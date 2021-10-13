@@ -9,8 +9,8 @@ typedef struct {
     Hitbox hitbox1;
     Hitbox hitbox2;
     Hitbox hitbox3;
-    TABLE(int velocities[8], { 0x10000, 0xE000, 0x12000, 0x14000, 0x10000, 0xE000, 0xC000, 0xE000 });
-    int velocityID;
+    TABLE(int32 velocities[8], { 0x10000, 0xE000, 0x12000, 0x14000, 0x10000, 0xE000, 0xC000, 0xE000 });
+    int32 velocityID;
     uint16 aniFrames;
     uint16 sfxPush;
     uint16 sfxPush2;
@@ -22,10 +22,10 @@ typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
-    int type;
+    int32 type;
     uint8 interval;
     uint8 intervalOffset;
-    int timer;
+    int32 timer;
     Animator animator;
 } EntityFBZMissile;
 

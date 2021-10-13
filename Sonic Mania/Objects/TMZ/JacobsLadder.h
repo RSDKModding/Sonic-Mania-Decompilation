@@ -13,17 +13,17 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    int height;
-    int interval;
-    int intervalOffset;
-    int duration;
+    int32 height;
+    int32 interval;
+    int32 intervalOffset;
+    int32 duration;
     bool32 flip;
-    int field_6C;
+    int32 field_6C;
     Vector2 field_70;
-    int field_78;
-    int field_7C;
+    int32 field_78;
+    int32 field_7C;
     bool32 field_80;
-    int field_84;
+    int32 field_84;
     uint8 activePlayers;
     uint8 playerTimers[4];
     Vector2 playerPositions[4];

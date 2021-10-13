@@ -65,17 +65,17 @@ void Tuesday_Create(void *data)
         if (!entity->type)
             entity->field_88 = (Entity *)entity;
         entity->field_8C = 0xFF;
-        int minX         = 0x7FFFFFFF;
-        int minY         = 0x7FFFFFFF;
-        int maxX         = 0;
-        int maxY         = 0;
+        int32 minX         = 0x7FFFFFFF;
+        int32 minY         = 0x7FFFFFFF;
+        int32 maxX         = 0;
+        int32 maxY         = 0;
         entity->drawPos  = entity->position;
         if (entity->type) {
             entity->position    = entity->field_88->position;
             entity->updateRange = entity->field_88->updateRange;
         }
 
-        int slotID           = RSDK.GetEntityID(entity->field_88);
+        int32 slotID           = RSDK.GetEntityID(entity->field_88);
         EntityTuesday *child = RSDK_GET_ENTITY(slotID, Tuesday);
         while (child->objectID == Tuesday->objectID || child->objectID == Platform->objectID) {
             if (child != entity && child->objectID == Tuesday->objectID) {
@@ -96,11 +96,11 @@ void Tuesday_Create(void *data)
                     child->drawPos.x = child->position.x;
                     child->drawPos.y = child->position.y;
                 }
-                int distX = (child->drawPos.x - entity->drawPos.x) >> 16;
-                int distY = (child->drawPos.y - entity->drawPos.y) >> 16;
+                int32 distX = (child->drawPos.x - entity->drawPos.x) >> 16;
+                int32 distY = (child->drawPos.y - entity->drawPos.y) >> 16;
 
                 if (abs(distX) <= 256 && abs(distY) <= 256) {
-                    int dir = 0;
+                    int32 dir = 0;
                     if (!distX)
                         dir |= 1;
                     else if (distX >= 0)
@@ -251,7 +251,7 @@ void Tuesday_DrawElectricity(void)
     Vector2 drawPos;
 
     if (entity->timer) {
-        int frameID = 0;
+        int32 frameID = 0;
         if (entity->timer <= 60)
             frameID = (Zone->timer >> 1) & 3;
         else
@@ -259,7 +259,7 @@ void Tuesday_DrawElectricity(void)
         entity->drawFX |= FX_FLIP;
 
         Animator animator;
-        for (int i = 0; i < 8; ++i) {
+        for (int32 i = 0; i < 8; ++i) {
             if (((1 << i) & entity->field_8E) && entity->linkPtrs[i]) {
                 drawPos.x           = entity->drawPos.x;
                 drawPos.y           = entity->drawPos.y;
@@ -268,7 +268,7 @@ void Tuesday_DrawElectricity(void)
                     case 0:
                         drawPos.x -= 0x200000;
                         RSDK.SetSpriteAnimation(Tuesday->aniFrames, 5, &animator, true, frameID);
-                        for (int p = (entity->drawPos.x - link->drawPos.x - 0x400000) >> 21; p >= 0; --p) {
+                        for (int32 p = (entity->drawPos.x - link->drawPos.x - 0x400000) >> 21; p >= 0; --p) {
                             RSDK.DrawSprite(&animator, &drawPos, false);
                             drawPos.x -= 0x100000;
                         }
@@ -277,7 +277,7 @@ void Tuesday_DrawElectricity(void)
                         drawPos.y += 0x100000;
                         drawPos.x -= 0x100000;
                         RSDK.SetSpriteAnimation(Tuesday->aniFrames, 6, &animator, true, frameID);
-                        for (int p = ((entity->drawPos.x - link->drawPos.x - 0x180000) >> 16) / 19; p >= 0; --p) {
+                        for (int32 p = ((entity->drawPos.x - link->drawPos.x - 0x180000) >> 16) / 19; p >= 0; --p) {
                             RSDK.DrawSprite(&animator, &drawPos, false);
                             drawPos.x -= 0xC0000;
                             drawPos.y += 0xC0000;
@@ -286,7 +286,7 @@ void Tuesday_DrawElectricity(void)
                     case 2:
                         drawPos.y += 0x200000;
                         RSDK.SetSpriteAnimation(Tuesday->aniFrames, 4, &animator, true, frameID);
-                        for (int p = (link->drawPos.y - entity->drawPos.y - 0x400000) >> 21; p >= 0; --p) {
+                        for (int32 p = (link->drawPos.y - entity->drawPos.y - 0x400000) >> 21; p >= 0; --p) {
                             RSDK.DrawSprite(&animator, &drawPos, false);
                             drawPos.y += 0x100000;
                         }
@@ -296,7 +296,7 @@ void Tuesday_DrawElectricity(void)
                         drawPos.x += 0x100000;
                         drawPos.y += 0x100000;
                         RSDK.SetSpriteAnimation(Tuesday->aniFrames, 6, &animator, true, frameID);
-                        for (int p = ((link->drawPos.x - entity->drawPos.x - 1572864) >> 16) / 19; p >= 0; --p) {
+                        for (int32 p = ((link->drawPos.x - entity->drawPos.x - 1572864) >> 16) / 19; p >= 0; --p) {
                             RSDK.DrawSprite(&animator, &drawPos, false);
                             drawPos.x += 0xC0000;
                             drawPos.y += 0xC0000;
@@ -306,7 +306,7 @@ void Tuesday_DrawElectricity(void)
                     case 4:
                         drawPos.x += 0x200000;
                         RSDK.SetSpriteAnimation(Tuesday->aniFrames, 5, &animator, true, frameID);
-                        for (int p = (link->drawPos.x - entity->drawPos.x - 0x400000) >> 21; p >= 0; --p) {
+                        for (int32 p = (link->drawPos.x - entity->drawPos.x - 0x400000) >> 21; p >= 0; --p) {
                             RSDK.DrawSprite(&animator, &drawPos, false);
                             drawPos.x += 0x100000;
                         }
@@ -315,7 +315,7 @@ void Tuesday_DrawElectricity(void)
                         drawPos.y -= 0x100000;
                         drawPos.x += 0x100000;
                         RSDK.SetSpriteAnimation(Tuesday->aniFrames, 6, &animator, true, frameID);
-                        for (int p = ((link->drawPos.x - entity->drawPos.x - 1572864) >> 16) / 19; p >= 0; --p) {
+                        for (int32 p = ((link->drawPos.x - entity->drawPos.x - 1572864) >> 16) / 19; p >= 0; --p) {
                             RSDK.DrawSprite(&animator, &drawPos, false);
                             drawPos.x += 0xC0000;
                             drawPos.y -= 0xC0000;
@@ -324,7 +324,7 @@ void Tuesday_DrawElectricity(void)
                     case 6:
                         drawPos.y -= 0x200000;
                         RSDK.SetSpriteAnimation(Tuesday->aniFrames, 4, &animator, true, frameID);
-                        for (int p = (entity->drawPos.y - link->drawPos.y - 0x400000) >> 21; p >= 0; --p) {
+                        for (int32 p = (entity->drawPos.y - link->drawPos.y - 0x400000) >> 21; p >= 0; --p) {
                             RSDK.DrawSprite(&animator, &drawPos, false);
                             drawPos.y -= 0x100000;
                         }
@@ -334,7 +334,7 @@ void Tuesday_DrawElectricity(void)
                         drawPos.x -= 0x100000;
                         drawPos.y -= 0x100000;
                         RSDK.SetSpriteAnimation(Tuesday->aniFrames, 6, &animator, true, frameID);
-                        for (int p = ((entity->drawPos.x - link->drawPos.x - 0x180000) >> 16) / 19; p >= 0; --p) {
+                        for (int32 p = ((entity->drawPos.x - link->drawPos.x - 0x180000) >> 16) / 19; p >= 0; --p) {
                             RSDK.DrawSprite(&animator, &drawPos, false);
                             drawPos.x -= 0xC0000;
                             drawPos.y -= 0xC0000;
@@ -355,10 +355,10 @@ void Tuesday_Unknown2(void)
     if (++entity->field_92 == 240) {
         RSDK.PlaySfx(Tuesday->sfxElecCharge, false, 255);
         entity->timer          = 120;
-        int slotID             = RSDK_sceneInfo->entitySlot + 1;
+        int32 slotID             = RSDK_sceneInfo->entitySlot + 1;
         EntityTuesday *tuesday = RSDK_GET_ENTITY(slotID, Tuesday);
-        int count              = entity->field_94;
-        for (int i = 0; i < count;) {
+        int32 count              = entity->field_94;
+        for (int32 i = 0; i < count;) {
             if (tuesday->objectID == Tuesday->objectID) {
                 ++i;
                 tuesday->field_8D = 0;
@@ -413,8 +413,8 @@ void Tuesday_Unknown3(void)
         RSDK.SetSpriteAnimation(Tuesday->aniFrames, 1, &entity->animator1, true, 0);
     }
 
-    int storeX       = entity->position.x;
-    int storeY       = entity->position.y;
+    int32 storeX       = entity->position.x;
+    int32 storeY       = entity->position.y;
     entity->position = entity->drawPos;
     Hitbox hitbox;
 
@@ -484,8 +484,8 @@ void Tuesday_Unknown3(void)
                                     hitbox.left   = (child->drawPos.x - entity->position.x) >> 16;
                                     hitbox.right  = 0;
                                     if (Player_CheckCollisionTouch(player, entity, &hitbox)) {
-                                        int distX = abs((player->position.x - entity->position.x) >> 16);
-                                        int distY = abs((player->position.y - entity->position.y) >> 16);
+                                        int32 distX = abs((player->position.x - entity->position.x) >> 16);
+                                        int32 distY = abs((player->position.y - entity->position.y) >> 16);
                                         if (abs(distX - distY) < 13) {
                                             if (player->shield != SHIELD_LIGHTNING) {
                                                 Player_CheckHit(player, child);
@@ -501,8 +501,8 @@ void Tuesday_Unknown3(void)
                                         hitbox.top    = 0;
                                         hitbox.right  = (child->drawPos.x - entity->position.x) >> 16;
                                         if (Player_CheckCollisionTouch(player, entity, &hitbox)) {
-                                            int distX = abs((player->position.x - entity->position.x) >> 16);
-                                            int distY = abs((player->position.y - entity->position.y) >> 16);
+                                            int32 distX = abs((player->position.x - entity->position.x) >> 16);
+                                            int32 distY = abs((player->position.y - entity->position.y) >> 16);
                                             if (abs(distX - distY) < 13) {
                                                 if (player->shield != SHIELD_LIGHTNING) {
                                                     Player_CheckHit(player, child);
@@ -518,8 +518,8 @@ void Tuesday_Unknown3(void)
                                             hitbox.left   = 0;
                                             hitbox.right  = (child->drawPos.x - entity->position.x) >> 16;
                                             if (Player_CheckCollisionTouch(player, entity, &hitbox)) {
-                                                int distX = abs((player->position.x - entity->position.x) >> 16);
-                                                int distY = abs((player->position.y - entity->position.y) >> 16);
+                                                int32 distX = abs((player->position.x - entity->position.x) >> 16);
+                                                int32 distY = abs((player->position.y - entity->position.y) >> 16);
                                                 if (abs(distX - distY) < 13) {
                                                     if (player->shield != SHIELD_LIGHTNING) {
                                                         Player_CheckHit(player, child);
@@ -535,8 +535,8 @@ void Tuesday_Unknown3(void)
                                                 hitbox.left   = (child->drawPos.x - entity->position.x) >> 16;
                                                 hitbox.right  = 0;
                                                 if (Player_CheckCollisionTouch(player, entity, &hitbox)) {
-                                                    int distX = abs((player->position.x - entity->position.x) >> 16);
-                                                    int distY = abs((player->position.y - entity->position.y) >> 16);
+                                                    int32 distX = abs((player->position.x - entity->position.x) >> 16);
+                                                    int32 distY = abs((player->position.y - entity->position.y) >> 16);
                                                     if (abs(distX - distY) < 13) {
                                                         if (player->shield != SHIELD_LIGHTNING) {
                                                             Player_CheckHit(player, child);
@@ -585,7 +585,7 @@ void Tuesday_Unknown3(void)
     entity->position.x = storeX;
     entity->position.y = storeY;
     if (entity->field_8D != 0xFF && entity->field_8D) {
-        for (int i = 0; i < 8; ++i) {
+        for (int32 i = 0; i < 8; ++i) {
             EntityTuesday *child = (EntityTuesday *)entity->linkPtrs[i];
             if (child) {
                 if (!child->field_8D)
@@ -633,10 +633,10 @@ void Tuesday_State_Destroyed(void)
         RSDK.PlaySfx(Tuesday->sfxExplosion, false, 255);
 
         if (Zone->timer & 4) {
-            int data = ((RSDK.Rand(0, 256) > 192) + 2);
+            int32 data = ((RSDK.Rand(0, 256) > 192) + 2);
 
-            int val    = 0;
-            int minVal = 0, maxVal = 0;
+            int32 val    = 0;
+            int32 minVal = 0, maxVal = 0;
             if (entity->type) {
                 val    = RSDK.Rand(-12, 12);
                 maxVal = 12;

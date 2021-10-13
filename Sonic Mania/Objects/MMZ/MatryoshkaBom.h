@@ -30,12 +30,12 @@ typedef struct {
     MatryoshkaSizes size;
     bool32 canExplode;
     bool32 destroyOffscreen;
-    int offsetY;
-    int offsetX;
+    int32 offsetY;
+    int32 offsetX;
     Vector2 startPos;
     uint8 startDir;
-    int timer;
-    int field_84;
+    int32 timer;
+    int32 field_84;
     Animator animator1;
     Animator animator2;
     Animator animator3;

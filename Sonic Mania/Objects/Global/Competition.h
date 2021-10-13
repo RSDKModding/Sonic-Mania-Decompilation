@@ -7,17 +7,17 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    int field_4;
-    int field_8;
-    int field_C;
-    int field_10;
-    int field_14;
-    int field_18;
-    int field_1C;
-    int field_20;
+    int32 field_4;
+    int32 field_8;
+    int32 field_C;
+    int32 field_10;
+    int32 field_14;
+    int32 field_18;
+    int32 field_1C;
+    int32 field_20;
     uint16 aniFrames;
     Entity *activeEntity;
-    int field_2C;
+    int32 field_2C;
 } ObjectCompetition;
 
 // Entity Class
@@ -25,9 +25,9 @@ typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     bool32 playerFlags[4];
-    int timer;
-    int seconds;
-    int field_74;
+    int32 timer;
+    int32 seconds;
+    int32 field_74;
     Animator animator;
 } EntityCompetition;
 
@@ -50,7 +50,7 @@ void Competition_State_Manager(void);
 
 void Competition_ResetOptions(void);
 void Competition_ClearMatchData(void);
-void Competition_CalculateScore(int playerID, uint8 flags);
+void Competition_CalculateScore(int32 playerID, uint8 flags);
 #endif
 
 #endif //!OBJ_COMPETITION_H

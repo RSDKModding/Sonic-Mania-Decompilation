@@ -61,11 +61,11 @@ void Smog_Draw(void)
     RSDK_THIS(Smog);
     ScanlineInfo *scanlinePtr = Smog->scanlines;
 
-    int y       = (Zone->timer + 2 * RSDK_screens->position.y) << 14;
+    int32 y       = (Zone->timer + 2 * RSDK_screens->position.y) << 14;
     uint8 defPos = ((RSDK_screens->position.y >> 1) + 2 * Zone->timer);
 
     ScanlineInfo *scanline = NULL;
-    for (int i = 0; i < RSDK_screens->height; ++i) {
+    for (int32 i = 0; i < RSDK_screens->height; ++i) {
         scanline  = (ScanlineInfo *)&Smog->scanlineData[defPos++ * sizeof(ScanlineInfo)];
         scanlinePtr->position.x = scanline->position.x + (RSDK_screens->position.x << 16);
         scanlinePtr->position.y = y;
@@ -129,8 +129,8 @@ void Smog_StageLoad(void)
     Smog->scanlines = RSDK.GetScanlines();
 
     ScanlineInfo *scanline = (ScanlineInfo *)Smog->scanlineData;
-    int angle              = 0;
-    for (int i = 0; i < 0x100; ++i) {
+    int32 angle              = 0;
+    for (int32 i = 0; i < 0x100; ++i) {
         scanline[i].deform.x   = (RSDK.Sin256(angle >> 1) << 6) + 0x10000;
         scanline[i].deform.y   = (RSDK.Sin256(angle >> 1) << 5) + 0x10000;
         scanline[i].position.x = (RSDK.Sin256(angle) << 10) - scanline->deform.x * RSDK_screens->centerX;

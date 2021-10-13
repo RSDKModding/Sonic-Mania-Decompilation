@@ -69,7 +69,7 @@ void Music_SetMusicTrack(const char *path, uint8 track, uint32 loopPoint)
 {
     track &= 0xF;
 
-    int charID = 0;
+    int32 charID = 0;
     for (; charID < 0x20; ++charID) {
         if (!path[charID]) {
             break;
@@ -105,7 +105,7 @@ void Music_PlayMusicTrack(uint8 trackID)
 {
     trackID &= 0xF;
 
-    for (int slot = SLOT_MUSICSTACK_START; slot < SLOT_MUSICSTACK_END; ++slot) {
+    for (int32 slot = SLOT_MUSICSTACK_START; slot < SLOT_MUSICSTACK_END; ++slot) {
         EntityMusic *music = RSDK_GET_ENTITY(slot, Music);
         if (music->objectID == Music->objectID && music->trackID == trackID) {
             destroyEntity(music);
@@ -113,7 +113,7 @@ void Music_PlayMusicTrack(uint8 trackID)
     }
 
     EntityMusic *entity = NULL;
-    for (int slot = SLOT_MUSICSTACK_START; slot < SLOT_MUSICSTACK_END; ++slot) {
+    for (int32 slot = SLOT_MUSICSTACK_START; slot < SLOT_MUSICSTACK_END; ++slot) {
         entity = RSDK_GET_ENTITY(slot, Music);
         if (entity->objectID != Music->objectID) {
             RSDK.ResetEntityPtr(entity, Music->objectID, NULL);
@@ -150,7 +150,7 @@ void Music_PlayMusicTrack(uint8 trackID)
 
     Music_Unknown5(entity);
 
-    for (int slot = SLOT_MUSICSTACK_START; slot < SLOT_MUSICSTACK_END; ++slot) {
+    for (int32 slot = SLOT_MUSICSTACK_START; slot < SLOT_MUSICSTACK_END; ++slot) {
         EntityMusic *music = RSDK_GET_ENTITY(slot, Music);
         if (music->objectID == Music->objectID && music != entity) {
             if (music->field_80 > entity->field_80) {
@@ -223,7 +223,7 @@ void Music_Unknown2(uint8 trackID)
     trackID &= 0xF;
     Music->nextTrack = TRACK_STAGE;
 
-    for (int slot = SLOT_MUSICSTACK_START; slot < SLOT_MUSICSTACK_END; ++slot) {
+    for (int32 slot = SLOT_MUSICSTACK_START; slot < SLOT_MUSICSTACK_END; ++slot) {
         EntityMusic *music = RSDK_GET_ENTITY(slot, Music);
         if (music->objectID == Music->objectID && music->trackID == trackID) {
             RSDK.ResetEntityPtr(music, TYPE_BLANK, NULL);
@@ -231,7 +231,7 @@ void Music_Unknown2(uint8 trackID)
     }
 
     EntityMusic *entity = NULL;
-    for (int slot = SLOT_MUSICSTACK_START; slot < SLOT_MUSICSTACK_END; ++slot) {
+    for (int32 slot = SLOT_MUSICSTACK_START; slot < SLOT_MUSICSTACK_END; ++slot) {
         entity = RSDK_GET_ENTITY(slot, Music);
         if (entity->objectID != Music->objectID) {
             RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL);
@@ -270,7 +270,7 @@ void Music_Unknown2(uint8 trackID)
 
 void Music_Unknown3(EntityMusic *entity)
 {
-    for (int slot = SLOT_MUSICSTACK_START; slot < SLOT_MUSICSTACK_END; ++slot) {
+    for (int32 slot = SLOT_MUSICSTACK_START; slot < SLOT_MUSICSTACK_END; ++slot) {
         EntityMusic *music = RSDK_GET_ENTITY(slot, Music);
         if (music->objectID == Music->objectID && music->field_80 == 100 && music->trackID != entity->trackID && music != entity)
             music->field_80 = 10;
@@ -279,7 +279,7 @@ void Music_Unknown3(EntityMusic *entity)
 bool32 Music_CheckMusicStack(void)
 {
     bool32 flag = false;
-    for (int slot = SLOT_MUSICSTACK_START; slot < SLOT_MUSICSTACK_END; ++slot) {
+    for (int32 slot = SLOT_MUSICSTACK_START; slot < SLOT_MUSICSTACK_END; ++slot) {
         EntityMusic *music = RSDK_GET_ENTITY(slot, Music);
         if (music->objectID == Music->objectID && music->field_80 > 0)
             flag = true;
@@ -288,8 +288,8 @@ bool32 Music_CheckMusicStack(void)
 }
 void Music_Unknown5(EntityMusic *entity)
 {
-    int activeCnt = 0;
-    for (int slot = SLOT_MUSICSTACK_START; slot < SLOT_MUSICSTACK_END; ++slot) {
+    int32 activeCnt = 0;
+    for (int32 slot = SLOT_MUSICSTACK_START; slot < SLOT_MUSICSTACK_END; ++slot) {
         EntityMusic *music = RSDK_GET_ENTITY(slot, Music);
         if (music->objectID == Music->objectID && entity != music) {
             if (music->trackID == Music->activeTrack) {
@@ -312,7 +312,7 @@ void Music_Unknown5(EntityMusic *entity)
 void Music_ResumePrevTrack(uint8 trackID, bool32 transitionFade)
 {
     trackID &= 0xF;
-    for (int slot = SLOT_MUSICSTACK_START; slot < SLOT_MUSICSTACK_END; ++slot) {
+    for (int32 slot = SLOT_MUSICSTACK_START; slot < SLOT_MUSICSTACK_END; ++slot) {
         EntityMusic *music = RSDK_GET_ENTITY(slot, Music);
         if (music->objectID == Music->objectID && music->trackID == trackID) {
             if (transitionFade) {
@@ -332,7 +332,7 @@ void Music_Unknown7(EntityMusic *entity)
         if (music->objectID != Music->objectID || music->state != Music_State_TransitionTrack) {
             RSDK.ResetEntityPtr(music, TYPE_BLANK, NULL);
 
-            for (int slot = SLOT_MUSICSTACK_START; slot < SLOT_MUSICSTACK_END; ++slot) {
+            for (int32 slot = SLOT_MUSICSTACK_START; slot < SLOT_MUSICSTACK_END; ++slot) {
                 EntityMusic *music = RSDK_GET_ENTITY(slot, Music);
                 if (music->objectID == Music->objectID && music->field_80 > entity->field_80) {
                     RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL);
@@ -342,10 +342,10 @@ void Music_Unknown7(EntityMusic *entity)
 
             bool32 flag = entity->field_78;
             RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL);
-            int cnt = 0;
+            int32 cnt = 0;
 
             EntityMusic *ptr = NULL;
-            for (int slot = SLOT_MUSICSTACK_START; slot < SLOT_MUSICSTACK_END; ++slot) {
+            for (int32 slot = SLOT_MUSICSTACK_START; slot < SLOT_MUSICSTACK_END; ++slot) {
                 EntityMusic *music = RSDK_GET_ENTITY(slot, Music);
                 if (music->objectID == Music->objectID && music->field_80 > cnt) {
                     ptr = music;
@@ -412,7 +412,7 @@ void Music_Unknown7(EntityMusic *entity)
 }
 void Music_ClearMusicStack(void)
 {
-    for (int slot = SLOT_MUSICSTACK_START; slot < SLOT_MUSICSTACK_END; ++slot) {
+    for (int32 slot = SLOT_MUSICSTACK_START; slot < SLOT_MUSICSTACK_END; ++slot) {
         RSDK.ResetEntityPtr(RSDK.GetEntityByID(slot), TYPE_BLANK, NULL);
     }
 }

@@ -69,7 +69,7 @@ void TryAgain_Unknown2(void)
 {
     RSDK_THIS(TryAgain);
     entity->field_74 += 0x3800;
-    int val = entity->position.y - 0x340000;
+    int32 val = entity->position.y - 0x340000;
     entity->unknownPos1.y += entity->field_74;
     if (entity->unknownPos1.y <= val || entity->field_74 <= 0) {
         entity->unknownPos2.y = entity->unknownPos1.y;

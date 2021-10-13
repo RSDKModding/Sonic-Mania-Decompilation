@@ -121,7 +121,7 @@ void GHZSetup_SetupStartingBG(void)
 
         player->onGround = true;
         player->state    = Player_State_Ground;
-        for (int s = 0; s < outsideLayer->scrollInfoCount; ++s) {
+        for (int32 s = 0; s < outsideLayer->scrollInfoCount; ++s) {
             outsideLayer->scrollInfo[s].scrollPos += globals->parallaxOffset[0] * outsideLayer->scrollInfo[s].scrollSpeed;
         }
     }
@@ -139,18 +139,18 @@ void GHZSetup_HandleActTransition(void)
 
     TileLayer *layer2 = RSDK.GetSceneLayer(2);
     layer2->scrollPos += 0xB000 * layer2->parallaxFactor;
-    for (int s = 0; s < layer2->scrollInfoCount; ++s) {
+    for (int32 s = 0; s < layer2->scrollInfoCount; ++s) {
         layer2->scrollInfo[s].scrollPos += 0x3CB000 * layer2->scrollInfo[s].parallaxFactor;
     }
 
     TileLayer *layer3 = RSDK.GetSceneLayer(3);
     layer3->scrollPos += 0xB000 * layer3->parallaxFactor;
-    for (int s = 0; s < layer3->scrollInfoCount; ++s) {
+    for (int32 s = 0; s < layer3->scrollInfoCount; ++s) {
         layer3->scrollInfo[s].scrollPos += 0x3CB000 * layer3->scrollInfo[s].parallaxFactor;
     }
 
     BGSwitch->screenID = 0;
-    for (int s = RSDK.GetSettingsValue(SETTINGS_SCREENCOUNT); BGSwitch->screenID < s;) {
+    for (int32 s = RSDK.GetSettingsValue(SETTINGS_SCREENCOUNT); BGSwitch->screenID < s;) {
         RSDK.GetSceneLayer(0)->drawLayer[BGSwitch->screenID]   = DRAWLAYER_COUNT;
         RSDK.GetSceneLayer(1)->drawLayer[BGSwitch->screenID]   = DRAWLAYER_COUNT;
         RSDK.GetSceneLayer(2)->drawLayer[BGSwitch->screenID]   = 0;

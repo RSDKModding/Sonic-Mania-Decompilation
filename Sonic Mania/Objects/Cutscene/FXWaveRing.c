@@ -34,18 +34,18 @@ void FXWaveRing_Draw(void)
 {
     RSDK_THIS(FXWaveRing);
 
-    int angInc  = 256 / entity->field_88;
+    int32 angInc  = 256 / entity->field_88;
     uint32 colour = (entity->r << 16) | (entity->g << 8) | entity->b;
-    int sin     = entity->field_8C * RSDK.Sin256(entity->angle2) + (entity->field_78 << 8);
+    int32 sin     = entity->field_8C * RSDK.Sin256(entity->angle2) + (entity->field_78 << 8);
 
-    int x = sin * RSDK.Sin256(entity->angle) + entity->position.x;
-    int y = sin * RSDK.Cos256(entity->angle) + entity->position.y;
+    int32 x = sin * RSDK.Sin256(entity->angle) + entity->position.x;
+    int32 y = sin * RSDK.Cos256(entity->angle) + entity->position.y;
 
-    int angle  = entity->angle;
-    int angle2 = entity->angle2;
-    int prevX  = x;
-    int prevY  = y;
-    for (int i = 0; i < entity->field_88 - 1; ++i) {
+    int32 angle  = entity->angle;
+    int32 angle2 = entity->angle2;
+    int32 prevX  = x;
+    int32 prevY  = y;
+    for (int32 i = 0; i < entity->field_88 - 1; ++i) {
         angle += angInc;
         angle2 += entity->field_6C;
         sin   = entity->field_8C * RSDK.Sin256(angle2) + (entity->field_78 << 8);

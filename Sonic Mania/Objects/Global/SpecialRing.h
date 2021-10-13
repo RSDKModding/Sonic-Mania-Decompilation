@@ -18,13 +18,13 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    int id;
-    int planeFilter;
-    int warpTimer;
-    int dword68;
+    int32 id;
+    int32 planeFilter;
+    int32 warpTimer;
+    int32 dword68;
     Animator warpData;
-    int angleZ;
-    int angleY;
+    int32 angleZ;
+    int32 angleY;
     bool32 enabled;
     Matrix matrix4;
     Matrix matrix;

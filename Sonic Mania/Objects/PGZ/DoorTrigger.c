@@ -9,7 +9,7 @@ void DoorTrigger_Update(void)
     if (entity->animator2.frameID) {
         if (entity->id-- == 1) {
             entity->id = RSDK.Rand(15, 121);
-            int anim   = 0;
+            int32 anim   = 0;
             switch (entity->orientation) {
                 case 0:
                 case 1: anim = 3; break;
@@ -31,7 +31,7 @@ void DoorTrigger_Update(void)
         foreach_active(Player, player)
         {
 
-            int anim    = player->playerAnimator.animationID;
+            int32 anim    = player->playerAnimator.animationID;
             bool32 flag = anim == ANI_JUMP;
             switch (player->characterID) {
                 case ID_SONIC: flag |= anim == ANI_DROPDASH; break;
@@ -64,7 +64,7 @@ void DoorTrigger_Update(void)
                         player->state = Player_State_KnuxGlideDrop;
                     }
                     else {
-                        int x = 0, y = 0;
+                        int32 x = 0, y = 0;
                         if (entity->animator1.frameID) {
                             x = player->position.x - entity->position.x;
                             if (entity->direction)
@@ -80,7 +80,7 @@ void DoorTrigger_Update(void)
                             y = player->position.y - entity->position.y;
                         }
 
-                        int angle = RSDK.ATan2(x, y);
+                        int32 angle = RSDK.ATan2(x, y);
 #if RETRO_USE_PLUS
                         if (player->characterID == ID_MIGHTY && player->playerAnimator.animationID == ANI_DROPDASH) {
                             player->velocity.y -= 0x10000;
@@ -98,8 +98,8 @@ void DoorTrigger_Update(void)
                     }
                     RSDK.PlaySfx(DoorTrigger->sfxShatter, false, 255);
 
-                    int spawnX = entity->position.x;
-                    int spawnY = entity->position.y;
+                    int32 spawnX = entity->position.x;
+                    int32 spawnY = entity->position.y;
                     switch (entity->orientation) {
                         case 0: spawnX -= 0x100000; break;
                         case 1: spawnX += 0x100000; break;
@@ -107,7 +107,7 @@ void DoorTrigger_Update(void)
                         case 3: spawnY += 0x100000; break;
                         default: break;
                     }
-                    for (int i = 0; i < 8; ++i) {
+                    for (int32 i = 0; i < 8; ++i) {
                         EntityDebris *shard =
                             CREATE_ENTITY(Debris, NULL, spawnX + RSDK.Rand(-0xA0000, 0xA0000), spawnY + RSDK.Rand(-0xA0000, 0xA0000));
                         shard->state      = Debris_State_Fall;

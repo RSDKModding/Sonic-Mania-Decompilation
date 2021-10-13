@@ -18,7 +18,7 @@ void WallBumper_Draw(void)
     if (entity->type) {
         entity->direction ^= entity->reverse;
         drawPos.x -= entity->size << 20;
-        for (int i = 0; i < entity->size; ++i) {
+        for (int32 i = 0; i < entity->size; ++i) {
             RSDK.DrawSprite(&entity->animator, &drawPos, false);
             drawPos.x += 0x200000;
         }
@@ -27,7 +27,7 @@ void WallBumper_Draw(void)
     else {
         entity->direction ^= FLIP_Y * entity->reverse;
         drawPos.y -= entity->size << 20;
-        for (int i = 0; i < entity->size; ++i) {
+        for (int32 i = 0; i < entity->size; ++i) {
             RSDK.DrawSprite(&entity->animator, &drawPos, false);
             drawPos.y += 0x200000;
         }

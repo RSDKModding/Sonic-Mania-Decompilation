@@ -20,11 +20,11 @@ typedef struct {
     bool32 respawn;
     uint16 targetLayer;
     uint8 type;
-    int delay;
+    int32 delay;
     bool32 eventOnly;
     bool32 mightyOnly;
-    int field_78;
-    int collapseDelay;
+    int32 field_78;
+    int32 collapseDelay;
     uint16 storedTiles[256];
     Hitbox hitbox;
     Vector2 playerPos;

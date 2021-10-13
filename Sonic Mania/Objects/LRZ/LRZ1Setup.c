@@ -18,8 +18,8 @@ void LRZ1Setup_StaticUpdate(void)
     }
 
     if (LRZ1Setup->fadeTimer <= 0) {
-        int cos   = RSDK.Cos1024(2 * (Zone->timer & 0x1FF));
-        int blend = cos >> 3;
+        int32 cos   = RSDK.Cos1024(2 * (Zone->timer & 0x1FF));
+        int32 blend = cos >> 3;
         if (cos >> 3 >= 0)
             RSDK.SetLimitedFade(5, 1, 4, cos >> 3, 208, 211);
         else
@@ -54,7 +54,7 @@ void LRZ1Setup_StaticUpdate(void)
             Hitbox *hitbox = Player_GetHitbox(player);
 
             uint8 behaviour = 0;
-            int tileInfo   = 0;
+            int32 tileInfo   = 0;
             LRZ2Setup_GetTileInfo(&tileInfo, player->collisionPlane, player->position.x, (hitbox->bottom << 16) + player->position.y,
                                   player->moveOffset.x, player->moveOffset.y, &behaviour);
             if (behaviour == 1 && player->shield != SHIELD_FIRE && !LRZ1Setup->fadeTimer) {
@@ -101,10 +101,10 @@ void LRZ1Setup_StageLoad(void)
     if (RSDK_sceneInfo->filter & FILTER_ENCORE) {
         RSDK.LoadPalette(0, "EncoreLRZ1.act", 255);
 
-        for (int i = 0; i < 0x400; ++i) LRZ1Setup->fgLow->deformationData[i] = LRZ1Setup->deformFG[i & 0x1F];
-        for (int i = 0; i < 0x400; ++i) LRZ1Setup->fgHigh->deformationData[i] = LRZ1Setup->deformFG[i & 0x1F];
-        for (int i = 0; i < 0x400; ++i) LRZ1Setup->bg1->deformationData[i] = LRZ1Setup->deformBG[i & 0x1F];
-        for (int i = 0; i < 0x400; ++i) LRZ1Setup->bg2->deformationData[i] = LRZ1Setup->deformBG[i & 0x1F];
+        for (int32 i = 0; i < 0x400; ++i) LRZ1Setup->fgLow->deformationData[i] = LRZ1Setup->deformFG[i & 0x1F];
+        for (int32 i = 0; i < 0x400; ++i) LRZ1Setup->fgHigh->deformationData[i] = LRZ1Setup->deformFG[i & 0x1F];
+        for (int32 i = 0; i < 0x400; ++i) LRZ1Setup->bg1->deformationData[i] = LRZ1Setup->deformBG[i & 0x1F];
+        for (int32 i = 0; i < 0x400; ++i) LRZ1Setup->bg2->deformationData[i] = LRZ1Setup->deformBG[i & 0x1F];
     }
     if (!isMainGameMode() || !globals->enableIntro || PlayerHelpers_CheckStageReload()) {
         Zone->screenBoundsL1[0] = 2732;
@@ -125,7 +125,7 @@ void LRZ1Setup_StageFinishCB(void) { CREATE_ENTITY(LRZ1Outro, NULL, 0, 0); }
 
 void LRZ1Setup_DrawLayerCB(void)
 {
-    int scroll                = maxVal(0x800000 - 8 * RSDK_screens->position.y * RSDK_screens->position.y, 0);
+    int32 scroll                = maxVal(0x800000 - 8 * RSDK_screens->position.y * RSDK_screens->position.y, 0);
     LRZ1Setup->bg1->scrollPos = scroll;
     LRZ1Setup->bg2->scrollPos = scroll;
 }

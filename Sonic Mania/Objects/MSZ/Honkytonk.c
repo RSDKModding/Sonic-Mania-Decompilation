@@ -7,7 +7,7 @@ void Honkytonk_Update(void)
     RSDK_THIS(Honkytonk);
 
     if (entity->depression > 0) {
-        int val = entity->depression - 0x20000;
+        int32 val = entity->depression - 0x20000;
         if (val < 0)
             val = 0;
         entity->depression = val;
@@ -15,13 +15,13 @@ void Honkytonk_Update(void)
 
     foreach_active(Player, player)
     {
-        int startX    = player->position.x;
-        int startY    = player->position.y;
-        int startXVel = player->velocity.x;
-        int startYVel = player->velocity.y;
+        int32 startX    = player->position.x;
+        int32 startY    = player->position.y;
+        int32 startXVel = player->velocity.x;
+        int32 startYVel = player->velocity.y;
 
-        int difX = (player->position.x - entity->position.x) >> 8;
-        int difY = (player->position.y - entity->position.y) >> 8;
+        int32 difX = (player->position.x - entity->position.x) >> 8;
+        int32 difY = (player->position.y - entity->position.y) >> 8;
         player->position.x = (difY * RSDK.Sin256(entity->negAngle)) + (difX * RSDK.Cos256(entity->negAngle)) + entity->position.x;
         player->position.y = (difY * RSDK.Cos256(entity->negAngle)) - (difX * RSDK.Sin256(entity->negAngle)) + entity->position.y;
 
@@ -30,7 +30,7 @@ void Honkytonk_Update(void)
 
         if (Player_CheckCollisionTouch(player, entity, &Honkytonk->hitbox1)) {
             Hitbox *playerBox = Player_GetHitbox(player);
-            int y             = player->position.y + ((playerBox->bottom + 12) << 16) - entity->position.y;
+            int32 y             = player->position.y + ((playerBox->bottom + 12) << 16) - entity->position.y;
             if (y > entity->depression)
                 entity->depression = y;
         }
@@ -54,7 +54,7 @@ void Honkytonk_Update(void)
             player->velocity.y = ((player->velocity.y >> 8) * RSDK.Cos256(entity->angle)) - ((player->velocity.x >> 8) * RSDK.Sin256(entity->angle));
 
             float speeds[] = { 1.0, 1.25, 1.5, 0.75 };
-            int channel    = RSDK.PlaySfx(Honkytonk->sfxPiano, 0, 255);
+            int32 channel    = RSDK.PlaySfx(Honkytonk->sfxPiano, 0, 255);
             RSDK.SetChannelAttributes(channel, 1.0, 0.0, speeds[Zone->timer & 3]);
         }
         else {

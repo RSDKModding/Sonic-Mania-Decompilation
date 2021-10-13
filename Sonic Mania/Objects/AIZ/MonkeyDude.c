@@ -173,8 +173,8 @@ void MonkeyDude_State_Setup(void)
     MonkeyDude_HandleStates();
 #endif
 
-    int delay = 0;
-    for (int i = 0; i < MonkeyDude_MaxBodyParts; ++i) {
+    int32 delay = 0;
+    for (int32 i = 0; i < MonkeyDude_MaxBodyParts; ++i) {
         entity->bodyAngles[i] = 0;
         entity->bodyTimers[i] = delay;
         entity->bodyStates[i] = MonkeyDude_State_BodyUnknown;
@@ -246,12 +246,12 @@ void MonkeyDude_HandleStates(void)
     if (entity->objectID) {
         if (entity->throwCount) {
             if (entity->throwCount == 3 && entity->bodyAngles[MonkeyDude_MaxBodyParts - 1] <= 164) {
-                int spawnX = entity->position.x + 0xD0000;
+                int32 spawnX = entity->position.x + 0xD0000;
                 if (!entity->direction)
                     spawnX = entity->position.x - 0xD0000;
-                int spawnY = entity->position.y;
+                int32 spawnY = entity->position.y;
 
-                for (int i = 0; i < MonkeyDude_MaxBodyParts; ++i) {
+                for (int32 i = 0; i < MonkeyDude_MaxBodyParts; ++i) {
                     if (entity->direction)
                         spawnX += RSDK.Sin256(entity->bodyAngles[i]) << 11;
                     else

@@ -23,9 +23,9 @@ typedef struct {
     Vector2 unknownPosA;
     Vector2 unknownPosB;
     Vector2 scrollPos;
-    int sprX;
-    int field_B0;
-    int field_B4;
+    int32 sprX;
+    int32 field_B0;
+    int32 field_B4;
 } EntityParallaxSprite;
 
 // Object Struct

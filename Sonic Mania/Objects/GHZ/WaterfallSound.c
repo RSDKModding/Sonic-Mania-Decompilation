@@ -48,19 +48,19 @@ void WaterfallSound_StageLoad(void)
 
 bool32 WaterfallSound_CheckCB(void)
 {
-    int worldCenterX = (RSDK_screens->position.x + RSDK_screens->centerX) << 16;
-    int worldCenterY = (RSDK_screens->position.y + RSDK_screens->centerY) << 16;
+    int32 worldCenterX = (RSDK_screens->position.x + RSDK_screens->centerX) << 16;
+    int32 worldCenterY = (RSDK_screens->position.y + RSDK_screens->centerY) << 16;
 
     WaterfallSound->activeCount = 0;
-    int count                   = 0;
+    int32 count                   = 0;
 
     foreach_all(WaterfallSound, sound)
     {
         sound->flag = false;
-        int x       = sound->position.x;
-        int y       = sound->position.y;
-        int sx12    = sound->size.x >> 12;
-        int sy12    = sound->size.y >> 12;
+        int32 x       = sound->position.x;
+        int32 y       = sound->position.y;
+        int32 sx12    = sound->size.x >> 12;
+        int32 sy12    = sound->size.y >> 12;
 
         Hitbox hitbox;
         hitbox.left   = -(sound->size.x >> 12);
@@ -76,11 +76,11 @@ bool32 WaterfallSound_CheckCB(void)
             sound->posUnk.y = worldCenterY;
         }
         else {
-            int distX = abs(worldCenterX - x) >> 16;
-            int distY = abs(worldCenterY - y) >> 16;
+            int32 distX = abs(worldCenterX - x) >> 16;
+            int32 distY = abs(worldCenterY - y) >> 16;
 
-            int rx = distX * distX;
-            int ry = distY * distY;
+            int32 rx = distX * distX;
+            int32 ry = distY * distY;
 
             if ((MathHelpers_Unknown6(ry + rx) << 16) - 8 * sound->size.y - 8 * sound->size.x <= 0x2800000) {
                 if (MathHelpers_Unknown14(&sound->posUnk, worldCenterX, worldCenterY, sound->position, hitbox)) {
@@ -109,22 +109,22 @@ bool32 WaterfallSound_CheckCB(void)
     WaterfallSound->activeCount = count;
     return WaterfallSound->activeCount > 0;
 }
-void WaterfallSound_UpdateCB(int sfxID)
+void WaterfallSound_UpdateCB(int32 sfxID)
 {
-    int worldCenterX = (RSDK_screens->position.x + RSDK_screens->centerX) << 16;
-    int worldCenterY = (RSDK_screens->position.y + RSDK_screens->centerY) << 16;
-    int worldLeft    = worldCenterX - (RSDK_screens->centerX << 16);
-    int worldRight   = worldCenterX + (RSDK_screens->centerX << 16);
+    int32 worldCenterX = (RSDK_screens->position.x + RSDK_screens->centerX) << 16;
+    int32 worldCenterY = (RSDK_screens->position.y + RSDK_screens->centerY) << 16;
+    int32 worldLeft    = worldCenterX - (RSDK_screens->centerX << 16);
+    int32 worldRight   = worldCenterX + (RSDK_screens->centerX << 16);
 
     float pan        = 0.0f;
     float volDivisor = 0.0f;
-    int dist         = 0x7FFF0000;
+    int32 dist         = 0x7FFF0000;
 
     foreach_all(WaterfallSound, sound)
     {
         if (sound->flag) {
-            int x = abs(worldCenterX - sound->posUnk.x);
-            int y = abs(worldCenterY - sound->posUnk.y);
+            int32 x = abs(worldCenterX - sound->posUnk.x);
+            int32 y = abs(worldCenterY - sound->posUnk.y);
 
             int16 val      = minVal(MathHelpers_Unknown6((x >> 16) * (x >> 16) + (y >> 16) * (y >> 16)), 640);
             float volume   = (val / -640.0f) + 1.0f;

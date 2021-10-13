@@ -6,13 +6,13 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    int palRotateTimerA;
-    int palRotateTimerB;
-    int angle;
-    int aniTilesFrameC;
-    int timerA;
-    int timerB;
-    int aniTilesFrameB;
+    int32 palRotateTimerA;
+    int32 palRotateTimerB;
+    int32 angle;
+    int32 aniTilesFrameC;
+    int32 timerA;
+    int32 timerB;
+    int32 aniTilesFrameB;
     uint16 aniTiles;
     TileLayer *bgLayer;
     TileLayer *bgLayer2;

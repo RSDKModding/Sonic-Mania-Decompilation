@@ -13,9 +13,9 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    int field_58;
-    int field_5C;
-    int rotationX;
+    int32 field_58;
+    int32 field_5C;
+    int32 rotationX;
     Matrix matrix1;
     Matrix matrix2;
     Matrix matrix3;

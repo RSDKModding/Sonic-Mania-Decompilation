@@ -26,12 +26,12 @@ typedef struct {
     uint8 go;
     Vector2 subOff1;
     Vector2 subOff2;
-    int depth;
-    int dest;
+    int32 depth;
+    int32 dest;
     Vector2 startPos;
-    int hScrollPos;
-    int vScrollPos;
-    int timer;
+    int32 hScrollPos;
+    int32 vScrollPos;
+    int32 timer;
     bool32 flag;
     Entity *playerPtr;
     StateMachine(stateStore);

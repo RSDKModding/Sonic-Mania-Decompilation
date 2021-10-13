@@ -24,7 +24,7 @@ void Whirlpool_Update(void)
         else {
             foreach_active(Player, player)
             {
-                int playerID = RSDK.GetEntityID(player);
+                int32 playerID = RSDK.GetEntityID(player);
                 if (!((1 << playerID) & entity->activePlayers)) {
                     if (Player_CheckCollisionTouch(player, entity, &entity->hitbox)) {
                         entity->active = ACTIVE_NORMAL;
@@ -54,8 +54,8 @@ void Whirlpool_Update(void)
                         if (entity->field_278[playerID] < 0)
                             entity->field_278[playerID] += 0x400;
                         entity->field_278[playerID] %= 0x3FF;
-                        int prevX          = player->position.x;
-                        int prevY          = player->position.y;
+                        int32 prevX          = player->position.x;
+                        int32 prevY          = player->position.y;
                         player->position.x = entity->position.x;
                         player->position.x += (RSDK.Cos1024(entity->field_278[playerID]) << 6) * entity->field_288[playerID];
                         player->position.y += entity->yVel << 15;
@@ -177,9 +177,9 @@ void WhirlPool_DrawSprites(void)
     Vector2 drawPos;
 
     drawPos    = entity->position;
-    int offset = (entity->yVel * Zone->timer % (entity->size.y >> 15)) << 15;
-    for (int i = 0; i < 0x80; ++i) {
-        int angle = entity->angle + entity->field_78[i];
+    int32 offset = (entity->yVel * Zone->timer % (entity->size.y >> 15)) << 15;
+    for (int32 i = 0; i < 0x80; ++i) {
+        int32 angle = entity->angle + entity->field_78[i];
         if (angle < 0)
             angle += 0x400;
         drawPos.x = entity->position.x;
@@ -196,9 +196,9 @@ void Whirlpool_SetupBubbles(void)
 {
     RSDK_THIS(Whirlpool);
 
-    for (int i = 0; i < 0x80; ++i) {
-        int rand1           = RSDK.Rand(entity->hitbox.left, entity->hitbox.right);
-        int rand2           = RSDK.Rand(0, 1024);
+    for (int32 i = 0; i < 0x80; ++i) {
+        int32 rand1           = RSDK.Rand(entity->hitbox.left, entity->hitbox.right);
+        int32 rand2           = RSDK.Rand(0, 1024);
         entity->field_78[i] = (rand1 << 16) | rand2;
     }
 }

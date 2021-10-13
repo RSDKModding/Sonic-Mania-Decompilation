@@ -15,8 +15,8 @@ void TwistingDoor_Update(void)
                 switch (entity->type) {
                     case 0:
                     case 3: {
-                        int x  = 0;
-                        int x2 = 0;
+                        int32 x  = 0;
+                        int32 x2 = 0;
                         if (entity->autoOpen) {
                             x2 = player1->position.x;
                             x  = entity->position.x;
@@ -40,8 +40,8 @@ void TwistingDoor_Update(void)
                     }
                     case 1:
                     case 2: {
-                        int y  = 0;
-                        int y2 = 0;
+                        int32 y  = 0;
+                        int32 y2 = 0;
                         if (entity->autoOpen) {
                             y2 = player1->position.y;
                             y  = entity->position.y;

@@ -34,7 +34,7 @@ void Piston_Draw(void)
 void Piston_Create(void *data)
 {
     RSDK_THIS(Piston);
-    int type              = entity->type;
+    int32 type              = entity->type;
     entity->spawnType     = type;
     entity->type          = 0;
     entity->collisionType = 1;
@@ -92,7 +92,7 @@ void Piston_MightyAntiHammer(void)
 {
     RSDK_THIS(Piston);
     Platform_CollisionState_AllSolid();
-    for (int i = 0; i < Player->playerCount; ++i) {
+    for (int32 i = 0; i < Player->playerCount; ++i) {
         if (((1 << i) & entity->stoodPlayers) != 0) {
             EntityPlayer *player = RSDK_GET_ENTITY(i, Player);
             if (player->state == Player_State_MightyHammerDrop)
@@ -159,7 +159,7 @@ void Piston_Launch(void)
     entity->drawPos.y -= 0x80000;
     entity->velocity.y = 0x80000;
     if (--entity->moveTimer <= 0) {
-        for (int i = 0; i < Player->playerCount; ++i) {
+        for (int32 i = 0; i < Player->playerCount; ++i) {
             EntityPlayer* player = RSDK_GET_ENTITY(i, Player);
             if (((1 << i) & entity->stoodPlayers) != 0) {
                 player->velocity.y = -0x100000;
@@ -232,7 +232,7 @@ void Piston_LaunchAndWait(void)
     entity->velocity.y = 0x40000;
     entity->moveTimer -= 4;
     if (entity->moveTimer == 4) {
-        for (int i = 0; i < Player->playerCount; ++i) {
+        for (int32 i = 0; i < Player->playerCount; ++i) {
             EntityPlayer *player = RSDK_GET_ENTITY(i, Player);
             if (((1 << i) & entity->stoodPlayers) != 0) {
                 RSDK.PlaySfx(Piston->launchSFX, false, 255);

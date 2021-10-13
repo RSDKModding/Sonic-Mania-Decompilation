@@ -64,13 +64,13 @@ EntityUIPopover *UIPopover_CreatePopover(void)
 
 void UIPopover_AddButton(EntityUIPopover *popover, uint8 frameID, void (*callback)(void), bool32 flag)
 {
-    int id = popover->buttonCount;
+    int32 id = popover->buttonCount;
     if (id < 4) {
         popover->frameIDs[id]  = frameID;
         popover->callbacks[id] = callback;
         popover->flags[id]     = flag;
 
-        int slot = popover->buttonCount + SLOT_POPOVER_BUTTONS;
+        int32 slot = popover->buttonCount + SLOT_POPOVER_BUTTONS;
         RSDK.ResetEntitySlot(slot, UIButton->objectID, 0);
         EntityUIButton *button = RSDK_GET_ENTITY(slot, UIButton);
 
@@ -97,7 +97,7 @@ void UIPopover_AddButton(EntityUIPopover *popover, uint8 frameID, void (*callbac
     }
 }
 
-void UIPopover_Setup(EntityUIPopover *popover, int posX, int posY)
+void UIPopover_Setup(EntityUIPopover *popover, int32 posX, int32 posY)
 {
     if (popover) {
         Vector2 size;
@@ -132,7 +132,7 @@ void UIPopover_Setup(EntityUIPopover *popover, int posX, int posY)
             UIPopover->storedControlState = StateMachine_None;
         }
 
-        int b = 0;
+        int32 b = 0;
         for (; b < 4; ++b) {
             if (!popover->buttons[b])
                 break;
@@ -142,7 +142,7 @@ void UIPopover_Setup(EntityUIPopover *popover, int posX, int posY)
         }
 
         control->buttonCount = b;
-        int sizeY            = (0x180000 * b) + 0x200000;
+        int32 sizeY            = (0x180000 * b) + 0x200000;
         popover->position.x  = posX;
         popover->position.y  = posY;
         popover->size.y      = sizeY;
@@ -164,8 +164,8 @@ void UIPopover_DrawSprites(void)
                   255, INK_NONE, false);
 
     if (entity->field_C8 == 1) {
-        int x = entity->position.x + 0x30000;
-        int y = (entity->size.y >> 1) + entity->position.y + 0x30000;
+        int32 x = entity->position.x + 0x30000;
+        int32 y = (entity->size.y >> 1) + entity->position.y + 0x30000;
         UIWidgets_Unknown6(1, 0, 0, 0, 1, x, y);
         UIWidgets_Unknown6(entity->field_C8, 48, 160, 240, 0, x - 0x30000, y - 0x30000);
     }
@@ -174,13 +174,13 @@ void UIPopover_DrawSprites(void)
 void UIPopover_SetupButtonPositions(void)
 {
     RSDK_THIS(UIPopover);
-    int offsets[] = { 0, 0, 24, 24, 24 };
+    int32 offsets[] = { 0, 0, 24, 24, 24 };
 
-    int posX    = entity->position.x;
-    int offsetY = offsets[entity->buttonCount] << 16;
+    int32 posX    = entity->position.x;
+    int32 offsetY = offsets[entity->buttonCount] << 16;
 
-    int posY = entity->position.y - ((offsetY * maxVal(entity->buttonCount - 1, 0)) >> 1);
-    for (int b = 0; b < 4; ++b) {
+    int32 posY = entity->position.y - ((offsetY * maxVal(entity->buttonCount - 1, 0)) >> 1);
+    for (int32 b = 0; b < 4; ++b) {
         if (!entity->buttons[b])
             break;
         EntityUIButton *button = entity->buttons[b];
@@ -202,7 +202,7 @@ void UIPopover_Close(void)
         destroyEntity(parent);
     }
 
-    for (int i = 0; i < 3; ++i) {
+    for (int32 i = 0; i < 3; ++i) {
         if (entity->buttons[i])
             destroyEntity(entity->buttons[i]);
     }

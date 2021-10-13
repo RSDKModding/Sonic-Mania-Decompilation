@@ -16,14 +16,14 @@ typedef struct {
     StateMachine(state);
     Vector2 size;
     bool32 drawOverTV;
-    int lineAlpha;
+    int32 lineAlpha;
     Hitbox hitbox;
-    int field_74;
-    int field_78;
-    int field_7C;
-    int field_80;
-    int field_84;
-    int field_88;
+    int32 field_74;
+    int32 field_78;
+    int32 field_7C;
+    int32 field_80;
+    int32 field_84;
+    int32 field_88;
 } EntityEggTV;
 
 // Object Struct

@@ -25,11 +25,11 @@ typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     EggPrisonTypes type;
-    int timer;
-    int originY;
-    int buttonPos;
-    int activated;
-    int field_70;
+    int32 timer;
+    int32 originY;
+    int32 buttonPos;
+    int32 activated;
+    int32 field_70;
     Hitbox hitbox1;
     Hitbox hitbox2;
     Hitbox hitbox3;

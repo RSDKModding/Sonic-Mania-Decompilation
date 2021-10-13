@@ -7,18 +7,18 @@
 typedef struct {
     RSDK_OBJECT
     StateMachine(state);
-    int timedOut;
+    int32 timedOut;
     bool32 encoreStage;
-    int machLevel;
-    int scoreBonus;
-    int machPoints;
-    int rings;
-    int timer;
-    int ringFrame;
-    int ringPan;
-    int spherePan;
-    int specialStageID;
-    int machQuotas[3];
+    int32 machLevel;
+    int32 scoreBonus;
+    int32 machPoints;
+    int32 rings;
+    int32 timer;
+    int32 ringFrame;
+    int32 ringPan;
+    int32 spherePan;
+    int32 specialStageID;
+    int32 machQuotas[3];
     uint8 playFieldLayer;
     uint16 sfx_BlueSphere;
     uint16 sfx_SSExit;
@@ -31,7 +31,7 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    int timer;
+    int32 timer;
     colour fadeColour;
 } EntityUFO_Setup;
 

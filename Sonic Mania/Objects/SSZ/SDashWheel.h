@@ -8,7 +8,7 @@ typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     Hitbox hitbox;
-    TABLE(int heightArray[33], { 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 3, 3, 4, 4, 5, 6, 6, 7, 8, 9, 10, 11, 12, 14, 15, 17, 19, 22, 26 });
+    TABLE(int32 heightArray[33], { 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 3, 3, 4, 4, 5, 6, 6, 7, 8, 9, 10, 11, 12, 14, 15, 17, 19, 22, 26 });
     uint16 sfxBumper;
     uint16 value5;
 } ObjectSDashWheel;
@@ -16,19 +16,19 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    int type;
+    int32 type;
     bool32 walkOnto;
     uint8 tag;
     bool32 field_64;
-    int field_68;
+    int32 field_68;
     bool32 activated;
     bool32 field_70;
     bool32 field_74;
-    int field_78;
+    int32 field_78;
     Animator animator1;
     Animator animator3;
     Animator animator2;
-    int cooldown;
+    int32 cooldown;
     uint8 rotateOffset;
 } EntitySDashWheel;
 
@@ -48,6 +48,6 @@ void SDashWheel_Serialize(void);
 
 // Extra Entity Functions
 bool32 SDashWheel_CheckCB(void);
-void SDashWheel_UpdateCB(int sfx);
+void SDashWheel_UpdateCB(int32 sfx);
 
 #endif //!OBJ_SDASHWHEEL_H

@@ -13,22 +13,22 @@ typedef struct {
 typedef struct {
     MANIA_UI_ITEM_BASE
     Vector2 size;
-    int listID;
-    int frameID;
+    int32 listID;
+    int32 frameID;
     bool32 noText;
     bool32 auxIcon;
-    int auxListID;
-    int auxFrameID;
-    int align;
-    int arrowWidth;
+    int32 auxListID;
+    int32 auxFrameID;
+    int32 align;
+    int32 arrowWidth;
     bool32 isDisabled;
-    int sizeIY;
+    int32 sizeIY;
     Vector2 field_134;
-    int field_13C;
-    int field_140;
+    int32 field_13C;
+    int32 field_140;
     bool32 textFlag;
-    int field_148;
-    int touchID;
+    int32 field_148;
+    int32 touchID;
     Animator animator1;
     Animator animator2;
     Animator animator3;

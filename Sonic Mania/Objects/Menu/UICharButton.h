@@ -13,17 +13,17 @@ typedef struct {
 typedef struct {
 	MANIA_UI_ITEM_BASE
     uint8 characterID;
-    int field_108;
-    int field_10C;
-    int field_110;
-    int field_114;
-    int field_118;
-    int field_11C;
-    int field_120;
-    int field_124;
-    int field_128;
-    int field_12C;
-    int field_130;
+    int32 field_108;
+    int32 field_10C;
+    int32 field_110;
+    int32 field_114;
+    int32 field_118;
+    int32 field_11C;
+    int32 field_120;
+    int32 field_124;
+    int32 field_128;
+    int32 field_12C;
+    int32 field_130;
     Animator animator1;
     Animator animator2;
     Animator animator3;

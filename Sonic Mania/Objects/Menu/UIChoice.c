@@ -46,7 +46,7 @@ void UIChoice_Draw(void)
     RSDK_THIS(UIChoice);
     Vector2 drawPos;
 
-    int size  = entity->size.y + entity->size.x;
+    int32 size  = entity->size.y + entity->size.x;
     drawPos.x = entity->position.x;
     drawPos.y = entity->position.y;
     drawPos.x -= entity->field_134.y;
@@ -158,7 +158,7 @@ void UIChoice_TouchedCB_Left(void)
 {
     RSDK_THIS(UIChoice);
     EntityUIButton *parent = (EntityUIButton *)entity->parent;
-    int id                 = parent->selection;
+    int32 id                 = parent->selection;
     EntityUIButton *ent    = NULL;
 
     do {
@@ -186,7 +186,7 @@ void UIChoice_TouchedCB_Right(void)
 {
     RSDK_THIS(UIChoice);
     EntityUIButton *parent = (EntityUIButton *)entity->parent;
-    int id                 = parent->selection;
+    int32 id                 = parent->selection;
     EntityUIButton *ent    = NULL;
     do {
         id = (id + 1) % parent->choiceCount;
@@ -226,16 +226,16 @@ bool32 UIChoice_CheckTouch(void)
     touchEnd[1].y = entity->touchPosEnd.y;
 
     bool32 pressed = false;
-    for (int i = 0; i < 2; ++i) {
+    for (int32 i = 0; i < 2; ++i) {
         if (RSDK_touchMouse->count) {
-            int sizeX = touchStart[i].x >> 1;
-            int sizeY = touchStart[i].y >> 1;
-            for (int t = 0; t < RSDK_touchMouse->count; ++t) {
-                int x = (RSDK_screens->position.x << 16) - ((RSDK_touchMouse->x[t] * RSDK_screens->width) * -65536.0f);
-                int y = (RSDK_screens->position.y << 16) - ((RSDK_touchMouse->y[t] * RSDK_screens->height) * -65536.0f);
+            int32 sizeX = touchStart[i].x >> 1;
+            int32 sizeY = touchStart[i].y >> 1;
+            for (int32 t = 0; t < RSDK_touchMouse->count; ++t) {
+                int32 x = (RSDK_screens->position.x << 16) - ((RSDK_touchMouse->x[t] * RSDK_screens->width) * -65536.0f);
+                int32 y = (RSDK_screens->position.y << 16) - ((RSDK_touchMouse->y[t] * RSDK_screens->height) * -65536.0f);
 
-                int touchX = abs(touchEnd[i].x + entity->position.x - x);
-                int touchY = abs(touchEnd[i].y + entity->position.y - y);
+                int32 touchX = abs(touchEnd[i].x + entity->position.x - x);
+                int32 touchY = abs(touchEnd[i].y + entity->position.y - y);
                 if (touchX < sizeX && touchY < sizeY) {
                     entity->touchID = i;
                     pressed         = true;
@@ -256,7 +256,7 @@ void UIChoice_Unknown6(void)
     RSDK_THIS(UIChoice);
 
     if (entity->field_134.x) {
-        int val = -(entity->field_134.x / abs(entity->field_134.x));
+        int32 val = -(entity->field_134.x / abs(entity->field_134.x));
         entity->field_134.x += val << 15;
         if (val < 0 && entity->field_134.x < 0) {
             entity->field_134.x = 0;
@@ -267,7 +267,7 @@ void UIChoice_Unknown6(void)
     }
 
     if (entity->field_134.y) {
-        int val = -(entity->field_134.y / abs(entity->field_134.y));
+        int32 val = -(entity->field_134.y / abs(entity->field_134.y));
         entity->field_134.y += val << 16;
         if (val < 0 && entity->field_134.y < 0) {
             entity->field_134.y = 0;

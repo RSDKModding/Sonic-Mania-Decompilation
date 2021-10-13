@@ -39,7 +39,7 @@ void ERZSetup_StageLoad(void)
     RSDK.GetSceneLayer(1)->scanlineCallback = ERZSetup_ScanlineCallback;
     Animals->animalTypes[0]             = ANIMAL_POCKY;
     Animals->animalTypes[1]             = ANIMAL_ROCKY;
-    for (int p = 1; p < Player->playerCount; ++p) {
+    for (int32 p = 1; p < Player->playerCount; ++p) {
         RSDK.ResetEntitySlot(p, 0, NULL);
     }
     Player->playerCount = 1;
@@ -49,15 +49,15 @@ void ERZSetup_ScanlineCallback(ScanlineInfo *scanlines)
 {
     ScreenInfo *screen = &RSDK_screens[RSDK_sceneInfo->currentScreenID];
     RSDK.SetClipBounds(0, 0, 0, screen->width, 136);
-    int a           = 0x1000000;
-    int posX        = screen->position.x << 14;
-    int sineAngle   = RSDK.Sin256(0);
-    int cosineAngle = RSDK.Cos256(0);
-    int timer       = ERZSetup->timer;
-    for (int i = 160; i > 16; --i) {
-        int angle             = a / (8 * i);
-        int sin               = sineAngle * angle;
-        int cos               = cosineAngle * angle;
+    int32 a           = 0x1000000;
+    int32 posX        = screen->position.x << 14;
+    int32 sineAngle   = RSDK.Sin256(0);
+    int32 cosineAngle = RSDK.Cos256(0);
+    int32 timer       = ERZSetup->timer;
+    for (int32 i = 160; i > 16; --i) {
+        int32 angle             = a / (8 * i);
+        int32 sin               = sineAngle * angle;
+        int32 cos               = cosineAngle * angle;
         scanlines->deform.y   = sin >> 7;
         scanlines->deform.x   = -cos >> 7;
         scanlines->position.x = sin - screen->centerX * (-cos >> 7) - posX;

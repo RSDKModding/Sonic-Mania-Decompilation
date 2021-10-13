@@ -6,13 +6,13 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    TABLE(int debrisInfo1[17], { 4, 0, 0, -0x20000, -0x28000, 1, 0, 0x20000, -0x28000, 2, 0, -0x28000, -0x20000, 3, 0, 0x28000, -0x20000 });
-    TABLE(int debrisInfo2[13], { 3, 4, 0, 0, -0x20000, 5, 0, -0x28000, -0x20000, 5, 1, 0x28000, -0x20000 });
-    int arenaLeft;
-    int arenaRight;
-    int startX;
-    int arenaTop;
-    int arenaBottom;
+    TABLE(int32 debrisInfo1[17], { 4, 0, 0, -0x20000, -0x28000, 1, 0, 0x20000, -0x28000, 2, 0, -0x28000, -0x20000, 3, 0, 0x28000, -0x20000 });
+    TABLE(int32 debrisInfo2[13], { 3, 4, 0, 0, -0x20000, 5, 0, -0x28000, -0x20000, 5, 1, 0x28000, -0x20000 });
+    int32 arenaLeft;
+    int32 arenaRight;
+    int32 startX;
+    int32 arenaTop;
+    int32 arenaBottom;
     uint16 sfxHit;
     uint16 sfxExplosion;
     uint16 sfxGather;
@@ -27,14 +27,14 @@ typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
-    int type;
-    int timer;
-    int invincibleTimer;
-    int health;
-    int partAngle2;
-    int partAngle;
-    int partOffset;
-    int partPos;
+    int32 type;
+    int32 timer;
+    int32 invincibleTimer;
+    int32 health;
+    int32 partAngle2;
+    int32 partAngle;
+    int32 partOffset;
+    int32 partPos;
     Vector2 offsetPos;
     Entity *parts[8];
     Entity *parent;

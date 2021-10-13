@@ -21,10 +21,10 @@ typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     uint16 size;
-    int speed;
-    int timer;
+    int32 speed;
+    int32 timer;
     Vector2 field_68[3];
-    int field_80;
+    int32 field_80;
     uint8 activePlayers;
     Animator animator1;
     Animator animator2;

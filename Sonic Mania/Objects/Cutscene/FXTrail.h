@@ -17,8 +17,8 @@ typedef struct {
     Entity *parent;
     Vector2 currentPos;
     Vector2 statePos[FXTrail_trackCount];
-    int currentRotation;
-    int stateRotation[FXTrail_trackCount];
+    int32 currentRotation;
+    int32 stateRotation[FXTrail_trackCount];
     uint8 currentDirection;
     uint8 stateDirection[FXTrail_trackCount];
     uint8 currentVisible;
@@ -26,7 +26,7 @@ typedef struct {
     Animator currentAnim;
     Animator stateAnim[FXTrail_trackCount];
     Animator *dataPtr;
-    int baseAlpha;
+    int32 baseAlpha;
 } EntityFXTrail;
 
 // Object Struct

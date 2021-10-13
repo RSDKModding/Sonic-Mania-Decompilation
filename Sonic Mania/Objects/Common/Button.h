@@ -11,10 +11,10 @@ typedef struct {
     bool32 hasPhantomRider;
     Hitbox hitboxV;
     Hitbox hitboxH;
-    int field_20;
-    int field_24;
-    int field_28;
-    int field_2C;
+    int32 field_20;
+    int32 field_24;
+    int32 field_28;
+    int32 field_2C;
     uint16 sfxButton;
     uint16 field_32;
 } ObjectButton;
@@ -22,15 +22,15 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    int type;
+    int32 type;
     bool32 walkOnto;
     uint8 tag;
-    int field_64;
-    int field_68;
+    int32 field_64;
+    int32 field_68;
     bool32 activated;
-    int field_70;
-    int field_74;
-    int field_78;
+    int32 field_70;
+    int32 field_74;
+    int32 field_78;
     Hitbox hitbox;
     Animator data1;
     Animator animator2;

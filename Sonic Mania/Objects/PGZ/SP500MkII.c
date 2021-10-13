@@ -64,8 +64,8 @@ void SP500MkII_Unknown1(void)
 {
     RSDK_THIS(SP500MkII);
     if (RSDK_sceneInfo->inEditor || DebugMode->debugActive) {
-        int storeX = entity->position.x;
-        int storeY = entity->position.y;
+        int32 storeX = entity->position.x;
+        int32 storeY = entity->position.y;
         entity->position.x += entity->field_98;
         entity->position.y += entity->field_9C;
         DrawHelpers_DrawHitboxOutline(0xFFFF00, entity->direction, entity->position.x, entity->position.y, &SP500MkII->hitbox2);
@@ -79,8 +79,8 @@ void SP500MkII_Unknown1(void)
 void SP500MkII_Unknown2(void)
 {
     RSDK_THIS(SP500MkII);
-    int storeX = entity->position.x;
-    int storeY = entity->position.y;
+    int32 storeX = entity->position.x;
+    int32 storeY = entity->position.y;
     entity->position.x += entity->field_98;
     entity->position.y += entity->field_9C;
 
@@ -132,7 +132,7 @@ void SP500MkII_Unknown3(void)
 
     drawPos.x += 0x80000;
     entity->animator.frameID = 1;
-    for (int l = 0; l < entity->length + 8; ++l) {
+    for (int32 l = 0; l < entity->length + 8; ++l) {
         RSDK.DrawSprite(&entity->animator, &drawPos, false);
         drawPos.x += 0x80000;
     }
@@ -155,19 +155,19 @@ void SP500MkII_Unknown4(void)
 {
     RSDK_THIS(SP500MkII);
 
-    int storeX         = entity->position.x;
-    int storeY         = entity->position.y;
+    int32 storeX         = entity->position.x;
+    int32 storeY         = entity->position.y;
     entity->position.x = entity->pos2.x;
     entity->position.y = entity->pos2.y;
-    int top            = SP500MkII->hitbox2.top << 16;
+    int32 top            = SP500MkII->hitbox2.top << 16;
 
-    int pos = 0;
+    int32 pos = 0;
     foreach_active(Player, player)
     {
-        int playerID = RSDK.GetEntityID(player);
-        int bottom   = player->position.y + (Player_GetHitbox(player)->bottom << 16);
+        int32 playerID = RSDK.GetEntityID(player);
+        int32 bottom   = player->position.y + (Player_GetHitbox(player)->bottom << 16);
         Player_CheckCollisionBox(player, entity, &SP500MkII->hitbox3);
-        int side        = Player_CheckCollisionBox(player, entity, &SP500MkII->hitbox1);
+        int32 side        = Player_CheckCollisionBox(player, entity, &SP500MkII->hitbox1);
         bool32 collided = side == C_TOP;
         bool32 touched  = Player_CheckCollisionTouch(player, entity, &SP500MkII->hitbox2);
 
@@ -177,7 +177,7 @@ void SP500MkII_Unknown4(void)
         }
 
         if (touched) {
-            int v12 = minVal(bottom - entity->position.y + top, 0xD0000);
+            int32 v12 = minVal(bottom - entity->position.y + top, 0xD0000);
 
             if (pos <= v12) {
                 pos = v12;
@@ -283,7 +283,7 @@ void SP500MkII_Unknown8(void)
     entity->field_A0 = entity->field_98;
     entity->field_A4 = entity->field_9C;
 
-    int dist = (entity->field_68 * (2 * (entity->yDir != 0) - 1)) << 21;
+    int32 dist = (entity->field_68 * (2 * (entity->yDir != 0) - 1)) << 21;
     if (entity->yDir == 1) {
         if (entity->field_9C < dist)
             entity->field_9C += 0x40000;

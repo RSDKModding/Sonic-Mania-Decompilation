@@ -37,17 +37,17 @@ bool32 ManiaModeMenu_InitUserdata(void)
 {
     if (!MenuSetup->dword10)
         MenuSetup->fxFade->timer = 512;
-    int authStatus = API.GetUserAuthStatus();
+    int32 authStatus = API.GetUserAuthStatus();
     if (!authStatus) {
         API.TryAuth();
     }
     else if (authStatus != STATUS_CONTINUE) {
-        int storageStatus = API.UserStorageStatusUnknown1();
+        int32 storageStatus = API.UserStorageStatusUnknown1();
         if (!storageStatus) {
             API.TryInitStorage();
         }
         else if (storageStatus != STATUS_CONTINUE) {
-            int statusUnknown2 = API.GetSaveStatus();
+            int32 statusUnknown2 = API.GetSaveStatus();
             if (!API.GetUserStorageNoSave() && (authStatus != STATUS_OK || storageStatus != STATUS_OK)) {
                 if (statusUnknown2 != STATUS_CONTINUE) {
                     if (statusUnknown2 != STATUS_FORBIDDEN) {
@@ -90,7 +90,7 @@ bool32 ManiaModeMenu_InitUserdata(void)
                     && globals->taTableLoaded != STATUS_ERROR) {
                 }
                 else {
-                    int status = API.GetSaveStatus();
+                    int32 status = API.GetSaveStatus();
                     if (status != STATUS_CONTINUE) {
                         if (status == STATUS_FORBIDDEN) {
                             RSDK.SetScene("Presentation", "Title Screen");
@@ -107,7 +107,7 @@ bool32 ManiaModeMenu_InitUserdata(void)
     return false;
 }
 
-void ManiaModeMenu_InitLocalization(int a1)
+void ManiaModeMenu_InitLocalization(int32 a1)
 {
     if (a1) {
         Localization->loaded = false;
@@ -117,7 +117,7 @@ void ManiaModeMenu_InitLocalization(int a1)
     }
 }
 
-int ManiaModeMenu_GetActiveMenu(void)
+int32 ManiaModeMenu_GetActiveMenu(void)
 {
     Entity *control = (Entity *)UIControl_GetUIControl();
     if (control == MainMenu->menuControlPtr || control == ExtrasMenu->extrasControl || control == OptionsMenu->optionsControl
@@ -147,7 +147,7 @@ int ManiaModeMenu_GetActiveMenu(void)
 
 void ManiaModeMenu_ChangeMenuTrack(void)
 {
-    int trackID = 0;
+    int32 trackID = 0;
     switch (ManiaModeMenu_GetActiveMenu()) {
         case 1: trackID = 1; break;
         case 2: trackID = 2; break;
@@ -161,7 +161,7 @@ void ManiaModeMenu_ChangeMenuTrack(void)
         Music_TransitionTrack(trackID, 0.12);
 }
 
-int ManiaModeMenu_StartReturnToTitle(void)
+int32 ManiaModeMenu_StartReturnToTitle(void)
 {
     EntityUIControl *control = UIControl_GetUIControl();
     if (control)
@@ -206,7 +206,7 @@ void ManiaModeMenu_Unknown3(void)
     MainMenu_Unknown2();
     UISubHeading_Unknown2();
     TimeAttackMenu_Unknown2();
-    int activeCount     = CompetitionMenu_Unknown4();
+    int32 activeCount     = CompetitionMenu_Unknown4();
     EntityUIControl *compRules = (EntityUIControl *)CompetitionMenu->compRulesControl;
     EntityUIButton *button     = UIButton_GetChoicePtr(compRules->buttons[1], compRules->buttons[1]->selection);
     if (button) {
@@ -252,7 +252,7 @@ void ManiaModeMenu_Unknown7(void)
         UIButton_SetChoiceSelection(extras->buttons[1], 1);
     }
 
-    int a, b, c, d;
+    int32 a, b, c, d;
     if (param->clearFlag) {
         a = param->characterID;
         b = param->zoneID;

@@ -52,10 +52,10 @@ void FBZSetup_StageLoad(void)
     if (!Zone->actID)
         bgLayer->scanlineCallback = FBZSetup_ScanlineCallback;
 
-    int val  = -336;
-    int val2 = 0;
-    for (int i = 0; i < 0x400; ++i) {
-        int angle = val >> 1;
+    int32 val  = -336;
+    int32 val2 = 0;
+    for (int32 i = 0; i < 0x400; ++i) {
+        int32 angle = val >> 1;
         if (RSDK.Sin1024(angle) >= 0)
             FBZSetup->array1[i] = 32 * (RSDK.Sin1024(angle) + 0x400);
         else
@@ -120,24 +120,24 @@ void FBZSetup_ActTransitionLoad(void)
     Zone->screenBoundsL1[3] = 0;
     Zone->screenBoundsB1[3] = 4324;
 
-    int id           = 0;
+    int32 id           = 0;
     TileLayer *layer = RSDK.GetSceneLayer(2);
-    for (int i = 0; i < layer->scrollInfoCount; ++i) {
+    for (int32 i = 0; i < layer->scrollInfoCount; ++i) {
         layer->scrollInfo[i].scrollPos = globals->parallaxOffset[id++];
     }
 
     foreach_all(ParallaxSprite, parallaxSprite) { parallaxSprite->scrollPos.x = globals->parallaxOffset[id++]; }
 }
 
-void FBZSetup_Unknown5(ScanlineInfo *scanlines, int a1, int a3, int a4, int a5, int a6)
+void FBZSetup_Unknown5(ScanlineInfo *scanlines, int32 a1, int32 a3, int32 a4, int32 a5, int32 a6)
 {
     ScreenInfo *screen = &RSDK_screens[RSDK_sceneInfo->currentScreenID];
-    int val            = (a3 * screen->position.y) >> 8;
-    int start          = a4 - val;
-    int end            = a4 - val + a5;
-    int x              = (a1 * screen->position.x) << 8;
+    int32 val            = (a3 * screen->position.y) >> 8;
+    int32 start          = a4 - val;
+    int32 end            = a4 - val + a5;
+    int32 x              = (a1 * screen->position.x) << 8;
     if (a4 - val < SCREEN_YSIZE && end > 0) {
-        int y = a6;
+        int32 y = a6;
         if (start < 0) {
             y     = a6 - (start << 16);
             start = 0;
@@ -146,7 +146,7 @@ void FBZSetup_Unknown5(ScanlineInfo *scanlines, int a1, int a3, int a4, int a5, 
             end = SCREEN_YSIZE;
         ScanlineInfo *scanlinePtr = &scanlines[start];
 
-        for (int i = 0; i < end - start; ++i) {
+        for (int32 i = 0; i < end - start; ++i) {
             scanlinePtr->position.x = x;
             scanlinePtr->position.y = y;
             scanlinePtr->deform.x   = 0x10000;
@@ -159,11 +159,11 @@ void FBZSetup_Unknown5(ScanlineInfo *scanlines, int a1, int a3, int a4, int a5, 
 void FBZSetup_ScanlineCallback(ScanlineInfo *scanlines)
 {
     ScreenInfo *screen        = &RSDK_screens[RSDK_sceneInfo->currentScreenID];
-    int y                     = screen->position.y >> 3;
+    int32 y                     = screen->position.y >> 3;
     ScanlineInfo *scanlinePtr = scanlines;
 
-    for (int i = 0; i < SCREEN_YSIZE; ++i) {
-        int pos                 = (i + y) & 0x3FF;
+    for (int32 i = 0; i < SCREEN_YSIZE; ++i) {
+        int32 pos                 = (i + y) & 0x3FF;
         scanlinePtr->deform.x   = FBZSetup->array1[pos];
         scanlinePtr->deform.y   = 0;
         scanlinePtr->position.x = ((screen->position.x << 14) - FBZSetup->array1[pos] * screen->centerX) & 0xFFFF8000;
@@ -217,7 +217,7 @@ void FBZSetup_BGSwitchCB_C(void)
 
 void FBZSetup_GenericTriggerCB_A(void)
 {
-    int id                                                          = (2 * (Zone->actID != 0) + 3);
+    int32 id                                                          = (2 * (Zone->actID != 0) + 3);
     RSDK.GetSceneLayer(id)->drawLayer[GenericTrigger->playerID]     = DRAWLAYER_COUNT;
     RSDK.GetSceneLayer(id + 1)->drawLayer[GenericTrigger->playerID] = 6;
 
@@ -232,7 +232,7 @@ void FBZSetup_GenericTriggerCB_A(void)
 
 void FBZSetup_GenericTriggerCB_B(void)
 {
-    int id                                                          = (2 * (Zone->actID != 0) + 3);
+    int32 id                                                          = (2 * (Zone->actID != 0) + 3);
     RSDK.GetSceneLayer(id)->drawLayer[GenericTrigger->playerID]     = 6;
     RSDK.GetSceneLayer(id + 1)->drawLayer[GenericTrigger->playerID] = DRAWLAYER_COUNT;
 

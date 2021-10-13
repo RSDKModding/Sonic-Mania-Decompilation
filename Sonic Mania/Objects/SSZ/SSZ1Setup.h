@@ -6,7 +6,7 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    int field_4;
+    int32 field_4;
     TileLayer *layer1Ptr;
     EntitySSZ1Outro *outroPtr;
 } ObjectSSZ1Setup;

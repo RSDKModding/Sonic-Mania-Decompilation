@@ -7,16 +7,16 @@
 typedef struct {
     RSDK_OBJECT
     uint8 count;
-    int field_4;
+    int32 field_4;
     uint16 aniFrames;
 } ObjectSnowflakes;
 
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    int field_58;
-    int field_5C;
-    int field_60;
+    int32 field_58;
+    int32 field_5C;
+    int32 field_60;
     Animator animator;
     uint8 animIDs[0x40];
     uint16 frameIDs[0x40];
@@ -40,6 +40,6 @@ void Snowflakes_EditorLoad(void);
 void Snowflakes_Serialize(void);
 
 // Extra Entity Functions
-Vector2 Snowflakes_Unknown1(int id);
+Vector2 Snowflakes_Unknown1(int32 id);
 
 #endif //! OBJ_SNOWFLAKES_H

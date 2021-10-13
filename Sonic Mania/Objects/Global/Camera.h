@@ -14,7 +14,7 @@ typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     Entity *targetPtr;
-    int screenID;
+    int32 screenID;
     Vector2 center;
     Vector2 field_6C;
     Vector2 lastPos;
@@ -22,18 +22,18 @@ typedef struct {
     Vector2 lookPos;
     Vector2 offset;
     bool32 offsetYFlag;
-    int centerY;
-    int adjustY;
-    int lerpPercent;
-    int lerpSpeed;
-    int lerpType;
+    int32 centerY;
+    int32 adjustY;
+    int32 lerpPercent;
+    int32 lerpSpeed;
+    int32 lerpType;
     Vector2 endLerpPos;
     Vector2 startLerpPos;
     Vector2 boundsOffset;
-    int boundsL;
-    int boundsR;
-    int boundsT;
-    int boundsB;
+    int32 boundsL;
+    int32 boundsR;
+    int32 boundsT;
+    int32 boundsB;
 } EntityCamera;
 
 // Object Struct
@@ -52,11 +52,11 @@ void Camera_Serialize(void);
 
 // Extra Entity Functions
 void Camera_SetCameraBounds(EntityCamera *entity);
-EntityCamera *Camera_SetTargetEntity(int screen, void *t);
-void Camera_ShakeScreen(int shakeX, int screen, int shakeY);
+EntityCamera *Camera_SetTargetEntity(int32 screen, void *t);
+void Camera_ShakeScreen(int32 shakeX, int32 screen, int32 shakeY);
 void Camera_HandleHBounds(void);
 void Camera_HandleVBounds(void);
-void Camera_SetupLerp(int type, int screen, int x, int y, int speed);
+void Camera_SetupLerp(int32 type, int32 screen, int32 x, int32 y, int32 speed);
 
 //States
 void Camera_State_Roam(void);

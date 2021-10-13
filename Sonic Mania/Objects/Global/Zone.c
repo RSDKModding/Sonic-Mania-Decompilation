@@ -14,14 +14,14 @@ void Zone_LateUpdate(void)
     else {
         foreach_active(Player, player)
         {
-            int playerID = 0;
+            int32 playerID = 0;
             if (!player->sidekick) {
                 playerID = RSDK.GetEntityID(player);
             }
 
             Hitbox *playerHitbox = Player_GetHitbox(player);
             if (Zone->playerBoundActiveL[playerID]) {
-                int offset = -0x10000 * playerHitbox->left;
+                int32 offset = -0x10000 * playerHitbox->left;
                 if (player->position.x - offset <= Zone->screenBoundsL2[playerID]) {
                     player->position.x = offset + Zone->screenBoundsL2[playerID];
                     if (player->onGround) {
@@ -39,7 +39,7 @@ void Zone_LateUpdate(void)
             }
 
             if (Zone->playerBoundActiveR[playerID]) {
-                int offset = playerHitbox->right << 16;
+                int32 offset = playerHitbox->right << 16;
                 if (offset + player->position.x >= Zone->screenBoundsR2[playerID]) {
                     player->position.x = Zone->screenBoundsR2[playerID] - offset;
                     if (player->onGround) {
@@ -146,7 +146,7 @@ void Zone_StaticUpdate(void)
     }
 
 #if RETRO_USE_PLUS
-    int zone = Zone_GetZoneID();
+    int32 zone = Zone_GetZoneID();
     if (zone >= 13) {
         zone = 13;
     }
@@ -155,10 +155,10 @@ void Zone_StaticUpdate(void)
             return;
     }
 
-    int act = Zone->actID;
+    int32 act = Zone->actID;
     if (act >= 3)
         act = 0;
-    int pos = act + 2 * zone;
+    int32 pos = act + 2 * zone;
     if (pos >= 0 && RSDK_sceneInfo->timeEnabled && globals->gameMode < MODE_TIMEATTACK)
         ++SaveGame->saveRAM->zoneTimes[pos];
 #endif
@@ -193,7 +193,7 @@ void Zone_StageLoad(void)
             saveRAM->characterFlags             = 0;
             uint8 id                 = globals->playerID & 0xFF;
             if (globals->playerID & 0xFF) {
-                int charID = -1;
+                int32 charID = -1;
                 if (id) {
                     do {
                         id >>= 1;
@@ -206,7 +206,7 @@ void Zone_StageLoad(void)
 
             if (globals->playerID & 0xFF00) {
                 uint8 id    = globals->playerID >> 8;
-                int charID = -1;
+                int32 charID = -1;
                 if (globals->playerID & 0xFF) {
                     do {
                         id >>= 1;
@@ -219,8 +219,8 @@ void Zone_StageLoad(void)
             else {
                 if (!globals->stock) {
                     if (globals->stock & 0xFF) {
-                        int id     = globals->stock & 0xFF;
-                        int charID = -1;
+                        int32 id     = globals->stock & 0xFF;
+                        int32 charID = -1;
                         if (globals->stock & 0xFF) {
                             do {
                                 id >>= 1;
@@ -234,7 +234,7 @@ void Zone_StageLoad(void)
 
                     if (globals->stock & 0xFF00) {
                         uint8 id    = globals->playerID >> 8;
-                        int charID = -1;
+                        int32 charID = -1;
                         if (charID) {
                             do {
                                 id >>= 1;
@@ -246,7 +246,7 @@ void Zone_StageLoad(void)
                     }
 
                     if (globals->stock & 0xFF0000) {
-                        int charID = -1;
+                        int32 charID = -1;
                         uint8 id    = globals->playerID >> 16;
                         if (id) {
                             do {
@@ -264,7 +264,7 @@ void Zone_StageLoad(void)
                     globals->stock >>= 8;
                     saveRAM->stock = globals->stock;
                     uint8 id     = globals->playerID >> 8;
-                    int charID  = -1;
+                    int32 charID  = -1;
                     if (id) {
                         do {
                             id >>= 1;
@@ -275,7 +275,7 @@ void Zone_StageLoad(void)
                     saveRAM->characterFlags = globals->characterFlags;
 
                     if (globals->stock & 0xFF) {
-                        int charID = -1;
+                        int32 charID = -1;
                         id         = globals->stock & 0xFF;
                         if (globals->stock & 0xFF) {
                             do {
@@ -290,7 +290,7 @@ void Zone_StageLoad(void)
 
                     if (globals->stock & 0xFF00) {
                         uint8 id    = globals->playerID >> 8;
-                        int charID = -1;
+                        int32 charID = -1;
                         if (charID) {
                             do {
                                 id >>= 1;
@@ -302,7 +302,7 @@ void Zone_StageLoad(void)
                     }
 
                     if (globals->stock & 0xFF0000) {
-                        int charID = -1;
+                        int32 charID = -1;
                         uint8 id    = globals->playerID >> 16;
                         if (id) {
                             do {
@@ -365,7 +365,7 @@ void Zone_StageLoad(void)
 #if RETRO_USE_PLUS
     if (!Zone->swapGameMode) {
 #endif
-        for (int s = 0; s < PLAYER_MAX; ++s) {
+        for (int32 s = 0; s < PLAYER_MAX; ++s) {
             Zone->screenBoundsL1[s] = 0;
             Zone->screenBoundsR1[s] = layerSize.x;
             Zone->screenBoundsT1[s] = 0;
@@ -450,7 +450,7 @@ void Zone_StageLoad(void)
     Zone->sfx_fail = RSDK.GetSFX("Stage/Fail.wav");
 }
 
-int Zone_GetZoneID(void)
+int32 Zone_GetZoneID(void)
 {
     if (RSDK.CheckStageFolder("GHZ"))
         return 0;
@@ -485,10 +485,10 @@ int Zone_GetZoneID(void)
     return -1;
 }
 
-void Zone_StoreEntities(int xOffset, int yOffset)
+void Zone_StoreEntities(int32 xOffset, int32 yOffset)
 {
-    int count = 0;
-    int pos   = 0;
+    int32 count = 0;
+    int32 pos   = 0;
     foreach_active(Player, player)
     {
         player->position.x -= xOffset;
@@ -529,9 +529,9 @@ void Zone_StoreEntities(int xOffset, int yOffset)
     globals->atlEnabled      = true;
 }
 
-void Zone_ReloadStoredEntities(int yOffset, int xOffset, bool32 flag)
+void Zone_ReloadStoredEntities(int32 yOffset, int32 xOffset, bool32 flag)
 {
-    for (int e = 0; e < globals->atlEntityCount; ++e) {
+    for (int32 e = 0; e < globals->atlEntityCount; ++e) {
         Entity *entityData = (Entity *)&globals->atlEntityData[e << 9];
         Entity *entity;
         if (globals->atlEntitySlot[e] >= 12)
@@ -577,7 +577,7 @@ void Zone_ReloadStoredEntities(int yOffset, int xOffset, bool32 flag)
     globals->atlEntityCount = 0;
 }
 
-void Zone_StartFadeOut(int fadeSpeed, int fadeColour)
+void Zone_StartFadeOut(int32 fadeSpeed, int32 fadeColour)
 {
     EntityZone *zone = RSDK_GET_ENTITY(SLOT_ZONE, Zone);
     zone->fadeColour = fadeColour;
@@ -617,15 +617,15 @@ void Zone_Unknown2(void)
     Music_FadeOut(0.025);
 }
 
-void Zone_Unknown3(Vector2 *posPtr, Vector2 *pos, int angle)
+void Zone_Unknown3(Vector2 *posPtr, Vector2 *pos, int32 angle)
 {
-    int x  = (pos->x - posPtr->x) >> 8;
-    int y  = (pos->y - posPtr->y) >> 8;
+    int32 x  = (pos->x - posPtr->x) >> 8;
+    int32 y  = (pos->y - posPtr->y) >> 8;
     pos->x = (y * RSDK.Sin256(angle)) + x * RSDK.Cos256(angle) + posPtr->x;
     pos->y = (y * RSDK.Cos256(angle)) - x * RSDK.Sin256(angle) + posPtr->y;
 }
 
-void Zone_Unknown4(int screen)
+void Zone_Unknown4(int32 screen)
 {
     EntityZone *entity = CREATE_ENTITY(Zone, NULL, 0, 0);
     entity->screenID   = screen;
@@ -672,7 +672,7 @@ void Zone_ApplyWorldBounds(void)
         EntityCamera *camera = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
         foreach_active(Player, player)
         {
-            int camWorldL = camera->boundsL << 16;
+            int32 camWorldL = camera->boundsL << 16;
             if (player->position.x - 0xA0000 <= camWorldL) {
                 player->position.x = camWorldL + 0xA0000;
                 if (player->onGround) {
@@ -688,7 +688,7 @@ void Zone_ApplyWorldBounds(void)
                 }
             }
 
-            int camWorldR = camera->boundsR << 16;
+            int32 camWorldR = camera->boundsR << 16;
             if (player->position.x + 0xA0000 >= camWorldR) {
                 player->position.x = camWorldR - 0xA0000;
                 if (player->onGround) {
@@ -725,17 +725,17 @@ bool32 Zone_IsAct2(void)
     return false;
 }
 
-int Zone_GetEncoreStageID(void)
+int32 Zone_GetEncoreStageID(void)
 {
-    int pos = RSDK_sceneInfo->listPos;
+    int32 pos = RSDK_sceneInfo->listPos;
     RSDK.SetScene("Mania Mode", "");
-    int mOff = pos - RSDK_sceneInfo->listPos;
+    int32 mOff = pos - RSDK_sceneInfo->listPos;
     RSDK.SetScene("Encore Mode", "");
-    int eOff = RSDK_sceneInfo->listPos;
+    int32 eOff = RSDK_sceneInfo->listPos;
 
-    int listPos = RSDK_sceneInfo->listPos;
+    int32 listPos = RSDK_sceneInfo->listPos;
 
-    int pos2 = 0;
+    int32 pos2 = 0;
     if (mOff >= 15) {
         if (mOff == 15 || mOff == 16) {
             pos2 = listPos + 15;
@@ -752,15 +752,15 @@ int Zone_GetEncoreStageID(void)
     LogHelpers_Print("Mania Mode offset %d, pos %d -> Encore Mode offset %d, pos %d", mOff, pos, pos2 - eOff, pos2);
     return pos2;
 }
-int Zone_GetManiaStageID(void)
+int32 Zone_GetManiaStageID(void)
 {
-    int pos = RSDK_sceneInfo->listPos;
+    int32 pos = RSDK_sceneInfo->listPos;
     RSDK.SetScene("Encore Mode", "");
-    int mOff = pos - RSDK_sceneInfo->listPos;
+    int32 mOff = pos - RSDK_sceneInfo->listPos;
     RSDK.SetScene("Mania Mode", "");
-    int eOff = RSDK_sceneInfo->listPos;
+    int32 eOff = RSDK_sceneInfo->listPos;
 
-    int pos2 = 0;
+    int32 pos2 = 0;
     if (pos2 >= 15) {
         if (pos2 == 15) {
             if (globals->playerID & ID_KNUCKLES)
@@ -901,23 +901,23 @@ void Zone_State_Fadeout_Destroy(void)
 
 void Zone_Unknown19(void)
 {
-    int playerBoundActiveB[4];
-    int playerBoundActiveT[4];
-    int playerBoundActiveR[4];
-    int playerBoundActiveL[4];
-    int deathBounds[4];
-    int screenBoundsB2[4];
-    int screenBoundsT2[4];
-    int screenBoundsR2[4];
-    int screenBoundsL2[4];
-    int screenBoundsB1[4];
-    int screenBoundsT1[4];
-    int screenBoundsR1[4];
-    int screenBoundsL1[4];
-    int layerIDs[8];
+    int32 playerBoundActiveB[4];
+    int32 playerBoundActiveT[4];
+    int32 playerBoundActiveR[4];
+    int32 playerBoundActiveL[4];
+    int32 deathBounds[4];
+    int32 screenBoundsB2[4];
+    int32 screenBoundsT2[4];
+    int32 screenBoundsR2[4];
+    int32 screenBoundsL2[4];
+    int32 screenBoundsB1[4];
+    int32 screenBoundsT1[4];
+    int32 screenBoundsR1[4];
+    int32 screenBoundsL1[4];
+    int32 layerIDs[8];
 
 #if RETRO_USE_PLUS
-    for (int p = 0; p < Player->playerCount; ++p) {
+    for (int32 p = 0; p < Player->playerCount; ++p) {
         EntityPlayer *player = RSDK_GET_ENTITY(Zone->playerIDs[p], Player);
         RSDK.CopyEntity(Zone->entityData[p], player, false);
 
@@ -936,7 +936,7 @@ void Zone_Unknown19(void)
         playerBoundActiveB[p] = Zone->playerBoundActiveB[p];
 
         uint8 *layerPlanes = (uint8 *)&layerIDs[2 * p];
-        for (int l = 0; l < LAYER_COUNT; ++l) {
+        for (int32 l = 0; l < LAYER_COUNT; ++l) {
             TileLayer *layer = RSDK.GetSceneLayer(l);
             if (layer)
                 layerPlanes[l] = layer->drawLayer[Zone->playerIDs[p]];
@@ -953,7 +953,7 @@ void Zone_Unknown19(void)
         RSDK.CopyEntity(&Zone->entityData[12 + p], RSDK_GET_ENTITY((2 * Player->playerCount) + Zone->playerIDs[p], ), false);
     }
 
-    for (int p = 0; p < Player->playerCount; ++p) {
+    for (int32 p = 0; p < Player->playerCount; ++p) {
         EntityPlayer *playerPtr = (EntityPlayer *)RSDK.GetEntityByID(Zone->playerIDs2[p]);
         EntityPlayer *player    = (EntityPlayer *)Zone->entityData[p];
         void *state             = player->state;
@@ -1024,7 +1024,7 @@ void Zone_Unknown19(void)
         Zone->playerBoundActiveB[Zone->playerIDs2[p]] = playerBoundActiveB[p];
 
         uint8 *layerPlanes = (uint8 *)&layerIDs[2 * p];
-        for (int l = 0; l < LAYER_COUNT; ++l) {
+        for (int32 l = 0; l < LAYER_COUNT; ++l) {
             TileLayer *layer                     = RSDK.GetSceneLayer(l);
             layer->drawLayer[Zone->playerIDs[p]] = layerPlanes[l];
         }
@@ -1032,7 +1032,7 @@ void Zone_Unknown19(void)
         EntityCamera *camera = playerPtr->camera;
         void *camTarget      = camera->targetPtr;
         void *camState       = camera->state;
-        int camScreen        = camera->screenID;
+        int32 camScreen        = camera->screenID;
         RSDK.CopyEntity(camera, &Zone->entityData[8 + p], false);
         camera->targetPtr                  = camTarget;
         camera->screenID                   = camScreen;

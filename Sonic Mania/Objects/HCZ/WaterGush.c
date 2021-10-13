@@ -6,12 +6,12 @@ void WaterGush_Update(void)
 {
     RSDK_THIS(WaterGush);
     WaterGush_SetupHitboxes();
-    int flag          = entity->flag;
+    int32 flag          = entity->flag;
     entity->direction = FLIP_NONE;
 
     foreach_active(Player, player)
     {
-        int playerID = RSDK.GetEntityID(player);
+        int32 playerID = RSDK.GetEntityID(player);
         if (!((1 << playerID) & entity->activePlayers)) {
             if (Player_CheckCollisionTouch(player, entity, &entity->hitbox2)) {
                 entity->active = ACTIVE_NORMAL;
@@ -31,10 +31,10 @@ void WaterGush_Update(void)
         }
 
         if (((1 << playerID) & entity->activePlayers)) {
-            int xMult = 0;
-            int yMult = 0;
+            int32 xMult = 0;
+            int32 yMult = 0;
 
-            int posY = 0;
+            int32 posY = 0;
             switch (entity->orientation) {
                 default: break;
                 case 0:
@@ -224,8 +224,8 @@ void WaterGush_DrawSprites(void)
     drawPos2.x    = entity->position.x;
     drawPos2.y    = entity->position.y;
 
-    int offsetX = 0;
-    int offsetY = 0;
+    int32 offsetX = 0;
+    int32 offsetY = 0;
     switch (entity->orientation) {
         default: break;
         case 0:
@@ -251,8 +251,8 @@ void WaterGush_DrawSprites(void)
     drawPos.x = drawPos2.x;
     drawPos.y = drawPos2.y;
     if (entity->field_78 > 0) {
-        int count = ((entity->field_78 - 1) >> 22) + 1;
-        for (int i = 0; i < count; ++i) {
+        int32 count = ((entity->field_78 - 1) >> 22) + 1;
+        for (int32 i = 0; i < count; ++i) {
             drawPos.x += offsetX;
             drawPos.y += offsetY;
             RSDK.DrawSprite(&entity->animator1, &drawPos, false);
@@ -267,29 +267,29 @@ void WaterGush_Unknown3(void)
 {
     RSDK_THIS(WaterGush);
 
-    int velX1   = 0;
-    int velY1   = 0;
-    int dir1    = 0;
-    int spawnX1 = 0;
-    int spawnY1 = 0;
+    int32 velX1   = 0;
+    int32 velY1   = 0;
+    int32 dir1    = 0;
+    int32 spawnX1 = 0;
+    int32 spawnY1 = 0;
 
-    int velX2   = 0;
-    int velY2   = 0;
-    int dir2    = 0;
-    int spawnX2 = 0;
-    int spawnY2 = 0;
+    int32 velX2   = 0;
+    int32 velY2   = 0;
+    int32 dir2    = 0;
+    int32 spawnX2 = 0;
+    int32 spawnY2 = 0;
 
-    int velX3   = 0;
-    int velY3   = 0;
-    int dir3    = 0;
-    int spawnY3 = 0;
-    int spawnX3 = 0;
+    int32 velX3   = 0;
+    int32 velY3   = 0;
+    int32 dir3    = 0;
+    int32 spawnY3 = 0;
+    int32 spawnX3 = 0;
 
-    int velX4   = 0;
-    int velY4   = 0;
-    int dir4    = 0;
-    int spawnX4 = 0;
-    int spawnY4 = 0;
+    int32 velX4   = 0;
+    int32 velY4   = 0;
+    int32 dir4    = 0;
+    int32 spawnX4 = 0;
+    int32 spawnY4 = 0;
 
     switch (entity->orientation) {
         default: break;
@@ -370,7 +370,7 @@ void WaterGush_Unknown3(void)
             break;
     }
 
-    for (int i = 0; i < 2; ++i) {
+    for (int32 i = 0; i < 2; ++i) {
         EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Fall, spawnX1, spawnY1);
         RSDK.SetSpriteAnimation(WaterGush->aniFrames, 4, &debris->animator, true, 0);
         debris->position.x += RSDK.Rand(-0x80000, 0x80000);

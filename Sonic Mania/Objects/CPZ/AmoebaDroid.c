@@ -113,9 +113,9 @@ void AmoebaDroid_StageLoad(void)
 void AmoebaDroid_HandleDropletMovement(void)
 {
     RSDK_THIS(AmoebaDroid);
-    int angle       = entity->partAngle2;
+    int32 angle       = entity->partAngle2;
     entity->partPos = (entity->partOffset * RSDK.Cos256(entity->partAngle)) >> 8;
-    for (int i = 0; i < 8; ++i) {
+    for (int32 i = 0; i < 8; ++i) {
         EntityAmoebaDroid *droidPart = (EntityAmoebaDroid *)entity->parts[i];
         droidPart->velocity          = droidPart->position;
         droidPart->position.x        = entity->partOffset * RSDK.Cos256(angle) + entity->position.x;
@@ -134,7 +134,7 @@ void AmoebaDroid_HandleDropletRelease(bool32 interact)
 {
     RSDK_THIS(AmoebaDroid);
 
-    for (int i = 0; i < 8; ++i) {
+    for (int32 i = 0; i < 8; ++i) {
         EntityAmoebaDroid *part = (EntityAmoebaDroid *)entity->parts[i];
         if (part) {
             part->velocity.y -= 0x20000;
@@ -218,14 +218,14 @@ void AmoebaDroid_StateDraw1_Unknown1(void)
 
     drawPos            = entity->position;
     SpriteFrame *frame = RSDK.GetFrame(AmoebaDroid->aniFrames, 3, 0);
-    int angle          = entity->angle;
-    int sprY           = frame->sprY;
+    int32 angle          = entity->angle;
+    int32 sprY           = frame->sprY;
 
-    int maxY      = (frame->sprY + 96) << 8;
+    int32 maxY      = (frame->sprY + 96) << 8;
     frame->height = 1;
     drawPos.y -= RSDK.Sin256(entity->angle) << 10;
 
-    for (int y = sprY << 8; y < maxY; angle += 2) {
+    for (int32 y = sprY << 8; y < maxY; angle += 2) {
         entity->scale.x = (RSDK.Sin256(frame->sprY + 2 * angle) >> 2) + 512;
         frame->sprY     = y >> 8;
 
@@ -454,7 +454,7 @@ void AmoebaDroid_StateMain_Unknown8(void)
             part->state     = AmoebaDroid_State2_Unknown2;
 
             entity->state = StateMachine_None;
-            for (int i = 0; i < 8; ++i) {
+            for (int32 i = 0; i < 8; ++i) {
                 entity->parts[i] = (Entity *)CREATE_ENTITY(AmoebaDroid, intToVoid(2), entity->position.x, entity->position.y);
             }
 
@@ -466,7 +466,7 @@ void AmoebaDroid_StateMain_Unknown8(void)
         }
         else {
             entity->velocity.y = minVal(-entity->velocity.y, -0x20000);
-            for (int i = 0; i < 8; ++i) {
+            for (int32 i = 0; i < 8; ++i) {
                 EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Fall, entity->position.x + RSDK.Rand(-0x200000, 0x200000),
                                                      entity->position.y + RSDK.Rand(0x100000, 0x180000));
                 RSDK.SetSpriteAnimation(AmoebaDroid->aniFrames, 5, &debris->animator, false, 0);
@@ -582,7 +582,7 @@ void AmoebaDroid_State2_Unknown1(void)
         entity->velocity.y += 0x2000;
         entity->position.y += entity->velocity.y;
         if (RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_FLOOR, entity->collisionPlane, 0, 0x60000, true)) {
-            for (int i = 0; i < 4; ++i) {
+            for (int32 i = 0; i < 4; ++i) {
                 EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Fall, entity->position.x + RSDK.Rand(-0x40000, 0x40000),
                                                      entity->position.y + RSDK.Rand(-0x40000, 0x40000));
                 RSDK.SetSpriteAnimation(AmoebaDroid->aniFrames, 5, &debris->animator, false, 0);
@@ -639,7 +639,7 @@ void AmoebaDroid_State4_Unknown1(void)
 void AmoebaDroid_State3_Unknown1(void)
 {
     RSDK_THIS(AmoebaDroid);
-    int pos = (entity->position.x + 0x80000) >> 20;
+    int32 pos = (entity->position.x + 0x80000) >> 20;
     foreach_active(ChemicalPool, pool)
     {
         if (pos >= pool->dword88 && pos < pool->dword8C)

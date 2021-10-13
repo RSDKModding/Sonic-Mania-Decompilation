@@ -12,8 +12,8 @@ typedef struct {
 // Entity Class
 typedef struct {
     MANIA_PLATFORM_BASE
-    int field_CC;
-    int field_D0;
+    int32 field_CC;
+    int32 field_D0;
 } EntityLauncher;
 
 // Object Struct

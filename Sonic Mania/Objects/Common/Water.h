@@ -6,14 +6,14 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    int waterLevel;
-    int newWaterLevel;
-    int targetWaterLevel;
-    int waterMoveSpeed;
-    int array3[4];
-    int array4[4];
-    int array5[4];
-    TABLE(int bubbleSizes[18], { 2, 4, 2, 2, 2, 2, 4, 2, 4, 2, 2, 4, 2, 4, 2, 2, 4, 2 });
+    int32 waterLevel;
+    int32 newWaterLevel;
+    int32 targetWaterLevel;
+    int32 waterMoveSpeed;
+    int32 array3[4];
+    int32 array4[4];
+    int32 array5[4];
+    TABLE(int32 bubbleSizes[18], { 2, 4, 2, 2, 2, 2, 4, 2, 4, 2, 2, 4, 2, 4, 2, 2, 4, 2 });
     uint16 spriteIndex;
     uint16 bigBubbleSprite;
     uint16 wakeSprite;
@@ -29,18 +29,18 @@ typedef struct {
     uint16 sfx_DNABurst;
     uint16 sfx_WaterLevelL;
     uint16 sfx_WaterLevelR;
-    int waterLevelChannel_L;
-    int waterLevelChannel_R;
-    int field_C0;
+    int32 waterLevelChannel_L;
+    int32 waterLevelChannel_R;
+    int32 field_C0;
     bool32 playingWaterLevelSFX;
-    int field_C8;
-    int waterLevelVolume;
-    int waterPalette;
-    int field_D4;
-    int wakePosX[4];
+    int32 field_C8;
+    int32 waterLevelVolume;
+    int32 waterPalette;
+    int32 field_D4;
+    int32 wakePosX[4];
     uint8 wakeDir[4];
     Animator wakeData;
-    int field_104;
+    int32 field_104;
     bool32 playingSkimSFX;
 } ObjectWater;
 
@@ -49,35 +49,35 @@ typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
-    int type;
+    int32 type;
     void *childPtr;
-    int field_68;
+    int32 field_68;
     int8 bubbleType1;
     uint8 field_6D;
     uint8 field_6E;
     int8 bubbleType2;
-    int numDuds;
-    int countdownID;
-    int field_78;
+    int32 numDuds;
+    int32 countdownID;
+    int32 field_78;
     Vector2 size;
     Vector2 height;
-    int speed;
-    int buttonTag;
+    int32 speed;
+    int32 buttonTag;
     uint8 r;
     uint8 g;
     uint8 b;
     uint8 priority;
     bool32 destroyOnTrigger;
     Hitbox hitbox;
-    int gapA4;
-    int field_A8;
-    int timer;
+    int32 gapA4;
+    int32 field_A8;
+    int32 timer;
     uint8 activePlayers;
     uint8 activePlayers2;
-    int field_B4;
-    int field_B8;
-    int field_BC;
-    int field_C0;
+    int32 field_B4;
+    int32 field_B8;
+    int32 field_BC;
+    int32 field_C0;
     EntityButton* taggedObject;
     Animator animator;
 } EntityWater;
@@ -104,8 +104,8 @@ void Water_RemoveWaterEffect(void);
 
 //Utils
 void Water_CheckButtonTag(void);
-void Water_SpawnBubble(EntityPlayer *player, int id);
-void Water_SpawnCountDownBubble(EntityPlayer *player, int id, uint8 bubbleID);
+void Water_SpawnBubble(EntityPlayer *player, int32 id);
+void Water_SpawnCountDownBubble(EntityPlayer *player, int32 id, uint8 bubbleID);
 EntityWater *Water_GetPlayerBubble(EntityPlayer *entityPtr);
 
 void Water_State_Palette(void);

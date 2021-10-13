@@ -55,8 +55,8 @@ void MainMenu_Initialize(void)
 
     foreach_all(UIButtonPrompt, prompt)
     {
-        int x = menuControl->startPos.x - menuControl->cameraOffset.x;
-        int y = menuControl->startPos.y - menuControl->cameraOffset.y;
+        int32 x = menuControl->startPos.x - menuControl->cameraOffset.x;
+        int32 y = menuControl->startPos.y - menuControl->cameraOffset.y;
         Hitbox hitbox;
         hitbox.right  = (menuControl->size.x >> 17);
         hitbox.left   = -(menuControl->size.x >> 17);
@@ -68,8 +68,8 @@ void MainMenu_Initialize(void)
 
     foreach_all(UIDiorama, diorama)
     {
-        int x = menuControl->startPos.x - menuControl->cameraOffset.x;
-        int y = menuControl->startPos.y - menuControl->cameraOffset.y;
+        int32 x = menuControl->startPos.x - menuControl->cameraOffset.x;
+        int32 y = menuControl->startPos.y - menuControl->cameraOffset.y;
         Hitbox hitbox;
         hitbox.right  = (menuControl->size.x >> 17);
         hitbox.left   = -(menuControl->size.x >> 17);
@@ -82,12 +82,12 @@ void MainMenu_Initialize(void)
     }
 
 #if RETRO_USE_PLUS
-    int button1Frame         = 1;
-    int button2Frame         = 2;
-    int button3Frame         = 3;
+    int32 button1Frame         = 1;
+    int32 button2Frame         = 2;
+    int32 button3Frame         = 3;
     bool32 button3StopMus    = false;
-    int button4Frame         = 4;
-    int button5Frame         = 6;
+    int32 button4Frame         = 4;
+    int32 button5Frame         = 6;
     bool32 button5Transition = false;
     if (API.CheckDLC(DLC_PLUS)) {
         button1Frame      = 5;
@@ -182,7 +182,7 @@ void MainMenu_ChangeMenu(void)
 #if RETRO_USE_PLUS
                 saveSelect->dwordCC     = 0;
                 ManiaModeMenu->field_28 = -1;
-                for (int i = 0; i < saveSelect->buttonCount; ++i) {
+                for (int32 i = 0; i < saveSelect->buttonCount; ++i) {
                     Entity *store          = RSDK_sceneInfo->entity;
                     RSDK_sceneInfo->entity = (Entity *)saveSelect->buttons[i];
                     UISaveSlot_Unknown21();
@@ -222,7 +222,7 @@ void MainMenu_ChangeMenu(void)
                 EntityUIControl *encoreSaveSel = (EntityUIControl *)ManiaModeMenu->encoreSaveSelect;
                 encoreSaveSel->activeEntityID  = 1;
                 encoreSaveSel->dwordCC         = 0;
-                for (int i = 0; i < encoreSaveSel->buttonCount; ++i) {
+                for (int32 i = 0; i < encoreSaveSel->buttonCount; ++i) {
                     Entity *store          = RSDK_sceneInfo->entity;
                     RSDK_sceneInfo->entity = (Entity *)encoreSaveSel->buttons[i];
                     UISaveSlot_Unknown21();
@@ -256,7 +256,7 @@ void MainMenu_ChangeMenu(void)
 }
 
 #if RETRO_USE_EGS
-int MainMenu_BuyPlusDialogCB(void)
+int32 MainMenu_BuyPlusDialogCB(void)
 {
     API.EGS_Unknown4(0);
     return 1;

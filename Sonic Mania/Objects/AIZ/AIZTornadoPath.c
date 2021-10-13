@@ -86,7 +86,7 @@ void AIZTornadoPath_Unknown1(void)
     EntityCamera *camera      = (EntityCamera *)AIZTornadoPath->camera;
     EntityAIZTornado *tornado = AIZTornadoPath->tornado;
 
-    int x = 0, y = 0;
+    int32 x = 0, y = 0;
     if (camera && camera->position.x >= RSDK_screens->width << 16) {
         x    = camera->position.x;
         y    = camera->position.y;
@@ -97,17 +97,17 @@ void AIZTornadoPath_Unknown1(void)
         y = tornado->field_88;
     }
     EntityAIZTornadoPath *node = (EntityAIZTornadoPath *)RSDK.GetEntityByID(RSDK_sceneInfo->entitySlot + 1);
-    int xDist                  = (x - node->position.x) >> 16;
-    int yDist                  = (y - node->position.y) >> 16;
+    int32 xDist                  = (x - node->position.x) >> 16;
+    int32 yDist                  = (y - node->position.y) >> 16;
     entity->angle              = RSDK.ATan2(xDist, yDist);
-    int newPosX                = x - entity->speed * RSDK.Cos256(entity->angle);
-    int newPosY                = y - entity->speed * RSDK.Sin256(entity->angle);
+    int32 newPosX                = x - entity->speed * RSDK.Cos256(entity->angle);
+    int32 newPosY                = y - entity->speed * RSDK.Sin256(entity->angle);
     if (flag) {
         camera->position.x = newPosX;
         camera->position.y = newPosY;
     }
 
-    int spd = entity->speed >> 3;
+    int32 spd = entity->speed >> 3;
     if (xDist * xDist + yDist * yDist < spd) {
         entity->active = ACTIVE_NEVER;
         node->active   = ACTIVE_NORMAL;
@@ -230,7 +230,7 @@ void AIZTornadoPath_Unknown7(void)
     if (entity->timer == 90) {
         entity->timer      = 0;
         player->stateInput = Player_ProcessP1Input;
-        int xOffset        = 0;
+        int32 xOffset        = 0;
         foreach_all(AIZTornadoPath, node)
         {
             if (node->type == 7) {

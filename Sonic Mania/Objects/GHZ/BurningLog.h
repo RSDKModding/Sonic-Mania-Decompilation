@@ -6,7 +6,7 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    int spriteIndex;
+    int32 spriteIndex;
     Hitbox hitbox;
     Hitbox hitbox2;
 } ObjectBurningLog;
@@ -15,7 +15,7 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     Animator animator;
-    int timer;
+    int32 timer;
 } EntityBurningLog;
 
 // Object Struct

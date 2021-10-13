@@ -59,7 +59,7 @@ void FlowerPod_SpawnSeeds(void)
 {
     RSDK_THIS(FlowerPod);
 
-    for (int v = -0x10000; v < 0x18000; v += 0x8000) {
+    for (int32 v = -0x10000; v < 0x18000; v += 0x8000) {
         EntityFlowerPod *seed = CREATE_ENTITY(FlowerPod, intToVoid(true), entity->position.x, entity->position.y);
         seed->isPermanent     = true;
         seed->velocity.x      = v;
@@ -74,7 +74,7 @@ void FlowerPod_State_Pod(void)
     RSDK.ProcessAnimation(&entity->animator2);
     foreach_active(Player, player)
     {
-        int anim    = player->playerAnimator.animationID;
+        int32 anim    = player->playerAnimator.animationID;
         bool32 flag = anim == ANI_JUMP || anim == ANI_SPINDASH;
         switch (player->characterID) {
             case ID_SONIC:

@@ -46,7 +46,7 @@ void TMZ2Setup_StageLoad(void)
         if ((RSDK_sceneInfo->filter & FILTER_ENCORE))
             RSDK.LoadPalette(0, "EncoreTMZ2.act", 0xFF);
 #endif
-        for (int i = 0; i < 256; ++i) RSDK.SetPaletteEntry(5, i, 0);
+        for (int32 i = 0; i < 256; ++i) RSDK.SetPaletteEntry(5, i, 0);
         RSDK.CopyPalette(0, 128, 4, 128, 128);
         TMZ2Setup->paletteInit = true;
     }

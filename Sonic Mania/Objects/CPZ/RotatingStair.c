@@ -25,7 +25,7 @@ void RotatingStair_Create(void *data)
     if (entity->type & 1)
         entity->amplitude.x = -entity->amplitude.x;
 
-    int typeStore = entity->type;
+    int32 typeStore = entity->type;
     entity->type  = 2;
     Platform_Create(NULL);
     entity->type = typeStore;
@@ -45,11 +45,11 @@ void RotatingStair_StageLoad(void) { RotatingStair->flag = 0; }
 void RotatingStair_Unknown1(void)
 {
     RSDK_THIS(RotatingStair);
-    int timer = Zone->timer + entity->oscOff;
-    int drawX = -entity->drawPos.x;
-    int drawY = -entity->drawPos.y;
+    int32 timer = Zone->timer + entity->oscOff;
+    int32 drawX = -entity->drawPos.x;
+    int32 drawY = -entity->drawPos.y;
 
-    int dir = 0;
+    int32 dir = 0;
     if (entity->type & 1)
         dir = entity->type - (((3 * timer) >> 9) & 3) - 2;
     else
@@ -79,14 +79,14 @@ void RotatingStair_Unknown1(void)
 void RotatingStair_Unknown2(void)
 {
     RSDK_THIS(RotatingStair);
-    int drawX = -entity->drawPos.x;
-    int drawY = -entity->drawPos.y;
+    int32 drawX = -entity->drawPos.x;
+    int32 drawY = -entity->drawPos.y;
 
-    int timer = 0;
+    int32 timer = 0;
     if (entity->speed * (Zone->timer + entity->oscOff) % entity->interval >= entity->duration)
         timer = entity->speed * (Zone->timer + entity->oscOff) % entity->interval - entity->duration;
 
-    int dir = 0;
+    int32 dir = 0;
     if (entity->type & 1)
         dir = entity->type - ((entity->speed * (Zone->timer + entity->oscOff) / entity->interval) & 3) - 2;
     else

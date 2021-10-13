@@ -50,7 +50,7 @@ void ERZStart_Player_HandleSuperDash(void *p)
     if (player->right)
         flags |= 8;
 
-    int angle = 0;
+    int32 angle = 0;
     switch (flags) {
         case 0:
             angle = 0;
@@ -131,7 +131,7 @@ void ERZStart_State_PlayerSuperFly(void)
             }
         }
 
-        int velY = player1->velocity.y;
+        int32 velY = player1->velocity.y;
         if (velY >= -player1->topSpeed) {
             if (velY > player1->topSpeed)
                 player1->velocity.y = velY - (player1->acceleration >> 1) - player1->acceleration;
@@ -175,7 +175,7 @@ void ERZStart_State_PlayerSuperFly(void)
             }
         }
 
-        int velX = player1->velocity.x;
+        int32 velX = player1->velocity.x;
         if (velX >= -player1->topSpeed) {
             if (velX > player1->topSpeed)
                 player1->velocity.x = velX - (player1->acceleration >> 1) - player1->acceleration;

@@ -51,7 +51,7 @@ void FBZTrash_Create(void *data)
 
 void FBZTrash_StageLoad(void) { FBZTrash->aniFrames = RSDK.LoadSpriteAnimation("FBZ/Trash.bin", SCOPE_STAGE); }
 
-void FBZTrash_Unknown1(EntityFBZTrash *trashPtr, int angle)
+void FBZTrash_Unknown1(EntityFBZTrash *trashPtr, int32 angle)
 {
     EntityFBZTrash *trash = CREATE_ENTITY(FBZTrash, intToVoid(2), trashPtr->position.x, trashPtr->position.y);
     trash->position.x += RSDK.Cos1024(angle) << 10;
@@ -67,7 +67,7 @@ void FBZTrash_Unknown1(EntityFBZTrash *trashPtr, int angle)
     RSDK.SetSpriteAnimation(FBZTrash->aniFrames, 5, &trash->animator, true, RSDK.Rand(0, 2));
 }
 
-void FBZTrash_Unknown2(int x, int y)
+void FBZTrash_Unknown2(int32 x, int32 y)
 {
     EntityFBZTrash *trash = CREATE_ENTITY(FBZTrash, intToVoid(3), x, y);
     FBZTrash_Unknown1(trash, 0);
@@ -93,8 +93,8 @@ void FBZTrash_Unknown3(void)
         foreach_active(FBZTrash, trash)
         {
             if (trash != entity) {
-                int rx = (entity->position.x - trash->position.x) >> 16;
-                int ry = (entity->position.y - trash->position.y) >> 16;
+                int32 rx = (entity->position.x - trash->position.x) >> 16;
+                int32 ry = (entity->position.y - trash->position.y) >> 16;
                 if (rx * rx + ry * ry < 288) {
                     if (BigSqueeze->isRumbling)
                         entity->field_64 = (entity->field_64 + trash->field_64) >> 1;
@@ -105,7 +105,7 @@ void FBZTrash_Unknown3(void)
                         entity->onGround = true;
                     }
                     else {
-                        int angle          = RSDK.ATan2(rx, ry);
+                        int32 angle          = RSDK.ATan2(rx, ry);
                         entity->velocity.x = minVal(entity->field_64 << 6, 640) * RSDK.Cos256(angle);
                         entity->velocity.y = minVal(entity->field_64 << 6, 640) * RSDK.Sin256(angle + RSDK.Rand(-32, 32));
                         entity->onGround   = false;
@@ -204,7 +204,7 @@ void FBZTrash_Unknown6(void)
     RSDK_THIS(FBZTrash);
     EntityFBZTrash *trash = (EntityFBZTrash *)entity->parent;
 
-    int angle = 0;
+    int32 angle = 0;
     if (trash->type == 2) {
         entity->angle = (entity->angle + 8) & 0x3FF;
         angle         = RSDK.Sin256(entity->angle) >> 2;

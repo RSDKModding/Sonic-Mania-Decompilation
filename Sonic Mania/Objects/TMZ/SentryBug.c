@@ -34,7 +34,7 @@ void SentryBug_Draw(void)
             entity->inkEffect = INK_NONE;
         }
 
-        for (int angle = 0, i = 0; angle < 0xFC; angle += 0x2A, ++i) {
+        for (int32 angle = 0, i = 0; angle < 0xFC; angle += 0x2A, ++i) {
             entity->animator1.frameID = ((angle + entity->netRotation + 8) >> 5) & 7;
             if (entity->netColour == 0xF0F000)
                 entity->animator1.frameID += 8;
@@ -131,14 +131,14 @@ void SentryBug_StateLate_Unknown1(void)
 {
     RSDK_THIS(SentryBug);
 
-    int *posPtrs = NULL;
+    int32 *posPtrs = NULL;
     if (entity->animator2.animationID == 1)
         posPtrs = &SentryBug->value1[12 * entity->animator2.frameID];
     else
         posPtrs = &SentryBug->value1[-12 * entity->animator2.frameID + 72];
 
-    int pos = 0;
-    for (int i = 0; i < 6; ++i) {
+    int32 pos = 0;
+    for (int32 i = 0; i < 6; ++i) {
         entity->positions[i].x = entity->position.x + posPtrs[pos + 0];
         entity->positions[i].y = entity->position.y + posPtrs[pos + 1];
 
@@ -150,14 +150,14 @@ void SentryBug_SetupPositions2(void)
 {
     RSDK_THIS(SentryBug);
 
-    int *posPtrs = NULL;
+    int32 *posPtrs = NULL;
     if (entity->animator2.animationID == 1)
         posPtrs = SentryBug->value2;
     else
         posPtrs = SentryBug->value3;
 
-    int pos = 0;
-    for (int i = 0; i < 6; ++i) {
+    int32 pos = 0;
+    for (int32 i = 0; i < 6; ++i) {
         entity->positions2[i].x = posPtrs[pos + 0];
         entity->positions2[i].y = posPtrs[pos + 1];
 
@@ -169,7 +169,7 @@ void SentryBug_StateLate_Unknown2(void)
 {
     RSDK_THIS(SentryBug);
 
-    for (int i = 0; i < 6; ++i) {
+    for (int32 i = 0; i < 6; ++i) {
         entity->positions2[i].y += 0x2800;
         entity->positions[i].x += entity->positions2[i].x;
         entity->positions[i].y += entity->positions2[i].y;
@@ -180,10 +180,10 @@ void SentryBug_StateLate_Unknown3(void)
 {
     RSDK_THIS(SentryBug);
 
-    int angle = entity->netRotation;
-    for (int i = 0; i < 6; ++i) {
-        int x = entity->netScale * RSDK.Cos256(angle) + entity->netX;
-        int y = entity->netScale * RSDK.Sin256(angle) + entity->netY;
+    int32 angle = entity->netRotation;
+    for (int32 i = 0; i < 6; ++i) {
+        int32 x = entity->netScale * RSDK.Cos256(angle) + entity->netX;
+        int32 y = entity->netScale * RSDK.Sin256(angle) + entity->netY;
 
         entity->positions[i + 6].x = (x - entity->positions[i].x) >> 3;
         entity->positions[i + 6].y = (y - entity->positions[i].y) >> 3;
@@ -198,8 +198,8 @@ void SentryBug_StateLate_Unknown4(void)
 {
     RSDK_THIS(SentryBug);
 
-    int angle = entity->netRotation;
-    for (int i = 0; i < 6; ++i) {
+    int32 angle = entity->netRotation;
+    for (int32 i = 0; i < 6; ++i) {
         entity->positions[i].x = entity->netScale * RSDK.Cos256(angle) + entity->netX;
         entity->positions[i].y = entity->netScale * RSDK.Sin256(angle) + entity->netY;
         angle += 42;
@@ -212,13 +212,13 @@ void SentryBug_StateLate_Unknown5(void)
 {
     RSDK_THIS(SentryBug);
 
-    int *posPtr = NULL;
+    int32 *posPtr = NULL;
     if (entity->animator2.animationID == 1)
         posPtr = &SentryBug->value1[12 * entity->animator2.frameID];
     else
         posPtr = &SentryBug->value1[-12 * entity->animator2.frameID + 72];
 
-    for (int i = 0; i < 6; ++i) {
+    for (int32 i = 0; i < 6; ++i) {
         entity->positions2[i].x = clampVal((entity->position.x + posPtr[0] - entity->positions[i].x) >> 3, -0xC0000, 0xC0000);
         entity->positions2[i].y = clampVal((entity->position.y + posPtr[1] - entity->positions[i].y) >> 3, -0xC0000, 0xC0000);
 
@@ -231,7 +231,7 @@ void SentryBug_State_Unknown1(void)
 {
     RSDK_THIS(SentryBug);
 
-    int x = entity->position.x;
+    int32 x = entity->position.x;
 
     entity->angle      = (entity->angle + entity->speed) & 0x3FF;
     entity->position.x = entity->amplitude.x * RSDK.Sin1024(entity->angle) + entity->field_78.x;
@@ -244,8 +244,8 @@ void SentryBug_State_Unknown1(void)
     EntityPlayer *player = Player_Unknown3();
     if (player) {
         if (!entity->timer) {
-            int rx = (entity->position.x - player->position.x) >> 16;
-            int ry = (entity->position.y - player->position.y) >> 16;
+            int32 rx = (entity->position.x - player->position.x) >> 16;
+            int32 ry = (entity->position.y - player->position.y) >> 16;
             if (rx * rx + ry * ry < 0x2400) {
                 entity->field_78.x = entity->position.x;
                 entity->field_78.y = entity->position.y;
@@ -318,14 +318,14 @@ void SentryBug_State_Unknown4(void)
     entity->netX += (player->position.x - entity->netX) >> 3;
     entity->netY += ((player->position.y - entity->netY) >> 3);
 
-    int rx        = (entity->netX - entity->position.x) >> 16;
-    int ry        = (entity->netY - entity->position.y) >> 16;
+    int32 rx        = (entity->netX - entity->position.x) >> 16;
+    int32 ry        = (entity->netY - entity->position.y) >> 16;
     entity->alpha = (RSDK.Sin256(4 * Zone->timer) >> 2) + 160;
 
     if (rx * rx + ry * ry <= 0x40000) {
         if (entity->netScale <= 0x1800) {
-            int rx = (entity->netX - player->position.x) >> 16;
-            int ry = (entity->netY - player->position.y) >> 16;
+            int32 rx = (entity->netX - player->position.x) >> 16;
+            int32 ry = (entity->netY - player->position.y) >> 16;
             if (rx * rx + ry * ry < 512 && Player_CheckValidState(player)) {
                 entity->drawNet     = true;
                 entity->alpha       = 256;

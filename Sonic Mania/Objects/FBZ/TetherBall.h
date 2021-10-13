@@ -18,11 +18,11 @@ typedef struct {
     StateMachine(state);
     uint8 type;
     uint8 chainCount;
-    int angleStart;
-    int angleEnd;
-    int timer;
-    int size;
-    int field_70;
+    int32 angleStart;
+    int32 angleEnd;
+    int32 timer;
+    int32 size;
+    int32 field_70;
     Vector2 posUnknown;
     EntityPlayer *playerPtr;
 } EntityTetherBall;

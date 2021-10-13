@@ -16,14 +16,14 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    int timer;
-    int timer2;
-    int field_64;
-    int field_68;
-    int buttonCount;
+    int32 timer;
+    int32 timer2;
+    int32 field_64;
+    int32 field_68;
+    int32 buttonCount;
     Vector2 size;
-    int field_78;
-    int field_7C;
+    int32 field_78;
+    int32 field_7C;
     EntityUIControl *parent;
     Entity* storedEntity;
     uint8 frameIDs[4];
@@ -31,8 +31,8 @@ typedef struct {
     bool32 flags[4];
     EntityUIButton *buttons[4];
     StateMachine(unknownCallback);
-    int field_C0;
-    int field_C4;
+    int32 field_C0;
+    int32 field_C4;
     uint8 field_C8;
 } EntityUIPopover;
 
@@ -53,7 +53,7 @@ void UIPopover_Serialize(void);
 // Extra Entity Functions
 EntityUIPopover *UIPopover_CreatePopover(void);
 void UIPopover_AddButton(EntityUIPopover *popover, uint8 frameID, void (*callback)(void), bool32 flag);
-void UIPopover_Setup(EntityUIPopover *popover, int posX, int posY);
+void UIPopover_Setup(EntityUIPopover *popover, int32 posX, int32 posY);
 void UIPopover_DrawSprites(void);
 void UIPopover_SetupButtonPositions(void);
 void UIPopover_Close(void);

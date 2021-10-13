@@ -8,13 +8,13 @@ void SpinSign_Update(void)
     foreach_active(Player, player)
     {
         if (Player_CheckCollisionTouch(player, entity, &SpinSign->hitboxes[entity->type])) {
-            int vel = 0;
+            int32 vel = 0;
             if (entity->type & 1)
                 vel = player->velocity.x;
             else
                 vel = player->velocity.y;
 
-            int val = (vel >> 7) + (vel >> 6);
+            int32 val = (vel >> 7) + (vel >> 6);
             if (abs(val) > entity->timer && val >= 0xC00) {
                 entity->timer     = val & -0x80;
                 entity->active    = ACTIVE_NORMAL;
@@ -144,7 +144,7 @@ void SpinSign_Unknown2(void)
 {
     RSDK_THIS(SpinSign);
 
-    int ang = entity->angle & 0xFFFF0000;
+    int32 ang = entity->angle & 0xFFFF0000;
     if (entity->direction)
         entity->angle -= entity->timer;
     else
@@ -177,7 +177,7 @@ void SpinSign_Unknown3(void)
     animator->frameID = (Zone->timer >> 4) & 1;
 
     entity->scale.y = abs(RSDK.Cos512(entity->rotation)) + 1;
-    int scale       = abs(RSDK.Sin512(entity->rotation)) + 1;
+    int32 scale       = abs(RSDK.Sin512(entity->rotation)) + 1;
 
     switch (entity->rotation >> 7) {
         case 0:
@@ -215,7 +215,7 @@ void SpinSign_Unknown4(void)
     animator->frameID = (Zone->timer >> 4) & 1;
 
     entity->scale.x   = abs(RSDK.Cos512(entity->rotation)) + 1;
-    int scale = abs(RSDK.Sin512(entity->rotation)) + 1;
+    int32 scale = abs(RSDK.Sin512(entity->rotation)) + 1;
 
     switch (entity->rotation >> 7) {
         case 0:
@@ -246,7 +246,7 @@ void SpinSign_Unknown5(void)
     entity->animator2.frameID = entity->rotation <= 128 || entity->rotation >= 384;
 
     entity->scale.y = abs(RSDK.Cos512(entity->rotation)) + 1;
-    int scale       = abs(RSDK.Sin512(entity->rotation)) + 1;
+    int32 scale       = abs(RSDK.Sin512(entity->rotation)) + 1;
 
     switch (entity->rotation >> 7) {
         case 0:
@@ -277,7 +277,7 @@ void SpinSign_Unknown6(void)
     entity->animator2.frameID = entity->rotation <= 128 || entity->rotation >= 384;
 
     entity->scale.x = abs(RSDK.Cos512(entity->rotation)) + 1;
-    int scale       = abs(RSDK.Sin512(entity->rotation)) + 1;
+    int32 scale       = abs(RSDK.Sin512(entity->rotation)) + 1;
 
     switch (entity->rotation >> 7) {
         case 0:

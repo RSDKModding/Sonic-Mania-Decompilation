@@ -89,7 +89,7 @@ void FBZ1Outro_Unknown2(void)
         signPost->velocity.y = 0;
         signPost->position.y = BigSqueeze->value7 - 0x180000;
 
-        int dist = BigSqueeze->value4[3] - 0x180000;
+        int32 dist = BigSqueeze->value4[3] - 0x180000;
         if (signPost->position.x < BigSqueeze->value4[3] - 0x180000)
             dist = signPost->position.x;
 
@@ -259,9 +259,9 @@ bool32 FBZ1Outro_CutsceneState_Unknown4(EntityCutsceneSeq *host)
         Zone_StoreEntities(0x35D40000, 0xA640000);
         RSDK.LoadScene();
 
-        int id           = 0;
+        int32 id           = 0;
         TileLayer *layer = RSDK.GetSceneLayer(1);
-        for (int i = 0; i < layer->scrollInfoCount; ++i) {
+        for (int32 i = 0; i < layer->scrollInfoCount; ++i) {
             globals->parallaxOffset[id++] = layer->scrollInfo[i].scrollPos + layer->scrollInfo[i].parallaxFactor * RSDK_screens->position.x;
         }
 

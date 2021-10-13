@@ -7,10 +7,10 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    int field_4;
+    int32 field_4;
     uint16 field_8;
     uint16 sfxSnap;
-    int field_C;
+    int32 field_C;
     EntityDecoration *decorations[16];
 } ObjectEncoreGoodEnd;
 
@@ -19,14 +19,14 @@ typedef struct {
     RSDK_ENTITY
     Vector2 size;
     bool32 activated;
-    int field_64;
-    int field_68;
-    int field_6C;
-    int field_70;
-    int field_74;
-    int field_78;
+    int32 field_64;
+    int32 field_68;
+    int32 field_6C;
+    int32 field_70;
+    int32 field_74;
+    int32 field_78;
     Hitbox hitbox;
-    int field_84;
+    int32 field_84;
 } EntityEncoreGoodEnd;
 
 // Object Struct
@@ -46,7 +46,7 @@ void EncoreGoodEnd_Serialize(void);
 // Extra Entity Functions
 void EncoreGoodEnd_SetupDecorations(void);
 
-void EncoreGoodEnd_Unknown2(int id);
+void EncoreGoodEnd_Unknown2(int32 id);
 void EncoreGoodEnd_Unknown9(void);
 void EncoreGoodEnd_Unknown10(void);
 void EncoreGoodEnd_Unknown11(void);

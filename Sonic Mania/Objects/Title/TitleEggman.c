@@ -22,9 +22,9 @@ void TitleEggman_Draw(void)
     else {
         Vector2 drawPos;
         entity->drawFX = FX_NONE;
-        int angle      = RSDK.Sin256(2 * entity->timer) >> 1;
+        int32 angle      = RSDK.Sin256(2 * entity->timer) >> 1;
 
-        for (int i = 1; i < 5; ++i) {
+        for (int32 i = 1; i < 5; ++i) {
             drawPos.x = (i << 8) * RSDK.Sin1024(angle) + entity->position.x;
             drawPos.y = entity->position.y + 0x80000 + (i << 8) * RSDK.Cos1024(angle);
             RSDK.DrawSprite(&entity->data3, &drawPos, false);

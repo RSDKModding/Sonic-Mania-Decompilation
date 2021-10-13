@@ -7,7 +7,7 @@
 typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
-    int timer;
+    int32 timer;
 } ObjectTimeTravelSetup;
 
 // Entity Class

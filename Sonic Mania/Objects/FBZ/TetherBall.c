@@ -17,7 +17,7 @@ void TetherBall_Draw(void)
     RSDK_THIS(TetherBall);
     Vector2 drawPos;
 
-    int i = 0x200;
+    int32 i = 0x200;
     for (; i < entity->size; i += 0x400) {
         TetherBall->animator.frameID = 2;
         drawPos                      = entity->position;
@@ -80,8 +80,8 @@ void TetherBall_StageLoad(void)
 void TetherBall_Unknown1(void)
 {
     RSDK_THIS(TetherBall);
-    int storeX       = entity->position.x;
-    int storeY       = entity->position.y;
+    int32 storeX       = entity->position.x;
+    int32 storeY       = entity->position.y;
     entity->position = entity->posUnknown;
     entity->rotation = entity->angle << 16;
     foreach_active(Player, player)
@@ -192,7 +192,7 @@ void TetherBall_Unknown2(void)
                 }
             }
             else {
-                int vel = 0;
+                int32 vel = 0;
                 if (player->groundVel <= 0)
                     vel = -0x60000;
                 else

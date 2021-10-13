@@ -13,10 +13,10 @@ typedef struct {
 typedef struct {
     MANIA_UI_ITEM_BASE
     Vector2 size;
-    int listID;
-    int frameID;
-    int align;
-    int choiceCount;
+    int32 listID;
+    int32 frameID;
+    int32 align;
+    int32 choiceCount;
     uint8 choiceDir;
     bool32 invisible;
     bool32 assignsP1;
@@ -24,20 +24,20 @@ typedef struct {
     bool32 transition;
     bool32 stopMusic;
     bool32 isDisabled;
-    int dword138;
-    int field_13C;
-    int field_140;
-    int field_144;
-    int field_148;
-    int dword14C;
-    int field_150;
+    int32 dword138;
+    int32 field_13C;
+    int32 field_140;
+    int32 field_144;
+    int32 field_148;
+    int32 dword14C;
+    int32 field_150;
     Vector2 posUnknown;
-    int selection;
+    int32 selection;
     void (*choiceChangeCB)(void);
     Animator animator;
     uint16 textSpriteIndex;
-    int startListID;
-    int startFrameID;
+    int32 startListID;
+    int32 startFrameID;
 } EntityUIButton;
 
 // Object Struct
@@ -56,9 +56,9 @@ void UIButton_Serialize(void);
 
 // Extra Entity Functions
 void UIButton_Unknown1(EntityUIButton *button);
-EntityUIButton *UIButton_GetChoicePtr(EntityUIButton *button, int a2);
-void UIButton_SetChoiceSelectionWithCB(EntityUIButton *button, int a2);
-void UIButton_SetChoiceSelection(EntityUIButton *button, int a2);
+EntityUIButton *UIButton_GetChoicePtr(EntityUIButton *button, int32 a2);
+void UIButton_SetChoiceSelectionWithCB(EntityUIButton *button, int32 a2);
+void UIButton_SetChoiceSelection(EntityUIButton *button, int32 a2);
 void *UIButton_GetOptions2(void);
 void UIButton_Fail(void);
 void UIButton_Unknown6(void);

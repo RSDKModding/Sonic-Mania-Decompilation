@@ -6,12 +6,12 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    int field_4;
-    int field_8;
-    int field_C;
-    int field_10;
-    int field_14;
-    int field_18;
+    int32 field_4;
+    int32 field_8;
+    int32 field_C;
+    int32 field_10;
+    int32 field_14;
+    int32 field_18;
     uint16 sfxAssemble;
     uint16 sfxMagicBox;
     uint16 sfxClack;
@@ -53,7 +53,7 @@ void HeavyMystic_EditorLoad(void);
 void HeavyMystic_Serialize(void);
 
 // Extra Entity Functions
-void HeavyMystic_Unknown1(int x, int y);
+void HeavyMystic_Unknown1(int32 x, int32 y);
 void HeavyMystic_Unknown2(void);
 
 #endif //!OBJ_HEAVYMYSTIC_H

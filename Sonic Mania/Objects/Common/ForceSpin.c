@@ -7,16 +7,16 @@ void ForceSpin_Update(void)
     RSDK_THIS(ForceSpin);
     foreach_active(Player, player)
     {
-        int x     = (player->position.x - entity->position.x) >> 8;
-        int y     = (player->position.y - entity->position.y) >> 8;
-        int scanX = (y * RSDK.Sin256(entity->negAngle)) + (x * RSDK.Cos256(entity->negAngle)) + entity->position.x;
-        int scanY = (y * RSDK.Cos256(entity->negAngle)) - (x * RSDK.Sin256(entity->negAngle)) + entity->position.y;
-        int pos   = ((player->velocity.y >> 8) * RSDK.Sin256(entity->negAngle)) + (player->velocity.x >> 8) * RSDK.Cos256(entity->negAngle);
+        int32 x     = (player->position.x - entity->position.x) >> 8;
+        int32 y     = (player->position.y - entity->position.y) >> 8;
+        int32 scanX = (y * RSDK.Sin256(entity->negAngle)) + (x * RSDK.Cos256(entity->negAngle)) + entity->position.x;
+        int32 scanY = (y * RSDK.Cos256(entity->negAngle)) - (x * RSDK.Sin256(entity->negAngle)) + entity->position.y;
+        int32 pos   = ((player->velocity.y >> 8) * RSDK.Sin256(entity->negAngle)) + (player->velocity.x >> 8) * RSDK.Cos256(entity->negAngle);
         RSDK.Cos256(entity->negAngle);
         RSDK.Sin256(entity->negAngle);
 
-        int xDif = abs(scanX - entity->position.x);
-        int yDif = abs(scanY - entity->position.y);
+        int32 xDif = abs(scanX - entity->position.x);
+        int32 yDif = abs(scanY - entity->position.y);
 
         if (xDif < 0x180000 && yDif < entity->size << 19) {
             if (scanX + pos >= entity->position.x) {
@@ -69,14 +69,14 @@ void ForceSpin_Create(void *data)
     if (!RSDK_sceneInfo->inEditor) {
         entity->active = ACTIVE_BOUNDS;
 
-        int x = 0;
+        int32 x = 0;
         if (entity->size * RSDK.Sin256(entity->angle) << 11 >= 0)
             x = entity->size * RSDK.Sin256(entity->angle) << 11;
         else
             x = -0x800 * entity->size * RSDK.Sin256(entity->angle);
         entity->updateRange.x = x + 0x200000;
 
-        int y = 0;
+        int32 y = 0;
         if (entity->size * RSDK.Cos256(entity->angle) << 11 >= 0)
             y = entity->size * RSDK.Cos256(entity->angle) << 11;
         else
@@ -100,7 +100,7 @@ void ForceSpin_DrawSprites(void)
     drawPos.y -= entity->size << 19;
     Zone_Unknown3(&entity->position, &drawPos, entity->angle);
 
-    for (int i = 0; i < entity->size; ++i) {
+    for (int32 i = 0; i < entity->size; ++i) {
         RSDK.DrawSprite(&entity->animator, &drawPos, 0);
         drawPos.x += RSDK.Sin256(entity->angle) << 12;
         drawPos.y += RSDK.Cos256(entity->angle) << 12;

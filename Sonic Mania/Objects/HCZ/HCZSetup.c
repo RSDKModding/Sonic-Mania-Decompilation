@@ -23,18 +23,18 @@ void HCZSetup_StaticUpdate(void)
         }
     }
 
-    int *sizes = HCZSetup->aniTilesDelay;
-    int sizeX  = 0;
-    int sizeY  = 0;
+    int32 *sizes = HCZSetup->aniTilesDelay;
+    int32 sizeX  = 0;
+    int32 sizeY  = 0;
 
-    for (int i = 0; i < 7; ++i) {
+    for (int32 i = 0; i < 7; ++i) {
         sizeX += sizes[0];
         sizeY += sizes[1];
         sizes += 2;
     }
 
-    int val   = Zone->timer % (sizeY + sizeX);
-    int valID = 0;
+    int32 val   = Zone->timer % (sizeY + sizeX);
+    int32 valID = 0;
 
     while (val >= HCZSetup->aniTilesDelay[valID]) {
         val -= HCZSetup->aniTilesDelay[valID];
@@ -46,7 +46,7 @@ void HCZSetup_StaticUpdate(void)
     }
 
     if (!(Zone->timer & 1)) {
-        for (int id = Zone->fgLow; id <= Zone->fgHigh; ++id) {
+        for (int32 id = Zone->fgLow; id <= Zone->fgHigh; ++id) {
             ++RSDK.GetSceneLayer(id)->deformationOffsetW;
         }
     }
@@ -115,34 +115,34 @@ void HCZSetup_StageLoad(void)
     HCZSetup->aniTiles3 = RSDK.LoadSpriteSheet("HCZ/AniTiles3.gif", SCOPE_STAGE);
 
     HCZSetup->bg = RSDK.GetSceneLayer(1);
-    for (int i = 0; i < 0x200; i += 0x10) {
-        int val = RSDK.Rand(0, 4);
+    for (int32 i = 0; i < 0x200; i += 0x10) {
+        int32 val = RSDK.Rand(0, 4);
 
-        int pos = i;
+        int32 pos = i;
         pos     = minVal(0x200, pos);
         pos     = maxVal(0x000, pos);
 
-        int *deformData = &HCZSetup->bg->deformationDataW[pos];
+        int32 *deformData = &HCZSetup->bg->deformationDataW[pos];
 
-        int angle = 0;
-        for (int d = 0; d < 0x10; ++d) {
+        int32 angle = 0;
+        for (int32 d = 0; d < 0x10; ++d) {
             *deformData = val * RSDK.Sin1024(angle) >> 10;
             angle += 64;
         }
 
-        memcpy(&HCZSetup->bg->deformationDataW[0x200], HCZSetup->bg->deformationDataW, 0x200 * sizeof(int));
+        memcpy(&HCZSetup->bg->deformationDataW[0x200], HCZSetup->bg->deformationDataW, 0x200 * sizeof(int32));
     }
 
     if (Zone->actID == 1) {
         HCZSetup->bg->scanlineCallback = HCZSetup_ScanlineCallback;
     }
 
-    int id = Zone->fgLow;
+    int32 id = Zone->fgLow;
     while (id <= Zone->fgHigh) {
         TileLayer *layer = RSDK.GetSceneLayer(id);
-        int *deformData  = layer->deformationDataW;
+        int32 *deformData  = layer->deformationDataW;
 
-        for (int i = 0; i < 4; ++i) {
+        for (int32 i = 0; i < 4; ++i) {
             deformData[0]  = 1;
             deformData[1]  = 1;
             deformData[2]  = 2;
@@ -225,23 +225,23 @@ void HCZSetup_ScanlineCallback(ScanlineInfo *scanlines)
     RSDK.ProcessParallax(HCZSetup->bg);
 
     ScreenInfo *screen = &RSDK_screens[RSDK_sceneInfo->currentScreenID];
-    int scrH           = screen->height;
-    int scrX           = screen->position.x;
-    int scrY           = screen->position.y;
-    int height         = 0x210 - (scrY >> 2);
-    int waterPos       = (Water->waterLevel >> 0x10) - scrY;
+    int32 scrH           = screen->height;
+    int32 scrX           = screen->position.x;
+    int32 scrY           = screen->position.y;
+    int32 height         = 0x210 - (scrY >> 2);
+    int32 waterPos       = (Water->waterLevel >> 0x10) - scrY;
 
-    int div = maxVal(1, abs(height - waterPos));
-    int val = maxVal(0x10000, 0x640000 / div);
+    int32 div = maxVal(1, abs(height - waterPos));
+    int32 val = maxVal(0x10000, 0x640000 / div);
 
     height   = clampVal(height, 0, scrH);
     waterPos = clampVal(waterPos, 0, scrH);
 
     ScanlineInfo *scanlinePtr = &scanlines[height];
     if (height >= waterPos) {
-        int pos = 0x4D00000;
+        int32 pos = 0x4D00000;
         if (waterPos < height) {
-            for (int i = 0; i < height - waterPos; ++i) {
+            for (int32 i = 0; i < height - waterPos; ++i) {
                 scanlinePtr->position.x = (((0x3540000 - 0xC000 * (pos >> 16)) / 100 + 0x10000) * scrX) & 0x1FFFFFF;
                 scanlinePtr->position.y = pos;
                 pos -= val;
@@ -250,9 +250,9 @@ void HCZSetup_ScanlineCallback(ScanlineInfo *scanlines)
         }
     }
     else {
-        int pos = 0x40C0000;
-        for (int i = 0; i < waterPos - height; ++i) {
-            int distance            = 0x46C - (pos >> 16);
+        int32 pos = 0x40C0000;
+        for (int32 i = 0; i < waterPos - height; ++i) {
+            int32 distance            = 0x46C - (pos >> 16);
             scanlinePtr->position.x = (((-0xC000 * distance) / 100 + 0x10000) * scrX) & 0x1FFFFFF;
             scanlinePtr->position.y = pos;
             pos += val;

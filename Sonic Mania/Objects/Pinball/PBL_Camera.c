@@ -46,14 +46,14 @@ void PBL_Camera_StageLoad(void)
 void PBL_Camera_Unknown1(void)
 {
     RSDK_THIS(PBL_Camera);
-    int angle = RSDK.Cos1024(-entity->rotationY) << 12;
+    int32 angle = RSDK.Cos1024(-entity->rotationY) << 12;
     if (angle < 0x3C0000)
         angle = 0x3C0000;
     //if (!angle)
     //    angle = 1;
 
-    int ang  = entity->angle - entity->field_7C;
-    int ang2 = ang - 0x400;
+    int32 ang  = entity->angle - entity->field_7C;
+    int32 ang2 = ang - 0x400;
     if (entity->angle <= 512)
         ang2 = ang + 0x400;
 
@@ -62,7 +62,7 @@ void PBL_Camera_Unknown1(void)
     else
         RSDK_screens->position.x -= 2 * ang;
 
-    int height               = ((RSDK.Sin1024(-entity->rotationY) << 12) << 8) / angle;
+    int32 height               = ((RSDK.Sin1024(-entity->rotationY) << 12) << 8) / angle;
     RSDK_screens->position.y = height - RSDK_screens->centerY + 512;
     entity->field_7C         = entity->angle;
     entity->field_80         = clampVal(RSDK_screens->centerY - height + 8, -64, RSDK_screens->height);

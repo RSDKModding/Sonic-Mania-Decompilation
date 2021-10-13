@@ -6,18 +6,18 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    int palTimer;
+    int32 palTimer;
     uint16 aniTiles;
     TileLayer* bgPtr;
-    TABLE(int deformData[64], { 1, 2, 1, 3, 1, 2, 2, 1, 2, 3, 1, 2, 1, 2, 0, 0, 2, 0, 3, 2, 2, 3, 2, 2, 1, 3, 0, 0, 1, 0, 1, 3,
+    TABLE(int32 deformData[64], { 1, 2, 1, 3, 1, 2, 2, 1, 2, 3, 1, 2, 1, 2, 0, 0, 2, 0, 3, 2, 2, 3, 2, 2, 1, 3, 0, 0, 1, 0, 1, 3,
                                 1, 2, 1, 3, 1, 2, 2, 1, 2, 3, 1, 2, 1, 2, 0, 0, 2, 0, 3, 2, 2, 3, 2, 2, 1, 3, 0, 0, 1, 0, 1, 3 });
-    int aniTilesTimer;
-    int aniTilesFrame;
-    STATIC(int aniTilesDelay, 60);
-    TABLE(int aniTileDelays[9], { 60, 60, 3, 3, 3, 3, 3, 3, 4 });
-    int value9;
-    int fadeTimer;
-    int flags;
+    int32 aniTilesTimer;
+    int32 aniTilesFrame;
+    STATIC(int32 aniTilesDelay, 60);
+    TABLE(int32 aniTileDelays[9], { 60, 60, 3, 3, 3, 3, 3, 3, 4 });
+    int32 value9;
+    int32 fadeTimer;
+    int32 flags;
     uint8 flameTimers[0x20000];
     uint8 *flameTimerPtrs[400];
     Vector2 flamePositions[400];
@@ -63,7 +63,7 @@ bool32 OOZSetup_CheckCB_Swim(void);
 
 void OOZSetup_Unknown4(void);
 void OOZSetup_Unknown5(void);
-bool32 OOZSetup_Unknown6(int posY, int posX, int angle);
+bool32 OOZSetup_Unknown6(int32 posY, int32 posX, int32 angle);
 
 void OOZSetup_GenericTriggerCB(void);
 

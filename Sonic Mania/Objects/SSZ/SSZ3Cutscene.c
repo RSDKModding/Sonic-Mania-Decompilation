@@ -127,8 +127,8 @@ bool32 SSZ3Cutscene_OutroState_Unknown1(EntityCutsceneSeq *host)
 
     FXRuby_SetupLayerDeformation();
 
-    int pos  = ((RSDK_screens->width + RSDK_screens->position.x) >> 4) + 2;
-    int pos2 = 0;
+    int32 pos  = ((RSDK_screens->width + RSDK_screens->position.x) >> 4) + 2;
+    int32 pos2 = 0;
     if (pos < 220) {
         pos2                    = ((RSDK_screens->width + RSDK_screens->position.x) >> 4) + 2;
         Zone->screenBoundsR1[0] = 16 * (((RSDK_screens->width + RSDK_screens->position.x) >> 4) + 38);
@@ -297,7 +297,7 @@ bool32 SSZ3Cutscene_OutroState_Unknown5(EntityCutsceneSeq *host)
                 players[0] = player1;
                 players[1] = player2;
 
-                for (int i = 0, angle = 0; angle < 0x80; ++i, angle += 0x40) {
+                for (int32 i = 0, angle = 0; angle < 0x80; ++i, angle += 0x40) {
                     EntityPlayer *player = players[i];
                     if (!player)
                         break;

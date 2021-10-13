@@ -6,7 +6,7 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    TABLE(int dunkeyCode[18], { 0, 1, 0, 1, 0, 1, 0, 2, 0, 2, 0, 2, 0, 3, 0, 3, 0, 3 });
+    TABLE(int32 dunkeyCode[18], { 0, 1, 0, 1, 0, 1, 0, 2, 0, 2, 0, 2, 0, 3, 0, 3, 0, 3 });
     uint16 aniFrames;
     uint16 sfxPullChain;
 } ObjectPullChain;
@@ -14,26 +14,26 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    int type;
+    int32 type;
     bool32 walkOnto;
     uint8 tag;
-    int field_64;
-    int field_68;
+    int32 field_64;
+    int32 field_68;
     bool32 activated;
-    int field_70;
-    int field_74;
-    int field_78;
+    int32 field_70;
+    int32 field_74;
+    int32 field_78;
     Animator animator;
-    int length;
-    int decorMode;
+    int32 length;
+    int32 decorMode;
     uint8 activePlayers1;
     uint8 activePlayers2;
     Vector2 basePos;
-    int field_A8;
-    int chainOffset;
-    int timer[4];
+    int32 field_A8;
+    int32 chainOffset;
+    int32 timer[4];
     uint8 codeInputFlags;
-    int field_D0[18];
+    int32 field_D0[18];
     Hitbox hitbox;
     Animator animator2;
 } EntityPullChain;

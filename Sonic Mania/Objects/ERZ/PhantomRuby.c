@@ -68,7 +68,7 @@ void PhantomRuby_PlaySFX(uint8 sfxID)
 {
     if (sfxID) {
         uint8 sfx    = sfxID - 1;
-        int channel = RSDK.PlaySfx(PhantomRuby->sfx_L[sfx], 0, 0);
+        int32 channel = RSDK.PlaySfx(PhantomRuby->sfx_L[sfx], 0, 0);
         RSDK.SetChannelAttributes(channel, 1.0, -1.0, 1.0);
         channel = RSDK.PlaySfx(PhantomRuby->sfx_R[sfx], 0, 0);
         RSDK.SetChannelAttributes(channel, 1.0, 1.0, 1.0);
@@ -153,12 +153,12 @@ void PhantomRuby_Unknown8(void)
 void PhantomRuby_Unknown9(void)
 {
     RSDK_THIS(PhantomRuby);
-    int rx    = (entity->startPos.x - entity->position.x) >> 16;
-    int ry    = (entity->startPos.y - entity->position.y) >> 16;
-    int angle = RSDK.ATan2(rx, ry);
+    int32 rx    = (entity->startPos.x - entity->position.x) >> 16;
+    int32 ry    = (entity->startPos.y - entity->position.y) >> 16;
+    int32 angle = RSDK.ATan2(rx, ry);
     entity->velocity.x += RSDK.Cos256(angle) << 3;
     entity->velocity.y += RSDK.Sin256(angle) << 3;
-    int r = rx * rx + ry * ry;
+    int32 r = rx * rx + ry * ry;
     if (r >= 16) {
         if (r < 2304) {
             entity->velocity.x = (entity->startPos.x - entity->position.x) >> 4;

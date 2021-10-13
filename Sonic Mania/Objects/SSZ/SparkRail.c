@@ -5,7 +5,7 @@ ObjectSparkRail *SparkRail;
 void SparkRail_Update(void)
 {
     RSDK_THIS(SparkRail);
-    int posY = entity->position.y + (entity->size.y >> 1);
+    int32 posY = entity->position.y + (entity->size.y >> 1);
     foreach_active(Player, player)
     {
         if (Player_CheckCollisionTouch(player, entity, &entity->hitbox) && player->onGround) {

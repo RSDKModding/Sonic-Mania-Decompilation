@@ -29,7 +29,7 @@ void Crate_Create(void *data)
 {
     RSDK_THIS(Crate);
 
-    int frameID = entity->frameID;
+    int32 frameID = entity->frameID;
     if (frameID == 3)
         entity->collision = 4;
     else
@@ -64,7 +64,7 @@ void Crate_StageLoad(void)
 
 void Crate_Break(EntityCrate *entity)
 {
-    for (int i = 0; i < 64; ++i) {
+    for (int32 i = 0; i < 64; ++i) {
         // the ice is used to create a shattering effect
         EntityIce *ice  = CREATE_ENTITY(Ice, intToVoid(3), (RSDK.Rand(-24, 25) << 16) + entity->position.x,
                                                         (RSDK.Rand(-24, 25) << 16) + entity->position.y);
@@ -98,14 +98,14 @@ void Crate_Break(EntityCrate *entity)
     }
     destroyEntity(entity);
 }
-void Crate_MoveY(EntityCrate *entity, int offset)
+void Crate_MoveY(EntityCrate *entity, int32 offset)
 {
     entity->drawPos.y += offset;
     entity->centerPos.x = entity->drawPos.x;
     entity->centerPos.y = entity->drawPos.y;
     entity->position.x  = entity->drawPos.x;
     entity->position.y  = entity->drawPos.y;
-    int start           = (entity->drawPos.y - 0x300000) & 0xFFFF0000;
+    int32 start           = (entity->drawPos.y - 0x300000) & 0xFFFF0000;
     foreach_active(Crate, crate)
     {
         if (crate != entity && RSDK.CheckObjectCollisionBox(entity, &entity->hitbox, crate, &crate->hitbox, true) == C_TOP)
@@ -118,12 +118,12 @@ bool32 Crate_Collide(void)
 
     foreach_active(Player, player)
     {
-        int storeX           = player->position.x;
-        int storeY           = player->position.y;
-        int storeXVel        = player->velocity.x;
-        int storeYVel        = player->velocity.y;
-        int storeVel         = player->groundVel;
-        int storeGrounded    = player->onGround;
+        int32 storeX           = player->position.x;
+        int32 storeY           = player->position.y;
+        int32 storeXVel        = player->velocity.x;
+        int32 storeYVel        = player->velocity.y;
+        int32 storeVel         = player->groundVel;
+        int32 storeGrounded    = player->onGround;
         Hitbox *playerHitbox = Player_GetHitbox(player);
         switch (RSDK.CheckObjectCollisionBox(entity, &entity->hitbox, player, playerHitbox, false)) {
             default:
@@ -265,8 +265,8 @@ void Crate_Fall(void)
 {
     RSDK_THIS(Crate);
     entity->drawPos.y += entity->velocity.y;
-    int x = entity->position.x;
-    int y = entity->position.y;
+    int32 x = entity->position.x;
+    int32 y = entity->position.y;
     entity->velocity.y += 0x3800;
     entity->position.x = entity->drawPos.x;
     entity->position.y = entity->drawPos.y;

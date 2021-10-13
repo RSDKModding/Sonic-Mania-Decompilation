@@ -66,7 +66,7 @@ void UILeaderboard_SetupEntrySprites(EntityUILeaderboard *entity)
     RSDK.SetSpriteAnimation(UILeaderboard->aniFrames, 12, &entity->animator6, true, 0);
     RSDK.SetSpriteAnimation(UILeaderboard->aniFrames, 13, &entity->animator3, true, entity->zoneID);
 
-    int frame = 0;
+    int32 frame = 0;
     if (entity->playerID <= 1)
         frame = 0;
     else
@@ -87,17 +87,17 @@ void UILeaderboard_SetupEntrySprites(EntityUILeaderboard *entity)
 #if !RETRO_USE_PLUS
 void UILeaderboard_InitLeaderboard(EntityUILeaderboard *leaderboard)
 {
-    int count = APICallback_LeaderboardEntryCount();
+    int32 count = APICallback_LeaderboardEntryCount();
     leaderboard->entryLength = count;
     if (leaderboard->entryIsUser && count >= 1) {
-        int i = 0;
+        int32 i = 0;
         for (; i < leaderboard->entryLength; ++i) {
             bool32 isUser = API_ReadLeaderboardEntry(i)->isUser;
             if (isUser)
                 break;
         }
 
-        int offset = leaderboard->entryLength - 6;
+        int32 offset = leaderboard->entryLength - 6;
         if (i - 2 < offset)
             offset = i - 2;
         if (offset <= 0)
@@ -133,7 +133,7 @@ void UILeaderboard_SetupLeaderboard(EntityUILeaderboard *leaderboard, uint8 play
 void UILeaderboard_LoadEntries(EntityUILeaderboard *entity)
 {
     if (!RSDK_sceneInfo->inEditor) {
-        for (int i = 0; i < 5; ++i) {
+        for (int32 i = 0; i < 5; ++i) {
             LeaderboardEntry *entry = API_ReadLeaderboardEntry(i + entity->entryOffset);
 #if RETRO_USE_PLUS
             if (entry && entry->status == STATUS_OK) {
@@ -299,7 +299,7 @@ void UILeaderboard_DrawEntries(void)
     RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, 11, &entity->animator11, true, 2);
     RSDK.DrawSprite(&entity->animator11, &drawPos, false);
 
-    for (int i = 0; i < 5; ++i) UILeaderboard_DrawRank(i);
+    for (int32 i = 0; i < 5; ++i) UILeaderboard_DrawRank(i);
 }
 
 void UILeaderboard_Unknown3(void)
@@ -338,7 +338,7 @@ void UILeaderboard_Unknown3(void)
     }
 }
 
-void UILeaderboard_DrawTime(int mins, int secs, int millisecs, int x, int y)
+void UILeaderboard_DrawTime(int32 mins, int32 secs, int32 millisecs, int32 x, int32 y)
 {
     RSDK_THIS(UILeaderboard);
     Vector2 drawPos;
@@ -353,7 +353,7 @@ void UILeaderboard_DrawTime(int mins, int secs, int millisecs, int x, int y)
 
     drawPos.x = x;
     drawPos.y = y;
-    for (int i = 0; i < 8; ++i) {
+    for (int32 i = 0; i < 8; ++i) {
         if (!scoreText[i])
             break;
         RSDK.SetSpriteAnimation(UILeaderboard->aniFrames, 8, &entity->animator12, true, (scoreText[i] - '0'));
@@ -362,7 +362,7 @@ void UILeaderboard_DrawTime(int mins, int secs, int millisecs, int x, int y)
     }
 }
 
-void UILeaderboard_DrawRank(int id)
+void UILeaderboard_DrawRank(int32 id)
 {
     RSDK_THIS(UILeaderboard);
     Vector2 drawPos;
@@ -370,7 +370,7 @@ void UILeaderboard_DrawRank(int id)
     drawPos.x = (id << 20) + entity->position.x - 0x200000;
     drawPos.y = (id << 20) + entity->position.y + 0x40000;
 
-    int colour = 0x5870E0;
+    int32 colour = 0x5870E0;
     switch (entity->ranks[id]) {
         default: break;
         case 1: colour = 0xD9AD04; break;
@@ -391,7 +391,7 @@ void UILeaderboard_DrawRank(int id)
             drawPos.x += 0xB40000;
         }
 
-        int min, sec, ms;
+        int32 min, sec, ms;
         TimeAttackData_GetTimeFromValue(entity->times[id], &min, &sec, &ms);
         drawPos.y -= 0x40000;
         UILeaderboard_DrawTime(min, sec, ms, drawPos.x, drawPos.y);
@@ -426,7 +426,7 @@ void UILeaderboard_ProcessButtonCB(void)
 #if RETRO_USE_PLUS
     Vector2 entryCount = API.LeaderboardEntryCount();
 
-    int newID      = entity->entryOffset;
+    int32 newID      = entity->entryOffset;
     if (UIControl->keyUp)
         newID--;
     else if (UIControl->keyDown)
@@ -436,7 +436,7 @@ void UILeaderboard_ProcessButtonCB(void)
     else if (UIControl->keyRight)
         newID += 5;
 
-    int end = entryCount.x + entryCount.y;
+    int32 end = entryCount.x + entryCount.y;
     if (newID >= end)
         newID = end - 5;
     if (newID < entryCount.x)
@@ -459,7 +459,7 @@ void UILeaderboard_ProcessButtonCB(void)
         }
     }
 #else
-    int newID = entity->entryOffset;
+    int32 newID = entity->entryOffset;
     if (UIControl->keyUp)
         newID--;
     else if (UIControl->keyDown)
@@ -469,7 +469,7 @@ void UILeaderboard_ProcessButtonCB(void)
     else if (UIControl->keyRight)
         newID += 5;
 
-    int end = entity->entryOffset + entity->entryLength;
+    int32 end = entity->entryOffset + entity->entryLength;
     if (newID >= end)
         newID = end - 5;
     if (newID < 0)

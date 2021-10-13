@@ -34,7 +34,7 @@ void SizeLaser_Create(void* data)
     
     entity->drawFX = FX_FLIP;
     if (!RSDK_sceneInfo->inEditor) {
-        int type              = (int)(size_t)data;
+        int32 type              = (int32)(size_t)data;
         entity->visible       = true;
         entity->updateRange.x = 0x800000;
         entity->updateRange.y = 0x800000;
@@ -131,7 +131,7 @@ void SizeLaser_StageLoad(void)
 
 bool32 SizeLaser_SizeChangeSFXCheck(void)
 {
-    int cnt = 0;
+    int32 cnt = 0;
     foreach_active(SizeLaser, entity)
     {
         if (entity->activeScreens)
@@ -352,13 +352,13 @@ void SizeLaser_PlayerState_Grow(void)
 void SizeLaser_Unknown3(void)
 {
     RSDK_THIS(SizeLaser);
-    int entityX = entity->position.x;
-    int entityY = entity->position.y;
+    int32 entityX = entity->position.x;
+    int32 entityY = entity->position.y;
 
-    int tx1[2];
-    int tx2[2];
-    int ty1[2];
-    int ty2[2];
+    int32 tx1[2];
+    int32 tx2[2];
+    int32 ty1[2];
+    int32 ty2[2];
 
     switch (entity->orientation) {
         case 0:
@@ -404,7 +404,7 @@ void SizeLaser_Unknown3(void)
     }
 
     foreach_active(Player, player) {
-        int pID = RSDK.GetEntityID(player);
+        int32 pID = RSDK.GetEntityID(player);
         if (MathHelpers_Unknown12(SizeLaser->playerPositions[pID].x, SizeLaser->playerPositions[pID].y, player->position.x, player->position.y,
                                   tx1[0], tx2[0], ty1[0], ty2[0])
             || MathHelpers_Unknown12(SizeLaser->playerPositions[pID].x, SizeLaser->playerPositions[pID].y, player->position.x, player->position.y,

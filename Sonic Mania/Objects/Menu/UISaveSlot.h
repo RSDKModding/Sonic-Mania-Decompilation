@@ -16,31 +16,31 @@ typedef struct {
 #if RETRO_USE_PLUS
     StateMachine(stateUnknown);
 #endif
-    int listID;
-    int frameID;
-    int saveZoneID;
-    int saveLives;
+    int32 listID;
+    int32 frameID;
+    int32 saveZoneID;
+    int32 saveLives;
 #if RETRO_USE_PLUS
-    int saveContinues;
+    int32 saveContinues;
 #endif
-    int saveEmeralds;
+    int32 saveEmeralds;
 #if RETRO_USE_PLUS
     uint8 saveEncorePlayer;
     uint8 saveEncoreBuddy;
     uint8 saveEncoreFriends[3];
 #endif
-    int type;
-    int slotID;
+    int32 type;
+    int32 slotID;
 #if RETRO_USE_PLUS
     bool32 encoreMode;
 #endif
-    int zoneID;
-    int field_13C;
-    int field_140;
-    int field_144;
-    int field_148;
-    int field_14C;
-    int radius;
+    int32 zoneID;
+    int32 field_13C;
+    int32 field_140;
+    int32 field_144;
+    int32 field_148;
+    int32 field_14C;
+    int32 radius;
     #if RETRO_USE_PLUS
     EntityFXRuby *fxRuby;
     bool32 debugEncoreDraw;
@@ -82,16 +82,16 @@ void UISaveSlot_Serialize(void);
 // Extra Entity Functions
 #if RETRO_USE_PLUS
 uint8 UISaveSlot_Unknown1(uint8 id);
-void UISaveSlot_Unknown2(uint8 playerID, bool32 isSilhouette, uint8 buddyID, uint8 *friendIDs, uint8 friendCount, int drawX, int drawY);
+void UISaveSlot_Unknown2(uint8 playerID, bool32 isSilhouette, uint8 buddyID, uint8 *friendIDs, uint8 friendCount, int32 drawX, int32 drawY);
 #endif
-void UISaveSlot_Unknown3(int drawX, int drawY);
-void UISaveSlot_DrawPlayerInfo(int drawX, int drawY);
+void UISaveSlot_Unknown3(int32 drawX, int32 drawY);
+void UISaveSlot_DrawPlayerInfo(int32 drawX, int32 drawY);
 void UISaveSlot_SetupButtonElements(void);
 void UISaveSlot_Unknown6(void);
 void UISaveSlot_LoadSaveInfo(void);
 void UISaveSlot_Unknown8(void);
 void UISaveSlot_DeleteDLG_CB(void);
-void UISaveSlot_DeleteSaveCB(int status);
+void UISaveSlot_DeleteSaveCB(int32 status);
 void UISaveSlot_ProcessButtonCB(void);
 void UISaveSlot_SelectedSave(void);
 void UISaveSlot_NextCharacter(void);

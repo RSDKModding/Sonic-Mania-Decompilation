@@ -13,8 +13,8 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    int timer;
-    int cableID;
+    int32 timer;
+    int32 cableID;
     Vector2 field_64;
     Vector2 drawPos[8];
     bool32 drawFlags[8];

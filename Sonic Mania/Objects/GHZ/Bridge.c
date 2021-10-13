@@ -39,8 +39,8 @@ void Bridge_Update(void)
                     bridgeHitbox.left  = -0x400;
                     bridgeHitbox.right = 0x400;
 
-                    int divisor = 0;
-                    int ang     = 0;
+                    int32 divisor = 0;
+                    int32 ang     = 0;
                     if (player->position.x - entity->startPos <= entity->stoodPos) {
                         divisor = entity->stoodPos;
                         ang     = (player->position.x - entity->startPos) << 7;
@@ -50,7 +50,7 @@ void Bridge_Update(void)
                         ang     = (entity->endPos - player->position.x) << 7;
                     }
 
-                    int hitY = (entity->field_6C * RSDK.Sin512(ang / divisor) >> 9) - 0x80000;
+                    int32 hitY = (entity->field_6C * RSDK.Sin512(ang / divisor) >> 9) - 0x80000;
                     if (player->velocity.y >= 0x8000) {
                         bridgeHitbox.top    = (hitY >> 16);
                         bridgeHitbox.bottom = bridgeHitbox.top + 8;
@@ -72,7 +72,7 @@ void Bridge_Update(void)
                         EntityPlayer *player1 = (EntityPlayer *)RSDK.GetEntityByID(SLOT_PLAYER1);
                         if (player == player1) {
                             if (entity->playerPtr != (Entity *)-1 && entity->playerPtr != (Entity *)-2) {
-                                int distance     = entity->endPos - entity->startPos;
+                                int32 distance     = entity->endPos - entity->startPos;
                                 entity->stoodPos = player->position.x - entity->startPos;
                                 entity->field_68 = (distance >> 13) * RSDK.Sin512((entity->stoodPos >> 8) / (distance >> 16));
                                 entity->field_6C = (entity->field_68 * entity->timer) >> 7;
@@ -103,7 +103,7 @@ void Bridge_Update(void)
             }
             else {
                 entity->stoodPos = player->position.x - entity->startPos;
-                int distance     = (entity->endPos - entity->startPos);
+                int32 distance     = (entity->endPos - entity->startPos);
                 entity->field_68 = RSDK.Sin512((entity->stoodPos >> 8) / (distance >> 16)) * (distance >> 13);
 
                 if (player->position.y > entity->position.y - 0x300000) {
@@ -142,13 +142,13 @@ void Bridge_StaticUpdate(void) {}
 void Bridge_Draw(void)
 {
     RSDK_THIS(Bridge);
-    int id = 0;
+    int32 id = 0;
     Vector2 drawPos;
 
-    int size  = entity->stoodPos >> 20;
-    int ang   = 0x80000;
+    int32 size  = entity->stoodPos >> 20;
+    int32 ang   = 0x80000;
     drawPos.x = entity->startPos + 0x80000;
-    for (int i = 0; i < size; ++i) {
+    for (int32 i = 0; i < size; ++i) {
         drawPos.y = (entity->field_6C * RSDK.Sin512((ang << 7) / entity->stoodPos) >> 9) + entity->position.y;
         RSDK.DrawSprite(&entity->animator, &drawPos, false);
         drawPos.x += 0x100000;
@@ -162,7 +162,7 @@ void Bridge_Draw(void)
     ++id;
 
     ang         = 0x80000;
-    int divisor = entity->endPos - entity->startPos - entity->stoodPos;
+    int32 divisor = entity->endPos - entity->startPos - entity->stoodPos;
     drawPos.x   = entity->endPos - 0x80000;
     for (; id < entity->length; ++id) {
         drawPos.y = (entity->field_6C * RSDK.Sin512((ang << 7) / divisor) >> 9) + entity->position.y;
@@ -179,7 +179,7 @@ void Bridge_Create(void *data)
     ++entity->length;
     entity->drawOrder     = Zone->drawOrderLow;
     entity->active        = ACTIVE_BOUNDS;
-    int len               = entity->length << 19;
+    int32 len               = entity->length << 19;
     entity->startPos      = entity->position.x - len;
     entity->endPos        = len + entity->position.x;
     entity->updateRange.x = len;
@@ -199,26 +199,26 @@ void Bridge_StageLoad(void)
         Bridge->aniFrames = RSDK.LoadSpriteAnimation("LRZ1/Bridge.bin", SCOPE_STAGE);
 }
 
-void Bridge_Burn(int offset)
+void Bridge_Burn(int32 offset)
 {
     RSDK_THIS(Bridge);
 
-    int size   = entity->stoodPos >> 20;
-    int spawnX = entity->startPos + 0x80000;
-    int off    = -offset;
-    int ang    = 0x80000;
-    for (int i = 0; i < size; ++i) {
-        int sine = RSDK.Sin512((ang << 7) / entity->stoodPos);
+    int32 size   = entity->stoodPos >> 20;
+    int32 spawnX = entity->startPos + 0x80000;
+    int32 off    = -offset;
+    int32 ang    = 0x80000;
+    for (int32 i = 0; i < size; ++i) {
+        int32 sine = RSDK.Sin512((ang << 7) / entity->stoodPos);
         RSDK.CreateEntity(BurningLog->objectID, intToVoid(8 * abs(off++) + 16), spawnX, (entity->field_6C * sine >> 9) + entity->position.y);
         ang += 0x100000;
         spawnX += 0x100000;
     }
 
-    int id = size;
+    int32 id = size;
     RSDK.CreateEntity(BurningLog->objectID, intToVoid(8 * abs(id++ - offset) + 16), spawnX, entity->field_6C + entity->position.y);
 
     spawnX      = entity->endPos - 0x80000;
-    int divisor = entity->endPos - entity->startPos - entity->stoodPos;
+    int32 divisor = entity->endPos - entity->startPos - entity->stoodPos;
     ang         = 0x80000;
     if (id >= entity->length) {
         RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL);
@@ -226,7 +226,7 @@ void Bridge_Burn(int offset)
     else {
         off = offset - id;
         for (; id < entity->length; ++id, --off) {
-            int spawnY = (entity->field_6C * RSDK.Sin512((ang << 7) / divisor) >> 9) + entity->position.y;
+            int32 spawnY = (entity->field_6C * RSDK.Sin512((ang << 7) / divisor) >> 9) + entity->position.y;
             RSDK.CreateEntity(BurningLog->objectID, intToVoid(8 * abs(entity->length - abs(off) - offset) + 16), spawnX, spawnY);
             ang += 0x100000;
             spawnX -= 0x100000;

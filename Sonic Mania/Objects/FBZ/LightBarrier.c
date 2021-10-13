@@ -41,11 +41,11 @@ void LightBarrier_Draw(void)
     entity->direction = FLIP_NONE;
     if (entity->enabled) {
         entity->inkEffect  = INK_ADD;
-        int timer          = entity->timer;
+        int32 timer          = entity->timer;
         SpriteFrame *frame = RSDK.GetFrame(LightBarrier->aniFrames, 0, 1);
         drawPos.y += 0x80000;
-        for (int i = 8; i < entity->size - 8;) {
-            int height = 64 - timer;
+        for (int32 i = 8; i < entity->size - 8;) {
+            int32 height = 64 - timer;
             if (64 - timer + i > (entity->size - 8))
                 height = (entity->size - 8) - i;
             frame->sprY   = timer + (entity->sprY & 0xFFFF);

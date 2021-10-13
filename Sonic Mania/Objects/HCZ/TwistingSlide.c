@@ -7,9 +7,9 @@ void TwistingSlide_Update(void)
     RSDK_THIS(TwistingSlide);
     foreach_active(Player, player)
     {
-        int playerID = RSDK.GetEntityID(player);
-        int storeX   = player->position.x;
-        int storeY   = player->position.y;
+        int32 playerID = RSDK.GetEntityID(player);
+        int32 storeX   = player->position.x;
+        int32 storeY   = player->position.y;
         if (player->state != Player_State_None)
             entity->activePlayers &= ~(1 << playerID);
 
@@ -25,7 +25,7 @@ void TwistingSlide_Update(void)
                             entity->field_64[playerID] = (player->position.y - entity->position.y + 0x4A0000) >> 16;
                             entity->activePlayers |= 1 << playerID;
                         }
-                        int val = 221 * entity->field_64[playerID];
+                        int32 val = 221 * entity->field_64[playerID];
                         if (221 * entity->field_64[playerID] >= 0x3FC0)
                             val = 170 * entity->field_64[playerID];
                         player->position.x = 0x2800 * RSDK.Cos256((val >> 8) + 192) + entity->position.x;
@@ -108,7 +108,7 @@ void TwistingSlide_Update(void)
                             entity->field_64[playerID] = (player->position.y - entity->position.y + 4849664) >> 16;
                             entity->activePlayers |= 1 << playerID;
                         }
-                        int val = 221 * entity->field_64[playerID];
+                        int32 val = 221 * entity->field_64[playerID];
                         if (221 * entity->field_64[playerID] >= 16320)
                             val = 170 * entity->field_64[playerID];
                         player->position.x = entity->position.x - 0x2800 * RSDK.Cos256((val >> 8) + 192);
@@ -213,8 +213,8 @@ void TwistingSlide_Update(void)
             if (player->playerAnimator.animationSpeed > 0xF0)
                 player->playerAnimator.animationSpeed = 0xF0;
 
-            int x = player->position.x - storeX;
-            int y = player->position.y - storeY;
+            int32 x = player->position.x - storeX;
+            int32 y = player->position.y - storeY;
             if (player->position.x != storeX && y) {
                 if (player->groundVel <= 0) {
                     y = storeY - player->position.y;

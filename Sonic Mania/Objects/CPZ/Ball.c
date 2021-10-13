@@ -102,7 +102,7 @@ void Ball_SpawnChildren(void)
 {
     RSDK_THIS(Ball);
     RSDK.PlaySfx(Ball->sfxSplash, false, 255);
-    for (int i = 0; i < 5; ++i) {
+    for (int32 i = 0; i < 5; ++i) {
         EntityBall *ball = CREATE_ENTITY(Ball, intToVoid(true), entity->position.x, entity->position.y);
         ball->drawOrder  = Zone->drawOrderHigh;
         ball->velocity.x = RSDK.Rand(-0x100, 0x100) << 10;

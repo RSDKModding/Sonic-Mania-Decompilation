@@ -28,8 +28,8 @@ typedef struct {
     uint16 timer;
     Vector2 startPos;
     uint8 startDir;
-    int field_BC;
-    int explodeTimer;
+    int32 field_BC;
+    int32 explodeTimer;
 } EntityGrabber;
 
 // Object Struct

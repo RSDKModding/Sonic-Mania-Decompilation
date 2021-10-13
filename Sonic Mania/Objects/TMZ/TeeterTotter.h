@@ -16,14 +16,14 @@ typedef struct {
     uint8 color;
     uint32 length;
     Vector2 origin;
-    int field_6C;
-    int playerIDs[4];
-    int inactiveSegments;
-    int field_84;
-    int field_88;
-    int field_8C;
-    int field_90[32];
-    int field_110[32];
+    int32 field_6C;
+    int32 playerIDs[4];
+    int32 inactiveSegments;
+    int32 field_84;
+    int32 field_88;
+    int32 field_8C;
+    int32 field_90[32];
+    int32 field_110[32];
     Hitbox hitbox;
     Animator animator;
 } EntityTeeterTotter;
@@ -43,7 +43,7 @@ void TeeterTotter_EditorLoad(void);
 void TeeterTotter_Serialize(void);
 
 // Extra Entity Functions
-int TeeterTotter_CheckPlayerCollisions(void);
+int32 TeeterTotter_CheckPlayerCollisions(void);
 void TeeterTotter_ProcessSegmentGravity(void);
 void TeeterTotter_Unknown3(void);
 

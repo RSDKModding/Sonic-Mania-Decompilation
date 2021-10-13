@@ -6,10 +6,10 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    int screenID;
-    int layerIDs[8];
+    int32 screenID;
+    int32 layerIDs[8];
     void (*switchCallback[8])(void);
-    int field_48;
+    int32 field_48;
 } ObjectBGSwitch;
 
 // Entity Class
@@ -17,12 +17,12 @@ typedef struct {
     RSDK_ENTITY
     Vector2 size;
     uint8 bgID;
-    int field_64;
-    int field_68;
-    int field_6C;
-    int field_70;
-    int field_74;
-    int field_78;
+    int32 field_64;
+    int32 field_68;
+    int32 field_6C;
+    int32 field_70;
+    int32 field_74;
+    int32 field_78;
 } EntityBGSwitch;
 
 // Object Struct

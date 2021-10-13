@@ -18,13 +18,13 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    int speed;
+    int32 speed;
     uint8 activePlayers;
     Vector2 startPos;
     Vector2 playerPos;
     Vector2 field_74;
-    int field_7C;
-    int field_80;
+    int32 field_7C;
+    int32 field_80;
     Animator animator1;
     Animator animator2;
 } EntityHandLauncher;

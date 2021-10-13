@@ -110,9 +110,9 @@ void FXFade_State_FadeOutBlack(void)
 {
     RSDK_THIS(FXFade);
 
-    int r = (entity->color >> 16) & 0xFF;
-    int g = (entity->color >> 8) & 0xFF;
-    int b = (entity->color >> 0) & 0xFF;
+    int32 r = (entity->color >> 16) & 0xFF;
+    int32 g = (entity->color >> 8) & 0xFF;
+    int32 b = (entity->color >> 0) & 0xFF;
 
     if (r) {
         r -= entity->speedOut;

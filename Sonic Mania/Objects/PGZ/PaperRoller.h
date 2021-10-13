@@ -14,12 +14,12 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    int length;
+    int32 length;
     Vector2 startPos;
-    int field_64;
-    int angleVal;
-    int playerTimer[4];
-    int playerUnknown[4];
+    int32 field_64;
+    int32 angleVal;
+    int32 playerTimer[4];
+    int32 playerUnknown[4];
     Vector2 field_8C;
     Vector2 field_94;
     Hitbox hitbox;
@@ -42,7 +42,7 @@ void PaperRoller_EditorLoad(void);
 void PaperRoller_Serialize(void);
 
 // Extra Entity Functions
-void PaperRoller_DrawLineDeform(uint32 colour, int len, int posX1, int posY1, int posX2, int posY2, int posX3, int posY3, int posX4, int posY4);
+void PaperRoller_DrawLineDeform(uint32 colour, int32 len, int32 posX1, int32 posY1, int32 posX2, int32 posY2, int32 posX3, int32 posY3, int32 posX4, int32 posY4);
 void PaperRoller_DrawPaperLines(void);
 void PaperRoller_DrawRollers(void);
 void PaperRoller_Unknown4(void);

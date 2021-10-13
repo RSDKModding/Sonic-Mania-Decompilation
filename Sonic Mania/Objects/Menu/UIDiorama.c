@@ -111,7 +111,7 @@ void UIDiorama_StageLoad(void)
 void UIDiorama_ManageStates(uint8 dioramaID)
 {
     RSDK_THIS(UIDiorama);
-    int ids[] = { 0x00, 0x0C, 0x0C, 0x01, 0x03, 0x0F, 0x0D, 0x0E };
+    int32 ids[] = { 0x00, 0x0C, 0x0C, 0x01, 0x03, 0x0F, 0x0D, 0x0E };
 
     entity->dioramaSubID = dioramaID;
     RSDK.CopyPalette(((ids[entity->dioramaID] >> 3) + 1), (32 * ids[entity->dioramaID]), 0, 224, 32);
@@ -166,11 +166,11 @@ void UIDiorama_SetText(TextInfo *info)
 {
     RSDK_THIS(UIDiorama);
     if (info) {
-        int lineCount = 0;
-        int linePos   = 0;
+        int32 lineCount = 0;
+        int32 linePos   = 0;
 
-        int *linePosPtr = &entity->field_D0;
-        for (int i = 0; i < info->textLength; ++i) {
+        int32 *linePosPtr = &entity->field_D0;
+        for (int32 i = 0; i < info->textLength; ++i) {
             if (info->text[linePos] == '\n' && lineCount < 3) {
                 linePosPtr[lineCount] = linePos;
                 ++lineCount;
@@ -519,8 +519,8 @@ void UIDiorama_StateDraw_ManiaMode(void)
 {
     RSDK_THIS(UIDiorama);
     Vector2 drawPos;
-    int frameWidths[] = { 0x400, 0x200, 0x200, 0x200, 0x200, 0x129 };
-    int frameSpeeds[] = { 0x100, 0x30, 0x30, 0x30, 0x60, 0x80 };
+    int32 frameWidths[] = { 0x400, 0x200, 0x200, 0x200, 0x200, 0x129 };
+    int32 frameSpeeds[] = { 0x100, 0x30, 0x30, 0x30, 0x60, 0x80 };
 
     if (RSDK_sceneInfo->currentDrawGroup == entity->drawOrder) {
         drawPos.x = entity->position.x + 0x380000;
@@ -533,7 +533,7 @@ void UIDiorama_StateDraw_ManiaMode(void)
         drawPos.x += 0x280000;
         RSDK.DrawSprite(&entity->animators[6], &drawPos, false);
 
-        int offsets[6];
+        int32 offsets[6];
         offsets[0] = 0;
         offsets[1] = entity->field_C0;
         offsets[2] = entity->field_C4;
@@ -541,11 +541,11 @@ void UIDiorama_StateDraw_ManiaMode(void)
         offsets[4] = 0;
         offsets[5] = 0;
 
-        for (int i = 0; i < 6; ++i) {
+        for (int32 i = 0; i < 6; ++i) {
             drawPos   = entity->position;
-            int width = frameWidths[i] << 16;
+            int32 width = frameWidths[i] << 16;
 
-            int offset2 = -(int)((offsets[i] << 8) + ((frameSpeeds[i] * (uint32)(entity->field_BC >> 4)) >> 4));
+            int32 offset2 = -(int32)((offsets[i] << 8) + ((frameSpeeds[i] * (uint32)(entity->field_BC >> 4)) >> 4));
             while (offset2 < -0x10000 * frameWidths[i]) {
                 offset2 += width;
             }
@@ -599,17 +599,17 @@ void UIDiorama_StateDraw_PlusUpsell(void)
         drawPos.x         = entity->position.x + 0x840000;
         drawPos.y         = entity->position.y - 0x480000;
 
-        int length[5];
+        int32 length[5];
         length[0] = entity->field_CC;
         length[1] = entity->field_D0;
         length[2] = entity->field_D4;
         length[3] = entity->field_D8;
         length[4] = entity->field_DC;
 
-        int lineCount = length[0];
-        for (int i = 0; i < lineCount + 1; ++i) {
-            int start = 0;
-            int end   = 0;
+        int32 lineCount = length[0];
+        for (int32 i = 0; i < lineCount + 1; ++i) {
+            int32 start = 0;
+            int32 end   = 0;
             if (i > 0) {
                 start = length[i] + 1;
             }
@@ -618,7 +618,7 @@ void UIDiorama_StateDraw_PlusUpsell(void)
             else
                 end = length[i + 1];
 
-            int width = -0x8000 * RSDK.GetStringWidth(UIWidgets->labelSpriteIndex, 0, &entity->textInfo, start, end, 0);
+            int32 width = -0x8000 * RSDK.GetStringWidth(UIWidgets->labelSpriteIndex, 0, &entity->textInfo, start, end, 0);
             drawPos.x += width;
             RSDK.DrawText(&entity->animators[6], &drawPos, &entity->textInfo, start, end, ALIGN_LEFT, 0, 0, 0, false);
 
@@ -650,7 +650,7 @@ void UIDiorama_StateDraw_EncoreMode(void)
         entity->inkEffect = INK_NONE;
         drawPos.y += 0x200000;
         drawPos.x += 0x500000;
-        int x = drawPos.x;
+        int32 x = drawPos.x;
         RSDK.DrawSprite(&entity->animators[2], &drawPos, false);
 
         drawPos.x += 0xE0000;
@@ -691,7 +691,7 @@ void UIDiorama_StateDraw_TimeAttack(void)
 
         drawPos.x = entity->position.x + 0x9B0000;
         drawPos.y = entity->position.y - 0x400000;
-        for (int i = 0; i < 3; ++i) {
+        for (int32 i = 0; i < 3; ++i) {
             RSDK.DrawSprite(&entity->animators[2], &drawPos, false);
             drawPos.x += 0x1C0000;
         }
@@ -764,7 +764,7 @@ void UIDiorama_StateDraw_Competition(void)
     if (RSDK_sceneInfo->currentDrawGroup == entity->drawOrder) {
         drawPos.x = entity->position.x + 0xAB0000;
         drawPos.y = entity->position.y - 0x190000;
-        for (int i = 0; i < 3; ++i) {
+        for (int32 i = 0; i < 3; ++i) {
             drawPos.x += 0x200000;
             RSDK.DrawSprite(&entity->animators[2], &drawPos, false);
         }
@@ -775,13 +775,13 @@ void UIDiorama_StateDraw_Competition(void)
         entity->animators[0].frameID = 0;
         RSDK.DrawSprite(&entity->animators[0], &drawPos, false);
 
-        int *val = &entity->field_C0;
+        int32 *val = &entity->field_C0;
         drawPos.y += entity->field_FC.y;
-        for (int i = 1; i <= 11; ++i) {
+        for (int32 i = 1; i <= 11; ++i) {
             drawPos.x                    = entity->position.x;
             entity->animators[0].frameID = i;
 
-            int offset = -(val[i - 1] << 8);
+            int32 offset = -(val[i - 1] << 8);
             if (offset < -0x2000000)
                 offset += ((-0x2000001 - offset) & 0xFE000000) + 0x2000000;
             drawPos.x += offset;
@@ -795,10 +795,10 @@ void UIDiorama_StateDraw_Competition(void)
     }
     else {
         entity->inkEffect   = INK_NONE;
-        int count           = API.CheckDLC(DLC_PLUS) ? 4 : 2;
+        int32 count           = API.CheckDLC(DLC_PLUS) ? 4 : 2;
         Vector2 *drawPosPtr = &entity->field_10C;
 
-        for (int i = 0; i < count; ++i) {
+        for (int32 i = 0; i < count; ++i) {
             RSDK.DrawSprite(&entity->animators[3 + i], &drawPosPtr[i], false);
         }
     }
@@ -814,9 +814,9 @@ void UIDiorama_StateDraw_Options(void)
     if (RSDK_sceneInfo->currentDrawGroup != entity->drawOrder) {
         Vector2 *offsets  = &entity->field_FC;
         Vector2 *offsets2 = &entity->field_114;
-        int *alpha        = &entity->field_BC;
+        int32 *alpha        = &entity->field_BC;
 
-        for (int i = 0; i < 3; ++i) {
+        for (int32 i = 0; i < 3; ++i) {
             drawPos = entity->position;
             drawPos.x += offsets[i].x;
             drawPos.y += offsets[i].y;

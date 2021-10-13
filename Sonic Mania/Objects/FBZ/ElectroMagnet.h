@@ -22,9 +22,9 @@ typedef struct {
     uint16 interval;
     uint16 intervalOffset;
     uint16 duration;
-    int height;
-    int shieldRange;
-    int timer;
+    int32 height;
+    int32 shieldRange;
+    int32 timer;
     bool32 invisible;
     Hitbox hitbox;
     Hitbox playerHitbox;

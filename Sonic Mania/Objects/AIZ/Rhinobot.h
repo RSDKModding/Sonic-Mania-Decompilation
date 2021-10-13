@@ -17,13 +17,13 @@ typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(timedState);
-    int field_60;
-    int timer;
-    int field_68;
-    int field_6C;
+    int32 field_60;
+    int32 timer;
+    int32 field_68;
+    int32 field_6C;
     bool32 flag;
-    int field_74;
-    int field_78;
+    int32 field_74;
+    int32 field_78;
     Vector2 startPos;
     char startDir;
     Animator animatorBot;

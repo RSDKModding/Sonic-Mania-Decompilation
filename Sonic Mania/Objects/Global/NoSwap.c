@@ -8,8 +8,8 @@ void NoSwap_Update(void)
     RSDK_THIS(NoSwap);
     if (Player->playerCount) {
         Vector2 *pos = &entity->posPtr;
-        int cnt      = 0;
-        for (int p = 0; p < Player->playerCount; ++p) {
+        int32 cnt      = 0;
+        for (int32 p = 0; p < Player->playerCount; ++p) {
             EntityPlayer *player = RSDK_GET_ENTITY(p, Player);
 
             if (!Player_CheckValidState(player)) {

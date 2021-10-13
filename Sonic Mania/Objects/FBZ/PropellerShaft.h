@@ -11,20 +11,20 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    int size;
-    int activePlayers;
-    int playerTimers[4];
-    int field_70;
-    int field_74;
-    int field_78;
-    int field_7C;
+    int32 size;
+    int32 activePlayers;
+    int32 playerTimers[4];
+    int32 field_70;
+    int32 field_74;
+    int32 field_78;
+    int32 field_7C;
     Hitbox hitbox;
-    int field_88;
-    int field_8C;
-    int field_90;
-    int field_94;
-    int field_98;
-    int field_9C;
+    int32 field_88;
+    int32 field_8C;
+    int32 field_90;
+    int32 field_94;
+    int32 field_98;
+    int32 field_9C;
 } EntityPropellerShaft;
 
 // Object Struct

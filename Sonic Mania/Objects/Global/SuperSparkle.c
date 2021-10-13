@@ -41,7 +41,7 @@ void SuperSparkle_Update(void)
             ring->velocity.y = -0x10000;
             ring->drawOrder  = player->drawOrder;
             RSDK.SetSpriteAnimation(Ring->spriteIndex, Zone->timer % 3 + 2, &ring->animator, true, 0);
-            int cnt = ring->animator.frameCount;
+            int32 cnt = ring->animator.frameCount;
             if (ring->animator.animationID == 2) {
                 ring->alpha = 224;
                 cnt >>= 1;

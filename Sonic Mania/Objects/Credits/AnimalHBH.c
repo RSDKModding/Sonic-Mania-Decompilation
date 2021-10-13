@@ -6,7 +6,7 @@ void AnimalHBH_Update(void)
 {
     RSDK_THIS(AnimalHBH);
     entity->position.x -= 0x10000;
-    int pos = entity->position.x - (RSDK_screens->position.x << 16) - (RSDK_screens->centerX << 16);
+    int32 pos = entity->position.x - (RSDK_screens->position.x << 16) - (RSDK_screens->centerX << 16);
     if (pos < 0)
         pos = ((RSDK_screens->position.x + RSDK_screens->centerX) << 16) - entity->position.x;
     if (pos < 0x800000)

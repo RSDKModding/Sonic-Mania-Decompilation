@@ -8,9 +8,9 @@ typedef struct {
     RSDK_OBJECT
     TABLE(colour colours[4], { 0xF0F0F0, 0xF0F0F0, 0xE0E0E0, 0xE0E0E0 });
     uint16 aniFrames;
-    int table1[0x1000];
-    int table2[0x1000];
-    int table3[0x1000];
+    int32 table1[0x1000];
+    int32 table2[0x1000];
+    int32 table3[0x1000];
     uint16 field_C016;
     uint16 sfxChemYellow;
     uint16 sfxChemRed;
@@ -21,20 +21,20 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    int type;
+    int32 type;
     Vector2 size;
-    int timer2;
-    int timer;
-    int tileSizeX;
-    int offsetY;
-    int field_78;
-    int r;
-    int g;
-    int b;
-    int dword88;
-    int dword8C;
-    int dword90;
-    int dword94;
+    int32 timer2;
+    int32 timer;
+    int32 tileSizeX;
+    int32 offsetY;
+    int32 field_78;
+    int32 r;
+    int32 g;
+    int32 b;
+    int32 dword88;
+    int32 dword8C;
+    int32 dword90;
+    int32 dword94;
     Hitbox hitbox;
     Vector2 field_A0[66];
     colour colours[4];
@@ -56,10 +56,10 @@ void ChemicalPool_EditorLoad(void);
 void ChemicalPool_Serialize(void);
 
 // Extra Entity Functions
-void ChemicalPool_ChangeState(EntityChemicalPool *chemPool, int a1, int a3, int a4, int a5);
+void ChemicalPool_ChangeState(EntityChemicalPool *chemPool, int32 a1, int32 a3, int32 a4, int32 a5);
 void ChemicalPool_ProcessDeformations(void);
-void ChemicalPool_SetDeform(int x, int y);
-void ChemicalPool_SpawnDebris(int x, int y);
+void ChemicalPool_SetDeform(int32 x, int32 y);
+void ChemicalPool_SpawnDebris(int32 x, int32 y);
 void ChemicalPool_SetupColours(void);
 //States
 void ChemicalPool_State_HarmfulBlue(void);

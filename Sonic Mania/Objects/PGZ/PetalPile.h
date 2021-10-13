@@ -6,14 +6,14 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    TABLE(int patternSize[5], { 7, 6, 6, 10, 3 });
-    TABLE(int pattern1[14],
+    TABLE(int32 patternSize[5], { 7, 6, 6, 10, 3 });
+    TABLE(int32 pattern1[14],
           { -0x10000, 0x10000, -0x8000, -0x10000, -0x5555, 0x10000, 0, -0x10000, 0x5555, 0x10000, 0x8000, -0x10000, 0x10000, 0x10000 });
-    TABLE(int pattern2[12], { -0x10000, 0x10000, -0x5555, -0x5555, 0x10000, -0x10000, 0, 0xAAAA, 0xAAAA, 0, 0x10000, 0x10000 });
-    TABLE(int pattern3[12], { 0x10000, 0x10000, 0x5555, -0x5555, -0x10000, -0x10000, 0, 0xAAAA, -0xAAAA, 0, -0x10000, 0x10000 });
-    TABLE(int pattern4[20], { -0x10000, 0x10000,  -0x8000, -0x10000, -0x5555, 0x10000, 0, -0x10000, 0x5555, 0x10000,
+    TABLE(int32 pattern2[12], { -0x10000, 0x10000, -0x5555, -0x5555, 0x10000, -0x10000, 0, 0xAAAA, 0xAAAA, 0, 0x10000, 0x10000 });
+    TABLE(int32 pattern3[12], { 0x10000, 0x10000, 0x5555, -0x5555, -0x10000, -0x10000, 0, 0xAAAA, -0xAAAA, 0, -0x10000, 0x10000 });
+    TABLE(int32 pattern4[20], { -0x10000, 0x10000,  -0x8000, -0x10000, -0x5555, 0x10000, 0, -0x10000, 0x5555, 0x10000,
                               0x8000,   -0x10000, 0x10000, 0x10000,  -0xAAAA, 0,       0, 0,        0xAAAA, 0 });
-    TABLE(int pattern5[6], { 0, -0x10000, -0x10000, 0x10000, 0x10000, 0x10000 });
+    TABLE(int32 pattern5[6], { 0, -0x10000, -0x10000, 0x10000, 0x10000, 0x10000 });
     uint16 aniFrames;
     uint16 sfxPetals;
 } ObjectPetalPile;
@@ -31,13 +31,13 @@ typedef struct {
     bool32 emitterMode;
     uint8 layerID;
     Vector2 velStore;
-    int field_84;
-    int field_88;
-    int field_8C;
-    int field_90;
+    int32 field_84;
+    int32 field_88;
+    int32 field_8C;
+    int32 field_90;
     int8 field_94;
-    int field_98;
-    int field_9C;
+    int32 field_98;
+    int32 field_9C;
     bool32 flag;
     Hitbox hitbox1;
     Animator animator;
@@ -58,7 +58,7 @@ void PetalPile_EditorLoad(void);
 void PetalPile_Serialize(void);
 
 // Extra Entity Functions
-int PetalPile_GetLeafPattern(int *patternPtr);
+int32 PetalPile_GetLeafPattern(int32 *patternPtr);
 
 void PetalPile_State_Setup(void);
 void PetalPile_State_HandleInteractions(void);

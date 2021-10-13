@@ -100,8 +100,8 @@ void CircleBumper_DebugSpawn(void)
 void CircleBumper_Unknown1(void)
 {
     RSDK_THIS(CircleBumper);
-    int storeX         = entity->position.x;
-    int storeY         = entity->position.y;
+    int32 storeX         = entity->position.x;
+    int32 storeY         = entity->position.y;
     entity->position.x = entity->originPos.x;
     entity->position.y = entity->originPos.y;
     foreach_active(Player, player)
@@ -111,9 +111,9 @@ void CircleBumper_Unknown1(void)
             entity->stateCollide     = CircleBumper_Unknown3;
             RSDK.PlaySfx(CircleBumper->sfxBumper, 0, 255);
             entity->active = ACTIVE_NORMAL;
-            int angle      = RSDK.ATan2(player->position.x - entity->position.x, player->position.y - entity->position.y);
-            int xVel       = 0x700 * RSDK.Cos256(angle);
-            int yVel       = 0x700 * RSDK.Sin256(angle);
+            int32 angle      = RSDK.ATan2(player->position.x - entity->position.x, player->position.y - entity->position.y);
+            int32 xVel       = 0x700 * RSDK.Cos256(angle);
+            int32 yVel       = 0x700 * RSDK.Sin256(angle);
             if (player->state == Player_State_FlyCarried)
                 RSDK_GET_ENTITY(SLOT_PLAYER2, Player)->flyCarryTimer = 30;
 
@@ -123,7 +123,7 @@ void CircleBumper_Unknown1(void)
             }
             else {
 #endif
-                int anim = player->playerAnimator.animationID;
+                int32 anim = player->playerAnimator.animationID;
                 if (anim != ANI_FLY && anim != ANI_FLYLIFTTIRED && player->state != Player_State_TailsFlight) {
                     if (player->state != Player_State_DropDash)
                         player->state = Player_State_Air;
@@ -215,7 +215,7 @@ void CircleBumper_Unknown7(void)
 void CircleBumper_Unknown8(void)
 {
     RSDK_THIS(CircleBumper);
-    int val = Zone->timer << 7;
+    int32 val = Zone->timer << 7;
     if (((val >> 16) & 1) == RSDK_sceneInfo->entity->direction) {
         entity->originPos.x = entity->position.x + (val * entity->amplitude.x >> 6) - (entity->amplitude.x << 15);
         entity->originPos.y = entity->position.y + (val * entity->amplitude.y >> 6) - (entity->amplitude.y << 15);

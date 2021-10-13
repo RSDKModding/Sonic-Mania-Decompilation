@@ -7,9 +7,9 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    STATIC(int timer, 240);
-    int aniFrameID;
-    TABLE(int aniFrameDelay[4], { 240, 3, 3, 3 });
+    STATIC(int32 timer, 240);
+    int32 aniFrameID;
+    TABLE(int32 aniFrameDelay[4], { 240, 3, 3, 3 });
 } ObjectSummary;
 
 // Entity Class
@@ -17,11 +17,11 @@ typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
-    int timer;
-    int field_64;
-    int field_68;
-    int player1ID;
-    int player2ID;
+    int32 timer;
+    int32 field_64;
+    int32 field_68;
+    int32 player1ID;
+    int32 player2ID;
     void *gameModeText;
     void *saveText;
     void *totalTime;
@@ -54,7 +54,7 @@ void Summary_State_Unknown2(void);
 void Summary_State_Unknown3(void);
 
 void Summary_SetTextString(uint8 anim, void *text, const char *str);
-void Summary_SetStageTime(char *buffer, int time);
+void Summary_SetStageTime(char *buffer, int32 time);
 void Summary_LoadTimes(void);
 
 #endif

@@ -21,9 +21,9 @@ void CaterkillerJr_StaticUpdate(void) {}
 void CaterkillerJr_Draw(void)
 {
     RSDK_THIS(CaterkillerJr);
-    int storeDir = entity->direction;
+    int32 storeDir = entity->direction;
 
-    for (int i = 6; i >= 0; --i) {
+    for (int32 i = 6; i >= 0; --i) {
         entity->direction = entity->bodyDirection[i];
         RSDK.DrawSprite(&entity->bodyAnimators[i], &entity->bodyPosition[i], false);
     }
@@ -98,7 +98,7 @@ void CaterkillerJr_DebugSpawn(void)
 void CaterkillerJr_SetupPositions(void)
 {
     RSDK_THIS(CaterkillerJr);
-    for (int i = 0; i < 7; ++i) {
+    for (int32 i = 0; i < 7; ++i) {
         entity->bodyPosition[i].x = entity->position.x;
         entity->bodyPosition[i].y = entity->position.y;
         entity->bodyVelocity[i].x = 0;
@@ -132,7 +132,7 @@ void CaterkillerJr_State1(void)
 {
     RSDK_THIS(CaterkillerJr);
 
-    int pos = 2 * (entity->direction != FLIP_NONE) - 1;
+    int32 pos = 2 * (entity->direction != FLIP_NONE) - 1;
     switch (++entity->timer) {
         case 12: entity->bodyVelocity[1].x = pos << 16; break;
         case 24: entity->bodyVelocity[2].x = pos << 16; break;
@@ -151,7 +151,7 @@ void CaterkillerJr_State1(void)
 void CaterkillerJr_State2(void)
 {
     RSDK_THIS(CaterkillerJr);
-    for (int i = 0; i < 7; ++i) {
+    for (int32 i = 0; i < 7; ++i) {
         RSDK.ProcessAnimation(&entity->bodyAnimators[i]);
         entity->bodyPosition[i].x += entity->bodyVelocity[i].x;
         if (entity->bodyDirection[i] && entity->bodyPosition[i].x >= entity->boundR - 0x80000) {
@@ -175,7 +175,7 @@ void CaterkillerJr_State2(void)
         }
 
         if (entity->bodyVelocity[i].x) {
-            int val = 0;
+            int32 val = 0;
             if (entity->bodyTimer[i] >= 2048) {
                 entity->bodyTimer[i] += 8;
                 val = RSDK.Sin1024(entity->bodyTimer[i]) << 10;
@@ -197,7 +197,7 @@ void CaterkillerJr_State2(void)
     {
         entity->position = entity->bodyPosition[0];
         if (Player_CheckBadnikHit(player, entity, &CaterkillerJr->hitbox) && Player_CheckBadnikBreak(entity, player, false)) {
-            for (int i = 0; i < 6; ++i) {
+            for (int32 i = 0; i < 6; ++i) {
                 EntityDebris *debris =
                     CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, entity->bodyPosition[i + 1].x, entity->bodyPosition[i + 1].y);
                 debris->animator      = entity->bodyAnimators[i + 1];
@@ -215,7 +215,7 @@ void CaterkillerJr_State2(void)
         }
 
         if (entity->objectID != TYPE_BLANK) {
-            for (int i = 0; i < 6; ++i) {
+            for (int32 i = 0; i < 6; ++i) {
                 entity->position.x = entity->bodyPosition[i + 1].x;
                 entity->position.y = entity->bodyPosition[i + 1].y;
                 if (Player_CheckCollisionTouch(player, entity, &CaterkillerJr->hitbox)) {

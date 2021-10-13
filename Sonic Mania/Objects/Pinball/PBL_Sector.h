@@ -15,7 +15,7 @@ typedef struct {
     RSDK_ENTITY
     Vector2 size;
     uint8 craneID;
-    int timer;
+    int32 timer;
     bool32 flag;
     Animator animator;
 } EntityPBL_Sector;

@@ -23,8 +23,8 @@ void SP500_Draw(void)
     RSDK.DrawSprite(&entity->animator, &drawPos, false);
 
     entity->animator.frameID = 3;
-    int pos                  = drawPos.x;
-    for (int l = 0; l < entity->len; ++l) {
+    int32 pos                  = drawPos.x;
+    for (int32 l = 0; l < entity->len; ++l) {
         RSDK.DrawSprite(&entity->animator, &drawPos, false);
         pos = drawPos.x + 0x100000;
         drawPos.x += 0x100000;
@@ -123,15 +123,15 @@ void SP500_Unknown1(void)
 {
     RSDK_THIS(SP500);
     entity->position.x += entity->offset;
-    int offsetX = (entity->position.x & 0xFFFF0000) - (entity->xOffset & 0xFFFF0000);
-    int offsetY = (entity->position.y & 0xFFFF0000) - (entity->yOffset & 0xFFFF0000);
+    int32 offsetX = (entity->position.x & 0xFFFF0000) - (entity->xOffset & 0xFFFF0000);
+    int32 offsetY = (entity->position.y & 0xFFFF0000) - (entity->yOffset & 0xFFFF0000);
 
     //???
     Entity *offset = (Entity *)&entity->xOffset;
 
     foreach_active(Player, player)
     {
-        int playerID = RSDK.GetEntityID(player);
+        int32 playerID = RSDK.GetEntityID(player);
         if (entity->playerTimers[playerID]) {
             entity->playerTimers[playerID]--;
         }
@@ -161,7 +161,7 @@ void SP500_Unknown1(void)
         }
     }
 
-    for (int i = 0; i < Player->playerCount; ++i) {
+    for (int32 i = 0; i < Player->playerCount; ++i) {
         if ((1 << i) & entity->activePlayers) {
             EntityPlayer *player = RSDK_GET_ENTITY(i, Player);
             player->position.x   = entity->position.x;
@@ -234,7 +234,7 @@ void SP500_Unknown5(void)
     SP500_Unknown1();
     if (++entity->timer >= 30) {
         entity->timer = 0;
-        for (int i = 0; i < Player->playerCount; ++i) {
+        for (int32 i = 0; i < Player->playerCount; ++i) {
             if ((1 << i) & entity->activePlayers) {
                 RSDK.PlaySfx(Player->sfx_Release, false, 255);
                 EntityPlayer *player     = RSDK_GET_ENTITY(i, Player);
@@ -300,7 +300,7 @@ void SP500_Unknown7(void)
         entity->flagA = (Zone->timer >> 1) & 1;
         RSDK.SetTileInfo(Zone->fgLow, (entity->position.x + entity->offset) >> 20, entity->position.y >> 20, tile);
 
-        int posY = entity->position.y;
+        int32 posY = entity->position.y;
         if (entity->position.y >= 0x1800000) {
             if (entity->position.y > 0x8800000) {
                 posY -= 0xA000000;
@@ -360,7 +360,7 @@ void SP500_Unknown9(void)
     switch (entity->timer) {
         case 30: RSDK.PlaySfx(SP500->sfxBeep4, false, 255); break;
         case 60: {
-            for (int i = 0; i < Player->playerCount; i += 2) {
+            for (int32 i = 0; i < Player->playerCount; i += 2) {
                 EntityPlayer *player = RSDK_GET_ENTITY(i, Player);
 
                 switch (player->characterID) {
@@ -381,7 +381,7 @@ void SP500_Unknown9(void)
             break;
         }
         case 90:
-            for (int i = SLOT_PLAYER1; i < Player->playerCount; ++i) {
+            for (int32 i = SLOT_PLAYER1; i < Player->playerCount; ++i) {
                 if ((1 << i) & entity->activePlayers) {
                     RSDK.PlaySfx(Player->sfx_Release, false, 255);
                     EntityPlayer *player     = RSDK_GET_ENTITY(i, Player);

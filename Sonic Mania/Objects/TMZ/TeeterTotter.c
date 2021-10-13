@@ -17,11 +17,11 @@ void TeeterTotter_Draw(void)
 {
     RSDK_THIS(TeeterTotter);
 
-    int x       = RSDK_sceneInfo->entity->position.x;
-    int y       = RSDK_sceneInfo->entity->position.y;
-    int offsetX = 0x100000 - (entity->length << 21) + x;
+    int32 x       = RSDK_sceneInfo->entity->position.x;
+    int32 y       = RSDK_sceneInfo->entity->position.y;
+    int32 offsetX = 0x100000 - (entity->length << 21) + x;
 
-    for (int i = 0; i < 2 * entity->length; ++i) {
+    for (int32 i = 0; i < 2 * entity->length; ++i) {
         if (!((1 << i) & entity->inactiveSegments)) {
             Vector2 drawPos;
             drawPos.x = (offsetX + (i << 21)) & 0xFFFF0000;
@@ -65,25 +65,25 @@ void TeeterTotter_StageLoad(void)
         TeeterTotter->aniFrames = RSDK.LoadSpriteAnimation("TMZ1/TeeterTotter.bin", SCOPE_STAGE);
 }
 
-int TeeterTotter_CheckPlayerCollisions(void)
+int32 TeeterTotter_CheckPlayerCollisions(void)
 {
     RSDK_THIS(TeeterTotter);
-    int id = -1;
+    int32 id = -1;
 
-    int ids[] = { -1, -1, -1, -1 };
+    int32 ids[] = { -1, -1, -1, -1 };
 
-    int storeX = entity->position.x;
-    int storeY = entity->position.y;
+    int32 storeX = entity->position.x;
+    int32 storeY = entity->position.y;
 
-    int x = 0x100000 - (entity->length << 21) + entity->position.x;
+    int32 x = 0x100000 - (entity->length << 21) + entity->position.x;
 
-    for (int i = 0; i < 2 * entity->length; ++i) {
+    for (int32 i = 0; i < 2 * entity->length; ++i) {
         if (!((1 << id) & entity->inactiveSegments)) {
             entity->position.x = (x + (i << 21)) & 0xFFFF0000;
             entity->position.y = (entity->field_90[i] + storeY) & 0xFFFF0000;
             foreach_active(Player, player)
             {
-                int playerID = RSDK.GetEntityID(player);
+                int32 playerID = RSDK.GetEntityID(player);
                 if (entity->playerIDs[playerID] == i) {
                     player->position.y += entity->field_110[i];
                     player->position.y += 0x10000;
@@ -100,7 +100,7 @@ int TeeterTotter_CheckPlayerCollisions(void)
     entity->position.x = storeX;
     entity->position.y = storeY;
 
-    for (int i = 0; i < PLAYER_MAX; ++i) entity->playerIDs[i] = ids[i];
+    for (int32 i = 0; i < PLAYER_MAX; ++i) entity->playerIDs[i] = ids[i];
 
     return id;
 }
@@ -109,11 +109,11 @@ void TeeterTotter_ProcessSegmentGravity(void)
 {
     RSDK_THIS(TeeterTotter);
 
-    int x       = entity->position.x;
-    int y       = entity->position.y;
-    int offsetX = (0x100000 - (entity->length << 21)) + x;
+    int32 x       = entity->position.x;
+    int32 y       = entity->position.y;
+    int32 offsetX = (0x100000 - (entity->length << 21)) + x;
 
-    for (int i = 0; i < 2 * entity->length; ++i) {
+    for (int32 i = 0; i < 2 * entity->length; ++i) {
         if (!((1 << i) & entity->inactiveSegments)) {
             entity->field_110[i] += 0x3800;
             entity->field_90[i] += entity->field_110[i];
@@ -132,7 +132,7 @@ void TeeterTotter_Unknown3(void)
     RSDK_THIS(TeeterTotter);
 
     uint8 len = entity->length;
-    for (int i = 0; i < 2 * entity->length; ++i) {
+    for (int32 i = 0; i < 2 * entity->length; ++i) {
         int8 val = i - len + 1;
         if (i - len < 0)
             val = i - len;
@@ -148,7 +148,7 @@ void TeeterTotter_State_Setup(void)
     entity->field_84 = 0;
     entity->field_88 = 0;
 
-    for (int i = 0; i < 2 * entity->length; ++i) {
+    for (int32 i = 0; i < 2 * entity->length; ++i) {
         entity->field_90[i]  = 0;
         entity->field_110[i] = 0;
     }
@@ -163,20 +163,20 @@ void TeeterTotter_State_Unknown1(void)
 {
     RSDK_THIS(TeeterTotter);
 
-    int prevVal[32];
-    for (int i = 0; i < 2 * entity->length; ++i) {
+    int32 prevVal[32];
+    for (int32 i = 0; i < 2 * entity->length; ++i) {
         prevVal[i] = entity->field_90[i];
     }
 
     TeeterTotter_Unknown3();
 
-    for (int i = 0; i < 2 * entity->length; ++i) {
+    for (int32 i = 0; i < 2 * entity->length; ++i) {
         entity->field_110[i] = entity->field_90[i] - prevVal[i];
     }
 
-    int val = TeeterTotter_CheckPlayerCollisions();
+    int32 val = TeeterTotter_CheckPlayerCollisions();
     if (val > -1) {
-        int id = val - entity->length;
+        int32 id = val - entity->length;
         if (id >= 0)
             ++id;
         entity->field_88 += 32 * id;
@@ -193,7 +193,7 @@ void TeeterTotter_State_Unknown2(void)
     TeeterTotter_ProcessSegmentGravity();
 
     bool32 flag = true;
-    for (int i = 0; i < 2 * entity->length; ++i) {
+    for (int32 i = 0; i < 2 * entity->length; ++i) {
         flag &= ((1 << i) & entity->inactiveSegments) != 0;
     }
 

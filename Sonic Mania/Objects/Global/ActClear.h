@@ -13,18 +13,18 @@ typedef struct {
     uint16 sfx_Event;
 #endif
     bool32 isTimeAttack;
-    int field_10;
+    int32 field_10;
 #if RETRO_USE_PLUS
-    int field_14;
+    int32 field_14;
 #endif
-    int actID;
-    int field_1C;
+    int32 actID;
+    int32 field_1C;
 #if RETRO_USE_PLUS
     bool32 forceNoSave;
     void (*bufferMove_CB)(void);
     void (*saveReplay_CB)(void);
-    int field_2C;
-    int field_30;
+    int32 field_2C;
+    int32 field_30;
     bool32 dword34;
 #endif
 } ObjectActClear;
@@ -33,17 +33,17 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    int timer;
-    int stageFinishTimer;
-    int scoreBonus;
-    int ringBonus;
-    int coolBonus;
-    int totalScore;
-    int time;
-    int dword78;
-    int field_7C;
-    int field_80;
-    int field_84;
+    int32 timer;
+    int32 stageFinishTimer;
+    int32 scoreBonus;
+    int32 ringBonus;
+    int32 coolBonus;
+    int32 totalScore;
+    int32 time;
+    int32 dword78;
+    int32 field_7C;
+    int32 field_80;
+    int32 field_84;
     Vector2 posUnknown;
     Vector2 posUnknown3;
     Vector2 posUnknown2;
@@ -77,11 +77,11 @@ void ActClear_Serialize(void);
 
 // Extra Entity Functions
 #if RETRO_USE_PLUS
-void ActClear_DrawTime(int mins, Vector2 *pos, int secs, int millisecs);
+void ActClear_DrawTime(int32 mins, Vector2 *pos, int32 secs, int32 millisecs);
 #endif
-void ActClear_DrawNumbers(Vector2 *pos, int value, signed int maxVals);
+void ActClear_DrawNumbers(Vector2 *pos, int32 value, int32 maxVals);
 void ActClear_CheckPlayerVictory(void);
-void ActClear_SaveGameCallback(int success);
+void ActClear_SaveGameCallback(int32 success);
 void ActClear_Unknown5(void);
 
 void ActClear_Unknown6(void);

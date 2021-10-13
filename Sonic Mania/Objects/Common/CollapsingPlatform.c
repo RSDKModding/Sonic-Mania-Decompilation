@@ -142,14 +142,14 @@ void CollapsingPlatform_Create(void *data)
         entity->active        = ACTIVE_BOUNDS;
         entity->updateRange.x = 0x800000;
         entity->updateRange.y = 0x800000;
-        int xOff              = (entity->position.x >> 20) - (entity->size.x >> 21);
-        int yOff              = (entity->position.y >> 20) - (entity->size.y >> 21);
+        int32 xOff              = (entity->position.x >> 20) - (entity->size.x >> 21);
+        int32 yOff              = (entity->position.y >> 20) - (entity->size.y >> 21);
 
         if ((entity->size.y & 0xFFF00000) && !(entity->size.y & 0xFFF00000 & 0x80000000)) {
-            int sx = entity->size.x >> 20;
-            int sy = entity->size.y >> 20;
-            for (int y = 0; y < sy; ++y) {
-                for (int x = 0; x < sx; ++x) {
+            int32 sx = entity->size.x >> 20;
+            int32 sy = entity->size.y >> 20;
+            for (int32 y = 0; y < sy; ++y) {
+                for (int32 x = 0; x < sx; ++x) {
                     entity->storedTiles[x + y * (entity->size.x >> 20)] = RSDK.GetTileInfo(entity->targetLayer, x + xOff, y + yOff);
                 }
             }
@@ -191,16 +191,16 @@ void CollapsingPlatform_State_Left(void)
     RSDK_THIS(CollapsingPlatform);
 
     uint16 *tiles = entity->storedTiles;
-    int startTX   = (entity->position.x >> 20) - (entity->size.x >> 21);
-    int startTY   = (entity->position.y >> 20) - (entity->size.y >> 21);
-    int tx        = entity->position.x - (entity->size.x >> 1) + 0x80000;
-    int ty        = (entity->position.y - (entity->size.y >> 1)) + 0x80000;
+    int32 startTX   = (entity->position.x >> 20) - (entity->size.x >> 21);
+    int32 startTY   = (entity->position.y >> 20) - (entity->size.y >> 21);
+    int32 tx        = entity->position.x - (entity->size.x >> 1) + 0x80000;
+    int32 ty        = (entity->position.y - (entity->size.y >> 1)) + 0x80000;
 
-    int sx = entity->size.x >> 20;
-    int sy = entity->size.y >> 20;
+    int32 sx = entity->size.x >> 20;
+    int32 sy = entity->size.y >> 20;
 
-    for (int y = 0; y < sy; ++y) {
-        for (int x = 0; x < sx; ++x) {
+    for (int32 y = 0; y < sy; ++y) {
+        for (int32 x = 0; x < sx; ++x) {
             EntityBreakableWall *tileChunk = CREATE_ENTITY(BreakableWall, intToVoid(2), tx, ty);
             tx += 0x100000;
             tileChunk->layerID   = entity->targetLayer;
@@ -208,8 +208,8 @@ void CollapsingPlatform_State_Left(void)
             tileChunk->drawOrder = entity->drawOrder;
             tileChunk->tilePos.y = y + startTY;
             tileChunk->tilePos.x = x + startTX;
-            int timerX           = x >> CollapsingPlatform->shift;
-            int timerY           = y >> CollapsingPlatform->shift;
+            int32 timerX           = x >> CollapsingPlatform->shift;
+            int32 timerY           = y >> CollapsingPlatform->shift;
             tileChunk->timer     = 3 * (sy + 2 * timerX - timerY);
             ++tiles;
         }
@@ -222,17 +222,17 @@ void CollapsingPlatform_State_Right(void)
     RSDK_THIS(CollapsingPlatform);
 
     uint16 *tiles = entity->storedTiles;
-    int startTX   = (entity->position.x >> 20) - (entity->size.x >> 21);
-    int startTY   = (entity->position.y >> 20) - (entity->size.y >> 21);
-    int tx        = entity->position.x - (entity->size.x >> 1) + 0x80000;
-    int ty        = (entity->position.y - (entity->size.y >> 1)) + 0x80000;
+    int32 startTX   = (entity->position.x >> 20) - (entity->size.x >> 21);
+    int32 startTY   = (entity->position.y >> 20) - (entity->size.y >> 21);
+    int32 tx        = entity->position.x - (entity->size.x >> 1) + 0x80000;
+    int32 ty        = (entity->position.y - (entity->size.y >> 1)) + 0x80000;
 
-    int timerSX   = entity->size.x >> CollapsingPlatform->shift >> 20;
+    int32 timerSX   = entity->size.x >> CollapsingPlatform->shift >> 20;
 
-    int sx = entity->size.x >> 20;
-    int sy = entity->size.y >> 20;
-    for (int y = 0; y < sy; ++y) {
-        for (int x = 0; x < sx; ++x) {
+    int32 sx = entity->size.x >> 20;
+    int32 sy = entity->size.y >> 20;
+    for (int32 y = 0; y < sy; ++y) {
+        for (int32 x = 0; x < sx; ++x) {
             EntityBreakableWall *tileChunk = CREATE_ENTITY(BreakableWall, intToVoid(2), tx, ty);
             tx += 0x100000;
             tileChunk->layerID   = entity->targetLayer;
@@ -240,8 +240,8 @@ void CollapsingPlatform_State_Right(void)
             tileChunk->drawOrder = entity->drawOrder;
             tileChunk->tilePos.y = y + startTY;
             tileChunk->tilePos.x = x + startTX;
-            int timerX           = x >> CollapsingPlatform->shift;
-            int timerY           = y >> CollapsingPlatform->shift;
+            int32 timerX           = x >> CollapsingPlatform->shift;
+            int32 timerY           = y >> CollapsingPlatform->shift;
             tileChunk->timer     = 3 * (sy + 2 * (timerSX - timerX) - timerY);
             ++tiles;
         }
@@ -254,18 +254,18 @@ void CollapsingPlatform_State_Center(void)
     RSDK_THIS(CollapsingPlatform);
 
     uint16 *tiles = entity->storedTiles;
-    int startTX   = (entity->position.x >> 20) - (entity->size.x >> 21);
-    int startTY   = (entity->position.y >> 20) - (entity->size.y >> 21);
-    int tx        = entity->position.x - (entity->size.x >> 1) + 0x80000;
-    int ty        = (entity->position.y - (entity->size.y >> 1)) + 0x80000;
+    int32 startTX   = (entity->position.x >> 20) - (entity->size.x >> 21);
+    int32 startTY   = (entity->position.y >> 20) - (entity->size.y >> 21);
+    int32 tx        = entity->position.x - (entity->size.x >> 1) + 0x80000;
+    int32 ty        = (entity->position.y - (entity->size.y >> 1)) + 0x80000;
 
-    int timerSX = entity->size.x >> CollapsingPlatform->shift >> 20;
-    int timerSY = entity->size.y >> CollapsingPlatform->shift >> 20;
+    int32 timerSX = entity->size.x >> CollapsingPlatform->shift >> 20;
+    int32 timerSY = entity->size.y >> CollapsingPlatform->shift >> 20;
 
-    int sx = entity->size.x >> 20;
-    int sy = entity->size.y >> 20;
-    for (int y = 0; y < sy; ++y) {
-        for (int x = 0; x < sx; ++x) {
+    int32 sx = entity->size.x >> 20;
+    int32 sy = entity->size.y >> 20;
+    for (int32 y = 0; y < sy; ++y) {
+        for (int32 x = 0; x < sx; ++x) {
             EntityBreakableWall *tileChunk = CREATE_ENTITY(BreakableWall, intToVoid(2), tx, ty);
             tx += 0x100000;
             tileChunk->layerID   = entity->targetLayer;
@@ -273,8 +273,8 @@ void CollapsingPlatform_State_Center(void)
             tileChunk->drawOrder = entity->drawOrder;
             tileChunk->tilePos.x = x + startTX;
             tileChunk->tilePos.y = y + startTY;
-            int timerX           = abs((timerSX >> 1) - (x >> CollapsingPlatform->shift));
-            int timerY           = y >> CollapsingPlatform->shift;
+            int32 timerX           = abs((timerSX >> 1) - (x >> CollapsingPlatform->shift));
+            int32 timerY           = y >> CollapsingPlatform->shift;
             tileChunk->timer     = 3 * (timerSY + 2 * timerX - timerY);
             if (!(timerSX & 1) && x >> CollapsingPlatform->shift < (timerSX >> 1))
                 tileChunk->timer -= 6;
@@ -287,8 +287,8 @@ void CollapsingPlatform_State_Center(void)
 void CollapsingPlatform_State_LeftOrRight(void)
 {
     RSDK_THIS(CollapsingPlatform);
-    int px = entity->playerPos.x;
-    int x  = entity->position.x;
+    int32 px = entity->playerPos.x;
+    int32 x  = entity->position.x;
 
     if (px < x)
         CollapsingPlatform_State_Left();
@@ -298,8 +298,8 @@ void CollapsingPlatform_State_LeftOrRight(void)
 void CollapsingPlatform_State_PlayerPos(void)
 {
     RSDK_THIS(CollapsingPlatform);
-    int px = entity->playerPos.x;
-    int x  = entity->position.x;
+    int32 px = entity->playerPos.x;
+    int32 x  = entity->position.x;
 
     if (abs(px - x) < entity->size.x / 6) {
         CollapsingPlatform_State_Center();

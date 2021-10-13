@@ -41,7 +41,7 @@ void Woodrow_Create(void *data)
         else {
             entity->drawOrder = Zone->drawOrderHigh;
             entity->bombCount      = 0;
-            int pos           = RSDK_sceneInfo->entitySlot + 1;
+            int32 pos           = RSDK_sceneInfo->entitySlot + 1;
             EntityWoodrow *bombSpawn                   = RSDK_GET_ENTITY(pos, Woodrow);
             while (bombSpawn->objectID == Woodrow->objectID) {
                 if (bombSpawn->type != 1)
@@ -228,7 +228,7 @@ void Woodrow_Unknown4(void)
             Woodrow_CheckOnScreen();
         }
         else {
-            int pos = RSDK_sceneInfo->entitySlot + 1;
+            int32 pos = RSDK_sceneInfo->entitySlot + 1;
 
             EntityWoodrow *bombSpawn = NULL;
             do {

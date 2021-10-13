@@ -209,17 +209,17 @@ void Button_CheckPRiderCollisions(void)
 void Button_TypeFloor(void)
 {
     RSDK_THIS(Button);
-    int val          = entity->field_78;
+    int32 val          = entity->field_78;
     entity->field_78 = 0;
     foreach_active(Player, player)
     {
         entity->hitbox.top    = (val >> 16) - (Button->field_28 & 0xFFFF);
         entity->hitbox.bottom = entity->hitbox.top + 32;
-        int playerX           = player->position.x;
-        int playerY           = player->position.y;
-        int xVel              = player->velocity.x;
-        int yVel              = player->velocity.y;
-        int vel               = player->groundVel;
+        int32 playerX           = player->position.x;
+        int32 playerY           = player->position.y;
+        int32 xVel              = player->velocity.x;
+        int32 yVel              = player->velocity.y;
+        int32 vel               = player->groundVel;
         bool32 grounded       = player->onGround;
         bool32 groundedStore  = player->groundedStore;
         void *nextGState      = player->nextGroundState;
@@ -238,7 +238,7 @@ void Button_TypeFloor(void)
             player->state           = state;
             entity->hitbox.top -= (val >> 16);
             entity->hitbox.top += (Button->field_20 >> 16);
-            int val2 = entity->field_78;
+            int32 val2 = entity->field_78;
             if (Player_CheckCollisionPlatform(player, entity, &entity->hitbox) == 1) {
                 entity->field_78 = Button->field_20;
             }
@@ -280,18 +280,18 @@ void Button_TypeFloor(void)
 void Button_TypeRoof(void)
 {
     RSDK_THIS(Button);
-    int val          = entity->field_78;
+    int32 val          = entity->field_78;
     entity->field_78 = 0;
 
     foreach_active(Player, player)
     {
         entity->hitbox.top    = -1 - (Button->field_28 & 0xFFFF) - (val >> 16);
         entity->hitbox.bottom = entity->hitbox.top + 32;
-        int playerX           = player->position.x;
-        int playerY           = player->position.y;
-        int xVel              = player->velocity.x;
-        int yVel              = player->velocity.y;
-        int vel               = player->groundVel;
+        int32 playerX           = player->position.x;
+        int32 playerY           = player->position.y;
+        int32 xVel              = player->velocity.x;
+        int32 yVel              = player->velocity.y;
+        int32 vel               = player->groundVel;
         bool32 grounded       = player->onGround;
         bool32 groundedStore  = player->groundedStore;
         void *nextGState      = player->nextGroundState;
@@ -310,7 +310,7 @@ void Button_TypeRoof(void)
             player->state           = state;
             entity->hitbox.top += (val >> 16);
             entity->hitbox.top += (Button->field_20 >> 16);
-            int val2 = entity->field_78;
+            int32 val2 = entity->field_78;
             if (Player_CheckCollisionBox(player, entity, &entity->hitbox) == 4) {
                 entity->field_78 = -Button->field_20;
             }
@@ -351,17 +351,17 @@ void Button_TypeRoof(void)
 void Button_TypeRWall(void)
 {
     RSDK_THIS(Button);
-    int val          = entity->field_78;
+    int32 val          = entity->field_78;
     entity->field_78 = 0;
     foreach_active(Player, player)
     {
         entity->hitbox.right = (Button->field_28 & 0xFFFF) - (val >> 16) + 1;
         entity->hitbox.left  = entity->hitbox.right - 16;
-        int playerX          = player->position.x;
-        int playerY          = player->position.y;
-        int xVel             = player->velocity.x;
-        int yVel             = player->velocity.y;
-        int vel              = player->groundVel;
+        int32 playerX          = player->position.x;
+        int32 playerY          = player->position.y;
+        int32 xVel             = player->velocity.x;
+        int32 yVel             = player->velocity.y;
+        int32 vel              = player->groundVel;
         bool32 grounded      = player->onGround;
         bool32 groundedStore = player->groundedStore;
         void *nextGState     = player->nextGroundState;
@@ -382,7 +382,7 @@ void Button_TypeRWall(void)
 
             entity->hitbox.right += (val >> 16);
             entity->hitbox.right = entity->hitbox.right - (Button->field_20 >> 16) - 1;
-            int val2             = entity->field_78;
+            int32 val2             = entity->field_78;
             if (Player_CheckCollisionBox(player, entity, &entity->hitbox) == 3) {
                 entity->field_78 = Button->field_20;
             }
@@ -424,7 +424,7 @@ void Button_TypeRWall(void)
 void Button_TypeLWall(void)
 {
     RSDK_THIS(Button);
-    int val          = entity->field_78;
+    int32 val          = entity->field_78;
     entity->field_78 = 0;
 
     foreach_active(Player, player)
@@ -432,11 +432,11 @@ void Button_TypeLWall(void)
         entity->hitbox.right = (val >> 16) + (Button->field_28 & 0xFFFF);
         entity->hitbox.left  = entity->hitbox.right - 16;
 
-        int playerX          = player->position.x;
-        int playerY          = player->position.y;
-        int xVel             = player->velocity.x;
-        int yVel             = player->velocity.y;
-        int vel              = player->groundVel;
+        int32 playerX          = player->position.x;
+        int32 playerY          = player->position.y;
+        int32 xVel             = player->velocity.x;
+        int32 yVel             = player->velocity.y;
+        int32 vel              = player->groundVel;
         bool32 grounded      = player->onGround;
         bool32 groundedStore = player->groundedStore;
         void *nextGState     = player->nextGroundState;
@@ -455,7 +455,7 @@ void Button_TypeLWall(void)
             player->state           = state;
             entity->hitbox.right -= (val >> 16);
             entity->hitbox.right -= (Button->field_20 >> 16);
-            int val2 = entity->field_78;
+            int32 val2 = entity->field_78;
             if (Player_CheckCollisionBox(player, entity, &entity->hitbox) == 2) {
                 entity->field_78 = -Button->field_20;
             }

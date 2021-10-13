@@ -7,13 +7,13 @@ void PaperRoller_Update(void)
     RSDK_THIS(PaperRoller);
     RSDK.ProcessAnimation(&entity->animator1);
 
-    int x1 = entity->position.x - (RSDK.Cos256(entity->angle) << 7) * entity->length;
-    int v3 = RSDK.Sin256(entity->angle);
-    int y1 = entity->position.y - (v3 << 7) * entity->length;
-    int x2 = (RSDK.Cos256(entity->angle) << 7) * entity->length + entity->position.x;
-    int y2 = (RSDK.Sin256(entity->angle) << 7) * entity->length + entity->position.y;
-    int x3 = entity->position.x;
-    int y3 = entity->position.y;
+    int32 x1 = entity->position.x - (RSDK.Cos256(entity->angle) << 7) * entity->length;
+    int32 v3 = RSDK.Sin256(entity->angle);
+    int32 y1 = entity->position.y - (v3 << 7) * entity->length;
+    int32 x2 = (RSDK.Cos256(entity->angle) << 7) * entity->length + entity->position.x;
+    int32 y2 = (RSDK.Sin256(entity->angle) << 7) * entity->length + entity->position.y;
+    int32 x3 = entity->position.x;
+    int32 y3 = entity->position.y;
 
     entity->position.x = x1;
     entity->position.y = y1;
@@ -87,25 +87,25 @@ void PaperRoller_StageLoad(void)
 {
     uint32 colours[]         = { 0x0F0F0E8, 0x0D0B898, 0x987870, 0x586868 };
     PaperRoller->aniFrames = RSDK.LoadSpriteAnimation("PSZ1/PaperRoller.bin", SCOPE_STAGE);
-    for (int i = 0; i < 0x40; ++i) PaperRoller->colours[i] = colours[i & 3];
+    for (int32 i = 0; i < 0x40; ++i) PaperRoller->colours[i] = colours[i & 3];
     PaperRoller->sfxPaper = RSDK.GetSFX("PSZ/Paper.wav");
 }
 
-void PaperRoller_DrawLineDeform(uint32 colour, int len, int posX1, int posY1, int posX2, int posY2, int posX3, int posY3, int posX4, int posY4)
+void PaperRoller_DrawLineDeform(uint32 colour, int32 len, int32 posX1, int32 posY1, int32 posX2, int32 posY2, int32 posX3, int32 posY3, int32 posX4, int32 posY4)
 {
     RSDK_THIS(PaperRoller);
 
-    int count = (entity->length / 4) + (entity->length % 4 > 0);
+    int32 count = (entity->length / 4) + (entity->length % 4 > 0);
     if (count) {
-        int negAngle = -(uint8)(entity->angle);
+        int32 negAngle = -(uint8)(entity->angle);
 
-        int posX     = posX1;
-        int posY     = posY1;
-        int moveX = (posX2 - posX1) / count;
-        int moveY = (posY2 - posY1) / count;
+        int32 posX     = posX1;
+        int32 posY     = posY1;
+        int32 moveX = (posX2 - posX1) / count;
+        int32 moveY = (posY2 - posY1) / count;
 
-        for (int i = 0; i < count; ++i) {
-            int clrOffset = 0;
+        for (int32 i = 0; i < count; ++i) {
+            int32 clrOffset = 0;
             if (entity->direction)
                 clrOffset = len % count;
             else
@@ -117,23 +117,23 @@ void PaperRoller_DrawLineDeform(uint32 colour, int len, int posX1, int posY1, in
                               INK_NONE, false);
             }
             else {
-                int distX = (posX - entity->position.x) >> 8;
-                int distY = (posY - entity->position.y) >> 8;
+                int32 distX = (posX - entity->position.x) >> 8;
+                int32 distY = (posY - entity->position.y) >> 8;
 
-                int angValX = distY * RSDK.Sin256(entity->angle) + distX * RSDK.Cos256(entity->angle);
+                int32 angValX = distY * RSDK.Sin256(entity->angle) + distX * RSDK.Cos256(entity->angle);
 
-                int angValY = entity->position.y - distX * RSDK.Sin256(entity->angle) + distY * RSDK.Cos256(entity->angle) - entity->position.y;
-                int lenY    = 0;
+                int32 angValY = entity->position.y - distX * RSDK.Sin256(entity->angle) + distY * RSDK.Cos256(entity->angle) - entity->position.y;
+                int32 lenY    = 0;
 
                 if (angValX >= posX4) {
-                    int length = (entity->length << 15) - posX4;
+                    int32 length = (entity->length << 15) - posX4;
                     if (length < 0)
                         length = posX4 - (entity->length << 15);
                     if (length >> 16 > 0)
                         lenY = (posY4 >> 8) * ((length + posX4 - angValX) >> 8) / (length >> 16);
                 }
                 else {
-                    int length = 0;
+                    int32 length = 0;
                     if ((entity->length << 15) + posX4 >= 0)
                         length = (entity->length << 15) + posX4;
                     else
@@ -146,8 +146,8 @@ void PaperRoller_DrawLineDeform(uint32 colour, int len, int posX1, int posY1, in
                 distX = angValX >> 8;
                 distY = (lenY + angValY) >> 8;
 
-                int offsetX1 = entity->position.x + distY * RSDK.Sin256(negAngle) + distX * RSDK.Cos256(negAngle);
-                int offsetY1 = entity->position.y - distX * RSDK.Sin256(negAngle) + distY * RSDK.Cos256(negAngle);
+                int32 offsetX1 = entity->position.x + distY * RSDK.Sin256(negAngle) + distX * RSDK.Cos256(negAngle);
+                int32 offsetY1 = entity->position.y - distX * RSDK.Sin256(negAngle) + distY * RSDK.Cos256(negAngle);
 
                 distX = ((posX + moveX) - entity->position.x) >> 8;
                 distY = ((posY + moveY) - entity->position.y) >> 8;
@@ -157,7 +157,7 @@ void PaperRoller_DrawLineDeform(uint32 colour, int len, int posX1, int posY1, in
 
                 lenY = 0;
                 if (angValX >= posX4) {
-                    int length = (entity->length << 15) - posX4;
+                    int32 length = (entity->length << 15) - posX4;
                     if (length < 0)
                         length = posX4 - (entity->length << 15);
 
@@ -165,7 +165,7 @@ void PaperRoller_DrawLineDeform(uint32 colour, int len, int posX1, int posY1, in
                         lenY = (posY4 >> 8) * ((length + posX4 - angValX) >> 8) / (length >> 16);
                 }
                 else {
-                    int length = 0;
+                    int32 length = 0;
                     if ((entity->length << 15) + posX4 >= 0)
                         length = (entity->length << 15) + posX4;
                     else
@@ -177,8 +177,8 @@ void PaperRoller_DrawLineDeform(uint32 colour, int len, int posX1, int posY1, in
 
                 distX        = angValX >> 8;
                 distY        = (lenY + angValY) >> 8;
-                int offsetX2 = entity->position.x + distY * RSDK.Sin256(negAngle) + distX * RSDK.Cos256(negAngle);
-                int offsetY2 = entity->position.y - distX * RSDK.Sin256(negAngle) + distY * RSDK.Cos256(negAngle);
+                int32 offsetX2 = entity->position.x + distY * RSDK.Sin256(negAngle) + distX * RSDK.Cos256(negAngle);
+                int32 offsetY2 = entity->position.y - distX * RSDK.Sin256(negAngle) + distY * RSDK.Cos256(negAngle);
                 RSDK.DrawLine(posX3 + offsetX1, posY3 + offsetY1, posX3 + offsetX2, posY3 + offsetY2, colour ? colour : lineClr, 127, INK_NONE,
                               false);
             }
@@ -193,30 +193,30 @@ void PaperRoller_DrawPaperLines(void)
 {
     RSDK_THIS(PaperRoller);
 
-    int x1 = entity->position.x - (RSDK.Cos256(entity->angle) << 7) * entity->length;
-    int y1 = entity->position.y - (RSDK.Sin256(entity->angle) << 7) * entity->length;
-    int x2 = (RSDK.Cos256(entity->angle) << 7) * entity->length + entity->position.x;
-    int y2 = (RSDK.Sin256(entity->angle) << 7) * entity->length + entity->position.y;
+    int32 x1 = entity->position.x - (RSDK.Cos256(entity->angle) << 7) * entity->length;
+    int32 y1 = entity->position.y - (RSDK.Sin256(entity->angle) << 7) * entity->length;
+    int32 x2 = (RSDK.Cos256(entity->angle) << 7) * entity->length + entity->position.x;
+    int32 y2 = (RSDK.Sin256(entity->angle) << 7) * entity->length + entity->position.y;
 
-    int len   = entity->length / 4 + (entity->length % 4 > 0);
-    int posX1 = x1 + 0x1800 * RSDK.Cos256(entity->angle - 64);
-    int posY1 = y1 + 0x1800 * RSDK.Sin256(entity->angle - 64);
-    int posX2 = x2 + 0x1800 * RSDK.Cos256(entity->angle - 64);
-    int posY2 = y2 + 0x1800 * RSDK.Sin256(entity->angle - 64);
+    int32 len   = entity->length / 4 + (entity->length % 4 > 0);
+    int32 posX1 = x1 + 0x1800 * RSDK.Cos256(entity->angle - 64);
+    int32 posY1 = y1 + 0x1800 * RSDK.Sin256(entity->angle - 64);
+    int32 posX2 = x2 + 0x1800 * RSDK.Cos256(entity->angle - 64);
+    int32 posY2 = y2 + 0x1800 * RSDK.Sin256(entity->angle - 64);
 
-    int altPosX1 = x2 + 0x1800 * RSDK.Cos256(entity->angle + 64);
-    int altPosY1 = y2 + 0x1800 * RSDK.Sin256(entity->angle + 64);
-    int altPosX2 = x1 + 0x1800 * RSDK.Cos256(entity->angle + 64);
-    int altPosY2 = y1 + 0x1800 * RSDK.Sin256(entity->angle + 64);
+    int32 altPosX1 = x2 + 0x1800 * RSDK.Cos256(entity->angle + 64);
+    int32 altPosY1 = y2 + 0x1800 * RSDK.Sin256(entity->angle + 64);
+    int32 altPosX2 = x1 + 0x1800 * RSDK.Cos256(entity->angle + 64);
+    int32 altPosY2 = y1 + 0x1800 * RSDK.Sin256(entity->angle + 64);
 
     PaperRoller_DrawLineDeform(0x000000, 0, posX1, posY1, posX2, posY2, 0, 0, entity->field_8C.x, entity->field_8C.y);
     PaperRoller_DrawLineDeform(0x000000, len, altPosX1, altPosY1, altPosX2, altPosY2, 0, 0, entity->field_94.x, entity->field_94.y);
 
-    int ang = entity->angle + 32;
+    int32 ang = entity->angle + 32;
     if (ang < 0)
         ang = ((-1 - (entity->angle + 32)) & 0xFFFFFF00) + entity->angle + 288;
 
-    int otherPosY1 = 0, otherPosY2 = 0, otherPosX2 = 0, otherPosX1 = 0;
+    int32 otherPosY1 = 0, otherPosY2 = 0, otherPosX2 = 0, otherPosX1 = 0;
     switch (ang >> 6) {
         case 0:
             otherPosY1 = 0x10000;
@@ -280,15 +280,15 @@ void PaperRoller_Unknown4(void)
 
     foreach_active(Player, player)
     {
-        int playerID = RSDK.GetEntityID(player);
+        int32 playerID = RSDK.GetEntityID(player);
         if (entity->playerTimer[playerID] <= 0) {
-            int distX = abs(entity->position.x - player->position.x);
-            int distY = abs(entity->position.y - player->position.y);
+            int32 distX = abs(entity->position.x - player->position.x);
+            int32 distY = abs(entity->position.y - player->position.y);
             if (MathHelpers_Unknown6((distX >> 16) * (distX >> 16) + (distY >> 16) * (distY >> 16)) <= 40 && !entity->playerTimer[playerID]) {
                 RSDK.PlaySfx(Player->sfx_Release, false, 255);
-                int angle = RSDK.ATan2(player->position.x - entity->position.x, player->position.y - entity->position.y);
+                int32 angle = RSDK.ATan2(player->position.x - entity->position.x, player->position.y - entity->position.y);
 
-                int ang = 0;
+                int32 ang = 0;
                 if (entity->direction == FLIP_NONE)
                     ang = angle + 64;
                 else
@@ -324,7 +324,7 @@ void PaperRoller_Unknown5(void)
     bool32 flagX = false;
     bool32 flagY = false;
 
-    int negAngle       = -entity->angle;
+    int32 negAngle       = -entity->angle;
     entity->field_8C.x = 0;
     entity->field_8C.y = 0;
     entity->field_94.x = 0;
@@ -332,21 +332,21 @@ void PaperRoller_Unknown5(void)
 
     foreach_active(Player, player)
     {
-        int playerID = RSDK.GetEntityID(player);
+        int32 playerID = RSDK.GetEntityID(player);
         if (player->jumpPress)
             entity->playerUnknown[playerID] = 0;
         else
             ++entity->playerUnknown[playerID];
 
-        int distX = (player->position.x - entity->position.x) >> 8;
-        int distY = (player->position.y - entity->position.y) >> 8;
-        int angX  = distY * RSDK.Sin256(entity->angle) + distX * RSDK.Cos256(entity->angle) + entity->position.x;
-        int angY  = distY * RSDK.Cos256(entity->angle) - distX * RSDK.Sin256(entity->angle) + entity->position.y;
+        int32 distX = (player->position.x - entity->position.x) >> 8;
+        int32 distY = (player->position.y - entity->position.y) >> 8;
+        int32 angX  = distY * RSDK.Sin256(entity->angle) + distX * RSDK.Cos256(entity->angle) + entity->position.x;
+        int32 angY  = distY * RSDK.Cos256(entity->angle) - distX * RSDK.Sin256(entity->angle) + entity->position.y;
 
-        int angDistX = angX - entity->position.x;
-        int angDistY = angY - entity->position.y;
+        int32 angDistX = angX - entity->position.x;
+        int32 angDistY = angY - entity->position.y;
         if (abs(angDistX) <= entity->length << 15 && abs(angDistY) <= 0x280000) {
-            int valY = 0;
+            int32 valY = 0;
             if (angDistY < 0) {
                 if (abs(angDistY) > 0x180000) {
                     valY = angDistY + 0x280000;
@@ -364,9 +364,9 @@ void PaperRoller_Unknown5(void)
 
                     Vector2 vel = player->velocity;
                     Zone_Unknown3(&pos2, &vel, entity->angle);
-                    int angle = RSDK.ATan2(vel.x, -vel.y);
+                    int32 angle = RSDK.ATan2(vel.x, -vel.y);
 
-                    int force = 6;
+                    int32 force = 6;
                     if (player->jumpHold)
                         force = 12;
 
@@ -420,8 +420,8 @@ void PaperRoller_Unknown5(void)
                     Vector2 vel = player->velocity;
                     Zone_Unknown3(&pos2, &vel, entity->angle);
 
-                    int angle = RSDK.ATan2(vel.x, -vel.y);
-                    int force = 6;
+                    int32 angle = RSDK.ATan2(vel.x, -vel.y);
+                    int32 force = 6;
                     if (player->jumpHold)
                         force = 12;
 

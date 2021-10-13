@@ -7,37 +7,37 @@
 typedef struct {
     RSDK_OBJECT
 #if RETRO_USE_PLUS
-    STATIC(int bgScrollPos, 240);
-    TABLE(int bgScrollPositions[4], { 240, 3, 3, 3 });
-    TABLE(int cheat_RickyMode[9], { 1, 9, 7, 9, 0, 8, 1, 1, 255 });
-    TABLE(int cheat_AllEmeralds[5], { 4, 1, 2, 6, 255 });
-    TABLE(int cheat_MaxContinues[9], { 1, 9, 9, 2, 1, 1, 2, 4, 255 });
-    TABLE(int cheat_SwapGameMode[9], { 2, 0, 1, 8, 0, 6, 2, 3, 255 });
-    TABLE(int cheat_UnlockAllMedals[9], { 1, 9, 8, 9, 0, 5, 0, 1, 255 });
-    TABLE(int cheat_SuperDash[9], { 2, 0, 1, 7, 0, 8, 1, 5, 255 });
-    TABLE(int cheat_MaxControl[5], { 9, 0, 0, 1, 255 });
-    TABLE(int cheat_DisableSuperMusic[5], { 6, 2, 1, 4, 255 });
-    int field_108;
-    int field_10C;
-    int field_110;
-    int field_114;
-    int bgScrollPosID;
-    int startMusicID;
-    int soundTestMax;
+    STATIC(int32 bgScrollPos, 240);
+    TABLE(int32 bgScrollPositions[4], { 240, 3, 3, 3 });
+    TABLE(int32 cheat_RickyMode[9], { 1, 9, 7, 9, 0, 8, 1, 1, 255 });
+    TABLE(int32 cheat_AllEmeralds[5], { 4, 1, 2, 6, 255 });
+    TABLE(int32 cheat_MaxContinues[9], { 1, 9, 9, 2, 1, 1, 2, 4, 255 });
+    TABLE(int32 cheat_SwapGameMode[9], { 2, 0, 1, 8, 0, 6, 2, 3, 255 });
+    TABLE(int32 cheat_UnlockAllMedals[9], { 1, 9, 8, 9, 0, 5, 0, 1, 255 });
+    TABLE(int32 cheat_SuperDash[9], { 2, 0, 1, 7, 0, 8, 1, 5, 255 });
+    TABLE(int32 cheat_MaxControl[5], { 9, 0, 0, 1, 255 });
+    TABLE(int32 cheat_DisableSuperMusic[5], { 6, 2, 1, 4, 255 });
+    int32 field_108;
+    int32 field_10C;
+    int32 field_110;
+    int32 field_114;
+    int32 bgScrollPosID;
+    int32 startMusicID;
+    int32 soundTestMax;
     uint16 sfxFail;
     uint16 sfxRing;
     uint16 sfxEmerald;
     uint16 sfxContinue;
     uint16 sfxMedalGot;
-    int *cheatCodePtrs[8];
-    int cheatUnknown[8];
+    int32 *cheatCodePtrs[8];
+    int32 cheatUnknown[8];
     void (*checkCheatActivated[8])(void);
 #else
     STATICbgScrollPos, 240);
-    int bgScrollPosID;
+    int32 bgScrollPosID;
     TABLE(bgScrollPositions[4], { 240, 3, 3, 3 });
-    int startMusicID;
-    int soundTestMax;
+    int32 startMusicID;
+    int32 soundTestMax;
     uint16 sfxFail;
 #endif
 } ObjectLevelSelect;
@@ -47,11 +47,11 @@ typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
-    int timer;
-    int labelID;
-    int soundTestID;
-    int playerID;
-    int player2ID;
+    int32 timer;
+    int32 labelID;
+    int32 soundTestID;
+    int32 playerID;
+    int32 player2ID;
     Entity *labelPtrs2[32];
     Entity *labelPtrs[32];
     Entity *soundTestLabel;
@@ -61,14 +61,14 @@ typedef struct {
 #if RETRO_USE_PLUS
     Entity *storedTextEntity;
 #endif
-    int labelCount;
+    int32 labelCount;
 #if RETRO_USE_PLUS
-    int field_18C;
-    int field_190;
-    int field_194;
-    int field_198;
-    int field_19C;
-    int field_1A0;
+    int32 field_18C;
+    int32 field_190;
+    int32 field_194;
+    int32 field_198;
+    int32 field_19C;
+    int32 field_1A0;
 #endif
 } EntityLevelSelect;
 

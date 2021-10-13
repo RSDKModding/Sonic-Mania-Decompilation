@@ -17,7 +17,7 @@ void ReplayRecorder_LateUpdate(void)
     if (!entity->paused) {
         StateMachine_Run(entity->stateLate);
 
-        int *buffer = NULL;
+        int32 *buffer = NULL;
         if (RSDK.GetEntityID(entity) == SLOT_REPLAYRECORDER_W)
             buffer = ReplayRecorder->writeBuffer;
         else
@@ -174,7 +174,7 @@ void ReplayRecorder_StageLoad(void)
 
             ReplayRecorder->dword124 = false;
             ReplayRecorder->dword128 = false;
-            int *buffer              = NULL;
+            int32 *buffer              = NULL;
             if (RSDK.GetEntityID(ReplayRecorder->recorder_w) == SLOT_REPLAYRECORDER_W)
                 buffer = ReplayRecorder->writeBuffer;
             else
@@ -197,7 +197,7 @@ void ReplayRecorder_StageLoad(void)
 
 void ReplayRecorder_TitleCardCB(void)
 {
-    int *buffer = NULL;
+    int32 *buffer = NULL;
     if (RSDK.GetEntityID(ReplayRecorder->recorder_w) == SLOT_REPLAYRECORDER_W)
         buffer = ReplayRecorder->writeBuffer;
     else
@@ -244,7 +244,7 @@ void ReplayRecorder_FinishCB(void)
 
 void ReplayRecorder_Buffer_Move(void)
 {
-    int *buffer = NULL;
+    int32 *buffer = NULL;
     if (RSDK.GetEntityID(ReplayRecorder->recorder_w) == SLOT_REPLAYRECORDER_W)
         buffer = ReplayRecorder->writeBuffer;
     else
@@ -272,12 +272,12 @@ void ReplayRecorder_SaveReplayDLG_YesCB(void)
 {
     ReplayRecorder->replayID    = 0;
     ReplayRecorder->replayRowID = -1;
-    int mins                    = RSDK_sceneInfo->minutes;
-    int secs                    = RSDK_sceneInfo->seconds;
-    int millisecds              = RSDK_sceneInfo->milliseconds;
+    int32 mins                    = RSDK_sceneInfo->minutes;
+    int32 secs                    = RSDK_sceneInfo->seconds;
+    int32 millisecds              = RSDK_sceneInfo->milliseconds;
     LogHelpers_Print("Bout to create ReplayDB entry...");
     EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
-    int rowID              = ReplayRecorder_AddReplayID(param->actID, param->zoneID, param->characterID, (millisecds + 100 * (secs + 60 * mins)),
+    int32 rowID              = ReplayRecorder_AddReplayID(param->actID, param->zoneID, param->characterID, (millisecds + 100 * (secs + 60 * mins)),
                                            RSDK_sceneInfo->filter == SCN_FILTER_ENCORE);
     if (rowID == -1) {
         LogHelpers_Print("Table row ID invalid! %d", -1);
@@ -389,7 +389,7 @@ void ReplayRecorder_WaitWhileReplaySaves(bool32 a1)
     }
 }
 
-void ReplayRecorder_Unknown10(int status)
+void ReplayRecorder_Unknown10(int32 status)
 {
     UIWaitSpinner_Wait2();
     ActClear->field_14 = 0;
@@ -405,7 +405,7 @@ void ReplayRecorder_Unknown10(int status)
     }
 }
 
-void ReplayRecorder_Buffer_PackInPlace(int *tempWriteBuffer)
+void ReplayRecorder_Buffer_PackInPlace(int32 *tempWriteBuffer)
 {
     LogHelpers_Print("Buffer_PackInPlace(%08x)", tempWriteBuffer);
 
@@ -414,21 +414,21 @@ void ReplayRecorder_Buffer_PackInPlace(int *tempWriteBuffer)
             LogHelpers_Print("Buffer_Ppack ERROR: Buffer is already packed");
         }
         else {
-            int frameSize        = 56;
-            int uncompressedSize = 28 * (tempWriteBuffer[4] + 2);
+            int32 frameSize        = 56;
+            int32 uncompressedSize = 28 * (tempWriteBuffer[4] + 2);
 
             uint8 *framePtr       = (uint8 *)&tempWriteBuffer[14];
             uint8 *compressedData = (uint8 *)&tempWriteBuffer[14];
-            for (int f = 0; f < tempWriteBuffer[4]; ++f) {
+            for (int32 f = 0; f < tempWriteBuffer[4]; ++f) {
                 uint8 uncompressedData[28];
                 memcpy(uncompressedData, framePtr, 28 * sizeof(uint8));
-                int *dataPtr = (int *)uncompressedData;
+                int32 *dataPtr = (int32 *)uncompressedData;
 
                 // set velocity to zero
                 dataPtr[2] = 0;
                 dataPtr[3] = 0;
 
-                int size = ReplayDB_Buffer_PackEntry(compressedData, uncompressedData);
+                int32 size = ReplayDB_Buffer_PackEntry(compressedData, uncompressedData);
                 framePtr += 28;
                 compressedData += size;
                 frameSize += size;
@@ -443,24 +443,24 @@ void ReplayRecorder_Buffer_PackInPlace(int *tempWriteBuffer)
     }
 }
 
-void ReplayRecorder_Buffer_Unpack(int *readBuffer, int *tempReadBuffer)
+void ReplayRecorder_Buffer_Unpack(int32 *readBuffer, int32 *tempReadBuffer)
 {
     LogHelpers_Print("Buffer_Unpack(0x%08x, 0x%08x)", readBuffer, tempReadBuffer);
 
     uint8 *compressedData = (uint8 *)&tempReadBuffer[14];
     if (*tempReadBuffer == 0xF6057BED) {
         if (tempReadBuffer[2] == 1) {
-            int compSize             = tempReadBuffer[11];
+            int32 compSize             = tempReadBuffer[11];
             readBuffer[0]            = tempReadBuffer[0];
             readBuffer[1]            = tempReadBuffer[1];
             readBuffer[2]            = tempReadBuffer[2];
             readBuffer[3]            = tempReadBuffer[3];
             readBuffer[4]            = tempReadBuffer[4];
             readBuffer[5]            = tempReadBuffer[5];
-            int frameSize            = 28 * (tempReadBuffer[4] + 2);
+            int32 frameSize            = 28 * (tempReadBuffer[4] + 2);
             uint8 *uncompressedBuffer = (uint8 *)&readBuffer[14];
-            for (int i = 0; i < tempReadBuffer[4]; ++i) {
-                int size = ReplayDB_Buffer_UnpackEntry(uncompressedBuffer, compressedData);
+            for (int32 i = 0; i < tempReadBuffer[4]; ++i) {
+                int32 size = ReplayDB_Buffer_UnpackEntry(uncompressedBuffer, compressedData);
                 compressedData += size;
                 uncompressedBuffer += 28;
             }
@@ -478,7 +478,7 @@ void ReplayRecorder_Buffer_Unpack(int *readBuffer, int *tempReadBuffer)
     }
 }
 
-void ReplayRecorder_Buffer_SaveFile(const char *fileName, int *buffer)
+void ReplayRecorder_Buffer_SaveFile(const char *fileName, int32 *buffer)
 {
     LogHelpers_Print("Buffer_SaveFile(%s, %08x)", fileName, buffer);
     if (buffer[3]) {
@@ -491,7 +491,7 @@ void ReplayRecorder_Buffer_SaveFile(const char *fileName, int *buffer)
     }
 }
 
-void ReplayRecorder_SetReplayStatus(int status)
+void ReplayRecorder_SetReplayStatus(int32 status)
 {
     if (ReplayRecorder->saveFinishPtr)
         ReplayRecorder->saveFinishPtr((status == STATUS_OK));
@@ -508,7 +508,7 @@ void ReplayRecorder_Buffer_LoadFile(const char *fileName, void *buffer, void (*c
     API_LoadUserFile(fileName, buffer, 0x100000, ReplayRecorder_Load_CB);
 }
 
-void ReplayRecorder_Load_CB(int status)
+void ReplayRecorder_Load_CB(int32 status)
 {
     if (ReplayRecorder->loadCallback)
         ReplayRecorder->loadCallback(status == STATUS_OK);
@@ -535,7 +535,7 @@ void ReplayRecorder_ConfigureGhost_CB(void)
 
 void ReplayRecorder_SetupActions(void)
 {
-    for (int i = 0; i < 64; ++i) {
+    for (int32 i = 0; i < 64; ++i) {
         ReplayRecorder->actions[i] = StateMachine_None;
     }
     ReplayRecorder->actions[3]  = StateMachine_None; // Current_Unknown16;
@@ -595,7 +595,7 @@ void ReplayRecorder_SetupActions(void)
 void ReplayRecorder_SetupWriteBuffer(void)
 {
     EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
-    int *buffer            = ReplayRecorder->writeBuffer;
+    int32 *buffer            = ReplayRecorder->writeBuffer;
     buffer[0]              = 0xF6057BED;    // signature
     buffer[1]              = RETRO_GAMEVER; // game version
     buffer[2]              = 0;
@@ -624,8 +624,8 @@ void ReplayRecorder_DrawGhostDisplay(void)
     }
     if (!RSDK_sceneInfo->currentScreenID && entity->alphaStore) {
         entity->inkEffect = INK_NONE;
-        int screenX       = (RSDK_screens->position.x + RSDK_screens->centerX) << 16;
-        int screenY       = (RSDK_screens->position.y + RSDK_screens->centerY) << 16;
+        int32 screenX       = (RSDK_screens->position.x + RSDK_screens->centerX) << 16;
+        int32 screenY       = (RSDK_screens->position.y + RSDK_screens->centerY) << 16;
 
         Hitbox hitbox;
         hitbox.left   = -(RSDK_screens->width >> 1);
@@ -637,12 +637,12 @@ void ReplayRecorder_DrawGhostDisplay(void)
             drawPos.x = 0;
             drawPos.y = 0;
 
-            int distX = abs(player->position.x - screenX);
-            int distY = abs(player->position.y - screenY);
-            int rad   = MathHelpers_Unknown6((distX >> 16) * (distX >> 16) + (distY >> 16) * (distY >> 16));
+            int32 distX = abs(player->position.x - screenX);
+            int32 distY = abs(player->position.y - screenY);
+            int32 rad   = MathHelpers_Unknown6((distX >> 16) * (distX >> 16) + (distY >> 16) * (distY >> 16));
             rad       = clampVal(rad, 100, 2000);
 
-            int val       = 12 - 4 * (3 * rad - 300) / 2000;
+            int32 val       = 12 - 4 * (3 * rad - 300) / 2000;
             hitbox.right  = hitbox.right - 8 - (val + 24);
             hitbox.bottom = hitbox.bottom - 8 - (val + 24);
             hitbox.top += val + 24 + 8;
@@ -652,9 +652,9 @@ void ReplayRecorder_DrawGhostDisplay(void)
             screenPos.x = screenX;
             screenPos.y = screenY;
             if (MathHelpers_Unknown14(&drawPos, player->position.x, player->position.y, screenPos, hitbox)) {
-                int angle = RSDK.ATan2(player->position.x - drawPos.x, player->position.y - drawPos.y);
-                int x     = ((val + 18) * RSDK.Cos256(angle) << 8) + drawPos.x;
-                int y     = ((val + 18) * RSDK.Sin256(angle) << 8) + drawPos.y;
+                int32 angle = RSDK.ATan2(player->position.x - drawPos.x, player->position.y - drawPos.y);
+                int32 x     = ((val + 18) * RSDK.Cos256(angle) << 8) + drawPos.x;
+                int32 y     = ((val + 18) * RSDK.Sin256(angle) << 8) + drawPos.y;
                 DrawHelpers_DrawDebug4(0xC0E0E0, 2, entity->alphaStore >> 1, x, y, (RSDK.Cos256(angle) << 10) + x, (RSDK.Sin256(angle) << 10) + y);
                 RSDK.DrawCircle(drawPos.x, drawPos.y, val + 16, 0xC0E0E0, entity->alphaStore >> 1, INK_ALPHA, 0);
 
@@ -712,7 +712,7 @@ void ReplayRecorder_Play(EntityPlayer *player)
     LogHelpers_Print("ReplayRecorder_Play()");
     EntityReplayRecorder *recorder = (EntityReplayRecorder *)ReplayRecorder->recorder_w;
 
-    int *buffer = NULL;
+    int32 *buffer = NULL;
     if (RSDK.GetEntityID(&ReplayRecorder->recorder_w) == SLOT_REPLAYRECORDER_W)
         buffer = ReplayRecorder->writeBuffer;
     else
@@ -757,13 +757,13 @@ void ReplayRecorder_Seek(EntityReplayRecorder *recorder, uint32 frame)
     LogHelpers_Print("ReplayRecorder_Seek(%u)", frame);
     recorder->replayFrame = frame;
 
-    int *frameBuffer = NULL;
+    int32 *frameBuffer = NULL;
     if (RSDK.GetEntityID(recorder) == SLOT_REPLAYRECORDER_W)
         frameBuffer = ReplayRecorder->frameBuffer_w;
     else
         frameBuffer = ReplayRecorder->frameBuffer_r;
     uint8 *byteBuf = (uint8 *)frameBuffer;
-    int newFrame  = frame;
+    int32 newFrame  = frame;
 
     uint8 *framePtr = &byteBuf[28 * frame];
     while (framePtr[0] != 1) {
@@ -778,9 +778,9 @@ void ReplayRecorder_Seek(EntityReplayRecorder *recorder, uint32 frame)
     if (newFrame <= frame) {
         ReplayRecorder_ApplyFrameData(recorder, framePtr);
         if (newFrame < frame) {
-            int count = frame - newFrame;
+            int32 count = frame - newFrame;
             uint8 *ptr = &byteBuf[28 * newFrame];
-            for (int i = 0; i < count; ++i) {
+            for (int32 i = 0; i < count; ++i) {
                 ptr += 28;
                 ReplayRecorder_Unknown19(recorder, ptr);
             }
@@ -790,14 +790,14 @@ void ReplayRecorder_Seek(EntityReplayRecorder *recorder, uint32 frame)
 
 void ReplayRecorder_SeekFunc(EntityReplayRecorder *recorder)
 {
-    int *buffer2 = NULL;
+    int32 *buffer2 = NULL;
     if (RSDK.GetEntityID(recorder) == SLOT_REPLAYRECORDER_W)
         buffer2 = ReplayRecorder->frameBuffer_w;
     else
         buffer2 = ReplayRecorder->frameBuffer_r;
     uint8 *byteBuf = (uint8 *)buffer2;
 
-    for (int f = 0; f < recorder->field_84; ++f) {
+    for (int32 f = 0; f < recorder->field_84; ++f) {
         if (byteBuf[f * 28] == 3) {
             ReplayRecorder_Seek(recorder, f);
             break;
@@ -859,7 +859,7 @@ void ReplayRecorder_SetGimmickState(EntityReplayRecorder *recorder, bool32 flag)
 void ReplayRecorder_ApplyFrameData(EntityReplayRecorder *recorder, uint8 *buffer)
 {
     EntityPlayer *player = recorder->player;
-    int *bufferPtr       = (int *)buffer;
+    int32 *bufferPtr       = (int32 *)buffer;
     if (player) {
         player->position.x = bufferPtr[1] & 0xFFFF0000;
         player->position.y = bufferPtr[2] & 0xFFFF0000;
@@ -876,7 +876,7 @@ void ReplayRecorder_ApplyFrameData(EntityReplayRecorder *recorder, uint8 *buffer
 void ReplayRecorder_Unknown19(EntityReplayRecorder *recorder, uint8 *buffer)
 {
     EntityPlayer *player = recorder->player;
-    int *bufferPtr       = (int *)buffer;
+    int32 *bufferPtr       = (int32 *)buffer;
     if (player) {
         if (buffer[1] & 2) {
             player->position.x = bufferPtr[1] & 0xFFFF0000;
@@ -921,9 +921,9 @@ void ReplayRecorder_PackFrame(uint8 *recording)
     uint8 frameBuf[28];
     memset(frameBuf, 0, sizeof(frameBuf));
     frameBuf[0]       = 0;
-    int *writeBuffer  = ReplayRecorder->writeBuffer;
-    int *writeBuffer2 = ReplayRecorder->frameBuffer_w;
-    int size          = ReplayDB_Buffer_PackEntry(frameBuf, recording);
+    int32 *writeBuffer  = ReplayRecorder->writeBuffer;
+    int32 *writeBuffer2 = ReplayRecorder->frameBuffer_w;
+    int32 size          = ReplayDB_Buffer_PackEntry(frameBuf, recording);
     memcpy(&writeBuffer2[7 * entity->replayFrame], recording, 0x28 * sizeof(uint8));
 
     if (writeBuffer[4]) {
@@ -942,26 +942,26 @@ void ReplayRecorder_PlayBackInput(void)
     RSDK_THIS(Player);
     EntityReplayRecorder *recorder = (EntityReplayRecorder *)ReplayRecorder->recorder_w;
 
-    int *buffer = NULL;
+    int32 *buffer = NULL;
     if (RSDK.GetEntityID(recorder) == SLOT_REPLAYRECORDER_W)
         buffer = ReplayRecorder->writeBuffer;
     else
         buffer = ReplayRecorder->readBuffer;
 
     if (ReplayRecorder->frameCounter >= buffer[5] && entity == recorder->player) {
-        int *frameBuffer = NULL;
+        int32 *frameBuffer = NULL;
         if (RSDK.GetEntityID(recorder) == SLOT_REPLAYRECORDER_W)
             frameBuffer = ReplayRecorder->frameBuffer_w;
         else
             frameBuffer = ReplayRecorder->frameBuffer_r;
-        int *playbackBuf = &frameBuffer[7 * recorder->replayFrame];
+        int32 *playbackBuf = &frameBuffer[7 * recorder->replayFrame];
         uint8 *bufBytes   = (uint8 *)playbackBuf;
 
         bool32 setPos = false;
         if (bufBytes[0]) {
             setPos = (bufBytes[0] == 1 || bufBytes[0] == 3) || (bufBytes[0] == 2 && (bufBytes[1] & 2));
             if ((bufBytes[0] == 1 || bufBytes[0] == 3) || (bufBytes[0] == 2 && (bufBytes[1] & 1))) {
-                int inputs                                          = bufBytes[2];
+                int32 inputs                                          = bufBytes[2];
                 RSDK_controller[entity->controllerID].keyUp.down    = (inputs & 0x01) > 0;
                 RSDK_controller[entity->controllerID].keyDown.down  = (inputs & 0x02) > 0;
                 RSDK_controller[entity->controllerID].keyLeft.down  = (inputs & 0x04) > 0;
@@ -1010,7 +1010,7 @@ void ReplayRecorder_PlayerState(void)
     if (recorder->playing) {
         entity->playerAnimator.animationSpeed = 0;
 
-        int *buffer = NULL;
+        int32 *buffer = NULL;
         if (RSDK.GetEntityID(recorder) == SLOT_REPLAYRECORDER_W)
             buffer = ReplayRecorder->frameBuffer_w;
         else
@@ -1037,8 +1037,8 @@ void ReplayRecorder_PlayerState(void)
         }
 
         if (FarPlane) {
-            int screenX = (RSDK_screens->position.x + RSDK_screens->centerX) << 16;
-            int screenY = (RSDK_screens->position.y + RSDK_screens->centerY) << 16;
+            int32 screenX = (RSDK_screens->position.x + RSDK_screens->centerX) << 16;
+            int32 screenY = (RSDK_screens->position.y + RSDK_screens->centerY) << 16;
 
             entity->scale.x   = 0x200;
             entity->scale.y   = 0x200;
@@ -1074,8 +1074,8 @@ void ReplayRecorder_PlayerState(void)
 void ReplayRecorder_StatePlay(void)
 {
     RSDK_THIS(ReplayRecorder);
-    int *buffer      = NULL;
-    int *frameBuffer = NULL;
+    int32 *buffer      = NULL;
+    int32 *frameBuffer = NULL;
     if (RSDK.GetEntityID(entity) == SLOT_REPLAYRECORDER_W)
         buffer = ReplayRecorder->writeBuffer;
     else
@@ -1128,18 +1128,18 @@ void ReplayRecorder_StateLate_Replay(void)
             entity->field_60 = player->state;
     }
 
-    int *frameBuffer = NULL;
+    int32 *frameBuffer = NULL;
     if (RSDK.GetEntityID(entity) == SLOT_REPLAYRECORDER_W)
         frameBuffer = ReplayRecorder->frameBuffer_w;
     else
         frameBuffer = ReplayRecorder->frameBuffer_r;
-    int *framePtr  = &frameBuffer[7 * entity->replayFrame];
+    int32 *framePtr  = &frameBuffer[7 * entity->replayFrame];
     uint8 *bufBytes = (uint8 *)framePtr;
     if (!entity->playing) {
         if (bufBytes[0]) {
             if ((bufBytes[0] == 1 || bufBytes[0] == 3) || (bufBytes[0] == 2 && (bufBytes[1] & 2))) {
-                int distX = abs(player->position.x - framePtr[1]);
-                int distY = abs(player->position.y - framePtr[2]);
+                int32 distX = abs(player->position.x - framePtr[1]);
+                int32 distY = abs(player->position.y - framePtr[2]);
                 if (MathHelpers_Unknown6((distX >> 16) * (distX >> 16) + (distY >> 16) * (distY >> 16)) << 16 >= 0x20000) {
                     player->position.x += (framePtr[1] - player->position.x) >> 1;
                     player->position.y += (framePtr[2] - player->position.y) >> 1;
@@ -1155,12 +1155,12 @@ void ReplayRecorder_None_Record(void) {}
 void ReplayRecorder_RecordFrameData(void)
 {
     uint8 recording[28];
-    int *recordingPtr = (int *)recording;
+    int32 *recordingPtr = (int32 *)recording;
 
     RSDK_THIS(ReplayRecorder);
     if (entity->replayFrame < entity->field_84 - 1) {
         EntityPlayer *player = entity->player;
-        int inputState       = 0;
+        int32 inputState       = 0;
         memset(recording, 0, sizeof(recording));
 
         ControllerState *controller = &RSDK_controller[player->controllerID];
@@ -1189,12 +1189,12 @@ void ReplayRecorder_RecordFrameData(void)
         entity->animID    = animator->animationID;
         entity->frameID   = animator->frameID;
 
-        for (int i = 0; i < 64; ++i) {
+        for (int32 i = 0; i < 64; ++i) {
             if (storedState == ReplayRecorder->actions[i])
                 break;
         }
 
-        for (int i = 0; i < 64; ++i) {
+        for (int32 i = 0; i < 64; ++i) {
             if (entity->stateStore == ReplayRecorder->actions[i])
                 break;
         }
@@ -1216,7 +1216,7 @@ void ReplayRecorder_RecordFrameData(void)
                 recording[1] = 8;
         }
         else {
-            int changedVals = 0;
+            int32 changedVals = 0;
             if (inputState != entity->storedInputs) {
                 recording[2] = inputState;
                 changedVals  = 1;
@@ -1338,11 +1338,11 @@ void ReplayRecorder_CreateReplayDB(void)
         globals->replayTableLoaded = STATUS_OK;
 }
 
-uint32 ReplayRecorder_AddReplayID(uint8 actID, char zone, int charID, int score, char mode)
+uint32 ReplayRecorder_AddReplayID(uint8 actID, char zone, int32 charID, int32 score, char mode)
 {
     if (globals->replayTableLoaded == STATUS_OK) {
         uint32 rowID       = API.AddUserDBRow(globals->replayTableID);
-        int zoneStortVal = score & 0x3FFFFFF | ((actID & 1 | 2 * (mode & 1 | 2 * zone)) << 26);
+        int32 zoneStortVal = score & 0x3FFFFFF | ((actID & 1 | 2 * (mode & 1 | 2 * zone)) << 26);
         API.SetUserDBValue(globals->replayTableID, rowID, 4, "score", &score);
         API.SetUserDBValue(globals->replayTableID, rowID, 2, "zoneID", &zone);
         API.SetUserDBValue(globals->replayTableID, rowID, 2, "act", &actID);
@@ -1362,18 +1362,18 @@ uint32 ReplayRecorder_AddReplayID(uint8 actID, char zone, int charID, int score,
     return -1;
 }
 
-void ReplayRecorder_DeleteTimeAttackRow(int a1, void (*callback)(bool32), int a3)
+void ReplayRecorder_DeleteTimeAttackRow(int32 a1, void (*callback)(bool32), int32 a3)
 {
-    int id                   = API.GetUserDBRowUUID(globals->replayTableID, a1);
-    int value                = 0;
+    int32 id                   = API.GetUserDBRowUUID(globals->replayTableID, a1);
+    int32 value                = 0;
     ReplayDB->deleteEntity   = RSDK_sceneInfo->entity;
     ReplayDB->deleteCallback = callback;
     API.RemoveDBRow(globals->replayTableID, a1);
     TimeAttackData->status = 0;
     API.SetupSortedUserDBRowIDs(globals->taTableID);
     API.Unknown33(globals->taTableID, 4, "replayID", &id);
-    int count = API.GetSortedUserDBRowCount(globals->taTableID);
-    for (int i = 0; i < count; ++i) {
+    int32 count = API.GetSortedUserDBRowCount(globals->taTableID);
+    for (int32 i = 0; i < count; ++i) {
         uint32 uuid = API.GetSortedUserDBRowID(globals->taTableID, i);
         LogHelpers_Print("Deleting Time Attack replay from row #%d", uuid);
         API.SetUserDBValue(globals->taTableID, uuid, 4, "replayID", &value);
@@ -1387,19 +1387,19 @@ void ReplayRecorder_DeleteTimeAttackRow(int a1, void (*callback)(bool32), int a3
         API.DeleteUserFile(filename, ReplayRecorder_DeleteReplaySave2CB);
 }
 
-void ReplayRecorder_DeleteReplayCB(int status)
+void ReplayRecorder_DeleteReplayCB(int32 status)
 {
     LogHelpers_Print("DeleteReplay_CB(%d)", status);
     API.SaveUserDB(globals->replayTableID, ReplayRecorder_DeleteReplaySaveCB);
 }
 
-void ReplayRecorder_DeleteReplaySaveCB(int status)
+void ReplayRecorder_DeleteReplaySaveCB(int32 status)
 {
     LogHelpers_Print("DeleteReplaySave_CB(%d)", status);
     API.SaveUserDB(globals->taTableID, ReplayRecorder_DeleteReplaySave2CB);
 }
 
-void ReplayRecorder_DeleteReplaySave2CB(int status)
+void ReplayRecorder_DeleteReplaySave2CB(int32 status)
 {
     LogHelpers_Print("DeleteReplaySave2_CB(%d)", status);
     if (ReplayDB->deleteCallback) {
@@ -1413,7 +1413,7 @@ void ReplayRecorder_DeleteReplaySave2CB(int status)
     }
 }
 
-int ReplayRecorder_SetStatus(int status)
+int32 ReplayRecorder_SetStatus(int32 status)
 {
     if (status == STATUS_OK) {
         globals->replayTableLoaded = STATUS_OK;
@@ -1438,7 +1438,7 @@ int ReplayRecorder_SetStatus(int status)
     return 1;
 }
 
-int ReplayRecorder_ReplaySaveFinish(int status)
+int32 ReplayRecorder_ReplaySaveFinish(int32 status)
 {
     if (ReplayDB->saveCallback) {
         Entity *store = RSDK_sceneInfo->entity;

@@ -13,7 +13,7 @@ typedef struct {
     MANIA_PLATFORM_BASE
     uint16 interval;
     uint16 intervalOffset;
-    int duration;
+    int32 duration;
 } EntityFoldingPlatform;
 
 // Object Struct

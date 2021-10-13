@@ -20,7 +20,7 @@ typedef struct {
     uint8 activePlayersReleased;
     uint8 playerTimers[4];
     Vector2 startPos;
-    int releaseTimer;
+    int32 releaseTimer;
     bool32 destroyFlag;
     Hitbox hitbox;
     Animator animator;

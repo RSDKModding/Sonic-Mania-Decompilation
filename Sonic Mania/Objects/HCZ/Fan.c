@@ -17,8 +17,8 @@ void Fan_StaticUpdate(void)
 {
     Fan->activePlayers = 0;
     if (Water) {
-        int offsetH = 0;
-        int offsetV = 0;
+        int32 offsetH = 0;
+        int32 offsetV = 0;
         foreach_active(Water, water)
         {
             if (water->state == Water_State_HCZBubble && water->activePlayers) {
@@ -59,7 +59,7 @@ void Fan_StaticUpdate(void)
                 offsetV = clampVal(offsetV, -0x20000, 0x20000);
 
                 if (water->field_B4 < offsetH) {
-                    int val = water->field_B4 + 0x800;
+                    int32 val = water->field_B4 + 0x800;
                     if (val < offsetH)
                         water->field_B8 = val;
                     else
@@ -67,7 +67,7 @@ void Fan_StaticUpdate(void)
                 }
 
                 if (water->field_B4 > offsetH) {
-                    int val = water->field_B4 - 0x800;
+                    int32 val = water->field_B4 - 0x800;
                     if (val > offsetH)
                         water->field_B8 = val;
                     else
@@ -75,7 +75,7 @@ void Fan_StaticUpdate(void)
                 }
 
                 if (water->field_B8 < offsetV) {
-                    int val = water->field_B8 + 0x800;
+                    int32 val = water->field_B8 + 0x800;
                     if (val < offsetV)
                         water->field_B8 = val;
                     else
@@ -83,7 +83,7 @@ void Fan_StaticUpdate(void)
                 }
 
                 if (water->field_B8 > offsetV) {
-                    int val = water->field_B8 - 0x800;
+                    int32 val = water->field_B8 - 0x800;
                     if (val > offsetV)
                         water->field_B8 = val;
                     else
@@ -98,7 +98,7 @@ void Fan_StaticUpdate(void)
             if (conveyor->activePlayers1) {
                 foreach_active(Player, player)
                 {
-                    int playerID = RSDK.GetEntityID(player);
+                    int32 playerID = RSDK.GetEntityID(player);
                     if (((1 << playerID) & conveyor->activePlayers1)) {
                         bool32 flag = false;
                         foreach_active(Fan, fan)
@@ -129,7 +129,7 @@ void Fan_StaticUpdate(void)
         range.x = 0x400000;
         range.y = 0x400000;
         if (RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu)->objectID != PauseMenu->objectID) {
-            int count = 0;
+            int32 count = 0;
             foreach_active(Fan, fan)
             {
                 uint16 tile = RSDK.GetTileInfo(Zone->fgHigh, fan->position.x >> 20, fan->position.y >> 20);
@@ -281,11 +281,11 @@ void Fan_HandlePlayerInteractions_Top(void)
     Fan->hitbox1.top    = (RSDK.Sin256(2 * Zone->timer) >> 5) - entity->size;
     Fan->hitbox1.bottom = 48;
 
-    int id = 1;
+    int32 id = 1;
     foreach_active(Player, player)
     {
         if (player->state != Player_State_None) {
-            int anim = player->playerAnimator.animationID;
+            int32 anim = player->playerAnimator.animationID;
             if (anim != ANI_HURT && anim != ANI_DIE && anim != ANI_DROWN
                 && RSDK.CheckObjectCollisionTouchBox(entity, &Fan->hitbox1, player, &Fan->playerHitbox)) {
                 if (Water && player->position.y > Water->waterLevel)
@@ -297,7 +297,7 @@ void Fan_HandlePlayerInteractions_Top(void)
                 player->tileCollisions = true;
                 player->onGround       = false;
 
-                int vel = maxVal((entity->position.y + (Fan->hitbox1.top << 16) - player->position.y) >> 4, Fan->field_C);
+                int32 vel = maxVal((entity->position.y + (Fan->hitbox1.top << 16) - player->position.y) >> 4, Fan->field_C);
                 if (player->velocity.y <= vel) {
                     player->velocity.y = vel;
                 }
@@ -343,11 +343,11 @@ void Fan_HandlePlayerInteractions_Bottom(void)
     foreach_active(Player, player)
     {
         if (player->state != Player_State_None) {
-            int anim = player->playerAnimator.animationID;
+            int32 anim = player->playerAnimator.animationID;
             if (anim != ANI_HURT && anim != ANI_DIE && anim != ANI_DROWN
                 && RSDK.CheckObjectCollisionTouchBox(entity, &Fan->hitbox2, player, &Fan->playerHitbox)) {
-                int vel = player->velocity.y;
-                int max = (entity->position.y - player->position.y + 0xA00000) >> 4;
+                int32 vel = player->velocity.y;
+                int32 max = (entity->position.y - player->position.y + 0xA00000) >> 4;
                 if (vel < max)
                     player->velocity.y = vel + ((entity->position.y - player->position.y + 0xA00000) >> 9);
             }
@@ -365,7 +365,7 @@ void Fan_HandlePlayerInteractions_Left(void)
     foreach_active(Player, player)
     {
         if (player->state != Player_State_None) {
-            int anim = player->playerAnimator.animationID;
+            int32 anim = player->playerAnimator.animationID;
             if (anim != ANI_HURT && anim != ANI_DIE && anim != ANI_DROWN && player->collisionMode != CMODE_LWALL
                 && RSDK.CheckObjectCollisionTouchBox(entity, &Fan->hitbox3, player, &Fan->playerHitbox)) {
                 player->position.x += (entity->position.x - player->position.x - 0xA00000) >> 4;
@@ -384,7 +384,7 @@ void Fan_HandlePlayerInteractions_Right(void)
     foreach_active(Player, player)
     {
         if (player->state != Player_State_None) {
-            int anim = player->playerAnimator.animationID;
+            int32 anim = player->playerAnimator.animationID;
             if (anim != ANI_HURT && anim != ANI_DIE && anim != ANI_DROWN) {
                 if (player->collisionMode != CMODE_LWALL && player->collisionMode != CMODE_RWALL
                     && RSDK.CheckObjectCollisionTouchBox(entity, &Fan->hitbox3, player, &Fan->playerHitbox)) {
@@ -450,7 +450,7 @@ void Fan_Unknown9(void)
 void Fan_Unknown10(void)
 {
     RSDK_THIS(Fan);
-    int slot                 = RSDK_sceneInfo->entitySlot - 1;
+    int32 slot                 = RSDK_sceneInfo->entitySlot - 1;
     EntityPlatform *platform = RSDK_GET_ENTITY(slot, Platform);
     while (platform->objectID == Fan->objectID) {
         --slot;

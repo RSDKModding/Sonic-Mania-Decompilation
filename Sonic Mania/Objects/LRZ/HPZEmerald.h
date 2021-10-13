@@ -12,9 +12,9 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    int field_58;
-    int type;
-    int field_60;
+    int32 field_58;
+    int32 type;
+    int32 field_60;
     Vector2 startPos;
     Hitbox *hitbox;
     Animator animator2;

@@ -6,9 +6,9 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    int field_4;
-    int inputLocked;
-    int field_C;
+    int32 field_4;
+    int32 inputLocked;
+    int32 field_C;
     bool32 upPress[4];
     bool32 downPress[4];
     bool32 leftPress[4];
@@ -32,18 +32,18 @@ typedef struct {
     bool32 keyStart;
 #endif
     bool32 flagA;
-    int field_C8;
-    int timer;
-    int field_D0;
-    int field_D4;
+    int32 field_C8;
+    int32 timer;
+    int32 field_D0;
+    int32 field_D4;
 } ObjectUIControl;
 
 // Entity Class
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    int field_5C;
-    int activeEntityID;
+    int32 field_5C;
+    int32 activeEntityID;
     TextInfo tag;
     TextInfo parentTag;
     bool32 activeOnLoad;
@@ -70,12 +70,12 @@ typedef struct {
 #if RETRO_USE_PLUS
     bool32 popoverHasFocus;
 #endif
-    int dwordC4;
+    int32 dwordC4;
     bool32 selectionDisabled;
-    int dwordCC;
-    int backoutTimer;
-    int storedEntityID;
-    int field_D8;
+    int32 dwordCC;
+    int32 backoutTimer;
+    int32 storedEntityID;
+    int32 field_D8;
     Entity *heading;
     Entity *shifter;
 #if RETRO_USE_PLUS
@@ -89,12 +89,12 @@ typedef struct {
     void (*unknownCallback4)(void);
     void (*yPressCB)(void);
     void (*xPressCB)(void);
-    int field_210;
-    int field_214;
-    int field_218;
-    int field_21C;
-    int field_220;
-    int field_224;
+    int32 field_210;
+    int32 field_214;
+    int32 field_218;
+    int32 field_21C;
+    int32 field_220;
+    int32 field_224;
 } EntityUIControl;
 
 // Object Struct
@@ -112,7 +112,7 @@ void UIControl_EditorLoad(void);
 void UIControl_Serialize(void);
 
 // Extra Entity Functions
-int UIControl_Unknown1(EntityUIControl *control, EntityUIButton *entity);
+int32 UIControl_Unknown1(EntityUIControl *control, EntityUIButton *entity);
 void UIControl_Unknown2(EntityUIControl *control);
 #if RETRO_USE_PLUS
 void UIControl_Unknown3(EntityUIControl *entity);
@@ -128,7 +128,7 @@ void UIControl_Unknown11(TextInfo *info);
 void UIControl_Unknown12(Entity *control);
 void UIControl_Unknown13(void);
 void UIControl_ClearInputs(char id);
-void UIControl_Unknown15(EntityUIControl *entity, int x, int y);
+void UIControl_Unknown15(EntityUIControl *entity, int32 x, int32 y);
 void UIControl_Unknown16(void);
 void UIControl_ProcessInputs(void);
 void UIControl_ProcessButtonInput(void);

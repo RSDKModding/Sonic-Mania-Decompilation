@@ -56,7 +56,7 @@ void UIInfoLabel_DrawSprites(void)
     RSDK_THIS(UIInfoLabel);
     Vector2 drawPos;
 
-    int size = (entity->size.y + entity->size.x) >> 16;
+    int32 size = (entity->size.y + entity->size.x) >> 16;
     UIWidgets_Unknown7(entity->size.y >> 0x10, size, entity->width, 240, 240, 240, entity->position.x, entity->position.y);
     drawPos.x = entity->position.x;
     drawPos.y = entity->position.y;

@@ -50,8 +50,8 @@ void SeltzerWater_Unknown1(void)
     EntityPlatformNode *node = RSDK_GET_ENTITY(entity->nodeSlot, PlatformNode);
     RSDK.ProcessAnimation(&entity->animator);
     if (node->objectID == PlatformNode->objectID) {
-        int x = (entity->position.x - node->position.x) >> 16;
-        int y = (entity->position.y - node->position.y) >> 16;
+        int32 x = (entity->position.x - node->position.x) >> 16;
+        int32 y = (entity->position.y - node->position.y) >> 16;
 
         entity->angle      = RSDK.ATan2(x, y);
         entity->velocity.x = -(entity->field_64 * RSDK.Cos256(entity->angle));

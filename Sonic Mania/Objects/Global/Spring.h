@@ -26,7 +26,7 @@ typedef struct {
     SpringTypes type;
     FlipFlags flipFlag;
     uint8 planeFilter;
-    int timer;
+    int32 timer;
     Animator animator;
     Hitbox hitbox;
 } EntitySpring;

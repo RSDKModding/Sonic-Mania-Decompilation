@@ -100,7 +100,7 @@ void ContinuePlayer_Unknown1(void)
         }
         else {
             RSDK.SetSpriteAnimation(entity->aniFrames, ANI_JOG, &entity->animator, false, 0);
-            int iVel                        = (entity->groundVel >> 16);
+            int32 iVel                        = (entity->groundVel >> 16);
             entity->animator.animationSpeed = 4 * ((iVel << 1) + iVel) + 64;
         }
     }

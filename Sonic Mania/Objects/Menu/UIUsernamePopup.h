@@ -13,11 +13,11 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    int timer;
-    int timeOut;
+    int32 timer;
+    int32 timeOut;
     bool32 drawFlag;
-    int field_68;
-    int dword6C;
+    int32 field_68;
+    int32 dword6C;
     Vector2 posUnknown;
     TextInfo username;
     Animator animator;

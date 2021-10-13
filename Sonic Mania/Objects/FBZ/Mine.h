@@ -14,7 +14,7 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    int timer;
+    int32 timer;
     Animator animator;
 } EntityMine;
 

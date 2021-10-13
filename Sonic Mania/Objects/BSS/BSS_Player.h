@@ -19,10 +19,10 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    int gravityStrength;
+    int32 gravityStrength;
     bool32 sideKick;
     StateMachine(stateInput);
-    int controllerID;
+    int32 controllerID;
     bool32 up;
     bool32 down;
     bool32 left;
@@ -33,7 +33,7 @@ typedef struct {
     uint16 spriteIndex;
     uint16 field_AE;
 #if RETRO_USE_TOUCH_CONTROLS
-    int touchJump;
+    int32 touchJump;
 #endif
 } EntityBSS_Player;
 

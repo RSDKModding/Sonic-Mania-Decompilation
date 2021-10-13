@@ -6,8 +6,8 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    int aniTileTimer;
-    int timer;
+    int32 aniTileTimer;
+    int32 timer;
     uint16 skySheet;
 } ObjectERZSetup;
 

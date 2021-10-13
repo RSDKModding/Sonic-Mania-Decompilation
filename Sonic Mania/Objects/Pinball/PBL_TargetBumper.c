@@ -12,14 +12,14 @@ void PBL_TargetBumper_Update(void)
 void PBL_TargetBumper_LateUpdate(void)
 {
     RSDK_THIS(PBL_TargetBumper);
-    int x = entity->position.x;
-    int y = entity->height;
-    int z = entity->position.y;
+    int32 x = entity->position.x;
+    int32 y = entity->height;
+    int32 z = entity->position.y;
 
     Matrix *mat = &PBL_Camera->matrix1;
     entity->depth3D = mat->values[2][1] * (y >> 16) + mat->values[2][2] * (z >> 16) + mat->values[2][0] * (x >> 16) + mat->values[2][3];
     if (entity->depth3D >= 0x4000) {
-        int depth = ((mat->values[0][3] << 8) + ((mat->values[0][2] * (z >> 8)) & 0xFFFFFF00) + ((mat->values[0][0] * (x >> 8)) & 0xFFFFFF00)
+        int32 depth = ((mat->values[0][3] << 8) + ((mat->values[0][2] * (z >> 8)) & 0xFFFFFF00) + ((mat->values[0][0] * (x >> 8)) & 0xFFFFFF00)
                      + ((mat->values[0][1] * (entity->height >> 8)) & 0xFFFFFF00));
         depth /= entity->depth3D;
     }
@@ -82,28 +82,28 @@ void PBL_TargetBumper_HandlePlayerInteractions(void)
 {
     RSDK_THIS(PBL_TargetBumper);
     if (entity->scale.y >= 128) {
-        int angle    = entity->angle >> 2;
-        int negAngle = -angle;
+        int32 angle    = entity->angle >> 2;
+        int32 negAngle = -angle;
 
         Vector2 pos2;
         pos2.x = 0;
         pos2.y = 0;
         foreach_active(PBL_Player, player)
         {
-            int distanceX = (player->position.x - entity->position.x) >> 8;
-            int distanceY = (player->position.y - entity->position.y) >> 8;
-            int posX      = player->position.x;
-            int posY      = player->position.y;
-            int velStoreX = player->velocity.x;
-            int velStoreY = player->velocity.y;
+            int32 distanceX = (player->position.x - entity->position.x) >> 8;
+            int32 distanceY = (player->position.y - entity->position.y) >> 8;
+            int32 posX      = player->position.x;
+            int32 posY      = player->position.y;
+            int32 velStoreX = player->velocity.x;
+            int32 velStoreY = player->velocity.y;
 
             player->position.x = distanceY * RSDK.Sin256(angle) + distanceX * RSDK.Cos256(angle) + entity->position.x;
             player->position.y = distanceY * RSDK.Cos256(angle) - distanceX * RSDK.Sin256(angle) + entity->position.y;
             player->velocity.x = (player->velocity.y >> 8) * RSDK.Sin256(angle) + (player->velocity.x >> 8) * RSDK.Cos256(angle);
             player->velocity.y = (player->velocity.y >> 8) * RSDK.Cos256(angle) - (player->velocity.x >> 8) * RSDK.Sin256(angle);
 
-            int velX = player->velocity.x;
-            int velY = player->velocity.y;
+            int32 velX = player->velocity.x;
+            int32 velY = player->velocity.y;
             switch (RSDK.CheckObjectCollisionBox(entity, &PBL_TargetBumper->hitbox, player, &PBL_Player->outerBox, true)) {
                 case 0:
                     player->position.x = posX;

@@ -56,7 +56,7 @@ void DemoMenu_Create(void *data)
 
 void DemoMenu_StageLoad(void) { DemoMenu->spriteIndex = RSDK.LoadSpriteAnimation("Title/DemoMenu.bin", SCOPE_STAGE); }
 
-void DemoMenu_DrawStagePreview(Vector2 *pos, Animator *animator, int zoneID)
+void DemoMenu_DrawStagePreview(Vector2 *pos, Animator *animator, int32 zoneID)
 {
     RSDK_THIS(DemoMenu);
     animator->frameID = 0;

@@ -6,9 +6,9 @@ void PopOut_Update(void)
 {
     RSDK_THIS(PopOut);
 
-    int storeDir        = entity->direction;
-    int storeX          = entity->position.x;
-    int storeY          = entity->position.y;
+    int32 storeDir        = entity->direction;
+    int32 storeX          = entity->position.x;
+    int32 storeY          = entity->position.y;
     EntitySpring *child = RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot + 1, Spring);
     if (child->objectID != Spring->objectID && child->objectID != Spikes->objectID)
         child = NULL;
@@ -95,21 +95,21 @@ void PopOut_Draw(void)
 {
     RSDK_THIS(PopOut);
 
-    int dir            = entity->direction;
-    int storeX         = entity->position.x;
-    int storeY         = entity->position.y;
+    int32 dir            = entity->direction;
+    int32 storeX         = entity->position.x;
+    int32 storeY         = entity->position.y;
     entity->position.x = -16 * entity->field_80 + entity->position.x + 2 * entity->field_78 * entity->field_80;
     entity->position.y = -16 * entity->field_84 + entity->position.y + 2 * entity->field_78 * entity->field_84;
     entity->rotation   = entity->orientation << 7;
 
     if (!entity->field_78) {
-        int off = 128;
+        int32 off = 128;
         if (!dir)
             off = -128;
         entity->rotation += off;
     }
     else if (entity->field_78 < 8) {
-        int off = 16;
+        int32 off = 16;
         if (!dir)
             off = -16;
         entity->rotation += (7 - entity->field_78) * off;

@@ -17,18 +17,18 @@ typedef struct {
     Vector2 startPos;
     EntityUIControl *parent;
     TextInfo text;
-    int timer;
+    int32 timer;
     uint8 characterID;
     uint8 zoneID;
     uint8 actID;
-    int isEncore;
-    int startDir;
-    int field_80;
-    int field_84;
-    int field_88;
-    int field_8C;
-    int field_90;
-    int field_94;
+    int32 isEncore;
+    int32 startDir;
+    int32 field_80;
+    int32 field_84;
+    int32 field_88;
+    int32 field_8C;
+    int32 field_90;
+    int32 field_94;
     Animator animator1;
     Animator animator2;
     Animator animator3;
@@ -53,10 +53,10 @@ void UITABanner_Serialize(void);
 
 // Extra Entity Functions
 void UITABanner_Unknown1(uint8 characterID, EntityUITABanner *banner, uint8 zoneID, uint8 actID, bool32 isEncore);
-void UITABanner_Unknown2(int drawX, int drawY, bool32 isEncore);
-void UITABanner_Unknown3(uint8 actID, uint8 characterID, bool32 isEncore, int drawX, int drawY);
-void UITABanner_Unknown4(int drawX, int drawY, int zoneID);
-void UITABanner_Unknown5(uint8 actID, uint8 zoneID, uint8 characterID, bool32 isEncore, int drawX, int drawY);
+void UITABanner_Unknown2(int32 drawX, int32 drawY, bool32 isEncore);
+void UITABanner_Unknown3(uint8 actID, uint8 characterID, bool32 isEncore, int32 drawX, int32 drawY);
+void UITABanner_Unknown4(int32 drawX, int32 drawY, int32 zoneID);
+void UITABanner_Unknown5(uint8 actID, uint8 zoneID, uint8 characterID, bool32 isEncore, int32 drawX, int32 drawY);
 
 #endif
 

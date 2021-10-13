@@ -32,11 +32,11 @@ void ParticleHelpers_StageLoad(void)
 
 }
 
-void ParticleHelpers_Unknown1(int x, int y)
+void ParticleHelpers_Unknown1(int32 x, int32 y)
 {
-    int pos = x - 0x80000;
-    for (int i = 0; i < 5; ++i) {
-        int spawnX           = pos + (i << 18);
+    int32 pos = x - 0x80000;
+    for (int32 i = 0; i < 5; ++i) {
+        int32 spawnX           = pos + (i << 18);
         EntityDebris *debris = (EntityDebris *)RSDK.CreateEntity(Debris->objectID, Debris_State_Fall, spawnX, y);
         debris->drawOrder    = Zone->drawOrderHigh;
         debris->gravity      = 0x3800;
@@ -48,14 +48,14 @@ void ParticleHelpers_Unknown1(int x, int y)
     }
 }
 
-void ParticleHelpers_Unknown2(void *debrisState, void (*callback)(EntityDebris *), int speed, int xOffset, int yOffset, int maxX, int maxY)
+void ParticleHelpers_Unknown2(void *debrisState, void (*callback)(EntityDebris *), int32 speed, int32 xOffset, int32 yOffset, int32 maxX, int32 maxY)
 {
 #if RETRO_USE_PLUS
-    int x = RSDK.Random(-(maxX >> 1), maxX >> 1, &Zone->randKey) + xOffset;
-    int y = RSDK.Random(-(maxY >> 1), maxY >> 1, &Zone->randKey) + yOffset;
+    int32 x = RSDK.Random(-(maxX >> 1), maxX >> 1, &Zone->randKey) + xOffset;
+    int32 y = RSDK.Random(-(maxY >> 1), maxY >> 1, &Zone->randKey) + yOffset;
 #else
-    int x = RSDK.Rand(-(maxX >> 1), maxX >> 1) + xOffset;
-    int y = RSDK.Rand(-(maxY >> 1), maxY >> 1) + yOffset;
+    int32 x = RSDK.Rand(-(maxX >> 1), maxX >> 1) + xOffset;
+    int32 y = RSDK.Rand(-(maxY >> 1), maxY >> 1) + yOffset;
 #endif
     EntityDebris *debris = (EntityDebris *)RSDK.CreateEntity(Debris->objectID, debrisState, x, y);
     debris->drawOrder    = Zone->drawOrderHigh;

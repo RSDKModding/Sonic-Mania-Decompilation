@@ -13,7 +13,7 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    int shadowScale;
+    int32 shadowScale;
     Entity *parent;
     Matrix matrix;
     Animator animator;

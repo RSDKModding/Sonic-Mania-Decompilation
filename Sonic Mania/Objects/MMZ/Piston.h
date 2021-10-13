@@ -17,7 +17,7 @@ typedef struct {
     StateMachine(stateCollide);
     uint32 type;
     Vector2 amplitude;
-    int speed;
+    int32 speed;
     bool32 reverse;
     uint8 size;
     uint8 collisionType;
@@ -25,9 +25,9 @@ typedef struct {
     Vector2 centerPos;
     Vector2 drawPos;
     Vector2 collisionOffset;
-    int stood;
-    int moveTimer;
-    int stoodAngle;
+    int32 stood;
+    int32 moveTimer;
+    int32 stoodAngle;
     uint8 stoodPlayers;
     uint8 pushPlayersL;
     uint8 pushPlayersR;
@@ -37,8 +37,8 @@ typedef struct {
     uint32 childCount;
     uint16 interval;
     uint16 intervalOffset;
-    int distance;
-    int spawnType;
+    int32 distance;
+    int32 spawnType;
 } EntityPiston;
 
 // Object Struct

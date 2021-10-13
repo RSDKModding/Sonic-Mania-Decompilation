@@ -15,15 +15,15 @@ typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     uint8 orientation;
-    int length;
-    int speed;
+    int32 length;
+    int32 speed;
     uint8 activePlayers;
     Vector2 posUnknown1;
-    int field_74;
-    int field_78;
-    int field_7C;
+    int32 field_74;
+    int32 field_78;
+    int32 field_7C;
     bool32 flag;
-    int field_84;
+    int32 field_84;
     Hitbox hitbox1;
     Hitbox hitbox2;
     Animator animator1;

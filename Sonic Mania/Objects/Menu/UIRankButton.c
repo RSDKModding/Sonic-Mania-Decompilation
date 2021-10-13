@@ -42,10 +42,10 @@ void UIRankButton_Draw(void)
 
     bool32 setClip = false;
 
-    int newClipX1 = 0;
-    int newClipY1 = 0;
-    int newClipX2 = 0;
-    int newClipY2 = 0;
+    int32 newClipX1 = 0;
+    int32 newClipY1 = 0;
+    int32 newClipX2 = 0;
+    int32 newClipY2 = 0;
     if (carousel && (carousel->clipSize.x > 0 || carousel->clipSize.y > 0)) {
         setClip   = true;
         newClipX2 = carousel->clipSize.x;
@@ -56,10 +56,10 @@ void UIRankButton_Draw(void)
     if (entity->field_14C || entity->field_148)
         setClip = false;
 
-    int clipX1 = RSDK_screens->clipBound_X1;
-    int clipY1 = RSDK_screens->clipBound_Y1;
-    int clipX2 = RSDK_screens->clipBound_X2;
-    int clipY2 = RSDK_screens->clipBound_Y2;
+    int32 clipX1 = RSDK_screens->clipBound_X1;
+    int32 clipY1 = RSDK_screens->clipBound_Y1;
+    int32 clipX2 = RSDK_screens->clipBound_X2;
+    int32 clipY2 = RSDK_screens->clipBound_Y2;
     if (setClip)
         RSDK.SetClipBounds(RSDK_sceneInfo->currentScreenID, (newClipX1 >> 16) - RSDK_screens->position.x - (newClipX2 >> 17),
                            (newClipY1 >> 16) - RSDK_screens->position.y - (newClipY2 >> 17),
@@ -110,7 +110,7 @@ void UIRankButton_Create(void *data)
 
 void UIRankButton_StageLoad(void) {}
 
-void UIRankButton_SetRankText(EntityUIRankButton *button, int rank)
+void UIRankButton_SetRankText(EntityUIRankButton *button, int32 rank)
 {
     char buffer[8];
     if (rank)
@@ -122,7 +122,7 @@ void UIRankButton_SetRankText(EntityUIRankButton *button, int rank)
     RSDK.SetSpriteString(UIWidgets->labelSpriteIndex, 0, &button->rankText);
 }
 
-void UIRankButton_Unknown2(int rank, EntityUIRankButton *button, int score, int row)
+void UIRankButton_Unknown2(int32 rank, EntityUIRankButton *button, int32 score, int32 row)
 {
     button->rank  = rank;
     button->score = score;
@@ -174,19 +174,19 @@ void UIRankButton_Unknown4(void)
     drawPos.x = entity->position.x;
     drawPos.y = entity->position.y;
 
-    int val2 = 0xA40000;
+    int32 val2 = 0xA40000;
     if (!entity->showsName)
         val2 = 0x840000;
 
-    int val = 0xB20000;
+    int32 val = 0xB20000;
     if (entity->showsName)
         val = 0xF20000;
 
     drawPos.x = 0x110000 - ((val + 0x150000) >> 1) + drawPos.x;
     UIRankButton_Unknown5(0, drawPos.x, drawPos.y, 0x220000, 0x100000);
 
-    int drawX = val2 + drawPos.x;
-    int drawY = drawPos.y;
+    int32 drawX = val2 + drawPos.x;
+    int32 drawY = drawPos.y;
     UIRankButton_Unknown5(0x000000, drawX, drawPos.y, val, 0x100000);
     if (entity->state != UIRankButton_Unknown14 || !((entity->timer >> 1) % 2)) {
         if (!RSDK_sceneInfo->inEditor) {
@@ -198,7 +198,7 @@ void UIRankButton_Unknown4(void)
                 RSDK.DrawSprite(&entity->animator4, &drawPos, false);
             }
 
-            int width = RSDK.GetStringWidth(UIWidgets->labelSpriteIndex, 0, &entity->rankText, 0, entity->rankText.textLength, 0);
+            int32 width = RSDK.GetStringWidth(UIWidgets->labelSpriteIndex, 0, &entity->rankText, 0, entity->rankText.textLength, 0);
             drawPos.x -= width << 15;
             RSDK.DrawText(&entity->animator2, &drawPos, &entity->rankText, 0, entity->rankText.textLength, ALIGN_LEFT, 0, 2, 0, false);
         }
@@ -208,7 +208,7 @@ void UIRankButton_Unknown4(void)
             drawPos.x += entity->field_14C;
             drawPos.y = drawY + entity->field_14C;
             drawPos.y += entity->field_148;
-            int len = entity->nameTimeText.textLength;
+            int32 len = entity->nameTimeText.textLength;
             if (len >= 20)
                 len = 20;
             RSDK.DrawText(&entity->animator2, &drawPos, &entity->nameTimeText, 0, len, ALIGN_LEFT, 0, 2, 0, false);
@@ -243,7 +243,7 @@ void UIRankButton_Unknown4(void)
     }
 }
 
-void UIRankButton_Unknown5(int colour, int a2, int a3, int a4, int a5)
+void UIRankButton_Unknown5(int32 colour, int32 a2, int32 a3, int32 a4, int32 a5)
 {
     RSDK_THIS(UIRankButton);
 
@@ -300,7 +300,7 @@ void UIRankButton_Unknown12(void)
 {
     RSDK_THIS(UIRankButton);
     if (entity->field_148) {
-        int dist = -(entity->field_148 / abs(entity->field_148));
+        int32 dist = -(entity->field_148 / abs(entity->field_148));
         entity->field_148 += dist << 15;
         if (dist < 0) {
             if (entity->field_148 < 0) {
@@ -314,7 +314,7 @@ void UIRankButton_Unknown12(void)
     }
 
     if (entity->field_14C) {
-        int dist = -(entity->field_14C / abs(entity->field_14C));
+        int32 dist = -(entity->field_14C / abs(entity->field_14C));
         entity->field_14C += dist << 16;
         if (dist < 0) {
             if (entity->field_14C < 0) {

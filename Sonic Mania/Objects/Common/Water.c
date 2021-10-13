@@ -72,7 +72,7 @@ void Water_StaticUpdate(void)
     }
 
     bool32 flag = false;
-    for (int i = 0; i < 4; ++i) {
+    for (int32 i = 0; i < 4; ++i) {
         flag |= Water->wakePosX[i] > 0;
     }
 
@@ -256,7 +256,7 @@ void Water_EditorLoad(void) {}
 void Water_SetWaterLevel(void)
 {
     ScreenInfo *screen = &RSDK_screens[RSDK_sceneInfo->currentScreenID];
-    int waterDrawPos   = (Water->waterLevel >> 0x10) - screen->position.y;
+    int32 waterDrawPos   = (Water->waterLevel >> 0x10) - screen->position.y;
     if (waterDrawPos >= 0) {
         if (waterDrawPos > screen->height)
             waterDrawPos = screen->height;
@@ -312,7 +312,7 @@ void Water_CheckButtonTag(void)
     }
 }
 
-void Water_SpawnBubble(EntityPlayer *player, int id)
+void Water_SpawnBubble(EntityPlayer *player, int32 id)
 {
     if (Water->array3[id] <= 0) {
         if (RSDK.Rand(0, 3) == 1)
@@ -358,7 +358,7 @@ void Water_SpawnBubble(EntityPlayer *player, int id)
     }
 }
 
-void Water_SpawnCountDownBubble(EntityPlayer *player, int id, uint8 bubbleID)
+void Water_SpawnCountDownBubble(EntityPlayer *player, int32 id, uint8 bubbleID)
 {
     EntityWater *bubble = CREATE_ENTITY(Water, intToVoid(8), player->position.x, player->position.y);
     if (player->direction) {
@@ -382,7 +382,7 @@ void Water_State_Palette(void)
     if (entity->type == 0)
         Water->waterLevel = (entity->size.x * RSDK.Sin512(2 * Zone->timer)) + Water->newWaterLevel;
 
-    for (int p = 0; p < Player->playerCount; ++p) {
+    for (int32 p = 0; p < Player->playerCount; ++p) {
         EntityPlayer *player = RSDK_GET_ENTITY(p, Player);
 
         if (player->state == Player_State_FlyIn && player->entPtr) {
@@ -423,7 +423,7 @@ void Water_State_Palette(void)
                 if (player->state != Player_State_FlyIn)
                     underwater = false;
             }
-            int waterID = 0;
+            int32 waterID = 0;
 #if RETRO_USE_PLUS
             if (!player->isGhost)
 #endif
@@ -603,7 +603,7 @@ void Water_Unknown4(void)
     entity->position.x += entity->field_B4;
     entity->position.y += entity->field_B8;
 
-    int anim = entity->animator.animationID;
+    int32 anim = entity->animator.animationID;
     if ((anim == 3 && entity->animator.frameID < 12) || anim == 4 || anim == 5 || (anim == 7 && !entity->activePlayers)) {
         entity->position.x = (RSDK.Sin512(entity->angle) << 9) + entity->field_68;
         entity->angle      = (entity->angle + 4) & 0x1FF;
@@ -644,7 +644,7 @@ void Water_HCZBubbleBurst(EntityWater *entity, bool32 jumpedOut)
 
         foreach_active(Player, player)
         {
-            int id = RSDK.GetEntityID(player);
+            int32 id = RSDK.GetEntityID(player);
             if ((1 << id) & entity->activePlayers) {
                 if (jumpedOut) {
                     RSDK.SetSpriteAnimation(player->spriteIndex, ANI_JUMP, &player->playerAnimator, true, 0);
@@ -757,7 +757,7 @@ void Water_State_Bubble(void)
                                     player->groundVel  = 0;
                                     flag               = true;
 
-                                    int anim = player->playerAnimator.animationID;
+                                    int32 anim = player->playerAnimator.animationID;
                                     if (player->characterID == ID_TAILS) {
                                         flag     = anim != ANI_FLY && anim != ANI_FLYTIRED && anim != ANI_FLYLIFT && anim != ANI_SWIM
                                                && anim != ANI_SWIMLIFT;
@@ -832,7 +832,7 @@ void Water_Unknown6(void)
 
 EntityWater *Water_GetPlayerBubble(EntityPlayer *player)
 {
-    int playerID = RSDK.GetEntityID(player);
+    int32 playerID = RSDK.GetEntityID(player);
 
     foreach_active(Water, water)
     {
@@ -867,7 +867,7 @@ void Water_State_HCZBubble(void)
     if (entity->animator.animationID != 6) {
         foreach_active(Player, player)
         {
-            int playerID = RSDK.GetEntityID(player);
+            int32 playerID = RSDK.GetEntityID(player);
             if (player->objectID != Player->objectID)
                 continue;
             if (player->hurtFlag)
@@ -896,7 +896,7 @@ void Water_State_HCZBubble(void)
                     entity->activePlayers |= 1 << playerID;
                     entity->activePlayers2 |= 1 << playerID;
                     if (RSDK.GetEntityID(entity) >= 64) {
-                        int id = 32;
+                        int32 id = 32;
                         while (RSDK_GET_ENTITY(id, )->objectID) {
                             if (++id >= 32 + PLAYER_MAX)
                                 break;
@@ -944,7 +944,7 @@ void Water_State_HCZBubble(void)
                         foreach_return;
                     }
 
-                    int xVel = 0;
+                    int32 xVel = 0;
                     if (player->left) {
                         player->direction = FLIP_X;
                         xVel              = -0x11000;
@@ -954,7 +954,7 @@ void Water_State_HCZBubble(void)
                         xVel              = 0x11000;
                     }
 
-                    int yVel = -0x8800;
+                    int32 yVel = -0x8800;
                     if (player->down)
                         yVel = -0x4400;
                     else if (player->up)
@@ -1064,7 +1064,7 @@ void Water_State_Bubbler(void)
         if (!entity->countdownID) {
             if (!entity->field_6E) {
                 entity->field_6E    = 1;
-                int rand            = RSDK.Rand(0, 0x10000);
+                int32 rand            = RSDK.Rand(0, 0x10000);
                 entity->bubbleType1 = rand % 6;
                 entity->bubbleType2 = rand & 0xC;
                 if (!entity->field_6D) {
@@ -1074,7 +1074,7 @@ void Water_State_Bubbler(void)
             }
             entity->countdownID = RSDK.Rand(0, 32);
             EntityWater *bubble = CREATE_ENTITY(Water, intToVoid(7), entity->position.x, entity->position.y - 0x20000);
-            int bubbleSize      = Water->bubbleSizes[entity->bubbleType1 + entity->bubbleType2];
+            int32 bubbleSize      = Water->bubbleSizes[entity->bubbleType1 + entity->bubbleType2];
             bubble->animator.loopIndex  = bubbleSize;
             bubble->animator.frameCount = bubbleSize + 1;
             if (entity->type == 4) {
@@ -1178,7 +1178,7 @@ void Water_State_Adjustable(void)
         }
     }
 
-    int px = entity->position.x + 1;
+    int32 px = entity->position.x + 1;
     if (!flag) {
         foreach_active(Player, player)
         {
@@ -1218,14 +1218,14 @@ void Water_State_Draw_Palette(void)
     ScreenInfo *screen = &RSDK_screens[RSDK_sceneInfo->currentScreenID];
     drawPos.x          = ((screen->position.x & 0xFFFFFFC0) + 32) << 16;
     drawPos.y          = Water->waterLevel;
-    for (int i = (screen->width >> 6) + 2; i > 0; --i) {
+    for (int32 i = (screen->width >> 6) + 2; i > 0; --i) {
         RSDK.DrawSprite(&entity->animator, &drawPos, 0);
         drawPos.x += 0x400000;
     }
 
     entity->drawFX |= FX_FLIP;
 
-    for (int i = 0; i < 4; ++i) {
+    for (int32 i = 0; i < 4; ++i) {
         if (Water->wakePosX[i] > 0) {
             entity->direction = Water->wakeDir[i];
             drawPos.x         = Water->wakePosX[i];

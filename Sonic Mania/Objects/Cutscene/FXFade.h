@@ -12,10 +12,10 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    int timer;
-    int speedIn;
-    int wait;
-    int speedOut;
+    int32 timer;
+    int32 speedIn;
+    int32 wait;
+    int32 speedOut;
     uint32 color;
     bool32 oneWay;
     bool32 eventOnly;

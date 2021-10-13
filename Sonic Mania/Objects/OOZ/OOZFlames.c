@@ -19,7 +19,7 @@ void OOZFlames_Draw(void)
     Vector2 drawPos;
 
     drawPos.x = (RSDK_screens[RSDK_sceneInfo->currentScreenID].centerX - 240) << 16;
-    for (int angle = 0; angle < 0x100; angle += 0x10) {
+    for (int32 angle = 0; angle < 0x100; angle += 0x10) {
         drawPos.y = (RSDK.Sin256(4 * (angle + Zone->timer)) << 11) + entity->field_60;
         RSDK.DrawSprite(&entity->animator, &drawPos, true);
         drawPos.x += 0x200000;

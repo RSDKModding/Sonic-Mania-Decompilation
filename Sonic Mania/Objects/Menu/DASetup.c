@@ -53,7 +53,7 @@ void DASetup_StageLoad(void)
         }
     }
 
-    int trackCount = 0;
+    int32 trackCount = 0;
     foreach_all(Music, track) { DASetup->trackList[trackCount++] = (Entity *)track; }
 
     DASetup->trackCount    = trackCount;
@@ -64,7 +64,7 @@ void DASetup_StageLoad(void)
     DASetup->sfxScoreTotal = RSDK.GetSFX("Global/ScoreTotal.wav");
 }
 
-void DASetup_DisplayTrack(int trackID)
+void DASetup_DisplayTrack(int32 trackID)
 {
     char buffer[0x10];
     TextInfo text;
@@ -147,7 +147,7 @@ void DASetup_SetupUI(void)
 
 void DASetup_State_ManageControl(void)
 {
-    int prevTrack = DASetup->trackID;
+    int32 prevTrack = DASetup->trackID;
     if (UIControl->keyRight)
         DASetup->trackID++;
     else if (UIControl->keyLeft)

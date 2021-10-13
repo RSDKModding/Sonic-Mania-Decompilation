@@ -12,13 +12,24 @@
 // ================
 // STANDARD TYPES
 // ================
+typedef signed char int8;
+typedef unsigned char uint8;
+typedef signed short int16;
+typedef unsigned short uint16;
+typedef signed int int32;
+typedef unsigned int uint32;
+
+typedef uint32 bool32;
+
+typedef uint32 colour;
+typedef uint32 color;
+
 typedef unsigned char byte;
 typedef signed char sbyte;
 typedef unsigned short ushort;
 typedef unsigned int uint;
-typedef long long int64;
+typedef signed long long int64;
 typedef unsigned long long uint64;
-typedef unsigned int bool32;
 
 enum GamePlatforms {
     PLATFORM_PC    = 0,

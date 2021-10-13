@@ -7,11 +7,11 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    int activeCount;
-    int field_8;
-    int field_C;
-    int field_10;
-    int field_14;
+    int32 activeCount;
+    int32 field_8;
+    int32 field_C;
+    int32 field_10;
+    int32 field_14;
 } ObjectWaterfallSound;
 
 // Entity Class
@@ -20,12 +20,12 @@ typedef struct {
     Vector2 size;
     Vector2 posUnk;
     bool32 flag;
-    int field_6C;
-    int field_70;
-    int field_74;
-    int field_78;
-    int field_7C;
-    int field_80;
+    int32 field_6C;
+    int32 field_70;
+    int32 field_74;
+    int32 field_78;
+    int32 field_7C;
+    int32 field_80;
 } EntityWaterfallSound;
 
 // Object Struct
@@ -44,7 +44,7 @@ void WaterfallSound_Serialize(void);
 
 // Extra Entity Functions
 bool32 WaterfallSound_CheckCB(void);
-void WaterfallSound_UpdateCB(int sfxID);
+void WaterfallSound_UpdateCB(int32 sfxID);
 #endif
 
 #endif //!OBJ_WATERFALLSOUND_H

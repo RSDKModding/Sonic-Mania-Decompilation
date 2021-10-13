@@ -81,7 +81,7 @@ void Gondola_Create(void *data)
 
 void Gondola_StageLoad(void) { Gondola->aniFrames = RSDK.LoadSpriteAnimation("HCZ/Gondola.bin", SCOPE_STAGE); }
 
-int Gondola_GetWaterLevel(void)
+int32 Gondola_GetWaterLevel(void)
 {
     RSDK_THIS(Gondola);
     if (RSDK_sceneInfo->entity->position.y < Water->waterLevel) {
@@ -98,7 +98,7 @@ int Gondola_GetWaterLevel(void)
 void Gondola_Unknown2(void)
 {
     RSDK_THIS(Gondola);
-    int waterLevel = Gondola_GetWaterLevel();
+    int32 waterLevel = Gondola_GetWaterLevel();
 
     entity->field_80 = entity->field_84.y - waterLevel;
     entity->field_74 = abs(entity->field_84.y - waterLevel) < 0x40000;
@@ -146,7 +146,7 @@ void Gondola_Unknown3(void)
 {
     RSDK_THIS(Gondola);
 
-    int desiredRotation = 0;
+    int32 desiredRotation = 0;
     if (!entity->onGround) {
         foreach_active(Player, player)
         {
@@ -169,7 +169,7 @@ void Gondola_Unknown4(void)
     if (!RSDK_sceneInfo->entity->onGround) {
         foreach_active(Player, player)
         {
-            int playerID = RSDK.GetEntityID(player);
+            int32 playerID = RSDK.GetEntityID(player);
             if (!player->sidekick) {
                 if (((1 << playerID) & entity->activePlayers)) {
                     entity->velocity.x = (player->position.x - entity->field_84.x) >> 5;
@@ -240,7 +240,7 @@ void Gondola_Unknown6(void)
     else {
         foreach_active(Player, player)
         {
-            int playerID = RSDK.GetEntityID(player);
+            int32 playerID = RSDK.GetEntityID(player);
             if (((1 << playerID) & entity->activePlayers)) {
                 player->position.x += entity->field_94.x;
                 player->position.y += entity->field_94.y;

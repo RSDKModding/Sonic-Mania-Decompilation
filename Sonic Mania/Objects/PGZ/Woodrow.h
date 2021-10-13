@@ -20,13 +20,13 @@ typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     uint8 type;
-    int distUp;
-    int distDown;
+    int32 distUp;
+    int32 distDown;
     uint8 field_68;
     uint8 bombCount;
     uint8 field_6A;
     uint8 field_6B;
-    int field_6C;
+    int32 field_6C;
     Vector2 startPos;
     uint8 startDir;
     Entity *parent;

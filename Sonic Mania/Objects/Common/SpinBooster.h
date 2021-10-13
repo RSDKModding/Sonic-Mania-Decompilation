@@ -14,14 +14,14 @@ typedef struct {
     RSDK_ENTITY
     uint8 autoGrip;
     uint8 bias;
-    int size;
-    int boostPower;
+    int32 size;
+    int32 boostPower;
     bool32 boostAlways;
     bool32 forwardOnly;
     bool32 playSound;
     bool32 allowTubeInput;
     uint8 activePlayers;
-    int field_78;
+    int32 field_78;
     Animator animator;
 } EntitySpinBooster;
 
@@ -40,10 +40,10 @@ void SpinBooster_EditorLoad(void);
 void SpinBooster_Serialize(void);
 
 // Extra Entity Functions
-int SpinBooster_GetRollDir(EntityPlayer *player);
+int32 SpinBooster_GetRollDir(EntityPlayer *player);
 void SpinBooster_HandleRollDir(EntityPlayer *player);
 void SpinBooster_ApplyRollVelocity(EntityPlayer *player);
-void SpinBooster_Unknown4(uint32 colour, int X1, int Y1, int X2, int Y2);
+void SpinBooster_Unknown4(uint32 colour, int32 X1, int32 Y1, int32 X2, int32 Y2);
 void SpinBooster_DrawSprites(void);
 void SpinBooster_HandleForceRoll(EntityPlayer *player);
 

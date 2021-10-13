@@ -31,12 +31,12 @@ typedef struct {
     RSDK_OBJECT
     char trackNames[16][32];
     uint32 trackLoops[16];
-    int trackStartPos;
-    int channelID;
-    int activeTrack;
-    int nextTrack;
-    int field_254;
-    int field_258;
+    int32 trackStartPos;
+    int32 channelID;
+    int32 activeTrack;
+    int32 nextTrack;
+    int32 field_254;
+    int32 field_258;
 } ObjectMusic;
 
 // Entity Class
@@ -45,21 +45,21 @@ typedef struct {
     StateMachine(state);
     TextInfo trackFile;
     TextInfo soundTestTitle;
-    int trackID;
+    int32 trackID;
     uint32 trackLoop;
     bool32 playOnLoad;
-    int field_78;
-    int timer;
-    int field_80;
-    int trackStartPos;
+    int32 field_78;
+    int32 timer;
+    int32 field_80;
+    int32 trackStartPos;
     float volume;
     float fadeSpeed;
-    int field_90;
-    int field_94;
-    int field_98;
-    int field_9C;
-    int field_A0;
-    int field_A4;
+    int32 field_90;
+    int32 field_94;
+    int32 field_98;
+    int32 field_9C;
+    int32 field_A0;
+    int32 field_A4;
 } EntityMusic;
 
 // Object Struct

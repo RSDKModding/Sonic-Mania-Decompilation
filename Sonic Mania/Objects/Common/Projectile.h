@@ -12,12 +12,12 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    int field_5C;
+    int32 field_5C;
     bool32 field_60;
-    int timer;
-    int timer2;
-    int gravityStrength;
-    int field_70;
+    int32 timer;
+    int32 timer2;
+    int32 gravityStrength;
+    int32 field_70;
     Hitbox hitbox;
     Animator animator;
 } EntityProjectile;

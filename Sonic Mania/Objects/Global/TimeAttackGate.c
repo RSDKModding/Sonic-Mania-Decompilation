@@ -62,8 +62,8 @@ void TimeAttackGate_Create(void *data)
                 entity->updateRange.y = 0x400000;
                 entity->drawOrder     = Zone->playerDrawLow + 1;
 
-                int checkA = entity->boundsOffset.y + (entity->boundsSize.y >> 1);
-                int checkB = entity->boundsOffset.y - (entity->boundsSize.y >> 1);
+                int32 checkA = entity->boundsOffset.y + (entity->boundsSize.y >> 1);
+                int32 checkB = entity->boundsOffset.y - (entity->boundsSize.y >> 1);
 
                 if ((-0x10000 * entity->extendTop) < entity->boundsOffset.y - (entity->boundsSize.y >> 1))
                     checkB = (-0x10000 * entity->extendTop);
@@ -113,8 +113,8 @@ void TimeAttackGate_HandleSpin(void)
 {
     RSDK_THIS(TimeAttackGate);
 
-    int top    = (TimeAttackGate->hitbox.top << 16) - (entity->extendTop << 16) + entity->position.y;
-    int bottom = ((entity->extendBottom + TimeAttackGate->hitbox.bottom) << 16) + entity->position.y;
+    int32 top    = (TimeAttackGate->hitbox.top << 16) - (entity->extendTop << 16) + entity->position.y;
+    int32 bottom = ((entity->extendBottom + TimeAttackGate->hitbox.bottom) << 16) + entity->position.y;
 
     foreach_active(Player, player)
     {
@@ -127,7 +127,7 @@ void TimeAttackGate_HandleSpin(void)
                 foreach_break;
             }
 
-            int vel = 0;
+            int32 vel = 0;
             if (player->onGround)
                 vel = player->groundVel;
             else
@@ -135,7 +135,7 @@ void TimeAttackGate_HandleSpin(void)
             if (vel >> 15
                 && MathHelpers_Unknown12(player->position.x, player->position.y, entity->playerPos.x, entity->playerPos.y, entity->position.x, bottom,
                                          entity->position.x, top)) {
-                int val = (vel >> 15) - 2;
+                int32 val = (vel >> 15) - 2;
                 if ((vel >> 15) >= 0)
                     val = (vel >> 15) + 2;
                 if (abs(val) > abs(entity->spinSpeed))
@@ -177,8 +177,8 @@ void TimeAttackGate_HandleSpin(void)
 void TimeAttackGate_HandleStart(void)
 {
     RSDK_THIS(TimeAttackGate);
-    int top               = (TimeAttackGate->hitbox.top << 16) - (entity->extendTop << 16) + entity->position.y;
-    int bottom            = ((entity->extendBottom + TimeAttackGate->hitbox.bottom) << 16) + entity->position.y;
+    int32 top               = (TimeAttackGate->hitbox.top << 16) - (entity->extendTop << 16) + entity->position.y;
+    int32 bottom            = ((entity->extendBottom + TimeAttackGate->hitbox.bottom) << 16) + entity->position.y;
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
 
     if (MathHelpers_Unknown12(player1->position.x, player1->position.y, entity->playerPos.x, entity->playerPos.y, entity->position.x, bottom,
@@ -230,11 +230,11 @@ void TimeAttackGate_Unknown1(void)
             UIWaitSpinner_Wait();
 
         EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
-        int playerID = param->characterID;
-        int zone     = param->zoneID;
-        int time     = (RSDK_sceneInfo->milliseconds + 100 * (RSDK_sceneInfo->seconds + 60 * RSDK_sceneInfo->minutes));
-        int act      = param->actID;
-        int mode     = RSDK_sceneInfo->filter == SCN_FILTER_ENCORE;
+        int32 playerID = param->characterID;
+        int32 zone     = param->zoneID;
+        int32 time     = (RSDK_sceneInfo->milliseconds + 100 * (RSDK_sceneInfo->seconds + 60 * RSDK_sceneInfo->minutes));
+        int32 act      = param->actID;
+        int32 mode     = RSDK_sceneInfo->filter == SCN_FILTER_ENCORE;
 
         param->dbRowID = TimeAttackData_AddTADBEntry(zone, playerID, act, mode, time, TimeAttackGate_LeaderboardCB);
         TimeAttackData_AddLeaderboardEntry(zone, playerID, act, mode, time);
@@ -242,7 +242,7 @@ void TimeAttackGate_Unknown1(void)
 }
 #endif
 
-void TimeAttackGate_LeaderboardCB(int status)
+void TimeAttackGate_LeaderboardCB(int32 status)
 {
     if (ActClear)
         ActClear->field_10 = 0;
@@ -253,8 +253,8 @@ void TimeAttackGate_LeaderboardCB(int status)
 void TimeAttackGate_CheckTouch(void)
 {
     RSDK_THIS(TimeAttackGate);
-    int x = entity->boundsOffset.x + entity->position.x;
-    int y = entity->boundsOffset.y + entity->position.y;
+    int32 x = entity->boundsOffset.x + entity->position.x;
+    int32 y = entity->boundsOffset.y + entity->position.y;
 
     Hitbox hitbox;
     hitbox.left   = (-entity->boundsSize.x) >> 17;
@@ -262,7 +262,7 @@ void TimeAttackGate_CheckTouch(void)
     hitbox.top    = (-entity->boundsSize.y) >> 17;
     hitbox.bottom = entity->boundsSize.y >> 17;
 
-    for (int i = 0; i < Player->playerCount; ++i) {
+    for (int32 i = 0; i < Player->playerCount; ++i) {
         EntityPlayer *player = RSDK_GET_ENTITY(i, Player);
 
         bool32 flag = false;
@@ -270,8 +270,8 @@ void TimeAttackGate_CheckTouch(void)
             flag = entity->position.x - player->position.x < 0x1000000;
         }
         else {
-            int storeX         = entity->position.x;
-            int storeY         = entity->position.y;
+            int32 storeX         = entity->position.x;
+            int32 storeY         = entity->position.y;
             entity->position.x = x;
             entity->position.y = y;
             flag               = Player_CheckCollisionTouch(player, entity, &hitbox);
@@ -394,7 +394,7 @@ void TimeAttackGate_State_Restarter(void)
                         else {
                             entity->state              = NULL;
                             globals->suppressTitlecard = true;
-                            for (int i = 0; i < CHANNEL_COUNT; ++i) {
+                            for (int32 i = 0; i < CHANNEL_COUNT; ++i) {
                                 if (i != Music->channelID && i != TimeAttackGate->dword30) {
                                     RSDK.StopChannel(i);
                                 }

@@ -28,9 +28,9 @@ void DrawHelpers_EditorLoad(void);
 void DrawHelpers_Serialize(void);
 
 // Extra Entity Functions
-void DrawHelpers_DrawHitboxOutline(uint32 colour, uint8 dir, int x, int y, Hitbox *hitbox);
-void DrawHelpers_DrawDebug3(uint32 colour, int x1, int y1, int x2, int y2);
-void DrawHelpers_DrawDebug4(uint32 colour, int a2, int alpha, int x1, int y1, int x2, int y2);
-void DrawHelpers_DrawDebug5(uint32 colour, int x, int y);
+void DrawHelpers_DrawHitboxOutline(uint32 colour, uint8 dir, int32 x, int32 y, Hitbox *hitbox);
+void DrawHelpers_DrawDebug3(uint32 colour, int32 x1, int32 y1, int32 x2, int32 y2);
+void DrawHelpers_DrawDebug4(uint32 colour, int32 a2, int32 alpha, int32 x1, int32 y1, int32 x2, int32 y2);
+void DrawHelpers_DrawDebug5(uint32 colour, int32 x, int32 y);
 
 #endif //! OBJ_DRAWHELPERS_H

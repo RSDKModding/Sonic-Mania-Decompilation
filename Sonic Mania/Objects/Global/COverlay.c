@@ -11,9 +11,9 @@ void COverlay_StaticUpdate(void) {}
 void COverlay_Draw(void)
 {
     RSDK_THIS(COverlay);
-    int tileX          = 0;
+    int32 tileX          = 0;
     for (entity->position.x = (RSDK_screens->position.x & 0xFFFFFFF0) << 16; tileX < (RSDK_screens->width >> 4) + 2; ++tileX) {
-        int tileY = 0;
+        int32 tileY = 0;
         for (entity->position.y = (RSDK_screens->position.y & 0xFFFFFFF0) << 16; tileY < (RSDK_screens->height >> 4) + 2; ++tileY) {
             COverlay_DrawTile();
             entity->position.y += 16 << 0x10;
@@ -47,7 +47,7 @@ void COverlay_DebugDraw(void)
 
 void COverlay_DebugSpawn(void)
 {
-    int count = 0;
+    int32 count = 0;
     foreach_all(COverlay, entity)
     {
         destroyEntity(entity);
@@ -61,14 +61,14 @@ void COverlay_DrawTile(void)
 {
     RSDK_THIS(COverlay);
     EntityPlayer *player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
-    int tx               = 0;
-    for (int x = 0; x < 0x10; ++x) {
+    int32 tx               = 0;
+    for (int32 x = 0; x < 0x10; ++x) {
         uint8 ty   = -1;
         uint8 th2  = -1;
         uint8 ty2  = -1;
         uint8 th   = -1;
         uint8 solid = 0;
-        for (int y = 0; y < 0x10; ++y) {
+        for (int32 y = 0; y < 0x10; ++y) {
             if (RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_FLOOR, player->collisionPlane, x << 0x10, y << 0x10, false)) {
                 solid |= 1;
                 th2 = y + 1;

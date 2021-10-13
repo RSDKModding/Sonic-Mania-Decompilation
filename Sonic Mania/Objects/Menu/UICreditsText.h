@@ -15,16 +15,16 @@ typedef struct {
     StateMachine(state);
     TextInfo text;
     TextInfo tag;
-    int listID;
+    int32 listID;
     bool32 isHeading;
     bool32 hasShape;
-    int timer;
-    int scaleTimer;
-    int scaleSpeed;
+    int32 timer;
+    int32 scaleTimer;
+    int32 scaleSpeed;
     Vector2 charPositions[64];
-    int charOffsets[64];
+    int32 charOffsets[64];
     int16 charTimers[64];
-    int clipY2;
+    int32 clipY2;
     Animator animator;
 } EntityUICreditsText;
 
@@ -43,7 +43,7 @@ void UICreditsText_EditorLoad(void);
 void UICreditsText_Serialize(void);
 
 // Extra Entity Functions
-void UICreditsText_SetText(int animID, EntityUICreditsText *label, TextInfo *text);
+void UICreditsText_SetText(int32 animID, EntityUICreditsText *label, TextInfo *text);
 
 void UICreditsText_State_Setup(void);
 void UICreditsText_State_SetupCharPos(void);

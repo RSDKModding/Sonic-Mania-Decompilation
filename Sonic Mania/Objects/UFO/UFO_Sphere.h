@@ -6,8 +6,8 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    int field_4;
-    TABLE(int defaultHeights[4], { 12, 12, 16, 16 });
+    int32 field_4;
+    TABLE(int32 defaultHeights[4], { 12, 12, 16, 16 });
     uint16 spriteIndex;
     uint16 sfx_MachSpeed;
     uint16 sfx_LedgeBreak;
@@ -17,19 +17,19 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    int type;
-    int behavior;
-    int height;
-    int speed;
+    int32 type;
+    int32 behavior;
+    int32 height;
+    int32 speed;
     Vector2 matAngle;
     Vector2 amplitude;
-    int timer;
-    int dword80;
-    int dword84;
-    int dword88;
+    int32 timer;
+    int32 dword80;
+    int32 dword84;
+    int32 dword88;
     Vector2 worldPos;
     Vector2 drawPos;
-    int dword9C;
+    int32 dword9C;
     Matrix matrix;
     Matrix matrix2;
     Animator animator;

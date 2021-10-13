@@ -12,12 +12,12 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    int field_58;
-    int field_5C;
-    int field_60;
-    int field_64;
-    int field_68;
-    int field_6C;
+    int32 field_58;
+    int32 field_5C;
+    int32 field_60;
+    int32 field_64;
+    int32 field_68;
+    int32 field_6C;
     Vector2 *posPtr;
     EntityUIControl *parent;
     Vector2 offset;
@@ -26,7 +26,7 @@ typedef struct {
     uint8 p2Score;
     bool32 showWinner;
     uint8 winnerID;
-    int sizeY;
+    int32 sizeY;
     TextInfo scoreText;
     Animator animator1;
     Animator textAnimator;

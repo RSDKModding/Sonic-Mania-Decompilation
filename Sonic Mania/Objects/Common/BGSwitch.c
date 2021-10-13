@@ -16,7 +16,7 @@ void BGSwitch_Update(void)
                 BGSwitch->layerIDs[BGSwitch->screenID] = entity->bgID;
         }
 
-        int id = BGSwitch->layerIDs[BGSwitch->screenID];
+        int32 id = BGSwitch->layerIDs[BGSwitch->screenID];
         if (id != BGSwitch->layerIDs[BGSwitch->screenID + 4]) {
             BGSwitch->layerIDs[BGSwitch->screenID + 4] = id;
             StateMachine_Run(BGSwitch->switchCallback[id]);

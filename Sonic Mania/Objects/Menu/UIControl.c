@@ -69,7 +69,7 @@ void UIControl_Create(void *data)
         entity->startPos.x = entity->position.x;
         entity->startPos.y = entity->position.y;
 #if RETRO_USE_PLUS
-        int entityID       = RSDK.GetEntityID(entity);
+        int32 entityID       = RSDK.GetEntityID(entity);
         if (UIButtonPrompt) {
             if (entityID != SLOT_DIALOG_UICONTROL) {
                 foreach_all(UIButtonPrompt, prompt)
@@ -133,7 +133,7 @@ EntityUIControl *UIControl_GetUIControl(void)
 
 void UIControl_ClearInputs(char id)
 {
-    for (int i = 0; i < 4; ++i) {
+    for (int32 i = 0; i < 4; ++i) {
         UIControl->upPress[i]      = false;
         UIControl->downPress[i]    = false;
         UIControl->leftPress[i]    = false;
@@ -177,7 +177,7 @@ void UIControl_ProcessInputs(void)
     UIControl_Unknown16();
 
     if (!UIControl->inputLocked) {
-        for (int i = 0; i < 4; ++i) {
+        for (int32 i = 0; i < 4; ++i) {
             UIControl->upPress[i]    = RSDK_controller[i + 1].keyUp.press || RSDK_stickL[i + 1].keyUp.press;
             UIControl->downPress[i]  = RSDK_controller[i + 1].keyDown.press || RSDK_stickL[i + 1].keyDown.press;
             UIControl->leftPress[i]  = RSDK_controller[i + 1].keyLeft.press || RSDK_stickL[i + 1].keyLeft.press;
@@ -321,9 +321,9 @@ void UIControl_ProcessInputs(void)
     }
 }
 
-int UIControl_Unknown1(EntityUIControl *control, EntityUIButton *entity)
+int32 UIControl_Unknown1(EntityUIControl *control, EntityUIButton *entity)
 {
-    for (int i = 0; i < control->buttonCount; ++i) {
+    for (int32 i = 0; i < control->buttonCount; ++i) {
         if (entity == control->buttons[i])
             return i;
     }
@@ -333,17 +333,17 @@ int UIControl_Unknown1(EntityUIControl *control, EntityUIButton *entity)
 void UIControl_Unknown2(EntityUIControl *control)
 {
     Entity *storeEntity = RSDK_sceneInfo->entity;
-    for (int i = 0; i < SCENEENTITY_COUNT; ++i) {
+    for (int32 i = 0; i < SCENEENTITY_COUNT; ++i) {
         EntityUIButton *entity = RSDK.GetEntityByID(i);
         if (entity) {
-            int h          = RSDK_screens->height;
-            int centerX    = -RSDK_screens->width >> 1;
-            int centerX2   = RSDK_screens->width >> 1;
-            int centerY    = h >> 1;
-            int negCenterY = -h >> 1;
+            int32 h          = RSDK_screens->height;
+            int32 centerX    = -RSDK_screens->width >> 1;
+            int32 centerX2   = RSDK_screens->width >> 1;
+            int32 centerY    = h >> 1;
+            int32 negCenterY = -h >> 1;
 
-            int x = centerX2;
-            int y = centerY;
+            int32 x = centerX2;
+            int32 y = centerY;
             if (centerX < centerX2)
                 x = centerX;
             if (centerX2 > centerX)
@@ -354,7 +354,7 @@ void UIControl_Unknown2(EntityUIControl *control)
                 negCenterY = centerY;
             if (entity->position.x >= control->position.x + (x << 16) && entity->position.x <= control->position.x + (centerX << 16)) {
                 if (entity->position.y >= control->position.y + (y << 16) && entity->position.y <= control->position.y + (negCenterY << 16)) {
-                    int id                 = RSDK.GetEntityID(entity);
+                    int32 id                 = RSDK.GetEntityID(entity);
                     RSDK_sceneInfo->entity = (Entity *)entity;
                     if (UIButton && entity->objectID == UIButton->objectID) {
                         UIButton_Unknown1(entity);
@@ -410,7 +410,7 @@ void UIControl_Unknown2(EntityUIControl *control)
 #if RETRO_USE_PLUS
 void UIControl_Unknown3(EntityUIControl *entity)
 {
-    for (int i = 0; i < entity->promptCount; ++i) {
+    for (int32 i = 0; i < entity->promptCount; ++i) {
         entity->prompts[i]->active = ACTIVE_NORMAL;
     }
 }
@@ -446,7 +446,7 @@ void UIControl_Unknown4(EntityUIControl *entity)
     entity->dwordCC       = 1;
 
 #if RETRO_USE_PLUS
-    for (int i = 0; i < entity->promptCount; ++i) {
+    for (int32 i = 0; i < entity->promptCount; ++i) {
         entity->prompts[i]->active = ACTIVE_NORMAL;
     }
 #endif
@@ -522,7 +522,7 @@ void UIControl_Unknown6(EntityUIControl *control)
     control->state      = StateMachine_None;
 #if RETRO_USE_PLUS
     if (entity->promptCount) {
-        for (int i = 0; i < control->promptCount; ++i) {
+        for (int32 i = 0; i < control->promptCount; ++i) {
             control->prompts[i]->active = ACTIVE_BOUNDS;
         }
     }
@@ -532,14 +532,14 @@ void UIControl_Unknown6(EntityUIControl *control)
 void UIControl_Unknown7(void)
 {
     RSDK_THIS(UIControl);
-    int slotID = RSDK.GetEntityID(entity);
+    int32 slotID = RSDK.GetEntityID(entity);
     Hitbox bounds;
 
     if (UIHeading && slotID != SLOT_DIALOG_UICONTROL) {
         foreach_all(UIHeading, heading)
         {
-            int x         = entity->startPos.x - entity->cameraOffset.x;
-            int y         = entity->startPos.y - entity->cameraOffset.y;
+            int32 x         = entity->startPos.x - entity->cameraOffset.x;
+            int32 y         = entity->startPos.y - entity->cameraOffset.y;
             bounds.right  = entity->size.x >> 17;
             bounds.left   = -(entity->size.x >> 17);
             bounds.bottom = entity->size.y >> 17;
@@ -553,8 +553,8 @@ void UIControl_Unknown7(void)
     if (UIShifter && slotID != SLOT_DIALOG_UICONTROL) {
         foreach_all(UIShifter, shifter)
         {
-            int x         = entity->startPos.x - entity->cameraOffset.x;
-            int y         = entity->startPos.y - entity->cameraOffset.y;
+            int32 x         = entity->startPos.x - entity->cameraOffset.x;
+            int32 y         = entity->startPos.y - entity->cameraOffset.y;
             bounds.right  = entity->size.x >> 17;
             bounds.left   = -(entity->size.x >> 17);
             bounds.bottom = (entity->size.y >> 17);
@@ -569,8 +569,8 @@ void UIControl_Unknown7(void)
     if (UICarousel && slotID != SLOT_DIALOG_UICONTROL) {
         foreach_all(UICarousel, carousel)
         {
-            int x         = entity->startPos.x - entity->cameraOffset.x;
-            int y         = entity->startPos.y - entity->cameraOffset.y;
+            int32 x         = entity->startPos.x - entity->cameraOffset.x;
+            int32 y         = entity->startPos.y - entity->cameraOffset.y;
             bounds.right  = entity->size.x >> 17;
             bounds.left   = -(entity->size.x >> 17);
             bounds.bottom = entity->size.y >> 17;
@@ -583,10 +583,10 @@ void UIControl_Unknown7(void)
     }
 #endif
 
-    for (int i = 0; i < SCENEENTITY_COUNT; ++i) {
+    for (int32 i = 0; i < SCENEENTITY_COUNT; ++i) {
         EntityUIButton *button = RSDK_GET_ENTITY(i, UIButton);
         if (button) {
-            int id = button->objectID;
+            int32 id = button->objectID;
             if (id != UIButton->objectID && (!UIModeButton || id != UIModeButton->objectID) && (!UISaveSlot || id != UISaveSlot->objectID)
                 && (!UICharButton || id != UICharButton->objectID) && (!UITAZoneModule || id != UITAZoneModule->objectID)
 #if RETRO_USE_PLUS
@@ -597,8 +597,8 @@ void UIControl_Unknown7(void)
                 && (!UISlider || id != UISlider->objectID) && (!UIKeyBinder || id != UIKeyBinder->objectID)) {
             }
             else {
-                int x         = entity->startPos.x - entity->cameraOffset.x;
-                int y         = entity->startPos.y - entity->cameraOffset.y;
+                int32 x         = entity->startPos.x - entity->cameraOffset.x;
+                int32 y         = entity->startPos.y - entity->cameraOffset.y;
                 bounds.left   = -(entity->size.x >> 17);
                 bounds.top    = -(entity->size.y >> 17);
                 bounds.right  = entity->size.x >> 17;
@@ -686,14 +686,14 @@ void UIControl_Unknown13(void)
     UIControl_Unknown11(&entity->parentTag);
 }
 
-void UIControl_Unknown15(EntityUIControl *entity, int x, int y)
+void UIControl_Unknown15(EntityUIControl *entity, int32 x, int32 y)
 {
-    int finalX = x;
+    int32 finalX = x;
     if (!x) {
         finalX = entity->position.x;
         x      = entity->position.x;
     }
-    int finalY = y;
+    int32 finalY = y;
     if (!y) {
         finalY = entity->position.y;
         y      = entity->position.y;
@@ -702,12 +702,12 @@ void UIControl_Unknown15(EntityUIControl *entity, int x, int y)
 #if RETRO_USE_PLUS
     if (!entity->noClamp) {
 #endif
-        int startX = entity->startPos.x - entity->cameraOffset.x;
-        int startY = entity->startPos.y - entity->cameraOffset.y;
-        int x1     = startX + (RSDK_screens->width << 15) - (entity->size.x >> 1);
-        int x2     = startX + (entity->size.x >> 1) - (RSDK_screens->width << 15);
-        int y1     = startY + (RSDK_screens->height << 15) - (entity->size.y >> 1);
-        int y2     = startY + (entity->size.y >> 1) - (RSDK_screens->height << 15);
+        int32 startX = entity->startPos.x - entity->cameraOffset.x;
+        int32 startY = entity->startPos.y - entity->cameraOffset.y;
+        int32 x1     = startX + (RSDK_screens->width << 15) - (entity->size.x >> 1);
+        int32 x2     = startX + (entity->size.x >> 1) - (RSDK_screens->width << 15);
+        int32 y1     = startY + (RSDK_screens->height << 15) - (entity->size.y >> 1);
+        int32 y2     = startY + (entity->size.y >> 1) - (RSDK_screens->height << 15);
         if (x < x2)
             x2 = x;
         finalX = x2;
@@ -762,7 +762,7 @@ void UIControl_ProcessButtonInput(void)
         UIControl->field_C8          = RSDK_touchMouse->count != 0;
         UIControl->field_4           = 1;
 
-        for (int i = 0; i < entity->buttonCount; ++i) {
+        for (int32 i = 0; i < entity->buttonCount; ++i) {
             if (entity->buttons[i]) {
                 EntityUIButton *button = entity->buttons[i];
 
@@ -790,8 +790,8 @@ void UIControl_ProcessButtonInput(void)
 
         if (RSDK_touchMouse->count) {
             if (flag) {
-                int id = -1;
-                for (int i = 0; i < entity->buttonCount; ++i) {
+                int32 id = -1;
+                for (int32 i = 0; i < entity->buttonCount; ++i) {
                     if (activeButton == entity->buttons[i]) {
                         id = i;
                         break;

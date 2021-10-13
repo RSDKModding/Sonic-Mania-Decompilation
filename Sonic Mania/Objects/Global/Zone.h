@@ -12,41 +12,41 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    int actID;
+    int32 actID;
     void (*stageFinishCallback)(void);
     bool32 forcePlayerOnScreenFlag;
     void (*callbacks[0x10])(void);
 #if RETRO_USE_PLUS
-    int callbackCount;
-    int playerFlags[4];
+    int32 callbackCount;
+    int32 playerFlags[4];
     uint8 playerID;
     uint8 playerCount;
     uint8 playerIDs[4];
     uint8 playerIDs2[4];
 #else
-    int field_94;
-    int callbackCount;
-    int playerFlags;
+    int32 field_94;
+    int32 callbackCount;
+    int32 playerFlags;
 #endif
-    int listPos;
-    int prevListPos;
-    int ringFrame;
-    int timer;
-    int timer2;
-    int screenBoundsL1[PLAYER_MAX];
-    int screenBoundsR1[PLAYER_MAX];
-    int screenBoundsT1[PLAYER_MAX];
-    int screenBoundsB1[PLAYER_MAX];
-    int screenBoundsL2[PLAYER_MAX];
-    int screenBoundsR2[PLAYER_MAX];
-    int screenBoundsT2[PLAYER_MAX];
-    int screenBoundsB2[PLAYER_MAX];
-    int deathBoundary[PLAYER_MAX];
-    int playerBoundActiveL[PLAYER_MAX];
-    int playerBoundActiveR[PLAYER_MAX];
-    int playerBoundActiveT[PLAYER_MAX];
-    int playerBoundActiveB[PLAYER_MAX];
-    int field_154;
+    int32 listPos;
+    int32 prevListPos;
+    int32 ringFrame;
+    int32 timer;
+    int32 timer2;
+    int32 screenBoundsL1[PLAYER_MAX];
+    int32 screenBoundsR1[PLAYER_MAX];
+    int32 screenBoundsT1[PLAYER_MAX];
+    int32 screenBoundsB1[PLAYER_MAX];
+    int32 screenBoundsL2[PLAYER_MAX];
+    int32 screenBoundsR2[PLAYER_MAX];
+    int32 screenBoundsT2[PLAYER_MAX];
+    int32 screenBoundsB2[PLAYER_MAX];
+    int32 deathBoundary[PLAYER_MAX];
+    int32 playerBoundActiveL[PLAYER_MAX];
+    int32 playerBoundActiveR[PLAYER_MAX];
+    int32 playerBoundActiveT[PLAYER_MAX];
+    int32 playerBoundActiveB[PLAYER_MAX];
+    int32 field_154;
     bool32 atlReloadFlag;
     bool32 field_15C;
     void (*timeOverState)(void);
@@ -68,11 +68,11 @@ typedef struct {
     uint16 sfx_fail;
 #if RETRO_USE_PLUS
     uint8 entityData[16][ENTITY_SIZE];
-    int screenPosX[PLAYER_MAX];
-    int screenPosY[PLAYER_MAX];
+    int32 screenPosX[PLAYER_MAX];
+    int32 screenPosY[PLAYER_MAX];
     bool32 swapGameMode;
-    int flag;
-    int randKey;
+    int32 flag;
+    int32 randKey;
 #endif
 } ObjectZone;
 
@@ -81,10 +81,10 @@ typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
-    int screenID;
-    int timer;
-    int fadeSpeed;
-    int fadeColour;
+    int32 screenID;
+    int32 timer;
+    int32 fadeSpeed;
+    int32 fadeColour;
 } EntityZone;
 
 // Object Struct
@@ -102,19 +102,19 @@ void Zone_EditorLoad(void);
 void Zone_Serialize(void);
 
 // Extra Entity Functions
-int Zone_GetZoneID(void);
-void Zone_StoreEntities(int xOffset, int yOffset);
-void Zone_ReloadStoredEntities(int xOffset, int yOffset, bool32 flag);
-void Zone_StartFadeOut(int fadeSpeed, int fadeColour);
+int32 Zone_GetZoneID(void);
+void Zone_StoreEntities(int32 xOffset, int32 yOffset);
+void Zone_ReloadStoredEntities(int32 xOffset, int32 yOffset, bool32 flag);
+void Zone_StartFadeOut(int32 fadeSpeed, int32 fadeColour);
 void Zone_StartFadeOutRestart(void);
 void Zone_Unknown2(void);
-void Zone_Unknown3(Vector2 *posPtr, Vector2 *pos, int angle);
-void Zone_Unknown4(int screen);
+void Zone_Unknown3(Vector2 *posPtr, Vector2 *pos, int32 angle);
+void Zone_Unknown4(int32 screen);
 void Zone_StartTeleportAction(void);
 void Zone_ApplyWorldBounds(void);
 bool32 Zone_IsAct2(void);
-int Zone_GetEncoreStageID(void);
-int Zone_GetManiaStageID(void);
+int32 Zone_GetEncoreStageID(void);
+int32 Zone_GetManiaStageID(void);
 void Zone_StateDraw_Fadeout(void);
 void Zone_State_Fadeout(void);
 void Zone_State_Fadeout_Restart(void);

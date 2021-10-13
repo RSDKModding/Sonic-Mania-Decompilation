@@ -18,29 +18,29 @@ void ParallaxSprite_Draw(void)
     ScreenInfo *screen = &RSDK_screens[RSDK_sceneInfo->currentScreenID];
     Vector2 drawPos;
 
-    int scrollPosX = ((entity->scrollPos.x + entity->parallaxFactor.x * screen->position.x) & 0x7FFF0000) % entity->loopPoint.x;
+    int32 scrollPosX = ((entity->scrollPos.x + entity->parallaxFactor.x * screen->position.x) & 0x7FFF0000) % entity->loopPoint.x;
     drawPos.x      = entity->position.x - scrollPosX;
 
-    int scrollPosY = ((entity->scrollPos.y + entity->parallaxFactor.y * screen->position.y) & 0x7FFF0000) % entity->loopPoint.y;
+    int32 scrollPosY = ((entity->scrollPos.y + entity->parallaxFactor.y * screen->position.y) & 0x7FFF0000) % entity->loopPoint.y;
     drawPos.y      = entity->position.y - scrollPosY;
 
-    int loopX = -entity->loopPoint.x >> 2;
+    int32 loopX = -entity->loopPoint.x >> 2;
     if (drawPos.x < loopX) {
         drawPos.x += entity->loopPoint.x;
     }
 
-    int loopY = -entity->loopPoint.y >> 2;
+    int32 loopY = -entity->loopPoint.y >> 2;
     if (drawPos.y < loopY) {
         drawPos.y += entity->loopPoint.y;
     }
 
     if (entity->attribute == 2) {
-        int y = (drawPos.y >> 16) - 32;
-        int x = (drawPos.x >> 16) - 56;
+        int32 y = (drawPos.y >> 16) - 32;
+        int32 x = (drawPos.x >> 16) - 56;
         RSDK.DrawRect(x, y, 112, 64, entity->unknownPosA.x, 255, 0, true);
 
-        for (int i = 0; i < 0xE0; i += 0x20) {
-            int val = (RSDK.Sin256(i + Zone->timer) >> 3) + 48;
+        for (int32 i = 0; i < 0xE0; i += 0x20) {
+            int32 val = (RSDK.Sin256(i + Zone->timer) >> 3) + 48;
             if (val > 64)
                 val = 64;
             RSDK.DrawRect(x, y - val + 64, 16, val, entity->unknownPosA.y, 255, 0, true);

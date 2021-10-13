@@ -7,8 +7,8 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    int counter;
-    int field_8;
+    int32 counter;
+    int32 field_8;
 } ObjectNoSwap;
 
 // Entity Class

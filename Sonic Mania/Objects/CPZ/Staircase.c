@@ -32,7 +32,7 @@ void Staircase_Create(void *data)
     Staircase->blockHitbox.bottom = 16;
     Staircase->blockHitbox.right  = 16;
 
-    int add             = (entity->direction) ? -0x200000 : 0x200000;
+    int32 add             = (entity->direction) ? -0x200000 : 0x200000;
     entity->blocks[0].x = entity->position.x;
     entity->blocks[0].y = entity->position.y;
     entity->blocks[1].x = entity->position.x + 1 * add;
@@ -85,9 +85,9 @@ void Staircase_MainState(void)
     Vector2 oldpos = entity->position;
     foreach_active(Player, player)
     {
-        for (int i = 0; i < 4; i++) {
+        for (int32 i = 0; i < 4; i++) {
             entity->position = entity->blocks[i];
-            int col          = Player_CheckCollisionBox(player, entity, &Staircase->blockHitbox);
+            int32 col          = Player_CheckCollisionBox(player, entity, &Staircase->blockHitbox);
             if (col == 4) {
                 entity->active    = ACTIVE_NORMAL;
                 entity->timer     = 59;
@@ -112,7 +112,7 @@ void Staircase_Wait(void)
     Vector2 oldpos = entity->position;
     foreach_active(Player, player)
     {
-        for (int i = 0; i < 4; i++) {
+        for (int32 i = 0; i < 4; i++) {
             entity->position = entity->blocks[i];
             Player_CheckCollisionBox(player, entity, &Staircase->blockHitbox);
         }
@@ -133,11 +133,11 @@ void Staircase_Wait(void)
 void Staircase_MoveBlocks(void)
 {
     RSDK_THIS(Staircase);
-    int add        = (entity->type) ? -0x4000 : 0x4000;
+    int32 add        = (entity->type) ? -0x4000 : 0x4000;
     Vector2 oldpos = entity->position;
     foreach_active(Player, player)
     {
-        for (int i = 0; i < 4; i++) {
+        for (int32 i = 0; i < 4; i++) {
             entity->position = entity->blocks[i];
             if (Player_CheckCollisionBox(player, entity, &Staircase->blockHitbox) == 1)
                 player->position.y += add * (i + 1);
@@ -161,7 +161,7 @@ void Staircase_BasicCollision(void)
     Vector2 oldpos = entity->position;
     foreach_active(Player, player)
     {
-        for (int i = 0; i < 4; i++) {
+        for (int32 i = 0; i < 4; i++) {
             entity->position = entity->blocks[i];
             if (Player_CheckCollisionBox(player, entity, &Staircase->blockHitbox) == 4 && player->onGround)
                 player->hurtFlag = 1;
@@ -175,13 +175,13 @@ void Staircase_BasicCollision(void)
 void Staircase_DrawBlocks(void)
 {
     RSDK_THIS(Staircase);
-    for (int i = 0; i < 4; i++) {
+    for (int32 i = 0; i < 4; i++) {
         RSDK.DrawSprite(&entity->animator, &entity->blocks[i], false);
     }
 }
 void Staircase_DrawShake(void) {
     RSDK_THIS(Staircase);
-    for (int i = 0; i < 4; i++) {
+    for (int32 i = 0; i < 4; i++) {
         Vector2 drawPos = entity->blocks[i];
         drawPos.y += ((entity->timer - i * 4) << 14) & 0x10000;
         RSDK.DrawSprite(&entity->animator, &drawPos, false);

@@ -43,8 +43,8 @@ void MMZ2Outro_StartCutscene(void)
 
     CutsceneSeq_StartSequence((Entity *)entity, states);
     RSDK.CopyPalette(0, 1, 1, 1, 255);
-    for (int i = 128; i < 256; ++i) RSDK.SetPaletteEntry(2, i, 0);
-    for (int i = 0; i < 256; ++i) RSDK.SetPaletteEntry(5, i, 0xFFFFFF);
+    for (int32 i = 128; i < 256; ++i) RSDK.SetPaletteEntry(2, i, 0);
+    for (int32 i = 0; i < 256; ++i) RSDK.SetPaletteEntry(5, i, 0xFFFFFF);
     RSDK.GetSceneLayer(0)->drawLayer[0] = 16;
     RSDK.GetSceneLayer(1)->drawLayer[0] = 16;
     RSDK.GetSceneLayer(2)->drawLayer[0] = 0;
@@ -127,7 +127,7 @@ bool32 MMZ2Outro_CutsceneState_Unknown3(EntityCutsceneSeq *host)
         }
     }
 
-    for (int p = 0; p < Player->playerCount; ++p) {
+    for (int32 p = 0; p < Player->playerCount; ++p) {
         Zone->screenBoundsR1[p] += 0x240;
         Zone->screenBoundsR2[p] += 0x2400000;
     }

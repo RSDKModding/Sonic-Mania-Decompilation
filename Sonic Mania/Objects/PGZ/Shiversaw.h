@@ -10,7 +10,7 @@ typedef struct {
     RSDK_OBJECT
     uint8 health;
     uint8 invincibilityTimer;
-    int timer;
+    int32 timer;
     uint16 aniFrames;
     Hitbox hitbox1;
     Hitbox hitbox2;
@@ -35,19 +35,19 @@ typedef struct {
     StateMachine(state);
     StateMachine(stateSaw[Shiversaw_SawCount]);
     uint8 sawID;
-    int timer;
-    int sawTimers[Shiversaw_SawCount];
-    int field_74[Shiversaw_SawCount];
-    int field_7C;
-    int field_80;
-    int field_84;
+    int32 timer;
+    int32 sawTimers[Shiversaw_SawCount];
+    int32 field_74[Shiversaw_SawCount];
+    int32 field_7C;
+    int32 field_80;
+    int32 field_84;
     Vector2 field_88;
-    int field_90[Shiversaw_SawCount];
-    int sawAngles[Shiversaw_SawCount];
-    int field_A0[Shiversaw_SawCount];
+    int32 field_90[Shiversaw_SawCount];
+    int32 sawAngles[Shiversaw_SawCount];
+    int32 field_A0[Shiversaw_SawCount];
     Vector2 sawPos[Shiversaw_SawCount];
-    int field_B8;
-    int circleRadius;
+    int32 field_B8;
+    int32 circleRadius;
     Animator animator1;
     Animator animator2;
     Animator animator3;
@@ -71,7 +71,7 @@ void Shiversaw_EditorLoad(void);
 void Shiversaw_Serialize(void);
 
 // Extra Entity Functions
-bool32 Shiversaw_CheckSawHit(EntityPlayer *player, int sawID);
+bool32 Shiversaw_CheckSawHit(EntityPlayer *player, int32 sawID);
 void Shiversaw_CheckPlayerCollisions(void);
 void Shiversaw_Unknown3(void);
 void Shiversaw_Unknown4(void);
@@ -91,7 +91,7 @@ void Shiversaw_Unknown12(void);
 void Shiversaw_Unknown13(void);
 
 void Shiversaw_CheckCrateCollisions(void);
-void Shiversaw_Unknown14(int speed);
+void Shiversaw_Unknown14(int32 speed);
 void Shiversaw_StateSaw_Unknown2(void);
 void Shiversaw_StateSaw_Unknown3(void);
 void Shiversaw_StateSaw_Unknown4(void);
@@ -99,7 +99,7 @@ void Shiversaw_StateSaw_Unknown5(void);
 void Shiversaw_StateSaw_Destroyed(void);
 void Shiversaw_StateSaw_Unknown7(void);
 void Shiversaw_StateSaw_Unknown1(void);
-void Shiversaw_ProcessSawMovement(int sawID);
+void Shiversaw_ProcessSawMovement(int32 sawID);
 
 void Shiversaw_StateDust_Unknown(void);
 

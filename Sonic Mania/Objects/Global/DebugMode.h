@@ -12,12 +12,12 @@ typedef struct {
     StateMachine(draw[0x100]);
     StateMachine(spawn[0x100]);
     Animator animator;
-    int objID;
-    int itemCount;
+    int32 objID;
+    int32 itemCount;
     bool32 debugActive;
     uint8 itemSubType;
     uint8 subtypeCount;
-    int field_A2C;
+    int32 field_A2C;
 } ObjectDebugMode;
 
 // Entity Class

@@ -119,15 +119,15 @@ void JuggleSaw_Crab_Collide(void)
     {
         if (Player_CheckBadnikHit(player, entity, &JuggleSaw->hitbox) && Player_CheckBadnikBreak(entity, player, false)) {
             if (entity->hasSaw == JSAW_HAS_SAW) {
-                int debrisX = entity->position.x;
-                int debrisY = entity->position.y;
+                int32 debrisX = entity->position.x;
+                int32 debrisY = entity->position.y;
                 if (entity->spawnDir >= FLIP_Y)
                     debrisX += 0x200000 * ((entity->direction & FLIP_X) ? -1 : 1);
                 else
                     debrisY += 0x200000 * ((entity->direction & FLIP_Y) ? 1 : -1);
                 EntityDebris *debris = CREATE_ENTITY(Debris, (void *)Debris_State_FallAndFlicker, debrisX, debrisY);
                 RSDK.SetSpriteAnimation(JuggleSaw->animID, 6, &debris->animator, true, 0);
-                int vx1 = -4, vx2 = 5, vy1 = -4, vy2 = 5;
+                int32 vx1 = -4, vx2 = 5, vy1 = -4, vy2 = 5;
                 if (entity->spawnDir >= FLIP_Y) {
                     if (entity->direction & FLIP_X)
                         vx2 = -1;
@@ -275,7 +275,7 @@ void JuggleSaw_Crab_ThrowSaw(void)
             reciever->hasSaw    = JSAW_AWAITING_SAW;
             reciever->active     = ACTIVE_NORMAL;
             EntityJuggleSaw *saw = CREATE_ENTITY(JuggleSaw, intToVoid(1), entity->position.x, entity->position.y);
-            int sx = 0x2C0000, sy = -0xE0000;
+            int32 sx = 0x2C0000, sy = -0xE0000;
             if (entity->spawnDir >= FLIP_Y) {
                 sx = 0xE0000;
                 sy = 0x2C0000;
@@ -283,9 +283,9 @@ void JuggleSaw_Crab_ThrowSaw(void)
             saw->position.x += sx * ((entity->direction & FLIP_X) ? -1 : 1);
             saw->position.y += sy * ((entity->direction & FLIP_Y) ? -1 : 1);
 
-            int recieverX   = reciever->position.x, targetX;
-            int recieverY   = reciever->position.y, targetY;
-            int recieverDir = reciever->direction, sawDir = 0;
+            int32 recieverX   = reciever->position.x, targetX;
+            int32 recieverY   = reciever->position.y, targetY;
+            int32 recieverDir = reciever->direction, sawDir = 0;
             if (reciever->spawnDir >= FLIP_Y) {
                 targetX = recieverX + 0x220000 * ((recieverDir & FLIP_X) ? -1 : 1);
                 targetY = recieverY + 0x140000 * (reciever->spawnPos.y >= entity->spawnPos.y ? 1 : -1);
@@ -298,7 +298,7 @@ void JuggleSaw_Crab_ThrowSaw(void)
             }
 
             saw->direction   = sawDir;
-            int targetAngle  = RSDK.ATan2(targetX - saw->position.x, targetY - saw->position.y);
+            int32 targetAngle  = RSDK.ATan2(targetX - saw->position.x, targetY - saw->position.y);
             saw->velocity.x  = entity->sawSpeed * RSDK.Cos256(targetAngle);
             saw->velocity.y  = entity->sawSpeed * RSDK.Sin256(targetAngle);
             saw->friends[0]  = (Entity*)reciever;
@@ -327,7 +327,7 @@ void JuggleSaw_Saw_Handle(void)
     entity->position.x += entity->velocity.x;
     entity->position.y += entity->velocity.y;
     EntityJuggleSaw *reciever = (EntityJuggleSaw *)entity->friends[0];
-    int oldDir                = reciever->direction;
+    int32 oldDir                = reciever->direction;
     reciever->direction       = entity->direction;
     Hitbox *grabbox           = &JuggleSaw->grabboxFloor;
     if (reciever->spawnDir >= FLIP_Y)
@@ -340,7 +340,7 @@ void JuggleSaw_Saw_Handle(void)
     bool32 collided     = RSDK.CheckObjectCollisionTouchBox(reciever, grabbox, entity, &JuggleSaw->sawHitbox);
     reciever->direction = oldDir;
     if (collided) {
-        int newDir = 0;
+        int32 newDir = 0;
         if (reciever->spawnDir >= FLIP_Y) {
             if (entity->velocity.y > 0)
                 newDir = oldDir | FLIP_Y;
@@ -364,7 +364,7 @@ void JuggleSaw_Saw_Handle(void)
         foreach_active(Player, player)
         {
             if (Player_CheckCollisionTouch(player, entity, &JuggleSaw->sawHitbox)) {
-                int animID = player->playerAnimator.animationID;
+                int32 animID = player->playerAnimator.animationID;
 #if RETRO_USE_PLUS
                 if (player->characterID == ID_MIGHTY
                     && (animID == ANI_CROUCH || animID == ANI_JUMP || animID == ANI_SPINDASH || animID == ANI_DROPDASH)) {
@@ -372,7 +372,7 @@ void JuggleSaw_Saw_Handle(void)
                         RSDK.PlaySfx(Player->sfx_PimPom, 0, 0xFF);
                         player->uncurlTimer = 30;
                     }
-                    int targetAngle     = RSDK.ATan2(player->position.x - entity->position.x, player->position.y - entity->position.y);
+                    int32 targetAngle     = RSDK.ATan2(player->position.x - entity->position.x, player->position.y - entity->position.y);
                     entity->velocity.x  = -0x400 * RSDK.Cos256(targetAngle);
                     entity->velocity.y  = -0x600 * RSDK.Sin256(targetAngle);
                     entity->interaction = false;

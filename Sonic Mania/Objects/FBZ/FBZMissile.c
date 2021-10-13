@@ -266,7 +266,7 @@ void FBZMissile_Unknown8(void)
 
     foreach_active(Player, player)
     {
-        int velY = player->velocity.y;
+        int32 velY = player->velocity.y;
         if (Player_CheckCollisionBox(player, entity, &FBZMissile->hitbox3)
 #if RETRO_USE_PLUS
             && player->state == Player_State_MightyHammerDrop 

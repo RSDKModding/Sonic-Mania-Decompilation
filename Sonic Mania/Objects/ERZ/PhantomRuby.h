@@ -26,12 +26,12 @@ typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     Vector2 startPos;
-    int timer;
-    int flag;
-    int field_6C;
-    int sfx;
-    int field_74;
-    int field_78;
+    int32 timer;
+    int32 flag;
+    int32 field_6C;
+    int32 sfx;
+    int32 field_74;
+    int32 field_78;
     Animator data1;
     Animator animator2;
 } EntityPhantomRuby;

@@ -21,12 +21,12 @@ typedef struct {
     Vector2 startPos;
     uint8 startDir;
     uint16 timer;
-    int field_68;
-    int field_6C;
+    int32 field_68;
+    int32 field_6C;
     Vector2 posUnknown;
-    int field_78;
-    int field_7C;
-    int swoopAngle;
+    int32 field_78;
+    int32 field_7C;
+    int32 swoopAngle;
     Entity *playerPtr;
     uint8 field_88;
     bool32 flag;

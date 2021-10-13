@@ -5,7 +5,7 @@ ObjectSpear *Spear;
 void Spear_Update(void)
 {
     RSDK_THIS(Spear);
-    int timer = (entity->intervalOffset + Zone->timer) % entity->interval;
+    int32 timer = (entity->intervalOffset + Zone->timer) % entity->interval;
     if (timer >= entity->duration) {
         if (timer - entity->duration >= 6)
             entity->field_7C = 0;
@@ -85,7 +85,7 @@ void Spear_Create(void *data)
     entity->updateRange.x = 0x800000;
     entity->updateRange.y = 0x800000;
 
-    int anim = 0;
+    int32 anim = 0;
     switch (entity->orientation) {
         case 0:
             entity->direction = FLIP_NONE;

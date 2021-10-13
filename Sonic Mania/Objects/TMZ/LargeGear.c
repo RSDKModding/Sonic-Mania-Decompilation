@@ -6,22 +6,22 @@ void LargeGear_Update(void)
 {
     RSDK_THIS(LargeGear);
     entity->angle = entity->rotOffset + entity->rotSpeed * Zone->timer;
-    int storeX    = entity->position.x;
-    int storeY    = entity->position.y;
+    int32 storeX    = entity->position.x;
+    int32 storeY    = entity->position.y;
 
     foreach_active(Player, player)
     {
-        int playerID = RSDK.GetEntityID(player);
+        int32 playerID = RSDK.GetEntityID(player);
 
-        int id      = 0;
-        int storeID = -1;
+        int32 id      = 0;
+        int32 storeID = -1;
 
         bool32 flag = false;
 
-        for (int angle = 0x180; angle < 0x380; angle += 0x40) {
-            int ang = angle + entity->angle;
-            int x   = (storeX + 0x2400 * RSDK.Cos512(ang)) & 0xFFFF0000;
-            int y   = (storeY + 0x2400 * RSDK.Sin512(ang)) & 0xFFFF0000;
+        for (int32 angle = 0x180; angle < 0x380; angle += 0x40) {
+            int32 ang = angle + entity->angle;
+            int32 x   = (storeX + 0x2400 * RSDK.Cos512(ang)) & 0xFFFF0000;
+            int32 y   = (storeY + 0x2400 * RSDK.Sin512(ang)) & 0xFFFF0000;
 
             if (((1 << playerID) & entity->activePlayers) && entity->playerIDs[playerID] == id) {
                 player->position.x += x - entity->positions[id].x;
@@ -77,7 +77,7 @@ void LargeGear_Draw(void)
     RSDK_THIS(LargeGear);
     Vector2 drawPos;
 
-    for (int i = 0; i < 0x200; i += 0x40) {
+    for (int32 i = 0; i < 0x200; i += 0x40) {
         entity->rotation = i + entity->angle;
 
         RSDK.SetSpriteAnimation(LargeGear->aniFrames, 1, &entity->animator2, true, 7 - abs(RSDK.Sin512(entity->rotation) / 73));
@@ -97,8 +97,8 @@ void LargeGear_Draw(void)
     entity->rotation = 0;
     RSDK.DrawSprite(&entity->animator3, NULL, false);
 
-    for (int i = 0; i < 0x200; i += 0x80) {
-        int angle = i + entity->angle;
+    for (int32 i = 0; i < 0x200; i += 0x80) {
+        int32 angle = i + entity->angle;
         drawPos   = entity->position;
 
         drawPos.x += 0x1300 * RSDK.Cos512(angle);

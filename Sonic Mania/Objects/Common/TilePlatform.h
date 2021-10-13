@@ -13,9 +13,9 @@ typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateCollide);
-    int type;
+    int32 type;
     Vector2 amplitude;
-    int speed;
+    int32 speed;
     bool32 hasTension;
     int8 frameID;
     uint8 collision;
@@ -23,15 +23,15 @@ typedef struct {
     Vector2 centerPos;
     Vector2 drawPos;
     Vector2 collisionOffset;
-    int stood;
-    int collapseDelay;
-    int stoodAngle;
+    int32 stood;
+    int32 collapseDelay;
+    int32 stoodAngle;
     uint8 stoodPlayers;
     uint8 pushPlayersL;
     uint8 pushPlayersR;
     Hitbox hitbox;
     Animator animator;
-    int childCount;
+    int32 childCount;
     Vector2 size;
     uint16 tiles[0x100];
 } EntityTilePlatform;

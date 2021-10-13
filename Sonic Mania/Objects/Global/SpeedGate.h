@@ -7,7 +7,7 @@
 typedef struct {
     RSDK_OBJECT
     Hitbox hitbox;
-    int field_C;
+    int32 field_C;
     uint16 spriteIndex;
     uint16 sfx_StarPost;
 } ObjectSpeedGate;
@@ -16,23 +16,23 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    int id;
-    int timer;
-    int prize;
-    int timer2;
-    int timer3;
-    int field_70;
-    int field_74;
+    int32 id;
+    int32 timer;
+    int32 prize;
+    int32 timer2;
+    int32 timer3;
+    int32 field_70;
+    int32 field_74;
     Vector2 posUnknown;
-    int field_80;
-    int field_84;
+    int32 field_80;
+    int32 field_84;
     EntityPlayer *playerPtr;
     Animator baseData;
     Animator topData;
     Animator timerData;
     Animator finsData;
     Animator bubbleData;
-    int activePlayers;
+    int32 activePlayers;
 } EntitySpeedGate;
 
 // Object Struct

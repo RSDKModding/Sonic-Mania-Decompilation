@@ -114,12 +114,12 @@ void WallCrawl_State_Setup(void)
 {
     RSDK_THIS(WallCrawl);
 
-    int offsetY    = -0xC0000;
+    int32 offsetY    = -0xC0000;
     entity->active = ACTIVE_NORMAL;
     if (entity->direction & FLIP_Y)
         offsetY = 0xC0000;
 
-    int offsetX = -0xD0000;
+    int32 offsetX = -0xD0000;
     if (!(entity->direction & FLIP_X))
         offsetX = 0xC0000;
 
@@ -149,7 +149,7 @@ void WallCrawl_State_Main(void)
                 }
             }
             else {
-                int offsetX   = -0x180000;
+                int32 offsetX   = -0x180000;
                 entity->state = WallCrawl_State_Idle;
                 if (!(entity->direction & FLIP_X))
                     offsetX = 0x180000;
@@ -172,12 +172,12 @@ void WallCrawl_State_Main(void)
     }
 
     entity->position.y += entity->velocity.y;
-    int offsetY    = -0xC0000;
+    int32 offsetY    = -0xC0000;
     entity->active = ACTIVE_NORMAL;
     if (entity->direction & FLIP_Y)
         offsetY = 0xC0000;
 
-    int offsetX = -0xD0000;
+    int32 offsetX = -0xD0000;
     if (!(entity->direction & FLIP_X))
         offsetX = 0xC0000;
     if (!RSDK.ObjectTileGrip(entity, Zone->fgLayers, (2 * ((entity->direction & 1) != 0) + 1), 0, offsetX, offsetY, 0)) {

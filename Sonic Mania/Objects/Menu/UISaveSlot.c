@@ -19,7 +19,7 @@ void UISaveSlot_Update(void)
     EntityUIControl *control = (EntityUIControl *)entity->parent;
 
     // ???
-    for (int i = 0; i < control->buttonCount; ++i) {
+    for (int32 i = 0; i < control->buttonCount; ++i) {
         if (entity == (EntityUISaveSlot *)control->buttons[i])
             break;
     }
@@ -128,7 +128,7 @@ void UISaveSlot_Draw(void)
             frame->width       = 86;
             frame->sprX        = entity->field_13C;
             if (frame->sprX > 106) {
-                int width    = frame->sprX - 106;
+                int32 width    = frame->sprX - 106;
                 frame->width = 86 - width;
                 RSDK.DrawSprite(&entity->animator7, &drawPos, false);
                 frame->pivotX += frame->width;
@@ -156,7 +156,7 @@ void UISaveSlot_Draw(void)
 
             drawPos.x = entity->position.x - 0x240000;
             drawPos.y = 0x450000 + entity->position.y;
-            for (int i = 0; i < 7; ++i) {
+            for (int32 i = 0; i < 7; ++i) {
                 entity->animator6.frameID = ((1 << i) & entity->saveEmeralds) ? i : 7;
                 RSDK.DrawSprite(&entity->animator6, &drawPos, false);
                 drawPos.x += 0xC0000;
@@ -279,7 +279,7 @@ uint8 UISaveSlot_Unknown1(uint8 id)
     return ID_NONE;
 }
 
-void UISaveSlot_Unknown2(uint8 playerID, bool32 isSilhouette, uint8 buddyID, uint8 *friendIDs, uint8 friendCount, int drawX, int drawY)
+void UISaveSlot_Unknown2(uint8 playerID, bool32 isSilhouette, uint8 buddyID, uint8 *friendIDs, uint8 friendCount, int32 drawX, int32 drawY)
 {
     RSDK_THIS(UISaveSlot);
     Vector2 drawPos;
@@ -301,7 +301,7 @@ void UISaveSlot_Unknown2(uint8 playerID, bool32 isSilhouette, uint8 buddyID, uin
         default: animator->frameID = 0; break;
     }
 
-    int y = drawY;
+    int32 y = drawY;
     if (friendCount)
         y = drawY - 0x80000;
     drawPos.x = drawX + 0x100000;
@@ -330,8 +330,8 @@ void UISaveSlot_Unknown2(uint8 playerID, bool32 isSilhouette, uint8 buddyID, uin
     entity->drawFX    = FX_NONE;
     if (friendCount && !isSilhouette) {
         RSDK.SetSpriteAnimation(UISaveSlot->aniFrames, 3, animator, true, 0);
-        int x      = drawX;
-        int offset = 0x120000;
+        int32 x      = drawX;
+        int32 offset = 0x120000;
         if (entity->saveContinues > 0) {
             offset = 0xA0000;
             x      = drawX - 0x160000;
@@ -339,7 +339,7 @@ void UISaveSlot_Unknown2(uint8 playerID, bool32 isSilhouette, uint8 buddyID, uin
         drawPos.x = x + ((offset * (friendCount - 1)) >> 1);
         drawPos.y = drawY + 0x1A0000;
 
-        for (int f = friendCount - 1; f >= 0; --f) {
+        for (int32 f = friendCount - 1; f >= 0; --f) {
             switch (friendIDs[f]) {
                 case ID_TAILS: animator->frameID = 1; break;
                 case ID_KNUCKLES: animator->frameID = 2; break;
@@ -354,7 +354,7 @@ void UISaveSlot_Unknown2(uint8 playerID, bool32 isSilhouette, uint8 buddyID, uin
 }
 #endif
 
-void UISaveSlot_Unknown3(int drawX, int drawY)
+void UISaveSlot_Unknown3(int32 drawX, int32 drawY)
 {
     RSDK_THIS(UISaveSlot);
     Vector2 drawPos;
@@ -363,14 +363,14 @@ void UISaveSlot_Unknown3(int drawX, int drawY)
     RSDK.SetSpriteAnimation(UISaveSlot->aniFrames, 2, &entity->animator3, true, 3);
 
     uint8 friendIDs[3];
-    int playerID    = 0;
-    int buddyID     = 0;
-    int friendCount = 0;
+    int32 playerID    = 0;
+    int32 buddyID     = 0;
+    int32 friendCount = 0;
 
 #if RETRO_USE_PLUS
     if (!entity->encoreMode) {
 #endif
-        int frames[]              = { 3, 0, 1, 2, 4, 5 };
+        int32 frames[]              = { 3, 0, 1, 2, 4, 5 };
         entity->animator3.frameID = frames[entity->frameID];
         entity->animator2.frameID = frames[entity->frameID];
 #if RETRO_USE_PLUS
@@ -380,7 +380,7 @@ void UISaveSlot_Unknown3(int drawX, int drawY)
             playerID = entity->saveEncorePlayer;
             buddyID  = entity->saveEncoreBuddy;
 
-            for (int i = 0; i < 3; ++i) {
+            for (int32 i = 0; i < 3; ++i) {
                 friendIDs[i] = 0;
                 if (!entity->saveEncoreFriends[i])
                     continue;
@@ -465,13 +465,13 @@ void UISaveSlot_Unknown3(int drawX, int drawY)
     RSDK.DrawSprite(&entity->animator2, &drawPos, false);
 }
 
-void UISaveSlot_DrawPlayerInfo(int drawX, int drawY)
+void UISaveSlot_DrawPlayerInfo(int32 drawX, int32 drawY)
 {
     RSDK_THIS(UISaveSlot);
     RSDK.SetSpriteAnimation(UISaveSlot->aniFrames, 3, &entity->animator4, true, 0);
     RSDK.SetSpriteAnimation(UISaveSlot->aniFrames, 21, &entity->animator5, true, 0);
 
-    int playerID = 0;
+    int32 playerID = 0;
 #if RETRO_USE_PLUS
     if (entity->encoreMode) {
         if (entity->isNewSave || entity->type == 1)
@@ -498,7 +498,7 @@ void UISaveSlot_DrawPlayerInfo(int drawX, int drawY)
     }
     else {
 #endif
-        int frames[] = { 0, 0, 1, 2, 3, 4 };
+        int32 frames[] = { 0, 0, 1, 2, 3, 4 };
         playerID     = frames[entity->frameID];
 #if RETRO_USE_PLUS
     }
@@ -510,7 +510,7 @@ void UISaveSlot_DrawPlayerInfo(int drawX, int drawY)
     animators[0] = &entity->animator4;
     animators[1] = &entity->animator5;
 
-    int retries[2];
+    int32 retries[2];
     retries[0] = minVal(entity->saveLives, 99);
 #if RETRO_USE_PLUS
     retries[1] = minVal(entity->saveContinues, 99);
@@ -524,7 +524,7 @@ void UISaveSlot_DrawPlayerInfo(int drawX, int drawY)
     positions[1].y = drawY;
     positions[1].x = drawX;
 
-    int count = 1;
+    int32 count = 1;
     if (retries[1] <= 0) {
         positions[0].x = drawX - 0x20000;
     }
@@ -534,7 +534,7 @@ void UISaveSlot_DrawPlayerInfo(int drawX, int drawY)
         count          = 2;
     }
 
-    for (int i = 0; i < count; ++i) {
+    for (int32 i = 0; i < count; ++i) {
         Vector2 drawPos;
 
         drawPos.x = positions[i].x;
@@ -665,15 +665,15 @@ void UISaveSlot_LoadSaveInfo(void)
 #else                         
     EntitySaveGame *saveRAM = (EntitySaveGame*)SaveGame_GetDataPtr(entity->slotID);
 #endif
-    int saveState = saveRAM->saveState;
+    int32 saveState = saveRAM->saveState;
     if (saveState == 1 || saveState == 2) {
 #if RETRO_USE_PLUS
         if (entity->encoreMode) {
             entity->saveEncorePlayer = saveRAM->playerID & 0xFF;
             entity->saveEncoreBuddy  = (saveRAM->playerID >> 8) & 0xFF;
 
-            int friends = saveRAM->stock;
-            for (int i = 0; i < 3; ++i) {
+            int32 friends = saveRAM->stock;
+            for (int32 i = 0; i < 3; ++i) {
                 entity->saveEncoreFriends[i] = ID_NONE;
                 if (!friends)
                     continue;
@@ -756,15 +756,15 @@ void UISaveSlot_DeleteDLG_CB(void)
     dialog->parent->state      = 0;
     UIWaitSpinner_Wait();
 #if RETRO_USE_PLUS
-    int *saveRAM = SaveGame_GetDataPtr(saveSlot->slotID % 8, saveSlot->encoreMode);
+    int32 *saveRAM = SaveGame_GetDataPtr(saveSlot->slotID % 8, saveSlot->encoreMode);
 #else
-    int *saveRAM = SaveGame_GetDataPtr(saveSlot->slotID % 8);
+    int32 *saveRAM = SaveGame_GetDataPtr(saveSlot->slotID % 8);
 #endif
     memset(saveRAM, 0, 0x400);
     SaveGame_SaveFile(UISaveSlot_DeleteSaveCB);
 }
 
-void UISaveSlot_DeleteSaveCB(int status)
+void UISaveSlot_DeleteSaveCB(int32 status)
 {
     EntityUIDialog *dialog     = (EntityUIDialog *)UIDialog->activeDialog;
     EntityUISaveSlot *saveSlot = (EntityUISaveSlot *)dialog->entityPtr;
@@ -883,9 +883,9 @@ void UISaveSlot_SelectedSave(void)
         foreach_all(UIButtonPrompt, prompt) { prompt->visible = false; }
 
 #if RETRO_USE_PLUS
-        int id = API_MostRecentActiveControllerID(1, 0, 5);
+        int32 id = API_MostRecentActiveControllerID(1, 0, 5);
 #else
-        int id = API_MostRecentActiveControllerID(0);
+        int32 id = API_MostRecentActiveControllerID(0);
 #endif
         API_ResetControllerAssignments();
         API_AssignControllerID(1, id);
@@ -899,11 +899,11 @@ void UISaveSlot_NextCharacter(void)
     RSDK_THIS(UISaveSlot);
     ++entity->frameID;
 
-    int player = entity->frameID;
+    int32 player = entity->frameID;
 #if RETRO_USE_PLUS
-    int max = API.CheckDLC(DLC_PLUS) ? 6 : 4;
+    int32 max = API.CheckDLC(DLC_PLUS) ? 6 : 4;
 #else
-    int max = 4;
+    int32 max = 4;
 #endif
     while (player >= max) {
         player -= max;
@@ -920,11 +920,11 @@ void UISaveSlot_PrevCharacter(void)
     RSDK_THIS(UISaveSlot);
     --entity->frameID;
 
-    int player = entity->frameID;
+    int32 player = entity->frameID;
 #if RETRO_USE_PLUS
-    int max = API.CheckDLC(DLC_PLUS) ? 6 : 4;
+    int32 max = API.CheckDLC(DLC_PLUS) ? 6 : 4;
 #else
-    int max = 4;
+    int32 max = 4;
 #endif
     while (player < 0) {
         player += max;
@@ -1035,9 +1035,9 @@ void UISaveSlot_Unknown21(void)
 
     if (!saveRAM->saveState) {
 #if RETRO_USE_PLUS
-        int frame = entity->encoreMode ? 6 : 0;
+        int32 frame = entity->encoreMode ? 6 : 0;
 #else
-        int frame = 0;
+        int32 frame = 0;
 #endif
         if (entity->frameID != frame) {
             entity->frameID = frame;
@@ -1114,9 +1114,9 @@ void UISaveSlot_Unknown28(void)
 #if RETRO_USE_PLUS
     if (entity->encoreMode && (entity->isNewSave || entity->type == 1)) {
         EntityFXRuby *fxRuby = entity->fxRuby;
-        int rubyY            = entity->position.y;
+        int32 rubyY            = entity->position.y;
 
-        int val = (4 * entity->field_144);
+        int32 val = (4 * entity->field_144);
         if (entity->type != 1)
             rubyY += 0x200000;
 

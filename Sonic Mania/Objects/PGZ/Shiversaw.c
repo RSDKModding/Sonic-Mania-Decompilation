@@ -22,7 +22,7 @@ void Shiversaw_Draw(void)
     Vector2 drawPos;
 
     entity->sawID = Shiversaw_SawCount;
-    for (int s = 0; s < Shiversaw_SawCount; ++s) {
+    for (int32 s = 0; s < Shiversaw_SawCount; ++s) {
         --entity->sawID;
         entity->direction = entity->sawID;
 
@@ -38,8 +38,8 @@ void Shiversaw_Draw(void)
             drawPos.x -= ((-entity->field_90[entity->sawID] >> 9) & 0x380) * RSDK.Cos512(entity->rotation + (entity->sawID << 8));
             drawPos.y -= ((-entity->field_90[entity->sawID] >> 9) & 0x380) * RSDK.Sin512(entity->rotation + (entity->sawID << 8));
 
-            int cnt = ~(entity->field_90[entity->sawID] >> 19);
-            for (int i = cnt; i > 0; --i) {
+            int32 cnt = ~(entity->field_90[entity->sawID] >> 19);
+            for (int32 i = cnt; i > 0; --i) {
                 drawPos.x += -0x400 * RSDK.Cos512(entity->rotation + (entity->sawID << 8));
                 drawPos.y += -0x400 * RSDK.Sin512(entity->rotation + (entity->sawID << 8));
             }
@@ -49,8 +49,8 @@ void Shiversaw_Draw(void)
             drawPos.y += ((entity->field_90[entity->sawID] >> 9) & 0x380) * RSDK.Sin512(entity->rotation + (entity->sawID << 8));
             RSDK.DrawSprite(&entity->animator4, &drawPos, false);
 
-            int cnt = (entity->field_90[entity->sawID] >> 19) - 1;
-            for (int i = cnt; i >= 0; --i) {
+            int32 cnt = (entity->field_90[entity->sawID] >> 19) - 1;
+            for (int32 i = cnt; i >= 0; --i) {
                 drawPos.x += RSDK.Cos512(entity->rotation + (entity->sawID << 8)) << 10;
                 drawPos.y += RSDK.Sin512(entity->rotation + (entity->sawID << 8)) << 10;
                 RSDK.DrawSprite(&entity->animator4, &drawPos, false);
@@ -100,7 +100,7 @@ void Shiversaw_Create(void *data)
             RSDK.SetSpriteAnimation(Shiversaw->aniFrames, 3, &entity->sawAnimator[1], true, 0);
             entity->updateRange.x = 0x800000;
             entity->updateRange.y = 0x800000;
-            for (int s = 0; s < Shiversaw_SawCount; ++s) {
+            for (int32 s = 0; s < Shiversaw_SawCount; ++s) {
                 entity->stateSaw[s] = Shiversaw_StateSaw_Unknown1;
                 entity->sawAngles[s] = 0x80 + ((s & 1) != 0) * 0x100;
             }
@@ -170,12 +170,12 @@ void Shiversaw_StageLoad(void)
     Shiversaw->sfxRocketJet       = RSDK.GetSFX("Stage/RocketJet.wav");
 }
 
-bool32 Shiversaw_CheckSawHit(EntityPlayer *player, int sawID)
+bool32 Shiversaw_CheckSawHit(EntityPlayer *player, int32 sawID)
 {
     RSDK_THIS(Shiversaw);
 #if RETRO_USE_PLUS
     if (player->characterID == ID_MIGHTY) {
-        int anim = player->playerAnimator.animationID;
+        int32 anim = player->playerAnimator.animationID;
         if (anim != ANI_JUMP && anim != ANI_SPINDASH && anim != ANI_DROPDASH)
             return Player_CheckHit(player, &entity->sawPos[sawID]);
         if (anim != ANI_DROPDASH)
@@ -196,8 +196,8 @@ bool32 Shiversaw_CheckSawHit(EntityPlayer *player, int sawID)
             RSDK.SetSpriteAnimation(player->spriteIndex, ANI_HURT, &player->playerAnimator, false, 0);
             RSDK.PlaySfx(Spikes->sfx_Spike, false, 255);
         }
-        int storeX         = entity->position.x;
-        int storeY         = entity->position.y;
+        int32 storeX         = entity->position.x;
+        int32 storeY         = entity->position.y;
         entity->position.x = entity->sawPos[sawID].x;
         entity->position.y = entity->sawPos[sawID].y;
         RSDK.PlaySfx(Ice->sfxWindowShatter, false, 255);
@@ -222,7 +222,7 @@ void Shiversaw_CheckPlayerCollisions(void)
     if (!Shiversaw->invincibilityTimer) {
         foreach_active(Player, player)
         {
-            for (int i = 0; i < Shiversaw_SawCount; ++i) {
+            for (int32 i = 0; i < Shiversaw_SawCount; ++i) {
                 if (entity->sawAnimator[i].animationID == 3) {
                     if (Player_CheckCollisionTouch(player, &entity->sawPos[i], &Shiversaw->hitbox2)) {
                         Shiversaw_CheckSawHit(player, i);
@@ -245,10 +245,10 @@ void Shiversaw_CheckPlayerCollisions(void)
                 else {
                     RSDK.PlaySfx(Shiversaw->sfxExplosion2, false, 255);
                     Shiversaw->invincibilityTimer = 30;
-                    int v14                       = entity->position.x;
-                    int v15                       = entity->position.y;
+                    int32 v14                       = entity->position.x;
+                    int32 v15                       = entity->position.y;
                     entity->sawID                 = 0;
-                    for (int i = 0; i < Shiversaw_SawCount; ++i) {
+                    for (int32 i = 0; i < Shiversaw_SawCount; ++i) {
                         if (entity->stateSaw[entity->sawID] != Shiversaw_StateSaw_Destroyed) {
                             RSDK.PlaySfx(Ice->sfxWindowShatter, false, 255);
                             entity->position.x = entity->sawPos[entity->sawID].x;
@@ -282,7 +282,7 @@ void Shiversaw_CheckPlayerCollisions(void)
 void Shiversaw_Unknown3(void)
 {
     RSDK_THIS(Shiversaw);
-    for (int i = 0; i < Shiversaw_SawCount; ++i) {
+    for (int32 i = 0; i < Shiversaw_SawCount; ++i) {
         if (i & 1)
             entity->sawPos[1].x = entity->position.x - 0x210000;
         else
@@ -301,8 +301,8 @@ void Shiversaw_Unknown4(void)
             RSDK.PlaySfx(Shiversaw->sfxExplosion2, false, 255);
 
         if (Zone->timer & 4) {
-            int x = RSDK.Rand(-19, 20) << 16;
-            int y = RSDK.Rand(-24, 25) << 16;
+            int32 x = RSDK.Rand(-19, 20) << 16;
+            int32 y = RSDK.Rand(-24, 25) << 16;
             EntityExplosion *explosion =
                 CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + 2), entity->position.x + x, entity->position.y + y);
             explosion->drawOrder = Zone->drawOrderHigh + 2;
@@ -572,7 +572,7 @@ void Shiversaw_State_Unknown1(void)
         entity->state      = Shiversaw_State_Unknown2;
     }
 
-    for (int i = 0; i < Shiversaw_SawCount; ++i) {
+    for (int32 i = 0; i < Shiversaw_SawCount; ++i) {
         entity->sawID = i;
         StateMachine_Run(entity->stateSaw[i]);
     }
@@ -586,8 +586,8 @@ void Shiversaw_Unknown9(void)
     entity->angle      = (entity->angle + 2) & 0xFF;
     entity->position.y = ((RSDK.Sin256(entity->angle) << 10) + entity->field_88.y) & 0xFFFF0000;
 
-    int id = 0;
-    for (int i = 0; i < Shiversaw_SawCount; ++i) {
+    int32 id = 0;
+    for (int32 i = 0; i < Shiversaw_SawCount; ++i) {
         entity->sawID = i;
         if (entity->stateSaw[i]) {
             if (entity->stateSaw[i] != Shiversaw_StateSaw_Destroyed)
@@ -620,7 +620,7 @@ void Shiversaw_State_Unknown2(void)
 
     entity->angle      = (entity->angle + 2) & 0xFF;
     entity->position.y = ((RSDK.Sin256(entity->angle) << 10) + entity->field_88.y) & 0xFFFF0000;
-    for (int i = 0; i < Shiversaw_SawCount; ++i) {
+    for (int32 i = 0; i < Shiversaw_SawCount; ++i) {
         entity->sawID = i;
         StateMachine_Run(entity->stateSaw[i]);
     }
@@ -638,13 +638,13 @@ void Shiversaw_State_Unknown3(void)
     entity->velocity.y    = 0;
 
     bool32 flag = true;
-    for (int i = 0; i < Shiversaw_SawCount; ++i) flag &= entity->stateSaw[i] == Shiversaw_StateSaw_Unknown2;
+    for (int32 i = 0; i < Shiversaw_SawCount; ++i) flag &= entity->stateSaw[i] == Shiversaw_StateSaw_Unknown2;
 
     if (flag) {
-        int x = entity->position.x;
-        int y = entity->field_88.y;
+        int32 x = entity->position.x;
+        int32 y = entity->field_88.y;
 
-        int distX = entity->position.x - player1->position.x;
+        int32 distX = entity->position.x - player1->position.x;
         if (distX >= 0) {
             if (distX < 0x380000)
                 entity->velocity.x = 0xC000;
@@ -658,7 +658,7 @@ void Shiversaw_State_Unknown3(void)
         else
             entity->velocity.x = -0xC000;
 
-        int distY = entity->field_88.y - player1->position.y;
+        int32 distY = entity->field_88.y - player1->position.y;
         if (distY < 0) {
             if (distY <= -0x540000) {
                 if (distY < -0x550000)
@@ -688,7 +688,7 @@ void Shiversaw_State_Unknown3(void)
 
     entity->angle      = (entity->angle + 2) & 0xFF;
     entity->position.y = ((RSDK.Sin256(entity->angle) << 10) + entity->field_88.y) & 0xFFFF0000;
-    for (int i = 0; i < Shiversaw_SawCount; ++i) {
+    for (int32 i = 0; i < Shiversaw_SawCount; ++i) {
         entity->sawID = i;
         StateMachine_Run(entity->stateSaw[i]);
     }
@@ -710,8 +710,8 @@ void Shiversaw_State_HitRecoil(void)
     if (entity->position.y <= player1->position.y)
         entity->velocity.y = -entity->velocity.y;
 
-    int x = entity->position.x;
-    int y = entity->field_88.y;
+    int32 x = entity->position.x;
+    int32 y = entity->field_88.y;
     entity->position.x += entity->velocity.x;
     entity->field_88.y += entity->velocity.y;
     Shiversaw_Unknown5(player1);
@@ -721,8 +721,8 @@ void Shiversaw_State_HitRecoil(void)
     entity->angle      = (entity->angle + 2) & 0xFF;
     entity->position.y = ((RSDK.Sin256(entity->angle) << 10) + entity->field_88.y) & 0xFFFF0000;
 
-    int id = 0;
-    for (int i = 0; i < Shiversaw_SawCount; ++i) {
+    int32 id = 0;
+    for (int32 i = 0; i < Shiversaw_SawCount; ++i) {
         entity->sawID = i;
         if (entity->stateSaw[i]) {
             if (entity->stateSaw[i] != Shiversaw_StateSaw_Destroyed)
@@ -751,7 +751,7 @@ void Shiversaw_State_Destroyed(void)
     RSDK_THIS(Shiversaw);
     RSDK.ProcessAnimation(&entity->animator2);
 
-    for (int i = 0; i < Shiversaw_SawCount; ++i) {
+    for (int32 i = 0; i < Shiversaw_SawCount; ++i) {
         entity->sawID = i;
         StateMachine_Run(entity->stateSaw[i]);
     }
@@ -842,9 +842,9 @@ void Shiversaw_Unknown13(void)
 void Shiversaw_CheckCrateCollisions(void)
 {
     RSDK_THIS(Shiversaw);
-    int sawID  = entity->sawID;
-    int storeX = entity->position.x;
-    int storeY = entity->position.y;
+    int32 sawID  = entity->sawID;
+    int32 storeX = entity->position.x;
+    int32 storeY = entity->position.y;
 
     entity->position.x = entity->sawPos[sawID].x;
     entity->position.y = entity->sawPos[sawID].y;
@@ -909,14 +909,14 @@ void Shiversaw_CheckCrateCollisions(void)
     entity->position.y = storeY;
 }
 
-void Shiversaw_Unknown14(int speed)
+void Shiversaw_Unknown14(int32 speed)
 {
     RSDK_THIS(Shiversaw);
-    int sawID             = entity->sawID;
+    int32 sawID             = entity->sawID;
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
 
-    int storeX         = entity->position.x;
-    int storeY         = entity->position.y;
+    int32 storeX         = entity->position.x;
+    int32 storeY         = entity->position.y;
     entity->position.x = entity->sawPos[sawID].x;
     entity->position.y = entity->sawPos[sawID].y;
     entity->position.x = storeX;
@@ -930,7 +930,7 @@ void Shiversaw_Unknown14(int speed)
         }
     }
     else {
-        int angle               = RSDK.ATan2(entity->sawPos[sawID].x - player1->position.x, entity->sawPos[sawID].y - player1->position.y);
+        int32 angle               = RSDK.ATan2(entity->sawPos[sawID].x - player1->position.x, entity->sawPos[sawID].y - player1->position.y);
         entity->field_A0[sawID] = (2 * (angle - (~sawID << 7))) & 0x1FC;
     }
 
@@ -949,7 +949,7 @@ void Shiversaw_Unknown14(int speed)
 void Shiversaw_StateSaw_Unknown2(void)
 {
     RSDK_THIS(Shiversaw);
-    int sawID = entity->sawID;
+    int32 sawID = entity->sawID;
     RSDK.ProcessAnimation(&entity->sawAnimator[sawID]);
 
     if (sawID & 1)
@@ -982,7 +982,7 @@ void Shiversaw_StateSaw_Unknown2(void)
 void Shiversaw_StateSaw_Unknown3(void)
 {
     RSDK_THIS(Shiversaw);
-    int sawID = entity->sawID;
+    int32 sawID = entity->sawID;
     RSDK.ProcessAnimation(&entity->sawAnimator[sawID]);
 
     if (entity->field_74[sawID] < 0) {
@@ -1011,7 +1011,7 @@ void Shiversaw_StateSaw_Unknown3(void)
 void Shiversaw_StateSaw_Unknown4(void)
 {
     RSDK_THIS(Shiversaw);
-    int sawID = entity->sawID;
+    int32 sawID = entity->sawID;
     RSDK.ProcessAnimation(&entity->sawAnimator[sawID]);
 
     if (entity->field_74[sawID] < 0x40000)
@@ -1031,7 +1031,7 @@ void Shiversaw_StateSaw_Unknown4(void)
 void Shiversaw_StateSaw_Unknown5(void)
 {
     RSDK_THIS(Shiversaw);
-    int sawID = entity->sawID;
+    int32 sawID = entity->sawID;
 
     RSDK.ProcessAnimation(&entity->sawAnimator[sawID]);
 
@@ -1058,7 +1058,7 @@ void Shiversaw_StateSaw_Unknown5(void)
 void Shiversaw_StateSaw_Destroyed(void)
 {
     RSDK_THIS(Shiversaw);
-    int sawID = entity->sawID;
+    int32 sawID = entity->sawID;
     if (sawID & 1)
         entity->sawPos[sawID].x = entity->position.x - 0x210000;
     else
@@ -1099,7 +1099,7 @@ void Shiversaw_StateSaw_Destroyed(void)
 void Shiversaw_StateSaw_Unknown7(void)
 {
     RSDK_THIS(Shiversaw);
-    int sawID = entity->sawID;
+    int32 sawID = entity->sawID;
     RSDK.ProcessAnimation(&entity->sawAnimator[sawID]);
     Shiversaw_ProcessSawMovement(sawID);
     if (entity->sawAnimator[sawID].frameID == entity->sawAnimator[sawID].frameCount - 1) {
@@ -1111,7 +1111,7 @@ void Shiversaw_StateSaw_Unknown7(void)
 void Shiversaw_StateSaw_Unknown1(void)
 {
     RSDK_THIS(Shiversaw);
-    int sawID = entity->sawID;
+    int32 sawID = entity->sawID;
     if (entity->state == Shiversaw_State_Unknown1) {
         RSDK.ProcessAnimation(&entity->sawAnimator[sawID]);
         Shiversaw_ProcessSawMovement(sawID);
@@ -1123,7 +1123,7 @@ void Shiversaw_StateSaw_Unknown1(void)
     }
 }
 
-void Shiversaw_ProcessSawMovement(int sawID)
+void Shiversaw_ProcessSawMovement(int32 sawID)
 {
     RSDK_THIS(Shiversaw);
     if (sawID & 1)

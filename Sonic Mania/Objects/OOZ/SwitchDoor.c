@@ -61,11 +61,11 @@ void SwitchDoor_StageLoad(void)
 void SwitchDoor_DrawSprites(void)
 {
     RSDK_THIS(SwitchDoor);
-    int id = 0;
+    int32 id = 0;
     Vector2 drawPos;
-    int yOffset              = 0;
+    int32 yOffset              = 0;
     entity->animator.frameID = entity->go ? 2 : 0;
-    for (int i = 0; i < 8; ++i) {
+    for (int32 i = 0; i < 8; ++i) {
         drawPos.y = entity->position.y + yOffset;
         drawPos.x = entity->position.x + (id << 20);
         RSDK.DrawSprite(&entity->animator, &drawPos, false);

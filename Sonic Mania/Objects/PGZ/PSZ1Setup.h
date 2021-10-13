@@ -6,27 +6,27 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    TABLE(int aniTileDelays1[7], { 64, 2, 1, 2, 2, 6, 2 });
-    TABLE(int aniTileDelays2[14], { 37, 2, 1, 2, 2, 6, 2, 12, 2, 1, 2, 2, 6, 2 });
-    int field_58;
+    TABLE(int32 aniTileDelays1[7], { 64, 2, 1, 2, 2, 6, 2 });
+    TABLE(int32 aniTileDelays2[14], { 37, 2, 1, 2, 2, 6, 2, 12, 2, 1, 2, 2, 6, 2 });
+    int32 field_58;
     bool32 flag;
-    int petalTimer;
-    int aniTilesDelayC;
-    int aniTilesFrameC;
-    int aniTilesDelayD;
-    int aniTilesFrameD;
-    int aniTilesDelayE;
-    int aniTilesFrameE;
-    int aniTilesDelayF;
-    int aniTilesFrameF;
-    int aniTilesDelayG;
-    int aniTilesFrameG;
-    int aniTilesDelayH;
-    int aniTilesFrameH;
-    int aniTilesFrameI;
-    int aniTilesFrameB;
-    int aniTilesFrameA;
-    int field_A0;
+    int32 petalTimer;
+    int32 aniTilesDelayC;
+    int32 aniTilesFrameC;
+    int32 aniTilesDelayD;
+    int32 aniTilesFrameD;
+    int32 aniTilesDelayE;
+    int32 aniTilesFrameE;
+    int32 aniTilesDelayF;
+    int32 aniTilesFrameF;
+    int32 aniTilesDelayG;
+    int32 aniTilesFrameG;
+    int32 aniTilesDelayH;
+    int32 aniTilesFrameH;
+    int32 aniTilesFrameI;
+    int32 aniTilesFrameB;
+    int32 aniTilesFrameA;
+    int32 field_A0;
     bool32 hasAchievement;
     uint16 aniTilesA;
     uint16 aniTilesB;

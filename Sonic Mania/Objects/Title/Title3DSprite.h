@@ -6,18 +6,18 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    int field_4;
-    int field_8;
-    int field_C;
+    int32 field_4;
+    int32 field_8;
+    int32 field_C;
     uint16 spriteIndex;
 } ObjectTitle3DSprite;
 
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    int frame;
-    int field_5C;
-    int field_60;
+    int32 frame;
+    int32 field_5C;
+    int32 field_60;
     Animator animator;
 } EntityTitle3DSprite;
 

@@ -16,13 +16,13 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    int type;
+    int32 type;
 #if RETRO_USE_PLUS
     StateMachine(state);
 #endif
     bool32 flag;
-    int timer;
-    int storeY;
+    int32 timer;
+    int32 storeY;
     Animator animator1;
     Animator animator2;
 #if RETRO_USE_PLUS

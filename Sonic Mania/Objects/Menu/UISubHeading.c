@@ -25,7 +25,7 @@ void UISubHeading_Draw(void)
     RSDK_THIS(UISubHeading);
     Vector2 drawPos;
 
-    int size  = entity->size.y + entity->size.x;
+    int32 size  = entity->size.y + entity->size.x;
     drawPos.x = entity->position.x;
     drawPos.y = entity->position.y;
     UIWidgets_Unknown7(entity->size.y, size >> 16, entity->shiftedY, 0, 0, 0, entity->position.x, entity->position.y);
@@ -102,7 +102,7 @@ void UISubHeading_Unknown2(void)
     button                  = control->buttons[2];
     EntityUIButton *option1 = UIButton_GetChoicePtr(button, 1);
     EntityUIButton *option2 = UIButton_GetChoicePtr(button, 2);
-    int unlock              = GameProgress_CheckUnlock(2);
+    int32 unlock              = GameProgress_CheckUnlock(2);
     button->disabled        = !unlock;
     if (button->disabled)
         UIButton_Unknown1(button);
@@ -156,7 +156,7 @@ void UISubHeading_Unknown3(void)
     saveSelEncore->unknownCallback4 = UISubHeading_Unknown10;
 }
 
-void UISubHeading_Unknown4(int slot)
+void UISubHeading_Unknown4(int32 slot)
 {
     EntityUIControl *control = (EntityUIControl *)ManiaModeMenu->secretsMenu;
     EntitySaveGame *saveGame  = (EntitySaveGame *)SaveGame_GetDataPtr(slot, false);
@@ -164,7 +164,7 @@ void UISubHeading_Unknown4(int slot)
     UIButton_SetChoiceSelection(control->buttons[0], (saveGame->medalMods & getMod(MEDAL_NOTIMEOVER)) != 0);
     UIButton_SetChoiceSelection(control->buttons[1], (saveGame->medalMods & getMod(MEDAL_ANDKNUCKLES)) != 0);
 
-    int medals = saveGame->medalMods;
+    int32 medals = saveGame->medalMods;
     if (medals & getMod(MEDAL_NODROPDASH)) {
         if (medals & getMod(MEDAL_PEELOUT)) {
             UIButton_SetChoiceSelection(control->buttons[2], 1);
@@ -183,11 +183,11 @@ void UISubHeading_Unknown4(int slot)
         UIButton_SetChoiceSelection(control->buttons[3], 0);
 }
 
-int UISubHeading_GetMedalMods(void)
+int32 UISubHeading_GetMedalMods(void)
 {
     EntityUIControl *control = (EntityUIControl *)ManiaModeMenu->secretsMenu;
 
-    int mods = 0;
+    int32 mods = 0;
     if (control->buttons[0]->selection == 1)
         mods |= getMod(MEDAL_NOTIMEOVER);
 
@@ -209,7 +209,7 @@ int UISubHeading_GetMedalMods(void)
     return mods;
 }
 
-void UISubHeading_SaveFileCB(int status)
+void UISubHeading_SaveFileCB(int32 status)
 {
     UIWaitSpinner_Wait2();
     RSDK.LoadScene();
@@ -247,7 +247,7 @@ void UISubHeading_Unknown10(void)
 
         bool32 flag  = false;
         bool32 flag2 = false;
-        for (int i = 0; i < entity->buttonCount; ++i) {
+        for (int32 i = 0; i < entity->buttonCount; ++i) {
             flag2 |= entity->buttons[i]->state == UISaveSlot_Unknown28;
             if (entity->field_D8 >= 0) {
                 if (entity->buttons[i] == entity->buttons[entity->field_D8]) {
@@ -308,7 +308,7 @@ void UISubHeading_StartNewSave(void)
         globals->saveSlotID = entity->slotID;
         globals->medalMods  = 0;
         if (entity->isNewSave) {
-            int *saveData = SaveGame_GetDataPtr(entity->slotID % 8, entity->encoreMode);
+            int32 *saveData = SaveGame_GetDataPtr(entity->slotID % 8, entity->encoreMode);
 
             memset(saveData, 0, 0x400);
             if (globals->gameMode != MODE_ENCORE)

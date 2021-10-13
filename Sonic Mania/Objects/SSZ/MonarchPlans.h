@@ -17,16 +17,16 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    int field_58;
-    int field_5C;
-    int field_60;
-    int field_64;
-    int field_68;
-    int field_6C;
-    int field_70;
-    int field_74;
-    int rotationZ;
-    int rotationY;
+    int32 field_58;
+    int32 field_5C;
+    int32 field_60;
+    int32 field_64;
+    int32 field_68;
+    int32 field_6C;
+    int32 field_70;
+    int32 field_74;
+    int32 rotationZ;
+    int32 rotationY;
     Matrix matrix1;
     Matrix matrix2;
     Matrix matrix3;

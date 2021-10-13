@@ -43,11 +43,11 @@ void Caterkiller_Create(void *data)
         entity->startDir = entity->direction;
 
         entity->headOffset = 0;
-        int offset         = 0xC0000;
+        int32 offset         = 0xC0000;
         if (entity->startDir)
             offset = -0xC0000;
-        int posX = entity->position.x;
-        for (int i = 0; i < Caterkiller_BodyCount; ++i) {
+        int32 posX = entity->position.x;
+        for (int32 i = 0; i < Caterkiller_BodyCount; ++i) {
             posX += offset;
             entity->bodyPosition[i].x = posX;
             entity->bodyPosition[i].y = entity->position.y;
@@ -98,8 +98,8 @@ void Caterkiller_CheckOnScreen(void)
 void Caterkiller_CheckTileCollisions(void)
 {
     RSDK_THIS(Caterkiller);
-    int storeX = 0;
-    int storeY = 0;
+    int32 storeX = 0;
+    int32 storeY = 0;
 
     if (entity->state == Caterkiller_Unknown7) {
         storeX = entity->position.x;
@@ -114,7 +114,7 @@ void Caterkiller_CheckTileCollisions(void)
             entity->direction ^= 1;
     }
 
-    for (int i = 0; i < Caterkiller_BodyCount; ++i) {
+    for (int32 i = 0; i < Caterkiller_BodyCount; ++i) {
         if (entity->state != Caterkiller_Unknown9 || i != (Caterkiller_BodyCount - 1)) {
             entity->position.x = entity->bodyPosition[i].x;
             entity->position.y = entity->bodyPosition[i].y;
@@ -135,8 +135,8 @@ void Caterkiller_StateDraw_Body(void)
     RSDK_THIS(Caterkiller);
     Vector2 drawPos;
 
-    int storeDir = entity->direction;
-    for (int i = Caterkiller_BodyCount - 1; i >= 0; --i) {
+    int32 storeDir = entity->direction;
+    for (int32 i = Caterkiller_BodyCount - 1; i >= 0; --i) {
         drawPos.x = entity->bodyPosition[i].x;
         drawPos.y = entity->bodyPosition[i].y;
         drawPos.y -= entity->bodyOffset[i] << 15;
@@ -159,8 +159,8 @@ void Caterkiller_StateDraw_Split(void)
 void Caterkiller_HandlePlayerInteractions(void)
 {
     RSDK_THIS(Caterkiller);
-    int storeX = entity->position.x;
-    int storeY = entity->position.y;
+    int32 storeX = entity->position.x;
+    int32 storeY = entity->position.y;
 
     foreach_active(Player, player)
     {
@@ -169,17 +169,17 @@ void Caterkiller_HandlePlayerInteractions(void)
                 Player_CheckBadnikBreak(entity, player, true);
             }
             else {
-                for (int i = 0; i < Caterkiller_BodyCount; ++i) {
+                for (int32 i = 0; i < Caterkiller_BodyCount; ++i) {
                     entity->position.x = entity->bodyPosition[i].x;
                     entity->position.y = entity->bodyPosition[i].y;
 
                     if (Player_CheckCollisionTouch(player, entity, &Caterkiller->hitbox)) {
                         Player_CheckHit(player, entity);
 
-                        for (int d = 0; d < Caterkiller_BodyCount + 1; ++d) {
-                            int spawnX       = storeX;
-                            int spawnY       = storeY;
-                            int spawnDir     = entity->direction;
+                        for (int32 d = 0; d < Caterkiller_BodyCount + 1; ++d) {
+                            int32 spawnX       = storeX;
+                            int32 spawnY       = storeY;
+                            int32 spawnDir     = entity->direction;
                             void *spawnState = Caterkiller_State_Split_Head;
                             if (d) {
                                 spawnX     = entity->bodyPosition[d - 1].x;
@@ -217,10 +217,10 @@ void Caterkiller_HandlePlayerInteractions(void)
     }
 }
 
-bool32 Caterkiller_CheckTileAngle(int x, int y, int dir)
+bool32 Caterkiller_CheckTileAngle(int32 x, int32 y, int32 dir)
 {
-    int ty      = (y >> 16) + 8;
-    int tx      = x >> 16;
+    int32 ty      = (y >> 16) + 8;
+    int32 tx      = x >> 16;
     uint16 tile = RSDK.GetTileInfo(Zone->fgHigh, x >> 16, ty);
     if (tile == 0xFFFF)
         tile = RSDK.GetTileInfo(Zone->fgLow, tx, ty);
@@ -266,7 +266,7 @@ void Caterkiller_Unknown7(void)
     RSDK_THIS(Caterkiller);
     if (entity->timer) {
         entity->timer--;
-        for (int b = 0; b < Caterkiller_BodyCount; ++b) {
+        for (int32 b = 0; b < Caterkiller_BodyCount; ++b) {
             if (entity->bodyDirection[b])
                 entity->bodyPosition[b].x += 0x4000 * (b + 1);
             else
@@ -306,8 +306,8 @@ void Caterkiller_Unknown9(void)
     if (entity->timer) {
         entity->timer--;
 
-        int mult = 1;
-        for (int b = Caterkiller_BodyCount - 2; b >= 0; --b) {
+        int32 mult = 1;
+        for (int32 b = Caterkiller_BodyCount - 2; b >= 0; --b) {
             if (entity->bodyDirection[b])
                 entity->bodyPosition[b].x += 0x4000 * mult;
             else

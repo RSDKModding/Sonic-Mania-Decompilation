@@ -102,7 +102,7 @@ void BigSqueeze_HandleWallCollisions(void)
     RSDK_THIS(BigSqueeze);
     foreach_active(Player, player)
     {
-        int side = Player_CheckCollisionBox(player, entity, &entity->hitbox);
+        int32 side = Player_CheckCollisionBox(player, entity, &entity->hitbox);
         if (side == 3)
             player->collisionFlagH |= 2;
         else if (side == 2)
@@ -214,14 +214,14 @@ void BigSqueeze_Unknown6(void)
 // - velocityX
 // - velocityY
 
-void BigSqueeze_Unknown7(int *debrisData)
+void BigSqueeze_Unknown7(int32 *debrisData)
 {
     RSDK_THIS(BigSqueeze);
     if (debrisData) {
-        int count = debrisData[0];
+        int32 count = debrisData[0];
         debrisData++;
 
-        for (int i = 0; i < count; ++i) {
+        for (int32 i = 0; i < count; ++i) {
             EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, entity->position.x, entity->position.y);
             RSDK.SetSpriteAnimation(BigSqueeze->aniFrames, 6, &debris->animator, true, debrisData[0]);
             debris->velocity.x    = debrisData[1];

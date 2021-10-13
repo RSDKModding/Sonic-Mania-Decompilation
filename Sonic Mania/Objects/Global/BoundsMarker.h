@@ -13,9 +13,9 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     uint8 type;
-    int width;
+    int32 width;
     bool32 vsDisable;
-    int offset;
+    int32 offset;
 } EntityBoundsMarker;
 
 // Object Struct

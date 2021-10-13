@@ -12,17 +12,17 @@ typedef struct {
 // Entity Class
 typedef struct {
     MANIA_UI_ITEM_BASE
-    int buttonID;
+    int32 buttonID;
     bool32 stopMusic;
     bool32 wasDisabled;
-    int field_110;
-    int field_114;
-    int field_118;
-    int field_11C;
-    int field_120;
-    int field_124;
-    int field_128;
-    int field_12C;
+    int32 field_110;
+    int32 field_114;
+    int32 field_118;
+    int32 field_11C;
+    int32 field_120;
+    int32 field_124;
+    int32 field_128;
+    int32 field_12C;
     bool32 field_130;
     Animator animator1;
     Animator animator2;

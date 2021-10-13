@@ -7,9 +7,9 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    int field_4;
+    int32 field_4;
     bool32 flag;
-    int field_C;
+    int32 field_C;
     Entity *charSelControl;
     Entity *zoneControl;
 } ObjectE3MenuSetup;
@@ -19,12 +19,12 @@ typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(timedState);
-    int timer;
-    int timeOut;
-    int field_70;
-    int fadeTimer;
-    int fadeColour;
-    int field_7C;
+    int32 timer;
+    int32 timeOut;
+    int32 field_70;
+    int32 fadeTimer;
+    int32 fadeColour;
+    int32 field_7C;
 } EntityE3MenuSetup;
 
 // Object Entity

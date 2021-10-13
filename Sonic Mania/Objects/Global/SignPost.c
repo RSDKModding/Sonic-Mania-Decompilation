@@ -29,7 +29,7 @@ void SignPost_Draw(void)
         else
             entity->scale.x = -RSDK.Cos512(entity->rotation);
 
-        int angle = 0;
+        int32 angle = 0;
         if (RSDK.Sin512(entity->rotation) >= 0)
             angle = RSDK.Sin512(entity->rotation);
         else
@@ -88,8 +88,8 @@ void SignPost_Create(void *data)
             entity->updateRange.x = 0x400000;
             entity->updateRange.y = 0x400000;
             if (globals->gameMode == MODE_COMPETITION) {
-                int checkA = entity->vsBoundsOffset.y + (entity->vsBoundsSize.y >> 1);
-                int checkB = entity->vsBoundsOffset.y - (entity->vsBoundsSize.y >> 1);
+                int32 checkA = entity->vsBoundsOffset.y + (entity->vsBoundsSize.y >> 1);
+                int32 checkB = entity->vsBoundsOffset.y - (entity->vsBoundsSize.y >> 1);
 
                 if ((-0x10000 * entity->vsExtendTop) < entity->vsBoundsOffset.y - (entity->vsBoundsSize.y >> 1))
                     checkB = (-0x10000 * entity->vsExtendTop);
@@ -209,7 +209,7 @@ void SignPost_SpinSpeed(void)
 
     if (entity->angle >= entity->maxAngle) {
         entity->maxAngle += 0x20000;
-        int speed = 0x600 * (entity->spinCount);
+        int32 speed = 0x600 * (entity->spinCount);
         if (speed > 0x3000)
             speed = 0x3000;
         entity->spinSpeed = speed;
@@ -233,7 +233,7 @@ void SignPost_SpawnSparkle(void)
         ring->active     = ACTIVE_NORMAL;
         ring->visible    = false;
         RSDK.SetSpriteAnimation(Ring->spriteIndex, entity->sparkleType + 2, &ring->animator, true, 0);
-        int cnt = ring->animator.frameCount;
+        int32 cnt = ring->animator.frameCount;
         if (ring->animator.animationID == 2) {
             ring->alpha = 224;
             cnt >>= 1;
@@ -415,7 +415,7 @@ void SignPost_CheckTouch(void)
 {
     RSDK_THIS(SignPost);
 
-    for (int p = 0; p < Player->playerCount; ++p) {
+    for (int32 p = 0; p < Player->playerCount; ++p) {
         EntityPlayer *player = RSDK_GET_ENTITY(p, Player);
         if (entity->activePlayers && RSDK_GET_ENTITY(p + Player->playerCount, Player)->objectID == GameOver->objectID) {
             entity->activePlayers |= 1 << p;
@@ -440,7 +440,7 @@ void SignPost_CheckTouch(void)
                     if (player->superState == SUPERSTATE_SUPER)
                         player->superState = SUPERSTATE_FADEOUT;
 
-                    int vel = 0;
+                    int32 vel = 0;
                     if (player->onGround)
                         vel = player->groundVel;
                     else
@@ -524,8 +524,8 @@ void SignPost_CheckTouch(void)
 void SignPost_HandleCompetition(void)
 {
     RSDK_THIS(SignPost);
-    int x = entity->vsBoundsOffset.x + entity->position.x;
-    int y = entity->vsBoundsOffset.y + entity->position.y;
+    int32 x = entity->vsBoundsOffset.x + entity->position.x;
+    int32 y = entity->vsBoundsOffset.y + entity->position.y;
 
     Hitbox hitbox;
     hitbox.left   = -entity->vsBoundsSize.x >> 17;
@@ -533,12 +533,12 @@ void SignPost_HandleCompetition(void)
     hitbox.right  = entity->vsBoundsSize.x >> 17;
     hitbox.bottom = entity->vsBoundsSize.y >> 17;
 
-    for (int p = 0; p < Player->playerCount; ++p) {
+    for (int32 p = 0; p < Player->playerCount; ++p) {
         EntityPlayer *player = RSDK_GET_ENTITY(p, Player);
         if (player->objectID == Player->objectID && !player->sidekick) {
             if (globals->gameMode == MODE_COMPETITION) {
-                int ex             = entity->position.x;
-                int ey             = entity->position.y;
+                int32 ex             = entity->position.x;
+                int32 ey             = entity->position.y;
                 entity->position.x = x;
                 entity->position.y = y;
                 if (Player_CheckCollisionTouch(player, entity, &hitbox)) {

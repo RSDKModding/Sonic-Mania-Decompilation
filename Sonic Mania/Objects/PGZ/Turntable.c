@@ -11,7 +11,7 @@ void Turntable_Update(void)
     entity->angle %= 0x3FF;
     foreach_active(Player, player)
     {
-        int pID = RSDK.GetEntityID(player);
+        int32 pID = RSDK.GetEntityID(player);
         if (!((1 << pID) & entity->activePlayers)) {
             if (Player_CheckCollisionBox(player, entity, &entity->hitbox) == 1) {
 #if RETRO_USE_PLUS
@@ -31,7 +31,7 @@ void Turntable_Update(void)
                 player->onGround        = 1;
                 player->state           = Player_State_None;
 
-                int dist = abs(player->position.x - entity->position.x) >> 0x10;
+                int32 dist = abs(player->position.x - entity->position.x) >> 0x10;
 
                 if (dist >= 0x10) {
                     if (player->position.x <= entity->position.x) {
@@ -44,12 +44,12 @@ void Turntable_Update(void)
                     }
                 }
                 else {
-                    int distY = 16 * (0x10000 - dist / 16);
-                    int angY  = -16 * (0x10000 - dist / 16);
+                    int32 distY = 16 * (0x10000 - dist / 16);
+                    int32 angY  = -16 * (0x10000 - dist / 16);
                     if (player->drawOrder != Zone->playerDrawLow)
                         angY = distY;
-                    int distX = player->position.x - entity->position.x;
-                    int angX  = -distX;
+                    int32 distX = player->position.x - entity->position.x;
+                    int32 angX  = -distX;
                     if (player->position.x >= entity->position.x)
                         angX = distX;
                     dist                  = 0x10;
@@ -70,7 +70,7 @@ void Turntable_Update(void)
             player->position.x    = entity->position.x;
             player->position.x += (RSDK.Cos1024(entity->field_78[pID]) << 6) * entity->field_88[pID];
 
-            int frame = 0;
+            int32 frame = 0;
             if (player->direction)
                 frame = 24 - entity->field_78[pID] / 42;
             else

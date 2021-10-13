@@ -6,19 +6,19 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    TABLE(int aniTilesDelay[14], { 4, 3, 2, 2, 2, 3, 3, 4, 3, 2, 2, 2, 3, 3 });
-    int field_3C;
-    int timerB;
-    int timerA;
-    int field_48;
+    TABLE(int32 aniTilesDelay[14], { 4, 3, 2, 2, 2, 3, 3, 4, 3, 2, 2, 2, 3, 3 });
+    int32 field_3C;
+    int32 timerB;
+    int32 timerA;
+    int32 field_48;
     uint16 aniTiles1;
     uint16 aniTiles2;
     uint16 aniTiles3;
     TileLayer *bg;
 #if RETRO_USE_PLUS
-    int activePlayerCount;
+    int32 activePlayerCount;
     bool32 playingLoopSFX;
-    int waterfallSFXTimer;
+    int32 waterfallSFXTimer;
     uint16 sfxWaterfall;
     uint16 sfxWaterfallLoop;
 #endif

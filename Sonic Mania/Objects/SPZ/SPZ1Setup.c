@@ -33,7 +33,7 @@ void SPZ1Setup_StaticUpdate(void)
 
     SPZ1Setup->angle += 3;
     SPZ1Setup->angle &= 0x1FF;
-    int percent = RSDK.Sin512(SPZ1Setup->angle) >> 1;
+    int32 percent = RSDK.Sin512(SPZ1Setup->angle) >> 1;
     if (percent <= 0)
         RSDK.SetLimitedFade(0, 1, 2, -percent, 152, 159);
     else
@@ -67,10 +67,10 @@ void SPZ1Setup_StageLoad(void)
     SPZ1Setup->bgLayer  = RSDK.GetSceneLayer(0);
     SPZ1Setup->bgLayer2 = RSDK.GetSceneLayer(0);
 
-    int id = 0;
-    for (int i = 0; i < 0x200; ++i) {
-        int off = 0;
-        int val = RSDK.Rand(0, 4);
+    int32 id = 0;
+    for (int32 i = 0; i < 0x200; ++i) {
+        int32 off = 0;
+        int32 val = RSDK.Rand(0, 4);
         if (id >= 0) {
             off = id;
             if (id > 512)
@@ -80,21 +80,21 @@ void SPZ1Setup_StageLoad(void)
             off = 0;
         }
 
-        int ang     = 0;
-        int *deform = &SPZ1Setup->bgLayer->deformationData[off];
-        for (int d = 0; d < 0x10; ++d) {
+        int32 ang     = 0;
+        int32 *deform = &SPZ1Setup->bgLayer->deformationData[off];
+        for (int32 d = 0; d < 0x10; ++d) {
             *deform = val * RSDK.Sin1024(ang) >> 10;
             *deform = val * RSDK.Sin1024(ang) >> 10;
             ang += 64;
         }
-        memcpy(SPZ1Setup->bgLayer->deformationData + 0x200, SPZ1Setup->bgLayer->deformationData, 0x200 * sizeof(int));
+        memcpy(SPZ1Setup->bgLayer->deformationData + 0x200, SPZ1Setup->bgLayer->deformationData, 0x200 * sizeof(int32));
         id += 16;
     }
 
     id = 0;
-    for (int i = 0; i < 0x200; ++i) {
-        int off = 0;
-        int val = RSDK.Rand(0, 4);
+    for (int32 i = 0; i < 0x200; ++i) {
+        int32 off = 0;
+        int32 val = RSDK.Rand(0, 4);
         if (id >= 0) {
             off = id;
             if (id > 512)
@@ -104,14 +104,14 @@ void SPZ1Setup_StageLoad(void)
             off = 0;
         }
 
-        int ang     = 0;
-        int *deform = &SPZ1Setup->bgLayer2->deformationData[off];
-        for (int d = 0; d < 0x10; ++d) {
+        int32 ang     = 0;
+        int32 *deform = &SPZ1Setup->bgLayer2->deformationData[off];
+        for (int32 d = 0; d < 0x10; ++d) {
             *deform = val * RSDK.Sin1024(ang) >> 10;
             *deform = val * RSDK.Sin1024(ang) >> 10;
             ang += 64;
         }
-        memcpy(SPZ1Setup->bgLayer2->deformationData + 0x200, SPZ1Setup->bgLayer2->deformationData, 0x200 * sizeof(int));
+        memcpy(SPZ1Setup->bgLayer2->deformationData + 0x200, SPZ1Setup->bgLayer2->deformationData, 0x200 * sizeof(int32));
         id += 16;
     }
 

@@ -18,12 +18,12 @@ typedef struct {
     Vector2 startPos;
     Vector2 moveOffset;
     uint8 startDir;
-    int timer;
-    int playerTimers[4];
+    int32 timer;
+    int32 playerTimers[4];
     Animator animator1;
     Animator animator3;
     Animator animator2;
-    int amplitude;
+    int32 amplitude;
     uint8 childCount;
     PlaneFilterTypes planeFilter;
     uint8 drawOrderLow;

@@ -19,13 +19,13 @@ typedef struct {
     StateMachine(state);
     Vector2 startPos;
     uint8 startDir;
-    int timer;
-    int field_6C;
+    int32 timer;
+    int32 field_6C;
     Animator animator1;
     Animator animator2;
     Animator animator3;
     bool32 dustFlag;
-    int field_BC;
+    int32 field_BC;
     bool32 flag;
 } EntityStegway;
 

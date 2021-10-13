@@ -12,7 +12,7 @@ void GasPlatform_Update(void)
                     GasPlatform_Unknown1();
                 break;
             case 1: {
-                int id = 0;
+                int32 id = 0;
                 foreach_active(Player, player)
                 {
                     if ((1 << id) & entity->stoodPlayers && !player->sidekick) {
@@ -99,11 +99,11 @@ void GasPlatform_Unknown2(void)
         entity->velocity.y += 0x3800;
     }
 
-    int dist = entity->centerPos.y - entity->drawPos.y;
+    int32 dist = entity->centerPos.y - entity->drawPos.y;
     if (dist > 0x180000) {
         RSDK.ProcessAnimation(&entity->animator2);
-        int storeX         = entity->position.x;
-        int storeY         = entity->position.y;
+        int32 storeX         = entity->position.x;
+        int32 storeY         = entity->position.y;
         entity->position.x = entity->centerPos.x;
         entity->position.y = entity->centerPos.y;
 
@@ -120,10 +120,10 @@ void GasPlatform_Unknown2(void)
     }
 
     if (entity->type == 1) {
-        int id = 0;
+        int32 id = 0;
         foreach_active(Player, player)
         {
-            int posY = entity->centerPos.y - 0x780000;
+            int32 posY = entity->centerPos.y - 0x780000;
             if (entity->position.y <= posY) {
                 entity->position.y = posY;
                 if ((1 << id) & entity->stoodPlayers) {
@@ -153,8 +153,8 @@ void GasPlatform_Unknown3(void)
 {
     RSDK_THIS(GasPlatform);
     RSDK.ProcessAnimation(&entity->animator2);
-    int storeX         = entity->position.x;
-    int storeY         = entity->position.y;
+    int32 storeX         = entity->position.x;
+    int32 storeY         = entity->position.y;
     entity->position.x = entity->centerPos.x;
     entity->position.y = entity->centerPos.y;
 

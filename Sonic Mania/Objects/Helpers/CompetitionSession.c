@@ -41,12 +41,12 @@ void CompetitionSession_ResetOptions(void)
     session->matchCount               = 0;
     session->levelIndex               = 0;
 
-    for (int i = 0; i < 12; ++i) {
+    for (int32 i = 0; i < 12; ++i) {
         session->zoneFlags[i]   = 0;
         session->winnerFlags[i] = 0;
     }
 
-    for (int i = 0; i < 4; ++i) {
+    for (int32 i = 0; i < 4; ++i) {
         session->finishFlags[i]       = 0;
         session->characterFlags[i]    = 0;
         session->time[i].minutes      = 0;
@@ -66,7 +66,7 @@ void CompetitionSession_ClearMatchData(void)
     EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
 
     session->winnerFlags[session->matchID] = 0;
-    for (int i = 0; i < 4; ++i) {
+    for (int32 i = 0; i < 4; ++i) {
         session->finishFlags[i]       = 0;
         session->time[i].minutes      = 0;
         session->time[i].seconds      = 0;
@@ -78,7 +78,7 @@ void CompetitionSession_ClearMatchData(void)
     }
 }
 
-void CompetitionSession_DeriveWinner(int playerID, int flags)
+void CompetitionSession_DeriveWinner(int32 playerID, int32 flags)
 {
     EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
     session->finishFlags[playerID]    = flags;
@@ -93,33 +93,33 @@ void CompetitionSession_DeriveWinner(int playerID, int flags)
         session->time[playerID].milliseconds = 59;
     }
 
-    int deathCount = 0;
+    int32 deathCount = 0;
     bool32 flag    = true;
-    for (int p = 0; p < session->playerCount; ++p) {
+    for (int32 p = 0; p < session->playerCount; ++p) {
         if (!session->lives[p] || session->finishFlags[p] == 1)
             ++deathCount;
     }
 
     if (deathCount < session->playerCount - 1) {
-        for (int p = 0; p < session->playerCount; ++p) {
+        for (int32 p = 0; p < session->playerCount; ++p) {
             flag = flag && (!session->lives[p] || session->finishFlags[p] == 1);
         }
     }
 
     if (flag) {
         if (!session->finishFlags[session->matchID]) {
-            int winnerTime       = 0;
-            int winnerRings      = 0;
-            int winnerScore      = 0;
-            int winnerItems      = 0;
-            int winnerTotalRings = 0;
+            int32 winnerTime       = 0;
+            int32 winnerRings      = 0;
+            int32 winnerScore      = 0;
+            int32 winnerItems      = 0;
+            int32 winnerTotalRings = 0;
 
-            int times[4];
-            for (int p = 0; p < session->playerCount; ++p) {
-                int mins = session->time[p].minutes;
-                int secs = session->time[p].seconds;
-                int ms   = session->time[p].milliseconds;
-                int time = ms + 100 * (secs + 60 * mins);
+            int32 times[4];
+            for (int32 p = 0; p < session->playerCount; ++p) {
+                int32 mins = session->time[p].minutes;
+                int32 secs = session->time[p].seconds;
+                int32 ms   = session->time[p].milliseconds;
+                int32 time = ms + 100 * (secs + 60 * mins);
                 times[p] = time;
 
                 if (session->rings[p] > winnerRings)
@@ -134,12 +134,12 @@ void CompetitionSession_DeriveWinner(int playerID, int flags)
                     winnerTime = time;
             }
 
-            int scores[4];
-            memset(scores, 0, 4 * sizeof(int));
-            int winner = 0;
-            for (int p = 0; p < session->playerCount; ++p) {
+            int32 scores[4];
+            memset(scores, 0, 4 * sizeof(int32));
+            int32 winner = 0;
+            for (int32 p = 0; p < session->playerCount; ++p) {
                 if (session->finishFlags[p] == 2) {
-                    int score = 0;
+                    int32 score = 0;
                     if (session->rings[p] == winnerRings)
                         score++;
                     if (session->totalRings[p] == winnerTotalRings)
@@ -158,7 +158,7 @@ void CompetitionSession_DeriveWinner(int playerID, int flags)
             }
 
             session->winnerFlags[session->matchID] = 0;
-            for (int p = 0; p < session->playerCount; ++p) {
+            for (int32 p = 0; p < session->playerCount; ++p) {
                 bool32 flag = session->wins[p] > 0 && session->finishFlags[p] != 1 && scores[p] == winner;
                 if (flag) {
                     ++session->wins[p];
@@ -173,7 +173,7 @@ void CompetitionSession_DeriveWinner(int playerID, int flags)
         LogHelpers_Print("DeriveWinner() -> %d", -1);
     }
 }
-void CompetitionSession_WinMatchFor(int player)
+void CompetitionSession_WinMatchFor(int32 player)
 {
     EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
 

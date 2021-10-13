@@ -13,7 +13,7 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    int go;
+    int32 go;
     bool32 reversible;
     bool32 field_60;
     Animator animator;

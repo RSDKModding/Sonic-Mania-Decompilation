@@ -17,14 +17,14 @@ typedef struct {
     uint8 field_60;
     uint8 activePlayerCount;
     uint8 timer;
-    int stoodPos;
-    int field_68;
-    int field_6C;
+    int32 stoodPos;
+    int32 field_68;
+    int32 field_6C;
     Entity *playerPtr;
-    int startPos;
-    int endPos;
+    int32 startPos;
+    int32 endPos;
     Animator animator;
-    int dword94;
+    int32 dword94;
 } EntityBridge;
 
 // Object Struct
@@ -42,7 +42,7 @@ void Bridge_EditorLoad(void);
 void Bridge_Serialize(void);
 
 // Extra Entity Functions
-void Bridge_Burn(int offset);
+void Bridge_Burn(int32 offset);
 
 
 #endif //!OBJ_BRIDGE_H

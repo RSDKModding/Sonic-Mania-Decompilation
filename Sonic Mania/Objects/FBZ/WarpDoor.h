@@ -11,8 +11,8 @@ typedef struct {
     uint8 boundCount;
     uint8 field_1405;
     uint8 field_1406;
-    int field_1408;
-    int field_140C;
+    int32 field_1408;
+    int32 field_140C;
     uint16 aniFrames;
     uint16 sfxRubyAttackL[6];
     uint16 sfxRubyAttackR[6];
@@ -22,21 +22,21 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    int go;
-    int width;
-    int height;
+    int32 go;
+    int32 width;
+    int32 height;
     uint8 tag;
-    int destinationTag;
+    int32 destinationTag;
     bool32 definesBounds;
-    int xBoundaryPosL;
-    int xBoundaryPosR;
-    int yBoundaryPosT;
-    int yBoundaryPosB;
+    int32 xBoundaryPosL;
+    int32 xBoundaryPosR;
+    int32 yBoundaryPosT;
+    int32 yBoundaryPosB;
     uint8 effect;
     bool32 warpToCenter;
     uint8 forcePlayerState;
     Animator animator;
-    int field_A4;
+    int32 field_A4;
     uint8 field_A8;
     uint8 field_A9;
     uint8 field_AA;
@@ -44,8 +44,8 @@ typedef struct {
     uint16 boundID;
     uint8 field_AE;
     uint8 field_AF;
-    int fadeTimer;
-    int field_B4;
+    int32 fadeTimer;
+    int32 field_B4;
     Hitbox hitbox;
 } EntityWarpDoor;
 

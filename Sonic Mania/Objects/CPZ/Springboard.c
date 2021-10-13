@@ -10,17 +10,17 @@ void Springboard_Update(void)
     foreach_active(Player, playerPtr)
     {
         if (playerPtr->velocity.y >= 0 && ((1 << RSDK.GetEntityID(playerPtr)) & entity->playerBits)) {
-            int val  = minVal((playerPtr->position.x - entity->position.x + 0x1C0000) >> 17, 28);
-            int val2 = maxVal(val, 0);
+            int32 val  = minVal((playerPtr->position.x - entity->position.x + 0x1C0000) >> 17, 28);
+            int32 val2 = maxVal(val, 0);
 
-            int val3 = val2;
+            int32 val3 = val2;
             if ((entity->direction & 1))
                 val3 = 28 - val2;
             if (val3 >= 8) {
                 if (entity->animator.frameID == 3)
                     RSDK.SetSpriteAnimation(Springboard->aniFrames, 0, &entity->animator, true, 0);
                 if (entity->animator.frameID == 2) {
-                    int anim = playerPtr->playerAnimator.animationID;
+                    int32 anim = playerPtr->playerAnimator.animationID;
                     if (anim == ANI_WALK || (anim > ANI_AIRWALK && anim <= ANI_DASH))
                         playerPtr->storedAnim = playerPtr->playerAnimator.animationID;
                     else
@@ -30,7 +30,7 @@ void Springboard_Update(void)
                     playerPtr->tileCollisions = true;
                     RSDK.SetSpriteAnimation(playerPtr->spriteIndex, ANI_SPRINGCS, &playerPtr->playerAnimator, true, 1);
                     playerPtr->groundVel   = playerPtr->velocity.x;
-                    int pos                = minVal(2 * val3 - 16, 39);
+                    int32 pos                = minVal(2 * val3 - 16, 39);
                     playerPtr->velocity.y  = Springboard->array2[pos] - playerPtr->gravityStrength - entity->force;
                     playerPtr->jumpAbility = 0;
                     RSDK.PlaySfx(Springboard->sfxSpring, 0, 255);
@@ -41,14 +41,14 @@ void Springboard_Update(void)
 
     foreach_active(Player, player)
     {
-        int playerID   = RSDK.GetEntityID(player);
-        int playerVel  = player->groundVel;
-        int playerVelX = player->velocity.x;
+        int32 playerID   = RSDK.GetEntityID(player);
+        int32 playerVel  = player->groundVel;
+        int32 playerVelX = player->velocity.x;
         bool32 flag    = false;
-        int val        = clampVal((player->position.x - entity->position.x + 0x1C0000) >> 17, 0, 27);
+        int32 val        = clampVal((player->position.x - entity->position.x + 0x1C0000) >> 17, 0, 27);
 
         if (!entity->direction) {
-            int hitboxTop = 0;
+            int32 hitboxTop = 0;
 
             if (entity->animator.frameID <= 2) {
                 hitboxTop = Springboard->array4[val];
@@ -93,8 +93,8 @@ void Springboard_Update(void)
             player->flailing = false;
         }
         else if (entity->direction == FLIP_X) {
-            int pos       = abs(val - 27);
-            int hitboxTop = 0;
+            int32 pos       = abs(val - 27);
+            int32 hitboxTop = 0;
 
             if (entity->animator.frameID <= 2) {
                 hitboxTop = Springboard->array4[pos];

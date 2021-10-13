@@ -13,7 +13,7 @@ void FBZFan_Update(void)
 
     foreach_active(Player, player)
     {
-        int playerID = RSDK.GetEntityID(player);
+        int32 playerID = RSDK.GetEntityID(player);
         bool32 flag  = false;
         Player_CheckCollisionBox(player, entity, &FBZFan->solidHitbox);
 
@@ -23,7 +23,7 @@ void FBZFan_Update(void)
             RSDK.SetSpriteAnimation(player->spriteIndex, ANI_FAN, &player->playerAnimator, false, 0);
             player->state    = Player_State_Air;
             player->onGround = false;
-            int vel          = (entity->position.y + (FBZFan->fanHitbox.top << 16) - player->position.y) >> 4;
+            int32 vel          = (entity->position.y + (FBZFan->fanHitbox.top << 16) - player->position.y) >> 4;
             if (player->velocity.y <= vel) {
                 player->velocity.y = vel;
             }

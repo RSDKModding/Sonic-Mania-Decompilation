@@ -18,8 +18,8 @@ void UISlider_Update(void)
 
     EntityUIControl *control = (EntityUIControl *)entity->parent;
 
-    int id = -1;
-    for (int i = 0; i < control->buttonCount; ++i) {
+    int32 id = -1;
+    for (int32 i = 0; i < control->buttonCount; ++i) {
         if (entity == (EntityUISlider *)control->buttons[i]) {
             id = i;
             break;
@@ -83,7 +83,7 @@ void UISlider_Unknown1(void)
     RSDK_THIS(UISlider);
     Vector2 drawPos;
 
-    int size  = entity->field_110 + entity->field_10C;
+    int32 size  = entity->field_110 + entity->field_10C;
     drawPos.x = entity->position.x;
     drawPos.y = entity->position.y;
     UIWidgets_Unknown7((entity->field_110 >> 16), size >> 16, entity->field_114, 0, 0, 0, entity->position.x, entity->position.y);
@@ -101,9 +101,9 @@ void UISlider_Unknown2(void)
     RSDK_THIS(UISlider);
     Vector2 drawPos;
 
-    int drawX = 0x7A0000 + entity->position.x;
-    int sliderPos        = (((34048 * entity->sliderPos) >> 2) & 0xFFFFFF00) - 0xB0000;
-    int drawX2            = drawX - ((0x7A0000 - sliderPos) >> 1);
+    int32 drawX = 0x7A0000 + entity->position.x;
+    int32 sliderPos        = (((34048 * entity->sliderPos) >> 2) & 0xFFFFFF00) - 0xB0000;
+    int32 drawX2            = drawX - ((0x7A0000 - sliderPos) >> 1);
     UIWidgets_Unknown7(12, 122, 12, 240, 240, 240, drawX - entity->field_11C, entity->position.y - entity->field_11C);
     UIWidgets_Unknown7(12, 122, 12, 0, 0, 0, entity->field_11C + drawX, entity->field_11C + entity->position.y);
     UIWidgets_Unknown7(12, sliderPos >> 16, 12, 232, 40, 88, entity->field_11C + drawX2, entity->field_11C + entity->position.y);
@@ -128,13 +128,13 @@ void UISlider_ButtonPressCB(void)
     RSDK_THIS(UISlider);
     EntityUIControl *parent = (EntityUIControl *)entity->parent;
 
-    int rowID = 0;
+    int32 rowID = 0;
     if (parent->rowCount && parent->columnCount)
         rowID = parent->activeEntityID / parent->columnCount;
     else
         rowID = 0;
 
-    int columnID = 0;
+    int32 columnID = 0;
     if (parent->columnCount)
         columnID = parent->activeEntityID % parent->columnCount;
     else
@@ -173,7 +173,7 @@ void UISlider_ButtonPressCB(void)
         if (rowID >= parent->rowCount)
             rowID -= parent->rowCount;
 
-        int max = parent->buttonCount - 1;
+        int32 max = parent->buttonCount - 1;
         if (rowID * parent->columnCount + columnID < max)
             max = rowID * parent->columnCount + columnID;
 
@@ -187,8 +187,8 @@ void UISlider_ButtonPressCB(void)
         }
     }
     else {
-        int id = -1;
-        for (int i = 0; i < parent->buttonCount; ++i) {
+        int32 id = -1;
+        for (int32 i = 0; i < parent->buttonCount; ++i) {
             if (entity == (EntityUISlider *)parent->buttons[i]) {
                 id = i;
                 break;
@@ -208,14 +208,14 @@ bool32 UISlider_TouchCB(void)
     bool32 touchFlag = false;
     if (RSDK_touchMouse->count) {
         if (!UISlider->entityPtr || UISlider->entityPtr == (Entity *)entity) {
-            int sizeX = entity->touchPosStart.x >> 1;
-            int sizeY = entity->touchPosStart.y >> 1;
-            for (int i = 0; i < RSDK_touchMouse->count; ++i) {
-                int x = (RSDK_screens->position.x << 16) - ((RSDK_touchMouse->x[i] * RSDK_screens->width) * -65536.0f);
-                int y = (RSDK_screens->position.y << 16) - ((RSDK_touchMouse->y[i] * RSDK_screens->height) * -65536.0f);
+            int32 sizeX = entity->touchPosStart.x >> 1;
+            int32 sizeY = entity->touchPosStart.y >> 1;
+            for (int32 i = 0; i < RSDK_touchMouse->count; ++i) {
+                int32 x = (RSDK_screens->position.x << 16) - ((RSDK_touchMouse->x[i] * RSDK_screens->width) * -65536.0f);
+                int32 y = (RSDK_screens->position.y << 16) - ((RSDK_touchMouse->y[i] * RSDK_screens->height) * -65536.0f);
 
-                int touchX = abs(entity->touchPosEnd.x + entity->position.x - x);
-                int touchY = abs(entity->touchPosEnd.y + entity->position.y - y);
+                int32 touchX = abs(entity->touchPosEnd.x + entity->position.x - x);
+                int32 touchY = abs(entity->touchPosEnd.y + entity->position.y - y);
                 if (!entity->flagB && touchX < sizeX && touchY < sizeY) {
                     entity->flagB = true;
                     RSDK.PlaySfx(UIWidgets->sfx_Bleep, false, 255);
@@ -229,7 +229,7 @@ bool32 UISlider_TouchCB(void)
                     if (entity->touchPosStart.x - 0x70000 < entity->field_134)
                         entity->field_134 = entity->touchPosStart.x - 0x70000;
 
-                    int val = 16 * (minVal(((entity->field_134 - 0x70000) >> 4 << 10) / (entity->touchPosStart.x - 0xE0000) + 2, UISlider_MaxVal) & -(UISlider_Increment / 0x10));
+                    int32 val = 16 * (minVal(((entity->field_134 - 0x70000) >> 4 << 10) / (entity->touchPosStart.x - 0xE0000) + 2, UISlider_MaxVal) & -(UISlider_Increment / 0x10));
                     if (val != entity->sliderPos) {
                         entity->sliderPos = val;
                         StateMachine_Run(entity->sliderChangedCB);
@@ -286,7 +286,7 @@ void UISlider_Unknown9(void)
     RSDK_THIS(UISlider);
 
     if (entity->field_118) {
-        int dist = -(entity->field_118 / abs(entity->field_118));
+        int32 dist = -(entity->field_118 / abs(entity->field_118));
         entity->field_118 += dist << 15;
         if (dist < 0) {
             if (entity->field_118 < 0) {
@@ -300,7 +300,7 @@ void UISlider_Unknown9(void)
     }
 
     if (entity->field_11C) {
-        int dist = -(entity->field_11C / abs(entity->field_11C));
+        int32 dist = -(entity->field_11C / abs(entity->field_11C));
         entity->field_11C += dist << 16;
         if (dist < 0) {
             if (entity->field_11C < 0) {

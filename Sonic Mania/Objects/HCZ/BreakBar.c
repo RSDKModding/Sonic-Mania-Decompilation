@@ -59,7 +59,7 @@ void BreakBar_DrawSprites(void)
 
         drawPos.x += 0x80000;
         RSDK.SetSpriteAnimation(BreakBar->aniFrames, 1, &entity->animator, true, 1);
-        for (int i = 0; i < entity->length; ++i) {
+        for (int32 i = 0; i < entity->length; ++i) {
             RSDK.DrawSprite(&entity->animator, &drawPos, false);
             drawPos.x += 0x80000;
         }
@@ -73,7 +73,7 @@ void BreakBar_DrawSprites(void)
 
         drawPos.y += 0x80000;
         RSDK.SetSpriteAnimation(BreakBar->aniFrames, 0, &entity->animator, true, 1);
-        for (int i = 0; i < entity->length; ++i) {
+        for (int32 i = 0; i < entity->length; ++i) {
             RSDK.DrawSprite(&entity->animator, &drawPos, false);
             drawPos.y += 0x80000;
         }
@@ -89,7 +89,7 @@ void BreakBar_CheckPlayerCollisions(void)
 
     foreach_active(Player, player)
     {
-        int playerID = RSDK.GetEntityID(player);
+        int32 playerID = RSDK.GetEntityID(player);
         if (((1 << playerID) & entity->activePlayersGrabbed) && !((1 << playerID) & entity->activePlayersReleased)) {
             if (!Player_CheckValidState(player)) {
                 entity->activePlayersGrabbed &= ~(1 << playerID);
@@ -129,8 +129,8 @@ void BreakBar_HandlePlayerInteractions(void *p)
     EntityPlayer *player = (EntityPlayer *)p;
 
     if (!entity->destroyFlag) {
-        int spawnX = entity->position.x;
-        int spawnY = entity->position.y;
+        int32 spawnX = entity->position.x;
+        int32 spawnY = entity->position.y;
 
         if (entity->orientation)
             spawnX += -0x40000 - ((8 * entity->length) >> 1 << 16);
@@ -138,9 +138,9 @@ void BreakBar_HandlePlayerInteractions(void *p)
             spawnY += -0x40000 - ((8 * entity->length) >> 1 << 16);
 
         if (entity->length != 0xFFFE) {
-            int len = (entity->length + 2) << 19;
-            for (int i = 0; i < entity->length + 2; ++i) {
-                int frame = 0;
+            int32 len = (entity->length + 2) << 19;
+            for (int32 i = 0; i < entity->length + 2; ++i) {
+                int32 frame = 0;
                 if (i == entity->length + 1)
                     frame = 2;
                 else
@@ -199,7 +199,7 @@ void BreakBar_State_Main(void)
     RSDK_THIS(BreakBar);
     foreach_active(Player, player)
     {
-        int playerID = RSDK.GetEntityID(player);
+        int32 playerID = RSDK.GetEntityID(player);
         if ((player->sidekick && Player->jumpInDelay >= 239) || !Player_CheckValidState(player)) {
             entity->activePlayersReleased &= ~(1 << playerID);
             entity->activePlayersGrabbed &= ~(1 << playerID);

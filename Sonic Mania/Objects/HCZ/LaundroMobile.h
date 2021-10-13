@@ -8,27 +8,27 @@ typedef struct {
     RSDK_OBJECT
     uint8 value1;
     uint8 value2;
-    int value3;
+    int32 value3;
     void *value4[6];
     uint8 value5;
     uint8 value6;
     uint8 value7;
     uint8 value8;
     int8 value9;
-    TABLE(int value10[8], { 1, 2, 2, 2, 1, 2, 2, 3 });
+    TABLE(int32 value10[8], { 1, 2, 2, 2, 1, 2, 2, 3 });
     uint8 value11;
-    int value12;
+    int32 value12;
     uint8 value13;
-    int value14[4];
+    int32 value14[4];
     Vector2 value15[4];
     uint8 value16[4];
-    int value17[2];
-    int value18[4];
-    int value19[4];
+    int32 value17[2];
+    int32 value18[4];
+    int32 value19[4];
     uint8 value20;
     uint8 value21;
     void *value22;
-    TABLE(int value23[73], { 12,       6,        0, -0x50000, -0x40000, 0, 0,        7,        0, 0x50000,  -0x40000, 0, 0,        10,       0,
+    TABLE(int32 value23[73], { 12,       6,        0, -0x50000, -0x40000, 0, 0,        7,        0, 0x50000,  -0x40000, 0, 0,        10,       0,
                              -0x50000, -0x40000, 0, 0,        11,       0, 0x50000,  -0x40000, 0, 0,        10,       0, -0x50000, -0x40000, 0,
                              0x200000, 11,       0, 0x50000,  -0x40000, 0, 0x200000, 10,       0, -0x50000, -0x40000, 0, 0x400000, 11,       0,
                              0x50000,  -0x40000, 0, 0x400000, 8,        0, -0x50000, -0x40000, 0, 0x400000, 9,        0, 0x50000,  -0x40000, 0,

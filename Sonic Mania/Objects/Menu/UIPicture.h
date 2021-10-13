@@ -12,11 +12,11 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    int listID;
-    int frameID;
-    int tag;
+    int32 listID;
+    int32 frameID;
+    int32 tag;
     uint8 zonePalette;
-    int zoneID;
+    int32 zoneID;
     Animator animator;
 } EntityUIPicture;
 

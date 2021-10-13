@@ -14,8 +14,8 @@ typedef struct {
 typedef struct {
     MANIA_UI_ITEM_BASE
     uint8 playerID;
-    int numRows;
-    int trophyCount;
+    int32 numRows;
+    int32 trophyCount;
     uint8 row0Label;
     uint8 row1Label;
     uint8 row2Label;
@@ -43,14 +43,14 @@ typedef struct {
     bool32 row11Highlight;
     bool32 row12Highlight;
     TextInfo rowText[13];
-    int characterID;
-    int field_1C0;
-    int offset;
-    int numRowStore;
-    int field_1CC;
-    int field_1D0;
-    int field_1D4;
-    int field_1D8;
+    int32 characterID;
+    int32 field_1C0;
+    int32 offset;
+    int32 numRowStore;
+    int32 field_1CC;
+    int32 field_1D0;
+    int32 field_1D4;
+    int32 field_1D8;
     Animator animator1;
     Animator animator2;
     Animator animator3;
@@ -79,7 +79,7 @@ void UIVsResults_Serialize(void);
 void UIVsResults_SetupSprites(void);
 void UIVsResults_Unknown2(void);
 void UIVsResults_Unknown3(void);
-void UIVsResults_DrawRow(int row, int posX, int posY);
+void UIVsResults_DrawRow(int32 row, int32 posX, int32 posY);
 void UIVsResults_Unknown5(void);
 void UIVsResults_Unknown6(void);
 void UIVsResults_Unknown7(void);

@@ -8,7 +8,7 @@ void AIZEggRobo_Update(void)
     if (entity->oscillate)
         entity->position.y += RSDK.Sin256(4 * (entity->oscillateOffset + Zone->timer)) << 7;
     if (entity->unknownPos.x != entity->position.x) {
-        int distance = entity->position.x - entity->unknownPos.x;
+        int32 distance = entity->position.x - entity->unknownPos.x;
         if (distance < 0)
             entity->direction = FLIP_X;
         else if (distance > 0)

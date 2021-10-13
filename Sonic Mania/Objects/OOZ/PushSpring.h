@@ -18,8 +18,8 @@ typedef struct {
     StateMachine(stateDraw);
     StateMachine(stateLate);
     uint8 type;
-    int pushOffset;
-    int pushTimer;
+    int32 pushOffset;
+    int32 pushTimer;
     Hitbox hitbox;
     bool32 field_78;
     Animator animator;

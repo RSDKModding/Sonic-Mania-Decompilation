@@ -6,7 +6,7 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    int field_4;
+    int32 field_4;
     uint16 sfxDrop;
     EntityBigSqueeze *boss1;
     EntityBigSqueeze *boss2;
@@ -21,14 +21,14 @@ typedef struct {
     RSDK_ENTITY
     Vector2 size;
     bool32 activated;
-    int field_64;
-    int field_68;
-    int field_6C;
-    int field_70;
-    int field_74;
-    int field_78;
+    int32 field_64;
+    int32 field_68;
+    int32 field_6C;
+    int32 field_70;
+    int32 field_74;
+    int32 field_78;
     Hitbox hitbox;
-    int grabbedPlayers;
+    int32 grabbedPlayers;
 } EntityFBZ1Outro;
 
 // Object Struct

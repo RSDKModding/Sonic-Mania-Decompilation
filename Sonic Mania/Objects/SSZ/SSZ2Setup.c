@@ -82,25 +82,25 @@ void SSZ2Setup_TowerScanlineCallback(ScanlineInfo *scanlines)
     RSDK.SetActivePalette(3, 0, RSDK_screens->height);
 
     ScanlineInfo *scanlinePtr = &scanlines[RSDK_screens->centerX - 64];
-    int x1                    = scanlinePtr->position.x;
-    int offset                = 0x10000;
-    for (int i = 2; i - 2 < 80;) {
+    int32 x1                    = scanlinePtr->position.x;
+    int32 offset                = 0x10000;
+    for (int32 i = 2; i - 2 < 80;) {
         scanlinePtr -= 5;
         scanlinePtr[5].position.x = x1 & 0x1FFFFFF;
 
-        int x2                    = x1 - offset;
+        int32 x2                    = x1 - offset;
         offset                    = (i - 2) * (i - 2) + offset;
         scanlinePtr[4].position.x = x2 & 0x1FFFFFF;
 
-        int x3                    = x2 - offset;
+        int32 x3                    = x2 - offset;
         offset                    = (i - 1) * (i - 1) + offset;
         scanlinePtr[3].position.x = x3 & 0x1FFFFFF;
 
-        int x4                    = x3 - offset;
+        int32 x4                    = x3 - offset;
         offset                    = i * i + offset;
         scanlinePtr[2].position.x = x4 & 0x1FFFFFF;
 
-        int x5                    = x4 - offset;
+        int32 x5                    = x4 - offset;
         offset                    = (i + 1) * (i + 1) + offset;
         scanlinePtr[1].position.x = x5 & 0x1FFFFFF;
 
@@ -114,23 +114,23 @@ void SSZ2Setup_TowerScanlineCallback(ScanlineInfo *scanlines)
     x1          = scanlinePtr->position.x;
     offset      = 0x10000;
 
-    for (int i = 2; i - 2 < 80;) {
+    for (int32 i = 2; i - 2 < 80;) {
         scanlinePtr += 5;
         scanlinePtr[-5].position.x = x1 & 0x1FFFFFF;
 
-        int x2                     = x1 + offset;
+        int32 x2                     = x1 + offset;
         offset                     = (i - 2) * (i - 2) + offset;
         scanlinePtr[-4].position.x = x2 & 0x1FFFFFF;
 
-        int x3                     = x2 + offset;
+        int32 x3                     = x2 + offset;
         offset                     = (i - 1) * (i - 1) + offset;
         scanlinePtr[-3].position.x = x3 & 0x1FFFFFF;
 
-        int x4                     = x3 + offset;
+        int32 x4                     = x3 + offset;
         offset                     = i * i + offset;
         scanlinePtr[-2].position.x = x4 & 0x1FFFFFF;
 
-        int x5                     = x4 + offset;
+        int32 x5                     = x4 + offset;
         offset                     = (i + 1) * (i + 1) + offset;
         scanlinePtr[-1].position.x = x5 & 0x1FFFFFF;
 
@@ -185,7 +185,7 @@ void SSZ2Setup_GenericTriggerCallback3(void)
             Zone->screenBoundsR1[3] = RSDK_screens->centerX + (entity->position.x >> 16);
 #endif
 
-            for (int i = 0; i < Player->playerCount; ++i) {
+            for (int32 i = 0; i < Player->playerCount; ++i) {
                 StarPost->postIDs[i] = 0;
             }
 

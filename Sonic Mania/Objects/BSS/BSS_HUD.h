@@ -32,6 +32,6 @@ void BSS_HUD_EditorLoad(void);
 void BSS_HUD_Serialize(void);
 
 // Extra Entity Functions
-void BSS_HUD_DrawNumbers(int value, Vector2 *drawPos);
+void BSS_HUD_DrawNumbers(int32 value, Vector2 *drawPos);
 
 #endif //!OBJ_BSS_HUD_H

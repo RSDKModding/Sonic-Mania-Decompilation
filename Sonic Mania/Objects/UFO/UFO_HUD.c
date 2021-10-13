@@ -14,7 +14,7 @@ void UFO_HUD_Update(void)
         entity->scale.x -= 0x10;
         entity->scale.y -= 0x10;
         if (entity->scale.x <= 512) {
-            int cnt = 32 * UFO_Setup->machPoints / UFO_Setup->machQuotas[UFO_Setup->machLevel];
+            int32 cnt = 32 * UFO_Setup->machPoints / UFO_Setup->machQuotas[UFO_Setup->machLevel];
             RSDK.CopyPalette(entity->palID, 96, 0, 96, cnt);
             RSDK.CopyPalette(1, cnt + 96, 0, cnt + 96, (uint8)(32 - cnt));
         }
@@ -47,7 +47,7 @@ void UFO_HUD_Draw(void)
         entity->drawFX = FX_SCALE;
     RSDK.DrawSprite(&entity->data1, &drawPos, true);
 
-    for (int i = 0; i <= UFO_Setup->machLevel; ++i) {
+    for (int32 i = 0; i <= UFO_Setup->machLevel; ++i) {
         RSDK.DrawSprite(&entity->data4, &drawPos, true);
         drawPos.x += 0xA0000;
     }
@@ -116,7 +116,7 @@ void UFO_HUD_CheckLevelUp(void)
     }
 
     if (hud->scale.x == 512) {
-        int cnt = 32 * UFO_Setup->machPoints / UFO_Setup->machQuotas[UFO_Setup->machLevel];
+        int32 cnt = 32 * UFO_Setup->machPoints / UFO_Setup->machQuotas[UFO_Setup->machLevel];
         RSDK.CopyPalette(hud->palID, 96, 0, 96, cnt);
         RSDK.CopyPalette(1, cnt + 96, 0, cnt + 96, (uint8)(32 - cnt));
     }
@@ -142,12 +142,12 @@ void UFO_HUD_LevelUpMach(void)
     RSDK.PlaySfx(UFO_Sphere->sfx_MachSpeed, 0, 255);
 }
 
-void UFO_HUD_DrawNumbers(Vector2 *drawPos, int value)
+void UFO_HUD_DrawNumbers(Vector2 *drawPos, int32 value)
 {
     RSDK_THIS(UFO_HUD);
 
-    int mult = 1;
-    for (int i = 0; i < 3; ++i) {
+    int32 mult = 1;
+    for (int32 i = 0; i < 3; ++i) {
         entity->animator2.frameID = value / mult % 10;
         RSDK.DrawSprite(&entity->animator2, drawPos, true);
         drawPos->x -= 0x100000;

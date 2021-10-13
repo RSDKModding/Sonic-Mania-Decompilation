@@ -61,16 +61,16 @@ void BuzzSaw_StageLoad(void)
 
 bool32 BuzzSaw_CheckCB(void)
 {
-    int worldX = (RSDK_screens->position.x + RSDK_screens->centerX) << 16;
-    int worldY = (RSDK_screens->position.y + RSDK_screens->centerY) << 16;
+    int32 worldX = (RSDK_screens->position.x + RSDK_screens->centerX) << 16;
+    int32 worldY = (RSDK_screens->position.y + RSDK_screens->centerY) << 16;
 
-    int count = 0;
+    int32 count = 0;
 
     foreach_all(BuzzSaw, saw)
     {
-        int x    = abs(worldX - saw->position.x);
-        int y    = abs(worldY - saw->position.y);
-        int dist = MathHelpers_Unknown6((x >> 16) * (x >> 16) + (y >> 16) * (y >> 16)) << 16;
+        int32 x    = abs(worldX - saw->position.x);
+        int32 y    = abs(worldY - saw->position.y);
+        int32 dist = MathHelpers_Unknown6((x >> 16) * (x >> 16) + (y >> 16) * (y >> 16)) << 16;
         if (dist > 0x2800000)
             count++;
     }
@@ -78,16 +78,16 @@ bool32 BuzzSaw_CheckCB(void)
     return count > 0;
 }
 
-void BuzzSaw_UpdateCB(int sfx)
+void BuzzSaw_UpdateCB(int32 sfx)
 {
-    int dist   = 0x7FFF0000;
-    int worldX = (RSDK_screens->position.x + RSDK_screens->centerX) << 16;
-    int worldY = (RSDK_screens->position.y + RSDK_screens->centerY) << 16;
+    int32 dist   = 0x7FFF0000;
+    int32 worldX = (RSDK_screens->position.x + RSDK_screens->centerX) << 16;
+    int32 worldY = (RSDK_screens->position.y + RSDK_screens->centerY) << 16;
 
     foreach_all(BuzzSaw, saw)
     {
-        int x = abs(worldX - saw->position.x);
-        int y = abs(worldY - saw->position.y);
+        int32 x = abs(worldX - saw->position.x);
+        int32 y = abs(worldY - saw->position.y);
         dist  = minVal(MathHelpers_Unknown6((x >> 16) * (x >> 16) + (y >> 16) * (y >> 16)) << 16, dist);
     }
 
@@ -132,10 +132,10 @@ void BuzzSaw_State_FreeMove_Waiting(void)
 
     foreach_active(Player, player)
     {
-        int angle = RSDK.ATan2((player->position.x - entity->position.x) >> 16, (player->position.y - entity->position.y) >> 16);
+        int32 angle = RSDK.ATan2((player->position.x - entity->position.x) >> 16, (player->position.y - entity->position.y) >> 16);
 
-        int rx = (abs(player->position.x - entity->position.x) >> 16) * (abs(player->position.x - entity->position.x) >> 16);
-        int ry = (abs(player->position.y - entity->position.y) >> 16) * (abs(player->position.y - entity->position.y) >> 16);
+        int32 rx = (abs(player->position.x - entity->position.x) >> 16) * (abs(player->position.x - entity->position.x) >> 16);
+        int32 ry = (abs(player->position.y - entity->position.y) >> 16) * (abs(player->position.y - entity->position.y) >> 16);
         if (angle + 32 - (entity->angle & 0xFF) < 0x40 && (rx + ry) - 0x4000 < 0x5000) {
             entity->active     = ACTIVE_NORMAL;
             entity->velocity.x = 0x600 * RSDK.Cos256(entity->angle);

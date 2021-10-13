@@ -369,15 +369,15 @@ bool32 GHZ2Outro_CutsceneState2_Unknown6(EntityCutsceneSeq *host)
             }
 
             if (host->timer >= host->field_68 + 52) {
-                int id = 0;
-                for (int angle = 0; angle < 0x80; angle += 0x10) {
+                int32 id = 0;
+                for (int32 angle = 0; angle < 0x80; angle += 0x10) {
                     EntityPlayer *player = RSDK_GET_ENTITY(id++, Player);
                     if (!player || player->objectID == TYPE_BLANK)
                         break;
                     RSDK.SetSpriteAnimation(player->spriteIndex, ANI_FAN, &player->playerAnimator, false, 0);
 
-                    int valX = (ruby->position.x - 0x400000) - player->position.x;
-                    int valY = (ruby->position.y - (0xA00000 + 944)) - player->position.y;
+                    int32 valX = (ruby->position.x - 0x400000) - player->position.x;
+                    int32 valY = (ruby->position.y - (0xA00000 + 944)) - player->position.y;
 
                     player->position.x += ((RSDK.Cos256(2 * (angle + host->timer - host->field_68)) << 12) + valX) >> 5;
                     player->position.y += ((RSDK.Sin256(2 * (angle + host->timer - host->field_68)) << 12) + valY) >> 5;

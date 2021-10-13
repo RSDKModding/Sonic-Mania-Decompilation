@@ -216,15 +216,15 @@ void BallHog_State_Bomb(void)
     if (RSDK.CheckOnScreen(entity, &entity->updateRange)) {
         if (entity->velocity.y > 0 && RSDK.ObjectTileGrip(entity, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x80000, 4)) {
             RSDK.PlaySfx(BallHog->sfxArrowHit, false, 255);
-            int storeY = entity->position.y;
+            int32 storeY = entity->position.y;
 
             entity->velocity.y = -0x30000;
             RSDK.ObjectTileGrip(entity, Zone->fgLayers, CMODE_FLOOR, 0, -0x20000, 0x80000, 8);
-            int y1 = entity->position.y;
+            int32 y1 = entity->position.y;
 
             entity->position.y = storeY;
             RSDK.ObjectTileGrip(entity, Zone->fgLayers, CMODE_FLOOR, 0, 0x20000, 0x80000, 8);
-            int y2 = entity->position.y;
+            int32 y2 = entity->position.y;
 
             entity->position.y = storeY;
             if (entity->velocity.x <= 0 ? y1 < y2 : y2 < y1)

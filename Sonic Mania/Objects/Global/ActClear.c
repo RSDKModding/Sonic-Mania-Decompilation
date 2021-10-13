@@ -16,10 +16,10 @@ void ActClear_Draw(void)
 {
     Vector2 drawPos;
     Vector2 verts[4];
-    int millisecsPtr = 0;
-    int secsPtr      = 0;
-    int minsPtr      = 0;
-    int offset       = 0;
+    int32 millisecsPtr = 0;
+    int32 secsPtr      = 0;
+    int32 minsPtr      = 0;
+    int32 offset       = 0;
     RSDK_THIS(ActClear);
 
     drawPos.x  = entity->posUnknown3.x;
@@ -29,7 +29,7 @@ void ActClear_Draw(void)
     verts[2].y = drawPos.y - 0x40000;
     verts[3].y = drawPos.y - 0x40000;
     if ((globals->playerID & 0xFF) == ID_KNUCKLES) {
-        int center = (RSDK_screens->centerX << 16) + 0x100000;
+        int32 center = (RSDK_screens->centerX << 16) + 0x100000;
         drawPos.x  = center + 2 * entity->posUnknown3.x;
         verts[0].x = drawPos.x - 0x910000;
         verts[1].x = drawPos.x + 0x340000;
@@ -64,7 +64,7 @@ void ActClear_Draw(void)
         offset = center - 0xA0000;
     }
     else {
-        int center = (RSDK_screens->centerX << 16) + 0x100000;
+        int32 center = (RSDK_screens->centerX << 16) + 0x100000;
         drawPos.x  = center + 2 * entity->posUnknown3.x;
         verts[0].x = drawPos.x - 0x6D0000;
         verts[1].x = drawPos.x + 0x340000;
@@ -121,8 +121,8 @@ void ActClear_Draw(void)
     drawPos.x += 0x340000;
     RSDK.DrawSprite(&entity->data1, &drawPos, true);
 
-    int dx = 0x430000 + drawPos.x;
-    int dy = drawPos.y + 0xE0000;
+    int32 dx = 0x430000 + drawPos.x;
+    int32 dy = drawPos.y + 0xE0000;
     drawPos.x += 0x430000;
     drawPos.y += 0xE0000;
 
@@ -409,7 +409,7 @@ void ActClear_StageLoad(void)
 }
 
 #if RETRO_USE_PLUS
-void ActClear_DrawTime(int mins, Vector2 *pos, int secs, int millisecs)
+void ActClear_DrawTime(int32 mins, Vector2 *pos, int32 secs, int32 millisecs)
 {
     Vector2 drawPos;
     RSDK_THIS(ActClear);
@@ -439,17 +439,17 @@ void ActClear_DrawTime(int mins, Vector2 *pos, int secs, int millisecs)
 }
 #endif
 
-void ActClear_DrawNumbers(Vector2 *pos, int value, int maxVals)
+void ActClear_DrawNumbers(Vector2 *pos, int32 value, int32 maxVals)
 {
     RSDK_THIS(ActClear);
-    int mult = 1;
+    int32 mult = 1;
     if (value >= 0) {
         if (!maxVals) {
             if (value <= 0) {
                 maxVals = 1;
             }
             else {
-                int i = value;
+                int32 i = value;
                 do {
                     ++maxVals;
                     i /= 10;
@@ -458,7 +458,7 @@ void ActClear_DrawNumbers(Vector2 *pos, int value, int maxVals)
         }
 
         if (maxVals > 0) {
-            int digit = 1;
+            int32 digit = 1;
             do {
                 entity->animator2.frameID = value / mult % 10;
                 RSDK.DrawSprite(&entity->animator2, pos, true);
@@ -491,7 +491,7 @@ void ActClear_CheckPlayerVictory(void)
         }
     }
 }
-void ActClear_SaveGameCallback(int success)
+void ActClear_SaveGameCallback(int32 success)
 {
     UIWaitSpinner_Wait2();
     ActClear->field_10 = 0;
@@ -670,10 +670,10 @@ void ActClear_LoadNextScene(void)
                 uint8 zoneID            = param->zoneID;
                 uint8 actID             = param->actID;
 
-                int time = 6000 * RSDK_sceneInfo->minutes + 100 * RSDK_sceneInfo->seconds + RSDK_sceneInfo->milliseconds;
+                int32 time = 6000 * RSDK_sceneInfo->minutes + 100 * RSDK_sceneInfo->seconds + RSDK_sceneInfo->milliseconds;
 
                 uint16 *record = TimeAttackData_GetRecordedTime(zoneID, actID, playerID, 1);
-                int rank       = 0;
+                int32 rank       = 0;
                 for (; rank < 3; ++rank) {
                     if (!record[rank] || time < record[rank])
                         break;
@@ -788,9 +788,9 @@ void ActClear_State_TAResults(void)
 
     if (!ActClear->field_10 && !ActClear->field_14) {
 #if RETRO_USE_TOUCH_CONTROLS
-        for (int t = 0; t < RSDK_touchMouse->count; ++t) {
-            int tx = (RSDK_touchMouse->x[t] * RSDK_screens->width);
-            int ty = (RSDK_touchMouse->y[t] * RSDK_screens->height);
+        for (int32 t = 0; t < RSDK_touchMouse->count; ++t) {
+            int32 tx = (RSDK_touchMouse->x[t] * RSDK_screens->width);
+            int32 ty = (RSDK_touchMouse->y[t] * RSDK_screens->height);
 
             if (RSDK_touchMouse->down[t]) {
                 if (tx >= RSDK_screens->width - 0x80 && ty >= 0 && tx <= RSDK_screens->width && ty <= 0x40) {
@@ -914,7 +914,7 @@ void ActClear_ForcePlayerOnScreen(void)
     EntityPlayer *player2 = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
     bool32 flagP2          = false;
     bool32 flagP1          = false;
-    int screenOffX        = RSDK_screens->width - 16 + RSDK_screens->position.x;
+    int32 screenOffX        = RSDK_screens->width - 16 + RSDK_screens->position.x;
     screenOffX <<= 16;
     player1->up        = false;
     player1->down      = false;

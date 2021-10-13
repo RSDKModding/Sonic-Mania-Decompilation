@@ -39,8 +39,8 @@ void FarPlane_Draw(void)
         RSDK.SetActivePalette(0, 0, RSDK_screens->height);
     }
     else {
-        int x                = (RSDK_screens->position.x + RSDK_screens->centerX) << 16;
-        int y                = (RSDK_screens->position.y + RSDK_screens->centerY) << 16;
+        int32 x                = (RSDK_screens->position.x + RSDK_screens->centerX) << 16;
+        int32 y                = (RSDK_screens->position.y + RSDK_screens->centerY) << 16;
         FarPlane->field_8.x  = (x + entity->origin.x - entity->position.x) & 0xFFFE0000;
         FarPlane->field_8.y  = (y + entity->origin.y - entity->position.y) & 0xFFFE0000;
         FarPlane->field_10.x = entity->position.x - ((entity->position.x - x) >> 1) + 0x8000;
@@ -107,7 +107,7 @@ void FarPlane_SetupEntities(void)
     RSDK_THIS(FarPlane);
     entity->entityCount = 0;
 
-    for (int i = 0; i < SCENEENTITY_COUNT && entity->entityCount < 0x100; ++i) {
+    for (int32 i = 0; i < SCENEENTITY_COUNT && entity->entityCount < 0x100; ++i) {
         Entity *entPtr = RSDK.GetEntityByID(i);
         if (abs(entity->origin.x - entPtr->position.x) < entity->size.x) {
             if (abs(entity->origin.y - entPtr->position.y) < entity->size.y) {
@@ -123,15 +123,15 @@ void FarPlane_SetupEntities(void)
 void FarPlane_SetEntityActivities(uint8 active)
 {
     RSDK_THIS(FarPlane);
-    for (int i = 0; i < entity->entityCount; ++i) {
+    for (int32 i = 0; i < entity->entityCount; ++i) {
         RSDK_GET_ENTITY(entity->entityIDs[i], )->active = active;
     }
 }
 
 void FarPlane_DrawLayerCB_Low(void)
 {
-    int id = 0;
-    for (int i = 0; i < 0x200 && id < 0x200; ++i) {
+    int32 id = 0;
+    for (int32 i = 0; i < 0x200 && id < 0x200; ++i) {
         Entity *ent = RSDK.GetDrawListRefPtr(1, i);
         if (!ent)
             break;
@@ -149,7 +149,7 @@ void FarPlane_DrawLayerCB_Low(void)
         ent->scale.y = 0x100;
     }
 
-    for (int i = 0; i < 0x200 && id < 0x200; ++i) {
+    for (int32 i = 0; i < 0x200 && id < 0x200; ++i) {
         Entity *ent = RSDK.GetDrawListRefPtr(2, i);
         if (!ent)
             break;
@@ -175,7 +175,7 @@ void FarPlane_DrawLayerCB_Low(void)
             invincibleStars->scale.x    = 0x100;
             invincibleStars->scale.y    = 0x100;
 
-            for (int s = 0; s < 8; ++s) {
+            for (int32 s = 0; s < 8; ++s) {
                 FarPlane->positionList[id].x = invincibleStars->starPos[s].x;
                 FarPlane->positionList[id].y = invincibleStars->starPos[s].y;
                 id++;
@@ -205,7 +205,7 @@ void FarPlane_DrawLayerCB_Low(void)
             imageTrail->currentPos.x += FarPlane->field_10.x;
             imageTrail->currentPos.y += FarPlane->field_10.y;
 
-            for (int s = 0; s < 7; ++s) {
+            for (int32 s = 0; s < 7; ++s) {
                 FarPlane->positionList[id].x = imageTrail->statePos[s].x;
                 FarPlane->positionList[id].y = imageTrail->statePos[s].y;
                 id++;
@@ -222,8 +222,8 @@ void FarPlane_DrawLayerCB_Low(void)
 
 void FarPlane_DrawLayerCB_High(void)
 {
-    int id = 0;
-    for (int i = 0; i < 0x200 && id < 0x200; ++i) {
+    int32 id = 0;
+    for (int32 i = 0; i < 0x200 && id < 0x200; ++i) {
         Entity *ent = RSDK.GetDrawListRefPtr(1, i);
         if (!ent)
             break;
@@ -232,7 +232,7 @@ void FarPlane_DrawLayerCB_High(void)
         id++;
     }
 
-    for (int i = 0; i < 0x200 && id < 0x200; ++i) {
+    for (int32 i = 0; i < 0x200 && id < 0x200; ++i) {
         Entity *ent = RSDK.GetDrawListRefPtr(2, i);
         if (!ent)
             break;
@@ -244,7 +244,7 @@ void FarPlane_DrawLayerCB_High(void)
     foreach_active(InvincibleStars, invincibleStars)
     {
         if (invincibleStars->drawOrder == 1 && id < 0x200) {
-            for (int s = 0; s < 8; ++s) {
+            for (int32 s = 0; s < 8; ++s) {
                 invincibleStars->starPos[s].x = FarPlane->positionList[id].x;
                 invincibleStars->starPos[s].y = FarPlane->positionList[id].y;
                 id++;
@@ -258,7 +258,7 @@ void FarPlane_DrawLayerCB_High(void)
             imageTrail->currentPos.x = FarPlane->positionList[id].x;
             imageTrail->currentPos.y = FarPlane->positionList[id].y;
             id++;
-            for (int s = 0; s < 7; ++s) {
+            for (int32 s = 0; s < 7; ++s) {
                 imageTrail->statePos[s].x = FarPlane->positionList[id].x;
                 imageTrail->statePos[s].y = FarPlane->positionList[id].y;
                 id++;
@@ -269,9 +269,9 @@ void FarPlane_DrawLayerCB_High(void)
 
 void FarPlane_ScanlineCB(ScanlineInfo *scanline)
 {
-    int x = FarPlane->field_8.x - (RSDK_screens->centerX << 17);
-    int y = FarPlane->field_8.y - (RSDK_screens->centerY << 17);
-    for (int h = 0; h < RSDK_screens->height; ++h) {
+    int32 x = FarPlane->field_8.x - (RSDK_screens->centerX << 17);
+    int32 y = FarPlane->field_8.y - (RSDK_screens->centerY << 17);
+    for (int32 h = 0; h < RSDK_screens->height; ++h) {
         scanline->position.x = x;
         scanline->position.y = y;
 

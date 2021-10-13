@@ -16,13 +16,13 @@ typedef struct {
     StateMachine(state);
     uint8 activePlayers;
     Animator animator;
-    int length;
+    int32 length;
     Vector2 startPos;
     Vector2 endPos;
     Vector2 handlePos;
     uint8 grabDelay[PLAYER_MAX];
     Vector2 field_98;
-    int field_A0;
+    int32 field_A0;
 } EntityZipLine;
 
 // Object Struct

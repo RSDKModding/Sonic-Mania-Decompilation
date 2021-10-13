@@ -23,24 +23,24 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    int timer;
-    int activeParts;
-    int currentAngle;
+    int32 timer;
+    int32 activeParts;
+    int32 currentAngle;
     void (*bodyStates[MonkeyDude_MaxBodyParts])(void);
-    int bodyAngles[MonkeyDude_MaxBodyParts];
-    int bodyFlags[MonkeyDude_MaxBodyParts];
-    int bodyTimers[MonkeyDude_MaxBodyParts];
+    int32 bodyAngles[MonkeyDude_MaxBodyParts];
+    int32 bodyFlags[MonkeyDude_MaxBodyParts];
+    int32 bodyTimers[MonkeyDude_MaxBodyParts];
     uint8 bodyPartID;
     Vector2 startPos;
     uint8 startDir;
-    int drawY;
-    int moveCount;
-    int nummoves;
-    int throwCount;
-    int angleSpeed;
+    int32 drawY;
+    int32 moveCount;
+    int32 nummoves;
+    int32 throwCount;
+    int32 angleSpeed;
     Animator animator;
     Animator handData;
-    int coconutFrame;
+    int32 coconutFrame;
 } EntityMonkeyDude;
 
 // Object Struct

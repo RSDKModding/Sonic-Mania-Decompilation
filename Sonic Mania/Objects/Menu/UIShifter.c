@@ -9,8 +9,8 @@ void UIShifter_LateUpdate(void)
 {
     RSDK_THIS(UIShifter);
     if (entity->parent) {
-        int x = 0;
-        int y = 0;
+        int32 x = 0;
+        int32 y = 0;
         if (entity->parent->field_D8 > 0) {
             x = entity->parent->field_D8 * entity->shift.x;
             y = entity->parent->field_D8 * entity->shift.y;
@@ -50,11 +50,11 @@ void UIShifter_Unknown(void)
 {
     RSDK_THIS(UIShifter);
 
-    int shiftX = -entity->shift.x;
-    int shiftY = -entity->shift.y;
-    int x      = entity->startPos.x + (entity->field_68 & 0xFFFF0000);
-    int y      = entity->startPos.y + (entity->field_6C & 0xFFFF0000);
-    for (int i = 0; i < entity->parent->buttonCount; ++i) {
+    int32 shiftX = -entity->shift.x;
+    int32 shiftY = -entity->shift.y;
+    int32 x      = entity->startPos.x + (entity->field_68 & 0xFFFF0000);
+    int32 y      = entity->startPos.y + (entity->field_6C & 0xFFFF0000);
+    for (int32 i = 0; i < entity->parent->buttonCount; ++i) {
         entity->parent->buttons[i]->position.x = x;
         entity->parent->buttons[i]->position.y = y;
         x += shiftX;

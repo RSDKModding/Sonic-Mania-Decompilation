@@ -31,7 +31,7 @@ typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(callback);
-    int timeOut;
+    int32 timeOut;
 } EntityTimeAttackMenu;
 
 // Object Struct
@@ -58,9 +58,9 @@ void TimeAttackMenu_DeleteReplayCB(void);
 void TimeAttackMenu_Unknown7(void);
 void TimeAttackMenu_Unknown8(bool32 success);
 void TimeAttackMenu_UnknownCB4_LB(void);
-void TimeAttackMenu_Unknown10(signed int zone, int playerID, signed int act, int encore, int a5, void (*callback)(void));
+void TimeAttackMenu_Unknown10(int32 zone, int32 playerID, int32 act, int32 encore, int32 a5, void (*callback)(void));
 void TimeAttackMenu_Options2CB_ReplayCarousel(void);
-void TimeAttackMenu_AddReplayEntry(int row, bool32 showGhost);
+void TimeAttackMenu_AddReplayEntry(int32 row, bool32 showGhost);
 void TimeAttackMenu_ReplayLoad_CB(bool32 a1);
 void TimeAttackMenu_WatchReplayCB(void);
 void TimeAttackMenu_ChallengeReplayCB(void);

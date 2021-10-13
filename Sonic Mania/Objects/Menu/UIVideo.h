@@ -7,7 +7,7 @@
 typedef struct {
     RSDK_OBJECT
     bool32 playing;
-    int field_8;
+    int32 field_8;
 } ObjectUIVideo;
 
 // Entity Class
@@ -20,13 +20,13 @@ typedef struct {
     bool32 gotoStage;
     TextInfo stageListCategory;
     TextInfo stageListName;
-    int timer;
-    int field_8C;
-    int field_90;
-    int field_94;
-    int field_98;
-    int field_9C;
-    int field_A0;
+    int32 timer;
+    int32 field_8C;
+    int32 field_90;
+    int32 field_94;
+    int32 field_98;
+    int32 field_9C;
+    int32 field_A0;
 } EntityUIVideo;
 
 // Object Struct

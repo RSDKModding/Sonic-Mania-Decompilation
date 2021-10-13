@@ -6,7 +6,7 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    TABLE(int frameArray[24], { 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14, 13 });
+    TABLE(int32 frameArray[24], { 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14, 13 });
     Animator animator;
     uint16 aniFrames;
 } ObjectCylinder;
@@ -16,11 +16,11 @@ typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     uint8 type;
-    int length;
-    int radius;
-    int field_68;
-    int playerFrameIDs[4];
-    int playerAngles[4];
+    int32 length;
+    int32 radius;
+    int32 field_68;
+    int32 playerFrameIDs[4];
+    int32 playerAngles[4];
     Hitbox hitbox1;
     Hitbox hitbox2;
     Hitbox hitbox3;

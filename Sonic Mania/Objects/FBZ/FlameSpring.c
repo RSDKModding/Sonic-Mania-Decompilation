@@ -92,7 +92,7 @@ void FlameSpring_State_Unknown1(void)
                 foreach_active(Player, player)
                 {
                     if (Player_CheckCollisionBox(player, entity, &FlameSpring->hitbox1) == 1) {
-                        int anim = player->playerAnimator.animationID;
+                        int32 anim = player->playerAnimator.animationID;
                         if (anim == ANI_WALK || (anim > ANI_AIRWALK && anim <= ANI_DASH))
                             player->storedAnim = player->playerAnimator.animationID;
                         else
@@ -120,7 +120,7 @@ void FlameSpring_State_Unknown1(void)
             RSDK.PlaySfx(FlameSpring->sfxFlame, false, 255);
         }
 
-        int timer = Zone->timer + entity->offset;
+        int32 timer = Zone->timer + entity->offset;
         if (!entity->type) {
             entity->field_6C.x = entity->position.x - 768 * RSDK.Sin1024(((4 * timer) & 0x1FF) + 256);
             entity->field_74.x = 768 * RSDK.Sin1024(((4 * timer) & 0x1FF) + 256) + entity->position.x;

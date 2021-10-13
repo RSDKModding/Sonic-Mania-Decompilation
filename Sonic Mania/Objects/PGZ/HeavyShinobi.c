@@ -154,14 +154,14 @@ void HeavyShinobi_HandleAfterFX(void)
 {
     RSDK_THIS(HeavyShinobi);
 
-    for (int i = 15; i > 0; --i) {
+    for (int32 i = 15; i > 0; --i) {
         HeavyShinobi->storePos[i] = HeavyShinobi->storePos[i - 1];
     }
     HeavyShinobi->storePos[0].x = entity->position.x;
     HeavyShinobi->storePos[0].y = entity->position.y;
 
-    for (int i = 0; i < 4; ++i) {
-        int storeAnim = entity->animator1.animationID;
+    for (int32 i = 0; i < 4; ++i) {
+        int32 storeAnim = entity->animator1.animationID;
         if (HeavyShinobi->animator1[i].animationID != storeAnim) {
             if (HeavyShinobi->storedAnimIDs[i] != storeAnim) {
                 HeavyShinobi->storedAnimIDs[i] = entity->animator1.animationID;
@@ -172,7 +172,7 @@ void HeavyShinobi_HandleAfterFX(void)
         if (HeavyShinobi->storedIDs[i]) {
             --HeavyShinobi->storedIDs[i];
             if (!HeavyShinobi->storedIDs[i]) {
-                int id = HeavyShinobi->storedAnimIDs[i];
+                int32 id = HeavyShinobi->storedAnimIDs[i];
                 if (id && (id <= 14 || id > 16)) {
                     RSDK.SetSpriteAnimation(HeavyShinobi->aniFrames, HeavyShinobi->storedAnimIDs[i], &HeavyShinobi->animator1[i], false, 0);
                 }
@@ -199,9 +199,9 @@ void HeavyShinobi_HandleSlash(void *p)
     RSDK.SetSpriteAnimation(HeavyShinobi->aniFrames, 4, &entity->animator1, true, 1);
     CREATE_ENTITY(HeavyShinobi, intToVoid(SHINOBI_SLASH), entity->position.x, entity->position.y)->direction = entity->direction;
 
-    int delay = 4;
-    int alpha = 0xC0;
-    for (int i = 3; i >= 0; --i) {
+    int32 delay = 4;
+    int32 alpha = 0xC0;
+    for (int32 i = 3; i >= 0; --i) {
         EntityHeavyShinobi *child = CREATE_ENTITY(HeavyShinobi, intToVoid(SHINOBI_SLASH), entity->position.x, entity->position.y);
         child->animator1.frameDelay += delay;
         child->alpha     = alpha;
@@ -249,8 +249,8 @@ void HeavyShinobi_Explode(void)
         RSDK.PlaySfx(HeavyShinobi->sfxExplosion, false, 255);
 
         if (!(Zone->timer & 0xF)) {
-            int x = RSDK.Rand(-19, 20) << 16;
-            int y = RSDK.Rand(-24, 25) << 16;
+            int32 x = RSDK.Rand(-19, 20) << 16;
+            int32 y = RSDK.Rand(-24, 25) << 16;
             EntityExplosion *explosion =
                 CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + 2), x + entity->position.x, y + entity->position.y);
             explosion->drawOrder = Zone->drawOrderHigh + 2;
@@ -269,7 +269,7 @@ void HeavyShinobi_State_Setup(void)
         Zone->playerBoundActiveB[0] = true;
         Zone->screenBoundsB1[0]     = (entity->position.y >> 16) + 68;
         entity->position.y          = (RSDK_screens->position.y - 192) << 16;
-        for (int i = 0; i < 16; ++i) HeavyShinobi->storePos[i] = entity->position;
+        for (int32 i = 0; i < 16; ++i) HeavyShinobi->storePos[i] = entity->position;
 
         entity->active = ACTIVE_NORMAL;
         entity->state  = HeavyShinobi_State_SetupArena;
@@ -319,7 +319,7 @@ void HeavyShinobi_State_Unknown1(void)
     HeavyShinobi_HandleAfterFX();
     RSDK.ProcessAnimation(&entity->animator1);
     RSDK.ProcessAnimation(&entity->animator2);
-    for (int i = 0; i < 4; ++i) RSDK.ProcessAnimation(&HeavyShinobi->animator1[i]);
+    for (int32 i = 0; i < 4; ++i) RSDK.ProcessAnimation(&HeavyShinobi->animator1[i]);
     entity->direction = RSDK_GET_ENTITY(SLOT_PLAYER1, Player)->position.x >= entity->position.x;
 
     EntityPlayer *player = Player_Unknown2();
@@ -339,7 +339,7 @@ void HeavyShinobi_State_Unknown2(void)
     HeavyShinobi_HandleAfterFX();
     RSDK.ProcessAnimation(&entity->animator1);
     RSDK.ProcessAnimation(&entity->animator2);
-    for (int i = 0; i < 4; ++i) RSDK.ProcessAnimation(&HeavyShinobi->animator1[i]);
+    for (int32 i = 0; i < 4; ++i) RSDK.ProcessAnimation(&HeavyShinobi->animator1[i]);
     if (entity->animator1.frameID == 12)
         RSDK.SetSpriteAnimation(HeavyShinobi->aniFrames, 5, &entity->animator2, false, 0);
 
@@ -376,7 +376,7 @@ void HeavyShinobi_State_Unknown3(void)
     RSDK_THIS(HeavyShinobi);
 
     HeavyShinobi_HandleAfterFX();
-    for (int i = 0; i < 4; ++i) RSDK.ProcessAnimation(&HeavyShinobi->animator1[i]);
+    for (int32 i = 0; i < 4; ++i) RSDK.ProcessAnimation(&HeavyShinobi->animator1[i]);
     RSDK.ProcessAnimation(&entity->animator1);
     entity->position.x += entity->velocity.x;
     entity->position.y += entity->velocity.y;
@@ -397,7 +397,7 @@ void HeavyShinobi_State_Unknown3(void)
 
     if (!--entity->timer) {
         if (!HeavyShinobi->activeShurikens) {
-            int count = 0;
+            int32 count = 0;
             switch (HeavyShinobi->health) {
                 case 1:
                 case 2:
@@ -419,7 +419,7 @@ void HeavyShinobi_State_Unknown3(void)
                 default: break;
             }
 
-            for (int i = 0; i < count; ++i) {
+            for (int32 i = 0; i < count; ++i) {
                 EntityHeavyShinobi *child = CREATE_ENTITY(HeavyShinobi, intToVoid(SHINOBI_SHURIKEN), entity->position.x, entity->position.y);
                 child->direction          = FLIP_NONE;
                 child->animator1.frameID  = RSDK.Rand(0, 8);
@@ -473,7 +473,7 @@ void HeavyShinobi_State_Unknown3(void)
                     entity->velocity.x = 0x20000;
                 }
                 entity->velocity.y  = -0x40000;
-                int angle           = RSDK.ATan2(player->position.x - entity->position.x, player->position.y - entity->position.y);
+                int32 angle           = RSDK.ATan2(player->position.x - entity->position.x, player->position.y - entity->position.y);
                 player->velocity.x  = 0x380 * RSDK.Cos256(angle);
                 player->velocity.y  = 0x380 * RSDK.Sin256(angle);
                 entity->timer       = 180;
@@ -600,7 +600,7 @@ void HeavyShinobi_State_Finished(void)
     HeavyShinobi_HandleAfterFX();
     RSDK.ProcessAnimation(&entity->animator1);
     RSDK.ProcessAnimation(&entity->animator2);
-    for (int i = 0; i < 4; ++i) RSDK.ProcessAnimation(&HeavyShinobi->animator1[i]);
+    for (int32 i = 0; i < 4; ++i) RSDK.ProcessAnimation(&HeavyShinobi->animator1[i]);
 
     entity->position.y += entity->velocity.y;
     entity->velocity.y += 0x2800;
@@ -623,7 +623,7 @@ void HeavyShinobi_StateDraw_Unknown1(void)
     entity->inkEffect = INK_ALPHA;
     entity->alpha     = 0x60;
 
-    for (int i = 3; i >= 0; --i) {
+    for (int32 i = 3; i >= 0; --i) {
         RSDK.DrawSprite(&HeavyShinobi->animator1[i], &HeavyShinobi->storePos[i << 2], false);
         entity->alpha += 0x20;
     }
@@ -688,13 +688,13 @@ void HeavyShinobi_State2_Unknown1(void)
                 }
 
 #if RETRO_USE_PLUS
-                int anim = player->playerAnimator.animationID;
+                int32 anim = player->playerAnimator.animationID;
                 if (player->characterID == ID_MIGHTY && (anim == ANI_CROUCH || anim == ANI_JUMP || anim == ANI_SPINDASH || anim == ANI_DROPDASH)) {
                     if (!player->uncurlTimer) {
                         RSDK.PlaySfx(Player->sfx_PimPom, false, 255);
                         player->uncurlTimer = 30;
                     }
-                    int angle           = RSDK.ATan2(player->position.x - entity->position.x, player->position.y - entity->position.y);
+                    int32 angle           = RSDK.ATan2(player->position.x - entity->position.x, player->position.y - entity->position.y);
                     entity->velocity.x  = -0x400 * RSDK.Cos256(angle);
                     entity->velocity.y  = -0x600 * RSDK.Sin256(angle);
                     entity->interaction = false;
@@ -796,7 +796,7 @@ void HeavyShinobi_State2_Unknown3(void)
             RSDK.PlaySfx(HeavyShinobi->sfxExplode, false, 255);
             CREATE_ENTITY(Explosion, intToVoid(2), entity->position.x, entity->position.y)->drawOrder = Zone->drawOrderHigh + 2;
 
-            for (int i = 0; i < 5; ++i) {
+            for (int32 i = 0; i < 5; ++i) {
                 EntityHeavyShinobi *child = CREATE_ENTITY(HeavyShinobi, intToVoid(SHINOBI_3), entity->position.x, entity->position.y);
                 child->rotation           = (entity->animator1.frameID & 0xFFFFFFFE) << 6;
                 child->direction          = entity->direction;
@@ -874,13 +874,13 @@ void HeavyShinobi_State3_Unknown1(void)
         {
             if (Player_CheckCollisionTouch(player, entity, &HeavyShinobi->hitbox7) && player->state != Ice_State_FrozenPlayer) {
 #if RETRO_USE_PLUS
-                int anim = player->playerAnimator.animationID;
+                int32 anim = player->playerAnimator.animationID;
                 if (player->characterID == ID_MIGHTY && (anim == ANI_CROUCH || anim == ANI_JUMP || anim == ANI_SPINDASH || anim == ANI_DROPDASH)) {
                     if (!player->uncurlTimer) {
                         RSDK.PlaySfx(Player->sfx_PimPom, false, 255);
                         player->uncurlTimer = 30;
                     }
-                    int angle           = RSDK.ATan2(player->position.x - entity->position.x, player->position.y - entity->position.y);
+                    int32 angle           = RSDK.ATan2(player->position.x - entity->position.x, player->position.y - entity->position.y);
                     entity->velocity.x  = -0x400 * RSDK.Cos256(angle);
                     entity->velocity.y  = -0x600 * RSDK.Sin256(angle);
                     entity->interaction = false;
@@ -935,8 +935,8 @@ void HeavyShinobi_State4_Unknown2(void)
         if (Player_CheckCollisionBox(player, entity, &HeavyShinobi->hitbox6)) {
             Hitbox *playerHitbox = Player_GetHitbox(player);
 
-            int left  = 0;
-            int right = 0;
+            int32 left  = 0;
+            int32 right = 0;
             if (entity->timer) {
                 left  = HeavyShinobi->hitbox6.left;
                 right = playerHitbox->right;
@@ -951,9 +951,9 @@ void HeavyShinobi_State4_Unknown2(void)
 
     if (HeavyShinobi->health == 0xFF) {
         RSDK.PlaySfx(HeavyShinobi->sfxExplode, false, 255);
-        for (int i = 0; i < 0x80; ++i) {
-            int x = RSDK.Rand(-64, 65) << 16;
-            int y = RSDK.Rand(-80, 81) << 16;
+        for (int32 i = 0; i < 0x80; ++i) {
+            int32 x = RSDK.Rand(-64, 65) << 16;
+            int32 y = RSDK.Rand(-80, 81) << 16;
 
             EntityIce *ice = CREATE_ENTITY(Ice, intToVoid(3), x + entity->position.x, y + entity->position.y);
             RSDK.SetSpriteAnimation(WoodChipper->aniFrames, 1, &ice->animator1, true, 0);

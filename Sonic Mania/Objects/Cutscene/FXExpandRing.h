@@ -12,12 +12,12 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    int timer;
-    int expandSpeed;
-    int colour;
-    int expandMax;
-    int innerRadius;
-    int outerRadius;
+    int32 timer;
+    int32 expandSpeed;
+    int32 colour;
+    int32 expandMax;
+    int32 innerRadius;
+    int32 outerRadius;
     Entity *parent;
     Vector2 posOffset;
 } EntityFXExpandRing;

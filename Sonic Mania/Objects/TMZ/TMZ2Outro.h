@@ -16,7 +16,7 @@ typedef struct {
     uint16 value8;
     uint16 value9;
     uint8 value10;
-    int value11;
+    int32 value11;
 } ObjectTMZ2Outro;
 
 // Entity Class

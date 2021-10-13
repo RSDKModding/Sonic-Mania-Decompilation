@@ -21,7 +21,7 @@ typedef struct {
     uint8 startDir;
     uint8 activeOrbs;
     Vector2 positions[Sol_MaxFlameOrbs];
-    int field_88;
+    int32 field_88;
     bool32 isFlameFX;
     bool32 fireOrbs;
     Animator animator1;

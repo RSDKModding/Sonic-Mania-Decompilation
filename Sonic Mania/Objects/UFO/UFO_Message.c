@@ -34,7 +34,7 @@ void UFO_Message_Create(void *data)
         entity->drawOrder = 12;
         entity->state     = UFO_Message_Unknown1;
 
-        int type = voidToInt(data);
+        int32 type = voidToInt(data);
         RSDK.SetSpriteAnimation(UFO_Message->spriteIndex, 4, &entity->data1, true, 2 * type);
         RSDK.SetSpriteAnimation(UFO_Message->spriteIndex, 4, &entity->animator2, true, 2 * type + 1);
         entity->timer = 320;

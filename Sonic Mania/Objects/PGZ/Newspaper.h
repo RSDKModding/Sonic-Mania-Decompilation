@@ -19,14 +19,14 @@ typedef struct {
     StateMachine(state);
     Hitbox hitbox;
     uint8 type;
-    int timer;
+    int32 timer;
     Animator animator;
 #else
     StateMachine(state);
     StateMachine(stateCollide);
-    int type;
+    int32 type;
     Vector2 amplitude;
-    int node;
+    int32 node;
     bool32 hasTension;
     int8 frameID;
     uint8 collision;
@@ -34,15 +34,15 @@ typedef struct {
     Vector2 centerPos;
     Vector2 drawPos;
     Vector2 collisionOffset;
-    int stood;
-    int collapseDelay;
-    int stoodAngle;
+    int32 stood;
+    int32 collapseDelay;
+    int32 stoodAngle;
     uint8 stoodPlayers;
     uint8 pushPlayersL;
     uint8 pushPlayersR;
     Hitbox hitbox;
     Animator animator;
-    int childCount;
+    int32 childCount;
 #endif
 } EntityNewspaper;
 

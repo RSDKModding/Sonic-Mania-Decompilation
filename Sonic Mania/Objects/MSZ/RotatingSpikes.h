@@ -14,12 +14,12 @@ typedef struct {
     RSDK_ENTITY
     Animator animator1;
     Animator animator2;
-    int pivotRadius;
-    int spikeRadius;
-    int spikeCount;
-    int rotSpeed;
-    int angleOffset;
-    int priority;
+    int32 pivotRadius;
+    int32 spikeRadius;
+    int32 spikeCount;
+    int32 rotSpeed;
+    int32 angleOffset;
+    int32 priority;
 } EntityRotatingSpikes;
 
 // Object Struct

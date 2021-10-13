@@ -41,19 +41,19 @@ void OOZSetup_StaticUpdate(void)
     OOZSetup->value9 = 0;
     foreach_active(Player, player)
     {
-        int playerID = RSDK.GetEntityID(player);
+        int32 playerID = RSDK.GetEntityID(player);
         if (player->state != Player_State_None) {
             Hitbox *playerHitbox = Player_GetHitbox(player);
             uint16 tile =
                 RSDK.GetTileInfo(Zone->fgLow, player->position.x >> 20, ((playerHitbox->bottom << 16) + player->position.y - 0x10000) >> 20);
             if (tile == 0xFFFF)
                 tile = RSDK.GetTileInfo(Zone->fgHigh, player->position.x >> 20, ((playerHitbox->bottom << 16) + player->position.y - 0x10000) >> 20);
-            int behaviour = RSDK.GetTileBehaviour(tile, player->collisionPlane);
+            int32 behaviour = RSDK.GetTileBehaviour(tile, player->collisionPlane);
 
             if (behaviour) {
                 if (player->shield == SHIELD_FIRE && player->superState != SUPERSTATE_SUPER && behaviour != 4) {
-                    int tx = (player->position.x & 0xFFF00000) + 0x70000;
-                    int ty = ((playerHitbox->bottom + 8) << 16) + player->position.y;
+                    int32 tx = (player->position.x & 0xFFF00000) + 0x70000;
+                    int32 ty = ((playerHitbox->bottom + 8) << 16) + player->position.y;
                     if (behaviour == 1) {
                         if (OOZSetup_Unknown6((ty & 0xFFF00000) - 0xC0000, tx, player->angle)) {
                             EntitySol *sol  = CREATE_ENTITY(Sol, intToVoid(1), tx - 0x10000, (ty & 0xFFF00000) - 0xC0000);
@@ -217,7 +217,7 @@ void OOZSetup_StageLoad(void)
     OOZSetup->aniTiles = RSDK.LoadSpriteSheet("OOZ/AniTiles.gif", SCOPE_STAGE);
 
     OOZSetup->bgPtr = RSDK.GetSceneLayer(0);
-    for (int i = 0; i < 0x400; ++i) {
+    for (int32 i = 0; i < 0x400; ++i) {
         OOZSetup->bgPtr->deformationData[i] = OOZSetup->deformData[i & 0x3F];
     }
     OOZSetup->fadeTimer     = 0;
@@ -278,7 +278,7 @@ void OOZSetup_StageLoad(void)
     }
 #endif
 
-    int id = Soundboard_LoadSFX("OOZ/Slide.wav", 12382, OOZSetup_CheckCB_Slide, NULL);
+    int32 id = Soundboard_LoadSFX("OOZ/Slide.wav", 12382, OOZSetup_CheckCB_Slide, NULL);
     if (id >= 0)
         Soundboard->sfxUnknown8[id] = 30;
 
@@ -293,14 +293,14 @@ void OOZSetup_StageLoad(void)
 
 bool32 OOZSetup_CheckCB_Flame(void)
 {
-    int count = 0;
+    int32 count = 0;
     foreach_active(Sol, sol)
     {
         if (sol->isFlameFX)
             count++;
     }
 
-    for (int i = 0; i < OOZSetup->flameCount; ++i) {
+    for (int32 i = 0; i < OOZSetup->flameCount; ++i) {
         if (OOZSetup->flameTimerPtrs[i])
             count++;
     }
@@ -309,7 +309,7 @@ bool32 OOZSetup_CheckCB_Flame(void)
 
 bool32 OOZSetup_CheckCB_Slide(void)
 {
-    int count = 0;
+    int32 count = 0;
     foreach_active(Player, player)
     {
         if (!player->sidekick) {
@@ -325,7 +325,7 @@ bool32 OOZSetup_CheckCB_Swim(void) { return OOZSetup->value9 > 0; }
 void OOZSetup_Unknown4(void)
 {
     RSDK_THIS(OOZSetup);
-    for (int i = 0; i < OOZSetup->flameCount; ++i) {
+    for (int32 i = 0; i < OOZSetup->flameCount; ++i) {
         if (OOZSetup->flameTimerPtrs[i]) {
             entity->rotation                = 2 * (OOZSetup->flamePositions[i].x & 0xFF);
             OOZSetup->flameAnimator.frameID = OOZSetup->flamePositions[i].y & 0xFF;
@@ -337,7 +337,7 @@ void OOZSetup_Unknown4(void)
 void OOZSetup_Unknown5(void)
 {
     RSDK_THIS(OOZSetup);
-    for (int i = 0; i < OOZSetup->flameCount; ++i) {
+    for (int32 i = 0; i < OOZSetup->flameCount; ++i) {
         if (OOZSetup->flameTimerPtrs[i]) {
             --(*OOZSetup->flameTimerPtrs[i]);
             if (!*OOZSetup->flameTimerPtrs[i]) {
@@ -349,8 +349,8 @@ void OOZSetup_Unknown5(void)
                 sol->state = Sol_Unknown10;
             }
             else {
-                int frame      = OOZSetup->flamePositions[i].y & 0xFF;
-                int frameTimer = (OOZSetup->flamePositions[i].y >> 8) & 0xFF;
+                int32 frame      = OOZSetup->flamePositions[i].y & 0xFF;
+                int32 frameTimer = (OOZSetup->flamePositions[i].y >> 8) & 0xFF;
                 if (frameTimer >= 3) {
                     frame++;
                     frameTimer = 0;
@@ -374,13 +374,13 @@ void OOZSetup_Unknown5(void)
     }
 }
 
-bool32 OOZSetup_Unknown6(int posY, int posX, int angle)
+bool32 OOZSetup_Unknown6(int32 posY, int32 posX, int32 angle)
 {
     RSDK_THIS(OOZSetup);
-    int pos = (posX >> 20) + (posY >> 20 << 10);
+    int32 pos = (posX >> 20) + (posY >> 20 << 10);
     if (pos <= 0x1FFFF) {
         if (!OOZSetup->flameTimers[pos]) {
-            int i = 0;
+            int32 i = 0;
             for (; i < 399; ++i) {
                 if (!OOZSetup->flameTimerPtrs[i])
                     break;
@@ -419,8 +419,8 @@ void OOZSetup_GenericTriggerCB(void)
 void OOZSetup_PlayerState_OilPool(void)
 {
     RSDK_THIS(Player);
-    int top              = entity->topSpeed;
-    int acc              = entity->acceleration;
+    int32 top              = entity->topSpeed;
+    int32 acc              = entity->acceleration;
     entity->topSpeed     = (entity->topSpeed >> 1) + (entity->topSpeed >> 3);
     entity->acceleration = (entity->acceleration >> 1) + (entity->acceleration >> 3);
 
@@ -445,10 +445,10 @@ void OOZSetup_PlayerState_OilPool(void)
 void OOZSetup_PlayerState_OilStrip(void)
 {
     RSDK_THIS(Player);
-    int acc  = entity->acceleration;
-    int top  = entity->topSpeed;
-    int skid = entity->skidSpeed;
-    int dec  = entity->deceleration;
+    int32 acc  = entity->acceleration;
+    int32 top  = entity->topSpeed;
+    int32 skid = entity->skidSpeed;
+    int32 dec  = entity->deceleration;
 
     Animator *animator = &entity->playerAnimator;
     entity->position.y += 0x10000;
@@ -531,8 +531,8 @@ void OOZSetup_PlayerState_OilSlide(void)
 void OOZSetup_PlayerState_OilFall(void)
 {
     RSDK_THIS(Player);
-    int top              = entity->topSpeed;
-    int acc              = entity->acceleration;
+    int32 top              = entity->topSpeed;
+    int32 acc              = entity->acceleration;
     entity->topSpeed     = (entity->topSpeed >> 2) + (entity->topSpeed >> 3);
     entity->acceleration = (entity->acceleration >> 2) + (entity->acceleration >> 3);
 

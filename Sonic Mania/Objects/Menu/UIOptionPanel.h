@@ -12,20 +12,20 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    int panelSize;
-    int topListID;
-    int topFrameID;
-    int botListID;
-    int botFrameID;
+    int32 panelSize;
+    int32 topListID;
+    int32 topFrameID;
+    int32 botListID;
+    int32 botFrameID;
     bool32 botAlignRight;
     bool32 botHidden;
-    int field_74;
-    int field_78;
+    int32 field_74;
+    int32 field_78;
     Vector2 field_7C;
     Vector2 drawPosTop;
     Vector2 drawPosBottom;
-    int field_94;
-    int field_98;
+    int32 field_94;
+    int32 field_98;
     Animator animator;
     Animator animator2;
     uint16 textSpriteIndex;

@@ -92,7 +92,7 @@ void Announcer_StartCountdown(void)
     announcer->scale.x   = 0x200;
     announcer->scale.y   = 0x200;
 }
-void Announcer_AnnounceGoal(int screen)
+void Announcer_AnnounceGoal(int32 screen)
 {
     EntityAnnouncer *entity = CREATE_ENTITY(Announcer, NULL, 0, 0);
     entity->state           = Announcer_Unknown6;
@@ -114,7 +114,7 @@ void Announcer_Unknown3(void)
     if (entity->playerID > 0) {
         entity->inkEffect = INK_NONE;
 
-        int frame                         = 0;
+        int32 frame                         = 0;
         EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
         switch (session->characterFlags[RSDK_sceneInfo->currentScreenID]) {
             case ID_TAILS: frame = 1; break;
@@ -161,7 +161,7 @@ void Announcer_Unknown5(void)
                 RSDK.SetSpriteAnimation(Announcer->spriteIndex, 1, &entity->animator, true, 3);
             }
 
-            int val = 0;
+            int32 val = 0;
             if (entity->timer - 15 > 0)
                 val = (entity->timer - 15) << 9;
             entity->alpha = 512 - val / 45;
@@ -227,8 +227,8 @@ void Announcer_Unknown6(void)
     }
     else {
         entity->visible = true;
-        int t           = 16 * entity->timer;
-        int val         = -0x10000 * RSDK_screens->width;
+        int32 t           = 16 * entity->timer;
+        int32 val         = -0x10000 * RSDK_screens->width;
         if (t > 0) {
             if (t < 256)
                 entity->pos.x = val + t * (-val >> 8);

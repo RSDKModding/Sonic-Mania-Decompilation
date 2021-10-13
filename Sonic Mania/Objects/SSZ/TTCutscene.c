@@ -107,10 +107,10 @@ bool32 TTCutscene_CutsceneState_FlyIn(EntityCutsceneSeq *host)
     RSDK_GET_PLAYER(player1, player2, camera);
     unused(camera);
 
-    int scrY  = (RSDK_screens->position.y + RSDK_screens->centerY) << 16;
-    int scrY2 = (RSDK_screens->position.y + RSDK_screens->height + 32) << 16;
+    int32 scrY  = (RSDK_screens->position.y + RSDK_screens->centerY) << 16;
+    int32 scrY2 = (RSDK_screens->position.y + RSDK_screens->height + 32) << 16;
 
-    int timerP1 = host->timer;
+    int32 timerP1 = host->timer;
     if (timerP1) {
         if (timerP1 >= 60) {
             player1->position.y = scrY;
@@ -127,7 +127,7 @@ bool32 TTCutscene_CutsceneState_FlyIn(EntityCutsceneSeq *host)
     player1->velocity.y = 0;
 
     if (player2->objectID == Player->objectID) {
-        int timerP2 = host->timer - 15;
+        int32 timerP2 = host->timer - 15;
         if (timerP2 > 0) {
             if (timerP2 >= 60) {
                 player2->position.y = scrY;
@@ -163,10 +163,10 @@ bool32 TTCutscene_CutsceneState_FlyOut(EntityCutsceneSeq *host)
     RSDK_GET_PLAYER(player1, player2, camera);
     unused(camera);
 
-    int scrY  = (RSDK_screens->position.y + RSDK_screens->centerY) << 16;
-    int scrY2 = (RSDK_screens->position.y - 32) << 16;
+    int32 scrY  = (RSDK_screens->position.y + RSDK_screens->centerY) << 16;
+    int32 scrY2 = (RSDK_screens->position.y - 32) << 16;
 
-    int timerP1 = host->timer;
+    int32 timerP1 = host->timer;
     if (timerP1) {
         if (timerP1 >= 60) {
             player1->position.y = scrY2;
@@ -183,7 +183,7 @@ bool32 TTCutscene_CutsceneState_FlyOut(EntityCutsceneSeq *host)
     player1->velocity.y = 0;
 
     if (player2->objectID == Player->objectID) {
-        int timerP2 = host->timer - 15;
+        int32 timerP2 = host->timer - 15;
         if (timerP2 > 0) {
             if (timerP2 >= 60) {
                 player2->position.y = scrY2;

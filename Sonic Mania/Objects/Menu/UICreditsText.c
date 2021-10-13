@@ -19,7 +19,7 @@ void UICreditsText_Draw(void)
 
     drawPos.x = entity->position.x;
     drawPos.y = entity->position.y;
-    int width = RSDK.GetStringWidth(UICreditsText->aniFrames, entity->listID, &entity->text, 0, entity->text.textLength, 0);
+    int32 width = RSDK.GetStringWidth(UICreditsText->aniFrames, entity->listID, &entity->text, 0, entity->text.textLength, 0);
     drawPos.y += 0x40000;
     if (entity->hasShape)
         UIWidgets_Unknown7(entity->scaleTimer >> 4, (entity->scaleTimer * (width + 16)) >> 8, 16, 0, 0, 0, drawPos.x, drawPos.y);
@@ -57,7 +57,7 @@ void UICreditsText_Create(void *data)
 
 void UICreditsText_StageLoad(void) { UICreditsText->aniFrames = RSDK.LoadSpriteAnimation("UI/CreditsText.bin", SCOPE_STAGE); }
 
-void UICreditsText_SetText(int animID, EntityUICreditsText *label, TextInfo *text)
+void UICreditsText_SetText(int32 animID, EntityUICreditsText *label, TextInfo *text)
 {
     RSDK.SetSpriteAnimation(UICreditsText->aniFrames, animID, &label->animator, true, 0);
     label->listID    = animID;
@@ -83,8 +83,8 @@ void UICreditsText_State_Setup(void)
             entity->state            = UICreditsText_State_ScaleIn;
         }
         else if (entity->isHeading) {
-            int yOffset = 0x280000;
-            for (int c = 0; c < entity->text.textLength; ++c) {
+            int32 yOffset = 0x280000;
+            for (int32 c = 0; c < entity->text.textLength; ++c) {
                 entity->charPositions[c].y = yOffset;
                 entity->charOffsets[c]     = -0x80000;
                 yOffset += 0x100000;
@@ -106,8 +106,8 @@ void UICreditsText_State_SetupCharPos(void)
     RSDK_THIS(UICreditsText);
     entity->visible = true;
 
-    int yOffset = 0x280000;
-    for (int c = 0; c < entity->text.textLength; ++c) {
+    int32 yOffset = 0x280000;
+    for (int32 c = 0; c < entity->text.textLength; ++c) {
         entity->charPositions[c].y = yOffset;
         entity->charOffsets[c]     = -0x80000;
         yOffset += 0x100000;
@@ -122,7 +122,7 @@ void UICreditsText_State_MoveChars(void)
 {
     RSDK_THIS(UICreditsText);
 
-    for (int c = 0; c < entity->text.textLength; ++c) {
+    for (int32 c = 0; c < entity->text.textLength; ++c) {
         if (entity->charPositions[c].y < 0)
             entity->charOffsets[c] += 0x28000;
         entity->charPositions[c].y += entity->charOffsets[c];
@@ -181,7 +181,7 @@ void UICreditsText_SetupIdleDelay(void)
             entity->state  = UICreditsText_State_ScaleOut;
         }
         else if (entity->isHeading) {
-            for (int c = 0; c < entity->text.textLength; ++c) {
+            for (int32 c = 0; c < entity->text.textLength; ++c) {
                 entity->charTimers[c]  = 2 * (entity->text.textLength - c - 1);
                 entity->charOffsets[c] = -0x80000;
             }
@@ -197,7 +197,7 @@ void UICreditsText_State_Idle(void)
 {
     RSDK_THIS(UICreditsText);
 
-    for (int c = 0; c < entity->text.textLength; ++c) {
+    for (int32 c = 0; c < entity->text.textLength; ++c) {
         if (entity->charTimers[c] <= 0) {
             entity->charOffsets[c] += 0x28000;
             entity->charPositions[c].y += entity->charOffsets[c];

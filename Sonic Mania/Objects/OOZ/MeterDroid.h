@@ -6,15 +6,15 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    TABLE(int debrisSpeeds[21], { 5, 0, 0, -0x20000, -0x28000, 1, 0, 0x20000, -0x20000, 2, 0, -0x28000, -0x10000, 3, 0, 0x28000, -0x10000, 4, 0, 0x10000, 0x10000 });
+    TABLE(int32 debrisSpeeds[21], { 5, 0, 0, -0x20000, -0x28000, 1, 0, 0x20000, -0x20000, 2, 0, -0x28000, -0x10000, 3, 0, 0x28000, -0x10000, 4, 0, 0x10000, 0x10000 });
     Hitbox hitbox1;
     Hitbox hitbox2;
     Hitbox hitbox3;
-    int boundsL;
-    int boundsR;
-    int startX;
-    int boundsT;
-    int boundsB;
+    int32 boundsL;
+    int32 boundsR;
+    int32 startX;
+    int32 boundsT;
+    int32 boundsB;
     uint16 sfxHit;
     uint16 sfxExplosion;
     uint16 sfxDestroy;
@@ -30,19 +30,19 @@ typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
-    int timer;
-    int invincibilityTimer;
-    int health;
-    int field_6C;
+    int32 timer;
+    int32 invincibilityTimer;
+    int32 health;
+    int32 field_6C;
     Vector2 field_70;
-    int field_78;
-    int field_7C;
-    int field_80;
-    int field_84;
+    int32 field_78;
+    int32 field_7C;
+    int32 field_80;
+    int32 field_84;
     Vector2 field_88;
     Vector2 field_90;
     Vector2 field_98;
-    int field_A0;
+    int32 field_A0;
     Entity *valvePtr;
     Animator animator1;
     Animator animator2;

@@ -16,11 +16,11 @@ typedef struct {
     RSDK_ENTITY
     uint8 orientation;
     bool32 open;
-    int speed;
+    int32 speed;
     uint8 id;
-    int automatic;
+    int32 automatic;
     EntityDoorTrigger *trigger;
-    int field_70;
+    int32 field_70;
     Vector2 startPos;
     Vector2 offset;
     Vector2 field_84;
@@ -44,6 +44,6 @@ void PSZDoor_EditorLoad(void);
 void PSZDoor_Serialize(void);
 
 // Extra Entity Functions
-int PSZDoor_Unknown1(void);
+int32 PSZDoor_Unknown1(void);
 
 #endif //!OBJ_PSZDOOR_H

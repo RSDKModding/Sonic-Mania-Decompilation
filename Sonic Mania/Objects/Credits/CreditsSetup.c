@@ -71,7 +71,7 @@ void CreditsSetup_StaticUpdate(void)
             }
         }
 
-        int move = 0x10000;
+        int32 move = 0x10000;
         if (RSDK_controller->keyA.down || RSDK_controller->keyB.down || RSDK_controller->keyC.down)
             move = 0x80000;
         foreach_all(UICreditsText, text)
@@ -111,17 +111,17 @@ void CreditsSetup_LoadCreditsStrings(void)
     RSDK.LoadStrings(&buffer, "Credits.txt", 8);
     RSDK.SetText(&info, "", 0x80);
 
-    int offset = (RSDK_screens->height + 128) << 16;
-    for (int i = 0; RSDK.SplitStringList(&info, &buffer, i, 1); ++i) {
+    int32 offset = (RSDK_screens->height + 128) << 16;
+    for (int32 i = 0; RSDK.SplitStringList(&info, &buffer, i, 1); ++i) {
         if (info.textLength <= 4) {
             offset += 0x200000;
         }
         else {
-            int type = info.text[1] - '0';
+            int32 type = info.text[1] - '0';
             bool32 hasShape = info.text[2] == 'U';
 
             info.textLength -= 3;
-            for (int c = 0; c < info.textLength; ++c) {
+            for (int32 c = 0; c < info.textLength; ++c) {
                 info.text[c] = info.text[c + 3];
             }
 

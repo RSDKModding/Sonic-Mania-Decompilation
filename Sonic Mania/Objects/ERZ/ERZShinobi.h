@@ -14,15 +14,15 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    int field_5C;
-    int field_60;
-    int timer;
-    int invincibilityTimer;
-    int field_6C;
-    int rotStore;
-    int field_74;
-    int field_78;
-    int field_7C;
+    int32 field_5C;
+    int32 field_60;
+    int32 timer;
+    int32 invincibilityTimer;
+    int32 field_6C;
+    int32 rotStore;
+    int32 field_74;
+    int32 field_78;
+    int32 field_7C;
     Hitbox outerBox;
     Hitbox innerBox;
     Animator animator1;

@@ -7,8 +7,8 @@ void HCZOneWayDoor_Update(void)
     RSDK_THIS(HCZOneWayDoor);
 
     bool32 flag   = false;
-    int storeX = entity->position.x;
-    int storeY = entity->position.y;
+    int32 storeX = entity->position.x;
+    int32 storeY = entity->position.y;
 
     foreach_active(Player, player) {
         entity->position.x = storeX;
@@ -173,7 +173,7 @@ void HCZOneWayDoor_DrawSprites(void)
     drawPos.x  = entity->position.x;
     drawPos.y  = entity->position.y;
 
-    int offsetX = 0, offsetY = 0;
+    int32 offsetX = 0, offsetY = 0;
     if (!entity->orientation || entity->orientation == 2) {
         drawPos.y = (entity->posUnknown3.y >> 1) + entity->position.y - (entity->posUnknown2.y >> 1);
         offsetY   = entity->posUnknown3.y;
@@ -184,7 +184,7 @@ void HCZOneWayDoor_DrawSprites(void)
 
     }
     
-    for (int i = 0; i < entity->length; ++i) {
+    for (int32 i = 0; i < entity->length; ++i) {
         RSDK.DrawSprite(&entity->animator, &drawPos, false);
         drawPos.x += offsetX;
         drawPos.y += offsetY;

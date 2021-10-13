@@ -6,13 +6,13 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    TABLE(int value1[10], { 3, 12, -0x20000, -0x10000, 13, 0, -0x10000, 14, 0x20000, -0x10000 });
-    TABLE(int value2[13], { 4, 8, -0x20000, -0x10000, 9, -0x10000, -0x10000, 10, 0x10000, -0x10000, 11, 0x20000, -0x10000 });
-    TABLE(int value3[25], { 8, 0, -0x20000, -0x10000, 1, -0x10000, -0x10000, 2, 0x10000, -0x10000, 3, 0x20000, -0x10000, 4, -0x20000, -0x8000,  5, -0x10000, -0x8000,  6, 0x10000, -0x8000, 7, 0x20000, -0x8000 });
-    int value4[4];
+    TABLE(int32 value1[10], { 3, 12, -0x20000, -0x10000, 13, 0, -0x10000, 14, 0x20000, -0x10000 });
+    TABLE(int32 value2[13], { 4, 8, -0x20000, -0x10000, 9, -0x10000, -0x10000, 10, 0x10000, -0x10000, 11, 0x20000, -0x10000 });
+    TABLE(int32 value3[25], { 8, 0, -0x20000, -0x10000, 1, -0x10000, -0x10000, 2, 0x10000, -0x10000, 3, 0x20000, -0x10000, 4, -0x20000, -0x8000,  5, -0x10000, -0x8000,  6, 0x10000, -0x8000, 7, 0x20000, -0x8000 });
+    int32 value4[4];
     bool32 isRumbling;
-    int value6;
-    int value7;
+    int32 value6;
+    int32 value7;
     uint16 sfxBossHit;
     uint16 sfxExplosion2;
     uint16 sfxMagnet;
@@ -25,12 +25,12 @@ typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
-    int type;
-    int timer2;
-    int invincibilityTimer;
-    int timer;
+    int32 type;
+    int32 timer2;
+    int32 invincibilityTimer;
+    int32 timer;
     Entity *eggman;
-    int field_74;
+    int32 field_74;
     Animator animator1;
     Animator animator2;
     Animator animator3;
@@ -62,7 +62,7 @@ void BigSqueeze_CheckPlayerCollisions2(void);
 void BigSqueeze_Hit(void);
 
 void BigSqueeze_Unknown6(void);
-void BigSqueeze_Unknown7(int *debrisData);
+void BigSqueeze_Unknown7(int32 *debrisData);
 
 void BigSqueeze_StateDraw2_Unknown1(void);
 void BigSqueeze_StateDraw3_Unknown1(void);

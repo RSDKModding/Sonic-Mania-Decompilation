@@ -15,9 +15,9 @@ typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateCollide);
-    int type;
+    int32 type;
     Vector2 amplitude;
-    int buttonTag;
+    int32 buttonTag;
     bool32 hasTension;
     uint8 autoOpen;
     uint8 collision;
@@ -25,15 +25,15 @@ typedef struct {
     Vector2 centerPos;
     Vector2 drawPos;
     Vector2 collisionOffset;
-    int stood;
-    int collapseDelay;
-    int stoodAngle;
+    int32 stood;
+    int32 collapseDelay;
+    int32 stoodAngle;
     uint8 stoodPlayers;
     uint8 pushPlayersL;
     uint8 pushPlayersR;
     Hitbox hitbox;
     Animator animator;
-    int childCount;
+    int32 childCount;
     bool32 close;
     EntityButton *buttonPtr;
 } EntityTwistingDoor;

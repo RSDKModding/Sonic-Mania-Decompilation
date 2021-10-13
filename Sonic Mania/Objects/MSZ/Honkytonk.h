@@ -16,8 +16,8 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    int negAngle;
-    int depression;
+    int32 negAngle;
+    int32 depression;
     Animator animator;
 } EntityHonkytonk;
 

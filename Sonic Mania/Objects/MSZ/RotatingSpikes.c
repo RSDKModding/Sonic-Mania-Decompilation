@@ -9,13 +9,13 @@ void RotatingSpikes_Update(void)
     RSDK.ProcessAnimation(&entity->animator2);
     entity->angle  = (entity->angle + entity->rotSpeed) & 0x3FF;
     Hitbox *hitbox = RSDK.GetHitbox(&entity->animator2, 0);
-    int storeX     = entity->position.x;
-    int storeY     = entity->position.y;
+    int32 storeX     = entity->position.x;
+    int32 storeY     = entity->position.y;
 
     foreach_active(Player, player)
     {
-        int radius = entity->spikeRadius + entity->pivotRadius;
-        for (int i = 0; i < entity->spikeCount; ++i) {
+        int32 radius = entity->spikeRadius + entity->pivotRadius;
+        for (int32 i = 0; i < entity->spikeCount; ++i) {
             entity->position.x = storeX + ((radius * RSDK.Cos1024(entity->angle + entity->angleOffset)) << 6);
             entity->position.y = storeY + ((radius * RSDK.Sin1024(entity->angle + entity->angleOffset)) << 6);
             if (Player_CheckCollisionTouch(player, entity, hitbox)
@@ -39,9 +39,9 @@ void RotatingSpikes_StaticUpdate(void) {}
 void RotatingSpikes_Draw(void)
 {
     RSDK_THIS(RotatingSpikes);
-    int radius = entity->spikeRadius + entity->pivotRadius;
+    int32 radius = entity->spikeRadius + entity->pivotRadius;
     RSDK.DrawSprite(&entity->animator1, NULL, false);
-    for (int i = 0; i < entity->spikeCount; ++i) {
+    for (int32 i = 0; i < entity->spikeCount; ++i) {
         Vector2 drawPos;
         drawPos.x = ((radius * RSDK.Cos1024(entity->angleOffset + entity->angle)) << 6) + entity->position.x;
         drawPos.y = ((radius * RSDK.Sin1024(entity->angleOffset + entity->angle)) << 6) + entity->position.y;

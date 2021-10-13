@@ -51,13 +51,13 @@ void SSZ1Intro_StageLoad(void)
     foreach_all(FXRuby, ruby) { SSZ1Intro->fxRuby = ruby; }
 }
 
-void SSZ1Intro_Unknown1(EntityPlayer *player1, EntityCutsceneSeq *host, EntityPlayer *player2, int offset)
+void SSZ1Intro_Unknown1(EntityPlayer *player1, EntityCutsceneSeq *host, EntityPlayer *player2, int32 offset)
 {
     EntityPlayer *players[2];
     players[0] = player1;
     players[1] = player2;
 
-    for (int i = 0, angle = 0; angle < 0x80; angle += 0x40, ++i) {
+    for (int32 i = 0, angle = 0; angle < 0x80; angle += 0x40, ++i) {
         EntityPlayer *playerPtr = players[i];
         if (!playerPtr)
             break;

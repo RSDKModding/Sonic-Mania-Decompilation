@@ -16,12 +16,12 @@ typedef struct {
     StateMachine(state);
     Vector2 startPos;
     uint8 startDir;
-    int field_68;
-    int field_6C;
-    int field_70;
-    int field_74;
-    int field_78;
-    int field_7C;
+    int32 field_68;
+    int32 field_6C;
+    int32 field_70;
+    int32 field_74;
+    int32 field_78;
+    int32 field_7C;
     Animator animator1;
     Animator animator2;
     Animator animator3;

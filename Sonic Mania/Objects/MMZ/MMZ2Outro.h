@@ -15,8 +15,8 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    int timer;
-    int flashTimer;
+    int32 timer;
+    int32 flashTimer;
 } EntityMMZ2Outro;
 
 // Object Struct

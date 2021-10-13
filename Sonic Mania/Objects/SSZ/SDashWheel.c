@@ -29,7 +29,7 @@ void SDashWheel_Update(void)
             else
                 entity->rotateOffset = 32;
         }
-        int dist = minVal(abs(entity->position.x - player->position.x) >> 16, 31);
+        int32 dist = minVal(abs(entity->position.x - player->position.x) >> 16, 31);
 
         hitbox.top    = SDashWheel->heightArray[dist] - 36;
         hitbox.bottom = -4 - hitbox.top;
@@ -47,7 +47,7 @@ void SDashWheel_Update(void)
                     RSDK.SetSpriteAnimation(player->spriteIndex, ANI_JUMP, &player->playerAnimator, false, 0);
                 }
 
-                int angle = RSDK.ATan2(player->position.x - entity->position.x, player->position.y - entity->position.y);
+                int32 angle = RSDK.ATan2(player->position.x - entity->position.x, player->position.y - entity->position.y);
 
                 player->velocity.x = 0x700 * RSDK.Cos256(angle);
                 player->velocity.y = 0x700 * RSDK.Sin256(angle);
@@ -117,7 +117,7 @@ void SDashWheel_StageLoad(void)
 
 bool32 SDashWheel_CheckCB(void)
 {
-    int count = 0;
+    int32 count = 0;
     foreach_active(PlatformControl, control)
     {
         if (control->controller && control->field_6C && control->speed > 0)
@@ -126,7 +126,7 @@ bool32 SDashWheel_CheckCB(void)
     return count > 0;
 }
 
-void SDashWheel_UpdateCB(int sfx)
+void SDashWheel_UpdateCB(int32 sfx)
 {
     if (!(Soundboard->sfxUnknown6[sfx] % 6))
         Camera_ShakeScreen(0, 0, 2);

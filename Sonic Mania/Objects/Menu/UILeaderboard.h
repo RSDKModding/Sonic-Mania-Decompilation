@@ -12,27 +12,27 @@ typedef struct {
 // Entity Class
 typedef struct {
     MANIA_UI_ITEM_BASE
-    int field_104;
+    int32 field_104;
     LeaderboardEntry *leaderboardEntry;
     TextInfo text1[5];
     TextInfo rankText[5];
     TextInfo nameText[5];
-    int times[5];
-    int ranks[5];
-    int isUser[5];
+    int32 times[5];
+    int32 ranks[5];
+    int32 isUser[5];
     uint8 playerID;
     uint8 zoneID;
     uint8 actID;
-    int timer2;
+    int32 timer2;
     uint8 editorFlip;
     bool32 field_1CC;
-    int entryOffset;
-    int entryLength;
+    int32 entryOffset;
+    int32 entryLength;
 #if !RETRO_USE_PLUS
-    int entryIsUser;
-    int taRecord;
+    int32 entryIsUser;
+    int32 taRecord;
 #endif
-    int field_1D8;
+    int32 field_1D8;
     StateMachine(yPressCB);
     TextInfo field_1E0;
     Animator animator1;
@@ -75,8 +75,8 @@ void UILeaderboard_LoadEntries(EntityUILeaderboard *entity);
 void UILeaderboard_DrawPrimitives(void);
 void UILeaderboard_DrawEntries(void);
 void UILeaderboard_Unknown3(void);
-void UILeaderboard_DrawTime(int mins, int secs, int millisecs, int x, int y);
-void UILeaderboard_DrawRank(int id);
+void UILeaderboard_DrawTime(int32 mins, int32 secs, int32 millisecs, int32 x, int32 y);
+void UILeaderboard_DrawRank(int32 id);
 
 void UILeaderboard_State_Unknown1(void);
 void UILeaderboard_State_Unknown2(void);

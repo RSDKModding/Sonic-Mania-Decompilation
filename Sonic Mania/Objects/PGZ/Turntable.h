@@ -13,14 +13,14 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     uint8 type;
-    int angleVel;
+    int32 angleVel;
     uint8 activePlayers;
     Vector2 size;
     Vector2 origin;
-    int field_74;
-    int field_78[4];
-    int field_88[4];
-    int field_98[4];
+    int32 field_74;
+    int32 field_78[4];
+    int32 field_88[4];
+    int32 field_98[4];
     Hitbox hitbox;
     Animator animator;
 } EntityTurntable;

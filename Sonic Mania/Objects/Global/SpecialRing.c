@@ -77,7 +77,7 @@ void SpecialRing_StageLoad(void)
         else {
             entity->enabled = !(SaveGame->saveRAM->collectedSpecialRings & (1 << ((16 * Zone->actID) + entity->id - 1)));
             if (globals->specialRingID == entity->id) {
-                for (int p = 0; p < Player->playerCount; ++p) {
+                for (int32 p = 0; p < Player->playerCount; ++p) {
                     EntityPlayer *player = (EntityPlayer *)RSDK.GetEntityByID(p);
 
                     player->position.x = entity->position.x;
@@ -94,7 +94,7 @@ void SpecialRing_StageLoad(void)
                             else
                                 player2->position.x -= 0x100000;
 
-                            for (int f = 0; f < 0x10; ++f) {
+                            for (int32 f = 0; f < 0x10; ++f) {
                                 Player->flyCarryPositions[f].x = player->position.x;
                                 Player->flyCarryPositions[f].y = player->position.y;
                             }
@@ -145,7 +145,7 @@ void SpecialRing_State_Warp(void)
     RSDK_THIS(SpecialRing);
     RSDK.ProcessAnimation(&entity->warpData);
     if (!(Zone->timer & 3)) {
-        for (int i = 0; i < 3; ++i) {
+        for (int32 i = 0; i < 3; ++i) {
             EntityRing *ring = CREATE_ENTITY(Ring, NULL, (RSDK.Rand(-0x200000, 0x20000) + entity->dword68) + entity->position.x,
                                              entity->position.y + RSDK.Rand(-0x200000, 0x200000));
             ring->state     = Ring_State_Sparkle;
@@ -154,7 +154,7 @@ void SpecialRing_State_Warp(void)
             ring->visible   = 0;
             ring->drawOrder = Zone->drawOrderLow;
             RSDK.SetSpriteAnimation(Ring->spriteIndex, i % 3 + 2, &ring->animator, true, 0);
-            int cnt = ring->animator.frameCount;
+            int32 cnt = ring->animator.frameCount;
             if (ring->animator.animationID == 2) {
                 ring->alpha = 224;
                 cnt >>= 1;

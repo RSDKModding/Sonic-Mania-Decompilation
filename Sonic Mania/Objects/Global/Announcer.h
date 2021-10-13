@@ -45,9 +45,9 @@ typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
-    int timer;
-    int playerID;
-    int screen;
+    int32 timer;
+    int32 playerID;
+    int32 screen;
     Vector2 pos;
     Animator animator;
     Animator animator2;
@@ -69,7 +69,7 @@ void Announcer_Serialize(void);
 
 // Extra Entity Functions
 void Announcer_StartCountdown(void);
-void Announcer_AnnounceGoal(int screen);
+void Announcer_AnnounceGoal(int32 screen);
 void Announcer_Unknown3(void);
 void Announcer_Unknown4(void);
 void Announcer_Unknown5(void);

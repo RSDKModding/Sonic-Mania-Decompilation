@@ -7,10 +7,10 @@
 typedef struct {
     RSDK_OBJECT
     bool32 initialized;
-    int flag;
-    int trackCount;
-    int trackID;
-    int activeTrack;
+    int32 flag;
+    int32 trackCount;
+    int32 trackID;
+    int32 activeTrack;
     Entity *control;
     Entity *labelA;
     Entity *labelB;
@@ -42,7 +42,7 @@ void DASetup_EditorLoad(void);
 void DASetup_Serialize(void);
 
 // Extra Entity Functions
-void DASetup_DisplayTrack(int trackID);
+void DASetup_DisplayTrack(int32 trackID);
 bool32 DASetup_HandleMedallionDebug(void);
 void DASetup_SetupUI(void);
 void DASetup_State_ManageControl(void);

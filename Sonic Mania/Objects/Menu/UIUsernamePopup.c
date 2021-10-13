@@ -46,7 +46,7 @@ void UIUsernamePopup_ShowPopup(void)
 #endif
             RSDK.SetSpriteAnimation(UIWidgets->labelSpriteIndex, 0, &entity->animator, true, 0);
             RSDK.SetSpriteString(UIWidgets->labelSpriteIndex, 0, &entity->username);
-            int width        = RSDK.GetStringWidth(UIWidgets->labelSpriteIndex, 0, &entity->username, 0, entity->username.textLength, 0);
+            int32 width        = RSDK.GetStringWidth(UIWidgets->labelSpriteIndex, 0, &entity->username, 0, entity->username.textLength, 0);
             entity->state    = UIUsernamePopup_Unknown4;
             entity->timer    = 0;
             entity->field_68 = (width + 16) << 16;
@@ -65,7 +65,7 @@ void UIUsernamePopup_DrawSprites(void)
         entity->posUnknown.y + (RSDK_screens->centerY << 16) - (entity->dword6C >> 1) + ((RSDK_screens->centerY + RSDK_screens->position.y) << 16);
     UIWidgets_Unknown7(entity->dword6C >> 16, entity->field_68 >> 16, entity->dword6C >> 16, 16, 124, 16, drawPos.x, drawPos.y);
 
-    int width = RSDK.GetStringWidth(UIWidgets->labelSpriteIndex, 0, &entity->username, 0, entity->username.textLength, 0);
+    int32 width = RSDK.GetStringWidth(UIWidgets->labelSpriteIndex, 0, &entity->username, 0, entity->username.textLength, 0);
     drawPos.y -= 0x10000;
     drawPos.x -= width << 15;
     RSDK.DrawText(&entity->animator, &drawPos, &entity->username, 0, entity->username.textLength, ALIGN_LEFT, 0, 0, 0, false);
@@ -126,7 +126,7 @@ void UIUsernamePopup_Unknown6(void)
     else {
         entity->drawFlag = true;
 
-        int val = 32 * maxVal(entity->timer, 0);
+        int32 val = 32 * maxVal(entity->timer, 0);
         if (val > 0) {
             if (val < 256) {
                 entity->posUnknown.x = val * (-entity->dword6C >> 8);

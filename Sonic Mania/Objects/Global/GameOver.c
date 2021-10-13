@@ -56,8 +56,8 @@ void GameOver_Create(void *data)
         entity->unknownPos1[6].x = 0x2E0000;
         entity->unknownPos1[7].x = 0x3F0000;
 
-        int posY = -0x200000;
-        for (int i = 0; i < 8; ++i) {
+        int32 posY = -0x200000;
+        for (int32 i = 0; i < 8; ++i) {
             entity->letterPosMove[i].x = -(entity->unknownPos1[i].x >> 4);
             entity->letterPosMove[i].y = 0x2000;
 
@@ -89,7 +89,7 @@ void GameOver_StageLoad(void)
     GameOver->activeScreens = 0;
 }
 
-void GameOver_SaveGameCallback(int status)
+void GameOver_SaveGameCallback(int32 status)
 {
     UIWaitSpinner_Wait2();
     RSDK.LoadScene();
@@ -110,14 +110,14 @@ void GameOver_Unknown2(void)
     entity->verts[2].y = entity->dword64.y + 0x80000;
     entity->verts[3].y = entity->dword64.y + 0x80000;
 
-    for (int i = 0; i < 8; ++i) {
+    for (int32 i = 0; i < 8; ++i) {
         entity->letterPositions[i].x = (screen->centerX << 16) + entity->scale.x * (entity->unknownPos1[i].x >> 9);
         if (entity->unknownArray1[i] < 3) {
             entity->letterPosMove[i].y += 0x4000;
             entity->letterPositions[i].y += entity->letterPosMove[i].y;
             if (entity->letterPosMove[i].y > 0 && entity->letterPositions[i].y > entity->unknownPos1[i].y) {
                 entity->letterPositions[i].y = entity->unknownPos1[i].y;
-                int newVal                 = ((((1431655765LL * entity->letterPosMove[i].y) >> 32) - entity->letterPosMove[i].y) >> 1)
+                int32 newVal                 = ((((1431655765LL * entity->letterPosMove[i].y) >> 32) - entity->letterPosMove[i].y) >> 1)
                              + ((((1431655765LL * entity->letterPosMove[i].y) >> 32) - entity->letterPosMove[i].y) >> 31);
                 entity->letterPosMove[i].y = newVal;
                 ++entity->unknownArray1[i];
@@ -149,9 +149,9 @@ void GameOver_Unknown2(void)
             }
             else {
                 EntityCompetition *manager = (EntityCompetition *)Competition->activeEntity;
-                int id                     = 0;
-                int deadPlayers            = 0;
-                for (int i = 0; i < session->playerCount; ++i) {
+                int32 id                     = 0;
+                int32 deadPlayers            = 0;
+                for (int32 i = 0; i < session->playerCount; ++i) {
                     Entity *ent = RSDK.GetEntityByID(i + Player->playerCount);
 
                     if (ent->objectID == GameOver->objectID) {
@@ -197,9 +197,9 @@ void GameOver_Unknown3(void)
 
     EntityCompetition *manager        = (EntityCompetition *)Competition->activeEntity;
     EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
-    int id                            = 0;
-    int deadPlayers                   = 0;
-    for (int i = 0; i < session->playerCount; ++i) {
+    int32 id                            = 0;
+    int32 deadPlayers                   = 0;
+    for (int32 i = 0; i < session->playerCount; ++i) {
         Entity *ent = RSDK.GetEntityByID(i + Player->playerCount);
 
         if (ent->objectID == GameOver->objectID) {
@@ -221,7 +221,7 @@ void GameOver_Unknown4(void)
     RSDK_THIS(GameOver);
     ++entity->timer;
 
-    int cID = CONT_ANY;
+    int32 cID = CONT_ANY;
     if (globals->gameMode == MODE_COMPETITION)
         cID = entity->playerID + 1;
 
@@ -235,8 +235,8 @@ void GameOver_Unknown4(void)
 
         foreach_all(GameOver, gameOver)
         {
-            int angle = 0x88;
-            for (int i = 0; i < 8; ++i) {
+            int32 angle = 0x88;
+            for (int32 i = 0; i < 8; ++i) {
                 gameOver->letterPosMove[i].x   = RSDK.Cos256(angle) << 11;
                 gameOver->letterPosMove[i].y   = RSDK.Sin256(angle) << 11;
                 gameOver->letterRotateSpeed[i] = RSDK.Rand(-8, 8);
@@ -252,7 +252,7 @@ void GameOver_Unknown5(void)
 {
     RSDK_THIS(GameOver);
     if (entity->timer < 120) {
-        for (int i = 0; i < 8; ++i) {
+        for (int32 i = 0; i < 8; ++i) {
             entity->letterPositions[i].x += entity->letterPosMove[i].x;
             entity->letterPositions[i].y += entity->letterPosMove[i].y;
             entity->letterRotations[i] += entity->letterRotateSpeed[i];
@@ -304,9 +304,9 @@ void GameOver_Unknown5(void)
 #if RETRO_USE_PLUS
                 if (globals->gameMode == MODE_ENCORE) {
                     globals->playerID &= 0xFF;
-                    int id                  = -1;
+                    int32 id                  = -1;
                     saveRAM->characterFlags = -1;
-                    for (int i = globals->playerID; i > 0; ++id, i >>= 1)
+                    for (int32 i = globals->playerID; i > 0; ++id, i >>= 1)
                         ;
                     globals->characterFlags = 1 << id;
                     saveRAM->characterFlags = globals->characterFlags;
@@ -323,9 +323,9 @@ void GameOver_Unknown5(void)
 #if RETRO_USE_PLUS
                 if (globals->gameMode == MODE_ENCORE) {
                     globals->playerID &= 0xFF;
-                    int id                  = -1;
+                    int32 id                  = -1;
                     saveRAM->characterFlags = -1;
-                    for (int i = globals->playerID; i > 0; ++id, i >>= 1)
+                    for (int32 i = globals->playerID; i > 0; ++id, i >>= 1)
                         ;
                     globals->characterFlags = 1 << id;
                     saveRAM->characterFlags = globals->characterFlags;

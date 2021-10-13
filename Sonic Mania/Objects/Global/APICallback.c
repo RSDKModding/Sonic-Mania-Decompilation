@@ -67,7 +67,7 @@ void APICallback_StageLoad(void)
     APICallback->controllerCount              = 4;
 }
 
-void APICallback_SetRichPresence(int id, TextInfo *msg)
+void APICallback_SetRichPresence(int32 id, TextInfo *msg)
 {
     if (globals->presenceID != id) {
         // RSDK.PrependText(&message, id + '.');
@@ -83,7 +83,7 @@ void APICallback_SetRichPresence(int id, TextInfo *msg)
     }
 }
 
-int APICallback_GetUserLanguage(void)
+int32 APICallback_GetUserLanguage(void)
 {
     if (APICallback->GetUserLanguage) {
         return APICallback->GetUserLanguage();
@@ -115,7 +115,7 @@ void APICallback_SetNoSaveDisabled(void)
     globals->noSave         = false;
 }
 
-void APICallback_SaveUserFile(const char *name, void *buffer, int size, void (*callback)(int))
+void APICallback_SaveUserFile(const char *name, void *buffer, int32 size, void (*callback)(int32))
 {
     if (globals->noSave) {
         LogHelpers_Print("SaveUserFile(%s, %X, %d, %X) failing due to noSave", name, buffer, size, callback);
@@ -140,7 +140,7 @@ void APICallback_SaveUserFile(const char *name, void *buffer, int size, void (*c
 void APICallback_SaveCB(void)
 {
     RSDK_THIS(APICallback);
-    int saveResult = RSDK.SaveUserFile(entity->fileName, entity->fileBuffer, entity->fileSize);
+    int32 saveResult = RSDK.SaveUserFile(entity->fileName, entity->fileBuffer, entity->fileSize);
     LogHelpers_Print("DUMMY DummySaveCB(%s, %x, %d) -> %d", entity->fileName, entity->fileBuffer, entity->fileSize, saveResult);
 
     if (entity->fileCallback)
@@ -157,7 +157,7 @@ void APICallback_SaveSettingsINI(void) {
     }
 }
 
-LeaderboardEntry *APICallback_ReadLeaderboardEntry(int rankID)
+LeaderboardEntry *APICallback_ReadLeaderboardEntry(int32 rankID)
 {
     if (APICallback->LeaderboardReadEntry)
         return APICallback->LeaderboardReadEntry(rankID);
@@ -242,7 +242,7 @@ void APICallback_PromptSavePreference_CB(void)
         if (!UIDialog->activeDialog) {
             TextInfo info;
 
-            int stringID = STR_SAVELOADFAIL;
+            int32 stringID = STR_SAVELOADFAIL;
             switch (entity->status) {
                 case STATUS_ERROR:
                     stringID = STR_NOXBOXPROFILE;
@@ -267,7 +267,7 @@ void APICallback_PromptSavePreference_CB(void)
     }
 }
 
-void APICallback_PromptSavePreference(int status)
+void APICallback_PromptSavePreference(int32 status)
 {
     if (globals->noSave) {
         LogHelpers_Print("PromptSavePreference() returning due to noSave");
@@ -285,7 +285,7 @@ void APICallback_PromptSavePreference(int status)
     APICallback->activeEntity = (Entity *)entity;
 }
 
-void APICallback_LoadUserFile(const char *name, void *buffer, int size, void (*callback)(int))
+void APICallback_LoadUserFile(const char *name, void *buffer, int32 size, void (*callback)(int32))
 {
     if (globals->noSave) {
         LogHelpers_Print("LoadUserFile(%s, %X, %d, %X) loading 0's due to noSave", name, buffer, size, callback);
@@ -308,10 +308,10 @@ void APICallback_LoadUserFile(const char *name, void *buffer, int size, void (*c
     }
 }
 
-int APICallback_LoadCB(void)
+int32 APICallback_LoadCB(void)
 {
     RSDK_THIS(APICallback);
-    int loadResult = RSDK.LoadUserFile(entity->fileName, entity->fileBuffer, entity->fileSize);
+    int32 loadResult = RSDK.LoadUserFile(entity->fileName, entity->fileBuffer, entity->fileSize);
     LogHelpers_Print("DUMMY DummyLoadCB(%s, %x, %d) -> %d", entity->fileName, entity->fileBuffer, entity->fileSize, loadResult);
 
     if (entity->fileCallback)
@@ -319,12 +319,12 @@ int APICallback_LoadCB(void)
     return 1;
 }
 
-int APICallback_LeaderboardStatus(void)
+int32 APICallback_LeaderboardStatus(void)
 {
     if (APICallback->LeaderboardStatus)
         return APICallback->LeaderboardStatus();
 
-    int status = 0;
+    int32 status = 0;
     if (RSDK_info->platform < PLATFORM_PS4) {
         LogHelpers_Print("EMPTY LeaderboardStatus()");
         status = 0;
@@ -347,7 +347,7 @@ int APICallback_LeaderboardStatus(void)
     return status;
 }
 
-int APICallback_LeaderboardEntryCount(void)
+int32 APICallback_LeaderboardEntryCount(void)
 {
     if (APICallback->LeaderboardEntryCount)
         return APICallback->LeaderboardEntryCount();
@@ -389,7 +389,7 @@ void APICallback_HandleCallback(void)
     }
 }
 
-int APICallback_GetUserAuthStatus(void)
+int32 APICallback_GetUserAuthStatus(void)
 {
     if (APICallback->GetUserAuthStatus) {
         APICallback->authStatus = APICallback->GetUserAuthStatus();
@@ -412,12 +412,12 @@ int APICallback_GetUserAuthStatus(void)
     return APICallback->authStatus;
 }
 
-signed int APICallback_GetStorageStatus(void)
+signed int32 APICallback_GetStorageStatus(void)
 {
     if (APICallback->saveStatus == STATUS_ERROR)
         return STATUS_ERROR;
 
-    int status = 0;
+    int32 status = 0;
     if (APICallback->GetStorageStatus) {
         status = APICallback->GetStorageStatus(0);
     }
@@ -451,7 +451,7 @@ signed int APICallback_GetStorageStatus(void)
     return status;
 }
 
-int APICallback_GetSaveStatus(void)
+int32 APICallback_GetSaveStatus(void)
 {
     if (globals->noSave)
         return STATUS_OK;
@@ -462,7 +462,7 @@ int APICallback_GetSaveStatus(void)
         return APICallback->saveStatus;
 }
 
-int APICallback_GetControllerType(int id)
+int32 APICallback_GetControllerType(int32 id)
 {
     if (APICallback->GetControllerType)
         return APICallback->GetControllerType(id, 0);
@@ -470,7 +470,7 @@ int APICallback_GetControllerType(int id)
         return RSDK_info->platform == PLATFORM_DEV;
 }
 
-int APICallback_FetchLeaderboardData(uint8 zoneID, uint8 actID, int playerID, int start, int end, bool32 isUser)
+int32 APICallback_FetchLeaderboardData(uint8 zoneID, uint8 actID, int32 playerID, int32 start, int32 end, bool32 isUser)
 {
     if (APICallback->FetchLeaderboard)
         return APICallback->FetchLeaderboard(zoneID, actID, playerID, start, end, isUser);
@@ -531,7 +531,7 @@ bool32 APICallback_CheckInputDisconnected(void)
     return APICallback_InputIDIsDisconnected(entity->field_7C) || PauseMenu->dword10;
 }
 
-bool32 APICallback_InputIDIsDisconnected(int id)
+bool32 APICallback_InputIDIsDisconnected(int32 id)
 {
     RSDK_THIS(APICallback);
     if (APICallback->InputIDIsDisconnected) {
@@ -543,7 +543,7 @@ bool32 APICallback_InputIDIsDisconnected(int id)
     }
 }
 
-int APICallback_ControllerIDForInputID(int id)
+int32 APICallback_ControllerIDForInputID(int32 id)
 {
     if (APICallback->ControllerIDForInputID) {
         return APICallback->ControllerIDForInputID(id);
@@ -553,7 +553,7 @@ int APICallback_ControllerIDForInputID(int id)
         return 1;
     }
 }
-int APICallback_MostRecentActiveControllerID(int id)
+int32 APICallback_MostRecentActiveControllerID(int32 id)
 {
     if (APICallback->MostRecentActiveControllerID) {
         return APICallback->MostRecentActiveControllerID(id);
@@ -563,7 +563,7 @@ int APICallback_MostRecentActiveControllerID(int id)
         return 1;
     }
 }
-void APICallback_AssignControllerID(int controllerID, int id)
+void APICallback_AssignControllerID(int32 controllerID, int32 id)
 {
     if (APICallback->AssignControllerID) {
         APICallback->AssignControllerID(controllerID, id);
@@ -587,21 +587,21 @@ void APICallback_ResetControllerAssignments(void)
     }
 }
 
-void APICallback_TrackActClear(uint8 zoneID, uint8 actID, uint8 playerID, int score, int rings, int time)
+void APICallback_TrackActClear(uint8 zoneID, uint8 actID, uint8 playerID, int32 score, int32 rings, int32 time)
 {
     if (APICallback->TrackActClear)
         APICallback->TrackActClear(zoneID, actID, playerID, score, rings, time);
     else
         LogHelpers_Print("EMPTY TrackActClear(%d, %d, %d, %d, %d, %d)", zoneID, actID, playerID, score, rings, time);
 }
-void APICallback_TrackTAClear(uint8 zoneID, uint8 actID, uint8 playerID, int time)
+void APICallback_TrackTAClear(uint8 zoneID, uint8 actID, uint8 playerID, int32 time)
 {
     if (APICallback->TrackTAClear)
         APICallback->TrackTAClear(zoneID, actID, playerID, time);
     else
         LogHelpers_Print("EMPTY TrackTAClear(%d, %d, %d, %d)", zoneID, actID, playerID, time);
 }
-void APICallback_TrackEnemyDefeat(uint8 zoneID, uint8 actID, uint8 playerID, int entityX, int entityY)
+void APICallback_TrackEnemyDefeat(uint8 zoneID, uint8 actID, uint8 playerID, int32 entityX, int32 entityY)
 {
     if (APICallback->TrackEnemyDefeat)
         APICallback->TrackEnemyDefeat(zoneID, actID, playerID, entityX, entityY);
@@ -637,7 +637,7 @@ void APICallback_TryAuth_CB(void)
     }
 }
 
-int APICallback_TryAuth(void)
+int32 APICallback_TryAuth(void)
 {
     if (APICallback->TryAuth) {
         LogHelpers_Print("API TryAuth()");
@@ -770,7 +770,7 @@ void APICallback_CheckUserAuth_CB(void)
     }
 }
 
-void APICallback_Wait(int success) { UIWaitSpinner_Wait2(); }
+void APICallback_Wait(int32 success) { UIWaitSpinner_Wait2(); }
 
 void APICallback_GetNextNotif(void)
 {
@@ -790,7 +790,7 @@ void APICallback_ManageNotifs(void)
         TextInfo info;
         INIT_TEXTINFO(info);
         if (!UIDialog->activeDialog) {
-            int str = GameProgress_GetNotifStringID(GameProgress_GetNextNotif());
+            int32 str = GameProgress_GetNotifStringID(GameProgress_GetNextNotif());
             Localization_GetString(&info, str);
             EntityUIDialog *dialog = UIDialog_CreateActiveDialog(&info);
             dialog->field_B4       = true;

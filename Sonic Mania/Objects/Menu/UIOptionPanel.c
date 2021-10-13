@@ -66,8 +66,8 @@ void UIOptionPanel_Unknown1(void)
     RSDK.DrawRect(entity->position.x - (entity->field_7C.x >> 1), entity->position.y - (entity->field_7C.y >> 1), entity->field_7C.x,
                   entity->field_7C.y, 0x30A0F0, 255, INK_NONE, false);
 
-    int x = entity->position.x - (entity->field_7C.x >> 1);
-    int y = entity->position.y - (entity->field_7C.y >> 1);
+    int32 x = entity->position.x - (entity->field_7C.x >> 1);
+    int32 y = entity->position.y - (entity->field_7C.y >> 1);
     RSDK.DrawRect(x, y, 0xE60000, 0x180000, 0, 255, INK_NONE, false);
     UIWidgets_Unknown5(0, 23, 0, 0, 0xE60000 + x, y);
 

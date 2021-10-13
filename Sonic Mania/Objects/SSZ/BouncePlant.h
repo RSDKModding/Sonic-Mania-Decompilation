@@ -15,15 +15,15 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    int timer;
+    int32 timer;
     Vector2 drawPos[8];
     Vector2 drawPos2[8];
-    int unknown[8];
+    int32 unknown[8];
     Vector2 stoodPos;
     bool32 stood;
     bool32 speedFlag;
-    int depression;
-    int centerX;
+    int32 depression;
+    int32 centerX;
     Animator animator;
     Animator animators[8];
 } EntityBouncePlant;
@@ -44,7 +44,7 @@ void BouncePlant_Serialize(void);
 
 // Extra Entity Functions
 void BoucePlant_Unknown1(void);
-int BoucePlant_Unknown2(int x);
-int BoucePlant_Unknown3(int x);
+int32 BoucePlant_Unknown2(int32 x);
+int32 BoucePlant_Unknown3(int32 x);
 
 #endif //!OBJ_BOUNCEPLANT_H

@@ -8,11 +8,11 @@ typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     uint8 field_6;
-    TABLE(int emeraldColours[36],
+    TABLE(int32 emeraldColours[36],
           { 0xA00000, 0xB01820, 0xC03040, 0xD04860, 0xE06080, 0x4040C8, 0x5858C8, 0xE060E0, 0x7070C8, 0x8888C8, 0xA0A0C8, 0xC048C8,
             0xA030B0, 0x801898, 0x600080, 0x88B8E0, 0x80E0,   0x2890E0, 0x58A8E0, 0xB8D0E0, 0x208000, 0x409800, 0x60B000, 0x80C800,
             0xA0E000, 0xE0E0A0, 0xD0C878, 0xC0B050, 0xB09828, 0xA08000, 0x808080, 0x909090, 0xA0A0A0, 0xC0C0C0, 0xB0B0B0, 0xE8E8E8 });
-    int colourStorage[36];
+    int32 colourStorage[36];
 } ObjectChaosEmerald;
 
 // Entity Class
@@ -20,7 +20,7 @@ typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     uint8 type;
-    int radius;
+    int32 radius;
     Vector2 originPos;
     Animator animator;
 } EntityChaosEmerald;

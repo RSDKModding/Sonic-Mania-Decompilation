@@ -17,7 +17,7 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    int planeFilter;
+    int32 planeFilter;
     Vector2 startPos;
     uint8 startDir;
     uint8 activeOrbs;

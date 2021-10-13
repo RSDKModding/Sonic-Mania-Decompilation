@@ -168,7 +168,7 @@ void Tornado_Unknown5(void)
     entity->field_80   = (entity->position.y & 0xFFFF0000) - entity->field_7C;
     entity->position.y = entity->field_7C;
     entity->field_6C   = 0;
-    int velY           = player1->velocity.y;
+    int32 velY           = player1->velocity.y;
     if (Player_CheckCollisionPlatform(player1, entity, hitbox)) {
         player1->position.x += TornadoPath->field_8.x;
         player1->position.y += entity->field_80;
@@ -183,16 +183,16 @@ void Tornado_Unknown5(void)
 
     EntityCamera *camera = TornadoPath->cameraPtr;
     if (camera) {
-        int screenX = camera->position.x - (RSDK_screens->centerX << 16) + 0xC0000;
+        int32 screenX = camera->position.x - (RSDK_screens->centerX << 16) + 0xC0000;
         if (player1->position.x < screenX)
             player1->position.x = screenX;
 
-        int screenY = ((RSDK_screens->centerX - 12) << 16) + camera->position.x;
+        int32 screenY = ((RSDK_screens->centerX - 12) << 16) + camera->position.x;
         if (player1->position.x > screenY)
             player1->position.x = screenY;
 
         if (player1->objectID == Player->objectID) {
-            int deathBounds = (camera->position.y + ((RSDK_screens[camera->screenID].centerY + 16) << 16));
+            int32 deathBounds = (camera->position.y + ((RSDK_screens[camera->screenID].centerY + 16) << 16));
             if (player1->position.y > deathBounds)
                 player1->hurtFlag = 1;
         }
@@ -294,14 +294,14 @@ void Tornado_Unknown6(void)
     if (entity->position.y > (RSDK_screens->height + RSDK_screens->position.y - 32) << 16)
         entity->position.y = (RSDK_screens->height + RSDK_screens->position.y - 32) << 16;
 
-    int storeX       = entity->position.x;
-    int storeY       = entity->position.y + entity->velocity.y;
+    int32 storeX       = entity->position.x;
+    int32 storeY       = entity->position.y + entity->velocity.y;
     entity->field_6C = 0;
     entity->field_7C &= 0xFFFF0000;
     entity->field_80   = (storeY & 0xFFFF0000) - entity->field_7C;
     entity->position.y = entity->field_7C;
-    int velY           = player1->velocity.y;
-    int posX           = entity->position.x;
+    int32 velY           = player1->velocity.y;
+    int32 posX           = entity->position.x;
 
     if (Player_CheckCollisionPlatform(player1, entity, hitbox)) {
         player1->position.x += TornadoPath->field_8.x;
@@ -318,18 +318,18 @@ void Tornado_Unknown6(void)
         player1->position.x += TornadoPath->field_8.x;
     }
 
-    int offsetX = 0;
+    int32 offsetX = 0;
     entity->position.x += 0x1E0000;
     if (abs(posX + 0x1E0000 - player1->position.x) > 0x100000) {
         offsetX = entity->field_9C;
         if (player1->position.x <= posX + 0x1E0000) {
             offsetX = -offsetX;
-            int pos = player1->position.x - (posX + 0x1E0000) + 0x100000;
+            int32 pos = player1->position.x - (posX + 0x1E0000) + 0x100000;
             if (pos > offsetX)
                 offsetX = pos;
         }
         else {
-            int pos = player1->position.x - (posX + 0x1E0000) - 0x100000;
+            int32 pos = player1->position.x - (posX + 0x1E0000) - 0x100000;
             if (pos < offsetX)
                 offsetX = pos;
         }
@@ -340,11 +340,11 @@ void Tornado_Unknown6(void)
 
     EntityCamera *camera = TornadoPath->cameraPtr;
     if (camera) {
-        int screenX = camera->position.x - (RSDK_screens->centerX << 16) + 0xC0000;
+        int32 screenX = camera->position.x - (RSDK_screens->centerX << 16) + 0xC0000;
         if (player1->position.x < screenX)
             player1->position.x = screenX;
 
-        int screenY = ((RSDK_screens->centerX - 12) << 16) + camera->position.x;
+        int32 screenY = ((RSDK_screens->centerX - 12) << 16) + camera->position.x;
         if (player1->position.x > screenY)
             player1->position.x = screenY;
 

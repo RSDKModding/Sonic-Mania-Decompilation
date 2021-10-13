@@ -6,17 +6,17 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    int startColourID;
-    int alpha1;
-    int alpha2;
-    int field_10;
+    int32 startColourID;
+    int32 alpha1;
+    int32 alpha2;
+    int32 field_10;
 } ObjectBSS_Palette;
 
 // Entity Class
 typedef struct {
     RSDK_ENTITY
     bool32 useStageConfig;
-    int paletteID;
+    int32 paletteID;
     uint8 skyAlpha;
     uint8 globeAlpha;
     colour playfieldA;

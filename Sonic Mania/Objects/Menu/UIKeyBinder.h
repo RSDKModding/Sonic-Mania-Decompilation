@@ -9,8 +9,8 @@ typedef struct {
     uint16 aniFrames;
     uint16 sfxFail;
     Entity *activeBinder;
-    int curInputID;
-    int curMappings;
+    int32 curInputID;
+    int32 curMappings;
     bool32 flag;
 } ObjectUIKeyBinder;
 
@@ -19,22 +19,22 @@ typedef struct {
     MANIA_UI_ITEM_BASE
     uint8 type;
     uint8 inputID;
-    int listID;
-    int frameID;
-    int field_110;
-    int field_114;
-    int field_118;
-    int field_11C;
-    int field_120;
-    int field_124;
-    int field_128;
-    int field_12C;
+    int32 listID;
+    int32 frameID;
+    int32 field_110;
+    int32 field_114;
+    int32 field_118;
+    int32 field_11C;
+    int32 field_120;
+    int32 field_124;
+    int32 field_128;
+    int32 field_12C;
     bool32 textFlag;
-    int field_134;
+    int32 field_134;
     Animator animator1;
     Animator animator2;
     uint16 textSpriteIndex;
-    int field_16C;
+    int32 field_16C;
 } EntityUIKeyBinder;
 
 // Object Struct
@@ -52,10 +52,10 @@ void UIKeyBinder_EditorLoad(void);
 void UIKeyBinder_Serialize(void);
 
 // Extra Entity Functions
-int UIKeyBinder_GetButtonListID(void);
-int UIKeyBinder_GetMappings(int input, int button);
-void UIKeyBinder_SetMappings(int input, int button, int mappings);
-int UIKeyBinder_Unknown4(int id);
+int32 UIKeyBinder_GetButtonListID(void);
+int32 UIKeyBinder_GetMappings(int32 input, int32 button);
+void UIKeyBinder_SetMappings(int32 input, int32 button, int32 mappings);
+int32 UIKeyBinder_Unknown4(int32 id);
 void UIKeyBinder_Unknown5(void);
 void UIKeyBinder_Options2CB(void);
 bool32 UIKeyBinder_Options7CB(void);

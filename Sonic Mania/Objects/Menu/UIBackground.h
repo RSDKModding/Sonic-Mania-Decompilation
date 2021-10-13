@@ -21,14 +21,14 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     StateMachine(stateDraw);
-    int type;
-    int timer;
-    int field_64;
-    int field_68;
-    int field_6C;
-    int field_70;
-    int field_74;
-    int field_78;
+    int32 type;
+    int32 timer;
+    int32 field_64;
+    int32 field_68;
+    int32 field_6C;
+    int32 field_70;
+    int32 field_74;
+    int32 field_78;
 } EntityUIBackground;
 
 // Object Struct

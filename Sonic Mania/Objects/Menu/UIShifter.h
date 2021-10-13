@@ -13,11 +13,11 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     Vector2 shift;
-    int field_60;
-    int field_64;
-    int field_68;
-    int field_6C;
-    int field_70;
+    int32 field_60;
+    int32 field_64;
+    int32 field_68;
+    int32 field_6C;
+    int32 field_70;
     Vector2 startPos;
     EntityUIControl *parent;
 } EntityUIShifter;

@@ -60,7 +60,7 @@ void Spikes_Serialize(void);
 void Spikes_StateDraw_Global(void);
 void Spikes_StateDraw_Stage(void);
 
-void Spikes_Unknown1(int a1, int a2);
-void Spikes_CheckHit(EntityPlayer *player, int playerVelX, int playerVelY);
+void Spikes_Unknown1(int32 a1, int32 a2);
+void Spikes_CheckHit(EntityPlayer *player, int32 playerVelX, int32 playerVelY);
 
 #endif //!OBJ_SPIKES_H

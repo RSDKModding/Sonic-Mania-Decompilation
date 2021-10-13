@@ -62,10 +62,10 @@ void ChemBubble_Unknown2(void)
 
     entity->velocity.y -= 0x2000;
     entity->position.y += entity->velocity.y;
-    int deform         = (RSDK.Sin256(entity->position.y >> entity->shiftY) << entity->shiftY2) + entity->startPos.x;
+    int32 deform         = (RSDK.Sin256(entity->position.y >> entity->shiftY) << entity->shiftY2) + entity->startPos.x;
     entity->position.x = deform;
-    int val            = ChemicalPool->table1[deform >> 20];
-    int pos            = parent->offsetY + (((deform >> 12) & 0xFF) * (ChemicalPool->table1[(deform + 0x100000) >> 20] - val) >> 8) + val + 0x20000;
+    int32 val            = ChemicalPool->table1[deform >> 20];
+    int32 pos            = parent->offsetY + (((deform >> 12) & 0xFF) * (ChemicalPool->table1[(deform + 0x100000) >> 20] - val) >> 8) + val + 0x20000;
     if (entity->position.y <= pos) {
         entity->position.y = pos;
         if (entity->animator.animationID == 2) {
@@ -85,8 +85,8 @@ void ChemBubble_Unknown3(void)
     EntityChemicalPool *parent = (EntityChemicalPool *)entity->parent;
 
     RSDK.ProcessAnimation(&entity->animator);
-    int val = ChemicalPool->table1[entity->position.x >> 20];
-    int pos = parent->offsetY + (((entity->position.x >> 12) & 0xFF) * (ChemicalPool->table1[(entity->position.x + 0x100000) >> 20] - val) >> 8) + val
+    int32 val = ChemicalPool->table1[entity->position.x >> 20];
+    int32 pos = parent->offsetY + (((entity->position.x >> 12) & 0xFF) * (ChemicalPool->table1[(entity->position.x + 0x100000) >> 20] - val) >> 8) + val
               + 0x20000;
 
     entity->position.y = pos;

@@ -17,7 +17,7 @@ void TMZCable_Draw(void)
 {
     RSDK_THIS(TMZCable);
 
-    for (int i = 0; i < 8; ++i) {
+    for (int32 i = 0; i < 8; ++i) {
         if (!entity->drawFlags[i])
             RSDK.DrawSprite(&entity->animator, &entity->drawPos[i], false);
     }
@@ -75,14 +75,14 @@ void TMZCable_Unknown1(void)
     RSDK_THIS(TMZCable);
 
     if (entity->posPtr) {
-        int x           = entity->posPtr->x + entity->field_64.x;
-        int y           = entity->posPtr->y + entity->field_64.y;
-        int entityAngle = entity->angle;
-        int angle       = RSDK.ATan2((entity->position.x - x) >> 16, (entity->position.y - y) >> 16) + 64;
+        int32 x           = entity->posPtr->x + entity->field_64.x;
+        int32 y           = entity->posPtr->y + entity->field_64.y;
+        int32 entityAngle = entity->angle;
+        int32 angle       = RSDK.ATan2((entity->position.x - x) >> 16, (entity->position.y - y) >> 16) + 64;
 
-        int id = 0;
-        for (int i = 0; i < 144; i += 18) {
-            int off = (RSDK.Sin256(entityAngle) * RSDK.Sin256(i)) >> 5;
+        int32 id = 0;
+        for (int32 i = 0; i < 144; i += 18) {
+            int32 off = (RSDK.Sin256(entityAngle) * RSDK.Sin256(i)) >> 5;
 
             entity->drawPos[0].x = x + 32 * id * ((entity->position.x - x) >> 8);
             entity->drawPos[0].y = y + 32 * id * ((entity->position.y - y) >> 8);
@@ -119,10 +119,10 @@ void TMZCable_Unknown4(void)
     RSDK_THIS(TMZCable);
 
     RSDK.ProcessAnimation(&entity->animator);
-    int storeX = entity->position.x;
-    int storeY = entity->position.y;
+    int32 storeX = entity->position.x;
+    int32 storeY = entity->position.y;
 
-    for (int i = 1; i < 8; ++i) {
+    for (int32 i = 1; i < 8; ++i) {
         entity->position.x = entity->drawPos[i].x;
         entity->position.y = entity->drawPos[i].y;
         foreach_active(Player, player)
@@ -158,18 +158,18 @@ void TMZCable_Unknown6(void)
     RSDK_THIS(TMZCable);
     TMZCable_Unknown1();
 
-    int id = entity->timer >> 5;
+    int32 id = entity->timer >> 5;
     if (!(Zone->timer % 3)) {
         RSDK.PlaySfx(PhantomEgg->sfxExplosion2, false, 255);
         if (Zone->timer & 4) {
-            int y = entity->drawPos[id].y + RSDK.Rand(-0x100000, 0x100000);
-            int x = entity->drawPos[id].x + RSDK.Rand(-0x100000, 0x100000);
+            int32 y = entity->drawPos[id].y + RSDK.Rand(-0x100000, 0x100000);
+            int32 x = entity->drawPos[id].x + RSDK.Rand(-0x100000, 0x100000);
             CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + 2), x, y)->drawOrder = Zone->drawOrderHigh;
         }
     }
     entity->timer += 3;
     if (entity->timer < 256) {
-        int timer = entity->timer & 0x1F;
+        int32 timer = entity->timer & 0x1F;
         if (timer >= 29) {
             entity->drawFlags[id] = true;
 

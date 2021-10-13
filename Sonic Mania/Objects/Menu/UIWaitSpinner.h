@@ -7,7 +7,7 @@
 typedef struct {
     RSDK_OBJECT
     uint16 spriteIndex;
-    int timer;
+    int32 timer;
     Entity *activeSpinner;
 } ObjectUIWaitSpinner;
 
@@ -15,7 +15,7 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    int timer;
+    int32 timer;
     bool32 flag;
     Animator animator;
 } EntityUIWaitSpinner;

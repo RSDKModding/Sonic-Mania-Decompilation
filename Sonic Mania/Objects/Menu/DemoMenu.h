@@ -13,8 +13,8 @@ typedef struct {
 typedef struct {
 	RSDK_ENTITY
     StateMachine(state);
-    int timer;
-    int selectedZone;
+    int32 timer;
+    int32 selectedZone;
     Vector2 drawPosA;
     Vector2 drawPosB;
     Vector2 drawPosC;
@@ -43,7 +43,7 @@ void DemoMenu_EditorLoad(void);
 void DemoMenu_Serialize(void);
 
 // Extra Entity Functions
-void DemoMenu_DrawStagePreview(Vector2 *pos, Animator *animator, int zoneID);
+void DemoMenu_DrawStagePreview(Vector2 *pos, Animator *animator, int32 zoneID);
 
 void DemoMenu_State_Appear(void);
 void DemoMenu_State_Selection(void);

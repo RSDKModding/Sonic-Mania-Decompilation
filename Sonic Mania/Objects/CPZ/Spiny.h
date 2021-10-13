@@ -18,13 +18,13 @@ typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     Animator animator;
-    int field_74;
+    int32 field_74;
     uint8 type;
     Vector2 startPos;
     uint8 startDir;
-    int shotSpeed;
-    int timer2;
-    int timer;
+    int32 shotSpeed;
+    int32 timer2;
+    int32 timer;
 } EntitySpiny;
 
 // Object Struct

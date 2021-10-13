@@ -42,7 +42,7 @@ void AIZSetup_StaticUpdate(void)
         }
 
         if (!(Zone->timer & 1)) {
-            for (int i = Zone->fgLow; i <= Zone->fgHigh; ++i) {
+            for (int32 i = Zone->fgLow; i <= Zone->fgHigh; ++i) {
                 RSDK.GetSceneLayer(i)->deformationOffsetW++;
             }
         }
@@ -121,30 +121,30 @@ void AIZSetup_StageLoad(void)
 
 #if RETRO_USE_PLUS
     if (RSDK.GetSceneLayerID("Background 4") >= DRAWLAYER_COUNT) {
-        for (int i = Zone->fgLow; i <= Zone->fgHigh; ++i) {
-            int *deformData = RSDK.GetSceneLayer(i)->deformationDataW;
+        for (int32 i = Zone->fgLow; i <= Zone->fgHigh; ++i) {
+            int32 *deformData = RSDK.GetSceneLayer(i)->deformationDataW;
 
-            int id = 0;
-            for (int d = 0; d < 0x200; ++d) {
+            int32 id = 0;
+            for (int32 d = 0; d < 0x200; ++d) {
                 deformData[d]         = (2 * RSDK.Sin1024(id)) >> 10;
                 deformData[d + 0x200] = (2 * RSDK.Sin1024(id)) >> 10;
                 id += 16;
             }
         }
 
-        int *deformData = RSDK.GetSceneLayer(0)->deformationDataW;
+        int32 *deformData = RSDK.GetSceneLayer(0)->deformationDataW;
 
-        int id = 0;
-        for (int d = 0; d < 0x200; d += 16) {
-            int pos = 0;
+        int32 id = 0;
+        for (int32 d = 0; d < 0x200; d += 16) {
+            int32 pos = 0;
             if (id >= 0)
                 pos = id;
             else
                 pos = 0;
 
-            int angle = 0;
-            int rand  = RSDK.Rand(0, 4);
-            for (int i = 0; i < 16; ++i) {
+            int32 angle = 0;
+            int32 rand  = RSDK.Rand(0, 4);
+            for (int32 i = 0; i < 16; ++i) {
                 deformData[pos + i]           = (rand * RSDK.Sin1024(angle)) >> 10;
                 deformData[(pos + 0x200) + i] = (rand * RSDK.Sin1024(angle)) >> 10;
                 angle += 64;
@@ -159,13 +159,13 @@ void AIZSetup_StageLoad(void)
         AIZSetup->bg3Info = RSDK.GetSceneLayer(RSDK.GetSceneLayerID("Background 3"));
         AIZSetup->bg4Info = RSDK.GetSceneLayer(RSDK.GetSceneLayerID("Background 4"));
 
-        for (int i = 0; i < AIZSetup->bg2Info->scrollInfoCount; ++i) {
-            int pFac                                   = AIZSetup->bg2Info->scrollInfo[i].parallaxFactor;
+        for (int32 i = 0; i < AIZSetup->bg2Info->scrollInfoCount; ++i) {
+            int32 pFac                                   = AIZSetup->bg2Info->scrollInfo[i].parallaxFactor;
             AIZSetup->bg2Info->scrollInfo[i].scrollPos = -0x7000000 - (0x220000 * pFac);
         }
 
-        for (int i = 0; i < AIZSetup->bg3Info->scrollInfoCount; ++i) {
-            int pFac                                   = AIZSetup->bg3Info->scrollInfo[i].parallaxFactor;
+        for (int32 i = 0; i < AIZSetup->bg3Info->scrollInfoCount; ++i) {
+            int32 pFac                                   = AIZSetup->bg3Info->scrollInfo[i].parallaxFactor;
             AIZSetup->bg3Info->scrollInfo[i].scrollPos = -0x7000000 - (0x220000 * pFac);
         }
 #if RETRO_USE_PLUS
@@ -233,7 +233,7 @@ void AIZSetup_Unknown5(void)
 void AIZSetup_Unknown24(void)
 {
     EntityAIZKingClaw *claw = (EntityAIZKingClaw *)AIZSetup->claw;
-    int x                   = -0x10000;
+    int32 x                   = -0x10000;
     foreach_all(AIZEggRobo, robo)
     {
         if (robo->forKnux && x >= robo->position.x)
@@ -280,7 +280,7 @@ void AIZSetup_SetupObjects(void)
         foreach_break;
     }
 
-    int id = 0;
+    int32 id = 0;
     foreach_all(Decoration, decoration) { AIZSetup->decorations[id++] = (Entity *)decoration; }
 }
 
@@ -513,7 +513,7 @@ bool32 AIZSetup_Cutscene1_Unknown7(Entity *h)
         if (!(host->timer % 5))
             Camera_ShakeScreen(0, 0, 2);
         claw->position.y -= 0x4000;
-        for (int i = 0; i < 3; ++i) {
+        for (int32 i = 0; i < 3; ++i) {
             EntityDecoration *decor = (EntityDecoration *)AIZSetup->decorations[i];
             decor->drawFX |= FX_ROTATE;
             decor->rotation = ((2 * (!(i & 1)) - 1) * RSDK.Sin256(16 * host->timer)) >> 7;
@@ -616,15 +616,15 @@ bool32 AIZSetup_Cutscene1_Unknown9(Entity *h)
             }
 
             if (host->timer >= host->field_68 + 32) {
-                int id = 0;
-                for (int angle = 0; angle < 0x80; angle += 0x40) {
+                int32 id = 0;
+                for (int32 angle = 0; angle < 0x80; angle += 0x40) {
                     EntityPlayer *player = RSDK_GET_ENTITY(id++, Player);
                     if (!player || player->objectID == TYPE_BLANK)
                         break;
                     RSDK.SetSpriteAnimation(player->spriteIndex, ANI_FAN, &player->playerAnimator, false, 0);
 
-                    int valX = (player->position.x - player->position.x) >> 3;
-                    int valY = (0xA00 * RSDK.Sin256(2 * (host->timer + angle - host->field_68)) + ruby->position.y - player->position.y) >> 3;
+                    int32 valX = (player->position.x - player->position.x) >> 3;
+                    int32 valY = (0xA00 * RSDK.Sin256(2 * (host->timer + angle - host->field_68)) + ruby->position.y - player->position.y) >> 3;
 
                     player->position.x += valX;
                     player->position.y += valY;

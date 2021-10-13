@@ -13,8 +13,8 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    int timer;
-    int offset;
+    int32 timer;
+    int32 offset;
     Animator animator;
 } EntityTMZFlames;
 

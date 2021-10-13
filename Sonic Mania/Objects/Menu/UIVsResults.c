@@ -47,7 +47,7 @@ void UIVsResults_Create(void *data)
     entity->textSpriteIndex = UIWidgets->textSpriteIndex;
 
     if (!RSDK_sceneInfo->inEditor) {
-        for (int i = 0; i < entity->numRows; ++i) {
+        for (int32 i = 0; i < entity->numRows; ++i) {
             if (!RSDK_sceneInfo->inEditor) {
                 RSDK.SetText(&entity->rowText[i], "00", 0);
                 RSDK.SetSpriteString(UIVsResults->aniFrames, 18, &entity->rowText[i]);
@@ -82,7 +82,7 @@ void UIVsResults_SetupSprites(void)
     }
     RSDK.SetSpriteAnimation(UIVsResults->aniFrames, 14, &entity->animator3, true, 1);
 
-    int frame = entity->characterID;
+    int32 frame = entity->characterID;
     if (frame > 2)
         ++frame;
     RSDK.SetSpriteAnimation(UIVsResults->aniFrames, 1, &entity->animator1, true, frame);
@@ -90,7 +90,7 @@ void UIVsResults_SetupSprites(void)
     RSDK.SetSpriteAnimation(UIVsResults->aniFrames, 18, &entity->animator4, true, 0);
 
     uint8 *rowLabels = &entity->row0Label;
-    for (int r = 0; r < entity->numRows; ++r) {
+    for (int32 r = 0; r < entity->numRows; ++r) {
         RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, 13, &entity->rowAnimators[r], true, rowLabels[r]);
     }
     RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, 12, &entity->textAnimator, true, entity->playerID + 8);
@@ -104,7 +104,7 @@ void UIVsResults_Unknown2(void)
 {
     RSDK_THIS(UIVsResults);
 
-    int y = (entity->field_1D0 >> 1) + entity->position.y - 0x1D8000;
+    int32 y = (entity->field_1D0 >> 1) + entity->position.y - 0x1D8000;
     if (!RSDK_sceneInfo->inEditor)
         UIWidgets_Unknown3(entity->field_1D0 >> 16, 96, entity->position.x + 0x30000, y);
 
@@ -124,7 +124,7 @@ void UIVsResults_Unknown3(void)
                        entity->position.y - 0x218000 + entity->field_1D0);
 }
 
-void UIVsResults_DrawRow(int row, int posX, int posY)
+void UIVsResults_DrawRow(int32 row, int32 posX, int32 posY)
 {
     RSDK_THIS(UIVsResults);
     Vector2 drawPos;
@@ -145,7 +145,7 @@ void UIVsResults_DrawRow(int row, int posX, int posY)
     if (!RSDK_sceneInfo->inEditor) {
         drawPos.y = posY + 0x80000;
         drawPos.x = posX + 0x590000;
-        int width = RSDK.GetStringWidth(UIVsResults->aniFrames, 18, &entity->rowText[row], 0, entity->rowText[row].textLength, 0);
+        int32 width = RSDK.GetStringWidth(UIVsResults->aniFrames, 18, &entity->rowText[row], 0, entity->rowText[row].textLength, 0);
         drawPos.x -= width << 16;
         RSDK.DrawText(&entity->animator4, &drawPos, &entity->rowText[row], 0, entity->rowText[row].textLength, ALIGN_LEFT, 0, 0, 0, false);
     }
@@ -156,7 +156,7 @@ void UIVsResults_Unknown5(void)
     RSDK_THIS(UIVsResults);
     Vector2 drawPos;
 
-    int count = entity->trophyCount;
+    int32 count = entity->trophyCount;
     drawPos.x = entity->position.x - 0x2B0000;
     drawPos.y = entity->position.y + 0x1C0000;
     RSDK.SetSpriteAnimation(UIVsResults->aniFrames, 14, &entity->animator5, true, 15);
@@ -205,7 +205,7 @@ void UIVsResults_Unknown6(void)
 
     drawPos.x = entity->position.x - 0x2D0000;
     drawPos.y = entity->position.y + 0x1D8000;
-    for (int r = 0; r < entity->numRows; ++r) {
+    for (int32 r = 0; r < entity->numRows; ++r) {
         UIVsResults_DrawRow(r, drawPos.x, drawPos.y);
         drawPos.y += 0x100000;
         if (r < entity->numRows - 1) {

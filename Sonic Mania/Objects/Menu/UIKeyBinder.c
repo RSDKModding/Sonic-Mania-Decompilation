@@ -17,14 +17,14 @@ void UIKeyBinder_Update(void)
     }
 
     EntityUIControl *parent = (EntityUIControl *)entity->parent;
-    int input               = entity->inputID + 1;
-    int mappings            = UIKeyBinder_GetMappings(input, entity->type);
+    int32 input               = entity->inputID + 1;
+    int32 mappings            = UIKeyBinder_GetMappings(input, entity->type);
 
     TextInfo info;
     INIT_TEXTINFO(info);
     bool32 flag = true;
 
-    int frameID = -1;
+    int32 frameID = -1;
     if (entity->field_16C == mappings) {
         flag = false;
     }
@@ -37,8 +37,8 @@ void UIKeyBinder_Update(void)
         frameID = UIButtonPrompt_MappingsToFrame(mappings);
     }
 
-    for (int b = 0; b <= 8 && flag; ++b) {
-        for (int i = 1; i <= 2 && flag; ++i) {
+    for (int32 b = 0; b <= 8 && flag; ++b) {
+        for (int32 i = 1; i <= 2 && flag; ++i) {
             if ((b != entity->type || i != input) && mappings) {
                 if (UIKeyBinder_GetMappings(i, b) != mappings)
                     continue;
@@ -48,7 +48,7 @@ void UIKeyBinder_Update(void)
                 UIKeyBinder->curInputID  = i;
                 UIKeyBinder->curMappings = b;
 
-                int str = -1;
+                int32 str = -1;
                 if (i == input) {
                     str = STR_KEYALREADYBOUND;
                 }
@@ -92,7 +92,7 @@ void UIKeyBinder_Update(void)
         }
         else {
             LogHelpers_Print("bind = %d 0x%02x", mappings, mappings);
-            int frame = UIButtonPrompt_MappingsToFrame(entity->field_16C);
+            int32 frame = UIButtonPrompt_MappingsToFrame(entity->field_16C);
             RSDK.SetSpriteAnimation(UIKeyBinder->aniFrames, UIKeyBinder_GetButtonListID(), &entity->animator2, true, frame);
             UIKeyBinder_SetMappings(input, entity->type, -1);
             RSDK.PlaySfx(UIKeyBinder->sfxFail, false, 255);
@@ -101,8 +101,8 @@ void UIKeyBinder_Update(void)
 
     StateMachine_Run(entity->state);
 
-    int id = -1;
-    for (int i = 0; i < parent->buttonCount; ++i) {
+    int32 id = -1;
+    for (int32 i = 0; i < parent->buttonCount; ++i) {
         if (entity == (EntityUIKeyBinder *)parent->buttons[i]) {
             id = i;
             break;
@@ -148,8 +148,8 @@ void UIKeyBinder_Create(void *data)
     RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, entity->listID, &entity->animator1, true, entity->frameID);
     entity->textSpriteIndex = UIWidgets->textSpriteIndex;
     if (RSDK_sceneInfo->inEditor == false) {
-        int mappings = UIKeyBinder_GetMappings(entity->inputID + 1, entity->type);
-        int frame    = UIButtonPrompt_MappingsToFrame(mappings);
+        int32 mappings = UIKeyBinder_GetMappings(entity->inputID + 1, entity->type);
+        int32 frame    = UIButtonPrompt_MappingsToFrame(mappings);
         RSDK.SetSpriteAnimation(UIKeyBinder->aniFrames, UIKeyBinder_GetButtonListID(), &entity->animator2, true, frame);
     }
 }
@@ -160,7 +160,7 @@ void UIKeyBinder_StageLoad(void)
     UIKeyBinder->sfxFail   = RSDK.GetSFX("Stage/Fail.wav");
 }
 
-int UIKeyBinder_GetButtonListID(void)
+int32 UIKeyBinder_GetButtonListID(void)
 {
     switch (Localization->language) {
         case LANGUAGE_FR: return 9; break;
@@ -172,7 +172,7 @@ int UIKeyBinder_GetButtonListID(void)
     return 1;
 }
 
-int UIKeyBinder_GetMappings(int input, int button)
+int32 UIKeyBinder_GetMappings(int32 input, int32 button)
 {
     switch (button) {
         case 0: return RSDK_controller[input].keyUp.keyMap; break;
@@ -189,7 +189,7 @@ int UIKeyBinder_GetMappings(int input, int button)
     return 0;
 }
 
-void UIKeyBinder_SetMappings(int input, int button, int mappings)
+void UIKeyBinder_SetMappings(int32 input, int32 button, int32 mappings)
 {
     switch (button) {
         case 0: RSDK_controller[input].keyUp.keyMap = mappings; break;
@@ -205,7 +205,7 @@ void UIKeyBinder_SetMappings(int input, int button, int mappings)
     }
 }
 
-int UIKeyBinder_Unknown4(int id)
+int32 UIKeyBinder_Unknown4(int32 id)
 {
     switch (id) {
         case 0: return 7;
@@ -305,7 +305,7 @@ void UIKeyBinder_Unknown12(void)
 
     entity->textFlag = true;
     if (entity->field_11C) {
-        int dist = -(entity->field_11C / abs(entity->field_11C));
+        int32 dist = -(entity->field_11C / abs(entity->field_11C));
         entity->field_11C += dist << 15;
         if (dist < 0) {
             if (entity->field_11C < 0) {
@@ -319,7 +319,7 @@ void UIKeyBinder_Unknown12(void)
     }
 
     if (entity->field_120) {
-        int dist = -(entity->field_120 / abs(entity->field_120));
+        int32 dist = -(entity->field_120 / abs(entity->field_120));
         entity->field_120 += dist << 16;
         if (dist < 0) {
             if (entity->field_120 < 0) {
@@ -377,7 +377,7 @@ void UIKeyBinder_Unknown16(void)
 {
     EntityUIKeyBinder *binder = (EntityUIKeyBinder *)UIKeyBinder->activeBinder;
     if (binder->state == UIKeyBinder_Unknown14) {
-        int mappings = UIKeyBinder_GetMappings(UIKeyBinder->curInputID, UIKeyBinder->curMappings);
+        int32 mappings = UIKeyBinder_GetMappings(UIKeyBinder->curInputID, UIKeyBinder->curMappings);
         // TODO: what is v3??
         // UIKeyBinder_SetMappings(UIKeyBinder->curInputID, v3, 0);
         UIKeyBinder_SetMappings(binder->inputID + 1, binder->type, mappings);

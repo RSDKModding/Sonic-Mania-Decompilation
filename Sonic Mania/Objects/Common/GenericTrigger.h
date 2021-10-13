@@ -7,8 +7,8 @@
 typedef struct {
     RSDK_OBJECT
     void (*callbacks[16])(void);
-    int playerID;
-    int field_48;
+    int32 playerID;
+    int32 field_48;
 } ObjectGenericTrigger;
 
 // Entity Class

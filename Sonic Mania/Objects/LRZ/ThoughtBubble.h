@@ -14,8 +14,8 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    int type;
-    int timer;
+    int32 type;
+    int32 timer;
     Vector2 drawPos1;
     Vector2 drawPos2;
     Animator animator1;

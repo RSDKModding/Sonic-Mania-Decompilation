@@ -87,7 +87,7 @@ void EncoreIntro_Create(void *data)
             ruby->animator2.animationID = -1;
         }
         else {
-            int id = RSDK.GetEntityID(entity);
+            int32 id = RSDK.GetEntityID(entity);
 
             foreach_all(Animals, animal)
             {
@@ -540,7 +540,7 @@ bool32 EncoreIntro_CutsceneState_Unknown10(EntityCutsceneSeq *host)
             CREATE_ENTITY(Explosion, intToVoid(2), mystic->position.x, mystic->position.y)->drawOrder = Zone->playerDrawHigh - 1;
             Music_PlayTrack(TRACK_HBHMISCHIEF);
 
-            for (int i = 0; i < 2; ++i) {
+            for (int32 i = 0; i < 2; ++i) {
                 EntityPlayer *player = RSDK_GET_ENTITY(i, Player);
                 player->state        = Player_State_Air;
                 player->onGround     = false;
@@ -566,10 +566,10 @@ bool32 EncoreIntro_CutsceneState_Unknown11(EntityCutsceneSeq *host)
     player->direction = ruby->position.x < player->position.x;
     buddy->direction  = ruby->position.x < buddy->position.x;
 
-    int offset = -0x320000;
+    int32 offset = -0x320000;
     if (buddy->direction)
         offset = 0x320000;
-    int pos = offset + ruby->position.x;
+    int32 pos = offset + ruby->position.x;
 
     if (mystic->position.x != pos) {
         if (mystic->position.x >= pos) {
@@ -794,8 +794,8 @@ bool32 EncoreIntro_CutsceneState_Unknown15(EntityCutsceneSeq *host)
 
     entity->position.y = mystic->position.y;
     if (entity->position.x <= mystic->position.x) {
-        int storeX         = entity->position.x;
-        int storeY         = entity->position.y;
+        int32 storeX         = entity->position.x;
+        int32 storeY         = entity->position.y;
         entity->position.x = mystic->position.x;
         entity->position.y = mystic->position.y;
         HeavyMystic_Unknown2();
@@ -955,7 +955,7 @@ bool32 EncoreIntro_CutsceneState_Unknown19(EntityCutsceneSeq *host)
                 players[0] = player;
                 players[1] = buddy;
 
-                for (int i = 0, angle = 0; angle < 0x80; ++i, angle += 0x40) {
+                for (int32 i = 0, angle = 0; angle < 0x80; ++i, angle += 0x40) {
                     if (!players[i])
                         break;
                     EntityPlayer *playerPtr = players[i];
@@ -1128,7 +1128,7 @@ bool32 EncoreIntro_CutsceneState_Unknown24(EntityCutsceneSeq *host)
     return false;
 }
 
-void EncoreIntro_SaveGameCB(int status)
+void EncoreIntro_SaveGameCB(int32 status)
 {
     UIWaitSpinner_Wait2();
     EncoreIntro->field_28 = 0;

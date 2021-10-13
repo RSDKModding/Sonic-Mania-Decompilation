@@ -18,9 +18,9 @@ typedef struct {
     uint8 speed;
     uint16 distance;
     uint8 field_60;
-    int field_64;
-    int field_68;
-    int field_6C;
+    int32 field_64;
+    int32 field_68;
+    int32 field_6C;
     bool32 flag;
     Vector2 startPos;
     uint8 startDir;

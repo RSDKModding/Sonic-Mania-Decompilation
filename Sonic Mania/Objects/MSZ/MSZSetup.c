@@ -40,10 +40,10 @@ void MSZSetup_StageLoad(void)
                 RSDK.RotatePalette(2, 204, 207, false);
             }
             else {
-                for (int i = 0; i < 0x400; ++i) MSZSetup->bg->deformationData[i] = MSZSetup->deformData[i & 0x1F];
+                for (int32 i = 0; i < 0x400; ++i) MSZSetup->bg->deformationData[i] = MSZSetup->deformData[i & 0x1F];
             }
 #else
-            for (int i = 0; i < 0x400; ++i) MSZSetup->bg->deformationData[i] = MSZSetup->deformData[i & 0x1F];
+            for (int32 i = 0; i < 0x400; ++i) MSZSetup->bg->deformationData[i] = MSZSetup->deformData[i & 0x1F];
 #endif
 
 #if RETRO_USE_PLUS
@@ -142,9 +142,9 @@ void MSZSetup_StageLoad(void)
 
 void MSZSetup_Unknown2(void)
 {
-    int id         = 0;
+    int32 id         = 0;
     TileLayer *bg1 = RSDK.GetSceneLayer(0);
-    for (int i = 0; i < bg1->scrollInfoCount; ++i) {
+    for (int32 i = 0; i < bg1->scrollInfoCount; ++i) {
         MSZSetup->field_138[id++] = bg1->scrollInfo[i].parallaxFactor;
 #if RETRO_USE_PLUS
         if (RSDK_sceneInfo->filter == SCN_FILTER_MANIA)
@@ -153,7 +153,7 @@ void MSZSetup_Unknown2(void)
     }
 
     TileLayer *bg2 = RSDK.GetSceneLayer(1);
-    for (int i = 0; i < bg2->scrollInfoCount; ++i) {
+    for (int32 i = 0; i < bg2->scrollInfoCount; ++i) {
         MSZSetup->field_138[id++] = bg2->scrollInfo[i].parallaxFactor;
 #if RETRO_USE_PLUS
         if (RSDK_sceneInfo->filter == SCN_FILTER_MANIA)
@@ -171,16 +171,16 @@ void MSZSetup_Unknown2(void)
     }
 }
 
-void MSZSetup_Unknown4(int parallaxMultiplier)
+void MSZSetup_Unknown4(int32 parallaxMultiplier)
 {
-    int id         = 0;
+    int32 id         = 0;
     TileLayer *bg1 = RSDK.GetSceneLayer(0);
-    for (int i = 0; i < bg1->scrollInfoCount; ++i) {
+    for (int32 i = 0; i < bg1->scrollInfoCount; ++i) {
         bg1->scrollInfo[i].scrollSpeed = parallaxMultiplier * MSZSetup->field_138[id++];
     }
 
     TileLayer *bg2 = RSDK.GetSceneLayer(1);
-    for (int i = 0; i < bg2->scrollInfoCount; ++i) {
+    for (int32 i = 0; i < bg2->scrollInfoCount; ++i) {
         bg2->scrollInfo[i].scrollSpeed = parallaxMultiplier * MSZSetup->field_138[id++];
     }
 
@@ -260,7 +260,7 @@ void MSZSetup_SwitchPalettes(void)
 #if RETRO_USE_PLUS
         if (!(RSDK_sceneInfo->filter & FILTER_ENCORE)) {
 #endif
-            for (int i = 0; i < 0x400; ++i) {
+            for (int32 i = 0; i < 0x400; ++i) {
                 MSZSetup->bg->deformationData[i] = MSZSetup->deformData[i & 0x1F];
             }
 #if RETRO_USE_PLUS
@@ -284,14 +284,14 @@ void MSZSetup_HandleRestart(void)
 {
     Zone_ReloadStoredEntities(0x5A00000, 0xD40000, true);
 
-    int id         = 0;
+    int32 id         = 0;
     TileLayer *bg1 = RSDK.GetSceneLayer(0);
-    for (int i = 0; i < bg1->scrollInfoCount; ++i) {
+    for (int32 i = 0; i < bg1->scrollInfoCount; ++i) {
         bg1->scrollInfo[i].scrollPos = globals->parallaxOffset[id++];
     }
 
     TileLayer *bg2 = RSDK.GetSceneLayer(1);
-    for (int i = 0; i < bg2->scrollInfoCount; ++i) {
+    for (int32 i = 0; i < bg2->scrollInfoCount; ++i) {
         bg2->scrollInfo[i].scrollPos = globals->parallaxOffset[id++];
     }
 

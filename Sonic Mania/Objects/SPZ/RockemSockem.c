@@ -35,16 +35,16 @@ void RockemSockem_Update(void)
     {
         if (Player_CheckBadnikHit(player, entity, &RockemSockem->hitbox)) {
 
-            int vel = 0;
+            int32 vel = 0;
             if (abs(player->velocity.x) <= abs(player->velocity.y)) {
                 vel = abs(player->velocity.y);
             }
             else {
                 vel = abs(player->velocity.x);
             }
-            int angle      = RSDK.ATan2((player->position.x - entity->position.x) / 3, player->position.y - entity->position.y);
-            int distX      = abs(entity->position.x - entity->startPos.x);
-            int distY      = abs(entity->position.y - entity->startPos.y);
+            int32 angle      = RSDK.ATan2((player->position.x - entity->position.x) / 3, player->position.y - entity->position.y);
+            int32 distX      = abs(entity->position.x - entity->startPos.x);
+            int32 distY      = abs(entity->position.y - entity->startPos.y);
             entity->timer2 = 120;
             if ((distX >> 16) * (distX >> 16) + (distY >> 16) * (distY >> 16) < 0x100 && !entity->timer) {
                 if ((angle - 32) & 0xC0) {
@@ -76,7 +76,7 @@ void RockemSockem_Update(void)
             else {
                 if ((((angle - 32) >> 6) & 3) != 1) {
                     if ((((angle - 32) >> 6) & 3) == 2) {
-                        int spd            = 0;
+                        int32 spd            = 0;
                         player->velocity.x = (0x700 * RSDK.Cos256(angle) + player->velocity.x) >> 1;
                         if (0x700 * RSDK.Sin256(angle) >= 0)
                             spd = 0x700 * RSDK.Sin256(angle);
@@ -86,7 +86,7 @@ void RockemSockem_Update(void)
                         RSDK.SetSpriteAnimation(player->spriteIndex, ANI_SPRINGCS, &player->playerAnimator, false, 0);
                     }
                     else if ((((angle - 32) >> 6) & 3) != 3) {
-                        int spd            = 0;
+                        int32 spd            = 0;
                         player->velocity.x = ((RSDK.Cos256(angle) << 9) + player->velocity.x) >> 1;
                         if (RSDK.Sin256(angle) << 10 >= 0)
                             spd = RSDK.Sin256(angle) << 10;
@@ -94,13 +94,13 @@ void RockemSockem_Update(void)
                             spd = -0x400 * RSDK.Sin256(angle);
                         player->velocity.y = -spd;
 
-                        int anim = player->playerAnimator.animationID;
+                        int32 anim = player->playerAnimator.animationID;
                         if (anim != ANI_JUMP && anim != ANI_JOG && anim != ANI_RUN && anim != ANI_DASH)
                             player->playerAnimator.animationID = ANI_WALK;
                     }
                 }
                 else {
-                    int spd            = 0;
+                    int32 spd            = 0;
                     player->velocity.x = (0x500 * RSDK.Cos256(angle) + player->velocity.x) >> 1;
                     if (0x500 * RSDK.Sin256(angle) >= 0)
                         spd = 0x500 * RSDK.Sin256(angle);
@@ -140,7 +140,7 @@ void RockemSockem_StaticUpdate(void) {}
 void RockemSockem_Draw(void)
 {
     RSDK_THIS(RockemSockem);
-    for (int i = 0; i < RockemSockem_coilCount; ++i) {
+    for (int32 i = 0; i < RockemSockem_coilCount; ++i) {
         entity->rotation = entity->jointRotations[i];
         RSDK.DrawSprite(&entity->jointAnimator, &entity->jointPositions[i], false);
     }
@@ -189,13 +189,13 @@ void RockemSockem_StageLoad(void)
 void RockemSockem_Unknown1(void)
 {
     RSDK_THIS(RockemSockem);
-    int x    = (RSDK.Sin256(entity->angle) << 11) + entity->drawPos.x;
-    int y    = (RSDK.Cos256(entity->angle) << 11) + entity->drawPos.y;
-    int ang  = RSDK.ATan2(y - entity->position.y, (RSDK.Sin256(entity->angle) << 11) + entity->drawPos.x - entity->position.x);
-    int posX = (0xC00 * RSDK.Sin256(ang) + entity->position.x) & 0xFFFF0000;
-    int posY = (0xC00 * RSDK.Cos256(ang) + entity->position.y) & 0xFFFF0000;
+    int32 x    = (RSDK.Sin256(entity->angle) << 11) + entity->drawPos.x;
+    int32 y    = (RSDK.Cos256(entity->angle) << 11) + entity->drawPos.y;
+    int32 ang  = RSDK.ATan2(y - entity->position.y, (RSDK.Sin256(entity->angle) << 11) + entity->drawPos.x - entity->position.x);
+    int32 posX = (0xC00 * RSDK.Sin256(ang) + entity->position.x) & 0xFFFF0000;
+    int32 posY = (0xC00 * RSDK.Cos256(ang) + entity->position.y) & 0xFFFF0000;
 
-    int angle = entity->angle;
+    int32 angle = entity->angle;
     x >>= 16;
     y >>= 16;
     posX >>= 16;

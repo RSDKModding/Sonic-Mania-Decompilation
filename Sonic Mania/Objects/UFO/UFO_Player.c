@@ -30,7 +30,7 @@ void UFO_Player_Draw(void)
     RSDK_THIS(UFO_Player);
     if (entity->depth3D >= 1) {
         RSDK.Prepare3DScene(UFO_Player->sceneIndex);
-        int anim = entity->playerAnimator.animationID;
+        int32 anim = entity->playerAnimator.animationID;
         if (anim == 2 || anim == 3) {
             RSDK.MatrixTranslateXYZ(&entity->matrix2, entity->position.x, entity->height + 0x100000, entity->position.y, true);
             RSDK.MatrixRotateX(&entity->matrix1, entity->field_74);
@@ -171,14 +171,14 @@ void UFO_Player_ProcessPlayerControl(void)
     RSDK_THIS(UFO_Player);
     if (entity->controllerID < PLAYER_MAX) {
 #if RETRO_USE_TOUCH_CONTROLS
-        for (int t = 0; t < RSDK_touchMouse->count; ++t) {
-            int tx = (RSDK_touchMouse->x[t] * RSDK_screens->width);
-            int ty = (RSDK_touchMouse->y[t] * RSDK_screens->height);
+        for (int32 t = 0; t < RSDK_touchMouse->count; ++t) {
+            int32 tx = (RSDK_touchMouse->x[t] * RSDK_screens->width);
+            int32 ty = (RSDK_touchMouse->y[t] * RSDK_screens->height);
 
             if (RSDK_touchMouse->down[t]) {
                 if (tx >= 0 && ty >= 96 && tx <= RSDK_screens->centerX && ty <= RSDK_screens->height) {
-                    int tx = (RSDK_touchMouse->x[t] * RSDK_screens->width);
-                    int ty = (RSDK_touchMouse->y[t] * RSDK_screens->height);
+                    int32 tx = (RSDK_touchMouse->x[t] * RSDK_screens->width);
+                    int32 ty = (RSDK_touchMouse->y[t] * RSDK_screens->height);
                     tx -= 64;
                     ty -= 192;
 
@@ -205,9 +205,9 @@ void UFO_Player_ProcessPlayerControl(void)
             }
         }
 
-        for (int t = 0; t < RSDK_touchMouse->count; ++t) {
-            int tx = (RSDK_touchMouse->x[t] * RSDK_screens->width);
-            int ty = (RSDK_touchMouse->y[t] * RSDK_screens->height);
+        for (int32 t = 0; t < RSDK_touchMouse->count; ++t) {
+            int32 tx = (RSDK_touchMouse->x[t] * RSDK_screens->width);
+            int32 ty = (RSDK_touchMouse->y[t] * RSDK_screens->height);
 
             if (RSDK_touchMouse->down[t]) {
                 if (tx >= RSDK_screens->centerX && ty >= 96 && tx <= RSDK_screens->width && ty <= RSDK_screens->height) {
@@ -224,9 +224,9 @@ void UFO_Player_ProcessPlayerControl(void)
         }
         entity->touchJump = RSDK_controller[entity->controllerID].keyA.down;
 
-        for (int t = 0; t < RSDK_touchMouse->count; ++t) {
-            int tx = (RSDK_touchMouse->x[t] * RSDK_screens->width);
-            int ty = (RSDK_touchMouse->y[t] * RSDK_screens->height);
+        for (int32 t = 0; t < RSDK_touchMouse->count; ++t) {
+            int32 tx = (RSDK_touchMouse->x[t] * RSDK_screens->width);
+            int32 ty = (RSDK_touchMouse->y[t] * RSDK_screens->height);
 
             if (RSDK_touchMouse->down[t]) {
                 if (tx >= RSDK_screens->width - 0x80 && ty >= 0 && tx <= RSDK_screens->width && ty <= 0x40) {
@@ -310,7 +310,7 @@ void UFO_Player_ChangeMachState(void)
 void UFO_Player_HandleBumperTiles(void)
 {
     RSDK_THIS(UFO_Player);
-    int flags = 0;
+    int32 flags = 0;
 
     uint16 tile = RSDK.GetTileInfo(UFO_Setup->playFieldLayer, (entity->position.x - 0x80000) >> 20, (entity->position.y - 0x80000) >> 20);
     if (RSDK.GetTileBehaviour(tile, 0) == 1)
@@ -414,7 +414,7 @@ void UFO_Player_HandleSpeedUp(void)
 void UFO_Player_StateRun(void)
 {
     RSDK_THIS(UFO_Player);
-    int val = UFO_Player->maxSpeed - 0x87000;
+    int32 val = UFO_Player->maxSpeed - 0x87000;
     if (entity->right) {
         if (entity->angleZ < (val >> 11) + 1280)
             entity->angleZ += (val >> 14) + entity->field_8C;
@@ -455,8 +455,8 @@ void UFO_Player_StateRun(void)
     }
     else {
         UFO_Player_HandleSpeedUp();
-        int x = (entity->groundVel >> 10) * RSDK.Sin1024(entity->angle);
-        int y = (entity->groundVel >> 10) * RSDK.Cos1024(entity->angle);
+        int32 x = (entity->groundVel >> 10) * RSDK.Sin1024(entity->angle);
+        int32 y = (entity->groundVel >> 10) * RSDK.Cos1024(entity->angle);
         entity->velocity.x += (x - entity->velocity.x) / entity->field_84;
         entity->velocity.y += (-y - entity->velocity.y) / entity->field_84;
     }
@@ -486,9 +486,9 @@ void UFO_Player_StateRun(void)
 void UFO_Player_StateJump(void)
 {
     RSDK_THIS(UFO_Player);
-    int val = UFO_Player->maxSpeed - 0x60000;
+    int32 val = UFO_Player->maxSpeed - 0x60000;
 
-    int speed = 0;
+    int32 speed = 0;
     if (entity->right) {
         speed = (val >> 20) + 12;
         if (entity->angleZ < (val >> 10) + 1280)
@@ -540,7 +540,7 @@ void UFO_Player_HandleTilt(void)
 {
     RSDK_THIS(UFO_Player);
 
-    int tilt = 0;
+    int32 tilt = 0;
     if (entity->right) {
         tilt = 8;
     }
@@ -576,8 +576,8 @@ void UFO_Player_HandleTilt(void)
 void UFO_Player_Unknown8(void)
 {
     RSDK_THIS(UFO_Player);
-    int xVel = entity->velocity.x;
-    int zVel = entity->velocity.y;
+    int32 xVel = entity->velocity.x;
+    int32 zVel = entity->velocity.y;
     entity->position.x += xVel;
     entity->position.y += zVel;
     entity->velocity.x = xVel - (xVel >> 8);
@@ -605,8 +605,8 @@ void UFO_Player_Unknown8(void)
 void UFO_Player_Unknown9(void)
 {
     RSDK_THIS(UFO_Player);
-    int x = entity->velocity.x;
-    int y = entity->velocity.y;
+    int32 x = entity->velocity.x;
+    int32 y = entity->velocity.y;
     entity->gravityStrength -= 0x800;
     entity->position.x += x - (x >> 5);
     entity->velocity.x = x - (x >> 5);
@@ -632,8 +632,8 @@ void UFO_Player_Unknown9(void)
 void UFO_Player_Unknown10(void)
 {
     RSDK_THIS(UFO_Player);
-    int xVel = entity->velocity.x;
-    int zVel = entity->velocity.y;
+    int32 xVel = entity->velocity.x;
+    int32 zVel = entity->velocity.y;
     ++entity->timer;
     entity->position.x += xVel - (xVel >> 4);
     entity->velocity.x = xVel - (xVel >> 4);

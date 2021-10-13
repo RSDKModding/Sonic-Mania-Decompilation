@@ -118,15 +118,15 @@ void TornadoPath_Unknown2(void)
     EntityCamera *camera = TornadoPath->cameraPtr;
     if (camera) {
         EntityTornadoPath *node = RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot + 1, TornadoPath);
-        int y                   = (camera->position.y - node->position.y) >> 16;
-        int x                   = (camera->position.x - node->position.x) >> 16;
+        int32 y                   = (camera->position.y - node->position.y) >> 16;
+        int32 x                   = (camera->position.x - node->position.x) >> 16;
         entity->angle           = RSDK.ATan2(x, y);
-        int cx                  = camera->position.x & 0xFFFF0000;
-        int cy                  = camera->position.y & 0xFFFF0000;
+        int32 cx                  = camera->position.x & 0xFFFF0000;
+        int32 cy                  = camera->position.y & 0xFFFF0000;
         camera->position.x -= entity->targetSpeedStore * RSDK.Cos256(entity->angle);
         camera->position.y -= entity->targetSpeedStore * RSDK.Sin256(entity->angle);
         TornadoPath->hitboxID = entity->fastMode;
-        int radius            = entity->targetSpeedStore >> 3;
+        int32 radius            = entity->targetSpeedStore >> 3;
         if (x * x + y * y < radius) {
             entity->active = ACTIVE_NEVER;
             node->active   = ACTIVE_NORMAL;
@@ -290,8 +290,8 @@ void TornadoPath_Unknown8(void)
     if (!player1->velocity.y && player1->state != Player_State_None) {
         player1->stateInput = Player_ProcessP1Input;
         entity->timer       = 0;
-        int velX            = 0;
-        int velY            = 0;
+        int32 velX            = 0;
+        int32 velY            = 0;
         if (entity->type == 8) {
             foreach_all(TornadoPath, node)
             {
@@ -353,8 +353,8 @@ void TornadoPath_Unknown11(void)
     TornadoPath->field_8.x   = 0;
     TornadoPath->field_8.y   = 0;
     if (player1->onGround) {
-        int velocityX = 0;
-        int velocityY = 0;
+        int32 velocityX = 0;
+        int32 velocityY = 0;
         foreach_all(TornadoPath, node)
         {
             if (node->type == 9) {

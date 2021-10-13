@@ -41,8 +41,8 @@ void UICharButton_Update(void)
     }
 
     EntityUIControl *parent = (EntityUIControl *)entity->parent;
-    int id                  = -1;
-    for (int i = 0; i < parent->buttonCount; ++i) {
+    int32 id                  = -1;
+    for (int32 i = 0; i < parent->buttonCount; ++i) {
         if (entity == (EntityUICharButton *)parent->buttons[i]) {
             id = i;
             break;
@@ -122,7 +122,7 @@ void UICharButton_Unknown3(void)
     RSDK.DrawRect(drawPos.x, drawPos.y, 0x5A0000, 0x100000, 0, 255, INK_NONE, false);
 
     if (entity->state != UICharButton_Unknown11 || !(entity->timer & 2)) {
-        int frame = entity->characterID;
+        int32 frame = entity->characterID;
         if (entity->characterID > 2)
             frame = entity->characterID + 1;
         RSDK.SetSpriteAnimation(UICharButton->aniFrames, 1, &entity->animator1, true, frame);

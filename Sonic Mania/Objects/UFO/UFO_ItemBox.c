@@ -13,9 +13,9 @@ void UFO_ItemBox_LateUpdate(void)
     RSDK_THIS(UFO_ItemBox);
     if (entity->state == UFO_ItemBox_Unknown1) {
         entity->visible = true;
-        int x           = entity->position.x >> 8;
-        int y           = entity->height >> 8;
-        int z           = entity->position.y >> 8;
+        int32 x           = entity->position.x >> 8;
+        int32 y           = entity->height >> 8;
+        int32 z           = entity->position.y >> 8;
 
         Matrix *mat = &UFO_Camera->matWorld;
 
@@ -24,7 +24,7 @@ void UFO_ItemBox_LateUpdate(void)
         entity->depth3D = mat->values[2][3] + (y * mat->values[2][1] >> 8) + (z * mat->values[2][2] >> 8) + (x * mat->values[2][0] >> 8);
 
         if (entity->depth3D >= 0x2000) {
-            int depth = (int)((mat->values[0][3] << 8) + (y * mat->values[0][1] & 0xFFFFFF00) + (z * mat->values[0][2] & 0xFFFFFF00)
+            int32 depth = (int32)((mat->values[0][3] << 8) + (y * mat->values[0][1] & 0xFFFFFF00) + (z * mat->values[0][2] & 0xFFFFFF00)
                               + (x * mat->values[0][0] & 0xFFFFFF00))
                         / entity->depth3D;
             entity->visible = abs(depth) < 0x100;
@@ -105,12 +105,12 @@ void UFO_ItemBox_Unknown1(void)
         }
         else if (player->stateInput) {
             if (player->state != UFO_Player_Unknown9) {
-                int pr = ((entity->position.x - player->position.x) >> 16) * ((entity->position.x - player->position.x) >> 16);
+                int32 pr = ((entity->position.x - player->position.x) >> 16) * ((entity->position.x - player->position.x) >> 16);
 
-                int rx = (entity->position.y - player->position.y) >> 16;
-                int ry = (entity->height - player->height - 0xA0000) >> 16;
+                int32 rx = (entity->position.y - player->position.y) >> 16;
+                int32 ry = (entity->height - player->height - 0xA0000) >> 16;
 
-                int spd = UFO_Player->maxSpeed >> 8;
+                int32 spd = UFO_Player->maxSpeed >> 8;
                 if (pr + (rx * rx + ry * ry) < spd) {
                     player->gravityStrength = 0x60000;
                     player->onGround        = false;
@@ -140,7 +140,7 @@ void UFO_ItemBox_Unknown2(void)
     entity->drawPos.x += ((RSDK_screens->centerX << 16) - entity->drawPos.x) >> 3;
     entity->drawPos.y += (((RSDK_screens->centerX - 4) << 16) - entity->drawPos.y) >> 3;
 
-    int scale       = entity->scale.x + ((512 - entity->scale.x) >> 3);
+    int32 scale       = entity->scale.x + ((512 - entity->scale.x) >> 3);
     entity->scale.x = scale;
     entity->scale.y = scale;
 

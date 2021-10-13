@@ -22,8 +22,8 @@ void OOZ2Outro_Update(void)
                 layer->scrollInfo[0].scrollPos = -entity->scrollOffset.x;
             }
             player->collisionLayers |= Zone->moveID;
-            player->moveOffset.x = -(int)(entity->moveOffset.x & 0xFFFF0000);
-            player->moveOffset.y = -(int)(entity->moveOffset.y & 0xFFFF0000);
+            player->moveOffset.x = -(int32)(entity->moveOffset.x & 0xFFFF0000);
+            player->moveOffset.y = -(int32)(entity->moveOffset.y & 0xFFFF0000);
         }
 
         if (entity->prisonPtr) {

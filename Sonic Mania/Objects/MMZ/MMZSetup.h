@@ -6,16 +6,16 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    int aniTileFrameB;
-    STATIC(int aniTileDelay3, 60);
-    TABLE(int aniTileDelays[12], { 9, 4, 4, 2, 2, 2, 9, 4, 4, 2, 2, 2 });
+    int32 aniTileFrameB;
+    STATIC(int32 aniTileDelay3, 60);
+    TABLE(int32 aniTileDelays[12], { 9, 4, 4, 2, 2, 2, 9, 4, 4, 2, 2, 2 });
     uint8 paletteTimer;
     uint8 aniTileDelay;
     uint8 aniTileFrameA;
     uint8 aniTileDelay2;
-    int aniTileDelay4;
-    int aniTileFrameC;
-    int aniTileFrameD;
+    int32 aniTileDelay4;
+    int32 aniTileFrameC;
+    int32 aniTileFrameD;
     uint16 aniTiles;
 } ObjectMMZSetup;
 

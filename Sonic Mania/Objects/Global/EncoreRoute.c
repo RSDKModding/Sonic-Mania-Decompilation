@@ -7,13 +7,13 @@ void EncoreRoute_Update(void)
 {
     RSDK_THIS(EncoreRoute);
 
-    int offX = entity->offset.x >> 16;
-    int offY = entity->offset.y >> 16;
+    int32 offX = entity->offset.x >> 16;
+    int32 offY = entity->offset.y >> 16;
 
-    int posY = entity->position.y >> 20;
-    for (int y = 0; y < (entity->size.y >> 0x10); ++y, ++posY) {
-        int posX = entity->position.x >> 20;
-        for (int x = 0; x < (entity->size.x >> 0x10); ++x, ++posX) {
+    int32 posY = entity->position.y >> 20;
+    for (int32 y = 0; y < (entity->size.y >> 0x10); ++y, ++posY) {
+        int32 posX = entity->position.x >> 20;
+        for (int32 x = 0; x < (entity->size.x >> 0x10); ++x, ++posX) {
             uint8 src = -1;
             uint8 dst = -1;
             switch (entity->layerSrc) {

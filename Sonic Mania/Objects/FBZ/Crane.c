@@ -22,7 +22,7 @@ void Crane_Draw(void)
     RSDK_THIS(Crane);
     if (RSDK_sceneInfo->currentDrawGroup == entity->drawOrder) {
         SpriteFrame *frame = RSDK.GetFrame(Crane->aniFrames, 4, 0);
-        int height         = (entity->position.y - entity->startPos.y) >> 16;
+        int32 height         = (entity->position.y - entity->startPos.y) >> 16;
         frame->sprY        = 230 - height;
         frame->height      = height;
         frame->pivotY      = -16 - height;
@@ -120,8 +120,8 @@ void Crane_CheckOnScreen(void)
 {
     RSDK_THIS(Crane);
     if (!RSDK.CheckOnScreen(RSDK_sceneInfo->entity, &entity->updateRange)) {
-        int x              = entity->position.x;
-        int y              = entity->position.y;
+        int32 x              = entity->position.x;
+        int32 y              = entity->position.y;
         entity->position.x = entity->startPos.x;
         entity->position.y = entity->startPos.y;
         if (RSDK.CheckOnScreen(entity, &entity->updateRange)) {

@@ -70,21 +70,21 @@ void CPZ1Intro_Particle_CB(Entity *d)
     RSDK.SetSpriteAnimation(CPZ1Intro->particleSpriteIndex, 1, &debris->animator, true, 0);
 }
 
-void CPZ1Intro_Unknown3(Entity *player1, Entity *cutSeq, Entity *player2, int val)
+void CPZ1Intro_Unknown3(Entity *player1, Entity *cutSeq, Entity *player2, int32 val)
 {
     EntityPlayer *players[2];
     players[0]             = (EntityPlayer *)player1;
     players[1]             = (EntityPlayer *)player2;
     EntityCutsceneSeq *seq = (EntityCutsceneSeq *)cutSeq;
 
-    int id = 0;
-    for (int angle = 0; angle < 0x80; angle += 0x40) {
+    int32 id = 0;
+    for (int32 angle = 0; angle < 0x80; angle += 0x40) {
         EntityPlayer *player = players[id++];
         if (!player)
             break;
 
-        int valX = (player->position.x - player->position.x) >> 3;
-        int valY = (val + 0xA00 * RSDK.Sin256(2 * (angle + seq->timer - seq->field_68)) - player->position.y) >> 3;
+        int32 valX = (player->position.x - player->position.x) >> 3;
+        int32 valY = (val + 0xA00 * RSDK.Sin256(2 * (angle + seq->timer - seq->field_68)) - player->position.y) >> 3;
         RSDK.SetSpriteAnimation(player->spriteIndex, ANI_FAN, &player->playerAnimator, false, 0);
         player->position.x += valX;
         player->position.y += valY;
@@ -101,7 +101,7 @@ bool32 CPZ1Intro_CheckSonicAnimFinish(void)
     return player1->playerAnimator.frameID == player1->playerAnimator.frameCount - 1 && player1->playerAnimator.animationTimer == 30;
 }
 
-bool32 CPZ1Intro_CheckTailsAnimFinish(int timer)
+bool32 CPZ1Intro_CheckTailsAnimFinish(int32 timer)
 {
     RSDK_GET_PLAYER(player1, player2, camera);
     unused(player2);
@@ -277,7 +277,7 @@ bool32 CPZ1Intro_Unknown8(void *h)
     EntityDebris *debris = (EntityDebris *)CPZ1Intro->debris;
     Hitbox *playerHitbox = Player_GetHitbox(player1);
 
-    int playerY = player1->position.y + ((playerHitbox->top + 2) << 16);
+    int32 playerY = player1->position.y + ((playerHitbox->top + 2) << 16);
     if (debris->position.y >= playerY) {
         RSDK.PlaySfx(CPZ1Intro->sfxDNABurst, 0, 255);
         ParticleHelpers_Unknown1(debris->position.x, playerY);

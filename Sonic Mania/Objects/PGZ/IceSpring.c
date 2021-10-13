@@ -10,16 +10,16 @@ void IceSpring_Update(void)
     entity->playerBits = 0;
     if (entity->state) {
         if (!entity->animator.animationSpeed) {
-            int i = 0;
+            int32 i = 0;
             foreach_active(Player, player)
             {
                 if (entity->planeFilter && player->collisionPlane != ((entity->planeFilter - 1) & 1))
                     continue;
 
-                int storeX = player->position.x;
-                int storeY = player->position.y;
+                int32 storeX = player->position.x;
+                int32 storeY = player->position.y;
 
-                int collided = 0;
+                int32 collided = 0;
                 if (player->state == Ice_State_FrozenPlayer)
                     collided = RSDK.CheckObjectCollisionBox(entity, &entity->hitbox, player, &Ice->hitbox2, 0);
                 else
@@ -31,7 +31,7 @@ void IceSpring_Update(void)
                     continue;
                 }
 
-                int type = entity->type;
+                int32 type = entity->type;
                 bool32 collideCheck = false;
                 if (!type) {
                     if ((entity->direction & 2) != 0)
@@ -86,7 +86,7 @@ void IceSpring_Update(void)
             }
         }
         StateMachine_Run(entity->state);
-        for (int i = 0; i < Player->playerCount; ++i) {
+        for (int32 i = 0; i < Player->playerCount; ++i) {
             if ((1 << i) & entity->playerBits) {
                 EntityPlayer *player = RSDK_GET_ENTITY(i, Player);
                 if (IceSpring->animators[i].animationID == ANI_JUMP) {
@@ -210,7 +210,7 @@ void IceSpring_Serialize(void)
     RSDK_EDITABLE_VAR(IceSpring, VAR_UINT8, planeFilter);
 }
 
-void IceSpring_Shatter(int velX, int velY)
+void IceSpring_Shatter(int32 velX, int32 velY)
 {
     RSDK_THIS(IceSpring);
     RSDK.PlaySfx(IceSpring->shatterSFX, 0, 255);

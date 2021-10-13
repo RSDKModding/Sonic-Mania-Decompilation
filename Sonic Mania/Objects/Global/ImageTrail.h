@@ -15,21 +15,21 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     Entity *player;
-    int playerObjID;
+    int32 playerObjID;
     Vector2 currentPos;
     Vector2 statePos[ImageTrail_TrackCount];
-    int currentRotation;
-    int stateRotation[ImageTrail_TrackCount];
+    int32 currentRotation;
+    int32 stateRotation[ImageTrail_TrackCount];
     uint8 currentDirection;
     uint8 stateDirection[ImageTrail_TrackCount];
     uint8 currentVisible;
     uint8 stateVisible[ImageTrail_TrackCount];
-    int currentScale;
-    int stateScale[ImageTrail_TrackCount];
+    int32 currentScale;
+    int32 stateScale[ImageTrail_TrackCount];
     Animator currentAnimData;
     Animator stateAnim[ImageTrail_TrackCount];
-    int baseAlpha;
-    int fadeoutTimer;
+    int32 baseAlpha;
+    int32 fadeoutTimer;
 } EntityImageTrail;
 
 // Object Struct

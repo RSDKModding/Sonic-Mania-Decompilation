@@ -13,7 +13,7 @@ void JunctionWheel_Update(void)
         entity->rotation -= 4;
     entity->rotation &= 0x1FF;
 
-    int rot     = ((entity->rotation + 48) >> 6) & 7;
+    int32 rot     = ((entity->rotation + 48) >> 6) & 7;
 
     foreach_active(Player, player) {
         if (player->state == Player_State_None) {

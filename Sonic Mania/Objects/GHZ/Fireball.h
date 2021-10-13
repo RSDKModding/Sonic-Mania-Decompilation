@@ -20,8 +20,8 @@ typedef struct {
     uint8 type;
     uint8 interval;
     uint8 intervalOffset;
-    int field_7C;
-    int field_80;
+    int32 field_7C;
+    int32 field_80;
 } EntityFireball;
 
 // Object Entity

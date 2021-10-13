@@ -6,8 +6,8 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    TABLE(int frameIDs[24], { 0, 1, 2, 3, 4, 5, 6, 5, 4, 3, 2, 1, 0, 1, 2, 3, 4, 5, 6, 5, 4, 3, 2, 1 });
-    TABLE(int directionIDs[24], { 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 1, 1, 1, 1, 1 });
+    TABLE(int32 frameIDs[24], { 0, 1, 2, 3, 4, 5, 6, 5, 4, 3, 2, 1, 0, 1, 2, 3, 4, 5, 6, 5, 4, 3, 2, 1 });
+    TABLE(int32 directionIDs[24], { 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 1, 1, 1, 1, 1 });
 } ObjectConveyorPlatform;
 
 // Entity Class
@@ -15,9 +15,9 @@ typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateCollide);
-    int type;
+    int32 type;
     Vector2 amplitude;
-    int node;
+    int32 node;
     bool32 hasTension;
     int8 frameID;
     uint8 collision;
@@ -25,15 +25,15 @@ typedef struct {
     Vector2 centerPos;
     Vector2 drawPos;
     Vector2 collisionOffset;
-    int stood;
-    int collapseDelay;
-    int stoodAngle;
+    int32 stood;
+    int32 collapseDelay;
+    int32 stoodAngle;
     uint8 stoodPlayers;
     uint8 pushPlayersL;
     uint8 pushPlayersR;
     Hitbox hitbox;
     Animator animator;
-    int childCount;
+    int32 childCount;
 
     uint16 interval;
     uint16 intervalOffset;

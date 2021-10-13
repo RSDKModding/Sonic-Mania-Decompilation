@@ -12,7 +12,7 @@ void Ice_LateUpdate(void) {}
 
 void Ice_StaticUpdate(void)
 {
-    for (int i = 0; i < Player->playerCount; ++i) {
+    for (int32 i = 0; i < Player->playerCount; ++i) {
         if (Ice->playerTimers[i] > 0)
             Ice->playerTimers[i]--;
     }
@@ -398,7 +398,7 @@ void Ice_State_FrozenPlayer(void)
     RSDK_THIS(Player);
 
     bool32 flag = entity->onGround;
-    int skid    = entity->groundVel;
+    int32 skid    = entity->groundVel;
     bool32 groundFlag    = entity->groundedStore;
 
     if (!flag) {
@@ -473,7 +473,7 @@ void Ice_State_FrozenPlayer(void)
 
         if (entity->state == Ice_State_FrozenPlayer) {
             if (entity->onGround) {
-                int rollFric            = entity->rollingFriction;
+                int32 rollFric            = entity->rollingFriction;
                 entity->left            = false;
                 entity->right           = false;
                 entity->rollingFriction = 0;
@@ -494,14 +494,14 @@ void Ice_State_FrozenPlayer(void)
     }
 }
 
-void Ice_ShatterGenerator(int xr, int yr, int count, int velX, int velY, int a6)
+void Ice_ShatterGenerator(int32 xr, int32 yr, int32 count, int32 velX, int32 velY, int32 a6)
 {
     RSDK_THIS(Ice);
     if (a6 > 0)
         count >>= 1;
-    for (int i = 0; i < maxVal(0, count); ++i) {
-        int randY                     = RSDK.Rand(-yr, yr + 1) << 16;
-        int randX                     = RSDK.Rand(-xr, xr + 1) << 16;
+    for (int32 i = 0; i < maxVal(0, count); ++i) {
+        int32 randY                     = RSDK.Rand(-yr, yr + 1) << 16;
+        int32 randX                     = RSDK.Rand(-xr, xr + 1) << 16;
         EntityIce *ice                = CREATE_ENTITY(Ice, intToVoid(3), randX + entity->position.x, randY + entity->position.y);
         ice->velocity.x               = velX + (RSDK.Rand(-6, 8) << 15);
         ice->velocity.y               = velY + (RSDK.Rand(-10, 2) << 15);
@@ -517,7 +517,7 @@ void Ice_ShatterGenerator(int xr, int yr, int count, int velX, int velY, int a6)
     }
 }
 
-void Ice_Unknown7(int velX, Entity *p, int velY)
+void Ice_Unknown7(int32 velX, Entity *p, int32 velY)
 {
     EntityPlayer *player = (EntityPlayer *)p;
     RSDK_THIS(Ice);
@@ -560,7 +560,7 @@ void Ice_Unknown8(Entity *p)
     }
 }
 
-Entity *Ice_Shatter(EntityIce *ice, int velX, int velY)
+Entity *Ice_Shatter(EntityIce *ice, int32 velX, int32 velY)
 {
     RSDK_THIS(Ice);
     EntityItemBox *itemBox = NULL;
@@ -577,7 +577,7 @@ Entity *Ice_Shatter(EntityIce *ice, int velX, int velY)
         Ice_ShatterGenerator(24, 20, 64, velX, velY, 2);
     }
 
-    int count = 0;
+    int32 count = 0;
     switch (ice->type) {
         case 0: break;
         case 1: count = 1;
@@ -588,8 +588,8 @@ Entity *Ice_Shatter(EntityIce *ice, int velX, int velY)
             if (ice->type == 3)
                 count = 5;
 
-            int angle = 16 * (12 - (count >> 1));
-            for (int i = 0; i < count; ++i) {
+            int32 angle = 16 * (12 - (count >> 1));
+            for (int32 i = 0; i < count; ++i) {
                 EntityRing *ring = CREATE_ENTITY(Ring, intToVoid(1), ice->position.x, ice->position.y);
                 ring->velocity.x = velX + 640 * RSDK.Cos256(angle);
                 ring->velocity.y = velY + 640 * RSDK.Sin256(angle);
@@ -653,11 +653,11 @@ void Ice_State_Pillar(void)
     foreach_active(Player, player)
     {
         bool32 flag = true;
-        int playerX = player->position.x;
-        int playerY = player->position.y;
+        int32 playerX = player->position.x;
+        int32 playerY = player->position.y;
 
         if (player->state == Ice_State_FrozenPlayer) {
-            int side = RSDK.CheckObjectCollisionBox(entity, &entity->hitbox3, player, &Ice->hitbox2, false);
+            int32 side = RSDK.CheckObjectCollisionBox(entity, &entity->hitbox3, player, &Ice->hitbox2, false);
             switch (side) {
                 case 1:
                     if (player->velocity.y < 0x40000) {
@@ -759,7 +759,7 @@ void Ice_State_Pillar(void)
         }
 
         if (flag) {
-            int side = RSDK.CheckObjectCollisionBox(entity, &entity->hitbox1, player, &Ice->hitbox2, false);
+            int32 side = RSDK.CheckObjectCollisionBox(entity, &entity->hitbox1, player, &Ice->hitbox2, false);
             if (side >= 2) {
                 if (side <= 3) {
                     if (entity->knuxSmash && player->characterID == ID_KNUCKLES) {
@@ -799,7 +799,7 @@ void Ice_State_Pillar(void)
             player->position.y = playerY;
             entity->position.x -= entity->playerPos.x;
             entity->position.y -= entity->playerPos.y;
-            int prevVel = player->velocity.y;
+            int32 prevVel = player->velocity.y;
             side        = Player_CheckCollisionBox(player, entity, &entity->hitbox1);
             if (side) {
                 if (player->shield == SHIELD_FIRE && player->invincibleTimer <= 0 && !entity->dwordE4) {
@@ -910,7 +910,7 @@ void Ice_Unknown15(void)
 {
     RSDK_THIS(Ice);
 
-    entity->playerPos.y = -(int)(entity->position.y & 0xFFFF0000);
+    entity->playerPos.y = -(int32)(entity->position.y & 0xFFFF0000);
     entity->position.y  = entity->velocity.y + entity->position.y;
     entity->playerPos.y += (entity->velocity.y + entity->position.y) & 0xFFFF0000;
     entity->velocity.y += 0x3800;
@@ -920,7 +920,7 @@ void Ice_Unknown15(void)
         Ice_State_Pillar();
     }
     else {
-        int velY = entity->velocity.y;
+        int32 velY = entity->velocity.y;
         foreach_all(Ice, ice)
         {
             if (ice != entity) {
@@ -1136,7 +1136,7 @@ void Ice_StateDraw_Unknown1(void)
     RSDK_THIS(Ice);
     Vector2 drawPos;
 
-    int dirStore = entity->direction;
+    int32 dirStore = entity->direction;
     drawPos.x    = entity->position.x;
     drawPos.y    = entity->position.y;
     drawPos.x += entity->dwordDC.x;
@@ -1182,7 +1182,7 @@ void Ice_StateDraw_PlayerBlock(void)
     drawPos.y += entity->dwordDC.y;
 
 #if RETRO_USE_PLUS
-    int frame                 = entity->animator1.frameID;
+    int32 frame                 = entity->animator1.frameID;
     entity->inkEffect         = INK_SUB;
     entity->animator1.frameID = 5;
     RSDK.DrawSprite(&entity->animator1, NULL, false);

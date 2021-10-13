@@ -28,7 +28,7 @@ void CutsceneSeq_LateUpdate(void)
         }
     }
 
-    for (int i = 0; i < 8; ++i) {
+    for (int32 i = 0; i < 8; ++i) {
         Vector2 *point = &entity->points[i];
         if (point->x && point->y) {
             break;
@@ -58,7 +58,7 @@ void CutsceneSeq_Draw(void)
     colours[6] = 0x9933FF;
     colours[7] = 0xFF9900;
 
-    for (int i = 0; i < 8; ++i) {
+    for (int32 i = 0; i < 8; ++i) {
         Vector2 *point = &entity->points[i];
         if (point->x || point->y) {
 #if RETRO_USE_PLUS
@@ -88,7 +88,7 @@ void CutsceneSeq_Create(void *data)
 
 void CutsceneSeq_StageLoad(void) {}
 
-Entity *CutsceneSeq_GetEntity(int type)
+Entity *CutsceneSeq_GetEntity(int32 type)
 {
     Entity *entity = NULL;
     if (RSDK.GetEntities(type, (Entity **)&entity)) {
@@ -99,7 +99,7 @@ Entity *CutsceneSeq_GetEntity(int type)
 
 void CutsceneSeq_LockAllPlayerControl(void)
 {
-    for (int i = 0; i < Player->playerCount; ++i) {
+    for (int32 i = 0; i < Player->playerCount; ++i) {
         CutsceneSeq_LockPlayerControl(RSDK.GetEntityByID(i));
     }
 }
@@ -149,7 +149,7 @@ void CutsceneSeq_CheckSkip(uint8 skipType, EntityCutsceneSeq *entity, void (*ski
         }
     }
 }
-void CutsceneSeq_NewState(int nextState, EntityCutsceneSeq *CutsceneSeq)
+void CutsceneSeq_NewState(int32 nextState, EntityCutsceneSeq *CutsceneSeq)
 {
     CutsceneSeq->stateID     = nextState;
     CutsceneSeq->timer       = 0;
@@ -189,7 +189,7 @@ void CutsceneSeq_StartSequence(Entity *host, void **states)
     cutsceneSeq->position.y   = 0;
     cutsceneSeq->cutsceneCurEntity = RSDK_sceneInfo->entity;
     cutsceneSeq->hostEntity        = host;
-    int id                         = 0;
+    int32 id                         = 0;
     while (states[id]) {
         LogHelpers_Print("state = %x", states[id]);
         cutsceneSeq->cutsceneStates[id] = states[id];

@@ -7,7 +7,7 @@
 typedef struct {
     RSDK_OBJECT
     Hitbox hitbox;
-    int field_C;
+    int32 field_C;
     uint16 aniFrames;
     uint16 sfxButton;
     uint16 sfxSmogClear;
@@ -16,10 +16,10 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    int field_58;
-    int field_5C;
-    int sprY;
-    int sprHeight;
+    int32 field_58;
+    int32 field_5C;
+    int32 sprY;
+    int32 sprHeight;
     bool32 activated;
     uint8 playerTimers[4];
     uint8 activePlayers;

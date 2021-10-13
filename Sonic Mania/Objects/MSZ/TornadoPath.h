@@ -8,36 +8,36 @@ typedef struct {
     RSDK_OBJECT
     EntityCamera *cameraPtr;
     Vector2 field_8;
-    int hitboxID;
-    int field_14;
-    int field_18;
-    int field_1C;
-    int field_20;
-    int field_24;
-    int field_28;
-    int field_2C;
-    int field_30;
+    int32 hitboxID;
+    int32 field_14;
+    int32 field_18;
+    int32 field_1C;
+    int32 field_20;
+    int32 field_24;
+    int32 field_28;
+    int32 field_2C;
+    int32 field_30;
 } ObjectTornadoPath;
 
 // Entity Class
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    int type;
-    int targetSpeed;
-    int timer;
+    int32 type;
+    int32 targetSpeed;
+    int32 timer;
     bool32 easeToSpeed;
     bool32 fastMode;
     Vector2 size;
-    int forceSpeed;
+    int32 forceSpeed;
     Hitbox hitbox;
-    int targetSpeedStore;
-    int field_88;
-    int field_8C;
-    int field_90;
-    int field_94;
-    int field_98;
-    int field_9C;
+    int32 targetSpeedStore;
+    int32 field_88;
+    int32 field_8C;
+    int32 field_90;
+    int32 field_94;
+    int32 field_98;
+    int32 field_9C;
 } EntityTornadoPath;
 
 // Object Struct

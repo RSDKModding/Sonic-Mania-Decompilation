@@ -19,11 +19,11 @@ typedef struct {
     Animator animator2;
     Animator animator4;
     uint8 pullDir;
-    int length;
-    int speed;
-    int field_C8;
-    int pulleyLength;
-    int playerTimers[4];
+    int32 length;
+    int32 speed;
+    int32 field_C8;
+    int32 pulleyLength;
+    int32 playerTimers[4];
     Vector2 handlePos;
 } EntityYoyoPulley;
 
@@ -44,6 +44,6 @@ void YoyoPulley_Serialize(void);
 // Extra Entity Functions
 void YoYoPulley_UpdateHandlePos(void);
 void YoYoPulley_DrawSprites(void);
-int YoYoPulley_GetLength(void);
+int32 YoYoPulley_GetLength(void);
 
 #endif //!OBJ_YOYOPULLEY_H

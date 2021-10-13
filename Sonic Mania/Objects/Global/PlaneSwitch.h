@@ -12,10 +12,10 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    int flags;
-    int size;
+    int32 flags;
+    int32 size;
     bool32 onPath;
-    int negAngle;
+    int32 negAngle;
     Animator animator;
 } EntityPlaneSwitch;
 

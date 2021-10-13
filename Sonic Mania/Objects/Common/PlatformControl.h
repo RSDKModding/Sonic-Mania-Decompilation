@@ -11,13 +11,13 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    int nodeCount;
-    int childCount;
-    int speed;
+    int32 nodeCount;
+    int32 childCount;
+    int32 speed;
     bool32 setActive;
     uint8 type;
-    int field_6C;
-    int buttonTag;
+    int32 field_6C;
+    int32 buttonTag;
     Entity *controller;
 } EntityPlatformControl;
 

@@ -6,14 +6,14 @@ void PlatformControl_Update(void)
 {
     RSDK_THIS(PlatformControl);
     entity->active = ACTIVE_NORMAL;
-    int nodeSlot  = RSDK.GetEntityID(entity) + 1;
-    int platSlot   = nodeSlot + entity->nodeCount;
+    int32 nodeSlot  = RSDK.GetEntityID(entity) + 1;
+    int32 platSlot   = nodeSlot + entity->nodeCount;
 
     if (entity->field_6C) {
-        for (int c = 0; c < entity->childCount; ++c) {
+        for (int32 c = 0; c < entity->childCount; ++c) {
             EntityPlatform *platform = RSDK_GET_ENTITY(platSlot, Platform);
             EntityPlatformNode *node = RSDK_GET_ENTITY(platform->speed, PlatformNode);
-            int flags                = 0;
+            int32 flags                = 0;
             if (platform->velocity.x <= 0) {
                 if (platform->drawPos.x <= node->position.x)
                     flags = 1;
@@ -81,7 +81,7 @@ void PlatformControl_Update(void)
         if (control && control->activated)
             entity->setActive = true;
         if (entity->setActive) {
-            for (int c = 0; c < entity->childCount; ++c) {
+            for (int32 c = 0; c < entity->childCount; ++c) {
                 EntityPlatform *platform = RSDK_GET_ENTITY(platSlot, Platform);
                 if (platform->state == Platform_State_Nothing)
                     platform->state = Platform_Unknown4;
@@ -100,8 +100,8 @@ void PlatformControl_Update(void)
 
     if (!RSDK.CheckOnScreen(entity, NULL)) {
         entity->active = ACTIVE_BOUNDS;
-        int slot       = nodeSlot + entity->nodeCount;
-        for (int c = 0; c < entity->childCount; ++c) {
+        int32 slot       = nodeSlot + entity->nodeCount;
+        for (int32 c = 0; c < entity->childCount; ++c) {
             EntityPlatform *platform = RSDK_GET_ENTITY(slot, Platform);
             if (platform->state == Platform_Unknown4) {
                 platform->speed -= nodeSlot;
@@ -125,8 +125,8 @@ void PlatformControl_Create(void *data)
     RSDK_THIS(PlatformControl);
     if (!RSDK_sceneInfo->inEditor) {
         entity->active = ACTIVE_BOUNDS;
-        int id         = RSDK.GetEntityID(entity) + 1;
-        for (int i = 0; i < entity->nodeCount; ++i) {
+        int32 id         = RSDK.GetEntityID(entity) + 1;
+        for (int32 i = 0; i < entity->nodeCount; ++i) {
             Entity *node = RSDK.GetEntityByID(id++);
             if (abs(node->position.x - entity->position.x) > entity->updateRange.x) {
                 entity->updateRange.x = abs(node->position.x - entity->position.x);
@@ -196,8 +196,8 @@ void PlatformControl_StageLoad(void) {}
 void PlatformControl_ManagePlatformVelocity(EntityPlatform *platform, Entity *node)
 {
     RSDK_THIS(PlatformControl);
-    int distX = abs((node->position.x - platform->drawPos.x) >> 16);
-    int distY = abs((node->position.y - platform->drawPos.y) >> 16);
+    int32 distX = abs((node->position.x - platform->drawPos.x) >> 16);
+    int32 distY = abs((node->position.y - platform->drawPos.y) >> 16);
     if (distY >= distX) {
         if (distY)
             platform->velocity.x = entity->speed * (((distX << 16) / distY) >> 2);

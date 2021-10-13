@@ -6,9 +6,9 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    int field_4;
-    int field_8;
-    int field_C;
+    int32 field_4;
+    int32 field_8;
+    int32 field_C;
     Entity *cutscenePtr;
 } ObjectLRZ3Setup;
 

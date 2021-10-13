@@ -17,7 +17,7 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    int timer;
+    int32 timer;
     Animator animator;
     Hitbox hitbox;
 } EntityRubyPortal;

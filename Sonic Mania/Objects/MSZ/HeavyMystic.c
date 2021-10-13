@@ -52,10 +52,10 @@ void HeavyMystic_StageLoad(void)
     HeavyMystic->sfxTransform  = RSDK.GetSFX("MSZ/MysticTransform.wav");
 }
 
-void HeavyMystic_Unknown1(int x, int y)
+void HeavyMystic_Unknown1(int32 x, int32 y)
 {
-    int velX = RSDK.Rand(-0xC000, 0xC000);
-    int velY = RSDK.Rand(-0xC000, 0xC000);
+    int32 velX = RSDK.Rand(-0xC000, 0xC000);
+    int32 velY = RSDK.Rand(-0xC000, 0xC000);
 
     EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_LightningSpark, x, y);
     debris->drawOrder    = Zone->drawOrderLow;

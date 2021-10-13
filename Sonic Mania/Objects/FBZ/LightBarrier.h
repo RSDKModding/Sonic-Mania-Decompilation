@@ -12,11 +12,11 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    int size;
+    int32 size;
     bool32 enabled;
-    int timer;
-    int sprY;
-    int alphaTimer;
+    int32 timer;
+    int32 sprY;
+    int32 alphaTimer;
     Hitbox hitbox;
     Animator animator1;
     Animator animator2;

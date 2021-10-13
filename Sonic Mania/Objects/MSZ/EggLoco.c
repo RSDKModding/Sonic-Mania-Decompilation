@@ -138,29 +138,29 @@ void EggLoco_StageLoad(void)
 
 bool32 EggLoco_CheckCB(void)
 {
-    int count   = 0;
-    int screenX = (RSDK_screens->position.x + RSDK_screens->centerX) << 16;
-    int screenY = (RSDK_screens->position.y + RSDK_screens->centerY) << 16;
+    int32 count   = 0;
+    int32 screenX = (RSDK_screens->position.x + RSDK_screens->centerX) << 16;
+    int32 screenY = (RSDK_screens->position.y + RSDK_screens->centerY) << 16;
     foreach_all(EggLoco, eggLoco)
     {
-        int distX = abs(screenX - eggLoco->position.x);
-        int distY = abs(screenY - eggLoco->position.y);
-        int rad   = MathHelpers_Unknown6((distY >> 16) * (distY >> 16) + (distX >> 16) * (distX >> 16));
+        int32 distX = abs(screenX - eggLoco->position.x);
+        int32 distY = abs(screenY - eggLoco->position.y);
+        int32 rad   = MathHelpers_Unknown6((distY >> 16) * (distY >> 16) + (distX >> 16) * (distX >> 16));
         if (rad <= 840)
             count++;
     }
     return count > 0;
 }
 
-void EggLoco_UpdateCB(int sfx)
+void EggLoco_UpdateCB(int32 sfx)
 {
-    int screenX = (RSDK_screens->position.x + RSDK_screens->centerX) << 16;
-    int screenY = (RSDK_screens->position.y + RSDK_screens->centerY) << 16;
+    int32 screenX = (RSDK_screens->position.x + RSDK_screens->centerX) << 16;
+    int32 screenY = (RSDK_screens->position.y + RSDK_screens->centerY) << 16;
     foreach_all(EggLoco, eggLoco)
     {
-        int distX = abs(screenX - eggLoco->position.x);
-        int distY = abs(screenY - eggLoco->position.y);
-        int vol   = minVal(MathHelpers_Unknown6((distX >> 16) * (distX >> 16) + (distY >> 16) * (distY >> 16)), 840);
+        int32 distX = abs(screenX - eggLoco->position.x);
+        int32 distY = abs(screenY - eggLoco->position.y);
+        int32 vol   = minVal(MathHelpers_Unknown6((distX >> 16) * (distX >> 16) + (distY >> 16) * (distY >> 16)), 840);
         RSDK.SetChannelAttributes(Soundboard->sfxChannel[sfx], 1.0 - (vol / 840.0), 0.0, 1.0);
         foreach_break;
     }

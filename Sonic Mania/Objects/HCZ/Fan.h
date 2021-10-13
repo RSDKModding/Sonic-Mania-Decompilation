@@ -6,9 +6,9 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    int activePlayers;
+    int32 activePlayers;
     uint8 field_8;
-    int field_C;
+    int32 field_C;
     Hitbox hitbox1;
     Hitbox hitbox2;
     Hitbox hitbox3;
@@ -27,12 +27,12 @@ typedef struct {
     uint8 type;
     uint8 activation;
     uint8 deactivation;
-    int size;
+    int32 size;
     uint16 interval;
     uint16 intervalOffset;
     uint16 duration;
     uint16 durationStore;
-    int buttonTag;
+    int32 buttonTag;
     EntityButton *buttonPtr;
     Animator animator;
 } EntityFan;

@@ -206,7 +206,7 @@ void UITAZoneModule_Unknown3(void)
         colour = 0xF26C4F;
 #endif
 
-    int drawY = entity->drawPos.y + 0x230000;
+    int32 drawY = entity->drawPos.y + 0x230000;
     UIWidgets_Unknown5(88, -71, 112, 224, entity->drawPos.x + 0x790000, drawY);
 
     RSDK.DrawRect(entity->drawPos.x + 0x790000, drawY - 0x480000, 0x200000, 0x480000, 0x5870E0, 255, INK_NONE, false);
@@ -282,7 +282,7 @@ void UITAZoneModule_Unknown4(void)
         uint16 *records1 = TimeAttackData_GetRecordedTime(entity->zoneID, 0, entity->characterID, 1);
         uint16 *records2 = TimeAttackData_GetRecordedTime(entity->zoneID, 1, entity->characterID, 1);
 
-        int time = records1[0] + records2[0];
+        int32 time = records1[0] + records2[0];
 
         if (records1[0] && records2[0])
             UITAZoneModule_DrawTime(&drawPos, time / 6000, time % 6000 / 100, time % 100);
@@ -320,7 +320,7 @@ void UITAZoneModule_Unknown5(void)
             RSDK.DrawSprite(&entity->animator1, &drawPos, false);
         }
         else {
-            int width    = entity->field_12C - 102;
+            int32 width    = entity->field_12C - 102;
             frame->width = 90 - width;
             RSDK.DrawSprite(&entity->animator1, &drawPos, false);
 
@@ -434,8 +434,8 @@ void UITAZoneModule_Unknown15(void)
     Hitbox hitbox;
     foreach_active(UIButtonPrompt, prompt)
     {
-        int posX      = parent->startPos.x - parent->cameraOffset.x;
-        int posY      = parent->startPos.y - parent->cameraOffset.y;
+        int32 posX      = parent->startPos.x - parent->cameraOffset.x;
+        int32 posY      = parent->startPos.y - parent->cameraOffset.y;
         hitbox.right  = parent->size.x >> 17;
         hitbox.left   = -(parent->size.x >> 17);
         hitbox.bottom = parent->size.y >> 17;
@@ -502,7 +502,7 @@ void UITAZoneModule_Unknown18(void)
 }
 
 #if !RETRO_USE_PLUS
-void UITAZoneModule_DrawTime(Vector2 *drawPos, int minutes, int seconds, int milliseconds)
+void UITAZoneModule_DrawTime(Vector2 *drawPos, int32 minutes, int32 seconds, int32 milliseconds)
 {
     RSDK_THIS(UITAZoneModule);
     char strBuf[16];
@@ -522,7 +522,7 @@ void UITAZoneModule_DrawTime(Vector2 *drawPos, int minutes, int seconds, int mil
         sprintf(strBuf, "%02d:%02d;%02d", minutes, seconds, milliseconds);
     }
 
-    for (int i = 0; i < 8; ++i) {
+    for (int32 i = 0; i < 8; ++i) {
         if (!strBuf[i])
             break;
         RSDK.SetSpriteAnimation(UITAZoneModule->aniFrames, 8, &entity->animator3, true, (uint8)(strBuf[i] - '0'));
@@ -546,7 +546,7 @@ void UITAZoneModule_Unknown8(void)
 
     RSDK.DrawRect(drawPos.x - 0x990000, drawPos.y + 0x240000, 0x860000, 0x150000, colour1, 255, INK_NONE, false);
 
-    int offset = 0;
+    int32 offset = 0;
     if (RSDK.Sin256(8 * minVal((uint8)entity->field_140, 16)) >= 0)
         offset = RSDK.Sin256(8 * minVal((uint8)entity->field_140, 16));
     else
@@ -652,8 +652,8 @@ void UITAZoneModule_Unknown8(void)
 void UITAZoneModule_Unknown7(void)
 {
     RSDK_THIS(UITAZoneModule);
-    int drawX = entity->drawPos.x;
-    int drawY = entity->drawPos.y;
+    int32 drawX = entity->drawPos.x;
+    int32 drawY = entity->drawPos.y;
     Vector2 drawPos2 = entity->drawPos;
 
     uint16 *records = TimeAttackData_GetRecordedTime(entity->zoneID, entity->actID, entity->characterID, 1);
@@ -668,7 +668,7 @@ void UITAZoneModule_Unknown7(void)
         RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, 16, &entity->animator7, true, 2);
         RSDK.DrawSprite(&entity->animator7, &drawPos2, false);
 
-        int time = 0;
+        int32 time = 0;
         if (records)
             time = records[0];
 
@@ -686,7 +686,7 @@ void UITAZoneModule_Unknown7(void)
         RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, 16, &entity->animator7, true, 3);
         RSDK.DrawSprite(&entity->animator7, &drawPos2, 0);
 
-        int time = 0;
+        int32 time = 0;
         if (records)
             time = records[1];
 
@@ -703,7 +703,7 @@ void UITAZoneModule_Unknown7(void)
         RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, 16, &entity->animator7, true, 4);
         RSDK.DrawSprite(&entity->animator7, &drawPos2, false);
 
-        int time = 0;
+        int32 time = 0;
         if (records)
             time = records[2];
 
@@ -744,7 +744,7 @@ void UITAZoneModule_Unknown22(void)
     if (entity->zoneID != 7 || entity->characterID == 3) {
         entity->actID = 0;
 
-        int id = API_MostRecentActiveControllerID(0);
+        int32 id = API_MostRecentActiveControllerID(0);
         API_ResetControllerAssignments();
         API_AssignControllerID(1, id);
 
@@ -761,7 +761,7 @@ void UITAZoneModule_Unknown23(void)
     RSDK_THIS(UITAZoneModule);
     EntityUIControl *parent = (EntityUIControl *)entity->parent;
 
-    int id = API_MostRecentActiveControllerID(0);
+    int32 id = API_MostRecentActiveControllerID(0);
     API_ResetControllerAssignments();
     API_AssignControllerID(1, id);
 
@@ -790,7 +790,7 @@ void UITAZoneModule_Unknown24(void)
         entity->field_140 = 0;
     }
     else if (UIControl->keyConfirm) {
-        int id = API_MostRecentActiveControllerID(0);
+        int32 id = API_MostRecentActiveControllerID(0);
         API_ResetControllerAssignments();
         API_AssignControllerID(1, id);
 
@@ -813,7 +813,7 @@ void UITAZoneModule_Unknown24(void)
     }
 }
 
-void UITAZoneModule_Unknown25(int player, int zone, int act, int a4, void (*callback)(void))
+void UITAZoneModule_Unknown25(int32 player, int32 zone, int32 act, int32 a4, void (*callback)(void))
 {
     TextInfo info;
     INIT_TEXTINFO(info);
@@ -838,7 +838,7 @@ void UITAZoneModule_Unknown25(int player, int zone, int act, int a4, void (*call
     }
 }
 
-void UITAZoneModule_Unknown26(EntityUIControl *control, char characterID, unsigned int zoneID, char actID, int score)
+void UITAZoneModule_Unknown26(EntityUIControl *control, char characterID, unsigned int32 zoneID, char actID, int32 score)
 {
     control->childHasFocus       = true;
     control->activeEntityID      = zoneID;
@@ -862,7 +862,7 @@ void UITAZoneModule_Unknown26(EntityUIControl *control, char characterID, unsign
         module->rank          = score;
     }
 
-    for (int i = 0; i < control->buttonCount; ++i) {
+    for (int32 i = 0; i < control->buttonCount; ++i) {
         EntityUITAZoneModule *button = (EntityUITAZoneModule *)control->buttons[i];
         if (button != module) {
             button->state      = UITAZoneModule_Unknown30;
@@ -873,7 +873,7 @@ void UITAZoneModule_Unknown26(EntityUIControl *control, char characterID, unsign
     }
 
     EntityUIControl *zoneControl = (EntityUIControl *)MenuSetup->timeAttackZones;
-    for (int i = 0; i < zoneControl->buttonCount; ++i) {
+    for (int32 i = 0; i < zoneControl->buttonCount; ++i) {
         EntityUITAZoneModule *button = (EntityUITAZoneModule *)zoneControl->buttons[i];
         button->characterID          = characterID;
     }
@@ -894,8 +894,8 @@ void UITAZoneModule_Unknown27(void)
             Hitbox hitbox;
             foreach_all(UIButtonPrompt, prompt)
             {
-                int posX      = parent->startPos.x - parent->cameraOffset.x;
-                int posY      = parent->startPos.y - parent->cameraOffset.y;
+                int32 posX      = parent->startPos.x - parent->cameraOffset.x;
+                int32 posY      = parent->startPos.y - parent->cameraOffset.y;
                 hitbox.left   = -(parent->size.x) >> 17;
                 hitbox.top    = -(parent->size.x) >> 17;
                 hitbox.right  = (parent->size.x) >> 17;
@@ -919,9 +919,9 @@ void UITAZoneModule_Unknown27(void)
     }
     else {
         if (heading->startPos.y >> 16 < RSDK_screens->position.y) {
-            int pos = (RSDK_screens->position.y << 16) - 0x1C0000;
+            int32 pos = (RSDK_screens->position.y << 16) - 0x1C0000;
             if (entity->timer >= 1) {
-                int pos = (RSDK_screens->position.y << 16) + 0x1C0000;
+                int32 pos = (RSDK_screens->position.y << 16) + 0x1C0000;
                 if (16 * entity->timer <= 255)
                     pos += 0x3800 * (RSDK.Sin1024(16 * entity->timer) >> 2);
                 else
@@ -933,8 +933,8 @@ void UITAZoneModule_Unknown27(void)
         Hitbox hitbox;
         foreach_all(UIButtonPrompt, prompt)
         {
-            int posX      = parent->startPos.x - parent->cameraOffset.x;
-            int posY      = parent->startPos.y - parent->cameraOffset.y;
+            int32 posX      = parent->startPos.x - parent->cameraOffset.x;
+            int32 posY      = parent->startPos.y - parent->cameraOffset.y;
             hitbox.left   = -(parent->size.x) >> 17;
             hitbox.top    = -(parent->size.x) >> 17;
             hitbox.right  = (parent->size.x) >> 17;
@@ -944,7 +944,7 @@ void UITAZoneModule_Unknown27(void)
                 if (!prompt->buttonID)
                     prompt->promptID = 4;
                 if (prompt->startPos.y >> 16 < RSDK_screens->position.y) {
-                    int offset1, offset2;
+                    int32 offset1, offset2;
                     if (prompt == promptPtr)
                         offset1 = 0x300000;
                     else
@@ -954,7 +954,7 @@ void UITAZoneModule_Unknown27(void)
                     else
                         offset2 = -0x300000;
 
-                    int pos = (RSDK_screens->position.y << 16) + offset2;
+                    int32 pos = (RSDK_screens->position.y << 16) + offset2;
                     if (entity->timer >= 1) {
                         if (16 * entity->timer <= 255)
                             pos += (RSDK.Sin1024(16 * entity->timer) >> 2) * ((((RSDK_screens->position.y) << 16) + offset1 - pos) >> 8);
@@ -1000,8 +1000,8 @@ void UITAZoneModule_Unknown28(void)
             Hitbox hitbox;
             foreach_all(UIButtonPrompt, prompt)
             {
-                int posX      = parent->startPos.x - parent->cameraOffset.x;
-                int posY      = parent->startPos.y - parent->cameraOffset.y;
+                int32 posX      = parent->startPos.x - parent->cameraOffset.x;
+                int32 posY      = parent->startPos.y - parent->cameraOffset.y;
                 hitbox.left   = -(parent->size.x) >> 17;
                 hitbox.top    = -(parent->size.x) >> 17;
                 hitbox.right  = (parent->size.x) >> 17;
@@ -1034,7 +1034,7 @@ void UITAZoneModule_Unknown28(void)
     }
     else {
         if (heading->startPos.y >> 16 < RSDK_screens->position.y) {
-            int pos = (RSDK_screens->position.y << 16) + 0x1C0000;
+            int32 pos = (RSDK_screens->position.y << 16) + 0x1C0000;
             if (entity->timer >= 1) {
                 if (16 * entity->timer <= 255)
                     pos -= 0x3800 * (RSDK.Sin1024(16 * entity->timer) >> 2);
@@ -1047,8 +1047,8 @@ void UITAZoneModule_Unknown28(void)
         Hitbox hitbox;
         foreach_all(UIButtonPrompt, prompt)
         {
-            int posX      = parent->startPos.x - parent->cameraOffset.x;
-            int posY      = parent->startPos.y - parent->cameraOffset.y;
+            int32 posX      = parent->startPos.x - parent->cameraOffset.x;
+            int32 posY      = parent->startPos.y - parent->cameraOffset.y;
             hitbox.left   = -(parent->size.x) >> 17;
             hitbox.top    = -(parent->size.x) >> 17;
             hitbox.right  = (parent->size.x) >> 17;
@@ -1056,7 +1056,7 @@ void UITAZoneModule_Unknown28(void)
 
             if (MathHelpers_PointInHitbox(FLIP_NONE, posX, posY, &hitbox, prompt->position.x, prompt->position.y)) {
                 if (prompt->startPos.y >> 16 < RSDK_screens->position.y) {
-                    int offset1, offset2;
+                    int32 offset1, offset2;
                     if (prompt == promptPtr)
                         offset1 = -0x180000;
                     else
@@ -1066,7 +1066,7 @@ void UITAZoneModule_Unknown28(void)
                     else
                         offset2 = 0x180000;
                     if (entity->timer >= 1) {
-                        int pos = (RSDK_screens->position.y << 16) + offset2;
+                        int32 pos = (RSDK_screens->position.y << 16) + offset2;
                         if (16 * entity->timer <= 255)
                             pos += (RSDK.Sin1024(16 * entity->timer) >> 2) * (((RSDK_screens->position.y) << 16 + offset1 - pos) >> 8);
                         else

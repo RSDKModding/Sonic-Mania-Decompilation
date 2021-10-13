@@ -99,15 +99,15 @@ Vector2 DNARiser_CalculateScale(Vector2 *vec)
     RSDK_THIS(DNARiser);
 
     Vector2 resultVec;
-    int x = 512;
-    int y = 512;
+    int32 x = 512;
+    int32 y = 512;
     if (vec) {
         x = vec->x;
         y = vec->y;
     }
 
-    int val     = (30 - entity->field_A8);
-    int sine    = RSDK.Sin1024(((val * (0x40000000 / ((10983 * val + 286520) >> 7))) >> 11) & 0x3FF);
+    int32 val     = (30 - entity->field_A8);
+    int32 sine    = RSDK.Sin1024(((val * (0x40000000 / ((10983 * val + 286520) >> 7))) >> 11) & 0x3FF);
     resultVec.x = (((val - 30) * (sine << 6) / 100 + 0x10000) * x) >> 16;
     resultVec.y = (((30 - val) * (sine << 6) / 100 + 0x10000) * y) >> 16;
     return resultVec;
@@ -146,7 +146,7 @@ void DNARiser_HandleInteractions(void)
 
     foreach_active(Player, player)
     {
-        int playerID = RSDK.GetEntityID(player);
+        int32 playerID = RSDK.GetEntityID(player);
 
         if (!((1 << playerID) & entity->activePlayers)) {
             if (Player_CheckCollisionTouch(player, entity, &DNARiser->hitbox)) {
@@ -203,7 +203,7 @@ void DNARiser_State_Unknown3(void)
         if (entity->height << 16 < entity->curHeight)
             entity->curHeight = entity->height << 16;
 
-        int angle = (((0x57262 * (entity->curHeight >> 16)) >> 16) + 250) & 0x3FF;
+        int32 angle = (((0x57262 * (entity->curHeight >> 16)) >> 16) + 250) & 0x3FF;
         if (angle >= 0x200u && !entity->field_B0) {
             entity->field_B0 = 1;
             RSDK.PlaySfx(DNARiser->sfxScan, 0, 255);
@@ -217,7 +217,7 @@ void DNARiser_State_Unknown3(void)
         for (; entity->field_E0 <= (entity->curHeight >> 18) + 1; ++entity->field_E0) {
             if (!(entity->field_E0 & 1) || !(entity->field_E0 % 5)) {
                 if (!entity->timer2) {
-                    int sfxID = 0;
+                    int32 sfxID = 0;
                     if (!entity->field_B6) {
                         do
 #if RETRO_USE_PLUS
@@ -260,7 +260,7 @@ void DNARiser_State_Unknown3(void)
 
     foreach_active(Player, player)
     {
-        int playerID = RSDK.GetEntityID(player);
+        int32 playerID = RSDK.GetEntityID(player);
         if (!((1 << playerID) & entity->activePlayers)) {
             if (Player_CheckCollisionTouch(player, entity, &DNARiser->hitbox)) {
                 RSDK.PlaySfx(DNARiser->sfxGrab, 0, 255);
@@ -312,7 +312,7 @@ void DNARiser_State_Unknown3(void)
     if (flag) {
         foreach_active(Player, player)
         {
-            int playerID = RSDK.GetEntityID(player);
+            int32 playerID = RSDK.GetEntityID(player);
             if (((1 << playerID) & entity->activePlayers)) {
                 player->drawOrder      = Zone->playerDrawLow;
                 player->tileCollisions = true;
@@ -347,7 +347,7 @@ void DNARiser_State_Unknown4(void)
                 entity->position.y += entity->velocity.y;
             }
 
-            int posY = entity->vector_D0.y;
+            int32 posY = entity->vector_D0.y;
             if (entity->position.y < entity->vector_D0.y)
                 posY = entity->position.y;
 
@@ -453,14 +453,14 @@ void DNARiser_StateDraw_Main(void)
     RSDK_THIS(DNARiser);
 
     bool32 flag = false;
-    int angle   = ((0x57262 * (entity->curHeight >> 16)) >> 16) + 100;
+    int32 angle   = ((0x57262 * (entity->curHeight >> 16)) >> 16) + 100;
 
     Animator animator;
     memset(&animator, 0, sizeof(animator));
     if ((uint32)(angle & 0x3FF) - 256 <= 0x200)
         flag = true;
 
-    int sineOff       = (RSDK.Sin1024(angle & 0x3FF) << 6) * (entity->field_CC >> 16);
+    int32 sineOff       = (RSDK.Sin1024(angle & 0x3FF) << 6) * (entity->field_CC >> 16);
     entity->alpha     = 0x100;
     entity->inkEffect = INK_NONE;
 
@@ -530,7 +530,7 @@ void DNARiser_StateDraw_Helix(void)
     if ((entity->angle - 256) <= 0x200)
         flag = true;
 
-    int sineOff       = (RSDK.Sin1024(entity->angle) << 6) * (entity->field_CC >> 16);
+    int32 sineOff       = (RSDK.Sin1024(entity->angle) << 6) * (entity->field_CC >> 16);
     entity->alpha     = 0x100;
     entity->inkEffect = INK_NONE;
 
@@ -556,13 +556,13 @@ void DNARiser_StateDraw_Helix(void)
     }
 
     if (!(entity->field_A4 % 5)) {
-        int distance = (parent->field_E0 - entity->field_A4 >= 8) ? 4 : ((parent->field_E0 - entity->field_A4) / 2);
-        int sine     = (RSDK.Sin1024(entity->angle) << 6) * ((entity->field_CC >> 16) - 12);
+        int32 distance = (parent->field_E0 - entity->field_A4 >= 8) ? 4 : ((parent->field_E0 - entity->field_A4) / 2);
+        int32 sine     = (RSDK.Sin1024(entity->angle) << 6) * ((entity->field_CC >> 16) - 12);
         drawPos.y    = entity->position.y;
         drawPos.x    = sine + entity->position.x;
         if (flag)
             drawPos.x = entity->position.x - sine;
-        int startX = drawPos.x;
+        int32 startX = drawPos.x;
         sine       = 2 * sine / 7;
 
         bool32 flagArray[8];
@@ -575,7 +575,7 @@ void DNARiser_StateDraw_Helix(void)
         flagArray[6] = flagArray[1];
         flagArray[7] = flagArray[0];
 
-        for (int i = 0; i < 8; ++i) {
+        for (int32 i = 0; i < 8; ++i) {
             bool32 flagA = (flag && i <= 3) || (!flag && i >= 4);
             bool32 flagB = RSDK_sceneInfo->currentDrawGroup == Zone->drawOrderHigh ? ((flag && !flagA) || (!flag && flagA))
                                                                                    : ((flag && flagA) || (!flag && !flagA));

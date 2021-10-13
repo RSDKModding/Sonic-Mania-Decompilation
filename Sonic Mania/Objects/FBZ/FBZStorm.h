@@ -6,7 +6,7 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    TABLE(int array1[20], { 64, 128, 192, 256, 256, 128, 0, 32, 64, 128, 192, 256, 256, 192, 128, 96, 64, 32, 16, 0 });
+    TABLE(int32 array1[20], { 64, 128, 192, 256, 256, 128, 0, 32, 64, 128, 192, 256, 256, 192, 128, 96, 64, 32, 16, 0 });
     Vector2 positions[0x100];
     uint16 aniFrames;
     uint16 sfxRain;
@@ -19,10 +19,10 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    int timer;
-    int blendAmount;
-    int stormAngle[4];
-    int screenPosX[4];
+    int32 timer;
+    int32 blendAmount;
+    int32 stormAngle[4];
+    int32 screenPosX[4];
     bool32 flag;
     Animator animator;
 } EntityFBZStorm;

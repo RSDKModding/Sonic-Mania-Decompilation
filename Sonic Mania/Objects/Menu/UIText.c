@@ -29,7 +29,7 @@ void UIText_Draw(void)
         spr = UIText->spriteIndex;
     else
         spr = UIWidgets->uiSpriteIndex;
-    int width = RSDK.GetStringWidth(spr, entity->listID, &entity->text, 0, entity->text.textLength, 0);
+    int32 width = RSDK.GetStringWidth(spr, entity->listID, &entity->text, 0, entity->text.textLength, 0);
     if (entity->align == ALIGN_RIGHT) {
         drawPos.x -= width << 15;
     }

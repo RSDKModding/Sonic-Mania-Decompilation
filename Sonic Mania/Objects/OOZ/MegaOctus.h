@@ -25,13 +25,13 @@ typedef struct {
     Animator animator3;
     Animator animator4;
     Animator animator5;
-    int field_80;
-    int field_84;
+    int32 field_80;
+    int32 field_84;
     bool32 spawnHarpoon;
-    int field_8C;
-    TABLE(int field_90[11], { -0x200000, -0x180000, -0x100000, -0xC0000, -0x80000, 0, 0x80000, 0xC0000, 0x100000, 0x180000, 0x200000 });
-    TABLE(int field_BC[4], { -0x780000, -0x800000, -0x700000, -0x510000 });
-    int orbHealth[2];
+    int32 field_8C;
+    TABLE(int32 field_90[11], { -0x200000, -0x180000, -0x100000, -0xC0000, -0x80000, 0, 0x80000, 0xC0000, 0x100000, 0x180000, 0x200000 });
+    TABLE(int32 field_BC[4], { -0x780000, -0x800000, -0x700000, -0x510000 });
+    int32 orbHealth[2];
     bool32 field_D4;
     uint16 aniFrames;
     uint16 eggmanFrames;
@@ -52,18 +52,18 @@ typedef struct {
     StateMachine(state);
     StateMachine(stateDraw);
     uint8 type;
-    int timer;
-    int field_68;
-    int field_6C;
-    int field_70;
-    int shotCount;
-    int invincibilityTimer;
+    int32 timer;
+    int32 field_68;
+    int32 field_6C;
+    int32 field_70;
+    int32 shotCount;
+    int32 invincibilityTimer;
     uint8 health;
     Vector2 origin;
-    int orbID;
+    int32 orbID;
     Entity *parent;
 #if RETRO_USE_PLUS
-    int tilePlatY;
+    int32 tilePlatY;
 #endif
     Animator animator1;
     Animator animator2;

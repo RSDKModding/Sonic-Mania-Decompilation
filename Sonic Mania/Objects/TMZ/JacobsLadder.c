@@ -9,7 +9,7 @@ void JacobsLadder_Update(void)
     entity->field_80  = false;
     entity->direction = entity->flip ? FLIP_Y : FLIP_NONE;
 
-    int val = (entity->intervalOffset + Zone->timer) % entity->interval;
+    int32 val = (entity->intervalOffset + Zone->timer) % entity->interval;
     if (val >= entity->duration) {
         if (val < entity->duration + 12)
             entity->field_84 = 1;
@@ -26,14 +26,14 @@ void JacobsLadder_Update(void)
     }
 
     if (entity->field_80) {
-        int storeX       = entity->position.x;
-        int storeY       = entity->position.y;
+        int32 storeX       = entity->position.x;
+        int32 storeY       = entity->position.y;
         entity->field_7C = val * ((entity->height << 20) / entity->duration);
         entity->position.y += (2 * entity->flip - 1) * (entity->field_7C + 0x300000);
 
         foreach_active(Player, player)
         {
-            int playerID = RSDK.GetEntityID(player);
+            int32 playerID = RSDK.GetEntityID(player);
 
             if (((1 << playerID) & entity->activePlayers)) {
                 if (player->state == Player_State_None && player->shield == SHIELD_LIGHTNING) {
@@ -90,7 +90,7 @@ void JacobsLadder_Update(void)
     else {
         foreach_active(Player, player)
         {
-            int playerID = RSDK.GetEntityID(player);
+            int32 playerID = RSDK.GetEntityID(player);
 
             if (((1 << playerID) & entity->activePlayers)) {
                 entity->activePlayers &= ~(1 << playerID);
@@ -117,20 +117,20 @@ void JacobsLadder_Draw(void)
     entity->drawFX    = FX_FLIP;
     entity->inkEffect = INK_NONE;
     entity->alpha     = 255;
-    int val           = -(int)entity->flip;
+    int32 val           = -(int32)entity->flip;
     val               = -(val != 0);
-    int val2          = val & 0xFFFFFF02;
+    int32 val2          = val & 0xFFFFFF02;
 
-    int yOff = 0x300000 * (2 * (entity->flip != false) - 1);
-    int id   = 0;
-    for (int i = 0; i < 2; ++i) {
+    int32 yOff = 0x300000 * (2 * (entity->flip != false) - 1);
+    int32 id   = 0;
+    for (int32 i = 0; i < 2; ++i) {
         entity->direction = val2 ^ id;
         drawPos.y         = entity->position.y;
         drawPos.x         = ((2 * (id != 0) - 1) << 21) + entity->position.x;
         RSDK.SetSpriteAnimation(JacobsLadder->aniFrames, 0, &entity->animator2, true, 0);
         RSDK.DrawSprite(&entity->animator2, &drawPos, false);
         drawPos.y += yOff;
-        for (int y = 0; y < entity->height; ++y) {
+        for (int32 y = 0; y < entity->height; ++y) {
             RSDK.SetSpriteAnimation(JacobsLadder->aniFrames, 1, &entity->animator2, true, 0);
             RSDK.DrawSprite(&entity->animator2, &drawPos, false);
             drawPos.y += (2 * (entity->flip != false) - 1) << 20;

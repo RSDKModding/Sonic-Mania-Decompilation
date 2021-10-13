@@ -8,7 +8,7 @@
 typedef struct {
     RSDK_OBJECT
     Entity *extrasControl;
-    int cheatCode[8];
+    int32 cheatCode[8];
 } ObjectExtrasMenu;
 
 // Entity Class

@@ -8,7 +8,7 @@ typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     Hitbox hitbox;
-    int field_10;
+    int32 field_10;
     uint16 sfxExplosion;
     uint16 sfxTwinkle;
 } ObjectFlowerPod;
@@ -17,7 +17,7 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    int timer;
+    int32 timer;
     Vector2 startPos;
     Animator animator1;
     Animator animator2;

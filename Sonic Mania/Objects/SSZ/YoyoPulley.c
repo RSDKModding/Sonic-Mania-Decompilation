@@ -6,19 +6,19 @@ void YoyoPulley_Update(void)
 {
     RSDK_THIS(YoyoPulley);
 
-    int speed = YoYoPulley_GetLength();
+    int32 speed = YoYoPulley_GetLength();
     if (entity->direction)
         entity->rotation -= speed;
     else
         entity->rotation += speed;
     YoYoPulley_UpdateHandlePos();
-    int storeX       = entity->position.x;
-    int storeY       = entity->position.y;
+    int32 storeX       = entity->position.x;
+    int32 storeY       = entity->position.y;
     entity->position = entity->handlePos;
 
     foreach_active(Player, player)
     {
-        int playerID = RSDK.GetEntityID(player);
+        int32 playerID = RSDK.GetEntityID(player);
 
         if (((1 << playerID) & entity->activePlayers) || entity->playerTimers[playerID]) {
             if (player->state == Player_State_None) {
@@ -161,10 +161,10 @@ void YoYoPulley_UpdateHandlePos(void)
 void YoYoPulley_DrawSprites(void)
 {
     RSDK_THIS(YoyoPulley);
-    int x1 = entity->position.x;
-    int y1 = entity->position.y;
-    int x2 = (RSDK.Cos512(entity->angle) << 7) * ((entity->pulleyLength >> 8) + 32) + x1;
-    int y2 = (RSDK.Sin512(entity->angle) << 7) * ((entity->pulleyLength >> 8) + 32) + y1;
+    int32 x1 = entity->position.x;
+    int32 y1 = entity->position.y;
+    int32 x2 = (RSDK.Cos512(entity->angle) << 7) * ((entity->pulleyLength >> 8) + 32) + x1;
+    int32 y2 = (RSDK.Sin512(entity->angle) << 7) * ((entity->pulleyLength >> 8) + 32) + y1;
     if (entity->direction) {
         RSDK.DrawLine(x1 - 0x120000, y1, x2 - 0x120000, y2, 0x2000u, 0, INK_NONE, false);
         RSDK.DrawLine(x1 - 0x130000, y1, x2 - 0x130000, y2, 0xC02000u, 0, INK_NONE, false);
@@ -184,7 +184,7 @@ void YoYoPulley_DrawSprites(void)
     RSDK.DrawSprite(&entity->animator3, 0, false);
 }
 
-int YoYoPulley_GetLength(void)
+int32 YoYoPulley_GetLength(void)
 {
     RSDK_THIS(YoyoPulley);
     EntityPlayer *player2 = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);

@@ -14,13 +14,13 @@ typedef struct {
 typedef struct {
 	RSDK_ENTITY
 	StateMachine(state);
-	int type;
+	int32 type;
 	Vector2 amplitude;
-	int speed;
+	int32 speed;
 	bool32 oscillate;
-	int unused_70;
-	int playerBits;
-	int cooldowns[4];
+	int32 unused_70;
+	int32 playerBits;
+	int32 cooldowns[4];
 	Vector2 internalPos;
 	Hitbox hitbox;
 	Animator animator;

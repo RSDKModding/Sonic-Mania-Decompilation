@@ -28,7 +28,7 @@ void ParticleHelpers_EditorLoad(void);
 void ParticleHelpers_Serialize(void);
 
 // Extra Entity Functions
-void ParticleHelpers_Unknown1(int x, int y);
-void ParticleHelpers_Unknown2(void *debrisState, void (*callback)(EntityDebris *), int speed, int xOffset, int yOffset, int maxX, int maxY);
+void ParticleHelpers_Unknown1(int32 x, int32 y);
+void ParticleHelpers_Unknown2(void *debrisState, void (*callback)(EntityDebris *), int32 speed, int32 xOffset, int32 yOffset, int32 maxX, int32 maxY);
 
 #endif //!OBJ_PARTICLEHELPERS_H

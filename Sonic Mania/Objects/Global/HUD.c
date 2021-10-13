@@ -237,12 +237,12 @@ void HUD_Draw(void)
     }
 #endif
 
-    int cID    = -1;
+    int32 cID    = -1;
     lifePos.x  = offset[HUDOFF_LIFE].x;
     lifePos.y  = offset[HUDOFF_LIFE].y;
-    int charID = player->characterID;
+    int32 charID = player->characterID;
 #if RETRO_USE_PLUS
-    int lives = entity->lives[player->playerID];
+    int32 lives = entity->lives[player->playerID];
     for (; charID > 0; ++cID) charID >>= 1;
     entity->lifeIconsData.frameID = cID;
     if (cID < 0) {
@@ -265,7 +265,7 @@ void HUD_Draw(void)
 
 #if RETRO_USE_PLUS
     if (globals->gameMode == MODE_ENCORE) {
-        for (int p = 0; p < PLAYER_MAX; ++p) {
+        for (int32 p = 0; p < PLAYER_MAX; ++p) {
             if (HUD->stockFlashTimers[p] > 0)
                 HUD->stockFlashTimers[p]--;
         }
@@ -273,8 +273,8 @@ void HUD_Draw(void)
         lifePos.x += 0x140000;
         EntityPlayer *sidekick = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
         if (sidekick->objectID) {
-            int charID = sidekick->characterID;
-            int id     = -1;
+            int32 charID = sidekick->characterID;
+            int32 id     = -1;
             for (id = -1; charID > 0; ++id) charID >>= 1;
             entity->lifeIconsData.frameID = id;
             if (id >= 0 && !(HUD->stockFlashTimers[0] & 4)) {
@@ -286,9 +286,9 @@ void HUD_Draw(void)
             lifePos.x += 0x140000;
             RSDK.SetSpriteAnimation(HUD->hudMappings, 12, &entity->lifeIconsData, true, 0);
 
-            for (int i = 0; i < 3; ++i) {
+            for (int32 i = 0; i < 3; ++i) {
                 id        = -1;
-                int stock = (globals->stock >> (i * 8)) & 0xFF;
+                int32 stock = (globals->stock >> (i * 8)) & 0xFF;
                 if (stock) {
                     do {
                         stock >>= 1;
@@ -378,7 +378,7 @@ void HUD_Create(void *data)
 #endif
 
 #if RETRO_USE_PLUS
-        for (int i = 0; i < SCREEN_MAX; ++i) {
+        for (int32 i = 0; i < SCREEN_MAX; ++i) {
             entity->vsScoreOffsets[i].x = entity->offsets[HUDOFF_SCORE].x;
             entity->vsScoreOffsets[i].y = entity->offsets[HUDOFF_SCORE].y;
             entity->vsTimeOffsets[i].x  = entity->offsets[HUDOFF_TIME].x;
@@ -435,16 +435,16 @@ void HUD_StageLoad(void)
 #endif
 }
 
-void HUD_DrawNumbersBase10(Vector2 *drawPos, int value, signed int maxDigits)
+void HUD_DrawNumbersBase10(Vector2 *drawPos, int32 value, int32 maxDigits)
 {
     RSDK_THIS(HUD);
-    int mult = 1;
+    int32 mult = 1;
     if (!maxDigits) {
         if (value <= 0) {
             maxDigits = 1;
         }
         else {
-            int v = value;
+            int32 v = value;
             do {
                 ++maxDigits;
                 v /= 10;
@@ -460,11 +460,11 @@ void HUD_DrawNumbersBase10(Vector2 *drawPos, int value, signed int maxDigits)
     }
 }
 
-void HUD_DrawNumbersBase16(Vector2 *drawPos, int value)
+void HUD_DrawNumbersBase16(Vector2 *drawPos, int32 value)
 {
     RSDK_THIS(HUD);
-    int mult = 1;
-    for (int i = 4; i; --i) {
+    int32 mult = 1;
+    for (int32 i = 4; i; --i) {
         entity->numbersData.frameID = value / mult & 0xF;
         RSDK.DrawSprite(&entity->numbersData, drawPos, true);
         drawPos->x -= 0x80000;
@@ -472,17 +472,17 @@ void HUD_DrawNumbersBase16(Vector2 *drawPos, int value)
     }
 }
 
-void HUD_DrawNumbersHyperRing(Vector2 *drawPos, int value)
+void HUD_DrawNumbersHyperRing(Vector2 *drawPos, int32 value)
 {
     RSDK_THIS(HUD);
-    int cnt   = 0;
-    int mult  = 1;
-    int mult2 = 1;
+    int32 cnt   = 0;
+    int32 mult  = 1;
+    int32 mult2 = 1;
     if (value <= 0) {
         cnt = 1;
     }
     else {
-        int v = value;
+        int32 v = value;
         while (v) {
             ++cnt;
             v /= 10;
@@ -505,9 +505,9 @@ void HUD_DrawNumbersHyperRing(Vector2 *drawPos, int value)
 }
 
 #if RETRO_GAMEVER != VER_100
-void HUD_GetKeyFrame(Animator *animator, int buttonID)
+void HUD_GetKeyFrame(Animator *animator, int32 buttonID)
 {
-    int val = UIButtonPrompt_GetGamepadType();
+    int32 val = UIButtonPrompt_GetGamepadType();
     if (API_GetConfirmButtonFlip && buttonID <= 1)
         buttonID ^= 1;
     if (val != 1 && (val <= 8 || val > 12)) {
@@ -516,15 +516,15 @@ void HUD_GetKeyFrame(Animator *animator, int buttonID)
     else {
         EntityPlayer *player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
 #if RETRO_USE_PLUS
-        int id = RSDK.ControllerIDForInputID(player->controllerID);
+        int32 id = RSDK.ControllerIDForInputID(player->controllerID);
 #else
-        int id                 = CONT_ANY;
+        int32 id                 = CONT_ANY;
 #endif
-        int contID = player->controllerID;
+        int32 contID = player->controllerID;
         if (id == CONT_UNASSIGNED)
             contID = CONT_P1;
 
-        int map = 0;
+        int32 map = 0;
         switch (buttonID) {
             default: break;
             case 0: map = RSDK_controller[contID].keyA.keyMap; break;
@@ -534,7 +534,7 @@ void HUD_GetKeyFrame(Animator *animator, int buttonID)
             case 4: map = RSDK_controller[contID].keyStart.keyMap; break;
         }
 
-        int frame = UIButtonPrompt_MappingsToFrame(map);
+        int32 frame = UIButtonPrompt_MappingsToFrame(map);
         RSDK.SetSpriteAnimation(HUD->superButtonMappings, 1, animator, true, frame);
     }
 }
@@ -556,7 +556,7 @@ void HUD_State_ComeOnScreen(void)
     Vector2 *offset[4];
     void **state = NULL;
 
-    int *max = NULL;
+    int32 *max = NULL;
     if (globals->gameMode == MODE_COMPETITION) {
         state                = (void **)&entity->vsStates[entity->screenID];
         offset[HUDOFF_SCORE] = &entity->vsScoreOffsets[RSDK_sceneInfo->currentScreenID];

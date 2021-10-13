@@ -76,7 +76,7 @@ bool32 TubeSpring_Spring(bool32 interact)
     RSDK_THIS(TubeSpring);
     Spring_State_Vertical();
     bool32 sprung = false;
-    for (int i = 0; i < Player->playerCount; i++) {
+    for (int32 i = 0; i < Player->playerCount; i++) {
         EntityPlayer *player = RSDK_GET_ENTITY(i, Player);
         if (Player_CheckValidState(player)) {
             bool32 oldinter     = player->interaction;

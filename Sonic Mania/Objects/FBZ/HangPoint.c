@@ -14,7 +14,7 @@ void HangPoint_Update(void)
                 flag = false;
         }
 
-        for (int i = 0; i < 4; ++i) {
+        for (int32 i = 0; i < 4; ++i) {
             if (entity->field_5C[i])
                 flag = false;
         }
@@ -94,13 +94,13 @@ void HangPoint_Update(void)
         }
     }
 
-    int storeX = entity->position.x;
-    int storeY = entity->position.y;
+    int32 storeX = entity->position.x;
+    int32 storeY = entity->position.y;
     entity->position.y += entity->field_7C;
 
     foreach_active(Player, player)
     {
-        int playerID = RSDK.GetEntityID(player);
+        int32 playerID = RSDK.GetEntityID(player);
 
         if (entity->playerTimer[playerID] > 0)
             entity->playerTimer[playerID]--;
@@ -208,7 +208,7 @@ void HangPoint_Update(void)
                                 foreach_active(HangPoint, point)
                                 {
                                     if (entity != point) {
-                                        int distance = entity->position.x - point->position.x;
+                                        int32 distance = entity->position.x - point->position.x;
                                         if (distance < 0x220000 && distance > 0) {
                                             if (abs(entity->position.y - point->position.y - point->field_7C) < 0x40000) {
                                                 entity->activePlayers &= ~(1 << playerID);
@@ -245,7 +245,7 @@ void HangPoint_Update(void)
                                 foreach_active(HangPoint, point)
                                 {
                                     if (entity != point) {
-                                        int distance = point->position.x - entity->position.x;
+                                        int32 distance = point->position.x - entity->position.x;
                                         if (distance < 0x220000 && distance > 0) {
                                             if (abs(entity->position.y - point->position.y - point->field_7C) < 0x40000) {
                                                 entity->activePlayers &= ~(1 << playerID);
@@ -326,11 +326,11 @@ void HangPoint_Draw(void)
     RSDK.DrawSprite(&HangPoint->animator, &drawPos, false);
     if (entity->length) {
         HangPoint->animator.frameID = 1;
-        int length                  = (entity->field_7C >> 16) & 0xFF00;
+        int32 length                  = (entity->field_7C >> 16) & 0xFF00;
 
         SpriteFrame *frame = RSDK.GetFrame(HangPoint->aniFrames, 0, HangPoint->animator.frameID);
 
-        int extraLength = (entity->field_7C >> 16) & 0x00FF;
+        int32 extraLength = (entity->field_7C >> 16) & 0x00FF;
         frame->pivotY   = -(entity->field_7C >> 16);
         frame->height   = extraLength;
         frame->sprY     = 257 - extraLength;
@@ -378,7 +378,7 @@ void HangPoint_StageLoad(void)
     HangPoint->hitbox.right  = hitbox->right;
 }
 
-void HangPoint_Unknown1(EntityHangPoint *entity, void *p, int playerID)
+void HangPoint_Unknown1(EntityHangPoint *entity, void *p, int32 playerID)
 {
     EntityPlayer *player = (EntityPlayer *)p;
     if (entity->field_5C[playerID]) {

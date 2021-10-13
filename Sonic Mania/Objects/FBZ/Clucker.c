@@ -49,7 +49,7 @@ void Clucker_Draw(void)
         RSDK.DrawSprite(&entity->animator, &drawPos, false);
 
         if (!entity->hasChildren) {
-            int frame                = entity->animator.frameID;
+            int32 frame                = entity->animator.frameID;
             entity->animator.frameID = 0;
             RSDK.DrawSprite(&entity->animator, NULL, false);
             entity->animator.frameID = frame;
@@ -133,7 +133,7 @@ void Clucker_DebugDraw(void)
 void Clucker_HandlePlayerInteractions(void)
 {
     RSDK_THIS(Clucker);
-    int posY = entity->position.y;
+    int32 posY = entity->position.y;
 
     foreach_active(Player, player)
     {
@@ -235,7 +235,7 @@ void Clucker_State_Unknown4(void)
     }
     else if (!entity->timer) {
         entity->field_60 -= 0x20000;
-        int spawnY = entity->position.y;
+        int32 spawnY = entity->position.y;
         if (entity->direction & FLIP_Y)
             spawnY += 0xD0000;
         else
@@ -293,8 +293,8 @@ void Clucker_State_Destroyed(void)
     RSDK_THIS(Clucker);
 
     EntityPlatform *platform = RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot - 1, Platform);
-    int offsetX              = 0;
-    int offsetY              = 0;
+    int32 offsetX              = 0;
+    int32 offsetY              = 0;
     if (platform->objectID == Platform->objectID) {
         offsetX = platform->collisionOffset.x;
         offsetY = platform->collisionOffset.y;

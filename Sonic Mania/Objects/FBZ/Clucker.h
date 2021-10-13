@@ -18,8 +18,8 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    int yOffset;
-    int field_60;
+    int32 yOffset;
+    int32 field_60;
     uint8 timer;
     uint16 delay;
     bool32 hasChildren;

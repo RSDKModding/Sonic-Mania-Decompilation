@@ -33,7 +33,7 @@ void UIResPicker_Draw(void)
     RSDK_THIS(UIResPicker);
     Vector2 drawPos;
 
-    int size  = (entity->size.y + entity->size.x) >> 16;
+    int32 size  = (entity->size.y + entity->size.x) >> 16;
     drawPos.x = entity->position.x;
     drawPos.y = entity->position.y;
     drawPos.x -= entity->offset;
@@ -75,7 +75,7 @@ void UIResPicker_Draw(void)
             case 2: drawPos.x = drawPos.x + (entity->size.x >> 1) - 0x60000; break;
         }
 
-        int width = RSDK.GetStringWidth(UIWidgets->labelSpriteIndex, 0, &entity->text, 0, entity->text.textLength, 0);
+        int32 width = RSDK.GetStringWidth(UIWidgets->labelSpriteIndex, 0, &entity->text, 0, entity->text.textLength, 0);
         drawPos.x -= width << 15;
         RSDK.DrawText(&entity->textAnimator, &drawPos, &entity->text, 0, entity->text.textLength, ALIGN_LEFT, 0, 0, 0, false);
     }
@@ -148,7 +148,7 @@ void UIResPicker_ProcessButtonCB(void)
 {
     RSDK_THIS(UIResPicker);
 
-    int sel = entity->selection;
+    int32 sel = entity->selection;
     if (UIControl->keyLeft)
         entity->selection--;
     if (UIControl->keyRight)
@@ -180,16 +180,16 @@ bool32 UIResPicker_ProcessTouchCB(void)
     touchEnd[1].y = entity->touchPosEnd.y;
 
     bool32 pressed = false;
-    for (int i = 0; i < 2; ++i) {
+    for (int32 i = 0; i < 2; ++i) {
         if (RSDK_touchMouse->count) {
-            int sizeX = touchStart[i].x >> 1;
-            int sizeY = touchStart[i].y >> 1;
-            for (int t = 0; t < RSDK_touchMouse->count; ++t) {
-                int x = (RSDK_screens->position.x << 16) - ((RSDK_touchMouse->x[t] * RSDK_screens->width) * -65536.0f);
-                int y = (RSDK_screens->position.y << 16) - ((RSDK_touchMouse->y[t] * RSDK_screens->height) * -65536.0f);
+            int32 sizeX = touchStart[i].x >> 1;
+            int32 sizeY = touchStart[i].y >> 1;
+            for (int32 t = 0; t < RSDK_touchMouse->count; ++t) {
+                int32 x = (RSDK_screens->position.x << 16) - ((RSDK_touchMouse->x[t] * RSDK_screens->width) * -65536.0f);
+                int32 y = (RSDK_screens->position.y << 16) - ((RSDK_touchMouse->y[t] * RSDK_screens->height) * -65536.0f);
 
-                int touchX = abs(touchEnd[i].x + entity->position.x - x);
-                int touchY = abs(touchEnd[i].y + entity->position.y - y);
+                int32 touchX = abs(touchEnd[i].x + entity->position.x - x);
+                int32 touchY = abs(touchEnd[i].y + entity->position.y - y);
                 if (touchX < sizeX && touchY < sizeY) {
                     entity->field_13C = i;
                     pressed           = true;
@@ -240,7 +240,7 @@ void UIResPicker_Unknown7(void)
 
     entity->textFlag = true;
     if (entity->field_120) {
-        int dist = -(entity->field_120 / abs(entity->field_120));
+        int32 dist = -(entity->field_120 / abs(entity->field_120));
         entity->field_120 += dist << 15;
         if (dist < 0) {
             if (entity->field_120 < 0) {
@@ -254,7 +254,7 @@ void UIResPicker_Unknown7(void)
     }
 
     if (entity->offset) {
-        int dist = -(entity->offset / abs(entity->offset));
+        int32 dist = -(entity->offset / abs(entity->offset));
         entity->offset += dist << 16;
         if (dist < 0) {
             if (entity->offset < 0) {

@@ -8,10 +8,10 @@ void UFO_Springboard_Update(void)
     foreach_active(UFO_Player, player)
     {
         if (player->bumperTimer <= 12 && player->stateInput) {
-            int xDif = (player->position.x - entity->position.x) >> 8;
-            int yDif = (player->position.y - entity->position.y) >> 8;
-            int valX  = (yDif * RSDK.Sin256(entity->angle >> 2)) + xDif * RSDK.Cos256(entity->angle >> 2) + entity->position.x;
-            int valY = (entity->position.y - xDif * RSDK.Sin256(entity->angle >> 2)) + yDif * RSDK.Cos256(entity->angle >> 2);
+            int32 xDif = (player->position.x - entity->position.x) >> 8;
+            int32 yDif = (player->position.y - entity->position.y) >> 8;
+            int32 valX  = (yDif * RSDK.Sin256(entity->angle >> 2)) + xDif * RSDK.Cos256(entity->angle >> 2) + entity->position.x;
+            int32 valY = (entity->position.y - xDif * RSDK.Sin256(entity->angle >> 2)) + yDif * RSDK.Cos256(entity->angle >> 2);
 
             RSDK.Sin256(entity->angle >> 2);
             RSDK.Cos256(entity->angle >> 2);
@@ -19,7 +19,7 @@ void UFO_Springboard_Update(void)
             RSDK.Sin256(entity->angle >> 2);
             if (abs(entity->position.x - valX) < 0x180000) {
                 if (abs(entity->position.y - valY) < 0x180000) {
-                    int val3 = 32 * ((valY - entity->position.y + 0x180000) / 48);
+                    int32 val3 = 32 * ((valY - entity->position.y + 0x180000) / 48);
                     if (player->height < val3) {
                         if (val3 - player->height <= 0xC0000) {
                             player->gravityStrength = 0xC0000;
@@ -54,14 +54,14 @@ void UFO_Springboard_Update(void)
 void UFO_Springboard_LateUpdate(void)
 {
     RSDK_THIS(UFO_Springboard);
-    int z       = entity->position.y;
-    int y       = entity->height;
-    int x       = entity->position.x;
+    int32 z       = entity->position.y;
+    int32 y       = entity->height;
+    int32 x       = entity->position.x;
     Matrix *mat = &UFO_Camera->matWorld;
 
     entity->depth3D = mat->values[2][1] * (y >> 16) + mat->values[2][2] * (z >> 16) + mat->values[2][0] * (x >> 16) + mat->values[2][3];
     if (entity->depth3D >= 0x4000) {
-        int depth = (int)((mat->values[0][3] << 8) + (mat->values[0][2] * (z >> 8) & 0xFFFFFF00) + (mat->values[0][0] * (x >> 8) & 0xFFFFFF00)
+        int32 depth = (int32)((mat->values[0][3] << 8) + (mat->values[0][2] * (z >> 8) & 0xFFFFFF00) + (mat->values[0][0] * (x >> 8) & 0xFFFFFF00)
                      + (mat->values[0][1] * (entity->height >> 8) & 0xFFFFFF00))
                     / entity->depth3D;
         entity->visible = abs(depth) < 256;

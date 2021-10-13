@@ -6,12 +6,12 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    int palTimer1;
-    int palTimer2;
-    int dstPal;
-    int srcPal;
-    int field_14;
-    int field_18;
+    int32 palTimer1;
+    int32 palTimer2;
+    int32 dstPal;
+    int32 srcPal;
+    int32 field_14;
+    int32 field_18;
 } ObjectLRZ2Setup;
 
 // Entity Class
@@ -36,7 +36,7 @@ void LRZ2Setup_Serialize(void);
 // Extra Entity Functions
 void LRZ2Setup_HandleStageReload(void);
 void LRZ2Setup_GenericTrigger_CB(void);
-EntityButton *LRZ2Setup_HandleTagSetup(int tag, Entity *entityPtr);
-void LRZ2Setup_GetTileInfo(int *tileInfo, int cPlane, int x, int y, int offsetX, int offsetY, uint8 *behaviour);
+EntityButton *LRZ2Setup_HandleTagSetup(int32 tag, Entity *entityPtr);
+void LRZ2Setup_GetTileInfo(int32 *tileInfo, int32 cPlane, int32 x, int32 y, int32 offsetX, int32 offsetY, uint8 *behaviour);
 
 #endif //!OBJ_LRZ2SETUP_H

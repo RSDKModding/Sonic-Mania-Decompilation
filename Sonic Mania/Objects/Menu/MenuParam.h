@@ -14,37 +14,37 @@ typedef struct {
     uint8 selectionFlag;
     uint8 field_59;
     char menuTag[0x100];
-    int selectionID;
-    int field_160;
-    int clearFlag;
-    int field_168;
-    int characterID;
-    int zoneID;
-    int actID;
-    int dbRowID;
+    int32 selectionID;
+    int32 field_160;
+    int32 clearFlag;
+    int32 field_168;
+    int32 characterID;
+    int32 zoneID;
+    int32 actID;
+    int32 dbRowID;
 #if RETRO_USE_PLUS
-    int isEncoreMode;
-    int field_180;
-    int viewReplay;
-    int showGhost;
+    int32 isEncoreMode;
+    int32 field_180;
+    int32 viewReplay;
+    int32 showGhost;
     uint8 field_18C;
     uint8 replayRank;
     uint8 field_18E;
     uint8 field_18F;
-    int field_190;
-    int field_194;
-    int field_198;
-    int field_19C;
+    int32 field_190;
+    int32 field_194;
+    int32 field_198;
+    int32 field_19C;
 #else
-    int timeScore;
-    int field_174;
-    int field_178;
-    int field_17C;
-    int field_180;
+    int32 timeScore;
+    int32 field_174;
+    int32 field_178;
+    int32 field_17C;
+    int32 field_180;
 #endif
-    int vsZoneID;
-    int vsActID;
-    int field_1A8;
+    int32 vsZoneID;
+    int32 vsActID;
+    int32 field_1A8;
 } EntityMenuParam;
 
 // Object Struct

@@ -18,7 +18,7 @@ void SaveGame_EditorLoad(void) {}
 void SaveGame_Serialize(void) {}
 
 #if RETRO_USE_PLUS
-int *SaveGame_GetDataPtr(int slot, bool32 encore)
+int32 *SaveGame_GetDataPtr(int32 slot, bool32 encore)
 {
     if (slot == NO_SAVE_SLOT)
         return globals->noSaveSlot;
@@ -29,7 +29,7 @@ int *SaveGame_GetDataPtr(int slot, bool32 encore)
         return &globals->saveRAM[0x100 * (slot % 8)];
 }
 #else
-int *SaveGame_GetDataPtr(int slot)
+int32 *SaveGame_GetDataPtr(int32 slot)
 {
     if (slot == NO_SAVE_SLOT)
         return globals->noSaveSlot;
@@ -40,7 +40,7 @@ int *SaveGame_GetDataPtr(int slot)
 
 void SaveGame_LoadSaveData(void)
 {
-    int slot = globals->saveSlotID;
+    int32 slot = globals->saveSlotID;
     if (slot == NO_SAVE_SLOT)
         SaveGame->saveRAM = (EntitySaveGame*)globals->noSaveSlot;
     else
@@ -79,7 +79,7 @@ void SaveGame_LoadSaveData(void)
 
     if (globals->recallEntities) {
         if (RSDK_sceneInfo->activeCategory < 3) {
-            for (int p = 0; p < 4; ++p) {
+            for (int32 p = 0; p < 4; ++p) {
                 StarPost->playerPositions[p].x = globals->restartPos[(p * 2) + 0];
                 StarPost->playerPositions[p].y = globals->restartPos[(p * 2) + 1];
                 StarPost->playerDirections[p]  = globals->restartDir[p];
@@ -103,7 +103,7 @@ void SaveGame_LoadSaveData(void)
             globals->restartPowerups = 0;
             LogHelpers_Print("RecallCollectedEntities");
 
-            for (int e = 0x40; e < 0x840; ++e) {
+            for (int32 e = 0x40; e < 0x840; ++e) {
                 if (globals->atlEntityData[(0x200 * 1) + e] == 1) {
                     Entity *entity   = RSDK.GetEntityByID(e);
                     entity->objectID = 0;
@@ -123,12 +123,12 @@ void SaveGame_LoadSaveData(void)
             globals->restartMilliseconds = 0;
             globals->restartSeconds      = 0;
             globals->restartMinutes      = 0;
-            memset(globals->atlEntityData, 0, 0x800 * sizeof(int));
+            memset(globals->atlEntityData, 0, 0x800 * sizeof(int32));
         }
     }
     else if (!Zone || Zone->listPos != Zone->prevListPos) {
         if (StarPost) {
-            for (int p = 0; p < PLAYER_MAX; ++p) {
+            for (int32 p = 0; p < PLAYER_MAX; ++p) {
                 StarPost->playerPositions[p].x = 0;
                 StarPost->playerPositions[p].y = 0;
                 StarPost->playerDirections[p]  = FLIP_NONE;
@@ -159,7 +159,7 @@ void SaveGame_LoadFile(void)
     SaveGame->loadCallback  = SaveGame_SaveLoadedCB;
     API_LoadUserFile("SaveData.bin", globals->saveRAM, 0x10000, SaveGame_LoadFile_CB);
 }
-void SaveGame_SaveFile(void (*callback)(int status))
+void SaveGame_SaveFile(void (*callback)(int32 status))
 {
     if (checkNoSave || !SaveGame->saveRAM || globals->saveLoaded != STATUS_OK) {
         if (callback)
@@ -176,7 +176,7 @@ void SaveGame_SaveFile(void (*callback)(int status))
     }
 }
 
-void SaveGame_SaveLoadedCB(int status)
+void SaveGame_SaveLoadedCB(int32 status)
 {
     LogHelpers_Print("SaveLoadedCB(%d)", status);
     if (status) {
@@ -214,7 +214,7 @@ void SaveGame_SaveGameState(void)
     EntitySaveGame *saveRAM = SaveGame->saveRAM;
     globals->recallEntities = true;
 
-    for (int p = 0; p < PLAYER_MAX; ++p) {
+    for (int32 p = 0; p < PLAYER_MAX; ++p) {
         globals->restartPos[(p * 2) + 0] = StarPost->playerPositions[p].x;
         globals->restartPos[(p * 2) + 1] = StarPost->playerPositions[p].y;
         globals->restartDir[p]           = StarPost->playerDirections[p];
@@ -245,7 +245,7 @@ void SaveGame_SaveGameState(void)
     globals->restart1UP      = player1->ringExtraLife;
     globals->restartPowerups = player1->shield | (player1->hyperRing << 6);
 
-    for (int i = 0x40; i < 0x40 + 0x800; ++i) {
+    for (int32 i = 0x40; i < 0x40 + 0x800; ++i) {
         EntityItemBox *itemBox = RSDK_GET_ENTITY(i, ItemBox);
         if (itemBox->objectID || (itemBox->active != 0xFF)) {
             if (itemBox->objectID == ItemBox->objectID) {
@@ -304,7 +304,7 @@ void SaveGame_ClearRestartData(void)
     globals->restartMilliseconds = 0;
     globals->restartSeconds      = 0;
     globals->restartMinutes      = 0;
-    memset(globals->atlEntityData, 0, 0x840 * sizeof(int));
+    memset(globals->atlEntityData, 0, 0x840 * sizeof(int32));
 }
 void SaveGame_SavePlayerState(void)
 {
@@ -358,9 +358,9 @@ void SaveGame_ResetPlayerState(void)
         Player->powerups      = globals->restartPowerups;
     }
 }
-void SaveGame_LoadFile_CB(int status)
+void SaveGame_LoadFile_CB(int32 status)
 {
-    int state = 0;
+    int32 state = 0;
     if (status == STATUS_OK || status == STATUS_NOTFOUND) {
         state               = 1;
         globals->saveLoaded = STATUS_OK;
@@ -380,7 +380,7 @@ void SaveGame_LoadFile_CB(int status)
         SaveGame->loadEntityPtr = NULL;
     }
 }
-void SaveGame_SaveFile_CB(int status)
+void SaveGame_SaveFile_CB(int32 status)
 {
     if (SaveGame->saveCallback) {
         Entity *store = RSDK_sceneInfo->entity;

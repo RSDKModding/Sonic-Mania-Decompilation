@@ -153,7 +153,7 @@ void BSS_Message_State_Finish(void)
     if (entity->timer2 > 320)
         destroyEntity(entity);
 }
-void BSS_Message_TrackProgress_CB(int success)
+void BSS_Message_TrackProgress_CB(int32 success)
 {
     RSDK_THIS(BSS_Message);
     entity->field_6C = 0;

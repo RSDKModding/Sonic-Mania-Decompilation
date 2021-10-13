@@ -17,15 +17,15 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    int timer;
-    int timer2;
+    int32 timer;
+    int32 timer2;
     Vector2 drawPos;
     Vector2 startPos;
     Vector2 jointPositions[RockemSockem_coilCount];
     Vector2 unknownPositions[RockemSockem_coilCount];
-    int jointRotations[RockemSockem_coilCount];
-    int field_E8;
-    int field_EC;
+    int32 jointRotations[RockemSockem_coilCount];
+    int32 field_E8;
+    int32 field_EC;
     Animator baseAnimator;
     Animator jointAnimator;
     Animator ballAnimator;

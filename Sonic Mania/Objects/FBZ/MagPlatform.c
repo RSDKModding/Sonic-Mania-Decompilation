@@ -45,7 +45,7 @@ void MagPlatform_Unknown1(void)
     entity->pushPlayersL = 0;
     entity->pushPlayersR = 0;
 
-    int playerID = 0;
+    int32 playerID = 0;
     foreach_active(Player, player)
     {
         bool32 groundStore = player->onGround;
@@ -110,7 +110,7 @@ void MagPlatform_Unknown3(void)
     RSDK_THIS(MagPlatform);
 
     entity->drawPos.y += entity->velocity.y;
-    int posY           = entity->position.y;
+    int32 posY           = entity->position.y;
     entity->position.y = entity->drawPos.y;
     entity->velocity.y -= 0x3800;
     if (RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_ROOF, 0, 0, -0x40000, true))

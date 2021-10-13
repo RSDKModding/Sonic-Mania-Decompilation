@@ -67,7 +67,7 @@ void HCZSpikeBall_Unknown2(void)
     if (conveyor) {
         Hitbox hitbox1, hitbox2, hitbox3, hitbox4;
 
-        int len = 0;
+        int32 len = 0;
         if (conveyor->length != -3)
             len = (conveyor->length + 3) << 20;
 
@@ -93,15 +93,15 @@ void HCZSpikeBall_Unknown2(void)
 
         if (MathHelpers_PointInHitbox(conveyor->direction, conveyor->position.x, conveyor->position.y, &hitbox1, entity->position.x,
                                       entity->position.y)) {
-            int dist = conveyor->position.x - (len >> 1);
+            int32 dist = conveyor->position.x - (len >> 1);
             if (conveyor->direction == FLIP_NONE)
                 dist = conveyor->position.x + (len >> 1);
             entity->field_68 = abs(entity->position.x - (entity->position.x - dist)) / 0x15555;
         }
         else if (MathHelpers_PointInHitbox(conveyor->direction, conveyor->position.x, conveyor->position.y, &hitbox2, entity->position.x,
                                            entity->position.y)) {
-            int off   = len / 0x15555;
-            int angle = 384;
+            int32 off   = len / 0x15555;
+            int32 angle = 384;
             if (conveyor->direction) {
                 off   = 2 * (len / 0x15555) + 51;
                 angle = 128;
@@ -120,8 +120,8 @@ void HCZSpikeBall_Unknown2(void)
                     entity->field_68 = 0;
                 }
                 else {
-                    int dist  = len / 0x15555;
-                    int angle = 384;
+                    int32 dist  = len / 0x15555;
+                    int32 angle = 384;
                     if (!conveyor->direction) {
                         dist  = 2 * (len / 0x15555) + 51;
                         angle = 128;
@@ -135,7 +135,7 @@ void HCZSpikeBall_Unknown2(void)
                 }
             }
             else {
-                int dist = (len >> 1) + conveyor->position.x;
+                int32 dist = (len >> 1) + conveyor->position.x;
                 if (conveyor->direction == FLIP_NONE)
                     dist = conveyor->position.x - (len >> 1);
                 entity->field_68 = abs((entity->position.x - dist)) / 0x15555 + (len / 0x15555) + 51;
@@ -160,13 +160,13 @@ void HCZSpikeBall_Unknown4(void)
     RSDK_THIS(HCZSpikeBall);
 
     if (entity->conveyor) {
-        int len = 0;
+        int32 len = 0;
         if (entity->conveyor->length != -3)
             len = (entity->conveyor->length + 3) << 20;
 
-        int timer   = (entity->field_68 + Zone->timer) % ((2 * len + 0x8A3AE6) / 0x15555);
-        int conveyX = entity->conveyor->position.x;
-        int conveyY = entity->conveyor->position.y;
+        int32 timer   = (entity->field_68 + Zone->timer) % ((2 * len + 0x8A3AE6) / 0x15555);
+        int32 conveyX = entity->conveyor->position.x;
+        int32 conveyY = entity->conveyor->position.y;
         if (timer < len / 0x15555) {
             if (entity->conveyor->direction == FLIP_NONE)
                 entity->position.x = (len >> 1) + conveyX;
@@ -176,13 +176,13 @@ void HCZSpikeBall_Unknown4(void)
             entity->position.x += 0x15555 * timer * (2 * (entity->conveyor->direction != FLIP_NONE) - 1);
         }
         else if (timer < len / 0x15555 + 51) {
-            int val = timer - (len / 0x15555);
+            int32 val = timer - (len / 0x15555);
             if (entity->conveyor->direction == FLIP_NONE)
                 entity->position.x = conveyX - (len >> 1);
             else
                 entity->position.x = (len >> 1) + conveyX;
 
-            int mult = 5;
+            int32 mult = 5;
             if (entity->conveyor->direction == FLIP_NONE)
                 mult = -5;
 
@@ -197,7 +197,7 @@ void HCZSpikeBall_Unknown4(void)
             else
                 entity->position.x = conveyX - (len >> 1);
 
-            int mult = 5;
+            int32 mult = 5;
             if (entity->conveyor->direction == FLIP_NONE)
                 mult = -5;
 

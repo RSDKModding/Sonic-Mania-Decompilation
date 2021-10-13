@@ -70,7 +70,7 @@ void MMZSetup_StageLoad(void)
         RSDK.GetSceneLayer(0)->scrollPos = 0x1800000;
         RSDK.GetSceneLayer(1)->scrollPos = 0x1800000;
 
-        for (int i = 3; i < 5; ++i) {
+        for (int32 i = 3; i < 5; ++i) {
             RSDK.GetSceneLayer(i)->scrollPos = (256 - RSDK_screens->centerX) << 16;
         }
 

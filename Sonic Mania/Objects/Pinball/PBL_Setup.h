@@ -7,16 +7,16 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    int field_4;
-    int timer;
-    int score;
-    int score1UP;
-    int rings;
-    int timer2;
-    int ringPan;
-    int sectorID;
-    int sectorCount;
-    int timer3;
+    int32 field_4;
+    int32 timer;
+    int32 score;
+    int32 score1UP;
+    int32 rings;
+    int32 timer2;
+    int32 ringPan;
+    int32 sectorID;
+    int32 sectorCount;
+    int32 timer3;
     uint8 tableLow;
     uint8 tableHigh;
     uint16 sfxContinue;
@@ -26,24 +26,24 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    int timer;
-    int colour;
-    int field_64;
-    int field_68;
-    int field_6C;
-    int field_70;
-    int field_74;
-    int field_78;
-    int field_7C;
-    int field_80;
-    int field_84;
-    int field_88;
-    int field_8C;
-    int field_90;
-    int field_94;
-    int field_98;
-    int field_9C;
-    int field_A0;
+    int32 timer;
+    int32 colour;
+    int32 field_64;
+    int32 field_68;
+    int32 field_6C;
+    int32 field_70;
+    int32 field_74;
+    int32 field_78;
+    int32 field_7C;
+    int32 field_80;
+    int32 field_84;
+    int32 field_88;
+    int32 field_8C;
+    int32 field_90;
+    int32 field_94;
+    int32 field_98;
+    int32 field_9C;
+    int32 field_A0;
 } EntityPBL_Setup;
 
 // Object Struct
@@ -67,7 +67,7 @@ void PBL_Setup_BG_ScanlineCallback(ScanlineInfo *scanlines);
 void PBL_Setup_DrawLayer_Callback(void);
 
 void PBL_Setup_Unknown5(void);
-void PBL_Setup_GiveScore(int score);
+void PBL_Setup_GiveScore(int32 score);
 void PBL_Setup_GiveLife(void);
 void PBL_Setup_Unknown9(void);
 void PBL_Setup_Unknown10(void);

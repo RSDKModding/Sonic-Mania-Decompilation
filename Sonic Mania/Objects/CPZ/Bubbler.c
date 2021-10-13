@@ -93,7 +93,7 @@ void Bubbler_HandleInteractions(void)
 void Bubbler_HandleProjectileInteractions(void)
 {
     RSDK_THIS(Bubbler);
-    int distance = 0x7FFFFFFF;
+    int32 distance = 0x7FFFFFFF;
     foreach_active(Player, player)
     {
         if (abs(player->position.x - entity->position.x) < distance) {
@@ -175,7 +175,7 @@ void Bubbler_State_Unknown3(void)
     entity->position.y += entity->velocity.y;
     if (++entity->timer2 >= 30) {
         entity->timer2 = 0;
-        int spawnX     = entity->position.x + 0x60000;
+        int32 spawnX     = entity->position.x + 0x60000;
         if (entity->direction)
             spawnX = entity->position.x - 0x60000;
         CREATE_ENTITY(Bubbler, intToVoid(true), spawnX, entity->position.y + 0xA0000)->active = ACTIVE_NORMAL;

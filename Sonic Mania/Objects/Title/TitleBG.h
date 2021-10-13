@@ -6,17 +6,17 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    int palTimer;
-    int timer;
-    int angle;
+    int32 palTimer;
+    int32 timer;
+    int32 angle;
     uint16 spriteIndex;
 } ObjectTitleBG;
 
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    int type;
-    int timer;
+    int32 type;
+    int32 timer;
     Animator animator;
 } EntityTitleBG;
 

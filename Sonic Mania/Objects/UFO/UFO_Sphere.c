@@ -12,9 +12,9 @@ void UFO_Sphere_Update(void)
 void UFO_Sphere_LateUpdate(void)
 {
     RSDK_THIS(UFO_Sphere);
-    int x = entity->position.x >> 8;
-    int y = entity->height >> 8;
-    int z = entity->position.y >> 8;
+    int32 x = entity->position.x >> 8;
+    int32 y = entity->height >> 8;
+    int32 z = entity->position.y >> 8;
 
     Matrix *mat = &UFO_Camera->matWorld;
 
@@ -97,10 +97,10 @@ void UFO_Sphere_CheckPlayerCollision(void)
         case 0: {
             foreach_active(UFO_Player, player)
             {
-                int ry     = (entity->height - player->height - 0xA0000) >> 16;
-                int rx     = (entity->position.y - player->position.y) >> 16;
-                int radius = rx * rx + ry * ry;
-                int pr     = UFO_Player->maxSpeed >> 9;
+                int32 ry     = (entity->height - player->height - 0xA0000) >> 16;
+                int32 rx     = (entity->position.y - player->position.y) >> 16;
+                int32 radius = rx * rx + ry * ry;
+                int32 pr     = UFO_Player->maxSpeed >> 9;
                 if (((entity->position.x - player->position.x) >> 16) * ((entity->position.x - player->position.x) >> 16) + radius < pr) {
                     entity->drawOrder = 12;
                     entity->state     = UFO_Sphere_Unknown3;
@@ -121,8 +121,8 @@ void UFO_Sphere_CheckPlayerCollision(void)
             {
                 if (player->state != UFO_Player_Unknown8 && player->state != UFO_Player_HandleTilt && player->state != UFO_Player_Unknown10
                     && player->state != UFO_Player_Unknown11) {
-                    int ry = (entity->height - player->height - 0xA0000) >> 16;
-                    int rx = (entity->position.y - player->position.y) >> 16;
+                    int32 ry = (entity->height - player->height - 0xA0000) >> 16;
+                    int32 rx = (entity->position.y - player->position.y) >> 16;
                     if (((entity->position.x - player->position.x) >> 16) * ((entity->position.x - player->position.x) >> 16) + rx * rx + ry * ry
                         < 384) {
                         RSDK.SetModelAnimation(UFO_Player->tumbleModel, &player->playerAnimator, 80, 0, false, 0);
@@ -144,8 +144,8 @@ void UFO_Sphere_CheckPlayerCollision(void)
             {
                 if (player->state != UFO_Player_Unknown8 && player->state != UFO_Player_HandleTilt && player->state != UFO_Player_Unknown10
                     && player->state != UFO_Player_Unknown11) {
-                    int ry = (entity->height - player->height - 0xA0000) >> 16;
-                    int rx = (entity->position.y - player->position.y) >> 16;
+                    int32 ry = (entity->height - player->height - 0xA0000) >> 16;
+                    int32 rx = (entity->position.y - player->position.y) >> 16;
                     if (((entity->position.x - player->position.x) >> 16) * ((entity->position.x - player->position.x) >> 16) + rx * rx + ry * ry
                         < 384) {
                         RSDK.SetModelAnimation(UFO_Player->tumbleModel, &player->playerAnimator, 80, 0, false, 0);
@@ -178,7 +178,7 @@ void UFO_Sphere_State_Moving(void)
     RSDK_THIS(UFO_Sphere);
     Matrix *mat = &entity->matrix;
 
-    int amp            = entity->amplitude.y * RSDK.Sin256(entity->angle + (UFO_Setup->timer << entity->speed));
+    int32 amp            = entity->amplitude.y * RSDK.Sin256(entity->angle + (UFO_Setup->timer << entity->speed));
     entity->position.x = entity->amplitude.x * RSDK.Cos256(entity->angle + (UFO_Setup->timer << entity->speed));
     entity->position.y = entity->amplitude.y * amp;
     entity->height     = 0;

@@ -19,12 +19,12 @@ void SSZ1Setup_Create(void *data) {}
 void SSZ1Setup_StageLoad(void)
 {
     SSZ1Setup->layer1Ptr = RSDK.GetSceneLayer(1);
-    int id               = 0;
-    for (int i = 0; i < 0x200; ++i) {
+    int32 id               = 0;
+    for (int32 i = 0; i < 0x200; ++i) {
         SSZ1Setup->layer1Ptr->deformationData[i] = (8 * RSDK.Sin1024(id)) >> 10;
         id += 8;
     }
-    memcpy(SSZ1Setup->layer1Ptr->deformationData + 0x200, SSZ1Setup->layer1Ptr->deformationData, 0x200 * sizeof(int));
+    memcpy(SSZ1Setup->layer1Ptr->deformationData + 0x200, SSZ1Setup->layer1Ptr->deformationData, 0x200 * sizeof(int32));
 
     Animals->animalTypes[0]      = ANIMAL_FLICKY;
     Animals->animalTypes[1]      = ANIMAL_RICKY;

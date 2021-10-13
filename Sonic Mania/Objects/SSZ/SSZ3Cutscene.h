@@ -11,7 +11,7 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    int field_58;
+    int32 field_58;
 #if RETRO_USE_PLUS
     bool32 flag;
     EntityPhantomRuby *ruby;

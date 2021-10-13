@@ -31,7 +31,7 @@ void Spring_Create(void *data)
     if (!RSDK_sceneInfo->inEditor) {
         entity->type %= 6;
         if (data) {
-            int propertyVal  = voidToInt(data);
+            int32 propertyVal  = voidToInt(data);
             entity->type     = (propertyVal >> 0) & 0xFF;
             entity->flipFlag = (propertyVal >> 8) & 0xFF;
         }
@@ -112,10 +112,10 @@ void Spring_State_Vertical(void)
         foreach_active(Player, player)
         {
             if (!entity->planeFilter || player->collisionPlane == ((uint8)(entity->planeFilter - 1) & 1)) {
-                int col = (entity->type == 0xFF && player->velocity.y < -0x50000) ? Player_CheckCollisionPlatform(player, entity, &entity->hitbox)
+                int32 col = (entity->type == 0xFF && player->velocity.y < -0x50000) ? Player_CheckCollisionPlatform(player, entity, &entity->hitbox)
                                                                                   : Player_CheckCollisionBox(player, entity, &entity->hitbox);
                 if (col == 1) {
-                    int anim = player->playerAnimator.animationID;
+                    int32 anim = player->playerAnimator.animationID;
                     if (anim == ANI_WALK || (anim > ANI_AIRWALK && anim <= ANI_DASH))
                         player->storedAnim = player->playerAnimator.animationID;
                     else
@@ -193,7 +193,7 @@ void Spring_State_Horizontal(void)
                         else
                             player->state = Player_State_Air;
                     }
-                    int anim = player->playerAnimator.animationID;
+                    int32 anim = player->playerAnimator.animationID;
                     if (anim != ANI_JUMP && anim != ANI_JOG && anim != ANI_RUN && anim != ANI_DASH)
                         player->playerAnimator.animationID = ANI_WALK;
                 }
@@ -233,7 +233,7 @@ void Spring_State_Horizontal(void)
                         else
                             player->state = Player_State_Air;
                     }
-                    int anim = player->playerAnimator.animationID;
+                    int32 anim = player->playerAnimator.animationID;
                     if (anim != ANI_JUMP && anim != ANI_JOG && anim != ANI_RUN && anim != ANI_DASH)
                         player->playerAnimator.animationID = ANI_WALK;
                 }
@@ -265,12 +265,12 @@ void Spring_State_Diagonal(void)
                     flag = true;
                 }
                 else {
-                    int y = player->velocity.y;
+                    int32 y = player->velocity.y;
                     if (y >= 0) {
                         flag = true;
                     }
                     else {
-                        int x = player->velocity.x;
+                        int32 x = player->velocity.x;
                         if (x < 0)
                             x = -x;
                         flag = x > -y;
@@ -283,14 +283,14 @@ void Spring_State_Diagonal(void)
                         }
                         else {
                             player->state = Player_State_Air;
-                            int anim      = player->playerAnimator.animationID;
+                            int32 anim      = player->playerAnimator.animationID;
                             if (anim != ANI_JUMP && anim != ANI_JOG && anim != ANI_RUN && anim != ANI_DASH)
                                 player->playerAnimator.animationID = ANI_WALK;
                         }
                     }
                     if (entity->direction < FLIP_Y) {
                         if (player->state != Player_State_ForceRoll_Air && player->state != Player_State_ForceRoll_Ground) {
-                            int anim = player->playerAnimator.animationID;
+                            int32 anim = player->playerAnimator.animationID;
                             if (anim == ANI_WALK || (anim > ANI_AIRWALK && anim <= ANI_DASH))
                                 player->storedAnim = player->playerAnimator.animationID;
                             else

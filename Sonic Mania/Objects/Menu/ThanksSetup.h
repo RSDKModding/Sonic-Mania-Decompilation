@@ -15,8 +15,8 @@ typedef struct {
     StateMachine(state);
     StateMachine(stateDraw);
     Entity *picture;
-    int timer;
-    int offset;
+    int32 timer;
+    int32 offset;
 } EntityThanksSetup;
 
 // Object Struct

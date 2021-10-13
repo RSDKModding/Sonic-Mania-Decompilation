@@ -12,21 +12,21 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    int field_58;
+    int32 field_58;
     Vector2 size;
-    int frequency;
-    int fluctuation;
+    int32 frequency;
+    int32 fluctuation;
     bool32 running;
-    int field_70;
+    int32 field_70;
     Vector2 startPos;
-    int timer;
+    int32 timer;
     Hitbox hitbox;
-    int field_88;
-    int field_8C;
-    int field_90;
-    int field_94;
-    int field_98;
-    int field_9C;
+    int32 field_88;
+    int32 field_8C;
+    int32 field_90;
+    int32 field_94;
+    int32 field_98;
+    int32 field_9C;
 } EntityRingField;
 
 // Object Struct

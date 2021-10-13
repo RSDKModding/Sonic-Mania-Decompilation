@@ -8,16 +8,16 @@ void MetalArm_Update(void)
     entity->offset.x = -entity->posUnknown.x;
     entity->offset.y = -entity->posUnknown.y;
 
-    int valA = entity->timer;
+    int32 valA = entity->timer;
     if (entity->durationA < entity->timer)
         valA = entity->durationA;
-    int difA           = ((entity->endAngleA - entity->startAngleA) << 16) / entity->durationA;
+    int32 difA           = ((entity->endAngleA - entity->startAngleA) << 16) / entity->durationA;
     entity->armAngle.x = (entity->startAngleA << 16) + difA * valA;
 
-    int valB = entity->timer;
+    int32 valB = entity->timer;
     if (entity->durationB < entity->timer)
         valB = entity->durationB;
-    int difB           = ((entity->endAngleB - entity->startAngleB) << 16) / entity->durationB;
+    int32 difB           = ((entity->endAngleB - entity->startAngleB) << 16) / entity->durationB;
     entity->armAngle.y = (entity->startAngleB << 16) + difB * valB;
 
     entity->posUnknown = MetalArm_Unknown2();
@@ -43,8 +43,8 @@ void MetalArm_Draw(void)
     entity->rotation = 0;
     RSDK.DrawSprite(&entity->animator1, NULL, false);
 
-    int x = 0x2400 * RSDK.Cos512((entity->armAngle.x >> 16)) + entity->position.x;
-    int y = 0x2400 * RSDK.Sin512((entity->armAngle.x >> 16)) + entity->position.y;
+    int32 x = 0x2400 * RSDK.Cos512((entity->armAngle.x >> 16)) + entity->position.x;
+    int32 y = 0x2400 * RSDK.Sin512((entity->armAngle.x >> 16)) + entity->position.y;
 
     Vector2 drawPos;
     drawPos            = MetalArm_Unknown2();
@@ -112,7 +112,7 @@ void MetalArm_StageLoad(void)
 
 bool32 MetalArm_Unknown1(void)
 {
-    int count = 0;
+    int32 count = 0;
     foreach_active(MetalArm, arm)
     {
         if (arm->state == MetalArm_Unknown5 || arm->state == MetalArm_Unknown7)
@@ -126,8 +126,8 @@ Vector2 MetalArm_Unknown2(void)
     RSDK_THIS(MetalArm);
     Vector2 result;
 
-    int x    = 0x2400 * RSDK.Cos512((entity->armAngle.x >> 16)) + entity->position.x;
-    int y    = 0x2400 * RSDK.Sin512((entity->armAngle.x >> 16)) + entity->position.y;
+    int32 x    = 0x2400 * RSDK.Cos512((entity->armAngle.x >> 16)) + entity->position.x;
+    int32 y    = 0x2400 * RSDK.Sin512((entity->armAngle.x >> 16)) + entity->position.y;
     result.x = x + 0x3800 * RSDK.Cos512((entity->armAngle.x + entity->armAngle.y) >> 16);
     result.y = y + 0x3800 * RSDK.Sin512((entity->armAngle.x + entity->armAngle.y) >> 16);
     return result;
@@ -139,7 +139,7 @@ void MetalArm_Unknown3(void)
 
     foreach_active(Player, player)
     {
-        int id = RSDK.GetEntityID(player);
+        int32 id = RSDK.GetEntityID(player);
         if ((1 << id) & entity->activePlayers) {
             player->position.x += entity->offset.x;
             player->position.y += entity->offset.y;
@@ -168,7 +168,7 @@ void MetalArm_Unknown5(void)
 {
     RSDK_THIS(MetalArm);
 
-    int duration = entity->durationB;
+    int32 duration = entity->durationB;
     if (entity->durationA > entity->durationB)
         duration = entity->durationA;
     if (entity->timer >= duration) {

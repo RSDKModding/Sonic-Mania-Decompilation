@@ -58,7 +58,7 @@ void SpikeLog_State_Main(void)
             if (Player_CheckCollisionTouch(player, entity, &SpikeLog->hitbox)) {
 #if RETRO_USE_PLUS
                 if (player->characterID == ID_MIGHTY) {
-                    int anim = player->playerAnimator.animationID;
+                    int32 anim = player->playerAnimator.animationID;
                     if (anim == ANI_JUMP || anim == ANI_SPINDASH || anim == ANI_DROPDASH) {
                         if (!player->invincibleTimer && player->blinkTimer <= 0) {
                             if (abs(player->velocity.x) < 0x10000 || !player->groundedStore) {

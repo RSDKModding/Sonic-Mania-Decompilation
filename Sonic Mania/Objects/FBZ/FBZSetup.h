@@ -6,14 +6,14 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    int field_4;
-    int frameA;
-    int frameC;
-    int frameD;
-    int frameB;
-    int array1[0x400];
-    int array2[0x400];
-    int array3[0x400];
+    int32 field_4;
+    int32 frameA;
+    int32 frameC;
+    int32 frameD;
+    int32 frameB;
+    int32 array1[0x400];
+    int32 array2[0x400];
+    int32 array3[0x400];
     uint16 aniTiles;
     uint16 bgOutsideLayer;
     EntityFBZ1Outro *outroPtr;
@@ -41,7 +41,7 @@ void FBZSetup_Serialize(void);
 // Extra Entity Functions
 void FBZSetup_ActTransitionLoad(void);
 
-void FBZSetup_Unknown5(ScanlineInfo *scanlines, int a1, int a3, int a4, int a5, int a6);
+void FBZSetup_Unknown5(ScanlineInfo *scanlines, int32 a1, int32 a3, int32 a4, int32 a5, int32 a6);
 void FBZSetup_ScanlineCallback(ScanlineInfo *scanlines);
 
 void FBZSetup_BGSwitchCB_A(void);

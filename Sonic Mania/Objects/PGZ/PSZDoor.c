@@ -6,10 +6,10 @@ void PSZDoor_Update(void)
 {
     RSDK_THIS(PSZDoor);
 
-    int offsetX = 0;
-    int offsetY = 0;
+    int32 offsetX = 0;
+    int32 offsetY = 0;
 
-    int speed = 0;
+    int32 speed = 0;
     switch (entity->open ^ entity->orientation) {
         case 0:
             offsetY = -0x10000;
@@ -30,8 +30,8 @@ void PSZDoor_Update(void)
         default: break;
     }
 
-    int startX = entity->startPos.x;
-    int startY = entity->startPos.y;
+    int32 startX = entity->startPos.x;
+    int32 startY = entity->startPos.y;
 
     Vector2 *pos = &entity->startPos;
     if (entity->field_70) {
@@ -51,8 +51,8 @@ void PSZDoor_Update(void)
         }
     }
 
-    int posX = entity->startPos.x - startX;
-    int posY = entity->startPos.y - startY;
+    int32 posX = entity->startPos.x - startX;
+    int32 posY = entity->startPos.y - startY;
 
     bool32 flag = false;
     foreach_active(Player, player)
@@ -126,7 +126,7 @@ void PSZDoor_Draw(void)
     else
         drawPos.y -= 2 * entity->offset.y;
 
-    int rotation     = entity->rotation;
+    int32 rotation     = entity->rotation;
     entity->rotation = 256 - rotation;
     RSDK.DrawSprite(&entity->animator2, &drawPos, false);
     RSDK.DrawSprite(&entity->animator1, &drawPos, false);
@@ -211,7 +211,7 @@ void PSZDoor_StageLoad(void)
     PSZDoor->sfxOpen            = RSDK.GetSFX("Stage/Open.wav");
 }
 
-int PSZDoor_Unknown1(void)
+int32 PSZDoor_Unknown1(void)
 {
     RSDK_THIS(PSZDoor);
     if (entity->field_70) {

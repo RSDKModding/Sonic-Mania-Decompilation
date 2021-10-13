@@ -13,20 +13,20 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    int timer;
-    int angleOffset;
-    int angle2Offset;
-    int angle2;
-    int field_6C;
-    int field_70;
+    int32 timer;
+    int32 angleOffset;
+    int32 angle2Offset;
+    int32 angle2;
+    int32 field_6C;
+    int32 field_70;
     char r;
     char g;
     char b;
-    int field_78;
+    int32 field_78;
     Entity *parent;
     Vector2 field_80;
-    int field_88;
-    int field_8C;
+    int32 field_88;
+    int32 field_8C;
 } EntityFXWaveRing;
 
 // Object Struct

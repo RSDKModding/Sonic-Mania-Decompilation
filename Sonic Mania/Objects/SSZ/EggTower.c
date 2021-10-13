@@ -11,7 +11,7 @@ void EggTower_StaticUpdate(void) {}
 void EggTower_Draw(void)
 {
     RSDK_THIS(EggTower);
-    int y = entity->position.y - 160 * ((entity->position.y - ((RSDK_screens->position.y + RSDK_screens->centerY) << 16)) >> 8);
+    int32 y = entity->position.y - 160 * ((entity->position.y - ((RSDK_screens->position.y + RSDK_screens->centerY) << 16)) >> 8);
     if (y > (RSDK_screens->position.y + 288) << 16)
         y -= (y - (RSDK_screens->position.y << 16) - 0x1200000) >> 1;
     RSDK.MatrixScaleXYZ(&entity->matrix2, entity->scale.x, -entity->scale.x, entity->scale.x);

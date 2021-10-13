@@ -96,7 +96,7 @@ void PushSpring_HandlePlayerCollisions_Top(void)
                 player->onGround      = false;
                 player->state         = Player_State_Air;
                 player->velocity.y    = -0xA0000;
-                int anim              = player->playerAnimator.animationID;
+                int32 anim              = player->playerAnimator.animationID;
                 if (anim == ANI_WALK || (anim > ANI_AIRWALK && anim <= ANI_DASH))
                     player->storedAnim = player->playerAnimator.animationID;
                 else
@@ -116,7 +116,7 @@ void PushSpring_HandlePlayerCollisions_Bottom(void)
 
     foreach_active(Player, player)
     {
-        int yvel = player->velocity.y;
+        int32 yvel = player->velocity.y;
         if (Player_CheckCollisionBox(player, entity, &entity->hitbox) == C_BOTTOM) {
             if (yvel < 0) {
                 player->velocity.y = yvel + 0x3800;

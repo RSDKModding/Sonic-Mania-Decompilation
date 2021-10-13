@@ -7,13 +7,13 @@ void FXSpinRay_Update(void)
     RSDK_THIS(FXSpinRay);
 
     entity->angle = ((entity->angle & 0xFF) + entity->offset) & 0xFF;
-    int angle     = entity->angle;
-    for (int i = 0; i < 20; i += 4) {
-        for (int v = 0; v < 4; ++v) {
+    int32 angle     = entity->angle;
+    for (int32 i = 0; i < 20; i += 4) {
+        for (int32 v = 0; v < 4; ++v) {
             entity->vertices[i + v].x = entity->field_80[v].x;
             entity->vertices[i + v].y = entity->field_80[v].y;
-            int x                     = (entity->vertices[i + v].x - entity->field_140.x) >> 8;
-            int y                     = (entity->vertices[i + v].y - entity->field_140.y) >> 8;
+            int32 x                     = (entity->vertices[i + v].x - entity->field_140.x) >> 8;
+            int32 y                     = (entity->vertices[i + v].y - entity->field_140.y) >> 8;
             entity->vertices[i + v].x = (y * RSDK.Sin256(angle)) + (x * RSDK.Cos256(angle)) + entity->field_140.x;
             entity->vertices[i + v].y = (y * RSDK.Cos256(angle)) - (x * RSDK.Sin256(angle)) + entity->field_140.y;
         }
@@ -37,9 +37,9 @@ void FXSpinRay_Draw(void)
 {
     RSDK_THIS(FXSpinRay);
 
-    int scrX = RSDK_sceneInfo->entity->position.x - (RSDK_screens->position.x << 16);
-    int scrY = RSDK_sceneInfo->entity->position.y - (RSDK_screens->position.y << 16);
-    for (int i = 0; i < 20; i += 4) {
+    int32 scrX = RSDK_sceneInfo->entity->position.x - (RSDK_screens->position.x << 16);
+    int32 scrY = RSDK_sceneInfo->entity->position.y - (RSDK_screens->position.y << 16);
+    for (int32 i = 0; i < 20; i += 4) {
         Vector2 vertices[4];
         vertices[0].x = scrX + entity->vertices[0].x;
         vertices[0].y = scrY + entity->vertices[0].y;

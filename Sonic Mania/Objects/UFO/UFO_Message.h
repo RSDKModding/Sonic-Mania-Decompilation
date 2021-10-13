@@ -13,12 +13,12 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    int timer2;
-    int timer;
+    int32 timer2;
+    int32 timer;
     Animator data1;
     Animator animator2;
-    int field_94;
-    int field_98;
+    int32 field_94;
+    int32 field_98;
 } EntityUFO_Message;
 
 // Object Struct

@@ -41,7 +41,7 @@ void ImageTrail_LateUpdate(void)
     }
 
     // Update recordings
-    for (int i = ImageTrail_TrackCount - 1; i > 0; --i) {
+    for (int32 i = ImageTrail_TrackCount - 1; i > 0; --i) {
         entity->statePos[i].x     = entity->statePos[i - 1].x;
         entity->statePos[i].y     = entity->statePos[i - 1].y;
         entity->stateRotation[i]  = entity->stateRotation[i - 1];
@@ -85,12 +85,12 @@ void ImageTrail_StaticUpdate(void) {}
 void ImageTrail_Draw(void)
 {
     RSDK_THIS(ImageTrail);
-    //int alpha[3] = { 0xA0 * entity->baseAlpha >> 8, entity->baseAlpha >> 1, 0x60 * entity->baseAlpha >> 8 };
-    int alpha = 0x60 * entity->baseAlpha >> 8;
-    int inc      = 0x40 / (ImageTrail_TrackCount / 3);
+    //int32 alpha[3] = { 0xA0 * entity->baseAlpha >> 8, entity->baseAlpha >> 1, 0x60 * entity->baseAlpha >> 8 };
+    int32 alpha = 0x60 * entity->baseAlpha >> 8;
+    int32 inc      = 0x40 / (ImageTrail_TrackCount / 3);
 
-    for (int i = (ImageTrail_TrackCount / 3); i >= 0; --i) {
-        int id = (i * 3) - (i - 1);
+    for (int32 i = (ImageTrail_TrackCount / 3); i >= 0; --i) {
+        int32 id = (i * 3) - (i - 1);
         if (entity->stateVisible[id]) {
             if (entity->stateScale[id] != 0x200) {
                 entity->drawFX |= FX_SCALE;
@@ -120,7 +120,7 @@ void ImageTrail_Create(void *data)
         entity->drawFX       = FX_FLIP | FX_SCALE | FX_ROTATE;
         entity->inkEffect    = INK_ALPHA;
 
-        for (int i = ImageTrail_TrackCount - 1; i >= 0; --i) {
+        for (int32 i = ImageTrail_TrackCount - 1; i >= 0; --i) {
             entity->statePos[i].x     = player->position.x;
             entity->statePos[i].y     = player->position.y;
             entity->stateRotation[i]  = player->rotation;

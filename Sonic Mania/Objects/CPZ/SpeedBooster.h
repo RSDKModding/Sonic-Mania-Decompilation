@@ -17,7 +17,7 @@ typedef struct {
 	RSDK_ENTITY
 	void (*state)(void);
 	uint8 speed;
-	int playerPos[4];
+	int32 playerPos[4];
 	Vector2 drawPos;
 	uint8 cooldown;
 	uint8 playerCooldown[4];

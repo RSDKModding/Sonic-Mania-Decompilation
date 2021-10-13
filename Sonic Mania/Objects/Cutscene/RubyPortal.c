@@ -111,13 +111,13 @@ void RubyPortal_Unknown1(void)
 {
     RSDK_THIS(RubyPortal);
     if (!(Zone->timer & 1)) {
-        int tx     = ((entity->position.x - 0x180000) >> 20);
-        int spawnX = (tx << 20) + 0x80000;
+        int32 tx     = ((entity->position.x - 0x180000) >> 20);
+        int32 spawnX = (tx << 20) + 0x80000;
 
-        for (int x = 0; x < 4; ++x) {
-            int ty     = (entity->position.y >> 20) - 8;
-            int spawnY = (ty << 20) + 0x80000;
-            for (int y = 4; y < 52; y += 3) {
+        for (int32 x = 0; x < 4; ++x) {
+            int32 ty     = (entity->position.y >> 20) - 8;
+            int32 spawnY = (ty << 20) + 0x80000;
+            for (int32 y = 4; y < 52; y += 3) {
                 uint16 tile = RSDK.GetTileInfo(Zone->fgLow, tx, ty);
                 if (tile != 0xFFFF) {
                     EntityBreakableWall *wall = CREATE_ENTITY(BreakableWall, intToVoid(1), spawnX, spawnY);
@@ -214,7 +214,7 @@ void RubyPortal_Unknown4(void)
         else {
             EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
             if (Player_CheckCollisionTouch(player1, entity, &RubyPortal->hitbox)) {
-                for (int p = 0; p < Player->playerCount; ++p) {
+                for (int32 p = 0; p < Player->playerCount; ++p) {
                     StarPost->postIDs[p] = 0;
                 }
 
@@ -243,8 +243,8 @@ void RubyPortal_Unknown4(void)
                 entity->state = RubyPortal_Unknown5;
 #endif
 
-                int sfx     = RSDK.Rand(0, RUBYSFX_ATTACK6);
-                int channel = RSDK.PlaySfx(WarpDoor->sfxRubyAttackL[sfx], 0, 0);
+                int32 sfx     = RSDK.Rand(0, RUBYSFX_ATTACK6);
+                int32 channel = RSDK.PlaySfx(WarpDoor->sfxRubyAttackL[sfx], 0, 0);
                 RSDK.SetChannelAttributes(channel, 1.0, -1.0, 1.0);
                 channel = RSDK.PlaySfx(WarpDoor->sfxRubyAttackR[sfx], 0, 0);
                 RSDK.SetChannelAttributes(channel, 1.0, 1.0, 1.0);
@@ -329,9 +329,9 @@ void RubyPortal_Unknown9(void)
 
     foreach_active(BreakableWall, wall)
     {
-        int rx    = (entity->position.x - wall->position.x) >> 16;
-        int ry    = (entity->position.y - wall->position.y) >> 16;
-        int angle = RSDK.ATan2(rx, ry);
+        int32 rx    = (entity->position.x - wall->position.x) >> 16;
+        int32 ry    = (entity->position.y - wall->position.y) >> 16;
+        int32 angle = RSDK.ATan2(rx, ry);
         wall->velocity.x += 8 * RSDK.Cos256(angle);
         wall->velocity.y += 8 * RSDK.Sin256(angle);
         wall->position.x += entity->velocity.x;
@@ -356,8 +356,8 @@ void RubyPortal_Unknown9(void)
 
     foreach_active(Debris, debris)
     {
-        int rx = (entity->position.x - debris->position.x) >> 16;
-        int ry = (entity->position.y - debris->position.y) >> 16;
+        int32 rx = (entity->position.x - debris->position.x) >> 16;
+        int32 ry = (entity->position.y - debris->position.y) >> 16;
         if (rx * rx + ry * ry < 0x900) {
             debris->scale.x -= 12;
             debris->scale.y -= 12;

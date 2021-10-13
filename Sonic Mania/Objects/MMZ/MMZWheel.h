@@ -12,13 +12,13 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    int amplitude;
+    int32 amplitude;
     uint8 childCount;
-    int speed;
+    int32 speed;
     uint8 motionType;
     Vector2 center;
     Vector2 offset;
-    int field_78;
+    int32 field_78;
     Animator animator;
 } EntityMMZWheel;
 

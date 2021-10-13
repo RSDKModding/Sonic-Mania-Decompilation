@@ -60,9 +60,9 @@ void HangConveyor_DrawSprites(void)
     drawPos.x = RSDK_sceneInfo->entity->position.x;
     drawPos.y = entity->position.y;
     drawPos.x += -0x80000 * (entity->length != 1 ? entity->length - 1 : 0);
-    int dirStore = entity->direction;
+    int32 dirStore = entity->direction;
 
-    for (int i = 0; i < entity->length; ++i) {
+    for (int32 i = 0; i < entity->length; ++i) {
         entity->direction = dirStore != FLIP_NONE;
         drawPos.y         = entity->position.y - 0x150000;
         RSDK.DrawSprite(&entity->animator3, &drawPos, false);
@@ -79,13 +79,13 @@ void HangConveyor_DrawSprites(void)
     drawPos.y         = entity->position.y;
 
     if (dirStore) {
-        int len = entity->length + 3;
+        int32 len = entity->length + 3;
         if (entity->length == 1)
             len = 4;
         drawPos.x += len << 19;
     }
     else {
-        int len = entity->length + 3;
+        int32 len = entity->length + 3;
         if (entity->length == 1)
             len = 4;
         drawPos.x += -0x80000 * len;
@@ -97,13 +97,13 @@ void HangConveyor_DrawSprites(void)
     drawPos.y         = entity->position.y;
 
     if (dirStore) {
-        int len = entity->length + 3;
+        int32 len = entity->length + 3;
         if (entity->length == 1)
             len = 4;
         drawPos.x += -0x80000 * len;
     }
     else {
-        int len = entity->length + 3;
+        int32 len = entity->length + 3;
         if (entity->length == 1)
             len = 4;
         drawPos.x += len << 19;
@@ -156,13 +156,13 @@ void HangConveyor_Unknown2(void)
     foreach_active(Player, player)
     {
         if (Player_CheckValidState(player)) {
-            int playerID = RSDK.GetEntityID(player);
-            int posY     = player->position.y;
+            int32 playerID = RSDK.GetEntityID(player);
+            int32 posY     = player->position.y;
             if (player->playerAnimator.animationID != ANI_POLESWINGH && player->playerAnimator.animationID != ANI_SHIMMYMOVE)
                 posY -= 0x180000;
 
-            int prevX                    = entity->field_A4[playerID].x;
-            int prevY                    = entity->field_A4[playerID].y;
+            int32 prevX                    = entity->field_A4[playerID].x;
+            int32 prevY                    = entity->field_A4[playerID].y;
             entity->field_A4[playerID].x = player->position.x;
             entity->field_A4[playerID].y = posY;
 
@@ -209,7 +209,7 @@ void HangConveyor_Unknown2(void)
                     }
                 }
 
-                int posY = player->position.y;
+                int32 posY = player->position.y;
                 if (player->playerAnimator.animationID != ANI_POLESWINGH && player->playerAnimator.animationID != ANI_SHIMMYMOVE) {
                     posY -= 0x180000;
                 }
@@ -292,7 +292,7 @@ void HangConveyor_Unknown2(void)
                     if (!((1 << playerID) & entity->activePlayers2) || collided1)
                         flag = false;
 
-                    int anim = player->playerAnimator.animationID;
+                    int32 anim = player->playerAnimator.animationID;
                     if (player->jumpPress || (anim != ANI_POLESWINGH && anim != ANI_SHIMMYMOVE) || player->velocity.x || player->velocity.y || flag
                         || (((1 << playerID) & entity->activePlayers3) && !collided2)) {
                         entity->activePlayers1 &= ~(1 << playerID);

@@ -6,7 +6,7 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    int field_4;
+    int32 field_4;
     uint16 aniFrames;
     uint16 field_A;
     uint16 sfxHighFive;
@@ -18,8 +18,8 @@ typedef struct {
     Entity *fxRuby;
     Entity *phantomRuby;
     Entity *rubyPortal;
-    int field_24;
-    int field_28;
+    int32 field_24;
+    int32 field_28;
 } ObjectEncoreIntro;
 
 // Entity Class
@@ -28,14 +28,14 @@ typedef struct {
     Vector2 size;
     bool32 activated;
     bool32 startPart2;
-    int field_68;
-    int field_6C;
-    int field_70;
-    int field_74;
-    int field_78;
-    int field_7C;
+    int32 field_68;
+    int32 field_6C;
+    int32 field_70;
+    int32 field_74;
+    int32 field_78;
+    int32 field_7C;
     Hitbox hitbox;
-    int field_88;
+    int32 field_88;
 } EntityEncoreIntro;
 
 // Object Struct
@@ -83,7 +83,7 @@ bool32 EncoreIntro_CutsceneState_Unknown22(EntityCutsceneSeq *host);
 bool32 EncoreIntro_CutsceneState_Unknown23(EntityCutsceneSeq *host);
 bool32 EncoreIntro_CutsceneState_Unknown24(EntityCutsceneSeq *host);
 
-void EncoreIntro_SaveGameCB(int status);
+void EncoreIntro_SaveGameCB(int32 status);
 
 void EncoreIntro_PhantomRuby_Unknown1(void);
 void EncoreIntro_PhantomRuby_Unknown2(void);

@@ -30,7 +30,7 @@ void LRZSpiral_Create(void *data)
                 entity->updateRange.y = (entity->height + 1) << 22;
                 entity->hitbox.left   = -16;
                 entity->hitbox.right  = 16;
-                int height            = entity->height << 25 >> 19;
+                int32 height            = entity->height << 25 >> 19;
                 entity->hitbox.top    = -height;
                 entity->hitbox.bottom = 128 - height;
                 entity->height        = (entity->height << 25) - 0x1000000;
@@ -83,7 +83,7 @@ void LRZSpiral_Unknown2(void)
     RSDK_THIS(LRZSpiral);
     foreach_active(Player, player)
     {
-        int pID = RSDK.GetEntityID(player);
+        int32 pID = RSDK.GetEntityID(player);
         if ((1 << pID) & entity->activePlayers) {
             if (player->state == Player_State_None) {
                 entity->playerVelocity[pID] += player->groundVel;
@@ -99,7 +99,7 @@ void LRZSpiral_Unknown2(void)
                         player->drawOrder = Zone->playerDrawLow;
                     player->position.x = 0x4800 * RSDK.Sin256(entity->playerVelocity[pID] >> 17) + entity->position.x;
                     player->position.y = entity->playerVelocity[pID] >> 2;
-                    int pos            = (player->position.y >> 16) & 0x7F;
+                    int32 pos            = (player->position.y >> 16) & 0x7F;
                     player->position.y = player->position.y & 0xFF800000;
                     player->position.y += 0x580000 + entity->position.y - ((entity->height + 0x1000000) >> 3);
                     if (entity->playerVelocity[pID] >= entity->height - 0x1000000)
@@ -153,7 +153,7 @@ void LRZSpiral_Unknown3(void)
     RSDK_THIS(LRZSpiral);
     foreach_active(Player, player)
     {
-        int pID = RSDK.GetEntityID(player);
+        int32 pID = RSDK.GetEntityID(player);
         if ((1 << pID) & entity->activePlayers) {
             if (player->state == Player_State_None) {
                 entity->playerVelocity[pID] += player->groundVel;
@@ -215,7 +215,7 @@ void LRZSpiral_Unknown4(void)
     RSDK_THIS(LRZSpiral);
     foreach_active(Player, player)
     {
-        int pID = RSDK.GetEntityID(player);
+        int32 pID = RSDK.GetEntityID(player);
         if ((1 << pID) & entity->activePlayers) {
             if (player->state == Player_State_None) {
                 entity->playerVelocity[pID] -= player->groundVel;

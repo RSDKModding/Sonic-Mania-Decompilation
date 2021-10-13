@@ -9,7 +9,7 @@ typedef struct {
     Hitbox hitbox1;
     Hitbox hitbox2;
     Hitbox hitbox3;
-    int playerFlags[4];
+    int32 playerFlags[4];
     uint16 aniFrames;
     uint16 sfxTravel;
 } ObjectTwistedTubes;
@@ -19,7 +19,7 @@ typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     uint8 height;
-    int timer;
+    int32 timer;
     EntityPlayer *playerPtr;
     Animator animator1;
     Animator animator2;

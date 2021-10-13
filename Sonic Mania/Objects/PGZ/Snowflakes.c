@@ -6,15 +6,15 @@ void Snowflakes_Update(void)
 {
     RSDK_THIS(Snowflakes);
     if (Snowflakes->count < 0x40 && !(Zone->timer % 16)) {
-        for (int i = 0; i < 0x40; ++i) {
+        for (int32 i = 0; i < 0x40; ++i) {
             if (!entity->positions[i].x && !entity->positions[i].y) {
                 if ((i & 0x8000) == 0) {
-                    int screenY            = RSDK_screens->position.y;
-                    int scrX    = RSDK_screens->position.x % RSDK_screens->width;
+                    int32 screenY            = RSDK_screens->position.y;
+                    int32 scrX    = RSDK_screens->position.x % RSDK_screens->width;
 #if RETRO_USE_PLUS
-                    int posX               = (scrX + RSDK.Random(0, RSDK_screens->width, &Zone->randKey)) % RSDK_screens->width;
+                    int32 posX               = (scrX + RSDK.Random(0, RSDK_screens->width, &Zone->randKey)) % RSDK_screens->width;
 #else
-                    int posX             = (scrX + RSDK.Rand(0, RSDK_screens->width)) % RSDK_screens->width;
+                    int32 posX             = (scrX + RSDK.Rand(0, RSDK_screens->width)) % RSDK_screens->width;
 #endif
                     entity->positions[i].y = (screenY - 5) << 16;
                     entity->positions[i].x = posX << 16;
@@ -33,9 +33,9 @@ void Snowflakes_Update(void)
                     }
                     else {
 #if RETRO_USE_PLUS
-                        int val = RSDK.Random(0, 10, &Zone->randKey);
+                        int32 val = RSDK.Random(0, 10, &Zone->randKey);
 #else
-                        int val = RSDK.Rand(0, 10);
+                        int32 val = RSDK.Rand(0, 10);
 #endif
                         if (val > 8) {
                             entity->animIDs[i] = 3;
@@ -60,10 +60,10 @@ void Snowflakes_Update(void)
     range.x = 0x800000;
     range.y = 0x800000;
 
-    for (int i = 0; i < 0x40; ++i) {
+    for (int32 i = 0; i < 0x40; ++i) {
         if (entity->positions[i].x || entity->positions[i].y) {
             Vector2 pos = Snowflakes_Unknown1(i);
-            int angle   = RSDK.Sin256(entity->angles[i]) << 6;
+            int32 angle   = RSDK.Sin256(entity->angles[i]) << 6;
             entity->positions[i].y += 0x8000;
             pos.y += 0x8000;
             entity->positions[i].x += angle;
@@ -98,22 +98,22 @@ void Snowflakes_StaticUpdate(void)
 void Snowflakes_Draw(void)
 {
     RSDK_THIS(Snowflakes);
-    int drawHigh  = Zone->drawOrderHigh;
-    int drawLayer = RSDK_sceneInfo->currentDrawGroup;
+    int32 drawHigh  = Zone->drawOrderHigh;
+    int32 drawLayer = RSDK_sceneInfo->currentDrawGroup;
 
-    for (int i = 0; i < 0x40; ++i) {
+    for (int32 i = 0; i < 0x40; ++i) {
         if (entity->positions[i].x || entity->positions[i].y) {
-            int val = entity->flipFlags[i];
+            int32 val = entity->flipFlags[i];
             if ((val || drawLayer != drawHigh) && (val != 1 || drawLayer == drawHigh)) {
                 Vector2 drawPos   = Snowflakes_Unknown1(i);
                 entity->direction = FLIP_NONE;
-                int angle         = RSDK.Sin256(entity->angles[i]) << 6;
+                int32 angle         = RSDK.Sin256(entity->angles[i]) << 6;
                 if (entity->animIDs[i] <= 2) {
                     RSDK.SetSpriteAnimation(Snowflakes->aniFrames, entity->animIDs[i], &entity->animator, true, entity->frameIDs[i] >> 2);
                     RSDK.DrawSprite(&entity->animator, &drawPos, false);
                 }
                 else {
-                    int frame = 0;
+                    int32 frame = 0;
                     if (entity->animIDs[i] == 4) {
                         frame = entity->frameIDs[i] / 3;
                         if (angle > 0)
@@ -150,23 +150,23 @@ void Snowflakes_StageLoad(void)
     Snowflakes->active    = ACTIVE_ALWAYS;
 }
 
-Vector2 Snowflakes_Unknown1(int id)
+Vector2 Snowflakes_Unknown1(int32 id)
 {
     RSDK_THIS(Snowflakes);
-    int x    = entity->positions[id].x;
-    int y    = entity->positions[id].y;
-    int mult = 128;
+    int32 x    = entity->positions[id].x;
+    int32 y    = entity->positions[id].y;
+    int32 mult = 128;
     if (!entity->flipFlags[id])
         mult = 64;
 
-    int i = x - (RSDK_screens->position.x << 8) * mult;
+    int32 i = x - (RSDK_screens->position.x << 8) * mult;
     while (i < 0) i += RSDK_screens->width << 16;
 
-    int posX = RSDK_screens->position.x / RSDK_screens->width;
+    int32 posX = RSDK_screens->position.x / RSDK_screens->width;
     if ((i % (RSDK_screens->width << 16)) >> 16 < RSDK_screens->position.x % RSDK_screens->width)
         posX = RSDK_screens->position.x / RSDK_screens->width + 1;
 
-    int posY = 0;
+    int32 posY = 0;
     if (y > (RSDK_screens->height + RSDK_screens->position.y) << 16)
         posY = -RSDK_screens->height;
 

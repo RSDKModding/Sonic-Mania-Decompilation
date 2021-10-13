@@ -20,7 +20,7 @@ typedef enum {
 typedef struct {
     RSDK_OBJECT
     Hitbox hitbox;
-    int pan;
+    int32 pan;
     uint16 spriteIndex;
     uint16 sfx_Ring;
 } ObjectRing;
@@ -32,14 +32,14 @@ typedef struct {
     StateMachine(stateDraw);
     RingTypes type;
     PlaneFilterTypes planeFilter;
-    int ringAmount;
-    int timer;
-    int maxFrameCount;
-    int sparkleType;
+    int32 ringAmount;
+    int32 timer;
+    int32 maxFrameCount;
+    int32 sparkleType;
     EntityPlayer *storedPlayer;
     RingMoveTypes moveType;
     Vector2 amplitude;
-    int speed;
+    int32 speed;
     Vector2 offset;
     Animator animator;
 } EntityRing;
@@ -74,9 +74,9 @@ void Ring_State_Normal(void);
 void Ring_State_Path(void);
 void Ring_State_Sparkle(void);
 void Ring_State_Track(void);
-void Ring_CheckObjectCollisions(int offsetX, int offsetY);
+void Ring_CheckObjectCollisions(int32 offsetX, int32 offsetY);
 uint8 Ring_CheckPlatformCollisions(EntityPlatform *platform);
 void Ring_Collect(void);
-void Ring_FakeLoseRings(Entity *entity, int ringCount, uint8 drawOrder);
+void Ring_FakeLoseRings(Entity *entity, int32 ringCount, uint8 drawOrder);
 
 #endif //!OBJ_RING_H

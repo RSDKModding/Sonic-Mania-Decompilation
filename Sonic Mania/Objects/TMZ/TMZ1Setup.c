@@ -45,7 +45,7 @@ void TMZ1Setup_StaticUpdate(void)
     }
 
     if (TMZ1Setup->stageState < 2) {
-        int posY = RSDK_screens->centerY + RSDK_screens->position.y;
+        int32 posY = RSDK_screens->centerY + RSDK_screens->position.y;
         if (posY >= 4192) {
             if (posY > 4528 && TMZ1Setup->stageState != 1 && !RSDK.GetEntityCount(TMZ1Setup->objectID, true))
                 RSDK.CreateEntity(TMZ1Setup->objectID, intToVoid(1), 0, 0);
@@ -87,12 +87,12 @@ void TMZ1Setup_StageLoad(void)
     TMZ1Setup->stageState   = -1;
     TMZ1Setup->bgPtr        = RSDK.GetSceneLayer(0);
 
-    int ang = 0;
-    for (int i = 0; i < 0x200; ++i) {
+    int32 ang = 0;
+    for (int32 i = 0; i < 0x200; ++i) {
         TMZ1Setup->bgPtr->deformationData[i] = (4 * RSDK.Sin1024(ang)) >> 10;
         ang += 16;
     }
-    memcpy(TMZ1Setup->bgPtr->deformationData + 0x200, TMZ1Setup->bgPtr->deformationData, 0x200 * sizeof(int));
+    memcpy(TMZ1Setup->bgPtr->deformationData + 0x200, TMZ1Setup->bgPtr->deformationData, 0x200 * sizeof(int32));
 
     RSDK.GetSceneLayer(2)->scrollPos = -0x1000000;
     RSDK.GetSceneLayer(3)->scrollPos = -0x1000000;
@@ -104,7 +104,7 @@ void TMZ1Setup_StageLoad(void)
             RSDK.LoadPalette(2, "EncoreTMZ1l.act", 0xFF);
         }
 #endif
-        for (int i = 0; i < 256; ++i) RSDK.SetPaletteEntry(5, i, 0);
+        for (int32 i = 0; i < 256; ++i) RSDK.SetPaletteEntry(5, i, 0);
         RSDK.CopyPalette(0, 0, 4, 0, 255);
         TMZ1Setup->paletteInit = true;
     }

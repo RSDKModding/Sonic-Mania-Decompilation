@@ -6,8 +6,8 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    int maxSpeed;
-    int field_8;
+    int32 maxSpeed;
+    int32 field_8;
     uint16 sfx_Jump;
     uint16 sfx_Charge;
     uint16 sfx_Release;
@@ -29,20 +29,20 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    int machQuota1;
-    int machQuota2;
-    int machQuota3;
-    int startingRings;
-    int timer;
-    int field_70;
-    int field_74;
-    int height;
-    int gravityStrength;
-    int angleZ;
-    int field_84;
-    int bumperTimer;
-    int field_8C;
-    int field_90;
+    int32 machQuota1;
+    int32 machQuota2;
+    int32 machQuota3;
+    int32 startingRings;
+    int32 timer;
+    int32 field_70;
+    int32 field_74;
+    int32 height;
+    int32 gravityStrength;
+    int32 angleZ;
+    int32 field_84;
+    int32 bumperTimer;
+    int32 field_8C;
+    int32 field_90;
     EntityUFO_Camera *camera;
     EntityUFO_Circuit *circuitPtr;
     Matrix matrix1;
@@ -50,7 +50,7 @@ typedef struct {
     Matrix matrix3;
     Matrix matrix4;
     StateMachine(stateInput);
-    int controllerID;
+    int32 controllerID;
     bool32 up;
     bool32 down;
     bool32 left;
@@ -59,7 +59,7 @@ typedef struct {
     bool32 jumpHold;
     Animator playerAnimator;
 #if RETRO_USE_TOUCH_CONTROLS
-    int touchJump;
+    int32 touchJump;
 #endif
 } EntityUFO_Player;
 

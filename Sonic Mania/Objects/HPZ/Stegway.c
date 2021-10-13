@@ -229,11 +229,11 @@ void Stegway_Unknown10(void)
     RSDK_THIS(Stegway);
 
     entity->position.x += entity->velocity.x;
-    int val = 2 * (entity->direction != FLIP_NONE) - 1;
+    int32 val = 2 * (entity->direction != FLIP_NONE) - 1;
 
     if (!entity->flag) {
-        int storeX = entity->position.x;
-        int storeY = entity->position.y;
+        int32 storeX = entity->position.x;
+        int32 storeY = entity->position.y;
         if (!RSDK.ObjectTileGrip(entity, Zone->fgLayers, CMODE_FLOOR, 0, val << 22, 0x100000, 8))
             entity->flag = true;
         entity->position.x = storeX;

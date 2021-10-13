@@ -33,7 +33,7 @@ void LogHelpers_Print(const char *message, ...)
 
 void LogHelpers_PrintString(TextInfo *text)
 {
-    for (int i = 0; i < text->textLength; ++i) {
+    for (int32 i = 0; i < text->textLength; ++i) {
         LogHelpers_Print("%c", text->text[i]);
     }
     LogHelpers_Print("\n");

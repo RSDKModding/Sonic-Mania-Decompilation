@@ -23,8 +23,8 @@ typedef struct {
     uint16 duration;
     Hitbox hitbox;
     bool32 flag;
-    int field_A4[4];
-    int field_B4[4];
+    int32 field_A4[4];
+    int32 field_B4[4];
     Vector2 field_C4[12];
 } EntityAcetone;
 

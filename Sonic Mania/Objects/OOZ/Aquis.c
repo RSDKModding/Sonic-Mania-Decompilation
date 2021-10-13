@@ -124,7 +124,7 @@ void Aquis_Unknown5(void)
     RSDK_THIS(Aquis);
     entity->timer--;
     if (!entity->timer) {
-        int timer = entity->timer2;
+        int32 timer = entity->timer2;
         entity->timer2--;
         if (timer) {
             entity->velocity.y = -0x10000;
@@ -190,7 +190,7 @@ void Aquis_Unknown6(void)
     }
 
     if (entity->state != Aquis_Unknown8) {
-        int timer = entity->timer2;
+        int32 timer = entity->timer2;
         entity->timer--;
         if (!timer) {
             entity->timer      = 32;

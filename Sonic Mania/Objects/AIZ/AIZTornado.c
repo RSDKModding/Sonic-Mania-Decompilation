@@ -79,8 +79,8 @@ void AIZTornado_Unknown1(void)
     entity->field_88 = entity->dword80;
 
     if (!entity->field_94) {
-        int x = entity->dword7C;
-        int y = entity->dword80;
+        int32 x = entity->dword7C;
+        int32 y = entity->dword80;
         if (AIZTornadoPath->field_C.y) {
             entity->dword60 = 0;
         }
@@ -104,8 +104,8 @@ void AIZTornado_Unknown2(void)
         player->drawOrder = entity->drawOrder + 1;
     else
         player->drawOrder = entity->drawOrder;
-    int x = entity->position.x;
-    int y = entity->position.y;
+    int32 x = entity->position.x;
+    int32 y = entity->position.y;
     entity->prevPos.x &= 0xFFFF0000;
     entity->prevPos.y &= 0xFFFF0000;
     entity->dword64        = 0;

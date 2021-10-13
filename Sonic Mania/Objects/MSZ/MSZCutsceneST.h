@@ -6,7 +6,7 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    TABLE(int value1[6], { -0x10000, -0x10000, 0, 0, 0, -0x10000 });
+    TABLE(int32 value1[6], { -0x10000, -0x10000, 0, 0, 0, -0x10000 });
     uint16 value2;
     uint16 value3;
     Vector2 value4;

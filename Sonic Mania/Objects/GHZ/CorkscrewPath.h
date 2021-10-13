@@ -6,17 +6,17 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    TABLE(int frameTable[24], { 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14, 13 });
+    TABLE(int32 frameTable[24], { 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14, 13 });
     uint16 aniFrames; // probably editor-only
 } ObjectCorkscrewPath;
 
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    int period;
-    int periodShifted;
-    int amplitude;
-    int activePlayers;
+    int32 period;
+    int32 periodShifted;
+    int32 amplitude;
+    int32 activePlayers;
 } EntityCorkscrewPath;
 
 // Object Struct

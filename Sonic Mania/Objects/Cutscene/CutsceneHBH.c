@@ -157,19 +157,19 @@ void CutsceneHBH_SetupColours(void)
 void CutsceneHBH_SetupPalettes(void)
 {
     RSDK_THIS(CutsceneHBH);
-    for (int c = 0; c < 0x80; ++c) {
+    for (int32 c = 0; c < 0x80; ++c) {
         RSDK.SetPaletteEntry(0, c + 0x80, entity->colours[c]);
     }
 }
 void CutsceneHBH_StorePalette(void)
 {
-    for (int c = 0; c < 0x80; ++c) {
+    for (int32 c = 0; c < 0x80; ++c) {
         CutsceneHBH->paletteColours[c] = RSDK.GetPaletteEntry(0, c + 0x80);
     }
 }
 void CutsceneHBH_RestorePalette(void)
 {
-    for (int c = 0; c < 0x80; ++c) {
+    for (int32 c = 0; c < 0x80; ++c) {
         RSDK.SetPaletteEntry(0, c + 0x80, CutsceneHBH->paletteColours[c]);
     }
 }

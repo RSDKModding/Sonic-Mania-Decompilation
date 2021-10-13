@@ -19,7 +19,7 @@ void OrbitSpike_Update(void)
         }
     }
     else {
-        int ang = (angle + 0x40) & 0xFF;
+        int32 ang = (angle + 0x40) & 0xFF;
         if (ang >= 0x80) {
             entity->drawOrder = Zone->drawOrderLow;
             entity->scale.x   = 386 + (abs(ang - 0xC0) << 1);

@@ -61,7 +61,7 @@ void EggPrison_Update(void)
                     if (entity->type < EGGPRISON_DUD)
                         RSDK_sceneInfo->timeEnabled = false;
                     if (entity->type == EGGPRISON_ANIMALS) {
-                        int anim = player->playerAnimator.animationID;
+                        int32 anim = player->playerAnimator.animationID;
                         if (anim == ANI_WALK || (anim > ANI_AIRWALK && anim <= ANI_DASH))
                             player->storedAnim = player->playerAnimator.animationID;
                         else
@@ -251,7 +251,7 @@ void EggPrison_Activated(void)
         case EGGPRISON_NORMAL:
         case EGGPRISON_FLYING:
         case EGGPRISON_DUD:
-            for (int i = 0; i < 10; ++i) {
+            for (int32 i = 0; i < 10; ++i) {
                 EntityAnimals *animals =
                     (EntityAnimals *)RSDK.CreateEntity(Animals->objectID, intToVoid(Animals->animalTypes[i & 1] + 1),
                                                        (((RSDK.Rand(0, 48) & -4) - 24) << 16) + entity->position.x, entity->position.y + 0x40000);
@@ -262,8 +262,8 @@ void EggPrison_Activated(void)
             }
             break;
         case EGGPRISON_RINGS: {
-            int angle = 144;
-            for (int r = 0; r < 6; ++r) {
+            int32 angle = 144;
+            for (int32 r = 0; r < 6; ++r) {
                 EntityRing *ring = (EntityRing *)RSDK.CreateEntity(
                     Ring->objectID, entity, (((RSDK.Rand(0, 48) & 0xFFFFFFFC) - 24) << 16) + entity->position.x, entity->position.y);
                 ring->velocity.x              = RSDK.Cos256(angle) << 9;
@@ -310,7 +310,7 @@ void EggPrison_Activated(void)
             break;
         }
         case EGGPRISON_ANIMALS:
-            for (int a = 0; a < 10; ++a) {
+            for (int32 a = 0; a < 10; ++a) {
                 EntityAnimals *animals = (EntityAnimals *)RSDK.CreateEntity(Animals->objectID, intToVoid(Animals->animalTypes[a & 1] + 1),
                                                                             (((RSDK.Rand(0, 48) & 0xFFFFFFFC) - 24) << 16) + entity->position.x,
                                                                             entity->position.y + 0x40000);
@@ -366,7 +366,7 @@ void EggPrison_Unknown1(void)
 void EggPrison_Unknown2(void)
 {
     RSDK_THIS(EggPrison);
-    for (int p = 0; p < Player->playerCount && entity->type < EGGPRISON_DUD; ++p) {
+    for (int32 p = 0; p < Player->playerCount && entity->type < EGGPRISON_DUD; ++p) {
         EntityPlayer *player = RSDK_GET_ENTITY(p, Player);
         if (!player->sidekick) {
             if (abs(entity->position.x - player->position.x) < 0x1000000) {

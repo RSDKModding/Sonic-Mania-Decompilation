@@ -12,8 +12,8 @@ void WoodChipper_LateUpdate(void) {}
 
 void WoodChipper_StaticUpdate(void)
 {
-    int cuttingCount = 0;
-    int debrisCount  = 0;
+    int32 cuttingCount = 0;
+    int32 debrisCount  = 0;
     if (RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu)->objectID != PauseMenu->objectID) {
         foreach_active(WoodChipper, chipper)
         {
@@ -62,13 +62,13 @@ void WoodChipper_Draw(void)
             drawPos.y += entity->field_80 + (RSDK.Sin256(entity->angle) << 10);
             RSDK.DrawSprite(&entity->animator1, &drawPos, false);
 
-            int pos = entity->field_80 >> 16;
+            int32 pos = entity->field_80 >> 16;
             if (pos <= -16) {
                 entity->animator1.frameID = 4;
-                int dist                  = -16 - pos;
+                int32 dist                  = -16 - pos;
                 if (dist >= -79) {
-                    int size = dist / 80 + 2;
-                    for (int i = 0; i < size; ++i) {
+                    int32 size = dist / 80 + 2;
+                    for (int32 i = 0; i < size; ++i) {
                         RSDK.DrawSprite(&entity->animator1, &drawPos, false);
                         drawPos.y += 0x500000;
                     }
@@ -162,7 +162,7 @@ void WoodChipper_StageLoad(void)
 void WoodChipper_HandlePlayerCollisions(void)
 {
     RSDK_THIS(WoodChipper);
-    int prevPlayers             = entity->activePlayers;
+    int32 prevPlayers             = entity->activePlayers;
     entity->activePlayers       = 0;
     WoodChipper->hitboxWood.top = (((RSDK.Sin256(entity->angle) << 10) + entity->field_80) >> 16) - 48;
     EntityPlayer *player2       = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
@@ -228,7 +228,7 @@ void WoodChipper_State_Chipper(void)
     else {
         if (entity->timer <= 0) {
             if (entity->field_80 < 0) {
-                int val = ((RSDK.Sin256(entity->angle) << 10) + entity->field_80) & 0xFFFF0000;
+                int32 val = ((RSDK.Sin256(entity->angle) << 10) + entity->field_80) & 0xFFFF0000;
 
                 entity->field_80 += entity->speed;
                 if (entity->field_80 > 0)
@@ -237,7 +237,7 @@ void WoodChipper_State_Chipper(void)
                 if (entity->angle < 64)
                     entity->angle += 4;
 
-                int move = val - (((RSDK.Sin256(entity->angle) << 10) + entity->field_80) & 0xFFFF0000);
+                int32 move = val - (((RSDK.Sin256(entity->angle) << 10) + entity->field_80) & 0xFFFF0000);
 
                 foreach_active(Player, player)
                 {
@@ -245,7 +245,7 @@ void WoodChipper_State_Chipper(void)
                         player->position.y -= move;
                 }
 
-                for (int i = entity->speed >> 12; i > 0; --i) {
+                for (int32 i = entity->speed >> 12; i > 0; --i) {
                     EntityWoodChipper *debris =
                         CREATE_ENTITY(WoodChipper, intToVoid(1), entity->position.x, ((RSDK.Rand(0, 17) - 40) << 16) + entity->position.y);
                     if (entity->direction) {
@@ -277,12 +277,12 @@ void WoodChipper_State_Chipper(void)
             entity->field_68[2].x = 0;
             entity->field_68[2].y = 0;
 
-            int val = ((RSDK.Sin256(entity->angle) << 10) + (entity->field_80 & 0xFC00)) & 0xFFFF0000;
+            int32 val = ((RSDK.Sin256(entity->angle) << 10) + (entity->field_80 & 0xFC00)) & 0xFFFF0000;
 
             if (entity->angle < 64)
                 entity->angle += 4;
 
-            int move = val - (((RSDK.Sin256(entity->angle) << 10) + (entity->field_80 & 0xFC00)) & 0xFFFF0000);
+            int32 move = val - (((RSDK.Sin256(entity->angle) << 10) + (entity->field_80 & 0xFC00)) & 0xFFFF0000);
 
             foreach_active(Player, player)
             {

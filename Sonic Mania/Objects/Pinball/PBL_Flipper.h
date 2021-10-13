@@ -7,15 +7,15 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    int field_4;
-    int field_8;
-    int field_C;
-    int field_10;
-    int field_14;
-    int field_18;
+    int32 field_4;
+    int32 field_8;
+    int32 field_C;
+    int32 field_10;
+    int32 field_14;
+    int32 field_18;
     Hitbox hitbox;
     Hitbox hitbox2;
-    int drawType;
+    int32 drawType;
     uint16 field_30;
     uint16 aniFrames;
     uint16 sceneIndex;
@@ -28,24 +28,24 @@ typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     uint8 minCraneID;
-    int height;
+    int32 height;
     bool32 retractable;
-    int field_68;
-    int field_6C;
-    int field_70;
-    int field_74;
-    int field_78;
-    int field_7C;
-    int field_80;
-    int field_84;
-    int field_88;
-    int field_8C;
-    int field_90;
-    int field_94;
-    int field_98;
-    int field_9C;
-    int field_A0;
-    int field_A4;
+    int32 field_68;
+    int32 field_6C;
+    int32 field_70;
+    int32 field_74;
+    int32 field_78;
+    int32 field_7C;
+    int32 field_80;
+    int32 field_84;
+    int32 field_88;
+    int32 field_8C;
+    int32 field_90;
+    int32 field_94;
+    int32 field_98;
+    int32 field_9C;
+    int32 field_A0;
+    int32 field_A4;
     Matrix matrix1;
     Matrix matrix2;
     Matrix matrix3;

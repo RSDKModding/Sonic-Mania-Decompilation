@@ -15,10 +15,10 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    int timer;
+    int32 timer;
     uint8 dword60;
     Vector2 startPos;
-    int startDir;
+    int32 startDir;
     Animator animator;
 } EntityCrabmeat;
 

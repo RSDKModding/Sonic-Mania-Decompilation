@@ -11,8 +11,8 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    int type;
-    int timer;
+    int32 type;
+    int32 timer;
 } EntityBSS_Collected;
 
 // Object Struct

@@ -35,7 +35,7 @@ void ExtrasMenu_Unknown2(void)
     EntityUIControl *control = (EntityUIControl *)ExtrasMenu->extrasControl;
 
     EntityUIButton *button = control->buttons[0];
-    int unlock             = GameProgress_CheckUnlock(8);
+    int32 unlock             = GameProgress_CheckUnlock(8);
     button->disabled       = !unlock;
     if (button->disabled)
         UIButton_Unknown1(button);
@@ -99,7 +99,7 @@ void ExtrasMenu_Unknown3(void)
 
 void ExtrasMenu_ProcessMedallionCheat(void)
 {
-    int key = 0;
+    int32 key = 0;
     if (UIControl->keyLeft) {
         key = 1;
     }
@@ -108,7 +108,7 @@ void ExtrasMenu_ProcessMedallionCheat(void)
     }
 
     if (key) {
-        for (int i = 0; i < 7; ++i) {
+        for (int32 i = 0; i < 7; ++i) {
             ExtrasMenu->cheatCode[i] = ExtrasMenu->cheatCode[i + 1];
         }
         ExtrasMenu->cheatCode[7] = key;

@@ -55,7 +55,7 @@ void Projectile_Unknown1(void)
                 break;
             case 4:
             case 7: {
-                int anim = player->playerAnimator.animationID;
+                int32 anim = player->playerAnimator.animationID;
                 if (entity->field_60
 #if RETRO_USE_PLUS
                     || (player->characterID == ID_MIGHTY && (anim == ANI_CROUCH || anim == ANI_JUMP || anim == ANI_SPINDASH || anim == ANI_DROPDASH))

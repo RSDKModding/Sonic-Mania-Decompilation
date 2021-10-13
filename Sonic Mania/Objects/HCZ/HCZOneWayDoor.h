@@ -17,9 +17,9 @@ typedef struct {
     Vector2 posUnknown1;
     Vector2 posUnknown2;
     Vector2 posUnknown3;
-    int field_74;
-    int length;
-    int duration;
+    int32 field_74;
+    int32 length;
+    int32 duration;
     uint8 orientation;
     uint8 detectDirection;
     Hitbox hitbox1;

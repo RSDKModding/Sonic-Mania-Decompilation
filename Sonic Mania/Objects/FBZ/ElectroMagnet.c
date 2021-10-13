@@ -76,7 +76,7 @@ void ElectroMagnet_StageLoad(void)
 void ElectroMagnet_Unknown1(void)
 {
     RSDK_THIS(ElectroMagnet);
-    int time = (Zone->timer + entity->intervalOffset) % entity->interval;
+    int32 time = (Zone->timer + entity->intervalOffset) % entity->interval;
 
     if (time <= entity->duration) {
         entity->active = ACTIVE_NORMAL;

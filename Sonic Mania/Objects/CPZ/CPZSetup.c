@@ -53,7 +53,7 @@ void CPZSetup_StageLoad(void)
     CPZSetup->palAnimFrameD = 1;
     CPZSetup->palAnimFrameE = 2;
     CPZSetup->layerPtr      = RSDK.GetSceneLayer(0);
-    for (int i = 0; i < 0x400; ++i) {
+    for (int32 i = 0; i < 0x400; ++i) {
         CPZSetup->layerPtr->deformationData[i] = CPZSetup->deformation[i & 0x3F];
     }
 
@@ -120,7 +120,7 @@ void CPZSetup_StageLoad(void)
             TileLayer *layer = RSDK.GetSceneLayer(3);
             layer->scrollPos += -0x118000 * layer->parallaxFactor;
 
-            for (int i = 0; i < layer->scrollInfoCount; ++i) {
+            for (int32 i = 0; i < layer->scrollInfoCount; ++i) {
                 layer->scrollInfo[i].parallaxFactor += 0x470000 * layer->scrollInfo[i].parallaxFactor;
             }
         }

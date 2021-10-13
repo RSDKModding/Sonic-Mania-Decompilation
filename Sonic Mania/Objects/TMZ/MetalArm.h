@@ -13,18 +13,18 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    int startAngleA;
-    int startAngleB;
-    int endAngleA;
-    int endAngleB;
-    int durationA;
-    int durationB;
-    int holdDuration;
+    int32 startAngleA;
+    int32 startAngleB;
+    int32 endAngleA;
+    int32 endAngleB;
+    int32 durationA;
+    int32 durationB;
+    int32 holdDuration;
     Vector2 armAngle;
     uint8 activePlayers;
     Vector2 startPos;
-    int timer;
-    int timer2;
+    int32 timer;
+    int32 timer2;
     Vector2 posUnknown;
     Vector2 offset;
     Hitbox hitbox;

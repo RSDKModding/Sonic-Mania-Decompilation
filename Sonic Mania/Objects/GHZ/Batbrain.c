@@ -87,13 +87,13 @@ void Batbrain_Unknown2(void)
 void Batbrain_Unknown3(void)
 {
     RSDK_THIS(Batbrain);
-    int targetPos           = 0x7FFFFFFF;
+    int32 targetPos           = 0x7FFFFFFF;
     EntityPlayer *player1   = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     EntityPlayer *playerPtr = NULL;
 
     foreach_active(Player, player)
     {
-        int distance = abs(player->position.x - entity->position.x);
+        int32 distance = abs(player->position.x - entity->position.x);
         if (distance >= targetPos) {
             player1 = player;
         }
@@ -109,7 +109,7 @@ void Batbrain_Unknown3(void)
 
     if (playerPtr) {
         player       = playerPtr;
-        int distance = playerPtr->position.y - entity->position.y;
+        int32 distance = playerPtr->position.y - entity->position.y;
         if (distance >= 0 && distance <= 0x800000 && !RSDK.Rand(0, 8)) {
             entity->state   = Batbrain_Unknown4;
             entity->targetY = player->position.y;

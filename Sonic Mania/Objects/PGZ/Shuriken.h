@@ -10,7 +10,7 @@ typedef struct {
     Hitbox hitbox2;
     Hitbox hitbox3;
     Hitbox hitbox4;
-    int timerGroups[255];
+    int32 timerGroups[255];
     uint16 aniFrames;
     uint16 sfxArrowLaunch;
     uint16 sfxArrowHit;

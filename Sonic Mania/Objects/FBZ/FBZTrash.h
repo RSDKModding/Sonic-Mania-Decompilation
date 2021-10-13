@@ -13,11 +13,11 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    int type;
-    int frameID;
-    int field_64;
-    int timer;
-    int field_6C;
+    int32 type;
+    int32 frameID;
+    int32 field_64;
+    int32 timer;
+    int32 field_6C;
     Vector2 field_70;
     Vector2 field_78;
     Entity *parent;
@@ -40,8 +40,8 @@ void FBZTrash_EditorLoad(void);
 void FBZTrash_Serialize(void);
 
 // Extra Entity Functions
-void FBZTrash_Unknown1(EntityFBZTrash *trashPtr, int angle);
-void FBZTrash_Unknown2(int x, int y);
+void FBZTrash_Unknown1(EntityFBZTrash *trashPtr, int32 angle);
+void FBZTrash_Unknown2(int32 x, int32 y);
 void FBZTrash_Unknown3(void);
 void FBZTrash_Unknown4(void);
 void FBZTrash_Unknown5(void);

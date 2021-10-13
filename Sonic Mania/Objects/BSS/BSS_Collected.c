@@ -6,7 +6,7 @@ void BSS_Collected_Update(void)
 {
     RSDK_THIS(BSS_Collected);
     EntityBSS_Setup *setup = RSDK_GET_ENTITY(SLOT_BSS_SETUP, BSS_Setup);
-    int fieldPos           = entity->position.y + (BSS_PLAYFIELD_W * entity->position.x);
+    int32 fieldPos           = entity->position.y + (BSS_PLAYFIELD_W * entity->position.x);
     switch (entity->type) {
         case 0:
             ++BSS_Setup->field_1C;

@@ -18,7 +18,7 @@ typedef struct {
     StateMachine(state);
     uint8 spearDir;
     Vector2 spearPos;
-    int timer;
+    int32 timer;
     Animator animator;
 } EntitySpearBlock;
 

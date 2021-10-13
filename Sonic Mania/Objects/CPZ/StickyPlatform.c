@@ -11,7 +11,7 @@ void StickyPlatform_Update(void)
     entity->position.y = entity->amplitude.y * RSDK.Cos1024(entity->angle) + entity->internalPos.y;
     StickyPlatform_Interact();
     RSDK.ProcessAnimation(&entity->animator);
-    int animState = entity->animator.animationID % 3;
+    int32 animState = entity->animator.animationID % 3;
     if (animState) {
         if (animState == 2 && entity->animator.frameID == entity->animator.frameCount - 1) {
             RSDK.SetSpriteAnimation(StickyPlatform->animID, 3 * (entity->type >> 1), &entity->animator, false, 0);
@@ -134,7 +134,7 @@ void StickyPlatform_Interact(void)
 {
     RSDK_THIS(StickyPlatform);
     if (Player->playerCount > 0) {
-        for (int i = 0; i < Player->playerCount; i++) {
+        for (int32 i = 0; i < Player->playerCount; i++) {
             EntityPlayer *player = RSDK.GetEntityByID(i);
             if (Player_CheckValidState(player) && player->interaction) {
                 if (((1 << i) & entity->playerBits)) {

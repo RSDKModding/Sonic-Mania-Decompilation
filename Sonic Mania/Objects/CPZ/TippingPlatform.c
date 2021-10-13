@@ -24,7 +24,7 @@ void TippingPlatform_Update(void)
     }
     else {
         if (entity->state == Platform_State_Normal) {
-            int timer = (Zone->timer + entity->intervalOffset) % entity->interval;
+            int32 timer = (Zone->timer + entity->intervalOffset) % entity->interval;
             if (timer >= entity->duration) {
                 if (timer >= entity->duration + 22) {
                     RSDK.SetSpriteAnimation(Platform->spriteIndex, 2, &entity->animator, true, 6);

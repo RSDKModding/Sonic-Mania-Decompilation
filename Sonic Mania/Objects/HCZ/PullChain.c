@@ -10,7 +10,7 @@ void PullChain_Update(void)
             entity->activated = false;
         foreach_active(Player, player)
         {
-            int plrID = RSDK.GetEntityID(player);
+            int32 plrID = RSDK.GetEntityID(player);
             if (entity->timer[plrID] > 0)
                 entity->timer[plrID]--;
             if (!player->sidekick) {
@@ -35,12 +35,12 @@ void PullChain_Update(void)
                 entity->position.y = entity->basePos.y + entity->chainOffset;
             }
 
-            int playerID = 1 << plrID;
+            int32 playerID = 1 << plrID;
             if (!((1 << plrID) & entity->activePlayers1)) {
                 if (!(entity->activePlayers2 & playerID)) {
                     if (!Current || true/*!(playerID & Current->activePlayers)*/) {
-                        int x = abs(player->position.x - entity->position.x);
-                        int y = abs((player->position.y - 0x180000) - entity->position.y);
+                        int32 x = abs(player->position.x - entity->position.x);
+                        int32 y = abs((player->position.y - 0x180000) - entity->position.y);
                         if (MathHelpers_Unknown6((y >> 16) * (y >> 16) + (x >> 16) * (x >> 16)) <= 8 && player->state != Player_State_None
                             && !entity->timer[plrID]) {
                             entity->activePlayers1 |= (1 << plrID);
@@ -55,7 +55,7 @@ void PullChain_Update(void)
                             player->velocity.y      = 0;
                             player->state           = Player_State_None;
                             if (!player->sidekick) {
-                                for (int i = 0; i < 18; ++i) {
+                                for (int32 i = 0; i < 18; ++i) {
                                     entity->field_D0[i] = 0;
                                 }
                             }
@@ -91,8 +91,8 @@ void PullChain_Update(void)
             }
 
             if ((entity->activePlayers2 & playerID)) {
-                int x = abs(player->position.x - entity->position.x);
-                int y = abs(player->position.y - 0x180000 - entity->position.y);
+                int32 x = abs(player->position.x - entity->position.x);
+                int32 y = abs(player->position.y - 0x180000 - entity->position.y);
                 if (MathHelpers_Unknown6((x >> 16) * (x >> 16) + (y >> 16) * (y >> 16)) > 4)
                     entity->activePlayers2 &= ~(1 << plrID);
             }
@@ -120,12 +120,12 @@ void PullChain_Draw(void)
     Vector2 drawPos;
     drawPos.x = entity->position.x;
     drawPos.y = entity->position.y;
-    for (int i = 0; i < entity->length; ++i) {
+    for (int32 i = 0; i < entity->length; ++i) {
         RSDK.DrawSprite(&entity->animator2, &drawPos, false);
         drawPos.y -= 0x80000;
     }
 
-    for (int i = 0; i < entity->chainOffset; i += 0x80000) {
+    for (int32 i = 0; i < entity->chainOffset; i += 0x80000) {
         RSDK.DrawSprite(&entity->animator2, &drawPos, false);
         drawPos.y -= 0x80000;
     }
@@ -181,7 +181,7 @@ bool32 PullChain_HandleDunkeyCode(EntityPlayer *player)
     if (inputFlags == entity->codeInputFlags)
         return false;
 
-    for (int i = 0; i < 17; ++i) {
+    for (int32 i = 0; i < 17; ++i) {
         entity->field_D0[i] = entity->field_D0[i + 1];
     }
 
@@ -202,7 +202,7 @@ bool32 PullChain_HandleDunkeyCode(EntityPlayer *player)
     }
     
     bool32 flag = true;
-    for (int i = 0; i < 18; ++i) {
+    for (int32 i = 0; i < 18; ++i) {
         flag &= (entity->field_D0[i] == PullChain->dunkeyCode[i]);
     }
     entity->codeInputFlags = inputFlags;

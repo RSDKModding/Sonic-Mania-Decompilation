@@ -13,11 +13,11 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    int listID;
-    int frame;
-    int field_64;
-    int field_68;
-    int field_6C;
+    int32 listID;
+    int32 frame;
+    int32 field_64;
+    int32 field_68;
+    int32 field_6C;
     Animator animator;
 } EntityPuyoLabel;
 

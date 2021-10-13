@@ -84,7 +84,7 @@ bool32 CPZBoss_Unknown1(void)
         //    v3 += 4;
         //} while (v3 < 1072);
         foreach_all(PuyoBean, bean) { destroyEntity(bean); }
-        int layerID = RSDK.GetSceneLayerID("FG High");
+        int32 layerID = RSDK.GetSceneLayerID("FG High");
         RSDK.CopyTileLayer(layerID, 438, 150, layerID, 452, 150, 6, 2);
         RSDK_sceneInfo->timeEnabled = true;
         CPZBoss_Create(NULL);
@@ -204,10 +204,10 @@ void CPZBoss_State_SetupMatch(void)
 
     if (!CPZBoss_Unknown1() && ++entity->timer == 60) {
         foreach_active(CPZShutter, shutter) { shutter->state = CPZShutter_State_Open; }
-        int key = (int)time(0);
-        int rand = RSDK.Random(0, 512, &key);
+        int32 key = (int32)time(0);
+        int32 rand = RSDK.Random(0, 512, &key);
 
-        int id = 0;
+        int32 id = 0;
         foreach_active(PuyoMatch, match)
         {
             /*RSDK.SetSpriteAnimation(0xFFFF, 0, &match->animator1, true, 0);
@@ -335,7 +335,7 @@ void CPZBoss_State_HandlePlayerMatchFinish(void)
         if (!(Zone->timer % 3)) {
             RSDK.PlaySfx(CPZBoss->sfxExplosion, 0, 255);
             if ((Zone->timer & 4) != 0) {
-                int data = ((RSDK.Rand(0, 256) > 192) + 2);
+                int32 data = ((RSDK.Rand(0, 256) > 192) + 2);
                 CREATE_ENTITY(Explosion, intToVoid(data), entity->field_6C + RSDK.Rand(-0x300000, 0x300000),
                               entity->field_70 + RSDK.Rand(-0x100000, 0x100000))
                     ->drawOrder = Zone->hudDrawOrder;
@@ -526,7 +526,7 @@ void CPZBoss_State_Unknown12(void)
     RSDK_THIS(CPZBoss);
 
     if (++entity->timer == 24) {
-        for (int i = 0; i < Player->playerCount; ++i) {
+        for (int32 i = 0; i < Player->playerCount; ++i) {
             EntityPlayer *player = RSDK_GET_ENTITY(i, Player);
             if (player->camera)
                 player->camera->state = Camera_State_Follow;

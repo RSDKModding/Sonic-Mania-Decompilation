@@ -8,7 +8,7 @@ void Shield_Update(void)
     StateMachine_Run(entity->state);
     EntityPlayer *player = entity->player;
     if (player) {
-        int drawOrder = player->drawOrder;
+        int32 drawOrder = player->drawOrder;
         if ((entity->frameID & -4) <= 0)
             --drawOrder;
         entity->drawOrder = drawOrder;

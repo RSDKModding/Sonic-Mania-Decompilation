@@ -89,11 +89,11 @@ void PathInverter_Unknown1(Entity *player)
         plr->nextGroundState = 0;
     }
 
-    int val    = entity->size.x + ((entity->position.x - player->position.x) >> 16);
-    int angle2 = 4 * (3 * val) / entity->size2.x;
-    int angle  = (val << 8) / entity->size2.x;
+    int32 val    = entity->size.x + ((entity->position.x - player->position.x) >> 16);
+    int32 angle2 = 4 * (3 * val) / entity->size2.x;
+    int32 angle  = (val << 8) / entity->size2.x;
     if (plr->playerAnimator.animationID != ANI_JUMP || !plr->groundedStore) {
-        int frame = 12 - angle2;
+        int32 frame = 12 - angle2;
         if (player->collisionMode != CMODE_ROOF * (entity->playerFlipFlags[plr->playerID] >= 0))
             frame = angle2;
         if (frame >= 0)
@@ -117,7 +117,7 @@ void PathInverter_State_Horizontal(void)
         if (player->collisionMode == CMODE_FLOOR || player->collisionMode == CMODE_ROOF) {
             if (abs(entity->position.x - player->position.x) >> 16 >= entity->size.x
                 || abs(entity->position.y - player->position.y) >> 16 >= entity->size.y + 32) {
-                int pid = player->playerID;
+                int32 pid = player->playerID;
                 if (entity->playerPtrs[pid]) {
                     entity->playerPtrs[pid] = 0;
                     player->groundVel       = entity->groundVelStore[player->playerID];

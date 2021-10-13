@@ -44,7 +44,7 @@ void UIButton_Draw(void)
     RSDK_THIS(UIButton);
 
     Vector2 drawPos;
-    int size  = entity->size.y + entity->size.x;
+    int32 size  = entity->size.y + entity->size.x;
     drawPos.x = entity->position.x;
     drawPos.y = entity->position.y;
     drawPos.x -= entity->field_140;
@@ -108,8 +108,8 @@ void UIButton_Create(void *data)
         entity->startListID     = entity->listID;
         entity->startFrameID    = entity->frameID;
 
-        int entID = RSDK.GetEntityID(entity) - entity->choiceCount;
-        for (int i = 0; i < entity->choiceCount; ++i) {
+        int32 entID = RSDK.GetEntityID(entity) - entity->choiceCount;
+        for (int32 i = 0; i < entity->choiceCount; ++i) {
             EntityUIButton *item = RSDK.GetEntityByID(entID + i);
             if ((UIChoice && item->objectID == UIChoice->objectID) || (UIVsRoundPicker && item->objectID == UIVsRoundPicker->objectID)
                 || (UIResPicker && item->objectID == UIResPicker->objectID) || (UIWinSize && item->objectID == UIWinSize->objectID)) {
@@ -133,7 +133,7 @@ void UIButton_StageLoad(void) {}
 
 void UIButton_Unknown1(EntityUIButton *button)
 {
-    for (int i = 0; i < button->choiceCount; ++i) {
+    for (int32 i = 0; i < button->choiceCount; ++i) {
         Entity *entity = RSDK.GetEntityByID(i % button->choiceCount - button->choiceCount + RSDK.GetEntityID(button));
         if (button->choiceCount > 0
             && (entity->objectID == UIChoice->objectID || entity->objectID == UIVsRoundPicker->objectID || entity->objectID == UIResPicker->objectID
@@ -144,7 +144,7 @@ void UIButton_Unknown1(EntityUIButton *button)
     }
 }
 
-EntityUIButton *UIButton_GetChoicePtr(EntityUIButton *button, int selection)
+EntityUIButton *UIButton_GetChoicePtr(EntityUIButton *button, int32 selection)
 {
     if (button->choiceCount <= 0)
         return NULL;
@@ -156,7 +156,7 @@ EntityUIButton *UIButton_GetChoicePtr(EntityUIButton *button, int selection)
     return NULL;
 }
 
-void UIButton_SetChoiceSelectionWithCB(EntityUIButton *button, int selection)
+void UIButton_SetChoiceSelectionWithCB(EntityUIButton *button, int32 selection)
 {
     if (button->choiceCount) {
         EntityUIButton *entPtr = UIButton_GetChoicePtr(button, button->selection);
@@ -202,7 +202,7 @@ void UIButton_SetChoiceSelectionWithCB(EntityUIButton *button, int selection)
     }
 }
 
-void UIButton_SetChoiceSelection(EntityUIButton *button, int selection)
+void UIButton_SetChoiceSelection(EntityUIButton *button, int32 selection)
 {
     if (button->choiceCount) {
         EntityUIButton *entPtr = UIButton_GetChoicePtr(button, button->selection);
@@ -254,8 +254,8 @@ void UIButton_Unknown6(void)
 
     UIControl_Unknown15(control, entity->position.x, entity->position.y);
     if (!UIControl_Unknown9(control)) {
-        int rowID = 0;
-        int colID = 0;
+        int32 rowID = 0;
+        int32 colID = 0;
         if (control->rowCount && control->columnCount) {
             rowID = control->activeEntityID / control->columnCount;
         }
@@ -293,7 +293,7 @@ void UIButton_Unknown6(void)
         if (flag) {
 #if RETRO_USE_PLUS
             if (control->noWrap) {
-                int rowCount = control->rowCount;
+                int32 rowCount = control->rowCount;
                 if (rowID < control->rowCount)
                     rowCount = rowID;
                 if (rowCount >= 0) {
@@ -304,7 +304,7 @@ void UIButton_Unknown6(void)
                     rowID = 0;
                 }
 
-                int colCount = control->columnCount;
+                int32 colCount = control->columnCount;
                 if (colID < control->columnCount)
                     colCount = colID;
                 if (colCount >= 0) {
@@ -329,7 +329,7 @@ void UIButton_Unknown6(void)
             }
 #endif
 
-            int id = control->buttonCount - 1;
+            int32 id = control->buttonCount - 1;
             if (colID + rowID * control->columnCount < id)
                 id = colID + rowID * control->columnCount;
             if (control->activeEntityID != id) {
@@ -370,22 +370,22 @@ bool32 UIButton_TouchCB_Alt(void)
     EntityUIControl *control = (EntityUIControl *)entity->parent;
 
     bool32 touchFlag = false;
-    int lastTouchID  = -1;
+    int32 lastTouchID  = -1;
     uint32 lastTouch   = 0xFFFFFFFF;
 
-    for (int i = 0; i < entity->touchPosCount; ++i) {
+    for (int32 i = 0; i < entity->touchPosCount; ++i) {
         Vector2 touchPos1 = entity->touchPos1[i];
         Vector2 touchPos2 = entity->touchPos2[i];
 
         if (RSDK_touchMouse->count) {
-            int screenX = RSDK_screens->position.x << 16;
-            int screenY = RSDK_screens->position.y << 16;
-            for (int t = 0; t < RSDK_touchMouse->count; ++t) {
-                int x = abs(touchPos2.x + entity->position.x - (screenX - (int)((RSDK_touchMouse->x[t] * RSDK_screens->width) * -65536.0f)));
-                int y = abs(touchPos2.y + entity->position.y - (screenY - (int)((RSDK_touchMouse->y[t] * RSDK_screens->height) * -65536.0f)));
+            int32 screenX = RSDK_screens->position.x << 16;
+            int32 screenY = RSDK_screens->position.y << 16;
+            for (int32 t = 0; t < RSDK_touchMouse->count; ++t) {
+                int32 x = abs(touchPos2.x + entity->position.x - (screenX - (int32)((RSDK_touchMouse->x[t] * RSDK_screens->width) * -65536.0f)));
+                int32 y = abs(touchPos2.y + entity->position.y - (screenY - (int32)((RSDK_touchMouse->y[t] * RSDK_screens->height) * -65536.0f)));
 
-                int x2 = touchPos1.x >> 1;
-                int y2 = touchPos1.y >> 1;
+                int32 x2 = touchPos1.x >> 1;
+                int32 y2 = touchPos1.y >> 1;
 
                 if (x < x2 && y < y2) {
                     touchFlag = true;
@@ -418,17 +418,17 @@ bool32 UIButton_ProcessTouch(void)
     bool32 touchFlag = false;
     if (entity->objectID != UIButton->objectID || !entity->invisible) {
         if (RSDK_touchMouse->count) {
-            int screenX = (RSDK_screens->position.x << 16);
-            int screenY = (RSDK_screens->position.y << 16);
-            int sizeX   = entity->touchPosStart.x >> 1;
-            int sizeY   = entity->touchPosStart.y >> 1;
+            int32 screenX = (RSDK_screens->position.x << 16);
+            int32 screenY = (RSDK_screens->position.y << 16);
+            int32 sizeX   = entity->touchPosStart.x >> 1;
+            int32 sizeY   = entity->touchPosStart.y >> 1;
 
-            for (int i = 0; i < RSDK_touchMouse->count; ++i) {
-                int x = screenX - ((RSDK_touchMouse->x[i] * RSDK_screens->width) * -65536.0f);
-                int y = screenY - ((RSDK_touchMouse->y[i] * RSDK_screens->height) * -65536.0f);
+            for (int32 i = 0; i < RSDK_touchMouse->count; ++i) {
+                int32 x = screenX - ((RSDK_touchMouse->x[i] * RSDK_screens->width) * -65536.0f);
+                int32 y = screenY - ((RSDK_touchMouse->y[i] * RSDK_screens->height) * -65536.0f);
 
-                int touchX = abs(entity->touchPosEnd.x + entity->position.x - x);
-                int touchY = abs(entity->touchPosEnd.y + entity->position.y - y);
+                int32 touchX = abs(entity->touchPosEnd.x + entity->position.x - x);
+                int32 touchY = abs(entity->touchPosEnd.y + entity->position.y - y);
                 if (touchX < sizeX && touchY < sizeY) {
                     touchFlag = true;
                 }
@@ -457,7 +457,7 @@ bool32 UIButton_ProcessTouch(void)
 
     if (!touchFlag) {
         if (!entity->touchPressed && entity->options7()) {
-            for (int i = 0; i < control->buttonCount; ++i) {
+            for (int32 i = 0; i < control->buttonCount; ++i) {
                 if (entity == control->buttons[i] && control->activeEntityID != i) {
                     entity->flag = false;
                     StateMachine_Run(entity->options6);
@@ -489,7 +489,7 @@ void UIButton_ProcessButtonInputs(void)
     EntityUIControl *control = (EntityUIControl *)entity->parent;
     EntityUIButton *entPtr   = UIButton_GetChoicePtr(entity, entity->selection);
 
-    int columnID = 0, rowID = 0;
+    int32 columnID = 0, rowID = 0;
     if (control->rowCount && control->columnCount)
         rowID = control->activeEntityID / control->columnCount;
     else
@@ -512,7 +512,7 @@ void UIButton_ProcessButtonInputs(void)
         }
     }
 
-    int selection = entity->selection;
+    int32 selection = entity->selection;
     bool32 flag2  = 0;
     if (entPtr && entity->choiceCount == 1 && entPtr->processButtonCB && !entity->choiceDir && !entity->disabled) {
         Entity *entStore       = RSDK_sceneInfo->entity;
@@ -573,7 +573,7 @@ void UIButton_ProcessButtonInputs(void)
     if (flag) {
 #if RETRO_USE_PLUS
         if (control->noWrap) {
-            int count = control->rowCount;
+            int32 count = control->rowCount;
             if (rowID < control->rowCount)
                 count = rowID;
 
@@ -608,7 +608,7 @@ void UIButton_ProcessButtonInputs(void)
         }
 #endif
 
-        int id = columnID + control->columnCount * rowID;
+        int32 id = columnID + control->columnCount * rowID;
         if (id >= control->buttonCount - 1)
             id = control->buttonCount - 1;
         if (control->activeEntityID != id && entity != control->buttons[id]) {
@@ -745,9 +745,9 @@ void UIButton_Unknown15(void)
 
     if (entity->assignsP1) {
 #if RETRO_USE_PLUS
-        int id = API_MostRecentActiveControllerID(0, 0, 0);
+        int32 id = API_MostRecentActiveControllerID(0, 0, 0);
 #else
-        int id = API_MostRecentActiveControllerID(0);
+        int32 id = API_MostRecentActiveControllerID(0);
 #endif
         API_ResetControllerAssignments();
         API_AssignControllerID(CONT_P1, id);
@@ -778,7 +778,7 @@ void UIButton_Unknown16(void)
     RSDK_THIS(UIButton);
 
     if (entity->field_13C) {
-        int val = -(entity->field_13C / abs(entity->field_13C));
+        int32 val = -(entity->field_13C / abs(entity->field_13C));
         entity->field_13C += val << 16;
         if (val < 0 && entity->field_13C < 0) {
             entity->field_13C = 0;
@@ -788,7 +788,7 @@ void UIButton_Unknown16(void)
     }
 
     if (entity->field_140) {
-        int val = -(entity->field_140 / abs(entity->field_140));
+        int32 val = -(entity->field_140 / abs(entity->field_140));
         entity->field_140 += val << 16;
         if (val < 0 && entity->field_140 < 0) {
             entity->field_140 = 0;

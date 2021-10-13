@@ -20,17 +20,17 @@ typedef struct {
     RSDK_ENTITY
     bool32 (*currentState)(Entity *host);
     uint8 stateID;
-    int timer;
-    int field_64;
-    int field_68;
-    int field_6C[8];
+    int32 timer;
+    int32 field_64;
+    int32 field_68;
+    int32 field_6C[8];
     Entity *cutsceneCurEntity;
     Entity *hostEntity;
     void *cutsceneStates[0x40];
     Vector2 points[8];
-    int fillTimerA;
-    int fillTimerB;
-    int skipType;
+    int32 fillTimerA;
+    int32 fillTimerB;
+    int32 skipType;
     void (*skipCallback)(void);
 } EntityCutsceneSeq;
 
@@ -49,11 +49,11 @@ void CutsceneSeq_EditorLoad(void);
 void CutsceneSeq_Serialize(void);
 
 // Extra Entity Functions
-Entity *CutsceneSeq_GetEntity(int type);
+Entity *CutsceneSeq_GetEntity(int32 type);
 void CutsceneSeq_LockAllPlayerControl(void);
 void CutsceneSeq_LockPlayerControl(void *plr);
 void CutsceneSeq_CheckSkip(uint8 skipType, EntityCutsceneSeq *entity, void (*skipCallback)(void));
-void CutsceneSeq_NewState(int nextState, EntityCutsceneSeq *CutsceneSeq);
+void CutsceneSeq_NewState(int32 nextState, EntityCutsceneSeq *CutsceneSeq);
 void CutsceneSeq_StartSequence(Entity *host, void **states);
 
 #endif //!OBJ_CUTSCENESEQ_H

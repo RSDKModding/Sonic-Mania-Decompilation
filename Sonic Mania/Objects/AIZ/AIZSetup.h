@@ -7,15 +7,15 @@
 typedef struct {
     RSDK_OBJECT
 #if RETRO_USE_PLUS
-    int aniTiles1[13];
-    int aniTiles2[12];
-    int aniTiles3[15];
-    int aniTiles4[14];
-    int aniTiles5[15];
-    int aniTiles6[14];
+    int32 aniTiles1[13];
+    int32 aniTiles2[12];
+    int32 aniTiles3[15];
+    int32 aniTiles4[14];
+    int32 aniTiles5[15];
+    int32 aniTiles6[14];
 #endif
     bool32 cutsceneInit;
-    int dword154;
+    int32 dword154;
     bool32 playingDrillSFX;
     TileLayer *bg1Info;
     TileLayer *bg2Info;
@@ -28,12 +28,12 @@ typedef struct {
     Entity *fxRuby;
     Entity *decorations[3];
 #if RETRO_USE_PLUS
-    int aniTileFrameA;
-    int aniTilesDelay1;
-    int aniTileFrameB;
-    int aniTilesDelay2;
-    int aniTileFrameC;
-    int aniTilesDelay3;
+    int32 aniTileFrameA;
+    int32 aniTilesDelay1;
+    int32 aniTileFrameB;
+    int32 aniTilesDelay2;
+    int32 aniTileFrameC;
+    int32 aniTilesDelay3;
 #endif  
     uint16 knuxSpriteIndex;
     uint16 sfxDrill;

@@ -7,7 +7,7 @@
 typedef struct {
     RSDK_OBJECT
     uint8 flags;
-    int postID;
+    int32 postID;
 } ObjectTMZBarrier;
 
 // Entity Class
@@ -16,7 +16,7 @@ typedef struct {
     uint8 type;
     uint8 warpTag;
     uint8 iD;
-    int field_5C;
+    int32 field_5C;
 } EntityTMZBarrier;
 
 // Object Struct

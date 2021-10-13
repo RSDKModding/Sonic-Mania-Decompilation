@@ -33,7 +33,7 @@ void UIWinSize_Draw(void)
     RSDK_THIS(UIWinSize);
     Vector2 drawPos;
 
-    int size  = (entity->size.y + entity->size.x) >> 16;
+    int32 size  = (entity->size.y + entity->size.x) >> 16;
     drawPos.x = entity->position.x;
     drawPos.y = entity->position.y;
     drawPos.x -= entity->offset;
@@ -84,7 +84,7 @@ void UIWinSize_Create(void *data)
 {
     RSDK_THIS(UIWinSize);
     if (!RSDK_sceneInfo->inEditor) {
-        int winHeight         = RSDK.GetSettingsValue(SETTINGS_WINDOW_HEIGHT);
+        int32 winHeight         = RSDK.GetSettingsValue(SETTINGS_WINDOW_HEIGHT);
         entity->visible       = true;
         entity->drawOrder     = 2;
         entity->active        = ACTIVE_BOUNDS;
@@ -109,7 +109,7 @@ void UIWinSize_SetupText(EntityUIWinSize *entityPtr)
 {
     RSDK_THIS(UIWinSize);
     if (sku_platform == PLATFORM_PC || sku_platform == PLATFORM_DEV) {
-        int height = 0;
+        int32 height = 0;
         RSDK.GetWindowSize(NULL, &height);
         entity->maxScale = height / SCREEN_YSIZE;
         if (entity->selection < 1)
@@ -122,7 +122,7 @@ void UIWinSize_SetupText(EntityUIWinSize *entityPtr)
         RSDK.PrependText(&entityPtr->text, buffer);
 #if RETRO_GAMEVER != VER_100
         if (Localization->language == LANGUAGE_TC) {
-            for (int c = 0; c < entityPtr->text.textLength; ++c) {
+            for (int32 c = 0; c < entityPtr->text.textLength; ++c) {
                 if (entityPtr->text.text[c] == 'x')
                     entityPtr->text.text[c] = 20493; //unicode character ID
             }
@@ -155,7 +155,7 @@ void UIWinSize_ProcessButtonCB(void)
 {
     RSDK_THIS(UIWinSize);
 
-    int sel = entity->selection;
+    int32 sel = entity->selection;
     if (UIControl->keyLeft)
         entity->selection--;
     if (UIControl->keyRight)
@@ -187,16 +187,16 @@ bool32 UIWinSize_ProcessTouchCB(void)
     touchEnd[1].y = entity->touchPosEnd.y;
 
     bool32 pressed = false;
-    for (int i = 0; i < 2; ++i) {
+    for (int32 i = 0; i < 2; ++i) {
         if (RSDK_touchMouse->count) {
-            int sizeX = touchStart[i].x >> 1;
-            int sizeY = touchStart[i].y >> 1;
-            for (int t = 0; t < RSDK_touchMouse->count; ++t) {
-                int x = (RSDK_screens->position.x << 16) - ((RSDK_touchMouse->x[t] * RSDK_screens->width) * -65536.0f);
-                int y = (RSDK_screens->position.y << 16) - ((RSDK_touchMouse->y[t] * RSDK_screens->height) * -65536.0f);
+            int32 sizeX = touchStart[i].x >> 1;
+            int32 sizeY = touchStart[i].y >> 1;
+            for (int32 t = 0; t < RSDK_touchMouse->count; ++t) {
+                int32 x = (RSDK_screens->position.x << 16) - ((RSDK_touchMouse->x[t] * RSDK_screens->width) * -65536.0f);
+                int32 y = (RSDK_screens->position.y << 16) - ((RSDK_touchMouse->y[t] * RSDK_screens->height) * -65536.0f);
 
-                int touchX = abs(touchEnd[i].x + entity->position.x - x);
-                int touchY = abs(touchEnd[i].y + entity->position.y - y);
+                int32 touchX = abs(touchEnd[i].x + entity->position.x - x);
+                int32 touchY = abs(touchEnd[i].y + entity->position.y - y);
                 if (touchX < sizeX && touchY < sizeY) {
                     entity->field_13C = i;
                     pressed           = true;
@@ -247,7 +247,7 @@ void UIWinSize_Unknown7(void)
 
     entity->textFlag = true;
     if (entity->field_120) {
-        int dist = -(entity->field_120 / abs(entity->field_120));
+        int32 dist = -(entity->field_120 / abs(entity->field_120));
         entity->field_120 += dist << 15;
         if (dist < 0) {
             if (entity->field_120 < 0) {
@@ -261,7 +261,7 @@ void UIWinSize_Unknown7(void)
     }
 
     if (entity->offset) {
-        int dist = -(entity->offset / abs(entity->offset));
+        int32 dist = -(entity->offset / abs(entity->offset));
         entity->offset += dist << 16;
         if (dist < 0) {
             if (entity->offset < 0) {

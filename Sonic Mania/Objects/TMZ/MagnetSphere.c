@@ -77,7 +77,7 @@ void MagnetSphere_CheckPlayerCollision(void)
     RSDK_THIS(MagnetSphere);
     foreach_active(Player, player)
     {
-        int pid = RSDK.GetEntityID(player);
+        int32 pid = RSDK.GetEntityID(player);
 
         if ((1 << pid) & entity->activePlayers) {
             if (player->state != Player_State_None) {
@@ -96,7 +96,7 @@ void MagnetSphere_CheckPlayerCollision(void)
                 MagnetSphere_MovePlayer(player, pid);
             }
             else {
-                int ang = 12 * RSDK.Sin256(MagnetSphere->angleList[MagnetSphere->sphereAngle[pid] >> 4] | (MagnetSphere->sphereAngle[pid] & 0xF));
+                int32 ang = 12 * RSDK.Sin256(MagnetSphere->angleList[MagnetSphere->sphereAngle[pid] >> 4] | (MagnetSphere->sphereAngle[pid] & 0xF));
                 player->velocity.x        = ang * RSDK.Sin256(MagnetSphere->playerAngles[pid]);
                 player->velocity.y        = -(ang * RSDK.Cos256(MagnetSphere->playerAngles[pid]));
                 player->jumpAbility       = 0;
@@ -111,7 +111,7 @@ void MagnetSphere_CheckPlayerCollision(void)
         else {
             if (!entity->playerTimers[pid] && player->state != Player_State_None) {
                 if (Player_CheckCollisionTouch(player, entity, &MagnetSphere->hitbox)) {
-                    int angle = RSDK.ATan2(entity->position.x - player->position.x, entity->position.y - player->position.y);
+                    int32 angle = RSDK.ATan2(entity->position.x - player->position.x, entity->position.y - player->position.y);
 
                     if (angle >= 128) {
                         MagnetSphere->sphereAngle[pid]  = -128;
@@ -142,12 +142,12 @@ void MagnetSphere_CheckPlayerCollision(void)
     }
 }
 
-void MagnetSphere_MovePlayer(void *p, int playerID)
+void MagnetSphere_MovePlayer(void *p, int32 playerID)
 {
     RSDK_THIS(MagnetSphere);
     EntityPlayer *player = (EntityPlayer *)p;
 
-    int ang            = 56 * RSDK.Cos256(MagnetSphere->sphereAngle[playerID]) >> 8;
+    int32 ang            = 56 * RSDK.Cos256(MagnetSphere->sphereAngle[playerID]) >> 8;
     player->velocity.x = -RSDK.Sin256(MagnetSphere->playerAngles[playerID]);
     player->velocity.y = RSDK.Cos256(MagnetSphere->playerAngles[playerID]);
     player->position.x = entity->position.x - (ang * RSDK.Sin256(MagnetSphere->playerAngles[playerID]) << 8);

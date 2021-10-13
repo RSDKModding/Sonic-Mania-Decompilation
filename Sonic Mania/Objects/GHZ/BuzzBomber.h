@@ -16,7 +16,7 @@ typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     uint8 shotRange;
-    int timer;
+    int32 timer;
     uint8 field_64;
     Vector2 startPos;
     uint8 startDir;

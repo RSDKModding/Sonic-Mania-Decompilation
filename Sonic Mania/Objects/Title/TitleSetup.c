@@ -298,9 +298,9 @@ void TitleSetup_Unknown10(void)
 #endif
         RSDK.SetScene("Presentation", nextScene);
 #if RETRO_USE_PLUS
-        int id = API_MostRecentActiveControllerID(0, 0, 5);
+        int32 id = API_MostRecentActiveControllerID(0, 0, 5);
 #else
-        int id = API_MostRecentActiveControllerID(0);
+        int32 id = API_MostRecentActiveControllerID(0);
 #endif
         API_ResetControllerAssignments();
         API_AssignControllerID(1, id);

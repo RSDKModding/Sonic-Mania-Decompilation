@@ -7,7 +7,7 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    int prizeID;
+    int32 prizeID;
     uint16 aniFrames;
     uint16 sfxBackGlass;
     uint16 sfxCraneMove;
@@ -23,11 +23,11 @@ typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
-    int type;
-    int field_64;
-    int timer;
-    int field_6C;
-    int field_70;
+    int32 type;
+    int32 field_64;
+    int32 timer;
+    int32 field_6C;
+    int32 field_70;
     Entity *parent;
     Entity *field_78;
     Animator animator1;

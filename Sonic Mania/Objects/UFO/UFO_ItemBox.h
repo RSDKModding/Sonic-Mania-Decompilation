@@ -6,9 +6,9 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    int breakCount;
-    int field_8;
-    int field_C;
+    int32 breakCount;
+    int32 field_8;
+    int32 field_C;
     uint16 itemBoxSprite;
     uint16 itemBoxModel;
     uint16 sceneIndex;
@@ -21,40 +21,40 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    int type;
-    int timer;
-    int height;
-    int timer2;
-    int worldX;
-    int worldY;
+    int32 type;
+    int32 timer;
+    int32 height;
+    int32 timer2;
+    int32 worldX;
+    int32 worldY;
     Vector2 drawPos;
-    int field_7C;
-    int field_80;
-    int field_84;
-    int field_88;
-    int field_8C;
-    int field_90;
-    int field_94;
-    int field_98;
-    int field_9C;
-    int field_A0;
-    int field_A4;
-    int field_A8;
-    int field_AC;
-    int field_B0;
-    int field_B4;
-    int field_B8;
+    int32 field_7C;
+    int32 field_80;
+    int32 field_84;
+    int32 field_88;
+    int32 field_8C;
+    int32 field_90;
+    int32 field_94;
+    int32 field_98;
+    int32 field_9C;
+    int32 field_A0;
+    int32 field_A4;
+    int32 field_A8;
+    int32 field_AC;
+    int32 field_B0;
+    int32 field_B4;
+    int32 field_B8;
     Matrix matrix1;
     Matrix matrix2;
     Matrix matrix3;
-    int sfxTimer;
+    int32 sfxTimer;
     Animator itemData;
-    int field_198;
-    int field_19C;
-    int field_1A0;
-    int field_1A4;
-    int field_1A8;
-    int field_1AC;
+    int32 field_198;
+    int32 field_19C;
+    int32 field_1A0;
+    int32 field_1A4;
+    int32 field_1A8;
+    int32 field_1AC;
 } EntityUFO_ItemBox;
 
 // Object Struct

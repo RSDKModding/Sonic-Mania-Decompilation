@@ -14,18 +14,18 @@ typedef struct {
 	MANIA_UI_ITEM_BASE
     uint8 playerID;
     bool32 prevFlag;
-    int frameID;
-    int field_110;
-    int field_114;
-    int field_118;
-    int field_11C;
+    int32 frameID;
+    int32 field_110;
+    int32 field_114;
+    int32 field_118;
+    int32 field_11C;
     bool32 ready;
-    int field_124;
-    int field_128;
-    int field_12C;
-    int field_130;
-    int field_134;
-    int field_138;
+    int32 field_124;
+    int32 field_128;
+    int32 field_12C;
+    int32 field_130;
+    int32 field_134;
+    int32 field_138;
     Animator animator1;
     Animator animator2;
     Animator animator3;
@@ -33,7 +33,7 @@ typedef struct {
     Animator animator5;
     Animator animator6;
     uint16 textSpriteIndex;
-    int prevFrameID;
+    int32 prevFrameID;
 } EntityUIVsCharSelector;
 
 // Object Struct

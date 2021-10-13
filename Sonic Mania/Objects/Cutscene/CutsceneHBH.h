@@ -20,7 +20,7 @@ typedef enum  {
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    int field_4;
+    int32 field_4;
     colour paletteColours[128];
 } ObjectCutsceneHBH;
 
@@ -29,19 +29,19 @@ typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     uint8 characterID;
-    int oscillate;
-    int hiddenAtStart;
-    int field_68;
+    int32 oscillate;
+    int32 hiddenAtStart;
+    int32 field_68;
     char field_6C;
     char field_6D;
     char field_6E;
     char field_6F;
-    int dword70;
-    int dword74;
+    int32 dword70;
+    int32 dword74;
     Vector2 originPos;
-    int timer;
-    int dword84;
-    int colourSet;
+    int32 timer;
+    int32 dword84;
+    int32 colourSet;
     colour colours[128];
     bool32 paletteFlag;
     bool32 timerFlag;

@@ -28,19 +28,19 @@ void MathHelpers_EditorLoad(void);
 void MathHelpers_Serialize(void);
 
 // Extra Entity Functions
-void MathHelpers_Lerp1(Vector2 *pos, int percent, int startX, int startY, int endX, int endY);
-void MathHelpers_Lerp2(Vector2 *pos, int percent, int startX, int startY, int endX, int endY);
-void MathHelpers_Lerp3(Vector2 *pos, int percent, int startX, int startY, int endX, int endY);
-void MathHelpers_Lerp4(Vector2 *pos, int percent, int startX, int startY, int endX, int endY);
-Vector2 MathHelpers_Unknown5(int percent, int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4);
-int MathHelpers_Unknown6(uint32 a1);
-int MathHelpers_Unknown7(int a1, int a2, int a3, int a4, int a5, int a6, int a7, int a8);
-bool32 MathHelpers_PointInHitbox(int direction, int x1, int y1, Hitbox *hitbox, int x2, int y2);
-bool32 MathHelpers_Unknown9(int px1, int py1, int px2, int py2, int tx1, int tx2, int ty1, int ty2);
-int MathHelpers_Unknown10(int px1, int py1, int px2, int py2, int tx1, int tx2);
-bool32 MathHelpers_Unknown11(int tx1, int tx2, int ty1, int ty2, int px2, int py2);
-int MathHelpers_Unknown12(int px1, int py1, int px2, int py2, int tx1, int tx2, int ty1, int ty2);
-int MathHelpers_Unknown13(int a1, int a2);
-bool32 MathHelpers_Unknown14(Vector2 *pos, int x1, int y1, Vector2 pos2, Hitbox hitbox);
+void MathHelpers_Lerp1(Vector2 *pos, int32 percent, int32 startX, int32 startY, int32 endX, int32 endY);
+void MathHelpers_Lerp2(Vector2 *pos, int32 percent, int32 startX, int32 startY, int32 endX, int32 endY);
+void MathHelpers_Lerp3(Vector2 *pos, int32 percent, int32 startX, int32 startY, int32 endX, int32 endY);
+void MathHelpers_Lerp4(Vector2 *pos, int32 percent, int32 startX, int32 startY, int32 endX, int32 endY);
+Vector2 MathHelpers_Unknown5(int32 percent, int32 x1, int32 y1, int32 x2, int32 y2, int32 x3, int32 y3, int32 x4, int32 y4);
+int32 MathHelpers_Unknown6(uint32 a1);
+int32 MathHelpers_Unknown7(int32 a1, int32 a2, int32 a3, int32 a4, int32 a5, int32 a6, int32 a7, int32 a8);
+bool32 MathHelpers_PointInHitbox(int32 direction, int32 x1, int32 y1, Hitbox *hitbox, int32 x2, int32 y2);
+bool32 MathHelpers_Unknown9(int32 px1, int32 py1, int32 px2, int32 py2, int32 tx1, int32 tx2, int32 ty1, int32 ty2);
+int32 MathHelpers_Unknown10(int32 px1, int32 py1, int32 px2, int32 py2, int32 tx1, int32 tx2);
+bool32 MathHelpers_Unknown11(int32 tx1, int32 tx2, int32 ty1, int32 ty2, int32 px2, int32 py2);
+int32 MathHelpers_Unknown12(int32 px1, int32 py1, int32 px2, int32 py2, int32 tx1, int32 tx2, int32 ty1, int32 ty2);
+int32 MathHelpers_Unknown13(int32 a1, int32 a2);
+bool32 MathHelpers_Unknown14(Vector2 *pos, int32 x1, int32 y1, Vector2 pos2, Hitbox hitbox);
 
 #endif //!OBJ_MATHHELPERS_H

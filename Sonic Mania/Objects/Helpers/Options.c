@@ -55,12 +55,12 @@ void Options_Reload(void)
 void Options_GetWinSize(void)
 {
     EntityOptions *options = (EntityOptions *)globals->optionsRAM;
-    int windowed           = RSDK.GetSettingsValue(SETTINGS_WINDOWED);
+    int32 windowed           = RSDK.GetSettingsValue(SETTINGS_WINDOWED);
     if (!windowed) {
         options->windowSize = 4;
     }
     else {
-        int width = RSDK.GetSettingsValue(SETTINGS_WINDOW_WIDTH);
+        int32 width = RSDK.GetSettingsValue(SETTINGS_WINDOW_WIDTH);
         if (width > 424) {
             if (width > 848) {
                 options->windowSize = (width > 1272) + 2;
@@ -75,7 +75,7 @@ void Options_GetWinSize(void)
     }
 }
 
-void Options_LoadCallback(int success)
+void Options_LoadCallback(int32 success)
 {
     if (success) {
         Localization->loaded = false;
@@ -112,7 +112,7 @@ void Options_LoadOptionsBin(void)
     }
 }
 
-void Options_SaveOptionsBin(void (*callback)(int))
+void Options_SaveOptionsBin(void (*callback)(int32))
 {
     if (Options->state) {
         if (sku_platform && sku_platform != PLATFORM_DEV) {
@@ -145,7 +145,7 @@ void Options_SaveOptionsBin(void (*callback)(int))
         callback(true);
 }
 
-void Options_SetLanguage(int language)
+void Options_SetLanguage(int32 language)
 {
     EntityOptions *options = (EntityOptions *)globals->optionsRAM;
     if (language >= 0) {
@@ -182,7 +182,7 @@ void Options_Unknown1(EntityOptions *options)
     }
 }
 
-void Options_LoadOptionsCallback(int statusCode)
+void Options_LoadOptionsCallback(int32 statusCode)
 {
     EntityOptions *options = (EntityOptions *)globals->optionsRAM;
     bool32 status          = false;
@@ -213,7 +213,7 @@ void Options_LoadOptionsCallback(int statusCode)
     }
 }
 
-void Options_SaveOptionsCallback(int statusCode)
+void Options_SaveOptionsCallback(int32 statusCode)
 {
     Options->state = 0;
     if (Options->saveCallback) {

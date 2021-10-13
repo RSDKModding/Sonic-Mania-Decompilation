@@ -18,7 +18,7 @@ void DAControl_Draw(void)
     Vector2 drawPos;
 
     entity->direction = FLIP_NONE;
-    for (int i = 0; i < 2; ++i) {
+    for (int32 i = 0; i < 2; ++i) {
         drawPos                   = entity->position;
         entity->animator1.frameID = 0;
         RSDK.DrawSprite(&entity->animator1, &drawPos, false);
@@ -49,7 +49,7 @@ void DAControl_Draw(void)
 
     drawPos.x = entity->position.x - 0x700000;
     drawPos.y = entity->position.y + 0x1E0000;
-    for (int i = 0; i < 5; ++i) {
+    for (int32 i = 0; i < 5; ++i) {
         RSDK.DrawSprite(&entity->animator2, &drawPos, false);
         RSDK.DrawSprite(&entity->animator3[i], &drawPos, false);
         drawPos.x += 0x380000;
@@ -75,7 +75,7 @@ void DAControl_Create(void *data)
         RSDK.SetSpriteAnimation(DAControl->aniFrames, 0, &entity->animator1, true, 0);
         RSDK.SetSpriteAnimation(DAControl->aniFrames, 1, &entity->animator2, true, 0);
         RSDK.SetSpriteAnimation(DAControl->aniFrames, 4, &entity->animator4, true, 0);
-        for (int i = 0; i < 5; ++i) RSDK.SetSpriteAnimation(DAControl->aniFrames, 2, &entity->animator3[i], true, i);
+        for (int32 i = 0; i < 5; ++i) RSDK.SetSpriteAnimation(DAControl->aniFrames, 2, &entity->animator3[i], true, i);
 
         RSDK.SetText(&entity->text, "SELECT A TRACK...", 0);
         RSDK.SetSpriteAnimation(DAControl->aniFrames, 4, &entity->animator4, true, 0);

@@ -79,7 +79,7 @@ void UIVsScoreboard_DrawSprites(void)
     UIWidgets_Unknown7(entity->size.y >> 16, (entity->size.y + entity->size.x) >> 16, entity->sizeY, 0, 0, 0, drawPos.x, drawPos.y);
 
     if (!RSDK_sceneInfo->inEditor) {
-        int width = RSDK.GetStringWidth(UIVsScoreboard->aniFrames, 18, &entity->scoreText, 0, entity->scoreText.textLength, 0);
+        int32 width = RSDK.GetStringWidth(UIVsScoreboard->aniFrames, 18, &entity->scoreText, 0, entity->scoreText.textLength, 0);
         drawPos.x -= width << 15;
         RSDK.DrawText(&entity->textAnimator, &drawPos, &entity->scoreText, 0, entity->scoreText.textLength, ALIGN_LEFT, 0, 0, 0, false);
 

@@ -30,7 +30,7 @@ void DDWrecker_Draw(void)
             RSDK.SetLimitedFade(1, 2, 3, entity->blendAmount, 1, 28);
         }
         else {
-            for (int i = 1; i < 0x1C; ++i) {
+            for (int32 i = 1; i < 0x1C; ++i) {
                 RSDK.SetPaletteEntry(1, i, 0xF0F0F0);
             }
         }
@@ -789,14 +789,14 @@ void DDWrecker_Hit(void)
 void DDWrecker_Spin(void)
 {
     RSDK_THIS(DDWrecker);
-    for (int i = 0; i < 6; ++i) {
+    for (int32 i = 0; i < 6; ++i) {
         EntityDDWrecker *child = RSDK_GET_ENTITY(entity->slots[i], DDWrecker);
         child->position.x      = DDWrecker->angleOffsets1[i] * RSDK.Sin1024(entity->angle3) * entity->arcOffset;
         child->position.y      = DDWrecker->angleOffsets1[i] * RSDK.Cos1024(entity->angle3) * entity->arcOffset;
         child->position.x += entity->position.x;
         child->position.y += entity->position.y;
 
-        int rot = child->rotation;
+        int32 rot = child->rotation;
         if (rot < 0) {
             if (rot < 0) {
                 rot += 2;
@@ -818,13 +818,13 @@ void DDWrecker_Spin(void)
 void DDWrecker_Spin2(void)
 {
     RSDK_THIS(DDWrecker);
-    int angle        = RSDK.Sin1024(entity->angle3) >> 2;
+    int32 angle        = RSDK.Sin1024(entity->angle3) >> 2;
     entity->rotation = RSDK.Sin1024(-entity->angle3) >> 6;
     if (entity->timer4 == 0)
         entity->angle2 = RSDK.Sin1024(-entity->angle3) >> 5;
 
     EntityDDWrecker *child = NULL;
-    for (int i = 0; i < 6; ++i) {
+    for (int32 i = 0; i < 6; ++i) {
         child             = RSDK_GET_ENTITY(entity->slots[i], DDWrecker);
         child->position.x = DDWrecker->angleOffsets2[i] * RSDK.Sin1024(angle) * entity->arcOffset;
         child->position.y = DDWrecker->angleOffsets2[i] * RSDK.Cos1024(angle) * entity->arcOffset;
@@ -856,7 +856,7 @@ void DDWrecker_State_Die(void)
     }
 
     if (++entity->timer == 80) {
-        int cnt = 0;
+        int32 cnt = 0;
         foreach_active(DDWrecker, child) { ++cnt; }
         if (cnt != 1) {
             destroyEntity(entity);

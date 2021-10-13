@@ -39,14 +39,14 @@ typedef struct {
     RSDK_OBJECT
     Animator sphereData[24];
     uint8 loadedTables;
-    TABLE(int ringScaleTableX[32],
+    TABLE(int32 ringScaleTableX[32],
           { 2, 4, 4, 4, 6, 6, 6, 7, 7, 8, 8, 9, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 22, 24, 26, 28, 30, 32, 32, 32 });
-    TABLE(int ringScaleTableY[32],
+    TABLE(int32 ringScaleTableY[32],
           { 2, 4, 4, 4, 6, 6, 6, 7, 7, 8, 8, 9, 9, 10, 11, 12, 13, 14, 15, 16, 16, 17, 17, 18, 18, 19, 19, 20, 21, 22, 23, 24 });
-    TABLE(int medalScaleTable[32],
+    TABLE(int32 medalScaleTable[32],
           { 4, 4, 5, 5, 6, 6, 7, 7, 8, 10, 12, 14, 16, 18, 20, 22, 24, 25, 26, 27, 28, 29, 30, 31, 32, 32, 32, 32, 32, 32, 32, 32 });
-    int screenYValues[32];
-    int medalScreenYVals[32];
+    int32 screenYValues[32];
+    int32 medalScreenYVals[32];
     uint16 spriteIndex;
     uint16 ringSpriteIndex;
 } ObjectBSS_Collectable;
@@ -54,13 +54,13 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    int type;
-    int field_5C;
-    int frameID;
-    int field_64;
-    int field_68;
-    int field_6C;
-    int field_70;
+    int32 type;
+    int32 field_5C;
+    int32 frameID;
+    int32 field_64;
+    int32 field_68;
+    int32 field_6C;
+    int32 field_70;
 } EntityBSS_Collectable;
 
 // Object Struct

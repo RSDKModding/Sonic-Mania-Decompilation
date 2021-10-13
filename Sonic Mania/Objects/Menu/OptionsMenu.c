@@ -150,8 +150,8 @@ void OptionsMenu_Unknown3(void)
 
     foreach_all(UIButton, button)
     {
-        int posX      = controlsControl_Win->startPos.x - controlsControl_Win->cameraOffset.x;
-        int posY      = controlsControl_Win->startPos.y - controlsControl_Win->cameraOffset.y;
+        int32 posX      = controlsControl_Win->startPos.x - controlsControl_Win->cameraOffset.x;
+        int32 posY      = controlsControl_Win->startPos.y - controlsControl_Win->cameraOffset.y;
         hitbox.right  = controlsControl_Win->size.x >> 17;
         hitbox.left   = -(controlsControl_Win->size.x >> 17);
         hitbox.bottom = controlsControl_Win->size.y >> 17;
@@ -353,7 +353,7 @@ void OptionsMenu_Unknown5(void)
         EntityOptions *options            = (EntityOptions *)globals->optionsRAM;
         Options_GetWinSize();
 
-        int vals[7];
+        int32 vals[7];
 
         vals[0] = RSDK.GetSettingsValue(SETTINGS_SHADERID);
         vals[1] = options->windowSize;
@@ -367,7 +367,7 @@ void OptionsMenu_Unknown5(void)
         vals[5] = RSDK.GetSettingsValue(SETTINGS_VSYNC);
         vals[6] = RSDK.GetSettingsValue(SETTINGS_TRIPLEBUFFERED);
 
-        for (int i = 0; i < videoControl_Win->buttonCount; ++i) {
+        for (int32 i = 0; i < videoControl_Win->buttonCount; ++i) {
             EntityUIButton *button = videoControl_Win->buttons[i];
 
             if (i == 4) {
@@ -499,8 +499,8 @@ void OptionsMenu_Unknown20(void) { UIControl_MatchMenuTag("Controls XB1"); }
 
 void OptionsMenu_Unknown21(void)
 {
-    int id   = RSDK.MostRecentActiveControllerID(1, 0, 5);
-    int type = RSDK.GetControllerType(id);
+    int32 id   = RSDK.MostRecentActiveControllerID(1, 0, 5);
+    int32 type = RSDK.GetControllerType(id);
 
     TextInfo info;
     INIT_TEXTINFO(info);
@@ -562,7 +562,7 @@ void OptionsMenu_Unknown22(void)
     RSDK.SetSettingsValue(SETTINGS_CHANGED, true);
 }
 
-void OptionsMenu_Unknown23(int id)
+void OptionsMenu_Unknown23(int32 id)
 {
     EntityUIControl *control = (EntityUIControl *)OptionsMenu->controlsControl_KB;
     foreach_all(UISubHeading, subHeading)
@@ -580,7 +580,7 @@ void OptionsMenu_Unknown23(int id)
         }
     }
 
-    for (int i = 0; i < control->buttonCount; ++i) {
+    for (int32 i = 0; i < control->buttonCount; ++i) {
         EntityUIKeyBinder *binder = (EntityUIKeyBinder *)control->buttons[i];
         if (binder->objectID == UIKeyBinder->objectID)
            binder->inputID = id;
@@ -592,7 +592,7 @@ void OptionsMenu_Unknown24(void)
     RSDK_THIS(UIButton);
     EntityUIControl *control = (EntityUIControl *)OptionsMenu->controlsControl_Windows;
 
-    for (int i = 0; i < control->buttonCount; ++i) {
+    for (int32 i = 0; i < control->buttonCount; ++i) {
         if (entity == control->buttons[i]) {
             OptionsMenu_Unknown23(i);
             UIControl_MatchMenuTag("Controls KB");
@@ -614,7 +614,7 @@ void OptionsMenu_Unknown25(void)
     }
 }
 
-void OptionsMenu_Unknown27(int status) { UIWaitSpinner_Wait2(); }
+void OptionsMenu_Unknown27(int32 status) { UIWaitSpinner_Wait2(); }
 
 void OptionsMenu_Unknown28(void)
 {
@@ -623,7 +623,7 @@ void OptionsMenu_Unknown28(void)
     RSDK.LoadScene();
 }
 
-void OptionsMenu_Unknown29(int status)
+void OptionsMenu_Unknown29(int32 status)
 {
     EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
     UIWaitSpinner_Wait2();
@@ -770,7 +770,7 @@ void OptionsMenu_ShowManual(void)
     API.LaunchManual();
 }
 
-void OptionsMenu_EraseSaveDataCB(int status)
+void OptionsMenu_EraseSaveDataCB(int32 status)
 {
     TextInfo info;
     EntityUIControl *control = (EntityUIControl *)OptionsMenu->dataOptionsControl;
@@ -792,13 +792,13 @@ void OptionsMenu_EraseSaveDataCB(int status)
 
 void OptionsMenu_EraseAllSaveData(void)
 {
-    for (int i = 0; i < 8; ++i) {
-        int *saveRAM = SaveGame_GetDataPtr(i, false);
+    for (int32 i = 0; i < 8; ++i) {
+        int32 *saveRAM = SaveGame_GetDataPtr(i, false);
         memset(saveRAM, 0, 0x400);
     }
 
-    for (int i = 0; i < 3; ++i) {
-        int *saveRAM = SaveGame_GetDataPtr(i, true);
+    for (int32 i = 0; i < 3; ++i) {
+        int32 *saveRAM = SaveGame_GetDataPtr(i, true);
         memset(saveRAM, 0, 0x400);
     }
 
@@ -816,13 +816,13 @@ void OptionsMenu_EraseAllSaveData(void)
 
 void OptionsMenu_EraseAllData(void)
 {
-    for (int i = 0; i < 8; ++i) {
-        int *saveRAM = SaveGame_GetDataPtr(i, false);
+    for (int32 i = 0; i < 8; ++i) {
+        int32 *saveRAM = SaveGame_GetDataPtr(i, false);
         memset(saveRAM, 0, 0x400);
     }
 
-    for (int i = 0; i < 3; ++i) {
-        int *saveRAM = SaveGame_GetDataPtr(i, true);
+    for (int32 i = 0; i < 3; ++i) {
+        int32 *saveRAM = SaveGame_GetDataPtr(i, true);
         memset(saveRAM, 0, 0x400);
     }
     memset(globals->noSaveSlot, 0, 0x400);
@@ -911,7 +911,7 @@ void OptionsMenu_Unknown44(void)
         ReplayRecorder_SaveReplayDB(OptionsMenu_Unknown45);
     }
     else {
-        int id = API.GetSortedUserDBRowID(globals->replayTableID, 0);
+        int32 id = API.GetSortedUserDBRowID(globals->replayTableID, 0);
         ReplayRecorder_DeleteTimeAttackRow(id, OptionsMenu_Unknown45, 1);
     }
 }

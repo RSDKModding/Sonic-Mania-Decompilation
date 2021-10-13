@@ -7,7 +7,7 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    int field_4;
+    int32 field_4;
     Hitbox innerBox;
     Hitbox outerBox;
     uint16 sfxPlunger;
@@ -20,23 +20,23 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    int timer;
-    int angleX;
-    int height;
-    int field_68;
-    int field_6C;
+    int32 timer;
+    int32 angleX;
+    int32 height;
+    int32 field_68;
+    int32 field_6C;
     Matrix matrix1;
     Matrix matrix2;
     Matrix matrix3;
     Matrix matrix4;
     StateMachine(stateInput);
-    int controllerID;
+    int32 controllerID;
     bool32 up;
     bool32 down;
     bool32 left;
     bool32 right;
     bool32 jumpPress;
-    int field_18C;
+    int32 field_18C;
     Animator animator;
 } EntityPBL_Player;
 

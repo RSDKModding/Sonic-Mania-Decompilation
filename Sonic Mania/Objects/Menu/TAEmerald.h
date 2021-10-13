@@ -14,7 +14,7 @@ typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     uint8 color;
-    int timer;
+    int32 timer;
     Vector2 startPos;
     Animator animator;
 } EntityTAEmerald;

@@ -12,8 +12,8 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    int timer;
-    int lookPos;
+    int32 timer;
+    int32 lookPos;
     bool32 flag;
     Animator animator1;
     Animator animator2;

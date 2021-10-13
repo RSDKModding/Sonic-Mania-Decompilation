@@ -144,7 +144,7 @@ void UIVsCharSelector_Unknown4(void)
         RSDK.DrawSprite(&entity->animator6, &drawPos, false);
     }
     else if (entity->state != UIVsCharSelector_Unknown11 || !(entity->timer & 2)) {
-        int frameID = entity->frameID;
+        int32 frameID = entity->frameID;
         if (entity->frameID > 2)
             frameID++;
         RSDK.SetSpriteAnimation(UIVsCharSelector->aniFrames, 1, &entity->animator1, true, frameID);
@@ -180,8 +180,8 @@ void UIVsCharSelector_ProcessButtonCB(void)
     EntityUIControl *parent = (EntityUIControl *)entity->parent;
 
     if (parent->active == ACTIVE_ALWAYS) {
-        int storedFrame = entity->frameID;
-        int inc         = 1;
+        int32 storedFrame = entity->frameID;
+        int32 inc         = 1;
         if (UIControl->leftPress[entity->playerID]) {
             --entity->frameID;
             inc               = -1;
@@ -197,9 +197,9 @@ void UIVsCharSelector_ProcessButtonCB(void)
         }
 
 #if RETRO_USE_PLUS
-        int max = 3 + (API.CheckDLC(DLC_PLUS) ? 2 : 0);
+        int32 max = 3 + (API.CheckDLC(DLC_PLUS) ? 2 : 0);
 #else
-        int max = 3;
+        int32 max = 3;
 #endif
         while (entity->frameID < 0) {
             entity->frameID += max;
@@ -210,14 +210,14 @@ void UIVsCharSelector_ProcessButtonCB(void)
         }
 
 #if RETRO_GAMEVER != VER_100
-        int activePlayers = 0;
-        for (int i = 0; i < parent->buttonCount; ++i) {
+        int32 activePlayers = 0;
+        for (int32 i = 0; i < parent->buttonCount; ++i) {
             EntityUIVsCharSelector *button = (EntityUIVsCharSelector *)parent->buttons[i];
             if (button->state == UIVsCharSelector_Unknown11 || button->processButtonCB == UIVsCharSelector_ProcessButtonCB_Alt)
                 activePlayers |= (1 << button->frameID);
         }
 
-        int frame = entity->frameID;
+        int32 frame = entity->frameID;
         while ((1 << frame) & activePlayers) {
             frame += inc;
             if (frame < 0)
@@ -298,7 +298,7 @@ void UIVsCharSelector_Unknown8(void)
 {
     RSDK_THIS(UIVsCharSelector);
 
-    int id = API_ControllerIDForInputID(entity->playerID + 1);
+    int32 id = API_ControllerIDForInputID(entity->playerID + 1);
 #if RETRO_USE_PLUS
     if (!id || id == CONT_AUTOASSIGN) {
 #else
@@ -317,10 +317,10 @@ void UIVsCharSelector_Unknown9(void)
     entity->processButtonCB = StateMachine_None;
     entity->flag            = false;
 
-    int id = API_ControllerIDForInputID(entity->playerID + 1);
+    int32 id = API_ControllerIDForInputID(entity->playerID + 1);
 #if RETRO_USE_PLUS
     entity->ready = false;
-    int assigned = RSDK.GetAssignedControllerID(id);
+    int32 assigned = RSDK.GetAssignedControllerID(id);
     if (parent->active == ACTIVE_ALWAYS) {
         if (!id) {
             API_AssignControllerID(entity->playerID + 1, CONT_AUTOASSIGN);
@@ -350,8 +350,8 @@ void UIVsCharSelector_Unknown10(void)
     EntityUIControl *parent = (EntityUIControl *)entity->parent;
 
     entity->flag = true;
-    int id       = API_ControllerIDForInputID(entity->playerID + 1);
-    int assigned = RSDK.GetAssignedControllerID(id);
+    int32 id       = API_ControllerIDForInputID(entity->playerID + 1);
+    int32 assigned = RSDK.GetAssignedControllerID(id);
 
     if (parent->active == ACTIVE_ALWAYS) {
         if (id && id != CONT_AUTOASSIGN && assigned) {

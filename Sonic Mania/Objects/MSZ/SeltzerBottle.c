@@ -16,7 +16,7 @@ void SeltzerBottle_Update(void)
             entity->state             = SeltzerBottle_Unknown1;
             RSDK.SetSpriteAnimation(SeltzerBottle->aniFrames, 6, &entity->animator4, false, 0);
             player->groundVel = clampVal(player->groundVel, -0xC0000, 0xC0000);
-            for (int p = 0; p < Player->playerCount; ++p) {
+            for (int32 p = 0; p < Player->playerCount; ++p) {
                 RSDK_GET_ENTITY(p, Player)->collisionLayers |= SeltzerBottle->layerBitFlags;
             }
             RSDK.PlaySfx(SeltzerBottle->sfxSpray, 0, 255);
@@ -108,7 +108,7 @@ void SeltzerBottle_StageLoad(void)
 void SeltzerBottle_Unknown1(void)
 {
     RSDK_THIS(SeltzerBottle);
-    int timer = ((entity->field_60 << 14) / entity->sprayTime) << 8;
+    int32 timer = ((entity->field_60 << 14) / entity->sprayTime) << 8;
     if (timer < 0x40000)
         timer = 0x40000;
     entity->field_64 = timer;
@@ -123,8 +123,8 @@ void SeltzerBottle_Unknown1(void)
     spray->drawOrder = Zone->playerDrawLow;
     spray->nodeSlot  = RSDK_sceneInfo->entitySlot + 1;
 
-    int storeX = entity->position.x;
-    int storeY = entity->position.y;
+    int32 storeX = entity->position.x;
+    int32 storeY = entity->position.y;
 
     foreach_active(Player, player)
     {
@@ -150,7 +150,7 @@ void SeltzerBottle_Unknown1(void)
     RSDK.ProcessAnimation(&entity->animator4);
 
     if (--entity->field_60 <= 0) {
-        for (int p = 0; p < Player->playerCount; ++p) {
+        for (int32 p = 0; p < Player->playerCount; ++p) {
             RSDK_GET_ENTITY(p, Player)->collisionLayers &= ~SeltzerBottle->layerBitFlags;
         }
         RSDK.SetSpriteAnimation(0xFFFF, 0, &entity->animator4, false, 0);

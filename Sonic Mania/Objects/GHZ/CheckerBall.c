@@ -134,7 +134,7 @@ void CheckerBall_Unknown1(void)
 {
     RSDK_THIS(CheckerBall);
     if (entity->onGround) {
-        int spd = RSDK.Sin256(entity->angle) << 13 >> 8;
+        int32 spd = RSDK.Sin256(entity->angle) << 13 >> 8;
         entity->groundVel += spd;
         entity->field_5C = entity->groundVel;
         if (!spd && !entity->flag) {
@@ -168,12 +168,12 @@ void CheckerBall_Unknown2(void)
     hitbox.top    = -22;
     hitbox.bottom = 22;
 
-    int playerID          = 0;
+    int32 playerID          = 0;
     entity->activePlayers = 0;
     foreach_active(Player, player)
     {
         Hitbox *playerHitbox = Player_GetHitbox(player);
-        int acc              = player->acceleration >> 1;
+        int32 acc              = player->acceleration >> 1;
         if (player->onGround) {
             if (player->position.x <= entity->position.x) {
                 hitbox.left  = -23;
@@ -223,14 +223,14 @@ void CheckerBall_Unknown2(void)
 void CheckerBall_Unknown3(void)
 {
     RSDK_THIS(CheckerBall);
-    int x              = ((entity->position.x - entity->collisionOffset.x) & 0xFFFF0000) - entity->roundedPos.x;
-    int y              = ((entity->position.y - entity->collisionOffset.y) & 0xFFFF0000) - entity->roundedPos.y;
-    int startX         = entity->position.x;
-    int startY         = entity->position.y;
+    int32 x              = ((entity->position.x - entity->collisionOffset.x) & 0xFFFF0000) - entity->roundedPos.x;
+    int32 y              = ((entity->position.y - entity->collisionOffset.y) & 0xFFFF0000) - entity->roundedPos.y;
+    int32 startX         = entity->position.x;
+    int32 startY         = entity->position.y;
     entity->position.x = entity->roundedPos.x;
     entity->position.y = entity->roundedPos.y;
 
-    int playerID = 0;
+    int32 playerID = 0;
     foreach_active(Player, player)
     {
         Hitbox *playerHitbox = Player_GetHitbox(player);
@@ -242,7 +242,7 @@ void CheckerBall_Unknown3(void)
             player->position.x += startX;
         }
         else {
-            int result = Player_CheckCollisionBox(player, entity, &CheckerBall->hitbox);
+            int32 result = Player_CheckCollisionBox(player, entity, &CheckerBall->hitbox);
             if (result == 4 && entity->velocity.y >= 0 && player->onGround) {
                 player->hurtFlag = true;
             }
@@ -282,7 +282,7 @@ void CheckerBall_BadnikBreak(void *b, Hitbox *hitbox)
     RSDK_THIS(CheckerBall);
     Entity *badnik = (Entity *)b;
     if (RSDK.CheckObjectCollisionTouchBox(badnik, hitbox, entity, &CheckerBall->hitbox)) {
-        int id = RSDK.Rand(0, 32);
+        int32 id = RSDK.Rand(0, 32);
         RSDK.CreateEntity(Animals->objectID, intToVoid(Animals->animalTypes[id >> 4] + 1), badnik->position.x, badnik->position.y);
         RSDK.CreateEntity(Explosion->objectID, intToVoid(1), badnik->position.x, badnik->position.y - 0x100000)->drawOrder = Zone->drawOrderHigh;
         RSDK.PlaySfx(Explosion->sfx_Destroy, 0, 255);
@@ -323,16 +323,16 @@ void CheckerBall_Unknown5(void)
 
     foreach_active(PlaneSwitch, planeSwitch)
     {
-        int x     = (entity->position.x - planeSwitch->position.x) >> 8;
-        int y     = (entity->position.y - planeSwitch->position.y) >> 8;
-        int scanX = (y * RSDK.Sin256(planeSwitch->negAngle)) + (x * RSDK.Cos256(planeSwitch->negAngle)) + planeSwitch->position.x;
-        int scanY = (y * RSDK.Cos256(planeSwitch->negAngle)) - (x * RSDK.Sin256(planeSwitch->negAngle)) + planeSwitch->position.y;
-        int pos   = ((entity->velocity.y >> 8) * RSDK.Sin256(planeSwitch->negAngle)) + (entity->velocity.x >> 8) * RSDK.Cos256(planeSwitch->negAngle);
+        int32 x     = (entity->position.x - planeSwitch->position.x) >> 8;
+        int32 y     = (entity->position.y - planeSwitch->position.y) >> 8;
+        int32 scanX = (y * RSDK.Sin256(planeSwitch->negAngle)) + (x * RSDK.Cos256(planeSwitch->negAngle)) + planeSwitch->position.x;
+        int32 scanY = (y * RSDK.Cos256(planeSwitch->negAngle)) - (x * RSDK.Sin256(planeSwitch->negAngle)) + planeSwitch->position.y;
+        int32 pos   = ((entity->velocity.y >> 8) * RSDK.Sin256(planeSwitch->negAngle)) + (entity->velocity.x >> 8) * RSDK.Cos256(planeSwitch->negAngle);
         RSDK.Cos256(planeSwitch->negAngle);
         RSDK.Sin256(planeSwitch->negAngle);
         if (!(planeSwitch->onPath && !entity->onGround)) {
-            int xDif = abs(scanX - planeSwitch->position.x);
-            int yDif = abs(scanY - planeSwitch->position.y);
+            int32 xDif = abs(scanX - planeSwitch->position.x);
+            int32 yDif = abs(scanY - planeSwitch->position.y);
 
             if (xDif < 0x180000 && yDif < planeSwitch->size << 19) {
                 if (scanX + pos >= planeSwitch->position.x) {
@@ -360,7 +360,7 @@ void CheckerBall_Unknown5(void)
     foreach_active(CheckerBall, checkerBall)
     {
         if (checkerBall != entity && entity->collisionPlane == checkerBall->collisionPlane) {
-            int pos = abs(entity->position.x - checkerBall->position.x) >> 17;
+            int32 pos = abs(entity->position.x - checkerBall->position.x) >> 17;
             if (pos >= 24)
                 pos = 23;
             Hitbox hitbox;
@@ -469,7 +469,7 @@ void CheckerBall_Unknown5(void)
     {
         if (platform->state != Platform_State_Falling && platform->state != Platform_State_OffScreenReset) {
             platform->position.y = platform->drawPos.y - platform->collisionOffset.y;
-            int result           = 0;
+            int32 result           = 0;
             if (platform->collision)
                 result = RSDK.CheckObjectCollisionBox(platform, &platform->hitbox, entity, &CheckerBall->hitbox, true);
             else
@@ -494,7 +494,7 @@ void CheckerBall_Unknown5(void)
     {
         if (entity->position.x > bridge->startPos && entity->position.x < bridge->endPos) {
             if (entity == (EntityCheckerBall*)bridge->playerPtr) {
-                int distance     = bridge->endPos - bridge->startPos;
+                int32 distance     = bridge->endPos - bridge->startPos;
                 bridge->stoodPos = entity->position.x - bridge->startPos;
                 bridge->field_68 = RSDK.Sin512((bridge->stoodPos >> 8) / (distance >> 16)) * (distance >> 13);
                 if (entity->position.y > bridge->position.y - 0x300000) {
@@ -521,8 +521,8 @@ void CheckerBall_Unknown5(void)
                     bridge->stoodPos = entity->position.x - bridge->startPos;
 
                 if (entity->velocity.y >= 0) {
-                    int divisor = 0;
-                    int ang     = 0;
+                    int32 divisor = 0;
+                    int32 ang     = 0;
                     if (entity->position.x - bridge->startPos > bridge->stoodPos) {
                         divisor = bridge->endPos - bridge->startPos - bridge->stoodPos;
                         ang     = (bridge->endPos - entity->position.x) << 7;
@@ -532,7 +532,7 @@ void CheckerBall_Unknown5(void)
                         ang     = (entity->position.x - bridge->startPos) << 7;
                     }
 
-                    int hitY = (bridge->field_6C * RSDK.Sin512(ang / divisor) >> 9) - 0x80000;
+                    int32 hitY = (bridge->field_6C * RSDK.Sin512(ang / divisor) >> 9) - 0x80000;
                     if (entity->velocity.y < 0x8000) {
                         bridgeHitbox.bottom = (hitY >> 16);
                         bridgeHitbox.top    = (hitY >> 16) - 8;
@@ -576,7 +576,7 @@ void CheckerBall_Unknown5(void)
     {
         if (buzzBomber->state == BuzzBomber_Unknown6 || buzzBomber->state == BuzzBomber_Unknown7) {
             if (RSDK.CheckObjectCollisionTouchBox(buzzBomber, &BuzzBomber->hitbox2, entity, &CheckerBall->hitbox)) {
-                int angle              = RSDK.ATan2(entity->position.x - buzzBomber->position.x, entity->position.y - buzzBomber->position.y);
+                int32 angle              = RSDK.ATan2(entity->position.x - buzzBomber->position.x, entity->position.y - buzzBomber->position.y);
                 buzzBomber->velocity.x = -0x80 * RSDK.Cos256(angle);
                 buzzBomber->velocity.y = -0x80 * RSDK.Sin256(angle);
             }
@@ -592,7 +592,7 @@ void CheckerBall_Unknown5(void)
     {
         if (crabmeat->state == Crabmeat_State_Projectile) {
             if (RSDK.CheckObjectCollisionTouchBox(crabmeat, &Crabmeat->projectileHitbox, entity, &CheckerBall->hitbox)) {
-                int angle            = RSDK.ATan2(entity->position.x - crabmeat->position.x, entity->position.y - crabmeat->position.y);
+                int32 angle            = RSDK.ATan2(entity->position.x - crabmeat->position.x, entity->position.y - crabmeat->position.y);
                 crabmeat->velocity.x = -0x80 * RSDK.Cos256(angle);
                 crabmeat->velocity.y = -0x80 * RSDK.Sin256(angle);
             }
@@ -612,7 +612,7 @@ void CheckerBall_Unknown5(void)
     {
         if (newtron->state == Newtron_State_Projectile) {
             if (RSDK.CheckObjectCollisionTouchBox(newtron, &Newtron->hitbox3, entity, &CheckerBall->hitbox)) {
-                int angle           = RSDK.ATan2(entity->position.x - newtron->position.x, entity->position.y - newtron->position.y);
+                int32 angle           = RSDK.ATan2(entity->position.x - newtron->position.x, entity->position.y - newtron->position.y);
                 newtron->velocity.x = -0x800 * RSDK.Cos256(angle);
                 newtron->velocity.y = -0x800 * RSDK.Sin256(angle);
             }
@@ -645,7 +645,7 @@ void CheckerBall_Unknown5(void)
             RSDK.SetSpriteAnimation(0xFFFF, 0, &itemBox->debrisData, true, 0);
             RSDK.CreateEntity(Explosion->objectID, 0, itemBox->position.x, itemBox->position.y - 0x100000);
 
-            for (int i = 0; i < 6; ++i) {
+            for (int32 i = 0; i < 6; ++i) {
                 EntityDebris *debris = (EntityDebris *)RSDK.CreateEntity(Debris->objectID, 0, itemBox->position.x + RSDK.Rand(-0x80000, 0x80000),
                                                                          itemBox->position.y + RSDK.Rand(-0x80000, 0x80000));
                 debris->state        = Debris_State_Fall;
@@ -684,16 +684,16 @@ void CheckerBall_Unknown5(void)
     {
         if (breakableWall->state == BreakableWall_State_BreakableSides
             && RSDK.CheckObjectCollisionTouchBox(breakableWall, &breakableWall->hitbox, entity, &CheckerBall->hitbox)) {
-            int *arrayPtr2 = BreakableWall->value3;
+            int32 *arrayPtr2 = BreakableWall->value3;
 
-            int *arrayPtr = NULL;
+            int32 *arrayPtr = NULL;
             if (entity->position.x >= breakableWall->position.x)
                 arrayPtr = BreakableWall->value5;
             else
                 arrayPtr = BreakableWall->value4;
 
-            for (int y = 0; y < 4; ++y) {
-                for (int x = 0; x < 2; ++x) {
+            for (int32 y = 0; y < 4; ++y) {
+                for (int32 x = 0; x < 2; ++x) {
                     EntityBreakableWall *block = (EntityBreakableWall *)RSDK.CreateEntity(
                         BreakableWall->objectID, intToVoid(1), breakableWall->position.x + arrayPtr2[0], arrayPtr2[1] + breakableWall->position.y);
                     block->tileInfo   = RSDK.GetTileInfo(Zone->fgHigh, (breakableWall->position.x + arrayPtr2[0]) >> 20,
@@ -729,7 +729,7 @@ void CheckerBall_Unknown5(void)
 
     foreach_active(Spring, spring)
     {
-        int result = RSDK.CheckObjectCollisionBox(spring, &spring->hitbox, entity, &CheckerBall->hitbox, true);
+        int32 result = RSDK.CheckObjectCollisionBox(spring, &spring->hitbox, entity, &CheckerBall->hitbox, true);
         if (result) {
             if (spring->state == Spring_State_Vertical) {
                 if (spring->direction) {

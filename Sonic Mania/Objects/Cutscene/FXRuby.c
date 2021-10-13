@@ -70,17 +70,17 @@ void FXRuby_StageLoad(void)
     FXRuby->fgLow  = RSDK.GetSceneLayer(RSDK.GetSceneLayerID("FG Low"));
     FXRuby->fgHigh = RSDK.GetSceneLayer(RSDK.GetSceneLayerID("FG High"));
 
-    for (int i = 0; i < 0x200; ++i) FXRuby->deformData[i] = RSDK.Rand(-64, 64);
+    for (int32 i = 0; i < 0x200; ++i) FXRuby->deformData[i] = RSDK.Rand(-64, 64);
 
-    for (int i = 0; i < 0x10000; ++i) FXRuby->lookupTable[0xFFFF - i] = i;
+    for (int32 i = 0; i < 0x10000; ++i) FXRuby->lookupTable[0xFFFF - i] = i;
 }
 
 void FXRuby_SetupLayerDeformation(void)
 {
-    for (int l = 0; l < LAYER_COUNT; ++l) {
+    for (int32 l = 0; l < LAYER_COUNT; ++l) {
         TileLayer *layer = RSDK.GetSceneLayer(l);
         if (layer->width && layer->drawLayer[0] != DRAWLAYER_COUNT) {
-            for (int s = 0; s < layer->scrollInfoCount; ++s) {
+            for (int32 s = 0; s < layer->scrollInfoCount; ++s) {
                 layer->scrollInfo[s].deform = true;
             }
         }
@@ -91,30 +91,30 @@ void FXRuby_Unknown2(void)
 {
     RSDK_THIS(FXRuby);
 
-    int timer = 0;
+    int32 timer = 0;
     if (Zone)
         timer = Zone->timer;
     else
         timer = UIWidgets->arrayIndex;
 
     
-    int *dataPtr = NULL;
-    for (int l = 0; l < LAYER_COUNT; ++l) {
+    int32 *dataPtr = NULL;
+    for (int32 l = 0; l < LAYER_COUNT; ++l) {
         TileLayer *layer = RSDK.GetSceneLayer(l);
         if (layer->width && layer->drawLayer[0] != DRAWLAYER_COUNT) {
             layer->deformationOffset += 3;
 
-            int *deformData = layer->deformationData;
+            int32 *deformData = layer->deformationData;
             if (dataPtr) {
-                for (int s = 0; s < 0x200; ++s) {
+                for (int32 s = 0; s < 0x200; ++s) {
                     deformData[s]         = dataPtr[s];
                     deformData[s + 0x200] = dataPtr[s + 0x200];
                 }
             }
             else {
-                int cnt = 8 * timer;
-                for (int s = 0; s < 0x200; ++s) {
-                    int angle             = RSDK.Sin256(4 * s);
+                int32 cnt = 8 * timer;
+                for (int32 s = 0; s < 0x200; ++s) {
+                    int32 angle             = RSDK.Sin256(4 * s);
                     deformData[s]         = ((entity->field_70 * FXRuby->deformData[cnt-- & 0x1FF]) >> 7) + ((entity->field_70 * angle) >> 7);
                     deformData[s + 0x200] = deformData[s];
                 }

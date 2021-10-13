@@ -15,13 +15,13 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    int timer;
-    int field_60;
+    int32 timer;
+    int32 field_60;
     Vector2 ballPos[12];
     Vector2 clawPos;
     Entity *grabbedEntities[8];
-    int count;
-    int field_F0;
+    int32 count;
+    int32 field_F0;
     Animator data1;
     Animator animator2;
     Animator data3;

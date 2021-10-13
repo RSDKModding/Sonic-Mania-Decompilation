@@ -13,18 +13,18 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    int length;
+    int32 length;
     uint8 activePlayers1;
     uint8 activePlayers2;
     uint8 activePlayers3;
     uint8 activePlayers4;
     Vector2 field_64[4];
-    int field_84[4];
-    int field_94[4];
+    int32 field_84[4];
+    int32 field_94[4];
     Vector2 field_A4[4];
-    int field_C4[4];
+    int32 field_C4[4];
     Vector2 startPos;
-    int field_DC;
+    int32 field_DC;
     Hitbox hitbox1;
     Hitbox hitbox2;
     Hitbox hitbox3;

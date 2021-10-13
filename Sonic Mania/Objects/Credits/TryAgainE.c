@@ -37,7 +37,7 @@ void TryAgainE_Draw(void)
             drawPos.y = entity->position.y + 0x2E0000 + 0x40000;
         RSDK.DrawSprite(&entity->player1Animator, &drawPos, false);
 
-        int drawY = drawPos.y;
+        int32 drawY = drawPos.y;
         if (entity->player1Animator.animationID == 2) {
             drawY = drawPos.y - 0x40000;
             drawPos.y -= 0x40000;
@@ -75,7 +75,7 @@ void TryAgainE_Create(void *data)
         RSDK.SetSpriteAnimation(TryAgainE->aniFrames, 1, &entity->animator2, true, 4);
         RSDK.SetSpriteAnimation(TryAgainE->aniFrames, 2, &entity->animator3, true, 3);
 
-        int id        = -1;
+        int32 id        = -1;
         uint8 playerID = globals->playerID & 0xFF;
         if (playerID) {
             do {
@@ -109,11 +109,11 @@ void TryAgainE_StageLoad(void)
 
 void TryAgainE_Unknown1(void)
 {
-    int id    = 1;
-    int timer = 0;
+    int32 id    = 1;
+    int32 timer = 0;
     foreach_all(TAEmerald, emerald)
     {
-        int store      = timer;
+        int32 store      = timer;
         emerald->state = TAEmerald_Unknown2;
         emerald->timer = timer;
         timer += 8;

@@ -7,13 +7,13 @@ void ZipLine_Update(void)
     RSDK_THIS(ZipLine);
     StateMachine_Run(entity->state);
 
-    int storeX         = entity->position.x;
-    int storeY         = entity->position.y;
+    int32 storeX         = entity->position.x;
+    int32 storeY         = entity->position.y;
     entity->position.x = entity->handlePos.x;
     entity->position.y = entity->handlePos.y;
     foreach_active(Player, player)
     {
-        int pid = RSDK.GetEntityID(player);
+        int32 pid = RSDK.GetEntityID(player);
         if (entity->grabDelay[pid])
             entity->grabDelay[pid]--;
 
@@ -40,7 +40,7 @@ void ZipLine_Update(void)
                         player->angle      = 0;
                         player->rotation   = 0;
                     }
-                    int prevX          = player->position.x;
+                    int32 prevX          = player->position.x;
                     player->position.x = entity->position.x;
                     player->position.y = entity->position.y;
                     player->position.y +=
@@ -333,7 +333,7 @@ void ZipLine_Unknown2(void)
 
     foreach_active(Player, player)
     {
-        int pid = RSDK.GetEntityID(player);
+        int32 pid = RSDK.GetEntityID(player);
         if ((1 << pid) & entity->activePlayers) {
             entity->grabDelay[pid] = 60;
             player->velocity.y     = entity->velocity.y;
@@ -404,18 +404,18 @@ Vector2 ZipLine_Unknown3(void)
         thisHitbox.right += 8;
         thisHitbox.bottom += 8;
         if (RSDK.CheckObjectCollisionTouchBox(endMarker, &thisHitbox, entity, &otherHitbox)) {
-            int distX1 = (entity->startPos.x >> 17) - (entity->endPos.x >> 17);
-            int distY1 = (entity->endPos.y >> 17) - (entity->startPos.y >> 17);
-            int distX2 = (endMarker->startPos.x >> 17) - (endMarker->endPos.x >> 17);
-            int distY2 = (endMarker->endPos.y >> 17) - (endMarker->startPos.y >> 17);
+            int32 distX1 = (entity->startPos.x >> 17) - (entity->endPos.x >> 17);
+            int32 distY1 = (entity->endPos.y >> 17) - (entity->startPos.y >> 17);
+            int32 distX2 = (endMarker->startPos.x >> 17) - (endMarker->endPos.x >> 17);
+            int32 distY2 = (endMarker->endPos.y >> 17) - (endMarker->startPos.y >> 17);
 
-            int val1      = distX1 * (entity->startPos.y >> 17) + distY1 * (entity->startPos.x >> 17);
-            int val2      = distX2 * (endMarker->startPos.y >> 17) + distY2 * (endMarker->startPos.x >> 17);
+            int32 val1      = distX1 * (entity->startPos.y >> 17) + distY1 * (entity->startPos.x >> 17);
+            int32 val2      = distX2 * (endMarker->startPos.y >> 17) + distY2 * (endMarker->startPos.x >> 17);
             float divisor = (float)(distY1 * distX2 - distX1 * distY2);
             if (divisor != 0.0f) {
                 endMarker->handlePos.x = -0x100000;
-                result.x               = (int)((float)(distX2 * val1 - distX1 * val2) / divisor) << 17;
-                result.y               = (int)((float)(distY1 * val2 - distY2 * val1) / divisor) << 17;
+                result.x               = (int32)((float)(distX2 * val1 - distX1 * val2) / divisor) << 17;
+                result.y               = (int32)((float)(distY1 * val2 - distY2 * val1) / divisor) << 17;
             }
         }
     }
@@ -432,8 +432,8 @@ void ZipLine_Unknown4(void)
     entity->velocity.y = entity->groundVel * RSDK.Sin256(entity->angle) >> 8;
 
     if (entity->field_98.x) {
-        int entX           = entity->position.x;
-        int entY           = entity->position.y;
+        int32 entX           = entity->position.x;
+        int32 entY           = entity->position.y;
         entity->position.x = entity->handlePos.x;
         entity->position.y = entity->handlePos.y;
 

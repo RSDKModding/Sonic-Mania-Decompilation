@@ -28,7 +28,7 @@ void Animals_Create(void *data)
     else
         entity->active = ACTIVE_NORMAL;
     entity->drawFX |= FX_FLIP;
-    int type              = 2;
+    int32 type              = 2;
     entity->visible       = true;
     entity->updateRange.x = 0x400000;
     entity->updateRange.y = 0x400000;
@@ -188,8 +188,8 @@ bool32 Animals_CheckGroundCollision(void)
                 bridgeHitbox.left  = -0x400;
                 bridgeHitbox.right = 0x400;
 
-                int divisor = 0;
-                int ang     = 0;
+                int32 divisor = 0;
+                int32 ang     = 0;
                 if (entity->position.x - bridge->startPos <= bridge->stoodPos) {
                     divisor = bridge->stoodPos;
                     ang     = (entity->position.x - bridge->startPos) << 7;
@@ -199,7 +199,7 @@ bool32 Animals_CheckGroundCollision(void)
                     ang     = (bridge->endPos - entity->position.x) << 7;
                 }
 
-                int hitY = (bridge->field_6C * RSDK.Sin512(ang / divisor) >> 9) - 0x80000;
+                int32 hitY = (bridge->field_6C * RSDK.Sin512(ang / divisor) >> 9) - 0x80000;
                 if (entity->velocity.y < 0x8000) {
                     bridgeHitbox.bottom = (hitY >> 16);
                     bridgeHitbox.top    = (hitY >> 16) - 8;

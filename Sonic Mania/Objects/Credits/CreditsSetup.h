@@ -6,14 +6,14 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    int field_4;
-    int creditsTrack;
+    int32 field_4;
+    int32 creditsTrack;
     Entity *fxFade;
     bool32 started;
     bool32 skipFlag;
-    int unknown;
-    int creditsPos;
-    int creditsSize;
+    int32 unknown;
+    int32 creditsPos;
+    int32 creditsSize;
 } ObjectCreditsSetup;
 
 // Entity Class

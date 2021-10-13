@@ -12,8 +12,8 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    int field_58;
-    int timer;
+    int32 field_58;
+    int32 timer;
     uint8 palID;
     Animator data1;
     Animator animator2;
@@ -38,6 +38,6 @@ void UFO_HUD_Serialize(void);
 // Extra Entity Functions
 void UFO_HUD_CheckLevelUp(void);
 void UFO_HUD_LevelUpMach(void);
-void UFO_HUD_DrawNumbers(Vector2 *drawPos, int value);
+void UFO_HUD_DrawNumbers(Vector2 *drawPos, int32 value);
 
 #endif //!OBJ_UFO_HUD_H

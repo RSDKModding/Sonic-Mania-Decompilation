@@ -6,10 +6,10 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    int value;
-    int dword8;
-    int field_C;
-    int aniTileFrame;
+    int32 value;
+    int32 dword8;
+    int32 field_C;
+    int32 aniTileFrame;
     uint16 aniTiles;
 } ObjectTMZ3Setup;
 

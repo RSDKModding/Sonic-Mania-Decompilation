@@ -5,7 +5,7 @@ ObjectFoldingPlatform *FoldingPlatform;
 void FoldingPlatform_Update(void)
 {
     RSDK_THIS(FoldingPlatform);
-    int timer = (Zone->timer + entity->intervalOffset) % entity->interval;
+    int32 timer = (Zone->timer + entity->intervalOffset) % entity->interval;
 
     if (timer >= entity->duration) {
         if (timer >= entity->duration + 8) {

@@ -9,12 +9,12 @@ void SSZSpotlight_Update(void)
     entity->rotation   = RSDK.Sin512(entity->angle) >> 2;
     Vector2 *vertStore = entity->vertStore;
 
-    for (int i = 0; i < 8; ++i) {
+    for (int32 i = 0; i < 8; ++i) {
         entity->vertPos[i].x = vertStore[i].x;
         entity->vertPos[i].y = vertStore[i].y;
 
-        int xOff = (entity->vertPos[i].x - entity->offsetPos.x) >> 4;
-        int yOff = (entity->vertPos[i].y - entity->offsetPos.y) >> 4;
+        int32 xOff = (entity->vertPos[i].x - entity->offsetPos.x) >> 4;
+        int32 yOff = (entity->vertPos[i].y - entity->offsetPos.y) >> 4;
         entity->vertPos[i].x  = (yOff * RSDK.Sin1024(entity->rotation) >> 6) + (xOff * RSDK.Cos1024(entity->rotation) >> 6) + entity->offsetPos.x;
         entity->vertPos[i].y  = (yOff * RSDK.Cos1024(entity->rotation) >> 6) - (xOff * RSDK.Sin1024(entity->rotation) >> 6) + entity->offsetPos.y;
     }
@@ -34,9 +34,9 @@ void SSZSpotlight_Draw(void)
     Vector2 vertPos[4];
     colour vertClrs[4];
 
-    int screenX = entity->position.x - (RSDK_screens[RSDK_sceneInfo->currentScreenID].position.x << 16);
+    int32 screenX = entity->position.x - (RSDK_screens[RSDK_sceneInfo->currentScreenID].position.x << 16);
 
-    for (int i = 0; i < 6; i += 2) {
+    for (int32 i = 0; i < 6; i += 2) {
         vertPos[0].x = screenX + vertPosPtr[i + 0].x;
         vertPos[0].y = vertPosPtr[i + 0].y;
         vertClrs[0]  = entity->vertClrPtrs[i];
@@ -71,11 +71,11 @@ void SSZSpotlight_Create(void *data)
 
         entity->angle = entity->offset;
 
-        int sizes[3];
+        int32 sizes[3];
         sizes[0]      = 4;
         sizes[1]      = 8;
         sizes[2]      = 16;
-        int s         = -sizes[entity->size];
+        int32 s         = -sizes[entity->size];
         entity->alpha = 256;
         s <<= 16;
         entity->offsetPos.y    = 0x1100000;
@@ -92,8 +92,8 @@ void SSZSpotlight_Create(void *data)
         entity->vertStore[7].x = sizes[entity->size] << 16;
 
         Vector2 *vertPtr = entity->vertStore;
-        for (int i = 0; i < 4; ++i) {
-            int store  = vertPtr->x;
+        for (int32 i = 0; i < 4; ++i) {
+            int32 store  = vertPtr->x;
             vertPtr->x = 720 * (store >> 8);
             vertPtr += 2;
         }

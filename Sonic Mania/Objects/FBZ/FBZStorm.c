@@ -15,14 +15,14 @@ void FBZStorm_Update(void)
     //        entity->velocity.x = v2;
     //}
 
-    for (int p = 0; p < Player->playerCount; ++p) {
+    for (int32 p = 0; p < Player->playerCount; ++p) {
         if (!RSDK_GET_ENTITY(p, Player)->sidekick) {
             entity->screenPosX[p] = RSDK_screens[p].position.x;
-            int x                 = ((entity->screenPosX[p] << 14) - (RSDK_screens[p].position.x << 14)) + entity->velocity.x;
+            int32 x                 = ((entity->screenPosX[p] << 14) - (RSDK_screens[p].position.x << 14)) + entity->velocity.x;
             entity->stormAngle[p] = RSDK.ATan2(entity->velocity.y, -x) << 1;
             Vector2 *pos          = &FBZStorm->positions[0x40 * p];
 
-            for (int i = 0; i < 0x40; ++i) {
+            for (int32 i = 0; i < 0x40; ++i) {
                 pos->x += x;
                 pos->y += entity->velocity.y;
 
@@ -77,12 +77,12 @@ void FBZStorm_Draw(void)
     RSDK_THIS(FBZStorm);
     ScreenInfo *screen = &RSDK_screens[RSDK_sceneInfo->currentScreenID];
 
-    int centerX      = screen->centerX << 16;
-    int centerY      = screen->centerY << 16;
+    int32 centerX      = screen->centerX << 16;
+    int32 centerY      = screen->centerY << 16;
     entity->rotation = entity->stormAngle[RSDK_sceneInfo->currentScreenID];
 
     Vector2 *pos = &FBZStorm->positions[0x40 * RSDK_sceneInfo->currentScreenID];
-    for (int i = 0; i < 0x40; ++i) {
+    for (int32 i = 0; i < 0x40; ++i) {
         Vector2 drawPos;
         drawPos.x = centerX + pos->x;
         drawPos.y = centerY + pos->y;
@@ -103,8 +103,8 @@ void FBZStorm_Create(void *data)
         entity->velocity.y = 0xC0000;
         entity->state      = FBZStorm_Unknown1;
 
-        for (int p = 0; p < Player->playerCount; ++p) {
-            for (int i = 0; i < 0x40; ++i) {
+        for (int32 p = 0; p < Player->playerCount; ++p) {
+            for (int32 i = 0; i < 0x40; ++i) {
                 FBZStorm->positions[i].x = RSDK.Rand(-0x1000000, 0x1000000);
                 FBZStorm->positions[i].y = RSDK.Rand(-0x800000, 0x800000);
             }

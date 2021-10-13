@@ -26,7 +26,7 @@ void DERobot_Create(void *data)
             entity->drawOrder     = Zone->drawOrderLow;
             entity->updateRange.x = 0x800000;
             entity->updateRange.y = 0x800000;
-            int slotID            = RSDK.GetEntityID(entity);
+            int32 slotID            = RSDK.GetEntityID(entity);
             if (data)
                 entity->aniID = voidToInt(data);
             switch (entity->aniID) {
@@ -158,7 +158,7 @@ void DERobot_StageLoad(void)
 void DERobot_Unknown1(void)
 {
     RSDK_THIS(DERobot);
-    int x = (entity->position.x >> 16) - RSDK_screens->centerX + 128;
+    int32 x = (entity->position.x >> 16) - RSDK_screens->centerX + 128;
     if (x > Zone->screenBoundsL1[0]) {
         Zone->screenBoundsL1[0]                        = x;
         Zone->screenBoundsR1[0]                        = RSDK_screens->width + 96 + x;
@@ -169,7 +169,7 @@ void DERobot_Unknown1(void)
     }
 }
 
-void DERobot_Unknown2(int a1)
+void DERobot_Unknown2(int32 a1)
 {
     RSDK_THIS(DERobot);
     EntityDERobot *part1 = (EntityDERobot *)entity->parts[a1 + 3];
@@ -185,8 +185,8 @@ void DERobot_Unknown2(int a1)
     part3->position.x = 0xA00 * RSDK.Sin1024(part2->angle) + part2->position.x;
     part3->position.y = 0xA00 * RSDK.Cos1024(part2->angle) + part2->position.y;
     part3->onGround   = false;
-    int storeX        = part3->position.x;
-    int storeY        = part3->position.y;
+    int32 storeX        = part3->position.x;
+    int32 storeY        = part3->position.y;
     if (RSDK.ObjectTileGrip(part3, Zone->fgLayers, CMODE_FLOOR, 0, -0x100000, 0x100000, 32)) {
         part3->position.y = storeY;
         if (RSDK.ObjectTileGrip(part3, Zone->fgLayers, CMODE_FLOOR, 0, 0x100000, 0x100000, 32))
@@ -198,7 +198,7 @@ void DERobot_Unknown2(int a1)
         part3->onGround = true;
 }
 
-void DERobot_Unknown3(int a1)
+void DERobot_Unknown3(int32 a1)
 {
     RSDK_THIS(DERobot);
     EntityDERobot *part1 = (EntityDERobot *)entity->parts[a1 + 3];
@@ -214,7 +214,7 @@ void DERobot_Unknown3(int a1)
     entity->position.y = part3->position.y - (0x440 * RSDK.Cos1024(part3->angle)) - 0x190000;
 }
 
-void DERobot_Unknown4(int a1)
+void DERobot_Unknown4(int32 a1)
 {
     RSDK_THIS(DERobot);
     EntityDERobot *part1 = (EntityDERobot *)entity->parts[a1 + 9];
@@ -228,14 +228,14 @@ void DERobot_Unknown4(int a1)
 void DERobot_Unknown5(void)
 {
     RSDK_THIS(DERobot);
-    int tx = (entity->position.x + 0xC0000) >> 20;
+    int32 tx = (entity->position.x + 0xC0000) >> 20;
     if (tx > entity->field_D0) {
         entity->field_D0 = tx;
-        int ty           = (entity->position.y >> 20) - 16;
-        int spawnY       = (ty << 20) + 0x80000;
+        int32 ty           = (entity->position.y >> 20) - 16;
+        int32 spawnY       = (ty << 20) + 0x80000;
 
         bool32 playSFX = false;
-        for (int i = 0; i < 32; ++i) {
+        for (int32 i = 0; i < 32; ++i) {
             uint16 tile = RSDK.GetTileInfo(Zone->fgHigh, tx, ty);
             if (tile != 0xFFFF) {
                 RSDK.SetTileInfo(Zone->fgHigh, tx, ty, 0xFFFF);
@@ -261,12 +261,12 @@ void DERobot_Unknown6(void)
 {
     RSDK_THIS(DERobot);
 
-    int tx     = (entity->position.x >> 20) - 4;
-    int ty     = (entity->position.y >> 20) - 16;
-    int spawnX = (tx << 20) + 0x80000;
-    for (int y = 0; y < 8; ++y) {
-        int spawnY = (ty << 20) + 0x80000;
-        for (int x = 0; x < 32; ++x) {
+    int32 tx     = (entity->position.x >> 20) - 4;
+    int32 ty     = (entity->position.y >> 20) - 16;
+    int32 spawnX = (tx << 20) + 0x80000;
+    for (int32 y = 0; y < 8; ++y) {
+        int32 spawnY = (ty << 20) + 0x80000;
+        for (int32 x = 0; x < 32; ++x) {
             uint16 tile = RSDK.GetTileInfo(Zone->fgLow, tx, ty);
             if (tile != 0xFFFF) {
                 RSDK.SetTileInfo(Zone->fgLow, tx, ty, 0xFFFF);
@@ -289,9 +289,9 @@ void DERobot_Unknown6(void)
     tx     = (entity->position.x >> 20) - 4;
     ty     = (entity->position.y >> 20) - 16;
     spawnX = (tx << 20) + 0x80000;
-    for (int y = 0; y < 32; ++y) {
-        int spawnY = (ty << 20) + 0x80000;
-        for (int x = 0; x < 32; ++x) {
+    for (int32 y = 0; y < 32; ++y) {
+        int32 spawnY = (ty << 20) + 0x80000;
+        for (int32 x = 0; x < 32; ++x) {
             uint16 tile = RSDK.GetTileInfo(Zone->fgHigh, tx, ty);
             if (tile != 0xFFFF) {
                 RSDK.SetTileInfo(Zone->fgHigh, tx, ty, 0xFFFF);
@@ -373,18 +373,18 @@ void DERobot_Unknown8(void)
 void DERobot_Unknown9(void)
 {
     RSDK_THIS(DERobot);
-    int val = (entity->field_CC + 22) << 16;
+    int32 val = (entity->field_CC + 22) << 16;
     val >>= 8;
-    int angle            = -(entity->angle >> 3);
-    int val1             = (-0xE00 * RSDK.Sin256(angle)) + (0x1600 * RSDK.Cos256(angle));
-    int val2             = (-0xE00 * RSDK.Cos256(angle)) - (0x1600 * RSDK.Sin256(angle));
-    int val3             = (-0xE00 * RSDK.Sin256(angle)) + val * RSDK.Cos256(angle);
-    int val4             = (((-0xE00 * RSDK.Cos256(angle)) - (val * RSDK.Sin256(angle))) >> 16) - (val2 >> 16);
+    int32 angle            = -(entity->angle >> 3);
+    int32 val1             = (-0xE00 * RSDK.Sin256(angle)) + (0x1600 * RSDK.Cos256(angle));
+    int32 val2             = (-0xE00 * RSDK.Cos256(angle)) - (0x1600 * RSDK.Sin256(angle));
+    int32 val3             = (-0xE00 * RSDK.Sin256(angle)) + val * RSDK.Cos256(angle);
+    int32 val4             = (((-0xE00 * RSDK.Cos256(angle)) - (val * RSDK.Sin256(angle))) >> 16) - (val2 >> 16);
     entity->hitbox.left  = (val1 >> 16);
     entity->hitbox.right = (val3 >> 16);
     foreach_active(Player, player)
     {
-        int dist = (player->position.x - entity->position.x) >> 16;
+        int32 dist = (player->position.x - entity->position.x) >> 16;
         if (dist >= val1 >> 16) {
             if (dist > (val3 >> 16))
                 dist = (val3 >> 16);
@@ -402,8 +402,8 @@ void DERobot_Unknown9(void)
 void DERobot_Unknown10(void)
 {
     RSDK_THIS(DERobot);
-    int storeX = entity->position.x;
-    int storeY = entity->position.y;
+    int32 storeX = entity->position.x;
+    int32 storeY = entity->position.y;
     Vector2 pos;
     pos.x = entity->position.x;
     pos.y = entity->position.y;
@@ -430,8 +430,8 @@ bool32 DERobot_Unknown11(void)
 {
     RSDK_THIS(DERobot);
     bool32 flag = false;
-    int storeX  = entity->position.x;
-    int storeY  = entity->position.y;
+    int32 storeX  = entity->position.x;
+    int32 storeY  = entity->position.y;
     Vector2 pos;
     pos.x = entity->position.x;
     pos.y = entity->position.y;
@@ -764,7 +764,7 @@ void DERobot_Unknown31(void)
         entity->timer         = 0;
         EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
         if (player1->position.y <= entity->position.y + 0x200000 && player1->state != Player_State_ForceRoll_Ground) {
-            for (int i = 0; i < Player->playerCount; ++i) {
+            for (int32 i = 0; i < Player->playerCount; ++i) {
                 Zone->screenBoundsL1[i]     = (entity->position.x >> 16) - RSDK_screens->centerX + 128;
                 Zone->screenBoundsR1[i]     = RSDK_screens->centerX + 128 + (entity->position.x >> 16);
                 Zone->screenBoundsB1[i]     = entity->position.y >> 16;
@@ -962,7 +962,7 @@ void DERobot_Unknown35(void)
 void DERobot_Unknown36(void)
 {
     RSDK_THIS(DERobot);
-    int v0                = entity->field_A8;
+    int32 v0                = entity->field_A8;
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     DERobot_Unknown1();
 
@@ -993,16 +993,16 @@ void DERobot_Unknown36(void)
         entity->parts[9]->angle += (-112 - entity->parts[9]->angle) >> 4;
         entity->parts[10]->angle += (64 - entity->parts[10]->angle) >> 4;
         if (entity->timer >= 240 && player1->position.x - entity->position.x <= 0xD00000) {
-            int angle = 4
+            int32 angle = 4
                         * RSDK.ATan2((player1->position.x - entity->parts[12]->position.x) >> 16,
                                      (player1->position.y - entity->parts[12]->position.y) >> 16);
 
-            int val = angle - 1024;
+            int32 val = angle - 1024;
             if (angle <= 512)
                 val = angle;
 
             val      = clampVal(val, -96, 128);
-            int val2 = entity->parts[11]->angle + (-(entity->parts[11]->angle + val) >> 3);
+            int32 val2 = entity->parts[11]->angle + (-(entity->parts[11]->angle + val) >> 3);
             if (val2 > 128)
                 val2 = 128;
 
@@ -1018,16 +1018,16 @@ void DERobot_Unknown36(void)
         entity->parts[9]->angle += (112 - entity->parts[9]->angle) >> 4;
         entity->parts[10]->angle += (-32 - entity->parts[10]->angle) >> 4;
         if (entity->timer >= 240 && player1->position.x - entity->position.x <= 0xD00000) {
-            int angle = 4
+            int32 angle = 4
                         * RSDK.ATan2((player1->position.x - entity->parts[12]->position.x) >> 16,
                                      (player1->position.y - entity->parts[12]->position.y) >> 16);
-            int val = angle - 1024;
+            int32 val = angle - 1024;
             if (angle <= 512)
                 val = angle;
 
             if (val > 128)
                 val = 128;
-            int val2 = entity->parts[11]->angle + (-(entity->parts[11]->angle + val) >> 3);
+            int32 val2 = entity->parts[11]->angle + (-(entity->parts[11]->angle + val) >> 3);
             if (val2 > 128)
                 val2 = 128;
             entity->parts[11]->angle = val2;

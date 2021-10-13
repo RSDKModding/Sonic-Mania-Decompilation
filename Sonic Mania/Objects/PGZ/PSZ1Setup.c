@@ -125,7 +125,7 @@ void PSZ1Setup_StaticUpdate(void)
             }
         }
 
-        int camY = player->camera->position.y;
+        int32 camY = player->camera->position.y;
         if (camY < 0x6100000) {
             if (camY <= 0x2800000) {
                 if (PSZ1Setup->field_A0 == 1) {
@@ -250,7 +250,7 @@ void PSZ1Setup_TriggerCB3(void)
     if (!PSZ1Setup->hasAchievement) {
         RSDK_THIS(GenericTrigger);
 
-        int count = 0;
+        int32 count = 0;
         foreach_all(Crate, crate)
         {
             if (MathHelpers_PointInHitbox(entity->direction, entity->position.x, entity->position.y, &entity->hitbox, crate->position.x,
@@ -278,7 +278,7 @@ void PSZ1Setup_ActTransitionCB(void)
     globals->suppressTitlecard = true;
     globals->suppressAutoMusic = true;
 
-    for (int p = 0; p < Player->playerCount; ++p) {
+    for (int32 p = 0; p < Player->playerCount; ++p) {
         StarPost->postIDs[p] = 0;
     }
 
@@ -289,7 +289,7 @@ void PSZ1Setup_ActTransitionCB(void)
 
 void PSZ1Setup_LevelWrap_Top(void)
 {
-    for (int i = 1; i < ENTITY_COUNT; ++i) {
+    for (int32 i = 1; i < ENTITY_COUNT; ++i) {
         Entity *entity = RSDK.GetEntityByID(i);
         if (entity->objectID != BoundsMarker->objectID) {
             if (entity->position.y >= 0x6800000) {
@@ -306,7 +306,7 @@ void PSZ1Setup_LevelWrap_Top(void)
 
 void PSZ1Setup_LevelWrap_Bottom(void)
 {
-    for (int i = 1; i < ENTITY_COUNT; ++i) {
+    for (int32 i = 1; i < ENTITY_COUNT; ++i) {
         Entity* entity = RSDK.GetEntityByID(i);
         if (entity->objectID != BoundsMarker->objectID) {
             if (entity->position.y <= 0x1800000) {

@@ -19,8 +19,8 @@ typedef struct {
 	RSDK_ENTITY
 	StateMachine(state);
 	uint32 type;
-	int timer;
-	int unused_64;
+	int32 timer;
+	int32 unused_64;
 	Vector2 spawnPos;
 	uint8 spawnDir;
 	Entity *spike;

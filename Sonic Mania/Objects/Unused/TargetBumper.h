@@ -13,11 +13,11 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    int type;
-    int hitCount;
+    int32 type;
+    int32 hitCount;
     Vector2 startPos;
     Vector2 curPos;
-    int field_74;
+    int32 field_74;
     Animator animator;
 } EntityTargetBumper;
 

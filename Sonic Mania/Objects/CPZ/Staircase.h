@@ -18,7 +18,7 @@ typedef struct {
     StateMachine(state);
     StateMachine(drawState);
     Vector2 blocks[4];
-    int timer;
+    int32 timer;
     Animator animator;
     uint8 type;
     bool32 bumpable;

@@ -81,7 +81,7 @@ void HandLauncher_CheckPlayerCollisions(void)
     if (entity->field_80 <= 0) {
         foreach_active(Player, player)
         {
-            int playerID = RSDK.GetEntityID(player);
+            int32 playerID = RSDK.GetEntityID(player);
             if ((entity->state == HandLauncher_Unknown8 || !player->sidekick) && !((1 << playerID) & entity->activePlayers)) {
                 if (player->onGround) {
                     if (Player_CheckCollisionTouch(player, entity, &HandLauncher->hitbox2)) {
@@ -113,8 +113,8 @@ bool32 HandLauncher_Unknown1(void)
     if (entity->activePlayers)
         return true;
 
-    int storeX       = entity->position.x;
-    int storeY       = entity->position.y;
+    int32 storeX       = entity->position.x;
+    int32 storeY       = entity->position.y;
     entity->position = entity->playerPos;
     bool32 flag      = false;
     foreach_active(Player, player)
@@ -132,10 +132,10 @@ bool32 HandLauncher_Unknown1(void)
 void HandLauncher_State_Release(void)
 {
     RSDK_THIS(HandLauncher);
-    int vel = entity->speed * (2 * (entity->direction == FLIP_NONE) - 1);
+    int32 vel = entity->speed * (2 * (entity->direction == FLIP_NONE) - 1);
     foreach_active(Player, player)
     {
-        int pID = RSDK.GetEntityID(player);
+        int32 pID = RSDK.GetEntityID(player);
         if (((1 << pID) & entity->activePlayers)) {
             entity->activePlayers &= ~(1 << pID);
             player->onGround  = true;
@@ -221,7 +221,7 @@ void HandLauncher_Unknown8(void)
 
     if (entity->field_7C < 3) {
         entity->position = entity->playerPos;
-        int dist         = (entity->playerPos.y - entity->startPos.y) / 3;
+        int32 dist         = (entity->playerPos.y - entity->startPos.y) / 3;
         if (entity->field_7C <= 3) {
             entity->position.y -= dist * entity->field_7C;
             entity->field_7C++;
@@ -244,7 +244,7 @@ void HandLauncher_Unknown8(void)
         }
         else if (entity->field_7C < 66) {
             entity->position = entity->playerPos;
-            int dist          = (entity->playerPos.y - entity->startPos.y) / 3;
+            int32 dist          = (entity->playerPos.y - entity->startPos.y) / 3;
             entity->position.y -= dist * minVal(66 - entity->field_7C, 3);
             entity->field_7C++;
             HandLauncher_CheckPlayerCollisions();

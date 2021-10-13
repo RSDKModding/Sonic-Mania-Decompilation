@@ -57,12 +57,12 @@ void FrostThrower_Unknown1(void)
 {
     RSDK_THIS(FrostThrower);
 
-    int pos = 0;
-    for (int i = 0; i < 4; ++i) {
-        int count = minVal(entity->field_B4[i], 3);
+    int32 pos = 0;
+    for (int32 i = 0; i < 4; ++i) {
+        int32 count = minVal(entity->field_B4[i], 3);
 
         RSDK.SetSpriteAnimation(FrostThrower->aniFrames, 1, &entity->animator2, true, i);
-        for (int p = 0; p < count; ++p) {
+        for (int32 p = 0; p < count; ++p) {
             Vector2 drawPos;
             drawPos.x = entity->position.x + entity->field_C4[pos + p].x;
             drawPos.y = entity->position.y + entity->field_C4[pos + p].y;
@@ -88,7 +88,7 @@ void FrostThrower_Unknown3(void)
 {
     RSDK_THIS(FrostThrower);
 
-    for (int i = 0; i < 4; ++i) {
+    for (int32 i = 0; i < 4; ++i) {
         entity->field_B4[i] = entity->field_A4[i];
         if (entity->field_A4[i] > 1) {
             if (RSDK.Rand(0, 10) <= 6)
@@ -100,15 +100,15 @@ void FrostThrower_Unknown3(void)
 void FrostThrower_Unknown4(void)
 {
     RSDK_THIS(FrostThrower);
-    int pos = 0;
+    int32 pos = 0;
 
-    int yMin[] = { 2, 20, 45, 55 };
-    int yMax[] = { 22, 45, 62, 78 };
-    int xMin[] = { -3, -5, -7, -9 };
-    int xMax[] = { 3, 5, 7, 9 };
-    for (int i = 0; i < 4; ++i) {
+    int32 yMin[] = { 2, 20, 45, 55 };
+    int32 yMax[] = { 22, 45, 62, 78 };
+    int32 xMin[] = { -3, -5, -7, -9 };
+    int32 xMax[] = { 3, 5, 7, 9 };
+    for (int32 i = 0; i < 4; ++i) {
         if (entity->field_B4[i]) {
-            for (int p = 0; p < entity->field_B4[i]; ++p) {
+            for (int32 p = 0; p < entity->field_B4[i]; ++p) {
                 entity->field_C4[pos + p].x = RSDK.Rand(xMin[i], xMax[i]) << 16;
                 entity->field_C4[pos + p].y = RSDK.Rand(yMin[i], yMax[i]) << 16;
             }

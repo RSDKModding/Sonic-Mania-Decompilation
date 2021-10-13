@@ -18,8 +18,8 @@ typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
-    int type;
-    int force;
+    int32 type;
+    int32 force;
     uint8 playerAni;
     uint8 offset;
     Vector2 field_6C;

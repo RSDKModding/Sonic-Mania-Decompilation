@@ -7,7 +7,7 @@ void AIZKingClaw_Update(void)
     RSDK_THIS(AIZKingClaw);
     StateMachine_Run(entity->state);
 
-    for (int i = 0; i < (entity->count <= 8 ? entity->count : 8); ++i) {
+    for (int32 i = 0; i < (entity->count <= 8 ? entity->count : 8); ++i) {
         Entity *grabbed = entity->grabbedEntities[i];
         if (grabbed) {
             grabbed->position.x = entity->clawPos.x;
@@ -40,7 +40,7 @@ void AIZKingClaw_Draw(void)
         RSDK.DrawSprite(&entity->data3, &entity->clawPos, 0);
     }
     else {
-        for (int i = 0; i < 12; ++i) {
+        for (int32 i = 0; i < 12; ++i) {
             RSDK.DrawSprite(&entity->data1, &entity->ballPos[i], false);
         }
         RSDK.DrawSprite(&entity->animator2, &entity->clawPos, 0);
@@ -94,10 +94,10 @@ void AIZKingClaw_Unknown1(void)
 
     entity->clawPos.x = entity->position.x;
     entity->clawPos.y = entity->position.y;
-    int moveX         = RSDK.Sin256(entity->angle) << 12;
-    int moveY         = RSDK.Cos256(entity->angle) << 12;
+    int32 moveX         = RSDK.Sin256(entity->angle) << 12;
+    int32 moveY         = RSDK.Cos256(entity->angle) << 12;
 
-    for (int i = 0; i < 12; ++i) {
+    for (int32 i = 0; i < 12; ++i) {
         entity->ballPos[i].x = entity->clawPos.x;
         entity->ballPos[i].y = entity->clawPos.y;
         entity->clawPos.x += moveX;

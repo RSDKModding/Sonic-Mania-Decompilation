@@ -10,23 +10,22 @@
 #define RETRO_GAMEVER VER_106
 
 #define RETRO_USE_PLUS (RETRO_GAMEVER >= VER_105)
-#define RETRO_USE_EGS (RETRO_GAMEVER == VER_107)
-
+#define RETRO_USE_EGS  (RETRO_GAMEVER == VER_107)
 
 #define RETRO_USE_MOD_LOADER (1)
 
-//used to manage standalone (RSDKv5.exe & Game.dll) and combined (Game.exe) modes
+// used to manage standalone (RSDKv5.exe & Game.dll) and combined (Game.exe) modes
 #ifndef RETRO_STANDALONE
 #define RETRO_STANDALONE (1)
 #endif
 
-//slightly misleading, this controls adding touch controls to players
+// slightly misleading, this controls adding touch controls to players
 #define RETRO_USE_TOUCH_CONTROLS (1)
 
 #include "GameLink.h"
 
 #ifdef _MSC_VER
-#define DLLExport __declspec(dllexport)
+#define DLLExport       __declspec(dllexport)
 #define setAlignment(x) __declspec(align(x))
 #else
 #define DLLExport
@@ -42,30 +41,30 @@ typedef enum { DLC_PLUS } GameDLC;
     RSDK_ENTITY                                                                                                                                      \
     StateMachine(state);                                                                                                                             \
     StateMachine(stateCollide);                                                                                                                      \
-    int type;                                                                                                                                        \
+    int32 type;                                                                                                                                      \
     Vector2 amplitude;                                                                                                                               \
-    int speed;                                                                                                                                       \
+    int32 speed;                                                                                                                                     \
     bool32 hasTension;                                                                                                                               \
-    int8 frameID;                                                                                                                                   \
-    uint8 collision;                                                                                                                                  \
-    Vector2 tileOrigin;                                                                                                                               \
+    int8 frameID;                                                                                                                                    \
+    uint8 collision;                                                                                                                                 \
+    Vector2 tileOrigin;                                                                                                                              \
     Vector2 centerPos;                                                                                                                               \
     Vector2 drawPos;                                                                                                                                 \
     Vector2 collisionOffset;                                                                                                                         \
-    int stood;                                                                                                                                       \
-    int collapseDelay;                                                                                                                               \
-    int stoodAngle;                                                                                                                                  \
-    uint8 stoodPlayers;                                                                                                                               \
-    uint8 pushPlayersL;                                                                                                                               \
-    uint8 pushPlayersR;                                                                                                                               \
+    int32 stood;                                                                                                                                     \
+    int32 collapseDelay;                                                                                                                             \
+    int32 stoodAngle;                                                                                                                                \
+    uint8 stoodPlayers;                                                                                                                              \
+    uint8 pushPlayersL;                                                                                                                              \
+    uint8 pushPlayersR;                                                                                                                              \
     Hitbox hitbox;                                                                                                                                   \
     Animator animator;                                                                                                                               \
-    int childCount;
+    int32 childCount;
 
 #define MANIA_UI_ITEM_BASE                                                                                                                           \
     RSDK_ENTITY                                                                                                                                      \
     StateMachine(state);                                                                                                                             \
-    void (*processButtonCB)(void);                                                                                                                          \
+    void (*processButtonCB)(void);                                                                                                                   \
     bool32 (*touchCB)(void);                                                                                                                         \
     void (*options2)(void);                                                                                                                          \
     void (*options3)(void);                                                                                                                          \
@@ -74,7 +73,7 @@ typedef enum { DLC_PLUS } GameDLC;
     void (*options6)(void);                                                                                                                          \
     bool32 (*options7)(void);                                                                                                                        \
     bool32 (*options8)(void);                                                                                                                        \
-    int timer;                                                                                                                                       \
+    int32 timer;                                                                                                                                     \
     Vector2 posUnknown2;                                                                                                                             \
     Entity *parent;                                                                                                                                  \
     Vector2 touchPosStart;                                                                                                                           \
@@ -83,8 +82,8 @@ typedef enum { DLC_PLUS } GameDLC;
     Vector2 touchPos1[4];                                                                                                                            \
     Vector2 touchPos2[4];                                                                                                                            \
     void (*touchPosCallbacks[4])(void);                                                                                                              \
-    int touchPosCount;                                                                                                                               \
-    int touchCountUnknown;                                                                                                                           \
+    int32 touchPosCount;                                                                                                                             \
+    int32 touchCountUnknown;                                                                                                                         \
     bool32 flag;                                                                                                                                     \
     bool32 disabled;
 

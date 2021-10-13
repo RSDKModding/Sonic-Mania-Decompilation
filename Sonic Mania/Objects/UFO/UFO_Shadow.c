@@ -16,14 +16,14 @@ void UFO_Shadow_LateUpdate(void)
         }
         else {
             entity->visible = true;
-            int x           = entity->position.x >> 8;
-            int z           = entity->position.y >> 8;
+            int32 x           = entity->position.x >> 8;
+            int32 z           = entity->position.y >> 8;
             Matrix *mat     = &UFO_Camera->matWorld;
 
             entity->depth3D = mat->values[2][3] + (z * mat->values[2][2] >> 8) + (x * mat->values[2][0] >> 8);
             if (entity->depth3D >= 0x4000)
                 entity->visible =
-                    abs((int)((mat->values[0][3] << 8) + ((z * mat->values[0][2]) & 0xFFFFFF00) + ((x * mat->values[0][0]) & 0xFFFFFF00))
+                    abs((int32)((mat->values[0][3] << 8) + ((z * mat->values[0][2]) & 0xFFFFFF00) + ((x * mat->values[0][0]) & 0xFFFFFF00))
                         / entity->depth3D)
                     < 0x100;
         }
@@ -68,7 +68,7 @@ void UFO_Shadow_StageLoad(void)
     UFO_Shadow->modelIndex = RSDK.LoadMesh("Special/Shadow.bin", SCOPE_STAGE);
     UFO_Shadow->sceneID    = RSDK.Create3DScene("View:Special", 4096, SCOPE_STAGE);
 
-    int slot = TEMPENTITY_START;
+    int32 slot = TEMPENTITY_START;
     foreach_all(UFO_Player, player)
     {
         EntityUFO_Shadow *shadow = (EntityUFO_Shadow *)RSDK.GetEntityByID(slot--);

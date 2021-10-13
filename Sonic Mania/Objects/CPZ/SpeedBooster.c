@@ -6,7 +6,7 @@ void SpeedBooster_Update(void)
 {
     RSDK_THIS(SpeedBooster);
     StateMachine_Run(entity->state);
-    for (int i = 0; i < 4; i++) {
+    for (int32 i = 0; i < 4; i++) {
         if (entity->playerCooldown[i])
             entity->playerCooldown[i]--;
     }
@@ -112,7 +112,7 @@ void SpeedBooster_Interact(void)
     bool32 isSSZ = RSDK.CheckStageFolder("SSZ1") || RSDK.CheckStageFolder("SSZ2");
     foreach_active(Player, player)
     {
-        int playerID   = RSDK.GetEntityID(player);
+        int32 playerID   = RSDK.GetEntityID(player);
         Hitbox *hitbox = &SpeedBooster->hitbox;
         if (entity->playerCooldown[playerID] || player->playerAnimator.animationID == ANI_HURT || !Player_CheckCollisionTouch(player, entity, hitbox)
             || !player->onGround) {
@@ -153,7 +153,7 @@ void SpeedBooster_SSZState(void)
     entity->drawPos.x  = entity->position.x;
     entity->drawPos.y  = entity->position.y;
     SPAWN_CHILD(SpeedBooster, 1);
-    int newVel        = 0x10000;
+    int32 newVel        = 0x10000;
     child->velocity.y = -0x70000;
     if (entity->velocity.x > 0)
         newVel = -0x10000;

@@ -13,11 +13,11 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     Animator animator;
-    int field_70;
-    int field_74;
+    int32 field_70;
+    int32 field_74;
     Vector2 size;
     TextInfo text;
-    int width;
+    int32 width;
     Animator animator2;
 } EntityUIInfoLabel;
 

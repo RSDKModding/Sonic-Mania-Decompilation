@@ -6,8 +6,8 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    int palID;
-    int palCnt;
+    int32 palID;
+    int32 palCnt;
     uint16 animalHBHSprite;
     uint16 silhouetteSprite;
 } ObjectAnimalHBH;
@@ -16,7 +16,7 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     uint8 type;
-    int timer;
+    int32 timer;
     Animator animalHBHData;
     Animator silhouetteData;
 } EntityAnimalHBH;

@@ -7,16 +7,16 @@ void CorkscrewPath_Update(void)
     RSDK_THIS(CorkscrewPath);
     foreach_active(Player, player)
     {
-        int playerID = RSDK.GetEntityID(player);
+        int32 playerID = RSDK.GetEntityID(player);
         if (abs(entity->position.x - player->position.x) >> 16 > entity->periodShifted) {
             entity->activePlayers &= ~playerID;
             if (player->playerAnimator.animationID != ANI_SPRINGCS)
                 player->direction &= ~FLIP_Y;
         }
         else {
-            int x     = entity->periodShifted + ((player->position.x - entity->position.x) >> 16);
-            int frame = 24 * x / entity->period;
-            int arc   = entity->amplitude * RSDK.Cos1024((x << 10) / entity->period);
+            int32 x     = entity->periodShifted + ((player->position.x - entity->position.x) >> 16);
+            int32 frame = 24 * x / entity->period;
+            int32 arc   = entity->amplitude * RSDK.Cos1024((x << 10) / entity->period);
             if (!(playerID & entity->activePlayers)) {
                 if (abs(arc + entity->position.y - player->position.y) >= 0x100000) {
                     entity->activePlayers &= ~playerID;

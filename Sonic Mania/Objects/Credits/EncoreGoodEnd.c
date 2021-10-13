@@ -67,7 +67,7 @@ void EncoreGoodEnd_StageLoad(void) { EncoreGoodEnd->sfxSnap = RSDK.GetSFX("SPZ/S
 
 void EncoreGoodEnd_SetupDecorations(void)
 {
-    int id = 0;
+    int32 id = 0;
     foreach_all(Decoration, decor)
     {
         if (id >= 16)
@@ -82,7 +82,7 @@ void EncoreGoodEnd_SetupDecorations(void)
     }
 }
 
-void EncoreGoodEnd_Unknown2(int id)
+void EncoreGoodEnd_Unknown2(int32 id)
 {
     switch (id) {
         case ID_SONIC: EncoreGoodEnd->decorations[5]->visible = false; break;
@@ -110,9 +110,9 @@ void EncoreGoodEnd_Unknown9(void)
 {
     RSDK_THIS(Player);
 
-    int id             = entity->characterID;
+    int32 id             = entity->characterID;
     entity->velocity.x = 0x18000;
-    int playerID       = -1;
+    int32 playerID       = -1;
     for (entity->groundVel = 0x18000; id > 0; ++playerID) id >>= 1;
 
     if (entity->position.x >= EncoreGoodEnd->decorations[playerID + 5]->position.x) {
@@ -152,8 +152,8 @@ void EncoreGoodEnd_Unknown10(void)
     RSDK_THIS(Player);
     Player_State_Air();
     if (entity->velocity.y > 0) {
-        int playerID       = -1;
-        for (int id = entity->characterID; id > 0; ++playerID) id >>= 1;
+        int32 playerID       = -1;
+        for (int32 id = entity->characterID; id > 0; ++playerID) id >>= 1;
 
         if (entity->position.y >= (EncoreGoodEnd->decorations[playerID + 5]->position.y - 0x80000)) {
             entity->position.y                                = (EncoreGoodEnd->decorations[playerID + 5]->position.y - 0x80000);
@@ -236,7 +236,7 @@ void EncoreGoodEnd_Unknown11(void)
         default: break;
     }
 
-    int anim = playerDecor->animator.frameID;
+    int32 anim = playerDecor->animator.frameID;
     if (anim == ANI_RUN || anim == ANI_SKID || anim == ANI_DROPDASH)
         playerDecor->animator.animationSpeed = 0;
 

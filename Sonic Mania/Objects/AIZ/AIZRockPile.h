@@ -7,18 +7,18 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    int rockPositions_small[8];
-    int rockSpeedsT_small[8];
-    int rockSpeedsL_small[8];
-    int rockSpeedsR_small[8];
-    int rockPositions_med[10];
-    int rockSpeedsT_med[10];
-    int rockSpeedsL_med[12];
-    int rockSpeedsR_med[12];
-    int rockPositions_large[16];
-    int rockSpeedsT_large[16];
-    int rockSpeedsL_large[16];
-    int rockSpeedsR_large[16];
+    int32 rockPositions_small[8];
+    int32 rockSpeedsT_small[8];
+    int32 rockSpeedsL_small[8];
+    int32 rockSpeedsR_small[8];
+    int32 rockPositions_med[10];
+    int32 rockSpeedsT_med[10];
+    int32 rockSpeedsL_med[12];
+    int32 rockSpeedsR_med[12];
+    int32 rockPositions_large[16];
+    int32 rockSpeedsT_large[16];
+    int32 rockSpeedsL_large[16];
+    int32 rockSpeedsR_large[16];
     uint16 spriteIndex;
     uint16 sfx_Break;
 } ObjectAIZRockPile;
@@ -26,15 +26,15 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    int size;
+    int32 size;
     bool32 smashTop;
     bool32 smashSides;
     bool32 onlyKnux;
     bool32 onlyMighty;
-    int *rockPositions;
-    int *rockSpeedsT;
-    int *rockSpeedsL;
-    int *rockSpeedsR;
+    int32 *rockPositions;
+    int32 *rockSpeedsT;
+    int32 *rockSpeedsL;
+    int32 *rockSpeedsR;
     Animator animator;
 } EntityAIZRockPile;
 
@@ -53,7 +53,7 @@ void AIZRockPile_EditorLoad(void);
 void AIZRockPile_Serialize(void);
 
 // Extra Entity Functions
-void AIZRockPile_SpawnRocks(int *speeds);
+void AIZRockPile_SpawnRocks(int32 *speeds);
 
 #endif
 

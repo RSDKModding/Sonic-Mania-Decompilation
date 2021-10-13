@@ -33,7 +33,7 @@ void UIMedallionPanel_DrawPanel(void)
     Vector2 drawPos;
 
     EntityGameProgress *progress = GameProgress_GetGameProgress();
-    for (int m = 0; m < 0x20; ++m) {
+    for (int32 m = 0; m < 0x20; ++m) {
         drawPos.x = (entity->position.x - 0x310000) + 0xE0000 * (m % 8);
         drawPos.y = (entity->position.y - 0x150000) + 0xE0000 * (m / 8);
         if (RSDK_sceneInfo->inEditor) {

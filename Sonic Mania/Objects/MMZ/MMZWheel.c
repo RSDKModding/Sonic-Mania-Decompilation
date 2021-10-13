@@ -12,7 +12,7 @@ void MMZWheel_Update(void)
     switch (entity->motionType) {
         default: break;
         case 0: {
-            int val = 2 * (entity->direction != FLIP_NONE) - 1;
+            int32 val = 2 * (entity->direction != FLIP_NONE) - 1;
             entity->position.x += val * (entity->speed << 14);
             if (abs(entity->position.x - entity->center.x) >= entity->amplitude << 16) {
                 entity->direction  = entity->direction == FLIP_NONE;
@@ -27,8 +27,8 @@ void MMZWheel_Update(void)
 
     entity->offset.x += entity->position.x;
     entity->offset.y += entity->position.y;
-    int id = RSDK_sceneInfo->entitySlot;
-    for (int i = 0; i < entity->childCount; ++i) {
+    int32 id = RSDK_sceneInfo->entitySlot;
+    for (int32 i = 0; i < entity->childCount; ++i) {
         Entity *child = RSDK.GetEntityByID(++id);
         child->position.x += entity->offset.x;
         child->position.y += entity->offset.y;

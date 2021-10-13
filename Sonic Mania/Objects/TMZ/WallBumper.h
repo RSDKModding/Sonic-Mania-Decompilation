@@ -13,8 +13,8 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    int type;
-    int size;
+    int32 type;
+    int32 size;
     bool32 reverse;
     bool32 destructible;
     Animator animator;

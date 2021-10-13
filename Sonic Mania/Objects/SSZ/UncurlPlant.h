@@ -7,25 +7,25 @@
 typedef struct {
     RSDK_OBJECT
     Hitbox hitbox;
-    TABLE(int array1[8], { 0, 16, 64, 96, 112, 144, 160, 192 });
-    TABLE(int array2[8], { 0, -8, 32, 64, 64, 64, 64, 64 });
-    TABLE(int array3[8], { 0, -24, 8, 8, 8, 8, 8, 8 });
+    TABLE(int32 array1[8], { 0, 16, 64, 96, 112, 144, 160, 192 });
+    TABLE(int32 array2[8], { 0, -8, 32, 64, 64, 64, 64, 64 });
+    TABLE(int32 array3[8], { 0, -24, 8, 8, 8, 8, 8, 8 });
     uint16 aniFrames;
 } ObjectUncurlPlant;
 
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    int field_58;
-    int field_5C;
+    int32 field_58;
+    int32 field_5C;
     Vector2 drawPositions[8];
     Vector2 positions[8];
-    int segments[8];
-    int field_100[8];
-    int field_120;
-    int field_124;
-    int field_128;
-    int field_12C;
+    int32 segments[8];
+    int32 field_100[8];
+    int32 field_120;
+    int32 field_124;
+    int32 field_128;
+    int32 field_12C;
     Animator animator;
     Animator animators[8];
 } EntityUncurlPlant;

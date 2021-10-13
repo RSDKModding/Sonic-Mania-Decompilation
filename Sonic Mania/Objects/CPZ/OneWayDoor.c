@@ -78,7 +78,7 @@ void OneWayDoor_Interact(void)
 
     foreach_active(Player, currentPlayer)
     {
-        int yChange = entity->yChange;
+        int32 yChange = entity->yChange;
         if (entity->drawState != OneWayDoor_MMZDraw)
             yChange *= 2;
 

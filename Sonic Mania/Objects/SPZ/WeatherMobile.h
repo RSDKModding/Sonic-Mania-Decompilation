@@ -6,14 +6,14 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    TABLE(int value1[29], { 4,       0,        0, -0x20000, -0x28000, 1,        0, -0x20000, -0x28000, 2,        0, 0x20000, -0x20000, 3,       0,
+    TABLE(int32 value1[29], { 4,       0,        0, -0x20000, -0x28000, 1,        0, -0x20000, -0x28000, 2,        0, 0x20000, -0x20000, 3,       0,
                             0x28000, -0x20000, 4, 0,        -0x10000, -0x10000, 5, 0,        0x10000,  -0x10000, 6, 0,       -0x8000,  -0x10000 });
-    int value2;
-    int value3;
-    int value4;
-    int value5;
-    int value6;
-    int value7;
+    int32 value2;
+    int32 value3;
+    int32 value4;
+    int32 value5;
+    int32 value6;
+    int32 value7;
     uint16 value8;
     uint16 value9;
     uint16 value10;
@@ -21,8 +21,8 @@ typedef struct {
     uint16 value12;
     uint16 value13;
     uint8 value14;
-    int value15;
-    int value16;
+    int32 value15;
+    int32 value16;
     uint16 value17;
     uint8 value18;
     uint16 value19;

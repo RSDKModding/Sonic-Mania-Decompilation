@@ -6,8 +6,8 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT 
-    int field_4;
-    int field_8;
+    int32 field_4;
+    int32 field_8;
     uint16 field_C;
     uint16 sfxHit;
     uint16 sfxExplosion2;
@@ -35,28 +35,28 @@ typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     Vector2 posUnknown;
-    int timer;
-    int field_68;
-    int field_6C;
-    int field_70;
-    int field_74;
-    int field_78;
-    int field_7C;
-    int field_80;
-    int field_84;
-    int field_88;
-    int field_8C;
-    int field_90;
-    int field_94;
-    int field_98;
-    int field_9C;
-    int field_A0;
-    int field_A4;
-    int field_A8;
-    int field_AC;
-    int field_B0;
-    int field_B4;
-    int field_B8;
+    int32 timer;
+    int32 field_68;
+    int32 field_6C;
+    int32 field_70;
+    int32 field_74;
+    int32 field_78;
+    int32 field_7C;
+    int32 field_80;
+    int32 field_84;
+    int32 field_88;
+    int32 field_8C;
+    int32 field_90;
+    int32 field_94;
+    int32 field_98;
+    int32 field_9C;
+    int32 field_A0;
+    int32 field_A4;
+    int32 field_A8;
+    int32 field_AC;
+    int32 field_B0;
+    int32 field_B4;
+    int32 field_B8;
     Animator animator;
     Animator animator2;
 } EntityMetalSonic;

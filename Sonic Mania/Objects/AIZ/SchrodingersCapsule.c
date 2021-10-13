@@ -155,7 +155,7 @@ void SchrodingersCapsule_Unknown2(void)
     RSDK.ProcessAnimation(&entity->animator4);
     RSDK.ProcessAnimation(&entity->animator5);
 
-    for (int p = 0; p < Player->playerCount; ++p) {
+    for (int32 p = 0; p < Player->playerCount; ++p) {
         EntityPlayer *player = RSDK_GET_ENTITY(p, Player);
         if (!player->sidekick) {
             if (abs(entity->position.x - player->position.x) < 0x1000000) {

@@ -6,8 +6,8 @@ void Hatch_Update(void)
 {
     RSDK_THIS(Hatch);
 
-    int posX           = entity->position.x;
-    int posY           = entity->position.y;
+    int32 posX           = entity->position.x;
+    int32 posY           = entity->position.y;
     entity->position.x = entity->startPos.x;
     entity->position.y = entity->startPos.y;
     if (entity->flag) {
@@ -159,7 +159,7 @@ void Hatch_Unknown1(void)
     RSDK_THIS(Hatch);
     RSDK.ProcessAnimation(&entity->animator2);
 
-    int flag = 0;
+    int32 flag = 0;
     foreach_active(Player, player)
     {
         if (Player_CheckCollisionBox(player, entity, &Hatch->hitbox3) == C_TOP) {

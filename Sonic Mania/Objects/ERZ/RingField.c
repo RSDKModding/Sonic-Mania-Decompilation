@@ -25,12 +25,12 @@ void RingField_Update(void)
                 ring->moveType            = 0;
                 RSDK.SetSpriteAnimation(RingField->spriteIndex, 0, &ring->animator, true, 0);
 
-                int sx = (RSDK_screens->centerX + RSDK_screens->position.x) << 16;
-                int sy = (RSDK_screens->position.y + RSDK_screens->centerY) << 16;
-                int x  = (RSDK.Rand(-RSDK_screens->centerX, RSDK_screens->centerX) << 15) + sx;
-                int y  = RSDK.Rand(-RSDK_screens->centerY, RSDK_screens->centerY);
+                int32 sx = (RSDK_screens->centerX + RSDK_screens->position.x) << 16;
+                int32 sy = (RSDK_screens->position.y + RSDK_screens->centerY) << 16;
+                int32 x  = (RSDK.Rand(-RSDK_screens->centerX, RSDK_screens->centerX) << 15) + sx;
+                int32 y  = RSDK.Rand(-RSDK_screens->centerY, RSDK_screens->centerY);
 
-                int angle = RSDK.ATan2(x - pos.x, (y << 15) + sy - pos.y);
+                int32 angle = RSDK.ATan2(x - pos.x, (y << 15) + sy - pos.y);
                 ring->velocity.x = RSDK.Cos256(angle) << 9;
                 ring->velocity.y = RSDK.Sin256(angle) << 9;
                 entity->timer    = (entity->fluctuation * RSDK.Sin256(Zone->timer) >> 8) + entity->frequency;
@@ -94,9 +94,9 @@ void RingField_StageLoad(void) { RingField->spriteIndex = RSDK.LoadSpriteAnimati
 
 void RingField_GetPos(Vector2 *pos)
 {
-    int rand = RSDK.Rand(0, 16) % 4;
-    int x    = 0;
-    int y    = 0;
+    int32 rand = RSDK.Rand(0, 16) % 4;
+    int32 x    = 0;
+    int32 y    = 0;
     switch (rand) {
         case 0:
         case 1:

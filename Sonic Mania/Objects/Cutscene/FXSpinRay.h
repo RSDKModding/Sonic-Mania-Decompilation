@@ -12,12 +12,12 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    int timer;
-    int offset;
-    int r;
-    int g;
-    int b;
-    int field_70;
+    int32 timer;
+    int32 offset;
+    int32 r;
+    int32 g;
+    int32 b;
+    int32 field_70;
     Entity *parent;
     Vector2 field_78;
     Vector2 field_80[4];

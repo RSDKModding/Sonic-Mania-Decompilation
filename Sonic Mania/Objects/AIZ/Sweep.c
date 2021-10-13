@@ -142,7 +142,7 @@ void Sweep_HandleInteractions(void)
             playerHitbox  = &hitbox;
         }
 
-        int side = RSDK.CheckObjectCollisionBox(entity, &Sweep->hitbox1, player, playerHitbox, false);
+        int32 side = RSDK.CheckObjectCollisionBox(entity, &Sweep->hitbox1, player, playerHitbox, false);
         if (side) {
             if (entity->state != Sweep_Unknown10 && ((entity->direction == FLIP_NONE && side == 2) || (entity->direction == FLIP_X && side == 3)))
                 Player_CheckHit(player, entity);

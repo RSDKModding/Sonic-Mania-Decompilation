@@ -22,10 +22,10 @@ typedef struct {
     RSDK_ENTITY
     EntityPlayer *player;
     StateMachine(state);
-    int type;
-    int timer;
-    int frameID;
-    int flag;
+    int32 type;
+    int32 timer;
+    int32 frameID;
+    int32 flag;
     Animator animator;
     Animator animator2;
 } EntityShield;

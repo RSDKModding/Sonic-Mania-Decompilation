@@ -11,7 +11,7 @@ void GameProgess_StageLoad(void) {}
 
 EntityGameProgress *GameProgress_GetGameProgress(void) { return (EntityGameProgress *)&globals->saveRAM[0x900]; }
 
-int GameProgress_GetNotifStringID(int type)
+int32 GameProgress_GetNotifStringID(int32 type)
 {
     switch (type) {
         case 0: return STR_TAUNLOCKED; break;
@@ -29,7 +29,7 @@ int GameProgress_GetNotifStringID(int type)
 void GameProgress_ShuffleBSSID(void)
 {
     EntityGameProgress *progress = GameProgress_GetGameProgress();
-    int startID = globals->blueSpheresID;
+    int32 startID = globals->blueSpheresID;
     if (progress) {
         while (true) {
             if (globals->blueSpheresInit) {
@@ -68,7 +68,7 @@ void GameProgress_ShuffleBSSID(void)
     }
 }
 
-bool32 GameProgress_GetZoneUnlocked(int zoneID)
+bool32 GameProgress_GetZoneUnlocked(int32 zoneID)
 {
     if (RSDK_sceneInfo->inEditor || checkNoSave || globals->saveLoaded != STATUS_OK /*|| globals == 0xFFFEDB5C*/) {
         LogHelpers_Print("WARNING GameProgress Attempted to check zone clear before loading SaveGame file");
@@ -82,11 +82,11 @@ bool32 GameProgress_GetZoneUnlocked(int zoneID)
 
 float GameProgress_GetCompletionPercent(EntityGameProgress *progress)
 {
-    int completeZones = 0;
-    int medalsGotten  = 0;
-    int emeraldsGotten = 0;
+    int32 completeZones = 0;
+    int32 medalsGotten  = 0;
+    int32 emeraldsGotten = 0;
 
-    for (int i = 0; i < 32; ++i) {
+    for (int32 i = 0; i < 32; ++i) {
         if (i < 7)
             emeraldsGotten += progress->emeraldFlags[i] == 1;
         if (i < 12)
@@ -101,7 +101,7 @@ float GameProgress_GetCompletionPercent(EntityGameProgress *progress)
     return zonePercent + medalPercent + specialPercent + endingPercent;
 }
 
-void GameProgress_TrackGameProgress(void (*callback)(int))
+void GameProgress_TrackGameProgress(void (*callback)(int32))
 {
 #if RETRO_USE_PLUS
     if (RSDK_sceneInfo->inEditor || checkNoSave || globals->saveLoaded != STATUS_OK) {
@@ -170,7 +170,7 @@ void GameProgress_UnlockAllMedals(void)
     progress->allGoldMedals     = true;
     progress->allSilverMedals   = true;
 
-    for (int m = 0; m < 0x20; ++m) {
+    for (int32 m = 0; m < 0x20; ++m) {
         if (m < 7)
             progress->emeraldFlags[m] = true;
         if (m < 13)
@@ -195,7 +195,7 @@ void GameProgress_ClearProgress(void)
     progress->allGoldMedals      = false;
     progress->allSilverMedals    = false;
 
-    for (int m = 0; m < 0x20; ++m) {
+    for (int32 m = 0; m < 0x20; ++m) {
         if (m < 7)
             progress->emeraldFlags[m] = false;
         if (m < 13)
@@ -207,7 +207,7 @@ void GameProgress_ClearProgress(void)
         progress->medals[m] = 0;
     }
 }
-void GameProgress_MarkZoneCompleted(int zoneID)
+void GameProgress_MarkZoneCompleted(int32 zoneID)
 {
     if (RSDK_sceneInfo->inEditor || checkNoSave || globals->saveLoaded != STATUS_OK) {
         LogHelpers_Print("WARNING GameProgress Attempted to mark completed zone before loading SaveGame file");
@@ -216,7 +216,7 @@ void GameProgress_MarkZoneCompleted(int zoneID)
 
     if (zoneID >= 0) {
         EntityGameProgress *progress = GameProgress_GetGameProgress();
-        for (int z = 0; z <= zoneID; ++z) {
+        for (int32 z = 0; z <= zoneID; ++z) {
             if (!progress->zoneClearFlags[z]) {
                 LogHelpers_Print("PROGRESS Cleared zone %d", z);
                 progress->zoneClearFlags[z] = true;
@@ -232,7 +232,7 @@ bool32 GameProgress_CheckZoneClear(void)
     }
     EntityGameProgress *progress = GameProgress_GetGameProgress();
 
-    for (int z = 0; z < 13; ++z) {
+    for (int32 z = 0; z < 13; ++z) {
         if (!progress->zoneClearFlags[z]) {
             GameProgress_MarkZoneCompleted(z);
             return true;
@@ -240,7 +240,7 @@ bool32 GameProgress_CheckZoneClear(void)
     }
     return false;
 }
-void GameProgress_GiveEmerald(int emeraldID)
+void GameProgress_GiveEmerald(int32 emeraldID)
 {
     if (RSDK_sceneInfo->inEditor || checkNoSave || globals->saveLoaded != STATUS_OK) {
         LogHelpers_Print("WARNING GameProgress Attempted to get emerald before loading SaveGame file");
@@ -250,8 +250,8 @@ void GameProgress_GiveEmerald(int emeraldID)
     EntityGameProgress *progress = GameProgress_GetGameProgress();
 
     progress->emeraldFlags[emeraldID] = true;
-    int allEmeraldsFlag               = true;
-    for (int i = 0; i < 7; ++i) {
+    int32 allEmeraldsFlag               = true;
+    for (int32 i = 0; i < 7; ++i) {
         allEmeraldsFlag = allEmeraldsFlag && progress->emeraldFlags[i];
     }
 
@@ -266,9 +266,9 @@ void GameProgress_GiveMedal(uint8 medalID, uint8 type)
     }
 
     EntityGameProgress *progress = GameProgress_GetGameProgress();
-    int goldCount                = 0;
-    int silverCount              = 0;
-    for (int m = 0; m < 0x20; ++m) {
+    int32 goldCount                = 0;
+    int32 silverCount              = 0;
+    for (int32 m = 0; m < 0x20; ++m) {
         if (m == medalID && type > progress->medals[m])
             progress->medals[m] = type;
         if (progress->medals[m] >= 2)
@@ -307,7 +307,7 @@ void GameProgress_PrintSaveProgress(void)
     LogHelpers_Print("=========================");
     LogHelpers_Print("Game Progress:\n");
 
-    for (int e = 0; e < 7; ++e) {
+    for (int32 e = 0; e < 7; ++e) {
         if (progress->emeraldFlags[e])
             LogHelpers_Print("Emerald %d => TRUE", e);
         else
@@ -318,7 +318,7 @@ void GameProgress_PrintSaveProgress(void)
     else
         LogHelpers_Print("YOU'VE NOT ENOUGH EMERALDS!\n");
 
-    for (int z = 0; z < 13; ++z) {
+    for (int32 z = 0; z < 13; ++z) {
         if (progress->zoneClearFlags[z])
             LogHelpers_Print("Zone %d clear => TRUE", z);
         else
@@ -332,7 +332,7 @@ void GameProgress_PrintSaveProgress(void)
         case 2: LogHelpers_Print("GOOD ENDING!\n"); break;
     }
 
-    for (int m = 0; m < 0x20; ++m) {
+    for (int32 m = 0; m < 0x20; ++m) {
         switch (progress->medals[m]) {
             default:
             case 2: LogHelpers_Print("Medallion %d => GOLD", m); break;
@@ -349,16 +349,16 @@ void GameProgress_PrintSaveProgress(void)
         LogHelpers_Print("ALL SILVER MEDALLIONS!");
     LogHelpers_Print("\n=========================");
 }
-int GameProgress_CountUnreadNotifs(void)
+int32 GameProgress_CountUnreadNotifs(void)
 {
     if (RSDK_sceneInfo->inEditor || checkNoSave || globals->saveLoaded != STATUS_OK) {
         LogHelpers_Print("WARNING GameProgress Attempted to count unread notifs before loading SaveGame file");
         return 0;
     }
     else {
-        int cnt                      = 0;
+        int32 cnt                      = 0;
         EntityGameProgress *progress = GameProgress_GetGameProgress();
-        for (int i = 0; i < 9; ++i) {
+        for (int32 i = 0; i < 9; ++i) {
             bool32 unlocked = progress->unreadNotifs[i];
             bool32 notif    = GameProgress_CheckUnlock(i);
             if (!unlocked && notif) {
@@ -368,7 +368,7 @@ int GameProgress_CountUnreadNotifs(void)
         return cnt;
     }
 }
-int GameProgress_GetNextNotif(void)
+int32 GameProgress_GetNextNotif(void)
 {
     if (RSDK_sceneInfo->inEditor || checkNoSave || globals->saveLoaded != STATUS_OK) {
         LogHelpers_Print("WARNING GameProgress Attempted to get next unread notif before loading SaveGame file");
@@ -376,7 +376,7 @@ int GameProgress_GetNextNotif(void)
     }
     else {
         EntityGameProgress *progress = GameProgress_GetGameProgress();
-        for (int i = 0; i < 9; ++i) {
+        for (int32 i = 0; i < 9; ++i) {
             bool32 unlocked = progress->unreadNotifs[i];
             bool32 notif    = GameProgress_CheckUnlock(i);
             if (!unlocked && notif) {

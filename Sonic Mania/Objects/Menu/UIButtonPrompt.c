@@ -36,7 +36,7 @@ void UIButtonPrompt_Update(void)
         entity->prevPrompt = entity->promptID;
     }
 
-    int button = entity->buttonID;
+    int32 button = entity->buttonID;
     if (entity->prevButton != button) {
         UIButtonPrompt_Unknown4();
         button             = entity->buttonID;
@@ -44,7 +44,7 @@ void UIButtonPrompt_Update(void)
     }
 
     if (sku_platform == PLATFORM_PC || sku_platform == PLATFORM_DEV) {
-        int mappings = UIButtonPrompt_GetButtonMappings(UIButtonPrompt->inputID, button);
+        int32 mappings = UIButtonPrompt_GetButtonMappings(UIButtonPrompt->inputID, button);
         if (textChanged || entity->mappings != mappings) {
             UIButtonPrompt_Unknown4();
             entity->mappings = mappings;
@@ -86,11 +86,11 @@ void UIButtonPrompt_StaticUpdate(void)
 {
     UIButtonPrompt->type = UIButtonPrompt_GetGamepadType();
 #if RETRO_USE_PLUS
-    int id                       = API_MostRecentActiveControllerID(0, 0, 0);
+    int32 id                       = API_MostRecentActiveControllerID(0, 0, 0);
 #else
-    int id = API_MostRecentActiveControllerID(0);
+    int32 id = API_MostRecentActiveControllerID(0);
 #endif
-    int type                   = API_GetControllerType(id);
+    int32 type                   = API_GetControllerType(id);
     if ((type & 0xFF00) == 0x100)
         UIButtonPrompt->inputID = type & 0xFF;
     else
@@ -144,7 +144,7 @@ void UIButtonPrompt_StageLoad(void)
     UIButtonPrompt->aniFrames = RSDK.LoadSpriteAnimation("UI/Buttons.bin", SCOPE_STAGE);
 }
 
-int UIButtonPrompt_GetButtonMappings(int input, int button)
+int32 UIButtonPrompt_GetButtonMappings(int32 input, int32 button)
 {
     switch (button) {
         case 0: return RSDK_controller[input].keyA.keyMap;
@@ -158,16 +158,16 @@ int UIButtonPrompt_GetButtonMappings(int input, int button)
     return 0;
 }
 
-int UIButtonPrompt_GetGamepadType(void)
+int32 UIButtonPrompt_GetGamepadType(void)
 {
 #if RETRO_USE_PLUS 
-    int id = API_MostRecentActiveControllerID(0, 0, 0);
+    int32 id = API_MostRecentActiveControllerID(0, 0, 0);
 #else
-    int id = API_MostRecentActiveControllerID(0);
+    int32 id = API_MostRecentActiveControllerID(0);
 #endif
-    int gamepadType = API_GetControllerType(id);
+    int32 gamepadType = API_GetControllerType(id);
 
-    int deviceType = (gamepadType >> 8) & 0xFF;
+    int32 deviceType = (gamepadType >> 8) & 0xFF;
     if (deviceType == DEVICE_TYPE_KEYBOARD) {
         switch (Localization->language) {
             case LANGUAGE_FR: return 9;
@@ -192,7 +192,7 @@ int UIButtonPrompt_GetGamepadType(void)
     return 2;
 }
 
-uint8 UIButtonPrompt_MappingsToFrame(int mappings)
+uint8 UIButtonPrompt_MappingsToFrame(int32 mappings)
 {
     //case values: https://docs.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes
     switch (mappings) {
@@ -295,7 +295,7 @@ void UIButtonPrompt_Unknown4(void)
         RSDK.SetSpriteAnimation(UIButtonPrompt->aniFrames, 2, &entity->animator2, true, entity->buttonID);
     }
     else {
-        int buttonID = entity->buttonID;
+        int32 buttonID = entity->buttonID;
         if (API_GetConfirmButtonFlip() && buttonID <= 1)
             buttonID ^= 1;
 
@@ -303,8 +303,8 @@ void UIButtonPrompt_Unknown4(void)
             RSDK.SetSpriteAnimation(UIButtonPrompt->aniFrames, UIButtonPrompt->type, &entity->animator2, true, buttonID);
         }
         else {
-            int mappings = UIButtonPrompt_GetButtonMappings(UIButtonPrompt->inputID, buttonID);
-            int frame    = UIButtonPrompt_MappingsToFrame(mappings);
+            int32 mappings = UIButtonPrompt_GetButtonMappings(UIButtonPrompt->inputID, buttonID);
+            int32 frame    = UIButtonPrompt_MappingsToFrame(mappings);
             RSDK.SetSpriteAnimation(UIButtonPrompt->aniFrames, 1, &entity->animator2, true, frame);
         }
     }
@@ -316,18 +316,18 @@ bool32 UIButtonPrompt_CheckTouch(void)
     EntityUIControl *control = (EntityUIControl *)entity->parent;
     if (control && !control->dialogHasFocus && !control->selectionDisabled) {
         if (RSDK_touchMouse->count) {
-            int screenX = (RSDK_screens->position.x << 16);
-            int screenY = (RSDK_screens->position.y << 16);
-            int sizeX   = entity->touchSize.x >> 1;
-            int sizeY   = entity->touchSize.y >> 1;
+            int32 screenX = (RSDK_screens->position.x << 16);
+            int32 screenY = (RSDK_screens->position.y << 16);
+            int32 sizeX   = entity->touchSize.x >> 1;
+            int32 sizeY   = entity->touchSize.y >> 1;
 
             bool32 flag = false;
-            for (int i = 0; i < RSDK_touchMouse->count; ++i) {
-                int x = screenX - ((RSDK_touchMouse->x[i] * RSDK_screens->width) * -65536.0f);
-                int y = screenY - ((RSDK_touchMouse->y[i] * RSDK_screens->height) * -65536.0f);
+            for (int32 i = 0; i < RSDK_touchMouse->count; ++i) {
+                int32 x = screenX - ((RSDK_touchMouse->x[i] * RSDK_screens->width) * -65536.0f);
+                int32 y = screenY - ((RSDK_touchMouse->y[i] * RSDK_screens->height) * -65536.0f);
 
-                int touchX = abs(entity->touchPos.x + entity->position.x - x);
-                int touchY = abs(entity->touchPos.y + entity->position.y - y);
+                int32 touchX = abs(entity->touchPos.x + entity->position.x - x);
+                int32 touchY = abs(entity->touchPos.y + entity->position.y - y);
                 if (touchX < sizeX && touchY < sizeY) {
                     flag = true;
                 }
@@ -371,7 +371,7 @@ void UIButtonPrompt_Unknown7(void)
         entity->timer = 0;
         entity->flag  = true;
         entity->state = UIButtonPrompt_Unknown6;
-        int buttonID  = entity->buttonID;
+        int32 buttonID  = entity->buttonID;
         if (API_GetConfirmButtonFlip() && buttonID <= 1)
             buttonID ^= 1;
         UIControl_ClearInputs(buttonID);

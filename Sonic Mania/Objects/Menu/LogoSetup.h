@@ -6,7 +6,7 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    int timer;
+    int32 timer;
     uint16 sfx_Sega;
 } ObjectLogoSetup;
 
@@ -15,7 +15,7 @@ typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
-    int timer;
+    int32 timer;
 } EntityLogoSetup;
 
 // Object Struct

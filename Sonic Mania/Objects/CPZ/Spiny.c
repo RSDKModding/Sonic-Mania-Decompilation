@@ -128,14 +128,14 @@ void Spiny_State_Floor(void)
     RSDK_THIS(Spiny);
     RSDK.ProcessAnimation(&entity->animator);
     if (++entity->timer2 >= 256) {
-        int velStore   = -entity->velocity.x;
+        int32 velStore   = -entity->velocity.x;
         entity->timer2 = 0;
         entity->direction ^= 1u;
         entity->timer      = 128;
         entity->velocity.x = velStore;
     }
 
-    int distance = 0x7FFFFFFF;
+    int32 distance = 0x7FFFFFFF;
     entity->position.x += entity->velocity.x;
     if (entity->timer) {
         entity->timer--;

@@ -12,23 +12,23 @@ void WarpDoor_Update(void)
         EntityWarpDoor *tag = (EntityWarpDoor *)WarpDoor->tags[entity->destinationTag];
         if (tag) {
             bool32 flag = false;
-            int boundID = -1;
+            int32 boundID = -1;
             foreach_all(Player, player)
             {
                 if (Player_CheckCollisionTouch(player, entity, &entity->hitbox)) {
                     flag = true;
                     if (!entity->field_A4) {
                         EntityCamera *camera = player->camera;
-                        int camRelPosX       = 0;
-                        int camRelPosY       = 0;
-                        int playerX          = player->position.x;
-                        int playerY          = player->position.y;
+                        int32 camRelPosX       = 0;
+                        int32 camRelPosY       = 0;
+                        int32 playerX          = player->position.x;
+                        int32 playerY          = player->position.y;
                         if (camera) {
                             camRelPosX = camera->position.x - playerX;
                             camRelPosY = camera->position.y - playerY;
                         }
-                        int relPosX = playerX - entity->position.x;
-                        int relPosY = playerY - entity->position.y;
+                        int32 relPosX = playerX - entity->position.x;
+                        int32 relPosY = playerY - entity->position.y;
                         LogHelpers_Print("camRelPos = <%d, %d>", camRelPosX >> 16, camRelPosY >> 16);
                         LogHelpers_Print("relPos = <%d, %d>", relPosX >> 16, relPosY >> 16);
 
@@ -49,8 +49,8 @@ void WarpDoor_Update(void)
                         }
 
                         if (camera) {
-                            int screenY = camRelPosY + posPtr.y;
-                            int screenX = camRelPosX + posPtr.x;
+                            int32 screenY = camRelPosY + posPtr.y;
+                            int32 screenX = camRelPosX + posPtr.x;
                             LogHelpers_Print("newPos = <%d, %d>", posPtr.x >> 16, posPtr.y >> 16);
                             LogHelpers_Print("newCamPos = <%d, %d>", screenX >> 16, screenY >> 16);
                             camera->position.x                        = screenX;
@@ -60,7 +60,7 @@ void WarpDoor_Update(void)
                             camera->state                             = Camera_State_Follow;
                             player->scrollDelay                       = 0;
                             WarpDoor_Unknown5(boundID, &posPtr);
-                            int pID                   = RSDK.GetEntityID(player);
+                            int32 pID                   = RSDK.GetEntityID(player);
                             camera->boundsL           = Zone->screenBoundsL1[pID];
                             camera->boundsR           = Zone->screenBoundsR1[pID];
                             camera->boundsT           = Zone->screenBoundsT1[pID];
@@ -82,8 +82,8 @@ void WarpDoor_Update(void)
                         if (!player->sidekick) {
                             if (RSDK.CheckStageFolder("TMZ2")) {
                                 if (entity->effect == 1) {
-                                    int sfx     = RSDK.Rand(0, 6);
-                                    int channel = RSDK.PlaySfx(WarpDoor->sfxRubyAttackL[sfx], false, 0xFF);
+                                    int32 sfx     = RSDK.Rand(0, 6);
+                                    int32 channel = RSDK.PlaySfx(WarpDoor->sfxRubyAttackL[sfx], false, 0xFF);
                                     RSDK.SetChannelAttributes(channel, 1.0, -1.0, 1.0);
                                     channel = RSDK.PlaySfx(WarpDoor->sfxRubyAttackR[sfx], 0, 0xFF);
                                     RSDK.SetChannelAttributes(channel, 1.0, 1.0, 1.0);
@@ -207,7 +207,7 @@ void WarpDoor_StageLoad(void)
     WarpDoor->field_140C = 0;
     WarpDoor->field_1408 = 0;
     WarpDoor->boundCount = 0;
-    for (int i = 0; i < 0x100; ++i) {
+    for (int32 i = 0; i < 0x100; ++i) {
         WarpDoor->tags[i] = NULL;
     }
     if (RSDK.CheckStageFolder("FBZ"))
@@ -303,16 +303,16 @@ bool32 WarpDoor_Unknown5(int16 a1, Vector2 *posPtr)
         return false;
     }
 
-    int storeX = player->position.x;
-    int storeY = player->position.y;
+    int32 storeX = player->position.x;
+    int32 storeY = player->position.y;
     if (posPtr) {
         player->position.x = posPtr->x;
         player->position.y = posPtr->y;
     }
 
-    int distStore = -1;
-    int id        = -1;
-    for (int i = 0; i < 0x100; ++i) {
+    int32 distStore = -1;
+    int32 id        = -1;
+    for (int32 i = 0; i < 0x100; ++i) {
         if (!WarpDoor->boundaries[i].left && !WarpDoor->boundaries[i].top && !WarpDoor->boundaries[i].right && !WarpDoor->boundaries[i].bottom)
             break;
 
@@ -320,9 +320,9 @@ bool32 WarpDoor_Unknown5(int16 a1, Vector2 *posPtr)
             || player->position.y > WarpDoor->boundaries[i].bottom << 16) {
         }
         else {
-            int left = WarpDoor->boundaries[i].left << 16;
+            int32 left = WarpDoor->boundaries[i].left << 16;
             if (player->position.x >= left) {
-                int dist =
+                int32 dist =
                     (WarpDoor->boundaries[i].bottom - WarpDoor->boundaries[i].top) * (WarpDoor->boundaries[i].left - WarpDoor->boundaries[i].right);
                 if (dist < distStore) {
                     distStore = dist;
@@ -343,14 +343,14 @@ bool32 WarpDoor_Unknown5(int16 a1, Vector2 *posPtr)
 void WarpDoor_DrawDebug(void)
 {
     RSDK_THIS(WarpDoor);
-    int x = (entity->hitbox.left << 16) + entity->position.x + 0x80000;
-    int y = (entity->hitbox.top << 16) + entity->position.y + 0x80000;
+    int32 x = (entity->hitbox.left << 16) + entity->position.x + 0x80000;
+    int32 y = (entity->hitbox.top << 16) + entity->position.y + 0x80000;
 
     entity->animator.frameID = entity->go ? 2 : 0;
 
-    int xOff = 0;
-    int yOff = 0;
-    for (int i = 0; i < entity->width * entity->height; ++i) {
+    int32 xOff = 0;
+    int32 yOff = 0;
+    for (int32 i = 0; i < entity->width * entity->height; ++i) {
         Vector2 drawPos;
         drawPos.y = y + yOff;
         drawPos.x = x + (xOff << 20);
@@ -362,7 +362,7 @@ void WarpDoor_DrawDebug(void)
     }
 
     if (RSDK_sceneInfo->inEditor) {
-        int colour = 0xFF0000;
+        int32 colour = 0xFF0000;
         if (!entity->go)
             colour = 0x0000FF;
 

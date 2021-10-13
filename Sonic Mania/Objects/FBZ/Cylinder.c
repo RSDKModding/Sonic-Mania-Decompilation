@@ -116,7 +116,7 @@ void Cylinder_State_Unknown1(void)
     foreach_active(Player, player)
     {
         Hitbox *playerHitbox = Player_GetHitbox(player);
-        int radius           = (entity->radius - playerHitbox->bottom) << 6;
+        int32 radius           = (entity->radius - playerHitbox->bottom) << 6;
 
         if (entity->playerFrameIDs[player->playerID]) {
             if (!Player_CheckCollisionTouch(player, entity, &entity->hitbox1) || player->velocity.y <= -0x40000) {
@@ -174,7 +174,7 @@ void Cylinder_State_Unknown2(void)
     foreach_active(Player, player)
     {
         Hitbox *playerHitbox = Player_GetHitbox(player);
-        int radius           = (entity->radius - playerHitbox->bottom) << 6;
+        int32 radius           = (entity->radius - playerHitbox->bottom) << 6;
 
         if (entity->playerFrameIDs[player->playerID]) {
             if (Player_CheckCollisionTouch(player, entity, &entity->hitbox1)) {
@@ -226,7 +226,7 @@ void Cylinder_State_Unknown3(void)
     foreach_active(Player, player)
     {
         Hitbox *playerHitbox = Player_GetHitbox(player);
-        int radius           = (entity->radius - playerHitbox->bottom - 12) << 6;
+        int32 radius           = (entity->radius - playerHitbox->bottom - 12) << 6;
 
         switch (entity->playerFrameIDs[player->playerID]) {
             case 0:
@@ -255,8 +255,8 @@ void Cylinder_State_Unknown3(void)
                             player->tileCollisions                   = false;
                             entity->playerFrameIDs[player->playerID] = 2;
                         }
-                        int distance = (player->position.x - entity->position.x) >> 16;
-                        int right    = entity->hitbox4.right - 48;
+                        int32 distance = (player->position.x - entity->position.x) >> 16;
+                        int32 right    = entity->hitbox4.right - 48;
                         if (distance < right) {
                             player->rotation  = 256;
                             player->direction = FLIP_NONE;
@@ -273,8 +273,8 @@ void Cylinder_State_Unknown3(void)
                         player->tileCollisions                   = false;
                         entity->playerFrameIDs[player->playerID] = 2;
                     }
-                    int distance = (entity->position.x - player->position.x) >> 16;
-                    int right    = -48 - entity->hitbox3.left;
+                    int32 distance = (entity->position.x - player->position.x) >> 16;
+                    int32 right    = -48 - entity->hitbox3.left;
                     if (distance < right) {
                         player->rotation  = 256;
                         player->direction = FLIP_X;
@@ -297,7 +297,7 @@ void Cylinder_State_Unknown3(void)
                     player->position.y += (player->groundVel >> 2) & 0xFFFFE000;
                 player->direction = FLIP_X;
 
-                int frame = 0;
+                int32 frame = 0;
                 if (player->groundVel <= 0) {
                     player->rotation = 128;
                     frame            = 35 - 24 * entity->playerAngles[player->playerID] / 1024;
@@ -324,7 +324,7 @@ void Cylinder_State_Unknown3(void)
                         }
                         else {
                             if (entity->hitbox3.top < entity->hitbox4.top) {
-                                int maxY = entity->position.y - (playerHitbox->bottom << 16) - entity->updateRange.y + 0x400000;
+                                int32 maxY = entity->position.y - (playerHitbox->bottom << 16) - entity->updateRange.y + 0x400000;
                                 if (player->position.y <= maxY) {
                                     player->position.y                       = maxY;
                                     entity->playerFrameIDs[player->playerID] = 3;
@@ -346,7 +346,7 @@ void Cylinder_State_Unknown3(void)
                             player->tileCollisions                   = true;
                         }
                         else if (entity->hitbox3.top >= entity->hitbox4.top) {
-                            int maxY = entity->position.y - (playerHitbox->bottom << 16) - entity->updateRange.y + 0x400000;
+                            int32 maxY = entity->position.y - (playerHitbox->bottom << 16) - entity->updateRange.y + 0x400000;
                             if (player->position.y <= maxY) {
                                 player->position.y                       = maxY;
                                 entity->playerFrameIDs[player->playerID] = 3;
@@ -380,8 +380,8 @@ void Cylinder_State_Unknown3(void)
                         player->onGround   = true;
                         player->velocity.y = 0;
                         if (player->groundVel >= 0) {
-                            int distance = (player->position.x - entity->position.x) >> 16;
-                            int right    = entity->hitbox4.right - 48;
+                            int32 distance = (player->position.x - entity->position.x) >> 16;
+                            int32 right    = entity->hitbox4.right - 48;
                             if (distance < right) {
                                 player->rotation  = 256;
                                 player->direction = FLIP_X;
@@ -390,8 +390,8 @@ void Cylinder_State_Unknown3(void)
                             }
                         }
                         else {
-                            int distance = (entity->position.x - player->position.x) >> 16;
-                            int right    = -48 - entity->hitbox3.left;
+                            int32 distance = (entity->position.x - player->position.x) >> 16;
+                            int32 right    = -48 - entity->hitbox3.left;
                             if (distance < right) {
                                 player->rotation  = 256;
                                 player->direction = FLIP_NONE;
@@ -425,16 +425,16 @@ void Cylinder_State_Unknown4(void)
     foreach_active(Player, player)
     {
         Hitbox *playerHitbox = Player_GetHitbox(player);
-        int radius           = (entity->radius + playerHitbox->bottom) << 6;
+        int32 radius           = (entity->radius + playerHitbox->bottom) << 6;
         if (entity->playerFrameIDs[player->playerID]) {
-            int angle = (entity->playerAngles[player->playerID] + 8) & 0x3FF;
+            int32 angle = (entity->playerAngles[player->playerID] + 8) & 0x3FF;
             if (Player_CheckCollisionTouch(player, entity, &entity->hitbox1) && !player->onGround) {
                 if ((player->position.y < entity->position.y && player->velocity.y >= 0)
                     || (player->position.y >= entity->position.y && player->velocity.y <= 0)) {
 
                     bool32 flag = true;
                     if (player->state == Cylinder_Player_State_Unknown2) {
-                        int frame = (24 - (24 * angle) / 1024) % 24;
+                        int32 frame = (24 - (24 * angle) / 1024) % 24;
                         if (player->groundVel)
                             RSDK.SetSpriteAnimation(player->spriteIndex, ANI_SPRINGCS, &player->playerAnimator, true, frame);
                         else
@@ -515,7 +515,7 @@ void Cylinder_State_Unknown4(void)
                     player->onGround                         = true;
                     player->velocity.y                       = 0;
                     entity->playerFrameIDs[player->playerID] = 1;
-                    int frame = (ANI_STANDCS - 24 * ((entity->playerAngles[player->playerID] + 8) & 0x3FF) / 1024) % ANI_STANDCS;
+                    int32 frame = (ANI_STANDCS - 24 * ((entity->playerAngles[player->playerID] + 8) & 0x3FF) / 1024) % ANI_STANDCS;
                     if (player->groundVel)
                         RSDK.SetSpriteAnimation(player->spriteIndex, ANI_SPRINGCS, &player->playerAnimator, true, frame);
                     else
@@ -539,8 +539,8 @@ void Cylinder_State_Unknown5(void)
     foreach_active(Player, player)
     {
         Hitbox *playerHitbox = Player_GetHitbox(player);
-        int top              = entity->position.y + (entity->hitbox1.top << 16);
-        int radius           = (entity->radius + playerHitbox->bottom) << 6;
+        int32 top              = entity->position.y + (entity->hitbox1.top << 16);
+        int32 radius           = (entity->radius + playerHitbox->bottom) << 6;
 
         if (entity->playerFrameIDs[player->playerID]) {
             bool32 inputFlag = false;
@@ -574,10 +574,10 @@ void Cylinder_State_Unknown5(void)
                     }
                     player->position.y += player->velocity.y;
 
-                    int len   = minVal(abs(player->position.y - top) >> 16, entity->length);
-                    int frame = 0;
+                    int32 len   = minVal(abs(player->position.y - top) >> 16, entity->length);
+                    int32 frame = 0;
 
-                    int angle = ((len << 10) / 192 + (((uint32)player->groundVel >> 22) & 0x200)) & 0x3FF;
+                    int32 angle = ((len << 10) / 192 + (((uint32)player->groundVel >> 22) & 0x200)) & 0x3FF;
                     if (player->groundVel <= 0) {
                         frame             = (24 - 24 * angle / 1024) % 24;
                         player->direction = FLIP_NONE;
@@ -737,7 +737,7 @@ void Cylinder_Player_State_Unknown2(void)
 void Cylinder_Player_State_Unknown3(void)
 {
     RSDK_THIS(Player);
-    int angle     = entity->angle;
+    int32 angle     = entity->angle;
     entity->angle = 0;
     Player_HandleRollDeceleration();
     if (entity->state == Player_State_Ground) {

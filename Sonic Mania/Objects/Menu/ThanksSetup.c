@@ -45,7 +45,7 @@ void ThanksSetup_StageLoad(void)
     ThanksSetup->sfx_Sega = RSDK.GetSFX("Stage/Sega.wav");
     RSDK.ResetEntitySlot(0, ThanksSetup->objectID, 0);
     UIPicture->spriteIndex = RSDK.LoadSpriteAnimation("Thanks/Decorations.bin", SCOPE_STAGE);
-    for (int i = 0; i < 16; ++i) {
+    for (int32 i = 0; i < 16; ++i) {
         RSDK.StopChannel(i);
     }
 }
@@ -55,7 +55,7 @@ void ThanksSetup_Unknown1(void)
     RSDK_THIS(ThanksSetup);
     entity->angle = (entity->angle - 3) & 0x1FF;
 
-    int angle = entity->angle;
+    int32 angle = entity->angle;
     foreach_active(UIPicture, picture)
     {
         if (!picture->animator.animationID) {

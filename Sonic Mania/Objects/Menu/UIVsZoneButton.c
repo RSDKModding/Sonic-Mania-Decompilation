@@ -51,8 +51,8 @@ void UIVsZoneButton_Update(void)
             entity->state = UIVsZoneButton_Unknown13;
         }
         else {
-            int id = -1;
-            for (int i = 0; i < parent->buttonCount; ++i) {
+            int32 id = -1;
+            for (int32 i = 0; i < parent->buttonCount; ++i) {
                 if (entity == (EntityUIVsZoneButton *)parent->buttons[i]) {
                     id = i;
                     break;
@@ -187,7 +187,7 @@ void UIVsZoneButton_Unknown5(void)
     drawPos.y += entity->field_13C;
     RSDK.DrawRect(drawPos.x - 0x180000, drawPos.y - 0x140000, 0x300000, 0x280000, 0xFFFFFF, 255, INK_NONE, false);
     if (entity->xOut) {
-        int dir           = entity->direction;
+        int32 dir           = entity->direction;
         entity->direction = entity->zoneDirection;
         RSDK.DrawSprite(&entity->zoneAnimator, &drawPos, false);
 
@@ -203,7 +203,7 @@ void UIVsZoneButton_Unknown5(void)
         RSDK.DrawSprite(&entity->animator1, &drawPos, false);
     }
     else if (entity->zoneID == 12) {
-        int dir           = entity->direction;
+        int32 dir           = entity->direction;
         entity->direction = entity->zoneDirection;
         RSDK.DrawSprite(&entity->zoneAnimator, &drawPos, false);
 
@@ -219,7 +219,7 @@ void UIVsZoneButton_Unknown6(void)
     RSDK_THIS(UIVsZoneButton);
     Vector2 drawPos;
 
-    int size  = (entity->field_11C + entity->field_118) >> 16;
+    int32 size  = (entity->field_11C + entity->field_118) >> 16;
     drawPos.x = entity->position.x;
     drawPos.y = entity->position.y + 0x280000;
 
@@ -229,7 +229,7 @@ void UIVsZoneButton_Unknown6(void)
     UIWidgets_Unknown7(entity->field_11C >> 16, size, entity->field_120, 0, 0, 0, drawPos.x, drawPos.y);
 
     if (!RSDK_sceneInfo->inEditor) {
-        int width = RSDK.GetStringWidth(UIWidgets->labelSpriteIndex, 0, &entity->nameText, 0, entity->nameText.textLength, 0);
+        int32 width = RSDK.GetStringWidth(UIWidgets->labelSpriteIndex, 0, &entity->nameText, 0, entity->nameText.textLength, 0);
         drawPos.y -= 0x10000;
         drawPos.x -= width << 15;
         RSDK.DrawText(&entity->textAnimator, &drawPos, &entity->nameText, 0, entity->nameText.textLength, ALIGN_LEFT, 0, 0, 0, false);
@@ -293,7 +293,7 @@ void UIVsZoneButton_Unknown13(void)
         entity->zoneDirection = entity->zoneAnimator.frameID & 3;
 
     if (entity->field_13C) {
-        int dist = -(entity->field_13C / abs(entity->field_13C));
+        int32 dist = -(entity->field_13C / abs(entity->field_13C));
         entity->field_13C += dist << 16;
         if (dist < 0) {
             if (entity->field_13C < 0) {

@@ -12,17 +12,17 @@ void AIZRockPile_Update(void)
     {
         if (!entity->onlyMighty || player->characterID == ID_MIGHTY) {
             if (!entity->onlyKnux || player->characterID == ID_KNUCKLES) {
-                int cMode     = player->collisionMode;
-                int playerX   = player->position.x;
-                int playerY   = player->position.y;
-                int xVelocity = player->velocity.x;
-                int yVelocity = player->velocity.y;
-                int jumping   = player->playerAnimator.animationID == ANI_JUMP;
-                int groundVel = player->groundVel;
+                int32 cMode     = player->collisionMode;
+                int32 playerX   = player->position.x;
+                int32 playerY   = player->position.y;
+                int32 xVelocity = player->velocity.x;
+                int32 yVelocity = player->velocity.y;
+                int32 jumping   = player->playerAnimator.animationID == ANI_JUMP;
+                int32 groundVel = player->groundVel;
 
                 
                 if (entity->smashSides || entity->smashTop) {
-                    int side = Player_CheckCollisionBox(player, entity, hitbox);
+                    int32 side = Player_CheckCollisionBox(player, entity, hitbox);
                     if (entity->smashSides && (side == 2 || side == 3)) {
                         if (side == 2 || side == 3) {
                             bool32 flag = jumping && player->onGround && abs(groundVel) >= 0x48000;
@@ -124,11 +124,11 @@ void AIZRockPile_StageLoad(void)
     AIZRockPile->sfx_Break   = RSDK.GetSFX("Stage/LedgeBreak3.wav");
 }
 
-void AIZRockPile_SpawnRocks(int *speeds)
+void AIZRockPile_SpawnRocks(int32 *speeds)
 {
     RSDK_THIS(AIZRockPile);
 
-    for (int i = 0; i < entity->size; ++i) {
+    for (int32 i = 0; i < entity->size; ++i) {
         EntityDebris *debris =
             (EntityDebris *)RSDK.CreateEntity(Debris->objectID, Debris_State_Fall, entity->position.x + entity->rockPositions[2 * i],
                                               entity->position.y + entity->rockPositions[(2 * i) + 1]);

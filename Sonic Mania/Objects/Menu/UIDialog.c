@@ -44,36 +44,36 @@ void UIDialog_Draw(void)
     drawPos.x += entity->drawPos.x;
     drawPos.y += entity->drawPos.y;
 
-    int w     = 0;
-    int count = entity->lineCount + 1;
+    int32 w     = 0;
+    int32 count = entity->lineCount + 1;
     if (count <= 0) {
         count = entity->lineCount + 1;
     }
     else {
-        for (int i = 0; i < count; ++i) {
-            int start = 0;
+        for (int32 i = 0; i < count; ++i) {
+            int32 start = 0;
             if (i)
                 start = entity->lineLength[i - 1] + 1;
 
-            int len = 0;
+            int32 len = 0;
             if (i >= entity->lineCount)
                 len = entity->textInfo.textLength;
             else
                 len = entity->lineLength[i];
-            int width = RSDK.GetStringWidth(UIWidgets->labelSpriteIndex, 0, &entity->textInfo, start, len, 0);
+            int32 width = RSDK.GetStringWidth(UIWidgets->labelSpriteIndex, 0, &entity->textInfo, start, len, 0);
             if (width > w)
                 w = width;
         }
     }
 
-    for (int i = 0; i < count; ++i) {
-        int offset = -0x8000 * w;
+    for (int32 i = 0; i < count; ++i) {
+        int32 offset = -0x8000 * w;
 
-        int start = 0;
+        int32 start = 0;
         if (i)
             start = entity->lineLength[i - 1] + 1;
 
-        int len = 0;
+        int32 len = 0;
         if (i >= entity->lineCount)
             len = entity->textInfo.textLength;
         else
@@ -109,7 +109,7 @@ EntityUIDialog *UIDialog_CreateActiveDialog(void *msg)
         LogHelpers_Print("EXCEPTION: Called CreateDialog when an activeDialog already existed.");
     }
     else {
-        int id = RSDK_GET_ENTITY(SLOT_DIALOG, UIDialog)->objectID;
+        int32 id = RSDK_GET_ENTITY(SLOT_DIALOG, UIDialog)->objectID;
         if (id) {
             LogHelpers_Print("Can't create UIDialog (%d), entity already exists in slot (class ID: %d)", UIDialog->objectID, id);
         }
@@ -129,8 +129,8 @@ void UIDialog_SetupText(EntityUIDialog *dialog, TextInfo *text)
 {
     if (text) {
         dialog->lineCount = 0;
-        int charPos       = 0;
-        for (int i = 0; i < text->textLength; ++i) {
+        int32 charPos       = 0;
+        for (int32 i = 0; i < text->textLength; ++i) {
             if (text->text[charPos] == '\n' && dialog->lineCount < 3) {
                 dialog->lineLength[dialog->lineCount] = charPos;
                 ++dialog->lineCount;
@@ -145,7 +145,7 @@ void UIDialog_SetupText(EntityUIDialog *dialog, TextInfo *text)
 
 void UIDialog_AddButton(uint8 frame, EntityUIDialog *dialog, void (*callback)(void), bool32 flag)
 {
-    int id = dialog->id;
+    int32 id = dialog->id;
     if (dialog->id < 3) {
         dialog->buttonFrames[dialog->id] = frame;
         dialog->callbacks[dialog->id]    = callback;
@@ -213,7 +213,7 @@ void UIDialog_Setup(EntityUIDialog *dialog)
             UIDialog->controlStateStore = StateMachine_None;
         }
 
-        int i = 0;
+        int32 i = 0;
         for (; i < 3; ++i) {
             if (!dialog->entPtrs[i])
                 break;
@@ -250,14 +250,14 @@ void UIDialog_Unknown6(void)
 
 void UIDialog_Unknown7(void)
 {
-    int offsets[] = { 0, 0, 0x80, 0x70 };
+    int32 offsets[] = { 0, 0, 0x80, 0x70 };
 
     RSDK_THIS(UIDialog);
-    int offset = offsets[entity->id] << 16;
-    int x      = entity->position.x - 0x240000 + entity->drawPos.x - ((offset * maxVal(entity->id - 1, 0)) >> 1);
-    int y      = entity->position.y + 0x2C0000 + entity->drawPos.y;
+    int32 offset = offsets[entity->id] << 16;
+    int32 x      = entity->position.x - 0x240000 + entity->drawPos.x - ((offset * maxVal(entity->id - 1, 0)) >> 1);
+    int32 y      = entity->position.y + 0x2C0000 + entity->drawPos.y;
 
-    for (int i = 0; i < 3; ++i) {
+    for (int32 i = 0; i < 3; ++i) {
         if (!entity->entPtrs[i])
             break;
         EntityUIButton *button = entity->entPtrs[i];
@@ -279,7 +279,7 @@ void UIDialog_Close(void)
         destroyEntity(control);
     }
 
-    for (int i = 0; i < 3; ++i) {
+    for (int32 i = 0; i < 3; ++i) {
         if (entity->entPtrs[i])
             destroyEntity(entity->entPtrs[i]);
     }
@@ -302,8 +302,8 @@ bool32 UIDialog_Unknown9(void)
     EntityUIDialog *entity   = UIDialog->activeDialog;
     EntityUIControl *control = entity->parent;
 
-    for (int i = 0; i < control->buttonCount; ++i) {
-        int frame = entity->buttonFrames[i];
+    for (int32 i = 0; i < control->buttonCount; ++i) {
+        int32 frame = entity->buttonFrames[i];
         if (frame == 1 || frame == 3) {
             if (entity->flags[i]) {
                 if (entity->state != UIDialog_Unknown13) {
@@ -327,7 +327,7 @@ void UIDialog_Unknown10(void)
 {
     EntityUIDialog *entity = UIDialog->activeDialog;
     if (entity->parent) {
-        int id = entity->parent->activeEntityID;
+        int32 id = entity->parent->activeEntityID;
         if (id >= 0 && id < entity->parent->buttonCount) {
             if (entity->flags[id]) {
                 UIDialog_Unknown4(entity, entity->callbacks[id]);

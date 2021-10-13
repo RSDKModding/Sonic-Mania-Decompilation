@@ -23,9 +23,9 @@ void StarPost_Draw(void)
 
     Vector2 drawPos;
     if (entity->starFlag > 0) {
-        int angle2 = entity->starAngle2;
-        int angle  = 3 * RSDK.Sin512(entity->starAngle);
-        for (int i = 0; i < 4; ++i) {
+        int32 angle2 = entity->starAngle2;
+        int32 angle  = 3 * RSDK.Sin512(entity->starAngle);
+        for (int32 i = 0; i < 4; ++i) {
             drawPos.x = entity->position.x + ((RSDK.Sin512(angle2) << 12) * entity->starOffset >> 7);
             drawPos.y = (((angle * RSDK.Sin512(angle2)) + (RSDK.Cos512(angle2) << 10)) * entity->starOffset >> 7) + entity->position.y - 0x320000;
             RSDK.DrawSprite(&entity->starData, &drawPos, false);
@@ -80,7 +80,7 @@ void StarPost_StageLoad(void)
         DebugMode->draw[DebugMode->itemCount++]    = StarPost_DebugDraw;
     }
 
-    for (int i = 0; i < Player->playerCount; ++i) {
+    for (int32 i = 0; i < Player->playerCount; ++i) {
         if (StarPost->postIDs[i]) {
             EntityPlayer *player          = RSDK_GET_ENTITY(i, Player);
             EntityStarPost *savedStarPost = RSDK_GET_ENTITY(StarPost->postIDs[i], StarPost);
@@ -95,9 +95,9 @@ void StarPost_StageLoad(void)
 
             if (!globals->specialRingID) {
                 if (globals->gameMode < MODE_TIMEATTACK) {
-                    int ms = RSDK_sceneInfo->milliseconds;
-                    int s  = RSDK_sceneInfo->minutes;
-                    int m  = RSDK_sceneInfo->seconds;
+                    int32 ms = RSDK_sceneInfo->milliseconds;
+                    int32 s  = RSDK_sceneInfo->minutes;
+                    int32 m  = RSDK_sceneInfo->seconds;
                     if ((RSDK_sceneInfo->milliseconds || RSDK_sceneInfo->seconds || RSDK_sceneInfo->minutes) || ms != globals->tempMilliseconds
                         || s != globals->tempSeconds || m != globals->tempMinutes) {
                         RSDK_sceneInfo->milliseconds = StarPost->storedMS;
@@ -121,7 +121,7 @@ void StarPost_StageLoad(void)
                         else
                             sideKick->position.x -= 0x100000;
 
-                        for (int p = 0; p < 0x10; ++p) {
+                        for (int32 p = 0; p < 0x10; ++p) {
                             Player->flyCarryPositions[p].x = player->position.x;
                             Player->flyCarryPositions[p].y = player->position.y;
                         }
@@ -156,7 +156,7 @@ void StarPost_DebugDraw(void)
 void StarPost_DebugSpawn(void) { RSDK.CreateEntity(StarPost->objectID, NULL, RSDK_sceneInfo->entity->position.x, RSDK_sceneInfo->entity->position.y); }
 void StarPost_ResetStarPosts(void)
 {
-    for (int i = 0; i < Player->playerCount; ++i) StarPost->postIDs[i] = 0;
+    for (int32 i = 0; i < Player->playerCount; ++i) StarPost->postIDs[i] = 0;
     StarPost->storedMS      = 0;
     StarPost->storedSeconds = 0;
     StarPost->storedMinutes = 0;
@@ -218,7 +218,7 @@ void StarPost_CheckCollisions(void)
 {
     RSDK_THIS(StarPost);
     foreach_active(Player, player) {
-        int playerSlot = RSDK.GetEntityID(player);
+        int32 playerSlot = RSDK.GetEntityID(player);
         if (!((1 << playerSlot) & entity->activated) && !player->sidekick) {
             if (Player_CheckCollisionTouch(player, entity, &StarPost->hitbox)) {
                 entity->state = StarPost_State_BallSpin;
@@ -241,7 +241,7 @@ void StarPost_CheckCollisions(void)
                     StarPost->storedMinutes = RSDK_sceneInfo->minutes;
                 }
 
-                int speed = 0;
+                int32 speed = 0;
                 if (player->onGround)
                     speed = -12 * (player->groundVel >> 17);
                 else
@@ -252,7 +252,7 @@ void StarPost_CheckCollisions(void)
                 else
                     speed -= 32;
 
-                int ballSpeed = entity->ballSpeed;
+                int32 ballSpeed = entity->ballSpeed;
                 if (!ballSpeed) {
                     entity->ballSpeed = speed;
                 }
@@ -277,7 +277,7 @@ void StarPost_CheckCollisions(void)
 
                 entity->timer = 0;
                 if (globals->gameMode < MODE_TIMEATTACK) {
-                    int quota = 50;
+                    int32 quota = 50;
 #if RETRO_USE_PLUS
                     if (globals->gameMode != MODE_ENCORE)
                         quota = 25;

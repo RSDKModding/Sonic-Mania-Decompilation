@@ -11,16 +11,16 @@ void UncurlPlant_Update(void)
     }
     else {
         if (entity->field_12C <= 0) {
-            for (int i = 0; i < entity->field_128; ++i) {
+            for (int32 i = 0; i < entity->field_128; ++i) {
                 entity->field_100[i] += (UncurlPlant->array3[i] - entity->field_100[i]) >> 2;
             }
 
-            for (int i = entity->field_128; i < 8; ++i) {
+            for (int32 i = entity->field_128; i < 8; ++i) {
                 entity->field_100[i] += (UncurlPlant->array2[i] - entity->field_100[i]) >> 2;
             }
         }
         else {
-            for (int i = 0; i < entity->field_128; ++i) {
+            for (int32 i = 0; i < entity->field_128; ++i) {
                 entity->field_100[i] = UncurlPlant->array3[i];
                 entity->segments[i]  = UncurlPlant->array2[i];
             }
@@ -42,16 +42,16 @@ void UncurlPlant_Update(void)
     entity->segments[6] = UncurlPlant->array1[6] + ((entity->field_124 * (entity->field_100[6] - UncurlPlant->array1[6])) >> 8);
     entity->segments[7] = UncurlPlant->array1[7] + ((entity->field_124 * (entity->field_100[7] - UncurlPlant->array1[7])) >> 8);
 
-    int valStore      = entity->field_128;
+    int32 valStore      = entity->field_128;
     entity->field_120 = 0;
     entity->field_128 = -1;
     entity->field_12C = 0;
     UncurlPlant_CalculateDrawPositions();
     foreach_active(Player, player)
     {
-        int angle = 0;
-        int val   = 0;
-        for (int i = 0; i < 8; ++i) {
+        int32 angle = 0;
+        int32 val   = 0;
+        for (int32 i = 0; i < 8; ++i) {
             angle += entity->segments[i];
             if (angle >= 144)
                 break;
@@ -96,7 +96,7 @@ void UncurlPlant_StaticUpdate(void) {}
 void UncurlPlant_Draw(void)
 {
     RSDK_THIS(UncurlPlant);
-    for (int i = 0; i < 8; ++i) {
+    for (int32 i = 0; i < 8; ++i) {
         RSDK.DrawSprite(&entity->animator, &entity->drawPositions[i], false);
         RSDK.DrawSprite(&entity->animators[i], &entity->drawPositions[i], false);
     }
@@ -123,7 +123,7 @@ void UncurlPlant_Create(void *data)
         entity->updateRange.y = 0x800000;
         UncurlPlant_CalculatePositions();
         RSDK.SetSpriteAnimation(UncurlPlant->aniFrames, 1, &entity->animator, true, 0);
-        for (int i = 0; i < 8; ++i) {
+        for (int32 i = 0; i < 8; ++i) {
             RSDK.SetSpriteAnimation(UncurlPlant->aniFrames, 1, &entity->animators[i], true, RSDK.Rand(1, 8));
             entity->segments[i] = UncurlPlant->array1[i];
         }
@@ -143,18 +143,18 @@ void UncurlPlant_CalculateDrawPositions(void)
 {
     RSDK_THIS(UncurlPlant);
 
-    int angle                  = entity->segments[0];
+    int32 angle                  = entity->segments[0];
     entity->drawPositions[0].x = entity->position.x;
     entity->drawPositions[0].y = entity->position.y;
     if (entity->direction == FLIP_NONE) {
-        for (int i = 1; i < 8; ++i) {
+        for (int32 i = 1; i < 8; ++i) {
             angle += entity->segments[i];
             entity->drawPositions[i].x = entity->drawPositions[i - 1].x + (RSDK.Cos1024(angle) << 10);
             entity->drawPositions[i].y = entity->drawPositions[i - 1].y - (RSDK.Sin1024(angle) << 10);
         }
     }
     else {
-        for (int i = 1; i < 8; ++i) {
+        for (int32 i = 1; i < 8; ++i) {
             angle += entity->segments[i];
             entity->drawPositions[i].x = entity->drawPositions[i - 1].x - (RSDK.Cos1024(angle) << 10);
             entity->drawPositions[i].y = entity->drawPositions[i - 1].y - (RSDK.Sin1024(angle) << 10);
@@ -166,18 +166,18 @@ void UncurlPlant_CalculatePositions(void)
 {
     RSDK_THIS(UncurlPlant);
 
-    int angle              = UncurlPlant->array3[0];
+    int32 angle              = UncurlPlant->array3[0];
     entity->positions[0].x = entity->position.x;
     entity->positions[0].y = entity->position.y;
     if (entity->direction == FLIP_NONE) {
-        for (int i = 1; i < 8; ++i) {
+        for (int32 i = 1; i < 8; ++i) {
             angle += UncurlPlant->array3[i];
             entity->positions[i].x = entity->positions[i - 1].x + (RSDK.Cos1024(angle) << 10);
             entity->positions[i].y = entity->positions[i - 1].y - (RSDK.Sin1024(angle) << 10);
         }
     }
     else {
-        for (int i = 1; i < 8; ++i) {
+        for (int32 i = 1; i < 8; ++i) {
             angle += UncurlPlant->array3[i];
             entity->positions[i].x = entity->positions[i - 1].x - (RSDK.Cos1024(angle) << 10);
             entity->positions[i].y = entity->positions[i - 1].y - (RSDK.Sin1024(angle) << 10);

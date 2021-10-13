@@ -20,13 +20,13 @@ typedef struct {
     Vector2 startPos;
     int8 colWidth;
     int8 rowHeight;
-    int yOffset;
-    int timer;
+    int32 yOffset;
+    int32 timer;
     int8 rowID;
     int8 field_75;
     int8 storedRowID;
     int8 field_77;
-    int fallOffset;
+    int32 fallOffset;
     Hitbox hitbox;
     Hitbox hitboxes[4];
     Entity* parent;
@@ -48,7 +48,7 @@ void SpikeCorridor_Serialize(void);
 
 // Extra Entity Functions
 void SpikeCorridor_SetupHitboxes(void);
-void SpikeCorridor_HandleDrawing(Animator *animator, int offsetY, int8 a3, bool32 animFlag);
+void SpikeCorridor_HandleDrawing(Animator *animator, int32 offsetY, int8 a3, bool32 animFlag);
 void SpikeCorridor_Unknown3(void);
 void SpikeCorridor_CheckPlayerCollisions(void);
 

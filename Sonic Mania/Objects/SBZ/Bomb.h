@@ -17,11 +17,11 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    int planeFilter;
+    int32 planeFilter;
     Vector2 startPos;
     uint8 startDir;
-    int timer;
-    int fuseOffset;
+    int32 timer;
+    int32 fuseOffset;
     Animator animator;
     Animator animator2;
 } EntityBomb;

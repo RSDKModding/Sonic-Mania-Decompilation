@@ -11,7 +11,7 @@ typedef struct {
     uint16 field_8;
     uint16 sfxChemDrop;
     uint16 sfxDNABurst;
-    int playerAnimID;
+    int32 playerAnimID;
     Entity *fxRuby;
     Entity *debris;
 } ObjectCPZ1Intro;
@@ -21,12 +21,12 @@ typedef struct {
     RSDK_ENTITY
     Vector2 size;
     bool32 activated;
-    int field_64;
-    int field_68;
-    int field_6C;
-    int field_70;
-    int field_74;
-    int field_78;
+    int32 field_64;
+    int32 field_68;
+    int32 field_6C;
+    int32 field_70;
+    int32 field_74;
+    int32 field_78;
     Hitbox hitbox;
 } EntityCPZ1Intro;
 
@@ -46,10 +46,10 @@ void CPZ1Intro_Serialize(void);
 
 // Extra Entity Functions
 void CPZ1Intro_Particle_CB(Entity *debris);
-void CPZ1Intro_Unknown3(Entity *player1, Entity *cutSeq, Entity *player2, int val);
+void CPZ1Intro_Unknown3(Entity *player1, Entity *cutSeq, Entity *player2, int32 val);
 
 bool32 CPZ1Intro_CheckSonicAnimFinish(void);
-bool32 CPZ1Intro_CheckTailsAnimFinish(int timer);
+bool32 CPZ1Intro_CheckTailsAnimFinish(int32 timer);
 bool32 CPZ1Intro_CheckKnuxAnimFinish(void);
 
 #if RETRO_USE_PLUS

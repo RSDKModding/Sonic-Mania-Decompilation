@@ -16,7 +16,7 @@ void ItemBox_Update(void)
             else {
                 RSDK.SetSpriteAnimation(ItemBox->spriteIndex, 7, &entity->contentsData, false, 0);
                 if (globals->gameMode == MODE_ENCORE) {
-                    int id = 0;
+                    int32 id = 0;
                     while ((1 << entity->contentsData.frameID) & globals->characterFlags) {
                         if (++entity->contentsData.frameID > 4)
                             entity->contentsData.frameID = 0;
@@ -372,8 +372,8 @@ void ItemBox_CheckHit(void)
             if (player->sidekick) {
                 entity->position.x -= entity->unknownPos.x;
                 entity->position.y -= entity->unknownPos.y;
-                int px             = player->position.x;
-                int py             = player->position.y;
+                int32 px             = player->position.x;
+                int32 py             = player->position.y;
                 uint8 side          = Player_CheckCollisionBox(player, entity, &ItemBox->hitbox);
                 player->position.x = px;
                 player->position.y = py;
@@ -401,7 +401,7 @@ void ItemBox_CheckHit(void)
                 }
             }
             else {
-                int anim = player->playerAnimator.animationID;
+                int32 anim = player->playerAnimator.animationID;
                 bool32 flag =
                     anim == ANI_JUMP && (player->velocity.y >= 0 || player->onGround || entity->direction || player->state == Ice_State_FrozenPlayer);
                 switch (player->characterID) {
@@ -414,8 +414,8 @@ void ItemBox_CheckHit(void)
                 if (!flag) {
                     entity->position.x -= entity->unknownPos.x;
                     entity->position.y -= entity->unknownPos.y;
-                    int px             = player->position.x;
-                    int py             = player->position.y;
+                    int32 px             = player->position.x;
+                    int32 py             = player->position.y;
                     uint8 side          = Player_CheckCollisionBox(player, entity, &ItemBox->hitbox);
                     player->position.x = px;
                     player->position.y = py;
@@ -518,7 +518,7 @@ void ItemBox_GivePowerup(void)
                         RSDK.PlaySfx(Player->sfx_SwapFail, 0, 255);
                         return;
                     }
-                    int charID = player->characterID;
+                    int32 charID = player->characterID;
                     Player_ChangeCharacter(player, (uint8)globals->stock);
                     globals->stock >>= 8;
 
@@ -554,31 +554,31 @@ void ItemBox_GivePowerup(void)
                     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
                     EntityPlayer *player2 = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
 
-                    int charID = -1;
-                    for (int i = player1->characterID; i > 0; ++charID) i >>= 1;
+                    int32 charID = -1;
+                    for (int32 i = player1->characterID; i > 0; ++charID) i >>= 1;
                     playerIDs[0] = charID;
 
                     charID = -1;
-                    for (int i = player2->characterID; i > 0; ++charID) i >>= 1;
+                    for (int32 i = player2->characterID; i > 0; ++charID) i >>= 1;
                     playerIDs[1] = charID;
 
                     if (playerIDs[1] == 0xFF) {
                         RSDK.PlaySfx(Player->sfx_SwapFail, false, 255);
                     }
                     else {
-                        for (int i = 0; i < 3; ++i) {
+                        for (int32 i = 0; i < 3; ++i) {
                             if (globals->stock & (0xFF << (8 * i))) {
-                                int characterID = (globals->stock >> (8 * i)) & 0xFF;
+                                int32 characterID = (globals->stock >> (8 * i)) & 0xFF;
 
                                 playerIDs[i + 2] = -1;
-                                for (int c = characterID; c > 0; ++playerIDs[i + 2]) c >>= 1;
+                                for (int32 c = characterID; c > 0; ++playerIDs[i + 2]) c >>= 1;
                             }
                         }
 
                         globals->stock = 0;
 
-                        int tempStock = 0;
-                        int p         = 0;
+                        int32 tempStock = 0;
+                        int32 p         = 0;
                         for (; p < 5;) {
                             bool32 inc = true;
                             if (playerIDs[p] == 0xFF)
@@ -593,8 +593,8 @@ void ItemBox_GivePowerup(void)
                                             break;
                                         }
                                         else if (p == 4 || playerIDs[p + 1] == 0xFF) {
-                                            int slot           = RSDK.Rand(0, p);
-                                            int id             = newPlayerIDs[slot];
+                                            int32 slot           = RSDK.Rand(0, p);
+                                            int32 id             = newPlayerIDs[slot];
                                             newPlayerIDs[slot] = newPlayerIDs[p];
                                             newPlayerIDs[p]    = id;
                                             tempStock |= 1 << newPlayerIDs[slot];
@@ -622,7 +622,7 @@ void ItemBox_GivePowerup(void)
                             }
                         }
 
-                        for (int i = 0; i < p; ++i) {
+                        for (int32 i = 0; i < p; ++i) {
                             switch (i) {
                                 case 0: Player_ChangeCharacter(player1, 1 << newPlayerIDs[0]); break;
                                 case 1: Player_ChangeCharacter(player2, 1 << newPlayerIDs[1]); break;
@@ -658,7 +658,7 @@ void ItemBox_GivePowerup(void)
                             globals->characterFlags |= (1 << entity->contentsData.frameID);
                             EntityPlayer *player2 = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
                             if (player2->objectID) {
-                                int id = 0;
+                                int32 id = 0;
                                 while ((globals->stock >> id) & 0xFF) id += 8;
                                 globals->stock |= (1 << entity->contentsData.frameID << id);
                                 HUD->stockFlashTimers[(id >> 3) + 1] = 120;
@@ -699,7 +699,7 @@ void ItemBox_GivePowerup(void)
                                         player2->drawFX |= FX_SCALE;
                                         player2->scale.x = 1024;
                                         player2->scale.y = 1024;
-                                        int spd          = player2->abilityValue1 / -12;
+                                        int32 spd          = player2->abilityValue1 / -12;
                                         if (spd >= -0x68000 || spd > -0xE0000) {
                                             if (spd < -0x68000)
                                                 player2->velocity.y = player2->abilityValue1 / -12;
@@ -803,7 +803,7 @@ void ItemBox_Break(EntityItemBox *itemBox, void *p)
     EntityExplosion *explosion = (EntityExplosion *)RSDK.CreateEntity(Explosion->objectID, 0, itemBox->position.x, itemBox->position.y - 0x100000);
     explosion->drawOrder       = Zone->drawOrderHigh;
 
-    for (int d = 0; d < 6; ++d) {
+    for (int32 d = 0; d < 6; ++d) {
         EntityDebris *debris = (EntityDebris *)RSDK.CreateEntity(Debris->objectID, 0, itemBox->position.x + RSDK.Rand(-0x80000, 0x80000),
                                                                  itemBox->position.y + RSDK.Rand(-0x80000, 0x80000));
         debris->state        = Debris_State_Fall;
@@ -1035,8 +1035,8 @@ void ItemBox_HandleObjectCollisions(void)
         foreach_active(Ice, ice)
         {
             if (ice->stateDraw == Ice_StateDraw_Unknown1) {
-                int storeX = ice->position.x;
-                int storeY = ice->position.y;
+                int32 storeX = ice->position.x;
+                int32 storeY = ice->position.y;
                 ice->position.x -= ice->playerPos.x;
                 ice->position.y -= ice->playerPos.y;
 
@@ -1058,8 +1058,8 @@ void ItemBox_HandleObjectCollisions(void)
     }
     foreach_active(Spikes, spikes)
     {
-        int storeX = spikes->position.x;
-        int storeY = spikes->position.y;
+        int32 storeX = spikes->position.x;
+        int32 storeY = spikes->position.y;
         spikes->position.x -= spikes->offset.x;
         spikes->position.y -= spikes->offset.y;
         if (RSDK.CheckObjectCollisionBox(spikes, &spikes->hitbox, entity, &ItemBox->hitbox, true)) {
@@ -1084,8 +1084,8 @@ void ItemBox_HandleObjectCollisions(void)
         if (itemBox != entity) {
             if (entity->state == ItemBox_State_Normal || entity->state == ItemBox_State_Falling) {
                 if (itemBox->state == ItemBox_State_Normal || itemBox->state == ItemBox_State_Falling) {
-                    int storeX = itemBox->position.x;
-                    int storeY = itemBox->position.y;
+                    int32 storeX = itemBox->position.x;
+                    int32 storeY = itemBox->position.y;
                     itemBox->position.x -= itemBox->unknownPos.x;
                     itemBox->position.y -= itemBox->unknownPos.y;
                     if (RSDK.CheckObjectCollisionBox(itemBox, &ItemBox->hitbox, entity, &ItemBox->hitbox, 1) == 1) {

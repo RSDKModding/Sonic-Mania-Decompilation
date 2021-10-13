@@ -7,7 +7,7 @@ void PropellerShaft_Update(void)
     RSDK_THIS(PropellerShaft);
     foreach_active(Player, player)
     {
-        int pID = RSDK.GetEntityID(player);
+        int32 pID = RSDK.GetEntityID(player);
 
         if (((1 << pID) & entity->activePlayers)) {
             if (!Player_CheckCollisionTouch(player, entity, &entity->hitbox)) {

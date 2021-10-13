@@ -22,7 +22,7 @@ void ERZShinobi_Draw(void)
         RSDK.CopyPalette(2, 128, 0, 128, 128);
     entity->rotation = entity->rotStore;
 
-    for (int i = 0; i < 8; ++i) {
+    for (int32 i = 0; i < 8; ++i) {
         Vector2 drawPos;
 
         drawPos.x                 = entity->field_6C * RSDK.Sin512(entity->rotation) + entity->position.x;
@@ -86,9 +86,9 @@ void ERZShinobi_CheckHit(void)
         }
     }
 
-    int storeX = entity->position.x;
-    int storeY = entity->position.y;
-    int angle  = entity->rotStore;
+    int32 storeX = entity->position.x;
+    int32 storeY = entity->position.y;
+    int32 angle  = entity->rotStore;
     foreach_active(Player, player)
     {
         entity->position.x = storeX + entity->field_6C * RSDK.Sin512(angle);
@@ -123,7 +123,7 @@ void ERZShinobi_HandleTileCollisions(void)
         entity->field_6C += (0x1600 - entity->field_6C) >> 3;
     }
 
-    int val                 = entity->field_6C / 88;
+    int32 val                 = entity->field_6C / 88;
     entity->outerBox.right  = val;
     entity->outerBox.bottom = val;
     entity->outerBox.left   = -val;

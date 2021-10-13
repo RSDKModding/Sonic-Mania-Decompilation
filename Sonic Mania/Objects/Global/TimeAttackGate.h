@@ -11,13 +11,13 @@ typedef struct {
     Entity *activeEntity;
     EntityPlayer *playerPtr;
     bool32 started;
-    int field_1C;
-    int field_20;
+    int32 field_1C;
+    int32 field_20;
     bool32 suppressedTitlecard;
     bool32 debugEnabled;
     uint16 sfxSignpost;
     uint16 sfxTeleport;
-    int dword30;
+    int32 dword30;
     StateMachine(startCB);
     StateMachine(endCB);
 } ObjectTimeAttackGate;
@@ -28,19 +28,19 @@ typedef struct {
     StateMachine(state);
     StateMachine(stateDraw);
     bool32 finishLine;
-    int extendTop;
-    int extendBottom;
+    int32 extendTop;
+    int32 extendBottom;
     Vector2 boundsSize;
     Vector2 boundsOffset;
-    int topBoundary;
-    int timer;
-    int field_84;
-    int field_88;
-    int spinSpeed;
-    int spinTimer;
-    int radius;
-    int restartTimer;
-    int fadeTimer;
+    int32 topBoundary;
+    int32 timer;
+    int32 field_84;
+    int32 field_88;
+    int32 spinSpeed;
+    int32 spinTimer;
+    int32 radius;
+    int32 restartTimer;
+    int32 fadeTimer;
     Vector2 playerPos;
     Animator baseAnimator;
     Animator topAnimator;
@@ -67,7 +67,7 @@ void TimeAttackGate_HandleStart(void);
 #if RETRO_USE_PLUS
 void TimeAttackGate_Unknown1(void);
 #endif
-void TimeAttackGate_LeaderboardCB(int status);
+void TimeAttackGate_LeaderboardCB(int32 status);
 void TimeAttackGate_CheckTouch(void);
 
 void TimeAttackGate_State_Main(void);

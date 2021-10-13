@@ -13,7 +13,7 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     EntityPlayer *player;
-    int timer;
+    int32 timer;
     bool32 activeFlag;
 } EntitySuperSparkle;
 

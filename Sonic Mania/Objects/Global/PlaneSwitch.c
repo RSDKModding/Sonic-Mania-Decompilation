@@ -7,16 +7,16 @@ void PlaneSwitch_Update(void)
     RSDK_THIS(PlaneSwitch);
     foreach_active(Player, player)
     {
-        int x     = (player->position.x - entity->position.x) >> 8;
-        int y     = (player->position.y - entity->position.y) >> 8;
-        int scanX = (y * RSDK.Sin256(entity->negAngle)) + (x * RSDK.Cos256(entity->negAngle)) + entity->position.x;
-        int scanY = (y * RSDK.Cos256(entity->negAngle)) - (x * RSDK.Sin256(entity->negAngle)) + entity->position.y;
-        int pos   = ((player->velocity.y >> 8) * RSDK.Sin256(entity->negAngle)) + (player->velocity.x >> 8) * RSDK.Cos256(entity->negAngle);
+        int32 x     = (player->position.x - entity->position.x) >> 8;
+        int32 y     = (player->position.y - entity->position.y) >> 8;
+        int32 scanX = (y * RSDK.Sin256(entity->negAngle)) + (x * RSDK.Cos256(entity->negAngle)) + entity->position.x;
+        int32 scanY = (y * RSDK.Cos256(entity->negAngle)) - (x * RSDK.Sin256(entity->negAngle)) + entity->position.y;
+        int32 pos   = ((player->velocity.y >> 8) * RSDK.Sin256(entity->negAngle)) + (player->velocity.x >> 8) * RSDK.Cos256(entity->negAngle);
         RSDK.Cos256(entity->negAngle);
         RSDK.Sin256(entity->negAngle);
         if (!(entity->onPath && !player->onGround)) {
-            int xDif = abs(scanX - entity->position.x);
-            int yDif = abs(scanY - entity->position.y);
+            int32 xDif = abs(scanX - entity->position.x);
+            int32 yDif = abs(scanY - entity->position.y);
 
             if (xDif < 0x180000 && yDif < entity->size << 19) {
                 if (scanX + pos >= entity->position.x) {
@@ -55,7 +55,7 @@ void PlaneSwitch_Draw(void)
     Zone_Unknown3(&entity->position, &drawPos, entity->angle);
 
     entity->animator.frameID = entity->flags & 3;
-    for (int i = 0; i < entity->size; ++i) {
+    for (int32 i = 0; i < entity->size; ++i) {
         RSDK.DrawSprite(&entity->animator, &drawPos, 0);
         drawPos.x += RSDK.Sin256(entity->angle) << 12;
         drawPos.y += RSDK.Cos256(entity->angle) << 12;
@@ -64,13 +64,13 @@ void PlaneSwitch_Draw(void)
     drawPos.x = entity->position.x + 0x80000;
     drawPos.y = entity->position.y - (entity->size << 19);
 
-    int dx    = (drawPos.x + 0x80000 - entity->position.x) >> 8;
-    int dy    = (drawPos.y - entity->position.y) >> 8;
+    int32 dx    = (drawPos.x + 0x80000 - entity->position.x) >> 8;
+    int32 dy    = (drawPos.y - entity->position.y) >> 8;
     drawPos.x = (dy * RSDK.Sin256(entity->angle)) + dx * RSDK.Cos256(entity->angle) + entity->position.x;
     drawPos.y = (dy * RSDK.Cos256(entity->angle)) - dx * RSDK.Sin256(entity->angle) + entity->position.y;
 
     entity->animator.frameID = (entity->flags >> 2) & 3;
-    for (int i = 0; i < entity->size; ++i) {
+    for (int32 i = 0; i < entity->size; ++i) {
         RSDK.DrawSprite(&entity->animator, &drawPos, 0);
         drawPos.x += RSDK.Sin256(entity->angle) << 12;
         drawPos.y += RSDK.Cos256(entity->angle) << 12;
@@ -84,14 +84,14 @@ void PlaneSwitch_Create(void *data)
     if (!RSDK_sceneInfo->inEditor) {
         entity->active = ACTIVE_BOUNDS;
 
-        int x = 0;
+        int32 x = 0;
         if (entity->size * RSDK.Sin256(entity->angle) << 11 >= 0)
             x = entity->size * RSDK.Sin256(entity->angle) << 11;
         else
             x = -(entity->size * RSDK.Sin256(entity->angle) << 11);
         entity->updateRange.x = x + 0x200000;
 
-        int y = 0;
+        int32 y = 0;
         if (entity->size * RSDK.Cos256(entity->angle) << 11 >= 0)
             y = entity->size * RSDK.Cos256(entity->angle) << 11;
         else

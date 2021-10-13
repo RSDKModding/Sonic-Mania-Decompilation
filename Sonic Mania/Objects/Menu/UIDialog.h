@@ -23,10 +23,10 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    int field_5C;
-    int timer;
+    int32 field_5C;
+    int32 timer;
     TextInfo textInfo;
-    int id;
+    int32 id;
     Vector2 field_70;
     Vector2 drawPos;
     EntityUIControl *parent;
@@ -36,10 +36,10 @@ typedef struct {
     bool32 flags[3];
     EntityUIButton *entPtrs[3];
     void (*curCallback)(void);
-    int field_B4;
-    int field_B8;
-    int lineLength[3];
-    int lineCount;
+    int32 field_B4;
+    int32 field_B8;
+    int32 lineLength[3];
+    int32 lineCount;
     Animator animator;
 } EntityUIDialog;
 

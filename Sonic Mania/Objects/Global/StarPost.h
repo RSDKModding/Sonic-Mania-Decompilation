@@ -24,15 +24,15 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    int id;
+    int32 id;
     bool32 vsRemove;
-    int ballSpeed;
-    int timer;
-    int starTimer;
-    int starFlag;
-    int starAngle2;
-    int starAngle;
-    int starOffset;
+    int32 ballSpeed;
+    int32 timer;
+    int32 starTimer;
+    int32 starFlag;
+    int32 starAngle2;
+    int32 starAngle;
+    int32 starOffset;
     Vector2 ballPos;
     Animator poleData;
     Animator ballData;

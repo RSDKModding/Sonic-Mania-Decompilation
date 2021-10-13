@@ -59,8 +59,8 @@ void ForceUnstick_DrawSprites(void)
     else
         ForceUnstick->animator.frameID = 9;
 
-    for (int y = 0; y < entity->height + 1; ++y) {
-        for (int x = 0; x < entity->width + 1; ++x) {
+    for (int32 y = 0; y < entity->height + 1; ++y) {
+        for (int32 x = 0; x < entity->width + 1; ++x) {
             RSDK.DrawSprite(&ForceUnstick->animator, &drawPos, false);
             drawPos.x += 0x100000;
         }

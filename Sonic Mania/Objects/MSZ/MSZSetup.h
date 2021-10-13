@@ -6,28 +6,28 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    int fadeTimer;
+    int32 fadeTimer;
     uint16 aniTiles;
     TileLayer *bg;
-    TABLE(int deformData[32], { -1, 0, 0, -1, -1, 0, 0, 0, 0, -1, -1, 0, 0, 0, 0, -1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 });
-    STATIC(int aniTilesTimerA, 16);
-    STATIC(int aniTilesTimerB, 30);
-    int aniTilesFrameA;
-    int aniTilesFrameB;
-    int aniTilesFrameC;
+    TABLE(int32 deformData[32], { -1, 0, 0, -1, -1, 0, 0, 0, 0, -1, -1, 0, 0, 0, 0, -1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 });
+    STATIC(int32 aniTilesTimerA, 16);
+    STATIC(int32 aniTilesTimerB, 30);
+    int32 aniTilesFrameA;
+    int32 aniTilesFrameB;
+    int32 aniTilesFrameC;
     bool32 flag;
-    TABLE(int aniTilesSizeA[14], { 0, 1, 2, 3, 4, 5, 2, 3, 4, 5, 2, 1, 6, 7 });
-    TABLE(int aniTilesDelayA[14], { 16, 2, 3, 3, 2, 2, 2, 2, 2, 3, 3, 3, 2, 3 });
-    TABLE(int aniTilesDelayB[8], { 16, 2, 4, 5, 16, 2, 4, 5 });
-    int field_138[512];
-    int parallaxMult;
-    int field_93C;
+    TABLE(int32 aniTilesSizeA[14], { 0, 1, 2, 3, 4, 5, 2, 3, 4, 5, 2, 1, 6, 7 });
+    TABLE(int32 aniTilesDelayA[14], { 16, 2, 3, 3, 2, 2, 2, 2, 2, 3, 3, 3, 2, 3 });
+    TABLE(int32 aniTilesDelayB[8], { 16, 2, 4, 5, 16, 2, 4, 5 });
+    int32 field_138[512];
+    int32 parallaxMult;
+    int32 field_93C;
     bool32 hasAchievement;
     Entity *msz2Cutscene;
-    int field_948;
+    int32 field_948;
 #if RETRO_USE_PLUS
-    int chuggaVolume;
-    int chuggaChannel;
+    int32 chuggaVolume;
+    int32 chuggaChannel;
     uint16 sfxLocoChugga;
 #endif
 } ObjectMSZSetup;
@@ -36,7 +36,7 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    int timer;
+    int32 timer;
 } EntityMSZSetup;
 
 // Object Struct
@@ -55,7 +55,7 @@ void MSZSetup_Serialize(void);
 
 // Extra Entity Functions
 void MSZSetup_Unknown2(void);
-void MSZSetup_Unknown4(int a1);
+void MSZSetup_Unknown4(int32 a1);
 
 void MSZSetup_ManageFadeST(void);
 void MSZSetup_ManageFadeK(void);

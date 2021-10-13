@@ -13,7 +13,7 @@ void PSZ2Setup_StaticUpdate(void)
         PSZ2Setup->aniTileFrame &= 7;
         PSZ2Setup->aniTileDelay = PSZ2Setup->aniTileDelays[PSZ2Setup->aniTileFrame];
 
-        int tileY = 32 * PSZ2Setup->aniTileFrame;
+        int32 tileY = 32 * PSZ2Setup->aniTileFrame;
         RSDK.DrawAniTiles(PSZ2Setup->aniTiles1, 260, 0, tileY, 64, 32);
         RSDK.DrawAniTiles(PSZ2Setup->aniTiles1, 268, 80, tileY, 48, 16);
         RSDK.DrawAniTiles(PSZ2Setup->aniTiles1, 271, 64, tileY + 16, 64, 16);
@@ -116,7 +116,7 @@ void PSZ2Setup_ActTransitionLoad(void)
     globals->restartMilliseconds = 0;
     globals->restartSeconds      = 0;
     globals->restartMinutes      = 0;
-    memset(globals->atlEntityData, 0, TEMPENTITY_START * sizeof(int));
+    memset(globals->atlEntityData, 0, TEMPENTITY_START * sizeof(int32));
 
     Zone->screenBoundsL1[0] = 0;
     Zone->screenBoundsR1[0] = 944;

@@ -16,13 +16,13 @@ typedef struct {
     RSDK_ENTITY
     StateMachine(stateCollide);
     StateMachine(stateMove);
-    int hitCount;
-    int type;
+    int32 hitCount;
+    int32 type;
     Vector2 amplitude;
-    int speed;
+    int32 speed;
     Vector2 originPos;
     Animator animator;
-    int field_94;
+    int32 field_94;
 } EntityCircleBumper;
 
 // Object Struct

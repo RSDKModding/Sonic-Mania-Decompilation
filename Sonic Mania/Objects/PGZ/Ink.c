@@ -9,7 +9,7 @@ void Ink_Update(void)
 
     foreach_active(Player, player)
     {
-        int playerID = RSDK.GetEntityID(player);
+        int32 playerID = RSDK.GetEntityID(player);
         Player_CheckCollisionBox(player, entity, &Ink->hitbox);
         Player_CheckCollisionBox(player, entity, &Ink->hitbox2);
         if (Player_CheckCollisionBox(player, entity, &Ink->hitbox3)) {
@@ -76,7 +76,7 @@ void Ink_StageLoad(void)
     Ink->hitbox3.top    = 26;
     Ink->hitbox3.right  = 24;
     Ink->hitbox3.bottom = 30;
-    for (int p = 0; p < 4; ++p) Ink->playerTypes[p] = 0;
+    for (int32 p = 0; p < 4; ++p) Ink->playerTypes[p] = 0;
 }
 
 void Ink_EditorDraw(void) {}

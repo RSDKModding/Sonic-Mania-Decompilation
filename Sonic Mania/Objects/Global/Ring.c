@@ -23,7 +23,7 @@ void Ring_Create(void *data)
     RSDK_THIS(Ring);
     entity->visible = true;
 
-    int layer = Zone->drawOrderLow;
+    int32 layer = Zone->drawOrderLow;
     if (entity->planeFilter > 0 && ((uint8)entity->planeFilter - 1) & 2)
         layer = Zone->drawOrderHigh;
 
@@ -136,8 +136,8 @@ void Ring_State_Attract(void)
     RSDK_THIS(Ring);
     EntityPlayer *player = entity->storedPlayer;
     if (player->shield == SHIELD_LIGHTNING) {
-        int startX = entity->position.x;
-        int startY = entity->position.y;
+        int32 startX = entity->position.x;
+        int32 startY = entity->position.y;
 
         if (entity->position.x <= player->position.x) {
             if (entity->velocity.x >= 0)
@@ -198,8 +198,8 @@ void Ring_State_Big(void)
         }
     }
 
-    int x = entity->scale.x << 11;
-    int y = entity->scale.y << 11;
+    int32 x = entity->scale.x << 11;
+    int32 y = entity->scale.y << 11;
     Ring_CheckObjectCollisions(x, y);
     if (!(entity->angle & 0xF)) {
         EntityRing *sparkle = CREATE_ENTITY(Ring, NULL, entity->position.x + RSDK.Rand(-x, x), entity->position.y + RSDK.Rand(-y, y));
@@ -208,7 +208,7 @@ void Ring_State_Big(void)
         sparkle->active     = 2;
         sparkle->visible    = 0;
         RSDK.SetSpriteAnimation(Ring->spriteIndex, entity->sparkleType + 2, &sparkle->animator, true, 0);
-        int frameCount = sparkle->animator.frameCount;
+        int32 frameCount = sparkle->animator.frameCount;
         if (sparkle->animator.animationID == 2) {
             sparkle->alpha = 0xE0;
             frameCount >>= 1;
@@ -239,7 +239,7 @@ void Ring_State_Bounce(void)
     entity->position.y += entity->velocity.y;
     if (entity->moveType != RING_MOVE_NONE) {
         if (entity->velocity.y > 0 && RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_FLOOR, entity->collisionPlane, 0, 0x80000, true)) {
-            int yvel = (entity->velocity.y >> 2) - entity->velocity.y;
+            int32 yvel = (entity->velocity.y >> 2) - entity->velocity.y;
             if (yvel > -0x10000)
                 yvel = -0x10000;
             entity->velocity.y = yvel;
@@ -364,12 +364,12 @@ void Ring_State_Track(void)
 
     entity->animator.frameID = Zone->ringFrame;
 }
-void Ring_CheckObjectCollisions(int offsetX, int offsetY)
+void Ring_CheckObjectCollisions(int32 offsetX, int32 offsetY)
 {
-    int flags = 0;
+    int32 flags = 0;
     RSDK_THIS(Ring);
-    int xVel = entity->velocity.x;
-    int yVel = entity->velocity.y;
+    int32 xVel = entity->velocity.x;
+    int32 yVel = entity->velocity.y;
 
     if (Platform) {
         foreach_active(Platform, colEnt) { flags |= 1 << Ring_CheckPlatformCollisions(colEnt); }
@@ -387,8 +387,8 @@ void Ring_CheckObjectCollisions(int offsetX, int offsetY)
                 bridgeHitbox.left  = -0x400;
                 bridgeHitbox.right = 0x400;
 
-                int divisor = 0;
-                int ang     = 0;
+                int32 divisor = 0;
+                int32 ang     = 0;
                 if (entity->position.x - bridge->startPos <= divisor) {
                     divisor = bridge->stoodPos;
                     ang     = (entity->position.x - bridge->startPos) << 7;
@@ -398,7 +398,7 @@ void Ring_CheckObjectCollisions(int offsetX, int offsetY)
                     ang     = (bridge->endPos - entity->position.x) << 7;
                 }
 
-                int hitY = (bridge->field_6C * RSDK.Sin512(ang / divisor) >> 9) - 0x80000;
+                int32 hitY = (bridge->field_6C * RSDK.Sin512(ang / divisor) >> 9) - 0x80000;
                 if (entity->velocity.y >= 0x8000) {
                     bridgeHitbox.bottom = (hitY >> 16);
                     bridgeHitbox.top    = (hitY >> 16) - 8;
@@ -471,7 +471,7 @@ uint8 Ring_CheckPlatformCollisions(EntityPlatform *platform)
 {
     RSDK_THIS(Ring);
 
-    int side = C_NONE;
+    int32 side = C_NONE;
     if (platform->state != Platform_State_Falling && platform->state != Platform_State_OffScreenReset) {
         platform->position.x = platform->drawPos.x - platform->collisionOffset.x;
         platform->position.y = platform->drawPos.y - platform->collisionOffset.y;
@@ -510,8 +510,8 @@ void Ring_Collect(void)
 {
     RSDK_THIS(Ring);
 
-    int x = entity->position.x;
-    int y = entity->position.y;
+    int32 x = entity->position.x;
+    int32 y = entity->position.y;
 
     if (entity->offset.x)
         entity->position = entity->offset;
@@ -523,19 +523,19 @@ void Ring_Collect(void)
                 if (player->sidekick)
                     player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
 
-                int ringAmount = 1;
+                int32 ringAmount = 1;
                 if (entity->type == RING_TYPE_BIG) {
                     player->ringExtraLife += 100 * (entity->ringAmount / 100);
                     ringAmount = entity->ringAmount;
                 }
                 Player_GiveRings(ringAmount, player, true);
-                int max = 0x100000;
+                int32 max = 0x100000;
                 if (entity->type != RING_TYPE_BIG)
                     max = 0x80000;
 
-                int cnt = 4 * (entity->type == RING_TYPE_BIG) + 4;
-                int min = -max;
-                for (int i = 0; i < cnt; ++i) {
+                int32 cnt = 4 * (entity->type == RING_TYPE_BIG) + 4;
+                int32 min = -max;
+                for (int32 i = 0; i < cnt; ++i) {
                     EntityRing *sparkle =
                         CREATE_ENTITY(Ring, NULL, entity->position.x + RSDK.Rand(min, max), entity->position.y + RSDK.Rand(min, max));
                     sparkle->state     = Ring_State_Sparkle;
@@ -547,7 +547,7 @@ void Ring_Collect(void)
                     else
                         sparkle->drawOrder = Zone->drawOrderHigh;
                     RSDK.SetSpriteAnimation(Ring->spriteIndex, i % 3 + 2, &sparkle->animator, true, 0);
-                    int frameCount = sparkle->animator.frameCount;
+                    int32 frameCount = sparkle->animator.frameCount;
                     if (sparkle->animator.animationID == 2) {
                         sparkle->alpha = 0xE0;
                         frameCount >>= 1;
@@ -574,12 +574,12 @@ void Ring_Collect(void)
     entity->position.x = x;
     entity->position.y = y;
 }
-void Ring_FakeLoseRings(Entity *entity, int ringCount, uint8 drawOrder)
+void Ring_FakeLoseRings(Entity *entity, int32 ringCount, uint8 drawOrder)
 {
-    int ringCount2 = ringCount - 16;
-    int ringCount3 = ringCount2 - 16;
-    int radius     = 0x800;
-    int scale      = 0x100;
+    int32 ringCount2 = ringCount - 16;
+    int32 ringCount3 = ringCount2 - 16;
+    int32 radius     = 0x800;
+    int32 scale      = 0x100;
     if (ringCount > 16) {
         radius    = 0x600;
         ringCount = 16;
@@ -604,12 +604,12 @@ void Ring_FakeLoseRings(Entity *entity, int ringCount, uint8 drawOrder)
         ringCount3 = 16;
     }
 
-    int angleVal = 0xC0 - 8 * (ringCount2 & 0xFFFFFFFE);
-    int angle    = angleVal + 8;
+    int32 angleVal = 0xC0 - 8 * (ringCount2 & 0xFFFFFFFE);
+    int32 angle    = angleVal + 8;
     if (!(ringCount2 & 1))
         angle = angleVal - 8;
 
-    for (int r = 0; r < ringCount2; ++r) {
+    for (int32 r = 0; r < ringCount2; ++r) {
         EntityRing *ringGrow = CREATE_ENTITY(Ring, entity, entity->position.x, entity->position.y);
         ringGrow->velocity.x = radius * RSDK.Cos256(angle);
         ringGrow->velocity.y = radius * RSDK.Sin256(angle);
@@ -629,7 +629,7 @@ void Ring_FakeLoseRings(Entity *entity, int ringCount, uint8 drawOrder)
     if (!(ringCount & 1))
         angle = angleVal - 8;
 
-    for (int r = 0; r < ringCount; ++r) {
+    for (int32 r = 0; r < ringCount; ++r) {
         EntityRing *ringGrow = CREATE_ENTITY(Ring, entity, entity->position.x, entity->position.y);
         ringGrow->velocity.x = (radius + 0x200) * RSDK.Cos256(angle);
         ringGrow->velocity.y = (radius + 0x200) * RSDK.Sin256(angle);
@@ -649,7 +649,7 @@ void Ring_FakeLoseRings(Entity *entity, int ringCount, uint8 drawOrder)
     if (!(ringCount3 & 1))
         angle = angleVal - 8;
 
-    for (int r = 0; r < ringCount3; ++r) {
+    for (int32 r = 0; r < ringCount3; ++r) {
         EntityRing *ringGrow = CREATE_ENTITY(Ring, entity, entity->position.x, entity->position.y);
         ringGrow->velocity.x = (radius + 0x400) * RSDK.Cos256(angle);
         ringGrow->velocity.y = (radius + 0x400) * RSDK.Sin256(angle);

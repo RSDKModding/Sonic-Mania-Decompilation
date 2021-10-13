@@ -53,7 +53,7 @@ bool32 PSZ1Intro_CutsceneState_Unknown1(EntityCutsceneSeq *host)
     RSDK_THIS(PSZ1Intro);
     CutsceneSeq_LockAllPlayerControl();
 
-    int id = 0;
+    int32 id = 0;
     foreach_all(HangGlider, glider)
     {
         if (id > Player->playerCount) {
@@ -127,7 +127,7 @@ bool32 PSZ1Intro_CutsceneState_Unknown3(EntityCutsceneSeq *host)
             if (player->sidekick) {
                 if (player->stateInput == StateMachine_None) {
                     player->stateInput = Player_ProcessP2Input_AI;
-                    for (int i = 0; i < 16; ++i) Player->flyCarryPositions[i] = player->position;
+                    for (int32 i = 0; i < 16; ++i) Player->flyCarryPositions[i] = player->position;
                 }
             }
             else {

@@ -125,8 +125,8 @@ bool32 GHZCutsceneST_CutsceneState_Unknown1(EntityCutsceneSeq *host)
         }
     }
 
-    int id = 0;
-    for (int angle = 0; angle < 0x80; angle += 0x40) {
+    int32 id = 0;
+    for (int32 angle = 0; angle < 0x80; angle += 0x40) {
         EntityPlayer *player = RSDK_GET_ENTITY(id++, Player);
         if (!player || player->objectID == TYPE_BLANK)
             break;
@@ -148,14 +148,14 @@ bool32 GHZCutsceneST_CutsceneState_Unknown2(EntityCutsceneSeq *host)
 
     EntityPlayer **curPlayer = &player1;
     if (fxRuby->outerRadius <= 0) {
-        int id = 0;
-        for (int angle = 0; angle < 0x80; angle += 0x10) {
+        int32 id = 0;
+        for (int32 angle = 0; angle < 0x80; angle += 0x10) {
             EntityPlayer *player = RSDK_GET_ENTITY(id++, Player);
             if (!player || player->objectID == TYPE_BLANK)
                 break;
             RSDK.SetSpriteAnimation(player->spriteIndex, ANI_FAN, &player->playerAnimator, false, 0);
-            int x              = (player->position.x - player->position.x) >> 3;
-            int y              = (0xA00 * RSDK.Sin256(2 * (angle + host->timer - host->field_68)) + ruby->position.y - player->position.y) >> 3;
+            int32 x              = (player->position.x - player->position.x) >> 3;
+            int32 y              = (0xA00 * RSDK.Sin256(2 * (angle + host->timer - host->field_68)) + ruby->position.y - player->position.y) >> 3;
             player->velocity.y = (y >> 8) * (y >> 8);
             player->velocity.x = (x >> 8) * (x >> 8);
             player->state      = Player_State_Air;
@@ -168,8 +168,8 @@ bool32 GHZCutsceneST_CutsceneState_Unknown2(EntityCutsceneSeq *host)
         return true;
     }
     else {
-        int id = 0;
-        for (int angle = 0; angle < 0x80; angle += 0x10) {
+        int32 id = 0;
+        for (int32 angle = 0; angle < 0x80; angle += 0x10) {
             EntityPlayer *player = RSDK_GET_ENTITY(id++, Player);
             if (!player || player->objectID == TYPE_BLANK)
                 break;
@@ -192,8 +192,8 @@ bool32 GHZCutsceneST_CutsceneState_Unknown3(EntityCutsceneSeq *host)
     EntityPlatform *platform = (EntityPlatform *)GHZCutsceneST->platform;
     if (host->timer >= 60) {
         if (host->timer == 60) {
-            int id = 0;
-            for (int i = 0; i < 2; ++i) {
+            int32 id = 0;
+            for (int32 i = 0; i < 2; ++i) {
                 EntityPlayer *player = RSDK_GET_ENTITY(id++, Player);
                 if (!player || player->objectID == TYPE_BLANK)
                     break;
@@ -209,7 +209,7 @@ bool32 GHZCutsceneST_CutsceneState_Unknown3(EntityCutsceneSeq *host)
         }
         else {
             claw->velocity.y -= 0x1800;
-            for (int hbhChar = 0; hbhChar < 5; ++hbhChar) {
+            for (int32 hbhChar = 0; hbhChar < 5; ++hbhChar) {
                 EntityCutsceneHBH *hbh = (EntityCutsceneHBH *)GHZCutsceneST->cutsceneHBH[hbhChar];
                 switch (hbhChar) {
                     case HBH_GUNNER:

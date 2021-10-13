@@ -16,8 +16,8 @@ typedef struct {
     StateMachine(stateDraw);
     Vector2 startPos;
     bool32 isJimmy;
-    int field_6C;
-    int field_70;
+    int32 field_6C;
+    int32 field_70;
     Animator animator1;
     Animator animator2;
     Animator animator3;

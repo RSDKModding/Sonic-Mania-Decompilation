@@ -56,7 +56,7 @@ void UIVideo_State_PlayVid1(void)
         char audioFile[64];
         RSDK.GetCString(audioFile, &entity->audioFile);
         RSDK.GetCString(videoFile1, &entity->videoFile1);
-        int len = entity->videoFile1.textLength;
+        int32 len = entity->videoFile1.textLength;
 #if RETRO_USE_PLUS
         if (videoFile1[len - 3] == 'p' && videoFile1[len - 2] == 'n' && videoFile1[len - 1] == 'g')
 #else

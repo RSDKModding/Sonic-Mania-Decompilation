@@ -16,14 +16,14 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    int type;
-    int flipFlag;
+    int32 type;
+    int32 flipFlag;
     uint8 planeFilter;
-    int basetimer;
+    int32 basetimer;
     Animator animator;
     Hitbox hitbox;
 	//END SPRING INHERITANCE
-    int timer;
+    int32 timer;
     uint8 playerBits;
 } EntityIceSpring;
 
@@ -42,6 +42,6 @@ void IceSpring_EditorLoad(void);
 void IceSpring_Serialize(void);
 
 // Extra Entity Functions
-void IceSpring_Shatter(int velX, int velY);
+void IceSpring_Shatter(int32 velX, int32 velY);
 
 #endif //!OBJ_ICESPRING_H

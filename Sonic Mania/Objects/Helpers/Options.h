@@ -9,28 +9,28 @@ typedef struct {
     RSDK_OBJECT
 #endif
     Entity *loadEntityPtr;
-    void (*loadCallback)(int);
+    void (*loadCallback)(int32);
     Entity *saveEntityPtr;
-    void (*saveCallback)(int);
-    int state;
+    void (*saveCallback)(int32);
+    int32 state;
 } ObjectOptions;
 
 // Entity Class
 typedef struct {
     RSDK_ENTITY
     uint8 language;
-    int overrideLanguage;
-    int screenShader;
-    int field_60;
-    int volMusic;
-    int field_68;
-    int volSfx;
-    int field_70;
-    int vSync;
+    int32 overrideLanguage;
+    int32 screenShader;
+    int32 field_60;
+    int32 volMusic;
+    int32 field_68;
+    int32 volSfx;
+    int32 field_70;
+    int32 vSync;
     uint8 windowSize;
-    int windowBorder;
-    int windowed;
-    int tripleBuffering;
+    int32 windowBorder;
+    int32 windowed;
+    int32 tripleBuffering;
 } EntityOptions;
 
 // Object Struct
@@ -50,12 +50,12 @@ void Options_Serialize(void);
 //Funcs
 void Options_Reload(void);
 void Options_GetWinSize(void);
-void Options_LoadCallback(int success);
+void Options_LoadCallback(int32 success);
 void Options_LoadOptionsBin(void);
-void Options_SaveOptionsBin(void (*callback)(int));
-void Options_SetLanguage(int language);
+void Options_SaveOptionsBin(void (*callback)(int32));
+void Options_SetLanguage(int32 language);
 void Options_Unknown1(EntityOptions *options);
-void Options_LoadOptionsCallback(int statusCode);
-void Options_SaveOptionsCallback(int statusCode);
+void Options_LoadOptionsCallback(int32 statusCode);
+void Options_SaveOptionsCallback(int32 statusCode);
 
 #endif //!OBJ_OPTIONS_H

@@ -168,9 +168,9 @@ void UIModeButton_Options3CB(void)
     EntityUIControl *parent = (EntityUIControl *)entity->parent;
     if (entity->buttonID == 2) {
 #if RETRO_USE_PLUS
-        int id = API_MostRecentActiveControllerID(1, 0, 5);
+        int32 id = API_MostRecentActiveControllerID(1, 0, 5);
 #else
-        int id = API_MostRecentActiveControllerID(0);
+        int32 id = API_MostRecentActiveControllerID(0);
 #endif
         API_ResetControllerAssignments();
         API_AssignControllerID(1, id);

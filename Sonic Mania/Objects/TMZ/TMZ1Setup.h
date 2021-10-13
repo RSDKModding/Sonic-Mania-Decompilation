@@ -7,13 +7,13 @@
 typedef struct {
     RSDK_OBJECT
     bool32 paletteInit;
-    int aniTileDelay;
-    int angle;
-    int field_10;
-    int aniTileFrame;
-    int stageState;
-    int field_1C;
-    int field_20;
+    int32 aniTileDelay;
+    int32 angle;
+    int32 field_10;
+    int32 aniTileFrame;
+    int32 stageState;
+    int32 field_1C;
+    int32 field_20;
     bool32 reloadFlag;
     uint16 aniTiles;
     TileLayer* bgPtr;
@@ -23,7 +23,7 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    int timer;
+    int32 timer;
 } EntityTMZ1Setup;
 
 // Object Struct

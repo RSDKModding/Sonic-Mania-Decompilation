@@ -18,11 +18,11 @@ typedef struct {
     TextInfo tag;
     bool32 selectable;
     uint16 listID;
-    int align;
-    int data0;
-    int data1;
-    int data2;
-    int data3;
+    int32 align;
+    int32 data0;
+    int32 data1;
+    int32 data2;
+    int32 data3;
     bool32 highlighted;
     Animator animator;
 } EntityUIText;

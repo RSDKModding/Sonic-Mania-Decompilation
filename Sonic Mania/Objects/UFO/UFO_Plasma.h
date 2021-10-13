@@ -6,11 +6,11 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    int field_4;
+    int32 field_4;
     ScanlineInfo *scanlines;
     uint8 scanlineData[0x100 * sizeof(ScanlineInfo)];
     uint16 spriteIndex;
-    int field_1010;
+    int32 field_1010;
 } ObjectUFO_Plasma;
 
 // Entity Class

@@ -7,15 +7,15 @@ void SpeedGate_Update(void)
     RSDK_THIS(SpeedGate);
     foreach_active(Player, player)
     {
-        int vel = 0;
+        int32 vel = 0;
         if (player->onGround)
             vel = player->groundVel;
         else
             vel = player->velocity.x;
-        int spd = vel >> 15;
+        int32 spd = vel >> 15;
         if (spd) {
             if (Player_CheckCollisionTouch(player, entity, &SpeedGate->hitbox)) {
-                int s = spd - 2;
+                int32 s = spd - 2;
                 if (spd >= 0)
                     s = spd + 2;
                 if (abs(s) > abs(entity->field_70))
@@ -108,7 +108,7 @@ void SpeedGate_State_Unknown1(void)
 {
     RSDK_THIS(SpeedGate);
 
-    int playerBit = 1;
+    int32 playerBit = 1;
     foreach_active(Player, player)
     {
         if (!(playerBit & entity->activePlayers)) {
@@ -153,12 +153,12 @@ void SpeedGate_State_Unknown2(void)
         entity->timer--;
         EntityPlayer *player = entity->playerPtr;
         if (entity->playerPtr) {
-            int vel = 0x100000;
+            int32 vel = 0x100000;
             if (entity->playerPtr->direction == FLIP_X)
                 vel = -0x100000;
 
-            entity->velocity.x += +((int)(vel - entity->field_80) >> 6) - (entity->velocity.x >> 4);
-            entity->velocity.y += ((int)(-0x200000 - entity->field_84) >> 6) - (entity->velocity.y >> 4);
+            entity->velocity.x += +((int32)(vel - entity->field_80) >> 6) - (entity->velocity.x >> 4);
+            entity->velocity.y += ((int32)(-0x200000 - entity->field_84) >> 6) - (entity->velocity.y >> 4);
 
             entity->field_80 += entity->velocity.x;
             entity->field_84 += entity->velocity.y;
@@ -192,7 +192,7 @@ void SpeedGate_State_Unknown2(void)
 void SpeedGate_State_Unknown3(void)
 {
     RSDK_THIS(SpeedGate);
-    int y = entity->position.y - 0x200000;
+    int32 y = entity->position.y - 0x200000;
 
     entity->velocity.x += ((RSDK_sceneInfo->entity->position.x - entity->posUnknown.x) >> 5) - (entity->velocity.x >> 3);
     entity->velocity.y += ((y - entity->posUnknown.y) >> 5) - (entity->velocity.y >> 3);

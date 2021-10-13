@@ -17,8 +17,8 @@ typedef struct {
     Vector2 size2;
     Vector2 size;
     Entity *playerPtrs[PLAYER_MAX];
-    int groundVelStore[PLAYER_MAX];
-    int playerFlipFlags[PLAYER_MAX];
+    int32 groundVelStore[PLAYER_MAX];
+    int32 playerFlipFlags[PLAYER_MAX];
     Animator animator;
 } EntityPathInverter;
 

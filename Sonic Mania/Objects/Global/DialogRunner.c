@@ -119,7 +119,7 @@ void DialogRunner_PromptSavePreference_CB(void)
     RSDK_THIS(DialogRunner);
     if (API.GetSaveStatus() == STATUS_CONTINUE) {
         if (!UIDialog->activeDialog) {
-            int stringID = STR_SAVELOADFAIL;
+            int32 stringID = STR_SAVELOADFAIL;
             switch (entity->status) {
                 case STATUS_ERROR:
                     stringID = STR_NOXBOXPROFILE;
@@ -142,7 +142,7 @@ void DialogRunner_PromptSavePreference_CB(void)
         destroyEntity(entity);
     }
 }
-void DialogRunner_CheckUserAuth_CB(int a1, int a2)
+void DialogRunner_CheckUserAuth_CB(int32 a1, int32 a2)
 {
     RSDK_THIS(DialogRunner);
     if (entity->timer) {
@@ -184,7 +184,7 @@ void DialogRunner_CheckUserAuth_CB(int a1, int a2)
         }
         else if (!UIDialog->activeDialog) {
             TextInfo info;
-            int id = STR_SIGNOUTDETECTED;
+            int32 id = STR_SIGNOUTDETECTED;
             if (entity->field_88)
                 id = STR_RETRURNINGTOTITLE;
             Localization_GetString(&info, id);
@@ -215,14 +215,14 @@ void DialogRunner_CheckUserAuth_CB(int a1, int a2)
         }
     }
 }
-void DialogRunner_ManageNotifs(int a1)
+void DialogRunner_ManageNotifs(int32 a1)
 {
     RSDK_THIS(DialogRunner);
     if (GameProgress_CountUnreadNotifs()) {
         TextInfo info;
         INIT_TEXTINFO(info);
         if (!UIDialog->activeDialog) {
-            int str = GameProgress_GetNotifStringID(GameProgress_GetNextNotif());
+            int32 str = GameProgress_GetNotifStringID(GameProgress_GetNextNotif());
             Localization_GetString(&info, str);
             EntityUIDialog *dialog = UIDialog_CreateActiveDialog(&info);
             dialog->field_B4       = 1;
@@ -238,7 +238,7 @@ void DialogRunner_ManageNotifs(int a1)
         RSDK.ResetEntityPtr(entity, TYPE_BLANK, 0);
     }
 }
-void DialogRunner_Wait(int success) { UIWaitSpinner_Wait2(); }
+void DialogRunner_Wait(int32 success) { UIWaitSpinner_Wait2(); }
 void DialogRunner_GetNextNotif(void)
 {
     if (RSDK_sceneInfo->inEditor || API.GetUserStorageNoSave() || globals->saveLoaded != STATUS_OK) {
@@ -247,7 +247,7 @@ void DialogRunner_GetNextNotif(void)
     }
     else {
         EntityGameProgress *progress = GameProgress_GetGameProgress();
-        int id             = GameProgress_GetNextNotif();
+        int32 id             = GameProgress_GetNextNotif();
         if (id >= 0)
             progress->unreadNotifs[id] = true;
     }
@@ -297,7 +297,7 @@ void DialogRunner_GetUserAuthStatus(void)
         globals->lastHasPlus             = API.CheckDLC(DLC_PLUS);
     }
 }
-void DialogRunner_PromptSavePreference(int id)
+void DialogRunner_PromptSavePreference(int32 id)
 {
     if (API.GetUserStorageNoSave()) {
         LogHelpers_Print("PromptSavePreference() returning due to noSave");

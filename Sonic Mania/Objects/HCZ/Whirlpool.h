@@ -9,22 +9,22 @@ typedef struct {
     uint16 aniFrames;
     uint16 sfxWhirlpool;
     bool32 playingSFX;
-    int sfxChannel;
-    int timer;
+    int32 sfxChannel;
+    int32 timer;
 } ObjectWhirlpool;
 
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    int angVel;
-    int yVel;
+    int32 angVel;
+    int32 yVel;
     Vector2 size;
     uint8 activePlayers;
     Vector2 posUnknown2;
-    int field_74;
-    int field_78[128];
-    int field_278[4];
-    int field_288[4];
+    int32 field_74;
+    int32 field_78[128];
+    int32 field_278[4];
+    int32 field_288[4];
     Hitbox hitbox;
     Animator animator;
 } EntityWhirlpool;

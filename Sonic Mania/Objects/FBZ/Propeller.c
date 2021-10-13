@@ -14,9 +14,9 @@ void Propeller_Update(void)
 
     foreach_active(Player, player)
     {
-        int playerID = RSDK.GetEntityID(player);
+        int32 playerID = RSDK.GetEntityID(player);
         bool32 flag  = 0;
-        int anim     = player->playerAnimator.animationID;
+        int32 anim     = player->playerAnimator.animationID;
         if (anim != ANI_SHAFTSWING && anim != ANI_HURT && entity->fanEnabled
             && RSDK.CheckObjectCollisionTouchBox(entity, &entity->hitbox2, player, &entity->playerHitbox)) {
             flag = true;

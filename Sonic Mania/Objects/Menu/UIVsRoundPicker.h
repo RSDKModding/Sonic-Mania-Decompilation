@@ -13,16 +13,16 @@ typedef struct {
 typedef struct {
 	MANIA_UI_ITEM_BASE
     Vector2 size;
-    int align;
-    int arrowWidth;
-    int val;
-    int maxVal;
-    int prevVal;
-    int dword120;
-    int field_124;
-    int field_128;
-    int field_12C;
-    int field_130;
+    int32 align;
+    int32 arrowWidth;
+    int32 val;
+    int32 maxVal;
+    int32 prevVal;
+    int32 dword120;
+    int32 field_124;
+    int32 field_128;
+    int32 field_12C;
+    int32 field_130;
     bool32 textFlag;
     TextInfo text;
     bool32 touchID;

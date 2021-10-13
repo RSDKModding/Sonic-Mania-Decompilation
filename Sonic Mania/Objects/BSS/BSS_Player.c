@@ -18,7 +18,7 @@ void BSS_Player_Update(void)
     }
     else {
         entity->gravityStrength += entity->velocity.y;
-        int speed = setup->maxSpeed;
+        int32 speed = setup->maxSpeed;
         if (!speed)
             speed = 16;
 
@@ -39,7 +39,7 @@ void BSS_Player_Update(void)
         }
     }
 
-    int grav           = (entity->gravityStrength >> 1) - (entity->gravityStrength >> 4);
+    int32 grav           = (entity->gravityStrength >> 1) - (entity->gravityStrength >> 4);
     entity->position.y = grav;
     if (RSDK_sceneInfo->entitySlot)
         entity->position.y += 0xBA0000;
@@ -148,14 +148,14 @@ void BSS_Player_ProcessP1Input(void)
     RSDK_THIS(BSS_Player);
     if (entity->controllerID < PLAYER_MAX) {
 #if RETRO_USE_TOUCH_CONTROLS
-        for (int t = 0; t < RSDK_touchMouse->count; ++t) {
-            int tx = (RSDK_touchMouse->x[t] * RSDK_screens->width);
-            int ty = (RSDK_touchMouse->y[t] * RSDK_screens->height);
+        for (int32 t = 0; t < RSDK_touchMouse->count; ++t) {
+            int32 tx = (RSDK_touchMouse->x[t] * RSDK_screens->width);
+            int32 ty = (RSDK_touchMouse->y[t] * RSDK_screens->height);
 
             if (RSDK_touchMouse->down[t]) {
                 if (tx >= 0 && ty >= 96 && tx <= RSDK_screens->centerX && ty <= RSDK_screens->height) {
-                    int tx = (RSDK_touchMouse->x[t] * RSDK_screens->width);
-                    int ty = (RSDK_touchMouse->y[t] * RSDK_screens->height);
+                    int32 tx = (RSDK_touchMouse->x[t] * RSDK_screens->width);
+                    int32 ty = (RSDK_touchMouse->y[t] * RSDK_screens->height);
                     tx -= 64;
                     ty -= 192;
 
@@ -182,9 +182,9 @@ void BSS_Player_ProcessP1Input(void)
             }
         }
 
-        for (int t = 0; t < RSDK_touchMouse->count; ++t) {
-            int tx = (RSDK_touchMouse->x[t] * RSDK_screens->width);
-            int ty = (RSDK_touchMouse->y[t] * RSDK_screens->height);
+        for (int32 t = 0; t < RSDK_touchMouse->count; ++t) {
+            int32 tx = (RSDK_touchMouse->x[t] * RSDK_screens->width);
+            int32 ty = (RSDK_touchMouse->y[t] * RSDK_screens->height);
 
             if (RSDK_touchMouse->down[t]) {
                 if (tx >= RSDK_screens->centerX && ty >= 96 && tx <= RSDK_screens->width && ty <= RSDK_screens->height) {
@@ -201,9 +201,9 @@ void BSS_Player_ProcessP1Input(void)
         }
         entity->touchJump = RSDK_controller[entity->controllerID].keyA.down;
 
-        for (int t = 0; t < RSDK_touchMouse->count; ++t) {
-            int tx = (RSDK_touchMouse->x[t] * RSDK_screens->width);
-            int ty = (RSDK_touchMouse->y[t] * RSDK_screens->height);
+        for (int32 t = 0; t < RSDK_touchMouse->count; ++t) {
+            int32 tx = (RSDK_touchMouse->x[t] * RSDK_screens->width);
+            int32 ty = (RSDK_touchMouse->y[t] * RSDK_screens->height);
 
             if (RSDK_touchMouse->down[t]) {
                 if (tx >= RSDK_screens->width - 0x80 && ty >= 0 && tx <= RSDK_screens->width && ty <= 0x40) {

@@ -16,7 +16,7 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    int state;
+    int32 state;
     TextInfo paletteFile;
     uint16 rowFlags;
     uint8 bankID;

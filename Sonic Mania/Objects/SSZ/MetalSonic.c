@@ -105,11 +105,11 @@ void MetalSonic_StageLoad(void)
     MetalSonic->sfxTransform2   = RSDK.GetSFX("Stage/Transform2.wav");
 }
 
-void MetalSonic_ProcessBGParallax(int mult)
+void MetalSonic_ProcessBGParallax(int32 mult)
 {
-    for (int i = 0; i < 2; ++i) {
+    for (int32 i = 0; i < 2; ++i) {
         TileLayer *bg = RSDK.GetSceneLayer(i);
-        for (int s = 0; s < bg->scrollInfoCount; ++s) {
+        for (int32 s = 0; s < bg->scrollInfoCount; ++s) {
             bg->scrollInfo[0].scrollPos += mult * bg->scrollInfo[0].parallaxFactor;
         }
     }
@@ -159,7 +159,7 @@ void MetalSonic_HandleStageWrap(void)
             {
                 trail->position.x += 0xE000000;
                 trail->currentPos.x += 0xE000000;
-                for (int i = 0; i < ImageTrail_TrackCount; ++i) trail->statePos[i].x += 0xE000000;
+                for (int32 i = 0; i < ImageTrail_TrackCount; ++i) trail->statePos[i].x += 0xE000000;
             }
             foreach_active(Platform, platform)
             {
@@ -167,7 +167,7 @@ void MetalSonic_HandleStageWrap(void)
                 platform->centerPos.x += 0xE000000;
             }
 
-            for (int i = 1; i < Player->playerCount; ++i) {
+            for (int32 i = 1; i < Player->playerCount; ++i) {
                 RSDK_GET_ENTITY(i, Player)->position.x += 0xE000000;
             }
         }
@@ -203,7 +203,7 @@ void MetalSonic_HandleStageWrap(void)
         {
             trail->position.x -= 0xE000000;
             trail->currentPos.x -= 0xE000000;
-            for (int i = 0; i < ImageTrail_TrackCount; ++i) trail->statePos[i].x -= 0xE000000;
+            for (int32 i = 0; i < ImageTrail_TrackCount; ++i) trail->statePos[i].x -= 0xE000000;
         }
         foreach_active(Platform, platform)
         {
@@ -211,7 +211,7 @@ void MetalSonic_HandleStageWrap(void)
             platform->centerPos.x -= 0xE000000;
         }
 
-        for (int i = 1; i < Player->playerCount; ++i) {
+        for (int32 i = 1; i < Player->playerCount; ++i) {
             RSDK_GET_ENTITY(i, Player)->position.x -= 0xE000000;
         }
     }

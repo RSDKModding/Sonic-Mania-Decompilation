@@ -29,9 +29,9 @@ typedef struct {
     StateMachine(state);
     uint8 type;
     uint8 orientation;
-    int timer;
+    int32 timer;
     Vector2 storedPos;
-    int extend;
+    int32 extend;
     Animator animator1;
     Animator animator2;
 } EntitySizeLaser;

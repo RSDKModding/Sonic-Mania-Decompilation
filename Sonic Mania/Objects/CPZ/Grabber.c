@@ -21,7 +21,7 @@ void Grabber_Draw(void)
                       INK_NONE, false);
 
         Vector2 drawPos;
-        int dir           = entity->direction;
+        int32 dir           = entity->direction;
         drawPos.x         = entity->position.x;
         drawPos.y         = entity->startPos.y;
         entity->direction = 0;

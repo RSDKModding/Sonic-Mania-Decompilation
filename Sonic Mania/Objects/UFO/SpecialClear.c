@@ -18,14 +18,14 @@ void SpecialClear_Draw(void)
     Vector2 vertPos[4];
     Vector2 drawPos;
 
-    int centerX             = RSDK_screens->centerX << 16;
+    int32 centerX             = RSDK_screens->centerX << 16;
     drawPos.x               = centerX - 0x600000;
     EntitySaveGame *saveRAM = SaveGame->saveRAM;
 
     // Draw Emeralds
-    int id = 1;
-    for (int i = 0; i < 7; ++i) {
-        int frame = 7;
+    int32 id = 1;
+    for (int32 i = 0; i < 7; ++i) {
+        int32 frame = 7;
         if ((id & saveRAM->chaosEmeralds) > 0)
             frame = i;
         entity->data4.frameID = frame;
@@ -322,11 +322,11 @@ void SpecialClear_StageLoad(void)
     SpecialClear->sfx_Emerald     = RSDK.GetSFX("Special/Emerald.wav");
 }
 
-void SpecialClear_DrawNumbers(Vector2 *pos, int value)
+void SpecialClear_DrawNumbers(Vector2 *pos, int32 value)
 {
     RSDK_THIS(SpecialClear);
-    int id  = 0;
-    int cnt = value;
+    int32 id  = 0;
+    int32 cnt = value;
     if (value <= 0) {
         id = 1;
     }
@@ -339,7 +339,7 @@ void SpecialClear_DrawNumbers(Vector2 *pos, int value)
     if (id <= 0)
         return;
 
-    int mult = 1;
+    int32 mult = 1;
     do {
         entity->data3.frameID = value / mult % 10;
         RSDK.DrawSprite(&entity->data3, pos, true);
@@ -349,7 +349,7 @@ void SpecialClear_DrawNumbers(Vector2 *pos, int value)
     } while (id);
 }
 
-void SpecialClear_GiveScoreBonus(int score)
+void SpecialClear_GiveScoreBonus(int32 score)
 {
     RSDK_THIS(SpecialClear);
     entity->score += score;
@@ -372,7 +372,7 @@ void SpecialClear_GiveScoreBonus(int score)
     }
 }
 
-void SpecialClear_SaveCB(int success)
+void SpecialClear_SaveCB(int32 success)
 {
     RSDK_THIS(SpecialClear);
     UIWaitSpinner_Wait2();
@@ -489,11 +489,11 @@ void SpecialClear_Unknown5(void)
 void SpecialClear_HandlePositions(void)
 {
     RSDK_THIS(SpecialClear);
-    int val = 0x700000;
+    int32 val = 0x700000;
     if (!entity->finishType)
         val = 0x680000;
 
-    for (int i = 0; i < 7; ++i) {
+    for (int32 i = 0; i < 7; ++i) {
         entity->emeraldSpeeds[i] += 0x4000;
         entity->emeraldPositions[i] += entity->emeraldSpeeds[i];
         if (entity->emeraldPositions[i] > val && entity->emeraldSpeeds[i] >= 0) {

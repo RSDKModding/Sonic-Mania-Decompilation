@@ -6,7 +6,7 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    TABLE(int offsets[5], { -0x20000, -0x10000, 0, 0x10000, 0x20000 });
+    TABLE(int32 offsets[5], { -0x20000, -0x10000, 0, 0x10000, 0x20000 });
     uint16 aniFrames;
     uint16 knuxFrames;
     uint16 sfxExplosion;
@@ -17,21 +17,21 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    int field_5C;
-    int timer;
-    int field_64;
-    int field_68;
-    int field_6C;
+    int32 field_5C;
+    int32 timer;
+    int32 field_64;
+    int32 field_68;
+    int32 field_6C;
     bool32 field_70;
-    int field_74;
-    int field_78;
-    int field_7C;
-    int field_80;
+    int32 field_74;
+    int32 field_78;
+    int32 field_7C;
+    int32 field_80;
     Vector2 field_84;
     Vector2 field_8C;
-    int field_94;
-    int field_98;
-    int field_9C;
+    int32 field_94;
+    int32 field_98;
+    int32 field_9C;
     Animator animator1;
     Animator animator2;
     Animator animator3;

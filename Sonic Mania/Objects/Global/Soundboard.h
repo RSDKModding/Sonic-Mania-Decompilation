@@ -8,16 +8,16 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    int sfxCount;
+    int32 sfxCount;
     uint16 sfxList[Soundboard_SFXLimit];
-    int sfxLoopPoint[Soundboard_SFXLimit];
+    int32 sfxLoopPoint[Soundboard_SFXLimit];
     bool32 (*sfxCheckCallback[Soundboard_SFXLimit])(void);
-    void (*sfxUpdateCallback[Soundboard_SFXLimit])(int);
+    void (*sfxUpdateCallback[Soundboard_SFXLimit])(int32);
     bool32 sfxUnknown4[Soundboard_SFXLimit];
-    int sfxChannel[Soundboard_SFXLimit];
-    int sfxUnknown6[Soundboard_SFXLimit];
-    int sfxUnknown7[Soundboard_SFXLimit];
-    int sfxUnknown8[Soundboard_SFXLimit];
+    int32 sfxChannel[Soundboard_SFXLimit];
+    int32 sfxUnknown6[Soundboard_SFXLimit];
+    int32 sfxUnknown7[Soundboard_SFXLimit];
+    int32 sfxUnknown8[Soundboard_SFXLimit];
 } ObjectSoundboard;
 
 // Entity Class
@@ -40,6 +40,6 @@ void Soundboard_EditorLoad(void);
 void Soundboard_Serialize(void);
 
 // Extra Entity Functions
-uint8 Soundboard_LoadSFX(const char *sfxName, uint32 loopPoint, bool32 (*checkCallback)(void), void (*updateCallback)(int));
+uint8 Soundboard_LoadSFX(const char *sfxName, uint32 loopPoint, bool32 (*checkCallback)(void), void (*updateCallback)(int32));
 
 #endif //!OBJ_SOUNDBOARD_H

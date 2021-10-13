@@ -108,7 +108,7 @@ void Newtron_CheckHit(void)
 void Newtron_CheckOnScreen(void)
 {
     RSDK_THIS(Newtron);
-    if (!RSDK.CheckOnScreen(RSDK_sceneInfo->entity, NULL) && !(int)RSDK.CheckPosOnScreen(&entity->startPos, &entity->updateRange)) {
+    if (!RSDK.CheckOnScreen(RSDK_sceneInfo->entity, NULL) && !(int32)RSDK.CheckPosOnScreen(&entity->startPos, &entity->updateRange)) {
         entity->position.x = entity->startPos.x;
         entity->position.y = entity->startPos.y;
         entity->velocity.x = 0;

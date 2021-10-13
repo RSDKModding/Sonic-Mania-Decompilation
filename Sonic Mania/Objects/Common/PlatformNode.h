@@ -12,7 +12,7 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    int nodeFlag;
+    int32 nodeFlag;
     Animator animator;
 } EntityPlatformNode;
 

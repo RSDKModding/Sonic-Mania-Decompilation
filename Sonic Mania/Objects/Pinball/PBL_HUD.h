@@ -16,7 +16,7 @@ typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
-    int timer;
+    int32 timer;
     Vector2 offset;
     TextInfo text;
     Animator data1;
@@ -39,7 +39,7 @@ void PBL_HUD_EditorLoad(void);
 void PBL_HUD_Serialize(void);
 
 // Extra Entity Functions
-void PBL_HUD_DisplayMessage(EntityPBL_HUD *entity, const char* message, int type);
+void PBL_HUD_DisplayMessage(EntityPBL_HUD *entity, const char* message, int32 type);
 void PBL_HUD_State_Message0(void);
 void PBL_HUD_State_Message1(void);
 void PBL_HUD_State_Message2(void);

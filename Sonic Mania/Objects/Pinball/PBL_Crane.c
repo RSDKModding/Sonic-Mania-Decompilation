@@ -93,7 +93,7 @@ void PBL_Crane_HandlePrizes(void)
         case 2:
         case 3:
         case 4: {
-            int playerID = 1 << entity->animator1.frameID;
+            int32 playerID = 1 << entity->animator1.frameID;
             globals->characterFlags |= playerID;
             PBL_Crane->prizeID = 3;
 
@@ -234,11 +234,11 @@ void PBL_Crane_State_CreatePrizes(void)
     entity->field_78         = camera->targetPtr;
     camera->targetPtr        = NULL;
     entity->visible          = true;
-    int spawnX               = entity->position.x - 0x6C0000;
-    int spawnY               = 0x600000 + entity->position.y;
+    int32 spawnX               = entity->position.x - 0x6C0000;
+    int32 spawnY               = 0x600000 + entity->position.y;
     entity->state            = PBL_Crane_Unknown6;
 
-    for (int i = 1; i < 6; ++i) {
+    for (int32 i = 1; i < 6; ++i) {
         EntityPBL_Crane *prize = CREATE_ENTITY(PBL_Crane, intToVoid(2), spawnX, spawnY);
         if (globals->gameMode == MODE_ENCORE) {
             if (!((1 << i) & globals->characterFlags) || i == 5) {
@@ -292,7 +292,7 @@ void PBL_Crane_Unknown7(void)
     EntityPBL_Crane *parent = (EntityPBL_Crane *)entity->parent;
 
     entity->position.x -= 0x10000;
-    int dist           = abs(entity->position.x - parent->position.x);
+    int32 dist           = abs(entity->position.x - parent->position.x);
     entity->position.y = (dist >> 13) * (dist >> 13) + (parent->position.y + 0x300000);
     if (entity->position.x < parent->position.x - 0x980000) {
         entity->position.x += 0x1100000;

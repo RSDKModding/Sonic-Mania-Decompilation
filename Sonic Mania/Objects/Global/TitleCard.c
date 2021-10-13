@@ -63,7 +63,7 @@ void TitleCard_Create(void *data)
         entity->drawPos2.x             = (RSDK_screens->centerX + 106) << 16;
         entity->dword2F4               = -0x400;
         if (entity->dword2EC - entity->field_2E4 < 0x100000) {
-            int dif = (entity->dword2EC - entity->field_2E4) - 0x100000;
+            int32 dif = (entity->dword2EC - entity->field_2E4) - 0x100000;
             entity->field_2E8 -= dif;
             entity->dword1E8 -= dif;
             entity->drawPos2.x -= dif;
@@ -238,19 +238,19 @@ void TitleCard_Unknown2(void)
         RSDK.SetText(&entity->zoneName, "UNTITLED", 0);
     RSDK.SetSpriteString(TitleCard->spriteIndex, 1, &entity->zoneName);
 
-    int offset       = 0x280000;
-    for (int c = 0; c < entity->zoneName.textLength; ++c) {
+    int32 offset       = 0x280000;
+    for (int32 c = 0; c < entity->zoneName.textLength; ++c) {
         entity->charPos[c].y  = offset;
         entity->charSpeeds[c] = -0x80000;
         offset += 0x100000;
     }
 
-    for (int i = 0; i < 4; ++i) {
+    for (int32 i = 0; i < 4; ++i) {
         entity->zoneCharPos[i] = ((2 - entity->zoneName.textLength) << 19) - ((i * 2) << 19);
         entity->zoneCharSpeed[i] = 0x40000;
     }
 
-    for (int c = 0; c < entity->zoneName.textLength; ++c) {
+    for (int32 c = 0; c < entity->zoneName.textLength; ++c) {
         if (entity->zoneName.text[c] == 0xFFFF) {
             entity->word2Offset = c;
         }
@@ -320,7 +320,7 @@ void TitleCard_Unknown4(void)
 {
     RSDK_THIS(TitleCard);
 
-    for (int c = 0; c < entity->zoneName.textLength; ++c) {
+    for (int32 c = 0; c < entity->zoneName.textLength; ++c) {
         if (entity->charPos[c].y < 0)
             entity->charSpeeds[c] += 0x28000;
 
@@ -329,7 +329,7 @@ void TitleCard_Unknown4(void)
             entity->charPos[c].y = 0;
     }
 
-    for (int i = 0; i < 4; ++i) {
+    for (int32 i = 0; i < 4; ++i) {
         if (entity->zoneCharPos[i] > 0)
             entity->zoneCharSpeed[i] -= 0x14000;
 
@@ -410,7 +410,7 @@ void TitleCard_Unknown8(void)
     RSDK_THIS(TitleCard);
     Zone_ApplyWorldBounds();
 
-    int val = entity->points0[0].x + (entity->points0[2].x - entity->points0[0].x - 0x100000) / 6;
+    int32 val = entity->points0[0].x + (entity->points0[2].x - entity->points0[0].x - 0x100000) / 6;
     if (val < entity->points0[2].x)
         val = entity->points0[2].x;
     entity->points0[0].x = val;
@@ -492,7 +492,7 @@ void TitleCard_Unknown10(void)
 {
     RSDK_THIS(TitleCard);
     Zone_ApplyWorldBounds();
-    int speed = ++entity->field_60 << 18;
+    int32 speed = ++entity->field_60 << 18;
     entity->points7[0].x -= speed;
     entity->points7[0].y -= speed;
     entity->points7[1].x -= speed;
@@ -629,7 +629,7 @@ void TitleCard_StateDraw_Default(void)
             RSDK.DrawRect(0, RSDK_screens->centerY - (entity->timer >> 1), RSDK_screens->width, entity->timer, entity->colours[3], 0xFF, INK_NONE,
                           true);
 
-        int val = entity->timer - 128;
+        int32 val = entity->timer - 128;
         if (val > 0) {
             if (val < 512)
                 RSDK.DrawRect(0, RSDK_screens->centerY - (val >> 1), RSDK_screens->width, val, entity->colours[2], 0xFF, INK_NONE, true);
@@ -699,7 +699,7 @@ void TitleCard_Unknown13(void)
     drawPos.x = entity->dword1E8;
     RSDK.SetClipBounds(RSDK_sceneInfo->currentScreenID, 0, 170, RSDK_screens[RSDK_sceneInfo->currentScreenID].width, 240);
 
-    for (int i = 0; i < 4; ++i) {
+    for (int32 i = 0; i < 4; ++i) {
         entity->zoneLetterData.frameID = i;
         drawPos.y                      = 0xBA0000 + entity->zoneCharPos[i];
         RSDK.DrawSprite(&entity->zoneLetterData, &drawPos, true);

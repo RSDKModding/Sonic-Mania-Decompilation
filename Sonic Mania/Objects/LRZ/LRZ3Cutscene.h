@@ -6,13 +6,13 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    int field_4;
+    int32 field_4;
 } ObjectLRZ3Cutscene;
 
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    int field_58;
+    int32 field_58;
 } EntityLRZ3Cutscene;
 
 // Object Struct

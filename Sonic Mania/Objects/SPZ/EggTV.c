@@ -51,9 +51,9 @@ void EggTV_DrawScanlines(void)
 {
     RSDK_THIS(EggTV);
 
-    int y = (((Zone->timer >> 1) & 1) << 16) - (entity->size.y >> 1) + entity->position.y;
+    int32 y = (((Zone->timer >> 1) & 1) << 16) - (entity->size.y >> 1) + entity->position.y;
     if (entity->size.y >= 0 && (entity->size.y & 0xFFFF0000)) {
-        for (int i = 0; i < (entity->size.y >> 16); i += 2) {
+        for (int32 i = 0; i < (entity->size.y >> 16); i += 2) {
             RSDK.DrawLine(entity->position.x - (entity->size.x >> 1), y, entity->position.x + (entity->size.x >> 1), y, 0x404060,
                           entity->lineAlpha, INK_BLEND, false);
             y += 0x20000;

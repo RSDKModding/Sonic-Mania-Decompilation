@@ -27,7 +27,7 @@ void BouncePlant_Update(void)
             Hitbox *playerHitbox = Player_GetHitbox(player);
 
             if (entity->stood) {
-                int posY = BoucePlant_Unknown3(player->position.x) + entity->stoodPos.y - (playerHitbox->bottom << 16) - 0x40000;
+                int32 posY = BoucePlant_Unknown3(player->position.x) + entity->stoodPos.y - (playerHitbox->bottom << 16) - 0x40000;
                 if (player->position.y > posY - 0x80000) {
                     player->velocity.x += RSDK.Sin256(entity->angle) << 13 >> 8;
                     player->position.y    = posY;
@@ -42,7 +42,7 @@ void BouncePlant_Update(void)
                 }
             }
             else {
-                int posY = BoucePlant_Unknown2(player->position.x) + entity->position.y - (playerHitbox->bottom << 16) - 0x40000;
+                int32 posY = BoucePlant_Unknown2(player->position.x) + entity->position.y - (playerHitbox->bottom << 16) - 0x40000;
                 if (player->position.y > posY - 0x80000 && player->position.y < entity->position.y + 0x400000) {
                     player->position.y = posY;
                     if (abs(player->velocity.x) > 0xC0000)
@@ -115,21 +115,21 @@ void BouncePlant_Update(void)
     }
 
     if (entity->stood) {
-        for (int i = 0; i < 8; ++i) {
+        for (int32 i = 0; i < 8; ++i) {
             entity->drawPos[i].y = entity->stoodPos.y + BoucePlant_Unknown3(entity->drawPos[i].x);
         }
     }
     else {
         if (entity->timer <= 0) {
-            for (int i = 0; i < 8; ++i) {
+            for (int32 i = 0; i < 8; ++i) {
                 entity->drawPos[i] = entity->drawPos2[i];
             }
         }
         else {
             entity->timer--;
 
-            for (int i = 0; i < 8; ++i) {
-                int val            = entity->unknown[i] + ((entity->drawPos2[i].y - entity->drawPos[i].y) >> 3) - (entity->unknown[i] >> 3);
+            for (int32 i = 0; i < 8; ++i) {
+                int32 val            = entity->unknown[i] + ((entity->drawPos2[i].y - entity->drawPos[i].y) >> 3) - (entity->unknown[i] >> 3);
                 entity->unknown[i] = val;
                 entity->drawPos[i].y += val;
             }
@@ -144,7 +144,7 @@ void BouncePlant_StaticUpdate(void) {}
 void BouncePlant_Draw(void)
 {
     RSDK_THIS(BouncePlant);
-    for (int i = 0; i < 8; ++i) {
+    for (int32 i = 0; i < 8; ++i) {
         RSDK.DrawSprite(&entity->animator, &entity->drawPos[i], false);
         RSDK.DrawSprite(&entity->animators[i], &entity->drawPos[i], false);
     }
@@ -171,7 +171,7 @@ void BouncePlant_Create(void *data)
         }
 
         RSDK.SetSpriteAnimation(BouncePlant->aniFrames, 1, &entity->animator, true, 0);
-        for (int i = 0; i < 8; ++i) {
+        for (int32 i = 0; i < 8; ++i) {
             RSDK.SetSpriteAnimation(BouncePlant->aniFrames, 1, &entity->animators[i], true, RSDK.Rand(1, 8));
             entity->drawPos[i].x = entity->drawPos2[i].x;
             entity->drawPos[i].y = entity->drawPos2[i].y;
@@ -194,35 +194,35 @@ void BoucePlant_Unknown1(void)
     RSDK_THIS(BouncePlant);
 
     if (entity->direction == FLIP_NONE) {
-        int x = entity->position.x - 0x2A0000;
-        for (int i = 0; i < 8; ++i) {
+        int32 x = entity->position.x - 0x2A0000;
+        for (int32 i = 0; i < 8; ++i) {
             entity->drawPos2[i].x = x;
             x += 0xC0000;
         }
     }
     else {
-        int x = entity->position.x + 0x2A0000;
-        for (int i = 0; i < 8; ++i) {
+        int32 x = entity->position.x + 0x2A0000;
+        for (int32 i = 0; i < 8; ++i) {
             entity->drawPos2[i].x = x;
             x -= 0xC0000;
         }
     }
 
-    int y = entity->position.y + 0x2A0000;
-    for (int i = 0; i < 8; ++i) {
+    int32 y = entity->position.y + 0x2A0000;
+    for (int32 i = 0; i < 8; ++i) {
         entity->drawPos2[i].y = y;
         y -= 0xC0000;
     }
 }
 
-int BoucePlant_Unknown2(int x)
+int32 BoucePlant_Unknown2(int32 x)
 {
     RSDK_THIS(BouncePlant);
 
-    int dist = 0;
-    int pos  = 0;
+    int32 dist = 0;
+    int32 pos  = 0;
     if (entity->direction) {
-        int val = entity->position.x - 0x180000;
+        int32 val = entity->position.x - 0x180000;
         dist    = x - entity->position.x;
         if (x < val) {
             pos = 3 * (x - val);
@@ -232,7 +232,7 @@ int BoucePlant_Unknown2(int x)
         }
     }
     else {
-        int val = entity->position.x + 0x180000;
+        int32 val = entity->position.x + 0x180000;
         dist    = entity->position.x - x;
         if (x > val) {
             pos = 3 * (val - x);
@@ -248,13 +248,13 @@ int BoucePlant_Unknown2(int x)
     return dist + ((entity->depression * (pos - dist)) >> 8);
 }
 
-int BoucePlant_Unknown3(int x)
+int32 BoucePlant_Unknown3(int32 x)
 {
     RSDK_THIS(BouncePlant);
 
-    int y         = 0;
-    int distanceX = 0;
-    int distanceY = 0;
+    int32 y         = 0;
+    int32 distanceX = 0;
+    int32 distanceY = 0;
     if (entity->direction) {
         y = (x - entity->stoodPos.x) >> 15;
         if (x < entity->stoodPos.x) {

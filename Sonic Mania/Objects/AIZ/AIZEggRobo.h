@@ -12,16 +12,16 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    int field_58;
+    int32 field_58;
     bool32 oscillate;
     bool32 forKnux;
-    int field_64;
+    int32 field_64;
     Vector2 unknownPos;
     Vector2 startPos;
-    int field_78;
-    int oscillateOffset;
-    int field_80;
-    int field_84;
+    int32 field_78;
+    int32 oscillateOffset;
+    int32 field_80;
+    int32 field_84;
     Animator animator1;
     Animator animator2;
     Animator animator3;

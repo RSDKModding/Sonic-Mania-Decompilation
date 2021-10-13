@@ -39,15 +39,15 @@ void UFO_Camera_StageLoad(void)
 void UFO_Camera_Unknown1(void)
 {
     RSDK_THIS(UFO_Camera);
-    int val = RSDK.Cos1024(-entity->angleX) << 12;
+    int32 val = RSDK.Cos1024(-entity->angleX) << 12;
     if (val < 0x3C0000)
         val = 0x3C0000;
 
     if (!val)
         val = 1;
-    int div  = !val ? 1 : val;
-    int val2 = entity->angle - entity->dword6C;
-    int val3 = val2 - 0x400;
+    int32 div  = !val ? 1 : val;
+    int32 val2 = entity->angle - entity->dword6C;
+    int32 val3 = val2 - 0x400;
     if (entity->angle <= 0x200)
         val3 = val2 + 0x400;
 
@@ -56,7 +56,7 @@ void UFO_Camera_Unknown1(void)
     else
         RSDK_screens->position.x -= 2 * val2;
 
-    int offset               = ((RSDK.Sin1024(-entity->angleX) << 12) << 8) / div;
+    int32 offset               = ((RSDK.Sin1024(-entity->angleX) << 12) << 8) / div;
     RSDK_screens->position.y = offset - RSDK_screens->centerY + 512;
     entity->dword6C          = entity->angle;
 
@@ -68,10 +68,10 @@ void UFO_Camera_Unknown2(void)
     RSDK_THIS(UFO_Camera);
     EntityUFO_Player *target = (EntityUFO_Player *)entity->target;
     if (target) {
-        int angle2   = (-0x200 - target->angle) & 0x3FF;
-        int angleDif = angle2 - entity->angle;
+        int32 angle2   = (-0x200 - target->angle) & 0x3FF;
+        int32 angleDif = angle2 - entity->angle;
 
-        int val1, val2, val3;
+        int32 val1, val2, val3;
         if (angleDif >= 0)
             val1 = angle2 - entity->angle;
         else
@@ -104,7 +104,7 @@ void UFO_Camera_Unknown2(void)
         entity->angle &= 0x3FF;
         if (target->state == UFO_Player_HandleTilt) {
             entity->angleX = -(target->height >> 18);
-            int val         = entity->field_64 * RSDK.Cos1024(entity->angleX) >> 10;
+            int32 val         = entity->field_64 * RSDK.Cos1024(entity->angleX) >> 10;
 
             entity->position.x = target->position.x - val * RSDK.Sin1024(entity->angle);
             entity->position.y = target->position.y - val * RSDK.Cos1024(entity->angle);

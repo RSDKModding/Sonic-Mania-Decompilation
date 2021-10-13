@@ -12,27 +12,27 @@
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    int saveState;
-    int characterID;
-    int zoneID;
-    int lives;
-    int score;
-    int score1UP;
-    int chaosEmeralds;
-    int continues;
-    int storedStageID;
-    int nextSpecialStage;
-    int collectedSpecialRings;
-    int medalMods;
+    int32 saveState;
+    int32 characterID;
+    int32 zoneID;
+    int32 lives;
+    int32 score;
+    int32 score1UP;
+    int32 chaosEmeralds;
+    int32 continues;
+    int32 storedStageID;
+    int32 nextSpecialStage;
+    int32 collectedSpecialRings;
+    int32 medalMods;
 #if RETRO_USE_PLUS
     //(AIZ if encore) + GHZ-TMZ + ERZ
     // Bonus stage is [28]
     // Special stage is [29]
     // the rest are unused
-    int zoneTimes[32];
-    int characterFlags;
-    int stock;
-    int playerID; // encore playerID
+    int32 zoneTimes[32];
+    int32 characterFlags;
+    int32 stock;
+    int32 playerID; // encore playerID
 #endif
 } EntitySaveGame;
 
@@ -42,11 +42,11 @@ typedef struct {
     RSDK_OBJECT
 #endif
     void *loadEntityPtr;
-    void (*loadCallback)(int);
+    void (*loadCallback)(int32);
     Entity *saveEntityPtr;
-    void (*saveCallback)(int);
+    void (*saveCallback)(int32);
     EntitySaveGame *saveRAM;
-    int field_14;
+    int32 field_14;
 } ObjectSaveGame;
 
 extern ObjectSaveGame *SaveGame;
@@ -64,21 +64,21 @@ void SaveGame_Serialize(void);
 
 //Funcs
 #if RETRO_USE_PLUS
-int *SaveGame_GetDataPtr(int slot, bool32 encore);
+int32 *SaveGame_GetDataPtr(int32 slot, bool32 encore);
 #else
-int *SaveGame_GetDataPtr(int slot);
+int32 *SaveGame_GetDataPtr(int32 slot);
 #endif
 void SaveGame_LoadSaveData(void);
 void SaveGame_LoadFile(void);
-void SaveGame_SaveFile(void (*callback)(int status));
-void SaveGame_SaveLoadedCB(int status);
+void SaveGame_SaveFile(void (*callback)(int32 status));
+void SaveGame_SaveLoadedCB(int32 status);
 void SaveGame_SaveGameState(void);
 void SaveGame_SaveProgress(void);
 void SaveGame_ClearRestartData(void);
 void SaveGame_SavePlayerState(void);
 void SaveGame_LoadPlayerState(void);
 void SaveGame_ResetPlayerState(void);
-void SaveGame_LoadFile_CB(int status);
-void SaveGame_SaveFile_CB(int status);
+void SaveGame_LoadFile_CB(int32 status);
+void SaveGame_SaveFile_CB(int32 status);
 
 #endif //!OBJ_SAVEGAME_H

@@ -25,11 +25,11 @@ typedef struct {
     uint8 field_5F;
     uint16 minDelay;
     uint16 field_62;
-    int delay;
-    int field_68;
+    int32 delay;
+    int32 field_68;
     Entity *parent;
     Vector2 startPos;
-    int startDir;
+    int32 startDir;
     Animator animator1;
     Animator animator2;
 } EntitySplats;

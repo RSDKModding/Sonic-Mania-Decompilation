@@ -12,7 +12,7 @@ typedef struct {
 // Entity Class
 typedef struct {
     MANIA_PLATFORM_BASE
-    int length;
+    int32 length;
 } EntityMagPlatform;
 
 // Object Struct

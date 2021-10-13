@@ -74,7 +74,7 @@ void ChemicalBall_MoveType0(void)
 {
     RSDK_THIS(ChemicalBall);
 
-    int timer = (Zone->timer + entity->intervalOffset) % (2 * entity->interval);
+    int32 timer = (Zone->timer + entity->intervalOffset) % (2 * entity->interval);
     if (timer < entity->interval == (entity->direction != FLIP_NONE)) {
         if (!entity->direction)
             timer -= entity->interval;
@@ -110,7 +110,7 @@ void ChemicalBall_MoveType0(void)
 void ChemicalBall_MoveType1(void)
 {
     RSDK_THIS(ChemicalBall);
-    int timer = (Zone->timer + entity->intervalOffset) % entity->interval;
+    int32 timer = (Zone->timer + entity->intervalOffset) % entity->interval;
     if (timer < 98) {
         if (timer >= 49) {
             if (!entity->direction)

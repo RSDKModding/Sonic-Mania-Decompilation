@@ -13,7 +13,7 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    int emeraldID;
+    int32 emeraldID;
     Animator animator;
 } EntitySummaryEmerald;
 

@@ -10,7 +10,7 @@ void InvincibleStars_Update(void)
         entity->starAngle[2] = (entity->starAngle[2] + 1) % 12;
         entity->starAngle[3] = (entity->starAngle[3] + 1) % 10;
 
-        for (int i = 8 - 1; i > 0; --i) {
+        for (int32 i = 8 - 1; i > 0; --i) {
             entity->starPos[i].x = entity->starPos[i - 1].x;
             entity->starPos[i].y = entity->starPos[i - 1].y;
         }
@@ -121,7 +121,7 @@ void InvincibleStars_Create(void *data)
         entity->active  = ACTIVE_NORMAL;
         entity->visible = true;
         entity->parent  = player;
-        for (int i = 0; i < 8; ++i) {
+        for (int32 i = 0; i < 8; ++i) {
             entity->starPos[i].x = player->position.x;
             entity->starPos[i].y = player->position.y;
         }

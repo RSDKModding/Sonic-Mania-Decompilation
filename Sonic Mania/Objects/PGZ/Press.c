@@ -45,7 +45,7 @@ void Press_Draw(void)
     SpriteFrame *spr = RSDK.GetFrame(Press->animID, 1u, entity->threadAnimator.frameID);
     spr->height      = 56;
     spr->sprY        = (entity->threadSprY >> 8) + 182;
-    for (int i = 0; i < entity->threads; ++i) {
+    for (int32 i = 0; i < entity->threads; ++i) {
         RSDK.DrawSprite(&entity->threadAnimator, &drawPos, false);
         drawPos.y += 0x380000;
     }
@@ -83,7 +83,7 @@ void Press_Create(void *data)
     entity->drawOrder = Zone->drawOrderLow;
     if (RSDK_sceneInfo->inEditor != true) {
         entity->size *= 8;
-        int size = entity->size;
+        int32 size = entity->size;
         entity->speed <<= 15;
         entity->updateRange.x = 0x1000000;
         // i don't think i can make this any more readable :(
@@ -127,14 +127,14 @@ void Press_DrawHandle(void)
 {
     RSDK_THIS(Press);
     Vector2 drawPos = entity->drawPos;
-    int rot         = entity->rotation;
-    int rotCos      = RSDK.Cos512(rot);
+    int32 rot         = entity->rotation;
+    int32 rotCos      = RSDK.Cos512(rot);
     if (rotCos >= 0)
         rotCos = RSDK.Cos512(rot);
     else
         rotCos = -RSDK.Cos512(rot);
     entity->scale.x = rotCos + 1;
-    int rotSin      = RSDK.Sin512(rot);
+    int32 rotSin      = RSDK.Sin512(rot);
     if (rotSin >= 0)
         rotSin = RSDK.Sin512(rot);
     else
@@ -175,7 +175,7 @@ void Press_Move(void)
     RSDK_THIS(Press);
     entity->onRoof  = 0;
     entity->onFloor = 0;
-    int playerBit   = 0;
+    int32 playerBit   = 0;
     foreach_active(Player, player)
     {
         entity->position.y += entity->offBottom;
@@ -191,7 +191,7 @@ void Press_Move(void)
             entity->onFloor |= 1 << playerBit;
         }
         entity->position.y += entity->offTop - entity->offBottom;
-        int collide = Player_CheckCollisionBox(player, entity, &Press->hitbox);
+        int32 collide = Player_CheckCollisionBox(player, entity, &Press->hitbox);
         if (collide == 4) { // collision bottom (crush detection)
             player->collisionFlagV |= 2;
         }
@@ -219,19 +219,19 @@ void Press_HandleMovement(void)
     RSDK.ProcessAnimation(&entity->bumperAnimator);
     Press_Move();
     uint32 speed        = entity->speed;
-    int oldBottom    = entity->offBottom;
-    int newBottom    = oldBottom - speed;
+    int32 oldBottom    = entity->offBottom;
+    int32 newBottom    = oldBottom - speed;
     entity->offBottom = oldBottom - speed;
     uint32 rot          = entity->rotation;
     entity->threadSprY += (speed >> 11);
     entity->threadSprY &= 0x7FF;
-    int oldTop       = entity->offTop;
-    int newTop       = speed + entity->offTop + entity->topOffset;
+    int32 oldTop       = entity->offTop;
+    int32 newTop       = speed + entity->offTop + entity->topOffset;
     entity->rotation  = (rot - (speed >> 15)) & 0x1FF;
     entity->offTop    = newTop;
     entity->topOffset = 0;
     if (newTop + 0x100000 >= newBottom - 0x100000) {
-        int diff = newTop - newBottom + 0x200000;
+        int32 diff = newTop - newBottom + 0x200000;
         if (diff > 0) {
             diff >>= 1;
             entity->offTop    = newTop - diff;
@@ -244,8 +244,8 @@ void Press_HandleMovement(void)
     }
     uint32 waitTime = 0;
     bool32 top = false, bottom = false;
-    int floorOffset   = (oldBottom & 0xFFFF0000) - (entity->offBottom & 0xFFFF0000);
-    int actualPos    = entity->position.y;
+    int32 floorOffset   = (oldBottom & 0xFFFF0000) - (entity->offBottom & 0xFFFF0000);
+    int32 actualPos    = entity->position.y;
     entity->topOffset = entity->offTop;
     foreach_active(Crate, crate)
     {
@@ -257,7 +257,7 @@ void Press_HandleMovement(void)
         entity->position.y += entity->offTop - entity->offBottom;
         if (RSDK.CheckObjectCollisionBox(crate, &crate->hitbox, entity, &Press->hitbox, false) == 1) {
             top       = true;
-            int frame = crate->frameID;
+            int32 frame = crate->frameID;
             if (!frame) // white (segregation)
                 waitTime += 60;
             if (frame == 1) // that's why yo crate raggedy
@@ -278,8 +278,8 @@ void Press_HandleMovement(void)
         entity->timerStart = waitTime;
         entity->timer      = waitTime;
     }
-    int playerBit  = 1;
-    int roofOffset = (oldTop & 0xFFFF0000) - (entity->offTop & 0xFFFF0000);
+    int32 playerBit  = 1;
+    int32 roofOffset = (oldTop & 0xFFFF0000) - (entity->offTop & 0xFFFF0000);
     foreach_active(Player, player)
     {
         if (playerBit & entity->onFloor)
@@ -305,20 +305,20 @@ void Press_HandleCrates(void)
         entity->state = Press_HandleMovement;
     }
     else {
-        int percentDone = ((entity->timerStart - entity->timer) << 16) / entity->timerStart;
-        int crateOff = 0;
+        int32 percentDone = ((entity->timerStart - entity->timer) << 16) / entity->timerStart;
+        int32 crateOff = 0;
         foreach_active(Crate, crate)
         {
             entity->position.y += entity->offTop + 0x80000;
             if (RSDK.CheckObjectCollisionTouchBox(entity, &Press->hitbox, crate, &crate->hitbox)
                 && percentDone > 0x8000) {
-                int percent = percentDone >> 9;
-                int percent2 = percent * percent;
+                int32 percent = percentDone >> 9;
+                int32 percent2 = percent * percent;
                 // i plugged it in desmos to see if i could shorten it
                 // i couldn't
                 // https://varyex.dev/rmgfile/171715b2.png
                 // -rmg
-                int angle = crateOff + ((percent * entity->timerStart * (percent2 >> 8)) >> 8);
+                int32 angle = crateOff + ((percent * entity->timerStart * (percent2 >> 8)) >> 8);
                 crateOff += 0x100;
                 crate->drawPos.x = (RSDK.Sin512(angle & 0x1FF) << 7) + crate->centerPos.x;
             }

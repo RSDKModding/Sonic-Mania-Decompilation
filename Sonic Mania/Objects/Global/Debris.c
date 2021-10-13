@@ -93,11 +93,11 @@ void Debris_State_FallAndFlicker(void)
     RSDK_sceneInfo->entity->visible = Zone->timer & 1;
 }
 
-void Debris_FallFlickerAnimSetup(int spriteIndex, int *entryPtr, int animationID)
+void Debris_FallFlickerAnimSetup(int32 spriteIndex, int32 *entryPtr, int32 animationID)
 {
     Entity *entity = RSDK_sceneInfo->entity;
     if (entryPtr) {
-        int cnt = *entryPtr;
+        int32 cnt = *entryPtr;
         // format:
         // cnt
         //[for cnt entries]
@@ -106,7 +106,7 @@ void Debris_FallFlickerAnimSetup(int spriteIndex, int *entryPtr, int animationID
         // xvel
         // yvel
         entity->drawFX = FX_FLIP;
-        for (int *entry = entryPtr + 1; cnt > 0; entry += 4, --cnt) {
+        for (int32 *entry = entryPtr + 1; cnt > 0; entry += 4, --cnt) {
             EntityDebris *debris = CREATE_ENTITY(Debris, (void *)Debris_State_FallAndFlicker, entity->position.x, entity->position.y);
             RSDK.SetSpriteAnimation(spriteIndex, animationID, &debris->animator, true, entry[0]);
             debris->direction     = entry[1];
@@ -120,11 +120,11 @@ void Debris_FallFlickerAnimSetup(int spriteIndex, int *entryPtr, int animationID
     }
 }
 
-void Debris_FallFlickerSetup(int spriteIndex, int *entryPtr)
+void Debris_FallFlickerSetup(int32 spriteIndex, int32 *entryPtr)
 {
     Entity *entity = RSDK_sceneInfo->entity;
     if (entryPtr) {
-        int cnt = *entryPtr;
+        int32 cnt = *entryPtr;
         // format:
         // cnt
         //[for cnt entries]
@@ -135,7 +135,7 @@ void Debris_FallFlickerSetup(int spriteIndex, int *entryPtr)
         // xoffset
         // yoffset
         entity->drawFX = FX_FLIP;
-        for (int *entry = entryPtr + 1; cnt > 0; entry += 6, --cnt) {
+        for (int32 *entry = entryPtr + 1; cnt > 0; entry += 6, --cnt) {
             EntityDebris *debris =
                 CREATE_ENTITY(Debris, (void *)Debris_State_FallAndFlicker, entity->position.x + entry[4], entity->position.y + entry[5]);
             RSDK.SetSpriteAnimation(spriteIndex, 0, &debris->animator, true, entry[0]);

@@ -6,7 +6,7 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    int timer;
+    int32 timer;
     uint16 spriteIndex;
 } ObjectUFO_Water;
 

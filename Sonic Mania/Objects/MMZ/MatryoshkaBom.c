@@ -37,7 +37,7 @@ void MatryoshkaBom_Create(void *data)
     entity->updateRange.x = 0x800000;
     entity->updateRange.y = 0x800000;
 
-    int size = voidToInt(data);
+    int32 size = voidToInt(data);
     if (size < MATRYOSHKA_SIZE_SHRAPNEL) {
         entity->active = ACTIVE_BOUNDS;
         if (size)

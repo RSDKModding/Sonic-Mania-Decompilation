@@ -36,9 +36,9 @@ typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     bool32 isPlayer2;
-    int timer;
-    int field_64;
-    int field_68;
+    int32 timer;
+    int32 field_64;
+    int32 field_68;
     Animator animator;
     uint16 aniFrames;
 } EntityContinuePlayer;

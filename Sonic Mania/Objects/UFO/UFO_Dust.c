@@ -13,9 +13,9 @@ void UFO_Dust_LateUpdate(void)
         RSDK.ResetEntityPtr(entity, TYPE_BLANK, 0);
     }
     else {
-        int x = entity->position.x >> 8;
-        int y = entity->height >> 8;
-        int z = entity->position.y >> 8;
+        int32 x = entity->position.x >> 8;
+        int32 y = entity->height >> 8;
+        int32 z = entity->position.y >> 8;
 
         Matrix *mat = &UFO_Camera->matWorld;
 

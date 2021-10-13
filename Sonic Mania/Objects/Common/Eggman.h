@@ -14,7 +14,7 @@ typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateStore);
-    int timer;
+    int32 timer;
     uint16 animID;
     Entity* parent;
     Vector2 offset;

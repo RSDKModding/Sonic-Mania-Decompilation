@@ -7,10 +7,10 @@
 typedef struct {
     RSDK_OBJECT
     bool32 paletteInit;
-    int aniTileDelay;
-    int aniTileFrame;
-    int dword10;
-    int dword14;
+    int32 aniTileDelay;
+    int32 aniTileFrame;
+    int32 dword10;
+    int32 dword14;
     uint16 aniTiles;
     uint16 dynTiles;
 } ObjectTMZ2Setup;

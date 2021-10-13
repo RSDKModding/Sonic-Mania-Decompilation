@@ -42,7 +42,7 @@ void PauseMenu_LateUpdate(void)
 void PauseMenu_StaticUpdate(void)
 {
     if (RSDK_sceneInfo->state == ENGINESTATE_REGULAR) {
-        int cnt = 0;
+        int32 cnt = 0;
         if (TitleCard)
             cnt = RSDK.GetEntityCount(TitleCard->objectID, true);
         if (ActClear)
@@ -68,9 +68,9 @@ void PauseMenu_StaticUpdate(void)
             }
 #endif
             else {
-                for (int i = 0; i < PauseMenu_GetPlayerCount(); ++i) {
+                for (int32 i = 0; i < PauseMenu_GetPlayerCount(); ++i) {
 #if RETRO_USE_PLUS
-                    int id = API_ControllerIDForInputID(i + 1);
+                    int32 id = API_ControllerIDForInputID(i + 1);
                     if (!RSDK.GetAssignedControllerID(id) && id != CONT_AUTOASSIGN) {
                         //PauseMenu->controllerDisconnect = true;
                         //RSDK.ResetEntitySlot(SLOT_PAUSEMENU, PauseMenu->objectID, NULL);
@@ -133,7 +133,7 @@ void PauseMenu_StageLoad(void)
         globals->hasPlusInitial = true;
     }
 #endif
-    for (int i = 0; i < 0x10; ++i) {
+    for (int32 i = 0; i < 0x10; ++i) {
         PauseMenu->channelFlags[i] = false;
     }
     PauseMenu_SetupLookupTable();
@@ -155,14 +155,14 @@ uint8 PauseMenu_GetPlayerCount(void)
 
 void PauseMenu_SetupLookupTable(void)
 {
-    for (int i = 0; i < 0x10000; ++i) {
-        int val = ((((0x103 * ((i >> 5) & 0x3F) + 33) >> 6) + ((0x20F * (i & 0x1F) + 0x17) >> 6) + ((0x20F * (i >> 11) + 0x17) >> 6)) << 8) / 0x2A8;
+    for (int32 i = 0; i < 0x10000; ++i) {
+        int32 val = ((((0x103 * ((i >> 5) & 0x3F) + 33) >> 6) + ((0x20F * (i & 0x1F) + 0x17) >> 6) + ((0x20F * (i >> 11) + 0x17) >> 6)) << 8) / 0x2A8;
         val     = minVal(0xFF, val);
         PauseMenu->lookupTable[i] = (val >> 3) | ((val >> 3) << 11) | 8 * val & 0xFFE0;
 
         // found as the "default" lookup table in rev01, produces a similar (but lighter) effect
         // included here because I think it is neat :)
-        // int val = ((i & 0x1F) + ((i >> 6) & 0x1F) + ((i >> 11) & 0x1F)) / 3 + 6;
+        // int32 val = ((i & 0x1F) + ((i >> 6) & 0x1F) + ((i >> 11) & 0x1F)) / 3 + 6;
         // PauseMenu->lookupTable[i] = 0x841 * minVal(0x1F, val);
     }
 }
@@ -197,7 +197,7 @@ void PauseMenu_HandleButtonPositions(void)
         pos.y += 0x240000;
     }
 
-    for (int i = 0; i < entity->buttonCount; ++i) {
+    for (int32 i = 0; i < entity->buttonCount; ++i) {
         if (!entity->buttonPtrs[i])
             break;
         EntityUIButton *button = (EntityUIButton *)entity->buttonPtrs[i];
@@ -214,12 +214,12 @@ void PauseMenu_AddButton(uint8 id, void *action)
 {
     RSDK_THIS(PauseMenu);
 
-    int buttonID = entity->buttonCount;
+    int32 buttonID = entity->buttonCount;
     if (buttonID < 3) {
         entity->buttonIDs[buttonID]     = id;
         entity->buttonActions[buttonID] = action;
 
-        int buttonSlot = entity->buttonCount + 18;
+        int32 buttonSlot = entity->buttonCount + 18;
         RSDK.ResetEntitySlot(buttonSlot, UIButton->objectID, NULL);
         EntityUIButton *button = RSDK_GET_ENTITY(buttonSlot, UIButton);
 
@@ -257,7 +257,7 @@ void PauseMenu_SetupMenu(void)
     control->activeEntityID = 0;
     entity->manager         = (Entity *)control;
 
-    int i = 0;
+    int32 i = 0;
     for (; i < 3; ++i) {
         if (!entity->buttonPtrs[i])
             break;
@@ -273,7 +273,7 @@ void PauseMenu_ClearButtons(EntityPauseMenu *entity)
     if (entity->manager)
         destroyEntity(entity->manager);
 
-    for (int i = 0; i < 3; ++i) {
+    for (int32 i = 0; i < 3; ++i) {
         if (entity->buttonPtrs[i])
             destroyEntity(entity->buttonPtrs[i]);
     }
@@ -318,8 +318,8 @@ void PauseMenu_FocusCamera(void)
     LogHelpers_Print("FocusCamera(): triggerPlayer = %d", entity->triggerPlayer);
     foreach_all(Camera, camera)
     {
-        int id         = RSDK.GetEntityID(camera);
-        int prevScreen = camera->screenID;
+        int32 id         = RSDK.GetEntityID(camera);
+        int32 prevScreen = camera->screenID;
         if (id - SLOT_CAMERA1 == entity->triggerPlayer) {
             camera->screenID = 0;
             Camera_SetCameraBounds(camera);
@@ -358,7 +358,7 @@ void PauseMenu_Restart_CB(void)
     TextInfo textBuffer;
 
 #if RETRO_USE_PLUS
-    int strID = STR_AREYOUSURE;
+    int32 strID = STR_AREYOUSURE;
     if (!ReplayRecorder || !ReplayRecorder->dword134)
         strID = STR_RESTARTWARNING;
     Localization_GetString(&textBuffer, strID);
@@ -400,7 +400,7 @@ void PauseMenu_Exit_CB(void)
     TextInfo textBuffer;
 
 #if RETRO_USE_PLUS
-    int strID = STR_AREYOUSURE;
+    int32 strID = STR_AREYOUSURE;
     if (!ReplayRecorder || !ReplayRecorder->dword134)
         strID = STR_QUITWARNINGLOSEPROGRESS;
     Localization_GetString(&textBuffer, strID);
@@ -449,7 +449,7 @@ void PauseMenu_Unknown16(void)
 
 void PauseMenu_PauseSound(void)
 {
-    for (int i = 0; i < 0x10; ++i) {
+    for (int32 i = 0; i < 0x10; ++i) {
         if (RSDK.ChannelActive(i)) {
             RSDK.PauseChannel(i);
             PauseMenu->channelFlags[i] = true;
@@ -459,7 +459,7 @@ void PauseMenu_PauseSound(void)
 
 void PauseMenu_ResumeSound(void)
 {
-    for (int i = 0; i < 0x10; ++i) {
+    for (int32 i = 0; i < 0x10; ++i) {
         if (PauseMenu->channelFlags[i]) {
             RSDK.ResumeChannel(i);
             PauseMenu->channelFlags[i] = false;
@@ -469,7 +469,7 @@ void PauseMenu_ResumeSound(void)
 
 void PauseMenu_StopSound(void)
 {
-    for (int i = 0; i < 0x10; ++i) {
+    for (int32 i = 0; i < 0x10; ++i) {
         if (PauseMenu->channelFlags[i]) {
             RSDK.StopChannel(i);
             PauseMenu->channelFlags[i] = false;
@@ -538,7 +538,7 @@ void PauseMenu_Unknown21(void)
     else {
         Vector2 pos;
 
-        int val = 32 * entity->timer;
+        int32 val = 32 * entity->timer;
         MathHelpers_Lerp3(&pos, maxVal(0, val), -0xF00000, 0, 0, 0);
 
         entity->field_68.x = pos.x;
@@ -594,7 +594,7 @@ void PauseMenu_Unknown23(void)
     else {
         Vector2 pos;
 
-        int val = 32 * entity->timer;
+        int32 val = 32 * entity->timer;
         MathHelpers_Lerp3(&pos, maxVal(0, val), 0, 0, -0xF00000, 0);
 
         entity->field_68.x = pos.x;
@@ -623,7 +623,7 @@ void PauseMenu_Unknown24(void)
             entity->state    = PauseMenu_Unknown22;
         }
         else {
-            int t            = entity->timer - 8;
+            int32 t            = entity->timer - 8;
             entity->field_A4 = 1;
             if (entity->timer == 8) {
                 RSDK.SetSettingsValue(SETTINGS_SCREENCOUNT, 1);
@@ -662,7 +662,7 @@ void PauseMenu_Unknown26(void)
             PauseMenu_ResumeSound();
         }
         else {
-            int t = entity->timer - 8;
+            int32 t = entity->timer - 8;
             if (entity->timer == 8) {
                 EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
                 RSDK.SetSettingsValue(SETTINGS_SCREENCOUNT, session->playerCount);
@@ -732,10 +732,10 @@ void PauseMenu_Unknown31(void)
 #if RETRO_USE_PLUS
     RSDK.ControllerIDForInputID((entity->triggerPlayer ^ 1) + 1);
 
-    int id = RSDK.MostRecentActiveControllerID(1, 1, 5);
+    int32 id = RSDK.MostRecentActiveControllerID(1, 1, 5);
 #else
-    int contID = API_ControllerIDForInputID((entity->triggerPlayer ^ 1) + 1);
-    int id = API_MostRecentActiveControllerID(contID);
+    int32 contID = API_ControllerIDForInputID((entity->triggerPlayer ^ 1) + 1);
+    int32 id = API_MostRecentActiveControllerID(contID);
 #endif
 
     if (id)
@@ -751,7 +751,7 @@ void PauseMenu_Unknown31(void)
 bool32 PauseMenu_Unknown32(void)
 {
     RSDK_THIS(PauseMenu);
-    int id = API_ControllerIDForInputID(entity->triggerPlayer + 1);
+    int32 id = API_ControllerIDForInputID(entity->triggerPlayer + 1);
 #if RETRO_USE_PLUS
     return RSDK.GetAssignedControllerID(id) || PauseMenu->dword10;
 #else
@@ -767,7 +767,7 @@ void PauseMenu_Unknown33(void)
     if (entity->timer == 1) {
         UIControl->inputLocked = false;
         if (PauseMenu->controllerDisconnect) {
-            int strID = STR_RECONNECTWIRELESSCONTROLLER;
+            int32 strID = STR_RECONNECTWIRELESSCONTROLLER;
             if (sku_platform == PLATFORM_SWITCH)
                 strID = STR_RECONNECTCONTROLLER;
             Localization_GetString(&textBuffer, strID);
@@ -780,7 +780,7 @@ void PauseMenu_Unknown33(void)
         }
 #if RETRO_USE_PLUS
         else if (PauseMenu->signoutDetected || PauseMenu->plusChanged) {
-            int strID = STR_TESTSTR;
+            int32 strID = STR_TESTSTR;
             if (PauseMenu->signoutDetected) {
                 strID = STR_SIGNOUTDETECTED;
             }
@@ -854,7 +854,7 @@ void PauseMenu_Unknown34(void)
             entity->state     = PauseMenu_Unknown33;
         }
         else {
-            int t            = entity->timer - 8;
+            int32 t            = entity->timer - 8;
             entity->field_A4 = 1;
             if (entity->timer == 8) {
                 RSDK.SetSettingsValue(SETTINGS_SCREENCOUNT, 1);
@@ -884,7 +884,7 @@ void PauseMenu_Unknown35(void)
             PauseMenu_ResumeSound();
         }
         else {
-            int t            = entity->timer - 8;
+            int32 t            = entity->timer - 8;
             entity->field_A4 = 1;
             if (entity->timer == 8) {
                 EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;

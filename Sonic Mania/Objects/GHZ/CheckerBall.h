@@ -18,8 +18,8 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     bool32 flag;
-    int field_5C;
-    int field_60;
+    int32 field_5C;
+    int32 field_60;
     Vector2 roundedPos;
     Vector2 collisionOffset;
     uint8 activePlayers;

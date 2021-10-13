@@ -13,7 +13,7 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     Vector2 size;
-    int speed;
+    int32 speed;
     Animator animator;
     Hitbox hitbox;
 } EntityConveyorBelt;

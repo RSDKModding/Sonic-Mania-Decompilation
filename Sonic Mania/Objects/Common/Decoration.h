@@ -14,7 +14,7 @@ typedef struct {
     RSDK_ENTITY
     Animator animator;
     uint8 type;
-    int rotSpeed;
+    int32 rotSpeed;
     Vector2 repeatTimes;
     Vector2 repeatSpacing;
     bool32 tmzFlag;

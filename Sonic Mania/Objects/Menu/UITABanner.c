@@ -21,7 +21,7 @@ void UITABanner_Draw(void)
     EntityUIControl *control = entity->parent;
     if (control) {
         if (control->active == ACTIVE_ALWAYS) {
-            int zone = entity->zoneID % 0xC;
+            int32 zone = entity->zoneID % 0xC;
             if (entity->isEncore)
                 RSDK.CopyPalette((zone >> 3) + 4, (32 * zone), 0, 224, 32);
             else
@@ -67,7 +67,7 @@ void UITABanner_Unknown1(uint8 characterID, EntityUITABanner *banner, uint8 zone
     banner->isEncore    = isEncore;
 }
 
-void UITABanner_Unknown2(int drawX, int drawY, bool32 isEncore)
+void UITABanner_Unknown2(int32 drawX, int32 drawY, bool32 isEncore)
 {
     if (!RSDK_sceneInfo->inEditor)
         RSDK.DrawRect(drawX - 0x990000, drawY - 0x1E8000, 0x1320000, 0x3D0000, 0xFFFFFF, 127, INK_BLEND, false);
@@ -88,7 +88,7 @@ void UITABanner_Unknown2(int drawX, int drawY, bool32 isEncore)
     UIWidgets_Unknown2(67, 312, drawX, drawY);
 }
 
-void UITABanner_Unknown3(uint8 actID, uint8 characterID, bool32 isEncore, int drawX, int drawY)
+void UITABanner_Unknown3(uint8 actID, uint8 characterID, bool32 isEncore, int32 drawX, int32 drawY)
 {
     RSDK_THIS(UITABanner);
     Vector2 drawPos;
@@ -101,7 +101,7 @@ void UITABanner_Unknown3(uint8 actID, uint8 characterID, bool32 isEncore, int dr
     colours[1] = 0xF0D808;
     colours[2] = 0x10101;
 
-    int widths[3];
+    int32 widths[3];
     widths[0] = 60;
     widths[1] = 52;
     widths[2] = 70;
@@ -109,7 +109,7 @@ void UITABanner_Unknown3(uint8 actID, uint8 characterID, bool32 isEncore, int dr
     drawPos.y = drawY + 0x118000;
 
     Vector2 drawOffsets[3];
-    for (int i = 0; i < 3; ++i) {
+    for (int32 i = 0; i < 3; ++i) {
         RSDK.DrawRect(drawPos.x, drawPos.y, widths[i] << 16, 0xD0000, colours[i], 255, INK_NONE, false);
 
         drawOffsets[i].x = drawPos.x + 0x10000;
@@ -140,7 +140,7 @@ void UITABanner_Unknown3(uint8 actID, uint8 characterID, bool32 isEncore, int dr
     RSDK.DrawSprite(&entity->animator3, &drawPos, false);
 }
 
-void UITABanner_Unknown4(int drawX, int drawY, int zoneID)
+void UITABanner_Unknown4(int32 drawX, int32 drawY, int32 zoneID)
 {
     RSDK_THIS(UITABanner);
     Vector2 drawPos;
@@ -149,12 +149,12 @@ void UITABanner_Unknown4(int drawX, int drawY, int zoneID)
     drawPos.y = drawY;
     drawPos.x = drawX - 0x690000;
     if (!RSDK_sceneInfo->inEditor && (control->active == ACTIVE_ALWAYS || control->dialogHasFocus == 1 || control->popoverHasFocus == 1)) {
-        int clipY  = (drawY >> 16) - RSDK_screens->position.y;
-        int clipX  = ((drawX - 0x690000) >> 16) - RSDK_screens->position.x;
-        int clipX1 = RSDK_screens->clipBound_X1;
-        int clipY1 = RSDK_screens->clipBound_Y1;
-        int clipX2 = RSDK_screens->clipBound_X2;
-        int clipY2 = RSDK_screens->clipBound_Y2;
+        int32 clipY  = (drawY >> 16) - RSDK_screens->position.y;
+        int32 clipX  = ((drawX - 0x690000) >> 16) - RSDK_screens->position.x;
+        int32 clipX1 = RSDK_screens->clipBound_X1;
+        int32 clipY1 = RSDK_screens->clipBound_Y1;
+        int32 clipX2 = RSDK_screens->clipBound_X2;
+        int32 clipY2 = RSDK_screens->clipBound_Y2;
         RSDK.SetClipBounds(RSDK_sceneInfo->currentScreenID, clipX - 48, clipY - 27, clipX + 48, clipY + 27);
 
         SpriteFrame *frame = RSDK.GetFrame(UITABanner->aniFrames, 11, zoneID);
@@ -165,7 +165,7 @@ void UITABanner_Unknown4(int drawX, int drawY, int zoneID)
             RSDK.DrawSprite(&entity->animator1, &drawPos, false);
         }
         else {
-            int width    = entity->timer - 102;
+            int32 width    = entity->timer - 102;
             frame->width = 90 - width;
             RSDK.DrawSprite(&entity->animator1, &drawPos, false);
 
@@ -187,7 +187,7 @@ void UITABanner_Unknown4(int drawX, int drawY, int zoneID)
     UIWidgets_Unknown2(61, 96, drawPos.x, drawPos.y);
 }
 
-void UITABanner_Unknown5(uint8 actID, uint8 zoneID, uint8 characterID, bool32 isEncore, int drawX, int drawY)
+void UITABanner_Unknown5(uint8 actID, uint8 zoneID, uint8 characterID, bool32 isEncore, int32 drawX, int32 drawY)
 {
     RSDK_THIS(UITABanner);
     Vector2 drawPos;

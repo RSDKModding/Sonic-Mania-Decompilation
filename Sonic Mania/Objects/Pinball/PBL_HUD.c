@@ -50,7 +50,7 @@ void PBL_HUD_Create(void *data)
 
 void PBL_HUD_StageLoad(void) { PBL_HUD->aniFrames = RSDK.LoadSpriteAnimation("Pinball/Backglass.bin", SCOPE_STAGE); }
 
-void PBL_HUD_DisplayMessage(EntityPBL_HUD *entity, const char *message, int type)
+void PBL_HUD_DisplayMessage(EntityPBL_HUD *entity, const char *message, int32 type)
 {
     if (entity->state != PBL_HUD_State_Message7 && entity->state != PBL_HUD_Unknown12 && entity->state != PBL_HUD_Unknown13) {
         RSDK.PrependText(&entity->text, message);
@@ -241,9 +241,9 @@ void PBL_HUD_StateDraw_Unknown2(void)
 void PBL_HUD_StateDraw_Unknown3(void)
 {
     RSDK_THIS(PBL_HUD);
-    int score = PBL_Setup->score;
-    int count = 0;
-    int mult  = 1;
+    int32 score = PBL_Setup->score;
+    int32 count = 0;
+    int32 mult  = 1;
 
     while (score > 0) {
         ++count;
@@ -257,7 +257,7 @@ void PBL_HUD_StateDraw_Unknown3(void)
     RSDK.DrawSprite(&entity->data1, NULL, true);
     RSDK.DrawSprite(&entity->animator2, NULL, true);
 
-    int div = 10;
+    int32 div = 10;
     while (count > 0) {
         entity->data3.frameID = PBL_Setup->score / mult % div;
         RSDK.DrawSprite(&entity->data3, &drawPos, true);

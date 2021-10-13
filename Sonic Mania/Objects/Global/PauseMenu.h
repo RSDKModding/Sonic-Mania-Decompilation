@@ -24,25 +24,25 @@ typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
-    int timer;
-    int field_64;
+    int32 timer;
+    int32 field_64;
     Vector2 field_68;
     Vector2 field_70;
     Entity *manager;
     uint8 triggerPlayer;
     bool32 disableRestart;
-    int buttonCount;
+    int32 buttonCount;
     uint8 buttonIDs[3];
     void (*buttonActions[3])(void);
     Entity* buttonPtrs[3];
-    int field_A4;
-    int fillTimer;
+    int32 field_A4;
+    int32 fillTimer;
     bool32 (*field_AC)(void);
-    int field_B0;
+    int32 field_B0;
     Animator animator;
     void (*funcPtrUnknown)(void);
-    int field_D0;
-    int field_D4;
+    int32 field_D0;
+    int32 field_D4;
 } EntityPauseMenu;
 
 // Object Struct

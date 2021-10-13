@@ -107,9 +107,9 @@ void Decoration_DrawSprite(void) {
     drawPos.x = entity->position.x - ((repeat.x * entity->repeatSpacing.x) >> 1);
     drawPos.y = entity->position.y - ((repeat.y * entity->repeatSpacing.y) >> 1);
 
-    for (int y = 0; y < repeat.y + 1; ++y) {
+    for (int32 y = 0; y < repeat.y + 1; ++y) {
         drawPos.x = entity->position.x - (repeat.x * entity->repeatSpacing.x >> 1);
-        for (int x = 0; x < repeat.x + 1; ++x) {
+        for (int32 x = 0; x < repeat.x + 1; ++x) {
             RSDK.DrawSprite(&entity->animator, &drawPos, 0);
             drawPos.x += entity->repeatSpacing.x;
         }

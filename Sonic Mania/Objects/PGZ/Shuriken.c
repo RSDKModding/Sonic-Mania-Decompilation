@@ -29,7 +29,7 @@ void Shuriken_StaticUpdate(void)
         }
     }
 
-    for (int i = 0; i < 0xFF; ++i) {
+    for (int32 i = 0; i < 0xFF; ++i) {
         if (groups[i] == NULL && Shuriken->timerGroups[i])
             Shuriken->timerGroups[i] = 0;
     }
@@ -83,13 +83,13 @@ void Shuriken_CheckPlayerCollisions(void)
     {
         if (Player_CheckCollisionTouch(player, entity, &Shuriken->hitbox3)) {
 #if RETRO_USE_PLUS
-            int anim = player->playerAnimator.animationID;
+            int32 anim = player->playerAnimator.animationID;
             if (player->characterID == ID_MIGHTY && (anim == ANI_CROUCH || anim == ANI_JUMP || anim == ANI_SPINDASH || anim == ANI_DROPDASH)) {
                 if (!player->uncurlTimer) {
                     RSDK.PlaySfx(Player->sfx_PimPom, false, 255);
                     player->uncurlTimer = 30;
                 }
-                int angle           = RSDK.ATan2(player->position.x - entity->position.x, player->position.y - entity->position.y);
+                int32 angle           = RSDK.ATan2(player->position.x - entity->position.x, player->position.y - entity->position.y);
                 entity->velocity.x  = -0x400 * RSDK.Cos256(angle);
                 entity->velocity.y  = -0x600 * RSDK.Sin256(angle);
                 entity->interaction = false;
@@ -136,7 +136,7 @@ void Shuriken_Unknown4(void)
 {
     RSDK_THIS(Shuriken);
     if (entity->timerMode) {
-        int timer = 0;
+        int32 timer = 0;
         if (entity->timerGroup)
             timer = Shuriken->timerGroups[(entity->timerGroup - 1)];
         else

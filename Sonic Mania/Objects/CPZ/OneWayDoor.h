@@ -17,7 +17,7 @@ typedef struct {
 	RSDK_ENTITY
 	StateMachine(state);
 	StateMachine(drawState);
-	int yChange;
+	int32 yChange;
 	Animator animator;
 } EntityOneWayDoor;
 

@@ -42,7 +42,7 @@ void ContinueSetup_Draw(void)
     }
 
     drawPos.x += 0x140000;
-    for (int i = 0; i < globals->continues; ++i) {
+    for (int32 i = 0; i < globals->continues; ++i) {
         RSDK.DrawSprite(&ContinueSetup->animator, &drawPos, true);
         drawPos.x += 0x140000;
     }
@@ -82,7 +82,7 @@ void ContinueSetup_StageLoad(void)
         "Continue/Count0.bin", "Continue/Count1.bin", "Continue/Count2.bin", "Continue/Count3.bin", "Continue/Count4.bin",
         "Continue/Count5.bin", "Continue/Count6.bin", "Continue/Count7.bin", "Continue/Count8.bin", "Continue/Count9.bin",
     };
-    for (int i = 0; i < 10; ++i) {
+    for (int32 i = 0; i < 10; ++i) {
         ContinueSetup->countIndex[i] = RSDK.LoadMesh(paths[i], SCOPE_STAGE);
     }
     ContinueSetup->sceneIndex = RSDK.Create3DScene("View:Continue", 4096, SCOPE_STAGE);

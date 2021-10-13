@@ -6,17 +6,17 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    int field_4;
+    int32 field_4;
     Vector2 field_8;
     Vector2 field_10;
     Vector2 field_18;
     Vector2 field_20;
     Vector2 positionList[0x200];
-    int field_1028;
-    int field_102C;
-    int field_1030;
-    int field_1034;
-    int field_1038;
+    int32 field_1028;
+    int32 field_102C;
+    int32 field_1030;
+    int32 field_1034;
+    int32 field_1038;
     uint16 layerID;
 } ObjectFarPlane;
 
@@ -26,13 +26,13 @@ typedef struct {
     Vector2 size;
     Vector2 origin;
     uint16 entityIDs[0x100];
-    int entityCount;
-    int field_26C;
-    int field_270;
-    int field_274;
-    int field_278;
-    int field_27C;
-    int field_280;
+    int32 entityCount;
+    int32 field_26C;
+    int32 field_270;
+    int32 field_274;
+    int32 field_278;
+    int32 field_27C;
+    int32 field_280;
 } EntityFarPlane;
 
 // Object Struct

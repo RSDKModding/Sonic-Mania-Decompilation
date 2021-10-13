@@ -59,12 +59,12 @@ void PetalPile_StageLoad(void)
     PetalPile->sfxPetals = RSDK.GetSFX("PSZ/Petals.wav");
 }
 
-int PetalPile_GetLeafPattern(int *patternPtr)
+int32 PetalPile_GetLeafPattern(int32 *patternPtr)
 {
     RSDK_THIS(PetalPile);
 
-    int count    = PetalPile->patternSize[entity->leafPattern];
-    int *pattern = NULL;
+    int32 count    = PetalPile->patternSize[entity->leafPattern];
+    int32 *pattern = NULL;
     switch (entity->leafPattern) {
         case 0: pattern = PetalPile->pattern1; break;
         case 1: pattern = PetalPile->pattern2; break;
@@ -74,9 +74,9 @@ int PetalPile_GetLeafPattern(int *patternPtr)
         default: return 0;
     }
 
-    int sizeX = maxVal(entity->pileSize.x, 0x20000);
-    int sizeY = maxVal(entity->pileSize.y, 0x20000);
-    for (int i = 0; i < count * 2; i += 2) {
+    int32 sizeX = maxVal(entity->pileSize.x, 0x20000);
+    int32 sizeY = maxVal(entity->pileSize.y, 0x20000);
+    for (int32 i = 0; i < count * 2; i += 2) {
         patternPtr[i + 0] = pattern[i + 0] * (sizeX >> 17);
         patternPtr[i + 1] = pattern[i + 1] * (sizeY >> 17);
     }
@@ -162,9 +162,9 @@ void PetalPile_State_Unknown3(void)
 
     Vector2 buffer[0x100];
     memset(buffer, 0, sizeof(buffer));
-    int count = PetalPile_GetLeafPattern((int *)buffer);
+    int32 count = PetalPile_GetLeafPattern((int32 *)buffer);
 
-    int offsetX = 0, offsetY = 0;
+    int32 offsetX = 0, offsetY = 0;
     switch (entity->field_94) {
         case 0:
             offsetX = entity->position.x + entity->field_84;
@@ -180,23 +180,23 @@ void PetalPile_State_Unknown3(void)
             break;
     }
 
-    int pos = 0;
-    for (int i = 0; i < count; ++i) {
-        int val = abs((entity->position.x - offsetX) + buffer[i].x);
+    int32 pos = 0;
+    for (int32 i = 0; i < count; ++i) {
+        int32 val = abs((entity->position.x - offsetX) + buffer[i].x);
         if (pos <= val)
             pos = val;
     }
 
-    for (int i = 0; i < count; ++i) {
-        int spawnX = buffer[i].x + entity->position.x;
-        int spawnY = buffer[i].y + entity->position.y;
+    for (int32 i = 0; i < count; ++i) {
+        int32 spawnX = buffer[i].x + entity->position.x;
+        int32 spawnY = buffer[i].y + entity->position.y;
 
-        int angle              = RSDK.ATan2(spawnX - offsetX, spawnY - offsetY);
+        int32 angle              = RSDK.ATan2(spawnX - offsetX, spawnY - offsetY);
         EntityPetalPile *petal = CREATE_ENTITY(PetalPile, entity, spawnX, spawnY);
         petal->state           = PetalPile_SetupLeaf;
         petal->stateDraw       = PetalPile_StateDraw_Leaf;
 
-        int val = entity->field_98 >> 1;
+        int32 val = entity->field_98 >> 1;
         if (entity->field_94) {
             petal->direction = entity->field_94 <= 0;
             petal->field_8C  = entity->field_8C;
@@ -224,15 +224,15 @@ void PetalPile_State_Unknown3(void)
     }
     else {
         if (!entity->flag) {
-            int left   = (entity->position.x >> 16) + entity->hitbox1.left;
-            int right  = (entity->position.x >> 16) + entity->hitbox1.right;
-            int top    = (entity->position.y >> 16) + entity->hitbox1.top;
-            int bottom = (entity->position.y >> 16) + entity->hitbox1.bottom;
+            int32 left   = (entity->position.x >> 16) + entity->hitbox1.left;
+            int32 right  = (entity->position.x >> 16) + entity->hitbox1.right;
+            int32 top    = (entity->position.y >> 16) + entity->hitbox1.top;
+            int32 bottom = (entity->position.y >> 16) + entity->hitbox1.bottom;
 
-            int sizeX = (right >> 4) - (left >> 4);
-            int sizeY = (bottom >> 4) - (top >> 4);
-            for (int x = 0; x <= sizeX; ++x) {
-                for (int y = 0; y <= sizeY; ++y) {
+            int32 sizeX = (right >> 4) - (left >> 4);
+            int32 sizeY = (bottom >> 4) - (top >> 4);
+            for (int32 x = 0; x <= sizeX; ++x) {
+                for (int32 y = 0; y <= sizeY; ++y) {
                     RSDK.SetTileInfo(entity->layerID, x + (left >> 4), y + (top >> 4), 0xFFFF);
                 }
             }
@@ -356,7 +356,7 @@ void PetalPile_State_Unknown7(void)
     entity->velocity.y += 0x4000;
     if (entity->velocity.y > 0x10000)
         entity->velocity.y = 0x10000;
-    int val = RSDK.Sin256(4 * entity->field_9C) << 8;
+    int32 val = RSDK.Sin256(4 * entity->field_9C) << 8;
     ++entity->timer;
     entity->position.x += val;
     entity->velocity.x = val;

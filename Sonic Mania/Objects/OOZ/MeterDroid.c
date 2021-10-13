@@ -127,8 +127,8 @@ void MeterDroid_CheckPlayerCollisions2(void)
 
     foreach_active(Player, player)
     {
-        int storeX = entity->position.x;
-        int storeY = entity->position.y;
+        int32 storeX = entity->position.x;
+        int32 storeY = entity->position.y;
         if (!entity->invincibilityTimer) {
             if (Player_CheckBadnikHit(player, entity, &MeterDroid->hitbox1) && Player_CheckBossHit(player, entity)) {
                 MeterDroid_Hit();
@@ -189,8 +189,8 @@ void MeterDroid_Hit(void)
         entity->state = MeterDroid_State_Die;
         entity->timer = 0;
         if (entity->stateDraw == MeterDroid_StateDraw_Unknown2) {
-            int x = RSDK.Rand(MeterDroid->hitbox1.left, MeterDroid->hitbox1.right) << 16;
-            int y = RSDK.Rand(MeterDroid->hitbox1.top, MeterDroid->hitbox1.bottom) << 16;
+            int32 x = RSDK.Rand(MeterDroid->hitbox1.left, MeterDroid->hitbox1.right) << 16;
+            int32 y = RSDK.Rand(MeterDroid->hitbox1.top, MeterDroid->hitbox1.bottom) << 16;
             CREATE_ENTITY(Explosion, intToVoid(2), x + entity->field_88.x, y + entity->field_88.y)->drawOrder = Zone->drawOrderHigh;
             entity->stateDraw                                                                                 = MeterDroid_StateDraw_Unknown1;
         }
@@ -211,7 +211,7 @@ void MeterDroid_Unknown5(void)
     RSDK_THIS(MeterDroid);
 
     valves[0] = NULL;
-    int id   = 0;
+    int32 id   = 0;
     foreach_active(Valve, valve) { valves[id++ + 1] = valve; }
 
     valves[0]         = valves[RSDK.Rand(0, id) + 1];
@@ -233,7 +233,7 @@ void MeterDroid_Unknown5(void)
 
 void MeterDroid_PopPlatforms(void)
 {
-    int delay = 30;
+    int32 delay = 30;
     foreach_active(GasPlatform, platform)
     {
         platform->type          = 2;
@@ -457,8 +457,8 @@ void MeterDroid_State_Unknown6(void)
     }
 
     if (entity->stateDraw == MeterDroid_StateDraw_Unknown2) {
-        int x = entity->field_90.x + entity->field_98.x;
-        int y = entity->field_90.y + entity->field_98.y;
+        int32 x = entity->field_90.x + entity->field_98.x;
+        int32 y = entity->field_90.y + entity->field_98.y;
         entity->field_88.x += x;
         entity->field_88.y += y;
         entity->field_90.x = x;
@@ -485,8 +485,8 @@ void MeterDroid_State_Unknown7(void)
     entity->field_88.x += entity->field_90.x;
     entity->field_88.y += entity->field_90.y;
 
-    int rx = abs(entity->field_78 - entity->field_88.x) >> 16;
-    int ry = abs(entity->field_7C - entity->field_88.y) >> 16;
+    int32 rx = abs(entity->field_78 - entity->field_88.x) >> 16;
+    int32 ry = abs(entity->field_7C - entity->field_88.y) >> 16;
 
     if (rx * rx + ry * ry < 512) {
         RSDK.PlaySfx(MeterDroid->sfxGrab, false, 255);
@@ -528,8 +528,8 @@ void MeterDroid_State_Unknown9(void)
     entity->position.y += entity->velocity.y;
     entity->position.x += entity->velocity.x;
 
-    int rx = abs(entity->field_78 - entity->position.x) >> 16;
-    int ry = abs(entity->field_7C - entity->position.y) >> 16;
+    int32 rx = abs(entity->field_78 - entity->position.x) >> 16;
+    int32 ry = abs(entity->field_7C - entity->position.y) >> 16;
 
     if (rx * rx + ry * ry < 96) {
         entity->direction = entity->valvePtr->direction;
@@ -679,7 +679,7 @@ void MeterDroid_State_FinishAct(void)
         }
     }
     if (++entity->timer == 180) {
-        for (int p = 0; p < Player->playerCount; ++p) {
+        for (int32 p = 0; p < Player->playerCount; ++p) {
             StarPost->postIDs[p] = 0;
         }
 

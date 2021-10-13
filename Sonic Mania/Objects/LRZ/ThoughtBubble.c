@@ -108,7 +108,7 @@ void ThoughtBubble_Unknown4(void)
 {
     RSDK_THIS(ThoughtBubble);
     entity->type = 1;
-    for (int i = 0; i < 8; ++i) {
+    for (int32 i = 0; i < 8; ++i) {
         EntityDebris *debris = (EntityDebris *)RSDK.CreateEntity(Debris->objectID, 0, entity->position.x + RSDK.Rand(-0x180000, 0x180000),
                                                                  entity->position.y + RSDK.Rand(-0x100000, 0x100000));
         debris->state        = Debris_State_LightningSpark;
@@ -116,7 +116,7 @@ void ThoughtBubble_Unknown4(void)
         debris->velocity.y   = RSDK.Rand(-0x20000, 0x20000);
         debris->drawFX       = FX_SCALE | FX_FLIP;
         debris->direction    = i & 3;
-        int scale            = RSDK.Rand(0x200, 0x400);
+        int32 scale            = RSDK.Rand(0x200, 0x400);
         debris->scale.x      = scale;
         debris->scale.y      = scale;
         debris->drawOrder    = Zone->drawOrderHigh;

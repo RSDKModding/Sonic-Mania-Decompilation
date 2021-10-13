@@ -59,11 +59,11 @@ void CrashTest_Create(void *data)
     entity->updateRange.y = 0x800000;
     CrashTest_SetupHitboxes();
 
-    int positions[] = { -0x100000, -0x180000, 0x80000,  -0x1A0000, -0x100000, -0x180000, 0x00000,  -0x100000,
+    int32 positions[] = { -0x100000, -0x180000, 0x80000,  -0x1A0000, -0x100000, -0x180000, 0x00000,  -0x100000,
                         -0x200000, -0x80000,  0x100000, -0x100000, -0x40000,  -0x180000, -0x40000, -0x80000 };
 
-    int pos = 0;
-    for (int i = 0; i < 8; ++i) {
+    int32 pos = 0;
+    for (int32 i = 0; i < 8; ++i) {
         entity->field_8C[i].x = positions[pos + 0];
         entity->field_8C[i].y = positions[pos + 1];
 
@@ -93,43 +93,43 @@ void CrashTest_SetupHitboxes(void)
     entity->hitbox1.top            = 0;
     entity->hitbox1.right          = 0;
     entity->hitbox1.bottom         = 0;
-    *(int *)&entity->hitbox1.left  = -0xF0016;
-    *(int *)&entity->hitbox1.right = -0x3FFF2;
+    *(int32 *)&entity->hitbox1.left  = -0xF0016;
+    *(int32 *)&entity->hitbox1.right = -0x3FFF2;
 
     entity->hitbox2.left           = 0;
     entity->hitbox2.top            = 0;
     entity->hitbox2.right          = 0;
     entity->hitbox2.bottom         = 0;
-    *(int *)&entity->hitbox2.left  = -0xF0028;
-    *(int *)&entity->hitbox2.right = 0xFFEA;
+    *(int32 *)&entity->hitbox2.left  = -0xF0028;
+    *(int32 *)&entity->hitbox2.right = 0xFFEA;
 
     entity->hitbox3.left           = 0;
     entity->hitbox3.top            = 0;
     entity->hitbox3.right          = 0;
     entity->hitbox3.bottom         = 0;
-    *(int *)&entity->hitbox3.left  = -0x30016;
-    *(int *)&entity->hitbox3.right = 14;
+    *(int32 *)&entity->hitbox3.left  = -0x30016;
+    *(int32 *)&entity->hitbox3.right = 14;
 
     entity->hitbox4.left           = 0;
     entity->hitbox4.top            = 0;
     entity->hitbox4.right          = 0;
     entity->hitbox4.bottom         = 0;
-    *(int *)&entity->hitbox4.left  = -0x23FFF2;
-    *(int *)&entity->hitbox4.right = 25;
+    *(int32 *)&entity->hitbox4.left  = -0x23FFF2;
+    *(int32 *)&entity->hitbox4.right = 25;
 
     entity->hitbox5.left           = 0;
     entity->hitbox5.top            = 0;
     entity->hitbox5.right          = 0;
     entity->hitbox5.bottom         = 0;
-    *(int *)&entity->hitbox5.left  = -0x17000C;
-    *(int *)&entity->hitbox5.right = 12;
+    *(int32 *)&entity->hitbox5.left  = -0x17000C;
+    *(int32 *)&entity->hitbox5.right = 12;
 
     entity->hitbox6.left           = 0;
     entity->hitbox6.top            = 0;
     entity->hitbox6.right          = 0;
     entity->hitbox6.bottom         = 0;
-    *(int *)&entity->hitbox6.left  = -0x15FFE4;
-    *(int *)&entity->hitbox6.right = -0x1FFCD;
+    *(int32 *)&entity->hitbox6.left  = -0x15FFE4;
+    *(int32 *)&entity->hitbox6.right = -0x1FFCD;
 }
 
 void CrashTest_EditorDraw(void) {}

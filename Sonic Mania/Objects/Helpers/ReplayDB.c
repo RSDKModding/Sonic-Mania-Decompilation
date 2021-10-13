@@ -15,14 +15,14 @@ void ReplayDB_Create(void *data) {}
 
 void ReplayDB_StageLoad(void) {}
 
-int ReplayDB_Buffer_PackEntry(uint8 *compressed, uint8 *uncompressed)
+int32 ReplayDB_Buffer_PackEntry(uint8 *compressed, uint8 *uncompressed)
 {
     compressed[0] = uncompressed[0];
     compressed[1] = uncompressed[1];
     bool32 flag   = *uncompressed == 1 || *uncompressed == 3;
     uint8 changes  = uncompressed[1];
     uint8 *outPtr  = &compressed[2];
-    int size      = 2;
+    int32 size      = 2;
 
     // input
     if (flag || (changes & 0x40)) {
@@ -33,31 +33,31 @@ int ReplayDB_Buffer_PackEntry(uint8 *compressed, uint8 *uncompressed)
 
     // position
     if (flag || (changes & 0x2)) {
-        *((int *)outPtr) = ((int *)uncompressed)[1];
-        size += sizeof(int);
-        outPtr += sizeof(int);
+        *((int32 *)outPtr) = ((int32 *)uncompressed)[1];
+        size += sizeof(int32);
+        outPtr += sizeof(int32);
 
-        *((int *)outPtr) = ((int *)uncompressed)[2];
-        size += sizeof(int);
-        outPtr += sizeof(int);
+        *((int32 *)outPtr) = ((int32 *)uncompressed)[2];
+        size += sizeof(int32);
+        outPtr += sizeof(int32);
     }
 
     // velocity
     if (flag || (changes & 0x4)) {
-        *((int *)outPtr) = ((int *)uncompressed)[3];
-        size += sizeof(int);
-        outPtr += sizeof(int);
+        *((int32 *)outPtr) = ((int32 *)uncompressed)[3];
+        size += sizeof(int32);
+        outPtr += sizeof(int32);
 
-        *((int *)outPtr) = ((int *)uncompressed)[4];
-        size += sizeof(int);
-        outPtr += sizeof(int);
+        *((int32 *)outPtr) = ((int32 *)uncompressed)[4];
+        size += sizeof(int32);
+        outPtr += sizeof(int32);
     }
 
     // rotation
     if (flag || (changes & 0x20)) {
-        *((int *)compressed) = ((int *)uncompressed)[5] >> 1;
-        size += sizeof(int);
-        compressed += sizeof(int);
+        *((int32 *)compressed) = ((int32 *)uncompressed)[5] >> 1;
+        size += sizeof(int32);
+        compressed += sizeof(int32);
     }
 
     // direction
@@ -84,9 +84,9 @@ int ReplayDB_Buffer_PackEntry(uint8 *compressed, uint8 *uncompressed)
     return size;
 }
 
-int ReplayDB_Buffer_UnpackEntry(uint8 *uncompressed, uint8 *compressed)
+int32 ReplayDB_Buffer_UnpackEntry(uint8 *uncompressed, uint8 *compressed)
 {
-    int *outPtr   = (int *)uncompressed;
+    int32 *outPtr   = (int32 *)uncompressed;
     uint8 *buf    = &compressed[2];
 
     // compress state
@@ -96,7 +96,7 @@ int ReplayDB_Buffer_UnpackEntry(uint8 *uncompressed, uint8 *compressed)
     uint8 changes    = compressed[1];
     uncompressed[1] = changes;
 
-    int size = 2 * sizeof(uint8);
+    int32 size = 2 * sizeof(uint8);
 
     // input
     if (flag || (changes & 0x1)) {
@@ -106,13 +106,13 @@ int ReplayDB_Buffer_UnpackEntry(uint8 *uncompressed, uint8 *compressed)
 
     // position
     if (flag || (changes & 0x2)) {
-        int x = *(int *)buf;
-        buf += sizeof(int);
-        size += sizeof(int);
+        int32 x = *(int32 *)buf;
+        buf += sizeof(int32);
+        size += sizeof(int32);
 
-        int y = *(int *)buf;
-        buf += sizeof(int);
-        size += sizeof(int);
+        int32 y = *(int32 *)buf;
+        buf += sizeof(int32);
+        size += sizeof(int32);
 
         outPtr[1] = x;
         outPtr[2] = y;
@@ -120,13 +120,13 @@ int ReplayDB_Buffer_UnpackEntry(uint8 *uncompressed, uint8 *compressed)
 
     // velocity
     if (flag || (changes & 0x4)) {
-        int x = *(int *)buf;
-        buf += sizeof(int);
-        size += sizeof(int);
+        int32 x = *(int32 *)buf;
+        buf += sizeof(int32);
+        size += sizeof(int32);
 
-        int y = *(int *)buf;
-        buf += sizeof(int);
-        size += sizeof(int);
+        int32 y = *(int32 *)buf;
+        buf += sizeof(int32);
+        size += sizeof(int32);
 
         outPtr[3] = x;
         outPtr[4] = y;
@@ -134,7 +134,7 @@ int ReplayDB_Buffer_UnpackEntry(uint8 *uncompressed, uint8 *compressed)
 
     // rotation
     if (flag || (changes & 0x20)) {
-        int rotation = *buf++;
+        int32 rotation = *buf++;
         outPtr[5]    = 2 * rotation;
         size += sizeof(uint8);
     }

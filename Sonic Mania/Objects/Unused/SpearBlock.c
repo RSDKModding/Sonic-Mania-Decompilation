@@ -111,7 +111,7 @@ void SpearBlock_State_SetupSpears(void)
     entity->active           = ACTIVE_NORMAL;
     entity->state            = SpearBlock_State_CheckSpearExtend;
     if (!(Zone->timer & 0x7F)) {
-        int frameTimer       = (Zone->timer >> 7) + entity->spearDir;
+        int32 frameTimer       = (Zone->timer >> 7) + entity->spearDir;
         entity->timer        = 4;
         entity->state        = SpearBlock_State_ExtendSpears;
         entity->animator.frameID = (frameTimer & 3);
@@ -122,7 +122,7 @@ void SpearBlock_State_CheckSpearExtend(void)
 {
     RSDK_THIS(SpearBlock);
     if (!(Zone->timer & 0x7F)) {
-        int frameTimer       = (Zone->timer >> 7) + entity->spearDir;
+        int32 frameTimer       = (Zone->timer >> 7) + entity->spearDir;
         entity->timer        = 4;
         entity->state        = SpearBlock_State_ExtendSpears;
         entity->animator.frameID = (frameTimer & 3);

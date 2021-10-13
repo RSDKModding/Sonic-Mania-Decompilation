@@ -203,15 +203,15 @@ bool32 PSZ2Outro_CutsceneState_Unknown6(EntityCutsceneSeq *host)
                 host->field_68 = host->timer;
             }
             if (host->timer >= host->field_68 + 52) {
-                int id = 0;
-                for (int angle = 0; angle < 0x80; angle += 0x40) {
+                int32 id = 0;
+                for (int32 angle = 0; angle < 0x80; angle += 0x40) {
                     EntityPlayer *player = RSDK_GET_ENTITY(id++, Player);
                     if (!player || player->objectID == TYPE_BLANK)
                         break;
                     RSDK.SetSpriteAnimation(player->spriteIndex, ANI_FAN, &player->playerAnimator, false, 0);
 
-                    int valX = (player->position.x - player->position.x) >> 3;
-                    int valY =
+                    int32 valX = (player->position.x - player->position.x) >> 3;
+                    int32 valY =
                         (0xA00 * RSDK.Sin256(2 * (angle + host->timer - host->field_68)) + (eggman->position.y - 0x200000) - player->position.y) >> 3;
 
                     player->position.x += valX;

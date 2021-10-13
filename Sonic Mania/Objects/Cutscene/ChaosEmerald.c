@@ -16,14 +16,14 @@ void ChaosEmerald_Draw(void)
 {
     RSDK_THIS(ChaosEmerald);
 
-    for (int i = 0; i < 36; ++i) {
+    for (int32 i = 0; i < 36; ++i) {
         ChaosEmerald->colourStorage[i] = RSDK.GetPaletteEntry(0, i + 128);
         RSDK.SetPaletteEntry(0, i + 128, ChaosEmerald->emeraldColours[i]);
     }
 
     RSDK.DrawSprite(&entity->animator, NULL, false);
 
-    for (int i = 0; i < 36; ++i) {
+    for (int32 i = 0; i < 36; ++i) {
         RSDK.SetPaletteEntry(0, i + 0x80, ChaosEmerald->colourStorage[i]);
     }
 }

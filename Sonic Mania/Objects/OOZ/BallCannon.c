@@ -98,7 +98,7 @@ void BallCannon_Unknown1(void)
         foreach_all(Player, player)
         {
             if (Player_CheckValidState(player)) {
-                int playerID = RSDK.GetEntityID(player);
+                int32 playerID = RSDK.GetEntityID(player);
 
                 if (entity->playerTimers[playerID]) {
                     entity->playerTimers[playerID]--;
@@ -178,7 +178,7 @@ void BallCannon_Unknown5(void)
         foreach_all(Player, player)
         {
             if (Player_CheckValidState(player)) {
-                int playerID = RSDK.GetEntityID(player);
+                int32 playerID = RSDK.GetEntityID(player);
 
                 if (((1 << playerID) & entity->activePlayers)) {
                     RSDK.PlaySfx(BallCannon->sfxFire, false, 255);
@@ -207,10 +207,10 @@ void BallCannon_StateCheckPlayerCollisions(void)
     foreach_active(Player, player)
     {
         Animator *animator = &player->playerAnimator;
-        int storeVelY      = player->velocity.y;
-        int storeVelX      = player->velocity.x;
-        int storeX         = player->position.x;
-        int storeY         = player->position.y;
+        int32 storeVelY      = player->velocity.y;
+        int32 storeVelX      = player->velocity.x;
+        int32 storeX         = player->position.x;
+        int32 storeY         = player->position.y;
 
         if (Player_CheckCollisionBox(player, entity, &BallCannon->hitbox2) == 1) {
             if (player->playerAnimator.animationID == ANI_JUMP || player->state == Player_State_DropDash
@@ -219,7 +219,7 @@ void BallCannon_StateCheckPlayerCollisions(void)
 #endif
                 ) {
                 if (storeVelY >= 0 && !player->groundedStore) {
-                    for (int i = 0; i < 16; ++i) {
+                    for (int32 i = 0; i < 16; ++i) {
                         EntityBallCannon *debris =
                             CREATE_ENTITY(BallCannon, intToVoid((i & 3) + 1), entity->position.x + BallCannon->array1[(i * 2) + 0],
                                           entity->position.y + BallCannon->array2[(i * 2) + 1]);
@@ -251,7 +251,7 @@ void BallCannon_Unknown7(void)
     if (RSDK.CheckOnScreen(RSDK_sceneInfo->entity, NULL)) {
         foreach_active(Player, player)
         {
-            int playerID = RSDK.GetEntityID(player);
+            int32 playerID = RSDK.GetEntityID(player);
 
             if (entity->playerTimers[playerID]) {
                 entity->playerTimers[playerID]--;
@@ -276,7 +276,7 @@ void BallCannon_Unknown7(void)
     }
     else {
         entity->visible = true;
-        for (int i = 0; i < Player->playerCount; ++i) {
+        for (int32 i = 0; i < Player->playerCount; ++i) {
             entity->playerTimers[i] = 0;
         }
         entity->state = BallCannon_StateCheckPlayerCollisions;

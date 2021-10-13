@@ -10,9 +10,9 @@
 
 //created so I can easily set up times in an array
 typedef struct {
-    int minutes;
-    int seconds;
-    int milliseconds;
+    int32 minutes;
+    int32 seconds;
+    int32 milliseconds;
 } vsTime;
 
 // Object Class
@@ -24,35 +24,35 @@ typedef struct {
 typedef struct {
 	RSDK_ENTITY
     bool32 inMatch;
-    int playerCount;
-    int levelIndex;
-    int zoneID;
-    int actID;
-    int matchID;
-    int matchCount;
-    int monitorMode;
+    int32 playerCount;
+    int32 levelIndex;
+    int32 zoneID;
+    int32 actID;
+    int32 matchID;
+    int32 matchCount;
+    int32 monitorMode;
 #if RETRO_USE_PLUS
-    int unknown29;
+    int32 unknown29;
 #endif
-    int zoneFlags[12];
+    int32 zoneFlags[12];
     uint8 characterFlags[PLAYER_MAX];
     uint8 winnerFlags[12];
-    int rings[PLAYER_MAX];
-    int score[PLAYER_MAX];
-    int items[PLAYER_MAX];
+    int32 rings[PLAYER_MAX];
+    int32 score[PLAYER_MAX];
+    int32 items[PLAYER_MAX];
     vsTime time[PLAYER_MAX];
     uint8 finishFlags[PLAYER_MAX];
-    int totalRings[PLAYER_MAX];
-    int wins[PLAYER_MAX];
-    int lives[PLAYER_MAX];
+    int32 totalRings[PLAYER_MAX];
+    int32 wins[PLAYER_MAX];
+    int32 lives[PLAYER_MAX];
 #if RETRO_USE_PLUS
-    int unknown84;
-    int unknown85;
-    int splitScreenMode;
-    int unknown87;
+    int32 unknown84;
+    int32 unknown85;
+    int32 splitScreenMode;
+    int32 unknown87;
     bool32 readOnlyDisplayMode;
-    int controllerIDs[PLAYER_MAX];
-    int prevMatchID;
+    int32 controllerIDs[PLAYER_MAX];
+    int32 prevMatchID;
 #endif
 } EntityCompetitionSession;
 
@@ -74,8 +74,8 @@ void CompetitionSession_Serialize(void);
 #if !RETRO_USE_PLUS
 void CompetitionSession_ResetOptions(void);
 void CompetitionSession_ClearMatchData(void);
-void CompetitionSession_DeriveWinner(int playerID, int flags);
-void CompetitionSession_WinMatchFor(int player);
+void CompetitionSession_DeriveWinner(int32 playerID, int32 flags);
+void CompetitionSession_WinMatchFor(int32 player);
 #endif
 
 

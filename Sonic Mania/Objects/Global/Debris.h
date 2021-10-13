@@ -12,11 +12,11 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    int timer;
-    int gravity;
-    int rotSpeed;
+    int32 timer;
+    int32 gravity;
+    int32 rotSpeed;
     Vector2 scaleInc;
-    int cooldown;
+    int32 cooldown;
     Animator animator;
 } EntityDebris;
 
@@ -39,7 +39,7 @@ void Debris_State_Fall(void);
 void Debris_State_LightningSpark(void);
 void Debris_State_FallAndFlicker(void);
 
-void Debris_FallFlickerAnimSetup(int spriteIndex, int *a2, int animationID);
-void Debris_FallFlickerSetup(int spriteIndex, int *a2);
+void Debris_FallFlickerAnimSetup(int32 spriteIndex, int32 *a2, int32 animationID);
+void Debris_FallFlickerSetup(int32 spriteIndex, int32 *a2);
 
 #endif //!OBJ_DEBRIS_H

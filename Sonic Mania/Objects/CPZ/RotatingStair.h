@@ -13,8 +13,8 @@ typedef struct {
 typedef struct {
 	MANIA_PLATFORM_BASE
 	uint16 oscOff;
-	int duration;
-	int interval;
+	int32 duration;
+	int32 interval;
 } EntityRotatingStair;
 
 // Object Struct

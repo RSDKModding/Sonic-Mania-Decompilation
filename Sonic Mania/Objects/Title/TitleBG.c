@@ -97,14 +97,14 @@ void TitleBG_SetupFX(void)
 void TitleBG_ScanlineCallbackA(ScanlineInfo *scanlines)
 {
     RSDK.SetClipBounds(0, 0, 0, RSDK_screens->width, SCREEN_YSIZE / 2);
-    int sine   = RSDK.Sin256(0);
-    int cosine = RSDK.Cos256(0);
+    int32 sine   = RSDK.Sin256(0);
+    int32 cosine = RSDK.Cos256(0);
 
-    int off = 0x1000000;
-    for (int i = 0xA0; i > 0x20; --i) {
-        int val               = off / (8 * i);
-        int sVal              = sine * val;
-        int cVal              = cosine * val;
+    int32 off = 0x1000000;
+    for (int32 i = 0xA0; i > 0x20; --i) {
+        int32 val               = off / (8 * i);
+        int32 sVal              = sine * val;
+        int32 cVal              = cosine * val;
         scanlines->deform.x   = (-cVal >> 7);
         scanlines->deform.y   = sVal >> 7;
         scanlines->position.x = sVal - RSDK_screens->centerX * (-cVal >> 7);
@@ -118,14 +118,14 @@ void TitleBG_ScanlineCallbackA(ScanlineInfo *scanlines)
 void TitleBG_ScanlineCallbackB(ScanlineInfo *scanlines)
 {
     RSDK.SetClipBounds(0, 0, 168, RSDK_screens->width, SCREEN_YSIZE);
-    int sine            = RSDK.Sin1024(-TitleBG->angle) >> 2;
-    int cosine          = RSDK.Cos1024(-TitleBG->angle) >> 2;
+    int32 sine            = RSDK.Sin1024(-TitleBG->angle) >> 2;
+    int32 cosine          = RSDK.Cos1024(-TitleBG->angle) >> 2;
     ScanlineInfo *scnln = &scanlines[168];
 
-    for (int i = 16; i < 88; ++i) {
-        int val           = 0xA00000 / (8 * i);
-        int sVal          = sine * val;
-        int cVal          = cosine * val;
+    for (int32 i = 16; i < 88; ++i) {
+        int32 val           = 0xA00000 / (8 * i);
+        int32 sVal          = sine * val;
+        int32 cVal          = cosine * val;
         scnln->deform.y   = sVal >> 7;
         scnln->deform.x   = -cVal >> 7;
         scnln->position.y = cVal - RSDK_screens->centerX * scnln->deform.y - 0xA000 * cosine + 0x2000000;

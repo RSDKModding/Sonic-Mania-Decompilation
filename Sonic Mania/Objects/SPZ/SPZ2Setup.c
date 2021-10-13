@@ -88,7 +88,7 @@ void SPZ2Setup_StageLoad(void)
     SPZ2Setup->fgLow     = RSDK.GetSceneLayer(Zone->fgLow);
     SPZ2Setup->fgHigh    = RSDK.GetSceneLayer(Zone->fgHigh);
 
-    for (int i = 0; i < 0x400; ++i) {
+    for (int32 i = 0; i < 0x400; ++i) {
         SPZ2Setup->fgLow->deformationData[i]  = SPZ2Setup->layerDeform[i & 0x1F];
         SPZ2Setup->fgHigh->deformationData[i] = SPZ2Setup->layerDeform[i & 0x1F];
     }

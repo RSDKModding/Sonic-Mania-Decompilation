@@ -33,8 +33,8 @@ void LRZ2Setup_StaticUpdate(void)
     if (!LRZ2Setup->field_14 && !(Zone->timer & 1))
         RSDK.RotatePalette(0, 228, 231, (LRZ2Setup->field_18 & 0xFF));
 
-    int cos   = RSDK.Cos1024(2 * (Zone->timer & 0x1FF));
-    int blend = cos >> 3;
+    int32 cos   = RSDK.Cos1024(2 * (Zone->timer & 0x1FF));
+    int32 blend = cos >> 3;
     if (cos >> 3 >= 0)
         RSDK.SetLimitedFade(5, 1, 4, cos >> 3, 224, 227);
     else
@@ -55,7 +55,7 @@ void LRZ2Setup_StaticUpdate(void)
         if (player->onGround) {
             Hitbox *playerHitbox = Player_GetHitbox(player);
             uint8 behaviour       = 0;
-            int tileInfo         = 0;
+            int32 tileInfo         = 0;
 
             LRZ2Setup_GetTileInfo(&tileInfo, player->collisionPlane, player->position.x, (playerHitbox->bottom << 16) + player->position.y,
                                   player->moveOffset.x, player->moveOffset.y, &behaviour);
@@ -73,7 +73,7 @@ void LRZ2Setup_StaticUpdate(void)
             switch (behaviour) {
                 default: break;
                 case 1: {
-                    int solid = 1 << 14;
+                    int32 solid = 1 << 14;
                     if (player->collisionPlane)
                         solid = 1 << 12;
                     if ((solid & tileInfo) && player->shield != SHIELD_FIRE)
@@ -109,7 +109,7 @@ void LRZ2Setup_StageLoad(void)
     Animals->animalTypes[0] = ANIMAL_FLICKY;
     Animals->animalTypes[1] = ANIMAL_CUCKY;
     if (!isMainGameMode() || !globals->atlEnabled || PlayerHelpers_CheckStageReload()) {
-        for (int p = 0; p < Player->playerCount; ++p) {
+        for (int32 p = 0; p < Player->playerCount; ++p) {
             Zone->screenBoundsL1[p] += 0x100;
         }
     }
@@ -171,7 +171,7 @@ void LRZ2Setup_GenericTrigger_CB(void)
             player1->left       = false;
             player1->right      = true;
 
-            for (int i = 0; i < Player->playerCount; ++i) {
+            for (int32 i = 0; i < Player->playerCount; ++i) {
                 StarPost->postIDs[i] = 0;
             }
 
@@ -192,7 +192,7 @@ void LRZ2Setup_GenericTrigger_CB(void)
     }
 }
 
-EntityButton *LRZ2Setup_HandleTagSetup(int tag, Entity *entityPtr)
+EntityButton *LRZ2Setup_HandleTagSetup(int32 tag, Entity *entityPtr)
 {
     if (RSDK_sceneInfo->inEditor)
         return NULL;
@@ -219,8 +219,8 @@ EntityButton *LRZ2Setup_HandleTagSetup(int tag, Entity *entityPtr)
     if (taggedEntity) {
         if ((Button && taggedEntity->objectID == Button->objectID) || (TurretSwitch && taggedEntity->objectID == TurretSwitch->objectID)) {
             if (entityPtr) {
-                int distX = abs(entityPtr->position.x - taggedEntity->position.x);
-                int distY = abs(entityPtr->position.y - taggedEntity->position.y);
+                int32 distX = abs(entityPtr->position.x - taggedEntity->position.x);
+                int32 distY = abs(entityPtr->position.y - taggedEntity->position.y);
 
                 if (entityPtr->updateRange.x < 0x800000 + distX)
                     entityPtr->updateRange.x = 0x800000 + distX;
@@ -233,23 +233,23 @@ EntityButton *LRZ2Setup_HandleTagSetup(int tag, Entity *entityPtr)
     return taggedEntity;
 }
 
-void LRZ2Setup_GetTileInfo(int *tileInfo, int cPlane, int x, int y, int offsetX, int offsetY, uint8 *behaviour)
+void LRZ2Setup_GetTileInfo(int32 *tileInfo, int32 cPlane, int32 x, int32 y, int32 offsetX, int32 offsetY, uint8 *behaviour)
 {
-    int tileInfoLow   = RSDK.GetTileInfo(Zone->fgLow, x >> 20, y >> 20);
-    int tileInfoHigh  = RSDK.GetTileInfo(Zone->fgHigh, x >> 20, y >> 20);
-    int behaviourLow  = RSDK.GetTileBehaviour(tileInfoLow, cPlane);
-    int behaviourHigh = RSDK.GetTileBehaviour(tileInfoHigh, cPlane);
+    int32 tileInfoLow   = RSDK.GetTileInfo(Zone->fgLow, x >> 20, y >> 20);
+    int32 tileInfoHigh  = RSDK.GetTileInfo(Zone->fgHigh, x >> 20, y >> 20);
+    int32 behaviourLow  = RSDK.GetTileBehaviour(tileInfoLow, cPlane);
+    int32 behaviourHigh = RSDK.GetTileBehaviour(tileInfoHigh, cPlane);
 
-    int tileInfoMove  = 0;
-    int behaviourMove = 0;
+    int32 tileInfoMove  = 0;
+    int32 behaviourMove = 0;
     if (Zone->moveLayer) {
         tileInfoMove  = RSDK.GetTileInfo(Zone->moveLayer, (offsetX + x) >> 20, (offsetY + y) >> 20);
         behaviourMove = RSDK.GetTileBehaviour(tileInfoMove, cPlane);
     }
 
-    int tileSolidLow  = 0;
-    int tileSolidHigh = 0;
-    int tileSolidMove = 0;
+    int32 tileSolidLow  = 0;
+    int32 tileSolidHigh = 0;
+    int32 tileSolidMove = 0;
     if (cPlane) {
         tileSolidHigh = tileInfoHigh >> 14;
         tileSolidLow  = tileInfoLow >> 14;

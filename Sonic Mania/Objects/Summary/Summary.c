@@ -65,7 +65,7 @@ void Summary_State_SetupText(void)
 
     foreach_all(UIText, text)
     {
-        int align = text->align;
+        int32 align = text->align;
         if (align == ALIGN_RIGHT) {
             if (entity->gameModeText)
                 entity->saveText = text;
@@ -83,12 +83,12 @@ void Summary_State_SetupText(void)
         }
     }
 
-    int id = 0;
-    for (int i = globals->playerID & 0xFF; i > 0; ++id) i >>= 1;
+    int32 id = 0;
+    for (int32 i = globals->playerID & 0xFF; i > 0; ++id) i >>= 1;
     entity->player1ID = id;
 
     id = 0;
-    for (int i = globals->playerID >> 8; i > 0; ++id) i >>= 1;
+    for (int32 i = globals->playerID >> 8; i > 0; ++id) i >>= 1;
     entity->player2ID = id;
 
     foreach_all(UIPicture, picture)
@@ -174,20 +174,20 @@ void Summary_SetTextString(uint8 anim, void *text, const char *str)
     else
         RSDK.SetSpriteString(UIWidgets->uiSpriteIndex, uiText->listID, &uiText->text);
 }
-void Summary_SetStageTime(char *buffer, int time)
+void Summary_SetStageTime(char *buffer, int32 time)
 {
     if (!time) {
         sprintf(buffer, "--'--\"--");
     }
     else {
-        int tm = 100 * time;
-        int mins = 0;
-        int secs = 0;
+        int32 tm = 100 * time;
+        int32 mins = 0;
+        int32 secs = 0;
         uint8 ms  = 0;
 
         if (tm >= 6000) {
             do {
-                int t = tm;
+                int32 t = tm;
                 if (tm > 6025)
                     t = 6025;
                 ++secs;
@@ -235,14 +235,14 @@ void Summary_LoadTimes(void)
     EntitySaveGame *saveRAM = SaveGame->saveRAM;
     char textBuf[0x100];
     memset(textBuf, 0, 0x100);
-    int totalTime = 0;
+    int32 totalTime = 0;
 
-    for (int i = 0; i < 0x20; ++i) {
+    for (int32 i = 0; i < 0x20; ++i) {
         if (entity->textEntities[i]) {
             EntityUIText *text = (EntityUIText *)entity->textEntities[i];
 
             Summary_SetStageTime(textBuf, saveRAM->zoneTimes[text->data0]);
-            int time = saveRAM->zoneTimes[text->data0] + totalTime;
+            int32 time = saveRAM->zoneTimes[text->data0] + totalTime;
             if (saveRAM->zoneTimes[text->data0] + totalTime < totalTime)
                 time = -1;
             totalTime = time;

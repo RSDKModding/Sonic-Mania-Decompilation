@@ -8,18 +8,18 @@ typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
     Hitbox hitbox;
-    int field_10;
-    int field_14;
-    int field_18;
+    int32 field_10;
+    int32 field_14;
+    int32 field_18;
 } ObjectBuzzSaw;
 
 // Entity Class
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    int type;
+    int32 type;
     Vector2 amplitude;
-    int speed;
+    int32 speed;
     Vector2 startPos;
     Vector2 drawPos;
     Animator animator;
@@ -41,7 +41,7 @@ void BuzzSaw_Serialize(void);
 
 // Extra Entity Functions
 bool32 BuzzSaw_CheckCB(void);
-void BuzzSaw_UpdateCB(int sfx);
+void BuzzSaw_UpdateCB(int32 sfx);
 
 void BuzzSaw_CheckPlayerCollisions(void);
 

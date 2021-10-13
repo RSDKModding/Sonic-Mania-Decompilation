@@ -64,7 +64,7 @@ typedef struct {
     uint16 aniFrames;
     Hitbox hitbox1;
     Hitbox hitbox2;
-    int playerTimers[PLAYER_MAX];
+    int32 playerTimers[PLAYER_MAX];
     uint16 sfxFreeze;
     uint16 sfxLedgeBreak;
     uint16 sfxWindowShatter;
@@ -91,7 +91,7 @@ typedef struct {
     Entity *playerPtr;
     Vector2 playerPos;
     Vector2 dwordDC;
-    int dwordE4;
+    int32 dwordE4;
     Hitbox hitbox1;
     Hitbox hitbox2;
     Hitbox hitbox3;
@@ -118,10 +118,10 @@ void Ice_FreezePlayer(void *p);
 bool32 Ice_Unknown3(void);
 bool32 Ice_Unknown4(void);
 void Ice_State_FrozenPlayer(void);
-void Ice_ShatterGenerator(int xr, int xy, int count, int velX, int velY, int a6);
-void Ice_Unknown7(int velX, Entity *p, int velY);
+void Ice_ShatterGenerator(int32 xr, int32 xy, int32 count, int32 velX, int32 velY, int32 a6);
+void Ice_Unknown7(int32 velX, Entity *p, int32 velY);
 void Ice_Unknown8(Entity *p);
-Entity *Ice_Shatter(EntityIce *ice, int velX, int velY);
+Entity *Ice_Shatter(EntityIce *ice, int32 velX, int32 velY);
 void Ice_TimeOverCB(void);
 
 void Ice_Unknown11(void);

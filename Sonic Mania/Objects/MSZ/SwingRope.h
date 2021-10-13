@@ -15,11 +15,11 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     uint8 ropeSize;
-    int ropeGrabDelay;
-    int rotatedAngle;
-    int rotatedOffset;
-    int playerLayers[4];
-    int angleOffset;
+    int32 ropeGrabDelay;
+    int32 rotatedAngle;
+    int32 rotatedOffset;
+    int32 playerLayers[4];
+    int32 angleOffset;
     Vector2 ropePos;
     Vector2 rotatePos;
     Animator ropeData;

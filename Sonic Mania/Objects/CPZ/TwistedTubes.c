@@ -30,7 +30,7 @@ void TwistedTubes_Draw(void)
     RSDK.DrawSprite(&entity->animator3, &drawPos, false);
 
     drawPos.y += 0x200000;
-    for (int h = 0; h < entity->height; ++h) {
+    for (int32 h = 0; h < entity->height; ++h) {
         entity->direction = FLIP_NONE;
         RSDK.DrawSprite(&entity->animator2, &drawPos, false);
 
@@ -113,7 +113,7 @@ void TwistedTubes_HandleInteractions(void)
     {
         if (player->state != Player_Unknown7) {
             Player_CheckCollisionBox(player, entity, &TwistedTubes->hitbox1);
-            int pID = RSDK.GetEntityID(player);
+            int32 pID = RSDK.GetEntityID(player);
 
             bool32 flag = false;
             if (Player_CheckCollisionTouch(player, entity, &TwistedTubes->hitbox2)) {

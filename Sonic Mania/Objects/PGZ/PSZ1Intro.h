@@ -12,7 +12,7 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    int timer;
+    int32 timer;
     EntityHangGlider *gliders[4];
 } EntityPSZ1Intro;
 

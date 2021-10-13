@@ -75,8 +75,8 @@ void InvisibleBlock_DrawSprites(void)
     drawPos.x -= entity->width << 19;
     drawPos.y -= entity->height << 19;
 
-    for (int y = 0; y <= entity->height; ++y) {
-        for (int x = 0; x <= entity->width; ++x) {
+    for (int32 y = 0; y <= entity->height; ++y) {
+        for (int32 x = 0; x <= entity->width; ++x) {
             RSDK.DrawSprite(&InvisibleBlock->animator, &drawPos, false);
             drawPos.x += 0x100000;
         }

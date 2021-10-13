@@ -28,17 +28,17 @@ void TilePlatform_Create(void *data)
         entity->hitbox.left = -entity->size.x >> 17;
         entity->size.x += 0x80000;
         entity->size.y += 0x80000;
-        int originX = (entity->targetPos.x >> 20) - (entity->size.x >> 21);
-        int originY = (entity->targetPos.y >> 20) - (entity->size.y >> 21);
+        int32 originX = (entity->targetPos.x >> 20) - (entity->size.x >> 21);
+        int32 originY = (entity->targetPos.y >> 20) - (entity->size.y >> 21);
 
-        int h = entity->size.y >> 20;
-        int w = entity->size.x >> 20;
+        int32 h = entity->size.y >> 20;
+        int32 w = entity->size.x >> 20;
 
-        int id = 0;
+        int32 id = 0;
         if ((entity->size.y & 0xFFF00000) > 0) {
-            for (int y = 0; y < h; ++y) {
+            for (int32 y = 0; y < h; ++y) {
                 if ((entity->size.x & 0xFFF00000) > 0) {
-                    for (int x = 0; x < w; ++x) {
+                    for (int32 x = 0; x < w; ++x) {
                         id                = x + y * (entity->size.x >> 20);
                         entity->tiles[id] = RSDK.GetTileInfo(Zone->moveLayer, originX + x, originY + y);
                     }

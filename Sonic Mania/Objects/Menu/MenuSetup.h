@@ -6,13 +6,13 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    int field_4;
+    int32 field_4;
     bool32 dword8;
     bool32 initialized;
     bool32 dword10;
     bool32 gameLoaded;
     bool32 field_18;
-    int field_1C;
+    int32 field_1C;
     EntityFXFade *fxFade;
 #if !RETRO_USE_PLUS
     Entity *saveSelPrompt;
@@ -49,10 +49,10 @@ typedef struct {
     Entity *controls_NX_JoyCon;
     Entity *controls_NX_Pro;
     Entity *language;
-    int field_138;
-    int field_13C;
-    int field_140;
-    int field_144;
+    int32 field_138;
+    int32 field_13C;
+    int32 field_140;
+    int32 field_144;
     Entity *dialog;
 #endif
 } ObjectMenuSetup;
@@ -62,11 +62,11 @@ typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(timedState);
-    int timer;
-    int timeOut;
-    int field_68;
-    int fadeTimer;
-    int fadeColour;
+    int32 timer;
+    int32 timeOut;
+    int32 field_68;
+    int32 fadeTimer;
+    int32 fadeColour;
 } EntityMenuSetup;
 
 // Object Struct
@@ -84,7 +84,7 @@ void MenuSetup_EditorLoad(void);
 void MenuSetup_Serialize(void);
 
 // Extra Entity Functions
-void MenuSetup_StartTransition(void (*callback)(void), int time);
+void MenuSetup_StartTransition(void (*callback)(void), int32 time);
 
 #if !RETRO_USE_PLUS
 //Setup
@@ -93,15 +93,15 @@ bool32 MenuSetup_InitUserdata(void);
 void MenuSetup_Unknown3(void);
 void MenuSetup_Unknown52(void);
 void MenuSetup_Unknown7(void);
-int MenuSetup_GetActiveMenu(void);
+int32 MenuSetup_GetActiveMenu(void);
 void MenuSetup_ChangeMenuTrack(void);
 void MenuSetup_SetBGColours(void);
 void MenuSetup_ChangeMenu(void);
-void MenuSetup_StartTransitionLB(void (*callback)(void), int time);
+void MenuSetup_StartTransitionLB(void (*callback)(void), int32 time);
 
 //Main Menu
 bool32 MenuSetup_ReturnToTitleOption(void);
-int MenuSetup_StartReturnToTitle(void);
+int32 MenuSetup_StartReturnToTitle(void);
 void MenuSetup_ReturnToTitle(void);
 void MenuSetup_ExitGame(void);
 void MenuSetup_ExitGame_Confirm(void);
@@ -109,9 +109,9 @@ void MenuSetup_ExitGame_CB(void);
 void MenuSetup_Unknown13(void);
 
 //Save Select
-int MenuSetup_GetMedalMods(void);
+int32 MenuSetup_GetMedalMods(void);
 void MenuSetup_OpenSaveSelectMenu(void);
-void MenuSetup_SaveFileCB(int status);
+void MenuSetup_SaveFileCB(int32 status);
 void MenuSetup_StartNewSave(void);
 void MenuSetup_CheckNoSaveSelected(void);
 void MenuSetup_OpenSecretsMenu(void);
@@ -157,12 +157,12 @@ void MenuSetup_Options_OpenLanguageMenu(void);
 void MenuSetup_Options_OpenControlsMenu(void);
 void MenuSetup_Options_Unknown22_P1(void);
 void MenuSetup_Options_Unknown22_P2(void);
-void MenuSetup_Options_Unknown51(int id);
+void MenuSetup_Options_Unknown51(int32 id);
 void MenuSetup_Unknown53(void);
 void MenuSetup_Unknown54(void);
 void MenuSetup_Options_OpenKBControlsMenu(void);
 void MenuSetup_Options_Unknown25(void);
-void MenuSetup_Options_Unknown27(int ststaus);
+void MenuSetup_Options_Unknown27(int32 ststaus);
 void MenuSetup_Options_LaunchManual(void);
 void MenuSetup_Options_Unknown52(void);
 void MenuSetup_Options_ShaderIDChanged_CB(void);

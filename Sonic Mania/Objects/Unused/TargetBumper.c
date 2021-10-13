@@ -106,12 +106,12 @@ void TargetBumper_Unknown3(void)
                     }
                     break;
                 case 2: {
-                    int angle = 96;
+                    int32 angle = 96;
                     if (entity->direction)
                         angle = 32;
 
-                    int ang  = 0;
-                    int ang2 = 0;
+                    int32 ang  = 0;
+                    int32 ang2 = 0;
                     if (RSDK.ATan2(player->velocity.x, player->velocity.y) - angle >= 0) {
                         ang  = RSDK.ATan2(player->velocity.x, player->velocity.y) - angle;
                         ang2 = ang;
@@ -153,7 +153,7 @@ void TargetBumper_Unknown3(void)
             if (player->state == Player_State_FlyCarried)
                 RSDK_GET_ENTITY(SLOT_PLAYER2, Player)->flyCarryTimer = 30;
 
-            int anim = player->playerAnimator.animationID;
+            int32 anim = player->playerAnimator.animationID;
             if (anim != ANI_FLY && anim != ANI_FLYLIFTTIRED && player->state != Player_State_TailsFlight) {
                 player->state = Player_State_Air;
                 if (anim != ANI_JUMP && anim != ANI_JOG && anim != ANI_RUN && anim != ANI_DASH)

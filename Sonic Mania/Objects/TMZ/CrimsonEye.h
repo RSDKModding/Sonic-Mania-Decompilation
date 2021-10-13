@@ -6,7 +6,7 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    TABLE(int value1[97],
+    TABLE(int32 value1[97],
           { 24,       0,  0, -0x28000, -0x28000, 1,  0, -0x14000, -0x28000, 2,  0, 0x14000,  -0x26000, 3,  0, 0x28000,  -0x26000, 4,  0, -0x26000,
             -0x24000, 5,  0, 0x26000,  -0x24000, 6,  0, -0x26000, -0x22000, 7,  0, 0x26000,  -0x22000, 8,  0, -0x24000, -0x20000, 9,  0, -0x12000,
             -0x20000, 10, 0, 0x12000,  -0x20000, 11, 0, 0x24000,  -0x20000, 12, 0, -0x22000, -0x1E000, 13, 0, -0x11000, -0x1E000, 14, 0, 0x11000,
@@ -16,19 +16,19 @@ typedef struct {
     uint8 value3;
     uint8 value4;
     uint8 value5;
-    int value6;
-    int value7;
+    int32 value6;
+    int32 value7;
     TextInfo value8;
     TextInfo value9;
-    int value10[8]; //= { 1, 5, 2, 6, 3, 7, 4, 8 };
-    int value11;
-    int value12;
-    int value13;
-    int value14;
-    int value15;
-    int value16;
+    int32 value10[8]; //= { 1, 5, 2, 6, 3, 7, 4, 8 };
+    int32 value11;
+    int32 value12;
+    int32 value13;
+    int32 value14;
+    int32 value15;
+    int32 value16;
     uint8 value17;
-    int value18;
+    int32 value18;
     uint16 aniFrames;
     Hitbox hitbox1;
     Hitbox hitbox2;

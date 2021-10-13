@@ -6,7 +6,7 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    TABLE(int array[5], { -0x20000, -0x10000, 0x00000, 0x10000, 0x20000 });
+    TABLE(int32 array[5], { -0x20000, -0x10000, 0x00000, 0x10000, 0x20000 });
     uint16 aniFrames;
 } ObjectAIZTornado;
 
@@ -14,20 +14,20 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    int dword5C;
-    int dword60;
-    int dword64;
-    int dword68;
-    int field_6C;
-    int field_70;
+    int32 dword5C;
+    int32 dword60;
+    int32 dword64;
+    int32 dword68;
+    int32 field_6C;
+    int32 field_70;
     Vector2 prevPos;
-    int dword7C;
-    int dword80;
-    int field_84;
-    int field_88;
+    int32 dword7C;
+    int32 dword80;
+    int32 field_84;
+    int32 field_88;
     Vector2 moveVelocity;
-    int field_94;
-    int dword98;
+    int32 field_94;
+    int32 dword98;
     Animator animator1;
     Animator animator2;
     Animator animator3;

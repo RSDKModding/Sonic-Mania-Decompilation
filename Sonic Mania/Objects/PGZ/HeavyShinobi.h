@@ -20,12 +20,12 @@ typedef struct {
     uint8 storedIDs[4];
     uint8 storedAnimIDs[4];
     Vector2 storePos[16];
-    int field_F0;
-    int field_F4;
-    int field_F8;
-    int field_FC;
-    int field_100;
-    int field_104;
+    int32 field_F0;
+    int32 field_F4;
+    int32 field_F8;
+    int32 field_FC;
+    int32 field_100;
+    int32 field_104;
     uint8 activeShurikens;
     uint16 aniFrames;
     Hitbox hitbox1;
@@ -53,9 +53,9 @@ typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
-    int type;
-    int timer;
-    int glitchTimer;
+    int32 type;
+    int32 timer;
+    int32 glitchTimer;
     Entity *playerPtr;
     Vector2 playerDistance;
     Animator animator1;

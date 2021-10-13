@@ -6,7 +6,7 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    int activeScreens;
+    int32 activeScreens;
     uint16 spriteIndex;
 } ObjectGameOver;
 
@@ -14,16 +14,16 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    int timer;
-    int playerID;
+    int32 timer;
+    int32 playerID;
     Vector2 dword64;
     Vector2 verts[4];
     Vector2 letterPositions[8];
     Vector2 unknownPos1[8];
     Vector2 letterPosMove[8];
-    int unknownArray1[8];
-    int letterRotations[8];
-    int letterRotateSpeed[8];
+    int32 unknownArray1[8];
+    int32 letterRotations[8];
+    int32 letterRotateSpeed[8];
     Animator animator;
 } EntityGameOver;
 
@@ -42,7 +42,7 @@ void GameOver_EditorLoad(void);
 void GameOver_Serialize(void);
 
 // Extra Entity Functions
-void GameOver_SaveGameCallback(int status);
+void GameOver_SaveGameCallback(int32 status);
 void GameOver_Unknown2(void);
 void GameOver_Unknown3(void);
 void GameOver_Unknown4(void);

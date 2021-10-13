@@ -123,7 +123,7 @@ void DebugMode_StageLoad(void)
     DebugMode->itemCount   = 0;
     DebugMode->debugActive = false;
 
-    for (int i = 0; i < 0x100; ++i) {
+    for (int32 i = 0; i < 0x100; ++i) {
         DebugMode->objectIDs[i] = TYPE_BLANK;
         DebugMode->draw[i]      = NULL;
         DebugMode->spawn[i]     = DebugMode_NullState;

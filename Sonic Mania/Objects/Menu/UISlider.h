@@ -10,26 +10,26 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    int field_4;
+    int32 field_4;
     Entity *entityPtr;
 } ObjectUISlider;
 
 // Entity Class
 typedef struct {
 	MANIA_UI_ITEM_BASE
-    int listID;
-    int frameID;
-    int field_10C;
-    int field_110;
-    int field_114;
-    int field_118;
-    int field_11C;
-    int field_120;
-    int field_124;
-    int sliderPos;
+    int32 listID;
+    int32 frameID;
+    int32 field_10C;
+    int32 field_110;
+    int32 field_114;
+    int32 field_118;
+    int32 field_11C;
+    int32 field_120;
+    int32 field_124;
+    int32 sliderPos;
     bool32 textFlag;
     bool32 flagB;
-    int field_134;
+    int32 field_134;
     void(*sliderChangedCB)(void);
     Animator textAnimator;
     uint16 textSpriteIndex;

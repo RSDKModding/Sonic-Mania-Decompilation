@@ -98,11 +98,11 @@ void PohBee_CheckPlayerCollisions(void)
                 }
             }
 
-            for (int i = 0; i < entity->spikeCount + 1; ++i) {
+            for (int32 i = 0; i < entity->spikeCount + 1; ++i) {
                 if (Player_CheckCollisionTouch(player, entity, &entity->hitboxes[i])) {
 #if RETRO_USE_PLUS
-                    int storeX       = entity->position.x;
-                    int storeY       = entity->position.y;
+                    int32 storeX       = entity->position.x;
+                    int32 storeY       = entity->position.y;
                     entity->position = PohBee_GetSpikePos(i, (entity->drawOrder != 1) + 6);
                     if (!Player_CheckMightyUnspin(768, player, 2, &player->uncurlTimer)) {
 #endif
@@ -126,8 +126,8 @@ void PohBee_DrawSprites(void)
 
     entity->drawFX = FX_FLIP;
 
-    int offsetY   = 16;
-    int shift = 7;
+    int32 offsetY   = 16;
+    int32 shift = 7;
     if (entity->drawOrder == 1) {
         offsetY   = 15;
         shift = 6;
@@ -142,8 +142,8 @@ void PohBee_DrawSprites(void)
     drawPos2.y = entity->position.y + (16 << offsetY);
     entity->drawFX |= FX_ROTATE;
 
-    int id = 4;
-    for (int i = 0; i < 10; ++i) {
+    int32 id = 4;
+    for (int32 i = 0; i < 10; ++i) {
         drawPos = drawPos2;
         drawPos.x += (id * RSDK.Cos512(entity->field_70)) << shift;
         drawPos.y += (id * RSDK.Sin512(entity->field_70)) << shift;
@@ -155,7 +155,7 @@ void PohBee_DrawSprites(void)
     RSDK.DrawSprite(&entity->animator4, &drawPos, false);
     if (entity->spikeCount == 1) {
         id = 4;
-        for (int i = 0; i < 4; ++i) {
+        for (int32 i = 0; i < 4; ++i) {
             drawPos = drawPos2;
             drawPos.x += (id * RSDK.Cos512(entity->field_74)) << shift;
             drawPos.y += (id * RSDK.Sin512(entity->field_74)) << shift;
@@ -173,7 +173,7 @@ Vector2 PohBee_GetSpikePos(uint8 spikeID, uint8 shift)
 
     Vector2 pos = entity->position;
 
-    int y = entity->position.y;
+    int32 y = entity->position.y;
     if (entity->drawOrder == 1)
         y += 0x100000;
     else
@@ -198,10 +198,10 @@ void PohBee_SetupHitboxes(void)
 {
     RSDK_THIS(PohBee);
 
-    for (int i = 0; i < 2; ++i) {
+    for (int32 i = 0; i < 2; ++i) {
         Vector2 pos = PohBee_GetSpikePos(i, 7);
-        int x       = (pos.x - entity->position.x) >> 16;
-        int y       = (pos.y - entity->position.y) >> 16;
+        int32 x       = (pos.x - entity->position.x) >> 16;
+        int32 y       = (pos.y - entity->position.y) >> 16;
 
         Hitbox hitbox;
         hitbox.left   = x - 12;
@@ -238,9 +238,9 @@ void PohBee_State_Move(void)
 {
     RSDK_THIS(PohBee);
 
-    int distX = abs(entity->position.x - entity->startPos.x);
+    int32 distX = abs(entity->position.x - entity->startPos.x);
 
-    int move = (2 * (entity->direction != FLIP_NONE) - 1) << 15;
+    int32 move = (2 * (entity->direction != FLIP_NONE) - 1) << 15;
     if (entity->animator1.animationID == 1) {
         switch (entity->animator1.frameID) {
             case 1: move >>= 1; break;

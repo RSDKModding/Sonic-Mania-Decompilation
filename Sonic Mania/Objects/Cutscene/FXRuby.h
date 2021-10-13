@@ -6,7 +6,7 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    int deformData[0x200];
+    int32 deformData[0x200];
     uint16 lookupTable[0x10000];
     TileLayer *fgLow;
     TileLayer *fgHigh;
@@ -16,19 +16,19 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    int dword5C;
-    int radiusSpeed;
-    int dword64;
-    int innerRadius;
-    int outerRadius;
-    int field_70;
-    int field_74;
-    int fadeWhite;
-    int fadeBlack;
+    int32 dword5C;
+    int32 radiusSpeed;
+    int32 dword64;
+    int32 innerRadius;
+    int32 outerRadius;
+    int32 field_70;
+    int32 field_74;
+    int32 fadeWhite;
+    int32 fadeBlack;
     bool32 waitForTrigger;
-    int field_84;
-    int field_88;
-    int field_8C;
+    int32 field_84;
+    int32 field_88;
+    int32 field_8C;
     bool32 flag;
 } EntityFXRuby;
 

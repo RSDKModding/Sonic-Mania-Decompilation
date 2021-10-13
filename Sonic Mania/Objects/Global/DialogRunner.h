@@ -7,32 +7,32 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    int field_4;
-    int field_8;
-    int field_C;
-    int field_10;
-    int field_14;
+    int32 field_4;
+    int32 field_8;
+    int32 field_C;
+    int32 field_10;
+    int32 field_14;
     void *entityPtr;
-    int field_1C;
-    int field_20;
+    int32 field_1C;
+    int32 field_20;
 } ObjectDialogRunner;
 
 // Entity Class
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    int timer;
+    int32 timer;
     void (*callback)(void);
-    int field_64;
-    int field_68;
-    int field_6C;
-    int field_70;
-    int field_74;
-    int field_78;
-    int field_7C;
-    int field_80;
-    int status;
-    int field_88;
+    int32 field_64;
+    int32 field_68;
+    int32 field_6C;
+    int32 field_70;
+    int32 field_74;
+    int32 field_78;
+    int32 field_7C;
+    int32 field_80;
+    int32 status;
+    int32 field_88;
 } EntityDialogRunner;
 
 // Object Struct
@@ -56,14 +56,14 @@ void DialogRunner_NotifyAutoSave(void);
 void DialogRunner_SetNoSaveDisabled(void);
 void DialogRunner_SetNoSaveEnabled(void);
 void DialogRunner_PromptSavePreference_CB(void);
-void DialogRunner_CheckUserAuth_CB(int a1, int a2);
-void DialogRunner_ManageNotifs(int a1);
-void DialogRunner_Wait(int a1);
+void DialogRunner_CheckUserAuth_CB(int32 a1, int32 a2);
+void DialogRunner_ManageNotifs(int32 a1);
+void DialogRunner_Wait(int32 a1);
 void DialogRunner_GetNextNotif(void);
 bool32 DialogRunner_CheckUnreadNotifs(void);
 bool32 DialogRunner_NotifyAutosave(void);
 void DialogRunner_GetUserAuthStatus(void);
-void DialogRunner_PromptSavePreference(int id);
+void DialogRunner_PromptSavePreference(int32 id);
 void DialogRunner_Unknown14(void);
 #endif
 

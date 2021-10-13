@@ -63,8 +63,8 @@ void Spikes_Update(void)
             if (entity->planeFilter <= 0 || player->collisionPlane == (((uint8)entity->planeFilter - 1) & 1)) {
                 EntityShield *shield = (EntityShield *)RSDK.GetEntityByID(Player->playerCount + RSDK.GetEntityID(player));
                 if (!Ice || (player->state != Ice_State_FrozenPlayer && shield->animator.animationID != 2) || Press) {
-                    int playerVelX = player->velocity.x;
-                    int playerVelY = player->velocity.y;
+                    int32 playerVelX = player->velocity.x;
+                    int32 playerVelY = player->velocity.y;
 
                     uint8 side = Player_CheckCollisionBox(player, entity, &entity->hitbox);
                     if (side) {
@@ -142,8 +142,8 @@ void Spikes_Update(void)
                     }
                 }
                 else {
-                    int posStoreX = player->position.x;
-                    int posStoreY = player->position.y;
+                    int32 posStoreX = player->position.x;
+                    int32 posStoreY = player->position.y;
 
                     uint8 side = 0;
                     if (player->state == Ice_State_FrozenPlayer) {
@@ -264,7 +264,7 @@ void Spikes_Create(void *data)
             entity->type = voidToInt(data);
 
         entity->active  = ACTIVE_BOUNDS;
-        int dir         = entity->type & 1;
+        int32 dir         = entity->type & 1;
         entity->visible = true;
         entity->type    = (entity->type >> 1) & 1;
         if (entity->planeFilter > 0 && ((uint8)entity->planeFilter - 1) & 2)
@@ -346,7 +346,7 @@ void Spikes_StateDraw_Global(void)
     RSDK_THIS(Spikes);
     drawPos.x = entity->position.x;
     drawPos.y = entity->position.y;
-    int cnt   = entity->count >> 1;
+    int32 cnt   = entity->count >> 1;
     switch (entity->type) {
         case 1:
         case 4:
@@ -388,7 +388,7 @@ void Spikes_StateDraw_Stage(void)
     RSDK_THIS(Spikes);
     drawPos.x = entity->position.x;
     drawPos.y = entity->position.y;
-    int cnt   = entity->count >> 1;
+    int32 cnt   = entity->count >> 1;
     switch (entity->type) {
         case 1:
         case 4:
@@ -418,14 +418,14 @@ void Spikes_StateDraw_Stage(void)
     }
 }
 
-void Spikes_Unknown1(int velX, int velY)
+void Spikes_Unknown1(int32 velX, int32 velY)
 {
     RSDK_THIS(Spikes);
     RSDK.PlaySfx(Ice->sfxWindowShatter, 0, 255);
     Ice_ShatterGenerator(16,  16,  16,  velX,  velY,  0);
     destroyEntity(entity);
 }
-void Spikes_CheckHit(EntityPlayer *player, int playerVelX, int playerVelY)
+void Spikes_CheckHit(EntityPlayer *player, int32 playerVelX, int32 playerVelY)
 {
     RSDK_THIS(Spikes);
     if (player->state == Player_State_Hit)

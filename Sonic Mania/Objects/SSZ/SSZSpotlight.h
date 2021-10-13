@@ -28,12 +28,12 @@ typedef struct {
     Vector2 vertStore[8];
     Vector2 vertPos[8];
     colour *vertClrPtrs;
-    int field_EC;
-    int field_F0;
-    int field_F4;
-    int field_F8;
-    int field_FC;
-    int field_100;
+    int32 field_EC;
+    int32 field_F0;
+    int32 field_F4;
+    int32 field_F8;
+    int32 field_FC;
+    int32 field_100;
 } EntitySSZSpotlight;
 
 // Object Struct

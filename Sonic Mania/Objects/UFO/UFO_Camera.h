@@ -16,12 +16,12 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    int field_5C;
-    int height;
-    int field_64;
-    int angleX;
-    int dword6C;
-    int clipY;
+    int32 field_5C;
+    int32 height;
+    int32 field_64;
+    int32 angleX;
+    int32 dword6C;
+    int32 clipY;
     Entity *target;
     Matrix matWorld;
     Matrix matView;

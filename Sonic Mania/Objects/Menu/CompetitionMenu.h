@@ -11,14 +11,14 @@ typedef struct {
     Entity *competitionControl_Legacy;
     Entity *compRulesControl;
     Entity *compZoneControl;
-    int field_14;
+    int32 field_14;
     Entity *prompt1;
     Entity *prompt2;
     Entity *compRoundControl;
     Entity *label1;
     Entity *compTotalControl;
     Entity *label2;
-    int timer;
+    int32 timer;
 } ObjectCompetitionMenu;
 
 // Entity Class
@@ -44,13 +44,13 @@ void CompetitionMenu_Serialize(void);
 void CompetitionMenu_Initialize(void);
 void CompetitionMenu_Unknown2(void);
 void CompetitionMenu_Unknown3(void);
-int CompetitionMenu_Unknown4(void);
+int32 CompetitionMenu_Unknown4(void);
 void CompetitionMenu_Unknown5(void);
-int CompetitionMenu_GetReadyPlayerCount(void);
-int CompetitionMenu_GetFlaggedReadyPlayerCount(void);
+int32 CompetitionMenu_GetReadyPlayerCount(void);
+int32 CompetitionMenu_GetFlaggedReadyPlayerCount(void);
 void CompetitionMenu_Unknown8(void);
-void CompetitionMenu_Unknown9(int playerCount);
-void CompetitionMenu_SetupSplitScreen(int mode);
+void CompetitionMenu_Unknown9(int32 playerCount);
+void CompetitionMenu_SetupSplitScreen(int32 mode);
 void CompetitionMenu_Unknown11(void *control);
 void CompetitionMenu_GotoCompRules(void);
 void CompetitionMenu_GotoCompZones(void);

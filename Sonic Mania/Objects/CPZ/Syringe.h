@@ -15,9 +15,9 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    int field_58;
-    int type;
-    int offsetY;
+    int32 field_58;
+    int32 type;
+    int32 offsetY;
     bool32 activated;
     colour colour;
     uint8 tag;

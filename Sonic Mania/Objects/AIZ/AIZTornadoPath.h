@@ -9,30 +9,30 @@ typedef struct {
     EntityAIZTornado *tornado;
     Entity *camera;
     Vector2 field_C;
-    int field_14;
-    int field_18;
-    int field_1C;
-    int field_20;
-    int field_24;
-    int field_28;
-    int field_2C;
+    int32 field_14;
+    int32 field_18;
+    int32 field_1C;
+    int32 field_20;
+    int32 field_24;
+    int32 field_28;
+    int32 field_2C;
 } ObjectAIZTornadoPath;
 
 // Entity Class
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    int type;
-    int targetSpeed;
-    int timer;
+    int32 type;
+    int32 targetSpeed;
+    int32 timer;
     bool32 easeToSpeed;
-    int speed;
-    int field_70;
-    int field_74;
-    int field_78;
-    int field_7C;
-    int field_80;
-    int field_84;
+    int32 speed;
+    int32 field_70;
+    int32 field_74;
+    int32 field_78;
+    int32 field_7C;
+    int32 field_80;
+    int32 field_84;
 } EntityAIZTornadoPath;
 
 // Object Struct

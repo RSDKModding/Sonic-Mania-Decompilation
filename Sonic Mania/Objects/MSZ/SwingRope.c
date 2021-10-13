@@ -5,28 +5,28 @@ ObjectSwingRope *SwingRope;
 void SwingRope_Update(void)
 {
     RSDK_THIS(SwingRope);
-    int sine              = 11 * RSDK.Sin512(entity->angleOffset + 3 * Zone->timer);
+    int32 sine              = 11 * RSDK.Sin512(entity->angleOffset + 3 * Zone->timer);
     entity->rotatedAngle  = sine;
     entity->rotatedOffset = sine >> 3;
     entity->rotatePos.x   = entity->position.x;
     entity->rotatePos.y   = entity->position.y;
 
-    for (int s = 0; s < entity->ropeSize; ++s) {
+    for (int32 s = 0; s < entity->ropeSize; ++s) {
         entity->angle = (sine >> 6) & 0x1FF;
         entity->rotatePos.x -= RSDK.Sin512(entity->angle) << 11;
         entity->rotatePos.y += RSDK.Cos512(entity->angle) << 11;
         sine += entity->rotatedOffset;
     }
 
-    int rotateX   = entity->rotatePos.x;
-    int rotateY   = entity->rotatePos.y;
+    int32 rotateX   = entity->rotatePos.x;
+    int32 rotateY   = entity->rotatePos.y;
     entity->angle = (sine >> 6) & 0x1FF;
     rotateY += 0x700 * RSDK.Cos512(entity->angle);
     entity->rotatePos.x -= RSDK.Sin512(entity->angle) << 11;
     entity->rotatePos.y += RSDK.Cos512(entity->angle) << 11;
 
-    int storeX         = entity->position.x;
-    int storeY         = entity->position.y;
+    int32 storeX         = entity->position.x;
+    int32 storeY         = entity->position.y;
     entity->position.x = entity->rotatePos.x;
     entity->position.y = entity->rotatePos.y;
     entity->velocity.x = entity->rotatePos.x - entity->ropePos.x;
@@ -102,9 +102,9 @@ void SwingRope_Draw(void)
     entity->ropePos.x = entity->position.x;
     entity->ropePos.y = entity->position.y;
 
-    int angle    = entity->rotatedAngle >> 6;
-    int rotAngle = entity->rotatedAngle;
-    for (int s = 0; s < entity->ropeSize; ++s) {
+    int32 angle    = entity->rotatedAngle >> 6;
+    int32 rotAngle = entity->rotatedAngle;
+    for (int32 s = 0; s < entity->ropeSize; ++s) {
         entity->angle = angle & 0x1FF;
         entity->ropePos.x -= RSDK.Sin512(entity->angle) << 11;
         entity->ropePos.y += RSDK.Cos512(entity->angle) << 11;

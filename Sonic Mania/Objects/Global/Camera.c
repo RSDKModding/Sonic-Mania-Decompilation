@@ -45,7 +45,7 @@ void Camera_Draw(void) {}
 
 void Camera_Create(void *data)
 {
-    int screen = voidToInt(data);
+    int32 screen = voidToInt(data);
     RSDK_THIS(Camera);
     entity->offset.x = 0x80000;
     entity->centerY  = RSDK_screens->centerY - 16;
@@ -76,7 +76,7 @@ void Camera_Create(void *data)
 void Camera_StageLoad(void)
 {
     if (!RSDK.CheckStageFolder("Credits")) {
-        for (int i = 0; i < RSDK.GetSettingsValue(SETTINGS_SCREENCOUNT); ++i) RSDK.ResetEntitySlot(SLOT_CAMERA1 + i, Camera->objectID, intToVoid(i));
+        for (int32 i = 0; i < RSDK.GetSettingsValue(SETTINGS_SCREENCOUNT); ++i) RSDK.ResetEntitySlot(SLOT_CAMERA1 + i, Camera->objectID, intToVoid(i));
         Camera->centerBounds.x = 0x100000;
         Camera->centerBounds.y = 0x180000;
     }
@@ -105,7 +105,7 @@ void Camera_SetCameraBounds(EntityCamera *entity)
     entity->center.x = screen->position.x + screen->centerX;
     entity->center.y = screen->position.y + screen->centerY;
 }
-EntityCamera *Camera_SetTargetEntity(int screen, void *t)
+EntityCamera *Camera_SetTargetEntity(int32 screen, void *t)
 {
     Entity *target = (Entity *)t;
 
@@ -120,7 +120,7 @@ EntityCamera *Camera_SetTargetEntity(int screen, void *t)
     }
     return NULL;
 }
-void Camera_ShakeScreen(int shakeX, int screen, int shakeY)
+void Camera_ShakeScreen(int32 shakeX, int32 screen, int32 shakeY)
 {
     foreach_all(Camera, camera)
     {
@@ -145,7 +145,7 @@ void Camera_HandleHBounds(void)
 
     if (Zone->screenBoundsL1[entity->screenID] < entity->boundsL) {
         if (screen->position.x <= entity->boundsL) {
-            int off         = entity->boundsL - entity->boundsOffset.x;
+            int32 off         = entity->boundsL - entity->boundsOffset.x;
             entity->boundsL = off;
             if (entity->velocity.x < 0) {
                 entity->boundsL += (entity->velocity.x >> 0x10);
@@ -196,7 +196,7 @@ void Camera_HandleVBounds(void)
 
     if (Zone->screenBoundsT1[entity->screenID] < entity->boundsT) {
         if (screen->position.y <= entity->boundsT) {
-            int off         = entity->boundsT - entity->boundsOffset.y;
+            int32 off         = entity->boundsT - entity->boundsOffset.y;
             entity->boundsT = off;
             if (entity->velocity.y < 0) {
                 entity->boundsT = (entity->velocity.y >> 0x10) + off;
@@ -234,7 +234,7 @@ void Camera_HandleVBounds(void)
     Zone->screenBoundsB2[entity->screenID] = entity->boundsB << 16;
 }
 
-void Camera_SetupLerp(int type, int screen, int x, int y, int speed)
+void Camera_SetupLerp(int32 type, int32 screen, int32 x, int32 y, int32 speed)
 {
     foreach_all(Camera, camera)
     {
@@ -255,7 +255,7 @@ void Camera_SetupLerp(int type, int screen, int x, int y, int speed)
 void Camera_State_Roam(void)
 {
     RSDK_THIS(Camera);
-    int speed = 0x100000;
+    int32 speed = 0x100000;
     if (!RSDK_controller[CONT_P1].keyA.down)
         speed = 0x40000;
 
@@ -305,7 +305,7 @@ void Camera_State_Follow(void)
         target->position.x += entity->field_6C.x;
         if (target->position.x <= entity->position.x + entity->offset.x) {
             if (target->position.x < entity->position.x - entity->offset.x) {
-                int pos = target->position.x + entity->offset.x - entity->position.x;
+                int32 pos = target->position.x + entity->offset.x - entity->position.x;
                 if (pos < -Camera->centerBounds.x)
                     pos = -Camera->centerBounds.x;
                 entity->position.x += pos;
@@ -313,7 +313,7 @@ void Camera_State_Follow(void)
             target->position.x -= entity->field_6C.x;
         }
         else {
-            int pos = target->position.x - entity->position.x - entity->offset.x;
+            int32 pos = target->position.x - entity->position.x - entity->offset.x;
             if (pos > Camera->centerBounds.x)
                 pos = Camera->centerBounds.x;
             entity->position.x += pos;
@@ -321,10 +321,10 @@ void Camera_State_Follow(void)
         }
 
         target->position.y += entity->field_6C.y;
-        int adjust = target->position.y - entity->adjustY;
+        int32 adjust = target->position.y - entity->adjustY;
         if (adjust <= entity->position.y + entity->offset.y) {
             if (adjust < entity->position.y - entity->offset.y) {
-                int pos = target->position.y + entity->offset.y - entity->position.y - entity->adjustY;
+                int32 pos = target->position.y + entity->offset.y - entity->position.y - entity->adjustY;
                 if (pos < -Camera->centerBounds.y)
                     pos = -Camera->centerBounds.y;
                 entity->position.y += pos;
@@ -332,7 +332,7 @@ void Camera_State_Follow(void)
             target->position.y -= entity->field_6C.y;
         }
         else {
-            int pos = adjust - entity->position.y - entity->offset.y;
+            int32 pos = adjust - entity->position.y - entity->offset.y;
             if (pos > Camera->centerBounds.y)
                 pos = Camera->centerBounds.y;
             entity->position.y += pos;
@@ -349,7 +349,7 @@ void Camera_State_HLock(void)
         target->position.x += entity->field_6C.x;
         if (target->position.x <= entity->position.x + entity->offset.x) {
             if (target->position.x < entity->position.x - entity->offset.x) {
-                int pos = target->position.x + entity->offset.x - entity->position.x;
+                int32 pos = target->position.x + entity->offset.x - entity->position.x;
                 if (pos < -Camera->centerBounds.x)
                     pos = -Camera->centerBounds.x;
                 entity->position.x = entity->position.x + pos;
@@ -357,7 +357,7 @@ void Camera_State_HLock(void)
             target->position.x -= entity->field_6C.x;
         }
         else {
-            int pos = target->position.x - entity->position.x - entity->offset.x;
+            int32 pos = target->position.x - entity->position.x - entity->offset.x;
             if (pos > Camera->centerBounds.x)
                 pos = Camera->centerBounds.x;
             entity->position.x = entity->position.x + pos;
@@ -372,10 +372,10 @@ void Camera_State_VLock(void)
         Camera_HandleVBounds();
         Entity *target = entity->targetPtr;
         target->position.y += entity->field_6C.y;
-        int adjust = target->position.y - entity->adjustY;
+        int32 adjust = target->position.y - entity->adjustY;
         if (adjust <= entity->position.y + entity->offset.y) {
             if (adjust < entity->position.y - entity->offset.y) {
-                int pos = target->position.y + entity->offset.y - entity->position.y - entity->adjustY;
+                int32 pos = target->position.y + entity->offset.y - entity->position.y - entity->adjustY;
                 if (pos < -Camera->centerBounds.y)
                     pos = -Camera->centerBounds.y;
                 entity->position.y = entity->position.y + pos;
@@ -383,7 +383,7 @@ void Camera_State_VLock(void)
             target->position.y -= entity->field_6C.y;
         }
         else {
-            int pos = adjust - entity->position.y - entity->offset.y;
+            int32 pos = adjust - entity->position.y - entity->offset.y;
             if (pos > Camera->centerBounds.y)
                 pos = Camera->centerBounds.y;
             entity->position.y = entity->position.y + pos;

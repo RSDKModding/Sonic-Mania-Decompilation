@@ -49,10 +49,10 @@ void UICarousel_Unknown1(void)
 {
     RSDK_THIS(UICarousel);
     EntityUIControl *control = (EntityUIControl *)entity->parent;
-    int entityID             = entity->field_98;
+    int32 entityID             = entity->field_98;
 
     if (control->activeEntityID != entityID) {
-        int max      = control->buttonCount - 1;
+        int32 max      = control->buttonCount - 1;
         bool32 flag  = 0;
         bool32 flag2 = 0;
         if (entityID != -1) {
@@ -72,7 +72,7 @@ void UICarousel_Unknown1(void)
             }
         }
 
-        int val = entity->scrollOffset;
+        int32 val = entity->scrollOffset;
         if (flag) {
             --entity->virtualIndex;
             entity->scrollOffset = entity->virtualIndex - (control->buttonCount >> 1);
@@ -120,15 +120,15 @@ void UICarousel_Unknown2(void)
     Vector2 vecs[0x10];
     memset(vecs, 0, sizeof(vecs));
 
-    for (int i = 0; i < control->buttonCount; ++i) {
+    for (int32 i = 0; i < control->buttonCount; ++i) {
         vecs[i].x = entity->position.x;
         vecs[i].y = entity->position.y - (entity->shift.y * i);
     }
 
-    for (int i = 0; i < control->buttonCount; ++i) {
+    for (int32 i = 0; i < control->buttonCount; ++i) {
         EntityUIButton *entPtr = control->buttons[i];
 
-        int pos = (i - entity->scrollOffset) % control->buttonCount;
+        int32 pos = (i - entity->scrollOffset) % control->buttonCount;
         if (pos < 0)
             pos += control->buttonCount;
 

@@ -136,9 +136,9 @@ void PBL_Player_ProcessPlayerControl(void)
     RSDK_THIS(PBL_Player);
     if (entity->controllerID < PLAYER_MAX) {
 #if RETRO_USE_TOUCH_CONTROLS
-        for (int t = 0; t < RSDK_touchMouse->count; ++t) {
-            int tx = (RSDK_touchMouse->x[t] * RSDK_screens->width);
-            int ty = (RSDK_touchMouse->y[t] * RSDK_screens->height);
+        for (int32 t = 0; t < RSDK_touchMouse->count; ++t) {
+            int32 tx = (RSDK_touchMouse->x[t] * RSDK_screens->width);
+            int32 ty = (RSDK_touchMouse->y[t] * RSDK_screens->height);
 
             if (RSDK_touchMouse->down[t]) {
                 if (tx >= RSDK_screens->centerX && ty >= RSDK_screens->centerY && tx <= RSDK_screens->width && ty <= RSDK_screens->height) {
@@ -148,9 +148,9 @@ void PBL_Player_ProcessPlayerControl(void)
             }
         }
 
-        for (int t = 0; t < RSDK_touchMouse->count; ++t) {
-            int tx = (RSDK_touchMouse->x[t] * RSDK_screens->width);
-            int ty = (RSDK_touchMouse->y[t] * RSDK_screens->height);
+        for (int32 t = 0; t < RSDK_touchMouse->count; ++t) {
+            int32 tx = (RSDK_touchMouse->x[t] * RSDK_screens->width);
+            int32 ty = (RSDK_touchMouse->y[t] * RSDK_screens->height);
 
             if (RSDK_touchMouse->down[t]) {
                 if (tx >= 0 && ty >= RSDK_screens->centerY && tx <= RSDK_screens->centerX && ty <= RSDK_screens->height) {
@@ -160,9 +160,9 @@ void PBL_Player_ProcessPlayerControl(void)
             }
         }
 
-        for (int t = 0; t < RSDK_touchMouse->count; ++t) {
-            int tx = (RSDK_touchMouse->x[t] * RSDK_screens->width);
-            int ty = (RSDK_touchMouse->y[t] * RSDK_screens->height);
+        for (int32 t = 0; t < RSDK_touchMouse->count; ++t) {
+            int32 tx = (RSDK_touchMouse->x[t] * RSDK_screens->width);
+            int32 ty = (RSDK_touchMouse->y[t] * RSDK_screens->height);
 
             if (RSDK_touchMouse->down[t]) {
                 if (tx >= RSDK_screens->width - 0x80 && ty >= 0 && tx <= RSDK_screens->width && ty <= 0x40) {

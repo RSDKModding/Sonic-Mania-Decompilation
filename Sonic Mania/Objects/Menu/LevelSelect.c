@@ -177,8 +177,8 @@ void LevelSelect_State_SetupEntities(void)
 {
     RSDK_THIS(LevelSelect);
 
-    int labelPos[32];
-    int lastY = 0;
+    int32 labelPos[32];
+    int32 lastY = 0;
     foreach_all(UIText, label)
     {
         if (label->position.x < 0x1000000 && label->position.y > lastY) {
@@ -190,7 +190,7 @@ void LevelSelect_State_SetupEntities(void)
     foreach_all(UIText, label2)
     {
         if (label2->position.x < 0x1000000) {
-            for (int i = 0; i < entity->labelCount; ++i) {
+            for (int32 i = 0; i < entity->labelCount; ++i) {
                 if (label2->position.y == labelPos[i]) {
                     if (label2->align == 2) {
                         entity->labelPtrs[i] = (Entity *)label2;
@@ -204,7 +204,7 @@ void LevelSelect_State_SetupEntities(void)
     }
 
     if (entity->labelCount > 0)
-        memset(labelPos, 0, sizeof(int) * entity->labelCount);
+        memset(labelPos, 0, sizeof(int32) * entity->labelCount);
     lastY = 0;
 
     foreach_all(UIText, label3)
@@ -219,7 +219,7 @@ void LevelSelect_State_SetupEntities(void)
     {
         if (label4->position.x > 0x1000000) {
             if (entity->labelCount > 0) {
-                for (int i = 0; i < entity->labelCount; ++i) {
+                for (int32 i = 0; i < entity->labelCount; ++i) {
                     if (label4->position.y == labelPos[i]) {
                         switch (label4->align) {
                             case 0: entity->labelPtrs2[i] = (Entity *)label4; break;
@@ -237,9 +237,9 @@ void LevelSelect_State_SetupEntities(void)
         }
     }
 
-    for (int i = 0; i < entity->labelCount; ++i) {
+    for (int32 i = 0; i < entity->labelCount; ++i) {
         if (!entity->labelPtrs2[i]) {
-            for (int v = i; i >= 0; --i) {
+            for (int32 v = i; i >= 0; --i) {
                 if (entity->labelPtrs[v]) {
                     entity->labelPtrs2[i] = entity->labelPtrs2[v];
                     break;
@@ -258,12 +258,12 @@ void LevelSelect_State_SetupEntities(void)
         }
     }
 
-    int id = 0;
-    for (int i = globals->playerID & 0xFF; i > 0; ++id) i >>= 1;
+    int32 id = 0;
+    for (int32 i = globals->playerID & 0xFF; i > 0; ++id) i >>= 1;
     entity->playerID = id;
 
     id = 0;
-    for (int i = globals->playerID >> 8; i > 0; ++id) i >>= 1;
+    for (int32 i = globals->playerID >> 8; i > 0; ++id) i >>= 1;
     entity->player2ID = id;
 
     foreach_all(UIPicture, picture)
@@ -425,7 +425,7 @@ void LevelSelect_Unknown2(void)
 #if RETRO_USE_PLUS
                         entity->field_18C = entity->soundTestID % 14;
                         entity->field_190 = entity->soundTestID & 0x1F;
-                        for (int i = 0; i < 8; ++i) {
+                        for (int32 i = 0; i < 8; ++i) {
                             if (entity->soundTestID != LevelSelect->cheatCodePtrs[i][LevelSelect->cheatUnknown[i]]) {
                                 LevelSelect->cheatUnknown[i] = 0;
                             }
@@ -490,13 +490,13 @@ void LevelSelect_Unknown6(void)
     if (!curLabel)
         curLabel = (EntityUIText *)entity->labelPtrs2[entity->labelID];
 
-    int distance                = 0x1000000;
+    int32 distance                = 0x1000000;
     EntityUIText *labelPtr = NULL;
     if (curLabel->position.x < 0x1000000) {
         foreach_active(UIText, label)
         {
             if (label->position.x > 0x1000000) {
-                int pos = abs(label->position.y - curLabel->position.y);
+                int32 pos = abs(label->position.y - curLabel->position.y);
                 if (pos < distance) {
                     distance = pos;
                     labelPtr = label;
@@ -508,7 +508,7 @@ void LevelSelect_Unknown6(void)
         foreach_active(UIText, label)
         {
             if (label->position.x < 0x1000000) {
-                int dist = abs(label->position.y - curLabel->position.y);
+                int32 dist = abs(label->position.y - curLabel->position.y);
                 if (dist < distance) {
                     distance = dist;
                     labelPtr = label;
@@ -517,8 +517,8 @@ void LevelSelect_Unknown6(void)
         }
     }
 
-    int labelID = entity->labelID;
-    for (int i = 0; i < entity->labelCount; ++i) {
+    int32 labelID = entity->labelID;
+    for (int32 i = 0; i < entity->labelCount; ++i) {
         if (entity->labelPtrs[i] == (Entity *)labelPtr || entity->labelPtrs2[i] == (Entity *)labelPtr) {
             labelID = i;
             break;
@@ -556,11 +556,11 @@ void LevelSelect_Unknown7(void)
         }
 #endif
 
-        int p1ID = 0;
+        int32 p1ID = 0;
         if (entity->playerID > 0)
             p1ID = 1 << (entity->playerID - 1);
 
-        int p2ID = 0;
+        int32 p2ID = 0;
         if (entity->player2ID > 0)
             p2ID = 1 << (entity->player2ID - 1);
         globals->playerID = p1ID | (p2ID << 8);

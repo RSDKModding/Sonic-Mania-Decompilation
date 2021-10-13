@@ -14,21 +14,21 @@ typedef struct {
 // Entity Class
 typedef struct {
     MANIA_UI_ITEM_BASE
-    int zoneID;
-    int act;
+    int32 zoneID;
+    int32 act;
     bool32 xOut;
     bool32 obfuscate;
     bool32 prevObfuscate;
-    int field_118;
-    int field_11C;
-    int field_120;
-    int field_124;
+    int32 field_118;
+    int32 field_11C;
+    int32 field_120;
+    int32 field_124;
     uint8 zoneDirection;
-    int field_12C;
-    int field_130;
-    int field_134;
-    int field_138;
-    int field_13C;
+    int32 field_12C;
+    int32 field_130;
+    int32 field_134;
+    int32 field_138;
+    int32 field_13C;
     TextInfo nameText;
     Animator textAnimator;
     Animator zoneAnimator;

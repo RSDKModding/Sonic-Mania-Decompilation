@@ -32,7 +32,7 @@ typedef struct {
     RSDK_OBJECT
     Hitbox hitbox;
     Hitbox hiddenHitbox;
-    int brokenFrame;
+    int32 brokenFrame;
     uint16 spriteIndex;
     uint16 sfx_Destroy;
     uint16 sfx_Teleport;
@@ -48,9 +48,9 @@ typedef struct {
     ItemBoxTypes type;
     Vector2 contentsPos;
     Vector2 unknownPos;
-    int contentsSpeed;
+    int32 contentsSpeed;
     Entity *storedEntity;
-    int timer;
+    int32 timer;
     bool32 isFalling;
     bool32 isContents;
     bool32 hidden;

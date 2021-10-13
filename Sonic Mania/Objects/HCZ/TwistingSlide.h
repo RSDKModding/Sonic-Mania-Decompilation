@@ -14,20 +14,20 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     uint8 type;
-    int endLen;
-    int activePlayers;
-    int field_64[4];
-    int field_74;
-    int field_78;
+    int32 endLen;
+    int32 activePlayers;
+    int32 field_64[4];
+    int32 field_74;
+    int32 field_78;
     Hitbox hitbox2;
     Hitbox hitbox3;
     Hitbox hitbox1;
-    int field_94;
-    int field_98;
-    int field_9C;
-    int field_A0;
-    int field_A4;
-    int field_A8;
+    int32 field_94;
+    int32 field_98;
+    int32 field_9C;
+    int32 field_A0;
+    int32 field_A4;
+    int32 field_A8;
 } EntityTwistingSlide;
 
 // Object Struct

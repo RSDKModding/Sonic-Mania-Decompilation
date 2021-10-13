@@ -157,7 +157,7 @@ void Blastoid_State_Projectile(void)
 
         foreach_active(Player, player)
         {
-            int shield = player->shield;
+            int32 shield = player->shield;
             if (Water_GetPlayerBubble(player))
                 player->shield = SHIELD_BUBBLE;
             if (Player_CheckCollisionTouch(player, entity, &Blastoid->hitboxProjectile))

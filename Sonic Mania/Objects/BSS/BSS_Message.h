@@ -13,11 +13,11 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    int timer;
-    int timer2;
+    int32 timer;
+    int32 timer2;
     bool32 flag;
-    int colour;
-    int field_6C;
+    int32 colour;
+    int32 field_6C;
     Animator leftData;
     Animator rightData;
 } EntityBSS_Message;
@@ -43,7 +43,7 @@ void BSS_Message_State_Unknown(void);
 void BSS_Message_State_Perfect(void);
 void BSS_Message_State_Idle(void);
 void BSS_Message_State_Finish(void);
-void BSS_Message_TrackProgress_CB(int success);
+void BSS_Message_TrackProgress_CB(int32 success);
 void BSS_Message_LoadPrevScene(void);
 void BSS_Message_LoadGameState(void);
 

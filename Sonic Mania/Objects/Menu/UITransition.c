@@ -39,7 +39,7 @@ void UITransition_StageLoad(void)
     foreach_all(UITransition, transition) { UITransition->activeTransition = (Entity *)transition; }
 }
 
-void UITransition_StartTransition(void (*callback)(void), int timeLimit)
+void UITransition_StartTransition(void (*callback)(void), int32 timeLimit)
 {
     EntityUITransition *transition = (EntityUITransition *)UITransition->activeTransition;
     if (transition->state == UITransition_State_Setup && !UIDialog->activeDialog) {
@@ -82,8 +82,8 @@ void UITransition_DrawShapes(void)
     colours[1] = 0x1888F0;
     colours[2] = 0xE82858;
 
-    int screenCenterX = (RSDK_screens->position.x + RSDK_screens->centerX) << 16;
-    int screenCenterY = (RSDK_screens->position.y + RSDK_screens->centerY) << 16;
+    int32 screenCenterX = (RSDK_screens->position.x + RSDK_screens->centerX) << 16;
+    int32 screenCenterY = (RSDK_screens->position.y + RSDK_screens->centerY) << 16;
     positions[0].x    = screenCenterX + entity->drawPos[0].x - 0xF00000;
     positions[0].y    = screenCenterY + entity->drawPos[0].y;
     positions[1].x    = screenCenterX + entity->drawPos[1].x;
@@ -91,7 +91,7 @@ void UITransition_DrawShapes(void)
     positions[2].x    = screenCenterX + entity->drawPos[2].x + 0xF00000;
     positions[2].y    = screenCenterY + entity->drawPos[2].y;
 
-    for (int i = 0; i < 3; ++i) {
+    for (int32 i = 0; i < 3; ++i) {
         UIWidgets_Unknown7(240, 0, 240, (colours[i] >> 16) & 0xFF, (colours[i] >> 8) & 0xFF, colours[i] & 0xFF, positions[i].x, positions[i].y);
     }
 }
@@ -121,16 +121,16 @@ void UITransition_State_TransitionIn(void)
     }
     else {
         entity->field_6C = true;
-        int remain       = entity->timer - entity->timeLimit;
+        int32 remain       = entity->timer - entity->timeLimit;
         if (!remain)
             RSDK.PlaySfx(UIWidgets->sfx_Woosh, false, 255);
 
-        int offsets[3];
+        int32 offsets[3];
         offsets[0] = clampVal(remain, 0, 8);
         offsets[1] = clampVal(remain - 4, 0, 8);
         offsets[2] = clampVal(remain - 8, 0, 8);
 
-        int val = 32 * offsets[0];
+        int32 val = 32 * offsets[0];
         if (val > 0) {
             if (val < 256) {
                 entity->drawPos[0].x = -0xF000 * val + 0xF00000;
@@ -203,13 +203,13 @@ void UITransition_State_TransitionOut(void)
         }
         else {
             entity->field_6C = true;
-            int offsets[3];
+            int32 offsets[3];
 
             offsets[0] = clampVal(entity->timer - 1, 0, 8);
             offsets[1] = clampVal(entity->timer - 5, 0, 8);
             offsets[2] = minVal(entity->timer - 1, 8);
 
-            int val = 32 * offsets[0];
+            int32 val = 32 * offsets[0];
             if (val > 0) {
                 if (val < 256) {
                     entity->drawPos[0].x = -0xF000 * val;

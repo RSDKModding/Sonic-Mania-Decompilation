@@ -6,13 +6,13 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    int waterFadeAmount;
-    STATIC(int delayA, 30);
-    int frameA;
-    TABLE(int delayListA[8], { 30, 2, 2, 2, 30, 2, 2, 2 });
-    STATIC(int delayB, 60);
-    int frameB;
-    TABLE(int delayListB[16], { 120, 2, 2, 2, 8, 2, 2, 2, 120, 2, 2, 2, 8, 2, 2, 2 });
+    int32 waterFadeAmount;
+    STATIC(int32 delayA, 30);
+    int32 frameA;
+    TABLE(int32 delayListA[8], { 30, 2, 2, 2, 30, 2, 2, 2 });
+    STATIC(int32 delayB, 60);
+    int32 frameB;
+    TABLE(int32 delayListB[16], { 120, 2, 2, 2, 8, 2, 2, 2, 120, 2, 2, 2, 8, 2, 2, 2 });
     uint16 aniTiles;
 } ObjectGHZSetup;
 

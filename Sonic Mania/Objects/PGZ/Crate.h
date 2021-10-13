@@ -32,7 +32,7 @@ void Crate_Serialize(void);
 
 // Extra Entity Functions
 void Crate_Break(EntityCrate *entity);
-void Crate_MoveY(EntityCrate *entity, int offset);
+void Crate_MoveY(EntityCrate *entity, int32 offset);
 bool32 Crate_Collide(void);
 void Crate_Null1(void);
 void Crate_ApplyGravity(void);

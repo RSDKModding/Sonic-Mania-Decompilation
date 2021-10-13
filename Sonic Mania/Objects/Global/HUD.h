@@ -21,10 +21,10 @@ typedef struct {
     uint16 sfxClick;
     uint16 sfxStarpost;
     bool32 dwordC;
-    int replaySaveEnabled;
-    int compSession[4];
-    int swapCooldown;
-    int stockFlashTimers[PLAYER_MAX];
+    int32 replaySaveEnabled;
+    int32 compSession[4];
+    int32 swapCooldown;
+    int32 stockFlashTimers[PLAYER_MAX];
 #endif
 } ObjectHUD;
 
@@ -34,12 +34,12 @@ typedef struct {
     StateMachine(state);
     Vector2 offsets[4];
 #if RETRO_USE_PLUS
-    int lifeFrameIDs[4];
-    int lives[PLAYER_MAX];
+    int32 lifeFrameIDs[4];
+    int32 lives[PLAYER_MAX];
 #endif
-    int maxOffset;
+    int32 maxOffset;
 #if RETRO_GAMEVER != VER_100
-    int superButtonPos;
+    int32 superButtonPos;
 #endif
 #if RETRO_USE_PLUS
     void (*vsStates[PLAYER_MAX])(void);
@@ -47,15 +47,15 @@ typedef struct {
     Vector2 vsTimeOffsets[4];
     Vector2 vsRingsOffsets[4];
     Vector2 vsLifeOffsets[4];
-    int vsMaxOffsets[4];
-    int screenID;
+    int32 vsMaxOffsets[4];
+    int32 screenID;
 #endif
 #if RETRO_GAMEVER != VER_100
-    int timeFlashFrame;
+    int32 timeFlashFrame;
 #endif
-    int ringFlashFrame;
-    int field_150;
-    int field_154;
+    int32 ringFlashFrame;
+    int32 field_150;
+    int32 field_154;
     Animator hudElementsData;
     Animator numbersData;
     Animator hyperNumbersData;
@@ -88,10 +88,10 @@ void HUD_EditorLoad(void);
 void HUD_Serialize(void);
 
 // Extra Entity Functions
-void HUD_DrawNumbersBase10(Vector2 *drawPos, int value, signed int maxDigits);
-void HUD_DrawNumbersBase16(Vector2 *drawPos, int value);
-void HUD_DrawNumbersHyperRing(Vector2 *drawPos, int value);
-void HUD_GetKeyFrame(Animator *animator, int buttonID);
+void HUD_DrawNumbersBase10(Vector2 *drawPos, int32 value, int32 maxDigits);
+void HUD_DrawNumbersBase16(Vector2 *drawPos, int32 value);
+void HUD_DrawNumbersHyperRing(Vector2 *drawPos, int32 value);
+void HUD_GetKeyFrame(Animator *animator, int32 buttonID);
 void HUD_GetSuperFrames(void);
 void HUD_State_ComeOnScreen(void);
 void HUD_State_GoOffScreen(void);

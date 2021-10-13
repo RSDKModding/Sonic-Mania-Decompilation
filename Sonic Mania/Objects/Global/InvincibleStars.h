@@ -14,8 +14,8 @@ typedef struct {
     RSDK_ENTITY
     Entity *parent;
     Vector2 starPos[8];
-    int starAngle[4];
-    int starOffset;
+    int32 starAngle[4];
+    int32 starOffset;
     Animator starsData[4];
 } EntityInvincibleStars;
 

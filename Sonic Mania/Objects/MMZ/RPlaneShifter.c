@@ -59,9 +59,9 @@ void RPlaneShifter_DrawSprites(void)
     poleAngles[0] = entity->angle + 21;
     poleAngles[1] = entity->angle + 106;
     poleAngles[2] = entity->angle - 64;
-    for (int i = 0; i < entity->height; ++i) {
+    for (int32 i = 0; i < entity->height; ++i) {
         drawPos.y -= 0x100000;
-        for (int p = 0; p < 3; ++p) {
+        for (int32 p = 0; p < 3; ++p) {
             drawPos.x = entity->position.x;
             if (RSDK_sceneInfo->inEditor) {
                 drawPos.x += 0x1C00 * RSDK.Cos256(poleAngles[p]);
@@ -145,7 +145,7 @@ void RPlaneShifter_Unknown3(void)
 
     foreach_active(Player, player)
     {
-        int playerID = RSDK.GetEntityID(player);
+        int32 playerID = RSDK.GetEntityID(player);
 
         if (!((1 << playerID) & entity->activePlayers1) && !((1 << playerID) & entity->activePlayers2)) {
             if (Player_CheckCollisionTouch(player, entity, &entity->hitbox) && player->onGround && !player->isChibi) {
@@ -220,7 +220,7 @@ void RPlaneShifter_Unknown4(void)
             flag = true;
         }
 
-        int speed = 0;
+        int32 speed = 0;
         if (!entity->field_64)
             speed = 0x3800;
         else
@@ -268,7 +268,7 @@ void RPlaneShifter_Unknown4(void)
 
     foreach_active(Player, player)
     {
-        int playerID = RSDK.GetEntityID(player);
+        int32 playerID = RSDK.GetEntityID(player);
 
         if (!((1 << playerID) & entity->activePlayers1) && !((1 << playerID) & entity->activePlayers2)
             && Player_CheckCollisionTouch(player, entity, &entity->hitbox) && player->onGround && !player->isChibi) {
@@ -287,12 +287,12 @@ void RPlaneShifter_Unknown4(void)
         if ((1 << playerID) & entity->activePlayers1) {
             RSDK.SetSpriteAnimation(player->spriteIndex, ANI_TWISTER, &player->playerAnimator, false, 0);
 
-            int rot = (entity->field_78 >> 16) & 0xFF;
-            int val = 0xFF - rot;
+            int32 rot = (entity->field_78 >> 16) & 0xFF;
+            int32 val = 0xFF - rot;
             if (player->direction)
                 val = rot;
 
-            int frame = 0;
+            int32 frame = 0;
             switch (val >> 6) {
                 case 0:
                 case 1: frame = 9 * val / 128; break;
@@ -316,7 +316,7 @@ void RPlaneShifter_Unknown5(void)
     RSDK_THIS(RPlaneShifter);
     foreach_active(Player, player)
     {
-        int playerID = RSDK.GetEntityID(player);
+        int32 playerID = RSDK.GetEntityID(player);
 
         if ((1 << playerID) & entity->activePlayers1) {
             entity->activePlayers1 &= ~(1 << playerID);

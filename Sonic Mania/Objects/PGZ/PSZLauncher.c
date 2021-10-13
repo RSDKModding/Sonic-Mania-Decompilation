@@ -76,9 +76,9 @@ void PSZLauncher_Unknown3(void)
     hitbox.bottom = 0;
     foreach_active(Player, player)
     {
-        int playerID = RSDK.GetEntityID(player);
+        int32 playerID = RSDK.GetEntityID(player);
 
-        int pos = 31 - clampVal(abs(player->position.x - entity->position.x) >> 16, 0, 31);
+        int32 pos = 31 - clampVal(abs(player->position.x - entity->position.x) >> 16, 0, 31);
         if ((entity->direction == FLIP_NONE && player->position.x > entity->position.x)
             || (entity->direction == FLIP_X && player->position.x < entity->position.x))
             pos = 31;
@@ -103,7 +103,7 @@ void PSZLauncher_Unknown4(void)
 
     foreach_active(Player, player)
     {
-        int playerID = RSDK.GetEntityID(player);
+        int32 playerID = RSDK.GetEntityID(player);
         if (Player_CheckCollisionTouch(player, entity, &PSZLauncher->hitbox)) {
             if (!((1 << playerID) & entity->activePlayers2) && !((1 << playerID) & entity->activePlayers) && player->velocity.y <= 0) {
                 entity->activePlayers2 |= (1 << playerID);

@@ -88,7 +88,7 @@ void UIReplayCarousel_Create(void *data)
     entity->dbUnknownCount  = 0;
     UIReplayCarousel_Unknown2();
     if (!RSDK_sceneInfo->inEditor) {
-        for (int i = 0; i < 4; ++i) {
+        for (int32 i = 0; i < 4; ++i) {
             RSDK.SetText(&entity->zoneNameText[i], "", 0);
             RSDK.SetText(&entity->createdAtText[i], "", 0);
         }
@@ -120,15 +120,15 @@ void UIReplayCarousel_ProcessButtonCB(void)
     EntityUIControl *parent = (EntityUIControl *)entity->parent;
 
     if (!entity->field_168 && entity->state != UIReplayCarousel_Unknown19) {
-        int rowID = 0;
+        int32 rowID = 0;
         if (parent->rowCount && parent->columnCount)
             rowID = parent->activeEntityID / parent->columnCount;
 
-        int columnID = 0;
+        int32 columnID = 0;
         if (parent->columnCount)
             columnID = parent->activeEntityID % parent->columnCount;
 
-        int id           = entity->field_164;
+        int32 id           = entity->field_164;
         bool32 movedUp   = false;
         bool32 movedDown = false;
         if (UIControl->keyUp) {
@@ -153,7 +153,7 @@ void UIReplayCarousel_ProcessButtonCB(void)
             if (rowID >= parent->rowCount)
                 rowID -= parent->rowCount;
 
-            int selection = (parent->buttonCount - 1);
+            int32 selection = (parent->buttonCount - 1);
             if (rowID * parent->columnCount + columnID < selection)
                 selection = (rowID * parent->columnCount + columnID);
 
@@ -198,7 +198,7 @@ void UIReplayCarousel_Unknown2(void)
     if (entity->field_16C) {
         entity->dbUnknownID = entity->field_16C / 102;
 
-        int pos           = 102 * (entity->field_16C / 102) - entity->field_16C - 102;
+        int32 pos           = 102 * (entity->field_16C / 102) - entity->field_16C - 102;
         entity->field_17C = pos << 16;
         if (pos < 153) {
             entity->field_174 = (152 - pos) / 0x66 + 1;
@@ -247,10 +247,10 @@ void UIReplayCarousel_HandleTouchPositions(void)
 
     if (entity->touchCB) {
         entity->touchPosCount = entity->field_174;
-        int posX              = entity->position.x;
-        int posY              = entity->field_17C + entity->position.y;
+        int32 posX              = entity->position.x;
+        int32 posY              = entity->field_17C + entity->position.y;
 
-        int i = 0;
+        int32 i = 0;
         for (; i < entity->field_174; ++i) {
             if (i + entity->dbUnknownID >= entity->dbUnknownCount)
                 break;
@@ -276,7 +276,7 @@ void UIReplayCarousel_HandleTouchPositions(void)
 void UIReplayCarousel_TouchedCB(void)
 {
     RSDK_THIS(UIReplayCarousel);
-    int id = entity->touchCountUnknown + entity->dbUnknownID;
+    int32 id = entity->touchCountUnknown + entity->dbUnknownID;
     if (entity->field_164 == id)
         UIReplayCarousel_Unknown11();
     else
@@ -288,12 +288,12 @@ void UIReplayCarousel_Unknown6(void)
     RSDK_THIS(UIReplayCarousel);
     if (!RSDK_sceneInfo->inEditor) {
         char buffer[0x20];
-        for (int i = 0; i < 4; ++i) {
-            int id = i + entity->dbUnknownID;
+        for (int32 i = 0; i < 4; ++i) {
+            int32 id = i + entity->dbUnknownID;
             if (id >= entity->dbUnknownCount)
                 break;
-            int row    = API.GetSortedUserDBRowID(globals->replayTableID, id);
-            int zoneID = 0xFF;
+            int32 row    = API.GetSortedUserDBRowID(globals->replayTableID, id);
+            int32 zoneID = 0xFF;
             API.GetUserDBValue(globals->replayTableID, row, 2, "zoneID", &zoneID);
             API.GetUserDBCreationTime(globals->replayTableID, row, buffer, 31, "%D");
             if (zoneID != 0xFF) {
@@ -311,7 +311,7 @@ void UIReplayCarousel_Unknown6(void)
     }
 }
 
-void UIReplayCarousel_Unknown7(int a1, int16 a2, int a3, int a4)
+void UIReplayCarousel_Unknown7(int32 a1, int16 a2, int32 a3, int32 a4)
 {
     RSDK_THIS(UIReplayCarousel);
     if (!RSDK_sceneInfo->inEditor)
@@ -340,18 +340,18 @@ void UIReplayCarousel_Unknown7(int a1, int16 a2, int a3, int a4)
         UIWidgets_Unknown2(91, 312, a3, a4);
 }
 
-void UIReplayCarousel_Unknown8(uint8 a1, uint8 a2, int a3, int a4, int arg10, int a6, int a7)
+void UIReplayCarousel_Unknown8(uint8 a1, uint8 a2, int32 a3, int32 a4, int32 arg10, int32 a6, int32 a7)
 {
     RSDK_THIS(UIReplayCarousel);
     Vector2 drawPos;
     uint32 colours[] = { 0xE82858, 0x5870E0, 0xF0D808, 0x010101 };
-    int widths[]   = { 60, 82, 52, 70 };
+    int32 widths[]   = { 60, 82, 52, 70 };
 
     drawPos.x = arg10 - 0x990000;
     drawPos.y = a6 + 0x1D8000;
 
     Vector2 drawOffsets[4];
-    for (int i = 0; i < 4; ++i) {
+    for (int32 i = 0; i < 4; ++i) {
         RSDK.DrawRect(drawPos.x, drawPos.y, widths[i] << 16, 0xD0000, colours[i], 255, INK_NONE, false);
 
         drawOffsets[i].x = drawPos.x + 0x10000;
@@ -367,10 +367,10 @@ void UIReplayCarousel_Unknown8(uint8 a1, uint8 a2, int a3, int a4, int arg10, in
     }
 
     if (!RSDK_sceneInfo->inEditor) {
-        int id    = a7 - entity->dbUnknownID;
+        int32 id    = a7 - entity->dbUnknownID;
         drawPos.x = drawOffsets[0].x + 0x1E0000;
         drawPos.y = drawOffsets[0].y;
-        int width = RSDK.GetStringWidth(UIWidgets->labelSpriteIndex, 0, &entity->createdAtText[id], 0, entity->createdAtText[id].textLength, 0);
+        int32 width = RSDK.GetStringWidth(UIWidgets->labelSpriteIndex, 0, &entity->createdAtText[id], 0, entity->createdAtText[id].textLength, 0);
         drawPos.x -= width << 15;
         drawPos.y -= 0x60000;
         RSDK.DrawText(&entity->animator9, &drawPos, &entity->createdAtText[id], 0, entity->createdAtText[id].textLength, ALIGN_LEFT, 0, 2, 0, false);
@@ -391,7 +391,7 @@ void UIReplayCarousel_Unknown8(uint8 a1, uint8 a2, int a3, int a4, int arg10, in
     RSDK.DrawSprite(&entity->animator3, &drawPos, false);
 }
 
-void UIReplayCarousel_Unknown9(uint8 a1, int16 a2, int a4, int a5)
+void UIReplayCarousel_Unknown9(uint8 a1, int16 a2, int32 a4, int32 a5)
 {
     RSDK_THIS(UIReplayCarousel);
     Vector2 drawPos;
@@ -418,7 +418,7 @@ void UIReplayCarousel_Unknown9(uint8 a1, int16 a2, int a4, int a5)
             RSDK.DrawSprite(&entity->animator1, &drawPos, false);
         }
         else {
-            int width    = entity->sprX - 102;
+            int32 width    = entity->sprX - 102;
             frame->width = 90 - width;
             RSDK.DrawSprite(&entity->animator1, &drawPos, false);
 
@@ -430,7 +430,7 @@ void UIReplayCarousel_Unknown9(uint8 a1, int16 a2, int a4, int a5)
     }
 }
 
-void UIReplayCarousel_Unknown10(uint8 zoneID, int a2, uint8 a3, uint8 a4, int a5, int a6, int drawX, int drawY)
+void UIReplayCarousel_Unknown10(uint8 zoneID, int32 a2, uint8 a3, uint8 a4, int32 a5, int32 a6, int32 drawX, int32 drawY)
 {
     RSDK_THIS(UIReplayCarousel);
     UIReplayCarousel_Unknown8(a3, a4, a2, a6, drawX, drawY, a2);
@@ -440,7 +440,7 @@ void UIReplayCarousel_Unknown10(uint8 zoneID, int a2, uint8 a3, uint8 a4, int a5
     drawPos.x = drawX;
     drawPos.y = drawY - 0x160000;
     if ((entity->state != UIReplayCarousel_Unknown19 || entity->field_164 != a2 || !(entity->timer & 2)) && !RSDK_sceneInfo->inEditor) {
-        int id    = a2 - entity->dbUnknownID;
+        int32 id    = a2 - entity->dbUnknownID;
         drawPos.x = drawX - 0x390000;
         if (zoneID == 5 || zoneID == 10) {
             RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 5, &entity->animators[id], true, 0);
@@ -512,27 +512,27 @@ void UIReplayCarousel_StateDraw_Unknown3(void)
     RSDK_THIS(UIReplayCarousel);
     EntityUIControl *parent = (EntityUIControl *)entity->parent;
 
-    int posY = entity->field_17C + entity->position.y;
-    for (int i = 0; i < entity->field_174; ++i) {
-        int id = i + entity->dbUnknownID;
+    int32 posY = entity->field_17C + entity->position.y;
+    for (int32 i = 0; i < entity->field_174; ++i) {
+        int32 id = i + entity->dbUnknownID;
         if (id >= entity->dbUnknownCount)
             break;
 
-        int score          = 0;
+        int32 score          = 0;
         uint16 zoneID      = 0;
         uint16 act         = 0;
         uint16 characterID = 0;
         uint16 encore      = 0;
 
-        int row = API.GetSortedUserDBRowID(globals->replayTableID, id);
+        int32 row = API.GetSortedUserDBRowID(globals->replayTableID, id);
         API.GetUserDBValue(globals->replayTableID, row, 4, "score", &score);
         API.GetUserDBValue(globals->replayTableID, row, 2, "zoneID", &zoneID);
         API.GetUserDBValue(globals->replayTableID, row, 2, "act", &act);
         API.GetUserDBValue(globals->replayTableID, row, 2, "characterID", &characterID);
         API.GetUserDBValue(globals->replayTableID, row, 2, "encore", &encore);
         if (id == entity->field_164 && parent->active == ACTIVE_ALWAYS) {
-            int val = (zoneID % 12) >> 3;
-            int pal = 0;
+            int32 val = (zoneID % 12) >> 3;
+            int32 pal = 0;
             if (encore)
                 pal = val + 4;
             else

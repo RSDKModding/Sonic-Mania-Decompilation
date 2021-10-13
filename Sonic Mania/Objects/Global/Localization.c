@@ -75,7 +75,7 @@ void Localization_LoadStrings(void)
 #if RETRO_USE_EGS
     if (API.CheckAchievementsEnabled()) {
         TextInfo names[STR_STRING_COUNT - STR_ACHIEVEMENT];
-        for (int i = STR_ACHIEVEMENT; i < STR_STRING_COUNT; ++i) {
+        for (int32 i = STR_ACHIEVEMENT; i < STR_STRING_COUNT; ++i) {
             names[i] = Localization->strings[i];
         }
 
@@ -89,7 +89,7 @@ void Localization_GetString(TextInfo *textInfo, uint8 id)
     memset(textInfo, 0, sizeof(TextInfo));
     RSDK.SetText(textInfo, "", 0);
     RSDK.CopyString(textInfo, &Localization->strings[id]);
-    for (int c = 0; c < textInfo->textLength; ++c) {
+    for (int32 c = 0; c < textInfo->textLength; ++c) {
         if (textInfo->text[c] == '\\')
             textInfo->text[c] = '\n';
     }

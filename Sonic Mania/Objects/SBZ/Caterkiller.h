@@ -17,7 +17,7 @@ typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
-    int planeFilter;
+    int32 planeFilter;
     Vector2 bodyPosition[Caterkiller_BodyCount];
     uint8 bodyDirection[Caterkiller_BodyCount];
     uint8 bodyOffset[Caterkiller_BodyCount];
@@ -55,7 +55,7 @@ void Caterkiller_StateDraw_Body(void);
 void Caterkiller_StateDraw_Split(void);
 
 void Caterkiller_HandlePlayerInteractions(void);
-bool32 Caterkiller_CheckTileAngle(int x, int y, int dir);
+bool32 Caterkiller_CheckTileAngle(int32 x, int32 y, int32 dir);
 
 //Body States
 void Caterkiller_Unknown5(void);

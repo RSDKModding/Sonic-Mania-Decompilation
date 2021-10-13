@@ -26,8 +26,8 @@ typedef struct {
     uint8 playerType;
     Vector2 startPos;
     uint8 startDir;
-    int timer2;
-    int timer;
+    int32 timer2;
+    int32 timer;
 } EntityCrane;
 
 // Object Struct

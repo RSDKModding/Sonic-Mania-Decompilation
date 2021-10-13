@@ -101,8 +101,8 @@ void BladePole_CheckPlayerCollisions(Hitbox *hitbox)
     foreach_active(Player, player)
     {
         if (Player_CheckCollisionTouch(player, entity, hitbox)) {
-            int storeX         = entity->position.x;
-            int storeY         = entity->position.y;
+            int32 storeX         = entity->position.x;
+            int32 storeY         = entity->position.y;
             entity->position.y = ((BladePole->hitbox2.bottom - BladePole->hitbox2.top) << 15) + storeY;
 #if RETRO_USE_PLUS
             if (!Player_CheckMightyUnspin(1024, player, 2, &player->uncurlTimer)) {

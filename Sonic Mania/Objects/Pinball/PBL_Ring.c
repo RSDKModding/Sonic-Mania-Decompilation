@@ -12,9 +12,9 @@ void PBL_Ring_Update(void)
 void PBL_Ring_LateUpdate(void)
 {
     RSDK_THIS(PBL_Ring);
-    int x = entity->position.x >> 8;
-    int y = entity->height >> 8;
-    int z = entity->position.y >> 8;
+    int32 x = entity->position.x >> 8;
+    int32 y = entity->height >> 8;
+    int32 z = entity->position.y >> 8;
 
     Matrix *mat = &PBL_Camera->matrix1;
 
@@ -73,12 +73,12 @@ void PBL_Ring_GiveRing(void)
     PBL_Setup_GiveScore(10);
 
     if (PBL_Setup->ringPan) {
-        int channel = RSDK.PlaySfx(PBL_Ring->sfxRing, 0, 255);
+        int32 channel = RSDK.PlaySfx(PBL_Ring->sfxRing, 0, 255);
         RSDK.SetChannelAttributes(channel, 1.0, -1.0, 1.0);
         PBL_Setup->ringPan = 0;
     }
     else {
-        int channel = RSDK.PlaySfx(PBL_Ring->sfxRing, 0, 255);
+        int32 channel = RSDK.PlaySfx(PBL_Ring->sfxRing, 0, 255);
         RSDK.SetChannelAttributes(channel, 1.0, 1.0, 1.0);
         PBL_Setup->ringPan = 1;
     }
@@ -90,9 +90,9 @@ void PBL_Ring_State_Ring(void)
 
     foreach_active(PBL_Player, player)
     {
-        int ry = (entity->height - player->height - 0xA0000) >> 16;
-        int rz = (entity->position.y - player->position.y) >> 16;
-        int rx = (entity->position.x - player->position.x) >> 16;
+        int32 ry = (entity->height - player->height - 0xA0000) >> 16;
+        int32 rz = (entity->position.y - player->position.y) >> 16;
+        int32 rx = (entity->position.x - player->position.x) >> 16;
         if (rx * rx + rz * rz + ry * ry < 0x100) {
             RSDK.SetSpriteAnimation(PBL_Ring->aniFrames, 2, &entity->animator, true, 4);
             ++entity->drawOrder;

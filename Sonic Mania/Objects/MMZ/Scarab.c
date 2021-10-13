@@ -20,8 +20,8 @@ void Scarab_Update(void)
     Scarab_HandlePlayerGrab();
     if (entity->state != Scarab_State_Setup) {
         if (!RSDK.CheckOnScreen(entity, NULL) && !RSDK.CheckPosOnScreen(&entity->startPos, &entity->updateRange)) {
-            int x                = -entity->position.x;
-            int y                = -entity->position.y;
+            int32 x                = -entity->position.x;
+            int32 y                = -entity->position.y;
             entity->direction    = entity->startDir;
             entity->position     = entity->startPos;
             entity->moveOffset.x = entity->position.x + x;
@@ -124,7 +124,7 @@ void Scarab_CheckPlayerCollisions(void)
     foreach_active(Player, player)
     {
         if (entity->planeFilter <= 0 || player->collisionPlane == ((uint8)(entity->planeFilter - 1) & 1)) {
-            int playerID = RSDK.GetEntityID(player);
+            int32 playerID = RSDK.GetEntityID(player);
             if (Player_CheckBadnikHit(player, entity, &Scarab->hitboxBadnik)) {
                 Scarab_HandlePlayerRelease();
                 Player_CheckBadnikBreak(entity, player, true);
@@ -153,8 +153,8 @@ void Scarab_HandleChildMove(void)
 {
     RSDK_THIS(Scarab);
 
-    int slot = RSDK_sceneInfo->entitySlot + 1;
-    for (int c = 0; c < entity->childCount; ++c) {
+    int32 slot = RSDK_sceneInfo->entitySlot + 1;
+    for (int32 c = 0; c < entity->childCount; ++c) {
         EntityItemBox *child = RSDK_GET_ENTITY(slot + c, ItemBox);
         child->position.x += entity->moveOffset.x;
         child->position.y += entity->moveOffset.y;
@@ -169,7 +169,7 @@ void Scarab_HandlePlayerGrab(void)
 
     foreach_active(Player, player)
     {
-        int playerID = RSDK.GetEntityID(player);
+        int32 playerID = RSDK.GetEntityID(player);
         if ((1 << playerID) & entity->grabbedPlayers) {
             if (entity->playerTimers[playerID] < 60 && player->interaction && player->state == Player_State_None) {
                 player->position.x = entity->position.x + ((2 * (entity->direction != FLIP_NONE) - 1) << 21);
@@ -206,7 +206,7 @@ void Scarab_HandlePlayerRelease(void)
 
     foreach_active(Player, player)
     {
-        int playerID = RSDK.GetEntityID(player);
+        int32 playerID = RSDK.GetEntityID(player);
 
         if ((1 << playerID) & entity->grabbedPlayers) {
             entity->grabbedPlayers &= ~(1 << playerID);
@@ -250,10 +250,10 @@ void Scarab_State_Move(void)
         entity->state = Scarab_State_Wait;
     }
 
-    int mult      = entity->field_DB;
-    int amplitude = entity->amplitude << 16;
-    int x         = entity->position.x + 0x6000 * mult;
-    int y         = entity->position.y;
+    int32 mult      = entity->field_DB;
+    int32 amplitude = entity->amplitude << 16;
+    int32 x         = entity->position.x + 0x6000 * mult;
+    int32 y         = entity->position.y;
 
     entity->position.x = x;
     if (abs(x - entity->startPos.x) < amplitude && RSDK.ObjectTileGrip(entity, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x60000, 2)) {

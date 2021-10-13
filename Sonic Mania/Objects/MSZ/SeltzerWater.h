@@ -13,9 +13,9 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    int field_5C;
-    int gravityStrength;
-    int field_64;
+    int32 field_5C;
+    int32 gravityStrength;
+    int32 field_64;
     uint16 nodeSlot;
     Animator animator;
 } EntitySeltzerWater;

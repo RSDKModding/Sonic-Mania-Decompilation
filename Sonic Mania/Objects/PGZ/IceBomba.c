@@ -19,7 +19,7 @@ void IceBomba_Draw(void)
     drawPos.x += 0x40000;
     drawPos.y += 0x1A0000;
 
-    int dirStore      = entity->direction;
+    int32 dirStore      = entity->direction;
     entity->direction = FLIP_NONE;
     RSDK.DrawSprite(&entity->bombAnimator, &drawPos, false);
     RSDK.DrawSprite(&entity->animator, NULL, false);
@@ -110,7 +110,7 @@ void IceBomba_DebugSpawn(void)
 void IceBomba_Fly_Collide(void)
 {
     RSDK_THIS(IceBomba);
-    int oldDir        = entity->direction;
+    int32 oldDir        = entity->direction;
     entity->direction = 0;
     foreach_active(Player, player)
     {
@@ -202,7 +202,7 @@ void IceBomba_Fly_Turn(void)
     entity->position.x += entity->velocity.x;
     entity->position.y = entity->dip * RSDK.Sin1024(entity->angle) + entity->spawnPos.y;
     entity->velocity.x += 0x1000 * (entity->direction ? -1 : 1);
-    int animTimer = ++entity->animator.animationTimer;
+    int32 animTimer = ++entity->animator.animationTimer;
     if (entity->direction) {
         if (animTimer >= 3) {
             --entity->bombAnimator.frameID;

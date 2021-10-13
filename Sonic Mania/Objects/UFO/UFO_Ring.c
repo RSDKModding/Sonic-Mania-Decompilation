@@ -11,9 +11,9 @@ void UFO_Ring_Update(void)
 void UFO_Ring_LateUpdate(void)
 {
     RSDK_THIS(UFO_Ring);
-    int x = entity->position.x >> 8;
-    int y = entity->height >> 8;
-    int z = entity->position.y >> 8;
+    int32 x = entity->position.x >> 8;
+    int32 y = entity->height >> 8;
+    int32 z = entity->position.y >> 8;
 
     Matrix *mat = &UFO_Camera->matWorld;
 
@@ -73,12 +73,12 @@ void UFO_Ring_PlayRingSFX(void)
     }
 
     if (UFO_Setup->ringPan) {
-        int channel = RSDK.PlaySfx(UFO_Ring->sfx_Ring, 0, 255);
+        int32 channel = RSDK.PlaySfx(UFO_Ring->sfx_Ring, 0, 255);
         RSDK.SetChannelAttributes(channel, 1.0, -1.0, 1.0);
         UFO_Setup->ringPan = 0;
     }
     else {
-        int channel = RSDK.PlaySfx(UFO_Ring->sfx_Ring, 0, 255);
+        int32 channel = RSDK.PlaySfx(UFO_Ring->sfx_Ring, 0, 255);
         RSDK.SetChannelAttributes(channel, 1.0, 1.0, 1.0);
         UFO_Setup->ringPan = 1;
     }
@@ -87,7 +87,7 @@ void UFO_Ring_PlayRingSFX(void)
 void UFO_Ring_LoseRings(EntityUFO_Player *player)
 {
     UFO_Setup->rings -= 10;
-    int i = 10;
+    int32 i = 10;
     if (UFO_Setup->rings < 0) {
         i                = UFO_Setup->rings + 10;
         UFO_Setup->rings = 0;
@@ -111,11 +111,11 @@ void UFO_Ring_Unknown2(void)
     RSDK_THIS(UFO_Ring);
     foreach_active(UFO_Player, player)
     {
-        int rx     = (entity->height - player->height - 0xA0000) >> 16;
-        int ry     = (entity->position.y - player->position.y) >> 16;
-        int radius = ry * ry + rx * rx;
+        int32 rx     = (entity->height - player->height - 0xA0000) >> 16;
+        int32 ry     = (entity->position.y - player->position.y) >> 16;
+        int32 radius = ry * ry + rx * rx;
 
-        int pr = UFO_Player->maxSpeed >> 9;
+        int32 pr = UFO_Player->maxSpeed >> 9;
         if (((entity->position.x - player->position.x) >> 16) * ((entity->position.x - player->position.x) >> 16) + radius < pr) {
             RSDK.SetSpriteAnimation(UFO_Ring->spriteIndex, 2, &entity->animator, true, 4);
             ++entity->drawOrder;
