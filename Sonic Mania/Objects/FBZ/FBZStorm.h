@@ -6,13 +6,13 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    int array1[20]; //= { 64, 128, 192, 256, 256, 128, 0, 32, 64, 128, 192, 256, 256, 192, 128, 96, 64, 32, 16, 0 };
-    Vector2 positions[PLAYER_MAX * 0x40];
+    TABLE(int array1[20], { 64, 128, 192, 256, 256, 128, 0, 32, 64, 128, 192, 256, 256, 192, 128, 96, 64, 32, 16, 0 });
+    Vector2 positions[0x100];
     ushort aniFrames;
     ushort sfxRain;
     byte playingRainSFX;
     ushort sfxThunder;
-    byte srcPal; //= 1;
+    STATIC(byte srcPal, 1);
 } ObjectFBZStorm;
 
 // Entity Class

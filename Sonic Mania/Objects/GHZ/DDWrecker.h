@@ -12,8 +12,8 @@ typedef struct {
     int bossBoundR;
     int bossBoundT;
     int xVelocityUnknown[3];
-    int angleOffsets1[6];
-    int angleOffsets2[6];
+    TABLE(int angleOffsets1[6], { -64, -32, -16, 16, 32, 64 });
+    TABLE(int angleOffsets2[6], { 32, 48, 64, 80, 96, 128 });
     ushort spriteIndex;
     ushort sfx_BossHit;
     ushort sfx_Explosion;

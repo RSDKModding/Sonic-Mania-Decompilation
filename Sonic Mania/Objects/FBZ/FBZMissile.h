@@ -9,7 +9,7 @@ typedef struct {
     Hitbox hitbox1;
     Hitbox hitbox2;
     Hitbox hitbox3;
-    int velocities[8]; //= { 65536, 57344, 73728, 81920, 65536, 57344, 49152, 57344 };
+    TABLE(int velocities[8], { 0x10000, 0xE000, 0x12000, 0x14000, 0x10000, 0xE000, 0xC000, 0xE000 });
     int velocityID;
     ushort aniFrames;
     ushort sfxPush;

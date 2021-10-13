@@ -7,16 +7,16 @@
 typedef struct {
     RSDK_OBJECT
 #if RETRO_USE_PLUS
-    int bgScrollPos;                //= 240;
-    int bgScrollPositions[4];       //= { 240, 3, 3, 3 };
-    int cheat_RickyMode[9];         //= { 1, 9, 7, 9, 0, 8, 1, 1, 255 };
-    int cheat_AllEmeralds[5];       //= { 4, 1, 2, 6, 255 };
-    int cheat_MaxContinues[9];      //= { 1, 9, 9, 2, 1, 1, 2, 4, 255 };
-    int cheat_SwapGameMode[9];      //= { 2, 0, 1, 8, 0, 6, 2, 3, 255 };
-    int cheat_UnlockAllMedals[9];   //= { 1, 9, 8, 9, 0, 5, 0, 1, 255 };
-    int cheat_SuperDash[9];         //= { 2, 0, 1, 7, 0, 8, 1, 5, 255 };
-    int cheat_MaxControl[5];        //= { 9, 0, 0, 1, 255 };
-    int cheat_DisableSuperMusic[5]; //= { 6, 2, 1, 4, 255 };
+    STATIC(int bgScrollPos, 240);
+    TABLE(int bgScrollPositions[4], { 240, 3, 3, 3 });
+    TABLE(int cheat_RickyMode[9], { 1, 9, 7, 9, 0, 8, 1, 1, 255 });
+    TABLE(int cheat_AllEmeralds[5], { 4, 1, 2, 6, 255 });
+    TABLE(int cheat_MaxContinues[9], { 1, 9, 9, 2, 1, 1, 2, 4, 255 });
+    TABLE(int cheat_SwapGameMode[9], { 2, 0, 1, 8, 0, 6, 2, 3, 255 });
+    TABLE(int cheat_UnlockAllMedals[9], { 1, 9, 8, 9, 0, 5, 0, 1, 255 });
+    TABLE(int cheat_SuperDash[9], { 2, 0, 1, 7, 0, 8, 1, 5, 255 });
+    TABLE(int cheat_MaxControl[5], { 9, 0, 0, 1, 255 });
+    TABLE(int cheat_DisableSuperMusic[5], { 6, 2, 1, 4, 255 });
     int field_108;
     int field_10C;
     int field_110;
@@ -33,9 +33,9 @@ typedef struct {
     int cheatUnknown[8];
     void (*checkCheatActivated[8])(void);
 #else
-    int bgScrollPos;          //= 240;
+    STATICbgScrollPos, 240);
     int bgScrollPosID;
-    int bgScrollPositions[4]; //= { 240, 3, 3, 3 };
+    TABLE(bgScrollPositions[4], { 240, 3, 3, 3 });
     int startMusicID;
     int soundTestMax;
     ushort sfxFail;

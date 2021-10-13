@@ -6,7 +6,7 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    int offsets[5]; //= { -131072, -65536, 0, 65536, 131072 };
+    TABLE(int offsets[5], { -0x20000, -0x10000, 0, 0x10000, 0x20000 });
     ushort aniFrames;
     ushort knuxFrames;
     ushort sfxExplosion;

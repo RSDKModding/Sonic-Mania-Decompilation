@@ -7,12 +7,12 @@
 typedef struct {
     RSDK_OBJECT
     int waterFadeAmount;
-    int delayA; //= 30
+    STATIC(int delayA, 30);
     int frameA;
-    int delayListA[8];
-    int delayB; //= 60
+    TABLE(int delayListA[8], 30, 2, 2, 2, 30, 2, 2, 2);
+    STATIC(int delayB, 60);
     int frameB;
-    int delayListB[16];
+    TABLE(int delayListB[16], 120, 2, 2, 2, 8, 2, 2, 2, 120, 2, 2, 2, 8, 2, 2, 2);
     ushort aniTiles;
 } ObjectGHZSetup;
 

@@ -6,11 +6,11 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    colour coloursManiaA[8];  //= { 32, 32, 4247680, 4247680, 4247680, 4247680, 32, 32 };
-    colour coloursManiaB[8];  //= { 32, 32, 15225048, 15225048, 15225048, 15225048, 32, 32 };
+    TABLE(colour coloursManiaA[8], { 0x000020, 0x000020, 0x40D080, 0x40D080, 0x40D080, 0x40D080, 0x000020, 0x000020 });
+    TABLE(colour coloursManiaB[8], { 0x000020, 0x000020, 0xE850D8, 0xE850D8, 0xE850D8, 0xE850D8, 0x000020, 0x000020 });
 #if RETRO_USE_PLUS
-    colour coloursEncoreA[8]; //= { 32, 32, 13637704, 13637704, 13637704, 13637704, 32, 32 };
-    colour coloursEncoreB[8]; //= { 32, 32, 13676568, 13676568, 13676568, 13676568, 32, 32 };
+    TABLE(colour coloursEncoreA[8], { 0x000020, 0x000020, 0xD01848, 0xD01848, 0xD01848, 0xD01848, 0x000020, 0x000020 });
+    TABLE(colour coloursEncoreB[8], { 0x000020, 0x000020, 0xD0B018, 0xD0B018, 0xD0B018, 0xD0B018, 0x000020, 0x000020 });
 #endif
     ushort spriteIndex;
 } ObjectSSZSpotlight;

@@ -6,7 +6,7 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    uint value1[7]; //= { 4194664, 7340408, 9437576, 12059016, 15729048, 15753392, 15769800 };
+    TABLE(colour value1[7], { 0x400168, 0x700178, 0x900188, 0xB80188, 0xF00198, 0xF060B0, 0xF0A0C8 });
     ushort value2;
     ushort value3;
     ushort value4;

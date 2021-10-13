@@ -6,7 +6,7 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    int sawOffsets[10]; //= { -1376256, -983040, -1507328, -917504, -1638400, -655360, -1703936, -327680, -1703936, -262144 };
+    TABLE(int sawOffsets[10], { -0x150000, -0xF0000, -0x170000, -0xE0000, -0x190000, -0xA0000, -0x1A0000, -0x50000, -0x1A0000, -0x40000 });
     Hitbox hitboxSaw;
     Hitbox hitbox2;
     ushort aniFrames;

@@ -9,34 +9,38 @@ typedef struct {
     byte value1;
     byte value2;
     int value3;
-    bool32 value4;
+    void *value4[6];
     byte value5;
     byte value6;
     byte value7;
     byte value8;
-    byte value9;
-    int value10[8]; //= { 1, 2, 2, 2, 1, 2, 2, 3 };
+    sbyte value9;
+    TABLE(int value10[8], { 1, 2, 2, 2, 1, 2, 2, 3 });
     byte value11;
     int value12;
     byte value13;
-    int value14;
-    TextInfo value15;
-    byte value16;
-    int value17;
-    int value18;
-    int value19;
+    int value14[4];
+    Vector2 value15[4];
+    byte value16[4];
+    int value17[2];
+    int value18[4];
+    int value19[4];
     byte value20;
     byte value21;
-    bool32 value22;
-    int value23[73]; //= { 12, 6, 0, -327680, -262144, 0, 0, 7, 0, 327680, -262144, 0, 0, 10, 0, -327680, -262144, 0, 0, 11, 0, 327680, -262144, 0, 0, 10, 0, -327680, -262144, 0, 2097152, 11, 0, 327680, -262144, 0, 2097152, 10, 0, -327680, -262144, 0, 4194304, 11, 0, 327680, -262144, 0, 4194304, 8, 0, -327680, -262144, 0, 4194304, 9, 0, 327680, -262144, 0, 4194304, 12, 0, -327680, -262144, 0, 4194304, 13, 0, 327680, -262144, 0, 4194304 };
+    void *value22;
+    TABLE(int value23[73], { 12,       6,        0, -0x50000, -0x40000, 0, 0,        7,        0, 0x50000,  -0x40000, 0, 0,        10,       0,
+                             -0x50000, -0x40000, 0, 0,        11,       0, 0x50000,  -0x40000, 0, 0,        10,       0, -0x50000, -0x40000, 0,
+                             0x200000, 11,       0, 0x50000,  -0x40000, 0, 0x200000, 10,       0, -0x50000, -0x40000, 0, 0x400000, 11,       0,
+                             0x50000,  -0x40000, 0, 0x400000, 8,        0, -0x50000, -0x40000, 0, 0x400000, 9,        0, 0x50000,  -0x40000, 0,
+                             0x400000, 12,       0, -0x50000, -0x40000, 0, 0x400000, 13,       0, 0x50000,  -0x40000, 0, 0x400000 });
     ushort value24;
     ushort value25;
-    colour value26;
-    colour value27;
-    colour value28;
-    colour value29;
-    colour value30;
-    colour value31;
+    Hitbox value26;
+    Hitbox value27;
+    Hitbox value28;
+    Hitbox value29;
+    Hitbox value30;
+    Hitbox value31;
     ushort value32;
     ushort value33;
     ushort value34;
@@ -55,7 +59,7 @@ typedef struct {
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
 } EntityLaundroMobile;
 
 // Object Struct
@@ -66,7 +70,7 @@ void LaundroMobile_Update(void);
 void LaundroMobile_LateUpdate(void);
 void LaundroMobile_StaticUpdate(void);
 void LaundroMobile_Draw(void);
-void LaundroMobile_Create(void* data);
+void LaundroMobile_Create(void *data);
 void LaundroMobile_StageLoad(void);
 void LaundroMobile_EditorDraw(void);
 void LaundroMobile_EditorLoad(void);
@@ -74,5 +78,4 @@ void LaundroMobile_Serialize(void);
 
 // Extra Entity Functions
 
-
-#endif //!OBJ_LAUNDROMOBILE_H
+#endif //! OBJ_LAUNDROMOBILE_H

@@ -7,9 +7,9 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    int timer; //= 240;
+    STATIC(int timer, 240);
     int aniFrameID;
-    int aniFrameDelay[4]; //= { 240, 3, 3, 3 };
+    TABLE(int aniFrameDelay[4], { 240, 3, 3, 3 });
 } ObjectSummary;
 
 // Entity Class
