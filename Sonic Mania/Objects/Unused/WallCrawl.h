@@ -10,7 +10,7 @@ typedef struct {
     Hitbox hitbox2;
     Hitbox hitbox3;
     Hitbox hitboxProjectile;
-    ushort aniFrames;
+    uint16 aniFrames;
 } ObjectWallCrawl;
 
 // Entity Class
@@ -21,7 +21,7 @@ typedef struct {
     int timer;
     EntityPlayer *playerPtr;
     Vector2 startPos;
-    byte startDir;
+    uint8 startDir;
     Animator animator;
 } EntityWallCrawl;
 

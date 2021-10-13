@@ -13,9 +13,9 @@ typedef struct {
     Animator bodyAnimator;
     Animator tailAnimator;
     Animator animator;
-    ushort aniFrames;
+    uint16 aniFrames;
 #if RETRO_USE_PLUS
-    ushort sfxDrop;
+    uint16 sfxDrop;
 #endif
 } ObjectMonkeyDude;
 
@@ -30,9 +30,9 @@ typedef struct {
     int bodyAngles[MonkeyDude_MaxBodyParts];
     int bodyFlags[MonkeyDude_MaxBodyParts];
     int bodyTimers[MonkeyDude_MaxBodyParts];
-    byte bodyPartID;
+    uint8 bodyPartID;
     Vector2 startPos;
-    byte startDir;
+    uint8 startDir;
     int drawY;
     int moveCount;
     int nummoves;

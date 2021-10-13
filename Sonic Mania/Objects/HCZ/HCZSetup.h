@@ -11,16 +11,16 @@ typedef struct {
     int timerB;
     int timerA;
     int field_48;
-    ushort aniTiles1;
-    ushort aniTiles2;
-    ushort aniTiles3;
+    uint16 aniTiles1;
+    uint16 aniTiles2;
+    uint16 aniTiles3;
     TileLayer *bg;
 #if RETRO_USE_PLUS
     int activePlayerCount;
     bool32 playingLoopSFX;
     int waterfallSFXTimer;
-    ushort sfxWaterfall;
-    ushort sfxWaterfallLoop;
+    uint16 sfxWaterfall;
+    uint16 sfxWaterfallLoop;
 #endif
 } ObjectHCZSetup;
 

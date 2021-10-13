@@ -9,7 +9,7 @@
 typedef struct {
     RSDK_OBJECT
     int sfxCount;
-    ushort sfxList[Soundboard_SFXLimit];
+    uint16 sfxList[Soundboard_SFXLimit];
     int sfxLoopPoint[Soundboard_SFXLimit];
     bool32 (*sfxCheckCallback[Soundboard_SFXLimit])(void);
     void (*sfxUpdateCallback[Soundboard_SFXLimit])(int);
@@ -40,6 +40,6 @@ void Soundboard_EditorLoad(void);
 void Soundboard_Serialize(void);
 
 // Extra Entity Functions
-byte Soundboard_LoadSFX(const char *sfxName, uint loopPoint, bool32 (*checkCallback)(void), void (*updateCallback)(int));
+uint8 Soundboard_LoadSFX(const char *sfxName, uint32 loopPoint, bool32 (*checkCallback)(void), void (*updateCallback)(int));
 
 #endif //!OBJ_SOUNDBOARD_H

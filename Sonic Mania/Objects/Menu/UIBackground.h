@@ -14,7 +14,7 @@ typedef struct {
                                   0xF09018, 0xC0C098, 0x38B0C8, 0x88A0B8 });
 #endif
     colour *activeColours;
-    ushort aniFrames;
+    uint16 aniFrames;
 } ObjectUIBackground;
 
 // Entity Class

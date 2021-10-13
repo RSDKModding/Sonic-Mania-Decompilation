@@ -8,14 +8,14 @@
 typedef struct {
     RSDK_OBJECT
     int prizeID;
-    ushort aniFrames;
-    ushort sfxBackGlass;
-    ushort sfxCraneMove;
-    ushort sfxCraneDrop;
-    ushort sfxCraneGrab;
-    ushort sfxCraneRise;
-    ushort sfxPrizeGood;
-    ushort sfxPrizeBad;
+    uint16 aniFrames;
+    uint16 sfxBackGlass;
+    uint16 sfxCraneMove;
+    uint16 sfxCraneDrop;
+    uint16 sfxCraneGrab;
+    uint16 sfxCraneRise;
+    uint16 sfxPrizeGood;
+    uint16 sfxPrizeBad;
 } ObjectPBL_Crane;
 
 // Entity Class

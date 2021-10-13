@@ -286,7 +286,7 @@ void SP500_Unknown7(void)
         }
     }
 
-    ushort tile = 0xFFFF;
+    uint16 tile = 0xFFFF;
 
     switch (entity->field_AC) {
         default: break;
@@ -411,7 +411,7 @@ void SP500_Unknown10(void)
 {
     RSDK_THIS(SP500);
 
-    byte flags = 0;
+    uint8 flags = 0;
     if (entity->position.x == entity->xOffset) {
         flags = 1;
     }

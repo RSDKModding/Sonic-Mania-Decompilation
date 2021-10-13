@@ -19,10 +19,10 @@ typedef struct {
 #if RETRO_USE_PLUS
     int callbackCount;
     int playerFlags[4];
-    byte playerID;
-    byte playerCount;
-    byte playerIDs[4];
-    byte playerIDs2[4];
+    uint8 playerID;
+    uint8 playerCount;
+    uint8 playerIDs[4];
+    uint8 playerIDs2[4];
 #else
     int field_94;
     int callbackCount;
@@ -50,24 +50,24 @@ typedef struct {
     bool32 atlReloadFlag;
     bool32 field_15C;
     void (*timeOverState)(void);
-    ushort fgLayers;
-    ushort fgLow;
-    ushort fgHigh;
-    ushort moveLayer;
-    ushort scratchLayer;
-    ushort fgLowID;
-    ushort fgHighID;
-    ushort moveID;
-    byte fgLayerLow;
-    byte fgLayerHigh;
-    byte drawOrderLow;
-    byte drawOrderHigh;
-    byte playerDrawLow;
-    byte playerDrawHigh;
-    byte hudDrawOrder;
-    ushort sfx_fail;
+    uint16 fgLayers;
+    uint16 fgLow;
+    uint16 fgHigh;
+    uint16 moveLayer;
+    uint16 scratchLayer;
+    uint16 fgLowID;
+    uint16 fgHighID;
+    uint16 moveID;
+    uint8 fgLayerLow;
+    uint8 fgLayerHigh;
+    uint8 drawOrderLow;
+    uint8 drawOrderHigh;
+    uint8 playerDrawLow;
+    uint8 playerDrawHigh;
+    uint8 hudDrawOrder;
+    uint16 sfx_fail;
 #if RETRO_USE_PLUS
-    byte entityData[16][ENTITY_SIZE];
+    uint8 entityData[16][ENTITY_SIZE];
     int screenPosX[PLAYER_MAX];
     int screenPosY[PLAYER_MAX];
     bool32 swapGameMode;

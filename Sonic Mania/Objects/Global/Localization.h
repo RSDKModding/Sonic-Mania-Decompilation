@@ -116,7 +116,7 @@ typedef struct {
     TextInfo text;
     TextInfo strings[STR_STRING_COUNT];
     bool32 loaded;
-    byte language;
+    uint8 language;
 } ObjectLocalization;
 
 // Entity Class
@@ -140,8 +140,8 @@ void Localization_Serialize(void);
 
 // Extra Entity Functions
 void Localization_LoadStrings(void);
-void Localization_GetString(TextInfo *textInfo, byte id);
-void Localization_GetZoneName(TextInfo *info, byte zone);
-void Localization_SetZoneNameShort(TextInfo *info, byte zone);
+void Localization_GetString(TextInfo *textInfo, uint8 id);
+void Localization_GetZoneName(TextInfo *info, uint8 zone);
+void Localization_SetZoneNameShort(TextInfo *info, uint8 zone);
 
 #endif //!OBJ_LOCALIZATION_H

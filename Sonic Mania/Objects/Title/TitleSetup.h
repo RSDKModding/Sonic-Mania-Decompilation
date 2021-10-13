@@ -7,11 +7,11 @@
 typedef struct {
     RSDK_OBJECT
     bool32 altMusic;
-    ushort spriteIndex;
-    ushort sfx_MenuBleep;
-    ushort sfx_MenuAccept;
-    ushort sfx_Ring;
-    byte cheatCode[8];
+    uint16 spriteIndex;
+    uint16 sfx_MenuBleep;
+    uint16 sfx_MenuAccept;
+    uint16 sfx_Ring;
+    uint8 cheatCode[8];
 } ObjectTitleSetup;
 
 // Entity Class

@@ -16,18 +16,18 @@ typedef struct {
     Hitbox hitbox;
     Hitbox hitbox2;
     int drawType;
-    ushort field_30;
-    ushort aniFrames;
-    ushort sceneIndex;
-    ushort sfxFlipper;
-    ushort sfxFlipperStage;
+    uint16 field_30;
+    uint16 aniFrames;
+    uint16 sceneIndex;
+    uint16 sfxFlipper;
+    uint16 sfxFlipperStage;
 } ObjectPBL_Flipper;
 
 // Entity Class
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    byte minCraneID;
+    uint8 minCraneID;
     int height;
     bool32 retractable;
     int field_68;

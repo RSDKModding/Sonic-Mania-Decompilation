@@ -7,10 +7,10 @@
 typedef struct {
     RSDK_OBJECT
     TABLE(int offsets[5], { -0x20000, -0x10000, 0, 0x10000, 0x20000 });
-    ushort aniFrames;
-    ushort knuxFrames;
-    ushort sfxExplosion;
-    ushort sfxImpact;
+    uint16 aniFrames;
+    uint16 knuxFrames;
+    uint16 sfxExplosion;
+    uint16 sfxImpact;
 } ObjectTornado;
 
 // Entity Class

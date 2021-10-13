@@ -83,7 +83,7 @@ void BSS_Player_Draw(void)
     drawPos.x = RSDK_screens->centerX << 16;
     RSDK.DrawSprite(&entity->playerAnimator, &drawPos, true);
 
-    byte charID = globals->playerID & 0xFF;
+    uint8 charID = globals->playerID & 0xFF;
     if (charID == ID_TAILS && entity->playerAnimator.animationID == 1)
         RSDK.DrawSprite(&entity->tailAnimator, &drawPos, true);
 #if RETRO_USE_PLUS

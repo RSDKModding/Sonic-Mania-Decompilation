@@ -8,15 +8,15 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    short objectIDs[0x100];
-    void (*draw[0x100])(void);
-    void (*spawn[0x100])(void);
+    int16 objectIDs[0x100];
+    StateMachine(draw[0x100]);
+    StateMachine(spawn[0x100]);
     Animator animator;
     int objID;
     int itemCount;
     bool32 debugActive;
-    byte itemSubType;
-    byte subtypeCount;
+    uint8 itemSubType;
+    uint8 subtypeCount;
     int field_A2C;
 } ObjectDebugMode;
 
@@ -41,6 +41,6 @@ void DebugMode_Serialize(void);
 
 // Extra Entity Functions
 void DebugMode_NullState(void);
-void DebugMode_AddObject(ushort id, void (*draw)(void), void (*spawn)(void));
+void DebugMode_AddObject(uint16 id, void (*draw)(void), void (*spawn)(void));
 
 #endif //!OBJ_DEBUGMODE_H

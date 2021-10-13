@@ -108,7 +108,7 @@ void UIDiorama_StageLoad(void)
     RSDK.SetDebugValue("Diorama Alt", &UIDiorama->dioramaAlt, DTYPE_UINT8, 0, 2);
 }
 
-void UIDiorama_ManageStates(byte dioramaID)
+void UIDiorama_ManageStates(uint8 dioramaID)
 {
     RSDK_THIS(UIDiorama);
     int ids[] = { 0x00, 0x0C, 0x0C, 0x01, 0x03, 0x0F, 0x0D, 0x0E };
@@ -545,7 +545,7 @@ void UIDiorama_StateDraw_ManiaMode(void)
             drawPos   = entity->position;
             int width = frameWidths[i] << 16;
 
-            int offset2 = -(int)((offsets[i] << 8) + ((frameSpeeds[i] * (uint)(entity->field_BC >> 4)) >> 4));
+            int offset2 = -(int)((offsets[i] << 8) + ((frameSpeeds[i] * (uint32)(entity->field_BC >> 4)) >> 4));
             while (offset2 < -0x10000 * frameWidths[i]) {
                 offset2 += width;
             }

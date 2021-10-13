@@ -132,7 +132,7 @@ void ItemBox_Create(void *data)
         entity->updateRange.x = 0x400000;
         entity->updateRange.y = 0x400000;
         entity->visible       = true;
-        if (entity->planeFilter > 0 && ((byte)entity->planeFilter - 1) & 2)
+        if (entity->planeFilter > 0 && ((uint8)entity->planeFilter - 1) & 2)
             entity->drawOrder = Zone->drawOrderHigh;
         else
             entity->drawOrder = Zone->drawOrderLow;
@@ -355,7 +355,7 @@ void ItemBox_CheckHit(void)
     RSDK_THIS(ItemBox);
     foreach_active(Player, player)
     {
-        if (entity->planeFilter <= 0 || player->collisionPlane == (((byte)entity->planeFilter - 1) & 1)) {
+        if (entity->planeFilter <= 0 || player->collisionPlane == (((uint8)entity->planeFilter - 1) & 1)) {
 #if RETRO_USE_PLUS
             if (player->characterID == ID_MIGHTY && player->jumpAbilityTimer > 1 && !entity->parent) {
                 if (RSDK.CheckObjectCollisionTouchCircle(player, 0x1000000, entity, 0x100000)) {
@@ -374,7 +374,7 @@ void ItemBox_CheckHit(void)
                 entity->position.y -= entity->unknownPos.y;
                 int px             = player->position.x;
                 int py             = player->position.y;
-                byte side          = Player_CheckCollisionBox(player, entity, &ItemBox->hitbox);
+                uint8 side          = Player_CheckCollisionBox(player, entity, &ItemBox->hitbox);
                 player->position.x = px;
                 player->position.y = py;
                 entity->position.x += entity->unknownPos.x;
@@ -416,7 +416,7 @@ void ItemBox_CheckHit(void)
                     entity->position.y -= entity->unknownPos.y;
                     int px             = player->position.x;
                     int py             = player->position.y;
-                    byte side          = Player_CheckCollisionBox(player, entity, &ItemBox->hitbox);
+                    uint8 side          = Player_CheckCollisionBox(player, entity, &ItemBox->hitbox);
                     player->position.x = px;
                     player->position.y = py;
                     entity->position.x += entity->unknownPos.x;
@@ -519,7 +519,7 @@ void ItemBox_GivePowerup(void)
                         return;
                     }
                     int charID = player->characterID;
-                    Player_ChangeCharacter(player, (byte)globals->stock);
+                    Player_ChangeCharacter(player, (uint8)globals->stock);
                     globals->stock >>= 8;
 
                     if (globals->stock) {
@@ -545,8 +545,8 @@ void ItemBox_GivePowerup(void)
                 return;
 #if RETRO_USE_PLUS
             case ITEMBOX_RANDOM: {
-                byte playerIDs[5]    = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
-                byte newPlayerIDs[5] = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
+                uint8 playerIDs[5]    = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
+                uint8 newPlayerIDs[5] = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
                 if (player->playerAnimator.animationID == ANI_TRANSFORM) {
                     RSDK.PlaySfx(Player->sfx_SwapFail, false, 255);
                 }
@@ -764,7 +764,7 @@ void ItemBox_GivePowerup(void)
                         default: entity->type = ITEMBOX_RING; break;
                     }
                     player = (EntityPlayer *)entity->parent;
-                    if ((uint)entity->type <= ITEMBOX_STOCK)
+                    if ((uint32)entity->type <= ITEMBOX_STOCK)
                         continue;
                 }
                 return;

@@ -132,7 +132,7 @@ void Fan_StaticUpdate(void)
             int count = 0;
             foreach_active(Fan, fan)
             {
-                ushort tile = RSDK.GetTileInfo(Zone->fgHigh, fan->position.x >> 20, fan->position.y >> 20);
+                uint16 tile = RSDK.GetTileInfo(Zone->fgHigh, fan->position.x >> 20, fan->position.y >> 20);
                 if (fan->state && fan->state != Fan_ProcessAnimationSpeed_Slow && tile == 0xFFFF && RSDK.CheckOnScreen(fan, &range))
                     ++count;
             }

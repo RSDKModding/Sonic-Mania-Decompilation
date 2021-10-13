@@ -10,18 +10,18 @@ typedef struct {
     Hitbox hitbox2;
     Hitbox hitbox3;
     Hitbox hitbox4;
-    ushort spriteIndex;
+    uint16 spriteIndex;
 } ObjectChopper;
 
 // Entity Class
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    byte type;
-    ushort timer;
+    uint8 type;
+    uint16 timer;
     bool32 charge;
     Vector2 startPos;
-    byte startDir;
+    uint8 startDir;
     Animator animator;
 } EntityChopper;
 

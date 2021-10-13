@@ -6,13 +6,13 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    ushort aniFrames;
+    uint16 aniFrames;
 } ObjectUICharButton;
 
 // Entity Class
 typedef struct {
 	MANIA_UI_ITEM_BASE
-    byte characterID;
+    uint8 characterID;
     int field_108;
     int field_10C;
     int field_110;

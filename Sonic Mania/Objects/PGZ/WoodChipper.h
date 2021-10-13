@@ -6,13 +6,13 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    ushort aniFrames;
+    uint16 aniFrames;
     Hitbox hitboxStump;
     Hitbox hitboxWood;
     Hitbox hitboxRazor;
-    ushort sfxChipperChips;
+    uint16 sfxChipperChips;
     bool32 playingChipSFX;
-    ushort sfxChipperWood;
+    uint16 sfxChipperWood;
     bool32 playingWoodSFX;
 } ObjectWoodChipper;
 
@@ -20,12 +20,12 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    ushort size;
+    uint16 size;
     int speed;
     int timer;
     Vector2 field_68[3];
     int field_80;
-    byte activePlayers;
+    uint8 activePlayers;
     Animator animator1;
     Animator animator2;
 } EntityWoodChipper;

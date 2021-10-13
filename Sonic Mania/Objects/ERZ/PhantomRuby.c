@@ -64,10 +64,10 @@ void PhantomRuby_StageLoad(void)
     PhantomRuby->sfx_R[6]  = RSDK.GetSFX("Ruby/RedCube_R.wav");
 }
 
-void PhantomRuby_PlaySFX(byte sfxID)
+void PhantomRuby_PlaySFX(uint8 sfxID)
 {
     if (sfxID) {
-        byte sfx    = sfxID - 1;
+        uint8 sfx    = sfxID - 1;
         int channel = RSDK.PlaySfx(PhantomRuby->sfx_L[sfx], 0, 0);
         RSDK.SetChannelAttributes(channel, 1.0, -1.0, 1.0);
         channel = RSDK.PlaySfx(PhantomRuby->sfx_R[sfx], 0, 0);

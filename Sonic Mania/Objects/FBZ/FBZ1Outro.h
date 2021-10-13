@@ -7,7 +7,7 @@
 typedef struct {
     RSDK_OBJECT
     int field_4;
-    ushort sfxDrop;
+    uint16 sfxDrop;
     EntityBigSqueeze *boss1;
     EntityBigSqueeze *boss2;
     EntityBigSqueeze *boss3;

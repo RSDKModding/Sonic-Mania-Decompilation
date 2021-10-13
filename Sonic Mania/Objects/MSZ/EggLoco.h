@@ -6,9 +6,9 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    ushort aniFrames;
-    ushort sfxSmoke;
-    ushort sfxWhistle;
+    uint16 aniFrames;
+    uint16 sfxSmoke;
+    uint16 sfxWhistle;
 } ObjectEggLoco;
 
 // Entity Class

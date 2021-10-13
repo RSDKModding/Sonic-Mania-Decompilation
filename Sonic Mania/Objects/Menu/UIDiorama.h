@@ -7,19 +7,19 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    ushort aniFrames;
-    ushort capsuleFrames;
-    ushort sonicFrames;
-    ushort tailsFrames;
-    ushort knuxFramesAIZ;
-    ushort knuxFramesHCZ;
-    ushort mightyFrames;
-    ushort rayFrames;
-    ushort ringFrames;
-    ushort speedGateFrames;
-    ushort bssSonicFrames;
-    ushort bssFrames;
-    byte dioramaAlt;
+    uint16 aniFrames;
+    uint16 capsuleFrames;
+    uint16 sonicFrames;
+    uint16 tailsFrames;
+    uint16 knuxFramesAIZ;
+    uint16 knuxFramesHCZ;
+    uint16 mightyFrames;
+    uint16 rayFrames;
+    uint16 ringFrames;
+    uint16 speedGateFrames;
+    uint16 bssSonicFrames;
+    uint16 bssFrames;
+    uint8 dioramaAlt;
 } ObjectUIDiorama;
 
 // Entity Class
@@ -28,7 +28,7 @@ typedef struct {
     int dioramaID;
     int dioramaSubID;
     int timer;
-    byte field_64;
+    uint8 field_64;
     bool32 flag;
     StateMachine(state);
     StateMachine(stateDraw);
@@ -177,7 +177,7 @@ void UIDiorama_EditorLoad(void);
 void UIDiorama_Serialize(void);
 
 // Extra Entity Functions
-void UIDiorama_ManageStates(byte dioramaID);
+void UIDiorama_ManageStates(uint8 dioramaID);
 void UIDiorama_SetText(TextInfo *info);
 
 void UIDiorama_State_ManiaMode_Alt0(void);

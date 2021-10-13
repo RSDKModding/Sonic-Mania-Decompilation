@@ -6,14 +6,14 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    ushort jumpPressState;
-    ushort field_6;
-    ushort sonicSpriteIndex;
-    ushort tailsSpriteIndex;
-    ushort knuxSpriteIndex;
-    ushort mightySpriteIndex;
-    ushort raySpriteIndex;
-    ushort sfx_Jump;
+    uint16 jumpPressState;
+    uint16 field_6;
+    uint16 sonicSpriteIndex;
+    uint16 tailsSpriteIndex;
+    uint16 knuxSpriteIndex;
+    uint16 mightySpriteIndex;
+    uint16 raySpriteIndex;
+    uint16 sfx_Jump;
 } ObjectBSS_Player;
 
 // Entity Class
@@ -30,8 +30,8 @@ typedef struct {
     bool32 jumpPress;
     Animator playerAnimator;
     Animator tailAnimator;
-    ushort spriteIndex;
-    ushort field_AE;
+    uint16 spriteIndex;
+    uint16 field_AE;
 #if RETRO_USE_TOUCH_CONTROLS
     int touchJump;
 #endif

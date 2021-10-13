@@ -19,8 +19,8 @@ typedef struct {
     Vector2 amplitude;
     int node;
     bool32 hasTension;
-    sbyte frameID;
-    byte collision;
+    int8 frameID;
+    uint8 collision;
     Vector2 tileOrigin;
     Vector2 centerPos;
     Vector2 drawPos;
@@ -28,17 +28,17 @@ typedef struct {
     int stood;
     int collapseDelay;
     int stoodAngle;
-    byte stoodPlayers;
-    byte pushPlayersL;
-    byte pushPlayersR;
+    uint8 stoodPlayers;
+    uint8 pushPlayersL;
+    uint8 pushPlayersR;
     Hitbox hitbox;
     Animator animator;
     int childCount;
 
-    ushort interval;
-    ushort intervalOffset;
-    ushort flipCount;
-    byte timer;
+    uint16 interval;
+    uint16 intervalOffset;
+    uint16 flipCount;
+    uint8 timer;
 } EntityConveyorPlatform;
 
 // Object Struct

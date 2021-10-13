@@ -89,7 +89,7 @@ void UIVsResults_SetupSprites(void)
     RSDK.SetSpriteAnimation(UIVsResults->aniFrames, 2, &entity->animator2, true, frame);
     RSDK.SetSpriteAnimation(UIVsResults->aniFrames, 18, &entity->animator4, true, 0);
 
-    byte *rowLabels = &entity->row0Label;
+    uint8 *rowLabels = &entity->row0Label;
     for (int r = 0; r < entity->numRows; ++r) {
         RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, 13, &entity->rowAnimators[r], true, rowLabels[r]);
     }

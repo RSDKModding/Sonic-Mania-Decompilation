@@ -7,8 +7,8 @@
 typedef struct {
     RSDK_OBJECT
     bool32 hasAchievement;
-    byte timer;
-    ushort spriteIndex;
+    uint8 timer;
+    uint16 spriteIndex;
     Hitbox hitbox;
     Hitbox burnHitbox;
 } ObjectSpikeLog;
@@ -17,7 +17,7 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    byte frame;
+    uint8 frame;
     Animator animator;
 } EntitySpikeLog;
 

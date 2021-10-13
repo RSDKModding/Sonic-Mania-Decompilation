@@ -33,7 +33,7 @@ void Explosion_Create(void* data)
     RSDK_THIS(Explosion);
     entity->active  = ACTIVE_NORMAL;
     entity->visible = true;
-    if (entity->planeFilter > 0 && ((byte)entity->planeFilter - 1) & 2)
+    if (entity->planeFilter > 0 && ((uint8)entity->planeFilter - 1) & 2)
         entity->drawOrder = Zone->drawOrderHigh;
     else
         entity->drawOrder = Zone->drawOrderLow;

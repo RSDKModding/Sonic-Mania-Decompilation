@@ -10,9 +10,9 @@ typedef struct {
     int aniTileDelay;
     int aniTileFrame;
     bool32 flag;
-    short petalTimer;
-    ushort aniTiles1;
-    ushort aniTiles2;
+    int16 petalTimer;
+    uint16 aniTiles1;
+    uint16 aniTiles2;
 } ObjectPSZ2Setup;
 
 // Entity Class

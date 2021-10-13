@@ -7,7 +7,7 @@
 typedef struct {
     RSDK_OBJECT
     Hitbox hitbox;
-    ushort spriteIndex;
+    uint16 spriteIndex;
 } ObjectMotobug;
 
 // Entity Class
@@ -17,7 +17,7 @@ typedef struct {
     int turnTimer;
     int timer;
     Vector2 startPos;
-    byte startDir;
+    uint8 startDir;
     bool32 wasTurning;
     Animator animator;
 } EntityMotobug;

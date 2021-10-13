@@ -6,7 +6,7 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    ushort aniFrames;
+    uint16 aniFrames;
     Entity *entityPtr;
 #if RETRO_USE_PLUS
     bool32 isEncoreMode;
@@ -20,7 +20,7 @@ typedef struct {
 #if !RETRO_USE_PLUS
     int value;
 #endif
-    byte zoneID;
+    uint8 zoneID;
     TextInfo text1;
     TextInfo text2;
 #if !RETRO_USE_PLUS
@@ -37,13 +37,13 @@ typedef struct {
     int field_140;
     int announceTimer;
 #endif
-    byte field_138;
-    byte characterID;
-    byte actID;
+    uint8 field_138;
+    uint8 characterID;
+    uint8 actID;
 #if RETRO_USE_PLUS
     bool32 isEncore;
 #else
-    byte rank;
+    uint8 rank;
 #endif
     int field_14C;
     int field_150;

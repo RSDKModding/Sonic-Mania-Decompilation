@@ -15,19 +15,19 @@ typedef struct {
     int field_1C;
     int field_20;
     int field_24;
-    ushort field_28;
-    ushort ufoModel;
+    uint16 field_28;
+    uint16 ufoModel;
     int field_2C;
-    ushort emeraldModel;
-    ushort sceneIndex;
+    uint16 emeraldModel;
+    uint16 sceneIndex;
 } ObjectUFO_Circuit;
 
 // Entity Class
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    byte mode;
-    byte throttle;
+    uint8 mode;
+    uint8 throttle;
     bool32 startNode;
     bool32 reverse;
     void *curNode;

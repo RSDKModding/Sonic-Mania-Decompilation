@@ -84,7 +84,7 @@ void Localization_LoadStrings(void)
 #endif
 }
 
-void Localization_GetString(TextInfo *textInfo, byte id)
+void Localization_GetString(TextInfo *textInfo, uint8 id)
 {
     memset(textInfo, 0, sizeof(TextInfo));
     RSDK.SetText(textInfo, "", 0);
@@ -95,7 +95,7 @@ void Localization_GetString(TextInfo *textInfo, byte id)
     }
 }
 
-void Localization_GetZoneName(TextInfo *info, byte zone)
+void Localization_GetZoneName(TextInfo *info, uint8 zone)
 {
     switch (zone) {
         case 0: RSDK.SetText(info, "GREEN HILL", 0); break;
@@ -114,7 +114,7 @@ void Localization_GetZoneName(TextInfo *info, byte zone)
         default: break;
     }
 }
-void Localization_SetZoneNameShort(TextInfo *info, byte zone)
+void Localization_SetZoneNameShort(TextInfo *info, uint8 zone)
 {
     switch (zone) {
         case 0: RSDK.SetText(info, "GHZ", false); break;

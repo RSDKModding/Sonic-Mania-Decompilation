@@ -218,11 +218,11 @@ void Press_HandleMovement(void)
     RSDK.ProcessAnimation(&entity->threadAnimator);
     RSDK.ProcessAnimation(&entity->bumperAnimator);
     Press_Move();
-    uint speed        = entity->speed;
+    uint32 speed        = entity->speed;
     int oldBottom    = entity->offBottom;
     int newBottom    = oldBottom - speed;
     entity->offBottom = oldBottom - speed;
-    uint rot          = entity->rotation;
+    uint32 rot          = entity->rotation;
     entity->threadSprY += (speed >> 11);
     entity->threadSprY &= 0x7FF;
     int oldTop       = entity->offTop;
@@ -242,7 +242,7 @@ void Press_HandleMovement(void)
         Camera_ShakeScreen(0, 0, 5);
         entity->state = Press_FinalCrush;
     }
-    uint waitTime = 0;
+    uint32 waitTime = 0;
     bool32 top = false, bottom = false;
     int floorOffset   = (oldBottom & 0xFFFF0000) - (entity->offBottom & 0xFFFF0000);
     int actualPos    = entity->position.y;

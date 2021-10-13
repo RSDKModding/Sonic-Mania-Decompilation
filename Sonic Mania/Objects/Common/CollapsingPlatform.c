@@ -190,7 +190,7 @@ void CollapsingPlatform_State_Left(void)
 {
     RSDK_THIS(CollapsingPlatform);
 
-    ushort *tiles = entity->storedTiles;
+    uint16 *tiles = entity->storedTiles;
     int startTX   = (entity->position.x >> 20) - (entity->size.x >> 21);
     int startTY   = (entity->position.y >> 20) - (entity->size.y >> 21);
     int tx        = entity->position.x - (entity->size.x >> 1) + 0x80000;
@@ -221,7 +221,7 @@ void CollapsingPlatform_State_Right(void)
 {
     RSDK_THIS(CollapsingPlatform);
 
-    ushort *tiles = entity->storedTiles;
+    uint16 *tiles = entity->storedTiles;
     int startTX   = (entity->position.x >> 20) - (entity->size.x >> 21);
     int startTY   = (entity->position.y >> 20) - (entity->size.y >> 21);
     int tx        = entity->position.x - (entity->size.x >> 1) + 0x80000;
@@ -253,7 +253,7 @@ void CollapsingPlatform_State_Center(void)
 {
     RSDK_THIS(CollapsingPlatform);
 
-    ushort *tiles = entity->storedTiles;
+    uint16 *tiles = entity->storedTiles;
     int startTX   = (entity->position.x >> 20) - (entity->size.x >> 21);
     int startTY   = (entity->position.y >> 20) - (entity->size.y >> 21);
     int tx        = entity->position.x - (entity->size.x >> 1) + 0x80000;

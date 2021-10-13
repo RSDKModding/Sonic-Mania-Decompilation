@@ -9,8 +9,8 @@ typedef struct {
     Hitbox hitboxHurt;
     Hitbox hitboxRange;
     Hitbox hitboxShrapnel;
-    ushort aniFrames;
-    ushort sfxExplosion;
+    uint16 aniFrames;
+    uint16 sfxExplosion;
 } ObjectBomb;
 
 // Entity Class
@@ -19,7 +19,7 @@ typedef struct {
     StateMachine(state);
     int planeFilter;
     Vector2 startPos;
-    byte startDir;
+    uint8 startDir;
     int timer;
     int fuseOffset;
     Animator animator;

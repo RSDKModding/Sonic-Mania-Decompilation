@@ -18,23 +18,23 @@ typedef enum {
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    ushort spriteIndex;
+    uint16 spriteIndex;
     Hitbox hitbox;
     Hitbox itemBoxHitbox;
-    ushort sfx_SignPost;
-    ushort sfx_SignPost2P;
-    ushort sfx_Twinkle;
-    ushort sfx_BubbleBounce;
-    ushort sfx_Slide;
-    byte maxPlayerCount;
+    uint16 sfx_SignPost;
+    uint16 sfx_SignPost2P;
+    uint16 sfx_Twinkle;
+    uint16 sfx_BubbleBounce;
+    uint16 sfx_Slide;
+    uint8 maxPlayerCount;
 } ObjectSignPost;
 
 // Entity Class
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    byte type;
-    ushort field_5D;
+    uint8 type;
+    uint16 field_5D;
     char field_5F;
     Vector2 vsBoundsSize;
     Vector2 vsBoundsOffset;
@@ -53,7 +53,7 @@ typedef struct {
     Animator sidebarData;
     Animator postTopData;
     Animator standData;
-    byte activePlayers;
+    uint8 activePlayers;
     bool32 debugObj;
 } EntitySignPost;
 

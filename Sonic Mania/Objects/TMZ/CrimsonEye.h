@@ -12,10 +12,10 @@ typedef struct {
             -0x20000, 10, 0, 0x12000,  -0x20000, 11, 0, 0x24000,  -0x20000, 12, 0, -0x22000, -0x1E000, 13, 0, -0x11000, -0x1E000, 14, 0, 0x11000,
             -0x1E000, 15, 0, 0x22000,  -0x1E000, 16, 0, -0x20000, -0x1C000, 17, 0, -0x10000, -0x1C000, 18, 0, 0x10000,  -0x1C000, 19, 0, 0x20000,
             -0x1C000, 20, 0, -0x1A000, -0x1A000, 21, 0, -0xD000,  -0x1A000, 22, 0, 0xD000,   -0x1A000, 23, 0, 0x1A000,  -0x1A000 });
-    byte value2;
-    byte value3;
-    byte value4;
-    byte value5;
+    uint8 value2;
+    uint8 value3;
+    uint8 value4;
+    uint8 value5;
     int value6;
     int value7;
     TextInfo value8;
@@ -27,9 +27,9 @@ typedef struct {
     int value14;
     int value15;
     int value16;
-    byte value17;
+    uint8 value17;
     int value18;
-    ushort aniFrames;
+    uint16 aniFrames;
     Hitbox hitbox1;
     Hitbox hitbox2;
     Hitbox hitbox3;
@@ -37,16 +37,16 @@ typedef struct {
     Hitbox hitbox5;
     Hitbox hitbox6;
     Hitbox hitbox7;
-    ushort sfxHit;
-    ushort sfxExplosion;
-    ushort sfxHover;
-    ushort sfxHover2;
-    ushort sfxElevator;
-    ushort sfxShot;
-    ushort sfxBeep;
-    ushort sfxHullClose;
-    ushort sfxButton;
-    ushort sfxImpact;
+    uint16 sfxHit;
+    uint16 sfxExplosion;
+    uint16 sfxHover;
+    uint16 sfxHover2;
+    uint16 sfxElevator;
+    uint16 sfxShot;
+    uint16 sfxBeep;
+    uint16 sfxHullClose;
+    uint16 sfxButton;
+    uint16 sfxImpact;
     TileLayer *liftBG;
     void *value38;
 } ObjectCrimsonEye;

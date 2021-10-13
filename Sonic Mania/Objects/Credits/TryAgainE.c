@@ -76,7 +76,7 @@ void TryAgainE_Create(void *data)
         RSDK.SetSpriteAnimation(TryAgainE->aniFrames, 2, &entity->animator3, true, 3);
 
         int id        = -1;
-        byte playerID = globals->playerID & 0xFF;
+        uint8 playerID = globals->playerID & 0xFF;
         if (playerID) {
             do {
                 playerID >>= 1;
@@ -138,14 +138,14 @@ void TryAgainE_Unknown2(void)
     if ((entity->timer & 0x7F) == 1) {
         if ((entity->timer & 0x80) != 0 && entity->animator2.animationID == 2)
             RSDK.SetSpriteAnimation(TryAgainE->aniFrames, 1, &entity->animator2, true, 0);
-        if ((sbyte)(entity->timer & 0xFF) >= 0 && entity->animator3.animationID == 2)
+        if ((int8)(entity->timer & 0xFF) >= 0 && entity->animator3.animationID == 2)
             RSDK.SetSpriteAnimation(TryAgainE->aniFrames, 1, &entity->animator3, true, 0);
         TryAgainE_Unknown1();
     }
     else if ((entity->timer & 0x7F) == 59) {
         if ((entity->timer & 0x80) == 0 && entity->animator2.animationID == 1)
             RSDK.SetSpriteAnimation(TryAgainE->aniFrames, 2, &entity->animator2, true, 0);
-        if ((sbyte)(entity->timer & 0xFF) < 0 && entity->animator3.animationID == 1)
+        if ((int8)(entity->timer & 0xFF) < 0 && entity->animator3.animationID == 1)
             RSDK.SetSpriteAnimation(TryAgainE->aniFrames, 2, &entity->animator3, true, 0);
     }
     if (++entity->timer == 1) {

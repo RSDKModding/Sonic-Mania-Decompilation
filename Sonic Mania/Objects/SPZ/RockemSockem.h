@@ -10,8 +10,8 @@
 typedef struct {
     RSDK_OBJECT
     Hitbox hitbox;
-    ushort aniFrames;
-    ushort sfxRockemSockem;
+    uint16 aniFrames;
+    uint16 sfxRockemSockem;
 } ObjectRockemSockem;
 
 // Entity Class

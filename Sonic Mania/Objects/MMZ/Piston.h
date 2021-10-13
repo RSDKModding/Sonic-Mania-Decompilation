@@ -6,8 +6,8 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-	ushort landSFX;
-	ushort launchSFX;
+	uint16 landSFX;
+	uint16 launchSFX;
 } ObjectPiston;
 
 // Entity Class
@@ -15,12 +15,12 @@ typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateCollide);
-    uint type;
+    uint32 type;
     Vector2 amplitude;
     int speed;
     bool32 reverse;
-    byte size;
-    byte collisionType;
+    uint8 size;
+    uint8 collisionType;
     Vector2 targetPos;
     Vector2 centerPos;
     Vector2 drawPos;
@@ -28,15 +28,15 @@ typedef struct {
     int stood;
     int moveTimer;
     int stoodAngle;
-    byte stoodPlayers;
-    byte pushPlayersL;
-    byte pushPlayersR;
-    byte field_A7;
+    uint8 stoodPlayers;
+    uint8 pushPlayersL;
+    uint8 pushPlayersR;
+    uint8 field_A7;
     Hitbox hitbox;
     Animator animator;
-    uint childCount;
-    ushort interval;
-    ushort intervalOffset;
+    uint32 childCount;
+    uint16 interval;
+    uint16 intervalOffset;
     int distance;
     int spawnType;
 } EntityPiston;

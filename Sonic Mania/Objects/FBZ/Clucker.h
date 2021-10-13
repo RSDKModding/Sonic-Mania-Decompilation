@@ -10,8 +10,8 @@ typedef struct {
     Hitbox hitboxRange;
     Hitbox hitboxSolid;
     Hitbox hitbox4;
-    ushort aniFrames;
-    ushort sfxShot;
+    uint16 aniFrames;
+    uint16 sfxShot;
 } ObjectClucker;
 
 // Entity Class
@@ -20,8 +20,8 @@ typedef struct {
     StateMachine(state);
     int yOffset;
     int field_60;
-    byte timer;
-    ushort delay;
+    uint8 timer;
+    uint16 delay;
     bool32 hasChildren;
     Animator animator;
 } EntityClucker;

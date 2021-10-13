@@ -14,14 +14,14 @@ typedef struct {
     int xVelocityUnknown[3];
     TABLE(int angleOffsets1[6], { -64, -32, -16, 16, 32, 64 });
     TABLE(int angleOffsets2[6], { 32, 48, 64, 80, 96, 128 });
-    ushort spriteIndex;
-    ushort sfx_BossHit;
-    ushort sfx_Explosion;
-    ushort sfx_Drop;
-    ushort sfx_Impact;
-    ushort sfx_Assemble;
-    ushort sfx_Rotate;
-    ushort sfx_Sharp;
+    uint16 spriteIndex;
+    uint16 sfx_BossHit;
+    uint16 sfx_Explosion;
+    uint16 sfx_Drop;
+    uint16 sfx_Impact;
+    uint16 sfx_Assemble;
+    uint16 sfx_Rotate;
+    uint16 sfx_Sharp;
 } ObjectDDWrecker;
 
 // Entity Class
@@ -39,7 +39,7 @@ typedef struct {
     int timer2;
     int angle3;
     int arcOffset;
-    ushort slots[6];
+    uint16 slots[6];
     void *bodyA;
     void *bodyB;
     int field_A0;

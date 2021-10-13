@@ -9,7 +9,7 @@ typedef struct {
     int palTimer;
     int timer;
     int angle;
-    ushort spriteIndex;
+    uint16 spriteIndex;
 } ObjectTitleBG;
 
 // Entity Class

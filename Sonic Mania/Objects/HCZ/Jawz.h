@@ -7,13 +7,13 @@
 typedef struct {
     RSDK_OBJECT
     Hitbox hitbox;
-    ushort aniFrames;
+    uint16 aniFrames;
 } ObjectJawz;
 
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    byte triggerDir;
+    uint8 triggerDir;
     StateMachine(state);
     Vector2 startPos;
     Animator animator;

@@ -7,7 +7,7 @@
 typedef struct {
     RSDK_OBJECT
     Hitbox hitbox;
-    ushort aniFrames;
+    uint16 aniFrames;
 } ObjectOrbitSpike;
 
 // Entity Class
@@ -15,7 +15,7 @@ typedef struct {
     RSDK_ENTITY
     Animator animator;
     Vector2 amplitude;
-    byte offset;
+    uint8 offset;
     Vector2 center;
 } EntityOrbitSpike;
 

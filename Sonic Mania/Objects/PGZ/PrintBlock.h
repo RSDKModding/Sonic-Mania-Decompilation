@@ -7,17 +7,17 @@
 typedef struct {
     RSDK_OBJECT
     Animator animator;
-    ushort aniFrames;
-    ushort sfxLetter;
+    uint16 aniFrames;
+    uint16 sfxLetter;
 } ObjectPrintBlock;
 
 // Entity Class
 typedef struct {
     MANIA_PLATFORM_BASE
-    ushort interval;
-    ushort intervalOffset;
-    ushort duration;
-    byte letter;
+    uint16 interval;
+    uint16 intervalOffset;
+    uint16 duration;
+    uint8 letter;
 } EntityPrintBlock;
 
 // Object Struct

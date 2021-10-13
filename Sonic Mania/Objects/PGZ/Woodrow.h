@@ -10,25 +10,25 @@ typedef struct {
     Hitbox hitbox2;
     Hitbox hitbox3;
     Hitbox hitbox4;
-    ushort aniFrames;
-    ushort sfxExplosion;
-    ushort sfxPeck;
+    uint16 aniFrames;
+    uint16 sfxExplosion;
+    uint16 sfxPeck;
 } ObjectWoodrow;
 
 // Entity Class
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    byte type;
+    uint8 type;
     int distUp;
     int distDown;
-    byte field_68;
-    byte bombCount;
-    byte field_6A;
-    byte field_6B;
+    uint8 field_68;
+    uint8 bombCount;
+    uint8 field_6A;
+    uint8 field_6B;
     int field_6C;
     Vector2 startPos;
-    byte startDir;
+    uint8 startDir;
     Entity *parent;
     Animator animator;
 } EntityWoodrow;

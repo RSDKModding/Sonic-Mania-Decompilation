@@ -10,7 +10,7 @@ typedef struct {
     TABLE(int array1[8], { 0, 16, 64, 96, 112, 144, 160, 192 });
     TABLE(int array2[8], { 0, -8, 32, 64, 64, 64, 64, 64 });
     TABLE(int array3[8], { 0, -24, 8, 8, 8, 8, 8, 8 });
-    ushort aniFrames;
+    uint16 aniFrames;
 } ObjectUncurlPlant;
 
 // Entity Class

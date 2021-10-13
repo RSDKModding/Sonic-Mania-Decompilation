@@ -6,19 +6,19 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    ushort aniFrames;
+    uint16 aniFrames;
     Hitbox hitbox;
 } ObjectYoyoPulley;
 
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    byte activePlayers;
+    uint8 activePlayers;
     Animator animator1;
     Animator animator3;
     Animator animator2;
     Animator animator4;
-    byte pullDir;
+    uint8 pullDir;
     int length;
     int speed;
     int field_C8;

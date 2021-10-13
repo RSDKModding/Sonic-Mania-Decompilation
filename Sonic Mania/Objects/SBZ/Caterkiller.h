@@ -9,7 +9,7 @@
 typedef struct {
     RSDK_OBJECT
     Hitbox hitbox;
-    ushort aniFrames;
+    uint16 aniFrames;
 } ObjectCaterkiller;
 
 // Entity Class
@@ -19,12 +19,12 @@ typedef struct {
     StateMachine(stateDraw);
     int planeFilter;
     Vector2 bodyPosition[Caterkiller_BodyCount];
-    byte bodyDirection[Caterkiller_BodyCount];
-    byte bodyOffset[Caterkiller_BodyCount];
-    byte headOffset;
-    byte timer;
+    uint8 bodyDirection[Caterkiller_BodyCount];
+    uint8 bodyOffset[Caterkiller_BodyCount];
+    uint8 headOffset;
+    uint8 timer;
     Vector2 startPos;
-    byte startDir;
+    uint8 startDir;
     Animator animator;
     Animator animator2;
 } EntityCaterkiller;

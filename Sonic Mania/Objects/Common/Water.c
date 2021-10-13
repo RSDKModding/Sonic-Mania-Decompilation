@@ -358,7 +358,7 @@ void Water_SpawnBubble(EntityPlayer *player, int id)
     }
 }
 
-void Water_SpawnCountDownBubble(EntityPlayer *player, int id, byte bubbleID)
+void Water_SpawnCountDownBubble(EntityPlayer *player, int id, uint8 bubbleID)
 {
     EntityWater *bubble = CREATE_ENTITY(Water, intToVoid(8), player->position.x, player->position.y);
     if (player->direction) {
@@ -400,7 +400,7 @@ void Water_State_Palette(void)
 
         if (loopFlag) {
             EntityWater *childPtr = NULL;
-            ushort underwater        = 0;
+            uint16 underwater        = 0;
             foreach_active(Water, water)
             {
                 if (water->type == 1) {

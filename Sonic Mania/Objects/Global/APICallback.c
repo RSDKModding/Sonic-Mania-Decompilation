@@ -470,7 +470,7 @@ int APICallback_GetControllerType(int id)
         return RSDK_info->platform == PLATFORM_DEV;
 }
 
-int APICallback_FetchLeaderboardData(byte zoneID, byte actID, int playerID, int start, int end, bool32 isUser)
+int APICallback_FetchLeaderboardData(uint8 zoneID, uint8 actID, int playerID, int start, int end, bool32 isUser)
 {
     if (APICallback->FetchLeaderboard)
         return APICallback->FetchLeaderboard(zoneID, actID, playerID, start, end, isUser);
@@ -587,21 +587,21 @@ void APICallback_ResetControllerAssignments(void)
     }
 }
 
-void APICallback_TrackActClear(byte zoneID, byte actID, byte playerID, int score, int rings, int time)
+void APICallback_TrackActClear(uint8 zoneID, uint8 actID, uint8 playerID, int score, int rings, int time)
 {
     if (APICallback->TrackActClear)
         APICallback->TrackActClear(zoneID, actID, playerID, score, rings, time);
     else
         LogHelpers_Print("EMPTY TrackActClear(%d, %d, %d, %d, %d, %d)", zoneID, actID, playerID, score, rings, time);
 }
-void APICallback_TrackTAClear(byte zoneID, byte actID, byte playerID, int time)
+void APICallback_TrackTAClear(uint8 zoneID, uint8 actID, uint8 playerID, int time)
 {
     if (APICallback->TrackTAClear)
         APICallback->TrackTAClear(zoneID, actID, playerID, time);
     else
         LogHelpers_Print("EMPTY TrackTAClear(%d, %d, %d, %d)", zoneID, actID, playerID, time);
 }
-void APICallback_TrackEnemyDefeat(byte zoneID, byte actID, byte playerID, int entityX, int entityY)
+void APICallback_TrackEnemyDefeat(uint8 zoneID, uint8 actID, uint8 playerID, int entityX, int entityY)
 {
     if (APICallback->TrackEnemyDefeat)
         APICallback->TrackEnemyDefeat(zoneID, actID, playerID, entityX, entityY);

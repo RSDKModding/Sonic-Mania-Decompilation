@@ -10,25 +10,25 @@ typedef struct {
     Hitbox playerOuterBox[4];
     Hitbox playerInnerBox[4];
     Vector2 playerPositions[4];
-    ushort spriteIndex;
-    ushort sonicIndex;
-    ushort tailsIndex;
-    ushort tailSpriteIndex;
-    ushort knuxIndex;
+    uint16 spriteIndex;
+    uint16 sonicIndex;
+    uint16 tailsIndex;
+    uint16 tailSpriteIndex;
+    uint16 knuxIndex;
 #if RETRO_USE_PLUS
-    ushort mightyIndex;
-    ushort rayIndex;
+    uint16 mightyIndex;
+    uint16 rayIndex;
 #endif
-    ushort sfxShrink2;
-    ushort sfxGrow2;
+    uint16 sfxShrink2;
+    uint16 sfxGrow2;
 } ObjectSizeLaser;
 
 // Entity Class
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    byte type;
-    byte orientation;
+    uint8 type;
+    uint8 orientation;
     int timer;
     Vector2 storedPos;
     int extend;

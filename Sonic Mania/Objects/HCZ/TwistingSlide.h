@@ -7,13 +7,13 @@
 typedef struct {
     RSDK_OBJECT
     Hitbox hitbox;
-    ushort aniFrames;
+    uint16 aniFrames;
 } ObjectTwistingSlide;
 
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    byte type;
+    uint8 type;
     int endLen;
     int activePlayers;
     int field_64[4];

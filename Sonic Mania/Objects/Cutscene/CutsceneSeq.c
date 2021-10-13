@@ -120,7 +120,7 @@ void CutsceneSeq_LockPlayerControl(void *plr)
     Player->jumpHoldState  = 0;
 }
 
-void CutsceneSeq_CheckSkip(byte skipType, EntityCutsceneSeq *entity, void (*skipCallback)(void))
+void CutsceneSeq_CheckSkip(uint8 skipType, EntityCutsceneSeq *entity, void (*skipCallback)(void))
 {
     bool32 skipPress = RSDK_controller->keyStart.press;
 #if RETRO_USE_TOUCH_CONTROLS

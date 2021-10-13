@@ -66,7 +66,7 @@ void UITransition_SetNewTag(const char *text)
     EntityUITransition *transition = (EntityUITransition *)UITransition->activeTransition;
     if (transition->state == UITransition_State_Setup) {
         if (!UIDialog->activeDialog) {
-            UITransition->newTag = text;
+            UITransition->newTag = (char *)text;
             UITransition_StartTransition(UITransition_MatchNewTag, 0);
         }
     }
@@ -76,7 +76,7 @@ void UITransition_DrawShapes(void)
 {
     RSDK_THIS(UITransition);
     Vector2 positions[3];
-    uint colours[3];
+    uint32 colours[3];
 
     colours[0] = 0xE48E00;
     colours[1] = 0x1888F0;

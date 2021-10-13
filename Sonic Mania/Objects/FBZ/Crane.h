@@ -9,8 +9,8 @@ typedef struct {
     Hitbox hitbox1;
     Hitbox hitbox2;
     Hitbox hitbox3;
-    ushort aniFrames;
-    ushort sfxGrab;
+    uint16 aniFrames;
+    uint16 sfxGrab;
 } ObjectCrane;
 
 // Entity Class
@@ -21,11 +21,11 @@ typedef struct {
     Animator animator2;
     Animator animator3;
     Entity *grabbedPlayer;
-    ushort distance;
-    byte startType;
-    byte playerType;
+    uint16 distance;
+    uint8 startType;
+    uint8 playerType;
     Vector2 startPos;
-    byte startDir;
+    uint8 startDir;
     int timer2;
     int timer;
 } EntityCrane;

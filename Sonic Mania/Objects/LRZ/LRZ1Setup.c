@@ -53,7 +53,7 @@ void LRZ1Setup_StaticUpdate(void)
         if (player->onGround) {
             Hitbox *hitbox = Player_GetHitbox(player);
 
-            byte behaviour = 0;
+            uint8 behaviour = 0;
             int tileInfo   = 0;
             LRZ2Setup_GetTileInfo(&tileInfo, player->collisionPlane, player->position.x, (hitbox->bottom << 16) + player->position.y,
                                   player->moveOffset.x, player->moveOffset.y, &behaviour);

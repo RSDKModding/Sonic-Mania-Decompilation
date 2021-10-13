@@ -62,7 +62,7 @@ EntityUIPopover *UIPopover_CreatePopover(void)
     }
 }
 
-void UIPopover_AddButton(EntityUIPopover *popover, byte frameID, void (*callback)(void), bool32 flag)
+void UIPopover_AddButton(EntityUIPopover *popover, uint8 frameID, void (*callback)(void), bool32 flag)
 {
     int id = popover->buttonCount;
     if (id < 4) {

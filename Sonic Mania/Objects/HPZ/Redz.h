@@ -10,8 +10,8 @@ typedef struct {
     Hitbox hitbox2;
     Hitbox hitboxFlame;
     Hitbox hitboxRange;
-    ushort aniFrames;
-    ushort sfxFlame;
+    uint16 aniFrames;
+    uint16 sfxFlame;
 } ObjectRedz;
 
 // Entity Class
@@ -19,9 +19,9 @@ typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     Vector2 startPos;
-    byte startDir;
-    ushort timer2;
-    ushort timer;
+    uint8 startDir;
+    uint16 timer2;
+    uint16 timer;
     Animator animator;
 } EntityRedz;
 

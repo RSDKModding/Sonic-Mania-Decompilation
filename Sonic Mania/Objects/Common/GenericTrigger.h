@@ -15,7 +15,7 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     Vector2 size;
-    byte triggerID;
+    uint8 triggerID;
     Hitbox hitbox;
 } EntityGenericTrigger;
 

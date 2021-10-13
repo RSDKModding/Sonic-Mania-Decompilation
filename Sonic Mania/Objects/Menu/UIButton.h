@@ -17,7 +17,7 @@ typedef struct {
     int frameID;
     int align;
     int choiceCount;
-    byte choiceDir;
+    uint8 choiceDir;
     bool32 invisible;
     bool32 assignsP1;
     bool32 freeBindP2;
@@ -35,7 +35,7 @@ typedef struct {
     int selection;
     void (*choiceChangeCB)(void);
     Animator animator;
-    ushort textSpriteIndex;
+    uint16 textSpriteIndex;
     int startListID;
     int startFrameID;
 } EntityUIButton;

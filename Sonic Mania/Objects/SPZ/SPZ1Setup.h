@@ -13,7 +13,7 @@ typedef struct {
     int timerA;
     int timerB;
     int aniTilesFrameB;
-    ushort aniTiles;
+    uint16 aniTiles;
     TileLayer *bgLayer;
     TileLayer *bgLayer2;
 } ObjectSPZ1Setup;

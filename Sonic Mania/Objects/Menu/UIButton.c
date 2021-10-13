@@ -371,7 +371,7 @@ bool32 UIButton_TouchCB_Alt(void)
 
     bool32 touchFlag = false;
     int lastTouchID  = -1;
-    uint lastTouch   = 0xFFFFFFFF;
+    uint32 lastTouch   = 0xFFFFFFFF;
 
     for (int i = 0; i < entity->touchPosCount; ++i) {
         Vector2 touchPos1 = entity->touchPos1[i];

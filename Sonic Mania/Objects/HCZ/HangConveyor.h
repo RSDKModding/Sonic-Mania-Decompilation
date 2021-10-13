@@ -6,7 +6,7 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    ushort aniFrames;
+    uint16 aniFrames;
 } ObjectHangConveyor;
 
 // Entity Class
@@ -14,10 +14,10 @@ typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int length;
-    byte activePlayers1;
-    byte activePlayers2;
-    byte activePlayers3;
-    byte activePlayers4;
+    uint8 activePlayers1;
+    uint8 activePlayers2;
+    uint8 activePlayers3;
+    uint8 activePlayers4;
     Vector2 field_64[4];
     int field_84[4];
     int field_94[4];

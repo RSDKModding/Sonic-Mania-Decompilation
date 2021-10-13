@@ -19,7 +19,7 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     bool32 (*currentState)(Entity *host);
-    byte stateID;
+    uint8 stateID;
     int timer;
     int field_64;
     int field_68;
@@ -52,7 +52,7 @@ void CutsceneSeq_Serialize(void);
 Entity *CutsceneSeq_GetEntity(int type);
 void CutsceneSeq_LockAllPlayerControl(void);
 void CutsceneSeq_LockPlayerControl(void *plr);
-void CutsceneSeq_CheckSkip(byte skipType, EntityCutsceneSeq *entity, void (*skipCallback)(void));
+void CutsceneSeq_CheckSkip(uint8 skipType, EntityCutsceneSeq *entity, void (*skipCallback)(void));
 void CutsceneSeq_NewState(int nextState, EntityCutsceneSeq *CutsceneSeq);
 void CutsceneSeq_StartSequence(Entity *host, void **states);
 

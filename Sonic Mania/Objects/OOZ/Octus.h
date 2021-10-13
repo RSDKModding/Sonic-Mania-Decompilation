@@ -9,8 +9,8 @@ typedef struct {
     Hitbox hitbox1;
     Hitbox hitbox2;
     Hitbox hitbox3;
-    ushort aniFrames;
-    ushort sfxShot;
+    uint16 aniFrames;
+    uint16 sfxShot;
 } ObjectOctus;
 
 // Entity Class
@@ -18,9 +18,9 @@ typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int timer;
-    byte field_60;
+    uint8 field_60;
     Vector2 startPos;
-    byte startDir;
+    uint8 startDir;
     int field_70;
     Animator animator;
 } EntityOctus;

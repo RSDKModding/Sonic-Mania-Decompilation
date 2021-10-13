@@ -6,7 +6,7 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    ushort spriteIndex;
+    uint16 spriteIndex;
     StateMachine(finishedCB);
     StateMachine(suppressCB);
 } ObjectTitleCard;
@@ -44,7 +44,7 @@ typedef struct {
     int field_2E4;
     int field_2E8;
     int dword2EC;
-    byte actID;
+    uint8 actID;
     int dword2F4;
     Vector2 drawPos2;
     bool32 enableIntro;

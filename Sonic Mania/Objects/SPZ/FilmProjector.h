@@ -6,13 +6,13 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    ushort spriteIndex;
+    uint16 spriteIndex;
 } ObjectFilmProjector;
 
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    byte pathMovement;
+    uint8 pathMovement;
     Vector2 posUnknown;
     Animator data1;
     Animator animator2;

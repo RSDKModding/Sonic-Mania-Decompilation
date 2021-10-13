@@ -50,7 +50,7 @@ void StickyPlatform_Create(void *data)
         entity->drawOrder     = Zone->drawOrderHigh - 2;
         entity->updateRange.x = 0x800000;
         entity->updateRange.y = 0x800000;
-        short left = 0, top = 0, right = 0, bottom = 0;
+        int16 left = 0, top = 0, right = 0, bottom = 0;
         RSDK.SetSpriteAnimation(StickyPlatform->animID, entity->type > 1 ? 3 : 0, &entity->animator, true, 0);
         switch (entity->type) {
             case 0:
@@ -151,7 +151,7 @@ void StickyPlatform_Interact(void)
                         }
                         else {
                             Hitbox *playerbox = Player_GetHitbox(player);
-                            ushort animID     = 0;
+                            uint16 animID     = 0;
                             switch (entity->type) {
                                 case 0:
                                     player->position.x = entity->position.x;

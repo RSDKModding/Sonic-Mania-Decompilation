@@ -6,7 +6,7 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    ushort aniFrames;
+    uint16 aniFrames;
 } ObjectMetalArm;
 
 // Entity Class
@@ -21,7 +21,7 @@ typedef struct {
     int durationB;
     int holdDuration;
     Vector2 armAngle;
-    byte activePlayers;
+    uint8 activePlayers;
     Vector2 startPos;
     int timer;
     int timer2;

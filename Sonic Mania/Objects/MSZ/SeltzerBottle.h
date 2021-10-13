@@ -8,10 +8,10 @@ typedef struct {
     RSDK_OBJECT
     Hitbox hitbox1;
     Hitbox hitbox2;
-    ushort layerID;
-    ushort layerBitFlags;
-    ushort aniFrames;
-    ushort sfxSpray;
+    uint16 layerID;
+    uint16 layerBitFlags;
+    uint16 aniFrames;
+    uint16 sfxSpray;
 } ObjectSeltzerBottle;
 
 // Entity Class

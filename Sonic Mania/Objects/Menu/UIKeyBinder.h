@@ -6,8 +6,8 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    ushort aniFrames;
-    ushort sfxFail;
+    uint16 aniFrames;
+    uint16 sfxFail;
     Entity *activeBinder;
     int curInputID;
     int curMappings;
@@ -17,8 +17,8 @@ typedef struct {
 // Entity Class
 typedef struct {
     MANIA_UI_ITEM_BASE
-    byte type;
-    byte inputID;
+    uint8 type;
+    uint8 inputID;
     int listID;
     int frameID;
     int field_110;
@@ -33,7 +33,7 @@ typedef struct {
     int field_134;
     Animator animator1;
     Animator animator2;
-    ushort textSpriteIndex;
+    uint16 textSpriteIndex;
     int field_16C;
 } EntityUIKeyBinder;
 

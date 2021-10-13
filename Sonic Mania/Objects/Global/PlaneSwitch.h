@@ -6,7 +6,7 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    ushort spriteIndex;
+    uint16 spriteIndex;
 } ObjectPlaneSwitch;
 
 // Entity Class

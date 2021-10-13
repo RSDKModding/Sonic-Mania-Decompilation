@@ -9,12 +9,12 @@ typedef struct {
     int breakCount;
     int field_8;
     int field_C;
-    ushort itemBoxSprite;
-    ushort itemBoxModel;
-    ushort sceneIndex;
-    ushort sfx_Destroy;
-    ushort sfx_RockemSockem;
-    ushort sfx_Bumper;
+    uint16 itemBoxSprite;
+    uint16 itemBoxModel;
+    uint16 sceneIndex;
+    uint16 sfx_Destroy;
+    uint16 sfx_RockemSockem;
+    uint16 sfx_Bumper;
 } ObjectUFO_ItemBox;
 
 // Entity Class

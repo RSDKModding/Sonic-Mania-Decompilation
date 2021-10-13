@@ -41,7 +41,7 @@ void Spring_Create(void *data)
         entity->updateRange.x           = 0x600000;
         entity->updateRange.y           = 0x600000;
         entity->visible                 = true;
-        if (entity->planeFilter && ((byte)entity->planeFilter - 1) & 2)
+        if (entity->planeFilter && ((uint8)entity->planeFilter - 1) & 2)
             entity->drawOrder = Zone->drawOrderHigh;
         else
             entity->drawOrder = Zone->drawOrderLow;
@@ -111,7 +111,7 @@ void Spring_State_Vertical(void)
     if (entity->direction == FLIP_NONE) {
         foreach_active(Player, player)
         {
-            if (!entity->planeFilter || player->collisionPlane == ((byte)(entity->planeFilter - 1) & 1)) {
+            if (!entity->planeFilter || player->collisionPlane == ((uint8)(entity->planeFilter - 1) & 1)) {
                 int col = (entity->type == 0xFF && player->velocity.y < -0x50000) ? Player_CheckCollisionPlatform(player, entity, &entity->hitbox)
                                                                                   : Player_CheckCollisionBox(player, entity, &entity->hitbox);
                 if (col == 1) {
@@ -147,7 +147,7 @@ void Spring_State_Vertical(void)
     else {
         foreach_active(Player, player)
         {
-            if ((!entity->planeFilter || player->collisionPlane == ((byte)(entity->planeFilter - 1) & 1))
+            if ((!entity->planeFilter || player->collisionPlane == ((uint8)(entity->planeFilter - 1) & 1))
                 && Player_CheckCollisionBox(player, entity, &entity->hitbox) == 4) {
                 if (player->state != Ice_State_FrozenPlayer) {
                     if (player->state == Player_State_ForceRoll_Air || player->state == Player_State_ForceRoll_Ground)
@@ -175,7 +175,7 @@ void Spring_State_Horizontal(void)
     if (entity->direction == FLIP_NONE) {
         foreach_active(Player, player)
         {
-            if ((!entity->planeFilter || player->collisionPlane == ((byte)(entity->planeFilter - 1) & 1))
+            if ((!entity->planeFilter || player->collisionPlane == ((uint8)(entity->planeFilter - 1) & 1))
                 && Player_CheckCollisionBox(player, entity, &entity->hitbox) == 3 && (!entity->onGround || player->onGround)) {
                 if (player->collisionMode == CMODE_ROOF) {
                     player->velocity.x = -entity->velocity.x;
@@ -215,7 +215,7 @@ void Spring_State_Horizontal(void)
     else {
         foreach_active(Player, player)
         {
-            if ((!entity->planeFilter || player->collisionPlane == ((byte)(entity->planeFilter - 1) & 1))
+            if ((!entity->planeFilter || player->collisionPlane == ((uint8)(entity->planeFilter - 1) & 1))
                 && Player_CheckCollisionBox(player, entity, &entity->hitbox) == 2 && (!entity->onGround || player->onGround)) {
                 if (player->collisionMode == CMODE_ROOF) {
                     player->velocity.x = -entity->velocity.x;
@@ -258,7 +258,7 @@ void Spring_State_Diagonal(void)
     RSDK_THIS(Spring);
     foreach_active(Player, player)
     {
-        if ((!entity->planeFilter || player->collisionPlane == ((byte)(entity->planeFilter - 1) & 1))) {
+        if ((!entity->planeFilter || player->collisionPlane == ((uint8)(entity->planeFilter - 1) & 1))) {
             if (Player_CheckCollisionTouch(player, entity, &entity->hitbox)) {
                 bool32 flag = false;
                 if (player->onGround) {

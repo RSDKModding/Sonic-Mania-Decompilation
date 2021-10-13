@@ -220,7 +220,7 @@ void WaterGush_DrawSprites(void)
     RSDK_THIS(WaterGush);
     Vector2 drawPos, drawPos2;
 
-    byte storeDir = entity->direction;
+    uint8 storeDir = entity->direction;
     drawPos2.x    = entity->position.x;
     drawPos2.y    = entity->position.y;
 

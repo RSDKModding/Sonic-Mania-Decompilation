@@ -16,7 +16,7 @@ typedef struct {
     int speedIn;
     int wait;
     int speedOut;
-    uint color;
+    uint32 color;
     bool32 oneWay;
     bool32 eventOnly;
     bool32 overHUD;

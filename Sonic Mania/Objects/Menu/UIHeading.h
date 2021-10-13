@@ -6,7 +6,7 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    ushort textSpriteIndex;
+    uint16 textSpriteIndex;
 } ObjectUIHeading;
 
 // Entity Class
@@ -18,7 +18,7 @@ typedef struct {
     int headingID;
     Animator animator2;
     Animator animator;
-    ushort textSpriteIndex;
+    uint16 textSpriteIndex;
 } EntityUIHeading;
 
 // Object Struct

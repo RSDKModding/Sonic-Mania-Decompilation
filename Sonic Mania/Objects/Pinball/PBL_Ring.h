@@ -9,8 +9,8 @@ typedef struct {
     RSDK_OBJECT
     int field_4;
     int field_8;
-    ushort aniFrames;
-    ushort sfxRing;
+    uint16 aniFrames;
+    uint16 sfxRing;
 } ObjectPBL_Ring;
 
 // Entity Class

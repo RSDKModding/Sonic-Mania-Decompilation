@@ -16,10 +16,10 @@ typedef struct {
     Hitbox hitboxHurt;
     Hitbox hitboxExplode;
     Hitbox hitboxShrapnel;
-    ushort aniFrames;
-    ushort sfxExplosion;
-    ushort sfxButton;
-    ushort sfxPon;
+    uint16 aniFrames;
+    uint16 sfxExplosion;
+    uint16 sfxButton;
+    uint16 sfxPon;
 } ObjectMatryoshkaBom;
 
 // Entity Class
@@ -33,7 +33,7 @@ typedef struct {
     int offsetY;
     int offsetX;
     Vector2 startPos;
-    byte startDir;
+    uint8 startDir;
     int timer;
     int field_84;
     Animator animator1;

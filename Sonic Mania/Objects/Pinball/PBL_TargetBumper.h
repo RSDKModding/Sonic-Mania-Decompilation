@@ -15,11 +15,11 @@ typedef struct {
     int field_18;
     Hitbox hitbox;
     int drawType;
-    ushort field_28;
-    ushort modelFrames;
-    ushort sceneIndex;
-    ushort sfxTargetBumper;
-    ushort sfxFlipper;
+    uint16 field_28;
+    uint16 modelFrames;
+    uint16 sceneIndex;
+    uint16 sfxTargetBumper;
+    uint16 sfxFlipper;
 } ObjectPBL_TargetBumper;
 
 // Entity Class

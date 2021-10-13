@@ -6,10 +6,10 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    ushort logoIndex;
+    uint16 logoIndex;
 #if RETRO_USE_PLUS
-    ushort plusIndex;
-    ushort sfx_Plus;
+    uint16 plusIndex;
+    uint16 sfx_Plus;
 #endif
 } ObjectTitleLogo;
 

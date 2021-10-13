@@ -553,7 +553,7 @@ void Platform_State_PlayerActivated(void)
     foreach_active(Player, player)
     {
         if (!player->sidekick) {
-            int angle = (byte)((byte)(entity->angle) + -0x80);
+            int angle = (uint8)((uint8)(entity->angle) + -0x80);
             int xOff  = (player->position.x - entity->centerPos.x) >> 8;
             int yOff  = (player->position.y - entity->centerPos.y) >> 8;
             RSDK.Sin256(angle);
@@ -643,7 +643,7 @@ void Platform_State_Pushable(void)
     entity->velocity.y = 0;
     foreach_active(Player, playerLoop)
     {
-        byte id = 1 << RSDK.GetEntityID(playerLoop);
+        uint8 id = 1 << RSDK.GetEntityID(playerLoop);
         if (id & entity->pushPlayersL)
             entity->velocity.x += entity->speed;
         if (id & entity->pushPlayersR)
@@ -752,13 +752,13 @@ void Platform_State_MovingSpike(void)
 
     int y1, y2;
     if (((move >> 16) & 1) == entity->direction) {
-        entity->drawPos.x = entity->centerPos.x + ((ushort)move * entity->amplitude.x >> 6) - (entity->amplitude.x << 9);
-        y1                = (ushort)move * entity->amplitude.y >> 6;
+        entity->drawPos.x = entity->centerPos.x + ((uint16)move * entity->amplitude.x >> 6) - (entity->amplitude.x << 9);
+        y1                = (uint16)move * entity->amplitude.y >> 6;
         y2                = entity->amplitude.y << 9;
     }
     else {
-        entity->drawPos.x = entity->centerPos.x + (entity->amplitude.x << 9) - ((ushort)move * entity->amplitude.x >> 6);
-        y2                = (ushort)move * entity->amplitude.y >> 6;
+        entity->drawPos.x = entity->centerPos.x + (entity->amplitude.x << 9) - ((uint16)move * entity->amplitude.x >> 6);
+        y2                = (uint16)move * entity->amplitude.y >> 6;
         y1                = entity->amplitude.y << 9;
     }
     entity->drawPos.y = entity->centerPos.y + y1 - y2;
@@ -1194,13 +1194,13 @@ void Platform_Unknown12(void)
 
     int y1, y2;
     if (((speed >> 0x10) & 1) == entity->direction) {
-        entity->drawPos.x = entity->centerPos.x + ((ushort)speed * entity->amplitude.x >> 6) - (entity->amplitude.x << 9);
-        y1                = (ushort)speed * entity->amplitude.y >> 6;
+        entity->drawPos.x = entity->centerPos.x + ((uint16)speed * entity->amplitude.x >> 6) - (entity->amplitude.x << 9);
+        y1                = (uint16)speed * entity->amplitude.y >> 6;
         y2                = entity->amplitude.y << 9;
     }
     else {
-        entity->drawPos.x = entity->centerPos.x + (entity->amplitude.x << 9) - ((ushort)speed * entity->amplitude.x >> 6);
-        y2                = (ushort)speed * entity->amplitude.y >> 6;
+        entity->drawPos.x = entity->centerPos.x + (entity->amplitude.x << 9) - ((uint16)speed * entity->amplitude.x >> 6);
+        y2                = (uint16)speed * entity->amplitude.y >> 6;
         y1                = entity->amplitude.y << 9;
     }
     entity->velocity.x = drawX + entity->drawPos.x;
@@ -1245,13 +1245,13 @@ void Platform_Unknown14(void)
 
     int y1, y2;
     if (((speed >> 0x10) & 1) == entity->direction) {
-        entity->drawPos.x = entity->centerPos.x + ((ushort)speed * entity->amplitude.x >> 6) - (entity->amplitude.x << 9);
-        y1                = (ushort)speed * entity->amplitude.y >> 6;
+        entity->drawPos.x = entity->centerPos.x + ((uint16)speed * entity->amplitude.x >> 6) - (entity->amplitude.x << 9);
+        y1                = (uint16)speed * entity->amplitude.y >> 6;
         y2                = entity->amplitude.y << 9;
     }
     else {
-        entity->drawPos.x = entity->centerPos.x + (entity->amplitude.x << 9) - ((ushort)speed * entity->amplitude.x >> 6);
-        y2                = (ushort)speed * entity->amplitude.y >> 6;
+        entity->drawPos.x = entity->centerPos.x + (entity->amplitude.x << 9) - ((uint16)speed * entity->amplitude.x >> 6);
+        y2                = (uint16)speed * entity->amplitude.y >> 6;
         y1                = entity->amplitude.y << 9;
     }
     entity->velocity.x = drawX + entity->drawPos.x;
@@ -1442,7 +1442,7 @@ void Platform_CollisionState_LRHazard(void)
     entity->pushPlayersR = 0;
     foreach_active(Player, player)
     {
-        ushort pid = RSDK.GetEntityID(player);
+        uint16 pid = RSDK.GetEntityID(player);
         switch (Player_CheckCollisionBox(player, entity, solidHitbox)) {
             case 1:
                 entity->stood = true;
@@ -1624,7 +1624,7 @@ void Platform_CollisionState_Sticky(void)
     entity->pushPlayersR   = 0;
     foreach_active(Player, player)
     {
-        ushort pid = RSDK.GetEntityID(player);
+        uint16 pid = RSDK.GetEntityID(player);
         Player_CheckCollisionPlatform(player, entity, platformHitbox);
         int side = Player_CheckCollisionBox(player, entity, solidHitbox);
 
@@ -1712,7 +1712,7 @@ void Platform_CollisionState_TopHazard(void)
     entity->pushPlayersR = 0;
     foreach_active(Player, player)
     {
-        ushort pid = RSDK.GetEntityID(player);
+        uint16 pid = RSDK.GetEntityID(player);
         switch (Player_CheckCollisionBox(player, entity, solidHitbox)) {
             case 1:
                 entity->stood = true;
@@ -1787,7 +1787,7 @@ void Platform_CollisionState_TopSolid(void)
     Hitbox *platformHitbox = RSDK.GetHitbox(&entity->animator, 0);
     foreach_active(Player, player)
     {
-        ushort pid = RSDK.GetEntityID(player);
+        uint16 pid = RSDK.GetEntityID(player);
         int yVel   = player->velocity.y;
         if (entity->collisionOffset.y < 0)
             player->velocity.y -= entity->collisionOffset.y;
@@ -1831,7 +1831,7 @@ void Platform_CollisionState_TurnTable(void)
     entity->pushPlayersR   = 0;
     foreach_active(Player, player)
     {
-        ushort pid = RSDK.GetEntityID(player);
+        uint16 pid = RSDK.GetEntityID(player);
         Player_CheckCollisionPlatform(player, entity, platformHitbox);
         switch (Player_CheckCollisionBox(player, entity, solidHitbox)) {
             case 1: entity->stood = true;
@@ -1934,7 +1934,7 @@ void Platform_CollisionState_Twister(void)
     entity->pushPlayersR   = 0;
     foreach_active(Player, player)
     {
-        ushort pid = RSDK.GetEntityID(player);
+        uint16 pid = RSDK.GetEntityID(player);
         Player_CheckCollisionPlatform(player, entity, platformHitbox);
         switch (Player_CheckCollisionBox(player, entity, solidHitbox)) {
             case 0:
@@ -2049,7 +2049,7 @@ void Platform_CollisionState_15(void)
     entity->pushPlayersR   = 0;
     foreach_active(Player, player)
     {
-        ushort pid = RSDK.GetEntityID(player);
+        uint16 pid = RSDK.GetEntityID(player);
         Player_CheckCollisionPlatform(player, entity, platformHitbox);
 
         switch (Player_CheckCollisionBox(player, entity, solidHitbox)) {

@@ -14,8 +14,8 @@ typedef struct {
     TABLE(int pattern4[20], { -0x10000, 0x10000,  -0x8000, -0x10000, -0x5555, 0x10000, 0, -0x10000, 0x5555, 0x10000,
                               0x8000,   -0x10000, 0x10000, 0x10000,  -0xAAAA, 0,       0, 0,        0xAAAA, 0 });
     TABLE(int pattern5[6], { 0, -0x10000, -0x10000, 0x10000, 0x10000, 0x10000 });
-    ushort aniFrames;
-    ushort sfxPetals;
+    uint16 aniFrames;
+    uint16 sfxPetals;
 } ObjectPetalPile;
 
 // Entity Class
@@ -23,19 +23,19 @@ typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
-    ushort timer;
-    sbyte leafPattern;
-    sbyte tileLayer;
+    uint16 timer;
+    int8 leafPattern;
+    int8 tileLayer;
     Vector2 pileSize;
     Vector2 maxSpeed;
     bool32 emitterMode;
-    byte layerID;
+    uint8 layerID;
     Vector2 velStore;
     int field_84;
     int field_88;
     int field_8C;
     int field_90;
-    sbyte field_94;
+    int8 field_94;
     int field_98;
     int field_9C;
     bool32 flag;

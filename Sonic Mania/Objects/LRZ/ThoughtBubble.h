@@ -6,8 +6,8 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    ushort aniFrames;
-    ushort dustFrames;
+    uint16 aniFrames;
+    uint16 dustFrames;
 } ObjectThoughtBubble;
 
 // Entity Class

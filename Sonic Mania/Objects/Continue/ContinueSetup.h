@@ -7,9 +7,9 @@
 typedef struct {
     RSDK_OBJECT
     Animator animator;
-    ushort sfxAccept;
-    ushort countIndex[10];
-    ushort sceneIndex;
+    uint16 sfxAccept;
+    uint16 countIndex[10];
+    uint16 sceneIndex;
 } ObjectContinueSetup;
 
 // Entity Class

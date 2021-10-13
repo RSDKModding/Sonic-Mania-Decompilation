@@ -6,37 +6,37 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    ushort spriteIndex;
-    ushort sfx_Three;
-    ushort sfx_Two;
-    ushort sfx_One;
-    ushort sfx_Go;
-    ushort sfx_Goal;
-    ushort sfx_SonicWins;
-    ushort sfx_TailsWins;
-    ushort sfx_KnuxWins;
+    uint16 spriteIndex;
+    uint16 sfx_Three;
+    uint16 sfx_Two;
+    uint16 sfx_One;
+    uint16 sfx_Go;
+    uint16 sfx_Goal;
+    uint16 sfx_SonicWins;
+    uint16 sfx_TailsWins;
+    uint16 sfx_KnuxWins;
 #if RETRO_USE_PLUS
-    ushort sfx_MightyWins;
-    ushort sfx_RayWins;
+    uint16 sfx_MightyWins;
+    uint16 sfx_RayWins;
 #endif
-    ushort sfx_NewRecordTop;
-    ushort sfx_NewRecordMid;
-    ushort sfx_Sonic;
-    ushort sfx_Tails;
-    ushort sfx_Knuckles;
+    uint16 sfx_NewRecordTop;
+    uint16 sfx_NewRecordMid;
+    uint16 sfx_Sonic;
+    uint16 sfx_Tails;
+    uint16 sfx_Knuckles;
 #if RETRO_USE_PLUS
-    ushort sfx_Mighty;
-    ushort sfx_Ray;
+    uint16 sfx_Mighty;
+    uint16 sfx_Ray;
 #endif
-    ushort sfx_TheWinnerIs;
-    ushort sfx_Player1;
-    ushort sfx_Player2;
+    uint16 sfx_TheWinnerIs;
+    uint16 sfx_Player1;
+    uint16 sfx_Player2;
 #if RETRO_USE_PLUS
-    ushort sfx_Player3;
-    ushort sfx_Player4;
+    uint16 sfx_Player3;
+    uint16 sfx_Player4;
 #endif
-    ushort sfx_ItsADraw;
-    ushort sfx_ItsADraw_Set;
+    uint16 sfx_ItsADraw;
+    uint16 sfx_ItsADraw_Set;
     bool32 finishedCountdown;
 } ObjectAnnouncer;
 

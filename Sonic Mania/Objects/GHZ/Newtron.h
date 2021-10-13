@@ -10,14 +10,14 @@ typedef struct {
     Hitbox hitbox2;
     Hitbox hitbox3;
     Hitbox hitbox4;
-    ushort aniFrames;
+    uint16 aniFrames;
 } ObjectNewtron;
 
 // Entity Class
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    byte type;
+    uint8 type;
     int timer;
     Vector2 startPos;
     Animator animator1;

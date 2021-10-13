@@ -22,7 +22,7 @@ void ZipLine_Update(void)
                 Hitbox *playerHitbox = Player_GetHitbox(player);
                 if (player->state != Player_State_Hit) {
                     if (player->velocity.x) {
-                        if ((byte)(entity->angle - 0x40) < 0x80)
+                        if ((uint8)(entity->angle - 0x40) < 0x80)
                             entity->groundVel = -player->groundVel;
                         else
                             entity->groundVel = player->groundVel;
@@ -116,7 +116,7 @@ void ZipLine_Update(void)
                     }
                     else if (!entity->state) {
                         entity->groundVel = player->groundVel;
-                        if ((byte)(entity->angle - 64) < 0x80)
+                        if ((uint8)(entity->angle - 64) < 0x80)
                             entity->groundVel = -player->groundVel;
 
                         if (entity->groundVel > 0xA0000)
@@ -127,7 +127,7 @@ void ZipLine_Update(void)
                         entity->velocity.x = entity->groundVel * RSDK.Cos256(entity->angle) >> 8;
                         entity->velocity.y = entity->groundVel * RSDK.Sin256(entity->angle) >> 8;
                         if (entity->angle & 0x7F) {
-                            if ((byte)entity->angle < 0x80) {
+                            if ((uint8)entity->angle < 0x80) {
                                 if (entity->handlePos.x == entity->startPos.x) {
                                     if (entity->velocity.y < 0) {
                                         entity->velocity.x = 0;

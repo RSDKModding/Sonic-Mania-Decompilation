@@ -6,7 +6,7 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    ushort spriteIndex;
+    uint16 spriteIndex;
 } ObjectEggman;
 
 // Entity Class
@@ -15,7 +15,7 @@ typedef struct {
     StateMachine(state);
     StateMachine(stateStore);
     int timer;
-    ushort animID;
+    uint16 animID;
     Entity* parent;
     Vector2 offset;
     Hitbox hitbox;

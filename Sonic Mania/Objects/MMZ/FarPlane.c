@@ -120,7 +120,7 @@ void FarPlane_SetupEntities(void)
     entity->active = ACTIVE_BOUNDS;
 }
 
-void FarPlane_SetEntityActivities(byte active)
+void FarPlane_SetEntityActivities(uint8 active)
 {
     RSDK_THIS(FarPlane);
     for (int i = 0; i < entity->entityCount; ++i) {

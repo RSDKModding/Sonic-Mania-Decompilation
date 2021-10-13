@@ -139,7 +139,7 @@ void PauseMenu_StageLoad(void)
     PauseMenu_SetupLookupTable();
 }
 
-byte PauseMenu_GetPlayerCount(void)
+uint8 PauseMenu_GetPlayerCount(void)
 {
     EntityMenuParam *param            = (EntityMenuParam *)globals->menuParam;
     EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
@@ -210,7 +210,7 @@ void PauseMenu_HandleButtonPositions(void)
     }
 }
 
-void PauseMenu_AddButton(byte id, void *action)
+void PauseMenu_AddButton(uint8 id, void *action)
 {
     RSDK_THIS(PauseMenu);
 

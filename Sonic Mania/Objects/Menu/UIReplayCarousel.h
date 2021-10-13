@@ -7,7 +7,7 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    ushort aniFrames;
+    uint16 aniFrames;
     EntityUIButtonPrompt *prompt;
 } ObjectUIReplayCarousel;
 
@@ -19,19 +19,19 @@ typedef struct {
     TextInfo loadingText;
     TextInfo noReplaysText;
     int sprX;
-    byte field_158;
+    uint8 field_158;
     int field_15C;
-    void (*stateDraw)(void);
-    short field_164;
-    ushort dbUnknownCount;
+    StateMachine(stateDraw);
+    int16 field_164;
+    uint16 dbUnknownCount;
     int field_168;
     int field_16C;
     int field_170;
-    byte field_174;
-    byte dbUnknownID;
+    uint8 field_174;
+    uint8 dbUnknownID;
     int field_178;
     int field_17C;
-    byte prevDBUnknownID;
+    uint8 prevDBUnknownID;
     int field_184;
     int field_188;
     int field_18C;
@@ -72,10 +72,10 @@ void UIReplayCarousel_SetupButtonCallbacks(void);
 void UIReplayCarousel_HandleTouchPositions(void);
 void UIReplayCarousel_TouchedCB(void);
 void UIReplayCarousel_Unknown6(void);
-void UIReplayCarousel_Unknown7(int a1, short a2, int a3, int a4);
-void UIReplayCarousel_Unknown8(byte a1, byte a2, int a3, int a4, int arg10, int a6, int a7);
-void UIReplayCarousel_Unknown9(byte a1, short a2, int a4, int a5);
-void UIReplayCarousel_Unknown10(byte zoneID, int a2, byte a3, byte a4, int a5, int a6, int drawX, int drawY);
+void UIReplayCarousel_Unknown7(int a1, int16 a2, int a3, int a4);
+void UIReplayCarousel_Unknown8(uint8 a1, uint8 a2, int a3, int a4, int arg10, int a6, int a7);
+void UIReplayCarousel_Unknown9(uint8 a1, int16 a2, int a4, int a5);
+void UIReplayCarousel_Unknown10(uint8 zoneID, int a2, uint8 a3, uint8 a4, int a5, int a6, int drawX, int drawY);
 void UIReplayCarousel_Unknown11(void);
 void UIReplayCarousel_Unknown12(void);
 void UIReplayCarousel_StateDraw_Unknown1(void);

@@ -8,11 +8,11 @@ typedef struct {
     RSDK_OBJECT
     TABLE(int array1[20], { 64, 128, 192, 256, 256, 128, 0, 32, 64, 128, 192, 256, 256, 192, 128, 96, 64, 32, 16, 0 });
     Vector2 positions[0x100];
-    ushort aniFrames;
-    ushort sfxRain;
-    byte playingRainSFX;
-    ushort sfxThunder;
-    STATIC(byte srcPal, 1);
+    uint16 aniFrames;
+    uint16 sfxRain;
+    uint8 playingRainSFX;
+    uint16 sfxThunder;
+    STATIC(uint8 srcPal, 1);
 } ObjectFBZStorm;
 
 // Entity Class

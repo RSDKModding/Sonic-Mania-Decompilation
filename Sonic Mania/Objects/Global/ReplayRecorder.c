@@ -284,7 +284,7 @@ void ReplayRecorder_SaveReplayDLG_YesCB(void)
         ReplayRecorder_SavedReplay(false);
     }
     else {
-        uint uuid                   = API.GetUserDBRowUUID(globals->replayTableID, rowID);
+        uint32 uuid                   = API.GetUserDBRowUUID(globals->replayTableID, rowID);
         ReplayRecorder->replayRowID = rowID;
         ReplayRecorder->replayID    = uuid;
         char fileName[0x20];
@@ -417,11 +417,11 @@ void ReplayRecorder_Buffer_PackInPlace(int *tempWriteBuffer)
             int frameSize        = 56;
             int uncompressedSize = 28 * (tempWriteBuffer[4] + 2);
 
-            byte *framePtr       = (byte *)&tempWriteBuffer[14];
-            byte *compressedData = (byte *)&tempWriteBuffer[14];
+            uint8 *framePtr       = (uint8 *)&tempWriteBuffer[14];
+            uint8 *compressedData = (uint8 *)&tempWriteBuffer[14];
             for (int f = 0; f < tempWriteBuffer[4]; ++f) {
-                byte uncompressedData[28];
-                memcpy(uncompressedData, framePtr, 28 * sizeof(byte));
+                uint8 uncompressedData[28];
+                memcpy(uncompressedData, framePtr, 28 * sizeof(uint8));
                 int *dataPtr = (int *)uncompressedData;
 
                 // set velocity to zero
@@ -447,7 +447,7 @@ void ReplayRecorder_Buffer_Unpack(int *readBuffer, int *tempReadBuffer)
 {
     LogHelpers_Print("Buffer_Unpack(0x%08x, 0x%08x)", readBuffer, tempReadBuffer);
 
-    byte *compressedData = (byte *)&tempReadBuffer[14];
+    uint8 *compressedData = (uint8 *)&tempReadBuffer[14];
     if (*tempReadBuffer == 0xF6057BED) {
         if (tempReadBuffer[2] == 1) {
             int compSize             = tempReadBuffer[11];
@@ -458,7 +458,7 @@ void ReplayRecorder_Buffer_Unpack(int *readBuffer, int *tempReadBuffer)
             readBuffer[4]            = tempReadBuffer[4];
             readBuffer[5]            = tempReadBuffer[5];
             int frameSize            = 28 * (tempReadBuffer[4] + 2);
-            byte *uncompressedBuffer = (byte *)&readBuffer[14];
+            uint8 *uncompressedBuffer = (uint8 *)&readBuffer[14];
             for (int i = 0; i < tempReadBuffer[4]; ++i) {
                 int size = ReplayDB_Buffer_UnpackEntry(uncompressedBuffer, compressedData);
                 compressedData += size;
@@ -752,7 +752,7 @@ void ReplayRecorder_Rewind(EntityReplayRecorder *recorder)
     recorder->replayFrame = 0;
 }
 
-void ReplayRecorder_Seek(EntityReplayRecorder *recorder, uint frame)
+void ReplayRecorder_Seek(EntityReplayRecorder *recorder, uint32 frame)
 {
     LogHelpers_Print("ReplayRecorder_Seek(%u)", frame);
     recorder->replayFrame = frame;
@@ -762,10 +762,10 @@ void ReplayRecorder_Seek(EntityReplayRecorder *recorder, uint frame)
         frameBuffer = ReplayRecorder->frameBuffer_w;
     else
         frameBuffer = ReplayRecorder->frameBuffer_r;
-    byte *byteBuf = (byte *)frameBuffer;
+    uint8 *byteBuf = (uint8 *)frameBuffer;
     int newFrame  = frame;
 
-    byte *framePtr = &byteBuf[28 * frame];
+    uint8 *framePtr = &byteBuf[28 * frame];
     while (framePtr[0] != 1) {
         if (framePtr[0] == 3)
             break;
@@ -779,7 +779,7 @@ void ReplayRecorder_Seek(EntityReplayRecorder *recorder, uint frame)
         ReplayRecorder_ApplyFrameData(recorder, framePtr);
         if (newFrame < frame) {
             int count = frame - newFrame;
-            byte *ptr = &byteBuf[28 * newFrame];
+            uint8 *ptr = &byteBuf[28 * newFrame];
             for (int i = 0; i < count; ++i) {
                 ptr += 28;
                 ReplayRecorder_Unknown19(recorder, ptr);
@@ -795,7 +795,7 @@ void ReplayRecorder_SeekFunc(EntityReplayRecorder *recorder)
         buffer2 = ReplayRecorder->frameBuffer_w;
     else
         buffer2 = ReplayRecorder->frameBuffer_r;
-    byte *byteBuf = (byte *)buffer2;
+    uint8 *byteBuf = (uint8 *)buffer2;
 
     for (int f = 0; f < recorder->field_84; ++f) {
         if (byteBuf[f * 28] == 3) {
@@ -856,7 +856,7 @@ void ReplayRecorder_SetGimmickState(EntityReplayRecorder *recorder, bool32 flag)
     }
 }
 
-void ReplayRecorder_ApplyFrameData(EntityReplayRecorder *recorder, byte *buffer)
+void ReplayRecorder_ApplyFrameData(EntityReplayRecorder *recorder, uint8 *buffer)
 {
     EntityPlayer *player = recorder->player;
     int *bufferPtr       = (int *)buffer;
@@ -873,7 +873,7 @@ void ReplayRecorder_ApplyFrameData(EntityReplayRecorder *recorder, byte *buffer)
     }
 }
 
-void ReplayRecorder_Unknown19(EntityReplayRecorder *recorder, byte *buffer)
+void ReplayRecorder_Unknown19(EntityReplayRecorder *recorder, uint8 *buffer)
 {
     EntityPlayer *player = recorder->player;
     int *bufferPtr       = (int *)buffer;
@@ -914,17 +914,17 @@ bool32 ReplayRecorder_CheckPlayerGimmickState(EntityReplayRecorder *recorder)
     return false;
 }
 
-void ReplayRecorder_PackFrame(byte *recording)
+void ReplayRecorder_PackFrame(uint8 *recording)
 {
     RSDK_THIS(ReplayRecorder);
 
-    byte frameBuf[28];
+    uint8 frameBuf[28];
     memset(frameBuf, 0, sizeof(frameBuf));
     frameBuf[0]       = 0;
     int *writeBuffer  = ReplayRecorder->writeBuffer;
     int *writeBuffer2 = ReplayRecorder->frameBuffer_w;
     int size          = ReplayDB_Buffer_PackEntry(frameBuf, recording);
-    memcpy(&writeBuffer2[7 * entity->replayFrame], recording, 0x28 * sizeof(byte));
+    memcpy(&writeBuffer2[7 * entity->replayFrame], recording, 0x28 * sizeof(uint8));
 
     if (writeBuffer[4]) {
         writeBuffer[4] = ((float)(writeBuffer[4] * writeBuffer[4]) + size) / (writeBuffer[4] + 1);
@@ -955,7 +955,7 @@ void ReplayRecorder_PlayBackInput(void)
         else
             frameBuffer = ReplayRecorder->frameBuffer_r;
         int *playbackBuf = &frameBuffer[7 * recorder->replayFrame];
-        byte *bufBytes   = (byte *)playbackBuf;
+        uint8 *bufBytes   = (uint8 *)playbackBuf;
 
         bool32 setPos = false;
         if (bufBytes[0]) {
@@ -1016,7 +1016,7 @@ void ReplayRecorder_PlayerState(void)
         else
             buffer = ReplayRecorder->frameBuffer_r;
 
-        byte *frameData = (byte *)&buffer[7 * recorder->replayFrame];
+        uint8 *frameData = (uint8 *)&buffer[7 * recorder->replayFrame];
         if (recorder->state) {
             if (frameData[0] == 2) {
                 ReplayRecorder_Unknown19(recorder, frameData);
@@ -1097,7 +1097,7 @@ void ReplayRecorder_StatePlay(void)
     }
     else if (ReplayRecorder->frameCounter < buffer[5]) {
         if (entity->playing) {
-            ReplayRecorder_ApplyFrameData(entity, (byte *)frameBuffer);
+            ReplayRecorder_ApplyFrameData(entity, (uint8 *)frameBuffer);
         }
     }
 }
@@ -1134,7 +1134,7 @@ void ReplayRecorder_StateLate_Replay(void)
     else
         frameBuffer = ReplayRecorder->frameBuffer_r;
     int *framePtr  = &frameBuffer[7 * entity->replayFrame];
-    byte *bufBytes = (byte *)framePtr;
+    uint8 *bufBytes = (uint8 *)framePtr;
     if (!entity->playing) {
         if (bufBytes[0]) {
             if ((bufBytes[0] == 1 || bufBytes[0] == 3) || (bufBytes[0] == 2 && (bufBytes[1] & 2))) {
@@ -1154,7 +1154,7 @@ void ReplayRecorder_None_Record(void) {}
 
 void ReplayRecorder_RecordFrameData(void)
 {
-    byte recording[28];
+    uint8 recording[28];
     int *recordingPtr = (int *)recording;
 
     RSDK_THIS(ReplayRecorder);
@@ -1338,10 +1338,10 @@ void ReplayRecorder_CreateReplayDB(void)
         globals->replayTableLoaded = STATUS_OK;
 }
 
-uint ReplayRecorder_AddReplayID(byte actID, char zone, int charID, int score, char mode)
+uint32 ReplayRecorder_AddReplayID(uint8 actID, char zone, int charID, int score, char mode)
 {
     if (globals->replayTableLoaded == STATUS_OK) {
-        uint rowID       = API.AddUserDBRow(globals->replayTableID);
+        uint32 rowID       = API.AddUserDBRow(globals->replayTableID);
         int zoneStortVal = score & 0x3FFFFFF | ((actID & 1 | 2 * (mode & 1 | 2 * zone)) << 26);
         API.SetUserDBValue(globals->replayTableID, rowID, 4, "score", &score);
         API.SetUserDBValue(globals->replayTableID, rowID, 2, "zoneID", &zone);
@@ -1349,7 +1349,7 @@ uint ReplayRecorder_AddReplayID(byte actID, char zone, int charID, int score, ch
         API.SetUserDBValue(globals->replayTableID, rowID, 2, "characterID", &charID);
         API.SetUserDBValue(globals->replayTableID, rowID, 2, "encore", &actID);
         API.SetUserDBValue(globals->replayTableID, rowID, 4, "zoneSortVal", &zoneStortVal);
-        uint UUID = API.GetUserDBRowUUID(globals->replayTableID, rowID);
+        uint32 UUID = API.GetUserDBRowUUID(globals->replayTableID, rowID);
         char createTime[24];
         sprintf(createTime, "");
         API.GetUserDBCreationTime(globals->replayTableID, rowID, createTime, 23, "%Y/%m/%d %H:%M:%S");
@@ -1374,7 +1374,7 @@ void ReplayRecorder_DeleteTimeAttackRow(int a1, void (*callback)(bool32), int a3
     API.Unknown33(globals->taTableID, 4, "replayID", &id);
     int count = API.GetSortedUserDBRowCount(globals->taTableID);
     for (int i = 0; i < count; ++i) {
-        uint uuid = API.GetSortedUserDBRowID(globals->taTableID, i);
+        uint32 uuid = API.GetSortedUserDBRowID(globals->taTableID, i);
         LogHelpers_Print("Deleting Time Attack replay from row #%d", uuid);
         API.SetUserDBValue(globals->taTableID, uuid, 4, "replayID", &value);
     }

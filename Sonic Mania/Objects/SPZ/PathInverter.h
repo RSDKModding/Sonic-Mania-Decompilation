@@ -6,14 +6,14 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    ushort aniFrames;
+    uint16 aniFrames;
 } ObjectPathInverter;
 
 // Entity Class
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    byte type;
+    uint8 type;
     Vector2 size2;
     Vector2 size;
     Entity *playerPtrs[PLAYER_MAX];

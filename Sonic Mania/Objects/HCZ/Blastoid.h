@@ -8,15 +8,15 @@ typedef struct {
     RSDK_OBJECT
     Hitbox hitboxBody;
     Hitbox hitboxProjectile;
-    ushort aniFrames;
-    ushort sfxShot;
+    uint16 aniFrames;
+    uint16 sfxShot;
 } ObjectBlastoid;
 
 // Entity Class
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    byte timer;
+    uint8 timer;
     Animator animator;
 } EntityBlastoid;
 

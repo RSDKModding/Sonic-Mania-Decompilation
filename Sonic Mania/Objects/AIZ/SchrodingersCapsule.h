@@ -7,9 +7,9 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    ushort aniFrames;
-    ushort sfxExplosion2;
-    ushort sfxExplosion3;
+    uint16 aniFrames;
+    uint16 sfxExplosion2;
+    uint16 sfxExplosion3;
 } ObjectSchrodingersCapsule;
 
 // Entity Class

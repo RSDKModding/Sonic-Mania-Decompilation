@@ -9,20 +9,20 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    byte flags[4];
+    uint8 flags[4];
     int sphereCount;
     int pinkSphereCount;
     int rings;
     int ringPan;
     int ringCount;
     int field_1C;
-    ushort bgLayer;
-    ushort globeLayer;
-    ushort frustum1Layer;
-    ushort frustum2Layer;
-    ushort playFieldLayer;
-    ushort ringCountLayer;
-    ushort globeMappings;
+    uint16 bgLayer;
+    uint16 globeLayer;
+    uint16 frustum1Layer;
+    uint16 frustum2Layer;
+    uint16 playFieldLayer;
+    uint16 ringCountLayer;
+    uint16 globeMappings;
     TABLE(int globeFrameTable[0xF], { 0, 1, 2, 3, 4, 5, 6, 7, 6, 5, 4, 3, 2, 1, 0 });
     TABLE(int globeDirTableL[0xF], { 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1 });
     TABLE(int globeDirTableR[0xF], { 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0 });
@@ -52,21 +52,21 @@ typedef struct {
     int frustumCount[2];
     int frustumOffset[2];
     int field_1434;
-    ushort playField[BSS_PLAYFIELD_W * BSS_PLAYFIELD_H];
-    ushort playField2[BSS_PLAYFIELD_W * BSS_PLAYFIELD_H];
-    ushort playField3[BSS_PLAYFIELD_W * BSS_PLAYFIELD_H];
-    ushort sfxBlueSphere;
-    ushort sfxSSExit;
-    ushort sfxBumper;
-    ushort sfxSpring;
-    ushort sfxRing;
-    ushort sfxLoseRings;
-    ushort sfxSSJettison;
-    ushort sfxEmerald;
-    ushort sfxEvent;
-    ushort sfxMedal;
-    ushort sfxMedalCaught;
-    ushort sfxTeleport;
+    uint16 playField[BSS_PLAYFIELD_W * BSS_PLAYFIELD_H];
+    uint16 playField2[BSS_PLAYFIELD_W * BSS_PLAYFIELD_H];
+    uint16 playField3[BSS_PLAYFIELD_W * BSS_PLAYFIELD_H];
+    uint16 sfxBlueSphere;
+    uint16 sfxSSExit;
+    uint16 sfxBumper;
+    uint16 sfxSpring;
+    uint16 sfxRing;
+    uint16 sfxLoseRings;
+    uint16 sfxSSJettison;
+    uint16 sfxEmerald;
+    uint16 sfxEvent;
+    uint16 sfxMedal;
+    uint16 sfxMedalCaught;
+    uint16 sfxTeleport;
 } ObjectBSS_Setup;
 
 // Entity Class
@@ -135,11 +135,11 @@ void BSS_Setup_State_Unknown23(void);
 bool32 BSS_Setup_Unknown(int x, int y);
 void BSS_Setup_LaunchSpheres(void);
 void BSS_Setup_StageFinishClear(void);
-bool32 BSS_Setup_Unknown2(byte x, byte y);
-bool32 BSS_Setup_Unknown3(byte x, byte y);
-bool32 BSS_Setup_Unknown4(byte x, byte y);
-bool32 BSS_Setup_Unknown5(byte x, byte y);
-bool32 BSS_Setup_Unknown6(byte x, byte y);
+bool32 BSS_Setup_Unknown2(uint8 x, uint8 y);
+bool32 BSS_Setup_Unknown3(uint8 x, uint8 y);
+bool32 BSS_Setup_Unknown4(uint8 x, uint8 y);
+bool32 BSS_Setup_Unknown5(uint8 x, uint8 y);
+bool32 BSS_Setup_Unknown6(uint8 x, uint8 y);
 void BSS_Setup_ProcessChain(void);
 
 #endif //! OBJ_BSS_SETUP_H

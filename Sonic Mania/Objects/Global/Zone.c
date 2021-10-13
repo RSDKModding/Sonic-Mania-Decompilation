@@ -186,12 +186,12 @@ void Zone_StageLoad(void)
 {
 #if RETRO_USE_PLUS
     EntitySaveGame *saveRAM = SaveGame->saveRAM;
-    Zone->randKey = (uint)time(0);
+    Zone->randKey = (uint32)time(0);
     if (globals->gameMode == MODE_ENCORE) {
         if (globals->characterFlags == 0) {
             globals->characterFlags = 0;
             saveRAM->characterFlags             = 0;
-            byte id                 = globals->playerID & 0xFF;
+            uint8 id                 = globals->playerID & 0xFF;
             if (globals->playerID & 0xFF) {
                 int charID = -1;
                 if (id) {
@@ -205,7 +205,7 @@ void Zone_StageLoad(void)
             }
 
             if (globals->playerID & 0xFF00) {
-                byte id    = globals->playerID >> 8;
+                uint8 id    = globals->playerID >> 8;
                 int charID = -1;
                 if (globals->playerID & 0xFF) {
                     do {
@@ -233,7 +233,7 @@ void Zone_StageLoad(void)
                     }
 
                     if (globals->stock & 0xFF00) {
-                        byte id    = globals->playerID >> 8;
+                        uint8 id    = globals->playerID >> 8;
                         int charID = -1;
                         if (charID) {
                             do {
@@ -247,7 +247,7 @@ void Zone_StageLoad(void)
 
                     if (globals->stock & 0xFF0000) {
                         int charID = -1;
-                        byte id    = globals->playerID >> 16;
+                        uint8 id    = globals->playerID >> 16;
                         if (id) {
                             do {
                                 id >>= 1;
@@ -263,7 +263,7 @@ void Zone_StageLoad(void)
                     globals->playerID |= (globals->stock & 0xFF);
                     globals->stock >>= 8;
                     saveRAM->stock = globals->stock;
-                    byte id     = globals->playerID >> 8;
+                    uint8 id     = globals->playerID >> 8;
                     int charID  = -1;
                     if (id) {
                         do {
@@ -289,7 +289,7 @@ void Zone_StageLoad(void)
                     }
 
                     if (globals->stock & 0xFF00) {
-                        byte id    = globals->playerID >> 8;
+                        uint8 id    = globals->playerID >> 8;
                         int charID = -1;
                         if (charID) {
                             do {
@@ -303,7 +303,7 @@ void Zone_StageLoad(void)
 
                     if (globals->stock & 0xFF0000) {
                         int charID = -1;
-                        byte id    = globals->playerID >> 16;
+                        uint8 id    = globals->playerID >> 16;
                         if (id) {
                             do {
                                 id >>= 1;
@@ -935,7 +935,7 @@ void Zone_Unknown19(void)
         playerBoundActiveT[p] = Zone->playerBoundActiveT[p];
         playerBoundActiveB[p] = Zone->playerBoundActiveB[p];
 
-        byte *layerPlanes = (byte *)&layerIDs[2 * p];
+        uint8 *layerPlanes = (uint8 *)&layerIDs[2 * p];
         for (int l = 0; l < LAYER_COUNT; ++l) {
             TileLayer *layer = RSDK.GetSceneLayer(l);
             if (layer)
@@ -1023,7 +1023,7 @@ void Zone_Unknown19(void)
         Zone->playerBoundActiveT[Zone->playerIDs2[p]] = playerBoundActiveT[p];
         Zone->playerBoundActiveB[Zone->playerIDs2[p]] = playerBoundActiveB[p];
 
-        byte *layerPlanes = (byte *)&layerIDs[2 * p];
+        uint8 *layerPlanes = (uint8 *)&layerIDs[2 * p];
         for (int l = 0; l < LAYER_COUNT; ++l) {
             TileLayer *layer                     = RSDK.GetSceneLayer(l);
             layer->drawLayer[Zone->playerIDs[p]] = layerPlanes[l];

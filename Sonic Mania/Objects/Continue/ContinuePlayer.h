@@ -23,12 +23,12 @@ typedef enum {
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    ushort aniFrames;
-    ushort playerAniFrames;
-    ushort tailAniFrames;
-    ushort sfxRoll;
-    ushort sfxCharge;
-    ushort sfxRelease;
+    uint16 aniFrames;
+    uint16 playerAniFrames;
+    uint16 tailAniFrames;
+    uint16 sfxRoll;
+    uint16 sfxCharge;
+    uint16 sfxRelease;
 } ObjectContinuePlayer;
 
 // Entity Class
@@ -40,7 +40,7 @@ typedef struct {
     int field_64;
     int field_68;
     Animator animator;
-    ushort aniFrames;
+    uint16 aniFrames;
 } EntityContinuePlayer;
 
 // Object Struct

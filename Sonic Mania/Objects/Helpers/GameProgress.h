@@ -10,8 +10,8 @@ typedef struct {
 
 // Entity Class
 typedef struct {
-    byte padding[0x56]; //aka sizeof(Entity) for pre-plus
-    byte medals[32];
+    uint8 padding[0x56]; //aka sizeof(Entity) for pre-plus
+    uint8 medals[32];
     bool32 allGoldMedals;
     bool32 allSilverMedals;
     bool32 zoneClearFlags[12];
@@ -53,8 +53,8 @@ void GameProgress_ClearProgress(void);
 void GameProgress_MarkZoneCompleted(int zoneID);
 bool32 GameProgress_CheckZoneClear(void);
 void GameProgress_GiveEmerald(int emeraldID);
-void GameProgress_GiveMedal(byte medalID, byte type);
-void GameProgress_GiveEnding(byte ending);
+void GameProgress_GiveMedal(uint8 medalID, uint8 type);
+void GameProgress_GiveEnding(uint8 ending);
 void GameProgress_PrintSaveProgress(void);
 int GameProgress_CountUnreadNotifs(void);
 int GameProgress_GetNextNotif(void);

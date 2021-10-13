@@ -11,9 +11,9 @@ typedef struct {
 // Entity Class
 typedef struct {
     MANIA_PLATFORM_BASE
-    ushort interval;
-    ushort intervalOffset;
-    ushort duration;
+    uint16 interval;
+    uint16 intervalOffset;
+    uint16 duration;
 } EntityVanishPlatform;
 
 // Object Struct

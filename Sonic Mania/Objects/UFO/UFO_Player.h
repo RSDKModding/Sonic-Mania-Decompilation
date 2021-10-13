@@ -8,21 +8,21 @@ typedef struct {
     RSDK_OBJECT
     int maxSpeed;
     int field_8;
-    ushort sfx_Jump;
-    ushort sfx_Charge;
-    ushort sfx_Release;
-    ushort sfx_LoseRings;
-    ushort sfx_Drop;
-    ushort sfx_Bumper;
-    ushort sfx_Spring;
-    ushort sfx_Skid;
-    ushort sfx_GrittyGround;
-    ushort jogModel;
-    ushort dashModel;
-    ushort jumpModel;
-    ushort ballModel;
-    ushort tumbleModel;
-    ushort sceneIndex;
+    uint16 sfx_Jump;
+    uint16 sfx_Charge;
+    uint16 sfx_Release;
+    uint16 sfx_LoseRings;
+    uint16 sfx_Drop;
+    uint16 sfx_Bumper;
+    uint16 sfx_Spring;
+    uint16 sfx_Skid;
+    uint16 sfx_GrittyGround;
+    uint16 jogModel;
+    uint16 dashModel;
+    uint16 jumpModel;
+    uint16 ballModel;
+    uint16 tumbleModel;
+    uint16 sceneIndex;
 } ObjectUFO_Player;
 
 // Entity Class

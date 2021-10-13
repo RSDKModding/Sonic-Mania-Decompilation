@@ -15,7 +15,7 @@ typedef struct {
     int field_1C;
     int field_20;
     bool32 reloadFlag;
-    ushort aniTiles;
+    uint16 aniTiles;
     TileLayer* bgPtr;
 } ObjectTMZ1Setup;
 

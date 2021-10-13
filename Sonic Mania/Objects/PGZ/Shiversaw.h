@@ -8,10 +8,10 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    byte health;
-    byte invincibilityTimer;
+    uint8 health;
+    uint8 invincibilityTimer;
     int timer;
-    ushort aniFrames;
+    uint16 aniFrames;
     Hitbox hitbox1;
     Hitbox hitbox2;
     Hitbox hitboxR;
@@ -22,11 +22,11 @@ typedef struct {
     Hitbox hitbox7;
     Hitbox hitbox8;
 #endif
-    ushort sfxHit;
-    ushort sfxExplosion2;
-    ushort sfxTargeting;
-    ushort sfxRocketJet;
-    ushort sfxExplosion3;
+    uint16 sfxHit;
+    uint16 sfxExplosion2;
+    uint16 sfxTargeting;
+    uint16 sfxRocketJet;
+    uint16 sfxExplosion3;
 } ObjectShiversaw;
 
 // Entity Class
@@ -34,7 +34,7 @@ typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateSaw[Shiversaw_SawCount]);
-    byte sawID;
+    uint8 sawID;
     int timer;
     int sawTimers[Shiversaw_SawCount];
     int field_74[Shiversaw_SawCount];

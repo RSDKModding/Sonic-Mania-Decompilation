@@ -6,9 +6,9 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    ushort aniFrames;
+    uint16 aniFrames;
 #if RETRO_USE_PLUS
-    ushort sfxPaperStack;
+    uint16 sfxPaperStack;
 #endif
 } ObjectNewspaper;
 
@@ -18,7 +18,7 @@ typedef struct {
 #if RETRO_USE_PLUS
     StateMachine(state);
     Hitbox hitbox;
-    byte type;
+    uint8 type;
     int timer;
     Animator animator;
 #else
@@ -28,8 +28,8 @@ typedef struct {
     Vector2 amplitude;
     int node;
     bool32 hasTension;
-    sbyte frameID;
-    byte collision;
+    int8 frameID;
+    uint8 collision;
     Vector2 tileOrigin;
     Vector2 centerPos;
     Vector2 drawPos;
@@ -37,9 +37,9 @@ typedef struct {
     int stood;
     int collapseDelay;
     int stoodAngle;
-    byte stoodPlayers;
-    byte pushPlayersL;
-    byte pushPlayersR;
+    uint8 stoodPlayers;
+    uint8 pushPlayersL;
+    uint8 pushPlayersR;
     Hitbox hitbox;
     Animator animator;
     int childCount;

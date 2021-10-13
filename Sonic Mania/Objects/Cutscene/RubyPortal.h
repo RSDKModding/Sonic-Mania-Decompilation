@@ -7,7 +7,7 @@
 typedef struct {
     RSDK_OBJECT
     Hitbox hitbox;
-    ushort spriteIndex;
+    uint16 spriteIndex;
 #if RETRO_USE_PLUS
     bool32 openPortal;
 #endif

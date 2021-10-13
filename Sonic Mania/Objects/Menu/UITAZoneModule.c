@@ -200,7 +200,7 @@ void UITAZoneModule_Unknown3(void)
 {
     RSDK_THIS(UITAZoneModule);
 
-    uint colour = 0x5FA0B0;
+    uint32 colour = 0x5FA0B0;
 #if RETRO_USE_PLUS
     if (entity->isEncore)
         colour = 0xF26C4F;
@@ -238,7 +238,7 @@ void UITAZoneModule_Unknown4(void)
     RSDK_THIS(UITAZoneModule);
     Vector2 drawPos;
     drawPos     = entity->drawPos;
-    uint colour = 0xF0F0F0;
+    uint32 colour = 0xF0F0F0;
 #if RETRO_USE_PLUS
     if (entity->isEncore)
         colour = 0xF26C4F;
@@ -279,8 +279,8 @@ void UITAZoneModule_Unknown4(void)
         UITAZoneModule_DrawTime(&drawPos, 0, 0, 0);
     }
     else {
-        ushort *records1 = TimeAttackData_GetRecordedTime(entity->zoneID, 0, entity->characterID, 1);
-        ushort *records2 = TimeAttackData_GetRecordedTime(entity->zoneID, 1, entity->characterID, 1);
+        uint16 *records1 = TimeAttackData_GetRecordedTime(entity->zoneID, 0, entity->characterID, 1);
+        uint16 *records2 = TimeAttackData_GetRecordedTime(entity->zoneID, 1, entity->characterID, 1);
 
         int time = records1[0] + records2[0];
 
@@ -525,7 +525,7 @@ void UITAZoneModule_DrawTime(Vector2 *drawPos, int minutes, int seconds, int mil
     for (int i = 0; i < 8; ++i) {
         if (!strBuf[i])
             break;
-        RSDK.SetSpriteAnimation(UITAZoneModule->aniFrames, 8, &entity->animator3, true, (byte)(strBuf[i] - '0'));
+        RSDK.SetSpriteAnimation(UITAZoneModule->aniFrames, 8, &entity->animator3, true, (uint8)(strBuf[i] - '0'));
         RSDK.DrawSprite(&entity->animator3, drawPos, 0);
         drawPos->x += 0x80000;
     }
@@ -536,21 +536,21 @@ void UITAZoneModule_Unknown8(void)
     RSDK_THIS(UITAZoneModule);
     Vector2 drawPos = entity->drawPos;
 
-    uint colour1 = 0;
+    uint32 colour1 = 0;
     if (entity->actID)
         colour1 = 0xE82858;
 
-    uint colour2 = 0;
+    uint32 colour2 = 0;
     if (entity->actID != 1)
         colour2 = 0xE82858;
 
     RSDK.DrawRect(drawPos.x - 0x990000, drawPos.y + 0x240000, 0x860000, 0x150000, colour1, 255, INK_NONE, false);
 
     int offset = 0;
-    if (RSDK.Sin256(8 * minVal((byte)entity->field_140, 16)) >= 0)
-        offset = RSDK.Sin256(8 * minVal((byte)entity->field_140, 16));
+    if (RSDK.Sin256(8 * minVal((uint8)entity->field_140, 16)) >= 0)
+        offset = RSDK.Sin256(8 * minVal((uint8)entity->field_140, 16));
     else
-        offset = -RSDK.Sin256(8 * minVal((byte)entity->field_140, 16));
+        offset = -RSDK.Sin256(8 * minVal((uint8)entity->field_140, 16));
     offset >>= 6;
 
     RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, 16, &entity->animator7, true, 0);
@@ -624,10 +624,10 @@ void UITAZoneModule_Unknown8(void)
     else
         RSDK.SetSpriteAnimation(UITAZoneModule->aniFrames, 9, &entity->animator7, true, 2);
     if (!entity->actID) {
-        if (RSDK.Sin256(2 * (byte)entity->field_140) >= 0)
-            drawPos2.x -= RSDK.Sin256(2 * (byte)entity->field_140) << 10;
+        if (RSDK.Sin256(2 * (uint8)entity->field_140) >= 0)
+            drawPos2.x -= RSDK.Sin256(2 * (uint8)entity->field_140) << 10;
         else
-            drawPos2.x -= -RSDK.Sin256(2 * (byte)entity->field_140) << 10;
+            drawPos2.x -= -RSDK.Sin256(2 * (uint8)entity->field_140) << 10;
     }
 
     if (entity->zoneID != 7 || entity->characterID == 3)
@@ -640,10 +640,10 @@ void UITAZoneModule_Unknown8(void)
     else
         RSDK.SetSpriteAnimation(UITAZoneModule->aniFrames, 9, &entity->animator7, true, 3);
     if (entity->actID == 1) {
-        if (RSDK.Sin256(2 * (byte)entity->field_140) >= 0)
-            drawPos3.x -= RSDK.Sin256(2 * (byte)entity->field_140) << 10;
+        if (RSDK.Sin256(2 * (uint8)entity->field_140) >= 0)
+            drawPos3.x -= RSDK.Sin256(2 * (uint8)entity->field_140) << 10;
         else
-            drawPos3.x -= -RSDK.Sin256(2 * (byte)entity->field_140) << 10;
+            drawPos3.x -= -RSDK.Sin256(2 * (uint8)entity->field_140) << 10;
     }
 
     RSDK.DrawSprite(&entity->animator7, &drawPos3, false);
@@ -656,7 +656,7 @@ void UITAZoneModule_Unknown7(void)
     int drawY = entity->drawPos.y;
     Vector2 drawPos2 = entity->drawPos;
 
-    ushort *records = TimeAttackData_GetRecordedTime(entity->zoneID, entity->actID, entity->characterID, 1);
+    uint16 *records = TimeAttackData_GetRecordedTime(entity->zoneID, entity->actID, entity->characterID, 1);
 
     RSDK.DrawRect(drawX - 0x990000, drawY + 0x240000, 0x1320000, 0x4D0000, 0x000000, 255, INK_NONE, false);
     UITAZoneModule_Unknown8();
@@ -825,7 +825,7 @@ void UITAZoneModule_Unknown25(int player, int zone, int act, int a4, void (*call
         MenuSetup->dialog = (Entity *)dialog;
         MenuSetup_StartTransitionLB(callback, 120);
 
-        ushort *records                  = TimeAttackData_GetRecordedTime(zone, act, player, 1);
+        uint16 *records                  = TimeAttackData_GetRecordedTime(zone, act, player, 1);
         EntityUILeaderboard *leaderboard = (EntityUILeaderboard *)MenuSetup->leaderboardWidget;
 
         bool32 isUser = false;

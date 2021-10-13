@@ -7,14 +7,14 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    ushort field_4;
+    uint16 field_4;
 } ObjectPBL_Sector;
 
 // Entity Class
 typedef struct {
     RSDK_ENTITY
     Vector2 size;
-    byte craneID;
+    uint8 craneID;
     int timer;
     bool32 flag;
     Animator animator;

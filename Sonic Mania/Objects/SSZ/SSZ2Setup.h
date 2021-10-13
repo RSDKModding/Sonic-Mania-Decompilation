@@ -6,10 +6,10 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    byte towerID;
-    ushort sparkTimer;
+    uint8 towerID;
+    uint16 sparkTimer;
     bool32 hasAchievement;
-    ushort sfxSpark;
+    uint16 sfxSpark;
     TileLayer *towerLayer;
 } ObjectSSZ2Setup;
 

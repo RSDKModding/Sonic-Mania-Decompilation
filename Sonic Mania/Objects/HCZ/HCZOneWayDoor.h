@@ -6,8 +6,8 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    ushort aniFrames;
-    ushort sfxClack;
+    uint16 aniFrames;
+    uint16 sfxClack;
 } ObjectHCZOneWayDoor;
 
 // Entity Class
@@ -20,8 +20,8 @@ typedef struct {
     int field_74;
     int length;
     int duration;
-    byte orientation;
-    byte detectDirection;
+    uint8 orientation;
+    uint8 detectDirection;
     Hitbox hitbox1;
     Hitbox hitbox2;
     Animator animator;

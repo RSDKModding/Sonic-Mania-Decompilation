@@ -10,7 +10,7 @@ typedef struct {
     RSDK_OBJECT
     Hitbox hitbox1;
     Hitbox hitbox2;
-    ushort aniFrames;
+    uint16 aniFrames;
 } ObjectOrbinaut;
 
 // Entity Class
@@ -19,8 +19,8 @@ typedef struct {
     StateMachine(state);
     int planeFilter;
     Vector2 startPos;
-    byte startDir;
-    byte activeOrbs;
+    uint8 startDir;
+    uint8 activeOrbs;
     Vector2 orbPositions[Orbinaut_MaxOrbs];
     bool32 fireOrbs;
     Animator animatorFace;

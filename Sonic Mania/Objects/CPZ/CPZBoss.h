@@ -8,17 +8,17 @@ typedef struct {
     RSDK_OBJECT
     Hitbox hitbox;
     Entity* managers[2];
-    ushort hudSlotID;
-    ushort aniFrames;
-    ushort playerFrames;
-    ushort sfxExplosion;
+    uint16 hudSlotID;
+    uint16 aniFrames;
+    uint16 playerFrames;
+    uint16 sfxExplosion;
 } ObjectCPZBoss;
 
 // Entity Class
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    byte type;
+    uint8 type;
     int timer;
     Vector2 startPos;
     int field_6C;

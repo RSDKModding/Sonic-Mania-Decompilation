@@ -13,11 +13,11 @@ typedef struct {
     bool32 isRumbling;
     int value6;
     int value7;
-    ushort sfxBossHit;
-    ushort sfxExplosion2;
-    ushort sfxMagnet;
-    ushort sfxOrbinaut;
-    ushort aniFrames;
+    uint16 sfxBossHit;
+    uint16 sfxExplosion2;
+    uint16 sfxMagnet;
+    uint16 sfxOrbinaut;
+    uint16 aniFrames;
 } ObjectBigSqueeze;
 
 // Entity Class

@@ -14,8 +14,8 @@ void EncoreRoute_Update(void)
     for (int y = 0; y < (entity->size.y >> 0x10); ++y, ++posY) {
         int posX = entity->position.x >> 20;
         for (int x = 0; x < (entity->size.x >> 0x10); ++x, ++posX) {
-            byte src = -1;
-            byte dst = -1;
+            uint8 src = -1;
+            uint8 dst = -1;
             switch (entity->layerSrc) {
                 case 0: src = Zone->fgLow; break;
                 case 1: src = Zone->fgHigh; break;

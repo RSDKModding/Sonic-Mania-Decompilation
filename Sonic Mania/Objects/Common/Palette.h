@@ -7,10 +7,10 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    byte field_4;
-    byte field_5;
-    byte count;
-    byte field_7;
+    uint8 field_4;
+    uint8 field_5;
+    uint8 count;
+    uint8 field_7;
 } ObjectPalette;
 
 // Entity Class
@@ -18,8 +18,8 @@ typedef struct {
     RSDK_ENTITY
     int state;
     TextInfo paletteFile;
-    ushort rowFlags;
-    byte bankID;
+    uint16 rowFlags;
+    uint8 bankID;
     bool32 loadOnce;
 } EntityPalette;
 

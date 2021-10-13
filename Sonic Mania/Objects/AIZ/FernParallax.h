@@ -7,8 +7,8 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    ushort aniFrames;
-    byte entityBuffer[2][ENTITY_SIZE];
+    uint16 aniFrames;
+    uint8 entityBuffer[2][ENTITY_SIZE];
 } ObjectFernParallax;
 
 // Entity Class
@@ -16,7 +16,7 @@ typedef struct {
     RSDK_ENTITY
     int field_58;
     Animator animator;
-    byte aniID;
+    uint8 aniID;
     Vector2 parallaxFactor;
 } EntityFernParallax;
 

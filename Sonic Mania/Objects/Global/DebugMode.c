@@ -131,7 +131,7 @@ void DebugMode_StageLoad(void)
 }
 
 void DebugMode_NullState(void) {}
-void DebugMode_AddObject(ushort id, void (*draw)(void), void (*spawn)(void))
+void DebugMode_AddObject(uint16 id, void (*draw)(void), void (*spawn)(void))
 {
     if (DebugMode->itemCount < 0x100) {
         DebugMode->objectIDs[DebugMode->itemCount] = id;

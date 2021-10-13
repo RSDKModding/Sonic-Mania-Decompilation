@@ -72,7 +72,7 @@ void Soundboard_StageLoad(void)
     }
 }
 
-byte Soundboard_LoadSFX(const char *sfxName, uint loopPoint, bool32 (*checkCallback)(void), void (*updateCallback)(int))
+uint8 Soundboard_LoadSFX(const char *sfxName, uint32 loopPoint, bool32 (*checkCallback)(void), void (*updateCallback)(int))
 {
     if (!Soundboard)
         return -1;

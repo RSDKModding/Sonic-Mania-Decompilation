@@ -15,25 +15,25 @@ typedef struct {
     Hitbox sawHitbox;
     Hitbox grabboxFloor;
     Hitbox grabboxWall;
-    ushort animID;
-    ushort explodeSFX;
-    ushort juggleSFX;
-    ushort throwSFX;
+    uint16 animID;
+    uint16 explodeSFX;
+    uint16 juggleSFX;
+    uint16 throwSFX;
 } ObjectJuggleSaw;
 
 // Entity Class
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    ushort sawDelay;
-    uint sawSpeed;
+    uint16 sawDelay;
+    uint32 sawSpeed;
     JuggleSawMode hasSaw;
-    ushort setID;
+    uint16 setID;
     Entity *friends[JuggleSaw_MaxFriends];
-    byte friendCount;
-    byte sawTimer;
+    uint8 friendCount;
+    uint8 sawTimer;
     Vector2 spawnPos;
-    byte spawnDir;
+    uint8 spawnDir;
     Animator animator;
 } EntityJuggleSaw;
 

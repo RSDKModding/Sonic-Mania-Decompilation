@@ -40,7 +40,7 @@ void ERZStart_Player_HandleSuperDash(void *p)
     EntityPlayer *player = (EntityPlayer *)p;
     RSDK_THIS(Player);
 
-    byte flags = 0;
+    uint8 flags = 0;
     if (player->up)
         flags |= 1;
     if (player->down)

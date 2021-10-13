@@ -192,7 +192,7 @@ int UIButtonPrompt_GetGamepadType(void)
     return 2;
 }
 
-byte UIButtonPrompt_MappingsToFrame(int mappings)
+uint8 UIButtonPrompt_MappingsToFrame(int mappings)
 {
     //case values: https://docs.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes
     switch (mappings) {

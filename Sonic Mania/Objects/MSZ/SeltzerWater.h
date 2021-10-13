@@ -6,7 +6,7 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    ushort aniFrames;
+    uint16 aniFrames;
 } ObjectSeltzerWater;
 
 // Entity Class
@@ -16,7 +16,7 @@ typedef struct {
     int field_5C;
     int gravityStrength;
     int field_64;
-    ushort nodeSlot;
+    uint16 nodeSlot;
     Animator animator;
 } EntitySeltzerWater;
 

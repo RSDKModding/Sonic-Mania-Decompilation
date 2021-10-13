@@ -143,7 +143,7 @@ void Competition_ClearMatchData(void)
     }
 }
 
-void Competition_CalculateScore(int playerID, byte flags)
+void Competition_CalculateScore(int playerID, uint8 flags)
 {
     EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
     session->finishFlags[playerID] = flags;

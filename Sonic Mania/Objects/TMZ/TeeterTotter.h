@@ -6,15 +6,15 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    ushort aniFrames;
+    uint16 aniFrames;
 } ObjectTeeterTotter;
 
 // Entity Class
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    byte color;
-    uint length;
+    uint8 color;
+    uint32 length;
     Vector2 origin;
     int field_6C;
     int playerIDs[4];

@@ -6,8 +6,8 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    ushort aniFrames;
-    ushort sfxFan;
+    uint16 aniFrames;
+    uint16 sfxFan;
 } ObjectPropeller;
 
 // Entity Class
@@ -17,7 +17,7 @@ typedef struct {
     Hitbox hitbox2;
     Hitbox hitbox;
     bool32 fanEnabled;
-    byte activePlayers;
+    uint8 activePlayers;
     Animator animator;
 } EntityPropeller;
 

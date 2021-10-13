@@ -10,7 +10,7 @@ typedef struct {
     RSDK_OBJECT
     Hitbox hitbox1;
     Hitbox hitbox2;
-    ushort aniFrames;
+    uint16 aniFrames;
 } ObjectSol;
 
 // Entity Class
@@ -18,8 +18,8 @@ typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     Vector2 startPos;
-    byte startDir;
-    byte activeOrbs;
+    uint8 startDir;
+    uint8 activeOrbs;
     Vector2 positions[Sol_MaxFlameOrbs];
     int field_88;
     bool32 isFlameFX;

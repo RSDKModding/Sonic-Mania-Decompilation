@@ -9,9 +9,9 @@ typedef struct {
     Hitbox hitbox;
     Hitbox innerBox;
     Hitbox outerBox;
-    byte array1[24];
-    sbyte array2[24];
-    ushort aniFrames;
+    uint8 array1[24];
+    int8 array2[24];
+    uint16 aniFrames;
 } ObjectCheckerBall;
 
 // Entity Class
@@ -22,7 +22,7 @@ typedef struct {
     int field_60;
     Vector2 roundedPos;
     Vector2 collisionOffset;
-    byte activePlayers;
+    uint8 activePlayers;
     Animator animator;
 } EntityCheckerBall;
 

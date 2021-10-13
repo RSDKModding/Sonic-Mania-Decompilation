@@ -6,15 +6,15 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    ushort aniFrames;
-    ushort sfxSpear;
+    uint16 aniFrames;
+    uint16 sfxSpear;
 } ObjectSpear;
 
 // Entity Class
 typedef struct {
     RSDK_ENTITY
     int field_58;
-    byte orientation;
+    uint8 orientation;
     int interval;
     int intervalOffset;
     int duration;

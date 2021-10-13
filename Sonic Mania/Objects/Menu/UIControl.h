@@ -49,13 +49,13 @@ typedef struct {
     bool32 activeOnLoad;
     bool32 noWidgets;
     bool32 resetSelection;
-    byte buttonCount;
+    uint8 buttonCount;
 #if RETRO_USE_PLUS
-    byte promptCount;
+    uint8 promptCount;
 #endif
-    byte rowCount;
-    byte columnCount;
-    byte startingID;
+    uint8 rowCount;
+    uint8 columnCount;
+    uint8 startingID;
     Vector2 size;
     Vector2 cameraOffset;
     Vector2 scrollSpeed;

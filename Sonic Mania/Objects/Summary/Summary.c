@@ -159,7 +159,7 @@ void Summary_State_Unknown3(void)
     }
 }
 
-void Summary_SetTextString(byte anim, void *text, const char *str)
+void Summary_SetTextString(uint8 anim, void *text, const char *str)
 {
     EntityUIText *uiText = (EntityUIText *)text;
     if (!UIWidgets || UIText->spriteIndex)
@@ -183,7 +183,7 @@ void Summary_SetStageTime(char *buffer, int time)
         int tm = 100 * time;
         int mins = 0;
         int secs = 0;
-        byte ms  = 0;
+        uint8 ms  = 0;
 
         if (tm >= 6000) {
             do {

@@ -408,7 +408,7 @@ void TimeAttackMenu_AddReplayEntry(int row, bool32 showGhost)
     RSDK.ResetControllerAssignments();
     RSDK.AssignControllerID(CONT_P1, id);
     LogHelpers_Print("Go_Replay(%d, %d)", row, showGhost);
-    uint uuid = API.GetUserDBRowUUID(globals->replayTableID, row);
+    uint32 uuid = API.GetUserDBRowUUID(globals->replayTableID, row);
     LogHelpers_Print("uuid: %08X", uuid);
 
     int score       = 0;

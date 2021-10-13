@@ -15,13 +15,13 @@ void ReplayDB_Create(void *data) {}
 
 void ReplayDB_StageLoad(void) {}
 
-int ReplayDB_Buffer_PackEntry(byte *compressed, byte *uncompressed)
+int ReplayDB_Buffer_PackEntry(uint8 *compressed, uint8 *uncompressed)
 {
     compressed[0] = uncompressed[0];
     compressed[1] = uncompressed[1];
     bool32 flag   = *uncompressed == 1 || *uncompressed == 3;
-    byte changes  = uncompressed[1];
-    byte *outPtr  = &compressed[2];
+    uint8 changes  = uncompressed[1];
+    uint8 *outPtr  = &compressed[2];
     int size      = 2;
 
     // input
@@ -84,24 +84,24 @@ int ReplayDB_Buffer_PackEntry(byte *compressed, byte *uncompressed)
     return size;
 }
 
-int ReplayDB_Buffer_UnpackEntry(byte *uncompressed, byte *compressed)
+int ReplayDB_Buffer_UnpackEntry(uint8 *uncompressed, uint8 *compressed)
 {
     int *outPtr   = (int *)uncompressed;
-    byte *buf    = &compressed[2];
+    uint8 *buf    = &compressed[2];
 
     // compress state
     *uncompressed = *compressed;
 
     bool32 flag     = *compressed == 1 || *compressed == 3;
-    byte changes    = compressed[1];
+    uint8 changes    = compressed[1];
     uncompressed[1] = changes;
 
-    int size = 2 * sizeof(byte);
+    int size = 2 * sizeof(uint8);
 
     // input
     if (flag || (changes & 0x1)) {
         uncompressed[2] = *buf++;
-        size += sizeof(byte);
+        size += sizeof(uint8);
     }
 
     // position
@@ -136,25 +136,25 @@ int ReplayDB_Buffer_UnpackEntry(byte *uncompressed, byte *compressed)
     if (flag || (changes & 0x20)) {
         int rotation = *buf++;
         outPtr[5]    = 2 * rotation;
-        size += sizeof(byte);
+        size += sizeof(uint8);
     }
 
     // direction
     if (flag || (changes & 0x10)) {
         uncompressed[3] = *buf++;
-        size += sizeof(byte);
+        size += sizeof(uint8);
     }
 
     // anim
     if (flag || (changes & 0x40)) {
         uncompressed[24] = *buf++;
-        size += sizeof(byte);
+        size += sizeof(uint8);
     }
 
     // frame
     if (flag || (changes & 0x80)) {
         uncompressed[25] = *buf++;
-        size += sizeof(byte);
+        size += sizeof(uint8);
     }
     return size;
 }

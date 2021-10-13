@@ -7,7 +7,7 @@
 typedef struct {
     RSDK_OBJECT
     int field_4;
-    ushort sfxExplosion3;
+    uint16 sfxExplosion3;
     EntityFXFade *fxFade;
     Entity *signPost;
 } ObjectPSZ2Intro;

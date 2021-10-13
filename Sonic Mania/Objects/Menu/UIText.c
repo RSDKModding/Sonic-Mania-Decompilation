@@ -24,7 +24,7 @@ void UIText_Draw(void)
     drawPos.x = entity->position.x;
     drawPos.y = entity->position.y;
 
-    ushort spr = -1;
+    uint16 spr = -1;
     if (!UIWidgets || UIText->spriteIndex)
         spr = UIText->spriteIndex;
     else

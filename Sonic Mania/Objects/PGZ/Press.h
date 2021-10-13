@@ -6,10 +6,10 @@
 // Object Class
 typedef struct {
 	RSDK_OBJECT
-	ushort animID;
+	uint16 animID;
 	Hitbox hitbox;
-	ushort impactSFX;
-	ushort pressSFX;
+	uint16 impactSFX;
+	uint16 pressSFX;
 #if RETRO_USE_PLUS
 	bool32 canSuper;
 #endif
@@ -19,19 +19,19 @@ typedef struct {
 typedef struct {
 	RSDK_ENTITY
 	StateMachine(state);
-	ushort size;
-	uint speed;
+	uint16 size;
+	uint32 speed;
 	int offTop;
 	int offBottom;
 	int topOffset;
-	uint threads;
+	uint32 threads;
 	int height;
 	int timerStart;
 	int timer;
 	Vector2 drawPos;
-	ushort threadSprY;
-	byte onRoof;
-	byte onFloor;
+	uint16 threadSprY;
+	uint8 onRoof;
+	uint8 onFloor;
 	Animator crusherAnimator;
 	Animator threadAnimator;
 	Animator bumperAnimator;

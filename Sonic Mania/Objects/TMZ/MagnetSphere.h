@@ -7,19 +7,19 @@
 typedef struct {
     RSDK_OBJECT
     Hitbox hitbox;
-    byte sphereAngle[4];
-    byte playerAngles[4];
+    uint8 sphereAngle[4];
+    uint8 playerAngles[4];
     TABLE(int angleList[16], { 32, 32, 32, 48, 64, 80, 96, 96, 96, 160, 160, 176, 192, 208, 224, 224 });
-    ushort aniFrames;
-    ushort sfxBumper;
-    ushort sfxPlasmaBall;
+    uint16 aniFrames;
+    uint16 sfxBumper;
+    uint16 sfxPlasmaBall;
 } ObjectMagnetSphere;
 
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    byte activePlayers;
-    byte playerTimers[4];
+    uint8 activePlayers;
+    uint8 playerTimers[4];
     int field_60;
     int field_64;
     int field_68;

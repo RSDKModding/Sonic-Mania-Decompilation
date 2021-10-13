@@ -7,20 +7,20 @@
 typedef struct {
     RSDK_OBJECT
     Animator animator;
-    ushort aniFrames;
-    ushort sfxTicTock;
+    uint16 aniFrames;
+    uint16 sfxTicTock;
 } ObjectRPlaneShifter;
 
 // Entity Class
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    uint height;
-    byte flags;
+    uint32 height;
+    uint8 flags;
     int field_64;
-    byte activePlayers1;
-    byte prevActivePlayers1;
-    byte activePlayers2;
+    uint8 activePlayers1;
+    uint8 prevActivePlayers1;
+    uint8 activePlayers2;
     int field_6C;
     int field_70;
     int field_74;

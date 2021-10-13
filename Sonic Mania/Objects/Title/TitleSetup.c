@@ -75,7 +75,7 @@ void TitleSetup_StageLoad(void)
 
 void TitleSetup_HandleCheatInputs(void)
 {
-    byte keyState = 0;
+    uint8 keyState = 0;
     if (RSDK_controller->keyUp.press || RSDK_stickL->keyUp.press) {
         keyState = 1;
     }

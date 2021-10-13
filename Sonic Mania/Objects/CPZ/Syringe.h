@@ -8,8 +8,8 @@ typedef struct {
     RSDK_OBJECT
     Hitbox bodyHitbox;
     Hitbox handleHitbox;
-    ushort aniFrames;
-    ushort sfxBloop;
+    uint16 aniFrames;
+    uint16 sfxBloop;
 } ObjectSyringe;
 
 // Entity Class
@@ -20,7 +20,7 @@ typedef struct {
     int offsetY;
     bool32 activated;
     colour colour;
-    byte tag;
+    uint8 tag;
     Animator animator1;
     Animator animator2;
 } EntitySyringe;

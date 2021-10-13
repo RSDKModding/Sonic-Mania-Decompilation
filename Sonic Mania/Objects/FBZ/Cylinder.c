@@ -577,7 +577,7 @@ void Cylinder_State_Unknown5(void)
                     int len   = minVal(abs(player->position.y - top) >> 16, entity->length);
                     int frame = 0;
 
-                    int angle = ((len << 10) / 192 + (((uint)player->groundVel >> 22) & 0x200)) & 0x3FF;
+                    int angle = ((len << 10) / 192 + (((uint32)player->groundVel >> 22) & 0x200)) & 0x3FF;
                     if (player->groundVel <= 0) {
                         frame             = (24 - 24 * angle / 1024) % 24;
                         player->direction = FLIP_NONE;

@@ -6,7 +6,7 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    ushort spriteIndex;
+    uint16 spriteIndex;
     bool32 hasEggman;
     bool32 hasPhantomRider;
     Hitbox hitboxV;
@@ -15,8 +15,8 @@ typedef struct {
     int field_24;
     int field_28;
     int field_2C;
-    ushort sfxButton;
-    ushort field_32;
+    uint16 sfxButton;
+    uint16 field_32;
 } ObjectButton;
 
 // Entity Class
@@ -24,7 +24,7 @@ typedef struct {
     RSDK_ENTITY
     int type;
     bool32 walkOnto;
-    byte tag;
+    uint8 tag;
     int field_64;
     int field_68;
     bool32 activated;

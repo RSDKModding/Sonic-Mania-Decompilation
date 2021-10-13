@@ -35,17 +35,17 @@ typedef struct {
             0x84000,   0x55800,   0x28800,   -0x3000,   -0x2D000,  -0x55800,  -0x7C800,  -0xA2000,  -0xC6000,  -0xE8800,  -0x109800,
             -0x129000, -0x147000, -0x163800, -0x17E800, -0x198000, -0x1B0000, -0x1C6800, -0x1DB800, -0x1EF000, -0x201000, -0x211800,
             -0x220800, -0x22E000, -0x23A000, -0x244800, -0x24D800, -0x255000, -0x25B000, -0x25F800, -0x262800, -0x264000 });
-    ushort aniFrames;
-    ushort sfxBloop;
+    uint16 aniFrames;
+    uint16 sfxBloop;
 } ObjectChemicalBall;
 
 // Entity Class
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    byte type;
-    byte interval;
-    byte intervalOffset;
+    uint8 type;
+    uint8 interval;
+    uint8 intervalOffset;
     int field_60;
     Vector2 startPos2;
     Vector2 startPos;

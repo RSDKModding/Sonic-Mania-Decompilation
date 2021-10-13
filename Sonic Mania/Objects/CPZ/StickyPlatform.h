@@ -6,8 +6,8 @@
 // Object Class
 typedef struct {
 	RSDK_OBJECT
-	ushort sfxID;
-	ushort animID;
+	uint16 sfxID;
+	uint16 animID;
 } ObjectStickyPlatform;
 
 // Entity Class

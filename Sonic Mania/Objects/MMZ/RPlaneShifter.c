@@ -47,7 +47,7 @@ void RPlaneShifter_StageLoad(void)
 void RPlaneShifter_DrawSprites(void)
 {
     RSDK_THIS(RPlaneShifter);
-    byte poleAngles[3];
+    uint8 poleAngles[3];
     Vector2 drawPos;
 
     drawPos.x = entity->position.x;

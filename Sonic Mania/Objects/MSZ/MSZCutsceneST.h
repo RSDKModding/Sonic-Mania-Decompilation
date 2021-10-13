@@ -7,10 +7,10 @@
 typedef struct {
     RSDK_OBJECT
     TABLE(int value1[6], { -0x10000, -0x10000, 0, 0, 0, -0x10000 });
-    ushort value2;
-    ushort value3;
+    uint16 value2;
+    uint16 value3;
     Vector2 value4;
-    byte value5;
+    uint8 value5;
     void *value6;
     void *value7;
     void *value8;
@@ -18,12 +18,12 @@ typedef struct {
     void *value10;
     void *value11[3];
     void *value12[3];
-    byte value13;
-    byte value14;
-    ushort value15;
-    ushort value16;
-    ushort value17;
-    byte value18;
+    uint8 value13;
+    uint8 value14;
+    uint16 value15;
+    uint16 value16;
+    uint16 value17;
+    uint8 value18;
 } ObjectMSZCutsceneST;
 
 // Entity Class

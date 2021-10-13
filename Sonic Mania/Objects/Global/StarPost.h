@@ -9,15 +9,15 @@ typedef struct {
     Hitbox hitbox;
     bool32 hasAchievement;
     Vector2 playerPositions[PLAYER_MAX];
-    byte playerDirections[PLAYER_MAX];
-    ushort postIDs[PLAYER_MAX];
-    byte storedMinutes;
-    byte storedSeconds;
-    byte storedMS;
-    byte activePlayers;
-    ushort spriteIndex;
-    ushort sfx_StarPost;
-    ushort sfx_Warp;
+    uint8 playerDirections[PLAYER_MAX];
+    uint16 postIDs[PLAYER_MAX];
+    uint8 storedMinutes;
+    uint8 storedSeconds;
+    uint8 storedMS;
+    uint8 activePlayers;
+    uint16 spriteIndex;
+    uint16 sfx_StarPost;
+    uint16 sfx_Warp;
 } ObjectStarPost;
 
 // Entity Class
@@ -38,7 +38,7 @@ typedef struct {
     Animator ballData;
     Animator starData;
     Hitbox starHitbox;
-    byte activated;
+    uint8 activated;
 } EntityStarPost;
 
 // Object Struct

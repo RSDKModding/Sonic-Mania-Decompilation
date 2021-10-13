@@ -12,7 +12,7 @@ void SSZ2Setup_StaticUpdate(void)
         foreach_active(Player, player)
         {
             Hitbox *hitbox = Player_GetHitbox(player);
-            ushort tile    = RSDK.GetTileInfo(Zone->fgLow, player->position.x >> 20, ((hitbox->bottom << 16) + player->position.y - 0x10000) >> 20);
+            uint16 tile    = RSDK.GetTileInfo(Zone->fgLow, player->position.x >> 20, ((hitbox->bottom << 16) + player->position.y - 0x10000) >> 20);
             if (tile == 0xFFFF)
                 tile = RSDK.GetTileInfo(Zone->fgLow, player->position.x >> 20, ((hitbox->bottom << 16) + player->position.y - 0x10000) >> 20);
 

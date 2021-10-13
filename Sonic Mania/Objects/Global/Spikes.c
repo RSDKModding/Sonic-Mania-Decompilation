@@ -60,13 +60,13 @@ void Spikes_Update(void)
     if (entity->stateMove != 1) {
         foreach_active(Player, player)
         {
-            if (entity->planeFilter <= 0 || player->collisionPlane == (((byte)entity->planeFilter - 1) & 1)) {
+            if (entity->planeFilter <= 0 || player->collisionPlane == (((uint8)entity->planeFilter - 1) & 1)) {
                 EntityShield *shield = (EntityShield *)RSDK.GetEntityByID(Player->playerCount + RSDK.GetEntityID(player));
                 if (!Ice || (player->state != Ice_State_FrozenPlayer && shield->animator.animationID != 2) || Press) {
                     int playerVelX = player->velocity.x;
                     int playerVelY = player->velocity.y;
 
-                    byte side = Player_CheckCollisionBox(player, entity, &entity->hitbox);
+                    uint8 side = Player_CheckCollisionBox(player, entity, &entity->hitbox);
                     if (side) {
                         if (Ice && player->shield == SHIELD_FIRE && player->invincibleTimer <= 0 && !Press && !entity->shatterTimer) {
                             Ice_ShatterGenerator(16,  16,  8,  0,  0,  0);
@@ -145,7 +145,7 @@ void Spikes_Update(void)
                     int posStoreX = player->position.x;
                     int posStoreY = player->position.y;
 
-                    byte side = 0;
+                    uint8 side = 0;
                     if (player->state == Ice_State_FrozenPlayer) {
                         side = RSDK.CheckObjectCollisionBox(entity, &entity->hitbox, player, &Ice->hitbox2, false);
                     }
@@ -267,7 +267,7 @@ void Spikes_Create(void *data)
         int dir         = entity->type & 1;
         entity->visible = true;
         entity->type    = (entity->type >> 1) & 1;
-        if (entity->planeFilter > 0 && ((byte)entity->planeFilter - 1) & 2)
+        if (entity->planeFilter > 0 && ((uint8)entity->planeFilter - 1) & 2)
             entity->drawOrder = Zone->drawOrderHigh;
         else
             entity->drawOrder = Zone->drawOrderLow;

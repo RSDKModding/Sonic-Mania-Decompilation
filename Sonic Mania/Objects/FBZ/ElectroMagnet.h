@@ -6,12 +6,12 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    ushort aniFrames;
+    uint16 aniFrames;
     Hitbox hitbox;
     Vector2 onScreenRange;
-    byte field_18;
+    uint8 field_18;
     bool32 playingMagnetSFX;
-    ushort sfxMagnet;
+    uint16 sfxMagnet;
 } ObjectElectroMagnet;
 
 // Entity Class
@@ -19,9 +19,9 @@ typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     Animator animator;
-    ushort interval;
-    ushort intervalOffset;
-    ushort duration;
+    uint16 interval;
+    uint16 intervalOffset;
+    uint16 duration;
     int height;
     int shieldRange;
     int timer;

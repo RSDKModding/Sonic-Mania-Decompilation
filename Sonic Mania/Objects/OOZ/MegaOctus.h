@@ -33,17 +33,17 @@ typedef struct {
     TABLE(int field_BC[4], { -0x780000, -0x800000, -0x700000, -0x510000 });
     int orbHealth[2];
     bool32 field_D4;
-    ushort aniFrames;
-    ushort eggmanFrames;
-    ushort hatchFrames;
+    uint16 aniFrames;
+    uint16 eggmanFrames;
+    uint16 hatchFrames;
     Hitbox hitbox;
-    ushort sfxBossHit;
-    ushort sfxExplosion;
-    ushort sfxLaser;
-    ushort sfxBullet;
-    ushort sfxHarpoon;
-    ushort sfxSurface;
-    ushort sfxLaserSplash;
+    uint16 sfxBossHit;
+    uint16 sfxExplosion;
+    uint16 sfxLaser;
+    uint16 sfxBullet;
+    uint16 sfxHarpoon;
+    uint16 sfxSurface;
+    uint16 sfxLaserSplash;
 } ObjectMegaOctus;
 
 // Entity Class
@@ -51,14 +51,14 @@ typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
-    byte type;
+    uint8 type;
     int timer;
     int field_68;
     int field_6C;
     int field_70;
     int shotCount;
     int invincibilityTimer;
-    byte health;
+    uint8 health;
     Vector2 origin;
     int orbID;
     Entity *parent;

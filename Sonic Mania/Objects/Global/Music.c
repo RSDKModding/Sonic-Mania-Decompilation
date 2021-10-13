@@ -65,7 +65,7 @@ void Music_StageLoad(void)
 #endif
 }
 
-void Music_SetMusicTrack(const char *path, byte track, uint loopPoint)
+void Music_SetMusicTrack(const char *path, uint8 track, uint32 loopPoint)
 {
     track &= 0xF;
 
@@ -101,7 +101,7 @@ void Music_State_PlayMusic(void)
     destroyEntity(entity);
 }
 
-void Music_PlayMusicTrack(byte trackID)
+void Music_PlayMusicTrack(uint8 trackID)
 {
     trackID &= 0xF;
 
@@ -170,7 +170,7 @@ void Music_PlayMusicTrack(byte trackID)
     entity->volume = 1.0;
 }
 
-void Music_PlayTrack(byte trackID)
+void Music_PlayTrack(uint8 trackID)
 {
     trackID &= 0xF;
     if (trackID == TRACK_ACTCLEAR) {
@@ -218,7 +218,7 @@ void Music_PlayTrackPtr(EntityMusic *entity)
 #endif
 }
 
-void Music_Unknown2(byte trackID)
+void Music_Unknown2(uint8 trackID)
 {
     trackID &= 0xF;
     Music->nextTrack = TRACK_STAGE;
@@ -309,7 +309,7 @@ void Music_Unknown5(EntityMusic *entity)
         }
     }
 }
-void Music_ResumePrevTrack(byte trackID, bool32 transitionFade)
+void Music_ResumePrevTrack(uint8 trackID, bool32 transitionFade)
 {
     trackID &= 0xF;
     for (int slot = SLOT_MUSICSTACK_START; slot < SLOT_MUSICSTACK_END; ++slot) {
@@ -417,7 +417,7 @@ void Music_ClearMusicStack(void)
     }
 }
 
-void Music_TransitionTrack(byte trackID, float fadeSpeed)
+void Music_TransitionTrack(uint8 trackID, float fadeSpeed)
 {
     trackID &= 0xF;
     switch (trackID) {

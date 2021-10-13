@@ -6,11 +6,11 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    ushort aniFrames;
+    uint16 aniFrames;
     Hitbox hitbox;
     int field_10;
-    ushort sfxExplosion;
-    ushort sfxTwinkle;
+    uint16 sfxExplosion;
+    uint16 sfxTwinkle;
 } ObjectFlowerPod;
 
 // Entity Class

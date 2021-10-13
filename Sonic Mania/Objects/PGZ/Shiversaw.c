@@ -355,7 +355,7 @@ void Shiversaw_Unknown5(EntityPlayer *player)
         }
     }
 
-    byte flags = 0;
+    uint8 flags = 0;
     foreach_all(Crate, crate)
     {
         if (RSDK.CheckObjectCollisionTouchBox(crate, &crate->hitbox, entity, &Shiversaw->hitboxT) && !(flags & 1)) {

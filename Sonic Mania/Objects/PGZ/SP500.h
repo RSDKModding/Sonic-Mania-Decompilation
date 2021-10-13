@@ -6,14 +6,14 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    ushort printLayerID;
+    uint16 printLayerID;
     Hitbox hitbox1;
     Hitbox hitbox2;
     Hitbox hitbox3;
-    ushort aniFrames;
-    ushort sfxBeep4;
-    ushort sfxFail;
-    ushort sfxButton2;
+    uint16 aniFrames;
+    uint16 sfxBeep4;
+    uint16 sfxFail;
+    uint16 sfxButton2;
 } ObjectSP500;
 
 // Entity Class
@@ -32,9 +32,9 @@ typedef struct {
     int field_8C;
     int offset;
     int timer;
-    byte activePlayers;
-    byte playerTimers[2];
-    byte field_9B;
+    uint8 activePlayers;
+    uint8 playerTimers[2];
+    uint8 field_9B;
     int field_9C;
     int flagA;
     int flagB;

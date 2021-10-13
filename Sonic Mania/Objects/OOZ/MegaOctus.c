@@ -296,7 +296,7 @@ void MegaOctus_HandleEggmanAnim(void)
 
                 if (MegaOctus->animator3.frameID >= MegaOctus->animator3.frameCount - 1) {
                     if (!laugh) {
-                        byte anim = entity->state == MegaOctus_State_Unknown4 ? 2 : 0;
+                        uint8 anim = entity->state == MegaOctus_State_Unknown4 ? 2 : 0;
                         RSDK.SetSpriteAnimation(MegaOctus->eggmanFrames, anim, &MegaOctus->animator3, true, 0);
                     }
                     else {
@@ -308,7 +308,7 @@ void MegaOctus_HandleEggmanAnim(void)
         case 3:
             if (!entity->invincibilityTimer) {
                 if (MegaOctus->animator3.frameID >= MegaOctus->animator3.frameCount - 1) {
-                    byte anim = entity->state == MegaOctus_State_Unknown4 ? 2 : 0;
+                    uint8 anim = entity->state == MegaOctus_State_Unknown4 ? 2 : 0;
                     RSDK.SetSpriteAnimation(MegaOctus->eggmanFrames, anim, &MegaOctus->animator3, true, 0);
                 }
             }
@@ -1268,7 +1268,7 @@ void MegaOctus_StateDraw_Arm_Unknown1(void)
     drawPos.x = entity->position.x;
     drawPos.y = entity->position.y;
 
-    byte angle = entity->angle;
+    uint8 angle = entity->angle;
     for (int i = entity->shotCount; i > 0; i -= 0x6000) {
         pos += 0x6000;
         if (pos >= 0x60000) {
@@ -1295,7 +1295,7 @@ void MegaOctus_StateDraw_Arm_Unknown2(void)
     drawPos.y = entity->position.y;
     int angle = entity->angle;
 
-    byte angle2 = angle - 64;
+    uint8 angle2 = angle - 64;
     int count   = (entity->shotCount - 1) / 0x6000 + 1;
     for (int i = 0; i < count; ++i) {
         pos += 0x6000;

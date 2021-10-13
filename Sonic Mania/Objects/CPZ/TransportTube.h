@@ -7,16 +7,16 @@
 typedef struct {
     RSDK_OBJECT
     int field_4[4];
-    ushort field_14;
-    ushort sfxTravel;
+    uint16 field_14;
+    uint16 sfxTravel;
 } ObjectTransportTube;
 
 // Entity Class
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    byte type;
-    byte dirMask;
+    uint8 type;
+    uint8 dirMask;
     int directionCount;
     Vector2 dirVelocity[8];
     int directionIDs[8];

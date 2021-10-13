@@ -8,8 +8,8 @@ typedef struct {
     RSDK_OBJECT
     int field_4;
     ScanlineInfo *scanlines;
-    byte scanlineData[0x100 * sizeof(ScanlineInfo)];
-    ushort spriteIndex;
+    uint8 scanlineData[0x100 * sizeof(ScanlineInfo)];
+    uint16 spriteIndex;
     int field_1010;
 } ObjectUFO_Plasma;
 

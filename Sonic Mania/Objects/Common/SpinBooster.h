@@ -6,21 +6,21 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    ushort aniFrames;
+    uint16 aniFrames;
 } ObjectSpinBooster;
 
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    byte autoGrip;
-    byte bias;
+    uint8 autoGrip;
+    uint8 bias;
     int size;
     int boostPower;
     bool32 boostAlways;
     bool32 forwardOnly;
     bool32 playSound;
     bool32 allowTubeInput;
-    byte activePlayers;
+    uint8 activePlayers;
     int field_78;
     Animator animator;
 } EntitySpinBooster;
@@ -43,7 +43,7 @@ void SpinBooster_Serialize(void);
 int SpinBooster_GetRollDir(EntityPlayer *player);
 void SpinBooster_HandleRollDir(EntityPlayer *player);
 void SpinBooster_ApplyRollVelocity(EntityPlayer *player);
-void SpinBooster_Unknown4(uint colour, int X1, int Y1, int X2, int Y2);
+void SpinBooster_Unknown4(uint32 colour, int X1, int Y1, int X2, int Y2);
 void SpinBooster_DrawSprites(void);
 void SpinBooster_HandleForceRoll(EntityPlayer *player);
 

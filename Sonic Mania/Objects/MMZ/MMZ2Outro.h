@@ -7,9 +7,9 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    ushort sfxThunda;
-    ushort sfxLightsOut;
-    ushort sfxTMZEyes;
+    uint16 sfxThunda;
+    uint16 sfxLightsOut;
+    uint16 sfxTMZEyes;
 } ObjectMMZ2Outro;
 
 // Entity Class

@@ -6,22 +6,22 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    ushort aniFrames;
+    uint16 aniFrames;
     Hitbox hitbox2;
     Hitbox hitbox;
-    ushort field_16;
-    ushort field_18;
-    ushort field_1A;
-    ushort field_1C;
-    ushort sfxHit;
-    ushort sfxExplosion;
-    ushort sfxTargeting;
-    ushort sfxImpact;
-    ushort sfxLedgeBreak;
-    ushort sfxBuzzsaw;
-    ushort sfxDrop;
-    ushort sfxButton2;
-    ushort sfxHullClose;
+    uint16 field_16;
+    uint16 field_18;
+    uint16 field_1A;
+    uint16 field_1C;
+    uint16 sfxHit;
+    uint16 sfxExplosion;
+    uint16 sfxTargeting;
+    uint16 sfxImpact;
+    uint16 sfxLedgeBreak;
+    uint16 sfxBuzzsaw;
+    uint16 sfxDrop;
+    uint16 sfxButton2;
+    uint16 sfxHullClose;
 } ObjectDERobot;
 
 // Entity Class

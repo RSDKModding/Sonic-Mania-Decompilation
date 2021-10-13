@@ -7,11 +7,11 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    ushort aniFrames;
+    uint16 aniFrames;
     Hitbox hitbox;
-    ushort field_10;
-    ushort meshIndex;
-    ushort sceneIndex;
+    uint16 field_10;
+    uint16 meshIndex;
+    uint16 sceneIndex;
 } ObjectMonarchPlans;
 
 // Entity Class

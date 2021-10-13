@@ -16,18 +16,18 @@ typedef struct {
 #endif
     Animator animator1;
     Animator animator2;
-    ushort uiSpriteIndex;
+    uint16 uiSpriteIndex;
 #if RETRO_USE_PLUS
-    ushort saveSelectSpriteIndex;
+    uint16 saveSelectSpriteIndex;
 #endif
-    ushort textSpriteIndex;
-    ushort labelSpriteIndex;
-    ushort sfx_Bleep;
-    ushort sfx_Accept;
-    ushort sfx_Warp;
-    ushort sfx_Event;
-    ushort sfx_Woosh;
-    ushort sfx_Fail;
+    uint16 textSpriteIndex;
+    uint16 labelSpriteIndex;
+    uint16 sfx_Bleep;
+    uint16 sfx_Accept;
+    uint16 sfx_Warp;
+    uint16 sfx_Event;
+    uint16 sfx_Woosh;
+    uint16 sfx_Fail;
 #if RETRO_USE_PLUS
     colour buttonColour;
 #endif

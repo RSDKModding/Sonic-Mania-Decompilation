@@ -7,7 +7,7 @@
 typedef struct {
     RSDK_OBJECT
     Hitbox hitbox;
-    ushort aniFrames;
+    uint16 aniFrames;
 } ObjectPohBee;
 
 // Entity Class
@@ -15,7 +15,7 @@ typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     Vector2 startPos;
-    byte startDir;
+    uint8 startDir;
     int field_68;
     int field_6C;
     int field_70;
@@ -27,7 +27,7 @@ typedef struct {
     Animator animator3;
     Animator animator4;
     Hitbox hitboxes[2];
-    byte spikeCount;
+    uint8 spikeCount;
     Vector2 amplitude;
     PlaneFilterTypes planeFilter;
 } EntityPohBee;
@@ -55,7 +55,7 @@ void PohBee_CheckPlayerCollisions(void);
 
 void PohBee_DrawSprites(void);
 
-Vector2 PohBee_GetSpikePos(byte spikeID, byte shift);
+Vector2 PohBee_GetSpikePos(uint8 spikeID, uint8 shift);
 void PohBee_SetupHitboxes(void);
 
 void PohBee_State_Setup(void);

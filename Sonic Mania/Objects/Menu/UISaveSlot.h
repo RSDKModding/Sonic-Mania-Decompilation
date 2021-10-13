@@ -6,7 +6,7 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    ushort aniFrames;
+    uint16 aniFrames;
 } ObjectUISaveSlot;
 
 // Entity Class
@@ -25,9 +25,9 @@ typedef struct {
 #endif
     int saveEmeralds;
 #if RETRO_USE_PLUS
-    byte saveEncorePlayer;
-    byte saveEncoreBuddy;
-    byte saveEncoreFriends[3];
+    uint8 saveEncorePlayer;
+    uint8 saveEncoreBuddy;
+    uint8 saveEncoreFriends[3];
 #endif
     int type;
     int slotID;
@@ -44,11 +44,11 @@ typedef struct {
     #if RETRO_USE_PLUS
     EntityFXRuby *fxRuby;
     bool32 debugEncoreDraw;
-    byte dCharPoint;
-    byte dCharPartner;
-    byte dCharStock1;
-    byte dCharStock2;
-    byte dCharStock3;
+    uint8 dCharPoint;
+    uint8 dCharPartner;
+    uint8 dCharStock1;
+    uint8 dCharStock2;
+    uint8 dCharStock3;
     #endif
     Animator animator1;
     Animator animator2;
@@ -62,7 +62,7 @@ typedef struct {
     Animator animator10;
     Animator animator11;
     Animator animator12;
-    ushort textSpriteIndex;
+    uint16 textSpriteIndex;
 } EntityUISaveSlot;
 
 // Object Struct
@@ -81,8 +81,8 @@ void UISaveSlot_Serialize(void);
 
 // Extra Entity Functions
 #if RETRO_USE_PLUS
-byte UISaveSlot_Unknown1(byte id);
-void UISaveSlot_Unknown2(byte playerID, bool32 isSilhouette, byte buddyID, byte *friendIDs, byte friendCount, int drawX, int drawY);
+uint8 UISaveSlot_Unknown1(uint8 id);
+void UISaveSlot_Unknown2(uint8 playerID, bool32 isSilhouette, uint8 buddyID, uint8 *friendIDs, uint8 friendCount, int drawX, int drawY);
 #endif
 void UISaveSlot_Unknown3(int drawX, int drawY);
 void UISaveSlot_DrawPlayerInfo(int drawX, int drawY);

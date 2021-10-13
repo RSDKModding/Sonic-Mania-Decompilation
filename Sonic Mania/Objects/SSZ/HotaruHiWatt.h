@@ -15,18 +15,18 @@ typedef struct {
     int value5;
     int value6;
     int value7;
-    byte value8;
-    ushort value9;
-    ushort value10;
-    ushort value11;
-    ushort value12;
-    ushort value13;
-    ushort value14;
-    ushort value15;
-    ushort value16;
-    ushort value17;
-    ushort value18;
-    ushort value19;
+    uint8 value8;
+    uint16 value9;
+    uint16 value10;
+    uint16 value11;
+    uint16 value12;
+    uint16 value13;
+    uint16 value14;
+    uint16 value15;
+    uint16 value16;
+    uint16 value17;
+    uint16 value18;
+    uint16 value19;
 } ObjectHotaruHiWatt;
 
 // Entity Class

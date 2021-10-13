@@ -6,10 +6,10 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    byte shift;
+    uint8 shift;
     Animator animator;
-    ushort spriteIndex;
-    ushort sfx_Crumble;
+    uint16 spriteIndex;
+    uint16 sfx_Crumble;
 } ObjectCollapsingPlatform;
 
 // Entity Class
@@ -18,14 +18,14 @@ typedef struct {
     StateMachine(state);
     Vector2 size;
     bool32 respawn;
-    ushort targetLayer;
-    byte type;
+    uint16 targetLayer;
+    uint8 type;
     int delay;
     bool32 eventOnly;
     bool32 mightyOnly;
     int field_78;
     int collapseDelay;
-    ushort storedTiles[256];
+    uint16 storedTiles[256];
     Hitbox hitbox;
     Vector2 playerPos;
 } EntityCollapsingPlatform;

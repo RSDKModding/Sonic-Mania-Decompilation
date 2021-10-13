@@ -6,8 +6,8 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    ushort sfxBleep;
-    ushort sfxAccept;
+    uint16 sfxBleep;
+    uint16 sfxAccept;
     bool32 disableEvents;
     bool32 controllerDisconnect;
     bool32 dword10;
@@ -16,7 +16,7 @@ typedef struct {
     bool32 plusChanged;
 #endif
     bool32 channelFlags[0x10];
-    ushort lookupTable[0x10000];
+    uint16 lookupTable[0x10000];
 } ObjectPauseMenu;
 
 // Entity Class
@@ -29,10 +29,10 @@ typedef struct {
     Vector2 field_68;
     Vector2 field_70;
     Entity *manager;
-    byte triggerPlayer;
+    uint8 triggerPlayer;
     bool32 disableRestart;
     int buttonCount;
-    byte buttonIDs[3];
+    uint8 buttonIDs[3];
     void (*buttonActions[3])(void);
     Entity* buttonPtrs[3];
     int field_A4;
@@ -60,11 +60,11 @@ void PauseMenu_EditorLoad(void);
 void PauseMenu_Serialize(void);
 
 // Extra Entity Functions
-byte PauseMenu_GetPlayerCount(void);
+uint8 PauseMenu_GetPlayerCount(void);
 void PauseMenu_SetupLookupTable(void);
 void PauseMenu_Unknown3(void);
 void PauseMenu_HandleButtonPositions(void);
-void PauseMenu_AddButton(byte id, void *action);
+void PauseMenu_AddButton(uint8 id, void *action);
 void PauseMenu_SetupMenu(void);
 void PauseMenu_ClearButtons(EntityPauseMenu *entity);
 void PauseMenu_Unknown8(void);

@@ -8,19 +8,19 @@ typedef struct {
 	RSDK_OBJECT
 	void (*defaultState)(void);
 	Hitbox hitbox;
-    ushort animID;
-	ushort sfxID;
+    uint16 animID;
+	uint16 sfxID;
 } ObjectSpeedBooster;
 
 // Entity Class
 typedef struct {
 	RSDK_ENTITY
 	void (*state)(void);
-	byte speed;
+	uint8 speed;
 	int playerPos[4];
 	Vector2 drawPos;
-	byte cooldown;
-	byte playerCooldown[4];
+	uint8 cooldown;
+	uint8 playerCooldown[4];
 	Animator animator;
 } EntitySpeedBooster;
 

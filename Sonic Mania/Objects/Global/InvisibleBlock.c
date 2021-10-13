@@ -7,7 +7,7 @@ void InvisibleBlock_Update(void)
     RSDK_THIS(InvisibleBlock);
     foreach_active(Player, player)
     {
-        if ((entity->planeFilter <= 0 || player->collisionPlane == (((byte)entity->planeFilter - 1) & 1)) && (!entity->noChibi || !player->isChibi)) {
+        if ((entity->planeFilter <= 0 || player->collisionPlane == (((uint8)entity->planeFilter - 1) & 1)) && (!entity->noChibi || !player->isChibi)) {
             switch (Player_CheckCollisionBox(player, entity, &entity->hitbox)) {
                 case C_TOP:
                     if (!entity->noCrush)

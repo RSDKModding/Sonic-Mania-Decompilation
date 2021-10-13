@@ -7,8 +7,8 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    ushort aniFrames;
-    ushort playerAniFrames;
+    uint16 aniFrames;
+    uint16 playerAniFrames;
 } ObjectTryAgainE;
 
 // Entity Class

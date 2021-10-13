@@ -53,7 +53,7 @@ void Summary_State_Unknown(void);
 void Summary_State_Unknown2(void);
 void Summary_State_Unknown3(void);
 
-void Summary_SetTextString(byte anim, void *text, const char *str);
+void Summary_SetTextString(uint8 anim, void *text, const char *str);
 void Summary_SetStageTime(char *buffer, int time);
 void Summary_LoadTimes(void);
 

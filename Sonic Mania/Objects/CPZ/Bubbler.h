@@ -9,17 +9,17 @@ typedef struct {
     Hitbox hitbox1;
     Hitbox hitbox2;
     Hitbox hitbox3;
-    ushort aniFrames;
+    uint16 aniFrames;
 } ObjectBubbler;
 
 // Entity Class
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    ushort timer;
-    ushort timer2;
+    uint16 timer;
+    uint16 timer2;
     Vector2 startPos;
-    byte startDir;
+    uint8 startDir;
     Animator animator1;
     Animator animator2;
 } EntityBubbler;

@@ -45,7 +45,7 @@ void UFO_Player_Draw(void)
         else {
             RSDK.MatrixTranslateXYZ(&entity->matrix2, entity->position.x, entity->height, entity->position.y, true);
             RSDK.MatrixRotateZ(&entity->matrix1, entity->angleZ >> 5);
-            RSDK.MatrixRotateY(&entity->matrix3, entity->angle + (entity->angleZ >> (6 - (byte)(UFO_Setup->machLevel))));
+            RSDK.MatrixRotateY(&entity->matrix3, entity->angle + (entity->angleZ >> (6 - (uint8)(UFO_Setup->machLevel))));
             RSDK.MatrixMultiply(&entity->matrix4, &entity->matrix1, &entity->matrix3);
             RSDK.MatrixMultiply(&entity->matrix3, &entity->matrix4, &entity->matrix2);
             RSDK.MatrixMultiply(&entity->matrix3, &entity->matrix3, &UFO_Camera->matWorld);
@@ -312,7 +312,7 @@ void UFO_Player_HandleBumperTiles(void)
     RSDK_THIS(UFO_Player);
     int flags = 0;
 
-    ushort tile = RSDK.GetTileInfo(UFO_Setup->playFieldLayer, (entity->position.x - 0x80000) >> 20, (entity->position.y - 0x80000) >> 20);
+    uint16 tile = RSDK.GetTileInfo(UFO_Setup->playFieldLayer, (entity->position.x - 0x80000) >> 20, (entity->position.y - 0x80000) >> 20);
     if (RSDK.GetTileBehaviour(tile, 0) == 1)
         flags = 1;
 
@@ -369,7 +369,7 @@ void UFO_Player_HandleSpeedUp(void)
 {
     RSDK_THIS(UFO_Player);
 
-    ushort tile = RSDK.GetTileInfo(UFO_Setup->playFieldLayer, entity->position.x >> 20, entity->position.y >> 20);
+    uint16 tile = RSDK.GetTileInfo(UFO_Setup->playFieldLayer, entity->position.x >> 20, entity->position.y >> 20);
     if (tile == 0xFFFF) {
         if (++entity->field_70 >= 2) {
             entity->interaction   = 0;

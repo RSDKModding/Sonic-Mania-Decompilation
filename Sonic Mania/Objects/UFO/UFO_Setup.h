@@ -19,11 +19,11 @@ typedef struct {
     int spherePan;
     int specialStageID;
     int machQuotas[3];
-    byte playFieldLayer;
-    ushort sfx_BlueSphere;
-    ushort sfx_SSExit;
-    ushort sfx_Emerald;
-    ushort sfx_Event;
+    uint8 playFieldLayer;
+    uint16 sfx_BlueSphere;
+    uint16 sfx_SSExit;
+    uint16 sfx_Emerald;
+    uint16 sfx_Event;
     bool32 resetToTitle;
 } ObjectUFO_Setup;
 

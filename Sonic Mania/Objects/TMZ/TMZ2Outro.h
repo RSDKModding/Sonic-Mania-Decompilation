@@ -7,15 +7,15 @@
 typedef struct {
     RSDK_OBJECT
     TABLE(colour value1[7], { 0x400168, 0x700178, 0x900188, 0xB80188, 0xF00198, 0xF060B0, 0xF0A0C8 });
-    ushort value2;
-    ushort value3;
-    ushort value4;
-    ushort value5;
-    ushort value6;
-    ushort value7;
-    ushort value8;
-    ushort value9;
-    byte value10;
+    uint16 value2;
+    uint16 value3;
+    uint16 value4;
+    uint16 value5;
+    uint16 value6;
+    uint16 value7;
+    uint16 value8;
+    uint16 value9;
+    uint8 value10;
     int value11;
 } ObjectTMZ2Outro;
 

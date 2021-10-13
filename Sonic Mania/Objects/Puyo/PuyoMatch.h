@@ -12,7 +12,7 @@ typedef struct {
     TABLE(int value4[8], { 0, 2, 3, 4, 5, 6, 7, 10 });
     TABLE(int value5[6], { 0, 0, 3, 6, 12, 24 });
     TABLE(int value6[24], { 0, 2, 5, 1, 3, 4, 5, 3, 4, 0, 1, 2, 3, 1, 0, 4, 2, 5, 0, 2, 1, 3, 5, 4 });
-    ushort value7;
+    uint16 value7;
 } ObjectPuyoMatch;
 
 // Entity Class

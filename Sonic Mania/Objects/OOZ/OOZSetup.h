@@ -7,7 +7,7 @@
 typedef struct {
     RSDK_OBJECT
     int palTimer;
-    ushort aniTiles;
+    uint16 aniTiles;
     TileLayer* bgPtr;
     TABLE(int deformData[64], { 1, 2, 1, 3, 1, 2, 2, 1, 2, 3, 1, 2, 1, 2, 0, 0, 2, 0, 3, 2, 2, 3, 2, 2, 1, 3, 0, 0, 1, 0, 1, 3,
                                 1, 2, 1, 3, 1, 2, 2, 1, 2, 3, 1, 2, 1, 2, 0, 0, 2, 0, 3, 2, 2, 3, 2, 2, 1, 3, 0, 0, 1, 0, 1, 3 });
@@ -18,19 +18,19 @@ typedef struct {
     int value9;
     int fadeTimer;
     int flags;
-    byte flameTimers[0x20000];
-    byte *flameTimerPtrs[400];
+    uint8 flameTimers[0x20000];
+    uint8 *flameTimerPtrs[400];
     Vector2 flamePositions[400];
-    ushort flameCount;
-    byte activePlayers;
+    uint16 flameCount;
+    uint8 activePlayers;
 #if RETRO_USE_PLUS
     Animator flameAnimator;
     Animator animator;
-    ushort solFrames;
-    ushort splashFrames;
+    uint16 solFrames;
+    uint16 splashFrames;
 #else
     Animator flameAnimator;
-    ushort solFrames;
+    uint16 solFrames;
 #endif
     bool32 hasAchievement;
     Entity *cutscenePtr;
@@ -39,7 +39,7 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    byte type;
+    uint8 type;
 } EntityOOZSetup;
 
 // Object Struct

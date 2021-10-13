@@ -61,14 +61,14 @@ typedef enum {
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    ushort aniFrames;
+    uint16 aniFrames;
     Hitbox hitbox1;
     Hitbox hitbox2;
     int playerTimers[PLAYER_MAX];
-    ushort sfxFreeze;
-    ushort sfxLedgeBreak;
-    ushort sfxWindowShatter;
-    ushort sfxStruggle;
+    uint16 sfxFreeze;
+    uint16 sfxLedgeBreak;
+    uint16 sfxWindowShatter;
+    uint16 sfxStruggle;
 } ObjectIce;
 
 // Entity Class
@@ -76,14 +76,14 @@ typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
-    byte size;
-    byte type;
-    byte subType;
-    byte subFlip;
+    uint8 size;
+    uint8 type;
+    uint8 subType;
+    uint8 subFlip;
     bool32 bottomSmash;
     bool32 knuxSmash;
-    byte timer;
-    byte animationID;
+    uint8 timer;
+    uint8 animationID;
     Animator animator1;
     Animator animator2;
     Animator animator3;

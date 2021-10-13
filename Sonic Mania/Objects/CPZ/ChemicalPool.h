@@ -7,14 +7,14 @@
 typedef struct {
     RSDK_OBJECT
     TABLE(colour colours[4], { 0xF0F0F0, 0xF0F0F0, 0xE0E0E0, 0xE0E0E0 });
-    ushort aniFrames;
+    uint16 aniFrames;
     int table1[0x1000];
     int table2[0x1000];
     int table3[0x1000];
-    ushort field_C016;
-    ushort sfxChemYellow;
-    ushort sfxChemRed;
-    ushort sfxChemChange;
+    uint16 field_C016;
+    uint16 sfxChemYellow;
+    uint16 sfxChemRed;
+    uint16 sfxChemChange;
 } ObjectChemicalPool;
 
 // Entity Class

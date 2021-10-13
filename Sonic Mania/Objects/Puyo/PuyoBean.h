@@ -9,19 +9,19 @@ typedef struct {
     TABLE(int value1[5], { 16, 12, 8, 4, 2 });
     colour value2;
     int value3;
-    byte value4;
+    uint8 value4;
     bool32 value5;
     int value6;
     TextInfo value7;
-    byte value8;
+    uint8 value8;
     int value9;
     Animator value10;
-    ushort value11;
-    ushort value12;
-    ushort value13;
-    ushort value14;
-    ushort value15;
-    ushort value16;
+    uint16 value11;
+    uint16 value12;
+    uint16 value13;
+    uint16 value14;
+    uint16 value15;
+    uint16 value16;
 } ObjectPuyoBean;
 
 // Entity Class

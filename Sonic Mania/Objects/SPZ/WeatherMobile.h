@@ -14,19 +14,19 @@ typedef struct {
     int value5;
     int value6;
     int value7;
-    ushort value8;
-    ushort value9;
-    ushort value10;
-    ushort value11;
-    ushort value12;
-    ushort value13;
-    byte value14;
+    uint16 value8;
+    uint16 value9;
+    uint16 value10;
+    uint16 value11;
+    uint16 value12;
+    uint16 value13;
+    uint8 value14;
     int value15;
     int value16;
-    ushort value17;
-    byte value18;
-    ushort value19;
-    ushort value20;
+    uint16 value17;
+    uint8 value18;
+    uint16 value19;
+    uint16 value20;
 } ObjectWeatherMobile;
 
 // Entity Class

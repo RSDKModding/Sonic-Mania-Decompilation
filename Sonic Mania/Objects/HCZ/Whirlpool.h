@@ -6,8 +6,8 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    ushort aniFrames;
-    ushort sfxWhirlpool;
+    uint16 aniFrames;
+    uint16 sfxWhirlpool;
     bool32 playingSFX;
     int sfxChannel;
     int timer;
@@ -19,7 +19,7 @@ typedef struct {
     int angVel;
     int yVel;
     Vector2 size;
-    byte activePlayers;
+    uint8 activePlayers;
     Vector2 posUnknown2;
     int field_74;
     int field_78[128];

@@ -6,7 +6,7 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    ushort aniFrames;
+    uint16 aniFrames;
     Hitbox hitbox1;
     Hitbox hitbox2;
 } ObjectBladePole;
@@ -15,7 +15,7 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    ushort timer;
+    uint16 timer;
     Animator animator1;
     Animator animator2;
     Animator animator3;

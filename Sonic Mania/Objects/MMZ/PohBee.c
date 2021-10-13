@@ -27,7 +27,7 @@ void PohBee_Create(void *data)
     RSDK_THIS(PohBee);
 
     entity->visible = true;
-    if (entity->planeFilter > 0 && ((byte)(entity->planeFilter - 1) & 2))
+    if (entity->planeFilter > 0 && ((uint8)(entity->planeFilter - 1) & 2))
         entity->drawOrder = Zone->drawOrderHigh;
     else
         entity->drawOrder = Zone->drawOrderLow;
@@ -85,7 +85,7 @@ void PohBee_CheckPlayerCollisions(void)
 
     foreach_active(Player, player)
     {
-        if (entity->planeFilter <= 0 || player->collisionPlane == ((byte)(entity->planeFilter - 1) & 1)) {
+        if (entity->planeFilter <= 0 || player->collisionPlane == ((uint8)(entity->planeFilter - 1) & 1)) {
             if (Player_CheckBadnikHit(player, entity, &PohBee->hitbox)) {
                 if (entity->drawOrder == 1) {
                     if (Player_CheckBadnikBreak(entity, player, false)) {
@@ -167,7 +167,7 @@ void PohBee_DrawSprites(void)
     }
 }
 
-Vector2 PohBee_GetSpikePos(byte spikeID, byte shift)
+Vector2 PohBee_GetSpikePos(uint8 spikeID, uint8 shift)
 {
     RSDK_THIS(PohBee);
 

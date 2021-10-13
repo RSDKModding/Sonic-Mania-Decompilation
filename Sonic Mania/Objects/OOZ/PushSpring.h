@@ -6,9 +6,9 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    ushort aniFrames;
-    ushort sfxPush;
-    ushort sfxSpring;
+    uint16 aniFrames;
+    uint16 sfxPush;
+    uint16 sfxSpring;
 } ObjectPushSpring;
 
 // Entity Class
@@ -17,7 +17,7 @@ typedef struct {
     StateMachine(state);
     StateMachine(stateDraw);
     StateMachine(stateLate);
-    byte type;
+    uint8 type;
     int pushOffset;
     int pushTimer;
     Hitbox hitbox;

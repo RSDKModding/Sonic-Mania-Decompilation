@@ -258,7 +258,7 @@ void GameProgress_GiveEmerald(int emeraldID)
     if (allEmeraldsFlag)
         progress->allEmeraldsFlag = true;
 }
-void GameProgress_GiveMedal(byte medalID, byte type)
+void GameProgress_GiveMedal(uint8 medalID, uint8 type)
 {
     if (RSDK_sceneInfo->inEditor || checkNoSave || globals->saveLoaded != STATUS_OK) {
         LogHelpers_Print("WARNING GameProgress Attempted to get medallion before loading SaveGame file");
@@ -286,7 +286,7 @@ void GameProgress_GiveMedal(byte medalID, byte type)
     if (silverCount >= 32)
         progress->allSilverMedals = true;
 }
-void GameProgress_GiveEnding(byte ending)
+void GameProgress_GiveEnding(uint8 ending)
 {
     if (RSDK_sceneInfo->inEditor || checkNoSave || globals->saveLoaded != STATUS_OK) {
         LogHelpers_Print("WARNING GameProgress Attempted to get game ending before loading SaveGame file");

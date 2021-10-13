@@ -16,7 +16,7 @@ void UFO_HUD_Update(void)
         if (entity->scale.x <= 512) {
             int cnt = 32 * UFO_Setup->machPoints / UFO_Setup->machQuotas[UFO_Setup->machLevel];
             RSDK.CopyPalette(entity->palID, 96, 0, 96, cnt);
-            RSDK.CopyPalette(1, cnt + 96, 0, cnt + 96, (byte)(32 - cnt));
+            RSDK.CopyPalette(1, cnt + 96, 0, cnt + 96, (uint8)(32 - cnt));
         }
         else {
             RSDK.SetLimitedFade(0, 1, 4, entity->scale.x - 0x200, 96, 127);
@@ -118,7 +118,7 @@ void UFO_HUD_CheckLevelUp(void)
     if (hud->scale.x == 512) {
         int cnt = 32 * UFO_Setup->machPoints / UFO_Setup->machQuotas[UFO_Setup->machLevel];
         RSDK.CopyPalette(hud->palID, 96, 0, 96, cnt);
-        RSDK.CopyPalette(1, cnt + 96, 0, cnt + 96, (byte)(32 - cnt));
+        RSDK.CopyPalette(1, cnt + 96, 0, cnt + 96, (uint8)(32 - cnt));
     }
 }
 

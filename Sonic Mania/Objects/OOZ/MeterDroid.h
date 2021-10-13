@@ -15,14 +15,14 @@ typedef struct {
     int startX;
     int boundsT;
     int boundsB;
-    ushort sfxHit;
-    ushort sfxExplosion;
-    ushort sfxDestroy;
-    ushort sfxToss;
-    ushort sfxGrab;
-    ushort sfxValve;
-    ushort sfxWrench;
-    ushort aniFrames;
+    uint16 sfxHit;
+    uint16 sfxExplosion;
+    uint16 sfxDestroy;
+    uint16 sfxToss;
+    uint16 sfxGrab;
+    uint16 sfxValve;
+    uint16 sfxWrench;
+    uint16 aniFrames;
 } ObjectMeterDroid;
 
 // Entity Class

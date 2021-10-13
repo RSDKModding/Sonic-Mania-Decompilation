@@ -7,7 +7,7 @@
 typedef struct {
     RSDK_OBJECT
     int fadeTimer;
-    ushort aniTiles;
+    uint16 aniTiles;
     TileLayer *bg;
     TABLE(int deformData[32], { -1, 0, 0, -1, -1, 0, 0, 0, 0, -1, -1, 0, 0, 0, 0, -1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 });
     STATIC(int aniTilesTimerA, 16);
@@ -28,7 +28,7 @@ typedef struct {
 #if RETRO_USE_PLUS
     int chuggaVolume;
     int chuggaChannel;
-    ushort sfxLocoChugga;
+    uint16 sfxLocoChugga;
 #endif
 } ObjectMSZSetup;
 

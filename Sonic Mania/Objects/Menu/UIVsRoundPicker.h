@@ -6,7 +6,7 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    ushort aniFrames;
+    uint16 aniFrames;
 } ObjectUIVsRoundPicker;
 
 // Entity Class
@@ -30,7 +30,7 @@ typedef struct {
     Animator animator2;
     Animator animator3;
     Animator animator4;
-    ushort textSpriteIndex;
+    uint16 textSpriteIndex;
 } EntityUIVsRoundPicker;
 
 // Object Struct

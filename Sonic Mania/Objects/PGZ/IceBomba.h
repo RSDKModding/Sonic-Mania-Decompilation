@@ -9,21 +9,21 @@ typedef struct {
 	Hitbox flyHitbox;
 	Hitbox bombHitbox;
 	Hitbox checkbox;
-	ushort animID;
-	ushort explosionSFX;
-	ushort freezeSFX;
+	uint16 animID;
+	uint16 explosionSFX;
+	uint16 freezeSFX;
 } ObjectIceBomba;
 
 // Entity Class
 typedef struct {
 	RSDK_ENTITY
 	StateMachine(state);
-	byte dir;
-	ushort dist;
-	ushort dip;
-	byte unused_62;
+	uint8 dir;
+	uint16 dist;
+	uint16 dip;
+	uint8 unused_62;
 	Vector2 spawnPos;
-	uint spawnDist;
+	uint32 spawnDist;
 	Animator animator;
 	Animator wingAnimator;
 	Animator bombAnimator;

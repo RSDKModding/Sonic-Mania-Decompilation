@@ -15,8 +15,8 @@ typedef struct {
     TABLE(int aniTileDelaysC[8], { 11, 2, 2, 2, 2, 2, 2, 2 });
     STATIC(int delayD, 30);
     int frameD;
-    ushort aniTiles;
-    ushort aniTiles2;
+    uint16 aniTiles;
+    uint16 aniTiles2;
 } ObjectSPZSetup;
 
 // Object Class
@@ -39,8 +39,8 @@ typedef struct {
     int aniTilesFrameA;
     TileLayer *fgLow;
     TileLayer *fgHigh;
-    ushort aniTiles;
-    ushort aniTiles2;
+    uint16 aniTiles;
+    uint16 aniTiles2;
     Entity* outroPtr;
 } ObjectSPZ2Setup;
 

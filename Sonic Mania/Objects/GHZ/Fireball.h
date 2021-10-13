@@ -6,9 +6,9 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    ushort aniFrames;
+    uint16 aniFrames;
     Hitbox hitbox;
-    ushort sfxFireball;
+    uint16 sfxFireball;
 } ObjectFireball;
 
 // Entity Class
@@ -17,9 +17,9 @@ typedef struct {
     StateMachine(state);
     StateMachine(stateDraw);
     Animator animator;
-    byte type;
-    byte interval;
-    byte intervalOffset;
+    uint8 type;
+    uint8 interval;
+    uint8 intervalOffset;
     int field_7C;
     int field_80;
 } EntityFireball;

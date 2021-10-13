@@ -6,9 +6,9 @@
 // Object Class
 typedef struct {
 	RSDK_OBJECT
-	ushort animID;
-	ushort bounceSFX;
-	ushort shatterSFX;
+	uint16 animID;
+	uint16 bounceSFX;
+	uint16 shatterSFX;
 	Animator animators[4];
 } ObjectIceSpring;
 
@@ -18,13 +18,13 @@ typedef struct {
     StateMachine(state);
     int type;
     int flipFlag;
-    byte planeFilter;
+    uint8 planeFilter;
     int basetimer;
     Animator animator;
     Hitbox hitbox;
 	//END SPRING INHERITANCE
     int timer;
-    byte playerBits;
+    uint8 playerBits;
 } EntityIceSpring;
 
 // Object Struct

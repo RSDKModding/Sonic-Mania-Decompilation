@@ -266,7 +266,7 @@ void UISaveSlot_Create(void *data)
 void UISaveSlot_StageLoad(void) { UISaveSlot->aniFrames = RSDK.LoadSpriteAnimation("UI/SaveSelect.bin", SCOPE_STAGE); }
 
 #if RETRO_USE_PLUS
-byte UISaveSlot_Unknown1(byte id)
+uint8 UISaveSlot_Unknown1(uint8 id)
 {
     switch (id) {
         case 1: return ID_SONIC;
@@ -279,7 +279,7 @@ byte UISaveSlot_Unknown1(byte id)
     return ID_NONE;
 }
 
-void UISaveSlot_Unknown2(byte playerID, bool32 isSilhouette, byte buddyID, byte *friendIDs, byte friendCount, int drawX, int drawY)
+void UISaveSlot_Unknown2(uint8 playerID, bool32 isSilhouette, uint8 buddyID, uint8 *friendIDs, uint8 friendCount, int drawX, int drawY)
 {
     RSDK_THIS(UISaveSlot);
     Vector2 drawPos;
@@ -362,7 +362,7 @@ void UISaveSlot_Unknown3(int drawX, int drawY)
     RSDK.SetSpriteAnimation(UISaveSlot->aniFrames, 1, &entity->animator2, true, 3);
     RSDK.SetSpriteAnimation(UISaveSlot->aniFrames, 2, &entity->animator3, true, 3);
 
-    byte friendIDs[3];
+    uint8 friendIDs[3];
     int playerID    = 0;
     int buddyID     = 0;
     int friendCount = 0;

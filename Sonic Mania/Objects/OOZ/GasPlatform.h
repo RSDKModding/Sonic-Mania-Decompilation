@@ -8,15 +8,15 @@ typedef struct {
     RSDK_OBJECT
     Hitbox hitbox;
     Vector2 range;
-    ushort sfxGasPop;
-    ushort sfxSpring;
+    uint16 sfxGasPop;
+    uint16 sfxSpring;
 } ObjectGasPlatform;
 
 // Entity Class
 typedef struct {
     MANIA_PLATFORM_BASE
-    ushort interval;
-    ushort intervalOffset;
+    uint16 interval;
+    uint16 intervalOffset;
     Animator animator2;
 } EntityGasPlatform;
 

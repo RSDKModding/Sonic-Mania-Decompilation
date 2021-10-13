@@ -234,7 +234,7 @@ void DDWrecker_State_Unknown2(void)
     RSDK_THIS(DDWrecker);
     entity->angle3 = (entity->angle3 + (entity->timer2 >> 1)) & 0x3FF;
     entity->arcOffset += (64 - entity->arcOffset) >> 4;
-    entity->angle      = (byte)(entity->angle + 2);
+    entity->angle      = (uint8)(entity->angle + 2);
     entity->position.y = ((RSDK.Sin256(entity->angle) << 10) + entity->startPos.y) & 0xFFFF0000;
     DDWrecker_Spin();
 
@@ -254,7 +254,7 @@ void DDWrecker_State_Unknown2(void)
 void DDWrecker_State_Unknown3(void)
 {
     RSDK_THIS(DDWrecker);
-    entity->angle      = (byte)(entity->angle + 2);
+    entity->angle      = (uint8)(entity->angle + 2);
     entity->position.y = ((RSDK.Sin256(entity->angle) << 10) + entity->startPos.y) & 0xFFFF0000;
 
     DDWrecker_Spin();
@@ -303,7 +303,7 @@ void DDWrecker_State_Unknown4(void)
     }
     entity->angle3 += 4;
     entity->angle3 &= 0x3FF;
-    entity->angle      = (byte)(entity->angle + 2);
+    entity->angle      = (uint8)(entity->angle + 2);
     entity->position.y = ((RSDK.Sin256(entity->angle) << 10) + entity->startPos.y) & 0xFFFF0000;
 
     DDWrecker_Spin2();
@@ -362,7 +362,7 @@ void DDWrecker_State_Unknown5(void)
     }
     entity->angle3 += 4;
     entity->angle3 &= 0x3FF;
-    entity->angle      = (byte)(entity->angle + 2);
+    entity->angle      = (uint8)(entity->angle + 2);
     entity->position.y = ((RSDK.Sin256(entity->angle) << 10) + entity->startPos.y) & 0xFFFF0000;
 
     DDWrecker_Spin2();

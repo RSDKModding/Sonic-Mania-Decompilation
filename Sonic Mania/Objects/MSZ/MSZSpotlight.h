@@ -6,14 +6,14 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    ushort spriteIndex;
+    uint16 spriteIndex;
 } ObjectMSZSpotlight;
 
 // Entity Class
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    byte color;
+    uint8 color;
     int timer;
     int moveFlag;
     Vector2 startPos;

@@ -16,10 +16,10 @@ typedef struct {
     Entity *labelB;
     Entity *fxFade;
     Entity *trackList[64];
-    ushort sfxEmerald;
-    ushort sfxMedal;
-    ushort sfxSSExit;
-    ushort sfxScoreTotal;
+    uint16 sfxEmerald;
+    uint16 sfxMedal;
+    uint16 sfxSSExit;
+    uint16 sfxScoreTotal;
 } ObjectDASetup;
 
 // Entity Class

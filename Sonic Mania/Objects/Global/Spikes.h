@@ -16,28 +16,28 @@ typedef struct {
     StateMachine(stateDraw);
     Animator vData;
     Animator hData;
-    ushort spriteIndex;
-    int dword3C;
-    int dword40;
-    ushort sfx_Move;
-    ushort sfx_Spike;
+    uint16 spriteIndex;
+    int32 dword3C;
+    int32 dword40;
+    uint16 sfx_Move;
+    uint16 sfx_Spike;
 } ObjectSpikes;
 
 // Entity Class
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    int type;
+    int32 type;
     bool32 moving;
-    byte count;
-    byte stagger;
-    short timer;
-    int planeFilter;
-    int stateMove;
-    int moveOffset;
+    uint8 count;
+    uint8 stagger;
+    int16 timer;
+    int32 planeFilter;
+    int32 stateMove;
+    int32 moveOffset;
     Vector2 offset;
-    short timer2;
-    byte shatterTimer;
+    int16 timer2;
+    uint8 shatterTimer;
     Hitbox hitbox;
     Animator animator;
 } EntitySpikes;

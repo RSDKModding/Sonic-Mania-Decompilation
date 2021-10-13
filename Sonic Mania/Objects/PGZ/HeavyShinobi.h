@@ -14,11 +14,11 @@ typedef enum {
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    byte health;
-    byte invincibilityTimer;
+    uint8 health;
+    uint8 invincibilityTimer;
     Animator animator1[4];
-    byte storedIDs[4];
-    byte storedAnimIDs[4];
+    uint8 storedIDs[4];
+    uint8 storedAnimIDs[4];
     Vector2 storePos[16];
     int field_F0;
     int field_F4;
@@ -26,8 +26,8 @@ typedef struct {
     int field_FC;
     int field_100;
     int field_104;
-    byte activeShurikens;
-    ushort aniFrames;
+    uint8 activeShurikens;
+    uint16 aniFrames;
     Hitbox hitbox1;
     Hitbox hitbox2;
     Hitbox hitbox3;
@@ -35,17 +35,17 @@ typedef struct {
     Hitbox hitbox5;
     Hitbox hitbox6;
     Hitbox hitbox7;
-    ushort sfxHit;
-    ushort sfxExplosion;
-    ushort sfxDefeat;
-    ushort sfxDropIn;
-    ushort sfxExplode;
-    ushort sfxGlitch;
-    ushort sfxJump;
-    ushort sfxParry;
-    ushort sfxSlash;
-    ushort sfxStick;
-    ushort sfxThrow;
+    uint16 sfxHit;
+    uint16 sfxExplosion;
+    uint16 sfxDefeat;
+    uint16 sfxDropIn;
+    uint16 sfxExplode;
+    uint16 sfxGlitch;
+    uint16 sfxJump;
+    uint16 sfxParry;
+    uint16 sfxSlash;
+    uint16 sfxStick;
+    uint16 sfxThrow;
 } ObjectHeavyShinobi;
 
 // Entity Class

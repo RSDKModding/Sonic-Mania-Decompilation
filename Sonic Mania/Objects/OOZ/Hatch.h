@@ -11,19 +11,19 @@ typedef struct {
     Hitbox hitbox3;
     Hitbox hitbox4;
     Hitbox hitbox5;
-    ushort aniFrames;
-    ushort sfxHatchOpen;
-    ushort sfxHatchClose;
-    ushort sfxDescend;
-    ushort sfxSurface;
-    ushort sfxGasPop;
+    uint16 aniFrames;
+    uint16 sfxHatchOpen;
+    uint16 sfxHatchClose;
+    uint16 sfxDescend;
+    uint16 sfxSurface;
+    uint16 sfxGasPop;
 } ObjectHatch;
 
 // Entity Class
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    byte go;
+    uint8 go;
     Vector2 subOff1;
     Vector2 subOff2;
     int depth;

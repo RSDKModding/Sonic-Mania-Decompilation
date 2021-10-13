@@ -30,7 +30,7 @@ void MatryoshkaBom_Create(void *data)
     RSDK_THIS(MatryoshkaBom);
 
     entity->visible = true;
-    if (entity->planeFilter > 0 && ((byte)(entity->planeFilter - 1) & 2))
+    if (entity->planeFilter > 0 && ((uint8)(entity->planeFilter - 1) & 2))
         entity->drawOrder = Zone->drawOrderHigh + 2;
     else
         entity->drawOrder = Zone->drawOrderLow + 2;
@@ -132,7 +132,7 @@ void MatryoshkaBom_CheckPlayerCollisions(void)
 
     foreach_active(Player, player)
     {
-        if (entity->planeFilter <= 0 || player->collisionPlane == ((byte)(entity->planeFilter - 1) & 1)) {
+        if (entity->planeFilter <= 0 || player->collisionPlane == ((uint8)(entity->planeFilter - 1) & 1)) {
             if (entity->state != MatryoshkaBom_Unknown10) {
                 if (entity->canExplode) {
                     if (entity->state != MatryoshkaBom_State_Exploding) {
@@ -412,7 +412,7 @@ void MatryoshkaBom_Unknown11(void)
 
         foreach_active(Player, player)
         {
-            if (entity->planeFilter <= 0 || player->collisionPlane == ((byte)(entity->planeFilter - 1) & 1)) {
+            if (entity->planeFilter <= 0 || player->collisionPlane == ((uint8)(entity->planeFilter - 1) & 1)) {
                 if (Player_CheckCollisionTouch(player, entity, &MatryoshkaBom->hitboxShrapnel)) {
                     Player_CheckHit(player, entity);
                 }

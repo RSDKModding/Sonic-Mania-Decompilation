@@ -6,11 +6,11 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    ushort field_4;
-    ushort field_6;
-    ushort sfxRocketJet;
-    ushort sfxShinobiJump;
-    ushort sfxHeliWoosh;
+    uint16 field_4;
+    uint16 field_6;
+    uint16 sfxRocketJet;
+    uint16 sfxShinobiJump;
+    uint16 sfxHeliWoosh;
 } ObjectGHZ2Outro;
 
 // Entity Class

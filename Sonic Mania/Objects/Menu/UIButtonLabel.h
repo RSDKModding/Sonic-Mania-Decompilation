@@ -6,7 +6,7 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    ushort aniFrames;
+    uint16 aniFrames;
 } ObjectUIButtonLabel;
 
 // Entity Class
@@ -16,12 +16,12 @@ typedef struct {
     int field_5C;
     int field_60;
     int field_64;
-    byte type;
+    uint8 type;
     int listID;
     int frameID;
     Animator animator1;
     Animator animator2;
-    ushort textSprite;
+    uint16 textSprite;
 } EntityUIButtonLabel;
 
 // Object Struct

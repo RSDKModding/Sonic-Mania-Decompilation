@@ -8,7 +8,7 @@ typedef struct {
     RSDK_OBJECT
     Hitbox hitboxBadnik;
     Hitbox hitboxGrab;
-    ushort aniFrames;
+    uint16 aniFrames;
 } ObjectScarab;
 
 // Entity Class
@@ -17,20 +17,20 @@ typedef struct {
     StateMachine(state);
     Vector2 startPos;
     Vector2 moveOffset;
-    byte startDir;
+    uint8 startDir;
     int timer;
     int playerTimers[4];
     Animator animator1;
     Animator animator3;
     Animator animator2;
     int amplitude;
-    byte childCount;
+    uint8 childCount;
     PlaneFilterTypes planeFilter;
-    byte drawOrderLow;
-    byte drawOrderHigh;
-    byte timer2;
-    sbyte field_DB;
-    byte grabbedPlayers;
+    uint8 drawOrderLow;
+    uint8 drawOrderHigh;
+    uint8 timer2;
+    int8 field_DB;
+    uint8 grabbedPlayers;
 } EntityScarab;
 
 // Object Struct

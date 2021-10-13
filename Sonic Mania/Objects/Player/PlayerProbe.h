@@ -6,15 +6,15 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    ushort spriteIndex;
+    uint16 spriteIndex;
 } ObjectPlayerProbe;
 
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    int size;
-    byte activePlayers;
-    int negAngle;
+    int32 size;
+    uint8 activePlayers;
+    int32 negAngle;
     Animator animator;
 } EntityPlayerProbe;
 
@@ -34,6 +34,6 @@ void PlayerProbe_Serialize(void);
 
 // Extra Entity Functions
 void PlayerProbe_Print(EntityPlayer *player);
-void PlayerProbe_DrawEditor(uint colour, int x1, int y1, int x2, int y2);
+void PlayerProbe_DrawEditor(uint32 colour, int32 x1, int32 y1, int32 x2, int32 y2);
 
 #endif //!OBJ_PLAYERPROBE_H

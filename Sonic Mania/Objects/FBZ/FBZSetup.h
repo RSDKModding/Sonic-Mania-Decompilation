@@ -14,8 +14,8 @@ typedef struct {
     int array1[0x400];
     int array2[0x400];
     int array3[0x400];
-    ushort aniTiles;
-    ushort bgOutsideLayer;
+    uint16 aniTiles;
+    uint16 bgOutsideLayer;
     EntityFBZ1Outro *outroPtr;
 } ObjectFBZSetup;
 

@@ -37,6 +37,6 @@ void LRZ2Setup_Serialize(void);
 void LRZ2Setup_HandleStageReload(void);
 void LRZ2Setup_GenericTrigger_CB(void);
 EntityButton *LRZ2Setup_HandleTagSetup(int tag, Entity *entityPtr);
-void LRZ2Setup_GetTileInfo(int *tileInfo, int cPlane, int x, int y, int offsetX, int offsetY, byte *behaviour);
+void LRZ2Setup_GetTileInfo(int *tileInfo, int cPlane, int x, int y, int offsetX, int offsetY, uint8 *behaviour);
 
 #endif //!OBJ_LRZ2SETUP_H

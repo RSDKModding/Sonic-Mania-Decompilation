@@ -7,7 +7,7 @@
 typedef struct {
     RSDK_OBJECT
     TABLE(int array[5], { -0x20000, -0x10000, 0x00000, 0x10000, 0x20000 });
-    ushort aniFrames;
+    uint16 aniFrames;
 } ObjectAIZTornado;
 
 // Entity Class

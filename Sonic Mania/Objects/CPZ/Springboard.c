@@ -63,7 +63,7 @@ void Springboard_Update(void)
             hitbox.right  = 28;
             hitbox.bottom = 8;
 
-            byte collision = 0;
+            uint8 collision = 0;
             if (!((1 << playerID) & entity->playerBits))
                 flag = collision = Player_CheckCollisionBox(player, entity, &hitbox);
             else
@@ -109,7 +109,7 @@ void Springboard_Update(void)
             hitbox.right  = 28;
             hitbox.bottom = 8;
 
-            byte collision = 0;
+            uint8 collision = 0;
             if (!((1 << playerID) & entity->playerBits))
                 collision = Player_CheckCollisionBox(player, entity, &hitbox);
             else

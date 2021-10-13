@@ -6,8 +6,8 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    ushort spriteIndex;
-    ushort sfx_Destroy;
+    uint16 spriteIndex;
+    uint16 sfx_Destroy;
 } ObjectExplosion;
 
 // Entity Class

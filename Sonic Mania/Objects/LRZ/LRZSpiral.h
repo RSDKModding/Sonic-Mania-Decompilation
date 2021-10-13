@@ -24,17 +24,17 @@ typedef struct {
             0x1A0000, 0x1A0000, 0x1A0000, 0x1B0000, 0x1B0000, 0x1B0000, 0x1C0000, 0x1C0000, 0x1C0000, 0x1D0000, 0x1D0000, 0x1D0000, 0x1D0000,
             0x1E0000, 0x1E0000, 0x1E0000, 0x1F0000, 0x1F0000, 0x1F0000, 0x200000, 0x200000, 0x200000, 0x210000, 0x210000, 0x210000 });
     Animator animator;
-    ushort aniFrames;
+    uint16 aniFrames;
 } ObjectLRZSpiral;
 
 // Entity Class
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    byte type;
+    uint8 type;
     int height;
     int radius;
-    byte activePlayers;
+    uint8 activePlayers;
     int playerVelocity[4];
     Hitbox hitbox;
 } EntityLRZSpiral;

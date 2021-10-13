@@ -9,8 +9,8 @@ typedef struct {
     Hitbox hitboxSpiny;
     Hitbox hitboxRange;
     Hitbox hitboxShot;
-    ushort aniFrames;
-    ushort sfxShot;
+    uint16 aniFrames;
+    uint16 sfxShot;
 } ObjectSpiny;
 
 // Entity Class
@@ -19,9 +19,9 @@ typedef struct {
     StateMachine(state);
     Animator animator;
     int field_74;
-    byte type;
+    uint8 type;
     Vector2 startPos;
-    byte startDir;
+    uint8 startDir;
     int shotSpeed;
     int timer2;
     int timer;

@@ -45,7 +45,7 @@ void BoundsMarker_StageLoad(void) {}
 void BoundsMarker_CheckBounds(void *p, EntityBoundsMarker *entity, bool32 setPos)
 {
     EntityPlayer *player = (EntityPlayer *)p;
-    ushort playerID      = RSDK.GetEntityID(player);
+    uint16 playerID      = RSDK.GetEntityID(player);
     if (Player_CheckValidState(player) || player->objectID == DebugMode->objectID) {
         if (abs(entity->position.x - player->position.x) < entity->width) {
             switch (entity->type) {

@@ -6,7 +6,7 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    ushort aniFrames;
+    uint16 aniFrames;
 } ObjectUICreditsText;
 
 // Entity Class
@@ -23,7 +23,7 @@ typedef struct {
     int scaleSpeed;
     Vector2 charPositions[64];
     int charOffsets[64];
-    short charTimers[64];
+    int16 charTimers[64];
     int clipY2;
     Animator animator;
 } EntityUICreditsText;

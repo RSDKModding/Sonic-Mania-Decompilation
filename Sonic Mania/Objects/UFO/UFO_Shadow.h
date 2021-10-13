@@ -6,8 +6,8 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    ushort sceneID;
-    ushort modelIndex;
+    uint16 sceneID;
+    uint16 modelIndex;
 } ObjectUFO_Shadow;
 
 // Entity Class

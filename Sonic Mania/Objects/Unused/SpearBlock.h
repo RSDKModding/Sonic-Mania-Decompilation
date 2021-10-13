@@ -8,7 +8,7 @@ typedef struct {
     RSDK_OBJECT
     Hitbox blockHitbox;
     Hitbox spearHitboxes[4];
-    ushort spriteIndex;
+    uint16 spriteIndex;
     Animator animator;
 } ObjectSpearBlock;
 
@@ -16,7 +16,7 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    byte spearDir;
+    uint8 spearDir;
     Vector2 spearPos;
     int timer;
     Animator animator;

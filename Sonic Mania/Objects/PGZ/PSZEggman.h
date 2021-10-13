@@ -6,8 +6,8 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    ushort controlFrames;
-    ushort aniFrames;
+    uint16 controlFrames;
+    uint16 aniFrames;
 } ObjectPSZEggman;
 
 // Entity Class

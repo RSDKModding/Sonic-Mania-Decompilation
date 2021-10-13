@@ -6,16 +6,16 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    ushort aniFrames;
+    uint16 aniFrames;
 } ObjectMMZWheel;
 
 // Entity Class
 typedef struct {
     RSDK_ENTITY
     int amplitude;
-    byte childCount;
+    uint8 childCount;
     int speed;
-    byte motionType;
+    uint8 motionType;
     Vector2 center;
     Vector2 offset;
     int field_78;

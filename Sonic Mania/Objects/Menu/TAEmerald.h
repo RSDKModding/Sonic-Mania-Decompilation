@@ -6,14 +6,14 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    ushort aniFrames;
+    uint16 aniFrames;
 } ObjectTAEmerald;
 
 // Entity Class
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    byte color;
+    uint8 color;
     int timer;
     Vector2 startPos;
     Animator animator;

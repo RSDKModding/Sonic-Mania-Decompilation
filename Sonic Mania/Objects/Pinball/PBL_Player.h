@@ -10,10 +10,10 @@ typedef struct {
     int field_4;
     Hitbox innerBox;
     Hitbox outerBox;
-    ushort sfxPlunger;
-    ushort jumpModel;
-    ushort ballModel;
-    ushort sceneIndex;
+    uint16 sfxPlunger;
+    uint16 jumpModel;
+    uint16 ballModel;
+    uint16 sceneIndex;
 } ObjectPBL_Player;
 
 // Entity Class

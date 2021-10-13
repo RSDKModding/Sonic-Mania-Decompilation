@@ -61,7 +61,7 @@ void Scarab_Create(void *data)
         entity->drawOrderLow  = Zone->drawOrderLow;
         entity->drawOrderHigh = Zone->playerDrawHigh;
     }
-    if ((byte)(entity->planeFilter - 1) & 2) {
+    if ((uint8)(entity->planeFilter - 1) & 2) {
         entity->drawOrderLow  = Zone->drawOrderHigh;
         entity->drawOrderHigh = Zone->playerDrawHigh;
     }
@@ -123,7 +123,7 @@ void Scarab_CheckPlayerCollisions(void)
 
     foreach_active(Player, player)
     {
-        if (entity->planeFilter <= 0 || player->collisionPlane == ((byte)(entity->planeFilter - 1) & 1)) {
+        if (entity->planeFilter <= 0 || player->collisionPlane == ((uint8)(entity->planeFilter - 1) & 1)) {
             int playerID = RSDK.GetEntityID(player);
             if (Player_CheckBadnikHit(player, entity, &Scarab->hitboxBadnik)) {
                 Scarab_HandlePlayerRelease();

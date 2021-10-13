@@ -6,8 +6,8 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    ushort aniFrames;
-    ushort sfxPon;
+    uint16 aniFrames;
+    uint16 sfxPon;
 } ObjectSparkRail;
 
 // Entity Class

@@ -138,7 +138,7 @@ void ChemicalPool_ChangeState(EntityChemicalPool *chemPool, int newType, int new
     chemPool->colours[2] = ((chemPool->g + (chemPool->r << 8)) << 8) + chemPool->b;
     chemPool->colours[3] = ((chemPool->g + (chemPool->r << 8)) << 8) + chemPool->b;
 
-    uint val = abs(newR - chemPool->r) + abs(newG - chemPool->g) + abs(newB - chemPool->b) - 1;
+    uint32 val = abs(newR - chemPool->r) + abs(newG - chemPool->g) + abs(newB - chemPool->b) - 1;
     if (val <= 0x1E && chemPool->state != ChemicalPool_State_Change) {
         chemPool->type  = newType;
         chemPool->timer = 4;

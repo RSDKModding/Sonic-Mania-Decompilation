@@ -6,8 +6,8 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    ushort aniFrames;
-    ushort sfxOpen;
+    uint16 aniFrames;
+    uint16 sfxOpen;
 } ObjectTwistingDoor;
 
 // Entity Class
@@ -19,8 +19,8 @@ typedef struct {
     Vector2 amplitude;
     int buttonTag;
     bool32 hasTension;
-    byte autoOpen;
-    byte collision;
+    uint8 autoOpen;
+    uint8 collision;
     Vector2 targetPos;
     Vector2 centerPos;
     Vector2 drawPos;
@@ -28,9 +28,9 @@ typedef struct {
     int stood;
     int collapseDelay;
     int stoodAngle;
-    byte stoodPlayers;
-    byte pushPlayersL;
-    byte pushPlayersR;
+    uint8 stoodPlayers;
+    uint8 pushPlayersL;
+    uint8 pushPlayersR;
     Hitbox hitbox;
     Animator animator;
     int childCount;

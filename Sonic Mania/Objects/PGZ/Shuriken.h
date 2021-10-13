@@ -11,24 +11,24 @@ typedef struct {
     Hitbox hitbox3;
     Hitbox hitbox4;
     int timerGroups[255];
-    ushort aniFrames;
-    ushort sfxArrowLaunch;
-    ushort sfxArrowHit;
+    uint16 aniFrames;
+    uint16 sfxArrowLaunch;
+    uint16 sfxArrowHit;
 } ObjectShuriken;
 
 // Entity Class
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    ushort timer;
-    ushort dropTimer;
-    byte activePlayers;
+    uint16 timer;
+    uint16 dropTimer;
+    uint8 activePlayers;
     Animator animator;
-    ushort delay;
+    uint16 delay;
     bool32 timerMode;
-    ushort interval;
-    ushort intervalOffset;
-    byte timerGroup;
+    uint16 interval;
+    uint16 intervalOffset;
+    uint8 timerGroup;
 } EntityShuriken;
 
 // Object Struct

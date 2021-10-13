@@ -6,11 +6,11 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    ushort spriteIndex;
-    ushort sfx_ScoreAdd;
-    ushort sfx_ScoreTotal;
+    uint16 spriteIndex;
+    uint16 sfx_ScoreAdd;
+    uint16 sfx_ScoreTotal;
 #if RETRO_USE_PLUS
-    ushort sfx_Event;
+    uint16 sfx_Event;
 #endif
     bool32 isTimeAttack;
     int field_10;

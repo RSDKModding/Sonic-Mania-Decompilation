@@ -15,8 +15,8 @@ typedef enum {
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    ushort spriteIndex;
-    ushort sfx_Spring;
+    uint16 spriteIndex;
+    uint16 sfx_Spring;
 } ObjectSpring;
 
 // Entity Class
@@ -25,7 +25,7 @@ typedef struct {
     StateMachine(state);
     SpringTypes type;
     FlipFlags flipFlag;
-    byte planeFilter;
+    uint8 planeFilter;
     int timer;
     Animator animator;
     Hitbox hitbox;

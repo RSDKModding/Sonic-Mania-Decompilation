@@ -31,7 +31,7 @@ void PBL_TargetBumper_Draw(void)
 {
     RSDK_THIS(PBL_TargetBumper);
     if (entity->depth3D >= 0x4000) {
-        uint colour = RSDK.GetPaletteEntry(0, (entity->field_60 & 0xFF) - 80);
+        uint32 colour = RSDK.GetPaletteEntry(0, (entity->field_60 & 0xFF) - 80);
         RSDK.SetDiffuseColour(PBL_TargetBumper->sceneIndex, (colour >> 16) & 0xFF, (colour >> 8) & 0xFF, colour & 0xFF);
         RSDK.Prepare3DScene(PBL_TargetBumper->sceneIndex);
         RSDK.MatrixScaleXYZ(&entity->matrix2, entity->scale.x, entity->scale.y, 256);

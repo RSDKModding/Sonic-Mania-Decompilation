@@ -6,18 +6,18 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    ushort aniFrames;
-    ushort sfxGush;
+    uint16 aniFrames;
+    uint16 sfxGush;
 } ObjectWaterGush;
 
 // Entity Class
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    byte orientation;
+    uint8 orientation;
     int length;
     int speed;
-    byte activePlayers;
+    uint8 activePlayers;
     Vector2 posUnknown1;
     int field_74;
     int field_78;

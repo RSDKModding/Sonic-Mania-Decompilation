@@ -21,8 +21,8 @@ typedef struct {
     RSDK_OBJECT
     Hitbox hitbox;
     int pan;
-    ushort spriteIndex;
-    ushort sfx_Ring;
+    uint16 spriteIndex;
+    uint16 sfx_Ring;
 } ObjectRing;
 
 // Entity Class
@@ -75,8 +75,8 @@ void Ring_State_Path(void);
 void Ring_State_Sparkle(void);
 void Ring_State_Track(void);
 void Ring_CheckObjectCollisions(int offsetX, int offsetY);
-byte Ring_CheckPlatformCollisions(EntityPlatform *platform);
+uint8 Ring_CheckPlatformCollisions(EntityPlatform *platform);
 void Ring_Collect(void);
-void Ring_FakeLoseRings(Entity *entity, int ringCount, byte drawOrder);
+void Ring_FakeLoseRings(Entity *entity, int ringCount, uint8 drawOrder);
 
 #endif //!OBJ_RING_H

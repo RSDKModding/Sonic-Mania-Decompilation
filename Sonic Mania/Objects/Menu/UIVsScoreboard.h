@@ -6,7 +6,7 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    ushort aniFrames;
+    uint16 aniFrames;
 } ObjectUIVsScoreboard;
 
 // Entity Class
@@ -22,17 +22,17 @@ typedef struct {
     EntityUIControl *parent;
     Vector2 offset;
     Vector2 size;
-    byte p1Score;
-    byte p2Score;
+    uint8 p1Score;
+    uint8 p2Score;
     bool32 showWinner;
-    byte winnerID;
+    uint8 winnerID;
     int sizeY;
     TextInfo scoreText;
     Animator animator1;
     Animator textAnimator;
     Animator animator2;
     Animator animator3;
-    ushort textSpriteIndex;
+    uint16 textSpriteIndex;
 } EntityUIVsScoreboard;
 
 // Object Struct

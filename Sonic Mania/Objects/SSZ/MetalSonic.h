@@ -8,26 +8,26 @@ typedef struct {
     RSDK_OBJECT 
     int field_4;
     int field_8;
-    ushort field_C;
-    ushort sfxHit;
-    ushort sfxExplosion2;
-    ushort sfxExplosion3;
-    ushort sfxRumble;
-    ushort sfxJump2;
-    ushort sfxSpecialRing;
-    ushort sfxMSElecPulse;
-    ushort sfxMSBall;
-    ushort sfxMSFireball;
-    ushort sfxBeep3;
-    ushort sfxBeep4;
-    ushort sfxRockemSockem;
-    ushort sfxMSShoot;
-    ushort sfxMSChargeFire;
-    ushort sfxMSTransform;
-    ushort sfxTransform2;
+    uint16 field_C;
+    uint16 sfxHit;
+    uint16 sfxExplosion2;
+    uint16 sfxExplosion3;
+    uint16 sfxRumble;
+    uint16 sfxJump2;
+    uint16 sfxSpecialRing;
+    uint16 sfxMSElecPulse;
+    uint16 sfxMSBall;
+    uint16 sfxMSFireball;
+    uint16 sfxBeep3;
+    uint16 sfxBeep4;
+    uint16 sfxRockemSockem;
+    uint16 sfxMSShoot;
+    uint16 sfxMSChargeFire;
+    uint16 sfxMSTransform;
+    uint16 sfxTransform2;
     Hitbox hitbox1;
     Hitbox hitbox2;
-    ushort aniFrames;
+    uint16 aniFrames;
 } ObjectMetalSonic;
 
 // Entity Class

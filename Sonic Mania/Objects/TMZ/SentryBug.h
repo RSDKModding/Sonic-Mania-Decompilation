@@ -16,11 +16,11 @@ typedef struct {
     TABLE(int value2[12], { -0x10000, -0x10000, -0x20000, -0x8000, -0x10000, 0x8000, 0x10000, -0x10000, 0x20000, -0x8000, 0x10000, 0x8000 });
     TABLE(int value3[12], { 0x10000, -0x10000, 0x20000, -0x8000, 0x10000, 0x8000, -0x10000, -0x10000, -0x20000, -0x8000, -0x10000, 0x8000 });
     Hitbox hitbox;
-    ushort meshFrames;
-    ushort sceneIndex;
-    ushort aniFrames;
-    ushort sfxPon;
-    ushort sfxSwarm;
+    uint16 meshFrames;
+    uint16 sceneIndex;
+    uint16 aniFrames;
+    uint16 sfxPon;
+    uint16 sfxSwarm;
 } ObjectSentryBug;
 
 // Entity Class
@@ -28,7 +28,7 @@ typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateLate);
-    byte speed;
+    uint8 speed;
     Vector2 amplitude;
     bool32 drawFlag;
     bool32 drawNet;

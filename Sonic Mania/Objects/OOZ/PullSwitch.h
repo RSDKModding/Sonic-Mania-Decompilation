@@ -8,9 +8,9 @@ typedef struct {
     RSDK_OBJECT
     Hitbox hitbox;
     int field_C;
-    ushort aniFrames;
-    ushort sfxButton;
-    ushort sfxSmogClear;
+    uint16 aniFrames;
+    uint16 sfxButton;
+    uint16 sfxSmogClear;
 } ObjectPullSwitch;
 
 // Entity Class
@@ -21,8 +21,8 @@ typedef struct {
     int sprY;
     int sprHeight;
     bool32 activated;
-    byte playerTimers[4];
-    byte activePlayers;
+    uint8 playerTimers[4];
+    uint8 activePlayers;
     Vector2 drawPos;
     Animator animator1;
     Animator animator2;

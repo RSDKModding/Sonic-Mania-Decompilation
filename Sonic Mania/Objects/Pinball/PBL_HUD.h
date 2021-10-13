@@ -7,8 +7,8 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    ushort aniFrames;
-    ushort field_6;
+    uint16 aniFrames;
+    uint16 field_6;
 } ObjectPBL_HUD;
 
 // Entity Class

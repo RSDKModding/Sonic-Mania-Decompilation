@@ -6,11 +6,11 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    ushort aniFrames;
+    uint16 aniFrames;
     Hitbox hitbox;
     TABLE(int heightArray[33], { 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 3, 3, 4, 4, 5, 6, 6, 7, 8, 9, 10, 11, 12, 14, 15, 17, 19, 22, 26 });
-    ushort sfxBumper;
-    ushort value5;
+    uint16 sfxBumper;
+    uint16 value5;
 } ObjectSDashWheel;
 
 // Entity Class
@@ -18,7 +18,7 @@ typedef struct {
     RSDK_ENTITY
     int type;
     bool32 walkOnto;
-    byte tag;
+    uint8 tag;
     bool32 field_64;
     int field_68;
     bool32 activated;
@@ -29,7 +29,7 @@ typedef struct {
     Animator animator3;
     Animator animator2;
     int cooldown;
-    byte rotateOffset;
+    uint8 rotateOffset;
 } EntitySDashWheel;
 
 // Object Struct

@@ -7,8 +7,8 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    ushort cutsceneFrames;
-    ushort dustFrames;
+    uint16 cutsceneFrames;
+    uint16 dustFrames;
 } ObjectAIZEncoreTutorial;
 
 // Entity Class

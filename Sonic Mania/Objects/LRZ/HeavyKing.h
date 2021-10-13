@@ -16,19 +16,19 @@ typedef struct {
 	int value8;
 	int value9;
 	int value10;
-	ushort value11;
-	ushort value12;
-	ushort value13;
-	ushort value14;
-	ushort value15;
-	ushort value16;
-	ushort value17;
-	ushort value18;
-	ushort value19;
-	ushort value20;
-	ushort value21;
-	ushort value22;
-	ushort value23;
+	uint16 value11;
+	uint16 value12;
+	uint16 value13;
+	uint16 value14;
+	uint16 value15;
+	uint16 value16;
+	uint16 value17;
+	uint16 value18;
+	uint16 value19;
+	uint16 value20;
+	uint16 value21;
+	uint16 value22;
+	uint16 value23;
 } ObjectHeavyKing;
 
 // Entity Class

@@ -7,14 +7,14 @@
 typedef struct {
     RSDK_OBJECT
     bool32 hasButton;
-    ushort aniFrames;
+    uint16 aniFrames;
 } ObjectPopOut;
 
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    byte orientation;
-    byte tag;
+    uint8 orientation;
+    uint8 tag;
     bool32 manualTrigger;
     int delay;
     Vector2 field_64;

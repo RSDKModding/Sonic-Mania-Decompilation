@@ -311,7 +311,7 @@ void UIReplayCarousel_Unknown6(void)
     }
 }
 
-void UIReplayCarousel_Unknown7(int a1, short a2, int a3, int a4)
+void UIReplayCarousel_Unknown7(int a1, int16 a2, int a3, int a4)
 {
     RSDK_THIS(UIReplayCarousel);
     if (!RSDK_sceneInfo->inEditor)
@@ -321,7 +321,7 @@ void UIReplayCarousel_Unknown7(int a1, short a2, int a3, int a4)
     RSDK.DrawRect(a3 + 0x790000, (a4 + 0x298000) - 0x550000, 0x200000, 0x550000, 0x5870E0, 255, INK_NONE, false);
     RSDK.DrawRect(a3 - 10027008, a4 - 2785280, 20054016, 0x2C0000, 0, 255, INK_NONE, false);
 
-    uint colour = 0xF0F0F0;
+    uint32 colour = 0xF0F0F0;
     if (a1)
         colour = 0xF26C4F;
     UIWidgets_Unknown7(16, 128, 16, (colour >> 16) & 0xFF, (colour >> 8) & 0xFF, colour & 0xFF, a3 - 0xA0000, a4 + 0xE0000);
@@ -340,11 +340,11 @@ void UIReplayCarousel_Unknown7(int a1, short a2, int a3, int a4)
         UIWidgets_Unknown2(91, 312, a3, a4);
 }
 
-void UIReplayCarousel_Unknown8(byte a1, byte a2, int a3, int a4, int arg10, int a6, int a7)
+void UIReplayCarousel_Unknown8(uint8 a1, uint8 a2, int a3, int a4, int arg10, int a6, int a7)
 {
     RSDK_THIS(UIReplayCarousel);
     Vector2 drawPos;
-    uint colours[] = { 0xE82858, 0x5870E0, 0xF0D808, 0x010101 };
+    uint32 colours[] = { 0xE82858, 0x5870E0, 0xF0D808, 0x010101 };
     int widths[]   = { 60, 82, 52, 70 };
 
     drawPos.x = arg10 - 0x990000;
@@ -391,7 +391,7 @@ void UIReplayCarousel_Unknown8(byte a1, byte a2, int a3, int a4, int arg10, int 
     RSDK.DrawSprite(&entity->animator3, &drawPos, false);
 }
 
-void UIReplayCarousel_Unknown9(byte a1, short a2, int a4, int a5)
+void UIReplayCarousel_Unknown9(uint8 a1, int16 a2, int a4, int a5)
 {
     RSDK_THIS(UIReplayCarousel);
     Vector2 drawPos;
@@ -430,7 +430,7 @@ void UIReplayCarousel_Unknown9(byte a1, short a2, int a4, int a5)
     }
 }
 
-void UIReplayCarousel_Unknown10(byte zoneID, int a2, byte a3, byte a4, int a5, int a6, int drawX, int drawY)
+void UIReplayCarousel_Unknown10(uint8 zoneID, int a2, uint8 a3, uint8 a4, int a5, int a6, int drawX, int drawY)
 {
     RSDK_THIS(UIReplayCarousel);
     UIReplayCarousel_Unknown8(a3, a4, a2, a6, drawX, drawY, a2);
@@ -519,10 +519,10 @@ void UIReplayCarousel_StateDraw_Unknown3(void)
             break;
 
         int score          = 0;
-        ushort zoneID      = 0;
-        ushort act         = 0;
-        ushort characterID = 0;
-        ushort encore      = 0;
+        uint16 zoneID      = 0;
+        uint16 act         = 0;
+        uint16 characterID = 0;
+        uint16 encore      = 0;
 
         int row = API.GetSortedUserDBRowID(globals->replayTableID, id);
         API.GetUserDBValue(globals->replayTableID, row, 4, "score", &score);

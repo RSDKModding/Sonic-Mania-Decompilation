@@ -83,10 +83,10 @@ void MathHelpers_Lerp4(Vector2 *pos, int percent, int startX, int startY, int en
 Vector2 MathHelpers_Unknown5(int percent, int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4)
 {
     int v9  = 0x10000 - percent;
-    int v10 = v9 * ((uint)(v9 * v9) >> 16) >> 16;
-    int v11 = percent * ((uint)(v9 * v9) >> 16) >> 16;
-    int v12 = percent * ((uint)(percent * percent) >> 16) >> 16;
-    int v13 = (0x10000 - percent) * ((uint)(percent * percent) >> 16) >> 16;
+    int v10 = v9 * ((uint32)(v9 * v9) >> 16) >> 16;
+    int v11 = percent * ((uint32)(v9 * v9) >> 16) >> 16;
+    int v12 = percent * ((uint32)(percent * percent) >> 16) >> 16;
+    int v13 = (0x10000 - percent) * ((uint32)(percent * percent) >> 16) >> 16;
 
     Vector2 result;
     result.x = v12 * (x4 >> 16) + v13 * (x3 >> 16) + v11 * (x2 >> 16) + v10 * (x1 >> 16) + 2 * v11 * (x2 >> 16) + 2 * v13 * (x3 >> 16);
@@ -94,7 +94,7 @@ Vector2 MathHelpers_Unknown5(int percent, int x1, int y1, int x2, int y2, int x3
     return result;
 }
 
-int MathHelpers_Unknown6(uint a1)
+int MathHelpers_Unknown6(uint32 a1)
 {
     int val = 0x40000000;
     int id  = 0;
@@ -299,8 +299,8 @@ int MathHelpers_Unknown12(int px1, int py1, int px2, int py2, int tx1, int tx2, 
 }
 int MathHelpers_Unknown13(int a1, int a2)
 {
-    uint val = ((abs(a1) >> 16) * (abs(a2) >> 16) << 16) + (abs(a1) >> 16) * (ushort)abs(a2) + (ushort)abs(a1) * (abs(a2) >> 16)
-               + ((ushort)abs(a1) * (ushort)abs(a2) >> 16);
+    uint32 val = ((abs(a1) >> 16) * (abs(a2) >> 16) << 16) + (abs(a1) >> 16) * (uint16)abs(a2) + (uint16)abs(a1) * (abs(a2) >> 16)
+               + ((uint16)abs(a1) * (uint16)abs(a2) >> 16);
     if ((a2 ^ ~a1) >= 0)
         return -(int)val;
     else

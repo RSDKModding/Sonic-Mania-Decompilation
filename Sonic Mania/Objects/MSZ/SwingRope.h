@@ -8,13 +8,13 @@ typedef struct {
     RSDK_OBJECT
     Hitbox hitbox1;
     Hitbox hitbox2;
-    ushort spriteIndex;
+    uint16 spriteIndex;
 } ObjectSwingRope;
 
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    byte ropeSize;
+    uint8 ropeSize;
     int ropeGrabDelay;
     int rotatedAngle;
     int rotatedOffset;

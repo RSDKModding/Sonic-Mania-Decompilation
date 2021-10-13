@@ -7,20 +7,20 @@
 typedef struct {
     RSDK_OBJECT
     Animator animator;
-    ushort aniFrames;
+    uint16 aniFrames;
     Hitbox hitbox;
 } ObjectHangPoint;
 
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    byte activePlayers;
+    uint8 activePlayers;
     int field_5C[4];
     int playerTimer[4];
     int field_7C;
     int field_80;
     int length;
-    byte speed;
+    uint8 speed;
 } EntityHangPoint;
 
 // Object Struct

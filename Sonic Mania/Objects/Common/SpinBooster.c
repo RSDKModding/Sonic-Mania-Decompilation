@@ -199,7 +199,7 @@ void SpinBooster_HandleRollDir(EntityPlayer *player)
     RSDK_THIS(SpinBooster);
 
     if (entity->autoGrip) {
-        sbyte cMode = 0;
+        int8 cMode = 0;
         if (entity->autoGrip < 5) {
             cMode = entity->autoGrip - 1;
         }
@@ -252,7 +252,7 @@ void SpinBooster_HandleRollDir(EntityPlayer *player)
         RSDK.ObjectTileGrip(player, Zone->fgLayers, cMode, 0, offsetX, offsetY, 1);
         player->angle = plrAngle;
         if (player->onGround) {
-            byte mode = 0;
+            uint8 mode = 0;
             switch (player->collisionMode) {
                 case CMODE_FLOOR: mode = CMODE_ROOF; break;
                 case CMODE_LWALL: mode = CMODE_RWALL; break;
@@ -316,7 +316,7 @@ void SpinBooster_ApplyRollVelocity(EntityPlayer *player)
         }
     }
 }
-void SpinBooster_Unknown4(uint colour, int X1, int Y1, int X2, int Y2)
+void SpinBooster_Unknown4(uint32 colour, int X1, int Y1, int X2, int Y2)
 {
     RSDK.DrawLine(X1, Y1, X2, Y2, colour, 127, INK_ADD, 0);
     int angle = RSDK.ATan2(X1 - X2, Y1 - Y2);
@@ -344,7 +344,7 @@ void SpinBooster_DrawSprites(void)
     }
 
     if (RSDK_sceneInfo->inEditor) {
-        byte negAngle = -entity->angle;
+        uint8 negAngle = -entity->angle;
         int power     = entity->boostPower;
         int X1        = entity->position.x;
         int Y1        = entity->position.y;
@@ -375,31 +375,31 @@ void SpinBooster_DrawSprites(void)
                     clr = 0x00FF00;
                 else
                     clr = 0xFFFF00;
-                SpinBooster_Unknown4(clr, X1, Y1, (RSDK.Cos256((byte)(negAngle + 64)) << 14) + entity->position.x,
-                                     (RSDK.Sin256((byte)(negAngle + 64)) << 14) + entity->position.y);
-                SpinBooster_Unknown4(clr, X1, Y1, (RSDK.Cos256((byte)(negAngle - 64)) << 14) + entity->position.x,
-                                     (RSDK.Sin256((byte)(negAngle - 64)) << 14) + entity->position.y);
+                SpinBooster_Unknown4(clr, X1, Y1, (RSDK.Cos256((uint8)(negAngle + 64)) << 14) + entity->position.x,
+                                     (RSDK.Sin256((uint8)(negAngle + 64)) << 14) + entity->position.y);
+                SpinBooster_Unknown4(clr, X1, Y1, (RSDK.Cos256((uint8)(negAngle - 64)) << 14) + entity->position.x,
+                                     (RSDK.Sin256((uint8)(negAngle - 64)) << 14) + entity->position.y);
                 break;
             case 6:
                 clr = 0xFFFF00;
-                SpinBooster_Unknown4(clr, X1, Y1, (RSDK.Cos256((byte)(negAngle + 64)) << 14) + entity->position.x,
-                                     (RSDK.Sin256((byte)(negAngle + 64)) << 14) + entity->position.y);
+                SpinBooster_Unknown4(clr, X1, Y1, (RSDK.Cos256((uint8)(negAngle + 64)) << 14) + entity->position.x,
+                                     (RSDK.Sin256((uint8)(negAngle + 64)) << 14) + entity->position.y);
                 SpinBooster_Unknown4(0xFF00, X1, Y1, (RSDK.Cos256(negAngle) << 14) + entity->position.x,
                                      (RSDK.Sin256(negAngle) << 14) + entity->position.y);
                 break;
             case 7:
                 clr = 0xFFFF00;
-                SpinBooster_Unknown4(clr, X1, Y1, (RSDK.Cos256((byte)(negAngle - 64)) << 14) + entity->position.x,
-                                     (RSDK.Sin256((byte)(negAngle - 64)) << 14) + entity->position.y);
+                SpinBooster_Unknown4(clr, X1, Y1, (RSDK.Cos256((uint8)(negAngle - 64)) << 14) + entity->position.x,
+                                     (RSDK.Sin256((uint8)(negAngle - 64)) << 14) + entity->position.y);
                 SpinBooster_Unknown4(0xFF00, X1, Y1, (RSDK.Cos256(negAngle) << 14) + entity->position.x,
                                      (RSDK.Sin256(negAngle) << 14) + entity->position.y);
                 break;
             case 8:
                 clr = 0xFFFF00;
-                SpinBooster_Unknown4(clr, X1, Y1, (RSDK.Cos256((byte)(negAngle + 64)) << 14) + entity->position.x,
-                                     (RSDK.Sin256((byte)(negAngle + 64)) << 14) + entity->position.y);
-                SpinBooster_Unknown4(clr, X1, Y1, (RSDK.Cos256((byte)(negAngle - 64)) << 14) + entity->position.x,
-                                     (RSDK.Sin256((byte)(negAngle - 64)) << 14) + entity->position.y);
+                SpinBooster_Unknown4(clr, X1, Y1, (RSDK.Cos256((uint8)(negAngle + 64)) << 14) + entity->position.x,
+                                     (RSDK.Sin256((uint8)(negAngle + 64)) << 14) + entity->position.y);
+                SpinBooster_Unknown4(clr, X1, Y1, (RSDK.Cos256((uint8)(negAngle - 64)) << 14) + entity->position.x,
+                                     (RSDK.Sin256((uint8)(negAngle - 64)) << 14) + entity->position.y);
                 SpinBooster_Unknown4(0xFF00, X1, Y1, (RSDK.Cos256(negAngle) << 14) + entity->position.x,
                                      (RSDK.Sin256(negAngle) << 14) + entity->position.y);
                 break;

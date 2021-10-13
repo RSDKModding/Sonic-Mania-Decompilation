@@ -6,13 +6,13 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    ushort spriteIndex;
+    uint16 spriteIndex;
 } ObjectBoundsMarker;
 
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    byte type;
+    uint8 type;
     int width;
     bool32 vsDisable;
     int offset;

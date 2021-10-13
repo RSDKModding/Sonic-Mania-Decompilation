@@ -20,10 +20,10 @@ typedef struct {
     Vector2 statePos[ImageTrail_TrackCount];
     int currentRotation;
     int stateRotation[ImageTrail_TrackCount];
-    byte currentDirection;
-    byte stateDirection[ImageTrail_TrackCount];
-    byte currentVisible;
-    byte stateVisible[ImageTrail_TrackCount];
+    uint8 currentDirection;
+    uint8 stateDirection[ImageTrail_TrackCount];
+    uint8 currentVisible;
+    uint8 stateVisible[ImageTrail_TrackCount];
     int currentScale;
     int stateScale[ImageTrail_TrackCount];
     Animator currentAnimData;

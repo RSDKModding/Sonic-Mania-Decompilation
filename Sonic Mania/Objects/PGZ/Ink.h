@@ -6,8 +6,8 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    byte playerTypes[4];
-    ushort spriteIndex;
+    uint8 playerTypes[4];
+    uint16 spriteIndex;
     Hitbox hitbox;
     Hitbox hitbox2;
     Hitbox hitbox3;
@@ -16,8 +16,8 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    byte type;
-    byte inkedPlayers;
+    uint8 type;
+    uint8 inkedPlayers;
     Animator data1;
     Animator animator2;
     Animator data3;

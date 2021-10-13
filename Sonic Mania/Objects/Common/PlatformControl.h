@@ -15,7 +15,7 @@ typedef struct {
     int childCount;
     int speed;
     bool32 setActive;
-    byte type;
+    uint8 type;
     int field_6C;
     int buttonTag;
     Entity *controller;

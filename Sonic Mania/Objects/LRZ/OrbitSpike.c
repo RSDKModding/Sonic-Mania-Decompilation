@@ -5,7 +5,7 @@ ObjectOrbitSpike *OrbitSpike;
 void OrbitSpike_Update(void)
 {
     RSDK_THIS(OrbitSpike);
-    byte angle = 2 * ((entity->offset & 0xFF) + (Zone->timer & 0xFF));
+    uint8 angle = 2 * ((entity->offset & 0xFF) + (Zone->timer & 0xFF));
     if (entity->amplitude.x) {
         if (angle >= 0x80) {
             entity->drawOrder = Zone->drawOrderLow;

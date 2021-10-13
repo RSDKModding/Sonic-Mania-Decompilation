@@ -231,7 +231,7 @@ void TransportTube_State_Type5(void)
             player->velocity.x = 0;
             player->velocity.y = 0;
 
-            byte flags = entity->dirMask & ((player->up << 0) | (player->down << 1) | (player->left << 2) | (player->right << 3));
+            uint8 flags = entity->dirMask & ((player->up << 0) | (player->down << 1) | (player->left << 2) | (player->right << 3));
             if (flags & 1) {
                 player->velocity.y = -0x100000;
             }

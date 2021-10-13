@@ -24,11 +24,11 @@ typedef struct {
     int bgScrollPosID;
     int startMusicID;
     int soundTestMax;
-    ushort sfxFail;
-    ushort sfxRing;
-    ushort sfxEmerald;
-    ushort sfxContinue;
-    ushort sfxMedalGot;
+    uint16 sfxFail;
+    uint16 sfxRing;
+    uint16 sfxEmerald;
+    uint16 sfxContinue;
+    uint16 sfxMedalGot;
     int *cheatCodePtrs[8];
     int cheatUnknown[8];
     void (*checkCheatActivated[8])(void);
@@ -38,7 +38,7 @@ typedef struct {
     TABLE(bgScrollPositions[4], { 240, 3, 3, 3 });
     int startMusicID;
     int soundTestMax;
-    ushort sfxFail;
+    uint16 sfxFail;
 #endif
 } ObjectLevelSelect;
 

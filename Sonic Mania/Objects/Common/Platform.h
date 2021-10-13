@@ -6,12 +6,12 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    ushort spriteIndex;
+    uint16 spriteIndex;
     Vector2 stoodPos[4];
-    ushort sfx_Clacker;
-    ushort sfx_Clang;
-    ushort sfx_Push;
-    ushort sfx_Clack;
+    uint16 sfx_Clacker;
+    uint16 sfx_Clang;
+    uint16 sfx_Push;
+    uint16 sfx_Clack;
     bool32 playingPushSFX;
     bool32 useClack;
 } ObjectPlatform;

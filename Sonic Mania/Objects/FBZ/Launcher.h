@@ -6,7 +6,7 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    ushort sfxLaunch;
+    uint16 sfxLaunch;
 } ObjectLauncher;
 
 // Entity Class

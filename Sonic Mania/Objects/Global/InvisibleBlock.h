@@ -6,15 +6,15 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    ushort spriteIndex;
+    uint16 spriteIndex;
     Animator animator;
 } ObjectInvisibleBlock;
 
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    byte width;
-    byte height;
+    uint8 width;
+    uint8 height;
     PlaneFilterTypes planeFilter;
     bool32 noCrush;
     bool32 activeNormal;

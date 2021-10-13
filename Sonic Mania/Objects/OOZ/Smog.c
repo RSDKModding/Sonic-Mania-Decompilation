@@ -62,7 +62,7 @@ void Smog_Draw(void)
     ScanlineInfo *scanlinePtr = Smog->scanlines;
 
     int y       = (Zone->timer + 2 * RSDK_screens->position.y) << 14;
-    byte defPos = ((RSDK_screens->position.y >> 1) + 2 * Zone->timer);
+    uint8 defPos = ((RSDK_screens->position.y >> 1) + 2 * Zone->timer);
 
     ScanlineInfo *scanline = NULL;
     for (int i = 0; i < RSDK_screens->height; ++i) {

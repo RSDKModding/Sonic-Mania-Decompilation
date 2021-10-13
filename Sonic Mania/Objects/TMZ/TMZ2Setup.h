@@ -11,8 +11,8 @@ typedef struct {
     int aniTileFrame;
     int dword10;
     int dword14;
-    ushort aniTiles;
-    ushort dynTiles;
+    uint16 aniTiles;
+    uint16 dynTiles;
 } ObjectTMZ2Setup;
 
 // Entity Class

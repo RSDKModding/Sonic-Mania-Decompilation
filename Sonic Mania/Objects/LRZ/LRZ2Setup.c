@@ -54,7 +54,7 @@ void LRZ2Setup_StaticUpdate(void)
     {
         if (player->onGround) {
             Hitbox *playerHitbox = Player_GetHitbox(player);
-            byte behaviour       = 0;
+            uint8 behaviour       = 0;
             int tileInfo         = 0;
 
             LRZ2Setup_GetTileInfo(&tileInfo, player->collisionPlane, player->position.x, (playerHitbox->bottom << 16) + player->position.y,
@@ -233,7 +233,7 @@ EntityButton *LRZ2Setup_HandleTagSetup(int tag, Entity *entityPtr)
     return taggedEntity;
 }
 
-void LRZ2Setup_GetTileInfo(int *tileInfo, int cPlane, int x, int y, int offsetX, int offsetY, byte *behaviour)
+void LRZ2Setup_GetTileInfo(int *tileInfo, int cPlane, int x, int y, int offsetX, int offsetY, uint8 *behaviour)
 {
     int tileInfoLow   = RSDK.GetTileInfo(Zone->fgLow, x >> 20, y >> 20);
     int tileInfoHigh  = RSDK.GetTileInfo(Zone->fgHigh, x >> 20, y >> 20);

@@ -7,7 +7,7 @@
 typedef struct {
     RSDK_OBJECT
     int timer;
-    ushort sfx_Sega;
+    uint16 sfx_Sega;
 } ObjectLogoSetup;
 
 // Entity Class

@@ -6,17 +6,17 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    ushort aniFrames;
+    uint16 aniFrames;
 } ObjectBridge;
 
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    byte length;
+    uint8 length;
     bool32 burnable;
-    byte field_60;
-    byte activePlayerCount;
-    byte timer;
+    uint8 field_60;
+    uint8 activePlayerCount;
+    uint8 timer;
     int stoodPos;
     int field_68;
     int field_6C;

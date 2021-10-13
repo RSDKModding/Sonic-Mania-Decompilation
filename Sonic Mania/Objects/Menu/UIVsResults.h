@@ -6,29 +6,29 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    ushort aniFrames;
-    ushort textFrames;
+    uint16 aniFrames;
+    uint16 textFrames;
 } ObjectUIVsResults;
 
 // Entity Class
 typedef struct {
     MANIA_UI_ITEM_BASE
-    byte playerID;
+    uint8 playerID;
     int numRows;
     int trophyCount;
-    byte row0Label;
-    byte row1Label;
-    byte row2Label;
-    byte row3Label;
-    byte row4Label;
-    byte row5Label;
-    byte row6Label;
-    byte row7Label;
-    byte row8Label;
-    byte row9Label;
-    byte row10Label;
-    byte row11Label;
-    byte row12Label;
+    uint8 row0Label;
+    uint8 row1Label;
+    uint8 row2Label;
+    uint8 row3Label;
+    uint8 row4Label;
+    uint8 row5Label;
+    uint8 row6Label;
+    uint8 row7Label;
+    uint8 row8Label;
+    uint8 row9Label;
+    uint8 row10Label;
+    uint8 row11Label;
+    uint8 row12Label;
     bool32 row0Highlight;
     bool32 row1Highlight;
     bool32 row2Highlight;
@@ -58,7 +58,7 @@ typedef struct {
     Animator animator4;
     Animator rowAnimators[13];
     Animator animator5;
-    ushort textSpriteIndex;
+    uint16 textSpriteIndex;
 } EntityUIVsResults;
 
 // Object Struct

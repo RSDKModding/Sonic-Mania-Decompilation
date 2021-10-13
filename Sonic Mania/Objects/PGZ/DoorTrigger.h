@@ -7,15 +7,15 @@
 typedef struct {
     RSDK_OBJECT
     Hitbox hitboxes[2];
-    ushort aniFrames;
-    ushort sfxShatter;
+    uint16 aniFrames;
+    uint16 sfxShatter;
 } ObjectDoorTrigger;
 
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    byte orientation;
-    byte id;
+    uint8 orientation;
+    uint8 id;
     Animator animator1;
     Animator animator2;
 } EntityDoorTrigger;

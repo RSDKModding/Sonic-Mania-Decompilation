@@ -9,7 +9,7 @@ void PBL_Player_Update(void)
     StateMachine_Run(entity->stateInput);
     StateMachine_Run(entity->state);
 
-    entity->angleX   = ((ushort)entity->angleX - (ushort)((abs(entity->velocity.y) + abs(entity->velocity.x)) >> 12)) & 0x3FF;
+    entity->angleX   = ((uint16)entity->angleX - (uint16)((abs(entity->velocity.y) + abs(entity->velocity.x)) >> 12)) & 0x3FF;
     entity->rotation = 4 * RSDK.ATan2(-entity->velocity.y, entity->velocity.x);
     if (!(entity->angleX & 0x100))
         entity->animator.animationID = PBL_Player->jumpModel;

@@ -7,7 +7,7 @@
 typedef struct {
     RSDK_OBJECT
     int deformData[0x200];
-    ushort lookupTable[0x10000];
+    uint16 lookupTable[0x10000];
     TileLayer *fgLow;
     TileLayer *fgHigh;
 } ObjectFXRuby;

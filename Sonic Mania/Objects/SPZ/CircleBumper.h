@@ -7,8 +7,8 @@
 typedef struct {
     RSDK_OBJECT
     Hitbox hitbox;
-    ushort aniFrames;
-    ushort sfxBumper;
+    uint16 aniFrames;
+    uint16 sfxBumper;
 } ObjectCircleBumper;
 
 // Entity Class

@@ -8,8 +8,8 @@ typedef struct {
     RSDK_OBJECT
     int field_4;
     int field_8;
-    ushort spriteIndex;
-    ushort sfx_Ring;
+    uint16 spriteIndex;
+    uint16 sfx_Ring;
 } ObjectUFO_Ring;
 
 // Entity Class

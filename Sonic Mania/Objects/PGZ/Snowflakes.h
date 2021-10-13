@@ -6,9 +6,9 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    byte count;
+    uint8 count;
     int field_4;
-    ushort aniFrames;
+    uint16 aniFrames;
 } ObjectSnowflakes;
 
 // Entity Class
@@ -18,11 +18,11 @@ typedef struct {
     int field_5C;
     int field_60;
     Animator animator;
-    byte animIDs[0x40];
-    ushort frameIDs[0x40];
+    uint8 animIDs[0x40];
+    uint16 frameIDs[0x40];
     Vector2 positions[0x40];
-    byte flipFlags[0x40];
-    ushort angles[0x40];
+    uint8 flipFlags[0x40];
+    uint16 angles[0x40];
 } EntitySnowflakes;
 
 // Object Struct

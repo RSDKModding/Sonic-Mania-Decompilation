@@ -603,7 +603,7 @@ void BreakableWall_HandleBlockBreak_V(void)
     entity->position.y = posY;
     RSDK.PlaySfx(BreakableWall->sfx_Break, false, 255);
 }
-void BreakableWall_HandleBlockBreak_H(EntityBreakableWall *entity, byte flip)
+void BreakableWall_HandleBlockBreak_H(EntityBreakableWall *entity, uint8 flip)
 {
     int startX = entity->position.x;
     int startY = entity->position.y;

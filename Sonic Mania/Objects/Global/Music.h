@@ -30,7 +30,7 @@ enum MusicTracks {
 typedef struct {
     RSDK_OBJECT
     char trackNames[16][32];
-    uint trackLoops[16];
+    uint32 trackLoops[16];
     int trackStartPos;
     int channelID;
     int activeTrack;
@@ -46,7 +46,7 @@ typedef struct {
     TextInfo trackFile;
     TextInfo soundTestTitle;
     int trackID;
-    uint trackLoop;
+    uint32 trackLoop;
     bool32 playOnLoad;
     int field_78;
     int timer;
@@ -77,20 +77,20 @@ void Music_EditorLoad(void);
 void Music_Serialize(void);
 
 // Extra Entity Functions
-void Music_SetMusicTrack(const char *path, byte track, uint loopPoint);
+void Music_SetMusicTrack(const char *path, uint8 track, uint32 loopPoint);
 void Music_State_PlayMusic(void);
-void Music_PlayMusicTrack(byte trackID);
-void Music_PlayTrack(byte trackID);
+void Music_PlayMusicTrack(uint8 trackID);
+void Music_PlayTrack(uint8 trackID);
 void Music_PlayTrackPtr(EntityMusic *entity);
 
-void Music_Unknown2(byte trackID);
+void Music_Unknown2(uint8 trackID);
 void Music_Unknown3(EntityMusic *entity);
 bool32 Music_CheckMusicStack(void);
 void Music_Unknown5(EntityMusic *entity);
-void Music_ResumePrevTrack(byte trackID, bool32 transitionFade);
+void Music_ResumePrevTrack(uint8 trackID, bool32 transitionFade);
 void Music_Unknown7(EntityMusic *entity);
 void Music_ClearMusicStack(void);
-void Music_TransitionTrack(byte trackID, float fadeSpeed);
+void Music_TransitionTrack(uint8 trackID, float fadeSpeed);
 void Music_FadeOut(float fadeSpeed);
 void Music_State_Unknown11(void);
 void Music_State_Unknown12(void);

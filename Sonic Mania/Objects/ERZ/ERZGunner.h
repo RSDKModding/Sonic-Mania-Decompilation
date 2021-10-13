@@ -11,7 +11,7 @@ typedef struct {
     colour value3;
     colour value4;
     colour value5;
-    ushort value6;
+    uint16 value6;
 } ObjectERZGunner;
 
 // Entity Class

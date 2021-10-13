@@ -8,8 +8,8 @@ typedef struct {
     RSDK_OBJECT
     int field_4;
     ScanlineInfo *scanlines;
-    byte scanlineData[0x100 * sizeof(ScanlineInfo)];
-    ushort aniFrames;
+    uint8 scanlineData[0x100 * sizeof(ScanlineInfo)];
+    uint16 aniFrames;
     int starPostID;
 } ObjectSmog;
 

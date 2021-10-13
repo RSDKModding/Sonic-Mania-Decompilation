@@ -6,7 +6,7 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    ushort aniFrames;
+    uint16 aniFrames;
     int taggedBoatIDs[3];
     bool32 hasAchievement;
 } ObjectGondola;
@@ -17,8 +17,8 @@ typedef struct {
     StateMachine(state);
     int minY;
     int maxY;
-    byte boatID;
-    byte activePlayers;
+    uint8 boatID;
+    uint8 activePlayers;
     Vector2 field_68;
     int field_70;
     int field_74;

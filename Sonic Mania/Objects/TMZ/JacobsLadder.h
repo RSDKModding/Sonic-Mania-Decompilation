@@ -6,8 +6,8 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    ushort aniFrames;
-    ushort sfxLadder;
+    uint16 aniFrames;
+    uint16 sfxLadder;
 } ObjectJacobsLadder;
 
 // Entity Class
@@ -24,8 +24,8 @@ typedef struct {
     int field_7C;
     bool32 field_80;
     int field_84;
-    byte activePlayers;
-    byte playerTimers[4];
+    uint8 activePlayers;
+    uint8 playerTimers[4];
     Vector2 playerPositions[4];
     Hitbox hitbox;
     Animator animator2;

@@ -35,12 +35,12 @@ typedef struct {
     int aniTileFrameC;
     int aniTilesDelay3;
 #endif  
-    ushort knuxSpriteIndex;
-    ushort sfxDrill;
-    ushort sfxBreak;
-    ushort sfxImpact;
-    ushort sfxHeliWoosh;
-    ushort aniTiles;
+    uint16 knuxSpriteIndex;
+    uint16 sfxDrill;
+    uint16 sfxBreak;
+    uint16 sfxImpact;
+    uint16 sfxHeliWoosh;
+    uint16 aniTiles;
 } ObjectAIZSetup;
 
 // Entity Class

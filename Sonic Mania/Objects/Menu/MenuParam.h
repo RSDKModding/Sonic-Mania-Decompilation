@@ -11,8 +11,8 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    byte selectionFlag;
-    byte field_59;
+    uint8 selectionFlag;
+    uint8 field_59;
     char menuTag[0x100];
     int selectionID;
     int field_160;
@@ -27,10 +27,10 @@ typedef struct {
     int field_180;
     int viewReplay;
     int showGhost;
-    byte field_18C;
-    byte replayRank;
-    byte field_18E;
-    byte field_18F;
+    uint8 field_18C;
+    uint8 replayRank;
+    uint8 field_18E;
+    uint8 field_18F;
     int field_190;
     int field_194;
     int field_198;

@@ -16,9 +16,9 @@ typedef enum {
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    ushort aniFrames;
-    ushort sfx_L[7];
-    ushort sfx_R[7];
+    uint16 aniFrames;
+    uint16 sfx_L[7];
+    uint16 sfx_R[7];
 } ObjectPhantomRuby;
 
 // Entity Class
@@ -51,7 +51,7 @@ void PhantomRuby_EditorLoad(void);
 void PhantomRuby_Serialize(void);
 
 // Extra Entity Functions
-void PhantomRuby_PlaySFX(byte sfxID);
+void PhantomRuby_PlaySFX(uint8 sfxID);
 void PhantomRuby_Unknown2(EntityPhantomRuby *ruby);
 void PhantomRuby_Unknown3(void);
 void PhantomRuby_Unknown4(void);

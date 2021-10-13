@@ -8,10 +8,10 @@ typedef struct {
     RSDK_OBJECT
     Hitbox hitbox;
     bool32 flag;
-    ushort aniFrames;
-    ushort sfxGrab;
-    ushort sfxClack;
-    ushort sfxSpeedBooster;
+    uint16 aniFrames;
+    uint16 sfxGrab;
+    uint16 sfxClack;
+    uint16 sfxSpeedBooster;
 } ObjectLaunchSpring;
 
 // Entity Class
@@ -21,16 +21,16 @@ typedef struct {
     Animator animator1;
     Animator animator2;
     Animator animator3;
-    byte type;
-    byte rotDir;
-    byte rotSpeed;
+    uint8 type;
+    uint8 rotDir;
+    uint8 rotSpeed;
     bool32 manual;
     bool32 strict;
-    byte timer;
-    byte field_B1;
-    byte timer2;
-    short field_B4;
-    short field_B6;
+    uint8 timer;
+    uint8 field_B1;
+    uint8 timer2;
+    int16 field_B4;
+    int16 field_B6;
     Entity *playerPtr;
 } EntityLaunchSpring;
 

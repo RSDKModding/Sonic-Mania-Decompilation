@@ -262,7 +262,7 @@ void WarpDoor_Unknown2(void)
     Zone->playerBoundActiveB[0] = false;
 }
 
-void WarpDoor_Unknown3(byte id)
+void WarpDoor_Unknown3(uint8 id)
 {
     Zone->playerBoundActiveT[0] = false;
     Zone->playerBoundActiveR[0] = false;
@@ -289,7 +289,7 @@ void WarpDoor_Unknown4(void)
     }
 }
 
-bool32 WarpDoor_Unknown5(short a1, Vector2 *posPtr)
+bool32 WarpDoor_Unknown5(int16 a1, Vector2 *posPtr)
 {
     if (!WarpDoor->boundCount)
         return false;

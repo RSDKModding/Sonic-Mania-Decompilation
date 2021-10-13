@@ -9,8 +9,8 @@ typedef struct {
     Hitbox hitbox1;
     Hitbox hitbox2;
     Hitbox hitbox3;
-    ushort aniFrames;
-    ushort sfxPon;
+    uint16 aniFrames;
+    uint16 sfxPon;
 } ObjectSweep;
 
 // Entity Class
@@ -19,9 +19,9 @@ typedef struct {
     StateMachine(state);
     StateMachine(stateStore);
     int timer;
-    byte hasShot;
+    uint8 hasShot;
     Vector2 startPos;
-    byte startDir;
+    uint8 startDir;
     Entity *waterPtr;
     Animator animator;
 } EntitySweep;

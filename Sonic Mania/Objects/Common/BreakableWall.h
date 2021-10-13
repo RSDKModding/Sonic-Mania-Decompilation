@@ -7,7 +7,7 @@
 typedef struct {
     RSDK_OBJECT
     Animator animator;
-    ushort spriteIndex;
+    uint16 spriteIndex;
     TABLE(int value3[16], { -0x80000, -0x180000, 0x80000, -0x180000, -0x80000, -0x80000, 0x80000, -0x80000, -0x80000, 0x80000, 0x80000, 0x80000,
                             -0x80000, 0x180000, 0x80000, 0x180000 });
     TABLE(int value4[16], { -0x60000, -0x60000, -0x40000, -0x50000, -0x120000, -0x20000, -0x60000, -0x10000, -0x80000, 0x20000, -0x60000, 0x10000,
@@ -16,8 +16,8 @@ typedef struct {
                             0x50000, 0x60000, 0x60000 });
     TABLE(int value6[8], { -0x80000, -0x80000, 0x80000, -0x80000, -0x80000, 0x80000, 0x80000, 0x80000 });
     TABLE(int value7[8], { -0x20000, -0x20000, 0x20000, -0x20000, -0x10000, -0x10000, 0x10000, -0x10000 }); 
-    ushort sfx_Break;
-    ushort farPlaneLayer;
+    uint16 sfx_Break;
+    uint16 farPlaneLayer;
 } ObjectBreakableWall;
 
 // Entity Class
@@ -25,13 +25,13 @@ typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
-    byte type;
+    uint8 type;
     bool32 onlyKnux;
     bool32 onlyMighty;
     bool32 priority;
     Vector2 size;
-    ushort tileInfo;
-    ushort layerID;
+    uint16 tileInfo;
+    uint16 layerID;
     int timer;
     Vector2 tilePos;
     int dword88;
@@ -76,7 +76,7 @@ void BreakableWall_HandleSidesBreak(void);
 void BreakableWall_HandleBottomBreak_Chunks(void);
 void BreakableWall_HandleBottomBreak_All(void);
 void BreakableWall_HandleBlockBreak_V(void);
-void BreakableWall_HandleBlockBreak_H(EntityBreakableWall *entity, byte flip);
+void BreakableWall_HandleBlockBreak_H(EntityBreakableWall *entity, uint8 flip);
 
 // Misc
 void BreakableWall_GiveScoreBonus(void *plr);

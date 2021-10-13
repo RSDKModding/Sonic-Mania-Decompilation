@@ -63,11 +63,11 @@ void COverlay_DrawTile(void)
     EntityPlayer *player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     int tx               = 0;
     for (int x = 0; x < 0x10; ++x) {
-        byte ty   = -1;
-        byte th2  = -1;
-        byte ty2  = -1;
-        byte th   = -1;
-        byte solid = 0;
+        uint8 ty   = -1;
+        uint8 th2  = -1;
+        uint8 ty2  = -1;
+        uint8 th   = -1;
+        uint8 solid = 0;
         for (int y = 0; y < 0x10; ++y) {
             if (RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_FLOOR, player->collisionPlane, x << 0x10, y << 0x10, false)) {
                 solid |= 1;

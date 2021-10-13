@@ -16,7 +16,7 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     Vector2 size;
-    byte bgID;
+    uint8 bgID;
     int field_64;
     int field_68;
     int field_6C;

@@ -13,7 +13,7 @@ void UFO_Plasma_Draw(void)
     ScanlineInfo *scanlinePtr = UFO_Plasma->scanlines;
 
     int y       = (UFO_Setup->timer + 2 * RSDK_screens->position.y) << 14;
-    byte defPos = ((RSDK_screens->position.y >> 1) + 2 * UFO_Setup->timer);
+    uint8 defPos = ((RSDK_screens->position.y >> 1) + 2 * UFO_Setup->timer);
 
     for (int i = 0; i < RSDK_screens->height; ++i) {
         ScanlineInfo *scanline  = (ScanlineInfo *)&UFO_Plasma->scanlineData[defPos++ * sizeof(ScanlineInfo)];

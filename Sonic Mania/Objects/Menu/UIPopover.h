@@ -26,14 +26,14 @@ typedef struct {
     int field_7C;
     EntityUIControl *parent;
     Entity* storedEntity;
-    byte frameIDs[4];
+    uint8 frameIDs[4];
     void (*callbacks[4])(void);
     bool32 flags[4];
     EntityUIButton *buttons[4];
     StateMachine(unknownCallback);
     int field_C0;
     int field_C4;
-    byte field_C8;
+    uint8 field_C8;
 } EntityUIPopover;
 
 // Object Struct
@@ -52,7 +52,7 @@ void UIPopover_Serialize(void);
 
 // Extra Entity Functions
 EntityUIPopover *UIPopover_CreatePopover(void);
-void UIPopover_AddButton(EntityUIPopover *popover, byte frameID, void (*callback)(void), bool32 flag);
+void UIPopover_AddButton(EntityUIPopover *popover, uint8 frameID, void (*callback)(void), bool32 flag);
 void UIPopover_Setup(EntityUIPopover *popover, int posX, int posY);
 void UIPopover_DrawSprites(void);
 void UIPopover_SetupButtonPositions(void);

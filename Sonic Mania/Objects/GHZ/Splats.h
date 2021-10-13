@@ -10,21 +10,21 @@ typedef struct {
     Hitbox hitbox1;
     Hitbox hitbox2;
     Hitbox hitbox3;
-    ushort aniFrames;
-    ushort sfxSplatsSpawn;
-    ushort sfxSplatsLand;
+    uint16 aniFrames;
+    uint16 sfxSplatsSpawn;
+    uint16 sfxSplatsLand;
 } ObjectSplats;
 
 // Entity Class
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    byte bounceCount;
-    byte activeCount;
-    byte numActive;
-    byte field_5F;
-    ushort minDelay;
-    ushort field_62;
+    uint8 bounceCount;
+    uint8 activeCount;
+    uint8 numActive;
+    uint8 field_5F;
+    uint16 minDelay;
+    uint16 field_62;
     int delay;
     int field_68;
     Entity *parent;

@@ -6,9 +6,9 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    ushort aniFrames;
+    uint16 aniFrames;
     Hitbox hitbox;
-    ushort sfxExplosion;
+    uint16 sfxExplosion;
 } ObjectMine;
 
 // Entity Class

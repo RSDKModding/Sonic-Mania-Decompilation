@@ -8,18 +8,18 @@ typedef struct {
     RSDK_OBJECT
     Hitbox hitbox1;
     Hitbox hitbox2;
-    ushort spriteIndex;
+    uint16 spriteIndex;
 } ObjectBuzzBomber;
 
 // Entity Class
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    byte shotRange;
+    uint8 shotRange;
     int timer;
-    byte field_64;
+    uint8 field_64;
     Vector2 startPos;
-    byte startDir;
+    uint8 startDir;
     Entity *projectile;
     Animator data1;
     Animator animator2;

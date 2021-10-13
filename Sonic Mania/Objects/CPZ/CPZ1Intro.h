@@ -6,11 +6,11 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    ushort playerFrames;
-    ushort particleSpriteIndex;
-    ushort field_8;
-    ushort sfxChemDrop;
-    ushort sfxDNABurst;
+    uint16 playerFrames;
+    uint16 particleSpriteIndex;
+    uint16 field_8;
+    uint16 sfxChemDrop;
+    uint16 sfxDNABurst;
     int playerAnimID;
     Entity *fxRuby;
     Entity *debris;

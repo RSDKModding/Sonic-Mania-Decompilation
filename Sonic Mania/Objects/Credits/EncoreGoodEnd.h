@@ -8,8 +8,8 @@
 typedef struct {
     RSDK_OBJECT
     int field_4;
-    ushort field_8;
-    ushort sfxSnap;
+    uint16 field_8;
+    uint16 sfxSnap;
     int field_C;
     EntityDecoration *decorations[16];
 } ObjectEncoreGoodEnd;

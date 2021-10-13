@@ -8,7 +8,7 @@ typedef struct {
     RSDK_OBJECT
     int type;
     int inputID;
-    ushort aniFrames;
+    uint16 aniFrames;
 } ObjectUIButtonPrompt;
 
 // Entity Class
@@ -20,7 +20,7 @@ typedef struct {
     Vector2 startPos;
     int promptID;
     int buttonID;
-    byte headingAnchor;
+    uint8 headingAnchor;
     int field_78;
     int prevPrompt;
     int prevButton;
@@ -35,7 +35,7 @@ typedef struct {
     Animator animator1;
     Animator animator2;
     Animator animator3;
-    ushort textSprite;
+    uint16 textSprite;
 } EntityUIButtonPrompt;
 
 // Object Struct
@@ -55,7 +55,7 @@ void UIButtonPrompt_Serialize(void);
 // Extra Entity Functions
 int UIButtonPrompt_GetButtonMappings(int input, int button);
 int UIButtonPrompt_GetGamepadType(void);
-byte UIButtonPrompt_MappingsToFrame(int mappings);
+uint8 UIButtonPrompt_MappingsToFrame(int mappings);
 
 bool32 UIButtonPrompt_CheckTouch(void);
 void UIButtonPrompt_Unknown4(void);

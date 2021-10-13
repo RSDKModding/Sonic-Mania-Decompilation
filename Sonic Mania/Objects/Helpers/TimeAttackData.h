@@ -6,9 +6,9 @@
 // Object Class
 typedef struct {
     int status;
-    byte zoneID;
-    byte act;
-    byte characterID;
+    uint8 zoneID;
+    uint8 act;
+    uint8 characterID;
     bool32 encore;
     int uuid;
     int rowID;
@@ -43,9 +43,9 @@ void TimeAttackData_EditorLoad(void);
 void TimeAttackData_Serialize(void);
 
 //Extra Entity FUnctions
-void TimeAttackData_TrackActClear(byte act, byte zone, StatInfo *stat, byte charID, int time, int rings, int score);
-void TimeAttackData_TrackTAClear(byte actID, byte zone, StatInfo *stat, byte charID, int gameMode, int time);
-void TimeAttackData_TrackEnemyDefeat(byte actID, byte zoneID, StatInfo *stat, byte charID, bool32 encore, int x, int y);
+void TimeAttackData_TrackActClear(uint8 act, uint8 zone, StatInfo *stat, uint8 charID, int time, int rings, int score);
+void TimeAttackData_TrackTAClear(uint8 actID, uint8 zone, StatInfo *stat, uint8 charID, int gameMode, int time);
+void TimeAttackData_TrackEnemyDefeat(uint8 actID, uint8 zoneID, StatInfo *stat, uint8 charID, bool32 encore, int x, int y);
 void TimeAttackData_ClearOptions(void);
 int TimeAttackData_GetManiaListPos(int zoneID, int playerID, int act);
 int TimeAttackData_GetEncoreListPos(int zoneID, int playerID, int act);
@@ -58,15 +58,15 @@ int TimeAttackData_AddTimeAttackDBEntry(char zone, char charID, int act, char mo
 int TimeAttackData_AddTADBEntry(char zone, char charID, int act, int mode, int time, void (*callback)(int));
 int TimeAttackData_SaveTimeAttackDB(void (*callback)(int));
 void TimeAttackData_SaveTimeAttackDB_CB(int statusCode);
-int TimeAttackData_GetScore(byte zone, byte charID, byte act, int encore, int val);
-int TimeAttackData_GetReplayID(byte zone, byte charID, byte act, int encore, int val);
-void TimeAttackData_ConfigureTableView(byte zoneID, byte characterID, byte act, int encore);
+int TimeAttackData_GetScore(uint8 zone, uint8 charID, uint8 act, int encore, int val);
+int TimeAttackData_GetReplayID(uint8 zone, uint8 charID, uint8 act, int encore, int val);
+void TimeAttackData_ConfigureTableView(uint8 zoneID, uint8 characterID, uint8 act, int encore);
 
 void TimeAttackData_GetLeaderboardRank_CB(int status, int rank);
-void TimeAttackData_AddLeaderboardEntry(byte zone, char playerID, byte act, int mode, int time);
+void TimeAttackData_AddLeaderboardEntry(uint8 zone, char playerID, uint8 act, int mode, int time);
 #else
-void TimeAttackData_SaveTATime(byte zone, byte act, byte player, byte rank, ushort time);
-ushort *TimeAttackData_GetRecordedTime(byte zone, byte act, byte player, byte rank);
+void TimeAttackData_SaveTATime(uint8 zone, uint8 act, uint8 player, uint8 rank, uint16 time);
+uint16 *TimeAttackData_GetRecordedTime(uint8 zone, uint8 act, uint8 player, uint8 rank);
 #endif
 
 #endif //!OBJ_TIMEATTACKDATA_H

@@ -6,13 +6,13 @@
 // Object Class
 typedef struct {
 	RSDK_OBJECT
-    byte flag;
+    uint8 flag;
 } ObjectRotatingStair;
 
 // Entity Class
 typedef struct {
 	MANIA_PLATFORM_BASE
-	ushort oscOff;
+	uint16 oscOff;
 	int duration;
 	int interval;
 } EntityRotatingStair;

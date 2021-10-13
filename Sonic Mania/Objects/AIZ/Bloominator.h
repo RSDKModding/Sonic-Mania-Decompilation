@@ -9,8 +9,8 @@ typedef struct {
     RSDK_OBJECT
     Hitbox hitbox;
     Hitbox projectileHitbox;
-    ushort spriteIndex;
-    ushort sfxShot;
+    uint16 spriteIndex;
+    uint16 sfxShot;
 } ObjectBloominator;
 
 // Entity Class

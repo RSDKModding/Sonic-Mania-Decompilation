@@ -6,7 +6,7 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    ushort aniFrames;
+    uint16 aniFrames;
     Hitbox hitbox1;
     Hitbox hitbox2;
     Hitbox hitbox3;
@@ -16,8 +16,8 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    byte start;
-    byte yDir;
+    uint8 start;
+    uint8 yDir;
     int printRows;
     int length;
     int field_68;
@@ -26,7 +26,7 @@ typedef struct {
     bool32 field_74;
     int field_78;
     int field_7C;
-    byte activePlayers;
+    uint8 activePlayers;
     int field_84;
     Vector2 pos2;
     Vector2 pos;

@@ -6,8 +6,8 @@
 // Object Class
 typedef struct {
 	RSDK_OBJECT
-	ushort aniFrames;
-	ushort sfxExit;
+	uint16 aniFrames;
+	uint16 sfxExit;
 	Hitbox hitbox;
 } ObjectTubeSpring;
 

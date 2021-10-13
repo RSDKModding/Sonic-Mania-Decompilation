@@ -8,8 +8,8 @@ typedef struct {
     RSDK_OBJECT
     Hitbox hitbox;
     int field_C;
-    ushort spriteIndex;
-    ushort sfx_StarPost;
+    uint16 spriteIndex;
+    uint16 sfx_StarPost;
 } ObjectSpeedGate;
 
 // Entity Class

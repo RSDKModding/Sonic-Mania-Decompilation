@@ -146,7 +146,7 @@ void PSZ1Setup_StaticUpdate(void)
         if (PSZ1Setup->petalTimer <= 0) {
             foreach_active(Player, player) {
                 Hitbox *playerHitbox = Player_GetHitbox(player);
-                ushort tile                  = RSDK.GetTileInfo(Zone->fgLow, player->position.x >> 20, (player->position.y + (playerHitbox->bottom << 16)) >> 20);
+                uint16 tile                  = RSDK.GetTileInfo(Zone->fgLow, player->position.x >> 20, (player->position.y + (playerHitbox->bottom << 16)) >> 20);
                 bool32 lowFlag = true;
                 if (tile == 0xFFFF) {
                     tile = RSDK.GetTileInfo(Zone->fgHigh, player->position.x >> 20, (player->position.y + (playerHitbox->bottom << 16)) >> 20);

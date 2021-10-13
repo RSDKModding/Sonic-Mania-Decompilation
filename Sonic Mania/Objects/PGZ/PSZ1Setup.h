@@ -28,9 +28,9 @@ typedef struct {
     int aniTilesFrameA;
     int field_A0;
     bool32 hasAchievement;
-    ushort aniTilesA;
-    ushort aniTilesB;
-    ushort aniTilesC;
+    uint16 aniTilesA;
+    uint16 aniTilesB;
+    uint16 aniTilesC;
 } ObjectPSZ1Setup;
 
 // Entity Class

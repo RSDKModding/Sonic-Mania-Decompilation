@@ -14,9 +14,9 @@ void DrawHelpers_Create(void *data) {}
 
 void DrawHelpers_StageLoad(void) {}
 
-void DrawHelpers_DrawHitboxOutline(uint colour, byte dir, int x, int y, Hitbox *hitbox)
+void DrawHelpers_DrawHitboxOutline(uint32 colour, uint8 dir, int x, int y, Hitbox *hitbox)
 {
-    short left, top, right, bottom;
+    int16 left, top, right, bottom;
 
     if (dir & FLIP_X) {
         right = -hitbox->right;
@@ -42,7 +42,7 @@ void DrawHelpers_DrawHitboxOutline(uint colour, byte dir, int x, int y, Hitbox *
     RSDK.DrawLine(x + (left << 16), y + (bottom << 16), x + (left << 16), y + (top << 16), colour, 0xFF, INK_NONE, false);
 }
 
-void DrawHelpers_DrawDebug3(uint colour, int x1, int y1, int x2, int y2)
+void DrawHelpers_DrawDebug3(uint32 colour, int x1, int y1, int x2, int y2)
 {
     int angle = RSDK.ATan2(x1 - x2, y1 - y2);
     RSDK.DrawLine(x1, y1, x2, y2, colour, 0x7F, INK_ADD, false);
@@ -50,7 +50,7 @@ void DrawHelpers_DrawDebug3(uint colour, int x1, int y1, int x2, int y2)
     RSDK.DrawLine(x2, y2, x2 + (RSDK.Cos256(angle - 12) << 12), y2 + (RSDK.Sin256(angle - 12) << 12), colour, 0x7F, INK_ADD, false);
 }
 
-void DrawHelpers_DrawDebug4(uint colour, int a2, int alpha, int x1, int y1, int x2, int y2)
+void DrawHelpers_DrawDebug4(uint32 colour, int a2, int alpha, int x1, int y1, int x2, int y2)
 {
     Vector2 verts[3];
 
@@ -78,7 +78,7 @@ void DrawHelpers_DrawDebug4(uint colour, int a2, int alpha, int x1, int y1, int 
     }
 }
 
-void DrawHelpers_DrawDebug5(uint colour, int x, int y)
+void DrawHelpers_DrawDebug5(uint32 colour, int x, int y)
 {
     if (x || y) {
         RSDK.DrawLine(x - 0x100000, y - 0x100000, x + 0x100000, y + 0x100000, colour, 0x7F, INK_NONE, false);

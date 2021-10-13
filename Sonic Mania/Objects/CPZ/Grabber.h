@@ -9,9 +9,9 @@ typedef struct {
     Hitbox hitbox1;
     Hitbox hitbox2;
     Hitbox hitboxRange;
-    ushort aniFrames;
-    ushort sfxGrab;
-    ushort sfxDestroy;
+    uint16 aniFrames;
+    uint16 sfxGrab;
+    uint16 sfxDestroy;
 } ObjectGrabber;
 
 // Entity Class
@@ -22,12 +22,12 @@ typedef struct {
     Animator animator2;
     Animator animator3;
     Entity *grabbedPlayer;
-    ushort field_A8;
-    ushort struggleTimer;
-    ushort struggleFlags;
-    ushort timer;
+    uint16 field_A8;
+    uint16 struggleTimer;
+    uint16 struggleFlags;
+    uint16 timer;
     Vector2 startPos;
-    byte startDir;
+    uint8 startDir;
     int field_BC;
     int explodeTimer;
 } EntityGrabber;

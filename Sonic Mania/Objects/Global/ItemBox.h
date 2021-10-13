@@ -33,12 +33,12 @@ typedef struct {
     Hitbox hitbox;
     Hitbox hiddenHitbox;
     int brokenFrame;
-    ushort spriteIndex;
-    ushort sfx_Destroy;
-    ushort sfx_Teleport;
-    ushort sfx_HyperRing;
-    ushort sfx_PowerDown;
-    ushort sfx_Revovery;
+    uint16 spriteIndex;
+    uint16 sfx_Destroy;
+    uint16 sfx_Teleport;
+    uint16 sfx_HyperRing;
+    uint16 sfx_PowerDown;
+    uint16 sfx_Revovery;
 } ObjectItemBox;
 
 // Entity Class

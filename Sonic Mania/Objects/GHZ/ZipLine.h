@@ -6,7 +6,7 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    ushort aniFrames;
+    uint16 aniFrames;
     Hitbox hitbox;
 } ObjectZipLine;
 
@@ -14,13 +14,13 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    byte activePlayers;
+    uint8 activePlayers;
     Animator animator;
     int length;
     Vector2 startPos;
     Vector2 endPos;
     Vector2 handlePos;
-    byte grabDelay[PLAYER_MAX];
+    uint8 grabDelay[PLAYER_MAX];
     Vector2 field_98;
     int field_A0;
 } EntityZipLine;

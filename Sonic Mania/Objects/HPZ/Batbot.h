@@ -10,8 +10,8 @@ typedef struct {
     Hitbox hitbox2;
     Hitbox hitbox3;
     Hitbox hitboxPlayer;
-    ushort aniFrames;
-    byte dirFlag[5];
+    uint16 aniFrames;
+    uint8 dirFlag[5];
 } ObjectBatbot;
 
 // Entity Class
@@ -19,8 +19,8 @@ typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     Vector2 startPos;
-    byte startDir;
-    ushort timer;
+    uint8 startDir;
+    uint16 timer;
     int field_68;
     int field_6C;
     Vector2 posUnknown;
@@ -28,9 +28,9 @@ typedef struct {
     int field_7C;
     int swoopAngle;
     Entity *playerPtr;
-    byte field_88;
+    uint8 field_88;
     bool32 flag;
-    ushort field_90;
+    uint16 field_90;
     Animator animator1;
     Animator animator2;
 } EntityBatbot;

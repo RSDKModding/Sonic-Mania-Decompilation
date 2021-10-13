@@ -6,9 +6,9 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    ushort aniFrames;
-    ushort textFrames;
-    ushort sfxFail;
+    uint16 aniFrames;
+    uint16 textFrames;
+    uint16 sfxFail;
 } ObjectUIVsZoneButton;
 
 // Entity Class
@@ -23,7 +23,7 @@ typedef struct {
     int field_11C;
     int field_120;
     int field_124;
-    byte zoneDirection;
+    uint8 zoneDirection;
     int field_12C;
     int field_130;
     int field_134;

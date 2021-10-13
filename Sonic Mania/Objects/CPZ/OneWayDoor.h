@@ -6,7 +6,7 @@
 // Object Class
 typedef struct {
 	RSDK_OBJECT
-	ushort animID;
+	uint16 animID;
 	Hitbox hitbox1;
 	Hitbox hitbox2;
 	Hitbox touchBox;

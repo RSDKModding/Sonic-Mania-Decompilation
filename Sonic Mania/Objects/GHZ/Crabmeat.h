@@ -8,7 +8,7 @@ typedef struct {
     RSDK_OBJECT
     Hitbox hitbox;
     Hitbox projectileHitbox;
-    ushort spriteIndex;
+    uint16 spriteIndex;
 } ObjectCrabmeat;
 
 // Entity Class
@@ -16,7 +16,7 @@ typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int timer;
-    byte dword60;
+    uint8 dword60;
     Vector2 startPos;
     int startDir;
     Animator animator;

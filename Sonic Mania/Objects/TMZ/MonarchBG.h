@@ -6,9 +6,9 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    ushort aniFrames;
-    ushort meshIndex;
-    ushort sceneIndex;
+    uint16 aniFrames;
+    uint16 meshIndex;
+    uint16 sceneIndex;
 } ObjectMonarchBG;
 
 // Entity Class

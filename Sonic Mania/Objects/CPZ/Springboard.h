@@ -13,8 +13,8 @@ typedef struct {
                             -0x20000, -0x20000, -0x30000, -0x30000, -0x30000, -0x30000, -0x30000, -0x30000, -0x40000, -0x40000 });
     TABLE(int array3[28], { 8, 9, 10, 11, 12, 13, 14, 15, 16, 16, 17, 18, 19, 20, 20, 21, 21, 22, 23, 24, 24, 24, 24, 24, 24, 24, 24, 24 });
     TABLE(int array4[28], { 8, 9, 10, 11, 12, 12, 12, 12, 13, 13, 13, 13, 13, 13, 14, 14, 15, 15, 16, 16, 16, 16, 15, 15, 14, 14, 13, 13 });
-    ushort aniFrames;
-    ushort sfxSpring;
+    uint16 aniFrames;
+    uint16 sfxSpring;
 } ObjectSpringboard;
 
 // Entity Class
@@ -22,7 +22,7 @@ typedef struct {
 	RSDK_ENTITY
     int force;
     int field_5C;
-    byte playerBits;
+    uint8 playerBits;
     Animator animator;
 } EntitySpringboard;
 

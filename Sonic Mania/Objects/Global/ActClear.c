@@ -298,7 +298,7 @@ void ActClear_Create(void *data)
 
         if (Zone_GetZoneID() >= 0) {
             StatInfo stat;
-            ushort time = RSDK_sceneInfo->milliseconds + 100 * (RSDK_sceneInfo->seconds + 60 * RSDK_sceneInfo->minutes);
+            uint16 time = RSDK_sceneInfo->milliseconds + 100 * (RSDK_sceneInfo->seconds + 60 * RSDK_sceneInfo->minutes);
             switch (globals->playerID & 0xFF) {
                 case ID_SONIC: TimeAttackData_TrackActClear(Zone->actID, Zone_GetZoneID(), &stat, 1, time, player1->rings, player1->score); break;
                 case ID_TAILS: TimeAttackData_TrackActClear(Zone->actID, Zone_GetZoneID(), &stat, 2, time, player1->rings, player1->score); break;
@@ -666,13 +666,13 @@ void ActClear_LoadNextScene(void)
             else if (globals->gameMode == MODE_TIMEATTACK) {
                 EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
                 ActClear->field_10     = true;
-                byte playerID          = param->characterID;
-                byte zoneID            = param->zoneID;
-                byte actID             = param->actID;
+                uint8 playerID          = param->characterID;
+                uint8 zoneID            = param->zoneID;
+                uint8 actID             = param->actID;
 
                 int time = 6000 * RSDK_sceneInfo->minutes + 100 * RSDK_sceneInfo->seconds + RSDK_sceneInfo->milliseconds;
 
-                ushort *record = TimeAttackData_GetRecordedTime(zoneID, actID, playerID, 1);
+                uint16 *record = TimeAttackData_GetRecordedTime(zoneID, actID, playerID, 1);
                 int rank       = 0;
                 for (; rank < 3; ++rank) {
                     if (!record[rank] || time < record[rank])

@@ -7,9 +7,9 @@
 typedef struct {
     RSDK_OBJECT
     Hitbox blockHitbox;
-    ushort animID;
-    byte gapE[2]; //?
-    ushort sfxID;
+    uint16 animID;
+    uint8 gapE[2]; //?
+    uint16 sfxID;
 } ObjectStaircase;
 
 // Entity Class
@@ -20,7 +20,7 @@ typedef struct {
     Vector2 blocks[4];
     int timer;
     Animator animator;
-    byte type;
+    uint8 type;
     bool32 bumpable;
 } EntityStaircase;
 

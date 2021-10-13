@@ -6,10 +6,10 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    ushort aniFrames;
-    ushort sfxDrop;
-    ushort sfxImpact;
-    ushort sfxIndicator;
+    uint16 aniFrames;
+    uint16 sfxDrop;
+    uint16 sfxImpact;
+    uint16 sfxIndicator;
 } ObjectSpikeCorridor;
 
 // Entity Class
@@ -18,14 +18,14 @@ typedef struct {
     StateMachine(state);
     StateMachine(stateDraw);
     Vector2 startPos;
-    sbyte colWidth;
-    sbyte rowHeight;
+    int8 colWidth;
+    int8 rowHeight;
     int yOffset;
     int timer;
-    sbyte rowID;
-    sbyte field_75;
-    sbyte storedRowID;
-    sbyte field_77;
+    int8 rowID;
+    int8 field_75;
+    int8 storedRowID;
+    int8 field_77;
     int fallOffset;
     Hitbox hitbox;
     Hitbox hitboxes[4];
@@ -48,7 +48,7 @@ void SpikeCorridor_Serialize(void);
 
 // Extra Entity Functions
 void SpikeCorridor_SetupHitboxes(void);
-void SpikeCorridor_HandleDrawing(Animator *animator, int offsetY, sbyte a3, bool32 animFlag);
+void SpikeCorridor_HandleDrawing(Animator *animator, int offsetY, int8 a3, bool32 animFlag);
 void SpikeCorridor_Unknown3(void);
 void SpikeCorridor_CheckPlayerCollisions(void);
 

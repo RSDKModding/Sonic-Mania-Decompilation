@@ -7,7 +7,7 @@
 typedef struct {
     RSDK_OBJECT
     Hitbox hitbox;
-    ushort aniFrames;
+    uint16 aniFrames;
     Entity *activeEntity;
     EntityPlayer *playerPtr;
     bool32 started;
@@ -15,8 +15,8 @@ typedef struct {
     int field_20;
     bool32 suppressedTitlecard;
     bool32 debugEnabled;
-    ushort sfxSignpost;
-    ushort sfxTeleport;
+    uint16 sfxSignpost;
+    uint16 sfxTeleport;
     int dword30;
     StateMachine(startCB);
     StateMachine(endCB);

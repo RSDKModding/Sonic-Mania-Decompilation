@@ -6,13 +6,13 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    ushort aniFrames;
+    uint16 aniFrames;
 } ObjectUIVsCharSelector;
 
 // Entity Class
 typedef struct {
 	MANIA_UI_ITEM_BASE
-    byte playerID;
+    uint8 playerID;
     bool32 prevFlag;
     int frameID;
     int field_110;
@@ -32,7 +32,7 @@ typedef struct {
     Animator animator4;
     Animator animator5;
     Animator animator6;
-    ushort textSpriteIndex;
+    uint16 textSpriteIndex;
     int prevFrameID;
 } EntityUIVsCharSelector;
 

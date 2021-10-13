@@ -11,10 +11,10 @@ typedef struct {
 // Entity Class
 typedef struct {
     MANIA_PLATFORM_BASE
-    byte interval;
-    byte intervalOffset;
-    byte duration;
-    byte bossID;
+    uint8 interval;
+    uint8 intervalOffset;
+    uint8 duration;
+    uint8 bossID;
     EntitySyringe *syringe;
 } EntityTippingPlatform;
 

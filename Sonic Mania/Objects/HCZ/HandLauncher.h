@@ -6,12 +6,12 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    ushort spriteIndex;
+    uint16 spriteIndex;
     Hitbox hitbox1;
     Hitbox hitbox2;
     Hitbox hitbox3;
     bool32 dunkeyMode;
-    ushort sfxDunkey;
+    uint16 sfxDunkey;
 } ObjectHandLauncher;
 
 // Entity Class
@@ -19,7 +19,7 @@ typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int speed;
-    byte activePlayers;
+    uint8 activePlayers;
     Vector2 startPos;
     Vector2 playerPos;
     Vector2 field_74;

@@ -19,8 +19,8 @@ typedef struct {
     int rockSpeedsT_large[16];
     int rockSpeedsL_large[16];
     int rockSpeedsR_large[16];
-    ushort spriteIndex;
-    ushort sfx_Break;
+    uint16 spriteIndex;
+    uint16 sfx_Break;
 } ObjectAIZRockPile;
 
 // Entity Class

@@ -6,8 +6,8 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    ushort modelIndex;
-    ushort sceneIndex;
+    uint16 modelIndex;
+    uint16 sceneIndex;
 } ObjectEggTower;
 
 // Entity Class

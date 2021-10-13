@@ -6,7 +6,7 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    ushort aniFrames;
+    uint16 aniFrames;
 } ObjectUILeaderboard;
 
 // Entity Class
@@ -20,11 +20,11 @@ typedef struct {
     int times[5];
     int ranks[5];
     int isUser[5];
-    byte playerID;
-    byte zoneID;
-    byte actID;
+    uint8 playerID;
+    uint8 zoneID;
+    uint8 actID;
     int timer2;
-    byte editorFlip;
+    uint8 editorFlip;
     bool32 field_1CC;
     int entryOffset;
     int entryLength;
@@ -47,7 +47,7 @@ typedef struct {
     Animator animator10;
     Animator animator11;
     Animator animator12;
-    ushort textSpriteIndex;
+    uint16 textSpriteIndex;
 } EntityUILeaderboard;
 
 // Object Struct
@@ -68,7 +68,7 @@ void UILeaderboard_Serialize(void);
 void UILeaderboard_SetupEntrySprites(EntityUILeaderboard *entity);
 #if !RETRO_USE_PLUS 
 void UILeaderboard_InitLeaderboard(EntityUILeaderboard *leaderboard);
-void UILeaderboard_SetupLeaderboard(EntityUILeaderboard *leaderboard, byte player, byte zone, byte act);
+void UILeaderboard_SetupLeaderboard(EntityUILeaderboard *leaderboard, uint8 player, uint8 zone, uint8 act);
 #endif
 void UILeaderboard_LoadEntries(EntityUILeaderboard *entity);
 

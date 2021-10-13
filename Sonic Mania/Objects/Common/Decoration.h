@@ -6,14 +6,14 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    ushort spriteIndex;
+    uint16 spriteIndex;
 } ObjectDecoration;
 
 // Entity Class
 typedef struct {
     RSDK_ENTITY
     Animator animator;
-    byte type;
+    uint8 type;
     int rotSpeed;
     Vector2 repeatTimes;
     Vector2 repeatSpacing;

@@ -18,7 +18,7 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    byte language;
+    uint8 language;
     int overrideLanguage;
     int screenShader;
     int field_60;
@@ -27,7 +27,7 @@ typedef struct {
     int volSfx;
     int field_70;
     int vSync;
-    byte windowSize;
+    uint8 windowSize;
     int windowBorder;
     int windowed;
     int tripleBuffering;

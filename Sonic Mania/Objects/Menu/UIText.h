@@ -6,7 +6,7 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    ushort spriteIndex;
+    uint16 spriteIndex;
 } ObjectUIText;
 
 // Entity Class
@@ -17,7 +17,7 @@ typedef struct {
     TextInfo text;
     TextInfo tag;
     bool32 selectable;
-    ushort listID;
+    uint16 listID;
     int align;
     int data0;
     int data1;

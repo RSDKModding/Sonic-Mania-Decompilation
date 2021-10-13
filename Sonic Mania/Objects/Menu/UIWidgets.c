@@ -308,7 +308,7 @@ void UIWidgets_Unknown11(int minutes, int seconds, int milliseconds, int x, int 
     for (int i = 0; i < 8; ++i) {
         if (!strBuf[i])
             break;
-        RSDK.SetSpriteAnimation(UIWidgets->saveSelectSpriteIndex, 8, &animator, true, (byte)(strBuf[i] - '0'));
+        RSDK.SetSpriteAnimation(UIWidgets->saveSelectSpriteIndex, 8, &animator, true, (uint8)(strBuf[i] - '0'));
         RSDK.DrawSprite(&animator, &drawPos, false);
         drawPos.x += 0x80000;
     }

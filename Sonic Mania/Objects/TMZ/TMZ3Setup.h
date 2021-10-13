@@ -10,7 +10,7 @@ typedef struct {
     int dword8;
     int field_C;
     int aniTileFrame;
-    ushort aniTiles;
+    uint16 aniTiles;
 } ObjectTMZ3Setup;
 
 // Entity Class

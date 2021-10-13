@@ -13,13 +13,13 @@ typedef enum {
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    ushort hudMappings;
+    uint16 hudMappings;
 #if RETRO_GAMEVER != VER_100
-    ushort superButtonMappings;
+    uint16 superButtonMappings;
 #endif
 #if RETRO_USE_PLUS
-    ushort sfxClick;
-    ushort sfxStarpost;
+    uint16 sfxClick;
+    uint16 sfxStarpost;
     bool32 dwordC;
     int replaySaveEnabled;
     int compSession[4];

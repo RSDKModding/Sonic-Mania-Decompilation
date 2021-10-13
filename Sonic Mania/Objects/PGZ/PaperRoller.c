@@ -85,19 +85,19 @@ void PaperRoller_Create(void *data)
 
 void PaperRoller_StageLoad(void)
 {
-    uint colours[]         = { 0x0F0F0E8, 0x0D0B898, 0x987870, 0x586868 };
+    uint32 colours[]         = { 0x0F0F0E8, 0x0D0B898, 0x987870, 0x586868 };
     PaperRoller->aniFrames = RSDK.LoadSpriteAnimation("PSZ1/PaperRoller.bin", SCOPE_STAGE);
     for (int i = 0; i < 0x40; ++i) PaperRoller->colours[i] = colours[i & 3];
     PaperRoller->sfxPaper = RSDK.GetSFX("PSZ/Paper.wav");
 }
 
-void PaperRoller_DrawLineDeform(uint colour, int len, int posX1, int posY1, int posX2, int posY2, int posX3, int posY3, int posX4, int posY4)
+void PaperRoller_DrawLineDeform(uint32 colour, int len, int posX1, int posY1, int posX2, int posY2, int posX3, int posY3, int posX4, int posY4)
 {
     RSDK_THIS(PaperRoller);
 
     int count = (entity->length / 4) + (entity->length % 4 > 0);
     if (count) {
-        int negAngle = -(byte)(entity->angle);
+        int negAngle = -(uint8)(entity->angle);
 
         int posX     = posX1;
         int posY     = posY1;
@@ -110,7 +110,7 @@ void PaperRoller_DrawLineDeform(uint colour, int len, int posX1, int posY1, int 
                 clrOffset = len % count;
             else
                 clrOffset = count - len % count - 1;
-            uint lineClr = PaperRoller->colours[(Zone->timer + clrOffset) % count];
+            uint32 lineClr = PaperRoller->colours[(Zone->timer + clrOffset) % count];
 
             if (!posY4) {
                 RSDK.DrawLine(posX3 + posX, posY3 + posY, posX3 + (posX + moveX), posY3 + (posY + moveY), colour ? colour : lineClr, 127,

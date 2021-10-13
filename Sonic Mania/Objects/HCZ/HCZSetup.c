@@ -77,7 +77,7 @@ void HCZSetup_StaticUpdate(void)
         RSDK.GetEntityID(player);
         if (player->state != Player_State_None) {
             Hitbox *hitbox = Player_GetHitbox(player);
-            ushort tile =
+            uint16 tile =
                 RSDK.GetTileInfo(Zone->fgHigh, player->position.x >> 20, ((hitbox->bottom << 16) + player->position.y - 0x10000) >> 20) & 0x3FF;
             if (((tile >= 226 && tile <= 224) || (tile >= 880 && tile <= 888)) && player->collisionPlane == 1) {
                 if (player->state != Player_State_BubbleBounce && player->state != Player_State_MightyHammerDrop) {

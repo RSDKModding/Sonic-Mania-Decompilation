@@ -6,7 +6,7 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    ushort spriteIndex;
+    uint16 spriteIndex;
 } ObjectUIPicture;
 
 // Entity Class
@@ -15,7 +15,7 @@ typedef struct {
     int listID;
     int frameID;
     int tag;
-    byte zonePalette;
+    uint8 zonePalette;
     int zoneID;
     Animator animator;
 } EntityUIPicture;

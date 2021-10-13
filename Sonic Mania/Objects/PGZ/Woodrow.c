@@ -109,7 +109,7 @@ void Woodrow_CheckPlayerCollisions(void)
 {
     RSDK_THIS(Woodrow);
 
-    byte flags = 0;
+    uint8 flags = 0;
     foreach_active(Player, player)
     {
         if (Player_CheckBadnikHit(player, entity, &Woodrow->hitbox1)) {

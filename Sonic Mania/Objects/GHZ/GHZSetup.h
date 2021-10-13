@@ -13,7 +13,7 @@ typedef struct {
     STATIC(int delayB, 60);
     int frameB;
     TABLE(int delayListB[16], { 120, 2, 2, 2, 8, 2, 2, 2, 120, 2, 2, 2, 8, 2, 2, 2 });
-    ushort aniTiles;
+    uint16 aniTiles;
 } ObjectGHZSetup;
 
 // Entity Class

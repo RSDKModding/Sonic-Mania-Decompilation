@@ -26,8 +26,8 @@ typedef struct {
     RSDK_ENTITY
     Vector2 offset;
     Vector2 size;
-    byte layerSrc;
-    byte layerDest;
+    uint8 layerSrc;
+    uint8 layerDest;
     EncoreRouteFrameIDs frameID;
 } EntityEncoreRoute;
 

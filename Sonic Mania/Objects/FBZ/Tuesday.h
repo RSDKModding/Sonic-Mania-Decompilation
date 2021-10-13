@@ -8,33 +8,33 @@ typedef struct {
     RSDK_OBJECT
     Hitbox hitbox1;
     Hitbox hitbox2;
-    ushort aniFrames;
-    ushort sfxElecCharge;
-    ushort sfxZap;
-    ushort sfxBossHit;
-    ushort sfxExplosion;
-    ushort sfxDrop;
+    uint16 aniFrames;
+    uint16 sfxElecCharge;
+    uint16 sfxZap;
+    uint16 sfxBossHit;
+    uint16 sfxExplosion;
+    uint16 sfxDrop;
 } ObjectTuesday;
 
 // Entity Class
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    byte type;
-    byte links;
-    byte invincibleTimer;
-    byte health;
+    uint8 type;
+    uint8 links;
+    uint8 invincibleTimer;
+    uint8 health;
     Vector2 drawPos;
     Entity *linkPtrs[8];
     Entity *field_88;
-    byte field_8C;
-    byte field_8D;
-    byte field_8E;
-    byte field_8F;
-    ushort timer;
-    ushort field_92;
-    ushort field_94;
-    ushort field_96;
+    uint8 field_8C;
+    uint8 field_8D;
+    uint8 field_8E;
+    uint8 field_8F;
+    uint16 timer;
+    uint16 field_92;
+    uint16 field_94;
+    uint16 field_96;
     Animator animator1;
     Animator animator2;
 } EntityTuesday;

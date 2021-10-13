@@ -6,7 +6,7 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    ushort aniFrames;
+    uint16 aniFrames;
     Hitbox hitbox1;
     Hitbox hitbox2;
 } ObjectLargeGear;
@@ -16,7 +16,7 @@ typedef struct {
     RSDK_ENTITY
     int rotSpeed;
     int rotOffset;
-    byte activePlayers;
+    uint8 activePlayers;
     int playerIDs[4];
     Vector2 positions[8];
     Vector2 origin;

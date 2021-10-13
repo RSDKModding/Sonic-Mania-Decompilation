@@ -7,14 +7,14 @@
 typedef struct {
     RSDK_OBJECT
     int activePlayers;
-    byte field_8;
+    uint8 field_8;
     int field_C;
     Hitbox hitbox1;
     Hitbox hitbox2;
     Hitbox hitbox3;
     Hitbox playerHitbox;
-    ushort aniFrames;
-    ushort sfxFan;
+    uint16 aniFrames;
+    uint16 sfxFan;
     bool32 playingFanSFX;
 } ObjectFan;
 
@@ -24,14 +24,14 @@ typedef struct {
     StateMachine(state);
     StateMachine(state3);
     StateMachine(state2);
-    byte type;
-    byte activation;
-    byte deactivation;
+    uint8 type;
+    uint8 activation;
+    uint8 deactivation;
     int size;
-    ushort interval;
-    ushort intervalOffset;
-    ushort duration;
-    ushort durationStore;
+    uint16 interval;
+    uint16 intervalOffset;
+    uint16 duration;
+    uint16 durationStore;
     int buttonTag;
     EntityButton *buttonPtr;
     Animator animator;

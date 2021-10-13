@@ -10,18 +10,18 @@ typedef struct {
 	RSDK_OBJECT
 	Hitbox hurtbox;
 	Hitbox hitbox;
-	ushort animID;
+	uint16 animID;
 } ObjectDragonfly;
 
 // Entity Class
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    byte dir;
-    byte dist;
-    byte speed;
+    uint8 dir;
+    uint8 dist;
+    uint8 speed;
     Vector2 positions[Dragonfly_BodyCount];
-    byte directions[Dragonfly_BodyCount];
+    uint8 directions[Dragonfly_BodyCount];
     Vector2 spawnPos;
     Animator animator;
     Animator wingAnimator;

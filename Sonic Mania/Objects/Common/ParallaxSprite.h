@@ -6,7 +6,7 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    ushort aniFrames;
+    uint16 aniFrames;
 } ObjectParallaxSprite;
 
 // Entity Class
@@ -14,8 +14,8 @@ typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     Animator animator;
-    byte aniID;
-    byte attribute;
+    uint8 aniID;
+    uint8 attribute;
     Vector2 parallaxFactor;
     Vector2 scrollSpeed;
     Vector2 loopPoint;

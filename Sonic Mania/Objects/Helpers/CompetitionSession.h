@@ -35,13 +35,13 @@ typedef struct {
     int unknown29;
 #endif
     int zoneFlags[12];
-    byte characterFlags[PLAYER_MAX];
-    byte winnerFlags[12];
+    uint8 characterFlags[PLAYER_MAX];
+    uint8 winnerFlags[12];
     int rings[PLAYER_MAX];
     int score[PLAYER_MAX];
     int items[PLAYER_MAX];
     vsTime time[PLAYER_MAX];
-    byte finishFlags[PLAYER_MAX];
+    uint8 finishFlags[PLAYER_MAX];
     int totalRings[PLAYER_MAX];
     int wins[PLAYER_MAX];
     int lives[PLAYER_MAX];

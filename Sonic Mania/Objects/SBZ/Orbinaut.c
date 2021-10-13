@@ -99,7 +99,7 @@ void Orbinaut_HandlePlayerInteractions(void)
             entity->position.y = entity->orbPositions[i].y;
             foreach_active(Player, player)
             {
-                if (entity->planeFilter <= 0 || player->collisionPlane == (byte)((entity->planeFilter - 1) & 1)) {
+                if (entity->planeFilter <= 0 || player->collisionPlane == (uint8)((entity->planeFilter - 1) & 1)) {
                     if (Player_CheckCollisionTouch(player, entity, &Orbinaut->hitbox2)) {
                         Player_CheckHit(player, entity);
                     }
@@ -270,7 +270,7 @@ void Orbinaut_State_Orb(void)
 
         foreach_active(Player, player)
         {
-            if (entity->planeFilter <= 0 || player->collisionPlane == (byte)((entity->planeFilter - 1) & 1)) {
+            if (entity->planeFilter <= 0 || player->collisionPlane == (uint8)((entity->planeFilter - 1) & 1)) {
                 if (Player_CheckCollisionTouch(player, entity, &Sol->hitbox2)) {
                     if (player->shield != SHIELD_FIRE)
                         Player_CheckHit(player, entity);

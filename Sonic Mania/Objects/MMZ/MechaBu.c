@@ -31,7 +31,7 @@ void MechaBu_Create(void *data)
     RSDK_THIS(MechaBu);
 
     entity->visible = true;
-    if (entity->planeFilter > 0 && (((byte)entity->planeFilter - 1) & 2))
+    if (entity->planeFilter > 0 && (((uint8)entity->planeFilter - 1) & 2))
         entity->drawOrder = Zone->drawOrderHigh;
     else
         entity->drawOrder = Zone->drawOrderLow;
@@ -87,7 +87,7 @@ void MechaBu_CheckPlayerCollisions(void)
 
     foreach_active(Player, player)
     {
-        if (entity->planeFilter <= 0 || player->collisionPlane == (((byte)entity->planeFilter - 1) & 1)) {
+        if (entity->planeFilter <= 0 || player->collisionPlane == (((uint8)entity->planeFilter - 1) & 1)) {
             if (Player_CheckCollisionTouch(player, &entity->sawPos, &MechaBu->hitboxSaw)
 #if RETRO_USE_PLUS
                 && !Player_CheckMightyUnspin(512, player, 2, &player->uncurlTimer)

@@ -9,20 +9,20 @@ typedef struct {
 	Hitbox hermitHitbox;
 	Hitbox spikeHitbox;
 	Hitbox checkbox;
-	ushort animID;
-	ushort launchSFX;
-	ushort splashSFX;
+	uint16 animID;
+	uint16 launchSFX;
+	uint16 splashSFX;
 } ObjectTurboSpiker;
 
 // Entity Class
 typedef struct {
 	RSDK_ENTITY
 	StateMachine(state);
-	uint type;
+	uint32 type;
 	int timer;
 	int unused_64;
 	Vector2 spawnPos;
-	byte spawnDir;
+	uint8 spawnDir;
 	Entity *spike;
 	Animator animator;
 	Animator spikeAnimator;

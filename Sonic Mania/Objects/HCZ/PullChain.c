@@ -166,7 +166,7 @@ bool32 PullChain_HandleDunkeyCode(EntityPlayer *player)
     if (HandLauncher->dunkeyMode)
         return false;
 
-    byte inputFlags = 0;
+    uint8 inputFlags = 0;
 
     if (player->left)
         inputFlags = 1;

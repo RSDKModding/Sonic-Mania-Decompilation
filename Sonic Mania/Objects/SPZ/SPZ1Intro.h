@@ -6,9 +6,9 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    ushort aniFrames;
-    ushort sfxGasPop;
-    ushort sfxPon;
+    uint16 aniFrames;
+    uint16 sfxGasPop;
+    uint16 sfxPon;
     EntityDebris *debris;
 } ObjectSPZ1Intro;
 

@@ -6,19 +6,19 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    ushort aniFrames;
-    ushort sfxBreak;
+    uint16 aniFrames;
+    uint16 sfxBreak;
 } ObjectBreakBar;
 
 // Entity Class
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    byte orientation;
-    ushort length;
-    byte activePlayersGrabbed;
-    byte activePlayersReleased;
-    byte playerTimers[4];
+    uint8 orientation;
+    uint16 length;
+    uint8 activePlayersGrabbed;
+    uint8 activePlayersReleased;
+    uint8 playerTimers[4];
     Vector2 startPos;
     int releaseTimer;
     bool32 destroyFlag;

@@ -8,17 +8,17 @@ typedef struct {
     RSDK_OBJECT
     TABLE(int heights[33], { 0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9, 10, 10, 11, 11, 12, 12, 13, 13, 15, 15, 16, 16, 0 });
     Hitbox hitbox;
-    ushort aniFrames;
+    uint16 aniFrames;
 } ObjectPSZLauncher;
 
 // Entity Class
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    byte activePlayers;
-    byte activePlayers2;
+    uint8 activePlayers;
+    uint8 activePlayers2;
     Animator animator;
-    byte power;
+    uint8 power;
 } EntityPSZLauncher;
 
 // Object Struct

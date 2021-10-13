@@ -6,7 +6,7 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    ushort sfxChain;
+    uint16 sfxChain;
 } ObjectMagPlatform;
 
 // Entity Class

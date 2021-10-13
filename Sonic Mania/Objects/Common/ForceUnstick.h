@@ -6,15 +6,15 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    ushort aniFrames;
+    uint16 aniFrames;
     Animator animator;
 } ObjectForceUnstick;
 
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    byte width;
-    byte height;
+    uint8 width;
+    uint8 height;
     bool32 breakClimb;
     Hitbox hitbox;
 } EntityForceUnstick;

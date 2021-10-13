@@ -33,6 +33,6 @@ bool32 PlayerHelpers_CheckAct2(void);
 bool32 PlayerHelpers_CheckIntro(void);
 bool32 PlayerHelpers_CheckAct1Regular(void);
 bool32 PlayerHelpers_CheckStageReload(void);
-bool32 PlayerHelpers_CheckPlayerPos(int x1, int y1, int x2, int y2);
+bool32 PlayerHelpers_CheckPlayerPos(int32 x1, int32 y1, int32 x2, int32 y2);
 
 #endif //!OBJ_PLAYERHELPERS_H

@@ -31,16 +31,16 @@ void BSS_HUD_Draw(void)
 
     // DEBUG, TODO: REMOVE
     if (false) {
-        ushort *playFields[3] = { BSS_Setup->playField, BSS_Setup->playField2, BSS_Setup->playField3 };
+        uint16 *playFields[3] = { BSS_Setup->playField, BSS_Setup->playField2, BSS_Setup->playField3 };
 
-        uint colours[24] = { 0x000000, 0x0000FF, 0xFF0000, 0xFFFFFF, 0xFFFF00, 0x00FF00, 0xFF00FF, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000,
+        uint32 colours[24] = { 0x000000, 0x0000FF, 0xFF0000, 0xFFFFFF, 0xFFFF00, 0x00FF00, 0xFF00FF, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000,
                              0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000 };
 
         for (int p = 0; p < 3; ++p) {
             for (int y = 0; y < BSS_PLAYFIELD_H; ++y) {
                 for (int x = 0; x < BSS_PLAYFIELD_W; ++x) {
                     int playFieldPos = (x * BSS_PLAYFIELD_H) + y;
-                    ushort type      = playFields[p][playFieldPos] & 0x7F;
+                    uint16 type      = playFields[p][playFieldPos] & 0x7F;
 
                     RSDK.DrawRect((RSDK_screens->width - 64) + (x << 1), (RSDK_screens->height - (3 * 64)) + (p * 64) + (y << 1), 2, 2, colours[type],
                                   0xFF, INK_NONE, true);

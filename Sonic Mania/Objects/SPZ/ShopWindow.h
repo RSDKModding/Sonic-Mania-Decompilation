@@ -6,8 +6,8 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    ushort spriteIndex;
-    ushort sfxShatter;
+    uint16 spriteIndex;
+    uint16 sfxShatter;
 } ObjectShopWindow;
 
 // Entity Class

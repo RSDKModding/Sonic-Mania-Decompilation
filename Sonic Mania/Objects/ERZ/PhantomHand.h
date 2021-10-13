@@ -9,9 +9,9 @@ typedef struct {
     TABLE(int value1[41], { 10,       0, 0, -0x20000, -0x10000, 1, 0, -0x10000, -0x10000, 2, 0, 0x10000, -0x10000, 3, 0, 0x20000,
                             -0x10000, 4, 0, -0x20000, -0x8000,  5, 0, -0x10000, -0x8000,  6, 0, 0x10000, -0x8000,  7, 0, 0x20000,
                             0x8000,   8, 0, 0x20000,  -0x8000,  9, 0, 0x20000,  -0x4000 });
-    byte value2;
+    uint8 value2;
     Hitbox value3;
-    ushort value4;
+    uint16 value4;
 } ObjectPhantomHand;
 
 // Entity Class

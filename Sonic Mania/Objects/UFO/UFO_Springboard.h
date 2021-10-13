@@ -12,10 +12,10 @@ typedef struct {
     int field_10;
     int field_14;
     int field_18;
-    ushort field_1C;
-    ushort modelIndex;
-    ushort sceneIndex;
-    ushort field_22;
+    uint16 field_1C;
+    uint16 modelIndex;
+    uint16 sceneIndex;
+    uint16 field_22;
 } ObjectUFO_Springboard;
 
 // Entity Class
@@ -23,7 +23,7 @@ typedef struct {
     RSDK_ENTITY
     int field_58;
     int height;
-    byte rampCount;
+    uint8 rampCount;
     int field_64;
     int field_68;
     int field_6C;

@@ -13,14 +13,14 @@ typedef struct {
     int value4;
     int value5;
     int value6;
-    ushort value7;
-    ushort value8;
-    ushort value9;
-    ushort value10;
-    ushort value11;
-    ushort value12;
-    ushort value13;
-    byte value14;
+    uint16 value7;
+    uint16 value8;
+    uint16 value9;
+    uint16 value10;
+    uint16 value11;
+    uint16 value12;
+    uint16 value13;
+    uint8 value14;
 } ObjectKleptoMobile;
 
 // Entity Class

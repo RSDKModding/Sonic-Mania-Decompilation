@@ -9,26 +9,26 @@ typedef struct {
     Hitbox hitbox1;
     Hitbox hitbox2;
     Hitbox hitbox3;
-    ushort aniFrames;
+    uint16 aniFrames;
     TABLE(int array1[32], { -0xC0000, -0xC0000, -0x40000, -0xC0000, 0x40000,  -0xC0000, 0xC0000, -0xC0000, -0xC0000, -0x40000, -0x40000,
                             -0x40000, 0x40000,  -0x40000, 0xC0000,  -0x40000, -0xC0000, 0x40000, -0x40000, 0x40000,  0x40000,  0x40000,
                             0xC0000,  0x40000,  -0xC0000, 0xC0000,  -0x40000, 0xC0000,  0x40000, 0xC0000,  0xC0000,  0xC0000 });
     TABLE(int array2[32], { -0x40000, -0x40000, -0x20000, -0x40000, 0x20000,  -0x40000, 0x40000, -0x40000, -0x3C000, -0x20000, -0x1C000,
                             -0x20000, 0x1C000,  -0x20000, 0x3C000,  -0x20000, -0x38000, 0x20000, -0x18000, 0x20000,  0x18000,  0x20000,
                             0x38000,  0x20000,  -0x34000, 0x40000,  -0x14000, 0x40000,  0x14000, 0x40000,  0x34000,  0x40000 });
-    ushort sfxLedgeBreak;
-    ushort sfxFire;
+    uint16 sfxLedgeBreak;
+    uint16 sfxFire;
 } ObjectBallCannon;
 
 // Entity Class
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    byte type;
+    uint8 type;
     bool32 exit;
-    byte field_64;
-    byte activePlayers;
-    byte playerTimers[4];
+    uint8 field_64;
+    uint8 activePlayers;
+    uint8 playerTimers[4];
     int field_6C;
     int rotationSpeed;
     Animator animator;

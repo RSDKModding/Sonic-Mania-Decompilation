@@ -93,7 +93,7 @@ void LRZSpiral_Unknown2(void)
                 else if (entity->playerVelocity[pID] < entity->height) {
                     if (player->groundVel < 0x100000)
                         player->groundVel += 0x1000;
-                    if ((byte)((entity->playerVelocity[pID] >> 17) + 64) < 0x80)
+                    if ((uint8)((entity->playerVelocity[pID] >> 17) + 64) < 0x80)
                         player->drawOrder = Zone->playerDrawHigh;
                     else
                         player->drawOrder = Zone->playerDrawLow;

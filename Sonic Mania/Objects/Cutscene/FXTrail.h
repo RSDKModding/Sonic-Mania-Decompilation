@@ -19,10 +19,10 @@ typedef struct {
     Vector2 statePos[FXTrail_trackCount];
     int currentRotation;
     int stateRotation[FXTrail_trackCount];
-    byte currentDirection;
-    byte stateDirection[FXTrail_trackCount];
-    byte currentVisible;
-    byte stateVisible[FXTrail_trackCount];
+    uint8 currentDirection;
+    uint8 stateDirection[FXTrail_trackCount];
+    uint8 currentVisible;
+    uint8 stateVisible[FXTrail_trackCount];
     Animator currentAnim;
     Animator stateAnim[FXTrail_trackCount];
     Animator *dataPtr;

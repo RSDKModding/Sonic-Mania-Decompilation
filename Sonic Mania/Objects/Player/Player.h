@@ -101,27 +101,27 @@ typedef enum {
 #if RETRO_USE_PLUS
 typedef struct {
     RSDK_OBJECT
-    TABLE(int sonicPhysicsTable[64],
+    TABLE(int32 sonicPhysicsTable[64],
           { 0x60000, 0xC00,  0x1800, 0x600,  0x8000,  0x600, 0x68000, -0x40000, 0x30000, 0x600,  0xC00,  0x300, 0x4000, 0x300, 0x38000, -0x20000,
             0xA0000, 0x3000, 0x6000, 0x1800, 0x10000, 0x600, 0x80000, -0x40000, 0x50000, 0x1800, 0x3000, 0xC00, 0x8000, 0x300, 0x38000, -0x20000,
             0xC0000, 0x1800, 0x3000, 0xC00,  0x8000,  0x600, 0x68000, -0x40000, 0x60000, 0xC00,  0x1800, 0x600, 0x4000, 0x300, 0x38000, -0x20000,
             0xC0000, 0x1800, 0x3000, 0xC00,  0x8000,  0x600, 0x80000, -0x40000, 0x60000, 0xC00,  0x1800, 0x600, 0x4000, 0x300, 0x38000, -0x20000 });
-    TABLE(int tailsPhysicsTable[64],
+    TABLE(int32 tailsPhysicsTable[64],
           { 0x60000, 0xC00,  0x1800, 0x600,  0x8000,  0x600, 0x68000, -0x40000, 0x30000, 0x600,  0xC00,  0x300, 0x4000, 0x300, 0x38000, -0x20000,
             0xA0000, 0x3000, 0x6000, 0x1800, 0x10000, 0x600, 0x80000, -0x40000, 0x50000, 0x1800, 0x3000, 0xC00, 0x8000, 0x300, 0x38000, -0x20000,
             0xC0000, 0x1800, 0x3000, 0xC00,  0x8000,  0x600, 0x68000, -0x40000, 0x60000, 0xC00,  0x1800, 0x600, 0x4000, 0x300, 0x38000, -0x20000,
             0xC0000, 0x1800, 0x3000, 0xC00,  0x8000,  0x600, 0x80000, -0x40000, 0x60000, 0xC00,  0x1800, 0x600, 0x4000, 0x300, 0x38000, -0x20000 });
-    TABLE(int knuxPhysicsTable[64],
+    TABLE(int32 knuxPhysicsTable[64],
           { 0x60000, 0xC00,  0x1800, 0x600,  0x8000,  0x600, 0x60000, -0x40000, 0x30000, 0x600,  0xC00,  0x300, 0x4000, 0x300, 0x30000, -0x20000,
             0xA0000, 0x3000, 0x6000, 0x1800, 0x10000, 0x600, 0x60000, -0x40000, 0x50000, 0x1800, 0x3000, 0xC00, 0x8000, 0x300, 0x30000, -0x20000,
             0xC0000, 0x1800, 0x3000, 0xC00,  0x8000,  0x600, 0x60000, -0x40000, 0x60000, 0xC00,  0x1800, 0x600, 0x4000, 0x300, 0x30000, -0x20000,
             0xC0000, 0x1800, 0x3000, 0xC00,  0x8000,  0x600, 0x60000, -0x40000, 0x60000, 0xC00,  0x1800, 0x600, 0x8000, 0x300, 0x30000, -0x20000 });
-    TABLE(int mightyPhysicsTable[64],
+    TABLE(int32 mightyPhysicsTable[64],
           { 0x60000, 0xC00,  0x1800, 0x600,  0x8000,  0x600, 0x68000, -0x40000, 0x30000, 0x600,  0xC00,  0x300, 0x4000, 0x300, 0x38000, -0x20000,
             0xA0000, 0x3000, 0x6000, 0x1800, 0x10000, 0x600, 0x80000, -0x40000, 0x50000, 0x1800, 0x3000, 0xC00, 0x8000, 0x300, 0x38000, -0x20000,
             0xC0000, 0x1800, 0x3000, 0xC00,  0x8000,  0x600, 0x68000, -0x40000, 0x60000, 0xC00,  0x1800, 0x600, 0x4000, 0x300, 0x38000, -0x20000,
             0xC0000, 0x1800, 0x3000, 0xC00,  0x8000,  0x600, 0x80000, -0x40000, 0x60000, 0xC00,  0x1800, 0x600, 0x4000, 0x300, 0x38000, -0x20000 });
-    TABLE(int rayPhysicsTable[64],
+    TABLE(int32 rayPhysicsTable[64],
           { 0x60000, 0xC00,  0x1800, 0x600,  0x8000,  0x600, 0x68000, -0x40000, 0x30000, 0x600,  0xC00,  0x300, 0x4000, 0x300, 0x38000, -0x20000,
             0xA0000, 0x3000, 0x6000, 0x1800, 0x10000, 0x600, 0x80000, -0x40000, 0x50000, 0x1800, 0x3000, 0xC00, 0x8000, 0x300, 0x38000, -0x20000,
             0xC0000, 0x1800, 0x3000, 0xC00,  0x8000,  0x600, 0x68000, -0x40000, 0x60000, 0xC00,  0x1800, 0x600, 0x4000, 0x300, 0x38000, -0x20000,
@@ -157,112 +157,112 @@ typedef struct {
     TABLE(colour superPalette_Ray_CPZ[18], { 0xE00180, 0xE00190, 0xE02898, 0xE048A8, 0xE060B8, 0xE078E0, 0xE02880, 0xE05888, 0xE08088, 0xE080A8,
                                              0xE080D8, 0xE080E0, 0xE02880, 0xE05888, 0xE08088, 0xE080A8, 0xE080D8, 0xE080E0 });
     bool32 cantSwap;
-    int playerCount;
-    ushort upState;
-    ushort downState;
-    ushort leftState;
-    ushort rightState;
-    ushort jumpPressState;
-    ushort jumpHoldState;
-    int flyCarryPosA;
-    int flyCarryPosB;
+    int32 playerCount;
+    uint16 upState;
+    uint16 downState;
+    uint16 leftState;
+    uint16 rightState;
+    uint16 jumpPressState;
+    uint16 jumpHoldState;
+    int32 flyCarryPosA;
+    int32 flyCarryPosB;
     Vector2 flyCarryPositions[0x10];
     Vector2 curFlyCarryPos;
-    int P2JumpActionDelay;
-    int jumpInDelay;
-    int p2InputDelay;
-    int field_9EC;
-    int rings;
-    STATIC(int ringExtraLife, 100);
-    int powerups;
-    STATIC(int savedLives, 3);
-    int savedScore;
-    STATIC(int savedScore1UP, 50000);
-    ushort sonicSpriteIndex;
-    ushort superSpriteIndex;
-    ushort tailsSpriteIndex;
-    ushort tailsTailsSpriteIndex;
-    ushort knuxSpriteIndex;
-    ushort mightySpriteIndex;
-    ushort raySpriteIndex;
-    ushort sfx_Jump;
-    ushort sfx_Roll;
-    ushort sfx_Charge;
-    ushort sfx_Release;
-    ushort sfx_PeelCharge;
-    ushort sfx_PeelRelease;
-    ushort sfx_Dropdash;
-    ushort sfx_LoseRings;
-    ushort sfx_Hurt;
-    ushort sfx_PimPom;
-    ushort sfx_Skidding;
-    ushort sfx_Grab;
-    ushort sfx_Flying;
+    int32 P2JumpActionDelay;
+    int32 jumpInDelay;
+    int32 p2InputDelay;
+    int32 field_9EC;
+    int32 rings;
+    STATIC(int32 ringExtraLife, 100);
+    int32 powerups;
+    STATIC(int32 savedLives, 3);
+    int32 savedScore;
+    STATIC(int32 savedScore1UP, 50000);
+    uint16 sonicSpriteIndex;
+    uint16 superSpriteIndex;
+    uint16 tailsSpriteIndex;
+    uint16 tailsTailsSpriteIndex;
+    uint16 knuxSpriteIndex;
+    uint16 mightySpriteIndex;
+    uint16 raySpriteIndex;
+    uint16 sfx_Jump;
+    uint16 sfx_Roll;
+    uint16 sfx_Charge;
+    uint16 sfx_Release;
+    uint16 sfx_PeelCharge;
+    uint16 sfx_PeelRelease;
+    uint16 sfx_Dropdash;
+    uint16 sfx_LoseRings;
+    uint16 sfx_Hurt;
+    uint16 sfx_PimPom;
+    uint16 sfx_Skidding;
+    uint16 sfx_Grab;
+    uint16 sfx_Flying;
     bool32 playingFlySFX;
-    ushort sfx_Tired;
-    ushort field_A36;
+    uint16 sfx_Tired;
+    uint16 field_A36;
     bool32 playingTiredSFX;
-    ushort sfx_Land;
-    ushort sfx_Slide;
-    ushort sfx_Outtahere;
-    ushort sfx_Transform2;
-    ushort sfx_Swap;
-    ushort sfx_SwapFail;
-    ushort sfx_MightyDeflect;
-    ushort sfx_MightyDrill;
-    ushort sfx_MightyLand;
-    ushort sfx_MightyUnspin;
-    int raySwoopTimer;
-    int rayDiveTimer;
+    uint16 sfx_Land;
+    uint16 sfx_Slide;
+    uint16 sfx_Outtahere;
+    uint16 sfx_Transform2;
+    uint16 sfx_Swap;
+    uint16 sfx_SwapFail;
+    uint16 sfx_MightyDeflect;
+    uint16 sfx_MightyDrill;
+    uint16 sfx_MightyLand;
+    uint16 sfx_MightyUnspin;
+    int32 raySwoopTimer;
+    int32 rayDiveTimer;
     bool32 gotHit[4];
     void (*configureGhost_CB)(void);
     bool32 (*canSuper)(bool32);
-    int superDashCooldown;
+    int32 superDashCooldown;
 } ObjectPlayer;
 #else
 typedef struct {
     RSDK_OBJECT
-    int playerCount;
-    TABLE(int sonicPhysicsTable[64],
+    int32 playerCount;
+    TABLE(int32 sonicPhysicsTable[64],
           { 0x60000, 0xC00,  0x1800, 0x600,  0x8000,  0x600, 0x68000, -0x40000, 0x30000, 0x600,  0xC00,  0x300, 0x4000, 0x300, 0x38000, -0x20000,
             0xA0000, 0x3000, 0x6000, 0x1800, 0x10000, 0x600, 0x80000, -0x40000, 0x50000, 0x1800, 0x3000, 0xC00, 0x8000, 0x300, 0x38000, -0x20000,
             0xC0000, 0x1800, 0x3000, 0xC00,  0x8000,  0x600, 0x68000, -0x40000, 0x60000, 0xC00,  0x1800, 0x600, 0x4000, 0x300, 0x38000, -0x20000,
             0xC0000, 0x1800, 0x3000, 0xC00,  0x8000,  0x600, 0x80000, -0x40000, 0x60000, 0xC00,  0x1800, 0x600, 0x4000, 0x300, 0x38000, -0x20000 });
-    TABLE(int tailsPhysicsTable[64],
+    TABLE(int32 tailsPhysicsTable[64],
           { 0x60000, 0xC00,  0x1800, 0x600,  0x8000,  0x600, 0x68000, -0x40000, 0x30000, 0x600,  0xC00,  0x300, 0x4000, 0x300, 0x38000, -0x20000,
             0xA0000, 0x3000, 0x6000, 0x1800, 0x10000, 0x600, 0x80000, -0x40000, 0x50000, 0x1800, 0x3000, 0xC00, 0x8000, 0x300, 0x38000, -0x20000,
             0xC0000, 0x1800, 0x3000, 0xC00,  0x8000,  0x600, 0x68000, -0x40000, 0x60000, 0xC00,  0x1800, 0x600, 0x4000, 0x300, 0x38000, -0x20000,
             0xC0000, 0x1800, 0x3000, 0xC00,  0x8000,  0x600, 0x80000, -0x40000, 0x60000, 0xC00,  0x1800, 0x600, 0x4000, 0x300, 0x38000, -0x20000 });
-    TABLE(int knuxPhysicsTable[64],
+    TABLE(int32 knuxPhysicsTable[64],
           { 0x60000, 0xC00,  0x1800, 0x600,  0x8000,  0x600, 0x60000, -0x40000, 0x30000, 0x600,  0xC00,  0x300, 0x4000, 0x300, 0x30000, -0x20000,
             0xA0000, 0x3000, 0x6000, 0x1800, 0x10000, 0x600, 0x60000, -0x40000, 0x50000, 0x1800, 0x3000, 0xC00, 0x8000, 0x300, 0x30000, -0x20000,
             0xC0000, 0x1800, 0x3000, 0xC00,  0x8000,  0x600, 0x60000, -0x40000, 0x60000, 0xC00,  0x1800, 0x600, 0x4000, 0x300, 0x30000, -0x20000,
             0xC0000, 0x1800, 0x3000, 0xC00,  0x8000,  0x600, 0x60000, -0x40000, 0x60000, 0xC00,  0x1800, 0x600, 0x8000, 0x300, 0x30000, -0x20000 });
-    ushort upState;
-    ushort downState;
-    ushort leftState;
-    ushort rightState;
-    ushort jumpPressState;
-    ushort jumpHoldState;
-    int flyCarryPosA;
-    int flyCarryPosB;
+    uint16 upState;
+    uint16 downState;
+    uint16 leftState;
+    uint16 rightState;
+    uint16 jumpPressState;
+    uint16 jumpHoldState;
+    int32 flyCarryPosA;
+    int32 flyCarryPosB;
     Vector2 flyCarryPositions[16];
     Vector2 curFlyCarryPos;
-    int P2JumpActionDelay;
-    int jumpInDelay;
-    int p2InputDelay;
-    byte value17;
-    int rings;
-    STATIC(int ringExtraLife, 100);
-    int powerups;
-    STATIC(int savedLives, 3);
-    int savedScore;
-    STATIC(int savedScore1UP, 50000);
-    ushort sonicSpriteIndex;
-    ushort superSpriteIndex;
-    ushort tailsTailsSpriteIndex;
-    ushort tailsSpriteIndex;
-    ushort knuxSpriteIndex;
+    int32 P2JumpActionDelay;
+    int32 jumpInDelay;
+    int32 p2InputDelay;
+    uint8 value17;
+    int32 rings;
+    STATIC(int32 ringExtraLife, 100);
+    int32 powerups;
+    STATIC(int32 savedLives, 3);
+    int32 savedScore;
+    STATIC(int32 savedScore1UP, 50000);
+    uint16 sonicSpriteIndex;
+    uint16 superSpriteIndex;
+    uint16 tailsTailsSpriteIndex;
+    uint16 tailsSpriteIndex;
+    uint16 knuxSpriteIndex;
     TABLE(colour superPalette_Sonic[18], { 0x000080, 0x0038C0, 0x0068F0, 0x1888F0, 0x30A0F0, 0x68D0F0, 0xF0C001, 0xF0D028, 0xF0E040, 0xF0E860,
                                            0xF0E898, 0xF0E8D0, 0xF0D898, 0xF0E0B0, 0xF0E8C0, 0xF0F0D8, 0xF0F0F0, 0xF0F0F8 });
     TABLE(colour superPalette_Tails[18], { 0x800801, 0xB01801, 0xD05001, 0xE07808, 0xE89008, 0xF0A801, 0xF03830, 0xF06848, 0xF09860, 0xF0B868,
@@ -281,28 +281,28 @@ typedef struct {
                                                0xF098F0, 0xF0A0F0, 0xF078F0, 0xF078F0, 0xF080F0, 0xF088F0, 0xF098F0, 0xF0A0F0 });
     TABLE(colour superPalette_Knux_CPZ[18], { 0xA00180, 0xB00178, 0xC00190, 0xD001B0, 0xE001E0, 0xE820E8, 0xF078D8, 0xF078E8, 0xF088F0, 0xF098F0,
                                               0xF0A8F0, 0xF0B0F0, 0xF078D8, 0xF078E8, 0xF088F0, 0xF098F0, 0xF0A8F0, 0xF0B0F0 });
-    ushort sfx_Jump;
-    ushort sfx_Roll;
-    ushort sfx_Charge;
-    ushort sfx_Release;
-    ushort sfx_PeelCharge;
-    ushort sfx_PeelRelease;
-    ushort sfx_Dropdash;
-    ushort sfx_LoseRings;
-    ushort sfx_Hurt;
-    ushort field_66E;
-    ushort sfx_Skidding;
-    ushort sfx_Grab;
-    ushort sfx_Flying;
-    ushort field_676;
+    uint16 sfx_Jump;
+    uint16 sfx_Roll;
+    uint16 sfx_Charge;
+    uint16 sfx_Release;
+    uint16 sfx_PeelCharge;
+    uint16 sfx_PeelRelease;
+    uint16 sfx_Dropdash;
+    uint16 sfx_LoseRings;
+    uint16 sfx_Hurt;
+    uint16 field_66E;
+    uint16 sfx_Skidding;
+    uint16 sfx_Grab;
+    uint16 sfx_Flying;
+    uint16 field_676;
     bool32 playingFlySFX;
-    ushort sfx_Tired;
-    ushort field_67E;
+    uint16 sfx_Tired;
+    uint16 field_67E;
     bool32 playingTiredSFX;
-    ushort sfx_Land;
-    ushort sfx_Slide;
-    ushort sfx_Outtahere;
-    ushort sfx_Transform2;
+    uint16 sfx_Land;
+    uint16 sfx_Slide;
+    uint16 sfx_Outtahere;
+    uint16 sfx_Transform2;
     bool32 gotHit[4];
 } ObjectPlayer;
 #endif
@@ -316,112 +316,112 @@ typedef struct {
     EntityCamera *camera;
     Animator playerAnimator;
     Animator tailAnimator;
-    int maxWalkSpeed;
-    int maxJogSpeed;
-    int maxRunSpeed;
-    int field_A4;
-    int tailRotation;
-    int tailDirection;
-    ushort spriteIndex;
-    ushort tailSpriteIndex;
-    ushort storedAnim;
-    ushort playerID;
+    int32 maxWalkSpeed;
+    int32 maxJogSpeed;
+    int32 maxRunSpeed;
+    int32 field_A4;
+    int32 tailRotation;
+    int32 tailDirection;
+    uint16 spriteIndex;
+    uint16 tailSpriteIndex;
+    uint16 storedAnim;
+    uint16 playerID;
     Hitbox *outerbox;
     Hitbox *innerbox;
-    int characterID;
-    int rings;
-    int ringExtraLife;
-    int shield;
-    int lives;
-    int score;
-    int score1UP;
-    int hyperRing;
-    int timer;
-    int outtaHereTimer;
-    int abilityTimer;
-    int spindashCharge;
-    int abilityValue;
-    int airTimer;
-    int invincibleTimer;
-    int speedShoesTimer;
-    int blinkTimer;
-    int scrollDelay;
-    int skidding;
-    int pushing;
-    int underwater;        // 0 = not in water, 1 = in palette water, else water entityID
+    int32 characterID;
+    int32 rings;
+    int32 ringExtraLife;
+    int32 shield;
+    int32 lives;
+    int32 score;
+    int32 score1UP;
+    int32 hyperRing;
+    int32 timer;
+    int32 outtaHereTimer;
+    int32 abilityTimer;
+    int32 spindashCharge;
+    int32 abilityValue;
+    int32 airTimer;
+    int32 invincibleTimer;
+    int32 speedShoesTimer;
+    int32 blinkTimer;
+    int32 scrollDelay;
+    int32 skidding;
+    int32 pushing;
+    int32 underwater;        // 0 = not in water, 1 = in palette water, else water entityID
     bool32 groundedStore;  // stored grounded state
     bool32 invertGravity;  // FBZ magnet flip
     bool32 isChibi;        // MMZ Chibi form flag
     bool32 forceTransform; // force transform flag
-    int superState;
-    int superSecondTimer;
-    int superBlendAmount;
-    int superBlendState;
+    int32 superState;
+    int32 superSecondTimer;
+    int32 superBlendAmount;
+    int32 superBlendState;
     bool32 sidekick;
-    int scoreBonus;
-    int cameraOffset;
-    int collisionFlagH;
-    int collisionFlagV;
-    int topSpeed;
-    int acceleration;
-    int deceleration;
-    int airAcceleration;
-    int airDeceleration;
-    int skidSpeed;
-    int rollingFriction;
-    int rollingDeceleration;
-    int gravityStrength;
-    int abilitySpeed;
-    int jumpStrength;
-    int jumpCap;
-    int flailing;
-    int sensorX[5];
-    int sensorY;
+    int32 scoreBonus;
+    int32 cameraOffset;
+    int32 collisionFlagH;
+    int32 collisionFlagV;
+    int32 topSpeed;
+    int32 acceleration;
+    int32 deceleration;
+    int32 airAcceleration;
+    int32 airDeceleration;
+    int32 skidSpeed;
+    int32 rollingFriction;
+    int32 rollingDeceleration;
+    int32 gravityStrength;
+    int32 abilitySpeed;
+    int32 jumpStrength;
+    int32 jumpCap;
+    int32 flailing;
+    int32 sensorX[5];
+    int32 sensorY;
     Vector2 moveOffset;
     StateMachine(stateInputReplay);
     StateMachine(stateInput);
-    int controllerID;
-    int controlLock;
+    int32 controllerID;
+    int32 controlLock;
     bool32 up;
     bool32 down;
     bool32 left;
     bool32 right;
     bool32 jumpPress;
     bool32 jumpHold;
-    int jumpAbility;
-    int jumpAbilityTimer;
+    int32 jumpAbility;
+    int32 jumpAbilityTimer;
     StateMachine(movesetState);
     StateMachine(peeloutState);
-    int flyCarryTimer;
+    int32 flyCarryTimer;
     Vector2 sidekickPos;
     Vector2 leaderPos;
-    byte hurtFlag;
+    uint8 hurtFlag;
     bool32 forceJumpIn;
 #if RETRO_USE_PLUS
     bool32 isGhost;
 #endif
-    int abilityValue1;
-    int abilityValue2;
-    int field_1FC;
-    int field_200;
-    int field_204;
-    int field_208;
-    int field_20C;
-    int field_210;
+    int32 abilityValue1;
+    int32 abilityValue2;
+    int32 field_1FC;
+    int32 field_200;
+    int32 field_204;
+    int32 field_208;
+    int32 field_20C;
+    int32 field_210;
     void *entPtr;
     void* field_218;
-    int field_21C;
+    int32 field_21C;
 #if RETRO_USE_PLUS
-    int field_220;
-    int field_224;
-    int field_228;
-    int field_22C;
-    int field_22F;
-    int field_230;
-    int uncurlTimer;
+    int32 field_220;
+    int32 field_224;
+    int32 field_228;
+    int32 field_22C;
+    int32 field_22F;
+    int32 field_230;
+    int32 uncurlTimer;
 #endif
 #if RETRO_USE_TOUCH_CONTROLS
-    int touchJump;
+    int32 touchJump;
 #endif
 } EntityPlayer;
 
@@ -443,23 +443,23 @@ void Player_Serialize(void);
 void Player_LoadSprites(void);
 void Player_LoadSpritesVS(void);
 void Player_SaveValues(void);
-void Player_GiveScore(EntityPlayer *player, int score);
-void Player_GiveRings(int amount, EntityPlayer *player, bool32 playSFX);
+void Player_GiveScore(EntityPlayer *player, int32 score);
+void Player_GiveRings(int32 amount, EntityPlayer *player, bool32 playSFX);
 void Player_GiveLife(EntityPlayer *entity);
 void Player_ApplyShieldEffect(EntityPlayer *player);
-void Player_ChangeCharacter(EntityPlayer *entity, int character);
-bool32 Player_CheckGoSuper(EntityPlayer *player, byte emeraldflags);
-void Player_BlendSuperSonicColours(int bankID);
-void Player_BlendSuperTailsColours(int bankID);
-void Player_BlendSuperKnuxColours(int bankID);
+void Player_ChangeCharacter(EntityPlayer *entity, int32 character);
+bool32 Player_CheckGoSuper(EntityPlayer *player, uint8 emeraldflags);
+void Player_BlendSuperSonicColours(int32 bankID);
+void Player_BlendSuperTailsColours(int32 bankID);
+void Player_BlendSuperKnuxColours(int32 bankID);
 #if RETRO_USE_PLUS
-void Player_BlendSuperMightyColours(int bankID);
-void Player_BlendSuperRayColours(int bankID);
+void Player_BlendSuperMightyColours(int32 bankID);
+void Player_BlendSuperRayColours(int32 bankID);
 #endif
 void Player_HandleSuperForm(void);
 bool32 Player_CheckKeyPress(void);
-void Player_LoseRings(EntityPlayer *player, int rings, byte cPlane);
-void Player_LoseHyperRings(EntityPlayer *player, int rings, byte cPlane);
+void Player_LoseRings(EntityPlayer *player, int32 rings, uint8 cPlane);
+void Player_LoseHyperRings(EntityPlayer *player, int32 rings, uint8 cPlane);
 EntityPlayer *Player_Unknown2(void);
 EntityPlayer *Player_Unknown3(void);
 #if RETRO_USE_PLUS
@@ -530,8 +530,8 @@ void Player_State_KnuxLedgePullUp(void);
 #if RETRO_USE_PLUS
 void Player_State_MightyHammerDrop(void);
 void Player_State_MightyUnspin(void);
-void Player_SpawnMightyHammerdropDust(int speed, Hitbox *hitbox);
-bool32 Player_CheckMightyUnspin(int bounceDistance, EntityPlayer *player, bool32 checkHammerDrop, int *uncurlTimer);
+void Player_SpawnMightyHammerdropDust(int32 speed, Hitbox *hitbox);
+bool32 Player_CheckMightyUnspin(int32 bounceDistance, EntityPlayer *player, bool32 checkHammerDrop, int32 *uncurlTimer);
 void Player_State_RayGlide(void);
 #endif
 void Player_State_FlyIn(void);
@@ -552,8 +552,8 @@ void Player_RayJumpAbility(void);
 
 bool32 Player_CheckRayDiving(void);
 bool32 Player_CheckRaySwooping(void);
-void Player_UpdateRayDiveSFX(int sfxID);
-void Player_UpdateRaySwoopSFX(int sfxID);
+void Player_UpdateRayDiveSFX(int32 sfxID);
+void Player_UpdateRaySwoopSFX(int32 sfxID);
 #endif
 
 //Input States

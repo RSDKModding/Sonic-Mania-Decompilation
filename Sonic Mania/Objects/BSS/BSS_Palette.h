@@ -17,8 +17,8 @@ typedef struct {
     RSDK_ENTITY
     bool32 useStageConfig;
     int paletteID;
-    byte skyAlpha;
-    byte globeAlpha;
+    uint8 skyAlpha;
+    uint8 globeAlpha;
     colour playfieldA;
     colour playfieldB;
     colour bgColor1;

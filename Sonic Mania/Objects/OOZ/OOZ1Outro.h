@@ -7,7 +7,7 @@
 typedef struct {
     RSDK_OBJECT
     int field_4;
-    ushort sfxDrop;
+    uint16 sfxDrop;
 } ObjectOOZ1Outro;
 
 // Entity Class

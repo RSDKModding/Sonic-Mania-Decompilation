@@ -131,12 +131,12 @@ void TeeterTotter_Unknown3(void)
 {
     RSDK_THIS(TeeterTotter);
 
-    byte len = entity->length;
+    uint8 len = entity->length;
     for (int i = 0; i < 2 * entity->length; ++i) {
-        sbyte val = i - len + 1;
+        int8 val = i - len + 1;
         if (i - len < 0)
             val = i - len;
-        entity->field_90[i] = (entity->field_84 >> 1) * (sbyte)(2 * val + 2 * ((sbyte)(2 * val) <= 0) - 1);
+        entity->field_90[i] = (entity->field_84 >> 1) * (int8)(2 * val + 2 * ((int8)(2 * val) <= 0) - 1);
     }
 }
 

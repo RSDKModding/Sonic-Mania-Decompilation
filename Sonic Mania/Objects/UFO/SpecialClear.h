@@ -22,16 +22,16 @@ typedef enum {
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    ushort spriteIndex;
+    uint16 spriteIndex;
 #if !RETRO_USE_PLUS
-    ushort continueFrames;
+    uint16 continueFrames;
 #endif
-    ushort sfx_ScoreAdd;
-    ushort sfx_ScoreTotal;
-    ushort sfx_Event;
-    ushort sfx_SpecialWarp;
-    ushort sfx_Continue;
-    ushort sfx_Emerald;
+    uint16 sfx_ScoreAdd;
+    uint16 sfx_ScoreTotal;
+    uint16 sfx_Event;
+    uint16 sfx_SpecialWarp;
+    uint16 sfx_Continue;
+    uint16 sfx_Emerald;
 } ObjectSpecialClear;
 
 // Entity Class

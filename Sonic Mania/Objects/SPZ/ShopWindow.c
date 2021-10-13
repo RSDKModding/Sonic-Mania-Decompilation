@@ -176,8 +176,8 @@ void ShopWindow_Draw_Normal(void)
     int y = (entity->position.y >> 0x10) - screen->position.y - entity->size.y;
     RSDK.SetClipBounds(RSDK_sceneInfo->currentScreenID, x, y, x + 2 * entity->size.x, y + 2 * entity->size.y + 1);
 
-    drawPos.x = (x - (byte)(x + (screen->position.x >> 1))) << 16;
-    drawPos.y = (y - (byte)(y + (screen->position.y >> 1))) << 16;
+    drawPos.x = (x - (uint8)(x + (screen->position.x >> 1))) << 16;
+    drawPos.y = (y - (uint8)(y + (screen->position.y >> 1))) << 16;
     if (entity->silhouette)
         RSDK.DrawRect(x, y, 2 * entity->size.x, 2 * entity->size.y, 0x100068, 255, INK_UNMASKED, true);
 

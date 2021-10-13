@@ -303,7 +303,7 @@ void Grabber_State_Struggle(void)
             player->velocity.x = 0;
             player->velocity.y = 0;
             if (entity->field_A8) {
-                byte flags = 0;
+                uint8 flags = 0;
                 entity->field_A8--;
                 if (player->left)
                     flags = 1;

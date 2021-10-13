@@ -13,13 +13,13 @@ typedef struct {
     int startX;
     int arenaTop;
     int arenaBottom;
-    ushort sfxHit;
-    ushort sfxExplosion;
-    ushort sfxGather;
-    ushort sfxBounce;
-    ushort sfxRelease;
-    ushort aniFrames;
-    ushort waterFrames;
+    uint16 sfxHit;
+    uint16 sfxExplosion;
+    uint16 sfxGather;
+    uint16 sfxBounce;
+    uint16 sfxRelease;
+    uint16 aniFrames;
+    uint16 waterFrames;
 } ObjectAmoebaDroid;
 
 // Entity Class

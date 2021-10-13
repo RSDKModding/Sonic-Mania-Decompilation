@@ -236,7 +236,7 @@ void DERobot_Unknown5(void)
 
         bool32 playSFX = false;
         for (int i = 0; i < 32; ++i) {
-            ushort tile = RSDK.GetTileInfo(Zone->fgHigh, tx, ty);
+            uint16 tile = RSDK.GetTileInfo(Zone->fgHigh, tx, ty);
             if (tile != 0xFFFF) {
                 RSDK.SetTileInfo(Zone->fgHigh, tx, ty, 0xFFFF);
                 EntityBreakableWall *wall = CREATE_ENTITY(BreakableWall, intToVoid(1), (tx << 20) + 0x80000, spawnY);
@@ -267,7 +267,7 @@ void DERobot_Unknown6(void)
     for (int y = 0; y < 8; ++y) {
         int spawnY = (ty << 20) + 0x80000;
         for (int x = 0; x < 32; ++x) {
-            ushort tile = RSDK.GetTileInfo(Zone->fgLow, tx, ty);
+            uint16 tile = RSDK.GetTileInfo(Zone->fgLow, tx, ty);
             if (tile != 0xFFFF) {
                 RSDK.SetTileInfo(Zone->fgLow, tx, ty, 0xFFFF);
                 EntityBreakableWall *wall = CREATE_ENTITY(BreakableWall, intToVoid(1), spawnX, spawnY);
@@ -292,7 +292,7 @@ void DERobot_Unknown6(void)
     for (int y = 0; y < 32; ++y) {
         int spawnY = (ty << 20) + 0x80000;
         for (int x = 0; x < 32; ++x) {
-            ushort tile = RSDK.GetTileInfo(Zone->fgHigh, tx, ty);
+            uint16 tile = RSDK.GetTileInfo(Zone->fgHigh, tx, ty);
             if (tile != 0xFFFF) {
                 RSDK.SetTileInfo(Zone->fgHigh, tx, ty, 0xFFFF);
                 EntityBreakableWall *wall = CREATE_ENTITY(BreakableWall, intToVoid(1), spawnX, spawnY);

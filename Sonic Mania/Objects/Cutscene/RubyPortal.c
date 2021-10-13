@@ -118,7 +118,7 @@ void RubyPortal_Unknown1(void)
             int ty     = (entity->position.y >> 20) - 8;
             int spawnY = (ty << 20) + 0x80000;
             for (int y = 4; y < 52; y += 3) {
-                ushort tile = RSDK.GetTileInfo(Zone->fgLow, tx, ty);
+                uint16 tile = RSDK.GetTileInfo(Zone->fgLow, tx, ty);
                 if (tile != 0xFFFF) {
                     EntityBreakableWall *wall = CREATE_ENTITY(BreakableWall, intToVoid(1), spawnX, spawnY);
                     wall->drawOrder           = Zone->drawOrderLow + 1;

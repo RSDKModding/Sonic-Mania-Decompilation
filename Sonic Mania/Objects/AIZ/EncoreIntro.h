@@ -7,14 +7,14 @@
 typedef struct {
     RSDK_OBJECT
     int field_4;
-    ushort aniFrames;
-    ushort field_A;
-    ushort sfxHighFive;
-    ushort sfxMysticPoof;
-    ushort sfxKingCharge;
-    ushort sfxMysticHat;
-    ushort sfxMysticTransform;
-    ushort sfxPon;
+    uint16 aniFrames;
+    uint16 field_A;
+    uint16 sfxHighFive;
+    uint16 sfxMysticPoof;
+    uint16 sfxKingCharge;
+    uint16 sfxMysticHat;
+    uint16 sfxMysticTransform;
+    uint16 sfxPon;
     Entity *fxRuby;
     Entity *phantomRuby;
     Entity *rubyPortal;

@@ -111,7 +111,7 @@ void UILeaderboard_InitLeaderboard(EntityUILeaderboard *leaderboard)
 }
 
 
-void UILeaderboard_SetupLeaderboard(EntityUILeaderboard *leaderboard, byte player, byte zone, byte act)
+void UILeaderboard_SetupLeaderboard(EntityUILeaderboard *leaderboard, uint8 player, uint8 zone, uint8 act)
 {
     leaderboard->timer       = 0;
     leaderboard->entryOffset = 0;

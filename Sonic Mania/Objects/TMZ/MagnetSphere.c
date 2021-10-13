@@ -162,7 +162,7 @@ void MagnetSphere_MovePlayer(void *p, int playerID)
         player->velocity.y = -player->velocity.y;
     }
 
-    byte angle = MagnetSphere->sphereAngle[playerID];
+    uint8 angle = MagnetSphere->sphereAngle[playerID];
     MagnetSphere->sphereAngle[playerID] += 4;
     if ((((MagnetSphere->sphereAngle[playerID] + 64) >> 7) & 1) != ((angle + 64) >> 7) && !player->sidekick)
         RSDK.PlaySfx(MagnetSphere->sfxPlasmaBall, 0, 255);

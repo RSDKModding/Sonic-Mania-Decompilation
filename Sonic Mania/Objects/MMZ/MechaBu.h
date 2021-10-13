@@ -9,9 +9,9 @@ typedef struct {
     TABLE(int sawOffsets[10], { -0x150000, -0xF0000, -0x170000, -0xE0000, -0x190000, -0xA0000, -0x1A0000, -0x50000, -0x1A0000, -0x40000 });
     Hitbox hitboxSaw;
     Hitbox hitbox2;
-    ushort aniFrames;
-    ushort sfxSawUp;
-    ushort sfxSawDown;
+    uint16 aniFrames;
+    uint16 sfxSawUp;
+    uint16 sfxSawDown;
 } ObjectMechaBu;
 
 // Entity Class
@@ -19,10 +19,10 @@ typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     PlaneFilterTypes planeFilter;
-    byte timer;
-    byte timer2;
+    uint8 timer;
+    uint8 timer2;
     Vector2 startPos;
-    byte startDir;
+    uint8 startDir;
     Vector2 sawPos;
     Animator animator1;
     Animator animator2;

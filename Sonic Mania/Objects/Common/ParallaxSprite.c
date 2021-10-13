@@ -49,7 +49,7 @@ void ParallaxSprite_Draw(void)
     }
     else if (entity->attribute == 6) {
         RSDK.GetFrame(ParallaxSprite->aniFrames, entity->aniID, 0)->sprX =
-            entity->sprX + (((ushort)(entity->field_B4) + ((ushort)(Zone->timer) << entity->field_B0)) & 0x7F);
+            entity->sprX + (((uint16)(entity->field_B4) + ((uint16)(Zone->timer) << entity->field_B0)) & 0x7F);
     }
     RSDK.DrawSprite(&entity->animator, &drawPos, true);
 }
@@ -60,7 +60,7 @@ void ParallaxSprite_Create(void *data)
     entity->active    = ACTIVE_NORMAL;
     entity->drawOrder = Zone->fgLayerLow + 1;
     if (data)
-        entity->attribute = (byte)voidToInt(data);
+        entity->attribute = (uint8)voidToInt(data);
     switch (entity->attribute) {
         case 2:
 #if RETRO_USE_PLUS

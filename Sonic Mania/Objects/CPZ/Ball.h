@@ -8,15 +8,15 @@ typedef struct {
     RSDK_OBJECT
     Hitbox hitbox1;
     Hitbox hitbox2;
-    ushort aniFrames;
-    ushort sfxSplash;
+    uint16 aniFrames;
+    uint16 sfxSplash;
 } ObjectBall;
 
 // Entity Class
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    byte type;
+    uint8 type;
     Entity *playerPtr;
     Vector2 startPos;
     Animator animator;

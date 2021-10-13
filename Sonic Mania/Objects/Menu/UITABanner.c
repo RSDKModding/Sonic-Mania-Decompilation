@@ -53,7 +53,7 @@ void UITABanner_Create(void *data)
 
 void UITABanner_StageLoad(void) { UITABanner->aniFrames = RSDK.LoadSpriteAnimation("UI/SaveSelect.bin", SCOPE_STAGE); }
 
-void UITABanner_Unknown1(byte characterID, EntityUITABanner *banner, byte zoneID, byte actID, bool32 isEncore)
+void UITABanner_Unknown1(uint8 characterID, EntityUITABanner *banner, uint8 zoneID, uint8 actID, bool32 isEncore)
 {
     RSDK.SetText(&banner->text, "", 0);
     Localization_GetZoneName(&banner->text, zoneID);
@@ -76,7 +76,7 @@ void UITABanner_Unknown2(int drawX, int drawY, bool32 isEncore)
     RSDK.DrawRect(drawX + 0x790000, (drawY + 0x1D8000) - 0x3D0000, 0x200000, 0x3D0000, 0x5870E0, 255, INK_NONE, false);
     RSDK.DrawRect(drawX - 0x990000, drawY - 0x1E8000, 0x1320000, 0x220000, 0, 255, INK_NONE, false);
 
-    uint colour = 0;
+    uint32 colour = 0;
     if (isEncore)
         colour = 0xF26C4F;
     else
@@ -88,7 +88,7 @@ void UITABanner_Unknown2(int drawX, int drawY, bool32 isEncore)
     UIWidgets_Unknown2(67, 312, drawX, drawY);
 }
 
-void UITABanner_Unknown3(byte actID, byte characterID, bool32 isEncore, int drawX, int drawY)
+void UITABanner_Unknown3(uint8 actID, uint8 characterID, bool32 isEncore, int drawX, int drawY)
 {
     RSDK_THIS(UITABanner);
     Vector2 drawPos;
@@ -187,7 +187,7 @@ void UITABanner_Unknown4(int drawX, int drawY, int zoneID)
     UIWidgets_Unknown2(61, 96, drawPos.x, drawPos.y);
 }
 
-void UITABanner_Unknown5(byte actID, byte zoneID, byte characterID, bool32 isEncore, int drawX, int drawY)
+void UITABanner_Unknown5(uint8 actID, uint8 zoneID, uint8 characterID, bool32 isEncore, int drawX, int drawY)
 {
     RSDK_THIS(UITABanner);
     Vector2 drawPos;

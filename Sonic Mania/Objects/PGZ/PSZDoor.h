@@ -7,17 +7,17 @@
 typedef struct {
     RSDK_OBJECT
     Hitbox hitboxes[2];
-    ushort aniFrames;
-    ushort sfxOpen;
+    uint16 aniFrames;
+    uint16 sfxOpen;
 } ObjectPSZDoor;
 
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    byte orientation;
+    uint8 orientation;
     bool32 open;
     int speed;
-    byte id;
+    uint8 id;
     int automatic;
     EntityDoorTrigger *trigger;
     int field_70;

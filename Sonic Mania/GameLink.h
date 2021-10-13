@@ -14,19 +14,19 @@
 // STANDARD TYPES
 // ================
 
-typedef signed char sbyte;
-typedef unsigned char byte;
-typedef unsigned short ushort;
-typedef unsigned int uint;
-typedef long long int64;
-typedef unsigned long long uint64;
-typedef unsigned int bool32;
+typedef signed char int8;
+typedef unsigned char uint8;
+typedef signed short int16;
+typedef unsigned short uint16;
+typedef signed int int32;
+typedef unsigned int uint32;
 
+typedef uint32 bool32;
 #define true 1
 #define false 0
 
-typedef uint colour;
-typedef uint color;
+typedef uint32 colour;
+typedef uint32 color;
 
 #define SCREEN_XMAX    (1280)
 #define SCREEN_YSIZE   (240)
@@ -59,8 +59,8 @@ typedef uint color;
 #define TILE_SIZE (16)
 
 typedef struct {
-    int x;
-    int y;
+    int32 x;
+    int32 y;
 } Vector2;
 
 typedef struct {
@@ -68,41 +68,41 @@ typedef struct {
     Vector2 scale;
     Vector2 velocity;
     Vector2 updateRange;
-    int angle;
-    int alpha;
-    int rotation;
-    int groundVel;
-    int depth;
-    ushort group;
-    ushort objectID;
+    int32 angle;
+    int32 alpha;
+    int32 rotation;
+    int32 groundVel;
+    int32 depth;
+    uint16 group;
+    uint16 objectID;
     bool32 inBounds;
     bool32 isPermanent;
     bool32 tileCollisions;
     bool32 interaction;
     bool32 onGround;
-    byte active;
+    uint8 active;
 #if RETRO_USE_PLUS
-    byte filter;
+    uint8 filter;
 #endif
-    byte direction;
-    byte drawOrder;
-    byte collisionLayers;
-    byte collisionPlane;
-    byte collisionMode;
-    byte drawFX;
-    byte inkEffect;
-    byte visible;
-    byte activeScreens;
+    uint8 direction;
+    uint8 drawOrder;
+    uint8 collisionLayers;
+    uint8 collisionPlane;
+    uint8 collisionMode;
+    uint8 drawFX;
+    uint8 inkEffect;
+    uint8 visible;
+    uint8 activeScreens;
 } Entity;
 
 typedef struct {
-    ushort objectID;
-    byte active;
+    uint16 objectID;
+    uint8 active;
 } Object;
 
 #define RSDK_OBJECT                                                                                                                                  \
-    ushort objectID;                                                                                                                                 \
-    byte active;
+    uint16 objectID;                                                                                                                                 \
+    uint8 active;
 
 #if RETRO_USE_PLUS
 #define RSDK_ENTITY                                                                                                                                  \
@@ -110,81 +110,81 @@ typedef struct {
     Vector2 scale;                                                                                                                                   \
     Vector2 velocity;                                                                                                                                \
     Vector2 updateRange;                                                                                                                             \
-    int angle;                                                                                                                                       \
-    int alpha;                                                                                                                                       \
-    int rotation;                                                                                                                                    \
-    int groundVel;                                                                                                                                   \
-    int depth3D;                                                                                                                                     \
-    ushort group;                                                                                                                                    \
-    ushort objectID;                                                                                                                                 \
+    int32 angle;                                                                                                                                     \
+    int32 alpha;                                                                                                                                     \
+    int32 rotation;                                                                                                                                  \
+    int32 groundVel;                                                                                                                                 \
+    int32 depth3D;                                                                                                                                   \
+    uint16 group;                                                                                                                                    \
+    uint16 objectID;                                                                                                                                 \
     bool32 inBounds;                                                                                                                                 \
     bool32 isPermanent;                                                                                                                              \
     bool32 tileCollisions;                                                                                                                           \
     bool32 interaction;                                                                                                                              \
     bool32 onGround;                                                                                                                                 \
-    byte active;                                                                                                                                     \
-    byte filter;                                                                                                                                     \
-    byte direction;                                                                                                                                  \
-    byte drawOrder;                                                                                                                                  \
-    byte collisionLayers;                                                                                                                            \
-    byte collisionPlane;                                                                                                                             \
-    byte collisionMode;                                                                                                                              \
-    byte drawFX;                                                                                                                                     \
-    byte inkEffect;                                                                                                                                  \
-    byte visible;                                                                                                                                    \
-    byte activeScreens;
+    uint8 active;                                                                                                                                    \
+    uint8 filter;                                                                                                                                    \
+    uint8 direction;                                                                                                                                 \
+    uint8 drawOrder;                                                                                                                                 \
+    uint8 collisionLayers;                                                                                                                           \
+    uint8 collisionPlane;                                                                                                                            \
+    uint8 collisionMode;                                                                                                                             \
+    uint8 drawFX;                                                                                                                                    \
+    uint8 inkEffect;                                                                                                                                 \
+    uint8 visible;                                                                                                                                   \
+    uint8 activeScreens;
 #else
 #define RSDK_ENTITY                                                                                                                                  \
     Vector2 position;                                                                                                                                \
     Vector2 scale;                                                                                                                                   \
     Vector2 velocity;                                                                                                                                \
     Vector2 updateRange;                                                                                                                             \
-    int angle;                                                                                                                                       \
-    int alpha;                                                                                                                                       \
-    int rotation;                                                                                                                                    \
-    int groundVel;                                                                                                                                   \
-    int depth;                                                                                                                                       \
-    ushort group;                                                                                                                                    \
-    ushort objectID;                                                                                                                                 \
+    int32 angle;                                                                                                                                     \
+    int32 alpha;                                                                                                                                     \
+    int32 rotation;                                                                                                                                  \
+    int32 groundVel;                                                                                                                                 \
+    int32 depth;                                                                                                                                     \
+    uint16 group;                                                                                                                                    \
+    uint16 objectID;                                                                                                                                 \
     bool32 inBounds;                                                                                                                                 \
     bool32 isPermanent;                                                                                                                              \
     bool32 tileCollisions;                                                                                                                           \
     bool32 interaction;                                                                                                                              \
     bool32 onGround;                                                                                                                                 \
-    byte active;                                                                                                                                     \
-    byte direction;                                                                                                                                  \
-    byte drawOrder;                                                                                                                                  \
-    byte collisionLayers;                                                                                                                            \
-    byte collisionPlane;                                                                                                                             \
-    byte collisionMode;                                                                                                                              \
-    byte drawFX;                                                                                                                                     \
-    byte inkEffect;                                                                                                                                  \
-    byte visible;                                                                                                                                    \
-    byte activeScreens;
+    uint8 active;                                                                                                                                    \
+    uint8 direction;                                                                                                                                 \
+    uint8 drawOrder;                                                                                                                                 \
+    uint8 collisionLayers;                                                                                                                           \
+    uint8 collisionPlane;                                                                                                                            \
+    uint8 collisionMode;                                                                                                                             \
+    uint8 drawFX;                                                                                                                                    \
+    uint8 inkEffect;                                                                                                                                 \
+    uint8 visible;                                                                                                                                   \
+    uint8 activeScreens;
 #endif
 
 #define ENTITY_SIZE (sizeof(Entity) + (0x100 * sizeof(void *)))
 
 #if RETRO_USE_PLUS
 typedef struct {
-    int platform;
-    int language;
-    int region;
+    int32 platform;
+    int32 language;
+    int32 region;
 } SKUInfo;
 
 typedef struct {
-    int field_0;
-    int field_4;
-    int field_8;
-    int field_C;
-    int field_10;
-    int field_14;
-    int field_18;
-    int field_1C;
-    int field_20;
-    int field_24;
-    int field_28;
-    int field_2C;
+    int32 field_0;
+    int32 field_4;
+    int32 field_8;
+    int32 field_C;
+    int32 field_10;
+    int32 field_14;
+    int32 field_18;
+    int32 field_1C;
+    int32 field_20;
+    int32 field_24;
+    int32 field_28;
+    int32 field_2C;
 } UnknownInfo;
 #endif
 
@@ -193,9 +193,9 @@ typedef struct {
     char gameSubname[0x100];
     char version[0x10];
 #if !RETRO_USE_PLUS
-    byte platform;
-    byte language;
-    byte region;
+    uint8 platform;
+    uint8 language;
+    uint8 region;
 #endif
 } EngineInfo;
 
@@ -203,33 +203,33 @@ typedef struct {
     Entity *entity;
     void *listData;
     void *listCategory;
-    int timeCounter;
-    int currentDrawGroup;
-    int currentScreenID;
-    ushort listPos;
-    ushort entitySlot;
-    ushort createSlot;
-    ushort classCount;
+    int32 timeCounter;
+    int32 currentDrawGroup;
+    int32 currentScreenID;
+    uint16 listPos;
+    uint16 entitySlot;
+    uint16 createSlot;
+    uint16 classCount;
     bool32 inEditor;
     bool32 effectGizmo;
     bool32 debugMode;
     bool32 useGlobalScripts;
     bool32 timeEnabled;
-    byte activeCategory;
-    byte categoryCount;
-    byte state;
+    uint8 activeCategory;
+    uint8 categoryCount;
+    uint8 state;
 #if RETRO_USE_PLUS
-    byte filter;
+    uint8 filter;
 #endif
-    byte milliseconds;
-    byte seconds;
-    byte minutes;
+    uint8 milliseconds;
+    uint8 seconds;
+    uint8 minutes;
 } SceneInfo;
 
 typedef struct {
     bool32 down;
     bool32 press;
-    int keyMap;
+    int32 keyMap;
 } InputState;
 
 typedef struct {
@@ -271,23 +271,23 @@ typedef struct {
     float x[0x10];
     float y[0x10];
     bool32 down[0x10];
-    byte count;
+    uint8 count;
 } TouchMouseData;
 
 typedef struct {
-    // ushort *frameBuffer;
-    ushort frameBuffer[SCREEN_XMAX * SCREEN_YSIZE];
+    // uint16 *frameBuffer;
+    uint16 frameBuffer[SCREEN_XMAX * SCREEN_YSIZE];
     Vector2 position;
-    int width;
-    int height;
-    int centerX;
-    int centerY;
-    int pitch;
-    int clipBound_X1;
-    int clipBound_Y1;
-    int clipBound_X2;
-    int clipBound_Y2;
-    int waterDrawPos;
+    int32 width;
+    int32 height;
+    int32 centerX;
+    int32 centerY;
+    int32 pitch;
+    int32 clipBound_X1;
+    int32 clipBound_Y1;
+    int32 clipBound_X2;
+    int32 clipBound_Y2;
+    int32 waterDrawPos;
 } ScreenInfo;
 
 typedef struct {
@@ -316,56 +316,56 @@ typedef struct {
 } GameInfo;
 
 typedef struct {
-    int values[4][4];
+    int32 values[4][4];
 } Matrix;
 
 typedef struct {
-    ushort *text;
-    ushort textLength;
-    ushort length;
+    uint16 *text;
+    uint16 textLength;
+    uint16 length;
 } TextInfo;
 
 typedef struct {
-    short left;
-    short top;
-    short right;
-    short bottom;
+    int16 left;
+    int16 top;
+    int16 right;
+    int16 bottom;
 } Hitbox;
 
 typedef struct {
-    short sprX;
-    short sprY;
-    short width;
-    short height;
-    short pivotX;
-    short pivotY;
-    ushort delay;
-    short id;
-    byte sheetID;
-    byte hitboxCnt;
+    int16 sprX;
+    int16 sprY;
+    int16 width;
+    int16 height;
+    int16 pivotX;
+    int16 pivotY;
+    uint16 delay;
+    int16 id;
+    uint8 sheetID;
+    uint8 hitboxCnt;
     Hitbox hitboxes[8];
 } SpriteFrame;
 
 typedef struct {
     SpriteFrame *framePtrs;
-    int frameID;
-    short animationID;
-    short prevAnimationID;
-    short animationSpeed;
-    short animationTimer;
-    short frameDelay;
-    short frameCount;
-    byte loopIndex;
-    byte rotationFlag;
+    int32 frameID;
+    int16 animationID;
+    int16 prevAnimationID;
+    int16 animationSpeed;
+    int16 animationTimer;
+    int16 frameDelay;
+    int16 frameCount;
+    uint8 loopIndex;
+    uint8 rotationFlag;
 } Animator;
 
 typedef struct {
-    int tilePos;
-    int parallaxFactor;
-    int scrollSpeed;
-    int scrollPos;
-    byte deform;
-    byte unknown;
+    int32 tilePos;
+    int32 parallaxFactor;
+    int32 scrollSpeed;
+    int32 scrollPos;
+    uint8 deform;
+    uint8 unknown;
 } ScrollInfo;
 
 typedef struct {
@@ -374,26 +374,26 @@ typedef struct {
 } ScanlineInfo;
 
 typedef struct {
-    byte behaviour;
-    byte drawLayer[4];
-    byte widthShift;
-    byte heightShift;
-    ushort width;
-    ushort height;
+    uint8 behaviour;
+    uint8 drawLayer[4];
+    uint8 widthShift;
+    uint8 heightShift;
+    uint16 width;
+    uint16 height;
     Vector2 position;
-    int parallaxFactor;
-    int scrollSpeed;
-    int scrollPos;
-    int deformationOffset;
-    int deformationOffsetW;
-    int deformationData[0x400];
-    int deformationDataW[0x400];
+    int32 parallaxFactor;
+    int32 scrollSpeed;
+    int32 scrollPos;
+    int32 deformationOffset;
+    int32 deformationOffsetW;
+    int32 deformationData[0x400];
+    int32 deformationDataW[0x400];
     void (*scanlineCallback)(ScanlineInfo *);
-    ushort scrollInfoCount;
+    uint16 scrollInfoCount;
     ScrollInfo scrollInfo[0x100];
-    uint name[4];
-    ushort *layout;
-    byte *lineScroll;
+    uint32 name[4];
+    uint16 *layout;
+    uint8 *lineScroll;
 } TileLayer;
 
 typedef struct {
@@ -401,14 +401,14 @@ typedef struct {
 #if RETRO_USE_PLUS
     TextInfo userID;
 #endif
-    int globalRank;
-    int score;
+    int32 globalRank;
+    int32 score;
     bool32 isUser;
-    int status;
+    int32 status;
 } LeaderboardEntry;
 
 typedef struct {
-    byte statID;
+    uint8 statID;
     const char *name;
     void *data[64];
 } StatInfo;
@@ -664,8 +664,8 @@ typedef enum {
     }
 #define StateMachine_None NULL
 
-//Fancy macro + build magic to make tables & static vars
-#define TABLE(var, ...) var
+// Fancy macro + build magic to make tables & static vars
+#define TABLE(var, ...)  var
 #define STATIC(var, val) var
 
 #endif /* GAMELINK_H */

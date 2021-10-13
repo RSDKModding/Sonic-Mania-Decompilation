@@ -7,17 +7,17 @@
 typedef struct {
     RSDK_OBJECT
     Animator animator;
-    ushort aniFrames;
+    uint16 aniFrames;
     Hitbox hitbox;
-    ushort sfxWhack;
+    uint16 sfxWhack;
 } ObjectTetherBall;
 
 // Entity Class
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    byte type;
-    byte chainCount;
+    uint8 type;
+    uint8 chainCount;
     int angleStart;
     int angleEnd;
     int timer;

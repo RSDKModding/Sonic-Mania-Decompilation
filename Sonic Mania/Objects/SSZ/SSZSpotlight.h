@@ -12,18 +12,18 @@ typedef struct {
     TABLE(colour coloursEncoreA[8], { 0x000020, 0x000020, 0xD01848, 0xD01848, 0xD01848, 0xD01848, 0x000020, 0x000020 });
     TABLE(colour coloursEncoreB[8], { 0x000020, 0x000020, 0xD0B018, 0xD0B018, 0xD0B018, 0xD0B018, 0x000020, 0x000020 });
 #endif
-    ushort spriteIndex;
+    uint16 spriteIndex;
 } ObjectSSZSpotlight;
 
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    byte color;
-    byte size;
-    byte drawFlag;
-    byte speed;
-    byte offset;
-    byte flashSpeed;
+    uint8 color;
+    uint8 size;
+    uint8 drawFlag;
+    uint8 speed;
+    uint8 offset;
+    uint8 flashSpeed;
     Vector2 offsetPos;
     Vector2 vertStore[8];
     Vector2 vertPos[8];

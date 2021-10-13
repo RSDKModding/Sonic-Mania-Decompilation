@@ -24,7 +24,7 @@ void Ring_Create(void *data)
     entity->visible = true;
 
     int layer = Zone->drawOrderLow;
-    if (entity->planeFilter > 0 && ((byte)entity->planeFilter - 1) & 2)
+    if (entity->planeFilter > 0 && ((uint8)entity->planeFilter - 1) & 2)
         layer = Zone->drawOrderHigh;
 
     entity->drawOrder = layer + 1;
@@ -305,7 +305,7 @@ void Ring_State_Path(void)
 {
     RSDK_THIS(Ring);
 
-    ushort timeVal = Zone->timer << 7;
+    uint16 timeVal = Zone->timer << 7;
     if ((timeVal & 0x100) == entity->direction) {
         entity->offset.x = entity->position.x + (timeVal * entity->amplitude.x >> 6) - (entity->amplitude.x << 15);
         entity->offset.y = entity->position.y + (timeVal * entity->amplitude.y >> 6) - (entity->amplitude.y << 15);
@@ -467,7 +467,7 @@ void Ring_CheckObjectCollisions(int offsetX, int offsetY)
             entity->velocity.y = -0x10000;
     }
 }
-byte Ring_CheckPlatformCollisions(EntityPlatform *platform)
+uint8 Ring_CheckPlatformCollisions(EntityPlatform *platform)
 {
     RSDK_THIS(Ring);
 
@@ -519,7 +519,7 @@ void Ring_Collect(void)
     foreach_active(Player, player)
     {
         if (Player_CheckCollisionTouch(player, entity, &Ring->hitbox)) {
-            if (!entity->planeFilter || player->collisionPlane == (((byte)entity->planeFilter - 1) & 1)) {
+            if (!entity->planeFilter || player->collisionPlane == (((uint8)entity->planeFilter - 1) & 1)) {
                 if (player->sidekick)
                     player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
 
@@ -574,7 +574,7 @@ void Ring_Collect(void)
     entity->position.x = x;
     entity->position.y = y;
 }
-void Ring_FakeLoseRings(Entity *entity, int ringCount, byte drawOrder)
+void Ring_FakeLoseRings(Entity *entity, int ringCount, uint8 drawOrder)
 {
     int ringCount2 = ringCount - 16;
     int ringCount3 = ringCount2 - 16;

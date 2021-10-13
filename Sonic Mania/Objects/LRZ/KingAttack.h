@@ -7,12 +7,12 @@
 typedef struct {
     RSDK_OBJECT
     TABLE(int value1[8], { 0x000020, 0x000020, 0xE850D8, 0xE850D8, 0xE850D8, 0xE850D8, 0x000020, 0x000020 });
-    ushort value2;
-    ushort value3;
-    ushort value4;
-    ushort value5;
-    ushort value6;
-    byte value7;
+    uint16 value2;
+    uint16 value3;
+    uint16 value4;
+    uint16 value5;
+    uint16 value6;
+    uint8 value7;
 } ObjectKingAttack;
 
 // Entity Class

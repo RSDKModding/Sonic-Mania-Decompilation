@@ -6,7 +6,7 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    ushort sfx_Sega;
+    uint16 sfx_Sega;
 } ObjectThanksSetup;
 
 // Entity Class

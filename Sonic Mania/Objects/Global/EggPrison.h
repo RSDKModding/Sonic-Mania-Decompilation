@@ -15,9 +15,9 @@ typedef enum {
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    ushort spriteIndex;
-    ushort sfxDestroy;
-    ushort sfxSpring;
+    uint16 spriteIndex;
+    uint16 sfxDestroy;
+    uint16 sfxSpring;
 } ObjectEggPrison;
 
 // Entity Class

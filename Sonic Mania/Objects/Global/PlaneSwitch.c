@@ -100,7 +100,7 @@ void PlaneSwitch_Create(void *data)
         entity->visible       = false;
         entity->updateRange.y = y + 0x200000;
         entity->drawOrder     = Zone->drawOrderLow;
-        entity->negAngle      = (byte) - (byte)entity->angle;
+        entity->negAngle      = (uint8) - (uint8)entity->angle;
     }
 }
 

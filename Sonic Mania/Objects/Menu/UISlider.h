@@ -32,7 +32,7 @@ typedef struct {
     int field_134;
     void(*sliderChangedCB)(void);
     Animator textAnimator;
-    ushort textSpriteIndex;
+    uint16 textSpriteIndex;
 } EntityUISlider;
 
 // Object Struct

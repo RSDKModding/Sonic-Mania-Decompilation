@@ -8,8 +8,8 @@
 typedef struct {
     RSDK_OBJECT
     Hitbox hitbox;
-    ushort aniFrames;
-    ushort sfxHuff;
+    uint16 aniFrames;
+    uint16 sfxHuff;
 } ObjectRhinobot;
 
 // Entity Class

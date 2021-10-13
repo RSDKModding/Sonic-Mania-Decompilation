@@ -6,7 +6,7 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    ushort aniFrames;
+    uint16 aniFrames;
 } ObjectFBZSinkTrash;
 
 // Entity Class
@@ -15,8 +15,8 @@ typedef struct {
     int type;
     Vector2 size;
     Vector2 positions[64];
-    byte frameIDs[64];
-    byte directions[64];
+    uint8 frameIDs[64];
+    uint8 directions[64];
     Hitbox hitbox1;
     Hitbox hitbox2;
     Animator animator1;

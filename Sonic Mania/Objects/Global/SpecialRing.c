@@ -39,7 +39,7 @@ void SpecialRing_Create(void *data)
         entity->updateRange.x = 0x900000;
         entity->updateRange.y = 0x900000;
         entity->drawFX        = FX_FLIP;
-        if (entity->planeFilter > 0 && ((byte)entity->planeFilter - 1) & 2)
+        if (entity->planeFilter > 0 && ((uint8)entity->planeFilter - 1) & 2)
             entity->drawOrder = Zone->drawOrderHigh;
         else
             entity->drawOrder = Zone->drawOrderLow;
@@ -205,7 +205,7 @@ void SpecialRing_State_Normal(void)
 
     if (entity->enabled && entity->scale.x > 0x100) {
         foreach_active(Player, player) {
-            if ((entity->planeFilter <= 0 || player->collisionPlane == (((byte)entity->planeFilter - 1) & 1)) && !player->sidekick) {
+            if ((entity->planeFilter <= 0 || player->collisionPlane == (((uint8)entity->planeFilter - 1) & 1)) && !player->sidekick) {
                 if (Player_CheckCollisionTouch(player, entity, &SpecialRing->hitbox) && RSDK_sceneInfo->timeEnabled) {
                     entity->dword68 = 0x100000;
                     entity->state   = SpecialRing_State_Warp;

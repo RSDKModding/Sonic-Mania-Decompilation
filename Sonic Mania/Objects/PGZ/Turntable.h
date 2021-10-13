@@ -6,15 +6,15 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    ushort aniFrames;
+    uint16 aniFrames;
 } ObjectTurntable;
 
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    byte type;
+    uint8 type;
     int angleVel;
-    byte activePlayers;
+    uint8 activePlayers;
     Vector2 size;
     Vector2 origin;
     int field_74;

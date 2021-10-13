@@ -11,10 +11,10 @@ typedef struct {
     Hitbox hitbox3;
     TABLE(int velocities[8], { 0x10000, 0xE000, 0x12000, 0x14000, 0x10000, 0xE000, 0xC000, 0xE000 });
     int velocityID;
-    ushort aniFrames;
-    ushort sfxPush;
-    ushort sfxPush2;
-    ushort sfxExplosion;
+    uint16 aniFrames;
+    uint16 sfxPush;
+    uint16 sfxPush2;
+    uint16 sfxExplosion;
 } ObjectFBZMissile;
 
 // Entity Class
@@ -23,8 +23,8 @@ typedef struct {
     StateMachine(state);
     StateMachine(stateDraw);
     int type;
-    byte interval;
-    byte intervalOffset;
+    uint8 interval;
+    uint8 intervalOffset;
     int timer;
     Animator animator;
 } EntityFBZMissile;

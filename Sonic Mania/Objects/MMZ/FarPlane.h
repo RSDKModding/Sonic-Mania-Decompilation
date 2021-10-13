@@ -17,7 +17,7 @@ typedef struct {
     int field_1030;
     int field_1034;
     int field_1038;
-    ushort layerID;
+    uint16 layerID;
 } ObjectFarPlane;
 
 // Entity Class
@@ -25,7 +25,7 @@ typedef struct {
     RSDK_ENTITY
     Vector2 size;
     Vector2 origin;
-    ushort entityIDs[0x100];
+    uint16 entityIDs[0x100];
     int entityCount;
     int field_26C;
     int field_270;
@@ -51,7 +51,7 @@ void FarPlane_Serialize(void);
 
 // Extra Entity Functions
 void FarPlane_SetupEntities(void);
-void FarPlane_SetEntityActivities(byte active);
+void FarPlane_SetEntityActivities(uint8 active);
 void FarPlane_DrawLayerCB_Low(void);
 void FarPlane_DrawLayerCB_High(void);
 void FarPlane_ScanlineCB(ScanlineInfo *scanline);

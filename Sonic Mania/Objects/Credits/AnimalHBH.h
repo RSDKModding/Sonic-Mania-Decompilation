@@ -8,14 +8,14 @@ typedef struct {
     RSDK_OBJECT
     int palID;
     int palCnt;
-    ushort animalHBHSprite;
-    ushort silhouetteSprite;
+    uint16 animalHBHSprite;
+    uint16 silhouetteSprite;
 } ObjectAnimalHBH;
 
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    byte type;
+    uint8 type;
     int timer;
     Animator animalHBHData;
     Animator silhouetteData;

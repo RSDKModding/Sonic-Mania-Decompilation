@@ -9,20 +9,20 @@ typedef struct {
     Hitbox hitboxBadnik;
     Hitbox hitboxRange;
     Hitbox hitboxProjectile;
-    ushort aniFrames;
+    uint16 aniFrames;
 } ObjectBlaster;
 
 // Entity Class
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    byte field_5C;
-    byte field_5D;
-    ushort timer;
-    ushort timer2;
-    ushort field_62;
+    uint8 field_5C;
+    uint8 field_5D;
+    uint16 timer;
+    uint16 timer2;
+    uint16 field_62;
     Vector2 startPos;
-    byte startDir;
+    uint8 startDir;
     Animator animator;
 } EntityBlaster;
 

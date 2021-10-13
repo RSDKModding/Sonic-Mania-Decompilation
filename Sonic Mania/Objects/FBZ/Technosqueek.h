@@ -7,23 +7,23 @@
 typedef struct {
     RSDK_OBJECT
     Hitbox hitbox;
-    ushort aniFrames;
+    uint16 aniFrames;
 } ObjectTechnosqueek;
 
 // Entity Class
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    byte type;
-    byte speed;
-    ushort distance;
-    byte field_60;
+    uint8 type;
+    uint8 speed;
+    uint16 distance;
+    uint8 field_60;
     int field_64;
     int field_68;
     int field_6C;
     bool32 flag;
     Vector2 startPos;
-    byte startDir;
+    uint8 startDir;
     Animator animator1;
     Animator animator2;
 } EntityTechnosqueek;

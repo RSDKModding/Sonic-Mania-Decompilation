@@ -12,8 +12,8 @@ typedef struct {
     Hitbox value3;
     Hitbox value4;
     Hitbox value5;
-    ushort value6;
-    ushort value7;
+    uint16 value6;
+    uint16 value7;
 } ObjectPhantomGunner;
 
 // Entity Class

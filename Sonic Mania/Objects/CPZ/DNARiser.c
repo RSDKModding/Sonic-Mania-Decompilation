@@ -457,7 +457,7 @@ void DNARiser_StateDraw_Main(void)
 
     Animator animator;
     memset(&animator, 0, sizeof(animator));
-    if ((uint)(angle & 0x3FF) - 256 <= 0x200)
+    if ((uint32)(angle & 0x3FF) - 256 <= 0x200)
         flag = true;
 
     int sineOff       = (RSDK.Sin1024(angle & 0x3FF) << 6) * (entity->field_CC >> 16);

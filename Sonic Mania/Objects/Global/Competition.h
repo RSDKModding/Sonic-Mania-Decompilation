@@ -15,7 +15,7 @@ typedef struct {
     int field_18;
     int field_1C;
     int field_20;
-    ushort aniFrames;
+    uint16 aniFrames;
     Entity *activeEntity;
     int field_2C;
 } ObjectCompetition;
@@ -50,7 +50,7 @@ void Competition_State_Manager(void);
 
 void Competition_ResetOptions(void);
 void Competition_ClearMatchData(void);
-void Competition_CalculateScore(int playerID, byte flags);
+void Competition_CalculateScore(int playerID, uint8 flags);
 #endif
 
 #endif //!OBJ_COMPETITION_H

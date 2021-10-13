@@ -6,8 +6,8 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    ushort aniFrames;
-    ushort sfxBouncer;
+    uint16 aniFrames;
+    uint16 sfxBouncer;
 } ObjectWallBumper;
 
 // Entity Class

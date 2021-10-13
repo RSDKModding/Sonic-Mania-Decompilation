@@ -14,10 +14,10 @@ void PlayerHelpers_Create(void *data) {}
 
 void PlayerHelpers_StageLoad(void) {}
 
-bool32 PlayerHelpers_CheckPlayerPos(int x1, int y1, int x2, int y2)
+bool32 PlayerHelpers_CheckPlayerPos(int32 x1, int32 y1, int32 x2, int32 y2)
 {
-    int px = 0;
-    int py = 0;
+    int32 px = 0;
+    int32 py = 0;
     if (!Player)
         return px >= x1 && px <= x2 && py >= y1 && py <= y2;
     foreach_all(Player, player)
@@ -69,7 +69,7 @@ bool32 PlayerHelpers_CheckAct1Regular(void)
 bool32 PlayerHelpers_CheckStageReload(void)
 {
     if (StarPost && Player->playerCount > 0) {
-        for (int p = 0; p < Player->playerCount; ++p) {
+        for (int32 p = 0; p < Player->playerCount; ++p) {
             if (StarPost->postIDs[p]) {
                 return true;
             }

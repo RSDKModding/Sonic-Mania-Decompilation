@@ -6,11 +6,11 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    ushort aniFrames;
-    ushort sfxGrab;
-    ushort sfxScan;
-    ushort sfxBurst;
-    ushort sfxTiny[6];
+    uint16 aniFrames;
+    uint16 sfxGrab;
+    uint16 sfxScan;
+    uint16 sfxBurst;
+    uint16 sfxTiny[6];
     Hitbox hitbox;
 } ObjectDNARiser;
 
@@ -25,22 +25,22 @@ typedef struct {
     int field_70;
     Animator animator2;
     Animator animator;
-    ushort field_A4;
-    short timer;
-    byte field_A8;
+    uint16 field_A4;
+    int16 timer;
+    uint8 field_A8;
     int field_AC;
     int field_B0;
-    ushort timer2;
-    char field_B6;
-    char field_B7;
+    uint16 timer2;
+    uint8 field_B6;
+    uint8 field_B7;
     int height;
     Vector2 speed;
-    byte activePlayers;
+    uint8 activePlayers;
     int curHeight;
     int field_CC;
     Vector2 vector_D0;
     Vector2 vector_D8;
-    ushort field_E0;
+    uint16 field_E0;
     Entity* field_E4;
     Entity *child;
     Entity* field_EC;

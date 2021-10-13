@@ -6,21 +6,21 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    ushort aniFrames;
-    ushort sfxFrostThrower;
-    ushort sfxFreeze;
+    uint16 aniFrames;
+    uint16 sfxFrostThrower;
+    uint16 sfxFreeze;
 } ObjectAcetone;
 
 // Entity Class
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    ushort timer;
+    uint16 timer;
     Animator animator1;
     Animator animator2;
-    ushort interval;
-    ushort intervalOffset;
-    ushort duration;
+    uint16 interval;
+    uint16 intervalOffset;
+    uint16 duration;
     Hitbox hitbox;
     bool32 flag;
     int field_A4[4];

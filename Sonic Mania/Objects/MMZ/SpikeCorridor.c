@@ -62,7 +62,7 @@ void SpikeCorridor_SetupHitboxes(void)
     entity->hitboxes[1].right  = size + 8 * entity->colWidth;
 }
 
-void SpikeCorridor_HandleDrawing(Animator *animator, int offsetY, sbyte a3, bool32 animFlag)
+void SpikeCorridor_HandleDrawing(Animator *animator, int offsetY, int8 a3, bool32 animFlag)
 {
     RSDK_THIS(SpikeCorridor);
     Vector2 drawPos;
@@ -130,7 +130,7 @@ void SpikeCorridor_Unknown3(void)
 {
     RSDK_THIS(SpikeCorridor);
 
-    int max  = (sbyte)(entity->colWidth - 9);
+    int max  = (int8)(entity->colWidth - 9);
     int rand = RSDK.Rand(3, max);
     if (entity->field_75 <= -1) {
         entity->field_77 = rand;

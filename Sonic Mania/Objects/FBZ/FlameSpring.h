@@ -6,11 +6,11 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    ushort aniFrames;
+    uint16 aniFrames;
     Hitbox hitbox1;
     Hitbox hitbox2;
-    ushort sfxSpring;
-    ushort sfxFlame;
+    uint16 sfxSpring;
+    uint16 sfxFlame;
 } ObjectFlameSpring;
 
 // Entity Class
@@ -20,12 +20,12 @@ typedef struct {
     StateMachine(stateDraw);
     int type;
     int force;
-    byte playerAni;
-    byte offset;
+    uint8 playerAni;
+    uint8 offset;
     Vector2 field_6C;
     Vector2 field_74;
     bool32 flag;
-    byte timer;
+    uint8 timer;
     Animator animator1;
     Animator animator2;
 } EntityFlameSpring;

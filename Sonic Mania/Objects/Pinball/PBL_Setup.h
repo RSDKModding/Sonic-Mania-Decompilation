@@ -17,9 +17,9 @@ typedef struct {
     int sectorID;
     int sectorCount;
     int timer3;
-    byte tableLow;
-    byte tableHigh;
-    ushort sfxContinue;
+    uint8 tableLow;
+    uint8 tableHigh;
+    uint16 sfxContinue;
 } ObjectPBL_Setup;
 
 // Entity Class

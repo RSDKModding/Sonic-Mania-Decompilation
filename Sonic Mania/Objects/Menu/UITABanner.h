@@ -7,7 +7,7 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    ushort aniFrames;
+    uint16 aniFrames;
 } ObjectUITABanner;
 
 // Entity Class
@@ -18,9 +18,9 @@ typedef struct {
     EntityUIControl *parent;
     TextInfo text;
     int timer;
-    byte characterID;
-    byte zoneID;
-    byte actID;
+    uint8 characterID;
+    uint8 zoneID;
+    uint8 actID;
     int isEncore;
     int startDir;
     int field_80;
@@ -52,11 +52,11 @@ void UITABanner_EditorLoad(void);
 void UITABanner_Serialize(void);
 
 // Extra Entity Functions
-void UITABanner_Unknown1(byte characterID, EntityUITABanner *banner, byte zoneID, byte actID, bool32 isEncore);
+void UITABanner_Unknown1(uint8 characterID, EntityUITABanner *banner, uint8 zoneID, uint8 actID, bool32 isEncore);
 void UITABanner_Unknown2(int drawX, int drawY, bool32 isEncore);
-void UITABanner_Unknown3(byte actID, byte characterID, bool32 isEncore, int drawX, int drawY);
+void UITABanner_Unknown3(uint8 actID, uint8 characterID, bool32 isEncore, int drawX, int drawY);
 void UITABanner_Unknown4(int drawX, int drawY, int zoneID);
-void UITABanner_Unknown5(byte actID, byte zoneID, byte characterID, bool32 isEncore, int drawX, int drawY);
+void UITABanner_Unknown5(uint8 actID, uint8 zoneID, uint8 characterID, bool32 isEncore, int drawX, int drawY);
 
 #endif
 
