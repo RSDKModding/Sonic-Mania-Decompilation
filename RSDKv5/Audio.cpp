@@ -395,6 +395,10 @@ bool32 LoadGlobalSFX() {
             LoadSfx(buffer, maxConcurrentPlays, SCOPE_GLOBAL);
         }
         CloseFile(&info);
+
+#if RETRO_USE_MOD_LOADER
+        LoadXMLSoundFX();
+#endif
         return true;
     }
     return false;

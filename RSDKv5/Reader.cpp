@@ -142,15 +142,33 @@ bool32 LoadFile(FileInfo *info, const char *filename, byte fileMode)
         pathLower[c] = tolower(filename[c]);
     }
 
-    for (int m = 0; m < modList.size(); ++m) {
-        if (modList[m].active) {
-            std::map<std::string, std::string>::const_iterator iter = modList[m].fileMap.find(pathLower);
-            if (iter != modList[m].fileMap.cend()) {
-                strcpy(filePathBuf, iter->second.c_str());
-                info->externalFile = true;
-                break;
+    bool addPath = false;
+    if (activeMod != -1) {
+        char buf[0x100];
+        sprintf(buf, "%s", filePathBuf);
+        sprintf(filePathBuf, "%smods/%s/%s", userFileDir, modList[activeMod].folder.c_str(), buf);
+        info->externalFile = true;
+        addPath            = false;
+    }
+    else {
+        for (int m = 0; m < modList.size(); ++m) {
+            if (modList[m].active) {
+                std::map<std::string, std::string>::const_iterator iter = modList[m].fileMap.find(pathLower);
+                if (iter != modList[m].fileMap.cend()) {
+                    strcpy(filePathBuf, iter->second.c_str());
+                    info->externalFile = true;
+                    break;
+                }
             }
         }
+    }
+#endif
+
+#if RETRO_PLATFORM == RETRO_OSX || RETRO_PLATFORM == RETRO_ANDROID
+    if (addPath) {
+        char pathBuf[0x100];
+        sprintf(pathBuf, "%s%s", userFileDir, filePathBuf);
+        sprintf(filePathBuf, "%s", pathBuf);
     }
 #endif
 

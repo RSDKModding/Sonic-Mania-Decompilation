@@ -321,6 +321,12 @@ void parseArguments(int argc, char *argv[]);
 
 void startGameObjects();
 
+#if RETRO_USE_MOD_LOADER
+void LoadXMLObjects();
+void LoadXMLSoundFX();
+int LoadXMLStages(int mode, int gcListCount, int gcStageCount);
+#endif
+
 void LoadGameConfig();
 void InitScriptSystem();
 

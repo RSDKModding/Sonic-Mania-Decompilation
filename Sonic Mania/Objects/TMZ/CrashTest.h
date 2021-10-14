@@ -57,5 +57,17 @@ void CrashTest_Serialize(void);
 
 // Extra Entity Functions
 void CrashTest_SetupHitboxes(void);
+void CrashTest_CheckOnScreen(void);
+void CrashTest_CheckPlayerCrash(void);
+void CrashTest_CheckPlayerCollisions(void);
+void CrashTest_CheckPlayerRide(void);
+void CrashTest_CheckPlayerJump(void);
+void CrashTest_Unknown6(void);
+
+void CrashTest_State_Setup(void);
+void CrashTest_State_Unknown1(void);
+void CrashTest_State_Rev(void);
+void CrashTest_State_Move(void);
+void CrashTest_State_Unknown4(void);
 
 #endif //!OBJ_CRASHTEST_H

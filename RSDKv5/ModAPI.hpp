@@ -5,6 +5,7 @@
 #include <vector>
 #include <string>
 #include <map>
+#include <tinyxml2.h>
 
 #include <functional>
 
@@ -89,12 +90,15 @@ struct ModInfo {
 };
 
 extern std::vector<ModInfo> modList;
+extern int activeMod;
 extern std::vector<ModCallbackSTD> modCallbackList[MODCB_MAX];
 
 extern void *modFunctionTable[ModTable_Max];
 extern int currentObjectID;
 
-extern ModInfo* currentMod;
+extern ModInfo *currentMod;
+
+inline void setActiveMod(int id) { activeMod = id; }
 
 void initModAPI();
 void unloadMods();

@@ -2,9 +2,9 @@
 #define TEXT_H
 
 struct TextInfo {
-    ushort* text;
-    short textLength;
-    short length;
+    uint16 *text;
+    int16 textLength;
+    int16 length;
 };
 
 inline void StringLowerCase(char *dest, const char *src)
@@ -59,6 +59,7 @@ extern char hashBuffer[0x400];
 void GenerateHash(uint *buffer, int len);
 void GenerateCRC(uint *id, char *fileName);
 
+#define RETRO_HASH(name)     uint32 name[4]
 #define HASH_SIZE            (4 * sizeof(uint))
 #define HASH_MATCH(a, b)     (memcmp(a, b, HASH_SIZE) == 0)
 #define GEN_HASH(text, hash)                                                                                                                         \

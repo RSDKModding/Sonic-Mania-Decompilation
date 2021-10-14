@@ -21,6 +21,9 @@
     <Filter Include="Source Files\Objects">
       <UniqueIdentifier>{b9894090-5a9a-4ac6-9ad3-1848676f8cfd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\tinyxml2">
+      <UniqueIdentifier>{a654cc12-6586-4ca9-a1f5-4283b5adb333}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -161,6 +164,9 @@
     <ClCompile Include="UserLeaderboards.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\dependencies\all\tinyxml2\tinyxml2.cpp">
+      <Filter>Source Files\tinyxml2</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.hpp">
@@ -297,6 +303,9 @@
     </ClInclude>
     <ClInclude Include="UserLeaderboards.hpp">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\dependencies\all\tinyxml2\tinyxml2.h">
+      <Filter>Source Files\tinyxml2</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -8,54 +8,54 @@
 enum RotationFlags { ROTFLAG_NONE, ROTFLAG_FULL, ROTFLAG_45DEG, ROTFLAG_90DEG, ROTFLAG_180DEG, ROTFLAG_STATICFRAMES };
 
 struct SpriteAnimationEntry {
-    uint hash[4];
-    int frameListOffset;
-    ushort frameCount;
-    short animationSpeed;
-    byte loopIndex;
-    byte rotationFlag;
+    RETRO_HASH(hash);
+    int32 frameListOffset;
+    uint16 frameCount;
+    int16 animationSpeed;
+    uint8 loopIndex;
+    uint8 rotationFlag;
 };
 
 struct Hitbox {
-    short left;
-    short top;
-    short right;
-    short bottom;
+    int16 left;
+    int16 top;
+    int16 right;
+    int16 bottom;
 };
 
 struct SpriteFrame {
-    short sprX;
-    short sprY;
-    short width;
-    short height;
-    short pivotX;
-    short pivotY;
+    int16 sprX;
+    int16 sprY;
+    int16 width;
+    int16 height;
+    int16 pivotX;
+    int16 pivotY;
     ushort delay;
-    short id;
-    byte sheetID;
-    byte hitboxCnt;
+    uint16 id;
+    uint8 sheetID;
+    uint8 hitboxCnt;
     Hitbox hitboxes[FRAMEHITBOX_COUNT];
 };
 
 struct SpriteAnimation {
-    uint hash[4];
+    RETRO_HASH(hash);
     SpriteFrame *frames;
     SpriteAnimationEntry *animations;
-    ushort animCount;
-    byte scope;
+    uint16 animCount;
+    uint8 scope;
 };
 
 struct Animator {
     SpriteFrame *framePtrs;
-    int frameID;
-    short animationID;
-    short prevAnimationID;
-    short animationSpeed;
-    short animationTimer;
-    short frameDelay;
-    short frameCount;
-    byte loopIndex;
-    byte rotationFlag;
+    int32 frameID;
+    int16 animationID;
+    int16 prevAnimationID;
+    int16 animationSpeed;
+    int16 animationTimer;
+    int16 frameDelay;
+    int16 frameCount;
+    uint8 loopIndex;
+    uint8 rotationFlag;
 };
 
 extern SpriteAnimation spriteAnimationList[SPRFILE_COUNT];
@@ -69,7 +69,7 @@ inline ushort GetSpriteAnimation(ushort sprIndex, const char *name)
         return 0;
     SpriteAnimation *spr = &spriteAnimationList[sprIndex];
 
-    uint hash[4];
+    RETRO_HASH(hash);
     GEN_HASH(name, hash);
 
     for (int a = 0; a < spr->animCount; ++a) {

@@ -31,6 +31,7 @@ namespace fs = std::filesystem;
 std::map<std::string, int> langMap;
 
 std::vector<ModInfo> modList;
+int activeMod = -1;
 std::vector<ModCallbackSTD> modCallbackList[MODCB_MAX];
 ModInfo *currentMod;
 

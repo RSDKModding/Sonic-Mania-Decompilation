@@ -44,7 +44,7 @@ enum TypeGroups {
     GROUP_CUSTOM4,
 };
 
-enum AttributeTypes {
+enum VariableTypes {
 	VAR_UINT8,
 	VAR_UINT16,
 	VAR_UINT32,
@@ -79,20 +79,20 @@ enum DefaultObjects {
 };
 
 struct UnknownStruct {
-    short v1;
-    short v2;
-    short v3;
-    short v4;
-    short v5;
-    short v6;
-    short v7;
-    short v8;
-    short v9;
+    int16 v1;
+    int16 v2;
+    int16 v3;
+    int16 v4;
+    int16 v5;
+    int16 v6;
+    int16 v7;
+    int16 v8;
+    int16 v9;
 };
 
 struct Object {
-    short objectID;
-    byte active;
+    int16 objectID;
+    uint8 active;
 };
 
 struct Entity {
@@ -100,31 +100,31 @@ struct Entity {
     Vector2 scale;
     Vector2 velocity;
     Vector2 updateRange;
-    int angle;
-    int alpha;
-    int rotation;
-    int groundVel;
-    int depth;
-    ushort group;
-    ushort objectID;
+    int32 angle;
+    int32 alpha;
+    int32 rotation;
+    int32 groundVel;
+    int32 depth;
+    uint16 group;
+    uint16 objectID;
     bool32 inBounds;
     bool32 isPermanent;
     bool32 tileCollisions;
     bool32 interaction;
     bool32 onGround;
-    byte active;
+    uint8 active;
 #if RETRO_REV02
-    byte filter;
+    uint8 filter;
 #endif
-    byte direction;
-    byte drawOrder;
-    byte collisionLayers;
-    byte collisionPlane;
-    byte collisionMode;
-    byte drawFX;
-    byte inkEffect;
-    byte visible;
-    byte activeScreens;
+    uint8 direction;
+    uint8 drawOrder;
+    uint8 collisionLayers;
+    uint8 collisionPlane;
+    uint8 collisionMode;
+    uint8 drawFX;
+    uint8 inkEffect;
+    uint8 visible;
+    uint8 activeScreens;
 };
 
 struct EntityBase : Entity {
@@ -132,7 +132,7 @@ struct EntityBase : Entity {
 };
 
 struct ObjectInfo {
-    uint hash[4];
+    RETRO_HASH(hash);
 #if RETRO_USE_MOD_LOADER //using std::function makes it easier to use stuff like lambdas
     std::function<void(void)> update;
     std::function<void(void)> lateUpdate;
@@ -155,27 +155,27 @@ struct ObjectInfo {
     void (*serialize)(void);
 #endif
     Object **type;
-    int entitySize;
-    int objectSize;
+    int32 entitySize;
+    int32 objectSize;
 #if RETRO_USE_MOD_LOADER
     ObjectInfo* inherited;
 #endif
 };        
 
 struct EditableVarInfo {
-    uint hash[4];
-    int offset;
-    int active;
+    uint32 hash[4];
+    int32 offset;
+    int32 active;
     byte type;
 };
 
 struct ForeachStackInfo {
-    int id;
+    int32 id;
 };
 
 struct TypeGroupList {
-    int rowCount;
-    ushort entries[ENTITY_COUNT];
+    int32 rowCount;
+    uint16 entries[ENTITY_COUNT];
 };
 
 extern int objectCount;

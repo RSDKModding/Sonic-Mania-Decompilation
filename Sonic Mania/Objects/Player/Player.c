@@ -677,7 +677,7 @@ void Player_StageLoad(void)
     Player->flyCarryPosA = 1;
     Player->flyCarryPosB = 0;
 #if RETRO_USE_PLUS
-    Player->field_9EC = 0;
+    Player->field_9EC = false;
 #endif
     Player->upState         = false;
     Player->downState       = false;
