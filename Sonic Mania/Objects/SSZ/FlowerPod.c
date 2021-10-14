@@ -161,11 +161,11 @@ void FlowerPod_State_SpawnBeanstalk(void)
         hitbox.top    = -4;
         hitbox.right  = 4;
         hitbox.bottom = 4;
-        foreach_active(Beanstalk, beanStalk)
+        foreach_active(Beanstalk, beanstalk)
         {
-            // if (!beanStalk->field_5C && RSDK.CheckObjectCollisionTouchBox(beanStalk, &Beanstalk->hitboxSeed, entity, &hitbox)) {
-            //    beanStalk->startGrowth = true;
-            //}
+            if (!beanstalk->type && RSDK.CheckObjectCollisionTouchBox(beanstalk, &Beanstalk->hitboxSeed, entity, &hitbox)) {
+                beanstalk->startGrowth = true;
+            }
         }
         RSDK.SetSpriteAnimation(FlowerPod->aniFrames, 5, &entity->animator2, true, 0);
         RSDK.SetSpriteAnimation(FlowerPod->aniFrames, 6, &entity->animator1, true, 0);
