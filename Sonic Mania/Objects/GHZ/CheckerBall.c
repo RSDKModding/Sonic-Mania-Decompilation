@@ -283,12 +283,12 @@ void CheckerBall_BadnikBreak(void *b, Hitbox *hitbox)
     Entity *badnik = (Entity *)b;
     if (RSDK.CheckObjectCollisionTouchBox(badnik, hitbox, entity, &CheckerBall->hitbox)) {
         int32 id = RSDK.Rand(0, 32);
-        RSDK.CreateEntity(Animals->objectID, intToVoid(Animals->animalTypes[id >> 4] + 1), badnik->position.x, badnik->position.y);
-        RSDK.CreateEntity(Explosion->objectID, intToVoid(1), badnik->position.x, badnik->position.y - 0x100000)->drawOrder = Zone->drawOrderHigh;
-        RSDK.PlaySfx(Explosion->sfx_Destroy, 0, 255);
-        EntityPlayer *player1   = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
-        EntityScoreBonus *bonus = (EntityScoreBonus *)RSDK.CreateEntity(ScoreBonus->objectID, 0, badnik->position.x, badnik->position.y);
-        bonus->drawOrder        = Zone->drawOrderHigh;
+        CREATE_ENTITY(Animals, intToVoid(Animals->animalTypes[id >> 4] + 1), badnik->position.x, badnik->position.y);
+        CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), badnik->position.x, badnik->position.y - 0x100000)->drawOrder = Zone->drawOrderHigh;
+        RSDK.PlaySfx(Explosion->sfxDestroy, false, 255);
+        EntityPlayer *player1       = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
+        EntityScoreBonus *bonus     = CREATE_ENTITY(ScoreBonus, NULL, badnik->position.x, badnik->position.y);
+        bonus->drawOrder            = Zone->drawOrderHigh;
         bonus->animator.frameID     = player1->scoreBonus;
         switch (player1->scoreBonus) {
             case 0: Player_GiveScore(player1, 100); break;
@@ -301,18 +301,18 @@ void CheckerBall_BadnikBreak(void *b, Hitbox *hitbox)
             case 7:
             case 8:
             case 9:
-            case 0xA:
-            case 0xB:
-            case 0xC:
-            case 0xD:
-            case 0xE: Player_GiveScore(player1, 1000); break;
-            case 0xF: Player_GiveScore(player1, 10000); break;
+            case 10:
+            case 11:
+            case 12:
+            case 13:
+            case 14: Player_GiveScore(player1, 1000); break;
+            case 15: Player_GiveScore(player1, 10000); break;
             default: break;
         }
 
         if (player1->scoreBonus < 15)
             player1->scoreBonus++;
-        RSDK.ResetEntityPtr(badnik, TYPE_BLANK, NULL);
+        destroyEntity(badnik);
     }
 }
 

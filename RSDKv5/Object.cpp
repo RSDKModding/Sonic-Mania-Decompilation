@@ -68,31 +68,53 @@ void RegisterObjectContainer(Object **structPtr, const char *name, uint objectSi
 
 void LoadStaticObject(byte *obj, uint *hash, int dataPos)
 {
+    FileInfo info;
+
     char buffer[0x40];
     const char *hexChars = "0123456789ABCDEF";
-    sprintf(buffer, "%s", "Data/Objects/Static/00000000000000000000000000000000.bin");
 
-    int strPos = 20;
+    char hashBuf[0x21];
+    sprintf(hashBuf, "%s", "00000000000000000000000000000000");
+
+    int strPos = 0;
     for (int i = 0; i < 32; i += 4) {
         int charVal      = hash[0] >> i;
-        buffer[strPos++] = hexChars[charVal & 0xF];
+        hashBuf[strPos++] = hexChars[charVal & 0xF];
     }
     for (int i = 0; i < 32; i += 4) {
         int charVal      = hash[1] >> i;
-        buffer[strPos++] = hexChars[charVal & 0xF];
+        hashBuf[strPos++] = hexChars[charVal & 0xF];
     }
     for (int i = 0; i < 32; i += 4) {
         int charVal      = hash[2] >> i;
-        buffer[strPos++] = hexChars[charVal & 0xF];
+        hashBuf[strPos++] = hexChars[charVal & 0xF];
     }
     for (int i = 0; i < 32; i += 4) {
         int charVal      = hash[3] >> i;
-        buffer[strPos++] = hexChars[charVal & 0xF];
+        hashBuf[strPos++] = hexChars[charVal & 0xF];
     }
 
-    FileInfo info;
+    bool loaded = false;
+    //This is done so Static/ can be loaded first, ensuring smoother development
+#if !RETRO_USE_ORIGINAL_CODE
+    sprintf(buffer, "Static/%s.bin", hashBuf);
+
     InitFileInfo(&info);
-    if (LoadFile(&info, buffer, FMODE_RB)) {
+    info.externalFile = true;
+    loaded            = LoadFile(&info, buffer, FMODE_RB);
+
+    if (!loaded) {
+#endif
+        sprintf(buffer, "Data/Objects/Static/%s.bin", hashBuf);
+        InitFileInfo(&info);
+        loaded = LoadFile(&info, buffer, FMODE_RB);
+        if (loaded)
+            printf("what");
+#if !RETRO_USE_ORIGINAL_CODE
+    }
+#endif
+
+    if (loaded) {
         uint sig = ReadInt32(&info, false);
 
         if (sig != 0x4A424F) {

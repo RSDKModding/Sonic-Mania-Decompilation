@@ -2432,9 +2432,9 @@ bool32 Player_CheckBadnikBreak(void *e, EntityPlayer *player, bool32 destroy)
 
     if (badnikHit) {
         CREATE_ENTITY(Animals, intToVoid((Animals->animalTypes[(RSDK.Rand(0, 32) >> 4)]) + 1), entity->position.x, entity->position.y);
-        EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid(1), entity->position.x, entity->position.y);
+        EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), entity->position.x, entity->position.y);
         explosion->drawOrder       = Zone->drawOrderHigh;
-        RSDK.PlaySfx(Explosion->sfx_Destroy, false, 255);
+        RSDK.PlaySfx(Explosion->sfxDestroy, false, 255);
 
         if (Zone_GetZoneID() >= 0) {
             int32 id = 0;

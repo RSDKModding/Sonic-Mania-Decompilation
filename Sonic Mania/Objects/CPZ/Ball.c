@@ -77,8 +77,8 @@ void Ball_HandleInteractions(void)
     {
         if (Player_CheckCollisionTouch(player, entity, &Ball->hitbox1)) {
             Player_CheckHit(player, entity);
-            CREATE_ENTITY(Explosion, intToVoid(1), entity->position.x, entity->position.y)->drawOrder = Zone->drawOrderHigh;
-            RSDK.PlaySfx(Explosion->sfx_Destroy, false, 255);
+            CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), entity->position.x, entity->position.y)->drawOrder = Zone->drawOrderHigh;
+            RSDK.PlaySfx(Explosion->sfxDestroy, false, 255);
             entity->velocity.y = 0;
             RSDK.SetSpriteAnimation(Ball->aniFrames, 1, &entity->animator, true, 0);
             entity->state = Ball_State_Unknown3;
@@ -180,8 +180,8 @@ void Ball_State_Unknown2(void)
 
     if (abs(entity->position.x - playerPtr->position.x) < 0x100000) {
         if (abs(0x500000 + entity->position.y - playerPtr->position.y) < 0x100000 && RSDK.CheckOnScreen(entity, &entity->updateRange)) {
-            RSDK.CreateEntity(Explosion->objectID, intToVoid(1), entity->position.x, entity->position.y)->drawOrder = Zone->drawOrderHigh;
-            RSDK.PlaySfx(Explosion->sfx_Destroy, false, 255);
+            RSDK.CreateEntity(Explosion->objectID, intToVoid(EXPLOSION_ENEMY), entity->position.x, entity->position.y)->drawOrder = Zone->drawOrderHigh;
+            RSDK.PlaySfx(Explosion->sfxDestroy, false, 255);
             entity->velocity.y = 0;
             RSDK.SetSpriteAnimation(Ball->aniFrames, 1, &entity->animator, true, 0);
             entity->state = Ball_State_Unknown3;

@@ -12,15 +12,9 @@ void Explosion_Update(void)
         destroyEntity(entity);
 }
 
-void Explosion_LateUpdate(void)
-{
+void Explosion_LateUpdate(void) {}
 
-}
-
-void Explosion_StaticUpdate(void)
-{
-
-}
+void Explosion_StaticUpdate(void) {}
 
 void Explosion_Draw(void)
 {
@@ -28,7 +22,7 @@ void Explosion_Draw(void)
     RSDK.DrawSprite(&entity->animator, NULL, false);
 }
 
-void Explosion_Create(void* data)
+void Explosion_Create(void *data)
 {
     RSDK_THIS(Explosion);
     entity->active  = ACTIVE_NORMAL;
@@ -37,27 +31,17 @@ void Explosion_Create(void* data)
         entity->drawOrder = Zone->drawOrderHigh;
     else
         entity->drawOrder = Zone->drawOrderLow;
-    RSDK.SetSpriteAnimation(Explosion->spriteIndex, voidToInt(data), &entity->animator, true, 0);
+    RSDK.SetSpriteAnimation(Explosion->aniFrames, voidToInt(data), &entity->animator, true, 0);
 }
 
 void Explosion_StageLoad(void)
 {
-    Explosion->spriteIndex = RSDK.LoadSpriteAnimation("Global/Explosions.bin", SCOPE_STAGE);
-    Explosion->sfx_Destroy = RSDK.GetSFX("Global/Destroy.wav");
+    Explosion->aniFrames  = RSDK.LoadSpriteAnimation("Global/Explosions.bin", SCOPE_STAGE);
+    Explosion->sfxDestroy = RSDK.GetSFX("Global/Destroy.wav");
 }
 
-void Explosion_EditorDraw(void)
-{
+void Explosion_EditorDraw(void) {}
 
-}
+void Explosion_EditorLoad(void) {}
 
-void Explosion_EditorLoad(void)
-{
-
-}
-
-void Explosion_Serialize(void)
-{
-
-}
-
+void Explosion_Serialize(void) {}

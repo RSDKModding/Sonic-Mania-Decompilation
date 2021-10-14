@@ -141,7 +141,7 @@ void Grabber_CheckOnScreen(void)
         entity->struggleFlags = 0;
         entity->struggleFlags = 0;
         entity->direction     = entity->startDir;
-        entity->grabbedPlayer = 0;
+        entity->grabbedPlayer = NULL;
         entity->field_BC      = 0;
         entity->explodeTimer  = 0;
         Grabber_Create(NULL);
@@ -161,10 +161,10 @@ void Grabber_HandleExplode(void)
                 Player_CheckHit(player, entity);
                 if (player->state != Player_State_Hit && Player_CheckValidState(player))
                     player->state = Player_State_Air;
-                entity->grabbedPlayer = 0;
+                entity->grabbedPlayer = NULL;
             }
-            CREATE_ENTITY(Explosion, intToVoid(1), entity->position.x, entity->position.y)->drawOrder = Zone->drawOrderHigh;
-            RSDK.PlaySfx(Explosion->sfx_Destroy, 0, 255);
+            CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), entity->position.x, entity->position.y)->drawOrder = Zone->drawOrderHigh;
+            RSDK.PlaySfx(Explosion->sfxDestroy, false, 255);
             destroyEntity(entity);
         }
     }

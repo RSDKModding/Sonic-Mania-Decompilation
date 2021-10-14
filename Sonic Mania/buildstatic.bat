@@ -1,0 +1,1 @@
+python autostatic.py Objects ../build/

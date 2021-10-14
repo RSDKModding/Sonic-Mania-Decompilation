@@ -7,9 +7,6 @@ USE64 = False
 if len(sys.argv) < 2:
     exit(1)
 
-try: os.mkdir("Static")
-except: pass
-
 TYPEMAP = {
     "uint8": 1,
     "uint16": 2, 
@@ -143,23 +140,37 @@ def deduce(delim):
     readuntil(delim) #read just to be sure
     t.append((name, tuple(TYPEMAP.keys()).index(type), asize, []))
 
-plus = len(sys.argv) < 3 or sys.argv[2] == "plus"
+debugMode = False if len(sys.argv) < 5 else sys.argv[4] == "debug"
+plus = len(sys.argv) < 4 or sys.argv[3] == "plus"
+folder = "" if len(sys.argv) < 3 else sys.argv[2]
+
+try: os.mkdir(f"{folder}Static")
+except: pass
+
 for path in Path(sys.argv[1]).rglob("*.h"):
-    mode = 0
-    # print(f"{path} STARTED")
+    mode        = 0
+    prevMode    = 0
     prepare(path)
     for l in readlines():
         if errflag:
             break
+        clnL = "".join(l.split())
+
+        if mode == 5:
+            if clnL.startswith("#else") or clnL.startswith("#endif"):
+                mode = prevMode #return to where we left off
+            continue
         
-        if ("".join(l.split()).startswith("#ifRETRO_USE_PLUS") and not plus) or ("".join(l.split()).startswith("#if!RETRO_USE_PLUS") and plus):
+        if (clnL.startswith("#ifRETRO_USE_PLUS") and not plus) or (clnL.startswith("#if!RETRO_USE_PLUS") and plus):
+            prevMode = mode
             mode = 5
             continue
-        elif ("".join(l.split()).startswith("#ifRETRO_USE_PLUS") and plus) or ("".join(l.split()).startswith("#if!RETRO_USE_PLUS") and not plus):
+        elif (clnL.startswith("#ifRETRO_USE_PLUS") and plus) or (clnL.startswith("#if!RETRO_USE_PLUS") and not plus):
             continue #ok idc
-        elif "".join(l.split()).startswith("#endif"):
+        elif clnL.startswith("#endif"):
             continue #ok idc
-        elif "".join(l.split()).startswith("#else"):
+        elif clnL.startswith("#else"):
+            prevMode = mode
             mode = 5
             continue #ok do care
 
@@ -194,7 +205,8 @@ for path in Path(sys.argv[1]).rglob("*.h"):
                     print(f"{name} NOT AN OBJECT STRUCT BUT HAS RSDK_OBJECT ({os.path.basename(path)})")
                     break
                 name = name[6:]
-                print(f"{name} FINISHED")
+                if debugMode:
+                    print(f"{name} FINISHED")
                 objects[name] = t
                 t = []
                 mode = 0
@@ -241,19 +253,19 @@ for path in Path(sys.argv[1]).rglob("*.h"):
             readuntil(";")
             mode = 2
             continue
-        if mode == 5:
-            if l.strip().startswith("#else") or l.strip().startswith("#endif"):
-                mode = 0 #STOP!!!!
 
 for key in objects:
     b = bytearray([ord('O'), ord('B'), ord('J'), 0])
     hasVal = False
 
-    hash = hashlib.md5(key.encode("utf-8")).hexdigest()
-    hash = (''.join([c[1] + c[0]
-                     for c in zip(hash[::2], hash[1::2])])).upper()
+    hash = key
+    if len(sys.argv) < 5 or sys.argv[4] != "debug":
+        hash = hashlib.md5(key.encode("utf-8")).hexdigest()
+        hash = (''.join([c[1] + c[0]
+                         for c in zip(hash[::2], hash[1::2])])).upper()
 
-    print(key, hash)
+    if debugMode:
+        print(key, hash)
 
     for name, type, size, arr in objects[key]:
         if arr:
@@ -266,11 +278,11 @@ for key in objects:
             bs = tuple(TYPEMAP.values())[type & (~0x80)]
             for val in arr:
                 b.extend(val.to_bytes(bs, byteorder='little', signed=(type & (~0x80)) in range(4, 7))) #val
-        print("  ", tuple(TYPEMAP.keys())[type & (~0x80)], name + (f"[{size}]" if arr else ""))
+        if debugMode:
+            print("  ", tuple(TYPEMAP.keys())[type & (~0x80)], name + (f"[{size}]" if arr else ""))
 
     if hasVal:
-
-        with open(f"Static/{hash}.bin", "wb") as file:
+        with open(f"{folder}Static/{hash}.bin", "wb") as file:
             file.write(b)
             file.close()
                 

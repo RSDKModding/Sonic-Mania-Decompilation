@@ -1949,6 +1949,9 @@
     <ClInclude Include="GameVariables.h">
       <Filter>Sources</Filter>
     </ClInclude>
+    <ClInclude Include="All.h">
+      <Filter>Sources</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameObjects.c">

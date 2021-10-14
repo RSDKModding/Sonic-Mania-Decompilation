@@ -448,8 +448,8 @@ void BigSqueeze_State2_Die(void)
                 foreach_active(FBZTrash, trash)
                 {
                     if (trash->state != FBZTrash_Unknown3) {
-                        CREATE_ENTITY(Explosion, intToVoid(1), trash->position.x, trash->position.y)->drawOrder = Zone->drawOrderHigh;
-                        RSDK.PlaySfx(Explosion->sfx_Destroy, false, 255);
+                        CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), trash->position.x, trash->position.y)->drawOrder = Zone->drawOrderHigh;
+                        RSDK.PlaySfx(Explosion->sfxDestroy, false, 255);
                         destroyEntity(trash);
                     }
                 }

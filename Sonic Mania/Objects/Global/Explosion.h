@@ -3,11 +3,18 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    EXPLOSION_ITEMBOX,
+    EXPLOSION_ENEMY,
+    EXPLOSION_BOSS,
+    EXPLOSION_BOSSPUFF,
+}ExplosionTypes;
+
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    uint16 spriteIndex;
-    uint16 sfx_Destroy;
+    uint16 aniFrames;
+    uint16 sfxDestroy;
 } ObjectExplosion;
 
 // Entity Class

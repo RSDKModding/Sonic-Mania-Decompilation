@@ -339,8 +339,8 @@ void Beanstalk_CheckPlayerCollisions_Plant(void)
         if (Player_CheckCollisionTouch(player, entity, &Beanstalk->hitboxPlant)) {
 #if RETRO_USE_PLUS
             if (player->state == Player_State_MightyHammerDrop) {
-                CREATE_ENTITY(Explosion, intToVoid(1), entity->position.x, entity->position.y)->drawOrder = Zone->drawOrderHigh;
-                RSDK.PlaySfx(Explosion->sfx_Destroy, false, 255);
+                CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), entity->position.x, entity->position.y)->drawOrder = Zone->drawOrderHigh;
+                RSDK.PlaySfx(Explosion->sfxDestroy, false, 255);
                 entity->state = Beanstalk_State1_Unknown;
                 RSDK.SetSpriteAnimation(Beanstalk->aniFrames, 0, &entity->animator2, true, 0);
             }

@@ -26,10 +26,10 @@ typedef struct {
     int32 dword140;
     int32 dword144;
     int32 dword148;
-    void* buffer;
-    void(*loadCallback)(bool32);
+    void *buffer;
+    void (*loadCallback)(bool32);
     char filename[0x100];
-    void(*saveFinishPtr)(bool32);
+    void (*saveFinishPtr)(bool32);
     int32 replayID;
     int32 replayRowID;
 } ObjectReplayRecorder;

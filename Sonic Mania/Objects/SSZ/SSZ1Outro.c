@@ -136,8 +136,8 @@ bool32 SSZ1Outro_CutsceneState_Unknown2(EntityCutsceneSeq *host)
 void SSZ1Outro_Unknown3(Entity *entity)
 {
     CREATE_ENTITY(Animals, intToVoid(Animals->animalTypes[RSDK.Rand(0, 32) >> 4] + 1), entity->position.x, entity->position.y);
-    CREATE_ENTITY(Explosion, intToVoid(1), entity->position.x, entity->position.y)->drawOrder = Zone->drawOrderHigh;
-    RSDK.PlaySfx(Explosion->sfx_Destroy, 0, 255);
+    CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), entity->position.x, entity->position.y)->drawOrder = Zone->drawOrderHigh;
+    RSDK.PlaySfx(Explosion->sfxDestroy, false, 255);
     destroyEntity(entity);
 }
 

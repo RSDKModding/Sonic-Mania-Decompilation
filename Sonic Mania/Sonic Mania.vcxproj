@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="All.h" />
     <ClInclude Include="GameLink.h" />
     <ClInclude Include="GameObjects.h" />
     <ClInclude Include="GameVariables.h" />
@@ -1942,6 +1943,12 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
     </Link>
+    <PostBuildEvent>
+      <Command>"$(ProjectDir)buildstatic.bat"</Command>
+    </PostBuildEvent>
+    <PostBuildEvent>
+      <Message>Building Static Object Files...</Message>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -1962,6 +1969,12 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
     </Link>
+    <PostBuildEvent>
+      <Command>"$(ProjectDir)buildstatic.bat"</Command>
+    </PostBuildEvent>
+    <PostBuildEvent>
+      <Message>Building Static Object Files...</Message>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -1978,6 +1991,12 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
     </Link>
+    <PostBuildEvent>
+      <Command>"$(ProjectDir)buildstatic.bat"</Command>
+    </PostBuildEvent>
+    <PostBuildEvent>
+      <Message>Building Static Object Files...</Message>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -1998,6 +2017,12 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
     </Link>
+    <PostBuildEvent>
+      <Command>"$(ProjectDir)buildstatic.bat"</Command>
+    </PostBuildEvent>
+    <PostBuildEvent>
+      <Message>Building Static Object Files...</Message>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
