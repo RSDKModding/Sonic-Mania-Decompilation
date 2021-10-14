@@ -1,4 +1,4 @@
-import os, sys, re
+import os, sys, hashlib
 from typing import IO, BinaryIO, Dict, Iterable, Iterator, List, Tuple
 from pathlib import Path
 
@@ -11,19 +11,28 @@ try: os.mkdir("Static")
 except: pass
 
 TYPEMAP = {
-    "byte": 1,
-    "ushort": 2, 
-    "uint": 4, 
-    "sbyte": 1,
-    "short": 2,
-    "int": 4,
+    "uint8": 1,
+    "uint16": 2, 
+    "uint32": 4, 
+    "int8": 1,
+    "int16": 2,
+    "int32": 4,
     "bool32": 4,
     "ptr": 0,
     "Vector2": 0,
     "TextInfo": 0,
     "Animator": 0,
     "Hitbox": 0,
-    "----": 0
+    "-----": 0
+}
+
+ALIASES = {
+    "color": "int32",
+    "colour": "int32"
+}
+
+DEFINES = {
+    "PLAYER_MAX": 4
 }
 
 objects: Dict[str, List[Tuple[str, int, int, List[int]]]] = {}
@@ -109,8 +118,9 @@ def deduce(delim):
         type = "ptr"
         readuntil("*") #da name!!!
     
-    if type in ("color", "colour"):
-        type = "uint" 
+    if type in ALIASES:
+        type = ALIASES[type]
+
     if type not in TYPEMAP:
         print(f"UNKNOWN TYPE {type} IN {os.path.basename(path)} OBJECT STRUCT")
         errflag = 1
@@ -122,7 +132,7 @@ def deduce(delim):
         backward()
         readuntil("[")
         sp = curpos
-        try: asize = int(readuntil("]"), 0)
+        try: asize = eval(readuntil("]").strip(), DEFINES)
         except: 
             print(f"INVALID ARRAY SIZE IN {os.path.basename(path)} OBJECT STRUCT")
             errflag = 1
@@ -170,6 +180,11 @@ for path in Path(sys.argv[1]).rglob("*.h"):
                 backward()
                 continue
             if l.strip().startswith("StateMachine"):
+                backward()
+                readuntil("(")
+                name = readuntil(")")
+                t.append((name, tuple(TYPEMAP.keys()).index("ptr"), 1, []))
+                readuntil("\n") #hack :LOL:
                 continue
             if l.strip().startswith("} "):
                 backward()
@@ -198,14 +213,14 @@ for path in Path(sys.argv[1]).rglob("*.h"):
             expected = t[-1][2]
             readuntil("{")
             for i in range(expected - 1):
-                try: t[-1][3].append(int(readuntil(","), 0))
+                try: t[-1][3].append(eval(readuntil(",").strip(), DEFINES))
                 except: 
                     print(f"INCORRECT INT IN {t[-1][0]} TABLE OR TABLE TOO SMALL IN {os.path.basename(path)}, EXPECTED: {expected}")
                     errflag = 1
                     break
             if errflag:
                 break
-            try: t[-1][3].append(int(readuntil("}"), 0))
+            try: t[-1][3].append(eval(readuntil("}").strip(), DEFINES))
             except: 
                 print(f"INCORRECT INT IN {t[-1][0]} TABLE OR TABLE TOO BIG IN {os.path.basename(path)}, EXPECTED: {expected}")
                 break
@@ -219,7 +234,7 @@ for path in Path(sys.argv[1]).rglob("*.h"):
             if t[-1][1] > tuple(TYPEMAP.keys()).index("bool32"):
                 print(f"INCORRECT STATIC TYPE {tuple(TYPEMAP.keys())[t[-1][1]]} ({t[-1][0]} of {os.path.basename(path)}")
                 break
-            try: t[-1][3].append(int(readuntil(")"), 0))
+            try: t[-1][3].append(eval(readuntil(")").strip(), DEFINES))
             except: 
                 print(f"INCORRECT STATIC INT IN {t[-1][0]} OF {os.path.basename(path)}")
                 break
@@ -230,30 +245,32 @@ for path in Path(sys.argv[1]).rglob("*.h"):
             if l.strip().startswith("#else") or l.strip().startswith("#endif"):
                 mode = 0 #STOP!!!!
 
-print("\n\n\n\nStatic Objs")
 for key in objects:
     b = bytearray([ord('O'), ord('B'), ord('J'), 0])
     hasVal = False
 
-    for tup in objects[key]:
-        type = tup[1]
-        if tup[3]:
+    hash = hashlib.md5(key.encode("utf-8")).hexdigest()
+    hash = (''.join([c[1] + c[0]
+                     for c in zip(hash[::2], hash[1::2])])).upper()
+
+    print(key, hash)
+
+    for name, type, size, arr in objects[key]:
+        if arr:
             hasVal = True
             type |= 0x80
         b.append(type)
-        b.extend(tup[2].to_bytes(4, 'little')) #array size
+        b.extend(size.to_bytes(4, 'little')) #array size
         if type >= 0x80:
-            b.extend(tup[2].to_bytes(4, 'little')) #data size
-            size = tuple(TYPEMAP.values())[tup[1]]
-            for val in tup[3]:
-                b.extend(val.to_bytes(size, byteorder='little', signed=False if val >= 0 else True)) #val
-    
-    if hasVal:
-        name = key
-        if len(sys.argv) < 4 or sys.argv[3] != "debug":
-            name = "00000000000000000000000000000000" #TODO: idk how to do hashes and I cba to learn rn :LOL
+            b.extend(size.to_bytes(4, 'little')) #data size
+            bs = tuple(TYPEMAP.values())[type & (~0x80)]
+            for val in arr:
+                b.extend(val.to_bytes(bs, byteorder='little', signed=(type & (~0x80)) in range(4, 7))) #val
+        print("  ", tuple(TYPEMAP.keys())[type & (~0x80)], name + (f"[{size}]" if arr else ""))
 
-        with open(f"Static/{name}.bin", "wb") as file:
+    if hasVal:
+
+        with open(f"Static/{hash}.bin", "wb") as file:
             file.write(b)
             file.close()
                 
