@@ -11,7 +11,7 @@ void TMZ3Setup_StaticUpdate(void)
     if (!(Zone->timer & 3)) {
         TMZ3Setup->aniTileFrame += 32;
         TMZ3Setup->aniTileFrame = TMZ3Setup->aniTileFrame & 0xFF;
-        RSDK.DrawAniTiles(TMZ3Setup->aniTiles, 34u, TMZ3Setup->aniTileFrame, 0, 32, 112);
+        RSDK.DrawAniTiles(TMZ3Setup->aniTiles, 34, TMZ3Setup->aniTileFrame, 0, 32, 112);
     }
 
     if (!(Zone->timer & 1))

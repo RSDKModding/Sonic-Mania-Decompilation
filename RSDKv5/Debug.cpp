@@ -576,15 +576,15 @@ void DevMenu_SceneSel()
 
     if (controller[CONT_P1].keyStart.press || controller[CONT_P1].keyA.press) {
         sceneInfo.activeCategory = devMenu.listPos;
-        sceneInfo.listPos        = devMenu.option;
+        sceneInfo.listPos        = devMenu.option + list->sceneOffsetStart;
         sceneInfo.state          = ENGINESTATE_LOAD;
     }
 #if !RETRO_USE_ORIGINAL_CODE
     else if (controller[CONT_P1].keyB.press) {
         devMenu.state   = DevMenu_ListSel;
-        devMenu.listPos = 0;
-        devMenu.scroll  = devMenu.listPos;
+        devMenu.scroll  = 0;
         devMenu.option  = 0;
+        devMenu.listPos = 0;
     }
 #endif
 }

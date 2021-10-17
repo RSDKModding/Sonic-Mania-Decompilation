@@ -303,7 +303,7 @@ void RubyPortal_Unknown8(void)
     if (!entity->timer)
         entity->visible = true;
     entity->timer++;
-    if (entity->timer >= 256) {
+    if (entity->alpha >= 0x100) {
         if (entity->timer == 240) {
             entity->timer      = 0;
             entity->state      = RubyPortal_Unknown9;

@@ -729,54 +729,54 @@ int32 Zone_GetEncoreStageID(void)
 {
     int32 pos = RSDK_sceneInfo->listPos;
     RSDK.SetScene("Mania Mode", "");
-    int32 mOff = pos - RSDK_sceneInfo->listPos;
+    int32 offset = pos - RSDK_sceneInfo->listPos;
     RSDK.SetScene("Encore Mode", "");
     int32 eOff = RSDK_sceneInfo->listPos;
 
     int32 listPos = RSDK_sceneInfo->listPos;
 
     int32 pos2 = 0;
-    if (mOff >= 15) {
-        if (mOff == 15 || mOff == 16) {
+    if (offset >= 15) {
+        if (offset == 15 || offset == 16) {
             pos2 = listPos + 15;
         }
         else {
             --listPos;
-            pos2 = mOff + listPos;
+            pos2 = offset + listPos;
         }
     }
     else {
-        pos2 = mOff + listPos;
+        pos2 = offset + listPos;
     }
     RSDK_sceneInfo->listPos = pos;
-    LogHelpers_Print("Mania Mode offset %d, pos %d -> Encore Mode offset %d, pos %d", mOff, pos, pos2 - eOff, pos2);
+    LogHelpers_Print("Mania Mode offset %d, pos %d -> Encore Mode offset %d, pos %d", offset, pos, pos2 - eOff, pos2);
     return pos2;
 }
 int32 Zone_GetManiaStageID(void)
 {
     int32 pos = RSDK_sceneInfo->listPos;
     RSDK.SetScene("Encore Mode", "");
-    int32 mOff = pos - RSDK_sceneInfo->listPos;
+    int32 offset = pos - RSDK_sceneInfo->listPos;
     RSDK.SetScene("Mania Mode", "");
-    int32 eOff = RSDK_sceneInfo->listPos;
+    int32 mOff = RSDK_sceneInfo->listPos;
 
     int32 pos2 = 0;
-    if (pos2 >= 15) {
-        if (pos2 == 15) {
-            if (globals->playerID & ID_KNUCKLES)
-                pos2 = RSDK_sceneInfo->listPos + 16;
+    if (offset >= 15) {
+        if (offset == 15) {
+            if (getPlayer(ID_KNUCKLES, 1))
+                pos2 = mOff + 16;
             else
-                pos2 = RSDK_sceneInfo->listPos + 15;
+                pos2 = mOff + 15;
         }
         else {
-            pos2 = mOff + RSDK_sceneInfo->listPos + 1;
+            pos2 = offset + mOff + 1;
         }
     }
     else {
-        pos2 = RSDK_sceneInfo->listPos + mOff;
+        pos2 = offset + mOff;
     }
     RSDK_sceneInfo->listPos = pos;
-    LogHelpers_Print("Encore Mode offset %d, pos %d -> Mania Mode offset %d, pos %d", mOff, pos, pos2 - eOff, pos2);
+    LogHelpers_Print("Encore Mode offset %d, pos %d -> Mania Mode offset %d, pos %d", offset, pos, pos2 - mOff, pos2);
     return pos2;
 }
 
@@ -794,15 +794,13 @@ void Zone_State_Fadeout(void)
 #if RETRO_USE_PLUS
         if (Zone->swapGameMode) {
             if (RSDK_sceneInfo->filter == SCN_FILTER_MANIA) {
-                if (RSDK.CheckValidScene()) {
+                if (RSDK.CheckValidScene())
                     RSDK_sceneInfo->listPos = Zone_GetEncoreStageID();
-                }
                 globals->gameMode = MODE_ENCORE;
             }
             else if (RSDK_sceneInfo->filter == SCN_FILTER_ENCORE) {
-                if (RSDK.CheckValidScene()) {
+                if (RSDK.CheckValidScene())
                     RSDK_sceneInfo->listPos = Zone_GetManiaStageID();
-                }
                 globals->gameMode = MODE_MANIA;
             }
             RSDK_sceneInfo->filter ^= 6;

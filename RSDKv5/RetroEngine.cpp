@@ -119,23 +119,23 @@ bool32 processEvents()
                         break;
                     case SDLK_F1:
                         sceneInfo.listPos--;
-                        if (sceneInfo.listPos >= sceneInfo.listCategory[sceneInfo.activeCategory].sceneCount) {
+                        if (sceneInfo.listPos < sceneInfo.listCategory[sceneInfo.activeCategory].sceneOffsetStart) {
                             sceneInfo.activeCategory--;
                             if (sceneInfo.activeCategory >= sceneInfo.categoryCount) {
                                 sceneInfo.activeCategory = sceneInfo.categoryCount - 1;
                             }
-                            sceneInfo.listPos = sceneInfo.listCategory[sceneInfo.activeCategory].sceneCount - 1;
+                            sceneInfo.listPos = sceneInfo.listCategory[sceneInfo.activeCategory].sceneOffsetEnd;
                         }
                         InitSceneLoad();
                         break;
                     case SDLK_F2:
                         sceneInfo.listPos++;
-                        if (sceneInfo.listPos >= sceneInfo.listCategory[sceneInfo.activeCategory].sceneCount) {
+                        if (sceneInfo.listPos > sceneInfo.listCategory[sceneInfo.activeCategory].sceneOffsetEnd) {
                             sceneInfo.activeCategory++;
                             if (sceneInfo.activeCategory >= sceneInfo.categoryCount) {
                                 sceneInfo.activeCategory = 0;
                             }
-                            sceneInfo.listPos = 0;
+                            sceneInfo.listPos = sceneInfo.listCategory[sceneInfo.activeCategory].sceneOffsetStart;
                         }
                         InitSceneLoad();
                         break;
@@ -160,45 +160,6 @@ bool32 processEvents()
                         }
                         break;
 #if !RETRO_USE_ORIGINAL_CODE
-                    case SDLK_F5:
-                        if (engine.devMenu) {
-                            sceneInfo.activeCategory = 0;
-                            sceneInfo.listPos        = 0;
-                            sceneInfo.state          = ENGINESTATE_LOAD;
-                        }
-                        break;
-                    case SDLK_F6:
-                        if (engine.devMenu) {
-                            sceneInfo.listPos--;
-                            SceneListInfo *list = &sceneInfo.listCategory[sceneInfo.activeCategory];
-                            if (sceneInfo.listPos < 0) {
-                                if (sceneInfo.activeCategory - 1 < 0) {
-                                    sceneInfo.activeCategory = sceneInfo.categoryCount - 1;
-                                }
-                                else {
-                                    sceneInfo.activeCategory--;
-                                }
-                                list              = &sceneInfo.listCategory[sceneInfo.activeCategory];
-                                sceneInfo.listPos = list->sceneCount - 1;
-                            }
-                            sceneInfo.state = ENGINESTATE_LOAD;
-                        }
-                        break;
-                    case SDLK_F7:
-                        if (engine.devMenu) {
-                            sceneInfo.listPos++;
-                            SceneListInfo *list = &sceneInfo.listCategory[sceneInfo.activeCategory];
-                            if (sceneInfo.listPos - list->sceneOffsetStart >= list->sceneCount) {
-                                sceneInfo.activeCategory++;
-                                if (sceneInfo.activeCategory >= sceneInfo.categoryCount) {
-                                    sceneInfo.activeCategory = 0;
-                                }
-                                list              = &sceneInfo.listCategory[sceneInfo.activeCategory];
-                                sceneInfo.listPos = 0;
-                            }
-                            sceneInfo.state = ENGINESTATE_LOAD;
-                        }
-                        break;
                     case SDLK_F9:
                         if (engine.devMenu)
                             showHitboxes ^= 1;
@@ -966,9 +927,7 @@ void LoadGameConfig()
                     }
                 }
                 else {
-                    for (int c = 0; c < 0x10; ++c) {
-                        globalPalette[i][(r << 4) + c] = 0;
-                    }
+                    for (int c = 0; c < 0x10; ++c) globalPalette[i][(r << 4) + c] = 0;
                 }
             }
         }

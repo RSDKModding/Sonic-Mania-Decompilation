@@ -45,22 +45,22 @@ void LoadScene()
 
     SceneListInfo *list = &sceneInfo.listCategory[sceneInfo.activeCategory];
 #if RETRO_REV02
-    if (strcmp(currentSceneFolder, sceneInfo.listData[list->sceneOffsetStart + sceneInfo.listPos].folder) == 0 && !hardResetFlag) {
+    if (strcmp(currentSceneFolder, sceneInfo.listData[sceneInfo.listPos].folder) == 0 && !hardResetFlag) {
         // Reload
         ClearUnusedStorage(DATASET_STG);
-        sceneInfo.filter = sceneInfo.listData[list->sceneOffsetStart + sceneInfo.listPos].filter;
+        sceneInfo.filter = sceneInfo.listData[sceneInfo.listPos].filter;
         printLog(PRINT_NORMAL, "Reloading Scene \"%s - %s\" with filter %d", list->name,
-                 sceneInfo.listData[list->sceneOffsetStart + sceneInfo.listPos].name,
-                 sceneInfo.listData[list->sceneOffsetStart + sceneInfo.listPos].filter);
+                 sceneInfo.listData[sceneInfo.listPos].name,
+                 sceneInfo.listData[sceneInfo.listPos].filter);
         return;
     }
 #endif
 
 #if !RETRO_REV02
-    if (strcmp(currentSceneFolder, sceneInfo.listData[list->sceneOffsetStart + sceneInfo.listPos].folder) == 0) {
+    if (strcmp(currentSceneFolder, sceneInfo.listData[sceneInfo.listPos].folder) == 0) {
         // Reload
         ClearUnusedStorage(DATASET_STG);
-        printLog(PRINT_NORMAL, "Reloading Scene \"%s - %s\"", list->name, sceneInfo.listData[list->sceneOffsetStart + sceneInfo.listPos].name);
+        printLog(PRINT_NORMAL, "Reloading Scene \"%s - %s\"", list->name, sceneInfo.listData[sceneInfo.listPos].name);
         return;
     }
 #endif
@@ -133,7 +133,7 @@ void LoadScene()
         screens[s].position.y = 0;
     }
 
-    SceneListEntry *sceneEntry = &sceneInfo.listData[list->sceneOffsetStart + sceneInfo.listPos];
+    SceneListEntry *sceneEntry = &sceneInfo.listData[sceneInfo.listPos];
     strcpy(currentSceneFolder, sceneEntry->folder);
 
 #if RETRO_REV02
@@ -218,6 +218,9 @@ void LoadScene()
                         stagePalette[i][(r << 4) + c] = bIndexes[blue] | gIndexes[green] | rIndexes[red];
                     }
                 }
+                else {
+                    for (int c = 0; c < 0x10; ++c) stagePalette[i][(r << 4) + c] = 0;
+                }
             }
         }
 
@@ -239,7 +242,7 @@ void LoadSceneFile()
     memset(objectEntityList, 0, ENTITY_COUNT * sizeof(EntityBase));
 
     SceneListInfo *list        = &sceneInfo.listCategory[sceneInfo.activeCategory];
-    SceneListEntry *sceneEntry = &sceneInfo.listData[list->sceneOffsetStart + sceneInfo.listPos];
+    SceneListEntry *sceneEntry = &sceneInfo.listData[sceneInfo.listPos];
     char buffer[0x40];
     sprintf(buffer, "Data/Stages/%s/Scene%s.bin", currentSceneFolder, sceneEntry->sceneID);
 
@@ -1063,12 +1066,12 @@ void SetScene(const char *categoryName, const char *sceneName)
     for (int i = 0; i < sceneInfo.categoryCount; ++i) {
         if (HASH_MATCH(sceneInfo.listCategory[i].hash, hash)) {
             sceneInfo.activeCategory = i;
-            sceneInfo.listPos        = 0;
+            sceneInfo.listPos        = sceneInfo.listCategory[i].sceneOffsetStart;
             GEN_HASH(sceneName, hash);
 
             for (int s = 0; s < sceneInfo.listCategory[i].sceneCount; ++s) {
                 if (HASH_MATCH(sceneInfo.listData[sceneInfo.listCategory[i].sceneOffsetStart + s].hash, hash)) {
-                    sceneInfo.listPos = s;
+                    sceneInfo.listPos = sceneInfo.listCategory[i].sceneOffsetStart + s;
                     break;
                 }
             }

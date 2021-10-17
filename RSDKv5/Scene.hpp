@@ -152,14 +152,13 @@ inline bool32 CheckValidStage()
         return false;
 
     SceneListInfo *list = &sceneInfo.listCategory[sceneInfo.activeCategory];
-    int pos             = list->sceneOffsetStart + sceneInfo.listPos;
-    return pos >= list->sceneOffsetStart && pos <= list->sceneOffsetEnd;
+    return sceneInfo.listPos >= list->sceneOffsetStart && sceneInfo.listPos <= list->sceneOffsetEnd;
 }
 
 inline bool32 CheckSceneFolder(const char *folderName)
 {
     SceneListInfo *list = &sceneInfo.listCategory[sceneInfo.activeCategory];
-    return strcmp(folderName, sceneInfo.listData[list->sceneOffsetStart + sceneInfo.listPos].folder) == 0;
+    return strcmp(folderName, sceneInfo.listData[sceneInfo.listPos].folder) == 0;
 }
 
 inline ushort GetSceneLayerID(const char *name)
