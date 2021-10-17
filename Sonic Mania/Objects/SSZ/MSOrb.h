@@ -5,12 +5,19 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    uint16 aniFrames;
+    Hitbox hitbox;
 } ObjectMSOrb;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    StateMachine(state);
+    StateMachine(stateDraw);
+    Animator animator;
+    int field_78;
+    int field_7C;
 } EntityMSOrb;
 
 // Object Struct
@@ -28,6 +35,8 @@ void MSOrb_EditorLoad(void);
 void MSOrb_Serialize(void);
 
 // Extra Entity Functions
-
+void MSOrb_CheckPlayerCollisions(void);
+void MSOrb_State_Orb(void);
+void MSOrb_StateDraw_Orb(void);
 
 #endif //!OBJ_MSORB_H

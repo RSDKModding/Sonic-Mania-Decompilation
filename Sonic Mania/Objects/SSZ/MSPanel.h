@@ -5,12 +5,16 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    uint16 aniFrames;
 } ObjectMSPanel;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    StateMachine(state);
+    Animator animator1;
+    Animator animator2;
 } EntityMSPanel;
 
 // Object Struct
@@ -28,6 +32,9 @@ void MSPanel_EditorLoad(void);
 void MSPanel_Serialize(void);
 
 // Extra Entity Functions
-
+void MSPanel_Unknown1(void);
+void MSPanel_Unknown2(void);
+void MSPanel_Unknown3(void);
+void MSPanel_Unknown4(void);
 
 #endif //!OBJ_MSPANEL_H

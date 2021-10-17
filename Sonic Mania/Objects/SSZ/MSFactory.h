@@ -5,12 +5,19 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    uint16 aniFrames;
+    uint16 sfxMachineActivate;
+    uint16 sfxHullClose;
 } ObjectMSFactory;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    StateMachine(state);
+    int timer;
+    Vector2 drawPos;
+    Animator animator;
 } EntityMSFactory;
 
 // Object Struct
@@ -28,6 +35,10 @@ void MSFactory_EditorLoad(void);
 void MSFactory_Serialize(void);
 
 // Extra Entity Functions
-
+void MSFactory_Unknown1(void);
+void MSFactory_Unknown2(void);
+void MSFactory_Unknown3(void);
+void MSFactory_Unknown4(void);
+void MSFactory_Unknown5(void);
 
 #endif //!OBJ_MSFACTORY_H

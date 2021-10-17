@@ -6,12 +6,19 @@
 #if RETRO_USE_PLUS
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    uint16 aniFrames;
+    uint16 sfxExplosion;
 } ObjectMSBomb;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    StateMachine(state);
+    int field_5C;
+    int timer;
+    Hitbox hitbox;
+    Animator animator;
 } EntityMSBomb;
 
 // Object Struct
@@ -29,6 +36,11 @@ void MSBomb_EditorLoad(void);
 void MSBomb_Serialize(void);
 
 // Extra Entity Functions
+void MSBomb_Unknown1(void);
+void MSBomb_Unknown2(void);
+void MSBomb_Unknown3(void);
+void MSBomb_Unknown4(void);
+
 #endif
 
 #endif //!OBJ_MSBOMB_H

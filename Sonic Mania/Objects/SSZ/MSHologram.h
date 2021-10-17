@@ -5,12 +5,23 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    uint16 aniFrames;
+    Hitbox hitbox;
+    uint16 sfxExplosion;
 } ObjectMSHologram;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    StateMachine(state);
+    int timer;
+    bool32 destroyed;
+    Animator animator1;
+    Animator animator2;
+    Animator animator4;
+    Animator animator3;
+    Animator animator5;
 } EntityMSHologram;
 
 // Object Struct
@@ -28,6 +39,8 @@ void MSHologram_EditorLoad(void);
 void MSHologram_Serialize(void);
 
 // Extra Entity Functions
-
+void MSHologram_State_CheckPlayerCollisions(void);
+void MSHologram_State_Explode(void);
+void MSHologram_State_Destroyed(void);
 
 #endif //!OBJ_MSHOLOGRAM_H

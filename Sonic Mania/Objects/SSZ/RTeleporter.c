@@ -66,7 +66,7 @@ void RTeleporter_State_CheckPlayerCollisions(void)
     {
         if (!player->onGround) {
             if (Player_CheckCollisionTouch(player, entity, &RTeleporter->hitbox)) {
-                Player_CheckHit2(entity, player, false);
+                Player_CheckHit2(player, entity, false);
                 entity->state     = RTeleporter_State_Destroyed;
                 entity->stateDraw = RTeleporter_StateDraw_Exploding;
             }
@@ -84,7 +84,7 @@ void RTeleporter_State_Destroyed(void)
             int x = RSDK.Rand(-32, 32) << 16;
             int y = RSDK.Rand(-32, 32) << 16;
             EntityExplosion *explosion =
-                CREATE_ENTITY(Explosion, intToVoid(((RSDK.Rand(0, 256) > 192) + 2)), x + entity->position.x, y + entity->position.y);
+                CREATE_ENTITY(Explosion, intToVoid(((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS)), x + entity->position.x, y + entity->position.y);
             explosion->drawOrder = Zone->drawOrderHigh;
         }
     }

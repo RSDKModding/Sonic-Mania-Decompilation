@@ -55,7 +55,7 @@ typedef struct {
     int32 field_A8;
     int32 field_AC;
     int32 field_B0;
-    int32 field_B4;
+    Hitbox* hitboxPtr;
     int32 field_B8;
     Animator animator;
     Animator animator2;
