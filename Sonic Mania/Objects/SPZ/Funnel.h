@@ -5,12 +5,25 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    Hitbox hitbox;
+    uint16 field_C;
+    uint16 sfxFunnel;
+    uint16 sfxPimPom;
+    uint16 aniFrames;
 } ObjectFunnel;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    StateMachine(state);
+    uint8 activePlayers;
+    int32 playerAngle[PLAYER_MAX];
+    int32 playerXVel[PLAYER_MAX];
+    int32 playerScoreTimer[PLAYER_MAX];
+    int32 playerYVel[PLAYER_MAX];
+    int32 playerTimers[PLAYER_MAX];
+    Animator animator;
 } EntityFunnel;
 
 // Object Struct
@@ -28,6 +41,7 @@ void Funnel_EditorLoad(void);
 void Funnel_Serialize(void);
 
 // Extra Entity Functions
+void Funnel_Unknown1(void);
 
 
 #endif //!OBJ_FUNNEL_H
