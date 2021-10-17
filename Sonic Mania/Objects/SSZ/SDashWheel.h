@@ -3,6 +3,16 @@
 
 #include "SonicMania.h"
 
+// Object Class (Old)
+// Found this by digging into the static object files, just looks like an older version of the "SDashWheel" obj, nothing special here
+typedef struct {
+    RSDK_OBJECT
+    uint16 aniFrames;
+    Hitbox hitbox;
+    TABLE(int32 heightArray[33], { 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 3, 3, 4, 4, 5, 6, 6, 7, 8, 9, 10, 11, 12, 14, 15, 17, 19, 22, 26 });
+    uint16 sfxBumper;
+} ObjectRollSwitch;
+
 // Object Class
 typedef struct {
     RSDK_OBJECT

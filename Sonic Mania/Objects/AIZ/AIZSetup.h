@@ -7,12 +7,12 @@
 typedef struct {
     RSDK_OBJECT
 #if RETRO_USE_PLUS
-    int32 aniTiles1[13];
-    int32 aniTiles2[12];
-    int32 aniTiles3[15];
-    int32 aniTiles4[14];
-    int32 aniTiles5[15];
-    int32 aniTiles6[14];
+    TABLE(int32 aniTiles1[13], { 0, 1, 2, 3, 4, 5, 6, 5, 4, 3, 2, 1, -1 });
+    TABLE(int32 aniTiles2[12], { 6, 4, 3, 2, 3, 4, 6, 4, 3, 2, 3, 4 });
+    TABLE(int32 aniTiles3[15], { 0, 1, 2, 3, 4, 5, 6, 7, 6, 5, 4, 3, 2, 1, -1 });
+    TABLE(int32 aniTiles4[14], { 30, 4, 3, 2, 3, 4, 6, 12, 6, 4, 3, 2, 3, 4 });
+    TABLE(int32 aniTiles5[15], { 7, 6, 5, 4, 3, 2, 1, 0, 1, 2, 3, 4, 5, 6, -1 });
+    TABLE(int32 aniTiles6[14], { 12, 6, 4, 3, 2, 3, 4, 30, 4, 3, 2, 3, 4, 6 });
 #endif
     bool32 cutsceneInit;
     int32 dword154;

@@ -157,33 +157,25 @@ inline void SetClipBounds(byte screenID, int x1, int y1, int x2, int y2)
     if (screenID < SCREEN_MAX) {
         screen = &screens[screenID];
 
-        if (x1 <= screen->width) {
+        if (x1 <= screen->width)
             screen->clipBound_X1 = x1 >= 0 ? x1 : 0;
-        }
-        else {
+        else
             screen->clipBound_X1 = screen->width;
-        }
 
-        if (y1 <= screen->height) {
+        if (y1 <= screen->height)
             screen->clipBound_Y1 = y1 >= 0 ? y1 : 0;
-        }
-        else {
+        else
             screen->clipBound_Y1 = screen->height;
-        }
 
-        if (x2 >= 0) {
+        if (x2 >= 0)
             screen->clipBound_X2 = x2 < screen->width ? x2 : screen->width;
-        }
-        else {
+        else
             screen->clipBound_X2 = 0;
-        }
 
-        if (y2 >= 0) {
+        if (y2 >= 0)
             screen->clipBound_Y2 = y2 < screen->height ? y2 : screen->height;
-        }
-        else {
+        else
             screen->clipBound_Y2 = 0;
-        }
     }
 }
 

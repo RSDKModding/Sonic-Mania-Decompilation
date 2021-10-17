@@ -7,18 +7,24 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    int32 rockPositions_small[8];
-    int32 rockSpeedsT_small[8];
-    int32 rockSpeedsL_small[8];
-    int32 rockSpeedsR_small[8];
-    int32 rockPositions_med[10];
-    int32 rockSpeedsT_med[10];
-    int32 rockSpeedsL_med[12];
-    int32 rockSpeedsR_med[12];
-    int32 rockPositions_large[16];
-    int32 rockSpeedsT_large[16];
-    int32 rockSpeedsL_large[16];
-    int32 rockSpeedsR_large[16];
+    TABLE(int32 rockPositions_small[8], { -0x40000, -0x40000, 0xC0000, -0x40000, -0xC0000, 0x40000, 0xC0000, 0x40000 });
+    TABLE(int32 rockSpeedsT_small[8], { -0x10000, -0x20000, 0x10000, -0x1E000, -0x1B000, -0x1C000, 0x1C000, -0x1C000 });
+    TABLE(int32 rockSpeedsL_small[8], { -0x30000, -0x30000, -0x2C000, -0x28000, -0x2C000, -0x28000, -0x28000, -0x20000 });
+    TABLE(int32 rockSpeedsR_small[8], { 0x2C000, -0x28000, 0x30000, -0x30000, 0x28000, -0x20000, 0x2C000, -0x28000 });
+    TABLE(int32 rockPositions_med[10], { -0x40000, -0xC0000, 0xB0000, -0xC0000, -0x40000, -0x40000, -0xC0000, 0xC0000, 0xC0000, 0xC0000 });
+    TABLE(int32 rockSpeedsT_med[10], { -0x30000, -0x30000, 0x2C000, -0x28000, -0x2C000, -0x28000, -0x28000, -0x20000, 0x28000, -0x18000 });
+    TABLE(int32 rockSpeedsL_med[12],
+          { -0x30000, -0x30000, -0x2C000, -0x28000, -0x2C000, -0x28000, -0x28000, -0x20000, -0x28000, -0x18000, -0x24000, -0x18000 });
+    TABLE(int32 rockSpeedsR_med[12],
+          { 0x2C000, -0x28000, 0x30000, -0x30000, 0x28000, -0x20000, 0x2C000, -0x28000, 0x24000, -0x18000, 0x28000, -0x18000 });
+    TABLE(int32 rockPositions_large[16], { -0x80000, -0x180000, 0xB0000, -0x1C0000, -0x40000, -0xC0000, 0xC0000, -0x40000, -0xC0000, 0x40000, 0x40000,
+                                           0xC0000, -0xC0000, 0x1C0000, 0xC0000, 0x1C0000 });
+    TABLE(int32 rockSpeedsT_large[16], { -0x30000, -0x30000, 0x2C000, -0x28000, -0x2C000, -0x28000, 0x28000, -0x20000, -0x28000, -0x18000, 0x24000,
+                                         -0x18000, -0x24000, -0x10000, 0x20000, -0x10000 });
+    TABLE(int32 rockSpeedsL_large[16], { -0x30000, -0x30000, -0x2C000, -0x28000, -0x2C000, -0x28000, -0x28000, -0x20000, -0x28000, -0x18000, -0x24000,
+                                         -0x18000, -0x24000, -0x10000, -0x20000, -0x10000 });
+    TABLE(int32 rockSpeedsR_large[16], { 0x2C000, -0x28000, 0x30000, -0x30000, 0x28000, -0x20000, 0x2C000, -0x28000, 0x24000, -0x18000, 0x28000,
+                                         -0x18000, 0x20000, -0x10000, 0x24000, -0x10000 });
     uint16 spriteIndex;
     uint16 sfx_Break;
 } ObjectAIZRockPile;
@@ -46,7 +52,7 @@ void AIZRockPile_Update(void);
 void AIZRockPile_LateUpdate(void);
 void AIZRockPile_StaticUpdate(void);
 void AIZRockPile_Draw(void);
-void AIZRockPile_Create(void* data);
+void AIZRockPile_Create(void *data);
 void AIZRockPile_StageLoad(void);
 void AIZRockPile_EditorDraw(void);
 void AIZRockPile_EditorLoad(void);
@@ -57,4 +63,4 @@ void AIZRockPile_SpawnRocks(int32 *speeds);
 
 #endif
 
-#endif //!OBJ_AIZROCKPILE_H
+#endif //! OBJ_AIZROCKPILE_H
