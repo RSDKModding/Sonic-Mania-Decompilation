@@ -695,14 +695,14 @@ void ItemBox_GivePowerup(void)
                                     }
                                     else {
                                         player2->state         = Player_State_JumpIn;
-                                        player2->abilityValue1 = ((RSDK_screens->position.y + RSDK_screens->height + 16) << 16) - player->position.y;
+                                        player2->abilityValues[0] = ((RSDK_screens->position.y + RSDK_screens->height + 16) << 16) - player->position.y;
                                         player2->drawFX |= FX_SCALE;
                                         player2->scale.x = 1024;
                                         player2->scale.y = 1024;
-                                        int32 spd          = player2->abilityValue1 / -12;
+                                        int32 spd          = player2->abilityValues[0] / -12;
                                         if (spd >= -0x68000 || spd > -0xE0000) {
                                             if (spd < -0x68000)
-                                                player2->velocity.y = player2->abilityValue1 / -12;
+                                                player2->velocity.y = player2->abilityValues[0] / -12;
                                             else
                                                 player2->velocity.y = -0x68000;
                                         }
@@ -710,8 +710,8 @@ void ItemBox_GivePowerup(void)
                                             player2->velocity.y = -0xE0000;
                                         }
                                     }
-                                    player2->entPtr     = dust;
-                                    player2->abilityValue1 = 0;
+                                    player2->abilityPtrs[0]   = dust;
+                                    player2->abilityValues[0] = 0;
                                     player2->nextAirState     = StateMachine_None;
                                     player2->nextGroundState  = StateMachine_None;
                                     player2->stateInput      = Player_ProcessP2InputLag;

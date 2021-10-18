@@ -113,14 +113,14 @@ void Press_StageLoad(void)
     Press->hitbox.right  = 112;
     Press->hitbox.bottom = 16;
 #if RETRO_USE_PLUS
-    Player->canSuper     = Press_SuperCheck;
+    Player->canSuperCB = Press_SuperCheckCB;
 #endif
     Press->impactSFX     = RSDK.GetSFX("Stage/Impact2.wav");
     Press->pressSFX      = RSDK.GetSFX("PSZ/Press.wav");
 }
 
 #if RETRO_USE_PLUS
-bool32 Press_SuperCheck(bool32 hud) { return Press->canSuper; }
+bool32 Press_SuperCheckCB(bool32 isHUD) { return Press->canSuper; }
 #endif
 
 void Press_DrawHandle(void)

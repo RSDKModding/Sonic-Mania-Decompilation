@@ -223,8 +223,8 @@ void HUD_Draw(void)
         lifePos.x -= 0x140000;
         bool32 flag = true;
 #if RETRO_USE_PLUS
-        if (Player->canSuper)
-            flag = Player->canSuper(1);
+        if (Player->canSuperCB)
+            flag = Player->canSuperCB(true);
 #endif
         if (player->state == Player_State_Air && player->jumpAbilityTimer == 1 && flag) {
             RSDK.DrawSprite(&entity->superButtonData1, &lifePos, true);
@@ -279,7 +279,7 @@ void HUD_Draw(void)
             entity->lifeIconsData.frameID = id;
             if (id >= 0 && !(HUD->stockFlashTimers[0] & 4)) {
                 if ((sidekick->state != Player_State_Die && sidekick->state != Player_State_Drown && sidekick->state != Player_State_EncoreRespawn)
-                    || !sidekick->abilityValue1) {
+                    || !sidekick->abilityValues[0]) {
                     RSDK.DrawSprite(&entity->lifeIconsData, &lifePos, true);
                 }
             }

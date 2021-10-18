@@ -183,8 +183,8 @@ void ReplayRecorder_StageLoad(void)
             EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
             if (param->viewReplay && buffer[3]) {
                 if (param->showGhost) {
-                    globals->playerID         = (globals->playerID & 0xFF) | ((globals->playerID & 0xFF) << 8);
-                    Player->configureGhost_CB = ReplayRecorder_ConfigureGhost_CB;
+                    globals->playerID        = (globals->playerID & 0xFF) | ((globals->playerID & 0xFF) << 8);
+                    Player->configureGhostCB = ReplayRecorder_ConfigureGhost_CB;
                 }
                 else {
                     globals->playerID &= 0xFF;
@@ -546,9 +546,9 @@ void ReplayRecorder_SetupActions(void)
     ReplayRecorder->actions[8]  = Cylinder_Player_State_Unknown3;
     ReplayRecorder->actions[9]  = Cylinder_Player_State_Unknown4;
     ReplayRecorder->actions[10] = Cylinder_Player_State_Unknown1;
-    ReplayRecorder->actions[13] = StateMachine_None; // GymBar_Unknown6;
-    ReplayRecorder->actions[14] = StateMachine_None; // GymBar_Unknown5;
-    ReplayRecorder->actions[15] = StateMachine_None; // GymBar_Unknown7;
+    ReplayRecorder->actions[13] = GymBar_PlayerState_Hang;
+    ReplayRecorder->actions[14] = GymBar_PlayerState_SwingV;
+    ReplayRecorder->actions[15] = GymBar_PlayerState_SwingH;
     ReplayRecorder->actions[16] = Ice_State_FrozenPlayer;
     ReplayRecorder->actions[17] = OOZSetup_PlayerState_OilFall;
     ReplayRecorder->actions[18] = OOZSetup_PlayerState_OilPool;
@@ -583,7 +583,7 @@ void ReplayRecorder_SetupActions(void)
     ReplayRecorder->actions[47] = Player_ForceSuperTransform;
     ReplayRecorder->actions[48] = Player_State_None;
     ReplayRecorder->actions[49] = Player_State_Transform;
-    ReplayRecorder->actions[50] = Player_Unknown7;
+    ReplayRecorder->actions[50] = Player_State_TransportTube;
     ReplayRecorder->actions[51] = Player_State_ForceRoll_Air;
     ReplayRecorder->actions[52] = Player_State_ForceRoll_Ground;
     ReplayRecorder->actions[53] = Player_State_Victory;
@@ -1180,7 +1180,7 @@ void ReplayRecorder_RecordFrameData(void)
         bool32 isGimmickState = ReplayRecorder_CheckPlayerGimmickState(entity);
         entity->stateStore    = player->state;
 
-        EntityIce *entPtr  = player->field_218;
+        EntityIce *entPtr  = player->abilityPtrs[1];
         Animator *animator = &player->playerAnimator;
         if (isGimmickState && RSDK.CheckStageFolder("PSZ2") && player->state == Ice_State_FrozenPlayer && entPtr->objectID == Ice->objectID) {
             animator = &entPtr->animator2;

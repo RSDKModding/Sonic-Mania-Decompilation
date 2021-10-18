@@ -111,7 +111,7 @@ void TwistedTubes_HandleInteractions(void)
 
     foreach_active(Player, player)
     {
-        if (player->state != Player_Unknown7) {
+        if (player->state != Player_State_TransportTube) {
             Player_CheckCollisionBox(player, entity, &TwistedTubes->hitbox1);
             int32 pID = RSDK.GetEntityID(player);
 
@@ -130,7 +130,7 @@ void TwistedTubes_HandleInteractions(void)
             }
 
             if (flag) {
-                player->state                  = Player_Unknown7;
+                player->state                  = Player_State_TransportTube;
                 player->drawOrder              = 1;
                 player->interaction            = false;
                 player->tileCollisions         = false;

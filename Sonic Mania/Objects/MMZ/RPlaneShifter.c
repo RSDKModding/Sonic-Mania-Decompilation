@@ -169,8 +169,8 @@ void RPlaneShifter_Unknown3(void)
                     entity->state = RPlaneShifter_Unknown4;
                 }
                 else {
-                    player->abilityValue1 = player->left;
-                    player->abilityValue2 = player->right;
+                    player->abilityValues[0] = player->left;
+                    player->abilityValues[1] = player->right;
                 }
             }
         }
@@ -182,18 +182,18 @@ void RPlaneShifter_Unknown3(void)
                     entity->activePlayers2 &= ~(1 << playerID);
                     Player_StartJump(player);
                 }
-                if (!player->abilityValue1 && player->left) {
+                if (!player->abilityValues[0] && player->left) {
                     entity->activePlayers1 &= ~(1 << playerID);
                     entity->activePlayers2 &= ~(1 << playerID);
                     player->state = Player_State_Ground;
                 }
-                if (!player->abilityValue2 && player->right) {
+                if (!player->abilityValues[1] && player->right) {
                     entity->activePlayers1 &= ~(1 << playerID);
                     entity->activePlayers2 &= ~(1 << playerID);
                     player->state = Player_State_Ground;
                 }
-                player->abilityValue1 = player->left;
-                player->abilityValue2 = player->right;
+                player->abilityValues[0] = player->left;
+                player->abilityValues[1] = player->right;
             }
         }
 

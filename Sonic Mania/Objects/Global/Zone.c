@@ -963,22 +963,10 @@ void Zone_Unknown19(void)
             playerPtr->nextGroundState = player->nextGroundState;
             playerPtr->onGround        = player->onGround;
             playerPtr->groundedStore   = player->groundedStore;
-            playerPtr->abilityValue1   = player->abilityValue1;
-            playerPtr->entPtr          = player->entPtr;
-            playerPtr->abilityValue2   = player->abilityValue2;
-            playerPtr->field_218       = player->field_218;
-            playerPtr->field_1FC       = player->field_1FC;
-            playerPtr->field_21C       = player->field_21C;
-            playerPtr->field_200       = player->field_200;
-            playerPtr->field_220       = player->field_220;
-            playerPtr->field_204       = player->field_204;
-            playerPtr->field_224       = player->field_224;
-            playerPtr->field_208       = player->field_208;
-            playerPtr->field_228       = player->field_228;
-            playerPtr->field_20C       = player->field_20C;
-            playerPtr->field_22C       = player->field_22C;
-            playerPtr->field_210       = player->field_210;
-            playerPtr->field_230       = player->field_230;
+            for (int i = 0; i < 8; ++i) {
+                playerPtr->abilityValues[i] = player->abilityValues[i];
+                playerPtr->abilityPtrs[i]   = player->abilityPtrs[i];
+            }
             playerPtr->angle           = player->angle;
             playerPtr->rotation        = player->rotation;
             playerPtr->direction       = player->direction;

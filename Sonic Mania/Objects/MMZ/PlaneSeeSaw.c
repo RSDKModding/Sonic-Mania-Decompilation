@@ -147,7 +147,7 @@ void PlaneSeeSaw_State_Launch(void)
                     player->state      = PlaneSeeSaw_PlayerState_ToBG;
                     player->velocity.y = -0xA0000;
                 }
-                player->abilityValue1    = entity->position.x;
+                player->abilityValues[0]    = entity->position.x;
                 player->nextAirState     = StateMachine_None;
                 player->nextGroundState  = StateMachine_None;
                 player->interaction      = false;
@@ -172,8 +172,8 @@ void PlaneSeeSaw_PlayerState_ToBG(void)
     EntityPlayer *entity = RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot, Player);
     entity->left         = false;
     entity->right        = false;
-    if (((entity->abilityValue1 ^ entity->position.x) & 0xFFFF0000)) {
-        if (entity->position.x <= entity->abilityValue1)
+    if (((entity->abilityValues[0] ^ entity->position.x) & 0xFFFF0000)) {
+        if (entity->position.x <= entity->abilityValues[0])
             entity->position.x += 0x8000;
         else
             entity->position.x -= 0x8000;
@@ -211,8 +211,8 @@ void PlaneSeeSaw_PlayerState_ToFG(void)
 
     entity->left  = false;
     entity->right = false;
-    if (((entity->abilityValue1 ^ entity->position.x) & 0xFFFF0000)) {
-        if (entity->position.x <= entity->abilityValue1)
+    if (((entity->abilityValues[0] ^ entity->position.x) & 0xFFFF0000)) {
+        if (entity->position.x <= entity->abilityValues[0])
             entity->position.x += 0x8000;
         else
             entity->position.x -= 0x8000;

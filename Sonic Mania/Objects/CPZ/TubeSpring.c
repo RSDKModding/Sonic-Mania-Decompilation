@@ -93,7 +93,7 @@ bool32 TubeSpring_Spring(bool32 interact)
             }
 
             sprung = true;
-            if (player->state == Player_State_None || player->state == Player_Unknown7) {
+            if (player->state == Player_State_None || player->state == Player_State_TransportTube) {
                 player->drawOrder      = Zone->playerDrawLow;
                 player->tileCollisions = true;
                 player->interaction    = true;

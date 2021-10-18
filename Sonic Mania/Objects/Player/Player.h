@@ -171,7 +171,7 @@ typedef struct {
     int32 P2JumpActionDelay;
     int32 jumpInDelay;
     int32 p2InputDelay;
-    int32 field_9EC;
+    bool32 disableP2KeyCheck;
     int32 rings;
     STATIC(int32 ringExtraLife, 100);
     int32 powerups;
@@ -215,8 +215,8 @@ typedef struct {
     int32 raySwoopTimer;
     int32 rayDiveTimer;
     bool32 gotHit[4];
-    void (*configureGhost_CB)(void);
-    bool32 (*canSuper)(bool32);
+    StateMachine(configureGhostCB);
+    bool32 (*canSuperCB)(bool32 isHUD);
     int32 superDashCooldown;
 } ObjectPlayer;
 #else
@@ -348,7 +348,7 @@ typedef struct {
     int32 scrollDelay;
     int32 skidding;
     int32 pushing;
-    int32 underwater;        // 0 = not in water, 1 = in palette water, else water entityID
+    int32 underwater;      // 0 = not in water, 1 = in palette water, else water entityID
     bool32 groundedStore;  // stored grounded state
     bool32 invertGravity;  // FBZ magnet flip
     bool32 isChibi;        // MMZ Chibi form flag
@@ -400,24 +400,9 @@ typedef struct {
 #if RETRO_USE_PLUS
     bool32 isGhost;
 #endif
-    int32 abilityValue1;
-    int32 abilityValue2;
-    int32 field_1FC;
-    int32 field_200;
-    int32 field_204;
-    int32 field_208;
-    int32 field_20C;
-    int32 field_210;
-    void *entPtr;
-    void* field_218;
-    int32 field_21C;
+    int32 abilityValues[8];
+    void* abilityPtrs[8];
 #if RETRO_USE_PLUS
-    int32 field_220;
-    int32 field_224;
-    int32 field_228;
-    int32 field_22C;
-    int32 field_22F;
-    int32 field_230;
     int32 uncurlTimer;
 #endif
 #if RETRO_USE_TOUCH_CONTROLS
@@ -433,7 +418,7 @@ void Player_Update(void);
 void Player_LateUpdate(void);
 void Player_StaticUpdate(void);
 void Player_Draw(void);
-void Player_Create(void* data);
+void Player_Create(void *data);
 void Player_StageLoad(void);
 void Player_EditorDraw(void);
 void Player_EditorLoad(void);
@@ -466,7 +451,7 @@ EntityPlayer *Player_Unknown3(void);
 void Player_Unknown4(void);
 #endif
 void Player_Unknown5(EntityPlayer *player);
-void Player_Unknown7(void);
+void Player_State_TransportTube(void);
 void Player_HandleDeath(EntityPlayer *player);
 void Player_ResetState(EntityPlayer *player);
 
@@ -484,7 +469,7 @@ bool32 Player_CheckBossHit(EntityPlayer *player, void *entity);
 bool32 Player_CheckProjectileHit(EntityPlayer *player, void *projectile);
 bool32 Player_CheckHit2(EntityPlayer *player, void *entity, bool32 flag);
 
-//State helpers
+// State helpers
 void Player_ChangePhysicsState(EntityPlayer *entity);
 void Player_HandleGroundMovement(void);
 void Player_HandleGroundRotation(void);
@@ -501,7 +486,7 @@ void Player_CheckStartFlyCarry(EntityPlayer *player);
 void Player_P2JumpBackIn(void);
 void Player_ForceSuperTransform(void);
 
-//States
+// States
 void Player_State_None(void);
 void Player_State_Ground(void);
 void Player_State_Air(void);
@@ -556,7 +541,7 @@ void Player_UpdateRayDiveSFX(int32 sfxID);
 void Player_UpdateRaySwoopSFX(int32 sfxID);
 #endif
 
-//Input States
+// Input States
 void Player_ProcessP1Input(void);
 void Player_ProcessP2InputLag(void);
 void Player_ProcessP2Input_AI(void);
@@ -564,4 +549,4 @@ void Player_ProcessP2Input_None(void);
 void Player_ProcessP2Input_Unknown(void);
 void Player_ProcessP2Input_Player(void);
 
-#endif //!OBJ_PLAYER_H
+#endif //! OBJ_PLAYER_H

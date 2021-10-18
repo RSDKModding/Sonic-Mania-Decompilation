@@ -339,8 +339,8 @@ void Ice_FreezePlayer(void *p)
         player->state                         = Ice_State_FrozenPlayer;
         player->velocity.y                    = 0;
         RSDK.SetSpriteAnimation(player->spriteIndex, ANI_JUMP, &player->playerAnimator, false, 0);
-        player->entPtr    = (Entity *)entity;
-        player->field_218 = ice;
+        player->abilityPtrs[0] = entity;
+        player->abilityPtrs[1] = ice;
         if (!entity->collisionMode) {
             player->position.y += Player_GetHitbox(player)->bottom - Ice->hitbox2.bottom;
         }

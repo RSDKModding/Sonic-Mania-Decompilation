@@ -385,15 +385,15 @@ void Water_State_Palette(void)
     for (int32 p = 0; p < Player->playerCount; ++p) {
         EntityPlayer *player = RSDK_GET_ENTITY(p, Player);
 
-        if (player->state == Player_State_FlyIn && player->entPtr) {
-            player->position.x = ((Entity *)player->entPtr)->position.x;
-            player->position.y = ((Entity *)player->entPtr)->position.y;
+        if (player->state == Player_State_FlyIn && player->abilityPtrs[0]) {
+            player->position.x = ((Entity *)player->abilityPtrs[0])->position.x;
+            player->position.y = ((Entity *)player->abilityPtrs[0])->position.y;
         }
 
         Water->wakePosX[p] = 0;
 
         bool32 loopFlag = true;
-        if (!Player_CheckValidState(player) || player->state == Player_Unknown7) {
+        if (!Player_CheckValidState(player) || player->state == Player_State_TransportTube) {
             if (player->state != Player_State_FlyIn)
                 loopFlag = false;
         }
@@ -548,7 +548,7 @@ void Water_State_Palette(void)
                                 globals->gameMode == MODE_ENCORE || 
 #endif
                                 globals->gameMode == MODE_COMPETITION)
-                                RSDK.PlaySfx(Water->sfx_DrownAlert, 0, 255);
+                                RSDK.PlaySfx(Water->sfx_DrownAlert, false, 255);
                         }
                     }
                 }
@@ -556,7 +556,7 @@ void Water_State_Palette(void)
         }
 
         if (entity->state == Player_State_FlyIn) {
-            if (player->entPtr) {
+            if (player->abilityPtrs[0]) {
                 entity->position.x = player->position.x;
                 entity->position.y = player->position.y;
             }

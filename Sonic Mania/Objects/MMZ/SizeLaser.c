@@ -214,32 +214,32 @@ void SizeLaser_P2JumpInResize(void)
     entity->position.x = player1->position.x;
     entity->position.y = player1->position.y;
 
-    entity->position.x += entity->abilityValue1;
-    entity->position.y += entity->abilityValue2;
-    if (entity->abilityValue1 <= 0) {
-        if (entity->abilityValue1 < 0) {
-            entity->abilityValue1 -= (entity->abilityValue1 >> 4);
-            if (entity->abilityValue1 > 0)
-                entity->abilityValue1 = 0;
+    entity->position.x += entity->abilityValues[0];
+    entity->position.y += entity->abilityValues[1];
+    if (entity->abilityValues[0] <= 0) {
+        if (entity->abilityValues[0] < 0) {
+            entity->abilityValues[0] -= (entity->abilityValues[0] >> 4);
+            if (entity->abilityValues[0] > 0)
+                entity->abilityValues[0] = 0;
         }
     }
     else {
-        entity->abilityValue1 -= (entity->abilityValue1 >> 4);
-        if (entity->abilityValue1 < 0)
-            entity->abilityValue1 = 0;
+        entity->abilityValues[0] -= (entity->abilityValues[0] >> 4);
+        if (entity->abilityValues[0] < 0)
+            entity->abilityValues[0] = 0;
     }
 
-    if (entity->abilityValue2 <= 0) {
-        if (entity->abilityValue2 < 0) {
-            entity->abilityValue2 -= (entity->abilityValue1 >> 4);
-            if (entity->abilityValue2 > 0)
-                entity->abilityValue2 = 0;
+    if (entity->abilityValues[1] <= 0) {
+        if (entity->abilityValues[1] < 0) {
+            entity->abilityValues[1] -= (entity->abilityValues[0] >> 4);
+            if (entity->abilityValues[1] > 0)
+                entity->abilityValues[1] = 0;
         }
     }
     else {
-        entity->abilityValue2 -= (entity->abilityValue1 >> 4);
-        if (entity->abilityValue2 < 0)
-            entity->abilityValue2 = 0;
+        entity->abilityValues[1] -= (entity->abilityValues[0] >> 4);
+        if (entity->abilityValues[1] < 0)
+            entity->abilityValues[1] = 0;
     }
 
     if (player1->state == SizeLaser_P2JumpInShrink) {
@@ -257,7 +257,7 @@ void SizeLaser_P2JumpInResize(void)
 void SizeLaser_P2JumpInGrow(void)
 {
     EntityPlayer *entity = RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot, Player);
-    void (*state)(void)  = entity->entPtr;
+    StateMachine(state)  = entity->abilityPtrs[0];
     StateMachine_Run(state);
 
     if (entity->scale.x >= 0x200) {
@@ -283,7 +283,7 @@ void SizeLaser_P2JumpInGrow(void)
 void SizeLaser_P2JumpInShrink(void)
 {
     EntityPlayer *entity = RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot, Player);
-    void (*state)(void)  = entity->entPtr;
+    StateMachine(state)  = entity->abilityPtrs[0];
     StateMachine_Run(state);
 
     if (entity->scale.x <= 0x140) {
@@ -332,7 +332,7 @@ void SizeLaser_PlayerState_Grow(void)
 {
     EntityPlayer *entity = RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot, Player);
 
-    void (*state)(void) = entity->entPtr;
+    StateMachine(state) = entity->abilityPtrs[0];
     StateMachine_Run(state);
 
     if (entity->scale.x >= 0x300) {
@@ -427,8 +427,8 @@ void SizeLaser_Unknown3(void)
                         player->scale.y        = 0x200;
                         player->tileCollisions = true;
                         RSDK.SetSpriteAnimation(player->spriteIndex, ANI_HURT, &player->playerAnimator, false, 0);
-                        player->entPtr = Player_State_Hit;
-                        player->state  = SizeLaser_PlayerState_Grow;
+                        player->abilityPtrs[0] = Player_State_Hit;
+                        player->state          = SizeLaser_PlayerState_Grow;
                     }
                 }
                 else {
@@ -472,9 +472,9 @@ void SizeLaser_Unknown3(void)
                             break;
                     }
                     RSDK.SetSpriteAnimation(player->spriteIndex, ANI_HURT, &player->playerAnimator, false, 0);
-                    RSDK.PlaySfx(SizeLaser->sfxGrow2, 0, 255);
+                    RSDK.PlaySfx(SizeLaser->sfxGrow2, false, 255);
                     player->tileCollisions = true;
-                    player->entPtr         = Player_State_Hit;
+                    player->abilityPtrs[0] = Player_State_Hit;
                     player->state          = SizeLaser_P2JumpInGrow;
                 }
             }
@@ -494,7 +494,7 @@ void SizeLaser_Unknown3(void)
                 RSDK.SetSpriteAnimation(player->spriteIndex, ANI_HURT, &player->playerAnimator, false, 0);
                 RSDK.PlaySfx(SizeLaser->sfxShrink2, 0, 255);
                 player->tileCollisions = true;
-                player->entPtr         = Player_State_Hit;
+                player->abilityPtrs[0] = Player_State_Hit;
                 player->state          = SizeLaser_P2JumpInShrink;
             }
         }

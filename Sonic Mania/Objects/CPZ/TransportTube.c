@@ -93,7 +93,7 @@ void TransportTube_State_Type0(void)
             if (rx * rx + ry * ry >= 192)
                 entity->playerTimers[i]--;
         }
-        else if (player->state == Player_Unknown7 && !TransportTube->field_4[i] && rx * rx + ry * ry < 192) {
+        else if (player->state == Player_State_TransportTube && !TransportTube->field_4[i] && rx * rx + ry * ry < 192) {
             TransportTube_Unknown2(rx - (player->velocity.x >> 16), ry - (player->velocity.y >> 16));
             player->position.x  = entity->position.x;
             player->position.y  = entity->position.y;
@@ -120,7 +120,7 @@ void TransportTube_State_Type1(void)
             else if (rx * rx + ry * ry < 192) {
                 player->position.x = entity->position.x;
                 player->position.y = entity->position.y;
-                if (player->state == Player_Unknown7) {
+                if (player->state == Player_State_TransportTube) {
                     player->drawOrder      = Zone->playerDrawLow;
                     player->tileCollisions = true;
                     player->interaction    = true;
@@ -137,7 +137,7 @@ void TransportTube_State_Type1(void)
                     player->onGround          = false;
                     player->tileCollisions    = false;
                     player->interaction       = false;
-                    player->state             = Player_Unknown7;
+                    player->state             = Player_State_TransportTube;
                     player->nextAirState      = StateMachine_None;
                     player->nextGroundState   = StateMachine_None;
                     TransportTube->field_4[i] = 0;
@@ -162,7 +162,7 @@ void TransportTube_State_Type23(void)
             if (rx * rx + ry * ry >= 192)
                 --entity->playerTimers[i];
         }
-        else if (player->state == Player_Unknown7 && rx * rx + ry * ry < 192) {
+        else if (player->state == Player_State_TransportTube && rx * rx + ry * ry < 192) {
             if (entity->players[i]) {
                 TransportTube->field_4[i] = 0;
                 entity->players[i]     = NULL;
@@ -191,7 +191,7 @@ void TransportTube_State_Type4(void)
     for (int32 i = 0; i < Player->playerCount; ++i) {
         EntityPlayer *player = entity->players[i];
         if (player) {
-            if (player->state == Player_Unknown7) {
+            if (player->state == Player_State_TransportTube) {
                 int32 rx = (player->position.x - entity->position.x) >> 16;
                 int32 ry = (player->position.y - entity->position.y) >> 16;
                 if (rx * rx + ry * ry < 192) {
@@ -225,7 +225,7 @@ void TransportTube_State_Type5(void)
             if (rx * rx + ry * ry >= 192)
                 --entity->playerTimers[i];
         }
-        else if (player->state == Player_Unknown7 && rx * rx + ry * ry < 192) {
+        else if (player->state == Player_State_TransportTube && rx * rx + ry * ry < 192) {
             player->position.x = entity->position.x;
             player->position.y = entity->position.y;
             player->velocity.x = 0;

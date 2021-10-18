@@ -5,12 +5,21 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    uint16 aniFrames;
+    uint16 sfxFlop;
+    uint16 sfxZap;
 } ObjectFlasherMKII;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    StateMachine(state);
+    uint8 orientation;
+    int32 type;
+    int32 timer;
+    Vector2 startPos;
+    Animator animator;
 } EntityFlasherMKII;
 
 // Object Struct
@@ -28,6 +37,18 @@ void FlasherMKII_EditorLoad(void);
 void FlasherMKII_Serialize(void);
 
 // Extra Entity Functions
+void FlasherMKII_DebugSpawn(void);
+void FlasherMKII_DebugDraw(void);
 
+void FlasherMKII_CheckOnScreen(void);
+
+void FlasherMKII_HandlePlayerCollisions(void);
+void FlasherMKII_HandleHarmPlayerCollisions(void);
+
+void FlasherMKII_State_Unknown1(void);
+void FlasherMKII_State_Unknown2(void);
+void FlasherMKII_State_Unknown3(void);
+void FlasherMKII_State_Unknown4(void);
+void FlasherMKII_State_Unknown5(void);
 
 #endif //!OBJ_FLASHERMKII_H
