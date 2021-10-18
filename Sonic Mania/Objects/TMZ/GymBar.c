@@ -140,14 +140,17 @@ void GymBar_HandlePlayerInteractions(void)
                             player->state                         = GymBar_PlayerState_SwingV;
                         }
                     }
-                    entity->playerTimers[playerID] = 16;
-                    RSDK.PlaySfx(Player->sfx_Grab, false, 255);
-                    player->nextAirState    = StateMachine_None;
-                    player->nextGroundState = StateMachine_None;
-                    player->velocity.x      = 0;
-                    player->velocity.y      = 0;
-                    player->groundVel       = 0;
-                    player->jumpAbility     = 0;
+                    if (player->state == GymBar_PlayerState_Hang || player->state == GymBar_PlayerState_SwingH
+                        || player->state == GymBar_PlayerState_SwingV) {
+                        entity->playerTimers[playerID] = 16;
+                        RSDK.PlaySfx(Player->sfx_Grab, false, 255);
+                        player->nextAirState    = StateMachine_None;
+                        player->nextGroundState = StateMachine_None;
+                        player->velocity.x      = 0;
+                        player->velocity.y      = 0;
+                        player->groundVel       = 0;
+                        player->jumpAbility     = 0;
+                    }
                 }
             }
             else if (entity->playerTimers[playerID])

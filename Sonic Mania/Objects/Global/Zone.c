@@ -590,14 +590,14 @@ void Zone_StartFadeOut(int32 fadeSpeed, int32 fadeColour)
     zone->drawOrder  = DRAWLAYER_COUNT - 1;
 }
 
-void Zone_StartFadeOutRestart(void)
+void Zone_StartFadeIn(int32 fadeSpeed, int32 fadeColour)
 {
-    EntityZone *zone  = RSDK_GET_ENTITY(SLOT_ZONE, Zone);
-    zone->timer     = 640;
-    zone->fadeSpeed = 10;
+    EntityZone *zone = RSDK_GET_ENTITY(SLOT_ZONE, Zone);
+    zone->fadeColour = fadeColour;
+    zone->fadeSpeed  = fadeSpeed;
     zone->screenID   = PLAYER_MAX;
-    zone->timer      = 0;
-    zone->state      = Zone_State_Fadeout_Restart;
+    zone->timer      = 640;
+    zone->state      = Zone_State_FadeIn;
     zone->stateDraw  = Zone_StateDraw_Fadeout;
     zone->visible    = true;
     zone->drawOrder  = DRAWLAYER_COUNT - 1;
@@ -820,7 +820,7 @@ void Zone_State_Fadeout(void)
     }
 }
 
-void Zone_State_Fadeout_Restart(void)
+void Zone_State_FadeIn(void)
 {
     RSDK_THIS(Zone);
     RSDK_sceneInfo->timeEnabled = true;

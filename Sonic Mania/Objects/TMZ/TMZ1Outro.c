@@ -53,13 +53,13 @@ bool32 TMZ1Outro_Cutscene1_State1(EntityCutsceneSeq *host)
 bool32 TMZ1Outro_Cutscene1_State2(EntityCutsceneSeq *host)
 {
     if (host->timer == 120) {
-        // CrimsonEye_Unknown5(4);
+        CrimsonEye_SetArrowDir(CE_ARROW_UP);
         RSDK.PlaySfx(CrimsonEye->sfxBeep, false, 255);
     }
 
     if (host->timer == 160) {
         Camera_ShakeScreen(0, 0, 6);
-        CrimsonEye->value13                = -0x10000;
+        CrimsonEye->scrollLimit            = -0x10000;
         TileLayer *moveLayer               = RSDK.GetSceneLayer(Zone->moveLayer);
         moveLayer->drawLayer[0]            = 0;
         moveLayer->scrollPos               = 0x5000000;
@@ -71,19 +71,19 @@ bool32 TMZ1Outro_Cutscene1_State2(EntityCutsceneSeq *host)
         RSDK.PlaySfx(CrimsonEye->sfxElevator, false, 255);
 
     if (host->timer > 200) {
-        if (CrimsonEye->value13) {
+        if (CrimsonEye->scrollLimit) {
             if (RSDK.GetSceneLayer(Zone->moveLayer)->scrollPos < 0x2300000)
-                CrimsonEye->value13 = 0;
+                CrimsonEye->scrollLimit = 0;
         }
-        else if (!CrimsonEye->value12) {
+        else if (!CrimsonEye->scrollPos) {
             Camera_ShakeScreen(0, 0, 6);
             RSDK.PlaySfx(CrimsonEye->sfxHullClose, false, 255);
             return true;
         }
     }
 
-    foreach_active(ItemBox, itembox) { itembox->position.y -= CrimsonEye->value13; }
-    foreach_active(SignPost, signPost) { signPost->position.y -= CrimsonEye->value13; }
+    foreach_active(ItemBox, itembox) { itembox->position.y -= CrimsonEye->scrollLimit; }
+    foreach_active(SignPost, signPost) { signPost->position.y -= CrimsonEye->scrollLimit; }
 
     return false;
 }
@@ -92,7 +92,7 @@ bool32 TMZ1Outro_Cutscene1_State3(EntityCutsceneSeq *host)
 {
     RSDK_THIS(TMZ1Outro);
 
-    if (host->timer == 30) {
+    if (host->timer >= 30) {
         bool32 flag = true;
         foreach_active(Player, player)
         {

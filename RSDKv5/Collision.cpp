@@ -24,7 +24,7 @@ bool32 showHitboxes = false;
 int debugHitboxCount = 0;
 DebugHitboxInfo debugHitboxList[DEBUG_HITBOX_MAX];
 
-int addDebugHitbox(byte type, Entity *entity, Hitbox *hitbox)
+int addDebugHitbox(byte type, byte dir, Entity *entity, Hitbox *hitbox)
 {
     int i = 0;
     int entityID = GetEntityID((EntityBase *)entity);
@@ -47,6 +47,17 @@ int addDebugHitbox(byte type, Entity *entity, Hitbox *hitbox)
         debugHitboxList[i].hitbox.bottom = hitbox->bottom;
         debugHitboxList[i].pos.x         = entity->position.x;
         debugHitboxList[i].pos.y         = entity->position.y;
+
+        if ((dir & FLIP_X) == FLIP_X) {
+            int store                       = -debugHitboxList[i].hitbox.left;
+            debugHitboxList[i].hitbox.left  = -debugHitboxList[i].hitbox.right;
+            debugHitboxList[i].hitbox.right = store;
+        }
+        if ((dir & FLIP_Y) == FLIP_Y) {
+            int store                        = -debugHitboxList[i].hitbox.top;
+            debugHitboxList[i].hitbox.top    = -debugHitboxList[i].hitbox.bottom;
+            debugHitboxList[i].hitbox.bottom = store;
+        }
 
         int id = debugHitboxCount;
         debugHitboxCount++;
@@ -110,8 +121,8 @@ bool32 CheckObjectCollisionTouch(Entity *thisEntity, Hitbox *thisHitbox, Entity 
 
 #if !RETRO_USE_ORIGINAL_CODE
     if (showHitboxes) {
-        int thisHitboxID  = addDebugHitbox(H_TYPE_TOUCH, thisEntity, thisHitbox);
-        int otherHitboxID = addDebugHitbox(H_TYPE_TOUCH, otherEntity, otherHitbox);
+        int thisHitboxID  = addDebugHitbox(H_TYPE_TOUCH, thisEntity->direction, thisEntity, thisHitbox);
+        int otherHitboxID = addDebugHitbox(H_TYPE_TOUCH, thisEntity->direction, otherEntity, otherHitbox);
 
         if (thisHitboxID >= 0 && collided)
             debugHitboxList[thisHitboxID].collision |= 1 << (collided - 1);
@@ -239,8 +250,8 @@ byte CheckObjectCollisionBox(Entity *thisEntity, Hitbox *thisHitbox, Entity *oth
 
 #if !RETRO_USE_ORIGINAL_CODE
             if (showHitboxes) {
-                int thisHitboxID  = addDebugHitbox(H_TYPE_BOX, thisEntity, thisHitbox);
-                int otherHitboxID = addDebugHitbox(H_TYPE_BOX, otherEntity, otherHitbox);
+                int thisHitboxID  = addDebugHitbox(H_TYPE_BOX, thisEntity->direction, thisEntity, thisHitbox);
+                int otherHitboxID = addDebugHitbox(H_TYPE_BOX, thisEntity->direction, otherEntity, otherHitbox);
 
                 if (thisHitboxID >= 0 && collisionResultY)
                     debugHitboxList[thisHitboxID].collision |= 1 << (collisionResultY - 1);
@@ -272,8 +283,8 @@ byte CheckObjectCollisionBox(Entity *thisEntity, Hitbox *thisHitbox, Entity *oth
 
 #if !RETRO_USE_ORIGINAL_CODE
             if (showHitboxes) {
-                int thisHitboxID  = addDebugHitbox(H_TYPE_BOX, thisEntity, thisHitbox);
-                int otherHitboxID = addDebugHitbox(H_TYPE_BOX, otherEntity, otherHitbox);
+                int thisHitboxID  = addDebugHitbox(H_TYPE_BOX, thisEntity->direction, thisEntity, thisHitbox);
+                int otherHitboxID = addDebugHitbox(H_TYPE_BOX, thisEntity->direction, otherEntity, otherHitbox);
 
                 if (thisHitboxID >= 0 && collisionResultX)
                     debugHitboxList[thisHitboxID].collision |= 1 << (collisionResultX - 1);
@@ -288,8 +299,8 @@ byte CheckObjectCollisionBox(Entity *thisEntity, Hitbox *thisHitbox, Entity *oth
 
 #if !RETRO_USE_ORIGINAL_CODE
     if (showHitboxes) {
-        addDebugHitbox(H_TYPE_BOX, thisEntity, thisHitbox);
-        addDebugHitbox(H_TYPE_BOX, otherEntity, otherHitbox);
+        addDebugHitbox(H_TYPE_BOX, thisEntity->direction, thisEntity, thisHitbox);
+        addDebugHitbox(H_TYPE_BOX, thisEntity->direction, otherEntity, otherHitbox);
     }
 #endif
     return 0;
@@ -364,8 +375,8 @@ bool32 CheckObjectCollisionPlatform(Entity *thisEntity, Hitbox *thisHitbox, Enti
 
 #if !RETRO_USE_ORIGINAL_CODE
     if (showHitboxes) {
-        int thisHitboxID  = addDebugHitbox(H_TYPE_PLAT, thisEntity, thisHitbox);
-        int otherHitboxID = addDebugHitbox(H_TYPE_PLAT, otherEntity, otherHitbox);
+        int thisHitboxID  = addDebugHitbox(H_TYPE_PLAT, thisEntity->direction, thisEntity, thisHitbox);
+        int otherHitboxID = addDebugHitbox(H_TYPE_PLAT, thisEntity->direction, otherEntity, otherHitbox);
 
         if (thisHitboxID >= 0 && collided)
             debugHitboxList[thisHitboxID].collision |= 1 << 0;

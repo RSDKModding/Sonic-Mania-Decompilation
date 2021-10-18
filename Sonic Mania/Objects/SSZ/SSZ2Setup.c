@@ -53,7 +53,7 @@ void SSZ2Setup_StageLoad(void)
         RSDK.SetLimitedFade(3, 0, 4, 96, 0, 256);
         if (globals->suppressTitlecard >= true) {
             SaveGame_LoadPlayerState();
-            Zone_StartFadeOut(10, 0x000000);
+            Zone_StartFadeIn(10, 0x000000);
         }
         RSDK.CreateEntity(SSZ3Cutscene->objectID, NULL, 0, 0);
         Zone->stageFinishCallback = SSZ2Setup_StageFinishCallback;

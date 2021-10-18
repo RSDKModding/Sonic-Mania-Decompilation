@@ -37,7 +37,7 @@ void TMZ3Setup_StageLoad(void)
     Animals->animalTypes[1] = ANIMAL_PICKY;
     if (globals->suppressTitlecard >= true) {
         SaveGame_LoadPlayerState();
-        Zone_StartFadeOut(16, 0xF0F0F0);
+        Zone_StartFadeIn(10, 0x000000);
     }
     RSDK.SetDrawLayerProperties(0, false, TMZ3Setup_DrawLayerCB_A);
     RSDK.SetDrawLayerProperties(1, false, TMZ3Setup_DrawLayerCB_B);

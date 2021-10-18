@@ -24,7 +24,7 @@ void LRZ3Setup_StageLoad(void)
     Animals->animalTypes[1] = ANIMAL_CUCKY;
     if (globals->suppressTitlecard) {
         SaveGame_LoadPlayerState();
-        Zone_StartFadeOutRestart();
+        Zone_StartFadeIn(10, 0x000000);
     }
 
     if (isMainGameMode() && globals->enableIntro && (!PlayerHelpers_CheckStageReload()

@@ -148,10 +148,10 @@ void TMZ1Setup_StageFinishCB(void)
 {
     foreach_active(CrimsonEye, crimsonEye)
     {
-        // if (crimsonEye->state == CrimsonEye_Unknown10) {
-        //     crimsonEye->state = CrimsonEye_Unknown11;
-        //     RSDK.CreateEntity(TMZ1Outro->objectID, NULL, crimsonEye->position.x, crimsonEye->position.y);
-        // }
+        if (crimsonEye->state == CrimsonEye_StateBody_Unknown5) {
+            crimsonEye->state = CrimsonEye_StateBody_Explode;
+            CREATE_ENTITY(TMZ1Outro, NULL, crimsonEye->position.x, crimsonEye->position.y);
+        }
     }
 }
 

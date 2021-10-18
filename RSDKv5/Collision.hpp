@@ -31,7 +31,7 @@ extern bool32 showHitboxes;
 extern int debugHitboxCount;
 extern DebugHitboxInfo debugHitboxList[DEBUG_HITBOX_MAX];
 
-int addDebugHitbox(byte type, Entity *entity, Hitbox *hitbox);
+int addDebugHitbox(byte type, byte dir, Entity *entity, Hitbox *hitbox);
 #endif
 
 extern int collisionTolerance;
@@ -67,8 +67,8 @@ inline bool32 CheckObjectCollisionCircle(Entity *thisEntity, int thisOffset, Ent
         thisHitbox.left = thisOffset >> 16;
         otherHitbox.left = otherOffset >> 16;
 
-        int thisHitboxID  = addDebugHitbox(H_TYPE_CIRCLE, thisEntity, &thisHitbox);
-        int otherHitboxID = addDebugHitbox(H_TYPE_CIRCLE, otherEntity, &otherHitbox);
+        int thisHitboxID  = addDebugHitbox(H_TYPE_CIRCLE, FLIP_NONE, thisEntity, &thisHitbox);
+        int otherHitboxID = addDebugHitbox(H_TYPE_CIRCLE, FLIP_NONE, otherEntity, &otherHitbox);
 
         if (thisHitboxID >= 0 && collided)
             debugHitboxList[thisHitboxID].collision |= 1 << (collided - 1);

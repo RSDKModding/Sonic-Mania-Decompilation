@@ -1429,10 +1429,14 @@ void DrawCircle(int x, int y, int radius, uint colour, int alpha, InkEffects ink
                         ScanEdge *edge = &scanEdgeBuffer[top];
                         int yCnt       = bottom - top;
                         for (int y = 0; y < yCnt; ++y) {
-                            if (edge->start < currentScreen->clipBound_X1 || edge->start > currentScreen->clipBound_X2)
+                            if (edge->start < currentScreen->clipBound_X1)
                                 edge->start = currentScreen->clipBound_X1;
+                            if (edge->start > currentScreen->clipBound_X2)
+                                edge->start = currentScreen->clipBound_X2;
 
-                            if (edge->end < currentScreen->clipBound_X1 || edge->end > currentScreen->clipBound_X2)
+                            if (edge->end < currentScreen->clipBound_X1)
+                                edge->end = currentScreen->clipBound_X1;
+                            if (edge->end > currentScreen->clipBound_X2)
                                 edge->end = currentScreen->clipBound_X2;
 
                             int count = edge->end - edge->start;
@@ -1449,10 +1453,14 @@ void DrawCircle(int x, int y, int radius, uint colour, int alpha, InkEffects ink
                         ScanEdge *edge = &scanEdgeBuffer[top];
                         int yCnt       = bottom - top;
                         for (int y = 0; y < yCnt; ++y) {
-                            if (edge->start < currentScreen->clipBound_X1 || edge->start > currentScreen->clipBound_X2)
+                            if (edge->start < currentScreen->clipBound_X1)
                                 edge->start = currentScreen->clipBound_X1;
+                            if (edge->start > currentScreen->clipBound_X2)
+                                edge->start = currentScreen->clipBound_X2;
 
-                            if (edge->end < currentScreen->clipBound_X1 || edge->end > currentScreen->clipBound_X2)
+                            if (edge->end < currentScreen->clipBound_X1)
+                                edge->end = currentScreen->clipBound_X1;
+                            if (edge->end > currentScreen->clipBound_X2)
                                 edge->end = currentScreen->clipBound_X2;
 
                             int count = edge->end - edge->start;
@@ -1469,10 +1477,14 @@ void DrawCircle(int x, int y, int radius, uint colour, int alpha, InkEffects ink
                         ScanEdge *edge = &scanEdgeBuffer[top];
                         int yCnt       = bottom - top;
                         for (int y = 0; y < yCnt; ++y) {
-                            if (edge->start < currentScreen->clipBound_X1 || edge->start > currentScreen->clipBound_X2)
+                            if (edge->start < currentScreen->clipBound_X1)
                                 edge->start = currentScreen->clipBound_X1;
+                            if (edge->start > currentScreen->clipBound_X2)
+                                edge->start = currentScreen->clipBound_X2;
 
-                            if (edge->end < currentScreen->clipBound_X1 || edge->end > currentScreen->clipBound_X2)
+                            if (edge->end < currentScreen->clipBound_X1)
+                                edge->end = currentScreen->clipBound_X1;
+                            if (edge->end > currentScreen->clipBound_X2)
                                 edge->end = currentScreen->clipBound_X2;
 
                             int count = edge->end - edge->start;
@@ -1490,10 +1502,14 @@ void DrawCircle(int x, int y, int radius, uint colour, int alpha, InkEffects ink
                         ScanEdge *edge = &scanEdgeBuffer[top];
                         int yCnt       = bottom - top;
                         for (int y = 0; y < yCnt; ++y) {
-                            if (edge->start < currentScreen->clipBound_X1 || edge->start > currentScreen->clipBound_X2)
+                            if (edge->start < currentScreen->clipBound_X1)
                                 edge->start = currentScreen->clipBound_X1;
+                            if (edge->start > currentScreen->clipBound_X2)
+                                edge->start = currentScreen->clipBound_X2;
 
-                            if (edge->end < currentScreen->clipBound_X1 || edge->end > currentScreen->clipBound_X2)
+                            if (edge->end < currentScreen->clipBound_X1)
+                                edge->end = currentScreen->clipBound_X1;
+                            if (edge->end > currentScreen->clipBound_X2)
                                 edge->end = currentScreen->clipBound_X2;
 
                             int count = edge->end - edge->start;
@@ -1512,10 +1528,14 @@ void DrawCircle(int x, int y, int radius, uint colour, int alpha, InkEffects ink
                         ScanEdge *edge = &scanEdgeBuffer[top];
                         int yCnt       = bottom - top;
                         for (int y = 0; y < yCnt; ++y) {
-                            if (edge->start < currentScreen->clipBound_X1 || edge->start > currentScreen->clipBound_X2)
+                            if (edge->start < currentScreen->clipBound_X1)
                                 edge->start = currentScreen->clipBound_X1;
+                            if (edge->start > currentScreen->clipBound_X2)
+                                edge->start = currentScreen->clipBound_X2;
 
-                            if (edge->end < currentScreen->clipBound_X1 || edge->end > currentScreen->clipBound_X2)
+                            if (edge->end < currentScreen->clipBound_X1)
+                                edge->end = currentScreen->clipBound_X1;
+                            if (edge->end > currentScreen->clipBound_X2)
                                 edge->end = currentScreen->clipBound_X2;
 
                             int count = edge->end - edge->start;
@@ -1533,10 +1553,14 @@ void DrawCircle(int x, int y, int radius, uint colour, int alpha, InkEffects ink
                         ScanEdge *edge = &scanEdgeBuffer[top];
                         int yCnt       = bottom - top;
                         for (int y = 0; y < yCnt; ++y) {
-                            if (edge->start < currentScreen->clipBound_X1 || edge->start > currentScreen->clipBound_X2)
+                            if (edge->start < currentScreen->clipBound_X1)
                                 edge->start = currentScreen->clipBound_X1;
+                            if (edge->start > currentScreen->clipBound_X2)
+                                edge->start = currentScreen->clipBound_X2;
 
-                            if (edge->end < currentScreen->clipBound_X1 || edge->end > currentScreen->clipBound_X2)
+                            if (edge->end < currentScreen->clipBound_X1)
+                                edge->end = currentScreen->clipBound_X1;
+                            if (edge->end > currentScreen->clipBound_X2)
                                 edge->end = currentScreen->clipBound_X2;
 
                             int count = edge->end - edge->start;
@@ -1553,10 +1577,14 @@ void DrawCircle(int x, int y, int radius, uint colour, int alpha, InkEffects ink
                         ScanEdge *edge = &scanEdgeBuffer[top];
                         int yCnt       = bottom - top;
                         for (int y = 0; y < yCnt; ++y) {
-                            if (edge->start < currentScreen->clipBound_X1 || edge->start > currentScreen->clipBound_X2)
+                            if (edge->start < currentScreen->clipBound_X1)
                                 edge->start = currentScreen->clipBound_X1;
+                            if (edge->start > currentScreen->clipBound_X2)
+                                edge->start = currentScreen->clipBound_X2;
 
-                            if (edge->end < currentScreen->clipBound_X1 || edge->end > currentScreen->clipBound_X2)
+                            if (edge->end < currentScreen->clipBound_X1)
+                                edge->end = currentScreen->clipBound_X1;
+                            if (edge->end > currentScreen->clipBound_X2)
                                 edge->end = currentScreen->clipBound_X2;
 
                             int count = edge->end - edge->start;
@@ -1574,10 +1602,14 @@ void DrawCircle(int x, int y, int radius, uint colour, int alpha, InkEffects ink
                         ScanEdge *edge = &scanEdgeBuffer[top];
                         int yCnt       = bottom - top;
                         for (int y = 0; y < yCnt; ++y) {
-                            if (edge->start < currentScreen->clipBound_X1 || edge->start > currentScreen->clipBound_X2)
+                            if (edge->start < currentScreen->clipBound_X1)
                                 edge->start = currentScreen->clipBound_X1;
+                            if (edge->start > currentScreen->clipBound_X2)
+                                edge->start = currentScreen->clipBound_X2;
 
-                            if (edge->end < currentScreen->clipBound_X1 || edge->end > currentScreen->clipBound_X2)
+                            if (edge->end < currentScreen->clipBound_X1)
+                                edge->end = currentScreen->clipBound_X1;
+                            if (edge->end > currentScreen->clipBound_X2)
                                 edge->end = currentScreen->clipBound_X2;
 
                             int count = edge->end - edge->start;

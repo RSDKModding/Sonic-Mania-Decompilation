@@ -959,7 +959,7 @@ void LinkGameLogicDLL(GameInfo *info)
         ADD_PUBLIC_FUNC(Zone_StoreEntities);
         ADD_PUBLIC_FUNC(Zone_ReloadStoredEntities);
         ADD_PUBLIC_FUNC(Zone_StartFadeOut);
-        ADD_PUBLIC_FUNC(Zone_StartFadeOutRestart);
+        ADD_PUBLIC_FUNC(Zone_StartFadeIn);
         ADD_PUBLIC_FUNC(Zone_StartTeleportAction);
         ADD_PUBLIC_FUNC(Zone_ApplyWorldBounds);
         ADD_PUBLIC_FUNC(Zone_IsAct2);
