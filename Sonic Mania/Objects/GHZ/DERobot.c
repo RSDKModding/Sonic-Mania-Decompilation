@@ -362,7 +362,7 @@ void DERobot_Unknown8(void)
 
     foreach_active(Player, player)
     {
-        if (!entity->field_C4 && Player_CheckBadnikHit(player, entity, &DERobot->hitbox) && Player_CheckBossHit(player, entity)) {
+        if (!entity->field_C4 && Player_CheckBadnikTouch(player, entity, &DERobot->hitbox) && Player_CheckBossHit(player, entity)) {
             DERobot_Unknown7();
             RSDK.PlaySfx(DERobot->sfxHit, 0, 255);
             player->velocity.x = 0x60000;

@@ -322,7 +322,7 @@ void HeavyShinobi_State_Unknown1(void)
     for (int32 i = 0; i < 4; ++i) RSDK.ProcessAnimation(&HeavyShinobi->animator1[i]);
     entity->direction = RSDK_GET_ENTITY(SLOT_PLAYER1, Player)->position.x >= entity->position.x;
 
-    EntityPlayer *player = Player_Unknown2();
+    EntityPlayer *player = Player_GetNearestPlayerX();
     if (abs(player->position.x - entity->position.x) < 0x500000 && player->state != Ice_State_FrozenPlayer) {
         HeavyShinobi_HandleSlash(player);
     }
@@ -349,7 +349,7 @@ void HeavyShinobi_State_Unknown2(void)
         entity->velocity.y = 0;
 
     if (entity->animator1.frameID == entity->animator1.frameCount - 1) {
-        EntityPlayer *player = Player_Unknown2();
+        EntityPlayer *player = Player_GetNearestPlayerX();
         if (abs(player->position.x - entity->position.x) >= 0x500000 || player->state == Ice_State_FrozenPlayer)
             HeavyShinobi_Unknown3();
         else
@@ -462,7 +462,7 @@ void HeavyShinobi_State_Unknown3(void)
     else {
         foreach_active(Player, player)
         {
-            if (player->state != Ice_State_FrozenPlayer && Player_CheckBadnikHit(player, entity, &HeavyShinobi->hitbox1)
+            if (player->state != Ice_State_FrozenPlayer && Player_CheckBadnikTouch(player, entity, &HeavyShinobi->hitbox1)
                 && Player_CheckBossHit(player, entity)) {
                 if (player->position.x >= entity->position.x) {
                     entity->direction  = FLIP_X;
@@ -530,7 +530,7 @@ void HeavyShinobi_State_Glitched(void)
     if (!HeavyShinobi->invincibilityTimer) {
         foreach_active(Player, player)
         {
-            if (player->state != Ice_State_FrozenPlayer && Player_CheckBadnikHit(player, entity, &HeavyShinobi->hitbox1)
+            if (player->state != Ice_State_FrozenPlayer && Player_CheckBadnikTouch(player, entity, &HeavyShinobi->hitbox1)
                 && Player_CheckBossHit(player, entity)) {
                 if (HeavyShinobi->health)
                     HeavyShinobi->health--;
@@ -775,7 +775,7 @@ void HeavyShinobi_State2_Unknown3(void)
                     foreach_break;
                 }
             }
-            else if ((player->state != Ice_State_FrozenPlayer || !entity->playerPtr) && Player_CheckBadnikHit(player, entity, &HeavyShinobi->hitbox5)
+            else if ((player->state != Ice_State_FrozenPlayer || !entity->playerPtr) && Player_CheckBadnikTouch(player, entity, &HeavyShinobi->hitbox5)
                      && Player_CheckHit2(player, entity, true)) {
                 RSDK.PlaySfx(HeavyShinobi->sfxExplode, false, 255);
                 CREATE_ENTITY(Explosion, intToVoid(2), entity->position.x, entity->position.y)->drawOrder = Zone->drawOrderHigh + 2;

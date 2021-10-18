@@ -84,7 +84,7 @@ void Blaster_HandlePlayerInteractions(void)
     RSDK_THIS(Blaster);
     foreach_active(Player, player)
     {
-        if (Player_CheckBadnikHit(player, entity, &Blaster->hitboxBadnik))
+        if (Player_CheckBadnikTouch(player, entity, &Blaster->hitboxBadnik))
             Player_CheckBadnikBreak(entity, player, true);
         if (entity->state != Blaster_State_Unknown3 && entity->state != Blaster_State_Unknown7 && entity->animator.animationID != 3) {
             if (Player_CheckCollisionTouch(player, entity, &Blaster->hitboxRange)) {

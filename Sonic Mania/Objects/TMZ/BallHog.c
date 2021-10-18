@@ -88,7 +88,7 @@ void BallHog_CheckPlayerCollisions(void)
 
     foreach_active(Player, player)
     {
-        if (Player_CheckBadnikHit(player, entity, &BallHog->hitboxBadnik))
+        if (Player_CheckBadnikTouch(player, entity, &BallHog->hitboxBadnik))
             Player_CheckBadnikBreak(entity, player, true);
     }
 }

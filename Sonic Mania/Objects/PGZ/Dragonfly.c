@@ -117,7 +117,7 @@ void Dragonfly_Collide(void)
 {
     RSDK_THIS(Dragonfly);
     foreach_active(Player, player) {
-        if (Player_CheckBadnikHit(player, entity, &Dragonfly->hurtbox)) {
+        if (Player_CheckBadnikTouch(player, entity, &Dragonfly->hurtbox)) {
             if (Player_CheckBadnikBreak(entity, player, false)) {
                 for (int32 i = 0; i < Dragonfly_BodyCount; ++i) {
                     EntityDragonfly *child = CREATE_ENTITY(Dragonfly, intToVoid(1), entity->positions[i].x, entity->positions[i].y); 

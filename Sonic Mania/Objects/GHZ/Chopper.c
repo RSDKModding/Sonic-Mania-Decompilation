@@ -256,7 +256,7 @@ void Chopper_CheckPlayerCollisions(void)
 
     foreach_active(Player, player)
     {
-        if (Player_CheckBadnikHit(player, entity, &Chopper->hitbox))
+        if (Player_CheckBadnikTouch(player, entity, &Chopper->hitbox))
             Player_CheckBadnikBreak(entity, player, true);
     }
 }
@@ -267,7 +267,7 @@ void Chopper_CheckPlayerCollisions2(void)
 
     foreach_active(Player, player)
     {
-        if (Player_CheckBadnikHit(player, entity, &Chopper->hitbox2))
+        if (Player_CheckBadnikTouch(player, entity, &Chopper->hitbox2))
             Player_CheckBadnikBreak(entity, player, true);
     }
 }

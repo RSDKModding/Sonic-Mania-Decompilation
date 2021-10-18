@@ -121,7 +121,7 @@ void Grabber_CheckPlayerCollisions(void)
                     player->direction                     = entity->direction ^ 1;
                 }
             }
-            if (player != (EntityPlayer*)entity->grabbedPlayer && !entity->timer && Player_CheckBadnikHit(player, entity, &Grabber->hitbox1)
+            if (player != (EntityPlayer*)entity->grabbedPlayer && !entity->timer && Player_CheckBadnikTouch(player, entity, &Grabber->hitbox1)
                 && Player_CheckBadnikBreak(entity, player, false)) {
                 EntityPlayer *player = (EntityPlayer *)entity->grabbedPlayer;
                 if (player)

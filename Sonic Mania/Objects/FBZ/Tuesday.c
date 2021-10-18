@@ -423,9 +423,9 @@ void Tuesday_Unknown3(void)
         if (!entity->invincibleTimer) {
             bool32 hit = false;
             if (entity->type)
-                hit = Player_CheckBadnikHit(player, entity, &Tuesday->hitbox1);
+                hit = Player_CheckBadnikTouch(player, entity, &Tuesday->hitbox1);
             else
-                hit = Player_CheckBadnikHit(player, entity, &Tuesday->hitbox2);
+                hit = Player_CheckBadnikTouch(player, entity, &Tuesday->hitbox2);
             if (hit) {
                 if (!player->invincibleTimer && player->shield != SHIELD_LIGHTNING && player->blinkTimer <= 0 && entity->timer && entity->timer <= 60
                     && (entity->type || Player_CheckCollisionTouch(player, entity, &Tuesday->hitbox1))) {

@@ -87,7 +87,7 @@ void Redz_HandlePlayerInteractions(void)
     RSDK_THIS(Redz);
     foreach_active(Player, player)
     {
-        if (Player_CheckBadnikHit(player, entity, &Redz->hitboxBadnik))
+        if (Player_CheckBadnikTouch(player, entity, &Redz->hitboxBadnik))
             Player_CheckBadnikBreak(entity, player, true);
     }
 }

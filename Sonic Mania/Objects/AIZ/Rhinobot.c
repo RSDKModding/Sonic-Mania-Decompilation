@@ -86,7 +86,7 @@ void Rhinobot_CheckHit(void)
     RSDK_THIS(Rhinobot);
     foreach_active(Player, player)
     {
-        if (Player_CheckBadnikHit(player, entity, &Rhinobot->hitbox))
+        if (Player_CheckBadnikTouch(player, entity, &Rhinobot->hitbox))
             Player_CheckBadnikBreak(entity, player, true);
     }
 }
@@ -167,7 +167,7 @@ void Rhinobot_State1(void)
 void Rhinobot_State2(void)
 {
     RSDK_THIS(Rhinobot);
-    EntityPlayer *player = (EntityPlayer *)Player_Unknown3();
+    EntityPlayer *player = (EntityPlayer *)Player_GetNearestPlayer();
 
     bool32 flag = false;
     if (abs(player->position.y - entity->position.y) <= 0x200000) {

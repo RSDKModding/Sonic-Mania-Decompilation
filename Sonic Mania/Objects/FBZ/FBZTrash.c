@@ -222,7 +222,7 @@ void FBZTrash_Unknown6(void)
 void FBZTrash_Unknown7(void)
 {
     RSDK_THIS(FBZTrash);
-    EntityPlayer *playerPtr = Player_Unknown3();
+    EntityPlayer *playerPtr = Player_GetNearestPlayer();
     entity->angle           = RSDK.ATan2(entity->position.x - playerPtr->position.x, entity->position.y - playerPtr->position.y);
     entity->velocity.x      = RSDK.Cos256(entity->angle) << 8;
     entity->velocity.y      = RSDK.Sin256(entity->angle) << 8;

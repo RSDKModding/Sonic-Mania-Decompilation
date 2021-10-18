@@ -217,7 +217,7 @@ void SpiderMobile_CheckPlayerCollisions(void)
 
     foreach_active(Player, player)
     {
-        if (Player_CheckBadnikHit(player, entity, &SpiderMobile->hitboxBumper)) {
+        if (Player_CheckBadnikTouch(player, entity, &SpiderMobile->hitboxBumper)) {
             int32 angle = RSDK.ATan2(player->position.x - entity->position.x, player->position.y - entity->position.y);
 
             int32 amp = (abs(player->velocity.x) + abs(player->velocity.y)) >> 9;

@@ -95,7 +95,7 @@ void WallCrawl_HandlePlayerInteractions(void)
                 }
             }
         }
-        if (Player_CheckBadnikHit(player, entity, &WallCrawl->hitboxBadnik))
+        if (Player_CheckBadnikTouch(player, entity, &WallCrawl->hitboxBadnik))
             Player_CheckBadnikBreak(entity, player, true);
     }
 }

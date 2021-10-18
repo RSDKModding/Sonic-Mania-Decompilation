@@ -33,7 +33,7 @@ void RockemSockem_Update(void)
 
     foreach_active(Player, player)
     {
-        if (Player_CheckBadnikHit(player, entity, &RockemSockem->hitbox)) {
+        if (Player_CheckBadnikTouch(player, entity, &RockemSockem->hitbox)) {
 
             int32 vel = 0;
             if (abs(player->velocity.x) <= abs(player->velocity.y)) {

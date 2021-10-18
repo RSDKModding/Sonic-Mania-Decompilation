@@ -230,7 +230,7 @@ void Shiversaw_CheckPlayerCollisions(void)
                 }
             }
 
-            if (Player_CheckBadnikHit(player, entity, &Shiversaw->hitbox1) && Player_CheckBossHit(player, entity)) {
+            if (Player_CheckBadnikTouch(player, entity, &Shiversaw->hitbox1) && Player_CheckBossHit(player, entity)) {
                 if (Shiversaw->health)
                     Shiversaw->health--;
 

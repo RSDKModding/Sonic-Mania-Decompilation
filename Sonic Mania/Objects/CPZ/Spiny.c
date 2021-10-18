@@ -91,7 +91,7 @@ void Spiny_CheckPlayerCollisions(void)
     RSDK_THIS(Spiny);
     foreach_active(Player, player)
     {
-        if (Player_CheckBadnikHit(player, entity, &Spiny->hitboxSpiny))
+        if (Player_CheckBadnikTouch(player, entity, &Spiny->hitboxSpiny))
             Player_CheckBadnikBreak(entity, player, true);
     }
 }

@@ -76,7 +76,7 @@ void Blastoid_CheckPlayerCollisions(void)
 
     foreach_active(Player, player)
     {
-        if (Player_CheckBadnikHit(player, entity, &Blastoid->hitboxBody) && Player_CheckBadnikBreak(entity, player, false)) {
+        if (Player_CheckBadnikTouch(player, entity, &Blastoid->hitboxBody) && Player_CheckBadnikBreak(entity, player, false)) {
             EntityCollapsingPlatform *platform = RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot - 1, CollapsingPlatform);
             if (platform->objectID == CollapsingPlatform->objectID) {
                 platform->active        = ACTIVE_NORMAL;

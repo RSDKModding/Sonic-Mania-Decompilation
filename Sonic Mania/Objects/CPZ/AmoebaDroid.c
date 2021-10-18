@@ -154,7 +154,7 @@ void AmoebaDroid_CheckHit(void)
 
     foreach_active(Player, player)
     {
-        if (!entity->invincibleTimer && Player_CheckBadnikHit(player, entity, &entity->hitbox) && Player_CheckBossHit(player, entity)) {
+        if (!entity->invincibleTimer && Player_CheckBadnikTouch(player, entity, &entity->hitbox) && Player_CheckBossHit(player, entity)) {
             if (--entity->health <= 0) {
                 AmoebaDroid_HandleDropletRelease(false);
                 entity->state               = AmoebaDroid_StateMain_Death;

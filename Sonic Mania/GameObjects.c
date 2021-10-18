@@ -862,7 +862,7 @@ void LinkGameLogicDLL(GameInfo *info)
 
         ADD_PUBLIC_FUNC(Player_CheckHit);
         ADD_PUBLIC_FUNC(Player_CheckHitFlip);
-        ADD_PUBLIC_FUNC(Player_CheckBadnikHit);
+        ADD_PUBLIC_FUNC(Player_CheckBadnikTouch);
         ADD_PUBLIC_FUNC(Player_CheckBadnikBreak);
         ADD_PUBLIC_FUNC(Player_CheckBossHit);
         ADD_PUBLIC_FUNC(Player_CheckProjectileHit);

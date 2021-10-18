@@ -89,7 +89,7 @@ void WallBumper_HandleInteractions(void)
 
     foreach_active(Player, player)
     {
-        if (player->playerAnimator.animationID != ANI_HURT && Player_CheckBadnikHit(player, entity, &entity->hitbox)) {
+        if (player->playerAnimator.animationID != ANI_HURT && Player_CheckBadnikTouch(player, entity, &entity->hitbox)) {
             if (entity->type) {
                 if (entity->direction) {
                     if (player->velocity.y < 0)

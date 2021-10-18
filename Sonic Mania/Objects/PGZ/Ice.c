@@ -1104,7 +1104,7 @@ void Ice_State_PlayerBlock(void)
     {
         if (player != (EntityPlayer *)entity->playerPtr && player->stateInput != Player_ProcessP2Input_AI && player->state != Ice_State_FrozenPlayer
             && player->velocity.y > 0 && !player->onGround && player->position.y < entity->position.y - 0x200000
-            && Player_CheckBadnikHit(player, entity, &entity->hitbox1)) {
+            && Player_CheckBadnikTouch(player, entity, &entity->hitbox1)) {
             if (player->playerAnimator.animationID == ANI_JUMP || player->playerAnimator.animationID == ANI_DROPDASH) {
                 Ice_Unknown8((Entity *)entity->playerPtr);
                 player->velocity.y = -0x30000;

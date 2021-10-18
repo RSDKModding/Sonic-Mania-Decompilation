@@ -94,7 +94,7 @@ void Batbot_HandlePlayerInteractions(void)
     RSDK_THIS(Batbot);
     foreach_active(Player, player)
     {
-        if (Player_CheckBadnikHit(player, entity, &Batbot->hitboxBadnik))
+        if (Player_CheckBadnikTouch(player, entity, &Batbot->hitboxBadnik))
             Player_CheckBadnikBreak(entity, player, true);
     }
 }

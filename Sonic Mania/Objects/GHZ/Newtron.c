@@ -100,7 +100,7 @@ void Newtron_CheckHit(void)
     RSDK_THIS(Newtron);
     foreach_active(Player, player)
     {
-        if (Player_CheckBadnikHit(player, entity, &Newtron->hitbox1))
+        if (Player_CheckBadnikTouch(player, entity, &Newtron->hitbox1))
             Player_CheckBadnikBreak(entity, player, true);
     }
 }

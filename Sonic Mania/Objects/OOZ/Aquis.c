@@ -94,7 +94,7 @@ void Aquis_CheckPlayerCollisions(void)
     RSDK_THIS(Aquis);
     foreach_active(Player, player)
     {
-        if (Player_CheckBadnikHit(player, entity, &Aquis->hitbox1))
+        if (Player_CheckBadnikTouch(player, entity, &Aquis->hitbox1))
             Player_CheckBadnikBreak(entity, player, true);
     }
 }
@@ -157,7 +157,7 @@ void Aquis_Unknown6(void)
 
     entity->position.x += entity->velocity.x;
     entity->position.y += entity->velocity.y;
-    EntityPlayer *playerPtr = Player_Unknown3();
+    EntityPlayer *playerPtr = Player_GetNearestPlayer();
     if (playerPtr) {
         bool32 flag = false;
         if (playerPtr->position.x >= entity->position.x) {

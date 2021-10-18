@@ -114,7 +114,7 @@ void IceBomba_Fly_Collide(void)
     entity->direction = 0;
     foreach_active(Player, player)
     {
-        if (Player_CheckBadnikHit(player, entity, &IceBomba->flyHitbox)) {
+        if (Player_CheckBadnikTouch(player, entity, &IceBomba->flyHitbox)) {
             if (Player_CheckBadnikBreak(entity, player, false)) {
                 if (entity->state != IceBomba_Fly_FlyAway) {
                     EntityIceBomba *bomb = CREATE_ENTITY(IceBomba, intToVoid(1), entity->position.x, entity->position.y);

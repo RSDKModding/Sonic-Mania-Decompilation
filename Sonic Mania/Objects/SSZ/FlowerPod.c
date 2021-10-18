@@ -92,7 +92,7 @@ void FlowerPod_State_Pod(void)
             default: break;
         }
 
-        if (flag && Player_CheckBadnikHit(player, entity, &FlowerPod->hitbox))
+        if (flag && Player_CheckBadnikTouch(player, entity, &FlowerPod->hitbox))
             entity->state = FlowerPod_State_Exploding;
     }
 }

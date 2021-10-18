@@ -93,7 +93,7 @@ void FlasherMKII_HandlePlayerCollisions(void)
     foreach_active(Player, player)
     {
         Hitbox *hitbox = RSDK.GetHitbox(&entity->animator, 0);
-        if (Player_CheckBadnikHit(player, entity, hitbox)) {
+        if (Player_CheckBadnikTouch(player, entity, hitbox)) {
             if ((entity->animator.animationID & 3) == 3) {
                 if (player->shield == SHIELD_LIGHTNING || player->invincibleTimer || player->blinkTimer) {
                     if (Player_CheckBadnikBreak(entity, player, true))
@@ -118,7 +118,7 @@ void FlasherMKII_HandleHarmPlayerCollisions(void)
     {
         if (player->shield == SHIELD_LIGHTNING || player->invincibleTimer || player->blinkTimer) {
             Hitbox *hitbox = RSDK.GetHitbox(&entity->animator, 0);
-            if (Player_CheckBadnikHit(player, entity, hitbox) && Player_CheckBadnikBreak(entity, player, true))
+            if (Player_CheckBadnikTouch(player, entity, hitbox) && Player_CheckBadnikBreak(entity, player, true))
                 RSDK.StopSFX(FlasherMKII->sfxZap);
         }
         else {
@@ -137,7 +137,7 @@ void FlasherMKII_State_Unknown1(void)
     if (entity->timer > 0)
         entity->timer--;
 
-    EntityPlayer *player = Player_Unknown3();
+    EntityPlayer *player = Player_GetNearestPlayer();
     if (player) {
         int rx = (entity->position.x - player->position.x) >> 16;
         int ry = (entity->position.y - player->position.y) >> 16;

@@ -182,7 +182,7 @@ void Crabmeat_CheckPlayerCollisions(void)
     RSDK_THIS(Crabmeat);
     foreach_active(Player, player)
     {
-        if (Player_CheckBadnikHit(player, entity, &Crabmeat->hitbox))
+        if (Player_CheckBadnikTouch(player, entity, &Crabmeat->hitbox))
             Player_CheckBadnikBreak((Entity*)entity, player, true);
     }
 }

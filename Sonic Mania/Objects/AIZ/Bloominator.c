@@ -74,7 +74,7 @@ void Bloominator_CheckHit(void)
     RSDK_THIS(Bloominator);
     foreach_active(Player, player)
     {
-        if (Player_CheckBadnikHit(player, entity, &Bloominator->hitbox))
+        if (Player_CheckBadnikTouch(player, entity, &Bloominator->hitbox))
             Player_CheckBadnikBreak(entity, player, true);
     }
 }

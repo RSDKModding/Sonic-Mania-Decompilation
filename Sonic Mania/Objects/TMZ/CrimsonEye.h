@@ -72,10 +72,10 @@ typedef struct {
     StateMachine(state);
     StateMachine(stateEye);
     StateMachine(stateDraw);
-    int type;
-    int timer;
-    int timer2;
-    int field_70;
+    int32 type;
+    int32 timer;
+    int32 timer2;
+    int32 field_70;
     Vector2 field_74;
     Animator animator;
 } EntityCrimsonEye;

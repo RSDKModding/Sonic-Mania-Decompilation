@@ -90,7 +90,7 @@ void Technosqueek_HandlePlayerInteractions(void)
 
     foreach_active(Player, player)
     {
-        if (Player_CheckBadnikHit(player, entity, &Technosqueek->hitbox))
+        if (Player_CheckBadnikTouch(player, entity, &Technosqueek->hitbox))
             Player_CheckBadnikBreak(entity, player, true);
     }
 }

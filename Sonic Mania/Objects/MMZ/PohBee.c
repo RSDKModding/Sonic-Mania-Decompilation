@@ -86,7 +86,7 @@ void PohBee_CheckPlayerCollisions(void)
     foreach_active(Player, player)
     {
         if (entity->planeFilter <= 0 || player->collisionPlane == ((uint8)(entity->planeFilter - 1) & 1)) {
-            if (Player_CheckBadnikHit(player, entity, &PohBee->hitbox)) {
+            if (Player_CheckBadnikTouch(player, entity, &PohBee->hitbox)) {
                 if (entity->drawOrder == 1) {
                     if (Player_CheckBadnikBreak(entity, player, false)) {
                         CREATE_ENTITY(Explosion, intToVoid(1), entity->position.x, entity->position.y)->drawOrder = 1;

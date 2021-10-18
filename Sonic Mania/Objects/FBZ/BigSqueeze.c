@@ -133,7 +133,7 @@ void BigSqueeze_CheckPlayerCollisions(void)
 
         foreach_active(Player, player)
         {
-            if (!entity->invincibilityTimer && Player_CheckBadnikHit(player, entity, &entity->hitbox) && Player_CheckBossHit(player, entity)) {
+            if (!entity->invincibilityTimer && Player_CheckBadnikTouch(player, entity, &entity->hitbox) && Player_CheckBossHit(player, entity)) {
                 BigSqueeze_Hit();
             }
         }
@@ -149,7 +149,7 @@ void BigSqueeze_CheckPlayerCollisions2(void)
 
         foreach_active(Player, player)
         {
-            if (!entity->invincibilityTimer && Player_CheckBadnikHit(player, entity, &entity->hitbox)) {
+            if (!entity->invincibilityTimer && Player_CheckBadnikTouch(player, entity, &entity->hitbox)) {
                 if (player->invincibleTimer || player->blinkTimer > 0 || player->shield == SHIELD_LIGHTNING) {
                     if (Player_CheckBossHit(player, entity))
                         BigSqueeze_Hit();

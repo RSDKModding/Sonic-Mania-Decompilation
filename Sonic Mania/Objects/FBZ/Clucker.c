@@ -144,7 +144,7 @@ void Clucker_HandlePlayerInteractions(void)
             entity->position.y -= entity->yOffset;
         else
             entity->position.y += entity->yOffset;
-        if (Player_CheckBadnikHit(player, entity, &Clucker->hitboxBadnik)) {
+        if (Player_CheckBadnikTouch(player, entity, &Clucker->hitboxBadnik)) {
             if (entity->hasChildren) {
                 Player_CheckBadnikBreak(entity, player, true);
             }
@@ -255,7 +255,7 @@ void Clucker_State_Unknown4(void)
         RSDK.PlaySfx(Clucker->sfxShot, false, 255);
     }
 
-    EntityPlayer *player = Player_Unknown3();
+    EntityPlayer *player = Player_GetNearestPlayer();
     if (player) {
         if (player->position.x >= entity->position.x) {
             if (!(entity->direction & 1)) {

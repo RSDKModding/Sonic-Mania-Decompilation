@@ -106,7 +106,7 @@ void CircleBumper_Unknown1(void)
     entity->position.y = entity->originPos.y;
     foreach_active(Player, player)
     {
-        if (player->playerAnimator.animationID != ANI_HURT && Player_CheckBadnikHit(player, entity, &CircleBumper->hitbox)) {
+        if (player->playerAnimator.animationID != ANI_HURT && Player_CheckBadnikTouch(player, entity, &CircleBumper->hitbox)) {
             entity->animator.frameID = 0;
             entity->stateCollide     = CircleBumper_Unknown3;
             RSDK.PlaySfx(CircleBumper->sfxBumper, 0, 255);

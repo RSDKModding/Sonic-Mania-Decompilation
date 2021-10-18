@@ -117,7 +117,7 @@ void JuggleSaw_Crab_Collide(void)
     RSDK_THIS(JuggleSaw);
     foreach_active(Player, player)
     {
-        if (Player_CheckBadnikHit(player, entity, &JuggleSaw->hitbox) && Player_CheckBadnikBreak(entity, player, false)) {
+        if (Player_CheckBadnikTouch(player, entity, &JuggleSaw->hitbox) && Player_CheckBadnikBreak(entity, player, false)) {
             if (entity->hasSaw == JSAW_HAS_SAW) {
                 int32 debrisX = entity->position.x;
                 int32 debrisY = entity->position.y;

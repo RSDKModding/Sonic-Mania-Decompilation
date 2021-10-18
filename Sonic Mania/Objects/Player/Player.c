@@ -1757,39 +1757,39 @@ void Player_LoseHyperRings(EntityPlayer *player, int32 rings, uint8 cPlane)
         angle += 32;
     }
 }
-EntityPlayer *Player_Unknown2(void)
+EntityPlayer *Player_GetNearestPlayerX(void)
 {
-    int32 pos = 0x7FFFFFFF;
+    int32 distance = 0x7FFFFFFF;
     RSDK_THIS(Player);
     EntityPlayer *returnPlayer = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     foreach_active(Player, player)
     {
-        int32 dif = abs(player->position.x - entity->position.x);
-        if (dif < pos) {
-            pos          = dif;
+        int32 distX = abs(player->position.x - entity->position.x);
+        if (distX < distance) {
+            distance     = distX;
             returnPlayer = player;
         }
     }
     return returnPlayer;
 }
-EntityPlayer *Player_Unknown3(void)
+EntityPlayer *Player_GetNearestPlayer(void)
 {
-    int32 pos = 0x7FFFFFFF;
+    int32 distance = 0x7FFFFFFF;
     RSDK_THIS(Player);
     EntityPlayer *returnPlayer = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     foreach_active(Player, player)
     {
-        int32 difX = abs(player->position.x - entity->position.x);
-        int32 difY = abs(player->position.y - entity->position.y);
-        if (difX + difY < pos) {
-            pos          = difX + difY;
+        int32 distX = abs(player->position.x - entity->position.x);
+        int32 distY = abs(player->position.y - entity->position.y);
+        if (distX + distY < distance) {
+            distance     = distX + distY;
             returnPlayer = player;
         }
     }
     return returnPlayer;
 }
 #if RETRO_USE_PLUS
-void Player_Unknown4(void)
+void Player_RemoveEncoreLeader(void)
 {
     EntityPlayer *sidekick = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
 
@@ -1801,12 +1801,12 @@ void Player_Unknown4(void)
     }
     else {
         globals->playerID &= 0xFF;
-        RSDK.ResetEntityPtr(sidekick, 0, 0);
+        destroyEntity(sidekick);
         sidekick->playerID = 1;
     }
 }
 #endif
-void Player_Unknown5(EntityPlayer *player)
+void Player_ResetBoundaries(EntityPlayer *player)
 {
     Vector2 size;
 
@@ -1903,9 +1903,9 @@ void Player_HandleDeath(EntityPlayer *player)
             if (player->state == Player_State_FlyIn || player->state == Player_State_JumpIn || player->state == Player_State_StartJumpIn) {
                 if (!EncoreIntro) {
                     Player_ResetState(player);
-                    Player_Unknown5(player);
+                    Player_ResetBoundaries(player);
                 }
-                Player_Unknown4();
+                Player_RemoveEncoreLeader();
             }
             else {
                 player->blinkTimer   = 120;
@@ -1914,7 +1914,7 @@ void Player_HandleDeath(EntityPlayer *player)
                 player->camera       = camera;
                 camera->targetPtr    = (Entity *)player;
                 camera->state        = Camera_State_Follow;
-                Player_Unknown4();
+                Player_RemoveEncoreLeader();
             }
         }
         else {
@@ -2076,7 +2076,7 @@ void Player_HandleDeath(EntityPlayer *player)
 
                 if (player->objectID == Player->objectID) {
                     player->abilityValues[0] = 0;
-                    Player_Unknown5(player);
+                    Player_ResetBoundaries(player);
                     if (BoundsMarker)
                         BoundsMarker_CheckAllBounds(player, true);
                 }
@@ -2102,7 +2102,7 @@ void Player_HandleDeath(EntityPlayer *player)
 
                     if (player->objectID == Player->objectID) {
                         player->abilityValues[0] = 0;
-                        Player_Unknown5(player);
+                        Player_ResetBoundaries(player);
                         if (BoundsMarker)
                             BoundsMarker_CheckAllBounds(player, true);
                     }
@@ -2127,7 +2127,7 @@ void Player_HandleDeath(EntityPlayer *player)
                         }
                         if (player->objectID == Player->objectID) {
                             player->abilityValues[0] = 0;
-                            Player_Unknown5(player);
+                            Player_ResetBoundaries(player);
                             if (BoundsMarker)
                                 BoundsMarker_CheckAllBounds(player, true);
                         }
@@ -2351,7 +2351,34 @@ bool32 Player_CheckHitFlip(EntityPlayer *player)
     Player_Hit(player);
     return true;
 }
-bool32 Player_CheckBadnikHit(EntityPlayer *player, void *e, Hitbox *entityHitbox)
+bool32 Player_CheckAttacking(EntityPlayer *player, void *e)
+{
+    Entity *entity   = (Entity *)e;
+    int32 anim       = player->playerAnimator.animationID;
+    int32 character  = player->characterID;
+    bool32 attacking = player->invincibleTimer != 0 || anim == ANI_JUMP || anim == ANI_SPINDASH;
+    switch (character) {
+        case ID_SONIC: attacking |= anim == ANI_DROPDASH; break;
+#if RETRO_USE_PLUS
+        case ID_MIGHTY: attacking |= anim == ANI_DROPDASH; break;
+#endif
+        case ID_TAILS:
+            if (!attacking) {
+                attacking = anim == ANI_FLY || anim == ANI_FLYTIRED || anim == ANI_FLYLIFT;
+                if (player->position.y <= entity->position.y)
+                    return false;
+            }
+            break;
+        case ID_KNUCKLES:
+            attacking |= anim == ANI_FLY || anim == ANI_FLYLIFTTIRED;
+            character = player->characterID;
+            break;
+        default: break;
+    }
+
+    return attacking;
+}
+bool32 Player_CheckBadnikTouch(EntityPlayer *player, void *e, Hitbox *entityHitbox)
 {
     Entity *entity = (Entity *)e;
 #if RETRO_USE_PLUS
@@ -2404,33 +2431,11 @@ bool32 Player_CheckBadnikHit(EntityPlayer *player, void *e, Hitbox *entityHitbox
     }
     return RSDK.CheckObjectCollisionTouchBox(entity, entityHitbox, player, otherHitbox);
 }
-
 bool32 Player_CheckBadnikBreak(void *e, EntityPlayer *player, bool32 destroy)
 {
     Entity *entity   = (Entity *)e;
-    int32 anim       = player->playerAnimator.animationID;
-    int32 charID     = player->characterID;
-    bool32 badnikHit = player->invincibleTimer != 0 || anim == ANI_JUMP || anim == ANI_SPINDASH;
-    switch (charID) {
-        case ID_SONIC: badnikHit |= anim == ANI_DROPDASH; break;
-#if RETRO_USE_PLUS
-        case ID_MIGHTY: badnikHit |= anim == ANI_DROPDASH; break;
-#endif
-        case ID_TAILS:
-            if (!badnikHit) {
-                badnikHit = anim == ANI_FLY || anim == ANI_FLYTIRED || anim == ANI_FLYLIFT;
-                if (player->position.y <= entity->position.y)
-                    badnikHit = false;
-            }
-            break;
-        case ID_KNUCKLES:
-            badnikHit |= anim == ANI_FLY || anim == ANI_FLYLIFTTIRED;
-            charID = player->characterID;
-            break;
-        default: break;
-    }
 
-    if (badnikHit) {
+    if (Player_CheckAttacking(player, entity)) {
         CREATE_ENTITY(Animals, intToVoid((Animals->animalTypes[(RSDK.Rand(0, 32) >> 4)]) + 1), entity->position.x, entity->position.y);
         EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), entity->position.x, entity->position.y);
         explosion->drawOrder       = Zone->drawOrderHigh;
@@ -2516,7 +2521,7 @@ bool32 Player_CheckBadnikBreak(void *e, EntityPlayer *player, bool32 destroy)
         return true;
     }
 #if RETRO_USE_PLUS
-    else if (charID == ID_MIGHTY && anim == ANI_CROUCH) {
+    else if (player->characterID == ID_MIGHTY && player->playerAnimator.animationID == ANI_CROUCH) {
         if (player->uncurlTimer)
             return false;
         RSDK.PlaySfx(Player->sfx_PimPom, false, 255);
@@ -2541,34 +2546,13 @@ bool32 Player_CheckBadnikBreak(void *e, EntityPlayer *player, bool32 destroy)
 bool32 Player_CheckBossHit(EntityPlayer *player, void *e)
 {
     Entity *entity = (Entity *)e;
-    int32 active =
-        player->invincibleTimer != 0 || player->playerAnimator.animationID == ANI_JUMP || player->playerAnimator.animationID == ANI_SPINDASH;
-    bool32 flag = false;
-    switch (player->characterID) {
-        case ID_SONIC: active |= player->playerAnimator.animationID == ANI_DROPDASH; break;
-#if RETRO_USE_PLUS
-        case ID_MIGHTY: active |= player->playerAnimator.animationID == ANI_DROPDASH; break;
-#endif
-        case ID_TAILS:
-            if (!active) {
-                active = player->playerAnimator.animationID == ANI_FLY || player->playerAnimator.animationID == ANI_FLYTIRED
-                         || player->playerAnimator.animationID == ANI_FLYLIFT;
-                if (player->position.y <= entity->position.y)
-                    flag = true;
-            }
-            break;
-        case ID_KNUCKLES: active |= player->playerAnimator.animationID == ANI_FLY || player->playerAnimator.animationID == ANI_FLYLIFTTIRED; break;
-        default: break;
-    }
-
-    if (active && !flag) {
+    if (Player_CheckAttacking(player, entity)) {
         player->groundVel  = -player->groundVel;
         player->velocity.x = -player->velocity.x;
         player->velocity.y = -(player->velocity.y + 2 * player->gravityStrength);
         if (player->characterID == ID_KNUCKLES && player->playerAnimator.animationID == ANI_FLY) {
             RSDK.SetSpriteAnimation(player->spriteIndex, ANI_FLYTIRED, &player->playerAnimator, false, 0);
             player->state = Player_State_KnuxGlideDrop;
-            return true;
         }
         else {
 #if RETRO_USE_PLUS
@@ -2579,42 +2563,30 @@ bool32 Player_CheckBossHit(EntityPlayer *player, void *e)
                     player->velocity.y = -0x40000;
             }
 #endif
-            return true;
         }
+        return true;
     }
     else {
         Player_CheckHit(player, entity);
-        return false;
     }
     return false;
 }
 bool32 Player_CheckProjectileHit(EntityPlayer *player, void *p)
 {
     Entity *projectile = (Entity *)p;
-    bool32 active      = false;
+    bool32 deflected      = false;
 #if RETRO_USE_PLUS
     if (player->characterID == ID_MIGHTY) {
         int32 anim = player->playerAnimator.animationID;
         if (anim == ANI_CROUCH || anim == ANI_JUMP || anim == ANI_SPINDASH || anim == ANI_DROPDASH)
-            active = true;
+            deflected = true;
     }
 #endif
 
-    if (player->shield > SHIELD_BLUE) {
+    if (player->shield > SHIELD_BLUE || deflected) {
 #if RETRO_USE_PLUS
-        if (active) {
+        if (deflected)
             RSDK.PlaySfx(Player->sfx_MightyDeflect, false, 0xFE);
-        }
-#endif
-        int32 angle             = RSDK.ATan2(player->position.x - projectile->position.x, player->position.y - projectile->position.y);
-        projectile->velocity.x  = -0x800 * RSDK.Cos256(angle);
-        projectile->velocity.y  = -0x800 * RSDK.Sin256(angle);
-        projectile->interaction = false;
-        return true;
-    }
-    else if (active) {
-#if RETRO_USE_PLUS
-        RSDK.PlaySfx(Player->sfx_MightyDeflect, false, 0xFE);
 #endif
         int32 angle             = RSDK.ATan2(player->position.x - projectile->position.x, player->position.y - projectile->position.y);
         projectile->velocity.x  = -0x800 * RSDK.Cos256(angle);
@@ -2631,43 +2603,14 @@ bool32 Player_CheckHit2(EntityPlayer *player, void *e, bool32 flag)
     Entity *entity  = (Entity *)e;
     int32 anim      = player->playerAnimator.animationID;
     int32 character = player->characterID;
-    bool32 active   = player->invincibleTimer != 0 || anim == ANI_JUMP || anim == ANI_SPINDASH;
-    switch (character) {
-        case ID_SONIC: active |= anim == ANI_DROPDASH; break;
-#if RETRO_USE_PLUS
-        case ID_MIGHTY: active |= anim == ANI_DROPDASH; break;
-#endif
-        case ID_TAILS:
-            if (!active) {
-                active = anim == ANI_FLY || anim == ANI_FLYTIRED || anim == ANI_FLYLIFT;
-                if (player->position.y <= entity->position.y) {
-                    if (flag) {
-#if RETRO_USE_PLUS
-                        if (!(character == ID_MIGHTY && anim == ANI_CROUCH)) {
-#endif
-                            Player_CheckHit(player, entity);
-#if RETRO_USE_PLUS
-                        }
-#endif
-                    }
-                    return false;
-                }
-            }
-            break;
-        case ID_KNUCKLES:
-            active |= anim == ANI_FLY || anim == ANI_FLYLIFTTIRED;
-            character = player->characterID;
-            break;
-        default: break;
-    }
 
-    if (active) {
+    if (Player_CheckAttacking(player, entity)) {
         if (player->velocity.y <= 0) {
             player->velocity.y += 0x10000;
             return true;
         }
 #if RETRO_USE_PLUS
-        else if (player->position.y >= entity->position.y || ((player->characterID & 0xFF) == ID_MIGHTY && anim == ANI_DROPDASH)) {
+        else if (player->position.y >= entity->position.y || (checkPlayerID(ID_MIGHTY, 1) && anim == ANI_DROPDASH)) {
             player->velocity.y -= 0x10000;
             return true;
         }

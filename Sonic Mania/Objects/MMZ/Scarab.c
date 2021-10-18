@@ -125,7 +125,7 @@ void Scarab_CheckPlayerCollisions(void)
     {
         if (entity->planeFilter <= 0 || player->collisionPlane == ((uint8)(entity->planeFilter - 1) & 1)) {
             int32 playerID = RSDK.GetEntityID(player);
-            if (Player_CheckBadnikHit(player, entity, &Scarab->hitboxBadnik)) {
+            if (Player_CheckBadnikTouch(player, entity, &Scarab->hitboxBadnik)) {
                 Scarab_HandlePlayerRelease();
                 Player_CheckBadnikBreak(entity, player, true);
             }

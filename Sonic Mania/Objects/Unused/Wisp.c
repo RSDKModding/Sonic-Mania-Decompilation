@@ -78,7 +78,7 @@ void Wisp_HandlePlayerInteractions(void)
         else {
             entity->targetPtr = player;
         }
-        if (Player_CheckBadnikHit(player, entity, &Wisp->hitbox))
+        if (Player_CheckBadnikTouch(player, entity, &Wisp->hitbox))
             Player_CheckBadnikBreak(entity, player, true);
     }
 }

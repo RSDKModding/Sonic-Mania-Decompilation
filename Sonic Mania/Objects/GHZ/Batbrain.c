@@ -59,7 +59,7 @@ void Batbrain_CheckHit(void)
     RSDK_THIS(Batbrain);
     foreach_active(Player, player)
     {
-        if (Player_CheckBadnikHit(player, entity, &Batbrain->hitbox))
+        if (Player_CheckBadnikTouch(player, entity, &Batbrain->hitbox))
             Player_CheckBadnikBreak(entity, player, true);
     }
 }

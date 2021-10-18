@@ -445,28 +445,43 @@ void Player_HandleSuperForm(void);
 bool32 Player_CheckKeyPress(void);
 void Player_LoseRings(EntityPlayer *player, int32 rings, uint8 cPlane);
 void Player_LoseHyperRings(EntityPlayer *player, int32 rings, uint8 cPlane);
-EntityPlayer *Player_Unknown2(void);
-EntityPlayer *Player_Unknown3(void);
+//returns the pointer to the nearest player to the current entity on the x axis only
+EntityPlayer *Player_GetNearestPlayerX(void);
+// returns the pointer to the nearest player to the current entity on both the x & y axis'
+EntityPlayer *Player_GetNearestPlayer(void);
 #if RETRO_USE_PLUS
-void Player_Unknown4(void);
+void Player_RemoveEncoreLeader(void);
 #endif
-void Player_Unknown5(EntityPlayer *player);
+void Player_ResetBoundaries(EntityPlayer *player);
 void Player_State_TransportTube(void);
 void Player_HandleDeath(EntityPlayer *player);
 void Player_ResetState(EntityPlayer *player);
 
 // Collision
+//returns a pointer to the currently active player hitbox
 Hitbox *Player_GetHitbox(EntityPlayer *player);
+//performs a non-solid box collision with the player, this handles setting the appropriate collision-related player variabes automatically
 bool32 Player_CheckCollisionTouch(EntityPlayer *player, void *entity, Hitbox *entityHitbox);
+// performs an all-solid box collision with the player, this handles setting the appropriate collision-related player variabes automatically
 bool32 Player_CheckCollisionBox(EntityPlayer *player, void *entity, Hitbox *entityHitbox);
+// performs a top-solid box collision with the player, this handles setting the appropriate collision-related player variabes automatically
 bool32 Player_CheckCollisionPlatform(EntityPlayer *player, void *entity, Hitbox *entityHitbox);
 
+//Hits the player if not invulnerable, returns true if player was hit
 bool32 Player_CheckHit(EntityPlayer *player, void *entity);
+// the same as above, though the knockback dir is gotten from the player dir rather the direction of the distance
 bool32 Player_CheckHitFlip(EntityPlayer *player);
-bool32 Player_CheckBadnikHit(EntityPlayer *player, void *entity, Hitbox *entityHitbox);
+//returns true if the player is in an "attacking" state
+bool32 Player_CheckAttacking(EntityPlayer *player, void *e);
+//checks if the player collided with an entity, this collision differs from the touch one above since it uses hammerdrop & instashield if appropriate
+bool32 Player_CheckBadnikTouch(EntityPlayer *player, void *entity, Hitbox *entityHitbox);
+//checks if the player is attacking the badnik, returns true if the player attacked the badnik, otherwise the player is hit and returns false
 bool32 Player_CheckBadnikBreak(void *entity, EntityPlayer *player, bool32 destroy);
+//similar to checkBadnikTouch, this time for bosses, handles rebounds and stuff properly, does NOT check for hammerdrop/instashield hitboxes. returns true if player hit the boss, otherwise the player is hit and returns false
 bool32 Player_CheckBossHit(EntityPlayer *player, void *entity);
+//similar to checkHit, but for projectiles, handles the rebound effect when using shields or crouching as mighty, returns true if deflected, otherwise the player is hit and returns false
 bool32 Player_CheckProjectileHit(EntityPlayer *player, void *projectile);
+//idk yet, needs more research
 bool32 Player_CheckHit2(EntityPlayer *player, void *entity, bool32 flag);
 
 // State helpers

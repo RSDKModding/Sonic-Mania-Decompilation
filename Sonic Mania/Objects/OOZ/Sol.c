@@ -110,7 +110,7 @@ void Sol_HandlePlayerInteractions(void)
 
     foreach_active(Player, player)
     {
-        if (Player_CheckBadnikHit(player, entity, &Sol->hitbox1) && Player_CheckBadnikBreak(entity, player, false)) {
+        if (Player_CheckBadnikTouch(player, entity, &Sol->hitbox1) && Player_CheckBadnikBreak(entity, player, false)) {
             int32 angle = entity->angle;
             for (int32 i = 0; i < Sol_MaxFlameOrbs; ++i) {
                 if ((1 << i) & entity->activeOrbs) {

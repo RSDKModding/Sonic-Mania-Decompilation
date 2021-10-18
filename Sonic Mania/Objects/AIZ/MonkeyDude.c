@@ -239,7 +239,7 @@ void MonkeyDude_HandleStates(void)
     RSDK_THIS(MonkeyDude);
     foreach_active(Player, player)
     {
-        if (Player_CheckBadnikHit(player, entity, &MonkeyDude->hitbox))
+        if (Player_CheckBadnikTouch(player, entity, &MonkeyDude->hitbox))
             Player_CheckBadnikBreak(entity, player, true);
     }
 
@@ -271,7 +271,7 @@ void MonkeyDude_HandleStates(void)
             }
         }
         else {
-            EntityPlayer *target = Player_Unknown3();
+            EntityPlayer *target = Player_GetNearestPlayer();
             if (!entity->direction) {
                 if (target->position.x < entity->position.x) {
                     if (abs(entity->position.x - target->position.x) <= 0x800000) {

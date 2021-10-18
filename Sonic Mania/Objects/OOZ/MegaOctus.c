@@ -903,7 +903,7 @@ void MegaOctus_CheckPlayerCollisions_Orb(void)
     else {
         foreach_active(Player, player)
         {
-            if (Player_CheckBadnikHit(player, &pos, &entity->hitbox) && Player_CheckBossHit(player, entity)) {
+            if (Player_CheckBadnikTouch(player, &pos, &entity->hitbox) && Player_CheckBossHit(player, entity)) {
                 --entity->health;
                 --MegaOctus->orbHealth[entity->orbID];
                 if (entity->health) {

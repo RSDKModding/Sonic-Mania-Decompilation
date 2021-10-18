@@ -83,7 +83,7 @@ void Motobug_CheckPlayerCollisions(void)
     RSDK_THIS(Motobug);
     foreach_active(Player, player)
     {
-        if (Player_CheckBadnikHit(player, entity, &Motobug->hitbox))
+        if (Player_CheckBadnikTouch(player, entity, &Motobug->hitbox))
             Player_CheckBadnikBreak((Entity *)entity, player, true);
     }
 }

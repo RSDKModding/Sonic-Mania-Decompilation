@@ -763,7 +763,7 @@ int32 Zone_GetManiaStageID(void)
     int32 pos2 = 0;
     if (offset >= 15) {
         if (offset == 15) {
-            if (getPlayer(ID_KNUCKLES, 1))
+            if (checkPlayerID(ID_KNUCKLES, 1))
                 pos2 = mOff + 16;
             else
                 pos2 = mOff + 15;

@@ -124,7 +124,7 @@ void BuzzBomber_Unknown1(void)
 
     foreach_active(Player, player)
     {
-        if (Player_CheckBadnikHit(player, entity, &BuzzBomber->hitbox1)) {
+        if (Player_CheckBadnikTouch(player, entity, &BuzzBomber->hitbox1)) {
             if (Player_CheckBadnikBreak(entity, player, true)) {
                 if (entity->projectile)
                     RSDK.ResetEntityPtr(entity->projectile, TYPE_BLANK, 0);

@@ -165,7 +165,7 @@ void Caterkiller_HandlePlayerInteractions(void)
     foreach_active(Player, player)
     {
         if (entity->planeFilter <= 0 || player->collisionPlane == ((entity->planeFilter - 1) & 1)) {
-            if (Player_CheckBadnikHit(player, entity, &Caterkiller->hitbox)) {
+            if (Player_CheckBadnikTouch(player, entity, &Caterkiller->hitbox)) {
                 Player_CheckBadnikBreak(entity, player, true);
             }
             else {
@@ -346,7 +346,7 @@ void Caterkiller_State_Split_Head(void)
         foreach_active(Player, player)
         {
             if ((entity->planeFilter <= 0 || player->collisionPlane == ((entity->planeFilter - 1) & 1))
-                && Player_CheckBadnikHit(player, entity, &Caterkiller->hitbox)) {
+                && Player_CheckBadnikTouch(player, entity, &Caterkiller->hitbox)) {
                 Player_CheckBadnikBreak(entity, player, true);
             }
         }

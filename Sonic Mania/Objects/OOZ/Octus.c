@@ -88,7 +88,7 @@ void Octus_CheckPlayerCollisions(void)
     RSDK_THIS(Octus);
     foreach_active(Player, player)
     {
-        if (Player_CheckBadnikHit(player, entity, &Octus->hitbox1))
+        if (Player_CheckBadnikTouch(player, entity, &Octus->hitbox1))
             Player_CheckBadnikBreak(entity, player, true);
     }
 }

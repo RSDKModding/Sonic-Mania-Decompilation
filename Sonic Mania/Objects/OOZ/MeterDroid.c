@@ -102,7 +102,7 @@ void MeterDroid_CheckPlayerCollisions(void)
     foreach_active(Player, player)
     {
         if (!entity->invincibilityTimer) {
-            if (Player_CheckBadnikHit(player, entity, &MeterDroid->hitbox1) && Player_CheckBossHit(player, entity)) {
+            if (Player_CheckBadnikTouch(player, entity, &MeterDroid->hitbox1) && Player_CheckBossHit(player, entity)) {
                 MeterDroid_Hit();
             }
             if (!entity->invincibilityTimer) {
@@ -130,7 +130,7 @@ void MeterDroid_CheckPlayerCollisions2(void)
         int32 storeX = entity->position.x;
         int32 storeY = entity->position.y;
         if (!entity->invincibilityTimer) {
-            if (Player_CheckBadnikHit(player, entity, &MeterDroid->hitbox1) && Player_CheckBossHit(player, entity)) {
+            if (Player_CheckBadnikTouch(player, entity, &MeterDroid->hitbox1) && Player_CheckBossHit(player, entity)) {
                 MeterDroid_Hit();
             }
             if (!entity->invincibilityTimer) {
@@ -165,7 +165,7 @@ void MeterDroid_CheckPlayerCollisions3(void)
     foreach_active(Player, player)
     {
         if (!entity->invincibilityTimer) {
-            if (Player_CheckBadnikHit(player, entity, &MeterDroid->hitbox1) && Player_CheckBossHit(player, entity)) {
+            if (Player_CheckBadnikTouch(player, entity, &MeterDroid->hitbox1) && Player_CheckBossHit(player, entity)) {
                 MeterDroid_Hit();
             }
             if (!entity->invincibilityTimer) {

@@ -633,7 +633,7 @@ void CrimsonEye_CheckPlayerCollisions(void)
     else {
         foreach_active(Player, player)
         {
-            if (Player_CheckBadnikHit(player, CrimsonEye->positions, &CrimsonEye->hitboxEye) && Player_CheckBossHit(player, entity)) {
+            if (Player_CheckBadnikTouch(player, CrimsonEye->positions, &CrimsonEye->hitboxEye) && Player_CheckBossHit(player, entity)) {
                 if (CrimsonEye->health)
                     CrimsonEye->health--;
 

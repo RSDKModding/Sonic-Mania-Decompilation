@@ -5,12 +5,20 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    Hitbox hitbox;
+    uint16 aniFrames;
 } ObjectPhantomShield;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    StateMachine(state);
+    bool32 shieldActive;
+    int32 blendAmount;
+    int32 playerTimer[4];
+    Entity *parent;
+    Animator animator;
 } EntityPhantomShield;
 
 // Object Struct
@@ -28,6 +36,8 @@ void PhantomShield_EditorLoad(void);
 void PhantomShield_Serialize(void);
 
 // Extra Entity Functions
-
+void PhantomShield_Unknown1(void);
+void PhantomShield_Unknown2(void);
+void PhantomShield_Unknown3(void);
 
 #endif //!OBJ_PHANTOMSHIELD_H

@@ -120,7 +120,7 @@ void SentryBug_CheckPlayerCollisions(void)
 
     foreach_active(Player, player)
     {
-        if (Player_CheckBadnikHit(player, entity, &SentryBug->hitbox)) {
+        if (Player_CheckBadnikTouch(player, entity, &SentryBug->hitbox)) {
             if (Player_CheckBadnikBreak(entity, player, true))
                 RSDK.StopSFX(SentryBug->sfxSwarm);
         }
@@ -241,7 +241,7 @@ void SentryBug_State_Unknown1(void)
     if (entity->timer > 0)
         entity->timer--;
 
-    EntityPlayer *player = Player_Unknown3();
+    EntityPlayer *player = Player_GetNearestPlayer();
     if (player) {
         if (!entity->timer) {
             int32 rx = (entity->position.x - player->position.x) >> 16;

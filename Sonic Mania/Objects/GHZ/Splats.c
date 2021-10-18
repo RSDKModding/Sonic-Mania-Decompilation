@@ -114,7 +114,7 @@ void Splats_CheckPlayerCollisions(void)
 
     foreach_active(Player, player)
     {
-        if (Player_CheckBadnikHit(player, entity, &Splats->hitbox1)) {
+        if (Player_CheckBadnikTouch(player, entity, &Splats->hitbox1)) {
             if (Splats->state == Splats_Unknown3) {
                 Player_CheckBadnikBreak(entity, player, true);
             }

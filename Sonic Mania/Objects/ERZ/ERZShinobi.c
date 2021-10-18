@@ -78,7 +78,7 @@ void ERZShinobi_CheckHit(void)
 
     foreach_active(Player, playerLoop)
     {
-        if (!entity->invincibilityTimer && Player_CheckBadnikHit(playerLoop, entity, &ERZShinobi->hitbox)
+        if (!entity->invincibilityTimer && Player_CheckBadnikTouch(playerLoop, entity, &ERZShinobi->hitbox)
             && Player_CheckBossHit(playerLoop, entity)) {
             entity->invincibilityTimer = 48;
             // RSDK.PlaySfx(ERZKing->sfxHit, false, 255);

@@ -103,7 +103,7 @@ void Mine_CheckMightyHit(void)
     RSDK_THIS(Mine);
     foreach_active(Player, player)
     {
-        if (Player_CheckBadnikHit(player, entity, &Mine->hitbox) && (player->characterID == ID_MIGHTY && player->jumpAbilityTimer > 1)) {
+        if (Player_CheckBadnikTouch(player, entity, &Mine->hitbox) && (player->characterID == ID_MIGHTY && player->jumpAbilityTimer > 1)) {
             entity->timer = 1;
         }
     }

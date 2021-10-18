@@ -103,7 +103,7 @@ bool32 TMZ2Outro_CutsceneState_WatchEggman(EntityCutsceneSeq *host)
     bool32 flag = true;
     foreach_active(Player, player)
     {
-        if (player->sidekick == true && player->characterID == ID_KNUCKLES && !getPlayer(ID_KNUCKLES, 1)) {
+        if (player->sidekick == true && player->characterID == ID_KNUCKLES && !checkPlayerID(ID_KNUCKLES, 1)) {
             if (player->stateInput != TMZ2Outro_PlayerStateInput_Escape) {
                 Zone->playerBoundActiveR[0] = false;
                 player->stateInput          = TMZ2Outro_PlayerStateInput_Escape;
@@ -141,7 +141,7 @@ bool32 TMZ2Outro_CutsceneState_WatchEggman(EntityCutsceneSeq *host)
     if (flag) {
         foreach_active(Player, player2)
         {
-            if (player2->sidekick == true && (player2->characterID != ID_KNUCKLES || getPlayer(ID_KNUCKLES, 2)))
+            if (player2->sidekick == true && (player2->characterID != ID_KNUCKLES || checkPlayerID(ID_KNUCKLES, 2)))
                 player2->stateInput = Player_ProcessP2Input_AI;
         }
     }
@@ -629,7 +629,7 @@ bool32 TMZ2Outro_CutsceneState_FinishSequence(EntityCutsceneSeq *host)
     if (!(RSDK_sceneInfo->filter & FILTER_ENCORE))
 #endif
         goodEndingFlag =
-            (getPlayer(ID_SONIC, 1) || (getPlayer(ID_KNUCKLES, 1) && getPlayer(ID_KNUCKLES, 2))) && SaveGame->saveRAM->chaosEmeralds == 0x7F;
+            (checkPlayerID(ID_SONIC, 1) || (checkPlayerID(ID_KNUCKLES, 1) && checkPlayerID(ID_KNUCKLES, 2))) && SaveGame->saveRAM->chaosEmeralds == 0x7F;
 
     bool32 saveFlag = false;
     if (!goodEndingFlag)
@@ -669,7 +669,7 @@ bool32 TMZ2Outro_CutsceneState_FinishSequence(EntityCutsceneSeq *host)
             switch (globals->playerID & 0xFF) {
                 case ID_TAILS: RSDK.SetScene("Videos", "Bad End - Tails"); break;
                 case ID_KNUCKLES:
-                    if (getPlayer(ID_KNUCKLES, 2))
+                    if (checkPlayerID(ID_KNUCKLES, 2))
                         RSDK.SetScene("Videos", "True End?");
                     else
                         RSDK.SetScene("Videos", "Bad End - Knux");

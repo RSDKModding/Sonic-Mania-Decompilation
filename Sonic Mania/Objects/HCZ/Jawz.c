@@ -61,7 +61,7 @@ void Jawz_CheckPlayerInteractions(void)
     RSDK_THIS(Jawz);
     foreach_active(Player, player)
     {
-        if (Player_CheckBadnikHit(player, entity, &Jawz->hitbox) && !Player_CheckBadnikBreak(entity, player, true)) {
+        if (Player_CheckBadnikTouch(player, entity, &Jawz->hitbox) && !Player_CheckBadnikBreak(entity, player, true)) {
             CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), entity->position.x, entity->position.y)->drawOrder = Zone->drawOrderHigh;
             RSDK.PlaySfx(Explosion->sfxDestroy, false, 255);
             destroyEntity(entity);
@@ -77,7 +77,7 @@ void Jawz_CheckPlayerTrigger(void)
     if (Player->playerCount <= 1 || RSDK_GET_ENTITY(SLOT_PLAYER2, Player)->sidekick)
         player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     else
-        player = Player_Unknown3();
+        player = Player_GetNearestPlayer();
 
     if (player) {
         if (abs(player->position.x - entity->position.x) < 0x1800000) {

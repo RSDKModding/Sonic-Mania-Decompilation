@@ -443,7 +443,7 @@ void ItemBox_CheckHit(void)
                         }
                     }
                 }
-                else if (Player_CheckBadnikHit(player, entity, &ItemBox->hitbox)) {
+                else if (Player_CheckBadnikTouch(player, entity, &ItemBox->hitbox)) {
                     ItemBox_Break(entity, player);
                     foreach_break;
                 }

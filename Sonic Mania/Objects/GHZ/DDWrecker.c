@@ -651,7 +651,7 @@ void DDWrecker_LateState_Unknown1(void)
     RSDK_THIS(DDWrecker);
     foreach_active(Player, player)
     {
-        if (!entity->invincible && Player_CheckBadnikHit(player, entity, &entity->hitbox) && Player_CheckBossHit(player, entity)) {
+        if (!entity->invincible && Player_CheckBadnikTouch(player, entity, &entity->hitbox) && Player_CheckBossHit(player, entity)) {
             DDWrecker_Hit();
             RSDK.PlaySfx(DDWrecker->sfx_BossHit, 0, 255);
         }
@@ -685,7 +685,7 @@ void DDWrecker_LateState_Unknown2(void)
     RSDK_THIS(DDWrecker);
     foreach_active(Player, player)
     {
-        if (!entity->invincible && Player_CheckBadnikHit(player, entity, &entity->hitbox)) {
+        if (!entity->invincible && Player_CheckBadnikTouch(player, entity, &entity->hitbox)) {
             if (player->invincibleTimer || player->blinkTimer > 0 || entity->animator.animationID < 3) {
                 if (Player_CheckBossHit(player, entity)) {
                     DDWrecker_Hit();
@@ -725,7 +725,7 @@ void DDWrecker_LateState_Unknown3(void)
     RSDK_THIS(DDWrecker);
     foreach_active(Player, player)
     {
-        if (!entity->invincible && Player_CheckBadnikHit(player, entity, &entity->hitbox)) {
+        if (!entity->invincible && Player_CheckBadnikTouch(player, entity, &entity->hitbox)) {
             if (player->invincibleTimer || player->blinkTimer > 0 || entity->animator.animationID < 3) {
                 if (Player_CheckBossHit(player, entity)) {
                     DDWrecker_Hit();

@@ -90,7 +90,7 @@ void Stegway_HandlePlayerInteractions(void)
     RSDK_THIS(Stegway);
     foreach_active(Player, player)
     {
-        if (Player_CheckBadnikHit(player, entity, &Stegway->hitboxBadnik))
+        if (Player_CheckBadnikTouch(player, entity, &Stegway->hitboxBadnik))
             Player_CheckBadnikBreak(entity, player, true);
     }
 }

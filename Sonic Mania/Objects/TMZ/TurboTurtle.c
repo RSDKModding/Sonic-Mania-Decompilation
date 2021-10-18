@@ -122,7 +122,7 @@ void TurboTurtle_CheckPlayerCollisions(void)
 
     foreach_active(Player, player)
     {
-        if (Player_CheckBadnikHit(player, entity, &TurboTurtle->hitbox))
+        if (Player_CheckBadnikTouch(player, entity, &TurboTurtle->hitbox))
             Player_CheckBadnikBreak(entity, player, true);
     }
 }

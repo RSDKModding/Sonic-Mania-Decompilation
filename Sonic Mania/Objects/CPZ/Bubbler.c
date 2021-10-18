@@ -85,7 +85,7 @@ void Bubbler_HandleInteractions(void)
     RSDK_THIS(Bubbler);
     foreach_active(Player, player)
     {
-        if (Player_CheckBadnikHit(player, entity, &Bubbler->hitbox1))
+        if (Player_CheckBadnikTouch(player, entity, &Bubbler->hitbox1))
             Player_CheckBadnikBreak(entity, player, true);
     }
 }

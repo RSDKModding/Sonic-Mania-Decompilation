@@ -85,7 +85,7 @@ void TurboSpiker_Hermit_Collide(void)
     RSDK_THIS(TurboSpiker);
     foreach_active(Player, player)
     {
-        if (Player_CheckBadnikHit(player, entity, &TurboSpiker->hermitHitbox) && Player_CheckBadnikBreak(entity, player, false)) {
+        if (Player_CheckBadnikTouch(player, entity, &TurboSpiker->hermitHitbox) && Player_CheckBadnikBreak(entity, player, false)) {
             if (entity->spike)
                 destroyEntity(entity->spike);
             destroyEntity(entity);
@@ -128,8 +128,8 @@ void TurboSpiker_Hermit_Create(void)
         RSDK.SetSpriteAnimation(TurboSpiker->animID, 1, &entity->spikeAnimator, true, 0);
         RSDK.SetSpriteAnimation(TurboSpiker->animID, 3, &entity->animator, true, 0);
         entity->drawOrder = Zone->fgLayerLow + 1;
-        if (Player_Unknown3())
-            entity->direction = Player_Unknown3()->position.x >= entity->position.x;
+        if (Player_GetNearestPlayer())
+            entity->direction = Player_GetNearestPlayer()->position.x >= entity->position.x;
     }
     EntityTurboSpiker *spike = CREATE_ENTITY(TurboSpiker, intToVoid(1), entity->position.x, entity->position.y);
     spike->isPermanent       = true;
@@ -287,8 +287,8 @@ void TurboSpiker_Hermit_Fire(void)
 {
     RSDK_THIS(TurboSpiker);
     if (!--entity->timer) {
-        if (Player_Unknown3())
-            entity->direction = Player_Unknown3()->position.x < entity->position.x;
+        if (Player_GetNearestPlayer())
+            entity->direction = Player_GetNearestPlayer()->position.x < entity->position.x;
         EntityTurboSpiker *spike = (EntityTurboSpiker *)entity->spike;
         if (spike) {
             RSDK.PlaySfx(TurboSpiker->launchSFX, 0, 255);

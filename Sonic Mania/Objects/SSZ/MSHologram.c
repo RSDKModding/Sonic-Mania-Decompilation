@@ -91,7 +91,7 @@ void MSHologram_State_CheckPlayerCollisions(void)
     foreach_active(Player, player)
     {
         if (player->playerAnimator.animationID == ANI_JUMP || player->playerAnimator.animationID == ANI_DROPDASH) {
-            if (Player_CheckBadnikHit(player, entity, &MSHologram->hitbox))
+            if (Player_CheckBadnikTouch(player, entity, &MSHologram->hitbox))
                 entity->state = MSHologram_State_Explode;
         }
         else {

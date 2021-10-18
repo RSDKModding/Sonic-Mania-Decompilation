@@ -196,7 +196,7 @@ void CaterkillerJr_State2(void)
     foreach_active(Player, player)
     {
         entity->position = entity->bodyPosition[0];
-        if (Player_CheckBadnikHit(player, entity, &CaterkillerJr->hitbox) && Player_CheckBadnikBreak(entity, player, false)) {
+        if (Player_CheckBadnikTouch(player, entity, &CaterkillerJr->hitbox) && Player_CheckBadnikBreak(entity, player, false)) {
             for (int32 i = 0; i < 6; ++i) {
                 EntityDebris *debris =
                     CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, entity->bodyPosition[i + 1].x, entity->bodyPosition[i + 1].y);

@@ -28,7 +28,7 @@ typedef enum {
     ID_KNUCKLES_ASSIST = ID_KNUCKLES << 8, //custom-added, can be used to check if & knux is active
     ID_DEFAULT_PLAYER  = ID_SONIC | ID_TAILS_ASSIST,
 } PlayerIDs;
-#define getPlayer(player, id) ((globals->playerID >> (8 * ((id) - 1))) & 0xFF) == (player)
+#define checkPlayerID(player, id) ((globals->playerID >> (8 * ((id) - 1))) & 0xFF) == (player)
 
 typedef enum { ITEMS_FIXED, ITEMS_RANDOM, ITEMS_TELEPORT } ItemModes;
 
