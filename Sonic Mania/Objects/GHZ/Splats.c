@@ -103,10 +103,14 @@ void Splats_DebugDraw(void)
         RSDK.SetSpriteAnimation(Splats->aniFrames, 0, &DebugMode->animator, true, 0);
     else
         RSDK.SetSpriteAnimation(Splats->aniFrames, 1, &DebugMode->animator, true, 0);
-    RSDK.DrawSprite(&DebugMode->animator, 0, 0);
+    RSDK.DrawSprite(&DebugMode->animator, NULL, false);
 }
 
-void Splats_DebugSpawn(void) { RSDK.CreateEntity(Splats->objectID, 0, RSDK_sceneInfo->entity->position.x, RSDK_sceneInfo->entity->position.y); }
+void Splats_DebugSpawn(void)
+{
+    RSDK_THIS(DebugMode);
+    CREATE_ENTITY(Splats, NULL, entity->position.x, entity->position.y);
+}
 
 void Splats_CheckPlayerCollisions(void)
 {
@@ -361,16 +365,26 @@ void Splats_Unknown10(void)
     if (entity->delay >= 30) {
         entity->alpha -= 2;
         if (!entity->alpha)
-            RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL);
+            destroyEntity(entity);
     }
     else {
         entity->delay++;
     }
 }
 
-void Splats_EditorDraw(void) {}
+void Splats_EditorDraw(void) { Splats_Draw(); }
 
-void Splats_EditorLoad(void) {}
+void Splats_EditorLoad(void)
+{
+    if (RSDK.CheckStageFolder("GHZ")) {
+        Splats->aniFrames = RSDK.LoadSpriteAnimation("GHZ/Splats.bin", SCOPE_STAGE);
+        Splats->state     = Splats_Unknown3;
+    }
+    else if (RSDK.CheckStageFolder("PSZ1")) {
+        Splats->aniFrames = RSDK.LoadSpriteAnimation("PSZ1/Splats.bin", SCOPE_STAGE);
+        Splats->state     = Splats_Unknown5;
+    }
+}
 
 void Splats_Serialize(void)
 {

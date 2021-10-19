@@ -18,7 +18,7 @@ typedef struct {
     RSDK_ENTITY
     uint8 type;
     uint8 inkedPlayers;
-    Animator data1;
+    Animator animator1;
     Animator animator2;
     Animator data3;
 } EntityInk;

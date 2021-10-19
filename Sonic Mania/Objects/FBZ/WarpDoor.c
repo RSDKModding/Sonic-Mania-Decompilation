@@ -367,10 +367,10 @@ void WarpDoor_DrawDebug(void)
             colour = 0x0000FF;
 
         if (entity->destinationTag >= 1 && entity->destinationTag <= 256) {
-            if (WarpDoor->tags[entity->destinationTag]) {
+            EntityWarpDoor *dest = (EntityWarpDoor *)WarpDoor->tags[entity->destinationTag];
+            if (dest) {
                 DrawHelpers_DrawHitboxOutline(colour, FLIP_NONE, entity->position.x, entity->position.y, &entity->hitbox);
-                DrawHelpers_DrawDebug3(0x00FFFF, entity->position.x, WarpDoor->tags[entity->destinationTag]->position.x, entity->position.y,
-                                       WarpDoor->tags[entity->destinationTag]->position.y);
+                DrawHelpers_DrawArrow(0x00FFFF, entity->position.x, dest->position.x, entity->position.y, dest->position.y);
             }
         }
 
@@ -402,9 +402,9 @@ void WarpDoor_Unknown7(void)
     entity->hitbox.bottom = (16 * entity->height) >> 1;
 }
 
-void WarpDoor_EditorDraw(void) {}
+void WarpDoor_EditorDraw(void) { WarpDoor_DrawDebug(); }
 
-void WarpDoor_EditorLoad(void) {}
+void WarpDoor_EditorLoad(void) { WarpDoor->aniFrames = RSDK.LoadSpriteAnimation("Global/PlaneSwitch.bin", SCOPE_STAGE); }
 
 void WarpDoor_Serialize(void)
 {

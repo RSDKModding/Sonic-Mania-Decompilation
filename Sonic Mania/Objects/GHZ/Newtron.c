@@ -90,10 +90,14 @@ void Newtron_StageLoad(void)
 void Newtron_DebugDraw(void)
 {
     RSDK.SetSpriteAnimation(Newtron->aniFrames, 0, &DebugMode->animator, true, 0);
-    RSDK.DrawSprite(&DebugMode->animator, 0, 0);
+    RSDK.DrawSprite(&DebugMode->animator, NULL, false);
 }
 
-void Newtron_DebugSpawn(void) { RSDK.CreateEntity(Newtron->objectID, NULL, RSDK_sceneInfo->entity->position.x, RSDK_sceneInfo->entity->position.y); }
+void Newtron_DebugSpawn(void)
+{
+    RSDK_THIS(DebugMode);
+    CREATE_ENTITY(Newtron, NULL, entity->position.x, entity->position.y);
+}
 
 void Newtron_CheckHit(void)
 {
@@ -108,7 +112,7 @@ void Newtron_CheckHit(void)
 void Newtron_CheckOnScreen(void)
 {
     RSDK_THIS(Newtron);
-    if (!RSDK.CheckOnScreen(RSDK_sceneInfo->entity, NULL) && !(int32)RSDK.CheckPosOnScreen(&entity->startPos, &entity->updateRange)) {
+    if (!RSDK.CheckOnScreen(RSDK_sceneInfo->entity, NULL) && !RSDK.CheckPosOnScreen(&entity->startPos, &entity->updateRange)) {
         entity->position.x = entity->startPos.x;
         entity->position.y = entity->startPos.y;
         entity->velocity.x = 0;
@@ -266,9 +270,19 @@ void Newtron_State_Projectile(void)
     }
 }
 
-void Newtron_EditorDraw(void) {}
+void Newtron_EditorDraw(void)
+{
+    RSDK_THIS(Newtron);
+    if (entity->type == 1)
+        RSDK.SetSpriteAnimation(Newtron->aniFrames, 2, &entity->animator1, true, 0);
+    else 
+        RSDK.SetSpriteAnimation(Newtron->aniFrames, 0, &entity->animator1, true, 0);
+    RSDK.SetSpriteAnimation(Newtron->aniFrames, 5, &entity->animator2, true, 0);
+    
+    Newtron_Draw();
+}
 
-void Newtron_EditorLoad(void) {}
+void Newtron_EditorLoad(void) { Newtron->aniFrames = RSDK.LoadSpriteAnimation("GHZ/Newtron.bin", SCOPE_STAGE); }
 
 void Newtron_Serialize(void)
 {

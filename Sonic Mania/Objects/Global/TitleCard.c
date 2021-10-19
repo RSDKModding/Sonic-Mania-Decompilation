@@ -820,9 +820,14 @@ void TitleCard_Unknown14(void)
     RSDK.DrawText(&entity->nameLetterData, &drawPos, &entity->zoneName, entity->word2Offset, 0, ALIGN_RIGHT, 1, 0, 0, true);
 }
 
-void TitleCard_EditorDraw(void) {}
+void TitleCard_EditorDraw(void)
+{
+    RSDK_THIS(TitleCard);
+    RSDK.SetSpriteAnimation(TitleCard->spriteIndex, 0, &entity->decorationData, true, 3);
+    RSDK.DrawSprite(&entity->decorationData, NULL, false);
+}
 
-void TitleCard_EditorLoad(void) {}
+void TitleCard_EditorLoad(void) { TitleCard->spriteIndex = RSDK.LoadSpriteAnimation("Editor/EditorIcons.bin", SCOPE_STAGE); }
 
 void TitleCard_Serialize(void)
 {

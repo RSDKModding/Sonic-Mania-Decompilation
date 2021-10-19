@@ -83,19 +83,16 @@ void RubyPortal_Create(void *data)
 
 void RubyPortal_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("ERZ")) {
+    if (RSDK.CheckStageFolder("ERZ"))
         RubyPortal->spriteIndex = RSDK.LoadSpriteAnimation("Phantom/Portal.bin", SCOPE_STAGE);
-    }
 #if RETRO_USE_PLUS
-    else if (RSDK.CheckStageFolder("AIZ")) {
+    else if (RSDK.CheckStageFolder("AIZ"))
         RubyPortal->spriteIndex = RSDK.LoadSpriteAnimation("AIZ/Portal.bin", SCOPE_STAGE);
-    }
-    else {
+    else
 #else // preplus has an explicit check
-    else if (RSDK.CheckStageFolder("TMZ2")) {
+    else if (RSDK.CheckStageFolder("TMZ2"))
 #endif
         RubyPortal->spriteIndex = RSDK.LoadSpriteAnimation("TMZ1/Portal.bin", SCOPE_STAGE);
-    }
 
     RubyPortal->hitbox.left   = -24;
     RubyPortal->hitbox.top    = -24;
@@ -373,8 +370,28 @@ void RubyPortal_Unknown9(void)
     foreach_active(PhantomRuby, ruby) { ruby->position.x += entity->velocity.x; }
 }
 
-void RubyPortal_EditorDraw(void) {}
+void RubyPortal_EditorDraw(void)
+{
+    RSDK_THIS(RubyPortal);
+    entity->visible       = true;
+    entity->drawOrder     = Zone->drawOrderLow;
+    RSDK.SetSpriteAnimation(RubyPortal->spriteIndex, 0, &entity->animator, true, 0);
 
-void RubyPortal_EditorLoad(void) {}
+    RSDK.DrawSprite(&entity->animator, NULL, false);
+}
+
+void RubyPortal_EditorLoad(void)
+{
+    if (RSDK.CheckStageFolder("ERZ"))
+        RubyPortal->spriteIndex = RSDK.LoadSpriteAnimation("Phantom/Portal.bin", SCOPE_STAGE);
+#if RETRO_USE_PLUS
+    else if (RSDK.CheckStageFolder("AIZ"))
+        RubyPortal->spriteIndex = RSDK.LoadSpriteAnimation("AIZ/Portal.bin", SCOPE_STAGE);
+    else
+#else // preplus has an explicit check
+    else if (RSDK.CheckStageFolder("TMZ2"))
+#endif
+        RubyPortal->spriteIndex = RSDK.LoadSpriteAnimation("TMZ1/Portal.bin", SCOPE_STAGE);
+}
 
 void RubyPortal_Serialize(void) {}

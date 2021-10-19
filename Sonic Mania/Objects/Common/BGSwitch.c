@@ -48,9 +48,28 @@ void BGSwitch_StageLoad(void)
     BGSwitch->layerIDs[7] = -1;
 }
 
-void BGSwitch_EditorDraw(void) {}
+void BGSwitch_EditorDraw(void)
+{
+    RSDK_THIS(BGSwitch);
+    RSDK.SetSpriteAnimation(BGSwitch->aniFrames, 0, &entity->animator, true, 5);
+    RSDK.DrawSprite(&entity->animator, NULL, false);
 
-void BGSwitch_EditorLoad(void) {}
+    //Bounds
+    Vector2 drawPos;
+
+    drawPos.x = entity->position.x;
+    drawPos.y = entity->position.y;
+    drawPos.x -= entity->size.x >> 1;
+    drawPos.y -= entity->size.y >> 1;
+    RSDK.DrawLine(drawPos.x - 0x10000, drawPos.y - 0x10000, drawPos.x + entity->size.x, drawPos.y - 0x10000, 0xE0E0E0, 0, INK_NONE, 0);
+    RSDK.DrawLine(drawPos.x - 0x10000, entity->size.y + drawPos.y, drawPos.x + entity->size.x, entity->size.y + drawPos.y, 0xE0E0E0, 0, INK_NONE,
+                  false);
+    RSDK.DrawLine(drawPos.x - 0x10000, drawPos.y - 0x10000, drawPos.x - 0x10000, drawPos.y + entity->size.y, 0xE0E0E0, 0, INK_NONE, 0);
+    RSDK.DrawLine(drawPos.x + entity->size.x, drawPos.y - 0x10000, drawPos.x + entity->size.x, drawPos.y + entity->size.y, 0xE0E0E0, 0, INK_NONE,
+                  false);
+}
+
+void BGSwitch_EditorLoad(void) { BGSwitch->aniFrames = RSDK.LoadSpriteAnimation("Editor/EditorIcons.bin", SCOPE_STAGE); }
 
 void BGSwitch_Serialize(void)
 {

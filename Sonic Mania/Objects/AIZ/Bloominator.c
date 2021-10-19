@@ -153,13 +153,13 @@ void Bloominator_State_Spikeball(void)
         }
     }
     else {
-        RSDK.ResetEntityPtr(entity, TYPE_BLANK, 0);
+        destroyEntity(entity);
     }
 }
 
-void Bloominator_EditorDraw(void) {}
+void Bloominator_EditorDraw(void) { Bloominator_Draw(); }
 
-void Bloominator_EditorLoad(void) {}
+void Bloominator_EditorLoad(void) { Bloominator->spriteIndex = RSDK.LoadSpriteAnimation("AIZ/Bloominator.bin", SCOPE_STAGE); }
 
 void Bloominator_Serialize(void) {}
 #endif

@@ -1944,7 +1944,7 @@
       <EnableUAC>false</EnableUAC>
     </Link>
     <PostBuildEvent>
-      <Command>"$(ProjectDir)buildstatic.bat"</Command>
+      <Command>"$(ProjectDir)buildstatic.bat" copy /Y "$(OutDir)Game.dll" "$(SolutionDir)build\"</Command>
     </PostBuildEvent>
     <PostBuildEvent>
       <Message>Building Static Object Files...</Message>
@@ -1970,7 +1970,7 @@
       <EnableUAC>false</EnableUAC>
     </Link>
     <PostBuildEvent>
-      <Command>"$(ProjectDir)buildstatic.bat"</Command>
+      <Command>"$(ProjectDir)buildstatic.bat" copy /Y "$(OutDir)Game.dll" "$(SolutionDir)build\"</Command>
     </PostBuildEvent>
     <PostBuildEvent>
       <Message>Building Static Object Files...</Message>
@@ -1992,7 +1992,7 @@
       <EnableUAC>false</EnableUAC>
     </Link>
     <PostBuildEvent>
-      <Command>"$(ProjectDir)buildstatic.bat"</Command>
+      <Command>"$(ProjectDir)buildstatic.bat" copy /Y "$(OutDir)Game.dll" "$(SolutionDir)build\"</Command>
     </PostBuildEvent>
     <PostBuildEvent>
       <Message>Building Static Object Files...</Message>
@@ -2018,7 +2018,7 @@
       <EnableUAC>false</EnableUAC>
     </Link>
     <PostBuildEvent>
-      <Command>"$(ProjectDir)buildstatic.bat"</Command>
+      <Command>"$(ProjectDir)buildstatic.bat" copy /Y "$(OutDir)Game.dll" "$(SolutionDir)build\"</Command>
     </PostBuildEvent>
     <PostBuildEvent>
       <Message>Building Static Object Files...</Message>

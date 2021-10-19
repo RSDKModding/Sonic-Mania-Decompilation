@@ -63,7 +63,7 @@ typedef struct {
     int32 field_118;
     int32 field_11C;
     int32 field_120;
-    Animator data1;
+    Animator animator1;
     Animator animator2;
     Animator data3;
     Animator data4;

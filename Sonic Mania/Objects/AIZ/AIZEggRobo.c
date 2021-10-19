@@ -27,9 +27,9 @@ void AIZEggRobo_StaticUpdate(void) {}
 void AIZEggRobo_Draw(void)
 {
     RSDK_THIS(AIZEggRobo);
-    RSDK.DrawSprite(&entity->animator3, 0, false);
-    RSDK.DrawSprite(&entity->animator1, 0, false);
-    RSDK.DrawSprite(&entity->animator2, 0, false);
+    RSDK.DrawSprite(&entity->animator3, NULL, false);
+    RSDK.DrawSprite(&entity->animator1, NULL, false);
+    RSDK.DrawSprite(&entity->animator2, NULL, false);
 }
 
 void AIZEggRobo_Create(void *data)
@@ -53,9 +53,9 @@ void AIZEggRobo_Create(void *data)
 
 void AIZEggRobo_StageLoad(void) { AIZEggRobo->aniFrames = RSDK.LoadSpriteAnimation("AIZ/AIZEggRobo.bin", SCOPE_STAGE); }
 
-void AIZEggRobo_EditorDraw(void) {}
+void AIZEggRobo_EditorDraw(void) { AIZEggRobo_Draw(); }
 
-void AIZEggRobo_EditorLoad(void) {}
+void AIZEggRobo_EditorLoad(void) { AIZEggRobo->aniFrames = RSDK.LoadSpriteAnimation("AIZ/AIZEggRobo.bin", SCOPE_STAGE); }
 
 void AIZEggRobo_Serialize(void)
 {

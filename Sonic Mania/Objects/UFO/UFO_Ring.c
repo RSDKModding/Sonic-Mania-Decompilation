@@ -153,11 +153,16 @@ void UFO_Ring_Unknown4(void)
 
     entity->alpha -= 4;
     if (!entity->alpha)
-        RSDK.ResetEntityPtr(entity, TYPE_BLANK, 0);
+        destroyEntity(entity);
 }
 
-void UFO_Ring_EditorDraw(void) {}
+void UFO_Ring_EditorDraw(void)
+{
+    RSDK_THIS(UFO_Ring);
+    RSDK.SetSpriteAnimation(UFO_Ring->spriteIndex, 1, &entity->animator, true, 0);
+    RSDK.DrawSprite(&entity->animator, NULL, true);
+}
 
-void UFO_Ring_EditorLoad(void) {}
+void UFO_Ring_EditorLoad(void) { UFO_Ring->spriteIndex = RSDK.LoadSpriteAnimation("Global/Ring.bin", SCOPE_STAGE); }
 
 void UFO_Ring_Serialize(void) { RSDK_EDITABLE_VAR(UFO_Ring, VAR_ENUM, height); }

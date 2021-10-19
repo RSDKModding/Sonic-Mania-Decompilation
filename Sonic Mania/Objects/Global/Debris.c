@@ -44,7 +44,7 @@ void Debris_Create(void *data)
 
     entity->active  = ACTIVE_NORMAL;
     entity->visible = true;
-    entity->state   = (void (*)(void))data;
+    entity->state   = (Type_StateMachine)data;
 }
 
 void Debris_StageLoad(void) {}
@@ -95,7 +95,7 @@ void Debris_State_FallAndFlicker(void)
 
 void Debris_FallFlickerAnimSetup(int32 spriteIndex, int32 *entryPtr, int32 animationID)
 {
-    Entity *entity = RSDK_sceneInfo->entity;
+    RSDK_THIS(Debris);
     if (entryPtr) {
         int32 cnt = *entryPtr;
         // format:
@@ -122,7 +122,7 @@ void Debris_FallFlickerAnimSetup(int32 spriteIndex, int32 *entryPtr, int32 anima
 
 void Debris_FallFlickerSetup(int32 spriteIndex, int32 *entryPtr)
 {
-    Entity *entity = RSDK_sceneInfo->entity;
+    RSDK_THIS(Debris);
     if (entryPtr) {
         int32 cnt = *entryPtr;
         // format:

@@ -221,9 +221,52 @@ void ParallaxSprite_Unknown5(void)
     }
 }
 
-void ParallaxSprite_EditorDraw(void) {}
+void ParallaxSprite_EditorDraw(void)
+{
+    RSDK_THIS(ParallaxSprite);
+    RSDK.SetSpriteAnimation(ParallaxSprite->aniFrames, entity->aniID, &entity->animator, true, 0);
+    Vector2 drawPos;
 
-void ParallaxSprite_EditorLoad(void) {}
+    drawPos.x        = entity->position.x;
+    drawPos.y        = entity->position.y;
+
+    if (entity->attribute == 2) {
+        int32 y = (drawPos.y >> 16) - 32;
+        int32 x = (drawPos.x >> 16) - 56;
+        RSDK.DrawRect(x, y, 112, 64, entity->unknownPosA.x, 255, 0, true);
+
+        for (int32 i = 0; i < 0xE0; i += 0x20) {
+            int32 val = (RSDK.Sin256(i + Zone->timer) >> 3) + 48;
+            if (val > 64)
+                val = 64;
+            RSDK.DrawRect(x, y - val + 64, 16, val, entity->unknownPosA.y, 255, 0, true);
+            x += 16;
+        }
+    }
+    else if (entity->attribute == 6) {
+        RSDK.GetFrame(ParallaxSprite->aniFrames, entity->aniID, 0)->sprX =
+            entity->sprX + (((uint16)(entity->field_B4) + ((uint16)(Zone->timer) << entity->field_B0)) & 0x7F);
+    }
+    RSDK.DrawSprite(&entity->animator, &drawPos, false);
+}
+
+void ParallaxSprite_EditorLoad(void)
+{
+    if (RSDK.CheckStageFolder("AIZ"))
+        ParallaxSprite->aniFrames = RSDK.LoadSpriteAnimation("AIZ/Decoration.bin", SCOPE_STAGE);
+    else if (RSDK.CheckStageFolder("CPZ"))
+        ParallaxSprite->aniFrames = RSDK.LoadSpriteAnimation("CPZ/CPZParallax.bin", SCOPE_STAGE);
+    else if (RSDK.CheckStageFolder("SPZ1"))
+        ParallaxSprite->aniFrames = RSDK.LoadSpriteAnimation("SPZ1/SPZParallax.bin", SCOPE_STAGE);
+    else if (RSDK.CheckStageFolder("FBZ"))
+        ParallaxSprite->aniFrames = RSDK.LoadSpriteAnimation("FBZ/FBZParallax.bin", SCOPE_STAGE);
+    else if (RSDK.CheckStageFolder("MSZ") || RSDK.CheckStageFolder("MSZCutscene"))
+        ParallaxSprite->aniFrames = RSDK.LoadSpriteAnimation("MSZ/MSZParallax.bin", SCOPE_STAGE);
+    else if (RSDK.CheckStageFolder("OOZ2"))
+        ParallaxSprite->aniFrames = RSDK.LoadSpriteAnimation("OOZ/OOZParallax.bin", SCOPE_STAGE);
+    else if (RSDK.CheckStageFolder("LRZ2") || RSDK.CheckStageFolder("LRZ3"))
+        ParallaxSprite->aniFrames = RSDK.LoadSpriteAnimation("LRZ2/LRZParallax.bin", SCOPE_STAGE);
+}
 
 void ParallaxSprite_Serialize(void)
 {

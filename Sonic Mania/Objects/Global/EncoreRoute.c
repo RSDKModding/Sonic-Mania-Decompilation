@@ -51,9 +51,44 @@ void EncoreRoute_Create(void *data)
 
 void EncoreRoute_StageLoad(void) {}
 
-void EncoreRoute_EditorDraw(void) {}
+void EncoreRoute_EditorDraw(void)
+{
+    RSDK_THIS(EncoreRoute);
+    Vector2 drawPos;
 
-void EncoreRoute_EditorLoad(void) {}
+    drawPos.x = entity->position.x;
+    drawPos.y = entity->position.y;
+    drawPos.x -= entity->size.x >> 1;
+    drawPos.y -= entity->size.y >> 1;
+    RSDK.DrawLine(drawPos.x - 0x10000, drawPos.y - 0x10000, drawPos.x + entity->size.x, drawPos.y - 0x10000, 0xE0E0E0, 0, INK_NONE, 0);
+    RSDK.DrawLine(drawPos.x - 0x10000, entity->size.y + drawPos.y, drawPos.x + entity->size.x, entity->size.y + drawPos.y, 0xE0E0E0, 0, INK_NONE,
+                  false);
+    RSDK.DrawLine(drawPos.x - 0x10000, drawPos.y - 0x10000, drawPos.x - 0x10000, drawPos.y + entity->size.y, 0xE0E0E0, 0, INK_NONE, 0);
+    RSDK.DrawLine(drawPos.x + entity->size.x, drawPos.y - 0x10000, drawPos.x + entity->size.x, drawPos.y + entity->size.y, 0xE0E0E0, 0, INK_NONE,
+                  false);
+
+    entity->direction = FLIP_NONE;
+    RSDK.DrawSprite(&EncoreRoute->animator, &drawPos, false);
+
+    drawPos.x += entity->size.x;
+    entity->direction = FLIP_X;
+    RSDK.DrawSprite(&EncoreRoute->animator, &drawPos, false);
+
+    drawPos.y += entity->size.y;
+    entity->direction = FLIP_XY;
+    RSDK.DrawSprite(&EncoreRoute->animator, &drawPos, false);
+
+    drawPos.x -= entity->size.x;
+    entity->direction = FLIP_Y;
+    RSDK.DrawSprite(&EncoreRoute->animator, &drawPos, false);
+
+}
+
+void EncoreRoute_EditorLoad(void)
+{
+    EncoreRoute->aniFrames = RSDK.LoadSpriteAnimation("Global/TicMark.bin", SCOPE_STAGE);
+    RSDK.SetSpriteAnimation(EncoreRoute->aniFrames, 0, &EncoreRoute->animator, true, 0);
+}
 
 void EncoreRoute_Serialize(void)
 {

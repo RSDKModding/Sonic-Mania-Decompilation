@@ -24,8 +24,7 @@ typedef struct {
     int32 field_70;
     int32 field_74;
     int32 field_78;
-    int32 field_7C;
-    int32 field_80;
+    Hitbox hitbox;
     Entity *eggman;
     Entity *DERobot;
     Entity *phantomRuby;

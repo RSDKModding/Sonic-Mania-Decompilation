@@ -68,12 +68,10 @@ void CaterkillerJr_Create(void *data)
 
 void CaterkillerJr_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("CPZ")) {
+    if (RSDK.CheckStageFolder("CPZ"))
         CaterkillerJr->aniFrames = RSDK.LoadSpriteAnimation("CPZ/CaterkillerJr.bin", SCOPE_STAGE);
-    }
-    else if (RSDK.CheckStageFolder("AIZ")) {
+    else if (RSDK.CheckStageFolder("AIZ"))
         CaterkillerJr->aniFrames = RSDK.LoadSpriteAnimation("AIZ/CaterkillerJr.bin", SCOPE_STAGE);
-    }
 
     CaterkillerJr->hitbox.left   = -16;
     CaterkillerJr->hitbox.top    = 8;
@@ -228,8 +226,32 @@ void CaterkillerJr_State2(void)
     }
 }
 
-void CaterkillerJr_EditorDraw(void) {}
+void CaterkillerJr_EditorDraw(void)
+{
+    RSDK_THIS(CaterkillerJr);
+    entity->visible           = true;
+    entity->drawFX            = FX_FLIP;
+    RSDK.SetSpriteAnimation(CaterkillerJr->aniFrames, 0, &entity->bodyAnimators[0], true, 6);
+    RSDK.SetSpriteAnimation(CaterkillerJr->aniFrames, 1, &entity->bodyAnimators[1], true, 6);
+    RSDK.SetSpriteAnimation(CaterkillerJr->aniFrames, 1, &entity->bodyAnimators[2], true, 6);
+    RSDK.SetSpriteAnimation(CaterkillerJr->aniFrames, 1, &entity->bodyAnimators[3], true, 6);
+    RSDK.SetSpriteAnimation(CaterkillerJr->aniFrames, 2, &entity->bodyAnimators[4], true, 0);
+    RSDK.SetSpriteAnimation(CaterkillerJr->aniFrames, 3, &entity->bodyAnimators[5], true, 0);
+    RSDK.SetSpriteAnimation(CaterkillerJr->aniFrames, 3, &entity->bodyAnimators[6], true, 0);
+    RSDK.SetSpriteAnimation(CaterkillerJr->aniFrames, 4, &entity->bodyAnimators[7], true, 0);
+    RSDK.SetSpriteAnimation(CaterkillerJr->aniFrames, 4, &entity->animator1, true, 0);
+    RSDK.SetSpriteAnimation(CaterkillerJr->aniFrames, 4, &entity->animator2, true, 0);
+    CaterkillerJr_SetupPositions();
 
-void CaterkillerJr_EditorLoad(void) {}
+    CaterkillerJr_Draw();
+}
+
+void CaterkillerJr_EditorLoad(void)
+{
+    if (RSDK.CheckStageFolder("CPZ"))
+        CaterkillerJr->aniFrames = RSDK.LoadSpriteAnimation("CPZ/CaterkillerJr.bin", SCOPE_STAGE);
+    else if (RSDK.CheckStageFolder("AIZ"))
+        CaterkillerJr->aniFrames = RSDK.LoadSpriteAnimation("AIZ/CaterkillerJr.bin", SCOPE_STAGE);
+}
 
 void CaterkillerJr_Serialize(void) { RSDK_EDITABLE_VAR(CaterkillerJr, VAR_UINT8, direction); }

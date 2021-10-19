@@ -140,8 +140,14 @@ void AIZTornado_Unknown3(void)
         AIZTornado_Unknown2();
 }
 
-void AIZTornado_EditorDraw(void) {}
+void AIZTornado_EditorDraw(void)
+{
+    RSDK_THIS(AIZTornado);
+    RSDK.DrawSprite(&entity->animator3, NULL, false);
+    RSDK.DrawSprite(&entity->animator2, NULL, false);
+    RSDK.DrawSprite(&entity->animator1, NULL, false);
+}
 
-void AIZTornado_EditorLoad(void) {}
+void AIZTornado_EditorLoad(void) { AIZTornado->aniFrames = RSDK.LoadSpriteAnimation("AIZ/AIZTornado.bin", SCOPE_STAGE); }
 
 void AIZTornado_Serialize(void) {}

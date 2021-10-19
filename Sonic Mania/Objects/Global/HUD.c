@@ -668,10 +668,8 @@ void HUD_State_GoOffScreen(void)
 void HUD_EditorDraw(void)
 {
     RSDK_THIS(HUD);
-#if RETRO_USE_PLUS
-    RSDK.SetSpriteAnimation(HUD->hudMappings, 0, &entity->taData1, true, 0);
-    RSDK.DrawSprite(&entity->taData1, NULL, false);
-#endif
+    RSDK.SetSpriteAnimation(HUD->hudMappings, 0, &entity->hudElementsData, true, 0);
+    RSDK.DrawSprite(&entity->hudElementsData, NULL, false);
 }
 
 void HUD_EditorLoad(void) { HUD->hudMappings = RSDK.LoadSpriteAnimation("Editor/EditorIcons.bin", SCOPE_STAGE); }

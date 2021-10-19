@@ -28,7 +28,7 @@ void Rhinobot_Draw(void)
         }
         RSDK.DrawSprite(&entity->animatorDust, &drawPos, false);
     }
-    RSDK.DrawSprite(&entity->animatorBot, 0, false);
+    RSDK.DrawSprite(&entity->animatorBot, NULL, false);
 }
 
 void Rhinobot_Create(void *data)
@@ -273,9 +273,9 @@ void Rhinobot_HandleUpdate4(void)
     }
 }
 
-void Rhinobot_EditorDraw(void) {}
+void Rhinobot_EditorDraw(void) { Rhinobot_Draw(); }
 
-void Rhinobot_EditorLoad(void) {}
+void Rhinobot_EditorLoad(void) { Rhinobot->aniFrames = RSDK.LoadSpriteAnimation("AIZ/Rhinobot.bin", SCOPE_STAGE); }
 
 void Rhinobot_Serialize(void) {}
 #endif

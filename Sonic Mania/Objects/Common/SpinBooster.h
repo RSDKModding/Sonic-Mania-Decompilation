@@ -43,7 +43,7 @@ void SpinBooster_Serialize(void);
 int32 SpinBooster_GetRollDir(EntityPlayer *player);
 void SpinBooster_HandleRollDir(EntityPlayer *player);
 void SpinBooster_ApplyRollVelocity(EntityPlayer *player);
-void SpinBooster_Unknown4(uint32 colour, int32 X1, int32 Y1, int32 X2, int32 Y2);
+void SpinBooster_DrawArrow(uint32 colour, int32 X1, int32 Y1, int32 X2, int32 Y2);
 void SpinBooster_DrawSprites(void);
 void SpinBooster_HandleForceRoll(EntityPlayer *player);
 

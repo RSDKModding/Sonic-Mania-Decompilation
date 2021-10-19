@@ -20,7 +20,7 @@ typedef enum  {
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    int32 field_4;
+    uint16 aniFrames;
     colour paletteColours[128];
 } ObjectCutsceneHBH;
 

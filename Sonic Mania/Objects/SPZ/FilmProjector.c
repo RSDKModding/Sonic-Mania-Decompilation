@@ -64,7 +64,7 @@ void FilmProjector_Draw(void)
 
         RSDK_sceneInfo->effectGizmo = true;
         entity->drawFX |= FX_FLIP;
-        RSDK.DrawSprite(&entity->data1, NULL, false);
+        RSDK.DrawSprite(&entity->animator1, NULL, false);
 
         entity->inkEffect = INK_BLEND;
         RSDK.DrawSprite(&entity->data6, &entity->posUnknown, false);
@@ -81,7 +81,7 @@ void FilmProjector_Draw(void)
 void FilmProjector_Create(void* data)
 {
     RSDK_THIS(FilmProjector);
-    RSDK.SetSpriteAnimation(FilmProjector->spriteIndex, 0, &entity->data1, true, 0);
+    RSDK.SetSpriteAnimation(FilmProjector->spriteIndex, 0, &entity->animator1, true, 0);
     RSDK.SetSpriteAnimation(FilmProjector->spriteIndex, 0, &entity->animator2, true, 1);
     RSDK.SetSpriteAnimation(FilmProjector->spriteIndex, 1, &entity->data3, true, 0);
     RSDK.SetSpriteAnimation(FilmProjector->spriteIndex, 1, &entity->data4, true, 1);

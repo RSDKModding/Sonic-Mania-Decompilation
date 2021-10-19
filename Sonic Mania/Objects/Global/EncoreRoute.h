@@ -12,13 +12,8 @@ typedef enum {
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    int32 field_4;
-    int32 field_8;
-    int32 field_C;
-    int32 field_10;
-    int32 field_14;
-    int32 field_18;
-    int32 field_1C;
+    uint16 aniFrames;
+    Animator animator;
 } ObjectEncoreRoute;
 
 // Entity Class

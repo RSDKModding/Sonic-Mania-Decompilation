@@ -8,17 +8,17 @@ void GHZCutsceneST_Update(void)
                         GHZCutsceneST_CutsceneState_LoadNextStage, NULL };
 
     RSDK_THIS(GHZCutsceneST);
-    if (!entity->timer) {
+    if (!entity->activated) {
         foreach_active(Player, player)
         {
             if (Player_CheckCollisionTouch(player, entity, &entity->hitbox) && !player->sidekick) {
                 CutsceneSeq_StartSequence((Entity *)entity, states);
                 if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->objectID) {
-                    EntityCutsceneSeq *cutsceneSeq = (EntityCutsceneSeq *)RSDK.GetEntityByID(SLOT_CUTSCENESEQ);
+                    EntityCutsceneSeq *cutsceneSeq = RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq);
                     cutsceneSeq->skipType         = SKIPTYPE_CALLBACK;
                     cutsceneSeq->skipCallback      = GHZCutsceneST_SkipCB;
                 }
-                entity->timer = 1;
+                entity->activated = true;
             }
         }
     }
@@ -34,28 +34,18 @@ void GHZCutsceneST_Create(void *data)
 {
     RSDK_THIS(GHZCutsceneST);
     if (!RSDK_sceneInfo->inEditor) {
-        entity->active        = ACTIVE_BOUNDS;
-        entity->visible       = 0;
-        entity->updateRange.x = 0x800000;
-        entity->updateRange.y = 0x800000;
-        if (!entity->size.x)
-            entity->size.x = 0x1A80000;
-        if (!entity->size.y)
-            entity->size.y = 0xF00000;
-        entity->updateRange.x       = 0x800000 + entity->size.x;
-        entity->updateRange.y       = 0x800000 + entity->size.y;
+        INIT_ENTITY(entity);
+        CutsceneRules_SetupEntity(entity);
+        GHZCutsceneST_SetupObjects();
+
+        entity->hitbox2             = entity->hitbox;
         RSDK_sceneInfo->timeEnabled = false;
-        entity->hitbox.left         = -entity->size.x >> 17;
-        entity->hitbox.right        = entity->size.x >> 17;
-        entity->hitbox.top          = -entity->size.y >> 17;
-        entity->hitbox.bottom       = entity->size.y >> 17;
-        GHZCutsceneST_SetupCutscene();
     }
 }
 
 void GHZCutsceneST_StageLoad(void) {}
 
-void GHZCutsceneST_SetupCutscene(void)
+void GHZCutsceneST_SetupObjects(void)
 {
     foreach_all(Platform, platform)
     {
@@ -265,7 +255,7 @@ bool32 GHZCutsceneST_CutsceneState_LoadNextStage(EntityCutsceneSeq *host)
     else
 #endif
         RSDK.SetScene("Mania Mode", "");
-    globals->parallaxOffset[0] = entity->timer2;
+    globals->parallaxOffset[0] = entity->field_68;
     EntityPlayer *player       = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     player->onGround           = true;
     player->state              = Player_State_Ground;

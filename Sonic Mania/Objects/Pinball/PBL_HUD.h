@@ -19,7 +19,7 @@ typedef struct {
     int32 timer;
     Vector2 offset;
     TextInfo text;
-    Animator data1;
+    Animator animator1;
     Animator animator2;
     Animator data3;
 } EntityPBL_HUD;

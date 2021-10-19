@@ -23,7 +23,7 @@ void BreakableWall_Create(void *data)
     RSDK_THIS(BreakableWall);
     entity->gravityStrength = 0x3800;
     if (data) {
-        int32 subtype           = voidToInt(data);
+        int32 subtype         = voidToInt(data);
         entity->visible       = true;
         entity->updateRange.x = 0x100000;
         entity->updateRange.y = 0x100000;
@@ -41,7 +41,7 @@ void BreakableWall_Create(void *data)
     }
     else {
         entity->drawFX |= FX_FLIP;
-        entity->visible       = 0;
+        entity->visible       = false;
         entity->drawOrder     = Zone->drawOrderHigh;
         entity->active        = ACTIVE_BOUNDS;
         entity->updateRange.x = 0x800000;
@@ -698,9 +698,17 @@ void BreakableWall_GiveScoreBonus(void *plr)
         player->scoreBonus++;
 }
 
-void BreakableWall_EditorDraw(void) {}
+void BreakableWall_EditorDraw(void)
+{
+    RSDK_THIS(BreakableWall);
+    StateMachine_Run(entity->stateDraw);
+}
 
-void BreakableWall_EditorLoad(void) {}
+void BreakableWall_EditorLoad(void)
+{
+    BreakableWall->spriteIndex = RSDK.LoadSpriteAnimation("Global/TicMark.bin", SCOPE_STAGE);
+    RSDK.SetSpriteAnimation(BreakableWall->spriteIndex, 0, &BreakableWall->animator, true, 0);
+}
 
 void BreakableWall_Serialize(void)
 {

@@ -42,7 +42,7 @@ void Ink_Draw(void)
     RSDK.DrawSprite(&entity->data3, NULL, false);
     RSDK.DrawSprite(&entity->animator2, NULL, false);
     entity->inkEffect = INK_NONE;
-    RSDK.DrawSprite(&entity->data1, NULL, false);
+    RSDK.DrawSprite(&entity->animator1, NULL, false);
 }
 
 void Ink_Create(void *data)
@@ -55,7 +55,7 @@ void Ink_Create(void *data)
         entity->alpha         = 0x180;
         entity->updateRange.x = 0x800000;
         entity->updateRange.y = 0x800000;
-        RSDK.SetSpriteAnimation(Ink->spriteIndex, entity->type, &entity->data1, true, 0);
+        RSDK.SetSpriteAnimation(Ink->spriteIndex, entity->type, &entity->animator1, true, 0);
         RSDK.SetSpriteAnimation(Ink->spriteIndex, entity->type + 3, &entity->animator2, true, 0);
     }
 }

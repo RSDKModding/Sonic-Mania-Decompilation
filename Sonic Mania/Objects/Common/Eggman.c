@@ -142,8 +142,12 @@ void Eggman_Unknown7(void)
     }
 }
 
-void Eggman_EditorDraw(void) {}
+void Eggman_EditorDraw(void)
+{
+    RSDK_THIS(Eggman);
+    RSDK.DrawSprite(&entity->animator, NULL, false);
+}
 
-void Eggman_EditorLoad(void) {}
+void Eggman_EditorLoad(void) { Eggman_StageLoad(); }
 
 void Eggman_Serialize(void) {}

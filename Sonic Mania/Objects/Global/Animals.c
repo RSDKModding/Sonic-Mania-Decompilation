@@ -4,7 +4,7 @@ ObjectAnimals *Animals;
 
 void Animals_Update(void)
 {
-    EntityAnimals *entity = (EntityAnimals *)RSDK_sceneInfo->entity;
+    RSDK_THIS(Animals);
     StateMachine_Run(entity->state);
     if (!entity->behaviour && !RSDK.CheckOnScreen(entity, NULL))
         destroyEntity(entity);
@@ -16,13 +16,13 @@ void Animals_StaticUpdate(void) {}
 
 void Animals_Draw(void)
 {
-    EntityAnimals *entity = (EntityAnimals *)RSDK_sceneInfo->entity;
+    RSDK_THIS(Animals);
     RSDK.DrawSprite(&entity->animator, NULL, false);
 }
 
 void Animals_Create(void *data)
 {
-    EntityAnimals *entity = (EntityAnimals *)RSDK_sceneInfo->entity;
+    RSDK_THIS(Animals);
     if (entity->behaviour == 2)
         entity->active = ACTIVE_BOUNDS;
     else
@@ -106,7 +106,7 @@ void Animals_StageLoad(void)
 
 void Animals_CheckPlayerPos(void)
 {
-    EntityAnimals *entity = (EntityAnimals *)RSDK_sceneInfo->entity;
+    RSDK_THIS(Animals);
 
     switch (entity->behaviour) {
         default:
@@ -141,8 +141,8 @@ void Animals_CheckPlayerPos(void)
 
 bool32 Animals_CheckPlatformCollision(void *plat)
 {
+    RSDK_THIS(Animals);
     EntityPlatform *platform = (EntityPlatform *)plat;
-    EntityAnimals *entity    = (EntityAnimals *)RSDK_sceneInfo->entity;
     bool32 flag              = false;
     if (platform->state != Platform_State_Falling && platform->state != Platform_State_OffScreenReset) {
         platform->position.x = platform->drawPos.x - platform->collisionOffset.x;
@@ -167,7 +167,7 @@ bool32 Animals_CheckPlatformCollision(void *plat)
 
 bool32 Animals_CheckGroundCollision(void)
 {
-    EntityAnimals *entity = (EntityAnimals *)RSDK_sceneInfo->entity;
+    RSDK_THIS(Animals);
     if (entity->velocity.y <= 0)
         return false;
     if (RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_FLOOR, 0, 0, Animals->hitboxes[entity->type], false))
@@ -220,7 +220,7 @@ bool32 Animals_CheckGroundCollision(void)
 
 void Animals_State_Freed(void)
 {
-    EntityAnimals *entity = (EntityAnimals *)RSDK_sceneInfo->entity;
+    RSDK_THIS(Animals);
     entity->position.y += entity->velocity.y;
     entity->velocity.y += 0x3800;
     RSDK.ProcessAnimation(&entity->animator);
@@ -248,7 +248,7 @@ void Animals_State_Freed(void)
 
 void Animals_State_FollowPlayer_Normal(void)
 {
-    EntityAnimals *entity = (EntityAnimals *)RSDK_sceneInfo->entity;
+    RSDK_THIS(Animals);
     entity->position.x += entity->velocity.x;
     entity->position.y += entity->velocity.y;
     entity->velocity.y += Animals->gravityStrength[entity->type];
@@ -261,7 +261,7 @@ void Animals_State_FollowPlayer_Normal(void)
 
 void Animals_State_FollowPlayer_Bird(void)
 {
-    EntityAnimals *entity = (EntityAnimals *)RSDK_sceneInfo->entity;
+    RSDK_THIS(Animals);
     entity->position.x += entity->velocity.x;
     entity->position.y += entity->velocity.y;
     entity->velocity.y += Animals->gravityStrength[entity->type];
@@ -274,16 +274,28 @@ void Animals_State_FollowPlayer_Bird(void)
 
 void Animals_State_BounceAround(void)
 {
-    EntityAnimals *entity = (EntityAnimals *)RSDK_sceneInfo->entity;
+    RSDK_THIS(Animals);
     if (entity->delay <= 0)
         entity->state = Animals_State_Freed;
     else
         entity->delay--;
 }
 
-void Animals_EditorDraw(void) {}
+void Animals_EditorDraw(void)
+{
+    RSDK_THIS(Animals);
 
-void Animals_EditorLoad(void) {}
+    switch (entity->behaviour) {
+        default: break;
+        case 0: RSDK.SetSpriteAnimation(Animals->spriteIndex, 2 * entity->type, &entity->animator, true, 0); break;
+        case 1:
+        case 2: RSDK.SetSpriteAnimation(Animals->spriteIndex, 2 * entity->type + 1, &entity->animator, true, 0); break;
+    }
+
+    RSDK.DrawSprite(&entity->animator, NULL, false);
+}
+
+void Animals_EditorLoad(void) { Animals->spriteIndex = RSDK.LoadSpriteAnimation("Global/Animals.bin", SCOPE_STAGE); }
 
 void Animals_Serialize(void)
 {

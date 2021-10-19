@@ -15,7 +15,7 @@ void Crabmeat_StaticUpdate(void) {}
 void Crabmeat_Draw(void)
 {
     RSDK_THIS(Crabmeat);
-    RSDK.DrawSprite(&entity->animator, 0, 0);
+    RSDK.DrawSprite(&entity->animator, NULL, false);
 }
 
 void Crabmeat_Create(void *data)
@@ -64,7 +64,7 @@ void Crabmeat_StageLoad(void)
 void Crabmeat_DebugDraw(void)
 {
     RSDK.SetSpriteAnimation(Crabmeat->spriteIndex, 0, &DebugMode->animator, true, 0);
-    RSDK.DrawSprite(&DebugMode->animator, 0, 0);
+    RSDK.DrawSprite(&DebugMode->animator, NULL, false);
 }
 void Crabmeat_DebugSpawn(void)
 {
@@ -134,12 +134,11 @@ void Crabmeat_State_Shoot(void)
             case 1:
                 entity->dword60 = 2;
 
-                EntityCrabmeat *projectile =
-                    (EntityCrabmeat *)RSDK.CreateEntity(Crabmeat->objectID, (void *)1, entity->position.x - 0x100000, entity->position.y);
+                EntityCrabmeat *projectile = CREATE_ENTITY(Crabmeat, intToVoid(true), entity->position.x - 0x100000, entity->position.y);
                 projectile->velocity.x = -0x10000;
                 projectile->velocity.y = -0x40000;
 
-                projectile = (EntityCrabmeat *)RSDK.CreateEntity(Crabmeat->objectID, (void *)1, entity->position.x + 0x100000, entity->position.y);
+                projectile = CREATE_ENTITY(Crabmeat, intToVoid(true), entity->position.x + 0x100000, entity->position.y);
                 projectile->velocity.x = 0x10000;
                 projectile->velocity.y = -0x40000;
                 break;
@@ -187,8 +186,8 @@ void Crabmeat_CheckPlayerCollisions(void)
     }
 }
 
-void Crabmeat_EditorDraw(void) {}
+void Crabmeat_EditorDraw(void) { Crabmeat_Draw(); }
 
-void Crabmeat_EditorLoad(void) {}
+void Crabmeat_EditorLoad(void) { Crabmeat->spriteIndex = RSDK.LoadSpriteAnimation("GHZ/Crabmeat.bin", SCOPE_STAGE); }
 
 void Crabmeat_Serialize(void) {}

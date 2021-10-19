@@ -2,15 +2,9 @@
 
 ObjectERZSetup *ERZSetup;
 
-void ERZSetup_Update(void)
-{
+void ERZSetup_Update(void) {}
 
-}
-
-void ERZSetup_LateUpdate(void)
-{
-
-}
+void ERZSetup_LateUpdate(void) {}
 
 void ERZSetup_StaticUpdate(void)
 {
@@ -23,22 +17,16 @@ void ERZSetup_StaticUpdate(void)
     }
 }
 
-void ERZSetup_Draw(void)
-{
+void ERZSetup_Draw(void) {}
 
-}
-
-void ERZSetup_Create(void* data)
-{
-
-}
+void ERZSetup_Create(void *data) {}
 
 void ERZSetup_StageLoad(void)
 {
-    ERZSetup->skySheet        = RSDK.LoadSpriteSheet("Phantom/Sky.gif", SCOPE_STAGE);
+    ERZSetup->skySheet                      = RSDK.LoadSpriteSheet("Phantom/Sky.gif", SCOPE_STAGE);
     RSDK.GetSceneLayer(1)->scanlineCallback = ERZSetup_ScanlineCallback;
-    Animals->animalTypes[0]             = ANIMAL_POCKY;
-    Animals->animalTypes[1]             = ANIMAL_ROCKY;
+    Animals->animalTypes[0]                 = ANIMAL_POCKY;
+    Animals->animalTypes[1]                 = ANIMAL_ROCKY;
     for (int32 p = 1; p < Player->playerCount; ++p) {
         RSDK.ResetEntitySlot(p, 0, NULL);
     }
@@ -55,9 +43,9 @@ void ERZSetup_ScanlineCallback(ScanlineInfo *scanlines)
     int32 cosineAngle = RSDK.Cos256(0);
     int32 timer       = ERZSetup->timer;
     for (int32 i = 160; i > 16; --i) {
-        int32 angle             = a / (8 * i);
-        int32 sin               = sineAngle * angle;
-        int32 cos               = cosineAngle * angle;
+        int32 angle           = a / (8 * i);
+        int32 sin             = sineAngle * angle;
+        int32 cos             = cosineAngle * angle;
         scanlines->deform.y   = sin >> 7;
         scanlines->deform.x   = -cos >> 7;
         scanlines->position.x = sin - screen->centerX * (-cos >> 7) - posX;
@@ -67,18 +55,8 @@ void ERZSetup_ScanlineCallback(ScanlineInfo *scanlines)
     }
 }
 
-void ERZSetup_EditorDraw(void)
-{
+void ERZSetup_EditorDraw(void) {}
 
-}
+void ERZSetup_EditorLoad(void) {}
 
-void ERZSetup_EditorLoad(void)
-{
-
-}
-
-void ERZSetup_Serialize(void)
-{
-
-}
-
+void ERZSetup_Serialize(void) {}

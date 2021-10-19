@@ -272,9 +272,9 @@ void Chopper_CheckPlayerCollisions2(void)
     }
 }
 
-void Chopper_EditorDraw(void) {}
+void Chopper_EditorDraw(void) { Chopper_Draw(); }
 
-void Chopper_EditorLoad(void) {}
+void Chopper_EditorLoad(void) { Chopper->spriteIndex = RSDK.LoadSpriteAnimation("GHZ/Chopper.bin", SCOPE_STAGE); }
 
 void Chopper_Serialize(void)
 {

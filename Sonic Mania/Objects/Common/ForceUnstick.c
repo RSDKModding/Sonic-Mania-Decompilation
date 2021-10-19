@@ -69,9 +69,13 @@ void ForceUnstick_DrawSprites(void)
     }
 }
 
-void ForceUnstick_EditorDraw(void) {}
+void ForceUnstick_EditorDraw(void) { ForceUnstick_DrawSprites(); }
 
-void ForceUnstick_EditorLoad(void) {}
+void ForceUnstick_EditorLoad(void)
+{
+    ForceUnstick->aniFrames = RSDK.LoadSpriteAnimation("Global/ItemBox.bin", SCOPE_STAGE);
+    RSDK.SetSpriteAnimation(ForceUnstick->aniFrames, 2, &ForceUnstick->animator, true, 6);
+}
 
 void ForceUnstick_Serialize(void)
 {

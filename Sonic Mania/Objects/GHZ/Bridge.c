@@ -221,7 +221,7 @@ void Bridge_Burn(int32 offset)
     int32 divisor = entity->endPos - entity->startPos - entity->stoodPos;
     ang         = 0x80000;
     if (id >= entity->length) {
-        RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL);
+        destroyEntity(entity);
     }
     else {
         off = offset - id;
@@ -231,13 +231,21 @@ void Bridge_Burn(int32 offset)
             ang += 0x100000;
             spawnX -= 0x100000;
         }
-        RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL);
+        destroyEntity(entity);
     }
 }
 
-void Bridge_EditorDraw(void) {}
+void Bridge_EditorDraw(void) { Bridge_Draw(); }
 
-void Bridge_EditorLoad(void) {}
+void Bridge_EditorLoad(void)
+{
+    if (RSDK.CheckStageFolder("GHZ"))
+        Bridge->aniFrames = RSDK.LoadSpriteAnimation("GHZ/Bridge.bin", SCOPE_STAGE);
+    if (RSDK.CheckStageFolder("HCZ"))
+        Bridge->aniFrames = RSDK.LoadSpriteAnimation("HCZ/Bridge.bin", SCOPE_STAGE);
+    if (RSDK.CheckStageFolder("LRZ1"))
+        Bridge->aniFrames = RSDK.LoadSpriteAnimation("LRZ1/Bridge.bin", SCOPE_STAGE);
+}
 
 void Bridge_Serialize(void)
 {

@@ -42,7 +42,7 @@ void DrawHelpers_DrawHitboxOutline(uint32 colour, uint8 dir, int32 x, int32 y, H
     RSDK.DrawLine(x + (left << 16), y + (bottom << 16), x + (left << 16), y + (top << 16), colour, 0xFF, INK_NONE, false);
 }
 
-void DrawHelpers_DrawDebug3(uint32 colour, int32 x1, int32 y1, int32 x2, int32 y2)
+void DrawHelpers_DrawArrow(uint32 colour, int32 x1, int32 y1, int32 x2, int32 y2)
 {
     int32 angle = RSDK.ATan2(x1 - x2, y1 - y2);
     RSDK.DrawLine(x1, y1, x2, y2, colour, 0x7F, INK_ADD, false);

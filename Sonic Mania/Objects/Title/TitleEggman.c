@@ -17,7 +17,7 @@ void TitleEggman_Draw(void)
 {
     RSDK_THIS(TitleEggman);
     if (entity->state == TitleEggman_Unknown1) {
-        RSDK.DrawSprite(&entity->data1, 0, 0);
+        RSDK.DrawSprite(&entity->animator1, 0, 0);
     }
     else {
         Vector2 drawPos;
@@ -48,7 +48,7 @@ void TitleEggman_Create(void *data)
         entity->drawOrder = 3;
         entity->active    = ACTIVE_NORMAL;
         if (data) {
-            RSDK.SetSpriteAnimation(TitleEggman->spriteIndex, 5, &entity->data1, true, 0);
+            RSDK.SetSpriteAnimation(TitleEggman->spriteIndex, 5, &entity->animator1, true, 0);
             entity->state = TitleEggman_Unknown1;
         }
         else {
@@ -72,8 +72,8 @@ void TitleEggman_StageLoad(void)
 void TitleEggman_Unknown1(void)
 {
     RSDK_THIS(TitleEggman);
-    RSDK.ProcessAnimation(&entity->data1);
-    if (entity->data1.frameID == entity->data1.frameCount - 1)
+    RSDK.ProcessAnimation(&entity->animator1);
+    if (entity->animator1.frameID == entity->animator1.frameCount - 1)
         RSDK.ResetEntityPtr(entity, 0, 0);
 }
 void TitleEggman_Unknown2(void)

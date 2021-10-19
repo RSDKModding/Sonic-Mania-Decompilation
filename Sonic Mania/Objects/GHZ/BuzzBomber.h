@@ -21,7 +21,7 @@ typedef struct {
     Vector2 startPos;
     uint8 startDir;
     Entity *projectile;
-    Animator data1;
+    Animator animator1;
     Animator animator2;
     Animator data3;
     Hitbox rangeHitbox;

@@ -17,6 +17,7 @@ typedef struct {
     int32 periodShifted;
     int32 amplitude;
     int32 activePlayers;
+    Animator animator;
 } EntityCorkscrewPath;
 
 // Object Struct

@@ -360,7 +360,7 @@ void CutsceneHBH_Unknown14(void)
     entity->position.x += entity->velocity.x;
     entity->position.y += entity->velocity.y;
     if (!RSDK.CheckOnScreen(entity, NULL))
-        RSDK.ResetEntityPtr(entity, TYPE_BLANK, false);
+        destroyEntity(entity);
 }
 
 void CutsceneHBH_Unknown15(void)
@@ -369,7 +369,7 @@ void CutsceneHBH_Unknown15(void)
     entity->velocity.x += 0x4000;
     entity->position.x += entity->velocity.x;
     if (!RSDK.CheckOnScreen(entity, NULL))
-        RSDK.ResetEntityPtr(entity, TYPE_BLANK, false);
+        destroyEntity(entity);
 }
 
 void CutsceneHBH_Unknown16(void)
@@ -429,7 +429,7 @@ void CutsceneHBH_Unknown17(void)
     }
     RSDK.ObjectTileGrip(entity, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x300000, 8);
     if (!RSDK.CheckOnScreen(entity, NULL))
-        RSDK.ResetEntityPtr(entity, TYPE_BLANK, false);
+        destroyEntity(entity);
 }
 
 void CutsceneHBH_Unknown18(void)
@@ -453,7 +453,7 @@ void CutsceneHBH_Unknown19(void)
     entity->position.x += entity->velocity.x;
     entity->position.y += entity->velocity.y;
     if (!RSDK.CheckOnScreen(entity, NULL))
-        RSDK.ResetEntityPtr(entity, TYPE_BLANK, false);
+        destroyEntity(entity);
 }
 
 void CutsceneHBH_Unknown20(void)
@@ -481,9 +481,14 @@ void CutsceneHBH_Unknown21(void)
     }
 }
 
-void CutsceneHBH_EditorDraw(void) {}
+void CutsceneHBH_EditorDraw(void)
+{
+    RSDK_THIS(CutsceneHBH);
+    RSDK.SetSpriteAnimation(CutsceneHBH->aniFrames, 0, &entity->animator, true, entity->characterID);
+    RSDK.DrawSprite(&entity->animator, NULL, false);
+}
 
-void CutsceneHBH_EditorLoad(void) {}
+void CutsceneHBH_EditorLoad(void) { CutsceneHBH->aniFrames = RSDK.LoadSpriteAnimation("Editor/CutsceneHBH.bin", SCOPE_STAGE); }
 
 void CutsceneHBH_Serialize(void)
 {

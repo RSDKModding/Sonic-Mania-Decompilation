@@ -87,6 +87,18 @@ typedef enum { DLC_PLUS } GameDLC;
     bool32 flag;                                                                                                                                     \
     bool32 disabled;
 
+#define MANIA_CUTSCENE_BASE                                                                                                                          \
+    RSDK_ENTITY                                                                                                                                      \
+    Vector2 size;                                                                                                                                    \
+    bool32 activated;                                                                                                                                \
+    int32 field_64;                                                                                                                                  \
+    int32 field_68;                                                                                                                                  \
+    int32 field_6C;                                                                                                                                  \
+    int32 field_70;                                                                                                                                  \
+    int32 field_74;                                                                                                                                  \
+    int32 field_78;                                                                                                                                  \
+    Hitbox hitbox;
+
 #include "GameVariables.h"
 #include "GameObjects.h"
 

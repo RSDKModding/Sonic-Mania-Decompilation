@@ -68,56 +68,56 @@ void SpecialClear_Draw(void)
     drawPos.x += centerX;
     switch (entity->finishType) {
         case 0:
-            entity->data1.frameID = 0;
-            RSDK.DrawSprite(&entity->data1, &drawPos, true);
+            entity->animator1.frameID = 0;
+            RSDK.DrawSprite(&entity->animator1, &drawPos, true);
             break;
         case 1:
-            entity->data1.frameID = 1;
-            RSDK.DrawSprite(&entity->data1, &drawPos, true);
+            entity->animator1.frameID = 1;
+            RSDK.DrawSprite(&entity->animator1, &drawPos, true);
 
-            entity->data1.frameID = 2;
-            RSDK.DrawSprite(&entity->data1, &drawPos, true);
+            entity->animator1.frameID = 2;
+            RSDK.DrawSprite(&entity->animator1, &drawPos, true);
 
             drawPos.x = entity->positions[1].x;
             drawPos.y = entity->positions[1].y;
             drawPos.x += centerX;
-            entity->data1.frameID = 3;
-            RSDK.DrawSprite(&entity->data1, &drawPos, true);
+            entity->animator1.frameID = 3;
+            RSDK.DrawSprite(&entity->animator1, &drawPos, true);
             break;
         case 2:
-            entity->data1.frameID = 4;
-            RSDK.DrawSprite(&entity->data1, &drawPos, true);
+            entity->animator1.frameID = 4;
+            RSDK.DrawSprite(&entity->animator1, &drawPos, true);
 
-            entity->data1.frameID = 5;
-            RSDK.DrawSprite(&entity->data1, &drawPos, true);
+            entity->animator1.frameID = 5;
+            RSDK.DrawSprite(&entity->animator1, &drawPos, true);
 
             drawPos.x = entity->positions[1].x;
             drawPos.y = entity->positions[1].y;
             drawPos.x += centerX;
-            entity->data1.frameID = 6;
-            RSDK.DrawSprite(&entity->data1, &drawPos, true);
+            entity->animator1.frameID = 6;
+            RSDK.DrawSprite(&entity->animator1, &drawPos, true);
             break;
         case 3:
-            entity->data1.frameID = 7;
-            RSDK.DrawSprite(&entity->data1, &drawPos, true);
+            entity->animator1.frameID = 7;
+            RSDK.DrawSprite(&entity->animator1, &drawPos, true);
 
-            entity->data1.frameID = 8;
-            RSDK.DrawSprite(&entity->data1, &drawPos, true);
+            entity->animator1.frameID = 8;
+            RSDK.DrawSprite(&entity->animator1, &drawPos, true);
 
-            entity->data1.frameID = 9;
-            RSDK.DrawSprite(&entity->data1, &drawPos, true);
+            entity->animator1.frameID = 9;
+            RSDK.DrawSprite(&entity->animator1, &drawPos, true);
 
             drawPos.x = entity->positions[1].x;
             drawPos.y = entity->positions[1].y;
             drawPos.x += centerX;
-            entity->data1.frameID = 10;
-            RSDK.DrawSprite(&entity->data1, &drawPos, true);
+            entity->animator1.frameID = 10;
+            RSDK.DrawSprite(&entity->animator1, &drawPos, true);
 
-            entity->data1.frameID = 11;
-            RSDK.DrawSprite(&entity->data1, &drawPos, true);
+            entity->animator1.frameID = 11;
+            RSDK.DrawSprite(&entity->animator1, &drawPos, true);
 
-            entity->data1.frameID = 13;
-            RSDK.DrawSprite(&entity->data1, &drawPos, true);
+            entity->animator1.frameID = 13;
+            RSDK.DrawSprite(&entity->animator1, &drawPos, true);
             break;
         default: break;
     }
@@ -273,14 +273,14 @@ void SpecialClear_Create(void *data)
         RSDK.SetSpriteAnimation(SpecialClear->spriteIndex, SC_ANI_NUMBERS, &entity->data3, true, 0);
         RSDK.SetSpriteAnimation(SpecialClear->spriteIndex, SC_ANI_EMERALDS, &entity->data4, true, 0);
         switch (globals->playerID & 0xFF) {
-            case ID_TAILS: RSDK.SetSpriteAnimation(SpecialClear->spriteIndex, SC_ANI_TAILS, &entity->data1, true, 0);
+            case ID_TAILS: RSDK.SetSpriteAnimation(SpecialClear->spriteIndex, SC_ANI_TAILS, &entity->animator1, true, 0);
 #if RETRO_USE_PLUS
                 RSDK.SetSpriteAnimation(SpecialClear->spriteIndex, SC_ANI_CONTINUE, &entity->data5, true, SC_ANI_TAILS);
 #else
                 RSDK.SetSpriteAnimation(SpecialClear->continueFrames, 0, &entity->data5, true, SC_ANI_TAILS);
 #endif
                 break;
-            case ID_KNUCKLES: RSDK.SetSpriteAnimation(SpecialClear->spriteIndex, SC_ANI_KNUX, &entity->data1, true, 0);
+            case ID_KNUCKLES: RSDK.SetSpriteAnimation(SpecialClear->spriteIndex, SC_ANI_KNUX, &entity->animator1, true, 0);
 #if RETRO_USE_PLUS
                 RSDK.SetSpriteAnimation(SpecialClear->spriteIndex, SC_ANI_CONTINUE, &entity->data5, true, SC_ANI_KNUX);
 #else
@@ -289,15 +289,15 @@ void SpecialClear_Create(void *data)
                 break;
 #if RETRO_USE_PLUS
             case ID_MIGHTY:
-                RSDK.SetSpriteAnimation(SpecialClear->spriteIndex, SC_ANI_MIGHTY, &entity->data1, true, 0);
+                RSDK.SetSpriteAnimation(SpecialClear->spriteIndex, SC_ANI_MIGHTY, &entity->animator1, true, 0);
                 RSDK.SetSpriteAnimation(SpecialClear->spriteIndex, SC_ANI_CONTINUE, &entity->data5, true, 3);
                 break;
             case ID_RAY:
-                RSDK.SetSpriteAnimation(SpecialClear->spriteIndex, SC_ANI_RAY, &entity->data1, true, 0);
+                RSDK.SetSpriteAnimation(SpecialClear->spriteIndex, SC_ANI_RAY, &entity->animator1, true, 0);
                 RSDK.SetSpriteAnimation(SpecialClear->spriteIndex, SC_ANI_CONTINUE, &entity->data5, true, SC_ANI_RAY);
                 break;
 #endif
-            default: RSDK.SetSpriteAnimation(SpecialClear->spriteIndex, SC_ANI_SONIC, &entity->data1, true, 0);
+            default: RSDK.SetSpriteAnimation(SpecialClear->spriteIndex, SC_ANI_SONIC, &entity->animator1, true, 0);
 #if RETRO_USE_PLUS
                 RSDK.SetSpriteAnimation(SpecialClear->spriteIndex, SC_ANI_CONTINUE, &entity->data5, true, SC_ANI_SONIC);
 #else

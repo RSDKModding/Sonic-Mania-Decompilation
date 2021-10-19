@@ -73,7 +73,7 @@ void Summary_State_SetupText(void)
                 entity->gameModeText = text;
         }
         else if (align == ALIGN_CENTER) {
-            if (text->data1 == 255) {
+            if (text->data1 == 0xFF) {
                 entity->totalTime = text;
             }
             else {

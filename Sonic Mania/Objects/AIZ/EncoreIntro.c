@@ -19,7 +19,8 @@ void EncoreIntro_Update(void)
         }
     }
 
-    if (entity->startPart2) {
+    //skip part 2 flag
+    if (entity->field_64) {
         void *states[] = { EncoreIntro_CutsceneState_Unknown7,  EncoreIntro_CutsceneState_Unknown8,
                            EncoreIntro_CutsceneState_Unknown9,  EncoreIntro_CutsceneState_Unknown10,
                            EncoreIntro_CutsceneState_Unknown11, EncoreIntro_CutsceneState_Unknown12,
@@ -33,7 +34,7 @@ void EncoreIntro_Update(void)
 
         EncoreIntro_SetupCutscenePart2();
         CutsceneSeq_StartSequence((Entity *)entity, states);
-        entity->startPart2 = false;
+        entity->field_64 = false;
     }
 }
 
@@ -47,25 +48,8 @@ void EncoreIntro_Create(void *data)
 {
     RSDK_THIS(EncoreIntro);
     if (!RSDK_sceneInfo->inEditor) {
-        entity->active        = ACTIVE_NORMAL;
-        entity->visible       = false;
-        entity->updateRange.x = 0x800000;
-        entity->updateRange.y = 0x800000;
-        if (!entity->size.x)
-            entity->size.x = 0x1A80000;
-        if (!entity->size.y)
-            entity->size.y = 0xF00000;
-        entity->updateRange.x       = 0x800000 + entity->size.x;
-        entity->updateRange.y       = 0x800000 + entity->size.y;
-        RSDK_sceneInfo->timeEnabled = false;
-        EncoreIntro->field_4        = 0;
-        Player->playerCount         = 4;
-
-        entity->hitbox.left   = -(entity->size.x >> 17);
-        entity->hitbox.right  = entity->size.x >> 17;
-        entity->hitbox.top    = -(entity->size.y >> 17);
-        entity->hitbox.bottom = entity->size.y >> 17;
-
+        INIT_ENTITY(entity);
+        CutsceneRules_SetupEntity(entity);
         EncoreIntro_SetupEntities();
 
         if (globals->enableIntro) {
@@ -100,8 +84,8 @@ void EncoreIntro_Create(void *data)
             }
             RSDK.ResetEntitySlot(id - 3, TYPE_BLANK, NULL);
             RSDK.ResetEntitySlot(id - 2, TYPE_BLANK, NULL);
-            entity->activated  = true;
-            entity->startPart2 = true;
+            entity->activated = true;
+            entity->field_64  = true;
         }
     }
 }
@@ -115,7 +99,7 @@ void EncoreIntro_StageLoad(void)
     EncoreIntro->sfxMysticHat       = RSDK.GetSFX("MSZ/MysticHat.wav");
     EncoreIntro->sfxMysticTransform = RSDK.GetSFX("MSZ/MysticTransform.wav");
     EncoreIntro->sfxPon             = RSDK.GetSFX("Stage/Pon.wav");
-    Music_SetMusicTrack("BuddyBeat.ogg", TRACK_EGGMAN2, 85232);
+    Music_SetMusicTrack("BuddyBeat.ogg", TRACK_BUDDYBEAT, 85232);
 }
 
 void EncoreIntro_SetupEntities(void)

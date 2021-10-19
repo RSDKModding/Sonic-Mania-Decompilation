@@ -429,23 +429,18 @@ void TimeAttackGate_StateDraw_Main(void)
 
     entity->rotation = entity->field_88;
     entity->drawFX   = FX_ROTATE;
-    RSDK.DrawSprite(&entity->topAnimator, 0, false);
-    RSDK.DrawSprite(&entity->baseAnimator, 0, false);
+    RSDK.DrawSprite(&entity->topAnimator, NULL, false);
+    RSDK.DrawSprite(&entity->baseAnimator, NULL, false);
 
     entity->drawFX = FX_SCALE;
     drawPos.y      = entity->position.y;
-    if (RSDK.Sin512(entity->angle & 0x7F) >= 0)
-        entity->scale.x = RSDK.Sin512(entity->angle & 0x7F);
-    else
-        entity->scale.x = -RSDK.Sin512(entity->angle & 0x7F);
+
+    entity->scale.x             = abs(RSDK.Sin512(entity->angle & 0x7F));
     drawPos.x                   = entity->position.x + 0x30000;
     entity->finAnimator.frameID = 1;
     RSDK.DrawSprite(&entity->finAnimator, &drawPos, false);
 
-    if (RSDK.Cos512(entity->angle & 0x7F) >= 0)
-        entity->scale.x = RSDK.Cos512(entity->angle & 0x7F);
-    else
-        entity->scale.x = -RSDK.Cos512(entity->angle & 0x7F);
+    entity->scale.x             = abs(RSDK.Cos512(entity->angle & 0x7F));
     drawPos.x                   = entity->position.x - 0x30000;
     entity->finAnimator.frameID = 0;
     RSDK.DrawSprite(&entity->finAnimator, &drawPos, false);
@@ -454,26 +449,17 @@ void TimeAttackGate_StateDraw_Main(void)
     entity->finAnimator.frameID = 1;
     RSDK.DrawSprite(&entity->finAnimator, &drawPos, false);
 
-    if (RSDK.Sin512(entity->angle & 0x7F) >= 0)
-        entity->scale.x = RSDK.Sin512(entity->angle & 0x7F);
-    else
-        entity->scale.x = -RSDK.Sin512(entity->angle & 0x7F);
+    entity->scale.x             = abs(RSDK.Sin512(entity->angle & 0x7F));
     drawPos.x                   = 0xB40 * RSDK.Cos512(entity->angle & 0x7F) + entity->position.x;
     entity->finAnimator.frameID = 2;
     RSDK.DrawSprite(&entity->finAnimator, &drawPos, false);
 
-    if (RSDK.Sin512(entity->angle & 0x7F) >= 0)
-        entity->scale.x = RSDK.Sin512(entity->angle & 0x7F);
-    else
-        entity->scale.x = -RSDK.Sin512(entity->angle & 0x7F);
+    entity->scale.x             = abs(RSDK.Sin512(entity->angle & 0x7F));
     drawPos.x                   = 0x180 * RSDK.Cos512(2 * (entity->angle & 0x7F)) + entity->position.x;
     entity->finAnimator.frameID = 0;
     RSDK.DrawSprite(&entity->finAnimator, &drawPos, false);
 
-    if (RSDK.Cos512(entity->angle & 0x7F) >= 0)
-        entity->scale.x = RSDK.Cos512(entity->angle & 0x7F);
-    else
-        entity->scale.x = -RSDK.Cos512(entity->angle & 0x7F);
+    entity->scale.x             = abs(RSDK.Cos512(entity->angle & 0x7F));
     drawPos.x                   = entity->position.x - 0xB40 * RSDK.Sin512(entity->angle & 0x7F);
     entity->finAnimator.frameID = 2;
     RSDK.DrawSprite(&entity->finAnimator, &drawPos, false);
@@ -491,9 +477,57 @@ void TimeAttackGate_StateDraw_Restarter(void)
     }
 }
 
-void TimeAttackGate_EditorDraw(void) {}
+void TimeAttackGate_EditorDraw(void)
+{
+    RSDK_THIS(TimeAttackGate);
+    Vector2 drawPos;
 
-void TimeAttackGate_EditorLoad(void) {}
+    if (entity->finishLine)
+        RSDK.SetSpriteAnimation(TimeAttackGate->aniFrames, 4, &entity->finAnimator, true, 0);
+    else
+        RSDK.SetSpriteAnimation(TimeAttackGate->aniFrames, 3, &entity->finAnimator, true, 0);
+
+
+    entity->rotation = entity->field_88;
+    entity->drawFX   = FX_ROTATE;
+    RSDK.DrawSprite(&entity->topAnimator, NULL, false);
+    RSDK.DrawSprite(&entity->baseAnimator, NULL, false);
+
+    entity->drawFX = FX_SCALE;
+    drawPos.y       = entity->position.y;
+    entity->scale.y = 0x200;
+
+    entity->scale.x             = abs(RSDK.Sin512(entity->angle & 0x7F));
+    drawPos.x                   = entity->position.x + 0x30000;
+    entity->finAnimator.frameID = 1;
+    RSDK.DrawSprite(&entity->finAnimator, &drawPos, false);
+
+    entity->scale.x             = abs(RSDK.Cos512(entity->angle & 0x7F));
+    drawPos.x                   = entity->position.x - 0x30000;
+    entity->finAnimator.frameID = 0;
+    RSDK.DrawSprite(&entity->finAnimator, &drawPos, false);
+
+    drawPos.x                   = 0x180 * RSDK.Cos512(2 * (entity->angle & 0x7F)) + entity->position.x;
+    entity->finAnimator.frameID = 1;
+    RSDK.DrawSprite(&entity->finAnimator, &drawPos, false);
+
+    entity->scale.x             = abs(RSDK.Sin512(entity->angle & 0x7F));
+    drawPos.x                   = 0xB40 * RSDK.Cos512(entity->angle & 0x7F) + entity->position.x;
+    entity->finAnimator.frameID = 2;
+    RSDK.DrawSprite(&entity->finAnimator, &drawPos, false);
+
+    entity->scale.x             = abs(RSDK.Sin512(entity->angle & 0x7F));
+    drawPos.x                   = 0x180 * RSDK.Cos512(2 * (entity->angle & 0x7F)) + entity->position.x;
+    entity->finAnimator.frameID = 0;
+    RSDK.DrawSprite(&entity->finAnimator, &drawPos, false);
+
+    entity->scale.x             = abs(RSDK.Cos512(entity->angle & 0x7F));
+    drawPos.x                   = entity->position.x - 0xB40 * RSDK.Sin512(entity->angle & 0x7F);
+    entity->finAnimator.frameID = 2;
+    RSDK.DrawSprite(&entity->finAnimator, &drawPos, false);
+}
+
+void TimeAttackGate_EditorLoad(void) { TimeAttackGate->aniFrames = RSDK.LoadSpriteAnimation("Global/SpeedGate.bin", SCOPE_STAGE); }
 
 void TimeAttackGate_Serialize(void)
 {

@@ -24,34 +24,27 @@ void SignPost_Draw(void)
         if (entity->rotation <= 128 || entity->rotation >= 384)
             face = &entity->eggPlateAnim;
 
-        if (RSDK.Cos512(entity->rotation) >= 0)
-            entity->scale.x = RSDK.Cos512(entity->rotation);
-        else
-            entity->scale.x = -RSDK.Cos512(entity->rotation);
-
-        int32 angle = 0;
-        if (RSDK.Sin512(entity->rotation) >= 0)
-            angle = RSDK.Sin512(entity->rotation);
-        else
-            angle = -RSDK.Sin512(entity->rotation);
+        entity->scale.x = abs(RSDK.Cos512(entity->rotation));
+        int32 scale = abs(RSDK.Sin512(entity->rotation));
 
         switch (entity->rotation >> 7) {
             case 0:
             case 2:
-                drawPos.x = entity->position.x + (angle << 9);
-                RSDK.DrawSprite(face, &drawPos, 0);
-                drawPos.x += -0xC00 * entity->scale.x - (angle << 9);
+                drawPos.x = entity->position.x + (scale << 9);
+                RSDK.DrawSprite(face, &drawPos, false);
+                drawPos.x += -0xC00 * entity->scale.x - (scale << 9);
                 break;
             case 1:
             case 3:
-                drawPos.x = entity->position.x - (angle << 9);
-                RSDK.DrawSprite(face, &drawPos, 0);
-                drawPos.x += (angle + 2 * (3 * entity->scale.x - 32)) << 9;
+                drawPos.x = entity->position.x - (scale << 9);
+                RSDK.DrawSprite(face, &drawPos, false);
+                drawPos.x += (scale + 2 * (3 * entity->scale.x - 32)) << 9;
                 break;
             default: break;
         }
-        entity->scale.x = angle;
+        entity->scale.x = scale;
         RSDK.DrawSprite(&entity->sidebarData, &drawPos, false);
+
         entity->drawFX = FX_NONE;
         RSDK.DrawSprite(&entity->postTopData, NULL, false);
         RSDK.DrawSprite(&entity->standData, NULL, false);
@@ -70,6 +63,7 @@ void SignPost_Create(void *data)
         entity->vsExtendTop = 120;
     if (!entity->vsExtendBottom)
         entity->vsExtendBottom = 120;
+
     if (!RSDK_sceneInfo->inEditor) {
         if (globals->gameMode != MODE_TIMEATTACK) {
             RSDK.SetSpriteAnimation(SignPost->spriteIndex, SIGNPOSTANI_EGGMAN, &entity->eggPlateAnim, true, 0);
@@ -112,7 +106,7 @@ void SignPost_Create(void *data)
             entity->spinSpeed = 0x3000;
             entity->spinCount = 8;
             entity->maxAngle  = 0x10000;
-            entity->scale.y   = 512;
+            entity->scale.y   = 0x200;
 
             switch (entity->type) {
                 default: destroyEntity(entity); break;
@@ -226,8 +220,8 @@ void SignPost_SpawnSparkle(void)
 {
     RSDK_THIS(SignPost);
     if (!(Zone->timer & 3)) {
-        EntityRing *ring = (EntityRing *)RSDK.CreateEntity(Ring->objectID, 0, entity->position.x + RSDK.Rand(-0x180000, 0x180000),
-                                                           entity->position.y + RSDK.Rand(-0x200000, 0x80000));
+        EntityRing *ring =
+            CREATE_ENTITY(Ring, 0, entity->position.x + RSDK.Rand(-0x180000, 0x180000), entity->position.y + RSDK.Rand(-0x200000, 0x80000));
         ring->state      = Ring_State_Sparkle;
         ring->stateDraw  = Ring_StateDraw_Sparkle;
         ring->active     = ACTIVE_NORMAL;
@@ -279,15 +273,7 @@ void SignPost_State_CompetitionFinish(void)
             entity->type                = 3;
             entity->state               = SignPost_State_Finish;
             RSDK_sceneInfo->timeEnabled = false;
-            EntityZone *zone            = (EntityZone *)RSDK.GetEntityByID(SLOT_ZONE);
-            zone->screenID              = 4;
-            zone->timer                 = 0;
-            zone->fadeSpeed             = 10;
-            zone->fadeColour            = 0;
-            zone->state                 = Zone_State_Fadeout_Unknown;
-            zone->stateDraw             = Zone_StateDraw_Fadeout;
-            zone->visible               = 1;
-            zone->drawOrder             = 15;
+            Zone_StartFadeOut(10, 0x000000);
         }
         else {
             entity->spinSpeed = 0x3000;
@@ -380,13 +366,8 @@ void SignPost_State_Fall(void)
                     itemBox->state      = ItemBox_State_Falling;
                     entity->itemBounceCount++;
                     entity->velocity.y = -0x20000;
-#if RETRO_USE_PLUS
                     if (entity->itemBounceCount == 2)
-                        API.UnlockAchievement("ACH_SIGNPOST");
-#else
-                    if (entity->itemBounceCount == 2)
-                        APICallback_UnlockAchievement("ACH_SIGNPOST");
-#endif
+                        API_UnlockAchievement("ACH_SIGNPOST");
                 }
             }
         }
@@ -404,7 +385,7 @@ void SignPost_State_Finish(void)
     RSDK_THIS(SignPost);
     RSDK.ProcessAnimation(&entity->facePlateAnim);
     if (entity->debugObj) {
-        Zone->stageFinishCallback  = NULL;
+        Zone->stageFinishCallback  = StateMachine_None;
         globals->atlEnabled        = false;
         globals->enableIntro       = false;
         globals->suppressTitlecard = false;
@@ -566,9 +547,46 @@ void SignPost_HandleCompetition(void)
     }
 }
 
-void SignPost_EditorDraw(void) {}
+void SignPost_EditorDraw(void)
+{
+    RSDK_THIS(SignPost);
+    Vector2 drawPos;
 
-void SignPost_EditorLoad(void) {}
+    RSDK.SetSpriteAnimation(SignPost->spriteIndex, SIGNPOSTANI_EGGMAN, &entity->eggPlateAnim, true, 0);
+    RSDK.SetSpriteAnimation(SignPost->spriteIndex, SIGNPOSTANI_POST, &entity->postTopData, true, 0);
+    RSDK.SetSpriteAnimation(SignPost->spriteIndex, SIGNPOSTANI_POST, &entity->sidebarData, true, 1);
+    RSDK.SetSpriteAnimation(SignPost->spriteIndex, SIGNPOSTANI_POST, &entity->standData, true, 2);
+
+    entity->drawFX = FX_SCALE;
+    drawPos.y      = entity->position.y;
+
+    entity->scale.x = abs(RSDK.Cos512(entity->rotation));
+    int32 scale     = abs(RSDK.Sin512(entity->rotation));
+
+    switch (entity->rotation >> 7) {
+        case 0:
+        case 2:
+            drawPos.x = entity->position.x + (scale << 9);
+            RSDK.DrawSprite(&entity->eggPlateAnim, &drawPos, false);
+            drawPos.x += -0xC00 * entity->scale.x - (scale << 9);
+            break;
+        case 1:
+        case 3:
+            drawPos.x = entity->position.x - (scale << 9);
+            RSDK.DrawSprite(&entity->eggPlateAnim, &drawPos, false);
+            drawPos.x += (scale + 2 * (3 * entity->scale.x - 32)) << 9;
+            break;
+        default: break;
+    }
+    entity->scale.x = scale;
+    RSDK.DrawSprite(&entity->sidebarData, &drawPos, false);
+
+    entity->drawFX = FX_NONE;
+    RSDK.DrawSprite(&entity->postTopData, NULL, false);
+    RSDK.DrawSprite(&entity->standData, NULL, false);
+}
+
+void SignPost_EditorLoad(void) { SignPost->spriteIndex = RSDK.LoadSpriteAnimation("Global/SignPost.bin", SCOPE_STAGE); }
 
 void SignPost_Serialize(void)
 {

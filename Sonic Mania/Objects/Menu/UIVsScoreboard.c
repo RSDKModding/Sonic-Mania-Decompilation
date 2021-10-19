@@ -94,7 +94,7 @@ void UIVsScoreboard_DrawSprites(void)
 
     if (RSDK_sceneInfo->inEditor) {
         if (entity->position.y != entity->offset.y)
-            DrawHelpers_DrawDebug3(0xFFFF, entity->position.x, entity->position.y, entity->offset.x + entity->position.x,
+            DrawHelpers_DrawArrow(0xFFFF, entity->position.x, entity->position.y, entity->offset.x + entity->position.x,
                                    entity->offset.y + entity->position.y);
     }
 }

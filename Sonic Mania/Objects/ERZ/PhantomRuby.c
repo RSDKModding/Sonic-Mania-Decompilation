@@ -6,11 +6,11 @@ void PhantomRuby_Update(void)
 {
     RSDK_THIS(PhantomRuby);
     StateMachine_Run(entity->state);
-    if (entity->data1.animationID == 1 && entity->data1.frameID == entity->data1.frameCount - 1)
-        RSDK.SetSpriteAnimation(PhantomRuby->aniFrames, 0, &entity->data1, true, 0);
+    if (entity->animator1.animationID == 1 && entity->animator1.frameID == entity->animator1.frameCount - 1)
+        RSDK.SetSpriteAnimation(PhantomRuby->aniFrames, 0, &entity->animator1, true, 0);
     if (entity->animator2.animationID == 2 && entity->animator2.frameID == entity->animator2.frameCount - 1)
         RSDK.SetSpriteAnimation(0xFFFF, 0xFFFF, &entity->animator2, true, 0);
-    RSDK.ProcessAnimation(&entity->data1);
+    RSDK.ProcessAnimation(&entity->animator1);
     RSDK.ProcessAnimation(&entity->animator2);
 }
 
@@ -21,7 +21,7 @@ void PhantomRuby_StaticUpdate(void) {}
 void PhantomRuby_Draw(void)
 {
     RSDK_THIS(PhantomRuby);
-    RSDK.DrawSprite(&entity->data1, 0, 0);
+    RSDK.DrawSprite(&entity->animator1, NULL, false);
     if (entity->animator2.animationID != -1) {
         entity->inkEffect = INK_ADD;
         entity->alpha     = 0xFF;
@@ -42,7 +42,7 @@ void PhantomRuby_Create(void *data)
     entity->updateRange.x = 0x800000;
     entity->updateRange.y = 0x800000;
     entity->state         = PhantomRuby_Unknown3;
-    RSDK.SetSpriteAnimation(PhantomRuby->aniFrames, 0, &entity->data1, true, 0);
+    RSDK.SetSpriteAnimation(PhantomRuby->aniFrames, 0, &entity->animator1, true, 0);
 }
 
 void PhantomRuby_StageLoad(void)
@@ -80,7 +80,7 @@ void PhantomRuby_Unknown2(EntityPhantomRuby *ruby)
     ruby->flag     = false;
     ruby->field_6C = 0;
     ruby->timer    = 0;
-    RSDK.SetSpriteAnimation(PhantomRuby->aniFrames, 1, &ruby->data1, true, 0);
+    RSDK.SetSpriteAnimation(PhantomRuby->aniFrames, 1, &ruby->animator1, true, 0);
     RSDK.SetSpriteAnimation(PhantomRuby->aniFrames, 2, &ruby->animator2, true, 0);
     ruby->state = PhantomRuby_Unknown4;
 }
@@ -185,8 +185,8 @@ void PhantomRuby_Unknown10(void)
     }
 }
 
-void PhantomRuby_EditorDraw(void) {}
+void PhantomRuby_EditorDraw(void) { PhantomRuby_Draw(); }
 
-void PhantomRuby_EditorLoad(void) {}
+void PhantomRuby_EditorLoad(void) { PhantomRuby->aniFrames = RSDK.LoadSpriteAnimation("Global/PhantomRuby.bin", SCOPE_STAGE); }
 
 void PhantomRuby_Serialize(void) { RSDK_EDITABLE_VAR(PhantomRuby, VAR_UINT8, sfx); }

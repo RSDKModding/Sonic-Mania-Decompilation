@@ -15,7 +15,7 @@ typedef struct {
     StateMachine(state);
     int32 timer2;
     int32 timer;
-    Animator data1;
+    Animator animator1;
     Animator animator2;
     int32 field_94;
     int32 field_98;

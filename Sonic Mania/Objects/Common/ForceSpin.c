@@ -135,9 +135,9 @@ void ForceSpin_SetPlayerState(void *plr)
     }
 }
 
-void ForceSpin_EditorDraw(void) {}
+void ForceSpin_EditorDraw(void) { ForceSpin_DrawSprites(); }
 
-void ForceSpin_EditorLoad(void) {}
+void ForceSpin_EditorLoad(void) { ForceSpin->aniFrames = RSDK.LoadSpriteAnimation("Global/PlaneSwitch.bin", SCOPE_STAGE); }
 
 void ForceSpin_Serialize(void)
 {

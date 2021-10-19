@@ -51,7 +51,7 @@ typedef struct {
     Vector2 posUnknown5;
     Vector2 posUnknown6;
     void *playerPtr;
-    Animator data1;
+    Animator animator1;
     Animator animator2;
     Animator playerNameData;
     Animator gotThroughData;

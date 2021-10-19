@@ -234,12 +234,18 @@ void UFO_Sphere_Unknown5(void)
     RSDK_THIS(UFO_Sphere);
 
     if (entity->animator.frameID == entity->animator.frameCount - 1)
-        RSDK.ResetEntityPtr(entity, TYPE_BLANK, 0);
+        destroyEntity(entity);
 }
 
-void UFO_Sphere_EditorDraw(void) {}
+void UFO_Sphere_EditorDraw(void)
+{
+    RSDK_THIS(UFO_Sphere);
+    RSDK.SetSpriteAnimation(UFO_Sphere->spriteIndex, entity->type, &entity->animator, true, 0);
 
-void UFO_Sphere_EditorLoad(void) {}
+    RSDK.DrawSprite(&entity->animator, &entity->drawPos, true);
+}
+
+void UFO_Sphere_EditorLoad(void) { UFO_Sphere->spriteIndex = RSDK.LoadSpriteAnimation("SpecialUFO/Spheres.bin", SCOPE_STAGE); }
 
 void UFO_Sphere_Serialize(void)
 {

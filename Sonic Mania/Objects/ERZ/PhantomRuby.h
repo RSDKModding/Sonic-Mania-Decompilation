@@ -32,7 +32,7 @@ typedef struct {
     int32 sfx;
     int32 field_74;
     int32 field_78;
-    Animator data1;
+    Animator animator1;
     Animator animator2;
 } EntityPhantomRuby;
 

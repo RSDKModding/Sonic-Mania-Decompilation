@@ -249,10 +249,6 @@ void Water_StageLoad(void)
     }
 }
 
-void Water_EditorDraw(void) {}
-
-void Water_EditorLoad(void) {}
-
 void Water_SetWaterLevel(void)
 {
     ScreenInfo *screen = &RSDK_screens[RSDK_sceneInfo->currentScreenID];
@@ -1219,7 +1215,7 @@ void Water_State_Draw_Palette(void)
     drawPos.x          = ((screen->position.x & 0xFFFFFFC0) + 32) << 16;
     drawPos.y          = Water->waterLevel;
     for (int32 i = (screen->width >> 6) + 2; i > 0; --i) {
-        RSDK.DrawSprite(&entity->animator, &drawPos, 0);
+        RSDK.DrawSprite(&entity->animator, &drawPos, false);
         drawPos.x += 0x400000;
     }
 
@@ -1229,7 +1225,7 @@ void Water_State_Draw_Palette(void)
         if (Water->wakePosX[i] > 0) {
             entity->direction = Water->wakeDir[i];
             drawPos.x         = Water->wakePosX[i];
-            RSDK.DrawSprite(&Water->wakeData, &drawPos, 0);
+            RSDK.DrawSprite(&Water->wakeData, &drawPos, false);
         }
     }
 
@@ -1284,6 +1280,62 @@ void Water_State_Draw_Bubble(void)
     RSDK_THIS(Water);
     RSDK.DrawSprite(&entity->animator, NULL, false);
 }
+
+void Water_EditorDraw(void)
+{
+    RSDK_THIS(Water);
+
+    switch (entity->type) {
+        case 0:
+            entity->alpha = RSDK.CheckStageFolder("AIZ") ? 0x60 : 0xE0;
+            RSDK.SetSpriteAnimation(Water->spriteIndex, 0, &entity->animator, true, 0);
+            entity->stateDraw = Water_State_Draw_Palette;
+            break;
+        case 1:
+            entity->drawFX    = FX_FLIP;
+            entity->stateDraw = Water_State_Draw_Tint;
+            break;
+        case 2:
+        case 4:
+            entity->inkEffect = INK_ADD;
+            entity->alpha     = 0x100;
+            RSDK.SetSpriteAnimation(Water->spriteIndex, 2, &entity->animator, true, 0);
+            entity->stateDraw = Water_State_Draw_Bubbler;
+            break;
+        case 3:
+            entity->active  = ACTIVE_BOUNDS;
+            entity->visible = false;
+            break;
+        case 5: entity->stateDraw = StateMachine_None; break;
+        case 6:
+            RSDK.SetSpriteAnimation(Water->spriteIndex, 1, &entity->animator, true, 0);
+            entity->stateDraw = Water_State_Draw_Splash;
+            break;
+        case 7:
+            entity->drawFX    = FX_SCALE;
+            entity->inkEffect = INK_ADD;
+            entity->alpha     = 0x100;
+            entity->scale.x   = 0x200;
+            entity->scale.y   = 0x200;
+            RSDK.SetSpriteAnimation(Water->spriteIndex, 5, &entity->animator, true, 0);
+            entity->stateDraw = Water_State_Draw_Bubble;
+            break;
+        case 8:
+            entity->drawFX    = FX_SCALE;
+            entity->inkEffect = INK_ADD;
+            entity->alpha     = 0x100;
+            entity->scale.x   = 0x200;
+            entity->scale.y   = 0x200;
+            RSDK.SetSpriteAnimation(Water->spriteIndex, 7, &entity->animator, true, 0);
+            entity->stateDraw = Water_State_Draw_CountDownBubble;
+            break;
+        default: return;
+    }
+
+    StateMachine_Run(entity->stateDraw);
+}
+
+void Water_EditorLoad(void) { Water->spriteIndex = RSDK.LoadSpriteAnimation("Global/Water.bin", SCOPE_STAGE); }
 
 void Water_Serialize(void)
 {

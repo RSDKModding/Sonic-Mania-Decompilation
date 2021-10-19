@@ -84,7 +84,7 @@ void NoSwap_Create(void *data)
 
 void NoSwap_StageLoad(void) { NoSwap->active = ACTIVE_ALWAYS; }
 
-void NoSwap_EditorDraw(void) {}
+void NoSwap_EditorDraw(void) { NoSwap_Draw(); }
 
 void NoSwap_EditorLoad(void) {}
 

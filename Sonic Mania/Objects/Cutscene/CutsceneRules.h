@@ -10,7 +10,7 @@ typedef struct {
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    MANIA_CUTSCENE_BASE
 } EntityCutsceneRules;
 
 // Object Entity
@@ -28,6 +28,6 @@ void CutsceneRules_EditorLoad(void);
 void CutsceneRules_Serialize(void);
 
 // Extra Entity Functions
-
+void CutsceneRules_SetupEntity(void *e);
 
 #endif //!OBJ_CUTSCENERULES_H

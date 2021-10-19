@@ -93,7 +93,8 @@ void CollapsingPlatform_Draw(void)
 {
     RSDK_THIS(CollapsingPlatform);
     Vector2 drawPos;
-    drawPos.x = RSDK_sceneInfo->entity->position.x;
+
+    drawPos.x = entity->position.x;
     drawPos.y = entity->position.y;
     drawPos.x -= entity->size.x >> 1;
     drawPos.y -= entity->size.y >> 1;
@@ -312,9 +313,13 @@ void CollapsingPlatform_State_PlayerPos(void)
     }
 }
 
-void CollapsingPlatform_EditorDraw(void) {}
+void CollapsingPlatform_EditorDraw(void) { CollapsingPlatform_Draw(); }
 
-void CollapsingPlatform_EditorLoad(void) {}
+void CollapsingPlatform_EditorLoad(void)
+{
+    CollapsingPlatform->spriteIndex = RSDK.LoadSpriteAnimation("Global/TicMark.bin", SCOPE_STAGE);
+    RSDK.SetSpriteAnimation(CollapsingPlatform->spriteIndex, 0, &CollapsingPlatform->animator, true, 0);
+}
 
 void CollapsingPlatform_Serialize(void)
 {

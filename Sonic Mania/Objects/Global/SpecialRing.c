@@ -16,8 +16,8 @@ void SpecialRing_Draw(void)
 {
     RSDK_THIS(SpecialRing);
     if (entity->state == SpecialRing_State_Warp) {
-        entity->direction = entity->warpData.frameID > 8;
-        RSDK.DrawSprite(&entity->warpData, 0, 0);
+        entity->direction = entity->warpAnimator.frameID > 8;
+        RSDK.DrawSprite(&entity->warpAnimator, 0, 0);
     }
     else {
         RSDK.Prepare3DScene(SpecialRing->sceneIndex);
@@ -44,7 +44,7 @@ void SpecialRing_Create(void *data)
         else
             entity->drawOrder = Zone->drawOrderLow;
         entity->state = SpecialRing_State_Normal;
-        RSDK.SetSpriteAnimation(SpecialRing->spriteIndex, 0, &entity->warpData, true, 0);
+        RSDK.SetSpriteAnimation(SpecialRing->spriteIndex, 0, &entity->warpAnimator, true, 0);
     }
 }
 
@@ -78,13 +78,13 @@ void SpecialRing_StageLoad(void)
             entity->enabled = !(SaveGame->saveRAM->collectedSpecialRings & (1 << ((16 * Zone->actID) + entity->id - 1)));
             if (globals->specialRingID == entity->id) {
                 for (int32 p = 0; p < Player->playerCount; ++p) {
-                    EntityPlayer *player = (EntityPlayer *)RSDK.GetEntityByID(p);
+                    EntityPlayer *player = RSDK_GET_ENTITY(p, Player);
 
                     player->position.x = entity->position.x;
                     player->position.y = entity->position.y;
                     player->position.y += 0x100000;
                     if (!p) {
-                        EntityPlayer *player2 = (EntityPlayer *)RSDK.GetEntityByID(SLOT_PLAYER2);
+                        EntityPlayer *player2 = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
                         if (globals->gameMode != MODE_COMPETITION) {
                             player2->position.x = player->position.x;
                             player2->position.y = player->position.y;
@@ -143,7 +143,7 @@ void SpecialRing_StartWarp(void)
 void SpecialRing_State_Warp(void)
 {
     RSDK_THIS(SpecialRing);
-    RSDK.ProcessAnimation(&entity->warpData);
+    RSDK.ProcessAnimation(&entity->warpAnimator);
     if (!(Zone->timer & 3)) {
         for (int32 i = 0; i < 3; ++i) {
             EntityRing *ring = CREATE_ENTITY(Ring, NULL, (RSDK.Rand(-0x200000, 0x20000) + entity->dword68) + entity->position.x,
@@ -170,7 +170,7 @@ void SpecialRing_State_Warp(void)
         destroyEntity(entity);
     }
     else {
-        if (entity->warpData.frameID == entity->warpData.frameCount - 1) {
+        if (entity->warpAnimator.frameID == entity->warpAnimator.frameCount - 1) {
             entity->warpTimer = 0;
             entity->visible   = false;
             entity->state     = SpecialRing_StartWarp;
@@ -237,9 +237,14 @@ void SpecialRing_State_Normal(void)
     }
 }
 
-void SpecialRing_EditorDraw(void) {}
+void SpecialRing_EditorDraw(void)
+{
+    RSDK_THIS(SpecialRing);
+    RSDK.SetSpriteAnimation(SpecialRing->spriteIndex, 0, &entity->warpAnimator, true, 7);
+    RSDK.DrawSprite(&entity->warpAnimator, NULL, false);
+}
 
-void SpecialRing_EditorLoad(void) {}
+void SpecialRing_EditorLoad(void) { SpecialRing->spriteIndex = RSDK.LoadSpriteAnimation("Global/SpecialRing.bin", SCOPE_STAGE); }
 
 void SpecialRing_Serialize(void)
 {

@@ -44,12 +44,11 @@ void Motobug_Create(void *data)
 
 void Motobug_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("GHZ")) {
+    if (RSDK.CheckStageFolder("GHZ"))
         Motobug->spriteIndex = RSDK.LoadSpriteAnimation("GHZ/Motobug.bin", SCOPE_STAGE);
-    }
-    else if (RSDK.CheckStageFolder("Blueprint")) {
+    else if (RSDK.CheckStageFolder("Blueprint"))
         Motobug->spriteIndex = RSDK.LoadSpriteAnimation("Blueprint/Motobug.bin", SCOPE_STAGE);
-    }
+
     Motobug->hitbox.left   = -14;
     Motobug->hitbox.top    = -14;
     Motobug->hitbox.right  = 14;
@@ -61,12 +60,12 @@ void Motobug_StageLoad(void)
 void Motobug_DebugDraw(void)
 {
     RSDK.SetSpriteAnimation(Motobug->spriteIndex, 0, &DebugMode->animator, true, 0);
-    RSDK.DrawSprite(&DebugMode->animator, 0, 0);
+    RSDK.DrawSprite(&DebugMode->animator, NULL, false);
 }
 void Motobug_DebugSpawn(void)
 {
-    RSDK_THIS(Motobug);
-    RSDK.CreateEntity(Motobug->objectID, 0, entity->position.x, entity->position.y);
+    RSDK_THIS(DebugMode);
+    CREATE_ENTITY(Motobug, 0, entity->position.x, entity->position.y);
 }
 void Motobug_CheckOnScreen(void)
 {
@@ -84,7 +83,7 @@ void Motobug_CheckPlayerCollisions(void)
     foreach_active(Player, player)
     {
         if (Player_CheckBadnikTouch(player, entity, &Motobug->hitbox))
-            Player_CheckBadnikBreak((Entity *)entity, player, true);
+            Player_CheckBadnikBreak(entity, player, true);
     }
 }
 void Motobug_State_Fall(void)
@@ -129,7 +128,7 @@ void Motobug_State_HandleMove(void)
 
     if (!--entity->timer) {
         entity->timer = 16;
-        Entity *smoke = (Entity *)RSDK.CreateEntity(Motobug->objectID, (void *)1, entity->position.x, entity->position.y);
+        Entity *smoke = CREATE_ENTITY(Motobug, (void *)1, entity->position.x, entity->position.y);
         if (entity->direction == FLIP_X)
             smoke->position.x -= 0x140000;
         else
@@ -215,8 +214,13 @@ void Motobug_State_Turn(void)
     }
 }
 
-void Motobug_EditorDraw(void) {}
+void Motobug_EditorDraw(void) { Motobug_Draw(); }
 
-void Motobug_EditorLoad(void) {}
+void Motobug_EditorLoad(void) {
+    if (RSDK.CheckStageFolder("GHZ"))
+        Motobug->spriteIndex = RSDK.LoadSpriteAnimation("GHZ/Motobug.bin", SCOPE_STAGE);
+    else if (RSDK.CheckStageFolder("Blueprint"))
+        Motobug->spriteIndex = RSDK.LoadSpriteAnimation("Blueprint/Motobug.bin", SCOPE_STAGE);
+}
 
 void Motobug_Serialize(void) {}

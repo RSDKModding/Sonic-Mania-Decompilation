@@ -23,15 +23,7 @@ void TTCutscene_Create(void *data)
 
     entity->active  = ACTIVE_NORMAL;
     entity->visible = false;
-    if (!entity->size.x)
-        entity->size.x = 0x1A80000;
-    if (!entity->size.y)
-        entity->size.y = 0xF00000;
-
-    entity->hitbox.left   = -entity->size.x >> 17;
-    entity->hitbox.right  = entity->size.x >> 17;
-    entity->hitbox.top    = -entity->size.y >> 17;
-    entity->hitbox.bottom = entity->size.y >> 17;
+    CutsceneRules_SetupEntity(entity);
 }
 
 void TTCutscene_StageLoad(void)

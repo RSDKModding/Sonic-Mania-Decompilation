@@ -183,7 +183,7 @@ void GHZSetup_SetupBGSwitchB2(void)
     RSDK.GetSceneLayer(1)->drawLayer[BGSwitch->screenID] = 0;
     RSDK.GetSceneLayer(2)->drawLayer[BGSwitch->screenID] = 0;
 }
-void GHZSetup_SpawnGHZ2Outro(void) { RSDK.CreateEntity(GHZ2Outro->objectID, (void *)1, 0, 0); }
+void GHZSetup_SpawnGHZ2Outro(void) { CREATE_ENTITY(GHZ2Outro, intToVoid(1), 0, 0); }
 
 void GHZSetup_EditorDraw(void) {}
 

@@ -4,18 +4,21 @@
 #include "SonicMania.h"
 
 enum MusicTracks {
-    TRACK_NONE       = -1,
-    TRACK_STAGE       = 0,
-    TRACK_INVINCIBLE  = 1,
-    TRACK_SNEAKERS    = 2,
-    TRACK_MINIBOSS    = 3,
-    TRACK_HBHBOSS     = 4,
-    TRACK_EGGMAN1     = 5,
-    TRACK_EGGMAN2     = 6,
-    TRACK_ACTCLEAR    = 7,
-    TRACK_DROWNING    = 8,
-    TRACK_GAMEOVER    = 9,
-    TRACK_SUPER       = 10,
+    TRACK_NONE         = -1,
+    TRACK_STAGE        = 0,
+    TRACK_INVINCIBLE   = 1,
+    TRACK_SNEAKERS     = 2,
+    TRACK_MINIBOSS     = 3,
+    TRACK_HBHBOSS      = 4,
+    TRACK_EGGMAN1      = 5,
+    TRACK_EGGMAN2      = 6,
+    TRACK_RUBYPRESENCE = 5,
+    TRACK_BUDDYBEAT    = 6,
+    TRACK_ACTCLEAR     = 7,
+    TRACK_DROWNING     = 8,
+    TRACK_GAMEOVER     = 9,
+    TRACK_SUPER        = 10,
+    TRACK_ERZBOSS      = 10,
 #if RETRO_USE_PLUS
     TRACK_HBHMISCHIEF = 11,
     TRACK_NOLOAD      = 12,
@@ -23,7 +26,7 @@ enum MusicTracks {
     TRACK_NOLOAD      = 11,
     TRACK_HBHMISCHIEF = 12,
 #endif
-    TRACK_1UP         = 13,
+    TRACK_1UP = 13,
 };
 
 // Object Class

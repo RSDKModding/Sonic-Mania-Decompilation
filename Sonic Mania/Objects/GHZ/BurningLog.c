@@ -14,19 +14,12 @@ void BurningLog_Update(void)
             if (entity->velocity.y < 0x380000)
                 Player_CheckCollisionPlatform(player, entity, &BurningLog->hitbox);
             if (Player_CheckCollisionTouch(player, entity, &BurningLog->hitbox2) && player->shield != SHIELD_FIRE) {
-                if (player->state != Player_State_Hit && player->state != Player_State_Die && player->state != Player_State_Drown
-                    && !player->invincibleTimer && !player->blinkTimer) {
-                    if (player->position.x > entity->position.x)
-                        player->velocity.x = 0x20000;
-                    else
-                        player->velocity.x = -0x20000;
-                    Player_Hit(player);
-                }
+                Player_CheckHit(player, entity);
             }
         }
     }
     else {
-        RSDK.ResetEntityPtr(entity, TYPE_BLANK, 0);
+        destroyEntity(entity);
     }
 }
 
@@ -37,7 +30,7 @@ void BurningLog_StaticUpdate(void) {}
 void BurningLog_Draw(void)
 {
     RSDK_THIS(BurningLog);
-    RSDK.DrawSprite(&entity->animator, 0, 0);
+    RSDK.DrawSprite(&entity->animator, NULL, false);
 }
 
 void BurningLog_Create(void *data)
@@ -67,8 +60,8 @@ void BurningLog_StageLoad(void)
     BurningLog->hitbox2.bottom = 8;
 }
 
-void BurningLog_EditorDraw(void) {}
+void BurningLog_EditorDraw(void) { BurningLog_Draw(); }
 
-void BurningLog_EditorLoad(void) {}
+void BurningLog_EditorLoad(void) { BurningLog->spriteIndex = RSDK.LoadSpriteAnimation("GHZ/Fireball.bin", SCOPE_STAGE); }
 
 void BurningLog_Serialize(void) { RSDK_EDITABLE_VAR(BurningLog, VAR_ENUM, timer); }

@@ -106,20 +106,20 @@ void ActClear_Draw(void)
 
     drawPos.x             = offset + entity->posUnknown2.x - 0x5C0000;
     drawPos.y             = entity->posUnknown2.y;
-    entity->data1.frameID = 1;
-    RSDK.DrawSprite(&entity->data1, &drawPos, true);
+    entity->animator1.frameID = 1;
+    RSDK.DrawSprite(&entity->animator1, &drawPos, true);
     drawPos.x += 0x320000;
 #if RETRO_USE_PLUS
     if (globals->gameMode != MODE_TIMEATTACK) {
 #endif
-        entity->data1.frameID = 8;
-        RSDK.DrawSprite(&entity->data1, &drawPos, true);
+        entity->animator1.frameID = 8;
+        RSDK.DrawSprite(&entity->animator1, &drawPos, true);
 #if RETRO_USE_PLUS
     }
 #endif
-    entity->data1.frameID = 10;
+    entity->animator1.frameID = 10;
     drawPos.x += 0x340000;
-    RSDK.DrawSprite(&entity->data1, &drawPos, true);
+    RSDK.DrawSprite(&entity->animator1, &drawPos, true);
 
     int32 dx = 0x430000 + drawPos.x;
     int32 dy = drawPos.y + 0xE0000;
@@ -143,32 +143,32 @@ void ActClear_Draw(void)
     drawPos.y = entity->posUnknown4.y;
 #if RETRO_USE_PLUS
     if (globals->gameMode == MODE_TIMEATTACK)
-        entity->data1.frameID = 17;
+        entity->animator1.frameID = 17;
     else
 #endif
-        entity->data1.frameID = 5;
-    RSDK.DrawSprite(&entity->data1, &drawPos, true);
+        entity->animator1.frameID = 5;
+    RSDK.DrawSprite(&entity->animator1, &drawPos, true);
 
     dx = drawPos.x + 0x320000;
     drawPos.x += 0x320000;
 #if RETRO_USE_PLUS
     if (globals->gameMode == MODE_TIMEATTACK) {
         drawPos.x             = dx - 0xA0000;
-        entity->data1.frameID = 1;
-        RSDK.DrawSprite(&entity->data1, &drawPos, true);
+        entity->animator1.frameID = 1;
+        RSDK.DrawSprite(&entity->animator1, &drawPos, true);
         drawPos.x += 0xA0000;
     }
     else {
 #endif
-        entity->data1.frameID = 8;
-        RSDK.DrawSprite(&entity->data1, &drawPos, true);
+        entity->animator1.frameID = 8;
+        RSDK.DrawSprite(&entity->animator1, &drawPos, true);
 #if RETRO_USE_PLUS
     }
 #endif
 
-    entity->data1.frameID = 10;
+    entity->animator1.frameID = 10;
     drawPos.x += 0x340000;
-    RSDK.DrawSprite(&entity->data1, &drawPos, true);
+    RSDK.DrawSprite(&entity->animator1, &drawPos, true);
 
     drawPos.x += 0x430000;
     drawPos.y += 0xE0000;
@@ -193,25 +193,25 @@ void ActClear_Draw(void)
         drawPos.x = offset + drawPos.x - 0x5C0000;
 #if RETRO_USE_PLUS
         if (globals->gameMode == MODE_TIMEATTACK)
-            entity->data1.frameID = 18;
+            entity->animator1.frameID = 18;
         else
 #endif
-            entity->data1.frameID = 15;
-        RSDK.DrawSprite(&entity->data1, &drawPos, true);
+            entity->animator1.frameID = 15;
+        RSDK.DrawSprite(&entity->animator1, &drawPos, true);
 
         drawPos.x += 0x320000;
 #if RETRO_USE_PLUS
         if (globals->gameMode != MODE_TIMEATTACK) {
 #endif
-            entity->data1.frameID = 8;
-            RSDK.DrawSprite(&entity->data1, &drawPos, true);
+            entity->animator1.frameID = 8;
+            RSDK.DrawSprite(&entity->animator1, &drawPos, true);
 #if RETRO_USE_PLUS
         }
 #endif
 
-        entity->data1.frameID = 10;
+        entity->animator1.frameID = 10;
         drawPos.x += 0x340000;
-        RSDK.DrawSprite(&entity->data1, &drawPos, true);
+        RSDK.DrawSprite(&entity->animator1, &drawPos, true);
 
         drawPos.x += 0x430000;
         drawPos.y += 0xE0000;
@@ -241,16 +241,16 @@ void ActClear_Draw(void)
 #if RETRO_USE_PLUS
     if (globals->gameMode == MODE_TIMEATTACK) {
         drawPos.x             = offset + entity->posUnknown6.x - 0x5C0000;
-        entity->data1.frameID = 19;
-        RSDK.DrawSprite(&entity->data1, &drawPos, true);
+        entity->animator1.frameID = 19;
+        RSDK.DrawSprite(&entity->animator1, &drawPos, true);
 
         drawPos.x += 0x320000;
-        entity->data1.frameID = 18;
-        RSDK.DrawSprite(&entity->data1, &drawPos, true);
+        entity->animator1.frameID = 18;
+        RSDK.DrawSprite(&entity->animator1, &drawPos, true);
 
-        entity->data1.frameID = 10;
+        entity->animator1.frameID = 10;
         drawPos.x += 0x340000;
-        RSDK.DrawSprite(&entity->data1, &drawPos, true);
+        RSDK.DrawSprite(&entity->animator1, &drawPos, true);
 
         drawPos.x += 0x430000;
         drawPos.y += 0xE0000;
@@ -265,12 +265,12 @@ void ActClear_Draw(void)
     else {
 #endif
         drawPos.x             = offset + entity->posUnknown6.x - 0x440000;
-        entity->data1.frameID = 9;
-        RSDK.DrawSprite(&entity->data1, &drawPos, true);
+        entity->animator1.frameID = 9;
+        RSDK.DrawSprite(&entity->animator1, &drawPos, true);
 
-        entity->data1.frameID = 10;
+        entity->animator1.frameID = 10;
         drawPos.x += 0x340000;
-        RSDK.DrawSprite(&entity->data1, &drawPos, true);
+        RSDK.DrawSprite(&entity->animator1, &drawPos, true);
 
         drawPos.x += 0x430000;
         drawPos.y += 0xE0000;
@@ -373,7 +373,7 @@ void ActClear_Create(void *data)
         entity->posUnknown5.y = 0x980000;
         entity->posUnknown6.x = -0x5480000;
         entity->posUnknown6.y = 0xC00000;
-        RSDK.SetSpriteAnimation(ActClear->spriteIndex, 0, &entity->data1, true, 0);
+        RSDK.SetSpriteAnimation(ActClear->spriteIndex, 0, &entity->animator1, true, 0);
         RSDK.SetSpriteAnimation(ActClear->spriteIndex, 1, &entity->animator2, true, 0);
 #if RETRO_USE_PLUS
         RSDK.SetSpriteAnimation(ActClear->spriteIndex, 0, &entity->data3, true, 12);

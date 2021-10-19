@@ -247,11 +247,7 @@ void Spikes_LateUpdate(void) {}
 
 void Spikes_StaticUpdate(void) {}
 
-void Spikes_Draw(void)
-{
-    if (Spikes->stateDraw)
-        Spikes->stateDraw();
-}
+void Spikes_Draw(void) { StateMachine_Run(Spikes->stateDraw); }
 
 void Spikes_Create(void *data)
 {
@@ -559,19 +555,81 @@ void Spikes_CheckHit(EntityPlayer *player, int32 playerVelX, int32 playerVelY)
     }
 }
 
-void Spikes_EditorDraw(void) { 
+void Spikes_EditorDraw(void)
+{
     RSDK_THIS(Spikes);
 
+    int32 dir = entity->type & 1;
+    int32 type = 0;
     switch ((entity->type >> 1) & 1) {
-        case 0: entity->direction = FLIP_Y * (entity->type & 1); break;
-        case 1: entity->direction = entity->type & 1; break;
+        case 0:
+            entity->direction = FLIP_Y * dir;
+            if (entity->direction)
+                type = 4;
+            else 
+                type = 1;
+            break;
+        case 1:
+            entity->direction = dir;
+            if (entity->direction) 
+                type = 2;
+            else 
+                type = 3;
+            break;
     }
 
-    Spikes_Draw(); 
+    Vector2 drawPos;
+    drawPos.x = entity->position.x;
+    drawPos.y = entity->position.y;
+    int32 cnt = entity->count >> 1;
+    switch (type) {
+        case 1:
+        case 4:
+            drawPos.x = 0x100000 - (entity->count << 19) + entity->position.x;
+            for (; cnt; --cnt) {
+                RSDK.DrawSprite(&Spikes->vData, &drawPos, false);
+                drawPos.x += 0x200000;
+            }
+
+            if (entity->count & 1) {
+                drawPos.x -= 0x100000;
+                RSDK.DrawSprite(&Spikes->vData, &drawPos, false);
+            }
+            break;
+        case 2:
+        case 3:
+            drawPos.y = 0x100000 - (entity->count << 19) + entity->position.y;
+            for (; cnt; --cnt) {
+                RSDK.DrawSprite(&Spikes->hData, &drawPos, false);
+                drawPos.y += 0x200000;
+            }
+
+            if (entity->count & 1) {
+                drawPos.y -= 0x100000;
+                RSDK.DrawSprite(&Spikes->hData, &drawPos, false);
+            }
+            break;
+        default: break;
+    }
+
 }
 
 void Spikes_EditorLoad(void)
 {
+    Spikes->stateDraw = Spikes_StateDraw_Stage;
+    if (RSDK.CheckStageFolder("FBZ")) {
+        Spikes->spriteIndex = RSDK.LoadSpriteAnimation("FBZ/Spikes.bin", SCOPE_STAGE);
+    }
+    if (RSDK.CheckStageFolder("PSZ2")) {
+        Spikes->spriteIndex = RSDK.LoadSpriteAnimation("PSZ2/Spikes.bin", SCOPE_STAGE);
+    }
+    else {
+        Spikes->spriteIndex = RSDK.LoadSpriteAnimation("Global/Spikes.bin", SCOPE_STAGE);
+        Spikes->stateDraw   = Spikes_StateDraw_Global;
+    }
+    RSDK.SetSpriteAnimation(Spikes->spriteIndex, 0, &Spikes->vData, true, 0);
+    RSDK.SetSpriteAnimation(Spikes->spriteIndex, 1, &Spikes->hData, true, 0);
+
     RSDK_ACTIVE_VAR(Spikes, type);
     RSDK_ENUM_VAR(SPIKES_UP);
     RSDK_ENUM_VAR(SPIKES_DOWN);

@@ -6666,6 +6666,7 @@ void Player_EditorLoad(void)
     Player->sonicSpriteIndex = RSDK.LoadSpriteAnimation("Editor/PlayerIcons.bin", SCOPE_STAGE);
 
     RSDK_ACTIVE_VAR(Player, characterID);
+    RSDK_ENUM_VAR(CHAR_NONE);
     RSDK_ENUM_VAR(CHAR_SONIC);
     RSDK_ENUM_VAR(CHAR_TAILS);
     RSDK_ENUM_VAR(CHAR_SONIC_TAILS);

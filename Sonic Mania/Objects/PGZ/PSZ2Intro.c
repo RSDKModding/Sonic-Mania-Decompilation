@@ -22,20 +22,8 @@ void PSZ2Intro_Draw(void) {}
 void PSZ2Intro_Create(void *data)
 {
     RSDK_THIS(PSZ2Intro);
-    entity->active        = ACTIVE_BOUNDS;
-    entity->visible       = false;
-    entity->updateRange.x = 0x800000;
-    entity->updateRange.y = 0x800000;
-    if (!entity->size.x)
-        entity->size.x = 0x1A80000;
-    if (!entity->size.y)
-        entity->size.y = 0xF00000;
-    entity->updateRange.x = 0x800000 + entity->size.x;
-    entity->updateRange.y = 0x800000 + entity->size.y;
-    entity->hitbox.left   = -entity->size.x >> 17;
-    entity->hitbox.top    = -entity->size.y >> 17;
-    entity->hitbox.right  = entity->size.x >> 17;
-    entity->hitbox.bottom = entity->size.y >> 17;
+    INIT_ENTITY(entity);
+    CutsceneRules_SetupEntity(entity);
 }
 
 void PSZ2Intro_StageLoad(void)

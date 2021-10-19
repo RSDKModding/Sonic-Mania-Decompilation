@@ -112,8 +112,8 @@ void AIZEncoreTutorial_Unknown4(void)
     RSDK_THIS(AIZEncoreTutorial);
     if (entity->alpha <= 0) {
         for (int32 i = 0; i < 8; ++i) {
-            EntityDebris *debris = (EntityDebris *)RSDK.CreateEntity(Debris->objectID, 0, entity->position.x + RSDK.Rand(-0x180000, 0x180000),
-                                                                     entity->position.y + RSDK.Rand(-0x100000, 0x100000));
+            EntityDebris *debris =
+                CREATE_ENTITY(Debris, NULL, entity->position.x + RSDK.Rand(-0x180000, 0x180000), entity->position.y + RSDK.Rand(-0x100000, 0x100000));
             debris->state        = Debris_State_LightningSpark;
             debris->velocity.x   = RSDK.Rand(-0x20000, 0x20000);
             debris->velocity.y   = RSDK.Rand(-0x20000, 0x20000);

@@ -22,7 +22,7 @@ typedef struct {
     Entity *grabbedEntities[8];
     int32 count;
     int32 field_F0;
-    Animator data1;
+    Animator animator1;
     Animator animator2;
     Animator data3;
     Animator data4;

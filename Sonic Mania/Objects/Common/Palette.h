@@ -7,10 +7,8 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    uint8 field_4;
-    uint8 field_5;
+    uint16 aniFrames;
     uint8 count;
-    uint8 field_7;
 } ObjectPalette;
 
 // Entity Class
@@ -21,6 +19,7 @@ typedef struct {
     uint16 rowFlags;
     uint8 bankID;
     bool32 loadOnce;
+    Animator animator;
 } EntityPalette;
 
 // Object Struct

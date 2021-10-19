@@ -5,6 +5,7 @@ ObjectSwingRope *SwingRope;
 void SwingRope_Update(void)
 {
     RSDK_THIS(SwingRope);
+
     int32 sine              = 11 * RSDK.Sin512(entity->angleOffset + 3 * Zone->timer);
     entity->rotatedAngle  = sine;
     entity->rotatedOffset = sine >> 3;
@@ -139,12 +140,10 @@ void SwingRope_Create(void *data)
 
 void SwingRope_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("MSZ")) {
+    if (RSDK.CheckStageFolder("MSZ"))
         SwingRope->spriteIndex = RSDK.LoadSpriteAnimation("MSZ/SwingRope.bin", SCOPE_STAGE);
-    }
-    else if (RSDK.CheckStageFolder("AIZ")) {
+    else if (RSDK.CheckStageFolder("AIZ"))
         SwingRope->spriteIndex = RSDK.LoadSpriteAnimation("AIZ/SwingRope.bin", SCOPE_STAGE);
-    }
 
     SwingRope->hitbox1.left   = -10;
     SwingRope->hitbox1.top    = -8;
@@ -166,13 +165,30 @@ void SwingRope_DebugDraw(void)
 void SwingRope_DebugSpawn(void)
 {
     RSDK_THIS(SwingRope);
-    EntitySwingRope *rope = (EntitySwingRope *)RSDK.CreateEntity(SwingRope->objectID, NULL, entity->position.x, entity->position.y);
+    EntitySwingRope *rope = CREATE_ENTITY(SwingRope, NULL, entity->position.x, entity->position.y);
     rope->ropeSize        = 6;
 }
 
-void SwingRope_EditorDraw(void) {}
+void SwingRope_EditorDraw(void)
+{
+    RSDK_THIS(SwingRope);
+    RSDK.SetSpriteAnimation(SwingRope->spriteIndex, 0, &entity->ropeData, true, 0);
+    RSDK.SetSpriteAnimation(SwingRope->spriteIndex, 1, &entity->handleData, true, 0);
+    RSDK.SetSpriteAnimation(SwingRope->spriteIndex, 2, &entity->pivotData, true, 0);
 
-void SwingRope_EditorLoad(void) {}
+    entity->rotatedAngle  = 11 * RSDK.Sin512(entity->angleOffset);
+    entity->rotatedOffset = entity->rotatedAngle >> 3;
+
+    SwingRope_Draw();
+}
+
+void SwingRope_EditorLoad(void)
+{
+    if (RSDK.CheckStageFolder("MSZ"))
+        SwingRope->spriteIndex = RSDK.LoadSpriteAnimation("MSZ/SwingRope.bin", SCOPE_STAGE);
+    else if (RSDK.CheckStageFolder("AIZ"))
+        SwingRope->spriteIndex = RSDK.LoadSpriteAnimation("AIZ/SwingRope.bin", SCOPE_STAGE);
+}
 
 void SwingRope_Serialize(void)
 {

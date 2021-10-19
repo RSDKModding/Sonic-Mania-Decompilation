@@ -89,14 +89,10 @@ void SpikeLog_State_Main(void)
         else {
             if (Player_CheckCollisionTouch(player, entity, &SpikeLog->hitbox)) {
                 if (!SpikeLog->hasAchievement) {
-#if RETRO_USE_PLUS
-                    API.UnlockAchievement("ACH_GHZ");
-#else
-                    APICallback_UnlockAchievement("ACH_GHZ");
-#endif
+                    API_UnlockAchievement("ACH_GHZ");
                     SpikeLog->hasAchievement = true;
                 }
-                RSDK.CreateEntity(BurningLog->objectID, (void *)0x10, entity->position.x, entity->position.y);
+                CREATE_ENTITY(BurningLog, intToVoid(0x10), entity->position.x, entity->position.y);
                 RSDK.SetTileInfo(Zone->fgLow, entity->position.x >> 20, entity->position.y >> 20, 0xFFFF);
                 entity->frame = 8;
                 entity->state = SpikeLog_State_Burn;
@@ -113,19 +109,24 @@ void SpikeLog_State_Burn(void)
         {
             if (other->state == SpikeLog_State_Main
                 && RSDK.CheckObjectCollisionTouchBox(other, &SpikeLog->burnHitbox, entity, &SpikeLog->burnHitbox)) {
-                RSDK.CreateEntity(BurningLog->objectID, (void *)0x10, other->position.x, other->position.y);
+                CREATE_ENTITY(BurningLog, intToVoid(0x10), other->position.x, other->position.y);
                 RSDK.SetTileInfo(Zone->fgLow, other->position.x >> 20, other->position.y >> 20, 0xFFFF);
                 other->frame  = 8;
                 other->state  = SpikeLog_State_Burn;
                 other->active = ACTIVE_NORMAL;
             }
         }
-        RSDK.ResetEntityPtr(entity, TYPE_BLANK, 0);
+        destroyEntity(entity);
     }
 }
 
-void SpikeLog_EditorDraw(void) {}
+void SpikeLog_EditorDraw(void)
+{
+    RSDK_THIS(SpikeLog);
+    entity->animator.frameID = entity->frame;
+    RSDK.DrawSprite(&entity->animator, NULL, false);
+}
 
-void SpikeLog_EditorLoad(void) {}
+void SpikeLog_EditorLoad(void) { SpikeLog->spriteIndex = RSDK.LoadSpriteAnimation("GHZ/SpikeLog.bin", SCOPE_STAGE); }
 
 void SpikeLog_Serialize(void) { RSDK_EDITABLE_VAR(SpikeLog, VAR_UINT8, frame); }

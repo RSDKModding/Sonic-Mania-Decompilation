@@ -70,7 +70,7 @@ void Tuesday_Create(void *data)
         int32 maxX         = 0;
         int32 maxY         = 0;
         entity->drawPos  = entity->position;
-        if (entity->type) {
+        if (entity->type && entity->field_88) {
             entity->position    = entity->field_88->position;
             entity->updateRange = entity->field_88->updateRange;
         }

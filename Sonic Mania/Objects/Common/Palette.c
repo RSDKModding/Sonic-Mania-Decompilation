@@ -29,9 +29,14 @@ void Palette_StageLoad(void)
         Palette->count++;
 }
 
-void Palette_EditorDraw(void) {}
+void Palette_EditorDraw(void)
+{
+    RSDK_THIS(Palette);
+    RSDK.SetSpriteAnimation(Palette->aniFrames, 0, &entity->animator, true, 9);
+    RSDK.DrawSprite(&entity->animator, NULL, false);
+}
 
-void Palette_EditorLoad(void) {}
+void Palette_EditorLoad(void) { BGSwitch->aniFrames = RSDK.LoadSpriteAnimation("Editor/EditorIcons.bin", SCOPE_STAGE); }
 
 void Palette_Serialize(void)
 {

@@ -174,7 +174,7 @@ void AIZSetup_StageLoad(void)
 
     Animals->animalTypes[0] = ANIMAL_FLICKY;
     Animals->animalTypes[1] = ANIMAL_RICKY;
-    Music_SetMusicTrack("RubyPresence.ogg", TRACK_EGGMAN1, 198457);
+    Music_SetMusicTrack("RubyPresence.ogg", TRACK_RUBYPRESENCE, 198457);
     AIZSetup->sfxDrill     = RSDK.GetSFX("LRZ/Drill.wav");
     AIZSetup->sfxBreak     = RSDK.GetSFX("Stage/LedgeBreak3.wav");
     AIZSetup->sfxImpact    = RSDK.GetSFX("Stage/Impact4.wav");

@@ -11,7 +11,7 @@ typedef struct {
     int32 field_8;
     int32 field_C;
     int32 field_10;
-    int32 field_14;
+    uint16 aniFrames;
 } ObjectWaterfallSound;
 
 // Entity Class
@@ -20,12 +20,7 @@ typedef struct {
     Vector2 size;
     Vector2 posUnk;
     bool32 flag;
-    int32 field_6C;
-    int32 field_70;
-    int32 field_74;
-    int32 field_78;
-    int32 field_7C;
-    int32 field_80;
+    Animator animator;
 } EntityWaterfallSound;
 
 // Object Struct

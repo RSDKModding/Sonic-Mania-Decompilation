@@ -6,9 +6,9 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    void (*callbacks[16])(void);
+    StateMachine(callbacks[16]);
     int32 playerID;
-    int32 field_48;
+    uint16 aniFrames;
 } ObjectGenericTrigger;
 
 // Entity Class
@@ -17,6 +17,7 @@ typedef struct {
     Vector2 size;
     uint8 triggerID;
     Hitbox hitbox;
+    Animator animator;
 } EntityGenericTrigger;
 
 // Object Struct

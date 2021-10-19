@@ -41,9 +41,8 @@ void WaterfallSound_Create(void *data)
 
 void WaterfallSound_StageLoad(void)
 {
-    if (globals->gameMode != MODE_COMPETITION) {
+    if (globals->gameMode != MODE_COMPETITION)
         Soundboard_LoadSFX("Stage/WaterfallLoop.wav", 2820, WaterfallSound_CheckCB, WaterfallSound_UpdateCB);
-    }
 }
 
 bool32 WaterfallSound_CheckCB(void)
@@ -150,9 +149,40 @@ void WaterfallSound_UpdateCB(int32 sfxID)
     RSDK.SetChannelAttributes(Soundboard->sfxChannel[sfxID], (volume / -640.0f) + 1.0, clampVal(pan, -1.0, 1.0), 1.0f);
 }
 
-void WaterfallSound_EditorDraw(void) {}
+void WaterfallSound_EditorDraw(void)
+{
+    RSDK_THIS(WaterfallSound);
+    Vector2 drawPos;
+    RSDK.SetSpriteAnimation(WaterfallSound->aniFrames, 0, &entity->animator, true, 0);
 
-void WaterfallSound_EditorLoad(void) {}
+    drawPos.x = entity->position.x;
+    drawPos.y = entity->position.y;
+    drawPos.x -= entity->size.x >> 1;
+    drawPos.y -= entity->size.y >> 1;
+    RSDK.DrawLine(drawPos.x - 0x10000, drawPos.y - 0x10000, drawPos.x + entity->size.x, drawPos.y - 0x10000, 0xE0E0E0, 0, INK_NONE, 0);
+    RSDK.DrawLine(drawPos.x - 0x10000, entity->size.y + drawPos.y, drawPos.x + entity->size.x, entity->size.y + drawPos.y, 0xE0E0E0, 0, INK_NONE,
+                  false);
+    RSDK.DrawLine(drawPos.x - 0x10000, drawPos.y - 0x10000, drawPos.x - 0x10000, drawPos.y + entity->size.y, 0xE0E0E0, 0, INK_NONE, 0);
+    RSDK.DrawLine(drawPos.x + entity->size.x, drawPos.y - 0x10000, drawPos.x + entity->size.x, drawPos.y + entity->size.y, 0xE0E0E0, 0, INK_NONE,
+                  false);
+
+    entity->direction = FLIP_NONE;
+    RSDK.DrawSprite(&entity->animator, &drawPos, false);
+
+    drawPos.x += entity->size.x;
+    entity->direction = FLIP_X;
+    RSDK.DrawSprite(&entity->animator, &drawPos, false);
+
+    drawPos.y += entity->size.y;
+    entity->direction = FLIP_XY;
+    RSDK.DrawSprite(&entity->animator, &drawPos, false);
+
+    drawPos.x -= entity->size.x;
+    entity->direction = FLIP_Y;
+    RSDK.DrawSprite(&entity->animator, &drawPos, false);
+}
+
+void WaterfallSound_EditorLoad(void) { WaterfallSound->aniFrames = RSDK.LoadSpriteAnimation("Global/TicMark.bin", SCOPE_STAGE); }
 
 void WaterfallSound_Serialize(void) { RSDK_EDITABLE_VAR(WaterfallSound, VAR_VECTOR2, size); }
 #endif

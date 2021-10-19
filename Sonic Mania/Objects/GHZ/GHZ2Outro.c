@@ -244,7 +244,7 @@ bool32 GHZ2Outro_CutsceneState2_Unknown3(EntityCutsceneSeq *host)
     if (host->timer == 240) {
         eggman->state  = Eggman_Unknown2;
         eggman->animID = 2;
-        Music_SetMusicTrack("RubyPresence.ogg", TRACK_EGGMAN1, 198457);
+        Music_SetMusicTrack("RubyPresence.ogg", TRACK_RUBYPRESENCE, 198457);
         Music_TransitionTrack(TRACK_EGGMAN1, 0.025);
     }
 

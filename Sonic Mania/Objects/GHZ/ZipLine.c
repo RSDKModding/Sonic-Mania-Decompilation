@@ -569,9 +569,9 @@ void ZipLine_Unknown4(void)
     }
 }
 
-void ZipLine_EditorDraw(void) {}
+void ZipLine_EditorDraw(void) { ZipLine_Draw(); }
 
-void ZipLine_EditorLoad(void) {}
+void ZipLine_EditorLoad(void) { ZipLine->aniFrames = RSDK.LoadSpriteAnimation("GHZ/ZipLine.bin", SCOPE_STAGE); }
 
 void ZipLine_Serialize(void)
 {

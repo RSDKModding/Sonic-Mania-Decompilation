@@ -16,7 +16,7 @@ typedef struct {
     StateMachine(state);
     int32 timer;
     Vector2 startPos;
-    Animator data1;
+    Animator animator1;
     Animator animator2;
     Animator data3;
     Animator data4;

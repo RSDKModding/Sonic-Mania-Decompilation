@@ -188,9 +188,8 @@ void SchrodingersCapsule_Unknown4(void)
     RSDK.ProcessAnimation(&entity->animator4);
     RSDK.ProcessAnimation(&entity->animator5);
     if (!(entity->timer % 3)) {
-        EntityExplosion *explosion =
-            (EntityExplosion *)RSDK.CreateEntity(Explosion->objectID, intToVoid((2 * (RSDK.Rand(0, 256) > 192) + 1)),
-                                                 (RSDK.Rand(-24, 24) << 16) + entity->position.x, (RSDK.Rand(-24, 24) << 16) + entity->position.y);
+        EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid((2 * (RSDK.Rand(0, 256) > 192) + EXPLOSION_ENEMY)),
+                                                   (RSDK.Rand(-24, 24) << 16) + entity->position.x, (RSDK.Rand(-24, 24) << 16) + entity->position.y);
         explosion->drawOrder = Zone->drawOrderHigh;
 
         RSDK.PlaySfx(SchrodingersCapsule->sfxExplosion2, 0, 255);
@@ -296,9 +295,19 @@ void SchrodingersCapsule_Unknown5(void)
     }
 }
 
-void SchrodingersCapsule_EditorDraw(void) {}
+void SchrodingersCapsule_EditorDraw(void)
+{
+    RSDK_THIS(SchrodingersCapsule);
 
-void SchrodingersCapsule_EditorLoad(void) {}
+    RSDK.SetSpriteAnimation(SchrodingersCapsule->aniFrames, 0, &entity->animator1, true, 0);
+    RSDK.SetSpriteAnimation(SchrodingersCapsule->aniFrames, 1, &entity->animator3, true, 0);
+    RSDK.SetSpriteAnimation(SchrodingersCapsule->aniFrames, 2, &entity->animator2, true, 0);
+    RSDK.SetSpriteAnimation(SchrodingersCapsule->aniFrames, 3, &entity->animator4, true, 0);
+    RSDK.SetSpriteAnimation(SchrodingersCapsule->aniFrames, 4, &entity->animator5, true, 0);
+    SchrodingersCapsule_Draw();
+}
+
+void SchrodingersCapsule_EditorLoad(void) { SchrodingersCapsule->aniFrames = RSDK.LoadSpriteAnimation("AIZ/SchrodingersCapsule.bin", SCOPE_STAGE); }
 
 void SchrodingersCapsule_Serialize(void) {}
 #endif

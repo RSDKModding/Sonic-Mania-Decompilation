@@ -405,6 +405,13 @@ extern RSDKFunctionTable RSDK;
     info.textLength = 0;                                                                                                                             \
     info.length     = 0
 
+//Initializes entity values to the defaults
+#define INIT_ENTITY(entity)                                                                                                                          \
+    (entity)->active        = ACTIVE_BOUNDS;                                                                                                         \
+    (entity)->visible       = false;                                                                                                                 \
+    (entity)->updateRange.x = 0x800000;                                                                                                              \
+    (entity)->updateRange.y = 0x800000;
+
 #define foreach_active(type, entityOut)                                                                                                              \
     Entity##type *entityOut = NULL;                                                                                                                  \
     while (RSDK.GetActiveEntities(type->objectID, (Entity **)&entityOut))

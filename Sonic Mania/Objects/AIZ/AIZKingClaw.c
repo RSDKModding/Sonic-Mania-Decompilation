@@ -37,14 +37,14 @@ void AIZKingClaw_Draw(void)
 {
     RSDK_THIS(AIZKingClaw);
     if (RSDK_sceneInfo->currentDrawGroup == Zone->drawOrderLow) {
-        RSDK.DrawSprite(&entity->data3, &entity->clawPos, 0);
+        RSDK.DrawSprite(&entity->data3, &entity->clawPos, false);
     }
     else {
         for (int32 i = 0; i < 12; ++i) {
-            RSDK.DrawSprite(&entity->data1, &entity->ballPos[i], false);
+            RSDK.DrawSprite(&entity->animator1, &entity->ballPos[i], false);
         }
-        RSDK.DrawSprite(&entity->animator2, &entity->clawPos, 0);
-        RSDK.DrawSprite(&entity->data4, &entity->clawPos, 0);
+        RSDK.DrawSprite(&entity->animator2, &entity->clawPos, false);
+        RSDK.DrawSprite(&entity->data4, &entity->clawPos, false);
     }
 }
 
@@ -69,7 +69,7 @@ void AIZKingClaw_Create(void *data)
             RSDK.SetSpriteAnimation(AIZKingClaw->aniFrames, 3, &entity->data3, true, 3);
             RSDK.SetSpriteAnimation(AIZKingClaw->aniFrames, 2, &entity->data4, true, 3);
         }
-        RSDK.SetSpriteAnimation(AIZKingClaw->aniFrames, 0, &entity->data1, true, 0);
+        RSDK.SetSpriteAnimation(AIZKingClaw->aniFrames, 0, &entity->animator1, true, 0);
         RSDK.SetSpriteAnimation(AIZKingClaw->aniFrames, 1, &entity->animator2, true, 0);
     }
 }
@@ -127,8 +127,16 @@ void AIZKingClaw_Unknown2(void)
     }
 }
 
-void AIZKingClaw_EditorDraw(void) {}
+void AIZKingClaw_EditorDraw(void) { AIZKingClaw_Draw(); }
 
-void AIZKingClaw_EditorLoad(void) {}
+void AIZKingClaw_EditorLoad(void)
+{
+    if (RSDK.CheckStageFolder("AIZ")) {
+        AIZKingClaw->aniFrames = RSDK.LoadSpriteAnimation("AIZ/Claw.bin", SCOPE_STAGE);
+    }
+    else if (RSDK.CheckStageFolder("GHZCutscene")) {
+        AIZKingClaw->aniFrames = RSDK.LoadSpriteAnimation("GHZCutscene/Claw.bin", SCOPE_STAGE);
+    }
+}
 
 void AIZKingClaw_Serialize(void) {}

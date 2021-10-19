@@ -11,16 +11,7 @@ typedef struct {
 
 // Entity Class
 typedef struct {
-    RSDK_ENTITY
-    Vector2 size;
-    int32 field_60;
-    int32 field_64;
-    int32 field_68;
-    int32 field_6C;
-    int32 field_70;
-    int32 field_74;
-    int32 field_78;
-    int32 field_7C;
+    MANIA_CUTSCENE_BASE
 } EntityTMZ1Outro;
 
 // Object Struct

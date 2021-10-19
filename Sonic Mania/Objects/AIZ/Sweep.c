@@ -321,8 +321,21 @@ void Sweep_Unknown11(void)
     }
 }
 
-void Sweep_EditorDraw(void) {}
+void Sweep_EditorDraw(void)
+{
+    RSDK_THIS(Sweep);
+    RSDK.SetSpriteAnimation(Sweep->aniFrames, 0, &entity->animator, true, 0);
+    Sweep_Draw();
+}
 
-void Sweep_EditorLoad(void) {}
+void Sweep_EditorLoad(void)
+{
+    if (RSDK.CheckStageFolder("CPZ"))
+        Sweep->aniFrames = RSDK.LoadSpriteAnimation("CPZ/Sweep.bin", SCOPE_STAGE);
+#if RETRO_USE_PLUS
+    else if (RSDK.CheckStageFolder("AIZ"))
+        Sweep->aniFrames = RSDK.LoadSpriteAnimation("AIZ/Sweep.bin", SCOPE_STAGE);
+#endif
+}
 
 void Sweep_Serialize(void) {}

@@ -45,7 +45,7 @@ void UFO_HUD_Draw(void)
     drawPos.x = RSDK_screens->centerX << 16;
     if (entity->scale.x > 0x200)
         entity->drawFX = FX_SCALE;
-    RSDK.DrawSprite(&entity->data1, &drawPos, true);
+    RSDK.DrawSprite(&entity->animator1, &drawPos, true);
 
     for (int32 i = 0; i <= UFO_Setup->machLevel; ++i) {
         RSDK.DrawSprite(&entity->data4, &drawPos, true);
@@ -82,7 +82,7 @@ void UFO_HUD_Create(void *data)
         entity->scale.x       = 0x200;
         entity->scale.y       = 0x200;
         entity->palID         = 2;
-        RSDK.SetSpriteAnimation(UFO_HUD->spriteIndex, 0, &entity->data1, true, 0);
+        RSDK.SetSpriteAnimation(UFO_HUD->spriteIndex, 0, &entity->animator1, true, 0);
         RSDK.SetSpriteAnimation(UFO_HUD->spriteIndex, 1, &entity->animator2, true, 0);
         RSDK.SetSpriteAnimation(UFO_HUD->spriteIndex, 2, &entity->data3, true, 0);
         RSDK.SetSpriteAnimation(UFO_HUD->spriteIndex, 3, &entity->data4, true, 0);

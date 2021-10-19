@@ -112,9 +112,14 @@ void PBL_Ring_State_RingSparkle(void)
     }
 }
 
-void PBL_Ring_EditorDraw(void) {}
+void PBL_Ring_EditorDraw(void)
+{
+    RSDK_THIS(PBL_Ring);
+    RSDK.SetSpriteAnimation(PBL_Ring->aniFrames, 1, &entity->animator, true, 0);
+    RSDK.DrawSprite(&entity->animator, NULL, true);
+}
 
-void PBL_Ring_EditorLoad(void) {}
+void PBL_Ring_EditorLoad(void) { PBL_Ring->aniFrames = RSDK.LoadSpriteAnimation("Global/Ring.bin", SCOPE_STAGE); }
 
 void PBL_Ring_Serialize(void) { RSDK_EDITABLE_VAR(PBL_Ring, VAR_ENUM, height); }
 #endif
