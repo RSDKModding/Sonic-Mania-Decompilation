@@ -183,10 +183,12 @@ void WoodChipper_HandlePlayerCollisions(void)
         }
         else if (Player_CheckCollisionBox(player, entity, &WoodChipper->hitboxWood) == 1) {
             entity->activePlayers |= 1 << player->playerID;
+#if RETRO_USE_PLUS
             if (player->state == Player_State_MightyHammerDrop) {
                 entity->timer = 1;
                 player->state = Player_State_Air;
             }
+#endif
         } 
         else {
             Player_CheckCollisionBox(player, entity, &WoodChipper->hitboxStump);

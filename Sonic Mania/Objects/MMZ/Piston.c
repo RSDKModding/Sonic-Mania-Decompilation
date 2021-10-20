@@ -52,7 +52,7 @@ void Piston_Create(void *data)
     entity->type = type;
     if (type == 3) {
         entity->state        = Piston_WaitForPlayers;
-        entity->stateCollide = Piston_MightyAntiHammer;
+        entity->stateCollide = Piston_StateCollide_Solid;
     }
     else
         entity->state = Piston_WaitForInterval;
@@ -88,10 +88,11 @@ void Piston_WaitForInterval(void)
     // i don't like the naming though maybe i go thru it again later
 }
 
-void Piston_MightyAntiHammer(void)
+void Piston_StateCollide_Solid(void)
 {
     RSDK_THIS(Piston);
     Platform_CollisionState_AllSolid();
+#if RETRO_USE_PLUS
     for (int32 i = 0; i < Player->playerCount; ++i) {
         if (((1 << i) & entity->stoodPlayers) != 0) {
             EntityPlayer *player = RSDK_GET_ENTITY(i, Player);
@@ -99,6 +100,7 @@ void Piston_MightyAntiHammer(void)
                 player->state = Player_State_Air;
         }
     }
+#endif
 }
 
 void Piston_Down(void)

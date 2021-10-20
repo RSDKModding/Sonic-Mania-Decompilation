@@ -335,6 +335,7 @@ void BreakableWall_HandleTopBreak_Chunks(void)
     foreach_active(Player, player)
     {
         int32 velY = player->velocity.y;
+        bool32 onGround   = player->onGround;
         if (Player_CheckCollisionBox(player, entity, &entity->hitbox) == 1 && !player->sidekick
             && ((player->collisionPlane == 1 && entity->type != 2) || entity->type == 2)) {
 #if RETRO_USE_PLUS
@@ -358,7 +359,7 @@ void BreakableWall_HandleTopBreak_Chunks(void)
 #endif
                     }
 
-                    if (player->groundedStore && player->collisionMode != CMODE_LWALL && player->collisionMode != CMODE_RWALL)
+                    if (onGround && player->collisionMode != CMODE_LWALL && player->collisionMode != CMODE_RWALL)
                         flag = false;
 
                     if (flag && !player->sidekick) {

@@ -889,9 +889,7 @@ void ActClear_State_ActFinish(void)
             }
         }
         else {
-#if RETRO_USE_PLUS
-            ActClear->field_1C           = 1;
-#endif
+            ActClear->finished           = true;
             ActClear->actID              = 0;
             RSDK_sceneInfo->milliseconds = 0;
             RSDK_sceneInfo->seconds      = 0;

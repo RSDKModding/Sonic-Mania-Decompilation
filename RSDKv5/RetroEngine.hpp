@@ -109,7 +109,7 @@ enum GameRegions {
 
 #define RETRO_USING_SDL2      (0) // general
 #define RETRO_USING_DIRECTX9  (0) // windows
-#define RETRO_USING_DIRECTX1    1 (0) // xbox one
+#define RETRO_USING_DIRECTX11 (0) // xbox one
 
 #define DEFAULT_SCREEN_XSIZE (424)
 #define DEFAULT_FULLSCREEN   false

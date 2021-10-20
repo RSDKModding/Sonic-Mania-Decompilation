@@ -965,13 +965,19 @@ void MegaOctus_StateOrb_FireShot(void)
         else
             angle = 3 * entity->shotCount;
         angle *= 4;
-#else
-        angle = RSDK.ATan(player1->position.x - x, player1->position.y - y);
-#endif
 
         EntityMegaOctus *shot = CREATE_ENTITY(MegaOctus, intToVoid(MEGAOCTUS_ORBSHOT), x, y);
         shot->velocity.x      = 0x300 * RSDK.Sin256(angle);
         shot->velocity.y      = 0x300 * RSDK.Cos256(angle);
+#else
+        EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
+        angle                 = RSDK.ATan2(player1->position.x - x, player1->position.y - y);
+
+        EntityMegaOctus *shot = CREATE_ENTITY(MegaOctus, intToVoid(MEGAOCTUS_ORBSHOT), x, y);
+        shot->velocity.x      = 0x300 * RSDK.Cos256(angle);
+        shot->velocity.y      = 0x300 * RSDK.Sin256(angle);
+#endif
+
         RSDK.PlaySfx(MegaOctus->sfxBullet, false, 255);
         if (entity->shotCount >= 4) {
             entity->velocity.y = 0x10000;
@@ -1192,7 +1198,7 @@ void MegaOctus_StateArm_Unknown3(void)
             parent->stateCollide = Platform_CollisionState_Null;
 #else
         parent->drawPos.y += 0x60000;
-        parent->collisionOffset.y += 0x60000;
+        parent->centerPos.y += 0x60000;
 #endif
     }
 
@@ -1243,7 +1249,8 @@ void MegaOctus_StateArm_Unknown4(void)
     }
 #else
     parent->drawPos.y -= 0x8000;
-    parent->collisionOffset.y -= 0x8000;
+    parent->centerPos.y -= 0x8000;
+    --entity->timer;
 #endif
 
     if (entity->timer <= 0) {

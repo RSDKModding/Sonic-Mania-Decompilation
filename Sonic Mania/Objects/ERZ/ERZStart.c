@@ -28,6 +28,19 @@ void ERZStart_Update(void)
         RSDK_sceneInfo->milliseconds = RSDK.Rand(0, 100);
         RSDK_sceneInfo->minutes      = RSDK.Rand(0, 9);
     }
+
+#if !RETRO_USE_PLUS
+    if (ERZStart->superDashCooldown > 0) {
+        RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
+        foreach_all(HUD, hud)
+        {
+            if (hud)
+                hud->field_154 = true;
+            foreach_break;
+        }
+        --ERZStart->superDashCooldown;
+    }
+#endif
 }
 
 void ERZStart_LateUpdate(void) {}
@@ -712,7 +725,11 @@ void ERZStart_Player_HandleSuperDash(void *p)
         fxFade->speedIn      = 256;
         fxFade->speedOut     = 64;
     }
+#if RETRO_USE_PLUS
     Player->superDashCooldown = 30;
+#else
+    ERZStart->superDashCooldown = 30;
+#endif
 }
 
 void ERZStart_State_PlayerSuperFly(void)

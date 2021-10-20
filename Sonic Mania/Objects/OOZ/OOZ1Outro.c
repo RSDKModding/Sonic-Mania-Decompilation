@@ -99,7 +99,7 @@ bool32 OOZ1Outro_Unknown2(EntityCutsceneSeq *host)
         host->fillTimerA -= 4;
 
     CutsceneSeq_LockAllPlayerControl();
-    if (ActClear->field_1C) {
+    if (ActClear->finished) {
         foreach_active(Player, player)
         {
             player->state          = Player_State_Air;

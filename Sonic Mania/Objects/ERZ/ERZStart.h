@@ -8,7 +8,7 @@ typedef struct {
     RSDK_OBJECT
     int32 timer;
     int32 field_8;
-    int32 field_C;
+    int32 superDashCooldown;
     int32 field_10;
     uint16 sfxClack;
     uint16 sfxFlyIn;

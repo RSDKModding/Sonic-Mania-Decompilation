@@ -436,8 +436,8 @@ bool32 ERZOutro_CutsceneState_ShowEnding(EntityCutsceneSeq *host)
             return false;
         UIWaitSpinner_Wait2();
     }
-    API.UnlockAchievement("ACH_GAME_CLEARED");
-    if (checkPlayerID(ID_KNUCKLES, 1) && checkPlayerID(ID_KNUCKLES, 1))
+    API_UnlockAchievement("ACH_GAME_CLEARED");
+    if (checkPlayerID(ID_KNUCKLES, 1) && checkPlayerID(ID_KNUCKLES, 2))
         RSDK.SetScene("Videos", "True End?");
     else
         RSDK.SetScene("Videos", "Good End");

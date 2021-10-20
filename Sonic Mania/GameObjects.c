@@ -835,7 +835,9 @@ void LinkGameLogicDLL(GameInfo *info)
         ADD_PUBLIC_FUNC(Player_HandleAirFriction);
         ADD_PUBLIC_FUNC(Player_StartJump);
         ADD_PUBLIC_FUNC(Player_StartRoll);
+#if RETRO_USE_PLUS
         ADD_PUBLIC_FUNC(Player_SwapMainPlayer);
+#endif
         ADD_PUBLIC_FUNC(Player_StartPeelout);
         ADD_PUBLIC_FUNC(Player_HandleRollDeceleration);
         ADD_PUBLIC_FUNC(Player_Hit);

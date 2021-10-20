@@ -134,6 +134,7 @@ void MetalSonic_HandleStageWrap(void)
             camera->position.x += 0xE000000;
             camera->center.x += 0xE00;
             MetalSonic_ProcessBGParallax(-0xE0000);
+#if RETRO_USE_PLUS
             if (entity->objectID == GigaMetal->objectID) {
                 camera->boundsL += 0xE00;
                 camera->boundsR += 0xE00;
@@ -142,9 +143,12 @@ void MetalSonic_HandleStageWrap(void)
                 Zone->screenBoundsL2[0] += 0xE000000;
                 Zone->screenBoundsR2[0] += 0xE000000;
             }
+#endif
 
             foreach_active(MSOrb, orb) { orb->position.x += 0xE000000; }
+#if RETRO_USE_PLUS
             foreach_active(MSBomb, bomb) { bomb->position.x += 0xE000000; }
+#endif
             foreach_active(Ring, ring) { ring->position.x += 0xE000000; }
             foreach_active(Spring, spring) { spring->position.x += 0xE000000; }
             foreach_active(Spikes, spikes) { spikes->position.x += 0xE000000; }
@@ -178,6 +182,7 @@ void MetalSonic_HandleStageWrap(void)
         camera->position.x -= 0xE000000;
         camera->center.x -= 0xE00;
         MetalSonic_ProcessBGParallax(0xE0000);
+#if RETRO_USE_PLUS
         if (entity->objectID == GigaMetal->objectID) {
             camera->boundsL -= 0xE00;
             camera->boundsR -= 0xE00;
@@ -186,9 +191,12 @@ void MetalSonic_HandleStageWrap(void)
             Zone->screenBoundsL2[0] -= 0xE000000;
             Zone->screenBoundsR2[0] -= 0xE000000;
         }
+#endif
 
         foreach_active(MSOrb, orb) { orb->position.x -= 0xE000000; }
+#if RETRO_USE_PLUS
         foreach_active(MSBomb, bomb) { bomb->position.x -= 0xE000000; }
+#endif
         foreach_active(Ring, ring) { ring->position.x -= 0xE000000; }
         foreach_active(Spring, spring) { spring->position.x -= 0xE000000; }
         foreach_active(Spikes, spikes) { spikes->position.x -= 0xE000000; }

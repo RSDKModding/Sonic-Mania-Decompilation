@@ -1,1 +1,1 @@
-python autostatic.py Objects ../build/
+python autostatic.py Objects ../build/ plus

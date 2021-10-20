@@ -7,7 +7,11 @@
 #define VER_106 6 // 1.06 (steam denuvo removal update)
 #define VER_107 7 // 1.07 (EGS/Origin releases)
 
+#ifdef MANIA_PREPLUS
+#define RETRO_GAMEVER VER_103
+#else
 #define RETRO_GAMEVER VER_106
+#endif
 
 #define RETRO_USE_PLUS (RETRO_GAMEVER >= VER_105)
 #define RETRO_USE_EGS  (RETRO_GAMEVER == VER_107)

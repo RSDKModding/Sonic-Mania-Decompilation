@@ -649,9 +649,9 @@ void ItemBox_GivePowerup(void)
                 Player_GiveRings(50, player, 0);
                 Player_CheckGoSuper(player, 127);
                 return;
+#if RETRO_USE_PLUS
             case ITEMBOX_STOCK: {
                 if (entity->contentsData.animationID == 7) {
-#if RETRO_USE_PLUS
                     if (globals->gameMode == MODE_ENCORE) {
                         if (!((1 << entity->contentsData.frameID) & globals->characterFlags) && globals->characterFlags != 31
                             && !(globals->stock & 0xFF0000)) {
@@ -734,23 +734,18 @@ void ItemBox_GivePowerup(void)
                         RSDK.PlaySfx(ItemBox->sfx_Revovery, 0, 255);
                     }
                     else {
-#endif
                         switch (entity->contentsData.frameID) {
                             case 0: Player_ChangeCharacter(player, ID_SONIC); break;
                             case 1: Player_ChangeCharacter(player, ID_TAILS); break;
                             case 2: Player_ChangeCharacter(player, ID_KNUCKLES); break;
-#if RETRO_USE_PLUS
                             case 3: Player_ChangeCharacter(player, ID_MIGHTY); break;
                             case 4: Player_ChangeCharacter(player, ID_RAY); break;
-#endif
                             default: break;
                         }
                         EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid(1), player->position.x, player->position.y);
                         explosion->drawOrder       = Zone->drawOrderHigh;
                         RSDK.PlaySfx(ItemBox->sfx_PowerDown, 0, 255);
-#if RETRO_USE_PLUS
                     }
-#endif
                 }
                 else {
                     switch (entity->contentsData.frameID) {
@@ -769,6 +764,7 @@ void ItemBox_GivePowerup(void)
                 }
                 return;
             }
+#endif
             default: return;
         }
     }

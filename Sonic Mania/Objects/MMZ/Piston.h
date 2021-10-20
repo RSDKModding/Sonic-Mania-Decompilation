@@ -67,7 +67,7 @@ void Piston_UpOrDown(void);
 void Piston_Launch(void);
 void Piston_Pullback(void);
 
-void Piston_MightyAntiHammer(void);
+void Piston_StateCollide_Solid(void);
 
 void Piston_WaitForPlayers(void);
 void Piston_PrepareLaunch(void);

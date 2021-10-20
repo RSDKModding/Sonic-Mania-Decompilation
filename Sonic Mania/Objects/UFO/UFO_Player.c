@@ -143,7 +143,7 @@ void UFO_Player_StageLoad(void)
 
     foreach_all(UFO_Player, player)
     {
-        EntityUFO_Player *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
+        EntityUFO_Player *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, UFO_Player);
         RSDK.CopyEntity(player1, player, true);
     }
 
@@ -157,7 +157,7 @@ void UFO_Player_StageLoad(void)
     UFO_Player->sfx_Skid         = RSDK.GetSFX("Special/Skid.wav");
     UFO_Player->sfx_GrittyGround = RSDK.GetSFX("Special/GrittyGround.wav");
 
-    EntityUFO_Player *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
+    EntityUFO_Player *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, UFO_Player);
     RSDK.ClearCameras();
     RSDK.AddCamera(&player1->position, 0x100000, 0x100000, true);
 }

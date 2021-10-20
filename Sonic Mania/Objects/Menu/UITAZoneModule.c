@@ -838,7 +838,7 @@ void UITAZoneModule_Unknown25(int32 player, int32 zone, int32 act, int32 a4, voi
     }
 }
 
-void UITAZoneModule_Unknown26(EntityUIControl *control, char characterID, unsigned int32 zoneID, char actID, int32 score)
+void UITAZoneModule_Unknown26(EntityUIControl *control, uint8 characterID, uint32 zoneID, uint8 actID, int32 score)
 {
     control->childHasFocus       = true;
     control->activeEntityID      = zoneID;

@@ -218,7 +218,7 @@ void RubyPortal_Unknown4(void)
                 SaveGame_SavePlayerState();
 
 #if !RETRO_USE_PLUS && RETRO_GAMEVER != VER_100
-                if (player->superState == SUPERSTATE_SUPER)
+                if (player1->superState == SUPERSTATE_SUPER)
                     globals->restartPowerups |= 0x80;
 #endif
 

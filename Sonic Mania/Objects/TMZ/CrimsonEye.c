@@ -971,7 +971,7 @@ void CrimsonEye_CheckPlayerCollisions_Ball(void)
     foreach_active(Player, player)
     {
         if (Player_CheckCollisionTouch(player, entity, &CrimsonEye->hitbox2)) {
-#if !RETRO_USE_PLUS
+#if RETRO_USE_PLUS
             if (!Player_CheckMightyUnspin(0x600, player, 2, &player->uncurlTimer))
 #endif
                 Player_CheckHit(player, entity);

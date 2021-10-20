@@ -18,7 +18,7 @@ typedef struct {
     int32 field_14;
 #endif
     int32 actID;
-    int32 field_1C;
+    bool32 finished;
 #if RETRO_USE_PLUS
     bool32 forceNoSave;
     void (*bufferMove_CB)(void);

@@ -33,9 +33,9 @@ typedef struct {
     int32 cheatUnknown[8];
     void (*checkCheatActivated[8])(void);
 #else
-    STATICbgScrollPos, 240);
+    STATIC(int32 bgScrollPos, 240);
     int32 bgScrollPosID;
-    TABLE(bgScrollPositions[4], { 240, 3, 3, 3 });
+    TABLE(int32 bgScrollPositions[4], { 240, 3, 3, 3 });
     int32 startMusicID;
     int32 soundTestMax;
     uint16 sfxFail;

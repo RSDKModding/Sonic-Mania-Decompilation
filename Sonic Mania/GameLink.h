@@ -143,7 +143,7 @@ typedef struct {
     int32 alpha;                                                                                                                                     \
     int32 rotation;                                                                                                                                  \
     int32 groundVel;                                                                                                                                 \
-    int32 depth;                                                                                                                                     \
+    int32 depth3D;                                                                                                                                   \
     uint16 group;                                                                                                                                    \
     uint16 objectID;                                                                                                                                 \
     bool32 inBounds;                                                                                                                                 \

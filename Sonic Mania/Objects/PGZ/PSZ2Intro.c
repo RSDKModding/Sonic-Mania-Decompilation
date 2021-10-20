@@ -79,11 +79,12 @@ bool32 PSZ2Intro_CutsceneState_Unknown1(EntityCutsceneSeq *host)
 
 bool32 PSZ2Intro_CutsceneState_Unknown2(EntityCutsceneSeq *host)
 {
-    if (!ActClear->field_1C)
-        return false;
-    if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->objectID)
-        RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->skipType = SKIPTYPE_RELOADSCN;
-    return true;
+    if (ActClear->finished) {
+        if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->objectID)
+            RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->skipType = SKIPTYPE_RELOADSCN;
+        return true;
+    }
+    return false;
 }
 
 bool32 PSZ2Intro_CutsceneState_Unknown3(EntityCutsceneSeq *host)

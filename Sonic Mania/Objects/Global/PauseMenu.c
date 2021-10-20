@@ -382,10 +382,8 @@ void PauseMenu_RestartDialog_YesCB(void)
     if (StarPost) {
         StarPost->postIDs[0] = 0;
         StarPost->postIDs[1] = 0;
-#if RETRO_USE_PLUS
         StarPost->postIDs[2] = 0;
         StarPost->postIDs[3] = 0;
-#endif
     }
     RSDK.StopChannel(Music->channelID);
     EntityPauseMenu *entity = CREATE_ENTITY(PauseMenu, intToVoid(1), (RSDK_screens->position.x + RSDK_screens->centerX) << 16,
@@ -565,7 +563,7 @@ void PauseMenu_Unknown22(void)
 #if RETRO_USE_PLUS
     if (RSDK_unknown->field_10 && !manager->dialogHasFocus) {
 #else
-    if (/*RSDK_touchMouse->flag10 &&*/ !manager->dialogHasFocus) {
+    if (/*RSDK_touchMouse->flag10*/ false && !manager->dialogHasFocus) {
 #endif
         EntityPauseMenu *pauseMenu = RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu);
         if (globals->gameMode != MODE_COMPETITION || RSDK.CheckStageFolder("Puyo"))

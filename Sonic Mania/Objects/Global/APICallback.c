@@ -412,7 +412,7 @@ int32 APICallback_GetUserAuthStatus(void)
     return APICallback->authStatus;
 }
 
-signed int32 APICallback_GetStorageStatus(void)
+int32 APICallback_GetStorageStatus(void)
 {
     if (APICallback->saveStatus == STATUS_ERROR)
         return STATUS_ERROR;

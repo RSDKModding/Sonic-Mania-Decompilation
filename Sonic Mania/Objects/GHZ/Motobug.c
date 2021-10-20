@@ -128,7 +128,7 @@ void Motobug_State_HandleMove(void)
 
     if (!--entity->timer) {
         entity->timer = 16;
-        Entity *smoke = CREATE_ENTITY(Motobug, (void *)1, entity->position.x, entity->position.y);
+        EntityMotobug *smoke = CREATE_ENTITY(Motobug, intToVoid(true), entity->position.x, entity->position.y);
         if (entity->direction == FLIP_X)
             smoke->position.x -= 0x140000;
         else
