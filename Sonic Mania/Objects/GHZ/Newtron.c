@@ -273,6 +273,7 @@ void Newtron_State_Projectile(void)
 void Newtron_EditorDraw(void)
 {
     RSDK_THIS(Newtron);
+    entity->drawFX = FX_FLIP;
     if (entity->type == 1)
         RSDK.SetSpriteAnimation(Newtron->aniFrames, 2, &entity->animator1, true, 0);
     else 

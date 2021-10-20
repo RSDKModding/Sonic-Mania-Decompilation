@@ -86,8 +86,24 @@ void CorkscrewPath_StageLoad(void) {}
 void CorkscrewPath_EditorDraw(void)
 {
     RSDK_THIS(CorkscrewPath);
-    RSDK.SetSpriteAnimation(CorkscrewPath->aniFrames, 0, &entity->animator, true, 7);
+    RSDK.SetSpriteAnimation(CorkscrewPath->aniFrames, 0, &entity->animator, true, 4);
     RSDK.DrawSprite(&entity->animator, NULL, false);
+
+    // Bounds
+    Vector2 drawPos;
+
+    Vector2 size;
+    size.x = abs(entity->period) << 15;
+    size.y = (entity->amplitude << 6) * RSDK.Cos1024(0);
+
+    RSDK.DrawLine(entity->position.x - size.x, entity->position.y - size.y, entity->position.x + size.x, entity->position.y - size.y, 0xFFFF00, 0xFF,
+                  INK_NONE, false);
+    RSDK.DrawLine(entity->position.x - size.x, entity->position.y + size.y, entity->position.x + size.x, entity->position.y + size.y, 0xFFFF00, 0xFF,
+                  INK_NONE, false);
+    RSDK.DrawLine(entity->position.x - size.x, entity->position.y - size.y, entity->position.x - size.x, entity->position.y + size.y, 0xFFFF00, 0xFF,
+                  INK_NONE, false);
+    RSDK.DrawLine(entity->position.x + size.x, entity->position.y - size.y, entity->position.x + size.x, entity->position.y + size.y, 0xFFFF00, 0xFF,
+                  INK_NONE, false);
 }
 
 void CorkscrewPath_EditorLoad(void) { CorkscrewPath->aniFrames = RSDK.LoadSpriteAnimation("Editor/EditorIcons.bin", SCOPE_STAGE); }

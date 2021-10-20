@@ -98,10 +98,10 @@ void CollapsingPlatform_Draw(void)
     drawPos.y = entity->position.y;
     drawPos.x -= entity->size.x >> 1;
     drawPos.y -= entity->size.y >> 1;
-    RSDK.DrawLine(drawPos.x - 0x10000, drawPos.y - 0x10000, drawPos.x + entity->size.x, drawPos.y - 0x10000, 0xE0E0E0, 0, INK_NONE, 0);
+    RSDK.DrawLine(drawPos.x - 0x10000, drawPos.y - 0x10000, drawPos.x + entity->size.x, drawPos.y - 0x10000, 0xE0E0E0, 0, INK_NONE, false);
     RSDK.DrawLine(drawPos.x - 0x10000, entity->size.y + drawPos.y, drawPos.x + entity->size.x, entity->size.y + drawPos.y, 0xE0E0E0, 0, INK_NONE,
                   false);
-    RSDK.DrawLine(drawPos.x - 0x10000, drawPos.y - 0x10000, drawPos.x - 0x10000, drawPos.y + entity->size.y, 0xE0E0E0, 0, INK_NONE, 0);
+    RSDK.DrawLine(drawPos.x - 0x10000, drawPos.y - 0x10000, drawPos.x - 0x10000, drawPos.y + entity->size.y, 0xE0E0E0, 0, INK_NONE, false);
     RSDK.DrawLine(drawPos.x + entity->size.x, drawPos.y - 0x10000, drawPos.x + entity->size.x, drawPos.y + entity->size.y, 0xE0E0E0, 0, INK_NONE,
                   false);
 
@@ -313,7 +313,37 @@ void CollapsingPlatform_State_PlayerPos(void)
     }
 }
 
-void CollapsingPlatform_EditorDraw(void) { CollapsingPlatform_Draw(); }
+void CollapsingPlatform_EditorDraw(void)
+{
+    RSDK_THIS(CollapsingPlatform);
+    Vector2 drawPos;
+
+    drawPos.x = entity->position.x;
+    drawPos.y = entity->position.y;
+    drawPos.x -= entity->size.x >> 1;
+    drawPos.y -= entity->size.y >> 1;
+    RSDK.DrawLine(drawPos.x - 0x10000, drawPos.y - 0x10000, drawPos.x + entity->size.x, drawPos.y - 0x10000, 0xFFFF00, 0, INK_NONE, false);
+    RSDK.DrawLine(drawPos.x - 0x10000, entity->size.y + drawPos.y, drawPos.x + entity->size.x, entity->size.y + drawPos.y, 0xFFFF00, 0, INK_NONE,
+                  false);
+    RSDK.DrawLine(drawPos.x - 0x10000, drawPos.y - 0x10000, drawPos.x - 0x10000, drawPos.y + entity->size.y, 0xFFFF00, 0, INK_NONE, false);
+    RSDK.DrawLine(drawPos.x + entity->size.x, drawPos.y - 0x10000, drawPos.x + entity->size.x, drawPos.y + entity->size.y, 0xFFFF00, 0, INK_NONE,
+                  false);
+
+    entity->direction = FLIP_NONE;
+    RSDK.DrawSprite(&CollapsingPlatform->animator, &drawPos, false);
+
+    drawPos.x += entity->size.x;
+    entity->direction = FLIP_X;
+    RSDK.DrawSprite(&CollapsingPlatform->animator, &drawPos, false);
+
+    drawPos.y += entity->size.y;
+    entity->direction = FLIP_XY;
+    RSDK.DrawSprite(&CollapsingPlatform->animator, &drawPos, false);
+
+    drawPos.x -= entity->size.x;
+    entity->direction = FLIP_Y;
+    RSDK.DrawSprite(&CollapsingPlatform->animator, &drawPos, false);
+}
 
 void CollapsingPlatform_EditorLoad(void)
 {

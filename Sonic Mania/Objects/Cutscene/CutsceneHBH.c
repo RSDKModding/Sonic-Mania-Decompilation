@@ -484,7 +484,7 @@ void CutsceneHBH_Unknown21(void)
 void CutsceneHBH_EditorDraw(void)
 {
     RSDK_THIS(CutsceneHBH);
-    RSDK.SetSpriteAnimation(CutsceneHBH->aniFrames, 0, &entity->animator, true, entity->characterID);
+    RSDK.SetSpriteAnimation(CutsceneHBH->aniFrames, entity->characterID, &entity->animator, true, 0);
     RSDK.DrawSprite(&entity->animator, NULL, false);
 }
 

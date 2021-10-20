@@ -701,7 +701,33 @@ void BreakableWall_GiveScoreBonus(void *plr)
 void BreakableWall_EditorDraw(void)
 {
     RSDK_THIS(BreakableWall);
-    StateMachine_Run(entity->stateDraw);
+    Vector2 drawPos;
+    drawPos.x = entity->position.x;
+    drawPos.y = entity->position.y;
+    drawPos.x -= entity->size.x << 19;
+    drawPos.y -= entity->size.y << 19;
+
+    RSDK.DrawLine(drawPos.x - 0x10000, drawPos.y - 0x10000, drawPos.x + (entity->size.x << 20), drawPos.y - 0x10000, 0xFFFF00, 0, INK_NONE, false);
+    RSDK.DrawLine(drawPos.x - 0x10000, drawPos.y + (entity->size.y << 20), drawPos.x + (entity->size.x << 20), drawPos.y + (entity->size.y << 20),
+                  0xFFFF00, 0, INK_NONE, false);
+    RSDK.DrawLine(drawPos.x - 0x10000, drawPos.y - 0x10000, drawPos.x - 0x10000, drawPos.y + (entity->size.y << 20), 0xFFFF00, 0, INK_NONE, false);
+    RSDK.DrawLine(drawPos.x + (entity->size.x << 20), drawPos.y - 0x10000, drawPos.x + (entity->size.x << 20), drawPos.y + (entity->size.y << 20),
+                  0xFFFF00, 0, INK_NONE, false);
+
+    entity->direction = FLIP_NONE;
+    RSDK.DrawSprite(&BreakableWall->animator, &drawPos, false);
+
+    drawPos.x += entity->size.x << 20;
+    entity->direction = FLIP_X;
+    RSDK.DrawSprite(&BreakableWall->animator, &drawPos, false);
+
+    drawPos.y += entity->size.y << 20;
+    entity->direction = FLIP_XY;
+    RSDK.DrawSprite(&BreakableWall->animator, &drawPos, false);
+
+    drawPos.x -= entity->size.x << 20;
+    entity->direction = FLIP_Y;
+    RSDK.DrawSprite(&BreakableWall->animator, &drawPos, false);
 }
 
 void BreakableWall_EditorLoad(void)

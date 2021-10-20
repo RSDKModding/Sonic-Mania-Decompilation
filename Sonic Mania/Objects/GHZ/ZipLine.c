@@ -569,7 +569,18 @@ void ZipLine_Unknown4(void)
     }
 }
 
-void ZipLine_EditorDraw(void) { ZipLine_Draw(); }
+void ZipLine_EditorDraw(void)
+{
+    RSDK_THIS(ZipLine);
+    entity->handlePos.x = entity->position.x;
+    entity->handlePos.y = entity->position.y;
+    entity->startPos.x  = entity->position.x;
+    entity->startPos.y  = entity->position.y;
+    entity->endPos.x    = entity->position.x + (entity->length << 8) * RSDK.Cos256(entity->angle);
+    entity->endPos.y    = entity->position.y + (entity->length << 8) * RSDK.Sin256(entity->angle);
+
+    ZipLine_Draw();
+}
 
 void ZipLine_EditorLoad(void) { ZipLine->aniFrames = RSDK.LoadSpriteAnimation("GHZ/ZipLine.bin", SCOPE_STAGE); }
 

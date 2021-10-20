@@ -50,7 +50,19 @@ void TilePlatform_Create(void *data)
 
 void TilePlatform_StageLoad(void) {}
 
-void TilePlatform_EditorDraw(void) {}
+void TilePlatform_EditorDraw(void)
+{
+    RSDK_THIS(TilePlatform);
+
+    RSDK.DrawLine(entity->position.x - entity->size.x, entity->position.y - entity->size.y, entity->position.x + entity->size.x,
+                  entity->position.y - entity->size.y, 0xFFFF00, 0xFF, INK_NONE, false);
+    RSDK.DrawLine(entity->position.x - entity->size.x, entity->position.y + entity->size.y, entity->position.x + entity->size.x,
+                  entity->position.y + entity->size.y, 0xFFFF00, 0xFF, INK_NONE, false);
+    RSDK.DrawLine(entity->position.x - entity->size.x, entity->position.y - entity->size.y, entity->position.x - entity->size.x,
+                  entity->position.y + entity->size.y, 0xFFFF00, 0xFF, INK_NONE, false);
+    RSDK.DrawLine(entity->position.x + entity->size.x, entity->position.y - entity->size.y, entity->position.x + entity->size.x,
+                  entity->position.y + entity->size.y, 0xFFFF00, 0xFF, INK_NONE, false);
+}
 
 void TilePlatform_EditorLoad(void) {}
 

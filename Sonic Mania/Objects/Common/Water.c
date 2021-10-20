@@ -1287,6 +1287,7 @@ void Water_EditorDraw(void)
 
     switch (entity->type) {
         case 0:
+            entity->inkEffect = INK_ADD;
             entity->alpha = RSDK.CheckStageFolder("AIZ") ? 0x60 : 0xE0;
             RSDK.SetSpriteAnimation(Water->spriteIndex, 0, &entity->animator, true, 0);
             entity->stateDraw = Water_State_Draw_Palette;
@@ -1329,7 +1330,7 @@ void Water_EditorDraw(void)
             RSDK.SetSpriteAnimation(Water->spriteIndex, 7, &entity->animator, true, 0);
             entity->stateDraw = Water_State_Draw_CountDownBubble;
             break;
-        default: return;
+        default: break;
     }
 
     StateMachine_Run(entity->stateDraw);

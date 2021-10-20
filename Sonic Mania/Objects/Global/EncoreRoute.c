@@ -58,8 +58,8 @@ void EncoreRoute_EditorDraw(void)
 
     drawPos.x = entity->position.x;
     drawPos.y = entity->position.y;
-    drawPos.x -= entity->size.x >> 1;
-    drawPos.y -= entity->size.y >> 1;
+    drawPos.x -= (TILE_SIZE * entity->size.x) >> 1;
+    drawPos.y -= (TILE_SIZE * entity->size.y) >> 1;
     RSDK.DrawLine(drawPos.x - 0x10000, drawPos.y - 0x10000, drawPos.x + entity->size.x, drawPos.y - 0x10000, 0xE0E0E0, 0, INK_NONE, 0);
     RSDK.DrawLine(drawPos.x - 0x10000, entity->size.y + drawPos.y, drawPos.x + entity->size.x, entity->size.y + drawPos.y, 0xE0E0E0, 0, INK_NONE,
                   false);
@@ -70,15 +70,15 @@ void EncoreRoute_EditorDraw(void)
     entity->direction = FLIP_NONE;
     RSDK.DrawSprite(&EncoreRoute->animator, &drawPos, false);
 
-    drawPos.x += entity->size.x;
+    drawPos.x += TILE_SIZE * entity->size.x;
     entity->direction = FLIP_X;
     RSDK.DrawSprite(&EncoreRoute->animator, &drawPos, false);
 
-    drawPos.y += entity->size.y;
+    drawPos.y += TILE_SIZE * entity->size.y;
     entity->direction = FLIP_XY;
     RSDK.DrawSprite(&EncoreRoute->animator, &drawPos, false);
 
-    drawPos.x -= entity->size.x;
+    drawPos.x -= TILE_SIZE * entity->size.x;
     entity->direction = FLIP_Y;
     RSDK.DrawSprite(&EncoreRoute->animator, &drawPos, false);
 

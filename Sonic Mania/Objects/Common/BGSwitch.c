@@ -55,18 +55,14 @@ void BGSwitch_EditorDraw(void)
     RSDK.DrawSprite(&entity->animator, NULL, false);
 
     //Bounds
-    Vector2 drawPos;
-
-    drawPos.x = entity->position.x;
-    drawPos.y = entity->position.y;
-    drawPos.x -= entity->size.x >> 1;
-    drawPos.y -= entity->size.y >> 1;
-    RSDK.DrawLine(drawPos.x - 0x10000, drawPos.y - 0x10000, drawPos.x + entity->size.x, drawPos.y - 0x10000, 0xE0E0E0, 0, INK_NONE, 0);
-    RSDK.DrawLine(drawPos.x - 0x10000, entity->size.y + drawPos.y, drawPos.x + entity->size.x, entity->size.y + drawPos.y, 0xE0E0E0, 0, INK_NONE,
-                  false);
-    RSDK.DrawLine(drawPos.x - 0x10000, drawPos.y - 0x10000, drawPos.x - 0x10000, drawPos.y + entity->size.y, 0xE0E0E0, 0, INK_NONE, 0);
-    RSDK.DrawLine(drawPos.x + entity->size.x, drawPos.y - 0x10000, drawPos.x + entity->size.x, drawPos.y + entity->size.y, 0xE0E0E0, 0, INK_NONE,
-                  false);
+    RSDK.DrawLine(entity->position.x - entity->size.x, entity->position.y - entity->size.y,
+                  entity->position.x + entity->size.x, entity->position.y - entity->size.y, 0xFFFF00, 0xFF, INK_NONE, false);
+    RSDK.DrawLine(entity->position.x - entity->size.x, entity->position.y + entity->size.y,
+                  entity->position.x + entity->size.x, entity->position.y + entity->size.y, 0xFFFF00, 0xFF, INK_NONE, false);
+    RSDK.DrawLine(entity->position.x - entity->size.x, entity->position.y - entity->size.y,
+                  entity->position.x - entity->size.x, entity->position.y + entity->size.y, 0xFFFF00, 0xFF, INK_NONE, false);
+    RSDK.DrawLine(entity->position.x + entity->size.x, entity->position.y - entity->size.y,
+                  entity->position.x + entity->size.x, entity->position.y + entity->size.y, 0xFFFF00, 0xFF, INK_NONE, false);
 }
 
 void BGSwitch_EditorLoad(void) { BGSwitch->aniFrames = RSDK.LoadSpriteAnimation("Editor/EditorIcons.bin", SCOPE_STAGE); }

@@ -4,7 +4,8 @@ ObjectBoundsMarker *BoundsMarker;
 
 void BoundsMarker_Update(void)
 {
-    EntityBoundsMarker *entity = (EntityBoundsMarker *)RSDK_sceneInfo->entity;
+    RSDK_THIS(BoundsMarker);
+
     for (int32 p = 0; p < Player->playerCount; ++p) {
         EntityPlayer *player = RSDK_GET_ENTITY(p, Player);
         BoundsMarker_CheckBounds(player, entity, false);
@@ -19,7 +20,8 @@ void BoundsMarker_Draw(void) {}
 
 void BoundsMarker_Create(void *data)
 {
-    EntityBoundsMarker *entity = (EntityBoundsMarker *)RSDK_sceneInfo->entity;
+    RSDK_THIS(BoundsMarker);
+
     if (!RSDK_sceneInfo->inEditor) {
         if (entity->vsDisable && globals->gameMode == MODE_COMPETITION) {
             destroyEntity(entity);
@@ -96,9 +98,27 @@ void BoundsMarker_CheckAllBounds(void *p, bool32 setPos)
 
 void BoundsMarker_EditorDraw(void)
 {
+    RSDK_THIS(BoundsMarker);
     Animator animator;
     RSDK.SetSpriteAnimation(BoundsMarker->spriteIndex, 0, &animator, true, 2);
     RSDK.DrawSprite(&animator, NULL, false);
+
+    Vector2 drawPos;
+
+    int w = entity->width << 16;
+    if (!entity->width)
+        w = 24 << 16;
+
+    //Bounds
+    RSDK.DrawLine(entity->position.x - w, entity->position.y, entity->position.x + w, entity->position.y, 0xFFFF00, 0xFF, INK_NONE, false);
+    if (entity->type == 1) {
+        RSDK.DrawLine(entity->position.x + w, entity->position.y - (entity->offset << 16), entity->position.x + w,
+                      entity->position.y - (entity->offset << 16), 0xFFFF00, 0x80, INK_BLEND, false);
+    }
+    else if (entity->type == 2) {
+        RSDK.DrawLine(entity->position.x + w, entity->position.y + (entity->offset << 16), entity->position.x + w,
+                      entity->position.y + (entity->offset << 16), 0xFFFF00, 0x80, INK_BLEND, false);
+    }
 }
 
 void BoundsMarker_EditorLoad(void) { BoundsMarker->spriteIndex = RSDK.LoadSpriteAnimation("Editor/EditorIcons.bin", SCOPE_STAGE); }

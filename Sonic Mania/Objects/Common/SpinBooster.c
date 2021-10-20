@@ -77,16 +77,10 @@ void SpinBooster_Create(void *data)
         }
         entity->active = ACTIVE_BOUNDS;
 
-        if (entity->size * RSDK.Sin256(entity->angle) << 11 >= 0)
-            entity->updateRange.x = entity->size * RSDK.Sin256(entity->angle) << 11;
-        else
-            entity->updateRange.x = -0x800 * entity->size * RSDK.Sin256(entity->angle);
+        entity->updateRange.x = entity->size * abs(RSDK.Sin256(entity->angle)) << 11;
         entity->updateRange.x += 0x200000;
 
-        if (entity->size * RSDK.Cos256(entity->angle) << 11 >= 0)
-            entity->updateRange.y = entity->size * RSDK.Cos256(entity->angle) << 11;
-        else
-            entity->updateRange.y = -0x800 * entity->size * RSDK.Cos256(entity->angle);
+        entity->updateRange.y = entity->size * abs(RSDK.Cos256(entity->angle)) << 11;
         entity->updateRange.y += 0x200000;
         entity->visible   = false;
         entity->drawOrder = Zone->drawOrderLow;
