@@ -461,24 +461,24 @@ void ItemBox_GivePowerup(void)
             case ITEMBOX_BLUESHIELD:
                 player->shield = SHIELD_BLUE;
                 Player_ApplyShieldEffect(player);
-                RSDK.PlaySfx(Shield->sfx_BlueShield, 0, 255);
+                RSDK.PlaySfx(Shield->sfx_BlueShield, false, 255);
                 return;
             case ITEMBOX_BUBBLESHIELD:
                 player->shield = SHIELD_BUBBLE;
                 Player_ApplyShieldEffect(player);
-                RSDK.PlaySfx(Shield->sfx_BubbleShield, 0, 255);
+                RSDK.PlaySfx(Shield->sfx_BubbleShield, false, 255);
                 player->airTimer = 0;
                 Music_ResumePrevTrack(TRACK_DROWNING, false);
                 return;
             case ITEMBOX_FIRESHIELD:
                 player->shield = SHIELD_FIRE;
                 Player_ApplyShieldEffect(player);
-                RSDK.PlaySfx(Shield->sfx_FireShield, 0, 255);
+                RSDK.PlaySfx(Shield->sfx_FireShield, false, 255);
                 return;
             case ITEMBOX_LIGHTNINGSHIELD:
                 player->shield = SHIELD_LIGHTNING;
                 Player_ApplyShieldEffect(player);
-                RSDK.PlaySfx(Shield->sfx_LightningShield, 0, 255);
+                RSDK.PlaySfx(Shield->sfx_LightningShield, false, 255);
                 return;
             case ITEMBOX_INVINCIBLE:
                 if (player->superState == SUPERSTATE_NONE) {

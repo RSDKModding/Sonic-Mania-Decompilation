@@ -25,14 +25,14 @@ void Zone_LateUpdate(void)
                 if (player->position.x - offset <= Zone->screenBoundsL2[playerID]) {
                     player->position.x = offset + Zone->screenBoundsL2[playerID];
                     if (player->onGround) {
-                        if (player->groundVel < Zone->field_154) {
-                            player->velocity.x = Zone->field_154;
-                            player->groundVel  = Zone->field_154;
+                        if (player->groundVel < Zone->autoScrollSpeed) {
+                            player->velocity.x = Zone->autoScrollSpeed;
+                            player->groundVel  = Zone->autoScrollSpeed;
                             player->pushing    = false;
                         }
                     }
-                    else if (player->velocity.x < Zone->field_154) {
-                        player->velocity.x = Zone->field_154;
+                    else if (player->velocity.x < Zone->autoScrollSpeed) {
+                        player->velocity.x = Zone->autoScrollSpeed;
                         player->groundVel  = 0;
                     }
                 }
@@ -43,15 +43,15 @@ void Zone_LateUpdate(void)
                 if (offset + player->position.x >= Zone->screenBoundsR2[playerID]) {
                     player->position.x = Zone->screenBoundsR2[playerID] - offset;
                     if (player->onGround) {
-                        if (player->groundVel > Zone->field_154) {
-                            player->velocity.x = Zone->field_154;
-                            player->groundVel  = Zone->field_154;
+                        if (player->groundVel > Zone->autoScrollSpeed) {
+                            player->velocity.x = Zone->autoScrollSpeed;
+                            player->groundVel  = Zone->autoScrollSpeed;
                             player->pushing    = false;
                         }
                     }
                     else {
-                        if (player->velocity.x > Zone->field_154) {
-                            player->velocity.x = Zone->field_154;
+                        if (player->velocity.x > Zone->autoScrollSpeed) {
+                            player->velocity.x = Zone->autoScrollSpeed;
                             player->groundVel  = 0;
                         }
                     }
@@ -113,14 +113,13 @@ void Zone_LateUpdate(void)
                 if (!playerLoop->sidekick && flag)
                     playerLoop->hurtFlag = 1;
             }
-            Zone->field_15C = true;
-
-            StateMachine_Run(Zone->timeOverState);
+            Zone->gotTimeOver = true;
+            StateMachine_Run(Zone->timeOverCallback);
         }
 
 #if RETRO_USE_PLUS
         if (RSDK_sceneInfo->minutes == 59 && RSDK_sceneInfo->seconds == 59)
-            ActClear->field_30 = true;
+            ActClear->disableTimeBonus = true;
 #endif
 
         if (Player->playerCount > 0) {
@@ -186,12 +185,12 @@ void Zone_StageLoad(void)
 {
 #if RETRO_USE_PLUS
     EntitySaveGame *saveRAM = SaveGame->saveRAM;
-    Zone->randKey = (uint32)time(0);
+    Zone->randKey           = (uint32)time(0);
     if (globals->gameMode == MODE_ENCORE) {
         if (globals->characterFlags == 0) {
             globals->characterFlags = 0;
-            saveRAM->characterFlags             = 0;
-            uint8 id                 = globals->playerID & 0xFF;
+            saveRAM->characterFlags = 0;
+            uint8 id                = globals->playerID & 0xFF;
             if (globals->playerID & 0xFF) {
                 int32 charID = -1;
                 if (id) {
@@ -205,7 +204,7 @@ void Zone_StageLoad(void)
             }
 
             if (globals->playerID & 0xFF00) {
-                uint8 id    = globals->playerID >> 8;
+                uint8 id     = globals->playerID >> 8;
                 int32 charID = -1;
                 if (globals->playerID & 0xFF) {
                     do {
@@ -233,7 +232,7 @@ void Zone_StageLoad(void)
                     }
 
                     if (globals->stock & 0xFF00) {
-                        uint8 id    = globals->playerID >> 8;
+                        uint8 id     = globals->playerID >> 8;
                         int32 charID = -1;
                         if (charID) {
                             do {
@@ -247,7 +246,7 @@ void Zone_StageLoad(void)
 
                     if (globals->stock & 0xFF0000) {
                         int32 charID = -1;
-                        uint8 id    = globals->playerID >> 16;
+                        uint8 id     = globals->playerID >> 16;
                         if (id) {
                             do {
                                 id >>= 1;
@@ -263,8 +262,8 @@ void Zone_StageLoad(void)
                     globals->playerID |= (globals->stock & 0xFF);
                     globals->stock >>= 8;
                     saveRAM->stock = globals->stock;
-                    uint8 id     = globals->playerID >> 8;
-                    int32 charID  = -1;
+                    uint8 id       = globals->playerID >> 8;
+                    int32 charID   = -1;
                     if (id) {
                         do {
                             id >>= 1;
@@ -276,7 +275,7 @@ void Zone_StageLoad(void)
 
                     if (globals->stock & 0xFF) {
                         int32 charID = -1;
-                        id         = globals->stock & 0xFF;
+                        id           = globals->stock & 0xFF;
                         if (globals->stock & 0xFF) {
                             do {
                                 id >>= 1;
@@ -289,7 +288,7 @@ void Zone_StageLoad(void)
                     }
 
                     if (globals->stock & 0xFF00) {
-                        uint8 id    = globals->playerID >> 8;
+                        uint8 id     = globals->playerID >> 8;
                         int32 charID = -1;
                         if (charID) {
                             do {
@@ -303,7 +302,7 @@ void Zone_StageLoad(void)
 
                     if (globals->stock & 0xFF0000) {
                         int32 charID = -1;
-                        uint8 id    = globals->playerID >> 16;
+                        uint8 id     = globals->playerID >> 16;
                         if (id) {
                             do {
                                 id >>= 1;
@@ -326,37 +325,35 @@ void Zone_StageLoad(void)
     }
 #endif
 
-    Zone->timer          = 0;
-    Zone->field_154      = 0;
-    Zone->ringFrame      = 0;
-    Zone->field_15C      = 0;
-    Zone->callbackCount  = 0;
-    Zone->fgLayerLow     = 0;
-    Zone->drawOrderLow   = 2;
-    Zone->playerDrawLow  = 4;
-    Zone->fgLayerHigh    = 6;
-    Zone->drawOrderHigh  = 8;
-    Zone->playerDrawHigh = 12;
-    Zone->hudDrawOrder   = 14;
+    Zone->timer           = 0;
+    Zone->autoScrollSpeed = 0;
+    Zone->ringFrame       = 0;
+    Zone->gotTimeOver     = false;
+    Zone->callbackCount   = 0;
+    Zone->fgLayerLow      = 0;
+    Zone->drawOrderLow    = 2;
+    Zone->playerDrawLow   = 4;
+    Zone->fgLayerHigh     = 6;
+    Zone->drawOrderHigh   = 8;
+    Zone->playerDrawHigh  = 12;
+    Zone->hudDrawOrder    = 14;
 
-    Zone->fgLow        = RSDK.GetSceneLayerID("FG Low");
-    Zone->fgHigh       = RSDK.GetSceneLayerID("FG High");
-    Zone->moveLayer    = RSDK.GetSceneLayerID("Move");
+    Zone->fgLow     = RSDK.GetSceneLayerID("FG Low");
+    Zone->fgHigh    = RSDK.GetSceneLayerID("FG High");
+    Zone->moveLayer = RSDK.GetSceneLayerID("Move");
 #if RETRO_USE_PLUS
     Zone->scratchLayer = RSDK.GetSceneLayerID("Scratch");
 #endif
 
-    if (Zone->fgLowID) {
+    if (Zone->fgLowID)
         Zone->fgLowID = 1 << Zone->fgLowID;
-    }
 
-    if (Zone->fgHigh) {
+    if (Zone->fgHigh)
         Zone->fgHighID = 1 << Zone->fgHigh;
-    }
 
-    if (Zone->moveLayer) {
+    if (Zone->moveLayer)
         Zone->moveID = 1 << Zone->moveLayer;
-    }
+
     Zone->fgLayers = 1 << Zone->fgLow;
     Zone->fgLayers |= 1 << Zone->fgHigh;
     Vector2 layerSize;
@@ -403,7 +400,7 @@ void Zone_StageLoad(void)
                 RSDK.SetSettingsValue(SETTINGS_SCREENCOUNT, 1);
             }
             else {
-#if RETRO_USE_PLUS 
+#if RETRO_USE_PLUS
                 Competition_ResetOptions();
 #else
                 CompetitionSession_ResetOptions();
@@ -430,7 +427,8 @@ void Zone_StageLoad(void)
 #if !RETRO_USE_PLUS
         case MODE_NOSAVE:
 #endif
-        case MODE_MANIA: Localization_GetString(&textInfo, STR_RPC_MANIA);
+        case MODE_MANIA:
+            Localization_GetString(&textInfo, STR_RPC_MANIA);
             API_SetRichPresence(PRESENCE_MANIA, &textInfo);
             break;
 #if RETRO_USE_PLUS
@@ -439,10 +437,12 @@ void Zone_StageLoad(void)
             API_SetRichPresence(PRESENCE_ENCORE, &textInfo);
             break;
 #endif
-        case MODE_TIMEATTACK: Localization_GetString(&textInfo, STR_RPC_TA);
+        case MODE_TIMEATTACK:
+            Localization_GetString(&textInfo, STR_RPC_TA);
             API_SetRichPresence(PRESENCE_TA, &textInfo);
             break;
-        case MODE_COMPETITION: Localization_GetString(&textInfo, STR_RPC_COMP);
+        case MODE_COMPETITION:
+            Localization_GetString(&textInfo, STR_RPC_COMP);
             API_SetRichPresence(PRESENCE_COMP, &textInfo);
             break;
         default: break;
@@ -619,10 +619,10 @@ void Zone_Unknown2(void)
 
 void Zone_Unknown3(Vector2 *posPtr, Vector2 *pos, int32 angle)
 {
-    int32 x  = (pos->x - posPtr->x) >> 8;
-    int32 y  = (pos->y - posPtr->y) >> 8;
-    pos->x = (y * RSDK.Sin256(angle)) + x * RSDK.Cos256(angle) + posPtr->x;
-    pos->y = (y * RSDK.Cos256(angle)) - x * RSDK.Sin256(angle) + posPtr->y;
+    int32 x = (pos->x - posPtr->x) >> 8;
+    int32 y = (pos->y - posPtr->y) >> 8;
+    pos->x  = (y * RSDK.Sin256(angle)) + x * RSDK.Cos256(angle) + posPtr->x;
+    pos->y  = (y * RSDK.Cos256(angle)) - x * RSDK.Sin256(angle) + posPtr->y;
 }
 
 void Zone_Unknown4(int32 screen)
@@ -662,7 +662,7 @@ void Zone_StartTeleportAction(void)
     entity->visible    = true;
     entity->drawOrder  = DRAWLAYER_COUNT - 1;
 #if RETRO_USE_PLUS
-    Zone->flag         = true;
+    Zone->flag = true;
 #endif
 }
 
@@ -842,7 +842,7 @@ void Zone_State_Fadeout_Unknown(void)
     if (entity->timer > 1024) {
         session->zoneFlags[session->levelIndex] = 1;
 #if RETRO_USE_PLUS
-        session->matchID                        = session->prevMatchID + 1;
+        session->matchID = session->prevMatchID + 1;
 #else
         session->matchID++;
 #endif
@@ -876,13 +876,13 @@ void Zone_Unknown16(void)
 
 void Zone_Unknown17(void)
 {
-    EntityPlayer *entity        = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
-    StarPost->storedMinutes     = RSDK_sceneInfo->minutes;
-    StarPost->storedSeconds     = RSDK_sceneInfo->seconds;
-    StarPost->storedMS          = RSDK_sceneInfo->milliseconds;
-    globals->suppressAutoMusic  = true;
-    globals->suppressTitlecard  = true;
-    TitleCard->suppressCB       = Zone_Unknown16;
+    EntityPlayer *entity       = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
+    StarPost->storedMinutes    = RSDK_sceneInfo->minutes;
+    StarPost->storedSeconds    = RSDK_sceneInfo->seconds;
+    StarPost->storedMS         = RSDK_sceneInfo->milliseconds;
+    globals->suppressAutoMusic = true;
+    globals->suppressTitlecard = true;
+    TitleCard->suppressCB      = Zone_Unknown16;
     SaveGame_SavePlayerState();
     Player->rings = entity->rings;
     RSDK.LoadScene();
@@ -967,11 +967,11 @@ void Zone_Unknown19(void)
                 playerPtr->abilityValues[i] = player->abilityValues[i];
                 playerPtr->abilityPtrs[i]   = player->abilityPtrs[i];
             }
-            playerPtr->angle           = player->angle;
-            playerPtr->rotation        = player->rotation;
-            playerPtr->direction       = player->direction;
-            playerPtr->tileCollisions  = player->tileCollisions;
-            playerPtr->interaction     = player->interaction;
+            playerPtr->angle          = player->angle;
+            playerPtr->rotation       = player->rotation;
+            playerPtr->direction      = player->direction;
+            playerPtr->tileCollisions = player->tileCollisions;
+            playerPtr->interaction    = player->interaction;
             RSDK.SetSpriteAnimation(playerPtr->spriteIndex, player->playerAnimator.animationID, &playerPtr->playerAnimator, false, 0);
         }
         else {
@@ -1018,7 +1018,7 @@ void Zone_Unknown19(void)
         EntityCamera *camera = playerPtr->camera;
         void *camTarget      = camera->targetPtr;
         void *camState       = camera->state;
-        int32 camScreen        = camera->screenID;
+        int32 camScreen      = camera->screenID;
         RSDK.CopyEntity(camera, &Zone->entityData[8 + p], false);
         camera->targetPtr                  = camTarget;
         camera->screenID                   = camScreen;

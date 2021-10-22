@@ -174,8 +174,8 @@ void CrashTest_CheckPlayerCollisions(void)
             Player_CheckCollisionBox(player, entity, &entity->hitbox3);
             Player_CheckCollisionBox(player, entity, &entity->hitbox4);
             if (entity->field_88) {
-                if (Player_CheckCollisionTouch(player, entity, &entity->hitbox6) && player->shield != SHIELD_FIRE) {
-                    Player_CheckHit(player, entity);
+                if (Player_CheckCollisionTouch(player, entity, &entity->hitbox6)) {
+                    Player_CheckElementalHit(player, entity, SHIELD_FIRE);
                 }
             }
         }

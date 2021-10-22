@@ -150,7 +150,7 @@ void MSBomb_Unknown3(void)
         {
             if (Player_CheckCollisionTouch(player, entity, &entity->hitbox)) {
                 if (Player_CheckHit(player, entity))
-                    player->velocity.x = abs(player->velocity.x) + Zone->field_154;
+                    player->velocity.x = abs(player->velocity.x) + Zone->autoScrollSpeed;
                 CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), entity->position.x, entity->position.y);
                 RSDK.PlaySfx(MSBomb->sfxExplosion, false, 255);
                 destroyEntity(entity);

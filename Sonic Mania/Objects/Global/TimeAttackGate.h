@@ -34,7 +34,7 @@ typedef struct {
     Vector2 boundsOffset;
     int32 topBoundary;
     int32 timer;
-    int32 field_84;
+    bool32 field_84;
     int32 field_88;
     int32 spinSpeed;
     int32 spinTimer;

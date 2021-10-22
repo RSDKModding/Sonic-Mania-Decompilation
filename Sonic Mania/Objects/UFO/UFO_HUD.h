@@ -17,8 +17,8 @@ typedef struct {
     uint8 palID;
     Animator animator1;
     Animator animator2;
-    Animator data3;
-    Animator data4;
+    Animator animator3;
+    Animator animator4;
 } EntityUFO_HUD;
 
 // Object Struct

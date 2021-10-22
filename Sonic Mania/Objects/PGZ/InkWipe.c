@@ -4,7 +4,7 @@ ObjectInkWipe *InkWipe;
 
 void InkWipe_Update(void)
 {
-    EntityInkWipe *entity = (EntityInkWipe *)RSDK_sceneInfo->entity;
+    RSDK_THIS(InkWipe);
     RSDK.ProcessAnimation(&entity->animator);
 }
 
@@ -20,13 +20,14 @@ void InkWipe_StaticUpdate(void)
 
 void InkWipe_Draw(void)
 {
-    EntityInkWipe *entity = (EntityInkWipe *)RSDK_sceneInfo->entity;
-    RSDK.DrawSprite(&entity->animator, NULL, 0);
+    RSDK_THIS(InkWipe);
+
+    RSDK.DrawSprite(&entity->animator, NULL, false);
 }
 
 void InkWipe_Create(void* data)
 {
-    EntityInkWipe *entity  = (EntityInkWipe *)RSDK_sceneInfo->entity;
+    RSDK_THIS(InkWipe);
     if (!RSDK_sceneInfo->inEditor) {
         entity->active        = ACTIVE_BOUNDS;
         entity->visible       = true;

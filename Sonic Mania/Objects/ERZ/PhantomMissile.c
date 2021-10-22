@@ -223,8 +223,8 @@ void PhantomMissile_Unknown7(void)
 
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionTouch(player, entity, &PhantomMissile->hitbox) && player->shield != SHIELD_FIRE) {
-            Player_CheckHit(player, entity);
+        if (Player_CheckCollisionTouch(player, entity, &PhantomMissile->hitbox)) {
+            Player_CheckElementalHit(player, entity, SHIELD_FIRE);
         }
     }
     if (++entity->timer >= 16) {

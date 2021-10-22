@@ -5,7 +5,7 @@ ObjectInk *Ink;
 void Ink_Update(void)
 {
     RSDK_THIS(Ink);
-    RSDK.ProcessAnimation(&entity->data3);
+    RSDK.ProcessAnimation(&entity->animator3);
 
     foreach_active(Player, player)
     {
@@ -20,8 +20,8 @@ void Ink_Update(void)
                     case ID_TAILS: RSDK.CopyPalette(entity->type + 3, 70, 0, 70, 6); break;
                     case ID_KNUCKLES: RSDK.CopyPalette(entity->type + 3, 80, 0, 80, 6); break;
                 }
-                Ink->playerTypes[playerID] = entity->type + 1;
-                RSDK.SetSpriteAnimation(Ink->spriteIndex, entity->type + 6, &entity->data3, true, 0);
+                Ink->playerColours[playerID] = entity->type + 1;
+                RSDK.SetSpriteAnimation(Ink->spriteIndex, entity->type + 6, &entity->animator3, true, 0);
             }
         }
         else {
@@ -39,7 +39,7 @@ void Ink_Draw(void)
     RSDK_THIS(Ink);
 
     RSDK_sceneInfo->entity->inkEffect = INK_SUB;
-    RSDK.DrawSprite(&entity->data3, NULL, false);
+    RSDK.DrawSprite(&entity->animator3, NULL, false);
     RSDK.DrawSprite(&entity->animator2, NULL, false);
     entity->inkEffect = INK_NONE;
     RSDK.DrawSprite(&entity->animator1, NULL, false);
@@ -76,7 +76,7 @@ void Ink_StageLoad(void)
     Ink->hitbox3.top    = 26;
     Ink->hitbox3.right  = 24;
     Ink->hitbox3.bottom = 30;
-    for (int32 p = 0; p < 4; ++p) Ink->playerTypes[p] = 0;
+    for (int32 p = 0; p < 4; ++p) Ink->playerColours[p] = 0;
 }
 
 void Ink_EditorDraw(void) {}

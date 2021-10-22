@@ -35,7 +35,7 @@ void ERZStart_Update(void)
         foreach_all(HUD, hud)
         {
             if (hud)
-                hud->field_154 = true;
+                hud->enableRingFlash = true;
             foreach_break;
         }
         --ERZStart->superDashCooldown;

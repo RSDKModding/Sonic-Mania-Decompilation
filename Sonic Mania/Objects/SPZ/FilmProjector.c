@@ -10,8 +10,8 @@ void FilmProjector_Update(void)
     else
         entity->rotation += 4;
     entity->rotation &= 0x1FF;
-    RSDK.ProcessAnimation(&entity->data5);
-    RSDK.ProcessAnimation(&entity->data6);
+    RSDK.ProcessAnimation(&entity->animator5);
+    RSDK.ProcessAnimation(&entity->animator6);
 }
 
 void FilmProjector_LateUpdate(void)
@@ -34,46 +34,46 @@ void FilmProjector_Draw(void)
         drawPos.y = entity->position.y - 0x440000;
         if (entity->direction == FLIP_NONE) {
             drawPos.x = entity->position.x - 0x3C0000;
-            RSDK.DrawSprite(&entity->data5, &drawPos, false);
+            RSDK.DrawSprite(&entity->animator5, &drawPos, false);
             entity->drawFX |= FX_ROTATE;
 
-            RSDK.DrawSprite(&entity->data3, &drawPos, false);
+            RSDK.DrawSprite(&entity->animator3, &drawPos, false);
             entity->drawFX &= ~FX_ROTATE;
 
-            RSDK.DrawSprite(&entity->data4, &drawPos, false);
+            RSDK.DrawSprite(&entity->animator4, &drawPos, false);
             drawPos.x += 0x680000;
         }
         else {
             drawPos.x = entity->position.x + 0x3C0000;
-            RSDK.DrawSprite(&entity->data5, &drawPos, false);
+            RSDK.DrawSprite(&entity->animator5, &drawPos, false);
             entity->drawFX |= FX_ROTATE;
 
-            RSDK.DrawSprite(&entity->data3, &drawPos, false);
+            RSDK.DrawSprite(&entity->animator3, &drawPos, false);
             entity->drawFX &= ~FX_ROTATE;
 
-            RSDK.DrawSprite(&entity->data4, &drawPos, false);
+            RSDK.DrawSprite(&entity->animator4, &drawPos, false);
             drawPos.x -= 0x680000;
         }
-        RSDK.DrawSprite(&entity->data5, &drawPos, false);
+        RSDK.DrawSprite(&entity->animator5, &drawPos, false);
 
         entity->drawFX |= FX_ROTATE;
-        RSDK.DrawSprite(&entity->data3, &drawPos, false);
+        RSDK.DrawSprite(&entity->animator3, &drawPos, false);
 
         entity->drawFX &= ~FX_ROTATE;
-        RSDK.DrawSprite(&entity->data4, &drawPos, false);
+        RSDK.DrawSprite(&entity->animator4, &drawPos, false);
 
         RSDK_sceneInfo->effectGizmo = true;
         entity->drawFX |= FX_FLIP;
         RSDK.DrawSprite(&entity->animator1, NULL, false);
 
         entity->inkEffect = INK_BLEND;
-        RSDK.DrawSprite(&entity->data6, &entity->posUnknown, false);
+        RSDK.DrawSprite(&entity->animator6, &entity->posUnknown, false);
 
         entity->inkEffect = INK_NONE;
     }
     else {
         RSDK.DrawSprite(&entity->animator2, &entity->posUnknown, false);
-        RSDK.DrawSprite(&entity->data6, &entity->posUnknown, false);
+        RSDK.DrawSprite(&entity->animator6, &entity->posUnknown, false);
         RSDK.AddDrawListRef(Zone->drawOrderHigh, RSDK_sceneInfo->entitySlot);
     }
 }
@@ -83,10 +83,10 @@ void FilmProjector_Create(void* data)
     RSDK_THIS(FilmProjector);
     RSDK.SetSpriteAnimation(FilmProjector->spriteIndex, 0, &entity->animator1, true, 0);
     RSDK.SetSpriteAnimation(FilmProjector->spriteIndex, 0, &entity->animator2, true, 1);
-    RSDK.SetSpriteAnimation(FilmProjector->spriteIndex, 1, &entity->data3, true, 0);
-    RSDK.SetSpriteAnimation(FilmProjector->spriteIndex, 1, &entity->data4, true, 1);
-    RSDK.SetSpriteAnimation(FilmProjector->spriteIndex, 2, &entity->data5, true, 0);
-    RSDK.SetSpriteAnimation(FilmProjector->spriteIndex, 3, &entity->data6, true, 1);
+    RSDK.SetSpriteAnimation(FilmProjector->spriteIndex, 1, &entity->animator3, true, 0);
+    RSDK.SetSpriteAnimation(FilmProjector->spriteIndex, 1, &entity->animator4, true, 1);
+    RSDK.SetSpriteAnimation(FilmProjector->spriteIndex, 2, &entity->animator5, true, 0);
+    RSDK.SetSpriteAnimation(FilmProjector->spriteIndex, 3, &entity->animator6, true, 1);
     if (!RSDK_sceneInfo->inEditor) {
         entity->active        = ACTIVE_BOUNDS;
         entity->updateRange.x = 0x1000000;

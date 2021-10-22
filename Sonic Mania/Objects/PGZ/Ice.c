@@ -281,7 +281,7 @@ void Ice_StageLoad(void)
     Ice->sfxLedgeBreak    = RSDK.GetSFX("Stage/LedgeBreak.wav");
     Ice->sfxWindowShatter = RSDK.GetSFX("Stage/WindowShatter.wav");
     Ice->sfxStruggle      = RSDK.GetSFX("PSZ/Struggle.wav");
-    Zone->timeOverState   = Ice_TimeOverCB;
+    Zone->timeOverCallback   = Ice_TimeOverCB;
     Zone_AddCallback(Ice_ZoneCB);
 }
 
@@ -306,7 +306,7 @@ void Ice_FreezePlayer(void *p)
 {
     EntityPlayer *player = (EntityPlayer *)p;
     RSDK_THIS(Ice);
-    if (!Zone->field_15C && player->state != Ice_State_FrozenPlayer && (player->shield != SHIELD_FIRE || player->invincibleTimer > 0)) {
+    if (!Zone->gotTimeOver && player->state != Ice_State_FrozenPlayer && (player->shield != SHIELD_FIRE || player->invincibleTimer > 0)) {
         EntityIce *ice = CREATE_ENTITY(Ice, intToVoid(1), player->position.x, player->position.y);
         ice->playerPtr = (Entity *)player;
 #if RETRO_USE_PLUS

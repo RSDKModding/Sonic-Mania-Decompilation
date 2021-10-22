@@ -69,7 +69,7 @@ void Spikes_Update(void)
                     uint8 side = Player_CheckCollisionBox(player, entity, &entity->hitbox);
                     if (side) {
                         if (Ice && player->shield == SHIELD_FIRE && player->invincibleTimer <= 0 && !Press && !entity->shatterTimer) {
-                            Ice_ShatterGenerator(16,  16,  8,  0,  0,  0);
+                            Ice_ShatterGenerator(16, 16, 8, 0, 0, 0);
                             entity->shatterTimer = 15;
                         }
 

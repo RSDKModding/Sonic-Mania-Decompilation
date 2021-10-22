@@ -36,10 +36,10 @@ typedef struct {
     uint8 playerTimers[2];
     uint8 field_9B;
     int32 field_9C;
-    int32 flagA;
-    int32 flagB;
+    bool32 successFlag;
+    bool32 failFlag;
     int32 field_A8;
-    int32 field_AC;
+    int32 inkColour;
     int32 xOffset;
     int32 yOffset;
     Entity *storedEntity;

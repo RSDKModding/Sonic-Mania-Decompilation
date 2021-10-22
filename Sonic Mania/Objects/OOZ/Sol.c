@@ -139,8 +139,7 @@ void Sol_HandlePlayerHurt(void)
     foreach_active(Player, player)
     {
         if (Player_CheckCollisionTouch(player, entity, &Sol->hitbox2)) {
-            if (player->shield != SHIELD_FIRE)
-                Player_CheckHit(player, entity);
+            Player_CheckElementalHit(player, entity, SHIELD_FIRE);
         }
     }
 }

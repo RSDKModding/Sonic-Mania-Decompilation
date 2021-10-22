@@ -5,12 +5,25 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    Hitbox hitbox;
+    uint16 sfxSpin;
+    uint16 sfxHop;
+    uint16 aniFrames;
 } ObjectBarStool;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    StateMachine(state);
+    uint8 height;
+    int spinSpeed;
+    int spinAngle;
+    int activePlayers;
+    int playerVal1[PLAYER_MAX];
+    int playerVal2[PLAYER_MAX];
+    Animator animator1;
+    Animator animator2;
 } EntityBarStool;
 
 // Object Struct

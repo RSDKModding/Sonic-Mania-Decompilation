@@ -48,18 +48,18 @@ void UFO_HUD_Draw(void)
     RSDK.DrawSprite(&entity->animator1, &drawPos, true);
 
     for (int32 i = 0; i <= UFO_Setup->machLevel; ++i) {
-        RSDK.DrawSprite(&entity->data4, &drawPos, true);
+        RSDK.DrawSprite(&entity->animator4, &drawPos, true);
         drawPos.x += 0xA0000;
     }
 
     drawPos.x = RSDK_screens->centerX << 16;
     if (!(entity->timer & 4) && entity->timer) {
-        entity->data3.frameID = 3;
-        RSDK.DrawSprite(&entity->data3, &drawPos, true);
+        entity->animator3.frameID = 3;
+        RSDK.DrawSprite(&entity->animator3, &drawPos, true);
     }
     else if (!entity->timer) {
-        entity->data3.frameID = UFO_Setup->machLevel;
-        RSDK.DrawSprite(&entity->data3, &drawPos, true);
+        entity->animator3.frameID = UFO_Setup->machLevel;
+        RSDK.DrawSprite(&entity->animator3, &drawPos, true);
     }
 
     entity->drawFX = FX_NONE;
@@ -84,8 +84,8 @@ void UFO_HUD_Create(void *data)
         entity->palID         = 2;
         RSDK.SetSpriteAnimation(UFO_HUD->spriteIndex, 0, &entity->animator1, true, 0);
         RSDK.SetSpriteAnimation(UFO_HUD->spriteIndex, 1, &entity->animator2, true, 0);
-        RSDK.SetSpriteAnimation(UFO_HUD->spriteIndex, 2, &entity->data3, true, 0);
-        RSDK.SetSpriteAnimation(UFO_HUD->spriteIndex, 3, &entity->data4, true, 0);
+        RSDK.SetSpriteAnimation(UFO_HUD->spriteIndex, 2, &entity->animator3, true, 0);
+        RSDK.SetSpriteAnimation(UFO_HUD->spriteIndex, 3, &entity->animator4, true, 0);
     }
 }
 

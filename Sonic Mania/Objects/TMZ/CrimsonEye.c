@@ -1072,8 +1072,8 @@ void CrimsonEye_StateShot_CheckPlayerCollisions(void)
 
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionTouch(player, entity, &CrimsonEye->hitboxElecOrb) && player->shield != SHIELD_LIGHTNING) {
-            Player_CheckHit(player, entity);
+        if (Player_CheckCollisionTouch(player, entity, &CrimsonEye->hitboxElecOrb)) {
+            Player_CheckElementalHit(player, entity, SHIELD_LIGHTNING);
         }
     }
 

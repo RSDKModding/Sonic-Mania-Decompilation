@@ -65,7 +65,7 @@ void Competition_State_Manager(void)
     RSDK_THIS(Competition);
 
     if (entity->timer <= 0) {
-        Zone->field_15C             = true;
+        Zone->gotTimeOver           = true;
         RSDK_sceneInfo->timeEnabled = false;
         for (int32 p = 0; p < Player->playerCount; ++p) {
             EntityPlayer *player = RSDK_GET_ENTITY(p, Player);
@@ -83,7 +83,7 @@ void Competition_State_Manager(void)
                 Music_PlayMusicTrack(TRACK_DROWNING);
             }
             else if (!entity->timer) {
-                Zone->field_15C             = true;
+                Zone->gotTimeOver           = true;
                 RSDK_sceneInfo->timeEnabled = false;
                 for (int32 p = 0; p < Player->playerCount; ++p) {
                     if (!entity->playerFlags[p]) {
@@ -100,11 +100,11 @@ void Competition_State_Manager(void)
 
 void Competition_ResetOptions(void)
 {
-    EntityCompetitionSession *session          = (EntityCompetitionSession *)globals->competitionSession;
-    session->inMatch    = false;
-    session->matchID    = 0;
-    session->matchCount = 0;
-    session->levelIndex = 0;
+    EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
+    session->inMatch                  = false;
+    session->matchID                  = 0;
+    session->matchCount               = 0;
+    session->levelIndex               = 0;
 
     for (int32 i = 0; i < 12; ++i) {
         session->zoneFlags[i]   = 0;
@@ -132,34 +132,34 @@ void Competition_ClearMatchData(void)
 
     session->winnerFlags[session->matchID] = 0;
     for (int32 i = 0; i < 4; ++i) {
-        session->finishFlags[i]                = 0;
-        session->time[i].minutes               = 0;
-        session->time[i].seconds               = 0;
-        session->time[i].milliseconds          = 0;
-        session->rings[i]                      = 0;
-        session->score[i]                      = 0;
-        session->items[i]                      = 0;
-        session->totalRings[i]                 = 0;
+        session->finishFlags[i]       = 0;
+        session->time[i].minutes      = 0;
+        session->time[i].seconds      = 0;
+        session->time[i].milliseconds = 0;
+        session->rings[i]             = 0;
+        session->score[i]             = 0;
+        session->items[i]             = 0;
+        session->totalRings[i]        = 0;
     }
 }
 
 void Competition_CalculateScore(int32 playerID, uint8 flags)
 {
     EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
-    session->finishFlags[playerID] = flags;
+    session->finishFlags[playerID]    = flags;
 
     if (flags == 1) {
-        session->totalRings[playerID]                 = 0;
-        session->items[playerID]                      = 0;
-        session->rings[playerID]                      = 0;
-        session->score[playerID]                      = 0;
-        session->time[playerID].minutes               = 9;
-        session->time[playerID].seconds               = 59;
-        session->time[playerID].milliseconds          = 59;
+        session->totalRings[playerID]        = 0;
+        session->items[playerID]             = 0;
+        session->rings[playerID]             = 0;
+        session->score[playerID]             = 0;
+        session->time[playerID].minutes      = 9;
+        session->time[playerID].seconds      = 59;
+        session->time[playerID].milliseconds = 59;
     }
 
     int32 deathCount = 0;
-    bool32 flag    = true;
+    bool32 flag      = true;
     for (int32 p = 0; p < session->playerCount; ++p) {
         if (!session->lives[p] || session->finishFlags[p] == 1)
             ++deathCount;
@@ -185,7 +185,7 @@ void Competition_CalculateScore(int32 playerID, uint8 flags)
                 int32 secs = session->time[p].seconds;
                 int32 ms   = session->time[p].milliseconds;
                 int32 time = ms + 100 * (secs + 60 * mins);
-                times[p] = time;
+                times[p]   = time;
 
                 if (session->rings[p] > winnerRings)
                     winnerRings = session->rings[p];

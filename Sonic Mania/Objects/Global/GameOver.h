@@ -3,6 +3,8 @@
 
 #include "SonicMania.h"
 
+#define GameOver_LetterCount (8)
+
 // Object Class
 typedef struct {
     RSDK_OBJECT
@@ -16,14 +18,14 @@ typedef struct {
     StateMachine(state);
     int32 timer;
     int32 playerID;
-    Vector2 dword64;
+    Vector2 barPos;
     Vector2 verts[4];
-    Vector2 letterPositions[8];
-    Vector2 unknownPos1[8];
-    Vector2 letterPosMove[8];
-    int32 unknownArray1[8];
-    int32 letterRotations[8];
-    int32 letterRotateSpeed[8];
+    Vector2 letterPositions[GameOver_LetterCount];
+    Vector2 unknownPos1[GameOver_LetterCount];
+    Vector2 letterPosMove[GameOver_LetterCount];
+    int32 letterBounceCount[GameOver_LetterCount];
+    int32 letterRotations[GameOver_LetterCount];
+    int32 letterRotateSpeed[GameOver_LetterCount];
     Animator animator;
 } EntityGameOver;
 
@@ -43,9 +45,9 @@ void GameOver_Serialize(void);
 
 // Extra Entity Functions
 void GameOver_SaveGameCallback(int32 status);
-void GameOver_Unknown2(void);
-void GameOver_Unknown3(void);
-void GameOver_Unknown4(void);
-void GameOver_Unknown5(void);
+void GameOver_State_EnterLetters(void);
+void GameOver_State_HandleMultiplayer(void);
+void GameOver_State_ShowMessage(void);
+void GameOver_State_ExitLetters(void);
 
 #endif //!OBJ_GAMEOVER_H

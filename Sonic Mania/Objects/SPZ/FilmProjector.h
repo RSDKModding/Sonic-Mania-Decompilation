@@ -16,10 +16,10 @@ typedef struct {
     Vector2 posUnknown;
     Animator animator1;
     Animator animator2;
-    Animator data3;
-    Animator data4;
-    Animator data5;
-    Animator data6;
+    Animator animator3;
+    Animator animator4;
+    Animator animator5;
+    Animator animator6;
 } EntityFilmProjector;
 
 // Object Struct

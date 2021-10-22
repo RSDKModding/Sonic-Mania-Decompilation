@@ -12,9 +12,9 @@ void SP500MkII_Update(void)
 
     entity->field_74 = false;
     entity->field_70 = false;
-    if (entity->field_7C && entity->field_68 < entity->printRows)
+    if (entity->field_7C && entity->printRowID < entity->printRows)
         entity->field_70 = true;
-    if (entity->field_78 && !entity->field_7C && entity->state != SP500MkII_Unknown8 && entity->field_68 < entity->printRows)
+    if (entity->printStarted && !entity->field_7C && entity->state != SP500MkII_Unknown8 && entity->printRowID < entity->printRows)
         entity->field_74 = true;
     RSDK.ProcessAnimation(&entity->animator);
 }
@@ -151,7 +151,7 @@ void SP500MkII_Unknown3(void)
     entity->direction = FLIP_NONE;
 }
 
-void SP500MkII_Unknown4(void)
+void SP500MkII_CheckPlayerCollisions(void)
 {
     RSDK_THIS(SP500MkII);
 
@@ -161,7 +161,7 @@ void SP500MkII_Unknown4(void)
     entity->position.y = entity->pos2.y;
     int32 top            = SP500MkII->hitbox2.top << 16;
 
-    int32 pos = 0;
+    int32 dist = 0;
     foreach_active(Player, player)
     {
         int32 playerID = RSDK.GetEntityID(player);
@@ -177,10 +177,10 @@ void SP500MkII_Unknown4(void)
         }
 
         if (touched) {
-            int32 v12 = minVal(bottom - entity->position.y + top, 0xD0000);
+            int32 distY = minVal(bottom - entity->position.y + top, 0xD0000);
 
-            if (pos <= v12) {
-                pos = v12;
+            if (dist <= distY) {
+                dist = distY;
             }
             if (collided)
                 entity->activePlayers |= (1 << playerID);
@@ -192,8 +192,8 @@ void SP500MkII_Unknown4(void)
         }
     }
 
-    entity->field_84   = pos;
-    entity->field_78   = entity->activePlayers != 0;
+    entity->field_84   = dist;
+    entity->printStarted = entity->activePlayers != 0;
     entity->position.x = storeX;
     entity->position.y = storeY;
 }
@@ -210,8 +210,8 @@ void SP500MkII_Unknown5(void)
     entity->timer         = 0;
     entity->activePlayers = 0;
     entity->field_84      = 0;
-    entity->field_78      = 0;
-    entity->field_7C      = 0;
+    entity->printStarted  = false;
+    entity->field_7C      = false;
     entity->field_6C      = 2 * (entity->start == 0) - 1;
     entity->field_70      = false;
     entity->field_74      = false;
@@ -223,14 +223,14 @@ void SP500MkII_Unknown6(void)
     RSDK_THIS(SP500MkII);
     entity->field_A0 = 0;
     entity->field_A4 = 0;
-    SP500MkII_Unknown4();
+    SP500MkII_CheckPlayerCollisions();
 
     if (entity->activePlayers & 1) {
         ++entity->timer;
     }
     else {
         if (entity->field_7C) {
-            if (entity->field_68 < entity->printRows)
+            if (entity->printRowID < entity->printRows)
                 entity->state = SP500MkII_Unknown7;
         }
         entity->timer = 0;
@@ -253,7 +253,7 @@ void SP500MkII_Unknown7(void)
 
         if (!entity->field_98) {
             entity->field_6C = 1;
-            ++entity->field_68;
+            ++entity->printRowID;
             entity->state    = SP500MkII_Unknown8;
             entity->field_7C = 0;
         }
@@ -266,7 +266,7 @@ void SP500MkII_Unknown7(void)
 
         if (entity->field_98 == entity->length << 19) {
             entity->field_6C = -1;
-            ++entity->field_68;
+            ++entity->printRowID;
             entity->state    = SP500MkII_Unknown8;
             entity->field_7C = 0;
         }
@@ -274,7 +274,7 @@ void SP500MkII_Unknown7(void)
 
     entity->field_A0 = entity->field_98 - entity->field_A0;
     entity->field_A4 = 0;
-    SP500MkII_Unknown4();
+    SP500MkII_CheckPlayerCollisions();
 }
 
 void SP500MkII_Unknown8(void)
@@ -283,7 +283,7 @@ void SP500MkII_Unknown8(void)
     entity->field_A0 = entity->field_98;
     entity->field_A4 = entity->field_9C;
 
-    int32 dist = (entity->field_68 * (2 * (entity->yDir != 0) - 1)) << 21;
+    int32 dist = (entity->printRowID * (2 * (entity->yDir != 0) - 1)) << 21;
     if (entity->yDir == 1) {
         if (entity->field_9C < dist)
             entity->field_9C += 0x40000;
@@ -303,7 +303,7 @@ void SP500MkII_Unknown8(void)
         entity->state = SP500MkII_Unknown6;
     entity->field_A0 = 0;
     entity->field_A4 = entity->field_9C - entity->field_A4;
-    SP500MkII_Unknown4();
+    SP500MkII_CheckPlayerCollisions();
 }
 
 void SP500MkII_EditorDraw(void)

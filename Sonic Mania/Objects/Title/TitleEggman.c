@@ -27,13 +27,13 @@ void TitleEggman_Draw(void)
         for (int32 i = 1; i < 5; ++i) {
             drawPos.x = (i << 8) * RSDK.Sin1024(angle) + entity->position.x;
             drawPos.y = entity->position.y + 0x80000 + (i << 8) * RSDK.Cos1024(angle);
-            RSDK.DrawSprite(&entity->data3, &drawPos, false);
+            RSDK.DrawSprite(&entity->animator3, &drawPos, false);
         }
         entity->drawFX   = FX_ROTATE;
         drawPos.x        = 0x500 * RSDK.Sin1024(angle) + entity->position.x;
         drawPos.y        = 0x500 * RSDK.Cos1024(angle) + entity->position.y + 0x80000;
         entity->rotation = -(angle >> 2);
-        RSDK.DrawSprite(&entity->data4, &drawPos, false);
+        RSDK.DrawSprite(&entity->animator4, &drawPos, false);
 
         entity->drawFX = FX_FLIP;
         RSDK.DrawSprite(&entity->animator2, NULL, false);
@@ -53,8 +53,8 @@ void TitleEggman_Create(void *data)
         }
         else {
             RSDK.SetSpriteAnimation(TitleEggman->spriteIndex, 2, &entity->animator2, true, 0);
-            RSDK.SetSpriteAnimation(TitleEggman->spriteIndex, 3, &entity->data3, true, 0);
-            RSDK.SetSpriteAnimation(TitleEggman->spriteIndex, 4, &entity->data4, true, 0);
+            RSDK.SetSpriteAnimation(TitleEggman->spriteIndex, 3, &entity->animator3, true, 0);
+            RSDK.SetSpriteAnimation(TitleEggman->spriteIndex, 4, &entity->animator4, true, 0);
             entity->startPos.x = entity->position.x;
             entity->startPos.y = entity->position.y;
             entity->velocity.x = 0x10000;
@@ -94,7 +94,7 @@ void TitleEggman_Unknown3(void)
     if ((entity->timer & 0xF) == 0)
         RSDK.CreateEntity(TitleEggman->objectID, (void *)1, entity->position.x - 0xE0000, entity->position.y + 0x80000);
     RSDK.ProcessAnimation(&entity->animator2);
-    RSDK.ProcessAnimation(&entity->data4);
+    RSDK.ProcessAnimation(&entity->animator4);
 }
 
 void TitleEggman_EditorDraw(void) {}

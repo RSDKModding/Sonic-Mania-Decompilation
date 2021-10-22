@@ -65,9 +65,9 @@ typedef struct {
     int32 field_120;
     Animator animator1;
     Animator animator2;
-    Animator data3;
-    Animator data4;
-    Animator data5;
+    Animator animator3;
+    Animator animator4;
+    Animator animator5;
 } EntitySpecialClear;
 
 // Object Struct

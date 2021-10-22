@@ -3,7 +3,7 @@
 
 #include "SonicMania.h"
 
-enum MusicTracks {
+typedef enum {
     TRACK_NONE         = -1,
     TRACK_STAGE        = 0,
     TRACK_INVINCIBLE   = 1,
@@ -27,7 +27,16 @@ enum MusicTracks {
     TRACK_HBHMISCHIEF = 12,
 #endif
     TRACK_1UP = 13,
-};
+} MusicTracks;
+
+typedef enum {
+    TRACK_PRIORITY_NONE    = 0,
+    TRACK_PRIORITY_ANY     = 10,
+    TRACK_PRIORITY_POWERUP = 100,
+    TRACK_PRIORITY_SUPER   = 1000,
+    TRACK_PRIORITY_DROWN   = 1000,
+    TRACK_PRIORITY_1UP     = 10000,
+} TrackPriorityValues;
 
 // Object Class
 typedef struct {
@@ -39,7 +48,7 @@ typedef struct {
     int32 activeTrack;
     int32 nextTrack;
     int32 field_254;
-    int32 field_258;
+    uint16 aniFrames;
 } ObjectMusic;
 
 // Entity Class
@@ -51,18 +60,13 @@ typedef struct {
     int32 trackID;
     uint32 trackLoop;
     bool32 playOnLoad;
-    int32 field_78;
+    int32 restartTrackFlag;
     int32 timer;
-    int32 field_80;
+    int32 trackPriority;
     int32 trackStartPos;
     float volume;
     float fadeSpeed;
-    int32 field_90;
-    int32 field_94;
-    int32 field_98;
-    int32 field_9C;
-    int32 field_A0;
-    int32 field_A4;
+    Animator animator;
 } EntityMusic;
 
 // Object Struct
@@ -87,17 +91,17 @@ void Music_PlayTrack(uint8 trackID);
 void Music_PlayTrackPtr(EntityMusic *entity);
 
 void Music_Unknown2(uint8 trackID);
-void Music_Unknown3(EntityMusic *entity);
-bool32 Music_CheckMusicStack(void);
-void Music_Unknown5(EntityMusic *entity);
+void Music_CheckMusicStack_Powerup(EntityMusic *entity);
+bool32 Music_CheckMusicStack_Active(void);
+void Music_GetNextTrack(EntityMusic *entity);
 void Music_ResumePrevTrack(uint8 trackID, bool32 transitionFade);
 void Music_Unknown7(EntityMusic *entity);
 void Music_ClearMusicStack(void);
 void Music_TransitionTrack(uint8 trackID, float fadeSpeed);
 void Music_FadeOut(float fadeSpeed);
 void Music_State_Unknown11(void);
-void Music_State_Unknown12(void);
-void Music_State_Unknown13(void);
+void Music_State_FadeTrackOut(void);
+void Music_State_FadeTrackIn(void);
 void Music_State_FadeOut(void);
 void Music_State_TransitionTrack(void);
 

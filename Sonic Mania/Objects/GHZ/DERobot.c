@@ -32,19 +32,19 @@ void DERobot_Create(void *data)
             switch (entity->aniID) {
                 case 0:
                     entity->active    = ACTIVE_BOUNDS;
-                    entity->parts[3]  = (Entity *)RSDK.GetEntityByID(slotID - 7);
-                    entity->parts[4]  = (Entity *)RSDK.GetEntityByID(slotID - 6);
-                    entity->parts[5]  = (Entity *)RSDK.GetEntityByID(slotID - 5);
-                    entity->parts[9]  = (Entity *)RSDK.GetEntityByID(slotID - 4);
-                    entity->parts[10] = (Entity *)RSDK.GetEntityByID(slotID - 3);
-                    entity->parts[2]  = (Entity *)RSDK.GetEntityByID(slotID - 2);
-                    entity->parts[0]  = (Entity *)RSDK.GetEntityByID(slotID - 1);
-                    entity->parts[6]  = (Entity *)RSDK.GetEntityByID(slotID + 1);
-                    entity->parts[7]  = (Entity *)RSDK.GetEntityByID(slotID + 2);
-                    entity->parts[8]  = (Entity *)RSDK.GetEntityByID(slotID + 3);
-                    entity->parts[1]  = (Entity *)RSDK.GetEntityByID(slotID + 4);
-                    entity->parts[11] = (Entity *)RSDK.GetEntityByID(slotID + 5);
-                    entity->parts[12] = (Entity *)RSDK.GetEntityByID(slotID + 6);
+                    entity->parts[3]  = RSDK_GET_ENTITY(slotID - 7, );
+                    entity->parts[4]  = RSDK_GET_ENTITY(slotID - 6, );
+                    entity->parts[5]  = RSDK_GET_ENTITY(slotID - 5, );
+                    entity->parts[9]  = RSDK_GET_ENTITY(slotID - 4, );
+                    entity->parts[10] = RSDK_GET_ENTITY(slotID - 3, );
+                    entity->parts[2]  = RSDK_GET_ENTITY(slotID - 2, );
+                    entity->parts[0]  = RSDK_GET_ENTITY(slotID - 1, );
+                    entity->parts[6]  = RSDK_GET_ENTITY(slotID + 1, );
+                    entity->parts[7]  = RSDK_GET_ENTITY(slotID + 2, );
+                    entity->parts[8]  = RSDK_GET_ENTITY(slotID + 3, );
+                    entity->parts[1]  = RSDK_GET_ENTITY(slotID + 4, );
+                    entity->parts[11] = RSDK_GET_ENTITY(slotID + 5, );
+                    entity->parts[12] = RSDK_GET_ENTITY(slotID + 6, );
                     entity->field_C8  = 8;
                     entity->state     = DERobot_Unknown31;
                     entity->stateDraw = DERobot_StateDraw_Unknown3;
@@ -1212,12 +1212,7 @@ void DERobot_Unknown40(void)
         RSDK.PlaySfx(DERobot->sfxDrop, 0, 255);
 
     if (entity->timer == 180) {
-        if (Music_CheckMusicStack()) {
-            Music->nextTrack = 0;
-        }
-        else {
-            Music_TransitionTrack(TRACK_STAGE, 0.0125);
-        }
+        Music_TransitionTrack(TRACK_STAGE, 0.0125);
 
         EntityEggPrison *prison = (EntityEggPrison *)entity->parts[2];
         RSDK.ResetEntityPtr(prison, EggPrison->objectID, intToVoid(1));
@@ -1230,8 +1225,9 @@ void DERobot_Unknown40(void)
     }
 
     if (!(Zone->timer & 7)) {
-        EntityExplosion *explosion = (EntityExplosion *)RSDK.CreateEntity(
-            Explosion->objectID, intToVoid(3), (RSDK.Rand(-48, 48) << 16) + entity->position.x, (RSDK.Rand(-48, 48) << 16) + entity->position.y);
+        int x                      = (RSDK.Rand(-48, 48) << 16) + entity->position.x;
+        int y                      = (RSDK.Rand(-48, 48) << 16) + entity->position.y;
+        EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid(3), x, y);
         explosion->drawOrder = Zone->drawOrderHigh;
     }
 

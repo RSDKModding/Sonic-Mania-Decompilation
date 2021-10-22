@@ -5,11 +5,11 @@ ObjectHUD *HUD;
 void HUD_Update(void)
 {
     RSDK_THIS(HUD);
-    entity->field_150 = 0;
-    entity->field_154 = 0;
+    entity->enableTimeFlash = false;
+    entity->enableRingFlash = false;
 #if RETRO_USE_PLUS
-    if (entity->taData2.animationID == 11)
-        RSDK.ProcessAnimation(&entity->taData2);
+    if (entity->taAnimator2.animationID == 11)
+        RSDK.ProcessAnimation(&entity->taAnimator2);
 #endif
 }
 
@@ -45,11 +45,11 @@ void HUD_LateUpdate(void)
     }
 #if RETRO_USE_PLUS
     else if (globals->gameMode == MODE_TIMEATTACK) {
-        if (HUD->dwordC) {
+        if (HUD->showTAPrompt) {
             if (sku_platform == PLATFORM_PC || sku_platform == PLATFORM_SWITCH || sku_platform == PLATFORM_DEV) {
-                HUD_GetKeyFrame(&entity->superButtonData1, 3);
-                HUD_GetKeyFrame(&entity->taData3, 3);
-                HUD_GetKeyFrame(&entity->taData4, 4);
+                HUD_GetKeyFrame(&entity->superButtonAnimator2, 3);
+                HUD_GetKeyFrame(&entity->taAnimator3, 3);
+                HUD_GetKeyFrame(&entity->taAnimator4, 4);
             }
             if (entity->superButtonPos < 0x180000)
                 entity->superButtonPos += 0x80000;
@@ -96,16 +96,16 @@ void HUD_Draw(void)
         foreach_active(Player, plr)
         {
             if (plr != player) {
-                entity->playerIDData.frameID = plr->playerID;
-                RSDK.DrawSprite(&entity->playerIDData, &plr->position, false);
+                entity->playerIDAnimator.frameID = plr->playerID;
+                RSDK.DrawSprite(&entity->playerIDAnimator, &plr->position, false);
             }
         }
     }
 #if RETRO_USE_PLUS
     else {
         if (HUD->swapCooldown > 0) {
-            RSDK.ProcessAnimation(&entity->playerIDData);
-            RSDK.DrawSprite(&entity->playerIDData, &player->position, false);
+            RSDK.ProcessAnimation(&entity->playerIDAnimator);
+            RSDK.DrawSprite(&entity->playerIDAnimator, &player->position, false);
             --HUD->swapCooldown;
         }
     }
@@ -119,7 +119,7 @@ void HUD_Draw(void)
 #if RETRO_GAMEVER != VER_100
 #if RETRO_USE_PLUS
     entity->timeFlashFrame = 0;
-    if ((RSDK_sceneInfo->minutes == 9 && isMainGameMode() && !(globals->medalMods & getMod(MEDAL_NOTIMEOVER))) && ActClear->field_30 == 1)
+    if ((RSDK_sceneInfo->minutes == 9 && isMainGameMode() && !(globals->medalMods & getMod(MEDAL_NOTIMEOVER))) && ActClear->disableTimeBonus)
         entity->timeFlashFrame = (Zone->timer2 >> 3) & 1;
 #else
     if (RSDK_sceneInfo->minutes == 9 && globals->gameMode < MODE_TIMEATTACK)
@@ -127,20 +127,20 @@ void HUD_Draw(void)
 #endif
 #endif
 
-    entity->hudElementsData.frameID = 0;
-    RSDK.DrawSprite(&entity->hudElementsData, &offset[HUDOFF_SCORE], true);
+    entity->hudElementsAnimator.frameID = 0;
+    RSDK.DrawSprite(&entity->hudElementsAnimator, &offset[HUDOFF_SCORE], true);
 
     lifePos.x = offset[HUDOFF_SCORE].x + 0x610000;
     lifePos.y = offset[HUDOFF_SCORE].y + 0xE0000;
     HUD_DrawNumbersBase10(&lifePos, player->score, 0);
-    entity->hudElementsData.frameID = entity->timeFlashFrame + 1;
-    RSDK.DrawSprite(&entity->hudElementsData, &offset[HUDOFF_TIME], true);
+    entity->hudElementsAnimator.frameID = entity->timeFlashFrame + 1;
+    RSDK.DrawSprite(&entity->hudElementsAnimator, &offset[HUDOFF_TIME], true);
 
-    if (!entity->field_150 || Zone->timer2 & 8) {
+    if (!entity->enableTimeFlash || Zone->timer2 & 8) {
         lifePos.x                       = offset[HUDOFF_TIME].x + 0x340000;
         lifePos.y                       = offset[HUDOFF_TIME].y - 0x20000;
-        entity->hudElementsData.frameID = 12;
-        RSDK.DrawSprite(&entity->hudElementsData, &lifePos, true);
+        entity->hudElementsAnimator.frameID = 12;
+        RSDK.DrawSprite(&entity->hudElementsAnimator, &lifePos, true);
 
         lifePos.x = offset[HUDOFF_TIME].x + 0x610000;
         lifePos.y = offset[HUDOFF_TIME].y + 0xE0000;
@@ -159,9 +159,9 @@ void HUD_Draw(void)
             HUD_DrawNumbersBase10(&lifePos, RSDK_sceneInfo->minutes, 1);
     }
 
-    entity->hudElementsData.frameID = entity->ringFlashFrame + 3;
-    RSDK.DrawSprite(&entity->hudElementsData, &offset[HUDOFF_RINGS], true);
-    if (!entity->field_154 || Zone->timer2 & 8) {
+    entity->hudElementsAnimator.frameID = entity->ringFlashFrame + 3;
+    RSDK.DrawSprite(&entity->hudElementsAnimator, &offset[HUDOFF_RINGS], true);
+    if (!entity->enableRingFlash || Zone->timer2 & 8) {
         lifePos.x = offset[HUDOFF_RINGS].x + 0x610000;
         lifePos.y = offset[HUDOFF_RINGS].y + 0xE0000;
 
@@ -195,31 +195,31 @@ void HUD_Draw(void)
         lifePos.x = (RSDK_screens[RSDK_sceneInfo->currentScreenID].width << 16) - entity->superButtonPos;
 
         if (API.CheckDLC(DLC_PLUS)) {
-            RSDK.DrawSprite(&entity->taData2, &lifePos, true);
+            RSDK.DrawSprite(&entity->taAnimator2, &lifePos, true);
             lifePos.x -= 0x1C0000;
 
             if (HUD->replaySaveEnabled) {
-                RSDK.DrawSprite(&entity->taData3, &lifePos, true);
+                RSDK.DrawSprite(&entity->taAnimator3, &lifePos, true);
             }
             else {
                 entity->inkEffect = INK_BLEND;
-                RSDK.DrawSprite(&entity->taData3, &lifePos, true);
+                RSDK.DrawSprite(&entity->taAnimator3, &lifePos, true);
                 entity->inkEffect = INK_NONE;
             }
 
             lifePos.y += 0x1C0000;
             lifePos.x = (RSDK_screens[RSDK_sceneInfo->currentScreenID].width << 16) - entity->superButtonPos;
         }
-        RSDK.DrawSprite(&entity->taData1, &lifePos, true);
+        RSDK.DrawSprite(&entity->taAnimator1, &lifePos, true);
         lifePos.x -= 0x1C0000;
-        RSDK.DrawSprite(&entity->taData4, &lifePos, true);
+        RSDK.DrawSprite(&entity->taAnimator4, &lifePos, true);
     }
 #endif
 #if RETRO_GAMEVER != VER_100
     else if (entity->superButtonPos > -0x200000) {
         lifePos.y = 0x140000;
         lifePos.x = (RSDK_screens[RSDK_sceneInfo->currentScreenID].width << 16) - entity->superButtonPos;
-        RSDK.DrawSprite(&entity->superButtonsData, &lifePos, true);
+        RSDK.DrawSprite(&entity->superButtonAnimator1, &lifePos, true);
         lifePos.x -= 0x140000;
         bool32 flag = true;
 #if RETRO_USE_PLUS
@@ -227,11 +227,11 @@ void HUD_Draw(void)
             flag = Player->canSuperCB(true);
 #endif
         if (player->state == Player_State_Air && player->jumpAbilityTimer == 1 && flag) {
-            RSDK.DrawSprite(&entity->superButtonData1, &lifePos, true);
+            RSDK.DrawSprite(&entity->superButtonAnimator2, &lifePos, true);
         }
         else {
             entity->inkEffect = INK_BLEND;
-            RSDK.DrawSprite(&entity->superButtonData1, &lifePos, true);
+            RSDK.DrawSprite(&entity->superButtonAnimator2, &lifePos, true);
             entity->inkEffect = INK_NONE;
         }
     }
@@ -244,9 +244,9 @@ void HUD_Draw(void)
 #if RETRO_USE_PLUS
     int32 lives = entity->lives[player->playerID];
     for (; charID > 0; ++cID) charID >>= 1;
-    entity->lifeIconsData.frameID = cID;
+    entity->lifeIconAnimator.frameID = cID;
     if (cID < 0) {
-        entity->lifeIconsData.frameID = entity->lifeFrameIDs[player->playerID];
+        entity->lifeIconAnimator.frameID = entity->lifeFrameIDs[player->playerID];
         lives                         = lives - 1;
     }
     else {
@@ -256,12 +256,12 @@ void HUD_Draw(void)
 #else
     switch (player->characterID) {
         default:
-        case ID_SONIC: entity->lifeIconsData.frameID = 0; break;
-        case ID_TAILS: entity->lifeIconsData.frameID = 1; break;
-        case ID_KNUCKLES: entity->lifeIconsData.frameID = 2; break;
+        case ID_SONIC: entity->lifeIconAnimator.frameID = 0; break;
+        case ID_TAILS: entity->lifeIconAnimator.frameID = 1; break;
+        case ID_KNUCKLES: entity->lifeIconAnimator.frameID = 2; break;
     }
 #endif
-    RSDK.DrawSprite(&entity->lifeIconsData, &lifePos, true);
+    RSDK.DrawSprite(&entity->lifeIconAnimator, &lifePos, true);
 
 #if RETRO_USE_PLUS
     if (globals->gameMode == MODE_ENCORE) {
@@ -276,15 +276,15 @@ void HUD_Draw(void)
             int32 charID = sidekick->characterID;
             int32 id     = -1;
             for (id = -1; charID > 0; ++id) charID >>= 1;
-            entity->lifeIconsData.frameID = id;
+            entity->lifeIconAnimator.frameID = id;
             if (id >= 0 && !(HUD->stockFlashTimers[0] & 4)) {
                 if ((sidekick->state != Player_State_Die && sidekick->state != Player_State_Drown && sidekick->state != Player_State_EncoreRespawn)
                     || !sidekick->abilityValues[0]) {
-                    RSDK.DrawSprite(&entity->lifeIconsData, &lifePos, true);
+                    RSDK.DrawSprite(&entity->lifeIconAnimator, &lifePos, true);
                 }
             }
             lifePos.x += 0x140000;
-            RSDK.SetSpriteAnimation(HUD->hudMappings, 12, &entity->lifeIconsData, true, 0);
+            RSDK.SetSpriteAnimation(HUD->aniFrames, 12, &entity->lifeIconAnimator, true, 0);
 
             for (int32 i = 0; i < 3; ++i) {
                 id        = -1;
@@ -295,27 +295,27 @@ void HUD_Draw(void)
                         ++id;
                     } while (stock > 0);
                 }
-                entity->lifeIconsData.frameID = id;
+                entity->lifeIconAnimator.frameID = id;
                 if (id >= 0 && !(HUD->stockFlashTimers[i + 1] & 4))
-                    RSDK.DrawSprite(&entity->lifeIconsData, &lifePos, true);
+                    RSDK.DrawSprite(&entity->lifeIconAnimator, &lifePos, true);
 
                 lifePos.x += 0x100000;
             }
 
-            RSDK.SetSpriteAnimation(HUD->hudMappings, 2, &entity->lifeIconsData, true, 0);
+            RSDK.SetSpriteAnimation(HUD->aniFrames, 2, &entity->lifeIconAnimator, true, 0);
         }
     }
     else {
-        entity->hudElementsData.frameID = 14;
-        RSDK.DrawSprite(&entity->hudElementsData, &lifePos, true);
+        entity->hudElementsAnimator.frameID = 14;
+        RSDK.DrawSprite(&entity->hudElementsAnimator, &lifePos, true);
         lifePos.x += 0x300000;
         if (player->lives < 10)
             lifePos.x -= 0x80000;
         HUD_DrawNumbersBase10(&lifePos, lives, 0);
     }
 #else
-    entity->hudElementsData.frameID = 14;
-    RSDK.DrawSprite(&entity->hudElementsData, &lifePos, true);
+    entity->hudElementsAnimator.frameID = 14;
+    RSDK.DrawSprite(&entity->hudElementsAnimator, &lifePos, true);
     lifePos.x += 0x300000;
     if (player->lives < 10)
         lifePos.x -= 0x80000;
@@ -360,7 +360,7 @@ void HUD_Create(void *data)
     RSDK_THIS(HUD);
     if (!RSDK_sceneInfo->inEditor) {
 #if RETRO_USE_PLUS
-        ActClear->field_30 = 0;
+        ActClear->disableTimeBonus = false;
 #endif
         entity->active                  = ACTIVE_NORMAL;
         entity->visible                 = true;
@@ -389,22 +389,22 @@ void HUD_Create(void *data)
             entity->vsLifeOffsets[i].y  = entity->offsets[HUDOFF_LIFE].y;
         }
 #endif
-        RSDK.SetSpriteAnimation(HUD->hudMappings, 0, &entity->hudElementsData, true, 0);
-        RSDK.SetSpriteAnimation(HUD->hudMappings, 1, &entity->numbersData, true, 0);
-        RSDK.SetSpriteAnimation(HUD->hudMappings, 9, &entity->hyperNumbersData, true, 0);
-        RSDK.SetSpriteAnimation(HUD->hudMappings, 2, &entity->lifeIconsData, true, 0);
+        RSDK.SetSpriteAnimation(HUD->aniFrames, 0, &entity->hudElementsAnimator, true, 0);
+        RSDK.SetSpriteAnimation(HUD->aniFrames, 1, &entity->numbersAnimator, true, 0);
+        RSDK.SetSpriteAnimation(HUD->aniFrames, 9, &entity->hyperNumbersAnimator, true, 0);
+        RSDK.SetSpriteAnimation(HUD->aniFrames, 2, &entity->lifeIconAnimator, true, 0);
 #if RETRO_USE_PLUS
         if (globals->gameMode == MODE_ENCORE)
-            RSDK.SetSpriteAnimation(HUD->hudMappings, 13, &entity->playerIDData, true, 0);
+            RSDK.SetSpriteAnimation(HUD->aniFrames, 13, &entity->playerIDAnimator, true, 0);
         else
-            RSDK.SetSpriteAnimation(HUD->hudMappings, 8, &entity->playerIDData, true, 0);
-        RSDK.SetSpriteAnimation(HUD->hudMappings, 10, &entity->taData1, true, 2);
-        RSDK.SetSpriteAnimation(HUD->hudMappings, 10, &entity->taData2, true, 1);
+            RSDK.SetSpriteAnimation(HUD->aniFrames, 8, &entity->playerIDAnimator, true, 0);
+        RSDK.SetSpriteAnimation(HUD->aniFrames, 10, &entity->taAnimator1, true, 2);
+        RSDK.SetSpriteAnimation(HUD->aniFrames, 10, &entity->taAnimator2, true, 1);
 #else
-        RSDK.SetSpriteAnimation(HUD->hudMappings, 8, &entity->playerIDData, true, 0);
+        RSDK.SetSpriteAnimation(HUD->aniFrames, 8, &entity->playerIDAnimator, true, 0);
 #endif
 #if RETRO_GAMEVER != VER_100
-        RSDK.SetSpriteAnimation(HUD->superButtonMappings, 0, &entity->superButtonsData, true, 0);
+        RSDK.SetSpriteAnimation(HUD->superButtonFrames, 0, &entity->superButtonAnimator1, true, 0);
         HUD_GetSuperFrames();
 #endif
 #if RETRO_USE_PLUS
@@ -415,15 +415,15 @@ void HUD_Create(void *data)
 
 void HUD_StageLoad(void)
 {
-    HUD->hudMappings = RSDK.LoadSpriteAnimation("Global/HUD.bin", SCOPE_STAGE);
+    HUD->aniFrames = RSDK.LoadSpriteAnimation("Global/HUD.bin", SCOPE_STAGE);
 #if RETRO_GAMEVER != VER_100
-    HUD->superButtonMappings = RSDK.LoadSpriteAnimation("Global/SuperButtons.bin", SCOPE_STAGE);
+    HUD->superButtonFrames = RSDK.LoadSpriteAnimation("Global/SuperButtons.bin", SCOPE_STAGE);
 #endif
 
 #if RETRO_USE_PLUS
     HUD->sfxClick    = RSDK.GetSFX("Stage/Click.wav");
     HUD->sfxStarpost = RSDK.GetSFX("Global/StarPost.wav");
-    HUD->dwordC      = 0;
+    HUD->showTAPrompt      = false;
 
     EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
     if (globals->gameMode == MODE_COMPETITION) {
@@ -453,8 +453,8 @@ void HUD_DrawNumbersBase10(Vector2 *drawPos, int32 value, int32 maxDigits)
     }
 
     while (maxDigits--) {
-        entity->numbersData.frameID = value / mult % 10;
-        RSDK.DrawSprite(&entity->numbersData, drawPos, true);
+        entity->numbersAnimator.frameID = value / mult % 10;
+        RSDK.DrawSprite(&entity->numbersAnimator, drawPos, true);
         mult *= 10;
         drawPos->x -= 0x80000;
     }
@@ -465,8 +465,8 @@ void HUD_DrawNumbersBase16(Vector2 *drawPos, int32 value)
     RSDK_THIS(HUD);
     int32 mult = 1;
     for (int32 i = 4; i; --i) {
-        entity->numbersData.frameID = value / mult & 0xF;
-        RSDK.DrawSprite(&entity->numbersData, drawPos, true);
+        entity->numbersAnimator.frameID = value / mult & 0xF;
+        RSDK.DrawSprite(&entity->numbersAnimator, drawPos, true);
         drawPos->x -= 0x80000;
         mult *= 16;
     }
@@ -491,17 +491,17 @@ void HUD_DrawNumbersHyperRing(Vector2 *drawPos, int32 value)
 
     if (cnt > 0) {
         while (cnt--) {
-            entity->hyperNumbersData.frameID = value / mult % 10;
-            RSDK.DrawSprite(&entity->hyperNumbersData, drawPos, true);
+            entity->hyperNumbersAnimator.frameID = value / mult % 10;
+            RSDK.DrawSprite(&entity->hyperNumbersAnimator, drawPos, true);
             drawPos->x -= 0x80000;
             mult = 10 * mult2;
             mult2 *= 10;
         }
     }
 
-    entity->hyperNumbersData.frameID = 10;
+    entity->hyperNumbersAnimator.frameID = 10;
     drawPos->x -= 0x40000;
-    RSDK.DrawSprite(&entity->hyperNumbersData, drawPos, true);
+    RSDK.DrawSprite(&entity->hyperNumbersAnimator, drawPos, true);
 }
 
 #if RETRO_GAMEVER != VER_100
@@ -511,7 +511,7 @@ void HUD_GetKeyFrame(Animator *animator, int32 buttonID)
     if (API_GetConfirmButtonFlip && buttonID <= 1)
         buttonID ^= 1;
     if (val != 1 && (val <= 8 || val > 12)) {
-        RSDK.SetSpriteAnimation(HUD->superButtonMappings, val, animator, true, buttonID);
+        RSDK.SetSpriteAnimation(HUD->superButtonFrames, val, animator, true, buttonID);
     }
     else {
         EntityPlayer *player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
@@ -535,16 +535,16 @@ void HUD_GetKeyFrame(Animator *animator, int32 buttonID)
         }
 
         int32 frame = UIButtonPrompt_MappingsToFrame(map);
-        RSDK.SetSpriteAnimation(HUD->superButtonMappings, 1, animator, true, frame);
+        RSDK.SetSpriteAnimation(HUD->superButtonFrames, 1, animator, true, frame);
     }
 }
 void HUD_GetSuperFrames(void)
 {
     RSDK_THIS(HUD);
-    HUD_GetKeyFrame(&entity->superButtonData1, 3);
+    HUD_GetKeyFrame(&entity->superButtonAnimator2, 3);
 #if RETRO_USE_PLUS
-    HUD_GetKeyFrame(&entity->taData3, 3);
-    HUD_GetKeyFrame(&entity->taData4, 4);
+    HUD_GetKeyFrame(&entity->taAnimator3, 3);
+    HUD_GetKeyFrame(&entity->taAnimator4, 4);
 #endif
 }
 #endif
@@ -632,16 +632,16 @@ void HUD_State_GoOffScreen(void)
 
     if (offset[HUDOFF_LIFE]->x < -0x500000) {
         if (globals->gameMode == MODE_COMPETITION) {
-            *statePtr = NULL;
+            *statePtr = StateMachine_None;
             Competition_CalculateScore(entity->screenID, 1);
             EntityGameOver *gameOver   = RSDK_GET_ENTITY(entity->screenID + Player->playerCount, GameOver);
             EntityCompetition *manager = (EntityCompetition *)Competition->activeEntity;
             if (!manager || manager->timer) {
-                RSDK.ResetEntityPtr(gameOver, GameOver->objectID, NULL);
+                RSDK.ResetEntityPtr(gameOver, GameOver->objectID, intToVoid(false));
                 gameOver->playerID = entity->screenID;
             }
             else {
-                RSDK.ResetEntityPtr(gameOver, GameOver->objectID, intToVoid(1));
+                RSDK.ResetEntityPtr(gameOver, GameOver->objectID, intToVoid(true));
                 RSDK.SetGameMode(ENGINESTATE_FROZEN);
                 RSDK_sceneInfo->timeEnabled = false;
                 gameOver->playerID          = entity->screenID;
@@ -668,10 +668,10 @@ void HUD_State_GoOffScreen(void)
 void HUD_EditorDraw(void)
 {
     RSDK_THIS(HUD);
-    RSDK.SetSpriteAnimation(HUD->hudMappings, 0, &entity->hudElementsData, true, 0);
-    RSDK.DrawSprite(&entity->hudElementsData, NULL, false);
+    RSDK.SetSpriteAnimation(HUD->aniFrames, 0, &entity->hudElementsAnimator, true, 0);
+    RSDK.DrawSprite(&entity->hudElementsAnimator, NULL, false);
 }
 
-void HUD_EditorLoad(void) { HUD->hudMappings = RSDK.LoadSpriteAnimation("Editor/EditorIcons.bin", SCOPE_STAGE); }
+void HUD_EditorLoad(void) { HUD->aniFrames = RSDK.LoadSpriteAnimation("Editor/EditorIcons.bin", SCOPE_STAGE); }
 
 void HUD_Serialize(void) {}

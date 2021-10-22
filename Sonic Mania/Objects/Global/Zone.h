@@ -13,16 +13,16 @@
 typedef struct {
     RSDK_OBJECT
     int32 actID;
-    void (*stageFinishCallback)(void);
+    StateMachine(stageFinishCallback);
     bool32 forcePlayerOnScreenFlag;
-    void (*callbacks[0x10])(void);
+    StateMachine(callbacks[0x10]);
 #if RETRO_USE_PLUS
     int32 callbackCount;
-    int32 playerFlags[4];
+    int32 playerFlags[PLAYER_MAX];
     uint8 playerID;
     uint8 playerCount;
-    uint8 playerIDs[4];
-    uint8 playerIDs2[4];
+    uint8 playerIDs[PLAYER_MAX];
+    uint8 playerIDs2[PLAYER_MAX];
 #else
     int32 field_94;
     int32 callbackCount;
@@ -46,10 +46,10 @@ typedef struct {
     int32 playerBoundActiveR[PLAYER_MAX];
     int32 playerBoundActiveT[PLAYER_MAX];
     int32 playerBoundActiveB[PLAYER_MAX];
-    int32 field_154;
+    int32 autoScrollSpeed;
     bool32 atlReloadFlag;
-    bool32 field_15C;
-    void (*timeOverState)(void);
+    bool32 gotTimeOver;
+    StateMachine(timeOverCallback);
     uint16 fgLayers;
     uint16 fgLow;
     uint16 fgHigh;

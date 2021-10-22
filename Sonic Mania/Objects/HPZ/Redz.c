@@ -213,8 +213,7 @@ void Redz_State_Flame(void)
     foreach_active(Player, player)
     {
         if (Player_CheckCollisionTouch(player, entity, &Redz->hitboxFlame)) {
-            if (player->shield != SHIELD_FIRE)
-                Player_CheckHit(player, entity);
+            Player_CheckElementalHit(player, entity, SHIELD_FIRE);
         }
     }
 

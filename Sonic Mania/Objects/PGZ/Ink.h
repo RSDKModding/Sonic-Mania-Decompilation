@@ -6,7 +6,7 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    uint8 playerTypes[4];
+    uint8 playerColours[4];
     uint16 spriteIndex;
     Hitbox hitbox;
     Hitbox hitbox2;
@@ -20,7 +20,7 @@ typedef struct {
     uint8 inkedPlayers;
     Animator animator1;
     Animator animator2;
-    Animator data3;
+    Animator animator3;
 } EntityInk;
 
 // Object Struct

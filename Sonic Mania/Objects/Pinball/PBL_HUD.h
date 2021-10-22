@@ -21,7 +21,7 @@ typedef struct {
     TextInfo text;
     Animator animator1;
     Animator animator2;
-    Animator data3;
+    Animator animator3;
 } EntityPBL_HUD;
 
 // Object Struct

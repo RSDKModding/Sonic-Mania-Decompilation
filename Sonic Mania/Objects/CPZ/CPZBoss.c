@@ -68,12 +68,7 @@ bool32 CPZBoss_Unknown1(void)
     if (!RSDK.CheckOnScreen(RSDK_sceneInfo->entity, 0)) {
         RSDK.SetDrawLayerProperties(Zone->drawOrderHigh, false, NULL);
         RSDK.SetDrawLayerProperties(Zone->drawOrderHigh + 1, false, NULL);
-        if (Music_CheckMusicStack()) {
-            Music->nextTrack = TRACK_STAGE;
-        }
-        else {
-            Music_TransitionTrack(TRACK_STAGE, 0.0125);
-        }
+        Music_TransitionTrack(TRACK_STAGE, 0.0125);
         // v3                 = 48;
         // PuyoBean->field_20 = 0;
         // PuyoBean->field_28 = 0;
@@ -372,12 +367,7 @@ void CPZBoss_State_PlayerWin(void)
             entity->state  = CPZBoss_State_Unknown10;
             RSDK.SetSpriteAnimation(CPZBoss->playerFrames, 1, &entity->playerAnimator, true, 0);
             RSDK.SetSpriteAnimation(CPZBoss->aniFrames, 6, &entity->animator1, false, 0);
-            if (Music_CheckMusicStack()) {
-                Music->nextTrack = 0;
-            }
-            else {
-                Music_TransitionTrack(TRACK_STAGE, 0.0125);
-            }
+            Music_TransitionTrack(TRACK_STAGE, 0.0125);
 
             // RSDK.PlaySfx(PuyoBean->field_DB4, 0, 255);
             foreach_active(TippingPlatform, platform)

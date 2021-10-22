@@ -12,12 +12,12 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    int32 field_5C;
-    bool32 field_60;
+    int32 type;
+    bool32 isProjectile;
     int32 timer;
-    int32 timer2;
+    int32 hurtDelay;
     int32 gravityStrength;
-    int32 field_70;
+    int32 rotationSpeed;
     Hitbox hitbox;
     Animator animator;
 } EntityProjectile;
@@ -37,8 +37,8 @@ void Projectile_EditorLoad(void);
 void Projectile_Serialize(void);
 
 // Extra Entity Functions
-void Projectile_Unknown1(void);
-void Projectile_Unknown2(void);
-void Projectile_Unknown3(void);
+void Projectile_CheckPlayerCollisions(void);
+void Projectile_State_Move(void);
+void Projectile_State_MoveGravity(void);
 
 #endif //!OBJ_PROJECTILE_H

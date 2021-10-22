@@ -23,7 +23,7 @@ void SP500_Draw(void)
     RSDK.DrawSprite(&entity->animator, &drawPos, false);
 
     entity->animator.frameID = 3;
-    int32 pos                  = drawPos.x;
+    int32 pos                = drawPos.x;
     for (int32 l = 0; l < entity->len; ++l) {
         RSDK.DrawSprite(&entity->animator, &drawPos, false);
         pos = drawPos.x + 0x100000;
@@ -44,12 +44,12 @@ void SP500_Draw(void)
     RSDK.DrawSprite(&entity->animator, &drawPos, false);
 
     entity->inkEffect = INK_ADD;
-    if (entity->flagA) {
+    if (entity->successFlag) {
         entity->animator.frameID = 4;
         RSDK.DrawSprite(&entity->animator, &drawPos, false);
     }
 
-    if (entity->flagB) {
+    if (entity->failFlag) {
         entity->animator.frameID = 5;
         RSDK.DrawSprite(&entity->animator, &drawPos, false);
     }
@@ -150,8 +150,8 @@ void SP500_Unknown1(void)
                     player->groundVel       = 0;
                     player->velocity.x      = 0;
                     player->velocity.y      = 0;
-                    player->nextAirState    = 0;
-                    player->nextGroundState = 0;
+                    player->nextAirState    = StateMachine_None;
+                    player->nextGroundState = StateMachine_None;
                     player->state           = Player_State_None;
                 }
             }
@@ -178,19 +178,19 @@ void SP500_Unknown2(void)
     RSDK_THIS(SP500);
     SP500_Unknown1();
     if (Zone->timer & 0x20) {
-        entity->flagA = true;
-        entity->flagB = true;
+        entity->successFlag = true;
+        entity->failFlag    = true;
     }
     else {
-        entity->flagA = false;
-        entity->flagB = false;
+        entity->successFlag = false;
+        entity->failFlag    = false;
     }
 
     if (entity->activePlayers) {
         RSDK.PlaySfx(SP500->sfxButton2, false, 255);
-        entity->flagA = false;
-        entity->flagB = false;
-        entity->state = SP500_Unknown4;
+        entity->successFlag = false;
+        entity->failFlag    = false;
+        entity->state       = SP500_Unknown4;
     }
 }
 
@@ -203,14 +203,14 @@ void SP500_Unknown4(void)
     SP500_Unknown1();
     if (++entity->timer >= 60) {
         entity->timer = 0;
-        if (Ink && Ink->playerTypes[0]) {
-            entity->field_AC = Ink->playerTypes[0] - 1;
+        if (Ink && Ink->playerColours[0]) {
+            entity->inkColour = Ink->playerColours[0] - 1;
             RSDK.PlaySfx(SP500->sfxBeep4, false, 255);
-            entity->flagA      = true;
-            entity->active     = ACTIVE_NORMAL;
-            entity->state      = SP500_Unknown6;
-            EntitySP500 *child = CREATE_ENTITY(SP500, intToVoid(1), entity->position.x, entity->position.y);
-            child->xOffset     = entity->position.x + ((entity->len - 3) << 19);
+            entity->successFlag = true;
+            entity->active      = ACTIVE_NORMAL;
+            entity->state       = SP500_Unknown6;
+            EntitySP500 *child  = CREATE_ENTITY(SP500, intToVoid(1), entity->position.x, entity->position.y);
+            child->xOffset      = entity->position.x + ((entity->len - 3) << 19);
             if (entity->printDir)
                 child->yOffset = entity->position.y + (entity->height << 19);
             else
@@ -222,8 +222,8 @@ void SP500_Unknown4(void)
         }
         else {
             RSDK.PlaySfx(SP500->sfxFail, false, 255);
-            entity->flagB = true;
-            entity->state = SP500_Unknown5;
+            entity->failFlag = true;
+            entity->state    = SP500_Unknown5;
         }
     }
 }
@@ -274,21 +274,21 @@ void SP500_Unknown7(void)
     if (entity->field_A8 == entity->startDir) {
         entity->offset += entity->velocity.x;
         if (entity->offset >= entity->offR) {
-            entity->state = SP500_Unknown8;
-            entity->flagA = true;
+            entity->state       = SP500_Unknown8;
+            entity->successFlag = true;
         }
     }
     else {
         entity->offset -= entity->velocity.x;
         if (entity->offset <= entity->offL) {
-            entity->state = SP500_Unknown8;
-            entity->flagA = true;
+            entity->state       = SP500_Unknown8;
+            entity->successFlag = true;
         }
     }
 
     uint16 tile = 0xFFFF;
 
-    switch (entity->field_AC) {
+    switch (entity->inkColour) {
         default: break;
         case 0: tile = RSDK.GetTileInfo(SP500->printLayerID, entity->srcC.x + (entity->offset >> 20), entity->srcC.y + entity->field_8C); break;
         case 1: tile = RSDK.GetTileInfo(SP500->printLayerID, entity->srcM.x + (entity->offset >> 20), entity->srcM.y + entity->field_8C); break;
@@ -297,7 +297,7 @@ void SP500_Unknown7(void)
 
     if (tile != 0xFFFF) {
         entity->position.y += 0x100000;
-        entity->flagA = (Zone->timer >> 1) & 1;
+        entity->successFlag = (Zone->timer >> 1) & 1;
         RSDK.SetTileInfo(Zone->fgLow, (entity->position.x + entity->offset) >> 20, entity->position.y >> 20, tile);
 
         int32 posY = entity->position.y;
@@ -316,8 +316,8 @@ void SP500_Unknown7(void)
         SP500_Unknown1();
     }
     else {
-        entity->velocity.x = 0x100000;
-        entity->flagA      = true;
+        entity->velocity.x  = 0x100000;
+        entity->successFlag = true;
         SP500_Unknown1();
     }
 }
@@ -368,7 +368,7 @@ void SP500_Unknown9(void)
                     case ID_TAILS: RSDK.CopyPalette(6, 70, 0, 70, 6); break;
                     case ID_KNUCKLES: RSDK.CopyPalette(6, 80, 0, 80, 6); break;
                 }
-                Ink->playerTypes[i] = 0;
+                Ink->playerColours[i] = 0;
             }
             EntityPlayer *player1      = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
             player1->camera->targetPtr = (Entity *)player1;
@@ -400,8 +400,8 @@ void SP500_Unknown9(void)
                     entity->playerTimers[i] = 15;
                 }
             }
-            entity->flagA = false;
-            entity->state = SP500_Unknown3;
+            entity->successFlag = false;
+            entity->state       = SP500_Unknown3;
             break;
     }
     SP500_Unknown1();

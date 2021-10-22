@@ -210,8 +210,8 @@ void ERZGunner_CheckPlayerExplosionCollisions(void)
         foreach_active(Explosion, explosion)
         {
             if (explosion->animator.frameID <= 6) {
-                if (player->shield != SHIELD_FIRE && Player_CheckCollisionTouch(player, explosion, &ERZGunner->hitbox3)) {
-                    Player_CheckHit(player, explosion);
+                if (Player_CheckCollisionTouch(player, explosion, &ERZGunner->hitbox3)) {
+                    Player_CheckElementalHit(player, explosion, SHIELD_FIRE);
                 }
             }
         }

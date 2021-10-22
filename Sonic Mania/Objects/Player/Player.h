@@ -471,6 +471,8 @@ bool32 Player_CheckCollisionPlatform(EntityPlayer *player, void *entity, Hitbox 
 bool32 Player_CheckHit(EntityPlayer *player, void *entity);
 // the same as above, though the knockback dir is gotten from the player dir rather the direction of the distance
 bool32 Player_CheckHitFlip(EntityPlayer *player);
+// Hits the player if not invulnerable and the player's shield doesn't match shield, returns true if player was hit
+bool32 Player_CheckElementalHit(EntityPlayer *player, void *entity, int shield);
 //returns true if the player is in an "attacking" state
 bool32 Player_CheckAttacking(EntityPlayer *player, void *e);
 //checks if the player collided with an entity, this collision differs from the touch one above since it uses hammerdrop & instashield if appropriate

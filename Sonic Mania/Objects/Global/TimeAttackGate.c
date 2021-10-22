@@ -183,7 +183,7 @@ void TimeAttackGate_HandleStart(void)
 
     if (MathHelpers_Unknown12(player1->position.x, player1->position.y, entity->playerPos.x, entity->playerPos.y, entity->position.x, bottom,
                               entity->position.x, top)) {
-        entity->field_84 = 1;
+        entity->field_84 = true;
         if (!entity->finishLine) {
             if (!TimeAttackGate->started) {
                 RSDK.PlaySfx(TimeAttackGate->sfxSignpost, false, 255);
@@ -225,7 +225,7 @@ void TimeAttackGate_Unknown1(void)
 {
     if (!TimeAttackGate->debugEnabled) {
         if (ActClear)
-            ActClear->field_10 = 1;
+            ActClear->finishedSavingGame = true;
         if (UIWaitSpinner)
             UIWaitSpinner_Wait();
 
@@ -245,7 +245,7 @@ void TimeAttackGate_Unknown1(void)
 void TimeAttackGate_LeaderboardCB(int32 status)
 {
     if (ActClear)
-        ActClear->field_10 = 0;
+        ActClear->finishedSavingGame = false;
     if (UIWaitSpinner)
         UIWaitSpinner_Wait2();
 }
@@ -302,7 +302,7 @@ void TimeAttackGate_State_Main(void)
                     foreach_active(HUD, hud)
                     {
                         if (hud)
-                            hud->field_150 = 1;
+                            hud->enableTimeFlash = true;
                         foreach_break;
                     }
                 }
@@ -322,7 +322,7 @@ void TimeAttackGate_State_Main(void)
                         foreach_active(HUD, hud)
                         {
                             if (hud)
-                                hud->field_150 = 1;
+                                hud->enableTimeFlash = true;
                             foreach_break;
                         }
                     }
@@ -336,7 +336,7 @@ void TimeAttackGate_State_Main(void)
     if (entity->finishLine) {
         TimeAttackGate_CheckTouch();
         if (entity->field_84) {
-            TimeAttackGate->field_1C = 1;
+            TimeAttackGate->field_1C = true;
             if (entity->timer >= 180) {
                 if (entity->timer == 180) {
                     Music_PlayTrack(TRACK_ACTCLEAR);

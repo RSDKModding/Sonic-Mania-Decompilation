@@ -24,7 +24,7 @@ void BuzzBomber_Draw(void)
         entity->inkEffect = INK_ALPHA;
         RSDK.DrawSprite(&entity->animator2, NULL, false);
         entity->inkEffect = INK_NONE;
-        RSDK.DrawSprite(&entity->data3, NULL, false);
+        RSDK.DrawSprite(&entity->animator3, NULL, false);
     }
 }
 
@@ -56,7 +56,7 @@ void BuzzBomber_Create(void *data)
         entity->updateRange.y = 0x200000;
         RSDK.SetSpriteAnimation(BuzzBomber->spriteIndex, 4, &entity->animator1, true, 0);
         RSDK.SetSpriteAnimation(0xFFFF, 0, &entity->animator2, true, 0);
-        RSDK.SetSpriteAnimation(0xFFFF, 0, &entity->data3, true, 0);
+        RSDK.SetSpriteAnimation(0xFFFF, 0, &entity->animator3, true, 0);
         entity->state = BuzzBomber_Unknown6;
     }
     else {
@@ -65,7 +65,7 @@ void BuzzBomber_Create(void *data)
         entity->updateRange.y = 0x800000;
         RSDK.SetSpriteAnimation(BuzzBomber->spriteIndex, 0, &entity->animator1, true, 0);
         RSDK.SetSpriteAnimation(BuzzBomber->spriteIndex, 2, &entity->animator2, true, 0);
-        RSDK.SetSpriteAnimation(BuzzBomber->spriteIndex, 3, &entity->data3, true, 0);
+        RSDK.SetSpriteAnimation(BuzzBomber->spriteIndex, 3, &entity->animator3, true, 0);
         entity->state = BuzzBomber_Unknown2;
         entity->alpha = 0xC0;
     }
@@ -132,7 +132,7 @@ void BuzzBomber_Unknown1(void)
             if (Player_CheckCollisionTouch(player, entity, &entity->rangeHitbox)) {
                 entity->field_64 = 1;
                 entity->timer    = 90;
-                RSDK.SetSpriteAnimation(0xFFFF, 0, &entity->data3, true, 0);
+                RSDK.SetSpriteAnimation(0xFFFF, 0, &entity->animator3, true, 0);
                 entity->state = BuzzBomber_Unknown5;
             }
         }
@@ -163,13 +163,13 @@ void BuzzBomber_Unknown3(void)
         entity->timer      = 60;
         entity->velocity.x = -entity->velocity.x;
         entity->field_64   = 0;
-        RSDK.SetSpriteAnimation(0xFFFF, 0, &entity->data3, true, 0);
+        RSDK.SetSpriteAnimation(0xFFFF, 0, &entity->animator3, true, 0);
         entity->state = BuzzBomber_Unknown4;
     }
 
     RSDK.ProcessAnimation(&entity->animator1);
     RSDK.ProcessAnimation(&entity->animator2);
-    RSDK.ProcessAnimation(&entity->data3);
+    RSDK.ProcessAnimation(&entity->animator3);
     BuzzBomber_Unknown1();
     BuzzBomber_CheckOnScreen();
 }
@@ -180,7 +180,7 @@ void BuzzBomber_Unknown4(void)
 
     if (!--entity->timer) {
         entity->timer = 128;
-        RSDK.SetSpriteAnimation(BuzzBomber->spriteIndex, 3, &entity->data3, true, 0);
+        RSDK.SetSpriteAnimation(BuzzBomber->spriteIndex, 3, &entity->animator3, true, 0);
         entity->state = BuzzBomber_Unknown3;
     }
     RSDK.ProcessAnimation(&entity->animator1);
@@ -223,7 +223,7 @@ void BuzzBomber_Unknown5(void)
     else if (!entity->timer) {
         RSDK.SetSpriteAnimation(BuzzBomber->spriteIndex, 0, &entity->animator1, true, 0);
         entity->timer = 128;
-        RSDK.SetSpriteAnimation(BuzzBomber->spriteIndex, 3, &entity->data3, true, 0);
+        RSDK.SetSpriteAnimation(BuzzBomber->spriteIndex, 3, &entity->animator3, true, 0);
         entity->state = BuzzBomber_Unknown3;
     }
 }

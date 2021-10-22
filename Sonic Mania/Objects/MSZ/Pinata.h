@@ -5,12 +5,19 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    Hitbox hitbox;
+    uint16 aniFrames;
+    uint16 sfxPinata;
 } ObjectPinata;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    StateMachine(state);
+    bool32 respawn;
+    int priority;
+    Animator animator;
 } EntityPinata;
 
 // Object Struct
@@ -28,6 +35,10 @@ void Pinata_EditorLoad(void);
 void Pinata_Serialize(void);
 
 // Extra Entity Functions
+void Pinata_DebugDraw(void);
+void Pinata_DebugSpawn(void);
 
+void Pinata_State_CheckPlayerCollisions(void);
+void Pinata_State_Respawn(void);
 
 #endif //!OBJ_PINATA_H

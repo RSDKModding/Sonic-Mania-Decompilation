@@ -82,7 +82,7 @@ void Acetone_Unknown2(void)
                 case ID_TAILS: RSDK.CopyPalette(6, 70, 0, 70, 6); break;
                 case ID_KNUCKLES: RSDK.CopyPalette(6, 80, 0, 80, 6); break;
             }
-            Ink->playerTypes[RSDK.GetEntityID(player)] = 0;
+            Ink->playerColours[RSDK.GetEntityID(player)] = 0;
         }
     }
 }

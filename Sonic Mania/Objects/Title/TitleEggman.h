@@ -18,8 +18,8 @@ typedef struct {
     Vector2 startPos;
     Animator animator1;
     Animator animator2;
-    Animator data3;
-    Animator data4;
+    Animator animator3;
+    Animator animator4;
 } EntityTitleEggman;
 
 // Object Struct

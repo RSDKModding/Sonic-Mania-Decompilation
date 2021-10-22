@@ -61,7 +61,7 @@ void MetalSonic_Create(void* data)
             destroyEntity(entity);
         }
         else {
-            Zone->field_154          = 0;
+            Zone->autoScrollSpeed          = 0;
             entity->active          = ACTIVE_BOUNDS;
             entity->drawFX          = FX_FLIP | FX_ROTATE;
             entity->visible         = false;

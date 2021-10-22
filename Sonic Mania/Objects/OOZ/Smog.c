@@ -33,7 +33,7 @@ void Smog_Update(void)
                 foreach_all(HUD, hud)
                 {
                     if (hud)
-                        hud->field_154 = 1;
+                        hud->enableRingFlash = true;
                     foreach_break;
                 }
                 if (entity->timer == 60 && !player->sidekick && player->rings > 0)

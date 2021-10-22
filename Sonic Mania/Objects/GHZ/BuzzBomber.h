@@ -23,7 +23,7 @@ typedef struct {
     Entity *projectile;
     Animator animator1;
     Animator animator2;
-    Animator data3;
+    Animator animator3;
     Hitbox rangeHitbox;
 } EntityBuzzBomber;
 

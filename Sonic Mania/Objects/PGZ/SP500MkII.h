@@ -20,11 +20,11 @@ typedef struct {
     uint8 yDir;
     int32 printRows;
     int32 length;
-    int32 field_68;
+    int32 printRowID;
     int32 field_6C;
     bool32 field_70;
     bool32 field_74;
-    int32 field_78;
+    bool32 printStarted;
     int32 field_7C;
     uint8 activePlayers;
     int32 field_84;
@@ -57,7 +57,7 @@ void SP500MkII_Unknown1(void);
 void SP500MkII_Unknown2(void);
 void SP500MkII_Unknown3(void);
 
-void SP500MkII_Unknown4(void);
+void SP500MkII_CheckPlayerCollisions(void);
 void SP500MkII_Unknown5(void);
 void SP500MkII_Unknown6(void);
 void SP500MkII_Unknown7(void);

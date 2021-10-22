@@ -15,7 +15,7 @@ void BSS_HUD_Draw(void)
 
     drawPos.y             = 0xD0000;
     drawPos.x             = (RSDK_screens->centerX - 141) << 16;
-    RSDK.DrawSprite(&entity->animData1, &drawPos, true);
+    RSDK.DrawSprite(&entity->animator1, &drawPos, true);
 
     drawPos.x += 0x250000;
     drawPos.y = 0x110000;
@@ -23,7 +23,7 @@ void BSS_HUD_Draw(void)
 
     drawPos.x = (RSDK_screens->centerX + 64) << 16;
     drawPos.y = 0xD0000;
-    RSDK.DrawSprite(&entity->animData2, &drawPos, true);
+    RSDK.DrawSprite(&entity->animator2, &drawPos, true);
 
     drawPos.x += 0x380000;
     drawPos.y = 0x110000;
@@ -59,9 +59,9 @@ void BSS_HUD_Create(void *data)
         entity->drawOrder     = DRAWLAYER_COUNT - 1;
         entity->updateRange.x = 0x800000;
         entity->updateRange.y = 0x800000;
-        RSDK.SetSpriteAnimation(BSS_HUD->spriteIndex, 0, &entity->animData1, true, 0);
-        RSDK.SetSpriteAnimation(BSS_HUD->spriteIndex, 0, &entity->animData2, true, 1);
-        RSDK.SetSpriteAnimation(BSS_HUD->spriteIndex, 1, &entity->numbersData, true, 0);
+        RSDK.SetSpriteAnimation(BSS_HUD->spriteIndex, 0, &entity->animator1, true, 0);
+        RSDK.SetSpriteAnimation(BSS_HUD->spriteIndex, 0, &entity->animator2, true, 1);
+        RSDK.SetSpriteAnimation(BSS_HUD->spriteIndex, 1, &entity->numbersAnimator, true, 0);
     }
 }
 
@@ -76,8 +76,8 @@ void BSS_HUD_DrawNumbers(int32 value, Vector2 *drawPos)
     RSDK_THIS(BSS_HUD);
     int32 mult              = 1;
     for (int32 i = 0; i < 3; ++i) {
-        entity->numbersData.frameID = value / mult % 10;
-        RSDK.DrawSprite(&entity->numbersData, drawPos, true);
+        entity->numbersAnimator.frameID = value / mult % 10;
+        RSDK.DrawSprite(&entity->numbersAnimator, drawPos, true);
         drawPos->x -= 0x100000;
         mult *= 10;
     }

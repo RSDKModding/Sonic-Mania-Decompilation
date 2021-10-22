@@ -355,7 +355,7 @@ void Player_StaticUpdate(void)
         foreach_all(HUD, hud)
         {
             if (hud)
-                hud->field_154 = true;
+                hud->enableRingFlash = true;
             foreach_break;
         }
         --Player->superDashCooldown;
@@ -1950,7 +1950,7 @@ void Player_HandleDeath(EntityPlayer *player)
             if (globals->gameMode != MODE_ENCORE) {
 #endif
                 if (player->lives) {
-                    if (Zone->field_15C) {
+                    if (Zone->gotTimeOver) {
                         player->objectID        = TYPE_BLANK;
                         EntitySaveGame *saveRAM = SaveGame->saveRAM;
                         if (globals->gameMode == MODE_COMPETITION) {
@@ -1968,7 +1968,7 @@ void Player_HandleDeath(EntityPlayer *player)
 #endif
                         }
                         else if (saveRAM) {
-                            RSDK.ResetEntitySlot(SLOT_GAMEOVER, GameOver->objectID, intToVoid(1));
+                            RSDK.ResetEntitySlot(SLOT_GAMEOVER, GameOver->objectID, intToVoid(true));
                             saveRAM->lives    = player->lives;
                             saveRAM->score    = player->score;
                             saveRAM->score1UP = player->score1UP;
@@ -2066,7 +2066,7 @@ void Player_HandleDeath(EntityPlayer *player)
                     }
                     else {
                         EntityGameOver *gameOver = RSDK_GET_ENTITY(SLOT_GAMEOVER, GameOver);
-                        RSDK.ResetEntityPtr(gameOver, GameOver->objectID, 0);
+                        RSDK.ResetEntityPtr(gameOver, GameOver->objectID, intToVoid(false));
                         gameOver->playerID = RSDK.GetEntityID(player);
                         GameOver->activeScreens |= 1 << screenID;
                         RSDK.SetGameMode(ENGINESTATE_FROZEN);
@@ -2094,7 +2094,7 @@ void Player_HandleDeath(EntityPlayer *player)
                         player->camera->targetPtr = (Entity *)player->camera;
                     }
                     EntityGameOver *gameOver = RSDK_GET_ENTITY(SLOT_GAMEOVER, GameOver);
-                    RSDK.ResetEntityPtr(gameOver, GameOver->objectID, 0);
+                    RSDK.ResetEntityPtr(gameOver, GameOver->objectID, intToVoid(false));
                     gameOver->playerID = RSDK.GetEntityID(player);
                     GameOver->activeScreens |= 1 << screenID;
                     RSDK.SetGameMode(ENGINESTATE_FROZEN);
@@ -2350,6 +2350,11 @@ bool32 Player_CheckHitFlip(EntityPlayer *player)
 
     Player_Hit(player);
     return true;
+}
+// Hits the player if not invulnerable and the player's shield doesn't match shield, returns true if player was hit
+bool32 Player_CheckElementalHit(EntityPlayer *player, void *entity, int shield)
+{
+    return player->shield != shield ? Player_CheckHit(player, entity) : false;
 }
 bool32 Player_CheckAttacking(EntityPlayer *player, void *e)
 {
@@ -2731,7 +2736,7 @@ void Player_HandleGroundMovement(void)
                     entity->groundVel -= entity->acceleration;
                 }
                 else {
-                    if (!entity->collisionMode && entity->groundVel > 0x40000 && !Zone->field_154) {
+                    if (!entity->collisionMode && entity->groundVel > 0x40000 && !Zone->autoScrollSpeed) {
                         entity->direction = FLIP_NONE;
                         entity->skidding  = 24;
                     }
@@ -2753,7 +2758,7 @@ void Player_HandleGroundMovement(void)
                     entity->groundVel += entity->acceleration;
                 }
                 else {
-                    if (!entity->collisionMode && entity->groundVel < -0x40000 && !Zone->field_154) {
+                    if (!entity->collisionMode && entity->groundVel < -0x40000 && !Zone->autoScrollSpeed) {
                         entity->direction = FLIP_X;
                         entity->skidding  = 24;
                     }
@@ -3994,7 +3999,7 @@ void Player_State_Spindash(void)
     if (!entity->down) {
         RSDK.SetSpriteAnimation(entity->spriteIndex, ANI_JUMP, &entity->playerAnimator, false, 0);
 
-        if (entity->camera && !Zone->field_154) {
+        if (entity->camera && !Zone->autoScrollSpeed) {
             entity->scrollDelay   = 15;
             entity->camera->state = Camera_State_VLock;
         }
@@ -4087,7 +4092,7 @@ void Player_State_Peelout(void)
     if (!entity->up) {
         RSDK.StopSFX(Player->sfx_PeelCharge);
         if (entity->abilityTimer >= 0x60000) {
-            if (entity->camera && !Zone->field_154) {
+            if (entity->camera && !Zone->autoScrollSpeed) {
                 entity->scrollDelay   = 15;
                 entity->camera->state = Camera_State_VLock;
             }
@@ -4121,7 +4126,7 @@ void Player_State_OuttaHere(void)
     else {
         Player_HandleAirMovement();
         if (entity->velocity.y > 0x100000) {
-            RSDK.ResetEntitySlot(SLOT_GAMEOVER, GameOver->objectID, NULL);
+            RSDK.ResetEntitySlot(SLOT_GAMEOVER, GameOver->objectID, intToVoid(false));
             destroyEntity(entity);
         }
     }
@@ -4129,7 +4134,7 @@ void Player_State_OuttaHere(void)
 void Player_State_Transform(void)
 {
     RSDK_THIS(Player);
-    entity->position.x += Zone->field_154;
+    entity->position.x += Zone->autoScrollSpeed;
     entity->invincibleTimer = 60;
     RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x140000, true);
     if (++entity->timer != 36) {
@@ -4318,7 +4323,7 @@ void Player_State_DropDash(void)
             }
         }
 
-        if (entity->camera && !Zone->field_154) {
+        if (entity->camera && !Zone->autoScrollSpeed) {
             entity->scrollDelay   = 8;
             entity->camera->state = Camera_State_VLock;
         }
@@ -4767,14 +4772,14 @@ void Player_State_KnuxGlideDrop(void)
             entity->camera->offsetYFlag = false;
         entity->jumpAbilityTimer = 0;
 
-        if (abs(Zone->field_154) > 0x20000) {
-            if (Zone->field_154 <= 0) {
-                entity->groundVel  = Zone->field_154 + 0x20000;
-                entity->velocity.x = Zone->field_154 + 0x20000;
+        if (abs(Zone->autoScrollSpeed) > 0x20000) {
+            if (Zone->autoScrollSpeed <= 0) {
+                entity->groundVel  = Zone->autoScrollSpeed + 0x20000;
+                entity->velocity.x = Zone->autoScrollSpeed + 0x20000;
             }
             else {
-                entity->groundVel  = Zone->field_154 - 0x20000;
-                entity->velocity.x = Zone->field_154 - 0x20000;
+                entity->groundVel  = Zone->autoScrollSpeed - 0x20000;
+                entity->velocity.x = Zone->autoScrollSpeed - 0x20000;
             }
             entity->timer = 16;
         }
@@ -4808,7 +4813,7 @@ void Player_State_GlideSlide(void)
     }
     else {
 
-        if (entity->groundVel && !Zone->field_154) {
+        if (entity->groundVel && !Zone->autoScrollSpeed) {
             if (!entity->timer)
                 RSDK.PlaySfx(Player->sfx_Slide, false, 255);
 
@@ -5140,7 +5145,7 @@ void Player_SpawnMightyHammerdropDust(int32 speed, Hitbox *hitbox)
     dust->collisionLayers = entity->collisionLayers;
     dust->tileCollisions  = 1;
     dust->animator.frameDelay += 4 * (4 - (abs(speed) >> 15));
-    dust->velocity.x = dust->groundVel = entity->velocity.x * (Zone->field_154 != 0) + (speed >> entity->isChibi);
+    dust->velocity.x = dust->groundVel = entity->velocity.x * (Zone->autoScrollSpeed != 0) + (speed >> entity->isChibi);
     if (entity->isChibi) {
         dust->drawFX |= FX_SCALE;
         dust->scale.x = 256;
@@ -5954,7 +5959,7 @@ void Player_SonicJumpAbility(void)
                             RSDK.SetSpriteAnimation(Shield->spriteIndex, 2, &shield->animator, true, 0);
                             shield->state     = Shield_State_Fire;
                             shield->direction = entity->direction;
-                            if (entity->camera && !Zone->field_154) {
+                            if (entity->camera && !Zone->autoScrollSpeed) {
                                 entity->scrollDelay   = 15;
                                 entity->camera->state = Camera_State_VLock;
                             }
@@ -6092,7 +6097,7 @@ void Player_MightyJumpAbility(void)
 
                 EntityImageTrail *trail = RSDK_GET_ENTITY(2 * Player->playerCount + RSDK.GetEntityID(entity), ImageTrail);
                 RSDK.ResetEntityPtr(trail, ImageTrail->objectID, entity);
-                if (entity->camera && !Zone->field_154) {
+                if (entity->camera && !Zone->autoScrollSpeed) {
                     entity->scrollDelay   = 8;
                     entity->camera->state = Camera_State_HLock;
                 }

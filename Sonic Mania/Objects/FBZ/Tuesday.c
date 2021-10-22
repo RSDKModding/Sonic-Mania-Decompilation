@@ -455,9 +455,7 @@ void Tuesday_Unknown3(void)
                             hitbox.left   = (child->drawPos.x - entity->position.x) >> 16;
                             hitbox.right  = 0;
                             if (Player_CheckCollisionTouch(player, entity, &hitbox)) {
-                                if (player->shield != SHIELD_LIGHTNING) {
-                                    Player_CheckHit(player, entity);
-                                }
+                                Player_CheckElementalHit(player, entity, SHIELD_LIGHTNING);
                             }
                         }
 
@@ -467,10 +465,8 @@ void Tuesday_Unknown3(void)
                             hitbox.top    = -2;
                             hitbox.bottom = 2;
                             hitbox.right  = (child->drawPos.x - entity->position.x) >> 16;
-                            if (Player_CheckCollisionTouch(player, entity, &hitbox) == 1) {
-                                if (player->shield != SHIELD_LIGHTNING) {
-                                    Player_CheckHit(player, entity);
-                                }
+                            if (Player_CheckCollisionTouch(player, entity, &hitbox)) {
+                                Player_CheckElementalHit(player, entity, SHIELD_LIGHTNING);
                             }
                         }
                     }
@@ -487,9 +483,7 @@ void Tuesday_Unknown3(void)
                                         int32 distX = abs((player->position.x - entity->position.x) >> 16);
                                         int32 distY = abs((player->position.y - entity->position.y) >> 16);
                                         if (abs(distX - distY) < 13) {
-                                            if (player->shield != SHIELD_LIGHTNING) {
-                                                Player_CheckHit(player, child);
-                                            }
+                                            Player_CheckElementalHit(player, entity, SHIELD_LIGHTNING);
                                         }
                                     }
                                 }
@@ -504,9 +498,7 @@ void Tuesday_Unknown3(void)
                                             int32 distX = abs((player->position.x - entity->position.x) >> 16);
                                             int32 distY = abs((player->position.y - entity->position.y) >> 16);
                                             if (abs(distX - distY) < 13) {
-                                                if (player->shield != SHIELD_LIGHTNING) {
-                                                    Player_CheckHit(player, child);
-                                                }
+                                                Player_CheckElementalHit(player, entity, SHIELD_LIGHTNING);
                                             }
                                         }
                                     }
@@ -521,9 +513,7 @@ void Tuesday_Unknown3(void)
                                                 int32 distX = abs((player->position.x - entity->position.x) >> 16);
                                                 int32 distY = abs((player->position.y - entity->position.y) >> 16);
                                                 if (abs(distX - distY) < 13) {
-                                                    if (player->shield != SHIELD_LIGHTNING) {
-                                                        Player_CheckHit(player, child);
-                                                    }
+                                                    Player_CheckElementalHit(player, entity, SHIELD_LIGHTNING);
                                                 }
                                             }
                                         }
@@ -538,9 +528,7 @@ void Tuesday_Unknown3(void)
                                                     int32 distX = abs((player->position.x - entity->position.x) >> 16);
                                                     int32 distY = abs((player->position.y - entity->position.y) >> 16);
                                                     if (abs(distX - distY) < 13) {
-                                                        if (player->shield != SHIELD_LIGHTNING) {
-                                                            Player_CheckHit(player, child);
-                                                        }
+                                                        Player_CheckElementalHit(player, entity, SHIELD_LIGHTNING);
                                                     }
                                                 }
                                             }
@@ -557,9 +545,7 @@ void Tuesday_Unknown3(void)
                                 hitbox.right  = 2;
                                 hitbox.bottom = (child->drawPos.y - entity->position.y) >> 16;
                                 if (Player_CheckCollisionTouch(player, entity, &hitbox)) {
-                                    if (player->shield != SHIELD_LIGHTNING) {
-                                        Player_CheckHit(player, entity);
-                                    }
+                                    Player_CheckElementalHit(player, entity, SHIELD_LIGHTNING);
                                 }
                             }
 
@@ -569,10 +555,8 @@ void Tuesday_Unknown3(void)
                                 hitbox.right  = 2;
                                 hitbox.top    = (child->drawPos.y - entity->position.y) >> 16;
                                 hitbox.bottom = 0;
-                                if (Player_CheckCollisionTouch(player, entity, &hitbox) == 1) {
-                                    if (player->shield != SHIELD_LIGHTNING) {
-                                        Player_CheckHit(player, entity);
-                                    }
+                                if (Player_CheckCollisionTouch(player, entity, &hitbox)) {
+                                    Player_CheckElementalHit(player, entity, SHIELD_LIGHTNING);
                                 }
                             }
                         }

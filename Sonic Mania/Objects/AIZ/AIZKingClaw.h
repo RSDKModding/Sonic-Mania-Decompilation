@@ -24,8 +24,8 @@ typedef struct {
     int32 field_F0;
     Animator animator1;
     Animator animator2;
-    Animator data3;
-    Animator data4;
+    Animator animator3;
+    Animator animator4;
 } EntityAIZKingClaw;
 
 // Object Struct

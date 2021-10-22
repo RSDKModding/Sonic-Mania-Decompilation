@@ -272,8 +272,7 @@ void Orbinaut_State_Orb(void)
         {
             if (entity->planeFilter <= 0 || player->collisionPlane == (uint8)((entity->planeFilter - 1) & 1)) {
                 if (Player_CheckCollisionTouch(player, entity, &Sol->hitbox2)) {
-                    if (player->shield != SHIELD_FIRE)
-                        Player_CheckHit(player, entity);
+                    Player_CheckElementalHit(player, entity, SHIELD_FIRE);
                 }
             }
         }

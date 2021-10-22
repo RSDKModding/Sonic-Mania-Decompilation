@@ -37,14 +37,14 @@ void AIZKingClaw_Draw(void)
 {
     RSDK_THIS(AIZKingClaw);
     if (RSDK_sceneInfo->currentDrawGroup == Zone->drawOrderLow) {
-        RSDK.DrawSprite(&entity->data3, &entity->clawPos, false);
+        RSDK.DrawSprite(&entity->animator3, &entity->clawPos, false);
     }
     else {
         for (int32 i = 0; i < 12; ++i) {
             RSDK.DrawSprite(&entity->animator1, &entity->ballPos[i], false);
         }
         RSDK.DrawSprite(&entity->animator2, &entity->clawPos, false);
-        RSDK.DrawSprite(&entity->data4, &entity->clawPos, false);
+        RSDK.DrawSprite(&entity->animator4, &entity->clawPos, false);
     }
 }
 
@@ -61,13 +61,13 @@ void AIZKingClaw_Create(void *data)
         entity->field_60      = entity->position.y - 0x300000;
         if (RSDK.CheckStageFolder("AIZ")) {
             entity->position.y -= 0x1000000;
-            RSDK.SetSpriteAnimation(AIZKingClaw->aniFrames, 3, &entity->data3, true, 0);
-            RSDK.SetSpriteAnimation(AIZKingClaw->aniFrames, 2, &entity->data4, true, 0);
+            RSDK.SetSpriteAnimation(AIZKingClaw->aniFrames, 3, &entity->animator3, true, 0);
+            RSDK.SetSpriteAnimation(AIZKingClaw->aniFrames, 2, &entity->animator4, true, 0);
         }
         else {
             entity->position.y -= 0x40000;
-            RSDK.SetSpriteAnimation(AIZKingClaw->aniFrames, 3, &entity->data3, true, 3);
-            RSDK.SetSpriteAnimation(AIZKingClaw->aniFrames, 2, &entity->data4, true, 3);
+            RSDK.SetSpriteAnimation(AIZKingClaw->aniFrames, 3, &entity->animator3, true, 3);
+            RSDK.SetSpriteAnimation(AIZKingClaw->aniFrames, 2, &entity->animator4, true, 3);
         }
         RSDK.SetSpriteAnimation(AIZKingClaw->aniFrames, 0, &entity->animator1, true, 0);
         RSDK.SetSpriteAnimation(AIZKingClaw->aniFrames, 1, &entity->animator2, true, 0);
@@ -115,13 +115,13 @@ void AIZKingClaw_Unknown2(void)
         RSDK.PlaySfx(AIZKingClaw->sfxClack, false, 0);
     ++entity->timer;
     if (!(entity->timer & 3)) {
-        if (entity->data4.frameID >= 3) {
+        if (entity->animator4.frameID >= 3) {
             entity->state = StateMachine_None;
         }
         else {
-            entity->data3.frameID++;
-            entity->data4.frameID++;
-            if (entity->data4.frameID == 3)
+            entity->animator3.frameID++;
+            entity->animator4.frameID++;
+            if (entity->animator4.frameID == 3)
                 RSDK.PlaySfx(AIZKingClaw->sfxWalkerLegs, false, 0);
         }
     }

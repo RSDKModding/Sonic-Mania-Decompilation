@@ -13,16 +13,16 @@ typedef enum {
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    uint16 hudMappings;
+    uint16 aniFrames;
 #if RETRO_GAMEVER != VER_100
-    uint16 superButtonMappings;
+    uint16 superButtonFrames;
 #endif
 #if RETRO_USE_PLUS
     uint16 sfxClick;
     uint16 sfxStarpost;
-    bool32 dwordC;
+    bool32 showTAPrompt;
     int32 replaySaveEnabled;
-    int32 compSession[4];
+    int32 compSession[PLAYER_MAX];
     int32 swapCooldown;
     int32 stockFlashTimers[PLAYER_MAX];
 #endif
@@ -32,9 +32,9 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    Vector2 offsets[4];
+    Vector2 offsets[PLAYER_MAX];
 #if RETRO_USE_PLUS
-    int32 lifeFrameIDs[4];
+    int32 lifeFrameIDs[PLAYER_MAX];
     int32 lives[PLAYER_MAX];
 #endif
     int32 maxOffset;
@@ -42,34 +42,34 @@ typedef struct {
     int32 superButtonPos;
 #endif
 #if RETRO_USE_PLUS
-    void (*vsStates[PLAYER_MAX])(void);
-    Vector2 vsScoreOffsets[4];
-    Vector2 vsTimeOffsets[4];
-    Vector2 vsRingsOffsets[4];
-    Vector2 vsLifeOffsets[4];
-    int32 vsMaxOffsets[4];
+    StateMachine(vsStates[PLAYER_MAX]);
+    Vector2 vsScoreOffsets[PLAYER_MAX];
+    Vector2 vsTimeOffsets[PLAYER_MAX];
+    Vector2 vsRingsOffsets[PLAYER_MAX];
+    Vector2 vsLifeOffsets[PLAYER_MAX];
+    int32 vsMaxOffsets[PLAYER_MAX];
     int32 screenID;
 #endif
 #if RETRO_GAMEVER != VER_100
     int32 timeFlashFrame;
 #endif
     int32 ringFlashFrame;
-    int32 field_150;
-    int32 field_154;
-    Animator hudElementsData;
-    Animator numbersData;
-    Animator hyperNumbersData;
-    Animator lifeIconsData;
-    Animator playerIDData;
+    bool32 enableTimeFlash;
+    bool32 enableRingFlash;
+    Animator hudElementsAnimator;
+    Animator numbersAnimator;
+    Animator hyperNumbersAnimator;
+    Animator lifeIconAnimator;
+    Animator playerIDAnimator;
 #if RETRO_GAMEVER != VER_100
-    Animator superButtonsData;
-    Animator superButtonData1;
+    Animator superButtonAnimator1;
+    Animator superButtonAnimator2;
 #endif
 #if RETRO_USE_PLUS
-    Animator taData1;
-    Animator taData4;
-    Animator taData2;
-    Animator taData3;
+    Animator taAnimator1;
+    Animator taAnimator4;
+    Animator taAnimator2;
+    Animator taAnimator3;
 #endif
 } EntityHUD;
 

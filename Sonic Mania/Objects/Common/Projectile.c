@@ -6,8 +6,8 @@ void Projectile_Update(void)
 {
     RSDK_THIS(Projectile);
     StateMachine_Run(entity->state);
-    if ((entity->drawFX & FX_ROTATE))
-        entity->rotation = (entity->rotation + entity->field_70) & 0x1FF;
+    if (entity->drawFX & FX_ROTATE)
+        entity->rotation = (entity->rotation + entity->rotationSpeed) & 0x1FF;
     RSDK.ProcessAnimation(&entity->animator);
 }
 
@@ -26,44 +26,45 @@ void Projectile_Create(void *data)
     RSDK_THIS(Projectile);
     entity->active  = ACTIVE_NORMAL;
     entity->visible = true;
-    entity->state   = (void (*)(void))data;
+    entity->state   = (Type_StateMachine)data;
 }
 
 void Projectile_StageLoad(void) {}
 
-void Projectile_Unknown1(void)
+void Projectile_CheckPlayerCollisions(void)
 {
     RSDK_THIS(Projectile);
+
     foreach_active(Player, player)
     {
-        switch (entity->field_5C) {
+        switch (entity->type) {
+            case 0: break;
             case 1:
-                if (entity->field_60) {
+                if (entity->isProjectile)
                     Player_CheckProjectileHit(player, entity);
-                }
-                else if (player->shield != SHIELD_FIRE) {
-                    Player_CheckHit(player, entity);
-                }
+                else
+                    Player_CheckElementalHit(player, entity, SHIELD_FIRE);
                 break;
             case 2:
-                if (entity->field_60) {
+                if (entity->isProjectile)
                     Player_CheckProjectileHit(player, entity);
-                }
-                else if (player->shield != SHIELD_LIGHTNING) {
-                    Player_CheckHit(player, entity);
-                }
+                else
+                    Player_CheckElementalHit(player, entity, SHIELD_LIGHTNING);
                 break;
+            case 3: break;
+            case 5: break;
+            case 6: break;
             case 4:
             case 7: {
                 int32 anim = player->playerAnimator.animationID;
-                if (entity->field_60
+                if (entity->isProjectile
 #if RETRO_USE_PLUS
                     || (player->characterID == ID_MIGHTY && (anim == ANI_CROUCH || anim == ANI_JUMP || anim == ANI_SPINDASH || anim == ANI_DROPDASH))
 #endif
                 ) {
                     if (Player_CheckProjectileHit(player, entity)) {
                         entity->gravityStrength = 0x3800;
-                        entity->state           = Projectile_Unknown3;
+                        entity->state           = Projectile_State_MoveGravity;
                     }
                 }
                 else {
@@ -71,20 +72,20 @@ void Projectile_Unknown1(void)
                 }
                 break;
             }
-            default: continue;
+            default: break;
         }
     }
 }
 
-void Projectile_Unknown2(void)
+void Projectile_State_Move(void)
 {
     RSDK_THIS(Projectile);
     entity->position.x += entity->velocity.x;
     entity->position.y += entity->velocity.y;
-    if (entity->timer2 <= 0)
-        Projectile_Unknown1();
+    if (entity->hurtDelay <= 0)
+        Projectile_CheckPlayerCollisions();
     else
-        entity->timer2--;
+        entity->hurtDelay--;
 
     if (entity->timer <= 0) {
         if (!RSDK.CheckOnScreen(entity, NULL))
@@ -96,16 +97,16 @@ void Projectile_Unknown2(void)
     }
 }
 
-void Projectile_Unknown3(void)
+void Projectile_State_MoveGravity(void)
 {
     RSDK_THIS(Projectile);
     entity->position.x += entity->velocity.x;
     entity->position.y += entity->velocity.y;
     entity->velocity.y += entity->gravityStrength;
-    if (entity->timer2 <= 0)
-        Projectile_Unknown1();
+    if (entity->hurtDelay <= 0)
+        Projectile_CheckPlayerCollisions();
     else
-        entity->timer2--;
+        entity->hurtDelay--;
 
     if (entity->timer <= 0) {
         if (!RSDK.CheckOnScreen(entity, NULL))

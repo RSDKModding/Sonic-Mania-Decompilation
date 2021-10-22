@@ -38,7 +38,7 @@ void PBL_HUD_Create(void *data)
         entity->scale.y    = 0x200;
         RSDK.SetSpriteAnimation(PBL_HUD->aniFrames, 0, &entity->animator1, true, 0);
         RSDK.SetSpriteAnimation(PBL_HUD->aniFrames, 0, &entity->animator2, true, 1);
-        RSDK.SetSpriteAnimation(PBL_HUD->aniFrames, 1, &entity->data3, true, 0);
+        RSDK.SetSpriteAnimation(PBL_HUD->aniFrames, 1, &entity->animator3, true, 0);
         RSDK.SetText(&entity->text, "", 64);
 
         if (globals->gameMode == MODE_ENCORE)
@@ -234,7 +234,7 @@ void PBL_HUD_StateDraw_Unknown2(void)
     position.x += entity->offset.x;
     position.y += entity->offset.y;
     RSDK.SetClipBounds(RSDK_sceneInfo->currentScreenID, RSDK_screens->centerX - 55, 40, RSDK_screens->centerX + 56, 58);
-    RSDK.DrawText(&entity->data3, &position, &entity->text, 0, 0, 0, 1, 0, 0, true);
+    RSDK.DrawText(&entity->animator3, &position, &entity->text, 0, 0, 0, 1, 0, 0, true);
     RSDK.SetClipBounds(RSDK_sceneInfo->currentScreenID, 0, 0, RSDK_screens->width, RSDK_screens->height);
 }
 
@@ -259,13 +259,13 @@ void PBL_HUD_StateDraw_Unknown3(void)
 
     int32 div = 10;
     while (count > 0) {
-        entity->data3.frameID = PBL_Setup->score / mult % div;
-        RSDK.DrawSprite(&entity->data3, &drawPos, true);
+        entity->animator3.frameID = PBL_Setup->score / mult % div;
+        RSDK.DrawSprite(&entity->animator3, &drawPos, true);
         drawPos.x -= 0xC0000;
         mult *= 10;
         --count;
     }
-    entity->data3.frameID = 0;
+    entity->animator3.frameID = 0;
 }
 
 void PBL_HUD_Unknown12(void)

@@ -13,8 +13,8 @@ void BurningLog_Update(void)
         {
             if (entity->velocity.y < 0x380000)
                 Player_CheckCollisionPlatform(player, entity, &BurningLog->hitbox);
-            if (Player_CheckCollisionTouch(player, entity, &BurningLog->hitbox2) && player->shield != SHIELD_FIRE) {
-                Player_CheckHit(player, entity);
+            if (Player_CheckCollisionTouch(player, entity, &BurningLog->hitbox2)) {
+                Player_CheckElementalHit(player, entity, SHIELD_FIRE);
             }
         }
     }

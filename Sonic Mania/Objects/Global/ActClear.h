@@ -13,18 +13,18 @@ typedef struct {
     uint16 sfx_Event;
 #endif
     bool32 isTimeAttack;
-    int32 field_10;
+    int32 finishedSavingGame;
 #if RETRO_USE_PLUS
-    int32 field_14;
+    int32 disableResultsInput;
 #endif
     int32 actID;
     bool32 finished;
 #if RETRO_USE_PLUS
     bool32 forceNoSave;
-    void (*bufferMove_CB)(void);
-    void (*saveReplay_CB)(void);
-    int32 field_2C;
-    int32 field_30;
+    StateMachine(bufferMove_CB);
+    StateMachine(saveReplay_CB);
+    int32 hasSavedReplay;
+    int32 disableTimeBonus;
     bool32 dword34;
 #endif
 } ObjectActClear;
@@ -51,13 +51,13 @@ typedef struct {
     Vector2 posUnknown5;
     Vector2 posUnknown6;
     void *playerPtr;
-    Animator animator1;
-    Animator animator2;
-    Animator playerNameData;
-    Animator gotThroughData;
-    Animator actNoData;
+    Animator hudElementsAnimator;
+    Animator numbersAnimator;
+    Animator playerNameAnimator;
+    Animator gotThroughAnimator;
+    Animator actNumAnimator;
 #if RETRO_USE_PLUS
-    Animator data3;
+    Animator timeElementsAnimator;
 #endif
 } EntityActClear;
 
