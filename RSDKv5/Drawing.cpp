@@ -17,6 +17,10 @@ ScreenInfo *currentScreen = NULL;
 byte startVertex_2P[2];
 byte startVertex_3P[3];
 
+#if RETRO_HARDWARE_RENDER
+bool32 forceRender = false;
+#endif
+
 char drawGroupNames[0x10][0x10]{
     "Draw Group 0", "Draw Group 1", "Draw Group 2",  "Draw Group 3",  "Draw Group 4",  "Draw Group 5",  "Draw Group 6",  "Draw Group 7",
     "Draw Group 8", "Draw Group 9", "Draw Group 10", "Draw Group 11", "Draw Group 12", "Draw Group 13", "Draw Group 14", "Draw Group 15",
@@ -128,8 +132,8 @@ bool32 InitRenderDevice()
 #else
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
 #endif
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 1);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
     SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 16);
 #endif
@@ -212,21 +216,24 @@ bool32 InitRenderDevice()
     }
 #endif
     glClearColor(0.0, 0.0, 0.0, 1.0);
+
     glDisable(GL_LIGHTING);
-    glDisable(GL_DITHER);
     glEnable(GL_TEXTURE_2D);
     glDisable(GL_DEPTH_TEST);
-
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
-
+    glDisable(GL_DITHER);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glDisable(GL_BLEND);
+    glEnable(GL_CULL_FACE);
 
-    glMatrixMode(GL_TEXTURE);
+    glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
 
     SetupViewport();
     SetupPolygonLists();
+    SetupShaders();
+
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
 
     for (int c = 0; c < 0x10000; ++c) {
         int r               = (c & 0b1111100000000000) >> 8;
@@ -402,7 +409,10 @@ void FlipScreen()
     }
 #else
     // maybe we glClear here?? idk i'm too scared
-    glOrtho(0, currentScreen->width << 4, SCREEN_YSIZE << 4, 0.0, -1.0, 1.0);
+    glClear(GL_COLOR_BUFFER_BIT);
+    forceRender = true;
+    TryRender();
+    SDL_GL_SwapWindow(engine.window);
 
 #endif
 #if RETRO_USING_SDL2
@@ -1270,6 +1280,7 @@ void DrawRectangle(int x, int y, int width, int height, uint colour, int alpha, 
             break;
     }
 
+#if RETRO_SOFTWARE_RENDER
     if (!screenRelative) {
         x = (x >> 16) - currentScreen->position.x;
         y = (y >> 16) - currentScreen->position.y;
@@ -1401,6 +1412,49 @@ void DrawRectangle(int x, int y, int width, int height, uint colour, int alpha, 
             break;
         }
     }
+#else
+    float xpos = x, ypos = y, w = width, h = height;
+    if (!screenRelative) {
+        xpos = (float)(x) / (1 << 16) - currentScreen->position.x;
+        ypos = (float)(y) / (1 << 16) - currentScreen->position.y;
+        w    = (float)(width) / (1 << 16);
+        h    = (float)(height) / (1 << 16);
+    }
+    gfxPolyList[renderCount].x            = xpos;
+    gfxPolyList[renderCount].y            = ypos;
+    gfxPolyList[renderCount].colour.color = colour;
+    gfxPolyList[renderCount].u            = 0;
+    gfxPolyList[renderCount].v            = 0;
+    renderCount++;
+
+    gfxPolyList[renderCount].x            = (xpos + w);
+    gfxPolyList[renderCount].y            = ypos;
+    gfxPolyList[renderCount].colour.color = colour;
+    gfxPolyList[renderCount].u            = 0;
+    gfxPolyList[renderCount].v            = gfxPolyList[renderCount - 1].v;
+    renderCount++;
+
+    gfxPolyList[renderCount].x            = xpos;
+    gfxPolyList[renderCount].y            = (ypos + h);
+    gfxPolyList[renderCount].colour.color = colour;
+    gfxPolyList[renderCount].u            = 0;
+    gfxPolyList[renderCount].v            = 0;
+    renderCount++;
+
+    gfxPolyList[renderCount].x            = gfxPolyList[renderCount - 2].x;
+    gfxPolyList[renderCount].y            = gfxPolyList[renderCount - 1].y;
+    gfxPolyList[renderCount].colour.color = colour;
+    gfxPolyList[renderCount].u            = 0;
+    gfxPolyList[renderCount].v            = 0;
+    renderCount++;
+
+    currentRenderState.texID = 0;
+    currentRenderState.blendMode = inkEffect;
+    currentRenderState.isGFX = true;
+    
+    TryRender();
+
+#endif
 }
 void DrawCircle(int x, int y, int radius, uint colour, int alpha, InkEffects inkEffect, bool32 screenRelative)
 {
@@ -2885,8 +2939,9 @@ void DrawSpriteFlipped(int x, int y, int width, int height, int sprX, int sprY, 
     if (width <= 0 || height <= 0)
         return;
 
-    GFXSurface *surface    = &gfxSurface[sheetID];
-    validDraw              = true;
+    GFXSurface *surface = &gfxSurface[sheetID];
+    validDraw           = true;
+#if RETRO_SOFTWARE_RENDER
     int pitch              = 0;
     int gfxPitch           = 0;
     byte *lineBuffer       = NULL;
@@ -3446,6 +3501,134 @@ void DrawSpriteFlipped(int x, int y, int width, int height, int sprX, int sprY, 
             }
             break;
     }
+#else
+    float xpos = x;
+    float ypos = y;
+    switch (direction) {
+        case FLIP_NONE:
+            gfxPolyList[renderCount].x            = xpos;
+            gfxPolyList[renderCount].y            = ypos;
+            gfxPolyList[renderCount].colour.color = 0xFFFFFFFF;
+            gfxPolyList[renderCount].u            = (sprX);
+            gfxPolyList[renderCount].v            = (sprY);
+            renderCount++;
+
+            gfxPolyList[renderCount].x            = (xpos + width);
+            gfxPolyList[renderCount].y            = ypos;
+            gfxPolyList[renderCount].colour.color = 0xFFFFFFFF;
+            gfxPolyList[renderCount].u            = (sprX + width);
+            gfxPolyList[renderCount].v            = gfxPolyList[renderCount - 1].v;
+            renderCount++;
+
+            gfxPolyList[renderCount].x            = xpos;
+            gfxPolyList[renderCount].y            = (ypos + height);
+            gfxPolyList[renderCount].colour.color = 0xFFFFFFFF;
+            gfxPolyList[renderCount].u            = gfxPolyList[renderCount - 2].u;
+            gfxPolyList[renderCount].v            = (sprY + height);
+            renderCount++;
+
+            gfxPolyList[renderCount].x            = gfxPolyList[renderCount - 2].x;
+            gfxPolyList[renderCount].y            = gfxPolyList[renderCount - 1].y;
+            gfxPolyList[renderCount].colour.color = 0xFFFFFFFF;
+            gfxPolyList[renderCount].u            = gfxPolyList[renderCount - 2].u;
+            gfxPolyList[renderCount].v            = gfxPolyList[renderCount - 1].v;
+            renderCount++;
+            break;
+        case FLIP_X:
+            gfxPolyList[renderCount].x            = xpos;
+            gfxPolyList[renderCount].y            = ypos;
+            gfxPolyList[renderCount].colour.color = 0xFFFFFFFF;
+            gfxPolyList[renderCount].u            = (sprX + width);
+            gfxPolyList[renderCount].v            = (sprY);
+            renderCount++;
+
+            gfxPolyList[renderCount].x            = (xpos + width);
+            gfxPolyList[renderCount].y            = ypos;
+            gfxPolyList[renderCount].colour.color = 0xFFFFFFFF;
+            gfxPolyList[renderCount].u            = (sprX);
+            gfxPolyList[renderCount].v            = gfxPolyList[renderCount - 1].v;
+            renderCount++;
+
+            gfxPolyList[renderCount].x            = xpos;
+            gfxPolyList[renderCount].y            = (ypos + height);
+            gfxPolyList[renderCount].colour.color = 0xFFFFFFFF;
+            gfxPolyList[renderCount].u            = gfxPolyList[renderCount - 2].u;
+            gfxPolyList[renderCount].v            = (sprY + height);
+            renderCount++;
+
+            gfxPolyList[renderCount].x            = gfxPolyList[renderCount - 2].x;
+            gfxPolyList[renderCount].y            = gfxPolyList[renderCount - 1].y;
+            gfxPolyList[renderCount].colour.color = 0xFFFFFFFF;
+            gfxPolyList[renderCount].u            = gfxPolyList[renderCount - 2].u;
+            gfxPolyList[renderCount].v            = gfxPolyList[renderCount - 1].v;
+            renderCount++;
+            break;
+        case FLIP_Y:
+            gfxPolyList[renderCount].x            = xpos;
+            gfxPolyList[renderCount].y            = ypos;
+            gfxPolyList[renderCount].colour.color = 0xFFFFFFFF;
+            gfxPolyList[renderCount].u            = (sprX);
+            gfxPolyList[renderCount].v            = (sprY + height);
+            renderCount++;
+
+            gfxPolyList[renderCount].x            = (xpos + width);
+            gfxPolyList[renderCount].y            = ypos;
+            gfxPolyList[renderCount].colour.color = 0xFFFFFFFF;
+            gfxPolyList[renderCount].u            = (sprX + width);
+            gfxPolyList[renderCount].v            = gfxPolyList[renderCount - 1].v;
+            renderCount++;
+
+            gfxPolyList[renderCount].x            = xpos;
+            gfxPolyList[renderCount].y            = (ypos + height);
+            gfxPolyList[renderCount].colour.color = 0xFFFFFFFF;
+            gfxPolyList[renderCount].u            = gfxPolyList[renderCount - 2].u;
+            gfxPolyList[renderCount].v            = (sprY);
+            renderCount++;
+
+            gfxPolyList[renderCount].x            = gfxPolyList[renderCount - 2].x;
+            gfxPolyList[renderCount].y            = gfxPolyList[renderCount - 1].y;
+            gfxPolyList[renderCount].colour.color = 0xFFFFFFFF;
+            gfxPolyList[renderCount].u            = gfxPolyList[renderCount - 2].u;
+            gfxPolyList[renderCount].v            = gfxPolyList[renderCount - 1].v;
+            renderCount++;
+            break;
+        case FLIP_XY:
+            gfxPolyList[renderCount].x            = xpos;
+            gfxPolyList[renderCount].y            = ypos;
+            gfxPolyList[renderCount].colour.color = 0xFFFFFFFF;
+            gfxPolyList[renderCount].u            = (sprX + width);
+            gfxPolyList[renderCount].v            = (sprY + height);
+            renderCount++;
+
+            gfxPolyList[renderCount].x            = (xpos + width);
+            gfxPolyList[renderCount].y            = ypos;
+            gfxPolyList[renderCount].colour.color = 0xFFFFFFFF;
+            gfxPolyList[renderCount].u            = (sprX);
+            gfxPolyList[renderCount].v            = gfxPolyList[renderCount - 1].v;
+            renderCount++;
+
+            gfxPolyList[renderCount].x            = xpos;
+            gfxPolyList[renderCount].y            = (ypos + height);
+            gfxPolyList[renderCount].colour.color = 0xFFFFFFFF;
+            gfxPolyList[renderCount].u            = gfxPolyList[renderCount - 2].u;
+            gfxPolyList[renderCount].v            = (sprY);
+            renderCount++;
+
+            gfxPolyList[renderCount].x            = gfxPolyList[renderCount - 2].x;
+            gfxPolyList[renderCount].y            = gfxPolyList[renderCount - 1].y;
+            gfxPolyList[renderCount].colour.color = 0xFFFFFFFF;
+            gfxPolyList[renderCount].u            = gfxPolyList[renderCount - 2].u;
+            gfxPolyList[renderCount].v            = gfxPolyList[renderCount - 1].v;
+            renderCount++;
+            break;
+    }
+    currentRenderState.isGFX        = true;
+    currentRenderState.texID        = surface->id;
+    currentRenderState.transparency = alpha;
+    currentRenderState.blendMode    = inkEffect;
+
+    TryRender();
+#endif
 }
 void DrawSpriteRotozoom(int x, int y, int pivotX, int pivotY, int width, int height, int sprX, int sprY, int scaleX, int scaleY, FlipFlags direction,
                         short rotation, InkEffects inkEffect, signed int alpha, int sheetID)
@@ -3477,6 +3660,7 @@ void DrawSpriteRotozoom(int x, int y, int pivotX, int pivotY, int width, int hei
     if (!(rotation & 0x1FF))
         angle = rotation & 0x1FF;
 
+#if RETRO_SOFTWARE_RENDER
     int sine        = sinVal512[angle];
     int cosine      = cosVal512[angle];
     int fullScaleXS = scaleX * sine >> 9;
@@ -3486,8 +3670,8 @@ void DrawSpriteRotozoom(int x, int y, int pivotX, int pivotY, int width, int hei
 
     int posX[4];
     int posY[4];
-    int sprXPos = (sprX - pivotX) << 16;
-    int sprYPos = (sprY - pivotY) << 16;
+    int sprxpos = (sprX - pivotX) << 16;
+    int sprypos = (sprY - pivotY) << 16;
 
     int xMax     = 0;
     int scaledX1 = 0;
@@ -3588,31 +3772,31 @@ void DrawSpriteRotozoom(int x, int y, int pivotX, int pivotY, int width, int hei
 
         int drawX = 0, drawY = 0;
         if (direction == FLIP_X) {
-            drawX     = sprXPos + deltaXLen * yLen - deltaX * xLen - (fullScaleX >> 1);
-            drawY     = sprYPos + deltaYLen * yLen + deltaY * xLen;
+            drawX     = sprxpos + deltaXLen * yLen - deltaX * xLen - (fullScaleX >> 1);
+            drawY     = sprypos + deltaYLen * yLen + deltaY * xLen;
             deltaX    = -deltaX;
             deltaXLen = -deltaXLen;
         }
         else if (!direction) {
-            drawX = sprXPos + deltaX * xLen - deltaXLen * yLen;
-            drawY = sprYPos + deltaYLen * yLen + deltaY * xLen;
+            drawX = sprxpos + deltaX * xLen - deltaXLen * yLen;
+            drawY = sprypos + deltaYLen * yLen + deltaY * xLen;
         }
 
         switch (inkEffect) {
             case INK_NONE:
                 for (int y = 0; y < yDif; ++y) {
                     ushort *palettePtr = fullPalette[*lineBuffer++];
-                    int drawXPos       = drawX;
-                    int drawYPos       = drawY;
+                    int drawxpos       = drawX;
+                    int drawypos       = drawY;
                     for (int x = 0; x < xDif; ++x) {
-                        if (drawXPos >= fullSprX && drawXPos < fullX && drawYPos >= fullSprY && drawYPos < fullY) {
-                            byte index = gfxData[((drawYPos >> 0x10) << lineSize) + (drawXPos >> 0x10)];
+                        if (drawxpos >= fullSprX && drawxpos < fullX && drawypos >= fullSprY && drawypos < fullY) {
+                            byte index = gfxData[((drawypos >> 0x10) << lineSize) + (drawxpos >> 0x10)];
                             if (index)
                                 *frameBufferPtr = palettePtr[index];
                         }
                         ++frameBufferPtr;
-                        drawXPos += deltaX;
-                        drawYPos += deltaY;
+                        drawxpos += deltaX;
+                        drawypos += deltaY;
                     }
                     drawX -= deltaXLen;
                     drawY += deltaYLen;
@@ -3622,17 +3806,17 @@ void DrawSpriteRotozoom(int x, int y, int pivotX, int pivotY, int width, int hei
             case INK_BLEND:
                 for (int y = 0; y < yDif; ++y) {
                     ushort *palettePtr = fullPalette[*lineBuffer++];
-                    int drawXPos       = drawX;
-                    int drawYPos       = drawY;
+                    int drawxpos       = drawX;
+                    int drawypos       = drawY;
                     for (int x = 0; x < xDif; ++x) {
-                        if (drawXPos >= fullSprX && drawXPos < fullX && drawYPos >= fullSprY && drawYPos < fullY) {
-                            byte index = gfxData[((drawYPos >> 0x10) << lineSize) + (drawXPos >> 0x10)];
+                        if (drawxpos >= fullSprX && drawxpos < fullX && drawypos >= fullSprY && drawypos < fullY) {
+                            byte index = gfxData[((drawypos >> 0x10) << lineSize) + (drawxpos >> 0x10)];
                             if (index)
                                 setPixelBlend(palettePtr[index], *frameBufferPtr);
                         }
                         ++frameBufferPtr;
-                        drawXPos += deltaX;
-                        drawYPos += deltaY;
+                        drawxpos += deltaX;
+                        drawypos += deltaY;
                     }
                     drawX -= deltaXLen;
                     drawY += deltaYLen;
@@ -3642,19 +3826,19 @@ void DrawSpriteRotozoom(int x, int y, int pivotX, int pivotY, int width, int hei
             case INK_ALPHA:
                 for (int y = 0; y < yDif; ++y) {
                     ushort *palettePtr = fullPalette[*lineBuffer++];
-                    int drawXPos       = drawX;
-                    int drawYPos       = drawY;
+                    int drawxpos       = drawX;
+                    int drawypos       = drawY;
                     for (int x = 0; x < xDif; ++x) {
-                        if (drawXPos >= fullSprX && drawXPos < fullX && drawYPos >= fullSprY && drawYPos < fullY) {
-                            byte index = gfxData[((drawYPos >> 0x10) << lineSize) + (drawXPos >> 0x10)];
+                        if (drawxpos >= fullSprX && drawxpos < fullX && drawypos >= fullSprY && drawypos < fullY) {
+                            byte index = gfxData[((drawypos >> 0x10) << lineSize) + (drawxpos >> 0x10)];
                             if (index) {
                                 ushort colour = palettePtr[index];
                                 setPixelAlpha(colour, *frameBufferPtr, alpha);
                             }
                         }
                         ++frameBufferPtr;
-                        drawXPos += deltaX;
-                        drawYPos += deltaY;
+                        drawxpos += deltaX;
+                        drawypos += deltaY;
                     }
                     drawX -= deltaXLen;
                     drawY += deltaYLen;
@@ -3665,19 +3849,19 @@ void DrawSpriteRotozoom(int x, int y, int pivotX, int pivotY, int width, int hei
                 ushort *blendTablePtr = &blendLookupTable[BLENDTABLE_XSIZE * alpha];
                 for (int y = 0; y < yDif; ++y) {
                     ushort *palettePtr = fullPalette[*lineBuffer++];
-                    int drawXPos       = drawX;
-                    int drawYPos       = drawY;
+                    int drawxpos       = drawX;
+                    int drawypos       = drawY;
                     for (int x = 0; x < xDif; ++x) {
-                        if (drawXPos >= fullSprX && drawXPos < fullX && drawYPos >= fullSprY && drawYPos < fullY) {
-                            byte index = gfxData[((drawYPos >> 0x10) << lineSize) + (drawXPos >> 0x10)];
+                        if (drawxpos >= fullSprX && drawxpos < fullX && drawypos >= fullSprY && drawypos < fullY) {
+                            byte index = gfxData[((drawypos >> 0x10) << lineSize) + (drawxpos >> 0x10)];
                             if (index) {
                                 ushort colour = palettePtr[index];
                                 setPixelAdditive(colour, *frameBufferPtr);
                             }
                         }
                         ++frameBufferPtr;
-                        drawXPos += deltaX;
-                        drawYPos += deltaY;
+                        drawxpos += deltaX;
+                        drawypos += deltaY;
                     }
                     drawX -= deltaXLen;
                     drawY += deltaYLen;
@@ -3689,19 +3873,19 @@ void DrawSpriteRotozoom(int x, int y, int pivotX, int pivotY, int width, int hei
                 ushort *subBlendTable = &subtractLookupTable[BLENDTABLE_XSIZE * alpha];
                 for (int y = 0; y < yDif; ++y) {
                     ushort *palettePtr = fullPalette[*lineBuffer++];
-                    int drawXPos       = drawX;
-                    int drawYPos       = drawY;
+                    int drawxpos       = drawX;
+                    int drawypos       = drawY;
                     for (int x = 0; x < xDif; ++x) {
-                        if (drawXPos >= fullSprX && drawXPos < fullX && drawYPos >= fullSprY && drawYPos < fullY) {
-                            byte index = gfxData[((drawYPos >> 0x10) << lineSize) + (drawXPos >> 0x10)];
+                        if (drawxpos >= fullSprX && drawxpos < fullX && drawypos >= fullSprY && drawypos < fullY) {
+                            byte index = gfxData[((drawypos >> 0x10) << lineSize) + (drawxpos >> 0x10)];
                             if (index) {
                                 ushort colour = palettePtr[index];
                                 setPixelSubtractive(colour, *frameBufferPtr);
                             }
                         }
                         ++frameBufferPtr;
-                        drawXPos += deltaX;
-                        drawYPos += deltaY;
+                        drawxpos += deltaX;
+                        drawypos += deltaY;
                     }
                     drawX -= deltaXLen;
                     drawY += deltaYLen;
@@ -3711,17 +3895,17 @@ void DrawSpriteRotozoom(int x, int y, int pivotX, int pivotY, int width, int hei
             }
             case INK_LOOKUP:
                 for (int y = 0; y < yDif; ++y) {
-                    int drawXPos = drawX;
-                    int drawYPos = drawY;
+                    int drawxpos = drawX;
+                    int drawypos = drawY;
                     for (int x = 0; x < xDif; ++x) {
-                        if (drawXPos >= fullSprX && drawXPos < fullX && drawYPos >= fullSprY && drawYPos < fullY) {
-                            byte index = gfxData[((drawYPos >> 0x10) << lineSize) + (drawXPos >> 0x10)];
+                        if (drawxpos >= fullSprX && drawxpos < fullX && drawypos >= fullSprY && drawypos < fullY) {
+                            byte index = gfxData[((drawypos >> 0x10) << lineSize) + (drawxpos >> 0x10)];
                             if (index)
                                 *frameBufferPtr = lookupTable[*frameBufferPtr];
                         }
                         ++frameBufferPtr;
-                        drawXPos += deltaX;
-                        drawYPos += deltaY;
+                        drawxpos += deltaX;
+                        drawypos += deltaY;
                     }
                     drawX -= deltaXLen;
                     drawY += deltaYLen;
@@ -3731,17 +3915,17 @@ void DrawSpriteRotozoom(int x, int y, int pivotX, int pivotY, int width, int hei
             case INK_MASKED:
                 for (int y = 0; y < yDif; ++y) {
                     ushort *palettePtr = fullPalette[*lineBuffer++];
-                    int drawXPos       = drawX;
-                    int drawYPos       = drawY;
+                    int drawxpos       = drawX;
+                    int drawypos       = drawY;
                     for (int x = 0; x < xDif; ++x) {
-                        if (drawXPos >= fullSprX && drawXPos < fullX && drawYPos >= fullSprY && drawYPos < fullY) {
-                            byte index = gfxData[((drawYPos >> 0x10) << lineSize) + (drawXPos >> 0x10)];
+                        if (drawxpos >= fullSprX && drawxpos < fullX && drawypos >= fullSprY && drawypos < fullY) {
+                            byte index = gfxData[((drawypos >> 0x10) << lineSize) + (drawxpos >> 0x10)];
                             if (index && *frameBufferPtr == maskColour)
                                 *frameBufferPtr = palettePtr[index];
                         }
                         ++frameBufferPtr;
-                        drawXPos += deltaX;
-                        drawYPos += deltaY;
+                        drawxpos += deltaX;
+                        drawypos += deltaY;
                     }
                     drawX -= deltaXLen;
                     drawY += deltaYLen;
@@ -3751,17 +3935,17 @@ void DrawSpriteRotozoom(int x, int y, int pivotX, int pivotY, int width, int hei
             case INK_UNMASKED:
                 for (int y = 0; y < yDif; ++y) {
                     ushort *palettePtr = fullPalette[*lineBuffer++];
-                    int drawXPos       = drawX;
-                    int drawYPos       = drawY;
+                    int drawxpos       = drawX;
+                    int drawypos       = drawY;
                     for (int x = 0; x < xDif; ++x) {
-                        if (drawXPos >= fullSprX && drawXPos < fullX && drawYPos >= fullSprY && drawYPos < fullY) {
-                            byte index = gfxData[((drawYPos >> 0x10) << lineSize) + (drawXPos >> 0x10)];
+                        if (drawxpos >= fullSprX && drawxpos < fullX && drawypos >= fullSprY && drawypos < fullY) {
+                            byte index = gfxData[((drawypos >> 0x10) << lineSize) + (drawxpos >> 0x10)];
                             if (index && *frameBufferPtr != maskColour)
                                 *frameBufferPtr = palettePtr[index];
                         }
                         ++frameBufferPtr;
-                        drawXPos += deltaX;
-                        drawYPos += deltaY;
+                        drawxpos += deltaX;
+                        drawypos += deltaY;
                     }
                     drawX -= deltaXLen;
                     drawY += deltaYLen;
@@ -3770,6 +3954,100 @@ void DrawSpriteRotozoom(int x, int y, int pivotX, int pivotY, int width, int hei
                 break;
         }
     }
+#else
+    GFXSurface *surface = &gfxSurface[sheetID];
+    float xpos          = x;
+    float ypos          = y;
+    rotation -= rotation >> 9 << 9;
+    if (rotation < 0)
+        rotation += 0x200;
+    if (rotation != 0)
+        rotation = 0x200 - rotation;
+
+    int sin = sinVal512[rotation] * scaleY >> 9;
+    int cos = cosVal512[rotation] * scaleX >> 9;
+    if (direction == FLIP_NONE) {
+        int x                                 = -pivotX;
+        int y                                 = -pivotY;
+        gfxPolyList[renderCount].x            = xpos + ((x * cos + y * sin) >> 5);
+        gfxPolyList[renderCount].y            = ypos + ((y * cos - x * sin) >> 5);
+        gfxPolyList[renderCount].colour.color = 0xFFFFFFFF;
+        gfxPolyList[renderCount].u            = sprX;
+        gfxPolyList[renderCount].v            = sprY;
+        renderCount++;
+
+        x                                     = width - pivotX;
+        y                                     = -pivotY;
+        gfxPolyList[renderCount].x            = xpos + ((x * cos + y * sin) >> 5);
+        gfxPolyList[renderCount].y            = ypos + ((y * cos - x * sin) >> 5);
+        gfxPolyList[renderCount].colour.color = 0xFFFFFFFF;
+        gfxPolyList[renderCount].u            = (sprX + width);
+        gfxPolyList[renderCount].v            = gfxPolyList[renderCount - 1].v;
+        renderCount++;
+
+        x                                     = -pivotX;
+        y                                     = height - pivotY;
+        gfxPolyList[renderCount].x            = xpos + ((x * cos + y * sin) >> 5);
+        gfxPolyList[renderCount].y            = ypos + ((y * cos - x * sin) >> 5);
+        gfxPolyList[renderCount].colour.color = 0xFFFFFFFF;
+        gfxPolyList[renderCount].u            = gfxPolyList[renderCount - 2].u;
+        gfxPolyList[renderCount].v            = (sprY + height);
+        renderCount++;
+
+        x                                     = width - pivotX;
+        y                                     = height - pivotY;
+        gfxPolyList[renderCount].x            = xpos + ((x * cos + y * sin) >> 5);
+        gfxPolyList[renderCount].y            = ypos + ((y * cos - x * sin) >> 5);
+        gfxPolyList[renderCount].colour.color = 0xFFFFFFFF;
+        gfxPolyList[renderCount].u            = gfxPolyList[renderCount - 2].u;
+        gfxPolyList[renderCount].v            = gfxPolyList[renderCount - 1].v;
+        renderCount++;
+    }
+    else {
+        int x                                 = pivotX;
+        int y                                 = -pivotY;
+        gfxPolyList[renderCount].x            = xpos + ((x * cos + y * sin) >> 5);
+        gfxPolyList[renderCount].y            = ypos + ((y * cos - x * sin) >> 5);
+        gfxPolyList[renderCount].colour.color = 0xFFFFFFFF;
+        gfxPolyList[renderCount].u            = sprX;
+        gfxPolyList[renderCount].v            = sprY;
+        renderCount++;
+
+        x                                     = pivotX - width;
+        y                                     = -pivotY;
+        gfxPolyList[renderCount].x            = xpos + ((x * cos + y * sin) >> 5);
+        gfxPolyList[renderCount].y            = ypos + ((y * cos - x * sin) >> 5);
+        gfxPolyList[renderCount].colour.color = 0xFFFFFFFF;
+        gfxPolyList[renderCount].u            = (sprX + width);
+        gfxPolyList[renderCount].v            = gfxPolyList[renderCount - 1].v;
+        renderCount++;
+
+        x                                     = pivotX;
+        y                                     = height - pivotY;
+        gfxPolyList[renderCount].x            = xpos + ((x * cos + y * sin) >> 5);
+        gfxPolyList[renderCount].y            = ypos + ((y * cos - x * sin) >> 5);
+        gfxPolyList[renderCount].colour.color = 0xFFFFFFFF;
+        gfxPolyList[renderCount].u            = gfxPolyList[renderCount - 2].u;
+        gfxPolyList[renderCount].v            = (sprY + height);
+        renderCount++;
+
+        x                                     = pivotX - width;
+        y                                     = height - pivotY;
+        gfxPolyList[renderCount].x            = xpos + ((x * cos + y * sin) >> 5);
+        gfxPolyList[renderCount].y            = ypos + ((y * cos - x * sin) >> 5);
+        gfxPolyList[renderCount].colour.color = 0xFFFFFFFF;
+        gfxPolyList[renderCount].u            = gfxPolyList[renderCount - 2].u;
+        gfxPolyList[renderCount].v            = gfxPolyList[renderCount - 1].v;
+        renderCount++;
+    }
+    currentRenderState.isGFX        = true;
+    currentRenderState.texID        = surface->id;
+    currentRenderState.transparency = alpha;
+    currentRenderState.blendMode    = inkEffect;
+
+    TryRender();
+
+#endif
 }
 
 void DrawDeformedSprite(ushort sheetID, InkEffects inkEffect, int alpha)
@@ -4148,6 +4426,7 @@ void DrawAniTile(ushort sheetID, ushort tileIndex, ushort srcX, ushort srcY, ush
         GFXSurface *surface = &gfxSurface[sheetID];
 
         // FLIP_NONE
+#if RETRO_SOFTWARE_RENDER
         byte *tileGFXData = &tilesetGFXData[tileIndex << 8];
         int cnt           = 0;
         for (int fy = 0; fy < height; fy += TILE_SIZE) {
@@ -4205,6 +4484,13 @@ void DrawAniTile(ushort sheetID, ushort tileIndex, ushort srcX, ushort srcY, ush
                 tileGFXData += (TILE_SIZE * 2);
             }
         }
+#else
+        currentRenderState.isGFX        = true;
+        currentRenderState.texID        = surface->id;
+        currentRenderState.transparency = 0xFF;
+        currentRenderState.blendMode    = INK_NONE;
+
+#endif
     }
 }
 
@@ -4362,11 +4648,65 @@ void DrawDevText(int x, const char *text, int y, int align, uint colour)
 }
 
 #if RETRO_HARDWARE_RENDER
-void SetupViewport() {
+DrawVertex gfxPolyList[VERTEX_LIMIT];
+short gfxPolyListIndex[INDEX_LIMIT];
+
+DrawVertex3D polyList3D[VERTEX3D_LIMIT];
+
+ushort vertexSize3D = 0;
+ushort indexSize3D  = 0;
+ushort tileUVArray[TILEUV_SIZE];
+float floor3Dxpos  = 0.0f;
+float floor3Dypos  = 0.0f;
+float floor3DZPos  = 0.0f;
+float floor3DAngle = 0;
+
+RenderState currentRenderState;
+RenderState lastRenderState;
+ushort renderCount     = 0;
+ushort lastRenderCount = 0;
+
+ShaderHelper paletteShader;
+
+#if RETRO_USING_OPENGL
+const char *palShader = "                           \
+    in vec2 TexCoords;                              \
+    out vec4 fragColour;                            \
+                                                    \
+    uniform vec2 screenSize;                        \
+    uniform vec3 transparentColour;                 \
+    uniform sampler2D sprite;                       \
+                                                    \
+    uniform vec4 palette[0x800];                    \
+    uniform int paletteLines[0x100];                \
+                                                    \
+    void main()                                     \
+    {                                               \
+        vec4 coord = gl_FragCoord - 0.5;            \
+        vec2 screenPos;                             \
+        screenPos.x = coord.x * screenSize.x;       \
+        screenPos.y = coord.y * screenSize.y;       \
+                                                    \
+        int id = paletteLines[screenPos.y];         \
+                                                    \
+        int index = texture2D(sprite, TexCoords).r; \
+                                                    \
+        if (!index)                                 \
+            discard;                                \
+                                                    \
+        fragColour = palette[id * 0x100 + index];   \
+    }";
+
+const char *vertShader = "void main() { gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex; }";
+#endif
+void SetupViewport()
+{
 #if RETRO_USING_OPENGL
     glViewport(0, 0, engine.windowWidth, engine.windowHeight);
 #endif
 }
+
+void SetupShaders() { paletteShader = ShaderHelper(vertShader, palShader); }
 
 void SetupPolygonLists()
 {
@@ -4387,22 +4727,98 @@ void SetupPolygonLists()
     }
 }
 
-void RenderGFX() {
+bool32 StateCheck()
+{
+
+    memcpy(currentRenderState.palette, fullPalette, sizeof(fullPalette));
+    memcpy(currentRenderState.lineBuffer, gfxLineBuffer, SCREEN_YSIZE * sizeof(byte));
+    bool32 diff = false;
+    if (memcmp(currentRenderState.lineBuffer, lastRenderState.lineBuffer, SCREEN_YSIZE * sizeof(byte)))
+        diff = true;
+    else if (memcmp(currentRenderState.palette, lastRenderState.palette, sizeof(fullPalette))) {
+        // we need to memcmp differently here and see if we can keep the renderstate
+        // here comes some rmg bullshit
+        byte checked = 0b00000000;
+        for (uint i = 0; i < SCREEN_YSIZE; ++i) {
+            byte p = currentRenderState.lineBuffer[i];
+            if (checked & (1 << p))
+                continue;
+            checked |= (1 << p);
+            if (memcmp(currentRenderState.palette[p], lastRenderState.palette[p], PALETTE_SIZE)) {
+                diff = true;
+                break;
+            }
+        }
+    }
+    if (!diff && !memcmp(&currentRenderState, &lastRenderState, sizeof(RenderState) - (sizeof(fullPalette) + SCREEN_YSIZE * sizeof(byte)))) {
+        lastRenderCount = renderCount;
+        return false;
+    }
+    return true; // the states are different, proceed to render
+}
+
+void TryRender()
+{
+    if (!forceRender && !StateCheck())
+        return;
+    else if (forceRender) {
+        lastRenderState = currentRenderState;
+        lastRenderCount = renderCount;
+    }
+    forceRender = false;
+#if RETRO_USING_OPENGL
     glLoadIdentity();
-    glDisable(GL_BLEND);
-    glEnableClientState(GL_COLOR_ARRAY);
-    glVertexPointer(2, GL_SHORT, sizeof(DrawVertex), &gfxPolyList[0].x);
-    glTexCoordPointer(2, GL_SHORT, sizeof(DrawVertex), &gfxPolyList[0].u);
-    glColorPointer(4, GL_UNSIGNED_BYTE, sizeof(DrawVertex), &gfxPolyList[0].colour);
-    glDrawElements(GL_TRIANGLES, gfxIndexSize, GL_UNSIGNED_SHORT, gfxPolyListIndex);
-    glDisableClientState(GL_COLOR_ARRAY);
-}
+    if (currentScreen)
+        glOrtho(0, currentScreen->width, SCREEN_YSIZE, 0.0, -1.0, 1.0);
 
-void RenderGFXBlend() {
+#if RETRO_USING_OPENGL
+    glViewport(0, 0, engine.windowWidth, engine.windowHeight);
+#endif
 
-}
+    if (lastRenderState.isGFX) {
+        if (currentRenderState.blendMode && !lastRenderState.blendMode)
+            glEnable(GL_BLEND);
+        if (lastRenderState.texID) {
+            paletteShader.use();
+            paletteShader.setTexture(lastRenderState.texID);
+            if (memcmp(currentRenderState.palette, lastRenderState.palette, sizeof(fullPalette)))
+                paletteShader.setPalette(lastRenderState);
+            if (memcmp(currentRenderState.lineBuffer, lastRenderState.lineBuffer, SCREEN_YSIZE * sizeof(byte)))
+                paletteShader.setPalLines(lastRenderState);
+        }
 
-void RenderPoly() {
+        glEnableClientState(GL_COLOR_ARRAY);
+        glVertexPointer(2, GL_SHORT, sizeof(DrawVertex), &gfxPolyList[0].x);
+        glTexCoordPointer(2, GL_SHORT, sizeof(DrawVertex), &gfxPolyList[0].u);
+        glColorPointer(4, GL_UNSIGNED_BYTE, sizeof(DrawVertex), &gfxPolyList[0].colour);
+        glDrawElements(GL_TRIANGLES, lastRenderCount, GL_UNSIGNED_SHORT, gfxPolyListIndex);
+        glDisableClientState(GL_COLOR_ARRAY);
+        paletteShader.stop();
+    }
+    else {
+        glPushMatrix();
+        glLoadIdentity();
+        // CalcPerspective(1.8326f, .75f, 0.1f, 2000.0f);
 
+        glMatrixMode(GL_MODELVIEW);
+        glLoadIdentity();
+
+        glScalef(1.0f, -1.0f, -1.0f);
+        glRotatef(180.0f + floor3DAngle, 0, 1.0f, 0);
+        glTranslatef(floor3Dxpos, floor3Dypos, floor3DZPos);
+        glVertexPointer(3, GL_FLOAT, sizeof(DrawVertex3D), &polyList3D[0].x);
+        glTexCoordPointer(2, GL_SHORT, sizeof(DrawVertex3D), &polyList3D[0].u);
+        glColorPointer(4, GL_UNSIGNED_BYTE, sizeof(DrawVertex3D), &polyList3D[0].colour);
+        glDrawElements(GL_TRIANGLES, lastRenderCount, GL_UNSIGNED_SHORT, gfxPolyListIndex);
+        glLoadIdentity();
+        glMatrixMode(GL_PROJECTION);
+        glPopMatrix();
+    }
+#endif
+    memcpy(gfxPolyList, &gfxPolyList[lastRenderCount], (VERTEX_LIMIT - lastRenderCount) * sizeof(DrawVertex));
+    memcpy(polyList3D, &polyList3D[lastRenderCount], (VERTEX3D_LIMIT - lastRenderCount) * sizeof(DrawVertex3D));
+    lastRenderState = currentRenderState;
+    lastRenderCount = renderCount;
+    renderCount     = 0;
 }
 #endif

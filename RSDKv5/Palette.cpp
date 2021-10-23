@@ -16,6 +16,10 @@ byte gfxLineBuffer[SCREEN_YSIZE];
 int maskColour = 0;
 ushort *lookupTable = NULL;
 
+#if RETRO_HARDWARE_RENDER
+uint gfxPalette16to32[0x10000];
+#endif
+
 #if RETRO_REV02
 void LoadPalette(byte paletteID, const char *filename, ushort rowFlags)
 {

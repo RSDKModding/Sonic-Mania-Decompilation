@@ -84,9 +84,9 @@ struct DrawList {
 
 #if RETRO_HARDWARE_RENDER
 
-#define VERTEX_LIMIT   (0x1000)
+#define VERTEX_LIMIT   (0x2000)
 #define INDEX_LIMIT    (VERTEX_LIMIT * 6)
-#define VERTEX3D_LIMIT (0x1904)
+#define VERTEX3D_LIMIT (0x2000)
 #define TILEUV_SIZE    (0x1000)
 struct DrawVertex {
     short x;
@@ -107,27 +107,118 @@ struct DrawVertex3D {
     Colour colour;
 };
 
-DrawVertex gfxPolyList[VERTEX_LIMIT];
-short gfxPolyListIndex[INDEX_LIMIT];
-ushort gfxVertexSize       = 0;
-ushort gfxVertexSizeOpaque = 0;
-ushort gfxIndexSize        = 0;
-ushort gfxIndexSizeOpaque  = 0;
+struct RenderState {
+    bool32 isGFX = false;
 
-DrawVertex3D polyList3D[VERTEX3D_LIMIT];
+    byte blendMode = INK_NONE;
+    byte transparency = 0xFF;
+    uint texID = 0;
 
-ushort vertexSize3D = 0;
-ushort indexSize3D  = 0;
-ushort tileUVArray[TILEUV_SIZE];
-float floor3DXPos  = 0.0f;
-float floor3DYPos  = 0.0f;
-float floor3DZPos  = 0.0f;
-float floor3DAngle = 0;
+    ushort palette[PALETTE_COUNT][PALETTE_SIZE];
+    byte lineBuffer[SCREEN_YSIZE];
+};
+
+struct ShaderHelper {
+    uint ID;
+
+    ShaderHelper() {
+        ID = 0;
+    }
+    ShaderHelper(const char* vert, const char* frag) {
+#if RETRO_USING_OPENGL
+        uint f = glCreateShader(GL_FRAGMENT_SHADER);
+        glShaderSource(f, 1, &frag, NULL);
+        uint v = glCreateShader(GL_VERTEX_SHADER);
+        glShaderSource(v, 1, &frag, NULL);
+        ID = glCreateProgram();
+        glAttachShader(ID, v);
+        glAttachShader(ID, f);        
+        glLinkProgram(ID);
+        glDeleteShader(f);
+        glDeleteShader(v);
+#endif
+    }
+
+    void use() {
+#if RETRO_USING_OPENGL
+        glUseProgram(ID);
+#endif
+    }
+
+    void stop() {
+#if RETRO_USING_OPENGL
+        glUseProgram(0); //stops all shaders
+#endif
+    }
+
+    void setScreen(ScreenInfo* screen) {
+#if RETRO_USING_OPENGL
+        glUniform2i(glGetUniformLocation(ID, "screenSize"), screen->width, screen->height);
+#endif
+    }
+
+    void setTexture(uint tID) {
+#if RETRO_USING_OPENGL
+        glBindTexture(GL_TEXTURE_2D, tID);
+        glUniform1i(glGetUniformLocation(ID, "sprite"), 0);
+#endif
+    }
+
+    void setPalLines(RenderState state) {
+#if RETRO_USING_OPENGL
+        GLint linesOut[0x100];
+        for (uint i = 0; i < SCREEN_YSIZE; ++i) {
+            linesOut[i] = state.lineBuffer[i];
+        }
+        glUniform1iv(glGetUniformLocation(ID, "paletteLines"), 0x100, linesOut);
+#endif
+    }
+
+    //this also sets up transparency color but :LOL:
+    void setPalette(RenderState state) {
+#if RETRO_USING_OPENGL
+        GLfloat palOut[PALETTE_COUNT][PALETTE_SIZE][4];
+        for (byte i = 0; i < PALETTE_COUNT; ++i) {
+            for (uint j = 0; j < PALETTE_SIZE; ++j) {
+                Colour* c = (Colour*)(&gfxPalette16to32[state.palette[i][j]]);
+                palOut[i][j][0] = c->components.r / 255.f;
+                palOut[i][j][1] = c->components.g / 255.f;
+                palOut[i][j][2] = c->components.b / 255.f;
+                palOut[i][j][3] = state.transparency / 255.f;
+            }
+        }
+        glUniform4fv(glGetUniformLocation(ID, "palette"), PALETTE_COUNT * PALETTE_SIZE, (GLfloat*)palOut);
+        glUniform3f(glGetUniformLocation(ID, "transparentColor"), palOut[0][0][0], palOut[0][0][1], palOut[0][0][2]);
+#endif
+    }
+};
+
+
+
+extern DrawVertex gfxPolyList[VERTEX_LIMIT];
+extern short gfxPolyListIndex[INDEX_LIMIT];
+
+extern DrawVertex3D polyList3D[VERTEX3D_LIMIT];
+
+extern ushort vertexSize3D;
+extern ushort indexSize3D;
+extern ushort tileUVArray[TILEUV_SIZE];
+extern float floor3DXPos;
+extern float floor3DYPos;
+extern float floor3DZPos;
+extern float floor3DAngle;
+
+extern RenderState currentRenderState;
+extern RenderState lastRenderState;
+extern ushort renderCount;
+extern ushort lastRenderCount;
+
+extern ShaderHelper paletteShader;
 
 #if RETRO_USING_OPENGL
-    extern GLuint framebufferHW;
+extern GLuint framebufferId;
+extern GLuint fbTextureId;
 #endif
-
 #endif
 
 extern DrawList drawLayers[DRAWLAYER_COUNT];
@@ -292,9 +383,9 @@ void DrawDevText(int x, const char *text, int y, int align, uint colour);
 #if RETRO_HARDWARE_RENDER
 void SetupViewport();
 void SetupPolygonLists();
-void RenderGFX();
-void RenderGFXBlend();
-void RenderPoly();
+void SetupShaders();
+bool32 StateCheck();
+void TryRender();
 #endif
 
 #endif // !DRAWING_H

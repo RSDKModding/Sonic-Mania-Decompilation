@@ -94,6 +94,9 @@ void LoadScene()
         if (gfxSurface[s].scope != SCOPE_GLOBAL) {
             MEM_ZERO(gfxSurface[s]);
             gfxSurface[s].scope = SCOPE_NONE;
+#if RETRO_USING_OPENGL
+            glDeleteTextures(1, &gfxSurface[s].id);
+#endif
         }
     }
 

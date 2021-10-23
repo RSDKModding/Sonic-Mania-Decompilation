@@ -7,6 +7,7 @@
 union Colour {
     byte bytes[4];
     uint colour;
+    uint color;
     union {
         byte b;
         byte g;
@@ -28,8 +29,8 @@ extern ushort fullPalette[PALETTE_COUNT][PALETTE_SIZE];
 
 extern byte gfxLineBuffer[SCREEN_YSIZE]; // Pointers to active palette
 
-#if RETRO_RENDERER == RETRO_HW_RENDERER
-uint gfxPalette16to32[0x10000];
+#if RETRO_HARDWARE_RENDER
+extern uint gfxPalette16to32[0x10000];
 #endif
 
 extern int maskColour;
