@@ -7,6 +7,12 @@
 union Colour {
     byte bytes[4];
     uint colour;
+    union {
+        byte b;
+        byte g;
+        byte r;
+        byte a;
+    } components;
 };
 
 extern ushort rIndexes[0x100];
@@ -21,6 +27,10 @@ extern ushort stagePalette[PALETTE_COUNT][PALETTE_SIZE];
 extern ushort fullPalette[PALETTE_COUNT][PALETTE_SIZE];
 
 extern byte gfxLineBuffer[SCREEN_YSIZE]; // Pointers to active palette
+
+#if RETRO_RENDERER == RETRO_HW_RENDERER
+uint gfxPalette16to32[0x10000];
+#endif
 
 extern int maskColour;
 extern ushort* lookupTable;

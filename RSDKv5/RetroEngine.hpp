@@ -111,6 +111,25 @@ enum GameRegions {
 #define RETRO_USING_DIRECTX9  (0) // windows
 #define RETRO_USING_DIRECTX11 (0) // xbox one
 
+#define RETRO_USING_OPENGL    (0) // custom, HW
+
+#define RETRO_SW_RENDER  (0)
+#define RETRO_HW_RENDER  (1)
+#define RETRO_RENDERTYPE (RETRO_SW_RENDER)
+
+#ifdef USE_SW_REN
+#undef RETRO_RENDERTYPE
+#define RETRO_RENDERTYPE (RETRO_SW_RENDER)
+#endif
+
+#ifdef USE_HW_REN
+#undef RETRO_RENDERTYPE
+#define RETRO_RENDERTYPE (RETRO_HW_RENDER)
+#endif
+
+#define RETRO_SOFTWARE_RENDER (RETRO_RENDERTYPE == RETRO_SW_RENDER)
+#define RETRO_HARDWARE_RENDER (RETRO_RENDERTYPE == RETRO_HW_RENDER)
+
 #define DEFAULT_SCREEN_XSIZE (424)
 #define DEFAULT_FULLSCREEN   false
 #define RETRO_USING_MOUSE
@@ -119,6 +138,11 @@ enum GameRegions {
 #if RETRO_PLATFORM == RETRO_WIN || RETRO_PLATFORM == RETRO_OSX || RETRO_PLATFORM == RETRO_LINUX || RETRO_PLATFORM == RETRO_iOS || RETRO_PLATFORM == RETRO_ANDROID
 #undef RETRO_USING_SDL2
 #define RETRO_USING_SDL2 (1)
+
+#if RETRO_HARDWARE_RENDER
+#undef RETRO_USING_OPENGL
+#define RETRO_USING_OPENGL (1)
+#endif
 
 #else // Since its an else & not an elif these platforms probably aren't supported yet
 #define RETRO_USING_SDL2 (0)
@@ -167,6 +191,60 @@ enum GameRegions {
 #undef RETRO_USING_MOUSE
 #endif
 
+#if RETRO_USING_OPENGL
+#if RETRO_PLATFORM == RETRO_ANDROID
+#define GL_GLEXT_PROTOTYPES
+
+#include <GLES/gl.h>
+#include <GLES/glext.h>
+
+#undef glGenFramebuffers
+#undef glBindFramebuffers
+#undef glFramebufferTexture2D
+
+#undef GL_FRAMEBUFFER
+#undef GL_COLOR_ATTACHMENT0
+#undef GL_FRAMEBUFFER_BINDING
+
+#define glGenFramebuffers      glGenFramebuffersOES
+#define glBindFramebuffer      glBindFramebufferOES
+#define glFramebufferTexture2D glFramebufferTexture2DOES
+#define glDeleteFramebuffers   glDeleteFramebuffersOES
+#define glOrtho                glOrthof
+
+#define GL_FRAMEBUFFER         GL_FRAMEBUFFER_OES
+#define GL_COLOR_ATTACHMENT0   GL_COLOR_ATTACHMENT0_OES
+#define GL_FRAMEBUFFER_BINDING GL_FRAMEBUFFER_BINDING_OES
+#elif RETRO_PLATFORM == RETRO_OSX
+#define GL_GLEXT_PROTOTYPES
+#define GL_SILENCE_DEPRECATION
+
+#include <OpenGL/gl.h>
+#include <OpenGL/glext.h>
+
+#undef glGenFramebuffers
+#undef glBindFramebuffer
+#undef glFramebufferTexture2D
+#undef glDeleteFramebuffers
+
+#undef GL_FRAMEBUFFER
+#undef GL_COLOR_ATTACHMENT0
+#undef GL_FRAMEBUFFER_BINDING
+
+#define glGenFramebuffers      glGenFramebuffersEXT
+#define glBindFramebuffer      glBindFramebufferEXT
+#define glFramebufferTexture2D glFramebufferTexture2DEXT
+#define glDeleteFramebuffers   glDeleteFramebuffersEXT
+
+#define GL_FRAMEBUFFER         GL_FRAMEBUFFER_EXT
+#define GL_COLOR_ATTACHMENT0   GL_COLOR_ATTACHMENT0_EXT
+#define GL_FRAMEBUFFER_BINDING GL_FRAMEBUFFER_BINDING_EXT
+#else
+#include <GL/glew.h>
+#include <GL/glu.h>
+#endif
+#endif
+
 //Determines if the engine is RSDKv5 rev01 (all versions pre-plus) or rev02 (all versions post-plus)
 #define RETRO_REV02 (1)
 //Determines if the engine should use EGS features like achievements or not (must be rev02)
@@ -177,7 +255,6 @@ enum GameRegions {
 
 //enables the use of the mod loader
 #define RETRO_USE_MOD_LOADER (!RETRO_USE_ORIGINAL_CODE && 1)
-#define RETRO_USE_PYTHON (RETRO_USE_MOD_LOADER && 0)
 
 enum EngineStates {
     ENGINESTATE_LOAD,
@@ -306,6 +383,9 @@ struct RetroEngine {
     int displayCount          = 0;
 
     SDL_Event sdlEvents;
+#if RETRO_USING_OPENGL
+    SDL_GLContext glContext; // OpenGL context
+#endif
 #endif
 };
 

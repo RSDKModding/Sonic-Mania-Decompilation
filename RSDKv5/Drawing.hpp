@@ -45,6 +45,9 @@ struct GFXSurface {
     int width;
     int lineSize;
     byte scope;
+#if RETRO_HARDWARE_RENDER
+    uint id;
+#endif
 };
 
 struct ScreenInfo {
@@ -78,6 +81,54 @@ struct DrawList {
     int entityCount;
     int layerCount;
 };
+
+#if RETRO_HARDWARE_RENDER
+
+#define VERTEX_LIMIT   (0x1000)
+#define INDEX_LIMIT    (VERTEX_LIMIT * 6)
+#define VERTEX3D_LIMIT (0x1904)
+#define TILEUV_SIZE    (0x1000)
+struct DrawVertex {
+    short x;
+    short y;
+    short u;
+    short v;
+
+    Colour colour;
+};
+
+struct DrawVertex3D {
+    float x;
+    float y;
+    float z;
+    short u;
+    short v;
+
+    Colour colour;
+};
+
+DrawVertex gfxPolyList[VERTEX_LIMIT];
+short gfxPolyListIndex[INDEX_LIMIT];
+ushort gfxVertexSize       = 0;
+ushort gfxVertexSizeOpaque = 0;
+ushort gfxIndexSize        = 0;
+ushort gfxIndexSizeOpaque  = 0;
+
+DrawVertex3D polyList3D[VERTEX3D_LIMIT];
+
+ushort vertexSize3D = 0;
+ushort indexSize3D  = 0;
+ushort tileUVArray[TILEUV_SIZE];
+float floor3DXPos  = 0.0f;
+float floor3DYPos  = 0.0f;
+float floor3DZPos  = 0.0f;
+float floor3DAngle = 0;
+
+#if RETRO_USING_OPENGL
+    extern GLuint framebufferHW;
+#endif
+
+#endif
 
 extern DrawList drawLayers[DRAWLAYER_COUNT];
 extern char drawGroupNames[0x10][0x10];
@@ -237,5 +288,13 @@ void DrawAniTile(ushort sheetID, ushort tileIndex, ushort srcX, ushort srcY, ush
 void DrawText(Animator *animator, Vector2 *position, TextInfo *info, int endFrame, int textLength, byte align, int spacing, int a8,
               Vector2 *charPositions, bool32 screenRelative);
 void DrawDevText(int x, const char *text, int y, int align, uint colour);
+
+#if RETRO_HARDWARE_RENDER
+void SetupViewport();
+void SetupPolygonLists();
+void RenderGFX();
+void RenderGFXBlend();
+void RenderPoly();
+#endif
 
 #endif // !DRAWING_H

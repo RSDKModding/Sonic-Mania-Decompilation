@@ -118,16 +118,36 @@ bool32 InitRenderDevice()
     SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "nearest");
     SDL_SetHint(SDL_HINT_RENDER_VSYNC, engine.vsync ? "1" : "0");
 
-    engine.window = SDL_CreateWindow(gameVerInfo.gameName, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, engine.windowWidth, engine.windowHeight,
-                                     SDL_WINDOW_ALLOW_HIGHDPI | SDL_WINDOW_HIDDEN);
+    byte flags = 0;
+#if RETRO_USING_OPENGL
+    flags |= SDL_WINDOW_OPENGL;
 
+#if RETRO_PLATFORM != RETRO_OSX // dude idk either you just gotta trust that this works
+#if RETRO_PLATFORM != RETRO_ANDROID
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+#else
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
+#endif
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 1);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
+    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+    SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 16);
+#endif
+#endif
+
+    engine.window = SDL_CreateWindow(gameVerInfo.gameName, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, engine.windowWidth, engine.windowHeight,
+                                     SDL_WINDOW_ALLOW_HIGHDPI | SDL_WINDOW_HIDDEN | flags);
+
+#if RETRO_SOFTWARE_RENDER
     engine.renderer = SDL_CreateRenderer(engine.window, -1, SDL_RENDERER_ACCELERATED);
+#endif
 
     if (!engine.window) {
         printLog(PRINT_NORMAL, "ERROR: failed to create window!");
         return 0;
     }
 
+#if RETRO_SOFTWARE_RENDER
     if (!engine.renderer) {
         printLog(PRINT_NORMAL, "ERROR: failed to create renderer!");
         return 0;
@@ -145,6 +165,7 @@ bool32 InitRenderDevice()
             return 0;
         }
     }
+#endif
 
     if (engine.startFullScreen) {
         SDL_RestoreWindow(engine.window);
@@ -172,9 +193,61 @@ bool32 InitRenderDevice()
             // what the
         }
     }
-    return true;
+
+    // return true;
+#endif //! RETRO_USING_SDL2
+
+#if RETRO_USING_OPENGL
+    // Init GL
+    engine.glContext = SDL_GL_CreateContext(engine.window);
+
+    SDL_GL_SetSwapInterval(engine.vsync ? 1 : 0);
+
+#if RETRO_PLATFORM != RETRO_ANDROID && RETRO_PLATFORM != RETRO_OSX
+    // glew Setup
+    GLenum err = glewInit();
+    if (err != GLEW_OK) {
+        printLog(PRINT_ERROR, "glew init error:\n%s", glewGetErrorString(err));
+        return false;
+    }
 #endif
-    return false;
+    glClearColor(0.0, 0.0, 0.0, 1.0);
+    glDisable(GL_LIGHTING);
+    glDisable(GL_DITHER);
+    glEnable(GL_TEXTURE_2D);
+    glDisable(GL_DEPTH_TEST);
+
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    glMatrixMode(GL_TEXTURE);
+    glLoadIdentity();
+
+    SetupViewport();
+    SetupPolygonLists();
+
+    for (int c = 0; c < 0x10000; ++c) {
+        int r               = (c & 0b1111100000000000) >> 8;
+        int g               = (c & 0b0000011111100000) >> 3;
+        int b               = (c & 0b0000000000011111) << 3;
+        gfxPalette16to32[c] = (0xFF << 24) | (b << 16) | (g << 8) | (r << 0);
+    }
+
+#if RETRO_USING_SDL2 && RETRO_PLATFORM == RETRO_ANDROID
+    SDL_DisplayMode mode;
+    SDL_GetDesktopDisplayMode(0, &mode);
+    int vw = mode.w;
+    int vh = mode.h;
+    if (mode.h > mode.w) {
+        vw = mode.h;
+        vh = mode.w;
+    }
+    SetScreenSize(0, vw, vh);
+#endif
+#endif
+    return true; // temp?
 }
 
 void FlipScreen()
@@ -191,7 +264,7 @@ void FlipScreen()
     }
 
     float dimAmount = engine.dimMax * engine.dimPercent;
-
+#if RETRO_SOFTWARE_RENDER
     switch (sceneInfo.state) {
         default: {
 #if RETRO_USING_SDL2
@@ -327,6 +400,11 @@ void FlipScreen()
             break;
         }
     }
+#else
+    // maybe we glClear here?? idk i'm too scared
+    glOrtho(0, currentScreen->width << 4, SCREEN_YSIZE << 4, 0.0, -1.0, 1.0);
+
+#endif
 #if RETRO_USING_SDL2
     SDL_ShowWindow(engine.window);
 #endif
@@ -470,9 +548,19 @@ void InitGFXSystem()
     gfxSurface[0].scope = SCOPE_GLOBAL;
     memcpy(gfxSurface[0].hash, hash, 4 * sizeof(int));
     gfxSurface[0].width    = TILE_SIZE;
-    gfxSurface[0].height   = 0x40000;
-    gfxSurface[0].lineSize = 4;
+    gfxSurface[0].height   = TILE_COUNT * TILE_SIZE;
+    gfxSurface[0].lineSize = log2(TILE_SIZE);
     gfxSurface[0].dataPtr  = tilesetGFXData;
+
+#if RETRO_USING_OPENGL
+    glGenTextures(1, &gfxSurface[0].id);
+    glBindTexture(GL_TEXTURE_2D, gfxSurface[0].id);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, TILE_SIZE, TILE_COUNT * TILE_SIZE, 0, GL_RED, GL_UNSIGNED_BYTE, gfxSurface[0].dataPtr);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+#endif
 
 #if RETRO_REV02
     GEN_HASH("EngineText", hash);
@@ -482,6 +570,16 @@ void InitGFXSystem()
     gfxSurface[1].height   = 0x400; // 128 chars
     gfxSurface[1].lineSize = 3;
     gfxSurface[1].dataPtr  = engineTextBuffer;
+
+#if RETRO_USING_OPENGL
+    glGenTextures(1, &gfxSurface[1].id);
+    glBindTexture(GL_TEXTURE_2D, gfxSurface[1].id);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, 8, 0x400, 0, GL_RED, GL_UNSIGNED_BYTE, gfxSurface[1].dataPtr);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+#endif
 #endif
 }
 
@@ -4262,3 +4360,49 @@ void DrawDevText(int x, const char *text, int y, int align, uint colour)
         ++length;
     }
 }
+
+#if RETRO_HARDWARE_RENDER
+void SetupViewport() {
+#if RETRO_USING_OPENGL
+    glViewport(0, 0, engine.windowWidth, engine.windowHeight);
+#endif
+}
+
+void SetupPolygonLists()
+{
+    int vID = 0;
+    for (int i = 0; i < VERTEX_LIMIT; i++) {
+        gfxPolyListIndex[vID++] = (i << 2) + 0;
+        gfxPolyListIndex[vID++] = (i << 2) + 1;
+        gfxPolyListIndex[vID++] = (i << 2) + 2;
+        gfxPolyListIndex[vID++] = (i << 2) + 1;
+        gfxPolyListIndex[vID++] = (i << 2) + 3;
+        gfxPolyListIndex[vID++] = (i << 2) + 2;
+
+        gfxPolyList[i].colour.colour = 0xFFFFFFFF;
+    }
+
+    for (int i = 0; i < VERTEX3D_LIMIT; i++) {
+        polyList3D[i].colour.colour = 0xFFFFFFFF;
+    }
+}
+
+void RenderGFX() {
+    glLoadIdentity();
+    glDisable(GL_BLEND);
+    glEnableClientState(GL_COLOR_ARRAY);
+    glVertexPointer(2, GL_SHORT, sizeof(DrawVertex), &gfxPolyList[0].x);
+    glTexCoordPointer(2, GL_SHORT, sizeof(DrawVertex), &gfxPolyList[0].u);
+    glColorPointer(4, GL_UNSIGNED_BYTE, sizeof(DrawVertex), &gfxPolyList[0].colour);
+    glDrawElements(GL_TRIANGLES, gfxIndexSize, GL_UNSIGNED_SHORT, gfxPolyListIndex);
+    glDisableClientState(GL_COLOR_ARRAY);
+}
+
+void RenderGFXBlend() {
+
+}
+
+void RenderPoly() {
+
+}
+#endif
