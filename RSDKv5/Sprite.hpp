@@ -52,7 +52,7 @@ struct ImagePNG {
     int chunkSize;
     int chunkCRC;
     int dataSize;
-    byte *dataBuffer;
+    byte *chunkBuffer;
 };
 
 bool32 LoadGIF(ImageGIF *image, const char *fileName, bool32 loadHeader);

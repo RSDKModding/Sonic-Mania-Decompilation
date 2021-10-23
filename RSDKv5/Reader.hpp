@@ -314,4 +314,18 @@ inline int ReadZLib(FileInfo *info, byte **buffer, int cSize, int size)
     return destLen;
 }
 
+inline int ReadZLib(FileInfo *info, byte **cBuffer, int cSize, byte **buffer, int size)
+{
+    if (!buffer || !cBuffer)
+        return 0;
+    uLongf complen = cSize;
+    uLongf destLen = size;
+
+    ReadBytes(info, cBuffer, complen);
+
+    uncompress(*buffer, &destLen, *cBuffer, complen);
+    *cBuffer = NULL;
+    return destLen;
+}
+
 #endif
