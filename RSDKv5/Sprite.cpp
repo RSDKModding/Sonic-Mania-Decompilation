@@ -529,10 +529,6 @@ bool32 LoadPNG(ImagePNG* image, const char* fileName, bool32 loadHeader) {
                             case 6: PNGUnpackRGBA(image, dataPtr); break;
                             default: break;
                         }
-
-                        // FileIO *file = fOpen("imgBuffer.bin", "wb");
-                        // fWrite(image->dataPtr, 1, image->dataSize, file);
-                        // fClose(file);
                     }
                     else {
                         Seek_Cur(&image->info, image->chunkSize);
@@ -556,181 +552,175 @@ bool32 LoadPNG(ImagePNG* image, const char* fileName, bool32 loadHeader) {
 #endif
 
 #if !RETRO_REV02
-bool32 LoadTGA(const char *filename)
+bool32 LoadTGA(ImagePNG *image, const char *filename)
 {
-    FileInfo info;
-    MEM_ZERO(info);
+    if (LoadFile(&image->info, filename, FMODE_RB)) {
+        byte startOffset      = ReadInt8(&image->info);
+        byte colourmaptype    = ReadInt8(&image->info);
+        byte datatypecode     = ReadInt8(&image->info);
+        short colourmaporigin = ReadInt16(&image->info);
+        short colourmaplength = ReadInt16(&image->info);
+        byte colourmapdepth   = ReadInt8(&image->info);
+        short originX         = ReadInt16(&image->info);
+        short originY         = ReadInt16(&image->info);
+        image->width          = ReadInt16(&image->info);
+        image->height         = ReadInt16(&image->info);
+        byte imageBPP         = ReadInt8(&image->info);
+        byte imagedescriptor  = ReadInt8(&image->info);
+        bool32 reverse        = (~imagedescriptor >> 4) & 1;
+        if (imageBPP >= 0x10) {
+            if (startOffset)
+                Seek_Cur(&image->info, startOffset);
 
-    if (LoadFile(&info, filename, FMODE_RB)) {
-        byte idlength         = ReadInt8(&info);
-        byte colourmaptype    = ReadInt8(&info);
-        byte datatypecode     = ReadInt8(&info);
-        short colourmaporigin = ReadInt16(&info);
-        short colourmaplength = ReadInt16(&info);
-        byte colourmapdepth   = ReadInt8(&info);
-        short x_origin        = ReadInt16(&info);
-        short y_origin        = ReadInt16(&info);
-        short width           = ReadInt16(&info);
-        short height          = ReadInt16(&info);
-        byte bitsperpixel     = ReadInt8(&info);
-        byte imagedescriptor  = ReadInt8(&info);
-        bool32 flag           = (~imagedescriptor >> 4) & 1;
-        if (width == 1024 && height == 512 && bitsperpixel >= 0x10) {
-            if (idlength)
-                Seek_Cur(&info, idlength);
+            AllocateStorage(sizeof(uint) * image->height * image->width, (void **)&image->dataPtr, DATASET_TMP, false);
+            uint *imageData = (uint *)image->dataPtr;
+            if (reverse)
+                imageData += (image->height * image->width) - image->width;
 
-            uint *imageData = NULL;
-            AllocateStorage(0x200000u, (void **)&imageData, DATASET_TMP, false);
-            if (flag)
-                imageData += 0x7FC00;
-
-            int y = 0;
+            int x = 0;
             if (datatypecode == 2) {
-                switch (bitsperpixel) {
+                switch (imageBPP) {
                     case 0x10:
-                        for (int i = 0; i < 0x80000; ++i) {
-                            byte val[2];
-                            ReadBytes(&info, val, sizeof(ushort));
-                            if (val[0] + (val[1] << 8) < 0)
-                                *imageData = 8 * (val[0] & 0x1F | 8 * ((val[0] + (val[1] << 8)) & 0x3E0 | 0x3FC00));
+                        for (int i = 0; i < image->height * image->width; ++i) {
+                            byte bytes[2];
+                            ReadBytes(&image->info, bytes, sizeof(ushort));
+                            if (bytes[0] + (bytes[1] << 8) < 0)
+                                *imageData++ = 8 * (bytes[0] & 0x1F | 8 * ((bytes[0] + (bytes[1] << 8)) & 0x3E0 | 0x3FC00));
                             else
-                                *imageData = 0;
-                            ++imageData;
-                            if (flag && ++y == 1024) {
-                                y = 0;
-                                imageData -= 2048;
+                                *imageData++ = 0;
+
+                            if (reverse && ++x == image->width) {
+                                x = 0;
+                                imageData -= image->width << 1;
                             }
                         }
                         break;
                     case 0x18:
-                        for (int i = 0; i < 0x80000; ++i) {
-                            byte val[3];
-                            ReadBytes(&info, val, 3 * sizeof(byte));
-                            *imageData = val[0] | ((val[1] | 0xFF00) << 8);
-                            ++imageData;
-                            if (flag && ++y == 1024) {
-                                y = 0;
-                                imageData -= 2048;
+                        for (int i = 0; i < image->height * image->width; ++i) {
+                            byte channels[3];
+                            ReadBytes(&image->info, channels, sizeof(colour) - 1);
+                            *imageData++ = (channels[0] << 0) | (channels[1] << 8) | (channels[2] << 16) | (0xFF << 24);
+
+                            if (reverse && ++x == image->width) {
+                                x = 0;
+                                imageData -= image->width << 1;
                             }
                         }
                         break;
                     case 0x20:
-                        for (int i = 0; i < 0x80000; ++i) {
-                            byte val[4];
-                            ReadBytes(&info, val, 4 * sizeof(byte));
-                            *imageData = (val[0] << 0) | (val[1] << 8) | (val[2] << 16) | (val[3] << 24);
-                            ++imageData;
-                            if (flag && ++y == 1024) {
-                                y = 0;
-                                imageData -= 2048;
+                        for (int i = 0; i < image->height * image->width; ++i) {
+                            byte channels[4];
+                            ReadBytes(&image->info, channels, sizeof(colour));
+                            *imageData++ = (channels[0] << 0) | (channels[1] << 8) | (channels[2] << 16) | (channels[3] << 24);
+
+                            if (reverse && ++x == image->width) {
+                                x = 0;
+                                imageData -= image->width << 1;
                             }
                         }
                         break;
                 }
             }
             else if (datatypecode == 10) {
-                switch (bitsperpixel) {
+                switch (imageBPP) {
                     case 0x10: {
-                        ushort value = 0;
+                        ushort colour16 = 0;
                         byte count = 0, flag = 0;
-                        for (int i = 0; i < 0x80000; ++i) {
+                        byte bytes[2];
+
+                        for (int i = 0; i < image->height * image->width; ++i) {
                             if (count) {
                                 if (!flag) {
                                     byte val[2];
-                                    ReadBytes(&info, val, sizeof(ushort));
-                                    value = val[0] + (val[1] << 8);
+                                    ReadBytes(&image->info, val, sizeof(ushort));
                                 }
                                 --count;
                             }
                             else {
                                 byte flags = 0;
-                                ReadBytes(&info, &flags, sizeof(byte));
+                                ReadBytes(&image->info, &flags, sizeof(byte));
                                 flag  = flags & 0x80;
                                 count = flags & 0x7F;
                                 flags &= 0x80;
-                                byte val[2];
-                                ReadBytes(&info, val, sizeof(ushort));
-                                ushort value = val[0] + (val[1] << 8);
+
+                                ReadBytes(&image->info, bytes, sizeof(ushort));
                             }
 
-                            if (value < 0) {
-                                *imageData = 8 * (value & 0x1F | 8 * (value & 0x3E0 | 0x3FC00));
-                            }
-                            else {
-                                *imageData = 0;
-                            }
+                            colour16 = bytes[0] + (bytes[1] << 8);
+                            if (colour16 < 0)
+                                *imageData++ = 8 * (colour16 & 0x1F | 8 * (colour16 & 0x3E0 | 0x3FC00));
+                            else
+                                *imageData++ = 0;
 
                             ++imageData;
-                            if (flag && ++y == 1024) {
-                                y = 0;
-                                imageData -= 2048;
+                            if (reverse && ++x == image->width) {
+                                x = 0;
+                                imageData -= image->width << 1;
                             }
                         }
-                    } break;
+                        break;
+                    }
                     case 0x18: {
-                        byte val[3];
-                        memset(val, 0, sizeof(val));
+                        byte channels[3];
+                        memset(channels, 0, sizeof(channels));
                         byte count = 0, flag = 0;
-                        for (int i = 0; i < 0x80000; ++i) {
+                        for (int i = 0; i < image->height * image->width; ++i) {
                             if (count) {
                                 if (!flag) {
-                                    ReadBytes(&info, val, 3 * sizeof(byte));
+                                    ReadBytes(&image->info, channels, sizeof(colour) - 1);
                                 }
                                 --count;
                             }
                             else {
                                 byte flags = 0;
-                                ReadBytes(&info, &flags, sizeof(byte));
+                                ReadBytes(&image->info, &flags, sizeof(byte));
                                 flag  = flags & 0x80;
                                 count = flags & 0x7F;
                                 flags &= 0x80;
-                                byte val[2];
-                                ReadBytes(&info, val, sizeof(ushort));
-                            }
-                            *imageData = val[0] | ((val[1] | 0xFF00) << 8);
 
-                            ++imageData;
-                            if (flag && ++y == 1024) {
-                                y = 0;
-                                imageData -= 2048;
+                                ReadBytes(&image->info, channels, sizeof(colour) - 1);
+                            }
+                            *imageData++ = (channels[0] << 0) | (channels[1] << 8) | (channels[2] << 16) | (0xFF << 24);
+
+                            if (reverse && ++x == image->width) {
+                                x = 0;
+                                imageData -= image->width << 1;
                             }
                         }
-                    } break;
+                        break;
+                    } 
                     case 0x20: {
-                        byte val[sizeof(uint)];
-                        memset(val, 0, sizeof(val));
+                        byte channels[sizeof(colour)];
+                        memset(channels, 0, sizeof(channels));
                         byte count = 0, flag = 0;
-                        for (int i = 0; i < 0x80000; ++i) {
+                        for (int i = 0; i < image->height * image->width; ++i) {
                             if (count) {
                                 if (!flag) {
-                                    ReadBytes(&info, val, sizeof(uint));
+                                    ReadBytes(&image->info, channels, sizeof(uint));
                                 }
                                 --count;
                             }
                             else {
                                 byte flags = 0;
-                                ReadBytes(&info, &flags, sizeof(byte));
+                                ReadBytes(&image->info, &flags, sizeof(byte));
                                 flag  = flags & 0x80;
                                 count = flags & 0x7F;
                                 flags &= 0x80;
-                                byte val[2];
-                                ReadBytes(&info, val, sizeof(ushort));
-                            }
-                            *imageData = (val[0] << 0) | (val[1] << 8) | (val[2] << 16) | (val[3] << 24);
 
-                            ++imageData;
-                            if (flag && ++y == 1024) {
-                                y = 0;
-                                imageData -= 2048;
+                                ReadBytes(&image->info, channels, sizeof(colour));
+                            }
+                            *imageData++ = (channels[0] << 0) | (channels[1] << 8) | (channels[2] << 16) | (channels[3] << 24);
+
+                            if (reverse && ++x == image->width) {
+                                x = 0;
+                                imageData -= image->width << 1;
                             }
                         }
-                    } break;
+                        break;
+                    } 
                 }
             }
-            CloseFile(&info);
-            //SetImageTexture(512, 1024, imageData);
-            //sub_5AD370(&imageData);
-            imageData = NULL;
+            CloseFile(&image->info);
             return true;
         }
     }
@@ -834,17 +824,12 @@ bool32 LoadImage(const char *filename, double displayLength, double speed, bool3
         CloseFile(&image.info);
         return true;
     }
-    else {
-        image.palette = NULL;
-        image.dataPtr = NULL;
-        CloseFile(&image.info);
-    }
 #elif !RETRO_REV02
-    if (LoadTGA(buffer)) {
+    if (LoadTGA(&image, buffer)) {
         if (image.width == 1024 && image.height == 512)
-            SetImageTexture(512, 1024, image.dataPtr);
+            SetImageTexture(image.width, image.height, image.dataPtr);
 
-        engine.displayLength    = displayLength;
+        engine.displayTime    = displayLength;
         engine.prevShaderID   = engine.shaderID;
         engine.prevEngineMode = sceneInfo.state;
         engine.dimMax         = 0.0;
@@ -853,8 +838,17 @@ bool32 LoadImage(const char *filename, double displayLength, double speed, bool3
         engine.skipCallback   = skipCallback;
         sceneInfo.state       = ENGINESTATE_SHOWPNG;
         engine.imageDelta     = speed / 60.0;
+
+        image.palette = NULL;
+        image.dataPtr = NULL;
+        CloseFile(&image.info);
         return true;
     }
 #endif
+    else {
+        image.palette = NULL;
+        image.dataPtr = NULL;
+        CloseFile(&image.info);
+    }
     return false;
 }
