@@ -42,8 +42,5 @@ void MSZCutsceneST_EditorLoad(void)
 
 }
 
-void MSZCutsceneST_Serialize(void)
-{
-
-}
+void MSZCutsceneST_Serialize(void) { RSDK_EDITABLE_VAR(MSZCutsceneST, VAR_VECTOR2, size); }
 

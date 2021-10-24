@@ -55,6 +55,7 @@ void MSZSetup_Serialize(void);
 
 // Extra Entity Functions
 void MSZSetup_Unknown2(void);
+void MSZSetup_Unknown3(void);
 void MSZSetup_Unknown4(int32 a1);
 
 void MSZSetup_ManageFadeST(void);
@@ -79,7 +80,14 @@ void MSZSetup_Unknown9(void);
 void MSZSetup_Unknown10(void);
 void MSZSetup_Unknown11(void);
 void MSZSetup_Unknown12(void);
+void MSZSetup_Unknown13(void);
+void MSZSetup_Unknown14(void);
+void MSZSetup_Unknown16(void);
+void MSZSetup_Unknown17(void);
+void MSZSetup_Unknown18(void);
+void MSZSetup_Unknown19(void);
 #endif
+void MSZSetup_Unknown21(void);
 
 void MSZSetup_PlayerState_Pilot(void);
 

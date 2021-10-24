@@ -39,7 +39,7 @@ void PuyoGame_Create(void *data)
     entity->updateRange.x = 0x800000;
     entity->updateRange.y = 0x800000;
     if (!RSDK_sceneInfo->inEditor)
-        RSDK.AddCamera(entity, RSDK_screens->centerX << 16, RSDK_screens->centerY << 16, true);
+        RSDK.AddCamera(&entity->position, RSDK_screens->centerX << 16, RSDK_screens->centerY << 16, true);
     // entity->state = PuyoGame_Unknown6;
 }
 

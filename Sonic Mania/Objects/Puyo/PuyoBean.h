@@ -7,21 +7,21 @@
 typedef struct {
     RSDK_OBJECT
     TABLE(int32 value1[5], { 16, 12, 8, 4, 2 });
-    colour value2;
-    int32 value3;
-    uint8 value4;
-    bool32 value5;
-    int32 value6;
-    TextInfo value7;
-    uint8 value8;
-    int32 value9;
-    Animator value10;
-    uint16 value11;
-    uint16 value12;
-    uint16 value13;
-    uint16 value14;
-    uint16 value15;
-    uint16 value16;
+    Hitbox hitbox;
+    int field_20[2];
+    int field_28[2];
+    Entity *gameState[256];
+    int field_430;
+    Vector2 field_434[256];
+    bool32 field_C34[84];
+    int shinkDelay;
+    Animator animator;
+    uint16 aniFrames;
+    uint16 sfxLand;
+    uint16 sfxRotate;
+    uint16 chainFrames[6];
+    uint16 sfxJunk;
+    uint16 sfxFall;
 } ObjectPuyoBean;
 
 // Entity Class
