@@ -5,12 +5,20 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    uint16 sfxAttack;
+    uint16 aniFrames;
 } ObjectPuyoAttack;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    int32 playerID;
+    int32 delay;
+    int32 radius;
+    int32 field_64;
+    Vector2 targetPos;
+    Animator animator;
 } EntityPuyoAttack;
 
 // Object Struct

@@ -5,12 +5,20 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    uint16 aniFrames;
 } ObjectPuyoIndicator;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    StateMachine(state);
+    uint8 playerID;
+    Vector2 startPos;
+    int field_68;
+    int field_6C;
+    int field_70;
+    Animator animator;
 } EntityPuyoIndicator;
 
 // Object Struct
@@ -28,6 +36,8 @@ void PuyoIndicator_EditorLoad(void);
 void PuyoIndicator_Serialize(void);
 
 // Extra Entity Functions
-
+void PuyoIndicator_Unknown1(void);
+void PuyoIndicator_Unknown2(void);
+void PuyoIndicator_Unknown3(void);
 
 #endif //!OBJ_PUYOINDICATOR_H

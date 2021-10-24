@@ -30,7 +30,7 @@ void UIVideo_StageLoad(void) {}
 
 bool32 UIVideo_SkipCallback(void)
 {
-    if (RSDK_controller->keyStart.press && RSDK_controller->keyA.press && RSDK_controller->keyB.press) {
+    if (RSDK_controller->keyStart.press || RSDK_controller->keyA.press || RSDK_controller->keyB.press) {
         Music_FadeOut(0.0125);
         UIVideo->playing = true;
         return true;
@@ -62,7 +62,7 @@ void UIVideo_State_PlayVid1(void)
 #else
         if (videoFile1[len - 3] == 't' && videoFile1[len - 2] == 'g' && videoFile1[len - 1] == 'a')
 #endif
-            RSDK.LoadImage(videoFile1, 1.0, 32.0, UIVideo_SkipCallback);
+            RSDK.LoadImage(videoFile1, 32.0, 1.0, UIVideo_SkipCallback);
         else
             RSDK.LoadVideo(videoFile1, 0.0, UIVideo_SkipCallback);
         entity->state = UIVideo_State_PlayVid2;

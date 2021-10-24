@@ -67,11 +67,11 @@ bool32 LogoSetup_ImageCallback(void)
 void LogoSetup_CESAScreen(void)
 {
     RSDK_THIS(LogoSetup);
-    LogoSetup->timer        = 0;
+    LogoSetup->timer = 0;
 #if RETRO_USE_PLUS
-    RSDK.LoadImage("CESA.png", 2.0, 60.0, LogoSetup_ImageCallback);
+    RSDK.LoadImage("CESA.png", 60.0, 2.0, LogoSetup_ImageCallback);
 #else
-    RSDK.LoadImage("CESA.tgb", 2.0, 60.0, LogoSetup_ImageCallback);
+    RSDK.LoadImage("CESA.tga", 60.0, 2.0, LogoSetup_ImageCallback);
 #endif
     entity->timer = 1024;
     entity->state = LogoSetup_SegaScreen;

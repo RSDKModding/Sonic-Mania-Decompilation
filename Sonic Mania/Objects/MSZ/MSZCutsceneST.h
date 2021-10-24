@@ -28,7 +28,8 @@ typedef struct {
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    MANIA_CUTSCENE_BASE
+    int field_84;
 } EntityMSZCutsceneST;
 
 // Object Struct

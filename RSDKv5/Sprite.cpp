@@ -248,325 +248,204 @@ bool32 LoadGIF(ImageGIF *image, const char *fileName, bool32 loadHeader)
 
 
 #if RETRO_REV02
-void PNGUnpackGreyscale(ImagePNG *image, byte *data)
+void PNGUnpackGreyscale(ImagePNG *image, byte *pixelData)
 {
     byte *pixels = image->dataPtr;
     for (int c = 0; c < image->width * image->height; ++c) {
-        int a = *data;
-        int b = *data++;
-        *pixels = a | ((a | ((b | 0xFFFFFF00) << 8)) << 8);
-        pixels += 4;
+        int brightness = *pixelData++;
+        int alpha = *pixelData++;
+
+        uint colour = 0;
+
+        colour = brightness << 16;
+        pixelData++;
+        colour |= brightness << 8;
+        pixelData++;
+        colour |= brightness << 0;
+        pixelData++;
+        colour |= alpha << 24;
+        pixelData++;
+
+        *pixels++ = colour;
     }
 }
 
-void PNGUnpackGreyscaleA(ImagePNG *image, byte *data)
+void PNGUnpackGreyscaleA(ImagePNG *image, byte *pixelData)
 {
-    byte *pixels = image->dataPtr;
+    colour *pixels = (colour *)image->dataPtr;
     for (int c = 0; c < image->width * image->height; ++c) {
-        int val = *data++;
-        *pixels = val | ((val | (val << 8)) << 8) | ((val | ((val | (val << 8)) << 8)) << 24);
-        ++pixels;
+        int brightness = *pixelData++;
+
+        uint colour    = 0;
+
+        colour = brightness << 16;
+        pixelData++;
+        colour |= brightness << 8;
+        pixelData++;
+        colour |= brightness << 0;
+        pixelData++;
+        colour |= 0xFF << 24;
+        pixelData++;
+
+        *pixels++ = colour;
     }
 }
 
-void PNGUnpackRGB(ImagePNG *image, byte *data)
+void PNGUnpackRGB(ImagePNG *image, byte *pixelData)
 {
-    byte *pixels = image->dataPtr;
+    colour *pixels = (colour *)image->dataPtr;
     for (int c = 0; c < image->width * image->height; ++c) {
-        *pixels = (0xFFFFFF00 | *data) << 16;
-        data++;
-        *pixels |= *data << 8;
-        data++;
-        *pixels |= *data << 0;
-        data++;
-        pixels += 4;
+        uint colour = 0;
+
+        colour = *pixelData << 16;
+        pixelData++;
+        colour |= *pixelData << 8;
+        pixelData++;
+        colour |= *pixelData << 0;
+        pixelData++;
+        colour |= 0xFF << 24;
+        pixelData++;
+
+        *pixels++ = colour;
     }
 }
 
-void PNGUnpackRGBA(ImagePNG *image, byte *data)
+void PNGUnpackRGBA(ImagePNG *image, byte *pixelData)
 {
-    byte *pixels = image->dataPtr;
+    colour *pixels = (colour*)image->dataPtr;
     for (int c = 0; c < image->width * image->height; ++c) {
-        *pixels |= *data << 16;
-        data++;
-        *pixels |= *data << 8;
-        data++;
-        *pixels |= *data << 0;
-        data++;
-        *pixels = *data << 24;
-        data++;
-        pixels += 4;
+        uint colour = 0;
+
+        colour |= *pixelData << 16;
+        pixelData++;
+        colour |= *pixelData << 8;
+        pixelData++;
+        colour |= *pixelData << 0;
+        pixelData++;
+        colour |= *pixelData << 24;
+        pixelData++;
+
+        *pixels++ = colour;
     }
 }
 
-//TODO: cleanup
-void PNGDecodeData(ImagePNG *image, byte *dataPtr) {
-    signed int v2; 
-    int v4;        
-    byte *result;  
-    int v6;        
-    byte v7;       
-    signed int v8; 
-    byte v9;       
-    int v10;       
-    byte *v11;     
-    int v12;       
-    int v13;       
-    char v14;      
-    byte v15;      
-    signed int v16;
-    byte v17;      
-    byte *v18;       
-    int v19;       
-    byte v20;      
-    char v22;      
-    signed int v23;
-    byte v24;      
-    byte *v25;       
-    int v26;       
-    byte v27;      
-    byte* v28;       
-    byte v29;      
-    byte *v30;     
-    signed int v31;
-    byte v32;      
-    byte v33;      
-    int v34;       
-    byte *v35;       
-    int v36;       
-    int v37;       
-    byte *v38;     
-    int v39;       
-    byte v40;      
-    byte v41;      
-    int v42;       
-    byte *v43;     
-    int v44;       
-    int v45;       
-    int v46;       
-    int v47;       
-    int v48;       
-    int v49;       
-    int v50;       
-    int v51;       
-    char v52;      
-    byte v53;      
-    bool32 v54;      
-    int v55;       
-    byte v56;      
-    int v57;       
-    int v58;       
-    int v59;       
-    int v61;       
-    int v62;       
-    int v63;       
-    byte* v64;       
-    int v65;       
-    int v66;       
-    int v67;       
-    int v68;       
-    int v70;        
-
-    v2 = ((uint)image->bitDepth + 7) >> 3;
-    v2 = ((uint)image->bitDepth + 7) >> 3;
+void DecodePNGData(ImagePNG *image, byte *dataPtr)
+{
+    int colourSize = (image->bitDepth + 7) >> 3;
     switch (image->clrType) {
-        case 2: v2 *= 3; break;
-        case 4: v2 *= 2; break;
-        case 6: v2 *= 4; break;
+        case 2: colourSize *= 3; break;
+        case 4: colourSize *= 2; break;
+        case 6: colourSize *= 4; break;
     }
-    v4     = v2 * image->width;
-    v70    = v4;
-    v59    = v4 + v2;
-    result = (dataPtr + 1);
+
+    int pitch      = colourSize * image->width;
+    uint8 *dataBuffer = dataPtr + 1;
+
     if (*dataPtr == 1 || *dataPtr == 3) {
-        if (v2) {
-            v16 = v2;
-            do {
-                v17        = *result++;
-                *dataPtr++ = v17;
-                --v16;
-            } while (v16);
+        for (int c = 0; c < colourSize; ++c) {
+            *dataPtr++ = *dataBuffer++;
         }
-        if (v2 < v4) {
-            v18 = &dataPtr[-v2];
-            v19 = v4 - v2;
-            do {
-                v20        = *(byte *)(++v18 - 1) + *result++;
-                *dataPtr++ = v20;
-                --v19;
-            } while (v19);
-        LABEL_29:
-            v4 = v70;
-            goto LABEL_30;
-        }
-    }
-    else {
-        if (*dataPtr != 4) {
-            if (v4 > 0) {
-                v6 = v2 * image->width;
-                do {
-                    v7         = *result++;
-                    *dataPtr++ = v7;
-                    --v6;
-                } while (v6);
+
+        if (colourSize < pitch) {
+            uint8 *buf = &dataPtr[-colourSize];
+            for (int c = 0; c < pitch - colourSize; ++c) {
+                *dataPtr++ = *buf++ + *dataBuffer++;
             }
-            goto LABEL_30;
-        }
-        if (v2) {
-            v8 = v2;
-            do {
-                v9         = *result++;
-                *dataPtr++ = v9;
-                --v8;
-            } while (v8);
-        }
-        if (v2 < v4) {
-            v10 = v4;
-            v11 = &dataPtr[-v2];
-            v12 = v10 - v2;
-            do {
-                v13 = *v11++;
-                v14 = 0;
-                if (v13 >= 0)
-                    v14 = v13;
-                v15        = v14 + *result++;
-                *dataPtr++ = v15;
-                --v12;
-            } while (v12);
-            goto LABEL_29;
         }
     }
-LABEL_30:
-    for (int i = 1; i < image->height; ++i) {
-        v22 = *result++;
-        switch (v22) {
+    else if (*dataPtr == 4) {
+        for (int c = 0; c < colourSize; ++c) {
+            *dataPtr++ = *dataBuffer++;
+        }
+
+        if (colourSize < pitch) {
+            uint8 *buf = &dataPtr[-colourSize];
+            for (int c = 0; c < pitch - colourSize; ++c) {
+                *dataPtr++ = *buf++ + *dataBuffer++;
+            }
+        }
+    }
+    else if (pitch > 0) {
+        for (int c = 0; c < colourSize * image->width; ++c) {
+            *dataPtr++ = *dataBuffer++;
+        }
+    }
+
+    for (int h = 1; h < image->height; ++h) {
+        int type = *dataBuffer++;
+        switch (type) {
             case 1:
-                if (v2) {
-                    v23 = v2;
-                    do {
-                        v24        = *result++;
-                        *dataPtr++ = v24;
-                        --v23;
-                    } while (v23);
-                }
-                if (v2 < v4) {
-                    v25 = &dataPtr[-v2];
-                    v26 = v4 - v2;
-                    do {
-                        v27        = *(byte *)(++v25 - 1) + *result++;
-                        *dataPtr++ = v27;
-                        --v26;
-                    } while (v26);
-                    v4 = v70;
+                for (int c = 0; c < colourSize; ++c) *dataPtr++ = *dataBuffer++;
+
+                if (colourSize < pitch) {
+                    uint8 *buf = &dataPtr[-colourSize];
+                    for (int c = 0; c < pitch - colourSize; ++c) {
+                        *dataPtr++ = *buf++ + *dataBuffer++;
+                    }
                 }
                 break;
-            case 2:
-                if (v4 > 0) {
-                    v28 = &dataPtr[-v4];
-                    do {
-                        v29        = *(byte *)(++v28 - 1) + *result++;
-                        *dataPtr++ = v29;
-                        --v4;
-                    } while (v4);
-                    v4 = v70;
+            case 2: {
+                uint8 *buf = &dataPtr[-pitch];
+                for (int c = 0; c < pitch; ++c) *dataPtr++ = *buf++ + *dataBuffer++;
+                break;
+            }
+            case 3: {
+                uint8 *buf = &dataPtr[-pitch];
+                for (int c = 0; c < colourSize; ++c) *dataPtr++ = *dataBuffer++ + (*buf++ >> 1);
+
+                if (colourSize < pitch) {
+                    uint8 *buf = &dataPtr[-colourSize];
+                    int count = colourSize - pitch;
+
+                    for (int c = 0; c < pitch - colourSize; ++c) {
+                        *dataPtr++ = *dataBuffer++ + ((*(buf - 1) + (buf++)[count]) >> 1);
+                    }
                 }
                 break;
-            case 3:
-                if (v2) {
-                    v30 = &dataPtr[-v4];
-                    v31 = v2;
-                    do {
-                        v32        = *v30++;
-                        v33        = *result++ + (v32 >> 1);
-                        *dataPtr++ = v33;
-                        --v31;
-                    } while (v31);
-                    v4 = v70;
-                }
-                if (v2 < v4) {
-                    v34 = v2 - v70;
-                    v35 = &dataPtr[-v2];
-                    v36 = v70 - v2;
-                    v61 = v34;
-                    do {
-                        v37         = *(byte *)(v34 + v35++);
-                        v34         = v61;
-                        v37 = *result++ + (((uint)*(byte *)(v35 - 1) + v37) >> 1);
-                        *dataPtr++  = v37;
-                        --v36;
-                    } while (v36);
-                    v4 = v70;
-                }
-                break;
-            case 4:
-                if (v2) {
-                    v38 = &dataPtr[-v70];
-                    do {
-                        v39 = *v38;
-                        v40 = 0;
-                        if (v39 > 0 && v39 >= 0)
-                            v40 = *v38;
-                        ++v38;
-                        v41        = v40 + *result++;
-                        *dataPtr++ = v41;
-                        --v2;
-                    } while (v2);
-                    v4 = v70;
-                }
-                if (v2 < v4) {
-                    v42 = v4 - v59;
-                    v43 = &dataPtr[-v4];
-                    v64 = &dataPtr[-v4];
-                    v44 = v4 - v2;
-                    v57 = v4 - v59;
-                    v62 = v44;
-                    v63 = v44;
-                    do {
-                        v45 = v43[v42];
-                        v46 = *v43;
-                        v47 = v43[v44];
-                        v65 = v46;
-                        v66 = v45;
-                        v67 = v47 - v45;
-                        v48 = v47 - v45 + v46;
-                        v49 = v47 - v48;
-                        if (v48 > v47)
-                            v49 = v48 - v47;
-                        v58 = v49;
-                        v50 = v67;
-                        if (v48 <= v65)
-                            v50 = v65 - v48;
-                        v68 = v50;
-                        v51 = v66 - v48;
-                        if (v48 > v66)
-                            v51 = v48 - v66;
-                        if (v58 > v68 || v58 > v51) {
-                            v47 = v66;
-                            if (v68 <= v51)
-                                v47 = v65;
+            }
+            case 4: {
+                uint8 *buf = &dataPtr[-pitch];
+                for (int c = 0; c < colourSize; ++c) *dataPtr++ = *buf++ + *dataBuffer++;
+
+                if (colourSize < pitch) {
+                    buf         = &dataPtr[-pitch];
+                    int count   = pitch - colourSize;
+                    int countv2 = pitch - (pitch + colourSize);
+
+                    for (int c = 0; c < pitch - colourSize; ++c) {
+                        uint8 val1   = buf[count];
+                        uint8 val2   = *buf;
+                        uint8 val3   = buf[countv2];
+                        int dif    = val1 - val3 + val2;
+
+                        int count1 = val3 - val2;
+                        if (dif > val1)
+                            count1 = val2 - val3;
+
+                        int count2 = val1 - val3;
+                        if (dif <= val2)
+                            count2 = val3 - val1;
+
+                        int count3 = val3 - dif;
+                        if (dif > val3)
+                            count3 = dif - val3;
+
+                        if (count1 > count2 || count1 > count3) {
+                            val1 = val3;
+                            if (count2 <= count3)
+                                val1 = *buf;
                         }
-                        v52        = *result++;
-                        v42        = v57;
-                        v53        = v47 + v52;
-                        v44        = v62;
-                        *dataPtr++ = v53;
-                        v43        = (byte *)(v64 + 1);
-                        v54        = v63-- == 1;
-                        ++v64;
-                    } while (!v54);
-                    v4 = v70;
+
+                        *dataPtr++ = val1 + *dataBuffer++;
+                        ++buf;
+                    }
                 }
                 break;
-            default:
-                if (v4 > 0) {
-                    v55 = v4;
-                    do {
-                        v56        = *result++;
-                        *dataPtr++ = v56;
-                        --v55;
-                    } while (v55);
-                }
+            }
+            default: {
+                for (int c = 0; c < pitch; ++c) *dataPtr++ = *dataBuffer++;
                 break;
+            }
         }
     }
 }
@@ -581,8 +460,8 @@ bool32 LoadPNG(ImagePNG* image, const char* fileName, bool32 loadHeader) {
 
                     bool32 endFlag = false;
                     if (image->chunkHeader == 'RDHI' && image->chunkSize == 13) {
-                        ReadBytes(&image->info, &image->width, 4);
-                        ReadBytes(&image->info, &image->height, 4);
+                        image->width       = ReadInt32(&image->info, true);
+                        image->height      = ReadInt32(&image->info, true);
                         image->bitDepth    = ReadInt8(&image->info);
                         image->clrType     = ReadInt8(&image->info);
                         image->compression = ReadInt8(&image->info);
@@ -592,7 +471,7 @@ bool32 LoadPNG(ImagePNG* image, const char* fileName, bool32 loadHeader) {
                             CloseFile(&image->info);
                             return false;
                         }
-                        image->depth    = 32;
+                        image->depth = 32;
                         if (loadHeader)
                             return true;
                     }
@@ -615,16 +494,17 @@ bool32 LoadPNG(ImagePNG* image, const char* fileName, bool32 loadHeader) {
                             }
                         }
                     }
-                    else if (/*image->chunkHeader == 'TADI'*/ false) {
+                    else if (image->chunkHeader == 'TADI') {
+                        image->dataSize = sizeof(uint) * image->height * (image->width + 1);
                         if (!image->dataPtr) {
-                            AllocateStorage(sizeof(uint) * image->height * (image->width + 1), (void **)&image->dataPtr, DATASET_TMP, 0);
+                            AllocateStorage(image->dataSize, (void **)&image->dataPtr, DATASET_TMP, false);
                             if (!image->dataPtr) {
                                 CloseFile(&image->info);
                                 return false;
                             }
                         }
-                        AllocateStorage(image->chunkSize, (void **)&image->dataBuffer, DATASET_TMP, 0);
-                        ReadBytes(&image->info, image->dataBuffer, image->chunkSize);
+                        AllocateStorage(image->chunkSize, (void **)&image->chunkBuffer, DATASET_TMP, false);
+                        ReadBytes(&image->info, image->chunkBuffer, image->chunkSize);
 
                         byte *dataPtr = NULL;
                         switch (image->clrType) {
@@ -635,16 +515,14 @@ bool32 LoadPNG(ImagePNG* image, const char* fileName, bool32 loadHeader) {
                             default: dataPtr = image->dataPtr; break;
                         }
 
-                        image->dataSize = 4 * image->height * (image->width + 1);
-                        ReadZLib(&image->info, (byte **)&image->dataBuffer, image->chunkSize, image->dataSize);
-                        PNGDecodeData(image, dataPtr);
+                        ReadZLib(&image->info, (byte **)&image->chunkBuffer, image->chunkSize, (byte **)&image->dataPtr, image->dataSize);
+                        DecodePNGData(image, dataPtr);
                         switch (image->clrType) {
                             case 0: PNGUnpackGreyscale(image, dataPtr); break;
                             case 2: PNGUnpackRGB(image, dataPtr); break;
                             case 3:
                                 for (int c = 0; c < image->width * image->height; ++c) {
-                                    image->dataPtr[c] = image->palette[*dataPtr] | 0xFF000000;
-                                    ++dataPtr;
+                                    image->dataPtr[c] = image->palette[*dataPtr++] | 0xFF000000;
                                 }
                                 break;
                             case 4: PNGUnpackGreyscaleA(image, dataPtr); break;
@@ -674,181 +552,175 @@ bool32 LoadPNG(ImagePNG* image, const char* fileName, bool32 loadHeader) {
 #endif
 
 #if !RETRO_REV02
-bool32 LoadTGA(const char *filename)
+bool32 LoadTGA(ImagePNG *image, const char *filename)
 {
-    FileInfo info;
-    MEM_ZERO(info);
+    if (LoadFile(&image->info, filename, FMODE_RB)) {
+        byte startOffset      = ReadInt8(&image->info);
+        byte colourmaptype    = ReadInt8(&image->info);
+        byte datatypecode     = ReadInt8(&image->info);
+        short colourmaporigin = ReadInt16(&image->info);
+        short colourmaplength = ReadInt16(&image->info);
+        byte colourmapdepth   = ReadInt8(&image->info);
+        short originX         = ReadInt16(&image->info);
+        short originY         = ReadInt16(&image->info);
+        image->width          = ReadInt16(&image->info);
+        image->height         = ReadInt16(&image->info);
+        byte imageBPP         = ReadInt8(&image->info);
+        byte imagedescriptor  = ReadInt8(&image->info);
+        bool32 reverse        = (~imagedescriptor >> 4) & 1;
+        if (imageBPP >= 0x10) {
+            if (startOffset)
+                Seek_Cur(&image->info, startOffset);
 
-    if (LoadFile(&info, filename, FMODE_RB)) {
-        byte idlength         = ReadInt8(&info);
-        byte colourmaptype    = ReadInt8(&info);
-        byte datatypecode     = ReadInt8(&info);
-        short colourmaporigin = ReadInt16(&info);
-        short colourmaplength = ReadInt16(&info);
-        byte colourmapdepth   = ReadInt8(&info);
-        short x_origin        = ReadInt16(&info);
-        short y_origin        = ReadInt16(&info);
-        short width           = ReadInt16(&info);
-        short height          = ReadInt16(&info);
-        byte bitsperpixel     = ReadInt8(&info);
-        byte imagedescriptor  = ReadInt8(&info);
-        bool32 flag           = (~imagedescriptor >> 4) & 1;
-        if (width == 1024 && height == 512 && bitsperpixel >= 0x10) {
-            if (idlength)
-                Seek_Cur(&info, idlength);
+            AllocateStorage(sizeof(uint) * image->height * image->width, (void **)&image->dataPtr, DATASET_TMP, false);
+            uint *imageData = (uint *)image->dataPtr;
+            if (reverse)
+                imageData += (image->height * image->width) - image->width;
 
-            uint *imageData = NULL;
-            AllocateStorage(0x200000u, (void **)&imageData, DATASET_TMP, false);
-            if (flag)
-                imageData += 0x7FC00;
-
-            int y = 0;
+            int x = 0;
             if (datatypecode == 2) {
-                switch (bitsperpixel) {
+                switch (imageBPP) {
                     case 0x10:
-                        for (int i = 0; i < 0x80000; ++i) {
-                            byte val[2];
-                            ReadBytes(&info, val, sizeof(ushort));
-                            if (val[0] + (val[1] << 8) < 0)
-                                *imageData = 8 * (val[0] & 0x1F | 8 * ((val[0] + (val[1] << 8)) & 0x3E0 | 0x3FC00));
+                        for (int i = 0; i < image->height * image->width; ++i) {
+                            byte bytes[2];
+                            ReadBytes(&image->info, bytes, sizeof(ushort));
+                            if (bytes[0] + (bytes[1] << 8) < 0)
+                                *imageData++ = 8 * (bytes[0] & 0x1F | 8 * ((bytes[0] + (bytes[1] << 8)) & 0x3E0 | 0x3FC00));
                             else
-                                *imageData = 0;
-                            ++imageData;
-                            if (flag && ++y == 1024) {
-                                y = 0;
-                                imageData -= 2048;
+                                *imageData++ = 0;
+
+                            if (reverse && ++x == image->width) {
+                                x = 0;
+                                imageData -= image->width << 1;
                             }
                         }
                         break;
                     case 0x18:
-                        for (int i = 0; i < 0x80000; ++i) {
-                            byte val[3];
-                            ReadBytes(&info, val, 3 * sizeof(byte));
-                            *imageData = val[0] | ((val[1] | 0xFF00) << 8);
-                            ++imageData;
-                            if (flag && ++y == 1024) {
-                                y = 0;
-                                imageData -= 2048;
+                        for (int i = 0; i < image->height * image->width; ++i) {
+                            byte channels[3];
+                            ReadBytes(&image->info, channels, sizeof(colour) - 1);
+                            *imageData++ = (channels[0] << 0) | (channels[1] << 8) | (channels[2] << 16) | (0xFF << 24);
+
+                            if (reverse && ++x == image->width) {
+                                x = 0;
+                                imageData -= image->width << 1;
                             }
                         }
                         break;
                     case 0x20:
-                        for (int i = 0; i < 0x80000; ++i) {
-                            byte val[4];
-                            ReadBytes(&info, val, 4 * sizeof(byte));
-                            *imageData = (val[0] << 0) | (val[1] << 8) | (val[2] << 16) | (val[3] << 24);
-                            ++imageData;
-                            if (flag && ++y == 1024) {
-                                y = 0;
-                                imageData -= 2048;
+                        for (int i = 0; i < image->height * image->width; ++i) {
+                            byte channels[4];
+                            ReadBytes(&image->info, channels, sizeof(colour));
+                            *imageData++ = (channels[0] << 0) | (channels[1] << 8) | (channels[2] << 16) | (channels[3] << 24);
+
+                            if (reverse && ++x == image->width) {
+                                x = 0;
+                                imageData -= image->width << 1;
                             }
                         }
                         break;
                 }
             }
             else if (datatypecode == 10) {
-                switch (bitsperpixel) {
+                switch (imageBPP) {
                     case 0x10: {
-                        ushort value = 0;
+                        ushort colour16 = 0;
                         byte count = 0, flag = 0;
-                        for (int i = 0; i < 0x80000; ++i) {
+                        byte bytes[2];
+
+                        for (int i = 0; i < image->height * image->width; ++i) {
                             if (count) {
                                 if (!flag) {
                                     byte val[2];
-                                    ReadBytes(&info, val, sizeof(ushort));
-                                    value = val[0] + (val[1] << 8);
+                                    ReadBytes(&image->info, val, sizeof(ushort));
                                 }
                                 --count;
                             }
                             else {
                                 byte flags = 0;
-                                ReadBytes(&info, &flags, sizeof(byte));
+                                ReadBytes(&image->info, &flags, sizeof(byte));
                                 flag  = flags & 0x80;
                                 count = flags & 0x7F;
                                 flags &= 0x80;
-                                byte val[2];
-                                ReadBytes(&info, val, sizeof(ushort));
-                                ushort value = val[0] + (val[1] << 8);
+
+                                ReadBytes(&image->info, bytes, sizeof(ushort));
                             }
 
-                            if (value < 0) {
-                                *imageData = 8 * (value & 0x1F | 8 * (value & 0x3E0 | 0x3FC00));
-                            }
-                            else {
-                                *imageData = 0;
-                            }
+                            colour16 = bytes[0] + (bytes[1] << 8);
+                            if (colour16 < 0)
+                                *imageData++ = 8 * (colour16 & 0x1F | 8 * (colour16 & 0x3E0 | 0x3FC00));
+                            else
+                                *imageData++ = 0;
 
                             ++imageData;
-                            if (flag && ++y == 1024) {
-                                y = 0;
-                                imageData -= 2048;
+                            if (reverse && ++x == image->width) {
+                                x = 0;
+                                imageData -= image->width << 1;
                             }
                         }
-                    } break;
+                        break;
+                    }
                     case 0x18: {
-                        byte val[3];
-                        memset(val, 0, sizeof(val));
+                        byte channels[3];
+                        memset(channels, 0, sizeof(channels));
                         byte count = 0, flag = 0;
-                        for (int i = 0; i < 0x80000; ++i) {
+                        for (int i = 0; i < image->height * image->width; ++i) {
                             if (count) {
                                 if (!flag) {
-                                    ReadBytes(&info, val, 3 * sizeof(byte));
+                                    ReadBytes(&image->info, channels, sizeof(colour) - 1);
                                 }
                                 --count;
                             }
                             else {
                                 byte flags = 0;
-                                ReadBytes(&info, &flags, sizeof(byte));
+                                ReadBytes(&image->info, &flags, sizeof(byte));
                                 flag  = flags & 0x80;
                                 count = flags & 0x7F;
                                 flags &= 0x80;
-                                byte val[2];
-                                ReadBytes(&info, val, sizeof(ushort));
-                            }
-                            *imageData = val[0] | ((val[1] | 0xFF00) << 8);
 
-                            ++imageData;
-                            if (flag && ++y == 1024) {
-                                y = 0;
-                                imageData -= 2048;
+                                ReadBytes(&image->info, channels, sizeof(colour) - 1);
+                            }
+                            *imageData++ = (channels[0] << 0) | (channels[1] << 8) | (channels[2] << 16) | (0xFF << 24);
+
+                            if (reverse && ++x == image->width) {
+                                x = 0;
+                                imageData -= image->width << 1;
                             }
                         }
-                    } break;
+                        break;
+                    } 
                     case 0x20: {
-                        byte val[sizeof(uint)];
-                        memset(val, 0, sizeof(val));
+                        byte channels[sizeof(colour)];
+                        memset(channels, 0, sizeof(channels));
                         byte count = 0, flag = 0;
-                        for (int i = 0; i < 0x80000; ++i) {
+                        for (int i = 0; i < image->height * image->width; ++i) {
                             if (count) {
                                 if (!flag) {
-                                    ReadBytes(&info, val, sizeof(uint));
+                                    ReadBytes(&image->info, channels, sizeof(uint));
                                 }
                                 --count;
                             }
                             else {
                                 byte flags = 0;
-                                ReadBytes(&info, &flags, sizeof(byte));
+                                ReadBytes(&image->info, &flags, sizeof(byte));
                                 flag  = flags & 0x80;
                                 count = flags & 0x7F;
                                 flags &= 0x80;
-                                byte val[2];
-                                ReadBytes(&info, val, sizeof(ushort));
-                            }
-                            *imageData = (val[0] << 0) | (val[1] << 8) | (val[2] << 16) | (val[3] << 24);
 
-                            ++imageData;
-                            if (flag && ++y == 1024) {
-                                y = 0;
-                                imageData -= 2048;
+                                ReadBytes(&image->info, channels, sizeof(colour));
+                            }
+                            *imageData++ = (channels[0] << 0) | (channels[1] << 8) | (channels[2] << 16) | (channels[3] << 24);
+
+                            if (reverse && ++x == image->width) {
+                                x = 0;
+                                imageData -= image->width << 1;
                             }
                         }
-                    } break;
+                        break;
+                    } 
                 }
             }
-            CloseFile(&info);
-            //SetImageTexture(512, 1024, imageData);
-            //sub_5AD370(&imageData);
-            imageData = NULL;
+            CloseFile(&image->info);
             return true;
         }
     }
@@ -933,7 +805,7 @@ ushort LoadSpriteSheet(const char *filename, Scopes scope)
     }
 }
 
-bool32 LoadImage(const char *filename, double displayTime, double delta, bool32 (*skipCallback)(void))
+bool32 LoadImage(const char *filename, double displayLength, double speed, bool32 (*skipCallback)(void))
 {
     char buffer[0x100];
     sprintf(buffer, "Data/Images/%s", filename);
@@ -945,9 +817,9 @@ bool32 LoadImage(const char *filename, double displayTime, double delta, bool32 
 #if RETRO_REV02
     if (LoadPNG(&image, buffer, false)) {
         if (image.width == 1024 && image.height == 512)
-           SetImageTexture(512, 1024, image.dataPtr);
+            SetImageTexture(image.width, image.height, image.dataPtr);
 
-        engine.displayTime    = displayTime;
+        engine.displayTime    = displayLength;
         engine.prevShaderID   = engine.shaderID;
         engine.prevEngineMode = sceneInfo.state;
         engine.dimMax         = 0.0;
@@ -955,34 +827,38 @@ bool32 LoadImage(const char *filename, double displayTime, double delta, bool32 
         engine.screenCount    = 0;
         engine.skipCallback   = skipCallback;
         sceneInfo.state       = ENGINESTATE_SHOWPNG;
-        engine.imageDelta     = delta / 60.0;
+        engine.imageDelta     = speed / 60.0;
 
         image.palette = NULL;
         image.dataPtr = NULL;
         CloseFile(&image.info);
         return true;
     }
+#elif !RETRO_REV02
+    if (LoadTGA(&image, buffer)) {
+        if (image.width == 1024 && image.height == 512)
+            SetImageTexture(image.width, image.height, image.dataPtr);
+
+        engine.displayTime    = displayLength;
+        engine.prevShaderID   = engine.shaderID;
+        engine.prevEngineMode = sceneInfo.state;
+        engine.dimMax         = 0.0;
+        engine.shaderID       = SHADER_RGB_IMAGE;
+        engine.screenCount    = 0;
+        engine.skipCallback   = skipCallback;
+        sceneInfo.state       = ENGINESTATE_SHOWPNG;
+        engine.imageDelta     = speed / 60.0;
+
+        image.palette = NULL;
+        image.dataPtr = NULL;
+        CloseFile(&image.info);
+        return true;
+    }
+#endif
     else {
         image.palette = NULL;
         image.dataPtr = NULL;
         CloseFile(&image.info);
     }
-#elif !RETRO_REV02
-    if (LoadTGA(buffer)) {
-        if (image.width == 1024 && image.height == 512)
-            SetImageTexture(512, 1024, image.dataPtr);
-
-        engine.displayTime    = displayTime;
-        engine.prevShaderID   = engine.shaderID;
-        engine.prevEngineMode = sceneInfo.state;
-        engine.dimMax         = 0.0;
-        engine.shaderID       = SHADER_RGB_IMAGE;
-        engine.screenCount    = 0;
-        engine.skipCallback   = skipCallback;
-        sceneInfo.state       = ENGINESTATE_SHOWPNG;
-        engine.imageDelta     = delta / 60.0;
-        return true;
-    }
-#endif
     return false;
 }

@@ -5,12 +5,15 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    int field_4;
+    uint16 sfxImpact;
+    uint16 playerFrames;
 } ObjectMSZ1KIntro;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    MANIA_CUTSCENE_BASE
 } EntityMSZ1KIntro;
 
 // Object Struct
@@ -28,6 +31,8 @@ void MSZ1KIntro_EditorLoad(void);
 void MSZ1KIntro_Serialize(void);
 
 // Extra Entity Functions
-
+bool32 MSZ1KIntro_CutsceneState_Unknown1(EntityCutsceneSeq *host);
+bool32 MSZ1KIntro_CutsceneState_Unknown2(EntityCutsceneSeq *host);
+bool32 MSZ1KIntro_CutsceneState_Unknown3(EntityCutsceneSeq *host);
 
 #endif //!OBJ_MSZ1KINTRO_H

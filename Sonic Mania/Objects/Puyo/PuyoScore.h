@@ -5,12 +5,19 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    uint16 aniFrames;
 } ObjectPuyoScore;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    StateMachine(state);
+    int32 playerID;
+    bool32 counter;
+    bool32 flag;
+    int32 score;
+    Animator animator;
 } EntityPuyoScore;
 
 // Object Struct
@@ -28,6 +35,6 @@ void PuyoScore_EditorLoad(void);
 void PuyoScore_Serialize(void);
 
 // Extra Entity Functions
-
+void PuyoScore_DrawScore(int score);
 
 #endif //!OBJ_PUYOSCORE_H

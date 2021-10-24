@@ -24,7 +24,7 @@ void MSZSetup_StageLoad(void)
     }
     else {
 #if RETRO_USE_PLUS
-        // GiantPistol->field_4   = false;
+        GiantPistol->flag      = false;
         MSZSetup->chuggaVolume = 0;
 #endif
 
@@ -124,7 +124,7 @@ void MSZSetup_StageLoad(void)
                     if (PlayerHelpers_CheckAct1Regular())
                         Zone->stageFinishCallback = MSZSetup_StageFinishCB_ST;
 #if RETRO_USE_PLUS
-                    // GiantPistol->field_4 = true;
+                    GiantPistol->flag = true;
 #endif
                 }
 #if RETRO_USE_PLUS
@@ -168,6 +168,25 @@ void MSZSetup_Unknown2(void)
         if (RSDK_sceneInfo->filter == SCN_FILTER_MANIA)
 #endif
             parallaxSprite->parallaxFactor.x = 0;
+    }
+}
+
+void MSZSetup_Unknown3(void)
+{
+    int32 id       = 0;
+    TileLayer *bg1 = RSDK.GetSceneLayer(0);
+    for (int32 i = 0; i < bg1->scrollInfoCount; ++i) {
+        bg1->scrollInfo[i].scrollSpeed = MSZSetup->field_138[id++];
+    }
+
+    TileLayer *bg2 = RSDK.GetSceneLayer(1);
+    for (int32 i = 0; i < bg2->scrollInfoCount; ++i) {
+        bg2->scrollInfo[i].scrollSpeed = MSZSetup->field_138[id++];
+    }
+
+    foreach_all(ParallaxSprite, parallaxSprite)
+    {
+        parallaxSprite->scrollSpeed.x = MSZSetup->field_138[id++] << 8;
     }
 }
 
@@ -350,14 +369,156 @@ void MSZSetup_Unknown12(void)
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     TileLayer *layer      = RSDK.GetSceneLayer(3);
     // HIBYTE(layer->scrollInfo[1].scrollPos)            = 0;
+    layer->scrollInfo[1].scrollPos   &= 0x00FFFFFF;
     layer->scrollInfo[1].scrollSpeed = 0x600 * MSZSetup->chuggaVolume;
 
     if (player1->position.x > 0x360C0000) {
-        // GiantPistol->field_4 = true;
-        // entity->state            = MSZSetup_Unknown13;
+        GiantPistol->flag = true;
+        entity->state     = MSZSetup_Unknown13;
+    }
+}
+
+void MSZSetup_Unknown13(void)
+{
+    RSDK_THIS(MSZSetup);
+    TileLayer *layer = RSDK.GetSceneLayer(3);
+    // HIBYTE(layer->scrollInfo[1].scrollPos)            = 0;
+    layer->scrollInfo[1].scrollPos &= 0x00FFFFFF;
+    layer->scrollInfo[1].scrollSpeed = 0x600 * MSZSetup->chuggaVolume;
+
+    if (!MSZSetup->parallaxMult) {
+        MSZSetup->chuggaVolume -= 4;
+        RSDK.SetChannelAttributes(MSZSetup->chuggaChannel, MSZSetup->chuggaVolume * 0.00390625, 0.0, 1.0);
+        if (MSZSetup->chuggaVolume <= 0) {
+            layer->scrollInfo[1].scrollSpeed = 0;
+            layer->scrollInfo[1].scrollPos   = 0;
+            MSZSetup->chuggaVolume           = 0;
+            entity->state                    = MSZSetup_Unknown14;
+        }
+    }
+}
+
+void MSZSetup_Unknown14(void)
+{
+    RSDK_THIS(MSZSetup);
+    if (RSDK_GET_ENTITY(SLOT_ACTCLEAR, ActClear)->objectID == ActClear->objectID)
+        entity->state = MSZSetup_Unknown16;
+}
+
+void MSZSetup_Unknown16(void)
+{
+    RSDK_THIS(MSZSetup);
+
+    if (RSDK_GET_ENTITY(SLOT_ACTCLEAR, ActClear)->objectID != ActClear->objectID) {
+        entity->timer                                      = 0;
+        Zone->screenBoundsR1[0]                        = 17064;
+        Zone->playerBoundActiveR[0]                    = false;
+
+        EntityPlayer *player1                              = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
+        player1->stateInput   = StateMachine_None;
+
+        foreach_active(Player, player)
+        {
+            RSDK.SetSpriteAnimation(player->spriteIndex, ANI_IDLE, &player->playerAnimator, true, 0);
+            player->up        = false;
+            player->down      = false;
+            player->left      = false;
+            player->right     = false;
+            player->jumpPress = false;
+            player->jumpHold  = false;
+            player->state     = Player_State_Ground;
+        }
+        entity->state = MSZSetup_Unknown17;
+    }
+}
+
+void MSZSetup_Unknown17(void)
+{
+    RSDK_THIS(MSZSetup);
+    EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
+    player1->right = true;
+
+    if (player1->position.x < (Zone->screenBoundsR1[0] - RSDK_screens->centerX) << 16) {
+        foreach_active(Player, player)
+        {
+            if (player->groundVel > 0x30000)
+                player->groundVel = 0x30000;
+        }
+    }
+    else {
+        player1->right = false;
+        player1->left  = true;
+        entity->state = MSZSetup_Unknown18;
+    }
+}
+
+void MSZSetup_Unknown18(void)
+{
+    RSDK_THIS(MSZSetup);
+    EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
+    if (player1->groundVel <= 0) {
+        player1->groundVel = 0;
+        player1->left           = false;
+        player1->direction = FLIP_NONE;
+        entity->timer           = 0;
+        entity->state           = MSZSetup_Unknown19;
+    }
+}
+
+void MSZSetup_Unknown19(void)
+{
+    RSDK_THIS(MSZSetup);
+    EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
+    player1->direction = FLIP_NONE;
+
+    if (++entity->timer >= 90) {
+        int id         = 0;
+
+        TileLayer *bg1 = RSDK.GetSceneLayer(0);
+        for (int i = 0; i < bg1->scrollInfoCount; ++i) {
+            globals->parallaxOffset[id++] = bg1->scrollInfo[i].tilePos;
+        }
+
+        TileLayer *bg2 = RSDK.GetSceneLayer(0);
+        for (int i = 0; i < bg2->scrollInfoCount; ++i) {
+            globals->parallaxOffset[id++] = bg2->scrollInfo[i].tilePos;
+        }
+
+        foreach_all(ParallaxSprite, sprite)
+        {
+            globals->parallaxOffset[id++] =
+                ((sprite->scrollPos.x + sprite->parallaxFactor.x * RSDK_screens->position.x) & 0x7FFF0000) % sprite->loopPoint.x;
+        }
+
+        Zone_StoreEntities((RSDK_screens->centerX + 16640) << 16, 0x5A00000);
+        globals->atlEnabled = true;
+        RSDK.LoadScene();
+        destroyEntity(entity);
     }
 }
 #endif
+
+void MSZSetup_Unknown21(void)
+{
+    int id = 0;
+
+    TileLayer *bg1 = RSDK.GetSceneLayer(0);
+    for (int i = 0; i < bg1->scrollInfoCount; ++i) {
+        globals->parallaxOffset[id++] = bg1->scrollInfo[i].scrollPos;
+    }
+
+    TileLayer *bg2 = RSDK.GetSceneLayer(0);
+    for (int i = 0; i < bg2->scrollInfoCount; ++i) {
+        globals->parallaxOffset[id++] = bg2->scrollInfo[i].scrollPos;
+    }
+
+    foreach_all(ParallaxSprite, sprite) { globals->parallaxOffset[id++] = sprite->scrollPos.x; }
+
+    Zone_StoreEntities((Zone->screenBoundsL1[0] + RSDK_screens->centerX) << 16, 0x5A00000);
+    ++RSDK_sceneInfo->listPos;
+    globals->atlEnabled = true;
+    RSDK.LoadScene();
+}
 
 void MSZSetup_PlayerState_Pilot(void)
 {

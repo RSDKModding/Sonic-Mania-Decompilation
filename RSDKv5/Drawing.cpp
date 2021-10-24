@@ -523,12 +523,12 @@ void SetImageTexture(int width, int height, byte *imagePixels)
     if (engine.imageTexture)
         SDL_DestroyTexture(engine.imageTexture);
 
-    engine.imageTexture = SDL_CreateTexture(engine.renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STREAMING, width, height);
+    engine.imageTexture = SDL_CreateTexture(engine.renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, width, height);
 
     int pitch = 0;
     byte *pixels;
     SDL_LockTexture(engine.imageTexture, NULL, (void **)&pixels, &pitch);
-    memcpy(pixels, imagePixels, pitch * SCREEN_YSIZE);
+    memcpy(pixels, imagePixels, pitch * height);
     SDL_UnlockTexture(engine.imageTexture);
 #endif
 }

@@ -452,7 +452,7 @@ void runRetroEngine()
                         }
                     }
                     else {
-                        engine.displayTime -= 0.0166666667f;
+                        engine.displayTime -= 0.01666666666666667;
                         if (engine.skipCallback) {
                             if (engine.skipCallback())
                                 engine.displayTime = 0.0;

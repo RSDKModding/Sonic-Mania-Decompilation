@@ -5,12 +5,26 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    uint16 aniFrames;
+    uint16 sfxMenuBleep;
+    uint16 sfxMenuAccept;
 } ObjectPuyoLevelSelect;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    StateMachine(state);
+    int32 playerID;
+    bool32 flag;
+    bool32 ready;
+    int32 optionID;
+    Animator animator1;
+    Animator animator2;
+    bool32 up;
+    bool32 down;
+    bool32 confirmPress;
+    bool32 backPress;
 } EntityPuyoLevelSelect;
 
 // Object Struct
@@ -28,6 +42,7 @@ void PuyoLevelSelect_EditorLoad(void);
 void PuyoLevelSelect_Serialize(void);
 
 // Extra Entity Functions
-
+void PuyoLevelSelect_DrawSprites(void);
+void PuyoLevelSelect_HandleMenuMovement(void);
 
 #endif //!OBJ_PUYOLEVELSELECT_H
