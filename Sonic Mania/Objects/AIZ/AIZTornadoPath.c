@@ -19,10 +19,10 @@ void AIZTornadoPath_Create(void *data)
     RSDK_THIS(AIZTornadoPath);
     if (!RSDK_sceneInfo->inEditor) {
         switch (entity->type) {
-            case 0:
+            case AIZTORNADOPATH_0:
                 if (!StarPost->postIDs[0]) {
                     entity->active       = ACTIVE_NORMAL;
-                    EntityCamera *camera = (EntityCamera *)RSDK.GetEntityByID(SLOT_CAMERA1);
+                    EntityCamera *camera = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
                     if (camera) {
                         camera->state          = StateMachine_None;
                         camera->position.x     = entity->position.x;
@@ -38,31 +38,31 @@ void AIZTornadoPath_Create(void *data)
                     entity->state            = AIZTornadoPath_Unknown2;
                 }
                 break;
-            case 1: entity->active = ACTIVE_NEVER; break;
-            case 2:
+            case AIZTORNADOPATH_1: entity->active = ACTIVE_NEVER; break;
+            case AIZTORNADOPATH_2:
                 entity->active = ACTIVE_NEVER;
                 entity->timer  = 1;
                 entity->state  = AIZTornadoPath_Unknown2;
                 break;
-            case 3:
+            case AIZTORNADOPATH_3:
                 entity->active = ACTIVE_NEVER;
                 entity->state  = AIZTornadoPath_Unknown3;
                 break;
-            case 4:
+            case AIZTORNADOPATH_4:
                 entity->active = ACTIVE_NEVER;
                 entity->state  = AIZTornadoPath_Unknown4;
                 break;
-            case 5:
+            case AIZTORNADOPATH_5:
                 entity->active = ACTIVE_NEVER;
                 entity->timer  = 1;
                 entity->state  = AIZTornadoPath_Unknown5;
                 break;
-            case 6:
+            case AIZTORNADOPATH_6:
                 entity->state  = AIZTornadoPath_Unknown6;
                 entity->active = (StarPost->postIDs[0] > 0) ? ACTIVE_XBOUNDS : ACTIVE_NEVER;
                 entity->speed  = entity->targetSpeed;
                 break;
-            case 7:
+            case AIZTORNADOPATH_7:
                 entity->active = ACTIVE_NEVER;
                 entity->timer  = 1;
                 entity->speed  = entity->targetSpeed;
@@ -233,7 +233,7 @@ void AIZTornadoPath_Unknown7(void)
         int32 xOffset        = 0;
         foreach_all(AIZTornadoPath, node)
         {
-            if (node->type == 7) {
+            if (node->type == AIZTORNADOPATH_7) {
                 xOffset      = node->position.x - player->position.x;
                 node->active = ACTIVE_NORMAL;
             }
@@ -255,9 +255,28 @@ void AIZTornadoPath_Unknown7(void)
     }
 }
 
-void AIZTornadoPath_EditorDraw(void) {}
+void AIZTornadoPath_EditorDraw(void)
+{
+    RSDK_THIS(AIZTornadoPath);
+    RSDK.SetSpriteAnimation(AIZTornadoPath->aniFrames, 0, &entity->animator, true, 7);
+    RSDK.DrawSprite(&entity->animator, NULL, false);
+}
 
-void AIZTornadoPath_EditorLoad(void) {}
+void AIZTornadoPath_EditorLoad(void)
+{
+    AIZTornadoPath->aniFrames = RSDK.LoadSpriteAnimation("Editor/EditorIcons.bin", SCOPE_STAGE);
+    RSDK.SetSpriteAnimation(AIZTornadoPath->aniFrames, 0, &AIZTornadoPath->animator, true, 7);
+
+    RSDK_ACTIVE_VAR(AIZTornadoPath, type);
+    RSDK_ENUM_VAR(AIZTORNADOPATH_0);
+    RSDK_ENUM_VAR(AIZTORNADOPATH_1);
+    RSDK_ENUM_VAR(AIZTORNADOPATH_2);
+    RSDK_ENUM_VAR(AIZTORNADOPATH_3);
+    RSDK_ENUM_VAR(AIZTORNADOPATH_4);
+    RSDK_ENUM_VAR(AIZTORNADOPATH_5);
+    RSDK_ENUM_VAR(AIZTORNADOPATH_6);
+    RSDK_ENUM_VAR(AIZTORNADOPATH_7);
+}
 
 void AIZTornadoPath_Serialize(void)
 {

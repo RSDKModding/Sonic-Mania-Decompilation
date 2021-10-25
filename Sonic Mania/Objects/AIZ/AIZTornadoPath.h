@@ -3,19 +3,25 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    AIZTORNADOPATH_0,
+    AIZTORNADOPATH_1,
+    AIZTORNADOPATH_2,
+    AIZTORNADOPATH_3,
+    AIZTORNADOPATH_4,
+    AIZTORNADOPATH_5,
+    AIZTORNADOPATH_6,
+    AIZTORNADOPATH_7,
+} TornadoPathTypes;
+
 // Object Class
 typedef struct {
     RSDK_OBJECT
     EntityAIZTornado *tornado;
     Entity *camera;
     Vector2 field_C;
-    int32 field_14;
-    int32 field_18;
-    int32 field_1C;
-    int32 field_20;
-    int32 field_24;
-    int32 field_28;
-    int32 field_2C;
+    uint16 aniFrames;
+    Animator animator;
 } ObjectAIZTornadoPath;
 
 // Entity Class
@@ -27,12 +33,7 @@ typedef struct {
     int32 timer;
     bool32 easeToSpeed;
     int32 speed;
-    int32 field_70;
-    int32 field_74;
-    int32 field_78;
-    int32 field_7C;
-    int32 field_80;
-    int32 field_84;
+    Animator animator;
 } EntityAIZTornadoPath;
 
 // Object Struct

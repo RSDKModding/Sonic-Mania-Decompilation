@@ -5,7 +5,11 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    int field_4;
+    EntityGiantPistol *pistol;
+    Entity *parallaxSprite;
+    EntityEggPrison *prison;
 } ObjectMSZ2Cutscene;
 
 // Entity Class
@@ -28,6 +32,12 @@ void MSZ2Cutscene_EditorLoad(void);
 void MSZ2Cutscene_Serialize(void);
 
 // Extra Entity Functions
+void MSZ2Cutscene_SetupCutscene(void);
+void MSZ2Cutscene_GetPistolPtr(void);
 
+bool32 MSZ2Cutscene_CutsceneState_Unknown1(EntityCutsceneSeq *host);
+bool32 MSZ2Cutscene_CutsceneState_Unknown2(EntityCutsceneSeq *host);
+bool32 MSZ2Cutscene_CutsceneState_Unknown3(EntityCutsceneSeq *host);
+bool32 MSZ2Cutscene_CutsceneState_Unknown4(EntityCutsceneSeq *host);
 
 #endif //!OBJ_MSZ2CUTSCENE_H

@@ -89,6 +89,7 @@ void MSZSetup_Unknown19(void);
 #endif
 void MSZSetup_Unknown21(void);
 
-void MSZSetup_PlayerState_Pilot(void);
+void MSZSetup_Player_State_Pilot(void);
+void MSZSetup_Player_State_PostCrashJumpIn(void);
 
 #endif //!OBJ_MSZSETUP_H

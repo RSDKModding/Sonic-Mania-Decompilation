@@ -5,12 +5,26 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    uint16 aniFrames;
+    uint16 sfxFlyover;
+    bool32 isPlayingFlyover;
+    int32 flyoverChannel;
+    Entity *weatherTV;
 } ObjectTVFlyingBattery;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    int32 field_58;
+    Vector2 field_5C;
+    int32 field_64;
+    int32 oscillation;
+    int32 field_6C;
+    int32 field_70;
+    Animator animator1;
+    Animator animator2;
+    Animator animator3;
 } EntityTVFlyingBattery;
 
 // Object Struct
@@ -28,6 +42,7 @@ void TVFlyingBattery_EditorLoad(void);
 void TVFlyingBattery_Serialize(void);
 
 // Extra Entity Functions
-
+void TVFlyingBattery_DrawSection(Vector2 drawPos, bool32 flag);
+void TVFlyingBattery_DrawSprites(void);
 
 #endif //!OBJ_TVFLYINGBATTERY_H

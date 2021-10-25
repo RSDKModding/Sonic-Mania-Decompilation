@@ -247,7 +247,7 @@ void MSZSetup_ManageFadeE(void)
 
 void MSZSetup_StageFinishCB_ST(void)
 {
-    // MSZCutsceneST->actFinishFlag = true;
+    MSZCutsceneST->actFinishFlag = true;
 }
 
 void MSZSetup_StageFinishCB_K(void)
@@ -520,7 +520,7 @@ void MSZSetup_Unknown21(void)
     RSDK.LoadScene();
 }
 
-void MSZSetup_PlayerState_Pilot(void)
+void MSZSetup_Player_State_Pilot(void)
 {
     RSDK_THIS(Player);
     entity->position.x  = 0;
@@ -531,6 +531,16 @@ void MSZSetup_PlayerState_Pilot(void)
     entity->position.x  = RSDK_screens->position.x << 16;
     entity->position.y  = RSDK_screens->position.y << 16;
     Player->jumpInDelay = 0;
+}
+
+void MSZSetup_Player_State_PostCrashJumpIn(void)
+{
+    RSDK_THIS(Player);
+    entity->active      = ACTIVE_NORMAL;
+    entity->visible     = true;
+    entity->stateInput  = Player_ProcessP2Input_AI;
+    Player->jumpInDelay = 240;
+    Player_P2JumpBackIn();
 }
 
 void MSZSetup_EditorDraw(void) {}

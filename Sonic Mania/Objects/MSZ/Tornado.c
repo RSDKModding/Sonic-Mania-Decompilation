@@ -75,7 +75,7 @@ void Tornado_Create(void *data)
             RSDK.SetSpriteAnimation(Tornado->knuxFrames, 6, &entity->animatorKnux, false, 0);
         EntityPlayer *player2 = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
         if (player2->objectID == Player->objectID)
-            player2->state = MSZSetup_PlayerState_Pilot;
+            player2->state = MSZSetup_Player_State_Pilot;
     }
 }
 

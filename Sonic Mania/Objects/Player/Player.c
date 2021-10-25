@@ -685,6 +685,8 @@ void Player_StageLoad(void)
     Player->rightState      = false;
     Player->jumpPressState  = false;
     Player->jumpHoldState   = false;
+
+    //Sfx Loading
     Player->sfx_Jump        = RSDK.GetSFX("Global/Jump.wav");
     Player->sfx_LoseRings   = RSDK.GetSFX("Global/LoseRings.wav");
     Player->sfx_Hurt        = RSDK.GetSFX("Global/Hurt.wav");
