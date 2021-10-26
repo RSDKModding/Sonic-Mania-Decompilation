@@ -16,7 +16,8 @@
 #define RETRO_USE_PLUS (RETRO_GAMEVER >= VER_105)
 #define RETRO_USE_EGS  (RETRO_GAMEVER == VER_107)
 
-//controls whether EditorLoad & EditorDraw should be compiled or not
+// Controls whether EditorLoad & EditorDraw should be included in the final product or not
+// This is a copy of what the original game likely had, as the original game does not include EditorLoad or EditorDraw funcs for any objects
 #define RETRO_INCLUDE_EDITOR (1)
 
 #define RETRO_USE_MOD_LOADER (1)
