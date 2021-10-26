@@ -143,8 +143,13 @@ void Flipper_StageLoad(void)
     Flipper->sfxFlipper   = RSDK.GetSFX("Stage/Flipper.wav");
 }
 
-void Flipper_EditorDraw(void) {}
+void Flipper_EditorDraw(void)
+{
+    RSDK_THIS(Flipper);
+    RSDK.SetSpriteAnimation(Flipper->aniFrames, 0, &entity->animator, true, 0);
+    Flipper_Draw();
+}
 
-void Flipper_EditorLoad(void) {}
+void Flipper_EditorLoad(void) { Flipper->aniFrames = RSDK.LoadSpriteAnimation("MSZ/Flipper.bin", SCOPE_STAGE); }
 
 void Flipper_Serialize(void) { RSDK_EDITABLE_VAR(Flipper, VAR_UINT8, direction); }

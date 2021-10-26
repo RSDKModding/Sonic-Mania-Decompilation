@@ -113,7 +113,7 @@ void RotatingStair_Unknown2(void)
     entity->velocity.y = drawY + entity->drawPos.y;
 }
 
-void RotatingStair_EditorDraw(void) {}
+void RotatingStair_EditorDraw(void) { RotatingStair_Draw(); }
 
 void RotatingStair_EditorLoad(void) {}
 

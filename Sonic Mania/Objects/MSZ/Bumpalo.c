@@ -560,9 +560,13 @@ void Bumpalo_State_Unknown6(void)
     }
 }
 
-void Bumpalo_EditorDraw(void) {}
+void Bumpalo_EditorDraw(void)
+{
+    RSDK_THIS(Bumpalo);
+    RSDK.DrawSprite(&entity->animator1, NULL, false);
+}
 
-void Bumpalo_EditorLoad(void) {}
+void Bumpalo_EditorLoad(void) { Bumpalo->aniFrames = RSDK.LoadSpriteAnimation("MSZ/Bumpalo.bin", SCOPE_STAGE); }
 
 void Bumpalo_Serialize(void)
 {

@@ -135,9 +135,9 @@ void Pinata_State_Respawn(void)
     }
 }
 
-void Pinata_EditorDraw(void) {}
+void Pinata_EditorDraw(void) { Pinata_Draw(); }
 
-void Pinata_EditorLoad(void) {}
+void Pinata_EditorLoad(void) { Pinata->aniFrames = RSDK.LoadSpriteAnimation("MSZ/Pinata.bin", SCOPE_STAGE); }
 
 void Pinata_Serialize(void)
 {

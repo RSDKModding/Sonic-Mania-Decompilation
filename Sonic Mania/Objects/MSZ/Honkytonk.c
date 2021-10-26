@@ -137,8 +137,13 @@ void Honkytonk_StageLoad(void)
     Honkytonk->sfxPiano       = RSDK.GetSFX("MSZ/Piano00C2.wav");
 }
 
-void Honkytonk_EditorDraw(void) {}
+void Honkytonk_EditorDraw(void)
+{
+    RSDK_THIS(Honkytonk);
+    RSDK.SetSpriteAnimation(Honkytonk->aniFrames, 0, &entity->animator, true, 0);
+    Honkytonk_Draw();
+}
 
-void Honkytonk_EditorLoad(void) {}
+void Honkytonk_EditorLoad(void) { Honkytonk->aniFrames = RSDK.LoadSpriteAnimation("MSZ/HonkyTonk.bin", SCOPE_STAGE); }
 
 void Honkytonk_Serialize(void) { RSDK_EDITABLE_VAR(Honkytonk, VAR_ENUM, angle); }

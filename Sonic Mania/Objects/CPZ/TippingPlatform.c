@@ -177,7 +177,19 @@ void TippingPlatform_Unknown5(void)
         entity->state = TippingPlatform_Unknown1;
 }
 
-void TippingPlatform_EditorDraw(void) {}
+void TippingPlatform_EditorDraw(void)
+{
+    RSDK_THIS(TippingPlatform);
+    if (entity->bossID) {
+        RSDK.SetSpriteAnimation(Platform->spriteIndex, 1, &entity->animator, true, 0);
+        entity->animator.animationSpeed = 0;
+    }
+    else {
+        RSDK.SetSpriteAnimation(Platform->spriteIndex, 2, &entity->animator, true, 6);
+    }
+
+    TippingPlatform_Draw();
+}
 
 void TippingPlatform_EditorLoad(void) {}
 

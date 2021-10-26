@@ -71,7 +71,7 @@ void Armadiloid_DebugSpawn(void)
 void Armadiloid_DebugDraw(void)
 {
     RSDK.SetSpriteAnimation(Armadiloid->aniFrames, 0, &DebugMode->animator, true, 0);
-    RSDK.DrawSprite(&DebugMode->animator, 0, false);
+    RSDK.DrawSprite(&DebugMode->animator, NULL, false);
 }
 
 void Armadiloid_State_Setup(void)
@@ -199,8 +199,26 @@ void Armadiloid_State_Rider(void)
     }
 }
 
-void Armadiloid_EditorDraw(void) {}
+void Armadiloid_EditorDraw(void)
+{
+    RSDK_THIS(Armadiloid);
 
-void Armadiloid_EditorLoad(void) {}
+    if (entity->type) {
+        RSDK.SetSpriteAnimation(Armadiloid->aniFrames, 4, &entity->animator1, true, 0);
+        RSDK.SetSpriteAnimation(0xFFFF, 1, &entity->animator2, true, 0);
+        RSDK.SetSpriteAnimation(0xFFFF, 3, &entity->animator3, true, 0);
+    }
+    else {
+        RSDK.SetSpriteAnimation(Armadiloid->aniFrames, 0, &entity->animator1, true, 0);
+        RSDK.SetSpriteAnimation(Armadiloid->aniFrames, 1, &entity->animator2, true, 0);
+        RSDK.SetSpriteAnimation(Armadiloid->aniFrames, 3, &entity->animator3, true, 0);
+    }
+
+    RSDK.DrawSprite(&entity->animator3, NULL, false);
+    RSDK.DrawSprite(&entity->animator2, NULL, false);
+    RSDK.DrawSprite(&entity->animator1, NULL, false);
+}
+
+void Armadiloid_EditorLoad(void) { Armadiloid->aniFrames = RSDK.LoadSpriteAnimation("MSZ/Armadiloid.bin", SCOPE_STAGE); }
 
 void Armadiloid_Serialize(void) { RSDK_EDITABLE_VAR(Armadiloid, VAR_ENUM, type); }

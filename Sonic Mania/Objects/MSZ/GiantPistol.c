@@ -378,8 +378,26 @@ void GiantPistol_Player_State_Unknown2(void)
     }
 }
 
-void GiantPistol_EditorDraw(void) {}
+void GiantPistol_EditorDraw(void)
+{
+    RSDK_THIS(GiantPistol);
+    RSDK.SetSpriteAnimation(GiantPistol->aniFrames, 0, &entity->animator1, true, 0);
+    RSDK.SetSpriteAnimation(GiantPistol->aniFrames, 0, &entity->animator2, true, 1);
+    RSDK.SetSpriteAnimation(GiantPistol->aniFrames, 5, &entity->animator3, true, 0);
+    RSDK.SetSpriteAnimation(GiantPistol->aniFrames, 6, &entity->animator4, true, 0);
+    RSDK.SetSpriteAnimation(GiantPistol->aniFrames, 4, &entity->animator7, true, 0);
+    RSDK.SetSpriteAnimation(GiantPistol->aniFrames, 1, &entity->animator5, true, 0);
+    RSDK.SetSpriteAnimation(GiantPistol->aniFrames, 2, &entity->animator6, true, 0);
+    RSDK.SetSpriteAnimation(GiantPistol->aniFrames, 3, &entity->animator8, true, 0);
 
-void GiantPistol_EditorLoad(void) {}
+    RSDK.DrawSprite(&entity->animator7, NULL, false);
+    RSDK.DrawSprite(&entity->animator4, NULL, false);
+    RSDK.DrawSprite(&entity->animator3, NULL, false);
+    RSDK.DrawSprite(&entity->animator1, NULL, false);
+    RSDK.DrawSprite(&entity->animator6, NULL, false);
+    RSDK.DrawSprite(&entity->animator8, NULL, false);
+}
+
+void GiantPistol_EditorLoad(void) { GiantPistol->aniFrames = RSDK.LoadSpriteAnimation("MSZ/Pistol.bin", SCOPE_STAGE); }
 
 void GiantPistol_Serialize(void) { RSDK_EDITABLE_VAR(GiantPistol, VAR_UINT8, direction); }

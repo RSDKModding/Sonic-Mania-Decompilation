@@ -396,8 +396,18 @@ void Tornado_Unknown9(void)
     entity->active = ACTIVE_BOUNDS;
 }
 
-void Tornado_EditorDraw(void) {}
+void Tornado_EditorDraw(void)
+{
+    RSDK_THIS(Tornado);
+    RSDK.SetSpriteAnimation(Tornado->aniFrames, 0, &entity->animator1, true, 0);
+    RSDK.SetSpriteAnimation(Tornado->aniFrames, 1, &entity->animator2, true, 0);
+    RSDK.SetSpriteAnimation(Tornado->aniFrames, 2, &entity->animator4, true, 0);
 
-void Tornado_EditorLoad(void) {}
+    RSDK.DrawSprite(&entity->animator3, NULL, false);
+    RSDK.DrawSprite(&entity->animator2, NULL, false);
+    RSDK.DrawSprite(&entity->animator1, NULL, false);
+}
+
+void Tornado_EditorLoad(void) { Tornado->aniFrames = RSDK.LoadSpriteAnimation("MSZ/Tornado.bin", SCOPE_STAGE); }
 
 void Tornado_Serialize(void) {}

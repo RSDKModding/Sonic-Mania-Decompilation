@@ -149,8 +149,18 @@ void OneWayDoor_CPZDraw(void)
     entity->position.y += 2 * entity->yChange;
 }
 
-void OneWayDoor_EditorDraw(void) {}
+void OneWayDoor_EditorDraw(void)
+{
+    RSDK_THIS(OneWayDoor);
+    StateMachine_Run(entity->drawState);
+}
 
-void OneWayDoor_EditorLoad(void) {}
+void OneWayDoor_EditorLoad(void)
+{
+    if (RSDK.CheckStageFolder("MMZ"))
+        OneWayDoor->animID = RSDK.LoadSpriteAnimation("MMZ/OneWayDoor.bin", SCOPE_STAGE);
+    else if (RSDK.CheckStageFolder("CPZ"))
+        OneWayDoor->animID = RSDK.LoadSpriteAnimation("CPZ/OneWayDoor.bin", SCOPE_STAGE);
+}
 
 void OneWayDoor_Serialize(void) { RSDK_EDITABLE_VAR(OneWayDoor, VAR_UINT8, direction); }

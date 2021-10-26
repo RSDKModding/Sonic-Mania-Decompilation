@@ -387,10 +387,18 @@ extern RSDKFunctionTable RSDK;
 #define RSDK_EDITABLE_VAR(object, type, var) RSDK.SetEditableVar(type, #var, (uint8)object->objectID, offsetof(Entity##object, var))
 #define RSDK_ACTIVE_VAR(object, var)         RSDK.SetActiveVariable(object->objectID, #var)
 #define RSDK_ENUM_VAR(var)                   RSDK.AddVarEnumValue(#var)
+
+#if RETRO_INCLUDE_EDITOR
 #define RSDK_ADD_OBJECT(object)                                                                                                                      \
     RSDK.RegisterObject((Object **)&object, #object, sizeof(Entity##object), sizeof(Object##object), object##_Update, object##_LateUpdate,           \
                         object##_StaticUpdate, object##_Draw, object##_Create, object##_StageLoad, object##_EditorDraw, object##_EditorLoad,         \
                         object##_Serialize)
+#else
+#define RSDK_ADD_OBJECT(object)                                                                                                                      \
+    RSDK.RegisterObject((Object **)&object, #object, sizeof(Entity##object), sizeof(Object##object), object##_Update, object##_LateUpdate,           \
+                        object##_StaticUpdate, object##_Draw, object##_Create, object##_StageLoad, NULL, NULL, object##_Serialize)
+#endif
+
 #if RETRO_USE_PLUS
 #define RSDK_ADD_OBJECT_CONTAINER(object) RSDK.RegisterObjectContainer((void **)&object, #object, sizeof(Object##object))
 #endif
