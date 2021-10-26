@@ -209,8 +209,10 @@ void Bubbler_State_Projectile_Unknown2(void)
         Bubbler_HandleProjectileInteractions();
 }
 
+#if RETRO_INCLUDE_EDITOR
 void Bubbler_EditorDraw(void) {}
 
 void Bubbler_EditorLoad(void) {}
+#endif
 
 void Bubbler_Serialize(void) { RSDK_EDITABLE_VAR(Bubbler, VAR_UINT8, direction); }

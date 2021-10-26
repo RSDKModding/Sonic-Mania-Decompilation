@@ -35,8 +35,10 @@ void PBL_Ring_StaticUpdate(void);
 void PBL_Ring_Draw(void);
 void PBL_Ring_Create(void* data);
 void PBL_Ring_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void PBL_Ring_EditorDraw(void);
 void PBL_Ring_EditorLoad(void);
+#endif
 void PBL_Ring_Serialize(void);
 
 // Extra Entity Functions

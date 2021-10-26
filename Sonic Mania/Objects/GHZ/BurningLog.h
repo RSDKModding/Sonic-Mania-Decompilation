@@ -28,8 +28,10 @@ void BurningLog_StaticUpdate(void);
 void BurningLog_Draw(void);
 void BurningLog_Create(void* data);
 void BurningLog_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void BurningLog_EditorDraw(void);
 void BurningLog_EditorLoad(void);
+#endif
 void BurningLog_Serialize(void);
 
 // Extra Entity Functions

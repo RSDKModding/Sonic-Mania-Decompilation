@@ -23,8 +23,10 @@ void LightBulb_StaticUpdate(void);
 void LightBulb_Draw(void);
 void LightBulb_Create(void* data);
 void LightBulb_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void LightBulb_EditorDraw(void);
 void LightBulb_EditorLoad(void);
+#endif
 void LightBulb_Serialize(void);
 
 // Extra Entity Functions

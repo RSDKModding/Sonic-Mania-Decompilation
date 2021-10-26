@@ -31,8 +31,10 @@ void Propeller_StaticUpdate(void);
 void Propeller_Draw(void);
 void Propeller_Create(void* data);
 void Propeller_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void Propeller_EditorDraw(void);
 void Propeller_EditorLoad(void);
+#endif
 void Propeller_Serialize(void);
 
 // Extra Entity Functions

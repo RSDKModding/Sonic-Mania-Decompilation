@@ -35,8 +35,10 @@ void ChaosEmerald_StaticUpdate(void);
 void ChaosEmerald_Draw(void);
 void ChaosEmerald_Create(void* data);
 void ChaosEmerald_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void ChaosEmerald_EditorDraw(void);
 void ChaosEmerald_EditorLoad(void);
+#endif
 void ChaosEmerald_Serialize(void);
 
 // Extra Entity Functions

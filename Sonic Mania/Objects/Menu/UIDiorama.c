@@ -891,9 +891,11 @@ void UIDiorama_StateDraw_Exit(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void UIDiorama_EditorDraw(void) {}
 
 void UIDiorama_EditorLoad(void) {}
+#endif
 
 void UIDiorama_Serialize(void) { RSDK_EDITABLE_VAR(UIDiorama, VAR_ENUM, dioramaID); }
 #endif

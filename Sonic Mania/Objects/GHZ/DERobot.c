@@ -1285,9 +1285,11 @@ void DERobot_Unknown43(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void DERobot_EditorDraw(void) {}
 
 void DERobot_EditorLoad(void) {}
+#endif
 
 void DERobot_Serialize(void)
 {

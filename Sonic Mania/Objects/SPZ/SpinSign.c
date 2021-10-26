@@ -299,8 +299,10 @@ void SpinSign_Unknown6(void)
     RSDK.DrawSprite(&entity->animator3, &drawPos, false);
 }
 
+#if RETRO_INCLUDE_EDITOR
 void SpinSign_EditorDraw(void) {}
 
 void SpinSign_EditorLoad(void) {}
+#endif
 
 void SpinSign_Serialize(void) { RSDK_EDITABLE_VAR(SpinSign, VAR_UINT8, type); }

@@ -36,8 +36,10 @@ void ShopWindow_StaticUpdate(void);
 void ShopWindow_Draw(void);
 void ShopWindow_Create(void* data);
 void ShopWindow_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void ShopWindow_EditorDraw(void);
 void ShopWindow_EditorLoad(void);
+#endif
 void ShopWindow_Serialize(void);
 
 // Extra Entity Functions

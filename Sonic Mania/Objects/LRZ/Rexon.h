@@ -23,8 +23,10 @@ void Rexon_StaticUpdate(void);
 void Rexon_Draw(void);
 void Rexon_Create(void* data);
 void Rexon_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void Rexon_EditorDraw(void);
 void Rexon_EditorLoad(void);
+#endif
 void Rexon_Serialize(void);
 
 // Extra Entity Functions

@@ -577,8 +577,10 @@ void LevelSelect_Unknown7(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void LevelSelect_EditorDraw(void) {}
 
 void LevelSelect_EditorLoad(void) {}
+#endif
 
 void LevelSelect_Serialize(void) {}

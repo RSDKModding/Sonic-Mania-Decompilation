@@ -32,8 +32,10 @@ void LightBarrier_StaticUpdate(void);
 void LightBarrier_Draw(void);
 void LightBarrier_Create(void* data);
 void LightBarrier_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void LightBarrier_EditorDraw(void);
 void LightBarrier_EditorLoad(void);
+#endif
 void LightBarrier_Serialize(void);
 
 // Extra Entity Functions

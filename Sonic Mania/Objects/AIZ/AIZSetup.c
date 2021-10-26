@@ -878,8 +878,10 @@ bool32 AIZSetup_Cutscene_LoadGHZ(Entity *h)
     return true;
 }
 
+#if RETRO_INCLUDE_EDITOR
 void AIZSetup_EditorDraw(void) {}
 
 void AIZSetup_EditorLoad(void) {}
+#endif
 
 void AIZSetup_Serialize(void) {}

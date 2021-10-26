@@ -286,8 +286,10 @@ void Funnel_StageLoad(void)
 
 void Funnel_Unknown1(void) {}
 
+#if RETRO_INCLUDE_EDITOR
 void Funnel_EditorDraw(void) {}
 
 void Funnel_EditorLoad(void) {}
+#endif
 
 void Funnel_Serialize(void) {}

@@ -1487,8 +1487,10 @@ void BSS_Setup_ProcessChain(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void BSS_Setup_EditorDraw(void) {}
 
 void BSS_Setup_EditorLoad(void) {}
+#endif
 
 void BSS_Setup_Serialize(void) { RSDK_EDITABLE_VAR(BSS_Setup, VAR_UINT8, paletteID); }

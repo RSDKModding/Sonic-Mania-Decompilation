@@ -34,8 +34,10 @@ void Explosion_StaticUpdate(void);
 void Explosion_Draw(void);
 void Explosion_Create(void* data);
 void Explosion_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void Explosion_EditorDraw(void);
 void Explosion_EditorLoad(void);
+#endif
 void Explosion_Serialize(void);
 
 // Extra Entity Functions

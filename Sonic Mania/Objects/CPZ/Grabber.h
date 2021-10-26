@@ -42,8 +42,10 @@ void Grabber_StaticUpdate(void);
 void Grabber_Draw(void);
 void Grabber_Create(void* data);
 void Grabber_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void Grabber_EditorDraw(void);
 void Grabber_EditorLoad(void);
+#endif
 void Grabber_Serialize(void);
 
 // Extra Entity Functions

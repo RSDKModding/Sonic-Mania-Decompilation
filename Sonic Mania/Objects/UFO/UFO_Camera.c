@@ -165,8 +165,10 @@ void UFO_Camera_Unknown4(void)
     RSDK.MatrixMultiply(&UFO_Camera->matWorld, &UFO_Camera->matWorld, &entity->matWorld);
 }
 
+#if RETRO_INCLUDE_EDITOR
 void UFO_Camera_EditorDraw(void) {}
 
 void UFO_Camera_EditorLoad(void) {}
+#endif
 
 void UFO_Camera_Serialize(void) {}

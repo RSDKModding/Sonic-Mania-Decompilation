@@ -274,9 +274,11 @@ void ManiaModeMenu_Unknown7(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void ManiaModeMenu_EditorDraw(void) {}
 
 void ManiaModeMenu_EditorLoad(void) {}
+#endif
 
 void ManiaModeMenu_Serialize(void) {}
 #endif

@@ -57,8 +57,10 @@ void TimeAttackGate_StaticUpdate(void);
 void TimeAttackGate_Draw(void);
 void TimeAttackGate_Create(void* data);
 void TimeAttackGate_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void TimeAttackGate_EditorDraw(void);
 void TimeAttackGate_EditorLoad(void);
+#endif
 void TimeAttackGate_Serialize(void);
 
 // Extra Entity Functions

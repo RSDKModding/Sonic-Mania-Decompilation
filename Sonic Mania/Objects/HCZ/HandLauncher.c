@@ -267,9 +267,11 @@ void HandLauncher_Unknown8(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void HandLauncher_EditorDraw(void) {}
 
 void HandLauncher_EditorLoad(void) {}
+#endif
 
 void HandLauncher_Serialize(void)
 {

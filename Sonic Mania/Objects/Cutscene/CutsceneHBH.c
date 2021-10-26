@@ -481,6 +481,7 @@ void CutsceneHBH_Unknown21(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void CutsceneHBH_EditorDraw(void)
 {
     RSDK_THIS(CutsceneHBH);
@@ -489,6 +490,7 @@ void CutsceneHBH_EditorDraw(void)
 }
 
 void CutsceneHBH_EditorLoad(void) { CutsceneHBH->aniFrames = RSDK.LoadSpriteAnimation("Editor/CutsceneHBH.bin", SCOPE_STAGE); }
+#endif
 
 void CutsceneHBH_Serialize(void)
 {

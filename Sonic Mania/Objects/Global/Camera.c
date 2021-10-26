@@ -422,8 +422,10 @@ void Camera_State_HandleLerp(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void Camera_EditorDraw(void) {}
 
 void Camera_EditorLoad(void) {}
+#endif
 
 void Camera_Serialize(void) {}

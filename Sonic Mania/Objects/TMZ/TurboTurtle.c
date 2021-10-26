@@ -447,9 +447,11 @@ void TurboTurtle_State3_Unknown2(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void TurboTurtle_EditorDraw(void) {}
 
 void TurboTurtle_EditorLoad(void) {}
+#endif
 
 void TurboTurtle_Serialize(void)
 {

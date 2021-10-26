@@ -33,8 +33,10 @@ void HangPoint_StaticUpdate(void);
 void HangPoint_Draw(void);
 void HangPoint_Create(void* data);
 void HangPoint_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void HangPoint_EditorDraw(void);
 void HangPoint_EditorLoad(void);
+#endif
 void HangPoint_Serialize(void);
 
 // Extra Entity Functions

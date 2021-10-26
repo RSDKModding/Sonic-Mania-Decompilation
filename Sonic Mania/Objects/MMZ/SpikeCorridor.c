@@ -329,9 +329,11 @@ void SpikeCorridor_StateDraw_Spikes(void)
     SpikeCorridor_HandleDrawing(&animator, 0, entity->field_77, false);
 }
 
+#if RETRO_INCLUDE_EDITOR
 void SpikeCorridor_EditorDraw(void) {}
 
 void SpikeCorridor_EditorLoad(void) {}
+#endif
 
 void SpikeCorridor_Serialize(void)
 {

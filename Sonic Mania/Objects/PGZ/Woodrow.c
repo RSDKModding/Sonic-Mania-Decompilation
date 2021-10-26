@@ -359,9 +359,11 @@ void Woodrow_Unknown8(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void Woodrow_EditorDraw(void) {}
 
 void Woodrow_EditorLoad(void) {}
+#endif
 
 void Woodrow_Serialize(void)
 {

@@ -48,9 +48,11 @@ void MSZCutsceneK_StageLoad(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void MSZCutsceneK_EditorDraw(void) {}
 
 void MSZCutsceneK_EditorLoad(void) {}
+#endif
 
 void MSZCutsceneK_SkipCB(void)
 {

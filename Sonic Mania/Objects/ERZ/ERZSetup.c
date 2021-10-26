@@ -55,8 +55,10 @@ void ERZSetup_ScanlineCallback(ScanlineInfo *scanlines)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void ERZSetup_EditorDraw(void) {}
 
 void ERZSetup_EditorLoad(void) {}
+#endif
 
 void ERZSetup_Serialize(void) {}

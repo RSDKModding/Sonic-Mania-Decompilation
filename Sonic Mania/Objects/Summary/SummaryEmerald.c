@@ -33,9 +33,11 @@ void SummaryEmerald_Create(void *data)
 
 void SummaryEmerald_StageLoad(void) { SummaryEmerald->spriteIndex = RSDK.LoadSpriteAnimation("Summary/SummaryEmerald.bin", SCOPE_STAGE); }
 
+#if RETRO_INCLUDE_EDITOR
 void SummaryEmerald_EditorDraw(void) {}
 
 void SummaryEmerald_EditorLoad(void) {}
+#endif
 
 void SummaryEmerald_Serialize(void) { RSDK_EDITABLE_VAR(SummaryEmerald, VAR_ENUM, emeraldID); }
 #endif

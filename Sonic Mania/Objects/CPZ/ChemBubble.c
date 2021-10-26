@@ -99,8 +99,10 @@ void ChemBubble_Unknown3(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void ChemBubble_EditorDraw(void) {}
 
 void ChemBubble_EditorLoad(void) {}
+#endif
 
 void ChemBubble_Serialize(void) {}

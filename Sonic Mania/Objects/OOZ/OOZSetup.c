@@ -573,8 +573,10 @@ void OOZSetup_PlayerState_OilFall(void)
     entity->acceleration = acc;
 }
 
+#if RETRO_INCLUDE_EDITOR
 void OOZSetup_EditorDraw(void) {}
 
 void OOZSetup_EditorLoad(void) {}
+#endif
 
 void OOZSetup_Serialize(void) { RSDK_EDITABLE_VAR(OOZSetup, VAR_UINT8, type); }

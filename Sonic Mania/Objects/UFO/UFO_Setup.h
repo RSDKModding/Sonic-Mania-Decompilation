@@ -45,8 +45,10 @@ void UFO_Setup_StaticUpdate(void);
 void UFO_Setup_Draw(void);
 void UFO_Setup_Create(void* data);
 void UFO_Setup_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void UFO_Setup_EditorDraw(void);
 void UFO_Setup_EditorLoad(void);
+#endif
 void UFO_Setup_Serialize(void);
 
 // Extra Entity Functions

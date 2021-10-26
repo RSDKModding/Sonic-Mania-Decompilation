@@ -26,8 +26,10 @@ void FoldingPlatform_StaticUpdate(void);
 void FoldingPlatform_Draw(void);
 void FoldingPlatform_Create(void* data);
 void FoldingPlatform_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void FoldingPlatform_EditorDraw(void);
 void FoldingPlatform_EditorLoad(void);
+#endif
 void FoldingPlatform_Serialize(void);
 
 // Extra Entity Functions

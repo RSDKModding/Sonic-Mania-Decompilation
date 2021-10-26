@@ -960,9 +960,11 @@ void TimeAttackMenu_Unknown42(void *c)
     carousel->field_98 = -1;
 }
 
+#if RETRO_INCLUDE_EDITOR
 void TimeAttackMenu_EditorDraw(void) {}
 
 void TimeAttackMenu_EditorLoad(void) {}
+#endif
 
 void TimeAttackMenu_Serialize(void) {}
 #endif

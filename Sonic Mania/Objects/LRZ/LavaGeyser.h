@@ -41,8 +41,10 @@ void LavaGeyser_StaticUpdate(void);
 void LavaGeyser_Draw(void);
 void LavaGeyser_Create(void* data);
 void LavaGeyser_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void LavaGeyser_EditorDraw(void);
 void LavaGeyser_EditorLoad(void);
+#endif
 void LavaGeyser_Serialize(void);
 
 // Extra Entity Functions

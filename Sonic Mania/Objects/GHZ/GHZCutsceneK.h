@@ -33,8 +33,10 @@ void GHZCutsceneK_StaticUpdate(void);
 void GHZCutsceneK_Draw(void);
 void GHZCutsceneK_Create(void* data);
 void GHZCutsceneK_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void GHZCutsceneK_EditorDraw(void);
 void GHZCutsceneK_EditorLoad(void);
+#endif
 void GHZCutsceneK_Serialize(void);
 
 // Extra Entity Functions

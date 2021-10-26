@@ -106,8 +106,10 @@ void FXSpinRay_State_FadeOut(void)
         entity->alpha -= 16;
 }
 
+#if RETRO_INCLUDE_EDITOR
 void FXSpinRay_EditorDraw(void) {}
 
 void FXSpinRay_EditorLoad(void) {}
+#endif
 
 void FXSpinRay_Serialize(void) {}

@@ -79,8 +79,10 @@ void MagSpikeBall_StageLoad(void)
     MagSpikeBall->hitbox.bottom = 12;
 }
 
+#if RETRO_INCLUDE_EDITOR
 void MagSpikeBall_EditorDraw(void) {}
 
 void MagSpikeBall_EditorLoad(void) {}
+#endif
 
 void MagSpikeBall_Serialize(void) {}

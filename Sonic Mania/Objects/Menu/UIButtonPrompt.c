@@ -379,9 +379,11 @@ void UIButtonPrompt_Unknown7(void)
     entity->flag = !((++entity->timer >> 1) & 1);
 }
 
+#if RETRO_INCLUDE_EDITOR
 void UIButtonPrompt_EditorDraw(void) {}
 
 void UIButtonPrompt_EditorLoad(void) {}
+#endif
 
 void UIButtonPrompt_Serialize(void)
 {

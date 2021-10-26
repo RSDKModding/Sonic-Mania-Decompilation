@@ -181,8 +181,10 @@ void CPZSetup_StageFinishCBAct1(void)
 
 void CPZSetup_StageFinishCBAct2(void) { CPZSetup->outro->active = ACTIVE_NORMAL; }
 
+#if RETRO_INCLUDE_EDITOR
 void CPZSetup_EditorDraw(void) {}
 
 void CPZSetup_EditorLoad(void) {}
+#endif
 
 void CPZSetup_Serialize(void) {}

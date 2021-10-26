@@ -447,8 +447,10 @@ bool32 ERZOutro_CutsceneState_ShowEnding(EntityCutsceneSeq *host)
 
 void ERZOutro_SaveFileCB(int32 status) { ERZOutro->savedGame = true; }
 
+#if RETRO_INCLUDE_EDITOR
 void ERZOutro_EditorDraw(void) {}
 
 void ERZOutro_EditorLoad(void) {}
+#endif
 
 void ERZOutro_Serialize(void) { RSDK_EDITABLE_VAR(ERZOutro, VAR_VECTOR2, size); }

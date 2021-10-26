@@ -128,8 +128,10 @@ void APICallback_StaticUpdate(void);
 void APICallback_Draw(void);
 void APICallback_Create(void* data);
 void APICallback_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void APICallback_EditorDraw(void);
 void APICallback_EditorLoad(void);
+#endif
 void APICallback_Serialize(void);
 
 // Extra Entity Functions

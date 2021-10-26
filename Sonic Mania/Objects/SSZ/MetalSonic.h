@@ -71,8 +71,10 @@ void MetalSonic_StaticUpdate(void);
 void MetalSonic_Draw(void);
 void MetalSonic_Create(void* data);
 void MetalSonic_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void MetalSonic_EditorDraw(void);
 void MetalSonic_EditorLoad(void);
+#endif
 void MetalSonic_Serialize(void);
 
 // Extra Entity Functions

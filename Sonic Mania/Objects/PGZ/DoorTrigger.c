@@ -191,9 +191,11 @@ void DoorTrigger_StageLoad(void)
     DoorTrigger->sfxShatter         = RSDK.GetSFX("Stage/WindowShatter.wav");
 }
 
+#if RETRO_INCLUDE_EDITOR
 void DoorTrigger_EditorDraw(void) {}
 
 void DoorTrigger_EditorLoad(void) {}
+#endif
 
 void DoorTrigger_Serialize(void)
 {

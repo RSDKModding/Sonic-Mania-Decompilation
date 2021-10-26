@@ -201,8 +201,10 @@ void FlowerPod_State_Flower(void)
     RSDK.ProcessAnimation(&entity->animator2);
 }
 
+#if RETRO_INCLUDE_EDITOR
 void FlowerPod_EditorDraw(void) {}
 
 void FlowerPod_EditorLoad(void) {}
+#endif
 
 void FlowerPod_Serialize(void) {}

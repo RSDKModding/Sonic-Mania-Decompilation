@@ -32,8 +32,10 @@ void Palette_StaticUpdate(void);
 void Palette_Draw(void);
 void Palette_Create(void *data);
 void Palette_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void Palette_EditorDraw(void);
 void Palette_EditorLoad(void);
+#endif
 void Palette_Serialize(void);
 #endif
 

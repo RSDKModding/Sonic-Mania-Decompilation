@@ -381,8 +381,10 @@ void Caterkiller_State_Split_Body(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void Caterkiller_EditorDraw(void) {}
 
 void Caterkiller_EditorLoad(void) {}
+#endif
 
 void Caterkiller_Serialize(void) { RSDK_EDITABLE_VAR(Caterkiller, VAR_ENUM, planeFilter); }

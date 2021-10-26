@@ -49,8 +49,10 @@ void DashLift_StaticUpdate(void);
 void DashLift_Draw(void);
 void DashLift_Create(void* data);
 void DashLift_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void DashLift_EditorDraw(void);
 void DashLift_EditorLoad(void);
+#endif
 void DashLift_Serialize(void);
 
 // Extra Entity Functions

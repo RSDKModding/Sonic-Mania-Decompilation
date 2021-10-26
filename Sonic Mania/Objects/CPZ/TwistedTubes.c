@@ -287,8 +287,10 @@ void TwistedTubes_Unknown8(void)
         destroyEntity(entity);
 }
 
+#if RETRO_INCLUDE_EDITOR
 void TwistedTubes_EditorDraw(void) {}
 
 void TwistedTubes_EditorLoad(void) {}
+#endif
 
 void TwistedTubes_Serialize(void) { RSDK_EDITABLE_VAR(TwistedTubes, VAR_UINT8, height); }

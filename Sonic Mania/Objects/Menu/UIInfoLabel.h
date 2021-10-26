@@ -31,8 +31,10 @@ void UIInfoLabel_StaticUpdate(void);
 void UIInfoLabel_Draw(void);
 void UIInfoLabel_Create(void* data);
 void UIInfoLabel_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void UIInfoLabel_EditorDraw(void);
 void UIInfoLabel_EditorLoad(void);
+#endif
 void UIInfoLabel_Serialize(void);
 
 // Extra Entity Functions

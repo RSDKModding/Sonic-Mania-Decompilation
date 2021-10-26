@@ -37,8 +37,10 @@ void PuyoLevelSelect_StaticUpdate(void);
 void PuyoLevelSelect_Draw(void);
 void PuyoLevelSelect_Create(void* data);
 void PuyoLevelSelect_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void PuyoLevelSelect_EditorDraw(void);
 void PuyoLevelSelect_EditorLoad(void);
+#endif
 void PuyoLevelSelect_Serialize(void);
 
 // Extra Entity Functions

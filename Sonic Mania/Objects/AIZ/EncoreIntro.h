@@ -38,8 +38,10 @@ void EncoreIntro_StaticUpdate(void);
 void EncoreIntro_Draw(void);
 void EncoreIntro_Create(void* data);
 void EncoreIntro_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void EncoreIntro_EditorDraw(void);
 void EncoreIntro_EditorLoad(void);
+#endif
 void EncoreIntro_Serialize(void);
 
 // Extra Entity Functions

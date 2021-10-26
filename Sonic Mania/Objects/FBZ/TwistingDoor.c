@@ -198,9 +198,11 @@ void TwistingDoor_Unknown4(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void TwistingDoor_EditorDraw(void) {}
 
 void TwistingDoor_EditorLoad(void) {}
+#endif
 
 void TwistingDoor_Serialize(void)
 {

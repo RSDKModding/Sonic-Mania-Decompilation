@@ -110,8 +110,10 @@ void Mine_CheckMightyHit(void)
 }
 #endif
 
+#if RETRO_INCLUDE_EDITOR
 void Mine_EditorDraw(void) {}
 
 void Mine_EditorLoad(void) {}
+#endif
 
 void Mine_Serialize(void) {}

@@ -321,6 +321,7 @@ void Sweep_Unknown11(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void Sweep_EditorDraw(void)
 {
     RSDK_THIS(Sweep);
@@ -337,5 +338,6 @@ void Sweep_EditorLoad(void)
         Sweep->aniFrames = RSDK.LoadSpriteAnimation("AIZ/Sweep.bin", SCOPE_STAGE);
 #endif
 }
+#endif
 
 void Sweep_Serialize(void) {}

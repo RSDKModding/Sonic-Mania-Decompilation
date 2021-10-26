@@ -37,8 +37,10 @@ void AIZEggRobo_StaticUpdate(void);
 void AIZEggRobo_Draw(void);
 void AIZEggRobo_Create(void* data);
 void AIZEggRobo_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void AIZEggRobo_EditorDraw(void);
 void AIZEggRobo_EditorLoad(void);
+#endif
 void AIZEggRobo_Serialize(void);
 
 // Extra Entity Functions

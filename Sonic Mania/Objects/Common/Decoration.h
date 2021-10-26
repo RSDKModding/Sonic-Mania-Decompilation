@@ -30,8 +30,10 @@ void Decoration_StaticUpdate(void);
 void Decoration_Draw(void);
 void Decoration_Create(void* data);
 void Decoration_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void Decoration_EditorDraw(void);
 void Decoration_EditorLoad(void);
+#endif
 void Decoration_Serialize(void);
 
 // Extra Entity Functions

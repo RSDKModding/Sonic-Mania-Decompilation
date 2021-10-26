@@ -25,8 +25,10 @@ void EggJankenPart_StaticUpdate(void);
 void EggJankenPart_Draw(void);
 void EggJankenPart_Create(void* data);
 void EggJankenPart_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void EggJankenPart_EditorDraw(void);
 void EggJankenPart_EditorLoad(void);
+#endif
 void EggJankenPart_Serialize(void);
 
 // Extra Entity Functions

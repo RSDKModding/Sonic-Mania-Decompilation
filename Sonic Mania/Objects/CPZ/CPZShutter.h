@@ -29,8 +29,10 @@ void CPZShutter_StaticUpdate(void);
 void CPZShutter_Draw(void);
 void CPZShutter_Create(void* data);
 void CPZShutter_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void CPZShutter_EditorDraw(void);
 void CPZShutter_EditorLoad(void);
+#endif
 void CPZShutter_Serialize(void);
 
 // Extra Entity Functions

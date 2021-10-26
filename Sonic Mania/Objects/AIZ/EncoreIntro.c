@@ -1214,9 +1214,11 @@ void EncoreIntro_PlayerState_InputNone(void)
     entity->jumpHold  = false;
 }
 
+#if RETRO_INCLUDE_EDITOR
 void EncoreIntro_EditorDraw(void) {}
 
 void EncoreIntro_EditorLoad(void) {}
+#endif
 
 void EncoreIntro_Serialize(void) { RSDK_EDITABLE_VAR(EncoreIntro, VAR_VECTOR2, size); }
 #endif

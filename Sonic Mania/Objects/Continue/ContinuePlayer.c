@@ -144,8 +144,10 @@ void ContinuePlayer_Unknown4(void)
     entity->position.x += entity->groundVel;
 }
 
+#if RETRO_INCLUDE_EDITOR
 void ContinuePlayer_EditorDraw(void) {}
 
 void ContinuePlayer_EditorLoad(void) {}
+#endif
 
 void ContinuePlayer_Serialize(void) { RSDK_EDITABLE_VAR(ContinuePlayer, VAR_BOOL, isPlayer2); }

@@ -46,9 +46,11 @@ void TubeSpring_StageLoad(void)
     TubeSpring->hitbox.bottom = 48;
 }
 
+#if RETRO_INCLUDE_EDITOR
 void TubeSpring_EditorDraw(void) {}
 
 void TubeSpring_EditorLoad(void) {}
+#endif
 
 void TubeSpring_Interact(void) { TubeSpring_Spring(true); }
 

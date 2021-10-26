@@ -145,9 +145,11 @@ void SSZEggman_Unknown5(void)
         destroyEntity(entity);
 }
 
+#if RETRO_INCLUDE_EDITOR
 void SSZEggman_EditorDraw(void) {}
 
 void SSZEggman_EditorLoad(void) {}
+#endif
 
 void SSZEggman_Serialize(void) {}
 #endif

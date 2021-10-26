@@ -317,9 +317,11 @@ void DialogRunner_Unknown14(void)
     DialogRunner->field_8 = 1;
 }
 
+#if RETRO_INCLUDE_EDITOR
 void DialogRunner_EditorDraw(void) {}
 
 void DialogRunner_EditorLoad(void) {}
+#endif
 
 void DialogRunner_Serialize(void) {}
 #endif

@@ -121,8 +121,10 @@ void MMZSetup_StageFinishCB_Act1(void)
 void MMZSetup_StageFinishCB_Act2(void) { CREATE_ENTITY(MMZ2Outro, NULL, 0, 0); }
 #endif
 
+#if RETRO_INCLUDE_EDITOR
 void MMZSetup_EditorDraw(void) {}
 
 void MMZSetup_EditorLoad(void) {}
+#endif
 
 void MMZSetup_Serialize(void) {}

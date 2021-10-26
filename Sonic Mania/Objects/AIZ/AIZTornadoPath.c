@@ -255,6 +255,7 @@ void AIZTornadoPath_Unknown7(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void AIZTornadoPath_EditorDraw(void)
 {
     RSDK_THIS(AIZTornadoPath);
@@ -277,6 +278,7 @@ void AIZTornadoPath_EditorLoad(void)
     RSDK_ENUM_VAR(AIZTORNADOPATH_6);
     RSDK_ENUM_VAR(AIZTORNADOPATH_7);
 }
+#endif
 
 void AIZTornadoPath_Serialize(void)
 {

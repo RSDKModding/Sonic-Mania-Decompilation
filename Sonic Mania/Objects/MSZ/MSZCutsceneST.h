@@ -51,8 +51,10 @@ void MSZCutsceneST_StaticUpdate(void);
 void MSZCutsceneST_Draw(void);
 void MSZCutsceneST_Create(void* data);
 void MSZCutsceneST_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void MSZCutsceneST_EditorDraw(void);
 void MSZCutsceneST_EditorLoad(void);
+#endif
 void MSZCutsceneST_Serialize(void);
 
 // Extra Entity Functions

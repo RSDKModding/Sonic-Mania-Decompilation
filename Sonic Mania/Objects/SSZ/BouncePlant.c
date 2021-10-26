@@ -283,8 +283,10 @@ int32 BoucePlant_Unknown3(int32 x)
     return y << 15;
 }
 
+#if RETRO_INCLUDE_EDITOR
 void BouncePlant_EditorDraw(void) {}
 
 void BouncePlant_EditorLoad(void) {}
+#endif
 
 void BouncePlant_Serialize(void) { RSDK_EDITABLE_VAR(BouncePlant, VAR_UINT8, direction); }

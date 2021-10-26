@@ -36,8 +36,10 @@ void TryAgain_StaticUpdate(void);
 void TryAgain_Draw(void);
 void TryAgain_Create(void* data);
 void TryAgain_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void TryAgain_EditorDraw(void);
 void TryAgain_EditorLoad(void);
+#endif
 void TryAgain_Serialize(void);
 
 // Extra Entity Functions

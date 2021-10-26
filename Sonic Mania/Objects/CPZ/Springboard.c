@@ -196,9 +196,11 @@ void Springboard_DebugDraw(void)
     RSDK.DrawSprite(&DebugMode->animator, 0, false);
 }
 
+#if RETRO_INCLUDE_EDITOR
 void Springboard_EditorDraw(void) {}
 
 void Springboard_EditorLoad(void) {}
+#endif
 
 void Springboard_Serialize(void)
 {

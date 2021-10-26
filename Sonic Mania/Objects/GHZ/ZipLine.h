@@ -35,8 +35,10 @@ void ZipLine_StaticUpdate(void);
 void ZipLine_Draw(void);
 void ZipLine_Create(void* data);
 void ZipLine_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void ZipLine_EditorDraw(void);
 void ZipLine_EditorLoad(void);
+#endif
 void ZipLine_Serialize(void);
 
 // Extra Entity Functions

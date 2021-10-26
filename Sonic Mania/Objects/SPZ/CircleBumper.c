@@ -226,9 +226,11 @@ void CircleBumper_Unknown8(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void CircleBumper_EditorDraw(void) {}
 
 void CircleBumper_EditorLoad(void) {}
+#endif
 
 void CircleBumper_Serialize(void)
 {

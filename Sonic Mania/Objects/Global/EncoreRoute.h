@@ -36,8 +36,10 @@ void EncoreRoute_StaticUpdate(void);
 void EncoreRoute_Draw(void);
 void EncoreRoute_Create(void* data);
 void EncoreRoute_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void EncoreRoute_EditorDraw(void);
 void EncoreRoute_EditorLoad(void);
+#endif
 void EncoreRoute_Serialize(void);
 
 // Extra Entity Functions

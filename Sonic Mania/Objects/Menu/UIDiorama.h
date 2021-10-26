@@ -172,8 +172,10 @@ void UIDiorama_StaticUpdate(void);
 void UIDiorama_Draw(void);
 void UIDiorama_Create(void* data);
 void UIDiorama_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void UIDiorama_EditorDraw(void);
 void UIDiorama_EditorLoad(void);
+#endif
 void UIDiorama_Serialize(void);
 
 // Extra Entity Functions

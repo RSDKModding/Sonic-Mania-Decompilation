@@ -312,9 +312,11 @@ void TwistingSlide_Unknown1(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void TwistingSlide_EditorDraw(void) {}
 
 void TwistingSlide_EditorLoad(void) {}
+#endif
 
 void TwistingSlide_Serialize(void)
 {

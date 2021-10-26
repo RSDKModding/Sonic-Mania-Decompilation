@@ -46,8 +46,10 @@ void SSZSpotlight_StaticUpdate(void);
 void SSZSpotlight_Draw(void);
 void SSZSpotlight_Create(void* data);
 void SSZSpotlight_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void SSZSpotlight_EditorDraw(void);
 void SSZSpotlight_EditorLoad(void);
+#endif
 void SSZSpotlight_Serialize(void);
 
 // Extra Entity Functions

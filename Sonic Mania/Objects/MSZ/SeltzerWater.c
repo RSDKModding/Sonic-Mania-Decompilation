@@ -93,8 +93,10 @@ void SeltzerWater_Unknown3(void)
         destroyEntity(entity);
 }
 
+#if RETRO_INCLUDE_EDITOR
 void SeltzerWater_EditorDraw(void) {}
 
 void SeltzerWater_EditorLoad(void) {}
+#endif
 
 void SeltzerWater_Serialize(void) {}

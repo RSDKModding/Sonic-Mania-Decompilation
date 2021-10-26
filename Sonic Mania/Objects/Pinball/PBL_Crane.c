@@ -531,9 +531,11 @@ void PBL_Crane_State2_Unknown3(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void PBL_Crane_EditorDraw(void) {}
 
 void PBL_Crane_EditorLoad(void) {}
+#endif
 
 void PBL_Crane_Serialize(void) {}
 #endif

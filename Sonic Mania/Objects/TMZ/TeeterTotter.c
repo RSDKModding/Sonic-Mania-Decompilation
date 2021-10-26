@@ -208,9 +208,11 @@ void TeeterTotter_State_Unknown2(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void TeeterTotter_EditorDraw(void) {}
 
 void TeeterTotter_EditorLoad(void) {}
+#endif
 
 void TeeterTotter_Serialize(void)
 {

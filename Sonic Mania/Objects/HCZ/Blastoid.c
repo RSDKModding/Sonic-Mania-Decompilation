@@ -170,8 +170,10 @@ void Blastoid_State_Projectile(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void Blastoid_EditorDraw(void) {}
 
 void Blastoid_EditorLoad(void) {}
+#endif
 
 void Blastoid_Serialize(void) { RSDK_EDITABLE_VAR(Blastoid, VAR_UINT8, direction); }

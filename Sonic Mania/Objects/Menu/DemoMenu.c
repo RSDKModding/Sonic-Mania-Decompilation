@@ -167,8 +167,10 @@ void DemoMenu_State_Disappear(void)
         RSDK.ResetEntityPtr(entity, 0, 0);
 }
 
+#if RETRO_INCLUDE_EDITOR
 void DemoMenu_EditorDraw(void) {}
 
 void DemoMenu_EditorLoad(void) {}
+#endif
 
 void DemoMenu_Serialize(void) {}

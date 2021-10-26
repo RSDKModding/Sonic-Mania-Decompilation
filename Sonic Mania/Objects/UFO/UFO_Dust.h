@@ -34,8 +34,10 @@ void UFO_Dust_StaticUpdate(void);
 void UFO_Dust_Draw(void);
 void UFO_Dust_Create(void* data);
 void UFO_Dust_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void UFO_Dust_EditorDraw(void);
 void UFO_Dust_EditorLoad(void);
+#endif
 void UFO_Dust_Serialize(void);
 
 // Extra Entity Functions

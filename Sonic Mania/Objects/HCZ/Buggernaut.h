@@ -34,8 +34,10 @@ void Buggernaut_StaticUpdate(void);
 void Buggernaut_Draw(void);
 void Buggernaut_Create(void* data);
 void Buggernaut_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void Buggernaut_EditorDraw(void);
 void Buggernaut_EditorLoad(void);
+#endif
 void Buggernaut_Serialize(void);
 
 // Extra Entity Functions

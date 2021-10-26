@@ -206,9 +206,11 @@ void UITABanner_Unknown5(uint8 actID, uint8 zoneID, uint8 characterID, bool32 is
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void UITABanner_EditorDraw(void) {}
 
 void UITABanner_EditorLoad(void) {}
+#endif
 
 void UITABanner_Serialize(void) {}
 #endif

@@ -103,9 +103,11 @@ void PBL_Camera_Unknown2(void)
     RSDK.MatrixMultiply(&PBL_Camera->matrix1, &PBL_Camera->matrix1, &entity->matrix);
 }
 
+#if RETRO_INCLUDE_EDITOR
 void PBL_Camera_EditorDraw(void) {}
 
 void PBL_Camera_EditorLoad(void) {}
+#endif
 
 void PBL_Camera_Serialize(void) {}
 #endif

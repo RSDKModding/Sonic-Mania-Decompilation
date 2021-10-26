@@ -235,6 +235,7 @@ void Bridge_Burn(int32 offset)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void Bridge_EditorDraw(void) { Bridge_Draw(); }
 
 void Bridge_EditorLoad(void)
@@ -246,6 +247,7 @@ void Bridge_EditorLoad(void)
     if (RSDK.CheckStageFolder("LRZ1"))
         Bridge->aniFrames = RSDK.LoadSpriteAnimation("LRZ1/Bridge.bin", SCOPE_STAGE);
 }
+#endif
 
 void Bridge_Serialize(void)
 {

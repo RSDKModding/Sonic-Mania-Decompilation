@@ -185,8 +185,10 @@ void GHZSetup_SetupBGSwitchB2(void)
 }
 void GHZSetup_SpawnGHZ2Outro(void) { CREATE_ENTITY(GHZ2Outro, intToVoid(1), 0, 0); }
 
+#if RETRO_INCLUDE_EDITOR
 void GHZSetup_EditorDraw(void) {}
 
 void GHZSetup_EditorLoad(void) {}
+#endif
 
 void GHZSetup_Serialize(void) {}

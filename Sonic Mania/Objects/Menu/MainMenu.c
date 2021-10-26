@@ -307,9 +307,11 @@ void MainMenu_Unknown4()
     ((EntityUIDiorama *)MainMenu->dioramaPtr)->dioramaSubID = -1;
 }
 
+#if RETRO_INCLUDE_EDITOR
 void MainMenu_EditorDraw(void) {}
 
 void MainMenu_EditorLoad(void) {}
+#endif
 
 void MainMenu_Serialize(void) {}
 #endif

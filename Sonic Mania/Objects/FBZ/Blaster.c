@@ -305,8 +305,10 @@ void Blaster_State_Unknown8(void)
         destroyEntity(entity);
 }
 
+#if RETRO_INCLUDE_EDITOR
 void Blaster_EditorDraw(void) {}
 
 void Blaster_EditorLoad(void) {}
+#endif
 
 void Blaster_Serialize(void) { RSDK_EDITABLE_VAR(Blaster, VAR_UINT8, direction); }

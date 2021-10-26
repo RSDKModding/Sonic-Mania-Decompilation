@@ -130,9 +130,11 @@ void PBL_Bumper_Unknown4(void)
     PBL_Bumper_HandlePlayerInteractions();
 }
 
+#if RETRO_INCLUDE_EDITOR
 void PBL_Bumper_EditorDraw(void) {}
 
 void PBL_Bumper_EditorLoad(void) {}
+#endif
 
 void PBL_Bumper_Serialize(void) {}
 #endif

@@ -663,8 +663,10 @@ void SpecialClear_Unknown15(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void SpecialClear_EditorDraw(void) {}
 
 void SpecialClear_EditorLoad(void) {}
+#endif
 
 void SpecialClear_Serialize(void) {}

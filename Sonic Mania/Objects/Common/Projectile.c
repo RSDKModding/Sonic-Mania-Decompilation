@@ -121,8 +121,10 @@ void Projectile_State_MoveGravity(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void Projectile_EditorDraw(void) {}
 
 void Projectile_EditorLoad(void) {}
+#endif
 
 void Projectile_Serialize(void) {}

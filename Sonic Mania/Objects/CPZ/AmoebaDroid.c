@@ -697,8 +697,10 @@ void AmoebaDroid_StateMain_SpawnSignpost(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void AmoebaDroid_EditorDraw(void) {}
 
 void AmoebaDroid_EditorLoad(void) {}
+#endif
 
 void AmoebaDroid_Serialize(void) { RSDK_EDITABLE_VAR(AmoebaDroid, VAR_ENUM, type); }

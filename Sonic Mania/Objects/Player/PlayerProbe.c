@@ -146,9 +146,11 @@ void PlayerProbe_DrawEditor(uint32 colour, int32 x1, int32 y1, int32 x2, int32 y
     RSDK.DrawLine(x2, y2, (RSDK.Cos256(angle - 12) << 12) + x2, (RSDK.Sin256(angle - 12) << 12) + y2, colour, 0x7F, INK_ADD, false);
 }
 
+#if RETRO_INCLUDE_EDITOR
 void PlayerProbe_EditorDraw(void) {}
 
 void PlayerProbe_EditorLoad(void) {}
+#endif
 
 void PlayerProbe_Serialize(void)
 {

@@ -198,9 +198,11 @@ void LavaGeyser_State_Unknown6(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void LavaGeyser_EditorDraw(void) {}
 
 void LavaGeyser_EditorLoad(void) {}
+#endif
 
 void LavaGeyser_Serialize(void)
 {

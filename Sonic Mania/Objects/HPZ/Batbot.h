@@ -45,8 +45,10 @@ void Batbot_StaticUpdate(void);
 void Batbot_Draw(void);
 void Batbot_Create(void* data);
 void Batbot_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void Batbot_EditorDraw(void);
 void Batbot_EditorLoad(void);
+#endif
 void Batbot_Serialize(void);
 
 // Extra Entity Functions

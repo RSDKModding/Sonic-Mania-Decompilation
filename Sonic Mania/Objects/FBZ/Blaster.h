@@ -36,8 +36,10 @@ void Blaster_StaticUpdate(void);
 void Blaster_Draw(void);
 void Blaster_Create(void* data);
 void Blaster_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void Blaster_EditorDraw(void);
 void Blaster_EditorLoad(void);
+#endif
 void Blaster_Serialize(void);
 
 // Extra Entity Functions

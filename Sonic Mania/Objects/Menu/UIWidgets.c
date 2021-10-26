@@ -315,8 +315,10 @@ void UIWidgets_Unknown11(int32 minutes, int32 seconds, int32 milliseconds, int32
 }
 #endif
 
+#if RETRO_INCLUDE_EDITOR
 void UIWidgets_EditorDraw(void) {}
 
 void UIWidgets_EditorLoad(void) {}
+#endif
 
 void UIWidgets_Serialize(void) {}

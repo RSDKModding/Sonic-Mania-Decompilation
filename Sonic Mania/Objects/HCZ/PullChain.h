@@ -48,8 +48,10 @@ void PullChain_StaticUpdate(void);
 void PullChain_Draw(void);
 void PullChain_Create(void* data);
 void PullChain_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void PullChain_EditorDraw(void);
 void PullChain_EditorLoad(void);
+#endif
 void PullChain_Serialize(void);
 
 // Extra Entity Functions

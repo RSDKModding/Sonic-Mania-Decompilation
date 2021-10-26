@@ -79,8 +79,10 @@ void Ink_StageLoad(void)
     for (int32 p = 0; p < 4; ++p) Ink->playerColours[p] = 0;
 }
 
+#if RETRO_INCLUDE_EDITOR
 void Ink_EditorDraw(void) {}
 
 void Ink_EditorLoad(void) {}
+#endif
 
 void Ink_Serialize(void) { RSDK_EDITABLE_VAR(Ink, VAR_UINT8, type); }

@@ -152,8 +152,10 @@ void ERZShinobi_Unknown3(void)
     ERZShinobi_CheckHit();
 }
 
+#if RETRO_INCLUDE_EDITOR
 void ERZShinobi_EditorDraw(void) {}
 
 void ERZShinobi_EditorLoad(void) {}
+#endif
 
 void ERZShinobi_Serialize(void) {}

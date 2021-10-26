@@ -49,8 +49,10 @@ void BreakableWall_StaticUpdate(void);
 void BreakableWall_Draw(void);
 void BreakableWall_Create(void* data);
 void BreakableWall_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void BreakableWall_EditorDraw(void);
 void BreakableWall_EditorLoad(void);
+#endif
 void BreakableWall_Serialize(void);
 
 // Extra Entity Functions

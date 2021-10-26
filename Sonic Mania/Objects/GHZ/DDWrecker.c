@@ -885,8 +885,10 @@ void DDWrecker_State_SpawnSignpost(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void DDWrecker_EditorDraw(void) {}
 
 void DDWrecker_EditorLoad(void) {}
+#endif
 
 void DDWrecker_Serialize(void) {}

@@ -1216,9 +1216,11 @@ void Ice_StateDraw_Shard(void)
     RSDK.DrawSprite(&entity->animator1, NULL, false);
 }
 
+#if RETRO_INCLUDE_EDITOR
 void Ice_EditorDraw(void) {}
 
 void Ice_EditorLoad(void) {}
+#endif
 
 void Ice_Serialize(void)
 {

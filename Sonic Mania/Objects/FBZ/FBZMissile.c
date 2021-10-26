@@ -282,9 +282,11 @@ void FBZMissile_Unknown8(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void FBZMissile_EditorDraw(void) {}
 
 void FBZMissile_EditorLoad(void) {}
+#endif
 
 void FBZMissile_Serialize(void)
 {

@@ -30,8 +30,10 @@ void BGSwitch_StaticUpdate(void);
 void BGSwitch_Draw(void);
 void BGSwitch_Create(void* data);
 void BGSwitch_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void BGSwitch_EditorDraw(void);
 void BGSwitch_EditorLoad(void);
+#endif
 void BGSwitch_Serialize(void);
 
 // Extra Entity Functions

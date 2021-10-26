@@ -46,8 +46,10 @@ void UIVsZoneButton_StaticUpdate(void);
 void UIVsZoneButton_Draw(void);
 void UIVsZoneButton_Create(void* data);
 void UIVsZoneButton_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void UIVsZoneButton_EditorDraw(void);
 void UIVsZoneButton_EditorLoad(void);
+#endif
 void UIVsZoneButton_Serialize(void);
 
 // Extra Entity Functions

@@ -37,8 +37,10 @@ void PhantomMissile_StaticUpdate(void);
 void PhantomMissile_Draw(void);
 void PhantomMissile_Create(void* data);
 void PhantomMissile_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void PhantomMissile_EditorDraw(void);
 void PhantomMissile_EditorLoad(void);
+#endif
 void PhantomMissile_Serialize(void);
 
 // Extra Entity Functions

@@ -40,8 +40,10 @@ void ERZShinobi_StaticUpdate(void);
 void ERZShinobi_Draw(void);
 void ERZShinobi_Create(void* data);
 void ERZShinobi_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void ERZShinobi_EditorDraw(void);
 void ERZShinobi_EditorLoad(void);
+#endif
 void ERZShinobi_Serialize(void);
 
 // Extra Entity Functions

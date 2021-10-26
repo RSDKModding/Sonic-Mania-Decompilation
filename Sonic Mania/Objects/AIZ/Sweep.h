@@ -36,8 +36,10 @@ void Sweep_StaticUpdate(void);
 void Sweep_Draw(void);
 void Sweep_Create(void* data);
 void Sweep_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void Sweep_EditorDraw(void);
 void Sweep_EditorLoad(void);
+#endif
 void Sweep_Serialize(void);
 
 // Extra Entity Functions

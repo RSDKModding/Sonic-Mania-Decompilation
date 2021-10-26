@@ -97,8 +97,10 @@ void Zone_StaticUpdate(void);
 void Zone_Draw(void);
 void Zone_Create(void *data);
 void Zone_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void Zone_EditorDraw(void);
 void Zone_EditorLoad(void);
+#endif
 void Zone_Serialize(void);
 
 // Extra Entity Functions

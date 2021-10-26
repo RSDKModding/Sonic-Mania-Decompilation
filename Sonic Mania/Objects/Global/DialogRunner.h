@@ -45,8 +45,10 @@ void DialogRunner_StaticUpdate(void);
 void DialogRunner_Draw(void);
 void DialogRunner_Create(void *data);
 void DialogRunner_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void DialogRunner_EditorDraw(void);
 void DialogRunner_EditorLoad(void);
+#endif
 void DialogRunner_Serialize(void);
 
 // Extra Entity Functions

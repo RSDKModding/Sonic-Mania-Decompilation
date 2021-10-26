@@ -62,9 +62,11 @@ void UIShifter_Unknown(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void UIShifter_EditorDraw(void) {}
 
 void UIShifter_EditorLoad(void) {}
+#endif
 
 void UIShifter_Serialize(void) { RSDK_EDITABLE_VAR(UIShifter, VAR_VECTOR2, shift); }
 #endif

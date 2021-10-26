@@ -270,6 +270,7 @@ void Newtron_State_Projectile(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void Newtron_EditorDraw(void)
 {
     RSDK_THIS(Newtron);
@@ -284,6 +285,7 @@ void Newtron_EditorDraw(void)
 }
 
 void Newtron_EditorLoad(void) { Newtron->aniFrames = RSDK.LoadSpriteAnimation("GHZ/Newtron.bin", SCOPE_STAGE); }
+#endif
 
 void Newtron_Serialize(void)
 {

@@ -36,8 +36,10 @@ void EggTV_StaticUpdate(void);
 void EggTV_Draw(void);
 void EggTV_Create(void* data);
 void EggTV_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void EggTV_EditorDraw(void);
 void EggTV_EditorLoad(void);
+#endif
 void EggTV_Serialize(void);
 
 // Extra Entity Functions

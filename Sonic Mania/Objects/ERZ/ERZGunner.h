@@ -46,8 +46,10 @@ void ERZGunner_StaticUpdate(void);
 void ERZGunner_Draw(void);
 void ERZGunner_Create(void* data);
 void ERZGunner_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void ERZGunner_EditorDraw(void);
 void ERZGunner_EditorLoad(void);
+#endif
 void ERZGunner_Serialize(void);
 
 // Extra Entity Functions

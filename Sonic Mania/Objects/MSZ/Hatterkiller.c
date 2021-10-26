@@ -163,8 +163,10 @@ void Hatterkiller_DebugSpawn(void)
     CREATE_ENTITY(Hatterkiller, intToVoid(-0x20000), entity->position.x, entity->position.y);
 }
 
+#if RETRO_INCLUDE_EDITOR
 void Hatterkiller_EditorDraw(void) {}
 
 void Hatterkiller_EditorLoad(void) {}
+#endif
 
 void Hatterkiller_Serialize(void) {}

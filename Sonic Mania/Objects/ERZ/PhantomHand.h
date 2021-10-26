@@ -41,8 +41,10 @@ void PhantomHand_StaticUpdate(void);
 void PhantomHand_Draw(void);
 void PhantomHand_Create(void* data);
 void PhantomHand_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void PhantomHand_EditorDraw(void);
 void PhantomHand_EditorLoad(void);
+#endif
 void PhantomHand_Serialize(void);
 
 // Extra Entity Functions

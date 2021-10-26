@@ -240,9 +240,11 @@ void UICreditsText_State_FadeOut(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void UICreditsText_EditorDraw(void) {}
 
 void UICreditsText_EditorLoad(void) {}
+#endif
 
 void UICreditsText_Serialize(void)
 {

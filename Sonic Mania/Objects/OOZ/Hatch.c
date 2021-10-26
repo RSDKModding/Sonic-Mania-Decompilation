@@ -467,9 +467,11 @@ void Hatch_Unknown11(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void Hatch_EditorDraw(void) {}
 
 void Hatch_EditorLoad(void) {}
+#endif
 
 void Hatch_Serialize(void)
 {

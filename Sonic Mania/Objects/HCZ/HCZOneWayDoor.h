@@ -37,8 +37,10 @@ void HCZOneWayDoor_StaticUpdate(void);
 void HCZOneWayDoor_Draw(void);
 void HCZOneWayDoor_Create(void* data);
 void HCZOneWayDoor_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void HCZOneWayDoor_EditorDraw(void);
 void HCZOneWayDoor_EditorLoad(void);
+#endif
 void HCZOneWayDoor_Serialize(void);
 
 // Extra Entity Functions

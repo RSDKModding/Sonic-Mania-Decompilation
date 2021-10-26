@@ -35,8 +35,10 @@ void Syringe_StaticUpdate(void);
 void Syringe_Draw(void);
 void Syringe_Create(void* data);
 void Syringe_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void Syringe_EditorDraw(void);
 void Syringe_EditorLoad(void);
+#endif
 void Syringe_Serialize(void);
 
 // Extra Entity Functions

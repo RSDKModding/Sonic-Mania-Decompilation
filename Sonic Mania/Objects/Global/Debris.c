@@ -150,8 +150,10 @@ void Debris_FallFlickerSetup(int32 spriteIndex, int32 *entryPtr)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void Debris_EditorDraw(void) {}
 
 void Debris_EditorLoad(void) {}
+#endif
 
 void Debris_Serialize(void) {}

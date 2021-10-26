@@ -65,8 +65,10 @@ void PBL_Flipper_StaticUpdate(void);
 void PBL_Flipper_Draw(void);
 void PBL_Flipper_Create(void* data);
 void PBL_Flipper_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void PBL_Flipper_EditorDraw(void);
 void PBL_Flipper_EditorLoad(void);
+#endif
 void PBL_Flipper_Serialize(void);
 
 // Extra Entity Functions

@@ -127,8 +127,10 @@ void TVFlyingBattery_DrawSprites(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void TVFlyingBattery_EditorDraw(void) {}
 
 void TVFlyingBattery_EditorLoad(void) {}
+#endif
 
 void TVFlyingBattery_Serialize(void) {}

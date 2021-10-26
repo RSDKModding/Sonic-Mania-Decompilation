@@ -35,8 +35,10 @@ void Soundboard_StaticUpdate(void);
 void Soundboard_Draw(void);
 void Soundboard_Create(void* data);
 void Soundboard_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void Soundboard_EditorDraw(void);
 void Soundboard_EditorLoad(void);
+#endif
 void Soundboard_Serialize(void);
 
 // Extra Entity Functions

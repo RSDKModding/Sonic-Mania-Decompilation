@@ -337,9 +337,11 @@ void HangConveyor_Unknown2(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void HangConveyor_EditorDraw(void) {}
 
 void HangConveyor_EditorLoad(void) {}
+#endif
 
 void HangConveyor_Serialize(void)
 {

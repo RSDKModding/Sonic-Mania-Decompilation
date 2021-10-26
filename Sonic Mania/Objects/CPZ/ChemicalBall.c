@@ -134,9 +134,11 @@ void ChemicalBall_MoveType1(void)
     ChemicalBall_CheckHit();
 }
 
+#if RETRO_INCLUDE_EDITOR
 void ChemicalBall_EditorDraw(void) {}
 
 void ChemicalBall_EditorLoad(void) {}
+#endif
 
 void ChemicalBall_Serialize(void)
 {

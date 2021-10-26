@@ -89,9 +89,11 @@ void OrbitSpike_StageLoad(void)
     OrbitSpike->hitbox.bottom = 12;
 }
 
+#if RETRO_INCLUDE_EDITOR
 void OrbitSpike_EditorDraw(void) {}
 
 void OrbitSpike_EditorLoad(void) {}
+#endif
 
 void OrbitSpike_Serialize(void)
 {

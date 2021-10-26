@@ -32,8 +32,10 @@ void GymBar_StaticUpdate(void);
 void GymBar_Draw(void);
 void GymBar_Create(void* data);
 void GymBar_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void GymBar_EditorDraw(void);
 void GymBar_EditorLoad(void);
+#endif
 void GymBar_Serialize(void);
 
 // Extra Entity Functions

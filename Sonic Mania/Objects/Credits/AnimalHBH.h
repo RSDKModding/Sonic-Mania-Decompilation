@@ -31,8 +31,10 @@ void AnimalHBH_StaticUpdate(void);
 void AnimalHBH_Draw(void);
 void AnimalHBH_Create(void* data);
 void AnimalHBH_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void AnimalHBH_EditorDraw(void);
 void AnimalHBH_EditorLoad(void);
+#endif
 void AnimalHBH_Serialize(void);
 
 // Extra Entity Functions

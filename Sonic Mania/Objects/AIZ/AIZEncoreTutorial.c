@@ -147,9 +147,11 @@ void AIZEncoreTutorial_Unknown5(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void AIZEncoreTutorial_EditorDraw(void) {}
 
 void AIZEncoreTutorial_EditorLoad(void) {}
+#endif
 
 void AIZEncoreTutorial_Serialize(void) {}
 #endif

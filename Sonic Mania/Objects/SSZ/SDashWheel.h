@@ -52,8 +52,10 @@ void SDashWheel_StaticUpdate(void);
 void SDashWheel_Draw(void);
 void SDashWheel_Create(void* data);
 void SDashWheel_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void SDashWheel_EditorDraw(void);
 void SDashWheel_EditorLoad(void);
+#endif
 void SDashWheel_Serialize(void);
 
 // Extra Entity Functions

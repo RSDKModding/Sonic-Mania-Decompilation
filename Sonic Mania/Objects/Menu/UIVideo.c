@@ -100,9 +100,11 @@ void UIVideo_State_FinishPlayback(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void UIVideo_EditorDraw(void) {}
 
 void UIVideo_EditorLoad(void) {}
+#endif
 
 void UIVideo_Serialize(void)
 {

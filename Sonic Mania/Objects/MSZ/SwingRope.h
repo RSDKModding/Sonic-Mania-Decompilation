@@ -37,8 +37,10 @@ void SwingRope_StaticUpdate(void);
 void SwingRope_Draw(void);
 void SwingRope_Create(void* data);
 void SwingRope_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void SwingRope_EditorDraw(void);
 void SwingRope_EditorLoad(void);
+#endif
 void SwingRope_Serialize(void);
 
 // Extra Entity Functions

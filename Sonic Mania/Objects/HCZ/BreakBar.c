@@ -257,9 +257,11 @@ void BreakBar_State_Main(void)
         destroyEntity(entity);
 }
 
+#if RETRO_INCLUDE_EDITOR
 void BreakBar_EditorDraw(void) {}
 
 void BreakBar_EditorLoad(void) {}
+#endif
 
 void BreakBar_Serialize(void)
 {

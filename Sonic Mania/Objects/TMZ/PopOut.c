@@ -255,9 +255,11 @@ void PopOut_Unknown(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void PopOut_EditorDraw(void) {}
 
 void PopOut_EditorLoad(void) {}
+#endif
 
 void PopOut_Serialize(void)
 {

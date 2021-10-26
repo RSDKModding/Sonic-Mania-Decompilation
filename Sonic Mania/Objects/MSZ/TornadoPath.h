@@ -57,8 +57,10 @@ void TornadoPath_StaticUpdate(void);
 void TornadoPath_Draw(void);
 void TornadoPath_Create(void* data);
 void TornadoPath_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void TornadoPath_EditorDraw(void);
 void TornadoPath_EditorLoad(void);
+#endif
 void TornadoPath_Serialize(void);
 
 // Extra Entity Functions

@@ -53,8 +53,10 @@ void ContinuePlayer_StaticUpdate(void);
 void ContinuePlayer_Draw(void);
 void ContinuePlayer_Create(void* data);
 void ContinuePlayer_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void ContinuePlayer_EditorDraw(void);
 void ContinuePlayer_EditorLoad(void);
+#endif
 void ContinuePlayer_Serialize(void);
 
 // Extra Entity Functions

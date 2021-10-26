@@ -40,8 +40,10 @@ void WoodChipper_StaticUpdate(void);
 void WoodChipper_Draw(void);
 void WoodChipper_Create(void* data);
 void WoodChipper_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void WoodChipper_EditorDraw(void);
 void WoodChipper_EditorLoad(void);
+#endif
 void WoodChipper_Serialize(void);
 
 // Extra Entity Functions

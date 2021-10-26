@@ -72,8 +72,10 @@ void UFO_Message_Unknown3(void)
         RSDK.ResetEntityPtr(entity, TYPE_BLANK, 0);
 }
 
+#if RETRO_INCLUDE_EDITOR
 void UFO_Message_EditorDraw(void) {}
 
 void UFO_Message_EditorLoad(void) {}
+#endif
 
 void UFO_Message_Serialize(void) {}

@@ -97,9 +97,11 @@ void TitleEggman_Unknown3(void)
     RSDK.ProcessAnimation(&entity->animator4);
 }
 
+#if RETRO_INCLUDE_EDITOR
 void TitleEggman_EditorDraw(void) {}
 
 void TitleEggman_EditorLoad(void) {}
+#endif
 
 void TitleEggman_Serialize(void) {}
 #endif

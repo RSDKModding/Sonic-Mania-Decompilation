@@ -72,8 +72,10 @@ void HeavyShinobi_StaticUpdate(void);
 void HeavyShinobi_Draw(void);
 void HeavyShinobi_Create(void* data);
 void HeavyShinobi_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void HeavyShinobi_EditorDraw(void);
 void HeavyShinobi_EditorLoad(void);
+#endif
 void HeavyShinobi_Serialize(void);
 
 // Extra Entity Functions

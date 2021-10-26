@@ -44,8 +44,10 @@ void TimeAttackMenu_StaticUpdate(void);
 void TimeAttackMenu_Draw(void);
 void TimeAttackMenu_Create(void *data);
 void TimeAttackMenu_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void TimeAttackMenu_EditorDraw(void);
 void TimeAttackMenu_EditorLoad(void);
+#endif
 void TimeAttackMenu_Serialize(void);
 
 // Extra Entity Functions

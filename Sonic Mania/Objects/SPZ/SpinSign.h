@@ -33,8 +33,10 @@ void SpinSign_StaticUpdate(void);
 void SpinSign_Draw(void);
 void SpinSign_Create(void* data);
 void SpinSign_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void SpinSign_EditorDraw(void);
 void SpinSign_EditorLoad(void);
+#endif
 void SpinSign_Serialize(void);
 
 // Extra Entity Functions

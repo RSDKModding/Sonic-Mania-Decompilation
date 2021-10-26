@@ -278,9 +278,11 @@ void Spiny_State_ShotDisappear(void)
         destroyEntity(entity);
 }
 
+#if RETRO_INCLUDE_EDITOR
 void Spiny_EditorDraw(void) {}
 
 void Spiny_EditorLoad(void) {}
+#endif
 
 void Spiny_Serialize(void)
 {

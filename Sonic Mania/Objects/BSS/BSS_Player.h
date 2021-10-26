@@ -47,8 +47,10 @@ void BSS_Player_StaticUpdate(void);
 void BSS_Player_Draw(void);
 void BSS_Player_Create(void* data);
 void BSS_Player_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void BSS_Player_EditorDraw(void);
 void BSS_Player_EditorLoad(void);
+#endif
 void BSS_Player_Serialize(void);
 
 // Extra Entity Functions

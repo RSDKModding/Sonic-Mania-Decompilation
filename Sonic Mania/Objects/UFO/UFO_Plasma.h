@@ -28,8 +28,10 @@ void UFO_Plasma_StaticUpdate(void);
 void UFO_Plasma_Draw(void);
 void UFO_Plasma_Create(void* data);
 void UFO_Plasma_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void UFO_Plasma_EditorDraw(void);
 void UFO_Plasma_EditorLoad(void);
+#endif
 void UFO_Plasma_Serialize(void);
 
 // Extra Entity Functions

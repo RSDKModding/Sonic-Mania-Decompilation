@@ -25,8 +25,10 @@ void TimeTravelSetup_StaticUpdate(void);
 void TimeTravelSetup_Draw(void);
 void TimeTravelSetup_Create(void* data);
 void TimeTravelSetup_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void TimeTravelSetup_EditorDraw(void);
 void TimeTravelSetup_EditorLoad(void);
+#endif
 void TimeTravelSetup_Serialize(void);
 
 // Extra Entity Functions

@@ -422,9 +422,11 @@ void LaunchSpring_Unknown16(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void LaunchSpring_EditorDraw(void) {}
 
 void LaunchSpring_EditorLoad(void) {}
+#endif
 
 void LaunchSpring_Serialize(void)
 {

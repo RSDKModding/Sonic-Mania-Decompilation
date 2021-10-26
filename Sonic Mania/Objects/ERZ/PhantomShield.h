@@ -31,8 +31,10 @@ void PhantomShield_StaticUpdate(void);
 void PhantomShield_Draw(void);
 void PhantomShield_Create(void* data);
 void PhantomShield_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void PhantomShield_EditorDraw(void);
 void PhantomShield_EditorLoad(void);
+#endif
 void PhantomShield_Serialize(void);
 
 // Extra Entity Functions

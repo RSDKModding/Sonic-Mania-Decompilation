@@ -60,6 +60,7 @@ void FernParallax_StageLoad(void)
     memset(FernParallax->entityBuffer, 0, 2 * ENTITY_SIZE);
 }
 
+#if RETRO_INCLUDE_EDITOR
 void FernParallax_EditorDraw(void)
 {
     RSDK_THIS(FernParallax);
@@ -67,6 +68,7 @@ void FernParallax_EditorDraw(void)
 }
 
 void FernParallax_EditorLoad(void) { FernParallax->aniFrames = RSDK.LoadSpriteAnimation("AIZ/Decoration.bin", SCOPE_STAGE); }
+#endif
 
 void FernParallax_Serialize(void)
 {

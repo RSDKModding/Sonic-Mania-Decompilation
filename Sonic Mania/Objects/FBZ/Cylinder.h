@@ -37,8 +37,10 @@ void Cylinder_StaticUpdate(void);
 void Cylinder_Draw(void);
 void Cylinder_Create(void* data);
 void Cylinder_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void Cylinder_EditorDraw(void);
 void Cylinder_EditorLoad(void);
+#endif
 void Cylinder_Serialize(void);
 
 // Extra Entity Functions

@@ -45,8 +45,10 @@ void FarPlane_StaticUpdate(void);
 void FarPlane_Draw(void);
 void FarPlane_Create(void* data);
 void FarPlane_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void FarPlane_EditorDraw(void);
 void FarPlane_EditorLoad(void);
+#endif
 void FarPlane_Serialize(void);
 
 // Extra Entity Functions

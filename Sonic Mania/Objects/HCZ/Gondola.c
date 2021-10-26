@@ -268,9 +268,11 @@ void Gondola_Unknown6(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void Gondola_EditorDraw(void) {}
 
 void Gondola_EditorLoad(void) {}
+#endif
 
 void Gondola_Serialize(void)
 {

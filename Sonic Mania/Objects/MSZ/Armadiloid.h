@@ -35,8 +35,10 @@ void Armadiloid_StaticUpdate(void);
 void Armadiloid_Draw(void);
 void Armadiloid_Create(void* data);
 void Armadiloid_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void Armadiloid_EditorDraw(void);
 void Armadiloid_EditorLoad(void);
+#endif
 void Armadiloid_Serialize(void);
 
 // Extra Entity Functions

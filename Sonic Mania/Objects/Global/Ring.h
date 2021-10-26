@@ -54,8 +54,10 @@ void Ring_StaticUpdate(void);
 void Ring_Draw(void);
 void Ring_Create(void* data);
 void Ring_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void Ring_EditorDraw(void);
 void Ring_EditorLoad(void);
+#endif
 void Ring_Serialize(void);
 
 // Extra Entity Functions

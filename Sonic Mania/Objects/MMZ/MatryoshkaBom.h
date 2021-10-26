@@ -51,8 +51,10 @@ void MatryoshkaBom_StaticUpdate(void);
 void MatryoshkaBom_Draw(void);
 void MatryoshkaBom_Create(void* data);
 void MatryoshkaBom_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void MatryoshkaBom_EditorDraw(void);
 void MatryoshkaBom_EditorLoad(void);
+#endif
 void MatryoshkaBom_Serialize(void);
 
 // Extra Entity Functions

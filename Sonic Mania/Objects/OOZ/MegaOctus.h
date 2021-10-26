@@ -80,8 +80,10 @@ void MegaOctus_StaticUpdate(void);
 void MegaOctus_Draw(void);
 void MegaOctus_Create(void *data);
 void MegaOctus_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void MegaOctus_EditorDraw(void);
 void MegaOctus_EditorLoad(void);
+#endif
 void MegaOctus_Serialize(void);
 
 // Extra Entity Functions

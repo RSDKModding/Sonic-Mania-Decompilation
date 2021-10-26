@@ -94,9 +94,11 @@ void FoldingPlatform_Unknown2(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void FoldingPlatform_EditorDraw(void) {}
 
 void FoldingPlatform_EditorLoad(void) {}
+#endif
 
 void FoldingPlatform_Serialize(void)
 {

@@ -40,8 +40,10 @@ void TransportTube_StaticUpdate(void);
 void TransportTube_Draw(void);
 void TransportTube_Create(void* data);
 void TransportTube_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void TransportTube_EditorDraw(void);
 void TransportTube_EditorLoad(void);
+#endif
 void TransportTube_Serialize(void);
 
 // Extra Entity Functions

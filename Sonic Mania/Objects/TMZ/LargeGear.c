@@ -140,9 +140,11 @@ void LargeGear_StageLoad(void)
     LargeGear->hitbox2.bottom = 64;
 }
 
+#if RETRO_INCLUDE_EDITOR
 void LargeGear_EditorDraw(void) {}
 
 void LargeGear_EditorLoad(void) {}
+#endif
 
 void LargeGear_Serialize(void)
 {

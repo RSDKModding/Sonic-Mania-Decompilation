@@ -126,9 +126,11 @@ void RingField_GetPos(Vector2 *pos)
     pos->y = y + ((RSDK_screens->position.y + RSDK_screens->centerY) << 16);
 }
 
+#if RETRO_INCLUDE_EDITOR
 void RingField_EditorDraw(void) {}
 
 void RingField_EditorLoad(void) {}
+#endif
 
 void RingField_Serialize(void)
 {

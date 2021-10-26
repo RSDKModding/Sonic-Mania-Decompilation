@@ -178,9 +178,11 @@ void BuzzSaw_State_FreeMove_Reset(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void BuzzSaw_EditorDraw(void) {}
 
 void BuzzSaw_EditorLoad(void) {}
+#endif
 
 void BuzzSaw_Serialize(void)
 {

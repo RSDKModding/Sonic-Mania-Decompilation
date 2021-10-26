@@ -35,8 +35,10 @@ void HangGlider_StaticUpdate(void);
 void HangGlider_Draw(void);
 void HangGlider_Create(void* data);
 void HangGlider_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void HangGlider_EditorDraw(void);
 void HangGlider_EditorLoad(void);
+#endif
 void HangGlider_Serialize(void);
 
 // Extra Entity Functions

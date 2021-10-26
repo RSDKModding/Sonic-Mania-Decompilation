@@ -420,8 +420,10 @@ void Player_StaticUpdate(void);
 void Player_Draw(void);
 void Player_Create(void *data);
 void Player_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void Player_EditorDraw(void);
 void Player_EditorLoad(void);
+#endif
 void Player_Serialize(void);
 
 // Extra Entity Functions

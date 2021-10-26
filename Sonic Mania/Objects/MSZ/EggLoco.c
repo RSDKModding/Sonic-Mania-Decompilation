@@ -212,8 +212,10 @@ void EggLoco_State_Unknown3(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void EggLoco_EditorDraw(void) {}
 
 void EggLoco_EditorLoad(void) {}
+#endif
 
 void EggLoco_Serialize(void) {}

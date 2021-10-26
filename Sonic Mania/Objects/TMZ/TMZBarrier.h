@@ -29,8 +29,10 @@ void TMZBarrier_StaticUpdate(void);
 void TMZBarrier_Draw(void);
 void TMZBarrier_Create(void* data);
 void TMZBarrier_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void TMZBarrier_EditorDraw(void);
 void TMZBarrier_EditorLoad(void);
+#endif
 void TMZBarrier_Serialize(void);
 
 // Extra Entity Functions

@@ -193,13 +193,16 @@ void Fireball_StateDraw_Normal(void)
     RSDK.DrawSprite(&entity->animator, NULL, false);
 }
 
+#if RETRO_INCLUDE_EDITOR
 void Fireball_EditorDraw(void)
 {
     RSDK_THIS(Fireball);
-    StateMachine_Run(entity->stateDraw);
+    RSDK.SetSpriteAnimation(Fireball->aniFrames, 0, &entity->animator, true, 0);
+    entity->stateDraw = Fireball_StateDraw_Normal;
 }
 
 void Fireball_EditorLoad(void) { Fireball->aniFrames = RSDK.LoadSpriteAnimation("GHZ/Fireball.bin", SCOPE_STAGE); }
+#endif
 
 void Fireball_Serialize(void)
 {

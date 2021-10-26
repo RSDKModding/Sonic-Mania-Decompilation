@@ -73,8 +73,10 @@ void PuyoAttack_StageLoad(void)
     PuyoAttack->sfxAttack = RSDK.GetSFX("Puyo/Attack.wav");
 }
 
+#if RETRO_INCLUDE_EDITOR
 void PuyoAttack_EditorDraw(void) {}
 
 void PuyoAttack_EditorLoad(void) {}
+#endif
 
 void PuyoAttack_Serialize(void) {}

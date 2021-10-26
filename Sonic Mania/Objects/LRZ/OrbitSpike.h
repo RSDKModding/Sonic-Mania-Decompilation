@@ -29,8 +29,10 @@ void OrbitSpike_StaticUpdate(void);
 void OrbitSpike_Draw(void);
 void OrbitSpike_Create(void* data);
 void OrbitSpike_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void OrbitSpike_EditorDraw(void);
 void OrbitSpike_EditorLoad(void);
+#endif
 void OrbitSpike_Serialize(void);
 
 // Extra Entity Functions

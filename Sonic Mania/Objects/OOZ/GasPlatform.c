@@ -188,9 +188,11 @@ void GasPlatform_Unknown4(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void GasPlatform_EditorDraw(void) {}
 
 void GasPlatform_EditorLoad(void) {}
+#endif
 
 void GasPlatform_Serialize(void)
 {

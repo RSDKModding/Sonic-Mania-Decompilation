@@ -34,8 +34,10 @@ void Newtron_StaticUpdate(void);
 void Newtron_Draw(void);
 void Newtron_Create(void* data);
 void Newtron_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void Newtron_EditorDraw(void);
 void Newtron_EditorLoad(void);
+#endif
 void Newtron_Serialize(void);
 
 // Extra Entity Functions

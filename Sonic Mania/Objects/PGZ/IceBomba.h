@@ -39,8 +39,10 @@ void IceBomba_StaticUpdate(void);
 void IceBomba_Draw(void);
 void IceBomba_Create(void* data);
 void IceBomba_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void IceBomba_EditorDraw(void);
 void IceBomba_EditorLoad(void);
+#endif
 void IceBomba_Serialize(void);
 
 void IceBomba_DebugDraw(void);

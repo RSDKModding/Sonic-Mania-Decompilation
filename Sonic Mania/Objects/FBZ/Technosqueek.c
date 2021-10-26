@@ -276,9 +276,11 @@ void Technosqueek_State_Unknown6(void)
     Technosqueek_HandlePlayerInteractions();
 }
 
+#if RETRO_INCLUDE_EDITOR
 void Technosqueek_EditorDraw(void) {}
 
 void Technosqueek_EditorLoad(void) {}
+#endif
 
 void Technosqueek_Serialize(void)
 {

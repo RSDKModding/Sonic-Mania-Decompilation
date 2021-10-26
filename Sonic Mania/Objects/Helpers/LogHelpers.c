@@ -39,8 +39,10 @@ void LogHelpers_PrintString(TextInfo *text)
     LogHelpers_Print("\n");
 }
 
+#if RETRO_INCLUDE_EDITOR
 void LogHelpers_EditorDraw(void) {}
 
 void LogHelpers_EditorLoad(void) {}
+#endif
 
 void LogHelpers_Serialize(void) {}

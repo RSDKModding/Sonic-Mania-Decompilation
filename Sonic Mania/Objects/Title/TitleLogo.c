@@ -238,8 +238,10 @@ void TitleLogo_Unknown6(void)
 }
 #endif
 
+#if RETRO_INCLUDE_EDITOR
 void TitleLogo_EditorDraw(void) {}
 
 void TitleLogo_EditorLoad(void) {}
+#endif
 
 void TitleLogo_Serialize(void) { RSDK_EDITABLE_VAR(TitleLogo, VAR_ENUM, type); }

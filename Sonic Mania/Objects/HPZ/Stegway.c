@@ -264,8 +264,10 @@ void Stegway_Unknown10(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void Stegway_EditorDraw(void) {}
 
 void Stegway_EditorLoad(void) {}
+#endif
 
 void Stegway_Serialize(void) { RSDK_EDITABLE_VAR(Stegway, VAR_UINT8, direction); }

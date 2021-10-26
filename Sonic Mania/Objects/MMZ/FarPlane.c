@@ -284,9 +284,11 @@ void FarPlane_ScanlineCB(ScanlineInfo *scanline)
     RSDK.SetActivePalette(4, 0, RSDK_screens->height);
 }
 
+#if RETRO_INCLUDE_EDITOR
 void FarPlane_EditorDraw(void) {}
 
 void FarPlane_EditorLoad(void) {}
+#endif
 
 void FarPlane_Serialize(void)
 {

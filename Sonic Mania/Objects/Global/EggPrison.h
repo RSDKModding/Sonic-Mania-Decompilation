@@ -49,8 +49,10 @@ void EggPrison_StaticUpdate(void);
 void EggPrison_Draw(void);
 void EggPrison_Create(void* data);
 void EggPrison_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void EggPrison_EditorDraw(void);
 void EggPrison_EditorLoad(void);
+#endif
 void EggPrison_Serialize(void);
 
 // Extra Entity Functions

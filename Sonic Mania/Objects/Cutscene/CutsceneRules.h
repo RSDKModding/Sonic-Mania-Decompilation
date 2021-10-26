@@ -23,8 +23,10 @@ void CutsceneRules_StaticUpdate(void);
 void CutsceneRules_Draw(void);
 void CutsceneRules_Create(void* data);
 void CutsceneRules_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void CutsceneRules_EditorDraw(void);
 void CutsceneRules_EditorLoad(void);
+#endif
 void CutsceneRules_Serialize(void);
 
 // Extra Entity Functions

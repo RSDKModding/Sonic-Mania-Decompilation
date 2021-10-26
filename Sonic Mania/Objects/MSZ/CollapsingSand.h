@@ -38,8 +38,10 @@ void CollapsingSand_StaticUpdate(void);
 void CollapsingSand_Draw(void);
 void CollapsingSand_Create(void* data);
 void CollapsingSand_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void CollapsingSand_EditorDraw(void);
 void CollapsingSand_EditorLoad(void);
+#endif
 void CollapsingSand_Serialize(void);
 
 // Extra Entity Functions

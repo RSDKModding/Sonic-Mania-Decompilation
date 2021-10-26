@@ -80,8 +80,10 @@ void FXExpandRing_State_FadeOut(void)
         entity->alpha -= 16;
 }
 
+#if RETRO_INCLUDE_EDITOR
 void FXExpandRing_EditorDraw(void) {}
 
 void FXExpandRing_EditorLoad(void) {}
+#endif
 
 void FXExpandRing_Serialize(void) {}

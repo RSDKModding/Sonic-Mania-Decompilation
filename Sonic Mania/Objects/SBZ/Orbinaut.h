@@ -37,8 +37,10 @@ void Orbinaut_StaticUpdate(void);
 void Orbinaut_Draw(void);
 void Orbinaut_Create(void* data);
 void Orbinaut_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void Orbinaut_EditorDraw(void);
 void Orbinaut_EditorLoad(void);
+#endif
 void Orbinaut_Serialize(void);
 
 // Extra Entity Functions

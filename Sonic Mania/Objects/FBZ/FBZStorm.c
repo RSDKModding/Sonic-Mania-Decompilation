@@ -207,8 +207,10 @@ void FBZStorm_Unknown5(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void FBZStorm_EditorDraw(void) {}
 
 void FBZStorm_EditorLoad(void) {}
+#endif
 
 void FBZStorm_Serialize(void) {}

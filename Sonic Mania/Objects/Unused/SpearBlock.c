@@ -170,8 +170,10 @@ void SpearBlock_State_RetractSpears(void)
         entity->state = SpearBlock_State_CheckSpearExtend;
 }
 
+#if RETRO_INCLUDE_EDITOR
 void SpearBlock_EditorDraw(void) {}
 
 void SpearBlock_EditorLoad(void) {}
+#endif
 
 void SpearBlock_Serialize(void) { RSDK_EDITABLE_VAR(SpearBlock, VAR_UINT8, spearDir); }

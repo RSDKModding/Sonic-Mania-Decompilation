@@ -6661,6 +6661,7 @@ void Player_ProcessP2Input_Player(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void Player_EditorDraw(void)
 {
     RSDK_THIS(Player);
@@ -6682,5 +6683,6 @@ void Player_EditorLoad(void)
     RSDK_ENUM_VAR(CHAR_TAILS_KNUX);
     RSDK_ENUM_VAR(CHAR_SONIC_TAILS_KNUX);
 }
+#endif
 
 void Player_Serialize(void) { RSDK_EDITABLE_VAR(Player, VAR_ENUM, characterID); }

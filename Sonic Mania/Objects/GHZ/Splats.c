@@ -372,6 +372,7 @@ void Splats_Unknown10(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void Splats_EditorDraw(void) { Splats_Draw(); }
 
 void Splats_EditorLoad(void)
@@ -385,6 +386,7 @@ void Splats_EditorLoad(void)
         Splats->state     = Splats_Unknown5;
     }
 }
+#endif
 
 void Splats_Serialize(void)
 {

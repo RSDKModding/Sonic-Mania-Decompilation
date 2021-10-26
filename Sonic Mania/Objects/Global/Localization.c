@@ -134,8 +134,10 @@ void Localization_SetZoneNameShort(TextInfo *info, uint8 zone)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void Localization_EditorDraw(void) {}
 
 void Localization_EditorLoad(void) {}
+#endif
 
 void Localization_Serialize(void) {}

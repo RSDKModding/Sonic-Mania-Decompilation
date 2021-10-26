@@ -334,9 +334,11 @@ void Shuriken_Unknown14(void)
         destroyEntity(entity);
 }
 
+#if RETRO_INCLUDE_EDITOR
 void Shuriken_EditorDraw(void) {}
 
 void Shuriken_EditorLoad(void) {}
+#endif
 
 void Shuriken_Serialize(void)
 {

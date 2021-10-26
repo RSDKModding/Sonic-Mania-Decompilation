@@ -237,9 +237,11 @@ void TetherBall_Unknown3(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void TetherBall_EditorDraw(void) {}
 
 void TetherBall_EditorLoad(void) {}
+#endif
 
 void TetherBall_Serialize(void)
 {

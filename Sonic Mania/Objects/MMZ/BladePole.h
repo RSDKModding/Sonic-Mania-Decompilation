@@ -31,8 +31,10 @@ void BladePole_StaticUpdate(void);
 void BladePole_Draw(void);
 void BladePole_Create(void* data);
 void BladePole_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void BladePole_EditorDraw(void);
 void BladePole_EditorLoad(void);
+#endif
 void BladePole_Serialize(void);
 
 // Extra Entity Functions

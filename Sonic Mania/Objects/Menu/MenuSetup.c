@@ -2181,8 +2181,10 @@ void MenuSetup_Extras_Callback_BSS_Mania(void) { MenuSetup_StartTransition(MenuS
 
 #endif
 
+#if RETRO_INCLUDE_EDITOR
 void MenuSetup_EditorDraw(void) {}
 
 void MenuSetup_EditorLoad(void) {}
+#endif
 
 void MenuSetup_Serialize(void) {}

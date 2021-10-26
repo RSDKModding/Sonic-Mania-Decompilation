@@ -125,8 +125,10 @@ void MSFactory_Unknown5(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void MSFactory_EditorDraw(void) {}
 
 void MSFactory_EditorLoad(void) {}
+#endif
 
 void MSFactory_Serialize(void) {}

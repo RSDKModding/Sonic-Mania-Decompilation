@@ -185,8 +185,10 @@ void UncurlPlant_CalculatePositions(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void UncurlPlant_EditorDraw(void) {}
 
 void UncurlPlant_EditorLoad(void) {}
+#endif
 
 void UncurlPlant_Serialize(void) { RSDK_EDITABLE_VAR(UncurlPlant, VAR_UINT8, direction); }

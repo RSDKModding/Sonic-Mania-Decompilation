@@ -143,8 +143,10 @@ void MagPlatform_Unknown4(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void MagPlatform_EditorDraw(void) {}
 
 void MagPlatform_EditorLoad(void) {}
+#endif
 
 void MagPlatform_Serialize(void) { RSDK_EDITABLE_VAR(MagPlatform, VAR_ENUM, length); }

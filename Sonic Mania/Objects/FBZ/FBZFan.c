@@ -103,8 +103,10 @@ void FBZFan_StageLoad(void)
     FBZFan->playerHitbox.bottom = 1;
 }
 
+#if RETRO_INCLUDE_EDITOR
 void FBZFan_EditorDraw(void) {}
 
 void FBZFan_EditorLoad(void) {}
+#endif
 
 void FBZFan_Serialize(void) {}

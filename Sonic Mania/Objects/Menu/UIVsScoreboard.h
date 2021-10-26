@@ -45,8 +45,10 @@ void UIVsScoreboard_StaticUpdate(void);
 void UIVsScoreboard_Draw(void);
 void UIVsScoreboard_Create(void* data);
 void UIVsScoreboard_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void UIVsScoreboard_EditorDraw(void);
 void UIVsScoreboard_EditorLoad(void);
+#endif
 void UIVsScoreboard_Serialize(void);
 
 // Extra Entity Functions

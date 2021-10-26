@@ -834,9 +834,11 @@ void UIButton_Unknown18(void)
     entity->dword14C = !((entity->timer >> 1) & 1);
 }
 
+#if RETRO_INCLUDE_EDITOR
 void UIButton_EditorDraw(void) {}
 
 void UIButton_EditorLoad(void) {}
+#endif
 
 void UIButton_Serialize(void)
 {

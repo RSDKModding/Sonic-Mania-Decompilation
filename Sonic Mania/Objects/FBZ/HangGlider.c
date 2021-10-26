@@ -98,9 +98,11 @@ void HangGlider_Unknown2(void)
     RSDK.ProcessAnimation(&entity->animator3);
 }
 
+#if RETRO_INCLUDE_EDITOR
 void HangGlider_EditorDraw(void) {}
 
 void HangGlider_EditorLoad(void) {}
+#endif
 
 void HangGlider_Serialize(void) {}
 #endif

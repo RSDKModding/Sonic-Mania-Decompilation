@@ -226,9 +226,11 @@ int32 PSZDoor_Unknown1(void)
     return 0;
 }
 
+#if RETRO_INCLUDE_EDITOR
 void PSZDoor_EditorDraw(void) {}
 
 void PSZDoor_EditorLoad(void) {}
+#endif
 
 void PSZDoor_Serialize(void)
 {

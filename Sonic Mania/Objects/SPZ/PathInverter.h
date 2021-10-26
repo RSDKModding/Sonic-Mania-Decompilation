@@ -32,8 +32,10 @@ void PathInverter_StaticUpdate(void);
 void PathInverter_Draw(void);
 void PathInverter_Create(void* data);
 void PathInverter_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void PathInverter_EditorDraw(void);
 void PathInverter_EditorLoad(void);
+#endif
 void PathInverter_Serialize(void);
 
 // Extra Entity Functions

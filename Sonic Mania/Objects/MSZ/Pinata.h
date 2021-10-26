@@ -30,8 +30,10 @@ void Pinata_StaticUpdate(void);
 void Pinata_Draw(void);
 void Pinata_Create(void* data);
 void Pinata_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void Pinata_EditorDraw(void);
 void Pinata_EditorLoad(void);
+#endif
 void Pinata_Serialize(void);
 
 // Extra Entity Functions

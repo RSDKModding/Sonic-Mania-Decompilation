@@ -73,8 +73,10 @@ void ItemBox_StaticUpdate(void);
 void ItemBox_Draw(void);
 void ItemBox_Create(void* data);
 void ItemBox_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void ItemBox_EditorDraw(void);
 void ItemBox_EditorLoad(void);
+#endif
 void ItemBox_Serialize(void);
 
 // Extra Entity Functions

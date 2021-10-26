@@ -30,8 +30,10 @@ void Constellation_StaticUpdate(void);
 void Constellation_Draw(void);
 void Constellation_Create(void* data);
 void Constellation_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void Constellation_EditorDraw(void);
 void Constellation_EditorLoad(void);
+#endif
 void Constellation_Serialize(void);
 
 // Extra Entity Functions

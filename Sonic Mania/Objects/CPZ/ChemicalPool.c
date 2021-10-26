@@ -385,9 +385,11 @@ void ChemicalPool_State_Change(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void ChemicalPool_EditorDraw(void) {}
 
 void ChemicalPool_EditorLoad(void) {}
+#endif
 
 void ChemicalPool_Serialize(void)
 {

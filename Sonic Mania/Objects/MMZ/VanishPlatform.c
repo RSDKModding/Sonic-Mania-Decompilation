@@ -69,9 +69,11 @@ void VanishPlatform_Unknown2(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void VanishPlatform_EditorDraw(void) {}
 
 void VanishPlatform_EditorLoad(void) {}
+#endif
 
 void VanishPlatform_Serialize(void)
 {

@@ -23,8 +23,10 @@ void RockDrill_StaticUpdate(void);
 void RockDrill_Draw(void);
 void RockDrill_Create(void* data);
 void RockDrill_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void RockDrill_EditorDraw(void);
 void RockDrill_EditorLoad(void);
+#endif
 void RockDrill_Serialize(void);
 
 // Extra Entity Functions

@@ -37,8 +37,10 @@ void UIText_StaticUpdate(void);
 void UIText_Draw(void);
 void UIText_Create(void* data);
 void UIText_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void UIText_EditorDraw(void);
 void UIText_EditorLoad(void);
+#endif
 void UIText_Serialize(void);
 
 // Extra Entity Functions

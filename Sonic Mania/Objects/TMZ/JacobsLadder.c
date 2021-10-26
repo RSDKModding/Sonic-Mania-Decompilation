@@ -180,9 +180,11 @@ void JacobsLadder_StageLoad(void)
     JacobsLadder->sfxLadder = RSDK.GetSFX("TMZ1/JacobsLadder.wav");
 }
 
+#if RETRO_INCLUDE_EDITOR
 void JacobsLadder_EditorDraw(void) {}
 
 void JacobsLadder_EditorLoad(void) {}
+#endif
 
 void JacobsLadder_Serialize(void)
 {

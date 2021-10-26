@@ -39,8 +39,10 @@ void HandLauncher_StaticUpdate(void);
 void HandLauncher_Draw(void);
 void HandLauncher_Create(void* data);
 void HandLauncher_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void HandLauncher_EditorDraw(void);
 void HandLauncher_EditorLoad(void);
+#endif
 void HandLauncher_Serialize(void);
 
 // Extra Entity Functions

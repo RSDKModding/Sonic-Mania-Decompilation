@@ -486,9 +486,11 @@ void Fan_Unknown11(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void Fan_EditorDraw(void) {}
 
 void Fan_EditorLoad(void) {}
+#endif
 
 void Fan_Serialize(void)
 {

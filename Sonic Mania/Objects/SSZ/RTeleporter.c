@@ -139,8 +139,10 @@ void RTeleporter_StateDraw_Destroyed(void)
     RSDK.DrawSprite(&entity->animator1, NULL, false);
 }
 
+#if RETRO_INCLUDE_EDITOR
 void RTeleporter_EditorDraw(void) {}
 
 void RTeleporter_EditorLoad(void) {}
+#endif
 
 void RTeleporter_Serialize(void) {}

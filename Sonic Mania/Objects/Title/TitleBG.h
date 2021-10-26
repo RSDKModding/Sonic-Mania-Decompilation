@@ -30,8 +30,10 @@ void TitleBG_StaticUpdate(void);
 void TitleBG_Draw(void);
 void TitleBG_Create(void* data);
 void TitleBG_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void TitleBG_EditorDraw(void);
 void TitleBG_EditorLoad(void);
+#endif
 void TitleBG_Serialize(void);
 
 // Extra Entity Functions

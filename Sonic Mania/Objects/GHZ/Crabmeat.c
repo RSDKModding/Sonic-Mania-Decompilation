@@ -186,8 +186,10 @@ void Crabmeat_CheckPlayerCollisions(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void Crabmeat_EditorDraw(void) { Crabmeat_Draw(); }
 
 void Crabmeat_EditorLoad(void) { Crabmeat->spriteIndex = RSDK.LoadSpriteAnimation("GHZ/Crabmeat.bin", SCOPE_STAGE); }
+#endif
 
 void Crabmeat_Serialize(void) {}

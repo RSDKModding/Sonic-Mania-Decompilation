@@ -35,8 +35,10 @@ void Reagent_StaticUpdate(void);
 void Reagent_Draw(void);
 void Reagent_Create(void* data);
 void Reagent_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void Reagent_EditorDraw(void);
 void Reagent_EditorLoad(void);
+#endif
 void Reagent_Serialize(void);
 
 // Extra Entity Functions

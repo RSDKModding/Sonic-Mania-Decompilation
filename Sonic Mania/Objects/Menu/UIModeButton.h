@@ -42,8 +42,10 @@ void UIModeButton_StaticUpdate(void);
 void UIModeButton_Draw(void);
 void UIModeButton_Create(void* data);
 void UIModeButton_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void UIModeButton_EditorDraw(void);
 void UIModeButton_EditorLoad(void);
+#endif
 void UIModeButton_Serialize(void);
 
 // Extra Entity Functions

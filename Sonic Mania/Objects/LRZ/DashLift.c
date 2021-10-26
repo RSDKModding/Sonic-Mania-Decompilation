@@ -165,9 +165,11 @@ void DashLift_State_HandleDash(void)
     DashLift_CheckOnScreen();
 }
 
+#if RETRO_INCLUDE_EDITOR
 void DashLift_EditorDraw(void) {}
 
 void DashLift_EditorLoad(void) {}
+#endif
 
 void DashLift_Serialize(void)
 {

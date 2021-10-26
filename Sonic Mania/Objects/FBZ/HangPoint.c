@@ -418,9 +418,11 @@ void HangPoint_Unknown1(EntityHangPoint *entity, void *p, int32 playerID)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void HangPoint_EditorDraw(void) {}
 
 void HangPoint_EditorLoad(void) {}
+#endif
 
 void HangPoint_Serialize(void)
 {

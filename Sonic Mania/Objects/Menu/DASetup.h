@@ -37,8 +37,10 @@ void DASetup_StaticUpdate(void);
 void DASetup_Draw(void);
 void DASetup_Create(void* data);
 void DASetup_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void DASetup_EditorDraw(void);
 void DASetup_EditorLoad(void);
+#endif
 void DASetup_Serialize(void);
 
 // Extra Entity Functions

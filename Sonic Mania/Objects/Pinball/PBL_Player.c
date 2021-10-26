@@ -286,9 +286,11 @@ void PBL_Player_State_Air(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void PBL_Player_EditorDraw(void) {}
 
 void PBL_Player_EditorLoad(void) {}
+#endif
 
 void PBL_Player_Serialize(void) {}
 #endif

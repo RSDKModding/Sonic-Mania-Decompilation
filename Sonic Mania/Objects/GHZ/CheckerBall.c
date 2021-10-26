@@ -787,8 +787,10 @@ void CheckerBall_Unknown5(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void CheckerBall_EditorDraw(void) {}
 
 void CheckerBall_EditorLoad(void) {}
+#endif
 
 void CheckerBall_Serialize(void) {}

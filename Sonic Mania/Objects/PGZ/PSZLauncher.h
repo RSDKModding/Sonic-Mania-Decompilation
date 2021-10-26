@@ -31,8 +31,10 @@ void PSZLauncher_StaticUpdate(void);
 void PSZLauncher_Draw(void);
 void PSZLauncher_Create(void* data);
 void PSZLauncher_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void PSZLauncher_EditorDraw(void);
 void PSZLauncher_EditorLoad(void);
+#endif
 void PSZLauncher_Serialize(void);
 
 // Extra Entity Functions

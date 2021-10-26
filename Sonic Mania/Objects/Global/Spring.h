@@ -41,8 +41,10 @@ void Spring_StaticUpdate(void);
 void Spring_Draw(void);
 void Spring_Create(void* data);
 void Spring_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void Spring_EditorDraw(void);
 void Spring_EditorLoad(void);
+#endif
 void Spring_Serialize(void);
 
 // Extra Entity Functions

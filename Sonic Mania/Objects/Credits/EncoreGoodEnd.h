@@ -39,8 +39,10 @@ void EncoreGoodEnd_StaticUpdate(void);
 void EncoreGoodEnd_Draw(void);
 void EncoreGoodEnd_Create(void* data);
 void EncoreGoodEnd_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void EncoreGoodEnd_EditorDraw(void);
 void EncoreGoodEnd_EditorLoad(void);
+#endif
 void EncoreGoodEnd_Serialize(void);
 
 // Extra Entity Functions

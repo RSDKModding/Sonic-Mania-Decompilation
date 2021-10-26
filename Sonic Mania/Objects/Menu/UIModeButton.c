@@ -257,9 +257,11 @@ void UIModeButton_Unknown10(void)
     entity->field_130 = !((entity->timer >> 1) & 1);
 }
 
+#if RETRO_INCLUDE_EDITOR
 void UIModeButton_EditorDraw(void) {}
 
 void UIModeButton_EditorLoad(void) {}
+#endif
 
 void UIModeButton_Serialize(void)
 {

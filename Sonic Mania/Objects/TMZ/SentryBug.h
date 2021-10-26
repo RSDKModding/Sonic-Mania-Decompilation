@@ -81,8 +81,10 @@ void SentryBug_StaticUpdate(void);
 void SentryBug_Draw(void);
 void SentryBug_Create(void* data);
 void SentryBug_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void SentryBug_EditorDraw(void);
 void SentryBug_EditorLoad(void);
+#endif
 void SentryBug_Serialize(void);
 
 // Extra Entity Functions

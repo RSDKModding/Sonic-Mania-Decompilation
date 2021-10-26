@@ -219,9 +219,11 @@ void PlatformControl_ManagePlatformVelocity(EntityPlatform *platform, Entity *no
         platform->velocity.y = -platform->velocity.y;
 }
 
+#if RETRO_INCLUDE_EDITOR
 void PlatformControl_EditorDraw(void) {}
 
 void PlatformControl_EditorLoad(void) {}
+#endif
 
 void PlatformControl_Serialize(void)
 {

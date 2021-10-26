@@ -67,9 +67,11 @@ void ConveyorPlatform_Create(void *data)
 
 void ConveyorPlatform_StageLoad(void) {}
 
+#if RETRO_INCLUDE_EDITOR
 void ConveyorPlatform_EditorDraw(void) {}
 
 void ConveyorPlatform_EditorLoad(void) {}
+#endif
 
 void ConveyorPlatform_Serialize(void)
 {

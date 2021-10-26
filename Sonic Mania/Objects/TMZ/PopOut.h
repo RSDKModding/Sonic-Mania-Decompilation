@@ -41,8 +41,10 @@ void PopOut_StaticUpdate(void);
 void PopOut_Draw(void);
 void PopOut_Create(void* data);
 void PopOut_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void PopOut_EditorDraw(void);
 void PopOut_EditorLoad(void);
+#endif
 void PopOut_Serialize(void);
 
 // Extra Entity Functions

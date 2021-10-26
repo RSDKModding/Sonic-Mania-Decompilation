@@ -1134,9 +1134,11 @@ void UITAZoneModule_Unknown31(void)
 
 #endif
 
+#if RETRO_INCLUDE_EDITOR
 void UITAZoneModule_EditorDraw(void) {}
 
 void UITAZoneModule_EditorLoad(void) {}
+#endif
 
 void UITAZoneModule_Serialize(void)
 {

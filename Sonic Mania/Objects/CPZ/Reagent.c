@@ -107,8 +107,10 @@ void Reagent_Unknown2(void)
         destroyEntity(entity);
 }
 
+#if RETRO_INCLUDE_EDITOR
 void Reagent_EditorDraw(void) {}
 
 void Reagent_EditorLoad(void) {}
+#endif
 
 void Reagent_Serialize(void) {}

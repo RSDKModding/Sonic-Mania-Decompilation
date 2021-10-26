@@ -47,8 +47,10 @@ void Fan_StaticUpdate(void);
 void Fan_Draw(void);
 void Fan_Create(void* data);
 void Fan_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void Fan_EditorDraw(void);
 void Fan_EditorLoad(void);
+#endif
 void Fan_Serialize(void);
 
 // Extra Entity Functions

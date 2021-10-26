@@ -56,6 +56,7 @@ void ChaosEmerald_State_Rotate(void)
     entity->position.y = entity->radius * RSDK.Sin256(entity->angle >> 8) + entity->originPos.y;
 }
 
+#if RETRO_INCLUDE_EDITOR
 void ChaosEmerald_EditorDraw(void)
 {
     RSDK_THIS(ChaosEmerald);
@@ -64,5 +65,6 @@ void ChaosEmerald_EditorDraw(void)
 }
 
 void ChaosEmerald_EditorLoad(void) { ChaosEmerald->aniFrames = RSDK.LoadSpriteAnimation("Cutscene/Emeralds.bin", SCOPE_STAGE); }
+#endif
 
 void ChaosEmerald_Serialize(void) { RSDK_EDITABLE_VAR(ChaosEmerald, VAR_UINT8, type); }

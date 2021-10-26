@@ -215,8 +215,10 @@ void HCZSpikeBall_Unknown4(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void HCZSpikeBall_EditorDraw(void) {}
 
 void HCZSpikeBall_EditorLoad(void) {}
+#endif
 
 void HCZSpikeBall_Serialize(void) {}

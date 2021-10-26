@@ -80,8 +80,10 @@ void TMZFlames_Unknown3(void)
         entity->scale.x += 16;
 }
 
+#if RETRO_INCLUDE_EDITOR
 void TMZFlames_EditorDraw(void) {}
 
 void TMZFlames_EditorLoad(void) {}
+#endif
 
 void TMZFlames_Serialize(void) {}

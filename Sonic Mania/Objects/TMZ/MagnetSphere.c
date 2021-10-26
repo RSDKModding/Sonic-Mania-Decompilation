@@ -168,8 +168,10 @@ void MagnetSphere_MovePlayer(void *p, int32 playerID)
         RSDK.PlaySfx(MagnetSphere->sfxPlasmaBall, 0, 255);
 }
 
+#if RETRO_INCLUDE_EDITOR
 void MagnetSphere_EditorDraw(void) {}
 
 void MagnetSphere_EditorLoad(void) {}
+#endif
 
 void MagnetSphere_Serialize(void) {}

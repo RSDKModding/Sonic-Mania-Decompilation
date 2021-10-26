@@ -38,8 +38,10 @@ void TitleSonic_Create(void *data)
 
 void TitleSonic_StageLoad(void) { TitleSonic->spriteIndex = RSDK.LoadSpriteAnimation("Title/Sonic.bin", SCOPE_STAGE); }
 
+#if RETRO_INCLUDE_EDITOR
 void TitleSonic_EditorDraw(void) {}
 
 void TitleSonic_EditorLoad(void) {}
+#endif
 
 void TitleSonic_Serialize(void) {}

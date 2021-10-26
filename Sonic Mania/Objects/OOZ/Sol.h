@@ -38,8 +38,10 @@ void Sol_StaticUpdate(void);
 void Sol_Draw(void);
 void Sol_Create(void* data);
 void Sol_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void Sol_EditorDraw(void);
 void Sol_EditorLoad(void);
+#endif
 void Sol_Serialize(void);
 
 // Extra Entity Functions

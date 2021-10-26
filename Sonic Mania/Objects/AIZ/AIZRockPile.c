@@ -145,9 +145,11 @@ void AIZRockPile_SpawnRocks(int32 *speeds)
     destroyEntity(entity);
 }
 
+#if RETRO_INCLUDE_EDITOR
 void AIZRockPile_EditorDraw(void) { AIZRockPile_Draw(); }
 
 void AIZRockPile_EditorLoad(void) { AIZRockPile->spriteIndex = RSDK.LoadSpriteAnimation("AIZ/Platform.bin", SCOPE_STAGE); }
+#endif
 
 void AIZRockPile_Serialize(void)
 {

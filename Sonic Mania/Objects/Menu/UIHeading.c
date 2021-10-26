@@ -59,8 +59,10 @@ void UIHeading_LoadSprites(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void UIHeading_EditorDraw(void) {}
 
 void UIHeading_EditorLoad(void) {}
+#endif
 
 void UIHeading_Serialize(void) { RSDK_EDITABLE_VAR(UIHeading, VAR_ENUM, headingID); }

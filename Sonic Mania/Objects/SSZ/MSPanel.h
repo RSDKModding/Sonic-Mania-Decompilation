@@ -27,8 +27,10 @@ void MSPanel_StaticUpdate(void);
 void MSPanel_Draw(void);
 void MSPanel_Create(void* data);
 void MSPanel_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void MSPanel_EditorDraw(void);
 void MSPanel_EditorLoad(void);
+#endif
 void MSPanel_Serialize(void);
 
 // Extra Entity Functions

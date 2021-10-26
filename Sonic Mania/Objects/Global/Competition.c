@@ -233,9 +233,11 @@ void Competition_CalculateScore(int32 playerID, uint8 flags)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void Competition_EditorDraw(void) {}
 
 void Competition_EditorLoad(void) {}
+#endif
 
 void Competition_Serialize(void) {}
 #endif

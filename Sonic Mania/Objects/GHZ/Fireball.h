@@ -34,8 +34,10 @@ void Fireball_StaticUpdate(void);
 void Fireball_Draw(void);
 void Fireball_Create(void *data);
 void Fireball_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void Fireball_EditorDraw(void);
 void Fireball_EditorLoad(void);
+#endif
 void Fireball_Serialize(void);
 
 // Extra Entity Functions

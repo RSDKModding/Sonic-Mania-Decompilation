@@ -37,8 +37,10 @@ void TVFlyingBattery_StaticUpdate(void);
 void TVFlyingBattery_Draw(void);
 void TVFlyingBattery_Create(void* data);
 void TVFlyingBattery_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void TVFlyingBattery_EditorDraw(void);
 void TVFlyingBattery_EditorLoad(void);
+#endif
 void TVFlyingBattery_Serialize(void);
 
 // Extra Entity Functions

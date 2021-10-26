@@ -159,9 +159,11 @@ int32 ReplayDB_Buffer_UnpackEntry(uint8 *uncompressed, uint8 *compressed)
     return size;
 }
 
+#if RETRO_INCLUDE_EDITOR
 void ReplayDB_EditorDraw(void) {}
 
 void ReplayDB_EditorLoad(void) {}
+#endif
 
 void ReplayDB_Serialize(void) {}
 #endif

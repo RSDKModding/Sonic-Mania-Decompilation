@@ -42,8 +42,10 @@ void SpikeCorridor_StaticUpdate(void);
 void SpikeCorridor_Draw(void);
 void SpikeCorridor_Create(void* data);
 void SpikeCorridor_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void SpikeCorridor_EditorDraw(void);
 void SpikeCorridor_EditorLoad(void);
+#endif
 void SpikeCorridor_Serialize(void);
 
 // Extra Entity Functions

@@ -459,9 +459,11 @@ void PaperRoller_Unknown5(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void PaperRoller_EditorDraw(void) {}
 
 void PaperRoller_EditorLoad(void) {}
+#endif
 
 void PaperRoller_Serialize(void)
 {

@@ -30,8 +30,10 @@ void Blastoid_StaticUpdate(void);
 void Blastoid_Draw(void);
 void Blastoid_Create(void* data);
 void Blastoid_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void Blastoid_EditorDraw(void);
 void Blastoid_EditorLoad(void);
+#endif
 void Blastoid_Serialize(void);
 
 // Extra Entity Functions

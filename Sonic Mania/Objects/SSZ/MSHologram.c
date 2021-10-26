@@ -144,8 +144,10 @@ void MSHologram_State_Destroyed(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void MSHologram_EditorDraw(void) {}
 
 void MSHologram_EditorLoad(void) {}
+#endif
 
 void MSHologram_Serialize(void) {}

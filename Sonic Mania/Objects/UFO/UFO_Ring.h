@@ -34,8 +34,10 @@ void UFO_Ring_StaticUpdate(void);
 void UFO_Ring_Draw(void);
 void UFO_Ring_Create(void* data);
 void UFO_Ring_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void UFO_Ring_EditorDraw(void);
 void UFO_Ring_EditorLoad(void);
+#endif
 void UFO_Ring_Serialize(void);
 
 // Extra Entity Functions

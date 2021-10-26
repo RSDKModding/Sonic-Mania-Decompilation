@@ -40,8 +40,10 @@ void WaterGush_StaticUpdate(void);
 void WaterGush_Draw(void);
 void WaterGush_Create(void* data);
 void WaterGush_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void WaterGush_EditorDraw(void);
 void WaterGush_EditorLoad(void);
+#endif
 void WaterGush_Serialize(void);
 
 // Extra Entity Functions

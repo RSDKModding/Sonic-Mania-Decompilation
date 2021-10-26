@@ -181,9 +181,11 @@ void UFO_ItemBox_Unknown2(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void UFO_ItemBox_EditorDraw(void) {}
 
 void UFO_ItemBox_EditorLoad(void) {}
+#endif
 
 void UFO_ItemBox_Serialize(void)
 {

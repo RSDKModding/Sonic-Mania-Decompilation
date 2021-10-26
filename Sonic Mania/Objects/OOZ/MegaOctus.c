@@ -1428,8 +1428,10 @@ void MegaOctus_TilePlatformState_Unknown(void)
 }
 #endif
 
+#if RETRO_INCLUDE_EDITOR
 void MegaOctus_EditorDraw(void) {}
 
 void MegaOctus_EditorLoad(void) {}
+#endif
 
 void MegaOctus_Serialize(void) {}

@@ -118,9 +118,11 @@ void PrintBlock_Unknown2(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void PrintBlock_EditorDraw(void) {}
 
 void PrintBlock_EditorLoad(void) {}
+#endif
 
 void PrintBlock_Serialize(void)
 {

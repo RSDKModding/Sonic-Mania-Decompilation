@@ -596,8 +596,10 @@ bool32 MSZCutsceneST_CutsceneState_Unknown9(EntityCutsceneSeq *host)
     return false;
 }
 
+#if RETRO_INCLUDE_EDITOR
 void MSZCutsceneST_EditorDraw(void) {}
 
 void MSZCutsceneST_EditorLoad(void) {}
+#endif
 
 void MSZCutsceneST_Serialize(void) { RSDK_EDITABLE_VAR(MSZCutsceneST, VAR_VECTOR2, size); }

@@ -395,9 +395,11 @@ void UIKeyBinder_Unknown16(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void UIKeyBinder_EditorDraw(void) {}
 
 void UIKeyBinder_EditorLoad(void) {}
+#endif
 
 void UIKeyBinder_Serialize(void)
 {

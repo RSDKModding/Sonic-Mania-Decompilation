@@ -39,8 +39,10 @@ void GameOver_StaticUpdate(void);
 void GameOver_Draw(void);
 void GameOver_Create(void* data);
 void GameOver_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void GameOver_EditorDraw(void);
 void GameOver_EditorLoad(void);
+#endif
 void GameOver_Serialize(void);
 
 // Extra Entity Functions

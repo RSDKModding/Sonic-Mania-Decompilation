@@ -614,9 +614,11 @@ void UIReplayCarousel_Unknown19(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void UIReplayCarousel_EditorDraw(void) {}
 
 void UIReplayCarousel_EditorLoad(void) {}
+#endif
 
 void UIReplayCarousel_Serialize(void) { RSDK_EDITABLE_VAR(UIReplayCarousel, VAR_BOOL, disabled); }
 #endif

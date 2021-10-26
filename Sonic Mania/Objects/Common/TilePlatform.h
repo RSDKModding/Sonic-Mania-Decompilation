@@ -46,8 +46,10 @@ void TilePlatform_StaticUpdate(void);
 void TilePlatform_Draw(void);
 void TilePlatform_Create(void* data);
 void TilePlatform_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void TilePlatform_EditorDraw(void);
 void TilePlatform_EditorLoad(void);
+#endif
 void TilePlatform_Serialize(void);
 
 // Extra Entity Functions

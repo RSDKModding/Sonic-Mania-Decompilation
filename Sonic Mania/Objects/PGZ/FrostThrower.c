@@ -256,9 +256,11 @@ void FrostThrower_Unknown7(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void FrostThrower_EditorDraw(void) {}
 
 void FrostThrower_EditorLoad(void) {}
+#endif
 
 void FrostThrower_Serialize(void)
 {

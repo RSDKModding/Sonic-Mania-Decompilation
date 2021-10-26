@@ -134,8 +134,10 @@ void TitleBG_ScanlineCallbackB(ScanlineInfo *scanlines)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void TitleBG_EditorDraw(void) {}
 
 void TitleBG_EditorLoad(void) {}
+#endif
 
 void TitleBG_Serialize(void) { RSDK_EDITABLE_VAR(TitleBG, VAR_ENUM, type); }

@@ -55,8 +55,10 @@ void SpiralPlatform_StaticUpdate(void);
 void SpiralPlatform_Draw(void);
 void SpiralPlatform_Create(void *data);
 void SpiralPlatform_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void SpiralPlatform_EditorDraw(void);
 void SpiralPlatform_EditorLoad(void);
+#endif
 void SpiralPlatform_Serialize(void);
 
 // Extra Entity Functions

@@ -43,8 +43,10 @@ void UIVsRoundPicker_StaticUpdate(void);
 void UIVsRoundPicker_Draw(void);
 void UIVsRoundPicker_Create(void* data);
 void UIVsRoundPicker_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void UIVsRoundPicker_EditorDraw(void);
 void UIVsRoundPicker_EditorLoad(void);
+#endif
 void UIVsRoundPicker_Serialize(void);
 
 // Extra Entity Functions

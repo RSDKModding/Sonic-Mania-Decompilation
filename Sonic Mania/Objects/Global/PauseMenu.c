@@ -919,8 +919,10 @@ void PauseMenu_Unknown37(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void PauseMenu_EditorDraw(void) {}
 
 void PauseMenu_EditorLoad(void) {}
+#endif
 
 void PauseMenu_Serialize(void) {}

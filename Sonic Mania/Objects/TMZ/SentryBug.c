@@ -408,9 +408,11 @@ void SentryBug_State_Unknown6(void)
     SentryBug_CheckPlayerCollisions();
 }
 
+#if RETRO_INCLUDE_EDITOR
 void SentryBug_EditorDraw(void) {}
 
 void SentryBug_EditorLoad(void) {}
+#endif
 
 void SentryBug_Serialize(void)
 {

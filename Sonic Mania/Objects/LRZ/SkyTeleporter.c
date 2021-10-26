@@ -58,8 +58,10 @@ void SkyTeleporter_Unknown1(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void SkyTeleporter_EditorDraw(void) {}
 
 void SkyTeleporter_EditorLoad(void) {}
+#endif
 
 void SkyTeleporter_Serialize(void) {}

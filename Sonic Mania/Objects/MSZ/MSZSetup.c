@@ -543,8 +543,10 @@ void MSZSetup_Player_State_PostCrashJumpIn(void)
     Player_P2JumpBackIn();
 }
 
+#if RETRO_INCLUDE_EDITOR
 void MSZSetup_EditorDraw(void) {}
 
 void MSZSetup_EditorLoad(void) {}
+#endif
 
 void MSZSetup_Serialize(void) {}

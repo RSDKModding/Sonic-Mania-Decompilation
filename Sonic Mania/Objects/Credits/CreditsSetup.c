@@ -142,8 +142,10 @@ void CreditsSetup_LoadCreditsStrings(void)
     CreditsSetup->creditsSize = offset + (RSDK_screens->height << 15);
 }
 
+#if RETRO_INCLUDE_EDITOR
 void CreditsSetup_EditorDraw(void) {}
 
 void CreditsSetup_EditorLoad(void) {}
+#endif
 
 void CreditsSetup_Serialize(void) {}

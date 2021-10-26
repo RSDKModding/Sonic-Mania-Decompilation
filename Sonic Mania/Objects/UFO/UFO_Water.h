@@ -25,8 +25,10 @@ void UFO_Water_StaticUpdate(void);
 void UFO_Water_Draw(void);
 void UFO_Water_Create(void* data);
 void UFO_Water_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void UFO_Water_EditorDraw(void);
 void UFO_Water_EditorLoad(void);
+#endif
 void UFO_Water_Serialize(void);
 
 // Extra Entity Functions

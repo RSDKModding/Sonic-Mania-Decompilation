@@ -218,8 +218,10 @@ bool32 TTCutscene_CutsceneState_NextScene(EntityCutsceneSeq *host)
     return false;
 }
 
+#if RETRO_INCLUDE_EDITOR
 void TTCutscene_EditorDraw(void) {}
 
 void TTCutscene_EditorLoad(void) {}
+#endif
 
 void TTCutscene_Serialize(void) { RSDK_EDITABLE_VAR(TTCutscene, VAR_VECTOR2, size); }

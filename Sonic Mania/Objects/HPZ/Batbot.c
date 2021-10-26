@@ -190,8 +190,10 @@ void Batbot_State_SwoopLeft(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void Batbot_EditorDraw(void) {}
 
 void Batbot_EditorLoad(void) {}
+#endif
 
 void Batbot_Serialize(void) { RSDK_EDITABLE_VAR(Batbot, VAR_UINT8, direction); }
