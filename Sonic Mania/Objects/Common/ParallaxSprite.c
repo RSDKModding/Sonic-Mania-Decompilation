@@ -34,22 +34,22 @@ void ParallaxSprite_Draw(void)
         drawPos.y += entity->loopPoint.y;
     }
 
-    if (entity->attribute == 2) {
+    if (entity->attribute == PSPRITE_ATTR_2) {
         int32 y = (drawPos.y >> 16) - 32;
         int32 x = (drawPos.x >> 16) - 56;
-        RSDK.DrawRect(x, y, 112, 64, entity->unknownPosA.x, 255, 0, true);
+        RSDK.DrawRect(x, y, 112, 64, entity->colour1, 255, 0, true);
 
         for (int32 i = 0; i < 0xE0; i += 0x20) {
             int32 val = (RSDK.Sin256(i + Zone->timer) >> 3) + 48;
             if (val > 64)
                 val = 64;
-            RSDK.DrawRect(x, y - val + 64, 16, val, entity->unknownPosA.y, 255, 0, true);
+            RSDK.DrawRect(x, y - val + 64, 16, val, entity->colour2, 255, 0, true);
             x += 16;
         }
     }
-    else if (entity->attribute == 6) {
+    else if (entity->attribute == PSPRITE_ATTR_6) {
         RSDK.GetFrame(ParallaxSprite->aniFrames, entity->aniID, 0)->sprX =
-            entity->sprX + (((uint16)(entity->field_B4) + ((uint16)(Zone->timer) << entity->field_B0)) & 0x7F);
+            entity->sprX + ((entity->field_B4 + (Zone->timer << entity->field_B0)) & 0x7F);
     }
     RSDK.DrawSprite(&entity->animator, &drawPos, true);
 }
@@ -60,18 +60,26 @@ void ParallaxSprite_Create(void *data)
     entity->active    = ACTIVE_NORMAL;
     entity->drawOrder = Zone->fgLayerLow + 1;
     if (data)
-        entity->attribute = (uint8)voidToInt(data);
+        entity->attribute = voidToInt(data);
     switch (entity->attribute) {
-        case 2:
+        case PSPRITE_ATTR_NONE:
+        default:
+            entity->parallaxFactor.x >>= 8;
+            entity->parallaxFactor.y >>= 8;
+            entity->drawFX  = FX_ROTATE;
+            entity->visible = !entity->hiddenAtStart;
+            entity->state   = ParallaxSprite_Unknown1;
+            break;
+        case PSPRITE_ATTR_2:
 #if RETRO_USE_PLUS
             if (RSDK_sceneInfo->filter & FILTER_ENCORE) {
-                entity->unknownPosA.x = 0x189098;
-                entity->unknownPosA.y = 0xD098;
+                entity->colour1 = 0x189098;
+                entity->colour2 = 0x00D098;
             }
             else {
 #endif
-                entity->unknownPosA.x = 0x885820;
-                entity->unknownPosA.y = 0xE89850;
+                entity->colour1 = 0x885820;
+                entity->colour2 = 0xE89850;
 #if RETRO_USE_PLUS
             }
 #endif
@@ -81,18 +89,18 @@ void ParallaxSprite_Create(void *data)
             entity->visible = !entity->hiddenAtStart;
             entity->state   = ParallaxSprite_Unknown1;
             break;
-        case 3:
+        case PSPRITE_ATTR_SPAWNER:
             entity->parallaxFactor.x >>= 8;
             entity->parallaxFactor.y >>= 8;
-            entity->state = ParallaxSprite_CreateCopy;
+            entity->state = ParallaxSprite_State_Spawner;
             break;
-        case 4:
+        case PSPRITE_ATTR_FADEOUT:
             entity->inkEffect = INK_ALPHA;
             entity->visible   = true;
             entity->alpha     = 0x100;
-            entity->state     = ParallaxSprite_Unknown3;
+            entity->state     = ParallaxSprite_State_FadeOut;
             break;
-        case 5:
+        case PSPRITE_ATTR_5:
             entity->parallaxFactor.x >>= 8;
             entity->parallaxFactor.y >>= 8;
             entity->visible   = true;
@@ -100,7 +108,7 @@ void ParallaxSprite_Create(void *data)
             entity->drawOrder = Zone->drawOrderHigh + 1;
             entity->state     = ParallaxSprite_Unknown1;
             break;
-        case 6:
+        case PSPRITE_ATTR_6:
             entity->parallaxFactor.x >>= 8;
             entity->parallaxFactor.y >>= 8;
             entity->sprX      = RSDK.GetFrame(ParallaxSprite->aniFrames, entity->aniID, 1)->sprX;
@@ -114,13 +122,6 @@ void ParallaxSprite_Create(void *data)
             entity->inkEffect = INK_MASKED;
             entity->visible   = true;
             entity->state     = NULL;
-            break;
-        default:
-            entity->parallaxFactor.x >>= 8;
-            entity->parallaxFactor.y >>= 8;
-            entity->drawFX  = FX_ROTATE;
-            entity->visible = !entity->hiddenAtStart;
-            entity->state   = ParallaxSprite_Unknown1;
             break;
     }
     RSDK.SetSpriteAnimation(ParallaxSprite->aniFrames, entity->aniID, &entity->animator, true, 0);
@@ -160,12 +161,11 @@ void ParallaxSprite_Unknown1(void)
     entity->scrollPos.y += entity->scrollSpeed.y;
 }
 
-void ParallaxSprite_CreateCopy(void)
+void ParallaxSprite_State_Spawner(void)
 {
     RSDK_THIS(ParallaxSprite);
     if (!(Zone->timer & 3)) {
-        EntityParallaxSprite *pSprite =
-            (EntityParallaxSprite *)RSDK.CreateEntity(ParallaxSprite->objectID, (void *)4, entity->position.x, entity->position.y);
+        EntityParallaxSprite *pSprite = CREATE_ENTITY(ParallaxSprite, intToVoid(PSPRITE_ATTR_FADEOUT), entity->position.x, entity->position.y);
         pSprite->parallaxFactor.x = entity->parallaxFactor.x;
         pSprite->parallaxFactor.y = entity->parallaxFactor.y;
         pSprite->loopPoint.x      = entity->loopPoint.x;
@@ -175,7 +175,7 @@ void ParallaxSprite_CreateCopy(void)
     }
 }
 
-void ParallaxSprite_Unknown3(void)
+void ParallaxSprite_State_FadeOut(void)
 {
     RSDK_THIS(ParallaxSprite);
     RSDK.ProcessAnimation(&entity->animator);
@@ -185,7 +185,7 @@ void ParallaxSprite_Unknown3(void)
     entity->scrollPos.y += entity->scrollSpeed.y;
     entity->alpha -= 2;
     if (!entity->alpha)
-        RSDK.ResetEntityPtr(entity, TYPE_BLANK, 0);
+        destroyEntity(entity);
 }
 
 void ParallaxSprite_Unknown4(void)
@@ -230,22 +230,22 @@ void ParallaxSprite_EditorDraw(void)
     drawPos.x        = entity->position.x;
     drawPos.y        = entity->position.y;
 
-    if (entity->attribute == 2) {
-        int32 y = (drawPos.y >> 16) - 32;
+    if (entity->attribute == PSPRITE_ATTR_2) {
         int32 x = (drawPos.x >> 16) - 56;
-        RSDK.DrawRect(x, y, 112, 64, entity->unknownPosA.x, 255, 0, true);
+        int32 y = (drawPos.y >> 16) - 32;
+        RSDK.DrawRect(x, y, 112, 64, entity->colour1, 255, 0, true);
 
         for (int32 i = 0; i < 0xE0; i += 0x20) {
             int32 val = (RSDK.Sin256(i + Zone->timer) >> 3) + 48;
             if (val > 64)
                 val = 64;
-            RSDK.DrawRect(x, y - val + 64, 16, val, entity->unknownPosA.y, 255, 0, true);
+            RSDK.DrawRect(x, y - val + 64, 16, val, entity->colour2, 255, 0, true);
             x += 16;
         }
     }
-    else if (entity->attribute == 6) {
+    else if (entity->attribute == PSPRITE_ATTR_6) {
         RSDK.GetFrame(ParallaxSprite->aniFrames, entity->aniID, 0)->sprX =
-            entity->sprX + (((uint16)(entity->field_B4) + ((uint16)(Zone->timer) << entity->field_B0)) & 0x7F);
+            entity->sprX + ((entity->field_B4 + (Zone->timer << entity->field_B0)) & 0x7F);
     }
     RSDK.DrawSprite(&entity->animator, &drawPos, false);
 }

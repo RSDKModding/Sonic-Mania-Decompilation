@@ -26,10 +26,10 @@ void PullChain_Update(void)
                     if (flag) {
                         if (!entity->field_64) {
                             entity->activated = true;
-                            entity->field_70 = 1;
+                            entity->field_70 = true;
                             entity->field_68 = !entity->field_68;
                         }
-                        entity->field_64 = 1;
+                        entity->field_64 = true;
                     }
                 }
                 entity->position.y = entity->basePos.y + entity->chainOffset;

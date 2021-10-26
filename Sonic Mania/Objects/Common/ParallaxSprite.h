@@ -3,6 +3,16 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    PSPRITE_ATTR_NONE,
+    PSPRITE_ATTR_1,
+    PSPRITE_ATTR_2,
+    PSPRITE_ATTR_SPAWNER,
+    PSPRITE_ATTR_FADEOUT,
+    PSPRITE_ATTR_5,
+    PSPRITE_ATTR_6,
+} ParallaxSpriteAttributes;
+
 // Object Class
 typedef struct {
     RSDK_OBJECT
@@ -20,7 +30,8 @@ typedef struct {
     Vector2 scrollSpeed;
     Vector2 loopPoint;
     bool32 hiddenAtStart;
-    Vector2 unknownPosA;
+    colour colour1;
+    colour colour2;
     Vector2 unknownPosB;
     Vector2 scrollPos;
     int32 sprX;
@@ -44,8 +55,8 @@ void ParallaxSprite_Serialize(void);
 
 // Extra Entity Functions
 void ParallaxSprite_Unknown1(void);
-void ParallaxSprite_CreateCopy(void);
-void ParallaxSprite_Unknown3(void);
+void ParallaxSprite_State_Spawner(void);
+void ParallaxSprite_State_FadeOut(void);
 void ParallaxSprite_Unknown4(void);
 void ParallaxSprite_Unknown5(void);
 

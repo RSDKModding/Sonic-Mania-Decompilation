@@ -202,16 +202,20 @@ EntityButton *LRZ2Setup_HandleTagSetup(int32 tag, Entity *entityPtr)
         if (Button) {
             foreach_all(Button, button)
             {
-                taggedEntity = button;
-                foreach_break;
+                if (button->tag == tag) {
+                    taggedEntity = button;
+                    foreach_break;
+                }
             }
         }
 
         if (TurretSwitch && !taggedEntity) {
             foreach_all(TurretSwitch, turretSwitch)
             {
-                taggedEntity = (EntityButton *)turretSwitch;
-                foreach_break;
+                // if (turretSwitch->buttonTag == tag) {
+                //     taggedEntity = (EntityButton *)turretSwitch;
+                //     foreach_break;
+                // }
             }
         }
     }

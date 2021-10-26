@@ -329,7 +329,7 @@ void Fan_HandlePlayerInteractions_Top(void)
 #endif
             water->field_68   = water->position.x;
             water->velocity.y = -0x40000;
-            water->childPtr   = 0;
+            water->childPtr   = NULL;
         }
     }
     Fan_ProcessAnimationSpeed_Fast();

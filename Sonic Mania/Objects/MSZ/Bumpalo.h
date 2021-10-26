@@ -5,12 +5,31 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    Hitbox hitboxBadnik;
+    Hitbox hitboxBumper;
+    Hitbox hitboxClack;
+    Hitbox hitboxCharge;
+    Hitbox hitbox5;
+    uint16 aniFrames;
+    uint16 sfxBumper;
+    uint16 sfxHuff;
+    uint16 sfxClack;
+    uint16 sfxImpact;
 } ObjectBumpalo;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    StateMachine(state);
+    Vector2 startPos;
+    uint8 startDir;
+    int32 timer;
+    bool32 ignoreCliffs;
+    bool32 flag;
+    Animator animator1;
+    Animator animator2;
+    Animator animator3;
 } EntityBumpalo;
 
 // Object Struct
@@ -28,6 +47,21 @@ void Bumpalo_EditorLoad(void);
 void Bumpalo_Serialize(void);
 
 // Extra Entity Functions
+void Bumpalo_DebugSpawn(void);
+void Bumpalo_DebugDraw(void);
 
+void Bumpalo_CheckOnScreen(void);
+void Bumpalo_BumpPlayer(void *p);
+void Bumpalo_CheckPlayerCollisions(void);
+void Bumpalo_HandlePlatformCollisions(void *p);
+void Bumpalo_HandleObjectCollisions(void);
+
+void Bumpalo_State_Setup(void);
+void Bumpalo_State_Unknown1(void);
+void Bumpalo_State_Unknown2(void);
+void Bumpalo_State_Unknown3(void);
+void Bumpalo_State_Unknown4(void);
+void Bumpalo_State_Unknown5(void);
+void Bumpalo_State_Unknown6(void);
 
 #endif //!OBJ_BUMPALO_H

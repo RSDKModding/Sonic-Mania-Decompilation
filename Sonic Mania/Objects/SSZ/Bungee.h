@@ -5,12 +5,22 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    uint16 aniFrames;
+    Animator animator;
 } ObjectBungee;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    Vector2 startPos;
+    Vector2 bungeePos;
+    int32 playerY[PLAYER_MAX];
+    bool32 hasAttatchedPlayer;
+    Entity *attatchedPlayer;
+    int32 field_80;
+    int32 playerDeathBoundary[PLAYER_MAX];
+    uint8 timer;
 } EntityBungee;
 
 // Object Struct
