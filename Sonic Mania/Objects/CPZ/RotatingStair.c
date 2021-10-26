@@ -18,7 +18,7 @@ void RotatingStair_Create(void *data)
 {
     RSDK_THIS(RotatingStair);
     entity->frameID   = 2;
-    entity->collision = 1;
+    entity->collision = PLATFORM_C_1;
     entity->speed     = 3;
     if (entity->direction)
         entity->amplitude.x = -entity->amplitude.x;
@@ -26,7 +26,7 @@ void RotatingStair_Create(void *data)
         entity->amplitude.x = -entity->amplitude.x;
 
     int32 typeStore = entity->type;
-    entity->type  = 2;
+    entity->type    = PLATFORM_2;
     Platform_Create(NULL);
     entity->type = typeStore;
 

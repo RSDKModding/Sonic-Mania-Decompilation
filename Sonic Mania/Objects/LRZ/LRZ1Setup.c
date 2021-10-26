@@ -24,8 +24,8 @@ void LRZ1Setup_StaticUpdate(void)
             RSDK.SetLimitedFade(5, 1, 4, cos >> 3, 208, 211);
         else
             RSDK.SetLimitedFade(5, 1, 3, -blend, 208, 211);
-        RSDK.RotatePalette(3u, 208u, 211, true);
-        RSDK.RotatePalette(4u, 208u, 211, true);
+        RSDK.RotatePalette(3u, 208, 211, true);
+        RSDK.RotatePalette(4u, 208, 211, true);
         if (blend >= 0)
             RSDK.SetLimitedFade(6, 2, 4, blend, 208, 211);
         else
@@ -111,7 +111,7 @@ void LRZ1Setup_StageLoad(void)
         Zone->screenBoundsL1[1] = 2732;
         Zone->screenBoundsL1[2] = 2732;
         Zone->screenBoundsL1[3] = 2732;
-        foreach_all(LRZ1Outro, outro) { destroyEntity(outro); }
+        foreach_all(LRZ1Intro, intro) { destroyEntity(intro); }
     }
 #else
     Zone->screenBoundsL1[0] = 648;

@@ -55,12 +55,12 @@ void FoldingPlatform_Create(void *data)
         entity->interval = 480;
     if (!entity->duration)
         entity->duration = 240;
-    entity->collision = 0;
+    entity->collision = PLATFORM_C_0;
     Platform_Create(NULL);
     RSDK.SetSpriteAnimation(Platform->spriteIndex, 2, &entity->animator, true, 0);
     entity->drawFX  = FX_FLIP;
-    entity->scale.x = 0;
-    entity->scale.y = 512;
+    entity->scale.x = 0x000;
+    entity->scale.y = 0x200;
     entity->state   = Platform_State_Normal;
 }
 

@@ -14,7 +14,7 @@ void MagPlatform_Draw(void)
     RSDK.DrawSprite(&entity->animator, &entity->drawPos, false);
 
     entity->animator.frameID                            = 1;
-    RSDK.GetFrame(Platform->spriteIndex, 3u, 1)->height = (entity->centerPos.y - entity->drawPos.y) >> 16;
+    RSDK.GetFrame(Platform->spriteIndex, 3, 1)->height = (entity->centerPos.y - entity->drawPos.y) >> 16;
     RSDK.DrawSprite(&entity->animator, &entity->drawPos, false);
 
     entity->animator.frameID = 2;
@@ -28,7 +28,7 @@ void MagPlatform_Create(void *data)
     RSDK_THIS(MagPlatform);
     Platform_Create(NULL);
     RSDK.SetSpriteAnimation(Platform->spriteIndex, 3, &entity->animator, true, 0);
-    if (RSDK_sceneInfo->inEditor != true) {
+    if (!RSDK_sceneInfo->inEditor) {
         entity->length <<= 16;
         entity->stateCollide = MagPlatform_Unknown1;
         entity->state        = MagPlatform_Unknown2;

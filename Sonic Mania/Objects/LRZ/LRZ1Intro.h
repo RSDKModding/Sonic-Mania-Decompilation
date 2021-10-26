@@ -6,12 +6,22 @@
 #if RETRO_USE_PLUS
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    uint16 aniFrames;
+    uint16 sfxSubLand;
+    uint16 sfxWalkerLegs2;
+    uint16 sfxLava;
 } ObjectLRZ1Intro;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    StateMachine(state);
+    int timer;
+    int originY;
+    int spawnPosY;
+    Vector2 field_68[PLAYER_MAX];
+    Animator animator;
 } EntityLRZ1Intro;
 
 // Object Struct
@@ -29,6 +39,18 @@ void LRZ1Intro_EditorLoad(void);
 void LRZ1Intro_Serialize(void);
 
 // Extra Entity Functions
+void LRZ1Intro_HandlePlayerCollisions(void);
+void LRZ1Intro_HandlePlayerMovement(void);
+void LRZ1Intro_HandleShipExplosions(void);
+void LRZ1Intro_HandleExplosions(void);
+
+void LRZ1Intro_State_Unknown1(void);
+void LRZ1Intro_State_Unknown2(void);
+void LRZ1Intro_State_Unknown3(void);
+void LRZ1Intro_State_Unknown4(void);
+void LRZ1Intro_State_Unknown5(void);
+void LRZ1Intro_State_Unknown6(void);
+
 #endif
 
 #endif //!OBJ_LRZ1INTRO_H

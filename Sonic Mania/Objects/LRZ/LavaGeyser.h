@@ -5,12 +5,30 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    uint16 aniFrames;
+    uint16 sfxHit;
+    uint16 sfxExplosion;
+    uint16 sfxDrill;
+    uint16 sfxLavaGeyser;
 } ObjectLavaGeyser;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    StateMachine(state);
+    uint8 type;
+    Animator animator1;
+    Animator animator2;
+    Animator animator3;
+    int32 field_A8;
+    int32 height;
+    int32 timer;
+    uint16 field_B4;
+    uint16 interval;
+    uint16 intervalOffset;
+    uint16 duration;
+    int32 force;
 } EntityLavaGeyser;
 
 // Object Struct
@@ -28,6 +46,15 @@ void LavaGeyser_EditorLoad(void);
 void LavaGeyser_Serialize(void);
 
 // Extra Entity Functions
+void LavaGeyser_CheckPlayerCollisions(void);
+void LavaGeyser_HandleSetup(void);
+void LavaGeyser_HandleIntervals(void);
 
+void LavaGeyser_State_Unknown1(void);
+void LavaGeyser_State_Unknown2(void);
+void LavaGeyser_State_Unknown3(void);
+void LavaGeyser_State_Unknown4(void);
+void LavaGeyser_State_Unknown5(void);
+void LavaGeyser_State_Unknown6(void);
 
 #endif //!OBJ_LAVAGEYSER_H

@@ -51,7 +51,7 @@ void GasPlatform_Create(void *data)
     if (!entity->interval)
         entity->interval = 1;
     entity->frameID   = 2;
-    entity->collision = 0;
+    entity->collision = PLATFORM_C_0;
     Platform_Create(NULL);
     RSDK.SetSpriteAnimation(Platform->spriteIndex, 2, &entity->animator2, true, 0);
     entity->stateCollide = Platform_CollisionState_AllSolid;

@@ -6,7 +6,7 @@ void SpiralPlatform_Update(void)
 {
     RSDK_THIS(SpiralPlatform);
 
-    entity->collision = 2;
+    entity->collision = PLATFORM_C_2;
     Platform_Update();
 
     foreach_active(Player, player)

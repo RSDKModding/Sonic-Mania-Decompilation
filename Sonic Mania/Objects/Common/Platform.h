@@ -3,6 +3,45 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    PLATFORM_0,
+    PLATFORM_1,
+    PLATFORM_2,
+    PLATFORM_3,
+    PLATFORM_4,
+    PLATFORM_5,
+    PLATFORM_6,
+    PLATFORM_7,
+    PLATFORM_8,
+    PLATFORM_9,
+    PLATFORM_10,
+    PLATFORM_11,
+    PLATFORM_12,
+    PLATFORM_13,
+    PLATFORM_14,
+    PLATFORM_15,
+    PLATFORM_16,
+} PlatformTypes;
+
+typedef enum {
+    PLATFORM_C_0,
+    PLATFORM_C_1,
+    PLATFORM_C_2,
+    PLATFORM_C_3,
+    PLATFORM_C_4,
+    PLATFORM_C_5,
+    PLATFORM_C_6,
+    PLATFORM_C_7,
+    PLATFORM_C_8,
+    PLATFORM_C_9,
+    PLATFORM_C_10,
+    PLATFORM_C_11,
+    PLATFORM_C_12,
+    PLATFORM_C_13,
+    PLATFORM_C_14,
+    PLATFORM_C_15,
+} PlatformCollisionTypes;
+
 // Object Class
 typedef struct {
     RSDK_OBJECT

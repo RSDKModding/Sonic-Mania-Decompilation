@@ -44,21 +44,24 @@ void LRZ3Setup_StageLoad(void)
 #if RETRO_USE_PLUS
         if (globals->gameMode == MODE_ENCORE) {
             if (!globals->tempFlags) {
-                // Zone->stageFinishCallback = LRZ3Outro_Unknown5;
+                Zone->stageFinishCallback = LRZ3Outro_StageFinishCB;
             }
         }
         else {
-#endif
-            if (!(globals->playerID & ID_KNUCKLES)) {
-                // Zone->stageFinishCallback = LRZ3Outro_Unknown5;
+            if (!checkPlayerID(ID_KNUCKLES, 1)) {
+                Zone->stageFinishCallback = LRZ3Outro_StageFinishCB;
             }
             else {
                 LRZ3Setup->cutscenePtr = CutsceneSeq_GetEntity(LRZ3OutroK->objectID);
                 if (LRZ3Setup->cutscenePtr)
                     Zone->stageFinishCallback = LRZ3Setup_StartCutscene;
             }
-#if RETRO_USE_PLUS
         }
+#else
+        if (checkPlayerID(ID_KNUCKLES, 1)) 
+            LRZ3Setup->cutscenePtr = CutsceneSeq_GetEntity(LRZ3OutroK->objectID);
+        if (LRZ3Setup->cutscenePtr)
+            Zone->stageFinishCallback = LRZ3Setup_StartCutscene;
 #endif
     }
 }

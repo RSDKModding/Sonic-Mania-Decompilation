@@ -36,11 +36,11 @@ void Piston_Create(void *data)
     RSDK_THIS(Piston);
     int32 type              = entity->type;
     entity->spawnType     = type;
-    entity->type          = 0;
-    entity->collisionType = 1;
+    entity->type            = PLATFORM_0;
+    entity->collisionType   = PLATFORM_C_1;
     if (type > 3)
         entity->size += 3;
-    Platform_Create(intToVoid(0));
+    Platform_Create(NULL);
     if (type <= 3) {
         entity->updateRange.x = 0x800000;
         entity->updateRange.y = (entity->distance + 128) << 16;
@@ -50,7 +50,7 @@ void Piston_Create(void *data)
         entity->updateRange.y = 0x800000;
     }
     entity->type = type;
-    if (type == 3) {
+    if (entity->type == 3) {
         entity->state        = Piston_WaitForPlayers;
         entity->stateCollide = Piston_StateCollide_Solid;
     }
