@@ -79,50 +79,44 @@ void PSZ1Setup_StaticUpdate(void)
         EntityPlayer *player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
         if (player->position.y < 0xAA00000) {
             if (player->position.y <= 0x900000) {
-                if (0xAC0000 > 0) {
-                    EntityCamera *camera = player->camera;
-                    camera->position.y += 167772160;
-                    camera->center.y += 2560;
-                    RSDK_screens[camera->screenID].position.y += 2560;
-                    player->position.y += 0xA000000;
-                    TileLayer *layer0 = RSDK.GetSceneLayer(0);
-                    TileLayer *layer1 = RSDK.GetSceneLayer(1);
-                    layer0->scrollPos -= 0xA00000;
-                    layer1->scrollPos -= 0x2800000;
-                    if (layer0->scrollPos < 0)
-                        layer0->scrollPos += 0x4000000;
+                EntityCamera *camera = player->camera;
+                camera->position.y += 0xA000000;
+                camera->center.y += 0xA00;
+                RSDK_screens[camera->screenID].position.y += 0xA00;
+                player->position.y += 0xA000000;
+                TileLayer *bg1 = RSDK.GetSceneLayer(0);
+                TileLayer *bg2 = RSDK.GetSceneLayer(1);
+                bg1->scrollPos -= 0xA00000;
+                bg2->scrollPos -= 0x2800000;
+                if (bg1->scrollPos < 0)
+                    bg1->scrollPos += 0x4000000;
 
-                    if (layer1->scrollPos < 0)
-                        layer1->scrollPos += 0x6000000;
-                }
+                if (bg2->scrollPos < 0)
+                    bg2->scrollPos += 0x6000000;
 
-                if (RSDK_screens->position.y >= 384) {
-                    RSDK_screens->position.y += 2560;
-                }
+                if (RSDK_screens->position.y >= 0x180) 
+                    RSDK_screens->position.y += 0xA00;
             }
         }
         else {
-            if (0xAC0000 > 0) {
-                EntityCamera* camera = player->camera;
-                camera->position.y -= 0xA000000;
-                camera->center.y -= 0xA00;
-                RSDK_screens[camera->screenID].position.y -= 2560;
-                player->position.y -= 0xA000000;
-                TileLayer *layer0 = RSDK.GetSceneLayer(0);
-                TileLayer *layer1 = RSDK.GetSceneLayer(1);
-                layer0->scrollPos += 0xA00000;
-                layer1->scrollPos += 0x2800000;
+            EntityCamera *camera = player->camera;
+            camera->position.y -= 0xA000000;
+            camera->center.y -= 0xA00;
+            RSDK_screens[camera->screenID].position.y -= 0xA00;
+            player->position.y -= 0xA000000;
+            TileLayer *bg1 = RSDK.GetSceneLayer(0);
+            TileLayer *bg2 = RSDK.GetSceneLayer(1);
+            bg1->scrollPos += 0xA00000;
+            bg2->scrollPos += 0x2800000;
 
-                if (layer0->scrollPos >= 0x6E000000)
-                    layer0->scrollPos -= 0x4000000;
+            if (bg1->scrollPos >= 0x6E000000)
+                bg1->scrollPos -= 0x4000000;
 
-                if (layer1->scrollPos >= 0x6E000000)
-                    layer1->scrollPos -= 0x6000000;
-            }
+            if (bg2->scrollPos >= 0x6E000000)
+                bg2->scrollPos -= 0x6000000;
 
-            if (RSDK_screens->position.y >= 2560) {
-                RSDK_screens->position.y -= 2560;
-            }
+            if (RSDK_screens->position.y >= 0xA00)
+                RSDK_screens->position.y -= 0xA00;
         }
 
         int32 camY = player->camera->position.y;

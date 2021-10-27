@@ -5,12 +5,22 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    Hitbox hitbox;
+    uint16 aniFrames;
+    uint16 sfxCactDrop;
 } ObjectCactula;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    StateMachine(state);
+    int32 field_5C;
+    int32 offsetY;
+    bool32 flag;
+    Animator animator1;
+    Animator animator2;
+    Animator animator3;
 } EntityCactula;
 
 // Object Struct
@@ -30,6 +40,14 @@ void Cactula_EditorLoad(void);
 void Cactula_Serialize(void);
 
 // Extra Entity Functions
+void Cactula_DebugSpawn(void);
+void Cactula_DebugDraw(void);
 
+void Cactula_CheckPlayerCollisions(void);
+bool32 Cactula_CheckCB(void);
+
+void Cactula_State_Unknown1(void);
+void Cactula_State_Unknown2(void);
+void Cactula_State_Unknown3(void);
 
 #endif //!OBJ_CACTULA_H
