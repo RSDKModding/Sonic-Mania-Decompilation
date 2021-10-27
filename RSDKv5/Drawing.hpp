@@ -1,7 +1,7 @@
 #ifndef DRAWING_H
 #define DRAWING_H
 
-#define SURFACE_MAX      (0x40)
+#define SURFACE_MAX (0x40)
 
 #if RETRO_REV02
 #define SCREEN_MAX (0x4)
@@ -51,7 +51,7 @@ struct GFXSurface {
 };
 
 struct ScreenInfo {
-    //ushort *frameBuffer;
+    // ushort *frameBuffer;
     ushort frameBuffer[SCREEN_XMAX * SCREEN_YSIZE];
     Vector2 position;
     int width;
@@ -94,7 +94,7 @@ struct DrawVertex {
     short u;
     short v;
 
-    Colour colour;
+    Colour colour = 0;
 };
 
 struct DrawVertex3D {
@@ -104,104 +104,25 @@ struct DrawVertex3D {
     short u;
     short v;
 
-    Colour colour;
+    Colour colour = 0;
 };
 
 struct RenderState {
-    bool32 isGFX = false;
+    bool32 isGFX = true;
 
-    byte blendMode = INK_NONE;
+    byte blendMode    = INK_NONE;
     byte transparency = 0xFF;
-    uint texID = 0;
+    uint texID        = 0;
 
     ushort palette[PALETTE_COUNT][PALETTE_SIZE];
     byte lineBuffer[SCREEN_YSIZE];
 };
-
-struct ShaderHelper {
-    uint ID;
-
-    ShaderHelper() {
-        ID = 0;
-    }
-    ShaderHelper(const char* vert, const char* frag) {
-#if RETRO_USING_OPENGL
-        uint f = glCreateShader(GL_FRAGMENT_SHADER);
-        glShaderSource(f, 1, &frag, NULL);
-        uint v = glCreateShader(GL_VERTEX_SHADER);
-        glShaderSource(v, 1, &frag, NULL);
-        ID = glCreateProgram();
-        glAttachShader(ID, v);
-        glAttachShader(ID, f);        
-        glLinkProgram(ID);
-        glDeleteShader(f);
-        glDeleteShader(v);
-#endif
-    }
-
-    void use() {
-#if RETRO_USING_OPENGL
-        glUseProgram(ID);
-#endif
-    }
-
-    void stop() {
-#if RETRO_USING_OPENGL
-        glUseProgram(0); //stops all shaders
-#endif
-    }
-
-    void setScreen(ScreenInfo* screen) {
-#if RETRO_USING_OPENGL
-        glUniform2i(glGetUniformLocation(ID, "screenSize"), screen->width, screen->height);
-#endif
-    }
-
-    void setTexture(uint tID) {
-#if RETRO_USING_OPENGL
-        glBindTexture(GL_TEXTURE_2D, tID);
-        glUniform1i(glGetUniformLocation(ID, "sprite"), 0);
-#endif
-    }
-
-    void setPalLines(RenderState state) {
-#if RETRO_USING_OPENGL
-        GLint linesOut[0x100];
-        for (uint i = 0; i < SCREEN_YSIZE; ++i) {
-            linesOut[i] = state.lineBuffer[i];
-        }
-        glUniform1iv(glGetUniformLocation(ID, "paletteLines"), 0x100, linesOut);
-#endif
-    }
-
-    //this also sets up transparency color but :LOL:
-    void setPalette(RenderState state) {
-#if RETRO_USING_OPENGL
-        GLfloat palOut[PALETTE_COUNT][PALETTE_SIZE][4];
-        for (byte i = 0; i < PALETTE_COUNT; ++i) {
-            for (uint j = 0; j < PALETTE_SIZE; ++j) {
-                Colour* c = (Colour*)(&gfxPalette16to32[state.palette[i][j]]);
-                palOut[i][j][0] = c->components.r / 255.f;
-                palOut[i][j][1] = c->components.g / 255.f;
-                palOut[i][j][2] = c->components.b / 255.f;
-                palOut[i][j][3] = state.transparency / 255.f;
-            }
-        }
-        glUniform4fv(glGetUniformLocation(ID, "palette"), PALETTE_COUNT * PALETTE_SIZE, (GLfloat*)palOut);
-        glUniform3f(glGetUniformLocation(ID, "transparentColor"), palOut[0][0][0], palOut[0][0][1], palOut[0][0][2]);
-#endif
-    }
-};
-
-
 
 extern DrawVertex gfxPolyList[VERTEX_LIMIT];
 extern short gfxPolyListIndex[INDEX_LIMIT];
 
 extern DrawVertex3D polyList3D[VERTEX3D_LIMIT];
 
-extern ushort vertexSize3D;
-extern ushort indexSize3D;
 extern ushort tileUVArray[TILEUV_SIZE];
 extern float floor3DXPos;
 extern float floor3DYPos;
@@ -213,7 +134,7 @@ extern RenderState lastRenderState;
 extern ushort renderCount;
 extern ushort lastRenderCount;
 
-extern ShaderHelper paletteShader;
+extern uint currentTex;
 
 #if RETRO_USING_OPENGL
 extern GLuint framebufferId;
@@ -294,7 +215,7 @@ inline void ClearCameras() { cameraCount = 0; }
 
 inline void SetClipBounds(byte screenID, int x1, int y1, int x2, int y2)
 {
-    ScreenInfo *screen; 
+    ScreenInfo *screen;
 
     if (screenID < SCREEN_MAX) {
         screen = &screens[screenID];
@@ -386,6 +307,45 @@ void SetupPolygonLists();
 void SetupShaders();
 bool32 StateCheck();
 void TryRender();
+
+inline void AddGFXPoly(float x, float y, float u, float v, Colour color, GFXSurface *surface = NULL)
+{
+    (void)surface;
+    gfxPolyList[renderCount].x = x;
+    gfxPolyList[renderCount].y = y;
+    gfxPolyList[renderCount].u = u;
+    gfxPolyList[renderCount].v = v;
+    gfxPolyList[renderCount++].colour = color;
+
+    /*float xN = x / currentScreen->width;
+    float yN = y / currentScreen->height;
+
+    float uN = 0, vN = 0;
+    float rN = 0, gN = 0, bN = 0, aN = 0;
+
+    if (surface) {
+        uN = u / surface->width;
+        vN = v / surface->height;
+    }
+    else {
+        rN = color.components.r / 255.f;
+        gN = color.components.g / 255.f;
+        bN = color.components.b / 255.f;
+        aN = color.components.a / 255.f;
+    }
+
+    gfxPolyVerts[renderCount][0] = xN;
+    gfxPolyVerts[renderCount][1] = yN;
+
+    gfxPolyTexUV[renderCount][0] = uN;
+    gfxPolyTexUV[renderCount][1] = vN;
+
+    gfxPolyColor[renderCount][0]   = rN;
+    gfxPolyColor[renderCount][1]   = gN;
+    gfxPolyColor[renderCount][2]   = bN;
+    gfxPolyColor[renderCount++][2] = aN;//*/
+}
+
 #endif
 
 #endif // !DRAWING_H

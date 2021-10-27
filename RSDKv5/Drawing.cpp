@@ -19,6 +19,116 @@ byte startVertex_3P[3];
 
 #if RETRO_HARDWARE_RENDER
 bool32 forceRender = false;
+uint currentTex;
+
+struct ShaderHelper {
+    uint ID;
+#if RETRO_USING_OPENGL
+    uint palTex = 0;
+#endif
+
+    ShaderHelper() { ID = 0; }
+    ShaderHelper(const char *vert, const char *frag)
+    {
+#if RETRO_USING_OPENGL
+        uint v = glCreateShader(GL_VERTEX_SHADER);
+        glShaderSource(v, 1, &vert, NULL);
+        uint f = glCreateShader(GL_FRAGMENT_SHADER);
+        glShaderSource(f, 1, &frag, NULL);
+        // glCompileShader(v);
+        // glCompileShader(f);
+        ID = glCreateProgram();
+        glAttachShader(ID, v);
+        glAttachShader(ID, f);
+        glLinkProgram(ID);
+        GLint success;
+        char infoLog[0x1000];
+        glGetProgramiv(ID, GL_LINK_STATUS, &success);
+        if (!success) {
+            glGetProgramInfoLog(ID, 0x1000, NULL, infoLog);
+            printLog(PRINT_ERROR, "OpenGL shader linking failed:\n%s", infoLog);
+        }
+        glDeleteShader(f);
+        glDeleteShader(v);
+#endif
+    }
+
+    void use()
+    {
+#if RETRO_USING_OPENGL
+        glUseProgram(ID);
+#endif
+    }
+
+    void bind() {
+#if RETRO_USING_OPENGL
+        glBindAttribLocation(ID, 0, "in_posGFX");
+        glBindAttribLocation(ID, 1, "in_texUV");
+        glBindAttribLocation(ID, 2, "in_color");
+#endif
+    }
+
+    void stop()
+    {
+#if RETRO_USING_OPENGL
+        glUseProgram(0); // stops all shaders
+#endif
+    }
+
+    void setProjection(MatrixF* matrix) {
+#if RETRO_USING_OPENGL
+        glUniformMatrix4fv(glGetUniformLocation(ID, "projection"), 1, GL_FALSE, (float *)matrix);
+#endif
+    }
+
+    void setScreen(ScreenInfo *screen)
+    {
+#if RETRO_USING_OPENGL
+        glUniform2i(glGetUniformLocation(ID, "screenSize"), screen->width, screen->height);
+#endif
+    }
+
+    void setTexture(uint tID)
+    {
+#if RETRO_USING_OPENGL
+        if (currentTex != tID) {
+            glBindTexture(GL_TEXTURE_2D, tID);
+            currentTex = tID;
+        }
+        glUniform1i(glGetUniformLocation(ID, "sprite"), 0);
+#endif
+    }
+
+    void setPalLines(RenderState state)
+    {
+#if RETRO_USING_OPENGL
+        GLint linesOut[0x100];
+        for (uint i = 0; i < SCREEN_YSIZE; ++i) {
+            linesOut[i] = state.lineBuffer[i];
+        }
+        glUniform1iv(glGetUniformLocation(ID, "paletteLines"), 0x100, linesOut);
+#endif
+    }
+
+    // this also sets up transparency color but :LOL:
+    void setPalette(RenderState state)
+    {
+#if RETRO_USING_OPENGL
+        if (palTex)
+            glDeleteTextures(1, &palTex);
+        glGenTextures(1, &palTex);
+        glActiveTexture(GL_TEXTURE0 + 1);
+        glBindTexture(GL_TEXTURE_2D, palTex);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, PALETTE_SIZE, PALETTE_COUNT, 0, GL_RGB, GL_UNSIGNED_SHORT_5_6_5, state.palette);
+        glActiveTexture(GL_TEXTURE0); // be safe
+        glUniform1i(glGetUniformLocation(ID, "palette"), 1);
+        glBindTexture(GL_TEXTURE_2D, currentTex);
+
+        // uint c0 = gfxPalette16to32[state.palette[0][0]];
+        // glUniform3f(glGetUniformLocation(ID, "transparentColor"), );
+#endif
+    }
+};
 #endif
 
 char drawGroupNames[0x10][0x10]{
@@ -132,7 +242,7 @@ bool32 InitRenderDevice()
 #else
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
 #endif
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
     SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 16);
@@ -228,9 +338,9 @@ bool32 InitRenderDevice()
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
 
-    SetupViewport();
     SetupPolygonLists();
     SetupShaders();
+    SetupViewport();
 
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
@@ -409,11 +519,10 @@ void FlipScreen()
     }
 #else
     // maybe we glClear here?? idk i'm too scared
-    glClear(GL_COLOR_BUFFER_BIT);
     forceRender = true;
     TryRender();
     SDL_GL_SwapWindow(engine.window);
-
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 #endif
 #if RETRO_USING_SDL2
     SDL_ShowWindow(engine.window);
@@ -589,7 +698,10 @@ void InitGFXSystem()
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-#endif
+#endif //! RETRO_USING_OPENGL
+#endif //! RETRO_REV02
+#if RETRO_USING_OPENGL
+    glBindTexture(GL_TEXTURE_2D, currentTex); //give it back
 #endif
 }
 
@@ -1420,38 +1532,16 @@ void DrawRectangle(int x, int y, int width, int height, uint colour, int alpha, 
         w    = (float)(width) / (1 << 16);
         h    = (float)(height) / (1 << 16);
     }
-    gfxPolyList[renderCount].x            = xpos;
-    gfxPolyList[renderCount].y            = ypos;
-    gfxPolyList[renderCount].colour.color = colour;
-    gfxPolyList[renderCount].u            = 0;
-    gfxPolyList[renderCount].v            = 0;
-    renderCount++;
 
-    gfxPolyList[renderCount].x            = (xpos + w);
-    gfxPolyList[renderCount].y            = ypos;
-    gfxPolyList[renderCount].colour.color = colour;
-    gfxPolyList[renderCount].u            = 0;
-    gfxPolyList[renderCount].v            = gfxPolyList[renderCount - 1].v;
-    renderCount++;
+    AddGFXPoly(xpos, ypos, 0, 0, colour);
+    AddGFXPoly(xpos + w, ypos, 0, 0, colour);
+    AddGFXPoly(xpos, ypos + h, 0, 0, colour);
+    AddGFXPoly(xpos + w, ypos + h, 0, 0, colour);
 
-    gfxPolyList[renderCount].x            = xpos;
-    gfxPolyList[renderCount].y            = (ypos + h);
-    gfxPolyList[renderCount].colour.color = colour;
-    gfxPolyList[renderCount].u            = 0;
-    gfxPolyList[renderCount].v            = 0;
-    renderCount++;
-
-    gfxPolyList[renderCount].x            = gfxPolyList[renderCount - 2].x;
-    gfxPolyList[renderCount].y            = gfxPolyList[renderCount - 1].y;
-    gfxPolyList[renderCount].colour.color = colour;
-    gfxPolyList[renderCount].u            = 0;
-    gfxPolyList[renderCount].v            = 0;
-    renderCount++;
-
-    currentRenderState.texID = 0;
+    currentRenderState.texID     = 0;
     currentRenderState.blendMode = inkEffect;
-    currentRenderState.isGFX = true;
-    
+    currentRenderState.isGFX     = true;
+
     TryRender();
 
 #endif
@@ -3506,120 +3596,29 @@ void DrawSpriteFlipped(int x, int y, int width, int height, int sprX, int sprY, 
     float ypos = y;
     switch (direction) {
         case FLIP_NONE:
-            gfxPolyList[renderCount].x            = xpos;
-            gfxPolyList[renderCount].y            = ypos;
-            gfxPolyList[renderCount].colour.color = 0xFFFFFFFF;
-            gfxPolyList[renderCount].u            = (sprX);
-            gfxPolyList[renderCount].v            = (sprY);
-            renderCount++;
-
-            gfxPolyList[renderCount].x            = (xpos + width);
-            gfxPolyList[renderCount].y            = ypos;
-            gfxPolyList[renderCount].colour.color = 0xFFFFFFFF;
-            gfxPolyList[renderCount].u            = (sprX + width);
-            gfxPolyList[renderCount].v            = gfxPolyList[renderCount - 1].v;
-            renderCount++;
-
-            gfxPolyList[renderCount].x            = xpos;
-            gfxPolyList[renderCount].y            = (ypos + height);
-            gfxPolyList[renderCount].colour.color = 0xFFFFFFFF;
-            gfxPolyList[renderCount].u            = gfxPolyList[renderCount - 2].u;
-            gfxPolyList[renderCount].v            = (sprY + height);
-            renderCount++;
-
-            gfxPolyList[renderCount].x            = gfxPolyList[renderCount - 2].x;
-            gfxPolyList[renderCount].y            = gfxPolyList[renderCount - 1].y;
-            gfxPolyList[renderCount].colour.color = 0xFFFFFFFF;
-            gfxPolyList[renderCount].u            = gfxPolyList[renderCount - 2].u;
-            gfxPolyList[renderCount].v            = gfxPolyList[renderCount - 1].v;
-            renderCount++;
+            AddGFXPoly(xpos, ypos, sprX, sprY, 0, surface);
+            AddGFXPoly(xpos + width, ypos, sprX + width, sprY, 0, surface);
+            AddGFXPoly(xpos, ypos + height, sprX, sprY + height, 0, surface);
+            AddGFXPoly(xpos + width, ypos + height, sprX + width, sprY + height, 0, surface);
             break;
         case FLIP_X:
-            gfxPolyList[renderCount].x            = xpos;
-            gfxPolyList[renderCount].y            = ypos;
-            gfxPolyList[renderCount].colour.color = 0xFFFFFFFF;
-            gfxPolyList[renderCount].u            = (sprX + width);
-            gfxPolyList[renderCount].v            = (sprY);
-            renderCount++;
-
-            gfxPolyList[renderCount].x            = (xpos + width);
-            gfxPolyList[renderCount].y            = ypos;
-            gfxPolyList[renderCount].colour.color = 0xFFFFFFFF;
-            gfxPolyList[renderCount].u            = (sprX);
-            gfxPolyList[renderCount].v            = gfxPolyList[renderCount - 1].v;
-            renderCount++;
-
-            gfxPolyList[renderCount].x            = xpos;
-            gfxPolyList[renderCount].y            = (ypos + height);
-            gfxPolyList[renderCount].colour.color = 0xFFFFFFFF;
-            gfxPolyList[renderCount].u            = gfxPolyList[renderCount - 2].u;
-            gfxPolyList[renderCount].v            = (sprY + height);
-            renderCount++;
-
-            gfxPolyList[renderCount].x            = gfxPolyList[renderCount - 2].x;
-            gfxPolyList[renderCount].y            = gfxPolyList[renderCount - 1].y;
-            gfxPolyList[renderCount].colour.color = 0xFFFFFFFF;
-            gfxPolyList[renderCount].u            = gfxPolyList[renderCount - 2].u;
-            gfxPolyList[renderCount].v            = gfxPolyList[renderCount - 1].v;
-            renderCount++;
+            AddGFXPoly(xpos, ypos, sprX + width, sprY, 0, surface);
+            AddGFXPoly(xpos + width, ypos, sprX, sprY, 0, surface);
+            AddGFXPoly(xpos, ypos + height, sprX + width, sprY + height, 0, surface);
+            AddGFXPoly(xpos + width, ypos + height, sprX, sprY + height, 0, surface);
             break;
         case FLIP_Y:
-            gfxPolyList[renderCount].x            = xpos;
-            gfxPolyList[renderCount].y            = ypos;
-            gfxPolyList[renderCount].colour.color = 0xFFFFFFFF;
-            gfxPolyList[renderCount].u            = (sprX);
-            gfxPolyList[renderCount].v            = (sprY + height);
-            renderCount++;
-
-            gfxPolyList[renderCount].x            = (xpos + width);
-            gfxPolyList[renderCount].y            = ypos;
-            gfxPolyList[renderCount].colour.color = 0xFFFFFFFF;
-            gfxPolyList[renderCount].u            = (sprX + width);
-            gfxPolyList[renderCount].v            = gfxPolyList[renderCount - 1].v;
-            renderCount++;
-
-            gfxPolyList[renderCount].x            = xpos;
-            gfxPolyList[renderCount].y            = (ypos + height);
-            gfxPolyList[renderCount].colour.color = 0xFFFFFFFF;
-            gfxPolyList[renderCount].u            = gfxPolyList[renderCount - 2].u;
-            gfxPolyList[renderCount].v            = (sprY);
-            renderCount++;
-
-            gfxPolyList[renderCount].x            = gfxPolyList[renderCount - 2].x;
-            gfxPolyList[renderCount].y            = gfxPolyList[renderCount - 1].y;
-            gfxPolyList[renderCount].colour.color = 0xFFFFFFFF;
-            gfxPolyList[renderCount].u            = gfxPolyList[renderCount - 2].u;
-            gfxPolyList[renderCount].v            = gfxPolyList[renderCount - 1].v;
+            AddGFXPoly(xpos, ypos, sprX, sprY + height, 0, surface);
+            AddGFXPoly(xpos + width, ypos, sprX + width, sprY + height, 0, surface);
+            AddGFXPoly(xpos, ypos + height, sprX, sprY, 0, surface);
+            AddGFXPoly(xpos + width, ypos + height, sprX + width, sprY, 0, surface);
             renderCount++;
             break;
         case FLIP_XY:
-            gfxPolyList[renderCount].x            = xpos;
-            gfxPolyList[renderCount].y            = ypos;
-            gfxPolyList[renderCount].colour.color = 0xFFFFFFFF;
-            gfxPolyList[renderCount].u            = (sprX + width);
-            gfxPolyList[renderCount].v            = (sprY + height);
-            renderCount++;
-
-            gfxPolyList[renderCount].x            = (xpos + width);
-            gfxPolyList[renderCount].y            = ypos;
-            gfxPolyList[renderCount].colour.color = 0xFFFFFFFF;
-            gfxPolyList[renderCount].u            = (sprX);
-            gfxPolyList[renderCount].v            = gfxPolyList[renderCount - 1].v;
-            renderCount++;
-
-            gfxPolyList[renderCount].x            = xpos;
-            gfxPolyList[renderCount].y            = (ypos + height);
-            gfxPolyList[renderCount].colour.color = 0xFFFFFFFF;
-            gfxPolyList[renderCount].u            = gfxPolyList[renderCount - 2].u;
-            gfxPolyList[renderCount].v            = (sprY);
-            renderCount++;
-
-            gfxPolyList[renderCount].x            = gfxPolyList[renderCount - 2].x;
-            gfxPolyList[renderCount].y            = gfxPolyList[renderCount - 1].y;
-            gfxPolyList[renderCount].colour.color = 0xFFFFFFFF;
-            gfxPolyList[renderCount].u            = gfxPolyList[renderCount - 2].u;
-            gfxPolyList[renderCount].v            = gfxPolyList[renderCount - 1].v;
-            renderCount++;
+            AddGFXPoly(xpos, ypos, sprX + width, sprY + height, 0, surface);
+            AddGFXPoly(xpos + width, ypos, sprX, sprY + height, 0, surface);
+            AddGFXPoly(xpos, ypos + height, sprX + width, sprY, 0, surface);
+            AddGFXPoly(xpos + width, ypos + height, sprX, sprY, 0, surface);
             break;
     }
     currentRenderState.isGFX        = true;
@@ -3967,78 +3966,38 @@ void DrawSpriteRotozoom(int x, int y, int pivotX, int pivotY, int width, int hei
     int sin = sinVal512[rotation] * scaleY >> 9;
     int cos = cosVal512[rotation] * scaleX >> 9;
     if (direction == FLIP_NONE) {
-        int x                                 = -pivotX;
-        int y                                 = -pivotY;
-        gfxPolyList[renderCount].x            = xpos + ((x * cos + y * sin) >> 5);
-        gfxPolyList[renderCount].y            = ypos + ((y * cos - x * sin) >> 5);
-        gfxPolyList[renderCount].colour.color = 0xFFFFFFFF;
-        gfxPolyList[renderCount].u            = sprX;
-        gfxPolyList[renderCount].v            = sprY;
-        renderCount++;
+        int x = -pivotX;
+        int y = -pivotY;
+        AddGFXPoly(xpos + ((x * cos + y * sin) >> 5), ypos + ((y * cos - x * sin) >> 5), sprX, sprY, 0, surface);
 
-        x                                     = width - pivotX;
-        y                                     = -pivotY;
-        gfxPolyList[renderCount].x            = xpos + ((x * cos + y * sin) >> 5);
-        gfxPolyList[renderCount].y            = ypos + ((y * cos - x * sin) >> 5);
-        gfxPolyList[renderCount].colour.color = 0xFFFFFFFF;
-        gfxPolyList[renderCount].u            = (sprX + width);
-        gfxPolyList[renderCount].v            = gfxPolyList[renderCount - 1].v;
-        renderCount++;
+        x = width - pivotX;
+        y = -pivotY;
+        AddGFXPoly(xpos + ((x * cos + y * sin) >> 5), ypos + ((y * cos - x * sin) >> 5), sprX + width, sprY, 0, surface);
 
-        x                                     = -pivotX;
-        y                                     = height - pivotY;
-        gfxPolyList[renderCount].x            = xpos + ((x * cos + y * sin) >> 5);
-        gfxPolyList[renderCount].y            = ypos + ((y * cos - x * sin) >> 5);
-        gfxPolyList[renderCount].colour.color = 0xFFFFFFFF;
-        gfxPolyList[renderCount].u            = gfxPolyList[renderCount - 2].u;
-        gfxPolyList[renderCount].v            = (sprY + height);
-        renderCount++;
+        x = -pivotX;
+        y = height - pivotY;
+        AddGFXPoly(xpos + ((x * cos + y * sin) >> 5), ypos + ((y * cos - x * sin) >> 5), sprX, sprY + height, 0, surface);
 
-        x                                     = width - pivotX;
-        y                                     = height - pivotY;
-        gfxPolyList[renderCount].x            = xpos + ((x * cos + y * sin) >> 5);
-        gfxPolyList[renderCount].y            = ypos + ((y * cos - x * sin) >> 5);
-        gfxPolyList[renderCount].colour.color = 0xFFFFFFFF;
-        gfxPolyList[renderCount].u            = gfxPolyList[renderCount - 2].u;
-        gfxPolyList[renderCount].v            = gfxPolyList[renderCount - 1].v;
-        renderCount++;
+        x = width - pivotX;
+        y = height - pivotY;
+        AddGFXPoly(xpos + ((x * cos + y * sin) >> 5), ypos + ((y * cos - x * sin) >> 5), sprX + width, sprY + height, 0, surface);
     }
     else {
-        int x                                 = pivotX;
-        int y                                 = -pivotY;
-        gfxPolyList[renderCount].x            = xpos + ((x * cos + y * sin) >> 5);
-        gfxPolyList[renderCount].y            = ypos + ((y * cos - x * sin) >> 5);
-        gfxPolyList[renderCount].colour.color = 0xFFFFFFFF;
-        gfxPolyList[renderCount].u            = sprX;
-        gfxPolyList[renderCount].v            = sprY;
-        renderCount++;
+        int x = pivotX;
+        int y = -pivotY;
+        AddGFXPoly(xpos + ((x * cos + y * sin) >> 5), ypos + ((y * cos - x * sin) >> 5), sprX, sprY, 0, surface);
 
-        x                                     = pivotX - width;
-        y                                     = -pivotY;
-        gfxPolyList[renderCount].x            = xpos + ((x * cos + y * sin) >> 5);
-        gfxPolyList[renderCount].y            = ypos + ((y * cos - x * sin) >> 5);
-        gfxPolyList[renderCount].colour.color = 0xFFFFFFFF;
-        gfxPolyList[renderCount].u            = (sprX + width);
-        gfxPolyList[renderCount].v            = gfxPolyList[renderCount - 1].v;
-        renderCount++;
+        x = pivotX - width;
+        y = -pivotY;
+        AddGFXPoly(xpos + ((x * cos + y * sin) >> 5), ypos + ((y * cos - x * sin) >> 5), sprX + width, sprY, 0, surface);
 
-        x                                     = pivotX;
-        y                                     = height - pivotY;
-        gfxPolyList[renderCount].x            = xpos + ((x * cos + y * sin) >> 5);
-        gfxPolyList[renderCount].y            = ypos + ((y * cos - x * sin) >> 5);
-        gfxPolyList[renderCount].colour.color = 0xFFFFFFFF;
-        gfxPolyList[renderCount].u            = gfxPolyList[renderCount - 2].u;
-        gfxPolyList[renderCount].v            = (sprY + height);
-        renderCount++;
+        x = pivotX;
+        y = height - pivotY;
+        AddGFXPoly(xpos + ((x * cos + y * sin) >> 5), ypos + ((y * cos - x * sin) >> 5), sprX, sprY + height, 0, surface);
 
-        x                                     = pivotX - width;
-        y                                     = height - pivotY;
-        gfxPolyList[renderCount].x            = xpos + ((x * cos + y * sin) >> 5);
-        gfxPolyList[renderCount].y            = ypos + ((y * cos - x * sin) >> 5);
-        gfxPolyList[renderCount].colour.color = 0xFFFFFFFF;
-        gfxPolyList[renderCount].u            = gfxPolyList[renderCount - 2].u;
-        gfxPolyList[renderCount].v            = gfxPolyList[renderCount - 1].v;
-        renderCount++;
+        x = pivotX - width;
+        y = height - pivotY;
+        AddGFXPoly(xpos + ((x * cos + y * sin) >> 5), ypos + ((y * cos - x * sin) >> 5), sprX + width, sprY + height, 0, surface);
     }
     currentRenderState.isGFX        = true;
     currentRenderState.texID        = surface->id;
@@ -4666,47 +4625,122 @@ RenderState lastRenderState;
 ushort renderCount     = 0;
 ushort lastRenderCount = 0;
 
-ShaderHelper paletteShader;
+ShaderHelper gfxShader;
 
 #if RETRO_USING_OPENGL
-const char *palShader = "                           \
-    in vec2 TexCoords;                              \
-    out vec4 fragColour;                            \
-                                                    \
-    uniform vec2 screenSize;                        \
-    uniform vec3 transparentColour;                 \
-    uniform sampler2D sprite;                       \
-                                                    \
-    uniform vec4 palette[0x800];                    \
-    uniform int paletteLines[0x100];                \
-                                                    \
-    void main()                                     \
-    {                                               \
-        vec4 coord = gl_FragCoord - 0.5;            \
-        vec2 screenPos;                             \
-        screenPos.x = coord.x * screenSize.x;       \
-        screenPos.y = coord.y * screenSize.y;       \
-                                                    \
-        int id = paletteLines[screenPos.y];         \
-                                                    \
-        int index = texture2D(sprite, TexCoords).r; \
-                                                    \
-        if (!index)                                 \
-            discard;                                \
-                                                    \
-        fragColour = palette[id * 0x100 + index];   \
-    }";
 
-const char *vertShader = "void main() { gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex; }";
+GLuint VAO;
+GLuint GFXVBO;
+GLuint polyVBO;
+
+const char *gfxShaderF = "\
+#version 330 core                                               \n\
+in vec2 in_texUV;                                               \n\
+in vec4 in_color;                                               \n\
+out vec4 out_color;                                             \n\
+                                                                \n\
+uniform vec2 screenSize;                                        \n\
+uniform vec3 transparentColour;                                 \n\
+uniform sampler2D sprite;                                       \n\
+                                                                \n\
+uniform sampler2D palette;                                      \n\
+uniform int paletteLines[0x100];                                \n\
+                                                                \n\
+void main()                                                     \n\
+{                                                               \n\
+    if (in_color.a == 0.0) {                                    \n\
+        vec4 coord = gl_FragCoord - 0.5;                        \n\
+        vec2 screenPos;                                         \n\
+        screenPos.x = coord.x * screenSize.x;                   \n\
+        screenPos.y = coord.y * screenSize.y;                   \n\
+                                                                \n\
+        int id = paletteLines[int(screenPos.y)];                \n\
+                                                                \n\
+        int index = int(texture2D(sprite, in_texUV).r * 255);   \n\
+                                                                \n\
+        if (index == 0)                                         \n\
+            discard;                                            \n\
+                                                                \n\
+        vec2 palvec;                                            \n\
+        palvec.x = index;                                       \n\
+        palvec.y = id;                                          \n\
+                                                                \n\
+        out_color = texture(palette, palvec);                   \n\
+    }                                                           \n\
+} ";
+
+const char *gfxShaderV = "\
+#version 330 core                                                   \n\
+layout (location = 0) in vec2 in_posGFX;                            \n\
+layout (location = 1) in vec2 in_texUV;                             \n\
+//layout (location = 2) in vec4 in_color;                             \n\
+out vec2 ex_texUV;                                                  \n\
+//out vec4 ex_color;                                                  \n\
+                                                                    \n\
+// uniform mat4 model;                                              \n\
+// uniform mat4 view; //set to identity for screen based            \n\
+uniform mat4 projection;                                            \n\
+                                                                    \n\
+void main()                                                         \n\
+{                                                                   \n\
+    gl_Position = vec4(in_posGFX, 0.0, 1.0);// * projection;           \n\
+    ex_texUV    = in_texUV;                                         \n\
+//    ex_color    = in_color;                                         \n\
+} ";
 #endif
+
+void ortho(MatrixF* matrix, float l, float r, float t, float b, float n, float f) {
+    matrix->values[0][0] = 2 / r - l;
+    matrix->values[0][1] = 0;
+    matrix->values[0][2] = 0;
+    matrix->values[0][3] = -(r + l / r - l);
+    matrix->values[1][0] = 0;
+    matrix->values[1][1] = 2 / t - b;
+    matrix->values[1][2] = 0;
+    matrix->values[1][3] = -(t + b / t - b);
+    matrix->values[2][0] = 0;
+    matrix->values[2][1] = 0;
+    matrix->values[2][2] = -2 / (f - n);
+    matrix->values[2][3] = -(f + n / f - n);
+    matrix->values[3][0] = 0;
+    matrix->values[3][1] = 0;
+    matrix->values[3][2] = 0;
+    matrix->values[3][3] = 1;
+}
+
 void SetupViewport()
 {
+    MatrixF orth;
+    if (currentScreen) {
+        ortho(&orth, 0, currentScreen->width, currentScreen->height, 0.0, -1.0, 1.0);
+        gfxShader.use();
+        gfxShader.setProjection(&orth);
+    }
+    //polyShader.setProjecton(&orth);
 #if RETRO_USING_OPENGL
     glViewport(0, 0, engine.windowWidth, engine.windowHeight);
 #endif
+    
 }
 
-void SetupShaders() { paletteShader = ShaderHelper(vertShader, palShader); }
+void SetupShaders()
+{
+    gfxShader = ShaderHelper(gfxShaderV, gfxShaderF);
+#if RETRO_USING_OPENGL
+    // i'm also gonna setup VBOs here bc i'm lazy
+    glGenVertexArrays(1, &VAO);
+    glBindVertexArray(VAO);
+    glGenBuffers(2, &GFXVBO);
+    glBindBuffer(GL_ARRAY_BUFFER, GFXVBO);
+    glVertexAttribPointer(0, 2, GL_SHORT, GL_FALSE, sizeof(DrawVertex), 0);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(1, 2, GL_SHORT, GL_FALSE, sizeof(DrawVertex), (void *)(sizeof(short) * 2));
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(2, 4, GL_UNSIGNED_BYTE, GL_FALSE, sizeof(DrawVertex), (void *)(sizeof(short) * 4));
+    //glEnableVertexAttribArray(2);
+
+#endif
+}
 
 void SetupPolygonLists()
 {
@@ -4729,9 +4763,13 @@ void SetupPolygonLists()
 
 bool32 StateCheck()
 {
-
-    memcpy(currentRenderState.palette, fullPalette, sizeof(fullPalette));
-    memcpy(currentRenderState.lineBuffer, gfxLineBuffer, SCREEN_YSIZE * sizeof(byte));
+    if (currentRenderState.isGFX) {
+        //pals aren't used by poly (?)
+        memcpy(currentRenderState.palette, fullPalette, sizeof(fullPalette));
+        memcpy(currentRenderState.lineBuffer, gfxLineBuffer, SCREEN_YSIZE * sizeof(byte));
+    }
+    if (forceRender)
+        return true;
     bool32 diff = false;
     if (memcmp(currentRenderState.lineBuffer, lastRenderState.lineBuffer, SCREEN_YSIZE * sizeof(byte)))
         diff = true;
@@ -4750,50 +4788,57 @@ bool32 StateCheck()
             }
         }
     }
-    if (!diff && !memcmp(&currentRenderState, &lastRenderState, sizeof(RenderState) - (sizeof(fullPalette) + SCREEN_YSIZE * sizeof(byte)))) {
-        lastRenderCount = renderCount;
+    if (!diff && !memcmp(&currentRenderState, &lastRenderState, sizeof(RenderState) - (sizeof(fullPalette) + SCREEN_YSIZE * sizeof(byte))))
         return false;
-    }
     return true; // the states are different, proceed to render
 }
 
 void TryRender()
 {
-    if (!forceRender && !StateCheck())
+    bool32 checkedPal = false, checkedpLines = false;
+    if (!StateCheck())
         return;
     else if (forceRender) {
+        if (!renderCount)
+            return;
+        checkedPal      = memcmp(currentRenderState.palette, lastRenderState.palette, sizeof(fullPalette));
+        checkedpLines   = memcmp(currentRenderState.lineBuffer, lastRenderState.lineBuffer, SCREEN_YSIZE * sizeof(byte));
         lastRenderState = currentRenderState;
         lastRenderCount = renderCount;
     }
     forceRender = false;
 #if RETRO_USING_OPENGL
-    glLoadIdentity();
-    if (currentScreen)
-        glOrtho(0, currentScreen->width, SCREEN_YSIZE, 0.0, -1.0, 1.0);
-
-#if RETRO_USING_OPENGL
-    glViewport(0, 0, engine.windowWidth, engine.windowHeight);
-#endif
-
     if (lastRenderState.isGFX) {
-        if (currentRenderState.blendMode && !lastRenderState.blendMode)
-            glEnable(GL_BLEND);
-        if (lastRenderState.texID) {
-            paletteShader.use();
-            paletteShader.setTexture(lastRenderState.texID);
-            if (memcmp(currentRenderState.palette, lastRenderState.palette, sizeof(fullPalette)))
-                paletteShader.setPalette(lastRenderState);
-            if (memcmp(currentRenderState.lineBuffer, lastRenderState.lineBuffer, SCREEN_YSIZE * sizeof(byte)))
-                paletteShader.setPalLines(lastRenderState);
+        //projection shoudl already be set for the GFX shader, but just incase
+        gfxShader.use();
+        if (currentScreen) {
+            MatrixF orth;
+            ortho(&orth, 0, currentScreen->width, currentScreen->height, 0.0, -1.0, 1.0);
+            gfxShader.setProjection(&orth);
         }
 
-        glEnableClientState(GL_COLOR_ARRAY);
-        glVertexPointer(2, GL_SHORT, sizeof(DrawVertex), &gfxPolyList[0].x);
-        glTexCoordPointer(2, GL_SHORT, sizeof(DrawVertex), &gfxPolyList[0].u);
-        glColorPointer(4, GL_UNSIGNED_BYTE, sizeof(DrawVertex), &gfxPolyList[0].colour);
-        glDrawElements(GL_TRIANGLES, lastRenderCount, GL_UNSIGNED_SHORT, gfxPolyListIndex);
-        glDisableClientState(GL_COLOR_ARRAY);
-        paletteShader.stop();
+        if (currentRenderState.blendMode && !lastRenderState.blendMode)
+            glEnable(GL_BLEND);
+        else if (!currentRenderState.blendMode && lastRenderState.blendMode)
+            glDisable(GL_BLEND);
+
+        if (lastRenderState.texID) {
+            gfxShader.setTexture(lastRenderState.texID);
+            if (checkedPal || memcmp(currentRenderState.palette, lastRenderState.palette, sizeof(fullPalette)))
+                gfxShader.setPalette(lastRenderState);
+            if (checkedpLines || memcmp(currentRenderState.lineBuffer, lastRenderState.lineBuffer, SCREEN_YSIZE * sizeof(byte)))
+                gfxShader.setPalLines(lastRenderState);
+        }
+
+        // VBO data feed
+        // the VAO and VBO are always binded, except for when they aren't (in poly)
+        // we rebind in poly so we don't care what happens here
+        glBufferData(GL_ARRAY_BUFFER, lastRenderCount * sizeof(DrawVertex), gfxPolyList, GL_DYNAMIC_DRAW);
+
+        //gfxShader.bind();
+        glDrawArrays(GL_TRIANGLES, 0, lastRenderCount);
+
+        gfxShader.stop();
     }
     else {
         glPushMatrix();
@@ -4818,7 +4863,7 @@ void TryRender()
     memcpy(gfxPolyList, &gfxPolyList[lastRenderCount], (VERTEX_LIMIT - lastRenderCount) * sizeof(DrawVertex));
     memcpy(polyList3D, &polyList3D[lastRenderCount], (VERTEX3D_LIMIT - lastRenderCount) * sizeof(DrawVertex3D));
     lastRenderState = currentRenderState;
+    renderCount -= lastRenderCount;
     lastRenderCount = renderCount;
-    renderCount     = 0;
 }
 #endif

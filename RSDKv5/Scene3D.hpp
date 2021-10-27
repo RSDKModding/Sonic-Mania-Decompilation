@@ -191,4 +191,13 @@ void AddModelToScene(ushort animID, ushort sceneID, byte drawMode, Matrix *matWo
 void AddMeshFrameToScene(ushort animID, ushort sceneID, Animator *animator, byte drawMode, Matrix *matWorld, Matrix *matView, uint colour);
 void Draw3DScene(ushort sceneID);
 
+#if RETRO_HARDWARE_RENDER
+struct MatrixF {
+    float values[4][4];
+};
+void matrixItoF(Matrix* matrixI, MatrixF* matrixF);
+void matrixFtoI(MatrixF *matrixF, Matrix *matrixI);
+
+#endif
+
 #endif

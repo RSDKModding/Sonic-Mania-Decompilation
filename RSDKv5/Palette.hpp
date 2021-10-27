@@ -14,6 +14,16 @@ union Colour {
         byte r;
         byte a;
     } components;
+
+    Colour(uint c) {
+        color = c;
+    }
+    Colour(byte r, byte g, byte b, byte a) {
+        components.r = r;
+        components.g = g;
+        components.b = b;
+        components.a = a;
+    }
 };
 
 extern ushort rIndexes[0x100];

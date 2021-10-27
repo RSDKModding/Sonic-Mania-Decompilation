@@ -1216,3 +1216,18 @@ void Draw3DScene(ushort sceneID)
         }
     }
 }
+
+#if RETRO_HARDWARE_RENDER
+void matrixItoF(Matrix* matrixI, MatrixF* matrixF) {
+    for (byte i = 0; i < 4; ++i) 
+        for (byte j = 0; j < 4; ++j) 
+            matrixF->values[i][j] = matrixI->values[i][j] / (float)(1 << 8);
+}
+void matrixFtoI(MatrixF *matrixF, Matrix *matrixI)
+{
+    for (byte i = 0; i < 4; ++i)
+        for (byte j = 0; j < 4; ++j) {
+            matrixI->values[i][j] = (int)(round(matrixF->values[i][j] * (1 << 8)));
+        }
+}
+#endif
