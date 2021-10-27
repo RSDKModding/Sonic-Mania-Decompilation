@@ -47,11 +47,14 @@ void Honkytonk_Update(void)
 
             difX               = (player->position.x - entity->position.x) >> 8;
             difY               = (player->position.y - entity->position.y) >> 8;
-            player->position.x = entity->position.x + (difY * RSDK.Sin256(entity->angle)) + (difX * RSDK.Cos256(entity->angle));
-            player->position.y = entity->position.y - (difX * RSDK.Sin256(entity->angle)) + (difY * RSDK.Cos256(entity->angle));
+            player->position.x = entity->position.x + difY * RSDK.Sin256(entity->angle) + difX * RSDK.Cos256(entity->angle);
+            player->position.y = entity->position.y - difX * RSDK.Sin256(entity->angle) + difY * RSDK.Cos256(entity->angle);
 
-            player->velocity.x = ((player->velocity.y >> 8) * RSDK.Sin256(entity->angle)) + ((player->velocity.x >> 8) * RSDK.Cos256(entity->angle));
-            player->velocity.y = ((player->velocity.y >> 8) * RSDK.Cos256(entity->angle)) - ((player->velocity.x >> 8) * RSDK.Sin256(entity->angle));
+            int velX = player->velocity.x;
+            int velY = player->velocity.y;
+
+            player->velocity.x = (velY >> 8) * RSDK.Sin256(entity->angle) + (velX >> 8) * RSDK.Cos256(entity->angle);
+            player->velocity.y = (velY >> 8) * RSDK.Cos256(entity->angle) - (velX >> 8) * RSDK.Sin256(entity->angle);
 
             float speeds[] = { 1.0, 1.25, 1.5, 0.75 };
             int32 channel    = RSDK.PlaySfx(Honkytonk->sfxPiano, 0, 255);

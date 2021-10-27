@@ -32,6 +32,7 @@ void Rexon_StageLoad(void)
 
 }
 
+#if RETRO_INCLUDE_EDITOR
 void Rexon_EditorDraw(void)
 {
 
@@ -41,6 +42,7 @@ void Rexon_EditorLoad(void)
 {
 
 }
+#endif
 
 void Rexon_Serialize(void)
 {

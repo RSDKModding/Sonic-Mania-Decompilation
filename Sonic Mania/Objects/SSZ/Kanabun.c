@@ -32,6 +32,7 @@ void Kanabun_StageLoad(void)
 
 }
 
+#if RETRO_INCLUDE_EDITOR
 void Kanabun_EditorDraw(void)
 {
 
@@ -41,6 +42,7 @@ void Kanabun_EditorLoad(void)
 {
 
 }
+#endif
 
 void Kanabun_Serialize(void)
 {

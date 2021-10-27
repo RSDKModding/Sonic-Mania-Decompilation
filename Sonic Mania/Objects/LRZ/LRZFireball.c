@@ -32,6 +32,7 @@ void LRZFireball_StageLoad(void)
 
 }
 
+#if RETRO_INCLUDE_EDITOR
 void LRZFireball_EditorDraw(void)
 {
 
@@ -41,6 +42,7 @@ void LRZFireball_EditorLoad(void)
 {
 
 }
+#endif
 
 void LRZFireball_Serialize(void)
 {

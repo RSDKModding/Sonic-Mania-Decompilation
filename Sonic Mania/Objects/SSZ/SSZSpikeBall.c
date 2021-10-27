@@ -32,6 +32,7 @@ void SSZSpikeBall_StageLoad(void)
 
 }
 
+#if RETRO_INCLUDE_EDITOR
 void SSZSpikeBall_EditorDraw(void)
 {
 
@@ -41,6 +42,7 @@ void SSZSpikeBall_EditorLoad(void)
 {
 
 }
+#endif
 
 void SSZSpikeBall_Serialize(void)
 {

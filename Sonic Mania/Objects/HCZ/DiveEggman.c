@@ -32,6 +32,7 @@ void DiveEggman_StageLoad(void)
 
 }
 
+#if RETRO_INCLUDE_EDITOR
 void DiveEggman_EditorDraw(void)
 {
 
@@ -41,6 +42,7 @@ void DiveEggman_EditorLoad(void)
 {
 
 }
+#endif
 
 void DiveEggman_Serialize(void)
 {

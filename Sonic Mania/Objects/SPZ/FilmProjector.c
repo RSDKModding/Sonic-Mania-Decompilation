@@ -104,6 +104,7 @@ void FilmProjector_Create(void* data)
 
 void FilmProjector_StageLoad(void) { FilmProjector->spriteIndex = RSDK.LoadSpriteAnimation("SPZ1/FilmProjector.bin", SCOPE_STAGE); }
 
+#if RETRO_INCLUDE_EDITOR
 void FilmProjector_EditorDraw(void)
 {
 
@@ -113,6 +114,7 @@ void FilmProjector_EditorLoad(void)
 {
 
 }
+#endif
 
 void FilmProjector_Serialize(void)
 {

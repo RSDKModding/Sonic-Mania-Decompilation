@@ -32,6 +32,7 @@ void ScrewMobile_StageLoad(void)
 
 }
 
+#if RETRO_INCLUDE_EDITOR
 void ScrewMobile_EditorDraw(void)
 {
 
@@ -41,6 +42,7 @@ void ScrewMobile_EditorLoad(void)
 {
 
 }
+#endif
 
 void ScrewMobile_Serialize(void)
 {

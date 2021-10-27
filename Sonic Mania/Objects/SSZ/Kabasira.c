@@ -32,6 +32,7 @@ void Kabasira_StageLoad(void)
 
 }
 
+#if RETRO_INCLUDE_EDITOR
 void Kabasira_EditorDraw(void)
 {
 
@@ -41,6 +42,7 @@ void Kabasira_EditorLoad(void)
 {
 
 }
+#endif
 
 void Kabasira_Serialize(void)
 {

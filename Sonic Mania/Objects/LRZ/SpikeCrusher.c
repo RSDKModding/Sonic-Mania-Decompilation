@@ -32,6 +32,7 @@ void SpikeCrusher_StageLoad(void)
 
 }
 
+#if RETRO_INCLUDE_EDITOR
 void SpikeCrusher_EditorDraw(void)
 {
 
@@ -41,6 +42,7 @@ void SpikeCrusher_EditorLoad(void)
 {
 
 }
+#endif
 
 void SpikeCrusher_Serialize(void)
 {

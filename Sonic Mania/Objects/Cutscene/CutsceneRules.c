@@ -48,6 +48,7 @@ void CutsceneRules_SetupEntity(void *e)
     entity->hitbox.bottom       = entity->size.y >> 17;
 }
 
+#if RETRO_INCLUDE_EDITOR
 void CutsceneRules_EditorDraw(void)
 {
 
@@ -57,6 +58,7 @@ void CutsceneRules_EditorLoad(void)
 {
 
 }
+#endif
 
 void CutsceneRules_Serialize(void)
 {

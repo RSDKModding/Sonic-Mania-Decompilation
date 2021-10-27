@@ -32,6 +32,7 @@ void LoveTester_StageLoad(void)
 
 }
 
+#if RETRO_INCLUDE_EDITOR
 void LoveTester_EditorDraw(void)
 {
 
@@ -41,6 +42,7 @@ void LoveTester_EditorLoad(void)
 {
 
 }
+#endif
 
 void LoveTester_Serialize(void)
 {

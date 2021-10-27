@@ -32,6 +32,7 @@ void Stalactite_StageLoad(void)
 
 }
 
+#if RETRO_INCLUDE_EDITOR
 void Stalactite_EditorDraw(void)
 {
 
@@ -41,6 +42,7 @@ void Stalactite_EditorLoad(void)
 {
 
 }
+#endif
 
 void Stalactite_Serialize(void)
 {

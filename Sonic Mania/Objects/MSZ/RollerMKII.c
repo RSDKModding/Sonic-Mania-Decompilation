@@ -32,6 +32,7 @@ void RollerMKII_StageLoad(void)
 
 }
 
+#if RETRO_INCLUDE_EDITOR
 void RollerMKII_EditorDraw(void)
 {
 
@@ -41,6 +42,7 @@ void RollerMKII_EditorLoad(void)
 {
 
 }
+#endif
 
 void RollerMKII_Serialize(void)
 {

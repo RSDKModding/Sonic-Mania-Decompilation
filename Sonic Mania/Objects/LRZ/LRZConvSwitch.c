@@ -32,6 +32,7 @@ void LRZConvSwitch_StageLoad(void)
 
 }
 
+#if RETRO_INCLUDE_EDITOR
 void LRZConvSwitch_EditorDraw(void)
 {
 
@@ -41,6 +42,7 @@ void LRZConvSwitch_EditorLoad(void)
 {
 
 }
+#endif
 
 void LRZConvSwitch_Serialize(void)
 {

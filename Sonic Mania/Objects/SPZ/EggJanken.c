@@ -32,6 +32,7 @@ void EggJanken_StageLoad(void)
 
 }
 
+#if RETRO_INCLUDE_EDITOR
 void EggJanken_EditorDraw(void)
 {
 
@@ -41,6 +42,7 @@ void EggJanken_EditorLoad(void)
 {
 
 }
+#endif
 
 void EggJanken_Serialize(void)
 {

@@ -32,6 +32,7 @@ void KingAttack_StageLoad(void)
 
 }
 
+#if RETRO_INCLUDE_EDITOR
 void KingAttack_EditorDraw(void)
 {
 
@@ -41,6 +42,7 @@ void KingAttack_EditorLoad(void)
 {
 
 }
+#endif
 
 void KingAttack_Serialize(void)
 {

@@ -32,6 +32,7 @@ void PimPom_StageLoad(void)
 
 }
 
+#if RETRO_INCLUDE_EDITOR
 void PimPom_EditorDraw(void)
 {
 
@@ -41,6 +42,7 @@ void PimPom_EditorLoad(void)
 {
 
 }
+#endif
 
 void PimPom_Serialize(void)
 {

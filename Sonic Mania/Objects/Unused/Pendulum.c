@@ -2,48 +2,24 @@
 
 ObjectPendulum *Pendulum = NULL;
 
-void Pendulum_Update(void)
-{
+//idk what this object is/was, there is literally 0 code for it in the game
 
-}
+void Pendulum_Update(void) {}
 
-void Pendulum_LateUpdate(void)
-{
+void Pendulum_LateUpdate(void) {}
 
-}
+void Pendulum_StaticUpdate(void) {}
 
-void Pendulum_StaticUpdate(void)
-{
+void Pendulum_Draw(void) {}
 
-}
+void Pendulum_Create(void *data) {}
 
-void Pendulum_Draw(void)
-{
+void Pendulum_StageLoad(void) {}
 
-}
+#if RETRO_INCLUDE_EDITOR
+void Pendulum_EditorDraw(void) {}
 
-void Pendulum_Create(void* data)
-{
+void Pendulum_EditorLoad(void) {}
+#endif
 
-}
-
-void Pendulum_StageLoad(void)
-{
-
-}
-
-void Pendulum_EditorDraw(void)
-{
-
-}
-
-void Pendulum_EditorLoad(void)
-{
-
-}
-
-void Pendulum_Serialize(void)
-{
-
-}
-
+void Pendulum_Serialize(void) {}

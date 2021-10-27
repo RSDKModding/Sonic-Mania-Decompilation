@@ -32,6 +32,7 @@ void KingClaw_StageLoad(void)
 
 }
 
+#if RETRO_INCLUDE_EDITOR
 void KingClaw_EditorDraw(void)
 {
 
@@ -41,6 +42,7 @@ void KingClaw_EditorLoad(void)
 {
 
 }
+#endif
 
 void KingClaw_Serialize(void)
 {

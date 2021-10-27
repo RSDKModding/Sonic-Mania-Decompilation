@@ -32,6 +32,7 @@ void LEDPanel_StageLoad(void)
 
 }
 
+#if RETRO_INCLUDE_EDITOR
 void LEDPanel_EditorDraw(void)
 {
 
@@ -41,6 +42,7 @@ void LEDPanel_EditorLoad(void)
 {
 
 }
+#endif
 
 void LEDPanel_Serialize(void)
 {

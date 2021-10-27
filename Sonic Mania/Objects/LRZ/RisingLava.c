@@ -32,6 +32,7 @@ void RisingLava_StageLoad(void)
 
 }
 
+#if RETRO_INCLUDE_EDITOR
 void RisingLava_EditorDraw(void)
 {
 
@@ -41,6 +42,7 @@ void RisingLava_EditorLoad(void)
 {
 
 }
+#endif
 
 void RisingLava_Serialize(void)
 {

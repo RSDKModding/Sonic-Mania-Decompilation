@@ -32,6 +32,7 @@ void KleptoMobile_StageLoad(void)
 
 }
 
+#if RETRO_INCLUDE_EDITOR
 void KleptoMobile_EditorDraw(void)
 {
 
@@ -41,6 +42,7 @@ void KleptoMobile_EditorLoad(void)
 {
 
 }
+#endif
 
 void KleptoMobile_Serialize(void)
 {

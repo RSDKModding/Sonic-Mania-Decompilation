@@ -44,6 +44,7 @@ void InkWipe_StageLoad(void)
         InkWipe->spriteIndex = RSDK.LoadSpriteAnimation("PSZ1/InkWipe.bin", SCOPE_STAGE);
 }
 
+#if RETRO_INCLUDE_EDITOR
 void InkWipe_EditorDraw(void)
 {
 
@@ -53,6 +54,7 @@ void InkWipe_EditorLoad(void)
 {
 
 }
+#endif
 
 void InkWipe_Serialize(void)
 {

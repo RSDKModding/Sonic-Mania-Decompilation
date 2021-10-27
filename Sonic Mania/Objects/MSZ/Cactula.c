@@ -32,6 +32,7 @@ void Cactula_StageLoad(void)
 
 }
 
+#if RETRO_INCLUDE_EDITOR
 void Cactula_EditorDraw(void)
 {
 
@@ -41,6 +42,7 @@ void Cactula_EditorLoad(void)
 {
 
 }
+#endif
 
 void Cactula_Serialize(void)
 {

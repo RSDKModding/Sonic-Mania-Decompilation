@@ -33,6 +33,7 @@ void GigaMetal_StageLoad(void)
 
 }
 
+#if RETRO_INCLUDE_EDITOR
 void GigaMetal_EditorDraw(void)
 {
 
@@ -42,6 +43,7 @@ void GigaMetal_EditorLoad(void)
 {
 
 }
+#endif
 
 void GigaMetal_Serialize(void)
 {

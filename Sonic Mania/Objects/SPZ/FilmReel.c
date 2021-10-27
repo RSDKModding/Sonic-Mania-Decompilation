@@ -32,6 +32,7 @@ void FilmReel_StageLoad(void)
 
 }
 
+#if RETRO_INCLUDE_EDITOR
 void FilmReel_EditorDraw(void)
 {
 
@@ -41,6 +42,7 @@ void FilmReel_EditorLoad(void)
 {
 
 }
+#endif
 
 void FilmReel_Serialize(void)
 {

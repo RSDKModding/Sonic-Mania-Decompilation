@@ -41,6 +41,6 @@ void Pinata_DebugDraw(void);
 void Pinata_DebugSpawn(void);
 
 void Pinata_State_CheckPlayerCollisions(void);
-void Pinata_State_Respawn(void);
+void Pinata_State_Destroyed(void);
 
 #endif //!OBJ_PINATA_H

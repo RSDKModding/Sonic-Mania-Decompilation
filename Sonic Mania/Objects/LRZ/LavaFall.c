@@ -32,6 +32,7 @@ void LavaFall_StageLoad(void)
 
 }
 
+#if RETRO_INCLUDE_EDITOR
 void LavaFall_EditorDraw(void)
 {
 
@@ -41,6 +42,7 @@ void LavaFall_EditorLoad(void)
 {
 
 }
+#endif
 
 void LavaFall_Serialize(void)
 {

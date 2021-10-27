@@ -32,6 +32,7 @@ void PhantomMystic_StageLoad(void)
 
 }
 
+#if RETRO_INCLUDE_EDITOR
 void PhantomMystic_EditorDraw(void)
 {
 
@@ -41,6 +42,7 @@ void PhantomMystic_EditorLoad(void)
 {
 
 }
+#endif
 
 void PhantomMystic_Serialize(void)
 {

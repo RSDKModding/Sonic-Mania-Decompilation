@@ -69,6 +69,7 @@ void ParticleHelpers_Unknown2(void *debrisState, void (*callback)(EntityDebris *
 }
 
 
+#if RETRO_INCLUDE_EDITOR
 void ParticleHelpers_EditorDraw(void)
 {
 
@@ -78,6 +79,7 @@ void ParticleHelpers_EditorLoad(void)
 {
 
 }
+#endif
 
 void ParticleHelpers_Serialize(void)
 {

@@ -32,6 +32,7 @@ void Fireflies_StageLoad(void)
 
 }
 
+#if RETRO_INCLUDE_EDITOR
 void Fireflies_EditorDraw(void)
 {
 
@@ -41,6 +42,7 @@ void Fireflies_EditorLoad(void)
 {
 
 }
+#endif
 
 void Fireflies_Serialize(void)
 {

@@ -32,6 +32,7 @@ void BadnikHelpers_StageLoad(void)
 
 }
 
+#if RETRO_INCLUDE_EDITOR
 void BadnikHelpers_EditorDraw(void)
 {
 
@@ -41,6 +42,7 @@ void BadnikHelpers_EditorLoad(void)
 {
 
 }
+#endif
 
 void BadnikHelpers_Serialize(void)
 {

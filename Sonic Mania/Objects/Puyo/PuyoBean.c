@@ -32,6 +32,7 @@ void PuyoBean_StageLoad(void)
 
 }
 
+#if RETRO_INCLUDE_EDITOR
 void PuyoBean_EditorDraw(void)
 {
 
@@ -41,6 +42,7 @@ void PuyoBean_EditorLoad(void)
 {
 
 }
+#endif
 
 void PuyoBean_Serialize(void)
 {

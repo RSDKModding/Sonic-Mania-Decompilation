@@ -113,14 +113,14 @@ void Pinata_State_CheckPlayerCollisions(void)
                 RSDK.SetSpriteAnimation(Pinata->aniFrames, 0, &debris->animator, true, RSDK.Rand(0, 4));
             }
 
-            entity->state   = Pinata_State_Respawn;
+            entity->state   = Pinata_State_Destroyed;
             entity->visible = false;
             entity->active  = ACTIVE_NORMAL;
         }
     }
 }
 
-void Pinata_State_Respawn(void)
+void Pinata_State_Destroyed(void)
 {
     RSDK_THIS(Pinata);
     Vector2 range;

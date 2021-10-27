@@ -542,6 +542,7 @@ void SizeLaser_Unknown10(void)
         destroyEntity(entity);
 }
 
+#if RETRO_INCLUDE_EDITOR
 void SizeLaser_EditorDraw(void)
 {
 
@@ -551,6 +552,7 @@ void SizeLaser_EditorLoad(void)
 {
 
 }
+#endif
 
 void SizeLaser_Serialize(void)
 {

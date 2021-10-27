@@ -32,6 +32,7 @@ void PhantomShinobi_StageLoad(void)
 
 }
 
+#if RETRO_INCLUDE_EDITOR
 void PhantomShinobi_EditorDraw(void)
 {
 
@@ -41,6 +42,7 @@ void PhantomShinobi_EditorLoad(void)
 {
 
 }
+#endif
 
 void PhantomShinobi_Serialize(void)
 {

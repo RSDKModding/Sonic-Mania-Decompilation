@@ -10,15 +10,31 @@ typedef struct {
                             -21, -20, -19, -18, -17, -16, -15, -14, -13, -12, -11, -10, -9,  -8,  -7,  -6,  -5,  -4,  -3,  -2,  -2,  -2,  -2,  -2 });
     Vector2 value2;
     int32 value3;
-    Hitbox value4;
-    Hitbox value5;
-    uint16 value6;
-    uint16 value7;
+    Hitbox hitbox1;
+    Hitbox hitbox2;
+    uint16 aniFrames;
+    uint16 sfxSpring;
 } ObjectSeeSaw;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    StateMachine(state);
+    uint8 side;
+    Vector2 orbPos;
+    int32 field_68;
+    int32 field_6C;
+    int32 field_70;
+    int32 field_74;
+    int32 field_78;
+    int32 field_7C;
+    int32 field_80;
+    int32 field_84;
+    int32 field_88;
+    int32 field_8C;
+    Animator animator1;
+    Animator animator2;
+    Animator animator3;
 } EntitySeeSaw;
 
 // Object Struct
@@ -38,6 +54,10 @@ void SeeSaw_EditorLoad(void);
 void SeeSaw_Serialize(void);
 
 // Extra Entity Functions
-
+void SeeSaw_SetupHitbox(int playerX, bool32 flag);
+void SeeSaw_Unknown2(void);
+void SeeSaw_Unknown3(void);
+void SeeSaw_Unknown4(void);
+void SeeSaw_Unknown5(void);
 
 #endif //!OBJ_SEESAW_H

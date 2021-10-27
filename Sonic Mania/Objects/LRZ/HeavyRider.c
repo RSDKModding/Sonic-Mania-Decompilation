@@ -32,6 +32,7 @@ void HeavyRider_StageLoad(void)
 
 }
 
+#if RETRO_INCLUDE_EDITOR
 void HeavyRider_EditorDraw(void)
 {
 
@@ -41,6 +42,7 @@ void HeavyRider_EditorLoad(void)
 {
 
 }
+#endif
 
 void HeavyRider_Serialize(void)
 {

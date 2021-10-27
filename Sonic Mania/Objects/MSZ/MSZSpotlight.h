@@ -3,6 +3,12 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    MSZSPOTLIGHT_RED,
+    MSZSPOTLIGHT_GREEN,
+    MSZSPOTLIGHT_BLUE,
+}MSZSpotlightColours;
+
 // Object Class
 typedef struct {
     RSDK_OBJECT
@@ -37,6 +43,10 @@ void MSZSpotlight_EditorLoad(void);
 void MSZSpotlight_Serialize(void);
 
 // Extra Entity Functions
-
+void MSZSpotlight_Unknown1(void);
+void MSZSpotlight_Unknown2(void);
+void MSZSpotlight_Unknown3(void);
+void MSZSpotlight_Unknown4(void);
+void MSZSpotlight_Unknown5(void);
 
 #endif //!OBJ_MSZSPOTLIGHT_H

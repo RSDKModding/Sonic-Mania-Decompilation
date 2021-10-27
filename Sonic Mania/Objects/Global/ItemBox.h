@@ -56,10 +56,10 @@ typedef struct {
     bool32 hidden;
     PlaneFilterTypes planeFilter;
     bool32 lrzConvPhys;
-    Animator brokenData;
-    Animator contentsData;
-    Animator overlayData;
-    Animator debrisData;
+    Animator animatorBox;
+    Animator animatorContents;
+    Animator animatorOverlay;
+    Animator animatorDebris;
     Entity *parent;
 } EntityItemBox;
 

@@ -191,6 +191,7 @@ void HCZOneWayDoor_DrawSprites(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void HCZOneWayDoor_EditorDraw(void)
 {
 
@@ -200,6 +201,7 @@ void HCZOneWayDoor_EditorLoad(void)
 {
 
 }
+#endif
 
 void HCZOneWayDoor_Serialize(void)
 {

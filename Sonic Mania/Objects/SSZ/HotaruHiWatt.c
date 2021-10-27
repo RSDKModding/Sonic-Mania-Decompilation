@@ -32,6 +32,7 @@ void HotaruHiWatt_StageLoad(void)
 
 }
 
+#if RETRO_INCLUDE_EDITOR
 void HotaruHiWatt_EditorDraw(void)
 {
 
@@ -41,6 +42,7 @@ void HotaruHiWatt_EditorLoad(void)
 {
 
 }
+#endif
 
 void HotaruHiWatt_Serialize(void)
 {

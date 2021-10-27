@@ -225,6 +225,7 @@ void MetalSonic_HandleStageWrap(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void MetalSonic_EditorDraw(void)
 {
 
@@ -234,6 +235,7 @@ void MetalSonic_EditorLoad(void)
 {
 
 }
+#endif
 
 void MetalSonic_Serialize(void)
 {

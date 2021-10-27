@@ -32,6 +32,7 @@ void UberCaterkiller_StageLoad(void)
 
 }
 
+#if RETRO_INCLUDE_EDITOR
 void UberCaterkiller_EditorDraw(void)
 {
 
@@ -41,6 +42,7 @@ void UberCaterkiller_EditorLoad(void)
 {
 
 }
+#endif
 
 void UberCaterkiller_Serialize(void)
 {
