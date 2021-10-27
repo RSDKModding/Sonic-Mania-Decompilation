@@ -438,8 +438,10 @@ void ERZKing_State_Explode(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void ERZKing_EditorDraw(void) {}
 
 void ERZKing_EditorLoad(void) {}
+#endif
 
 void ERZKing_Serialize(void) { RSDK_EDITABLE_VAR(ERZKing, VAR_ENUM, type); }

@@ -38,8 +38,10 @@ void BallHog_StaticUpdate(void);
 void BallHog_Draw(void);
 void BallHog_Create(void* data);
 void BallHog_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void BallHog_EditorDraw(void);
 void BallHog_EditorLoad(void);
+#endif
 void BallHog_Serialize(void);
 
 // Extra Entity Functions

@@ -114,8 +114,10 @@ void MSPanel_Unknown4(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void MSPanel_EditorDraw(void) {}
 
 void MSPanel_EditorLoad(void) {}
+#endif
 
 void MSPanel_Serialize(void) {}

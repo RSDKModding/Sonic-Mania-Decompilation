@@ -906,9 +906,11 @@ void CompetitionMenu_GotoPuyoVS(void)
     RSDK.LoadScene();
 }
 
+#if RETRO_INCLUDE_EDITOR
 void CompetitionMenu_EditorDraw(void) {}
 
 void CompetitionMenu_EditorLoad(void) {}
+#endif
 
 void CompetitionMenu_Serialize(void) {}
 #endif

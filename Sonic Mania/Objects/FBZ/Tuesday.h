@@ -49,8 +49,10 @@ void Tuesday_StaticUpdate(void);
 void Tuesday_Draw(void);
 void Tuesday_Create(void* data);
 void Tuesday_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void Tuesday_EditorDraw(void);
 void Tuesday_EditorLoad(void);
+#endif
 void Tuesday_Serialize(void);
 
 // Extra Entity Functions

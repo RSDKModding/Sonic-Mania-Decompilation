@@ -178,8 +178,10 @@ void PathInverter_State_Vertical(void)
 { /*empty*/
 }
 
+#if RETRO_INCLUDE_EDITOR
 void PathInverter_EditorDraw(void) {}
 
 void PathInverter_EditorLoad(void) {}
+#endif
 
 void PathInverter_Serialize(void) { RSDK_EDITABLE_VAR(PathInverter, VAR_UINT8, type); }

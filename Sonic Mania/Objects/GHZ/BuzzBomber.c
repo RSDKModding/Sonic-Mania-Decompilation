@@ -259,6 +259,7 @@ void BuzzBomber_Unknown7(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void BuzzBomber_EditorDraw(void) { BuzzBomber_Draw(); }
 
 void BuzzBomber_EditorLoad(void)
@@ -268,6 +269,7 @@ void BuzzBomber_EditorLoad(void)
     else if (RSDK.CheckStageFolder("Blueprint"))
         BuzzBomber->spriteIndex = RSDK.LoadSpriteAnimation("Blueprint/BuzzBomber.bin", SCOPE_STAGE);
 }
+#endif
 
 void BuzzBomber_Serialize(void)
 {

@@ -273,8 +273,10 @@ void PhantomMissile_Unknown9(void)
         destroyEntity(entity);
 }
 
+#if RETRO_INCLUDE_EDITOR
 void PhantomMissile_EditorDraw(void) {}
 
 void PhantomMissile_EditorLoad(void) {}
+#endif
 
 void PhantomMissile_Serialize(void) {}

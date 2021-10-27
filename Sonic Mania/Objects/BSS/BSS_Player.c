@@ -271,8 +271,10 @@ void BSS_Player_ProcessP2Input(void)
     entity->jumpPress = BSS_Player->jumpPressState >> 15;
 }
 
+#if RETRO_INCLUDE_EDITOR
 void BSS_Player_EditorDraw(void) {}
 
 void BSS_Player_EditorLoad(void) {}
+#endif
 
 void BSS_Player_Serialize(void) {}

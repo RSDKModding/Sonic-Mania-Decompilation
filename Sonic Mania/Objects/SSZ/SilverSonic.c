@@ -32,6 +32,7 @@ void SilverSonic_StageLoad(void)
 
 }
 
+#if RETRO_INCLUDE_EDITOR
 void SilverSonic_EditorDraw(void)
 {
 
@@ -41,6 +42,7 @@ void SilverSonic_EditorLoad(void)
 {
 
 }
+#endif
 
 void SilverSonic_Serialize(void)
 {

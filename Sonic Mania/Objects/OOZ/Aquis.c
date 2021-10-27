@@ -327,8 +327,10 @@ void Aquis_State_Shot(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void Aquis_EditorDraw(void) {}
 
 void Aquis_EditorLoad(void) {}
+#endif
 
 void Aquis_Serialize(void) {}

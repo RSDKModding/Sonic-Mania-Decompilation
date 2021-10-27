@@ -257,9 +257,11 @@ void BallHog_State_Bomb(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void BallHog_EditorDraw(void) {}
 
 void BallHog_EditorLoad(void) {}
+#endif
 
 void BallHog_Serialize(void)
 {

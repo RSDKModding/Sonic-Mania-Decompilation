@@ -956,9 +956,11 @@ void OptionsMenu_EraseAll_Confirm(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void OptionsMenu_EditorDraw(void) {}
 
 void OptionsMenu_EditorLoad(void) {}
+#endif
 
 void OptionsMenu_Serialize(void) {}
 #endif

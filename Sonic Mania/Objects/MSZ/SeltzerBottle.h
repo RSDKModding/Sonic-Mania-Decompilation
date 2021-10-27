@@ -43,8 +43,10 @@ void SeltzerBottle_StaticUpdate(void);
 void SeltzerBottle_Draw(void);
 void SeltzerBottle_Create(void* data);
 void SeltzerBottle_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void SeltzerBottle_EditorDraw(void);
 void SeltzerBottle_EditorLoad(void);
+#endif
 void SeltzerBottle_Serialize(void);
 
 // Extra Entity Functions

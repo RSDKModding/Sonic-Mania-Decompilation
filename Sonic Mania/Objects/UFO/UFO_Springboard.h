@@ -56,8 +56,10 @@ void UFO_Springboard_StaticUpdate(void);
 void UFO_Springboard_Draw(void);
 void UFO_Springboard_Create(void* data);
 void UFO_Springboard_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void UFO_Springboard_EditorDraw(void);
 void UFO_Springboard_EditorLoad(void);
+#endif
 void UFO_Springboard_Serialize(void);
 
 // Extra Entity Functions

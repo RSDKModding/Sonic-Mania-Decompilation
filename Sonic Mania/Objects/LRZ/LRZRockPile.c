@@ -32,6 +32,7 @@ void LRZRockPile_StageLoad(void)
 
 }
 
+#if RETRO_INCLUDE_EDITOR
 void LRZRockPile_EditorDraw(void)
 {
 
@@ -41,6 +42,7 @@ void LRZRockPile_EditorLoad(void)
 {
 
 }
+#endif
 
 void LRZRockPile_Serialize(void)
 {

@@ -244,8 +244,10 @@ void FBZSetup_StageFinishCB_Act1(void) { FBZSetup->outroPtr->active = ACTIVE_NOR
 void FBZSetup_StageFinishCB_Act2(void) { CREATE_ENTITY(FBZ2Outro, NULL, 0, 0); }
 #endif
 
+#if RETRO_INCLUDE_EDITOR
 void FBZSetup_EditorDraw(void) {}
 
 void FBZSetup_EditorLoad(void) {}
+#endif
 
 void FBZSetup_Serialize(void) {}

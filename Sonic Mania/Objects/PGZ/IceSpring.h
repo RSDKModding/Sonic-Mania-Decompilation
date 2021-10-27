@@ -37,8 +37,10 @@ void IceSpring_StaticUpdate(void);
 void IceSpring_Draw(void);
 void IceSpring_Create(void* data);
 void IceSpring_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void IceSpring_EditorDraw(void);
 void IceSpring_EditorLoad(void);
+#endif
 void IceSpring_Serialize(void);
 
 // Extra Entity Functions

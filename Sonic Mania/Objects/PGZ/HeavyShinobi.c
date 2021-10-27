@@ -992,8 +992,10 @@ void HeavyShinobi_StateDraw4_Unknown1(void)
     entity->direction = FLIP_NONE;
 }
 
+#if RETRO_INCLUDE_EDITOR
 void HeavyShinobi_EditorDraw(void) {}
 
 void HeavyShinobi_EditorLoad(void) {}
+#endif
 
 void HeavyShinobi_Serialize(void) {}

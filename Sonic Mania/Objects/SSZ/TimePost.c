@@ -182,8 +182,10 @@ void TimePost_State_Spin(void)
 
 void TimePost_State_FinishedSpin(void) { TimePost_HandleTimeSparkles(); }
 
+#if RETRO_INCLUDE_EDITOR
 void TimePost_EditorDraw(void) {}
 
 void TimePost_EditorLoad(void) {}
+#endif
 
 void TimePost_Serialize(void) { RSDK_EDITABLE_VAR(TimePost, VAR_UINT8, type); }

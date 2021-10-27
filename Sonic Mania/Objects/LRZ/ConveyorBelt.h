@@ -28,8 +28,10 @@ void ConveyorBelt_StaticUpdate(void);
 void ConveyorBelt_Draw(void);
 void ConveyorBelt_Create(void* data);
 void ConveyorBelt_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void ConveyorBelt_EditorDraw(void);
 void ConveyorBelt_EditorLoad(void);
+#endif
 void ConveyorBelt_Serialize(void);
 
 // Extra Entity Functions

@@ -413,9 +413,11 @@ void CrashTest_State_Unknown4(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void CrashTest_EditorDraw(void) {}
 
 void CrashTest_EditorLoad(void) {}
+#endif
 
 void CrashTest_Serialize(void)
 {

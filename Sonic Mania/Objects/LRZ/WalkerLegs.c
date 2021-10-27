@@ -32,6 +32,7 @@ void WalkerLegs_StageLoad(void)
 
 }
 
+#if RETRO_INCLUDE_EDITOR
 void WalkerLegs_EditorDraw(void)
 {
 
@@ -41,6 +42,7 @@ void WalkerLegs_EditorLoad(void)
 {
 
 }
+#endif
 
 void WalkerLegs_Serialize(void)
 {

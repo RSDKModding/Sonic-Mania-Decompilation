@@ -296,9 +296,11 @@ void UIChoice_Unknown7(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void UIChoice_EditorDraw(void) {}
 
 void UIChoice_EditorLoad(void) {}
+#endif
 
 void UIChoice_Serialize(void)
 {

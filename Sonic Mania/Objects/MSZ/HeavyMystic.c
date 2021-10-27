@@ -87,6 +87,7 @@ void HeavyMystic_Unknown2(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void HeavyMystic_EditorDraw(void)
 {
 
@@ -96,6 +97,7 @@ void HeavyMystic_EditorLoad(void)
 {
 
 }
+#endif
 
 void HeavyMystic_Serialize(void)
 {

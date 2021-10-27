@@ -219,9 +219,11 @@ void UICharButton_Unknown11(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void UICharButton_EditorDraw(void) {}
 
 void UICharButton_EditorLoad(void) {}
+#endif
 
 void UICharButton_Serialize(void)
 {

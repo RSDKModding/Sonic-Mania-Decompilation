@@ -26,8 +26,10 @@ void ConveyorWheel_StaticUpdate(void);
 void ConveyorWheel_Draw(void);
 void ConveyorWheel_Create(void* data);
 void ConveyorWheel_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void ConveyorWheel_EditorDraw(void);
 void ConveyorWheel_EditorLoad(void);
+#endif
 void ConveyorWheel_Serialize(void);
 
 // Extra Entity Functions

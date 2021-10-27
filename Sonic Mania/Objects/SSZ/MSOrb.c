@@ -79,6 +79,7 @@ void MSOrb_StateDraw_Orb(void)
     RSDK.DrawSprite(&entity->animator, NULL, false);
 }
 
+#if RETRO_INCLUDE_EDITOR
 void MSOrb_EditorDraw(void)
 {
 
@@ -88,6 +89,7 @@ void MSOrb_EditorLoad(void)
 {
 
 }
+#endif
 
 void MSOrb_Serialize(void)
 {

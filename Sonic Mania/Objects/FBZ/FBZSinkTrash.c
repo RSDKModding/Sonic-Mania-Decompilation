@@ -226,9 +226,11 @@ void FBZSinkTrash_Create(void *data)
 
 void FBZSinkTrash_StageLoad(void) { FBZSinkTrash->aniFrames = RSDK.LoadSpriteAnimation("FBZ/Trash.bin", SCOPE_STAGE); }
 
+#if RETRO_INCLUDE_EDITOR
 void FBZSinkTrash_EditorDraw(void) {}
 
 void FBZSinkTrash_EditorLoad(void) {}
+#endif
 
 void FBZSinkTrash_Serialize(void)
 {

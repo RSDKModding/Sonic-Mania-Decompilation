@@ -6,7 +6,7 @@ void SpiralPlatform_Update(void)
 {
     RSDK_THIS(SpiralPlatform);
 
-    entity->collision = 2;
+    entity->collision = PLATFORM_C_2;
     Platform_Update();
 
     foreach_active(Player, player)
@@ -72,9 +72,11 @@ void SpiralPlatform_Unknown1(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void SpiralPlatform_EditorDraw(void) {}
 
 void SpiralPlatform_EditorLoad(void) {}
+#endif
 
 void SpiralPlatform_Serialize(void)
 {

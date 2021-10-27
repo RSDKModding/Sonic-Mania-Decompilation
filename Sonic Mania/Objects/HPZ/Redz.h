@@ -35,8 +35,10 @@ void Redz_StaticUpdate(void);
 void Redz_Draw(void);
 void Redz_Create(void* data);
 void Redz_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void Redz_EditorDraw(void);
 void Redz_EditorLoad(void);
+#endif
 void Redz_Serialize(void);
 
 // Extra Entity Functions

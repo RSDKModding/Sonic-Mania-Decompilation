@@ -43,8 +43,10 @@ void HangConveyor_StaticUpdate(void);
 void HangConveyor_Draw(void);
 void HangConveyor_Create(void* data);
 void HangConveyor_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void HangConveyor_EditorDraw(void);
 void HangConveyor_EditorLoad(void);
+#endif
 void HangConveyor_Serialize(void);
 
 // Extra Entity Functions

@@ -32,6 +32,7 @@ void Firework_StageLoad(void)
 
 }
 
+#if RETRO_INCLUDE_EDITOR
 void Firework_EditorDraw(void)
 {
 
@@ -41,6 +42,7 @@ void Firework_EditorLoad(void)
 {
 
 }
+#endif
 
 void Firework_Serialize(void)
 {

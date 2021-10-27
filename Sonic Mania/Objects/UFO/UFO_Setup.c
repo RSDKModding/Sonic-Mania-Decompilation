@@ -419,8 +419,10 @@ void UFO_Setup_Unknown14(void)
         UFO_Setup_Finish_Fail();
 }
 
+#if RETRO_INCLUDE_EDITOR
 void UFO_Setup_EditorDraw(void) {}
 
 void UFO_Setup_EditorLoad(void) {}
+#endif
 
 void UFO_Setup_Serialize(void) {}

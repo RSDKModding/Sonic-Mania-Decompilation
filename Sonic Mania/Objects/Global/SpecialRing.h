@@ -42,8 +42,10 @@ void SpecialRing_StaticUpdate(void);
 void SpecialRing_Draw(void);
 void SpecialRing_Create(void* data);
 void SpecialRing_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void SpecialRing_EditorDraw(void);
 void SpecialRing_EditorLoad(void);
+#endif
 void SpecialRing_Serialize(void);
 
 // Extra Entity Functions

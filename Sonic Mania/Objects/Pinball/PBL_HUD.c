@@ -300,9 +300,11 @@ void PBL_HUD_Unknown13(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void PBL_HUD_EditorDraw(void) {}
 
 void PBL_HUD_EditorLoad(void) {}
+#endif
 
 void PBL_HUD_Serialize(void) {}
 #endif

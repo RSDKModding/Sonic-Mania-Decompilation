@@ -274,8 +274,10 @@ void GHZCutsceneST_SkipCB(void)
         RSDK.SetScene("Mania Mode", "Green Hill Zone 1");
 }
 
+#if RETRO_INCLUDE_EDITOR
 void GHZCutsceneST_EditorDraw(void) {}
 
 void GHZCutsceneST_EditorLoad(void) {}
+#endif
 
 void GHZCutsceneST_Serialize(void) { RSDK_EDITABLE_VAR(GHZCutsceneST, VAR_VECTOR2, size); }

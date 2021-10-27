@@ -156,8 +156,10 @@ void TryAgain_Unknown4(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void TryAgain_EditorDraw(void) {}
 
 void TryAgain_EditorLoad(void) {}
+#endif
 
 void TryAgain_Serialize(void) {}

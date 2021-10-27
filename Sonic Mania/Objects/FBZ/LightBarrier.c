@@ -85,9 +85,11 @@ void LightBarrier_Create(void *data)
 
 void LightBarrier_StageLoad(void) { LightBarrier->aniFrames = RSDK.LoadSpriteAnimation("FBZ/LightBarrier.bin", SCOPE_STAGE); }
 
+#if RETRO_INCLUDE_EDITOR
 void LightBarrier_EditorDraw(void) {}
 
 void LightBarrier_EditorLoad(void) {}
+#endif
 
 void LightBarrier_Serialize(void)
 {

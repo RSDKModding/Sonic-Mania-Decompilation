@@ -49,8 +49,10 @@ void UIResPicker_StaticUpdate(void);
 void UIResPicker_Draw(void);
 void UIResPicker_Create(void* data);
 void UIResPicker_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void UIResPicker_EditorDraw(void);
 void UIResPicker_EditorLoad(void);
+#endif
 void UIResPicker_Serialize(void);
 
 // Extra Entity Functions

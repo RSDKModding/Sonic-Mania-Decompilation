@@ -53,8 +53,10 @@ void PetalPile_StaticUpdate(void);
 void PetalPile_Draw(void);
 void PetalPile_Create(void *data);
 void PetalPile_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void PetalPile_EditorDraw(void);
 void PetalPile_EditorLoad(void);
+#endif
 void PetalPile_Serialize(void);
 
 // Extra Entity Functions

@@ -231,8 +231,10 @@ void RockemSockem_Unknown1(void)
     entity->jointPositions[5].y = 0x2AAB * (posY + y + 4 * posY);
 }
 
+#if RETRO_INCLUDE_EDITOR
 void RockemSockem_EditorDraw(void) {}
 
 void RockemSockem_EditorLoad(void) {}
+#endif
 
 void RockemSockem_Serialize(void) {}

@@ -174,9 +174,11 @@ void FXRuby_Unknown9(void)
         RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL);
 }
 
+#if RETRO_INCLUDE_EDITOR
 void FXRuby_EditorDraw(void) {}
 
 void FXRuby_EditorLoad(void) {}
+#endif
 
 void FXRuby_Serialize(void)
 {

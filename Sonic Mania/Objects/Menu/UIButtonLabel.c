@@ -43,9 +43,11 @@ void UIButtonLabel_Create(void *data)
 
 void UIButtonLabel_StageLoad(void) { UIButtonLabel->aniFrames = RSDK.LoadSpriteAnimation("UI/ButtonLabel.bin", SCOPE_STAGE); }
 
+#if RETRO_INCLUDE_EDITOR
 void UIButtonLabel_EditorDraw(void) {}
 
 void UIButtonLabel_EditorLoad(void) {}
+#endif
 
 void UIButtonLabel_Serialize(void)
 {

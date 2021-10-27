@@ -30,8 +30,10 @@ void SeltzerWater_StaticUpdate(void);
 void SeltzerWater_Draw(void);
 void SeltzerWater_Create(void* data);
 void SeltzerWater_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void SeltzerWater_EditorDraw(void);
 void SeltzerWater_EditorLoad(void);
+#endif
 void SeltzerWater_Serialize(void);
 
 // Extra Entity Functions

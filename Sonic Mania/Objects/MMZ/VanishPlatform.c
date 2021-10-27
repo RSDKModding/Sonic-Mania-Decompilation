@@ -12,11 +12,11 @@ void VanishPlatform_Update(void)
     }
     if (entity->scale.x <= 336) {
         entity->stateCollide = Platform_CollisionState_Null;
-        entity->collision    = 4;
+        entity->collision    = PLATFORM_C_4;
     }
     else {
         entity->stateCollide = Platform_CollisionState_TopSolid;
-        entity->collision    = 0;
+        entity->collision    = PLATFORM_C_0;
     }
     Platform_Update();
 }
@@ -34,7 +34,7 @@ void VanishPlatform_Draw(void)
 void VanishPlatform_Create(void *data)
 {
     RSDK_THIS(VanishPlatform);
-    entity->collision = 0;
+    entity->collision = PLATFORM_C_0;
     Platform_Create(NULL);
     RSDK.SetSpriteAnimation(Platform->spriteIndex, 3, &entity->animator, true, 0);
     entity->drawFX  = FX_SCALE;
@@ -69,9 +69,11 @@ void VanishPlatform_Unknown2(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void VanishPlatform_EditorDraw(void) {}
 
 void VanishPlatform_EditorLoad(void) {}
+#endif
 
 void VanishPlatform_Serialize(void)
 {

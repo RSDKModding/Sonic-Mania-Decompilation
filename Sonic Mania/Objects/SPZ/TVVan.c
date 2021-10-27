@@ -32,6 +32,7 @@ void TVVan_StageLoad(void)
 
 }
 
+#if RETRO_INCLUDE_EDITOR
 void TVVan_EditorDraw(void)
 {
 
@@ -41,6 +42,7 @@ void TVVan_EditorLoad(void)
 {
 
 }
+#endif
 
 void TVVan_Serialize(void)
 {

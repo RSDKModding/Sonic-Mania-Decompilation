@@ -83,6 +83,7 @@ void CorkscrewPath_Create(void *data)
 
 void CorkscrewPath_StageLoad(void) {}
 
+#if RETRO_INCLUDE_EDITOR
 void CorkscrewPath_EditorDraw(void)
 {
     RSDK_THIS(CorkscrewPath);
@@ -107,6 +108,7 @@ void CorkscrewPath_EditorDraw(void)
 }
 
 void CorkscrewPath_EditorLoad(void) { CorkscrewPath->aniFrames = RSDK.LoadSpriteAnimation("Editor/EditorIcons.bin", SCOPE_STAGE); }
+#endif
 
 void CorkscrewPath_Serialize(void)
 {

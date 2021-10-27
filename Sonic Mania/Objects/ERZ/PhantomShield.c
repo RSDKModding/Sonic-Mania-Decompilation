@@ -143,8 +143,10 @@ void PhantomShield_Unknown3(void)
         destroyEntity(entity);
 }
 
+#if RETRO_INCLUDE_EDITOR
 void PhantomShield_EditorDraw(void) {}
 
 void PhantomShield_EditorLoad(void) {}
+#endif
 
 void PhantomShield_Serialize(void) {}

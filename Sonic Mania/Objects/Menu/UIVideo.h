@@ -39,8 +39,10 @@ void UIVideo_StaticUpdate(void);
 void UIVideo_Draw(void);
 void UIVideo_Create(void* data);
 void UIVideo_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void UIVideo_EditorDraw(void);
 void UIVideo_EditorLoad(void);
+#endif
 void UIVideo_Serialize(void);
 
 // Extra Entity Functions

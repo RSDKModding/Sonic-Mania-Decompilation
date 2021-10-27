@@ -30,8 +30,10 @@ void MMZLightning_StaticUpdate(void);
 void MMZLightning_Draw(void);
 void MMZLightning_Create(void* data);
 void MMZLightning_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void MMZLightning_EditorDraw(void);
 void MMZLightning_EditorLoad(void);
+#endif
 void MMZLightning_Serialize(void);
 
 // Extra Entity Functions

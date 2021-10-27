@@ -370,6 +370,7 @@ void RubyPortal_Unknown9(void)
     foreach_active(PhantomRuby, ruby) { ruby->position.x += entity->velocity.x; }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void RubyPortal_EditorDraw(void)
 {
     RSDK_THIS(RubyPortal);
@@ -393,5 +394,6 @@ void RubyPortal_EditorLoad(void)
 #endif
         RubyPortal->spriteIndex = RSDK.LoadSpriteAnimation("TMZ1/Portal.bin", SCOPE_STAGE);
 }
+#endif
 
 void RubyPortal_Serialize(void) {}

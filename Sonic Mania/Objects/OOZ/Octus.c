@@ -219,8 +219,10 @@ void Octus_State_Shot(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void Octus_EditorDraw(void) {}
 
 void Octus_EditorLoad(void) {}
+#endif
 
 void Octus_Serialize(void) { RSDK_EDITABLE_VAR(Octus, VAR_UINT8, direction); }

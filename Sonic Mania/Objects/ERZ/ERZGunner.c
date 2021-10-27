@@ -600,8 +600,10 @@ void ERZGunner_State3_Unknown(void)
         destroyEntity(entity);
 }
 
+#if RETRO_INCLUDE_EDITOR
 void ERZGunner_EditorDraw(void) {}
 
 void ERZGunner_EditorLoad(void) {}
+#endif
 
 void ERZGunner_Serialize(void) {}

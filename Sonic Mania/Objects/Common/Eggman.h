@@ -32,8 +32,10 @@ void Eggman_StaticUpdate(void);
 void Eggman_Draw(void);
 void Eggman_Create(void* data);
 void Eggman_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void Eggman_EditorDraw(void);
 void Eggman_EditorLoad(void);
+#endif
 void Eggman_Serialize(void);
 
 // Extra Entity Functions

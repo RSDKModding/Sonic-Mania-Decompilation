@@ -75,8 +75,10 @@ void ReplayRecorder_StaticUpdate(void);
 void ReplayRecorder_Draw(void);
 void ReplayRecorder_Create(void* data);
 void ReplayRecorder_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void ReplayRecorder_EditorDraw(void);
 void ReplayRecorder_EditorLoad(void);
+#endif
 void ReplayRecorder_Serialize(void);
 
 // Extra Entity Functions

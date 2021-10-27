@@ -26,8 +26,10 @@ void VanishPlatform_StaticUpdate(void);
 void VanishPlatform_Draw(void);
 void VanishPlatform_Create(void* data);
 void VanishPlatform_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void VanishPlatform_EditorDraw(void);
 void VanishPlatform_EditorLoad(void);
+#endif
 void VanishPlatform_Serialize(void);
 
 // Extra Entity Functions

@@ -1166,8 +1166,10 @@ bool32 SpiderMobile_CheckCB(void)
     return flag;
 }
 
+#if RETRO_INCLUDE_EDITOR
 void SpiderMobile_EditorDraw(void) {}
 
 void SpiderMobile_EditorLoad(void) {}
+#endif
 
 void SpiderMobile_Serialize(void) { RSDK_EDITABLE_VAR(SpiderMobile, VAR_VECTOR2, origin); }

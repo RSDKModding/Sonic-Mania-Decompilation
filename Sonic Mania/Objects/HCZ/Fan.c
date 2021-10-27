@@ -329,7 +329,7 @@ void Fan_HandlePlayerInteractions_Top(void)
 #endif
             water->field_68   = water->position.x;
             water->velocity.y = -0x40000;
-            water->childPtr   = 0;
+            water->childPtr   = NULL;
         }
     }
     Fan_ProcessAnimationSpeed_Fast();
@@ -486,9 +486,11 @@ void Fan_Unknown11(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void Fan_EditorDraw(void) {}
 
 void Fan_EditorLoad(void) {}
+#endif
 
 void Fan_Serialize(void)
 {

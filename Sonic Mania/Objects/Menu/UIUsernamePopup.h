@@ -33,8 +33,10 @@ void UIUsernamePopup_StaticUpdate(void);
 void UIUsernamePopup_Draw(void);
 void UIUsernamePopup_Create(void* data);
 void UIUsernamePopup_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void UIUsernamePopup_EditorDraw(void);
 void UIUsernamePopup_EditorLoad(void);
+#endif
 void UIUsernamePopup_Serialize(void);
 
 // Extra Entity Functions

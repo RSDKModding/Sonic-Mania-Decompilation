@@ -49,8 +49,10 @@ void UIWidgets_StaticUpdate(void);
 void UIWidgets_Draw(void);
 void UIWidgets_Create(void* data);
 void UIWidgets_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void UIWidgets_EditorDraw(void);
 void UIWidgets_EditorLoad(void);
+#endif
 void UIWidgets_Serialize(void);
 
 // Extra Entity Functions

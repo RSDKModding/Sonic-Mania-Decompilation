@@ -38,8 +38,10 @@ void FrostThrower_StaticUpdate(void);
 void FrostThrower_Draw(void);
 void FrostThrower_Create(void* data);
 void FrostThrower_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void FrostThrower_EditorDraw(void);
 void FrostThrower_EditorLoad(void);
+#endif
 void FrostThrower_Serialize(void);
 
 // Extra Entity Functions

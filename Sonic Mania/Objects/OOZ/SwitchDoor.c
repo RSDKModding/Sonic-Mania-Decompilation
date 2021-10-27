@@ -76,9 +76,11 @@ void SwitchDoor_DrawSprites(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void SwitchDoor_EditorDraw(void) {}
 
 void SwitchDoor_EditorLoad(void) {}
+#endif
 
 void SwitchDoor_Serialize(void)
 {

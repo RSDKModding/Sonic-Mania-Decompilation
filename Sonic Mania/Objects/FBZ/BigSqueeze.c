@@ -554,8 +554,10 @@ void BigSqueeze_State3_Unknown2(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void BigSqueeze_EditorDraw(void) {}
 
 void BigSqueeze_EditorLoad(void) {}
+#endif
 
 void BigSqueeze_Serialize(void) { RSDK_EDITABLE_VAR(BigSqueeze, VAR_ENUM, type); }

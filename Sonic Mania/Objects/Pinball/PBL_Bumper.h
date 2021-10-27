@@ -60,8 +60,10 @@ void PBL_Bumper_StaticUpdate(void);
 void PBL_Bumper_Draw(void);
 void PBL_Bumper_Create(void* data);
 void PBL_Bumper_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void PBL_Bumper_EditorDraw(void);
 void PBL_Bumper_EditorLoad(void);
+#endif
 void PBL_Bumper_Serialize(void);
 
 // Extra Entity Functions

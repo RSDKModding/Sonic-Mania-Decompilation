@@ -75,9 +75,34 @@ void RotatingSpikes_StageLoad(void)
     }
 }
 
-void RotatingSpikes_EditorDraw(void) {}
+void RotatingSpikes_EditorDraw(void)
+{
+    RSDK_THIS(RotatingSpikes);
+    RSDK.SetSpriteAnimation(RotatingSpikes->aniFrames, 0, &entity->animator1, true, 0);
+    RSDK.SetSpriteAnimation(RotatingSpikes->aniFrames, 1, &entity->animator2, true, 0);
+    entity->drawOrder = !entity->priority ? Zone->drawOrderLow : Zone->drawOrderHigh;
 
-void RotatingSpikes_EditorLoad(void) {}
+    RSDK.SetSpriteAnimation(RotatingSpikes->aniFrames, 0, &entity->animator1, true, 0);
+    RSDK.SetSpriteAnimation(RotatingSpikes->aniFrames, 1, &entity->animator2, true, 0);
+
+    int32 radius = entity->spikeRadius + entity->pivotRadius;
+    RSDK.DrawSprite(&entity->animator1, NULL, false);
+    for (int32 i = 0; i < entity->spikeCount; ++i) {
+        Vector2 drawPos;
+        drawPos.x = ((radius * RSDK.Cos1024((entity->angleOffset & 0x3FF) + entity->angle)) << 6) + entity->position.x;
+        drawPos.y = ((radius * RSDK.Sin1024((entity->angleOffset & 0x3FF) + entity->angle)) << 6) + entity->position.y;
+        RSDK.DrawSprite(&entity->animator2, &drawPos, false);
+        radius += 2 * entity->spikeRadius;
+    }
+}
+
+void RotatingSpikes_EditorLoad(void)
+{
+    if (RSDK.CheckStageFolder("MSZ"))
+        RotatingSpikes->aniFrames = RSDK.LoadSpriteAnimation("MSZ/RotatingSpikes.bin", SCOPE_STAGE);
+    else if (RSDK.CheckStageFolder("SSZ1")) 
+        RotatingSpikes->aniFrames = RSDK.LoadSpriteAnimation("SSZ1/RotatingSpikes.bin", SCOPE_STAGE);
+}
 
 void RotatingSpikes_Serialize(void)
 {

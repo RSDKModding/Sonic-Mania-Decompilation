@@ -187,8 +187,10 @@ void TMZCable_Unknown6(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void TMZCable_EditorDraw(void) {}
 
 void TMZCable_EditorLoad(void) {}
+#endif
 
 void TMZCable_Serialize(void) { RSDK_EDITABLE_VAR(TMZCable, VAR_ENUM, cableID); }

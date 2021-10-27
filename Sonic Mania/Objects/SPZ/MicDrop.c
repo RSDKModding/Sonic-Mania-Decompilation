@@ -32,6 +32,7 @@ void MicDrop_StageLoad(void)
 
 }
 
+#if RETRO_INCLUDE_EDITOR
 void MicDrop_EditorDraw(void)
 {
 
@@ -41,6 +42,7 @@ void MicDrop_EditorLoad(void)
 {
 
 }
+#endif
 
 void MicDrop_Serialize(void)
 {

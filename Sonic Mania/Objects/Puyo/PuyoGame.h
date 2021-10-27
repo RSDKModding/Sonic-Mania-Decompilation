@@ -43,8 +43,10 @@ void PuyoGame_StaticUpdate(void);
 void PuyoGame_Draw(void);
 void PuyoGame_Create(void* data);
 void PuyoGame_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void PuyoGame_EditorDraw(void);
 void PuyoGame_EditorLoad(void);
+#endif
 void PuyoGame_Serialize(void);
 
 // Extra Entity Functions

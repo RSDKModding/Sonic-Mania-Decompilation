@@ -32,6 +32,7 @@ void PopcornKernel_StageLoad(void)
 
 }
 
+#if RETRO_INCLUDE_EDITOR
 void PopcornKernel_EditorDraw(void)
 {
 
@@ -41,6 +42,7 @@ void PopcornKernel_EditorLoad(void)
 {
 
 }
+#endif
 
 void PopcornKernel_Serialize(void)
 {

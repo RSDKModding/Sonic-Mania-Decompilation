@@ -37,8 +37,10 @@ void PaperRoller_StaticUpdate(void);
 void PaperRoller_Draw(void);
 void PaperRoller_Create(void* data);
 void PaperRoller_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void PaperRoller_EditorDraw(void);
 void PaperRoller_EditorLoad(void);
+#endif
 void PaperRoller_Serialize(void);
 
 // Extra Entity Functions

@@ -208,9 +208,11 @@ void MetalArm_Unknown7(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void MetalArm_EditorDraw(void) {}
 
 void MetalArm_EditorLoad(void) {}
+#endif
 
 void MetalArm_Serialize(void)
 {

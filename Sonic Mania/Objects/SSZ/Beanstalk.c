@@ -450,9 +450,11 @@ void Beanstalk_State3_Unknown(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void Beanstalk_EditorDraw(void) {}
 
 void Beanstalk_EditorLoad(void) {}
+#endif
 
 void Beanstalk_Serialize(void)
 {

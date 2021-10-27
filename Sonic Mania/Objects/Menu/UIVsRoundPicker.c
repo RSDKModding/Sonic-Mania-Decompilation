@@ -292,9 +292,11 @@ void UIVsRoundPicker_Unknown9(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void UIVsRoundPicker_EditorDraw(void) {}
 
 void UIVsRoundPicker_EditorLoad(void) {}
+#endif
 
 void UIVsRoundPicker_Serialize(void)
 {

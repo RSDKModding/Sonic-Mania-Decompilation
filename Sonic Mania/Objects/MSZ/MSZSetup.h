@@ -21,10 +21,10 @@ typedef struct {
     TABLE(int32 aniTilesDelayB[8], { 16, 2, 4, 5, 16, 2, 4, 5 });
     int32 field_138[512];
     int32 parallaxMult;
-    int32 field_93C;
+    int32 parallaxPos;
     bool32 hasAchievement;
     Entity *msz2Cutscene;
-    int32 field_948;
+    int32 starPostID;
 #if RETRO_USE_PLUS
     int32 chuggaVolume;
     int32 chuggaChannel;
@@ -49,8 +49,10 @@ void MSZSetup_StaticUpdate(void);
 void MSZSetup_Draw(void);
 void MSZSetup_Create(void* data);
 void MSZSetup_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void MSZSetup_EditorDraw(void);
 void MSZSetup_EditorLoad(void);
+#endif
 void MSZSetup_Serialize(void);
 
 // Extra Entity Functions
@@ -89,6 +91,7 @@ void MSZSetup_Unknown19(void);
 #endif
 void MSZSetup_Unknown21(void);
 
-void MSZSetup_PlayerState_Pilot(void);
+void MSZSetup_Player_State_Pilot(void);
+void MSZSetup_Player_State_PostCrashJumpIn(void);
 
 #endif //!OBJ_MSZSETUP_H

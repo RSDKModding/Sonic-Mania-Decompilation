@@ -694,8 +694,10 @@ void MeterDroid_State_FinishAct(void)
         destroyEntity(entity);
 }
 
+#if RETRO_INCLUDE_EDITOR
 void MeterDroid_EditorDraw(void) {}
 
 void MeterDroid_EditorLoad(void) {}
+#endif
 
 void MeterDroid_Serialize(void) {}

@@ -831,9 +831,11 @@ void UIControl_ProcessButtonInput(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void UIControl_EditorDraw(void) {}
 
 void UIControl_EditorLoad(void) {}
+#endif
 
 void UIControl_Serialize(void)
 {

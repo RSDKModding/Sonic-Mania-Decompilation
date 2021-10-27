@@ -53,8 +53,10 @@ void ERZRider_Unknown1(void)
     // thats all folks!
 }
 
+#if RETRO_INCLUDE_EDITOR
 void ERZRider_EditorDraw(void) {}
 
 void ERZRider_EditorLoad(void) {}
+#endif
 
 void ERZRider_Serialize(void) {}

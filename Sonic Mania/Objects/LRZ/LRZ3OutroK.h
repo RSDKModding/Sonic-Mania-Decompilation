@@ -5,12 +5,18 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    int32 field_4;
+    uint16 sfxWarp;
+    EntityEggPrison *prison;
+    Entity *teleporter;
+    EntityFXRuby *fxRuby;
 } ObjectLRZ3OutroK;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+	MANIA_CUTSCENE_BASE
+    Vector2 playerPos[2];
 } EntityLRZ3OutroK;
 
 // Object Struct
@@ -28,6 +34,11 @@ void LRZ3OutroK_EditorLoad(void);
 void LRZ3OutroK_Serialize(void);
 
 // Extra Entity Functions
+void LRZ3OutroK_StartCutscene(void);
 
+bool32 LRZ3OutroK_CutsceneState_Unknown1(EntityCutsceneSeq *host);
+bool32 LRZ3OutroK_CutsceneState_Unknown2(EntityCutsceneSeq *host);
+bool32 LRZ3OutroK_CutsceneState_Unknown3(EntityCutsceneSeq *host);
+bool32 LRZ3OutroK_CutsceneState_Unknown4(EntityCutsceneSeq *host);
 
 #endif //!OBJ_LRZ3OUTROK_H

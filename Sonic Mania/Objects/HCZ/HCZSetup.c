@@ -274,8 +274,10 @@ void HCZSetup_StageFinishCB_Act2(void)
     Zone_StartFadeOut(10, 0x000000);
 }
 
+#if RETRO_INCLUDE_EDITOR
 void HCZSetup_EditorDraw(void) {}
 
 void HCZSetup_EditorLoad(void) {}
+#endif
 
 void HCZSetup_Serialize(void) {}

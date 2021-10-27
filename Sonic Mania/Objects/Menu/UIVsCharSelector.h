@@ -46,8 +46,10 @@ void UIVsCharSelector_StaticUpdate(void);
 void UIVsCharSelector_Draw(void);
 void UIVsCharSelector_Create(void* data);
 void UIVsCharSelector_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void UIVsCharSelector_EditorDraw(void);
 void UIVsCharSelector_EditorLoad(void);
+#endif
 void UIVsCharSelector_Serialize(void);
 
 // Extra Entity Functions

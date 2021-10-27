@@ -30,8 +30,10 @@ void FernParallax_StaticUpdate(void);
 void FernParallax_Draw(void);
 void FernParallax_Create(void* data);
 void FernParallax_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void FernParallax_EditorDraw(void);
 void FernParallax_EditorLoad(void);
+#endif
 void FernParallax_Serialize(void);
 
 // Extra Entity Functions

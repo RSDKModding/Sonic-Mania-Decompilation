@@ -307,9 +307,11 @@ void UFO_Circuit_Unknown5(void)
     entity->position.y += entity->velocity.y;
 }
 
+#if RETRO_INCLUDE_EDITOR
 void UFO_Circuit_EditorDraw(void) {}
 
 void UFO_Circuit_EditorLoad(void) {}
+#endif
 
 void UFO_Circuit_Serialize(void)
 {

@@ -84,8 +84,10 @@ void FXTrail_Create(void *data)
 
 void FXTrail_StageLoad(void) {}
 
+#if RETRO_INCLUDE_EDITOR
 void FXTrail_EditorDraw(void) {}
 
 void FXTrail_EditorLoad(void) {}
+#endif
 
 void FXTrail_Serialize(void) {}

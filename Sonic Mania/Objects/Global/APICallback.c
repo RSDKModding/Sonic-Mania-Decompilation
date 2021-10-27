@@ -834,9 +834,11 @@ bool32 APICallback_NotifyAutosave(void)
     return true;
 }
 
+#if RETRO_INCLUDE_EDITOR
 void APICallback_EditorDraw(void) {}
 
 void APICallback_EditorLoad(void) {}
+#endif
 
 void APICallback_Serialize(void) {}
 

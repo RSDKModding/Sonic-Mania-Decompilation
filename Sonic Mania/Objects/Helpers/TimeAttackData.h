@@ -38,8 +38,10 @@ void TimeAttackData_StaticUpdate(void);
 void TimeAttackData_Draw(void);
 void TimeAttackData_Create(void *data);
 void TimeAttackData_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void TimeAttackData_EditorDraw(void);
 void TimeAttackData_EditorLoad(void);
+#endif
 void TimeAttackData_Serialize(void);
 
 //Extra Entity FUnctions

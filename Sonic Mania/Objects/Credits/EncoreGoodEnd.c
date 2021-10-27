@@ -462,9 +462,11 @@ bool32 EncoreGoodEnd_CutsceneState_Unknown6(EntityCutsceneSeq *host)
 
 void EncoreGoodEnd_SkipCB(void) { EncoreGoodEnd_CutsceneState_Unknown6(NULL); }
 
+#if RETRO_INCLUDE_EDITOR
 void EncoreGoodEnd_EditorDraw(void) {}
 
 void EncoreGoodEnd_EditorLoad(void) {}
+#endif
 
 void EncoreGoodEnd_Serialize(void) { RSDK_EDITABLE_VAR(EncoreGoodEnd, VAR_VECTOR2, size); }
 #endif

@@ -144,8 +144,10 @@ void ThanksSetup_Unknown6(void)
     RSDK.FillScreen(0, entity->timer, entity->timer - 128, entity->timer - 256);
 }
 
+#if RETRO_INCLUDE_EDITOR
 void ThanksSetup_EditorDraw(void) {}
 
 void ThanksSetup_EditorLoad(void) {}
+#endif
 
 void ThanksSetup_Serialize(void) {}

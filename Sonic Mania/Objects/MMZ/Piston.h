@@ -51,8 +51,10 @@ void Piston_StaticUpdate(void);
 void Piston_Draw(void);
 void Piston_Create(void *data);
 void Piston_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void Piston_EditorDraw(void);
 void Piston_EditorLoad(void);
+#endif
 void Piston_Serialize(void);
 
 // Extra Entity Functions

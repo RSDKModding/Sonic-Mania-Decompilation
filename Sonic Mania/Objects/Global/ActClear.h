@@ -71,8 +71,10 @@ void ActClear_StaticUpdate(void);
 void ActClear_Draw(void);
 void ActClear_Create(void* data);
 void ActClear_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void ActClear_EditorDraw(void);
 void ActClear_EditorLoad(void);
+#endif
 void ActClear_Serialize(void);
 
 // Extra Entity Functions

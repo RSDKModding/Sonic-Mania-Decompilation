@@ -198,8 +198,10 @@ void CutsceneSeq_StartSequence(Entity *host, void **states)
     LogHelpers_Print("Starting sequence with %d states", id);
 }
 
+#if RETRO_INCLUDE_EDITOR
 void CutsceneSeq_EditorDraw(void) {}
 
 void CutsceneSeq_EditorLoad(void) {}
+#endif
 
 void CutsceneSeq_Serialize(void) {}

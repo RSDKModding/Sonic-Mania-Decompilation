@@ -45,8 +45,10 @@ void Gondola_StaticUpdate(void);
 void Gondola_Draw(void);
 void Gondola_Create(void* data);
 void Gondola_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void Gondola_EditorDraw(void);
 void Gondola_EditorLoad(void);
+#endif
 void Gondola_Serialize(void);
 
 // Extra Entity Functions

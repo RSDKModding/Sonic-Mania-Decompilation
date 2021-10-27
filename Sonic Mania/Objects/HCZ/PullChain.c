@@ -26,10 +26,10 @@ void PullChain_Update(void)
                     if (flag) {
                         if (!entity->field_64) {
                             entity->activated = true;
-                            entity->field_70 = 1;
+                            entity->field_70 = true;
                             entity->field_68 = !entity->field_68;
                         }
-                        entity->field_64 = 1;
+                        entity->field_64 = true;
                     }
                 }
                 entity->position.y = entity->basePos.y + entity->chainOffset;
@@ -211,9 +211,11 @@ bool32 PullChain_HandleDunkeyCode(EntityPlayer *player)
 }
 #endif
 
+#if RETRO_INCLUDE_EDITOR
 void PullChain_EditorDraw(void) {}
 
 void PullChain_EditorLoad(void) {}
+#endif
 
 void PullChain_Serialize(void)
 {

@@ -158,6 +158,7 @@ void JunctionWheel_StageLoad(void)
     JunctionWheel->hitbox6.bottom = 40;
 }
 
+#if RETRO_INCLUDE_EDITOR
 void JunctionWheel_EditorDraw(void)
 {
 
@@ -167,6 +168,7 @@ void JunctionWheel_EditorLoad(void)
 {
 
 }
+#endif
 
 void JunctionWheel_Serialize(void)
 {

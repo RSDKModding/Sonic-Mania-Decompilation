@@ -32,6 +32,7 @@ void Current_StageLoad(void)
 
 }
 
+#if RETRO_INCLUDE_EDITOR
 void Current_EditorDraw(void)
 {
 
@@ -41,6 +42,7 @@ void Current_EditorLoad(void)
 {
 
 }
+#endif
 
 void Current_Serialize(void)
 {

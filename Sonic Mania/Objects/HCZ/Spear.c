@@ -137,9 +137,11 @@ void Spear_Unknown1(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void Spear_EditorDraw(void) {}
 
 void Spear_EditorLoad(void) {}
+#endif
 
 void Spear_Serialize(void)
 {

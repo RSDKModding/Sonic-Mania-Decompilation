@@ -58,8 +58,10 @@ void PBL_Camera_StaticUpdate(void);
 void PBL_Camera_Draw(void);
 void PBL_Camera_Create(void* data);
 void PBL_Camera_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void PBL_Camera_EditorDraw(void);
 void PBL_Camera_EditorLoad(void);
+#endif
 void PBL_Camera_Serialize(void);
 
 // Extra Entity Functions

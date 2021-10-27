@@ -32,6 +32,7 @@ void Iwamodoki_StageLoad(void)
 
 }
 
+#if RETRO_INCLUDE_EDITOR
 void Iwamodoki_EditorDraw(void)
 {
 
@@ -41,6 +42,7 @@ void Iwamodoki_EditorLoad(void)
 {
 
 }
+#endif
 
 void Iwamodoki_Serialize(void)
 {

@@ -149,6 +149,7 @@ void WaterfallSound_UpdateCB(int32 sfxID)
     RSDK.SetChannelAttributes(Soundboard->sfxChannel[sfxID], (volume / -640.0f) + 1.0, clampVal(pan, -1.0, 1.0), 1.0f);
 }
 
+#if RETRO_INCLUDE_EDITOR
 void WaterfallSound_EditorDraw(void)
 {
     RSDK_THIS(WaterfallSound);
@@ -188,6 +189,7 @@ void WaterfallSound_EditorDraw(void)
 }
 
 void WaterfallSound_EditorLoad(void) { WaterfallSound->aniFrames = RSDK.LoadSpriteAnimation("Global/TicMark.bin", SCOPE_STAGE); }
+#endif
 
 void WaterfallSound_Serialize(void) { RSDK_EDITABLE_VAR(WaterfallSound, VAR_VECTOR2, size); }
 #endif

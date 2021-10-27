@@ -33,8 +33,10 @@ void WaterfallSound_StaticUpdate(void);
 void WaterfallSound_Draw(void);
 void WaterfallSound_Create(void* data);
 void WaterfallSound_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void WaterfallSound_EditorDraw(void);
 void WaterfallSound_EditorLoad(void);
+#endif
 void WaterfallSound_Serialize(void);
 
 // Extra Entity Functions

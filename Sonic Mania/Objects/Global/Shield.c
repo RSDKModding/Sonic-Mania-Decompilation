@@ -230,8 +230,10 @@ void Shield_State_Insta(void)
         destroyEntity(entity);
 }
 
+#if RETRO_INCLUDE_EDITOR
 void Shield_EditorDraw(void) {}
 
 void Shield_EditorLoad(void) {}
+#endif
 
 void Shield_Serialize(void) {}

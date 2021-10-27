@@ -127,8 +127,10 @@ void UIWaitSpinner_State_Wait2(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void UIWaitSpinner_EditorDraw(void) {}
 
 void UIWaitSpinner_EditorLoad(void) {}
+#endif
 
 void UIWaitSpinner_Serialize(void) {}

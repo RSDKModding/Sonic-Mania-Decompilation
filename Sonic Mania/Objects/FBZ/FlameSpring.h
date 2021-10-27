@@ -40,8 +40,10 @@ void FlameSpring_StaticUpdate(void);
 void FlameSpring_Draw(void);
 void FlameSpring_Create(void* data);
 void FlameSpring_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void FlameSpring_EditorDraw(void);
 void FlameSpring_EditorLoad(void);
+#endif
 void FlameSpring_Serialize(void);
 
 // Extra Entity Functions

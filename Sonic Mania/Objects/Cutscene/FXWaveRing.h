@@ -39,8 +39,10 @@ void FXWaveRing_StaticUpdate(void);
 void FXWaveRing_Draw(void);
 void FXWaveRing_Create(void* data);
 void FXWaveRing_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void FXWaveRing_EditorDraw(void);
 void FXWaveRing_EditorLoad(void);
+#endif
 void FXWaveRing_Serialize(void);
 
 // Extra Entity Functions

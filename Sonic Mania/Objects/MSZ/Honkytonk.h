@@ -31,8 +31,10 @@ void Honkytonk_StaticUpdate(void);
 void Honkytonk_Draw(void);
 void Honkytonk_Create(void* data);
 void Honkytonk_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void Honkytonk_EditorDraw(void);
 void Honkytonk_EditorLoad(void);
+#endif
 void Honkytonk_Serialize(void);
 
 // Extra Entity Functions

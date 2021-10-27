@@ -1458,9 +1458,11 @@ int32 ReplayRecorder_ReplaySaveFinish(int32 status)
     return 1;
 }
 
+#if RETRO_INCLUDE_EDITOR
 void ReplayRecorder_EditorDraw(void) {}
 
 void ReplayRecorder_EditorLoad(void) {}
+#endif
 
 void ReplayRecorder_Serialize(void) {}
 #endif

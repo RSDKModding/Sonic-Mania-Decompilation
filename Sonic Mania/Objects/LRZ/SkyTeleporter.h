@@ -31,8 +31,10 @@ void SkyTeleporter_StaticUpdate(void);
 void SkyTeleporter_Draw(void);
 void SkyTeleporter_Create(void* data);
 void SkyTeleporter_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void SkyTeleporter_EditorDraw(void);
 void SkyTeleporter_EditorLoad(void);
+#endif
 void SkyTeleporter_Serialize(void);
 
 // Extra Entity Functions

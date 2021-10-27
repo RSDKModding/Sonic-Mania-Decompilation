@@ -93,8 +93,10 @@ uint8 Soundboard_LoadSFX(const char *sfxName, uint32 loopPoint, bool32 (*checkCa
     return sfxID;
 }
 
+#if RETRO_INCLUDE_EDITOR
 void Soundboard_EditorDraw(void) {}
 
 void Soundboard_EditorLoad(void) {}
+#endif
 
 void Soundboard_Serialize(void) {}

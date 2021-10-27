@@ -50,8 +50,10 @@ void EggLoco_StaticUpdate(void);
 void EggLoco_Draw(void);
 void EggLoco_Create(void* data);
 void EggLoco_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void EggLoco_EditorDraw(void);
 void EggLoco_EditorLoad(void);
+#endif
 void EggLoco_Serialize(void);
 
 // Extra Entity Functions

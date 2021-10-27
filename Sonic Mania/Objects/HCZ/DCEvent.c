@@ -32,6 +32,7 @@ void DCEvent_StageLoad(void)
 
 }
 
+#if RETRO_INCLUDE_EDITOR
 void DCEvent_EditorDraw(void)
 {
 
@@ -41,6 +42,7 @@ void DCEvent_EditorLoad(void)
 {
 
 }
+#endif
 
 void DCEvent_Serialize(void)
 {

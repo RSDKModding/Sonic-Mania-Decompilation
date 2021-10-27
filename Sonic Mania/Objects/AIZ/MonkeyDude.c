@@ -421,6 +421,7 @@ void MonkeyDude_State_Coconut(void)
 }
 #endif
 
+#if RETRO_INCLUDE_EDITOR
 void MonkeyDude_EditorDraw(void) { MonkeyDude_Draw(); }
 
 void MonkeyDude_EditorLoad(void)
@@ -428,8 +429,9 @@ void MonkeyDude_EditorLoad(void)
 #if RETRO_USE_PLUS
     MonkeyDude->aniFrames = RSDK.LoadSpriteAnimation("AIZ/MonkeyDude.bin", SCOPE_STAGE);
 #else
-    MonkeyDude->aniFrames     = RSDK.LoadSpriteAnimation("Blueprint/MonkeyDude.bin", SCOPE_STAGE);
+    MonkeyDude->aniFrames = RSDK.LoadSpriteAnimation("Blueprint/MonkeyDude.bin", SCOPE_STAGE);
 #endif
 }
+#endif
 
 void MonkeyDude_Serialize(void) { RSDK_EDITABLE_VAR(MonkeyDude, VAR_ENUM, nummoves); }

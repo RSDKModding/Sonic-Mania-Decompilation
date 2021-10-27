@@ -339,9 +339,11 @@ void UIVsZoneButton_Unknown15(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void UIVsZoneButton_EditorDraw(void) {}
 
 void UIVsZoneButton_EditorLoad(void) {}
+#endif
 
 void UIVsZoneButton_Serialize(void)
 {

@@ -606,9 +606,14 @@ void DNARiser_StateDraw_Helix(void)
     }
 }
 
-void DNARiser_EditorDraw(void) {}
+void DNARiser_EditorDraw(void)
+{
+    RSDK_THIS(DNARiser);
+    RSDK.SetSpriteAnimation(DNARiser->aniFrames, 0, &entity->animator2, true, 0);
+    DNARiser_StateDraw_Main();
+}
 
-void DNARiser_EditorLoad(void) {}
+void DNARiser_EditorLoad(void) { DNARiser->aniFrames = RSDK.LoadSpriteAnimation("CPZ/DNARiser.bin", SCOPE_STAGE); }
 
 void DNARiser_Serialize(void)
 {

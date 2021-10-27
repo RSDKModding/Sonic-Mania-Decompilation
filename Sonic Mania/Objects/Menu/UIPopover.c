@@ -278,9 +278,11 @@ void UIPopover_Unknown10(void) {}
 
 void UIPopover_Unknown11(void) { UIPopover_Close(); }
 
+#if RETRO_INCLUDE_EDITOR
 void UIPopover_EditorDraw(void) {}
 
 void UIPopover_EditorLoad(void) {}
+#endif
 
 void UIPopover_Serialize(void) {}
 #endif

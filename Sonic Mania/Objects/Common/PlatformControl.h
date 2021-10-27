@@ -31,8 +31,10 @@ void PlatformControl_StaticUpdate(void);
 void PlatformControl_Draw(void);
 void PlatformControl_Create(void* data);
 void PlatformControl_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void PlatformControl_EditorDraw(void);
 void PlatformControl_EditorLoad(void);
+#endif
 void PlatformControl_Serialize(void);
 
 // Extra Entity Functions

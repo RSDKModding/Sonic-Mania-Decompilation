@@ -49,8 +49,10 @@ void LocoSmoke_Create(void *data)
 
 void LocoSmoke_StageLoad(void) { LocoSmoke->aniFrames = RSDK.LoadSpriteAnimation("MSZ/Train.bin", SCOPE_STAGE); }
 
+#if RETRO_INCLUDE_EDITOR
 void LocoSmoke_EditorDraw(void) {}
 
 void LocoSmoke_EditorLoad(void) {}
+#endif
 
 void LocoSmoke_Serialize(void) {}

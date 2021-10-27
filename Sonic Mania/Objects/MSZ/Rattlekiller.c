@@ -32,6 +32,7 @@ void Rattlekiller_StageLoad(void)
 
 }
 
+#if RETRO_INCLUDE_EDITOR
 void Rattlekiller_EditorDraw(void)
 {
 
@@ -41,6 +42,7 @@ void Rattlekiller_EditorLoad(void)
 {
 
 }
+#endif
 
 void Rattlekiller_Serialize(void)
 {

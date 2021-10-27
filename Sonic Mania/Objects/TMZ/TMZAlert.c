@@ -84,8 +84,10 @@ void TMZAlert_Unknown3(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void TMZAlert_EditorDraw(void) {}
 
 void TMZAlert_EditorLoad(void) {}
+#endif
 
 void TMZAlert_Serialize(void) {}

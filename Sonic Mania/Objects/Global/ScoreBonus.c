@@ -41,6 +41,7 @@ void ScoreBonus_Create(void* data)
 
 void ScoreBonus_StageLoad(void) { ScoreBonus->spriteIndex = RSDK.LoadSpriteAnimation("Global/ScoreBonus.bin", SCOPE_STAGE); }
 
+#if RETRO_INCLUDE_EDITOR
 void ScoreBonus_EditorDraw(void)
 {
 
@@ -50,6 +51,7 @@ void ScoreBonus_EditorLoad(void)
 {
 
 }
+#endif
 
 void ScoreBonus_Serialize(void)
 {

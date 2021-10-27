@@ -38,8 +38,10 @@ void Technosqueek_StaticUpdate(void);
 void Technosqueek_Draw(void);
 void Technosqueek_Create(void* data);
 void Technosqueek_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void Technosqueek_EditorDraw(void);
 void Technosqueek_EditorLoad(void);
+#endif
 void Technosqueek_Serialize(void);
 
 // Extra Entity Functions

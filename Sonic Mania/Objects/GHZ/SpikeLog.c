@@ -120,6 +120,7 @@ void SpikeLog_State_Burn(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void SpikeLog_EditorDraw(void)
 {
     RSDK_THIS(SpikeLog);
@@ -128,5 +129,6 @@ void SpikeLog_EditorDraw(void)
 }
 
 void SpikeLog_EditorLoad(void) { SpikeLog->spriteIndex = RSDK.LoadSpriteAnimation("GHZ/SpikeLog.bin", SCOPE_STAGE); }
+#endif
 
 void SpikeLog_Serialize(void) { RSDK_EDITABLE_VAR(SpikeLog, VAR_UINT8, frame); }

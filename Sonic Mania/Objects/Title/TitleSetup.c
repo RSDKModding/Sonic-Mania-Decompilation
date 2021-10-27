@@ -369,8 +369,10 @@ void TitleSetup_Unknown15(void)
     RSDK.FillScreen(0xF0F0F0, entity->timer, entity->timer - 128, entity->timer - 256);
 }
 
+#if RETRO_INCLUDE_EDITOR
 void TitleSetup_EditorDraw(void) {}
 
 void TitleSetup_EditorLoad(void) {}
+#endif
 
 void TitleSetup_Serialize(void) {}

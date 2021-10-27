@@ -32,6 +32,7 @@ void PhantomEgg_StageLoad(void)
 
 }
 
+#if RETRO_INCLUDE_EDITOR
 void PhantomEgg_EditorDraw(void)
 {
 
@@ -41,6 +42,7 @@ void PhantomEgg_EditorLoad(void)
 {
 
 }
+#endif
 
 void PhantomEgg_Serialize(void)
 {

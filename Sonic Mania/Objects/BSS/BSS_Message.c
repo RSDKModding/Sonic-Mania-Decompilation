@@ -217,8 +217,10 @@ void BSS_Message_LoadGameState(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void BSS_Message_EditorDraw(void) {}
 
 void BSS_Message_EditorLoad(void) {}
+#endif
 
 void BSS_Message_Serialize(void) {}

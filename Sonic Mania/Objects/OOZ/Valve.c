@@ -55,8 +55,10 @@ void Valve_StageLoad(void)
     Valve->sfxClick      = RSDK.GetSFX("Stage/Click.wav");
 }
 
+#if RETRO_INCLUDE_EDITOR
 void Valve_EditorDraw(void) {}
 
 void Valve_EditorLoad(void) {}
+#endif
 
 void Valve_Serialize(void) { RSDK_EDITABLE_VAR(Valve, VAR_UINT8, direction); }

@@ -29,8 +29,10 @@ void TAEmerald_StaticUpdate(void);
 void TAEmerald_Draw(void);
 void TAEmerald_Create(void* data);
 void TAEmerald_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void TAEmerald_EditorDraw(void);
 void TAEmerald_EditorLoad(void);
+#endif
 void TAEmerald_Serialize(void);
 
 // Extra Entity Functions

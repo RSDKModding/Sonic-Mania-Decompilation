@@ -32,8 +32,10 @@ void UFO_SpeedLines_StaticUpdate(void);
 void UFO_SpeedLines_Draw(void);
 void UFO_SpeedLines_Create(void* data);
 void UFO_SpeedLines_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void UFO_SpeedLines_EditorDraw(void);
 void UFO_SpeedLines_EditorLoad(void);
+#endif
 void UFO_SpeedLines_Serialize(void);
 
 // Extra Entity Functions

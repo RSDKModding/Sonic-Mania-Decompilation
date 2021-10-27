@@ -114,8 +114,10 @@ void UFO_Shadow_StageLoad(void)
     LogHelpers_Print("%d shadow entities spawned", TEMPENTITY_START - slot);
 }
 
+#if RETRO_INCLUDE_EDITOR
 void UFO_Shadow_EditorDraw(void) {}
 
 void UFO_Shadow_EditorLoad(void) {}
+#endif
 
 void UFO_Shadow_Serialize(void) {}

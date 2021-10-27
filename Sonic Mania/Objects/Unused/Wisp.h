@@ -32,8 +32,10 @@ void Wisp_StaticUpdate(void);
 void Wisp_Draw(void);
 void Wisp_Create(void* data);
 void Wisp_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void Wisp_EditorDraw(void);
 void Wisp_EditorLoad(void);
+#endif
 void Wisp_Serialize(void);
 
 // Extra Entity Functions

@@ -493,8 +493,10 @@ void UILeaderboard_ProcessButtonCB(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void UILeaderboard_EditorDraw(void) {}
 
 void UILeaderboard_EditorLoad(void) {}
+#endif
 
 void UILeaderboard_Serialize(void) { RSDK_EDITABLE_VAR(UILeaderboard, VAR_BOOL, disabled); }

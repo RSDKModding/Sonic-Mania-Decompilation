@@ -221,8 +221,10 @@ void Redz_State_Flame(void)
         destroyEntity(entity);
 }
 
+#if RETRO_INCLUDE_EDITOR
 void Redz_EditorDraw(void) {}
 
 void Redz_EditorLoad(void) {}
+#endif
 
 void Redz_Serialize(void) { RSDK_EDITABLE_VAR(Redz, VAR_UINT8, direction); }

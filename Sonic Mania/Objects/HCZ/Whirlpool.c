@@ -203,9 +203,11 @@ void Whirlpool_SetupBubbles(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void Whirlpool_EditorDraw(void) {}
 
 void Whirlpool_EditorLoad(void) {}
+#endif
 
 void Whirlpool_Serialize(void)
 {

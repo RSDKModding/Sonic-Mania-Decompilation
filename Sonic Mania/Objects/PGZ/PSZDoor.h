@@ -39,8 +39,10 @@ void PSZDoor_StaticUpdate(void);
 void PSZDoor_Draw(void);
 void PSZDoor_Create(void* data);
 void PSZDoor_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void PSZDoor_EditorDraw(void);
 void PSZDoor_EditorLoad(void);
+#endif
 void PSZDoor_Serialize(void);
 
 // Extra Entity Functions

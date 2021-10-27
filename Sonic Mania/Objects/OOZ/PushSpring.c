@@ -325,9 +325,11 @@ void PushSpring_Unknown11(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void PushSpring_EditorDraw(void) {}
 
 void PushSpring_EditorLoad(void) {}
+#endif
 
 void PushSpring_Serialize(void)
 {

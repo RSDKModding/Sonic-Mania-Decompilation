@@ -92,8 +92,10 @@ void Water_StaticUpdate(void);
 void Water_Draw(void);
 void Water_Create(void* data);
 void Water_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void Water_EditorDraw(void);
 void Water_EditorLoad(void);
+#endif
 void Water_Serialize(void);
 
 // Extra Entity Functions

@@ -59,8 +59,10 @@ void WarpDoor_StaticUpdate(void);
 void WarpDoor_Draw(void);
 void WarpDoor_Create(void* data);
 void WarpDoor_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void WarpDoor_EditorDraw(void);
 void WarpDoor_EditorLoad(void);
+#endif
 void WarpDoor_Serialize(void);
 
 // Extra Entity Functions

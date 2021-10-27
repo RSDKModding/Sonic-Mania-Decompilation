@@ -26,8 +26,10 @@ void ExtrasMenu_StaticUpdate(void);
 void ExtrasMenu_Draw(void);
 void ExtrasMenu_Create(void* data);
 void ExtrasMenu_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void ExtrasMenu_EditorDraw(void);
 void ExtrasMenu_EditorLoad(void);
+#endif
 void ExtrasMenu_Serialize(void);
 
 // Extra Entity Functions

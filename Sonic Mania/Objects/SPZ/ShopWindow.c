@@ -222,9 +222,11 @@ void ShopWindow_State_Draw_Shattered(void)
                   (entity->position.y >> 0x10) - screen->position.y - entity->size.y, 2 * entity->size.x, 2 * entity->size.y, 0xF0F0F0, 255, 0, true);
 }
 
+#if RETRO_INCLUDE_EDITOR
 void ShopWindow_EditorDraw(void) {}
 
 void ShopWindow_EditorLoad(void) {}
+#endif
 
 void ShopWindow_Serialize(void)
 {

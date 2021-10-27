@@ -32,6 +32,7 @@ void TVPole_StageLoad(void)
 
 }
 
+#if RETRO_INCLUDE_EDITOR
 void TVPole_EditorDraw(void)
 {
 
@@ -41,6 +42,7 @@ void TVPole_EditorLoad(void)
 {
 
 }
+#endif
 
 void TVPole_Serialize(void)
 {

@@ -429,9 +429,11 @@ void WaterGush_Unknown3(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void WaterGush_EditorDraw(void) {}
 
 void WaterGush_EditorLoad(void) {}
+#endif
 
 void WaterGush_Serialize(void)
 {

@@ -282,8 +282,10 @@ void Ball_State4_Unknown1(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void Ball_EditorDraw(void) {}
 
 void Ball_EditorLoad(void) {}
+#endif
 
 void Ball_Serialize(void) { RSDK_EDITABLE_VAR(Ball, VAR_UINT8, type); }

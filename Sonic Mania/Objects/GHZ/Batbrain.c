@@ -184,8 +184,10 @@ void Batbrain_Unknown6(void)
     Batbrain_CheckOnScreen();
 }
 
+#if RETRO_INCLUDE_EDITOR
 void Batbrain_EditorDraw(void) { Batbrain_Draw(); }
 
 void Batbrain_EditorLoad(void) { Batbrain->aniFrames = RSDK.LoadSpriteAnimation("GHZ/Batbrain.bin", SCOPE_STAGE); }
+#endif
 
 void Batbrain_Serialize(void) {}

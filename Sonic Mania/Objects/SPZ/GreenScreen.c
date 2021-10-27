@@ -32,6 +32,7 @@ void GreenScreen_StageLoad(void)
 
 }
 
+#if RETRO_INCLUDE_EDITOR
 void GreenScreen_EditorDraw(void)
 {
 
@@ -41,6 +42,7 @@ void GreenScreen_EditorLoad(void)
 {
 
 }
+#endif
 
 void GreenScreen_Serialize(void)
 {

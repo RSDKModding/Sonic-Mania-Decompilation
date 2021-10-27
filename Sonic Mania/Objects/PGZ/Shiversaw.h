@@ -66,8 +66,10 @@ void Shiversaw_StaticUpdate(void);
 void Shiversaw_Draw(void);
 void Shiversaw_Create(void* data);
 void Shiversaw_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void Shiversaw_EditorDraw(void);
 void Shiversaw_EditorLoad(void);
+#endif
 void Shiversaw_Serialize(void);
 
 // Extra Entity Functions

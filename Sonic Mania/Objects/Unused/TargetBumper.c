@@ -205,9 +205,11 @@ void TargetBumper_Unknown5(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void TargetBumper_EditorDraw(void) {}
 
 void TargetBumper_EditorLoad(void) {}
+#endif
 
 void TargetBumper_Serialize(void)
 {

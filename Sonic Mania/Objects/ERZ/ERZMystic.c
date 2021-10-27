@@ -419,8 +419,10 @@ void ERZMystic_State_Unknown10(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void ERZMystic_EditorDraw(void) {}
 
 void ERZMystic_EditorLoad(void) {}
+#endif
 
 void ERZMystic_Serialize(void) {}

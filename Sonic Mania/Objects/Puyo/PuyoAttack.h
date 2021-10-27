@@ -31,8 +31,10 @@ void PuyoAttack_StaticUpdate(void);
 void PuyoAttack_Draw(void);
 void PuyoAttack_Create(void* data);
 void PuyoAttack_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void PuyoAttack_EditorDraw(void);
 void PuyoAttack_EditorLoad(void);
+#endif
 void PuyoAttack_Serialize(void);
 
 // Extra Entity Functions

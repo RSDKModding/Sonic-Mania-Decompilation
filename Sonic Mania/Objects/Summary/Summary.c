@@ -254,9 +254,11 @@ void Summary_LoadTimes(void)
     Summary_SetTextString(0, entity->totalTime, textBuf);
 }
 
+#if RETRO_INCLUDE_EDITOR
 void Summary_EditorDraw(void) {}
 
 void Summary_EditorLoad(void) {}
+#endif
 
 void Summary_Serialize(void) {}
 #endif

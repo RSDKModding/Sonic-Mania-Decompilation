@@ -293,9 +293,11 @@ void PBL_Flipper_Unknown4(void)
     PBL_Flipper_HandlePlayerInteractions();
 }
 
+#if RETRO_INCLUDE_EDITOR
 void PBL_Flipper_EditorDraw(void) {}
 
 void PBL_Flipper_EditorLoad(void) {}
+#endif
 
 void PBL_Flipper_Serialize(void)
 {

@@ -49,9 +49,11 @@ void UIPicture_StageLoad(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void UIPicture_EditorDraw(void) {}
 
 void UIPicture_EditorLoad(void) {}
+#endif
 
 void UIPicture_Serialize(void)
 {

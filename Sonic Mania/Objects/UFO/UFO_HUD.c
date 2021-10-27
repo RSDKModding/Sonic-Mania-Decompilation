@@ -155,8 +155,10 @@ void UFO_HUD_DrawNumbers(Vector2 *drawPos, int32 value)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void UFO_HUD_EditorDraw(void) {}
 
 void UFO_HUD_EditorLoad(void) {}
+#endif
 
 void UFO_HUD_Serialize(void) {}

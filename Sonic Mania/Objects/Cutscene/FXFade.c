@@ -135,9 +135,11 @@ void FXFade_State_FadeOutBlack(void)
     entity->color = (r << 16) | (g << 8) | (b << 0);
 }
 
+#if RETRO_INCLUDE_EDITOR
 void FXFade_EditorDraw(void) {}
 
 void FXFade_EditorLoad(void) {}
+#endif
 
 void FXFade_Serialize(void)
 {

@@ -114,8 +114,10 @@ void Launcher_Unknown4(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void Launcher_EditorDraw(void) {}
 
 void Launcher_EditorLoad(void) {}
+#endif
 
 void Launcher_Serialize(void) { RSDK_EDITABLE_VAR(FoldingPlatform, VAR_UINT8, direction); }

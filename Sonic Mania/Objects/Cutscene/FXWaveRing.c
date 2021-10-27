@@ -122,9 +122,11 @@ void FXWaveRing_State_FadeOut(void)
         entity->alpha -= 16;
 }
 
+#if RETRO_INCLUDE_EDITOR
 void FXWaveRing_EditorDraw(void) {}
 
 void FXWaveRing_EditorLoad(void) {}
+#endif
 
 void FXWaveRing_Serialize(void) {}
 #endif

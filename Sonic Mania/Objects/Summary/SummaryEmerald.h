@@ -27,8 +27,10 @@ void SummaryEmerald_StaticUpdate(void);
 void SummaryEmerald_Draw(void);
 void SummaryEmerald_Create(void* data);
 void SummaryEmerald_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void SummaryEmerald_EditorDraw(void);
 void SummaryEmerald_EditorLoad(void);
+#endif
 void SummaryEmerald_Serialize(void);
 
 // Extra Entity Functions

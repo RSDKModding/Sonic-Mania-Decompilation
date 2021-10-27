@@ -322,8 +322,10 @@ void PhantomHand_State_Unknown4(void)
         entity->alpha -= 8;
 }
 
+#if RETRO_INCLUDE_EDITOR
 void PhantomHand_EditorDraw(void) {}
 
 void PhantomHand_EditorLoad(void) {}
+#endif
 
 void PhantomHand_Serialize(void) {}

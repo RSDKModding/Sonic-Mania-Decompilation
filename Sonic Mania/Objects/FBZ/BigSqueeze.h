@@ -49,8 +49,10 @@ void BigSqueeze_StaticUpdate(void);
 void BigSqueeze_Draw(void);
 void BigSqueeze_Create(void* data);
 void BigSqueeze_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void BigSqueeze_EditorDraw(void);
 void BigSqueeze_EditorLoad(void);
+#endif
 void BigSqueeze_Serialize(void);
 
 // Extra Entity Functions

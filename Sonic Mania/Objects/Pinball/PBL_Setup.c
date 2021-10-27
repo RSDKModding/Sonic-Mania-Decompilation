@@ -272,9 +272,11 @@ void PBL_Setup_SaveAndChangeScene(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void PBL_Setup_EditorDraw(void) {}
 
 void PBL_Setup_EditorLoad(void) {}
+#endif
 
 void PBL_Setup_Serialize(void) {}
 #endif

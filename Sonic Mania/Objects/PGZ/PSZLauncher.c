@@ -135,9 +135,11 @@ void PSZLauncher_Unknown6(void)
     PSZLauncher_Unknown4();
 }
 
+#if RETRO_INCLUDE_EDITOR
 void PSZLauncher_EditorDraw(void) {}
 
 void PSZLauncher_EditorLoad(void) {}
+#endif
 
 void PSZLauncher_Serialize(void)
 {

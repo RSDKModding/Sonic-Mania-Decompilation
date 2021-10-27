@@ -49,8 +49,10 @@ void Tornado_StaticUpdate(void);
 void Tornado_Draw(void);
 void Tornado_Create(void* data);
 void Tornado_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void Tornado_EditorDraw(void);
 void Tornado_EditorLoad(void);
+#endif
 void Tornado_Serialize(void);
 
 // Extra Entity Functions

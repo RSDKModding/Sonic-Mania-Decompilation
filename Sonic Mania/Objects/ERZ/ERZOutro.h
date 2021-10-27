@@ -35,8 +35,10 @@ void ERZOutro_StaticUpdate(void);
 void ERZOutro_Draw(void);
 void ERZOutro_Create(void* data);
 void ERZOutro_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void ERZOutro_EditorDraw(void);
 void ERZOutro_EditorLoad(void);
+#endif
 void ERZOutro_Serialize(void);
 
 // Extra Entity Functions

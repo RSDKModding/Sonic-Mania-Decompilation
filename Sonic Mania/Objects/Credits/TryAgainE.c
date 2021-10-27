@@ -188,9 +188,11 @@ void TryAgainE_Unknown2(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void TryAgainE_EditorDraw(void) {}
 
 void TryAgainE_EditorLoad(void) {}
+#endif
 
 void TryAgainE_Serialize(void) {}
 #endif

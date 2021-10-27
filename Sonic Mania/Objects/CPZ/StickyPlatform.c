@@ -37,7 +37,7 @@ void StickyPlatform_StaticUpdate(void) {}
 void StickyPlatform_Draw(void)
 {
     RSDK_THIS(StickyPlatform);
-    RSDK.DrawSprite(&entity->animator, 0, false);
+    RSDK.DrawSprite(&entity->animator, NULL, false);
 }
 
 void StickyPlatform_Create(void *data)
@@ -116,18 +116,6 @@ void StickyPlatform_StageLoad(void)
 {
     StickyPlatform->animID = RSDK.LoadSpriteAnimation("CPZ/StickyPlatform.bin", SCOPE_STAGE);
     StickyPlatform->sfxID  = RSDK.GetSFX("Puyo/Land.wav");
-}
-
-void StickyPlatform_EditorDraw(void) {}
-
-void StickyPlatform_EditorLoad(void) {}
-
-void StickyPlatform_Serialize(void)
-{
-    RSDK_EDITABLE_VAR(StickyPlatform, VAR_ENUM, type);
-    RSDK_EDITABLE_VAR(StickyPlatform, VAR_VECTOR2, amplitude);
-    RSDK_EDITABLE_VAR(StickyPlatform, VAR_ENUM, speed);
-    RSDK_EDITABLE_VAR(StickyPlatform, VAR_BOOL, oscillate);
 }
 
 void StickyPlatform_Interact(void)
@@ -241,4 +229,21 @@ void StickyPlatform_AddSpeed(void)
 {
     RSDK_THIS(StickyPlatform);
     entity->angle = (entity->angle + entity->speed) & 0x3FF;
+}
+
+void StickyPlatform_EditorDraw(void)
+{
+    RSDK_THIS(StickyPlatform);
+    RSDK.SetSpriteAnimation(StickyPlatform->animID, entity->type > 1 ? 3 : 0, &entity->animator, true, 0);
+    StickyPlatform_Draw();
+}
+
+void StickyPlatform_EditorLoad(void) { StickyPlatform->animID = RSDK.LoadSpriteAnimation("CPZ/StickyPlatform.bin", SCOPE_STAGE); }
+
+void StickyPlatform_Serialize(void)
+{
+    RSDK_EDITABLE_VAR(StickyPlatform, VAR_ENUM, type);
+    RSDK_EDITABLE_VAR(StickyPlatform, VAR_VECTOR2, amplitude);
+    RSDK_EDITABLE_VAR(StickyPlatform, VAR_ENUM, speed);
+    RSDK_EDITABLE_VAR(StickyPlatform, VAR_BOOL, oscillate);
 }

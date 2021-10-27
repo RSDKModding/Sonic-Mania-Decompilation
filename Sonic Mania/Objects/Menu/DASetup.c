@@ -197,8 +197,10 @@ void DASetup_State_ManageControl(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void DASetup_EditorDraw(void) {}
 
 void DASetup_EditorLoad(void) {}
+#endif
 
 void DASetup_Serialize(void) {}

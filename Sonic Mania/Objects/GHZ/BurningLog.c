@@ -60,8 +60,10 @@ void BurningLog_StageLoad(void)
     BurningLog->hitbox2.bottom = 8;
 }
 
+#if RETRO_INCLUDE_EDITOR
 void BurningLog_EditorDraw(void) { BurningLog_Draw(); }
 
 void BurningLog_EditorLoad(void) { BurningLog->spriteIndex = RSDK.LoadSpriteAnimation("GHZ/Fireball.bin", SCOPE_STAGE); }
+#endif
 
 void BurningLog_Serialize(void) { RSDK_EDITABLE_VAR(BurningLog, VAR_ENUM, timer); }

@@ -157,9 +157,11 @@ void Bloominator_State_Spikeball(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void Bloominator_EditorDraw(void) { Bloominator_Draw(); }
 
 void Bloominator_EditorLoad(void) { Bloominator->spriteIndex = RSDK.LoadSpriteAnimation("AIZ/Bloominator.bin", SCOPE_STAGE); }
+#endif
 
 void Bloominator_Serialize(void) {}
 #endif

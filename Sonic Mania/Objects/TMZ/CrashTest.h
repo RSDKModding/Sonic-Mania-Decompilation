@@ -51,8 +51,10 @@ void CrashTest_StaticUpdate(void);
 void CrashTest_Draw(void);
 void CrashTest_Create(void* data);
 void CrashTest_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void CrashTest_EditorDraw(void);
 void CrashTest_EditorLoad(void);
+#endif
 void CrashTest_Serialize(void);
 
 // Extra Entity Functions

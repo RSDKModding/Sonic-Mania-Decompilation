@@ -226,8 +226,10 @@ void WallCrawl_State_Projectile(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void WallCrawl_EditorDraw(void) {}
 
 void WallCrawl_EditorLoad(void) {}
+#endif
 
 void WallCrawl_Serialize(void) { RSDK_EDITABLE_VAR(WallCrawl, VAR_UINT8, direction); }

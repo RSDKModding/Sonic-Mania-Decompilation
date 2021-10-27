@@ -32,6 +32,7 @@ void Jellygnite_StageLoad(void)
 
 }
 
+#if RETRO_INCLUDE_EDITOR
 void Jellygnite_EditorDraw(void)
 {
 
@@ -41,6 +42,7 @@ void Jellygnite_EditorLoad(void)
 {
 
 }
+#endif
 
 void Jellygnite_Serialize(void)
 {

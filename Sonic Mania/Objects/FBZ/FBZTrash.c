@@ -242,9 +242,11 @@ void FBZTrash_Unknown7(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void FBZTrash_EditorDraw(void) {}
 
 void FBZTrash_EditorLoad(void) {}
+#endif
 
 void FBZTrash_Serialize(void)
 {

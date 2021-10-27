@@ -127,6 +127,7 @@ void AIZKingClaw_Unknown2(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void AIZKingClaw_EditorDraw(void) { AIZKingClaw_Draw(); }
 
 void AIZKingClaw_EditorLoad(void)
@@ -138,5 +139,6 @@ void AIZKingClaw_EditorLoad(void)
         AIZKingClaw->aniFrames = RSDK.LoadSpriteAnimation("GHZCutscene/Claw.bin", SCOPE_STAGE);
     }
 }
+#endif
 
 void AIZKingClaw_Serialize(void) {}

@@ -39,8 +39,10 @@ void UISubHeading_StaticUpdate(void);
 void UISubHeading_Draw(void);
 void UISubHeading_Create(void* data);
 void UISubHeading_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void UISubHeading_EditorDraw(void);
 void UISubHeading_EditorLoad(void);
+#endif
 void UISubHeading_Serialize(void);
 
 // Extra Entity Functions

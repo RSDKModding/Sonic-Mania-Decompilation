@@ -169,9 +169,11 @@ void ElectroMagnet_Unknown2(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void ElectroMagnet_EditorDraw(void) {}
 
 void ElectroMagnet_EditorLoad(void) {}
+#endif
 
 void ElectroMagnet_Serialize(void)
 {

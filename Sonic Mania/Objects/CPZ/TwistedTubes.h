@@ -38,8 +38,10 @@ void TwistedTubes_StaticUpdate(void);
 void TwistedTubes_Draw(void);
 void TwistedTubes_Create(void* data);
 void TwistedTubes_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void TwistedTubes_EditorDraw(void);
 void TwistedTubes_EditorLoad(void);
+#endif
 void TwistedTubes_Serialize(void);
 
 // Extra Entity Functions

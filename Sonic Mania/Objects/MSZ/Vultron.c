@@ -32,6 +32,7 @@ void Vultron_StageLoad(void)
 
 }
 
+#if RETRO_INCLUDE_EDITOR
 void Vultron_EditorDraw(void)
 {
 
@@ -41,6 +42,7 @@ void Vultron_EditorLoad(void)
 {
 
 }
+#endif
 
 void Vultron_Serialize(void)
 {

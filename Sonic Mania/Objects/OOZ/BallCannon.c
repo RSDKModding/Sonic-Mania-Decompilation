@@ -295,9 +295,11 @@ void BallCannon_Unknown8(void)
         destroyEntity(entity);
 }
 
+#if RETRO_INCLUDE_EDITOR
 void BallCannon_EditorDraw(void) {}
 
 void BallCannon_EditorLoad(void) {}
+#endif
 
 void BallCannon_Serialize(void)
 {

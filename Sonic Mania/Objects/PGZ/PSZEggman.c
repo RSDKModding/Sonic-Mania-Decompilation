@@ -73,8 +73,10 @@ void PSZEggman_Unknown1(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void PSZEggman_EditorDraw(void) {}
 
 void PSZEggman_EditorLoad(void) {}
+#endif
 
 void PSZEggman_Serialize(void) {}

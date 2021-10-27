@@ -1148,8 +1148,10 @@ void Shiversaw_StateDust_Unknown(void)
         destroyEntity(entity);
 }
 
+#if RETRO_INCLUDE_EDITOR
 void Shiversaw_EditorDraw(void) {}
 
 void Shiversaw_EditorLoad(void) {}
+#endif
 
 void Shiversaw_Serialize(void) {}

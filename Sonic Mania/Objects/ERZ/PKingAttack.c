@@ -234,8 +234,10 @@ void PKingAttack_Unknown6(void)
         destroyEntity(entity);
 }
 
+#if RETRO_INCLUDE_EDITOR
 void PKingAttack_EditorDraw(void) {}
 
 void PKingAttack_EditorLoad(void) {}
+#endif
 
 void PKingAttack_Serialize(void) {}

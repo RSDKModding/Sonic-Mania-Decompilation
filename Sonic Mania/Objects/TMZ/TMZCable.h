@@ -32,8 +32,10 @@ void TMZCable_StaticUpdate(void);
 void TMZCable_Draw(void);
 void TMZCable_Create(void* data);
 void TMZCable_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void TMZCable_EditorDraw(void);
 void TMZCable_EditorLoad(void);
+#endif
 void TMZCable_Serialize(void);
 
 // Extra Entity Functions

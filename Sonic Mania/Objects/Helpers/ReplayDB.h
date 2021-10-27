@@ -30,8 +30,10 @@ void ReplayDB_StaticUpdate(void);
 void ReplayDB_Draw(void);
 void ReplayDB_Create(void* data);
 void ReplayDB_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void ReplayDB_EditorDraw(void);
 void ReplayDB_EditorLoad(void);
+#endif
 void ReplayDB_Serialize(void);
 
 // Extra Entity Functions

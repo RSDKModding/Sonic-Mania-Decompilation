@@ -45,8 +45,10 @@ void SpeedGate_StaticUpdate(void);
 void SpeedGate_Draw(void);
 void SpeedGate_Create(void* data);
 void SpeedGate_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void SpeedGate_EditorDraw(void);
 void SpeedGate_EditorLoad(void);
+#endif
 void SpeedGate_Serialize(void);
 
 // Extra Entity Functions

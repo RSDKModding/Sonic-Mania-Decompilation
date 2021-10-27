@@ -217,9 +217,11 @@ void UIVsResults_Unknown6(void)
 
 void UIVsResults_Unknown7(void) {}
 
+#if RETRO_INCLUDE_EDITOR
 void UIVsResults_EditorDraw(void) {}
 
 void UIVsResults_EditorLoad(void) {}
+#endif
 
 void UIVsResults_Serialize(void)
 {

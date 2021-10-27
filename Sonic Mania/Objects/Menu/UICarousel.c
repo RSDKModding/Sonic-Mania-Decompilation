@@ -140,9 +140,11 @@ void UICarousel_Unknown2(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void UICarousel_EditorDraw(void) {}
 
 void UICarousel_EditorLoad(void) {}
+#endif
 
 void UICarousel_Serialize(void)
 {

@@ -32,6 +32,7 @@ void EggPistonsMKII_StageLoad(void)
 
 }
 
+#if RETRO_INCLUDE_EDITOR
 void EggPistonsMKII_EditorDraw(void)
 {
 
@@ -41,6 +42,7 @@ void EggPistonsMKII_EditorLoad(void)
 {
 
 }
+#endif
 
 void EggPistonsMKII_Serialize(void)
 {

@@ -37,8 +37,10 @@ void ERZStart_StaticUpdate(void);
 void ERZStart_Draw(void);
 void ERZStart_Create(void* data);
 void ERZStart_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void ERZStart_EditorDraw(void);
 void ERZStart_EditorLoad(void);
+#endif
 void ERZStart_Serialize(void);
 
 // Extra Entity Functions

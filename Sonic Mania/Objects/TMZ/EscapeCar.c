@@ -258,8 +258,10 @@ void EscapeCar_StateEncore_GoodEnd(void)
 }
 #endif
 
+#if RETRO_INCLUDE_EDITOR
 void EscapeCar_EditorDraw(void) {}
 
 void EscapeCar_EditorLoad(void) {}
+#endif
 
 void EscapeCar_Serialize(void) {}

@@ -9,11 +9,11 @@ void TippingPlatform_Update(void)
     if (entity->bossID) {
         if (entity->animator.frameID) {
             entity->stateCollide = Platform_CollisionState_Null;
-            entity->collision    = 4;
+            entity->collision    = PLATFORM_C_4;
         }
         else {
             entity->stateCollide = Platform_CollisionState_TopSolid;
-            entity->collision    = 0;
+            entity->collision    = PLATFORM_C_0;
         }
         if (!entity->stoodAngle && entity->bossID > 2 && entity->syringe->activated) {
             entity->stoodAngle    = 1;
@@ -57,11 +57,11 @@ void TippingPlatform_Update(void)
             flag = entity->animator.frameID == 6;
         if (flag) {
             entity->stateCollide = Platform_CollisionState_TopSolid;
-            entity->collision    = 0;
+            entity->collision    = PLATFORM_C_0;
         }
         else {
             entity->stateCollide = Platform_CollisionState_Null;
-            entity->collision    = 4;
+            entity->collision    = PLATFORM_C_4;
         }
     }
     Platform_Update();
@@ -84,7 +84,7 @@ void TippingPlatform_Create(void *data)
         entity->interval = -16;
     if (!entity->duration)
         entity->duration = 120;
-    entity->collision = 0;
+    entity->collision = PLATFORM_C_0;
     Platform_Create(NULL);
 
     if (entity->bossID) {
@@ -107,7 +107,7 @@ void TippingPlatform_Create(void *data)
                         entity->updateRange.y = abs(entity->position.y - syringe->position.y) + 0x400000;
                     }
                     entity->stateCollide = Platform_CollisionState_AllSolid;
-                    entity->collision    = 1;
+                    entity->collision    = PLATFORM_C_1;
                     foreach_break;
                 }
             }
@@ -177,7 +177,19 @@ void TippingPlatform_Unknown5(void)
         entity->state = TippingPlatform_Unknown1;
 }
 
-void TippingPlatform_EditorDraw(void) {}
+void TippingPlatform_EditorDraw(void)
+{
+    RSDK_THIS(TippingPlatform);
+    if (entity->bossID) {
+        RSDK.SetSpriteAnimation(Platform->spriteIndex, 1, &entity->animator, true, 0);
+        entity->animator.animationSpeed = 0;
+    }
+    else {
+        RSDK.SetSpriteAnimation(Platform->spriteIndex, 2, &entity->animator, true, 6);
+    }
+
+    TippingPlatform_Draw();
+}
 
 void TippingPlatform_EditorLoad(void) {}
 

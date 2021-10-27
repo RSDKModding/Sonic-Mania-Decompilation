@@ -32,6 +32,7 @@ void PhantomRider_StageLoad(void)
 
 }
 
+#if RETRO_INCLUDE_EDITOR
 void PhantomRider_EditorDraw(void)
 {
 
@@ -41,6 +42,7 @@ void PhantomRider_EditorLoad(void)
 {
 
 }
+#endif
 
 void PhantomRider_Serialize(void)
 {

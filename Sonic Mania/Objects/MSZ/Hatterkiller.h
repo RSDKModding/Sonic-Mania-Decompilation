@@ -38,8 +38,10 @@ void Hatterkiller_StaticUpdate(void);
 void Hatterkiller_Draw(void);
 void Hatterkiller_Create(void* data);
 void Hatterkiller_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void Hatterkiller_EditorDraw(void);
 void Hatterkiller_EditorLoad(void);
+#endif
 void Hatterkiller_Serialize(void);
 
 // Extra Entity Functions

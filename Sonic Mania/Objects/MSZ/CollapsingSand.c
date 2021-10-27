@@ -339,9 +339,13 @@ void CollapsingSand_State_CollapseRight(void)
     }
 }
 
-void CollapsingSand_EditorDraw(void) {}
+void CollapsingSand_EditorDraw(void) { CollapsingSand_Draw(); }
 
-void CollapsingSand_EditorLoad(void) {}
+void CollapsingSand_EditorLoad(void)
+{
+    CollapsingSand->aniFrames = RSDK.LoadSpriteAnimation("MSZ/SandCollapse.bin", SCOPE_STAGE);
+    RSDK.SetSpriteAnimation(CollapsingSand->aniFrames, 0, &CollapsingSand->animator, true, 0);
+}
 
 void CollapsingSand_Serialize(void)
 {

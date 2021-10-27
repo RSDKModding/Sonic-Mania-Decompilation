@@ -784,9 +784,11 @@ void Cylinder_Player_State_Unknown1(void)
 
 void Cylinder_StageLoad(void) {}
 
+#if RETRO_INCLUDE_EDITOR
 void Cylinder_EditorDraw(void) {}
 
 void Cylinder_EditorLoad(void) {}
+#endif
 
 void Cylinder_Serialize(void)
 {

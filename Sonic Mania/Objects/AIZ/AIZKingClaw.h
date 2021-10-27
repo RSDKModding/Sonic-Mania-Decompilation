@@ -38,8 +38,10 @@ void AIZKingClaw_StaticUpdate(void);
 void AIZKingClaw_Draw(void);
 void AIZKingClaw_Create(void* data);
 void AIZKingClaw_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void AIZKingClaw_EditorDraw(void);
 void AIZKingClaw_EditorLoad(void);
+#endif
 void AIZKingClaw_Serialize(void);
 
 // Extra Entity Functions

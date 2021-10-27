@@ -296,9 +296,11 @@ void Orbinaut_Unknown10(void)
 }
 
 
+#if RETRO_INCLUDE_EDITOR
 void Orbinaut_EditorDraw(void) {}
 
 void Orbinaut_EditorLoad(void) {}
+#endif
 
 void Orbinaut_Serialize(void)
 {

@@ -57,9 +57,11 @@ void Staircase_StageLoad(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void Staircase_EditorDraw(void) {}
 
 void Staircase_EditorLoad(void) {}
+#endif
 
 void Staircase_Serialize(void)
 {

@@ -88,9 +88,11 @@ void Syringe_StageLoad(void)
     Syringe->sfxBloop            = RSDK.GetSFX("Stage/Bloop.wav");
 }
 
+#if RETRO_INCLUDE_EDITOR
 void Syringe_EditorDraw(void) {}
 
 void Syringe_EditorLoad(void) {}
+#endif
 
 void Syringe_Serialize(void)
 {

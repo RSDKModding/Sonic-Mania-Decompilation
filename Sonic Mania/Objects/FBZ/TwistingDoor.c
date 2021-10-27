@@ -13,8 +13,8 @@ void TwistingDoor_Update(void)
         if (Player_CheckValidState(player1)) {
             if (entity->autoOpen) {
                 switch (entity->type) {
-                    case 0:
-                    case 3: {
+                    case PLATFORM_0:
+                    case PLATFORM_3: {
                         int32 x  = 0;
                         int32 x2 = 0;
                         if (entity->autoOpen) {
@@ -33,13 +33,13 @@ void TwistingDoor_Update(void)
                             if (abs(player1->position.y - entity->position.y) < 0x400000) {
                                 entity->state         = TwistingDoor_Unknown2;
                                 entity->active        = ACTIVE_NORMAL;
-                                entity->collapseDelay = entity->type < 2 ? 64 : 128;
+                                entity->collapseDelay = entity->type < PLATFORM_2 ? 64 : 128;
                             }
                         }
                         break;
                     }
-                    case 1:
-                    case 2: {
+                    case PLATFORM_1:
+                    case PLATFORM_2: {
                         int32 y  = 0;
                         int32 y2 = 0;
                         if (entity->autoOpen) {
@@ -59,7 +59,7 @@ void TwistingDoor_Update(void)
                             if (abs(player1->position.x - entity->position.x) < 0x400000) {
                                 entity->state         = TwistingDoor_Unknown2;
                                 entity->active        = ACTIVE_NORMAL;
-                                entity->collapseDelay = entity->type < 2 ? 64 : 128;
+                                entity->collapseDelay = entity->type < PLATFORM_2 ? 64 : 128;
                             }
                         }
                         break;
@@ -84,13 +84,13 @@ void TwistingDoor_Draw(void)
 void TwistingDoor_Create(void *data)
 {
     RSDK_THIS(TwistingDoor);
-    entity->collision = 1;
+    entity->collision = PLATFORM_C_1;
     Platform_Create(NULL);
 
     entity->drawFX = FX_FLIP;
     RSDK.SetSpriteAnimation(TwistingDoor->aniFrames, entity->type, &entity->animator, true, 0);
 
-    if (!entity->type || entity->type == 3) {
+    if (entity->type == PLATFORM_0 || entity->type == PLATFORM_3) {
         if (!entity->direction)
             entity->groundVel = -0x10000;
         else
@@ -133,10 +133,10 @@ void TwistingDoor_Unknown1(void)
     RSDK_THIS(TwistingDoor);
     EntityButton *button = entity->buttonPtr;
     if (button->activated) {
-        RSDK.PlaySfx(TwistingDoor->sfxOpen, 0, 255);
+        RSDK.PlaySfx(TwistingDoor->sfxOpen, false, 255);
         entity->active        = ACTIVE_NORMAL;
         entity->state         = TwistingDoor_Unknown2;
-        entity->collapseDelay = entity->type < 2 ? 64 : 128;
+        entity->collapseDelay = entity->type < PLATFORM_2 ? 64 : 128;
     }
     entity->velocity.y = 0;
     entity->velocity.x = 0;
@@ -147,7 +147,7 @@ void TwistingDoor_Unknown2(void)
     RSDK_THIS(TwistingDoor);
     RSDK.ProcessAnimation(&entity->animator);
 
-    if (entity->type == 1 || entity->type == 2) {
+    if (entity->type == PLATFORM_1 || entity->type == PLATFORM_2) {
         entity->drawPos.x += entity->groundVel;
         entity->velocity.x = entity->groundVel;
     }
@@ -183,7 +183,7 @@ void TwistingDoor_Unknown4(void)
     if (--entity->animator.frameID < 0)
         entity->animator.frameID = 7;
 
-    if (entity->type == 1 || entity->type == 2) {
+    if (entity->type == PLATFORM_1 || entity->type == PLATFORM_2) {
         entity->drawPos.x -= entity->groundVel;
         entity->velocity.x = entity->groundVel;
     }
@@ -198,9 +198,11 @@ void TwistingDoor_Unknown4(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void TwistingDoor_EditorDraw(void) {}
 
 void TwistingDoor_EditorLoad(void) {}
+#endif
 
 void TwistingDoor_Serialize(void)
 {

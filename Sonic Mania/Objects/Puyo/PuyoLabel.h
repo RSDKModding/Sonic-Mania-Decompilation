@@ -31,8 +31,10 @@ void PuyoLabel_StaticUpdate(void);
 void PuyoLabel_Draw(void);
 void PuyoLabel_Create(void* data);
 void PuyoLabel_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void PuyoLabel_EditorDraw(void);
 void PuyoLabel_EditorLoad(void);
+#endif
 void PuyoLabel_Serialize(void);
 
 // Extra Entity Functions

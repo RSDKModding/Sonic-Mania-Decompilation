@@ -30,8 +30,10 @@ void MSOrb_StaticUpdate(void);
 void MSOrb_Draw(void);
 void MSOrb_Create(void* data);
 void MSOrb_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void MSOrb_EditorDraw(void);
 void MSOrb_EditorLoad(void);
+#endif
 void MSOrb_Serialize(void);
 
 // Extra Entity Functions

@@ -192,9 +192,11 @@ void SpeedBooster_Wait2(void)
     SpeedBooster_Interact();
 }
 
+#if RETRO_INCLUDE_EDITOR
 void SpeedBooster_EditorDraw(void) {}
 
 void SpeedBooster_EditorLoad(void) {}
+#endif
 
 void SpeedBooster_Serialize(void)
 {

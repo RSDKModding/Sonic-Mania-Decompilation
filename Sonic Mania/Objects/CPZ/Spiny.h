@@ -37,8 +37,10 @@ void Spiny_StaticUpdate(void);
 void Spiny_Draw(void);
 void Spiny_Create(void* data);
 void Spiny_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void Spiny_EditorDraw(void);
 void Spiny_EditorLoad(void);
+#endif
 void Spiny_Serialize(void);
 
 // Extra Entity Functions

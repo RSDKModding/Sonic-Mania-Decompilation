@@ -79,8 +79,10 @@ void MenuSetup_StaticUpdate(void);
 void MenuSetup_Draw(void);
 void MenuSetup_Create(void* data);
 void MenuSetup_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void MenuSetup_EditorDraw(void);
 void MenuSetup_EditorLoad(void);
+#endif
 void MenuSetup_Serialize(void);
 
 // Extra Entity Functions

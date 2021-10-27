@@ -359,9 +359,11 @@ void UIRankButton_Unknown14(void)
     entity->dword158 = !((entity->timer >> 1) & 1);
 }
 
+#if RETRO_INCLUDE_EDITOR
 void UIRankButton_EditorDraw(void) {}
 
 void UIRankButton_EditorLoad(void) {}
+#endif
 
 void UIRankButton_Serialize(void) { RSDK_EDITABLE_VAR(UIRankButton, VAR_BOOL, showsName); }
 #endif

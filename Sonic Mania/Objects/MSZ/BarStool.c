@@ -165,8 +165,16 @@ void BarStool_StageLoad(void)
     BarStool->sfxHop        = RSDK.GetSFX("MSZ/StoolHop.wav");
 }
 
-void BarStool_EditorDraw(void) {}
+void BarStool_EditorDraw(void)
+{
+    RSDK_THIS(BarStool);
+    RSDK.SetSpriteAnimation(BarStool->aniFrames, 0, &entity->animator1, true, 0);
+    RSDK.SetSpriteAnimation(BarStool->aniFrames, 1, &entity->animator2, true, entity->height);
 
-void BarStool_EditorLoad(void) {}
+    RSDK.DrawSprite(&entity->animator2, NULL, false);
+    RSDK.DrawSprite(&entity->animator1, NULL, false);
+}
+
+void BarStool_EditorLoad(void) { BarStool->aniFrames = RSDK.LoadSpriteAnimation("MSZ/BarStool.bin", SCOPE_STAGE); }
 
 void BarStool_Serialize(void) { RSDK_EDITABLE_VAR(BarStool, VAR_UINT8, height); }

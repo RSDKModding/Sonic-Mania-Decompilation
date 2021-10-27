@@ -37,8 +37,10 @@ void YoyoPulley_StaticUpdate(void);
 void YoyoPulley_Draw(void);
 void YoyoPulley_Create(void* data);
 void YoyoPulley_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void YoyoPulley_EditorDraw(void);
 void YoyoPulley_EditorLoad(void);
+#endif
 void YoyoPulley_Serialize(void);
 
 // Extra Entity Functions

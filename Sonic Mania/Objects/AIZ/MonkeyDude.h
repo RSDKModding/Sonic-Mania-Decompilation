@@ -53,8 +53,10 @@ void MonkeyDude_StaticUpdate(void);
 void MonkeyDude_Draw(void);
 void MonkeyDude_Create(void* data);
 void MonkeyDude_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void MonkeyDude_EditorDraw(void);
 void MonkeyDude_EditorLoad(void);
+#endif
 void MonkeyDude_Serialize(void);
 
 // Extra Entity Functions

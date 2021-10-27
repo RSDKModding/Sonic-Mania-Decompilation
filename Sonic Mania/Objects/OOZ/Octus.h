@@ -35,8 +35,10 @@ void Octus_StaticUpdate(void);
 void Octus_Draw(void);
 void Octus_Create(void* data);
 void Octus_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void Octus_EditorDraw(void);
 void Octus_EditorLoad(void);
+#endif
 void Octus_Serialize(void);
 
 // Extra Entity Functions

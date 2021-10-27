@@ -295,6 +295,7 @@ void SchrodingersCapsule_Unknown5(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void SchrodingersCapsule_EditorDraw(void)
 {
     RSDK_THIS(SchrodingersCapsule);
@@ -308,6 +309,7 @@ void SchrodingersCapsule_EditorDraw(void)
 }
 
 void SchrodingersCapsule_EditorLoad(void) { SchrodingersCapsule->aniFrames = RSDK.LoadSpriteAnimation("AIZ/SchrodingersCapsule.bin", SCOPE_STAGE); }
+#endif
 
 void SchrodingersCapsule_Serialize(void) {}
 #endif

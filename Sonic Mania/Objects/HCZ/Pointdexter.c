@@ -32,6 +32,7 @@ void Pointdexter_StageLoad(void)
 
 }
 
+#if RETRO_INCLUDE_EDITOR
 void Pointdexter_EditorDraw(void)
 {
 
@@ -41,6 +42,7 @@ void Pointdexter_EditorLoad(void)
 {
 
 }
+#endif
 
 void Pointdexter_Serialize(void)
 {

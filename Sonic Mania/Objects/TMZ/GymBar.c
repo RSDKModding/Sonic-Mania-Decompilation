@@ -264,9 +264,11 @@ void GymBar_PlayerState_SwingH(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void GymBar_EditorDraw(void) {}
 
 void GymBar_EditorLoad(void) {}
+#endif
 
 void GymBar_Serialize(void)
 {

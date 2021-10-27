@@ -31,8 +31,10 @@ void UIHeading_StaticUpdate(void);
 void UIHeading_Draw(void);
 void UIHeading_Create(void* data);
 void UIHeading_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void UIHeading_EditorDraw(void);
 void UIHeading_EditorLoad(void);
+#endif
 void UIHeading_Serialize(void);
 
 // Extra Entity Functions

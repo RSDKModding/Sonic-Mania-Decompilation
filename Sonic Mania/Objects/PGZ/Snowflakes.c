@@ -176,8 +176,10 @@ Vector2 Snowflakes_Unknown1(int32 id)
     return pos;
 }
 
+#if RETRO_INCLUDE_EDITOR
 void Snowflakes_EditorDraw(void) {}
 
 void Snowflakes_EditorLoad(void) {}
+#endif
 
 void Snowflakes_Serialize(void) {}

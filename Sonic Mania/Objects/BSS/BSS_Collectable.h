@@ -73,8 +73,10 @@ void BSS_Collectable_StaticUpdate(void);
 void BSS_Collectable_Draw(void);
 void BSS_Collectable_Create(void *data);
 void BSS_Collectable_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void BSS_Collectable_EditorDraw(void);
 void BSS_Collectable_EditorLoad(void);
+#endif
 void BSS_Collectable_Serialize(void);
 
 // Extra Entity Functions

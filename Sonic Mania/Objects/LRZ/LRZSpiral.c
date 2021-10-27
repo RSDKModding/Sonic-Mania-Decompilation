@@ -273,9 +273,11 @@ void LRZSpiral_Unknown4(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void LRZSpiral_EditorDraw(void) {}
 
 void LRZSpiral_EditorLoad(void) {}
+#endif
 
 void LRZSpiral_Serialize(void)
 {

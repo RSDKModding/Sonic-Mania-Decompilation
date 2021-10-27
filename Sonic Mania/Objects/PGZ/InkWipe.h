@@ -25,8 +25,10 @@ void InkWipe_StaticUpdate(void);
 void InkWipe_Draw(void);
 void InkWipe_Create(void* data);
 void InkWipe_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void InkWipe_EditorDraw(void);
 void InkWipe_EditorLoad(void);
+#endif
 void InkWipe_Serialize(void);
 
 // Extra Entity Functions

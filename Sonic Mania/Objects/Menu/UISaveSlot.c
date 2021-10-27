@@ -1165,9 +1165,11 @@ void UISaveSlot_Unknown28(void)
 #endif
 }
 
+#if RETRO_INCLUDE_EDITOR
 void UISaveSlot_EditorDraw(void) {}
 
 void UISaveSlot_EditorLoad(void) {}
+#endif
 
 void UISaveSlot_Serialize(void)
 {

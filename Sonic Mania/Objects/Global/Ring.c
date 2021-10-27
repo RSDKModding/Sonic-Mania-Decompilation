@@ -665,6 +665,7 @@ void Ring_FakeLoseRings(Entity *entity, int32 ringCount, uint8 drawOrder)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void Ring_EditorDraw(void)
 {
     RSDK_THIS(Ring);
@@ -692,6 +693,7 @@ void Ring_EditorLoad(void)
     RSDK_ENUM_VAR(PLANEFILTER_A);
     RSDK_ENUM_VAR(PLANEFILTER_B);
 }
+#endif
 
 void Ring_Serialize(void)
 {

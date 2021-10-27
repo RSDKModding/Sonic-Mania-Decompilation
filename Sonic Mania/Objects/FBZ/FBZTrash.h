@@ -35,8 +35,10 @@ void FBZTrash_StaticUpdate(void);
 void FBZTrash_Draw(void);
 void FBZTrash_Create(void* data);
 void FBZTrash_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void FBZTrash_EditorDraw(void);
 void FBZTrash_EditorLoad(void);
+#endif
 void FBZTrash_Serialize(void);
 
 // Extra Entity Functions

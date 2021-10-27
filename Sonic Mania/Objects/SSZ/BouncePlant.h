@@ -38,8 +38,10 @@ void BouncePlant_StaticUpdate(void);
 void BouncePlant_Draw(void);
 void BouncePlant_Create(void* data);
 void BouncePlant_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void BouncePlant_EditorDraw(void);
 void BouncePlant_EditorLoad(void);
+#endif
 void BouncePlant_Serialize(void);
 
 // Extra Entity Functions

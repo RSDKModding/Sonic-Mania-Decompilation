@@ -32,6 +32,7 @@ void WeatherTV_StageLoad(void)
 
 }
 
+#if RETRO_INCLUDE_EDITOR
 void WeatherTV_EditorDraw(void)
 {
 
@@ -41,6 +42,7 @@ void WeatherTV_EditorLoad(void)
 {
 
 }
+#endif
 
 void WeatherTV_Serialize(void)
 {

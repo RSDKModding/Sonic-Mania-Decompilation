@@ -143,8 +143,10 @@ void BladePole_Unknown5(void)
     ++entity->timer;
 }
 
+#if RETRO_INCLUDE_EDITOR
 void BladePole_EditorDraw(void) {}
 
 void BladePole_EditorLoad(void) {}
+#endif
 
 void BladePole_Serialize(void) {}

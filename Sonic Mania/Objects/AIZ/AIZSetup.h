@@ -58,8 +58,10 @@ void AIZSetup_StaticUpdate(void);
 void AIZSetup_Draw(void);
 void AIZSetup_Create(void* data);
 void AIZSetup_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void AIZSetup_EditorDraw(void);
 void AIZSetup_EditorLoad(void);
+#endif
 void AIZSetup_Serialize(void);
 
 // Extra Entity Functions

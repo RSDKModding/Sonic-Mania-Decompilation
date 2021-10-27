@@ -199,9 +199,11 @@ void FlameSpring_StateDraw_Unknown2(void)
     RSDK.DrawSprite(&entity->animator1, NULL, false);
 }
 
+#if RETRO_INCLUDE_EDITOR
 void FlameSpring_EditorDraw(void) {}
 
 void FlameSpring_EditorLoad(void) {}
+#endif
 
 void FlameSpring_Serialize(void)
 {

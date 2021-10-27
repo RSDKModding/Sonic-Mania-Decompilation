@@ -3,20 +3,32 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    TORNADOPATH_0,
+    TORNADOPATH_1,
+    TORNADOPATH_2,
+    TORNADOPATH_3,
+    TORNADOPATH_4,
+    TORNADOPATH_5,
+    TORNADOPATH_6,
+    TORNADOPATH_7,
+    TORNADOPATH_8,
+    TORNADOPATH_9,
+    TORNADOPATH_10,
+    TORNADOPATH_11,
+    TORNADOPATH_12,
+    TORNADOPATH_13,
+}TornadoPathTypes;
+
 // Object Class
 typedef struct {
     RSDK_OBJECT
     EntityCamera *cameraPtr;
     Vector2 field_8;
     int32 hitboxID;
-    int32 field_14;
-    int32 field_18;
-    int32 field_1C;
-    int32 field_20;
-    int32 field_24;
-    int32 field_28;
-    int32 field_2C;
-    int32 field_30;
+    uint16 aniFrames;
+    Animator animator;
+    bool32 flag;
 } ObjectTornadoPath;
 
 // Entity Class
@@ -32,12 +44,7 @@ typedef struct {
     int32 forceSpeed;
     Hitbox hitbox;
     int32 targetSpeedStore;
-    int32 field_88;
-    int32 field_8C;
-    int32 field_90;
-    int32 field_94;
-    int32 field_98;
-    int32 field_9C;
+    Animator animator;
 } EntityTornadoPath;
 
 // Object Struct
@@ -50,8 +57,10 @@ void TornadoPath_StaticUpdate(void);
 void TornadoPath_Draw(void);
 void TornadoPath_Create(void* data);
 void TornadoPath_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void TornadoPath_EditorDraw(void);
 void TornadoPath_EditorLoad(void);
+#endif
 void TornadoPath_Serialize(void);
 
 // Extra Entity Functions

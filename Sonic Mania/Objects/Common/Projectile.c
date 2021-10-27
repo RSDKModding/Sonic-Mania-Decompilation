@@ -37,42 +37,45 @@ void Projectile_CheckPlayerCollisions(void)
 
     foreach_active(Player, player)
     {
-        switch (entity->type) {
-            case 0: break;
-            case 1:
-                if (entity->isProjectile)
-                    Player_CheckProjectileHit(player, entity);
-                else
-                    Player_CheckElementalHit(player, entity, SHIELD_FIRE);
-                break;
-            case 2:
-                if (entity->isProjectile)
-                    Player_CheckProjectileHit(player, entity);
-                else
-                    Player_CheckElementalHit(player, entity, SHIELD_LIGHTNING);
-                break;
-            case 3: break;
-            case 5: break;
-            case 6: break;
-            case 4:
-            case 7: {
-                int32 anim = player->playerAnimator.animationID;
-                if (entity->isProjectile
+        if (Player_CheckCollisionTouch(player, entity, &entity->hitbox)) {
+            switch (entity->type) {
+                case 0: break;
+                case 1:
+                    if (entity->isProjectile)
+                        Player_CheckProjectileHit(player, entity);
+                    else
+                        Player_CheckElementalHit(player, entity, SHIELD_FIRE);
+                    break;
+                case 2:
+                    if (entity->isProjectile)
+                        Player_CheckProjectileHit(player, entity);
+                    else
+                        Player_CheckElementalHit(player, entity, SHIELD_LIGHTNING);
+                    break;
+                case 3: break;
+                case 5: break;
+                case 6: break;
+                case 4:
+                case 7: {
+                    int32 anim = player->playerAnimator.animationID;
+                    if (entity->isProjectile
 #if RETRO_USE_PLUS
-                    || (player->characterID == ID_MIGHTY && (anim == ANI_CROUCH || anim == ANI_JUMP || anim == ANI_SPINDASH || anim == ANI_DROPDASH))
+                        || (player->characterID == ID_MIGHTY
+                            && (anim == ANI_CROUCH || anim == ANI_JUMP || anim == ANI_SPINDASH || anim == ANI_DROPDASH))
 #endif
-                ) {
-                    if (Player_CheckProjectileHit(player, entity)) {
-                        entity->gravityStrength = 0x3800;
-                        entity->state           = Projectile_State_MoveGravity;
+                    ) {
+                        if (Player_CheckProjectileHit(player, entity)) {
+                            entity->gravityStrength = 0x3800;
+                            entity->state           = Projectile_State_MoveGravity;
+                        }
                     }
+                    else {
+                        Player_CheckHit(player, entity);
+                    }
+                    break;
                 }
-                else {
-                    Player_CheckHit(player, entity);
-                }
-                break;
+                default: break;
             }
-            default: break;
         }
     }
 }
@@ -118,8 +121,10 @@ void Projectile_State_MoveGravity(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void Projectile_EditorDraw(void) {}
 
 void Projectile_EditorLoad(void) {}
+#endif
 
 void Projectile_Serialize(void) {}

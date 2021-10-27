@@ -366,9 +366,11 @@ void Crane_State_Unknown10(void)
     Crane_CheckOnScreen();
 }
 
+#if RETRO_INCLUDE_EDITOR
 void Crane_EditorDraw(void) {}
 
 void Crane_EditorLoad(void) {}
+#endif
 
 void Crane_Serialize(void)
 {

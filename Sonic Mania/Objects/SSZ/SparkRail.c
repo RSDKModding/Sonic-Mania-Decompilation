@@ -56,8 +56,10 @@ void SparkRail_StageLoad(void)
     SparkRail->sfxPon = RSDK.GetSFX("Stage/Pon.wav");
 }
 
+#if RETRO_INCLUDE_EDITOR
 void SparkRail_EditorDraw(void) {}
 
 void SparkRail_EditorLoad(void) {}
+#endif
 
 void SparkRail_Serialize(void) { RSDK_EDITABLE_VAR(SparkRail, VAR_VECTOR2, size); }

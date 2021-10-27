@@ -69,8 +69,10 @@ void UFO_Circuit_StaticUpdate(void);
 void UFO_Circuit_Draw(void);
 void UFO_Circuit_Create(void* data);
 void UFO_Circuit_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void UFO_Circuit_EditorDraw(void);
 void UFO_Circuit_EditorLoad(void);
+#endif
 void UFO_Circuit_Serialize(void);
 
 // Extra Entity Functions

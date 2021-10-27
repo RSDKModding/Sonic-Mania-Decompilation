@@ -412,8 +412,10 @@ bool32 MathHelpers_Unknown14(Vector2 *pos, int32 x1, int32 y1, Vector2 pos2, Hit
     return true;
 }
 
+#if RETRO_INCLUDE_EDITOR
 void MathHelpers_EditorDraw(void) {}
 
 void MathHelpers_EditorLoad(void) {}
+#endif
 
 void MathHelpers_Serialize(void) {}

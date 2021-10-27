@@ -147,8 +147,10 @@ void Smog_StageLoad(void)
 
 void Smog_DrawLayerCB(void) { RSDK.CopyPalette(1, 0, 0, 0, 128); }
 
+#if RETRO_INCLUDE_EDITOR
 void Smog_EditorDraw(void) {}
 
 void Smog_EditorLoad(void) {}
+#endif
 
 void Smog_Serialize(void) {}

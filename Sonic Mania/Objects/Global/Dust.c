@@ -129,8 +129,10 @@ void Dust_State_EggLoco(void)
         RSDK.ResetEntityPtr(entity, 0, 0);
 }
 
+#if RETRO_INCLUDE_EDITOR
 void Dust_EditorDraw(void) {}
 
 void Dust_EditorLoad(void) {}
+#endif
 
 void Dust_Serialize(void) {}

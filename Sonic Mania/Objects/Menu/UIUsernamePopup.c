@@ -145,8 +145,10 @@ void UIUsernamePopup_Unknown6(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void UIUsernamePopup_EditorDraw(void) {}
 
 void UIUsernamePopup_EditorLoad(void) {}
+#endif
 
 void UIUsernamePopup_Serialize(void) {}

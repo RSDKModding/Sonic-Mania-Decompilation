@@ -32,6 +32,7 @@ void MegaChopper_StageLoad(void)
 
 }
 
+#if RETRO_INCLUDE_EDITOR
 void MegaChopper_EditorDraw(void)
 {
 
@@ -41,6 +42,7 @@ void MegaChopper_EditorLoad(void)
 {
 
 }
+#endif
 
 void MegaChopper_Serialize(void)
 {

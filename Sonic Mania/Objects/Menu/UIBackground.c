@@ -57,8 +57,10 @@ void UIBackground_DrawNormal(void)
     RSDK.DrawCircle(drawPos.x + RSDK_screens->centerX, drawPos.y + RSDK_screens->centerY, 26, colourPtrs[0], 255, INK_NONE, true);
 }
 
+#if RETRO_INCLUDE_EDITOR
 void UIBackground_EditorDraw(void) {}
 
 void UIBackground_EditorLoad(void) {}
+#endif
 
 void UIBackground_Serialize(void) { RSDK_EDITABLE_VAR(UIBackground, VAR_ENUM, type); }

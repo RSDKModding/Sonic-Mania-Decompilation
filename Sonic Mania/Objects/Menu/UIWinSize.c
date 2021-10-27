@@ -295,9 +295,11 @@ void UIWinSize_Unknown8(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void UIWinSize_EditorDraw(void) {}
 
 void UIWinSize_EditorLoad(void) {}
+#endif
 
 void UIWinSize_Serialize(void)
 {

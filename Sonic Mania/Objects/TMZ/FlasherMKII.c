@@ -285,8 +285,10 @@ void FlasherMKII_State_Unknown5(void)
     FlasherMKII_CheckOnScreen();
 }
 
+#if RETRO_INCLUDE_EDITOR
 void FlasherMKII_EditorDraw(void) {}
 
 void FlasherMKII_EditorLoad(void) {}
+#endif
 
 void FlasherMKII_Serialize(void) { RSDK_EDITABLE_VAR(FlasherMKII, VAR_UINT8, orientation); }

@@ -69,9 +69,11 @@ void PBL_Sector_Create(void *data)
 
 void PBL_Sector_StageLoad(void) {}
 
+#if RETRO_INCLUDE_EDITOR
 void PBL_Sector_EditorDraw(void) {}
 
 void PBL_Sector_EditorLoad(void) {}
+#endif
 
 void PBL_Sector_Serialize(void)
 {

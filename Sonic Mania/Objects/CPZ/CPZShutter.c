@@ -54,8 +54,10 @@ void CPZShutter_State_Close(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void CPZShutter_EditorDraw(void) {}
 
 void CPZShutter_EditorLoad(void) {}
+#endif
 
 void CPZShutter_Serialize(void) {}

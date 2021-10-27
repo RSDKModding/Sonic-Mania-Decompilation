@@ -111,10 +111,10 @@ void SaveGame_LoadSaveData(void)
                 }
                 else if (globals->atlEntityData[(0x200 * 1) + e] == 2) {
                     EntityItemBox *itemBox = (EntityItemBox *)RSDK.GetEntityByID(e);
-                    RSDK.SetSpriteAnimation(ItemBox->spriteIndex, 1, &itemBox->brokenData, true, 0);
-                    RSDK.SetSpriteAnimation(0xFFFF, 0, &itemBox->overlayData, true, 0);
-                    RSDK.SetSpriteAnimation(0xFFFF, 0, &itemBox->debrisData, true, 0);
-                    RSDK.SetSpriteAnimation(0xFFFF, 0, &itemBox->contentsData, true, 0);
+                    RSDK.SetSpriteAnimation(ItemBox->spriteIndex, 1, &itemBox->animatorBox, true, 0);
+                    RSDK.SetSpriteAnimation(0xFFFF, 0, &itemBox->animatorOverlay, true, 0);
+                    RSDK.SetSpriteAnimation(0xFFFF, 0, &itemBox->animatorDebris, true, 0);
+                    RSDK.SetSpriteAnimation(0xFFFF, 0, &itemBox->animatorContents, true, 0);
                     itemBox->state = ItemBox_State_Broken;
                 }
             }

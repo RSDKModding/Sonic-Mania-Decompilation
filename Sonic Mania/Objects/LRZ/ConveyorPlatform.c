@@ -9,12 +9,12 @@ void ConveyorPlatform_Update(void)
         if (entity->collapseDelay || entity->timer) {
             if (++entity->timer == 24) {
                 entity->stateCollide = Platform_CollisionState_AllSolid;
-                entity->collision    = 1;
+                entity->collision    = PLATFORM_C_1;
                 entity->timer        = 0;
             }
             else {
                 entity->stateCollide = Platform_CollisionState_Null;
-                entity->collision    = 4;
+                entity->collision    = PLATFORM_C_4;
             }
             entity->animator.frameID = ConveyorPlatform->frameIDs[entity->timer];
             entity->direction        = ConveyorPlatform->directionIDs[entity->timer];
@@ -25,7 +25,7 @@ void ConveyorPlatform_Update(void)
             entity->timer++;
             if (entity->timer >= entity->flipCount) {
                 entity->stateCollide = Platform_CollisionState_AllSolid;
-                entity->collision    = 1;
+                entity->collision    = PLATFORM_C_1;
                 entity->timer        = 0;
             }
             entity->animator.frameID = ConveyorPlatform->frameIDs[entity->timer % 24];
@@ -33,7 +33,7 @@ void ConveyorPlatform_Update(void)
         }
         if (!((Zone->timer + entity->intervalOffset) % entity->interval) && !entity->timer) {
             entity->stateCollide = Platform_CollisionState_Null;
-            entity->collision    = 4;
+            entity->collision    = PLATFORM_C_4;
             entity->timer        = 1;
         }
     }
@@ -54,12 +54,12 @@ void ConveyorPlatform_Create(void *data)
 {
     RSDK_THIS(ConveyorPlatform);
     if (entity->type)
-        entity->type = 5;
+        entity->type = PLATFORM_5;
     Platform_Create(NULL);
     RSDK.SetSpriteAnimation(Platform->spriteIndex, 2, &entity->animator, true, 0);
     entity->drawFX |= FX_FLIP;
     entity->stateCollide = Platform_CollisionState_AllSolid;
-    entity->collision    = 1;
+    entity->collision    = PLATFORM_C_1;
     entity->timer        = 0;
     if (!RSDK_sceneInfo->inEditor)
         entity->flipCount *= 12;
@@ -67,9 +67,11 @@ void ConveyorPlatform_Create(void *data)
 
 void ConveyorPlatform_StageLoad(void) {}
 
+#if RETRO_INCLUDE_EDITOR
 void ConveyorPlatform_EditorDraw(void) {}
 
 void ConveyorPlatform_EditorLoad(void) {}
+#endif
 
 void ConveyorPlatform_Serialize(void)
 {

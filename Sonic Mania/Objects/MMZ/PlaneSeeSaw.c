@@ -240,8 +240,10 @@ void PlaneSeeSaw_PlayerState_ToFG(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void PlaneSeeSaw_EditorDraw(void) {}
 
 void PlaneSeeSaw_EditorLoad(void) {}
+#endif
 
 void PlaneSeeSaw_Serialize(void) {}

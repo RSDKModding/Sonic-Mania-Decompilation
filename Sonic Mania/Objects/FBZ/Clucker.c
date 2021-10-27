@@ -330,9 +330,11 @@ void Clucker_State_Projectile(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void Clucker_EditorDraw(void) {}
 
 void Clucker_EditorLoad(void) {}
+#endif
 
 void Clucker_Serialize(void)
 {

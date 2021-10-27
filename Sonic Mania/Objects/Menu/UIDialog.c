@@ -426,8 +426,10 @@ void UIDialog_Unknown13(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void UIDialog_EditorDraw(void) {}
 
 void UIDialog_EditorLoad(void) {}
+#endif
 
 void UIDialog_Serialize(void) {}

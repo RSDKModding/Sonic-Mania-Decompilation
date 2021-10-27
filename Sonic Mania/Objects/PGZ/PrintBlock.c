@@ -73,8 +73,8 @@ void PrintBlock_Draw(void)
 void PrintBlock_Create(void *data)
 {
     RSDK_THIS(PrintBlock);
-    entity->collision = 1;
-    Platform_Create(0);
+    entity->collision = PLATFORM_C_1;
+    Platform_Create(NULL);
     RSDK.SetSpriteAnimation(PrintBlock->aniFrames, entity->letter, &entity->animator, true, 0);
     entity->alpha     = 128;
     entity->drawOrder = Zone->drawOrderLow;
@@ -118,9 +118,11 @@ void PrintBlock_Unknown2(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void PrintBlock_EditorDraw(void) {}
 
 void PrintBlock_EditorLoad(void) {}
+#endif
 
 void PrintBlock_Serialize(void)
 {

@@ -71,8 +71,10 @@ void SuperSparkle_Create(void *data)
 
 void SuperSparkle_StageLoad(void) { SuperSparkle->spriteIndex = RSDK.LoadSpriteAnimation("Global/SuperSparkle.bin", SCOPE_STAGE); }
 
+#if RETRO_INCLUDE_EDITOR
 void SuperSparkle_EditorDraw(void) {}
 
 void SuperSparkle_EditorLoad(void) {}
+#endif
 
 void SuperSparkle_Serialize(void) {}

@@ -86,8 +86,10 @@ void DrawHelpers_DrawDebug5(uint32 colour, int32 x, int32 y)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void DrawHelpers_EditorDraw(void) {}
 
 void DrawHelpers_EditorLoad(void) {}
+#endif
 
 void DrawHelpers_Serialize(void) {}

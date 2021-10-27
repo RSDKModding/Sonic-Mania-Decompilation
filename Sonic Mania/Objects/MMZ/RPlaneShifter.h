@@ -39,8 +39,10 @@ void RPlaneShifter_StaticUpdate(void);
 void RPlaneShifter_Draw(void);
 void RPlaneShifter_Create(void* data);
 void RPlaneShifter_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void RPlaneShifter_EditorDraw(void);
 void RPlaneShifter_EditorLoad(void);
+#endif
 void RPlaneShifter_Serialize(void);
 
 // Extra Entity Functions

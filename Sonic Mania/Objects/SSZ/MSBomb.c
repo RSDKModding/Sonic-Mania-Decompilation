@@ -191,9 +191,11 @@ void MSBomb_Unknown4(void)
         destroyEntity(entity);
 }
 
+#if RETRO_INCLUDE_EDITOR
 void MSBomb_EditorDraw(void) {}
 
 void MSBomb_EditorLoad(void) {}
+#endif
 
 void MSBomb_Serialize(void) {}
 #endif

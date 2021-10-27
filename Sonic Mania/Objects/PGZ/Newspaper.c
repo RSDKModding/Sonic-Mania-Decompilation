@@ -53,8 +53,8 @@ void Newspaper_Create(void *data)
         entity->hitbox.bottom = 16;
     }
 #else
-    entity->collision = 1;
-    entity->type      = 5;
+    entity->collision = PLATFORM_C_1;
+    entity->type      = PLATFORM_5;
     Platform_Create(NULL);
     RSDK.SetSpriteAnimation(Newspaper->aniFrames, 0, &entity->animator, true, 0);
 #endif
@@ -105,9 +105,11 @@ void Newspaper_HandleInteractions(void)
 }
 #endif
 
+#if RETRO_INCLUDE_EDITOR
 void Newspaper_EditorDraw(void) {}
 
 void Newspaper_EditorLoad(void) {}
+#endif
 
 void Newspaper_Serialize(void)
 {

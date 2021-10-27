@@ -393,9 +393,11 @@ void UISubHeading_StartNewSave(void)
 }
 #endif
 
+#if RETRO_INCLUDE_EDITOR
 void UISubHeading_EditorDraw(void) {}
 
 void UISubHeading_EditorLoad(void) {}
+#endif
 
 void UISubHeading_Serialize(void)
 {

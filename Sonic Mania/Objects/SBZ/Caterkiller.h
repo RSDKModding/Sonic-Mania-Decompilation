@@ -39,8 +39,10 @@ void Caterkiller_StaticUpdate(void);
 void Caterkiller_Draw(void);
 void Caterkiller_Create(void* data);
 void Caterkiller_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void Caterkiller_EditorDraw(void);
 void Caterkiller_EditorLoad(void);
+#endif
 void Caterkiller_Serialize(void);
 
 // Extra Entity Functions

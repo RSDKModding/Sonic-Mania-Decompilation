@@ -55,8 +55,10 @@ bool32 GHZCutsceneK_Unknown(void)
     return false;
 }
 
+#if RETRO_INCLUDE_EDITOR
 void GHZCutsceneK_EditorDraw(void) {}
 
 void GHZCutsceneK_EditorLoad(void) {}
+#endif
 
 void GHZCutsceneK_Serialize(void) { RSDK_EDITABLE_VAR(GHZCutsceneK, VAR_VECTOR2, size); }

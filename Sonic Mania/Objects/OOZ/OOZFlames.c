@@ -68,8 +68,10 @@ void OOZFlames_Unknown2(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void OOZFlames_EditorDraw(void) {}
 
 void OOZFlames_EditorLoad(void) {}
+#endif
 
 void OOZFlames_Serialize(void) {}

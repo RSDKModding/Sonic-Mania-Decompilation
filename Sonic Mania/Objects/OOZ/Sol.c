@@ -443,9 +443,11 @@ void Sol_Unknown12(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void Sol_EditorDraw(void) {}
 
 void Sol_EditorLoad(void) {}
+#endif
 
 void Sol_Serialize(void)
 {

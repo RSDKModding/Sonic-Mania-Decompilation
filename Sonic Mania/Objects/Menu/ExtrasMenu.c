@@ -226,9 +226,11 @@ void ExtrasMenu_Start_BSS_Mania(void)
 
 void ExtrasMenu_Callback_BSS_Mania(void) { MenuSetup_StartTransition(ExtrasMenu_Start_BSS_Mania, 32); }
 
+#if RETRO_INCLUDE_EDITOR
 void ExtrasMenu_EditorDraw(void) {}
 
 void ExtrasMenu_EditorLoad(void) {}
+#endif
 
 void ExtrasMenu_Serialize(void) {}
 #endif

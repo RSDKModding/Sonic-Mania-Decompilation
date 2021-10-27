@@ -40,8 +40,10 @@ void TimePost_StaticUpdate(void);
 void TimePost_Draw(void);
 void TimePost_Create(void* data);
 void TimePost_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void TimePost_EditorDraw(void);
 void TimePost_EditorLoad(void);
+#endif
 void TimePost_Serialize(void);
 
 // Extra Entity Functions

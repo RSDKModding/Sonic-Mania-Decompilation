@@ -28,8 +28,10 @@ void OOZFlames_StaticUpdate(void);
 void OOZFlames_Draw(void);
 void OOZFlames_Create(void* data);
 void OOZFlames_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void OOZFlames_EditorDraw(void);
 void OOZFlames_EditorLoad(void);
+#endif
 void OOZFlames_Serialize(void);
 
 // Extra Entity Functions

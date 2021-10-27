@@ -32,6 +32,7 @@ void PhantomKing_StageLoad(void)
 
 }
 
+#if RETRO_INCLUDE_EDITOR
 void PhantomKing_EditorDraw(void)
 {
 
@@ -41,6 +42,7 @@ void PhantomKing_EditorLoad(void)
 {
 
 }
+#endif
 
 void PhantomKing_Serialize(void)
 {

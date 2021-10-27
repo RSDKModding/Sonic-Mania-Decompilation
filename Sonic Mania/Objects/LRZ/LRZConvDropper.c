@@ -32,6 +32,7 @@ void LRZConvDropper_StageLoad(void)
 
 }
 
+#if RETRO_INCLUDE_EDITOR
 void LRZConvDropper_EditorDraw(void)
 {
 
@@ -41,6 +42,7 @@ void LRZConvDropper_EditorLoad(void)
 {
 
 }
+#endif
 
 void LRZConvDropper_Serialize(void)
 {

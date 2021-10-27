@@ -32,6 +32,7 @@ void Canista_StageLoad(void)
 
 }
 
+#if RETRO_INCLUDE_EDITOR
 void Canista_EditorDraw(void)
 {
 
@@ -41,6 +42,7 @@ void Canista_EditorLoad(void)
 {
 
 }
+#endif
 
 void Canista_Serialize(void)
 {

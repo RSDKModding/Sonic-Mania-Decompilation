@@ -383,9 +383,11 @@ void PetalPile_StateDraw_Leaf(void)
     RSDK.DrawSprite(&entity->animator, NULL, false);
 }
 
+#if RETRO_INCLUDE_EDITOR
 void PetalPile_EditorDraw(void) {}
 
 void PetalPile_EditorLoad(void) {}
+#endif
 
 void PetalPile_Serialize(void)
 {

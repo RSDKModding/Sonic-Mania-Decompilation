@@ -307,9 +307,11 @@ void WoodChipper_State_Debris(void)
         destroyEntity(entity);
 }
 
+#if RETRO_INCLUDE_EDITOR
 void WoodChipper_EditorDraw(void) {}
 
 void WoodChipper_EditorLoad(void) {}
+#endif
 
 void WoodChipper_Serialize(void)
 {

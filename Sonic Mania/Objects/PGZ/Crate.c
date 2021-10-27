@@ -31,9 +31,9 @@ void Crate_Create(void *data)
 
     int32 frameID = entity->frameID;
     if (frameID == 3)
-        entity->collision = 4;
+        entity->collision = PLATFORM_C_4;
     else
-        entity->collision = 1;
+        entity->collision = PLATFORM_C_1;
     Platform_Create(NULL);
     entity->frameID = frameID;
 

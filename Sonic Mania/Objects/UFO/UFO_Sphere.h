@@ -45,8 +45,10 @@ void UFO_Sphere_StaticUpdate(void);
 void UFO_Sphere_Draw(void);
 void UFO_Sphere_Create(void* data);
 void UFO_Sphere_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void UFO_Sphere_EditorDraw(void);
 void UFO_Sphere_EditorLoad(void);
+#endif
 void UFO_Sphere_Serialize(void);
 
 // Extra Entity Functions

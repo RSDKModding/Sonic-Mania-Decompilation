@@ -32,6 +32,7 @@ void Gachapandora_StageLoad(void)
 
 }
 
+#if RETRO_INCLUDE_EDITOR
 void Gachapandora_EditorDraw(void)
 {
 
@@ -41,6 +42,7 @@ void Gachapandora_EditorLoad(void)
 {
 
 }
+#endif
 
 void Gachapandora_Serialize(void)
 {

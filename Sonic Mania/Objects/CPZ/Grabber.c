@@ -357,8 +357,10 @@ void Grabber_State_Unknown9(void)
     Grabber_CheckOnScreen();
 }
 
+#if RETRO_INCLUDE_EDITOR
 void Grabber_EditorDraw(void) {}
 
 void Grabber_EditorLoad(void) {}
+#endif
 
 void Grabber_Serialize(void) { RSDK_EDITABLE_VAR(Grabber, VAR_UINT8, direction); }

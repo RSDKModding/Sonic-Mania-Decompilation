@@ -76,8 +76,10 @@ void AnimalHBH_StageLoad(void)
     AnimalHBH->palCnt           = 0;
 }
 
+#if RETRO_INCLUDE_EDITOR
 void AnimalHBH_EditorDraw(void) {}
 
 void AnimalHBH_EditorLoad(void) {}
+#endif
 
 void AnimalHBH_Serialize(void) { RSDK_EDITABLE_VAR(AnimalHBH, VAR_UINT8, type); }

@@ -56,10 +56,10 @@ typedef struct {
     bool32 hidden;
     PlaneFilterTypes planeFilter;
     bool32 lrzConvPhys;
-    Animator brokenData;
-    Animator contentsData;
-    Animator overlayData;
-    Animator debrisData;
+    Animator animatorBox;
+    Animator animatorContents;
+    Animator animatorOverlay;
+    Animator animatorDebris;
     Entity *parent;
 } EntityItemBox;
 
@@ -73,8 +73,10 @@ void ItemBox_StaticUpdate(void);
 void ItemBox_Draw(void);
 void ItemBox_Create(void* data);
 void ItemBox_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void ItemBox_EditorDraw(void);
 void ItemBox_EditorLoad(void);
+#endif
 void ItemBox_Serialize(void);
 
 // Extra Entity Functions

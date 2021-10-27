@@ -183,8 +183,10 @@ void Wisp_Unknown7(void)
     Wisp_CheckOnScreen();
 }
 
+#if RETRO_INCLUDE_EDITOR
 void Wisp_EditorDraw(void) {}
 
 void Wisp_EditorLoad(void) {}
+#endif
 
 void Wisp_Serialize(void) { RSDK_EDITABLE_VAR(Wisp, VAR_UINT8, direction); }

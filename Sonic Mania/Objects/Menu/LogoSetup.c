@@ -125,8 +125,10 @@ void LogoSetup_Unknown4(void)
     RSDK.FillScreen(0, entity->timer, entity->timer - 0x80, entity->timer - 0x100);
 }
 
+#if RETRO_INCLUDE_EDITOR
 void LogoSetup_EditorDraw(void) {}
 
 void LogoSetup_EditorLoad(void) {}
+#endif
 
 void LogoSetup_Serialize(void) {}

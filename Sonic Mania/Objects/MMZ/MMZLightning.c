@@ -116,9 +116,11 @@ void MMZLightning_Unknown7(void)
         destroyEntity(entity);
 }
 
+#if RETRO_INCLUDE_EDITOR
 void MMZLightning_EditorDraw(void) {}
 
 void MMZLightning_EditorLoad(void) {}
+#endif
 
 void MMZLightning_Serialize(void) {}
 #endif

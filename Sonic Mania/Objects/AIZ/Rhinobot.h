@@ -40,8 +40,10 @@ void Rhinobot_StaticUpdate(void);
 void Rhinobot_Draw(void);
 void Rhinobot_Create(void* data);
 void Rhinobot_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void Rhinobot_EditorDraw(void);
 void Rhinobot_EditorLoad(void);
+#endif
 void Rhinobot_Serialize(void);
 
 // Extra Entity Functions

@@ -132,9 +132,11 @@ void SDashWheel_UpdateCB(int32 sfx)
         Camera_ShakeScreen(0, 0, 2);
 }
 
+#if RETRO_INCLUDE_EDITOR
 void SDashWheel_EditorDraw(void) {}
 
 void SDashWheel_EditorLoad(void) {}
+#endif
 
 void SDashWheel_Serialize(void)
 {

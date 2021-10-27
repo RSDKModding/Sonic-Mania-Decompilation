@@ -765,9 +765,11 @@ void Tuesday_State_Debris(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void Tuesday_EditorDraw(void) {}
 
 void Tuesday_EditorLoad(void) {}
+#endif
 
 void Tuesday_Serialize(void)
 {

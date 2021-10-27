@@ -29,8 +29,10 @@ void Jawz_StaticUpdate(void);
 void Jawz_Draw(void);
 void Jawz_Create(void* data);
 void Jawz_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void Jawz_EditorDraw(void);
 void Jawz_EditorLoad(void);
+#endif
 void Jawz_Serialize(void);
 
 // Extra Entity Functions

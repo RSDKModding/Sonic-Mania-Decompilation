@@ -32,6 +32,7 @@ void Hotaru_StageLoad(void)
 
 }
 
+#if RETRO_INCLUDE_EDITOR
 void Hotaru_EditorDraw(void)
 {
 
@@ -41,6 +42,7 @@ void Hotaru_EditorLoad(void)
 {
 
 }
+#endif
 
 void Hotaru_Serialize(void)
 {

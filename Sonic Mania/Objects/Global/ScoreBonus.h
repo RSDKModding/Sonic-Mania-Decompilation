@@ -26,8 +26,10 @@ void ScoreBonus_StaticUpdate(void);
 void ScoreBonus_Draw(void);
 void ScoreBonus_Create(void* data);
 void ScoreBonus_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void ScoreBonus_EditorDraw(void);
 void ScoreBonus_EditorLoad(void);
+#endif
 void ScoreBonus_Serialize(void);
 
 // Extra Entity Functions

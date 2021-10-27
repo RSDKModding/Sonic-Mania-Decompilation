@@ -78,8 +78,10 @@ void TAEmerald_Unknown2(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void TAEmerald_EditorDraw(void) {}
 
 void TAEmerald_EditorLoad(void) {}
+#endif
 
 void TAEmerald_Serialize(void) { RSDK_EDITABLE_VAR(TAEmerald, VAR_UINT8, color); }

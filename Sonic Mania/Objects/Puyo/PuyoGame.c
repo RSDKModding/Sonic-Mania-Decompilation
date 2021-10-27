@@ -54,8 +54,10 @@ void PuyoGame_StageLoad(void)
     RSDK.ResetEntitySlot(SLOT_ZONE, TYPE_BLANK, NULL);
 }
 
+#if RETRO_INCLUDE_EDITOR
 void PuyoGame_EditorDraw(void) {}
 
 void PuyoGame_EditorLoad(void) {}
+#endif
 
 void PuyoGame_Serialize(void) {}

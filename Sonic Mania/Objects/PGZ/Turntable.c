@@ -142,9 +142,11 @@ void Turntable_SetupSize(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void Turntable_EditorDraw(void) {}
 
 void Turntable_EditorLoad(void) {}
+#endif
 
 void Turntable_Serialize(void)
 {

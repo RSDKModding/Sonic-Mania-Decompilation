@@ -288,9 +288,11 @@ void UIResPicker_Unknown8(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void UIResPicker_EditorDraw(void) {}
 
 void UIResPicker_EditorLoad(void) {}
+#endif
 
 void UIResPicker_Serialize(void)
 {

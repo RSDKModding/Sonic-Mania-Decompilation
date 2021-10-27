@@ -53,9 +53,11 @@ void AIZEggRobo_Create(void *data)
 
 void AIZEggRobo_StageLoad(void) { AIZEggRobo->aniFrames = RSDK.LoadSpriteAnimation("AIZ/AIZEggRobo.bin", SCOPE_STAGE); }
 
+#if RETRO_INCLUDE_EDITOR
 void AIZEggRobo_EditorDraw(void) { AIZEggRobo_Draw(); }
 
 void AIZEggRobo_EditorLoad(void) { AIZEggRobo->aniFrames = RSDK.LoadSpriteAnimation("AIZ/AIZEggRobo.bin", SCOPE_STAGE); }
+#endif
 
 void AIZEggRobo_Serialize(void)
 {

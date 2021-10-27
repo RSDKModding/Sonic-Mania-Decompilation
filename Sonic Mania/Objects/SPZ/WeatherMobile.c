@@ -32,6 +32,7 @@ void WeatherMobile_StageLoad(void)
 
 }
 
+#if RETRO_INCLUDE_EDITOR
 void WeatherMobile_EditorDraw(void)
 {
 
@@ -41,6 +42,7 @@ void WeatherMobile_EditorLoad(void)
 {
 
 }
+#endif
 
 void WeatherMobile_Serialize(void)
 {

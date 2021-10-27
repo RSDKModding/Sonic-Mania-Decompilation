@@ -176,8 +176,10 @@ void ContinueSetup_Unknown4(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void ContinueSetup_EditorDraw(void) {}
 
 void ContinueSetup_EditorLoad(void) {}
+#endif
 
 void ContinueSetup_Serialize(void) {}

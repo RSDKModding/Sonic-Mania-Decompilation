@@ -34,8 +34,10 @@ void AIZEncoreTutorial_StaticUpdate(void);
 void AIZEncoreTutorial_Draw(void);
 void AIZEncoreTutorial_Create(void* data);
 void AIZEncoreTutorial_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void AIZEncoreTutorial_EditorDraw(void);
 void AIZEncoreTutorial_EditorLoad(void);
+#endif
 void AIZEncoreTutorial_Serialize(void);
 
 // Extra Entity Functions

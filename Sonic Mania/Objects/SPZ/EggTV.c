@@ -72,9 +72,11 @@ void EggTV_DrawTV(void)
     entity->drawFX = FX_NONE;
 }
 
+#if RETRO_INCLUDE_EDITOR
 void EggTV_EditorDraw(void) {}
 
 void EggTV_EditorLoad(void) {}
+#endif
 
 void EggTV_Serialize(void)
 {

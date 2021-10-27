@@ -259,9 +259,11 @@ void Acetone_Unknown7(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void Acetone_EditorDraw(void) {}
 
 void Acetone_EditorLoad(void) {}
+#endif
 
 void Acetone_Serialize(void)
 {

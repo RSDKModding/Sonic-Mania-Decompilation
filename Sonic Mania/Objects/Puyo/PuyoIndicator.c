@@ -78,8 +78,10 @@ void PuyoIndicator_Unknown3(void)
     entity->position.y = entity->startPos.y;
 }
 
+#if RETRO_INCLUDE_EDITOR
 void PuyoIndicator_EditorDraw(void) {}
 
 void PuyoIndicator_EditorLoad(void) {}
+#endif
 
 void PuyoIndicator_Serialize(void) { RSDK_EDITABLE_VAR(PuyoIndicator, VAR_UINT8, playerID); }

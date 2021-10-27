@@ -398,9 +398,11 @@ void UIVsCharSelector_Unknown11(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void UIVsCharSelector_EditorDraw(void) {}
 
 void UIVsCharSelector_EditorLoad(void) {}
+#endif
 
 void UIVsCharSelector_Serialize(void)
 {

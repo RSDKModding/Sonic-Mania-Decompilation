@@ -31,8 +31,10 @@ void WallBumper_StaticUpdate(void);
 void WallBumper_Draw(void);
 void WallBumper_Create(void* data);
 void WallBumper_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void WallBumper_EditorDraw(void);
 void WallBumper_EditorLoad(void);
+#endif
 void WallBumper_Serialize(void);
 
 // Extra Entity Functions

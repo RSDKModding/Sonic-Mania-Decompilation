@@ -1100,8 +1100,10 @@ void CrimsonEye_StateDraw_Arrow(void)
         RSDK.DrawSprite(&entity->animator, NULL, false);
 }
 
+#if RETRO_INCLUDE_EDITOR
 void CrimsonEye_EditorDraw(void) {}
 
 void CrimsonEye_EditorLoad(void) {}
+#endif
 
 void CrimsonEye_Serialize(void) { RSDK_EDITABLE_VAR(CrimsonEye, VAR_ENUM, type); }

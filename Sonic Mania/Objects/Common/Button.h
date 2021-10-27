@@ -46,8 +46,10 @@ void Button_StaticUpdate(void);
 void Button_Draw(void);
 void Button_Create(void* data);
 void Button_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void Button_EditorDraw(void);
 void Button_EditorLoad(void);
+#endif
 void Button_Serialize(void);
 
 // Extra Entity Functions

@@ -36,8 +36,10 @@ void Aquis_StaticUpdate(void);
 void Aquis_Draw(void);
 void Aquis_Create(void* data);
 void Aquis_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void Aquis_EditorDraw(void);
 void Aquis_EditorLoad(void);
+#endif
 void Aquis_Serialize(void);
 
 // Extra Entity Functions

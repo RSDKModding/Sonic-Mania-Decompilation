@@ -46,8 +46,10 @@ void SizeLaser_StaticUpdate(void);
 void SizeLaser_Draw(void);
 void SizeLaser_Create(void* data);
 void SizeLaser_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void SizeLaser_EditorDraw(void);
 void SizeLaser_EditorLoad(void);
+#endif
 void SizeLaser_Serialize(void);
 
 // Extra Entity Functions

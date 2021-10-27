@@ -54,8 +54,10 @@ void AIZRockPile_StaticUpdate(void);
 void AIZRockPile_Draw(void);
 void AIZRockPile_Create(void *data);
 void AIZRockPile_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void AIZRockPile_EditorDraw(void);
 void AIZRockPile_EditorLoad(void);
+#endif
 void AIZRockPile_Serialize(void);
 
 // Extra Entity Functions

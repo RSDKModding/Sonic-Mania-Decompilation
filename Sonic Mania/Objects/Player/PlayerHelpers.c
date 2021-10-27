@@ -86,8 +86,10 @@ bool32 PlayerHelpers_CheckStageReload(void)
     return false;
 }
 
+#if RETRO_INCLUDE_EDITOR
 void PlayerHelpers_EditorDraw(void) {}
 
 void PlayerHelpers_EditorLoad(void) {}
+#endif
 
 void PlayerHelpers_Serialize(void) {}

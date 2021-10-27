@@ -134,8 +134,10 @@ void ThoughtBubble_Unknown5(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void ThoughtBubble_EditorDraw(void) {}
 
 void ThoughtBubble_EditorLoad(void) {}
+#endif
 
 void ThoughtBubble_Serialize(void) {}

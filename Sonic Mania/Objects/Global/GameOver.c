@@ -337,8 +337,10 @@ void GameOver_State_ExitLetters(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void GameOver_EditorDraw(void) {}
 
 void GameOver_EditorLoad(void) {}
+#endif
 
 void GameOver_Serialize(void) {}

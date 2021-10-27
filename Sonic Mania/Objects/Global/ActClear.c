@@ -1002,8 +1002,10 @@ void ActClear_ForcePlayerOnScreen(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void ActClear_EditorDraw(void) {}
 
 void ActClear_EditorLoad(void) {}
+#endif
 
 void ActClear_Serialize(void) {}

@@ -281,9 +281,11 @@ void TransportTube_State_Type6(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void TransportTube_EditorDraw(void) {}
 
 void TransportTube_EditorLoad(void) {}
+#endif
 
 void TransportTube_Serialize(void)
 {

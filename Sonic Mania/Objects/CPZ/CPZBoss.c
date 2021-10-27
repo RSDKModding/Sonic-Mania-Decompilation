@@ -528,8 +528,10 @@ void CPZBoss_State_Unknown12(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void CPZBoss_EditorDraw(void) {}
 
 void CPZBoss_EditorLoad(void) {}
+#endif
 
 void CPZBoss_Serialize(void) { RSDK_EDITABLE_VAR(CPZBoss, VAR_UINT8, type); }

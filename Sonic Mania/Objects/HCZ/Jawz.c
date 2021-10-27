@@ -140,8 +140,10 @@ void Jawz_State_Main(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void Jawz_EditorDraw(void) {}
 
 void Jawz_EditorLoad(void) {}
+#endif
 
 void Jawz_Serialize(void) { RSDK_EDITABLE_VAR(Jawz, VAR_UINT8, triggerDir); }

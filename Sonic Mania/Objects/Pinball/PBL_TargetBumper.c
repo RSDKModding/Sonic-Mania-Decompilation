@@ -199,9 +199,11 @@ void PBL_TargetBumper_Unknown4(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void PBL_TargetBumper_EditorDraw(void) {}
 
 void PBL_TargetBumper_EditorLoad(void) {}
+#endif
 
 void PBL_TargetBumper_Serialize(void) { RSDK_EDITABLE_VAR(PBL_TargetBumper, VAR_ENUM, angle); }
 #endif

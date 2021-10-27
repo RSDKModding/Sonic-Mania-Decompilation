@@ -140,6 +140,7 @@ void AIZTornado_Unknown3(void)
         AIZTornado_Unknown2();
 }
 
+#if RETRO_INCLUDE_EDITOR
 void AIZTornado_EditorDraw(void)
 {
     RSDK_THIS(AIZTornado);
@@ -149,5 +150,6 @@ void AIZTornado_EditorDraw(void)
 }
 
 void AIZTornado_EditorLoad(void) { AIZTornado->aniFrames = RSDK.LoadSpriteAnimation("AIZ/AIZTornado.bin", SCOPE_STAGE); }
+#endif
 
 void AIZTornado_Serialize(void) {}

@@ -51,8 +51,10 @@ void FlingRamp_StageLoad(void)
     FlingRamp->hitbox.bottom = 16;
 }
 
+#if RETRO_INCLUDE_EDITOR
 void FlingRamp_EditorDraw(void) {}
 
 void FlingRamp_EditorLoad(void) {}
+#endif
 
 void FlingRamp_Serialize(void) { RSDK_EDITABLE_VAR(FlingRamp, VAR_UINT8, direction); }

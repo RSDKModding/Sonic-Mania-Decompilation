@@ -25,8 +25,10 @@ void TubeSpring_StaticUpdate(void);
 void TubeSpring_Draw(void);
 void TubeSpring_Create(void* data);
 void TubeSpring_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void TubeSpring_EditorDraw(void);
 void TubeSpring_EditorLoad(void);
+#endif
 void TubeSpring_Serialize(void);
 
 // Extra Entity Functions

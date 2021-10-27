@@ -328,9 +328,11 @@ void Press_HandleCrates(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void Press_EditorDraw(void) {}
 
 void Press_EditorLoad(void) {}
+#endif
 
 void Press_Serialize(void)
 {

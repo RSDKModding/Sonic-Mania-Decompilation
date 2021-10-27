@@ -14,16 +14,16 @@ void PlatformNode_Create(void *data) {}
 
 void PlatformNode_StageLoad(void) {}
 
-void PlatformNode_EditorDraw(void) {}
+void PlatformNode_EditorDraw(void)
+{
+    RSDK_THIS(PlatformNode);
+    RSDK.SetSpriteAnimation(PlatformNode->spriteIndex, 0, &entity->animator, false, 7);
+    RSDK.DrawSprite(&entity->animator, NULL, false);
+}
 
 void PlatformNode_EditorLoad(void)
 {
-    // Dont have any code to prove this is what it was like, but its a 50/50 chance
-    // PlatformMode->textSpriteIndex = RSDK.LoadSpriteAnimation("some path to a bin", SCOPE_STAGE);
-
-    //foreach_all(PlatformNode->objectID, entity) {
-    //    RSDK.SetSpriteAnimation(PlatformNode->textSpriteIndex, 0, &entity->animator, true, 0);
-    //}
+    PlatformNode->spriteIndex = RSDK.LoadSpriteAnimation("Editor/EditorIcons.bin", SCOPE_STAGE);
 }
 
 void PlatformNode_Serialize(void) { RSDK_EDITABLE_VAR(PlatformNode, VAR_ENUM, nodeFlag); }

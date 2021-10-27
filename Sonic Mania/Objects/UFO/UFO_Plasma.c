@@ -63,8 +63,10 @@ void UFO_Plasma_StageLoad(void)
     RSDK.SetDrawLayerProperties(3, false, NULL);
 }
 
+#if RETRO_INCLUDE_EDITOR
 void UFO_Plasma_EditorDraw(void) {}
 
 void UFO_Plasma_EditorLoad(void) {}
+#endif
 
 void UFO_Plasma_Serialize(void) {}

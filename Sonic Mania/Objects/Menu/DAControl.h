@@ -33,8 +33,10 @@ void DAControl_StaticUpdate(void);
 void DAControl_Draw(void);
 void DAControl_Create(void* data);
 void DAControl_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void DAControl_EditorDraw(void);
 void DAControl_EditorLoad(void);
+#endif
 void DAControl_Serialize(void);
 
 // Extra Entity Functions

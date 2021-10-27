@@ -107,8 +107,10 @@ void UIControl_StaticUpdate(void);
 void UIControl_Draw(void);
 void UIControl_Create(void* data);
 void UIControl_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void UIControl_EditorDraw(void);
 void UIControl_EditorLoad(void);
+#endif
 void UIControl_Serialize(void);
 
 // Extra Entity Functions

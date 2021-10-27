@@ -53,8 +53,10 @@ void UIMedallionPanel_DrawPanel(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void UIMedallionPanel_EditorDraw(void) {}
 
 void UIMedallionPanel_EditorLoad(void) {}
+#endif
 
 void UIMedallionPanel_Serialize(void) {}

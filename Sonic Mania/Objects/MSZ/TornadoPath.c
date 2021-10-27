@@ -19,7 +19,7 @@ void TornadoPath_Create(void *data)
     RSDK_THIS(TornadoPath);
     if (!RSDK_sceneInfo->inEditor) {
         switch (entity->type) {
-            case 0:
+            case TORNADOPATH_0:
                 if (!StarPost->postIDs[0]
                     && PlayerHelpers_CheckPlayerPos(entity->position.x - (entity->size.x >> 1), entity->position.y - (entity->size.y >> 1), 
                                                     entity->position.x + (entity->size.x >> 1), entity->position.y + (entity->size.y >> 1))) {
@@ -38,28 +38,28 @@ void TornadoPath_Create(void *data)
                     entity->targetSpeedStore = entity->targetSpeed;
                 }
                 break;
-            case 1: entity->active = ACTIVE_NEVER; break;
-            case 2:
-            case 10:
+            case TORNADOPATH_1: entity->active = ACTIVE_NEVER; break;
+            case TORNADOPATH_2:
+            case TORNADOPATH_10:
                 entity->active = ACTIVE_NEVER;
                 entity->timer  = 1;
                 entity->state  = TornadoPath_Unknown3;
                 break;
-            case 3:
+            case TORNADOPATH_3:
                 entity->active = ACTIVE_NEVER;
                 entity->state  = TornadoPath_State_ReturnCamera;
                 break;
-            case 4:
+            case TORNADOPATH_4:
                 entity->active = ACTIVE_NEVER;
                 entity->state  = TornadoPath_Unknown5;
                 break;
-            case 5:
-            case 6:
+            case TORNADOPATH_5:
+            case TORNADOPATH_6:
                 entity->active = ACTIVE_NEVER;
                 entity->state  = TornadoPath_Unknown6;
                 break;
-            case 7:
-            case 8:
+            case TORNADOPATH_7:
+            case TORNADOPATH_8:
                 if (StarPost->postIDs[0]
                     || !PlayerHelpers_CheckPlayerPos(entity->position.y - (entity->size.y >> 1), entity->position.x - (entity->size.x >> 1),
                                                      entity->position.x + (entity->size.x >> 1), entity->position.y + (entity->size.y >> 1))) {
@@ -73,21 +73,21 @@ void TornadoPath_Create(void *data)
                     entity->targetSpeedStore = entity->targetSpeed;
                 }
                 break;
-            case 9:
+            case TORNADOPATH_9:
                 entity->active           = ACTIVE_NEVER;
                 entity->timer            = 1;
                 entity->state            = TornadoPath_Unknown9;
                 entity->targetSpeedStore = entity->targetSpeed;
                 break;
-            case 11:
+            case TORNADOPATH_11:
                 entity->active = ACTIVE_NEVER;
                 entity->state  = TornadoPath_Unknown11;
                 break;
-            case 12:
+            case TORNADOPATH_12:
                 entity->active = ACTIVE_NEVER;
                 entity->state  = TornadoPath_Unknown12;
                 break;
-            case 13:
+            case TORNADOPATH_13:
                 entity->active = ACTIVE_NEVER;
                 entity->state  = TornadoPath_Unknown13;
                 break;
@@ -143,7 +143,7 @@ void TornadoPath_Unknown2(void)
 void TornadoPath_Unknown3(void)
 {
     RSDK_THIS(TornadoPath);
-    if (entity->type == 10) {
+    if (entity->type == TORNADOPATH_10) {
         foreach_active(Tornado, tornado) { tornado->drawOrder = Zone->playerDrawHigh; }
     }
 
@@ -221,10 +221,10 @@ void TornadoPath_Unknown6(void)
     foreach_all(TornadoPath, node)
     {
         bool32 flag = false;
-        if (entity->type == 5)
-            flag = node->type == 7;
+        if (entity->type == TORNADOPATH_5)
+            flag = node->type == TORNADOPATH_7;
         else
-            flag = node->type == 8;
+            flag = node->type == TORNADOPATH_8;
         if (flag)
             node->active = ACTIVE_XBOUNDS;
     }
@@ -271,7 +271,7 @@ void TornadoPath_Unknown8(void)
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     ++entity->timer;
     if (entity->timer == 60) {
-        foreach_active(Tornado, tornado)
+        foreach_all(Tornado, tornado)
         {
             tornado->position.x = player1->position.x - 0x1400000;
             tornado->position.y = player1->position.y + 0x400000;
@@ -292,10 +292,10 @@ void TornadoPath_Unknown8(void)
         entity->timer       = 0;
         int32 velX            = 0;
         int32 velY            = 0;
-        if (entity->type == 8) {
+        if (entity->type == TORNADOPATH_8) {
             foreach_all(TornadoPath, node)
             {
-                if (node->type == 9) {
+                if (node->type == TORNADOPATH_9) {
                     velX         = node->position.x - player1->position.x;
                     velY         = node->position.y - player1->position.y;
                     node->active = ACTIVE_NORMAL;
@@ -357,7 +357,7 @@ void TornadoPath_Unknown11(void)
         int32 velocityY = 0;
         foreach_all(TornadoPath, node)
         {
-            if (node->type == 9) {
+            if (node->type == TORNADOPATH_9) {
                 velocityX    = node->position.x - player1->position.x;
                 velocityY    = node->position.y - player1->position.y;
                 node->active = ACTIVE_NORMAL;
@@ -385,7 +385,7 @@ void TornadoPath_Unknown12(void)
         foreach_all(MSZCutsceneST, cutscene)
         {
             cutscene->active = ACTIVE_NORMAL;
-            // cutscene->nodePtr = entity;
+            cutscene->nodePtr = (Entity *)entity;
         }
     }
 }
@@ -394,12 +394,37 @@ void TornadoPath_Unknown13(void)
 {
     TornadoPath->field_8.x = 0;
     TornadoPath->field_8.y = 0;
-    TornadoPath->field_30  = 1;
+    TornadoPath->flag  = true;
 }
 
-void TornadoPath_EditorDraw(void) {}
+void TornadoPath_EditorDraw(void)
+{
+    RSDK_THIS(TornadoPath);
+    RSDK.SetSpriteAnimation(TornadoPath->aniFrames, 0, &entity->animator, true, 7);
+    RSDK.DrawSprite(&entity->animator, NULL, false);
+}
 
-void TornadoPath_EditorLoad(void) {}
+void TornadoPath_EditorLoad(void)
+{
+    TornadoPath->aniFrames = RSDK.LoadSpriteAnimation("Editor/EditorIcons.bin", SCOPE_STAGE);
+    RSDK.SetSpriteAnimation(TornadoPath->aniFrames, 0, &TornadoPath->animator, true, 7);
+
+    RSDK_ACTIVE_VAR(TornadoPath, type);
+    RSDK_ENUM_VAR(TORNADOPATH_0);
+    RSDK_ENUM_VAR(TORNADOPATH_1);
+    RSDK_ENUM_VAR(TORNADOPATH_2);
+    RSDK_ENUM_VAR(TORNADOPATH_3);
+    RSDK_ENUM_VAR(TORNADOPATH_4);
+    RSDK_ENUM_VAR(TORNADOPATH_5);
+    RSDK_ENUM_VAR(TORNADOPATH_6);
+    RSDK_ENUM_VAR(TORNADOPATH_7);
+    RSDK_ENUM_VAR(TORNADOPATH_8);
+    RSDK_ENUM_VAR(TORNADOPATH_9);
+    RSDK_ENUM_VAR(TORNADOPATH_10);
+    RSDK_ENUM_VAR(TORNADOPATH_11);
+    RSDK_ENUM_VAR(TORNADOPATH_12);
+    RSDK_ENUM_VAR(TORNADOPATH_13);
+}
 
 void TornadoPath_Serialize(void)
 {

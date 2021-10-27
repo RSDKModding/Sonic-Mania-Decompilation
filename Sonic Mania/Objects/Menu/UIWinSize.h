@@ -47,8 +47,10 @@ void UIWinSize_StaticUpdate(void);
 void UIWinSize_Draw(void);
 void UIWinSize_Create(void* data);
 void UIWinSize_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void UIWinSize_EditorDraw(void);
 void UIWinSize_EditorLoad(void);
+#endif
 void UIWinSize_Serialize(void);
 
 // Extra Entity Functions

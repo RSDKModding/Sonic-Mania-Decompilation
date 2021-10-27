@@ -176,9 +176,17 @@ void SeltzerBottle_Unknown2(void)
     }
 }
 
-void SeltzerBottle_EditorDraw(void) {}
+void SeltzerBottle_EditorDraw(void)
+{
+    RSDK_THIS(SeltzerBottle);
+    RSDK.SetSpriteAnimation(SeltzerBottle->aniFrames, 0, &entity->animator1, true, 0);
+    RSDK.SetSpriteAnimation(SeltzerBottle->aniFrames, 1, &entity->animator2, true, 0);
+    RSDK.SetSpriteAnimation(SeltzerBottle->aniFrames, 2, &entity->animator3, true, 0);
+    
+    SeltzerBottle_Draw();
+}
 
-void SeltzerBottle_EditorLoad(void) {}
+void SeltzerBottle_EditorLoad(void) { SeltzerBottle->aniFrames = RSDK.LoadSpriteAnimation("MSZ/Seltzer.bin", SCOPE_STAGE); }
 
 void SeltzerBottle_Serialize(void)
 {

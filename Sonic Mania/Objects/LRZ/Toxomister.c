@@ -32,6 +32,7 @@ void Toxomister_StageLoad(void)
 
 }
 
+#if RETRO_INCLUDE_EDITOR
 void Toxomister_EditorDraw(void)
 {
 
@@ -41,6 +42,7 @@ void Toxomister_EditorLoad(void)
 {
 
 }
+#endif
 
 void Toxomister_Serialize(void)
 {

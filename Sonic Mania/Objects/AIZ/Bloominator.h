@@ -31,8 +31,10 @@ void Bloominator_StaticUpdate(void);
 void Bloominator_Draw(void);
 void Bloominator_Create(void* data);
 void Bloominator_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void Bloominator_EditorDraw(void);
 void Bloominator_EditorLoad(void);
+#endif
 void Bloominator_Serialize(void);
 
 // Extra Entity Functions

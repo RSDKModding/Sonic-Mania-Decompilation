@@ -41,8 +41,10 @@ void Summary_StaticUpdate(void);
 void Summary_Draw(void);
 void Summary_Create(void* data);
 void Summary_StageLoad(void);
+#if RETRO_INCLUDE_EDITOR
 void Summary_EditorDraw(void);
 void Summary_EditorLoad(void);
+#endif
 void Summary_Serialize(void);
 
 // Extra Entity Functions

@@ -32,6 +32,7 @@ void BuckwildBall_StageLoad(void)
 
 }
 
+#if RETRO_INCLUDE_EDITOR
 void BuckwildBall_EditorDraw(void)
 {
 
@@ -41,6 +42,7 @@ void BuckwildBall_EditorLoad(void)
 {
 
 }
+#endif
 
 void BuckwildBall_Serialize(void)
 {

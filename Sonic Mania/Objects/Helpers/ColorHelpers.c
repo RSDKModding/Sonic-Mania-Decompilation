@@ -32,6 +32,7 @@ void ColorHelpers_StageLoad(void)
 
 }
 
+#if RETRO_INCLUDE_EDITOR
 void ColorHelpers_EditorDraw(void)
 {
 
@@ -41,6 +42,7 @@ void ColorHelpers_EditorLoad(void)
 {
 
 }
+#endif
 
 void ColorHelpers_Serialize(void)
 {

@@ -54,8 +54,8 @@ void LRZ2Setup_StaticUpdate(void)
     {
         if (player->onGround) {
             Hitbox *playerHitbox = Player_GetHitbox(player);
-            uint8 behaviour       = 0;
-            int32 tileInfo         = 0;
+            uint8 behaviour      = 0;
+            int32 tileInfo       = 0;
 
             LRZ2Setup_GetTileInfo(&tileInfo, player->collisionPlane, player->position.x, (playerHitbox->bottom << 16) + player->position.y,
                                   player->moveOffset.x, player->moveOffset.y, &behaviour);
@@ -202,16 +202,20 @@ EntityButton *LRZ2Setup_HandleTagSetup(int32 tag, Entity *entityPtr)
         if (Button) {
             foreach_all(Button, button)
             {
-                taggedEntity = button;
-                foreach_break;
+                if (button->tag == tag) {
+                    taggedEntity = button;
+                    foreach_break;
+                }
             }
         }
 
         if (TurretSwitch && !taggedEntity) {
             foreach_all(TurretSwitch, turretSwitch)
             {
-                taggedEntity = (EntityButton *)turretSwitch;
-                foreach_break;
+                // if (turretSwitch->buttonTag == tag) {
+                //     taggedEntity = (EntityButton *)turretSwitch;
+                //     foreach_break;
+                // }
             }
         }
     }
