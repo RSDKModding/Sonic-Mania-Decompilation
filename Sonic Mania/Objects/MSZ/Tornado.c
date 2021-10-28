@@ -268,7 +268,7 @@ void Tornado_Unknown6(void)
         default: break;
     }
 
-    if (entity->field_6C == 1) {
+    if (entity->field_6C) {
         entity->position.x += TornadoPath->field_8.x;
         entity->position.y += TornadoPath->field_8.y;
         if (player1->stateInput) {
@@ -307,7 +307,7 @@ void Tornado_Unknown6(void)
         player1->position.x += TornadoPath->field_8.x;
         player1->position.y += entity->field_80;
         player1->flailing = 0;
-        entity->field_6C  = 1;
+        entity->field_6C  = true;
         if (velY > 0x10000) {
             entity->field_5C = 0;
             entity->field_78 = 0x20000;

@@ -123,9 +123,9 @@ void DebugMode_StageLoad(void)
     DebugMode->itemCount   = 0;
     DebugMode->debugActive = false;
 
-    for (int32 i = 0; i < 0x100; ++i) {
+    for (int32 i = 0; i < DebugMode_ObjectLimit; ++i) {
         DebugMode->objectIDs[i] = TYPE_BLANK;
-        DebugMode->draw[i]      = NULL;
+        DebugMode->draw[i]      = StateMachine_None;
         DebugMode->spawn[i]     = DebugMode_NullState;
     }
 }
@@ -133,7 +133,7 @@ void DebugMode_StageLoad(void)
 void DebugMode_NullState(void) {}
 void DebugMode_AddObject(uint16 id, void (*draw)(void), void (*spawn)(void))
 {
-    if (DebugMode->itemCount < 0x100) {
+    if (DebugMode->itemCount < DebugMode_ObjectLimit) {
         DebugMode->objectIDs[DebugMode->itemCount] = id;
         DebugMode->draw[DebugMode->itemCount]      = draw;
         DebugMode->spawn[DebugMode->itemCount]     = spawn;

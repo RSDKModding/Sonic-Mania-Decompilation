@@ -174,16 +174,17 @@ bool32 MSZCutsceneST_CutsceneState_Unknown3(EntityCutsceneSeq *host)
 
     if (!host->timer) {
         Music_PlayTrack(TRACK_HBHMISCHIEF);
-        RSDK.SetSpriteAnimation(player1->spriteIndex, 42, &player1->playerAnimator, false, 0);
+        RSDK.SetSpriteAnimation(player1->spriteIndex, ANI_RIDE, &player1->playerAnimator, false, 0);
         player1->direction = FLIP_NONE;
     }
+
     if (!host->field_6C[0]) {
         int x = (tornado->position.x & 0xFFFF0000) + 0x200000;
         if (player1->position.x != x)
             player1->position.x += (x - player1->position.x) >> 1;
 
         if (abs(player1->position.x - x) < 0x10000) {
-            player1->position.x   = abs(player1->position.x - x);
+            player1->position.x   = x;
             MSZCutsceneST->value4 = tornado->position;
             host->field_68        = host->timer;
             host->field_6C[0]     = 1;
@@ -216,7 +217,6 @@ bool32 MSZCutsceneST_CutsceneState_Unknown4(EntityCutsceneSeq *host)
     EntityTornadoPath *nodePtr = (EntityTornadoPath *)MSZCutsceneST->nodePtr;
     int x                      = nodePtr->position.x - 0x600000;
     int y                      = nodePtr->position.y + 0x300000;
-
     if (host->timer - host->field_68 == 120 && !host->field_6C[1]) {
         tornado->position.x = x;
         tornado->position.y = y;
@@ -227,6 +227,12 @@ bool32 MSZCutsceneST_CutsceneState_Unknown4(EntityCutsceneSeq *host)
         MathHelpers_Lerp4(&tornado->position, 255 * (host->timer - host->field_68) / 120, MSZCutsceneST->value4.x, MSZCutsceneST->value4.y, x, y);
         tornado->position.x &= 0xFFFF0000;
         tornado->position.y &= 0xFFFF0000;
+
+        player1->position.x = (tornado->position.x & 0xFFFF0000) + 0x200000;
+        if (player1->characterID == ID_TAILS)
+            player1->position.y = (tornado->position.y & 0xFFFF0000) - 0x2C0000;
+        else
+            player1->position.y = (tornado->position.y & 0xFFFF0000) - 0x300000;
     }
     return false;
 }
@@ -373,7 +379,7 @@ bool32 MSZCutsceneST_CutsceneState_ShowRougeB(EntityCutsceneSeq *host)
     rouge->position.x = armadiloid->position.x + 0x40000;
     rouge->position.y = armadiloid->position.y - 0x200000;
 
-    if (MSZCutsceneST->projectile && MSZCutsceneST->projectile->position.x <= tornado->position.x + 0x300000) {
+    if (MSZCutsceneST->projectile && MSZCutsceneST->projectile->position.y < tornado->position.y - 0x100000) {
         destroyEntity(MSZCutsceneST->projectile);
         return true;
     }
@@ -532,7 +538,7 @@ bool32 MSZCutsceneST_CutsceneState_Unknown6(EntityCutsceneSeq *host)
         debris->drawOrder = Zone->drawOrderLow;
         debris->state     = Debris_State_LightningSpark;
         debris->timer     = 53;
-        // RSDK.SetSpriteAnimation(UberCaterkiller->field_1E, 4, &debris->animator, true, 0);
+        RSDK.SetSpriteAnimation(UberCaterkiller->aniFrames, 4, &debris->animator, true, 0);
         MSZCutsceneST->projectile = (Entity *)debris;
     }
 
@@ -590,7 +596,7 @@ bool32 MSZCutsceneST_CutsceneState_Unknown8(EntityCutsceneSeq *host)
 bool32 MSZCutsceneST_CutsceneState_Unknown9(EntityCutsceneSeq *host)
 {
     if (host->timer == 10) {
-        MSZSetup_Unknown21();
+        MSZSetup_StoreMSZ1STScrollPos();
         return true;
     }
     return false;

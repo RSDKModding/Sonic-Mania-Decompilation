@@ -410,7 +410,7 @@ void MSZSetup_HandleRestart(void)
         bg2->scrollInfo[i].scrollPos = globals->parallaxOffset[id++];
     }
 
-    foreach_all(ParallaxSprite, parallaxSprite) { parallaxSprite->parallaxFactor.x = globals->parallaxOffset[id++]; }
+    foreach_all(ParallaxSprite, parallaxSprite) { parallaxSprite->scrollPos.x = globals->parallaxOffset[id++]; }
 }
 
 void MSZSetup_Unknown9(void)
@@ -557,11 +557,11 @@ void MSZSetup_Unknown18(void)
         player1->left      = false;
         player1->direction = FLIP_NONE;
         entity->timer      = 0;
-        entity->state      = MSZSetup_Unknown19;
+        entity->state      = MSZSetup_StoreMSZ1EScrollPos;
     }
 }
 
-void MSZSetup_Unknown19(void)
+void MSZSetup_StoreMSZ1EScrollPos(void)
 {
     RSDK_THIS(MSZSetup);
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
@@ -594,7 +594,7 @@ void MSZSetup_Unknown19(void)
 }
 #endif
 
-void MSZSetup_Unknown21(void)
+void MSZSetup_StoreMSZ1STScrollPos(void)
 {
     int id = 0;
 
@@ -603,7 +603,7 @@ void MSZSetup_Unknown21(void)
         globals->parallaxOffset[id++] = bg1->scrollInfo[i].scrollPos;
     }
 
-    TileLayer *bg2 = RSDK.GetSceneLayer(0);
+    TileLayer *bg2 = RSDK.GetSceneLayer(1);
     for (int i = 0; i < bg2->scrollInfoCount; ++i) {
         globals->parallaxOffset[id++] = bg2->scrollInfo[i].scrollPos;
     }

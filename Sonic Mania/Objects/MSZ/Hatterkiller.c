@@ -129,7 +129,7 @@ void Hatterkiller_Create(void *data)
         }
         entity->animators[0] = &entity->animator1;
 
-        if (data >= 0)
+        if (voidToInt(data) >= 0)
             RSDK.SetSpriteAnimation(Hatterkiller->aniFrames, 3, &entity->animator1, true, 0);
         else
             RSDK.SetSpriteAnimation(Hatterkiller->aniFrames, 2, &entity->animator1, true, 0);

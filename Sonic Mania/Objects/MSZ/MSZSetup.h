@@ -87,9 +87,9 @@ void MSZSetup_Unknown14(void);
 void MSZSetup_Unknown16(void);
 void MSZSetup_Unknown17(void);
 void MSZSetup_Unknown18(void);
-void MSZSetup_Unknown19(void);
+void MSZSetup_StoreMSZ1EScrollPos(void);
 #endif
-void MSZSetup_Unknown21(void);
+void MSZSetup_StoreMSZ1STScrollPos(void);
 
 void MSZSetup_Player_State_Pilot(void);
 void MSZSetup_Player_State_PostCrashJumpIn(void);
