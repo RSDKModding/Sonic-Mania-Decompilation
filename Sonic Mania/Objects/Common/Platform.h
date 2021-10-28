@@ -105,14 +105,14 @@ void Platform_CollisionState_AllSolid(void);
 void Platform_CollisionState_AllHazard(void);
 void Platform_CollisionState_BottomHazard(void);
 void Platform_CollisionState_LRHazard(void);
-void Platform_CollisionState_None(void);
+void Platform_CollisionState_Tiles(void);
 void Platform_CollisionState_Sticky(void);
 void Platform_CollisionState_TopHazard(void);
 void Platform_CollisionState_TopSolid(void);
 void Platform_CollisionState_TurnTable(void);
 void Platform_CollisionState_Twister(void);
-void Platform_CollisionState_Null(void);
-void Platform_CollisionState_15(void);
+void Platform_CollisionState_None(void);
+void Platform_CollisionState_AllSolid_NoCrush(void);
 
 //Unknown
 void Platform_Unknown1(void);

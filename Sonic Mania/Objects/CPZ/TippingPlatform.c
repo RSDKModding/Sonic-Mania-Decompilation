@@ -8,7 +8,7 @@ void TippingPlatform_Update(void)
 
     if (entity->bossID) {
         if (entity->animator.frameID) {
-            entity->stateCollide = Platform_CollisionState_Null;
+            entity->stateCollide = Platform_CollisionState_None;
             entity->collision    = PLATFORM_C_4;
         }
         else {
@@ -60,7 +60,7 @@ void TippingPlatform_Update(void)
             entity->collision    = PLATFORM_C_0;
         }
         else {
-            entity->stateCollide = Platform_CollisionState_Null;
+            entity->stateCollide = Platform_CollisionState_None;
             entity->collision    = PLATFORM_C_4;
         }
     }

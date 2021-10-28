@@ -46,7 +46,7 @@ void PrintBlock_Update(void)
     }
 
     if (entity->animator.frameID <= 2) {
-        entity->stateCollide = Platform_CollisionState_Null;
+        entity->stateCollide = Platform_CollisionState_None;
         entity->collision    = 4;
     }
     else {

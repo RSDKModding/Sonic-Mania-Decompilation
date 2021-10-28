@@ -332,9 +332,9 @@ void Platform_Create(void *data)
                 break;
             case PLATFORM_C_1:
             default: entity->stateCollide = Platform_CollisionState_AllSolid; break;
-            case PLATFORM_C_2: entity->stateCollide = Platform_CollisionState_None; break;
+            case PLATFORM_C_2: entity->stateCollide = Platform_CollisionState_Tiles; break;
             case PLATFORM_C_3: entity->stateCollide = Platform_CollisionState_AllHazard; break;
-            case PLATFORM_C_4: entity->stateCollide = Platform_CollisionState_Null; break;
+            case PLATFORM_C_4: entity->stateCollide = Platform_CollisionState_None; break;
             case PLATFORM_C_5: entity->stateCollide = Platform_CollisionState_LRHazard; break;
             case PLATFORM_C_6: entity->stateCollide = Platform_CollisionState_BottomHazard; break;
             case PLATFORM_C_7: entity->stateCollide = Platform_CollisionState_TopHazard; break;
@@ -345,7 +345,7 @@ void Platform_Create(void *data)
             case PLATFORM_C_12:
             case PLATFORM_C_13: entity->stateCollide = Platform_CollisionState_Sticky; break;
             case PLATFORM_C_14: entity->stateCollide = Platform_CollisionState_TurnTable; break;
-            case PLATFORM_C_15: entity->stateCollide = Platform_CollisionState_15; break;
+            case PLATFORM_C_15: entity->stateCollide = Platform_CollisionState_AllSolid_NoCrush; break;
         }
         for (int32 i = 0; i < entity->childCount; ++i) {
             EntityPlatform *child = RSDK_GET_ENTITY((i + RSDK.GetEntityID(entity) + 1), Platform);
@@ -1521,7 +1521,7 @@ void Platform_CollisionState_LRHazard(void)
         }
     }
 }
-void Platform_CollisionState_None(void)
+void Platform_CollisionState_Tiles(void)
 {
     RSDK_THIS(Platform);
     entity->stoodPlayers = 0;
@@ -2035,8 +2035,8 @@ void Platform_CollisionState_Twister(void)
         }
     }
 }
-void Platform_CollisionState_Null(void) {}
-void Platform_CollisionState_15(void)
+void Platform_CollisionState_None(void) {}
+void Platform_CollisionState_AllSolid_NoCrush(void)
 {
     RSDK_THIS(Platform);
     Hitbox *solidHitbox    = RSDK.GetHitbox(&entity->animator, 1);
@@ -2051,6 +2051,7 @@ void Platform_CollisionState_15(void)
         Player_CheckCollisionPlatform(player, entity, platformHitbox);
 
         switch (Player_CheckCollisionBox(player, entity, solidHitbox)) {
+            default: break;
             case C_TOP:
                 entity->stood = true;
                 if (!((1 << pid) & stoodPlayers) && !player->sidekick && entity->state == Platform_State_Collapsing && !entity->collapseDelay) {
@@ -2098,7 +2099,6 @@ void Platform_CollisionState_15(void)
                 }
                 break;
             case C_BOTTOM: break;
-            default: break;
         }
     }
 }

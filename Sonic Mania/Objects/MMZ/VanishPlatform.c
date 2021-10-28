@@ -11,7 +11,7 @@ void VanishPlatform_Update(void)
         entity->state         = VanishPlatform_Unknown1;
     }
     if (entity->scale.x <= 336) {
-        entity->stateCollide = Platform_CollisionState_Null;
+        entity->stateCollide = Platform_CollisionState_None;
         entity->collision    = PLATFORM_C_4;
     }
     else {

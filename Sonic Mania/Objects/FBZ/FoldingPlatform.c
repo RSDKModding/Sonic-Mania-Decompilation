@@ -32,7 +32,7 @@ void FoldingPlatform_Update(void)
         entity->collision    = 0;
     }
     else {
-        entity->stateCollide = Platform_CollisionState_Null;
+        entity->stateCollide = Platform_CollisionState_None;
         entity->collision    = 4;
     }
     Platform_Update();
