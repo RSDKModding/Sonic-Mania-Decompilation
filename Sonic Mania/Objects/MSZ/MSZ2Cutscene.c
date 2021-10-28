@@ -98,7 +98,9 @@ bool32 MSZ2Cutscene_CutsceneState_Unknown1(EntityCutsceneSeq *host)
         player1->state     = Player_State_Ground;
         player1->groundVel = 0;
         if (player2->objectID == Player->objectID) {
+#if RETRO_USE_PLUS
             Player->disableP2KeyCheck = true;
+#endif
             player2->state            = Player_State_Ground;
             player2->stateInput       = Player_ProcessP2Input_AI;
             player2->groundVel        = 0;

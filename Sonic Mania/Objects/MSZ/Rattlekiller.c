@@ -318,7 +318,7 @@ void Rattlekiller_HandleSorting(void)
         for (int i2 = Rattlekiller_SegmentCount - 1; i2 > i; --i2) {
             int idA = entity->bodyIDs[i2 - 1];
             int idB = entity->bodyIDs[i2];
-            if (entity->field_1A4[idA] >= entity->field_1A4[idB]) {
+            if (entity->field_1A4[idA] > entity->field_1A4[idB]) {
                 entity->bodyIDs[i2 - 1] = idB;
                 entity->bodyIDs[i2]     = idA;
             }
@@ -327,9 +327,35 @@ void Rattlekiller_HandleSorting(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void Rattlekiller_EditorDraw(void) {}
+void Rattlekiller_EditorDraw(void)
+{
+    RSDK_THIS(Rattlekiller);
+    RSDK.SetSpriteAnimation(Rattlekiller->aniFrames, 0, &entity->animators[0], false, 0);
+    RSDK.SetSpriteAnimation(Rattlekiller->aniFrames, 1, &entity->animators[1], false, 0);
+    RSDK.SetSpriteAnimation(Rattlekiller->aniFrames, 4, &entity->animators[2], false, 0);
 
-void Rattlekiller_EditorLoad(void) {}
+    entity->startPos      = entity->position;
+    entity->startPos2     = entity->position;
+
+    entity->startPos.y -= entity->length << 15;
+    entity->startPos2.y += entity->length << 15;
+
+    int delay = 0;
+    for (int i = 0; i < Rattlekiller_SegmentCount; ++i) {
+        entity->bodyIDs[i]       = i;
+        entity->bodyAnimators[i] = &entity->animators[1];
+        entity->bodyDelays[i]    = delay;
+        entity->bodyPositions[i] = entity->startPos;
+
+        delay += 8;
+    }
+
+    
+    Rattlekiller_HandleSorting();
+    Rattlekiller_Draw();
+}
+
+void Rattlekiller_EditorLoad(void) { Rattlekiller->aniFrames = RSDK.LoadSpriteAnimation("MSZ/Rattlekiller.bin", SCOPE_STAGE); }
 #endif
 
 void Rattlekiller_Serialize(void)
