@@ -242,6 +242,28 @@ void MSZSetup_StageLoad(void)
     Animals->animalTypes[1] = ANIMAL_POCKY;
 }
 
+void MSZSetup_Unknown1(int x, int y)
+{
+    int posX = x >> 8;
+    TileLayer *bg1 = RSDK.GetSceneLayer(0);
+    bg1->scrollPos += (y >> 8) * bg1->parallaxFactor;
+    for (int32 i = 0; i < bg1->scrollInfoCount; ++i) {
+        bg1->scrollInfo[i].scrollPos = posX * bg1->scrollInfo[i].parallaxFactor;
+    }
+
+    TileLayer *bg2 = RSDK.GetSceneLayer(1);
+    bg2->scrollPos += (y >> 8) * bg2->parallaxFactor;
+    for (int32 i = 0; i < bg2->scrollInfoCount; ++i) {
+        bg2->scrollInfo[i].scrollPos = posX * bg2->scrollInfo[i].parallaxFactor;
+    }
+
+    foreach_all(ParallaxSprite, sprite)
+    {
+        if (sprite->aniID < 7)
+            sprite->scrollPos.x += posX * (sprite->parallaxFactor.x >> 16);
+    }
+}
+
 void MSZSetup_Unknown2(void)
 {
     int32 id       = 0;

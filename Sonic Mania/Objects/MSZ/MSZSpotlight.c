@@ -86,10 +86,10 @@ void MSZSpotlight_Unknown3(void)
         entity->timer = 0;
         foreach_active(HeavyMystic, mystic)
         {
-            // if (mystic->type == 2) {
-            // entity->startPos.x = boss->position.x;
-            // entity->startPos.y = boss->position.y;
-            // }
+            if (mystic->type == MYSTIC_BOX) {
+                entity->startPos.x = mystic->position.x;
+                entity->startPos.y = mystic->position.y;
+            }
         }
         entity->velocity.x = (entity->startPos.x - entity->position.x) >> 4;
         entity->velocity.y = ((entity->startPos.y - entity->position.y) >> 4);
@@ -107,10 +107,10 @@ void MSZSpotlight_Unknown4(void)
     if (rx * rx + ry * ry < 16) {
         foreach_active(HeavyMystic, mystic)
         {
-            // if (mystic->type == 2 && mystic->state != HeavyMystic_Unknown55) {
-            //     mystic->state = HeavyMystic_Unknown55;
-            //     RSDK.PlaySfx(HeavyMystic->sfxClack, false, 255);
-            // }
+            if (mystic->type == MYSTIC_BOX && mystic->state != HeavyMystic_State2_Unknown4) {
+                mystic->state = HeavyMystic_State2_Unknown4;
+                RSDK.PlaySfx(HeavyMystic->sfxClack, false, 255);
+            }
         }
         entity->position.x = entity->startPos.x;
         entity->position.y = entity->startPos.y;
