@@ -25,7 +25,7 @@ typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
-    int32 invincibiltyTimer;
+    int32 invincibilityTimer;
     int32 health;
     Vector2 bodyPositions[UberCaterkiller_SegmentCount];
     Vector2 bodyVelocity[UberCaterkiller_SegmentCount];
