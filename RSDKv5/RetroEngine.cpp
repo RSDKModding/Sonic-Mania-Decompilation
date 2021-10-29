@@ -205,6 +205,8 @@ bool initRetroEngine()
     sleep(1); // wait to initialize the engine
 #endif
 
+    Sleep(1000);
+
     InitStorage();
 
 #if RETRO_PLATFORM == RETRO_OSX

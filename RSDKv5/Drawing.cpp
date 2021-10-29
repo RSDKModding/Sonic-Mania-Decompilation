@@ -35,8 +35,8 @@ struct ShaderHelper {
         glShaderSource(v, 1, &vert, NULL);
         uint f = glCreateShader(GL_FRAGMENT_SHADER);
         glShaderSource(f, 1, &frag, NULL);
-        // glCompileShader(v);
-        // glCompileShader(f);
+        glCompileShader(v);
+        glCompileShader(f);
         ID = glCreateProgram();
         glAttachShader(ID, v);
         glAttachShader(ID, f);
@@ -50,6 +50,7 @@ struct ShaderHelper {
         }
         glDeleteShader(f);
         glDeleteShader(v);
+        bind();
 #endif
     }
 
@@ -62,7 +63,7 @@ struct ShaderHelper {
 
     void bind() {
 #if RETRO_USING_OPENGL
-        glBindAttribLocation(ID, 0, "in_posGFX");
+        glBindAttribLocation(ID, 0, "in_pos");
         glBindAttribLocation(ID, 1, "in_texUV");
         glBindAttribLocation(ID, 2, "in_color");
 #endif
@@ -76,8 +77,17 @@ struct ShaderHelper {
     }
 
     void setProjection(MatrixF* matrix) {
+        MatrixF view;
+        for (int i = 0; i < 16; ++i) {
+            ((float*)&view)[i] = 0; //what the fuck did i just do
+        }
+        view.values[0][0] = 1;
+        view.values[1][1] = 1;
+        view.values[2][2] = 1;
+        view.values[3][3] = 1;
 #if RETRO_USING_OPENGL
-        glUniformMatrix4fv(glGetUniformLocation(ID, "projection"), 1, GL_FALSE, (float *)matrix);
+        glUniformMatrix4fv(glGetUniformLocation(ID, "projection"), 1, GL_TRUE, (float *)matrix);
+        glUniformMatrix4fv(glGetUniformLocation(ID, "view"), 1, GL_TRUE, (float*)&view);
 #endif
     }
 
@@ -92,7 +102,7 @@ struct ShaderHelper {
     {
 #if RETRO_USING_OPENGL
         if (currentTex != tID) {
-            glBindTexture(GL_TEXTURE_2D, tID);
+            glBindTexture(GL_TEXTURE_RECTANGLE, tID);
             currentTex = tID;
         }
         glUniform1i(glGetUniformLocation(ID, "sprite"), 0);
@@ -118,11 +128,16 @@ struct ShaderHelper {
             glDeleteTextures(1, &palTex);
         glGenTextures(1, &palTex);
         glActiveTexture(GL_TEXTURE0 + 1);
-        glBindTexture(GL_TEXTURE_2D, palTex);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, PALETTE_SIZE, PALETTE_COUNT, 0, GL_RGB, GL_UNSIGNED_SHORT_5_6_5, state.palette);
+        glBindTexture(GL_TEXTURE_RECTANGLE, palTex);
+        glTexImage2D(GL_TEXTURE_RECTANGLE, 0, GL_RGB, PALETTE_SIZE, PALETTE_COUNT, 0, GL_RGB, GL_UNSIGNED_SHORT_5_6_5, state.palette);
+        glTexParameterf(GL_TEXTURE_RECTANGLE, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameterf(GL_TEXTURE_RECTANGLE, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexParameterf(GL_TEXTURE_RECTANGLE, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameterf(GL_TEXTURE_RECTANGLE, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
         glActiveTexture(GL_TEXTURE0); // be safe
         glUniform1i(glGetUniformLocation(ID, "palette"), 1);
-        glBindTexture(GL_TEXTURE_2D, currentTex);
+        glBindTexture(GL_TEXTURE_RECTANGLE, currentTex);
 
         // uint c0 = gfxPalette16to32[state.palette[0][0]];
         // glUniform3f(glGetUniformLocation(ID, "transparentColor"), );
@@ -327,23 +342,15 @@ bool32 InitRenderDevice()
 #endif
     glClearColor(0.0, 0.0, 0.0, 1.0);
 
-    glDisable(GL_LIGHTING);
-    glEnable(GL_TEXTURE_2D);
     glDisable(GL_DEPTH_TEST);
     glDisable(GL_DITHER);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glDisable(GL_BLEND);
-    glEnable(GL_CULL_FACE);
+    glDisable(GL_CULL_FACE);
 
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-
-    SetupPolygonLists();
     SetupShaders();
     SetupViewport();
-
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
+    SetupPolygonLists();
 
     for (int c = 0; c < 0x10000; ++c) {
         int r               = (c & 0b1111100000000000) >> 8;
@@ -522,7 +529,7 @@ void FlipScreen()
     forceRender = true;
     TryRender();
     SDL_GL_SwapWindow(engine.window);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT);
 #endif
 #if RETRO_USING_SDL2
     SDL_ShowWindow(engine.window);
@@ -673,12 +680,12 @@ void InitGFXSystem()
 
 #if RETRO_USING_OPENGL
     glGenTextures(1, &gfxSurface[0].id);
-    glBindTexture(GL_TEXTURE_2D, gfxSurface[0].id);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, TILE_SIZE, TILE_COUNT * TILE_SIZE, 0, GL_RED, GL_UNSIGNED_BYTE, gfxSurface[0].dataPtr);
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glBindTexture(GL_TEXTURE_RECTANGLE, gfxSurface[0].id);
+    glTexImage2D(GL_TEXTURE_RECTANGLE, 0, GL_RED, TILE_SIZE, TILE_COUNT * TILE_SIZE, 0, GL_RED, GL_UNSIGNED_BYTE, gfxSurface[0].dataPtr);
+    glTexParameterf(GL_TEXTURE_RECTANGLE, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameterf(GL_TEXTURE_RECTANGLE, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameterf(GL_TEXTURE_RECTANGLE, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameterf(GL_TEXTURE_RECTANGLE, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 #endif
 
 #if RETRO_REV02
@@ -692,16 +699,16 @@ void InitGFXSystem()
 
 #if RETRO_USING_OPENGL
     glGenTextures(1, &gfxSurface[1].id);
-    glBindTexture(GL_TEXTURE_2D, gfxSurface[1].id);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, 8, 0x400, 0, GL_RED, GL_UNSIGNED_BYTE, gfxSurface[1].dataPtr);
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glBindTexture(GL_TEXTURE_RECTANGLE, gfxSurface[1].id);
+    glTexImage2D(GL_TEXTURE_RECTANGLE, 0, GL_RED, 8, 0x400, 0, GL_RED, GL_UNSIGNED_BYTE, gfxSurface[1].dataPtr);
+    glTexParameterf(GL_TEXTURE_RECTANGLE, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameterf(GL_TEXTURE_RECTANGLE, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameterf(GL_TEXTURE_RECTANGLE, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameterf(GL_TEXTURE_RECTANGLE, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 #endif //! RETRO_USING_OPENGL
 #endif //! RETRO_REV02
 #if RETRO_USING_OPENGL
-    glBindTexture(GL_TEXTURE_2D, currentTex); //give it back
+    glBindTexture(GL_TEXTURE_RECTANGLE, currentTex); //give it back
 #endif
 }
 
@@ -1538,6 +1545,7 @@ void DrawRectangle(int x, int y, int width, int height, uint colour, int alpha, 
     AddGFXPoly(xpos, ypos + h, 0, 0, colour);
     AddGFXPoly(xpos + w, ypos + h, 0, 0, colour);
 
+    renderIndex += 6;
     currentRenderState.texID     = 0;
     currentRenderState.blendMode = inkEffect;
     currentRenderState.isGFX     = true;
@@ -2169,6 +2177,7 @@ void DrawFace(Vector2 *vertices, int vertCount, int r, int g, int b, int alpha, 
             break;
     }
 
+#if RETRO_SOFTWARE_RENDER
     int top    = 0x7FFFFFFF;
     int bottom = -0x10000;
     for (int v = 0; v < vertCount; ++v) {
@@ -2377,6 +2386,12 @@ void DrawFace(Vector2 *vertices, int vertCount, int r, int g, int b, int alpha, 
                 break;
         }
     }
+#else
+    Colour c(r, g, b, alpha);
+    for (int i = 0; i < vertCount; ++i) {
+        //AddGFXPoly()
+    }
+#endif
 }
 void DrawBlendedFace(Vector2 *vertices, uint *colours, int vertCount, int alpha, InkEffects inkEffect)
 {
@@ -3621,6 +3636,8 @@ void DrawSpriteFlipped(int x, int y, int width, int height, int sprX, int sprY, 
             AddGFXPoly(xpos + width, ypos + height, sprX, sprY, 0, surface);
             break;
     }
+    renderIndex += 6;
+
     currentRenderState.isGFX        = true;
     currentRenderState.texID        = surface->id;
     currentRenderState.transparency = alpha;
@@ -3968,37 +3985,39 @@ void DrawSpriteRotozoom(int x, int y, int pivotX, int pivotY, int width, int hei
     if (direction == FLIP_NONE) {
         int x = -pivotX;
         int y = -pivotY;
-        AddGFXPoly(xpos + ((x * cos + y * sin) >> 5), ypos + ((y * cos - x * sin) >> 5), sprX, sprY, 0, surface);
+        AddGFXPoly(xpos + ((x * cos + y * sin) >> 1), ypos + ((y * cos - x * sin) >> 1), sprX, sprY, 0, surface);
 
         x = width - pivotX;
         y = -pivotY;
-        AddGFXPoly(xpos + ((x * cos + y * sin) >> 5), ypos + ((y * cos - x * sin) >> 5), sprX + width, sprY, 0, surface);
+        AddGFXPoly(xpos + ((x * cos + y * sin) >> 1), ypos + ((y * cos - x * sin) >> 1), sprX + width, sprY, 0, surface);
 
         x = -pivotX;
         y = height - pivotY;
-        AddGFXPoly(xpos + ((x * cos + y * sin) >> 5), ypos + ((y * cos - x * sin) >> 5), sprX, sprY + height, 0, surface);
+        AddGFXPoly(xpos + ((x * cos + y * sin) >> 1), ypos + ((y * cos - x * sin) >> 1), sprX, sprY + height, 0, surface);
 
         x = width - pivotX;
         y = height - pivotY;
-        AddGFXPoly(xpos + ((x * cos + y * sin) >> 5), ypos + ((y * cos - x * sin) >> 5), sprX + width, sprY + height, 0, surface);
+        AddGFXPoly(xpos + ((x * cos + y * sin) >> 1), ypos + ((y * cos - x * sin) >> 1), sprX + width, sprY + height, 0, surface);
     }
     else {
         int x = pivotX;
         int y = -pivotY;
-        AddGFXPoly(xpos + ((x * cos + y * sin) >> 5), ypos + ((y * cos - x * sin) >> 5), sprX, sprY, 0, surface);
+        AddGFXPoly(xpos + ((x * cos + y * sin) >> 1), ypos + ((y * cos - x * sin) >> 1), sprX, sprY, 0, surface);
 
         x = pivotX - width;
         y = -pivotY;
-        AddGFXPoly(xpos + ((x * cos + y * sin) >> 5), ypos + ((y * cos - x * sin) >> 5), sprX + width, sprY, 0, surface);
+        AddGFXPoly(xpos + ((x * cos + y * sin) >> 1), ypos + ((y * cos - x * sin) >> 1), sprX + width, sprY, 0, surface);
 
         x = pivotX;
         y = height - pivotY;
-        AddGFXPoly(xpos + ((x * cos + y * sin) >> 5), ypos + ((y * cos - x * sin) >> 5), sprX, sprY + height, 0, surface);
+        AddGFXPoly(xpos + ((x * cos + y * sin) >> 1), ypos + ((y * cos - x * sin) >> 1), sprX, sprY + height, 0, surface);
 
         x = pivotX - width;
         y = height - pivotY;
-        AddGFXPoly(xpos + ((x * cos + y * sin) >> 5), ypos + ((y * cos - x * sin) >> 5), sprX + width, sprY + height, 0, surface);
+        AddGFXPoly(xpos + ((x * cos + y * sin) >> 1), ypos + ((y * cos - x * sin) >> 1), sprX + width, sprY + height, 0, surface);
     }
+    renderIndex += 6;
+
     currentRenderState.isGFX        = true;
     currentRenderState.texID        = surface->id;
     currentRenderState.transparency = alpha;
@@ -4608,9 +4627,9 @@ void DrawDevText(int x, const char *text, int y, int align, uint colour)
 
 #if RETRO_HARDWARE_RENDER
 DrawVertex gfxPolyList[VERTEX_LIMIT];
-short gfxPolyListIndex[INDEX_LIMIT];
+ushort gfxPolyListIndex[INDEX_LIMIT];
 
-DrawVertex3D polyList3D[VERTEX3D_LIMIT];
+//DrawVertex3D polyList3D[VERTEX3D_LIMIT];
 
 ushort vertexSize3D = 0;
 ushort indexSize3D  = 0;
@@ -4624,31 +4643,33 @@ RenderState currentRenderState;
 RenderState lastRenderState;
 ushort renderCount     = 0;
 ushort lastRenderCount = 0;
+ushort renderIndex = 0;
+ushort lastRenderIndex = 0;
 
 ShaderHelper gfxShader;
 
 #if RETRO_USING_OPENGL
 
 GLuint VAO;
-GLuint GFXVBO;
-GLuint polyVBO;
+GLuint attribVBO;
+GLuint indexVBO;
 
 const char *gfxShaderF = "\
 #version 330 core                                               \n\
-in vec2 in_texUV;                                               \n\
-in vec4 in_color;                                               \n\
+in vec2 ex_texUV;                                               \n\
+in vec4 ex_color;                                               \n\
 out vec4 out_color;                                             \n\
                                                                 \n\
 uniform vec2 screenSize;                                        \n\
 uniform vec3 transparentColour;                                 \n\
-uniform sampler2D sprite;                                       \n\
+uniform sampler2DRect sprite;                                       \n\
                                                                 \n\
-uniform sampler2D palette;                                      \n\
+uniform sampler2DRect palette;                                      \n\
 uniform int paletteLines[0x100];                                \n\
                                                                 \n\
 void main()                                                     \n\
 {                                                               \n\
-    if (in_color.a == 0.0) {                                    \n\
+    if (ex_color.a == 0.0) {                                    \n\
         vec4 coord = gl_FragCoord - 0.5;                        \n\
         vec2 screenPos;                                         \n\
         screenPos.x = coord.x * screenSize.x;                   \n\
@@ -4656,7 +4677,7 @@ void main()                                                     \n\
                                                                 \n\
         int id = paletteLines[int(screenPos.y)];                \n\
                                                                 \n\
-        int index = int(texture2D(sprite, in_texUV).r * 255);   \n\
+        int index = int(texture(sprite, ex_texUV).r * 255);     \n\
                                                                 \n\
         if (index == 0)                                         \n\
             discard;                                            \n\
@@ -4667,41 +4688,42 @@ void main()                                                     \n\
                                                                 \n\
         out_color = texture(palette, palvec);                   \n\
     }                                                           \n\
+    else out_color = ex_color;                                  \n\
 } ";
 
 const char *gfxShaderV = "\
 #version 330 core                                                   \n\
-layout (location = 0) in vec2 in_posGFX;                            \n\
-layout (location = 1) in vec2 in_texUV;                             \n\
-//layout (location = 2) in vec4 in_color;                             \n\
+in vec3 in_pos;                                                     \n\
+in vec2 in_texUV;                                                   \n\
+in vec4 in_color;                                                   \n\
 out vec2 ex_texUV;                                                  \n\
-//out vec4 ex_color;                                                  \n\
+out vec4 ex_color;                                                  \n\
                                                                     \n\
 // uniform mat4 model;                                              \n\
-// uniform mat4 view; //set to identity for screen based            \n\
+uniform mat4 view; //set to identity for screen based            \n\
 uniform mat4 projection;                                            \n\
                                                                     \n\
 void main()                                                         \n\
 {                                                                   \n\
-    gl_Position = vec4(in_posGFX, 0.0, 1.0);// * projection;           \n\
+    gl_Position = view * projection * vec4(in_pos, 1.0);                   \n\
     ex_texUV    = in_texUV;                                         \n\
-//    ex_color    = in_color;                                         \n\
+    ex_color    = in_color;                                         \n\
 } ";
 #endif
 
-void ortho(MatrixF* matrix, float l, float r, float t, float b, float n, float f) {
-    matrix->values[0][0] = 2 / r - l;
+void ortho(MatrixF* matrix, float l, float r, float b, float t, float n, float f) {
+    matrix->values[0][0] = 2.f / (r - l);
     matrix->values[0][1] = 0;
     matrix->values[0][2] = 0;
-    matrix->values[0][3] = -(r + l / r - l);
+    matrix->values[0][3] = -(r + l) / (r - l);
     matrix->values[1][0] = 0;
-    matrix->values[1][1] = 2 / t - b;
+    matrix->values[1][1] = 2.f / (t - b);
     matrix->values[1][2] = 0;
-    matrix->values[1][3] = -(t + b / t - b);
+    matrix->values[1][3] = -(t + b) / (t - b);
     matrix->values[2][0] = 0;
     matrix->values[2][1] = 0;
-    matrix->values[2][2] = -2 / (f - n);
-    matrix->values[2][3] = -(f + n / f - n);
+    matrix->values[2][2] = -2.f / (f - n);
+    matrix->values[2][3] = -(f + n) / (f - n);
     matrix->values[3][0] = 0;
     matrix->values[3][1] = 0;
     matrix->values[3][2] = 0;
@@ -4730,15 +4752,14 @@ void SetupShaders()
     // i'm also gonna setup VBOs here bc i'm lazy
     glGenVertexArrays(1, &VAO);
     glBindVertexArray(VAO);
-    glGenBuffers(2, &GFXVBO);
-    glBindBuffer(GL_ARRAY_BUFFER, GFXVBO);
-    glVertexAttribPointer(0, 2, GL_SHORT, GL_FALSE, sizeof(DrawVertex), 0);
+    glGenBuffers(2, &attribVBO);
+    glBindBuffer(GL_ARRAY_BUFFER, attribVBO);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(DrawVertex), 0);
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(1, 2, GL_SHORT, GL_FALSE, sizeof(DrawVertex), (void *)(sizeof(short) * 2));
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(DrawVertex), (void*)offsetof(DrawVertex, u));
     glEnableVertexAttribArray(1);
-    glVertexAttribPointer(2, 4, GL_UNSIGNED_BYTE, GL_FALSE, sizeof(DrawVertex), (void *)(sizeof(short) * 4));
-    //glEnableVertexAttribArray(2);
-
+    glVertexAttribPointer(2, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(DrawVertex), (void*)offsetof(DrawVertex, colour));
+    glEnableVertexAttribArray(2);
 #endif
 }
 
@@ -4753,12 +4774,12 @@ void SetupPolygonLists()
         gfxPolyListIndex[vID++] = (i << 2) + 3;
         gfxPolyListIndex[vID++] = (i << 2) + 2;
 
-        gfxPolyList[i].colour.colour = 0xFFFFFFFF;
+        gfxPolyList[i].colour.colour = 0;
     }
-
-    for (int i = 0; i < VERTEX3D_LIMIT; i++) {
-        polyList3D[i].colour.colour = 0xFFFFFFFF;
-    }
+#if RETRO_USING_OPENGL
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexVBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(gfxPolyListIndex), gfxPolyListIndex, GL_STATIC_DRAW);
+#endif
 }
 
 bool32 StateCheck()
@@ -4788,9 +4809,8 @@ bool32 StateCheck()
             }
         }
     }
-    if (!diff && !memcmp(&currentRenderState, &lastRenderState, sizeof(RenderState) - (sizeof(fullPalette) + SCREEN_YSIZE * sizeof(byte))))
-        return false;
-    return true; // the states are different, proceed to render
+    if (diff || currentRenderState.texID != currentTex)
+        return true; 
 }
 
 void TryRender()
@@ -4805,6 +4825,7 @@ void TryRender()
         checkedpLines   = memcmp(currentRenderState.lineBuffer, lastRenderState.lineBuffer, SCREEN_YSIZE * sizeof(byte));
         lastRenderState = currentRenderState;
         lastRenderCount = renderCount;
+        lastRenderIndex = renderIndex;
     }
     forceRender = false;
 #if RETRO_USING_OPENGL
@@ -4836,7 +4857,8 @@ void TryRender()
         glBufferData(GL_ARRAY_BUFFER, lastRenderCount * sizeof(DrawVertex), gfxPolyList, GL_DYNAMIC_DRAW);
 
         //gfxShader.bind();
-        glDrawArrays(GL_TRIANGLES, 0, lastRenderCount);
+        //glDrawArrays(GL_TRIANGLES, 0, lastRenderCount);
+        glDrawElements(GL_TRIANGLES, lastRenderIndex, GL_UNSIGNED_SHORT, 0);
 
         gfxShader.stop();
     }
@@ -4851,9 +4873,9 @@ void TryRender()
         glScalef(1.0f, -1.0f, -1.0f);
         glRotatef(180.0f + floor3DAngle, 0, 1.0f, 0);
         glTranslatef(floor3Dxpos, floor3Dypos, floor3DZPos);
-        glVertexPointer(3, GL_FLOAT, sizeof(DrawVertex3D), &polyList3D[0].x);
-        glTexCoordPointer(2, GL_SHORT, sizeof(DrawVertex3D), &polyList3D[0].u);
-        glColorPointer(4, GL_UNSIGNED_BYTE, sizeof(DrawVertex3D), &polyList3D[0].colour);
+        //glVertexPointer(3, GL_FLOAT, sizeof(DrawVertex3D), &polyList3D[0].x);
+        //glTexCoordPointer(2, GL_SHORT, sizeof(DrawVertex3D), &polyList3D[0].u);
+        //glColorPointer(4, GL_UNSIGNED_BYTE, sizeof(DrawVertex3D), &polyList3D[0].colour);
         glDrawElements(GL_TRIANGLES, lastRenderCount, GL_UNSIGNED_SHORT, gfxPolyListIndex);
         glLoadIdentity();
         glMatrixMode(GL_PROJECTION);
@@ -4861,9 +4883,11 @@ void TryRender()
     }
 #endif
     memcpy(gfxPolyList, &gfxPolyList[lastRenderCount], (VERTEX_LIMIT - lastRenderCount) * sizeof(DrawVertex));
-    memcpy(polyList3D, &polyList3D[lastRenderCount], (VERTEX3D_LIMIT - lastRenderCount) * sizeof(DrawVertex3D));
+    //memcpy(polyList3D, &polyList3D[lastRenderCount], (VERTEX3D_LIMIT - lastRenderCount) * sizeof(DrawVertex3D));
     lastRenderState = currentRenderState;
     renderCount -= lastRenderCount;
+    renderIndex -= lastRenderIndex;
     lastRenderCount = renderCount;
+    lastRenderIndex = renderIndex;
 }
 #endif

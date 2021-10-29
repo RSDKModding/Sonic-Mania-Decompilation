@@ -89,20 +89,11 @@ struct DrawList {
 #define VERTEX3D_LIMIT (0x2000)
 #define TILEUV_SIZE    (0x1000)
 struct DrawVertex {
-    short x;
-    short y;
-    short u;
-    short v;
-
-    Colour colour = 0;
-};
-
-struct DrawVertex3D {
     float x;
     float y;
     float z;
-    short u;
-    short v;
+    float u;
+    float v;
 
     Colour colour = 0;
 };
@@ -119,9 +110,9 @@ struct RenderState {
 };
 
 extern DrawVertex gfxPolyList[VERTEX_LIMIT];
-extern short gfxPolyListIndex[INDEX_LIMIT];
+extern ushort gfxPolyListIndex[INDEX_LIMIT];
 
-extern DrawVertex3D polyList3D[VERTEX3D_LIMIT];
+// extern DrawVertex3D polyList3D[VERTEX3D_LIMIT];
 
 extern ushort tileUVArray[TILEUV_SIZE];
 extern float floor3DXPos;
@@ -133,6 +124,8 @@ extern RenderState currentRenderState;
 extern RenderState lastRenderState;
 extern ushort renderCount;
 extern ushort lastRenderCount;
+extern ushort renderIndex;
+extern ushort lastRenderIndex;
 
 extern uint currentTex;
 
@@ -308,43 +301,19 @@ void SetupShaders();
 bool32 StateCheck();
 void TryRender();
 
-inline void AddGFXPoly(float x, float y, float u, float v, Colour color, GFXSurface *surface = NULL)
+inline void AddGFXPoly(float x, float y, float z, float u, float v, Colour color = 0, GFXSurface *surface = NULL)
 {
-    (void)surface;
-    gfxPolyList[renderCount].x = x;
-    gfxPolyList[renderCount].y = y;
-    gfxPolyList[renderCount].u = u;
-    gfxPolyList[renderCount].v = v;
-    gfxPolyList[renderCount++].colour = color;
-
-    /*float xN = x / currentScreen->width;
-    float yN = y / currentScreen->height;
-
-    float uN = 0, vN = 0;
-    float rN = 0, gN = 0, bN = 0, aN = 0;
-
+    gfxPolyList[renderCount].x        = x;
+    gfxPolyList[renderCount].y        = y;
+    gfxPolyList[renderCount].z        = z;
     if (surface) {
-        uN = u / surface->width;
-        vN = v / surface->height;
+        gfxPolyList[renderCount].u        = u;// / surface->width;
+        gfxPolyList[renderCount].v        = v;// / surface->height;
     }
-    else {
-        rN = color.components.r / 255.f;
-        gN = color.components.g / 255.f;
-        bN = color.components.b / 255.f;
-        aN = color.components.a / 255.f;
-    }
-
-    gfxPolyVerts[renderCount][0] = xN;
-    gfxPolyVerts[renderCount][1] = yN;
-
-    gfxPolyTexUV[renderCount][0] = uN;
-    gfxPolyTexUV[renderCount][1] = vN;
-
-    gfxPolyColor[renderCount][0]   = rN;
-    gfxPolyColor[renderCount][1]   = gN;
-    gfxPolyColor[renderCount][2]   = bN;
-    gfxPolyColor[renderCount++][2] = aN;//*/
+    else gfxPolyList[renderCount].colour = color;
+    renderCount++;
 }
+inline void AddGFXPoly(float x, float y, float u, float v, Colour color, GFXSurface *surface = NULL) { AddGFXPoly(x, y, 0, u, v, color, surface); }
 
 #endif
 
