@@ -123,8 +123,8 @@ void CollapsingSand_State_CollapseLeft(void)
             int tx = entity->tileX;
             int ty = entity->tileY;
             if (tx >= entity->tileMaxX) {
-                int y = (ty << 20) + 0x80000;
                 int x = (tx << 20) + 0x80000;
+                int y = (ty << 20) + 0x80000;
 
                 while (true) {
                     if (ty < entity->tileMaxY)
@@ -185,7 +185,7 @@ void CollapsingSand_State_CollapseLeft(void)
                 int y = ((ty << 20) + 0x80000);
 
                 while (true) {
-                    if (tx < entity->tileMaxY)
+                    if (ty < entity->tileMaxY)
                         break;
 
                     bool32 flag = false;
@@ -213,7 +213,7 @@ void CollapsingSand_State_CollapseLeft(void)
                     y -= 0x100000;
                     tx--;
                     ty--;
-                    if (ty < entity->tileMaxX)
+                    if (tx < entity->tileMaxX)
                         break;
                 }
             }

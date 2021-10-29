@@ -81,9 +81,11 @@ bool32 SPZ2Outro_CutsceneState_Unknown1(EntityCutsceneSeq *host)
         // weatherTV->field_58              = WeatherTV_Unknown41;
         // RSDK.AddDrawListRef(Zone->drawOrderHigh, RSDK.GetEntityID(weatherTV));
         // WeatherTV->field_18       = true;
-        camera->targetPtr         = 0;
-        player1->camera           = 0;
+        camera->targetPtr = NULL;
+        player1->camera   = NULL;
+#if RETRO_USE_PLUS
         Player->disableP2KeyCheck = true;
+#endif
         CutsceneSeq_LockAllPlayerControl();
         player1->stateInput = StateMachine_None;
         player1->jumpPress  = false;

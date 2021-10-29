@@ -4,13 +4,14 @@
 #include "SonicMania.h"
 
 #define DEBUGMODE_ADD_OBJ(object) DebugMode_AddObject(object->objectID, object##_DebugDraw, object##_DebugSpawn)
+#define DebugMode_ObjectLimit     (0x100)
 
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    int16 objectIDs[0x100];
-    StateMachine(draw[0x100]);
-    StateMachine(spawn[0x100]);
+    int16 objectIDs[DebugMode_ObjectLimit];
+    StateMachine(draw[DebugMode_ObjectLimit]);
+    StateMachine(spawn[DebugMode_ObjectLimit]);
     Animator animator;
     int32 objID;
     int32 itemCount;

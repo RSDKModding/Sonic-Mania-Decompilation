@@ -1195,7 +1195,7 @@ void MegaOctus_StateArm_Unknown3(void)
         parent->state      = MegaOctus_TilePlatformState_Unknown;
         parent->velocity.y = 0x60000;
         if (parent->drawPos.y - entity->tilePlatY > 0x480000)
-            parent->stateCollide = Platform_CollisionState_Null;
+            parent->stateCollide = Platform_CollisionState_None;
 #else
         parent->drawPos.y += 0x60000;
         parent->centerPos.y += 0x60000;
@@ -1245,7 +1245,7 @@ void MegaOctus_StateArm_Unknown4(void)
             entity->timer = 0;
 
         if (parent->drawPos.y - entity->tilePlatY < 0x480000)
-            parent->stateCollide = Platform_CollisionState_None;
+            parent->stateCollide = Platform_CollisionState_Tiles;
     }
 #else
     parent->drawPos.y -= 0x8000;

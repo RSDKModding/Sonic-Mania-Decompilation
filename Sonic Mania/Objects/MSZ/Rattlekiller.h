@@ -3,14 +3,36 @@
 
 #include "SonicMania.h"
 
+#define Rattlekiller_SegmentCount (10)
+
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    Hitbox hitbox;
+    uint16 sfxRocketJet;
+    uint16 aniFrames;
 } ObjectRattlekiller;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    int32 field_58;
+    int32 field_5C;
+    int32 timer;
+    int32 bodyStates[Rattlekiller_SegmentCount];
+    Vector2 bodyPositions[Rattlekiller_SegmentCount];
+    Vector2 field_DC[Rattlekiller_SegmentCount];
+    Vector2 field_12C[Rattlekiller_SegmentCount];
+    int32 bodyAngles[Rattlekiller_SegmentCount];
+    int32 field_1A4[Rattlekiller_SegmentCount];
+    int32 bodyDelays[Rattlekiller_SegmentCount];
+    int32 bodyIDs[Rattlekiller_SegmentCount];
+    Animator *bodyAnimators[Rattlekiller_SegmentCount];
+    Vector2 startPos;
+    Vector2 startPos2;
+    Vector2 playerPos;
+    int32 length;
+    Animator animators[3];
 } EntityRattlekiller;
 
 // Object Struct
@@ -30,6 +52,9 @@ void Rattlekiller_EditorLoad(void);
 void Rattlekiller_Serialize(void);
 
 // Extra Entity Functions
+void Rattlekiller_DebugSpawn(void);
+void Rattlekiller_DebugDraw(void);
 
+void Rattlekiller_HandleSorting(void);
 
 #endif //!OBJ_RATTLEKILLER_H

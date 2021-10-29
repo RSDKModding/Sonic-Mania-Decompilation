@@ -13,7 +13,7 @@ void ConveyorPlatform_Update(void)
                 entity->timer        = 0;
             }
             else {
-                entity->stateCollide = Platform_CollisionState_Null;
+                entity->stateCollide = Platform_CollisionState_None;
                 entity->collision    = PLATFORM_C_4;
             }
             entity->animator.frameID = ConveyorPlatform->frameIDs[entity->timer];
@@ -32,7 +32,7 @@ void ConveyorPlatform_Update(void)
             entity->direction        = ConveyorPlatform->directionIDs[entity->timer % 24];
         }
         if (!((Zone->timer + entity->intervalOffset) % entity->interval) && !entity->timer) {
-            entity->stateCollide = Platform_CollisionState_Null;
+            entity->stateCollide = Platform_CollisionState_None;
             entity->collision    = PLATFORM_C_4;
             entity->timer        = 1;
         }

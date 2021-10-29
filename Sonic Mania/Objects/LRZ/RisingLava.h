@@ -5,12 +5,20 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    Animator;
+    uint16 aniFrames;
+    uint16 sfxRumble;
 } ObjectRisingLava;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    StateMachine(state);
+    Vector2 size;
+    Vector2 offset;
+    int32 limit;
+    Hitbox hitbox;
 } EntityRisingLava;
 
 // Object Struct
@@ -30,6 +38,8 @@ void RisingLava_EditorLoad(void);
 void RisingLava_Serialize(void);
 
 // Extra Entity Functions
-
+void RisingLava_State_CheckRiseStart(void);
+void RisingLava_State_RiseShake(void);
+void RisingLava_State_StoppedRising(void);
 
 #endif //!OBJ_RISINGLAVA_H

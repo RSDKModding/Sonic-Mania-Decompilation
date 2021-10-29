@@ -29,6 +29,9 @@ bin/
 [Oo]bj/
 cmake/
 
+#TEMP LOL
+.github/
+
 #dependencies
 [Dd]ependencies/win-uwp/**
 [Dd]ependencies/windows/*

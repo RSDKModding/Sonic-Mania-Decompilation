@@ -5,12 +5,25 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    Hitbox hitbox;
+    uint16 aniFrames;
+    uint16 sfxVultron;
 } ObjectVultron;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    StateMachine(state);
+    uint8 type;
+    Vector2 startPos;
+    uint8 startDir;
+    uint16 dist;
+    uint16 distance;
+    int32 storeY;
+    Hitbox hitbox;
+    Animator animator1;
+    Animator animator2;
 } EntityVultron;
 
 // Object Struct
@@ -30,6 +43,20 @@ void Vultron_EditorLoad(void);
 void Vultron_Serialize(void);
 
 // Extra Entity Functions
+void Vultron_DebugSpawn(void);
+void Vultron_DebugDraw(void);
 
+void Vultron_CheckPlayerCollisions(void);
+void Vultron_CheckOnScreen(void);
+
+void Vultron_State_Setup(void);
+void Vultron_State_Unknown1(void);
+void Vultron_State_Unknown2(void);
+void Vultron_State_Unknown3(void);
+void Vultron_State_Unknown4(void);
+void Vultron_State_Unknown5(void);
+void Vultron_State_Unknown6(void);
+
+void Vultron_State2_Unknown(void);
 
 #endif //!OBJ_VULTRON_H

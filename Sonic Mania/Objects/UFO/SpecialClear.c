@@ -60,7 +60,7 @@ void SpecialClear_Draw(void)
         vertPos[1].y = drawPos.y + 0x1C0000;
         vertPos[2].y = drawPos.y + 0x2C0000;
         vertPos[3].y = drawPos.y + 0x2C0000;
-        RSDK.DrawQuad(vertPos, 4, 0, 0, 0, 255, 0);
+        RSDK.DrawQuad(vertPos, 4, 0x00, 0x00, 0x00, 255, INK_NONE);
     }
 
     drawPos.x = entity->positions[0].x;
@@ -521,11 +521,7 @@ void SpecialClear_Unknown6(void)
 
     if (entity->positions[6].x <= 0) {
         if (entity->finishType == 2) {
-#if RETRO_USE_PLUS
-            API.UnlockAchievement("ACH_EMERALDS");
-#else
-            APICallback_UnlockAchievement("ACH_EMERALDS");
-#endif
+            API_UnlockAchievement("ACH_EMERALDS");
         }
         entity->state = SpecialClear_Unknown7;
     }

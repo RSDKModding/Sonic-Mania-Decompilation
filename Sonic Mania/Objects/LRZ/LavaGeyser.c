@@ -155,7 +155,7 @@ void LavaGeyser_State_Unknown4(void)
     entity->angle += 2;
     entity->height = 0x600 * RSDK.Cos256(entity->angle) + entity->field_A8;
     LavaGeyser_CheckPlayerCollisions();
-    if (!-entity->timer)
+    if (!--entity->timer)
         entity->state = LavaGeyser_State_Unknown5;
 }
 

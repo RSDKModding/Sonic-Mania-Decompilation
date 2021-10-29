@@ -331,8 +331,8 @@ void TornadoPath_Unknown9(void)
     entity->targetSpeedStore = 0;
     TornadoPath->field_8.x   = 0;
     TornadoPath->field_8.y   = 0;
-    // if (UberCaterkiller->field_C)
-    //    entity->state = TornadoPath_Unknown3;
+    if (UberCaterkiller->defeated)
+       entity->state = TornadoPath_Unknown3;
 }
 
 void TornadoPath_Unknown10(void)
@@ -341,8 +341,8 @@ void TornadoPath_Unknown10(void)
     entity->targetSpeedStore = 0;
     TornadoPath->field_8.x   = 0;
     TornadoPath->field_8.y   = 0;
-    // if (UberCaterkiller->field_C)
-    //    entity->state = TornadoPath_Unknown3;
+    if (UberCaterkiller->defeated)
+       entity->state = TornadoPath_Unknown3;
 }
 
 void TornadoPath_Unknown11(void)

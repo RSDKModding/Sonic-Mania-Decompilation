@@ -13,7 +13,11 @@ void PuyoGame_Update(void)
     StateMachine_Run(entity->state);
     RSDK.ProcessAnimation(&entity->animator);
 
-    if ((RSDK_controller->keyStart.press || RSDK_unknown->field_10 == true) && !RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu)->objectID) {
+#if RETRO_USE_PLUS
+    if ((RSDK_controller->keyStart.press || RSDK_unknown->field_10) && !RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu)->objectID) {
+#else
+    if ((RSDK_controller->keyStart.press) && !RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu)->objectID) {
+#endif
         RSDK.ResetEntitySlot(SLOT_PAUSEMENU, PauseMenu->objectID, NULL);
         RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu)->triggerPlayer = 1;
         RSDK.PlaySfx(PauseMenu->sfxAccept, false, 255);
@@ -50,7 +54,7 @@ void PuyoGame_StageLoad(void)
 
     TextInfo buffer;
     Localization_GetString(&buffer, STR_RPC_PLAYING);
-    API.SetRichPresence(0, &buffer);
+    API_SetRichPresence(0, &buffer);
     RSDK.ResetEntitySlot(SLOT_ZONE, TYPE_BLANK, NULL);
 }
 
