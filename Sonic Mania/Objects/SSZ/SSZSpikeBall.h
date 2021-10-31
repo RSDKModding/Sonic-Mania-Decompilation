@@ -5,12 +5,26 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    uint16 aniFrames;
+    uint16 sfxPon;
+    Hitbox hitboxBall;
+    Hitbox hitboxBase[4];
 } ObjectSSZSpikeBall;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    StateMachine(state);
+    uint8 type;
+    uint16 interval;
+    uint16 intervalOffset;
+    int32 speed;
+    int32 dist;
+    uint8 timer;
+    Vector2 spikeBallPos;
+    Animator animator1;
+    Animator animator2;
 } EntitySSZSpikeBall;
 
 // Object Struct
@@ -30,6 +44,13 @@ void SSZSpikeBall_EditorLoad(void);
 void SSZSpikeBall_Serialize(void);
 
 // Extra Entity Functions
-
+void SSZSpikeBall_State_Setup(void);
+void SSZSpikeBall_Unknown2(void);
+void SSZSpikeBall_Unknown3(void);
+void SSZSpikeBall_Unknown4(void);
+void SSZSpikeBall_Unknown5(void);
+void SSZSpikeBall_Unknown6(void);
+void SSZSpikeBall_Unknown7(void);
+void SSZSpikeBall_Unknown8(void);
 
 #endif //!OBJ_SSZSPIKEBALL_H

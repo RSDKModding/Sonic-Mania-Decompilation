@@ -615,9 +615,17 @@ void UIReplayCarousel_Unknown19(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void UIReplayCarousel_EditorDraw(void) {}
+void UIReplayCarousel_EditorDraw(void)
+{
+    RSDK_THIS(UIReplayCarousel);
 
-void UIReplayCarousel_EditorLoad(void) {}
+    Vector2 drawPos;
+    drawPos.x = entity->position.x;
+    drawPos.y = entity->position.y + 0x100000;
+    UIWidgets_Unknown7(16, 96, 16, 0, 0, 0, drawPos.x, drawPos.y);
+}
+
+void UIReplayCarousel_EditorLoad(void) { UIReplayCarousel->aniFrames = RSDK.LoadSpriteAnimation("UI/SaveSelect.bin", SCOPE_STAGE); }
 #endif
 
 void UIReplayCarousel_Serialize(void) { RSDK_EDITABLE_VAR(UIReplayCarousel, VAR_BOOL, disabled); }

@@ -6,12 +6,12 @@ void YoyoPulley_Update(void)
 {
     RSDK_THIS(YoyoPulley);
 
-    int32 speed = YoYoPulley_GetLength();
+    int32 speed = YoyoPulley_GetLength();
     if (entity->direction)
         entity->rotation -= speed;
     else
         entity->rotation += speed;
-    YoYoPulley_UpdateHandlePos();
+    YoyoPulley_UpdateHandlePos();
     int32 storeX       = entity->position.x;
     int32 storeY       = entity->position.y;
     entity->position = entity->handlePos;
@@ -92,7 +92,7 @@ void YoyoPulley_LateUpdate(void) {}
 
 void YoyoPulley_StaticUpdate(void) {}
 
-void YoyoPulley_Draw(void) { YoYoPulley_DrawSprites(); }
+void YoyoPulley_Draw(void) { YoyoPulley_DrawSprites(); }
 
 void YoyoPulley_Create(void *data)
 {
@@ -103,17 +103,9 @@ void YoyoPulley_Create(void *data)
         entity->pulleyLength = 0;
         entity->active       = ACTIVE_BOUNDS;
         entity->visible      = true;
-        entity->drawFX       = FX_ROTATE | FX_FLIP;
-
-        if ((entity->length << 8) * RSDK.Cos512(entity->angle) >= 0)
-            entity->updateRange.x = 0x800000 + (entity->length << 8) * RSDK.Cos512(entity->angle);
-        else
-            entity->updateRange.x = 0x800000 + -((entity->length << 8) * RSDK.Cos512(entity->angle));
-
-        if ((entity->length << 8) * RSDK.Sin512(entity->angle) >= 0)
-            entity->updateRange.y = 0x800000 + (entity->length << 8) * RSDK.Sin512(entity->angle);
-        else
-            entity->updateRange.y = 0x800000 + -((entity->length << 8) * RSDK.Sin512(entity->angle));
+        entity->drawFX        = FX_ROTATE | FX_FLIP;
+        entity->updateRange.x = 0x800000 + abs((entity->length << 8) * RSDK.Cos512(entity->angle));
+        entity->updateRange.y = 0x800000 + abs((entity->length << 8) * RSDK.Sin512(entity->angle));
 
         RSDK.SetSpriteAnimation(YoyoPulley->aniFrames, 0, &entity->animator1, true, 0);
         RSDK.SetSpriteAnimation(YoyoPulley->aniFrames, 1, &entity->animator2, true, 0);
@@ -143,7 +135,7 @@ void YoyoPulley_StageLoad(void)
     YoyoPulley->hitbox.bottom = 12;
 }
 
-void YoYoPulley_UpdateHandlePos(void)
+void YoyoPulley_UpdateHandlePos(void)
 {
     RSDK_THIS(YoyoPulley);
 
@@ -158,7 +150,7 @@ void YoYoPulley_UpdateHandlePos(void)
         entity->handlePos.x += 0x150000;
 }
 
-void YoYoPulley_DrawSprites(void)
+void YoyoPulley_DrawSprites(void)
 {
     RSDK_THIS(YoyoPulley);
     int32 x1 = entity->position.x;
@@ -166,25 +158,25 @@ void YoYoPulley_DrawSprites(void)
     int32 x2 = (RSDK.Cos512(entity->angle) << 7) * ((entity->pulleyLength >> 8) + 32) + x1;
     int32 y2 = (RSDK.Sin512(entity->angle) << 7) * ((entity->pulleyLength >> 8) + 32) + y1;
     if (entity->direction) {
-        RSDK.DrawLine(x1 - 0x120000, y1, x2 - 0x120000, y2, 0x2000u, 0, INK_NONE, false);
-        RSDK.DrawLine(x1 - 0x130000, y1, x2 - 0x130000, y2, 0xC02000u, 0, INK_NONE, false);
-        RSDK.DrawLine(x1 - 0x140000, y1, x2 - 0x140000, y2, 0xE08000u, 0, INK_NONE, false);
-        RSDK.DrawLine(x1 - 0x150000, y1, x2 - 0x150000, y2, 0xC02000u, 0, INK_NONE, false);
-        RSDK.DrawLine(x1 - 0x160000, y1, x2 - 0x160000, y2, 0x2000u, 0, INK_NONE, false);
+        RSDK.DrawLine(x1 - 0x120000, y1, x2 - 0x120000, y2, 0x002000, 0, INK_NONE, false);
+        RSDK.DrawLine(x1 - 0x130000, y1, x2 - 0x130000, y2, 0xC02000, 0, INK_NONE, false);
+        RSDK.DrawLine(x1 - 0x140000, y1, x2 - 0x140000, y2, 0xE08000, 0, INK_NONE, false);
+        RSDK.DrawLine(x1 - 0x150000, y1, x2 - 0x150000, y2, 0xC02000, 0, INK_NONE, false);
+        RSDK.DrawLine(x1 - 0x160000, y1, x2 - 0x160000, y2, 0x002000, 0, INK_NONE, false);
     }
     else {
-        RSDK.DrawLine(x1 + 0x120000, y1, x2 + 0x120000, y2, 0x2000u, 0, INK_NONE, false);
-        RSDK.DrawLine(x1 + 0x130000, y1, x2 + 0x130000, y2, 0xC02000u, 0, INK_NONE, false);
-        RSDK.DrawLine(x1 + 0x140000, y1, x2 + 0x140000, y2, 0xE08000u, 0, INK_NONE, false);
-        RSDK.DrawLine(x1 + 0x150000, y1, x2 + 0x150000, y2, 0xC02000u, 0, INK_NONE, false);
-        RSDK.DrawLine(x1 + 0x160000, y1, x2 + 0x160000, y2, 0x2000u, 0, INK_NONE, false);
+        RSDK.DrawLine(x1 + 0x120000, y1, x2 + 0x120000, y2, 0x002000, 0, INK_NONE, false);
+        RSDK.DrawLine(x1 + 0x130000, y1, x2 + 0x130000, y2, 0xC02000, 0, INK_NONE, false);
+        RSDK.DrawLine(x1 + 0x140000, y1, x2 + 0x140000, y2, 0xE08000, 0, INK_NONE, false);
+        RSDK.DrawLine(x1 + 0x150000, y1, x2 + 0x150000, y2, 0xC02000, 0, INK_NONE, false);
+        RSDK.DrawLine(x1 + 0x160000, y1, x2 + 0x160000, y2, 0x002000, 0, INK_NONE, false);
     }
     RSDK.DrawSprite(&entity->animator4, &entity->handlePos, false);
-    RSDK.DrawSprite(&entity->animator1, 0, false);
-    RSDK.DrawSprite(&entity->animator3, 0, false);
+    RSDK.DrawSprite(&entity->animator1, NULL, false);
+    RSDK.DrawSprite(&entity->animator3, NULL, false);
 }
 
-int32 YoYoPulley_GetLength(void)
+int32 YoyoPulley_GetLength(void)
 {
     RSDK_THIS(YoyoPulley);
     EntityPlayer *player2 = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
@@ -241,7 +233,35 @@ int32 YoYoPulley_GetLength(void)
     return entity->pulleyLength;
 }
 
-void YoyoPulley_EditorDraw(void) { YoYoPulley_DrawSprites(); }
+void YoyoPulley_EditorDraw(void)
+{
+    RSDK_THIS(YoyoPulley);
+    entity->drawFX       = FX_ROTATE | FX_FLIP;
+
+    entity->updateRange.x = 0x800000 + abs((entity->length << 8) * RSDK.Cos512(entity->angle));
+    entity->updateRange.y = 0x800000 + abs((entity->length << 8) * RSDK.Sin512(entity->angle));
+
+    RSDK.SetSpriteAnimation(YoyoPulley->aniFrames, 0, &entity->animator1, false, 0);
+    RSDK.SetSpriteAnimation(YoyoPulley->aniFrames, 1, &entity->animator2, false, 0);
+    RSDK.SetSpriteAnimation(YoyoPulley->aniFrames, 2, &entity->animator3, false, 0);
+    RSDK.SetSpriteAnimation(YoyoPulley->aniFrames, 3, &entity->animator4, false, 0);
+    if (RSDK.GetFrameID(&entity->animator1))
+        entity->drawOrder = Zone->drawOrderHigh;
+    else
+        entity->drawOrder = Zone->drawOrderLow;
+
+    entity->pulleyLength = 0;
+    if (entity->pullDir == 0) {
+        entity->pulleyLength = entity->length << 8;
+        entity->handlePos    = entity->position;
+        entity->handlePos.x += (entity->pulleyLength + 0x2B00) * RSDK.Cos512(entity->angle);
+        entity->handlePos.y += (entity->pulleyLength + 0x2B00) * RSDK.Sin512(entity->angle);
+    }
+
+    YoyoPulley_UpdateHandlePos();
+
+    YoyoPulley_DrawSprites();
+}
 
 void YoyoPulley_EditorLoad(void) { YoyoPulley->aniFrames = RSDK.LoadSpriteAnimation("SSZ1/SDashWheel.bin", SCOPE_STAGE); }
 

@@ -97,7 +97,11 @@ bool32 CPZ2Outro_CutsceneSeq(void *h)
     return false;
 }
 
-void CPZ2Outro_EditorDraw(void) {}
+void CPZ2Outro_EditorDraw(void)
+{
+    RSDK_THIS(CPZ2Outro);
+    CutsceneRules_DrawCutsceneBounds(entity);
+}
 
 void CPZ2Outro_EditorLoad(void) {}
 

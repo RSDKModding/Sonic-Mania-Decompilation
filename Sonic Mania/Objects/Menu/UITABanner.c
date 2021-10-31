@@ -207,9 +207,16 @@ void UITABanner_Unknown5(uint8 actID, uint8 zoneID, uint8 characterID, bool32 is
 }
 
 #if RETRO_INCLUDE_EDITOR
-void UITABanner_EditorDraw(void) {}
+void UITABanner_EditorDraw(void)
+{
+    RSDK_THIS(UITABanner);
 
-void UITABanner_EditorLoad(void) {}
+    RSDK.SetSpriteAnimation(UITABanner->aniFrames, 11, &entity->animator1, true, entity->zoneID % 0xC);
+    UITABanner_Unknown2(entity->position.x, entity->position.y, entity->isEncore);
+    UITABanner_Unknown5(entity->actID, entity->zoneID % 0xC, entity->characterID, entity->isEncore, entity->position.x, entity->position.y);
+}
+
+void UITABanner_EditorLoad(void) { UITABanner->aniFrames = RSDK.LoadSpriteAnimation("UI/SaveSelect.bin", SCOPE_STAGE); }
 #endif
 
 void UITABanner_Serialize(void) {}

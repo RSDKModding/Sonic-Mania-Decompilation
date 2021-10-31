@@ -1215,7 +1215,11 @@ void EncoreIntro_PlayerState_InputNone(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void EncoreIntro_EditorDraw(void) {}
+void EncoreIntro_EditorDraw(void)
+{
+    RSDK_THIS(EncoreIntro);
+    CutsceneRules_DrawCutsceneBounds(entity);
+}
 
 void EncoreIntro_EditorLoad(void) {}
 #endif

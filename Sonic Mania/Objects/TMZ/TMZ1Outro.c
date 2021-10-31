@@ -166,7 +166,11 @@ bool32 TMZ1Outro_Cutscene2_State1(EntityCutsceneSeq *host)
     return false;
 }
 
-void TMZ1Outro_EditorDraw(void) {}
+void TMZ1Outro_EditorDraw(void)
+{
+    RSDK_THIS(TMZ1Outro);
+    CutsceneRules_DrawCutsceneBounds(entity);
+}
 
 void TMZ1Outro_EditorLoad(void) {}
 

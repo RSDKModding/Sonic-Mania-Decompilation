@@ -48,6 +48,6 @@ void PopOut_EditorLoad(void);
 void PopOut_Serialize(void);
 
 // Extra Entity Functions
-void PopOut_Unknown(void);
+void PopOut_SetupHitboxes(void);
 
 #endif //!OBJ_POPOUT_H

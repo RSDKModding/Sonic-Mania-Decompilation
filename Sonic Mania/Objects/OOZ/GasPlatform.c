@@ -189,7 +189,13 @@ void GasPlatform_Unknown4(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void GasPlatform_EditorDraw(void) {}
+void GasPlatform_EditorDraw(void)
+{
+    RSDK_THIS(GasPlatform);
+    entity->drawPos = entity->position;
+
+    GasPlatform_Draw();
+}
 
 void GasPlatform_EditorLoad(void) {}
 #endif

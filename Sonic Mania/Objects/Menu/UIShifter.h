@@ -6,7 +6,9 @@
 #if RETRO_USE_PLUS
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    Animator animator;
+    uint16 aniFrames;
 } ObjectUIShifter;
 
 // Entity Class

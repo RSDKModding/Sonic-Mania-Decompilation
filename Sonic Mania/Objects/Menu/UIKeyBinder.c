@@ -119,7 +119,7 @@ void UIKeyBinder_LateUpdate(void) {}
 
 void UIKeyBinder_StaticUpdate(void) {}
 
-void UIKeyBinder_Draw(void) { UIKeyBinder_Unknown5(); }
+void UIKeyBinder_Draw(void) { UIKeyBinder_DrawSprites(); }
 
 void UIKeyBinder_Create(void *data)
 {
@@ -147,7 +147,7 @@ void UIKeyBinder_Create(void *data)
     entity->frameID         = UIKeyBinder_Unknown4(entity->type);
     RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, entity->listID, &entity->animator1, true, entity->frameID);
     entity->textSpriteIndex = UIWidgets->textSpriteIndex;
-    if (RSDK_sceneInfo->inEditor == false) {
+    if (!RSDK_sceneInfo->inEditor) {
         int32 mappings = UIKeyBinder_GetMappings(entity->inputID + 1, entity->type);
         int32 frame    = UIButtonPrompt_MappingsToFrame(mappings);
         RSDK.SetSpriteAnimation(UIKeyBinder->aniFrames, UIKeyBinder_GetButtonListID(), &entity->animator2, true, frame);
@@ -222,7 +222,7 @@ int32 UIKeyBinder_Unknown4(int32 id)
     return 0;
 }
 
-void UIKeyBinder_Unknown5(void)
+void UIKeyBinder_DrawSprites(void)
 {
     RSDK_THIS(UIKeyBinder);
     Vector2 drawPos;
@@ -396,9 +396,14 @@ void UIKeyBinder_Unknown16(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void UIKeyBinder_EditorDraw(void) {}
+void UIKeyBinder_EditorDraw(void)
+{
+    RSDK_THIS(UIKeyBinder);
+    entity->inkEffect = entity->disabled ? INK_BLEND : INK_NONE;
+    UIKeyBinder_DrawSprites();
+}
 
-void UIKeyBinder_EditorLoad(void) {}
+void UIKeyBinder_EditorLoad(void) { UIKeyBinder->aniFrames = RSDK.LoadSpriteAnimation("UI/Buttons.bin", SCOPE_STAGE); }
 #endif
 
 void UIKeyBinder_Serialize(void)

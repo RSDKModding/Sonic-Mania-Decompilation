@@ -41,18 +41,28 @@ void UIPicture_Create(void *data)
 
 void UIPicture_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("Menu")) {
+    if (RSDK.CheckStageFolder("Menu")) 
         UIPicture->spriteIndex = RSDK.LoadSpriteAnimation("UI/Picture.bin", SCOPE_STAGE);
-    }
-    else if (RSDK.CheckStageFolder("Logos")) {
+    else if (RSDK.CheckStageFolder("Logos")) 
         UIPicture->spriteIndex = RSDK.LoadSpriteAnimation("Logos/Logos.bin", SCOPE_STAGE);
-    }
 }
 
 #if RETRO_INCLUDE_EDITOR
-void UIPicture_EditorDraw(void) {}
+void UIPicture_EditorDraw(void)
+{
+    RSDK_THIS(UIPicture);
+    RSDK.SetSpriteAnimation(UIPicture->spriteIndex, entity->listID, &entity->animator, true, entity->frameID);
 
-void UIPicture_EditorLoad(void) {}
+    RSDK.DrawSprite(&entity->animator, NULL, false);
+}
+
+void UIPicture_EditorLoad(void)
+{
+    if (RSDK.CheckStageFolder("Menu"))
+        UIPicture->spriteIndex = RSDK.LoadSpriteAnimation("UI/Picture.bin", SCOPE_STAGE);
+    else if (RSDK.CheckStageFolder("Logos"))
+        UIPicture->spriteIndex = RSDK.LoadSpriteAnimation("Logos/Logos.bin", SCOPE_STAGE);
+}
 #endif
 
 void UIPicture_Serialize(void)

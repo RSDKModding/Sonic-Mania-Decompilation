@@ -68,7 +68,13 @@ void ConveyorPlatform_Create(void *data)
 void ConveyorPlatform_StageLoad(void) {}
 
 #if RETRO_INCLUDE_EDITOR
-void ConveyorPlatform_EditorDraw(void) {}
+void ConveyorPlatform_EditorDraw(void)
+{
+    RSDK_THIS(ConveyorPlatform);
+
+    entity->drawPos = entity->position;
+    ConveyorPlatform_Draw();
+}
 
 void ConveyorPlatform_EditorLoad(void) {}
 #endif

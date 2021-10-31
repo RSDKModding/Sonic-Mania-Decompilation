@@ -171,7 +171,7 @@ typedef struct {
     bool32 (*GetEntities)(uint16 type, Entity **entity);
     void (*BreakForeachLoop)(void);
     void (*SetEditableVar)(uint8 type, const char *name, uint8 object, int32 storeOffset);
-    void *(*GetEntityByID)(uint16 objectID);
+    void *(*GetEntityByID)(uint16 slotID);
     int32 (*GetEntityID)(void *entityPtr);
     int32 (*GetEntityCount)(uint16 type, bool32 isActive);
     int32 (*GetDrawListRef)(uint8 layerID, uint16 entityID);

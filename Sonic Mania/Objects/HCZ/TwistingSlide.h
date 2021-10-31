@@ -22,12 +22,7 @@ typedef struct {
     Hitbox hitbox2;
     Hitbox hitbox3;
     Hitbox hitbox1;
-    int32 field_94;
-    int32 field_98;
-    int32 field_9C;
-    int32 field_A0;
-    int32 field_A4;
-    int32 field_A8;
+    Animator animator;
 } EntityTwistingSlide;
 
 // Object Struct

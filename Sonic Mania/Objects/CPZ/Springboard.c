@@ -187,19 +187,25 @@ void Springboard_StageLoad(void)
 
 void Springboard_DebugSpawn(void)
 {
-    RSDK_THIS(Springboard);
+    RSDK_THIS(DebugMode);
     CREATE_ENTITY(Springboard, NULL, entity->position.x, entity->position.y);
 }
 void Springboard_DebugDraw(void)
 {
     RSDK.SetSpriteAnimation(Springboard->aniFrames, 1, &DebugMode->animator, true, 0);
-    RSDK.DrawSprite(&DebugMode->animator, 0, false);
+    RSDK.DrawSprite(&DebugMode->animator, NULL, false);
 }
 
 #if RETRO_INCLUDE_EDITOR
-void Springboard_EditorDraw(void) {}
+void Springboard_EditorDraw(void)
+{
+    RSDK_THIS(Springboard);
+    RSDK.SetSpriteAnimation(Springboard->aniFrames, 0, &entity->animator, false, 3);
 
-void Springboard_EditorLoad(void) {}
+    Springboard_Draw();
+}
+
+void Springboard_EditorLoad(void) { Springboard->aniFrames = RSDK.LoadSpriteAnimation("CPZ/Springboard.bin", SCOPE_STAGE); }
 #endif
 
 void Springboard_Serialize(void)

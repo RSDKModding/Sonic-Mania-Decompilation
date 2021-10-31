@@ -45,10 +45,8 @@ void UIButton_Draw(void)
 
     Vector2 drawPos;
     int32 size  = entity->size.y + entity->size.x;
-    drawPos.x = entity->position.x;
-    drawPos.y = entity->position.y;
-    drawPos.x -= entity->field_140;
-    drawPos.y -= entity->field_140;
+    drawPos.x = entity->position.x - entity->field_140;
+    drawPos.y = entity->position.y - entity->field_140;
     size >>= 16;
 #if RETRO_USE_PLUS
     UIWidgets_Unknown7(entity->size.y >> 16, size, entity->dword138, (UIWidgets->buttonColour >> 16) & 0xFF, (UIWidgets->buttonColour >> 8) & 0xFF,
@@ -56,10 +54,8 @@ void UIButton_Draw(void)
 #else
     UIWidgets_Unknown7(entity->size.y >> 16, size, entity->dword138, 0xF0, 0xF0, 0xF0, drawPos.x, drawPos.y);
 #endif
-    drawPos.x = entity->position.x;
-    drawPos.y = entity->position.y;
-    drawPos.x += entity->field_140;
-    drawPos.y += entity->field_140;
+    drawPos.x = entity->position.x + entity->field_140;
+    drawPos.y = entity->position.y + entity->field_140;
     UIWidgets_Unknown7(entity->size.y >> 16, size, entity->dword138, 0, 0, 0, drawPos.x, drawPos.y);
     if (entity->dword14C) {
         drawPos.x = entity->position.x;
@@ -835,7 +831,27 @@ void UIButton_Unknown18(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void UIButton_EditorDraw(void) {}
+void UIButton_EditorDraw(void)
+{
+    RSDK_THIS(UIButton);
+    if (entity->disabled)
+        RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, 7, &entity->animator, true, 0);
+    else
+        RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, entity->listID, &entity->animator, true, entity->frameID);
+    entity->textSpriteIndex = UIWidgets->textSpriteIndex;
+    entity->startListID     = entity->listID;
+    entity->startFrameID    = entity->frameID;
+
+    entity->drawOrder       = 2;
+    entity->updateRange.x   = 0x800000;
+    entity->updateRange.y   = 0x400000;
+    entity->dword138        = entity->size.y >> 16;
+    entity->size.y          = abs(entity->size.y);
+    entity->dword14C        = 1;
+
+    entity->inkEffect = entity->invisible ? INK_BLEND : INK_NONE;
+    UIButton_Draw();
+}
 
 void UIButton_EditorLoad(void) {}
 #endif

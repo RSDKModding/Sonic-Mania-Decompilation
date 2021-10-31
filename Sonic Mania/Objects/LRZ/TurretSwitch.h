@@ -5,12 +5,30 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    uint16 aniFrames;
+    uint16 sfxShot;
+    Hitbox hitboxProjectile;
 } ObjectTurretSwitch;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    int32 type;
+    bool32 walkOnto;
+    uint8 tag;
+    int32 field_64;
+    int32 field_68;
+    bool32 activated;
+    int32 field_70;
+    int32 field_74;
+    int32 field_78;
+    Animator animator;
+    StateMachine(state);
+    int32 timer;
+    Vector2 startPos;
+    Hitbox hitbox;
+    Hitbox hitboxRange;
 } EntityTurretSwitch;
 
 // Object Struct
@@ -30,6 +48,11 @@ void TurretSwitch_EditorLoad(void);
 void TurretSwitch_Serialize(void);
 
 // Extra Entity Functions
+void TurretSwitch_CheckPlayerCollisions(void);
+void TurretSwitch_Break(EntityTurretSwitch *entity, EntityPlayer *player);
 
+void TurretSwitch_State_Setup(void);
+void TurretSwitch_State_Turret(void);
+void TurretSwitch_State_Projectile(void);
 
 #endif //!OBJ_TURRETSWITCH_H

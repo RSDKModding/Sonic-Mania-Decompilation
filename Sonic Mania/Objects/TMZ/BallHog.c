@@ -71,8 +71,7 @@ void BallHog_StageLoad(void)
 
 void BallHog_DebugSpawn(void)
 {
-    RSDK_THIS(BallHog);
-
+    RSDK_THIS(DebugMode);
     CREATE_ENTITY(BallHog, NULL, entity->position.x, entity->position.y);
 }
 
@@ -258,9 +257,9 @@ void BallHog_State_Bomb(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void BallHog_EditorDraw(void) {}
+void BallHog_EditorDraw(void) { BallHog_Draw(); }
 
-void BallHog_EditorLoad(void) {}
+void BallHog_EditorLoad(void) { BallHog->aniFrames = RSDK.LoadSpriteAnimation("TMZ1/BallHog.bin", SCOPE_STAGE); }
 #endif
 
 void BallHog_Serialize(void)

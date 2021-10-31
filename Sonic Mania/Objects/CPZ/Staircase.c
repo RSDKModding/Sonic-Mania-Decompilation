@@ -32,15 +32,12 @@ void Staircase_Create(void *data)
     Staircase->blockHitbox.bottom = 16;
     Staircase->blockHitbox.right  = 16;
 
-    int32 add             = (entity->direction) ? -0x200000 : 0x200000;
-    entity->blocks[0].x = entity->position.x;
-    entity->blocks[0].y = entity->position.y;
-    entity->blocks[1].x = entity->position.x + 1 * add;
-    entity->blocks[1].y = entity->position.y;
-    entity->blocks[2].x = entity->position.x + 2 * add;
-    entity->blocks[2].y = entity->position.y;
-    entity->blocks[3].x = entity->position.x + 3 * add;
-    entity->blocks[3].y = entity->position.y;
+    int32 add = (entity->direction) ? -0x200000 : 0x200000;
+
+    for (int i = 0; i < Starcase_StairCount; ++i) {
+        entity->blocks[i].x = entity->position.x + i * add;
+        entity->blocks[i].y = entity->position.y;
+    }
 
     RSDK.SetSpriteAnimation(Staircase->animID, 0, &entity->animator, true, 0);
 
@@ -53,25 +50,11 @@ void Staircase_StageLoad(void)
     if (RSDK.CheckStageFolder("CPZ")) {
         Staircase->animID = RSDK.LoadSpriteAnimation("CPZ/Staircase.bin", SCOPE_STAGE);
         Staircase->sfxID  = RSDK.GetSFX("CPZ/CPZ2HitBlocksStop.wav");
-        Soundboard_LoadSFX("CPZ/CPZ2HitBlocks.wav", true, Staircase_SFXCallback, NULL);
+        Soundboard_LoadSFX("CPZ/CPZ2HitBlocks.wav", true, Staircase_CheckCB, NULL);
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
-void Staircase_EditorDraw(void) {}
-
-void Staircase_EditorLoad(void) {}
-#endif
-
-void Staircase_Serialize(void)
-{
-    RSDK_EDITABLE_VAR(Staircase, VAR_UINT8, direction);
-    RSDK_EDITABLE_VAR(Staircase, VAR_UINT8, type);
-    // fun fact: why is this never used
-    RSDK_EDITABLE_VAR(Staircase, VAR_BOOL, bumpable);
-}
-
-bool32 Staircase_SFXCallback(void)
+bool32 Staircase_CheckCB(void)
 {
     foreach_active(Staircase, entity)
     {
@@ -89,8 +72,9 @@ void Staircase_MainState(void)
     {
         for (int32 i = 0; i < 4; i++) {
             entity->position = entity->blocks[i];
-            int32 col          = Player_CheckCollisionBox(player, entity, &Staircase->blockHitbox);
-            if (col == 4) {
+            int32 side          = Player_CheckCollisionBox(player, entity, &Staircase->blockHitbox);
+            if (side == C_BOTTOM) {
+                //bumpable would prolly be used here :D
                 entity->active    = ACTIVE_NORMAL;
                 entity->timer     = 59;
                 entity->state     = Staircase_Wait;
@@ -98,7 +82,7 @@ void Staircase_MainState(void)
                 if (player->onGround)
                     player->hurtFlag = 1;
             }
-            else if (col == 1) {
+            else if (side == C_TOP) {
                 entity->active = ACTIVE_NORMAL;
                 entity->timer  = 32;
                 entity->state  = Staircase_Wait;
@@ -114,7 +98,7 @@ void Staircase_Wait(void)
     Vector2 oldpos = entity->position;
     foreach_active(Player, player)
     {
-        for (int32 i = 0; i < 4; i++) {
+        for (int32 i = 0; i < Starcase_StairCount; i++) {
             entity->position = entity->blocks[i];
             Player_CheckCollisionBox(player, entity, &Staircase->blockHitbox);
         }
@@ -124,7 +108,7 @@ void Staircase_Wait(void)
     if (--entity->timer < 0) {
         entity->timer = 128;
         if (!RSDK.IsSFXPlaying(Staircase->sfxID))
-            RSDK.PlaySfx(Staircase->sfxID, 0, 255);
+            RSDK.PlaySfx(Staircase->sfxID, false, 255);
         entity->state     = Staircase_MoveBlocks;
         entity->drawState = Staircase_DrawBlocks;
     }
@@ -139,7 +123,7 @@ void Staircase_MoveBlocks(void)
     Vector2 oldpos = entity->position;
     foreach_active(Player, player)
     {
-        for (int32 i = 0; i < 4; i++) {
+        for (int32 i = 0; i < Starcase_StairCount; i++) {
             entity->position = entity->blocks[i];
             if (Player_CheckCollisionBox(player, entity, &Staircase->blockHitbox) == 1)
                 player->position.y += add * (i + 1);
@@ -147,10 +131,8 @@ void Staircase_MoveBlocks(void)
     }
     entity->position = oldpos;
 
-    entity->blocks[0].y += 1 * add;
-    entity->blocks[1].y += 2 * add;
-    entity->blocks[2].y += 3 * add;
-    entity->blocks[3].y += 4 * add;
+    for (int i = 0; i < Starcase_StairCount; ++i) entity->blocks[i].y += (i + 1) * add;
+
     if (--entity->timer <= 0)
         entity->state = Staircase_BasicCollision;
     if (!RSDK.CheckOnScreen(entity, &entity->updateRange))
@@ -163,9 +145,9 @@ void Staircase_BasicCollision(void)
     Vector2 oldpos = entity->position;
     foreach_active(Player, player)
     {
-        for (int32 i = 0; i < 4; i++) {
+        for (int32 i = 0; i < Starcase_StairCount; i++) {
             entity->position = entity->blocks[i];
-            if (Player_CheckCollisionBox(player, entity, &Staircase->blockHitbox) == 4 && player->onGround)
+            if (Player_CheckCollisionBox(player, entity, &Staircase->blockHitbox) == C_BOTTOM && player->onGround)
                 player->hurtFlag = 1;
         }
     }
@@ -177,15 +159,41 @@ void Staircase_BasicCollision(void)
 void Staircase_DrawBlocks(void)
 {
     RSDK_THIS(Staircase);
-    for (int32 i = 0; i < 4; i++) {
+    for (int32 i = 0; i < Starcase_StairCount; i++) {
         RSDK.DrawSprite(&entity->animator, &entity->blocks[i], false);
     }
 }
 void Staircase_DrawShake(void) {
     RSDK_THIS(Staircase);
-    for (int32 i = 0; i < 4; i++) {
+    for (int32 i = 0; i < Starcase_StairCount; i++) {
         Vector2 drawPos = entity->blocks[i];
         drawPos.y += ((entity->timer - i * 4) << 14) & 0x10000;
         RSDK.DrawSprite(&entity->animator, &drawPos, false);
     }
+}
+
+#if RETRO_INCLUDE_EDITOR
+void Staircase_EditorDraw(void)
+{
+    RSDK_THIS(Staircase);
+
+    int32 add = (entity->direction) ? -0x200000 : 0x200000;
+
+    for (int i = 0; i < Starcase_StairCount; ++i) {
+        entity->blocks[i].x = entity->position.x + i * add;
+        entity->blocks[i].y = entity->position.y;
+    }
+
+    Staircase_DrawBlocks();
+}
+
+void Staircase_EditorLoad(void) { Staircase->animID = RSDK.LoadSpriteAnimation("CPZ/Staircase.bin", SCOPE_STAGE); }
+#endif
+
+void Staircase_Serialize(void)
+{
+    RSDK_EDITABLE_VAR(Staircase, VAR_UINT8, direction);
+    RSDK_EDITABLE_VAR(Staircase, VAR_UINT8, type);
+    // fun fact: why is this never used
+    RSDK_EDITABLE_VAR(Staircase, VAR_BOOL, bumpable);
 }

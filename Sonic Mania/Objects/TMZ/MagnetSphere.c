@@ -63,7 +63,8 @@ void MagnetSphere_StageLoad(void)
 
 void MagnetSphere_DebugSpawn(void)
 {
-    RSDK.CreateEntity(MagnetSphere->objectID, 0, RSDK_sceneInfo->entity->position.x, RSDK_sceneInfo->entity->position.y);
+    RSDK_THIS(DebugMode);
+    CREATE_ENTITY(MagnetSphere, NULL, entity->position.x, entity->position.y);
 }
 
 void MagnetSphere_DebugDraw(void)
@@ -169,9 +170,9 @@ void MagnetSphere_MovePlayer(void *p, int32 playerID)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void MagnetSphere_EditorDraw(void) {}
+void MagnetSphere_EditorDraw(void) { MagnetSphere_Draw(); }
 
-void MagnetSphere_EditorLoad(void) {}
+void MagnetSphere_EditorLoad(void) { MagnetSphere->aniFrames = RSDK.LoadSpriteAnimation("TMZ1/MagnetSphere.bin", SCOPE_STAGE); }
 #endif
 
 void MagnetSphere_Serialize(void) {}

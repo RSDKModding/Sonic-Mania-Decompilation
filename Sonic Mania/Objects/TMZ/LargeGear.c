@@ -141,9 +141,16 @@ void LargeGear_StageLoad(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void LargeGear_EditorDraw(void) {}
+void LargeGear_EditorDraw(void)
+{
+    RSDK_THIS(LargeGear);
+    entity->origin = entity->position;
+    entity->angle  = entity->rotOffset;
 
-void LargeGear_EditorLoad(void) {}
+    LargeGear_Draw();
+}
+
+void LargeGear_EditorLoad(void) { LargeGear->aniFrames = RSDK.LoadSpriteAnimation("TMZ1/LargeGear.bin", SCOPE_STAGE); }
 #endif
 
 void LargeGear_Serialize(void)

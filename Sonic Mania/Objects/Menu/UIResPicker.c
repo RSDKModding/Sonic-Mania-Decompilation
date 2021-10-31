@@ -289,7 +289,21 @@ void UIResPicker_Unknown8(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void UIResPicker_EditorDraw(void) {}
+void UIResPicker_EditorDraw(void)
+{
+    RSDK_THIS(UIResPicker);
+    entity->selection     = -2;
+    entity->drawOrder     = 2;
+    entity->updateRange.x = 0x800000;
+    entity->updateRange.y = 0x400000;
+    entity->field_11C     = entity->size.y >> 16;
+    entity->size.y        = abs(entity->size.y);
+    RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 2, &entity->animator1, true, 0);
+    RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 2, &entity->animator2, true, 1);
+    RSDK.SetSpriteAnimation(UIWidgets->labelSpriteIndex, 0, &entity->textAnimator, true, 0);
+
+    UIResPicker_Draw();
+}
 
 void UIResPicker_EditorLoad(void) {}
 #endif

@@ -179,9 +179,28 @@ void BuzzSaw_State_FreeMove_Reset(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void BuzzSaw_EditorDraw(void) {}
+void BuzzSaw_EditorDraw(void)
+{
+    RSDK_THIS(BuzzSaw);
 
-void BuzzSaw_EditorLoad(void) {}
+    entity->drawFX    = FX_ROTATE;
+    entity->inkEffect = INK_NONE;
+    entity->rotation  = 0;
+    if (!entity->type)
+        entity->rotation = entity->angle;
+    else
+        entity->inkEffect = INK_ADD;
+
+    RSDK.SetSpriteAnimation(BuzzSaw->aniFrames, entity->type, &entity->animator, true, 0);
+    entity->active        = ACTIVE_BOUNDS;
+    entity->updateRange.x = (abs(entity->speed * entity->amplitude.x) + 64) << 17;
+    entity->updateRange.y = (abs(entity->speed * entity->amplitude.y) + 64) << 17;
+    entity->drawPos       = entity->position;
+
+    BuzzSaw_Draw();
+}
+
+void BuzzSaw_EditorLoad(void) { BuzzSaw->aniFrames = RSDK.LoadSpriteAnimation("MMZ/BuzzSaw.bin", SCOPE_STAGE); }
 #endif
 
 void BuzzSaw_Serialize(void)

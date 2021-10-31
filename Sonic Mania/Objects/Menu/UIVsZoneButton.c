@@ -153,7 +153,7 @@ void UIVsZoneButton_Unknown3(void)
 {
     RSDK_THIS(UIVsZoneButton);
     if (!RSDK_sceneInfo->inEditor)
-        UIWidgets_Unknown3(56, 80, RSDK_sceneInfo->entity->position.x + 0x30000, RSDK_sceneInfo->entity->position.y + 0x30000);
+        UIWidgets_Unknown3(56, 80, entity->position.x + 0x30000, entity->position.y + 0x30000);
     if (entity->flag)
         UIWidgets_Unknown4(56, 80, entity->position.x, entity->position.y);
     else
@@ -340,9 +340,13 @@ void UIVsZoneButton_Unknown15(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void UIVsZoneButton_EditorDraw(void) {}
+void UIVsZoneButton_EditorDraw(void) { UIVsZoneButton_Draw(); }
 
-void UIVsZoneButton_EditorLoad(void) {}
+void UIVsZoneButton_EditorLoad(void)
+{
+    UIVsZoneButton->aniFrames  = RSDK.LoadSpriteAnimation("UI/SaveSelect.bin", SCOPE_STAGE);
+    UIVsZoneButton->textFrames = RSDK.LoadSpriteAnimation("UI/TextEN.bin", SCOPE_STAGE);
+}
 #endif
 
 void UIVsZoneButton_Serialize(void)

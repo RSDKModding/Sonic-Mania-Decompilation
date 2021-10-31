@@ -258,9 +258,23 @@ void UIModeButton_Unknown10(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void UIModeButton_EditorDraw(void) {}
+void UIModeButton_EditorDraw(void)
+{
+    RSDK_THIS(UIModeButton);
+    entity->visible         = true;
+    entity->drawOrder       = 2;
+    entity->updateRange.x   = 0x800000;
+    entity->updateRange.y   = 0x400000;
+    entity->field_130       = true;
+    entity->field_114       = 0x280000;
+    entity->field_118       = 0x280000;
+    UIModeButton_Unknown1();
+    entity->textSpriteIndex = UIWidgets->textSpriteIndex;
 
-void UIModeButton_EditorLoad(void) {}
+    UIModeButton_Draw();
+}
+
+void UIModeButton_EditorLoad(void) { UIModeButton->aniFrames = RSDK.LoadSpriteAnimation("UI/MainIcons.bin", SCOPE_STAGE); }
 #endif
 
 void UIModeButton_Serialize(void)

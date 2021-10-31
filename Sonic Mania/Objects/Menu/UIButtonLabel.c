@@ -44,9 +44,22 @@ void UIButtonLabel_Create(void *data)
 void UIButtonLabel_StageLoad(void) { UIButtonLabel->aniFrames = RSDK.LoadSpriteAnimation("UI/ButtonLabel.bin", SCOPE_STAGE); }
 
 #if RETRO_INCLUDE_EDITOR
-void UIButtonLabel_EditorDraw(void) {}
+void UIButtonLabel_EditorDraw(void)
+{
+    RSDK_THIS(UIButtonLabel);
 
-void UIButtonLabel_EditorLoad(void) {}
+    entity->drawOrder     = 2;
+    entity->drawFX        = FX_FLIP;
+    entity->updateRange.x = 0x800000;
+    entity->updateRange.y = 0x300000;
+    RSDK.SetSpriteAnimation(UIButtonLabel->aniFrames, 0, &entity->animator1, true, entity->type);
+    RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, entity->listID, &entity->animator2, true, entity->frameID);
+    entity->textSprite = UIWidgets->textSpriteIndex;
+
+    UIButtonLabel_Draw();
+}
+
+void UIButtonLabel_EditorLoad(void) { UIButtonLabel->aniFrames = RSDK.LoadSpriteAnimation("UI/ButtonLabel.bin", SCOPE_STAGE); }
 #endif
 
 void UIButtonLabel_Serialize(void)

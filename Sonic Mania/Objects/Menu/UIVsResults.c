@@ -218,7 +218,7 @@ void UIVsResults_Unknown6(void)
 void UIVsResults_Unknown7(void) {}
 
 #if RETRO_INCLUDE_EDITOR
-void UIVsResults_EditorDraw(void) {}
+void UIVsResults_EditorDraw(void) { UIVsResults_Draw(); }
 
 void UIVsResults_EditorLoad(void) {}
 #endif

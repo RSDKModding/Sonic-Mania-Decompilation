@@ -11,7 +11,7 @@ void GHZ2Outro_Update(void)
                               GHZ2Outro_LoadNextStage,           NULL };
 
     RSDK_THIS(GHZ2Outro);
-    if (!entity->type) {
+    if (!entity->activated) {
         CutsceneSeq_StartSequence((Entity *)entity, states_Outro);
         if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->objectID) {
             EntityCutsceneSeq *seq = RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq);
@@ -40,7 +40,7 @@ void GHZ2Outro_Create(void *data)
 {
     RSDK_THIS(GHZ2Outro);
     if (!RSDK_sceneInfo->inEditor) {
-        entity->type = data != NULL;
+        entity->activated = data != NULL;
 
         foreach_all(DERobot, robot) { entity->DERobot = (Entity *)robot; }
         foreach_all(Eggman, eggman) { entity->eggman = (Entity *)eggman; }
@@ -432,8 +432,12 @@ void GHZ2Outro_Cutscene_SkipCB(void)
         RSDK.SetScene("Mania Mode", "Chemical Plant Zone 1");
 }
 
-void GHZ2Outro_EditorDraw(void) {}
+void GHZ2Outro_EditorDraw(void)
+{
+    RSDK_THIS(GHZ2Outro);
+    CutsceneRules_DrawCutsceneBounds(entity);
+}
 
 void GHZ2Outro_EditorLoad(void) {}
 
-void GHZ2Outro_Serialize(void) {}
+void GHZ2Outro_Serialize(void) { RSDK_EDITABLE_VAR(GHZ2Outro, VAR_VECTOR2, size); }

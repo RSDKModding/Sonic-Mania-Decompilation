@@ -104,7 +104,7 @@ void TurboTurtle_StageLoad(void)
 
 void TurboTurtle_DebugSpawn(void)
 {
-    RSDK_THIS(TurboTurtle);
+    RSDK_THIS(DebugMode);
     EntityTurboTurtle *turboTurtle = CREATE_ENTITY(TurboTurtle, NULL, entity->position.x, entity->position.y);
     turboTurtle->direction         = entity->direction;
     turboTurtle->startDir          = entity->direction;
@@ -113,7 +113,7 @@ void TurboTurtle_DebugSpawn(void)
 void TurboTurtle_DebugDraw(void)
 {
     RSDK.SetSpriteAnimation(TurboTurtle->aniFrames, 0, &DebugMode->animator, true, 0);
-    RSDK.DrawSprite(&DebugMode->animator, 0, false);
+    RSDK.DrawSprite(&DebugMode->animator, NULL, false);
 }
 
 void TurboTurtle_CheckPlayerCollisions(void)
@@ -448,9 +448,25 @@ void TurboTurtle_State3_Unknown2(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void TurboTurtle_EditorDraw(void) {}
+void TurboTurtle_EditorDraw(void)
+{
+    RSDK_THIS(TurboTurtle);
 
-void TurboTurtle_EditorLoad(void) {}
+    entity->visible       = true;
+    entity->drawOrder     = Zone->drawOrderLow;
+    entity->startPos      = entity->position;
+    entity->startDir      = entity->direction;
+
+    entity->updateRange.x =
+        abs(0x70000 * (entity->stepCount * (2 * (entity->initialSide == 0) - 1) + entity->startPos.x - entity->startPos.x)) + 0x800000;
+
+    RSDK.SetSpriteAnimation(TurboTurtle->aniFrames, 0, &entity->animator, true, 0);
+    entity->direction   = entity->startDir;
+
+    TurboTurtle_Draw();
+}
+
+void TurboTurtle_EditorLoad(void) { TurboTurtle->aniFrames = RSDK.LoadSpriteAnimation("TMZ1/TurboTurtle.bin", SCOPE_STAGE); }
 #endif
 
 void TurboTurtle_Serialize(void)

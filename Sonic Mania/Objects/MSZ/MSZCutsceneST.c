@@ -603,7 +603,11 @@ bool32 MSZCutsceneST_CutsceneState_Unknown9(EntityCutsceneSeq *host)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void MSZCutsceneST_EditorDraw(void) {}
+void MSZCutsceneST_EditorDraw(void)
+{
+    RSDK_THIS(MSZCutsceneST);
+    CutsceneRules_DrawCutsceneBounds(entity);
+}
 
 void MSZCutsceneST_EditorLoad(void) {}
 #endif

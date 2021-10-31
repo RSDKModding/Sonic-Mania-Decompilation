@@ -326,9 +326,23 @@ void PushSpring_Unknown11(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void PushSpring_EditorDraw(void) {}
+void PushSpring_EditorDraw(void)
+{
+    RSDK_THIS(PushSpring);
 
-void PushSpring_EditorLoad(void) {}
+    int dir = entity->direction;
+
+    RSDK.SetSpriteAnimation(PushSpring->aniFrames, entity->type, &entity->animator, false, 0);
+    if (!entity->type  &&entity->direction) {
+        entity->direction = FLIP_Y;
+    }
+
+    RSDK.DrawSprite(&entity->animator, NULL, false);
+
+    entity->direction = dir;
+}
+
+void PushSpring_EditorLoad(void) { PushSpring->aniFrames = RSDK.LoadSpriteAnimation("OOZ/PushSpring.bin", SCOPE_STAGE); }
 #endif
 
 void PushSpring_Serialize(void)

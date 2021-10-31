@@ -288,9 +288,22 @@ void TwistedTubes_Unknown8(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void TwistedTubes_EditorDraw(void) {}
+void TwistedTubes_EditorDraw(void)
+{
+    RSDK_THIS(TwistedTubes);
 
-void TwistedTubes_EditorLoad(void) {}
+    entity->updateRange.y = (entity->height + 4) << 21;
+    entity->updateRange.x = 0x800000;
+    RSDK.SetSpriteAnimation(TwistedTubes->aniFrames, 0, &entity->animator1, true, 0);
+    RSDK.SetSpriteAnimation(TwistedTubes->aniFrames, 0, &entity->animator2, true, 1);
+    RSDK.SetSpriteAnimation(TwistedTubes->aniFrames, 0, &entity->animator3, true, 2);
+    RSDK.SetSpriteAnimation(TwistedTubes->aniFrames, 0, &entity->animator4, true, 3);
+    RSDK.SetSpriteAnimation(TwistedTubes->aniFrames, 0, &entity->animator5, true, 4);
+    
+    TwistedTubes_Draw();
+}
+
+void TwistedTubes_EditorLoad(void) { TwistedTubes->aniFrames = RSDK.LoadSpriteAnimation("CPZ/TwistedTubes.bin", SCOPE_STAGE); }
 #endif
 
 void TwistedTubes_Serialize(void) { RSDK_EDITABLE_VAR(TwistedTubes, VAR_UINT8, height); }

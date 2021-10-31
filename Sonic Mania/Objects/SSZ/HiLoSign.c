@@ -88,7 +88,7 @@ void HiLoSign_DebugSpawn(void)
 void HiLoSign_DebugDraw(void)
 {
     RSDK.SetSpriteAnimation(HiLoSign->aniFrames, 0, &DebugMode->animator, true, 0);
-    RSDK.DrawSprite(&DebugMode->animator, 0, false);
+    RSDK.DrawSprite(&DebugMode->animator, NULL, false);
 }
 
 void HiLoSign_State_Spinning(void)

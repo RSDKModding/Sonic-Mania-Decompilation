@@ -80,7 +80,7 @@ void UIOptionPanel_Unknown1(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void UIOptionPanel_EditorDraw(void) {}
+void UIOptionPanel_EditorDraw(void) { UIOptionPanel_Draw(); }
 
 void UIOptionPanel_EditorLoad(void) {}
 #endif

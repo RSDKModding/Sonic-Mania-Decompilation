@@ -31,5 +31,6 @@ void CutsceneRules_Serialize(void);
 
 // Extra Entity Functions
 void CutsceneRules_SetupEntity(void *e);
+void CutsceneRules_DrawCutsceneBounds(void *e);
 
 #endif //!OBJ_CUTSCENERULES_H

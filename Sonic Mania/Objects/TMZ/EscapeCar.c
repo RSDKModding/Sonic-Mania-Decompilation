@@ -259,9 +259,47 @@ void EscapeCar_StateEncore_GoodEnd(void)
 #endif
 
 #if RETRO_INCLUDE_EDITOR
-void EscapeCar_EditorDraw(void) {}
+void EscapeCar_EditorDraw(void)
+{
+    RSDK_THIS(EscapeCar);
+    entity->drawOrder     = Zone->drawOrderLow;
+    entity->updateRange.x = 0x800000;
+    entity->updateRange.y = 0x800000;
+#if RETRO_USE_PLUS
+    if (globals->gameMode == MODE_ENCORE) {
+        entity->state = EscapeCar_StateEncore_Unknown1;
+        RSDK.SetSpriteAnimation(EscapeCar->aniFrames, 8, &entity->animator2, true, 0);
+    }
+    else {
+#endif
+        switch (globals->playerID & 0xFF) {
+            case ID_TAILS:
+#if RETRO_USE_PLUS
+            case ID_MIGHTY:
+            case ID_RAY:
+#endif
+                entity->type = 0;
+                break;
+            case ID_KNUCKLES:
+                if (((globals->playerID >> 8) & 0xFF) == ID_KNUCKLES)
+                    entity->type = 3;
+                else
+                    entity->type = 0;
+                break;
+            default: entity->type = 3; break;
+        }
+        RSDK.SetSpriteAnimation(EscapeCar->aniFrames, (entity->type + 2), &entity->animator2, true, 0);
+#if RETRO_USE_PLUS
+    }
+#endif
+    RSDK.SetSpriteAnimation(EscapeCar->aniFrames, 0, &entity->animator1, true, 0);
 
-void EscapeCar_EditorLoad(void) {}
+    RSDK.DrawSprite(&entity->animator2, NULL, false);
+    RSDK.DrawSprite(&entity->animator1, NULL, false);
+    RSDK.DrawSprite(&entity->animator3, NULL, false);
+}
+
+void EscapeCar_EditorLoad(void) { EscapeCar->aniFrames = RSDK.LoadSpriteAnimation("Phantom/EscapeCar.bin", SCOPE_STAGE); }
 #endif
 
 void EscapeCar_Serialize(void) {}

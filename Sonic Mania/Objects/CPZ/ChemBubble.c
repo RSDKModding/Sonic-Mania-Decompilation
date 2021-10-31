@@ -100,9 +100,17 @@ void ChemBubble_Unknown3(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void ChemBubble_EditorDraw(void) {}
+void ChemBubble_EditorDraw(void)
+{
+    RSDK_THIS(ChemBubble);
 
-void ChemBubble_EditorLoad(void) {}
+    RSDK.SetSpriteAnimation(ChemBubble->aniFrames, 1, &entity->animator, true, 0);
+    entity->drawFX = FX_SCALE;
+
+    ChemBubble_Draw();
+}
+
+void ChemBubble_EditorLoad(void) { ChemBubble->aniFrames = RSDK.LoadSpriteAnimation("CPZ/ChemPool.bin", SCOPE_STAGE); }
 #endif
 
 void ChemBubble_Serialize(void) {}

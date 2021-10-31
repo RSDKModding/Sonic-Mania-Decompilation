@@ -193,9 +193,19 @@ void SpeedBooster_Wait2(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void SpeedBooster_EditorDraw(void) {}
+void SpeedBooster_EditorDraw(void) { SpeedBooster_Draw(); }
 
-void SpeedBooster_EditorLoad(void) {}
+void SpeedBooster_EditorLoad(void)
+{
+    if (RSDK.CheckStageFolder("CPZ")) {
+        SpeedBooster->animID        = RSDK.LoadSpriteAnimation("CPZ/SpeedBooster.bin", SCOPE_STAGE);
+    }
+    else if (RSDK.CheckStageFolder("SSZ1") || RSDK.CheckStageFolder("SSZ2")) {
+        SpeedBooster->animID =
+            RSDK.LoadSpriteAnimation((RSDK.CheckStageFolder("SSZ1") ? "SSZ1/SpeedBooster.bin" : "SSZ2/SpeedBooster.bin"), SCOPE_STAGE);
+    }
+    DEBUGMODE_ADD_OBJ(SpeedBooster);
+}
 #endif
 
 void SpeedBooster_Serialize(void)

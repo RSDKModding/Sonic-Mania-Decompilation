@@ -85,7 +85,14 @@ void InvisibleBlock_DrawSprites(void)
     }
 }
 
-void InvisibleBlock_EditorDraw(void) { InvisibleBlock_DrawSprites(); }
+void InvisibleBlock_EditorDraw(void)
+{
+    RSDK_THIS(InvisibleBlock);
+    entity->updateRange.x = (entity->width + 5) << 19;
+    entity->updateRange.y = (entity->height + 5) << 19;
+
+    InvisibleBlock_DrawSprites();
+}
 
 void InvisibleBlock_EditorLoad(void)
 {

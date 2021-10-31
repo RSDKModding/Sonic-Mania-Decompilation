@@ -108,9 +108,38 @@ void Reagent_Unknown2(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void Reagent_EditorDraw(void) {}
+void Reagent_EditorDraw(void)
+{
+    RSDK_THIS(Reagent);
 
-void Reagent_EditorLoad(void) {}
+    entity->updateRange.x = 0x800000;
+    entity->updateRange.y = 0x2000000;
+    entity->inkEffect     = INK_ALPHA;
+    entity->alpha         = 0xC0;
+
+    switch (entity->type) {
+        case 0:
+            entity->r = 0;
+            entity->g = 8;
+            entity->b = 192;
+            break;
+        case 1:
+            entity->r = 24;
+            entity->g = 144;
+            entity->b = 0;
+            break;
+        case 2:
+            entity->r = 0;
+            entity->g = 128;
+            entity->b = 176;
+            break;
+    }
+    RSDK.SetSpriteAnimation(Reagent->aniFrames, entity->type + 1, &entity->animator, true, 0);
+
+    Reagent_Draw();
+}
+
+void Reagent_EditorLoad(void) { Reagent->aniFrames = RSDK.LoadSpriteAnimation("CPZ/Syringe.bin", SCOPE_STAGE); }
 #endif
 
 void Reagent_Serialize(void) {}

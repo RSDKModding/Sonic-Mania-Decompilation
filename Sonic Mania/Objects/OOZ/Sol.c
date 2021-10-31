@@ -444,9 +444,18 @@ void Sol_Unknown12(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void Sol_EditorDraw(void) {}
+void Sol_EditorDraw(void)
+{
+    RSDK_THIS(Sol);
 
-void Sol_EditorLoad(void) {}
+    int32 angle = entity->angle;
+    Sol_HandleRotation();
+    entity->angle = angle;
+
+    Sol_Draw();
+}
+
+void Sol_EditorLoad(void) { Sol->aniFrames = RSDK.LoadSpriteAnimation("OOZ/Sol.bin", SCOPE_STAGE); }
 #endif
 
 void Sol_Serialize(void)

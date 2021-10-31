@@ -7,7 +7,7 @@
 typedef struct {
     RSDK_OBJECT
     int32 field_4[4];
-    uint16 field_14;
+    uint16 aniFrames;
     uint16 sfxTravel;
 } ObjectTransportTube;
 
@@ -22,12 +22,7 @@ typedef struct {
     int32 directionIDs[8];
     int32 playerTimers[4];
     EntityPlayer *players[4];
-    int32 field_E4;
-    int32 field_E8;
-    int32 field_EC;
-    int32 field_F0;
-    int32 field_F4;
-    int32 field_F8;
+    Animator animator;
 } EntityTransportTube;
 
 // Object Struct

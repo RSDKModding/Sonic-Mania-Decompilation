@@ -60,9 +60,21 @@ void UIHeading_LoadSprites(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void UIHeading_EditorDraw(void) {}
+void UIHeading_EditorDraw(void)
+{
+    RSDK_THIS(UIHeading);
+    entity->startPos      = entity->position;
+    entity->drawOrder     = 2;
+    entity->updateRange.x = 0x800000;
+    entity->updateRange.y = 0x300000;
+    RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 0, &entity->animator2, true, 0);
+    RSDK.SetSpriteAnimation(UIHeading->textSpriteIndex, entity->headingID, &entity->animator, true, 0);
+    entity->textSpriteIndex = UIHeading->textSpriteIndex;
 
-void UIHeading_EditorLoad(void) {}
+    UIHeading_Draw();
+}
+
+void UIHeading_EditorLoad(void) { UIHeading->textSpriteIndex = RSDK.LoadSpriteAnimation("UI/HeadingsEN.bin", SCOPE_STAGE); }
 #endif
 
 void UIHeading_Serialize(void) { RSDK_EDITABLE_VAR(UIHeading, VAR_ENUM, headingID); }

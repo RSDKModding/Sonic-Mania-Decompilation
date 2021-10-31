@@ -17,8 +17,8 @@ void TeeterTotter_Draw(void)
 {
     RSDK_THIS(TeeterTotter);
 
-    int32 x       = RSDK_sceneInfo->entity->position.x;
-    int32 y       = RSDK_sceneInfo->entity->position.y;
+    int32 x       = entity->position.x;
+    int32 y       = entity->position.y;
     int32 offsetX = 0x100000 - (entity->length << 21) + x;
 
     for (int32 i = 0; i < 2 * entity->length; ++i) {
@@ -48,7 +48,7 @@ void TeeterTotter_Create(void *data)
     entity->drawOrder     = Zone->drawOrderLow;
     entity->origin        = entity->position;
     entity->updateRange.x = (entity->length + 2) << 22;
-    entity->visible       = 1;
+    entity->visible       = true;
     entity->drawFX        = FX_FLIP;
     entity->updateRange.y = (entity->length + 4) << 21;
 
@@ -209,9 +209,26 @@ void TeeterTotter_State_Unknown2(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void TeeterTotter_EditorDraw(void) {}
+void TeeterTotter_EditorDraw(void)
+{
+    RSDK_THIS(TeeterTotter);
 
-void TeeterTotter_EditorLoad(void) {}
+    if (entity->length >= 0x10 || entity->length) {
+        if (entity->length > 0x10)
+            entity->length = 0x10;
+    }
+    else {
+        entity->length = 1;
+    }
+
+    entity->origin        = entity->position;
+    entity->updateRange.x = (entity->length + 2) << 22;
+    entity->updateRange.y = (entity->length + 4) << 21;
+
+    TeeterTotter_Draw();
+}
+
+void TeeterTotter_EditorLoad(void) { TeeterTotter->aniFrames = RSDK.LoadSpriteAnimation("TMZ1/TeeterTotter.bin", SCOPE_STAGE); }
 #endif
 
 void TeeterTotter_Serialize(void)

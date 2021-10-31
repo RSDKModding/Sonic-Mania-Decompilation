@@ -203,7 +203,7 @@ void WarpDoor_Create(void *data)
 void WarpDoor_StageLoad(void)
 {
     WarpDoor->aniFrames = RSDK.LoadSpriteAnimation("Global/PlaneSwitch.bin", SCOPE_STAGE);
-    WarpDoor_Unknown2();
+    WarpDoor_SetStageBounds();
     WarpDoor->field_140C = 0;
     WarpDoor->field_1408 = 0;
     WarpDoor->boundCount = 0;
@@ -242,7 +242,7 @@ void WarpDoor_Unknown1(void)
     }
 }
 
-void WarpDoor_Unknown2(void)
+void WarpDoor_SetStageBounds(void)
 {
     Vector2 size;
 
@@ -262,7 +262,7 @@ void WarpDoor_Unknown2(void)
     Zone->playerBoundActiveB[0] = false;
 }
 
-void WarpDoor_Unknown3(uint8 id)
+void WarpDoor_SetWarpBounds(uint8 id)
 {
     Zone->playerBoundActiveT[0] = false;
     Zone->playerBoundActiveR[0] = false;
@@ -299,7 +299,7 @@ bool32 WarpDoor_Unknown5(int16 a1, Vector2 *posPtr)
     if (!player || !player->camera)
         return false;
     if (a1 > -1) {
-        WarpDoor_Unknown3(a1);
+        WarpDoor_SetWarpBounds(a1);
         return false;
     }
 
@@ -336,7 +336,7 @@ bool32 WarpDoor_Unknown5(int16 a1, Vector2 *posPtr)
     player->position.y = storeY;
     if (id < 0)
         return 0;
-    WarpDoor_Unknown3(id);
+    WarpDoor_SetWarpBounds(id);
     return true;
 }
 
@@ -402,7 +402,12 @@ void WarpDoor_Unknown7(void)
     entity->hitbox.bottom = (16 * entity->height) >> 1;
 }
 
-void WarpDoor_EditorDraw(void) { WarpDoor_DrawDebug(); }
+void WarpDoor_EditorDraw(void)
+{
+    RSDK_THIS(WarpDoor);
+    entity->active = ACTIVE_ALWAYS;
+    WarpDoor_DrawDebug();
+}
 
 void WarpDoor_EditorLoad(void) { WarpDoor->aniFrames = RSDK.LoadSpriteAnimation("Global/PlaneSwitch.bin", SCOPE_STAGE); }
 

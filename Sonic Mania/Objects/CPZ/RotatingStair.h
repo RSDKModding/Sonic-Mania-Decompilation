@@ -11,7 +11,29 @@ typedef struct {
 
 // Entity Class
 typedef struct {
-	MANIA_PLATFORM_BASE
+    RSDK_ENTITY
+    StateMachine(state);
+    StateMachine(stateCollide);
+    int32 mode;
+    Vector2 amplitude;
+    int32 speed;
+    bool32 hasTension;
+    int8 frameID;
+    uint8 collision;
+    Vector2 tileOrigin;
+    Vector2 centerPos;
+    Vector2 drawPos;
+    Vector2 collisionOffset;
+    int32 stood;
+    int32 collapseDelay;
+    int32 stoodAngle;
+    uint8 stoodPlayers;
+    uint8 pushPlayersL;
+    uint8 pushPlayersR;
+    Hitbox hitbox;
+    Animator animator;
+    int32 childCount;
+
 	uint16 oscOff;
 	int32 duration;
 	int32 interval;

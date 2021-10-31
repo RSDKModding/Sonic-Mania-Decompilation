@@ -5,12 +5,16 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    uint16 sfxHuff;
+    uint16 sfxImpact;
 } ObjectSpikeCrusher;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    MANIA_PLATFORM_BASE
+    int32 startDir;
+    Animator animator2;
 } EntitySpikeCrusher;
 
 // Object Struct
@@ -30,6 +34,13 @@ void SpikeCrusher_EditorLoad(void);
 void SpikeCrusher_Serialize(void);
 
 // Extra Entity Functions
+void SpikeCrusher_CheckOnScreen(void);
 
+void SpikeCrusher_State_Unknown1(void);
+void SpikeCrusher_State_Unknown2(void);
+void SpikeCrusher_State_Unknown3(void);
+void SpikeCrusher_State_Unknown4(void);
+void SpikeCrusher_State_Unknown5(void);
+void SpikeCrusher_State_Unknown6(void);
 
 #endif //!OBJ_SPIKECRUSHER_H

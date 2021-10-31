@@ -210,9 +210,17 @@ void Bubbler_State_Projectile_Unknown2(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void Bubbler_EditorDraw(void) {}
+void Bubbler_EditorDraw(void)
+{
+    RSDK_THIS(Bubbler);
+    entity->startPos   = entity->position;
+    RSDK.SetSpriteAnimation(Bubbler->aniFrames, 0, &entity->animator1, true, 0);
+    RSDK.SetSpriteAnimation(Bubbler->aniFrames, 1, &entity->animator2, true, 0);
 
-void Bubbler_EditorLoad(void) {}
+    Bubbler_Draw();
+}
+
+void Bubbler_EditorLoad(void) { Bubbler->aniFrames = RSDK.LoadSpriteAnimation("CPZ/Bubbler.bin", SCOPE_STAGE); }
 #endif
 
 void Bubbler_Serialize(void) { RSDK_EDITABLE_VAR(Bubbler, VAR_UINT8, direction); }

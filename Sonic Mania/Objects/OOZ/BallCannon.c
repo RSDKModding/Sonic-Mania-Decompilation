@@ -296,9 +296,45 @@ void BallCannon_Unknown8(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void BallCannon_EditorDraw(void) {}
+void BallCannon_EditorDraw(void)
+{
+    RSDK_THIS(BallCannon);
 
-void BallCannon_EditorLoad(void) {}
+    entity->drawFX        = FX_ROTATE | FX_FLIP;
+    entity->active        = ACTIVE_BOUNDS;
+    entity->updateRange.x = 0x400000;
+    entity->updateRange.y = 0x400000;
+
+    switch (entity->type) {
+        case 0:
+            if (entity->angle >= 4)
+                entity->direction = FLIP_X;
+            entity->rotation = (entity->angle + entity->direction + 1) << 7;
+            switch (entity->angle) {
+                case 0:
+                case 5: entity->velocity.y = 0x100000; break;
+                case 1:
+                case 6: entity->velocity.x = -0x100000; break;
+                case 2:
+                case 7: entity->velocity.y = -0x100000; break;
+                case 3:
+                case 4: entity->velocity.x = 0x100000; break;
+                default: break;
+            }
+            RSDK.SetSpriteAnimation(BallCannon->aniFrames, 0, &entity->animator, true, 0);
+            break;
+        case 1:
+            RSDK.SetSpriteAnimation(BallCannon->aniFrames, 3, &entity->animator, true, 0);
+            break;
+        case 2:
+            RSDK.SetSpriteAnimation(BallCannon->aniFrames, 4, &entity->animator, true, 0);
+            break;
+    }
+
+    BallCannon_Draw();
+}
+
+void BallCannon_EditorLoad(void) { BallCannon->aniFrames = RSDK.LoadSpriteAnimation("OOZ/BallCannon.bin", SCOPE_STAGE); }
 #endif
 
 void BallCannon_Serialize(void)

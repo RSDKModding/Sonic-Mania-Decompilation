@@ -87,7 +87,7 @@ int32 Gondola_GetWaterLevel(void)
     if (RSDK_sceneInfo->entity->position.y < Water->waterLevel) {
         foreach_active(Water, water)
         {
-            if (water->type == 1 && RSDK.CheckObjectCollisionTouchBox(water, &water->hitbox, entity, &Water->hitbox)) {
+            if (water->type == WATER_RECT && RSDK.CheckObjectCollisionTouchBox(water, &water->hitbox, entity, &Water->hitbox)) {
                 return water->position.y + (water->hitbox.top << 16);
             }
         }
@@ -249,11 +249,7 @@ void Gondola_Unknown6(void)
                     if (!Gondola->taggedBoatIDs[entity->boatID]) {
                         Gondola->taggedBoatIDs[entity->boatID] = 1;
                         if (Gondola->taggedBoatIDs[0] && Gondola->taggedBoatIDs[1] && Gondola->taggedBoatIDs[2]) {
-#if RETRO_USE_PLUS
-                            API.UnlockAchievement("ACH_HCZ");
-#else
-                            APICallback_UnlockAchievement("ACH_HCZ");
-#endif
+                            API_UnlockAchievement("ACH_HCZ");
                             Gondola->hasAchievement = true;
                         }
                     }
@@ -269,9 +265,9 @@ void Gondola_Unknown6(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void Gondola_EditorDraw(void) {}
+void Gondola_EditorDraw(void) { Gondola_Draw(); }
 
-void Gondola_EditorLoad(void) {}
+void Gondola_EditorLoad(void) { Gondola->aniFrames = RSDK.LoadSpriteAnimation("HCZ/Gondola.bin", SCOPE_STAGE); }
 #endif
 
 void Gondola_Serialize(void)

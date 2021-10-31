@@ -258,9 +258,9 @@ void BreakBar_State_Main(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void BreakBar_EditorDraw(void) {}
+void BreakBar_EditorDraw(void) { BreakBar_DrawSprites(); }
 
-void BreakBar_EditorLoad(void) {}
+void BreakBar_EditorLoad(void) { BreakBar->aniFrames = RSDK.LoadSpriteAnimation("HCZ/BreakBar.bin", SCOPE_STAGE); }
 #endif
 
 void BreakBar_Serialize(void)

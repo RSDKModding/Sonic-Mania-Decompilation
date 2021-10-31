@@ -409,9 +409,23 @@ void SentryBug_State_Unknown6(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void SentryBug_EditorDraw(void) {}
+void SentryBug_EditorDraw(void)
+{
+    RSDK_THIS(SentryBug);
 
-void SentryBug_EditorLoad(void) {}
+    entity->field_78 = entity->position;
+    entity->field_80 = entity->position;
+
+    if (entity->amplitude.x >= 0)
+        RSDK.SetSpriteAnimation(SentryBug->aniFrames, 1, &entity->animator2, true, 6);
+    else
+        RSDK.SetSpriteAnimation(SentryBug->aniFrames, 0, &entity->animator2, true, 6);
+    RSDK.SetSpriteAnimation(SentryBug->aniFrames, 2, &entity->animator1, true, 0);
+
+    SentryBug_Draw();
+}
+
+void SentryBug_EditorLoad(void) { SentryBug->aniFrames = RSDK.LoadSpriteAnimation("TMZ1/SentryBug.bin", SCOPE_STAGE); }
 #endif
 
 void SentryBug_Serialize(void)

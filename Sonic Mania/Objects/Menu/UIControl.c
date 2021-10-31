@@ -832,9 +832,28 @@ void UIControl_ProcessButtonInput(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void UIControl_EditorDraw(void) {}
+void UIControl_EditorDraw(void)
+{
+    RSDK_THIS(UIControl);
+    entity->updateRange.x = entity->size.x >> 1;
+    entity->updateRange.y = entity->size.y >> 1;
 
-void UIControl_EditorLoad(void) {}
+    Vector2 drawPos;
+
+    drawPos.x = entity->position.x;
+    drawPos.y = entity->position.y;
+    drawPos.x -= entity->size.x >> 1;
+    drawPos.y -= entity->size.y >> 1;
+    RSDK.DrawLine(drawPos.x, drawPos.y, drawPos.x + entity->size.x, drawPos.y, 0xFFFF00, 0, INK_NONE, false);
+    RSDK.DrawLine(drawPos.x, entity->size.y + drawPos.y, drawPos.x + entity->size.x, entity->size.y + drawPos.y, 0xFFFF00, 0, INK_NONE, false);
+    RSDK.DrawLine(drawPos.x, drawPos.y, drawPos.x, drawPos.y + entity->size.y, 0xFFFF00, 0, INK_NONE, false);
+    RSDK.DrawLine(drawPos.x + entity->size.x, drawPos.y, drawPos.x + entity->size.x, drawPos.y + entity->size.y, 0xFFFF00, 0, INK_NONE, false);
+
+    RSDK.SetSpriteAnimation(UIControl->aniFrames, 0, &entity->animator, false, 7);
+    RSDK.DrawSprite(&entity->animator, NULL, false);
+}
+
+void UIControl_EditorLoad(void) { UIControl->aniFrames = RSDK.LoadSpriteAnimation("Editor/EditorIcons.bin", SCOPE_STAGE); }
 #endif
 
 void UIControl_Serialize(void)

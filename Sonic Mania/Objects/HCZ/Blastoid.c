@@ -171,9 +171,14 @@ void Blastoid_State_Projectile(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void Blastoid_EditorDraw(void) {}
+void Blastoid_EditorDraw(void)
+{
+    RSDK_THIS(Blastoid);
+    RSDK.SetSpriteAnimation(Blastoid->aniFrames, 0, &entity->animator, false, 0);
+    Blastoid_Draw();
+}
 
-void Blastoid_EditorLoad(void) {}
+void Blastoid_EditorLoad(void) { Blastoid->aniFrames = RSDK.LoadSpriteAnimation("HCZ/Blastoid.bin", SCOPE_STAGE); }
 #endif
 
 void Blastoid_Serialize(void) { RSDK_EDITABLE_VAR(Blastoid, VAR_UINT8, direction); }

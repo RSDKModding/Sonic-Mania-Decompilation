@@ -62,9 +62,8 @@ void ContinuePlayer_Create(void *data)
 void ContinuePlayer_StageLoad(void)
 {
     ContinuePlayer->aniFrames = RSDK.LoadSpriteAnimation("Players/Continue.bin", SCOPE_STAGE);
-    if (globals->playerID == ID_NONE) {
+    if (globals->playerID == ID_NONE) 
         globals->playerID = ID_DEFAULT_PLAYER;
-    }
 
     switch (globals->playerID & 0xFF) {
         case ID_TAILS: ContinuePlayer->playerAniFrames = RSDK.LoadSpriteAnimation("Players/Tails.bin", SCOPE_STAGE); break;

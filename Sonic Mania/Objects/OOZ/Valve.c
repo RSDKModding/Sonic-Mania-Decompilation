@@ -56,9 +56,16 @@ void Valve_StageLoad(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void Valve_EditorDraw(void) {}
+void Valve_EditorDraw(void)
+{
+    RSDK_THIS(Valve);
+    RSDK.SetSpriteAnimation(Valve->aniFrames, 1, &entity->animator1, false, 3);
+    RSDK.SetSpriteAnimation(Valve->aniFrames, 3, &entity->animator2, false, 3);
 
-void Valve_EditorLoad(void) {}
+    Valve_Draw();
+}
+
+void Valve_EditorLoad(void) { Valve->aniFrames = RSDK.LoadSpriteAnimation("OOZ/Valve.bin", SCOPE_STAGE); }
 #endif
 
 void Valve_Serialize(void) { RSDK_EDITABLE_VAR(Valve, VAR_UINT8, direction); }

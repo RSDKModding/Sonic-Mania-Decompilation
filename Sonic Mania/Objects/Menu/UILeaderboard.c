@@ -494,9 +494,14 @@ void UILeaderboard_ProcessButtonCB(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void UILeaderboard_EditorDraw(void) {}
+void UILeaderboard_EditorDraw(void)
+{
+    RSDK_THIS(UILeaderboard);
+    entity->inkEffect = entity->disabled ? INK_BLEND : INK_NONE;
+    UILeaderboard_Draw();
+}
 
-void UILeaderboard_EditorLoad(void) {}
+void UILeaderboard_EditorLoad(void) { UILeaderboard->aniFrames = RSDK.LoadSpriteAnimation("UI/SaveSelect.bin", SCOPE_STAGE); }
 #endif
 
 void UILeaderboard_Serialize(void) { RSDK_EDITABLE_VAR(UILeaderboard, VAR_BOOL, disabled); }

@@ -360,7 +360,11 @@ void UIRankButton_Unknown14(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void UIRankButton_EditorDraw(void) {}
+void UIRankButton_EditorDraw(void)
+{
+    RSDK_THIS(UIRankButton);
+    UIRankButton_Unknown4();
+}
 
 void UIRankButton_EditorLoad(void) {}
 #endif

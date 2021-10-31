@@ -46,12 +46,6 @@ void TubeSpring_StageLoad(void)
     TubeSpring->hitbox.bottom = 48;
 }
 
-#if RETRO_INCLUDE_EDITOR
-void TubeSpring_EditorDraw(void) {}
-
-void TubeSpring_EditorLoad(void) {}
-#endif
-
 void TubeSpring_Interact(void) { TubeSpring_Spring(true); }
 
 void TubeSpring_Springing(void)
@@ -108,6 +102,25 @@ bool32 TubeSpring_Spring(bool32 interact)
     }
     return sprung;
 }
+
+#if RETRO_INCLUDE_EDITOR
+void TubeSpring_EditorDraw(void)
+{
+    RSDK_THIS(TubeSpring);
+    Spring_Create(NULL);
+    RSDK.SetSpriteAnimation(TubeSpring->aniFrames, 0, &entity->animator, true, 0);
+
+    TubeSpring_Draw();
+}
+
+void TubeSpring_EditorLoad(void)
+{
+    if (RSDK.CheckStageFolder("CPZ"))
+        TubeSpring->aniFrames = RSDK.LoadSpriteAnimation("CPZ/TubeSpring.bin", SCOPE_STAGE);
+    if (RSDK.CheckStageFolder("FBZ"))
+        TubeSpring->aniFrames = RSDK.LoadSpriteAnimation("FBZ/TubeSpring.bin", SCOPE_STAGE);
+}
+#endif
 
 void TubeSpring_Serialize(void)
 {

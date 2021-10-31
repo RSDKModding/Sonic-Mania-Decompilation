@@ -220,9 +220,9 @@ void UICharButton_Unknown11(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void UICharButton_EditorDraw(void) {}
+void UICharButton_EditorDraw(void) { UICharButton_Draw(); }
 
-void UICharButton_EditorLoad(void) {}
+void UICharButton_EditorLoad(void) { UICharButton->aniFrames = RSDK.LoadSpriteAnimation("UI/SaveSelect.bin", SCOPE_STAGE); }
 #endif
 
 void UICharButton_Serialize(void)

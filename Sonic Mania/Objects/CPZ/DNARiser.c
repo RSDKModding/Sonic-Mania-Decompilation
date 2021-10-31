@@ -609,7 +609,27 @@ void DNARiser_StateDraw_Helix(void)
 void DNARiser_EditorDraw(void)
 {
     RSDK_THIS(DNARiser);
+
+    entity->vector_D0     = entity->position;
+    entity->active        = ACTIVE_BOUNDS;
+    entity->speed.x       = 0;
+    entity->velocity.x    = 0;
+    entity->speed.y       = -abs(entity->speed.y);
+    entity->timer         = 0;
+    entity->curHeight     = 0;
+    entity->field_AC      = 0;
+    entity->field_E4      = 0;
+    entity->child         = 0;
+    entity->field_E0      = 0;
+    entity->activePlayers = 0;
+    entity->field_60      = 0;
+    entity->field_B6      = 0;
+    entity->timer2        = 0;
+    entity->field_B0      = 0;
+    entity->velocity.y    = 0;
+    entity->field_70      = 0x200;
     RSDK.SetSpriteAnimation(DNARiser->aniFrames, 0, &entity->animator2, true, 0);
+
     DNARiser_StateDraw_Main();
 }
 

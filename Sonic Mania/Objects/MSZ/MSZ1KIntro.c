@@ -119,7 +119,11 @@ bool32 MSZ1KIntro_CutsceneState_Unknown3(EntityCutsceneSeq *host)
     return false;
 }
 
-void MSZ1KIntro_EditorDraw(void) {}
+void MSZ1KIntro_EditorDraw(void)
+{
+    RSDK_THIS(MSZ1KIntro);
+    CutsceneRules_DrawCutsceneBounds(entity);
+}
 
 void MSZ1KIntro_EditorLoad(void) {}
 

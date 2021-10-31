@@ -85,9 +85,15 @@ void TMZAlert_Unknown3(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void TMZAlert_EditorDraw(void) {}
+void TMZAlert_EditorDraw(void)
+{
+    RSDK_THIS(TMZAlert);
+    RSDK.SetSpriteAnimation(TMZAlert->aniFrames, 0, &entity->animator, true, 0);
 
-void TMZAlert_EditorLoad(void) {}
+    TMZAlert_Draw();
+}
+
+void TMZAlert_EditorLoad(void) { TMZAlert->aniFrames = RSDK.LoadSpriteAnimation("Phantom/AlertScreen.bin", SCOPE_STAGE); }
 #endif
 
 void TMZAlert_Serialize(void) {}

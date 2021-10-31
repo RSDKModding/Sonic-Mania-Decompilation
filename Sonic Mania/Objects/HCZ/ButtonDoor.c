@@ -144,11 +144,11 @@ void ButtonDoor_SetupButtonTag(void)
             if (TurretSwitch && !tagged) {
                 foreach_all(TurretSwitch, turretSwitch)
                 {
-                    // if (turretSwitch->buttonTag == tag) {
-                    //     taggedEntity = (EntityButton *)turretSwitch;
-                    //     tagged = true;
-                    //     foreach_break;
-                    // }
+                    if (turretSwitch->tag == entity->buttonTag) {
+                        taggedEntity = (EntityButton *)turretSwitch;
+                        tagged = true;
+                        foreach_break;
+                    }
                 }
             }
         }

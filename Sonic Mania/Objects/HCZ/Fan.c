@@ -170,7 +170,7 @@ void Fan_Create(void *data)
         entity->updateRange.x = 0x800000;
         entity->updateRange.y = 0x800000;
         if (!entity->type)
-            entity->direction *= 2;
+            entity->direction *= FLIP_Y;
         if (!entity->size)
             entity->size = 5;
         entity->size *= 16;
@@ -487,9 +487,24 @@ void Fan_Unknown11(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void Fan_EditorDraw(void) {}
+void Fan_EditorDraw(void)
+{
+    RSDK_THIS(Fan);
+    RSDK.SetSpriteAnimation(Fan->aniFrames, entity->type, &entity->animator, true, 0);
 
-void Fan_EditorLoad(void) {}
+    if (!entity->type)
+        entity->direction *= FLIP_Y;
+
+    Fan_Draw();
+}
+
+void Fan_EditorLoad(void)
+{
+    if (RSDK.CheckStageFolder("OOZ1") || RSDK.CheckStageFolder("OOZ2"))
+        Fan->aniFrames = RSDK.LoadSpriteAnimation("OOZ/Fan.bin", SCOPE_STAGE);
+    else if (RSDK.CheckStageFolder("HCZ"))
+        Fan->aniFrames = RSDK.LoadSpriteAnimation("HCZ/Fan.bin", SCOPE_STAGE);
+}
 #endif
 
 void Fan_Serialize(void)

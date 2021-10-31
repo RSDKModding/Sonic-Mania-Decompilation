@@ -698,9 +698,43 @@ void AmoebaDroid_StateMain_SpawnSignpost(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void AmoebaDroid_EditorDraw(void) {}
+void AmoebaDroid_EditorDraw(void)
+{
+    RSDK_THIS(AmoebaDroid);
+    switch (entity->type) {
+        case 0:
+            entity->drawFX = FX_FLIP;
+            RSDK.SetSpriteAnimation(AmoebaDroid->aniFrames, 0, &entity->animator1, true, 0);
+            RSDK.SetSpriteAnimation(AmoebaDroid->aniFrames, 1, &entity->animator2, true, 0);
+            RSDK.SetSpriteAnimation(AmoebaDroid->aniFrames, 2, &entity->animator3, true, 0);
+            entity->stateDraw = AmoebaDroid_StateDrawMain_Unknown1;
+            break;
+        case 1:
+            entity->drawFX    = FX_SCALE;
+            entity->inkEffect = INK_ALPHA;
+            entity->scale.y   = 0x200;
+            RSDK.SetSpriteAnimation(AmoebaDroid->aniFrames, 3, &entity->animator1, true, 0);
+            entity->stateDraw = AmoebaDroid_StateDraw1_Unknown1;
+            break;
+        case 2:
+            entity->updateRange.x = 0x200000;
+            entity->updateRange.y = 0x200000;
+            entity->inkEffect     = INK_ALPHA;
+            RSDK.SetSpriteAnimation(AmoebaDroid->aniFrames, 4, &entity->animator1, true, 0);
+            break;
+        case 3: RSDK.SetSpriteAnimation(AmoebaDroid->waterFrames, 1, &entity->animator1, true, 0); break;
+        case 4: RSDK.SetSpriteAnimation(AmoebaDroid->waterFrames, 1, &entity->animator1, true, 0); break;
+        default: break;
+    }
 
-void AmoebaDroid_EditorLoad(void) {}
+    AmoebaDroid_Draw();
+}
+
+void AmoebaDroid_EditorLoad(void)
+{
+    AmoebaDroid->aniFrames   = RSDK.LoadSpriteAnimation("CPZ/AmoebaDroid.bin", SCOPE_STAGE);
+    AmoebaDroid->waterFrames = RSDK.LoadSpriteAnimation("Global/Water.bin", SCOPE_STAGE);
+}
 #endif
 
 void AmoebaDroid_Serialize(void) { RSDK_EDITABLE_VAR(AmoebaDroid, VAR_ENUM, type); }

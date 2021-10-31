@@ -451,9 +451,52 @@ void Beanstalk_State3_Unknown(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void Beanstalk_EditorDraw(void) {}
+void Beanstalk_EditorDraw(void)
+{
+    RSDK_THIS(Beanstalk);
 
-void Beanstalk_EditorLoad(void) {}
+    entity->bezCtrlAngle &= 0xFF;
+    entity->field_74 = -1;
+    entity->field_78 = 0x200;
+    entity->field_8C = entity->position;
+    entity->field_94 = entity->position;
+    entity->field_9C = 0;
+    entity->timer    = 0;
+    entity->field_A0 = 0;
+
+    switch (entity->type) {
+        case 0:
+            RSDK.SetSpriteAnimation(Beanstalk->aniFrames, 4, &entity->animator1, true, 9);
+            break;
+        case 1:
+            RSDK.SetSpriteAnimation(Beanstalk->aniFrames, 0, &entity->animator1, true, 0);
+            break;
+        case 2:
+            RSDK.SetSpriteAnimation(Beanstalk->aniFrames, 0, &entity->animator1, true, 0);
+            RSDK.SetSpriteAnimation(Beanstalk->aniFrames, 2, &entity->animator2, true, 0);
+            break;
+        case 3:
+            RSDK.SetSpriteAnimation(Beanstalk->aniFrames, 0, &entity->animator1, true, 0);
+            RSDK.SetSpriteAnimation(Beanstalk->aniFrames, 3, &entity->animator2, true, 0);
+            break;
+        default: break;
+    }
+
+    Beanstalk_Unknown4();
+    Beanstalk_Unknown5();
+
+    entity->scale.x = entity->field_78;
+    entity->scale.y = entity->field_78;
+    entity->drawFX  = FX_SCALE | FX_FLIP;
+    RSDK.DrawSprite(&entity->animator1, NULL, false);
+    if (entity->type > 1)
+        RSDK.DrawSprite(&entity->animator2, NULL, false);
+    entity->drawFX  = FX_FLIP;
+    entity->scale.x = 0x200;
+    entity->scale.y = 0x200;
+}
+
+void Beanstalk_EditorLoad(void) { Beanstalk->aniFrames = RSDK.LoadSpriteAnimation("SSZ1/Beanstalk.bin", SCOPE_STAGE); }
 #endif
 
 void Beanstalk_Serialize(void)

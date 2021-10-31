@@ -2103,7 +2103,13 @@ void Platform_CollisionState_AllSolid_NoCrush(void)
     }
 }
 
-void Platform_EditorDraw(void) { Platform_Draw(); }
+void Platform_EditorDraw(void)
+{
+    RSDK_THIS(Platform);
+    entity->drawPos = entity->position;
+    entity->centerPos = entity->position;
+    Platform_Draw();
+}
 
 void Platform_EditorLoad(void)
 {
@@ -2127,6 +2133,24 @@ void Platform_EditorLoad(void)
     RSDK_ENUM_VAR(PLATFORM_14);
     RSDK_ENUM_VAR(PLATFORM_15);
     RSDK_ENUM_VAR(PLATFORM_16);
+
+    RSDK_ACTIVE_VAR(Platform, collision);
+    RSDK_ENUM_VAR(PLATFORM_C_0);
+    RSDK_ENUM_VAR(PLATFORM_C_1);
+    RSDK_ENUM_VAR(PLATFORM_C_2);
+    RSDK_ENUM_VAR(PLATFORM_C_3);
+    RSDK_ENUM_VAR(PLATFORM_C_4);
+    RSDK_ENUM_VAR(PLATFORM_C_5);
+    RSDK_ENUM_VAR(PLATFORM_C_6);
+    RSDK_ENUM_VAR(PLATFORM_C_7);
+    RSDK_ENUM_VAR(PLATFORM_C_8);
+    RSDK_ENUM_VAR(PLATFORM_C_9);
+    RSDK_ENUM_VAR(PLATFORM_C_10);
+    RSDK_ENUM_VAR(PLATFORM_C_11);
+    RSDK_ENUM_VAR(PLATFORM_C_12);
+    RSDK_ENUM_VAR(PLATFORM_C_13);
+    RSDK_ENUM_VAR(PLATFORM_C_14);
+    RSDK_ENUM_VAR(PLATFORM_C_15);
 }
 
 void Platform_Serialize(void)

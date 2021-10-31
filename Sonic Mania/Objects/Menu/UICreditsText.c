@@ -241,9 +241,14 @@ void UICreditsText_State_FadeOut(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void UICreditsText_EditorDraw(void) {}
+void UICreditsText_EditorDraw(void)
+{
+    RSDK_THIS(UICreditsText);
+    RSDK.SetSpriteAnimation(UICreditsText->aniFrames, entity->listID, &entity->animator, true, 0);
+    UICreditsText_Draw();
+}
 
-void UICreditsText_EditorLoad(void) {}
+void UICreditsText_EditorLoad(void) { UICreditsText->aniFrames = RSDK.LoadSpriteAnimation("UI/CreditsText.bin", SCOPE_STAGE); }
 #endif
 
 void UICreditsText_Serialize(void)

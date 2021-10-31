@@ -186,9 +186,18 @@ void UncurlPlant_CalculatePositions(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void UncurlPlant_EditorDraw(void) {}
+void UncurlPlant_EditorDraw(void)
+{
+    RSDK_THIS(UncurlPlant);
+    RSDK.SetSpriteAnimation(UncurlPlant->aniFrames, 1, &entity->animator, false, 0);
+    UncurlPlant_CalculateDrawPositions();
 
-void UncurlPlant_EditorLoad(void) {}
+    for (int32 i = 0; i < 8; ++i) {
+        RSDK.DrawSprite(&entity->animator, &entity->drawPositions[i], false);
+    }
+}
+
+void UncurlPlant_EditorLoad(void) { UncurlPlant->aniFrames = RSDK.LoadSpriteAnimation("SSZ1/Plants.bin", SCOPE_STAGE); }
 #endif
 
 void UncurlPlant_Serialize(void) { RSDK_EDITABLE_VAR(UncurlPlant, VAR_UINT8, direction); }

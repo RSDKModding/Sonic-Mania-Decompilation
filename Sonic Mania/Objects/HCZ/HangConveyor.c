@@ -338,9 +338,9 @@ void HangConveyor_Unknown2(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void HangConveyor_EditorDraw(void) {}
+void HangConveyor_EditorDraw(void) { HangConveyor_DrawSprites(); }
 
-void HangConveyor_EditorLoad(void) {}
+void HangConveyor_EditorLoad(void) { HangConveyor->aniFrames = RSDK.LoadSpriteAnimation("HCZ/HangConveyor.bin", SCOPE_STAGE); }
 #endif
 
 void HangConveyor_Serialize(void)

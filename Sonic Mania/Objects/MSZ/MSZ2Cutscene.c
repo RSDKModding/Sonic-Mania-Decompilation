@@ -251,7 +251,11 @@ bool32 MSZ2Cutscene_CutsceneState_Unknown4(EntityCutsceneSeq *host)
     return false;
 }
 
-void MSZ2Cutscene_EditorDraw(void) {}
+void MSZ2Cutscene_EditorDraw(void)
+{
+    RSDK_THIS(MSZ2Cutscene);
+    CutsceneRules_DrawCutsceneBounds(entity);
+}
 
 void MSZ2Cutscene_EditorLoad(void) {}
 

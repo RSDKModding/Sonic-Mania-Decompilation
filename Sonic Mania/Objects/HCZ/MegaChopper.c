@@ -205,7 +205,7 @@ void MegaChopper_State_Unknown1(void)
         bool32 flag = false;
         foreach_active(Water, water)
         {
-            if (water->type == 1 && RSDK.CheckObjectCollisionTouchBox(water, &water->hitbox, entity, &Water->hitbox)) {
+            if (water->type == WATER_RECT && RSDK.CheckObjectCollisionTouchBox(water, &water->hitbox, entity, &Water->hitbox)) {
                 flag = true;
             }
         }
@@ -242,7 +242,7 @@ void MegaChopper_State_Unknown2(void)
     else {
         foreach_active(Water, water)
         {
-            if (water->type == 1 && RSDK.CheckObjectCollisionTouchBox(water, &water->hitbox, entity, &Water->hitbox)) {
+            if (water->type == WATER_RECT && RSDK.CheckObjectCollisionTouchBox(water, &water->hitbox, entity, &Water->hitbox)) {
                 entity->state = MegaChopper_State_Unknown1;
             }
         }

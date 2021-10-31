@@ -17,7 +17,7 @@ ScreenInfo *currentScreen = NULL;
 byte startVertex_2P[2];
 byte startVertex_3P[3];
 
-char drawGroupNames[0x10][0x10]{
+char drawGroupNames[0x10][0x10] = {
     "Draw Group 0", "Draw Group 1", "Draw Group 2",  "Draw Group 3",  "Draw Group 4",  "Draw Group 5",  "Draw Group 6",  "Draw Group 7",
     "Draw Group 8", "Draw Group 9", "Draw Group 10", "Draw Group 11", "Draw Group 12", "Draw Group 13", "Draw Group 14", "Draw Group 15",
 };

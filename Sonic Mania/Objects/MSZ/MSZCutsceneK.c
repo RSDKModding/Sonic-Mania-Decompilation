@@ -48,12 +48,6 @@ void MSZCutsceneK_StageLoad(void)
     }
 }
 
-#if RETRO_INCLUDE_EDITOR
-void MSZCutsceneK_EditorDraw(void) {}
-
-void MSZCutsceneK_EditorLoad(void) {}
-#endif
-
 void MSZCutsceneK_SkipCB(void)
 {
     RSDK.SetScene("Mania Mode", "");
@@ -189,5 +183,15 @@ bool32 MSZCutsceneK_CutsceneState_Unknown2(EntityCutsceneSeq *host)
     player2->position.y = tornado->position.y + MSZCutsceneK->pos2.y;
     return false;
 }
+
+#if RETRO_INCLUDE_EDITOR
+void MSZCutsceneK_EditorDraw(void)
+{
+    RSDK_THIS(MSZCutsceneK);
+    CutsceneRules_DrawCutsceneBounds(entity);
+}
+
+void MSZCutsceneK_EditorLoad(void) {}
+#endif
 
 void MSZCutsceneK_Serialize(void) { RSDK_EDITABLE_VAR(MSZCutsceneK, VAR_VECTOR2, size); }

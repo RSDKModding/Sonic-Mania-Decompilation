@@ -1135,9 +1135,20 @@ void UITAZoneModule_Unknown31(void)
 #endif
 
 #if RETRO_INCLUDE_EDITOR
-void UITAZoneModule_EditorDraw(void) {}
+void UITAZoneModule_EditorDraw(void)
+{
+    RSDK_THIS(UITAZoneModule);
 
-void UITAZoneModule_EditorLoad(void) {}
+    RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 3, &entity->animator5, false, 0);
+    RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 3, &entity->animator6, false, 0);
+    UITAZoneModule_SetupText();
+
+    entity->inkEffect = entity->disabled ? INK_BLEND : INK_NONE;
+
+    UITAZoneModule_Draw();
+}
+
+void UITAZoneModule_EditorLoad(void) { UITAZoneModule->aniFrames = RSDK.LoadSpriteAnimation("UI/SaveSelect.bin", SCOPE_STAGE); }
 #endif
 
 void UITAZoneModule_Serialize(void)

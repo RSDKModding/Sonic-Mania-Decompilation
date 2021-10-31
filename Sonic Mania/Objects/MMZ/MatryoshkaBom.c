@@ -116,14 +116,14 @@ void MatryoshkaBom_StageLoad(void)
 
 void MatryoshkaBom_DebugSpawn(void)
 {
-    RSDK_THIS(MatryoshkaBom);
-    CREATE_ENTITY(MatryoshkaBom, 0, entity->position.x, entity->position.y);
+    RSDK_THIS(DebugMode);
+    CREATE_ENTITY(MatryoshkaBom, NULL, entity->position.x, entity->position.y);
 }
 
 void MatryoshkaBom_DebugDraw(void)
 {
     RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 0, &DebugMode->animator, true, 0);
-    RSDK.DrawSprite(&DebugMode->animator, 0, false);
+    RSDK.DrawSprite(&DebugMode->animator, NULL, false);
 }
 
 void MatryoshkaBom_CheckPlayerCollisions(void)
@@ -424,10 +424,37 @@ void MatryoshkaBom_Unknown11(void)
     }
 }
 
-void MatryoshkaBom_EditorDraw(void) {}
+void MatryoshkaBom_EditorDraw(void)
+{
+    RSDK_THIS(MatryoshkaBom);
+    entity->drawFX |= FX_FLIP;
+
+    switch (entity->size) {
+        default: break;
+        case MATRYOSHKA_SIZE_BIG:
+            RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 0, &entity->animator1, false, 0);
+            RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 13, &entity->animator2, false, 0);
+            RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 2, &entity->animator3, false, 0);
+            break;
+        case MATRYOSHKA_SIZE_MED:
+            RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 4, &entity->animator1, false, 0);
+            RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 14, &entity->animator2, false, 0);
+            RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 6, &entity->animator3, false, 0);
+            break;
+        case MATRYOSHKA_SIZE_SMALL:
+            RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 9, &entity->animator1, false, 0);
+            RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 15, &entity->animator2, false, 0);
+            RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 10, &entity->animator3, false, 0);
+            break;
+    }
+
+    MatryoshkaBom_Draw();
+}
 
 void MatryoshkaBom_EditorLoad(void)
 {
+    MatryoshkaBom->aniFrames = RSDK.LoadSpriteAnimation("MMZ/MatryoshkaBom.bin", SCOPE_STAGE);
+
     RSDK_ACTIVE_VAR(MatryoshkaBom, planeFilter);
     RSDK_ENUM_VAR(PLANEFILTER_NONE);
     RSDK_ENUM_VAR(PLANEFILTER_A);

@@ -209,9 +209,19 @@ void MetalArm_Unknown7(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void MetalArm_EditorDraw(void) {}
+void MetalArm_EditorDraw(void)
+{
+    RSDK_THIS(MetalArm);
+    entity->startPos.x    = entity->position.x;
+    entity->startPos.y    = entity->position.y;
+    entity->armAngle.x = entity->startAngleA << 16;
+    entity->armAngle.y = entity->startAngleB << 16;
+    entity->posUnknown = MetalArm_Unknown2();
 
-void MetalArm_EditorLoad(void) {}
+    MetalArm_Draw();
+}
+
+void MetalArm_EditorLoad(void) { MetalArm->aniFrames = RSDK.LoadSpriteAnimation("TMZ1/MetalArm.bin", SCOPE_STAGE); }
 #endif
 
 void MetalArm_Serialize(void)

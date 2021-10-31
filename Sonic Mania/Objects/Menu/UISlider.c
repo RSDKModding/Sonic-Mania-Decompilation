@@ -334,7 +334,7 @@ void UISlider_Unknown10(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void UISlider_EditorDraw(void) {}
+void UISlider_EditorDraw(void) { UISlider_Draw(); }
 
 void UISlider_EditorLoad(void) {}
 #endif
