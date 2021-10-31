@@ -84,10 +84,10 @@ struct DrawList {
 
 #if RETRO_HARDWARE_RENDER
 
-#define VERTEX_LIMIT   (0x2000)
-#define INDEX_LIMIT    (VERTEX_LIMIT * 6)
-#define VERTEX3D_LIMIT (0x2000)
-#define TILEUV_SIZE    (0x1000)
+#define VERTEX_LIMIT        (0x400)
+#define RENDERSTATE_LIMIT   (0x20)
+#define INDEX_LIMIT         (VERTEX_LIMIT * 6)
+#define TILEUV_SIZE         (0x1000)
 struct DrawVertex {
     float x;
     float y;
@@ -98,34 +98,38 @@ struct DrawVertex {
     Colour colour = 0;
 };
 
+class ShaderBase;
+class PlaceShader;
+class CircleShader;
+
+extern PlaceShader placeShader;
+extern CircleShader circleShader;
+
 struct RenderState {
-    bool32 isGFX = true;
+    ShaderBase *shader = (ShaderBase *)&placeShader;
+    byte blendMode     = INK_NONE;
 
-    byte blendMode    = INK_NONE;
-    byte transparency = 0xFF;
-    uint texID        = 0;
+    ushort indexCount = 0;
+    ushort indecies[INDEX_LIMIT];
 
+    Colour maskColor = 0;
+    // cast me to set variables specific to the shader
+    byte argBuffer[0x20];
+
+    // these 2 are used in multiple and are MASSIVE so we keep them
     ushort palette[PALETTE_COUNT][PALETTE_SIZE];
     byte lineBuffer[SCREEN_YSIZE];
 };
 
-extern DrawVertex gfxPolyList[VERTEX_LIMIT];
-extern ushort gfxPolyListIndex[INDEX_LIMIT];
-
-// extern DrawVertex3D polyList3D[VERTEX3D_LIMIT];
+extern DrawVertex vertexList[VERTEX_LIMIT];
 
 extern ushort tileUVArray[TILEUV_SIZE];
-extern float floor3DXPos;
-extern float floor3DYPos;
-extern float floor3DZPos;
-extern float floor3DAngle;
 
-extern RenderState currentRenderState;
-extern RenderState lastRenderState;
+extern RenderState renderStates[RENDERSTATE_LIMIT];
+
+extern sbyte renderStateIndex;
 extern ushort renderCount;
 extern ushort lastRenderCount;
-extern ushort renderIndex;
-extern ushort lastRenderIndex;
 
 extern uint currentTex;
 
@@ -298,23 +302,22 @@ void DrawDevText(int x, const char *text, int y, int align, uint colour);
 void SetupViewport();
 void SetupPolygonLists();
 void SetupShaders();
-bool32 StateCheck();
-void TryRender();
+void RenderRenderStates();
 
-inline void AddGFXPoly(float x, float y, float z, float u, float v, Colour color = 0, GFXSurface *surface = NULL)
+inline void AddPoly(float x, float y, float z, float u, float v, Colour color = 0, GFXSurface *surface = NULL)
 {
-    gfxPolyList[renderCount].x        = x;
-    gfxPolyList[renderCount].y        = y;
-    gfxPolyList[renderCount].z        = z;
-    if (surface) {
-        gfxPolyList[renderCount].u        = u;// / surface->width;
-        gfxPolyList[renderCount].v        = v;// / surface->height;
-    }
-    else gfxPolyList[renderCount].colour = color;
-    renderCount++;
-}
-inline void AddGFXPoly(float x, float y, float u, float v, Colour color, GFXSurface *surface = NULL) { AddGFXPoly(x, y, 0, u, v, color, surface); }
+    vertexList[renderCount].x = x;
+    vertexList[renderCount].y = y;
+    vertexList[renderCount].z = z;
+    vertexList[renderCount].u = u;
+    vertexList[renderCount].v = v;
 
+    vertexList[renderCount ++].colour = color;
+}
+inline void AddPoly(float x, float y, float u, float v, Colour color, GFXSurface *surface = NULL) { AddPoly(x, y, 0, u, v, color, surface); }
+
+void AddRenderState(int blendMode, ushort vertCount, ushort indexCount, void *args = NULL, ShaderBase *shader = (ShaderBase *)&placeShader,
+                    ushort *altIndex = NULL);
 #endif
 
 #endif // !DRAWING_H

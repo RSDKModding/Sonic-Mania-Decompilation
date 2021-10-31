@@ -21,14 +21,16 @@ byte startVertex_3P[3];
 bool32 forceRender = false;
 uint currentTex;
 
-struct ShaderHelper {
+class ShaderBase
+{
+public:
     uint ID;
 #if RETRO_USING_OPENGL
     uint palTex = 0;
 #endif
 
-    ShaderHelper() { ID = 0; }
-    ShaderHelper(const char *vert, const char *frag)
+    ShaderBase() { ID = 0; }
+    ShaderBase(const char *vert, const char *frag)
     {
 #if RETRO_USING_OPENGL
         uint v = glCreateShader(GL_VERTEX_SHADER);
@@ -61,10 +63,11 @@ struct ShaderHelper {
 #endif
     }
 
-    void bind() {
+    void bind()
+    {
 #if RETRO_USING_OPENGL
         glBindAttribLocation(ID, 0, "in_pos");
-        glBindAttribLocation(ID, 1, "in_texUV");
+        glBindAttribLocation(ID, 1, "in_UV");
         glBindAttribLocation(ID, 2, "in_color");
 #endif
     }
@@ -76,10 +79,11 @@ struct ShaderHelper {
 #endif
     }
 
-    void setProjection(MatrixF* matrix) {
+    void setProjection(MatrixF *matrix)
+    {
         MatrixF view;
         for (int i = 0; i < 16; ++i) {
-            ((float*)&view)[i] = 0; //what the fuck did i just do
+            ((float *)&view)[i] = 0; // what the fuck did i just do
         }
         view.values[0][0] = 1;
         view.values[1][1] = 1;
@@ -87,41 +91,36 @@ struct ShaderHelper {
         view.values[3][3] = 1;
 #if RETRO_USING_OPENGL
         glUniformMatrix4fv(glGetUniformLocation(ID, "projection"), 1, GL_TRUE, (float *)matrix);
-        glUniformMatrix4fv(glGetUniformLocation(ID, "view"), 1, GL_TRUE, (float*)&view);
+        glUniformMatrix4fv(glGetUniformLocation(ID, "view"), 1, GL_TRUE, (float *)&view);
 #endif
     }
 
     void setScreen(ScreenInfo *screen)
     {
 #if RETRO_USING_OPENGL
-        glUniform2i(glGetUniformLocation(ID, "screenSize"), screen->width, screen->height);
+        glUniform2f(glGetUniformLocation(ID, "screen.size"), screen->width, screen->height);
+        glUniform2f(glGetUniformLocation(ID, "screen.clipRectTL"), screen->clipBound_X1, screen->clipBound_Y1);
+        glUniform2f(glGetUniformLocation(ID, "screen.clipRectBR"), screen->clipBound_X2, screen->clipBound_Y2);
 #endif
     }
 
-    void setTexture(uint tID)
+    void setMask(Colour mask, byte ink)
     {
+        if (ink != INK_MASKED && ink != INK_UNMASKED) {
 #if RETRO_USING_OPENGL
-        if (currentTex != tID) {
-            glBindTexture(GL_TEXTURE_RECTANGLE, tID);
-            currentTex = tID;
+            glUniform1i(glGetUniformLocation(ID, "maskMode"), 0);
+#endif
+            return;
         }
-        glUniform1i(glGetUniformLocation(ID, "sprite"), 0);
+#if RETRO_USING_OPENGL
+        glUniform3f(glGetUniformLocation(ID, "maskColor"), mask.r, mask.g, mask.b);
+        glUniform1i(glGetUniformLocation(ID, "maskMode"), (ink == INK_UNMASKED) + 1);
 #endif
     }
 
-    void setPalLines(RenderState state)
-    {
-#if RETRO_USING_OPENGL
-        GLint linesOut[0x100];
-        for (uint i = 0; i < SCREEN_YSIZE; ++i) {
-            linesOut[i] = state.lineBuffer[i];
-        }
-        glUniform1iv(glGetUniformLocation(ID, "paletteLines"), 0x100, linesOut);
-#endif
-    }
+    virtual void setArgs(RenderState *&state){};
 
-    // this also sets up transparency color but :LOL:
-    void setPalette(RenderState state)
+    virtual void setPalette(RenderState *&state)
     {
 #if RETRO_USING_OPENGL
         if (palTex)
@@ -129,21 +128,45 @@ struct ShaderHelper {
         glGenTextures(1, &palTex);
         glActiveTexture(GL_TEXTURE0 + 1);
         glBindTexture(GL_TEXTURE_RECTANGLE, palTex);
-        glTexImage2D(GL_TEXTURE_RECTANGLE, 0, GL_RGB, PALETTE_SIZE, PALETTE_COUNT, 0, GL_RGB, GL_UNSIGNED_SHORT_5_6_5, state.palette);
+        glTexImage2D(GL_TEXTURE_RECTANGLE, 0, GL_RGB, PALETTE_SIZE, PALETTE_COUNT, 0, GL_RGB, GL_UNSIGNED_SHORT_5_6_5, state->palette);
         glTexParameterf(GL_TEXTURE_RECTANGLE, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         glTexParameterf(GL_TEXTURE_RECTANGLE, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
         glTexParameterf(GL_TEXTURE_RECTANGLE, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
         glTexParameterf(GL_TEXTURE_RECTANGLE, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
         glActiveTexture(GL_TEXTURE0); // be safe
-        glUniform1i(glGetUniformLocation(ID, "palette"), 1);
         glBindTexture(GL_TEXTURE_RECTANGLE, currentTex);
-
-        // uint c0 = gfxPalette16to32[state.palette[0][0]];
-        // glUniform3f(glGetUniformLocation(ID, "transparentColor"), );
 #endif
     }
+
+    virtual void setPalLines(RenderState *&state)
+    {
+#if RETRO_USING_OPENGL
+        GLint linesOut[0x100];
+        for (uint i = 0; i < SCREEN_YSIZE; ++i) {
+            linesOut[i] = state->lineBuffer[i];
+        }
+        glUniform1iv(glGetUniformLocation(ID, "paletteLines"), 0x100, linesOut);
+    }
+#endif
 };
+
+union PlaceArgs {
+    byte size[0x100];
+    struct {
+        uint texID;
+        byte transparency;
+    };
+};
+
+union CircleArgs {
+    byte size[0x100];
+    struct {
+        float innerR;
+        float outerR;
+    };
+};
+
 #endif
 
 char drawGroupNames[0x10][0x10]{
@@ -345,19 +368,12 @@ bool32 InitRenderDevice()
     glDisable(GL_DEPTH_TEST);
     glDisable(GL_DITHER);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glDisable(GL_BLEND);
+    glEnable(GL_BLEND);
     glDisable(GL_CULL_FACE);
 
     SetupShaders();
     SetupViewport();
     SetupPolygonLists();
-
-    for (int c = 0; c < 0x10000; ++c) {
-        int r               = (c & 0b1111100000000000) >> 8;
-        int g               = (c & 0b0000011111100000) >> 3;
-        int b               = (c & 0b0000000000011111) << 3;
-        gfxPalette16to32[c] = (0xFF << 24) | (b << 16) | (g << 8) | (r << 0);
-    }
 
 #if RETRO_USING_SDL2 && RETRO_PLATFORM == RETRO_ANDROID
     SDL_DisplayMode mode;
@@ -525,10 +541,9 @@ void FlipScreen()
         }
     }
 #else
-    // maybe we glClear here?? idk i'm too scared
-    forceRender = true;
-    TryRender();
+    RenderRenderStates();
     SDL_GL_SwapWindow(engine.window);
+    glBlendFunc(GL_ONE, GL_ZERO);
     glClear(GL_COLOR_BUFFER_BIT);
 #endif
 #if RETRO_USING_SDL2
@@ -708,7 +723,7 @@ void InitGFXSystem()
 #endif //! RETRO_USING_OPENGL
 #endif //! RETRO_REV02
 #if RETRO_USING_OPENGL
-    glBindTexture(GL_TEXTURE_RECTANGLE, currentTex); //give it back
+    glBindTexture(GL_TEXTURE_RECTANGLE, currentTex); // give it back
 #endif
 }
 
@@ -838,7 +853,8 @@ void FillScreen(uint colour, int redAlpha, int greenAlpha, int blueAlpha)
     blueAlpha = maxVal(0x00, blueAlpha);
 
     if (redAlpha + greenAlpha + blueAlpha) {
-        validDraw       = true;
+        validDraw = true;
+#if RETRO_SOFTWARE_RENDER
         ushort redVal   = blendLookupTable[BLENDTABLE_XSIZE * redAlpha + bIndexes[(colour >> 0x10) & 0xFF]];
         ushort greenVal = blendLookupTable[BLENDTABLE_XSIZE * greenAlpha + bIndexes[(colour >> 0x08) & 0xFF]];
         ushort blueVal  = blendLookupTable[BLENDTABLE_XSIZE * blueAlpha + bIndexes[(colour >> 0x00) & 0xFF]];
@@ -857,6 +873,20 @@ void FillScreen(uint colour, int redAlpha, int greenAlpha, int blueAlpha)
 
             currentScreen->frameBuffer[id] = (b) | (g << 6) | (r << 11);
         }
+#else
+        Colour c = colour;
+        /*float rN = c.components.r / 255.f;
+        float gN = c.components.g / 255.f;
+        float bN = c.components.b / 255.f;
+
+        float raN = redAlpha / 255.f;
+        float gaN = greenAlpha / 255.f;
+        float baN = blueAlpha / 255.f;//*/
+
+        DrawRectangle(0, 0, currentScreen->width, currentScreen->height, Colour(c.r, 0, 0, 0).color, redAlpha, INK_ADD, true);
+        DrawRectangle(0, 0, currentScreen->width, currentScreen->height, Colour(0, c.g, 0, 0).color, greenAlpha, INK_ADD, true);
+        DrawRectangle(0, 0, currentScreen->width, currentScreen->height, Colour(0, 0, c.b, 0).color, blueAlpha, INK_ADD, true);
+#endif
     }
 }
 
@@ -1540,341 +1570,363 @@ void DrawRectangle(int x, int y, int width, int height, uint colour, int alpha, 
         h    = (float)(height) / (1 << 16);
     }
 
-    AddGFXPoly(xpos, ypos, 0, 0, colour);
-    AddGFXPoly(xpos + w, ypos, 0, 0, colour);
-    AddGFXPoly(xpos, ypos + h, 0, 0, colour);
-    AddGFXPoly(xpos + w, ypos + h, 0, 0, colour);
+    Colour c = colour;
+    c.a      = alpha;
 
-    renderIndex += 6;
-    currentRenderState.texID     = 0;
-    currentRenderState.blendMode = inkEffect;
-    currentRenderState.isGFX     = true;
+    PlaceArgs args;
+    args.texID        = 0;
+    args.transparency = 255;
+    AddRenderState(inkEffect, 4, 6, &args);
 
-    TryRender();
+    AddPoly(xpos, ypos, 0, 0, c);
+    AddPoly(xpos + w, ypos, 0, 0, c);
+    AddPoly(xpos, ypos + h, 0, 0, c);
+    AddPoly(xpos + w, ypos + h, 0, 0, c);
+
 
 #endif
 }
 void DrawCircle(int x, int y, int radius, uint colour, int alpha, InkEffects inkEffect, bool32 screenRelative)
 {
-    if (radius > 0) {
+    if (radius <= 0)
+        return;
+    switch (inkEffect) {
+        default: break;
+        case INK_ALPHA:
+            if (alpha > 0xFF) {
+                inkEffect = INK_NONE;
+            }
+            else if (alpha <= 0)
+                return;
+            break;
+        case INK_ADD:
+        case INK_SUB:
+            if (alpha > 0xFF) {
+                alpha = 0xFF;
+            }
+            else if (alpha <= 0)
+                return;
+            break;
+        case INK_LOOKUP:
+            if (!lookupTable)
+                return;
+            break;
+    }
+#if RETRO_SOFTWARE_RENDER
+    if (!screenRelative) {
+        x = (x >> 16) - currentScreen->position.x;
+        y = (y >> 16) - currentScreen->position.y;
+    }
+
+    int yRadiusBottom = y + radius;
+    int bottom        = currentScreen->clipBound_Y1;
+    int yRadiusTop    = y - radius;
+    int top = top = y - radius;
+    if (y - radius >= bottom) {
+        top = y - radius;
+        if (top > currentScreen->clipBound_Y2)
+            top = currentScreen->clipBound_Y2;
+    }
+    else {
+        top = currentScreen->clipBound_Y1;
+    }
+
+    if (yRadiusBottom >= bottom) {
+        bottom = y + radius;
+        bottom++;
+        if (bottom > currentScreen->clipBound_Y2)
+            bottom = currentScreen->clipBound_Y2;
+    }
+
+    if (top != bottom) {
+        for (int i = top; i < bottom; ++i) {
+            scanEdgeBuffer[i].start = 0x7FFF;
+            scanEdgeBuffer[i].end   = -1;
+        }
+
+        int r                    = 3 - 2 * radius;
+        int xRad                 = x - radius;
+        int curY                 = y;
+        int curX                 = x;
+        int startY               = yRadiusTop + 1;
+        ScanEdge *scanEdgeTop    = &scanEdgeBuffer[yRadiusTop];
+        ScanEdge *scanEdgeBottom = &scanEdgeBuffer[yRadiusBottom];
+        ScanEdge *scanEdge       = &scanEdgeBuffer[y];
+        int dif                  = x - y;
+
+        for (int i = 0; i <= radius; ++i) {
+            int scanX = i + curX;
+            if (yRadiusBottom >= top && yRadiusBottom <= bottom && scanX > scanEdgeBottom->end)
+                scanEdgeBottom->end = scanX;
+            if (startY >= top && startY <= bottom && scanX > scanEdgeTop->end)
+                scanEdgeTop->end = scanX;
+
+            int scanY = i + y;
+            if (scanY >= top && scanY <= bottom) {
+                ScanEdge *edge = &scanEdgeBuffer[scanY];
+                if (yRadiusBottom + dif > edge->end)
+                    edge->end = yRadiusBottom + dif;
+            }
+
+            if (curY >= top && curY <= bottom && yRadiusBottom + dif > scanEdge->end)
+                scanEdge->end = yRadiusBottom + dif;
+            if (yRadiusBottom >= top && yRadiusBottom <= bottom && x < scanEdgeBottom->start)
+                scanEdgeBottom->start = x;
+            if (startY >= top && startY <= bottom && x < scanEdgeTop->start)
+                scanEdgeTop->start = x;
+
+            if (scanY >= top && scanY <= bottom) {
+                ScanEdge *edge = &scanEdgeBuffer[scanY];
+                if (xRad < edge->start)
+                    edge->start = xRad;
+            }
+
+            if (curY >= top && curY <= bottom && xRad < scanEdge->start)
+                scanEdge->start = xRad;
+
+            if (r >= 0) {
+                --yRadiusBottom;
+                --scanEdgeBottom;
+                ++startY;
+                r += 4 * (i - radius) + 10;
+                ++scanEdgeTop;
+                --radius;
+                ++xRad;
+            }
+            else {
+                r += 4 * i + 6;
+            }
+            --curY;
+            --scanEdge;
+            --x;
+        }
+
+        // validDraw              = true;
+        ushort *frameBufferPtr = &currentScreen->frameBuffer[top * currentScreen->pitch];
+        ushort colour16        = bIndexes[(colour >> 0) & 0xFF] | gIndexes[(colour >> 8) & 0xFF] | rIndexes[(colour >> 16) & 0xFF];
+
         switch (inkEffect) {
             default: break;
+            case INK_NONE:
+                if (top <= bottom) {
+                    ScanEdge *edge = &scanEdgeBuffer[top];
+                    int yCnt       = bottom - top;
+                    for (int y = 0; y < yCnt; ++y) {
+                        if (edge->start < currentScreen->clipBound_X1)
+                            edge->start = currentScreen->clipBound_X1;
+                        if (edge->start > currentScreen->clipBound_X2)
+                            edge->start = currentScreen->clipBound_X2;
+
+                        if (edge->end < currentScreen->clipBound_X1)
+                            edge->end = currentScreen->clipBound_X1;
+                        if (edge->end > currentScreen->clipBound_X2)
+                            edge->end = currentScreen->clipBound_X2;
+
+                        int count = edge->end - edge->start;
+                        for (int x = 0; x < count; ++x) {
+                            frameBufferPtr[edge->start + x] = colour16;
+                        }
+                        ++edge;
+                        frameBufferPtr += currentScreen->pitch;
+                    }
+                }
+                break;
+            case INK_BLEND:
+                if (top <= bottom) {
+                    ScanEdge *edge = &scanEdgeBuffer[top];
+                    int yCnt       = bottom - top;
+                    for (int y = 0; y < yCnt; ++y) {
+                        if (edge->start < currentScreen->clipBound_X1)
+                            edge->start = currentScreen->clipBound_X1;
+                        if (edge->start > currentScreen->clipBound_X2)
+                            edge->start = currentScreen->clipBound_X2;
+
+                        if (edge->end < currentScreen->clipBound_X1)
+                            edge->end = currentScreen->clipBound_X1;
+                        if (edge->end > currentScreen->clipBound_X2)
+                            edge->end = currentScreen->clipBound_X2;
+
+                        int count = edge->end - edge->start;
+                        for (int x = 0; x < count; ++x) {
+                            setPixelBlend(colour16, frameBufferPtr[edge->start + x]);
+                        }
+                        ++edge;
+                        frameBufferPtr += currentScreen->pitch;
+                    }
+                }
+                break;
             case INK_ALPHA:
-                if (alpha > 0xFF) {
-                    inkEffect = INK_NONE;
+                if (top <= bottom) {
+                    ScanEdge *edge = &scanEdgeBuffer[top];
+                    int yCnt       = bottom - top;
+                    for (int y = 0; y < yCnt; ++y) {
+                        if (edge->start < currentScreen->clipBound_X1)
+                            edge->start = currentScreen->clipBound_X1;
+                        if (edge->start > currentScreen->clipBound_X2)
+                            edge->start = currentScreen->clipBound_X2;
+
+                        if (edge->end < currentScreen->clipBound_X1)
+                            edge->end = currentScreen->clipBound_X1;
+                        if (edge->end > currentScreen->clipBound_X2)
+                            edge->end = currentScreen->clipBound_X2;
+
+                        int count = edge->end - edge->start;
+                        for (int x = 0; x < count; ++x) {
+                            setPixelAlpha(colour16, frameBufferPtr[edge->start + x], alpha);
+                        }
+                        ++edge;
+                        frameBufferPtr += currentScreen->pitch;
+                    }
                 }
-                else if (alpha <= 0)
-                    return;
                 break;
-            case INK_ADD:
-            case INK_SUB:
-                if (alpha > 0xFF) {
-                    alpha = 0xFF;
+            case INK_ADD: {
+                ushort *blendTablePtr = &blendLookupTable[BLENDTABLE_XSIZE * alpha];
+                if (top <= bottom) {
+                    ScanEdge *edge = &scanEdgeBuffer[top];
+                    int yCnt       = bottom - top;
+                    for (int y = 0; y < yCnt; ++y) {
+                        if (edge->start < currentScreen->clipBound_X1)
+                            edge->start = currentScreen->clipBound_X1;
+                        if (edge->start > currentScreen->clipBound_X2)
+                            edge->start = currentScreen->clipBound_X2;
+
+                        if (edge->end < currentScreen->clipBound_X1)
+                            edge->end = currentScreen->clipBound_X1;
+                        if (edge->end > currentScreen->clipBound_X2)
+                            edge->end = currentScreen->clipBound_X2;
+
+                        int count = edge->end - edge->start;
+                        for (int x = 0; x < count; ++x) {
+                            setPixelAdditive(colour16, frameBufferPtr[edge->start + x]);
+                        }
+                        ++edge;
+                        frameBufferPtr += currentScreen->pitch;
+                    }
                 }
-                else if (alpha <= 0)
-                    return;
                 break;
+            }
+            case INK_SUB: {
+                ushort *subBlendTable = &subtractLookupTable[BLENDTABLE_XSIZE * alpha];
+                if (top <= bottom) {
+                    ScanEdge *edge = &scanEdgeBuffer[top];
+                    int yCnt       = bottom - top;
+                    for (int y = 0; y < yCnt; ++y) {
+                        if (edge->start < currentScreen->clipBound_X1)
+                            edge->start = currentScreen->clipBound_X1;
+                        if (edge->start > currentScreen->clipBound_X2)
+                            edge->start = currentScreen->clipBound_X2;
+
+                        if (edge->end < currentScreen->clipBound_X1)
+                            edge->end = currentScreen->clipBound_X1;
+                        if (edge->end > currentScreen->clipBound_X2)
+                            edge->end = currentScreen->clipBound_X2;
+
+                        int count = edge->end - edge->start;
+                        for (int x = 0; x < count; ++x) {
+                            setPixelSubtractive(colour16, frameBufferPtr[edge->start + x]);
+                        }
+                        ++edge;
+                        frameBufferPtr += currentScreen->pitch;
+                    }
+                }
+                break;
+            }
             case INK_LOOKUP:
-                if (!lookupTable)
-                    return;
+                if (top <= bottom) {
+                    ScanEdge *edge = &scanEdgeBuffer[top];
+                    int yCnt       = bottom - top;
+                    for (int y = 0; y < yCnt; ++y) {
+                        if (edge->start < currentScreen->clipBound_X1)
+                            edge->start = currentScreen->clipBound_X1;
+                        if (edge->start > currentScreen->clipBound_X2)
+                            edge->start = currentScreen->clipBound_X2;
+
+                        if (edge->end < currentScreen->clipBound_X1)
+                            edge->end = currentScreen->clipBound_X1;
+                        if (edge->end > currentScreen->clipBound_X2)
+                            edge->end = currentScreen->clipBound_X2;
+
+                        int count = edge->end - edge->start;
+                        for (int x = 0; x < count; ++x) {
+                            frameBufferPtr[edge->start + x] = lookupTable[frameBufferPtr[edge->start + x]];
+                        }
+                        ++edge;
+                        frameBufferPtr += currentScreen->pitch;
+                    }
+                }
                 break;
-        }
+            case INK_MASKED:
+                if (top <= bottom) {
+                    ScanEdge *edge = &scanEdgeBuffer[top];
+                    int yCnt       = bottom - top;
+                    for (int y = 0; y < yCnt; ++y) {
+                        if (edge->start < currentScreen->clipBound_X1)
+                            edge->start = currentScreen->clipBound_X1;
+                        if (edge->start > currentScreen->clipBound_X2)
+                            edge->start = currentScreen->clipBound_X2;
 
-        if (!screenRelative) {
-            x = (x >> 16) - currentScreen->position.x;
-            y = (y >> 16) - currentScreen->position.y;
-        }
+                        if (edge->end < currentScreen->clipBound_X1)
+                            edge->end = currentScreen->clipBound_X1;
+                        if (edge->end > currentScreen->clipBound_X2)
+                            edge->end = currentScreen->clipBound_X2;
 
-        int yRadiusBottom = y + radius;
-        int bottom        = currentScreen->clipBound_Y1;
-        int yRadiusTop    = y - radius;
-        int top = top = y - radius;
-        if (y - radius >= bottom) {
-            top = y - radius;
-            if (top > currentScreen->clipBound_Y2)
-                top = currentScreen->clipBound_Y2;
-        }
-        else {
-            top = currentScreen->clipBound_Y1;
-        }
-
-        if (yRadiusBottom >= bottom) {
-            bottom = y + radius;
-            bottom++;
-            if (bottom > currentScreen->clipBound_Y2)
-                bottom = currentScreen->clipBound_Y2;
-        }
-
-        if (top != bottom) {
-            for (int i = top; i < bottom; ++i) {
-                scanEdgeBuffer[i].start = 0x7FFF;
-                scanEdgeBuffer[i].end   = -1;
-            }
-
-            int r                    = 3 - 2 * radius;
-            int xRad                 = x - radius;
-            int curY                 = y;
-            int curX                 = x;
-            int startY               = yRadiusTop + 1;
-            ScanEdge *scanEdgeTop    = &scanEdgeBuffer[yRadiusTop];
-            ScanEdge *scanEdgeBottom = &scanEdgeBuffer[yRadiusBottom];
-            ScanEdge *scanEdge       = &scanEdgeBuffer[y];
-            int dif                  = x - y;
-
-            for (int i = 0; i <= radius; ++i) {
-                int scanX = i + curX;
-                if (yRadiusBottom >= top && yRadiusBottom <= bottom && scanX > scanEdgeBottom->end)
-                    scanEdgeBottom->end = scanX;
-                if (startY >= top && startY <= bottom && scanX > scanEdgeTop->end)
-                    scanEdgeTop->end = scanX;
-
-                int scanY = i + y;
-                if (scanY >= top && scanY <= bottom) {
-                    ScanEdge *edge = &scanEdgeBuffer[scanY];
-                    if (yRadiusBottom + dif > edge->end)
-                        edge->end = yRadiusBottom + dif;
-                }
-
-                if (curY >= top && curY <= bottom && yRadiusBottom + dif > scanEdge->end)
-                    scanEdge->end = yRadiusBottom + dif;
-                if (yRadiusBottom >= top && yRadiusBottom <= bottom && x < scanEdgeBottom->start)
-                    scanEdgeBottom->start = x;
-                if (startY >= top && startY <= bottom && x < scanEdgeTop->start)
-                    scanEdgeTop->start = x;
-
-                if (scanY >= top && scanY <= bottom) {
-                    ScanEdge *edge = &scanEdgeBuffer[scanY];
-                    if (xRad < edge->start)
-                        edge->start = xRad;
-                }
-
-                if (curY >= top && curY <= bottom && xRad < scanEdge->start)
-                    scanEdge->start = xRad;
-
-                if (r >= 0) {
-                    --yRadiusBottom;
-                    --scanEdgeBottom;
-                    ++startY;
-                    r += 4 * (i - radius) + 10;
-                    ++scanEdgeTop;
-                    --radius;
-                    ++xRad;
-                }
-                else {
-                    r += 4 * i + 6;
-                }
-                --curY;
-                --scanEdge;
-                --x;
-            }
-
-            // validDraw              = true;
-            ushort *frameBufferPtr = &currentScreen->frameBuffer[top * currentScreen->pitch];
-            ushort colour16        = bIndexes[(colour >> 0) & 0xFF] | gIndexes[(colour >> 8) & 0xFF] | rIndexes[(colour >> 16) & 0xFF];
-
-            switch (inkEffect) {
-                default: break;
-                case INK_NONE:
-                    if (top <= bottom) {
-                        ScanEdge *edge = &scanEdgeBuffer[top];
-                        int yCnt       = bottom - top;
-                        for (int y = 0; y < yCnt; ++y) {
-                            if (edge->start < currentScreen->clipBound_X1)
-                                edge->start = currentScreen->clipBound_X1;
-                            if (edge->start > currentScreen->clipBound_X2)
-                                edge->start = currentScreen->clipBound_X2;
-
-                            if (edge->end < currentScreen->clipBound_X1)
-                                edge->end = currentScreen->clipBound_X1;
-                            if (edge->end > currentScreen->clipBound_X2)
-                                edge->end = currentScreen->clipBound_X2;
-
-                            int count = edge->end - edge->start;
-                            for (int x = 0; x < count; ++x) {
+                        int count = edge->end - edge->start;
+                        for (int x = 0; x < count; ++x) {
+                            if (frameBufferPtr[edge->start + x] == maskColour)
                                 frameBufferPtr[edge->start + x] = colour16;
-                            }
-                            ++edge;
-                            frameBufferPtr += currentScreen->pitch;
                         }
+                        ++edge;
+                        frameBufferPtr += currentScreen->pitch;
                     }
-                    break;
-                case INK_BLEND:
-                    if (top <= bottom) {
-                        ScanEdge *edge = &scanEdgeBuffer[top];
-                        int yCnt       = bottom - top;
-                        for (int y = 0; y < yCnt; ++y) {
-                            if (edge->start < currentScreen->clipBound_X1)
-                                edge->start = currentScreen->clipBound_X1;
-                            if (edge->start > currentScreen->clipBound_X2)
-                                edge->start = currentScreen->clipBound_X2;
-
-                            if (edge->end < currentScreen->clipBound_X1)
-                                edge->end = currentScreen->clipBound_X1;
-                            if (edge->end > currentScreen->clipBound_X2)
-                                edge->end = currentScreen->clipBound_X2;
-
-                            int count = edge->end - edge->start;
-                            for (int x = 0; x < count; ++x) {
-                                setPixelBlend(colour16, frameBufferPtr[edge->start + x]);
-                            }
-                            ++edge;
-                            frameBufferPtr += currentScreen->pitch;
-                        }
-                    }
-                    break;
-                case INK_ALPHA:
-                    if (top <= bottom) {
-                        ScanEdge *edge = &scanEdgeBuffer[top];
-                        int yCnt       = bottom - top;
-                        for (int y = 0; y < yCnt; ++y) {
-                            if (edge->start < currentScreen->clipBound_X1)
-                                edge->start = currentScreen->clipBound_X1;
-                            if (edge->start > currentScreen->clipBound_X2)
-                                edge->start = currentScreen->clipBound_X2;
-
-                            if (edge->end < currentScreen->clipBound_X1)
-                                edge->end = currentScreen->clipBound_X1;
-                            if (edge->end > currentScreen->clipBound_X2)
-                                edge->end = currentScreen->clipBound_X2;
-
-                            int count = edge->end - edge->start;
-                            for (int x = 0; x < count; ++x) {
-                                setPixelAlpha(colour16, frameBufferPtr[edge->start + x], alpha);
-                            }
-                            ++edge;
-                            frameBufferPtr += currentScreen->pitch;
-                        }
-                    }
-                    break;
-                case INK_ADD: {
-                    ushort *blendTablePtr = &blendLookupTable[BLENDTABLE_XSIZE * alpha];
-                    if (top <= bottom) {
-                        ScanEdge *edge = &scanEdgeBuffer[top];
-                        int yCnt       = bottom - top;
-                        for (int y = 0; y < yCnt; ++y) {
-                            if (edge->start < currentScreen->clipBound_X1)
-                                edge->start = currentScreen->clipBound_X1;
-                            if (edge->start > currentScreen->clipBound_X2)
-                                edge->start = currentScreen->clipBound_X2;
-
-                            if (edge->end < currentScreen->clipBound_X1)
-                                edge->end = currentScreen->clipBound_X1;
-                            if (edge->end > currentScreen->clipBound_X2)
-                                edge->end = currentScreen->clipBound_X2;
-
-                            int count = edge->end - edge->start;
-                            for (int x = 0; x < count; ++x) {
-                                setPixelAdditive(colour16, frameBufferPtr[edge->start + x]);
-                            }
-                            ++edge;
-                            frameBufferPtr += currentScreen->pitch;
-                        }
-                    }
-                    break;
                 }
-                case INK_SUB: {
-                    ushort *subBlendTable = &subtractLookupTable[BLENDTABLE_XSIZE * alpha];
-                    if (top <= bottom) {
-                        ScanEdge *edge = &scanEdgeBuffer[top];
-                        int yCnt       = bottom - top;
-                        for (int y = 0; y < yCnt; ++y) {
-                            if (edge->start < currentScreen->clipBound_X1)
-                                edge->start = currentScreen->clipBound_X1;
-                            if (edge->start > currentScreen->clipBound_X2)
-                                edge->start = currentScreen->clipBound_X2;
+                break;
+            case INK_UNMASKED:
+                if (top <= bottom) {
+                    ScanEdge *edge = &scanEdgeBuffer[top];
+                    int yCnt       = bottom - top;
+                    for (int y = 0; y < yCnt; ++y) {
+                        if (edge->start < currentScreen->clipBound_X1)
+                            edge->start = currentScreen->clipBound_X1;
+                        if (edge->start > currentScreen->clipBound_X2)
+                            edge->start = currentScreen->clipBound_X2;
 
-                            if (edge->end < currentScreen->clipBound_X1)
-                                edge->end = currentScreen->clipBound_X1;
-                            if (edge->end > currentScreen->clipBound_X2)
-                                edge->end = currentScreen->clipBound_X2;
+                        if (edge->end < currentScreen->clipBound_X1)
+                            edge->end = currentScreen->clipBound_X1;
+                        if (edge->end > currentScreen->clipBound_X2)
+                            edge->end = currentScreen->clipBound_X2;
 
-                            int count = edge->end - edge->start;
-                            for (int x = 0; x < count; ++x) {
-                                setPixelSubtractive(colour16, frameBufferPtr[edge->start + x]);
-                            }
-                            ++edge;
-                            frameBufferPtr += currentScreen->pitch;
+                        int count = edge->end - edge->start;
+                        for (int x = 0; x < count; ++x) {
+                            if (frameBufferPtr[edge->start + x] != maskColour)
+                                frameBufferPtr[edge->start + x] = colour16;
                         }
+                        ++edge;
+                        frameBufferPtr += currentScreen->pitch;
                     }
-                    break;
                 }
-                case INK_LOOKUP:
-                    if (top <= bottom) {
-                        ScanEdge *edge = &scanEdgeBuffer[top];
-                        int yCnt       = bottom - top;
-                        for (int y = 0; y < yCnt; ++y) {
-                            if (edge->start < currentScreen->clipBound_X1)
-                                edge->start = currentScreen->clipBound_X1;
-                            if (edge->start > currentScreen->clipBound_X2)
-                                edge->start = currentScreen->clipBound_X2;
-
-                            if (edge->end < currentScreen->clipBound_X1)
-                                edge->end = currentScreen->clipBound_X1;
-                            if (edge->end > currentScreen->clipBound_X2)
-                                edge->end = currentScreen->clipBound_X2;
-
-                            int count = edge->end - edge->start;
-                            for (int x = 0; x < count; ++x) {
-                                frameBufferPtr[edge->start + x] = lookupTable[frameBufferPtr[edge->start + x]];
-                            }
-                            ++edge;
-                            frameBufferPtr += currentScreen->pitch;
-                        }
-                    }
-                    break;
-                case INK_MASKED:
-                    if (top <= bottom) {
-                        ScanEdge *edge = &scanEdgeBuffer[top];
-                        int yCnt       = bottom - top;
-                        for (int y = 0; y < yCnt; ++y) {
-                            if (edge->start < currentScreen->clipBound_X1)
-                                edge->start = currentScreen->clipBound_X1;
-                            if (edge->start > currentScreen->clipBound_X2)
-                                edge->start = currentScreen->clipBound_X2;
-
-                            if (edge->end < currentScreen->clipBound_X1)
-                                edge->end = currentScreen->clipBound_X1;
-                            if (edge->end > currentScreen->clipBound_X2)
-                                edge->end = currentScreen->clipBound_X2;
-
-                            int count = edge->end - edge->start;
-                            for (int x = 0; x < count; ++x) {
-                                if (frameBufferPtr[edge->start + x] == maskColour)
-                                    frameBufferPtr[edge->start + x] = colour16;
-                            }
-                            ++edge;
-                            frameBufferPtr += currentScreen->pitch;
-                        }
-                    }
-                    break;
-                case INK_UNMASKED:
-                    if (top <= bottom) {
-                        ScanEdge *edge = &scanEdgeBuffer[top];
-                        int yCnt       = bottom - top;
-                        for (int y = 0; y < yCnt; ++y) {
-                            if (edge->start < currentScreen->clipBound_X1)
-                                edge->start = currentScreen->clipBound_X1;
-                            if (edge->start > currentScreen->clipBound_X2)
-                                edge->start = currentScreen->clipBound_X2;
-
-                            if (edge->end < currentScreen->clipBound_X1)
-                                edge->end = currentScreen->clipBound_X1;
-                            if (edge->end > currentScreen->clipBound_X2)
-                                edge->end = currentScreen->clipBound_X2;
-
-                            int count = edge->end - edge->start;
-                            for (int x = 0; x < count; ++x) {
-                                if (frameBufferPtr[edge->start + x] != maskColour)
-                                    frameBufferPtr[edge->start + x] = colour16;
-                            }
-                            ++edge;
-                            frameBufferPtr += currentScreen->pitch;
-                        }
-                    }
-                    break;
-            }
+                break;
         }
     }
+#else
+    float xp = x, yp = y;
+    if (!screenRelative) {
+        xp = x / (float)(1 >> 16) - currentScreen->position.x;
+        yp = y / (float)(1 >> 16) - currentScreen->position.y;
+    }
+
+    CircleArgs args;
+    args.innerR = 0;
+    args.outerR = 1;
+    AddRenderState(inkEffect, 4, 6, &args, (ShaderBase *)&circleShader);
+
+    Colour c = colour;
+    c.a      = alpha;
+    AddPoly(xp - radius, yp - radius, 0, -1, -1, colour);
+    AddPoly(xp + radius, yp - radius, 0, -1, 1, colour);
+    AddPoly(xp - radius, yp + radius, 0, 1, -1, colour);
+    AddPoly(xp + radius, yp + radius, 0, 1, 1, colour);
+
+#endif
 }
 void DrawCircleOutline(int x, int y, int innerRadius, int outerRadius, uint colour, int alpha, InkEffects inkEffect, bool32 screenRelative)
 {
@@ -1900,7 +1952,7 @@ void DrawCircleOutline(int x, int y, int innerRadius, int outerRadius, uint colo
                 return;
             break;
     }
-
+#if RETRO_SOFTWARE_RENDER
     if (!screenRelative) {
         x = (x >> 16) - currentScreen->position.x;
         y = (y >> 16) - currentScreen->position.y;
@@ -2150,6 +2202,27 @@ void DrawCircleOutline(int x, int y, int innerRadius, int outerRadius, uint colo
             }
         }
     }
+#else
+    float xp = x, yp = y;
+    if (!screenRelative) {
+        xp = x / (float)(1 >> 16) - currentScreen->position.x;
+        yp = y / (float)(1 >> 16) - currentScreen->position.y;
+    }
+
+    CircleArgs args;
+    args.innerR = innerRadius / (float)outerRadius;
+    args.outerR = 1;
+    AddRenderState(inkEffect, 4, 6, &args, (ShaderBase *)&circleShader);
+
+    Colour c = colour;
+    c.a      = alpha;
+
+    AddPoly(xp - outerRadius, yp - outerRadius, 0, -1, -1, colour);
+    AddPoly(xp + outerRadius, yp - outerRadius, 0, 1, -1, colour);
+    AddPoly(xp - outerRadius, yp + outerRadius, 0, -1, 1, colour);
+    AddPoly(xp + outerRadius, yp + outerRadius, 0, 1, 1, colour);
+
+#endif
 }
 
 void DrawFace(Vector2 *vertices, int vertCount, int r, int g, int b, int alpha, InkEffects inkEffect)
@@ -2377,6 +2450,7 @@ void DrawFace(Vector2 *vertices, int vertCount, int r, int g, int b, int alpha, 
 
                     int count = edge->end - edge->start;
                     for (int x = 0; x < count; ++x) {
+
                         if (frameBufferPtr[edge->start + x] != maskColour)
                             frameBufferPtr[edge->start + x] = colour16;
                     }
@@ -2388,9 +2462,20 @@ void DrawFace(Vector2 *vertices, int vertCount, int r, int g, int b, int alpha, 
     }
 #else
     Colour c(r, g, b, alpha);
+    int count = 3 * vertCount - 3;
+    ushort indecies[INDEX_LIMIT];
     for (int i = 0; i < vertCount; ++i) {
-        //AddGFXPoly()
+        if (i < vertCount - 1) {
+            indecies[i * 3 + 0] = i;
+            indecies[i * 3 + 1] = i + 1;
+            indecies[i * 3 + 2] = i + 2;
+        }
     }
+    indecies[count - 1] = 0;
+
+    AddRenderState(inkEffect, vertCount, count, NULL, (ShaderBase *)&placeShader, indecies);
+
+    for (int i = 0; i < vertCount; ++i) AddPoly(vertices[i].x / (float)(1 << 16), vertices[i].y / (float)(1 << 16), 0, 0, 0, c);
 #endif
 }
 void DrawBlendedFace(Vector2 *vertices, uint *colours, int vertCount, int alpha, InkEffects inkEffect)
@@ -2417,7 +2502,7 @@ void DrawBlendedFace(Vector2 *vertices, uint *colours, int vertCount, int alpha,
                 return;
             break;
     }
-
+#if RETRO_SOFTWARE_RENDER
     int top    = 0x7FFFFFFF;
     int bottom = -0x10000;
     for (int v = 0; v < vertCount; ++v) {
@@ -2830,6 +2915,26 @@ void DrawBlendedFace(Vector2 *vertices, uint *colours, int vertCount, int alpha,
                 break;
         }
     }
+#else
+    int count = 3 * vertCount - 3;
+    ushort indecies[INDEX_LIMIT];
+    for (int i = 0; i < vertCount; ++i) {
+        if (i < vertCount - 1) {
+            indecies[i * 3 + 0] = i;
+            indecies[i * 3 + 1] = i + 1;
+            indecies[i * 3 + 2] = i + 2;
+        }
+    }
+    indecies[count - 1] = 0;
+
+    AddRenderState(inkEffect, vertCount, count, NULL, (ShaderBase *)&placeShader, indecies);
+
+    for (int i = 0; i < vertCount; ++i) {
+        Colour c = colours[i];
+        c.a = alpha;
+        AddPoly(vertices[i].x / (float)(1 << 16), vertices[i].y / (float)(1 << 16), 0, 0, 0, c);
+    }
+#endif
 }
 
 void DrawSprite(Animator *animator, Vector2 *position, bool32 screenRelative)
@@ -3609,41 +3714,39 @@ void DrawSpriteFlipped(int x, int y, int width, int height, int sprX, int sprY, 
 #else
     float xpos = x;
     float ypos = y;
+    PlaceArgs args;
+    args.texID        = surface->id;
+    args.transparency = alpha;
+    AddRenderState(inkEffect, 4, 6, &args);
+
     switch (direction) {
         case FLIP_NONE:
-            AddGFXPoly(xpos, ypos, sprX, sprY, 0, surface);
-            AddGFXPoly(xpos + width, ypos, sprX + width, sprY, 0, surface);
-            AddGFXPoly(xpos, ypos + height, sprX, sprY + height, 0, surface);
-            AddGFXPoly(xpos + width, ypos + height, sprX + width, sprY + height, 0, surface);
+            AddPoly(xpos, ypos, sprX, sprY, 0, surface);
+            AddPoly(xpos + width, ypos, sprX + width, sprY, 0, surface);
+            AddPoly(xpos, ypos + height, sprX, sprY + height, 0, surface);
+            AddPoly(xpos + width, ypos + height, sprX + width, sprY + height, 0, surface);
             break;
         case FLIP_X:
-            AddGFXPoly(xpos, ypos, sprX + width, sprY, 0, surface);
-            AddGFXPoly(xpos + width, ypos, sprX, sprY, 0, surface);
-            AddGFXPoly(xpos, ypos + height, sprX + width, sprY + height, 0, surface);
-            AddGFXPoly(xpos + width, ypos + height, sprX, sprY + height, 0, surface);
+            AddPoly(xpos, ypos, sprX + width, sprY, 0, surface);
+            AddPoly(xpos + width, ypos, sprX, sprY, 0, surface);
+            AddPoly(xpos, ypos + height, sprX + width, sprY + height, 0, surface);
+            AddPoly(xpos + width, ypos + height, sprX, sprY + height, 0, surface);
             break;
         case FLIP_Y:
-            AddGFXPoly(xpos, ypos, sprX, sprY + height, 0, surface);
-            AddGFXPoly(xpos + width, ypos, sprX + width, sprY + height, 0, surface);
-            AddGFXPoly(xpos, ypos + height, sprX, sprY, 0, surface);
-            AddGFXPoly(xpos + width, ypos + height, sprX + width, sprY, 0, surface);
+            AddPoly(xpos, ypos, sprX, sprY + height, 0, surface);
+            AddPoly(xpos + width, ypos, sprX + width, sprY + height, 0, surface);
+            AddPoly(xpos, ypos + height, sprX, sprY, 0, surface);
+            AddPoly(xpos + width, ypos + height, sprX + width, sprY, 0, surface);
             renderCount++;
             break;
         case FLIP_XY:
-            AddGFXPoly(xpos, ypos, sprX + width, sprY + height, 0, surface);
-            AddGFXPoly(xpos + width, ypos, sprX, sprY + height, 0, surface);
-            AddGFXPoly(xpos, ypos + height, sprX + width, sprY, 0, surface);
-            AddGFXPoly(xpos + width, ypos + height, sprX, sprY, 0, surface);
+            AddPoly(xpos, ypos, sprX + width, sprY + height, 0, surface);
+            AddPoly(xpos + width, ypos, sprX, sprY + height, 0, surface);
+            AddPoly(xpos, ypos + height, sprX + width, sprY, 0, surface);
+            AddPoly(xpos + width, ypos + height, sprX, sprY, 0, surface);
             break;
     }
-    renderIndex += 6;
 
-    currentRenderState.isGFX        = true;
-    currentRenderState.texID        = surface->id;
-    currentRenderState.transparency = alpha;
-    currentRenderState.blendMode    = inkEffect;
-
-    TryRender();
 #endif
 }
 void DrawSpriteRotozoom(int x, int y, int pivotX, int pivotY, int width, int height, int sprX, int sprY, int scaleX, int scaleY, FlipFlags direction,
@@ -3974,57 +4077,48 @@ void DrawSpriteRotozoom(int x, int y, int pivotX, int pivotY, int width, int hei
     GFXSurface *surface = &gfxSurface[sheetID];
     float xpos          = x;
     float ypos          = y;
-    rotation -= rotation >> 9 << 9;
-    if (rotation < 0)
-        rotation += 0x200;
-    if (rotation != 0)
-        rotation = 0x200 - rotation;
 
-    int sin = sinVal512[rotation] * scaleY >> 9;
-    int cos = cosVal512[rotation] * scaleX >> 9;
+    PlaceArgs args;
+    args.texID        = surface->id;
+    args.transparency = alpha;
+    AddRenderState(inkEffect, 4, 6, &args);
+
+    int sin = sinVal512[angle] * scaleY >> 4;
+    int cos = cosVal512[angle] * scaleX >> 4;
     if (direction == FLIP_NONE) {
         int x = -pivotX;
         int y = -pivotY;
-        AddGFXPoly(xpos + ((x * cos + y * sin) >> 1), ypos + ((y * cos - x * sin) >> 1), sprX, sprY, 0, surface);
+        AddPoly(xpos + ((x * cos + y * sin) >> 1), ypos + ((y * cos - x * sin) >> 1), sprX, sprY, 0, surface);
 
         x = width - pivotX;
         y = -pivotY;
-        AddGFXPoly(xpos + ((x * cos + y * sin) >> 1), ypos + ((y * cos - x * sin) >> 1), sprX + width, sprY, 0, surface);
+        AddPoly(xpos + ((x * cos + y * sin) >> 1), ypos + ((y * cos - x * sin) >> 1), sprX + width, sprY, 0, surface);
 
         x = -pivotX;
         y = height - pivotY;
-        AddGFXPoly(xpos + ((x * cos + y * sin) >> 1), ypos + ((y * cos - x * sin) >> 1), sprX, sprY + height, 0, surface);
+        AddPoly(xpos + ((x * cos + y * sin) >> 1), ypos + ((y * cos - x * sin) >> 1), sprX, sprY + height, 0, surface);
 
         x = width - pivotX;
         y = height - pivotY;
-        AddGFXPoly(xpos + ((x * cos + y * sin) >> 1), ypos + ((y * cos - x * sin) >> 1), sprX + width, sprY + height, 0, surface);
+        AddPoly(xpos + ((x * cos + y * sin) >> 1), ypos + ((y * cos - x * sin) >> 1), sprX + width, sprY + height, 0, surface);
     }
     else {
         int x = pivotX;
         int y = -pivotY;
-        AddGFXPoly(xpos + ((x * cos + y * sin) >> 1), ypos + ((y * cos - x * sin) >> 1), sprX, sprY, 0, surface);
+        AddPoly(xpos + ((x * cos + y * sin) >> 1), ypos + ((y * cos - x * sin) >> 1), sprX, sprY, 0, surface);
 
         x = pivotX - width;
         y = -pivotY;
-        AddGFXPoly(xpos + ((x * cos + y * sin) >> 1), ypos + ((y * cos - x * sin) >> 1), sprX + width, sprY, 0, surface);
+        AddPoly(xpos + ((x * cos + y * sin) >> 1), ypos + ((y * cos - x * sin) >> 1), sprX + width, sprY, 0, surface);
 
         x = pivotX;
         y = height - pivotY;
-        AddGFXPoly(xpos + ((x * cos + y * sin) >> 1), ypos + ((y * cos - x * sin) >> 1), sprX, sprY + height, 0, surface);
+        AddPoly(xpos + ((x * cos + y * sin) >> 1), ypos + ((y * cos - x * sin) >> 1), sprX, sprY + height, 0, surface);
 
         x = pivotX - width;
         y = height - pivotY;
-        AddGFXPoly(xpos + ((x * cos + y * sin) >> 1), ypos + ((y * cos - x * sin) >> 1), sprX + width, sprY + height, 0, surface);
+        AddPoly(xpos + ((x * cos + y * sin) >> 1), ypos + ((y * cos - x * sin) >> 1), sprX + width, sprY + height, 0, surface);
     }
-    renderIndex += 6;
-
-    currentRenderState.isGFX        = true;
-    currentRenderState.texID        = surface->id;
-    currentRenderState.transparency = alpha;
-    currentRenderState.blendMode    = inkEffect;
-
-    TryRender();
-
 #endif
 }
 
@@ -4404,7 +4498,6 @@ void DrawAniTile(ushort sheetID, ushort tileIndex, ushort srcX, ushort srcY, ush
         GFXSurface *surface = &gfxSurface[sheetID];
 
         // FLIP_NONE
-#if RETRO_SOFTWARE_RENDER
         byte *tileGFXData = &tilesetGFXData[tileIndex << 8];
         int cnt           = 0;
         for (int fy = 0; fy < height; fy += TILE_SIZE) {
@@ -4462,13 +4555,6 @@ void DrawAniTile(ushort sheetID, ushort tileIndex, ushort srcX, ushort srcY, ush
                 tileGFXData += (TILE_SIZE * 2);
             }
         }
-#else
-        currentRenderState.isGFX        = true;
-        currentRenderState.texID        = surface->id;
-        currentRenderState.transparency = 0xFF;
-        currentRenderState.blendMode    = INK_NONE;
-
-#endif
     }
 }
 
@@ -4626,10 +4712,9 @@ void DrawDevText(int x, const char *text, int y, int align, uint colour)
 }
 
 #if RETRO_HARDWARE_RENDER
-DrawVertex gfxPolyList[VERTEX_LIMIT];
-ushort gfxPolyListIndex[INDEX_LIMIT];
+DrawVertex vertexList[VERTEX_LIMIT];
 
-//DrawVertex3D polyList3D[VERTEX3D_LIMIT];
+// DrawVertex3D polyList3D[VERTEX3D_LIMIT];
 
 ushort vertexSize3D = 0;
 ushort indexSize3D  = 0;
@@ -4639,14 +4724,11 @@ float floor3Dypos  = 0.0f;
 float floor3DZPos  = 0.0f;
 float floor3DAngle = 0;
 
-RenderState currentRenderState;
-RenderState lastRenderState;
+RenderState renderStates[RENDERSTATE_LIMIT];
+
+sbyte renderStateIndex = -1;
 ushort renderCount     = 0;
 ushort lastRenderCount = 0;
-ushort renderIndex = 0;
-ushort lastRenderIndex = 0;
-
-ShaderHelper gfxShader;
 
 #if RETRO_USING_OPENGL
 
@@ -4654,64 +4736,80 @@ GLuint VAO;
 GLuint attribVBO;
 GLuint indexVBO;
 
-const char *gfxShaderF = "\
-#version 330 core                                               \n\
-in vec2 ex_texUV;                                               \n\
-in vec4 ex_color;                                               \n\
-out vec4 out_color;                                             \n\
-                                                                \n\
-uniform vec2 screenSize;                                        \n\
-uniform vec3 transparentColour;                                 \n\
-uniform sampler2DRect sprite;                                       \n\
-                                                                \n\
-uniform sampler2DRect palette;                                      \n\
-uniform int paletteLines[0x100];                                \n\
-                                                                \n\
-void main()                                                     \n\
-{                                                               \n\
-    if (ex_color.a == 0.0) {                                    \n\
-        vec4 coord = gl_FragCoord - 0.5;                        \n\
-        vec2 screenPos;                                         \n\
-        screenPos.x = coord.x * screenSize.x;                   \n\
-        screenPos.y = coord.y * screenSize.y;                   \n\
-                                                                \n\
-        int id = paletteLines[int(screenPos.y)];                \n\
-                                                                \n\
-        int index = int(texture(sprite, ex_texUV).r * 255);     \n\
-                                                                \n\
-        if (index == 0)                                         \n\
-            discard;                                            \n\
-                                                                \n\
-        vec2 palvec;                                            \n\
-        palvec.x = index;                                       \n\
-        palvec.y = id;                                          \n\
-                                                                \n\
-        out_color = texture(palette, palvec);                   \n\
-    }                                                           \n\
-    else out_color = ex_color;                                  \n\
-} ";
+GLuint outFB;
+GLuint tFB;
+GLuint outFBT;
+GLuint tFBT;
 
-const char *gfxShaderV = "\
-#version 330 core                                                   \n\
-in vec3 in_pos;                                                     \n\
-in vec2 in_texUV;                                                   \n\
-in vec4 in_color;                                                   \n\
-out vec2 ex_texUV;                                                  \n\
-out vec4 ex_color;                                                  \n\
-                                                                    \n\
-// uniform mat4 model;                                              \n\
-uniform mat4 view; //set to identity for screen based            \n\
-uniform mat4 projection;                                            \n\
-                                                                    \n\
-void main()                                                         \n\
-{                                                                   \n\
-    gl_Position = view * projection * vec4(in_pos, 1.0);                   \n\
-    ex_texUV    = in_texUV;                                         \n\
-    ex_color    = in_color;                                         \n\
-} ";
+#include "assets/generated/opengl/default.vert"
+#include "assets/generated/opengl/place.frag"
+#include "assets/generated/opengl/circle.frag"
+
 #endif
 
-void ortho(MatrixF* matrix, float l, float r, float b, float t, float n, float f) {
+class PlaceShader : public ShaderBase
+{
+public:
+    PlaceShader() : ShaderBase(){};
+    PlaceShader(const char *v, const char *f) : ShaderBase(v, f)
+    {
+        use();
+        glUniform1i(glGetUniformLocation(ID, "sprite"), 0);
+        glUniform1i(glGetUniformLocation(ID, "palette"), 1);
+        stop();
+    }
+
+    void setTexture(uint tID)
+    {
+#if RETRO_USING_OPENGL
+        if (!tID && currentTex)
+            glUniform1i(glGetUniformLocation(ID, "useColor"), true);
+        else if (tID) {
+            glUniform1i(glGetUniformLocation(ID, "useColor"), false);
+            if (currentTex != tID)
+                glBindTexture(GL_TEXTURE_RECTANGLE, tID);
+        }
+        currentTex = tID;
+#endif
+    }
+
+    void setArgs(RenderState *&state)
+    {
+        PlaceArgs *args = (PlaceArgs *)state->argBuffer;
+        setTexture(args->texID);
+#if RETRO_USING_OPENGL
+        if (state->blendMode)
+            glUniform1f(glGetUniformLocation(ID, "transparency"), args->transparency / 255.f);
+        else
+            glUniform1f(glGetUniformLocation(ID, "transparency"), 1.f);
+#endif
+    }
+};
+
+class CircleShader : public ShaderBase
+{
+public:
+    CircleShader() : ShaderBase(){};
+    CircleShader(const char *v, const char *f) : ShaderBase(v, f){};
+
+    void setArgs(RenderState *&state)
+    {
+        CircleArgs *args = (CircleArgs *)state->argBuffer;
+#if RETRO_USING_OPENGL
+        glUniform1f(glGetUniformLocation(ID, "innerRadius"), args->innerR);
+        glUniform1f(glGetUniformLocation(ID, "outerRadius"), args->outerR);
+#endif
+    }
+
+    void setPalette(RenderState *&state){};
+    void setPalLines(RenderState *&state){};
+};
+
+PlaceShader placeShader;
+CircleShader circleShader;
+
+void ortho(MatrixF *matrix, float l, float r, float b, float t, float n, float f)
+{
     matrix->values[0][0] = 2.f / (r - l);
     matrix->values[0][1] = 0;
     matrix->values[0][2] = 0;
@@ -4735,159 +4833,164 @@ void SetupViewport()
     MatrixF orth;
     if (currentScreen) {
         ortho(&orth, 0, currentScreen->width, currentScreen->height, 0.0, -1.0, 1.0);
-        gfxShader.use();
-        gfxShader.setProjection(&orth);
+        placeShader.use();
+        placeShader.setProjection(&orth);
     }
-    //polyShader.setProjecton(&orth);
+    // polyShader.setProjecton(&orth);
 #if RETRO_USING_OPENGL
     glViewport(0, 0, engine.windowWidth, engine.windowHeight);
 #endif
-    
 }
 
 void SetupShaders()
 {
-    gfxShader = ShaderHelper(gfxShaderV, gfxShaderF);
+    placeShader  = PlaceShader(defaultVert, placeFrag);
+    circleShader = CircleShader(defaultVert, circleFrag);
 #if RETRO_USING_OPENGL
     // i'm also gonna setup VBOs here bc i'm lazy
     glGenVertexArrays(1, &VAO);
     glBindVertexArray(VAO);
-    glGenBuffers(2, &attribVBO);
+    glGenBuffers(1, &attribVBO);
     glBindBuffer(GL_ARRAY_BUFFER, attribVBO);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(DrawVertex), 0);
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(DrawVertex), (void*)offsetof(DrawVertex, u));
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(DrawVertex), (void *)offsetof(DrawVertex, u));
     glEnableVertexAttribArray(1);
-    glVertexAttribPointer(2, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(DrawVertex), (void*)offsetof(DrawVertex, colour));
+    glVertexAttribPointer(2, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(DrawVertex), (void *)offsetof(DrawVertex, colour));
     glEnableVertexAttribArray(2);
+    glGenBuffers(1, &indexVBO);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexVBO);
 #endif
 }
+
+ushort baseIndexList[INDEX_LIMIT];
 
 void SetupPolygonLists()
 {
+
     int vID = 0;
     for (int i = 0; i < VERTEX_LIMIT; i++) {
-        gfxPolyListIndex[vID++] = (i << 2) + 0;
-        gfxPolyListIndex[vID++] = (i << 2) + 1;
-        gfxPolyListIndex[vID++] = (i << 2) + 2;
-        gfxPolyListIndex[vID++] = (i << 2) + 1;
-        gfxPolyListIndex[vID++] = (i << 2) + 3;
-        gfxPolyListIndex[vID++] = (i << 2) + 2;
+        baseIndexList[vID++] = (i << 2) + 0;
+        baseIndexList[vID++] = (i << 2) + 1;
+        baseIndexList[vID++] = (i << 2) + 2;
+        baseIndexList[vID++] = (i << 2) + 1;
+        baseIndexList[vID++] = (i << 2) + 3;
+        baseIndexList[vID++] = (i << 2) + 2;
 
-        gfxPolyList[i].colour.colour = 0;
+        vertexList[i].colour.colour = 0;
     }
-#if RETRO_USING_OPENGL
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexVBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(gfxPolyListIndex), gfxPolyListIndex, GL_STATIC_DRAW);
-#endif
 }
 
-bool32 StateCheck()
+bool32 StatesCompatible(RenderState *one, RenderState *two)
 {
-    if (currentRenderState.isGFX) {
-        //pals aren't used by poly (?)
-        memcpy(currentRenderState.palette, fullPalette, sizeof(fullPalette));
-        memcpy(currentRenderState.lineBuffer, gfxLineBuffer, SCREEN_YSIZE * sizeof(byte));
-    }
-    if (forceRender)
-        return true;
-    bool32 diff = false;
-    if (memcmp(currentRenderState.lineBuffer, lastRenderState.lineBuffer, SCREEN_YSIZE * sizeof(byte)))
-        diff = true;
-    else if (memcmp(currentRenderState.palette, lastRenderState.palette, sizeof(fullPalette))) {
+    if (memcmp(one->argBuffer, two->argBuffer, 0x20) || one->blendMode != two->blendMode || one->shader != two->shader
+        || memcmp(one->lineBuffer, two->lineBuffer, SCREEN_YSIZE * sizeof(byte)))
+        return false;
+    if (one->maskColor.color != two->maskColor.color && (two->blendMode == INK_MASKED || two->blendMode == INK_UNMASKED))
+        return false;
+    if (memcmp(one->palette, two->palette, PALETTE_COUNT * PALETTE_SIZE * sizeof(ushort))) {
         // we need to memcmp differently here and see if we can keep the renderstate
         // here comes some rmg bullshit
         byte checked = 0b00000000;
         for (uint i = 0; i < SCREEN_YSIZE; ++i) {
-            byte p = currentRenderState.lineBuffer[i];
+            if (checked == 0xFF)
+                break;
+            byte p = two->lineBuffer[i];
             if (checked & (1 << p))
                 continue;
             checked |= (1 << p);
-            if (memcmp(currentRenderState.palette[p], lastRenderState.palette[p], PALETTE_SIZE)) {
-                diff = true;
-                break;
+            if (memcmp(one->palette[p], two->palette[p], PALETTE_SIZE * sizeof(ushort))) {
+                return false;
             }
         }
     }
-    if (diff || currentRenderState.texID != currentTex)
-        return true; 
+    return true;
 }
 
-void TryRender()
+void AddRenderState(int blendMode, ushort vertCount, ushort indexCount, void *args, ShaderBase *shader, ushort *altIndex)
 {
-    bool32 checkedPal = false, checkedpLines = false;
-    if (!StateCheck())
+    if (!vertCount || !indexCount)
         return;
-    else if (forceRender) {
-        if (!renderCount)
+    // set up a new state minimally needed for comparison
+    RenderState newState;
+    newState.blendMode  = blendMode;
+    newState.indexCount = indexCount;
+    newState.maskColor = maskColourFull;
+    newState.shader = shader;
+    if (args)
+        memcpy(newState.argBuffer, args, 0x20);
+    else
+        memset(newState.argBuffer, 0, 0x20);
+    memcpy(newState.palette, fullPalette, sizeof(fullPalette));
+    memcpy(newState.lineBuffer, gfxLineBuffer, sizeof(gfxLineBuffer));
+
+    if (!altIndex)
+        altIndex = baseIndexList;
+    if (renderStateIndex + 1 && vertCount + renderCount < VERTEX_LIMIT) {
+        RenderState *last = &renderStates[renderStateIndex];
+        if (last->indexCount + indexCount < INDEX_LIMIT && StatesCompatible(last, &newState)) {
+            // merge em and we'll be on our way
+            memcpy(&last->indecies[last->indexCount], altIndex, indexCount * sizeof(ushort));
+            for (int i = 0; i < indexCount; ++i) last->indecies[i + last->indexCount] += renderCount;
+            last->indexCount += indexCount;
             return;
-        checkedPal      = memcmp(currentRenderState.palette, lastRenderState.palette, sizeof(fullPalette));
-        checkedpLines   = memcmp(currentRenderState.lineBuffer, lastRenderState.lineBuffer, SCREEN_YSIZE * sizeof(byte));
-        lastRenderState = currentRenderState;
-        lastRenderCount = renderCount;
-        lastRenderIndex = renderIndex;
+        }
     }
-    forceRender = false;
+    renderStateIndex++;
+    if (renderStateIndex >= RENDERSTATE_LIMIT || vertCount + renderCount >= VERTEX_LIMIT) {
+        RenderRenderStates(); // you should render NOW!
+        renderStateIndex++;
+    }
+    memcpy(newState.indecies, altIndex, indexCount * sizeof(ushort));
+    for (int i = 0; i < indexCount; ++i) newState.indecies[i] += renderCount;
+    renderStates[renderStateIndex] = newState;
+}
+
+void RenderRenderStates()
+{
+    if (!renderCount) return;
 #if RETRO_USING_OPENGL
-    if (lastRenderState.isGFX) {
-        //projection shoudl already be set for the GFX shader, but just incase
-        gfxShader.use();
+    glBufferData(GL_ARRAY_BUFFER, renderCount * sizeof(DrawVertex), vertexList, GL_DYNAMIC_DRAW);
+#endif
+    for (int i = 0; i <= renderStateIndex && i < 32; ++i) {
+        RenderState *renderState = &renderStates[i];
+        renderState->shader->use();
+
+        renderState->shader->setMask(renderState->maskColor, renderState->blendMode);
+        renderState->shader->setPalette(renderState);
+        renderState->shader->setPalLines(renderState);
+
+        renderState->shader->setArgs(renderState);
+
+#if RETRO_USING_OPENGL
         if (currentScreen) {
             MatrixF orth;
             ortho(&orth, 0, currentScreen->width, currentScreen->height, 0.0, -1.0, 1.0);
-            gfxShader.setProjection(&orth);
+            renderState->shader->setProjection(&orth);
+            renderState->shader->setScreen(currentScreen);
+            float xScale = engine.windowWidth / (float)pixWidth;
+            float yScale = engine.windowHeight / (float)SCREEN_YSIZE;
+            glScissor(currentScreen->clipBound_X1 * xScale, (SCREEN_YSIZE - currentScreen->clipBound_Y2) * yScale,
+                      (currentScreen->clipBound_X2 - currentScreen->clipBound_X1) * xScale,
+                      (currentScreen->clipBound_Y2 - currentScreen->clipBound_Y1) * yScale);
         }
 
-        if (currentRenderState.blendMode && !lastRenderState.blendMode)
-            glEnable(GL_BLEND);
-        else if (!currentRenderState.blendMode && lastRenderState.blendMode)
-            glDisable(GL_BLEND);
+        glBlendEquation(GL_FUNC_ADD);
 
-        if (lastRenderState.texID) {
-            gfxShader.setTexture(lastRenderState.texID);
-            if (checkedPal || memcmp(currentRenderState.palette, lastRenderState.palette, sizeof(fullPalette)))
-                gfxShader.setPalette(lastRenderState);
-            if (checkedpLines || memcmp(currentRenderState.lineBuffer, lastRenderState.lineBuffer, SCREEN_YSIZE * sizeof(byte)))
-                gfxShader.setPalLines(lastRenderState);
+        switch (renderState->blendMode) {
+            case INK_MASKED:
+            case INK_UNMASKED:
+            case INK_NONE: glBlendFunc(GL_ONE, GL_ZERO); break;
+            case INK_ALPHA: glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); break;
+            case INK_ADD: glBlendFunc(GL_SRC_ALPHA, GL_ONE); break;
+            case INK_SUB: glBlendFunc(GL_ONE, GL_ONE); glBlendEquation(GL_FUNC_REVERSE_SUBTRACT); break;
         }
 
-        // VBO data feed
-        // the VAO and VBO are always binded, except for when they aren't (in poly)
-        // we rebind in poly so we don't care what happens here
-        glBufferData(GL_ARRAY_BUFFER, lastRenderCount * sizeof(DrawVertex), gfxPolyList, GL_DYNAMIC_DRAW);
-
-        //gfxShader.bind();
-        //glDrawArrays(GL_TRIANGLES, 0, lastRenderCount);
-        glDrawElements(GL_TRIANGLES, lastRenderIndex, GL_UNSIGNED_SHORT, 0);
-
-        gfxShader.stop();
-    }
-    else {
-        glPushMatrix();
-        glLoadIdentity();
-        // CalcPerspective(1.8326f, .75f, 0.1f, 2000.0f);
-
-        glMatrixMode(GL_MODELVIEW);
-        glLoadIdentity();
-
-        glScalef(1.0f, -1.0f, -1.0f);
-        glRotatef(180.0f + floor3DAngle, 0, 1.0f, 0);
-        glTranslatef(floor3Dxpos, floor3Dypos, floor3DZPos);
-        //glVertexPointer(3, GL_FLOAT, sizeof(DrawVertex3D), &polyList3D[0].x);
-        //glTexCoordPointer(2, GL_SHORT, sizeof(DrawVertex3D), &polyList3D[0].u);
-        //glColorPointer(4, GL_UNSIGNED_BYTE, sizeof(DrawVertex3D), &polyList3D[0].colour);
-        glDrawElements(GL_TRIANGLES, lastRenderCount, GL_UNSIGNED_SHORT, gfxPolyListIndex);
-        glLoadIdentity();
-        glMatrixMode(GL_PROJECTION);
-        glPopMatrix();
-    }
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, renderState->indexCount * sizeof(ushort), renderState->indecies, GL_DYNAMIC_DRAW);
+        glDrawElements(GL_TRIANGLES, renderState->indexCount, GL_UNSIGNED_SHORT, 0);
 #endif
-    memcpy(gfxPolyList, &gfxPolyList[lastRenderCount], (VERTEX_LIMIT - lastRenderCount) * sizeof(DrawVertex));
-    //memcpy(polyList3D, &polyList3D[lastRenderCount], (VERTEX3D_LIMIT - lastRenderCount) * sizeof(DrawVertex3D));
-    lastRenderState = currentRenderState;
-    renderCount -= lastRenderCount;
-    renderIndex -= lastRenderIndex;
-    lastRenderCount = renderCount;
-    lastRenderIndex = renderIndex;
+    }
+    renderCount      = 0;
+    renderStateIndex = -1;
 }
 #endif

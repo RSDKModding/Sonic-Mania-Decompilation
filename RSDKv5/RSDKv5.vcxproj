@@ -286,6 +286,11 @@
     <PostBuildEvent>
       <Message>copying SDL2 library DLL to the build directory. build should fail if it's not found</Message>
     </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>cd assets
+py -3 generate.py
+cd..</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugHW|Win32'">
     <ClCompile>
@@ -314,6 +319,11 @@
     <ResourceCompile>
       <PreprocessorDefinitions>_UNICODE;UNICODE;%(PreprocessorDefinitions);USE_HW_REN</PreprocessorDefinitions>
     </ResourceCompile>
+    <PreBuildEvent>
+      <Command>cd assets
+py -3 generate.py
+cd..</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -339,6 +349,11 @@
     <PostBuildEvent>
       <Message>copying SDL2 library DLL to the build directory. build should fail if it's not found</Message>
     </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>cd assets
+py -3 generate.py
+cd..</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugHW|x64'">
     <ClCompile>
@@ -356,7 +371,6 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)dependencies/windows/SDL2/lib/$(PlatformTargetAsMSBuildArchitecture)/Debug/;$(SolutionDir)dependencies/windows/libtheora/win32/VS2008/$(Platform)/Debug/;$(SolutionDir)dependencies/windows/libvorbis/win32/VS2010/$(Platform)/Debug/;$(SolutionDir)dependencies/windows/libogg/win32/VS2015/$(Platform)/Debug/;$(SolutionDir)dependencies/windows/glew/lib/Release/$(Platform)/</AdditionalLibraryDirectories>
-
       <AdditionalDependencies>SDL2.lib;SDL2main.lib;libogg.lib;libvorbis_static.lib;libvorbisfile_static.lib;libtheora_static.lib;Opengl32.lib;glu32.lib;glew32.lib;Shell32.lib</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
@@ -368,6 +382,11 @@
     <ResourceCompile>
       <PreprocessorDefinitions>_UNICODE;UNICODE;%(PreprocessorDefinitions);</PreprocessorDefinitions>
     </ResourceCompile>
+    <PreBuildEvent>
+      <Command>cd assets
+py -3 generate.py
+cd..</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -397,6 +416,11 @@
     <PostBuildEvent>
       <Message>copying SDL2 library DLL to the build directory. build should fail if it's not found</Message>
     </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>cd assets
+py -3 generate.py
+cd..</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseHW|Win32'">
     <ClCompile>
@@ -429,6 +453,11 @@
     <ResourceCompile>
       <PreprocessorDefinitions>_UNICODE;UNICODE;%(PreprocessorDefinitions);USE_HW_REN</PreprocessorDefinitions>
     </ResourceCompile>
+    <PreBuildEvent>
+      <Command>cd assets
+py -3 generate.py
+cd..</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -458,6 +487,11 @@
     <PostBuildEvent>
       <Message>copying SDL2 library DLL to the build directory. build should fail if it's not found</Message>
     </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>cd assets
+py -3 generate.py
+cd..</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseHW|x64'">
     <ClCompile>
@@ -490,6 +524,11 @@
     <ResourceCompile>
       <PreprocessorDefinitions>_UNICODE;UNICODE;%(PreprocessorDefinitions);USE_HW_REN</PreprocessorDefinitions>
     </ResourceCompile>
+    <PreBuildEvent>
+      <Command>cd assets
+py -3 generate.py
+cd..</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -8,21 +8,21 @@ union Colour {
     byte bytes[4];
     uint colour;
     uint color;
-    union {
+    struct {
         byte b;
         byte g;
         byte r;
         byte a;
-    } components;
+    };
 
     Colour(uint c) {
         color = c;
     }
-    Colour(byte r, byte g, byte b, byte a) {
-        components.r = r;
-        components.g = g;
-        components.b = b;
-        components.a = a;
+    Colour(byte R, byte G, byte B, byte A) {
+        r = R;
+        g = G;
+        b = B;
+        a = A;
     }
 };
 
@@ -40,7 +40,7 @@ extern ushort fullPalette[PALETTE_COUNT][PALETTE_SIZE];
 extern byte gfxLineBuffer[SCREEN_YSIZE]; // Pointers to active palette
 
 #if RETRO_HARDWARE_RENDER
-extern uint gfxPalette16to32[0x10000];
+extern Colour maskColourFull;
 #endif
 
 extern int maskColour;
@@ -74,10 +74,7 @@ inline void SetPaletteEntry(byte paletteID, byte index, uint colour)
     fullPalette[paletteID][index] = bIndexes[(colour >> 0) & 0xFF] | gIndexes[(colour >> 8) & 0xFF] | rIndexes[(colour >> 16) & 0xFF];
 }
 
-inline void SetPaletteMask(uint colour)
-{
-    maskColour = bIndexes[(colour >> 0) & 0xFF] | gIndexes[(colour >> 8) & 0xFF] | rIndexes[(colour >> 16) & 0xFF];
-}
+extern inline void SetPaletteMask(uint colour);
 
 inline void SetLookupTable(ushort *tablePtr) { lookupTable = tablePtr; }
 

@@ -17,7 +17,7 @@ int maskColour = 0;
 ushort *lookupTable = NULL;
 
 #if RETRO_HARDWARE_RENDER
-uint gfxPalette16to32[0x10000];
+Colour maskColourFull = 0;
 #endif
 
 #if RETRO_REV02
@@ -78,6 +78,14 @@ void SetPaletteFade(byte destPaletteID, byte srcPaletteA, byte srcPaletteB, usho
 
         ++dst;
     }
+}
+
+inline void SetPaletteMask(uint colour)
+{
+    maskColour = bIndexes[(colour >> 0) & 0xFF] | gIndexes[(colour >> 8) & 0xFF] | rIndexes[(colour >> 16) & 0xFF];
+#if RETRO_HARDWARE_RENDER
+    maskColourFull = colour;
+#endif
 }
 
 #if RETRO_REV02
