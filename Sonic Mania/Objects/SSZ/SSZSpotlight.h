@@ -12,7 +12,7 @@ typedef struct {
     TABLE(colour coloursEncoreA[8], { 0x000020, 0x000020, 0xD01848, 0xD01848, 0xD01848, 0xD01848, 0x000020, 0x000020 });
     TABLE(colour coloursEncoreB[8], { 0x000020, 0x000020, 0xD0B018, 0xD0B018, 0xD0B018, 0xD0B018, 0x000020, 0x000020 });
 #endif
-    uint16 spriteIndex;
+    uint16 aniFrames;
 } ObjectSSZSpotlight;
 
 // Entity Class
@@ -28,12 +28,7 @@ typedef struct {
     Vector2 vertStore[8];
     Vector2 vertPos[8];
     colour *vertClrPtrs;
-    int32 field_EC;
-    int32 field_F0;
-    int32 field_F4;
-    int32 field_F8;
-    int32 field_FC;
-    int32 field_100;
+    Animator animator;
 } EntitySSZSpotlight;
 
 // Object Struct

@@ -49,7 +49,7 @@ void EncoreIntro_Create(void *data)
     RSDK_THIS(EncoreIntro);
     if (!RSDK_sceneInfo->inEditor) {
         INIT_ENTITY(entity);
-        CutsceneRules_SetupEntity(entity);
+        CutsceneRules_SetupEntity(entity, &entity->size, &entity->hitbox);
         EncoreIntro_SetupEntities();
 
         if (globals->enableIntro) {
@@ -1218,7 +1218,7 @@ void EncoreIntro_PlayerState_InputNone(void)
 void EncoreIntro_EditorDraw(void)
 {
     RSDK_THIS(EncoreIntro);
-    CutsceneRules_DrawCutsceneBounds(entity);
+    CutsceneRules_DrawCutsceneBounds(entity, &entity->size);
 }
 
 void EncoreIntro_EditorLoad(void) {}

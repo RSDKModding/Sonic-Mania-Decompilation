@@ -28,7 +28,8 @@ void ERZOutro_Create(void *data)
     RSDK_THIS(ERZOutro);
     if (!RSDK_sceneInfo->inEditor) {
         INIT_ENTITY(entity);
-        CutsceneRules_SetupEntity(entity);
+        CutsceneRules_SetupEntity(entity, &entity->size, &entity->hitbox);
+        entity->active = ACTIVE_NEVER;
     }
 }
 
@@ -448,7 +449,11 @@ bool32 ERZOutro_CutsceneState_ShowEnding(EntityCutsceneSeq *host)
 void ERZOutro_SaveFileCB(int32 status) { ERZOutro->savedGame = true; }
 
 #if RETRO_INCLUDE_EDITOR
-void ERZOutro_EditorDraw(void) {}
+void ERZOutro_EditorDraw(void)
+{
+    RSDK_THIS(ERZOutro);
+    CutsceneRules_DrawCutsceneBounds(entity, &entity->size);
+}
 
 void ERZOutro_EditorLoad(void) {}
 #endif

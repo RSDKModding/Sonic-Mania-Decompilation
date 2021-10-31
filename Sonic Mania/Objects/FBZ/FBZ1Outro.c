@@ -21,7 +21,8 @@ void FBZ1Outro_Create(void *data)
 {
     RSDK_THIS(FBZ1Outro);
     INIT_ENTITY(entity);
-    CutsceneRules_SetupEntity(entity);
+    CutsceneRules_SetupEntity(entity, &entity->size, &entity->hitbox);
+    entity->active = ACTIVE_NEVER;
 }
 
 void FBZ1Outro_StageLoad(void)
@@ -263,8 +264,14 @@ bool32 FBZ1Outro_CutsceneState_Unknown4(EntityCutsceneSeq *host)
     return false;
 }
 
-void FBZ1Outro_EditorDraw(void) {}
+#if RETRO_INCLUDE_EDITOR
+void FBZ1Outro_EditorDraw(void)
+{
+    RSDK_THIS(FBZ1Outro);
+    CutsceneRules_DrawCutsceneBounds(entity, &entity->size);
+}
 
 void FBZ1Outro_EditorLoad(void) {}
+#endif
 
-void FBZ1Outro_Serialize(void) {}
+void FBZ1Outro_Serialize(void) { RSDK_EDITABLE_VAR(FBZ1Outro, VAR_VECTOR2, size); }

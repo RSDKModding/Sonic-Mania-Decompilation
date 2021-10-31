@@ -29,7 +29,7 @@ void HCZ1Intro_Create(void *data)
     RSDK_THIS(HCZ1Intro);
 
     INIT_ENTITY(entity);
-    CutsceneRules_SetupEntity(entity);
+    CutsceneRules_SetupEntity(entity, &entity->size, &entity->hitbox);
     entity->active = ACTIVE_NORMAL;
 }
 
@@ -120,7 +120,7 @@ bool32 HCZ1Intro_CutsceneState(EntityCutsceneSeq *host)
 void HCZ1Intro_EditorDraw(void)
 {
     RSDK_THIS(HCZ1Intro);
-    CutsceneRules_DrawCutsceneBounds(entity);
+    CutsceneRules_DrawCutsceneBounds(entity, &entity->size);
 }
 
 void HCZ1Intro_EditorLoad(void) {}

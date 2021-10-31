@@ -51,10 +51,12 @@ void ERZStart_Draw(void) {}
 
 void ERZStart_Create(void *data)
 {
-    RSDK_THIS(ERZSetup);
+    RSDK_THIS(ERZStart);
     if (!RSDK_sceneInfo->inEditor) {
         INIT_ENTITY(entity);
-        CutsceneRules_SetupEntity(entity);
+        CutsceneRules_SetupEntity(entity, &entity->size, &entity->hitbox);
+        entity->active = ACTIVE_NORMAL;
+
         ERZStart_SetupObjects();
         ERZStart->timer = 0;
     }
@@ -870,7 +872,11 @@ void ERZStart_State_PlayerRebound(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void ERZStart_EditorDraw(void) {}
+void ERZStart_EditorDraw(void)
+{
+    RSDK_THIS(ERZStart);
+    CutsceneRules_DrawCutsceneBounds(entity, &entity->size);
+}
 
 void ERZStart_EditorLoad(void) {}
 #endif

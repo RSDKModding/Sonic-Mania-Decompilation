@@ -29,21 +29,9 @@ void SSZ1Intro_Create(void *data)
 {
     RSDK_THIS(SSZ1Intro);
 
-    entity->active        = ACTIVE_NORMAL;
-    entity->visible       = false;
-    entity->updateRange.x = 0x800000;
-    entity->updateRange.y = 0x800000;
-    if (!entity->size.x)
-        entity->size.x = 0x1A80000;
-    if (!entity->size.y)
-        entity->size.y = 0xF00000;
-    entity->updateRange.x = 0x800000 + entity->size.x;
-    entity->updateRange.y = 0x800000 + entity->size.y;
-
-    entity->hitbox.left   = -(entity->size.x >> 17);
-    entity->hitbox.right  = entity->size.x >> 17;
-    entity->hitbox.top    = -(entity->size.y >> 17);
-    entity->hitbox.bottom = entity->size.y >> 17;
+    INIT_ENTITY(entity);
+    CutsceneRules_SetupEntity(entity, &entity->size, &entity->hitbox);
+    entity->active = ACTIVE_NORMAL;
 }
 
 void SSZ1Intro_StageLoad(void)
@@ -174,8 +162,14 @@ bool32 SSZ1Intro_CutsceneState_Unknown3(EntityCutsceneSeq *host)
     return false;
 }
 
-void SSZ1Intro_EditorDraw(void) {}
+#if RETRO_INCLUDE_EDITOR
+void SSZ1Intro_EditorDraw(void)
+{
+    RSDK_THIS(SSZ1Intro);
+    CutsceneRules_DrawCutsceneBounds(entity, &entity->size);
+}
 
 void SSZ1Intro_EditorLoad(void) {}
+#endif
 
 void SSZ1Intro_Serialize(void) { RSDK_EDITABLE_VAR(SSZ1Intro, VAR_VECTOR2, size); }

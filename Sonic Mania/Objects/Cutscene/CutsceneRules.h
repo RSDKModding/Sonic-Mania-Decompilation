@@ -30,7 +30,7 @@ void CutsceneRules_EditorLoad(void);
 void CutsceneRules_Serialize(void);
 
 // Extra Entity Functions
-void CutsceneRules_SetupEntity(void *e);
-void CutsceneRules_DrawCutsceneBounds(void *e);
+void CutsceneRules_SetupEntity(void *e, Vector2 *size, Hitbox *hitbox);
+void CutsceneRules_DrawCutsceneBounds(void *e, Vector2 *size);
 
 #endif //!OBJ_CUTSCENERULES_H

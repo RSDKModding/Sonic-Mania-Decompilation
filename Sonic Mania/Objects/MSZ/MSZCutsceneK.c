@@ -22,7 +22,7 @@ void MSZCutsceneK_Create(void *data)
     RSDK_THIS(MSZCutsceneK);
 
     INIT_ENTITY(entity);
-    CutsceneRules_SetupEntity(entity);
+    CutsceneRules_SetupEntity(entity, &entity->size, &entity->hitbox);
     entity->active = ACTIVE_BOUNDS;
 }
 
@@ -188,7 +188,7 @@ bool32 MSZCutsceneK_CutsceneState_Unknown2(EntityCutsceneSeq *host)
 void MSZCutsceneK_EditorDraw(void)
 {
     RSDK_THIS(MSZCutsceneK);
-    CutsceneRules_DrawCutsceneBounds(entity);
+    CutsceneRules_DrawCutsceneBounds(entity, &entity->size);
 }
 
 void MSZCutsceneK_EditorLoad(void) {}

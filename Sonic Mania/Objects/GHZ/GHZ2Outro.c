@@ -432,12 +432,14 @@ void GHZ2Outro_Cutscene_SkipCB(void)
         RSDK.SetScene("Mania Mode", "Chemical Plant Zone 1");
 }
 
+#if RETRO_INCLUDE_EDITOR
 void GHZ2Outro_EditorDraw(void)
 {
     RSDK_THIS(GHZ2Outro);
-    CutsceneRules_DrawCutsceneBounds(entity);
+    CutsceneRules_DrawCutsceneBounds(entity, &entity->size);
 }
 
 void GHZ2Outro_EditorLoad(void) {}
+#endif
 
 void GHZ2Outro_Serialize(void) { RSDK_EDITABLE_VAR(GHZ2Outro, VAR_VECTOR2, size); }

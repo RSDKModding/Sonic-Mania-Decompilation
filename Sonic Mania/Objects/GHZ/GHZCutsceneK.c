@@ -29,7 +29,7 @@ void GHZCutsceneK_Create(void *data)
     RSDK_THIS(GHZCutsceneST);
 
     INIT_ENTITY(entity);
-    CutsceneRules_SetupEntity(entity);
+    CutsceneRules_SetupEntity(entity, &entity->size, &entity->hitbox);
     entity->active = ACTIVE_BOUNDS;
 }
 
@@ -48,7 +48,7 @@ bool32 GHZCutsceneK_Unknown(void)
 void GHZCutsceneK_EditorDraw(void)
 {
     RSDK_THIS(GHZCutsceneK);
-    CutsceneRules_DrawCutsceneBounds(entity);
+    CutsceneRules_DrawCutsceneBounds(entity, &entity->size);
 }
 
 void GHZCutsceneK_EditorLoad(void) {}

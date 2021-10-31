@@ -31,7 +31,7 @@ void MSZ1KIntro_Create(void *data)
     RSDK_THIS(MSZ1KIntro);
 
     INIT_ENTITY(entity);
-    CutsceneRules_SetupEntity(entity);
+    CutsceneRules_SetupEntity(entity, &entity->size, &entity->hitbox);
     entity->active = ACTIVE_NORMAL;
     if (!globals->suppressTitlecard)
         destroyEntity(entity);
@@ -119,12 +119,14 @@ bool32 MSZ1KIntro_CutsceneState_Unknown3(EntityCutsceneSeq *host)
     return false;
 }
 
+#if RETRO_INCLUDE_EDITOR
 void MSZ1KIntro_EditorDraw(void)
 {
     RSDK_THIS(MSZ1KIntro);
-    CutsceneRules_DrawCutsceneBounds(entity);
+    CutsceneRules_DrawCutsceneBounds(entity, &entity->size);
 }
 
 void MSZ1KIntro_EditorLoad(void) {}
+#endif
 
 void MSZ1KIntro_Serialize(void) { RSDK_EDITABLE_VAR(MSZ1KIntro, VAR_VECTOR2, size); }
