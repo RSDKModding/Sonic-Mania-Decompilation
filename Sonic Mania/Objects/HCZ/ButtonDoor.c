@@ -154,7 +154,8 @@ void ButtonDoor_SetupButtonTag(void)
         }
 
         if (taggedEntity) {
-            if ((Button && taggedEntity->objectID == Button->objectID) || (TurretSwitch && taggedEntity->objectID == TurretSwitch->objectID)) {
+            if ((Button && taggedEntity->objectID == Button->objectID) || (TurretSwitch && taggedEntity->objectID == TurretSwitch->objectID)
+                || (PullChain && taggedEntity->objectID == PullChain->objectID)) {
                 if (entity) {
                     int32 distX = abs(entity->position.x - taggedEntity->position.x);
                     int32 distY = abs(entity->position.y - taggedEntity->position.y);
@@ -165,8 +166,8 @@ void ButtonDoor_SetupButtonTag(void)
                     if (entity->updateRange.y < 0x800000 + distY)
                         entity->updateRange.y = 0x800000 + distY;
                 }
+                entity->taggedButton = taggedEntity;
             }
-            entity->taggedButton = taggedEntity;
         }
     }
 }

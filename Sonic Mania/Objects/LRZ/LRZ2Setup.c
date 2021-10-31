@@ -233,6 +233,9 @@ EntityButton *LRZ2Setup_HandleTagSetup(int32 tag, Entity *entityPtr)
                     entityPtr->updateRange.y = 0x800000 + distY;
             }
         }
+        else {
+            taggedEntity = NULL;
+        }
     }
     return taggedEntity;
 }

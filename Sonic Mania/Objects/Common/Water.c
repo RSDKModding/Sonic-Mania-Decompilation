@@ -431,7 +431,7 @@ void Water_State_Palette(void)
                         childPtr = RSDK_GET_ENTITY(player->underwater, Water);
                     player->underwater = false;
                     Player_ChangePhysicsState(player);
-                    if (player->velocity.y /*&& (!Current || !((1 << RSDK_GetEntityID(player)) & Current->activePlayers))*/
+                    if (player->velocity.y && (!Current || !((1 << RSDK.GetEntityID(player)) & Current->activePlayers))
                         && (Player_CheckValidState(player) || player->state == Player_State_FlyIn)) {
                         if (!Water->field_D4) {
                             if (childPtr) {
@@ -476,7 +476,7 @@ void Water_State_Palette(void)
                 player->underwater   = waterID;
                 if (notUnderwater) {
                     Player_ChangePhysicsState(player);
-                    if (player->velocity.y /*&& (!Current || !((1 << RSDK.GetEntityID(player)) & Current->activePlayers))*/) {
+                    if (player->velocity.y && (!Current || !((1 << RSDK.GetEntityID(player)) & Current->activePlayers))) {
                         if (!Water->field_D4) {
                             if (childPtr) {
                                 EntityWater *splash =
@@ -502,11 +502,11 @@ void Water_State_Palette(void)
                     if (player->invincibleTimer <= 0) {
                         if (player->shield == SHIELD_FIRE) {
                             player->shield = SHIELD_NONE;
-                            RSDK.ResetEntityPtr(RSDK.GetEntityByID(Player->playerCount + RSDK.GetEntityID(player)), 0, 0);
+                            destroyEntity(RSDK.GetEntityByID(Player->playerCount + RSDK.GetEntityID(player)));
                         }
                         if (player->shield == SHIELD_LIGHTNING) {
                             player->shield = SHIELD_NONE;
-                            RSDK.ResetEntityPtr(RSDK.GetEntityByID(Player->playerCount + RSDK.GetEntityID(player)), 0, 0);
+                            destroyEntity(RSDK.GetEntityByID(Player->playerCount + RSDK.GetEntityID(player)));
                         }
                     }
                     if (player->shield != SHIELD_BUBBLE) {
@@ -745,9 +745,8 @@ void Water_State_Bubble(void)
                                     entity->childPtr    = player;
                                 }
 
-                                if (/*player->state != Current_Unknown14 && player->state != Current_Unknown13 && player->state != Current_Unknown15
-                                    && player->state != Current_Unknown16*/
-                                    true) {
+                                if (player->state != Current_Player_State_Type1 && player->state != Current_Player_State_Type0
+                                    && player->state != Current_Player_State_Type2 && player->state != Current_Player_State_Type3) {
                                     player->velocity.x = 0;
                                     player->velocity.y = 0;
                                     player->groundVel  = 0;

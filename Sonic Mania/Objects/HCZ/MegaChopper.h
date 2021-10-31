@@ -5,12 +5,25 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    Hitbox hitbox1;
+    Hitbox hitbox2;
+    uint16 aniFrames;
 } ObjectMegaChopper;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    StateMachine(state);
+    Vector2 startPos;
+    Entity *playerPtr;
+    Vector2 playerPos;
+    uint8 playerDir;
+    uint16 field_72;
+    uint16 shakeCount;
+    uint16 lastShakeFlags;
+    uint8 nibbleTimer;
+    Animator animator;
 } EntityMegaChopper;
 
 // Object Struct
@@ -30,6 +43,20 @@ void MegaChopper_EditorLoad(void);
 void MegaChopper_Serialize(void);
 
 // Extra Entity Functions
+void MegaChopper_DebugSpawn(void);
+void MegaChopper_DebugDraw(void);
 
+void MegaChopper_CheckPlayerCollisions(void);
+void MegaChopper_CheckOnScreen(void);
+
+void MegaChopper_PlayerInput_StateP1(void);
+void MegaChopper_PlayerInput_StateP2(void);
+void MegaChopper_PlayerInput_StateP2_AI(void);
+
+void MegaChopper_State_Setup(void);
+void MegaChopper_State_Unknown1(void);
+void MegaChopper_State_Unknown2(void);
+void MegaChopper_State_Unknown3(void);
+void MegaChopper_State_Unknown4(void);
 
 #endif //!OBJ_MEGACHOPPER_H

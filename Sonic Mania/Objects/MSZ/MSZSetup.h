@@ -56,9 +56,10 @@ void MSZSetup_EditorLoad(void);
 void MSZSetup_Serialize(void);
 
 // Extra Entity Functions
+void MSZSetup_Unknown1(int x, int y);
 void MSZSetup_Unknown2(void);
 void MSZSetup_Unknown3(void);
-void MSZSetup_Unknown4(int32 a1);
+void MSZSetup_Unknown4(int32 parallaxMult);
 
 void MSZSetup_ManageFadeST(void);
 void MSZSetup_ManageFadeK(void);

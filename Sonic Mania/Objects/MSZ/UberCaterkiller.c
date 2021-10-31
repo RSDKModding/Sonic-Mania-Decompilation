@@ -20,7 +20,7 @@ void UberCaterkiller_Draw(void)
     RSDK_THIS(UberCaterkiller);
     int clipY2 = RSDK_screens->clipBound_Y2;
     if (entity->aniID) {
-        if (entity->invincibiltyTimer & 1)
+        if (entity->invincibilityTimer & 1)
             RSDK.SetPaletteEntry(0, 160, 0xE0E0E0);
 
         if (entity->bodyScales[0] < 0x200 == (RSDK_sceneInfo->currentDrawGroup == entity->drawOrder)) {
@@ -71,7 +71,7 @@ void UberCaterkiller_Draw(void)
 
         entity->direction ^= FLIP_X;
         entity->rotation = 0;
-        if (entity->invincibiltyTimer & 1)
+        if (entity->invincibilityTimer & 1)
             RSDK.SetPaletteEntry(0, 160, 0xE0E0E0);
 
         if (entity->bodyScales[0] < 512 == (RSDK_sceneInfo->currentDrawGroup == entity->drawOrder)) {
@@ -144,8 +144,8 @@ void UberCaterkiller_CheckPlayerCollisions(void)
 {
     RSDK_THIS(UberCaterkiller);
 
-    if (entity->invincibiltyTimer > 0) {
-        entity->invincibiltyTimer--;
+    if (entity->invincibilityTimer > 0) {
+        entity->invincibilityTimer--;
     }
     else {
         foreach_active(Player, player)
@@ -174,7 +174,7 @@ void UberCaterkiller_CheckPlayerCollisions(void)
                         entity->state = UberCaterkiller_State_Destroyed;
                     }
                     else {
-                        entity->invincibiltyTimer = 48;
+                        entity->invincibilityTimer = 48;
                         RSDK.PlaySfx(UberCaterkiller->sfxHit, false, 255);
                     }
                     foreach_break;

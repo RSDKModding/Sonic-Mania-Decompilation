@@ -544,10 +544,10 @@ void ReplayRecorder_SetupActions(void)
     for (int32 i = 0; i < 64; ++i) {
         ReplayRecorder->actions[i] = StateMachine_None;
     }
-    ReplayRecorder->actions[3]  = StateMachine_None; // Current_Unknown16;
-    ReplayRecorder->actions[4]  = StateMachine_None; // Current_Unknown13;
-    ReplayRecorder->actions[5]  = StateMachine_None; // Current_Unknown14;
-    ReplayRecorder->actions[6]  = StateMachine_None; // Current_Unknown15;
+    ReplayRecorder->actions[3]  = Current_Player_State_Type3;
+    ReplayRecorder->actions[4]  = Current_Player_State_Type0;
+    ReplayRecorder->actions[5]  = Current_Player_State_Type1;
+    ReplayRecorder->actions[6]  = Current_Player_State_Type2;
     ReplayRecorder->actions[7]  = Cylinder_Player_State_Unknown2;
     ReplayRecorder->actions[8]  = Cylinder_Player_State_Unknown3;
     ReplayRecorder->actions[9]  = Cylinder_Player_State_Unknown4;

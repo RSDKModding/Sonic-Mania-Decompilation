@@ -5,12 +5,19 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    Hitbox hitbox;
+    uint16 aniFrames;
 } ObjectPointdexter;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    StateMachine(state);
+    uint8 timer;
+    Vector2 startPos;
+    uint8 startDir;
+    Animator animator;
 } EntityPointdexter;
 
 // Object Struct
@@ -30,6 +37,13 @@ void Pointdexter_EditorLoad(void);
 void Pointdexter_Serialize(void);
 
 // Extra Entity Functions
+void Pointdexter_DebugSpawn(void);
+void Pointdexter_DebugDraw(void);
 
+void Pointdexter_CheckOnScreen(void);
+void Pointdexter_CheckPlayerCollisions(void);
+
+void Pointdexter_State_Setup(void);
+void Pointdexter_State_Swimming(void);
 
 #endif //!OBJ_POINTDEXTER_H

@@ -7,19 +7,19 @@ void Hatterkiller_Update(void)
     RSDK_THIS(Hatterkiller);
 
     for (int s = 0; s < Hatterkiller_SegmentCount; ++s) {
-        if (entity->delays[0] <= 0) {
-            entity->velocities[0].y += 0x3800;
-            entity->positions[0].x += entity->velocities[0].x + TornadoPath->field_8.x;
-            entity->positions[0].y += entity->velocities[0].y + TornadoPath->field_8.y;
+        if (entity->delays[s] <= 0) {
+            entity->velocities[s].y += 0x3800;
+            entity->positions[s].x += entity->velocities[s].x + TornadoPath->field_8.x;
+            entity->positions[s].y += entity->velocities[s].y + TornadoPath->field_8.y;
         }
         else {
-            entity->delays[0]--;
-            entity->positions[0].x += TornadoPath->field_8.x;
-            entity->positions[0].y += TornadoPath->field_8.y;
+            entity->delays[s]--;
+            entity->positions[s].x += TornadoPath->field_8.x;
+            entity->positions[s].y += TornadoPath->field_8.y;
         }
     }
 
-    if (HeavyMystic->field_18) {
+    if (HeavyMystic->curtainLinePos) {
         if (!(Zone->timer & 3))
             HeavyMystic_Unknown1(entity->position.x, entity->position.y);
         if (++entity->field_58 == 40) {
@@ -64,7 +64,7 @@ void Hatterkiller_Update(void)
 
                 if (Player_CheckCollisionTouch(player, entity, &Hatterkiller->hitbox)) {
 #if RETRO_USE_PLUS
-                    if (!Player_CheckMightyUnspin(512, player, 2, &player->uncurlTimer))
+                    if (!Player_CheckMightyUnspin(0x200, player, 2, &player->uncurlTimer))
 #endif
                         Player_CheckHit(player, entity);
                 }
@@ -72,12 +72,12 @@ void Hatterkiller_Update(void)
         }
     }
 
-    if (HeavyMystic->field_18) {
+    if (HeavyMystic->curtainLinePos) {
         entity->position = entity->positions[9];
         if (!RSDK.CheckOnScreen(entity, NULL)) {
-            if (HeavyMystic->field_18 == 1 && !RSDK.CheckOnScreen(entity, NULL)) {
+            if (HeavyMystic->curtainLinePos == 1 && !RSDK.CheckOnScreen(entity, NULL)) {
                 foreach_active(ParallaxSprite, sprite) { sprite->visible = false; }
-                ++HeavyMystic->field_18;
+                ++HeavyMystic->curtainLinePos;
             }
             CREATE_ENTITY(UberCaterkiller, NULL, entity->positions[Hatterkiller_SegmentCount - 1].x,
                           (RSDK_screens->position.y + 64 + RSDK_screens->height) << 16);
@@ -87,10 +87,9 @@ void Hatterkiller_Update(void)
     else if (!RSDK.CheckOnScreen(entity, NULL)) {
         destroyEntity(entity);
     }
-    else {
-        entity->position.x = entity->positions[0].x;
-        entity->position.y = entity->positions[0].y;
-    }
+
+    entity->position.x = entity->positions[0].x;
+    entity->position.y = entity->positions[0].y;
 }
 
 void Hatterkiller_LateUpdate(void) {}
