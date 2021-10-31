@@ -104,18 +104,16 @@ public:
 #endif
     }
 
-    void setMask(Colour mask, byte ink)
+    void setBlend(RenderState *&state)
     {
-        if (ink != INK_MASKED && ink != INK_UNMASKED) {
 #if RETRO_USING_OPENGL
-            glUniform1i(glGetUniformLocation(ID, "maskMode"), 0);
+        glUniform1i(glGetUniformLocation(ID, "inkEffect"), state->blendMode);
 #endif
-            return;
+        if (state->blendMode == INK_MASKED || state->blendMode == INK_UNMASKED) {
+#if RETRO_USING_OPENGL
+            glUniform3f(glGetUniformLocation(ID, "maskColor"), state->maskColor.r, state->maskColor.g, state->maskColor.b);
+#endif
         }
-#if RETRO_USING_OPENGL
-        glUniform3f(glGetUniformLocation(ID, "maskColor"), mask.r, mask.g, mask.b);
-        glUniform1i(glGetUniformLocation(ID, "maskMode"), (ink == INK_UNMASKED) + 1);
-#endif
     }
 
     virtual void setArgs(RenderState *&state){};
@@ -284,6 +282,7 @@ bool32 InitRenderDevice()
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
     SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 16);
+    //SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 16);
 #endif
 #endif
 
@@ -370,6 +369,7 @@ bool32 InitRenderDevice()
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glEnable(GL_BLEND);
     glDisable(GL_CULL_FACE);
+    //glEnable(GL_MULTISAMPLE);
 
     SetupShaders();
     SetupViewport();
@@ -914,7 +914,7 @@ void DrawLine(int x1, int y1, int x2, int y2, uint colour, int alpha, InkEffects
                 return;
             break;
     }
-
+#if RETRO_SOFTWARE_RENDER
     int drawY1 = y1;
     int drawX1 = x1;
     int drawY2 = y2;
@@ -1403,6 +1403,27 @@ void DrawLine(int x1, int y1, int x2, int y2, uint colour, int alpha, InkEffects
             }
             break;
     }
+#else
+    float x1p = x1, x2p = x2, y1p = y1, y2p = y2;
+    if (!screenRelative) {
+        x1p = x1 / (float)(1 << 16) - currentScreen->position.x;
+        x2p = x2 / (float)(1 << 16) - currentScreen->position.x;
+        y1p = y1 / (float)(1 << 16) - currentScreen->position.y;
+        y2p = y2 / (float)(1 << 16) - currentScreen->position.y;
+    }
+    x1p -= .5f; x2p += .5f; y1p -= .5f; y2p += .5f;
+    Vector2 vecs[4];
+    vecs[0].x = (x1p + 0) * (1 << 16);
+    vecs[0].y = (y1p + 0) * (1 << 16);
+    vecs[1].x = (x1p + 1) * (1 << 16);
+    vecs[1].y = (y1p + 1) * (1 << 16);
+    vecs[2].x = (x2p + 1) * (1 << 16);
+    vecs[2].y = (y2p + 1) * (1 << 16);
+    vecs[3].x = (x2p + 0) * (1 << 16);
+    vecs[3].y = (y2p + 0) * (1 << 16);
+    Colour c = colour;
+    DrawFace(vecs, 4, c.r, c.g, c.b, alpha, inkEffect);
+#endif
 }
 void DrawRectangle(int x, int y, int width, int height, uint colour, int alpha, InkEffects inkEffect, bool32 screenRelative)
 {
@@ -1582,7 +1603,6 @@ void DrawRectangle(int x, int y, int width, int height, uint colour, int alpha, 
     AddPoly(xpos + w, ypos, 0, 0, c);
     AddPoly(xpos, ypos + h, 0, 0, c);
     AddPoly(xpos + w, ypos + h, 0, 0, c);
-
 
 #endif
 }
@@ -2931,7 +2951,7 @@ void DrawBlendedFace(Vector2 *vertices, uint *colours, int vertCount, int alpha,
 
     for (int i = 0; i < vertCount; ++i) {
         Colour c = colours[i];
-        c.a = alpha;
+        c.a      = alpha;
         AddPoly(vertices[i].x / (float)(1 << 16), vertices[i].y / (float)(1 << 16), 0, 0, 0, c);
     }
 #endif
@@ -4083,41 +4103,43 @@ void DrawSpriteRotozoom(int x, int y, int pivotX, int pivotY, int width, int hei
     args.transparency = alpha;
     AddRenderState(inkEffect, 4, 6, &args);
 
-    int sin = sinVal512[angle] * scaleY >> 4;
-    int cos = cosVal512[angle] * scaleX >> 4;
+    float sY = scaleY / (float)(1 << 9);
+    float sX = scaleX / (float)(1 << 9);
+    float sin = sinVal512[angle] / (float)(1 << 9);
+    float cos = cosVal512[angle] / (float)(1 << 9);
     if (direction == FLIP_NONE) {
-        int x = -pivotX;
-        int y = -pivotY;
-        AddPoly(xpos + ((x * cos + y * sin) >> 1), ypos + ((y * cos - x * sin) >> 1), sprX, sprY, 0, surface);
-
-        x = width - pivotX;
-        y = -pivotY;
-        AddPoly(xpos + ((x * cos + y * sin) >> 1), ypos + ((y * cos - x * sin) >> 1), sprX + width, sprY, 0, surface);
-
-        x = -pivotX;
-        y = height - pivotY;
-        AddPoly(xpos + ((x * cos + y * sin) >> 1), ypos + ((y * cos - x * sin) >> 1), sprX, sprY + height, 0, surface);
-
-        x = width - pivotX;
-        y = height - pivotY;
-        AddPoly(xpos + ((x * cos + y * sin) >> 1), ypos + ((y * cos - x * sin) >> 1), sprX + width, sprY + height, 0, surface);
-    }
-    else {
         int x = pivotX;
-        int y = -pivotY;
-        AddPoly(xpos + ((x * cos + y * sin) >> 1), ypos + ((y * cos - x * sin) >> 1), sprX, sprY, 0, surface);
+        int y = pivotY;
+        AddPoly(xpos + ((x * cos + y * sin)) * sX, ypos + ((y * cos - x * sin)) * sY, sprX, sprY, 0, surface);
 
-        x = pivotX - width;
-        y = -pivotY;
-        AddPoly(xpos + ((x * cos + y * sin) >> 1), ypos + ((y * cos - x * sin) >> 1), sprX + width, sprY, 0, surface);
+        x = width + pivotX;
+        y = pivotY;
+        AddPoly(xpos + ((x * cos + y * sin)) * sX, ypos + ((y * cos - x * sin)) * sY, sprX + width, sprY, 0, surface);
 
         x = pivotX;
-        y = height - pivotY;
-        AddPoly(xpos + ((x * cos + y * sin) >> 1), ypos + ((y * cos - x * sin) >> 1), sprX, sprY + height, 0, surface);
+        y = height + pivotY;
+        AddPoly(xpos + ((x * cos + y * sin)) * sX, ypos + ((y * cos - x * sin)) * sY, sprX, sprY + height, 0, surface);
 
-        x = pivotX - width;
-        y = height - pivotY;
-        AddPoly(xpos + ((x * cos + y * sin) >> 1), ypos + ((y * cos - x * sin) >> 1), sprX + width, sprY + height, 0, surface);
+        x = width + pivotX;
+        y = height + pivotY;
+        AddPoly(xpos + ((x * cos + y * sin)) * sX, ypos + ((y * cos - x * sin)) * sY, sprX + width, sprY + height, 0, surface);
+    }
+    else {
+        int x = -pivotX;
+        int y = pivotY;
+        AddPoly(xpos + ((x * cos + y * sin)) * sX, ypos + ((y * cos - x * sin)) * sY, sprX, sprY, 0, surface);
+
+        x = -pivotX - width;
+        y = pivotY;
+        AddPoly(xpos + ((x * cos + y * sin)) * sX, ypos + ((y * cos - x * sin)) * sY, sprX + width, sprY, 0, surface);
+
+        x = -pivotX;
+        y = height + pivotY;
+        AddPoly(xpos + ((x * cos + y * sin)) * sX, ypos + ((y * cos - x * sin)) * sY, sprX, sprY + height, 0, surface);
+
+        x = -pivotX - width;
+        y = height + pivotY;
+        AddPoly(xpos + ((x * cos + y * sin)) * sX, ypos + ((y * cos - x * sin)) * sY, sprX + width, sprY + height, 0, surface);
     }
 #endif
 }
@@ -4915,8 +4937,8 @@ void AddRenderState(int blendMode, ushort vertCount, ushort indexCount, void *ar
     RenderState newState;
     newState.blendMode  = blendMode;
     newState.indexCount = indexCount;
-    newState.maskColor = maskColourFull;
-    newState.shader = shader;
+    newState.maskColor  = maskColourFull;
+    newState.shader     = shader;
     if (args)
         memcpy(newState.argBuffer, args, 0x20);
     else
@@ -4948,7 +4970,8 @@ void AddRenderState(int blendMode, ushort vertCount, ushort indexCount, void *ar
 
 void RenderRenderStates()
 {
-    if (!renderCount) return;
+    if (!renderCount)
+        return;
 #if RETRO_USING_OPENGL
     glBufferData(GL_ARRAY_BUFFER, renderCount * sizeof(DrawVertex), vertexList, GL_DYNAMIC_DRAW);
 #endif
@@ -4956,7 +4979,7 @@ void RenderRenderStates()
         RenderState *renderState = &renderStates[i];
         renderState->shader->use();
 
-        renderState->shader->setMask(renderState->maskColor, renderState->blendMode);
+        renderState->shader->setBlend(renderState);
         renderState->shader->setPalette(renderState);
         renderState->shader->setPalLines(renderState);
 
@@ -4981,9 +5004,13 @@ void RenderRenderStates()
             case INK_MASKED:
             case INK_UNMASKED:
             case INK_NONE: glBlendFunc(GL_ONE, GL_ZERO); break;
+            case INK_BLEND:
             case INK_ALPHA: glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); break;
             case INK_ADD: glBlendFunc(GL_SRC_ALPHA, GL_ONE); break;
-            case INK_SUB: glBlendFunc(GL_ONE, GL_ONE); glBlendEquation(GL_FUNC_REVERSE_SUBTRACT); break;
+            case INK_SUB:
+                glBlendFunc(GL_ONE, GL_ONE);
+                glBlendEquation(GL_FUNC_REVERSE_SUBTRACT);
+                break;
         }
 
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, renderState->indexCount * sizeof(ushort), renderState->indecies, GL_DYNAMIC_DRAW);

@@ -4,7 +4,7 @@ in vec4 ex_color;
 out vec4 out_color;
 
 uniform vec3 maskColor;
-uniform int maskMode;
+uniform int inkEffect;
 
 struct ScreenInfo {
     vec2 size;
@@ -22,8 +22,9 @@ void main() {
     //out_color = vec4(dist, dot(pos, pos), 1.0, 1.0); 
     if (dist >= outerRadius || dist <= innerRadius) discard;
     out_color = vec4(ex_color.b, ex_color.g, ex_color.r, ex_color.a);
-    if (maskMode == 1 && out_color.xyz != maskColor)
+    if (inkEffect == 6 && out_color.xyz != maskColor)
         discard;
-    else if (maskMode == 2 && out_color.xyz == maskColor)
+    else if (inkEffect == 7 && out_color.xyz == maskColor)
         discard;
+    if (inkEffect == 1) out_color = vec4(out_color.xyz, 0.5);
 }

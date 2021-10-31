@@ -4,7 +4,7 @@ in vec4 ex_color;
 out vec4 out_color;
 
 uniform vec3 maskColor;
-uniform int maskMode;
+uniform int inkEffect;
 uniform float transparency;
 uniform sampler2DRect sprite;
 
@@ -40,7 +40,8 @@ void main()
 
         out_color = vec4(texture(palette, palvec).xyz, transparency);
     }
-    if (maskMode != 0) out_color = vec4(out_color.xyz - maskColor, 1.0);//*/
-    //if (maskMode == 1 && out_color.xyz != maskColor) discard;
-    //else if (maskMode == 2 && out_color.xyz == maskColor) discard;
+    //if (maskMode != 0) out_color = vec4(out_color.xyz - maskColor, 1.0);//*/
+    if (inkEffect == 6 && out_color.xyz != maskColor) discard;
+    else if (inkEffect == 7 && out_color.xyz == maskColor) discard;
+    if (inkEffect == 1) out_color = vec4(out_color.xyz, 0.5);
 }
