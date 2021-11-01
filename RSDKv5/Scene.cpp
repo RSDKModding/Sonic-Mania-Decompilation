@@ -1,6 +1,6 @@
 #include "RetroEngine.hpp"
 
-byte tilesetGFXData[TILESET_SIZE * 4];
+uint8 tilesetGFXData[TILESET_SIZE * 4];
 
 ScanlineInfo *scanlines = NULL;
 TileLayer tileLayers[LAYER_COUNT];
@@ -25,12 +25,12 @@ void LoadScene()
     sceneInfo.seconds      = 0;
     sceneInfo.milliseconds = 0;
 
-    for (int i = 0; i < DRAWLAYER_COUNT; ++i) {
+    for (int32 i = 0; i < DRAWLAYER_COUNT; ++i) {
         drawLayers[i].entityCount = 0;
         drawLayers[i].layerCount  = 0;
     }
 
-    for (int i = 0; i < TYPEGROUP_COUNT; ++i) {
+    for (int32 i = 0; i < TYPEGROUP_COUNT; ++i) {
         typeGroups[i].rowCount = 0;
     }
 #if RETRO_REV02
@@ -38,7 +38,7 @@ void LoadScene()
 #endif
     lookupTable = NULL;
 
-    for (int l = 0; l < LAYER_COUNT; ++l) {
+    for (int32 l = 0; l < LAYER_COUNT; ++l) {
         MEM_ZERO(tileLayers[l]);
         tileLayers[l].drawLayer[0] = -1;
     }
@@ -66,7 +66,7 @@ void LoadScene()
 #endif
 
     // Unload Model data
-    for (int m = 0; m < MODEL_MAX; ++m) {
+    for (int32 m = 0; m < MODEL_MAX; ++m) {
         if (modelList[m].scope != SCOPE_GLOBAL) {
             MEM_ZERO(modelList[m]);
             modelList[m].scope = SCOPE_NONE;
@@ -74,7 +74,7 @@ void LoadScene()
     }
 
     // Unload 3D Scenes
-    for (int s = 0; s < SCENE3D_MAX; ++s) {
+    for (int32 s = 0; s < SCENE3D_MAX; ++s) {
         if (scene3DList[s].scope != SCOPE_GLOBAL) {
             MEM_ZERO(scene3DList[s]);
             scene3DList[s].scope = SCOPE_NONE;
@@ -82,7 +82,7 @@ void LoadScene()
     }
 
     // Unload animations
-    for (int s = 0; s < SPRFILE_COUNT; ++s) {
+    for (int32 s = 0; s < SPRFILE_COUNT; ++s) {
         if (spriteAnimationList[s].scope != SCOPE_GLOBAL) {
             MEM_ZERO(spriteAnimationList[s]);
             spriteAnimationList[s].scope = SCOPE_NONE;
@@ -90,7 +90,7 @@ void LoadScene()
     }
 
     // Unload surfaces
-    for (int s = 0; s < SURFACE_MAX; ++s) {
+    for (int32 s = 0; s < SURFACE_MAX; ++s) {
         if (gfxSurface[s].scope != SCOPE_GLOBAL) {
             MEM_ZERO(gfxSurface[s]);
             gfxSurface[s].scope = SCOPE_NONE;
@@ -98,7 +98,7 @@ void LoadScene()
     }
 
     // Unload sfx channels
-    for (int c = 0; c < CHANNEL_COUNT; ++c) {
+    for (int32 c = 0; c < CHANNEL_COUNT; ++c) {
         if (channels[c].state == CHANNEL_SFX || channels[c].state == (CHANNEL_SFX | CHANNEL_PAUSED)) {
             channels[c].soundID = -1;
             channels[c].state = CHANNEL_NONE;
@@ -106,7 +106,7 @@ void LoadScene()
     }
 
     // Unload stage SFX
-    for (int s = 0; s < SFX_COUNT; ++s) {
+    for (int32 s = 0; s < SFX_COUNT; ++s) {
         if (sfxList[s].scope != SCOPE_GLOBAL) {
             MEM_ZERO(sfxList[s]);
             sfxList[s].scope = SCOPE_NONE;
@@ -114,13 +114,13 @@ void LoadScene()
     }
 
     // Unload object data
-    for (int o = 0; o < sceneInfo.classCount; ++o) {
+    for (int32 o = 0; o < sceneInfo.classCount; ++o) {
         if (objectList[stageObjectIDs[o]].type) {
             *objectList[stageObjectIDs[o]].type = NULL;
         }
     }
 
-    for (int l = 0; l < DRAWLAYER_COUNT; ++l) {
+    for (int32 l = 0; l < DRAWLAYER_COUNT; ++l) {
         MEM_ZERO(drawLayers[l]);
         drawLayers[l].sorted = false;
     }
@@ -128,7 +128,7 @@ void LoadScene()
     ClearUnusedStorage(DATASET_STG);
     ClearUnusedStorage(DATASET_SFX);
 
-    for (int s = 0; s < SCREEN_MAX; ++s) {
+    for (int32 s = 0; s < SCREEN_MAX; ++s) {
         screens[s].position.x = 0;
         screens[s].position.y = 0;
     }
@@ -156,7 +156,7 @@ void LoadScene()
     InitFileInfo(&info);
     if (LoadFile(&info, buffer, FMODE_RB)) {
         char buffer[0x100];
-        uint sig = ReadInt32(&info, false);
+        uint32 sig = ReadInt32(&info, false);
 
         if (sig != 0x474643) {
             CloseFile(&info);
@@ -167,28 +167,26 @@ void LoadScene()
         sceneInfo.classCount       = 0;
 
         if (sceneInfo.useGlobalScripts) {
-            for (int o = 0; o < globalObjectCount; ++o) {
+            for (int32 o = 0; o < globalObjectCount; ++o) 
                 stageObjectIDs[o] = globalObjectIDs[o];
-            }
             sceneInfo.classCount = globalObjectCount;
         }
         else {
-            for (int o = 0; o < TYPE_DEFAULTCOUNT; ++o) {
+            for (int32 o = 0; o < TYPE_DEFAULTCOUNT; ++o) 
                 stageObjectIDs[o] = globalObjectIDs[o];
-            }
 
             sceneInfo.classCount = TYPE_DEFAULTCOUNT;
         }
 
-        byte objCnt = ReadInt8(&info);
-        for (int o = 0; o < objCnt; ++o) {
+        uint8 objCnt = ReadInt8(&info);
+        for (int32 o = 0; o < objCnt; ++o) {
             ReadString(&info, hashBuffer);
 
-            uint hash[4];
+            RETRO_HASH(hash);
             GEN_HASH(hashBuffer, hash);
 
             stageObjectIDs[sceneInfo.classCount] = 0;
-            for (int objID = 0; objID < objectCount; ++objID) {
+            for (int32 objID = 0; objID < objectCount; ++objID) {
                 if (HASH_MATCH(hash, objectList[objID].hash)) {
                     stageObjectIDs[sceneInfo.classCount] = objID;
                     sceneInfo.classCount++;
@@ -196,38 +194,38 @@ void LoadScene()
             }
         }
 
-        for (int o = 0; o < sceneInfo.classCount; ++o) {
+        for (int32 o = 0; o < sceneInfo.classCount; ++o) {
             ObjectInfo *obj = &objectList[stageObjectIDs[o]];
             if (obj->type && !*obj->type) {
                 AllocateStorage(obj->objectSize, (void **)obj->type, DATASET_STG, true);
-                LoadStaticObject((byte *)*obj->type, obj->hash, sizeof(Object));
+                LoadStaticObject((uint8 *)*obj->type, obj->hash, sizeof(Object));
                 (*obj->type)->objectID = o;
                 if (o >= TYPE_DEFAULTCOUNT)
                     (*obj->type)->active = ACTIVE_NORMAL;
             }
         }
 
-        for (int i = 0; i < PALETTE_COUNT; ++i) {
+        for (int32 i = 0; i < PALETTE_COUNT; ++i) {
             activeStageRows[i] = ReadInt16(&info);
-            for (int r = 0; r < 0x10; ++r) {
+            for (int32 r = 0; r < 0x10; ++r) {
                 if ((activeStageRows[i] >> r & 1)) {
-                    for (int c = 0; c < 0x10; ++c) {
-                        byte red                     = ReadInt8(&info);
-                        byte green                   = ReadInt8(&info);
-                        byte blue                    = ReadInt8(&info);
+                    for (int32 c = 0; c < 0x10; ++c) {
+                        uint8 red                     = ReadInt8(&info);
+                        uint8 green                   = ReadInt8(&info);
+                        uint8 blue                    = ReadInt8(&info);
                         stagePalette[i][(r << 4) + c] = bIndexes[blue] | gIndexes[green] | rIndexes[red];
                     }
                 }
                 else {
-                    for (int c = 0; c < 0x10; ++c) stagePalette[i][(r << 4) + c] = 0;
+                    for (int32 c = 0; c < 0x10; ++c) stagePalette[i][(r << 4) + c] = 0;
                 }
             }
         }
 
-        byte sfxCnt = ReadInt8(&info);
-        for (int i = 0; i < sfxCnt; ++i) {
+        uint8 sfxCnt = ReadInt8(&info);
+        for (int32 i = 0; i < sfxCnt; ++i) {
             ReadString(&info, buffer);
-            byte maxConcurrentPlays = ReadInt8(&info);
+            uint8 maxConcurrentPlays = ReadInt8(&info);
             LoadSfx(buffer, maxConcurrentPlays, SCOPE_STAGE);
         }
 
@@ -248,23 +246,23 @@ void LoadSceneFile()
 
     dataStorage[DATASET_TMP].usedStorage = 0;
 
-    for (int s = 0; s < SCREEN_MAX; ++s) screens[s].waterDrawPos = screens[s].height;
+    for (int s = 0; s < SCREEN_MAX; ++s) screens[s].waterDrawPos = screens[s].size.y;
 
-    if (screens[0].height > 0)
-        memset(gfxLineBuffer, 0, screens[0].height * sizeof(byte));
+    if (screens[0].size.y > 0)
+        memset(gfxLineBuffer, 0, screens[0].size.y * sizeof(uint8));
 
     memset(tileLayers, 0, LAYER_COUNT * sizeof(TileLayer));
 
     //Reload palette
-    for (int i = 0; i < 8; ++i) {
-        for (int r = 0; r < 0x10; ++r) {
+    for (int32 i = 0; i < 8; ++i) {
+        for (int32 r = 0; r < 0x10; ++r) {
             if ((activeGlobalRows[i] >> r & 1)) {
-                for (int c = 0; c < 0x10; ++c) {
+                for (int32 c = 0; c < 0x10; ++c) {
                     fullPalette[i][(r << 4) + c] = globalPalette[i][(r << 4) + c];
                 }
             }
             if ((activeStageRows[i] >> r & 1)) {
-                for (int c = 0; c < 0x10; ++c) {
+                for (int32 c = 0; c < 0x10; ++c) {
                     fullPalette[i][(r << 4) + c] = stagePalette[i][(r << 4) + c];
                 }
             }
@@ -297,24 +295,24 @@ void LoadSceneFile()
             layer->drawLayer[0] = ReadInt8(&info);
             for (int s = 1; s < SCREEN_MAX; ++s) layer->drawLayer[s] = layer->drawLayer[0];
 
-            layer->width = ReadInt16(&info);
-            int shift    = 1;
-            int shift2   = 1;
-            int val      = 0;
+            layer->xsize = ReadInt16(&info);
+            int32 shift    = 1;
+            int32 shift2   = 1;
+            int32 val      = 0;
             do {
                 shift = shift2;
                 val   = 1 << shift2++;
-            } while (val < layer->width);
+            } while (val < layer->xsize);
             layer->widthShift = shift;
 
-            layer->height = ReadInt16(&info);
+            layer->ysize = ReadInt16(&info);
             shift     = 1;
             shift2    = 1;
             val       = 0;
             do {
                 shift = shift2;
                 val   = 1 << shift2++;
-            } while (val < layer->height);
+            } while (val < layer->ysize);
             layer->heightShift = shift;
 
             layer->parallaxFactor = ReadInt16(&info);
@@ -322,14 +320,14 @@ void LoadSceneFile()
             layer->scrollPos      = 0;
 
             layer->layout = NULL;
-            if (layer->width || layer->height) {
-                AllocateStorage(sizeof(ushort) * (1 << layer->widthShift) * (1 << layer->heightShift), (void **)&layer->layout, DATASET_STG, true);
-                memset(layer->layout, 0xFF, sizeof(ushort) * (1 << layer->widthShift) * (1 << layer->heightShift));
+            if (layer->xsize || layer->ysize) {
+                AllocateStorage(sizeof(uint16) * (1 << layer->widthShift) * (1 << layer->heightShift), (void **)&layer->layout, DATASET_STG, true);
+                memset(layer->layout, 0xFF, sizeof(uint16) * (1 << layer->widthShift) * (1 << layer->heightShift));
             }
 
-            int size = layer->width;
-            if (size <= layer->height)
-                size = layer->height;
+            int32 size = layer->xsize;
+            if (size <= layer->ysize)
+                size = layer->ysize;
             AllocateStorage(TILE_SIZE * size, (void **)&layer->lineScroll, DATASET_STG, true);
 
             layer->scrollInfoCount = ReadInt16(&info);
@@ -342,17 +340,17 @@ void LoadSceneFile()
                 layer->scrollInfo[s].unknown        = ReadInt8(&info);
             }
 
-            byte *scrollIndexes = NULL;
-            ReadZLibRSDK(&info, (byte **)&scrollIndexes);
-            memcpy(layer->lineScroll, scrollIndexes, TILE_SIZE * size * sizeof(byte));
+            uint8 *scrollIndexes = NULL;
+            ReadZLibRSDK(&info, (uint8 **)&scrollIndexes);
+            memcpy(layer->lineScroll, scrollIndexes, TILE_SIZE * size * sizeof(uint8));
             scrollIndexes = NULL;
 
-            byte *tileLayout = NULL;
-            ReadZLibRSDK(&info, (byte **)&tileLayout);
+            uint8 *tileLayout = NULL;
+            ReadZLibRSDK(&info, (uint8 **)&tileLayout);
 
             int id = 0;
-            for (int y = 0; y < layer->height; ++y) {
-                for (int x = 0; x < layer->width; ++x) {
+            for (int y = 0; y < layer->ysize; ++y) {
+                for (int x = 0; x < layer->xsize; ++x) {
                     layer->layout[x + (y << layer->widthShift)] = (tileLayout[id + 1] << 8) + tileLayout[id + 0];
                     id += 2;
                 }
@@ -360,7 +358,7 @@ void LoadSceneFile()
             tileLayout = NULL;
         }
 
-        byte objCount = ReadInt8(&info);
+        uint8 objCount  = ReadInt8(&info);
         editableVarList = NULL;
         AllocateStorage(sizeof(EditableVarInfo) * EDITABLEVAR_COUNT, (void **)&editableVarList, DATASET_TMP, false);
 
@@ -369,7 +367,7 @@ void LoadSceneFile()
         AllocateStorage(SCENEENTITY_COUNT * sizeof(EntityBase), (void **)&entList, DATASET_TMP, true);
 #endif
         for (int i = 0; i < objCount; ++i) {
-            uint hashBuf[4];
+            RETRO_HASH(hashBuf);
             hashBuf[0] = ReadInt32(&info, false);
             hashBuf[1] = ReadInt32(&info, false);
             hashBuf[2] = ReadInt32(&info, false);
@@ -416,7 +414,7 @@ void LoadSceneFile()
                 for (int v = 0; v < editableVarCount; ++v) {
                     if (HASH_MATCH(hashBuf, editableVarList[v].hash)) {
                         varID = v;
-                        memcpy(varList[e].hash, editableVarList[v].hash, 4 * sizeof(uint));
+                        HASH_COPY(varList[e].hash, editableVarList[v].hash);
                         varList[e].offset = editableVarList[v].offset;
                         varList[e].active = true;
                         break;
@@ -447,13 +445,13 @@ void LoadSceneFile()
                 entity->position.x = ReadInt32(&info, false);
                 entity->position.y = ReadInt32(&info, false);
 
-                byte *ptr = (byte *)entity;
-                for (int v = 1; v < varCnt; ++v) {
+                uint8 *ptr = (uint8 *)entity;
+                for (int32 v = 1; v < varCnt; ++v) {
                     switch (varList[v].type) {
                         case VAR_UINT8:
                         case VAR_INT8:
                             if (varList[v].active) {
-                                ReadBytes(&info, &ptr[varList[v].offset], sizeof(byte));
+                                ReadBytes(&info, &ptr[varList[v].offset], sizeof(int8));
                             }
                             else {
                                 ReadInt8(&info);
@@ -462,7 +460,7 @@ void LoadSceneFile()
                         case VAR_UINT16:
                         case VAR_INT16:
                             if (varList[v].active) {
-                                ReadBytes(&info, &ptr[varList[v].offset], sizeof(short));
+                                ReadBytes(&info, &ptr[varList[v].offset], sizeof(int16));
                             }
                             else {
                                 ReadInt16(&info);
@@ -474,7 +472,7 @@ void LoadSceneFile()
                         case VAR_BOOL:
                         case VAR_COLOUR:
                             if (varList[v].active) {
-                                ReadBytes(&info, &ptr[varList[v].offset], sizeof(int));
+                                ReadBytes(&info, &ptr[varList[v].offset], sizeof(int32));
                             }
                             else {
                                 ReadInt32(&info, false);
@@ -496,8 +494,8 @@ void LoadSceneFile()
                             break;
                         case VAR_VECTOR2:
                             if (varList[v].active) {
-                                ReadBytes(&info, &ptr[varList[v].offset], sizeof(int));
-                                ReadBytes(&info, &ptr[varList[v].offset + sizeof(int)], sizeof(int));
+                                ReadBytes(&info, &ptr[varList[v].offset], sizeof(int32));
+                                ReadBytes(&info, &ptr[varList[v].offset + sizeof(int32)], sizeof(int32));
                             }
                             else {
                                 ReadInt32(&info, false); // x
@@ -506,7 +504,7 @@ void LoadSceneFile()
                             break;
                         case VAR_UNKNOWN:
                             if (varList[v].active) {
-                                ReadBytes(&info, &ptr[varList[v].offset], sizeof(int));
+                                ReadBytes(&info, &ptr[varList[v].offset], sizeof(int32));
                             }
                             else {
                                 ReadInt32(&info, false);
@@ -860,10 +858,10 @@ void ProcessParallaxAutoScroll()
 }
 void ProcessParallax(TileLayer *layer)
 {
-    if (!layer->width || !layer->height)
+    if (!layer->xsize || !layer->ysize)
         return;
-    int pixelWidth            = TILE_SIZE * layer->width;
-    int pixelHeight           = TILE_SIZE * layer->height;
+    int pixelWidth            = TILE_SIZE * layer->xsize;
+    int pixelHeight           = TILE_SIZE * layer->ysize;
     ScanlineInfo *scanlinePtr = scanlines;
     ScrollInfo *scrollInfo    = layer->scrollInfo;
 
@@ -907,7 +905,7 @@ void ProcessParallax(TileLayer *layer)
 
             // Under water
             deformationData = &layer->deformationDataW[(posY + (ushort)layer->deformationOffsetW) & 0x1FF];
-            for (int i = currentScreen->waterDrawPos; i < currentScreen->height; ++i) {
+            for (int i = currentScreen->waterDrawPos; i < currentScreen->size.y; ++i) {
                 scanlinePtr->position.x = layer->scrollInfo[*lineScrollPtr].tilePos;
                 if (layer->scrollInfo[*lineScrollPtr].deform) {
                     scanlinePtr->position.x += *deformationData << 0x10;
@@ -944,7 +942,7 @@ void ProcessParallax(TileLayer *layer)
             byte *lineScrollPtr = &layer->lineScroll[posX];
 
             // Above water
-            for (int i = 0; i < currentScreen->width; ++i) {
+            for (int i = 0; i < currentScreen->size.x; ++i) {
                 scanlinePtr->position.x = posX++ << 0x10;
                 scanlinePtr->position.y = layer->scrollInfo[*lineScrollPtr].tilePos;
                 scanlinePtr->deform.x   = 0x10000;
@@ -970,7 +968,7 @@ void ProcessParallax(TileLayer *layer)
             if (posY < 0)
                 posY += pixelHeight;
 
-            for (int i = 0; i < currentScreen->height; ++i) {
+            for (int i = 0; i < currentScreen->size.y; ++i) {
                 scanlinePtr->position.x = posX << 0x10;
                 scanlinePtr->position.y = posY++ << 0x10;
                 scanlinePtr->deform.x   = 0x10000;
@@ -1019,7 +1017,7 @@ void ProcessParallax(TileLayer *layer)
 
             // Under water
             deformationData = &layer->deformationDataW[((posY >> 16) + (ushort)layer->deformationOffsetW) & 0x1FF];
-            for (int i = currentScreen->waterDrawPos; i < currentScreen->height; ++i) {
+            for (int i = currentScreen->waterDrawPos; i < currentScreen->size.y; ++i) {
                 scanlinePtr->position.x = layer->scrollInfo[*lineScrollPtr].tilePos;
                 if (layer->scrollInfo[*lineScrollPtr].deform) {
                     scanlinePtr->position.x += *deformationData;
@@ -1060,7 +1058,7 @@ void ProcessSceneTimer()
 
 void SetScene(const char *categoryName, const char *sceneName)
 {
-    uint hash[4];
+    RETRO_HASH(hash);
     GEN_HASH(categoryName, hash);
 
     for (int i = 0; i < sceneInfo.categoryCount; ++i) {
@@ -1080,37 +1078,33 @@ void SetScene(const char *categoryName, const char *sceneName)
     }
 }
 
-void CopyTileLayout(ushort dstLayerID, int startX1, int startY1, ushort srcLayerID, int startX2, int startY2, int countX, int countY)
+void CopyTileLayout(uint16 dstLayerID, int32 startX1, int32 startY1, uint16 srcLayerID, int32 startX2, int32 startY2, int32 countX, int32 countY)
 {
     if (dstLayerID < LAYER_COUNT && srcLayerID < LAYER_COUNT) {
         TileLayer *dstLayer = &tileLayers[dstLayerID];
         TileLayer *srcLayer = &tileLayers[srcLayerID];
 
-        if (startX1 >= 0 && startX1 < dstLayer->width) {
-            if (startY1 >= 0 && startY1 < dstLayer->height) {
-                if (startX2 >= 0 && startX2 < srcLayer->width) {
-                    if (startY2 >= 0 && startY2 < srcLayer->height) {
+        if (startX1 >= 0 && startX1 < dstLayer->xsize) {
+            if (startY1 >= 0 && startY1 < dstLayer->ysize) {
+                if (startX2 >= 0 && startX2 < srcLayer->xsize) {
+                    if (startY2 >= 0 && startY2 < srcLayer->ysize) {
 
-                        if (startX1 + countX > dstLayer->width) {
-                            countX = dstLayer->width - startX1;
-                        }
+                        if (startX1 + countX > dstLayer->xsize) 
+                            countX = dstLayer->xsize - startX1;
 
-                        if (startY1 + countY > dstLayer->height) {
-                            countY = dstLayer->height - startY1;
-                        }
+                        if (startY1 + countY > dstLayer->ysize) 
+                            countY = dstLayer->ysize - startY1;
 
-                        if (startX2 + countX > srcLayer->width) {
-                            countX = srcLayer->width - startX2;
-                        }
+                        if (startX2 + countX > srcLayer->xsize) 
+                            countX = srcLayer->xsize - startX2;
 
-                        if (startY2 + countY > srcLayer->height) {
-                            countY = srcLayer->height - startY2;
-                        }
+                        if (startY2 + countY > srcLayer->ysize) 
+                            countY = srcLayer->ysize - startY2;
 
                         for (int y = 0; y < countY; ++y) {
                             for (int x = 0; x < countX; ++x) {
-                                ushort tile = srcLayer->layout[(x + startX2) + ((y + startY2) * srcLayer->width)];
-                                dstLayer->layout[(x + startX1) + ((y + startY1) * dstLayer->width)] = tile;
+                                ushort tile = srcLayer->layout[(x + startX2) + ((y + startY2) * srcLayer->xsize)];
+                                dstLayer->layout[(x + startX1) + ((y + startY1) * dstLayer->xsize)] = tile;
                             }
                         }
                     }
@@ -1122,7 +1116,7 @@ void CopyTileLayout(ushort dstLayerID, int startX1, int startY1, ushort srcLayer
 
 void DrawLayerHScroll(TileLayer *layer)
 {
-    if (!layer->width || !layer->height)
+    if (!layer->xsize || !layer->ysize)
         return;
     int lineTileCount         = (currentScreen->pitch >> 4) - 1;
     byte *lineBuffer          = &gfxLineBuffer[currentScreen->clipBound_Y1];
@@ -1134,16 +1128,16 @@ void DrawLayerHScroll(TileLayer *layer)
         int y           = scanlinePtr->position.y;
         int tileX       = x >> 0x10;
         ushort *palette = fullPalette[*lineBuffer++];
-        if (tileX >= TILE_SIZE * layer->width) {
-            x = (tileX - TILE_SIZE * layer->width) << 0x10;
+        if (tileX >= TILE_SIZE * layer->xsize) {
+            x = (tileX - TILE_SIZE * layer->xsize) << 0x10;
         }
         else if (tileX < 0) {
-            x = (tileX + TILE_SIZE * layer->width) << 0x10;
+            x = (tileX + TILE_SIZE * layer->xsize) << 0x10;
         }
         int cnt        = TILE_SIZE - ((x >> 0x10) & 0xF);
         int cntX       = (x >> 16) & 0xF;
         int cntY       = TILE_SIZE * ((y >> 0x10) & 0xF);
-        int lineRemain = currentScreen->width;
+        int lineRemain = currentScreen->size.x;
 
         int tx         = (x >> 20);
         ushort *layout = &layer->layout[tx + ((y >> 20) << layer->widthShift)];
@@ -1165,9 +1159,9 @@ void DrawLayerHScroll(TileLayer *layer)
             ++layout;
             ++tx;
 
-            if (tx == layer->width) {
+            if (tx == layer->xsize) {
                 tx = 0;
-                layout -= layer->width;
+                layout -= layer->xsize;
             }
 
             if (*layout < 0xFFFF) {
@@ -1242,9 +1236,9 @@ void DrawLayerHScroll(TileLayer *layer)
             ++layout;
             ++tx;
 
-            if (tx == layer->width) {
+            if (tx == layer->xsize) {
                 tx = 0;
-                layout -= layer->width;
+                layout -= layer->xsize;
             }
 
             int r = lineRemain >= TILE_SIZE ? TILE_SIZE : lineRemain;
@@ -1268,9 +1262,9 @@ void DrawLayerHScroll(TileLayer *layer)
 }
 void DrawLayerVScroll(TileLayer *layer)
 {
-    if (!layer->width || !layer->height)
+    if (!layer->xsize || !layer->ysize)
         return;
-    int lineTileCount       = (currentScreen->height >> 4) - 1;
+    int lineTileCount       = (currentScreen->size.y >> 4) - 1;
     ushort *frameBuffer     = &currentScreen->frameBuffer[currentScreen->clipBound_X1];
     ScanlineInfo *scanLines = &scanlines[currentScreen->clipBound_X1];
     ushort *palettePtr      = fullPalette[gfxLineBuffer[0]];
@@ -1278,17 +1272,17 @@ void DrawLayerVScroll(TileLayer *layer)
         int x     = scanLines->position.x;
         int y     = scanLines->position.y;
         int tileY = y >> 0x10;
-        if (tileY >= TILE_SIZE * layer->height) {
-            y -= (TILE_SIZE * layer->height) << 0x10;
+        if (tileY >= TILE_SIZE * layer->ysize) {
+            y -= (TILE_SIZE * layer->ysize) << 0x10;
         }
         else if (tileY < 0) {
-            y += (TILE_SIZE * layer->height) << 0x10;
+            y += (TILE_SIZE * layer->ysize) << 0x10;
         }
 
         int cnt        = TILE_SIZE - ((y >> 16) & 0xF);
         int cntY       = (y >> 16) & 0xF;
         int cntX       = (x >> 16) & 0xF;
-        int lineRemain = currentScreen->height;
+        int lineRemain = currentScreen->size.y;
 
         ushort *layout = &layer->layout[(x >> 20) + ((y >> 20) << layer->widthShift)];
         lineRemain -= cnt;
@@ -1306,12 +1300,12 @@ void DrawLayerVScroll(TileLayer *layer)
 
         tileY = y >> 20;
         for (int i = 0; i < lineTileCount; ++i) {
-            layout += layer->width;
+            layout += layer->xsize;
             ++tileY;
 
-            if (tileY == layer->height) {
+            if (tileY == layer->ysize) {
                 tileY = 0;
-                layout -= layer->height << layer->widthShift;
+                layout -= layer->ysize << layer->widthShift;
             }
             if (*layout >= 0xFFFF) {
                 frameBuffer += TILE_SIZE * currentScreen->pitch;
@@ -1372,12 +1366,12 @@ void DrawLayerVScroll(TileLayer *layer)
         }
 
         while (lineRemain > 0) {
-            layout += layer->width;
+            layout += layer->xsize;
             ++tileY;
 
-            if (tileY == layer->height) {
+            if (tileY == layer->ysize) {
                 tileY = 0;
-                layout -= layer->height << layer->widthShift;
+                layout -= layer->ysize << layer->widthShift;
             }
 
             int r = lineRemain >= TILE_SIZE ? TILE_SIZE : lineRemain;
@@ -1396,13 +1390,13 @@ void DrawLayerVScroll(TileLayer *layer)
         }
 
         ++scanLines;
-        frameBuffer -= currentScreen->pitch * currentScreen->height;
+        frameBuffer -= currentScreen->pitch * currentScreen->size.y;
         frameBuffer++;
     }
 }
 void DrawLayerRotozoom(TileLayer *layer)
 {
-    if (!layer->width || !layer->height)
+    if (!layer->xsize || !layer->ysize)
         return;
     ushort *layout            = layer->layout;
     int countX                = currentScreen->clipBound_X2 - currentScreen->clipBound_X1;
@@ -1413,8 +1407,6 @@ void DrawLayerRotozoom(TileLayer *layer)
     int height                = (TILE_SIZE << layer->heightShift) - 1;
 
     for (int cy = currentScreen->clipBound_Y1; cy < currentScreen->clipBound_Y2; ++cy) {
-        int defX = scanlinePtr->deform.x;
-        int defY = scanlinePtr->deform.y;
         int posX = scanlinePtr->position.x;
         int posY = scanlinePtr->position.y;
 
@@ -1422,7 +1414,7 @@ void DrawLayerRotozoom(TileLayer *layer)
         ++lineBuffer;
         int fbOffset = currentScreen->pitch - countX;
 
-        for (int cnt = countX; cnt; --cnt) {
+        for (int cx = countX; cx; --cx) {
             int tx = posX >> 20;
             int ty = posY >> 20;
             int x  = (posX >> 16) & 0xF;
@@ -1431,8 +1423,8 @@ void DrawLayerRotozoom(TileLayer *layer)
             byte idx = tilesetGFXData[TILE_SIZE * (y + TILE_SIZE * tile) + x];
             if (idx)
                 *frameBuffer = palettePtr[idx];
-            posX += defX;
-            posY += defY;
+            posX += scanlinePtr->deform.x;
+            posY += scanlinePtr->deform.y;
             ++frameBuffer;
         }
 
@@ -1442,8 +1434,12 @@ void DrawLayerRotozoom(TileLayer *layer)
 }
 void DrawLayerBasic(TileLayer *layer)
 {
-    if (!layer->width || !layer->height)
+    if (!layer->xsize || !layer->ysize)
         return;
+
+    if (currentScreen->clipBound_X1 >= currentScreen->clipBound_X2 || currentScreen->clipBound_Y1 >= currentScreen->clipBound_Y2)
+        return;
+    
     int lineTileCount         = (currentScreen->pitch >> 4) - 1;
     byte *lineBuffer          = &gfxLineBuffer[currentScreen->clipBound_Y1];
     ScanlineInfo *scanlinePtr = &scanlines[currentScreen->clipBound_Y1];
@@ -1454,16 +1450,16 @@ void DrawLayerBasic(TileLayer *layer)
         int y           = scanlinePtr->position.y;
         int tileX       = x >> 0x10;
         ushort *palette = fullPalette[*lineBuffer++];
-        if (tileX >= TILE_SIZE * layer->width) {
-            x = (tileX - TILE_SIZE * layer->width) << 0x10;
+        if (tileX >= TILE_SIZE * layer->xsize) {
+            x = (tileX - TILE_SIZE * layer->xsize) << 0x10;
         }
         else if (tileX < 0) {
-            x = (tileX + TILE_SIZE * layer->width) << 0x10;
+            x = (tileX + TILE_SIZE * layer->xsize) << 0x10;
         }
         int cnt        = TILE_SIZE - ((x >> 0x10) & 0xF);
         int cntX       = (x >> 16) & 0xF;
         int cntY       = TILE_SIZE * ((y >> 0x10) & 0xF);
-        int lineRemain = currentScreen->width;
+        int lineRemain = currentScreen->size.x;
 
         int tx         = (x >> 20);
         ushort *layout = &layer->layout[tx + ((y >> 20) << layer->widthShift)];
@@ -1485,9 +1481,9 @@ void DrawLayerBasic(TileLayer *layer)
             ++layout;
             ++tx;
 
-            if (tx == layer->width) {
+            if (tx == layer->xsize) {
                 tx = 0;
-                layout -= layer->width;
+                layout -= layer->xsize;
             }
 
             if (*layout < 0xFFFF) {
@@ -1562,9 +1558,9 @@ void DrawLayerBasic(TileLayer *layer)
             ++layout;
             ++tx;
 
-            if (tx == layer->width) {
+            if (tx == layer->xsize) {
                 tx = 0;
-                layout -= layer->width;
+                layout -= layer->xsize;
             }
 
             int r = lineRemain >= TILE_SIZE ? TILE_SIZE : lineRemain;
