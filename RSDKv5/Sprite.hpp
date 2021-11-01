@@ -58,7 +58,7 @@ struct ImagePNG {
 bool32 LoadGIF(ImageGIF *image, const char *fileName, bool32 loadHeader);
 #if RETRO_REV02
 bool32 LoadPNG(ImagePNG *image, const char *fileName, bool32 loadHeader);
-#elif !RETRO_REV02
+#else
 bool32 LoadTGA(ImagePNG *image, const char *fileName);
 #endif
 

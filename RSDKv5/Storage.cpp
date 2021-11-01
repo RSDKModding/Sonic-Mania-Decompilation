@@ -5,33 +5,33 @@ DataStorage dataStorage[DATASET_MAX];
 void InitStorage()
 {
     // storage limit (in ints)
-    dataStorage[DATASET_STG].storageLimit = 0x1800000; 
-    dataStorage[DATASET_MUS].storageLimit = 0x800000; 
+    dataStorage[DATASET_STG].storageLimit = 0x1800000;
+    dataStorage[DATASET_MUS].storageLimit = 0x800000;
     dataStorage[DATASET_SFX].storageLimit = 0x4000000; // 0x2000000;
-    dataStorage[DATASET_STR].storageLimit = 0x200000; 
-    dataStorage[DATASET_TMP].storageLimit = 0x800000; 
-    
-    for (int s = 0; s < DATASET_MAX; ++s) {
-        dataStorage[s].memPtr = (int*)malloc(dataStorage[s].storageLimit);
+    dataStorage[DATASET_STR].storageLimit = 0x200000;
+    dataStorage[DATASET_TMP].storageLimit = 0x800000;
+
+    for (int32 s = 0; s < DATASET_MAX; ++s) {
+        dataStorage[s].memPtr      = (int32 *)malloc(dataStorage[s].storageLimit);
         dataStorage[s].usedStorage = 0;
-        dataStorage[s].rowCount  = 0;
+        dataStorage[s].rowCount    = 0;
         dataStorage[s].unknown     = 0;
     }
 }
 
 void ReleaseStorage()
 {
-    for (int s = 0; s < DATASET_MAX; ++s) {
+    for (int32 s = 0; s < DATASET_MAX; ++s) {
         if (dataStorage[s].memPtr)
             free(dataStorage[s].memPtr);
         dataStorage[s].memPtr      = NULL;
         dataStorage[s].usedStorage = 0;
-        dataStorage[s].rowCount  = 0;
+        dataStorage[s].rowCount    = 0;
         dataStorage[s].unknown     = 0;
     }
 
-    for (int p = 0; p < dataPackCount; ++p) {
-        if (dataPacks[p].dataPtr != NULL)
+    for (int32 p = 0; p < dataPackCount; ++p) {
+        if (dataPacks[p].dataPtr)
             free(dataPacks[p].dataPtr);
         dataPacks[p].dataPtr = NULL;
     }
@@ -44,22 +44,23 @@ void ReleaseStorage()
 // size
 // [storage bytes]
 
-void AllocateStorage(uint size, void **dataPtr, StorageDataSets dataSet, bool32 clear) {
-    int **data = (int **)dataPtr;
-    *data       = NULL;
+void AllocateStorage(uint32 size, void **dataPtr, StorageDataSets dataSet, bool32 clear)
+{
+    int32 **data = (int32 **)dataPtr;
+    *data        = NULL;
 
     if (dataSet < DATASET_MAX) {
         DataStorage *storage = &dataStorage[dataSet];
 
         if ((size & -4) < size)
-            size = (size & -4) + sizeof(int);
+            size = (size & -4) + sizeof(int32);
 
-        if (storage->rowCount < 0x1000) {
-            if (size + sizeof(int) * storage->usedStorage >= storage->storageLimit) {
+        if (storage->rowCount < STORAGE_ENTRY_COUNT) {
+            if (size + sizeof(int32) * storage->usedStorage >= storage->storageLimit) {
                 ClearUnusedStorage(dataSet);
 
-                if (size + sizeof(int) * storage->usedStorage >= storage->storageLimit) {
-                    if (storage->rowCount >= 0x1000)
+                if (size + sizeof(int32) * storage->usedStorage >= storage->storageLimit) {
+                    if (storage->rowCount >= STORAGE_ENTRY_COUNT)
                         CleanEmptyStorage(dataSet);
 
                     if (*data && clear) {
@@ -73,7 +74,7 @@ void AllocateStorage(uint size, void **dataPtr, StorageDataSets dataSet, bool32 
                     storage->memPtr[storage->usedStorage++] = storage->usedStorage + 2;
                     storage->memPtr[storage->usedStorage++] = size;
                     *data                                   = &storage->memPtr[storage->usedStorage];
-                    storage->usedStorage += size / sizeof(int);
+                    storage->usedStorage += size / sizeof(int32);
                     storage->startPtrs1[storage->rowCount] = data;
                     storage->startPtrs2[storage->rowCount] = *data;
                 }
@@ -84,12 +85,12 @@ void AllocateStorage(uint size, void **dataPtr, StorageDataSets dataSet, bool32 
                 storage->memPtr[storage->usedStorage++] = storage->usedStorage + 2;
                 storage->memPtr[storage->usedStorage++] = size;
                 *data                                   = &storage->memPtr[storage->usedStorage];
-                storage->usedStorage += size / sizeof(int);
+                storage->usedStorage += size / sizeof(int32);
                 storage->startPtrs1[storage->rowCount] = data;
                 storage->startPtrs2[storage->rowCount] = *data;
             }
             ++storage->rowCount;
-            if (storage->rowCount >= 0x1000)
+            if (storage->rowCount >= STORAGE_ENTRY_COUNT)
                 CleanEmptyStorage(dataSet);
 
             if (*data && clear) {
@@ -103,19 +104,19 @@ void RemoveStorageEntry(void **dataPtr)
 {
     if (dataPtr) {
         if (*dataPtr) {
-            int **data = (int **)dataPtr;
-            int *ptr   = *data;
+            int32 **data = (int32 **)dataPtr;
+            int32 *ptr   = *data;
 
-            int set = *(ptr - 3);
+            int32 set = *(ptr - 3);
 
-            for (int e = 0; e < dataStorage[set].rowCount; ++e) {
+            for (int32 e = 0; e < dataStorage[set].rowCount; ++e) {
                 if (data == dataStorage[set].startPtrs1[e]) {
                     dataStorage[set].startPtrs1[e] = NULL;
                 }
             }
 
-            int c = 0;
-            for (int e = 0; e < dataStorage[set].rowCount; ++e) {
+            int32 c = 0;
+            for (int32 e = 0; e < dataStorage[set].rowCount; ++e) {
                 if (dataStorage[set].startPtrs1[e]) {
                     if (e != c) {
                         dataStorage[set].startPtrs1[c] = dataStorage[set].startPtrs1[e];
@@ -128,7 +129,7 @@ void RemoveStorageEntry(void **dataPtr)
             }
             dataStorage[set].rowCount = c;
 
-            for (int e = dataStorage[set].rowCount; e < 0x1000; ++e) {
+            for (int32 e = dataStorage[set].rowCount; e < STORAGE_ENTRY_COUNT; ++e) {
                 dataStorage[set].startPtrs1[e] = NULL;
                 dataStorage[set].startPtrs2[e] = NULL;
             }
@@ -143,17 +144,17 @@ void ClearUnusedStorage(StorageDataSets set)
     CleanEmptyStorage(set);
 
     if (dataStorage[set].usedStorage) {
-        int totalSizeA  = 0;
-        int totalSizeB  = 0;
-        int usedStorage = 0;
-        int *memPtr2    = dataStorage[set].memPtr;
-        int *memPtr     = dataStorage[set].memPtr;
+        int32 totalSizeA  = 0;
+        int32 totalSizeB  = 0;
+        int32 usedStorage = 0;
+        int32 *memPtr2    = dataStorage[set].memPtr;
+        int32 *memPtr     = dataStorage[set].memPtr;
 
-        for (int c = 0; c < dataStorage[set].usedStorage;) {
-            int startOffset = memPtr2[2];
-            int size        = ((uint)memPtr2[3] >> 2) + 4;
-            *memPtr2         = false;
-            int *dataPtr    = &dataStorage[set].memPtr[startOffset];
+        for (int32 c = 0; c < dataStorage[set].usedStorage;) {
+            int32 startOffset = memPtr2[2];
+            int32 size        = ((uint32)memPtr2[3] >> 2) + 4;
+            *memPtr2          = false;
+            int32 *dataPtr    = &dataStorage[set].memPtr[startOffset];
 
             if (!dataStorage[set].rowCount) {
                 memPtr2 += size;
@@ -163,7 +164,7 @@ void ClearUnusedStorage(StorageDataSets set)
                 totalSizeA += size;
             }
             else {
-                for (int e = 0; e < dataStorage[set].rowCount; ++e) {
+                for (int32 e = 0; e < dataStorage[set].rowCount; ++e) {
                     if (dataPtr == dataStorage[set].startPtrs2[e])
                         *memPtr2 = true;
                 }
@@ -177,7 +178,7 @@ void ClearUnusedStorage(StorageDataSets set)
                     }
                     else {
                         for (; size; --size) {
-                            int store = *memPtr2;
+                            int32 store = *memPtr2;
                             ++memPtr2;
                             *memPtr = store;
                             ++memPtr;
@@ -198,14 +199,14 @@ void ClearUnusedStorage(StorageDataSets set)
         if (usedStorage) {
             bool32 flag = dataStorage[set].usedStorage == usedStorage;
             dataStorage[set].usedStorage -= usedStorage;
-            int *memPtr = dataStorage[set].memPtr;
+            int32 *memPtr = dataStorage[set].memPtr;
 
             if (!flag) {
-                for (int offset = 0; offset < dataStorage[set].usedStorage;) {
-                    int *ptr = &dataStorage[set].memPtr[memPtr[2]];
-                    int size = ((uint)memPtr[3] >> 2) + 4;
+                for (int32 offset = 0; offset < dataStorage[set].usedStorage;) {
+                    int32 *ptr = &dataStorage[set].memPtr[memPtr[2]];
+                    int32 size = ((uint32)memPtr[3] >> 2) + 4;
 
-                    for (int c = 0; c < dataStorage[set].rowCount; ++c) {
+                    for (int32 c = 0; c < dataStorage[set].rowCount; ++c) {
                         if (ptr == dataStorage[set].startPtrs2[c]) {
                             *dataStorage[set].startPtrs1[c] = memPtr + 4;
                             dataStorage[set].startPtrs2[c]  = memPtr + 4;
@@ -221,19 +222,19 @@ void ClearUnusedStorage(StorageDataSets set)
     }
 }
 
-void CopyStorage(int **src, int **dst)
+void CopyStorage(int32 **src, int32 **dst)
 {
     if (src) {
-        int *dstPtr = *dst;
-        *src        = *dst;
-        int dstSet  = dstPtr[-3];
+        int32 *dstPtr = *dst;
+        *src          = *dst;
+        int32 dstSet  = dstPtr[-3];
 
-        if (dataStorage[dstSet].rowCount < 0x1000) {
+        if (dataStorage[dstSet].rowCount < STORAGE_ENTRY_COUNT) {
             dataStorage[dstSet].startPtrs1[dataStorage[dstSet].rowCount] = src;
             dataStorage[dstSet].startPtrs2[dataStorage[dstSet].rowCount] = *src;
 
             dstSet = dstPtr[-3];
-            if (dataStorage[dstSet].rowCount >= 0x1000)
+            if (dataStorage[dstSet].rowCount >= STORAGE_ENTRY_COUNT)
                 CleanEmptyStorage((StorageDataSets)dstSet);
         }
     }
@@ -244,13 +245,13 @@ void CleanEmptyStorage(StorageDataSets set)
     if (set < DATASET_MAX) {
         DataStorage *storage = &dataStorage[set];
 
-        for (int e = 0; e < storage->rowCount; ++e) {
+        for (int32 e = 0; e < storage->rowCount; ++e) {
             if (storage->startPtrs1[e] && *storage->startPtrs1[e] != storage->startPtrs2[e])
                 storage->startPtrs1[e] = NULL;
         }
 
-        int c = 0;
-        for (int e = 0; e < storage->rowCount; ++e) {
+        int32 c = 0;
+        for (int32 e = 0; e < storage->rowCount; ++e) {
             if (storage->startPtrs1[e]) {
                 if (e != c) {
                     storage->startPtrs1[c] = storage->startPtrs1[e];
@@ -263,7 +264,7 @@ void CleanEmptyStorage(StorageDataSets set)
         }
         storage->rowCount = c;
 
-        for (int e = storage->rowCount; e < 0x1000; ++e) {
+        for (int32 e = storage->rowCount; e < STORAGE_ENTRY_COUNT; ++e) {
             storage->startPtrs1[e] = NULL;
             storage->startPtrs2[e] = NULL;
         }

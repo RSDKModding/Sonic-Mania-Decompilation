@@ -2,12 +2,12 @@
 
 SpriteAnimation spriteAnimationList[SPRFILE_COUNT];
 
-short LoadSpriteAnimation(const char *filename, Scopes scope)
+uint16 LoadSpriteAnimation(const char *filename, Scopes scope)
 {
     char buffer[0x100];
     sprintf(buffer, "Data/Sprites/%s", filename);
 
-    uint hash[4];
+    RETRO_HASH(hash);
     GEN_HASH(filename, hash);
 
     for (int i = 0; i < SPRFILE_COUNT; ++i) {
@@ -26,7 +26,7 @@ short LoadSpriteAnimation(const char *filename, Scopes scope)
         return -1;
 
     char nameBuffer[0x8][0x20];
-    byte sheetIDs[0x18];
+    uint8 sheetIDs[0x18];
     sheetIDs[0] = 0;
 
     FileInfo info;
@@ -100,12 +100,12 @@ short LoadSpriteAnimation(const char *filename, Scopes scope)
     return -1;
 }
 
-short CreateSpriteAnimation(const char *filename, uint frameCount, uint animCount, Scopes scope)
+uint16 CreateSpriteAnimation(const char *filename, uint32 frameCount, uint32 animCount, Scopes scope)
 {
     char buffer[0x100];
     sprintf(buffer, "Data/Sprites/%s", filename);
 
-    uint hash[4];
+    RETRO_HASH(hash);
     GEN_HASH(filename, hash);
 
     for (int i = 0; i < SPRFILE_COUNT; ++i) {
@@ -159,7 +159,7 @@ void ProcessAnimation(Animator *animator)
     }
 }
 
-int GetStringWidth(ushort sprIndex, ushort animID, TextInfo *info, int startIndex, int length, int spacing)
+int GetStringWidth(uint16 sprIndex, uint16 animID, TextInfo *info, int32 startIndex, int32 length, int32 spacing)
 {
     if (sprIndex >= SPRFILE_COUNT)
         return 0;
@@ -203,7 +203,7 @@ int GetStringWidth(ushort sprIndex, ushort animID, TextInfo *info, int startInde
     return 0;
 }
 
-void SetSpriteString(ushort spriteIndex, ushort animID, TextInfo *info)
+void SetSpriteString(uint16 spriteIndex, uint16 animID, TextInfo *info)
 {
     if (spriteIndex >= SPRFILE_COUNT)
         return;

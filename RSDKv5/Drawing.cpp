@@ -2,20 +2,20 @@
 
 DrawList drawLayers[DRAWLAYER_COUNT];
 
-ushort blendLookupTable[BLENDTABLE_SIZE];
-ushort subtractLookupTable[BLENDTABLE_SIZE];
+uint16 blendLookupTable[BLENDTABLE_SIZE];
+uint16 subtractLookupTable[BLENDTABLE_SIZE];
 
 GFXSurface gfxSurface[SURFACE_MAX];
 
-int pixWidth    = 424;
+int32 pixWidth    = 424;
 float dpi       = 1;
-int cameraCount = 0;
+int32 cameraCount = 0;
 ScreenInfo screens[SCREEN_MAX];
 CameraInfo cameras[CAMERA_MAX];
 ScreenInfo *currentScreen = NULL;
 
-byte startVertex_2P[2];
-byte startVertex_3P[3];
+uint8 startVertex_2P[2];
+uint8 startVertex_3P[3];
 
 char drawGroupNames[0x10][0x10] = {
     "Draw Group 0", "Draw Group 1", "Draw Group 2",  "Draw Group 3",  "Draw Group 4",  "Draw Group 5",  "Draw Group 6",  "Draw Group 7",
@@ -106,8 +106,8 @@ bool32 InitRenderDevice()
     for (int s = 0; s < SCREEN_MAX; ++s) {
         SetScreenSize(s, pixWidth, SCREEN_YSIZE);
 
-        // screens[s].frameBuffer = new ushort[screens[s].width * screens[s].height];
-        memset(screens[s].frameBuffer, 0, (screens[s].width * screens[s].height) * sizeof(ushort));
+        // screens[s].frameBuffer = new ushort[screens[s].size.x * screens[s].size.y];
+        memset(screens[s].frameBuffer, 0, (screens[s].size.x * screens[s].size.y) * sizeof(ushort));
     }
 
     int size  = pixWidth >= SCREEN_YSIZE ? pixWidth : SCREEN_YSIZE;
@@ -138,7 +138,7 @@ bool32 InitRenderDevice()
 
     for (int s = 0; s < SCREEN_MAX; ++s) {
         engine.screenBuffer[s] =
-            SDL_CreateTexture(engine.renderer, SDL_PIXELFORMAT_RGB565, SDL_TEXTUREACCESS_STREAMING, screens[s].width, screens[s].height);
+            SDL_CreateTexture(engine.renderer, SDL_PIXELFORMAT_RGB565, SDL_TEXTUREACCESS_STREAMING, screens[s].size.x, screens[s].size.y);
 
         if (!engine.screenBuffer[s]) {
             printLog(PRINT_NORMAL, "ERROR: failed to create screen buffer!\nerror msg: %s", SDL_GetError());
@@ -394,7 +394,7 @@ void UpdateWindow()
 
     for (int s = 0; s < SCREEN_MAX; ++s) {
         engine.screenBuffer[s] =
-            SDL_CreateTexture(engine.renderer, SDL_PIXELFORMAT_RGB565, SDL_TEXTUREACCESS_STREAMING, screens[s].width, screens[s].height);
+            SDL_CreateTexture(engine.renderer, SDL_PIXELFORMAT_RGB565, SDL_TEXTUREACCESS_STREAMING, screens[s].size.x, screens[s].size.y);
 
         if (!engine.screenBuffer[s]) {
             printLog(PRINT_NORMAL, "ERROR: failed to create screen buffer %d!\nerror msg: %s", s, SDL_GetError());
@@ -620,7 +620,7 @@ void FillScreen(uint colour, int redAlpha, int greenAlpha, int blueAlpha)
         ushort *greenPtr = &blendLookupTable[BLENDTABLE_XSIZE * (0xFF - greenAlpha)];
         ushort *bluePtr  = &blendLookupTable[BLENDTABLE_XSIZE * (0xFF - blueAlpha)];
 
-        int cnt = currentScreen->height * currentScreen->pitch;
+        int cnt = currentScreen->size.y * currentScreen->pitch;
         for (int id = 0; cnt > 0; --cnt, ++id) {
             ushort px = currentScreen->frameBuffer[id];
 
@@ -3448,7 +3448,7 @@ void DrawSpriteRotozoom(int x, int y, int pivotX, int pivotY, int width, int hei
     if (right > currentScreen->clipBound_X2)
         right = currentScreen->clipBound_X2;
 
-    int top = currentScreen->height;
+    int top = currentScreen->size.y;
     for (int i = 0; i < 4; ++i) {
         if (posY[i] < top)
             top = posY[i];
@@ -4220,7 +4220,7 @@ void DrawDevText(int x, const char *text, int y, int align, uint colour)
             }
         }
 
-        if (y >= 0 && y < currentScreen->height - 7) {
+        if (y >= 0 && y < currentScreen->size.y - 7) {
             int drawX  = x;
             int alignX = 0;
             if (align == ALIGN_CENTER) {
@@ -4233,7 +4233,7 @@ void DrawDevText(int x, const char *text, int y, int align, uint colour)
 
             const char *textPtr = &text[length - cnt];
             while (cnt > 0) {
-                if (drawX >= 0 && drawX < currentScreen->width - 7) {
+                if (drawX >= 0 && drawX < currentScreen->size.x - 7) {
                     ushort *frameBufferPtr = &currentScreen->frameBuffer[drawX + y * currentScreen->pitch];
                     char curChar           = *textPtr;
                     if ((curChar < '\t' || curChar > '\n') && curChar != ' ') {

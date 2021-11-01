@@ -5,9 +5,9 @@ InputManagerInfo InputManager;
 #endif
 
 InputDeviceBase InputDevices[INPUTDEVICE_COUNT];
-int InputDeviceCount = 0;
+int32 InputDeviceCount = 0;
 
-int activeControllers[PLAYER_COUNT];
+int32 activeControllers[PLAYER_COUNT];
 InputDevice *activeInputDevices[PLAYER_COUNT];
 
 ControllerState controller[PLAYER_COUNT + 1];
@@ -21,7 +21,7 @@ TouchMouseData touchMouseData;
 
 #if RETRO_USING_SDL2
 
-int winAPIToSDLMappings(int mapping)
+int32 winAPIToSDLMappings(int32 mapping)
 {
     switch (mapping) {
         default: return SDL_SCANCODE_UNKNOWN;
@@ -252,7 +252,7 @@ int winAPIToSDLMappings(int mapping)
     }
 }
 
-int SDLToWinAPIMappings(int mapping)
+int32 SDLToWinAPIMappings(int32 mapping)
 {
     switch (mapping) {
         default: return VK_UNKNOWN;
@@ -346,9 +346,9 @@ int SDLToWinAPIMappings(int mapping)
     }
 }
 
-bool32 getControllerButton(InputDevice *device, byte buttonID)
+bool32 getControllerButton(InputDevice *device, uint8 buttonID)
 {
-    if (buttonID == (byte)SDL_CONTROLLER_BUTTON_INVALID || !device)
+    if (buttonID == (uint8)SDL_CONTROLLER_BUTTON_INVALID || !device)
         return false;
 
     if (SDL_GameControllerGetButton(((InputDeviceSDL *)device)->controllerPtr, (SDL_GameControllerButton)buttonID)) {
@@ -423,7 +423,7 @@ void UpdateDeviceInput(InputDevice *device)
 #endif
 }
 
-void ProcessKeyboardInput(InputDevice *device, int controllerID)
+void ProcessKeyboardInput(InputDevice *device, int32 controllerID)
 {
 #if RETRO_USING_SDL2
     int keyCount         = 0;
@@ -469,7 +469,7 @@ void ProcessKeyboardInput(InputDevice *device, int controllerID)
     }
 #endif
 }
-void ProcessDeviceInput(InputDevice *device, int controllerID)
+void ProcessDeviceInput(InputDevice *device, int32 controllerID)
 {
 #if RETRO_USING_SDL2
     for (int i = 0; i < 12; ++i) InputManager.keyPress[controllerID - 1][i] = false;
@@ -604,7 +604,7 @@ void ProcessDeviceInput(InputDevice *device, int controllerID)
 #endif
 }
 
-InputDevice *InitKeyboardDevice(uint id)
+InputDevice *InitKeyboardDevice(uint32 id)
 {
     if (InputDeviceCount == INPUTDEVICE_COUNT)
         return NULL;
@@ -827,7 +827,7 @@ void ProcessInput()
 #endif
 }
 
-int GetGamePadType(int inputID)
+int32 GetGamePadType(int32 inputID)
 {
     for (int i = 0; i < InputDeviceCount; ++i) {
         if (InputDevices[i].inputID == inputID) {

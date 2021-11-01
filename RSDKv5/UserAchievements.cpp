@@ -172,16 +172,16 @@ void DrawAchievements()
             CopyString(&achievementText[0], achievements->GetAchievementText(&buffer));
             CopyString(&achievementText[1], achievements->GetAchievementName(&buffer, achievementID));
 
-            int drawX = achievementStrX + currentScreen->width - achievementStrW;
-            DrawRectangle(drawX, currentScreen->height - 40, achievementStrW - achievementStrX, 40, 0xFF107C, 255, INK_NONE, true);
+            int drawX = achievementStrX + currentScreen->size.x - achievementStrW;
+            DrawRectangle(drawX, currentScreen->size.y - 40, achievementStrW - achievementStrX, 40, 0xFF107C, 255, INK_NONE, true);
 
             Vector2 vertices[3];
             vertices[0].x = (drawX - 40) << 16;
-            vertices[1].y = (currentScreen->height - 40) << 16;
-            vertices[0].y = currentScreen->height << 16;
+            vertices[1].y = (currentScreen->size.y - 40) << 16;
+            vertices[0].y = currentScreen->size.y << 16;
             vertices[1].x = drawX << 16;
             vertices[2].x = drawX << 16;
-            vertices[2].y = currentScreen->height << 16;
+            vertices[2].y = currentScreen->size.y << 16;
             DrawFace(vertices, 3, 255, 16, 124, 255, INK_NONE);
 
             drawPos.x = (drawX - achievementStrX + achievementStrW - 8) << 16;

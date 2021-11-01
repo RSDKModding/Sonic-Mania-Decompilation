@@ -1,12 +1,12 @@
 #include "RetroEngine.hpp"
 
-RSDKFileInfo dataFiles[0x1000];
-RSDKContainer dataPacks[4];
+RSDKFileInfo dataFiles[FILE_COUNT];
+RSDKContainer dataPacks[PACK_COUNT];
 
-byte dataPackCount   = 0;
-ushort dataFileCount = 0;
+uint8 dataPackCount  = 0;
+uint16 dataFileCount = 0;
 
-char gameLogicName[0x400];
+char gameLogicName[0x200];
 
 bool32 useDataFile = false;
 
@@ -127,7 +127,7 @@ bool32 OpenDataFile(FileInfo *info, const char *filename)
     return false;
 }
 
-bool32 LoadFile(FileInfo *info, const char *filename, byte fileMode)
+bool32 LoadFile(FileInfo *info, const char *filename, uint8 fileMode)
 {
     if (info->file)
         return false;
@@ -195,7 +195,7 @@ bool32 LoadFile(FileInfo *info, const char *filename, byte fileMode)
     return true;
 }
 
-void GenerateELoadKeys(FileInfo *info, const char *key1, int key2)
+void GenerateELoadKeys(FileInfo *info, const char *key1, int32 key2)
 {
     byte hash[0x10];
 
@@ -268,7 +268,7 @@ void DecryptBytes(FileInfo *info, void *buffer, size_t size)
         }
     }
 }
-void SkipBytes(FileInfo *info, int size)
+void SkipBytes(FileInfo *info, int32 size)
 {
     if (size) {
         while (size > 0) {

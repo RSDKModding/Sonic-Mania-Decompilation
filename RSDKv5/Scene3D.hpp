@@ -21,87 +21,87 @@ enum Scene3DDrawTypes {
 };
 
 struct ScanEdge {
-    int start;
-    int end;
-    int startR;
-    int endR;
-    int startG;
-    int endG;
-    int startB;
-    int endB;
+    int32 start;
+    int32 end;
+    int32 startR;
+    int32 endR;
+    int32 startG;
+    int32 endG;
+    int32 startB;
+    int32 endB;
 };
 
 struct Matrix {
-    int values[4][4];
+    int32 values[4][4];
 };
 
 struct ModelVertex {
-    int x;
-    int y;
-    int z;
-    int nx;
-    int ny;
-    int nz;
+    int32 x;
+    int32 y;
+    int32 z;
+    int32 nx;
+    int32 ny;
+    int32 nz;
 };
 
 struct TexCoord {
-    int x;
-    int y;
+    int32 x;
+    int32 y;
 };
 
 struct Model {
-    uint hash[4];
+    uint32 hash[4];
     ModelVertex *vertices;
     TexCoord *texCoords;
     Colour *colours;
-    ushort *indices;
-    ushort vertCount;
-    ushort indexCount;
-    ushort frameCount;
-    byte flags;
-    byte faceVertCount;
-    byte scope;
+    uint16 *indices;
+    uint16 vertCount;
+    uint16 indexCount;
+    uint16 frameCount;
+    uint8 flags;
+    uint8 faceVertCount;
+    uint8 scope;
 };
 
 struct Scene3DVertex {
-    int x;
-    int y;
-    int z;
-    int nx;
-    int ny;
-    int nz;
-    int tx;
-    int ty;
-    uint colour;
+    int32 x;
+    int32 y;
+    int32 z;
+    int32 nx;
+    int32 ny;
+    int32 nz;
+    int32 tx;
+    int32 ty;
+    uint32 colour;
 };
 
 struct FaceBufferEntry {
-    int depth;
-    int index;
+    int32 depth;
+    int32 index;
 };
 
 struct Scene3D {
-    uint hash[4];
+    RETRO_HASH(hash);
     Scene3DVertex *vertices;
     Scene3DVertex *normals;
     FaceBufferEntry *faceBuffer;
-    byte *faceVertCounts;
-    int projectionX;
-    int projectionY;
-    int diffuseX;
-    int diffuseY;
-    int diffuseZ;
-    int diffuseIntensityX;
-    int diffuseIntensityY;
-    int diffuseIntensityZ;
-    int specularIntensityX;
-    int specularIntensityY;
-    int specularIntensityZ;
-    ushort vertLimit;
-    ushort vertexCount;
-    ushort faceCount;
-    byte drawMode;
-    byte scope;
+    uint8 *faceVertCounts;
+    int32 projectionX;
+    int32 projectionY;
+    int32 diffuseX;
+    int32 diffuseY;
+    int32 diffuseZ;
+    int32 diffuseIntensityX;
+    int32 diffuseIntensityY;
+    int32 diffuseIntensityZ;
+    int32 specularIntensityX;
+    int32 specularIntensityY;
+    int32 specularIntensityZ;
+    uint16 vertLimit;
+    uint16 vertexCount;
+    uint16 faceCount;
+    uint8 drawMode;
+    uint8 scope;
 };
 
 extern Model modelList[MODEL_MAX];
@@ -109,23 +109,23 @@ extern Scene3D scene3DList[SCENE3D_MAX];
 
 extern ScanEdge scanEdgeBuffer[SCREEN_YSIZE * 2];
 
-void ProcessScanEdge(int x1, int y1, int x2, int y2);
-void ProcessScanEdgeClr(uint c1, uint c2, int x1, int y1, int x2, int y2);
+void ProcessScanEdge(int32 x1, int32 y1, int32 x2, int32 y2);
+void ProcessScanEdgeClr(uint32 c1, uint32 c2, int32 x1, int32 y1, int32 x2, int32 y2);
 
 void setIdentityMatrix(Matrix *matrix);
 void matrixMultiply(Matrix *dest, Matrix *matrixA, Matrix *matrixB);
-void matrixTranslateXYZ(Matrix *Matrix, int x, int y, int z, bool32 setIdentity);
-void matrixScaleXYZ(Matrix *matrix, int scaleX, int scaleY, int scaleZ);
-void matrixRotateX(Matrix *matrix, short angle);
-void matrixRotateY(Matrix *matrix, short angle);
-void matrixRotateZ(Matrix *matrix, short angle);
-void matrixRotateXYZ(Matrix *matrix, short rotationX, short rotationY, short rotationZ);
+void matrixTranslateXYZ(Matrix *Matrix, int32 x, int32 y, int32 z, bool32 setIdentity);
+void matrixScaleXYZ(Matrix *matrix, int32 scaleX, int32 scaleY, int32 scaleZ);
+void matrixRotateX(Matrix *matrix, int16 angle);
+void matrixRotateY(Matrix *matrix, int16 angle);
+void matrixRotateZ(Matrix *matrix, int16 angle);
+void matrixRotateXYZ(Matrix *matrix, int16 rotationX, int16 rotationY, int16 rotationZ);
 void matrixInverse(Matrix *dest, Matrix *matrix);
 void matrixCopy(Matrix *matDst, Matrix *matSrc);
 
-ushort LoadMesh(const char *filepath, Scopes scope);
-ushort Create3DScene(const char *name, ushort faceCnt, Scopes scope);
-inline void Prepare3DScene(ushort sceneID)
+uint16 LoadMesh(const char *filepath, Scopes scope);
+uint16 Create3DScene(const char *name, uint16 faceCnt, Scopes scope);
+inline void Prepare3DScene(uint16 sceneID)
 {
     if (sceneID < SCENE3D_MAX) {
         Scene3D *scn     = &scene3DList[sceneID];
@@ -133,12 +133,12 @@ inline void Prepare3DScene(ushort sceneID)
         scn->faceCount   = 0;
         memset(scn->vertices, 0, sizeof(Scene3DVertex) * scn->vertLimit);
         memset(scn->normals, 0, sizeof(Scene3DVertex) * scn->vertLimit);
-        memset(scn->faceVertCounts, 0, sizeof(byte) * scn->vertLimit);
+        memset(scn->faceVertCounts, 0, sizeof(uint8) * scn->vertLimit);
         memset(scn->faceBuffer, 0, sizeof(FaceBufferEntry) * scn->vertLimit);
     }
 }
 
-inline void SetMeshAnimation(ushort model, Animator *animator, short animSpeed, byte loopIndex, bool32 forceApply, ushort frameID)
+inline void SetMeshAnimation(uint16 model, Animator *animator, int16 animSpeed, uint8 loopIndex, bool32 forceApply, uint16 frameID)
 {
     if (model >= MODEL_MAX) {
         if (animator)
@@ -160,7 +160,7 @@ inline void SetMeshAnimation(ushort model, Animator *animator, short animSpeed, 
     animator->loopIndex       = loopIndex;
     animator->animationID     = model;
 }
-inline void SetDiffuseColour(ushort sceneID, byte x, byte y, byte z)
+inline void SetDiffuseColour(uint16 sceneID, uint8 x, uint8 y, uint8 z)
 {
     if (sceneID < SCENE3D_MAX) {
         Scene3D *scn  = &scene3DList[sceneID];
@@ -169,7 +169,7 @@ inline void SetDiffuseColour(ushort sceneID, byte x, byte y, byte z)
         scn->diffuseZ = z;
     }
 }
-inline void SetDiffuseIntensity(ushort sceneID, byte x, byte y, byte z)
+inline void SetDiffuseIntensity(uint16 sceneID, uint8 x, uint8 y, uint8 z)
 {
     if (sceneID < SCENE3D_MAX) {
         Scene3D *scn  = &scene3DList[sceneID];
@@ -178,17 +178,17 @@ inline void SetDiffuseIntensity(ushort sceneID, byte x, byte y, byte z)
         scn->diffuseIntensityZ = z;
     }
 }
-inline void SetSpecularIntensity(ushort sceneID, byte x, byte y, byte z)
+inline void SetSpecularIntensity(uint16 sceneID, uint8 x, uint8 y, uint8 z)
 {
     if (sceneID < SCENE3D_MAX) {
         Scene3D *scn   = &scene3DList[sceneID];
-        scn->specularIntensityX  = x;
+        scn->specularIntensityX = x;
         scn->specularIntensityY = y;
         scn->specularIntensityZ = z;
     }
 }
-void AddModelToScene(ushort animID, ushort sceneID, byte drawMode, Matrix *matWorld, Matrix *matView, uint colour);
-void AddMeshFrameToScene(ushort animID, ushort sceneID, Animator *animator, byte drawMode, Matrix *matWorld, Matrix *matView, uint colour);
-void Draw3DScene(ushort sceneID);
+void AddModelToScene(uint16 animID, uint16 sceneID, uint8 drawMode, Matrix *matWorld, Matrix *matView, colour colour);
+void AddMeshFrameToScene(uint16 animID, uint16 sceneID, Animator *animator, uint8 drawMode, Matrix *matWorld, Matrix *matView, colour colour);
+void Draw3DScene(uint16 sceneID);
 
 #endif

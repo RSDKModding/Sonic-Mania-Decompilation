@@ -5,91 +5,91 @@
 #define PALETTE_SIZE  (0x100)
 
 union Colour {
-    byte bytes[4];
-    uint colour;
+    uint8 bytes[4];
+    uint32 colour;
 };
 
-extern ushort rIndexes[0x100];
-extern ushort gIndexes[0x100];
-extern ushort bIndexes[0x100];
+extern uint16 rIndexes[0x100];
+extern uint16 gIndexes[0x100];
+extern uint16 bIndexes[0x100];
 
-extern ushort globalPalette[PALETTE_COUNT][PALETTE_SIZE];
-extern ushort activeGlobalRows[PALETTE_COUNT];
-extern ushort activeStageRows[PALETTE_COUNT];
-extern ushort stagePalette[PALETTE_COUNT][PALETTE_SIZE];
+extern uint16 globalPalette[PALETTE_COUNT][PALETTE_SIZE];
+extern uint16 activeGlobalRows[PALETTE_COUNT];
+extern uint16 activeStageRows[PALETTE_COUNT];
+extern uint16 stagePalette[PALETTE_COUNT][PALETTE_SIZE];
 
-extern ushort fullPalette[PALETTE_COUNT][PALETTE_SIZE];
+extern uint16 fullPalette[PALETTE_COUNT][PALETTE_SIZE];
 
-extern byte gfxLineBuffer[SCREEN_YSIZE]; // Pointers to active palette
+extern uint8 gfxLineBuffer[SCREEN_YSIZE]; // Pointers to active palette
 
-extern int maskColour;
-extern ushort* lookupTable;
+extern int32 maskColour;
+extern uint16 *lookupTable;
 
 #define RGB888_TO_RGB565(r, g, b)  ((b) >> 3) | (((g) >> 2) << 5) | (((r) >> 3) << 11)       // used in pc vers
 
 #define PACK_RGB888(r, g, b) RGB888_TO_RGB565(r, g, b)
 
 #if RETRO_REV02
-void LoadPalette(byte paletteID, const char *filePath, ushort rowFlags);
+void LoadPalette(uint8 paletteID, const char *filePath, uint16 rowFlags);
 #endif
 
-inline void SetActivePalette(byte newActivePal, int startLine, int endLine)
+inline void SetActivePalette(uint8 newActivePal, int32 startLine, int32 endLine)
 {
     if (newActivePal < PALETTE_COUNT)
-        for (int l = startLine; l < endLine && l < SCREEN_YSIZE; l++) gfxLineBuffer[l] = newActivePal;
+        for (int32 l = startLine; l < endLine && l < SCREEN_YSIZE; l++) gfxLineBuffer[l] = newActivePal;
 }
 
-inline uint GetPaletteEntry(byte paletteID, byte index)
+inline uint32 GetPaletteEntry(uint8 paletteID, uint8 index)
 {
     //0x1F   = 0000 0000 0001 1110
     //0x7E0  = 0000 0111 1110 0000
     //0xF800 = 1111 1000 0000 0000
-    ushort clr = fullPalette[(paletteID & 7)][index];
+    uint16 clr = fullPalette[(paletteID & 7)][index];
     return 8 * (clr & 0x1F | 4 * (clr & 0x7E0 | 8 * (clr & 0xF800)));
 }
 
-inline void SetPaletteEntry(byte paletteID, byte index, uint colour)
+inline void SetPaletteEntry(uint8 paletteID, uint8 index, uint32 colour)
 {
     fullPalette[paletteID][index] = bIndexes[(colour >> 0) & 0xFF] | gIndexes[(colour >> 8) & 0xFF] | rIndexes[(colour >> 16) & 0xFF];
 }
 
-inline void SetPaletteMask(uint colour)
+inline void SetPaletteMask(uint32 colour)
 {
     maskColour = bIndexes[(colour >> 0) & 0xFF] | gIndexes[(colour >> 8) & 0xFF] | rIndexes[(colour >> 16) & 0xFF];
 }
 
-inline void SetLookupTable(ushort *tablePtr) { lookupTable = tablePtr; }
+inline void SetLookupTable(uint16 *tablePtr) { lookupTable = tablePtr; }
 
-inline void CopyPalette(byte sourcePalette, byte srcPaletteStart, byte destinationPalette, byte destPaletteStart, ushort count)
+inline void CopyPalette(uint8 sourcePalette, uint8 srcPaletteStart, uint8 destinationPalette, uint8 destPaletteStart, uint16 count)
 {
     if (sourcePalette < PALETTE_COUNT && destinationPalette < PALETTE_COUNT) {
-        for (int i = 0; i < count; ++i) {
+        for (int32 i = 0; i < count; ++i) {
             fullPalette[destinationPalette][destPaletteStart + i] = fullPalette[sourcePalette][srcPaletteStart + i];
         }
     }
 }
 
-inline void RotatePalette(byte palID, byte startIndex, byte endIndex, bool32 right)
+inline void RotatePalette(uint8 palID, uint8 startIndex, uint8 endIndex, bool32 right)
 {
     if (right) {
-        ushort startClr = fullPalette[palID][endIndex];
-        for (int i = endIndex; i > startIndex; --i) {
+        uint16 startClr = fullPalette[palID][endIndex];
+        for (int32 i = endIndex; i > startIndex; --i) {
             fullPalette[palID][i] = fullPalette[palID][i - 1];
         }
         fullPalette[palID][startIndex] = startClr;
     }
     else {
-        ushort startClr = fullPalette[palID][startIndex];
-        for (int i = startIndex; i < endIndex; ++i) {
+        uint16 startClr = fullPalette[palID][startIndex];
+        for (int32 i = startIndex; i < endIndex; ++i) {
             fullPalette[palID][i] = fullPalette[palID][i + 1];
         }
         fullPalette[palID][endIndex] = startClr;
     }
 }
 
-void SetPaletteFade(byte destPaletteID, byte srcPaletteA, byte srcPaletteB, ushort blendAmount, int startIndex, int endIndex);
+void SetPaletteFade(byte destPaletteID, byte srcPaletteA, byte srcPaletteB, ushort blendAmount, int32 startIndex, int32 endIndex);
 #if RETRO_REV02
-void BlendColours(byte paletteID, byte *coloursA, byte *coloursB, int alpha, int index, int count);
+void BlendColours(byte paletteID, byte *coloursA, byte *coloursB, int32 alpha, int32 index, int32 count);
 #endif
 
 #endif

@@ -166,7 +166,7 @@ struct EditableVarInfo {
     uint32 hash[4];
     int32 offset;
     int32 active;
-    byte type;
+    uint8 type;
 };
 
 struct ForeachStackInfo {
@@ -178,16 +178,16 @@ struct TypeGroupList {
     uint16 entries[ENTITY_COUNT];
 };
 
-extern int objectCount;
+extern int32 objectCount;
 extern ObjectInfo objectList[OBJECT_COUNT];
-extern int globalObjectCount;
-extern int globalObjectIDs[OBJECT_COUNT];
-extern int stageObjectIDs[OBJECT_COUNT];
+extern int32 globalObjectCount;
+extern int32 globalObjectIDs[OBJECT_COUNT];
+extern int32 stageObjectIDs[OBJECT_COUNT];
 
 extern EntityBase objectEntityList[ENTITY_COUNT];
 
 extern EditableVarInfo *editableVarList;
-extern int editableVarCount;
+extern int32 editableVarCount;
 
 extern ForeachStackInfo foreachStackList[FOREACH_STACK_COUNT];
 extern ForeachStackInfo *foreachStackPtr;

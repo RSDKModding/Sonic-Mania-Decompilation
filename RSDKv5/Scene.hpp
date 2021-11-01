@@ -18,7 +18,7 @@ enum LayerTypes {
 };
 
 struct SceneListInfo {
-    uint hash[4];
+    RETRO_HASH(hash);
     char name[0x20];
     ushort sceneOffsetStart;
     ushort sceneOffsetEnd;
@@ -26,12 +26,12 @@ struct SceneListInfo {
 };
 
 struct SceneListEntry {
-    uint hash[4];
+    RETRO_HASH(hash);
     char name[0x20];
     char folder[0x10];
     char sceneID[0x08];
 #if RETRO_REV02
-    byte filter;
+    uint8 filter;
 #endif
 };
 
@@ -39,36 +39,36 @@ struct SceneInfo {
     Entity *entity;
     SceneListEntry *listData;
     SceneListInfo *listCategory;
-    int timeCounter;
-    int currentDrawGroup;
-    int currentScreenID;
-    ushort listPos;
-    ushort entitySlot;
-    ushort createSlot;
-    ushort classCount;
+    int32 timeCounter;
+    int32 currentDrawGroup;
+    int32 currentScreenID;
+    uint16 listPos;
+    uint16 entitySlot;
+    uint16 createSlot;
+    uint16 classCount;
     bool32 inEditor;
     bool32 effectGizmo;
     bool32 debugMode;
     bool32 useGlobalScripts;
     bool32 timeEnabled;
-    byte activeCategory;
-    byte categoryCount;
-    byte state;
+    uint8 activeCategory;
+    uint8 categoryCount;
+    uint8 state;
 #if RETRO_REV02
-    byte filter;
+    uint8 filter;
 #endif
-    byte milliseconds;
-    byte seconds;
-    byte minutes;
+    uint8 milliseconds;
+    uint8 seconds;
+    uint8 minutes;
 };
 
 struct ScrollInfo {
-    int tilePos;
-    int parallaxFactor;
-    int scrollSpeed;
-    int scrollPos;
-    byte deform;
-    byte unknown;
+    int32 tilePos;
+    int32 parallaxFactor;
+    int32 scrollSpeed;
+    int32 scrollPos;
+    uint8 deform;
+    uint8 unknown;
 };
 
 struct ScanlineInfo {
@@ -77,38 +77,38 @@ struct ScanlineInfo {
 };
 
 struct TileLayer {
-    byte type;
-    byte drawLayer[4];
-    byte widthShift;
-    byte heightShift;
-    ushort width;
-    ushort height;
+    uint8 type;
+    uint8 drawLayer[4];
+    uint8 widthShift;
+    uint8 heightShift;
+    uint16 xsize;
+    uint16 ysize;
     Vector2 position;
-    int parallaxFactor;
-    int scrollSpeed;
-    int scrollPos;
-    int deformationOffset;
-    int deformationOffsetW;
-    int deformationData[0x400];
-    int deformationDataW[0x400];
+    int32 parallaxFactor;
+    int32 scrollSpeed;
+    int32 scrollPos;
+    int32 deformationOffset;
+    int32 deformationOffsetW;
+    int32 deformationData[0x400];
+    int32 deformationDataW[0x400];
     void (*scanlineCallback)(ScanlineInfo *);
-    ushort scrollInfoCount;
+    uint16 scrollInfoCount;
     ScrollInfo scrollInfo[0x100];
     uint name[4];
     ushort *layout;
-    byte *lineScroll;
+    uint8 *lineScroll;
 };
 
 struct CollisionMask {
-    byte floorMasks[TILE_SIZE];
-    byte lWallMasks[TILE_SIZE];
-    byte roofMasks[TILE_SIZE];
-    byte rWallMasks[TILE_SIZE];
-    byte floorAngle;
-    byte lWallAngle;
-    byte rWallAngle;
-    byte roofAngle;
-    byte flag;
+    uint8 floorMasks[TILE_SIZE];
+    uint8 lWallMasks[TILE_SIZE];
+    uint8 roofMasks[TILE_SIZE];
+    uint8 rWallMasks[TILE_SIZE];
+    uint8 floorAngle;
+    uint8 lWallAngle;
+    uint8 rWallAngle;
+    uint8 roofAngle;
+    uint8 flag;
 };
 
 extern ScanlineInfo *scanlines;
@@ -123,7 +123,7 @@ extern char currentSceneFolder[0x10];
 
 extern SceneInfo sceneInfo;
 
-extern byte tilesetGFXData[TILESET_SIZE * 4];
+extern uint8 tilesetGFXData[TILESET_SIZE * 4];
 
 void LoadScene();
 void LoadSceneFile();
@@ -161,9 +161,9 @@ inline bool32 CheckSceneFolder(const char *folderName)
     return strcmp(folderName, sceneInfo.listData[sceneInfo.listPos].folder) == 0;
 }
 
-inline ushort GetSceneLayerID(const char *name)
+inline uint16 GetSceneLayerID(const char *name)
 {
-    uint hash[4];
+    RETRO_HASH(hash);
     GEN_HASH(name, hash);
 
     for (int i = 0; i < LAYER_COUNT; ++i) {
@@ -173,7 +173,7 @@ inline ushort GetSceneLayerID(const char *name)
     return -1;
 }
 
-inline TileLayer *GetSceneLayer(ushort layerID)
+inline TileLayer *GetSceneLayer(uint16 layerID)
 {
     if (layerID < LAYER_COUNT)
         return &tileLayers[layerID];
@@ -181,43 +181,44 @@ inline TileLayer *GetSceneLayer(ushort layerID)
         return NULL;
 }
 
-inline void GetLayerSize(ushort layerID, Vector2 *size, bool32 pixelSize)
+inline void GetLayerSize(uint16 layerID, Vector2 *size, bool32 pixelSize)
 {
     if (layerID < LAYER_COUNT && size) {
         TileLayer *layer = &tileLayers[layerID];
         if (pixelSize == 1) {
-            size->x = TILE_SIZE * layer->width;
-            size->y = TILE_SIZE * layer->height;
+            size->x = TILE_SIZE * layer->xsize;
+            size->y = TILE_SIZE * layer->ysize;
         }
         else {
-            size->x = layer->width;
-            size->y = layer->height;
+            size->x = layer->xsize;
+            size->y = layer->ysize;
         }
     }
 }
 
-inline ushort GetTileInfo(ushort layerID, int tileX, int tileY)
+inline uint16 GetTileInfo(uint16 layerID, int32 tileX, int32 tileY)
 {
     if (layerID < LAYER_COUNT) {
         TileLayer *layer = &tileLayers[layerID];
-        if (tileX >= 0 && tileX < layer->width && tileY >= 0 && tileY < layer->height) {
+        if (tileX >= 0 && tileX < layer->xsize && tileY >= 0 && tileY < layer->ysize) {
             return layer->layout[tileX + (tileY << layer->widthShift)];
         }
     }
     return 0xFFFF;
 }
 
-inline void SetTileInfo(ushort layerID, int tileX, int tileY, ushort tile)
+inline void SetTileInfo(uint16 layerID, int tileX, int tileY, uint16 tile)
 {
     if (layerID < LAYER_COUNT) {
         TileLayer* layer = &tileLayers[layerID];
-        if (tileX >= 0 && tileX < layer->width && tileY >= 0 && tileY < layer->height) {
+        if (tileX >= 0 && tileX < layer->xsize && tileY >= 0 && tileY < layer->ysize) {
             layer->layout[tileX + (tileY << layer->widthShift)] = tile;
         }
     }
 }
 
-inline int GetTileAngle(ushort tile, byte cLayer, byte cMode) { 
+inline int32 GetTileAngle(uint16 tile, uint8 cLayer, uint8 cMode)
+{ 
     switch (cMode) {
         default: return 0;
         case CMODE_FLOOR: return collisionMasks[cLayer & 1][tile & 0xFFF].floorAngle;
@@ -226,23 +227,23 @@ inline int GetTileAngle(ushort tile, byte cLayer, byte cMode) {
         case CMODE_RWALL: return collisionMasks[cLayer & 1][tile & 0xFFF].rWallAngle;
     }
 }
-inline void SetTileAngle(ushort tile, byte cLayer, byte cMode, int value)
+inline void SetTileAngle(uint16 tile, uint8 cLayer, uint8 cMode, int32 value)
 {
     switch (cMode) {
         default: break;
-        case CMODE_FLOOR: collisionMasks[cLayer & 1][tile & 0xFFF].floorAngle = value;
-        case CMODE_LWALL: collisionMasks[cLayer & 1][tile & 0xFFF].lWallAngle = value;
-        case CMODE_ROOF: collisionMasks[cLayer & 1][tile & 0xFFF].roofAngle = value;
-        case CMODE_RWALL: collisionMasks[cLayer & 1][tile & 0xFFF].rWallAngle = value;
+        case CMODE_FLOOR: collisionMasks[cLayer & 1][tile & 0xFFF].floorAngle = value; break;
+        case CMODE_LWALL: collisionMasks[cLayer & 1][tile & 0xFFF].lWallAngle = value; break;
+        case CMODE_ROOF: collisionMasks[cLayer & 1][tile & 0xFFF].roofAngle = value; break;
+        case CMODE_RWALL: collisionMasks[cLayer & 1][tile & 0xFFF].rWallAngle = value; break;
     }
 }
 
-inline byte GetTileBehaviour(ushort tile, byte cLayer) { return collisionMasks[cLayer & 1][tile & 0x3FF].flag; }
-inline void SetTileBehaviour(ushort tile, byte cLayer, byte value) { collisionMasks[cLayer & 1][tile & 0x3FF].flag = value; }
+inline uint8 GetTileBehaviour(uint16 tile, uint8 cLayer) { return collisionMasks[cLayer & 1][tile & 0x3FF].flag; }
+inline void SetTileBehaviour(uint16 tile, uint8 cLayer, uint8 value) { collisionMasks[cLayer & 1][tile & 0x3FF].flag = value; }
 
-void CopyTileLayout(ushort dstLayerID, int startX1, int startY1, ushort srcLayerID, int startX2, int startY2, int countX, int countY);
+void CopyTileLayout(uint16 dstLayerID, int32 startX1, int32 startY1, uint16 srcLayerID, int32 startX2, int32 startY2, int32 countX, int32 countY);
 
-inline void CopyTile(ushort dest, ushort src, ushort count)
+inline void CopyTile(uint16 dest, uint16 src, uint16 count)
 {
     if (dest > TILE_COUNT)
         dest = TILE_COUNT - 1;
