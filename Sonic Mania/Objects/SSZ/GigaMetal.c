@@ -169,17 +169,25 @@ void GigaMetal_StageLoad(void)
 {
     GigaMetal->spriteIndex = RSDK.LoadSpriteAnimation("SSZ2/GigaMetal.bin", SCOPE_STAGE);
 
-    *(int *)&GigaMetal->hitbox1.left  = -720908;
-    *(int *)&GigaMetal->hitbox1.right = 786444;
+    GigaMetal->hitbox1.left   = -12;
+    GigaMetal->hitbox1.top    = -12;
+    GigaMetal->hitbox1.right  = 12;
+    GigaMetal->hitbox1.bottom = 12;
 
-    *(int *)&GigaMetal->hitbox2.left  = -589836;
-    *(int *)&GigaMetal->hitbox2.right = 0xA000C;
+    GigaMetal->hitbox2.left   = -12;
+    GigaMetal->hitbox2.top    = -10;
+    GigaMetal->hitbox2.right  = 12;
+    GigaMetal->hitbox2.bottom = 10;
 
-    *(int *)&GigaMetal->hitbox3.left  = -983080;
-    *(int *)&GigaMetal->hitbox3.right = 0x280028;
+    GigaMetal->hitbox3.left   = -40;
+    GigaMetal->hitbox3.top    = -16;
+    GigaMetal->hitbox3.right  = 40;
+    GigaMetal->hitbox3.bottom = 40;
 
-    *(int *)&GigaMetal->hitbox4.left  = -8060984;
-    *(int *)&GigaMetal->hitbox4.right = -4194288;
+    GigaMetal->hitbox4.left   = -56;
+    GigaMetal->hitbox4.top    = -124;
+    GigaMetal->hitbox4.right  = 16;
+    GigaMetal->hitbox4.bottom = -64;
 
     GigaMetal->sfxRoar   = RSDK.GetSFX("SSZ2/MSRoar.wav");
     GigaMetal->sfxImpact = RSDK.GetSFX("Stage/Impact6.wav");
