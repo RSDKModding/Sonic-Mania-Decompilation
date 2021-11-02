@@ -781,13 +781,14 @@ ushort LoadSpriteSheet(const char *filename, Scopes scope)
         LoadGIF(&image, NULL, false);
 
 #if RETRO_USING_OPENGL
+        glActiveTexture(GL_TEXTURE0);
         glGenTextures(1, &gfxSurface[id].id);
-        glBindTexture(GL_TEXTURE_RECTANGLE, gfxSurface[id].id);
-        glTexImage2D(GL_TEXTURE_RECTANGLE, 0, GL_RED, surface->width, surface->height, 0, GL_RED, GL_UNSIGNED_BYTE, gfxSurface[id].dataPtr);
-        glTexParameterf(GL_TEXTURE_RECTANGLE, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glTexParameterf(GL_TEXTURE_RECTANGLE, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-        glTexParameterf(GL_TEXTURE_RECTANGLE, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-        glTexParameterf(GL_TEXTURE_RECTANGLE, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        glBindTexture(GL_TEXTURE_2D, gfxSurface[id].id);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, surface->width, surface->height, 0, GL_RED, GL_UNSIGNED_BYTE, gfxSurface[id].dataPtr);
+        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 #endif
 
         image.palette = NULL;

@@ -18,8 +18,8 @@ uint8 startVertex_2P[2];
 uint8 startVertex_3P[3];
 
 #if RETRO_HARDWARE_RENDER
-bool32 forceRender = false;
-uint currentTex;
+
+int fullscreen[8];
 
 class ShaderBase
 {
@@ -52,7 +52,7 @@ public:
         }
         glDeleteShader(f);
         glDeleteShader(v);
-        bind();
+        this->bind();
 #endif
     }
 
@@ -63,7 +63,7 @@ public:
 #endif
     }
 
-    void bind()
+    virtual void bind()
     {
 #if RETRO_USING_OPENGL
         glBindAttribLocation(ID, 0, "in_pos");
@@ -98,22 +98,9 @@ public:
     void setScreen(ScreenInfo *screen)
     {
 #if RETRO_USING_OPENGL
-        glUniform2f(glGetUniformLocation(ID, "screen.size"), screen->width, screen->height);
-        glUniform2f(glGetUniformLocation(ID, "screen.clipRectTL"), screen->clipBound_X1, screen->clipBound_Y1);
-        glUniform2f(glGetUniformLocation(ID, "screen.clipRectBR"), screen->clipBound_X2, screen->clipBound_Y2);
+        glUniform2f(glGetUniformLocation(ID, "screenSize"), screen->width, screen->height);
+        glUniform2f(glGetUniformLocation(ID, "viewportSize"), engine.windowWidth, engine.windowHeight);
 #endif
-    }
-
-    void setBlend(RenderState *&state)
-    {
-#if RETRO_USING_OPENGL
-        glUniform1i(glGetUniformLocation(ID, "inkEffect"), state->blendMode);
-#endif
-        if (state->blendMode == INK_MASKED || state->blendMode == INK_UNMASKED) {
-#if RETRO_USING_OPENGL
-            glUniform3f(glGetUniformLocation(ID, "maskColor"), state->maskColor.r, state->maskColor.g, state->maskColor.b);
-#endif
-        }
     }
 
     virtual void setArgs(RenderState *&state){};
@@ -121,19 +108,20 @@ public:
     virtual void setPalette(RenderState *&state)
     {
 #if RETRO_USING_OPENGL
-        if (palTex)
-            glDeleteTextures(1, &palTex);
-        glGenTextures(1, &palTex);
         glActiveTexture(GL_TEXTURE0 + 1);
-        glBindTexture(GL_TEXTURE_RECTANGLE, palTex);
-        glTexImage2D(GL_TEXTURE_RECTANGLE, 0, GL_RGB, PALETTE_SIZE, PALETTE_COUNT, 0, GL_RGB, GL_UNSIGNED_SHORT_5_6_5, state->palette);
-        glTexParameterf(GL_TEXTURE_RECTANGLE, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glTexParameterf(GL_TEXTURE_RECTANGLE, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-        glTexParameterf(GL_TEXTURE_RECTANGLE, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-        glTexParameterf(GL_TEXTURE_RECTANGLE, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
-        glActiveTexture(GL_TEXTURE0); // be safe
-        glBindTexture(GL_TEXTURE_RECTANGLE, currentTex);
+        if (!palTex) {
+            glGenTextures(1, &palTex);
+            glBindTexture(GL_TEXTURE_RECTANGLE, palTex);
+            glTexImage2D(GL_TEXTURE_RECTANGLE, 0, GL_RGB, PALETTE_SIZE, PALETTE_COUNT, 0, GL_RGB, GL_UNSIGNED_SHORT_5_6_5, state->palette);
+            glTexParameterf(GL_TEXTURE_RECTANGLE, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+            glTexParameterf(GL_TEXTURE_RECTANGLE, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+            glTexParameterf(GL_TEXTURE_RECTANGLE, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+            glTexParameterf(GL_TEXTURE_RECTANGLE, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        }
+        else {
+            glBindTexture(GL_TEXTURE_RECTANGLE, palTex);
+            glTexSubImage2D(GL_TEXTURE_RECTANGLE, 0, 0, 0, PALETTE_SIZE, PALETTE_COUNT, GL_RGB, GL_UNSIGNED_SHORT_5_6_5, state->palette);
+        }
 #endif
     }
 
@@ -149,8 +137,79 @@ public:
 #endif
 };
 
+union FBSArgsBase {
+    byte size[0x20];
+    ushort *lookupTable;
+};
+
+class FBShaderBase : public ShaderBase
+{
+public:
+#if RETRO_USING_OPENGL
+    uint lookupTex = 0;
+#endif
+
+    FBShaderBase() : ShaderBase(){};
+    FBShaderBase(const char *v, const char *f) : ShaderBase(v, f)
+    {
+        bind();
+        use();
+#if RETRO_USING_OPENGL
+        setSourceDest(20, 10);
+        glUniform1i(glGetUniformLocation(ID, "lookupTable"), 11);
+#endif
+        stop();
+    };
+
+    void setLookupTable(RenderState *&state)
+    {
+#if RETRO_USING_OPENGL
+        glActiveTexture(GL_TEXTURE10 + 1);
+        if (!lookupTex) {
+            glGenTextures(1, &lookupTex);
+            glBindTexture(GL_TEXTURE_RECTANGLE, lookupTex);
+            glTexImage2D(GL_TEXTURE_RECTANGLE, 0, GL_RGB, 0x100, 0x100, 0, GL_RGB, GL_UNSIGNED_SHORT_5_6_5, state->lookupTable);
+            glTexParameterf(GL_TEXTURE_RECTANGLE, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+            glTexParameterf(GL_TEXTURE_RECTANGLE, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+            glTexParameterf(GL_TEXTURE_RECTANGLE, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+            glTexParameterf(GL_TEXTURE_RECTANGLE, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        }
+        else {
+            glBindTexture(GL_TEXTURE_RECTANGLE, lookupTex);
+            glTexSubImage2D(GL_TEXTURE_RECTANGLE, 0, 0, 0, 0x100, 0x100, GL_RGB, GL_UNSIGNED_SHORT_5_6_5, state->lookupTable);
+        }
+#endif
+    }
+
+    void setSourceDest(uint source, uint dest)
+    {
+#if RETRO_USING_OPENGL
+        glUniform1i(glGetUniformLocation(ID, "source"), source);
+        glUniform1i(glGetUniformLocation(ID, "dest"), dest);
+#endif
+    }
+
+    virtual void setArgs(RenderState *&state)
+    {
+#if RETRO_USING_OPENGL
+        glUniform1i(glGetUniformLocation(ID, "inkEffect"), state->blendMode);
+        glUniform1f(glGetUniformLocation(ID, "alpha"), state->alpha);
+#endif
+        if (state->blendMode == INK_MASKED || state->blendMode == INK_UNMASKED) {
+#if RETRO_USING_OPENGL
+            glUniform1i(glGetUniformLocation(ID, "maskColor"), state->maskColor);
+#endif
+        }
+        else if (state->blendMode == INK_LOOKUP) {
+            setLookupTable(state);
+        }
+    }
+    void setPalette(RenderState *&state){};
+    void setPalLines(RenderState *&state){};
+};
+
 union PlaceArgs {
-    byte size[0x100];
+    byte size[0x20];
     struct {
         uint texID;
         byte transparency;
@@ -158,12 +217,16 @@ union PlaceArgs {
 };
 
 union CircleArgs {
-    byte size[0x100];
+    byte size[0x20];
     struct {
         float innerR;
         float outerR;
     };
 };
+
+#if RETRO_USING_OPENGL
+GLuint tileFB;
+#endif
 
 #endif
 
@@ -282,12 +345,12 @@ bool32 InitRenderDevice()
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
     SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 16);
-    //SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 16);
+    // SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 16);
 #endif
 #endif
 
     engine.window = SDL_CreateWindow(gameVerInfo.gameName, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, engine.windowWidth, engine.windowHeight,
-                                     SDL_WINDOW_ALLOW_HIGHDPI | SDL_WINDOW_HIDDEN | flags);
+                                     SDL_WINDOW_ALLOW_HIGHDPI | flags);
 
 #if RETRO_SOFTWARE_RENDER
     engine.renderer = SDL_CreateRenderer(engine.window, -1, SDL_RENDERER_ACCELERATED);
@@ -369,11 +432,34 @@ bool32 InitRenderDevice()
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glEnable(GL_BLEND);
     glDisable(GL_CULL_FACE);
-    //glEnable(GL_MULTISAMPLE);
+    // glEnable(GL_MULTISAMPLE);
 
+    SetupPolygonLists();
     SetupShaders();
     SetupViewport();
-    SetupPolygonLists();
+
+// handle init GFX
+#if RETRO_USING_OPENGL
+    glGenFramebuffers(1, &tileFB);
+    glBindFramebuffer(GL_FRAMEBUFFER, tileFB);
+    glActiveTexture(GL_TEXTURE0);
+    glGenTextures(1, &gfxSurface[0].id);
+    glBindTexture(GL_TEXTURE_2D, gfxSurface[0].id);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, TILE_SIZE, TILE_COUNT * TILE_SIZE, 0, GL_RED, GL_UNSIGNED_BYTE, gfxSurface[0].dataPtr);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, gfxSurface[0].id, 0);
+
+    glGenTextures(1, &gfxSurface[1].id);
+    glBindTexture(GL_TEXTURE_RECTANGLE, gfxSurface[1].id);
+    glTexImage2D(GL_TEXTURE_RECTANGLE, 0, GL_RED, 8, 0x400, 0, GL_RED, GL_UNSIGNED_BYTE, gfxSurface[1].dataPtr);
+    glTexParameterf(GL_TEXTURE_RECTANGLE, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameterf(GL_TEXTURE_RECTANGLE, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameterf(GL_TEXTURE_RECTANGLE, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameterf(GL_TEXTURE_RECTANGLE, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+#endif //! RETRO_USING_OPENGL
 
 #if RETRO_USING_SDL2 && RETRO_PLATFORM == RETRO_ANDROID
     SDL_DisplayMode mode;
@@ -389,6 +475,8 @@ bool32 InitRenderDevice()
 #endif
     return true; // temp?
 }
+
+void FlipScreenHW();
 
 void FlipScreen()
 {
@@ -541,13 +629,7 @@ void FlipScreen()
         }
     }
 #else
-    RenderRenderStates();
-    SDL_GL_SwapWindow(engine.window);
-    glBlendFunc(GL_ONE, GL_ZERO);
-    glClear(GL_COLOR_BUFFER_BIT);
-#endif
-#if RETRO_USING_SDL2
-    SDL_ShowWindow(engine.window);
+    FlipScreenHW();
 #endif
 }
 void ReleaseRenderDevice()
@@ -582,19 +664,28 @@ void ReleaseRenderDevice()
 void UpdateWindow()
 {
 #if RETRO_USING_SDL2
+    uint flags = 0;
+#if RETRO_SOFTWARE_RENDER
     for (int s = 0; s < SCREEN_MAX; ++s) {
         SDL_DestroyTexture(engine.screenBuffer[s]);
     }
+
     SDL_DestroyRenderer(engine.renderer);
+#elif RETRO_USING_OPENGL
+        flags = SDL_WINDOW_OPENGL;
+#endif
+
     SDL_DestroyWindow(engine.window);
 
     SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "nearest");
     SDL_SetHint(SDL_HINT_RENDER_VSYNC, engine.vsync ? "1" : "0");
 
     engine.window = SDL_CreateWindow(gameVerInfo.gameName, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, engine.windowWidth, engine.windowHeight,
-                                     SDL_WINDOW_ALLOW_HIGHDPI | SDL_WINDOW_HIDDEN);
+                                     SDL_WINDOW_ALLOW_HIGHDPI | flags);
 
+#if RETRO_SOFTWARE_RENDER
     engine.renderer = SDL_CreateRenderer(engine.window, -1, SDL_RENDERER_ACCELERATED);
+#endif
 
     if (!engine.window) {
         printLog(PRINT_NORMAL, "ERROR: failed to create window!");
@@ -602,6 +693,7 @@ void UpdateWindow()
         return;
     }
 
+#if RETRO_SOFTWARE_RENDER
     if (!engine.renderer) {
         printLog(PRINT_NORMAL, "ERROR: failed to create renderer!");
         engine.running = false;
@@ -621,6 +713,7 @@ void UpdateWindow()
             return;
         }
     }
+#endif
 
     if (!engine.isWindowed) {
         SDL_RestoreWindow(engine.window);
@@ -645,6 +738,9 @@ void UpdateWindow()
             // what the
         }
     }
+#if RETRO_HARDWARE_RENDER
+    SetupViewport();
+#endif
 #endif
 }
 
@@ -693,16 +789,6 @@ void InitGFXSystem()
     gfxSurface[0].lineSize = log2(TILE_SIZE);
     gfxSurface[0].dataPtr  = tilesetGFXData;
 
-#if RETRO_USING_OPENGL
-    glGenTextures(1, &gfxSurface[0].id);
-    glBindTexture(GL_TEXTURE_RECTANGLE, gfxSurface[0].id);
-    glTexImage2D(GL_TEXTURE_RECTANGLE, 0, GL_RED, TILE_SIZE, TILE_COUNT * TILE_SIZE, 0, GL_RED, GL_UNSIGNED_BYTE, gfxSurface[0].dataPtr);
-    glTexParameterf(GL_TEXTURE_RECTANGLE, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameterf(GL_TEXTURE_RECTANGLE, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexParameterf(GL_TEXTURE_RECTANGLE, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameterf(GL_TEXTURE_RECTANGLE, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-#endif
-
 #if RETRO_REV02
     GEN_HASH("EngineText", hash);
     gfxSurface[1].scope = SCOPE_GLOBAL;
@@ -712,18 +798,6 @@ void InitGFXSystem()
     gfxSurface[1].lineSize = 3;
     gfxSurface[1].dataPtr  = engineTextBuffer;
 
-#if RETRO_USING_OPENGL
-    glGenTextures(1, &gfxSurface[1].id);
-    glBindTexture(GL_TEXTURE_RECTANGLE, gfxSurface[1].id);
-    glTexImage2D(GL_TEXTURE_RECTANGLE, 0, GL_RED, 8, 0x400, 0, GL_RED, GL_UNSIGNED_BYTE, gfxSurface[1].dataPtr);
-    glTexParameterf(GL_TEXTURE_RECTANGLE, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameterf(GL_TEXTURE_RECTANGLE, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexParameterf(GL_TEXTURE_RECTANGLE, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameterf(GL_TEXTURE_RECTANGLE, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-#endif //! RETRO_USING_OPENGL
-#endif //! RETRO_REV02
-#if RETRO_USING_OPENGL
-    glBindTexture(GL_TEXTURE_RECTANGLE, currentTex); // give it back
 #endif
 }
 
@@ -874,18 +948,36 @@ void FillScreen(uint colour, int redAlpha, int greenAlpha, int blueAlpha)
             currentScreen->frameBuffer[id] = (b) | (g << 6) | (r << 11);
         }
 #else
-        Colour c = colour;
-        /*float rN = c.components.r / 255.f;
-        float gN = c.components.g / 255.f;
-        float bN = c.components.b / 255.f;
+        PlaceArgs args;
+        args.texID        = 0;
+        args.transparency = 255;
 
-        float raN = redAlpha / 255.f;
-        float gaN = greenAlpha / 255.f;
-        float baN = blueAlpha / 255.f;//*/
+        AddRenderState(INK_ADD, 4, 6, &args, redAlpha, &placeShader, NULL, NULL, &fbsPassthrough);
 
-        DrawRectangle(0, 0, currentScreen->width, currentScreen->height, Colour(c.r, 0, 0, 0).color, redAlpha, INK_ADD, true);
-        DrawRectangle(0, 0, currentScreen->width, currentScreen->height, Colour(0, c.g, 0, 0).color, greenAlpha, INK_ADD, true);
-        DrawRectangle(0, 0, currentScreen->width, currentScreen->height, Colour(0, 0, c.b, 0).color, blueAlpha, INK_ADD, true);
+        Colour src = colour;
+        Colour c   = Colour(src.r, 0, 0, redAlpha);
+
+        AddPoly(0, 0, 0, 0, c);
+        AddPoly(currentScreen->width, 0, 0, 0, c);
+        AddPoly(0, currentScreen->height, 0, 0, c);
+        AddPoly(currentScreen->width, currentScreen->height, 0, 0, c);
+
+        AddRenderState(INK_ADD, 4, 6, &args, greenAlpha, &placeShader, NULL, NULL, &fbsPassthrough);
+        c = Colour(0, src.g, 0, greenAlpha);
+
+        AddPoly(0, 0, 0, 0, c);
+        AddPoly(currentScreen->width, 0, 0, 0, c);
+        AddPoly(0, currentScreen->height, 0, 0, c);
+        AddPoly(currentScreen->width, currentScreen->height, 0, 0, c);
+
+        AddRenderState(INK_ADD, 4, 6, &args, blueAlpha, &placeShader, NULL, NULL, &fbsPassthrough);
+        c = Colour(0, 0, src.b, blueAlpha);
+
+        AddPoly(0, 0, 0, 0, c);
+        AddPoly(currentScreen->width, 0, 0, 0, c);
+        AddPoly(0, currentScreen->height, 0, 0, c);
+        AddPoly(currentScreen->width, currentScreen->height, 0, 0, c);
+
 #endif
     }
 }
@@ -1411,7 +1503,10 @@ void DrawLine(int x1, int y1, int x2, int y2, uint colour, int alpha, InkEffects
         y1p = y1 / (float)(1 << 16) - currentScreen->position.y;
         y2p = y2 / (float)(1 << 16) - currentScreen->position.y;
     }
-    x1p -= .5f; x2p += .5f; y1p -= .5f; y2p += .5f;
+    x1p -= .5f;
+    x2p += .5f;
+    y1p -= .5f;
+    y2p += .5f;
     Vector2 vecs[4];
     vecs[0].x = (x1p + 0) * (1 << 16);
     vecs[0].y = (y1p + 0) * (1 << 16);
@@ -1421,7 +1516,7 @@ void DrawLine(int x1, int y1, int x2, int y2, uint colour, int alpha, InkEffects
     vecs[2].y = (y2p + 1) * (1 << 16);
     vecs[3].x = (x2p + 0) * (1 << 16);
     vecs[3].y = (y2p + 0) * (1 << 16);
-    Colour c = colour;
+    Colour c  = colour;
     DrawFace(vecs, 4, c.r, c.g, c.b, alpha, inkEffect);
 #endif
 }
@@ -1930,14 +2025,14 @@ void DrawCircle(int x, int y, int radius, uint colour, int alpha, InkEffects ink
 #else
     float xp = x, yp = y;
     if (!screenRelative) {
-        xp = x / (float)(1 >> 16) - currentScreen->position.x;
-        yp = y / (float)(1 >> 16) - currentScreen->position.y;
+        xp = x / (float)(1 << 16) - currentScreen->position.x;
+        yp = y / (float)(1 << 16) - currentScreen->position.y;
     }
 
     CircleArgs args;
     args.innerR = 0;
     args.outerR = 1;
-    AddRenderState(inkEffect, 4, 6, &args, (ShaderBase *)&circleShader);
+    AddRenderState(inkEffect, 4, 6, &args, alpha, (ShaderBase *)&circleShader);
 
     Colour c = colour;
     c.a      = alpha;
@@ -2232,7 +2327,7 @@ void DrawCircleOutline(int x, int y, int innerRadius, int outerRadius, uint colo
     CircleArgs args;
     args.innerR = innerRadius / (float)outerRadius;
     args.outerR = 1;
-    AddRenderState(inkEffect, 4, 6, &args, (ShaderBase *)&circleShader);
+    AddRenderState(inkEffect, 4, 6, &args, alpha, (ShaderBase *)&circleShader);
 
     Colour c = colour;
     c.a      = alpha;
@@ -2493,7 +2588,7 @@ void DrawFace(Vector2 *vertices, int vertCount, int r, int g, int b, int alpha, 
     }
     indecies[count - 1] = 0;
 
-    AddRenderState(inkEffect, vertCount, count, NULL, (ShaderBase *)&placeShader, indecies);
+    AddRenderState(inkEffect, vertCount, count, NULL, alpha, (ShaderBase *)&placeShader, indecies);
 
     for (int i = 0; i < vertCount; ++i) AddPoly(vertices[i].x / (float)(1 << 16), vertices[i].y / (float)(1 << 16), 0, 0, 0, c);
 #endif
@@ -2947,7 +3042,7 @@ void DrawBlendedFace(Vector2 *vertices, uint *colours, int vertCount, int alpha,
     }
     indecies[count - 1] = 0;
 
-    AddRenderState(inkEffect, vertCount, count, NULL, (ShaderBase *)&placeShader, indecies);
+    AddRenderState(inkEffect, vertCount, count, NULL, alpha, (ShaderBase *)&placeShader, indecies);
 
     for (int i = 0; i < vertCount; ++i) {
         Colour c = colours[i];
@@ -4103,8 +4198,8 @@ void DrawSpriteRotozoom(int x, int y, int pivotX, int pivotY, int width, int hei
     args.transparency = alpha;
     AddRenderState(inkEffect, 4, 6, &args);
 
-    float sY = scaleY / (float)(1 << 9);
-    float sX = scaleX / (float)(1 << 9);
+    float sY  = scaleY / (float)(1 << 9);
+    float sX  = scaleX / (float)(1 << 9);
     float sin = sinVal512[angle] / (float)(1 << 9);
     float cos = cosVal512[angle] / (float)(1 << 9);
     if (direction == FLIP_NONE) {
@@ -4673,6 +4768,10 @@ void DrawDevText(int x, const char *text, int y, int align, uint colour)
     int length      = 0;
     ushort colour16 = bIndexes[(colour >> 0) & 0xFF] | gIndexes[(colour >> 8) & 0xFF] | rIndexes[(colour >> 16) & 0xFF];
 
+#if RETRO_HARDWARE_RENDER
+    ushort vertCount = 0, indexCount = 0;
+#endif
+
     bool32 endFlag = false;
     while (!endFlag) {
         char cur = text[length];
@@ -4707,6 +4806,7 @@ void DrawDevText(int x, const char *text, int y, int align, uint colour)
                     ushort *frameBufferPtr = &currentScreen->frameBuffer[drawX + y * currentScreen->pitch];
                     char curChar           = *textPtr;
                     if ((curChar < '\t' || curChar > '\n') && curChar != ' ') {
+#if RETRO_SOFTWARE_RENDER
                         byte h              = 8;
                         byte *engineTextPtr = &engineTextBuffer[0x40 * *textPtr];
                         do {
@@ -4721,6 +4821,14 @@ void DrawDevText(int x, const char *text, int y, int align, uint colour)
                             } while (w);
                             frameBufferPtr = &frameBufferPtr[currentScreen->pitch - 8];
                         } while (h);
+#else
+                        AddPoly(drawX, y, 0, 0, 8 * *textPtr, colour);
+                        AddPoly(drawX + 8, y, 0, 8, 8 * *textPtr, colour);
+                        AddPoly(drawX, y + 8, 0, 0, 8 * *textPtr + 8, colour);
+                        AddPoly(drawX + 8, y + 8, 0, 8, 8 * *textPtr + 8, colour);
+                        indexCount += 6;
+                        vertCount += 4;
+#endif
                     }
                     ++textPtr;
                     --cnt;
@@ -4731,6 +4839,11 @@ void DrawDevText(int x, const char *text, int y, int align, uint colour)
         y += 8;
         ++length;
     }
+#if RETRO_HARDWARE_RENDER
+    renderCount -= vertCount;
+    AddRenderState(INK_NONE, vertCount, indexCount, NULL, 0xFF, (ShaderBase *)&devTextShader);
+    renderCount += vertCount;
+#endif
 }
 
 #if RETRO_HARDWARE_RENDER
@@ -4758,14 +4871,38 @@ GLuint VAO;
 GLuint attribVBO;
 GLuint indexVBO;
 
-GLuint outFB;
-GLuint tFB;
-GLuint outFBT;
-GLuint tFBT;
+GLuint fbpVAO;
+GLuint fbpVBO;
+GLuint fbiVBO;
 
-#include "assets/generated/opengl/default.vert"
-#include "assets/generated/opengl/place.frag"
-#include "assets/generated/opengl/circle.frag"
+GLuint outFB;
+GLuint outFBT;
+GLuint tFB;
+GLuint tFBT;
+GLuint t2FB;
+GLuint t2FBT;
+
+GLuint tTBound = 20;
+GLuint t2Bound = 21;
+
+void SwapTempFBs()
+{
+    GLuint buf = tFB;
+    tFB        = t2FB;
+    t2FB       = buf;
+    buf        = tTBound;
+    tTBound    = t2Bound;
+    t2Bound    = buf;
+}
+
+#include "assets/generated/opengl/pre/default.vert"
+#include "assets/generated/opengl/pre/place.frag"
+#include "assets/generated/opengl/pre/circle.frag"
+#include "assets/generated/opengl/pre/devText.frag"
+
+#include "assets/generated/opengl/fb/passthrough.vert"
+#include "assets/generated/opengl/fb/passthrough.frag"
+#include "assets/generated/opengl/fb/final.frag"
 
 #endif
 
@@ -4784,14 +4921,13 @@ public:
     void setTexture(uint tID)
     {
 #if RETRO_USING_OPENGL
-        if (!tID && currentTex)
+        glActiveTexture(GL_TEXTURE0);
+        if (!tID)
             glUniform1i(glGetUniformLocation(ID, "useColor"), true);
-        else if (tID) {
+        else {
             glUniform1i(glGetUniformLocation(ID, "useColor"), false);
-            if (currentTex != tID)
-                glBindTexture(GL_TEXTURE_RECTANGLE, tID);
+            glBindTexture(GL_TEXTURE_2D, tID);
         }
-        currentTex = tID;
 #endif
     }
 
@@ -4827,8 +4963,69 @@ public:
     void setPalLines(RenderState *&state){};
 };
 
+class DevTextShader : public ShaderBase
+{
+#if !RETRO_REV02
+    uint textID;
+#endif
+
+public:
+    DevTextShader() : ShaderBase(){};
+    DevTextShader(const char *v, const char *f) : ShaderBase(v, f)
+    {
+        use();
+#if RETRO_USING_OPENGL
+        glUniform1i(glGetUniformLocation(ID, "text"), 2);
+#endif
+        stop();
+    };
+    void setArgs(RenderState *&state)
+    {
+#if RETRO_USING_OPENGL
+        glActiveTexture(GL_TEXTURE0 + 2);
+#if RETRO_REV02
+        glBindTexture(GL_TEXTURE_RECTANGLE, gfxSurface[1].id);
+#else
+        if (!textID) {
+            glGenTextures(1, &textID);
+            glBindTexture(GL_TEXTURE_RECTANGLE, textID);
+            glTexImage2D(GL_TEXTURE_RECTANGLE, 0, GL_RED, 8, 0x400, 0, GL_RED, GL_UNSIGNED_BYTE, engineTextBuffer);
+            glTexParameterf(GL_TEXTURE_RECTANGLE, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+            glTexParameterf(GL_TEXTURE_RECTANGLE, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+            glTexParameterf(GL_TEXTURE_RECTANGLE, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+            glTexParameterf(GL_TEXTURE_RECTANGLE, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        }
+        else
+            glBindTexture(GL_TEXTURE_RECTANGLE, textID);
+#endif //! RETRO_REV02
+        glActiveTexture(GL_TEXTURE0);
+#endif //! RETRO_USING_OPENGL
+    };
+    void setPalette(RenderState *&state){};
+    void setPalLines(RenderState *&state){};
+};
+
 PlaceShader placeShader;
 CircleShader circleShader;
+DevTextShader devTextShader;
+
+class FBFinal : public FBShaderBase
+{
+public:
+    FBFinal() : FBShaderBase(){};
+    FBFinal(const char *v, const char *f) : FBShaderBase(v, f)
+    {
+        use();
+#if RETRO_USING_OPENGL
+        glUniform1i(glGetUniformLocation(ID, "tex"), 10);
+#endif
+        stop();
+    }
+    void setArgs(RenderState *&state){};
+};
+
+FBShaderBase fbsPassthrough;
+FBFinal fbsFinal;
 
 void ortho(MatrixF *matrix, float l, float r, float b, float t, float n, float f)
 {
@@ -4852,22 +5049,77 @@ void ortho(MatrixF *matrix, float l, float r, float b, float t, float n, float f
 
 void SetupViewport()
 {
-    MatrixF orth;
-    if (currentScreen) {
-        ortho(&orth, 0, currentScreen->width, currentScreen->height, 0.0, -1.0, 1.0);
-        placeShader.use();
-        placeShader.setProjection(&orth);
-    }
-    // polyShader.setProjecton(&orth);
 #if RETRO_USING_OPENGL
     glViewport(0, 0, engine.windowWidth, engine.windowHeight);
+    // it's time.
+    glBindFramebuffer(GL_FRAMEBUFFER, outFB);
+    glActiveTexture(GL_TEXTURE10);
+    glBindTexture(GL_TEXTURE_2D, outFBT);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, engine.windowWidth, engine.windowHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, outFBT, 0);
+    glBindFramebuffer(GL_FRAMEBUFFER, tFB);
+    glActiveTexture(GL_TEXTURE20);
+    glBindTexture(GL_TEXTURE_2D, tFBT);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, engine.windowWidth, engine.windowHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tFBT, 0);
+    glBindFramebuffer(GL_FRAMEBUFFER, t2FB);
+    glActiveTexture(GL_TEXTURE20 + 1);
+    glBindTexture(GL_TEXTURE_2D, t2FBT);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, engine.windowWidth, engine.windowHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, t2FBT, 0);
+
+    // clang-format off
+    int pos[] = { // POSITIONS
+                      0, 0, 
+                      engine.windowWidth, 0, 
+                      0, engine.windowHeight, 
+                      engine.windowWidth, engine.windowHeight,
+                      // UVS
+                      0, 0, 
+                      1, 0, 
+                      0, 1, 
+                      1, 1
+    };
+    // clang-format on
+    memcpy(fullscreen, pos, sizeof(int) * 16);
+    glBindBuffer(GL_ARRAY_BUFFER, fbpVBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(int) * 16, fullscreen, GL_DYNAMIC_DRAW);
+
+    MatrixF orth;
+    ortho(&orth, 0, engine.windowWidth, 0.0, engine.windowHeight, -1.0, 1.0);
+    // set all FB projections so we dont have to later
+    fbsPassthrough.use();
+    fbsPassthrough.setProjection(&orth);
+    fbsFinal.use();
+    fbsFinal.setProjection(&orth);
 #endif
 }
 
+ushort baseIndexList[INDEX_LIMIT];
+
 void SetupShaders()
 {
-    placeShader  = PlaceShader(defaultVert, placeFrag);
-    circleShader = CircleShader(defaultVert, circleFrag);
+    placeShader   = PlaceShader(defaultVert, placeFrag);
+    circleShader  = CircleShader(defaultVert, circleFrag);
+    devTextShader = DevTextShader(defaultVert, devTextFrag);
+
+    fbsPassthrough = FBShaderBase(passthroughVert, passthroughFrag);
+    fbsFinal       = FBFinal(passthroughVert, finalFrag);
 #if RETRO_USING_OPENGL
     // i'm also gonna setup VBOs here bc i'm lazy
     glGenVertexArrays(1, &VAO);
@@ -4882,10 +5134,28 @@ void SetupShaders()
     glEnableVertexAttribArray(2);
     glGenBuffers(1, &indexVBO);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexVBO);
+
+    glGenVertexArrays(1, &fbpVAO);
+    glBindVertexArray(fbpVAO);
+    glGenBuffers(1, &fbpVBO);
+    glBindBuffer(GL_ARRAY_BUFFER, fbpVBO);
+    glVertexAttribPointer(0, 2, GL_INT, GL_FALSE, 0, 0);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(1, 2, GL_INT, GL_FALSE, 0, (void *)(sizeof(int) * 8));
+    glEnableVertexAttribArray(1);
+    glGenBuffers(1, &fbiVBO);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, fbiVBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(ushort), baseIndexList, GL_DYNAMIC_DRAW);
+
+    // framebuffers and their textures, too
+    glGenFramebuffers(1, &outFB);
+    glGenTextures(1, &outFBT); // don't do anything yet! we set it in viewport
+    glGenFramebuffers(1, &tFB);
+    glGenTextures(1, &tFBT);
+    glGenFramebuffers(1, &t2FB);
+    glGenTextures(1, &t2FBT);
 #endif
 }
-
-ushort baseIndexList[INDEX_LIMIT];
 
 void SetupPolygonLists()
 {
@@ -4905,10 +5175,14 @@ void SetupPolygonLists()
 
 bool32 StatesCompatible(RenderState *one, RenderState *two)
 {
-    if (memcmp(one->argBuffer, two->argBuffer, 0x20) || one->blendMode != two->blendMode || one->shader != two->shader
-        || memcmp(one->lineBuffer, two->lineBuffer, SCREEN_YSIZE * sizeof(byte)))
+    if (two->blendMode != INK_NONE && two->blendMode != INK_LOOKUP)
+        return false; // the rest can't really be merged
+    if (memcmp(one->argBuffer, two->argBuffer, 0x20) || one->blendMode != two->blendMode || one->shader != two->shader || one->alpha != two->alpha
+        || memcmp(one->lineBuffer, two->lineBuffer, SCREEN_YSIZE * sizeof(byte)) || one->lookupTable != two->lookupTable
+        || one->fbShader != two->fbShader || one->fbShader2 || two->fbShader2)
+        // if we render inplace (one->fbShader2 || two->fbShader2), we have to buffer it through first
         return false;
-    if (one->maskColor.color != two->maskColor.color && (two->blendMode == INK_MASKED || two->blendMode == INK_UNMASKED))
+    if (one->maskColor != two->maskColor && (two->blendMode == INK_MASKED || two->blendMode == INK_UNMASKED))
         return false;
     if (memcmp(one->palette, two->palette, PALETTE_COUNT * PALETTE_SIZE * sizeof(ushort))) {
         // we need to memcmp differently here and see if we can keep the renderstate
@@ -4929,16 +5203,21 @@ bool32 StatesCompatible(RenderState *one, RenderState *two)
     return true;
 }
 
-void AddRenderState(int blendMode, ushort vertCount, ushort indexCount, void *args, ShaderBase *shader, ushort *altIndex)
+void AddRenderState(int blendMode, ushort vertCount, ushort indexCount, void *args, byte alpha, void *shader, ushort *altIndex, void *fbShader, void *fbShader2)
 {
-    if (!vertCount || !indexCount)
+    if (!vertCount || !indexCount || !currentScreen)
         return;
     // set up a new state minimally needed for comparison
     RenderState newState;
     newState.blendMode  = blendMode;
     newState.indexCount = indexCount;
-    newState.maskColor  = maskColourFull;
-    newState.shader     = shader;
+    newState.maskColor  = maskColour;
+    newState.alpha = alpha;
+    newState.shader     = (ShaderBase *)shader;
+    newState.fbShader   = (FBShaderBase *)fbShader;
+    newState.fbShader2  = (FBShaderBase *)fbShader2;
+    if (blendMode == INK_LOOKUP)
+        newState.lookupTable = lookupTable;
     if (args)
         memcpy(newState.argBuffer, args, 0x20);
     else
@@ -4973,51 +5252,118 @@ void RenderRenderStates()
     if (!renderCount)
         return;
 #if RETRO_USING_OPENGL
+    glBindVertexArray(VAO);
+    glBindBuffer(GL_ARRAY_BUFFER, attribVBO);
     glBufferData(GL_ARRAY_BUFFER, renderCount * sizeof(DrawVertex), vertexList, GL_DYNAMIC_DRAW);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexVBO);
 #endif
     for (int i = 0; i <= renderStateIndex && i < 32; ++i) {
         RenderState *renderState = &renderStates[i];
         renderState->shader->use();
 
-        renderState->shader->setBlend(renderState);
         renderState->shader->setPalette(renderState);
         renderState->shader->setPalLines(renderState);
 
         renderState->shader->setArgs(renderState);
 
 #if RETRO_USING_OPENGL
-        if (currentScreen) {
-            MatrixF orth;
-            ortho(&orth, 0, currentScreen->width, currentScreen->height, 0.0, -1.0, 1.0);
-            renderState->shader->setProjection(&orth);
-            renderState->shader->setScreen(currentScreen);
-            float xScale = engine.windowWidth / (float)pixWidth;
-            float yScale = engine.windowHeight / (float)SCREEN_YSIZE;
-            glScissor(currentScreen->clipBound_X1 * xScale, (SCREEN_YSIZE - currentScreen->clipBound_Y2) * yScale,
-                      (currentScreen->clipBound_X2 - currentScreen->clipBound_X1) * xScale,
-                      (currentScreen->clipBound_Y2 - currentScreen->clipBound_Y1) * yScale);
+        glClearColor(0, 0, 0, 0);
+        glBlendFunc(GL_ONE, GL_ZERO);
+        if (renderState->fbShader2) {
+            glBindFramebuffer(GL_FRAMEBUFFER, tFB);
+            glClear(GL_COLOR_BUFFER_BIT);
+        }
+        else {
+            // cheat, render directly to fb2 for final
+            glBindFramebuffer(GL_FRAMEBUFFER, t2FB);
         }
 
-        glBlendEquation(GL_FUNC_ADD);
+        MatrixF orth;
+        ortho(&orth, 0, currentScreen->width, currentScreen->height, 0.0, -1.0, 1.0);
+        renderState->shader->setProjection(&orth);
+        renderState->shader->setScreen(currentScreen);
+        float xScale = engine.windowWidth / (float)pixWidth;
+        float yScale = engine.windowHeight / (float)SCREEN_YSIZE;
+        glScissor(currentScreen->clipBound_X1 * xScale, (SCREEN_YSIZE - currentScreen->clipBound_Y2) * yScale,
+                  (currentScreen->clipBound_X2 - currentScreen->clipBound_X1) * xScale,
+                  (currentScreen->clipBound_Y2 - currentScreen->clipBound_Y1) * yScale);
+
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, renderState->indexCount * sizeof(ushort), renderState->indecies, GL_DYNAMIC_DRAW);
+        glDrawElements(GL_TRIANGLES, renderState->indexCount, GL_UNSIGNED_SHORT, 0);
+
+        glBindVertexArray(fbpVAO);
+        glBindBuffer(GL_ARRAY_BUFFER, fbpVBO);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, fbiVBO);
 
         switch (renderState->blendMode) {
             case INK_MASKED:
             case INK_UNMASKED:
-            case INK_NONE: glBlendFunc(GL_ONE, GL_ZERO); break;
+            case INK_LOOKUP:
+            case INK_NONE:
+            case INK_SUB:
             case INK_BLEND:
             case INK_ALPHA: glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); break;
             case INK_ADD: glBlendFunc(GL_SRC_ALPHA, GL_ONE); break;
-            case INK_SUB:
-                glBlendFunc(GL_ONE, GL_ONE);
-                glBlendEquation(GL_FUNC_REVERSE_SUBTRACT);
-                break;
         }
 
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, renderState->indexCount * sizeof(ushort), renderState->indecies, GL_DYNAMIC_DRAW);
-        glDrawElements(GL_TRIANGLES, renderState->indexCount, GL_UNSIGNED_SHORT, 0);
+        if (renderState->fbShader) {
+            if (renderState->fbShader2) {
+                // render inplace, swap shaders
+                glBindFramebuffer(GL_FRAMEBUFFER, t2FB);
+                renderState->fbShader->use();
+                renderState->fbShader->setSourceDest(tTBound, t2Bound);
+                renderState->fbShader->setArgs(renderState);
+                glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, 0);
+                renderState->fbShader = renderState->fbShader2;
+            }
+            // render to the out FB, clear t2
+            glBindFramebuffer(GL_FRAMEBUFFER, outFB);
+            renderState->fbShader->use();
+            renderState->fbShader->setSourceDest(t2Bound, 10);
+            renderState->fbShader->setArgs(renderState);
+
+            glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, 0);
+            glBindFramebuffer(GL_FRAMEBUFFER, t2FB);
+            glClear(GL_COLOR_BUFFER_BIT);
+        }
+        else {
+            // if fbShader2, render "inplace" to prepare for the next send
+            if (renderState->fbShader2) {
+                glBindFramebuffer(GL_FRAMEBUFFER, t2FB);
+                renderState->fbShader2->use();
+                renderState->fbShader2->setSourceDest(tTBound, t2Bound);
+                renderState->fbShader2->setArgs(renderState);
+                glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, 0);
+            }
+        }
+        glBindVertexArray(VAO);
+        glBindBuffer(GL_ARRAY_BUFFER, attribVBO); // rebind
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexVBO);
 #endif
     }
     renderCount      = 0;
     renderStateIndex = -1;
+}
+
+void FlipScreenHW()
+{
+    if (renderCount) {
+        RenderRenderStates();
+        glClearColor(0, 0, 0, 1);
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        fbsFinal.use();
+        glBindVertexArray(fbpVAO);
+        glBindBuffer(GL_ARRAY_BUFFER, fbpVBO);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, fbiVBO);
+
+        glBlendFunc(GL_ONE, GL_ZERO);
+        glClear(GL_COLOR_BUFFER_BIT);
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, 0);
+
+        // TODO: TEMP. REMOVE ME WHEN IT MAKES SENSE TO DO SO
+        glBindFramebuffer(GL_FRAMEBUFFER, outFB);
+        glClear(GL_COLOR_BUFFER_BIT);
+    }
+    SDL_GL_SwapWindow(engine.window);
 }
 #endif

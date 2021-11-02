@@ -80,14 +80,6 @@ void SetPaletteFade(byte destPaletteID, byte srcPaletteA, byte srcPaletteB, usho
     }
 }
 
-inline void SetPaletteMask(uint colour)
-{
-    maskColour = bIndexes[(colour >> 0) & 0xFF] | gIndexes[(colour >> 8) & 0xFF] | rIndexes[(colour >> 16) & 0xFF];
-#if RETRO_HARDWARE_RENDER
-    maskColourFull = colour;
-#endif
-}
-
 #if RETRO_REV02
 void BlendColours(byte paletteID, byte* coloursA, byte* coloursB, int32 alpha, int32 index, int32 count) {
 

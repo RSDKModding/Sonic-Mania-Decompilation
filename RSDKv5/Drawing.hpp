@@ -82,10 +82,10 @@ struct DrawList {
 
 #if RETRO_HARDWARE_RENDER
 
-#define VERTEX_LIMIT        (0x400)
-#define RENDERSTATE_LIMIT   (0x20)
-#define INDEX_LIMIT         (VERTEX_LIMIT * 6)
-#define TILEUV_SIZE         (0x1000)
+#define VERTEX_LIMIT      (0x400)
+#define RENDERSTATE_LIMIT (0x20)
+#define INDEX_LIMIT       (VERTEX_LIMIT * 6)
+#define TILEUV_SIZE       (0x1000)
 struct DrawVertex {
     float x;
     float y;
@@ -99,22 +99,36 @@ struct DrawVertex {
 class ShaderBase;
 class PlaceShader;
 class CircleShader;
+class DevTextShader;
+
+class FBShaderBase;
+class FBFinal;
 
 extern PlaceShader placeShader;
 extern CircleShader circleShader;
+extern DevTextShader devTextShader;
+
+extern FBShaderBase fbsPassthrough;
+extern FBFinal fbsFinal;
 
 struct RenderState {
     ShaderBase *shader = (ShaderBase *)&placeShader;
-    byte blendMode     = INK_NONE;
+
+    FBShaderBase *fbShader  = (FBShaderBase *)&fbsPassthrough;
+    FBShaderBase *fbShader2 = NULL;
+    byte blendMode          = INK_NONE;
+    byte alpha = 0xFF;
 
     ushort indexCount = 0;
     ushort indecies[INDEX_LIMIT];
 
-    Colour maskColor = 0;
+    ushort maskColor = 0;
     // cast me to set variables specific to the shader
     byte argBuffer[0x20];
+    byte fsArgs[0x20];
 
     // these 2 are used in multiple and are MASSIVE so we keep them
+    ushort* lookupTable;
     ushort palette[PALETTE_COUNT][PALETTE_SIZE];
     byte lineBuffer[SCREEN_YSIZE];
 };
@@ -128,13 +142,6 @@ extern RenderState renderStates[RENDERSTATE_LIMIT];
 extern sbyte renderStateIndex;
 extern ushort renderCount;
 extern ushort lastRenderCount;
-
-extern uint currentTex;
-
-#if RETRO_USING_OPENGL
-extern GLuint framebufferId;
-extern GLuint fbTextureId;
-#endif
 #endif
 
 extern DrawList drawLayers[DRAWLAYER_COUNT];
@@ -307,15 +314,19 @@ inline void AddPoly(float x, float y, float z, float u, float v, Colour color = 
     vertexList[renderCount].x = x;
     vertexList[renderCount].y = y;
     vertexList[renderCount].z = z;
+    if (surface) {
+        u /= surface->width;
+        v /= surface->height;
+    }
     vertexList[renderCount].u = u;
     vertexList[renderCount].v = v;
 
-    vertexList[renderCount ++].colour = color;
+    vertexList[renderCount++].colour = color;
 }
 inline void AddPoly(float x, float y, float u, float v, Colour color, GFXSurface *surface = NULL) { AddPoly(x, y, 0, u, v, color, surface); }
 
-void AddRenderState(int blendMode, ushort vertCount, ushort indexCount, void *args = NULL, ShaderBase *shader = (ShaderBase *)&placeShader,
-                    ushort *altIndex = NULL);
+void AddRenderState(int blendMode, ushort vertCount, ushort indexCount, void *args = NULL, byte alpha = 0xFF, void *shader = &placeShader, ushort *altIndex = NULL,
+                    void *fbshader = &fbsPassthrough, void *fbshader2 = NULL);
 #endif
 
 #endif // !DRAWING_H
