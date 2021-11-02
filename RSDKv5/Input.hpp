@@ -290,20 +290,20 @@ enum WinMappings {
 struct InputDevice {
     void (*updateInput)(InputDevice *device);
     void (*processInput)(InputDevice *device, int inputID);
-    int gamePadType;
-    int inputID;
-    byte active;
-    byte assignedControllerID;
-    byte field_E;
-    byte field_F;
-    byte anyPress;
-    int inactiveTimer[2];
-    int field_1C;
-    byte controllerID;
+    int32 gamePadType;
+    int32 inputID;
+    uint8 active;
+    uint8 assignedControllerID;
+    uint8 field_E;
+    uint8 field_F;
+    uint8 anyPress;
+    int32 inactiveTimer[2];
+    int32 field_1C;
+    uint8 controllerID;
 };
 
 struct InputDeviceBase : InputDevice {
-    byte data[0x3DC];
+    uint8 data[0x3DC];
 };
 
 #if RETRO_USING_SDL2
@@ -315,7 +315,7 @@ struct InputDeviceSDL : InputDevice {
 struct InputState {
     bool32 down;
     bool32 press;
-    int keyMap;
+    int32 keyMap;
 
     inline void setHeld()
     {
@@ -366,12 +366,12 @@ struct TouchMouseData {
     float x[0x10];
     float y[0x10];
     bool32 down[0x10];
-    byte count;
+    uint8 count;
 };
 
 #if RETRO_USING_SDL2
 struct InputManagerInfo {
-    int mouseHideTimer = 0;
+    int32 mouseHideTimer = 0;
     bool32 keyPress[PLAYER_COUNT][12];
     bool32 anyPress;
 };
@@ -380,9 +380,9 @@ extern InputManagerInfo InputManager;
 #endif
 
 extern InputDeviceBase InputDevices[INPUTDEVICE_COUNT];
-extern int InputDeviceCount;
+extern int32 InputDeviceCount;
 
-extern int activeControllers[PLAYER_COUNT];
+extern int32 activeControllers[PLAYER_COUNT];
 extern InputDevice *activeInputDevices[PLAYER_COUNT];
 
 extern ControllerState controller[PLAYER_COUNT + 1];
@@ -398,20 +398,20 @@ void ProcessInput();
 void UpdateKeyboardInput(InputDevice *device);
 void UpdateDeviceInput(InputDevice *device);
 
-void ProcessKeyboardInput(InputDevice* device, int controllerID);
-void ProcessDeviceInput(InputDevice* device, int controllerID);
+void ProcessKeyboardInput(InputDevice* device, int32 controllerID);
+void ProcessDeviceInput(InputDevice* device, int32 controllerID);
 
-inline int controllerUnknown2(int a2, int a3) { return 0; }
-inline int controllerUnknown3(int a2, int a3) { return 0; }
+inline int32 controllerUnknown2(int32 a2, int32 a3) { return 0; }
+inline int32 controllerUnknown3(int32 a2, int32 a3) { return 0; }
 
 #if RETRO_USING_SDL2
-inline InputDevice *controllerInit(byte controllerID)
+inline InputDevice *controllerInit(uint8 controllerID)
 {
     if (InputDeviceCount >= INPUTDEVICE_COUNT)
         return NULL;
     InputDeviceSDL *device = (InputDeviceSDL *)&InputDevices[InputDeviceCount++];
     device->controllerPtr  = SDL_GameControllerOpen(controllerID);
-    uint id;
+    uint32 id;
     char buffer[0x20];
     sprintf(buffer, "%s%d", "SDLDevice", controllerID);
     GenerateCRC(&id, buffer);
@@ -432,12 +432,12 @@ inline InputDevice *controllerInit(byte controllerID)
     return device;
 };
 
-inline void controllerClose(byte controllerID)
+inline void controllerClose(uint8 controllerID)
 {
     if (controllerID >= INPUTDEVICE_COUNT || InputDeviceCount <= 0)
         return;
 
-    uint id;
+    uint32 id;
     char buffer[0x20];
     sprintf(buffer, "%s%d", "SDLDevice", controllerID);
     GenerateCRC(&id, buffer);
@@ -454,7 +454,7 @@ inline void controllerClose(byte controllerID)
 }
 #endif
 
-inline InputDevice *InputDeviceFromID(int inputID)
+inline InputDevice *InputDeviceFromID(int32 inputID)
 {
     for (int i = 0; i < InputDeviceCount; ++i) {
         if (InputDevices[i].inputID == inputID) {
@@ -463,7 +463,7 @@ inline InputDevice *InputDeviceFromID(int inputID)
     }
     return NULL;
 }
-inline int GetControllerInputID()
+inline int32 GetControllerInputID()
 {
     for (int i = 0; i < InputDeviceCount; ++i) {
         if (InputDevices[i].active && !InputDevices[i].field_F && !InputDevices[i].assignedControllerID && InputDevices[i].anyPress) {
@@ -473,7 +473,7 @@ inline int GetControllerInputID()
     return -1;
 }
 
-inline int ControllerIDForInputID(byte inputID)
+inline int ControllerIDForInputID(uint8 inputID)
 {
     byte i = inputID - 1;
     if (i < PLAYER_COUNT)
@@ -482,7 +482,7 @@ inline int ControllerIDForInputID(byte inputID)
 }
 
 #if RETRO_REV02
-inline int MostRecentActiveControllerID(int a1, int a2, uint a3)
+inline int32 MostRecentActiveControllerID(int32 a1, int32 a2, uint32 a3)
 {
     uint v3          = -1;
     uint recentTimer = -1;
@@ -518,7 +518,7 @@ inline int MostRecentActiveControllerID(int a1, int a2, uint a3)
     return inputIDStore;
 }
 #else
-inline int MostRecentActiveControllerID(int a2)
+inline int32 MostRecentActiveControllerID(int32 a2)
 {
     uint v3          = -1;
     uint recentTimer = -1;
@@ -553,9 +553,9 @@ inline int MostRecentActiveControllerID(int a2)
 }
 #endif
 
-int GetGamePadType(int inputID);
+int32 GetGamePadType(int32 inputID);
 
-inline int GetAssignedControllerID(int inputID)
+inline int32 GetAssignedControllerID(int32 inputID)
 {
     for (int i = 0; i < InputDeviceCount; ++i) {
         if (InputDevices[i].inputID == inputID) {
@@ -566,7 +566,7 @@ inline int GetAssignedControllerID(int inputID)
     return 0;
 }
 
-inline int GetAssignedUnknown(int inputID)
+inline int32 GetAssignedUnknown(int32 inputID)
 {
     for (int i = 0; i < InputDeviceCount; ++i) {
         if (InputDevices[i].inputID == inputID) {
@@ -577,7 +577,7 @@ inline int GetAssignedUnknown(int inputID)
     return 0xFFFF;
 }
 
-inline int DoInputUnknown2(int inputID, int a2, int a3)
+inline int32 DoInputUnknown2(int32 inputID, int32 a2, int32 a3)
 {
     for (int i = 0; i < InputDeviceCount; ++i) {
         if (InputDevices[i].inputID == inputID) {
@@ -588,7 +588,7 @@ inline int DoInputUnknown2(int inputID, int a2, int a3)
     return 0;
 }
 
-inline int DoInputUnknown3(int inputID, int a2, int a3)
+inline int32 DoInputUnknown3(int32 inputID, int32 a2, int32 a3)
 {
     for (int i = 0; i < InputDeviceCount; ++i) {
         if (InputDevices[i].inputID == inputID) {
@@ -599,9 +599,9 @@ inline int DoInputUnknown3(int inputID, int a2, int a3)
     return 0;
 }
 
-inline int Missing24() { return 0xFFFF; }
+inline int32 Missing24() { return 0xFFFF; }
 
-inline int DoInputUnknown2_Active(int inputID, int a2, int a3)
+inline int32 DoInputUnknown2_Active(int32 inputID, int32 a2, int32 a3)
 {
     if (inputID < PLAYER_COUNT) {
         if (activeControllers[inputID]) {
@@ -612,7 +612,7 @@ inline int DoInputUnknown2_Active(int inputID, int a2, int a3)
     return 0;
 }
 
-inline int DoInputUnknown3_Active(int inputID, int a2, int a3)
+inline int32 DoInputUnknown3_Active(int32 inputID, int32 a2, int32 a3)
 {
     if (inputID < PLAYER_COUNT) {
         if (activeControllers[inputID]) {
@@ -623,7 +623,7 @@ inline int DoInputUnknown3_Active(int inputID, int a2, int a3)
     return 0;
 }
 
-inline void AssignControllerID(sbyte controllerID, int inputID)
+inline void AssignControllerID(int8 controllerID, int32 inputID)
 {
     int contID = controllerID - 1;
     if (contID < PLAYER_COUNT) {
@@ -651,7 +651,7 @@ inline void AssignControllerID(sbyte controllerID, int inputID)
     }
 }
 
-inline bool32 InputIDIsDisconnected(byte inputID)
+inline bool32 InputIDIsDisconnected(uint8 inputID)
 {
     if (inputID < PLAYER_COUNT)
         return activeControllers[inputID] != CONT_ANY;

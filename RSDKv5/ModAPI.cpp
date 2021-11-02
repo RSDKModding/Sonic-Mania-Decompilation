@@ -6,7 +6,7 @@
 #include <stdexcept>
 #include <functional>
 
-int currentObjectID = 0;
+int32 currentObjectID = 0;
 
 #if RETRO_PLATFORM == RETRO_ANDROID
 namespace fs = std::__fs::filesystem;
@@ -28,17 +28,17 @@ namespace fs = std::filesystem;
 // this helps later on just trust me
 #define MODAPI_ENDS_WITH(str) buf.length() > strlen(str) && !buf.compare(buf.length() - strlen(str), strlen(str), std::string(str))
 
-std::map<std::string, int> langMap;
+std::map<std::string, size_t> langMap;
 
 std::vector<ModInfo> modList;
-int activeMod = -1;
+int32 activeMod = -1;
 std::vector<ModCallbackSTD> modCallbackList[MODCB_MAX];
 ModInfo *currentMod;
 
 std::vector<ModPublicFunctionInfo> gamePublicFuncs;
 
 // did we try to load a logic of a different lang? load it later
-std::vector<int> waitList;
+std::vector<int32> waitList;
 
 void *modFunctionTable[ModTable_Max];
 
@@ -110,7 +110,7 @@ void unloadMods()
     modList.clear();
     langMap.clear();
     waitList.clear();
-    for (int c = 0; c < MODCB_MAX; ++c) modCallbackList[c].clear();
+    for (int32 c = 0; c < MODCB_MAX; ++c) modCallbackList[c].clear();
 }
 
 void loadMods()
@@ -128,11 +128,11 @@ void loadMods()
             fClose(configFile);
             auto ini = iniparser_load(mod_config.c_str());
 
-            int c             = iniparser_getsecnkeys(ini, "Mods");
+            int32 c             = iniparser_getsecnkeys(ini, "Mods");
             const char **keys = new const char *[c];
             iniparser_getseckeys(ini, "Mods", keys);
 
-            for (int m = 0; m < c; ++m) {
+            for (int32 m = 0; m < c; ++m) {
                 ModInfo info;
                 bool32 active = iniparser_getboolean(ini, keys[m], false);
                 bool32 loaded = loadMod(&info, modPath.string(), string(keys[m] + 5), active);
@@ -140,7 +140,7 @@ void loadMods()
                     if (info.language == (const char *)1 && !loaded)
                         waitList.push_back(modList.size());
                     else
-                        langMap.insert(pair<string, int>(info.language, modList.size()));
+                        langMap.insert(pair<string, size_t>(info.language, modList.size()));
                 }
                 if (!loaded)
                     info.active = false;
@@ -149,7 +149,7 @@ void loadMods()
         }
 
         // try the waitlist
-        for (int &m : waitList) {
+        for (int32 &m : waitList) {
             loadMod(&modList[m], modPath.string(), modList[m].folder, true);
             modList[m].language = 0;
         }
@@ -185,12 +185,12 @@ void loadCfg(ModInfo *info, std::string path)
     cfg->externalFile = true;
     // CFG FILE READ
     if (LoadFile(cfg, path.c_str(), FMODE_RB)) {
-        int catCount = ReadInt8(cfg);
-        for (int c = 0; c < catCount; ++c) {
+        int32 catCount = ReadInt8(cfg);
+        for (int32 c = 0; c < catCount; ++c) {
             char catBuf[0x100];
             ReadString(cfg, catBuf);
-            int keyCount = ReadInt8(cfg);
-            for (int k = 0; k < keyCount; ++k) {
+            int32 keyCount = ReadInt8(cfg);
+            for (int32 k = 0; k < keyCount; ++k) {
                 // ReadString except w packing the type bit
                 byte size    = ReadInt8(cfg);
                 char *keyBuf = new char[size & 0x7F];
@@ -258,8 +258,8 @@ bool32 loadMod(ModInfo *info, std::string modsPath, std::string folder, bool32 a
                             "data/",
                             "data\\",
                         };
-                        int tokenPos = -1;
-                        for (int i = 0; i < 4; ++i) {
+                        int32 tokenPos = -1;
+                        for (int32 i = 0; i < 4; ++i) {
                             tokenPos = std::string(modBuf).find(folderTest[i], 0);
                             if (tokenPos >= 0)
                                 break;
@@ -267,7 +267,7 @@ bool32 loadMod(ModInfo *info, std::string modsPath, std::string folder, bool32 a
 
                         if (tokenPos >= 0) {
                             char buffer[0x80];
-                            for (int i = strlen(modBuf); i >= tokenPos; --i) {
+                            for (int32 i = strlen(modBuf); i >= tokenPos; --i) {
                                 buffer[i - tokenPos] = modBuf[i] == '\\' ? '/' : modBuf[i];
                             }
 
@@ -276,7 +276,7 @@ bool32 loadMod(ModInfo *info, std::string modsPath, std::string folder, bool32 a
                             std::string modPath(modBuf);
                             char pathLower[0x100];
                             memset(pathLower, 0, sizeof(char) * 0x100);
-                            for (int c = 0; c < path.size(); ++c) {
+                            for (int32 c = 0; c < path.size(); ++c) {
                                 pathLower[c] = tolower(path.c_str()[c]);
                             }
 
@@ -294,7 +294,7 @@ bool32 loadMod(ModInfo *info, std::string modsPath, std::string folder, bool32 a
             std::istringstream stream(logic);
             std::string buf;
             while (std::getline(stream, buf, ',')) {
-                int mode = 0;
+                int32 mode = 0;
                 buf      = trim(buf);
 #if RETRO_PLATFORM == RETRO_WIN
                 if (MODAPI_ENDS_WITH(".dll"))
@@ -324,7 +324,7 @@ bool32 loadMod(ModInfo *info, std::string modsPath, std::string folder, bool32 a
                 }
                 if (!mode) {
                     // lang mod time
-                    int i      = 0;
+                    int32 i      = 0;
                     bool found = false;
                     for (auto ext : langMap) {
                         i++;
@@ -425,7 +425,7 @@ bool32 loadMod(ModInfo *info, std::string modsPath, std::string folder, bool32 a
                     std::advance(it, mode - 2);
                     const char *fid = info->folder.c_str();
                     const char *log = buf.c_str();
-                    int isSTD       = 0;
+                    int32 isSTD       = 0;
                     modLink res     = (*(newLangLink *)modList[it->second].linkModLogic[0].target<modLink>())(fid, log, &isSTD);
                     if (isSTD)
                         info->linkModLogic.push_back(*(modLinkSTD *)res);
@@ -447,15 +447,15 @@ bool32 loadMod(ModInfo *info, std::string modsPath, std::string folder, bool32 a
             fClose(set);
             using namespace std;
             auto ini = iniparser_load((modDir + "/modSettings.ini").c_str());
-            int sec  = iniparser_getnsec(ini);
+            int32 sec  = iniparser_getnsec(ini);
             if (sec) {
-                for (int i = 0; i < sec; ++i) {
+                for (int32 i = 0; i < sec; ++i) {
                     const char *secn  = iniparser_getsecname(ini, i);
-                    int len           = iniparser_getsecnkeys(ini, secn);
+                    int32 len           = iniparser_getsecnkeys(ini, secn);
                     const char **keys = new const char *[len];
                     iniparser_getseckeys(ini, secn, keys);
                     map<string, string> secset;
-                    for (int j = 0; j < len; ++j)
+                    for (int32 j = 0; j < len; ++j)
                         secset.insert(pair<string, string>(keys[j] + strlen(secn) + 1, iniparser_getstring(ini, keys[j], "")));
                     info->settings.insert(pair<string, map<string, string>>(secn, secset));
                 }
@@ -463,7 +463,7 @@ bool32 loadMod(ModInfo *info, std::string modsPath, std::string folder, bool32 a
             else {
                 // either you use categories or you don't, i don't make the rules
                 map<string, string> secset;
-                for (int j = 0; j < ini->size; ++j) secset.insert(pair<string, string>(ini->key[j] + 1, ini->val[j]));
+                for (int32 j = 0; j < ini->size; ++j) secset.insert(pair<string, string>(ini->key[j] + 1, ini->val[j]));
                 info->settings.insert(pair<string, map<string, string>>("", secset));
             }
             iniparser_freedict(ini);
@@ -478,7 +478,7 @@ bool32 loadMod(ModInfo *info, std::string modsPath, std::string folder, bool32 a
             std::string buf;
             while (std::getline(stream, buf, ',')) {
                 buf      = trim(buf);
-                int mode = 0;
+                int32 mode = 0;
                 if (MODAPI_ENDS_WITH(".ini"))
                     mode = 1;
                 else if (MODAPI_ENDS_WITH(".cfg"))
@@ -507,13 +507,13 @@ bool32 loadMod(ModInfo *info, std::string modsPath, std::string folder, bool32 a
                         fClose(set);
                         using namespace std;
                         auto ini = iniparser_load(file.string().c_str());
-                        int sec  = iniparser_getnsec(ini);
-                        for (int i = 0; i < sec; ++i) {
+                        int32 sec  = iniparser_getnsec(ini);
+                        for (int32 i = 0; i < sec; ++i) {
                             const char *secn  = iniparser_getsecname(ini, i);
-                            int len           = iniparser_getsecnkeys(ini, secn);
+                            int32 len           = iniparser_getsecnkeys(ini, secn);
                             const char **keys = new const char *[len];
                             iniparser_getseckeys(ini, secn, keys);
-                            for (int j = 0; j < len; ++j) info->config[secn][keys[j] + strlen(secn) + 1] = iniparser_getstring(ini, keys[j], "");
+                            for (int32 j = 0; j < len; ++j) info->config[secn][keys[j] + strlen(secn) + 1] = iniparser_getstring(ini, keys[j], "");
                         }
                         iniparser_freedict(ini);
                     }
@@ -537,8 +537,8 @@ bool32 loadMod(ModInfo *info, std::string modsPath, std::string folder, bool32 a
                 fWrite(&kt, 1, 1, cfg);
                 for (auto kkv : kv.second) {
                     byte len   = (byte)(kkv.first.length()) & 0x7F;
-                    bool isint = false;
-                    int r      = 0;
+                    bool32 isint = false;
+                    int32 r      = 0;
                     try {
                         r     = std::stoi(kkv.second, nullptr, 0);
                         isint = true;
@@ -548,7 +548,7 @@ bool32 loadMod(ModInfo *info, std::string modsPath, std::string folder, bool32 a
                     fWrite(&len, 1, 1, cfg);
                     writeText(cfg, kkv.first.c_str());
                     if (isint)
-                        fWrite(&r, sizeof(int), 1, cfg);
+                        fWrite(&r, sizeof(int32), 1, cfg);
                     else {
                         byte len = kkv.second.length();
                         fWrite(&len, 1, 1, cfg);
@@ -585,7 +585,7 @@ void saveMods()
 
         writeText(file, "[Mods]\n");
 
-        for (int m = 0; m < modList.size(); ++m) {
+        for (int32 m = 0; m < modList.size(); ++m) {
             currentMod = &modList[m];
             SaveSettings();
             writeText(file, "%s=%c\n", currentMod->folder.c_str(), currentMod->active ? 'y' : 'n');
@@ -595,7 +595,7 @@ void saveMods()
     currentMod = cur;
 }
 
-void RunModCallbacks(int callbackID, void *data)
+void RunModCallbacks(int32 callbackID, void *data)
 {
     if (callbackID < 0 || callbackID >= MODCB_MAX)
         return;
@@ -609,7 +609,7 @@ void RunModCallbacks(int callbackID, void *data)
 // Mod API
 bool32 LoadModInfo(const char *folder, TextInfo *name, TextInfo *description, TextInfo *version, bool32 *active)
 {
-    for (int m = 0; m < modList.size(); ++m) {
+    for (int32 m = 0; m < modList.size(); ++m) {
         if (modList[m].folder == folder) {
             if (description)
                 SetText(description, (char *)modList[m].desc.c_str(), false);
@@ -626,9 +626,9 @@ bool32 LoadModInfo(const char *folder, TextInfo *name, TextInfo *description, Te
     return false;
 }
 
-void AddModCallback(int callbackID, ModCallback callback) { return AddModCallback_STD(callbackID, callback); }
+void AddModCallback(int32 callbackID, ModCallback callback) { return AddModCallback_STD(callbackID, callback); }
 
-void AddModCallback_STD(int callbackID, ModCallbackSTD callback)
+void AddModCallback_STD(int32 callbackID, ModCallbackSTD callback)
 {
     if (callbackID < 0 || callbackID >= MODCB_MAX)
         return;
@@ -668,7 +668,7 @@ void *GetPublicFunction(const char *id, const char *functionName)
 
 void GetModPath(const char *id, TextInfo *result)
 {
-    int m;
+    int32 m;
     for (m = 0; m < modList.size(); ++m)
         if (modList[m].active && modList[m].folder == id)
             break;
@@ -682,7 +682,7 @@ void GetModPath(const char *id, TextInfo *result)
 
 std::string GetModPath_i(const char *id)
 {
-    int m;
+    int32 m;
     for (m = 0; m < modList.size(); ++m)
         if (modList[m].active && modList[m].folder == id)
             break;
@@ -736,7 +736,7 @@ bool32 GetSettingsBool(const char *id, const char *key, bool32 fallback)
     return fallback;
 }
 
-int GetSettingsInteger(const char *id, const char *key, int fallback)
+int32 GetSettingsInteger(const char *id, const char *key, int32 fallback)
 {
     if (!id) {
         if (!currentMod)
@@ -810,7 +810,7 @@ bool32 GetConfigBool(const char *key, bool32 fallback)
     return fallback;
 }
 
-int GetConfigInteger(const char *key, int fallback)
+int32 GetConfigInteger(const char *key, int32 fallback)
 {
     std::string v = GetConfigValue(key);
     if (!v.length())
@@ -846,7 +846,7 @@ bool32 ForeachConfigCategory(TextInfo *textInfo)
         ++foreachStackPtr;
         foreachStackPtr->id = 0;
     }
-    int sid = 0;
+    int32 sid = 0;
     string cat;
     bool32 set = false;
     if (currentMod->config[""].size() && foreachStackPtr->id == sid++) {
@@ -886,7 +886,7 @@ bool32 ForeachConfig(TextInfo *textInfo)
         ++foreachStackPtr;
         foreachStackPtr->id = 0;
     }
-    int sid = 0;
+    int32 sid = 0;
     string key, cat;
     if (currentMod->config[""].size()) {
         for (pair<string, string> pair : currentMod->config[""]) {
@@ -934,7 +934,7 @@ void SetSettingsValue(const char *key, std::string val)
 }
 
 void SetSettingsBool(const char *key, bool32 val) { SetSettingsValue(key, val ? "Y" : "N"); }
-void SetSettingsInteger(const char *key, int val) { SetSettingsValue(key, std::to_string(val)); }
+void SetSettingsInteger(const char *key, int32 val) { SetSettingsValue(key, std::to_string(val)); }
 void SetSettingsString(const char *key, TextInfo *val)
 {
     char *buf = new char[val->textLength];
@@ -966,8 +966,8 @@ void SaveSettings()
 
 // i'm going to hell for this
 // nvm im actually so proud of this func yall have no idea i'm insane
-int superLevels = 1;
-void Super(int objectID, ModSuper callback, void *data)
+int32 superLevels = 1;
+void Super(int32 objectID, ModSuper callback, void *data)
 {
     ObjectInfo *super = &objectList[stageObjectIDs[objectID]];
     Object *before    = NULL;
@@ -1037,19 +1037,19 @@ void Super(int objectID, ModSuper callback, void *data)
 
 void *GetGlobals() { return (void *)globalVarsPtr; }
 
-void ModRegisterGlobalVariables(const char *globalsPath, void **globals, uint size)
+void ModRegisterGlobalVariables(const char *globalsPath, void **globals, uint32 size)
 {
     AllocateStorage(size, globals, DATASET_STG, true);
     FileInfo info;
     InitFileInfo(&info);
 
-    int *varPtr = *(int **)globals;
+    int32 *varPtr = *(int32 **)globals;
     if (LoadFile(&info, globalsPath, FMODE_RB)) {
         byte varCount = ReadInt8(&info);
-        for (int i = 0; i < varCount && globalVarsPtr; ++i) {
-            int offset = ReadInt32(&info, false);
-            int count  = ReadInt32(&info, false);
-            for (int v = 0; v < count; ++v) {
+        for (int32 i = 0; i < varCount && globalVarsPtr; ++i) {
+            int32 offset = ReadInt32(&info, false);
+            int32 count  = ReadInt32(&info, false);
+            for (int32 v = 0; v < count; ++v) {
                 varPtr[offset + v] = ReadInt32(&info, false);
             }
         }
@@ -1058,7 +1058,7 @@ void ModRegisterGlobalVariables(const char *globalsPath, void **globals, uint si
     }
 }
 
-void ModRegisterObject(Object **structPtr, const char *name, uint entitySize, uint objectSize, void (*update)(void), void (*lateUpdate)(void),
+void ModRegisterObject(Object **structPtr, const char *name, uint32 entitySize, uint32 objectSize, void (*update)(void), void (*lateUpdate)(void),
                        void (*staticUpdate)(void), void (*draw)(void), void (*create)(void *), void (*stageLoad)(void), void (*editorDraw)(void),
                        void (*editorLoad)(void), void (*serialize)(void), const char *inherited)
 {
@@ -1066,17 +1066,17 @@ void ModRegisterObject(Object **structPtr, const char *name, uint entitySize, ui
                                  editorLoad, serialize, inherited);
 }
 
-void ModRegisterObject_STD(Object **structPtr, const char *name, uint entitySize, uint objectSize, std::function<void(void)> update,
+void ModRegisterObject_STD(Object **structPtr, const char *name, uint32 entitySize, uint32 objectSize, std::function<void(void)> update,
                            std::function<void(void)> lateUpdate, std::function<void(void)> staticUpdate, std::function<void(void)> draw,
                            std::function<void(void *)> create, std::function<void(void)> stageLoad, std::function<void(void)> editorDraw,
                            std::function<void(void)> editorLoad, std::function<void(void)> serialize, const char *inherited)
 {
     ModInfo *curMod = currentMod;
-    int preCount    = objectCount + 1;
-    uint hash[4];
+    int32 preCount    = objectCount + 1;
+    RETRO_HASH(hash);
     GEN_HASH(name, hash);
 
-    for (int i = 0; i < objectCount; ++i) {
+    for (int32 i = 0; i < objectCount; ++i) {
         if (HASH_MATCH(objectList[i].hash, hash)) {
             objectCount = i;
             --preCount;
@@ -1088,9 +1088,9 @@ void ModRegisterObject_STD(Object **structPtr, const char *name, uint entitySize
     ObjectInfo *inherit = NULL;
 
     if (inherited) {
-        uint hash[4];
+        uint32 hash[4];
         GEN_HASH(inherited, hash);
-        for (int i = 0; i < preCount; ++i) {
+        for (int32 i = 0; i < preCount; ++i) {
             if (HASH_MATCH(objectList[i].hash, hash)) {
                 inherit = new ObjectInfo(objectList[i]);
                 break;
@@ -1151,7 +1151,7 @@ void ModRegisterObject_STD(Object **structPtr, const char *name, uint entitySize
 
 Object *GetObject(const char *name)
 {
-    if (int o = GetObjectByName(name))
+    if (int32 o = GetObjectByName(name))
         return *objectList[stageObjectIDs[o]].type;
     return NULL;
 }

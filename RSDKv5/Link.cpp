@@ -82,7 +82,7 @@ enum UserdataTableIDs {
 };
 #else
 APITableEntry APIFunctionTable[APITABLE_COUNT];
-int APIFunctionTableCount;
+int32 APIFunctionTableCount;
 #endif
 
 enum FunctionTableIDs {
@@ -310,7 +310,7 @@ void NullFunc() {}
 void addToAPIFunctionTable(const char *name, void *ptr)
 {
     if (APIFunctionTableCount < APITABLE_COUNT) {
-        uint hash[4];
+        RETRO_HASH(hash);
         GEN_HASH(name, hash);
         for (int f = 0; f < APIFunctionTableCount; ++f) {
             if (HASH_MATCH(hash, APIFunctionTable[f].hash))

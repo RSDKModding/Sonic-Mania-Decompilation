@@ -15,34 +15,34 @@ extern void *APIFunctionTable[APITABLE_COUNT];
 #else
 struct APITableEntry {
     void *ptr;
-    uint hash[4];
+    RETRO_HASH(hash);
 };
 
 extern APITableEntry APIFunctionTable[APITABLE_COUNT];
-extern int APIFunctionTableCount;
+extern int32 APIFunctionTableCount;
 #endif
 
 #if RETRO_REV02
 struct SKUInfo {
-    int platform;
-    int language;
-    int region;
+    int32 platform;
+    int32 language;
+    int32 region;
 };
 
 struct UnknownInfo {
-    int field_0;
-    int field_4;
-    int field_8;
-    int field_C;
-    int field_10;
-    int field_14;
-    int field_18;
-    int field_1C;
-    int field_20;
-    int field_24;
-    int field_28;
-    int field_2C;
-    byte field_30;
+    int32 field_0;
+    int32 field_4;
+    int32 field_8;
+    int32 field_C;
+    int32 field_10;
+    int32 field_14;
+    int32 field_18;
+    int32 field_1C;
+    int32 field_20;
+    int32 field_24;
+    int32 field_28;
+    int32 field_2C;
+    uint8 field_30;
 };
 
 extern SKUInfo curSKU;
@@ -54,9 +54,9 @@ struct GameVersionInfo {
     char gameSubName[0x100];
     char gameVersion[0x10];
 #if !RETRO_REV02
-    byte platform;
-    byte language;
-    byte region;
+    uint8 platform;
+    uint8 language;
+    uint8 region;
 #endif
 };
 

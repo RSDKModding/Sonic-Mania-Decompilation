@@ -38,7 +38,7 @@ inline void StringUpperCase(char *dest, const char *src)
     if (*src) {
         int srcPos = 0;
         do {
-            while (curChar - 'a' <= 0x19u) {
+            while (curChar - 'a' <= 0x19) {
                 destPos       = srcPos;
                 dest[destPos] = curChar - ' ';
                 curChar       = src[++srcPos];
@@ -56,16 +56,16 @@ inline void StringUpperCase(char *dest, const char *src)
 }
 
 extern char hashBuffer[0x400];
-void GenerateHash(uint *buffer, int len);
-void GenerateCRC(uint *id, char *fileName);
+void GenerateHash(uint32 *buffer, int32 len);
+void GenerateCRC(uint32 *id, char *fileName);
 
 #define RETRO_HASH(name)     uint32 name[4]
-#define HASH_SIZE            (4 * sizeof(uint))
+#define HASH_SIZE            (4 * sizeof(uint32))
 #define HASH_MATCH(a, b)     (memcmp(a, b, HASH_SIZE) == 0)
 #define GEN_HASH(text, hash)                                                                                                                         \
     strcpy(hashBuffer, text);                                                                                                                        \
-    GenerateHash(hash, (int)strlen(hashBuffer))
-#define HASH_COPY(dst, src) memcpy(dst, src, 0x10)
+    GenerateHash(hash, (int32)strlen(hashBuffer))
+#define HASH_COPY(dst, src) memcpy(dst, src, HASH_SIZE)
 
 inline void SetText(TextInfo *textInfo, char *text, uint size)
 {
@@ -142,7 +142,7 @@ void AppendText(TextInfo *info, char *text);
 void PrependText(TextInfo *info, char *text);
 void AppendString(TextInfo *textA, TextInfo *textB);
 bool32 StringCompare(TextInfo *textA, TextInfo *textB, bool32 flag);
-bool32 SplitStringList(TextInfo *list, TextInfo *strings, int start, int count);
+bool32 SplitStringList(TextInfo *list, TextInfo *strings, int32 start, int32 count);
 
 void LoadStrings(TextInfo *buffer, const char *filePath);
 

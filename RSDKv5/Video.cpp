@@ -2,16 +2,15 @@
 
 FileInfo videoFile;
 
-
 THEORAPLAY_Decoder *videoDecoder;
 const THEORAPLAY_VideoFrame *videoVidData;
 THEORAPLAY_Io callbacks;
 
 bool32 videoPlaying = false;
-int vidFrameMS      = 0;
-int vidBaseticks    = 0;
-int videoWidth      = 0;
-int videoHeight     = 0;
+int32 vidFrameMS    = 0;
+int32 vidBaseticks  = 0;
+int32 videoWidth    = 0;
+int32 videoHeight   = 0;
 float videoAR       = 0;
 
 long videoRead(THEORAPLAY_Io *io, void *buf, long buflen)
@@ -95,7 +94,7 @@ void LoadVideo(const char *filename, double a2, bool32 (*skipCallback)(void))
     }
 }
 
-int ProcessVideo() {
+int32 ProcessVideo() {
     if (engine.skipCallback) {
         if (engine.skipCallback()) {
             StopVideoPlayback();
@@ -152,7 +151,7 @@ int ProcessVideo() {
 #endif
 #if RETRO_USING_SDL1
                 uint *videoFrameBuffer = (uint *)Engine.videoBuffer->pixels;
-                memcpy(videoFrameBuffer, videoVidData->pixels, videoVidData->width * videoVidData->height * sizeof(uint));
+                memcpy(videoFrameBuffer, videoVidData->pixels, videoVidData->xsize * videoVidData->ysize * sizeof(uint));
 #endif
 
                 THEORAPLAY_freeVideo(videoVidData);
@@ -194,10 +193,10 @@ void StopVideoPlayback()
     }
 }
 
-void SetupVideoBuffer(int width, int height)
+void SetupVideoBuffer(int32 width, int32 height)
 {
 #if RETRO_USING_SDL1
-    engine.videoBuffer = SDL_CreateRGBSurface(0, width, height, 32, 0x000000FF, 0x0000FF00, 0x00FF0000, 0xFF000000);
+    engine.videoBuffer = SDL_CreateRGBSurface(0, xsize, ysize, 32, 0x000000FF, 0x0000FF00, 0x00FF0000, 0xFF000000);
 #endif
 #if RETRO_USING_SDL2
     engine.videoBuffer = SDL_CreateTexture(engine.renderer, SDL_PIXELFORMAT_YV12, SDL_TEXTUREACCESS_STREAMING, width, height);

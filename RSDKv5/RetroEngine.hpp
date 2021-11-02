@@ -312,7 +312,6 @@ enum SeverityModes {
 #if RETRO_REV02
 #include "DevOutput.hpp"
 #endif
-#include "TestObject.hpp"
 
 struct RetroEngine {
     RetroEngine() {}
@@ -330,10 +329,10 @@ struct RetroEngine {
     bool32 confirmFlip = false; // swaps A/B, used for nintendo and etc controllers
     bool32 XYFlip = false; // swaps X/Y, used for nintendo and etc controllers
 
-    int prevEngineMode      = ENGINESTATE_LOAD;
+    int32 prevEngineMode      = ENGINESTATE_LOAD;
     bool32 running          = false;
-    int gameSpeed           = 1;
-    int fastForwardSpeed    = 8;
+    int32 gameSpeed           = 1;
+    int32 fastForwardSpeed    = 8;
     bool32 frameStep        = false;
     bool32 showPaletteOverlay = false;
     bool32 drawLayerVisible[DRAWLAYER_COUNT];
@@ -346,24 +345,24 @@ struct RetroEngine {
     bool32 exclusiveFS     = false;
     bool32 vsync           = false;
     bool32 tripleBuffer    = false;
-    int windowWidth        = 424;
-    int windowHeight       = SCREEN_YSIZE;
-    int fsWidth            = 0;
-    int fsHeight           = 0;
-    int gameHeight         = SCREEN_YSIZE;
-    int refreshRate        = 60;
+    int32 windowWidth        = 424;
+    int32 windowHeight       = SCREEN_YSIZE;
+    int32 fsWidth            = 0;
+    int32 fsHeight           = 0;
+    int32 gameHeight         = SCREEN_YSIZE;
+    int32 refreshRate        = 60;
 
     //Image/Video support
     float displayTime;
     float imageDelta;
-    bool32 (*skipCallback)();
+    bool32 (*skipCallback)(void);
 
     bool32 shaderSupport = true;
-    int shaderID         = 0;
-    int prevShaderID         = 0;
-    int screenCount      = 1;
-    int dimTimer         = 0;
-    int dimLimit         = 0;
+    int32 shaderID       = 0;
+    int32 prevShaderID   = 0;
+    int32 screenCount    = 1;
+    int32 dimTimer       = 0;
+    int32 dimLimit       = 0;
     float dimPercent     = 1.0;
     float dimMax         = 1.0;
 
@@ -380,7 +379,7 @@ struct RetroEngine {
     SDL_Texture *videoBuffer  = nullptr;
 
     SDL_DisplayMode *displays = nullptr;
-    int displayCount          = 0;
+    int32 displayCount        = 0;
 
     SDL_Event sdlEvents;
 #if RETRO_USING_OPENGL
@@ -394,17 +393,17 @@ extern RetroEngine engine;
 typedef void (*linkPtr)(GameInfo *);
 extern linkPtr linkGameLogic;
 
-bool initRetroEngine();
+bool32 initRetroEngine();
 void runRetroEngine();
 
-void parseArguments(int argc, char *argv[]);
+void parseArguments(int32 argc, char *argv[]);
 
 void startGameObjects();
 
 #if RETRO_USE_MOD_LOADER
 void LoadXMLObjects();
 void LoadXMLSoundFX();
-int LoadXMLStages(int mode, int gcListCount, int gcStageCount);
+int32 LoadXMLStages(int32 mode, int32 gcListCount, int32 gcStageCount);
 #endif
 
 void LoadGameConfig();
@@ -418,9 +417,9 @@ inline void SetEngineState(byte state)
         sceneInfo.state |= ENGINESTATE_STEPOVER;
 }
 
-extern int *globalVarsPtr;
+extern int32 *globalVarsPtr;
 
-inline void RegisterGlobalVariables(void **globals, int size)
+inline void RegisterGlobalVariables(void **globals, int32 size)
 {
     AllocateStorage(size, globals, DATASET_STG, true);
     globalVarsPtr = (int *)*globals;

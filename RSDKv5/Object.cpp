@@ -1,15 +1,15 @@
 #include "RetroEngine.hpp"
 
-int objectCount = 0;
+int32 objectCount = 0;
 ObjectInfo objectList[OBJECT_COUNT];
-int globalObjectCount = 0;
-int globalObjectIDs[OBJECT_COUNT];
-int stageObjectIDs[OBJECT_COUNT];
+int32 globalObjectCount = 0;
+int32 globalObjectIDs[OBJECT_COUNT];
+int32 stageObjectIDs[OBJECT_COUNT];
 
 EntityBase objectEntityList[ENTITY_COUNT];
 
 EditableVarInfo *editableVarList;
-int editableVarCount = 0;
+int32 editableVarCount = 0;
 
 TypeGroupList typeGroups[TYPEGROUP_COUNT];
 
@@ -274,8 +274,8 @@ void InitObjects()
     sceneInfo.state = ENGINESTATE_REGULAR;
     if (!cameraCount) {
         cameras[0].targetPos     = &screens[0].position;
-        cameras[0].offset.x      = screens[0].centerX << 0x10;
-        cameras[0].offset.y      = screens[0].centerY << 0x10;
+        cameras[0].offset.x      = screens[0].center.x << 0x10;
+        cameras[0].offset.y      = screens[0].center.y << 0x10;
         cameras[0].worldRelative = false;
         cameraCount              = 1;
     }
@@ -722,17 +722,17 @@ void ProcessObjectDrawLists()
                     if (currentScreen->clipBound_Y1 > 0)
                         currentScreen->clipBound_Y1 = 0;
 
-                    if (currentScreen->width >= 0) {
-                        if (currentScreen->clipBound_X2 < currentScreen->width)
-                            currentScreen->clipBound_X2 = currentScreen->width;
+                    if (currentScreen->size.x >= 0) {
+                        if (currentScreen->clipBound_X2 < currentScreen->size.x)
+                            currentScreen->clipBound_X2 = currentScreen->size.x;
                     }
                     else {
                         currentScreen->clipBound_X2 = 0;
                     }
 
-                    if (currentScreen->height >= 0) {
-                        if (currentScreen->clipBound_Y2 < currentScreen->height)
-                            currentScreen->clipBound_Y2 = currentScreen->height;
+                    if (currentScreen->size.y >= 0) {
+                        if (currentScreen->clipBound_Y2 < currentScreen->size.y)
+                            currentScreen->clipBound_Y2 = currentScreen->size.y;
                     }
                     else {
                         currentScreen->clipBound_Y2 = 0;

@@ -9,40 +9,40 @@
 #define minVal(a, b) (a <= b ? a : b)
 
 struct Vector2 {
-    int x;
-    int y;
+    int32 x;
+    int32 y;
 };
 
 #define MEM_ZERO(x)  memset(&(x), 0, sizeof((x)))
 #define MEM_ZEROP(x) memset((x), 0, sizeof(*(x)))
 
-extern int sinVal1024[0x400];
-extern int cosVal1024[0x400];
-extern int tanVal1024[0x400];
-extern int aSinVal1024[0x400];
-extern int aCosVal1024[0x400];
+extern int32 sinVal1024[0x400];
+extern int32 cosVal1024[0x400];
+extern int32 tanVal1024[0x400];
+extern int32 aSinVal1024[0x400];
+extern int32 aCosVal1024[0x400];
 
-extern int sinVal512[0x200];
-extern int cosVal512[0x200];
-extern int tanVal512[0x200];
-extern int aSinVal512[0x200];
-extern int aCosVal512[0x200];
+extern int32 sinVal512[0x200];
+extern int32 cosVal512[0x200];
+extern int32 tanVal512[0x200];
+extern int32 aSinVal512[0x200];
+extern int32 aCosVal512[0x200];
 
-extern int sinVal256[0x100];
-extern int cosVal256[0x100];
-extern int tanVal256[0x100];
-extern int aSinVal256[0x100];
-extern int aCosVal256[0x100];
+extern int32 sinVal256[0x100];
+extern int32 cosVal256[0x100];
+extern int32 tanVal256[0x100];
+extern int32 aSinVal256[0x100];
+extern int32 aCosVal256[0x100];
 
-extern byte atanVal256[0x100 * 0x100];
+extern uint8 atanVal256[0x100 * 0x100];
 
 // Setup angles
 void CalculateTrigAngles();
 
-inline int sin1024(int angle) { return sinVal1024[angle & 0x3FF]; }
-inline int cos1024(int angle) { return cosVal1024[angle & 0x3FF]; }
-inline int tan1024(short angle) { return tanVal1024[angle & 0x3FF]; }
-inline int aSin1024(int angle)
+inline int32 sin1024(int32 angle) { return sinVal1024[angle & 0x3FF]; }
+inline int32 cos1024(int32 angle) { return cosVal1024[angle & 0x3FF]; }
+inline int32 tan1024(int32 angle) { return tanVal1024[angle & 0x3FF]; }
+inline int32 aSin1024(int32 angle)
 {
     if (angle > 0x3FF)
         return 0;
@@ -50,7 +50,7 @@ inline int aSin1024(int angle)
         return -aSinVal1024[-angle];
     return aSinVal1024[angle];
 }
-inline int aCos1024(int angle)
+inline int32 aCos1024(int32 angle)
 {
     if (angle > 0x3FF)
         return 0;
@@ -59,10 +59,10 @@ inline int aCos1024(int angle)
     return aCosVal1024[angle];
 }
 
-inline int sin512(int angle) { return sinVal512[angle & 0x1FF]; }
-inline int cos512(int angle) { return cosVal512[angle & 0x1FF]; }
-inline int tan512(short angle) { return tanVal512[angle & 0x1FF]; }
-inline int aSin512(int angle)
+inline int32 sin512(int32 angle) { return sinVal512[angle & 0x1FF]; }
+inline int32 cos512(int32 angle) { return cosVal512[angle & 0x1FF]; }
+inline int32 tan512(int32 angle) { return tanVal512[angle & 0x1FF]; }
+inline int32 aSin512(int32 angle)
 {
     if (angle > 0x1FF)
         return 0;
@@ -70,7 +70,7 @@ inline int aSin512(int angle)
         return -aSinVal512[-angle];
     return aSinVal512[angle];
 }
-inline int aCos512(int angle)
+inline int32 aCos512(int32 angle)
 {
     if (angle > 0x1FF)
         return 0;
@@ -79,10 +79,10 @@ inline int aCos512(int angle)
     return aCosVal512[angle];
 }
 
-inline int sin256(int angle) { return sinVal256[angle & 0xFF]; }
-inline int cos256(int angle) { return cosVal256[angle & 0xFF]; }
-inline int tan256(int angle) { return tanVal256[angle & 0xFF]; }
-inline int aSin256(int angle)
+inline int32 sin256(int32 angle) { return sinVal256[angle & 0xFF]; }
+inline int32 cos256(int32 angle) { return cosVal256[angle & 0xFF]; }
+inline int32 tan256(int32 angle) { return tanVal256[angle & 0xFF]; }
+inline int32 aSin256(int32 angle)
 {
     if (angle > 0xFF)
         return 0;
@@ -90,7 +90,7 @@ inline int aSin256(int angle)
         return -aSinVal256[-angle];
     return aSinVal256[angle];
 }
-inline int aCos256(int angle)
+inline int32 aCos256(int32 angle)
 {
     if (angle > 0xFF)
         return 0;
@@ -100,14 +100,14 @@ inline int aCos256(int angle)
 }
 
 // Get Arc Tan value
-byte ArcTanLookup(int x, int y);
+uint8 ArcTanLookup(int32 x, int32 y);
 
-extern uint randKey;
+extern uint32 randKey;
 
-inline void setRandKey(int key) { randKey = key; }
-inline int RSDK_random(int min, int max)
+inline void setRandKey(int32 key) { randKey = key; }
+inline int32 RSDK_random(int32 min, int32 max)
 {
-    int val = 1103515245 * randKey + 12345;
+    int32 val = 1103515245 * randKey + 12345;
     randKey = 1103515245 * (1103515245 * val + 12345) + 12345;
 
     if (min > max)
@@ -117,12 +117,12 @@ inline int RSDK_random(int min, int max)
     else 
         return max;
 }
-inline int RSDK_random2(int min, int max, int *randKey)
+inline int32 RSDK_random2(int32 min, int32 max, int32 *randKey)
 {
     if (!randKey)
         return 0;
 
-    int val = 1103515245 * *randKey + 12345;
+    int32 val = 1103515245 * *randKey + 12345;
     *randKey = 1103515245 * (1103515245 * val + 12345) + 12345;
 
     if (min > max)

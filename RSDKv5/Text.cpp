@@ -1,7 +1,5 @@
 #include "RetroEngine.hpp"
 
-
-
 // From here: https://rosettacode.org/wiki/MD5#C
 
 #include <stdlib.h>
@@ -131,9 +129,9 @@ unsigned *md5(const char *msg, int mlen)
 
 char hashBuffer[0x400];
 // Buffer is expected to be at least 16 bytes long
-void GenerateHash(uint *buffer, int len)
+void GenerateHash(uint32 *buffer, int32 len)
 {
-    byte *buf   = (byte *)buffer;
+    uint8 *buf  = (uint8 *)buffer;
     unsigned *d = md5(hashBuffer, len);
     WBunion u;
 
@@ -170,7 +168,7 @@ uint crc32_t[256] = {
     0xc30c8ea1, 0x5a05df1b, 0x2d02ef8d
 };
 
-void GenerateCRC(uint *id, char *str)
+void GenerateCRC(uint32 *id, char *str)
 {
     *id     = -1;
     if (!str)
@@ -354,7 +352,7 @@ bool32 StringCompare(TextInfo *textA, TextInfo *textB, bool32 exactMatch)
 
 }
 
-bool32 SplitStringList(TextInfo *list, TextInfo *strings, int start, int count)
+bool32 SplitStringList(TextInfo *list, TextInfo *strings, int32 start, int32 count)
 {
     if (!strings->length || !strings->text)
         return false;

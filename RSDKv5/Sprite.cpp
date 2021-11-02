@@ -563,8 +563,8 @@ bool32 LoadTGA(ImagePNG *image, const char *filename)
         byte colourmapdepth   = ReadInt8(&image->info);
         short originX         = ReadInt16(&image->info);
         short originY         = ReadInt16(&image->info);
-        image->width          = ReadInt16(&image->info);
-        image->height         = ReadInt16(&image->info);
+        image->xsize          = ReadInt16(&image->info);
+        image->ysize         = ReadInt16(&image->info);
         byte imageBPP         = ReadInt8(&image->info);
         byte imagedescriptor  = ReadInt8(&image->info);
         bool32 reverse        = (~imagedescriptor >> 4) & 1;
@@ -572,16 +572,16 @@ bool32 LoadTGA(ImagePNG *image, const char *filename)
             if (startOffset)
                 Seek_Cur(&image->info, startOffset);
 
-            AllocateStorage(sizeof(uint) * image->height * image->width, (void **)&image->dataPtr, DATASET_TMP, false);
+            AllocateStorage(sizeof(uint) * image->ysize * image->xsize, (void **)&image->dataPtr, DATASET_TMP, false);
             uint *imageData = (uint *)image->dataPtr;
             if (reverse)
-                imageData += (image->height * image->width) - image->width;
+                imageData += (image->ysize * image->xsize) - image->xsize;
 
             int x = 0;
             if (datatypecode == 2) {
                 switch (imageBPP) {
                     case 0x10:
-                        for (int i = 0; i < image->height * image->width; ++i) {
+                        for (int i = 0; i < image->ysize * image->xsize; ++i) {
                             byte bytes[2];
                             ReadBytes(&image->info, bytes, sizeof(ushort));
                             if (bytes[0] + (bytes[1] << 8) < 0)
@@ -589,33 +589,33 @@ bool32 LoadTGA(ImagePNG *image, const char *filename)
                             else
                                 *imageData++ = 0;
 
-                            if (reverse && ++x == image->width) {
+                            if (reverse && ++x == image->xsize) {
                                 x = 0;
-                                imageData -= image->width << 1;
+                                imageData -= image->xsize << 1;
                             }
                         }
                         break;
                     case 0x18:
-                        for (int i = 0; i < image->height * image->width; ++i) {
+                        for (int i = 0; i < image->ysize * image->xsize; ++i) {
                             byte channels[3];
                             ReadBytes(&image->info, channels, sizeof(colour) - 1);
                             *imageData++ = (channels[0] << 0) | (channels[1] << 8) | (channels[2] << 16) | (0xFF << 24);
 
-                            if (reverse && ++x == image->width) {
+                            if (reverse && ++x == image->xsize) {
                                 x = 0;
-                                imageData -= image->width << 1;
+                                imageData -= image->xsize << 1;
                             }
                         }
                         break;
                     case 0x20:
-                        for (int i = 0; i < image->height * image->width; ++i) {
+                        for (int i = 0; i < image->ysize * image->xsize; ++i) {
                             byte channels[4];
                             ReadBytes(&image->info, channels, sizeof(colour));
                             *imageData++ = (channels[0] << 0) | (channels[1] << 8) | (channels[2] << 16) | (channels[3] << 24);
 
-                            if (reverse && ++x == image->width) {
+                            if (reverse && ++x == image->xsize) {
                                 x = 0;
-                                imageData -= image->width << 1;
+                                imageData -= image->xsize << 1;
                             }
                         }
                         break;
@@ -628,7 +628,7 @@ bool32 LoadTGA(ImagePNG *image, const char *filename)
                         byte count = 0, flag = 0;
                         byte bytes[2];
 
-                        for (int i = 0; i < image->height * image->width; ++i) {
+                        for (int i = 0; i < image->ysize * image->xsize; ++i) {
                             if (count) {
                                 if (!flag) {
                                     byte val[2];
@@ -653,9 +653,9 @@ bool32 LoadTGA(ImagePNG *image, const char *filename)
                                 *imageData++ = 0;
 
                             ++imageData;
-                            if (reverse && ++x == image->width) {
+                            if (reverse && ++x == image->xsize) {
                                 x = 0;
-                                imageData -= image->width << 1;
+                                imageData -= image->xsize << 1;
                             }
                         }
                         break;
@@ -664,7 +664,7 @@ bool32 LoadTGA(ImagePNG *image, const char *filename)
                         byte channels[3];
                         memset(channels, 0, sizeof(channels));
                         byte count = 0, flag = 0;
-                        for (int i = 0; i < image->height * image->width; ++i) {
+                        for (int i = 0; i < image->ysize * image->xsize; ++i) {
                             if (count) {
                                 if (!flag) {
                                     ReadBytes(&image->info, channels, sizeof(colour) - 1);
@@ -682,9 +682,9 @@ bool32 LoadTGA(ImagePNG *image, const char *filename)
                             }
                             *imageData++ = (channels[0] << 0) | (channels[1] << 8) | (channels[2] << 16) | (0xFF << 24);
 
-                            if (reverse && ++x == image->width) {
+                            if (reverse && ++x == image->xsize) {
                                 x = 0;
-                                imageData -= image->width << 1;
+                                imageData -= image->xsize << 1;
                             }
                         }
                         break;
@@ -693,7 +693,7 @@ bool32 LoadTGA(ImagePNG *image, const char *filename)
                         byte channels[sizeof(colour)];
                         memset(channels, 0, sizeof(channels));
                         byte count = 0, flag = 0;
-                        for (int i = 0; i < image->height * image->width; ++i) {
+                        for (int i = 0; i < image->ysize * image->xsize; ++i) {
                             if (count) {
                                 if (!flag) {
                                     ReadBytes(&image->info, channels, sizeof(uint));
@@ -711,9 +711,9 @@ bool32 LoadTGA(ImagePNG *image, const char *filename)
                             }
                             *imageData++ = (channels[0] << 0) | (channels[1] << 8) | (channels[2] << 16) | (channels[3] << 24);
 
-                            if (reverse && ++x == image->width) {
+                            if (reverse && ++x == image->xsize) {
                                 x = 0;
-                                imageData -= image->width << 1;
+                                imageData -= image->xsize << 1;
                             }
                         }
                         break;
@@ -836,8 +836,8 @@ bool32 LoadImage(const char *filename, double displayLength, double speed, bool3
     }
 #elif !RETRO_REV02
     if (LoadTGA(&image, buffer)) {
-        if (image.width == 1024 && image.height == 512)
-            SetImageTexture(image.width, image.height, image.dataPtr);
+        if (image.xsize == 1024 && image.ysize == 512)
+            SetImageTexture(image.xsize, image.ysize, image.dataPtr);
 
         engine.displayTime    = displayLength;
         engine.prevShaderID   = engine.shaderID;

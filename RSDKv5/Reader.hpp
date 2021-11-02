@@ -29,6 +29,9 @@ SDL_RWops *fOpen(const char *path, const char *mode);
 #include <zlib/zlib.h>
 #endif
 
+#define FILE_COUNT (0x1000)
+#define PACK_COUNT (4)
+
 enum Scopes {
     SCOPE_NONE,
     SCOPE_GLOBAL,
@@ -36,44 +39,44 @@ enum Scopes {
 };
 
 struct FileInfo {
-    int fileSize;
-    int externalFile;
+    int32 fileSize;
+    int32 externalFile;
     FileIO *file;
-    byte* fileData;
-    int readPos;
-    int fileOffset;
-    byte usingFileBuffer;
-    byte encrypted;
-    byte eNybbleSwap;
-    byte encryptionKeyA[0x10];
-    byte encryptionKeyB[0x10];
-    byte eKeyPosA;
-    byte eKeyPosB;
-    byte eKeyNo;
+    uint8* fileData;
+    int32 readPos;
+    int32 fileOffset;
+    uint8 usingFileBuffer;
+    uint8 encrypted;
+    uint8 eNybbleSwap;
+    uint8 encryptionKeyA[0x10];
+    uint8 encryptionKeyB[0x10];
+    uint8 eKeyPosA;
+    uint8 eKeyPosB;
+    uint8 eKeyNo;
 };
 
 struct RSDKFileInfo {
-    uint hash[0x4];
-    int size;
-    int offset;
-    byte encrypted;
-    byte useFileBuffer;
-    int packID;
+    RETRO_HASH(hash);
+    int32 size;
+    int32 offset;
+    uint8 encrypted;
+    uint8 useFileBuffer;
+    int32 packID;
 };
 
 struct RSDKContainer {
     char name[0x100];
-    byte *dataPtr;
-    int fileCount;
+    uint8 *dataPtr;
+    int32 fileCount;
 };
 
-extern RSDKFileInfo dataFiles[0x1000];
-extern RSDKContainer dataPacks[4];
+extern RSDKFileInfo dataFiles[FILE_COUNT];
+extern RSDKContainer dataPacks[PACK_COUNT];
 
-extern byte dataPackCount;
-extern ushort dataFileCount;
+extern uint8 dataPackCount;
+extern uint16 dataFileCount;
 
-extern char gameLogicName[0x400];
+extern char gameLogicName[0x200];
 
 extern bool32 useDataFile;
 
@@ -101,7 +104,7 @@ inline void InitFileInfo(FileInfo *info)
     info->fileOffset      = 0;
 }
 
-bool32 LoadFile(FileInfo *info, const char *filename, byte fileMode);
+bool32 LoadFile(FileInfo *info, const char *filename, uint8 fileMode);
 
 inline void CloseFile(FileInfo *info)
 {
@@ -112,11 +115,11 @@ inline void CloseFile(FileInfo *info)
     info->file = NULL;
 }
 
-void GenerateELoadKeys(FileInfo *info, const char *key1, int key2);
+void GenerateELoadKeys(FileInfo *info, const char *key1, int32 key2);
 void DecryptBytes(FileInfo *info, void *buffer, size_t size);
-void SkipBytes(FileInfo *info, int size);
+void SkipBytes(FileInfo *info, int32 size);
 
-inline void Seek_Set(FileInfo* info, int count) {
+inline void Seek_Set(FileInfo* info, int32 count) {
     if (info->readPos != count) {
         info->readPos = count;
         if (info->encrypted) {
@@ -136,7 +139,7 @@ inline void Seek_Set(FileInfo* info, int count) {
     }
 }
 
-inline void Seek_Cur(FileInfo *info, int count)
+inline void Seek_Cur(FileInfo *info, int32 count)
 {
     info->readPos += count;
     if (info->encrypted) {
@@ -151,7 +154,7 @@ inline void Seek_Cur(FileInfo *info, int count)
     }
 }
 
-inline size_t ReadBytes(FileInfo *info, void* data, int count)
+inline size_t ReadBytes(FileInfo *info, void* data, int32 count)
 {
     size_t bytesRead = 0;
     if (info->usingFileBuffer) {
@@ -168,7 +171,7 @@ inline size_t ReadBytes(FileInfo *info, void* data, int count)
     return bytesRead;
 }
 
-inline byte ReadInt8(FileInfo *info)
+inline uint8 ReadInt8(FileInfo *info)
 {
     byte result = 0;
     size_t bytesRead = 0;
@@ -186,7 +189,7 @@ inline byte ReadInt8(FileInfo *info)
     return result;
 }
 
-inline short ReadInt16(FileInfo *info)
+inline int16 ReadInt16(FileInfo *info)
 {
     short result  = 0;
     size_t bytesRead = 0;
@@ -204,7 +207,7 @@ inline short ReadInt16(FileInfo *info)
     return result;
 }
 
-inline int ReadInt32(FileInfo *info, bool32 swapEndian)
+inline int32 ReadInt32(FileInfo *info, bool32 swapEndian)
 {
     int result   = 0;
     size_t bytesRead = 0;
@@ -277,7 +280,7 @@ inline void ReadString(FileInfo *info, char* buffer) {
     buffer[size] = 0;
 }
 
-inline int ReadZLibRSDK(FileInfo *info, byte **buffer)
+inline int32 ReadZLibRSDK(FileInfo *info, uint8 **buffer)
 {
     if (!buffer)
         return 0;
@@ -297,7 +300,7 @@ inline int ReadZLibRSDK(FileInfo *info, byte **buffer)
     return destLen;
 }
 
-inline int ReadZLib(FileInfo *info, byte **buffer, int cSize, int size)
+inline int32 ReadZLib(FileInfo *info, uint8 **buffer, int32 cSize, int32 size)
 {
     if (!buffer)
         return 0;
@@ -314,7 +317,7 @@ inline int ReadZLib(FileInfo *info, byte **buffer, int cSize, int size)
     return destLen;
 }
 
-inline int ReadZLib(FileInfo *info, byte **cBuffer, int cSize, byte **buffer, int size)
+inline int32 ReadZLib(FileInfo *info, uint8 **cBuffer, int32 cSize, uint8 **buffer, int32 size)
 {
     if (!buffer || !cBuffer)
         return 0;

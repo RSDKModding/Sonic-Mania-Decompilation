@@ -17,11 +17,11 @@ enum ShaderIDs {
 struct ShaderEntry {
     void *vertexShaderObject;
     void *pixelShaderObject;
-    byte linear;
+    uint8 linear;
     char name[0x20];
 };
 
-extern int shaderCount;
+extern int32 shaderCount;
 extern ShaderEntry shaderList[SHADER_MAX];
 
 bool InitShaders();

@@ -18,7 +18,7 @@ void *link_handle = NULL;
 #endif
 #endif
 
-int *globalVarsPtr = NULL;
+int32 *globalVarsPtr = NULL;
 RetroEngine engine = RetroEngine();
 
 bool32 processEvents()
@@ -199,7 +199,7 @@ bool32 processEvents()
     return true;
 }
 
-bool initRetroEngine()
+bool32 initRetroEngine()
 {
 #if RETRO_PLATFORM == RETRO_ANDROID
     sleep(1); // wait to initialize the engine
@@ -474,8 +474,8 @@ void runRetroEngine()
                     sceneInfo.state = engine.prevEngineMode;
                 currentScreen = &screens[0];
                 int yOff      = DevOutput_GetStringYOffset(outputString);
-                DrawRectangle(0, currentScreen->centerY - (yOff >> 1), currentScreen->width, yOff, 128, 255, INK_NONE, true);
-                DrawDevText(8, outputString, currentScreen->centerY - (yOff >> 1) + 8, 0, 0xF0F0F0);
+                DrawRectangle(0, currentScreen->center.y - (yOff >> 1), currentScreen->size.x, yOff, 128, 255, INK_NONE, true);
+                DrawDevText(8, outputString, currentScreen->center.y - (yOff >> 1) + 8, 0, 0xF0F0F0);
                 break;
             }
             case ENGINESTATE_ERRORMSG_FATAL: {
@@ -484,8 +484,8 @@ void runRetroEngine()
                 if (controller[0].keyStart.down)
                     engine.running = false;
                 int yOff = DevOutput_GetStringYOffset(outputString);
-                DrawRectangle(0, currentScreen->centerY - (yOff >> 1), currentScreen->width, yOff, 0xF00000, 255, INK_NONE, true);
-                DrawDevText(8, outputString, currentScreen->centerY - (yOff >> 1) + 8, 0, 0xF0F0F0);
+                DrawRectangle(0, currentScreen->center.y - (yOff >> 1), currentScreen->size.x, yOff, 0xF00000, 255, INK_NONE, true);
+                DrawDevText(8, outputString, currentScreen->center.y - (yOff >> 1) + 8, 0, 0xF0F0F0);
                 break;
             }
 #endif
@@ -494,8 +494,8 @@ void runRetroEngine()
 #if !RETRO_USE_ORIGINAL_CODE
         for (int t = 0; t < touchMouseData.count; ++t) {
             if (touchMouseData.down[t]) {
-                int tx = touchMouseData.x[t] * screens->width;
-                int ty = touchMouseData.y[t] * screens->height;
+                int tx = touchMouseData.x[t] * screens->size.x;
+                int ty = touchMouseData.y[t] * screens->size.y;
 
                 if (tx <= 32 && ty <= 32) {
                     if (engine.devMenu) {
@@ -544,7 +544,7 @@ void runRetroEngine()
 #endif
 }
 
-void parseArguments(int argc, char *argv[])
+void parseArguments(int32 argc, char *argv[])
 {
     for (int a = 0; a < argc; ++a) {
         const char *find = "";
@@ -612,8 +612,6 @@ void startGameObjects()
     LoadGameConfig();
 }
 
-
-
 #if RETRO_USE_MOD_LOADER
 const tinyxml2::XMLElement *firstXMLChildElement(tinyxml2::XMLDocument *doc, const tinyxml2::XMLElement *elementPtr, const char *name)
 {
@@ -639,8 +637,8 @@ const tinyxml2::XMLElement *nextXMLSiblingElement(tinyxml2::XMLDocument *doc, co
 
 const tinyxml2::XMLAttribute *findXMLAttribute(const tinyxml2::XMLElement *elementPtr, const char *name) { return elementPtr->FindAttribute(name); }
 const char *getXMLAttributeName(const tinyxml2::XMLAttribute *attributePtr) { return attributePtr->Name(); }
-int getXMLAttributeValueInt(const tinyxml2::XMLAttribute *attributePtr) { return attributePtr->IntValue(); }
-bool getXMLAttributeValueBool(const tinyxml2::XMLAttribute *attributePtr) { return attributePtr->BoolValue(); }
+int32 getXMLAttributeValueInt(const tinyxml2::XMLAttribute *attributePtr) { return attributePtr->IntValue(); }
+bool32 getXMLAttributeValueBool(const tinyxml2::XMLAttribute *attributePtr) { return attributePtr->BoolValue(); }
 const char *getXMLAttributeValueString(const tinyxml2::XMLAttribute *attributePtr) { return attributePtr->Value(); }
 
 void LoadXMLObjects()
@@ -753,7 +751,7 @@ void LoadXMLSoundFX()
     }
     setActiveMod(-1);
 }
-int LoadXMLStages(int mode, int gcListCount, int gcStageCount)
+int32 LoadXMLStages(int32 mode, int32 gcListCount, int32 gcStageCount)
 {
     FileInfo info;
     int listCount = 0;
@@ -1009,7 +1007,7 @@ void InitScriptSystem()
 {
 #if RETRO_USE_MOD_LOADER
     objectCount = 0;
-    memset(globalObjectIDs, 0, sizeof(int) * OBJECT_COUNT);
+    memset(globalObjectIDs, 0, sizeof(int32) * OBJECT_COUNT);
     memset(objectEntityList, 0, sizeof(EntityBase) * ENTITY_COUNT);
     editableVarCount = 0;
     foreachStackPtr  = foreachStackList;
@@ -1023,10 +1021,9 @@ void InitScriptSystem()
                    DevOutput_StaticUpdate, DevOutput_Draw, DevOutput_Create, DevOutput_StageLoad, DevOutput_EditorDraw, DevOutput_EditorLoad,
                    DevOutput_Serialize);
 #endif
-    globalObjectIDs[0] = 0;
-
+    globalObjectIDs[0] = TYPE_DEFAULTOBJECT;
 #if RETRO_REV02
-    globalObjectIDs[1] = 1;
+    globalObjectIDs[1] = TYPE_DEVOUTPUT;
 #endif
 
     globalObjectCount = TYPE_DEFAULTCOUNT;
@@ -1107,7 +1104,7 @@ void InitScriptSystem()
     }
 
 #if RETRO_USE_MOD_LOADER
-    for (int m = 0; m < modList.size(); ++m) {
+    for (int32 m = 0; m < modList.size(); ++m) {
         if (!modList[m].active || modList[m].language)
             continue;
         currentMod = &modList[m];

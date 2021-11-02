@@ -254,7 +254,7 @@ void FarPlane_DrawLayerCB_High(void)
 
     foreach_active(ImageTrail, imageTrail)
     {
-        if (invincibleStars->drawOrder == 1 && id < 0x200) {
+        if (imageTrail->drawOrder == 1 && id < 0x200) {
             imageTrail->currentPos.x = FarPlane->positionList[id].x;
             imageTrail->currentPos.y = FarPlane->positionList[id].y;
             id++;

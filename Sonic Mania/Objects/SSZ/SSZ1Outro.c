@@ -63,7 +63,7 @@ bool32 SSZ1Outro_CutsceneState_Unknown1(EntityCutsceneSeq *host)
 
         CutsceneSeq_LockAllPlayerControl();
         player1->state      = Player_State_Ground;
-        player1->stateInput = 0;
+        player1->stateInput = StateMachine_None;
         if (player2->objectID == Player->objectID) {
             player2->state      = Player_State_Ground;
             player2->stateInput = StateMachine_None;
@@ -87,11 +87,13 @@ bool32 SSZ1Outro_CutsceneState_Unknown1(EntityCutsceneSeq *host)
         if (player1->position.x > player2->position.x)
             player2->right = true;
 
-        if (player2->groundVel < player1->groundVel)
+        if (player1->groundVel < player2->groundVel)
             player2->groundVel = player1->groundVel;
 
-        if (player1->groundVel < player2->velocity.x)
+        if (player1->groundVel < player1->velocity.x)
             player2->velocity.x = player1->groundVel;
+        else
+            player2->velocity.x = player1->velocity.x;
 
         player2->nextAirState    = StateMachine_None;
         player2->nextGroundState = StateMachine_None;
@@ -131,10 +133,10 @@ void SSZ1Outro_Unknown3(Entity *entity)
 
 void SSZ1Outro_Unknown4(void)
 {
-    foreach_active(HotaruMKII, boss)
+    foreach_active(HotaruMKII, hotaru)
     {
-        // if (!boss->field_A4)
-        //    SSZ1Outro_Unknown3((Entity*)boss);
+        if (!hotaru->type)
+            SSZ1Outro_Unknown3((Entity *)hotaru);
     }
 }
 

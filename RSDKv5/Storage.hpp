@@ -1,6 +1,8 @@
 #ifndef STORAGE_H
 #define STORAGE_H
 
+#define STORAGE_ENTRY_COUNT (0x1000)
+
 enum StorageDataSets {
     DATASET_STG = 0,
     DATASET_MUS = 1,
@@ -11,20 +13,20 @@ enum StorageDataSets {
 };
 
 struct DataStorage {
-    int *memPtr;
-    uint usedStorage;
-    uint storageLimit;
-    int **startPtrs1[0x1000];
-    int *startPtrs2[0x1000];
-    uint rowCount;
-    uint unknown;
+    int32 *memPtr;
+    uint32 usedStorage;
+    uint32 storageLimit;
+    int32 **startPtrs1[STORAGE_ENTRY_COUNT];
+    int32 *startPtrs2[STORAGE_ENTRY_COUNT];
+    uint32 rowCount;
+    uint32 unknown;
 };
 
 template <typename T> class List
 {
     T *entries = NULL;
-    int count  = 0;
-    int length  = 0;
+    int32 count  = 0;
+    int32 length  = 0;
 
     public:
     List()
@@ -91,7 +93,7 @@ template <typename T> class List
         }
     }
 
-    inline int Count() { return count; }
+    inline int32 Count() { return count; }
 };
 
 extern DataStorage dataStorage[DATASET_MAX];
@@ -99,10 +101,10 @@ extern DataStorage dataStorage[DATASET_MAX];
 void InitStorage();
 void ReleaseStorage();
 
-void AllocateStorage(uint size, void **dataPtr, StorageDataSets dataSet, bool32 clear);
+void AllocateStorage(uint32 size, void **dataPtr, StorageDataSets dataSet, bool32 clear);
 void ClearUnusedStorage(StorageDataSets set);
 void RemoveStorageEntry(void **dataPtr);
-void CopyStorage(int **src, int **dst);
+void CopyStorage(int32 **src, int32 **dst);
 void CleanEmptyStorage(StorageDataSets dataSet);
 
 #endif // STORAGE_H

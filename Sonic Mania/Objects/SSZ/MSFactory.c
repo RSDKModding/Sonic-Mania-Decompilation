@@ -20,7 +20,7 @@ void MSFactory_Draw(void)
     RSDK.DrawSprite(&entity->animator, &entity->drawPos, false);
 
     entity->animator.frameID = 1;
-    RSDK.DrawSprite(&entity->animator, 0, false);
+    RSDK.DrawSprite(&entity->animator, NULL, false);
 }
 
 void MSFactory_Create(void *data)
@@ -126,9 +126,19 @@ void MSFactory_Unknown5(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void MSFactory_EditorDraw(void) {}
+void MSFactory_EditorDraw(void)
+{
+    RSDK_THIS(MSFactory);
+    RSDK.SetSpriteAnimation(MSFactory->aniFrames, 0, &entity->animator, false, 1);
 
-void MSFactory_EditorLoad(void) {}
+    entity->animator.frameID = 0;
+    RSDK.DrawSprite(&entity->animator, NULL, false);
+
+    entity->animator.frameID = 1;
+    RSDK.DrawSprite(&entity->animator, NULL, false);
+}
+
+void MSFactory_EditorLoad(void) { MSFactory->aniFrames = RSDK.LoadSpriteAnimation("SSZ2/MSFactory.bin", SCOPE_STAGE); }
 #endif
 
 void MSFactory_Serialize(void) {}

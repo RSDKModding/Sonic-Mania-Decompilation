@@ -115,9 +115,18 @@ void MSPanel_Unknown4(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void MSPanel_EditorDraw(void) {}
+void MSPanel_EditorDraw(void)
+{
+    RSDK_THIS(MSPanel);
 
-void MSPanel_EditorLoad(void) {}
+    RSDK.SetSpriteAnimation(MSPanel->aniFrames, 1, &entity->animator1, false, 0);
+    RSDK.SetSpriteAnimation(MSPanel->aniFrames, 0, &entity->animator2, false, 0);
+
+    RSDK.DrawSprite(&entity->animator2, NULL, false);
+    RSDK.DrawSprite(&entity->animator1, NULL, false);
+}
+
+void MSPanel_EditorLoad(void) { MSPanel->aniFrames = RSDK.LoadSpriteAnimation("SSZ2/MSPanel.bin", SCOPE_STAGE); }
 #endif
 
 void MSPanel_Serialize(void) {}

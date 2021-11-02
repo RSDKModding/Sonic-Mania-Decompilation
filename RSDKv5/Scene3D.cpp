@@ -12,7 +12,7 @@ enum ModelFlags {
     MODEL_USECOLOURS  = 4,
 };
 
-void ProcessScanEdge(int x1, int y1, int x2, int y2)
+void ProcessScanEdge(int32 x1, int32 y1, int32 x2, int32 y2)
 {
     int top = y1 >> 16;
     int iy1 = y1 >> 16;
@@ -53,7 +53,7 @@ void ProcessScanEdge(int x1, int y1, int x2, int y2)
     }
 }
 
-void ProcessScanEdgeClr(uint c1, uint c2, int x1, int y1, int x2, int y2)
+void ProcessScanEdgeClr(uint32 c1, uint32 c2, int32 x1, int32 y1, int32 x2, int32 y2)
 {
     int iy1 = y1 >> 16;
     int iy2 = y2 >> 16;
@@ -175,7 +175,7 @@ void matrixMultiply(Matrix *dest, Matrix *matrixA, Matrix *matrixB)
         dest->values[rowB][rowA] = result[rowB][rowA];
     }
 }
-void matrixTranslateXYZ(Matrix *matrix, int x, int y, int z, bool32 setIdentity)
+void matrixTranslateXYZ(Matrix *matrix, int32 x, int32 y, int32 z, bool32 setIdentity)
 {
     if (setIdentity) {
         matrix->values[0][0] = 0x100;
@@ -196,7 +196,7 @@ void matrixTranslateXYZ(Matrix *matrix, int x, int y, int z, bool32 setIdentity)
     matrix->values[1][3] = y >> 8;
     matrix->values[2][3] = z >> 8;
 }
-void matrixScaleXYZ(Matrix *matrix, int scaleX, int scaleY, int scaleZ)
+void matrixScaleXYZ(Matrix *matrix, int32 scaleX, int32 scaleY, int32 scaleZ)
 {
     matrix->values[0][0] = scaleX;
     matrix->values[1][0] = 0;
@@ -215,7 +215,7 @@ void matrixScaleXYZ(Matrix *matrix, int scaleX, int scaleY, int scaleZ)
     matrix->values[2][3] = 0;
     matrix->values[3][3] = 0x100;
 }
-void matrixRotateX(Matrix *matrix, short rotationX)
+void matrixRotateX(Matrix *matrix, int16 rotationX)
 {
     int sine   = sinVal1024[rotationX & 0x3FF] >> 2;
     int cosine = cosVal1024[rotationX & 0x3FF] >> 2;
@@ -237,7 +237,7 @@ void matrixRotateX(Matrix *matrix, short rotationX)
     matrix->values[2][3] = 0;
     matrix->values[3][3] = 0x100;
 }
-void matrixRotateY(Matrix *matrix, short rotationY)
+void matrixRotateY(Matrix *matrix, int16 rotationY)
 {
     int sine             = sinVal1024[rotationY & 0x3FF] >> 2;
     int cosine           = cosVal1024[rotationY & 0x3FF] >> 2;
@@ -258,7 +258,7 @@ void matrixRotateY(Matrix *matrix, short rotationY)
     matrix->values[2][3] = 0;
     matrix->values[3][3] = 0x100;
 }
-void matrixRotateZ(Matrix *matrix, short rotationZ)
+void matrixRotateZ(Matrix *matrix, int16 rotationZ)
 {
     int sine             = sinVal1024[rotationZ & 0x3FF] >> 2;
     int cosine           = cosVal1024[rotationZ & 0x3FF] >> 2;
@@ -279,7 +279,7 @@ void matrixRotateZ(Matrix *matrix, short rotationZ)
     matrix->values[2][3] = 0;
     matrix->values[3][3] = 0x100;
 }
-void matrixRotateXYZ(Matrix *matrix, short rotationX, short rotationY, short rotationZ)
+void matrixRotateXYZ(Matrix *matrix, int16 rotationX, int16 rotationY, int16 rotationZ)
 {
     int sinX = sinVal1024[rotationX & 0x3FF] >> 2;
     int cosX = cosVal1024[rotationX & 0x3FF] >> 2;
@@ -359,7 +359,7 @@ void matrixInverse(Matrix *dest, Matrix *matrix)
 }
 void matrixCopy(Matrix *matDst, Matrix *matSrc) { memcpy(matDst, matSrc, sizeof(Matrix)); }
 
-ushort LoadMesh(const char *filename, Scopes scope)
+uint16 LoadMesh(const char *filename, Scopes scope)
 {
     char buffer[0x100];
     sprintf(buffer, "Data/Meshes/%s", filename);
@@ -449,7 +449,7 @@ ushort LoadMesh(const char *filename, Scopes scope)
     }
     return -1;
 }
-ushort Create3DScene(const char *name, ushort vertexLimit, Scopes scope)
+uint16 Create3DScene(const char *name, uint16 vertexLimit, Scopes scope)
 {
     uint hash[4];
     GEN_HASH(name, hash);
@@ -487,7 +487,7 @@ ushort Create3DScene(const char *name, ushort vertexLimit, Scopes scope)
 
     return id;
 }
-void AddModelToScene(ushort modelID, ushort sceneID, byte drawMode, Matrix *matWorld, Matrix *matView, uint colour)
+void AddModelToScene(uint16 modelID, uint16 sceneID, uint8 drawMode, Matrix *matWorld, Matrix *matView, colour colour)
 {
     if (modelID < MODEL_MAX && sceneID < SCENE3D_MAX) {
         if (matWorld) {
@@ -610,7 +610,7 @@ void AddModelToScene(ushort modelID, ushort sceneID, byte drawMode, Matrix *matW
         }
     }
 }
-void AddMeshFrameToScene(ushort modelID, ushort sceneID, Animator *animator, byte drawMode, Matrix *matWorld, Matrix *matView, uint colour)
+void AddMeshFrameToScene(uint16 modelID, uint16 sceneID, Animator *animator, uint8 drawMode, Matrix *matWorld, Matrix *matView, colour colour)
 {
     if (modelID < MODEL_MAX && sceneID < SCENE3D_MAX) {
         if (matWorld && animator) {
@@ -771,7 +771,7 @@ void AddMeshFrameToScene(ushort modelID, ushort sceneID, Animator *animator, byt
         }
     }
 }
-void Draw3DScene(ushort sceneID)
+void Draw3DScene(uint16 sceneID)
 {
     if (sceneID < SCENE3D_MAX) {
         Entity *entity = sceneInfo.entity;
@@ -1004,8 +1004,8 @@ void Draw3DScene(ushort sceneID)
                             v = 0xFF;
                         }
                         else {
-                            vertPos[v].x = currentScreen->centerX + (drawVert[v].x << scn->projectionX) / vertZ;
-                            vertPos[v].y = currentScreen->centerY - (drawVert[v].y << scn->projectionY) / vertZ;
+                            vertPos[v].x = currentScreen->center.x + (drawVert[v].x << scn->projectionX) / vertZ;
+                            vertPos[v].y = currentScreen->center.y - (drawVert[v].y << scn->projectionY) / vertZ;
                         }
                     }
 
@@ -1032,8 +1032,8 @@ void Draw3DScene(ushort sceneID)
                             v = 0xFF;
                         }
                         else {
-                            vertPos[v].x = (currentScreen->centerX << 16) + ((drawVert[v].x << scn->projectionX) / vertZ << 16);
-                            vertPos[v].y = (currentScreen->centerY << 16) - ((drawVert[v].y << scn->projectionY) / vertZ << 16);
+                            vertPos[v].x = (currentScreen->center.x << 16) + ((drawVert[v].x << scn->projectionX) / vertZ << 16);
+                            vertPos[v].y = (currentScreen->center.y << 16) - ((drawVert[v].y << scn->projectionY) / vertZ << 16);
                         }
                     }
 
@@ -1057,8 +1057,8 @@ void Draw3DScene(ushort sceneID)
                             v = 0xFF;
                         }
                         else {
-                            vertPos[v].x = currentScreen->centerX + (drawVert[v].x << scn->projectionX) / vertZ;
-                            vertPos[v].y = currentScreen->centerY - (drawVert[v].y << scn->projectionY) / vertZ;
+                            vertPos[v].x = currentScreen->center.x + (drawVert[v].x << scn->projectionX) / vertZ;
+                            vertPos[v].y = currentScreen->center.y - (drawVert[v].y << scn->projectionY) / vertZ;
                             ny1 += drawVert[v].ny;
                         }
                     }
@@ -1116,8 +1116,8 @@ void Draw3DScene(ushort sceneID)
                             v = 0xFF;
                         }
                         else {
-                            vertPos[v].x = (currentScreen->centerX << 16) + ((drawVert[v].x << scn->projectionX) / vertZ << 16);
-                            vertPos[v].y = (currentScreen->centerY << 16) - ((drawVert[v].y << scn->projectionY) / vertZ << 16);
+                            vertPos[v].x = (currentScreen->center.x << 16) + ((drawVert[v].x << scn->projectionX) / vertZ << 16);
+                            vertPos[v].y = (currentScreen->center.y << 16) - ((drawVert[v].y << scn->projectionY) / vertZ << 16);
                             ny += drawVert[v].ny;
                         }
                     }
@@ -1170,8 +1170,8 @@ void Draw3DScene(ushort sceneID)
                             v = 0xFF;
                         }
                         else {
-                            vertPos[v].x = (currentScreen->centerX << 16) + ((drawVert[v].x << scn->projectionX) / vertZ << 16);
-                            vertPos[v].y = (currentScreen->centerY << 16) - ((drawVert[v].y << scn->projectionY) / vertZ << 16);
+                            vertPos[v].x = (currentScreen->center.x << 16) + ((drawVert[v].x << scn->projectionX) / vertZ << 16);
+                            vertPos[v].y = (currentScreen->center.y << 16) - ((drawVert[v].y << scn->projectionY) / vertZ << 16);
 
                             int normal    = drawVert[v].ny;
                             int normalVal = (normal >> 2) * (abs(normal) >> 2);
