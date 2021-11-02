@@ -112,7 +112,7 @@ void PhantomRuby_Unknown5(void)
 {
     RSDK_THIS(PhantomRuby);
     entity->angle += 2;
-    entity->position.y = (RSDK.Sin256(entity->angle) << 1) + entity->startPos.y;
+    entity->position.y = (RSDK.Sin256(entity->angle) << 10) + entity->startPos.y;
 }
 
 void PhantomRuby_Unknown6(void)
