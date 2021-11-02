@@ -1106,8 +1106,8 @@ void CopyTileLayout(uint16 dstLayerID, int32 startX1, int32 startY1, uint16 srcL
 
                         for (int y = 0; y < countY; ++y) {
                             for (int x = 0; x < countX; ++x) {
-                                ushort tile = srcLayer->layout[(x + startX2) + ((y + startY2) * srcLayer->xsize)];
-                                dstLayer->layout[(x + startX1) + ((y + startY1) * dstLayer->xsize)] = tile;
+                                ushort tile = srcLayer->layout[(x + startX2) + ((y + startY2) << srcLayer->widthShift)];
+                                dstLayer->layout[(x + startX1) + ((y + startY1) << dstLayer->widthShift)] = tile;
                             }
                         }
                     }

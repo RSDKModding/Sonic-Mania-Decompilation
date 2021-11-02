@@ -349,7 +349,7 @@ void GigaMetal_HandleCameraMovement(void)
     camera->boundsL      = Zone->screenBoundsL1[0];
     camera->boundsR      = Zone->screenBoundsR1[0];
     camera->position.x   = (Zone->screenBoundsR1[0] + camera->boundsL) << 15;
-    // MetalSonic_HandleStageWrap();
+    MetalSonic_HandleStageWrap();
 }
 
 void GigaMetal_CheckPlayerCollisions(void)
@@ -369,8 +369,9 @@ void GigaMetal_CheckPlayerCollisions(void)
 
     foreach_active(Player, playerPtr)
     {
-        if (!GigaMetal->invincibleTimer && Player_CheckBadnikTouch(player, entity, &GigaMetal->hitbox3) && Player_CheckBossHit(player, entity)) {
-            player->velocity.x += Zone->autoScrollSpeed;
+        if (!GigaMetal->invincibleTimer && Player_CheckBadnikTouch(playerPtr, entity, &GigaMetal->hitbox3)
+            && Player_CheckBossHit(playerPtr, entity)) {
+            playerPtr->velocity.x += Zone->autoScrollSpeed;
             GigaMetal_Hit();
         }
     }
@@ -503,6 +504,9 @@ void GigaMetal_State_Unknown3(void)
 
         EntityGigaMetal *backArm = (EntityGigaMetal *)entity->backArm;
         backArm->state           = GigaMetal_StateArm_Unknown2;
+
+        entity->timer            = 0;
+        entity->state            = GigaMetal_State_Unknown4;
     }
 }
 
@@ -608,8 +612,8 @@ void GigaMetal_State_Unknown5(void)
     GigaMetal_CheckPlayerCollisions();
 
     if ((Zone->timer & 7) == 2) {
-        int endY = (RSDK_screens->height + RSDK_screens->position.y) >> 4;
         int endX = ((RSDK_screens->width + RSDK_screens->position.x) >> 4) + 1;
+        int endY = (RSDK_screens->height + RSDK_screens->position.y) >> 4;
 
         RSDK.CopyTileLayer(Zone->fgHigh, endX, endY - 5, Zone->fgHigh, endX, endY - 5 + 8, 1, 6);
         if (endX > 224)
@@ -908,7 +912,7 @@ void GigaMetal_StateHead_Unknown4(void)
         RSDK.PlaySfx(GigaMetal->sfxRoar, false, 255);
     }
     else {
-        entity->rotation = -2;
+        entity->rotation -= 2;
     }
 }
 

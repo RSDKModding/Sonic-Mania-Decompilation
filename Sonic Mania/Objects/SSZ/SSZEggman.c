@@ -80,7 +80,7 @@ void SSZEggman_Unknown2(void)
 
     foreach_active(MetalSonic, metal)
     {
-        /*if (metal->state == MetalSonic_Unknown33) {
+        if (/*metal->state == MetalSonic_Unknown33*/ true) {
             entity->speed = -0x28000;
             RSDK.SetSpriteAnimation(SSZEggman->aniFrames, 3, &entity->animator1, true, 0);
             entity->state = SSZEggman_Unknown3;
@@ -89,7 +89,7 @@ void SSZEggman_Unknown2(void)
                 entity->ruby->velocity.x = -0x40000;
                 entity->ruby->velocity.y = -0x40000;
             }
-        }*/
+        }
     }
 }
 

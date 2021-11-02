@@ -29,18 +29,18 @@ void MSBomb_Create(void *data)
     entity->drawOrder = Zone->drawOrderLow;
     if (data) {
         RSDK.SetSpriteAnimation(MSBomb->aniFrames, 1, &entity->animator, true, 0);
-        entity->hitbox.left   = 4;
-        entity->hitbox.top    = 4;
-        entity->hitbox.right  = -4;
-        entity->hitbox.bottom = -4;
+        entity->hitbox.left   = -4;
+        entity->hitbox.top    = -4;
+        entity->hitbox.right  = 4;
+        entity->hitbox.bottom = 4;
         entity->state         = MSBomb_Unknown4;
     }
     else {
         RSDK.SetSpriteAnimation(MSBomb->aniFrames, 0, &entity->animator, true, 0);
-        entity->hitbox.left   = 8;
-        entity->hitbox.top    = 8;
-        entity->hitbox.right  = -8;
-        entity->hitbox.bottom = -8;
+        entity->hitbox.left   = -8;
+        entity->hitbox.top    = -8;
+        entity->hitbox.right  = 8;
+        entity->hitbox.bottom = 8;
         entity->drawFX        = FX_SCALE;
         entity->scale.x       = 0xC0;
         entity->scale.y       = 0xC0;

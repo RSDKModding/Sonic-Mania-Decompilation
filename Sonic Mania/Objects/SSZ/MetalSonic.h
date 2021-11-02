@@ -78,6 +78,7 @@ void MetalSonic_EditorLoad(void);
 void MetalSonic_Serialize(void);
 
 // Extra Entity Functions
-
+void MetalSonic_ProcessBGParallax(int32 mult);
+void MetalSonic_HandleStageWrap(void);
 
 #endif //!OBJ_METALSONIC_H

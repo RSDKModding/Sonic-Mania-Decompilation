@@ -109,7 +109,7 @@ void UITransition_State_TransitionIn(void)
 
     if (entity->timer < entity->timeLimit)
         entity->field_6C = false;
-    if (entity->timer >= entity->timeLimit + 16) {
+    if (entity->timer > entity->timeLimit + 16) {
         entity->drawPos[0].y = 0;
         entity->drawPos[1].x = 0;
         entity->drawPos[1].y = 0;
@@ -172,13 +172,12 @@ void UITransition_State_TransitionIn(void)
                 entity->drawPos[2].x = 0;
                 entity->drawPos[2].y = 0;
             }
-            ++entity->timer;
         }
         else {
             entity->drawPos[2].x = 0xF00000;
             entity->drawPos[2].y = -0xF00000;
-            ++entity->timer;
         }
+        ++entity->timer;
     }
 }
 
@@ -187,7 +186,7 @@ void UITransition_State_TransitionOut(void)
     RSDK_THIS(UITransition);
 
     if (entity->timer >= 1) {
-        if (entity->timer >= 17) {
+        if (entity->timer > 16) {
             entity->timer            = 0;
             entity->field_6C         = false;
             entity->drawPos[0].x     = -0xF00000;
@@ -206,8 +205,8 @@ void UITransition_State_TransitionOut(void)
             int32 offsets[3];
 
             offsets[0] = clampVal(entity->timer - 1, 0, 8);
-            offsets[1] = clampVal(entity->timer - 5, 0, 8);
-            offsets[2] = minVal(entity->timer - 1, 8);
+            offsets[1] = clampVal(entity->timer - 4, 0, 8);
+            offsets[2] = clampVal(entity->timer - 1, 0, 8);
 
             int32 val = 32 * offsets[0];
             if (val > 0) {
@@ -245,19 +244,18 @@ void UITransition_State_TransitionOut(void)
             if (val > 0) {
                 if (val < 256) {
                     entity->drawPos[2].x = -0xF000 * val;
-                    entity->drawPos[2].y = 0x1E0000 * val;
+                    entity->drawPos[2].y = 0x1E0000 * offsets[2];
                 }
                 else {
                     entity->drawPos[2].x = -0xF00000;
                     entity->drawPos[2].y = 0xF00000;
                 }
-                ++entity->timer;
             }
             else {
                 entity->drawPos[2].x = 0;
                 entity->drawPos[2].y = 0;
-                ++entity->timer;
             }
+            ++entity->timer;
         }
     }
     else {
