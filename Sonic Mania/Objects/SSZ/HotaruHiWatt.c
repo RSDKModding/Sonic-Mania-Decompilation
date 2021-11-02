@@ -1159,6 +1159,10 @@ void HotaruHiWatt_EditorDraw(void)
     entity->drawFX = FX_FLIP;
     RSDK.SetSpriteAnimation(HotaruHiWatt->aniFrames, 0, &entity->animator2, false, 0);
     RSDK.SetSpriteAnimation(HotaruHiWatt->aniFrames, 1, &entity->animator3, false, 0);
+
+    entity->direction = FLIP_NONE;
+    RSDK.DrawSprite(&entity->animator2, NULL, false);
+    RSDK.DrawSprite(&entity->animator3, NULL, false);
 }
 
 void HotaruHiWatt_EditorLoad(void)

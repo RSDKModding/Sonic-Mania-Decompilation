@@ -22,7 +22,7 @@ void MSHologram_Draw(void)
     RSDK_THIS(MSHologram);
     Vector2 drawPos;
 
-    drawPos.x = RSDK_sceneInfo->entity->position.x;
+    drawPos.x = entity->position.x;
     drawPos.y = entity->position.y;
     RSDK.DrawSprite(&entity->animator1, NULL, false);
 
@@ -145,9 +145,44 @@ void MSHologram_State_Destroyed(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void MSHologram_EditorDraw(void) {}
+void MSHologram_EditorDraw(void)
+{
+    RSDK_THIS(MSHologram);
+    RSDK.SetSpriteAnimation(MSHologram->aniFrames, 0, &entity->animator1, false, 0);
+    RSDK.SetSpriteAnimation(MSHologram->aniFrames, 1, &entity->animator2, false, 0);
+    RSDK.SetSpriteAnimation(MSHologram->aniFrames, 2, &entity->animator4, false, 0);
+    RSDK.SetSpriteAnimation(MSHologram->aniFrames, 3, &entity->animator3, false, 0);
+    RSDK.SetSpriteAnimation(MSHologram->aniFrames, 4, &entity->animator5, false, 0);
 
-void MSHologram_EditorLoad(void) {}
+    Vector2 drawPos;
+    drawPos.x = entity->position.x;
+    drawPos.y = entity->position.y;
+    RSDK.DrawSprite(&entity->animator1, NULL, false);
+
+    RSDK.DrawSprite(&entity->animator2, NULL, false);
+
+    entity->direction = FLIP_X;
+    RSDK.DrawSprite(&entity->animator3, NULL, false);
+
+    entity->direction = FLIP_NONE;
+    RSDK.DrawSprite(&entity->animator4, NULL, false);
+
+    if (entity->angle < 128)
+        entity->direction = FLIP_X;
+    drawPos.x += (RSDK.Cos256(entity->angle) - 320) << 13;
+    drawPos.y += (RSDK.Sin256(entity->angle) - 448) << 12;
+    RSDK.DrawSprite(&entity->animator5, &drawPos, false);
+
+    entity->direction = FLIP_NONE;
+}
+
+void MSHologram_EditorLoad(void)
+{
+    if (RSDK.CheckStageFolder("SSZ1"))
+        MSHologram->aniFrames = RSDK.LoadSpriteAnimation("SSZ1/MSHologram.bin", SCOPE_STAGE);
+    else if (RSDK.CheckStageFolder("SSZ2"))
+        MSHologram->aniFrames = RSDK.LoadSpriteAnimation("SSZ2/MSHologram.bin", SCOPE_STAGE);
+}
 #endif
 
 void MSHologram_Serialize(void) {}

@@ -28,7 +28,7 @@ namespace fs = std::filesystem;
 // this helps later on just trust me
 #define MODAPI_ENDS_WITH(str) buf.length() > strlen(str) && !buf.compare(buf.length() - strlen(str), strlen(str), std::string(str))
 
-std::map<std::string, int32> langMap;
+std::map<std::string, size_t> langMap;
 
 std::vector<ModInfo> modList;
 int32 activeMod = -1;
@@ -140,7 +140,7 @@ void loadMods()
                     if (info.language == (const char *)1 && !loaded)
                         waitList.push_back(modList.size());
                     else
-                        langMap.insert(pair<string, int32>(info.language, modList.size()));
+                        langMap.insert(pair<string, size_t>(info.language, modList.size()));
                 }
                 if (!loaded)
                     info.active = false;
