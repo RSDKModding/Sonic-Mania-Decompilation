@@ -67,8 +67,8 @@ void WarpDoor_Serialize(void);
 
 // Extra Entity Functions
 void WarpDoor_Unknown1(void);
-void WarpDoor_Unknown2(void);
-void WarpDoor_Unknown3(uint8 id);
+void WarpDoor_SetStageBounds(void);
+void WarpDoor_SetWarpBounds(uint8 id);
 void WarpDoor_Unknown4(void);
 bool32 WarpDoor_Unknown5(int16 a1, Vector2 *posPtr);
 void WarpDoor_DrawDebug(void);

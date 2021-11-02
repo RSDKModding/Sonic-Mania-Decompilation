@@ -22,7 +22,7 @@ void LRZ3OutroK_Create(void *data)
     RSDK_THIS(LRZ3OutroK);
 
     INIT_ENTITY(entity);
-    CutsceneRules_SetupEntity(entity);
+    CutsceneRules_SetupEntity(entity, &entity->size, &entity->hitbox);
     entity->active = ACTIVE_NEVER;
 }
 
@@ -210,8 +210,14 @@ bool32 LRZ3OutroK_CutsceneState_Unknown4(EntityCutsceneSeq *host)
     return false;
 }
 
-void LRZ3OutroK_EditorDraw(void) {}
+#if RETRO_INCLUDE_EDITOR
+void LRZ3OutroK_EditorDraw(void)
+{
+    RSDK_THIS(LRZ3OutroK);
+    CutsceneRules_DrawCutsceneBounds(entity, &entity->size);
+}
 
 void LRZ3OutroK_EditorLoad(void) {}
+#endif
 
 void LRZ3OutroK_Serialize(void) { RSDK_EDITABLE_VAR(LRZ3OutroK, VAR_VECTOR2, size); }

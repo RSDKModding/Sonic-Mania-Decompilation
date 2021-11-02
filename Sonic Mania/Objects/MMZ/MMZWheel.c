@@ -63,9 +63,9 @@ void MMZWheel_Create(void *data)
 void MMZWheel_StageLoad(void) { MMZWheel->aniFrames = RSDK.LoadSpriteAnimation("MMZ/MMZWheel.bin", SCOPE_STAGE); }
 
 #if RETRO_INCLUDE_EDITOR
-void MMZWheel_EditorDraw(void) {}
+void MMZWheel_EditorDraw(void) { MMZWheel_Draw(); }
 
-void MMZWheel_EditorLoad(void) {}
+void MMZWheel_EditorLoad(void) { MMZWheel->aniFrames = RSDK.LoadSpriteAnimation("MMZ/MMZWheel.bin", SCOPE_STAGE); }
 #endif
 
 void MMZWheel_Serialize(void)

@@ -10,15 +10,9 @@ void SizeLaser_Update(void)
     StateMachine_Run(entity->state);
 }
 
-void SizeLaser_LateUpdate(void)
-{
+void SizeLaser_LateUpdate(void) {}
 
-}
-
-void SizeLaser_StaticUpdate(void)
-{
-
-}
+void SizeLaser_StaticUpdate(void) {}
 
 void SizeLaser_Draw(void)
 {
@@ -28,13 +22,13 @@ void SizeLaser_Draw(void)
         RSDK.DrawSprite(&entity->animator2, &entity->storedPos, false);
 }
 
-void SizeLaser_Create(void* data)
+void SizeLaser_Create(void *data)
 {
     RSDK_THIS(SizeLaser);
-    
+
     entity->drawFX = FX_FLIP;
     if (!RSDK_sceneInfo->inEditor) {
-        int32 type              = (int32)(size_t)data;
+        int32 type            = voidToInt(data);
         entity->visible       = true;
         entity->updateRange.x = 0x800000;
         entity->updateRange.y = 0x800000;
@@ -123,8 +117,8 @@ void SizeLaser_StageLoad(void)
     SizeLaser->hitbox.top    = -4;
     SizeLaser->hitbox.right  = 4;
     SizeLaser->hitbox.bottom = 4;
-    SizeLaser->sfxShrink2   = RSDK.GetSFX("MMZ/Shrink2.wav");
-    SizeLaser->sfxGrow2     = RSDK.GetSFX("MMZ/Grow2.wav");
+    SizeLaser->sfxShrink2    = RSDK.GetSFX("MMZ/Shrink2.wav");
+    SizeLaser->sfxGrow2      = RSDK.GetSFX("MMZ/Grow2.wav");
 
     Soundboard_LoadSFX("MMZ/SizeLaser.wav", true, SizeLaser_SizeChangeSFXCheck, NULL);
 }
@@ -274,7 +268,7 @@ void SizeLaser_P2JumpInGrow(void)
             entity->cameraOffset = 0x50000;
     }
     else {
-        entity->state        = SizeLaser_P2JumpInGrow;
+        entity->state = SizeLaser_P2JumpInGrow;
         entity->scale.x += 6;
         entity->scale.y = entity->scale.x;
     }
@@ -289,16 +283,16 @@ void SizeLaser_P2JumpInShrink(void)
     if (entity->scale.x <= 0x140) {
         switch (entity->characterID) {
             case ID_TAILS:
-                entity->spriteIndex = SizeLaser->tailsIndex;
+                entity->spriteIndex     = SizeLaser->tailsIndex;
                 entity->tailSpriteIndex = SizeLaser->tailSpriteIndex;
                 break;
             case ID_KNUCKLES:
-                entity->spriteIndex = SizeLaser->knuxIndex;
+                entity->spriteIndex     = SizeLaser->knuxIndex;
                 entity->tailSpriteIndex = -1;
                 break;
 #if RETRO_USE_PLUS
             case ID_MIGHTY:
-                entity->spriteIndex = SizeLaser->mightyIndex;
+                entity->spriteIndex     = SizeLaser->mightyIndex;
                 entity->tailSpriteIndex = -1;
                 break;
             case ID_RAY:
@@ -307,7 +301,7 @@ void SizeLaser_P2JumpInShrink(void)
                 break;
 #endif
             default:
-                entity->spriteIndex = SizeLaser->sonicIndex;
+                entity->spriteIndex     = SizeLaser->sonicIndex;
                 entity->tailSpriteIndex = -1;
                 break;
         }
@@ -322,7 +316,7 @@ void SizeLaser_P2JumpInShrink(void)
         Player_ChangePhysicsState(entity);
     }
     else {
-        entity->state        = SizeLaser_P2JumpInShrink;
+        entity->state = SizeLaser_P2JumpInShrink;
         entity->scale.x -= 6;
         entity->scale.y = entity->scale.x;
     }
@@ -339,7 +333,7 @@ void SizeLaser_PlayerState_Grow(void)
         entity->scale.x     = 0x300;
         entity->scale.y     = 0x300;
         entity->interaction = true;
-        entity->state            = Player_State_Air;
+        entity->state       = Player_State_Air;
         Player_ChangePhysicsState(entity);
     }
     else {
@@ -403,7 +397,8 @@ void SizeLaser_Unknown3(void)
             break;
     }
 
-    foreach_active(Player, player) {
+    foreach_active(Player, player)
+    {
         int32 pID = RSDK.GetEntityID(player);
         if (MathHelpers_Unknown12(SizeLaser->playerPositions[pID].x, SizeLaser->playerPositions[pID].y, player->position.x, player->position.y,
                                   tx1[0], tx2[0], ty1[0], ty2[0])
@@ -506,8 +501,7 @@ void SizeLaser_Unknown8(void)
     RSDK_THIS(SizeLaser);
 
     if (entity->timer < 24 && !(entity->timer & 1))
-        RSDK.CreateEntity(SizeLaser->objectID, intToVoid(entity->type + 4 * entity->orientation + 1), entity->position.x,
-                          entity->position.y);
+        RSDK.CreateEntity(SizeLaser->objectID, intToVoid(entity->type + 4 * entity->orientation + 1), entity->position.x, entity->position.y);
     SizeLaser_Unknown3();
     entity->timer = (entity->timer + 1) & 0x1F;
 }
@@ -532,7 +526,6 @@ void SizeLaser_Unknown9(void)
     }
 }
 
-
 void SizeLaser_Unknown10(void)
 {
     RSDK_THIS(SizeLaser);
@@ -543,15 +536,29 @@ void SizeLaser_Unknown10(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void SizeLaser_EditorDraw(void)
-{
+void SizeLaser_EditorDraw(void) {
+    RSDK_THIS(SizeLaser);
 
+    switch (entity->orientation) {
+        case 0:
+            entity->direction = FLIP_NONE;
+            RSDK.SetSpriteAnimation(SizeLaser->spriteIndex, 2 * entity->type, &entity->animator1, true, 0);
+            break;
+        case 1:
+            entity->direction = FLIP_NONE;
+            RSDK.SetSpriteAnimation(SizeLaser->spriteIndex, 2 * entity->type + 1, &entity->animator1, true, 0);
+            break;
+        case 2:
+            entity->direction = FLIP_X;
+            RSDK.SetSpriteAnimation(SizeLaser->spriteIndex, 2 * entity->type + 1, &entity->animator1, true, 0);
+            break;
+    }
+
+    RSDK.DrawSprite(&entity->animator1, NULL, false);
+    RSDK.DrawSprite(&entity->animator2, NULL, false);
 }
 
-void SizeLaser_EditorLoad(void)
-{
-
-}
+void SizeLaser_EditorLoad(void) { SizeLaser->spriteIndex = RSDK.LoadSpriteAnimation("MMZ/SizeLaser.bin", SCOPE_STAGE); }
 #endif
 
 void SizeLaser_Serialize(void)
@@ -560,4 +567,3 @@ void SizeLaser_Serialize(void)
     RSDK_EDITABLE_VAR(SizeLaser, VAR_UINT8, orientation);
     RSDK_EDITABLE_VAR(SizeLaser, VAR_ENUM, extend);
 }
-

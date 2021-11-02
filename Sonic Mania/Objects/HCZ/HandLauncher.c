@@ -268,9 +268,17 @@ void HandLauncher_Unknown8(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void HandLauncher_EditorDraw(void) {}
+void HandLauncher_EditorDraw(void)
+{
+    RSDK_THIS(HandLauncher);
+    RSDK.SetSpriteAnimation(HandLauncher->spriteIndex, 0, &entity->animator1, true, 0);
+    RSDK.SetSpriteAnimation(HandLauncher->spriteIndex, 1, &entity->animator2, true, 0);
 
-void HandLauncher_EditorLoad(void) {}
+    RSDK.DrawSprite(&entity->animator1, NULL, false);
+    RSDK.DrawSprite(&entity->animator2, NULL, false);
+}
+
+void HandLauncher_EditorLoad(void) { HandLauncher->spriteIndex = RSDK.LoadSpriteAnimation("HCZ/HandLauncher.bin", SCOPE_STAGE); }
 #endif
 
 void HandLauncher_Serialize(void)

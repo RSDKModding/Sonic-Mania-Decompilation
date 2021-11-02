@@ -159,15 +159,9 @@ void JunctionWheel_StageLoad(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void JunctionWheel_EditorDraw(void)
-{
+void JunctionWheel_EditorDraw(void) { JunctionWheel_Draw(); }
 
-}
-
-void JunctionWheel_EditorLoad(void)
-{
-
-}
+void JunctionWheel_EditorLoad(void) { JunctionWheel->aniFrames = RSDK.LoadSpriteAnimation("SSZ1/JunctionWheel.bin", SCOPE_STAGE); }
 #endif
 
 void JunctionWheel_Serialize(void)

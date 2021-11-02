@@ -3,12 +3,14 @@
 
 #include "SonicMania.h"
 
+#define Starcase_StairCount (4)
+
 // Object Class
 typedef struct {
     RSDK_OBJECT
     Hitbox blockHitbox;
     uint16 animID;
-    uint8 gapE[2]; //?
+    uint16 field_E;
     uint16 sfxID;
 } ObjectStaircase;
 
@@ -17,7 +19,7 @@ typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(drawState);
-    Vector2 blocks[4];
+    Vector2 blocks[Starcase_StairCount];
     int32 timer;
     Animator animator;
     uint8 type;
@@ -41,7 +43,7 @@ void Staircase_EditorLoad(void);
 void Staircase_Serialize(void);
 
 // Extra Entity Functions
-bool32 Staircase_SFXCallback(void);
+bool32 Staircase_CheckCB(void);
 
 void Staircase_MainState(void);
 void Staircase_Wait(void);

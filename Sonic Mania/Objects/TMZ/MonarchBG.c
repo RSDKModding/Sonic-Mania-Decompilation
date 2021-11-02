@@ -57,9 +57,18 @@ void MonarchBG_StageLoad(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void MonarchBG_EditorDraw(void) {}
+void MonarchBG_EditorDraw(void)
+{
+    RSDK_THIS(MonarchBG);
+    entity->position.x    = 0x8000000;
+    entity->position.y    = 0xC000000;
+    RSDK.SetSpriteAnimation(MonarchBG->aniFrames, 0, &entity->animatorTop, true, 0);
+    RSDK.SetSpriteAnimation(MonarchBG->aniFrames, 1, &entity->animatorBottom, true, 0);
 
-void MonarchBG_EditorLoad(void) {}
+    MonarchBG_Draw();
+}
+
+void MonarchBG_EditorLoad(void) { MonarchBG->aniFrames = RSDK.LoadSpriteAnimation("TMZ1/MonarchBG.bin", SCOPE_STAGE); }
 #endif
 
 void MonarchBG_Serialize(void) {}

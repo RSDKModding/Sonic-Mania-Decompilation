@@ -58,7 +58,7 @@ int32 UIKeyBinder_GetButtonListID(void);
 int32 UIKeyBinder_GetMappings(int32 input, int32 button);
 void UIKeyBinder_SetMappings(int32 input, int32 button, int32 mappings);
 int32 UIKeyBinder_Unknown4(int32 id);
-void UIKeyBinder_Unknown5(void);
+void UIKeyBinder_DrawSprites(void);
 void UIKeyBinder_Options2CB(void);
 bool32 UIKeyBinder_Options7CB(void);
 bool32 UIKeyBinder_Options8CB(void);

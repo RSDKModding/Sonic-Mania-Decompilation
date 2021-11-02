@@ -27,12 +27,7 @@ typedef struct {
     Vector2 origin;
     uint16 entityIDs[0x100];
     int32 entityCount;
-    int32 field_26C;
-    int32 field_270;
-    int32 field_274;
-    int32 field_278;
-    int32 field_27C;
-    int32 field_280;
+    Animator animator;
 } EntityFarPlane;
 
 // Object Struct

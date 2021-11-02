@@ -35,10 +35,11 @@ void GHZCutsceneST_Create(void *data)
     RSDK_THIS(GHZCutsceneST);
     if (!RSDK_sceneInfo->inEditor) {
         INIT_ENTITY(entity);
-        CutsceneRules_SetupEntity(entity);
+        CutsceneRules_SetupEntity(entity, &entity->size, &entity->hitbox);
+        entity->active = ACTIVE_BOUNDS;
+
         GHZCutsceneST_SetupObjects();
 
-        entity->hitbox2             = entity->hitbox;
         RSDK_sceneInfo->timeEnabled = false;
     }
 }
@@ -275,7 +276,11 @@ void GHZCutsceneST_SkipCB(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void GHZCutsceneST_EditorDraw(void) {}
+void GHZCutsceneST_EditorDraw(void)
+{
+    RSDK_THIS(GHZCutsceneST);
+    CutsceneRules_DrawCutsceneBounds(entity, &entity->size);
+}
 
 void GHZCutsceneST_EditorLoad(void) {}
 #endif

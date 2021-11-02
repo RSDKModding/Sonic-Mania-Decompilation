@@ -1429,9 +1429,26 @@ void MegaOctus_TilePlatformState_Unknown(void)
 #endif
 
 #if RETRO_INCLUDE_EDITOR
-void MegaOctus_EditorDraw(void) {}
+void MegaOctus_EditorDraw(void)
+{
+    RSDK_THIS(MegaOctus);
 
-void MegaOctus_EditorLoad(void) {}
+    RSDK.SetSpriteAnimation(MegaOctus->aniFrames, 0, &entity->animator1, false, 0);
+    RSDK.SetSpriteAnimation(MegaOctus->eggmanFrames, 1, &MegaOctus->animator3, false, 0);
+    RSDK.SetSpriteAnimation(MegaOctus->aniFrames, 1, &MegaOctus->animator1, false, 5);
+    RSDK.SetSpriteAnimation(MegaOctus->aniFrames, 2, &MegaOctus->animator2, false, 5);
+    RSDK.SetSpriteAnimation(MegaOctus->hatchFrames, 0, &MegaOctus->animator4, false, 0);
+    RSDK.SetSpriteAnimation(MegaOctus->hatchFrames, 1, &MegaOctus->animator5, false, 0);
+
+    MegaOctus_StateDraw_Body();
+}
+
+void MegaOctus_EditorLoad(void)
+{
+    MegaOctus->aniFrames    = RSDK.LoadSpriteAnimation("OOZ/MegaOctus.bin", SCOPE_STAGE);
+    MegaOctus->eggmanFrames = RSDK.LoadSpriteAnimation("Eggman/EggmanOOZ.bin", SCOPE_STAGE);
+    MegaOctus->hatchFrames  = RSDK.LoadSpriteAnimation("OOZ/Hatch.bin", SCOPE_STAGE);
+}
 #endif
 
 void MegaOctus_Serialize(void) {}

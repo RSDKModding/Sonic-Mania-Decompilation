@@ -85,8 +85,7 @@ void HCZOneWayDoor_StaticUpdate(void)
 
 }
 
-void HCZOneWayDoor_Draw(void)
-{ HCZOneWayDoor_DrawSprites(); }
+void HCZOneWayDoor_Draw(void) { HCZOneWayDoor_DrawSprites(); }
 
 void HCZOneWayDoor_Create(void* data)
 {
@@ -192,15 +191,9 @@ void HCZOneWayDoor_DrawSprites(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void HCZOneWayDoor_EditorDraw(void)
-{
+void HCZOneWayDoor_EditorDraw(void) { HCZOneWayDoor_DrawSprites(); }
 
-}
-
-void HCZOneWayDoor_EditorLoad(void)
-{
-
-}
+void HCZOneWayDoor_EditorLoad(void) { HCZOneWayDoor->aniFrames = RSDK.LoadSpriteAnimation("HCZ/ButtonDoor.bin", SCOPE_STAGE); }
 #endif
 
 void HCZOneWayDoor_Serialize(void)

@@ -62,8 +62,6 @@ void UIDiorama_Draw(void)
             entity->dioramaSize.y = 0xA20000;
             RSDK.DrawRect(entity->dioramaPos.x, entity->dioramaPos.y, entity->dioramaSize.x, entity->dioramaSize.y, entity->maskColour, 255,
                           INK_MASKED, false);
-
-
         }
 
         entity->inkEffect = INK_MASKED;
@@ -892,9 +890,18 @@ void UIDiorama_StateDraw_Exit(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void UIDiorama_EditorDraw(void) {}
+void UIDiorama_EditorDraw(void)
+{
+    RSDK_THIS(UIDiorama);
+    RSDK.SetSpriteAnimation(UIDiorama->aniFrames, 0, &entity->animator1, true, 0);
+    RSDK.SetSpriteAnimation(UIDiorama->aniFrames, 1, &entity->animator2, true, 0);
 
-void UIDiorama_EditorLoad(void) {}
+    RSDK.DrawSprite(&entity->animator1, NULL, false);
+    RSDK.DrawSprite(&entity->animator2, NULL, false);
+
+}
+
+void UIDiorama_EditorLoad(void) { UIDiorama->aniFrames = RSDK.LoadSpriteAnimation("UI/Diorama.bin", SCOPE_STAGE); }
 #endif
 
 void UIDiorama_Serialize(void) { RSDK_EDITABLE_VAR(UIDiorama, VAR_ENUM, dioramaID); }

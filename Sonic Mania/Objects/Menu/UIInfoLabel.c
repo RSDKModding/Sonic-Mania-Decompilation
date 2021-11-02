@@ -28,8 +28,6 @@ void UIInfoLabel_Create(void *data)
 
 void UIInfoLabel_StageLoad(void) {}
 
-void UIInfoLabel_EditorDraw(void) {}
-
 void UIInfoLabel_SetText(EntityUIInfoLabel *label, char *text)
 {
     if (!RSDK_sceneInfo->inEditor) {
@@ -65,7 +63,7 @@ void UIInfoLabel_DrawSprites(void)
     if (RSDK_sceneInfo->inEditor) {
         RSDK.SetSpriteAnimation(UIInfoLabel->spriteIndex, 12, &entity->animator2, true, 2);
         drawPos.y -= 0x40000;
-        RSDK.DrawSprite(&entity->animator2, &drawPos, 0);
+        RSDK.DrawSprite(&entity->animator2, &drawPos, false);
     }
     else {
         drawPos.y -= 0x10000;
@@ -74,7 +72,17 @@ void UIInfoLabel_DrawSprites(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
+void UIInfoLabel_EditorDraw(void)
+{
+    RSDK_THIS(UIInfoLabel);
+    RSDK.SetSpriteAnimation(UIWidgets->labelSpriteIndex, 0, &entity->animator2, true, 0);
+
+    UIInfoLabel_DrawSprites();
+}
+
 void UIInfoLabel_EditorLoad(void) {}
+#endif
 
 void UIInfoLabel_Serialize(void)
 {

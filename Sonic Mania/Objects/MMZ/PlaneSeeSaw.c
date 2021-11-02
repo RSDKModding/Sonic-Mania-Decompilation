@@ -241,9 +241,17 @@ void PlaneSeeSaw_PlayerState_ToFG(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void PlaneSeeSaw_EditorDraw(void) {}
+void PlaneSeeSaw_EditorDraw(void)
+{
+    RSDK_THIS(PlaneSeeSaw);
+    RSDK.SetSpriteAnimation(PlaneSeeSaw->aniFrames, 0, &entity->animator2, false, 0);
+    RSDK.SetSpriteAnimation(PlaneSeeSaw->aniFrames, 1, &entity->animator1, false, 0);
+    RSDK.SetSpriteAnimation(PlaneSeeSaw->aniFrames, 2, &entity->animator3, false, 0);
 
-void PlaneSeeSaw_EditorLoad(void) {}
+    PlaneSeeSaw_Draw();
+}
+
+void PlaneSeeSaw_EditorLoad(void) { PlaneSeeSaw->aniFrames = RSDK.LoadSpriteAnimation("MMZ/SeeSaw.bin", SCOPE_STAGE); }
 #endif
 
 void PlaneSeeSaw_Serialize(void) {}

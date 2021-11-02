@@ -5,12 +5,22 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    uint16 aniFrames;
+    uint16 sfxFlail;
 } ObjectSpikeFlail;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    uint8 chainLength;
+    uint16 phase512;
+    Animator animator1;
+    Animator animator2;
+    Animator animator3;
+    Vector2 origin;
+    bool32 playingFlailSfx;
+    Hitbox hitbox;
 } EntitySpikeFlail;
 
 // Object Struct
@@ -30,6 +40,8 @@ void SpikeFlail_EditorLoad(void);
 void SpikeFlail_Serialize(void);
 
 // Extra Entity Functions
-
+void SpikeFlail_SetupHitbox(void);
+void SpikeFlail_CheckPlayerCollisions(void);
+Vector2 SpikeFlail_GetScale(int a1, int angle);
 
 #endif //!OBJ_SPIKEFLAIL_H

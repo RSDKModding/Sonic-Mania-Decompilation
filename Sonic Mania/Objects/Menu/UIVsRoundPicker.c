@@ -293,9 +293,27 @@ void UIVsRoundPicker_Unknown9(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void UIVsRoundPicker_EditorDraw(void) {}
+void UIVsRoundPicker_EditorDraw(void)
+{
+    RSDK_THIS(UIVsRoundPicker);
+    entity->visible         = true;
+    entity->drawOrder       = 2;
+    entity->active          = ACTIVE_BOUNDS;
+    entity->updateRange.x   = 0x800000;
+    entity->updateRange.y   = 0x400000;
+    entity->dword120        = entity->size.y >> 16;
+    entity->size.y          = abs(entity->size.y);
+    entity->flag            = true;
+    RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, 12, &entity->animator1, true, 4);
+    entity->textSpriteIndex = UIWidgets->textSpriteIndex;
+    RSDK.SetSpriteAnimation(UIVsRoundPicker->aniFrames, 15, &entity->animator2, true, 0);
+    RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 2, &entity->animator3, true, 0);
+    RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 2, &entity->animator4, true, 1);
 
-void UIVsRoundPicker_EditorLoad(void) {}
+    UIVsRoundPicker_Draw();
+}
+
+void UIVsRoundPicker_EditorLoad(void) { UIVsRoundPicker->aniFrames = RSDK.LoadSpriteAnimation("UI/SaveSelect.bin", SCOPE_STAGE); }
 #endif
 
 void UIVsRoundPicker_Serialize(void)

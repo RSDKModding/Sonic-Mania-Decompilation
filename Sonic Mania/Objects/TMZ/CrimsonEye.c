@@ -26,7 +26,7 @@ void CrimsonEye_Create(void *data)
             if (data)
                 entity->type = voidToInt(data);
             switch (entity->type) {
-                case CRIMSONEYE_CONATINER:
+                case CRIMSONEYE_CONTAINER:
                     entity->active    = ACTIVE_BOUNDS;
                     entity->visible   = true;
                     entity->drawOrder = Zone->drawOrderLow + 1;
@@ -1101,9 +1101,78 @@ void CrimsonEye_StateDraw_Arrow(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void CrimsonEye_EditorDraw(void) {}
+void CrimsonEye_EditorDraw(void)
+{
+    RSDK_THIS(CrimsonEye);
+    switch (entity->type) {
+        case CRIMSONEYE_CONTAINER:
+            entity->drawOrder = Zone->drawOrderLow + 1;
+            RSDK.SetSpriteAnimation(CrimsonEye->aniFrames, 0, &entity->animator, true, 0);
+            entity->updateRange.x = 0x800000;
+            entity->updateRange.y = 0x800000;
+            CrimsonEye->value8.x  = entity->position.x;
+            CrimsonEye->value8.y  = entity->position.y - 0xA00000;
+            entity->stateDraw     = CrimsonEye_StateDraw_Container;
+            break;
+        case CRIMSONEYE_CORE:
+            entity->drawOrder = Zone->drawOrderLow + 1;
+            RSDK.SetSpriteAnimation(CrimsonEye->aniFrames, 1, &entity->animator, true, 0);
+            entity->field_74      = entity->position;
+            entity->stateDraw     = CrimsonEye_StateDraw_Core;
+            entity->updateRange.x = 0x800000;
+            entity->updateRange.y = 0x800000;
+            break;
+        case CRIMSONEYE_BALL:
+            entity->drawFX    = FX_SCALE;
+            entity->drawOrder = Zone->drawOrderLow + 1;
+            RSDK.SetSpriteAnimation(CrimsonEye->aniFrames, 2, &entity->animator, true, 0);
+            entity->scale.x       = 0x200;
+            entity->scale.y       = 0x200;
+            entity->stateDraw     = CrimsonEye_StateDraw_Simple;
+            entity->updateRange.x = 0x800000;
+            entity->updateRange.y = 0x800000;
+            break;
+        case CRIMSONEYE_ARROW:
+            entity->drawOrder = Zone->drawOrderLow;
+            RSDK.SetSpriteAnimation(CrimsonEye->aniFrames, 3, &entity->animator, true, 0);
+            entity->scale.x       = 0x200;
+            entity->scale.y       = 0x200;
+            entity->stateDraw     = CrimsonEye_StateDraw_Arrow;
+            entity->updateRange.x = 0x800000;
+            entity->updateRange.y = 0x800000;
+            break;
+        case CRIMSONEYE_SPIKE:
+            entity->drawOrder = Zone->drawOrderLow + 1;
+            RSDK.SetSpriteAnimation(CrimsonEye->aniFrames, 2, &entity->animator, true, 0);
+            entity->stateDraw     = CrimsonEye_StateDraw_Simple;
+            entity->updateRange.x = 0x800000;
+            entity->updateRange.y = 0x800000;
+            break;
+        case CRIMSONEYE_SHOT:
+            entity->drawOrder = Zone->drawOrderLow + 1;
+            RSDK.SetSpriteAnimation(CrimsonEye->aniFrames, 4, &entity->animator, true, 0);
+            entity->stateDraw     = CrimsonEye_StateDraw_Simple;
+            entity->updateRange.x = 0x800000;
+            entity->updateRange.y = 0x800000;
+            break;
+        default: break;
+    }
 
-void CrimsonEye_EditorLoad(void) {}
+    StateMachine_Run(entity->stateDraw);
+}
+
+void CrimsonEye_EditorLoad(void)
+{
+    CrimsonEye->aniFrames = RSDK.LoadSpriteAnimation("TMZ1/CrimsonEye.bin", SCOPE_STAGE);
+
+    RSDK_ACTIVE_VAR(CrimsonEye, type);
+    RSDK_ENUM_VAR(CRIMSONEYE_CONTAINER);
+    RSDK_ENUM_VAR(CRIMSONEYE_CORE);
+    RSDK_ENUM_VAR(CRIMSONEYE_BALL);
+    RSDK_ENUM_VAR(CRIMSONEYE_ARROW);
+    RSDK_ENUM_VAR(CRIMSONEYE_SPIKE);
+    RSDK_ENUM_VAR(CRIMSONEYE_SHOT);
+}
 #endif
 
 void CrimsonEye_Serialize(void) { RSDK_EDITABLE_VAR(CrimsonEye, VAR_ENUM, type); }

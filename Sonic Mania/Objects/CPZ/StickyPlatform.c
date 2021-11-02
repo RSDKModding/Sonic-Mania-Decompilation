@@ -43,8 +43,8 @@ void StickyPlatform_Draw(void)
 void StickyPlatform_Create(void *data)
 {
     RSDK_THIS(StickyPlatform);
-    entity->drawFX = INK_BLEND;
-    if (RSDK_sceneInfo->inEditor != true) {
+    entity->drawFX = FX_FLIP;
+    if (!RSDK_sceneInfo->inEditor) {
         entity->visible       = true;
         entity->active        = ACTIVE_BOUNDS;
         entity->drawOrder     = Zone->drawOrderHigh - 2;
@@ -235,6 +235,14 @@ void StickyPlatform_EditorDraw(void)
 {
     RSDK_THIS(StickyPlatform);
     RSDK.SetSpriteAnimation(StickyPlatform->animID, entity->type > 1 ? 3 : 0, &entity->animator, true, 0);
+    switch (entity->type) {
+        case 0: entity->direction = FLIP_NONE; break;
+        case 1: entity->direction = FLIP_Y; break;
+        case 2: entity->direction = FLIP_NONE; break;
+        case 3: entity->direction = FLIP_X; break;
+        default: break;
+    }
+
     StickyPlatform_Draw();
 }
 

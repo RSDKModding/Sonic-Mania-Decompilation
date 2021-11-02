@@ -286,9 +286,36 @@ void FlasherMKII_State_Unknown5(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void FlasherMKII_EditorDraw(void) {}
+void FlasherMKII_EditorDraw(void)
+{
+    RSDK_THIS(FlasherMKII);
+    entity->startPos = entity->position;
+    switch (entity->orientation) {
+        case 0:
+            entity->type      = 0;
+            entity->direction = FLIP_NONE;
+            break;
+        case 1:
+            entity->type      = 0;
+            entity->direction = FLIP_Y;
+            break;
+        case 2:
+            entity->direction = FLIP_NONE;
+            entity->type      = 4;
+            break;
+        case 3:
+            entity->direction = FLIP_X;
+            entity->type      = 4;
+            break;
+        default: break;
+    }
 
-void FlasherMKII_EditorLoad(void) {}
+    RSDK.SetSpriteAnimation(FlasherMKII->aniFrames, entity->type, &entity->animator, true, 0);
+
+    FlasherMKII_Draw();
+}
+
+void FlasherMKII_EditorLoad(void) { FlasherMKII->aniFrames = RSDK.LoadSpriteAnimation("TMZ1/FlasherMKII.bin", SCOPE_STAGE); }
 #endif
 
 void FlasherMKII_Serialize(void) { RSDK_EDITABLE_VAR(FlasherMKII, VAR_UINT8, orientation); }

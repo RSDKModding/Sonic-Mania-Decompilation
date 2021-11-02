@@ -695,9 +695,16 @@ void MeterDroid_State_FinishAct(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void MeterDroid_EditorDraw(void) {}
+void MeterDroid_EditorDraw(void)
+{
+    RSDK_THIS(MeterDroid);
+    RSDK.SetSpriteAnimation(MeterDroid->aniFrames, 1, &entity->animator1, false, 0);
+    RSDK.SetSpriteAnimation(MeterDroid->aniFrames, 8, &entity->animator2, false, 0);
 
-void MeterDroid_EditorLoad(void) {}
+    RSDK.DrawSprite(&entity->animator1, NULL, false);
+}
+
+void MeterDroid_EditorLoad(void) { MeterDroid->aniFrames = RSDK.LoadSpriteAnimation("OOZ/MeterDroid.bin", SCOPE_STAGE); }
 #endif
 
 void MeterDroid_Serialize(void) {}

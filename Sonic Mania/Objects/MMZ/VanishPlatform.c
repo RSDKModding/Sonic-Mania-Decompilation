@@ -70,7 +70,14 @@ void VanishPlatform_Unknown2(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void VanishPlatform_EditorDraw(void) {}
+void VanishPlatform_EditorDraw(void)
+{
+    RSDK_THIS(VanishPlatform);
+    entity->drawPos = entity->position;
+    entity->drawFX  = FX_NONE;
+
+    VanishPlatform_Draw();
+}
 
 void VanishPlatform_EditorLoad(void) {}
 #endif

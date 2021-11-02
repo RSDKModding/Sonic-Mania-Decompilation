@@ -297,9 +297,25 @@ void UIChoice_Unknown7(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void UIChoice_EditorDraw(void) {}
+void UIChoice_EditorDraw(void)
+{
+    RSDK_THIS(UIChoice);
+    entity->drawOrder     = 2;
+    entity->updateRange.x = 0x800000;
+    entity->updateRange.y = 0x400000;
+    entity->sizeIY        = entity->size.y >> 16;
+    entity->size.y        = abs(entity->size.y);
+    entity->textFlag      = true;
+    RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, entity->listID, &entity->animator1, true, entity->frameID);
+    entity->spriteIndex = UIWidgets->textSpriteIndex;
+    RSDK.SetSpriteAnimation(UIChoice->aniFrames, entity->auxListID, &entity->animator2, true, entity->auxFrameID);
+    RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 2, &entity->animator3, true, 0);
+    RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 2, &entity->animator4, true, 1);
 
-void UIChoice_EditorLoad(void) {}
+    UIChoice_Draw();
+}
+
+void UIChoice_EditorLoad(void) { UIChoice->aniFrames = RSDK.LoadSpriteAnimation("UI/SaveSelect.bin", SCOPE_STAGE); }
 #endif
 
 void UIChoice_Serialize(void)

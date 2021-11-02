@@ -5,7 +5,7 @@ ObjectChemicalBall *ChemicalBall;
 void ChemicalBall_Update(void)
 {
     RSDK_THIS(ChemicalBall);
-    if (globals->gameMode == MODE_TIMEATTACK && TimeAttackGate /*&& TimeAttackGate->field_1C*/)
+    if (globals->gameMode == MODE_TIMEATTACK && TimeAttackGate && TimeAttackGate->field_1C)
         destroyEntity(entity);
     StateMachine_Run(entity->state);
 }
@@ -135,9 +135,28 @@ void ChemicalBall_MoveType1(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void ChemicalBall_EditorDraw(void) {}
+void ChemicalBall_EditorDraw(void)
+{
+    RSDK_THIS(ChemicalBall);
 
-void ChemicalBall_EditorLoad(void) {}
+    entity->startPos2.x   = entity->position.x;
+    entity->startPos2.y   = entity->position.y;
+    entity->startPos.x = entity->position.x;
+    entity->startPos.y = entity->position.y;
+    if (entity->direction == FLIP_NONE)
+        entity->startPos.x += 0x320000;
+    else
+        entity->startPos.x -= 0x320000;
+
+    if (entity->type == 1)
+        entity->startPos.y -= 0x480000;
+
+    RSDK.SetSpriteAnimation(ChemicalBall->aniFrames, 0, &entity->animator, true, 0);
+
+    ChemicalBall_Draw();
+}
+
+void ChemicalBall_EditorLoad(void) { ChemicalBall->aniFrames = RSDK.LoadSpriteAnimation("CPZ/ChemicalBall.bin", SCOPE_STAGE); }
 #endif
 
 void ChemicalBall_Serialize(void)

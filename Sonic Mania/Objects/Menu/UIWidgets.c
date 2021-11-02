@@ -318,7 +318,20 @@ void UIWidgets_Unknown11(int32 minutes, int32 seconds, int32 milliseconds, int32
 #if RETRO_INCLUDE_EDITOR
 void UIWidgets_EditorDraw(void) {}
 
-void UIWidgets_EditorLoad(void) {}
+void UIWidgets_EditorLoad(void)
+{
+    UIWidgets->uiSpriteIndex = RSDK.LoadSpriteAnimation("UI/UIElements.bin", SCOPE_STAGE);
+#if RETRO_USE_PLUS
+    UIWidgets->saveSelectSpriteIndex = RSDK.LoadSpriteAnimation("UI/SaveSelect.bin", SCOPE_STAGE);
+#endif
+    UIWidgets->labelSpriteIndex = RSDK.LoadSpriteAnimation("UI/SmallFont.bin", SCOPE_STAGE);
+    UIWidgets->textSpriteIndex  = RSDK.LoadSpriteAnimation("UI/TextEN.bin", SCOPE_STAGE);
+    RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 1, &UIWidgets->animator1, true, 0);
+    RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 2, &UIWidgets->animator2, true, 0);
+#if RETRO_USE_PLUS
+    UIWidgets->buttonColour = 0xF0F0F0;
+#endif
+}
 #endif
 
 void UIWidgets_Serialize(void) {}

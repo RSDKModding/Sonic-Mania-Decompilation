@@ -146,9 +146,18 @@ void SSZEggman_Unknown5(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void SSZEggman_EditorDraw(void) {}
+void SSZEggman_EditorDraw(void)
+{
+    RSDK_THIS(SSZEggman);
+    RSDK.SetSpriteAnimation(SSZEggman->aniFrames, 2, &entity->animator1, true, 0);
+    entity->offset.y = -0x100000;
+    RSDK.SetSpriteAnimation(SSZEggman->aniFrames, 4, &entity->animator2, true, 0);
+    RSDK.SetSpriteAnimation(SSZEggman->aniFrames, 5, &entity->animator3, true, 0);
 
-void SSZEggman_EditorLoad(void) {}
+    SSZEggman_Draw();
+}
+
+void SSZEggman_EditorLoad(void) { SSZEggman->aniFrames = RSDK.LoadSpriteAnimation("Eggman/EggmanSSZ.bin", SCOPE_STAGE); }
 #endif
 
 void SSZEggman_Serialize(void) {}

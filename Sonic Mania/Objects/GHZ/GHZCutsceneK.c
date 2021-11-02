@@ -7,12 +7,12 @@ void GHZCutsceneK_Update(void)
     void *states[2] = { GHZCutsceneK_Unknown, NULL };
 
     RSDK_THIS(GHZCutsceneK);
-    if (!entity->timer) {
+    if (!entity->activated) {
         foreach_active(Player, player)
         {
             if (Player_CheckCollisionTouch(player, entity, &entity->hitbox) && !player->sidekick) {
                 CutsceneSeq_StartSequence((Entity *)entity, states);
-                entity->timer = 1;
+                entity->activated = true;
             }
         }
     }
@@ -27,21 +27,10 @@ void GHZCutsceneK_Draw(void) {}
 void GHZCutsceneK_Create(void *data)
 {
     RSDK_THIS(GHZCutsceneST);
-    entity->active        = ACTIVE_BOUNDS;
-    entity->visible       = false;
-    entity->updateRange.x = 0x800000;
-    entity->updateRange.y = 0x800000;
-    if (!entity->size.x)
-        entity->size.x = 0x1A80000;
-    if (!entity->size.y)
-        entity->size.y = 0xF00000;
-    entity->updateRange.x = 0x800000 + entity->size.x;
-    entity->updateRange.y = 0x800000 + entity->size.y;
 
-    entity->hitbox.left   = -entity->size.x >> 17;
-    entity->hitbox.right  = entity->size.x >> 17;
-    entity->hitbox.top    = -entity->size.y >> 17;
-    entity->hitbox.bottom = entity->size.y >> 17;
+    INIT_ENTITY(entity);
+    CutsceneRules_SetupEntity(entity, &entity->size, &entity->hitbox);
+    entity->active = ACTIVE_BOUNDS;
 }
 
 void GHZCutsceneK_StageLoad(void) {}
@@ -56,7 +45,11 @@ bool32 GHZCutsceneK_Unknown(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void GHZCutsceneK_EditorDraw(void) {}
+void GHZCutsceneK_EditorDraw(void)
+{
+    RSDK_THIS(GHZCutsceneK);
+    CutsceneRules_DrawCutsceneBounds(entity, &entity->size);
+}
 
 void GHZCutsceneK_EditorLoad(void) {}
 #endif

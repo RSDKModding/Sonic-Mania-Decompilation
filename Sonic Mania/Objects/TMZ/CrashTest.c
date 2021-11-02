@@ -414,9 +414,35 @@ void CrashTest_State_Unknown4(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void CrashTest_EditorDraw(void) {}
+void CrashTest_EditorDraw(void)
+{
+    RSDK_THIS(CrashTest);
+    RSDK.SetSpriteAnimation(CrashTest->aniFrames, 0, &entity->animator1, false, 0);
+    RSDK.SetSpriteAnimation(CrashTest->aniFrames, 2, &entity->animator2, false, 0);
+    RSDK.SetSpriteAnimation(CrashTest->aniFrames, 6, &entity->animator3, false, 0);
+    RSDK.SetSpriteAnimation(CrashTest->aniFrames, 4, &entity->animator4, false, 0);
 
-void CrashTest_EditorLoad(void) {}
+    Vector2 drawPos;
+    Vector2 drawPos2;
+    Vector2 drawPos3;
+
+    drawPos2 = entity->startPos;
+    drawPos2.x += 0x300000 * (2 * (entity->direction != FLIP_NONE) - 1);
+
+    drawPos = entity->startPos;
+    drawPos.x += entity->dword84 * (2 * (entity->direction != FLIP_NONE) - 1);
+
+    drawPos3.x = (2 * (entity->direction != FLIP_NONE) - 1) * (entity->length << 16) + entity->startPos.x
+                 + 0x340000 * (2 * (entity->direction != FLIP_NONE) - 1);
+    drawPos3.y = entity->startPos.y;
+
+    RSDK.DrawSprite(&entity->animator3, &drawPos2, false);
+    RSDK.DrawSprite(&entity->animator4, &drawPos3, false);
+    RSDK.DrawSprite(&entity->animator2, &drawPos, false);
+    RSDK.DrawSprite(&entity->animator1, &drawPos, false);
+}
+
+void CrashTest_EditorLoad(void) { CrashTest->aniFrames = RSDK.LoadSpriteAnimation("TMZ1/CrashTest.bin", SCOPE_STAGE); }
 #endif
 
 void CrashTest_Serialize(void)

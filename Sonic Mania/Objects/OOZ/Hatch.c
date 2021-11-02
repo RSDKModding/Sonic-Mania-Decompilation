@@ -42,12 +42,12 @@ void Hatch_Draw(void)
 {
     RSDK_THIS(Hatch);
     if (RSDK_sceneInfo->currentDrawGroup == RSDK_sceneInfo->entity->drawOrder) {
-        RSDK.DrawSprite(&entity->animator2, 0, false);
+        RSDK.DrawSprite(&entity->animator2, NULL, false);
     }
     else {
         if (entity->animator2.animationID == 2 && entity->animator2.frameID >= 3)
-            RSDK.DrawSprite(&entity->animator2, 0, false);
-        RSDK.DrawSprite(&entity->animator1, 0, false);
+            RSDK.DrawSprite(&entity->animator2, NULL, false);
+        RSDK.DrawSprite(&entity->animator1, NULL, false);
     }
 }
 
@@ -468,9 +468,23 @@ void Hatch_Unknown11(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void Hatch_EditorDraw(void) {}
+void Hatch_EditorDraw(void)
+{
+    RSDK_THIS(Hatch);
 
-void Hatch_EditorLoad(void) {}
+    entity->drawOrder = Zone->drawOrderLow + 1;
+
+    entity->updateRange.x = 16 * maxVal(abs(entity->subOff1.x), abs(entity->subOff2.x));
+    entity->updateRange.y = 16 * maxVal(abs(entity->subOff1.y), abs(entity->subOff2.y));
+
+    RSDK.SetSpriteAnimation(Hatch->aniFrames, 0, &entity->animator1, false, 0);
+    RSDK.SetSpriteAnimation(Hatch->aniFrames, 2, &entity->animator2, false, 4);
+
+    RSDK.DrawSprite(&entity->animator2, NULL, false);
+    RSDK.DrawSprite(&entity->animator1, NULL, false);
+}
+
+void Hatch_EditorLoad(void) { Hatch->aniFrames = RSDK.LoadSpriteAnimation("OOZ/Hatch.bin", SCOPE_STAGE); }
 #endif
 
 void Hatch_Serialize(void)

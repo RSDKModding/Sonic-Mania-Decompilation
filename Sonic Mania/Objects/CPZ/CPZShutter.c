@@ -55,9 +55,14 @@ void CPZShutter_State_Close(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void CPZShutter_EditorDraw(void) {}
+void CPZShutter_EditorDraw(void)
+{
+    RSDK_THIS(CPZShutter);
+    RSDK.SetSpriteAnimation(CPZShutter->aniFrames, 0, &entity->animator, true, 0);
+    CPZShutter_Draw();
+}
 
-void CPZShutter_EditorLoad(void) {}
+void CPZShutter_EditorLoad(void) { CPZShutter->aniFrames = RSDK.LoadSpriteAnimation("CPZ/Shutter.bin", SCOPE_STAGE); }
 #endif
 
 void CPZShutter_Serialize(void) {}

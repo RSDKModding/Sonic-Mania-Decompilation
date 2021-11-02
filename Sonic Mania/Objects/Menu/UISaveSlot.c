@@ -1166,9 +1166,26 @@ void UISaveSlot_Unknown28(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void UISaveSlot_EditorDraw(void) {}
+void UISaveSlot_EditorDraw(void)
+{
+    RSDK_THIS(UISaveSlot);
+    entity->drawOrder       = 2;
+    entity->updateRange.x   = 0x800000;
+    entity->updateRange.y   = 0x300000;
+    if (!entity->type) {
+        UISaveSlot_LoadSaveInfo();
+    }
+    else {
+        entity->slotID = NO_SAVE_SLOT;
+        UISaveSlot_Unknown6();
+    }
+    entity->textSpriteIndex = UIWidgets->textSpriteIndex;
+    UISaveSlot_Unknown8();
 
-void UISaveSlot_EditorLoad(void) {}
+    UISaveSlot_Draw();
+}
+
+void UISaveSlot_EditorLoad(void) { UISaveSlot->aniFrames = RSDK.LoadSpriteAnimation("UI/SaveSelect.bin", SCOPE_STAGE); }
 #endif
 
 void UISaveSlot_Serialize(void)

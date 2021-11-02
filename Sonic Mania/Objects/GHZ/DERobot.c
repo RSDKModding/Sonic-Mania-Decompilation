@@ -1286,7 +1286,78 @@ void DERobot_Unknown43(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void DERobot_EditorDraw(void) {}
+void DERobot_EditorDraw(void)
+{
+    RSDK_THIS(DERobot);
+
+    switch (entity->aniID) {
+        case 0:
+            entity->stateDraw = DERobot_StateDraw_Unknown3;
+            RSDK.SetSpriteAnimation(DERobot->aniFrames, entity->aniID, &entity->animator1, true, entity->frameID);
+            break;
+        case 1:
+            entity->stateDraw = DERobot_StateDraw_Unknown1;
+            entity->drawFX    = FX_ROTATE;
+            entity->offset.x  = -0x160000;
+            entity->offset.y  = -0x240000;
+            RSDK.SetSpriteAnimation(DERobot->aniFrames, entity->aniID, &entity->animator1, true, entity->frameID);
+            break;
+        case 2:
+            if (entity->frameID == 2) {
+                RSDK.SetSpriteAnimation(DERobot->aniFrames, 5, &entity->animator2, true, 0);
+                RSDK.SetSpriteAnimation(DERobot->aniFrames, 4, &entity->animator3, true, 0);
+                entity->stateDraw = DERobot_StateDraw_Unknown2;
+                entity->drawFX    = FX_ROTATE;
+                entity->state     = DERobot_Unknown18;
+            }
+            else if (entity->frameID) {
+                entity->stateDraw = DERobot_StateDraw_Unknown3;
+            }
+            else {
+                entity->stateDraw = DERobot_StateDraw_Unknown1;
+                entity->offset.x  = -0xC0000;
+                entity->offset.y  = -0x100000;
+            }
+            RSDK.SetSpriteAnimation(DERobot->aniFrames, entity->aniID, &entity->animator1, true, entity->frameID);
+            break;
+        case 3:
+            if (entity->frameID) {
+                entity->stateDraw = DERobot_StateDraw_Unknown3;
+            }
+            else {
+                RSDK.SetSpriteAnimation(DERobot->aniFrames, entity->aniID, &entity->animator2, true, 1);
+                entity->stateDraw = DERobot_StateDraw_Unknown4;
+            }
+            if (entity->frameID > 1)
+                entity->drawFX = FX_ROTATE;
+            RSDK.SetSpriteAnimation(DERobot->aniFrames, entity->aniID, &entity->animator1, true, entity->frameID);
+            break;
+        case 6:
+            entity->active     = ACTIVE_NORMAL;
+            entity->visible    = true;
+            entity->drawFX     = FX_FLIP;
+            entity->drawOrder  = Zone->drawOrderHigh;
+            RSDK.SetSpriteAnimation(DERobot->aniFrames, 7, &entity->animator2, true, 0);
+            entity->state     = DERobot_Unknown33;
+            entity->stateDraw = DERobot_StateDraw_Unknown5;
+            RSDK.SetSpriteAnimation(DERobot->aniFrames, entity->aniID, &entity->animator1, true, entity->frameID);
+            break;
+        case 9:
+            entity->stateDraw = DERobot_StateDraw_Unknown3;
+            RSDK.SetSpriteAnimation(DERobot->aniFrames, entity->aniID, &entity->animator1, true, entity->frameID);
+            break;
+        case 10:
+            entity->stateDraw = DERobot_StateDraw_Unknown3;
+            RSDK.SetSpriteAnimation(DERobot->aniFrames, entity->aniID, &entity->animator1, true, entity->frameID);
+            break;
+        default:
+            entity->stateDraw = DERobot_StateDraw_Unknown3;
+            RSDK.SetSpriteAnimation(DERobot->aniFrames, entity->aniID, &entity->animator1, true, entity->frameID);
+            break;
+    }
+
+    StateMachine_Run(entity->stateDraw);
+}
 
 void DERobot_EditorLoad(void) {}
 #endif

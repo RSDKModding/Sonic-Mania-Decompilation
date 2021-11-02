@@ -35,7 +35,7 @@ void CPZ1Intro_Create(void *data)
     RSDK_THIS(CPZ1Intro);
 
     INIT_ENTITY(entity);
-    CutsceneRules_SetupEntity(entity);
+    CutsceneRules_SetupEntity(entity, &entity->size, &entity->hitbox);
     entity->active        = ACTIVE_NORMAL;
 }
 
@@ -392,7 +392,11 @@ bool32 CPZ1Intro_Unknown15(void *h)
     return false;
 }
 
-void CPZ1Intro_EditorDraw(void) {}
+void CPZ1Intro_EditorDraw(void)
+{
+    RSDK_THIS(CPZ1Intro);
+    CutsceneRules_DrawCutsceneBounds(entity, &entity->size);
+}
 
 void CPZ1Intro_EditorLoad(void) {}
 

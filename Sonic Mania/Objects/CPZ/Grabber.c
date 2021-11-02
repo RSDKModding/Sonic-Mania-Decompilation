@@ -358,9 +358,26 @@ void Grabber_State_Unknown9(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void Grabber_EditorDraw(void) {}
+void Grabber_EditorDraw(void)
+{
+    RSDK_THIS(Grabber);
 
-void Grabber_EditorLoad(void) {}
+    RSDK.DrawLine(entity->position.x, entity->startPos.y - 0x100000, entity->position.x, entity->position.y, 0x202020, 0, INK_NONE, false);
+    RSDK.DrawLine(entity->position.x - 0x10000, entity->startPos.y - 0x100000, entity->position.x - 0x10000, entity->position.y, 0xE0E0E0, 0,
+                  INK_NONE, false);
+
+    Vector2 drawPos;
+    int32 dir         = entity->direction;
+    drawPos.x         = entity->position.x;
+    drawPos.y         = entity->startPos.y;
+    entity->direction = FLIP_NONE;
+    RSDK.DrawSprite(&entity->animator3, &drawPos, false);
+    entity->direction = dir;
+    RSDK.DrawSprite(&entity->animator1, NULL, false);
+    RSDK.DrawSprite(&entity->animator2, NULL, false);
+}
+
+void Grabber_EditorLoad(void) { Grabber->aniFrames = RSDK.LoadSpriteAnimation("CPZ/Grabber.bin", SCOPE_STAGE); }
 #endif
 
 void Grabber_Serialize(void) { RSDK_EDITABLE_VAR(Grabber, VAR_UINT8, direction); }

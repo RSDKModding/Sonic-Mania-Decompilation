@@ -181,9 +181,9 @@ void JacobsLadder_StageLoad(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void JacobsLadder_EditorDraw(void) {}
+void JacobsLadder_EditorDraw(void) { JacobsLadder_Draw(); }
 
-void JacobsLadder_EditorLoad(void) {}
+void JacobsLadder_EditorLoad(void) { JacobsLadder->aniFrames = RSDK.LoadSpriteAnimation("TMZ1/JacobsLadder.bin", SCOPE_STAGE); }
 #endif
 
 void JacobsLadder_Serialize(void)

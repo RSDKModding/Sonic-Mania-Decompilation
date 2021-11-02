@@ -70,15 +70,14 @@ void MechaBu_StageLoad(void)
 
 void MechaBu_DebugSpawn(void)
 {
-    RSDK_THIS(MechaBu);
-
+    RSDK_THIS(DebugMode);
     CREATE_ENTITY(MechaBu, NULL, entity->position.x, entity->position.y);
 }
 
 void MechaBu_DebugDraw(void)
 {
     RSDK.SetSpriteAnimation(MechaBu->aniFrames, 0, &DebugMode->animator, true, 0);
-    RSDK.DrawSprite(&DebugMode->animator, 0, false);
+    RSDK.DrawSprite(&DebugMode->animator, NULL, false);
 }
 
 void MechaBu_CheckPlayerCollisions(void)
@@ -263,10 +262,19 @@ void MechaBu_Unknown8(void)
     }
 }
 
-void MechaBu_EditorDraw(void) {}
+void MechaBu_EditorDraw(void)
+{
+    RSDK_THIS(MechaBu);
+    entity->sawPos.x = entity->position.x + -0x150000;
+    entity->sawPos.y = entity->position.y + -0xF0000;
+
+    MechaBu_Draw();
+}
 
 void MechaBu_EditorLoad(void)
 {
+    MechaBu->aniFrames = RSDK.LoadSpriteAnimation("MMZ/MechaBu.bin", SCOPE_STAGE);
+
     RSDK_ACTIVE_VAR(MechaBu, planeFilter);
     RSDK_ENUM_VAR(PLANEFILTER_NONE);
     RSDK_ENUM_VAR(PLANEFILTER_A);

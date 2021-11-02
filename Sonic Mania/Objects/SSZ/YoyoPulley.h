@@ -44,8 +44,8 @@ void YoyoPulley_EditorLoad(void);
 void YoyoPulley_Serialize(void);
 
 // Extra Entity Functions
-void YoYoPulley_UpdateHandlePos(void);
-void YoYoPulley_DrawSprites(void);
-int32 YoYoPulley_GetLength(void);
+void YoyoPulley_UpdateHandlePos(void);
+void YoyoPulley_DrawSprites(void);
+int32 YoyoPulley_GetLength(void);
 
 #endif //!OBJ_YOYOPULLEY_H

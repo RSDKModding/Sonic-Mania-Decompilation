@@ -216,9 +216,9 @@ void HCZSpikeBall_Unknown4(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void HCZSpikeBall_EditorDraw(void) {}
+void HCZSpikeBall_EditorDraw(void) { HCZSpikeBall_Draw(); }
 
-void HCZSpikeBall_EditorLoad(void) {}
+void HCZSpikeBall_EditorLoad(void) { HCZSpikeBall->aniFrames = RSDK.LoadSpriteAnimation("HCZ/Platform.bin", SCOPE_STAGE); }
 #endif
 
 void HCZSpikeBall_Serialize(void) {}

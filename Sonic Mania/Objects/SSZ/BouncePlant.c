@@ -284,9 +284,35 @@ int32 BoucePlant_Unknown3(int32 x)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void BouncePlant_EditorDraw(void) {}
+void BouncePlant_EditorDraw(void)
+{
+    RSDK_THIS(BouncePlant);
 
-void BouncePlant_EditorLoad(void) {}
+    entity->drawOrder     = Zone->drawOrderLow;
+    entity->updateRange.x = 0x800000;
+    entity->updateRange.y = 0x800000;
+    BoucePlant_Unknown1();
+
+    if (entity->direction) {
+        entity->centerX = entity->position.x - 0x180000;
+        entity->angle   = 64;
+    }
+    else {
+        entity->centerX = entity->position.x + 0x180000;
+        entity->angle   = 192;
+    }
+
+    RSDK.SetSpriteAnimation(BouncePlant->aniFrames, 1, &entity->animator, true, 0);
+    for (int32 i = 0; i < 8; ++i) {
+        RSDK.SetSpriteAnimation(BouncePlant->aniFrames, 1, &entity->animators[i], true, 1);
+        entity->drawPos[i].x = entity->drawPos2[i].x;
+        entity->drawPos[i].y = entity->drawPos2[i].y;
+    }
+
+    BouncePlant_Draw();
+}
+
+void BouncePlant_EditorLoad(void) { BouncePlant->aniFrames = RSDK.LoadSpriteAnimation("SSZ1/Plants.bin", SCOPE_STAGE); }
 #endif
 
 void BouncePlant_Serialize(void) { RSDK_EDITABLE_VAR(BouncePlant, VAR_UINT8, direction); }

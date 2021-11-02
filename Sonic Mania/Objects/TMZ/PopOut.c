@@ -145,13 +145,12 @@ void PopOut_Create(void *data)
             else
                 entity->childType = 0;
             RSDK.SetSpriteAnimation(PopOut->aniFrames, 1, &entity->animator2, true, entity->childType);
-            PopOut_Unknown();
         }
         else {
             entity->childType = 2;
             RSDK.SetSpriteAnimation(PopOut->aniFrames, 2, &entity->animator2, true, 0);
-            PopOut_Unknown();
         }
+        PopOut_SetupHitboxes();
 
         switch (entity->orientation + 4 * entity->direction) {
             case 0:
@@ -184,7 +183,7 @@ void PopOut_StageLoad(void)
         PopOut->hasButton = true;
 }
 
-void PopOut_Unknown(void)
+void PopOut_SetupHitboxes(void)
 {
     RSDK_THIS(PopOut);
     entity->hitbox.left    = 0;
@@ -256,9 +255,32 @@ void PopOut_Unknown(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void PopOut_EditorDraw(void) {}
+void PopOut_EditorDraw(void)
+{
+    RSDK_THIS(PopOut);
+    entity->field_64.x    = entity->position.x;
+    entity->field_64.y    = entity->position.y;
+    RSDK.SetSpriteAnimation(PopOut->aniFrames, 0, &entity->animator, true, 0);
 
-void PopOut_EditorLoad(void) {}
+    EntitySpring *child = RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot + 1, Spring);
+    if (child->objectID != Spring->objectID && child->objectID != Spikes->objectID)
+        child = NULL;
+    if (child && child->objectID == Spring->objectID) {
+        if (child->type & 1)
+            entity->childType = 1;
+        else
+            entity->childType = 0;
+        RSDK.SetSpriteAnimation(PopOut->aniFrames, 1, &entity->animator2, true, entity->childType);
+    }
+    else {
+        entity->childType = 2;
+        RSDK.SetSpriteAnimation(PopOut->aniFrames, 2, &entity->animator2, true, 0);
+    }
+    
+    PopOut_Draw();
+}
+
+void PopOut_EditorLoad(void) { PopOut->aniFrames = RSDK.LoadSpriteAnimation("TMZ1/PopOut.bin", SCOPE_STAGE); }
 #endif
 
 void PopOut_Serialize(void)

@@ -24,7 +24,7 @@ void FlowerPod_Create(void *data)
     RSDK_THIS(FlowerPod);
     if (RSDK_sceneInfo->inEditor != true) {
         entity->active        = ACTIVE_BOUNDS;
-        entity->visible       = 1;
+        entity->visible       = true;
         entity->drawFX        = FX_FLIP;
         entity->drawOrder     = Zone->drawOrderLow;
         entity->updateRange.x = 0x800000;
@@ -74,25 +74,7 @@ void FlowerPod_State_Pod(void)
     RSDK.ProcessAnimation(&entity->animator2);
     foreach_active(Player, player)
     {
-        int32 anim    = player->playerAnimator.animationID;
-        bool32 flag = anim == ANI_JUMP || anim == ANI_SPINDASH;
-        switch (player->characterID) {
-            case ID_SONIC:
-#if RETRO_USE_PLUS
-            case ID_MIGHTY: flag |= anim == ANI_DROPDASH; break;
-#endif
-            case ID_TAILS:
-                if (!flag) {
-                    flag = anim == ANI_FLY || anim == ANI_FLYTIRED || anim == ANI_FLYLIFT;
-                    if (player->position.y <= entity->position.y)
-                        flag = true;
-                }
-                break;
-            case ID_KNUCKLES: flag |= anim == ANI_FLY || anim == ANI_FLYLIFTTIRED; break;
-            default: break;
-        }
-
-        if (flag && Player_CheckBadnikTouch(player, entity, &FlowerPod->hitbox))
+        if (Player_CheckAttacking(player, entity) && Player_CheckBadnikTouch(player, entity, &FlowerPod->hitbox))
             entity->state = FlowerPod_State_Exploding;
     }
 }
@@ -202,9 +184,16 @@ void FlowerPod_State_Flower(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void FlowerPod_EditorDraw(void) {}
+void FlowerPod_EditorDraw(void)
+{
+    RSDK_THIS(FlowerPod);
+    RSDK.SetSpriteAnimation(FlowerPod->aniFrames, 0, &entity->animator1, false, 0);
+    RSDK.SetSpriteAnimation(FlowerPod->aniFrames, 1, &entity->animator2, false, 0);
 
-void FlowerPod_EditorLoad(void) {}
+    FlowerPod_Draw();
+}
+
+void FlowerPod_EditorLoad(void) { FlowerPod->aniFrames = RSDK.LoadSpriteAnimation("SSZ1/FlowerPod.bin", SCOPE_STAGE); }
 #endif
 
 void FlowerPod_Serialize(void) {}

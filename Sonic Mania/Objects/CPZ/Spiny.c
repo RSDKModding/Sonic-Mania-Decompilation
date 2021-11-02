@@ -279,9 +279,19 @@ void Spiny_State_ShotDisappear(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void Spiny_EditorDraw(void) {}
+void Spiny_EditorDraw(void)
+{
+    RSDK_THIS(Spiny);
 
-void Spiny_EditorLoad(void) {}
+    if (!entity->type) 
+        RSDK.SetSpriteAnimation(Spiny->aniFrames, 0, &entity->animator, false, 0);
+    else 
+        RSDK.SetSpriteAnimation(Spiny->aniFrames, 2, &entity->animator, false, 0);
+
+    Spiny_Draw();
+}
+
+void Spiny_EditorLoad(void) { Spiny->aniFrames = RSDK.LoadSpriteAnimation("CPZ/Spiny.bin", SCOPE_STAGE); }
 #endif
 
 void Spiny_Serialize(void)

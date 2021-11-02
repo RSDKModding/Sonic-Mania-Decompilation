@@ -380,9 +380,25 @@ void UIButtonPrompt_Unknown7(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void UIButtonPrompt_EditorDraw(void) {}
+void UIButtonPrompt_EditorDraw(void)
+{
+    RSDK_THIS(UIButtonPrompt);
 
-void UIButtonPrompt_EditorLoad(void) {}
+    entity->startPos      = entity->position;
+    entity->drawOrder     = 2;
+    entity->field_94      = 0;
+    entity->updateRange.x = 0x2000000;
+    entity->updateRange.y = 0x800000;
+    entity->flag          = true;
+    RSDK.SetSpriteAnimation(UIButtonPrompt->aniFrames, 0, &entity->animator1, true, 0);
+    RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, 0, &entity->animator3, true, entity->promptID);
+    UIButtonPrompt_Unknown4();
+    entity->textSprite = UIWidgets->textSpriteIndex;
+
+    UIButtonPrompt_Draw();
+}
+
+void UIButtonPrompt_EditorLoad(void) { UIButtonPrompt->aniFrames = RSDK.LoadSpriteAnimation("UI/Buttons.bin", SCOPE_STAGE); }
 #endif
 
 void UIButtonPrompt_Serialize(void)

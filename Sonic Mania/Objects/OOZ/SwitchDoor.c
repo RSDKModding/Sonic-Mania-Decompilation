@@ -39,7 +39,7 @@ void SwitchDoor_Create(void *data)
 {
     RSDK_THIS(SwitchDoor);
     RSDK.SetSpriteAnimation(SwitchDoor->aniFrames, 0, &entity->animator, true, 0);
-    if (RSDK_sceneInfo->inEditor != true) {
+    if (!RSDK_sceneInfo->inEditor) {
         entity->active        = ACTIVE_BOUNDS;
         entity->updateRange.x = 0x100000;
         entity->updateRange.y = 0x140000;
@@ -77,7 +77,14 @@ void SwitchDoor_DrawSprites(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void SwitchDoor_EditorDraw(void) {}
+void SwitchDoor_EditorDraw(void)
+{
+    RSDK_THIS(SwitchDoor);
+    entity->updateRange.x = 0x100000;
+    entity->updateRange.y = 0x140000;
+
+    SwitchDoor_DrawSprites();
+}
 
 void SwitchDoor_EditorLoad(void) {}
 #endif

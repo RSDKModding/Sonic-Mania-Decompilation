@@ -35,10 +35,9 @@ void UIBackground_DrawNormal(void)
 {
     RSDK_THIS(UIBackground);
     colour *colourPtrs = UIBackground->activeColours;
-    entity             = (EntityUIBackground *)RSDK_sceneInfo->entity;
 
     Vector2 drawPos;
-    RSDK.FillScreen(*colourPtrs, 255, 255, 255);
+    RSDK.FillScreen(colourPtrs[0], 255, 255, 255);
 
     drawPos.x = ((RSDK.Sin512(entity->timer) >> 3) + 112) * RSDK.Sin256(entity->timer) >> 8;
     drawPos.y = ((RSDK.Sin512(entity->timer) >> 3) + 112) * RSDK.Cos256(entity->timer) >> 8;

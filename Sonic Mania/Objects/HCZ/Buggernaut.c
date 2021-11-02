@@ -329,6 +329,10 @@ void Buggernaut_EditorDraw(void)
 {
     RSDK_THIS(Buggernaut);
     entity->drawFX = FX_FLIP;
+    entity->alpha  = 0x80;
+    RSDK.SetSpriteAnimation(Buggernaut->aniFrames, 0, &entity->animator1, true, 0);
+    RSDK.SetSpriteAnimation(Buggernaut->aniFrames, 2, &entity->animator2, true, 0);
+
     Buggernaut_Draw();
 }
 

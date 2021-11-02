@@ -23,7 +23,7 @@ void TTCutscene_Create(void *data)
 
     entity->active  = ACTIVE_NORMAL;
     entity->visible = false;
-    CutsceneRules_SetupEntity(entity);
+    CutsceneRules_SetupEntity(entity, &entity->size, &entity->hitbox);
 }
 
 void TTCutscene_StageLoad(void)
@@ -219,7 +219,11 @@ bool32 TTCutscene_CutsceneState_NextScene(EntityCutsceneSeq *host)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void TTCutscene_EditorDraw(void) {}
+void TTCutscene_EditorDraw(void)
+{
+    RSDK_THIS(TTCutscene);
+    CutsceneRules_DrawCutsceneBounds(entity, &entity->size);
+}
 
 void TTCutscene_EditorLoad(void) {}
 #endif

@@ -283,9 +283,20 @@ void Ball_State4_Unknown1(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void Ball_EditorDraw(void) {}
+void Ball_EditorDraw(void)
+{
+    RSDK_THIS(Ball);
 
-void Ball_EditorLoad(void) {}
+    entity->startPos = entity->position;
+    if (!entity->type) 
+        RSDK.SetSpriteAnimation(Ball->aniFrames, 0, &entity->animator, true, 0);
+    else 
+        RSDK.SetSpriteAnimation(0xFFFF, 0, &entity->animator, true, 0);
+
+    Ball_Draw();
+}
+
+void Ball_EditorLoad(void) { Ball->aniFrames = RSDK.LoadSpriteAnimation("CPZ/Ball.bin", SCOPE_STAGE); }
 #endif
 
 void Ball_Serialize(void) { RSDK_EDITABLE_VAR(Ball, VAR_UINT8, type); }

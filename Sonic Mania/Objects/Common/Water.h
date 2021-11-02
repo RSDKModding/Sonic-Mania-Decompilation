@@ -3,6 +3,18 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    WATER_PALETTE,
+    WATER_RECT,
+    WATER_BUBBLER,
+    WATER_ADJUST,
+    WATER_BUBBLER_2,
+    WATER_BUBBLE_SPAWNER,
+    WATER_SPLASH,
+    WATER_BUBBLE,
+    WATER_COUNTDOWNBUBBLE,
+}WaterTypes;
+
 // Object Class
 typedef struct {
     RSDK_OBJECT
@@ -118,7 +130,7 @@ void Water_HCZBubbleBurst(EntityWater *entity, bool32 jumpedOut);
 void Water_State_Bubble(void);
 void Water_Unknown6(void);
 void Water_State_HCZBubble(void);
-void Water_Unknown9(void);
+void Water_HCZBubbleSpawner(void);
 void Water_State_Bubbler(void);
 void Water_State_CountDownBubble(void);
 void Water_State_BubbleMove(void);

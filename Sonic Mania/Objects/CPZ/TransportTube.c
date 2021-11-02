@@ -282,7 +282,18 @@ void TransportTube_State_Type6(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void TransportTube_EditorDraw(void) {}
+void TransportTube_EditorDraw(void)
+{
+    RSDK_THIS(TransportTube);
+    entity->updateRange.x = 0xC00000;
+    entity->updateRange.y = 0xC00000;
+    TransportTube_SetupDirections(entity);
+
+    for (int32 v = 0; v < entity->directionCount; ++v) {
+        DrawHelpers_DrawArrow(0xFF0000, entity->position.x, entity->position.y, entity->position.x + (entity->dirVelocity[v].x << 18),
+                              entity->position.y + (entity->dirVelocity[v].y << 18));
+    }
+}
 
 void TransportTube_EditorLoad(void) {}
 #endif

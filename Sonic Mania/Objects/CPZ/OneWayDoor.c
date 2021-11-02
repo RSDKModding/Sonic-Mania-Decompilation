@@ -143,16 +143,25 @@ void OneWayDoor_CPZDraw(void)
     RSDK_THIS(OneWayDoor);
     entity->animator.frameID = 0;
     entity->position.y -= 2 * entity->yChange;
-    RSDK.DrawSprite(&entity->animator, 0, false);
+    RSDK.DrawSprite(&entity->animator, NULL, false);
     entity->animator.frameID = 1;
-    RSDK.DrawSprite(&entity->animator, 0, false);
+    RSDK.DrawSprite(&entity->animator, NULL, false);
     entity->position.y += 2 * entity->yChange;
 }
 
+#if RETRO_INCLUDE_EDITOR
 void OneWayDoor_EditorDraw(void)
 {
     RSDK_THIS(OneWayDoor);
-    StateMachine_Run(entity->drawState);
+
+    if (RSDK.CheckStageFolder("MMZ")) {
+        RSDK.SetSpriteAnimation(OneWayDoor->animID, entity->direction ? 4 : 2, &entity->animator, true, 0);
+        OneWayDoor_MMZDraw();
+    }
+    else if (RSDK.CheckStageFolder("CPZ")) {
+        RSDK.SetSpriteAnimation(OneWayDoor->animID, 0, &entity->animator, true, 0);
+        OneWayDoor_CPZDraw();
+    }
 }
 
 void OneWayDoor_EditorLoad(void)
@@ -162,5 +171,6 @@ void OneWayDoor_EditorLoad(void)
     else if (RSDK.CheckStageFolder("CPZ"))
         OneWayDoor->animID = RSDK.LoadSpriteAnimation("CPZ/OneWayDoor.bin", SCOPE_STAGE);
 }
+#endif
 
 void OneWayDoor_Serialize(void) { RSDK_EDITABLE_VAR(OneWayDoor, VAR_UINT8, direction); }

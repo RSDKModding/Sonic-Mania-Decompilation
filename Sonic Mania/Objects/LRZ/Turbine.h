@@ -5,12 +5,23 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    uint16 aniFrames;
+    uint16 sfxTurbine;
+    Hitbox hitbox1;
+    Hitbox hitboxHurt;
+    bool32 playingTurbineSfx;
 } ObjectTurbine;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    StateMachine(state);
+    uint8 type;
+    uint8 activePlayers;
+    int32 playerAngles[4];
+    int32 playerTimers[4];
+    Animator animator;
 } EntityTurbine;
 
 // Object Struct
@@ -30,6 +41,7 @@ void Turbine_EditorLoad(void);
 void Turbine_Serialize(void);
 
 // Extra Entity Functions
-
+void Turbine_CheckPlayerCollisions(void);
+void Turbine_CheckPlayerCollisions_Hurt(void);
 
 #endif //!OBJ_TURBINE_H

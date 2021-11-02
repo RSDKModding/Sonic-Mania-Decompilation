@@ -23,7 +23,8 @@ void PSZ2Intro_Create(void *data)
 {
     RSDK_THIS(PSZ2Intro);
     INIT_ENTITY(entity);
-    CutsceneRules_SetupEntity(entity);
+    CutsceneRules_SetupEntity(entity, &entity->size, &entity->hitbox);
+    entity->active = ACTIVE_BOUNDS;
 }
 
 void PSZ2Intro_StageLoad(void)
@@ -161,8 +162,14 @@ bool32 PSZ2Intro_CutsceneState_Unknown4(EntityCutsceneSeq *host)
     return false;
 }
 
-void PSZ2Intro_EditorDraw(void) {}
+#if RETRO_INCLUDE_EDITOR
+void PSZ2Intro_EditorDraw(void)
+{
+    RSDK_THIS(PSZ2Outro);
+    CutsceneRules_DrawCutsceneBounds(entity, &entity->size);
+}
 
 void PSZ2Intro_EditorLoad(void) {}
+#endif
 
 void PSZ2Intro_Serialize(void) { RSDK_EDITABLE_VAR(PSZ2Intro, VAR_VECTOR2, size); }

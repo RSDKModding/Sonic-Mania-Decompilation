@@ -63,7 +63,16 @@ void UIText_Create(void *data)
 void UIText_StageLoad(void) {}
 
 #if RETRO_INCLUDE_EDITOR
-void UIText_EditorDraw(void) {}
+void UIText_EditorDraw(void)
+{
+    RSDK_THIS(UIText);
+    if (!UIWidgets || UIText->spriteIndex)
+        RSDK.SetSpriteAnimation(UIText->spriteIndex, entity->highlighted + entity->listID, &entity->animator, true, 0);
+    else
+        RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, entity->listID, &entity->animator, true, 0);
+
+    RSDK.DrawSprite(&entity->animator, NULL, false);
+}
 
 void UIText_EditorLoad(void) {}
 #endif

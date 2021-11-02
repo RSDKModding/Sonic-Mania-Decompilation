@@ -21,46 +21,46 @@ void PullSwitch_Update(void)
             RSDK.PlaySfx(PullSwitch->sfxSmogClear, 0, 255);
         }
         OOZSetup->fadeTimer = 0;
-        Smog->field_4     = 0;
+        Smog->field_4       = 0;
     }
 
     entity->activated = false;
     foreach_active(Player, player)
     {
-        int32 pID              = RSDK.GetEntityID(player);
+        int32 playerID       = RSDK.GetEntityID(player);
         Hitbox *playerHitbox = Player_GetHitbox(player);
 
-        if (entity->playerTimers[pID]) {
-            entity->playerTimers[pID]--;
+        if (entity->playerTimers[playerID]) {
+            entity->playerTimers[playerID]--;
         }
-        else if (((1 << pID) & entity->activePlayers)) {
+        else if (((1 << playerID) & entity->activePlayers)) {
             player->position.x = entity->position.x;
             player->position.y = entity->position.y - (playerHitbox->top << 16) + 0x1A0000;
             entity->activated  = true;
             if (player->state == Player_State_None) {
                 if (player->jumpPress) {
-                    entity->activePlayers &= ~(1 << pID);
-                    entity->playerTimers[pID] = 60;
-                    player->velocity.y        = -0x40000;
-                    player->onGround          = false;
-                    player->groundedStore     = false;
-                    player->jumpAbilityTimer  = 1;
+                    entity->activePlayers &= ~(1 << playerID);
+                    entity->playerTimers[playerID] = 60;
+                    player->velocity.y             = -0x40000;
+                    player->onGround               = false;
+                    player->groundedStore          = false;
+                    player->jumpAbilityTimer       = 1;
                     RSDK.SetSpriteAnimation(player->spriteIndex, ANI_JUMP, &player->playerAnimator, false, 0);
                     player->playerAnimator.animationSpeed = 48;
                     player->state                         = Player_State_Air;
                 }
             }
             else {
-                entity->activePlayers &= ~(1 << pID);
-                entity->playerTimers[pID] = 60;
+                entity->activePlayers &= ~(1 << playerID);
+                entity->playerTimers[playerID] = 60;
             }
         }
         else {
             if (Player_CheckCollisionTouch(player, entity, &PullSwitch->hitbox)) {
-                entity->activePlayers |= 1 << pID;
+                entity->activePlayers |= 1 << playerID;
                 player->state           = Player_State_None;
-                player->nextGroundState = 0;
-                player->nextAirState    = 0;
+                player->nextGroundState = StateMachine_None;
+                player->nextAirState    = StateMachine_None;
                 RSDK.SetSpriteAnimation(player->spriteIndex, ANI_HANG, &player->playerAnimator, false, 0);
                 player->velocity.x  = 0;
                 player->velocity.y  = 0;
@@ -85,7 +85,7 @@ void PullSwitch_Draw(void)
     frame->height      = (entity->position.y - entity->drawPos.y) >> 16;
     frame->sprY        = entity->sprY + entity->sprHeight - frame->height;
     RSDK.DrawSprite(&entity->animator3, &entity->drawPos, false);
-    RSDK.DrawSprite(&entity->animator1, 0, false);
+    RSDK.DrawSprite(&entity->animator1, NULL, false);
     RSDK.DrawSprite(&entity->animator2, &entity->drawPos, false);
 }
 
@@ -95,7 +95,7 @@ void PullSwitch_Create(void *data)
     entity->drawFX = FX_FLIP;
     if (!RSDK_sceneInfo->inEditor) {
         entity->active        = ACTIVE_BOUNDS;
-        entity->visible       = 1;
+        entity->visible       = true;
         entity->drawFX        = FX_FLIP;
         entity->drawOrder     = Zone->drawOrderLow;
         entity->drawPos       = entity->position;
@@ -123,9 +123,22 @@ void PullSwitch_StageLoad(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void PullSwitch_EditorDraw(void) {}
+void PullSwitch_EditorDraw(void)
+{
+    RSDK_THIS(PullSwitch);
+    entity->drawPos = entity->position;
+    RSDK.SetSpriteAnimation(PullSwitch->aniFrames, 0, &entity->animator1, false, 2);
+    RSDK.SetSpriteAnimation(PullSwitch->aniFrames, 0, &entity->animator2, false, 0);
+    RSDK.SetSpriteAnimation(PullSwitch->aniFrames, 0, &entity->animator3, false, 1);
 
-void PullSwitch_EditorLoad(void) {}
+    RSDK.DrawSprite(&entity->animator3, &entity->drawPos, false);
+    RSDK.DrawSprite(&entity->animator2, &entity->drawPos, false);
+
+    entity->drawPos.y += 0x300000;
+    RSDK.DrawSprite(&entity->animator1, &entity->drawPos, false);
+}
+
+void PullSwitch_EditorLoad(void) { PullSwitch->aniFrames = RSDK.LoadSpriteAnimation("OOZ/PullSwitch.bin", SCOPE_STAGE); }
 #endif
 
 void PullSwitch_Serialize(void) {}

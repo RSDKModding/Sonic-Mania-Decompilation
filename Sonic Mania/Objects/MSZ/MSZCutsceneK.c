@@ -22,7 +22,7 @@ void MSZCutsceneK_Create(void *data)
     RSDK_THIS(MSZCutsceneK);
 
     INIT_ENTITY(entity);
-    CutsceneRules_SetupEntity(entity);
+    CutsceneRules_SetupEntity(entity, &entity->size, &entity->hitbox);
     entity->active = ACTIVE_BOUNDS;
 }
 
@@ -47,12 +47,6 @@ void MSZCutsceneK_StageLoad(void)
         foreach_break;
     }
 }
-
-#if RETRO_INCLUDE_EDITOR
-void MSZCutsceneK_EditorDraw(void) {}
-
-void MSZCutsceneK_EditorLoad(void) {}
-#endif
 
 void MSZCutsceneK_SkipCB(void)
 {
@@ -189,5 +183,15 @@ bool32 MSZCutsceneK_CutsceneState_Unknown2(EntityCutsceneSeq *host)
     player2->position.y = tornado->position.y + MSZCutsceneK->pos2.y;
     return false;
 }
+
+#if RETRO_INCLUDE_EDITOR
+void MSZCutsceneK_EditorDraw(void)
+{
+    RSDK_THIS(MSZCutsceneK);
+    CutsceneRules_DrawCutsceneBounds(entity, &entity->size);
+}
+
+void MSZCutsceneK_EditorLoad(void) {}
+#endif
 
 void MSZCutsceneK_Serialize(void) { RSDK_EDITABLE_VAR(MSZCutsceneK, VAR_VECTOR2, size); }

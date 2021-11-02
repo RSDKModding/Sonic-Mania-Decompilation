@@ -296,9 +296,26 @@ void UIWinSize_Unknown8(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void UIWinSize_EditorDraw(void) {}
+void UIWinSize_EditorDraw(void)
+{
+    RSDK_THIS(UIWinSize);
+    int32 winHeight       = SCREEN_YSIZE;
+    entity->visible       = true;
+    entity->drawOrder     = 2;
+    entity->active        = ACTIVE_BOUNDS;
+    entity->updateRange.x = 0x800000;
+    entity->updateRange.y = 0x400000;
+    entity->selection     = winHeight / SCREEN_YSIZE;
+    entity->height        = entity->size.y >> 16;
+    entity->size.y        = abs(entity->size.y);
+    RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 2, &entity->animator1, true, 0);
+    RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 2, &entity->animator2, true, 1);
+    RSDK.SetSpriteAnimation(UIWidgets->labelSpriteIndex, 0, &entity->textAnimator, true, 0);
 
-void UIWinSize_EditorLoad(void) {}
+    UIWinSize_Draw();
+}
+
+void UIWinSize_EditorLoad(void) { UIWinSize->aniFrames = RSDK.LoadSpriteAnimation("UI/SaveSelect.bin", SCOPE_STAGE); }
 #endif
 
 void UIWinSize_Serialize(void)

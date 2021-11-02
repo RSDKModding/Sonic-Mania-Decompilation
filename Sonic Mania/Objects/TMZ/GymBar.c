@@ -265,9 +265,23 @@ void GymBar_PlayerState_SwingH(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void GymBar_EditorDraw(void) {}
+void GymBar_EditorDraw(void)
+{
+    RSDK_THIS(GymBar);
+    if (!entity->type) {
+        entity->updateRange.x = (entity->size << 18) + 0x400000;
+        entity->field_68.x    = entity->position.x - (entity->size << 18) + 0x50000;
+        entity->field_68.y    = (entity->size << 18) + entity->position.x - 0xC0000;
+    }
+    else {
+        entity->updateRange.y = (entity->size + 16) << 18;
+    }
+    RSDK.SetSpriteAnimation(GymBar->aniFrames, entity->type, &entity->animator, true, 0);
 
-void GymBar_EditorLoad(void) {}
+    GymBar_Draw();
+}
+
+void GymBar_EditorLoad(void) { GymBar->aniFrames = RSDK.LoadSpriteAnimation("TMZ1/GymBar.bin", SCOPE_STAGE); }
 #endif
 
 void GymBar_Serialize(void)

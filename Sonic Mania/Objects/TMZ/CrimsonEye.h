@@ -4,7 +4,7 @@
 #include "SonicMania.h"
 
 typedef enum {
-    CRIMSONEYE_CONATINER,
+    CRIMSONEYE_CONTAINER,
     CRIMSONEYE_CORE,
     CRIMSONEYE_BALL,
     CRIMSONEYE_ARROW,

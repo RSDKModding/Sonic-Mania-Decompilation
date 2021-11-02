@@ -430,9 +430,31 @@ void WaterGush_Unknown3(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void WaterGush_EditorDraw(void) {}
+void WaterGush_EditorDraw(void)
+{
+    RSDK_THIS(WaterGush);
 
-void WaterGush_EditorLoad(void) {}
+    if (entity->orientation) {
+        if (entity->orientation == 1) {
+            entity->direction = FLIP_NONE;
+        }
+        else {
+            if (entity->orientation == 2)
+                entity->direction = FLIP_X;
+        }
+        RSDK.SetSpriteAnimation(WaterGush->aniFrames, 1, &entity->animator1, true, 0);
+        RSDK.SetSpriteAnimation(WaterGush->aniFrames, 3, &entity->animator2, true, 0);
+    }
+    else {
+        entity->direction = FLIP_NONE;
+        RSDK.SetSpriteAnimation(WaterGush->aniFrames, 0, &entity->animator1, true, 0);
+        RSDK.SetSpriteAnimation(WaterGush->aniFrames, 2, &entity->animator2, true, 0);
+    }
+
+    WaterGush_DrawSprites();
+}
+
+void WaterGush_EditorLoad(void) { WaterGush->aniFrames = RSDK.LoadSpriteAnimation("HCZ/WaterGush.bin", SCOPE_STAGE); }
 #endif
 
 void WaterGush_Serialize(void)

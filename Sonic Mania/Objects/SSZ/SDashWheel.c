@@ -133,9 +133,21 @@ void SDashWheel_UpdateCB(int32 sfx)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void SDashWheel_EditorDraw(void) {}
+void SDashWheel_EditorDraw(void)
+{
+    RSDK_THIS(SDashWheel);
+    RSDK.SetSpriteAnimation(SDashWheel->aniFrames, 0, &entity->animator1, false, 0);
+    RSDK.SetSpriteAnimation(SDashWheel->aniFrames, 1, &entity->animator2, false, 0);
+    RSDK.SetSpriteAnimation(SDashWheel->aniFrames, 2, &entity->animator3, false, 0);
+    if (RSDK.GetFrameID(&entity->animator1))
+        entity->drawOrder = Zone->drawOrderHigh;
+    else
+        entity->drawOrder = Zone->drawOrderLow;
 
-void SDashWheel_EditorLoad(void) {}
+    SDashWheel_Draw();
+}
+
+void SDashWheel_EditorLoad(void) { SDashWheel->aniFrames = RSDK.LoadSpriteAnimation("SSZ1/SDashWheel.bin", SCOPE_STAGE); }
 #endif
 
 void SDashWheel_Serialize(void)

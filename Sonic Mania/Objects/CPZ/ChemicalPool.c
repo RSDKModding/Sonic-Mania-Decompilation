@@ -386,7 +386,23 @@ void ChemicalPool_State_Change(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void ChemicalPool_EditorDraw(void) {}
+void ChemicalPool_EditorDraw(void)
+{
+    RSDK_THIS(ChemicalPool);
+    Vector2 drawPos;
+
+    drawPos.x = entity->position.x;
+    drawPos.y = entity->position.y;
+    drawPos.x -= entity->size.x >> 1;
+    drawPos.y -= entity->size.y >> 1;
+    RSDK.DrawLine(drawPos.x, drawPos.y, drawPos.x + entity->size.x, drawPos.y, 0xFFFF00, 0, INK_NONE, false);
+    RSDK.DrawLine(drawPos.x, entity->size.y + drawPos.y, drawPos.x + entity->size.x, entity->size.y + drawPos.y, 0xFFFF00, 0, INK_NONE, false);
+    RSDK.DrawLine(drawPos.x, drawPos.y, drawPos.x, drawPos.y + entity->size.y, 0xFFFF00, 0, INK_NONE, false);
+    RSDK.DrawLine(drawPos.x + entity->size.x, drawPos.y, drawPos.x + entity->size.x, drawPos.y + entity->size.y, 0xFFFF00, 0, INK_NONE, false);
+
+    RSDK.DrawRect(drawPos.x, drawPos.y, entity->size.x, entity->size.y, (entity->r << 16) | (entity->g << 8) | (entity->b << 0), 0xC0, INK_ALPHA,
+                  true);
+}
 
 void ChemicalPool_EditorLoad(void) {}
 #endif

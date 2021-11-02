@@ -330,9 +330,31 @@ void SpikeCorridor_StateDraw_Spikes(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void SpikeCorridor_EditorDraw(void) {}
+void SpikeCorridor_EditorDraw(void)
+{
+    RSDK_THIS(SpikeCorridor);
+    Animator animator;
 
-void SpikeCorridor_EditorLoad(void) {}
+    entity->inkEffect = INK_NONE;
+    memset(&animator, 0, sizeof(Animator));
+    SpikeCorridor_HandleDrawing(&animator, 0, entity->colWidth, true);
+
+    int yOffset        = 0;
+    entity->fallOffset = (entity->yOffset + 24 * (entity->rowHeight - 1)) << 16;
+    
+    while (yOffset < entity->fallOffset) {
+        entity->velocity.y += 0x3800;
+        yOffset += entity->velocity.y;
+        if (yOffset > entity->fallOffset)
+            yOffset = entity->fallOffset;
+    }
+
+    entity->inkEffect = INK_BLEND;
+    memset(&animator, 0, sizeof(Animator));
+    SpikeCorridor_HandleDrawing(&animator, yOffset, entity->colWidth, false);
+}
+
+void SpikeCorridor_EditorLoad(void) { SpikeCorridor->aniFrames = RSDK.LoadSpriteAnimation("MMZ/SpikeCorridor.bin", SCOPE_STAGE); }
 #endif
 
 void SpikeCorridor_Serialize(void)

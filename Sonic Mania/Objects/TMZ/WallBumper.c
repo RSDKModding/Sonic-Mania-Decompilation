@@ -73,14 +73,14 @@ void WallBumper_StageLoad(void)
 
 void WallBumper_DebugSpawn(void)
 {
-    RSDK_THIS(WallBumper);
+    RSDK_THIS(DebugMode);
     CREATE_ENTITY(WallBumper, NULL, entity->position.x, entity->position.y);
 }
 
 void WallBumper_DebugDraw(void)
 {
     RSDK.SetSpriteAnimation(WallBumper->aniFrames, 0, &DebugMode->animator, true, 0);
-    RSDK.DrawSprite(&DebugMode->animator, 0, false);
+    RSDK.DrawSprite(&DebugMode->animator, NULL, false);
 }
 
 void WallBumper_HandleInteractions(void)
@@ -149,9 +149,27 @@ void WallBumper_HandleInteractions(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void WallBumper_EditorDraw(void) {}
+void WallBumper_EditorDraw(void)
+{
+    RSDK_THIS(WallBumper);
 
-void WallBumper_EditorLoad(void) {}
+    int dir = entity->direction;
+
+    if (!entity->type) {
+        entity->updateRange.y = (entity->size + 4) << 20;
+    }
+    else {
+        entity->direction *= FLIP_Y;
+        entity->updateRange.x = (entity->size + 4) << 20;
+    }
+    RSDK.SetSpriteAnimation(WallBumper->aniFrames, entity->type, &entity->animator, true, 0);
+
+    WallBumper_Draw();
+
+    entity->direction = dir;
+}
+
+void WallBumper_EditorLoad(void) { WallBumper->aniFrames = RSDK.LoadSpriteAnimation("TMZ1/WallBumper.bin", SCOPE_STAGE); }
 #endif
 
 void WallBumper_Serialize(void)

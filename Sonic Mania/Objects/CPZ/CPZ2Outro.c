@@ -22,7 +22,7 @@ void CPZ2Outro_Create(void *data)
     RSDK_THIS(CPZ2Outro);
 
     INIT_ENTITY(entity);
-    CutsceneRules_SetupEntity(entity);
+    CutsceneRules_SetupEntity(entity, &entity->size, &entity->hitbox);
     entity->active        = ACTIVE_NEVER;
 }
 
@@ -97,7 +97,11 @@ bool32 CPZ2Outro_CutsceneSeq(void *h)
     return false;
 }
 
-void CPZ2Outro_EditorDraw(void) {}
+void CPZ2Outro_EditorDraw(void)
+{
+    RSDK_THIS(CPZ2Outro);
+    CutsceneRules_DrawCutsceneBounds(entity, &entity->size);
+}
 
 void CPZ2Outro_EditorLoad(void) {}
 

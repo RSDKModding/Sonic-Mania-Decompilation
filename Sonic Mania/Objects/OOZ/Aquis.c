@@ -328,9 +328,14 @@ void Aquis_State_Shot(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void Aquis_EditorDraw(void) {}
+void Aquis_EditorDraw(void)
+{
+    RSDK_THIS(Aquis);
+    RSDK.DrawSprite(&entity->animator1, NULL, false);
+    RSDK.DrawSprite(&entity->animator2, NULL, false);
+}
 
-void Aquis_EditorLoad(void) {}
+void Aquis_EditorLoad(void) { Aquis->aniFrames = RSDK.LoadSpriteAnimation("OOZ/Aquis.bin", SCOPE_STAGE); }
 #endif
 
 void Aquis_Serialize(void) {}

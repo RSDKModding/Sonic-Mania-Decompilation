@@ -45,13 +45,13 @@ void Octus_Create(void *data)
         entity->updateRange.y = 0x800000;
         RSDK.SetSpriteAnimation(Octus->aniFrames, 0, &entity->animator, true, 0);
         entity->state = Octus_State_Setup;
-        entity->alpha = 192;
+        entity->alpha = 0xC0;
     }
 }
 
 void Octus_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("OOZ1") == 1 || RSDK.CheckStageFolder("OOZ2") == 1)
+    if (RSDK.CheckStageFolder("OOZ1") || RSDK.CheckStageFolder("OOZ2"))
         Octus->aniFrames = RSDK.LoadSpriteAnimation("OOZ/Octus.bin", SCOPE_STAGE);
     Octus->hitbox1.left   = -16;
     Octus->hitbox1.top    = -12;
@@ -220,9 +220,9 @@ void Octus_State_Shot(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void Octus_EditorDraw(void) {}
+void Octus_EditorDraw(void) { Octus_Draw(); }
 
-void Octus_EditorLoad(void) {}
+void Octus_EditorLoad(void) { Octus->aniFrames = RSDK.LoadSpriteAnimation("OOZ/Octus.bin", SCOPE_STAGE); }
 #endif
 
 void Octus_Serialize(void) { RSDK_EDITABLE_VAR(Octus, VAR_UINT8, direction); }

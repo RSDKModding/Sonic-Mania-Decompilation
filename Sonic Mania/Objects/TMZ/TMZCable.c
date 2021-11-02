@@ -188,7 +188,38 @@ void TMZCable_Unknown6(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void TMZCable_EditorDraw(void) {}
+void TMZCable_EditorDraw(void)
+{
+    RSDK_THIS(TMZCable);
+    entity->cableID &= 3;
+    switch (entity->cableID) {
+        case 0:
+            entity->field_64.x = -0x1C0000;
+            entity->field_64.y = 0x100000;
+            entity->angle      = 0;
+            break;
+        case 1:
+            entity->field_64.x = 0x1C0000;
+            entity->field_64.y = 0x100000;
+            entity->angle      = 64;
+            break;
+        case 2:
+            entity->field_64.x = -0x1C0000;
+            entity->field_64.y = -0x100000;
+            entity->angle      = 128;
+            break;
+        case 3:
+            entity->field_64.x = 0x1C0000;
+            entity->field_64.y = -0x100000;
+            entity->angle      = 0xC0;
+            break;
+        default: break;
+    }
+
+    RSDK.SetSpriteAnimation(PhantomEgg->aniFrames, 9, &entity->animator, true, 0);
+
+    TMZCable_Draw();
+}
 
 void TMZCable_EditorLoad(void) {}
 #endif

@@ -226,11 +226,15 @@ void CaterkillerJr_State2(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void CaterkillerJr_EditorDraw(void)
 {
     RSDK_THIS(CaterkillerJr);
     entity->visible           = true;
     entity->drawFX            = FX_FLIP;
+
+    entity->headStartPos.x = entity->position.x;
+    entity->headStartPos.y = entity->position.y;
     RSDK.SetSpriteAnimation(CaterkillerJr->aniFrames, 0, &entity->bodyAnimators[0], true, 6);
     RSDK.SetSpriteAnimation(CaterkillerJr->aniFrames, 1, &entity->bodyAnimators[1], true, 6);
     RSDK.SetSpriteAnimation(CaterkillerJr->aniFrames, 1, &entity->bodyAnimators[2], true, 6);
@@ -253,5 +257,6 @@ void CaterkillerJr_EditorLoad(void)
     else if (RSDK.CheckStageFolder("AIZ"))
         CaterkillerJr->aniFrames = RSDK.LoadSpriteAnimation("AIZ/CaterkillerJr.bin", SCOPE_STAGE);
 }
+#endif
 
 void CaterkillerJr_Serialize(void) { RSDK_EDITABLE_VAR(CaterkillerJr, VAR_UINT8, direction); }

@@ -35,7 +35,7 @@ typedef struct {
     int32 field_C8;
     int32 timer;
     int32 field_D0;
-    int32 field_D4;
+    uint16 aniFrames;
 } ObjectUIControl;
 
 // Entity Class
@@ -89,12 +89,7 @@ typedef struct {
     void (*unknownCallback4)(void);
     void (*yPressCB)(void);
     void (*xPressCB)(void);
-    int32 field_210;
-    int32 field_214;
-    int32 field_218;
-    int32 field_21C;
-    int32 field_220;
-    int32 field_224;
+    Animator animator;
 } EntityUIControl;
 
 // Object Struct

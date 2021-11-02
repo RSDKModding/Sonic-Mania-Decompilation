@@ -89,9 +89,22 @@ void Syringe_StageLoad(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void Syringe_EditorDraw(void) {}
+void Syringe_EditorDraw(void)
+{
+    RSDK_THIS(Syringe);
+    switch (entity->type) {
+        case 0: entity->colour = 0x0008C0; break;
+        case 1: entity->colour = 0x189000; break;
+        case 2: entity->colour = 0x0080B0; break;
+    }
 
-void Syringe_EditorLoad(void) {}
+    RSDK.SetSpriteAnimation(Syringe->aniFrames, 0, &entity->animator2, true, 0);
+    RSDK.SetSpriteAnimation(Syringe->aniFrames, 0, &entity->animator1, true, 1);
+
+    Syringe_Draw();
+}
+
+void Syringe_EditorLoad(void) { Syringe->aniFrames = RSDK.LoadSpriteAnimation("CPZ/Syringe.bin", SCOPE_STAGE); }
 #endif
 
 void Syringe_Serialize(void)

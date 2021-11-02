@@ -529,9 +529,31 @@ void CPZBoss_State_Unknown12(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void CPZBoss_EditorDraw(void) {}
+void CPZBoss_EditorDraw(void)
+{
+    RSDK_THIS(CPZBoss);
+    entity->startPos = entity->position;
 
-void CPZBoss_EditorLoad(void) {}
+    if (!entity->type) {
+        entity->drawFX = FX_FLIP;
+        RSDK.SetSpriteAnimation(CPZBoss->playerFrames, 1, &entity->playerAnimator, true, 0);
+        RSDK.SetSpriteAnimation(CPZBoss->playerFrames, 0, &entity->animator2, true, 0);
+        RSDK.SetSpriteAnimation(0xFFFF, 0, &entity->animator1, true, 0);
+    }
+    else {
+        RSDK.SetSpriteAnimation(CPZBoss->aniFrames, 2, &entity->animator1, true, 0);
+        RSDK.SetSpriteAnimation(CPZBoss->aniFrames, 0, &entity->animator2, true, 0);
+        RSDK.SetSpriteAnimation(0xFFFF, 0, &entity->playerAnimator, true, 0);
+    }
+
+    CPZBoss_Draw();
+}
+
+void CPZBoss_EditorLoad(void)
+{
+    CPZBoss->aniFrames    = RSDK.LoadSpriteAnimation("Eggman/EggmanCPZ.bin", SCOPE_STAGE);
+    CPZBoss->playerFrames = RSDK.LoadSpriteAnimation("CPZ/MBMSonic.bin", SCOPE_STAGE);
+}
 #endif
 
 void CPZBoss_Serialize(void) { RSDK_EDITABLE_VAR(CPZBoss, VAR_UINT8, type); }

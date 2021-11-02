@@ -63,10 +63,10 @@ void PohBee_DebugSpawn(void)
 void PohBee_DebugDraw(void)
 {
     RSDK.SetSpriteAnimation(PohBee->aniFrames, 2, &DebugMode->animator, true, 0);
-    RSDK.DrawSprite(&DebugMode->animator, 0, false);
+    RSDK.DrawSprite(&DebugMode->animator, NULL, false);
 
     RSDK.SetSpriteAnimation(PohBee->aniFrames, 0, &DebugMode->animator, true, 0);
-    RSDK.DrawSprite(&DebugMode->animator, 0, false);
+    RSDK.DrawSprite(&DebugMode->animator, NULL, false);
 }
 
 void PohBee_CheckOnScreen(void)
@@ -274,7 +274,19 @@ void PohBee_State_Move(void)
     entity->field_74 = (112 * ((RSDK.Sin512(entity->field_6C >> 2) >> 2) + 144)) >> 7;
 }
 
-void PohBee_EditorDraw(void) { PohBee_DrawSprites(); }
+void PohBee_EditorDraw(void)
+{
+    RSDK_THIS(PohBee);
+
+    entity->field_70  = 128;
+    entity->field_74  = 172;
+    RSDK.SetSpriteAnimation(PohBee->aniFrames, 0, &entity->animator1, true, 0);
+    RSDK.SetSpriteAnimation(PohBee->aniFrames, 2, &entity->animator2, true, 0);
+    RSDK.SetSpriteAnimation(PohBee->aniFrames, 3, &entity->animator3, true, 0);
+    RSDK.SetSpriteAnimation(PohBee->aniFrames, 4, &entity->animator4, true, 0);
+
+    PohBee_DrawSprites();
+}
 
 void PohBee_EditorLoad(void)
 {

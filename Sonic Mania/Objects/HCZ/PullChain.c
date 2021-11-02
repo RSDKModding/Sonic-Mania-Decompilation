@@ -17,13 +17,10 @@ void PullChain_Update(void)
                 if (((1 << plrID) & entity->activePlayers1)) {
                     if (entity->chainOffset < 0x100000)
                         entity->chainOffset += 0x8000;
-                    bool32 flag = entity->chainOffset == 0x100000;
-                    if (entity->chainOffset > 0x100000) {
+                    if (entity->chainOffset > 0x100000) 
                         entity->chainOffset = 0x100000;
-                        flag                = entity->chainOffset == 0x100000;
-                    }
 
-                    if (flag) {
+                    if (entity->chainOffset == 0x100000) {
                         if (!entity->field_64) {
                             entity->activated = true;
                             entity->field_70 = true;
@@ -38,7 +35,7 @@ void PullChain_Update(void)
             int32 playerID = 1 << plrID;
             if (!((1 << plrID) & entity->activePlayers1)) {
                 if (!(entity->activePlayers2 & playerID)) {
-                    if (!Current || true/*!(playerID & Current->activePlayers)*/) {
+                    if (!Current || (playerID & Current->activePlayers)) {
                         int32 x = abs(player->position.x - entity->position.x);
                         int32 y = abs((player->position.y - 0x180000) - entity->position.y);
                         if (MathHelpers_Unknown6((y >> 16) * (y >> 16) + (x >> 16) * (x >> 16)) <= 8 && player->state != Player_State_None
@@ -212,9 +209,20 @@ bool32 PullChain_HandleDunkeyCode(EntityPlayer *player)
 #endif
 
 #if RETRO_INCLUDE_EDITOR
-void PullChain_EditorDraw(void) {}
+void PullChain_EditorDraw(void)
+{
+    RSDK_THIS(PullChain);
+    if (!entity->decorMode)
+        entity->drawOrder = Zone->playerDrawLow;
+    else
+        entity->drawOrder = Zone->drawOrderLow;
+    RSDK.SetSpriteAnimation(PullChain->aniFrames, 0, &entity->animator, true, entity->decorMode);
+    RSDK.SetSpriteAnimation(PullChain->aniFrames, 1, &entity->animator2, true, entity->decorMode);
 
-void PullChain_EditorLoad(void) {}
+    PullChain_Draw();
+}
+
+void PullChain_EditorLoad(void) { PullChain->aniFrames = RSDK.LoadSpriteAnimation("HCZ/PullChain.bin", SCOPE_STAGE); }
 #endif
 
 void PullChain_Serialize(void)

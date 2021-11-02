@@ -21,7 +21,7 @@ void Jawz_Draw(void)
 void Jawz_Create(void *data)
 {
     RSDK_THIS(Jawz);
-    entity->visible   = 1;
+    entity->visible   = true;
     entity->drawOrder = Zone->drawOrderLow;
     entity->drawFX |= FX_FLIP;
     entity->startPos      = entity->position;
@@ -141,9 +141,9 @@ void Jawz_State_Main(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void Jawz_EditorDraw(void) {}
+void Jawz_EditorDraw(void) { Jawz_Draw(); }
 
-void Jawz_EditorLoad(void) {}
+void Jawz_EditorLoad(void) { Jawz->aniFrames = RSDK.LoadSpriteAnimation("HCZ/Jawz.bin", SCOPE_STAGE); }
 #endif
 
 void Jawz_Serialize(void) { RSDK_EDITABLE_VAR(Jawz, VAR_UINT8, triggerDir); }

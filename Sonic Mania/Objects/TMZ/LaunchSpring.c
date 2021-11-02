@@ -17,17 +17,17 @@ void LaunchSpring_Draw(void)
     RSDK_THIS(LaunchSpring);
 
     RSDK.GetFrame(LaunchSpring->aniFrames, 2, 0)->pivotY = -8 - entity->field_B1;
-    RSDK.DrawSprite(&entity->animator3, 0, false);
+    RSDK.DrawSprite(&entity->animator3, NULL, false);
 
     entity->animator1.frameID = 0;
-    RSDK.DrawSprite(&entity->animator2, 0, false);
+    RSDK.DrawSprite(&entity->animator2, NULL, false);
 
     SpriteFrame *frame = RSDK.GetFrame(LaunchSpring->aniFrames, 0, 0);
-    RSDK.DrawSprite(&entity->animator1, 0, false);
+    RSDK.DrawSprite(&entity->animator1, NULL, false);
 
     frame->pivotY     = entity->timer - 55;
     entity->direction = FLIP_X;
-    RSDK.DrawSprite(&entity->animator1, 0, false);
+    RSDK.DrawSprite(&entity->animator1, NULL, false);
 
     frame->pivotY     = -55;
     entity->direction = FLIP_NONE;
@@ -423,9 +423,25 @@ void LaunchSpring_Unknown16(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void LaunchSpring_EditorDraw(void) {}
+void LaunchSpring_EditorDraw(void)
+{
+    RSDK_THIS(LaunchSpring);
+    if (RSDK.CheckStageFolder("SSZ1") || RSDK.CheckStageFolder("SSZ2")) {
+        RSDK.SetSpriteAnimation(LaunchSpring->aniFrames, 0, &entity->animator1, true, 0);
+        RSDK.SetSpriteAnimation(LaunchSpring->aniFrames, 1, &entity->animator2, true, 0);
+        RSDK.SetSpriteAnimation(LaunchSpring->aniFrames, 2, &entity->animator3, true, 0);
 
-void LaunchSpring_EditorLoad(void) {}
+        LaunchSpring_Draw();
+    }
+}
+
+void LaunchSpring_EditorLoad(void)
+{
+    if (RSDK.CheckStageFolder("SSZ1"))
+        LaunchSpring->aniFrames = RSDK.LoadSpriteAnimation("SSZ1/LaunchSpring.bin", SCOPE_STAGE);
+    else if (RSDK.CheckStageFolder("SSZ2"))
+        LaunchSpring->aniFrames = RSDK.LoadSpriteAnimation("SSZ2/LaunchSpring.bin", SCOPE_STAGE);
+}
 #endif
 
 void LaunchSpring_Serialize(void)

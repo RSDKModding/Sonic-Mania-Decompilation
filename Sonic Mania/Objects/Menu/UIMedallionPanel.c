@@ -54,9 +54,9 @@ void UIMedallionPanel_DrawPanel(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void UIMedallionPanel_EditorDraw(void) {}
+void UIMedallionPanel_EditorDraw(void) { UIMedallionPanel_DrawPanel(); }
 
-void UIMedallionPanel_EditorLoad(void) {}
+void UIMedallionPanel_EditorLoad(void) { UIMedallionPanel->spriteIndex = RSDK.LoadSpriteAnimation("UI/MedallionPanel.bin", SCOPE_STAGE); }
 #endif
 
 void UIMedallionPanel_Serialize(void) {}

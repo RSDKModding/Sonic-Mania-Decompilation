@@ -183,9 +183,48 @@ void TimePost_State_Spin(void)
 void TimePost_State_FinishedSpin(void) { TimePost_HandleTimeSparkles(); }
 
 #if RETRO_INCLUDE_EDITOR
-void TimePost_EditorDraw(void) {}
+void TimePost_EditorDraw(void)
+{
+    RSDK_THIS(TimePost);
+    RSDK.SetSpriteAnimation(TimePost->aniFrames, 0, &entity->animator1, false, 0);
+    RSDK.SetSpriteAnimation(TimePost->aniFrames, 0, &entity->animator2, false, 1);
+    RSDK.SetSpriteAnimation(TimePost->aniFrames, 0, &entity->animator3, false, 2);
 
-void TimePost_EditorLoad(void) {}
+    entity->drawFX = FX_SCALE;
+
+    int scaleX2 = abs(RSDK.Cos512(entity->rotation));
+    int scaleX1 = abs(RSDK.Sin512(entity->rotation));
+
+    Vector2 drawPos, drawPos2;
+    switch (entity->rotation >> 7) {
+        case 0:
+        case 2:
+            drawPos2.x = entity->position.x + (scaleX1 << 9);
+            drawPos2.y = entity->position.y;
+            drawPos.x  = -0x500 * scaleX2 - (scaleX1 << 9) + drawPos2.x;
+            drawPos.y  = entity->position.y;
+            break;
+        case 1:
+        case 3:
+            drawPos2.x = entity->position.x - (scaleX1 << 9);
+            drawPos2.y = entity->position.y;
+            drawPos.x  = ((scaleX1 - 32) << 9) + drawPos2.x + 0x500 * scaleX2;
+            drawPos.y  = entity->position.y;
+            break;
+        default: break;
+    }
+
+    entity->scale.x = scaleX1;
+    RSDK.DrawSprite(&entity->animator2, &drawPos, false);
+
+    entity->scale.x = scaleX2;
+    RSDK.DrawSprite(&entity->animator1, &drawPos2, false);
+
+    entity->drawFX = FX_NONE;
+    RSDK.DrawSprite(&entity->animator3, NULL, false);
+}
+
+void TimePost_EditorLoad(void) { TimePost->aniFrames = RSDK.LoadSpriteAnimation("SSZ1/TimePost.bin", SCOPE_STAGE); }
 #endif
 
 void TimePost_Serialize(void) { RSDK_EDITABLE_VAR(TimePost, VAR_UINT8, type); }

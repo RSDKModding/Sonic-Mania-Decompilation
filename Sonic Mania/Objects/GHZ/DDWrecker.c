@@ -886,9 +886,30 @@ void DDWrecker_State_SpawnSignpost(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void DDWrecker_EditorDraw(void) {}
+void DDWrecker_EditorDraw(void)
+{
+    RSDK_THIS(DDWrecker);
 
-void DDWrecker_EditorLoad(void) {}
+    entity->drawFX = FX_NONE;
+    switch (entity->type) {
+        case 1: // main body
+        case 2:
+            RSDK.SetSpriteAnimation(DDWrecker->spriteIndex, 0, &entity->animator, false, 0);
+            entity->drawFX        = FX_FLIP | FX_ROTATE;
+            break;
+        case 3: // chains
+            RSDK.SetSpriteAnimation(DDWrecker->spriteIndex, 4, &entity->animator, false, 0);
+            break;
+        case 4: // core
+            RSDK.SetSpriteAnimation(DDWrecker->spriteIndex, 5, &entity->animator, false, 0);
+            break;
+        default: break;
+    }
+
+    RSDK.DrawSprite(&entity->animator, NULL, false);
+}
+
+void DDWrecker_EditorLoad(void) { DDWrecker->spriteIndex = RSDK.LoadSpriteAnimation("GHZ/DDWrecker.bin", SCOPE_STAGE); }
 #endif
 
 void DDWrecker_Serialize(void) {}

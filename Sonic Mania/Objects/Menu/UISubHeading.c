@@ -394,7 +394,22 @@ void UISubHeading_StartNewSave(void)
 #endif
 
 #if RETRO_INCLUDE_EDITOR
-void UISubHeading_EditorDraw(void) {}
+void UISubHeading_EditorDraw(void)
+{
+    RSDK_THIS(UISubHeading);
+
+    if (entity->offset < 0x10000)
+        entity->offset <<= 16;
+    entity->drawOrder     = 2;
+    entity->updateRange.x = 0x800000;
+    entity->updateRange.y = 0x400000;
+    entity->shiftedY      = entity->size.y >> 16;
+    entity->size.y        = abs(entity->size.y);
+    RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, entity->listID, &entity->animator, true, entity->frameID);
+    entity->textSpriteIndex = UIWidgets->textSpriteIndex;
+
+    UISubHeading_Draw();
+}
 
 void UISubHeading_EditorLoad(void) {}
 #endif

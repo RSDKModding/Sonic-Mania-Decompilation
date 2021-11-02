@@ -502,6 +502,30 @@ void Button_EditorDraw(void)
     RSDK_THIS(Button);
     Vector2 drawPos;
 
+    switch (entity->type) {
+        case 0:
+            entity->direction = FLIP_NONE;
+            RSDK.SetSpriteAnimation(Button->spriteIndex, 0, &entity->animator1, true, 0);
+            RSDK.SetSpriteAnimation(Button->spriteIndex, 0, &entity->animator2, true, 1);
+            break;
+        case 1:
+            entity->direction = FLIP_Y;
+            RSDK.SetSpriteAnimation(Button->spriteIndex, 0, &entity->animator1, true, 0);
+            RSDK.SetSpriteAnimation(Button->spriteIndex, 0, &entity->animator2, true, 1);
+            break;
+        case 2:
+            entity->direction = FLIP_NONE;
+            RSDK.SetSpriteAnimation(Button->spriteIndex, 1, &entity->animator1, true, 0);
+            RSDK.SetSpriteAnimation(Button->spriteIndex, 1, &entity->animator2, true, 1);
+            break;
+        case 3:
+            entity->direction = FLIP_X;
+            RSDK.SetSpriteAnimation(Button->spriteIndex, 1, &entity->animator1, true, 0);
+            RSDK.SetSpriteAnimation(Button->spriteIndex, 1, &entity->animator2, true, 1);
+            break;
+        default: break;
+    }
+
     drawPos.x = entity->position.x;
     drawPos.y = entity->position.y;
     if (entity->type >= 2)

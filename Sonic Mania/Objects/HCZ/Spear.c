@@ -138,9 +138,9 @@ void Spear_Unknown1(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void Spear_EditorDraw(void) {}
+void Spear_EditorDraw(void) { Spear_Draw(); }
 
-void Spear_EditorLoad(void) {}
+void Spear_EditorLoad(void) { Spear->aniFrames = RSDK.LoadSpriteAnimation("HCZ/Spear.bin", SCOPE_STAGE); }
 #endif
 
 void Spear_Serialize(void)
