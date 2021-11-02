@@ -5631,7 +5631,7 @@ void Player_EndFlyJumpIn(EntityPlayer *thisEntity, EntityPlayer *player)
         thisEntity->state = Player_State_Air;
     }
 #endif
-    else if (!thisEntity->isChibi && (player->isChibi || player->state != SizeLaser_P2JumpInShrink)) {
+    else if (!thisEntity->isChibi && (player->isChibi || player->state == SizeLaser_P2JumpInShrink)) {
         thisEntity->drawFX |= FX_SCALE;
         thisEntity->scale.x          = 0x200;
         thisEntity->scale.y          = 0x200;
@@ -5646,7 +5646,7 @@ void Player_EndFlyJumpIn(EntityPlayer *thisEntity, EntityPlayer *player)
         thisEntity->abilityValues[1] = parent->position.y - thisEntity->position.y;
         thisEntity->state            = SizeLaser_P2JumpInShrink;
     }
-    else if (!thisEntity->isChibi || (player->isChibi && player->state != SizeLaser_P2JumpInGrow)) {
+    else if (!thisEntity->isChibi || (player->isChibi || player->state == SizeLaser_P2JumpInGrow)) {
         thisEntity->state = Player_State_Air;
     }
     else {
