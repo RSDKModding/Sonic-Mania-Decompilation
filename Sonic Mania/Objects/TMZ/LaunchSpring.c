@@ -118,15 +118,15 @@ bool32 LaunchSpring_Unknown1(void *p)
     if (!Firework)
         return false;
 
-    // EntityPlayer *player = (EntityPlayer *)p;
-    // int32 playerID = RSDK.GetEntityID(player);
+    EntityPlayer *player = (EntityPlayer *)p;
+    int32 playerID = RSDK.GetEntityID(player);
     bool32 flag  = false;
     foreach_active(Firework, firework)
     {
-        /*if ((1 << playerID) & firework->activePlayers) {
+        if ((1 << playerID) & firework->activePlayers) {
             flag = true;
             foreach_break;
-        }*/
+        }
     }
     return flag;
 }
