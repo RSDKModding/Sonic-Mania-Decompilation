@@ -16,7 +16,7 @@ void MSPanel_Draw(void)
 {
     RSDK_THIS(MSPanel);
 
-    if (!(MetalSonic->field_8 & 1)) {
+    if (MetalSonic->field_8 & 1) {
         RSDK.CopyPalette(2, 32, 0, 32, 16);
         RSDK.CopyPalette(2, 160, 0, 160, 16);
         RSDK.DrawSprite(&entity->animator2, NULL, false);
@@ -58,11 +58,11 @@ void MSPanel_Unknown1(void)
         foreach_active(MetalSonic, metal)
         {
             if (abs(entity->position.x - metal->position.x) < 0x400000 && metal->position.y - entity->position.y < 0x1000000) {
-                // metal->panel      = entity;
-                // metal->state      = MetalSonic_Unknown24;
-                metal->angle      = 0;
-                metal->posUnknown = entity->position;
-                metal->posUnknown.y += 0x240000;
+                metal->panel     = (Entity *)entity;
+                metal->state     = MetalSonic_State_EnterPanel;
+                metal->angle     = 0;
+                metal->targetPos = entity->position;
+                metal->targetPos.y += 0x240000;
                 metal->timer = 0;
                 RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 3, &metal->animator, false, 0);
                 RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 11, &metal->animator2, false, 0);

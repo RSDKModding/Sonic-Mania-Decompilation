@@ -180,7 +180,7 @@ void PhantomMissile_Unknown6(void)
     int angle = RSDK.ATan2(-ry, rx);
     int rot   = 2 * angle - entity->rotation;
 
-    if (abs(2 * angle - entity->rotation) >= abs(rot - 0x200)) {
+    if (abs(rot) >= abs(rot - 0x200)) {
         if (abs(rot - 0x200) < abs(rot + 0x200)) {
             entity->rotation += ((rot - 0x200) >> shift);
         }
@@ -189,7 +189,7 @@ void PhantomMissile_Unknown6(void)
         }
     }
     else {
-        if (abs(2 * angle - entity->rotation) < abs(rot + 0x200)) {
+        if (abs(rot) < abs(rot + 0x200)) {
             entity->rotation += (rot >> shift);
         }
         else {

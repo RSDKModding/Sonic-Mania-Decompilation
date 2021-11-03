@@ -6,8 +6,8 @@ void SilverSonic_Update(void)
 {
     RSDK_THIS(SilverSonic);
     RSDK.ProcessAnimation(&entity->animator);
-    entity->hitboxPtr       = RSDK.GetHitbox(&entity->animator, 0);
-    entity->hitboxBadnikPtr = RSDK.GetHitbox(&entity->animator, 1);
+    entity->outerBox = RSDK.GetHitbox(&entity->animator, 0);
+    entity->innerBox = RSDK.GetHitbox(&entity->animator, 1);
 
     if (entity->position.x >= Zone->screenBoundsL2[0] + 0x180000) {
         if (entity->position.x > Zone->screenBoundsR2[0] - 0x180000) {
@@ -26,7 +26,7 @@ void SilverSonic_Update(void)
         }
     }
 
-    RSDK.ProcessTileCollisions(entity, entity->hitboxPtr, entity->hitboxBadnikPtr);
+    RSDK.ProcessTileCollisions(entity, entity->outerBox, entity->innerBox);
     StateMachine_Run(entity->state);
 }
 
@@ -102,7 +102,8 @@ void SilverSonic_CheckPlayerCollisions_Badnik(void)
 
     foreach_active(Player, player)
     {
-        if (Player_CheckBadnikTouch(player, entity, entity->hitboxBadnikPtr)) {
+        if (Player_CheckBadnikTouch(player, entity, entity->innerBox)) {
+#if RETRO_USE_PLUS
             if (Player_CheckBadnikBreak(entity, player, false)) {
                 int x = entity->position.x;
                 int y = entity->position.y;
@@ -113,6 +114,9 @@ void SilverSonic_CheckPlayerCollisions_Badnik(void)
                 entity->field_60   = 2;
                 entity->state      = MSBomb_Unknown2;
             }
+#else
+            Player_CheckBadnikBreak(entity, player, true);
+#endif
         }
     }
 }
@@ -127,7 +131,7 @@ void SilverSonic_CheckPlayerCollisions_Ball(void)
     else {
         foreach_active(Player, player)
         {
-            if (Player_CheckBadnikTouch(player, entity, entity->hitboxBadnikPtr)) {
+            if (Player_CheckBadnikTouch(player, entity, entity->innerBox)) {
                 if (Player_CheckAttacking(player, entity)) {
                     if (entity->onGround) {
                         if (abs(player->velocity.x) <= 0x30000) {
@@ -187,7 +191,8 @@ void SilverSonic_CheckPlayerCollisions_Arm(void)
 
     foreach_active(Player, player)
     {
-        if (Player_CheckBadnikTouch(player, entity, entity->hitboxBadnikPtr)) {
+        if (Player_CheckBadnikTouch(player, entity, entity->innerBox)) {
+#if RETRO_USE_PLUS
             if (entity->direction) {
                 if (player->position.x <= entity->position.x) {
                     Player_CheckHit(player, entity);
@@ -218,6 +223,20 @@ void SilverSonic_CheckPlayerCollisions_Arm(void)
                     entity->state      = MSBomb_Unknown2;
                 }
             }
+#else
+            if (entity->direction) {
+                if (player->position.x <= entity->position.x)
+                    Player_CheckHit(player, entity);
+                else
+                    Player_CheckBadnikBreak(entity, player, true);
+            }
+            else {
+                if (player->position.x >= entity->position.x)
+                    Player_CheckHit(player, entity);
+                else
+                    Player_CheckBadnikBreak(entity, player, true);
+            }
+#endif
         }
     }
 }
@@ -381,16 +400,16 @@ void SilverSonic_State2_Unknown6(void)
 
     foreach_active(MetalSonic, metal)
     {
-        if (RSDK.CheckObjectCollisionTouchBox(metal, metal->hitboxPtr, entity, entity->hitboxPtr)) {
+        if (RSDK.CheckObjectCollisionTouchBox(metal, metal->outerBox, entity, entity->outerBox)) {
             entity->velocity.x  = 0;
             entity->velocity.y  = 0;
             entity->state       = SilverSonic_State2_Explode;
             MetalSonic->field_8 = 32;
             Camera_ShakeScreen(-4, 0, 1);
-            metal->field_70 -= 2;
-            if (metal->field_70 <= 0) {
+            metal->health -= RETRO_USE_PLUS ? 2 : 1;
+            if (metal->health <= 0) {
                 metal->timer = 0;
-                // metal->state = MetalSonic_Unknown29;
+                metal->state = MetalSonic_State_PanelExplosion;
             }
         }
     }

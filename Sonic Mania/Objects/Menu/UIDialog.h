@@ -60,7 +60,7 @@ void UIDialog_EditorLoad(void);
 void UIDialog_Serialize(void);
 
 // Extra Entity Functions
-EntityUIDialog *UIDialog_CreateActiveDialog(void *msg);
+EntityUIDialog *UIDialog_CreateActiveDialog(TextInfo *msg);
 void UIDialog_SetupText(EntityUIDialog *dialog, TextInfo *text);
 
 void UIDialog_AddButton(uint8 a1, EntityUIDialog *dialog, void (*callback)(void), bool32 flag);
@@ -74,5 +74,10 @@ void UIDialog_Unknown10(void);
 void UIDialog_Unknown11(void);
 void UIDialog_Unknown12(void);
 void UIDialog_Unknown13(void);
+
+//Some Helpers
+EntityUIDialog *UIDialog_CreateDialogOk(TextInfo *text, void (*callback)(void), bool32 flag);
+EntityUIDialog *UIDialog_CreateDialogYesNo(TextInfo *text, void (*callbackYes)(void), void (*callbackNo)(void), bool32 flagYes, bool32 flagNo);
+EntityUIDialog *UIDialog_CreateDialogOkCancel(TextInfo *text, void (*callbackOk)(void), void (*callbackCancel)(void), bool32 flagOk, bool32 flagCancel);
 
 #endif //!OBJ_UIDIALOG_H

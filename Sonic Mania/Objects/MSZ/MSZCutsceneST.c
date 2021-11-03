@@ -368,7 +368,7 @@ bool32 MSZCutsceneST_CutsceneState_ShowRougeB(EntityCutsceneSeq *host)
     rouge->position.x = armadiloid->position.x + 0x40000;
     rouge->position.y = armadiloid->position.y - 0x200000;
 
-    if (MSZCutsceneST->projectile && MSZCutsceneST->projectile->position.y < tornado->position.y - 0x100000) {
+    if (MSZCutsceneST->projectile && MSZCutsceneST->projectile->position.y >= tornado->position.y - 0x100000) {
         destroyEntity(MSZCutsceneST->projectile);
         return true;
     }

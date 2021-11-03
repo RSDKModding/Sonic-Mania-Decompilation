@@ -6,8 +6,9 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    TABLE(int32 value1[32], { -22, -24, -10, -24, -22, -31, -10, -31, -22, -38, -10, -38, -22, -45, -10, -45, 10, -24, 22, -24, 10, -31, 22, -31, 10, -38, 22, -38, 10, -45, 22, -45 });
-    int32 field_84;
+    TABLE(int32 value1[32], { -22, -24, -10, -24, -22, -31, -10, -31, -22, -38, -10, -38, -22, -45, -10, -45,
+                              10,  -24, 22,  -24, 10,  -31, 22,  -31, 10,  -38, 22,  -38, 10,  -45, 22,  -45 });
+    int32 value2;
     Hitbox hitbox1;
     Hitbox hitbox2;
     Hitbox hitbox3;
@@ -23,7 +24,7 @@ typedef struct {
     int32 type;
     Entity *parent;
     int32 timer2;
-    int32 field_74;
+    int32 invincibilityTimer;
     int32 timer3;
     int32 timer;
     int32 field_80;

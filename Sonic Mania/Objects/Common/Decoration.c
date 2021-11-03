@@ -84,12 +84,6 @@ void Decoration_StageLoad(void)
 void Decoration_DrawSprite(void)
 {
     RSDK_THIS(Decoration);
-    RSDK.SetSpriteAnimation(Decoration->spriteIndex, entity->type, &entity->animator, true, 0);
-    if (entity->rotSpeed)
-        entity->drawFX |= FX_ROTATE;
-    else
-        entity->drawFX &= ~FX_ROTATE;
-
     Vector2 drawPos, repeat;
 
     repeat.x  = entity->repeatTimes.x >> 16;
@@ -107,9 +101,22 @@ void Decoration_DrawSprite(void)
     }
 }
 
-void Decoration_EditorDraw(void) { Decoration_DrawSprite(); }
+#if RETRO_INCLUDE_EDITOR
+void Decoration_EditorDraw(void)
+{
+    RSDK_THIS(Decoration);
+    RSDK.SetSpriteAnimation(Decoration->spriteIndex, entity->type, &entity->animator, true, 0);
+    if (entity->rotSpeed)
+        entity->drawFX |= FX_ROTATE;
+    else
+        entity->drawFX &= ~FX_ROTATE;
+
+
+    Decoration_DrawSprite();
+}
 
 void Decoration_EditorLoad(void) { Decoration_StageLoad(); }
+#endif
 
 void Decoration_Serialize(void)
 {

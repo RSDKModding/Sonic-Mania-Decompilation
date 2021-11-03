@@ -47,15 +47,15 @@ void RubyPortal_Create(void *data)
             if (door->objectID == WarpDoor->objectID) {
                 entity->hitbox      = door->hitbox;
                 door->hitbox.left   = 0;
-                door->hitbox.top   = -0x800;
+                door->hitbox.top    = 0x7FFF;
                 door->hitbox.right  = 0;
-                door->hitbox.bottom = -0x800;
+                door->hitbox.bottom = 0x7FFF;
             }
             entity->state = RubyPortal_Unknown2;
             if (StarPost->postIDs[0])
-                TMZ2_DrawDynTiles2();
+                TMZ2_DrawDynTiles_Ruby();
             else
-                TMZ2_DrawDynTiles1();
+                TMZ2_DrawDynTiles_Eggman();
         }
         else {
             entity->state = RubyPortal_Unknown3;
@@ -67,15 +67,15 @@ void RubyPortal_Create(void *data)
             if (door->objectID == WarpDoor->objectID) {
                 entity->hitbox      = door->hitbox;
                 door->hitbox.left   = 0;
-                door->hitbox.top    = -0x800;
+                door->hitbox.top    = 0x7FFF;
                 door->hitbox.right  = 0;
-                door->hitbox.bottom = -0x800;
+                door->hitbox.bottom = 0x7FFF;
             }
             entity->state = RubyPortal_Unknown2;
             if (StarPost->postIDs[0])
-                TMZ2_DrawDynTiles2();
+                TMZ2_DrawDynTiles_Ruby();
             else
-                TMZ2_DrawDynTiles1();
+                TMZ2_DrawDynTiles_Eggman();
         }
 #endif
     }

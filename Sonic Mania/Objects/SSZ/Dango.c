@@ -98,6 +98,8 @@ void Dango_CheckPlayerCollisions(void)
             if (player->characterID == ID_MIGHTY)
                 flag |= anim == ANI_CROUCH || player->jumpAbilityTimer > 1;
             flag &= entity->state == Dango_State_Unknown4 && player->state != Player_State_MightyHammerDrop;
+#else
+            flag &= entity->state == Dango_State_Unknown4;
 #endif
 
             if (flag) {
@@ -117,12 +119,16 @@ void Dango_CheckPlayerCollisions(void)
                         entity->groundVel = 0x20000;
                 }
                 entity->velocity.x = entity->groundVel;
-                if (player->characterID != ID_MIGHTY || player->jumpAbilityTimer <= 1) {
+#if RETRO_USE_PLUS
+                if (!(player->characterID == ID_MIGHTY && player->jumpAbilityTimer > 1)) {
+#endif
                     player->groundVel  = (player->position.x - entity->position.x) >> 2;
                     player->velocity.x = player->groundVel;
                     player->velocity.y = (player->position.y - entity->position.y) >> 2;
                     player->onGround   = false;
+#if RETRO_USE_PLUS
                 }
+#endif
 
                 if ((entity->position.x > player->position.x && entity->velocity.x < 0)
                     || (entity->position.x < player->position.x && entity->velocity.x > 0)) {

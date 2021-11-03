@@ -103,7 +103,7 @@ void UIDialog_StageLoad(void)
     UIDialog->activeDialog = NULL;
 }
 
-EntityUIDialog *UIDialog_CreateActiveDialog(void *msg)
+EntityUIDialog *UIDialog_CreateActiveDialog(TextInfo *msg)
 {
     if (UIDialog->activeDialog) {
         LogHelpers_Print("EXCEPTION: Called CreateDialog when an activeDialog already existed.");
@@ -424,6 +424,38 @@ void UIDialog_Unknown13(void)
         entity->drawPos.x = pos.x;
         entity->drawPos.y = pos.y;
     }
+}
+
+
+EntityUIDialog *UIDialog_CreateDialogOk(TextInfo *text, void (*callback)(void), bool32 flag)
+{
+    EntityUIDialog *dialog = UIDialog_CreateActiveDialog(text);
+    if (dialog) {
+        UIDialog_AddButton(DIALOG_OK, dialog, callback, flag);
+        UIDialog_Setup(dialog);
+    }
+    return dialog;
+}
+EntityUIDialog *UIDialog_CreateDialogYesNo(TextInfo *text, void (*callbackYes)(void), void (*callbackNo)(void), bool32 flagYes, bool32 flagNo)
+{
+    EntityUIDialog *dialog = UIDialog_CreateActiveDialog(text);
+    if (dialog) {
+        UIDialog_AddButton(DIALOG_NO, dialog, callbackNo, flagNo);
+        UIDialog_AddButton(DIALOG_YES, dialog, callbackYes, flagYes);
+        UIDialog_Setup(dialog);
+    }
+    return dialog;
+}
+EntityUIDialog *UIDialog_CreateDialogOkCancel(TextInfo *text, void (*callbackOk)(void), void (*callbackCancel)(void), bool32 flagOk,
+                                              bool32 flagCancel)
+{
+    EntityUIDialog *dialog = UIDialog_CreateActiveDialog(text);
+    if (dialog) {
+        UIDialog_AddButton(DIALOG_OK, dialog, callbackOk, flagOk);
+        UIDialog_AddButton(DIALOG_CANCEL, dialog, callbackCancel, flagCancel);
+        UIDialog_Setup(dialog);
+    }
+    return dialog;
 }
 
 #if RETRO_INCLUDE_EDITOR

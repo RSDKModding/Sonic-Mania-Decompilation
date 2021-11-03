@@ -70,9 +70,11 @@ void MMZSetup_StageLoad(void)
         RSDK.GetSceneLayer(0)->scrollPos = 0x1800000;
         RSDK.GetSceneLayer(1)->scrollPos = 0x1800000;
 
+#if RETRO_USE_PLUS
         for (int32 i = 3; i < 5; ++i) {
-            RSDK.GetSceneLayer(i)->scrollPos = (256 - RSDK_screens->centerX) << 16;
+            RSDK.GetSceneLayer(i)->scrollInfo[0].scrollPos = (256 - RSDK_screens->centerX) << 16;
         }
+#endif
 
         MMZSetup->aniTileDelay2 = 16;
         if (!PlayerHelpers_CheckStageReload() && PlayerHelpers_CheckPlayerPos(0x73C0000, 0x2C0000, 0x1040000, 0x82C0000)) {

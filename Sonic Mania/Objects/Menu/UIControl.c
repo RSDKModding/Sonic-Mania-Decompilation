@@ -484,32 +484,16 @@ void UIControl_Unknown5(EntityUIControl *entity)
         }
 
 #if RETRO_USE_PLUS
-        if (entity->resetSelection) {
+        if (entity->resetSelection || !entity->dwordCC) {
             entity->position.x   = entity->startPos.x;
             entity->position.y   = entity->startPos.y;
             entity->posUnknown.x = entity->startPos.x;
             entity->posUnknown.y = entity->startPos.y;
-            entity->dwordCC      = 1;
-            UIControl_Unknown3(entity);
-            entity->state = UIControl_ProcessInputs;
         }
-        else {
-            if (entity->dwordCC) {
-                entity->dwordCC = 1;
-                UIControl_Unknown3(entity);
-                entity->state = UIControl_ProcessInputs;
-            }
-            else {
-                entity->position.x   = entity->startPos.x;
-                entity->position.y   = entity->startPos.y;
-                entity->posUnknown.x = entity->startPos.x;
-                entity->posUnknown.y = entity->startPos.y;
-                entity->dwordCC      = 1;
-                UIControl_Unknown3(entity);
-                entity->state = UIControl_ProcessInputs;
-            }
-        }
+        entity->dwordCC = 1;
+        UIControl_Unknown3(entity);
 #endif
+        entity->state = UIControl_ProcessInputs;
     }
 }
 

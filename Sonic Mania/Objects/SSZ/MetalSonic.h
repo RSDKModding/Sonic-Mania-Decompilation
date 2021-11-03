@@ -23,8 +23,10 @@ typedef struct {
     uint16 sfxRockemSockem;
     uint16 sfxMSShoot;
     uint16 sfxMSChargeFire;
+#if RETRO_USE_PLUS
     uint16 sfxMSTransform;
     uint16 sfxTransform2;
+#endif
     Hitbox hitbox1;
     Hitbox hitbox2;
     uint16 aniFrames;
@@ -34,29 +36,26 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    Vector2 posUnknown;
+    Vector2 targetPos;
     int32 timer;
     int32 field_68;
     int32 field_6C;
-    int32 field_70;
+    int32 health;
     int32 field_74;
     int32 field_78;
     int32 field_7C;
     int32 field_80;
     int32 field_84;
-    int32 field_88;
-    int32 field_8C;
+    int32 timer2;
+    uint8 attackType;
     int32 field_90;
     int32 field_94;
-    int32 field_98;
-    int32 field_9C;
-    int32 field_A0;
-    int32 field_A4;
-    int32 field_A8;
-    int32 field_AC;
-    int32 field_B0;
-    Hitbox* hitboxPtr;
-    int32 field_B8;
+    Entity* panel;
+    Vector2 field_9C;
+    Vector2 field_A4;
+    Vector2 field_AC;
+    Hitbox* outerBox;
+    Hitbox* innerBox;
     Animator animator;
     Animator animator2;
 } EntityMetalSonic;
@@ -78,7 +77,72 @@ void MetalSonic_EditorLoad(void);
 void MetalSonic_Serialize(void);
 
 // Extra Entity Functions
-void MetalSonic_ProcessBGParallax(int32 mult);
 void MetalSonic_HandleStageWrap(void);
+void MetalSonic_ProcessBGParallax(int32 mult);
+void MetalSonic_HandleVelocity(void);
+void MetalSonic_HandleAnimDir(void);
+#if !RETRO_USE_PLUS
+void MetalSonic_CheckPlayerCollisions(void);
+void MetalSonic_Hit(void);
+void MetalSonic_Explode(void);
+#endif
+
+void MetalSonic_State_SetupArena(void);
+void MetalSonic_State_WaitForPlayer(void);
+void MetalSonic_State_WaitForHologram(void);
+void MetalSonic_State_Appear(void);
+void MetalSonic_State_Land(void);
+void MetalSonic_State_Taunt(void);
+void MetalSonic_State_GetReady(void);
+void MetalSonic_State_SetupBounds(void);
+void MetalSonic_State_Start(void);
+void MetalSonic_State_Unknown1(void);
+void MetalSonic_State_Unknown2(void);
+void MetalSonic_State_Unknown3(void);
+void MetalSonic_State_StartAttack(void);
+void MetalSonic_State_Unknown5(void);
+void MetalSonic_State_Unknown6(void);
+void MetalSonic_State_Unknown7(void);
+void MetalSonic_State_Unknown8(void);
+void MetalSonic_State_Unknown9(void);
+void MetalSonic_State_Unknown10(void);
+void MetalSonic_State_EnterPanel(void);
+void MetalSonic_State_StartPanelSeq(void);
+void MetalSonic_HandlePanelAttack(void);
+void MetalSonic_State_ShowFactory(void);
+void MetalSonic_State_Unknown13(void);
+void MetalSonic_State_PanelExplosion(void);
+void MetalSonic_State_Unknown14(void);
+void MetalSonic_State_Unknown15(void);
+
+#if RETRO_USE_PLUS //Phase 3 (GigaMetal)
+void MetalSonic_State_WaitForRuby(void);
+void MetalSonic_State_ObtainRuby(void);
+void MetalSonic_State_Transform(void);
+void MetalSonic_State_Defeated(void);
+#else // Phase 3 (VS Metal Sonic)
+void MetalSonic_State_Unknown16(void);
+void MetalSonic_State_Unknown17(void);
+void MetalSonic_State_Unknown18(void);
+void MetalSonic_State_Unknown19(void);
+void MetalSonic_State_Unknown20(void);
+void MetalSonic_State_Unknown21(void);
+void MetalSonic_State_Unknown22(void);
+void MetalSonic_State_Unknown23(void);
+void MetalSonic_State_Unknown24(void);
+void MetalSonic_State_Unknown25(void);
+void MetalSonic_State_Unknown26(void);
+void MetalSonic_State_Unknown27(void);
+void MetalSonic_State_Unknown28(void);
+void MetalSonic_State_Unknown29(void);
+void MetalSonic_State_Unknown30(void);
+void MetalSonic_State_Explode(void);
+void MetalSonic_State_Defeated(void);
+void MetalSonic_State_Finish(void);
+void MetalSonic_State_None(void);
+
+void MetalSonic_StateWall_Fall(void);
+void MetalSonic_StateWall_Move(void);
+#endif
 
 #endif //!OBJ_METALSONIC_H

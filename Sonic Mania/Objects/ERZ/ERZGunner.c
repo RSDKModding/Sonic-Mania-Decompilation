@@ -221,7 +221,7 @@ void ERZGunner_CheckPlayerExplosionCollisions(void)
 void ERZGunner_StateDraw_Unknown0(void)
 {
     RSDK_THIS(ERZGunner);
-    if (entity->field_74 & 1) {
+    if (entity->invincibilityTimer & 1) {
         RSDK.CopyPalette(2, 128, 0, 128, 128);
         RSDK.DrawSprite(&entity->animator1, NULL, false);
 
@@ -274,8 +274,9 @@ void ERZGunner_State_Unknown1(void)
 {
     RSDK_THIS(ERZGunner);
 
-    if (entity->field_74 > 0)
-        entity->field_74--;
+    if (entity->invincibilityTimer > 0)
+        entity->invincibilityTimer--;
+
     entity->angle      = (entity->angle + 3) & 0xFF;
     entity->position.y = (RSDK.Sin256(entity->angle) << 11) + entity->posUnknown1.y;
 
@@ -288,16 +289,16 @@ void ERZGunner_State_Unknown1(void)
         ERZGunner_CheckPlayerExplosionCollisions();
     }
     else {
-        if (++entity->timer != 2) {
-            ERZGunner->field_84 = 0;
-            entity->timer2      = 0;
+        if (++entity->timer == 2) {
+            foreach_all(ERZKing, king) { king->active = ACTIVE_NORMAL; }
+            destroyEntity(entity);
+        }
+        else {
+            ERZGunner->value2 = 0;
+            entity->timer2    = 0;
             RSDK.SetSpriteAnimation(ERZGunner->aniFrames, 2, &entity->animator1, true, 0);
             entity->state = ERZGunner_State_Unknown2;
             ERZGunner_CheckPlayerExplosionCollisions();
-        }
-        else {
-            foreach_all(ERZKing, king) { king->active = ACTIVE_NORMAL; }
-            destroyEntity(entity);
         }
     }
 }
@@ -306,8 +307,8 @@ void ERZGunner_State_Unknown2(void)
 {
     RSDK_THIS(ERZGunner);
 
-    if (entity->field_74 > 0)
-        entity->field_74--;
+    if (entity->invincibilityTimer > 0)
+        entity->invincibilityTimer--;
 
     entity->angle      = (entity->angle + 3) & 0xFF;
     entity->position.y = (RSDK.Sin256(entity->angle) << 11) + entity->posUnknown1.y;
@@ -354,11 +355,11 @@ void ERZGunner_State1_Unknown1(void)
         EntityERZGunner *parent = (EntityERZGunner *)entity->parent;
 
         entity->timer2 = 0;
-        if ((ERZGunner->field_84 & 3) == 3)
+        if ((ERZGunner->value2 & 3) == 3)
             entity->type = 4;
         else
-            entity->type = (ERZGunner->field_84 & 1) + 2;
-        ++ERZGunner->field_84;
+            entity->type = (ERZGunner->value2 & 1) + 2;
+        ++ERZGunner->value2;
         entity->drawOrder  = Zone->drawOrderLow;
         entity->position.y = (RSDK_screens->position.y - 64) << 16;
 
@@ -552,11 +553,11 @@ void ERZGunner_State1_Unknown6(void)
     ERZGunner_Explode2();
     if (entity->scale.x < 128) {
         RSDK.PlaySfx(ERZKing->sfxHit, false, 255);
-        parent->field_74   = 48;
-        entity->position.x = parent->position.x;
-        entity->position.y = parent->position.y;
-        entity->visible    = false;
-        entity->state      = ERZGunner_State1_Unknown7;
+        parent->invincibilityTimer = 48;
+        entity->position.x         = parent->position.x;
+        entity->position.y         = parent->position.y;
+        entity->visible            = false;
+        entity->state              = ERZGunner_State1_Unknown7;
     }
 }
 

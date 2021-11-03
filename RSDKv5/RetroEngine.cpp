@@ -160,6 +160,14 @@ bool32 processEvents()
                         }
                         break;
 #if !RETRO_USE_ORIGINAL_CODE
+                    case SDLK_F5:
+                        if (engine.devMenu && engine.screenCount > 1)
+                            engine.screenCount--;
+                        break;
+                    case SDLK_F6:
+                        if (engine.devMenu && engine.screenCount < SCREEN_MAX)
+                            engine.screenCount++;
+                        break;
                     case SDLK_F9:
                         if (engine.devMenu)
                             showHitboxes ^= 1;

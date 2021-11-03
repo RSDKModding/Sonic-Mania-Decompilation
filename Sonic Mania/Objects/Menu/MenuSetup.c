@@ -963,14 +963,10 @@ void MenuSetup_ExitGame(void) { APICallback_ExitGame(); }
 
 void MenuSetup_ExitGame_Confirm(void)
 {
-    TextInfo buffer;
-    Localization_GetString(&buffer, STR_QUITWARNING);
-    EntityUIDialog *dialog = UIDialog_CreateActiveDialog(&buffer);
-    if (dialog) {
-        UIDialog_AddButton(DIALOG_NO, dialog, NULL, 1);
-        UIDialog_AddButton(DIALOG_YES, dialog, MenuSetup_ExitGame_CB, 1);
-        UIDialog_Setup(dialog);
-    }
+    TextInfo info;
+    INIT_TEXTINFO(info);
+    Localization_GetString(&info, STR_QUITWARNING);
+    UIDialog_CreateDialogYesNo(&info, MenuSetup_ExitGame_CB, NULL, true, true);
 }
 
 void MenuSetup_ExitGame_CB(void)
@@ -1273,7 +1269,7 @@ void MenuSetup_Leaderboard_Unknown(void)
         Localization_GetString(&info, str);
 
         UIDialog_SetupText(dialog, &info);
-        UIDialog_AddButton(DIALOG_OK, dialog, 0, true);
+        UIDialog_AddButton(DIALOG_OK, dialog, NULL, true);
 
         EntityUIControl *parent = (EntityUIControl *)dialog->parent;
         parent->rowCount        = 1;
@@ -1756,12 +1752,7 @@ bool32 MenuSetup_VS_Unknown60(void)
     INIT_TEXTINFO(info);
 
     Localization_GetString(&info, STR_EXITCOMP);
-    EntityUIDialog *dialog = UIDialog_CreateActiveDialog(&info);
-    if (dialog) {
-        UIDialog_AddButton(DIALOG_NO, dialog, 0, true);
-        UIDialog_AddButton(DIALOG_YES, dialog, MenuSetup_VS_Unknown59, true);
-        UIDialog_Setup(dialog);
-    }
+    UIDialog_CreateDialogYesNo(&info, MenuSetup_VS_Unknown59, NULL, true, true);
     return true;
 }
 

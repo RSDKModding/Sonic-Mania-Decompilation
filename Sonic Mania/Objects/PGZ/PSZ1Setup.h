@@ -53,8 +53,10 @@ void PSZ1Setup_EditorLoad(void);
 void PSZ1Setup_Serialize(void);
 
 // Extra Entity Functions
+#if RETRO_USE_PLUS
 void PSZ1Setup_BGSwitchCB1(void);
 void PSZ1Setup_BGSwitchCB2(void);
+#endif
 void PSZ1Setup_TriggerCB1(void);
 void PSZ1Setup_TriggerCB2(void);
 void PSZ1Setup_TriggerCB3(void);

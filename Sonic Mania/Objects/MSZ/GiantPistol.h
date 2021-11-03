@@ -6,7 +6,9 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
+#if RETRO_USE_PLUS
     bool32 flag;
+#endif
     Hitbox hitbox1;
     Hitbox hitbox2;
     Hitbox hitbox3;

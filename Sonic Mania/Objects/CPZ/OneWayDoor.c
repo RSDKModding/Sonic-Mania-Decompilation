@@ -28,13 +28,15 @@ void OneWayDoor_Create(void *data)
     entity->updateRange.y = 0x1000000;
     entity->state         = OneWayDoor_State_MoveDown;
     entity->drawOrder     = Zone->drawOrderHigh - 2;
+    RSDK.SetSpriteAnimation(OneWayDoor->animID, 0, &entity->animator, true, 0);
     if (RSDK.CheckStageFolder("MMZ")) {
+#if RETRO_USE_PLUS
         RSDK.SetSpriteAnimation(OneWayDoor->animID, entity->direction ? 4 : 2, &entity->animator, true, 0);
+#endif
         entity->drawState = OneWayDoor_MMZDraw;
         entity->groundVel = 0x60000;
     }
     else if (RSDK.CheckStageFolder("CPZ")) {
-        RSDK.SetSpriteAnimation(OneWayDoor->animID, 0, &entity->animator, true, 0);
         entity->drawState = OneWayDoor_CPZDraw;
         entity->groundVel = 0x80000;
     }
@@ -66,9 +68,9 @@ void OneWayDoor_Interact(void)
 {
     RSDK_THIS(OneWayDoor);
     entity->state = OneWayDoor_State_MoveDown;
-    bool32 isMMZ1 = true;
-    if (!RSDK.CheckStageFolder("MMZ") || (Zone->actID != 1))
-        isMMZ1 = false;
+    bool32 isMMZ1 = false;
+    if (RSDK.CheckStageFolder("MMZ") && Zone->actID == 1)
+        isMMZ1 = true;
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     bool32 playerIsBehind = false;
     if (entity->direction == FLIP_X)
@@ -99,15 +101,15 @@ void OneWayDoor_Interact(void)
             OneWayDoor->touchBox.left = -88;
 
         if (Player_CheckCollisionTouch(currentPlayer, entity, &OneWayDoor->touchBox)) {
-            if (isMMZ1 && currentPlayer->sidekick && !playerIsBehind) {
 #if RETRO_USE_PLUS
+            if (isMMZ1 && currentPlayer->sidekick && !playerIsBehind) {
                 Player->cantSwap = true;
                 NoSwap->counter++;
+            }
+            else
 #endif
-            }
-            else {
                 entity->state = OneWayDoor_State_MoveUp;
-            }
+            
         }
     }
 }
@@ -131,21 +133,27 @@ void OneWayDoor_State_MoveUp(void)
 void OneWayDoor_MMZDraw(void)
 {
     RSDK_THIS(OneWayDoor);
+
     entity->position.y -= entity->yChange;
-    RSDK.DrawSprite(&entity->animator, 0, false);
+    RSDK.DrawSprite(&entity->animator, NULL, false);
+
     entity->position.y += 2 * entity->yChange + 0x200000;
-    RSDK.DrawSprite(&entity->animator, 0, false);
-    entity->position.y -= 0x200000 + entity->yChange;
+    RSDK.DrawSprite(&entity->animator, NULL, false);
+
+    entity->position.y += -0x200000 - entity->yChange;
 }
 
 void OneWayDoor_CPZDraw(void)
 {
     RSDK_THIS(OneWayDoor);
+
     entity->animator.frameID = 0;
     entity->position.y -= 2 * entity->yChange;
     RSDK.DrawSprite(&entity->animator, NULL, false);
+
     entity->animator.frameID = 1;
     RSDK.DrawSprite(&entity->animator, NULL, false);
+
     entity->position.y += 2 * entity->yChange;
 }
 
