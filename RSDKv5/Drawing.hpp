@@ -51,7 +51,7 @@ struct GFXSurface {
 };
 
 struct ScreenInfo {
-    //uint16 *frameBuffer;
+    // uint16 *frameBuffer;
     uint16 frameBuffer[SCREEN_XMAX * SCREEN_YSIZE];
     Vector2 position;
     Vector2 size;
@@ -82,10 +82,11 @@ struct DrawList {
 
 #if RETRO_HARDWARE_RENDER
 
-#define VERTEX_LIMIT      (0x400)
+#define VERTEX_LIMIT      (0x800)
 #define RENDERSTATE_LIMIT (0x20)
 #define INDEX_LIMIT       (VERTEX_LIMIT * 6)
-#define TILEUV_SIZE       (0x1000)
+//                  TILE_COUNT
+#define TILEUV_SIZE (0x400 * 4 * 4)
 struct DrawVertex {
     float x;
     float y;
@@ -100,16 +101,20 @@ class ShaderBase;
 class PlaceShader;
 class CircleShader;
 class DevTextShader;
+class TileShader;
 
 class FBShaderBase;
 class FBFinal;
+class TileShaderFB;
 
 extern PlaceShader placeShader;
 extern CircleShader circleShader;
 extern DevTextShader devTextShader;
+extern TileShader tileShader;
 
 extern FBShaderBase fbsPassthrough;
 extern FBFinal fbsFinal;
+extern TileShaderFB fbsTile;
 
 struct RenderState {
     ShaderBase *shader = (ShaderBase *)&placeShader;
@@ -117,7 +122,7 @@ struct RenderState {
     FBShaderBase *fbShader  = (FBShaderBase *)&fbsPassthrough;
     FBShaderBase *fbShader2 = NULL;
     byte blendMode          = INK_NONE;
-    byte alpha = 0xFF;
+    byte alpha              = 0xFF;
 
     ushort indexCount = 0;
     ushort indecies[INDEX_LIMIT];
@@ -127,8 +132,12 @@ struct RenderState {
     byte argBuffer[0x20];
     byte fsArgs[0x20];
 
+    ScreenInfo* screen;
+    Vector2 clipRectX;
+    Vector2 clipRectY;
+
     // these 2 are used in multiple and are MASSIVE so we keep them
-    ushort* lookupTable;
+    ushort *lookupTable;
     ushort palette[PALETTE_COUNT][PALETTE_SIZE];
     byte lineBuffer[SCREEN_YSIZE];
 };
@@ -142,6 +151,10 @@ extern RenderState renderStates[RENDERSTATE_LIMIT];
 extern sbyte renderStateIndex;
 extern ushort renderCount;
 extern ushort lastRenderCount;
+
+#if RETRO_USING_OPENGL
+extern GLuint fbFBT;
+#endif
 #endif
 
 extern DrawList drawLayers[DRAWLAYER_COUNT];
@@ -314,7 +327,7 @@ inline void AddPoly(float x, float y, float z, float u, float v, Colour color = 
     vertexList[renderCount].x = x;
     vertexList[renderCount].y = y;
     vertexList[renderCount].z = z;
-    if (surface) {
+    if (surface && surface != gfxSurface) {
         u /= surface->width;
         v /= surface->height;
     }
@@ -323,10 +336,11 @@ inline void AddPoly(float x, float y, float z, float u, float v, Colour color = 
 
     vertexList[renderCount++].colour = color;
 }
-inline void AddPoly(float x, float y, float u, float v, Colour color, GFXSurface *surface = NULL) { AddPoly(x, y, 0, u, v, color, surface); }
+inline void AddPoly(float x, float y, float u, float v, Colour color = 0, GFXSurface *surface = NULL) { AddPoly(x, y, 0, u, v, color, surface); }
 
-void AddRenderState(int blendMode, ushort vertCount, ushort indexCount, void *args = NULL, byte alpha = 0xFF, void *shader = &placeShader, ushort *altIndex = NULL,
-                    void *fbshader = &fbsPassthrough, void *fbshader2 = NULL);
+void AddRenderState(int blendMode, ushort vertCount, ushort indexCount, void *args = NULL, byte alpha = 0xFF, void *shader = &placeShader,
+                    ushort *altIndex = NULL, void *fbshader = &fbsPassthrough, void *fbshader2 = NULL, Vector2* clipRect = NULL);
+
 #endif
 
 #endif // !DRAWING_H

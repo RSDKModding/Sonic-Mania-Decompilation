@@ -6,12 +6,20 @@ if not os.path.exists("generated"):
 class Types(enum.Enum):
     TEXT = 0
     IMAGE = 1
+    DATA = 2
 
 EXT_MAP = {
     ".vert": Types.TEXT,
     ".frag": Types.TEXT,
-    ".gif": Types.IMAGE
+    ".gif": Types.IMAGE,
+    ".bin": Types.DATA
 }
+
+def mkdirs(path: pathlib.Path):
+    if not path.exists():
+        try: path.mkdir()
+        except: mkdirs(path.parent)
+
 
 for file in pathlib.Path(".").rglob("*"):
     if not file.is_file(): continue
@@ -19,8 +27,7 @@ for file in pathlib.Path(".").rglob("*"):
     try:
         t = EXT_MAP[file.suffix]
     except: continue
-    if not ("generated" / file.parent).exists():
-        ("generated" / file.parent).mkdir()
+    mkdirs("generated" / file.parent)
     if t == Types.TEXT:
         s = open(file, "r").read()
         arr = [hex(ord(x)) for x in s]

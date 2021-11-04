@@ -18,6 +18,10 @@ bool32 validDraw = false;
 ForeachStackInfo foreachStackList[FOREACH_STACK_COUNT];
 ForeachStackInfo *foreachStackPtr = NULL;
 
+#if RETRO_HARDWARE_RENDER
+    
+#endif
+
 #if RETRO_USE_MOD_LOADER
 void RegisterObject(Object **structPtr, const char *name, uint entitySize, uint objectSize, void (*update)(void), void (*lateUpdate)(void),
                     void (*staticUpdate)(void), void (*draw)(void), void (*create)(void *), void (*stageLoad)(void), void (*editorDraw)(void),
@@ -658,7 +662,7 @@ void ProcessObjectDrawLists()
             sceneInfo.currentDrawGroup = 0;
             for (int l = 0; l < DRAWLAYER_COUNT; ++l) {
                 if (engine.drawLayerVisible[l]) {
-
+                    
                     DrawList *list = &drawLayers[l];
 
                     if (list->callback)

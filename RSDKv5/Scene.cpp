@@ -16,7 +16,7 @@ SceneInfo sceneInfo;
 void LoadScene()
 {
 #if RETRO_USE_MOD_LOADER
-    //run this before the game actually unloads all the objects & scene assets
+    // run this before the game actually unloads all the objects & scene assets
     RunModCallbacks(MODCB_STAGEUNLOAD, NULL);
 #endif
 
@@ -49,8 +49,7 @@ void LoadScene()
         // Reload
         ClearUnusedStorage(DATASET_STG);
         sceneInfo.filter = sceneInfo.listData[sceneInfo.listPos].filter;
-        printLog(PRINT_NORMAL, "Reloading Scene \"%s - %s\" with filter %d", list->name,
-                 sceneInfo.listData[sceneInfo.listPos].name,
+        printLog(PRINT_NORMAL, "Reloading Scene \"%s - %s\" with filter %d", list->name, sceneInfo.listData[sceneInfo.listPos].name,
                  sceneInfo.listData[sceneInfo.listPos].filter);
         return;
     }
@@ -104,7 +103,7 @@ void LoadScene()
     for (int32 c = 0; c < CHANNEL_COUNT; ++c) {
         if (channels[c].state == CHANNEL_SFX || channels[c].state == (CHANNEL_SFX | CHANNEL_PAUSED)) {
             channels[c].soundID = -1;
-            channels[c].state = CHANNEL_NONE;
+            channels[c].state   = CHANNEL_NONE;
         }
     }
 
@@ -170,13 +169,11 @@ void LoadScene()
         sceneInfo.classCount       = 0;
 
         if (sceneInfo.useGlobalScripts) {
-            for (int32 o = 0; o < globalObjectCount; ++o) 
-                stageObjectIDs[o] = globalObjectIDs[o];
+            for (int32 o = 0; o < globalObjectCount; ++o) stageObjectIDs[o] = globalObjectIDs[o];
             sceneInfo.classCount = globalObjectCount;
         }
         else {
-            for (int32 o = 0; o < TYPE_DEFAULTCOUNT; ++o) 
-                stageObjectIDs[o] = globalObjectIDs[o];
+            for (int32 o = 0; o < TYPE_DEFAULTCOUNT; ++o) stageObjectIDs[o] = globalObjectIDs[o];
 
             sceneInfo.classCount = TYPE_DEFAULTCOUNT;
         }
@@ -256,7 +253,7 @@ void LoadSceneFile()
 
     memset(tileLayers, 0, LAYER_COUNT * sizeof(TileLayer));
 
-    //Reload palette
+    // Reload palette
     for (int32 i = 0; i < 8; ++i) {
         for (int32 r = 0; r < 0x10; ++r) {
             if ((activeGlobalRows[i] >> r & 1)) {
@@ -299,9 +296,9 @@ void LoadSceneFile()
             for (int s = 1; s < SCREEN_MAX; ++s) layer->drawLayer[s] = layer->drawLayer[0];
 
             layer->xsize = ReadInt16(&info);
-            int32 shift    = 1;
-            int32 shift2   = 1;
-            int32 val      = 0;
+            int32 shift  = 1;
+            int32 shift2 = 1;
+            int32 val    = 0;
             do {
                 shift = shift2;
                 val   = 1 << shift2++;
@@ -309,9 +306,9 @@ void LoadSceneFile()
             layer->widthShift = shift;
 
             layer->ysize = ReadInt16(&info);
-            shift     = 1;
-            shift2    = 1;
-            val       = 0;
+            shift        = 1;
+            shift2       = 1;
+            val          = 0;
             do {
                 shift = shift2;
                 val   = 1 << shift2++;
@@ -618,7 +615,6 @@ void LoadTileConfig(char *filepath)
                         }
                     }
 
-                    
                     // RWall rotations
                     for (int c = 0; c < TILE_SIZE; ++c) {
                         int h = TILE_SIZE - 1;
@@ -808,11 +804,11 @@ void LoadStageGIF(char *filepath)
                 }
             }
         }
-
+        //#if RETRO_SOFTWARE_RENDER
         // Flip X
         byte *srcGFXData = tilesetGFXData;
         byte *dstGFXData = &tilesetGFXData[(FLIP_X * TILESET_SIZE) + (TILE_SIZE - 1)];
-        for (int t = 0; t < 0x400 * TILE_SIZE; ++t) {
+        for (int t = 0; t < TILE_COUNT * TILE_SIZE; ++t) {
             for (int r = 0; r < TILE_SIZE; ++r) {
                 *dstGFXData-- = *srcGFXData++;
             }
@@ -821,7 +817,7 @@ void LoadStageGIF(char *filepath)
 
         // Flip Y
         srcGFXData = tilesetGFXData;
-        for (int t = 0; t < 0x400; ++t) {
+        for (int t = 0; t < TILE_COUNT; ++t) {
             dstGFXData = &tilesetGFXData[(FLIP_Y * TILESET_SIZE) + (t * TILE_DATASIZE) + (TILE_DATASIZE - TILE_SIZE)];
             for (int y = 0; y < TILE_SIZE; ++y) {
                 for (int x = 0; x < TILE_SIZE; ++x) {
@@ -834,12 +830,21 @@ void LoadStageGIF(char *filepath)
         // Flip XY
         srcGFXData = &tilesetGFXData[(FLIP_Y * TILESET_SIZE)];
         dstGFXData = &tilesetGFXData[(FLIP_XY * TILESET_SIZE) + (TILE_SIZE - 1)];
-        for (int t = 0; t < 0x400 * TILE_SIZE; ++t) {
+        for (int t = 0; t < TILE_COUNT * TILE_SIZE; ++t) {
             for (int r = 0; r < TILE_SIZE; ++r) {
                 *dstGFXData-- = *srcGFXData++;
             }
             dstGFXData += (TILE_SIZE * 2);
         }
+
+#if (1)
+#else
+        // push the new tileset here
+#if RETRO_USING_OPENGL
+        glActiveTexture(GL_TEXTURE0 + 2);
+        glTextureSubImage2D(gfxSurface[0].id, 0, 0, 0, TILE_SIZE, TILE_SIZE * TILE_COUNT, GL_RED, GL_UNSIGNED_BYTE, tilesetGFXData);
+#endif
+#endif
 
         tileset.palette = NULL;
         tileset.decoder = NULL;
@@ -1092,16 +1097,16 @@ void CopyTileLayout(uint16 dstLayerID, int32 startX1, int32 startY1, uint16 srcL
                 if (startX2 >= 0 && startX2 < srcLayer->xsize) {
                     if (startY2 >= 0 && startY2 < srcLayer->ysize) {
 
-                        if (startX1 + countX > dstLayer->xsize) 
+                        if (startX1 + countX > dstLayer->xsize)
                             countX = dstLayer->xsize - startX1;
 
-                        if (startY1 + countY > dstLayer->ysize) 
+                        if (startY1 + countY > dstLayer->ysize)
                             countY = dstLayer->ysize - startY1;
 
-                        if (startX2 + countX > srcLayer->xsize) 
+                        if (startX2 + countX > srcLayer->xsize)
                             countX = srcLayer->xsize - startX2;
 
-                        if (startY2 + countY > srcLayer->ysize) 
+                        if (startY2 + countY > srcLayer->ysize)
                             countY = srcLayer->ysize - startY2;
 
                         for (int y = 0; y < countY; ++y) {
@@ -1121,10 +1126,15 @@ void DrawLayerHScroll(TileLayer *layer)
 {
     if (!layer->xsize || !layer->ysize)
         return;
+
     int lineTileCount         = (currentScreen->pitch >> 4) - 1;
     byte *lineBuffer          = &gfxLineBuffer[currentScreen->clipBound_Y1];
     ScanlineInfo *scanlinePtr = &scanlines[currentScreen->clipBound_Y1];
     ushort *frameBuffer       = &currentScreen->frameBuffer[currentScreen->pitch * currentScreen->clipBound_Y1];
+#if RETRO_HARDWARE_RENDER
+    // RenderRenderStates(); // be free
+    memset(frameBuffer, 0, currentScreen->size.x * currentScreen->size.y * sizeof(ushort));
+#endif
 
     for (int cy = currentScreen->clipBound_Y1; cy < currentScreen->clipBound_Y2; ++cy) {
         int x           = scanlinePtr->position.x;
@@ -1153,7 +1163,11 @@ void DrawLayerHScroll(TileLayer *layer)
             for (byte *i = &tilesetGFXData[TILE_DATASIZE * (*layout & 0xFFF) + cntX + cntY]; cnt; ++frameBuffer) {
                 --cnt;
                 if (*i)
+#if RETRO_SOFTWARE_RENDER
                     *frameBuffer = palette[*i];
+#else
+                    *frameBuffer = *i;
+#endif
                 ++i;
             }
         }
@@ -1170,6 +1184,8 @@ void DrawLayerHScroll(TileLayer *layer)
             if (*layout < 0xFFFF) {
                 byte *tilesetData = &tilesetGFXData[TILE_DATASIZE * (*layout & 0xFFF) + cntY];
                 byte index        = *tilesetData;
+
+#if RETRO_SOFTWARE_RENDER
                 if (index)
                     *frameBuffer = palette[index];
 
@@ -1232,6 +1248,70 @@ void DrawLayerHScroll(TileLayer *layer)
                 index = tilesetData[15];
                 if (index)
                     frameBuffer[15] = palette[index];
+#else
+                if (index)
+                    *frameBuffer = index;
+
+                index = tilesetData[1];
+                if (index)
+                    frameBuffer[1] = index;
+
+                index = tilesetData[2];
+                if (index)
+                    frameBuffer[2] = index;
+
+                index = tilesetData[3];
+                if (index)
+                    frameBuffer[3] = index;
+
+                index = tilesetData[4];
+                if (index)
+                    frameBuffer[4] = index;
+
+                index = tilesetData[5];
+                if (index)
+                    frameBuffer[5] = index;
+
+                index = tilesetData[6];
+                if (index)
+                    frameBuffer[6] = index;
+
+                index = tilesetData[7];
+                if (index)
+                    frameBuffer[7] = index;
+
+                index = tilesetData[8];
+                if (index)
+                    frameBuffer[8] = index;
+
+                index = tilesetData[9];
+                if (index)
+                    frameBuffer[9] = index;
+
+                index = tilesetData[10];
+                if (index)
+                    frameBuffer[10] = index;
+
+                index = tilesetData[11];
+                if (index)
+                    frameBuffer[11] = index;
+
+                index = tilesetData[12];
+                if (index)
+                    frameBuffer[12] = index;
+
+                index = tilesetData[13];
+                if (index)
+                    frameBuffer[13] = index;
+
+                index = tilesetData[14];
+                if (index)
+                    frameBuffer[14] = index;
+
+                index = tilesetData[15];
+                if (index)
+                    frameBuffer[15] = index;
+#endif
             }
         }
 
@@ -1253,7 +1333,11 @@ void DrawLayerHScroll(TileLayer *layer)
                 for (byte *i = &tilesetGFXData[TILE_DATASIZE * (*layout & 0xFFF) + cntY]; r; ++frameBuffer) {
                     --r;
                     if (*i)
+#if RETRO_SOFTWARE_RENDER
                         *frameBuffer = palette[*i];
+#else
+                        *frameBuffer = *i;
+#endif
                     ++i;
                 }
             }
@@ -1261,7 +1345,74 @@ void DrawLayerHScroll(TileLayer *layer)
         }
 
         ++scanlinePtr;
+#if (1)
+#else
+            float xp = scanlinePtr->position.x / (float)(1 << 16) - TILE_SIZE;
+        float yp = scanlinePtr->position.y / (float)(1 << 16);
+        uint count = 0;
+        for (int i = lineTileCount; i > 0 || lineRemain > -TILE_SIZE; lineRemain -= TILE_SIZE, --i, xp += TILE_SIZE) {
+            if (*layout < 0xFFFF) {
+                ++count;
+
+                ushort t = (*layout & 0x3FF);
+                byte f = (*layout >> 10) & 3;
+                ushort point = (t << 2) | (f << 12);
+                AddPoly(xp, yp, 0, tileUVArray[point], tileUVArray[point + 1]);
+                AddPoly(xp + TILE_SIZE, yp, 0, tileUVArray[point + 2], tileUVArray[point + 1]);
+                AddPoly(xp, yp + TILE_SIZE, 0, tileUVArray[point], tileUVArray[point + 3]);
+                AddPoly(xp + TILE_SIZE, yp + TILE_SIZE, 0, tileUVArray[point + 2], tileUVArray[point + 3]); //*/
+            }
+            ++layout;
+            ++tx;
+
+            if (tx == layer->xsize) {
+                tx = 0;
+                layout -= layer->xsize;
+            }
+        }
+
+        struct {
+            ScanlineInfo *scanlines;
+            ushort offX;
+            ushort offY;
+            ushort starting;
+            byte type;
+        } args;
+
+        args.scanlines = scanlinePtr;
+        args.offX = cntX;
+        args.offY = cntY;
+        args.starting = cy;
+        args.type = 0;
+
+        if (renderCount + (lineTileCount + 6) * 4 >= VERTEX_LIMIT)
+            RenderRenderStates(); // force a clear just to be extra safe
+        renderCount -= count * 4;
+        Vector2 clips[2];
+        clips[0].x = 0;
+        clips[0].y = currentScreen->clipBound_X2;
+        clips[1].x = cy;
+        clips[1].y = cy + 1;
+        AddRenderState(INK_NONE, count * 4, count * 6, &args, 0xFF, &tileShader, NULL, NULL, &fbsPassthrough, clips);
+        renderCount += count * 4;
+
+        ++scanlinePtr;
+#endif
     }
+#if RETRO_HARDWARE_RENDER
+    glActiveTexture(GL_TEXTURE2);
+    glBindTexture(GL_TEXTURE_RECTANGLE, fbFBT);
+    glTexSubImage2D(GL_TEXTURE_RECTANGLE, 0, 0, 0, currentScreen->size.x, currentScreen->size.y,
+                    GL_RGB, GL_UNSIGNED_SHORT_5_6_5, currentScreen->frameBuffer);
+    uint x = currentScreen->size.x;
+    uint y = currentScreen->size.y;
+    AddRenderState(INK_NONE, 4, 6, NULL, 0xFF, &tileShader);
+    AddPoly(0, 0, 0, 0);
+    AddPoly(x, 0, x, 0);
+    AddPoly(0, y, 0, y);
+    AddPoly(x, y, x, y);
+    RenderRenderStates();
+#endif
 }
 void DrawLayerVScroll(TileLayer *layer)
 {
@@ -1271,6 +1422,10 @@ void DrawLayerVScroll(TileLayer *layer)
     ushort *frameBuffer     = &currentScreen->frameBuffer[currentScreen->clipBound_X1];
     ScanlineInfo *scanLines = &scanlines[currentScreen->clipBound_X1];
     ushort *palettePtr      = fullPalette[gfxLineBuffer[0]];
+#if RETRO_HARDWARE_RENDER
+    memset(frameBuffer, 0, currentScreen->size.x * currentScreen->size.y * sizeof(ushort));
+#endif
+
     for (int cx = currentScreen->clipBound_X1; cx < currentScreen->clipBound_X2; ++cx) {
         int x     = scanLines->position.x;
         int y     = scanLines->position.y;
@@ -1296,7 +1451,11 @@ void DrawLayerVScroll(TileLayer *layer)
             for (byte *i = &tilesetGFXData[TILE_SIZE * (cntY + TILE_SIZE * (*layout & 0xFFF)) + cntX]; cnt; frameBuffer += currentScreen->pitch) {
                 --cnt;
                 if (*i)
+#if RETRO_SOFTWARE_RENDER
                     *frameBuffer = palettePtr[*i];
+#else
+                    *frameBuffer = *i;
+#endif
                 i += TILE_SIZE;
             }
         }
@@ -1315,6 +1474,7 @@ void DrawLayerVScroll(TileLayer *layer)
             }
             else {
                 byte *gfxPtr = &tilesetGFXData[TILE_DATASIZE * (*layout & 0xFFF) + cntX];
+#if RETRO_SOFTWARE_RENDER
                 if (*gfxPtr)
                     *frameBuffer = palettePtr[*gfxPtr];
 
@@ -1362,7 +1522,56 @@ void DrawLayerVScroll(TileLayer *layer)
 
                 if (gfxPtr[0xF0])
                     frameBuffer[currentScreen->pitch * 15] = palettePtr[gfxPtr[0xF0]];
+#else
+                if (*gfxPtr)
+                    *frameBuffer = palettePtr[*gfxPtr];
 
+                if (gfxPtr[0x10])
+                    frameBuffer[currentScreen->pitch * 1] = gfxPtr[0x10];
+
+                if (gfxPtr[0x20])
+                    frameBuffer[currentScreen->pitch * 2] = gfxPtr[0x20];
+
+                if (gfxPtr[0x30])
+                    frameBuffer[currentScreen->pitch * 3] = gfxPtr[0x30];
+
+                if (gfxPtr[0x40])
+                    frameBuffer[currentScreen->pitch * 4] = gfxPtr[0x40];
+
+                if (gfxPtr[0x50])
+                    frameBuffer[currentScreen->pitch * 5] = gfxPtr[0x50];
+
+                if (gfxPtr[0x60])
+                    frameBuffer[currentScreen->pitch * 6] = gfxPtr[0x60];
+
+                if (gfxPtr[0x70])
+                    frameBuffer[currentScreen->pitch * 7] = gfxPtr[0x70];
+
+                if (gfxPtr[0x80])
+                    frameBuffer[currentScreen->pitch * 8] = gfxPtr[0x80];
+
+                if (gfxPtr[0x90])
+                    frameBuffer[currentScreen->pitch * 9] = gfxPtr[0x90];
+
+                if (gfxPtr[0xA0])
+                    frameBuffer[currentScreen->pitch * 10] = gfxPtr[0xA0];
+
+                if (gfxPtr[0xB0])
+                    frameBuffer[currentScreen->pitch * 11] = gfxPtr[0xB0];
+
+                if (gfxPtr[0xC0])
+                    frameBuffer[currentScreen->pitch * 12] = gfxPtr[0xC0];
+
+                if (gfxPtr[0xD0])
+                    frameBuffer[currentScreen->pitch * 13] = gfxPtr[0xD0];
+
+                if (gfxPtr[0xE0])
+                    frameBuffer[currentScreen->pitch * 14] = gfxPtr[0xE0];
+
+                if (gfxPtr[0xF0])
+                    frameBuffer[currentScreen->pitch * 15] = gfxPtr[0xF0];
+
+#endif
                 frameBuffer += currentScreen->pitch * TILE_SIZE;
             }
             lineRemain -= TILE_SIZE;
@@ -1385,7 +1594,11 @@ void DrawLayerVScroll(TileLayer *layer)
                 for (byte *i = &tilesetGFXData[TILE_DATASIZE * (*layout & 0xFFF) + cntX]; r; frameBuffer += currentScreen->pitch) {
                     --r;
                     if (*i)
+#if RETRO_SOFTWARE_RENDER
                         *frameBuffer = palettePtr[*i];
+#else
+                        *frameBuffer = *i;
+#endif
                     i += 0x10;
                 }
             }
@@ -1396,6 +1609,20 @@ void DrawLayerVScroll(TileLayer *layer)
         frameBuffer -= currentScreen->pitch * currentScreen->size.y;
         frameBuffer++;
     }
+#if RETRO_HARDWARE_RENDER
+    glActiveTexture(GL_TEXTURE2);
+    glBindTexture(GL_TEXTURE_RECTANGLE, fbFBT);
+    glTexSubImage2D(GL_TEXTURE_RECTANGLE, 0, 0, 0, currentScreen->size.x, currentScreen->size.y, GL_RGB, GL_UNSIGNED_SHORT_5_6_5,
+                    currentScreen->frameBuffer);
+    uint x = currentScreen->size.x;
+    uint y = currentScreen->size.y;
+    AddRenderState(INK_NONE, 4, 6, NULL, 0xFF, &tileShader);
+    AddPoly(0, 0, 0, 0);
+    AddPoly(x, 0, x, 0);
+    AddPoly(0, y, 0, y);
+    AddPoly(x, y, x, y);
+    RenderRenderStates();
+#endif
 }
 void DrawLayerRotozoom(TileLayer *layer)
 {
@@ -1408,6 +1635,9 @@ void DrawLayerRotozoom(TileLayer *layer)
     ushort *frameBuffer       = &currentScreen->frameBuffer[currentScreen->clipBound_X1 + currentScreen->clipBound_Y1 * currentScreen->pitch];
     int width                 = (TILE_SIZE << layer->widthShift) - 1;
     int height                = (TILE_SIZE << layer->heightShift) - 1;
+#if RETRO_USE_HARDWARE
+    memset(frameBuffer, 0, currentScreen->size.x * currentScreen->size.y * sizeof(ushort));
+#endif
 
     for (int cy = currentScreen->clipBound_Y1; cy < currentScreen->clipBound_Y2; ++cy) {
         int posX = scanlinePtr->position.x;
@@ -1418,14 +1648,18 @@ void DrawLayerRotozoom(TileLayer *layer)
         int fbOffset = currentScreen->pitch - countX;
 
         for (int cx = countX; cx; --cx) {
-            int tx = posX >> 20;
-            int ty = posY >> 20;
-            int x  = (posX >> 16) & 0xF;
-            int y  = (posY >> 16) & 0xF;
+            int tx      = posX >> 20;
+            int ty      = posY >> 20;
+            int x       = (posX >> 16) & 0xF;
+            int y       = (posY >> 16) & 0xF;
             ushort tile = layout[((width >> 4) & tx) + (((height >> 4) & ty) << layer->widthShift)] & 0xFFF;
-            byte idx = tilesetGFXData[TILE_SIZE * (y + TILE_SIZE * tile) + x];
+            byte idx    = tilesetGFXData[TILE_SIZE * (y + TILE_SIZE * tile) + x];
             if (idx)
+#if RETRO_SOFTWARE_RENDER
                 *frameBuffer = palettePtr[idx];
+#else
+                *frameBuffer = idx;
+#endif
             posX += scanlinePtr->deform.x;
             posY += scanlinePtr->deform.y;
             ++frameBuffer;
@@ -1434,6 +1668,20 @@ void DrawLayerRotozoom(TileLayer *layer)
         frameBuffer += fbOffset;
         ++scanlinePtr;
     }
+#if RETRO_HARDWARE_RENDER
+    glActiveTexture(GL_TEXTURE2);
+    glBindTexture(GL_TEXTURE_RECTANGLE, fbFBT);
+    glTexSubImage2D(GL_TEXTURE_RECTANGLE, 0, 0, 0, currentScreen->size.x, currentScreen->size.y, GL_RGB, GL_UNSIGNED_SHORT_5_6_5,
+                    currentScreen->frameBuffer);
+    uint x = currentScreen->size.x;
+    uint y = currentScreen->size.y;
+    AddRenderState(INK_NONE, 4, 6, NULL, 0xFF, &tileShader);
+    AddPoly(0, 0, 0, 0);
+    AddPoly(x, 0, x, 0);
+    AddPoly(0, y, 0, y);
+    AddPoly(x, y, x, y);
+    RenderRenderStates();
+#endif
 }
 void DrawLayerBasic(TileLayer *layer)
 {
@@ -1442,7 +1690,7 @@ void DrawLayerBasic(TileLayer *layer)
 
     if (currentScreen->clipBound_X1 >= currentScreen->clipBound_X2 || currentScreen->clipBound_Y1 >= currentScreen->clipBound_Y2)
         return;
-    
+
     int lineTileCount         = (currentScreen->pitch >> 4) - 1;
     byte *lineBuffer          = &gfxLineBuffer[currentScreen->clipBound_Y1];
     ScanlineInfo *scanlinePtr = &scanlines[currentScreen->clipBound_Y1];

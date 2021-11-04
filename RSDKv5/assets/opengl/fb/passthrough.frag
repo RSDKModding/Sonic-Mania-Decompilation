@@ -5,7 +5,7 @@ out vec4 out_color;
 uniform int inkEffect;
 uniform int maskColor;
 uniform sampler2DRect lookupTable;
-uniform float alpha;
+uniform int alpha;
 
 uniform sampler2D source;
 uniform sampler2D dest;
@@ -22,7 +22,7 @@ const int INK_UNMASK = 7;
 void main()
 {
     out_color  = texture(source, ex_UV);
-    float alph = alpha;
+    float alph = alpha / 255.0;
     if (out_color.a == 0)
         discard;
     ivec3 placed  = ivec3(texture(dest, ex_UV).rgb * 255);

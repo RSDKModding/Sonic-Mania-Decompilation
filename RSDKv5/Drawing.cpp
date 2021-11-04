@@ -8,7 +8,7 @@ uint16 subtractLookupTable[BLENDTABLE_SIZE];
 GFXSurface gfxSurface[SURFACE_MAX];
 
 int32 pixWidth    = 424;
-float dpi       = 1;
+float dpi         = 1;
 int32 cameraCount = 0;
 ScreenInfo screens[SCREEN_MAX];
 CameraInfo cameras[CAMERA_MAX];
@@ -19,7 +19,7 @@ uint8 startVertex_3P[3];
 
 #if RETRO_HARDWARE_RENDER
 
-int fullscreen[8];
+int fullscreen[16];
 
 class ShaderBase
 {
@@ -98,7 +98,7 @@ public:
     void setScreen(ScreenInfo *screen)
     {
 #if RETRO_USING_OPENGL
-        glUniform2f(glGetUniformLocation(ID, "screenSize"), screen->width, screen->height);
+        glUniform2f(glGetUniformLocation(ID, "screenSize"), screen->size.x, screen->size.y);
         glUniform2f(glGetUniformLocation(ID, "viewportSize"), engine.windowWidth, engine.windowHeight);
 #endif
     }
@@ -193,7 +193,7 @@ public:
     {
 #if RETRO_USING_OPENGL
         glUniform1i(glGetUniformLocation(ID, "inkEffect"), state->blendMode);
-        glUniform1f(glGetUniformLocation(ID, "alpha"), state->alpha);
+        glUniform1i(glGetUniformLocation(ID, "alpha"), state->alpha);
 #endif
         if (state->blendMode == INK_MASKED || state->blendMode == INK_UNMASKED) {
 #if RETRO_USING_OPENGL
@@ -223,10 +223,6 @@ union CircleArgs {
         float outerR;
     };
 };
-
-#if RETRO_USING_OPENGL
-GLuint tileFB;
-#endif
 
 #endif
 
@@ -431,6 +427,7 @@ bool32 InitRenderDevice()
     glDisable(GL_DITHER);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glEnable(GL_BLEND);
+    glEnable(GL_SCISSOR_TEST);
     glDisable(GL_CULL_FACE);
     // glEnable(GL_MULTISAMPLE);
 
@@ -440,18 +437,19 @@ bool32 InitRenderDevice()
 
 // handle init GFX
 #if RETRO_USING_OPENGL
-    glGenFramebuffers(1, &tileFB);
-    glBindFramebuffer(GL_FRAMEBUFFER, tileFB);
-    glActiveTexture(GL_TEXTURE0);
+    glActiveTexture(GL_TEXTURE0 + 2);
     glGenTextures(1, &gfxSurface[0].id);
-    glBindTexture(GL_TEXTURE_2D, gfxSurface[0].id);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, TILE_SIZE, TILE_COUNT * TILE_SIZE, 0, GL_RED, GL_UNSIGNED_BYTE, gfxSurface[0].dataPtr);
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, gfxSurface[0].id, 0);
+    glBindTexture(GL_TEXTURE_RECTANGLE, gfxSurface[0].id);
+    glTexImage2D(GL_TEXTURE_RECTANGLE, 0, GL_RED, TILE_SIZE, TILE_SIZE * TILE_COUNT, 0, GL_RED, GL_UNSIGNED_BYTE, gfxSurface[0].dataPtr);
+    glTexImage2D(GL_TEXTURE_RECTANGLE, 1, GL_RED, TILE_SIZE, TILE_SIZE * TILE_COUNT, 0, GL_RED, GL_UNSIGNED_BYTE, gfxSurface[0].dataPtr);
 
+    glTexParameterf(GL_TEXTURE_RECTANGLE, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameterf(GL_TEXTURE_RECTANGLE, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameterf(GL_TEXTURE_RECTANGLE, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameterf(GL_TEXTURE_RECTANGLE, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+#if RETRO_REV02
+    glActiveTexture(GL_TEXTURE0 + 3);
     glGenTextures(1, &gfxSurface[1].id);
     glBindTexture(GL_TEXTURE_RECTANGLE, gfxSurface[1].id);
     glTexImage2D(GL_TEXTURE_RECTANGLE, 0, GL_RED, 8, 0x400, 0, GL_RED, GL_UNSIGNED_BYTE, gfxSurface[1].dataPtr);
@@ -459,6 +457,7 @@ bool32 InitRenderDevice()
     glTexParameterf(GL_TEXTURE_RECTANGLE, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameterf(GL_TEXTURE_RECTANGLE, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameterf(GL_TEXTURE_RECTANGLE, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+#endif
 #endif //! RETRO_USING_OPENGL
 
 #if RETRO_USING_SDL2 && RETRO_PLATFORM == RETRO_ANDROID
@@ -785,7 +784,7 @@ void InitGFXSystem()
     gfxSurface[0].scope = SCOPE_GLOBAL;
     memcpy(gfxSurface[0].hash, hash, 4 * sizeof(int));
     gfxSurface[0].width    = TILE_SIZE;
-    gfxSurface[0].height   = TILE_COUNT * TILE_SIZE;
+    gfxSurface[0].height   = TILESET_SIZE;
     gfxSurface[0].lineSize = log2(TILE_SIZE);
     gfxSurface[0].dataPtr  = tilesetGFXData;
 
@@ -950,7 +949,6 @@ void FillScreen(uint colour, int redAlpha, int greenAlpha, int blueAlpha)
 #else
         PlaceArgs args;
         args.texID        = 0;
-        args.transparency = 255;
 
         AddRenderState(INK_ADD, 4, 6, &args, redAlpha, &placeShader, NULL, NULL, &fbsPassthrough);
 
@@ -958,25 +956,25 @@ void FillScreen(uint colour, int redAlpha, int greenAlpha, int blueAlpha)
         Colour c   = Colour(src.r, 0, 0, redAlpha);
 
         AddPoly(0, 0, 0, 0, c);
-        AddPoly(currentScreen->width, 0, 0, 0, c);
-        AddPoly(0, currentScreen->height, 0, 0, c);
-        AddPoly(currentScreen->width, currentScreen->height, 0, 0, c);
+        AddPoly(currentScreen->size.x, 0, 0, 0, c);
+        AddPoly(0, currentScreen->size.y, 0, 0, c);
+        AddPoly(currentScreen->size.x, currentScreen->size.y, 0, 0, c);
 
         AddRenderState(INK_ADD, 4, 6, &args, greenAlpha, &placeShader, NULL, NULL, &fbsPassthrough);
         c = Colour(0, src.g, 0, greenAlpha);
 
         AddPoly(0, 0, 0, 0, c);
-        AddPoly(currentScreen->width, 0, 0, 0, c);
-        AddPoly(0, currentScreen->height, 0, 0, c);
-        AddPoly(currentScreen->width, currentScreen->height, 0, 0, c);
+        AddPoly(currentScreen->size.x, 0, 0, 0, c);
+        AddPoly(0, currentScreen->size.y, 0, 0, c);
+        AddPoly(currentScreen->size.x, currentScreen->size.y, 0, 0, c);
 
         AddRenderState(INK_ADD, 4, 6, &args, blueAlpha, &placeShader, NULL, NULL, &fbsPassthrough);
         c = Colour(0, 0, src.b, blueAlpha);
 
         AddPoly(0, 0, 0, 0, c);
-        AddPoly(currentScreen->width, 0, 0, 0, c);
-        AddPoly(0, currentScreen->height, 0, 0, c);
-        AddPoly(currentScreen->width, currentScreen->height, 0, 0, c);
+        AddPoly(currentScreen->size.x, 0, 0, 0, c);
+        AddPoly(0, currentScreen->size.y, 0, 0, c);
+        AddPoly(currentScreen->size.x, currentScreen->size.y, 0, 0, c);
 
 #endif
     }
@@ -1691,7 +1689,6 @@ void DrawRectangle(int x, int y, int width, int height, uint colour, int alpha, 
 
     PlaceArgs args;
     args.texID        = 0;
-    args.transparency = 255;
     AddRenderState(inkEffect, 4, 6, &args);
 
     AddPoly(xpos, ypos, 0, 0, c);
@@ -3831,8 +3828,7 @@ void DrawSpriteFlipped(int x, int y, int width, int height, int sprX, int sprY, 
     float ypos = y;
     PlaceArgs args;
     args.texID        = surface->id;
-    args.transparency = alpha;
-    AddRenderState(inkEffect, 4, 6, &args);
+    AddRenderState(inkEffect, 4, 6, &args, alpha);
 
     switch (direction) {
         case FLIP_NONE:
@@ -4195,8 +4191,7 @@ void DrawSpriteRotozoom(int x, int y, int pivotX, int pivotY, int width, int hei
 
     PlaceArgs args;
     args.texID        = surface->id;
-    args.transparency = alpha;
-    AddRenderState(inkEffect, 4, 6, &args);
+    AddRenderState(inkEffect, 4, 6, &args, alpha);
 
     float sY  = scaleY / (float)(1 << 9);
     float sX  = scaleX / (float)(1 << 9);
@@ -4849,15 +4844,7 @@ void DrawDevText(int x, const char *text, int y, int align, uint colour)
 #if RETRO_HARDWARE_RENDER
 DrawVertex vertexList[VERTEX_LIMIT];
 
-// DrawVertex3D polyList3D[VERTEX3D_LIMIT];
-
-ushort vertexSize3D = 0;
-ushort indexSize3D  = 0;
 ushort tileUVArray[TILEUV_SIZE];
-float floor3Dxpos  = 0.0f;
-float floor3Dypos  = 0.0f;
-float floor3DZPos  = 0.0f;
-float floor3DAngle = 0;
 
 RenderState renderStates[RENDERSTATE_LIMIT];
 
@@ -4882,6 +4869,8 @@ GLuint tFBT;
 GLuint t2FB;
 GLuint t2FBT;
 
+GLuint fbFBT;
+
 GLuint tTBound = 20;
 GLuint t2Bound = 21;
 
@@ -4899,10 +4888,12 @@ void SwapTempFBs()
 #include "assets/generated/opengl/pre/place.frag"
 #include "assets/generated/opengl/pre/circle.frag"
 #include "assets/generated/opengl/pre/devText.frag"
+#include "assets/generated/opengl/pre/tile.frag"
 
 #include "assets/generated/opengl/fb/passthrough.vert"
 #include "assets/generated/opengl/fb/passthrough.frag"
 #include "assets/generated/opengl/fb/final.frag"
+#include "assets/generated/opengl/fb/tileFB.frag"
 
 #endif
 
@@ -4975,14 +4966,14 @@ public:
     {
         use();
 #if RETRO_USING_OPENGL
-        glUniform1i(glGetUniformLocation(ID, "text"), 2);
+        glUniform1i(glGetUniformLocation(ID, "text"), 3);
 #endif
         stop();
     };
     void setArgs(RenderState *&state)
     {
 #if RETRO_USING_OPENGL
-        glActiveTexture(GL_TEXTURE0 + 2);
+        glActiveTexture(GL_TEXTURE0 + 3);
 #if RETRO_REV02
         glBindTexture(GL_TEXTURE_RECTANGLE, gfxSurface[1].id);
 #else
@@ -5005,9 +4996,25 @@ public:
     void setPalLines(RenderState *&state){};
 };
 
+class TileShader : public ShaderBase
+{
+public:
+    TileShader() : ShaderBase(){};
+    TileShader(const char *v, const char *f) : ShaderBase(v, f)
+    {
+        use();
+#if RETRO_USING_OPENGL
+        glUniform1i(glGetUniformLocation(ID, "tiles"), 2);
+        glUniform1i(glGetUniformLocation(ID, "palette"), 1);
+#endif
+        stop();
+    };
+};
+
 PlaceShader placeShader;
 CircleShader circleShader;
 DevTextShader devTextShader;
+TileShader tileShader;
 
 class FBFinal : public FBShaderBase
 {
@@ -5024,8 +5031,48 @@ public:
     void setArgs(RenderState *&state){};
 };
 
+class TileShaderFB : public FBShaderBase
+{
+public:
+    TileShaderFB() : FBShaderBase(){};
+    TileShaderFB(const char *v, const char *f) : FBShaderBase(v, f){};
+    void setArgs(RenderState *&state)
+    {
+        struct TileArgs {
+            ScanlineInfo *scanlines;
+            ushort offX;
+            ushort offY;
+            ushort starting;
+            byte type;
+        };
+        TileArgs *args = (TileArgs *)&state->argBuffer;
+#if RETRO_USING_OPENGL
+        GLfloat position[TILE_SIZE * 2];
+        GLfloat deform[TILE_SIZE * 2];
+
+        for (int i = 0; i < TILE_SIZE; ++i) {
+            position[i * 2]     = args->scanlines[i].position.x - (args->offX << 16);
+            position[i * 2 + 1] = args->scanlines[i].position.y - (args->offY << 16);
+            if (args->type == LAYER_HSCROLL)
+                position[i * 2 + 1] -= (i + args->starting) << 16;
+
+            if (args->type == LAYER_ROTOZOOM) {
+                deform[i * 2]     = args->scanlines[i].deform.x;
+                deform[i * 2 + 1] = args->scanlines[i].deform.y;
+            }
+        }
+        glUniform2fv(glGetUniformLocation(ID, "position"), TILE_SIZE, position);
+        glUniform2fv(glGetUniformLocation(ID, "deform"), TILE_SIZE, deform);
+        glUniform1i(glGetUniformLocation(ID, "starting"), args->starting);
+        glUniform1i(glGetUniformLocation(ID, "type"), args->type);
+        setScreen(state->screen);
+#endif
+    }
+};
+
 FBShaderBase fbsPassthrough;
 FBFinal fbsFinal;
+TileShaderFB fbsTile;
 
 void ortho(MatrixF *matrix, float l, float r, float b, float t, float n, float f)
 {
@@ -5065,7 +5112,7 @@ void SetupViewport()
     glBindFramebuffer(GL_FRAMEBUFFER, tFB);
     glActiveTexture(GL_TEXTURE20);
     glBindTexture(GL_TEXTURE_2D, tFBT);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, engine.windowWidth, engine.windowHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, engine.windowWidth, engine.windowHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -5083,6 +5130,14 @@ void SetupViewport()
 
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, t2FBT, 0);
 
+    glActiveTexture(GL_TEXTURE0 + 2);
+    glBindTexture(GL_TEXTURE_RECTANGLE, fbFBT);
+    glTexImage2D(GL_TEXTURE_RECTANGLE, 0, GL_RGB, SCREEN_XMAX, SCREEN_YSIZE, 0, GL_RGB, GL_UNSIGNED_SHORT_5_6_5, NULL);
+    glTexParameterf(GL_TEXTURE_RECTANGLE, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameterf(GL_TEXTURE_RECTANGLE, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameterf(GL_TEXTURE_RECTANGLE, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameterf(GL_TEXTURE_RECTANGLE, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
     // clang-format off
     int pos[] = { // POSITIONS
                       0, 0, 
@@ -5097,16 +5152,20 @@ void SetupViewport()
     };
     // clang-format on
     memcpy(fullscreen, pos, sizeof(int) * 16);
-    glBindBuffer(GL_ARRAY_BUFFER, fbpVBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(int) * 16, fullscreen, GL_DYNAMIC_DRAW);
 
     MatrixF orth;
     ortho(&orth, 0, engine.windowWidth, 0.0, engine.windowHeight, -1.0, 1.0);
+
+    glBindBuffer(GL_ARRAY_BUFFER, fbpVBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(int) * 16, pos, GL_DYNAMIC_DRAW);
+
     // set all FB projections so we dont have to later
     fbsPassthrough.use();
     fbsPassthrough.setProjection(&orth);
     fbsFinal.use();
     fbsFinal.setProjection(&orth);
+    fbsTile.use();
+    fbsTile.setProjection(&orth);
 #endif
 }
 
@@ -5117,9 +5176,12 @@ void SetupShaders()
     placeShader   = PlaceShader(defaultVert, placeFrag);
     circleShader  = CircleShader(defaultVert, circleFrag);
     devTextShader = DevTextShader(defaultVert, devTextFrag);
+    tileShader    = TileShader(defaultVert, tileFrag);
 
     fbsPassthrough = FBShaderBase(passthroughVert, passthroughFrag);
     fbsFinal       = FBFinal(passthroughVert, finalFrag);
+    fbsTile        = TileShaderFB(passthroughVert, tileFBFrag);
+
 #if RETRO_USING_OPENGL
     // i'm also gonna setup VBOs here bc i'm lazy
     glGenVertexArrays(1, &VAO);
@@ -5154,6 +5216,9 @@ void SetupShaders()
     glGenTextures(1, &tFBT);
     glGenFramebuffers(1, &t2FB);
     glGenTextures(1, &t2FBT);
+
+    glGenTextures(1, &fbFBT);
+
 #endif
 }
 
@@ -5171,15 +5236,44 @@ void SetupPolygonLists()
 
         vertexList[i].colour.colour = 0;
     }
+
+    for (int i = 0; i < TILE_COUNT; ++i) {
+        int o              = i * 4;
+        tileUVArray[o + 0] = 0;
+        tileUVArray[o + 1] = i * TILE_SIZE;
+        tileUVArray[o + 2] = TILE_SIZE;
+        tileUVArray[o + 3] = i * TILE_SIZE + TILE_SIZE;
+
+        // FLIP X
+        o += TILE_COUNT * 4;
+        tileUVArray[o + 0] = tileUVArray[i * 4 + 2];
+        tileUVArray[o + 1] = tileUVArray[i * 4 + 1];
+        tileUVArray[o + 2] = tileUVArray[i * 4 + 0];
+        tileUVArray[o + 3] = tileUVArray[i * 4 + 3];
+
+        // FLIP Y
+        o += TILE_COUNT * 4;
+        tileUVArray[o + 0] = tileUVArray[i * 4 + 0];
+        tileUVArray[o + 1] = tileUVArray[i * 4 + 3];
+        tileUVArray[o + 2] = tileUVArray[i * 4 + 2];
+        tileUVArray[o + 3] = tileUVArray[i * 4 + 1];
+
+        // FLIP XY
+        o += TILE_COUNT * 4;
+        tileUVArray[o + 0] = tileUVArray[i * 4 + 2];
+        tileUVArray[o + 1] = tileUVArray[i * 4 + 3];
+        tileUVArray[o + 2] = tileUVArray[i * 4 + 0];
+        tileUVArray[o + 3] = tileUVArray[i * 4 + 1];
+    }
 }
 
 bool32 StatesCompatible(RenderState *one, RenderState *two)
 {
-    if (two->blendMode != INK_NONE && two->blendMode != INK_LOOKUP)
+    if (one->blendMode != INK_NONE && one->blendMode != INK_LOOKUP)
         return false; // the rest can't really be merged
     if (memcmp(one->argBuffer, two->argBuffer, 0x20) || one->blendMode != two->blendMode || one->shader != two->shader || one->alpha != two->alpha
         || memcmp(one->lineBuffer, two->lineBuffer, SCREEN_YSIZE * sizeof(byte)) || one->lookupTable != two->lookupTable
-        || one->fbShader != two->fbShader || one->fbShader2 || two->fbShader2)
+        || one->fbShader != two->fbShader || one->fbShader2 || two->fbShader2 || memcmp(&one->clipRectX, &two->clipRectX, sizeof(int32) * 4))
         // if we render inplace (one->fbShader2 || two->fbShader2), we have to buffer it through first
         return false;
     if (one->maskColor != two->maskColor && (two->blendMode == INK_MASKED || two->blendMode == INK_UNMASKED))
@@ -5203,7 +5297,8 @@ bool32 StatesCompatible(RenderState *one, RenderState *two)
     return true;
 }
 
-void AddRenderState(int blendMode, ushort vertCount, ushort indexCount, void *args, byte alpha, void *shader, ushort *altIndex, void *fbShader, void *fbShader2)
+void AddRenderState(int blendMode, ushort vertCount, ushort indexCount, void *args, byte alpha, void *shader, ushort *altIndex, void *fbShader,
+                    void *fbShader2, Vector2 *clipRect)
 {
     if (!vertCount || !indexCount || !currentScreen)
         return;
@@ -5212,7 +5307,8 @@ void AddRenderState(int blendMode, ushort vertCount, ushort indexCount, void *ar
     newState.blendMode  = blendMode;
     newState.indexCount = indexCount;
     newState.maskColor  = maskColour;
-    newState.alpha = alpha;
+    newState.alpha      = alpha;
+    newState.screen     = currentScreen;
     newState.shader     = (ShaderBase *)shader;
     newState.fbShader   = (FBShaderBase *)fbShader;
     newState.fbShader2  = (FBShaderBase *)fbShader2;
@@ -5222,6 +5318,14 @@ void AddRenderState(int blendMode, ushort vertCount, ushort indexCount, void *ar
         memcpy(newState.argBuffer, args, 0x20);
     else
         memset(newState.argBuffer, 0, 0x20);
+    if (!clipRect)
+        memcpy(&newState.clipRectX, &currentScreen->clipBound_X1, sizeof(int32) * 4);
+    else {
+        newState.clipRectX.x = maxVal(currentScreen->clipBound_X1, clipRect[0].x);
+        newState.clipRectX.y = minVal(currentScreen->clipBound_X2, clipRect[0].y);
+        newState.clipRectY.x = maxVal(currentScreen->clipBound_Y1, clipRect[1].x);
+        newState.clipRectY.y = minVal(currentScreen->clipBound_Y2, clipRect[1].y);
+    }
     memcpy(newState.palette, fullPalette, sizeof(fullPalette));
     memcpy(newState.lineBuffer, gfxLineBuffer, sizeof(gfxLineBuffer));
 
@@ -5243,7 +5347,8 @@ void AddRenderState(int blendMode, ushort vertCount, ushort indexCount, void *ar
         renderStateIndex++;
     }
     memcpy(newState.indecies, altIndex, indexCount * sizeof(ushort));
-    for (int i = 0; i < indexCount; ++i) newState.indecies[i] += renderCount;
+    if (renderCount)
+        for (int i = 0; i < indexCount; ++i) newState.indecies[i] += renderCount;
     renderStates[renderStateIndex] = newState;
 }
 
@@ -5279,18 +5384,19 @@ void RenderRenderStates()
         }
 
         MatrixF orth;
-        ortho(&orth, 0, currentScreen->width, currentScreen->height, 0.0, -1.0, 1.0);
+        ortho(&orth, 0, renderState->screen->size.x, renderState->screen->size.y, 0.0, 0.0, 16.0);
         renderState->shader->setProjection(&orth);
-        renderState->shader->setScreen(currentScreen);
+        renderState->shader->setScreen(renderState->screen);
         float xScale = engine.windowWidth / (float)pixWidth;
         float yScale = engine.windowHeight / (float)SCREEN_YSIZE;
-        glScissor(currentScreen->clipBound_X1 * xScale, (SCREEN_YSIZE - currentScreen->clipBound_Y2) * yScale,
-                  (currentScreen->clipBound_X2 - currentScreen->clipBound_X1) * xScale,
-                  (currentScreen->clipBound_Y2 - currentScreen->clipBound_Y1) * yScale);
+        glEnable(GL_SCISSOR_TEST);
+        glScissor(renderState->clipRectX.x * xScale, (SCREEN_YSIZE - renderState->clipRectY.y) * yScale,
+                  (renderState->clipRectX.y - renderState->clipRectX.x) * xScale,
+                  (renderState->clipRectY.y - renderState->clipRectY.x) * yScale);
 
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, renderState->indexCount * sizeof(ushort), renderState->indecies, GL_DYNAMIC_DRAW);
         glDrawElements(GL_TRIANGLES, renderState->indexCount, GL_UNSIGNED_SHORT, 0);
-
+		glDisable(GL_SCISSOR_TEST);
         glBindVertexArray(fbpVAO);
         glBindBuffer(GL_ARRAY_BUFFER, fbpVBO);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, fbiVBO);
