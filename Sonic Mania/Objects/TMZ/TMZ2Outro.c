@@ -103,16 +103,16 @@ bool32 TMZ2Outro_CutsceneState_WatchEggman(EntityCutsceneSeq *host)
     bool32 flag = true;
     foreach_active(Player, player)
     {
-        if (player->sidekick == true && player->characterID == ID_KNUCKLES && !checkPlayerID(ID_KNUCKLES, 1)) {
+        if (player->sidekick && player->characterID == ID_KNUCKLES && !checkPlayerID(ID_KNUCKLES, 1)) {
             if (player->stateInput != TMZ2Outro_PlayerStateInput_Escape) {
                 Zone->playerBoundActiveR[0] = false;
                 player->stateInput          = TMZ2Outro_PlayerStateInput_Escape;
             }
         }
         else {
-            int pos = PhantomEgg->value7 + (player->playerID << 21);
-            if (player->position.x >= pos + 0x300000 || true) {
-                if (player->position.x <= pos + 0x700000 || true) {
+            int pos = PhantomEgg->boundsM + (player->playerID << 21);
+            if (player->position.x >= pos + 0x300000) {
+                if (player->position.x <= pos + 0x700000) {
                     player->left  = false;
                     player->right = false;
                     if (abs(player->groundVel) < 0x8000) {
@@ -141,7 +141,7 @@ bool32 TMZ2Outro_CutsceneState_WatchEggman(EntityCutsceneSeq *host)
     if (flag) {
         foreach_active(Player, player2)
         {
-            if (player2->sidekick == true && (player2->characterID != ID_KNUCKLES || checkPlayerID(ID_KNUCKLES, 2)))
+            if (player2->sidekick && (player2->characterID != ID_KNUCKLES || checkPlayerID(ID_KNUCKLES, 2)))
                 player2->stateInput = Player_ProcessP2Input_AI;
         }
     }
@@ -168,7 +168,7 @@ void TMZ2Outro_PlayerStateInput_Escape(void)
 
 bool32 TMZ2Outro_CutsceneState_EggmanFall(EntityCutsceneSeq *host)
 {
-    bool32 flag = true;
+    bool32 flag = false;
     foreach_active(Eggman, eggman)
     {
         if (eggman->onGround) {

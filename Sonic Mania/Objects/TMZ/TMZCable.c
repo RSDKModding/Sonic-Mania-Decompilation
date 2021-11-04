@@ -17,7 +17,7 @@ void TMZCable_Draw(void)
 {
     RSDK_THIS(TMZCable);
 
-    for (int32 i = 0; i < 8; ++i) {
+    for (int32 i = 0; i < TMZCable_JointCount; ++i) {
         if (!entity->drawFlags[i])
             RSDK.DrawSprite(&entity->animator, &entity->drawPos[i], false);
     }
@@ -38,17 +38,17 @@ void TMZCable_Create(void *data)
             case 0:
                 entity->field_64.x = -0x1C0000;
                 entity->field_64.y = 0x100000;
-                entity->angle      = 0;
+                entity->angle      = 0x00;
                 break;
             case 1:
                 entity->field_64.x = 0x1C0000;
                 entity->field_64.y = 0x100000;
-                entity->angle      = 64;
+                entity->angle      = 0x40;
                 break;
             case 2:
                 entity->field_64.x = -0x1C0000;
                 entity->field_64.y = -0x100000;
-                entity->angle      = 128;
+                entity->angle      = 0x80;
                 break;
             case 3:
                 entity->field_64.x = 0x1C0000;
@@ -81,13 +81,13 @@ void TMZCable_Unknown1(void)
         int32 angle       = RSDK.ATan2((entity->position.x - x) >> 16, (entity->position.y - y) >> 16) + 64;
 
         int32 id = 0;
-        for (int32 i = 0; i < 144; i += 18) {
+        for (int32 i = 0; i < (18 * TMZCable_JointCount); i += 18) {
             int32 off = (RSDK.Sin256(entityAngle) * RSDK.Sin256(i)) >> 5;
 
-            entity->drawPos[0].x = x + 32 * id * ((entity->position.x - x) >> 8);
-            entity->drawPos[0].y = y + 32 * id * ((entity->position.y - y) >> 8);
-            entity->drawPos[0].x += off * RSDK.Cos256(angle);
-            entity->drawPos[0].y += off * RSDK.Sin256(angle);
+            entity->drawPos[id].x = x + 32 * id * ((entity->position.x - x) >> 8);
+            entity->drawPos[id].y = y + 32 * id * ((entity->position.y - y) >> 8);
+            entity->drawPos[id].x += off * RSDK.Cos256(angle);
+            entity->drawPos[id].y += off * RSDK.Sin256(angle);
 
             entityAngle += 32;
             id++;
@@ -122,7 +122,7 @@ void TMZCable_Unknown4(void)
     int32 storeX = entity->position.x;
     int32 storeY = entity->position.y;
 
-    for (int32 i = 1; i < 8; ++i) {
+    for (int32 i = 1; i < TMZCable_JointCount; ++i) {
         entity->position.x = entity->drawPos[i].x;
         entity->position.y = entity->drawPos[i].y;
         foreach_active(Player, player)
@@ -164,9 +164,10 @@ void TMZCable_Unknown6(void)
         if (Zone->timer & 4) {
             int32 y = entity->drawPos[id].y + RSDK.Rand(-0x100000, 0x100000);
             int32 x = entity->drawPos[id].x + RSDK.Rand(-0x100000, 0x100000);
-            CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + 2), x, y)->drawOrder = Zone->drawOrderHigh;
+            CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawOrder = Zone->drawOrderHigh;
         }
     }
+
     entity->timer += 3;
     if (entity->timer < 256) {
         int32 timer = entity->timer & 0x1F;
@@ -191,32 +192,15 @@ void TMZCable_Unknown6(void)
 void TMZCable_EditorDraw(void)
 {
     RSDK_THIS(TMZCable);
-    entity->cableID &= 3;
-    switch (entity->cableID) {
-        case 0:
-            entity->field_64.x = -0x1C0000;
-            entity->field_64.y = 0x100000;
-            entity->angle      = 0;
-            break;
-        case 1:
-            entity->field_64.x = 0x1C0000;
-            entity->field_64.y = 0x100000;
-            entity->angle      = 64;
-            break;
-        case 2:
-            entity->field_64.x = -0x1C0000;
-            entity->field_64.y = -0x100000;
-            entity->angle      = 128;
-            break;
-        case 3:
-            entity->field_64.x = 0x1C0000;
-            entity->field_64.y = -0x100000;
-            entity->angle      = 0xC0;
-            break;
-        default: break;
-    }
 
+    uint8 angles[] = { 0x00, 0x40, 0x80, 0xC0 };
+    entity->angle  = angles[entity->cableID & 3];
     RSDK.SetSpriteAnimation(PhantomEgg->aniFrames, 9, &entity->animator, true, 0);
+
+    for (int32 i = 0; i < TMZCable_JointCount; ++i) {
+        entity->drawPos[i].x = entity->position.x;
+        entity->drawPos[i].y = entity->position.y;
+    }
 
     TMZCable_Draw();
 }

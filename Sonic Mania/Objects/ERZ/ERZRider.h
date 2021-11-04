@@ -43,6 +43,6 @@ void ERZRider_EditorLoad(void);
 void ERZRider_Serialize(void);
 
 // Extra Entity Functions
-void ERZRider_Unknown1(void);
+void ERZRider_StateDraw_Unknown1(void);
 
 #endif //!OBJ_ERZRIDER_H

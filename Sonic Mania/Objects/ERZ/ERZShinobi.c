@@ -18,6 +18,7 @@ void ERZShinobi_StaticUpdate(void) {}
 void ERZShinobi_Draw(void)
 {
     RSDK_THIS(ERZShinobi);
+
     if ((entity->invincibilityTimer & 1))
         RSDK.CopyPalette(2, 128, 0, 128, 128);
     entity->rotation = entity->rotStore;
@@ -54,7 +55,7 @@ void ERZShinobi_Create(void *data)
         entity->updateRange.y   = 0x800000;
         entity->collisionLayers = Zone->fgLayers;
         entity->tileCollisions  = true;
-        entity->spearOffset        = 0x1600;
+        entity->spearOffset     = 0x1600;
         entity->state           = ERZShinobi_Unknown3;
         RSDK.SetSpriteAnimation(ERZShinobi->aniFrames, 0, &entity->animator1, true, 0);
         RSDK.SetSpriteAnimation(ERZShinobi->aniFrames, 0, &entity->animator2, true, 1);
@@ -72,7 +73,7 @@ void ERZShinobi_StageLoad(void)
     ERZShinobi->hitbox.bottom = 24;
 }
 
-void ERZShinobi_CheckHit(void)
+void ERZShinobi_CheckPlayerCollisions(void)
 {
     RSDK_THIS(ERZShinobi);
 
@@ -123,7 +124,7 @@ void ERZShinobi_HandleTileCollisions(void)
         entity->spearOffset += (0x1600 - entity->spearOffset) >> 3;
     }
 
-    int32 val                 = entity->spearOffset / 88;
+    int32 val               = entity->spearOffset / 88;
     entity->outerBox.right  = val;
     entity->outerBox.bottom = val;
     entity->outerBox.left   = -val;
@@ -149,13 +150,23 @@ void ERZShinobi_Unknown3(void)
             entity->onGround   = false;
         }
     }
-    ERZShinobi_CheckHit();
+    ERZShinobi_CheckPlayerCollisions();
 }
 
 #if RETRO_INCLUDE_EDITOR
-void ERZShinobi_EditorDraw(void) {}
+void ERZShinobi_EditorDraw(void)
+{
+    RSDK_THIS(ERZShinobi);
 
-void ERZShinobi_EditorLoad(void) {}
+    entity->spearOffset = 0x1600;
+    RSDK.SetSpriteAnimation(ERZShinobi->aniFrames, 0, &entity->animator1, false, 0);
+    RSDK.SetSpriteAnimation(ERZShinobi->aniFrames, 0, &entity->animator2, false, 1);
+    RSDK.SetSpriteAnimation(ERZShinobi->aniFrames, 1, &entity->animator3, false, 0);
+
+    ERZShinobi_Draw();
+}
+
+void ERZShinobi_EditorLoad(void) { ERZShinobi->aniFrames = RSDK.LoadSpriteAnimation("Phantom/PhantomShinobi.bin", SCOPE_STAGE); }
 #endif
 
 void ERZShinobi_Serialize(void) {}

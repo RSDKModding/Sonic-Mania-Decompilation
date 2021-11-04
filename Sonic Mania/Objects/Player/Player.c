@@ -1114,7 +1114,7 @@ bool32 Player_CheckGoSuper(EntityPlayer *player, uint8 emeraldflags)
     uint8 emeralds = 127;
     // if (emeraldflags != 255)
     //    emeralds = emeraldflags;
-    if (!RSDK_sceneInfo->timeEnabled && !ERZStart && (!PhantomEgg || PhantomEgg->field_244)) {
+    if (!RSDK_sceneInfo->timeEnabled && !ERZStart && (!PhantomEgg || PhantomEgg->superFlag)) {
         return false;
     }
 
@@ -1558,7 +1558,7 @@ void Player_HandleSuperForm(void)
     if (entity->superState == SUPERSTATE_SUPER) {
         bool32 flag = false;
         if (!RSDK_sceneInfo->timeEnabled && !ERZStart) {
-            if (!PhantomEgg || PhantomEgg->field_244) {
+            if (!PhantomEgg || PhantomEgg->superFlag) {
                 entity->superState = SUPERSTATE_FADEOUT;
                 flag               = true;
             }

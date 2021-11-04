@@ -21,12 +21,7 @@ typedef struct {
     Vector2 startPos;
     int32 timer;
     Hitbox hitbox;
-    int32 field_88;
-    int32 field_8C;
-    int32 field_90;
-    int32 field_94;
-    int32 field_98;
-    int32 field_9C;
+    Animator animator;
 } EntityRingField;
 
 // Object Struct

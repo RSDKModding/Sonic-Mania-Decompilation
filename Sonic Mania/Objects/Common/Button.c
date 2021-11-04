@@ -175,7 +175,7 @@ void Button_CheckEggmanCollisions(void)
             eggman->onGround = true;
             entity->field_78 = Button->field_20;
             if (!entity->field_74) {
-                RSDK.PlaySfx(Button->sfxButton, 0, 255);
+                RSDK.PlaySfx(Button->sfxButton, false, 0xFF);
                 entity->activated = true;
                 entity->field_68 ^= 1;
             }
@@ -192,17 +192,17 @@ void Button_CheckPRiderCollisions(void)
     foreach_active(PhantomRider, rider)
     {
         entity->hitbox.top = (Button->field_20 >> 16) - (Button->field_28 & 0xFFFF);
-        /*if (RSDK.CheckObjectCollisionPlatform(entity, &entity->hitbox, rider, &rider->hitbox, true)) {
+        if (RSDK.CheckObjectCollisionPlatform(entity, &entity->hitbox, rider, &rider->hitbox, true)) {
             entity->field_78 = Button->field_20;
             if (!entity->field_74) {
-                RSDK.PlaySfx(Button->sfxButton, 0, 255);
+                RSDK.PlaySfx(Button->sfxButton, false, 0xFF);
                 entity->activated = true;
                 entity->field_68 ^= 1;
             }
             entity->field_74 = 1;
             entity->field_64 = 1;
             entity->field_70 = 1;
-        }*/
+        }
     }
 }
 

@@ -40,7 +40,7 @@ void ERZRider_Create(void *data)
             RSDK.SetSpriteAnimation(ERZRider->aniFrames, 5, &entity->animator3, true, 0);
             RSDK.SetSpriteAnimation(ERZRider->aniFrames, 6, &entity->animator4, true, 0);
             entity->startPos  = entity->position;
-            entity->stateDraw = ERZRider_Unknown1;
+            entity->stateDraw = ERZRider_StateDraw_Unknown1;
             entity->state     = StateMachine_None;
         }
     }
@@ -48,15 +48,25 @@ void ERZRider_Create(void *data)
 
 void ERZRider_StageLoad(void) { ERZRider->aniFrames = RSDK.LoadSpriteAnimation("Phantom/PhantomRider.bin", SCOPE_STAGE); }
 
-void ERZRider_Unknown1(void)
+void ERZRider_StateDraw_Unknown1(void)
 {
     // thats all folks!
 }
 
 #if RETRO_INCLUDE_EDITOR
-void ERZRider_EditorDraw(void) {}
+void ERZRider_EditorDraw(void)
+{
+    RSDK_THIS(ERZRider);
+    entity->drawFX = FX_FLIP;
+    RSDK.SetSpriteAnimation(ERZRider->aniFrames, 0, &entity->animator1, false, 0);
+    RSDK.SetSpriteAnimation(ERZRider->aniFrames, 4, &entity->animator2, false, 0);
+    RSDK.SetSpriteAnimation(ERZRider->aniFrames, 5, &entity->animator3, false, 0);
+    RSDK.SetSpriteAnimation(ERZRider->aniFrames, 6, &entity->animator4, false, 0);
 
-void ERZRider_EditorLoad(void) {}
+    // ???
+}
+
+void ERZRider_EditorLoad(void) { ERZRider->aniFrames = RSDK.LoadSpriteAnimation("Phantom/PhantomRider.bin", SCOPE_STAGE); }
 #endif
 
 void ERZRider_Serialize(void) {}

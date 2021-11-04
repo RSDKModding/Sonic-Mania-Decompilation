@@ -18,7 +18,7 @@ void PKingAttack_Draw(void)
 
     if (entity->type == 2)
         RSDK.DrawCircle(entity->position.x, entity->position.y, 32, 0, 255, INK_LOOKUP, false);
-    RSDK.DrawSprite(&entity->animator, 0, false);
+    RSDK.DrawSprite(&entity->animator, NULL, false);
 }
 
 void PKingAttack_Create(void *data)
@@ -33,6 +33,7 @@ void PKingAttack_Create(void *data)
         entity->updateRange.y = 0x800000;
 
         switch (entity->type) {
+            default: break;
             case 1:
                 entity->drawFX  = FX_SCALE;
                 entity->visible = true;
@@ -235,9 +236,19 @@ void PKingAttack_Unknown6(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void PKingAttack_EditorDraw(void) {}
+void PKingAttack_EditorDraw(void)
+{
+    RSDK_THIS(PKingAttack);
 
-void PKingAttack_EditorLoad(void) {}
+    entity->type      = 1;
+    entity->inkEffect = INK_ADD;
+    entity->alpha     = 0xC0;
+    RSDK.SetSpriteAnimation(PKingAttack->aniFrames, 12, &entity->animator, true, 0);
+
+    PKingAttack_Draw();
+}
+
+void PKingAttack_EditorLoad(void) { PKingAttack->aniFrames = RSDK.LoadSpriteAnimation("Phantom/PhantomKing.bin", SCOPE_STAGE); }
 #endif
 
 void PKingAttack_Serialize(void) {}

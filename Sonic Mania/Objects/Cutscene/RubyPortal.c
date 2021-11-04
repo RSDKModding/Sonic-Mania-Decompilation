@@ -376,6 +376,9 @@ void RubyPortal_EditorDraw(void)
     RSDK_THIS(RubyPortal);
     entity->visible       = true;
     entity->drawOrder     = Zone->drawOrderLow;
+    entity->scale.x       = 0x200;
+    entity->scale.y       = 0x200;
+    entity->alpha         = 0xFF;
     RSDK.SetSpriteAnimation(RubyPortal->spriteIndex, 0, &entity->animator, true, 0);
 
     RSDK.DrawSprite(&entity->animator, NULL, false);

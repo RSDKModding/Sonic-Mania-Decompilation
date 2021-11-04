@@ -18,7 +18,7 @@ typedef struct {
     int32 field_60;
     int32 field_64;
     int32 field_68;
-    int32 field_6C;
+    int32 id;
     Vector2 drawPos;
     Entity *parent;
     Animator animator0;

@@ -18,7 +18,26 @@ typedef struct {
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    StateMachine(state);
+    StateMachine(stateDraw);
+    Vector2 posUnknown1;
+    Vector2 startPos;
+    int32 type;
+    Entity *parent;
+    int32 timer2;
+    int32 invincibilityTimer;
+    int32 field_80;
+    int32 timer3;
+    int32 timer;
+    int32 field_8C;
+    int32 field_90;
+    Vector2 posUnknown2;
+    Animator animator1;
+    Animator animator2;
+    Animator animator3;
+    Animator animator4;
+    Animator animator5;
 } EntityPhantomGunner;
 
 // Object Struct
@@ -38,6 +57,31 @@ void PhantomGunner_EditorLoad(void);
 void PhantomGunner_Serialize(void);
 
 // Extra Entity Functions
+void PhantomGunner_Explode(void);
+void PhantomGunner_Explode2(void);
+void PhantomGunner_SpawnDust(void);
+void PhantomGunner_HandleRotations(int angle);
+void PhantomGunner_CheckPlayerMissileCollisions(void);
+void PhantomGunner_CheckPlayerExplosionCollisions(void);
+
+void PhantomGunner_StateDraw_Unknown0(void);
+void PhantomGunner_StateDraw_Unknown1(void);
+void PhantomGunner_StateDraw_Unknown2(void);
+
+void PhantomGunner_State_ResetState(void);
+void PhantomGunner_State_Unknown1(void);
+void PhantomGunner_State_Unknown2(void);
+
+void PhantomGunner_State1_Unknown1(void);
+void PhantomGunner_State1_Unknown2(void);
+void PhantomGunner_State1_Unknown3(void);
+void PhantomGunner_State1_Unknown4(void);
+void PhantomGunner_State1_Unknown5(void);
+void PhantomGunner_State1_Unknown6(void);
+void PhantomGunner_State1_Unknown7(void);
+
+void PhantomGunner_State2_Unknown(void);
+void PhantomGunner_State3_Unknown(void);
 
 
 #endif //!OBJ_PHANTOMGUNNER_H

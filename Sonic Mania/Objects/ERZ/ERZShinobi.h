@@ -46,7 +46,7 @@ void ERZShinobi_EditorLoad(void);
 void ERZShinobi_Serialize(void);
 
 // Extra Entity Functions
-void ERZShinobi_CheckHit(void);
+void ERZShinobi_CheckPlayerCollisions(void);
 void ERZShinobi_HandleTileCollisions(void);
 void ERZShinobi_Unknown3(void);
 

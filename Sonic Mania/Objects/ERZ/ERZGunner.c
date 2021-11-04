@@ -5,7 +5,6 @@ ObjectERZGunner *ERZGunner;
 void ERZGunner_Update(void)
 {
     RSDK_THIS(ERZGunner);
-
     StateMachine_Run(entity->state);
 }
 
@@ -20,8 +19,9 @@ void ERZGunner_Draw(void)
     if (entity->stateDraw) {
         StateMachine_Run(entity->stateDraw);
     }
-    else
+    else {
         RSDK.DrawSprite(&entity->animator1, NULL, false);
+    }
 }
 
 void ERZGunner_Create(void *data)
@@ -41,11 +41,10 @@ void ERZGunner_Create(void *data)
                 RSDK.SetSpriteAnimation(ERZGunner->aniFrames, 0, &entity->animator1, true, 0);
                 RSDK.SetSpriteAnimation(ERZGunner->aniFrames, 1, &entity->animator2, true, 0);
 
-                entity->posUnknown1.x = entity->position.x;
-                entity->posUnknown1.y = entity->position.y;
-                entity->posUnknown2   = RSDK_screens->position;
-                entity->stateDraw     = ERZGunner_StateDraw_Unknown0;
-                entity->state         = ERZGunner_State_Unknown1;
+                entity->posUnknown1 = entity->position;
+                entity->posUnknown2 = RSDK_screens->position;
+                entity->stateDraw   = ERZGunner_StateDraw_Unknown0;
+                entity->state       = ERZGunner_State_Unknown1;
                 break;
             case 1:
                 RSDK.SetSpriteAnimation(ERZGunner->aniFrames, 10, &entity->animator1, true, 0);
@@ -54,16 +53,14 @@ void ERZGunner_Create(void *data)
                 entity->state     = ERZGunner_State1_Unknown1;
                 break;
             case 5:
-                entity->posUnknown1.x = entity->position.x;
-                entity->posUnknown1.y = entity->position.y;
-                entity->state         = ERZGunner_State2_Unknown;
+                entity->posUnknown1 = entity->position;
+                entity->state       = ERZGunner_State2_Unknown;
                 break;
             case 6:
-                entity->posUnknown1.x = entity->position.x;
-                entity->posUnknown1.y = entity->position.y;
-                entity->state         = ERZGunner_State3_Unknown;
+                entity->posUnknown1 = entity->position;
+                entity->state       = ERZGunner_State3_Unknown;
                 break;
-            default: return;
+            default: break;
         }
     }
 }
@@ -602,9 +599,20 @@ void ERZGunner_State3_Unknown(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void ERZGunner_EditorDraw(void) {}
+void ERZGunner_EditorDraw(void)
+{
+    RSDK_THIS(ERZGunner);
+    entity->drawFX = FX_FLIP;
+    RSDK.SetSpriteAnimation(ERZGunner->aniFrames, 0, &entity->animator1, false, 0);
+    RSDK.SetSpriteAnimation(ERZGunner->aniFrames, 1, &entity->animator2, false, 0);
 
-void ERZGunner_EditorLoad(void) {}
+    entity->posUnknown1 = entity->position;
+    entity->posUnknown2 = RSDK_screens->position;
+
+    ERZGunner_StateDraw_Unknown0();
+}
+
+void ERZGunner_EditorLoad(void) { ERZGunner->aniFrames = RSDK.LoadSpriteAnimation("Phantom/PhantomGunner.bin", SCOPE_STAGE); }
 #endif
 
 void ERZGunner_Serialize(void) {}

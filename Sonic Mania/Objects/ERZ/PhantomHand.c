@@ -42,7 +42,7 @@ void PhantomHand_Create(void *data)
         entity->field_6C      = entity->position.x;
         entity->field_70      = entity->position.y;
         entity->active        = ACTIVE_NORMAL;
-        entity->inkEffect     = INK_ALPHA;
+        entity->inkEffect     = INK_ADD;
         entity->drawFX        = FX_FLIP | FX_SCALE;
         entity->alpha         = 0x100;
         entity->updateRange.x = 0x800000;
@@ -169,7 +169,7 @@ void PhantomHand_State_Unknown2(void)
         entity->state = PhantomHand_State_Unknown4;
     }
     else {
-        if ((entity->direction && player1->position.x <= PhantomEgg->value7) || (entity->direction && player1->position.x >= PhantomEgg->value7)) {
+        if ((entity->direction && player1->position.x <= PhantomEgg->boundsM) || (entity->direction && player1->position.x >= PhantomEgg->boundsM)) {
             PhantomHand_CheckPlayerGrab(entity->parent->position.x, player1->position.y);
         }
         else {
@@ -201,7 +201,7 @@ void PhantomHand_State_Unknown3(void)
         if (entity->direction == FLIP_NONE) {
             foreach_active(Player, player)
             {
-                if (entity->state != Player_State_None && entity->position.x - entity->position.x < dist) {
+                if (player->state != Player_State_None && entity->position.x - player->position.x < dist) {
                     dist      = entity->position.x - entity->position.x;
                     playerPtr = player;
                 }
@@ -212,7 +212,7 @@ void PhantomHand_State_Unknown3(void)
         else {
             foreach_active(Player, player)
             {
-                if (entity->state != Player_State_None && player->position.x - entity->position.x < dist) {
+                if (player->state != Player_State_None && player->position.x - entity->position.x < dist) {
                     dist      = player->position.x - entity->position.x;
                     playerPtr = player;
                 }
@@ -286,8 +286,8 @@ void PhantomHand_State_Unknown8(void)
     RSDK.ProcessAnimation(&entity->animator3);
     if (entity->animator3.frameID == entity->animator3.frameCount - 1) {
         RSDK.SetSpriteAnimation(0xFFFF, 0, &entity->animator3, true, 0);
-        // if (entity->field_78)
-        //    PhantomEgg_Unknown6();
+        if (entity->field_78)
+            PhantomEgg_SetupScanlineCB();
         entity->state = StateMachine_None;
     }
 }
