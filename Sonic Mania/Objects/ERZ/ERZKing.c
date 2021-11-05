@@ -23,8 +23,9 @@ void ERZKing_Draw(void)
     if (entity->stateDraw) {
         StateMachine_Run(entity->stateDraw);
     }
-    else
+    else {
         RSDK.DrawSprite(&entity->animator1, NULL, false);
+    }
 }
 
 void ERZKing_Create(void *data)
@@ -46,14 +47,14 @@ void ERZKing_Create(void *data)
                 entity->hitbox.top    = -24;
                 entity->hitbox.right  = 24;
                 entity->hitbox.bottom = 24;
-                entity->visible       = 0;
+                entity->visible       = false;
                 entity->direction     = FLIP_X;
                 entity->health        = 8;
                 RSDK.SetSpriteAnimation(ERZKing->aniFrames, 0, &entity->animator2, true, 0);
                 RSDK.SetSpriteAnimation(ERZKing->aniFrames, 1, &entity->animator3, true, 0);
                 RSDK.SetSpriteAnimation(ERZKing->aniFrames, 2, &entity->animator4, true, 0);
                 RSDK.SetSpriteAnimation(ERZKing->aniFrames, 7, &entity->animator5, true, 0);
-                RSDK.SetSpriteAnimation(ERZKing->aniFrames, 8, &entity->animator6, true, 0);
+                RSDK.SetSpriteAnimation(ERZKing->aniFrames, 8, &entity->animatorRuby, true, 0);
                 entity->posUnknown = entity->position;
                 entity->state      = ERZKing_State_Unknown1;
                 break;
@@ -123,32 +124,32 @@ void ERZKing_HandleFrames(void)
     int angle = entity->angle2;
 
     for (int i = 0; i < 10; i += 2) {
-        entity->framePositions[0].x = x + 2 * RSDK.Cos512(entity->rotation) * RSDK.Cos1024(angle);
-        entity->framePositions[0].y = y + 2 * RSDK.Sin512(entity->rotation) * RSDK.Cos1024(angle);
-        entity->frameIDs[0]         = angle & 0x3FF;
+        entity->framePositions[i].x = x + 2 * RSDK.Cos512(entity->rotation) * RSDK.Cos1024(angle);
+        entity->framePositions[i].y = y + 2 * RSDK.Sin512(entity->rotation) * RSDK.Cos1024(angle);
+        entity->frameIDs[i]         = angle & 0x3FF;
 
         angle += 512;
 
-        entity->framePositions[1].x = x + 2 * RSDK.Cos512(entity->rotation) * RSDK.Cos1024(angle);
-        entity->framePositions[1].y = y + 2 * RSDK.Sin512(entity->rotation) * RSDK.Cos1024(angle);
-        entity->frameIDs[1]         = angle & 0x3FF;
+        entity->framePositions[i + 1].x = x + 2 * RSDK.Cos512(entity->rotation) * RSDK.Cos1024(angle);
+        entity->framePositions[i + 1].y = y + 2 * RSDK.Sin512(entity->rotation) * RSDK.Cos1024(angle);
+        entity->frameIDs[i + 1]         = angle & 0x3FF;
 
         x += RSDK.Sin512(negAng) << 10;
         y += RSDK.Cos512(negAng) << 10;
         angle += 0x240;
     }
 
-    entity->drawPos.x = entity->position.x;
-    entity->drawPos.y = entity->position.y;
-    entity->drawPos.x -= 0x1400 * RSDK.Sin512(negAng);
-    entity->drawPos.y -= 0x1400 * RSDK.Cos512(negAng);
+    entity->rubyPos.x = entity->position.x;
+    entity->rubyPos.y = entity->position.y;
+    entity->rubyPos.x -= 0x1400 * RSDK.Sin512(negAng);
+    entity->rubyPos.y -= 0x1400 * RSDK.Cos512(negAng);
     if (entity->direction) {
-        entity->drawPos.x -= 0x180 * RSDK.Cos512(negAng);
-        entity->drawPos.y -= 0x180 * RSDK.Sin512(negAng);
+        entity->rubyPos.x -= 0x180 * RSDK.Cos512(negAng);
+        entity->rubyPos.y -= 0x180 * RSDK.Sin512(negAng);
     }
     else {
-        entity->drawPos.x += 0x180 * RSDK.Cos512(negAng);
-        entity->drawPos.y += 0x180 * RSDK.Sin512(negAng);
+        entity->rubyPos.x += 0x180 * RSDK.Cos512(negAng);
+        entity->rubyPos.y += 0x180 * RSDK.Sin512(negAng);
     }
 }
 
@@ -164,6 +165,7 @@ void ERZKing_StateDraw_Body(void)
         RSDK.SetLimitedFade(0, 1, 4, entity->typeChangeTimer, 0, 48);
         RSDK.SetLimitedFade(0, 1, 4, entity->typeChangeTimer, 128, 256);
     }
+
     RSDK.DrawSprite(&entity->animator2, NULL, false);
     RSDK.DrawSprite(&entity->animator3, NULL, false);
 
@@ -185,7 +187,8 @@ void ERZKing_StateDraw_Body(void)
         }
     }
 
-    RSDK.DrawSprite(&entity->animator6, &entity->drawPos, false);
+    RSDK.DrawSprite(&entity->animatorRuby, &entity->rubyPos, false);
+
     if (entity->typeChangeTimer <= 0) {
         if (entity->invincibilityTimer & 1)
             RSDK.CopyPalette(1, 128, 0, 128, 128);
@@ -374,7 +377,7 @@ void ERZKing_State_Arm(void)
     int x2 = 0, y2 = 0;
     if (parent->direction) {
         moveX = parent->position.x - 0x300000;
-        x     = (0xD00 * RSDK.Cos512(negAngle)) + 0x300 * RSDK.Sin512(negAngle) + parent->position.x;
+        x     = parent->position.x + 0xD00 * RSDK.Cos512(negAngle) + 0x300 * RSDK.Sin512(negAngle);
         y     = parent->position.y - 0xD00 * RSDK.Sin512(negAngle) + 0x300 * RSDK.Cos512(negAngle);
         if (entity->type == 1) {
             x += -0x1800 * RSDK.Cos512(parent->rotation);
@@ -386,8 +389,8 @@ void ERZKing_State_Arm(void)
     }
     else {
         moveX = parent->position.x + 0x300000;
-        x     = 0x300 * RSDK.Sin512(negAngle) - (0xD00 * RSDK.Cos512(negAngle)) + parent->position.x;
-        y     = (0xD00 * RSDK.Sin512(negAngle)) + 0x300 * RSDK.Cos512(negAngle) + parent->position.y;
+        x     = 0x300 * RSDK.Sin512(negAngle) - 0xD00 * RSDK.Cos512(negAngle) + parent->position.x;
+        y     = 0xD00 * RSDK.Sin512(negAngle) + 0x300 * RSDK.Cos512(negAngle) + parent->position.y;
         if (entity->type == 1) {
             x += 0x1800 * RSDK.Cos512(parent->rotation);
             y += -0x1800 * RSDK.Sin512(parent->rotation);
@@ -439,9 +442,24 @@ void ERZKing_State_Explode(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void ERZKing_EditorDraw(void) {}
+void ERZKing_EditorDraw(void)
+{
+    RSDK_THIS(ERZKing);
 
-void ERZKing_EditorLoad(void) {}
+    entity->posUnknown = entity->position;
+    entity->angle2     = 0;
+    ERZKing_HandleFrames();
+
+    RSDK.SetSpriteAnimation(ERZKing->aniFrames, 0, &entity->animator2, true, 0);
+    RSDK.SetSpriteAnimation(ERZKing->aniFrames, 1, &entity->animator3, true, 0);
+    RSDK.SetSpriteAnimation(ERZKing->aniFrames, 2, &entity->animator4, true, 0);
+    RSDK.SetSpriteAnimation(ERZKing->aniFrames, 7, &entity->animator5, true, 0);
+    RSDK.SetSpriteAnimation(ERZKing->aniFrames, 8, &entity->animatorRuby, true, 0);
+
+    ERZKing_StateDraw_Body();
+}
+
+void ERZKing_EditorLoad(void) { ERZKing->aniFrames = RSDK.LoadSpriteAnimation("Phantom/PhantomKing.bin", SCOPE_STAGE); }
 #endif
 
 void ERZKing_Serialize(void) { RSDK_EDITABLE_VAR(ERZKing, VAR_ENUM, type); }
