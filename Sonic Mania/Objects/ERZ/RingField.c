@@ -17,12 +17,12 @@ void RingField_Update(void)
             if (entity->timer <= 0) {
                 Vector2 pos;
                 RingField_GetPos(&pos);
-                EntityRing *ring          = (EntityRing *)RSDK.CreateEntity(Ring->objectID, &pos, pos.x, pos.y);
+                EntityRing *ring          = CREATE_ENTITY(Ring, &pos, pos.x, pos.y);
                 ring->animator.animationSpeed = 512;
                 ring->state               = Ring_State_Normal;
                 ring->drawOrder           = Zone->drawOrderLow;
                 ring->stateDraw           = Ring_StateDraw_Normal;
-                ring->moveType            = 0;
+                ring->moveType            = RING_MOVE_NONE;
                 RSDK.SetSpriteAnimation(RingField->spriteIndex, 0, &ring->animator, true, 0);
 
                 int32 sx = (RSDK_screens->centerX + RSDK_screens->position.x) << 16;
@@ -57,7 +57,7 @@ void RingField_StaticUpdate(void)
             ring->position.y += ring->velocity.y;
         }
         if (!RSDK.CheckOnScreen(ring, &updateRange))
-            RSDK.ResetEntityPtr(ring, TYPE_BLANK, 0);
+            destroyEntity(ring);
     }
 }
 
@@ -75,7 +75,7 @@ void RingField_Create(void *data)
     entity->drawFX        = FX_FLIP;
     entity->updateRange.x = 0x800000;
     entity->updateRange.y = 0x800000;
-    if (entity->size.x)
+    if (!entity->size.x)
         entity->size.x = 0x6400000;
     if (!entity->size.y)
         entity->size.y = 0x1E00000;
@@ -127,7 +127,22 @@ void RingField_GetPos(Vector2 *pos)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void RingField_EditorDraw(void) {}
+void RingField_EditorDraw(void)
+{
+    RSDK_THIS(RingField);
+    Vector2 drawPos;
+
+    drawPos.x = entity->position.x;
+    drawPos.y = entity->position.y;
+    drawPos.x -= entity->size.x >> 1;
+    drawPos.y -= entity->size.y >> 1;
+    RSDK.DrawLine(drawPos.x - 0x10000, drawPos.y - 0x10000, drawPos.x + entity->size.x, drawPos.y - 0x10000, 0xFFFF00, 0, INK_NONE, false);
+    RSDK.DrawLine(drawPos.x - 0x10000, entity->size.y + drawPos.y, drawPos.x + entity->size.x, entity->size.y + drawPos.y, 0xFFFF00, 0, INK_NONE,
+                  false);
+    RSDK.DrawLine(drawPos.x - 0x10000, drawPos.y - 0x10000, drawPos.x - 0x10000, drawPos.y + entity->size.y, 0xFFFF00, 0, INK_NONE, false);
+    RSDK.DrawLine(drawPos.x + entity->size.x, drawPos.y - 0x10000, drawPos.x + entity->size.x, drawPos.y + entity->size.y, 0xFFFF00, 0, INK_NONE,
+                  false);
+}
 
 void RingField_EditorLoad(void) {}
 #endif

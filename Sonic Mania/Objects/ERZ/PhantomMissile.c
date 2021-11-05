@@ -153,7 +153,7 @@ void PhantomMissile_Unknown5(void)
         PhantomMissile_Unknown1();
         RSDK.SetSpriteAnimation(PhantomMissile->aniFrames, 1, &entity->animator1, true, 0);
         RSDK.SetSpriteAnimation(PhantomMissile->aniFrames, 2, &entity->animator2, true, 0);
-        RSDK.SetSpriteAnimation(PhantomMissile->aniFrames, 3, &entity->animator3, true, entity->field_6C);
+        RSDK.SetSpriteAnimation(PhantomMissile->aniFrames, 3, &entity->animator3, true, entity->id);
         entity->drawOrder = Zone->drawOrderHigh;
         entity->state     = PhantomMissile_Unknown6;
     }
@@ -180,7 +180,7 @@ void PhantomMissile_Unknown6(void)
     int angle = RSDK.ATan2(-ry, rx);
     int rot   = 2 * angle - entity->rotation;
 
-    if (abs(2 * angle - entity->rotation) >= abs(rot - 0x200)) {
+    if (abs(rot) >= abs(rot - 0x200)) {
         if (abs(rot - 0x200) < abs(rot + 0x200)) {
             entity->rotation += ((rot - 0x200) >> shift);
         }
@@ -189,7 +189,7 @@ void PhantomMissile_Unknown6(void)
         }
     }
     else {
-        if (abs(2 * angle - entity->rotation) < abs(rot + 0x200)) {
+        if (abs(rot) < abs(rot + 0x200)) {
             entity->rotation += (rot >> shift);
         }
         else {
@@ -274,9 +274,15 @@ void PhantomMissile_Unknown9(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void PhantomMissile_EditorDraw(void) {}
+void PhantomMissile_EditorDraw(void)
+{
+    RSDK_THIS(PhantomMissile);
+    RSDK.SetSpriteAnimation(PhantomMissile->aniFrames, 0, &entity->animator0, false, 0);
 
-void PhantomMissile_EditorLoad(void) {}
+    RSDK.DrawSprite(&entity->animator0, NULL, false);
+}
+
+void PhantomMissile_EditorLoad(void) { PhantomMissile->aniFrames = RSDK.LoadSpriteAnimation("Phantom/EggMissile.bin", SCOPE_STAGE); }
 #endif
 
 void PhantomMissile_Serialize(void) {}

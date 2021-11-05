@@ -175,11 +175,11 @@ void MSBomb_Unknown4(void)
 
     foreach_active(MetalSonic, metal)
     {
-        if (RSDK.CheckObjectCollisionTouchBox(metal, metal->hitboxPtr, entity, &entity->hitbox)) {
+        if (RSDK.CheckObjectCollisionTouchBox(metal, metal->outerBox, entity, &entity->hitbox)) {
             MetalSonic->field_8 = 16;
-            if (--metal->field_70 <= 0) {
+            if (--metal->health <= 0) {
                 metal->timer = 0;
-                // metal->state = MetalSonic_Unknown29;
+                metal->state = MetalSonic_State_PanelExplosion;
             }
             RSDK.PlaySfx(MetalSonic->sfxHit, false, 255);
             destroyEntity(entity);

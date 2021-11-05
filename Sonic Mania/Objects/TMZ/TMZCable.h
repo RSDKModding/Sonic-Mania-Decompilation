@@ -3,6 +3,8 @@
 
 #include "SonicMania.h"
 
+#define TMZCable_JointCount (8)
+
 // Object Class
 typedef struct {
     RSDK_OBJECT
@@ -16,8 +18,8 @@ typedef struct {
     int32 timer;
     int32 cableID;
     Vector2 field_64;
-    Vector2 drawPos[8];
-    bool32 drawFlags[8];
+    Vector2 drawPos[TMZCable_JointCount];
+    bool32 drawFlags[TMZCable_JointCount];
     Vector2 *posPtr;
     Animator animator;
 } EntityTMZCable;

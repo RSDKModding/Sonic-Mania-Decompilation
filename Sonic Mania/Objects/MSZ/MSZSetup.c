@@ -72,13 +72,17 @@ void MSZSetup_Create(void *data)
     if (RSDK_sceneInfo->minutes || RSDK_sceneInfo->seconds || RSDK_sceneInfo->milliseconds) {
         if (RSDK_sceneInfo->minutes == globals->tempMinutes && RSDK_sceneInfo->seconds == globals->tempSeconds
             && RSDK_sceneInfo->milliseconds == globals->tempMilliseconds)
-            MSZSetup->flag = globals->tempFlags;
+            MSZSetup->flag = (RETRO_GAMEVER != VER_100 ? globals->tempFlags : globals->restartMusicID);
         else
             MSZSetup->flag = globals->restartFlags;
     }
     else {
         globals->restartFlags = 0;
+#if RETRO_GAMEVER != VER_100
         globals->tempFlags    = 0;
+#else
+        globals->restartMusicID = 0;
+#endif
         MSZSetup->flag        = false;
     }
 
@@ -97,10 +101,10 @@ void MSZSetup_Create(void *data)
             destroyEntity(entity);
 #if RETRO_USE_PLUS
         }
-#endif
         RSDK.CopyPalette(0, 128, 1, 128, 128);
         RSDK.CopyPalette(0, 128, 2, 128, 128);
         RSDK.RotatePalette(2, 204, 207, false);
+#endif
     }
 #if RETRO_USE_PLUS
     else if (RSDK_sceneInfo->filter & FILTER_ENCORE) {
@@ -110,6 +114,9 @@ void MSZSetup_Create(void *data)
     }
 #endif
     else {
+#if !RETRO_USE_PLUS 
+        RSDK.CopyPalette(0, 204, 4, 204, 4);
+#endif
         RSDK.CopyPalette(3, 128, 0, 128, 128);
     }
 }
@@ -195,19 +202,14 @@ void MSZSetup_StageLoad(void)
 #if RETRO_USE_PLUS
             if ((RSDK_sceneInfo->filter & FILTER_ENCORE)) {
                 RSDK.ResetEntitySlot(32, MSZSetup->objectID, MSZSetup_ManageFadeE);
-                if isMainGameMode () {
+                if (isMainGameMode()) {
                     if (PlayerHelpers_CheckAct1())
                         Zone->stageFinishCallback = MSZSetup_StageFinishCB_E;
                 }
             }
             else {
-#endif
                 if (RSDK.GetEntityCount(Tornado->objectID, false) <= 0) {
-#if RETRO_USE_PLUS
                     RSDK.ResetEntitySlot(32, MSZSetup->objectID, MSZSetup_ManageFadeK);
-#else
-                RSDK.ResetEntitySlot(17, MSZSetup->objectID, MSZSetup_ManageFadeK);
-#endif
                     if (!PlayerHelpers_CheckIntro())
                         FXFade_StopAll();
                     if (PlayerHelpers_CheckAct1Regular()) {
@@ -218,18 +220,29 @@ void MSZSetup_StageLoad(void)
                 else {
                     MSZSetup_Unknown2();
                     MSZSetup_Unknown4(1024);
-#if RETRO_USE_PLUS
                     RSDK.ResetEntitySlot(32, MSZSetup->objectID, MSZSetup_ManageFadeST);
-#else
-                RSDK.ResetEntitySlot(17, MSZSetup->objectID, MSZSetup_ManageFadeST);
-#endif
                     if (PlayerHelpers_CheckAct1Regular())
                         Zone->stageFinishCallback = MSZSetup_StageFinishCB_ST;
-#if RETRO_USE_PLUS
                     GiantPistol->flag = true;
-#endif
                 }
-#if RETRO_USE_PLUS
+            }
+#else
+            if (checkPlayerID(ID_KNUCKLES, 1)) {
+                RSDK.ResetEntitySlot(17, MSZSetup->objectID, MSZSetup_ManageFadeK);
+                if (!PlayerHelpers_CheckIntro())
+                    FXFade_StopAll();
+                if (PlayerHelpers_CheckAct1Regular()) {
+                    Zone->forcePlayerOnScreenFlag = true;
+                    Zone->stageFinishCallback     = MSZSetup_StageFinishCB_K;
+                }
+            }
+            else {
+                MSZSetup_Unknown2();
+                MSZSetup_Unknown4(0x400);
+                RSDK.ResetEntitySlot(17, MSZSetup->objectID, MSZSetup_ManageFadeST);
+
+                if (PlayerHelpers_CheckAct1Regular())
+                    Zone->stageFinishCallback = MSZSetup_StageFinishCB_ST;
             }
 #endif
         }
@@ -405,10 +418,10 @@ void MSZSetup_SwitchPalettes(void)
 #endif
         MSZSetup->flag = true;
         RSDK.CopyPalette(4, 128, 0, 128, 128);
+#if RETRO_USE_PLUS
         RSDK.CopyPalette(4, 128, 1, 128, 128);
         RSDK.CopyPalette(4, 128, 2, 128, 128);
         RSDK.RotatePalette(2, 204, 207, false);
-#if RETRO_USE_PLUS
         if ((RSDK_sceneInfo->filter & FILTER_ENCORE))
             entity->state = MSZSetup_Unknown10;
         else

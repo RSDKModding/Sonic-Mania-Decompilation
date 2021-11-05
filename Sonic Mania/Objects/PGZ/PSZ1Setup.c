@@ -207,20 +207,23 @@ void PSZ1Setup_StageLoad(void)
 
     if (isMainGameMode() && PlayerHelpers_CheckAct1())
         Zone->stageFinishCallback = PSZ1Setup_ActTransitionCB;
+
 #if RETRO_USE_PLUS
     if (RSDK_sceneInfo->filter & FILTER_ENCORE)
         RSDK.LoadPalette(0, "EncorePSZ1.act", 0xFF);
     Animals->animalTypes[0] = ANIMAL_POCKY;
-    Animals->animalTypes[1] = ANIMAL_BECKY;
-#endif
+    Animals->animalTypes[1]     = ANIMAL_BECKY;
+
     BGSwitch->switchCallback[0] = PSZ1Setup_BGSwitchCB1;
     BGSwitch->switchCallback[1] = PSZ1Setup_BGSwitchCB2;
     BGSwitch->layerIDs[0]       = 0;
     BGSwitch->layerIDs[1]       = 0;
     BGSwitch->layerIDs[2]       = 0;
     BGSwitch->layerIDs[3]       = 0;
+#endif
 }
 
+#if RETRO_USE_PLUS
 void PSZ1Setup_BGSwitchCB1(void)
 {
     RSDK.GetSceneLayer(0)->drawLayer[BGSwitch->screenID] = 0;
@@ -234,6 +237,7 @@ void PSZ1Setup_BGSwitchCB2(void)
     RSDK.GetSceneLayer(1)->drawLayer[BGSwitch->screenID] = DRAWLAYER_COUNT;
     RSDK.GetSceneLayer(2)->drawLayer[BGSwitch->screenID] = DRAWLAYER_COUNT;
 }
+#endif
 
 void PSZ1Setup_TriggerCB1(void) { PSZ1Setup->flag = true; }
 

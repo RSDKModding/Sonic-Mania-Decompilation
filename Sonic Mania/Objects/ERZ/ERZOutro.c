@@ -26,11 +26,9 @@ void ERZOutro_Draw(void) {}
 void ERZOutro_Create(void *data)
 {
     RSDK_THIS(ERZOutro);
-    if (!RSDK_sceneInfo->inEditor) {
-        INIT_ENTITY(entity);
-        CutsceneRules_SetupEntity(entity, &entity->size, &entity->hitbox);
-        entity->active = ACTIVE_NEVER;
-    }
+    INIT_ENTITY(entity);
+    CutsceneRules_SetupEntity(entity, &entity->size, &entity->hitbox);
+    entity->active = ACTIVE_NEVER;
 }
 
 void ERZOutro_StageLoad(void)

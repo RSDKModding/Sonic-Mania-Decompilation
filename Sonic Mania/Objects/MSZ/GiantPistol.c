@@ -230,7 +230,11 @@ void GiantPistol_State_Aiming(void)
     }
 
     uint8 flags = 0;
+#if RETRO_USE_PLUS
     if (GiantPistol->flag) {
+#else 
+    if (!Zone->actID && !checkPlayerID(ID_KNUCKLES, 1)) {
+#endif
         if (entity->angle == 118 && entity->activePlayers > 0) {
 #if RETRO_USE_PLUS
             if (RSDK_sceneInfo->filter & FILTER_ENCORE) {

@@ -244,7 +244,7 @@ void MainMenu_ChangeMenu(void)
                     EntityUIDialog *dialog = UIDialog_CreateActiveDialog(buffer);
                     if (dialog) {
                         UIDialog_AddButton(DIALOG_OK, dialog, MainMenu_BuyPlusDialogCB, true);
-                        UIDialog_AddButton(DIALOG_CANCEL, dialog, 0, true);
+                        UIDialog_AddButton(DIALOG_CANCEL, dialog, NULL, true);
                         UIDialog_Setup(dialog);
                     }
                 }

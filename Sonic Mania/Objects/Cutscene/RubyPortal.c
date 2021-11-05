@@ -47,15 +47,15 @@ void RubyPortal_Create(void *data)
             if (door->objectID == WarpDoor->objectID) {
                 entity->hitbox      = door->hitbox;
                 door->hitbox.left   = 0;
-                door->hitbox.top   = -0x800;
+                door->hitbox.top    = 0x7FFF;
                 door->hitbox.right  = 0;
-                door->hitbox.bottom = -0x800;
+                door->hitbox.bottom = 0x7FFF;
             }
             entity->state = RubyPortal_Unknown2;
             if (StarPost->postIDs[0])
-                TMZ2_DrawDynTiles2();
+                TMZ2_DrawDynTiles_Ruby();
             else
-                TMZ2_DrawDynTiles1();
+                TMZ2_DrawDynTiles_Eggman();
         }
         else {
             entity->state = RubyPortal_Unknown3;
@@ -67,15 +67,15 @@ void RubyPortal_Create(void *data)
             if (door->objectID == WarpDoor->objectID) {
                 entity->hitbox      = door->hitbox;
                 door->hitbox.left   = 0;
-                door->hitbox.top    = -0x800;
+                door->hitbox.top    = 0x7FFF;
                 door->hitbox.right  = 0;
-                door->hitbox.bottom = -0x800;
+                door->hitbox.bottom = 0x7FFF;
             }
             entity->state = RubyPortal_Unknown2;
             if (StarPost->postIDs[0])
-                TMZ2_DrawDynTiles2();
+                TMZ2_DrawDynTiles_Ruby();
             else
-                TMZ2_DrawDynTiles1();
+                TMZ2_DrawDynTiles_Eggman();
         }
 #endif
     }
@@ -376,6 +376,9 @@ void RubyPortal_EditorDraw(void)
     RSDK_THIS(RubyPortal);
     entity->visible       = true;
     entity->drawOrder     = Zone->drawOrderLow;
+    entity->scale.x       = 0x200;
+    entity->scale.y       = 0x200;
+    entity->alpha         = 0xFF;
     RSDK.SetSpriteAnimation(RubyPortal->spriteIndex, 0, &entity->animator, true, 0);
 
     RSDK.DrawSprite(&entity->animator, NULL, false);

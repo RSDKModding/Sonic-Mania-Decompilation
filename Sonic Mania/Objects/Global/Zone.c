@@ -592,7 +592,7 @@ void Zone_StartFadeOut(int32 fadeSpeed, int32 fadeColour)
 
 void Zone_StartFadeIn(int32 fadeSpeed, int32 fadeColour)
 {
-    EntityZone *zone = RSDK_GET_ENTITY(SLOT_ZONE, Zone);
+    EntityZone *zone = CREATE_ENTITY(Zone, NULL, 0, 0);
     zone->fadeColour = fadeColour;
     zone->fadeSpeed  = fadeSpeed;
     zone->screenID   = PLAYER_MAX;

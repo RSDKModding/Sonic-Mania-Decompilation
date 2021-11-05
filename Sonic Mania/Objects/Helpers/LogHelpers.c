@@ -33,10 +33,9 @@ void LogHelpers_Print(const char *message, ...)
 
 void LogHelpers_PrintString(TextInfo *text)
 {
-    for (int32 i = 0; i < text->textLength; ++i) {
-        LogHelpers_Print("%c", text->text[i]);
-    }
-    LogHelpers_Print("\n");
+    char buffer[0x100];
+    RSDK.GetCString(buffer, text);
+    LogHelpers_Print(buffer);
 }
 
 #if RETRO_INCLUDE_EDITOR

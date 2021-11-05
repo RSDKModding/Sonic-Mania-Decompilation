@@ -14,15 +14,14 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    int32 field_5C;
-    int32 field_60;
+    Vector2 startPos;
     int32 timer;
     int32 invincibilityTimer;
-    int32 field_6C;
+    int32 spearOffset;
     int32 rotStore;
     int32 field_74;
     int32 field_78;
-    int32 field_7C;
+    bool32 prevOnGround;
     Hitbox outerBox;
     Hitbox innerBox;
     Animator animator1;
@@ -47,7 +46,7 @@ void ERZShinobi_EditorLoad(void);
 void ERZShinobi_Serialize(void);
 
 // Extra Entity Functions
-void ERZShinobi_CheckHit(void);
+void ERZShinobi_CheckPlayerCollisions(void);
 void ERZShinobi_HandleTileCollisions(void);
 void ERZShinobi_Unknown3(void);
 

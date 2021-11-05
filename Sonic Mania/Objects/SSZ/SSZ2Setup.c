@@ -55,8 +55,10 @@ void SSZ2Setup_StageLoad(void)
             SaveGame_LoadPlayerState();
             Zone_StartFadeIn(10, 0x000000);
         }
-        RSDK.CreateEntity(SSZ3Cutscene->objectID, NULL, 0, 0);
+        CREATE_ENTITY(SSZ3Cutscene, intToVoid(false), 0, 0);
+#if RETRO_USE_PLUS
         Zone->stageFinishCallback = SSZ2Setup_StageFinishCallback;
+#endif
     }
 #if RETRO_USE_PLUS
     if ((RSDK_sceneInfo->filter & FILTER_ENCORE))
@@ -67,7 +69,9 @@ void SSZ2Setup_StageLoad(void)
     GenericTrigger->callbacks[2] = SSZ2Setup_GenericTriggerCallback3;
 }
 
-void SSZ2Setup_StageFinishCallback(void) { RSDK.CreateEntity(SSZ3Cutscene->objectID, intToVoid(true), 0, 0); }
+#if RETRO_USE_PLUS
+void SSZ2Setup_StageFinishCallback(void) { CREATE_ENTITY(SSZ3Cutscene, intToVoid(true), 0, 0); }
+#endif
 
 void SSZ2Setup_TowerDrawLayerCallback(void)
 {

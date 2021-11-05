@@ -94,15 +94,15 @@ void WarpDoor_Update(void)
                                     }
                                     tag->fadeTimer = 512;
                                     if (entity->destinationTag == 99 || entity->destinationTag == 100)
-                                       TMZ2_DrawDynTiles1();
+                                       TMZ2_DrawDynTiles_Eggman();
                                     else
-                                       TMZ2_DrawDynTiles2();
+                                       TMZ2_DrawDynTiles_Ruby();
                                 }
                             }
                             else if (RSDK.CheckStageFolder("OOZ2")) {
                                 if (entity->effect == 1 || entity->effect == 2) {
                                     OOZSetup->flags = entity->effect == 2 ? 1 : 0;
-                                    RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL);
+                                    destroyEntity(entity);
                                     foreach_return;
                                 }
                             }

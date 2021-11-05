@@ -83,9 +83,10 @@ void Pointdexter_CheckPlayerCollisions(void)
             ) {
                 Player_CheckBadnikBreak(entity, player, true);
             }
-            else if (!Player_CheckMightyUnspin(0x200, player, 2, &player->uncurlTimer)) {
+#if RETRO_USE_PLUS
+            else if (!Player_CheckMightyUnspin(0x200, player, 2, &player->uncurlTimer)) 
+#endif
                 Player_CheckHit(player, entity);
-            }
         }
     }
 }

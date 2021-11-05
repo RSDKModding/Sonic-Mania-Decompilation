@@ -423,12 +423,12 @@ void GigaMetal_State_SetupBounds(void)
                 metal->position.y = entity->position.y + 0x400000;
             }
             metal->angle        = 0;
-            metal->posUnknown.x = entity->position.x - 0x400000;
-            metal->posUnknown.y = entity->position.y - 0x500000;
+            metal->targetPos.x = entity->position.x - 0x400000;
+            metal->targetPos.y = entity->position.y - 0x500000;
             metal->timer        = 0;
             metal->visible      = true;
             metal->active       = ACTIVE_NORMAL;
-            // metal->state        = MetalSonic_Unknown32;
+            metal->state        = MetalSonic_State_WaitForRuby;
             RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 3, &metal->animator, false, 0);
             RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 11, &metal->animator2, false, 0);
         }
@@ -708,7 +708,7 @@ void GigaMetal_State_Destroyed(void)
         metal->position.x = entity->position.x - 0x100000;
         metal->position.y = entity->position.y - 0x200000;
         metal->active     = ACTIVE_NORMAL;
-        // metal->state           = MetalSonic_State_Defeated;
+        metal->state           = MetalSonic_State_Defeated;
         metal->velocity.x = 0;
         metal->velocity.y = -0x40000;
         RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 10, &metal->animator, false, 0);

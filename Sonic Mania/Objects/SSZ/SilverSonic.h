@@ -22,8 +22,8 @@ typedef struct {
     int32 field_60;
     int32 field_64;
     int32 invincibilityTimer;
-    Hitbox *hitboxPtr;
-    Hitbox *hitboxBadnikPtr;
+    Hitbox *outerBox;
+    Hitbox *innerBox;
     Animator animator;
 } EntitySilverSonic;
 

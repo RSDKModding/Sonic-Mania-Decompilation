@@ -38,7 +38,7 @@ void TMZFlames_Create(void *data)
         entity->updateRange.x = 0x800000;
         entity->updateRange.y = 0x800000;
         entity->drawFX        = FX_SCALE;
-        entity->inkEffect     = INK_ALPHA;
+        entity->inkEffect     = INK_ADD;
         entity->alpha         = 0x100;
         entity->scale.x       = 0x400;
         entity->scale.y       = 0x200;

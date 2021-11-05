@@ -375,6 +375,8 @@ void SetPresence(byte id, TextInfo *info)
     char buffer[0xFF];
     char buffer2[0xFF];
     GetCString(buffer, info);
+    if (info->text[info->textLength - 1] == '\r')
+        buffer[info->textLength - 1] = 0;
 #if RETRO_REV02
     richPresence->curID = id;
     sprintf(buffer2, "DUMMY SetPresence(%d, %s) -> %s", id, buffer, (richPresence->curID != id ? "Successful Set" : "Redundant Set"));

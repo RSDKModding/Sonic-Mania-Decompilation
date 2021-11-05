@@ -171,7 +171,7 @@ void SizeLaser_SetP2State(EntityPlayer *player, bool32 chibiFlag)
         switch (player->characterID) {
             case ID_TAILS:
                 player->spriteIndex     = Player->tailsSpriteIndex;
-                player->tailSpriteIndex = Player->tailsSpriteIndex;
+                player->tailSpriteIndex = Player->tailsTailsSpriteIndex;
                 player->isChibi         = false;
                 break;
             case ID_KNUCKLES:

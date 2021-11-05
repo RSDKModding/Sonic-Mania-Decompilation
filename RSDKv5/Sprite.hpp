@@ -36,7 +36,11 @@ struct ImageGIF {
     GifDecoder *decoder;
 };
 
+#if RETRO_REV02
 struct ImagePNG {
+#else
+struct ImageTGA {
+#endif
     FileInfo info;
     int32 width;
     int32 height;
@@ -59,7 +63,7 @@ bool32 LoadGIF(ImageGIF *image, const char *fileName, bool32 loadHeader);
 #if RETRO_REV02
 bool32 LoadPNG(ImagePNG *image, const char *fileName, bool32 loadHeader);
 #else
-bool32 LoadTGA(ImagePNG *image, const char *fileName);
+bool32 LoadTGA(ImageTGA *image, const char *fileName);
 #endif
 
 ushort LoadSpriteSheet(const char *filename, Scopes scope);

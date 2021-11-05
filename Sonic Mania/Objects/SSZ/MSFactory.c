@@ -101,9 +101,12 @@ void MSFactory_Unknown4(void)
     RSDK_THIS(MSFactory);
 
     if (++entity->timer == 8) {
-        foreach_active(MetalSonic, metal) { foreach_break; }
-        // if (metal && metal->state != MetalSonic_Unknown29)
-        //    CREATE_ENTITY(SilverSonic, NULL, entity->drawPos.x, entity->drawPos.y + 0x80000);
+        foreach_active(MetalSonic, metal)
+        {
+            if (metal && metal->state != MetalSonic_State_PanelExplosion)
+                CREATE_ENTITY(SilverSonic, NULL, entity->drawPos.x, entity->drawPos.y + 0x80000);
+            foreach_break;
+        }
     }
     if (entity->timer == 60) {
         entity->timer = 0;

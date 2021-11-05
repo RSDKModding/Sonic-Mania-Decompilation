@@ -37,7 +37,7 @@ void FBZMissile_Create(void *data)
         switch (entity->type) {
             case 0:
                 RSDK.SetSpriteAnimation(FBZMissile->aniFrames, 0, &entity->animator, true, 0);
-                entity->direction *= 2;
+                entity->direction *= FLIP_Y;
                 entity->drawOrder = Zone->drawOrderHigh;
                 entity->state     = FBZMissile_Unknown1;
                 break;
@@ -244,12 +244,11 @@ void FBZMissile_Unknown7(void)
 
         foreach_active(Player, player)
         {
-            if (Player_CheckCollisionTouch(player, entity, &FBZMissile->hitbox2)
+            if (Player_CheckCollisionTouch(player, entity, &FBZMissile->hitbox2)) {
 #if RETRO_USE_PLUS
-                && !Player_CheckMightyUnspin(768, player, 2, &player->uncurlTimer)
+                if (!Player_CheckMightyUnspin(768, player, 2, &player->uncurlTimer))
 #endif
-            ) {
-                Player_CheckHit(player, entity);
+                    Player_CheckHit(player, entity);
             }
         }
     }
@@ -264,14 +263,11 @@ void FBZMissile_Unknown8(void)
     entity->position.x += entity->velocity.x;
     RSDK.ProcessAnimation(&entity->animator);
 
+#if RETRO_USE_PLUS
     foreach_active(Player, player)
     {
         int32 velY = player->velocity.y;
-        if (Player_CheckCollisionBox(player, entity, &FBZMissile->hitbox3)
-#if RETRO_USE_PLUS
-            && player->state == Player_State_MightyHammerDrop 
-#endif
-            && !player->sidekick) {
+        if (Player_CheckCollisionBox(player, entity, &FBZMissile->hitbox3) && player->state == Player_State_MightyHammerDrop && !player->sidekick) {
             RSDK.PlaySfx(FBZMissile->sfxExplosion, false, 255);
             RSDK.PlaySfx(Player->sfx_Release, false, 255);
             player->velocity.y = velY - 0x10000;
@@ -280,6 +276,7 @@ void FBZMissile_Unknown8(void)
             foreach_break;
         }
     }
+#endif
 }
 
 #if RETRO_INCLUDE_EDITOR

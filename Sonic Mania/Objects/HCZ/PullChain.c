@@ -35,7 +35,7 @@ void PullChain_Update(void)
             int32 playerID = 1 << plrID;
             if (!((1 << plrID) & entity->activePlayers1)) {
                 if (!(entity->activePlayers2 & playerID)) {
-                    if (!Current || (playerID & Current->activePlayers)) {
+                    if (!Current || !(playerID & Current->activePlayers)) {
                         int32 x = abs(player->position.x - entity->position.x);
                         int32 y = abs((player->position.y - 0x180000) - entity->position.y);
                         if (MathHelpers_Unknown6((y >> 16) * (y >> 16) + (x >> 16) * (x >> 16)) <= 8 && player->state != Player_State_None

@@ -80,7 +80,7 @@ void SSZEggman_Unknown2(void)
 
     foreach_active(MetalSonic, metal)
     {
-        if (/*metal->state == MetalSonic_Unknown33*/ true) {
+        if (metal->state == MetalSonic_State_ObtainRuby) {
             entity->speed = -0x28000;
             RSDK.SetSpriteAnimation(SSZEggman->aniFrames, 3, &entity->animator1, true, 0);
             entity->state = SSZEggman_Unknown3;

@@ -24,15 +24,16 @@ void ERZMystic_Draw(void)
     if (entity->stateDraw) {
         StateMachine_Run(entity->stateDraw);
     }
-    else
+    else {
         RSDK.DrawSprite(&entity->animator1, NULL, false);
+    }
 }
 
 void ERZMystic_Create(void *data)
 {
     RSDK_THIS(ERZMystic);
 
-    RSDK_sceneInfo->entity->drawFX = FX_FLIP;
+    entity->drawFX = FX_FLIP;
     if (!RSDK_sceneInfo->inEditor) {
         entity->visible       = true;
         entity->drawOrder     = Zone->drawOrderLow;
@@ -420,9 +421,23 @@ void ERZMystic_State_Unknown10(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void ERZMystic_EditorDraw(void) {}
+void ERZMystic_EditorDraw(void)
+{
+    RSDK_THIS(ERZMystic);
+    entity->mysticPos   = entity->position;
+    entity->cupY        = entity->position.y;
+    entity->cupAlpha[0] = 0x60;
+    entity->cupAlpha[1] = 0;
+    entity->cupAlpha[2] = 0x60;
+    RSDK.SetSpriteAnimation(ERZMystic->aniFrames, 2, &entity->animator1, true, 0);
+    RSDK.SetSpriteAnimation(ERZMystic->aniFrames, 0, &entity->animator2, true, 0);
+    RSDK.SetSpriteAnimation(ERZMystic->aniFrames, 0, &entity->animator3, true, 1);
+    RSDK.SetSpriteAnimation(ERZMystic->aniFrames, 1, &entity->animator4, true, 0);
 
-void ERZMystic_EditorLoad(void) {}
+    ERZMystic_StateDraw_Unknown1();
+}
+
+void ERZMystic_EditorLoad(void) { ERZMystic->aniFrames = RSDK.LoadSpriteAnimation("Phantom/PhantomMystic.bin", SCOPE_STAGE); }
 #endif
 
 void ERZMystic_Serialize(void) {}

@@ -33,7 +33,9 @@ void SSZ2Setup_EditorLoad(void);
 void SSZ2Setup_Serialize(void);
 
 // Extra Entity Functions
+#if RETRO_USE_PLUS
 void SSZ2Setup_StageFinishCallback(void);
+#endif
 
 void SSZ2Setup_TowerDrawLayerCallback(void);
 void SSZ2Setup_TowerScanlineCallback(ScanlineInfo *scanlines);

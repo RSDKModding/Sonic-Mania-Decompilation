@@ -38,7 +38,7 @@ inline void StringUpperCase(char *dest, const char *src)
     if (*src) {
         int srcPos = 0;
         do {
-            while (curChar - 'a' <= 0x19) {
+            while ((uint32)curChar - 'a' < 26) {
                 destPos       = srcPos;
                 dest[destPos] = curChar - ' ';
                 curChar       = src[++srcPos];

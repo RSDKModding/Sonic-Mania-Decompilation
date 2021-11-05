@@ -7,8 +7,8 @@
 typedef struct {
     RSDK_OBJECT
     bool32 paletteInit;
-    int32 aniTileDelay;
-    int32 aniTileFrame;
+    int32 palDelay;
+    int32 palTimer;
     int32 dword10;
     int32 dword14;
     uint16 aniTiles;
@@ -38,7 +38,7 @@ void TMZ2Setup_Serialize(void);
 void TMZ2Setup_DrawLayerCB_A(void);
 void TMZ2Setup_DrawLayerCB_B(void);
 
-void TMZ2_DrawDynTiles1(void);
-void TMZ2_DrawDynTiles2(void);
+void TMZ2_DrawDynTiles_Eggman(void);
+void TMZ2_DrawDynTiles_Ruby(void);
 
 #endif //!OBJ_TMZ2SETUP_H

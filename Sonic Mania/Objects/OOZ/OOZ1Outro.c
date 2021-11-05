@@ -159,7 +159,7 @@ bool32 OOZ1Outro_Unknown4(EntityCutsceneSeq *host)
 
 void OOZ1Outro_EditorDraw(void)
 {
-    RSDK_THIS(OOZ2Outro);
+    RSDK_THIS(OOZ1Outro);
     Vector2 drawPos;
 
     drawPos.x = entity->position.x;

@@ -42,8 +42,8 @@ void PhantomShield_Create(void *data)
         entity->drawOrder     = Zone->drawOrderLow;
         entity->parent        = (Entity *)data;
         entity->active        = ACTIVE_NORMAL;
-        entity->drawFX        = FX_FLIP | FX_ROTATE;
-        entity->inkEffect     = INK_BLEND;
+        entity->drawFX        = FX_FLIP;
+        entity->inkEffect     = INK_ADD;
         entity->alpha         = 0x100;
         entity->scale.x       = 0x200;
         entity->scale.y       = 0x200;
@@ -58,10 +58,10 @@ void PhantomShield_StageLoad(void)
 {
     PhantomShield->aniFrames = RSDK.LoadSpriteAnimation("Phantom/EggShield.bin", SCOPE_STAGE);
 
-    PhantomShield->hitbox.left   = -20;
-    PhantomShield->hitbox.top    = -20;
-    PhantomShield->hitbox.right  = 20;
-    PhantomShield->hitbox.bottom = 20;
+    PhantomShield->hitbox.left   = -32;
+    PhantomShield->hitbox.top    = -32;
+    PhantomShield->hitbox.right  = 32;
+    PhantomShield->hitbox.bottom = 32;
 }
 
 void PhantomShield_Unknown1(void)
