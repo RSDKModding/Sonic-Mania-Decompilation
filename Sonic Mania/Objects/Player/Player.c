@@ -2370,7 +2370,7 @@ bool32 Player_CheckAttacking(EntityPlayer *player, void *e)
         case ID_MIGHTY: attacking |= anim == ANI_DROPDASH; break;
 #endif
         case ID_TAILS:
-            if (!attacking) {
+            if (!attacking && entity) {
                 attacking = anim == ANI_FLY || anim == ANI_FLYTIRED || anim == ANI_FLYLIFT;
                 if (player->position.y <= entity->position.y)
                     return false;
