@@ -6,7 +6,7 @@ void SpeedBooster_Update(void)
 {
     RSDK_THIS(SpeedBooster);
     StateMachine_Run(entity->state);
-    for (int32 i = 0; i < 4; i++) {
+    for (int32 i = 0; i < PLAYER_MAX; i++) {
         if (entity->playerCooldown[i])
             entity->playerCooldown[i]--;
     }
@@ -76,14 +76,14 @@ void SpeedBooster_StageLoad(void)
 
 void SpeedBooster_DebugSpawn(void)
 {
-    RSDK_THIS(SpeedBooster);
+    RSDK_THIS(DebugMode);
     CREATE_ENTITY(SpeedBooster, NULL, entity->position.x, entity->position.y);
 }
 
 void SpeedBooster_DebugDraw(void)
 {
     RSDK.SetSpriteAnimation(SpeedBooster->animID, 0, &DebugMode->animator, true, 0);
-    RSDK.DrawSprite(&DebugMode->animator, 0, false);
+    RSDK.DrawSprite(&DebugMode->animator, NULL, false);
 }
 
 void SpeedBooster_MovingState(void)
@@ -128,16 +128,16 @@ void SpeedBooster_Interact(void)
             if (check) {
                 if (player->groundVel < entity->groundVel)
                     player->groundVel = entity->groundVel;
-                player->direction = 0;
+                player->direction = FLIP_NONE;
             }
             else {
                 if (player->groundVel > -entity->groundVel)
                     player->groundVel = -entity->groundVel;
-                player->direction = 1;
+                player->direction = FLIP_X;
             }
             entity->playerCooldown[playerID] = 30;
             player->controlLock              = 16;
-            player->pushing                  = 0;
+            player->pushing                  = false;
             player->tileCollisions           = true;
             if (player->state != Player_State_Roll)
                 player->state = Player_State_Ground;
@@ -149,10 +149,10 @@ void SpeedBooster_Interact(void)
 void SpeedBooster_SSZState(void)
 {
     RSDK_THIS(SpeedBooster);
-    entity->velocity.x = 0x55550 * RSDK_sceneInfo->entity->velocity.x;
+    entity->velocity.x = 0x55550 * entity->velocity.x;
     entity->drawPos.x  = entity->position.x;
     entity->drawPos.y  = entity->position.y;
-    SPAWN_CHILD(SpeedBooster, 1);
+    EntitySpeedBooster *child = CREATE_ENTITY(SpeedBooster, intToVoid(1), entity->position.x, entity->position.y);
     int32 newVel        = 0x10000;
     child->velocity.y = -0x70000;
     if (entity->velocity.x > 0)
@@ -204,7 +204,6 @@ void SpeedBooster_EditorLoad(void)
         SpeedBooster->animID =
             RSDK.LoadSpriteAnimation((RSDK.CheckStageFolder("SSZ1") ? "SSZ1/SpeedBooster.bin" : "SSZ2/SpeedBooster.bin"), SCOPE_STAGE);
     }
-    DEBUGMODE_ADD_OBJ(SpeedBooster);
 }
 #endif
 

@@ -5,8 +5,8 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
-	void (*defaultState)(void);
+    RSDK_OBJECT
+    StateMachine(defaultState);
 	Hitbox hitbox;
     uint16 animID;
 	uint16 sfxID;
@@ -14,14 +14,14 @@ typedef struct {
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
-	void (*state)(void);
-	uint8 speed;
-	int32 playerPos[4];
-	Vector2 drawPos;
-	uint8 cooldown;
-	uint8 playerCooldown[4];
-	Animator animator;
+    RSDK_ENTITY
+    StateMachine(state);
+    uint8 speed;
+    int32 playerPos[PLAYER_MAX];
+    Vector2 drawPos;
+    uint8 cooldown;
+    uint8 playerCooldown[PLAYER_MAX];
+    Animator animator;
 } EntitySpeedBooster;
 
 // Object Struct
