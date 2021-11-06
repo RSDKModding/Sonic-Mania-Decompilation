@@ -1399,12 +1399,12 @@ void DrawLayerRotozoom(TileLayer *layer)
     if (!layer->xsize || !layer->ysize)
         return;
     ushort *layout            = layer->layout;
-    int countX                = currentScreen->clipBound_X2 - currentScreen->clipBound_X1;
     byte *lineBuffer          = &gfxLineBuffer[currentScreen->clipBound_Y1];
     ScanlineInfo *scanlinePtr = &scanlines[currentScreen->clipBound_Y1];
     ushort *frameBuffer       = &currentScreen->frameBuffer[currentScreen->clipBound_X1 + currentScreen->clipBound_Y1 * currentScreen->pitch];
     int width                 = (TILE_SIZE << layer->widthShift) - 1;
     int height                = (TILE_SIZE << layer->heightShift) - 1;
+    int lineSize              = currentScreen->clipBound_X2 - currentScreen->clipBound_X1;
 
     for (int cy = currentScreen->clipBound_Y1; cy < currentScreen->clipBound_Y2; ++cy) {
         int posX = scanlinePtr->position.x;
@@ -1412,9 +1412,9 @@ void DrawLayerRotozoom(TileLayer *layer)
 
         ushort *palettePtr = fullPalette[*lineBuffer];
         ++lineBuffer;
-        int fbOffset = currentScreen->pitch - countX;
+        int fbOffset = currentScreen->pitch - lineSize;
 
-        for (int cx = countX; cx; --cx) {
+        for (int cx = lineSize; cx; --cx) {
             int tx = posX >> 20;
             int ty = posY >> 20;
             int x  = (posX >> 16) & 0xF;

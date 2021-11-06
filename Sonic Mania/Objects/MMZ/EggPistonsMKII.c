@@ -16,7 +16,7 @@ void EggPistonsMKII_Draw(void)
 {
     RSDK_THIS(EggPistonsMKII);
 
-    if (entity->type == 5) {
+    if (entity->type == EGGPISTON_ALARM) {
         RSDK.FillScreen(0x880000, EggPistonsMKII->alarmTimer, EggPistonsMKII->alarmTimer, EggPistonsMKII->alarmTimer);
     }
     else {
@@ -62,9 +62,9 @@ void EggPistonsMKII_Create(void *data)
                     entity->state              = EggPistonsMKII_State_SetupArena;
                     entity->visible            = false;
                     entity->drawOrder          = Zone->drawOrderLow;
-                    EggPistonsMKII->controller = (Entity*)entity;
+                    EggPistonsMKII->controller = (Entity *)entity;
                     break;
-                case EGGPISTON_PISTON2:
+                case EGGPISTON_EMITTER:
                     RSDK.SetSpriteAnimation(EggPistonsMKII->aniFrames, 1, &entity->animator1, true, 0);
                     entity->updateRange.x = 0x800000;
                     entity->updateRange.y = 0x800000;
@@ -76,25 +76,25 @@ void EggPistonsMKII_Create(void *data)
                     entity->visible       = true;
                     entity->drawOrder     = Zone->drawOrderLow + 1;
                     break;
-                case EGGPISTON_BALLSHOOTER:
+                case EGGPISTON_BARRIER:
                     RSDK.SetSpriteAnimation(EggPistonsMKII->aniFrames, 5, &entity->animator1, true, 0);
                     entity->hitbox.left   = -32;
                     entity->hitbox.top    = -32;
                     entity->hitbox.right  = 32;
                     entity->hitbox.bottom = 32;
-                    entity->state         = EggPistonsMKII_StateBallShooter_Idle;
+                    entity->state         = EggPistonsMKII_StateOrbGenerator_Idle;
                     entity->updateRange.x = 0x800000;
                     entity->updateRange.y = 0x800000;
                     entity->visible       = true;
                     entity->drawOrder     = Zone->drawOrderLow;
                     break;
-                case EGGPISTON_BALL:
+                case EGGPISTON_PLASMABALL:
                     RSDK.SetSpriteAnimation(EggPistonsMKII->aniFrames, 2, &entity->animator1, true, 0);
                     entity->hitbox.left   = -12;
                     entity->hitbox.top    = -12;
                     entity->hitbox.right  = 12;
                     entity->hitbox.bottom = 12;
-                    entity->state         = EggPistonsMKII_StateBall_Unknown1;
+                    entity->state         = EggPistonsMKII_StateOrb_Unknown1;
                     entity->updateRange.x = 0x800000;
                     entity->updateRange.y = 0x800000;
                     entity->visible       = true;
@@ -219,12 +219,12 @@ EntityEggPistonsMKII *EggPistonsMKII_GetNextPiston(void)
     EntityEggPistonsMKII *piston = NULL;
     int pistonID                 = 0;
 
-     do {
+    do {
         do {
-             pistonID = RSDK.Rand(0, 5);
-             piston   = (EntityEggPistonsMKII *)EggPistonsMKII->pistons[pistonID];
+            pistonID = RSDK.Rand(0, 5);
+            piston   = (EntityEggPistonsMKII *)EggPistonsMKII->pistons[pistonID];
         } while (piston->state != EggPistonsMKII_StatePiston_Unknown1);
-     } while (pistonID == EggPistonsMKII->pistonID - 1 || pistonID == EggPistonsMKII->pistonID + 1);
+    } while (pistonID == EggPistonsMKII->pistonID - 1 || pistonID == EggPistonsMKII->pistonID + 1);
 
     EggPistonsMKII->pistonID = pistonID;
 
@@ -237,12 +237,12 @@ EntityEggPistonsMKII *EggPistonsMKII_GetNextPiston(void)
 void EggPistonsMKII_SpawnElecBall(void)
 {
     EntityEggPistonsMKII *spawner = RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot + 6, EggPistonsMKII);
-    spawner->state                = EggPistonsMKII_StateBallShooter_Warning;
+    spawner->state                = EggPistonsMKII_StateOrbGenerator_Warning;
     spawner->timer                = 330;
     int offset                    = 0;
 
     for (int i = 0; i < 4; ++i) {
-        EntityEggPistonsMKII *child = CREATE_ENTITY(EggPistonsMKII, intToVoid(EGGPISTON_BALL), spawner->position.x, spawner->position.y);
+        EntityEggPistonsMKII *child = CREATE_ENTITY(EggPistonsMKII, intToVoid(EGGPISTON_PLASMABALL), spawner->position.x, spawner->position.y);
         child->pistonID             = offset + spawner->position.x + ((RSDK.Rand(0, 48) - 48) << 16);
         child->inkEffect            = INK_ADD;
         child->velocity.x           = (child->pistonID - child->position.x) >> 4;
@@ -328,10 +328,10 @@ void EggPistonsMKII_State_EnterBoss(void)
             EggPistonsMKII->health = 8;
             entity->timer          = 142;
             for (int i = 0; i < 2; ++i) {
-                EntityEggPistonsMKII *piston = RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot + 14 + i, EggPistonsMKII);
-                piston->velocity.y           = -0x20000;
-                piston->timer                = 64;
-                piston->state                = EggPistonsMKII_State_Unknown1;
+                EntityEggPistonsMKII *barrier = RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot + 14 + i, EggPistonsMKII);
+                barrier->velocity.y           = -0x20000;
+                barrier->timer                = 64;
+                barrier->state                = EggPistonsMKII_State_Unknown1;
             }
 
             player1->right = false;
@@ -649,9 +649,9 @@ void EggPistonsMKII_StatePiston_Explode(void)
     }
 }
 
-void EggPistonsMKII_StateBallShooter_Idle(void) {}
+void EggPistonsMKII_StateOrbGenerator_Idle(void) {}
 
-void EggPistonsMKII_StateBallShooter_Warning(void)
+void EggPistonsMKII_StateOrbGenerator_Warning(void)
 {
     RSDK_THIS(EggPistonsMKII);
 
@@ -662,11 +662,11 @@ void EggPistonsMKII_StateBallShooter_Warning(void)
 
     if (!--entity->timer) {
         entity->animator1.frameID = 0;
-        entity->state             = EggPistonsMKII_StateBallShooter_Idle;
+        entity->state             = EggPistonsMKII_StateOrbGenerator_Idle;
     }
 }
 
-void EggPistonsMKII_StateBall_Unknown1(void)
+void EggPistonsMKII_StateOrb_Unknown1(void)
 {
     RSDK_THIS(EggPistonsMKII);
 
@@ -675,12 +675,12 @@ void EggPistonsMKII_StateBall_Unknown1(void)
     entity->position.x += entity->velocity.x;
     if (entity->position.x <= entity->pistonID) {
         entity->timer = 180;
-        entity->state = EggPistonsMKII_StateBall_Unknown2;
+        entity->state = EggPistonsMKII_StateOrb_Unknown2;
     }
     RSDK.ProcessAnimation(&entity->animator1);
 }
 
-void EggPistonsMKII_StateBall_Unknown2(void)
+void EggPistonsMKII_StateOrb_Unknown2(void)
 {
     RSDK_THIS(EggPistonsMKII);
 
@@ -690,13 +690,13 @@ void EggPistonsMKII_StateBall_Unknown2(void)
         entity->velocity.y = 0x14000;
         entity->timer      = 133;
         RSDK.SetSpriteAnimation(EggPistonsMKII->aniFrames, 3, &entity->animator2, true, 0);
-        entity->state = EggPistonsMKII_StateBall_Unknown3;
+        entity->state = EggPistonsMKII_StateOrb_Unknown3;
         entity->animator1.animationSpeed *= 2;
     }
     RSDK.ProcessAnimation(&entity->animator1);
 }
 
-void EggPistonsMKII_StateBall_Unknown3(void)
+void EggPistonsMKII_StateOrb_Unknown3(void)
 {
     RSDK_THIS(EggPistonsMKII);
 
@@ -727,11 +727,11 @@ void EggPistonsMKII_StateAlarm_Destroyed(void)
     if (!--EggPistonsMKII->alarmTimer) {
 
         for (int i = 0; i < 2; ++i) {
-            int slot                    = RSDK.GetEntityID(EggPistonsMKII->controller);
-            EntityEggPistonsMKII *child = RSDK_GET_ENTITY(slot + 14 + i, EggPistonsMKII);
+            int slot                      = RSDK.GetEntityID(EggPistonsMKII->controller);
+            EntityEggPistonsMKII *barrier = RSDK_GET_ENTITY(slot + 14 + i, EggPistonsMKII);
 
             for (int d = 0; d < 4; ++d) {
-                EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, child->position.x, child->position.y);
+                EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, barrier->position.x, barrier->position.y);
                 RSDK.SetSpriteAnimation(EggPistonsMKII->aniFrames, 5, &debris->animator, true, i + 1);
                 debris->gravity       = 0x3800;
                 debris->velocity.x    = ((i & 1) << 17 >> (i >> 1)) - 0x10000;
@@ -741,7 +741,7 @@ void EggPistonsMKII_StateAlarm_Destroyed(void)
                 debris->updateRange.y = 0x400000;
             }
 
-            destroyEntity(child);
+            destroyEntity(barrier);
         }
 
         Zone->screenBoundsR1[0] += 424;
@@ -796,54 +796,28 @@ void EggPistonsMKII_EditorDraw(void)
     entity->updateRange.y = 0x800000;
 
     switch (entity->type) {
-        case EGGPISTON_PISTON:
-            RSDK.SetSpriteAnimation(EggPistonsMKII->aniFrames, 0, &entity->animator1, true, 0);
-            RSDK.SetSpriteAnimation(0xFFFF, 0, &entity->animator2, true, 0);
-            entity->drawOrder = Zone->fgLayerHigh - 1;
-            break;
-        case EGGPISTON_CONTROL:
-            RSDK.SetSpriteAnimation(EggPistonsMKII->eggmanFrames, 0, &entity->animator1, true, 0);
-            RSDK.SetSpriteAnimation(0xFFFF, 0, &entity->animator2, true, 0);
-            entity->drawOrder = Zone->drawOrderLow;
-            break;
-        case EGGPISTON_PISTON2:
-            RSDK.SetSpriteAnimation(EggPistonsMKII->aniFrames, 1, &entity->animator1, true, 0);
-            RSDK.SetSpriteAnimation(0xFFFF, 0, &entity->animator2, true, 0);
-            entity->drawOrder = Zone->drawOrderLow + 1;
-            break;
-        case EGGPISTON_BALLSHOOTER:
-            RSDK.SetSpriteAnimation(EggPistonsMKII->aniFrames, 5, &entity->animator1, true, 0);
-            RSDK.SetSpriteAnimation(0xFFFF, 0, &entity->animator2, true, 0);
-            entity->drawOrder = Zone->drawOrderLow;
-            break;
-        case EGGPISTON_BALL:
-            RSDK.SetSpriteAnimation(EggPistonsMKII->aniFrames, 2, &entity->animator1, true, 0);
-            RSDK.SetSpriteAnimation(0xFFFF, 0, &entity->animator2, true, 0);
-            entity->drawOrder = Zone->drawOrderLow;
-            break;
-        case EGGPISTON_ALARM:
-            RSDK.SetSpriteAnimation(0xFFFF, 0, &entity->animator1, true, 0);
-            RSDK.SetSpriteAnimation(0xFFFF, 0, &entity->animator2, true, 0);
-            entity->drawOrder = Zone->drawOrderHigh;
-            break;
+        case EGGPISTON_PISTON: RSDK.SetSpriteAnimation(EggPistonsMKII->aniFrames, 0, &entity->animator1, true, 0); break;
+        case EGGPISTON_CONTROL: RSDK.SetSpriteAnimation(EggPistonsMKII->eggmanFrames, 0, &entity->animator1, true, 0); break;
+        case EGGPISTON_EMITTER: RSDK.SetSpriteAnimation(EggPistonsMKII->aniFrames, 1, &entity->animator1, true, 0); break;
+        case EGGPISTON_BARRIER: RSDK.SetSpriteAnimation(EggPistonsMKII->aniFrames, 5, &entity->animator1, true, 0); break;
+        case EGGPISTON_PLASMABALL: RSDK.SetSpriteAnimation(EggPistonsMKII->aniFrames, 2, &entity->animator1, true, 0); break;
+        case EGGPISTON_ALARM: RSDK.SetSpriteAnimation(0xFFFF, 0, &entity->animator1, true, 0); break;
         default: break;
     }
 
-    RSDK.DrawSprite(&entity->animator2, NULL, false);
     RSDK.DrawSprite(&entity->animator1, NULL, false);
 }
 
 void EggPistonsMKII_EditorLoad(void)
 {
-    EggPistonsMKII->aniFrames = RSDK.LoadSpriteAnimation("MMZ/EggPistonsMKII.bin", SCOPE_STAGE);
+    EggPistonsMKII->aniFrames    = RSDK.LoadSpriteAnimation("MMZ/EggPistonsMKII.bin", SCOPE_STAGE);
+    EggPistonsMKII->eggmanFrames = RSDK.LoadSpriteAnimation("Eggman/EggmanMMZ1.bin", SCOPE_STAGE);
 
     RSDK_ACTIVE_VAR(EggPistonsMKII, type);
     RSDK_ENUM_VAR(EGGPISTON_PISTON);
     RSDK_ENUM_VAR(EGGPISTON_CONTROL);
-    RSDK_ENUM_VAR(EGGPISTON_PISTON2);
-    RSDK_ENUM_VAR(EGGPISTON_BALLSHOOTER);
-    RSDK_ENUM_VAR(EGGPISTON_BALL);
-    RSDK_ENUM_VAR(EGGPISTON_ALARM);
+    RSDK_ENUM_VAR(EGGPISTON_EMITTER);
+    RSDK_ENUM_VAR(EGGPISTON_BARRIER);
 }
 #endif
 

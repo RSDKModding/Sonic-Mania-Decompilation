@@ -6,9 +6,9 @@
 typedef enum {
     EGGPISTON_PISTON,
     EGGPISTON_CONTROL,
-    EGGPISTON_PISTON2,
-    EGGPISTON_BALLSHOOTER,
-    EGGPISTON_BALL,
+    EGGPISTON_EMITTER,
+    EGGPISTON_BARRIER,
+    EGGPISTON_PLASMABALL,
     EGGPISTON_ALARM,
 }EggPistonMKIITypes;
 
@@ -89,16 +89,16 @@ void EggPistonsMKII_StatePiston_Unknown4(void);
 void EggPistonsMKII_StatePiston_Unknown5(void);
 void EggPistonsMKII_StatePiston_Explode(void);
 
-void EggPistonsMKII_StateBallShooter_Idle(void);
-void EggPistonsMKII_StateBallShooter_Warning(void);
+void EggPistonsMKII_StateOrbGenerator_Idle(void);
+void EggPistonsMKII_StateOrbGenerator_Warning(void);
 
-void EggPistonsMKII_StateBall_Unknown1(void);
-void EggPistonsMKII_StateBall_Unknown2(void);
-void EggPistonsMKII_StateBall_Unknown3(void);
+void EggPistonsMKII_StateOrb_Unknown1(void);
+void EggPistonsMKII_StateOrb_Unknown2(void);
+void EggPistonsMKII_StateOrb_Unknown3(void);
 
 void EggPistonsMKII_StateAlarm_Active(void);
-
 void EggPistonsMKII_StateAlarm_Destroyed(void);
+
 void EggPistonsMKII_State_Explode(void);
 void EggPistonsMKII_State_Unknown1(void);
 
