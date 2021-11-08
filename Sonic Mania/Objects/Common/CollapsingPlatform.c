@@ -83,6 +83,20 @@ void CollapsingPlatform_Update(void)
             }
         }
     }
+    else if (entity->playerPos.x) {
+        entity->collapseDelay = entity->delay;
+        if (!entity->delay) {
+            StateMachine_Run(entity->state);
+            RSDK.PlaySfx(CollapsingPlatform->sfx_Crumble, 0, 255);
+            if (entity->respawn) {
+                entity->collapseDelay = 0;
+                entity->playerPos.x   = 0;
+            }
+            else {
+                destroyEntity(entity);
+            }
+        }
+    }
 }
 
 void CollapsingPlatform_LateUpdate(void) {}

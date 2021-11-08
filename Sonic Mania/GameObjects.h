@@ -89,7 +89,7 @@ typedef struct {
     bool32 (*Unknown4)(uint8 inputID);
     bool32 (*CheckDLC)(GameDLC dlc);
     void (*ShowExtensionOverlay)(uint8 overlay);
-#if RETRO_GAMEVER == VER_107
+#if RETRO_USE_EGS
     void (*EGS_Checkout)(int32 a1);
     void (*ShowEncorePage)(int32 a1);
     void (*EGS_Unknown4)(int32 a1);
@@ -98,12 +98,12 @@ typedef struct {
     void (*UnlockAchievement)(const char *achName);
     void (*GetAchievementStatus)(void);
     void (*SetAchievementStatus)(int32 a1);
-#if RETRO_GAMEVER == VER_107
+#if RETRO_USE_EGS
     bool32 (*CheckAchievementsEnabled)(void);
     void (*GetAchievementNames)(TextInfo *names, int32 count);
 #endif
     void (*LeaderboardsUnknown4)(void);
-#if RETRO_GAMEVER == VER_107
+#if RETRO_USE_EGS
     void (*EGS_LeaderboardUnknown1)(void);
 #endif
     void (*FetchLeaderboard)(const char *name, int32 a2);
@@ -385,10 +385,18 @@ extern RSDKFunctionTable RSDK;
 #include "All.h"
 
 #define RSDK_EDITABLE_VAR(object, type, var) RSDK.SetEditableVar(type, #var, (uint8)object->objectID, offsetof(Entity##object, var))
-#define RSDK_ACTIVE_VAR(object, var)         RSDK.SetActiveVariable(object->objectID, #var)
-#define RSDK_ENUM_VAR(var)                   RSDK.AddVarEnumValue(#var)
 
 #if RETRO_INCLUDE_EDITOR
+// Some extra precaution to prevent crashes in editor
+#define RSDK_ACTIVE_VAR(object, var)                                                                                                                 \
+    if (object) {                                                                                                                                    \
+        RSDK.SetActiveVariable(object->objectID, #var);                                                                                               \
+    }                                                                                                                                                \
+    else {                                                                                                                                           \
+        RSDK.SetActiveVariable(-1, #var);                                                                                                             \
+    }
+#define RSDK_ENUM_VAR(var)                   RSDK.AddVarEnumValue(#var)
+
 #define RSDK_ADD_OBJECT(object)                                                                                                                      \
     RSDK.RegisterObject((Object **)&object, #object, sizeof(Entity##object), sizeof(Object##object), object##_Update, object##_LateUpdate,           \
                         object##_StaticUpdate, object##_Draw, object##_Create, object##_StageLoad, object##_EditorDraw, object##_EditorLoad,         \

@@ -38,8 +38,8 @@ void PuyoIndicator_EditorLoad(void);
 void PuyoIndicator_Serialize(void);
 
 // Extra Entity Functions
-void PuyoIndicator_Unknown1(void);
-void PuyoIndicator_Unknown2(void);
-void PuyoIndicator_Unknown3(void);
+void PuyoIndicator_ShowWinner(void);
+void PuyoIndicator_ShowLoser(void);
+void PuyoIndicator_ShowReady(void);
 
 #endif //!OBJ_PUYOINDICATOR_H

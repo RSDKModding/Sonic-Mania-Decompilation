@@ -53,9 +53,18 @@ void PuyoScore_DrawScore(int score)
     }
 }
 
-void PuyoScore_EditorDraw(void) { PuyoScore_DrawScore(0); }
+#if RETRO_INCLUDE_EDITOR
+void PuyoScore_EditorDraw(void)
+{
+    RSDK_THIS(PuyoScore);
+    if (entity->counter)
+        PuyoScore_DrawScore(entity->playerID);
+    else
+        PuyoScore_DrawScore(entity->playerID ? 67890 : 12345);
+}
 
 void PuyoScore_EditorLoad(void) { PuyoScore->aniFrames = RSDK.LoadSpriteAnimation("Puyo/PuyoUI.bin", SCOPE_STAGE); }
+#endif
 
 void PuyoScore_Serialize(void)
 {

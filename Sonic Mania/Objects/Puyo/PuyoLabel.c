@@ -28,9 +28,15 @@ void PuyoLabel_Create(void *data)
 void PuyoLabel_StageLoad(void) { PuyoLabel->aniFrames = RSDK.LoadSpriteAnimation("Puyo/PuyoUI.bin", SCOPE_STAGE); }
 
 #if RETRO_INCLUDE_EDITOR
-void PuyoLabel_EditorDraw(void) {}
+void PuyoLabel_EditorDraw(void)
+{
+    RSDK_THIS(PuyoLabel);
+    RSDK.SetSpriteAnimation(PuyoLabel->aniFrames, entity->listID, &entity->animator, true, entity->frame);
 
-void PuyoLabel_EditorLoad(void) {}
+    PuyoLabel_Draw();
+}
+
+void PuyoLabel_EditorLoad(void) { PuyoLabel->aniFrames = RSDK.LoadSpriteAnimation("Puyo/PuyoUI.bin", SCOPE_STAGE); }
 #endif
 
 void PuyoLabel_Serialize(void)

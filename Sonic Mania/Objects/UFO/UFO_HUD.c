@@ -27,9 +27,9 @@ void UFO_HUD_Update(void)
         entity->timer--;
 
     if (UFO_Setup->rings <= 0 || UFO_Setup->rings >= 10)
-        entity->field_58 = 1;
+        entity->showRingCount = true;
     else
-        entity->field_58 = (UFO_Setup->timer >> 3) & 1;
+        entity->showRingCount = (UFO_Setup->timer >> 3) & 1;
 }
 
 void UFO_HUD_LateUpdate(void) {}
@@ -63,7 +63,7 @@ void UFO_HUD_Draw(void)
     }
 
     entity->drawFX = FX_NONE;
-    if (entity->field_58 == 1) {
+    if (entity->showRingCount) {
         drawPos.x += 0x200000;
         drawPos.y = 0x250000;
         UFO_HUD_DrawNumbers(&drawPos, UFO_Setup->rings);
@@ -92,7 +92,7 @@ void UFO_HUD_Create(void *data)
 void UFO_HUD_StageLoad(void)
 {
     UFO_HUD->spriteIndex = RSDK.LoadSpriteAnimation("SpecialUFO/HUD.bin", SCOPE_STAGE);
-    RSDK.ResetEntitySlot(SLOT_UFO_HUD, UFO_HUD->objectID, 0);
+    RSDK.ResetEntitySlot(SLOT_UFO_HUD, UFO_HUD->objectID, NULL);
 }
 
 void UFO_HUD_CheckLevelUp(void)
@@ -139,7 +139,7 @@ void UFO_HUD_LevelUpMach(void)
     UFO_Player_ChangeMachState();
     hud->scale.x = 0x300;
     hud->scale.y = 0x300;
-    RSDK.PlaySfx(UFO_Sphere->sfx_MachSpeed, 0, 255);
+    RSDK.PlaySfx(UFO_Sphere->sfx_MachSpeed, false, 255);
 }
 
 void UFO_HUD_DrawNumbers(Vector2 *drawPos, int32 value)

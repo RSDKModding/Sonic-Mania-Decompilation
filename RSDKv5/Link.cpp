@@ -522,9 +522,9 @@ void setupFunctions()
     addToRSDKFunctionTable(FunctionTable_ATan256, tan256);
     addToRSDKFunctionTable(FunctionTable_ASin256, aSin256);
     addToRSDKFunctionTable(FunctionTable_ACos256, aCos256);
-    addToRSDKFunctionTable(FunctionTable_Rand, RSDK_random);
-    addToRSDKFunctionTable(FunctionTable_Random, RSDK_random2);
-    addToRSDKFunctionTable(FunctionTable_SetRandKey, setRandKey);
+    addToRSDKFunctionTable(FunctionTable_Rand, GetRandomValue);
+    addToRSDKFunctionTable(FunctionTable_Random, GetSeededRandomValue);
+    addToRSDKFunctionTable(FunctionTable_SetRandKey, SetRandKey);
     addToRSDKFunctionTable(FunctionTable_ATan2, ArcTanLookup);
     addToRSDKFunctionTable(FunctionTable_SetIdentityMatrix, setIdentityMatrix);
     addToRSDKFunctionTable(FunctionTable_MatrixMultiply, matrixMultiply);

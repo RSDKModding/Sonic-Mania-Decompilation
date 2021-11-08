@@ -547,6 +547,7 @@ void SignPost_HandleCompetition(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void SignPost_EditorDraw(void)
 {
     RSDK_THIS(SignPost);
@@ -587,6 +588,7 @@ void SignPost_EditorDraw(void)
 }
 
 void SignPost_EditorLoad(void) { SignPost->spriteIndex = RSDK.LoadSpriteAnimation("Global/SignPost.bin", SCOPE_STAGE); }
+#endif
 
 void SignPost_Serialize(void)
 {

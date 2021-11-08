@@ -777,11 +777,11 @@ void Water_State_Bubble(void)
                                         player->state = Player_State_Air;
                                     }
 #endif
-                                    player->airTimer = 0;
-                                    if (!player->sidekick)
-                                        Music_ResumePrevTrack(TRACK_DROWNING, false);
-                                    RSDK.PlaySfx(Water->sfx_Breathe, 0, 255);
                                 }
+                                player->airTimer = 0;
+                                if (!player->sidekick)
+                                    Music_ResumePrevTrack(TRACK_DROWNING, false);
+                                RSDK.PlaySfx(Water->sfx_Breathe, false, 255);
                             }
                         }
                     }
@@ -1284,6 +1284,9 @@ void Water_EditorDraw(void)
 {
     RSDK_THIS(Water);
 
+    entity->updateRange.x = 0x800000;
+    entity->updateRange.y = 0x800000;
+
     switch (entity->type) {
         case WATER_PALETTE:
             entity->inkEffect = INK_ADD;
@@ -1294,7 +1297,9 @@ void Water_EditorDraw(void)
             break;
         case WATER_RECT:
             entity->drawFX    = FX_FLIP;
-            entity->stateDraw = Water_State_Draw_Tint;
+            entity->stateDraw     = Water_State_Draw_Tint;
+            entity->updateRange.x = entity->size.x >> 1;
+            entity->updateRange.y = entity->size.y >> 1;
             break;
         case WATER_BUBBLER:
         case WATER_BUBBLER_2:
@@ -1375,7 +1380,7 @@ void Water_Serialize(void)
     RSDK_ENUM_VAR(WATER_ADJUST);
     RSDK_ENUM_VAR(WATER_BUBBLER_2);
     RSDK_ENUM_VAR(WATER_BUBBLE_SPAWNER);
-    RSDK_ENUM_VAR(WATER_SPLASH);
-    RSDK_ENUM_VAR(WATER_BUBBLE);
-    RSDK_ENUM_VAR(WATER_COUNTDOWNBUBBLE);
+    // RSDK_ENUM_VAR(WATER_SPLASH);
+    // RSDK_ENUM_VAR(WATER_BUBBLE);
+    // RSDK_ENUM_VAR(WATER_COUNTDOWNBUBBLE);
 }

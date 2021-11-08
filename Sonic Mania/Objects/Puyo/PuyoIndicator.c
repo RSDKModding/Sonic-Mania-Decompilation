@@ -38,7 +38,7 @@ void PuyoIndicator_Create(void *data)
 
 void PuyoIndicator_StageLoad(void) { PuyoIndicator->aniFrames = RSDK.LoadSpriteAnimation("Puyo/PuyoIndicator.bin", SCOPE_STAGE); }
 
-void PuyoIndicator_Unknown1(void)
+void PuyoIndicator_ShowWinner(void)
 {
     RSDK_THIS(PuyoIndicator);
 
@@ -53,7 +53,7 @@ void PuyoIndicator_Unknown1(void)
     entity->scale.y += (RSDK.Sin512(8 * Zone->timer) >> 3) + 32;
 }
 
-void PuyoIndicator_Unknown2(void)
+void PuyoIndicator_ShowLoser(void)
 {
     RSDK_THIS(PuyoIndicator);
 
@@ -66,7 +66,7 @@ void PuyoIndicator_Unknown2(void)
     entity->position.y += RSDK.Sin256(4 * Zone->timer) << 10;
 }
 
-void PuyoIndicator_Unknown3(void)
+void PuyoIndicator_ShowReady(void)
 {
     RSDK_THIS(PuyoIndicator);
 
@@ -79,9 +79,24 @@ void PuyoIndicator_Unknown3(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void PuyoIndicator_EditorDraw(void) {}
+void PuyoIndicator_EditorDraw(void)
+{
+    RSDK_THIS(PuyoIndicator);
+    entity->drawFX   = FX_FLIP; 
+    entity->startPos = entity->position;
+    if (entity->playerID)
+        PuyoIndicator_ShowLoser();
+    else
+        PuyoIndicator_ShowWinner();
+    entity->scale.x  = 0x200;
+    entity->scale.y  = 0x200;
 
-void PuyoIndicator_EditorLoad(void) {}
+    PuyoIndicator_Draw();
+
+    entity->position = entity->startPos;
+}
+
+void PuyoIndicator_EditorLoad(void) { PuyoIndicator->aniFrames = RSDK.LoadSpriteAnimation("Puyo/PuyoIndicator.bin", SCOPE_STAGE); }
 #endif
 
 void PuyoIndicator_Serialize(void) { RSDK_EDITABLE_VAR(PuyoIndicator, VAR_UINT8, playerID); }

@@ -555,6 +555,7 @@ void Spikes_CheckHit(EntityPlayer *player, int32 playerVelX, int32 playerVelY)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void Spikes_EditorDraw(void)
 {
     RSDK_THIS(Spikes);
@@ -641,6 +642,7 @@ void Spikes_EditorLoad(void)
     RSDK_ENUM_VAR(PLANEFILTER_A);
     RSDK_ENUM_VAR(PLANEFILTER_B);
 }
+#endif
 
 void Spikes_Serialize(void)
 {

@@ -237,6 +237,7 @@ void SpecialRing_State_Normal(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void SpecialRing_EditorDraw(void)
 {
     RSDK_THIS(SpecialRing);
@@ -245,6 +246,7 @@ void SpecialRing_EditorDraw(void)
 }
 
 void SpecialRing_EditorLoad(void) { SpecialRing->spriteIndex = RSDK.LoadSpriteAnimation("Global/SpecialRing.bin", SCOPE_STAGE); }
+#endif
 
 void SpecialRing_Serialize(void)
 {

@@ -61,8 +61,8 @@ void FetchLeaderboard(const char *name, int id)
     // leaderboards->leaderboardEntryCount = RSDK.Rand(start, end);
     leaderboards->prevIsUser = id == 0;
     if (id == 0) {
-        leaderboards->rankScore = RSDK_random(1000, 9999);
-        leaderboards->prevRank  = RSDK_random(0, (leaderboards->entryStart + leaderboards->entryLength) - 1);
+        leaderboards->rankScore = GetRandomValue(1000, 9999);
+        leaderboards->prevRank  = GetRandomValue(0, (leaderboards->entryStart + leaderboards->entryLength) - 1);
     }
     leaderboards->status = STATUS_OK;
 

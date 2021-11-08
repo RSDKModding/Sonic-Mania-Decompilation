@@ -665,6 +665,7 @@ void HUD_State_GoOffScreen(void)
 #endif
 }
 
+#if RETRO_INCLUDE_EDITOR
 void HUD_EditorDraw(void)
 {
     RSDK_THIS(HUD);
@@ -673,5 +674,6 @@ void HUD_EditorDraw(void)
 }
 
 void HUD_EditorLoad(void) { HUD->aniFrames = RSDK.LoadSpriteAnimation("Editor/EditorIcons.bin", SCOPE_STAGE); }
+#endif
 
 void HUD_Serialize(void) {}

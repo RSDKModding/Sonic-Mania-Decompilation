@@ -85,6 +85,7 @@ void InvisibleBlock_DrawSprites(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void InvisibleBlock_EditorDraw(void)
 {
     RSDK_THIS(InvisibleBlock);
@@ -105,6 +106,7 @@ void InvisibleBlock_EditorLoad(void)
     RSDK_ENUM_VAR(PLANEFILTER_A);
     RSDK_ENUM_VAR(PLANEFILTER_B);
 }
+#endif
 
 void InvisibleBlock_Serialize(void)
 {

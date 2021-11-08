@@ -550,6 +550,7 @@ void Music_State_TransitionTrack(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void Music_EditorDraw(void)
 {
     RSDK_THIS(Music);
@@ -558,6 +559,7 @@ void Music_EditorDraw(void)
 }
 
 void Music_EditorLoad(void) { Music->aniFrames = RSDK.LoadSpriteAnimation("Editor/EditorIcons.bin", SCOPE_STAGE); }
+#endif
 
 void Music_Serialize(void)
 {

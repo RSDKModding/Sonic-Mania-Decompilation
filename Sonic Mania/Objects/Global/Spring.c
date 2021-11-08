@@ -316,6 +316,7 @@ void Spring_State_Diagonal(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void Spring_EditorDraw(void)
 {
     RSDK_THIS(Spring);
@@ -342,6 +343,7 @@ void Spring_EditorLoad(void)
     RSDK_ENUM_VAR(FLIP_Y);
     RSDK_ENUM_VAR(FLIP_XY);
 }
+#endif
 
 void Spring_Serialize(void)
 {

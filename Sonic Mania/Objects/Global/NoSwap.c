@@ -84,9 +84,18 @@ void NoSwap_Create(void *data)
 
 void NoSwap_StageLoad(void) { NoSwap->active = ACTIVE_ALWAYS; }
 
-void NoSwap_EditorDraw(void) { NoSwap_Draw(); }
+#if RETRO_INCLUDE_EDITOR
+void NoSwap_EditorDraw(void)
+{
+    RSDK_THIS(NoSwap);
+    entity->updateRange.x = TILE_SIZE * entity->size.x;
+    entity->updateRange.y = TILE_SIZE * entity->size.y;
+
+    NoSwap_Draw();
+}
 
 void NoSwap_EditorLoad(void) {}
+#endif
 
 void NoSwap_Serialize(void)
 {

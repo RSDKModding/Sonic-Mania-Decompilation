@@ -31,6 +31,9 @@ typedef struct {
     int32 field_98;
     int32 field_9C;
     uint8 field_A0;
+    uint8 field_A1;
+    uint8 field_A2;
+    uint8 field_A3;
 } EntityPuyoGame;
 
 // Object Struct
@@ -50,6 +53,19 @@ void PuyoGame_EditorLoad(void);
 void PuyoGame_Serialize(void);
 
 // Extra Entity Functions
-
+void PuyoGame_SetupStartingEntities(void);
+void PuyoGame_SetupPlayer(uint8 player);
+void PuyoGame_DestroyPuyoBeans(void);
+void PuyoGame_Unknown4(void);
+void PuyoGame_Unknown5(void);
+void PuyoGame_Unknown6(void);
+void PuyoGame_Unknown7(void);
+void PuyoGame_Unknown8(void);
+void PuyoGame_Unknown9(void);
+void PuyoGame_SetupEntities(void);
+void PuyoGame_Unknown11(void);
+void PuyoGame_Unknown12(void);
+void PuyoGame_Unknown13(void);
+void PuyoGame_Unknown14(void);
 
 #endif //!OBJ_PUYOGAME_H

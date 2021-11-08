@@ -426,6 +426,7 @@ void EggPrison_Unknown5(void)
         destroyEntity(entity);
 }
 
+#if RETRO_INCLUDE_EDITOR
 void EggPrison_EditorDraw(void)
 {
     RSDK_THIS(EggPrison);
@@ -476,5 +477,6 @@ void EggPrison_EditorLoad(void)
     RSDK_ENUM_VAR(EGGPRISON_TRAP);
     RSDK_ENUM_VAR(EGGPRISON_ANIMALS);
 }
+#endif
 
 void EggPrison_Serialize(void) { RSDK_EDITABLE_VAR(EggPrison, VAR_ENUM, type); }

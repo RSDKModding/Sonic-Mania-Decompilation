@@ -7,8 +7,7 @@ void PuyoAttack_Update(void)
     RSDK_THIS(PuyoAttack);
 
     if (entity->delay > 0) {
-        entity->delay--;
-        if (entity->delay)
+        if (--entity->delay)
             return;
         entity->visible = true;
     }
@@ -35,7 +34,7 @@ void PuyoAttack_Update(void)
     if (entity->radius < 1024)
         entity->radius += 8;
     if (entity->position.y < entity->targetPos.y) {
-        // PuyoMatch_Unknown1(entity->playerID, entity->field_64);
+        PuyoMatch_StartPuyoAttack(entity->playerID, entity->score);
         destroyEntity(entity);
     }
 }
@@ -58,10 +57,10 @@ void PuyoAttack_Create(void *data)
         entity->radius    = 512;
         entity->drawOrder = Zone->hudDrawOrder;
         entity->playerID  = voidToInt(data);
-        if (!voidToInt(data))
-            entity->rotation = 64;
+        if (!entity->playerID)
+            entity->rotation = 0x40;
         else
-            entity->rotation = 320;
+            entity->rotation = 0x140;
         entity->active = ACTIVE_NORMAL;
         RSDK.SetSpriteAnimation(PuyoAttack->aniFrames, entity->playerID ^ 1, &entity->animator, true, 0);
     }
@@ -74,9 +73,15 @@ void PuyoAttack_StageLoad(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void PuyoAttack_EditorDraw(void) {}
+void PuyoAttack_EditorDraw(void)
+{
+    RSDK_THIS(PuyoAttack);
+    RSDK.SetSpriteAnimation(PuyoAttack->aniFrames, 0, &entity->animator, true, 3);
 
-void PuyoAttack_EditorLoad(void) {}
+    PuyoAttack_Draw();
+}
+
+void PuyoAttack_EditorLoad(void) { PuyoAttack->aniFrames = RSDK.LoadSpriteAnimation("Puyo/Combos.bin", SCOPE_STAGE); }
 #endif
 
 void PuyoAttack_Serialize(void) {}
