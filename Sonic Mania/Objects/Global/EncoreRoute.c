@@ -69,12 +69,7 @@ void EncoreRoute_EditorDraw(void)
         drawPos.x = positions[i]->x;
         drawPos.y = positions[i]->y;
 
-        RSDK.DrawLine(drawPos.x - 0x10000, drawPos.y - 0x10000, drawPos.x + size.x, drawPos.y - 0x10000, 0xFFFF00, 0xFF, INK_NONE, false);
-        RSDK.DrawLine(drawPos.x - 0x10000, size.y + drawPos.y, drawPos.x + size.x, size.y + drawPos.y, 0xFFFF00, 0xFF,
-                      INK_NONE, false);
-        RSDK.DrawLine(drawPos.x - 0x10000, drawPos.y - 0x10000, drawPos.x - 0x10000, drawPos.y + size.y, 0xFFFF00, 0xFF, INK_NONE, false);
-        RSDK.DrawLine(drawPos.x + size.x, drawPos.y - 0x10000, drawPos.x + size.x, drawPos.y + size.y, 0xFFFF00, 0xFF,
-                      INK_NONE, false);
+        DrawHelpers_DrawRectOutline(0xFFFF00, positions[i]->x, positions[i]->y, size.x, size.y);
 
         entity->direction = FLIP_NONE;
         RSDK.DrawSprite(&EncoreRoute->animator, &drawPos, false);

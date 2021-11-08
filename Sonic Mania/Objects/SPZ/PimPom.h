@@ -5,7 +5,10 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    uint16 aniFrames;
+    uint16 sfxPimPom;
+    uint16 sfxBumper2;
 } ObjectPimPom;
 
 // Entity Class

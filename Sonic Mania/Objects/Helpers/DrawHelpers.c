@@ -86,6 +86,20 @@ void DrawHelpers_DrawDebug5(uint32 colour, int32 x, int32 y)
     }
 }
 
+void DrawHelpers_DrawRectOutline(uint32 colour, int32 x, int32 y, int32 sizeX, int32 sizeY)
+{
+    Vector2 drawPos;
+
+    drawPos.x = x;
+    drawPos.y = y;
+    drawPos.x -= sizeX >> 1;
+    drawPos.y -= sizeY >> 1;
+    RSDK.DrawLine(drawPos.x - 0x10000, drawPos.y - 0x10000, drawPos.x + sizeX, drawPos.y - 0x10000, colour, 0, INK_NONE, false);
+    RSDK.DrawLine(drawPos.x - 0x10000, sizeY + drawPos.y, drawPos.x + sizeX, sizeY + drawPos.y, colour, 0, INK_NONE, false);
+    RSDK.DrawLine(drawPos.x - 0x10000, drawPos.y - 0x10000, drawPos.x - 0x10000, drawPos.y + sizeY, colour, 0, INK_NONE, false);
+    RSDK.DrawLine(drawPos.x + sizeX, drawPos.y - 0x10000, drawPos.x + sizeX, drawPos.y + sizeY, colour, 0, INK_NONE, false);
+}
+
 #if RETRO_INCLUDE_EDITOR
 void DrawHelpers_EditorDraw(void) {}
 

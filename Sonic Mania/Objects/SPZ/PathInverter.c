@@ -179,9 +179,15 @@ void PathInverter_State_Vertical(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void PathInverter_EditorDraw(void) {}
+void PathInverter_EditorDraw(void)
+{
+    RSDK_THIS(PathInverter);
+    RSDK.SetSpriteAnimation(PathInverter->aniFrames, entity->type, &entity->animator, true, 0);
 
-void PathInverter_EditorLoad(void) {}
+    PathInverter_Draw();
+}
+
+void PathInverter_EditorLoad(void) { PathInverter->aniFrames = RSDK.LoadSpriteAnimation("SPZ2/PathInverter.bin", SCOPE_STAGE); }
 #endif
 
 void PathInverter_Serialize(void) { RSDK_EDITABLE_VAR(PathInverter, VAR_UINT8, type); }

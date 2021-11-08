@@ -586,7 +586,8 @@ void LaundroMobile_State_SetupArena(void)
         entity->active = ACTIVE_NORMAL;
         RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
         if (entity->position.x >= 0x60800000) {
-            if (LaundroMobile->health == 5 + 8) {
+            // did this used to only have 12 health during mania dev?
+            if (LaundroMobile->health == RETRO_USE_PLUS ? (5 + 8) : (4 + 8)) {
                 LaundroMobile->health = 8;
                 Music_TransitionTrack(TRACK_EGGMAN1, 0.0125);
                 entity->visible = true;

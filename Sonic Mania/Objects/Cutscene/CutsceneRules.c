@@ -32,16 +32,7 @@ void CutsceneRules_SetupEntity(void *e, Vector2 *size, Hitbox *hitbox)
 void CutsceneRules_DrawCutsceneBounds(void *e, Vector2 *size)
 {
     EntityCutsceneRules *entity = (EntityCutsceneRules *)e;
-    Vector2 drawPos;
-
-    drawPos.x = entity->position.x;
-    drawPos.y = entity->position.y;
-    drawPos.x -= size->x >> 1;
-    drawPos.y -= size->y >> 1;
-    RSDK.DrawLine(drawPos.x, drawPos.y, drawPos.x + size->x, drawPos.y, 0xFFFF00, 0, INK_NONE, false);
-    RSDK.DrawLine(drawPos.x, size->y + drawPos.y, drawPos.x + size->x, size->y + drawPos.y, 0xFFFF00, 0, INK_NONE, false);
-    RSDK.DrawLine(drawPos.x, drawPos.y, drawPos.x, drawPos.y + size->y, 0xFFFF00, 0, INK_NONE, false);
-    RSDK.DrawLine(drawPos.x + size->x, drawPos.y, drawPos.x + size->x, drawPos.y + size->y, 0xFFFF00, 0, INK_NONE, false);
+    DrawHelpers_DrawRectOutline(0xFFFF00, entity->position.x, entity->position.y, size->x, size->y);
 }
 
 #if RETRO_INCLUDE_EDITOR

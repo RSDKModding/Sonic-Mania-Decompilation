@@ -27,38 +27,43 @@ void CircleBumper_Create(void *data)
     entity->originPos.x = entity->position.x;
     entity->originPos.y = entity->position.y;
     entity->active      = ACTIVE_BOUNDS;
-    entity->amplitude.y >>= 10;
-    entity->amplitude.x >>= 10;
-    switch (entity->type - 1) {
+    if (!RSDK_sceneInfo->inEditor) {
+        entity->amplitude.x >>= 10;
+        entity->amplitude.y >>= 10;
+    }
+
+    switch (entity->type) {
         case 0:
-            entity->updateRange.x = (abs(entity->amplitude.x) + 4096) << 10;
-            entity->stateMove     = CircleBumper_Unknown5;
-            entity->updateRange.y = (abs(entity->amplitude.y) + 4096) << 10;
-            break;
-        case 1:
-            entity->updateRange.x = (abs(entity->amplitude.x) + 4096) << 10;
-            entity->updateRange.y = (abs(entity->amplitude.y) + 4096) << 10;
-            RSDK.SetSpriteAnimation(CircleBumper->aniFrames, 0, &entity->animator, true, 0);
-            entity->stateMove = CircleBumper_Unknown6;
-            break;
-        case 2:
-            entity->updateRange.x = (abs(entity->amplitude.x) + 0x2000) << 9;
-            entity->stateMove     = CircleBumper_Unknown8;
-            entity->updateRange.y = (abs(entity->amplitude.y) + 0x2000) << 9;
-            break;
-        case 3:
-            entity->updateRange.x = 0x400000;
-            entity->updateRange.y = 0x400000;
-            entity->active        = ACTIVE_NEVER;
-            entity->stateMove     = CircleBumper_Unknown7;
-            break;
         default:
             entity->updateRange.x = 0x400000;
             entity->updateRange.y = 0x400000;
             RSDK.SetSpriteAnimation(CircleBumper->aniFrames, 0, &entity->animator, true, 0);
             entity->stateMove = CircleBumper_Unknown4;
             break;
+        case 1:
+            entity->updateRange.x = (abs(entity->amplitude.x) + 0x1000) << 10;
+            entity->stateMove     = CircleBumper_Unknown5;
+            entity->updateRange.y = (abs(entity->amplitude.y) + 0x1000) << 10;
+            break;
+        case 2:
+            entity->updateRange.x = (abs(entity->amplitude.x) + 0x1000) << 10;
+            entity->updateRange.y = (abs(entity->amplitude.y) + 0x1000) << 10;
+            RSDK.SetSpriteAnimation(CircleBumper->aniFrames, 0, &entity->animator, true, 0);
+            entity->stateMove = CircleBumper_Unknown6;
+            break;
+        case 3:
+            entity->updateRange.x = (abs(entity->amplitude.x) + 0x2000) << 9;
+            entity->stateMove     = CircleBumper_Unknown8;
+            entity->updateRange.y = (abs(entity->amplitude.y) + 0x2000) << 9;
+            break;
+        case 4:
+            entity->updateRange.x = 0x400000;
+            entity->updateRange.y = 0x400000;
+            entity->active        = ACTIVE_NEVER;
+            entity->stateMove     = CircleBumper_Unknown7;
+            break;
     }
+
     RSDK.SetSpriteAnimation(CircleBumper->aniFrames, 0, &entity->animator, true, 0);
     entity->stateCollide = CircleBumper_Unknown2;
     if (!entity->hitCount)
@@ -67,15 +72,12 @@ void CircleBumper_Create(void *data)
 
 void CircleBumper_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("SPZ1")) {
+    if (RSDK.CheckStageFolder("SPZ1")) 
         CircleBumper->aniFrames = RSDK.LoadSpriteAnimation("SPZ1/CircleBumper.bin", SCOPE_STAGE);
-    }
-    else if (RSDK.CheckStageFolder("SPZ2")) {
+    else if (RSDK.CheckStageFolder("SPZ2")) 
         CircleBumper->aniFrames = RSDK.LoadSpriteAnimation("SPZ2/CircleBumper.bin", SCOPE_STAGE);
-    }
-    else if (RSDK.CheckStageFolder("Blueprint")) {
+    else if (RSDK.CheckStageFolder("Blueprint")) 
         CircleBumper->aniFrames = RSDK.LoadSpriteAnimation("Blueprint/CircleBumper.bin", SCOPE_STAGE);
-    }
 
     CircleBumper->hitbox.left   = -7;
     CircleBumper->hitbox.top    = -6;
@@ -94,7 +96,9 @@ void CircleBumper_DebugDraw(void)
 
 void CircleBumper_DebugSpawn(void)
 {
-    RSDK.CreateEntity(CircleBumper->objectID, 0, RSDK_sceneInfo->entity->position.x, RSDK_sceneInfo->entity->position.y);
+    RSDK_THIS(DebugMode);
+
+    CREATE_ENTITY(CircleBumper, NULL, entity->position.x, entity->position.y);
 }
 
 void CircleBumper_Unknown1(void)
@@ -227,9 +231,48 @@ void CircleBumper_Unknown8(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void CircleBumper_EditorDraw(void) {}
+void CircleBumper_EditorDraw(void)
+{
+    RSDK_THIS(CircleBumper);
 
-void CircleBumper_EditorLoad(void) {}
+    switch (entity->type) {
+        case 0:
+        default:
+            entity->updateRange.x = 0x400000;
+            entity->updateRange.y = 0x400000;
+            break;
+        case 1:
+            entity->updateRange.x = (abs(entity->amplitude.x) + 0x1000) << 10;
+            entity->updateRange.y = (abs(entity->amplitude.y) + 0x1000) << 10;
+            break;
+        case 2:
+            entity->updateRange.x = (abs(entity->amplitude.x) + 0x1000) << 10;
+            entity->updateRange.y = (abs(entity->amplitude.y) + 0x1000) << 10;
+            break;
+        case 3:
+            entity->updateRange.x = (abs(entity->amplitude.x) + 0x2000) << 9;
+            entity->updateRange.y = (abs(entity->amplitude.y) + 0x2000) << 9;
+            break;
+        case 4:
+            entity->updateRange.x = 0x400000;
+            entity->updateRange.y = 0x400000;
+            break;
+    }
+    RSDK.SetSpriteAnimation(CircleBumper->aniFrames, 0, &entity->animator, true, 0);
+    entity->originPos = entity->position;
+
+    CircleBumper_Draw();
+}
+
+void CircleBumper_EditorLoad(void)
+{
+    if (RSDK.CheckStageFolder("SPZ1"))
+        CircleBumper->aniFrames = RSDK.LoadSpriteAnimation("SPZ1/CircleBumper.bin", SCOPE_STAGE);
+    else if (RSDK.CheckStageFolder("SPZ2"))
+        CircleBumper->aniFrames = RSDK.LoadSpriteAnimation("SPZ2/CircleBumper.bin", SCOPE_STAGE);
+    else if (RSDK.CheckStageFolder("Blueprint"))
+        CircleBumper->aniFrames = RSDK.LoadSpriteAnimation("Blueprint/CircleBumper.bin", SCOPE_STAGE);
+}
 #endif
 
 void CircleBumper_Serialize(void)

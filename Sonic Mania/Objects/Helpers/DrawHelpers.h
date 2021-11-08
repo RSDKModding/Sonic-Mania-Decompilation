@@ -35,4 +35,6 @@ void DrawHelpers_DrawArrow(uint32 colour, int32 x1, int32 y1, int32 x2, int32 y2
 void DrawHelpers_DrawDebug4(uint32 colour, int32 a2, int32 alpha, int32 x1, int32 y1, int32 x2, int32 y2);
 void DrawHelpers_DrawDebug5(uint32 colour, int32 x, int32 y);
 
+void DrawHelpers_DrawRectOutline(uint32 colour, int32 x, int32 y, int32 sizeX, int32 sizeY);
+
 #endif //! OBJ_DRAWHELPERS_H
