@@ -69,17 +69,18 @@ void Letterboard_State_Controller(void)
 
     bool32 flag = true;
     if (entity->letterID) {
-        flag = false;
+        int count = 0;
 
         int slot = RSDK_sceneInfo->entitySlot + 1;
         for (int i = 0; i < entity->letterID; ++i) {
             EntityLetterboard *letterboard = RSDK_GET_ENTITY(slot + i, Letterboard);
             if (!letterboard->state)
-                flag = false;
+                count++;
 
             if (letterboard->state == Letterboard_State_Spun)
                 entity->active = ACTIVE_NORMAL;
         }
+        flag = count == entity->letterID;
     }
 
     if (flag) {
