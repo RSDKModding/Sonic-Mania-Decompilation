@@ -335,7 +335,7 @@ bool32 ERZOutro_CutsceneState_EnterPortal(EntityCutsceneSeq *host)
         host->field_68     = RSDK.ATan2(player1->position.x - portal->position.x, player1->position.y - portal->position.y) << 16;
         int rx             = abs(portal->position.x - player1->position.x) >> 16;
         int ry             = abs(portal->position.y - player1->position.y) >> 16;
-        host->field_64     = MathHelpers_Unknown6(rx * rx + ry * ry) << 16;
+        host->field_64     = MathHelpers_SquareRoot(rx * rx + ry * ry) << 16;
         player1->drawFX |= FX_SCALE;
         player1->scale.x = 0x200;
         player1->scale.y = 0x200;
@@ -354,7 +354,7 @@ bool32 ERZOutro_CutsceneState_EnterPortal(EntityCutsceneSeq *host)
             ERZOutro->field_2C = RSDK.ATan2(ruby->position.x - portal->position.x, ruby->position.y - portal->position.y) << 16;
             int rx             = abs(portal->position.x - ruby->position.x) >> 16;
             int ry             = abs(portal->position.y - ruby->position.y) >> 16;
-            ERZOutro->field_28 = MathHelpers_Unknown6(rx * rx + ry * ry) << 16;
+            ERZOutro->field_28 = MathHelpers_SquareRoot(rx * rx + ry * ry) << 16;
             ruby->drawFX |= FX_SCALE;
             ruby->scale.x = 0x200;
             ruby->scale.y = 0x200;
@@ -383,14 +383,14 @@ bool32 ERZOutro_CutsceneState_EnterPortal(EntityCutsceneSeq *host)
             fxRuby->fadeWhite += 2;
         int rx   = abs(portal->position.x - player1->position.x) >> 16;
         int ry   = abs(portal->position.y - player1->position.y) >> 16;
-        int dist = MathHelpers_Unknown6(rx * rx + ry * ry);
+        int dist = MathHelpers_SquareRoot(rx * rx + ry * ry);
 
         player1->scale.x = 8 * minVal(dist, 0x40);
         player1->scale.y = 8 * minVal(dist, 0x40);
 
         rx            = abs(portal->position.x - ruby->position.x) >> 16;
         ry            = abs(portal->position.y - ruby->position.y) >> 16;
-        dist          = MathHelpers_Unknown6(rx * rx + ry * ry);
+        dist          = MathHelpers_SquareRoot(rx * rx + ry * ry);
         ruby->scale.x = 8 * minVal(dist, 0x40);
         ruby->scale.y = 8 * minVal(dist, 0x40);
 

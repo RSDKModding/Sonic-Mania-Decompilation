@@ -492,10 +492,13 @@ void Fan_EditorDraw(void)
     RSDK_THIS(Fan);
     RSDK.SetSpriteAnimation(Fan->aniFrames, entity->type, &entity->animator, true, 0);
 
+    int dir = entity->direction;
     if (!entity->type)
         entity->direction *= FLIP_Y;
 
     Fan_Draw();
+
+    entity->direction = dir;
 }
 
 void Fan_EditorLoad(void)

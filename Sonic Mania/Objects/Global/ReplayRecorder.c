@@ -633,7 +633,7 @@ void ReplayRecorder_DrawGhostDisplay(void)
 
             int32 distX = abs(player->position.x - screenX);
             int32 distY = abs(player->position.y - screenY);
-            int32 rad   = MathHelpers_Unknown6((distX >> 16) * (distX >> 16) + (distY >> 16) * (distY >> 16));
+            int32 rad   = MathHelpers_SquareRoot((distX >> 16) * (distX >> 16) + (distY >> 16) * (distY >> 16));
             rad         = clampVal(rad, 100, 2000);
 
             int32 val     = 12 - 4 * (3 * rad - 300) / 2000;
@@ -1135,7 +1135,7 @@ void ReplayRecorder_StateLate_Replay(void)
             if ((bufBytes[0] == 1 || bufBytes[0] == 3) || (bufBytes[0] == 2 && (bufBytes[1] & 2))) {
                 int32 distX = abs(player->position.x - framePtr[1]);
                 int32 distY = abs(player->position.y - framePtr[2]);
-                if (MathHelpers_Unknown6((distX >> 16) * (distX >> 16) + (distY >> 16) * (distY >> 16)) << 16 >= 0x20000) {
+                if (MathHelpers_SquareRoot((distX >> 16) * (distX >> 16) + (distY >> 16) * (distY >> 16)) << 16 >= 0x20000) {
                     player->position.x += (framePtr[1] - player->position.x) >> 1;
                     player->position.y += (framePtr[2] - player->position.y) >> 1;
                 }

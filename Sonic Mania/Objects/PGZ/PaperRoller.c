@@ -284,7 +284,7 @@ void PaperRoller_Unknown4(void)
         if (entity->playerTimer[playerID] <= 0) {
             int32 distX = abs(entity->position.x - player->position.x);
             int32 distY = abs(entity->position.y - player->position.y);
-            if (MathHelpers_Unknown6((distX >> 16) * (distX >> 16) + (distY >> 16) * (distY >> 16)) <= 40 && !entity->playerTimer[playerID]) {
+            if (MathHelpers_SquareRoot((distX >> 16) * (distX >> 16) + (distY >> 16) * (distY >> 16)) <= 40 && !entity->playerTimer[playerID]) {
                 RSDK.PlaySfx(Player->sfx_Release, false, 255);
                 int32 angle = RSDK.ATan2(player->position.x - entity->position.x, player->position.y - entity->position.y);
 

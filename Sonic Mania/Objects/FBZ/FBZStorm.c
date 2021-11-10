@@ -8,12 +8,12 @@ void FBZStorm_Update(void)
     StateMachine_Run(entity->state);
 
     entity->velocity.x = -0x40000;
-    // foreach_active(Current, current)
-    //{
-    //    v2 = -0x10000 * LOBYTE(current[1].velocity.x);
-    //    if (v2 < entity->velocity.x)
-    //        entity->velocity.x = v2;
-    //}
+    foreach_active(Current, current)
+    {
+        int strength = -0x10000 * current->strength;
+        if (strength < entity->velocity.x)
+            entity->velocity.x = strength;
+    }
 
     for (int32 p = 0; p < Player->playerCount; ++p) {
         if (!RSDK_GET_ENTITY(p, Player)->sidekick) {

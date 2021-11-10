@@ -903,7 +903,7 @@ void LinkGameLogicDLL(GameInfo *info)
         ADD_PUBLIC_FUNC(MathHelpers_Lerp3);
         ADD_PUBLIC_FUNC(MathHelpers_Lerp4);
         ADD_PUBLIC_FUNC(MathHelpers_Unknown5);
-        ADD_PUBLIC_FUNC(MathHelpers_Unknown6);
+        ADD_PUBLIC_FUNC(MathHelpers_SquareRoot);
         ADD_PUBLIC_FUNC(MathHelpers_Unknown7);
         ADD_PUBLIC_FUNC(MathHelpers_PointInHitbox);
         ADD_PUBLIC_FUNC(MathHelpers_Unknown9);

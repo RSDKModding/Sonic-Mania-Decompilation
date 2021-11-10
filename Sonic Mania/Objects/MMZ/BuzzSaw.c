@@ -70,7 +70,7 @@ bool32 BuzzSaw_CheckCB(void)
     {
         int32 x    = abs(worldX - saw->position.x);
         int32 y    = abs(worldY - saw->position.y);
-        int32 dist = MathHelpers_Unknown6((x >> 16) * (x >> 16) + (y >> 16) * (y >> 16)) << 16;
+        int32 dist = MathHelpers_SquareRoot((x >> 16) * (x >> 16) + (y >> 16) * (y >> 16)) << 16;
         if (dist > 0x2800000)
             count++;
     }
@@ -88,7 +88,7 @@ void BuzzSaw_UpdateCB(int32 sfx)
     {
         int32 x = abs(worldX - saw->position.x);
         int32 y = abs(worldY - saw->position.y);
-        dist  = minVal(MathHelpers_Unknown6((x >> 16) * (x >> 16) + (y >> 16) * (y >> 16)) << 16, dist);
+        dist  = minVal(MathHelpers_SquareRoot((x >> 16) * (x >> 16) + (y >> 16) * (y >> 16)) << 16, dist);
     }
 
     RSDK.SetChannelAttributes(Soundboard->sfxChannel[sfx], 1.0 - (minVal(dist >> 16, 640) / 640.0), 0.0, 1.0);

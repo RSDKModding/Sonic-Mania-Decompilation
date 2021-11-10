@@ -81,14 +81,14 @@ bool32 WaterfallSound_CheckCB(void)
             int32 rx = distX * distX;
             int32 ry = distY * distY;
 
-            if ((MathHelpers_Unknown6(ry + rx) << 16) - 8 * sound->size.y - 8 * sound->size.x <= 0x2800000) {
+            if ((MathHelpers_SquareRoot(ry + rx) << 16) - 8 * sound->size.y - 8 * sound->size.x <= 0x2800000) {
                 if (MathHelpers_Unknown14(&sound->posUnk, worldCenterX, worldCenterY, sound->position, hitbox)) {
                     distX = abs(worldCenterX - sound->posUnk.x) >> 16;
                     distY = abs(worldCenterY - sound->posUnk.y) >> 16;
                     rx    = distX * distX;
                     ry    = distY * distY;
 
-                    if (MathHelpers_Unknown6(ry + rx) << 16 <= 0x2800000) {
+                    if (MathHelpers_SquareRoot(ry + rx) << 16 <= 0x2800000) {
                         sound->flag = true;
                         ++count;
                     }
@@ -125,7 +125,7 @@ void WaterfallSound_UpdateCB(int32 sfxID)
             int32 x = abs(worldCenterX - sound->posUnk.x);
             int32 y = abs(worldCenterY - sound->posUnk.y);
 
-            int16 val      = minVal(MathHelpers_Unknown6((x >> 16) * (x >> 16) + (y >> 16) * (y >> 16)), 640);
+            int16 val      = minVal(MathHelpers_SquareRoot((x >> 16) * (x >> 16) + (y >> 16) * (y >> 16)), 640);
             float volume   = (val / -640.0f) + 1.0f;
             float distance = -1.0;
             if (sound->posUnk.x > worldLeft) {
