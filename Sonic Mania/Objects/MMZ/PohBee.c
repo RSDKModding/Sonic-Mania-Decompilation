@@ -293,9 +293,9 @@ void PohBee_EditorLoad(void)
     PohBee->aniFrames = RSDK.LoadSpriteAnimation("MMZ/PohBee.bin", SCOPE_STAGE);
 
     RSDK_ACTIVE_VAR(PohBee, planeFilter);
-    RSDK_ENUM_VAR(PLANEFILTER_NONE);
-    RSDK_ENUM_VAR(PLANEFILTER_A);
-    RSDK_ENUM_VAR(PLANEFILTER_B);
+    RSDK_ENUM_VAR("No Filter", PLANEFILTER_NONE);
+    RSDK_ENUM_VAR("Plane A", PLANEFILTER_A);
+    RSDK_ENUM_VAR("Plane B", PLANEFILTER_B);
 }
 
 void PohBee_Serialize(void)

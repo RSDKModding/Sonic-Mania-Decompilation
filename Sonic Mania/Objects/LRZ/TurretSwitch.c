@@ -66,18 +66,18 @@ void TurretSwitch_CheckPlayerCollisions(void)
 
     foreach_active(Player, player)
     {
-        if (Player_CheckAttacking(player, entity) || player->state == Ice_State_FrozenPlayer) {
-            if (Player_CheckCollisionTouch(player, entity, &ItemBox->hitbox)) {
+        if (Player_CheckCollisionTouch(player, entity, &ItemBox->hitbox)) {
+            if (Player_CheckAttacking(player, entity) || player->state == Ice_State_FrozenPlayer) {
                 TurretSwitch_Break(entity, player);
                 foreach_break;
             }
-        }
-        else {
+            else {
 #if RETRO_USE_PLUS
-            if (player->characterID != ID_MIGHTY || player->playerAnimator.animationID != ANI_CROUCH)
+                if (player->characterID != ID_MIGHTY || player->playerAnimator.animationID != ANI_CROUCH)
 #endif
-                Player_CheckHit(player, entity);
-            foreach_break;
+                    Player_CheckHit(player, entity);
+                foreach_break;
+            }
         }
     }
 }
@@ -170,7 +170,14 @@ void TurretSwitch_EditorDraw(void)
     TurretSwitch_Draw();
 }
 
-void TurretSwitch_EditorLoad(void) { TurretSwitch->aniFrames = RSDK.LoadSpriteAnimation("LRZ1/TurretSwitch.bin", SCOPE_STAGE); }
+void TurretSwitch_EditorLoad(void)
+{
+    TurretSwitch->aniFrames = RSDK.LoadSpriteAnimation("LRZ1/TurretSwitch.bin", SCOPE_STAGE);
+
+    RSDK_ACTIVE_VAR(TurretSwitch, direction);
+    RSDK_ENUM_VAR("No Flip", FLIP_NONE);
+    RSDK_ENUM_VAR("Flip X", FLIP_X);
+}
 #endif
 
 void TurretSwitch_Serialize(void)

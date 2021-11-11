@@ -401,7 +401,7 @@ extern RSDKFunctionTable RSDK;
     else {                                                                                                                                           \
         RSDK.SetActiveVariable(-1, #var);                                                                                                             \
     }
-#define RSDK_ENUM_VAR(var)                   RSDK.AddVarEnumValue(#var)
+#define RSDK_ENUM_VAR(name, var) RSDK.AddVarEnumValue(name)
 
 #define RSDK_ADD_OBJECT(object)                                                                                                                      \
     RSDK.RegisterObject((Object **)&object, #object, sizeof(Entity##object), sizeof(Object##object), object##_Update, object##_LateUpdate,           \

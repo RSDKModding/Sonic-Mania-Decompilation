@@ -13,7 +13,7 @@ void Batbot_Update(void)
 
     Batbot_HandlePlayerInteractions();
     if (entity->state != Batbot_State_Setup) {
-        if (!RSDK.CheckOnScreen(RSDK_sceneInfo->entity, 0) && !RSDK.CheckPosOnScreen(&entity->startPos, &entity->updateRange)) {
+        if (!RSDK.CheckOnScreen(entity, NULL) && !RSDK.CheckPosOnScreen(&entity->startPos, &entity->updateRange)) {
             entity->direction = entity->startDir;
             entity->position  = entity->startPos;
             Batbot_Create(NULL);
@@ -49,24 +49,28 @@ void Batbot_Create(void *data)
 
 void Batbot_StageLoad(void)
 {
-    //if (RSDK.CheckStageFolder("HPZ"))
+    if (RSDK.CheckStageFolder("HPZ"))
         Batbot->aniFrames = RSDK.LoadSpriteAnimation("HPZ/Batbot.bin", SCOPE_STAGE);
     Batbot->hitboxBadnik.left   = -16;
     Batbot->hitboxBadnik.top    = -12;
     Batbot->hitboxBadnik.right  = 16;
     Batbot->hitboxBadnik.bottom = 12;
+
     Batbot->hitbox2.left        = -96;
     Batbot->hitbox2.top         = -64;
     Batbot->hitbox2.right       = 96;
     Batbot->hitbox2.bottom      = 128;
+
     Batbot->hitbox3.left        = -80;
     Batbot->hitbox3.top         = -64;
     Batbot->hitbox3.right       = 80;
     Batbot->hitbox3.bottom      = 96;
+
     Batbot->hitboxPlayer.left   = 0;
     Batbot->hitboxPlayer.top    = 0;
     Batbot->hitboxPlayer.right  = 0;
     Batbot->hitboxPlayer.bottom = 0;
+
     Batbot->dirFlag[0]          = 0;
     Batbot->dirFlag[1]          = 0;
     Batbot->dirFlag[2]          = 0;
@@ -77,7 +81,8 @@ void Batbot_StageLoad(void)
 
 void Batbot_DebugSpawn(void)
 {
-    RSDK_THIS(Batbot);
+    RSDK_THIS(DebugMode);
+
     EntityBatbot *batBot = CREATE_ENTITY(Batbot, NULL, entity->position.x, entity->position.y);
     batBot->direction    = entity->direction;
     batBot->startDir     = entity->direction;
@@ -191,9 +196,24 @@ void Batbot_State_SwoopLeft(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void Batbot_EditorDraw(void) {}
+void Batbot_EditorDraw(void)
+{
+    RSDK_THIS(Batbot);
 
-void Batbot_EditorLoad(void) {}
+    RSDK.SetSpriteAnimation(Batbot->aniFrames, 3, &entity->animator2, true, 0);
+    RSDK.SetSpriteAnimation(Batbot->aniFrames, 0, &entity->animator1, true, 0);
+
+    Batbot_Draw();
+}
+
+void Batbot_EditorLoad(void)
+{
+    Batbot->aniFrames = RSDK.LoadSpriteAnimation("HPZ/Batbot.bin", SCOPE_STAGE);
+
+    RSDK_ACTIVE_VAR(Batbot, direction);
+    RSDK_ENUM_VAR("No Flip", FLIP_NONE);
+    RSDK_ENUM_VAR("Flip X", FLIP_X);
+}
 #endif
 
 void Batbot_Serialize(void) { RSDK_EDITABLE_VAR(Batbot, VAR_UINT8, direction); }

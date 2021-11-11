@@ -81,8 +81,8 @@ void Caterkiller_DebugDraw(void)
 
 void Caterkiller_DebugSpawn(void)
 {
-    RSDK_THIS(Caterkiller);
-    RSDK.CreateEntity(Caterkiller->objectID, 0, entity->position.x, entity->position.y);
+    RSDK_THIS(DebugMode);
+    CREATE_ENTITY(Caterkiller, 0, entity->position.x, entity->position.y);
 }
 
 void Caterkiller_CheckOnScreen(void)
@@ -382,9 +382,39 @@ void Caterkiller_State_Split_Body(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void Caterkiller_EditorDraw(void) {}
+void Caterkiller_EditorDraw(void)
+{
+    RSDK_THIS(Caterkiller);
+    
+    entity->startPos = entity->position;
 
-void Caterkiller_EditorLoad(void) {}
+    entity->headOffset = 0;
+    int32 offset       = 0xC0000;
+    if (entity->startDir)
+        offset = -0xC0000;
+    int32 posX = entity->position.x;
+    for (int32 i = 0; i < Caterkiller_BodyCount; ++i) {
+        posX += offset;
+        entity->bodyPosition[i].x = posX;
+        entity->bodyPosition[i].y = entity->position.y;
+        entity->bodyDirection[i]  = entity->direction;
+    }
+
+    RSDK.SetSpriteAnimation(Caterkiller->aniFrames, 0, &entity->animator, true, 0);
+    RSDK.SetSpriteAnimation(Caterkiller->aniFrames, 1, &entity->animator2, true, 0);
+
+    Caterkiller_StateDraw_Body();
+}
+
+void Caterkiller_EditorLoad(void)
+{
+    Caterkiller->aniFrames = RSDK.LoadSpriteAnimation("MMZ/Caterkiller.bin", SCOPE_STAGE);
+
+    RSDK_ACTIVE_VAR(Caterkiller, planeFilter);
+    RSDK_ENUM_VAR("No Filter", PLANEFILTER_NONE);
+    RSDK_ENUM_VAR("Plane A", PLANEFILTER_A);
+    RSDK_ENUM_VAR("Plane B", PLANEFILTER_B);
+}
 #endif
 
 void Caterkiller_Serialize(void) { RSDK_EDITABLE_VAR(Caterkiller, VAR_ENUM, planeFilter); }

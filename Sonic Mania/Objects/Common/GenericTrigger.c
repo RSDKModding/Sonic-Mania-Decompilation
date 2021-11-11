@@ -41,8 +41,13 @@ void GenericTrigger_StageLoad(void) {}
 void GenericTrigger_EditorDraw(void)
 {
     RSDK_THIS(GenericTrigger);
+    entity->updateRange.x = entity->size.x;
+    entity->updateRange.y = entity->size.y;
+
     RSDK.SetSpriteAnimation(GenericTrigger->aniFrames, 0, &entity->animator, true, 7);
     RSDK.DrawSprite(&entity->animator, NULL, false);
+
+    DrawHelpers_DrawRectOutline(0xFFFF00, entity->position.x, entity->position.y, entity->size.x, entity->size.y);
 }
 
 void GenericTrigger_EditorLoad(void) { GenericTrigger->aniFrames = RSDK.LoadSpriteAnimation("Editor/EditorIcons.bin", SCOPE_STAGE); }

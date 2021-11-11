@@ -279,10 +279,12 @@ void LoadSceneFile()
             return;
         }
 
+        //Editor Metadata (mostly unknown)
         Seek_Cur(&info, 0x10);
         byte strLen = ReadInt8(&info);
         Seek_Cur(&info, strLen + 1);
 
+        //Tile Layers
         byte layerCount = ReadInt8(&info);
         for (int i = 0; i < layerCount; ++i) {
             TileLayer *layer = &tileLayers[i];
@@ -358,6 +360,7 @@ void LoadSceneFile()
             tileLayout = NULL;
         }
 
+        //Objects
         uint8 objCount  = ReadInt8(&info);
         editableVarList = NULL;
         AllocateStorage(sizeof(EditableVarInfo) * EDITABLEVAR_COUNT, (void **)&editableVarList, DATASET_TMP, false);

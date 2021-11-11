@@ -330,18 +330,23 @@ void Spring_EditorLoad(void)
     Spring->spriteIndex = RSDK.LoadSpriteAnimation("Global/Springs.bin", SCOPE_STAGE);
 
     RSDK_ACTIVE_VAR(Spring, type);
-    RSDK_ENUM_VAR(SPRING_VERT_RED);
-    RSDK_ENUM_VAR(SPRING_VERT_YELLOW);
-    RSDK_ENUM_VAR(SPRING_HORIZ_RED);
-    RSDK_ENUM_VAR(SPRING_HORIZ_YELLOW);
-    RSDK_ENUM_VAR(SPRING_DIAG_RED);
-    RSDK_ENUM_VAR(SPRING_DIAG_YELLOW);
+    RSDK_ENUM_VAR("Vertical (Red)", SPRING_VERT_RED);
+    RSDK_ENUM_VAR("Vertical (Yellow)", SPRING_VERT_YELLOW);
+    RSDK_ENUM_VAR("Horizontal (Red)", SPRING_HORIZ_RED);
+    RSDK_ENUM_VAR("Horizontal (Yellow)", SPRING_HORIZ_YELLOW);
+    RSDK_ENUM_VAR("Diagonal (Red)", SPRING_DIAG_RED);
+    RSDK_ENUM_VAR("Diagonal (Yellow)", SPRING_DIAG_YELLOW);
 
     RSDK_ACTIVE_VAR(Spring, flipFlag);
-    RSDK_ENUM_VAR(FLIP_NONE);
-    RSDK_ENUM_VAR(FLIP_X);
-    RSDK_ENUM_VAR(FLIP_Y);
-    RSDK_ENUM_VAR(FLIP_XY);
+    RSDK_ENUM_VAR("No Flip", FLIP_NONE);
+    RSDK_ENUM_VAR("Flip X", FLIP_X);
+    RSDK_ENUM_VAR("Flip Y", FLIP_Y);
+    RSDK_ENUM_VAR("Flip XY", FLIP_XY);
+
+    RSDK_ACTIVE_VAR(Spring, planeFilter);
+    RSDK_ENUM_VAR("No Filter", PLANEFILTER_NONE);
+    RSDK_ENUM_VAR("Plane A", PLANEFILTER_A);
+    RSDK_ENUM_VAR("Plane B", PLANEFILTER_B);
 }
 #endif
 

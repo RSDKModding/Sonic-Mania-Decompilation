@@ -29,7 +29,7 @@ void LRZ3Setup_StageLoad(void)
 
     if (isMainGameMode() && globals->enableIntro && (!PlayerHelpers_CheckStageReload()
         || !PlayerHelpers_CheckStageReload())) {
-        RSDK.CreateEntity(LRZ3Cutscene->objectID, NULL, 0, 0);
+        CREATE_ENTITY(LRZ3Cutscene, NULL, 0, 0);
     }
 
 #if RETRO_USE_PLUS

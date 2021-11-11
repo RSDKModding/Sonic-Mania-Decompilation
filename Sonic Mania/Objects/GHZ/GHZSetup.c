@@ -184,8 +184,8 @@ void GHZSetup_EditorDraw(void) {}
 void GHZSetup_EditorLoad(void)
 {
     RSDK_ACTIVE_VAR(BGSwitch, bgID);
-    RSDK_ENUM_VAR(GHZ_BG_OUTSIDE);
-    RSDK_ENUM_VAR(GHZ_BG_CAVES);
+    RSDK_ENUM_VAR("Outside BG", GHZ_BG_OUTSIDE);
+    RSDK_ENUM_VAR("Caves BG", GHZ_BG_CAVES);
 }
 #endif
 

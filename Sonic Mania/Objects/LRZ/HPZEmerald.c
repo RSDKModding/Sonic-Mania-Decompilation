@@ -6,7 +6,7 @@ void HPZEmerald_Update(void)
 {
     RSDK_THIS(HPZEmerald);
     RSDK.ProcessAnimation(&entity->animator2);
-    if (entity->field_60 == 1) {
+    if (entity->flag) {
         if (entity->type) {
             foreach_active(Player, player) { Player_CheckCollisionPlatform(player, entity, entity->hitbox); }
         }
@@ -40,14 +40,14 @@ void HPZEmerald_StaticUpdate(void) {}
 void HPZEmerald_Draw(void)
 {
     RSDK_THIS(HPZEmerald);
-    if (entity->field_60) {
-        RSDK.DrawSprite(&entity->animator2, 0, 0);
+    if (entity->flag) {
+        RSDK.DrawSprite(&entity->animator2, NULL, false);
     }
     else {
         entity->inkEffect = INK_NONE;
-        RSDK.DrawSprite(&entity->animator2, 0, 0);
+        RSDK.DrawSprite(&entity->animator2, NULL, false);
         entity->inkEffect = INK_ADD;
-        RSDK.DrawSprite(&entity->animator, 0, 0);
+        RSDK.DrawSprite(&entity->animator, NULL, false);
     }
 }
 
@@ -56,17 +56,20 @@ void HPZEmerald_Create(void *data)
     RSDK_THIS(HPZEmerald);
     if (!RSDK_sceneInfo->inEditor) {
         entity->visible = true;
-        if (entity->type == 1) {
-            entity->field_60  = 1;
-            entity->drawOrder = Zone->drawOrderLow;
+
+        switch (entity->type) {
+            case 0:
+            default: entity->drawOrder = 1; break;
+            case 1:
+                entity->flag      = true;
+                entity->drawOrder = Zone->drawOrderLow;
+                break;
+            case 2:
+                entity->flag  = true;
+                entity->drawOrder = Zone->drawOrderHigh;
+                break;
         }
-        else if (entity->type == 2) {
-            entity->field_60  = 1;
-            entity->drawOrder = Zone->drawOrderHigh;
-        }
-        else {
-            entity->drawOrder = 1;
-        }
+
         entity->startPos.x    = entity->position.x;
         entity->startPos.y    = entity->position.y;
         entity->active        = ACTIVE_BOUNDS;
@@ -87,9 +90,30 @@ void HPZEmerald_Create(void *data)
 void HPZEmerald_StageLoad(void) { HPZEmerald->spriteIndex = RSDK.LoadSpriteAnimation("LRZ3/Emerald.bin", SCOPE_STAGE); }
 
 #if RETRO_INCLUDE_EDITOR
-void HPZEmerald_EditorDraw(void) {}
+void HPZEmerald_EditorDraw(void)
+{
+    RSDK_THIS(HPZEmerald);
 
-void HPZEmerald_EditorLoad(void) {}
+    entity->flag = false;
+    switch (entity->type) {
+        case 0:
+        default:
+        case 1: entity->flag = true; break;
+        case 2: entity->flag = true; break;
+    }
+
+    if (entity->type) {
+        RSDK.SetSpriteAnimation(HPZEmerald->spriteIndex, 1, &entity->animator2, true, 0);
+    }
+    else {
+        RSDK.SetSpriteAnimation(HPZEmerald->spriteIndex, 0, &entity->animator2, true, 0);
+        RSDK.SetSpriteAnimation(HPZEmerald->spriteIndex, 0, &entity->animator, true, 1);
+    }
+
+    HPZEmerald_Draw();
+}
+
+void HPZEmerald_EditorLoad(void) { HPZEmerald->spriteIndex = RSDK.LoadSpriteAnimation("LRZ3/Emerald.bin", SCOPE_STAGE); }
 #endif
 
 void HPZEmerald_Serialize(void) { RSDK_EDITABLE_VAR(HPZEmerald, VAR_UINT8, type); }

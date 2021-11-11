@@ -210,16 +210,16 @@ void ItemBox_DebugSpawn(void)
 
 void ItemBox_State_Broken(void)
 {
-    // RSDK_THIS(ItemBox);
-    // if (LRZConvItem)
-    //    LRZConvItem_Unknown2(entity);
+    RSDK_THIS(ItemBox);
+    if (LRZConvItem)
+       LRZConvItem_Unknown2(entity);
     ItemBox_HandleFallingCollision();
 }
 void ItemBox_State_Contents(void)
 {
     RSDK_THIS(ItemBox);
     if (LRZConvItem && entity->lrzConvPhys) {
-        // LRZConvItem_Unknown2(entity);
+        LRZConvItem_Unknown2(entity);
     }
     else {
         ItemBox_HandleFallingCollision();
@@ -241,7 +241,7 @@ void ItemBox_State_Unknown(void)
 {
     RSDK_THIS(ItemBox);
     if (LRZConvItem && entity->lrzConvPhys) {
-        // LRZConvItem_Unknown2(entity);
+        LRZConvItem_Unknown2(entity);
     }
     else {
         ItemBox_HandleFallingCollision();
@@ -322,7 +322,8 @@ void ItemBox_State_Conveyor(void)
 {
     RSDK_THIS(ItemBox);
 
-    // entity->contentsPos.x = LRZConvItem_Unknown2(entity);
+    entity->moveOffset = LRZConvItem_Unknown2(entity);  
+    entity->contentsPos.x = entity->position.x;
     if (entity->direction == FLIP_NONE)
         entity->contentsPos.y = entity->position.y - 0x30000;
     else
@@ -370,15 +371,15 @@ void ItemBox_CheckHit(void)
 #endif
 
             if (player->sidekick) {
-                entity->position.x -= entity->unknownPos.x;
-                entity->position.y -= entity->unknownPos.y;
+                entity->position.x -= entity->moveOffset.x;
+                entity->position.y -= entity->moveOffset.y;
                 int32 px             = player->position.x;
                 int32 py             = player->position.y;
                 uint8 side          = Player_CheckCollisionBox(player, entity, &ItemBox->hitbox);
                 player->position.x = px;
                 player->position.y = py;
-                entity->position.x += entity->unknownPos.x;
-                entity->position.y += entity->unknownPos.y;
+                entity->position.x += entity->moveOffset.x;
+                entity->position.y += entity->moveOffset.y;
 
                 if (side == C_BOTTOM) {
                     entity->active = ACTIVE_ALWAYS;
@@ -389,8 +390,8 @@ void ItemBox_CheckHit(void)
                         player->velocity.y = 0x20000;
                 }
                 else if (side == C_TOP) {
-                    player->position.x += entity->unknownPos.x;
-                    player->position.y += entity->unknownPos.y;
+                    player->position.x += entity->moveOffset.x;
+                    player->position.y += entity->moveOffset.y;
                 }
 
                 if (Player_CheckCollisionBox(player, entity, &ItemBox->hitbox) == C_BOTTOM) {
@@ -412,15 +413,15 @@ void ItemBox_CheckHit(void)
 #endif
                 }
                 if (!flag) {
-                    entity->position.x -= entity->unknownPos.x;
-                    entity->position.y -= entity->unknownPos.y;
+                    entity->position.x -= entity->moveOffset.x;
+                    entity->position.y -= entity->moveOffset.y;
                     int32 px             = player->position.x;
                     int32 py             = player->position.y;
                     uint8 side          = Player_CheckCollisionBox(player, entity, &ItemBox->hitbox);
                     player->position.x = px;
                     player->position.y = py;
-                    entity->position.x += entity->unknownPos.x;
-                    entity->position.y += entity->unknownPos.y;
+                    entity->position.x += entity->moveOffset.x;
+                    entity->position.y += entity->moveOffset.y;
 
                     if (side == C_BOTTOM) {
                         entity->active = ACTIVE_ALWAYS;
@@ -432,8 +433,8 @@ void ItemBox_CheckHit(void)
                             entity->velocity.y = -0x20000;
                     }
                     else if (side == C_TOP) {
-                        player->position.x += entity->unknownPos.x;
-                        player->position.y += entity->unknownPos.y;
+                        player->position.x += entity->moveOffset.x;
+                        player->position.y += entity->moveOffset.y;
                     }
 
                     if (Player_CheckCollisionBox(player, entity, &ItemBox->hitbox) == C_BOTTOM) {
@@ -866,8 +867,8 @@ bool32 ItemBox_HandleFallingCollision(void)
     if (entity->direction)
         return false;
 
-    entity->unknownPos.x = -entity->position.x;
-    entity->unknownPos.y = -entity->position.y;
+    entity->moveOffset.x = -entity->position.x;
+    entity->moveOffset.y = -entity->position.y;
     if (entity->velocity.y)
         entity->parent = NULL;
     entity->position.x += entity->velocity.x;
@@ -881,16 +882,16 @@ bool32 ItemBox_HandleFallingCollision(void)
         || (entity->direction != FLIP_Y || entity->animatorBox.animationID != 1
                 ? !RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x100000, true)
                 : !RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0, true))) {
-        entity->unknownPos.x += entity->position.x;
-        entity->unknownPos.y += entity->position.y;
+        entity->moveOffset.x += entity->position.x;
+        entity->moveOffset.y += entity->position.y;
         return false;
     }
     else {
         entity->velocity.y = 0;
         if (entity->state != ItemBox_State_Unknown && entity->state != ItemBox_State_Contents)
             entity->active = ACTIVE_BOUNDS;
-        entity->unknownPos.x += entity->position.x;
-        entity->unknownPos.y += entity->position.y;
+        entity->moveOffset.x += entity->position.x;
+        entity->moveOffset.y += entity->position.y;
         return true;
     }
 }
@@ -966,8 +967,8 @@ void ItemBox_HandleObjectCollisions(void)
                 platform->stood      = true;
                 entity->position.x   = entity->scale.x + platform->drawPos.x;
                 entity->position.y   = (entity->scale.y + platform->drawPos.y) & 0xFFFF0000;
-                entity->unknownPos.x = platform->collisionOffset.x & 0xFFFF0000;
-                entity->unknownPos.y = platform->collisionOffset.y & 0xFFFF0000;
+                entity->moveOffset.x = platform->collisionOffset.x & 0xFFFF0000;
+                entity->moveOffset.y = platform->collisionOffset.y & 0xFFFF0000;
                 entity->contentsPos.x += platform->collisionOffset.x;
                 entity->contentsPos.y += platform->collisionOffset.y;
                 entity->velocity.y = 0;
@@ -991,8 +992,8 @@ void ItemBox_HandleObjectCollisions(void)
                 tilePlatform->stood  = true;
                 entity->position.x   = entity->scale.x + tilePlatform->drawPos.x;
                 entity->position.y   = (entity->scale.y + tilePlatform->drawPos.y) & 0xFFFF0000;
-                entity->unknownPos.x = tilePlatform->collisionOffset.x & 0xFFFF0000;
-                entity->unknownPos.y = tilePlatform->collisionOffset.y & 0xFFFF0000;
+                entity->moveOffset.x = tilePlatform->collisionOffset.x & 0xFFFF0000;
+                entity->moveOffset.y = tilePlatform->collisionOffset.y & 0xFFFF0000;
                 entity->contentsPos.x += tilePlatform->collisionOffset.x;
                 entity->contentsPos.y += tilePlatform->collisionOffset.y;
                 entity->velocity.y = 0;
@@ -1007,8 +1008,8 @@ void ItemBox_HandleObjectCollisions(void)
                 crate->stood         = true;
                 entity->position.x   = entity->scale.x + crate->drawPos.x;
                 entity->position.y   = (entity->scale.y + crate->drawPos.x) & 0xFFFF0000;
-                entity->unknownPos.x = crate->collisionOffset.x & 0xFFFF0000;
-                entity->unknownPos.y = crate->collisionOffset.y & 0xFFFF0000;
+                entity->moveOffset.x = crate->collisionOffset.x & 0xFFFF0000;
+                entity->moveOffset.y = crate->collisionOffset.y & 0xFFFF0000;
                 entity->contentsPos.x += crate->collisionOffset.x;
                 entity->contentsPos.y += crate->collisionOffset.y;
                 entity->velocity.y = 0;
@@ -1043,8 +1044,8 @@ void ItemBox_HandleObjectCollisions(void)
                     entity->contentsPos.x += ice->playerPos.x;
                     entity->contentsPos.y += ice->playerPos.y;
                     entity->contentsPos.y = entity->contentsPos.y >> 0x10 << 0x10;
-                    entity->unknownPos.x  = ice->playerPos.x;
-                    entity->unknownPos.y  = ice->playerPos.y;
+                    entity->moveOffset.x  = ice->playerPos.x;
+                    entity->moveOffset.y  = ice->playerPos.y;
                     entity->velocity.y    = 0;
                 }
                 ice->position.x = storeX;
@@ -1067,8 +1068,8 @@ void ItemBox_HandleObjectCollisions(void)
             entity->contentsPos.y += spikes->offset.y;
             entity->contentsPos.y &= 0xFFFF0000;
 
-            entity->unknownPos.x = spikes->offset.x;
-            entity->unknownPos.y = spikes->offset.y;
+            entity->moveOffset.x = spikes->offset.x;
+            entity->moveOffset.y = spikes->offset.y;
             entity->velocity.y   = 0;
         }
         spikes->position.x = storeX;
@@ -1082,18 +1083,18 @@ void ItemBox_HandleObjectCollisions(void)
                 if (itemBox->state == ItemBox_State_Normal || itemBox->state == ItemBox_State_Falling) {
                     int32 storeX = itemBox->position.x;
                     int32 storeY = itemBox->position.y;
-                    itemBox->position.x -= itemBox->unknownPos.x;
-                    itemBox->position.y -= itemBox->unknownPos.y;
+                    itemBox->position.x -= itemBox->moveOffset.x;
+                    itemBox->position.y -= itemBox->moveOffset.y;
                     if (RSDK.CheckObjectCollisionBox(itemBox, &ItemBox->hitbox, entity, &ItemBox->hitbox, 1) == 1) {
-                        entity->position.x += itemBox->unknownPos.x;
-                        entity->position.y += itemBox->unknownPos.y;
+                        entity->position.x += itemBox->moveOffset.x;
+                        entity->position.y += itemBox->moveOffset.y;
                         entity->position.y = entity->position.y >> 0x10 << 0x10;
-                        entity->contentsPos.x += itemBox->unknownPos.x;
-                        entity->contentsPos.y += itemBox->unknownPos.y;
+                        entity->contentsPos.x += itemBox->moveOffset.x;
+                        entity->contentsPos.y += itemBox->moveOffset.y;
                         entity->contentsPos.y = entity->contentsPos.y >> 0x10 << 0x10;
 
-                        entity->unknownPos.x = itemBox->unknownPos.x;
-                        entity->unknownPos.y = itemBox->unknownPos.y;
+                        entity->moveOffset.x = itemBox->moveOffset.x;
+                        entity->moveOffset.y = itemBox->moveOffset.y;
                         entity->velocity.y   = 0;
                     }
                     itemBox->position.x = storeX;
@@ -1128,31 +1129,31 @@ void ItemBox_EditorLoad(void)
     ItemBox->spriteIndex = RSDK.LoadSpriteAnimation("Global/ItemBox.bin", SCOPE_STAGE);
 
     RSDK_ACTIVE_VAR(ItemBox, type);
-    RSDK_ENUM_VAR(ITEMBOX_RING);
-    RSDK_ENUM_VAR(ITEMBOX_BLUESHIELD);
-    RSDK_ENUM_VAR(ITEMBOX_BUBBLESHIELD);
-    RSDK_ENUM_VAR(ITEMBOX_FIRESHIELD);
-    RSDK_ENUM_VAR(ITEMBOX_LIGHTNINGSHIELD);
-    RSDK_ENUM_VAR(ITEMBOX_INVINCIBLE);
-    RSDK_ENUM_VAR(ITEMBOX_SNEAKERS);
-    RSDK_ENUM_VAR(ITEMBOX_1UP_SONIC);
-    RSDK_ENUM_VAR(ITEMBOX_1UP_TAILS);
-    RSDK_ENUM_VAR(ITEMBOX_1UP_KNUX);
-    RSDK_ENUM_VAR(ITEMBOX_EGGMAN);
-    RSDK_ENUM_VAR(ITEMBOX_HYPERRING);
-    RSDK_ENUM_VAR(ITEMBOX_SWAP);
-    RSDK_ENUM_VAR(ITEMBOX_RANDOM);
-    RSDK_ENUM_VAR(ITEMBOX_SUPER);
+    RSDK_ENUM_VAR("Rings", ITEMBOX_RING);
+    RSDK_ENUM_VAR("Blue Shield", ITEMBOX_BLUESHIELD);
+    RSDK_ENUM_VAR("Bubble Shield", ITEMBOX_BUBBLESHIELD);
+    RSDK_ENUM_VAR("Fire Shield", ITEMBOX_FIRESHIELD);
+    RSDK_ENUM_VAR("Lightning Shield", ITEMBOX_LIGHTNINGSHIELD);
+    RSDK_ENUM_VAR("Invincibility", ITEMBOX_INVINCIBLE);
+    RSDK_ENUM_VAR("Speed Shoes", ITEMBOX_SNEAKERS);
+    RSDK_ENUM_VAR("1UP (Sonic)", ITEMBOX_1UP_SONIC);
+    RSDK_ENUM_VAR("1UP (Tails)", ITEMBOX_1UP_TAILS);
+    RSDK_ENUM_VAR("1UP (Knux)", ITEMBOX_1UP_KNUX);
+    RSDK_ENUM_VAR("Eggman", ITEMBOX_EGGMAN);
+    RSDK_ENUM_VAR("Hyper Ring", ITEMBOX_HYPERRING);
+    RSDK_ENUM_VAR("Swap", ITEMBOX_SWAP);
+    RSDK_ENUM_VAR("Random", ITEMBOX_RANDOM);
+    RSDK_ENUM_VAR("Super", ITEMBOX_SUPER);
 #if RETRO_USE_PLUS
-    RSDK_ENUM_VAR(ITEMBOX_1UP_MIGHTY);
-    RSDK_ENUM_VAR(ITEMBOX_1UP_RAY);
-    RSDK_ENUM_VAR(ITEMBOX_STOCK);
+    RSDK_ENUM_VAR("1UP (Mighty)", ITEMBOX_1UP_MIGHTY);
+    RSDK_ENUM_VAR("1UP (Ray)", ITEMBOX_1UP_RAY);
+    RSDK_ENUM_VAR("Extra Stock", ITEMBOX_STOCK);
 #endif
 
     RSDK_ACTIVE_VAR(ItemBox, planeFilter);
-    RSDK_ENUM_VAR(PLANEFILTER_NONE);
-    RSDK_ENUM_VAR(PLANEFILTER_A);
-    RSDK_ENUM_VAR(PLANEFILTER_B);
+    RSDK_ENUM_VAR("No Filter", PLANEFILTER_NONE);
+    RSDK_ENUM_VAR("Plane A", PLANEFILTER_A);
+    RSDK_ENUM_VAR("Plane B", PLANEFILTER_B);
 }
 #endif
 

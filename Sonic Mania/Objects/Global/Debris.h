@@ -16,7 +16,7 @@ typedef struct {
     int32 gravity;
     int32 rotSpeed;
     Vector2 scaleInc;
-    int32 cooldown;
+    int32 delay;
     Animator animator;
 } EntityDebris;
 

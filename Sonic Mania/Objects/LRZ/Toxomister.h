@@ -5,12 +5,25 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    Hitbox hitbox1;
+    Hitbox hitbox2;
+    uint16 aniFrames;
 } ObjectToxomister;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    StateMachine(state);
+    Vector2 startPos;
+    uint8 startDir;
+    Entity *link;
+    EntityPlayer *grabbedPlayer;
+    int32 timer;
+    uint16 shakeTimer;
+    uint16 shakeCount;
+    uint16 prevShakeFlags;
+    Animator animator;
 } EntityToxomister;
 
 // Object Struct
@@ -30,6 +43,21 @@ void Toxomister_EditorLoad(void);
 void Toxomister_Serialize(void);
 
 // Extra Entity Functions
+void Toxomister_DebugSpawn(void);
+void Toxomister_DebugDraw(void);
 
+void Toxomister_CheckPlayerCollisions(void);
+void Toxomister_CheckOnScreen(void);
+void Toxomister_CheckMistOnScreen(void);
+void Toxomister_CheckPlayerMistCollisions(void);
+
+void Toxomister_State_Setup(void);
+void Toxomister_State_Unknown1(void);
+
+void Toxomister_State1_Unknown1(void);
+void Toxomister_State1_Unknown2(void);
+void Toxomister_State1_Unknown3(void);
+void Toxomister_State1_Unknown4(void);
+void Toxomister_State1_Unknown5(void);
 
 #endif //!OBJ_TOXOMISTER_H

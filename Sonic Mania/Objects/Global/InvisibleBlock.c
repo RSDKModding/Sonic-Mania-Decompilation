@@ -102,9 +102,9 @@ void InvisibleBlock_EditorLoad(void)
     InvisibleBlock->animator.frameID = 10;
 
     RSDK_ACTIVE_VAR(InvisibleBlock, planeFilter);
-    RSDK_ENUM_VAR(PLANEFILTER_NONE);
-    RSDK_ENUM_VAR(PLANEFILTER_A);
-    RSDK_ENUM_VAR(PLANEFILTER_B);
+    RSDK_ENUM_VAR("No Filter", PLANEFILTER_NONE);
+    RSDK_ENUM_VAR("Plane A", PLANEFILTER_A);
+    RSDK_ENUM_VAR("Plane B", PLANEFILTER_B);
 }
 #endif
 

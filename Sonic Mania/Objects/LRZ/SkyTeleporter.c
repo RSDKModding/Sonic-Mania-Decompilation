@@ -59,9 +59,13 @@ void SkyTeleporter_Unknown1(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void SkyTeleporter_EditorDraw(void) {}
+void SkyTeleporter_EditorDraw(void)
+{
+    RSDK_THIS(SkyTeleporter);
+    RSDK.DrawSprite(&entity->animator, NULL, false);
+}
 
-void SkyTeleporter_EditorLoad(void) {}
+void SkyTeleporter_EditorLoad(void) { SkyTeleporter->aniFrames = RSDK.LoadSpriteAnimation("LRZ3/SkyTeleporter.bin", SCOPE_STAGE); }
 #endif
 
 void SkyTeleporter_Serialize(void) {}

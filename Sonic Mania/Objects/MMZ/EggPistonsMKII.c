@@ -814,10 +814,10 @@ void EggPistonsMKII_EditorLoad(void)
     EggPistonsMKII->eggmanFrames = RSDK.LoadSpriteAnimation("Eggman/EggmanMMZ1.bin", SCOPE_STAGE);
 
     RSDK_ACTIVE_VAR(EggPistonsMKII, type);
-    RSDK_ENUM_VAR(EGGPISTON_PISTON);
-    RSDK_ENUM_VAR(EGGPISTON_CONTROL);
-    RSDK_ENUM_VAR(EGGPISTON_EMITTER);
-    RSDK_ENUM_VAR(EGGPISTON_BARRIER);
+    RSDK_ENUM_VAR("Piston", EGGPISTON_PISTON);
+    RSDK_ENUM_VAR("Control", EGGPISTON_CONTROL);
+    RSDK_ENUM_VAR("Emitter", EGGPISTON_EMITTER);
+    RSDK_ENUM_VAR("Barrier", EGGPISTON_BARRIER);
 }
 #endif
 

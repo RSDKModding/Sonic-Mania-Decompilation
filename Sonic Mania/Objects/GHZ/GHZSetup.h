@@ -6,7 +6,7 @@
 typedef enum {
     GHZ_BG_OUTSIDE,
     GHZ_BG_CAVES,
-}GHZBGIDs;
+} BGSwitchIDsGHZ;
 
 // Object Class
 typedef struct {

@@ -46,7 +46,7 @@ void Stegway_Create(void *data)
 
 void Stegway_StageLoad(void)
 {
-    //if (RSDK.CheckStageFolder("HPZ"))
+    if (RSDK.CheckStageFolder("HPZ"))
         Stegway->aniFrames = RSDK.LoadSpriteAnimation("HPZ/Stegway.bin", SCOPE_STAGE);
     Stegway->hitboxBadnik.left   = -20;
     Stegway->hitboxBadnik.top    = -14;
@@ -63,7 +63,8 @@ void Stegway_StageLoad(void)
 
 void Stegway_DebugSpawn(void)
 {
-    RSDK_THIS(Stegway);
+    RSDK_THIS(DebugMode);
+
     EntityStegway *stegway = CREATE_ENTITY(Stegway, NULL, entity->position.x, entity->position.y);
     stegway->direction     = entity->direction;
     stegway->startDir      = entity->direction;
@@ -265,9 +266,24 @@ void Stegway_Unknown10(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void Stegway_EditorDraw(void) {}
+void Stegway_EditorDraw(void)
+{
+    RSDK_THIS(Stegway);
+    RSDK.SetSpriteAnimation(Stegway->aniFrames, 2, &entity->animator2, true, 0);
+    RSDK.SetSpriteAnimation(Stegway->aniFrames, 3, &entity->animator3, true, 0);
+    Stegway_SetupAnims(0, true);
 
-void Stegway_EditorLoad(void) {}
+    Stegway_Draw();
+}
+
+void Stegway_EditorLoad(void)
+{
+    Stegway->aniFrames = RSDK.LoadSpriteAnimation("HPZ/Stegway.bin", SCOPE_STAGE);
+
+    RSDK_ACTIVE_VAR(Stegway, direction);
+    RSDK_ENUM_VAR("No Flip", FLIP_NONE);
+    RSDK_ENUM_VAR("Flip X", FLIP_X);
+}
 #endif
 
 void Stegway_Serialize(void) { RSDK_EDITABLE_VAR(Stegway, VAR_UINT8, direction); }

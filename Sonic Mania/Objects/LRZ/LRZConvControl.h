@@ -3,14 +3,33 @@
 
 #include "SonicMania.h"
 
+typedef enum { LRZCONVCTRL_TRIGGER_PLAYER, LRZCONVCTRL_TRIGGER_BUTTON } LRZConvControlTriggerModes;
+typedef enum {
+    LRZCONVCTRL_BEHAVIOR_ONOFF_SET,
+    LRZCONVCTRL_BEHAVIOR_ONOFF_SWAP,
+    LRZCONVCTRL_BEHAVIOR_CHANGEDIR_SET,
+    LRZCONVCTRL_BEHAVIOR_CHANGEDIR_SWAP
+} LRZConvControlBehaviours;
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    uint16 aniFrames;
 } ObjectLRZConvControl;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    StateMachine(state);
+    uint8 triggerMode;
+    int32 buttonTag;
+    Vector2 hitboxSize;
+    uint8 behavior;
+    uint8 flipVal;
+    EntityButton *taggedButton;
+    uint8 activePlayers;
+    uint8 field_75;
+    Hitbox hitbox;
+    Animator animator;
 } EntityLRZConvControl;
 
 // Object Struct
@@ -30,6 +49,7 @@ void LRZConvControl_EditorLoad(void);
 void LRZConvControl_Serialize(void);
 
 // Extra Entity Functions
-
+void LRZConvControl_HandlePlayerTrigger(void);
+void LRZConvControl_HandleButtonTrigger(void);
 
 #endif //!OBJ_LRZCONVCONTROL_H

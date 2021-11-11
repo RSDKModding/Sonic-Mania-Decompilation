@@ -5,12 +5,29 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    uint16 aniFrames;
+    colour lineColours[64];
 } ObjectLRZConveyor;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    int32 slope;
+    int32 length;
+    int32 speed;
+    bool32 globalControl;
+    int32 buttonTag;
+    uint8 buttonBehavior;
+    bool32 off;
+    uint8 isOff;
+    uint8 startDir;
+    Vector2 startPos;
+    int32 field_80;
+    EntityButton *taggedButton;
+    Hitbox hitbox;
+    Animator animator1;
+    Animator animator2;
 } EntityLRZConveyor;
 
 // Object Struct
@@ -30,6 +47,11 @@ void LRZConveyor_EditorLoad(void);
 void LRZConveyor_Serialize(void);
 
 // Extra Entity Functions
-
+void LRZConveyor_HandleBehaviour(void);
+void LRZConveyor_HandlePlayerInteractions(void);
+int LRZConveyor_HandlePlayerCollisions(EntityLRZConveyor *conveyor, void *p, Hitbox *hitboxPtr);
+void LRZConveyor_Unknown4(void);
+void LRZConveyor_Unknown5(colour *colour, int a2, int a3, int a4, int a5, int a6, int a7, int a8);
+void LRZConveyor_Unknown6(void);
 
 #endif //!OBJ_LRZCONVEYOR_H

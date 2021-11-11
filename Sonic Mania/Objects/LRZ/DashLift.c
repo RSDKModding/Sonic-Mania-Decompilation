@@ -166,7 +166,15 @@ void DashLift_State_HandleDash(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void DashLift_EditorDraw(void) {}
+void DashLift_EditorDraw(void)
+{
+    RSDK_THIS(DashLift);
+
+    entity->drawPos = entity->position;
+    RSDK.SetSpriteAnimation(Platform->spriteIndex, 2, &entity->animator, true, 4);
+
+    DashLift_Draw();
+}
 
 void DashLift_EditorLoad(void) {}
 #endif

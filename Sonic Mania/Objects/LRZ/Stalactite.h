@@ -5,12 +5,18 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    Hitbox hitbox1;
+    Hitbox hitbox2;
+    uint16 aniFrames;
+    uint16 sfxShoot;
 } ObjectStalactite;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    StateMachine(state);
+    Animator animator;
 } EntityStalactite;
 
 // Object Struct
@@ -30,6 +36,10 @@ void Stalactite_EditorLoad(void);
 void Stalactite_Serialize(void);
 
 // Extra Entity Functions
-
+void Stalactite_State_Unknown1(void);
+void Stalactite_State_Unknown2(void);
+void Stalactite_State_Unknown3(void);
+void Stalactite_State_Unknown4(void);
+void Stalactite_State_Unknown5(void);
 
 #endif //!OBJ_STALACTITE_H

@@ -14,7 +14,7 @@ typedef struct {
     RSDK_ENTITY
     int32 field_58;
     int32 type;
-    int32 field_60;
+    bool32 flag;
     Vector2 startPos;
     Hitbox *hitbox;
     Animator animator2;

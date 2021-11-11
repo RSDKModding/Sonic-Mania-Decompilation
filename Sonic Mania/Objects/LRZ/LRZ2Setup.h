@@ -3,6 +3,10 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    GENERICTRIGGER_OUTRO
+}GenericTriggerTypesLRZ2;
+
 // Object Class
 typedef struct {
     RSDK_OBJECT
@@ -10,8 +14,8 @@ typedef struct {
     int32 palTimer2;
     int32 dstPal;
     int32 srcPal;
-    int32 field_14;
-    int32 field_18;
+    bool32 conveyorOff;
+    uint8 conveyorDir;
 } ObjectLRZ2Setup;
 
 // Entity Class

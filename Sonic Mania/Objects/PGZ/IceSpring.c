@@ -193,23 +193,6 @@ void IceSpring_StageLoad(void)
     IceSpring->shatterSFX = RSDK.GetSFX("Stage/WindowShatter.wav");
 }
 
-void IceSpring_EditorLoad(void) { IceSpring_StageLoad(); }
-
-void IceSpring_EditorDraw(void)
-{
-    RSDK_THIS(IceSpring);
-    RSDK.SetSpriteAnimation(IceSpring->animID, entity->type, &entity->animator, true, 0);
-    IceSpring_Draw();
-}
-
-void IceSpring_Serialize(void)
-{
-    RSDK_EDITABLE_VAR(IceSpring, VAR_ENUM, type);
-    RSDK_EDITABLE_VAR(IceSpring, VAR_ENUM, flipFlag);
-    RSDK_EDITABLE_VAR(IceSpring, VAR_BOOL, onGround);
-    RSDK_EDITABLE_VAR(IceSpring, VAR_UINT8, planeFilter);
-}
-
 void IceSpring_Shatter(int32 velX, int32 velY)
 {
     RSDK_THIS(IceSpring);
@@ -218,4 +201,28 @@ void IceSpring_Shatter(int32 velX, int32 velY)
     if (entity->type < 2)
         destroyEntity(entity);
     else entity->animator.frameID = 7;
+}
+
+#if RETRO_INCLUDE_EDITOR
+void IceSpring_EditorLoad(void) { IceSpring_StageLoad(); }
+
+void IceSpring_EditorDraw(void)
+{
+    RSDK_THIS(IceSpring);
+    RSDK.SetSpriteAnimation(IceSpring->animID, entity->type, &entity->animator, true, 0);
+    IceSpring_Draw();
+
+    RSDK_ACTIVE_VAR(IceSpring, planeFilter);
+    RSDK_ENUM_VAR("No Filter", PLANEFILTER_NONE);
+    RSDK_ENUM_VAR("Plane A", PLANEFILTER_A);
+    RSDK_ENUM_VAR("Plane B", PLANEFILTER_B);
+}
+#endif
+
+void IceSpring_Serialize(void)
+{
+    RSDK_EDITABLE_VAR(IceSpring, VAR_ENUM, type);
+    RSDK_EDITABLE_VAR(IceSpring, VAR_ENUM, flipFlag);
+    RSDK_EDITABLE_VAR(IceSpring, VAR_BOOL, onGround);
+    RSDK_EDITABLE_VAR(IceSpring, VAR_UINT8, planeFilter);
 }

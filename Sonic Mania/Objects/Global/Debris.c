@@ -6,7 +6,7 @@ void Debris_Update(void)
 {
     RSDK_THIS(Debris);
 
-    if (entity->cooldown <= 0) {
+    if (entity->delay <= 0) {
         RSDK.ProcessAnimation(&entity->animator);
         StateMachine_Run(entity->state);
 
@@ -25,7 +25,7 @@ void Debris_Update(void)
         }
     }
     else
-        entity->cooldown--;
+        entity->delay--;
 }
 
 void Debris_LateUpdate(void) {}

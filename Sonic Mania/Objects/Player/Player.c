@@ -2210,7 +2210,7 @@ bool32 Player_CheckCollisionBox(EntityPlayer *player, void *e, Hitbox *entityHit
     Entity *entity = (Entity *)e;
 #if RETRO_USE_PLUS
     if (player->isGhost)
-        return false;
+        return C_NONE;
 #endif
     Hitbox *playerHitbox = player->outerbox;
     if (!playerHitbox)
@@ -2219,9 +2219,9 @@ bool32 Player_CheckCollisionBox(EntityPlayer *player, void *e, Hitbox *entityHit
     if (playerHitbox)
         otherHitbox = playerHitbox;
     switch (RSDK.CheckObjectCollisionBox(entity, entityHitbox, player, otherHitbox, true)) {
-        case 0:
-        default: return false;
-        case 1: {
+        case C_NONE:
+        default: return C_NONE;
+        case C_TOP: {
             player->controlLock   = 0;
             player->collisionMode = CMODE_FLOOR;
 
@@ -2254,21 +2254,21 @@ bool32 Player_CheckCollisionBox(EntityPlayer *player, void *e, Hitbox *entityHit
 
             if (entity->velocity.y <= 0)
                 player->collisionFlagV |= 1;
-            return 1;
+            return C_TOP;
         }
-        case 2:
+        case C_LEFT:
             player->controlLock = 0;
             if (player->left && player->onGround) {
                 player->groundVel = -0x8000;
                 player->position.x &= 0xFFFF0000;
             }
-            return 2;
-        case 3:
+            return C_LEFT;
+        case C_RIGHT:
             player->controlLock = 0;
             if (player->right && player->onGround)
                 player->groundVel = 0x8000;
-            return 3;
-        case 4: return 4;
+            return C_RIGHT;
+        case C_BOTTOM: return C_BOTTOM;
     }
 }
 bool32 Player_CheckCollisionPlatform(EntityPlayer *player, void *e, Hitbox *entityHitbox)
@@ -2605,6 +2605,25 @@ bool32 Player_CheckProjectileHit(EntityPlayer *player, void *p)
     Player_CheckHit(player, projectile);
     return false;
 }
+#if RETRO_USE_PLUS
+bool32 Player_CheckMightyShellHit(EntityPlayer *player, void *e)
+{
+    Entity *entity = (Entity *)e;
+    if (player->characterID == ID_MIGHTY
+        && (player->playerAnimator.animationID == ANI_CROUCH || player->playerAnimator.animationID == ANI_JUMP
+            || player->playerAnimator.animationID == ANI_SPINDASH || player->playerAnimator.animationID == ANI_DROPDASH)) {
+        if (!player->uncurlTimer) {
+            RSDK.PlaySfx(Player->sfx_PimPom, false, 255);
+            player->uncurlTimer = 30;
+        }
+        int angle          = RSDK.ATan2(player->position.x - entity->position.x, player->position.y - entity->position.y);
+        entity->velocity.x = -0x300 * RSDK.Cos256(angle);
+        entity->velocity.y = -0x400 * RSDK.Sin256(angle);
+        return true;
+    }
+    return false;
+}
+#endif
 bool32 Player_CheckHit2(EntityPlayer *player, void *e, bool32 flag)
 {
     Entity *entity  = (Entity *)e;
@@ -6674,14 +6693,14 @@ void Player_EditorLoad(void)
     Player->sonicSpriteIndex = RSDK.LoadSpriteAnimation("Editor/PlayerIcons.bin", SCOPE_STAGE);
 
     RSDK_ACTIVE_VAR(Player, characterID);
-    RSDK_ENUM_VAR(CHAR_NONE);
-    RSDK_ENUM_VAR(CHAR_SONIC);
-    RSDK_ENUM_VAR(CHAR_TAILS);
-    RSDK_ENUM_VAR(CHAR_SONIC_TAILS);
-    RSDK_ENUM_VAR(CHAR_KNUX);
-    RSDK_ENUM_VAR(CHAR_SONIC_KNUX);
-    RSDK_ENUM_VAR(CHAR_TAILS_KNUX);
-    RSDK_ENUM_VAR(CHAR_SONIC_TAILS_KNUX);
+    RSDK_ENUM_VAR("None", CHAR_NONE);
+    RSDK_ENUM_VAR("Sonic", CHAR_SONIC);
+    RSDK_ENUM_VAR("Tails", CHAR_TAILS);
+    RSDK_ENUM_VAR("Sonic & Tails", CHAR_SONIC_TAILS);
+    RSDK_ENUM_VAR("Knuckles", CHAR_KNUX);
+    RSDK_ENUM_VAR("Sonic & Knuckles", CHAR_SONIC_KNUX);
+    RSDK_ENUM_VAR("Tails & Knuckles", CHAR_TAILS_KNUX);
+    RSDK_ENUM_VAR("Sonic, Tails & Knuckles", CHAR_SONIC_TAILS_KNUX);
 }
 #endif
 

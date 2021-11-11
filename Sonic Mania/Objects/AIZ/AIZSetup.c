@@ -184,8 +184,8 @@ void AIZSetup_StageLoad(void)
         foreach_all(AIZTornadoPath, node) { destroyEntity(node); }
     }
 #if RETRO_USE_PLUS
-    BGSwitch->switchCallback[0] = AIZSetup_bgSwitch1_CB;
-    BGSwitch->switchCallback[1] = AIZSetup_bgSwitch2_CB;
+    BGSwitch->switchCallback[AIZ_BG_BEACH] = AIZSetup_bgSwitch1_CB;
+    BGSwitch->switchCallback[AIZ_BG_JUNGLE] = AIZSetup_bgSwitch2_CB;
     BGSwitch->layerIDs[0]       = 0;
     BGSwitch->layerIDs[1]       = 0;
     BGSwitch->layerIDs[2]       = 0;
@@ -881,7 +881,12 @@ bool32 AIZSetup_Cutscene_LoadGHZ(Entity *h)
 #if RETRO_INCLUDE_EDITOR
 void AIZSetup_EditorDraw(void) {}
 
-void AIZSetup_EditorLoad(void) {}
+void AIZSetup_EditorLoad(void)
+{
+    RSDK_ACTIVE_VAR(BGSwitch, bgID);
+    RSDK_ENUM_VAR("Beach BG", AIZ_BG_BEACH);
+    RSDK_ENUM_VAR("Jungle BG", AIZ_BG_JUNGLE);
+}
 #endif
 
 void AIZSetup_Serialize(void) {}

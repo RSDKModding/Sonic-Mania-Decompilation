@@ -199,9 +199,31 @@ void LavaGeyser_State_Unknown6(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void LavaGeyser_EditorDraw(void) {}
+void LavaGeyser_EditorDraw(void)
+{
+    RSDK_THIS(LavaGeyser);
+    RSDK.SetSpriteAnimation(LavaGeyser->aniFrames, 1, &entity->animator1, true, 0);
+    RSDK.SetSpriteAnimation(LavaGeyser->aniFrames, 0, &entity->animator2, true, 0);
+    RSDK.SetSpriteAnimation(LavaGeyser->aniFrames, 1, &entity->animator3, true, 16);
 
-void LavaGeyser_EditorLoad(void) {}
+    entity->velocity.y = entity->force << 12;
+    entity->height     = 0;
+
+    while (entity->velocity.y > 0) {
+        entity->height += entity->velocity.y;
+        entity->velocity.y -= 0x1800;
+    }
+
+    LavaGeyser_Draw();
+}
+
+void LavaGeyser_EditorLoad(void)
+{
+    if (RSDK.CheckStageFolder("LRZ1"))
+        LavaGeyser->aniFrames = RSDK.LoadSpriteAnimation("LRZ1/LavaGeyser.bin", SCOPE_STAGE);
+    else if (RSDK.CheckStageFolder("LRZ2"))
+        LavaGeyser->aniFrames = RSDK.LoadSpriteAnimation("LRZ2/LavaGeyser.bin", SCOPE_STAGE);
+}
 #endif
 
 void LavaGeyser_Serialize(void)
