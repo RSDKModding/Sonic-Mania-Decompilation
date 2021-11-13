@@ -52,21 +52,21 @@ void DrillerdroidO_Create(void *data)
                     DrillerdroidO->childSlotStart = RSDK_sceneInfo->entitySlot + 2;
                     DrillerdroidO->field_8C       = 4;
                     entity->state                 = DrillerdroidO_State_SetupArena;
-                    entity->stateDraw             = DrillerdroidO_StateDraw_Unknown;
+                    entity->stateDraw             = DrillerdroidO_StateDraw_Boss;
                     break;
-                case DRILLERDROIDO_1:
+                case DRILLERDROIDO_FIREBALLEMITTER:
                     entity->active        = ACTIVE_BOUNDS;
                     entity->drawFX        = FX_FLIP;
                     entity->updateRange.x = 0x800000;
                     entity->updateRange.y = 0x800000;
                     RSDK.SetSpriteAnimation(DrillerdroidO->ticFrames, 0, &entity->animator1, true, 0);
                     entity->drawOrder = Zone->drawOrderHigh;
-                    entity->state     = DrillerdroidO_State1_Unknown;
-                    entity->stateDraw = DrillerdroidO_StateDraw1_Unknown;
+                    entity->state     = DrillerdroidO_State_FireballEmitter;
+                    entity->stateDraw = DrillerdroidO_StateDraw_FireballEmitter;
                     break;
-                case DRILLERDROIDO_2:
-                case DRILLERDROIDO_3:
-                case DRILLERDROIDO_4:
+                case DRILLERDROIDO_TARGET:
+                case DRILLERDROIDO_UNKNOWN3:
+                case DRILLERDROIDO_UNKNOWN4:
                     entity->active        = ACTIVE_NORMAL;
                     entity->drawFX        = FX_FLIP;
                     entity->updateRange.x = 0x800000;
@@ -74,8 +74,8 @@ void DrillerdroidO_Create(void *data)
                     RSDK.SetSpriteAnimation(DrillerdroidO->aniFrames, 2, &entity->animator1, true, 0);
                     RSDK.SetSpriteAnimation(DrillerdroidO->aniFrames, 3, &entity->animator2, true, 0);
                     entity->drawOrder = Zone->drawOrderHigh;
-                    entity->state     = DrillerdroidO_State2_Unknown;
-                    entity->stateDraw = DrillerdroidO_StateDraw2_Unknown;
+                    entity->state     = DrillerdroidO_State_Target;
+                    entity->stateDraw = DrillerdroidO_StateDraw_Target;
                     break;
                 default: break;
             }
@@ -152,7 +152,7 @@ void DrillerdroidO_StageLoad(void)
     DrillerdroidO->active             = ACTIVE_ALWAYS;
     DrillerdroidO->shouldPlayDrillSfx = 0;
     DrillerdroidO->playingDrillSfx    = false;
-    DrillerdroidO->field_90           = 0;
+    DrillerdroidO->emitFireballs      = false;
     DrillerdroidO->sfxHit             = RSDK.GetSFX("Stage/BossHit.wav");
     DrillerdroidO->sfxExplosion       = RSDK.GetSFX("Stage/Explosion2.wav");
     DrillerdroidO->sfxDrill           = RSDK.GetSFX("LRZ/Drill.wav");
@@ -195,7 +195,7 @@ void DrillerdroidO_CheckPlayerCollisions(void)
                                 RSDK_sceneInfo->timeEnabled = false;
                                 Player_GiveScore(RSDK_GET_ENTITY(SLOT_PLAYER1, Player), 1000);
                                 entity->invincibilityTimer = 60;
-                                DrillerdroidO->field_90    = 0;
+                                DrillerdroidO->emitFireballs = false;
                                 entity->state              = DrillerdroidO_State_Destroyed;
                             }
                             else {
@@ -300,12 +300,12 @@ void DrillerdroidO_State_StartBoss(void)
         Zone->screenBoundsL1[0]     = (entity->position.x >> 16) - RSDK_screens->centerX;
         Music_TransitionTrack(TRACK_MINIBOSS, 0.0125);
         entity->health = 6;
-        CREATE_ENTITY(DrillerdroidO, intToVoid(DRILLERDROIDO_2), entity->position.x, entity->startY);
+        CREATE_ENTITY(DrillerdroidO, intToVoid(DRILLERDROIDO_TARGET), entity->position.x, entity->startY);
         entity->position.x = 0;
         RSDK.PlaySfx(DrillerdroidO->sfxTargeting, false, 255);
         entity->state           = DrillerdroidO_State_Unknown1;
         DrillerdroidO->field_84 = 1;
-        DrillerdroidO->field_90 = 1;
+        DrillerdroidO->emitFireballs = true;
     }
 }
 
@@ -578,12 +578,12 @@ void DrillerdroidO_State_Unknown12(void)
 
         if (entity->health <= DrillerdroidO->field_8C && DrillerdroidO->field_8C) {
             entity->timer           = 90;
-            DrillerdroidO->field_90 = 0;
+            DrillerdroidO->emitFireballs = false;
             entity->state           = DrillerdroidO_State_Unknown13;
         }
         else {
             EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
-            CREATE_ENTITY(DrillerdroidO, intToVoid(DRILLERDROIDO_2), player1->position.x, player1->position.y)->target = (Entity *)player1;
+            CREATE_ENTITY(DrillerdroidO, intToVoid(DRILLERDROIDO_TARGET), player1->position.x, player1->position.y)->target = (Entity *)player1;
             RSDK.PlaySfx(DrillerdroidO->sfxTargeting, false, 255);
             entity->state = DrillerdroidO_State_Unknown1;
         }
@@ -631,9 +631,9 @@ void DrillerdroidO_State_Unknown15(void)
     Zone->screenBoundsT1[0] = RSDK_screens->position.y;
     if (Zone->screenBoundsT1[0] == Zone->screenBoundsB1[0] - 240) {
         EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
-        CREATE_ENTITY(DrillerdroidO, intToVoid(DRILLERDROIDO_2), player1->position.x, player1->position.y)->target = (Entity *)player1;
+        CREATE_ENTITY(DrillerdroidO, intToVoid(DRILLERDROIDO_TARGET), player1->position.x, player1->position.y)->target = (Entity *)player1;
         RSDK.PlaySfx(DrillerdroidO->sfxTargeting, false, 255);
-        DrillerdroidO->field_90 = 1;
+        DrillerdroidO->emitFireballs = true;
         entity->state           = DrillerdroidO_State_Unknown1;
     }
 }
@@ -837,7 +837,7 @@ void DrillerdroidO_State_Finish(void)
     }
 }
 
-void DrillerdroidO_StateDraw_Unknown(void)
+void DrillerdroidO_StateDraw_Boss(void)
 {
     RSDK_THIS(DrillerdroidO);
     Vector2 drawPos;
@@ -912,7 +912,7 @@ void DrillerdroidO_StateDraw_Unknown2(void)
     RSDK.DrawSprite(&entity->animator1, NULL, false);
 }
 
-void DrillerdroidO_State2_Unknown(void)
+void DrillerdroidO_State_Target(void)
 {
     RSDK_THIS(DrillerdroidO);
 
@@ -947,7 +947,7 @@ void DrillerdroidO_State2_Unknown(void)
         destroyEntity(entity);
 }
 
-void DrillerdroidO_StateDraw2_Unknown(void)
+void DrillerdroidO_StateDraw_Target(void)
 {
     RSDK_THIS(DrillerdroidO);
     Vector2 drawPos;
@@ -981,7 +981,7 @@ void DrillerdroidO_StateDraw2_Unknown(void)
     RSDK.DrawSprite(&entity->animator3, NULL, false);
 }
 
-void DrillerdroidO_State1_Unknown(void)
+void DrillerdroidO_State_FireballEmitter(void)
 {
     RSDK_THIS(DrillerdroidO);
 
@@ -994,7 +994,7 @@ void DrillerdroidO_State1_Unknown(void)
         }
     }
 
-    if (flag && DrillerdroidO->field_90) {
+    if (flag && DrillerdroidO->emitFireballs) {
         if (!(Zone->timer & 0x3F)) {
             EntityLRZFireball *fireball = CREATE_ENTITY(LRZFireball, LRZFireball_StateChild_Type2, entity->position.x, entity->position.y + 0x940000);
             fireball->angle             = 0xEE;
@@ -1014,29 +1014,39 @@ void DrillerdroidO_State1_Unknown(void)
     }
 }
 
-void DrillerdroidO_StateDraw1_Unknown(void) {}
+void DrillerdroidO_StateDraw_FireballEmitter(void) {}
 
 #if RETRO_INCLUDE_EDITOR
 void DrillerdroidO_EditorDraw(void)
 {
     RSDK_THIS(DrillerdroidO);
+    DrillerdroidO->field_64[0] = 4;
+    DrillerdroidO->field_5C[0] = 4;
+    DrillerdroidO->field_64[1] = 0;
+    DrillerdroidO->field_5C[1] = 0;
+    DrillerdroidO->field_54[0] = 0x100000;
+    DrillerdroidO->field_54[1] = 0x100000;
+    DrillerdroidO->field_4C[0] = 0;
+    DrillerdroidO->field_4C[1] = 0;
+    DrillerdroidO->field_74[0] = 0;
+    DrillerdroidO->field_74[1] = 0;
+    DrillerdroidO->field_6C[0] = 0;
+    DrillerdroidO->field_6C[1] = 0;
+
     switch (entity->type) {
         case DRILLERDROIDO_MAIN:
             RSDK.SetSpriteAnimation(DrillerdroidO->aniFrames, 0, &entity->animator1, true, 0);
             RSDK.SetSpriteAnimation(DrillerdroidO->aniFrames, 5, &entity->animator2, true, 0);
-            DrillerdroidO_StateDraw_Unknown();
+            DrillerdroidO_StateDraw_Boss();
+
+            // Note: its actually centerX offset on left/right but mania is usually always at 424 width anyways so its pretty much the same
+            DrawHelpers_DrawArenaBounds(0x00C0F0, 1 | 2 | 4 | 8, -212, -SCREEN_YSIZE, 212, 96);
             break;
-        case DRILLERDROIDO_1:
+        case DRILLERDROIDO_FIREBALLEMITTER:
             RSDK.SetSpriteAnimation(DrillerdroidO->ticFrames, 0, &entity->animator1, true, 0);
             RSDK.SetSpriteAnimation(0xFFFF, 3, &entity->animator2, true, 0);
-            DrillerdroidO_StateDraw1_Unknown();
-            break;
-        case DRILLERDROIDO_2:
-        case DRILLERDROIDO_3:
-        case DRILLERDROIDO_4:
-            RSDK.SetSpriteAnimation(DrillerdroidO->aniFrames, 2, &entity->animator1, true, 0);
-            RSDK.SetSpriteAnimation(DrillerdroidO->aniFrames, 3, &entity->animator2, true, 0);
-            DrillerdroidO_StateDraw2_Unknown();
+
+            DrawHelpers_DrawRectOutline(0xFFFF00, entity->position.x, entity->position.y + (0xC0 << 15), 0x40 << 16, 0xC0 << 16);
             break;
         default: break;
     }
@@ -1048,8 +1058,8 @@ void DrillerdroidO_EditorLoad(void)
     DrillerdroidO->ticFrames = RSDK.LoadSpriteAnimation("Global/TicMark.bin", SCOPE_STAGE);
 
     RSDK_ACTIVE_VAR(DrillerdroidO, type);
-    RSDK_ENUM_VAR("Drillerdroid", DRILLERDROID_MAIN);
-    RSDK_ENUM_VAR("Type 1", DRILLERDROID_1);
+    RSDK_ENUM_VAR("Drillerdroid", DRILLERDROIDO_MAIN);
+    RSDK_ENUM_VAR("Fireball Emitter", DRILLERDROIDO_FIREBALLEMITTER);
 }
 #endif
 

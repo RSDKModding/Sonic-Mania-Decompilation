@@ -5,10 +5,10 @@
 
 typedef enum {
     DRILLERDROIDO_MAIN,
-    DRILLERDROIDO_1,
-    DRILLERDROIDO_2,
-    DRILLERDROIDO_3,
-    DRILLERDROIDO_4,
+    DRILLERDROIDO_FIREBALLEMITTER,
+    DRILLERDROIDO_TARGET,
+    DRILLERDROIDO_UNKNOWN3,
+    DRILLERDROIDO_UNKNOWN4,
 } DrillerdroidOTypes;
 
 // Object Class
@@ -34,7 +34,7 @@ typedef struct {
     uint8 field_84;
     int32 childSlotStart;
     uint8 field_8C;
-    int32 field_90;
+    bool32 emitFireballs;
     Entity *boss;
     uint16 aniFrames;
     uint16 ticFrames;
@@ -109,13 +109,13 @@ void DrillerdroidO_State_Unknown18(void);
 void DrillerdroidO_State_Destroyed(void);
 void DrillerdroidO_State_Finish(void);
 
-void DrillerdroidO_StateDraw_Unknown(void);
+void DrillerdroidO_StateDraw_Boss(void);
 void DrillerdroidO_StateDraw_Unknown2(void);
 
-void DrillerdroidO_State2_Unknown(void);
-void DrillerdroidO_StateDraw2_Unknown(void);
+void DrillerdroidO_State_Target(void);
+void DrillerdroidO_StateDraw_Target(void);
 
-void DrillerdroidO_State1_Unknown(void);
-void DrillerdroidO_StateDraw1_Unknown(void);
+void DrillerdroidO_State_FireballEmitter(void);
+void DrillerdroidO_StateDraw_FireballEmitter(void);
 
 #endif //!OBJ_DRILLERDROIDO_H

@@ -36,14 +36,6 @@ void Drillerdroid_Create(void *data)
     RSDK_THIS(Drillerdroid);
 
     if (!RSDK_sceneInfo->inEditor) {
-        //TEMP!!
-        int x = entity->position.x;
-        int y = entity->position.y;
-        RSDK.ResetEntityPtr(entity, DrillerdroidO->objectID, intToVoid(entity->type));
-        entity->position.x = x;
-        entity->position.y = y;
-        return;
-
         if (globals->gameMode < MODE_TIMEATTACK) {
             entity->visible = true;
             if (data)
