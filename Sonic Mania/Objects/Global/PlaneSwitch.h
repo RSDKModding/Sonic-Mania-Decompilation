@@ -47,7 +47,8 @@ void PlaneSwitch_EditorLoad(void);
 void PlaneSwitch_Serialize(void);
 
 // Extra Entity Functions
-void PlaneSwitch_CheckCollisions(EntityPlaneSwitch *entity, void *o, bool32 switchDrawOrder, uint8 low, uint8 high);
+void PlaneSwitch_CheckCollisions(EntityPlaneSwitch *entity, void *o, int32 flags, int32 size, bool32 switchDrawOrder, uint8 low, uint8 high);
+void PlaneSwitch_DrawSprites(EntityPlaneSwitch *entity);
 
 
 #endif //!OBJ_PLANESWITCH_H

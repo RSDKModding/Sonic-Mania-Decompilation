@@ -49,7 +49,7 @@ void LRZ3Outro_HandleExplosions(void)
     explosion->drawFX     = FX_SCALE;
     explosion->inkEffect  = INK_BLEND;
     explosion->scale.x    = RSDK.Rand(0x200, 0x400);
-    explosion->scale.y    = explosion->scale.y;
+    explosion->scale.y    = explosion->scale.x;
 }
 
 void LRZ3Outro_State_Unknown1(void)

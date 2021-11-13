@@ -7,7 +7,7 @@ void BGSwitch_Update(void)
     RSDK_THIS(BGSwitch);
 
     for (BGSwitch->screenID = 0; BGSwitch->screenID < SCREEN_MAX; BGSwitch->screenID++) {
-        EntityCamera *camera = (EntityCamera *)RSDK.GetEntityByID(BGSwitch->screenID + SLOT_CAMERA1);
+        EntityCamera *camera = RSDK_GET_ENTITY(SLOT_CAMERA1 + BGSwitch->screenID, Camera);
         if (!camera->objectID)
             break;
 
@@ -51,6 +51,9 @@ void BGSwitch_StageLoad(void)
 void BGSwitch_EditorDraw(void)
 {
     RSDK_THIS(BGSwitch);
+    entity->updateRange.x = entity->size.x;
+    entity->updateRange.y = entity->size.y;
+
     RSDK.SetSpriteAnimation(BGSwitch->aniFrames, 0, &entity->animator, true, 5);
     RSDK.DrawSprite(&entity->animator, NULL, false);
 

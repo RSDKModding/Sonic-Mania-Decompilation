@@ -196,6 +196,10 @@ void KingClaw_EditorDraw(void)
 
     KingClaw_HandleJointPositions();
     KingClaw_Draw();
+
+    entity->position.y += SCREEN_YSIZE << 15;
+    DrawHelpers_DrawArenaBounds(0x00C0F0, 1 | 2 | 4 | 0, -320, -(SCREEN_YSIZE >> 1), 320, SCREEN_YSIZE >> 1);
+    entity->position.y -= SCREEN_YSIZE << 15;
 }
 
 void KingClaw_EditorLoad(void) { KingClaw->aniFrames = RSDK.LoadSpriteAnimation("LRZ3/Claw.bin", SCOPE_STAGE); }

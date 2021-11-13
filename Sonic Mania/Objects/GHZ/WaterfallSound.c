@@ -153,6 +153,8 @@ void WaterfallSound_UpdateCB(int32 sfxID)
 void WaterfallSound_EditorDraw(void)
 {
     RSDK_THIS(WaterfallSound);
+    entity->updateRange.x = TILE_SIZE * entity->size.x;
+    entity->updateRange.y = TILE_SIZE * entity->size.y;
 
     RSDK.DrawLine(entity->position.x - TILE_SIZE * entity->size.x, entity->position.y - TILE_SIZE * entity->size.y,
                   entity->position.x + TILE_SIZE * entity->size.x, entity->position.y - TILE_SIZE * entity->size.y, 0xFFFF00, 0xFF, INK_NONE, false);

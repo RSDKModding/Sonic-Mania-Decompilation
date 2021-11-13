@@ -5,7 +5,10 @@ ObjectPlaneSwitch *PlaneSwitch;
 void PlaneSwitch_Update(void)
 {
     RSDK_THIS(PlaneSwitch);
-    foreach_active(Player, player) { PlaneSwitch_CheckCollisions(entity, player, true, Zone->playerDrawLow, Zone->playerDrawHigh); }
+    foreach_active(Player, player)
+    {
+        PlaneSwitch_CheckCollisions(entity, player, entity->flags, entity->size, true, Zone->playerDrawLow, Zone->playerDrawHigh);
+    }
     entity->visible = DebugMode->debugActive;
 }
 
@@ -15,8 +18,8 @@ void PlaneSwitch_StaticUpdate(void) {}
 
 void PlaneSwitch_Draw(void)
 {
-    Vector2 drawPos;
     RSDK_THIS(PlaneSwitch);
+    Vector2 drawPos;
 
     drawPos.x = entity->position.x;
     drawPos.y = entity->position.y;
@@ -76,7 +79,7 @@ void PlaneSwitch_Create(void *data)
 
 void PlaneSwitch_StageLoad(void) { PlaneSwitch->spriteIndex = RSDK.LoadSpriteAnimation("Global/PlaneSwitch.bin", SCOPE_STAGE); }
 
-void PlaneSwitch_CheckCollisions(EntityPlaneSwitch *entity, void *o, bool32 switchDrawOrder, uint8 low, uint8 high)
+void PlaneSwitch_CheckCollisions(EntityPlaneSwitch *entity, void *o, int32 flags, int32 size, bool32 switchDrawOrder, uint8 low, uint8 high)
 {
     Entity *other = (Entity *)o;
 
@@ -91,20 +94,20 @@ void PlaneSwitch_CheckCollisions(EntityPlaneSwitch *entity, void *o, bool32 swit
         int32 xDif = abs(scanX - entity->position.x);
         int32 yDif = abs(scanY - entity->position.y);
 
-        if (xDif < 0x180000 && yDif < entity->size << 19) {
+        if (xDif < 0x180000 && yDif < size << 19) {
             if (scanX + pos >= entity->position.x) {
-                other->collisionPlane = (entity->flags >> 3) & 1;
+                other->collisionPlane = (flags >> 3) & 1;
                 if (switchDrawOrder) {
-                    if (!(entity->flags & 4))
+                    if (!(flags & 4))
                         other->drawOrder = low;
                     else
                         other->drawOrder = high;
                 }
             }
             else {
-                other->collisionPlane = (entity->flags >> 1) & 1;
+                other->collisionPlane = (flags >> 1) & 1;
                 if (switchDrawOrder) {
-                    if (!(entity->flags & 1))
+                    if (!(flags & 1))
                         other->drawOrder = low;
                     else
                         other->drawOrder = high;

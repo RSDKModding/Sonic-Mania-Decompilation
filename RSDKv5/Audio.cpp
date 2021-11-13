@@ -224,12 +224,12 @@ void ProcessAudioPlayback(void *data, Uint8 *stream, int len)
 
                                 if (channel->bufferPos >= channel->sampleLength) {
                                     if (channel->loop == 1) {
-                                        channel->bufferPos    = 0;
-                                        channel->sampleLength = channel->sampleLength;
+                                        channel->bufferPos = 0;
+                                        soundBuf    = &channel->samplePtr[channel->bufferPos];
                                     }
                                     else if (channel->loop) {
-                                        channel->bufferPos    = channel->loop;
-                                        channel->sampleLength = channel->sampleLength;
+                                        channel->bufferPos = channel->loop;
+                                        soundBuf           = &channel->samplePtr[channel->bufferPos];
                                     }
                                     else {
                                         MEM_ZEROP(channel);
