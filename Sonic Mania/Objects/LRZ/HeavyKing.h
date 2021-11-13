@@ -6,34 +6,50 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    TABLE(int32 value1[32], { 0, 0, 1, 0, 2, 2, 1, 0, 0, 1, 1, 2, 0, 2, 0, 0, 2, 1, 1, 2, 1, 0, 1, 0, 2, 2, 0, 1, 0, 0, 2, 1 });
-	int32 value2;
-	Hitbox value3;
-	Hitbox value4;
-	Hitbox value5;
-	int32 value6;
-	int32 value7;
-	int32 value8;
-	int32 value9;
-	int32 value10;
-	uint16 value11;
-	uint16 value12;
-	uint16 value13;
-	uint16 value14;
-	uint16 value15;
-	uint16 value16;
-	uint16 value17;
-	uint16 value18;
-	uint16 value19;
-	uint16 value20;
-	uint16 value21;
-	uint16 value22;
-	uint16 value23;
+    TABLE(int32 attackPattern[32], { 0, 0, 1, 0, 2, 2, 1, 0, 0, 1, 1, 2, 0, 2, 0, 0, 2, 1, 1, 2, 1, 0, 1, 0, 2, 2, 0, 1, 0, 0, 2, 1 });
+    int32 attackPatternPos;
+    Hitbox hitbox1;
+    Hitbox hitbox2;
+    Hitbox hitbox3;
+    int32 boundsL;
+    int32 boundsM;
+    int32 boundsR;
+    int32 value9;
+    int32 value10;
+    uint16 sfxHit;
+    uint16 sfxImpact2;
+    uint16 sfxImpact5;
+    uint16 sfxCharge;
+    uint16 sfxExplosion;
+    uint16 sfxFreeze;
+    uint16 sfxRodPlant;
+    uint16 sfxRodShine;
+    uint16 sfxElecOn;
+    uint16 sfxTwinCharge;
+    uint16 sfxImpact6;
+    uint16 aniFrames;
+    uint16 cutsceneFrames;
 } ObjectHeavyKing;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    StateMachine(state);
+    StateMachine(stateStore);
+    int32 timer;
+    int32 invincibilityTimer;
+    int32 health;
+    int32 field_6C;
+    int32 field_70;
+    Vector2 originPos;
+    Entity *claw;
+    Entity *masterEmerald;
+    Entity *targetEmerald;
+    Animator animator1;
+    Animator animator2;
+    Animator animator3;
+    Animator animator1Store;
+    Animator animator2Store;
 } EntityHeavyKing;
 
 // Object Struct
@@ -53,6 +69,50 @@ void HeavyKing_EditorLoad(void);
 void HeavyKing_Serialize(void);
 
 // Extra Entity Functions
+void HeavyKing_CheckPlayerCollisions(void);
+void HeavyKing_CheckPlayerCollisions_Charging(void);
+void HeavyKing_Hit(void);
+void HeavyKing_HandleClawMovement(void);
+void HeavyKing_HandleAnimators(void);
+void HeavyKing_Unknown6(void);
+void HeavyKing_FindTargetEmerald(void);
 
+void HeavyKing_Unknown8(int frame);
+void HeavyKing_Unknown9(void);
+void HeavyKing_CreateSpinRay(void);
+void HeavyKing_CreateExpandRing(void);
+void HeavyKing_CreateAttack(void);
+void HeavyKing_CreateAttackCircle(void);
+
+void HeavyKing_State_SetupArena(void);
+void HeavyKing_State_HandleCutsceneSetup(void);
+void HeavyKing_State_CutsceneUnknown1(void);
+void HeavyKing_State_CutsceneUnknown2(void);
+void HeavyKing_State_CutsceneUnknown3(void);
+void HeavyKing_State_CutsceneUnknown4(void);
+void HeavyKing_State_CutsceneUnknown5(void);
+void HeavyKing_State_CutsceneUnknown6(void);
+void HeavyKing_State_CutsceneUnknown7(void);
+void HeavyKing_State_CutsceneUnknown8(void);
+void HeavyKing_State_CutsceneUnknown9(void);
+void HeavyKing_State_CutsceneUnknown10(void);
+
+void HeavyKing_State_Unknown13(void);
+void HeavyKing_State_Unknown1(void);
+void HeavyKing_State_Unknown2(void);
+void HeavyKing_State_Unknown3(void);
+void HeavyKing_State_Unknown4(void);
+void HeavyKing_State_Unknown5(void);
+void HeavyKing_State_Unknown6(void);
+void HeavyKing_State_Unknown7(void);
+void HeavyKing_State_Unknown8(void);
+void HeavyKing_State_Unknown9(void);
+void HeavyKing_State_Unknown10(void);
+void HeavyKing_State_Unknown11(void);
+void HeavyKing_State_Unknown12(void);
+void HeavyKing_State_HitRecoil(void);
+void HeavyKing_State_Destroyed(void);
+void HeavyKing_State_Escape(void);
+void HeavyKing_State_Finish(void);
 
 #endif //!OBJ_HEAVYKING_H

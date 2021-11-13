@@ -454,6 +454,7 @@ extern RSDKFunctionTable RSDK;
     EntityCamera *cam = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
 
 #define destroyEntity(entity) RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL)
+#define destroyEntitySlot(slot) RSDK.ResetEntitySlot(slot, TYPE_BLANK, NULL)
 
 #if RETRO_USE_PLUS
 #define isMainGameMode() (globals->gameMode == MODE_MANIA || globals->gameMode == MODE_ENCORE)

@@ -5,37 +5,7 @@ ObjectPlaneSwitch *PlaneSwitch;
 void PlaneSwitch_Update(void)
 {
     RSDK_THIS(PlaneSwitch);
-    foreach_active(Player, player)
-    {
-        int32 x     = (player->position.x - entity->position.x) >> 8;
-        int32 y     = (player->position.y - entity->position.y) >> 8;
-        int32 scanX = (y * RSDK.Sin256(entity->negAngle)) + (x * RSDK.Cos256(entity->negAngle)) + entity->position.x;
-        int32 scanY = (y * RSDK.Cos256(entity->negAngle)) - (x * RSDK.Sin256(entity->negAngle)) + entity->position.y;
-        int32 pos   = ((player->velocity.y >> 8) * RSDK.Sin256(entity->negAngle)) + (player->velocity.x >> 8) * RSDK.Cos256(entity->negAngle);
-        RSDK.Cos256(entity->negAngle);
-        RSDK.Sin256(entity->negAngle);
-        if (!(entity->onPath && !player->onGround)) {
-            int32 xDif = abs(scanX - entity->position.x);
-            int32 yDif = abs(scanY - entity->position.y);
-
-            if (xDif < 0x180000 && yDif < entity->size << 19) {
-                if (scanX + pos >= entity->position.x) {
-                    player->collisionPlane = (entity->flags >> 3) & 1;
-                    if (!(entity->flags & 4))
-                        player->drawOrder = Zone->playerDrawLow;
-                    else
-                        player->drawOrder = Zone->playerDrawHigh;
-                }
-                else {
-                    player->collisionPlane = (entity->flags >> 1) & 1;
-                    if (!(entity->flags & 1))
-                        player->drawOrder = Zone->playerDrawLow;
-                    else
-                        player->drawOrder = Zone->playerDrawHigh;
-                }
-            }
-        }
-    }
+    foreach_active(Player, player) { PlaneSwitch_CheckCollisions(entity, player, true, Zone->playerDrawLow, Zone->playerDrawHigh); }
     entity->visible = DebugMode->debugActive;
 }
 
@@ -106,10 +76,72 @@ void PlaneSwitch_Create(void *data)
 
 void PlaneSwitch_StageLoad(void) { PlaneSwitch->spriteIndex = RSDK.LoadSpriteAnimation("Global/PlaneSwitch.bin", SCOPE_STAGE); }
 
+void PlaneSwitch_CheckCollisions(EntityPlaneSwitch *entity, void *o, bool32 switchDrawOrder, uint8 low, uint8 high)
+{
+    Entity *other = (Entity *)o;
+
+    int32 x     = (other->position.x - entity->position.x) >> 8;
+    int32 y     = (other->position.y - entity->position.y) >> 8;
+    int32 scanX = (y * RSDK.Sin256(entity->negAngle)) + (x * RSDK.Cos256(entity->negAngle)) + entity->position.x;
+    int32 scanY = (y * RSDK.Cos256(entity->negAngle)) - (x * RSDK.Sin256(entity->negAngle)) + entity->position.y;
+    int32 pos   = ((other->velocity.y >> 8) * RSDK.Sin256(entity->negAngle)) + (other->velocity.x >> 8) * RSDK.Cos256(entity->negAngle);
+    RSDK.Cos256(entity->negAngle);
+    RSDK.Sin256(entity->negAngle);
+    if (!(entity->onPath && !other->onGround)) {
+        int32 xDif = abs(scanX - entity->position.x);
+        int32 yDif = abs(scanY - entity->position.y);
+
+        if (xDif < 0x180000 && yDif < entity->size << 19) {
+            if (scanX + pos >= entity->position.x) {
+                other->collisionPlane = (entity->flags >> 3) & 1;
+                if (switchDrawOrder) {
+                    if (!(entity->flags & 4))
+                        other->drawOrder = low;
+                    else
+                        other->drawOrder = high;
+                }
+            }
+            else {
+                other->collisionPlane = (entity->flags >> 1) & 1;
+                if (switchDrawOrder) {
+                    if (!(entity->flags & 1))
+                        other->drawOrder = low;
+                    else
+                        other->drawOrder = high;
+                }
+            }
+        }
+    }
+}
+
 #if RETRO_INCLUDE_EDITOR
 void PlaneSwitch_EditorDraw(void) { PlaneSwitch_Draw(); }
 
-void PlaneSwitch_EditorLoad(void) { PlaneSwitch_StageLoad(); }
+void PlaneSwitch_EditorLoad(void)
+{
+    PlaneSwitch_StageLoad();
+
+    // I dont want clang format to do its magic here since I want a specific formatting so
+    // clang-format off
+    RSDK_ACTIVE_VAR(PlaneSwitch, flags);
+    RSDK_ENUM_VAR("Plane R: A, Plane L: A, Layer R: Low,  Layer L: Low,  ", PLANESWITCH_LOWLAYER_LEFT  | PLANESWITCH_PLANEA_LEFT | PLANESWITCH_LOWLAYER_RIGHT  | PLANESWITCH_PLANEA_RIGHT);
+    RSDK_ENUM_VAR("Plane R: A, Plane L: A, Layer R: Low,  Layer L: High, ", PLANESWITCH_HIGHLAYER_LEFT | PLANESWITCH_PLANEA_LEFT | PLANESWITCH_LOWLAYER_RIGHT  | PLANESWITCH_PLANEA_RIGHT);
+    RSDK_ENUM_VAR("Plane R: A, Plane L: B, Layer R: Low,  Layer L: Low,  ", PLANESWITCH_LOWLAYER_LEFT  | PLANESWITCH_PLANEB_LEFT | PLANESWITCH_LOWLAYER_RIGHT  | PLANESWITCH_PLANEA_RIGHT);
+    RSDK_ENUM_VAR("Plane R: A, Plane L: B, Layer R: Low,  Layer L: High, ", PLANESWITCH_HIGHLAYER_LEFT | PLANESWITCH_PLANEB_LEFT | PLANESWITCH_LOWLAYER_RIGHT  | PLANESWITCH_PLANEA_RIGHT);
+    RSDK_ENUM_VAR("Plane R: A, Plane L: A, Layer R: High, Layer L: Low,  ", PLANESWITCH_LOWLAYER_LEFT  | PLANESWITCH_PLANEA_LEFT | PLANESWITCH_HIGHLAYER_RIGHT | PLANESWITCH_PLANEA_RIGHT);
+    RSDK_ENUM_VAR("Plane R: A, Plane L: A, Layer R: High, Layer L: High, ", PLANESWITCH_HIGHLAYER_LEFT | PLANESWITCH_PLANEA_LEFT | PLANESWITCH_HIGHLAYER_RIGHT | PLANESWITCH_PLANEA_RIGHT);
+    RSDK_ENUM_VAR("Plane R: A, Plane L: B, Layer R: High, Layer L: Low,  ", PLANESWITCH_LOWLAYER_LEFT  | PLANESWITCH_PLANEB_LEFT | PLANESWITCH_HIGHLAYER_RIGHT | PLANESWITCH_PLANEA_RIGHT);
+    RSDK_ENUM_VAR("Plane R: A, Plane L: B, Layer R: High, Layer L: High, ", PLANESWITCH_HIGHLAYER_LEFT | PLANESWITCH_PLANEB_LEFT | PLANESWITCH_HIGHLAYER_RIGHT | PLANESWITCH_PLANEA_RIGHT);
+    RSDK_ENUM_VAR("Plane R: B, Plane L: A, Layer R: Low,  Layer L: Low,  ", PLANESWITCH_LOWLAYER_LEFT  | PLANESWITCH_PLANEA_LEFT | PLANESWITCH_LOWLAYER_RIGHT  | PLANESWITCH_PLANEB_RIGHT);
+    RSDK_ENUM_VAR("Plane R: B, Plane L: A, Layer R: Low,  Layer L: High, ", PLANESWITCH_HIGHLAYER_LEFT | PLANESWITCH_PLANEA_LEFT | PLANESWITCH_LOWLAYER_RIGHT  | PLANESWITCH_PLANEB_RIGHT);
+    RSDK_ENUM_VAR("Plane R: B, Plane L: B, Layer R: Low,  Layer L: Low,  ", PLANESWITCH_LOWLAYER_LEFT  | PLANESWITCH_PLANEB_LEFT | PLANESWITCH_LOWLAYER_RIGHT  | PLANESWITCH_PLANEB_RIGHT);
+    RSDK_ENUM_VAR("Plane R: B, Plane L: B, Layer R: Low,  Layer L: High, ", PLANESWITCH_HIGHLAYER_LEFT | PLANESWITCH_PLANEB_LEFT | PLANESWITCH_LOWLAYER_RIGHT  | PLANESWITCH_PLANEB_RIGHT);
+    RSDK_ENUM_VAR("Plane R: B, Plane L: A, Layer R: High, Layer L: Low,  ", PLANESWITCH_LOWLAYER_LEFT  | PLANESWITCH_PLANEA_LEFT | PLANESWITCH_HIGHLAYER_RIGHT | PLANESWITCH_PLANEB_RIGHT);
+    RSDK_ENUM_VAR("Plane R: B, Plane L: A, Layer R: High, Layer L: High, ", PLANESWITCH_HIGHLAYER_LEFT | PLANESWITCH_PLANEA_LEFT | PLANESWITCH_HIGHLAYER_RIGHT | PLANESWITCH_PLANEB_RIGHT);
+    RSDK_ENUM_VAR("Plane R: B, Plane L: B, Layer R: High, Layer L: Low,  ", PLANESWITCH_LOWLAYER_LEFT  | PLANESWITCH_PLANEB_LEFT | PLANESWITCH_HIGHLAYER_RIGHT | PLANESWITCH_PLANEB_RIGHT);
+    RSDK_ENUM_VAR("Plane R: B, Plane L: B, Layer R: High, Layer L: High, ", PLANESWITCH_HIGHLAYER_LEFT | PLANESWITCH_PLANEB_LEFT | PLANESWITCH_HIGHLAYER_RIGHT | PLANESWITCH_PLANEB_RIGHT);
+    // clang-format on
+}
 #endif
 
 void PlaneSwitch_Serialize(void)

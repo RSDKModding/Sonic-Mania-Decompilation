@@ -4,8 +4,8 @@
 #include "SonicMania.h"
 
 typedef enum {
-    CPZ_BG_CPZ1,
     CPZ_BG_CPZ2,
+    CPZ_BG_CPZ1,
 } BGSwitchIDsCPZ;
 
 // Object Class

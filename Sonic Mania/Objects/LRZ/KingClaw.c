@@ -11,7 +11,10 @@ void KingClaw_Update(void)
 
 void KingClaw_LateUpdate(void) {}
 
-void KingClaw_StaticUpdate(void) {}
+void KingClaw_StaticUpdate(void)
+{
+    foreach_active(KingClaw, claw) { RSDK.AddDrawListRef(1, RSDK.GetEntityID(claw)); }
+}
 
 void KingClaw_Draw(void)
 {
@@ -110,7 +113,7 @@ void KingClaw_Unknown3(void)
     if (entity->timer == 60) {
         foreach_active(HPZEmerald, emerald)
         {
-            if (!emerald->type)
+            if (emerald->type == HPZEMERALD_MASTER)
                 entity->masterEmerald = emerald;
         }
 
@@ -125,7 +128,7 @@ void KingClaw_Unknown4(void)
     entity->position.y -= 0x2000;
 
     if (entity->masterEmerald)
-        entity->masterEmerald->position.y += 0xF80000;
+        entity->masterEmerald->position.y = entity->position.y + 0xF80000;
 
     if (++entity->timer == 480) {
         entity->timer = 0;
@@ -148,7 +151,7 @@ void KingClaw_Unknown5(void)
     entity->angle    = RSDK.Sin256(-entity->timer) >> 4;
     entity->rotation = -2 * entity->angle;
     entity->timer += 3;
-    if (entity->timer >= 0x8000) {
+    if (entity->timer >= 0x800) {
         entity->state = StateMachine_None;
         entity->angle = 0;
         entity->timer = 0;

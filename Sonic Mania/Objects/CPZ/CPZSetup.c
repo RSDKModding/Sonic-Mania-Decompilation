@@ -181,8 +181,8 @@ void CPZSetup_EditorDraw(void) {}
 void CPZSetup_EditorLoad(void)
 {
     RSDK_ACTIVE_VAR(BGSwitch, bgID);
-    RSDK_ENUM_VAR("Act 1 BG", CPZ_BG_CPZ1);
     RSDK_ENUM_VAR("Act 2 BG", CPZ_BG_CPZ2);
+    RSDK_ENUM_VAR("Act 1 BG", CPZ_BG_CPZ1);
 }
 #endif
 

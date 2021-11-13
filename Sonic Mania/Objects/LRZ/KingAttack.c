@@ -21,7 +21,7 @@ void KingAttack_Draw(void)
 
     switch (entity->type) {
         case 0:
-            for (int i = 0; i < 8; i += 4) {
+            for (int i = 0; i < 6; i += 2) {
                 Vector2 vertices[4];
                 colour colours[4];
 
@@ -46,7 +46,8 @@ void KingAttack_Draw(void)
             //[Fallthrough]
         default: RSDK.DrawSprite(&entity->animator, NULL, false); break;
         case 5:
-            RSDK.DrawLine(entity->position.x, entity->position.y, entity->lineEndPos.x, entity->lineEndPos.y, 33008u, entity->alpha, INK_ADD, false);
+            RSDK.DrawLine(entity->position.x, entity->position.y, entity->lineEndPos.x, entity->lineEndPos.y, 0x0080F0, entity->alpha, INK_ADD,
+                          false);
             break;
     }
 }
@@ -139,7 +140,7 @@ void KingAttack_StageLoad(void)
     KingAttack->flag          = false;
     KingAttack->sfxElecPulse  = RSDK.GetSFX("Stage/ElecPulse.wav");
     KingAttack->sfxTwinShot   = RSDK.GetSFX("LRZ/TwinShot.wav");
-    int id                    = Soundboard_LoadSFX("LRZ/ElecIdle.wav", 1u, KingAttack_ElecIdleCheckCB, 0);
+    int id                    = Soundboard_LoadSFX("LRZ/ElecIdle.wav", true, KingAttack_ElecIdleCheckCB, NULL);
     if (id >= 0)
         Soundboard->sfxUnknown8[id] = 30;
 }
@@ -190,14 +191,14 @@ void KingAttack_HandleLaserPositions(void)
     entity->laserVertPostions[6].x = x + 0x40000;
     entity->laserVertPostions[7].x = entity->position.x + 0x40000;
 
-    // entity->laserVertPostions[0].y = y;
-    // entity->laserVertPostions[1].y = HeavyKing->field_6C;
-    // entity->laserVertPostions[2].y = y;
-    // entity->laserVertPostions[3].y = HeavyKing->field_6C;
-    // entity->laserVertPostions[4].y = y;
-    // entity->laserVertPostions[5].y = HeavyKing->field_6C;
-    // entity->laserVertPostions[6].y = y;
-    // entity->laserVertPostions[7].y = HeavyKing->field_6C;
+    entity->laserVertPostions[0].y = y;
+    entity->laserVertPostions[1].y = HeavyKing->value9;
+    entity->laserVertPostions[2].y = y;
+    entity->laserVertPostions[3].y = HeavyKing->value9;
+    entity->laserVertPostions[4].y = y;
+    entity->laserVertPostions[5].y = HeavyKing->value9;
+    entity->laserVertPostions[6].y = y;
+    entity->laserVertPostions[7].y = HeavyKing->value9;
 }
 
 void KingAttack_State0_Unknown(void)
@@ -425,11 +426,11 @@ void KingAttack_State5_Unknown(void)
 
     entity->position.x = entity->timer * RSDK.Cos256(entity->angle);
     entity->position.y = entity->timer * RSDK.Sin256(entity->angle);
-
     entity->lineEndPos.x = entity->position.x - (entity->position.x >> 3);
     entity->lineEndPos.y = entity->position.y - (entity->position.y >> 3);
-    entity->position.x   = entity->position.y + parent->position.x;
-    entity->position.y   = entity->position.y + parent->position.y;
+
+    entity->position.x += parent->position.x;
+    entity->position.y += parent->position.y;
     entity->lineEndPos.x += parent->position.x;
     entity->lineEndPos.y += parent->position.y;
 
