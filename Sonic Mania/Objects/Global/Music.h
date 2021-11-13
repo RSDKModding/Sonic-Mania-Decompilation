@@ -48,6 +48,11 @@ typedef struct {
     int32 activeTrack;
     int32 nextTrack;
     int32 field_254;
+#if !RETRO_USE_PLUS
+    bool32 trackFlag;
+    bool32 musicStackFlagA;
+    bool32 musicStackFlagB;
+#endif
     uint16 aniFrames;
 } ObjectMusic;
 

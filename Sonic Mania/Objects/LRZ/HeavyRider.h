@@ -37,8 +37,8 @@ typedef struct {
     uint16 aniFrames;
     Hitbox hitbox1;
     Hitbox hitbox2;
-    Hitbox hitbox4;
-    Hitbox hitbox3;
+    Hitbox innerBox;
+    Hitbox outerBox;
     Hitbox hitbox5;
     Hitbox hitbox6;
     Hitbox hitbox7;

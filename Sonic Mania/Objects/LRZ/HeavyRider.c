@@ -127,15 +127,15 @@ void HeavyRider_StageLoad(void)
     HeavyRider->hitbox2.right  = 20;
     HeavyRider->hitbox2.bottom = 20;
 
-    HeavyRider->hitbox3.left   = -5;
-    HeavyRider->hitbox3.top    = 0;
-    HeavyRider->hitbox3.right  = 5;
-    HeavyRider->hitbox3.bottom = 48;
+    HeavyRider->outerBox.left   = -5;
+    HeavyRider->outerBox.top    = 0;
+    HeavyRider->outerBox.right  = 5;
+    HeavyRider->outerBox.bottom = 48;
 
-    HeavyRider->hitbox4.left   = -4;
-    HeavyRider->hitbox4.top    = 0;
-    HeavyRider->hitbox4.right  = 4;
-    HeavyRider->hitbox4.bottom = 48;
+    HeavyRider->innerBox.left   = -4;
+    HeavyRider->innerBox.top    = 0;
+    HeavyRider->innerBox.right  = 4;
+    HeavyRider->innerBox.bottom = 48;
 
     HeavyRider->hitbox5.left   = -4;
     HeavyRider->hitbox5.top    = 46;
@@ -521,7 +521,7 @@ void HeavyRider_State_Unknown1(void)
     RSDK.ProcessAnimation(&entity->animator1);
     RSDK.ProcessAnimation(&entity->animator2);
     RSDK.ProcessAnimation(&entity->animator4);
-    RSDK.ProcessTileCollisions(entity, &HeavyRider->hitbox3, &HeavyRider->hitbox4);
+    RSDK.ProcessTileCollisions(entity, &HeavyRider->outerBox, &HeavyRider->innerBox);
 
     if (entity->onGround) {
         if (entity->velocity.y <= 0x20000) {
@@ -764,7 +764,7 @@ void HeavyRider_State_Unknown4(void)
 
     RSDK.ProcessAnimation(&entity->animator1);
     RSDK.ProcessAnimation(&entity->animator4);
-    RSDK.ProcessTileCollisions(entity, &HeavyRider->hitbox3, &HeavyRider->hitbox4);
+    RSDK.ProcessTileCollisions(entity, &HeavyRider->outerBox, &HeavyRider->innerBox);
     if (entity->onGround) {
         if (entity->velocity.y <= 0x20000) {
             if (!(Zone->timer & 3))
@@ -1094,7 +1094,7 @@ void HeavyRider_StateJimmy_RevRelease(void)
 
     RSDK.ProcessAnimation(&entity->animator1);
     RSDK.ProcessAnimation(&entity->animator2);
-    RSDK.ProcessTileCollisions(entity, &HeavyRider->hitbox3, &HeavyRider->hitbox4);
+    RSDK.ProcessTileCollisions(entity, &HeavyRider->outerBox, &HeavyRider->innerBox);
 
     if (entity->onGround) {
         if (entity->velocity.y <= 0x20000)

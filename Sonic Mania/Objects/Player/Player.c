@@ -511,7 +511,7 @@ void Player_Create(void *data)
     RSDK_THIS(Player);
     if (RSDK_sceneInfo->inEditor) {
         RSDK.SetSpriteAnimation(Player->sonicSpriteIndex, ANI_IDLE, &entity->playerAnimator, true, 0);
-        entity->characterID = ID_SONIC;
+        // entity->characterID = ID_SONIC;
     }
     else {
         entity->playerID = RSDK.GetEntityID(entity);
@@ -601,10 +601,10 @@ void Player_Create(void *data)
         Player->rings                              = 0;
         Player->ringExtraLife                      = 100;
         entity->hyperRing                          = (Player->powerups >> 6) & 1;
-        Player->powerups &= 0xBF;
+        Player->powerups &= ~0x40;
         if (Player->powerups >= 0x80) {
             entity->state = Player_ForceSuperTransform;
-            Player->powerups &= 0x7F;
+            Player->powerups &= ~0x80;
         }
         if (Player->powerups) {
             entity->shield = Player->powerups;
@@ -4161,8 +4161,8 @@ void Player_State_Transform(void)
     if (++entity->timer != 36) {
         if (!entity->isChibi) {
             if (entity->playerAnimator.frameID == entity->playerAnimator.frameCount - 1) {
-                entity->forceTransform = 0;
-                entity->interaction    = 1;
+                entity->forceTransform = false;
+                entity->interaction    = true;
                 entity->state          = Player_State_Air;
                 RSDK.SetSpriteAnimation(entity->spriteIndex, ANI_WALK, &entity->playerAnimator, false, 3);
 
@@ -4189,8 +4189,8 @@ void Player_State_Transform(void)
 
         if (!entity->isChibi) {
             if (entity->playerAnimator.frameID == entity->playerAnimator.frameCount - 1) {
-                entity->forceTransform = 0;
-                entity->interaction    = 1;
+                entity->forceTransform = false;
+                entity->interaction    = true;
                 entity->state          = Player_State_Air;
 
 #if RETRO_USE_PLUS

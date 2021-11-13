@@ -297,11 +297,10 @@ void BuckwildBall_State_Unknown3(void)
             entity->drawOrder               = Zone->drawOrderHigh;
         }
         else {
-            //TODO: ???
-            int slot                                                           = RSDK.GetEntityID(Drillerdroid->field_74);
-            RSDK_GET_ENTITY(entity->field_B8 + slot + 6, )[1].alpha = 1;
-            Drillerdroid->field_5C[entity->field_B8]                           = -1;
-            entity->velocity.y                                                 = -0x40000;
+            int slot                                                                        = RSDK.GetEntityID(Drillerdroid->boss);
+            RSDK_GET_ENTITY(slot + 6 + entity->field_B8, CollapsingPlatform)->collapseDelay = 1;
+            Drillerdroid->field_5C[entity->field_B8]                                        = -1;
+            entity->velocity.y                                                              = -0x40000;
         }
 
         BuckwildBall_HandleTimerSfx();

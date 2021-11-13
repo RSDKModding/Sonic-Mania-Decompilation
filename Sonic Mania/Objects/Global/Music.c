@@ -336,7 +336,7 @@ void Music_Unknown7(EntityMusic *entity)
             for (int32 slot = SLOT_MUSICSTACK_START; slot < SLOT_MUSICSTACK_END; ++slot) {
                 EntityMusic *music = RSDK_GET_ENTITY(slot, Music);
                 if (music->objectID == Music->objectID && music->trackPriority > entity->trackPriority) {
-                    RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL);
+                    destroyEntity(entity);
                     return;
                 }
             }

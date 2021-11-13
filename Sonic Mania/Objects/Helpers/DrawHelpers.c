@@ -102,34 +102,36 @@ void DrawHelpers_DrawRectOutline(uint32 colour, int32 x, int32 y, int32 sizeX, i
 
 void DrawHelpers_DrawArenaBounds(uint32 colour, uint8 flags, int32 left, int32 top, int32 right, int32 bottom)
 {
+    RSDK_THIS_GEN();
+
     left <<= 16;
     top <<= 16;
     right <<= 16;
     bottom <<= 16;
 
-    int sizeX = abs(right - left);
-    int sizeY = abs(bottom - top);
-    RSDK_THIS_GEN();
-
-    //left
-    if (flags & 1)
-        RSDK.DrawLine(entity->position.x + left, entity->position.y - (sizeY >> 1), entity->position.x + left, entity->position.y + (sizeY >> 1),
-                      colour, 0, INK_NONE, false);
+    // left
+    if (flags & 1) {
+        RSDK.DrawLine(entity->position.x + left, entity->position.y + top, entity->position.x + left, entity->position.y + bottom, colour, 0,
+                      INK_NONE, false);
+    }
 
     // top
-    if (flags & 2)
-        RSDK.DrawLine(entity->position.x - (sizeX >> 1), entity->position.y + top, entity->position.x + (sizeX >> 1), entity->position.y + top,
-                      colour, 0, INK_NONE, false);
+    if (flags & 2) {
+        RSDK.DrawLine(entity->position.x + left, entity->position.y + top, entity->position.x + right, entity->position.y + top, colour, 0, INK_NONE,
+                      false);
+    }
 
-    //right
-    if (flags & 4)
-        RSDK.DrawLine(entity->position.x + right, entity->position.y - (sizeY >> 1), entity->position.x + right, entity->position.y + (sizeY >> 1),
-                      colour, 0, INK_NONE, false);
+    // right
+    if (flags & 4) {
+        RSDK.DrawLine(entity->position.x + right, entity->position.y + top, entity->position.x + right, entity->position.y + bottom, colour, 0,
+                      INK_NONE, false);
+    }
 
     // bottom
-    if (flags & 8)
-        RSDK.DrawLine(entity->position.x - (sizeX >> 1), entity->position.y + bottom, entity->position.x + (sizeX >> 1), entity->position.y + bottom,
-                      colour, 0, INK_NONE, false);
+    if (flags & 8) {
+        RSDK.DrawLine(entity->position.x + left, entity->position.y + bottom, entity->position.x + right, entity->position.y + bottom, colour, 0,
+                      INK_NONE, false);
+    }
 }
 
 #if RETRO_INCLUDE_EDITOR
