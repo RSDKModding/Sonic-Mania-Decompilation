@@ -31,7 +31,9 @@ typedef struct {
     int32 field_20;
     int32 field_24;
     uint8 chargeTimer;
+#if RETRO_USE_PLUS
     Entity *outro;
+#endif
     uint16 aniFrames;
     Hitbox hitbox1;
     Hitbox hitbox2;

@@ -493,8 +493,13 @@ void HeavyRider_State_SetupRider(void)
 
     Zone->playerBoundActiveL[0] = true;
 
+#if RETRO_USE_PLUS
     EntityLRZ3Outro *outro = (EntityLRZ3Outro *)HeavyRider->outro;
     if (outro->state == LRZ3Outro_State_Unknown3) {
+#else
+    EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
+    if (player1->position.x > entity->position.x) {
+#endif
         entity->position.y -= 0x400000;
         entity->position.x      = (Zone->screenBoundsL1[0] - 64) << 16;
         entity->onGround        = false;
