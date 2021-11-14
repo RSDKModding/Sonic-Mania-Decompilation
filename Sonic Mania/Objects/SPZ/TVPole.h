@@ -5,12 +5,19 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    uint16 aniFrames;
 } ObjectTVPole;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    StateMachine(state);
+    uint16 length;
+    int32 activePlayers;
+    int32 playerTimers[4];
+    Hitbox hitbox;
+    Animator animator;
 } EntityTVPole;
 
 // Object Struct
@@ -30,6 +37,7 @@ void TVPole_EditorLoad(void);
 void TVPole_Serialize(void);
 
 // Extra Entity Functions
-
+void TVPole_State_CheckGrab(void);
+void TVPole_State_ForceRelease(void);
 
 #endif //!OBJ_TVPOLE_H

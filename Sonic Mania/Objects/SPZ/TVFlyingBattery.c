@@ -128,9 +128,17 @@ void TVFlyingBattery_DrawSprites(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void TVFlyingBattery_EditorDraw(void) {}
+void TVFlyingBattery_EditorDraw(void)
+{
+    RSDK_THIS(TVFlyingBattery);
 
-void TVFlyingBattery_EditorLoad(void) {}
+    RSDK.SetSpriteAnimation(TVFlyingBattery->aniFrames, 1, &entity->animator2, true, 0);
+    RSDK.SetSpriteAnimation(TVFlyingBattery->aniFrames, 1, &entity->animator3, true, 1);
+
+    TVFlyingBattery_DrawSprites();
+}
+
+void TVFlyingBattery_EditorLoad(void) { TVFlyingBattery->aniFrames = RSDK.LoadSpriteAnimation("SPZ2/TVFlyingBattery.bin", SCOPE_STAGE); }
 #endif
 
 void TVFlyingBattery_Serialize(void) {}
