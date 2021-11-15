@@ -12,12 +12,36 @@ typedef struct {
     TABLE(int32 value4[8], { 0, 2, 3, 4, 5, 6, 7, 10 });
     TABLE(int32 value5[6], { 0, 0, 3, 6, 12, 24 });
     TABLE(int32 value6[24], { 0, 2, 5, 1, 3, 4, 5, 3, 4, 0, 1, 2, 3, 1, 0, 4, 2, 5, 0, 2, 1, 3, 5, 4 });
-    uint16 value7;
+    uint16 aniFrames;
 } ObjectPuyoMatch;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    StateMachine(state);
+    StateMachine(stateInput);
+    StateMachine(matchFinishCB);
+    StateMachine(matchLoseCB);
+    int32 playerID;
+    int32 score;
+    int32 comboScore;
+    int32 field_74;
+    int32 comboCount;
+    int32 comboBeanCount;
+    int32 *field_80;
+    int32 field_84;
+    int32 field_88;
+    int32 timer;
+    int32 field_90;
+    int32 field_94;
+    Vector2 beanDropPos;
+    EntityPuyoBean *beanPtr;
+    int32 matchKey;
+    Animator animator1;
+    Animator animator2;
+    Animator animator3;
+    Animator animator4;
+    Animator animator5;
 } EntityPuyoMatch;
 
 // Object Struct
@@ -37,6 +61,15 @@ void PuyoMatch_EditorLoad(void);
 void PuyoMatch_Serialize(void);
 
 // Extra Entity Functions
+void PuyoMatch_StartPuyoAttack(int playerID, int score);
+void PuyoMatch_SetupNextBeans(EntityPuyoMatch *match);
+void PuyoMatch_DropNextBeans(void);
+void PuyoMatch_Unknown4(void);
+void PuyoMatch_DrawNumbers(void);
 
+void PuyoMatch_State_Unknown1(void);
+void PuyoMatch_State_Unknown2(void);
+void PuyoMatch_State_Unknown3(void);
+void PuyoMatch_State_Unknown4(void);
 
 #endif //!OBJ_PUYOMATCH_H

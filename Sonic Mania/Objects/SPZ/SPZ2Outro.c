@@ -76,13 +76,13 @@ bool32 SPZ2Outro_CutsceneState_Unknown1(EntityCutsceneSeq *host)
         prison->drawOrder           = Zone->playerDrawHigh;
         tvFlyingBattery->position.y = 0x81E0000;
         tvFlyingBattery->active     = ACTIVE_NORMAL;
-        // weatherTV->field_5C              = WeatherTV_Unknown20;
-        // weatherTV->field_60              = 0;
-        // weatherTV->field_58              = WeatherTV_Unknown41;
-        // RSDK.AddDrawListRef(Zone->drawOrderHigh, RSDK.GetEntityID(weatherTV));
-        // WeatherTV->field_18       = true;
-        camera->targetPtr = NULL;
-        player1->camera   = NULL;
+        weatherTV->stateDraw        = WeatherTV_StateDraw_Unknown14;
+        weatherTV->timer2           = 0;
+        weatherTV->state            = WeatherTV_State_Outro;
+        RSDK.AddDrawListRef(Zone->drawOrderHigh, RSDK.GetEntityID(weatherTV));
+        WeatherTV->useHighLayer = true;
+        camera->targetPtr       = NULL;
+        player1->camera         = NULL;
 #if RETRO_USE_PLUS
         Player->disableP2KeyCheck = true;
 #endif

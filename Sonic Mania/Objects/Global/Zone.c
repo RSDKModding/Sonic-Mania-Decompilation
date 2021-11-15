@@ -185,7 +185,7 @@ void Zone_StageLoad(void)
 {
 #if RETRO_USE_PLUS
     EntitySaveGame *saveRAM = SaveGame->saveRAM;
-    Zone->randKey           = (uint32)time(0);
+    Zone->randKey           = (uint32)time(NULL);
     if (globals->gameMode == MODE_ENCORE) {
         if (globals->characterFlags == 0) {
             globals->characterFlags = 0;

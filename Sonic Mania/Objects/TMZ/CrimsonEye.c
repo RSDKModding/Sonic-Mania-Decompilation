@@ -343,7 +343,7 @@ void CrimsonEye_StateBody_Unknown4(void)
         debris->drawOrder     = Zone->drawOrderHigh;
         debris->updateRange.x = 0x400000;
         debris->updateRange.y = 0x400000;
-        debris->cooldown      = 60;
+        debris->delay      = 60;
 
         debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, entity->position.x, entity->position.y);
         RSDK.SetSpriteAnimation(CrimsonEye->aniFrames, 0, &debris->animator, true, 3);
@@ -353,7 +353,7 @@ void CrimsonEye_StateBody_Unknown4(void)
         debris->drawOrder     = Zone->drawOrderHigh;
         debris->updateRange.x = 0x400000;
         debris->updateRange.y = 0x400000;
-        debris->cooldown      = 60;
+        debris->delay      = 60;
     }
 
     if (entity->drawOrder > Zone->drawOrderLow) {
@@ -662,7 +662,7 @@ void CrimsonEye_CheckPlayerCollisions(void)
                     debris->drawOrder     = Zone->drawOrderHigh;
                     debris->updateRange.x = 0x400000;
                     debris->updateRange.y = 0x400000;
-                    debris->cooldown      = 120;
+                    debris->delay      = 120;
 
                     debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, entity->position.x, entity->position.y);
                     RSDK.SetSpriteAnimation(CrimsonEye->aniFrames, 1, &debris->animator, true, 15);
@@ -672,7 +672,7 @@ void CrimsonEye_CheckPlayerCollisions(void)
                     debris->drawOrder     = Zone->drawOrderHigh;
                     debris->updateRange.x = 0x400000;
                     debris->updateRange.y = 0x400000;
-                    debris->cooldown      = 120;
+                    debris->delay      = 120;
 
                     debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, entity->position.x, entity->position.y);
                     RSDK.SetSpriteAnimation(CrimsonEye->aniFrames, 1, &debris->animator, true, 16);
@@ -682,7 +682,7 @@ void CrimsonEye_CheckPlayerCollisions(void)
                     debris->drawOrder     = Zone->drawOrderHigh;
                     debris->updateRange.x = 0x400000;
                     debris->updateRange.y = 0x400000;
-                    debris->cooldown      = 120;
+                    debris->delay      = 120;
 
                     debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, entity->position.x, entity->position.y);
                     RSDK.SetSpriteAnimation(CrimsonEye->aniFrames, 1, &debris->animator, true, 17);
@@ -692,7 +692,7 @@ void CrimsonEye_CheckPlayerCollisions(void)
                     debris->drawOrder     = Zone->drawOrderHigh;
                     debris->updateRange.x = 0x400000;
                     debris->updateRange.y = 0x400000;
-                    debris->cooldown      = 120;
+                    debris->delay      = 120;
 
                     debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, entity->position.x, entity->position.y);
                     RSDK.SetSpriteAnimation(CrimsonEye->aniFrames, 1, &debris->animator, true, 12);
@@ -745,7 +745,7 @@ void CrimsonEye_CheckPlayerCollisions(void)
                     debris->drawOrder     = Zone->drawOrderHigh;
                     debris->updateRange.x = 0x400000;
                     debris->updateRange.y = 0x400000;
-                    debris->cooldown      = 60;
+                    debris->delay      = 60;
 
                     debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, CrimsonEye->positions[1].x, CrimsonEye->positions[1].y);
                     RSDK.SetSpriteAnimation(CrimsonEye->aniFrames, 1, &debris->animator, true, 2);
@@ -755,7 +755,7 @@ void CrimsonEye_CheckPlayerCollisions(void)
                     debris->drawOrder     = Zone->drawOrderHigh;
                     debris->updateRange.x = 0x400000;
                     debris->updateRange.y = 0x400000;
-                    debris->cooldown      = 60;
+                    debris->delay      = 60;
 
                     debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, CrimsonEye->positions[2].x, CrimsonEye->positions[2].y);
                     RSDK.SetSpriteAnimation(CrimsonEye->aniFrames, 1, &debris->animator, true, 3);
@@ -765,7 +765,7 @@ void CrimsonEye_CheckPlayerCollisions(void)
                     debris->drawOrder     = Zone->drawOrderHigh;
                     debris->updateRange.x = 0x400000;
                     debris->updateRange.y = 0x400000;
-                    debris->cooldown      = 60;
+                    debris->delay      = 60;
 
                     RSDK_sceneInfo->timeEnabled = false;
                     Player_GiveScore(RSDK.GetEntityByID(SLOT_PLAYER1), 1000);
@@ -1166,12 +1166,10 @@ void CrimsonEye_EditorLoad(void)
     CrimsonEye->aniFrames = RSDK.LoadSpriteAnimation("TMZ1/CrimsonEye.bin", SCOPE_STAGE);
 
     RSDK_ACTIVE_VAR(CrimsonEye, type);
-    RSDK_ENUM_VAR(CRIMSONEYE_CONTAINER);
-    RSDK_ENUM_VAR(CRIMSONEYE_CORE);
-    RSDK_ENUM_VAR(CRIMSONEYE_BALL);
-    RSDK_ENUM_VAR(CRIMSONEYE_ARROW);
-    RSDK_ENUM_VAR(CRIMSONEYE_SPIKE);
-    RSDK_ENUM_VAR(CRIMSONEYE_SHOT);
+    RSDK_ENUM_VAR("Container", CRIMSONEYE_CONTAINER);
+    RSDK_ENUM_VAR("Core", CRIMSONEYE_CORE);
+    RSDK_ENUM_VAR("Ball", CRIMSONEYE_BALL);
+    RSDK_ENUM_VAR("Arrow", CRIMSONEYE_ARROW);
 }
 #endif
 

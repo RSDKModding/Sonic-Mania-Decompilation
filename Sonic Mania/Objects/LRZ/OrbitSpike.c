@@ -76,12 +76,10 @@ void OrbitSpike_Create(void *data)
 
 void OrbitSpike_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("LRZ1")) {
+    if (RSDK.CheckStageFolder("LRZ1")) 
         OrbitSpike->aniFrames = RSDK.LoadSpriteAnimation("LRZ1/OrbitSpike.bin", SCOPE_STAGE);
-    }
-    else if (RSDK.CheckStageFolder("LRZ2")) {
+    else if (RSDK.CheckStageFolder("LRZ2")) 
         OrbitSpike->aniFrames = RSDK.LoadSpriteAnimation("LRZ2/OrbitSpike.bin", SCOPE_STAGE);
-    }
 
     OrbitSpike->hitbox.left   = -12;
     OrbitSpike->hitbox.top    = -12;
@@ -90,9 +88,63 @@ void OrbitSpike_StageLoad(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void OrbitSpike_EditorDraw(void) {}
+void OrbitSpike_EditorDraw(void)
+{
+    RSDK_THIS(OrbitSpike);
+    entity->center.x      = entity->position.x;
+    entity->center.y      = entity->position.y;
+    entity->updateRange.x = 0x800000;
+    entity->updateRange.y = 0x800000;
+    entity->drawFX        = FX_SCALE;
+    RSDK.SetSpriteAnimation(OrbitSpike->aniFrames, 0, &entity->animator, true, 0);
 
-void OrbitSpike_EditorLoad(void) {}
+    entity->inkEffect = INK_NONE;
+    entity->scale.x   = 0x200;
+    entity->scale.y   = 0x200;
+
+    OrbitSpike_Draw();
+
+    //Offset render
+    uint8 angle = 2 * (entity->offset & 0xFF);
+    if (entity->amplitude.x) {
+        if (angle >= 0x80) {
+            entity->scale.x = 386 + (abs(angle - 0xC0) << 1);
+            entity->scale.y = 386 + (abs(angle - 0xC0) << 1);
+        }
+        else {
+            entity->scale.x = (319 - abs(angle - 0x40)) << 1;
+            entity->scale.y = (319 - abs(angle - 0x40)) << 1;
+        }
+    }
+    else {
+        int32 ang = (angle + 0x40) & 0xFF;
+        if (ang >= 0x80) {
+            entity->scale.x = 386 + (abs(ang - 0xC0) << 1);
+            entity->scale.y = 386 + (abs(ang - 0xC0) << 1);
+        }
+        else {
+            entity->scale.x = (319 - abs(ang - 0x40)) << 1;
+            entity->scale.y = (319 - abs(ang - 0x40)) << 1;
+        }
+    }
+
+    entity->position.x = (entity->amplitude.x >> 8) * RSDK.Cos256(angle) + entity->center.x;
+    entity->position.y = (entity->amplitude.y >> 8) * RSDK.Sin256(angle) + entity->center.y;
+    
+    entity->inkEffect = INK_ALPHA;
+    entity->alpha = 0x40;
+    OrbitSpike_Draw();
+
+    entity->position = entity->center;
+}
+
+void OrbitSpike_EditorLoad(void)
+{
+    if (RSDK.CheckStageFolder("LRZ1"))
+        OrbitSpike->aniFrames = RSDK.LoadSpriteAnimation("LRZ1/OrbitSpike.bin", SCOPE_STAGE);
+    else if (RSDK.CheckStageFolder("LRZ2"))
+        OrbitSpike->aniFrames = RSDK.LoadSpriteAnimation("LRZ2/OrbitSpike.bin", SCOPE_STAGE);
+}
 #endif
 
 void OrbitSpike_Serialize(void)

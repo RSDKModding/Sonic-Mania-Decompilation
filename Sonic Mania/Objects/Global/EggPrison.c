@@ -426,6 +426,7 @@ void EggPrison_Unknown5(void)
         destroyEntity(entity);
 }
 
+#if RETRO_INCLUDE_EDITOR
 void EggPrison_EditorDraw(void)
 {
     RSDK_THIS(EggPrison);
@@ -469,12 +470,13 @@ void EggPrison_EditorLoad(void)
     EggPrison->spriteIndex = RSDK.LoadSpriteAnimation("Global/EggPrison.bin", SCOPE_STAGE);
 
     RSDK_ACTIVE_VAR(EggPrison, type);
-    RSDK_ENUM_VAR(EGGPRISON_NORMAL);
-    RSDK_ENUM_VAR(EGGPRISON_FLYING);
-    RSDK_ENUM_VAR(EGGPRISON_DUD);
-    RSDK_ENUM_VAR(EGGPRISON_RINGS);
-    RSDK_ENUM_VAR(EGGPRISON_TRAP);
-    RSDK_ENUM_VAR(EGGPRISON_ANIMALS);
+    RSDK_ENUM_VAR("Normal", EGGPRISON_NORMAL);
+    RSDK_ENUM_VAR("Flying", EGGPRISON_FLYING);
+    RSDK_ENUM_VAR("Dud", EGGPRISON_DUD);
+    RSDK_ENUM_VAR("Rings", EGGPRISON_RINGS);
+    RSDK_ENUM_VAR("Trap", EGGPRISON_TRAP);
+    RSDK_ENUM_VAR("Animals", EGGPRISON_ANIMALS);
 }
+#endif
 
 void EggPrison_Serialize(void) { RSDK_EDITABLE_VAR(EggPrison, VAR_ENUM, type); }

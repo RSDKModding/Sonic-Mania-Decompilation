@@ -38,7 +38,7 @@ void PullChain_Update(void)
                     if (!Current || !(playerID & Current->activePlayers)) {
                         int32 x = abs(player->position.x - entity->position.x);
                         int32 y = abs((player->position.y - 0x180000) - entity->position.y);
-                        if (MathHelpers_Unknown6((y >> 16) * (y >> 16) + (x >> 16) * (x >> 16)) <= 8 && player->state != Player_State_None
+                        if (MathHelpers_SquareRoot((y >> 16) * (y >> 16) + (x >> 16) * (x >> 16)) <= 8 && player->state != Player_State_None
                             && !entity->timer[plrID]) {
                             entity->activePlayers1 |= (1 << plrID);
                             entity->activePlayers2 |= (1 << plrID);
@@ -90,7 +90,7 @@ void PullChain_Update(void)
             if ((entity->activePlayers2 & playerID)) {
                 int32 x = abs(player->position.x - entity->position.x);
                 int32 y = abs(player->position.y - 0x180000 - entity->position.y);
-                if (MathHelpers_Unknown6((x >> 16) * (x >> 16) + (y >> 16) * (y >> 16)) > 4)
+                if (MathHelpers_SquareRoot((x >> 16) * (x >> 16) + (y >> 16) * (y >> 16)) > 4)
                     entity->activePlayers2 &= ~(1 << plrID);
             }
         }

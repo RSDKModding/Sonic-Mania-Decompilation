@@ -279,10 +279,12 @@ void LoadSceneFile()
             return;
         }
 
+        // Editor Metadata (mostly unknown)
         Seek_Cur(&info, 0x10);
         byte strLen = ReadInt8(&info);
         Seek_Cur(&info, strLen + 1);
 
+        // Tile Layers
         byte layerCount = ReadInt8(&info);
         for (int i = 0; i < layerCount; ++i) {
             TileLayer *layer = &tileLayers[i];
@@ -358,6 +360,7 @@ void LoadSceneFile()
             tileLayout = NULL;
         }
 
+        // Objects
         uint8 objCount  = ReadInt8(&info);
         editableVarList = NULL;
         AllocateStorage(sizeof(EditableVarInfo) * EDITABLEVAR_COUNT, (void **)&editableVarList, DATASET_TMP, false);
@@ -1347,7 +1350,7 @@ void DrawLayerHScroll(TileLayer *layer)
         ++scanlinePtr;
 #if (1)
 #else
-            float xp = scanlinePtr->position.x / (float)(1 << 16) - TILE_SIZE;
+        float xp = scanlinePtr->position.x / (float)(1 << 16) - TILE_SIZE;
         float yp = scanlinePtr->position.y / (float)(1 << 16);
         uint count = 0;
         for (int i = lineTileCount; i > 0 || lineRemain > -TILE_SIZE; lineRemain -= TILE_SIZE, --i, xp += TILE_SIZE) {
@@ -1402,8 +1405,8 @@ void DrawLayerHScroll(TileLayer *layer)
 #if RETRO_HARDWARE_RENDER
     glActiveTexture(GL_TEXTURE2);
     glBindTexture(GL_TEXTURE_RECTANGLE, fbFBT);
-    glTexSubImage2D(GL_TEXTURE_RECTANGLE, 0, 0, 0, currentScreen->size.x, currentScreen->size.y,
-                    GL_RGB, GL_UNSIGNED_SHORT_5_6_5, currentScreen->frameBuffer);
+    glTexSubImage2D(GL_TEXTURE_RECTANGLE, 0, 0, 0, currentScreen->size.x, currentScreen->size.y, GL_RGB, GL_UNSIGNED_SHORT_5_6_5,
+                    currentScreen->frameBuffer);
     uint x = currentScreen->size.x;
     uint y = currentScreen->size.y;
     AddRenderState(INK_NONE, 4, 6, NULL, 0xFF, &tileShader);
@@ -1629,7 +1632,6 @@ void DrawLayerRotozoom(TileLayer *layer)
     if (!layer->xsize || !layer->ysize)
         return;
     ushort *layout            = layer->layout;
-    int countX                = currentScreen->clipBound_X2 - currentScreen->clipBound_X1;
     byte *lineBuffer          = &gfxLineBuffer[currentScreen->clipBound_Y1];
     ScanlineInfo *scanlinePtr = &scanlines[currentScreen->clipBound_Y1];
     ushort *frameBuffer       = &currentScreen->frameBuffer[currentScreen->clipBound_X1 + currentScreen->clipBound_Y1 * currentScreen->pitch];
@@ -1639,15 +1641,17 @@ void DrawLayerRotozoom(TileLayer *layer)
     memset(frameBuffer, 0, currentScreen->size.x * currentScreen->size.y * sizeof(ushort));
 #endif
 
+    int lineSize = currentScreen->clipBound_X2 - currentScreen->clipBound_X1;
+
     for (int cy = currentScreen->clipBound_Y1; cy < currentScreen->clipBound_Y2; ++cy) {
         int posX = scanlinePtr->position.x;
         int posY = scanlinePtr->position.y;
 
         ushort *palettePtr = fullPalette[*lineBuffer];
         ++lineBuffer;
-        int fbOffset = currentScreen->pitch - countX;
+        int fbOffset = currentScreen->pitch - lineSize;
 
-        for (int cx = countX; cx; --cx) {
+        for (int cx = lineSize; cx; --cx) {
             int tx      = posX >> 20;
             int ty      = posY >> 20;
             int x       = (posX >> 16) & 0xF;

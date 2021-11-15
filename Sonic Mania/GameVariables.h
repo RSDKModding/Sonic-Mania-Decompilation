@@ -66,6 +66,14 @@ typedef enum {
     SLOT_PLAYER2             = 1,
     SLOT_PLAYER3             = 2,
     SLOT_PLAYER4             = 3,
+    SLOT_POWERUP1            = 4,
+    SLOT_POWERUP2            = 5,
+    SLOT_POWERUP3            = 6,
+    SLOT_POWERUP4            = 7,
+    SLOT_POWERUP1_2          = 8,
+    SLOT_POWERUP2_2          = 9,
+    SLOT_POWERUP3_2          = 10,
+    SLOT_POWERUP4_2          = 11,
     SLOT_BSS_SETUP           = 8,
     SLOT_PBL_SETUP           = 8,
     SLOT_UFO_SETUP           = 8,
@@ -76,6 +84,8 @@ typedef enum {
     SLOT_BSS_MESSAGE         = 11,
     SLOT_UFO_HUD             = 11,
     SLOT_ZONE                = RETRO_USE_PLUS ? 12 : 8,
+    // 13 = ???
+    // 14 = ???
     SLOT_CUTSCENESEQ         = 15,
     SLOT_PAUSEMENU           = 16,
     SLOT_GAMEOVER            = 16,
@@ -105,6 +115,7 @@ typedef enum {
     SLOT_REPLAYRECORDER_W = 37,
 #endif
     SLOT_MUSICSTACK_START = 40,
+    //[41-47] are part of the music stack
     SLOT_MUSICSTACK_END   = 48,
     SLOT_CAMERA1          = 60,
     SLOT_CAMERA2          = 61,

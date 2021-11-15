@@ -3,14 +3,29 @@
 
 #include "SonicMania.h"
 
+typedef enum { LRZCONVSWITCH_RIGHT, LRZCONVSWITCH_LEFT } LRZConvSwitchCalibrateModes;
+
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    uint16 aniFrames;
+    uint16 sfxClack;
 } ObjectLRZConvSwitch;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    StateMachine(state);
+    uint8 calibration;
+    uint8 conveyorDir;
+    int32 dir;
+    Vector2 playerPositions[PLAYER_MAX];
+    int32 field_84;
+    Vector2 startPos;
+    int32 field_90;
+    int32 field_94;
+    int32 field_98;
+    Animator animator;
 } EntityLRZConvSwitch;
 
 // Object Struct
@@ -30,6 +45,7 @@ void LRZConvSwitch_EditorLoad(void);
 void LRZConvSwitch_Serialize(void);
 
 // Extra Entity Functions
+void LRZConvSwitch_Calibrate(void);
 
 
 #endif //!OBJ_LRZCONVSWITCH_H

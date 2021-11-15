@@ -10,10 +10,8 @@ void FXSpinRay_Update(void)
     int32 angle     = entity->angle;
     for (int32 i = 0; i < 20; i += 4) {
         for (int32 v = 0; v < 4; ++v) {
-            entity->vertices[i + v].x = entity->field_80[v].x;
-            entity->vertices[i + v].y = entity->field_80[v].y;
-            int32 x                     = (entity->vertices[i + v].x - entity->field_140.x) >> 8;
-            int32 y                     = (entity->vertices[i + v].y - entity->field_140.y) >> 8;
+            int32 x                   = (entity->field_80[v].x - entity->field_140.x) >> 8;
+            int32 y                   = (entity->field_80[v].y - entity->field_140.y) >> 8;
             entity->vertices[i + v].x = (y * RSDK.Sin256(angle)) + (x * RSDK.Cos256(angle)) + entity->field_140.x;
             entity->vertices[i + v].y = (y * RSDK.Cos256(angle)) - (x * RSDK.Sin256(angle)) + entity->field_140.y;
         }
@@ -37,18 +35,18 @@ void FXSpinRay_Draw(void)
 {
     RSDK_THIS(FXSpinRay);
 
-    int32 scrX = RSDK_sceneInfo->entity->position.x - (RSDK_screens->position.x << 16);
-    int32 scrY = RSDK_sceneInfo->entity->position.y - (RSDK_screens->position.y << 16);
+    int32 scrX = entity->position.x - (RSDK_screens->position.x << 16);
+    int32 scrY = entity->position.y - (RSDK_screens->position.y << 16);
     for (int32 i = 0; i < 20; i += 4) {
         Vector2 vertices[4];
-        vertices[0].x = scrX + entity->vertices[0].x;
-        vertices[0].y = scrY + entity->vertices[0].y;
-        vertices[1].x = scrX + entity->vertices[1].x;
-        vertices[1].y = scrY + entity->vertices[1].y;
-        vertices[2].x = scrX + entity->vertices[2].x;
-        vertices[2].y = scrY + entity->vertices[2].y;
-        vertices[3].x = scrX + entity->vertices[3].x;
-        vertices[3].y = scrY + entity->vertices[3].y;
+        vertices[0].x = scrX + entity->vertices[i + 0].x;
+        vertices[0].y = scrY + entity->vertices[i + 0].y;
+        vertices[1].x = scrX + entity->vertices[i + 1].x;
+        vertices[1].y = scrY + entity->vertices[i + 1].y;
+        vertices[2].x = scrX + entity->vertices[i + 2].x;
+        vertices[2].y = scrY + entity->vertices[i + 2].y;
+        vertices[3].x = scrX + entity->vertices[i + 3].x;
+        vertices[3].y = scrY + entity->vertices[i + 3].y;
         RSDK.DrawQuad(vertices, 4, entity->r, entity->g, entity->b, entity->alpha, INK_ADD);
     }
 }
@@ -57,7 +55,7 @@ void FXSpinRay_Create(void *data)
 {
     RSDK_THIS(FXSpinRay);
     if (!RSDK_sceneInfo->inEditor) {
-        entity->visible       = 1;
+        entity->visible       = true;
         entity->active        = ACTIVE_NORMAL;
         entity->drawOrder     = Zone->drawOrderHigh;
         entity->field_70      = 0x600000;

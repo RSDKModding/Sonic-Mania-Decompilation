@@ -315,8 +315,12 @@ void DevMenu_MainMenu()
 
     if (controller[CONT_P1].keyStart.press || controller[CONT_P1].keyA.press) {
         switch (devMenu.option) {
-            case 0: sceneInfo.state = devMenu.stateStore; break;
-            case 1: sceneInfo.state = ENGINESTATE_LOAD; break;
+            case 0:
+                sceneInfo.state = devMenu.stateStore;
+                break;
+            case 1:
+                sceneInfo.state = ENGINESTATE_LOAD;
+                break;
             case 2:
                 devMenu.state  = DevMenu_ListSel;
                 devMenu.option = 0;

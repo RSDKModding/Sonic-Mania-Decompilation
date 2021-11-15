@@ -336,7 +336,7 @@ void Music_Unknown7(EntityMusic *entity)
             for (int32 slot = SLOT_MUSICSTACK_START; slot < SLOT_MUSICSTACK_END; ++slot) {
                 EntityMusic *music = RSDK_GET_ENTITY(slot, Music);
                 if (music->objectID == Music->objectID && music->trackPriority > entity->trackPriority) {
-                    RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL);
+                    destroyEntity(entity);
                     return;
                 }
             }
@@ -550,6 +550,7 @@ void Music_State_TransitionTrack(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void Music_EditorDraw(void)
 {
     RSDK_THIS(Music);
@@ -558,6 +559,7 @@ void Music_EditorDraw(void)
 }
 
 void Music_EditorLoad(void) { Music->aniFrames = RSDK.LoadSpriteAnimation("Editor/EditorIcons.bin", SCOPE_STAGE); }
+#endif
 
 void Music_Serialize(void)
 {

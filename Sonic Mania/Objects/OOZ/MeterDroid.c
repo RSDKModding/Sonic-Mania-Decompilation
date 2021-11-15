@@ -191,12 +191,11 @@ void MeterDroid_Hit(void)
         if (entity->stateDraw == MeterDroid_StateDraw_Unknown2) {
             int32 x = RSDK.Rand(MeterDroid->hitbox1.left, MeterDroid->hitbox1.right) << 16;
             int32 y = RSDK.Rand(MeterDroid->hitbox1.top, MeterDroid->hitbox1.bottom) << 16;
-            CREATE_ENTITY(Explosion, intToVoid(2), x + entity->field_88.x, y + entity->field_88.y)->drawOrder = Zone->drawOrderHigh;
+            CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSS), x + entity->field_88.x, y + entity->field_88.y)->drawOrder = Zone->drawOrderHigh;
             entity->stateDraw                                                                                 = MeterDroid_StateDraw_Unknown1;
         }
         RSDK_sceneInfo->timeEnabled = false;
-        EntityPlayer *player1       = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
-        Player_GiveScore(player1, 1000);
+        Player_GiveScore(RSDK_GET_ENTITY(SLOT_PLAYER1, Player), 1000);
     }
     else {
         entity->invincibilityTimer = 48;
@@ -305,8 +304,7 @@ void MeterDroid_State_Setup(void)
 void MeterDroid_State_Unknown1(void)
 {
     RSDK_THIS(MeterDroid);
-    RSDK_sceneInfo->entity->angle = (entity->angle + 4) & 0xFF;
-    entity->position.y            = ((RSDK.Sin256(entity->angle) << 10) + entity->field_70.y) & 0xFFFF0000;
+    entity->position.y = BadnikHelpers_Oscillate(entity->field_70.y, 4, 10);
     RSDK.ProcessAnimation(&entity->animator1);
     RSDK.ProcessAnimation(&entity->animator2);
 
@@ -329,8 +327,7 @@ void MeterDroid_State_Unknown1(void)
 void MeterDroid_State_Unknown2(void)
 {
     RSDK_THIS(MeterDroid);
-    RSDK_sceneInfo->entity->angle = (entity->angle + 4) & 0xFF;
-    entity->position.y            = ((RSDK.Sin256(entity->angle) << 10) + entity->field_70.y) & 0xFFFF0000;
+    entity->position.y = BadnikHelpers_Oscillate(entity->field_70.y, 4, 10);
     RSDK.ProcessAnimation(&entity->animator1);
     RSDK.ProcessAnimation(&entity->animator2);
     if (++entity->timer == 90) {
@@ -343,8 +340,7 @@ void MeterDroid_State_Unknown2(void)
 void MeterDroid_State_Unknown3(void)
 {
     RSDK_THIS(MeterDroid);
-    RSDK_sceneInfo->entity->angle = (entity->angle + 4) & 0xFF;
-    entity->position.y            = ((RSDK.Sin256(entity->angle) << 10) + entity->field_70.y) & 0xFFFF0000;
+    entity->position.y = BadnikHelpers_Oscillate(entity->field_70.y, 4, 10);
     RSDK.ProcessAnimation(&entity->animator1);
     RSDK.ProcessAnimation(&entity->animator2);
     if (++entity->timer == 60) {
@@ -420,8 +416,7 @@ void MeterDroid_State_Unknown5(void)
 void MeterDroid_State_Unknown6(void)
 {
     RSDK_THIS(MeterDroid);
-    RSDK_sceneInfo->entity->angle = (entity->angle + 4) & 0xFF;
-    entity->position.y            = ((RSDK.Sin256(entity->angle) << 10) + entity->field_70.y) & 0xFFFF0000;
+    entity->position.y = BadnikHelpers_Oscillate(entity->field_70.y, 4, 10);
     RSDK.ProcessAnimation(&entity->animator1);
     RSDK.ProcessAnimation(&entity->animator2);
     RSDK.ProcessAnimation(&entity->animator3);
@@ -475,8 +470,7 @@ void MeterDroid_State_Unknown6(void)
 void MeterDroid_State_Unknown7(void)
 {
     RSDK_THIS(MeterDroid);
-    RSDK_sceneInfo->entity->angle = (entity->angle + 4) & 0xFF;
-    entity->position.y            = ((RSDK.Sin256(entity->angle) << 10) + entity->field_70.y) & 0xFFFF0000;
+    entity->position.y = BadnikHelpers_Oscillate(entity->field_70.y, 4, 10);
     RSDK.ProcessAnimation(&entity->animator1);
     RSDK.ProcessAnimation(&entity->animator2);
     RSDK.ProcessAnimation(&entity->animator3);
@@ -500,8 +494,7 @@ void MeterDroid_State_Unknown7(void)
 void MeterDroid_State_Unknown8(void)
 {
     RSDK_THIS(MeterDroid);
-    RSDK_sceneInfo->entity->angle = (entity->angle + 4) & 0xFF;
-    entity->position.y            = ((RSDK.Sin256(entity->angle) << 10) + entity->field_70.y) & 0xFFFF0000;
+    entity->position.y = BadnikHelpers_Oscillate(entity->field_70.y, 4, 10);
     RSDK.ProcessAnimation(&entity->animator1);
     RSDK.ProcessAnimation(&entity->animator2);
     MeterDroid_CheckPlayerCollisions();
@@ -629,7 +622,7 @@ void MeterDroid_State_Die(void)
         RSDK.PlaySfx(MeterDroid->sfxExplosion, false, 255);
 
         if (Zone->timer & 4) {
-            EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid(2 * (RSDK.Rand(0, 256) > 192) + 1),
+            EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid(2 * (RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS),
                                                        (RSDK.Rand(-208, 208) + RSDK_screens->centerX + RSDK_screens->position.x) << 16,
                                                        (RSDK.Rand(-112, 112) + RSDK_screens->centerY + RSDK_screens->position.y) << 16);
             explosion->drawOrder       = Zone->drawOrderHigh;

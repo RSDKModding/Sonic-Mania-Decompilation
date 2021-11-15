@@ -145,7 +145,7 @@ bool32 EggLoco_CheckCB(void)
     {
         int32 distX = abs(screenX - eggLoco->position.x);
         int32 distY = abs(screenY - eggLoco->position.y);
-        int32 rad   = MathHelpers_Unknown6((distY >> 16) * (distY >> 16) + (distX >> 16) * (distX >> 16));
+        int32 rad   = MathHelpers_SquareRoot((distY >> 16) * (distY >> 16) + (distX >> 16) * (distX >> 16));
         if (rad <= 840)
             count++;
     }
@@ -160,7 +160,7 @@ void EggLoco_UpdateCB(int32 sfx)
     {
         int32 distX = abs(screenX - eggLoco->position.x);
         int32 distY = abs(screenY - eggLoco->position.y);
-        int32 vol   = minVal(MathHelpers_Unknown6((distX >> 16) * (distX >> 16) + (distY >> 16) * (distY >> 16)), 840);
+        int32 vol   = minVal(MathHelpers_SquareRoot((distX >> 16) * (distX >> 16) + (distY >> 16) * (distY >> 16)), 840);
         RSDK.SetChannelAttributes(Soundboard->sfxChannel[sfx], 1.0 - (vol / 840.0), 0.0, 1.0);
         foreach_break;
     }

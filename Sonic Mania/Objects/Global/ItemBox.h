@@ -47,7 +47,7 @@ typedef struct {
     StateMachine(state);
     ItemBoxTypes type;
     Vector2 contentsPos;
-    Vector2 unknownPos;
+    Vector2 moveOffset;
     int32 contentsSpeed;
     Entity *storedEntity;
     int32 timer;

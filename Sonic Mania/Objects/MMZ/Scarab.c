@@ -159,7 +159,7 @@ void Scarab_HandleChildMove(void)
         child->position.x += entity->moveOffset.x;
         child->position.y += entity->moveOffset.y;
         if (child->objectID == ItemBox->objectID)
-            child->unknownPos = entity->moveOffset;
+            child->moveOffset = entity->moveOffset;
     }
 }
 
@@ -302,9 +302,9 @@ void Scarab_EditorLoad(void)
     Scarab->aniFrames = RSDK.LoadSpriteAnimation("MMZ/Scarab.bin", SCOPE_STAGE);
 
     RSDK_ACTIVE_VAR(Scarab, planeFilter);
-    RSDK_ENUM_VAR(PLANEFILTER_NONE);
-    RSDK_ENUM_VAR(PLANEFILTER_A);
-    RSDK_ENUM_VAR(PLANEFILTER_B);
+    RSDK_ENUM_VAR("No Filter", PLANEFILTER_NONE);
+    RSDK_ENUM_VAR("Plane A", PLANEFILTER_A);
+    RSDK_ENUM_VAR("Plane B", PLANEFILTER_B);
 }
 
 void Scarab_Serialize(void)

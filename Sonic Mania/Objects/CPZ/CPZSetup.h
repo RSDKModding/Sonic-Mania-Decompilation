@@ -3,6 +3,11 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    CPZ_BG_CPZ2,
+    CPZ_BG_CPZ1,
+} BGSwitchIDsCPZ;
+
 // Object Class
 typedef struct {
     RSDK_OBJECT

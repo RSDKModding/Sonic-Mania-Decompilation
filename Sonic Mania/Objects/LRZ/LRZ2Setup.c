@@ -30,8 +30,8 @@ void LRZ2Setup_StaticUpdate(void)
     }
 
     RSDK.SetLimitedFade(0, LRZ2Setup->srcPal, LRZ2Setup->dstPal, (RSDK.Cos256(LRZ2Setup->palTimer2) >> 1) + 128, 160, 168);
-    if (!LRZ2Setup->field_14 && !(Zone->timer & 1))
-        RSDK.RotatePalette(0, 228, 231, (LRZ2Setup->field_18 & 0xFF));
+    if (!LRZ2Setup->conveyorOff && !(Zone->timer & 1))
+        RSDK.RotatePalette(0, 228, 231, (LRZ2Setup->conveyorDir & 0xFF));
 
     int32 cos   = RSDK.Cos1024(2 * (Zone->timer & 0x1FF));
     int32 blend = cos >> 3;
@@ -90,9 +90,9 @@ void LRZ2Setup_StaticUpdate(void)
                     break;
             }
 
-            if (!LRZ2Setup->field_14 && flag2) {
+            if (!LRZ2Setup->conveyorOff && flag2) {
                 if (player->onGround) {
-                    player->position.x += (2 * ((((tileInfo & 0x400) != 0) ^ (LRZ2Setup->field_18 & 0xFF)) != flag) - 1) << 17;
+                    player->position.x += (2 * ((((tileInfo & 0x400) != 0) ^ (LRZ2Setup->conveyorDir & 0xFF)) != flag) - 1) << 17;
                     player->position.y += 0x10000;
                 }
             }
@@ -127,9 +127,9 @@ void LRZ2Setup_StageLoad(void)
     LRZ2Setup->dstPal = 1;
     LRZ2Setup->srcPal = 2;
     if (globals->gameMode == MODE_TIMEATTACK || globals->gameMode == MODE_COMPETITION)
-        GenericTrigger->callbacks[0] = NULL;
+        GenericTrigger->callbacks[GENERICTRIGGER_OUTRO] = NULL;
     else
-        GenericTrigger->callbacks[0] = LRZ2Setup_GenericTrigger_CB;
+        GenericTrigger->callbacks[GENERICTRIGGER_OUTRO] = LRZ2Setup_GenericTrigger_CB;
 }
 
 void LRZ2Setup_HandleStageReload(void)
@@ -284,8 +284,14 @@ void LRZ2Setup_GetTileInfo(int32 *tileInfo, int32 cPlane, int32 x, int32 y, int3
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void LRZ2Setup_EditorDraw(void) {}
 
-void LRZ2Setup_EditorLoad(void) {}
+void LRZ2Setup_EditorLoad(void)
+{
+    RSDK_ACTIVE_VAR(GenericTrigger, triggerID);
+    RSDK_ENUM_VAR("LRZ2 Outro", GENERICTRIGGER_OUTRO);
+}
+#endif
 
 void LRZ2Setup_Serialize(void) {}

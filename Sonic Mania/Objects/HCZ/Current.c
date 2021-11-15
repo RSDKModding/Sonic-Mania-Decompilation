@@ -729,6 +729,11 @@ void Current_EditorLoad(void)
 {
     Current->aniFrames = RSDK.LoadSpriteAnimation("Global/TicMark.bin", SCOPE_STAGE);
     RSDK.SetSpriteAnimation(Current->aniFrames, 0, &Current->animator, true, 0);
+
+    RSDK_ACTIVE_VAR(Current, planeFilter);
+    RSDK_ENUM_VAR("No Filter", PLANEFILTER_NONE);
+    RSDK_ENUM_VAR("Plane A", PLANEFILTER_A);
+    RSDK_ENUM_VAR("Plane B", PLANEFILTER_B);
 }
 #endif
 

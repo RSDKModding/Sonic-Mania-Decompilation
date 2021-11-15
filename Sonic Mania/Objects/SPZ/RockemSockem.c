@@ -2,8 +2,6 @@
 
 ObjectRockemSockem *RockemSockem;
 
-// Extras lol
-
 void RockemSockem_Update(void)
 {
     RSDK_THIS(RockemSockem);
@@ -232,9 +230,39 @@ void RockemSockem_Unknown1(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void RockemSockem_EditorDraw(void) {}
+void RockemSockem_EditorDraw(void)
+{
+    RSDK_THIS(RockemSockem);
 
-void RockemSockem_EditorLoad(void) {}
+    entity->drawPos.x = entity->position.x;
+    entity->drawPos.y = entity->position.y;
+    entity->position.y -= (0xE0000 + (0x50000 * RockemSockem_coilCount));
+    entity->startPos.x    = entity->position.x;
+    entity->startPos.y    = entity->position.y;
+    entity->angle         = 0x80;
+    entity->active        = ACTIVE_BOUNDS;
+    entity->updateRange.x = 0x800000;
+    entity->updateRange.y = 0x800000;
+    entity->visible       = true;
+    entity->drawOrder     = Zone->drawOrderLow;
+    entity->drawFX        = FX_ROTATE | FX_FLIP;
+
+    if (abs(entity->startPos.x - entity->position.x) <= 0x10000)
+        entity->field_E8 = 0;
+    else
+        entity->field_E8 = (entity->startPos.x - entity->position.x) >> 17;
+    RockemSockem_Unknown1();
+
+    RockemSockem_Draw();
+}
+
+void RockemSockem_EditorLoad(void)
+{
+    if (RSDK.CheckStageFolder("SPZ1"))
+        RockemSockem->aniFrames = RSDK.LoadSpriteAnimation("SPZ1/RockemSockem.bin", SCOPE_STAGE);
+    else
+        RockemSockem->aniFrames = RSDK.LoadSpriteAnimation("SPZ2/RockemSockem.bin", SCOPE_STAGE);
+}
 #endif
 
 void RockemSockem_Serialize(void) {}

@@ -63,19 +63,31 @@ void EggTV_DrawScanlines(void)
 void EggTV_DrawTV(void)
 {
     RSDK_THIS(EggTV);
-    entity->alpha     = 255;
+    entity->alpha     = 0xFF;
     entity->drawFX    = FX_SCALE;
     entity->inkEffect = INK_NONE;
-    entity->scale.x   = ((entity->size.x >> 16) << 9) / 96;
-    entity->scale.y   = ((entity->size.y >> 16) << 9) / 96;
+    entity->scale.x   = ((entity->size.x >> 16) << 9) / 0x60;
+    entity->scale.y   = ((entity->size.y >> 16) << 9) / 0x60;
     RSDK.DrawSprite(&EggTV->animator, NULL, false);
     entity->drawFX = FX_NONE;
 }
 
 #if RETRO_INCLUDE_EDITOR
-void EggTV_EditorDraw(void) {}
+void EggTV_EditorDraw(void)
+{
+    RSDK_THIS(EggTV);
 
-void EggTV_EditorLoad(void) {}
+    entity->updateRange.x = 0x800000 + entity->size.x;
+    entity->updateRange.y = 0x800000 + entity->size.y;
+
+    EggTV_DrawTV();
+}
+
+void EggTV_EditorLoad(void)
+{
+    EggTV->aniFrames = RSDK.LoadSpriteAnimation("SPZ2/EggTV.bin", SCOPE_STAGE);
+    RSDK.SetSpriteAnimation(EggTV->aniFrames, 0, &EggTV->animator, true, 0);
+}
 #endif
 
 void EggTV_Serialize(void)

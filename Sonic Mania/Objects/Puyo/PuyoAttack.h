@@ -16,7 +16,7 @@ typedef struct {
     int32 playerID;
     int32 delay;
     int32 radius;
-    int32 field_64;
+    int32 score;
     Vector2 targetPos;
     Animator animator;
 } EntityPuyoAttack;

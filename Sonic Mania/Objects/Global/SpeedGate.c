@@ -266,6 +266,7 @@ void SpeedGate_State_Unknown3(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void SpeedGate_EditorDraw(void)
 {
     RSDK_THIS(SpeedGate);
@@ -322,6 +323,7 @@ void SpeedGate_EditorDraw(void)
 }
 
 void SpeedGate_EditorLoad(void) { SpeedGate->spriteIndex = RSDK.LoadSpriteAnimation("Global/SpeedGate.bin", SCOPE_STAGE); }
+#endif
 
 void SpeedGate_Serialize(void)
 {

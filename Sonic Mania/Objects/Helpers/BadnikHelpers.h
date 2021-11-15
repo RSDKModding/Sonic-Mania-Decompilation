@@ -30,6 +30,12 @@ void BadnikHelpers_EditorLoad(void);
 void BadnikHelpers_Serialize(void);
 
 // Extra Entity Functions
+//Handles oscillations
+int BadnikHelpers_Oscillate(int origin, int speed, int power);
 
+//Handles Boss Explosions
+void BadnikHelpers_HandleExplode(int xMin, int xMax, int yMin, int yMax, uint8 drawOrder);
+// Handles Boss Explosions (but assumes minMax is 16bit-shifted)
+void BadnikHelpers_HandleExplode16(int xMin, int xMax, int yMin, int yMax, uint8 drawOrder);
 
 #endif //!OBJ_BADNIKHELPERS_H

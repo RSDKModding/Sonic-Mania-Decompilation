@@ -456,15 +456,14 @@ void MatryoshkaBom_EditorLoad(void)
     MatryoshkaBom->aniFrames = RSDK.LoadSpriteAnimation("MMZ/MatryoshkaBom.bin", SCOPE_STAGE);
 
     RSDK_ACTIVE_VAR(MatryoshkaBom, planeFilter);
-    RSDK_ENUM_VAR(PLANEFILTER_NONE);
-    RSDK_ENUM_VAR(PLANEFILTER_A);
-    RSDK_ENUM_VAR(PLANEFILTER_B);
+    RSDK_ENUM_VAR("No Filter", PLANEFILTER_NONE);
+    RSDK_ENUM_VAR("Plane A", PLANEFILTER_A);
+    RSDK_ENUM_VAR("Plane B", PLANEFILTER_B);
 
     RSDK_ACTIVE_VAR(MatryoshkaBom, size);
-    RSDK_ENUM_VAR(MATRYOSHKA_SIZE_BIG);
-    RSDK_ENUM_VAR(MATRYOSHKA_SIZE_MED);
-    RSDK_ENUM_VAR(MATRYOSHKA_SIZE_SMALL);
-    RSDK_ENUM_VAR(MATRYOSHKA_SIZE_SHRAPNEL);
+    RSDK_ENUM_VAR("Big", MATRYOSHKA_SIZE_BIG);
+    RSDK_ENUM_VAR("Medium", MATRYOSHKA_SIZE_MED);
+    RSDK_ENUM_VAR("Small", MATRYOSHKA_SIZE_SMALL);
 }
 
 void MatryoshkaBom_Serialize(void)

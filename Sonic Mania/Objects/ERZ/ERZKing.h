@@ -31,7 +31,7 @@ typedef struct {
     int32 angle2;
     int32 frameIDs[10];
     Vector2 framePositions[10];
-    Vector2 drawPos;
+    Vector2 rubyPos;
     int32 field_104;
     int32 field_108;
     Entity *parent;
@@ -40,7 +40,7 @@ typedef struct {
     Animator animator3;
     Animator animator4;
     Animator animator5;
-    Animator animator6;
+    Animator animatorRuby;
     Animator animator7;
     Animator animator8;
     Animator animator9;

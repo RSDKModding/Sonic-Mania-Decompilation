@@ -5,12 +5,28 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    Hitbox hitbox1;
+    Hitbox hitbox2;
+    bool32 finished;
+    uint16 aniFrames;
+    uint16 eggmanFrames;
+    uint16 sfxExplosion;
+    uint16 sfxRumble;
+    uint16 sfxImpact6;
+    uint16 sfxImpact4;
 } ObjectDCEvent;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    StateMachine(state);
+    uint8 numChildren;
+    uint8 type;
+    int32 timer2;
+    int32 field_64;
+    int32 timer;
+    Animator animator;
 } EntityDCEvent;
 
 // Object Struct
@@ -30,6 +46,21 @@ void DCEvent_EditorLoad(void);
 void DCEvent_Serialize(void);
 
 // Extra Entity Functions
+void DCEvent_State_Collapse(void);
+void DCEvent_State_Unknown1(void);
 
+void DCEvent_StateInput_Unknown1(void);
+void DCEvent_StateInput_Unknown2(void);
+
+void DCEvent_State_Unknown2(void);
+void DCEvent_State_Unknown3(void);
+void DCEvent_State_Unknown4(void);
+void DCEvent_State_Unknown5(void);
+
+void DCEvent_State1_Unknown1(void);
+void DCEvent_State1_Unknown2(void);
+
+void DCEvent_State2_Unknown1(void);
+void DCEvent_State2_Unknown2(void);
 
 #endif //!OBJ_DCEVENT_H

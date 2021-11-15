@@ -94,7 +94,7 @@ Vector2 MathHelpers_Unknown5(int32 percent, int32 x1, int32 y1, int32 x2, int32 
     return result;
 }
 
-int32 MathHelpers_Unknown6(uint32 a1)
+int32 MathHelpers_SquareRoot(uint32 a1)
 {
     int32 val = 0x40000000;
     int32 id  = 0;
@@ -129,7 +129,7 @@ int32 MathHelpers_Unknown7(int32 a1, int32 a2, int32 a3, int32 a4, int32 a5, int
         Vector2 res = MathHelpers_Unknown5(i, a1, a2, a3, a4, a5, a6, a7, a8);
         int32 val1    = abs(res.x - prev1);
         int32 val2    = abs(res.y - prev2);
-        val += MathHelpers_Unknown6((val2 >> 16) * (val2 >> 16) + (val1 >> 16) * (val1 >> 16)) << 16;
+        val += MathHelpers_SquareRoot((val2 >> 16) * (val2 >> 16) + (val1 >> 16) * (val1 >> 16)) << 16;
         prev1 = res.x;
         prev2 = res.y;
     }

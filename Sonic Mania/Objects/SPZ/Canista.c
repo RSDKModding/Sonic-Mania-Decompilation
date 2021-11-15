@@ -28,7 +28,7 @@ void Canista_Create(void *data)
     if (data) {
         entity->drawFX |= FX_FLIP;
         entity->inkEffect     = INK_ALPHA;
-        entity->alpha         = 256;
+        entity->alpha         = 0x100;
         entity->timer3        = 90;
         entity->updateRange.x = 0x400000;
         entity->updateRange.y = 0x400000;

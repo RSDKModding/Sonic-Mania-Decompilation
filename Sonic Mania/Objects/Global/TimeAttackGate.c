@@ -477,6 +477,7 @@ void TimeAttackGate_StateDraw_Restarter(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void TimeAttackGate_EditorDraw(void)
 {
     RSDK_THIS(TimeAttackGate);
@@ -528,6 +529,7 @@ void TimeAttackGate_EditorDraw(void)
 }
 
 void TimeAttackGate_EditorLoad(void) { TimeAttackGate->aniFrames = RSDK.LoadSpriteAnimation("Global/SpeedGate.bin", SCOPE_STAGE); }
+#endif
 
 void TimeAttackGate_Serialize(void)
 {

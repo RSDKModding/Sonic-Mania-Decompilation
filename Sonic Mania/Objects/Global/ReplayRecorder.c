@@ -22,7 +22,7 @@ void ReplayRecorder_LateUpdate(void)
             buffer = ReplayRecorder->writeBuffer;
         else
             buffer = ReplayRecorder->readBuffer;
-        if (entity->replayFrame > buffer[4] && entity->state) {
+        if (entity->replayFrame > buffer[REPLAY_HDR_FRAMECOUNT2] && entity->state) {
             ReplayRecorder_Stop(entity);
         }
 
@@ -152,11 +152,11 @@ void ReplayRecorder_StageLoad(void)
         ReplayRecorder->dword148     = 0;
         ReplayRecorder->loadCallback = NULL;
         ReplayRecorder->buffer       = NULL;
-        memset(ReplayRecorder->filename, 0, 0x100);
+        memset(ReplayRecorder->filename, 0, sizeof(ReplayRecorder->filename));
         ReplayRecorder->writeBuffer   = globals->replayWriteBuffer;
-        ReplayRecorder->frameBuffer_w = &globals->replayWriteBuffer[14];
+        ReplayRecorder->frameBuffer_w = &globals->replayWriteBuffer[REPLAY_HDR_SIZE];
         ReplayRecorder->readBuffer    = globals->replayReadBuffer;
-        ReplayRecorder->frameBuffer_r = &globals->replayReadBuffer[14];
+        ReplayRecorder->frameBuffer_r = &globals->replayReadBuffer[REPLAY_HDR_SIZE];
         if (Zone) {
             if (!RSDK_sceneInfo->inEditor)
                 ReplayRecorder_SetupActions();
@@ -181,7 +181,7 @@ void ReplayRecorder_StageLoad(void)
                 buffer = ReplayRecorder->readBuffer;
 
             EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
-            if (param->viewReplay && buffer[3]) {
+            if (param->viewReplay && buffer[REPLAY_HDR_PACKED]) {
                 if (param->showGhost) {
                     globals->playerID        = (globals->playerID & 0xFF) | ((globals->playerID & 0xFF) << 8);
                     Player->configureGhostCB = ReplayRecorder_ConfigureGhost_CB;
@@ -203,9 +203,9 @@ void ReplayRecorder_TitleCardCB(void)
     else
         buffer = ReplayRecorder->readBuffer;
 
-    if (Player->playerCount != 1 || !buffer[3])
+    if (Player->playerCount != 1 || !buffer[REPLAY_HDR_PACKED])
         ReplayRecorder->dword124 = true;
-    if (buffer[3] == 1)
+    if (buffer[REPLAY_HDR_PACKED])
         ReplayRecorder->dword128 = true;
 }
 
@@ -249,8 +249,8 @@ void ReplayRecorder_Buffer_Move(void)
         buffer = ReplayRecorder->writeBuffer;
     else
         buffer = ReplayRecorder->readBuffer;
-    if (buffer[3]) {
-        if (buffer[4] < (((EntityReplayRecorder *)ReplayRecorder->recorder_r)->field_84 - 1)) {
+    if (buffer[REPLAY_HDR_PACKED]) {
+        if (buffer[REPLAY_HDR_FRAMECOUNT2] < (((EntityReplayRecorder *)ReplayRecorder->recorder_r)->field_84 - 1)) {
             memset(globals->replayTempWBuffer, 0, 0x100000);
             LogHelpers_Print("Buffer_Move(0x%08x, 0x%08x)", globals->replayTempWBuffer, buffer);
             memcpy(globals->replayTempWBuffer, buffer, 0x100000);
@@ -299,20 +299,15 @@ void ReplayRecorder_SaveReplayDLG_YesCB(void)
 
 void ReplayRecorder_Unknown6(void)
 {
-    TextInfo buffer;
-    INIT_TEXTINFO(buffer);
-    Localization_GetString(&buffer, STR_SAVEREPLAY);
-    EntityUIDialog *dialog = UIDialog_CreateActiveDialog(&buffer);
-    if (dialog) {
-        UIDialog_AddButton(DIALOG_NO, dialog, ReplayRecorder_SaveReplayDLG_NoCB, true);
-        UIDialog_AddButton(DIALOG_YES, dialog, ReplayRecorder_SaveReplayDLG_YesCB, true);
-        UIDialog_Setup(dialog);
-    }
+    TextInfo message;
+    INIT_TEXTINFO(message);
+    Localization_GetString(&message, STR_SAVEREPLAY);
+    UIDialog_CreateDialogYesNo(&message, ReplayRecorder_SaveReplayDLG_YesCB, ReplayRecorder_SaveReplayDLG_NoCB, true, true);
 }
 
 void ReplayRecorder_SaveReplay(void)
 {
-    if (globals->replayTempWBuffer[3]) {
+    if (globals->replayTempWBuffer[REPLAY_HDR_PACKED]) {
         LogHelpers_Print("Saving replay...");
         foreach_all(HUD, hud) { foreach_break; }
         RSDK.SetSpriteAnimation(HUD->aniFrames, 11, &hud->taAnimator2, true, 0);
@@ -337,14 +332,10 @@ void ReplayRecorder_SavedReplay(bool32 status)
     else {
         if (ReplayRecorder->replayRowID != -1)
             API.RemoveDBRow(globals->replayTableID, ReplayRecorder->replayRowID);
-        TextInfo buffer;
-        INIT_TEXTINFO(buffer);
-        Localization_GetString(&buffer, STR_NOREPLAYSPACE);
-        EntityUIDialog *dialog = UIDialog_CreateActiveDialog(&buffer);
-        if (dialog) {
-            UIDialog_AddButton(2, dialog, NULL, true);
-            UIDialog_Setup(dialog);
-        }
+        TextInfo message;
+        INIT_TEXTINFO(message);
+        Localization_GetString(&message, STR_NOREPLAYSPACE);
+        UIDialog_CreateDialogOk(&message, NULL, true);
         UIWaitSpinner_Wait2();
         ActClear->disableResultsInput = false;
         ActClear->hasSavedReplay      = false;
@@ -372,19 +363,15 @@ void ReplayRecorder_WaitWhileReplaySaves(bool32 flag)
         }
     }
     else {
-        TextInfo buffer;
-        INIT_TEXTINFO(buffer);
+        TextInfo message;
+        INIT_TEXTINFO(message);
         char fileName[0x20];
         sprintf(fileName, "Replay_%08X.bin", ReplayRecorder->replayID);
         if (ReplayRecorder->replayRowID != -1)
             API.RemoveDBRow(globals->replayTableID, ReplayRecorder->replayRowID);
         API.DeleteUserFile(fileName, 0);
-        Localization_GetString(&buffer, STR_NOREPLAYSPACE);
-        EntityUIDialog *dialog = UIDialog_CreateActiveDialog(&buffer);
-        if (dialog) {
-            UIDialog_AddButton(2, dialog, 0, 1);
-            UIDialog_Setup(dialog);
-        }
+        Localization_GetString(&message, STR_NOREPLAYSPACE);
+        UIDialog_CreateDialogOk(&message, NULL, true);
         UIWaitSpinner_Wait2();
         ActClear->disableResultsInput = false;
         ActClear->hasSavedReplay      = false;
@@ -415,17 +402,17 @@ void ReplayRecorder_Buffer_PackInPlace(int32 *tempWriteBuffer)
 {
     LogHelpers_Print("Buffer_PackInPlace(%08x)", tempWriteBuffer);
 
-    if (*tempWriteBuffer == 0xF6057BED) {
-        if (tempWriteBuffer[2] == 1) {
+    if (*tempWriteBuffer == Replay_Signature) {
+        if (tempWriteBuffer[REPLAY_HDR_PACKED2]) {
             LogHelpers_Print("Buffer_Ppack ERROR: Buffer is already packed");
         }
         else {
-            int32 frameSize        = 56;
-            int32 uncompressedSize = 28 * (tempWriteBuffer[4] + 2);
+            int32 compSize         = REPLAY_HDR_SIZE * sizeof(int);
+            int32 uncompressedSize = 28 * (tempWriteBuffer[REPLAY_HDR_FRAMECOUNT2] + 2);
 
-            uint8 *framePtr       = (uint8 *)&tempWriteBuffer[14];
-            uint8 *compressedData = (uint8 *)&tempWriteBuffer[14];
-            for (int32 f = 0; f < tempWriteBuffer[4]; ++f) {
+            uint8 *framePtr       = (uint8 *)&tempWriteBuffer[REPLAY_HDR_SIZE];
+            uint8 *compressedData = (uint8 *)&tempWriteBuffer[REPLAY_HDR_SIZE];
+            for (int32 f = 0; f < tempWriteBuffer[REPLAY_HDR_FRAMECOUNT2]; ++f) {
                 uint8 uncompressedData[28];
                 memcpy(uncompressedData, framePtr, 28 * sizeof(uint8));
                 int32 *dataPtr = (int32 *)uncompressedData;
@@ -437,11 +424,11 @@ void ReplayRecorder_Buffer_PackInPlace(int32 *tempWriteBuffer)
                 int32 size = ReplayDB_Buffer_PackEntry(compressedData, uncompressedData);
                 framePtr += 28;
                 compressedData += size;
-                frameSize += size;
+                compSize += size;
             }
-            LogHelpers_Print("Packed %d frames: %luB -> %luB", tempWriteBuffer[4], uncompressedSize, frameSize);
-            tempWriteBuffer[11] = frameSize;
-            tempWriteBuffer[2]  = 1;
+            LogHelpers_Print("Packed %d frames: %luB -> %luB", tempWriteBuffer[REPLAY_HDR_FRAMECOUNT2], uncompressedSize, compSize);
+            tempWriteBuffer[REPLAY_HDR_COMPSIZE] = compSize;
+            tempWriteBuffer[REPLAY_HDR_PACKED2]  = true;
         }
     }
     else {
@@ -454,25 +441,25 @@ void ReplayRecorder_Buffer_Unpack(int32 *readBuffer, int32 *tempReadBuffer)
     LogHelpers_Print("Buffer_Unpack(0x%08x, 0x%08x)", readBuffer, tempReadBuffer);
 
     uint8 *compressedData = (uint8 *)&tempReadBuffer[14];
-    if (*tempReadBuffer == 0xF6057BED) {
-        if (tempReadBuffer[2] == 1) {
-            int32 compSize            = tempReadBuffer[11];
-            readBuffer[0]             = tempReadBuffer[0];
-            readBuffer[1]             = tempReadBuffer[1];
-            readBuffer[2]             = tempReadBuffer[2];
-            readBuffer[3]             = tempReadBuffer[3];
-            readBuffer[4]             = tempReadBuffer[4];
-            readBuffer[5]             = tempReadBuffer[5];
-            int32 frameSize           = 28 * (tempReadBuffer[4] + 2);
-            uint8 *uncompressedBuffer = (uint8 *)&readBuffer[14];
-            for (int32 i = 0; i < tempReadBuffer[4]; ++i) {
+    if (*tempReadBuffer == Replay_Signature) {
+        if (tempReadBuffer[REPLAY_HDR_PACKED2]) {
+            int32 compSize                     = tempReadBuffer[REPLAY_HDR_COMPSIZE];
+            readBuffer[REPLAY_HDR_SIG]         = tempReadBuffer[REPLAY_HDR_SIG];
+            readBuffer[REPLAY_HDR_VER]         = tempReadBuffer[REPLAY_HDR_VER];
+            readBuffer[REPLAY_HDR_PACKED2]     = tempReadBuffer[REPLAY_HDR_PACKED2];
+            readBuffer[REPLAY_HDR_PACKED]      = tempReadBuffer[REPLAY_HDR_PACKED];
+            readBuffer[REPLAY_HDR_FRAMECOUNT2] = tempReadBuffer[REPLAY_HDR_FRAMECOUNT2];
+            readBuffer[REPLAY_HDR_FRAMECOUNT]  = tempReadBuffer[REPLAY_HDR_FRAMECOUNT];
+            int32 frameSize                    = 28 * (tempReadBuffer[REPLAY_HDR_FRAMECOUNT2] + 2);
+            uint8 *uncompressedBuffer          = (uint8 *)&readBuffer[REPLAY_HDR_SIZE];
+            for (int32 i = 0; i < tempReadBuffer[REPLAY_HDR_FRAMECOUNT2]; ++i) {
                 int32 size = ReplayDB_Buffer_UnpackEntry(uncompressedBuffer, compressedData);
                 compressedData += size;
                 uncompressedBuffer += 28;
             }
-            LogHelpers_Print("Unpacked %d frames: %luB -> %luB", tempReadBuffer[4], compSize, frameSize);
-            readBuffer[2]  = 0;
-            readBuffer[11] = frameSize;
+            LogHelpers_Print("Unpacked %d frames: %luB -> %luB", tempReadBuffer[REPLAY_HDR_FRAMECOUNT2], compSize, frameSize);
+            readBuffer[REPLAY_HDR_PACKED2]  = false;
+            readBuffer[REPLAY_HDR_COMPSIZE] = frameSize;
             memset(tempReadBuffer, 0, 0x100000);
         }
         else {
@@ -487,13 +474,13 @@ void ReplayRecorder_Buffer_Unpack(int32 *readBuffer, int32 *tempReadBuffer)
 void ReplayRecorder_Buffer_SaveFile(const char *fileName, int32 *buffer)
 {
     LogHelpers_Print("Buffer_SaveFile(%s, %08x)", fileName, buffer);
-    if (buffer[3]) {
+    if (buffer[REPLAY_HDR_PACKED]) {
         ReplayRecorder->saveFinishPtr = ReplayRecorder_SavedReplay;
-        API_SaveUserFile(fileName, buffer, buffer[11], ReplayRecorder_SetReplayStatus, true);
+        API_SaveUserFile(fileName, buffer, buffer[REPLAY_HDR_COMPSIZE], ReplayRecorder_SetReplayStatus, true);
     }
     else {
         LogHelpers_Print("Attempted to save an empty replay buffer");
-        ReplayRecorder_SavedReplay(0);
+        ReplayRecorder_SavedReplay(false);
     }
 }
 
@@ -520,7 +507,7 @@ void ReplayRecorder_Load_CB(int32 status)
         ReplayRecorder->loadCallback(status == STATUS_OK);
     ReplayRecorder->loadCallback = NULL;
     ReplayRecorder->buffer       = NULL;
-    memset(ReplayRecorder->filename, 0, 0x100);
+    memset(ReplayRecorder->filename, 0, sizeof(ReplayRecorder->filename));
 }
 
 void ReplayRecorder_ConfigureGhost_CB(void)
@@ -600,24 +587,25 @@ void ReplayRecorder_SetupActions(void)
 
 void ReplayRecorder_SetupWriteBuffer(void)
 {
-    EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
-    int32 *buffer          = ReplayRecorder->writeBuffer;
-    buffer[0]              = 0xF6057BED;    // signature
-    buffer[1]              = RETRO_GAMEVER; // game version
-    buffer[2]              = 0;
-    buffer[8]              = param->characterID;
-    buffer[6]              = param->zoneID;
-    buffer[7]              = param->actID;
-    buffer[9]              = RSDK_sceneInfo->filter == SCN_FILTER_ENCORE;
-    buffer[10]             = Zone->timer;
-    buffer[11]             = 56;
-    buffer[5]              = ReplayRecorder->frameCounter;
-    LogHelpers_Print("characterID = %d", buffer[8]);
-    LogHelpers_Print("zoneID = %d", buffer[6]);
-    LogHelpers_Print("act = %d", buffer[7]);
-    LogHelpers_Print("isPlusLayout = %d", buffer[9]);
-    LogHelpers_Print("oscillation = %d", buffer[10]);
-    buffer[3] = true;
+    EntityMenuParam *param     = (EntityMenuParam *)globals->menuParam;
+    int32 *buffer              = ReplayRecorder->writeBuffer;
+    buffer[REPLAY_HDR_SIG]     = Replay_Signature; // signature
+    buffer[REPLAY_HDR_VER]     = RETRO_GAMEVER;    // game version
+    buffer[REPLAY_HDR_PACKED2] = 0;                // ???
+    buffer[REPLAY_HDR_PACKED]  = true;             // isPacked
+    // buffer[REPLAY_HDR_FRAMECOUNT2] = ???
+    buffer[REPLAY_HDR_FRAMECOUNT]   = ReplayRecorder->frameCounter;                // frameCount
+    buffer[REPLAY_HDR_ZONEID]       = param->zoneID;                               // zoneID
+    buffer[REPLAY_HDR_ACTID]        = param->actID;                                // actID
+    buffer[REPLAY_HDR_CHARID]       = param->characterID;                          // characterID
+    buffer[REPLAY_HDR_ISPLUSLAYOUT] = RSDK_sceneInfo->filter == SCN_FILTER_ENCORE; // isEncore
+    buffer[REPLAY_HDR_OSC]          = Zone->timer;                                 // oscillation
+    buffer[REPLAY_HDR_COMPSIZE]     = REPLAY_HDR_SIZE * sizeof(int);               // header size
+    LogHelpers_Print("characterID = %d", buffer[REPLAY_HDR_CHARID]);
+    LogHelpers_Print("zoneID = %d", buffer[REPLAY_HDR_ZONEID]);
+    LogHelpers_Print("act = %d", buffer[REPLAY_HDR_ACTID]);
+    LogHelpers_Print("isPlusLayout = %d", buffer[REPLAY_HDR_ISPLUSLAYOUT]);
+    LogHelpers_Print("oscillation = %d", buffer[REPLAY_HDR_OSC]);
 }
 
 void ReplayRecorder_DrawGhostDisplay(void)
@@ -645,7 +633,7 @@ void ReplayRecorder_DrawGhostDisplay(void)
 
             int32 distX = abs(player->position.x - screenX);
             int32 distY = abs(player->position.y - screenY);
-            int32 rad   = MathHelpers_Unknown6((distX >> 16) * (distX >> 16) + (distY >> 16) * (distY >> 16));
+            int32 rad   = MathHelpers_SquareRoot((distX >> 16) * (distX >> 16) + (distY >> 16) * (distY >> 16));
             rad         = clampVal(rad, 100, 2000);
 
             int32 val     = 12 - 4 * (3 * rad - 300) / 2000;
@@ -706,8 +694,8 @@ void ReplayRecorder_StartRecording(EntityPlayer *player)
     EntityReplayRecorder *recorder = (EntityReplayRecorder *)ReplayRecorder->recorder_r;
     LogHelpers_Print("ReplayRecorder_StartRecording()");
     recorder->active = ACTIVE_NORMAL;
-    memset(globals->replayTempWBuffer, 0, 0x100000);
-    memset(globals->replayWriteBuffer, 0, 0x100000);
+    memset(globals->replayTempWBuffer, 0, sizeof(globals->replayTempWBuffer));
+    memset(globals->replayWriteBuffer, 0, sizeof(globals->replayWriteBuffer));
     ReplayRecorder_Rewind(recorder);
     ReplayRecorder_SetupWriteBuffer();
     ReplayRecorder_Record(recorder, player);
@@ -724,7 +712,7 @@ void ReplayRecorder_Play(EntityPlayer *player)
     else
         buffer = ReplayRecorder->readBuffer;
 
-    if (buffer[3]) {
+    if (buffer[REPLAY_HDR_PACKED]) {
         recorder->active = ACTIVE_NORMAL;
         if (player) {
             recorder->player   = player;
@@ -736,7 +724,7 @@ void ReplayRecorder_Play(EntityPlayer *player)
             ReplayRecorder->dword138 = true;
         }
         else {
-            Zone->timer              = buffer[10];
+            Zone->timer              = buffer[REPLAY_HDR_OSC];
             player->stateInputReplay = ReplayRecorder_PlayBackInput;
             player->controllerID     = 2;
             RSDK.AssignControllerID(2, CONT_UNASSIGNED);
@@ -932,15 +920,16 @@ void ReplayRecorder_PackFrame(uint8 *recording)
     int32 size          = ReplayDB_Buffer_PackEntry(frameBuf, recording);
     memcpy(&writeBuffer2[7 * entity->replayFrame], recording, 0x28 * sizeof(uint8));
 
-    if (writeBuffer[4]) {
-        writeBuffer[4] = ((float)(writeBuffer[4] * writeBuffer[4]) + size) / (writeBuffer[4] + 1);
+    if (writeBuffer[REPLAY_HDR_FRAMECOUNT2]) {
+        writeBuffer[REPLAY_HDR_FRAMECOUNT2] =
+            ((float)(writeBuffer[REPLAY_HDR_FRAMECOUNT2] * writeBuffer[REPLAY_HDR_FRAMECOUNT2]) + size) / (writeBuffer[REPLAY_HDR_FRAMECOUNT2] + 1);
     }
     else {
-        writeBuffer[4] = size;
+        writeBuffer[REPLAY_HDR_FRAMECOUNT2] = size;
     }
-    writeBuffer[11] += size;
+    writeBuffer[REPLAY_HDR_COMPSIZE] += size;
     ++entity->replayFrame;
-    ++writeBuffer[4];
+    ++writeBuffer[REPLAY_HDR_FRAMECOUNT2];
 }
 
 void ReplayRecorder_PlayBackInput(void)
@@ -954,7 +943,7 @@ void ReplayRecorder_PlayBackInput(void)
     else
         buffer = ReplayRecorder->readBuffer;
 
-    if (ReplayRecorder->frameCounter >= buffer[5] && entity == recorder->player) {
+    if (ReplayRecorder->frameCounter >= buffer[REPLAY_HDR_FRAMECOUNT] && entity == recorder->player) {
         int32 *frameBuffer = NULL;
         if (RSDK.GetEntityID(recorder) == SLOT_REPLAYRECORDER_W)
             frameBuffer = ReplayRecorder->frameBuffer_w;
@@ -1092,16 +1081,16 @@ void ReplayRecorder_StatePlay(void)
     else
         frameBuffer = ReplayRecorder->frameBuffer_r;
 
-    if (ReplayRecorder->frameCounter >= buffer[5]) {
-        if (ReplayRecorder->frameCounter != buffer[5]) {
+    if (ReplayRecorder->frameCounter >= buffer[REPLAY_HDR_FRAMECOUNT]) {
+        if (ReplayRecorder->frameCounter != buffer[REPLAY_HDR_FRAMECOUNT]) {
             if (!entity->playing)
-                ReplayRecorder_Seek(entity, ReplayRecorder->frameCounter - buffer[5]);
-            entity->replayFrame = ReplayRecorder->frameCounter - buffer[5];
+                ReplayRecorder_Seek(entity, ReplayRecorder->frameCounter - buffer[REPLAY_HDR_FRAMECOUNT]);
+            entity->replayFrame = ReplayRecorder->frameCounter - buffer[REPLAY_HDR_FRAMECOUNT];
         }
         entity->stateLate = ReplayRecorder_StateLate_Replay;
         entity->state     = ReplayRecorder_None_Replay;
     }
-    else if (ReplayRecorder->frameCounter < buffer[5]) {
+    else if (ReplayRecorder->frameCounter < buffer[REPLAY_HDR_FRAMECOUNT]) {
         if (entity->playing) {
             ReplayRecorder_ApplyFrameData(entity, (uint8 *)frameBuffer);
         }
@@ -1122,9 +1111,9 @@ void ReplayRecorder_StateLate_Replay(void)
             RSDK_screens[camera->screenID].position.x = (camera->position.x >> 16);
             RSDK_screens[camera->screenID].position.y = (camera->position.y >> 16);
             if (WarpDoor)
-                WarpDoor_Unknown5(-1, 0);
+                WarpDoor_SetupBoundaries(-1, NULL);
             else
-                WarpDoor_Unknown4();
+                WarpDoor_CheckAllBounds();
             camera->state       = Camera_State_Follow;
             player->scrollDelay = 0;
         }
@@ -1146,7 +1135,7 @@ void ReplayRecorder_StateLate_Replay(void)
             if ((bufBytes[0] == 1 || bufBytes[0] == 3) || (bufBytes[0] == 2 && (bufBytes[1] & 2))) {
                 int32 distX = abs(player->position.x - framePtr[1]);
                 int32 distY = abs(player->position.y - framePtr[2]);
-                if (MathHelpers_Unknown6((distX >> 16) * (distX >> 16) + (distY >> 16) * (distY >> 16)) << 16 >= 0x20000) {
+                if (MathHelpers_SquareRoot((distX >> 16) * (distX >> 16) + (distY >> 16) * (distY >> 16)) << 16 >= 0x20000) {
                     player->position.x += (framePtr[1] - player->position.x) >> 1;
                     player->position.y += (framePtr[2] - player->position.y) >> 1;
                 }

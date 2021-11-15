@@ -89,7 +89,7 @@ typedef struct {
     bool32 (*Unknown4)(uint8 inputID);
     bool32 (*CheckDLC)(GameDLC dlc);
     void (*ShowExtensionOverlay)(uint8 overlay);
-#if RETRO_GAMEVER == VER_107
+#if RETRO_USE_EGS
     void (*EGS_Checkout)(int32 a1);
     void (*ShowEncorePage)(int32 a1);
     void (*EGS_Unknown4)(int32 a1);
@@ -98,12 +98,12 @@ typedef struct {
     void (*UnlockAchievement)(const char *achName);
     void (*GetAchievementStatus)(void);
     void (*SetAchievementStatus)(int32 a1);
-#if RETRO_GAMEVER == VER_107
+#if RETRO_USE_EGS
     bool32 (*CheckAchievementsEnabled)(void);
     void (*GetAchievementNames)(TextInfo *names, int32 count);
 #endif
     void (*LeaderboardsUnknown4)(void);
-#if RETRO_GAMEVER == VER_107
+#if RETRO_USE_EGS
     void (*EGS_LeaderboardUnknown1)(void);
 #endif
     void (*FetchLeaderboard)(const char *name, int32 a2);
@@ -385,10 +385,24 @@ extern RSDKFunctionTable RSDK;
 #include "All.h"
 
 #define RSDK_EDITABLE_VAR(object, type, var) RSDK.SetEditableVar(type, #var, (uint8)object->objectID, offsetof(Entity##object, var))
-#define RSDK_ACTIVE_VAR(object, var)         RSDK.SetActiveVariable(object->objectID, #var)
-#define RSDK_ENUM_VAR(var)                   RSDK.AddVarEnumValue(#var)
+#define RSDK_EDITABLE_ARRAY(object, type, var, size)                                                                                                 \
+    for (int i = 0; i < size; ++i) {                                                                                                                 \
+        char buffer[0x40];                                                                                                                           \
+        sprintf(buffer, "%s%d", #var, i);                                                                                                            \
+        RSDK.SetEditableVar(type, buffer, (uint8)object->objectID, offsetof(Entity##object, var[i]));                                                \
+    }
 
 #if RETRO_INCLUDE_EDITOR
+// Some extra precaution to prevent crashes in editor
+#define RSDK_ACTIVE_VAR(object, var)                                                                                                                 \
+    if (object) {                                                                                                                                    \
+        RSDK.SetActiveVariable(object->objectID, #var);                                                                                               \
+    }                                                                                                                                                \
+    else {                                                                                                                                           \
+        RSDK.SetActiveVariable(-1, #var);                                                                                                             \
+    }
+#define RSDK_ENUM_VAR(name, var) RSDK.AddVarEnumValue(name)
+
 #define RSDK_ADD_OBJECT(object)                                                                                                                      \
     RSDK.RegisterObject((Object **)&object, #object, sizeof(Entity##object), sizeof(Object##object), object##_Update, object##_LateUpdate,           \
                         object##_StaticUpdate, object##_Draw, object##_Create, object##_StageLoad, object##_EditorDraw, object##_EditorLoad,         \
@@ -404,8 +418,8 @@ extern RSDKFunctionTable RSDK;
 #endif
 
 #define RSDK_THIS(type)             Entity##type *entity = (Entity##type *)RSDK_sceneInfo->entity
+#define RSDK_THIS_GEN()             Entity *entity = RSDK_sceneInfo->entity
 #define RSDK_GET_ENTITY(slot, type) ((Entity##type *)RSDK.GetEntityByID(slot))
-#define SPAWN_CHILD(obj, data)      Entity##obj *child = (Entity##obj *)RSDK.CreateEntity(obj->objectID, (void*)(data), entity->position.x, entity->position.y)
 #define CREATE_ENTITY(obj, data, x, y) ((Entity##obj *)RSDK.CreateEntity(obj->objectID, data, x, y))
 
 #define INIT_TEXTINFO(info)                                                                                                                          \
@@ -440,11 +454,16 @@ extern RSDKFunctionTable RSDK;
     EntityCamera *cam = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
 
 #define destroyEntity(entity) RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL)
+#define destroyEntitySlot(slot) RSDK.ResetEntitySlot(slot, TYPE_BLANK, NULL)
 
 #if RETRO_USE_PLUS
 #define isMainGameMode() (globals->gameMode == MODE_MANIA || globals->gameMode == MODE_ENCORE)
 #else
 #define isMainGameMode() (globals->gameMode == MODE_NOSAVE || globals->gameMode == MODE_MANIA)
+#endif
+
+#if RETRO_INCLUDE_EDITOR
+#define showGizmos() RSDK_sceneInfo->listPos == RSDK_sceneInfo->entitySlot || RSDK_sceneInfo->effectGizmo
 #endif
 
 DLLExport void LinkGameLogicDLL(GameInfo *gameInfo);

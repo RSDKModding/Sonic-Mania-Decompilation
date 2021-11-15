@@ -3,6 +3,11 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    GHZ_BG_OUTSIDE,
+    GHZ_BG_CAVES,
+} BGSwitchIDsGHZ;
+
 // Object Class
 typedef struct {
     RSDK_OBJECT
@@ -41,10 +46,10 @@ void GHZSetup_Serialize(void);
 void GHZSetup_SetupStartingBG(void);
 void GHZSetup_SetupActTransition(void);
 void GHZSetup_HandleActTransition(void);
-void GHZSetup_SetupBGSwitchA1(void);
-void GHZSetup_SetupBGSwitchA2(void);
-void GHZSetup_SetupBGSwitchB1(void);
-void GHZSetup_SetupBGSwitchB2(void);
+void GHZSetup_BGSwitch_CB_Outside_Act2(void);
+void GHZSetup_BGSwitch_CB_Caves_Act2(void);
+void GHZSetup_BGSwitch_CB_Outside_Act1(void);
+void GHZSetup_BGSwitch_CB_Caves_Act1(void);
 void GHZSetup_SpawnGHZ2Outro(void);
 
 #endif //!OBJ_GHZSETUP_H

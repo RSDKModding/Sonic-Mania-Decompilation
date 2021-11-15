@@ -19,9 +19,9 @@ void WaterGush_Update(void)
                     entity->flag = true;
                 RSDK.PlaySfx(WaterGush->sfxGush, false, 255);
                 entity->activePlayers |= 1 << playerID;
-                RSDK.SetSpriteAnimation(player->spriteIndex, 18, &player->playerAnimator, true, 6);
-                player->nextGroundState = 0;
-                player->nextAirState    = 0;
+                RSDK.SetSpriteAnimation(player->spriteIndex, ANI_HURT, &player->playerAnimator, true, 6);
+                player->nextGroundState = StateMachine_None;
+                player->nextAirState    = StateMachine_None;
                 player->velocity.x      = 0;
                 player->velocity.y      = 0;
                 player->tileCollisions  = false;
@@ -434,6 +434,13 @@ void WaterGush_EditorDraw(void)
 {
     RSDK_THIS(WaterGush);
 
+    entity->updateRange.x = 0x800000;
+    if (entity->orientation == 2 || entity->orientation == 1)
+        entity->updateRange.x = (entity->length + 2) << 22;
+    entity->updateRange.y = 0x800000;
+    if (!entity->orientation)
+        entity->updateRange.y = (entity->length + 2) << 22;
+
     if (entity->orientation) {
         if (entity->orientation == 1) {
             entity->direction = FLIP_NONE;
@@ -450,6 +457,8 @@ void WaterGush_EditorDraw(void)
         RSDK.SetSpriteAnimation(WaterGush->aniFrames, 0, &entity->animator1, true, 0);
         RSDK.SetSpriteAnimation(WaterGush->aniFrames, 2, &entity->animator2, true, 0);
     }
+
+    entity->field_78 = entity->length << 22;
 
     WaterGush_DrawSprites();
 }

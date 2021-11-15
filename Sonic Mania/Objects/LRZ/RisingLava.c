@@ -87,7 +87,14 @@ void RisingLava_State_StoppedRising(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void RisingLava_EditorDraw(void) {}
+void RisingLava_EditorDraw(void)
+{
+    RSDK_THIS(RisingLava);
+    DrawHelpers_DrawRectOutline(0xFFFF00, entity->position.x, entity->position.y, entity->size.x, entity->size.y);
+    DrawHelpers_DrawRectOutline(0xFFFF00, entity->offset.x, entity->offset.y, entity->size.x, entity->size.y);
+
+    DrawHelpers_DrawArrow(0xFFFF00, entity->position.x, entity->position.y, entity->offset.x, entity->offset.y);
+}
 
 void RisingLava_EditorLoad(void) {}
 #endif

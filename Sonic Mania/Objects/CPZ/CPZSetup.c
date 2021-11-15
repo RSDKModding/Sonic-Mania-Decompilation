@@ -69,12 +69,12 @@ void CPZSetup_StageLoad(void)
     if (Zone->actID) {
         RSDK.SetPaletteMask(0xF000);
         RSDK.SetPaletteEntry(0, 0xFF, 0xF000);
-        BGSwitch->switchCallback[0] = CPZSetup_BGSwitchCB1;
-        BGSwitch->switchCallback[1] = CPZSetup_BGSwitchCB2;
-        BGSwitch->layerIDs[0]       = 1;
-        BGSwitch->layerIDs[1]       = 1;
-        BGSwitch->layerIDs[2]       = 1;
-        BGSwitch->layerIDs[3]       = 1;
+        BGSwitch->switchCallback[CPZ_BG_CPZ1] = CPZSetup_BGSwitchCB1;
+        BGSwitch->switchCallback[CPZ_BG_CPZ2] = CPZSetup_BGSwitchCB2;
+        BGSwitch->layerIDs[0]                 = 1;
+        BGSwitch->layerIDs[1]                 = 1;
+        BGSwitch->layerIDs[2]                 = 1;
+        BGSwitch->layerIDs[3]                 = 1;
 
         bool32 flag = false;
         if (PlayerHelpers_CheckStageReload() || !PlayerHelpers_CheckPlayerPos(0x18900000, 0xAC0000, 0x2560000, 0x19800000)) {
@@ -107,10 +107,7 @@ void CPZSetup_StageLoad(void)
         BGSwitch->screenID = 0;
         if (flag) {
             for (; BGSwitch->screenID < RSDK.GetSettingsValue(SETTINGS_SCREENCOUNT); BGSwitch->screenID++) {
-                RSDK.GetSceneLayer(0)->drawLayer[BGSwitch->screenID]   = DRAWLAYER_COUNT;
-                RSDK.GetSceneLayer(1)->drawLayer[BGSwitch->screenID]   = DRAWLAYER_COUNT;
-                RSDK.GetSceneLayer(2)->drawLayer[BGSwitch->screenID]   = DRAWLAYER_COUNT;
-                RSDK.GetSceneLayer(3)->drawLayer[BGSwitch->screenID++] = 0;
+                CPZSetup_BGSwitchCB2();
             }
             BGSwitch->layerIDs[0] = 1;
             BGSwitch->layerIDs[1] = 1;
@@ -126,10 +123,7 @@ void CPZSetup_StageLoad(void)
         }
         else {
             for (; BGSwitch->screenID < RSDK.GetSettingsValue(SETTINGS_SCREENCOUNT); BGSwitch->screenID++) {
-                RSDK.GetSceneLayer(0)->drawLayer[BGSwitch->screenID]   = 0;
-                RSDK.GetSceneLayer(1)->drawLayer[BGSwitch->screenID]   = 0;
-                RSDK.GetSceneLayer(2)->drawLayer[BGSwitch->screenID]   = 0;
-                RSDK.GetSceneLayer(3)->drawLayer[BGSwitch->screenID++] = DRAWLAYER_COUNT;
+                CPZSetup_BGSwitchCB1();
             }
             BGSwitch->layerIDs[0] = 0;
             BGSwitch->layerIDs[1] = 0;
@@ -184,7 +178,12 @@ void CPZSetup_StageFinishCBAct2(void) { CPZSetup->outro->active = ACTIVE_NORMAL;
 #if RETRO_INCLUDE_EDITOR
 void CPZSetup_EditorDraw(void) {}
 
-void CPZSetup_EditorLoad(void) {}
+void CPZSetup_EditorLoad(void)
+{
+    RSDK_ACTIVE_VAR(BGSwitch, bgID);
+    RSDK_ENUM_VAR("Act 2 BG", CPZ_BG_CPZ2);
+    RSDK_ENUM_VAR("Act 1 BG", CPZ_BG_CPZ1);
+}
 #endif
 
 void CPZSetup_Serialize(void) {}

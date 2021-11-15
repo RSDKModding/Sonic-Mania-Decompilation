@@ -42,19 +42,21 @@ void COverlay_DebugDraw(void)
 {
     RSDK.SetSpriteAnimation(COverlay->spriteIndex, 0, &DebugMode->animator, true, 0);
     DebugMode->animator.frameID = 4;
-    RSDK.DrawSprite(&DebugMode->animator, 0, 0);
+    RSDK.DrawSprite(&DebugMode->animator, NULL, false);
 }
 
 void COverlay_DebugSpawn(void)
 {
+    RSDK_THIS(DebugMode);
+
     int32 count = 0;
-    foreach_all(COverlay, entity)
+    foreach_all(COverlay, overlay)
     {
-        destroyEntity(entity);
+        destroyEntity(overlay);
         ++count;
     }
     if (!count)
-        RSDK.CreateEntity(COverlay->objectID, NULL, RSDK_sceneInfo->entity->position.x, RSDK_sceneInfo->entity->position.y);
+        CREATE_ENTITY(COverlay, NULL, entity->position.x, entity->position.y);
 }
 
 void COverlay_DrawTile(void)

@@ -237,6 +237,7 @@ void SpecialRing_State_Normal(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void SpecialRing_EditorDraw(void)
 {
     RSDK_THIS(SpecialRing);
@@ -244,7 +245,16 @@ void SpecialRing_EditorDraw(void)
     RSDK.DrawSprite(&entity->warpAnimator, NULL, false);
 }
 
-void SpecialRing_EditorLoad(void) { SpecialRing->spriteIndex = RSDK.LoadSpriteAnimation("Global/SpecialRing.bin", SCOPE_STAGE); }
+void SpecialRing_EditorLoad(void)
+{
+    SpecialRing->spriteIndex = RSDK.LoadSpriteAnimation("Global/SpecialRing.bin", SCOPE_STAGE);
+
+    RSDK_ACTIVE_VAR(SpecialRing, planeFilter);
+    RSDK_ENUM_VAR("No Filter", PLANEFILTER_NONE);
+    RSDK_ENUM_VAR("Plane A", PLANEFILTER_A);
+    RSDK_ENUM_VAR("Plane B", PLANEFILTER_B);
+}
+#endif
 
 void SpecialRing_Serialize(void)
 {

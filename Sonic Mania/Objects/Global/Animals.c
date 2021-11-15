@@ -281,6 +281,7 @@ void Animals_State_BounceAround(void)
         entity->delay--;
 }
 
+#if RETRO_INCLUDE_EDITOR
 void Animals_EditorDraw(void)
 {
     RSDK_THIS(Animals);
@@ -296,6 +297,7 @@ void Animals_EditorDraw(void)
 }
 
 void Animals_EditorLoad(void) { Animals->spriteIndex = RSDK.LoadSpriteAnimation("Global/Animals.bin", SCOPE_STAGE); }
+#endif
 
 void Animals_Serialize(void)
 {

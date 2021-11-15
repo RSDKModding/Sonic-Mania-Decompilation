@@ -24,8 +24,8 @@ void LRZ1Setup_StaticUpdate(void)
             RSDK.SetLimitedFade(5, 1, 4, cos >> 3, 208, 211);
         else
             RSDK.SetLimitedFade(5, 1, 3, -blend, 208, 211);
-        RSDK.RotatePalette(3u, 208, 211, true);
-        RSDK.RotatePalette(4u, 208, 211, true);
+        RSDK.RotatePalette(3, 208, 211, true);
+        RSDK.RotatePalette(4, 208, 211, true);
         if (blend >= 0)
             RSDK.SetLimitedFade(6, 2, 4, blend, 208, 211);
         else

@@ -102,17 +102,19 @@ void SpinSign_StageLoad(void)
 
 void SpinSign_DebugSpawn(void)
 {
-    RSDK_THIS(SpinSign);
-    RSDK.CreateEntity(SpinSign->objectID, 0, entity->position.x, entity->position.y);
+    RSDK_THIS(DebugMode);
+    CREATE_ENTITY(SpinSign, NULL, entity->position.x, entity->position.y);
 }
 void SpinSign_DebugDraw(void)
 {
     RSDK.SetSpriteAnimation(SpinSign->aniFrames, 4, &DebugMode->animator, true, 0);
-    RSDK.DrawSprite(&DebugMode->animator, 0, 0);
+    RSDK.DrawSprite(&DebugMode->animator, NULL, false);
+
     RSDK.SetSpriteAnimation(SpinSign->aniFrames, 3, &DebugMode->animator, true, 0);
-    RSDK.DrawSprite(&DebugMode->animator, 0, 0);
+    RSDK.DrawSprite(&DebugMode->animator, NULL, false);
+
     RSDK.SetSpriteAnimation(SpinSign->aniFrames, 4, &DebugMode->animator, true, 2);
-    RSDK.DrawSprite(&DebugMode->animator, 0, 0);
+    RSDK.DrawSprite(&DebugMode->animator, NULL, false);
 }
 
 void SpinSign_Unknown1(void)
@@ -300,9 +302,46 @@ void SpinSign_Unknown6(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void SpinSign_EditorDraw(void) {}
+void SpinSign_EditorDraw(void)
+{
+    RSDK_THIS(SpinSign);
 
-void SpinSign_EditorLoad(void) {}
+    RSDK.SetSpriteAnimation(SpinSign->aniFrames, 3, &entity->animator1, true, 0);
+    RSDK.SetSpriteAnimation(SpinSign->aniFrames, 4, &entity->animator3, true, 0);
+    entity->active        = ACTIVE_BOUNDS;
+    entity->updateRange.x = 0x800000;
+    entity->updateRange.y = 0x800000;
+    entity->scale.x       = 0x200;
+    entity->scale.y       = 0x200;
+
+    switch (entity->type) {
+        case 0:
+            entity->animator3.frameID = 1;
+            RSDK.SetSpriteAnimation(SpinSign->aniFrames, 0, &entity->animator2, true, 0);
+            entity->stateDraw = SpinSign_Unknown3;
+            break;
+        case 1:
+            entity->animator3.frameID = 0;
+            RSDK.SetSpriteAnimation(SpinSign->aniFrames, 0, &entity->animator2, true, 0);
+            entity->stateDraw = SpinSign_Unknown4;
+            break;
+        case 2:
+            entity->animator3.frameID = 1;
+            RSDK.SetSpriteAnimation(SpinSign->aniFrames, 5, &entity->animator2, true, 0);
+            entity->stateDraw = SpinSign_Unknown5;
+            break;
+        case 3:
+            entity->animator3.frameID = 2;
+            RSDK.SetSpriteAnimation(SpinSign->aniFrames, 5, &entity->animator2, true, 0);
+            entity->stateDraw = SpinSign_Unknown6;
+            break;
+        default: break;
+    }
+
+    StateMachine_Run(entity->stateDraw);
+}
+
+void SpinSign_EditorLoad(void) { SpinSign->aniFrames = RSDK.LoadSpriteAnimation("SPZ1/SpinSign.bin", SCOPE_STAGE); }
 #endif
 
 void SpinSign_Serialize(void) { RSDK_EDITABLE_VAR(SpinSign, VAR_UINT8, type); }

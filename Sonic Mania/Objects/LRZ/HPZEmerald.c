@@ -6,19 +6,19 @@ void HPZEmerald_Update(void)
 {
     RSDK_THIS(HPZEmerald);
     RSDK.ProcessAnimation(&entity->animator2);
-    if (entity->field_60 == 1) {
+    if (entity->solid) {
         if (entity->type) {
             foreach_active(Player, player) { Player_CheckCollisionPlatform(player, entity, entity->hitbox); }
         }
 
-        // Entity *heavyKing = 0;
-        // while (RSDK.GetActiveObjects(HeavyKing->objectID, (Entity **)&heavyKing) == 1) {
-        //    if (*(_WORD *)(heavyKing + 144) != 5 && !*(_DWORD *)(heavyKing + 72)
-        //        && RSDK.CheckObjectCollisionPlatform(entity, entity->hitbox, heavyKing, &HeavyKing[18], 1) == 1) {
-        //        Camera_ShakeScreen(0, 0, 3);
-        //        RSDK.PlaySfx(*(unsigned __int16 *)&HeavyKing[29].priority, 0, 255);
-        //    }
-        //}
+        foreach_active(HeavyKing, king)
+        {
+            if (king->animator1.animationID != 5 && !king->onGround
+                && RSDK.CheckObjectCollisionPlatform(entity, entity->hitbox, king, &HeavyKing->hitbox1, true)) {
+                Camera_ShakeScreen(0, 0, 3);
+                RSDK.PlaySfx(HeavyKing->sfxImpact2, false, 255);
+            }
+        }
     }
 
     if (!entity->onGround) {
@@ -40,14 +40,15 @@ void HPZEmerald_StaticUpdate(void) {}
 void HPZEmerald_Draw(void)
 {
     RSDK_THIS(HPZEmerald);
-    if (entity->field_60) {
-        RSDK.DrawSprite(&entity->animator2, 0, 0);
+
+    entity->inkEffect = INK_NONE;
+    if (entity->solid) {
+        RSDK.DrawSprite(&entity->animator2, NULL, false);
     }
     else {
-        entity->inkEffect = INK_NONE;
-        RSDK.DrawSprite(&entity->animator2, 0, 0);
+        RSDK.DrawSprite(&entity->animator2, NULL, false);
         entity->inkEffect = INK_ADD;
-        RSDK.DrawSprite(&entity->animator, 0, 0);
+        RSDK.DrawSprite(&entity->animator, NULL, false);
     }
 }
 
@@ -56,17 +57,20 @@ void HPZEmerald_Create(void *data)
     RSDK_THIS(HPZEmerald);
     if (!RSDK_sceneInfo->inEditor) {
         entity->visible = true;
-        if (entity->type == 1) {
-            entity->field_60  = 1;
-            entity->drawOrder = Zone->drawOrderLow;
+
+        switch (entity->type) {
+            case HPZEMERALD_MASTER:
+            default: entity->drawOrder = 1; break;
+            case HPZEMERALD_EMERALD_LOW:
+                entity->solid     = true;
+                entity->drawOrder = Zone->drawOrderLow;
+                break;
+            case HPZEMERALD_EMERALD_HIGH:
+                entity->solid     = true;
+                entity->drawOrder = Zone->drawOrderHigh;
+                break;
         }
-        else if (entity->type == 2) {
-            entity->field_60  = 1;
-            entity->drawOrder = Zone->drawOrderHigh;
-        }
-        else {
-            entity->drawOrder = 1;
-        }
+
         entity->startPos.x    = entity->position.x;
         entity->startPos.y    = entity->position.y;
         entity->active        = ACTIVE_BOUNDS;
@@ -87,9 +91,38 @@ void HPZEmerald_Create(void *data)
 void HPZEmerald_StageLoad(void) { HPZEmerald->spriteIndex = RSDK.LoadSpriteAnimation("LRZ3/Emerald.bin", SCOPE_STAGE); }
 
 #if RETRO_INCLUDE_EDITOR
-void HPZEmerald_EditorDraw(void) {}
+void HPZEmerald_EditorDraw(void)
+{
+    RSDK_THIS(HPZEmerald);
 
-void HPZEmerald_EditorLoad(void) {}
+    entity->solid = false;
+    switch (entity->type) {
+        case HPZEMERALD_MASTER:
+        default:
+        case HPZEMERALD_EMERALD_LOW: entity->solid = true; break;
+        case HPZEMERALD_EMERALD_HIGH: entity->solid = true; break;
+    }
+
+    if (entity->type) {
+        RSDK.SetSpriteAnimation(HPZEmerald->spriteIndex, 1, &entity->animator2, true, 0);
+    }
+    else {
+        RSDK.SetSpriteAnimation(HPZEmerald->spriteIndex, 0, &entity->animator2, true, 0);
+        RSDK.SetSpriteAnimation(HPZEmerald->spriteIndex, 0, &entity->animator, true, 1);
+    }
+
+    HPZEmerald_Draw();
+}
+
+void HPZEmerald_EditorLoad(void)
+{
+    HPZEmerald->spriteIndex = RSDK.LoadSpriteAnimation("LRZ3/Emerald.bin", SCOPE_STAGE);
+
+    RSDK_ACTIVE_VAR(HPZEmerald, type);
+    RSDK_ENUM_VAR("Master Emerald", HPZEMERALD_MASTER);
+    RSDK_ENUM_VAR("Stone Emerald (Low Layer)", HPZEMERALD_EMERALD_LOW);
+    RSDK_ENUM_VAR("Stone Emerald (High Layer)", HPZEMERALD_EMERALD_HIGH);
+}
 #endif
 
 void HPZEmerald_Serialize(void) { RSDK_EDITABLE_VAR(HPZEmerald, VAR_UINT8, type); }

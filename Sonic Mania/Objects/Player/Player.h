@@ -485,7 +485,12 @@ bool32 Player_CheckBadnikBreak(void *entity, EntityPlayer *player, bool32 destro
 bool32 Player_CheckBossHit(EntityPlayer *player, void *entity);
 //similar to checkHit, but for projectiles, handles the rebound effect when using shields or crouching as mighty, returns true if deflected, otherwise the player is hit and returns false
 bool32 Player_CheckProjectileHit(EntityPlayer *player, void *projectile);
-//idk yet, needs more research
+#if RETRO_USE_PLUS
+// similar to checkHit, but for objects that should bounce off mighty's shell, returns true if deflected, otherwise the player is hit and returns
+// false
+bool32 Player_CheckMightyShellHit(EntityPlayer *player, void *e);
+#endif
+// idk yet, needs more research
 bool32 Player_CheckHit2(EntityPlayer *player, void *entity, bool32 flag);
 
 // State helpers

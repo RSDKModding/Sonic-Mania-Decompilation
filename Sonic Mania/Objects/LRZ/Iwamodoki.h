@@ -5,12 +5,26 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    Hitbox hitbox1;
+    Hitbox hitbox2;
+    Hitbox hitbox3;
+    uint16 aniFrames;
 } ObjectIwamodoki;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    StateMachine(state);
+    bool32 lrzConvPhys;
+    Vector2 startPos;
+    Vector2 moveOffset;
+    Vector2 preMovePos;
+    Vector2 postMovePos;
+    uint8 startDir;
+    int32 timer1;
+    int32 timer2;
+    Animator animator;
 } EntityIwamodoki;
 
 // Object Struct
@@ -30,6 +44,17 @@ void Iwamodoki_EditorLoad(void);
 void Iwamodoki_Serialize(void);
 
 // Extra Entity Functions
+void Iwamodoki_DebugSpawn(void);
+void Iwamodoki_DebugDraw(void);
 
+void Iwamodoki_HandlePlayerCollisions(void);
+void Iwamodoki_CheckOnScreen(void);
+
+void Iwamodoki_State_Setup(void);
+void Iwamodoki_State_Unknown1(void);
+void Iwamodoki_State_Unknown2(void);
+void Iwamodoki_State_Unknown3(void);
+void Iwamodoki_State_Unknown4(void);
+void Iwamodoki_State_Debris(void);
 
 #endif //!OBJ_IWAMODOKI_H

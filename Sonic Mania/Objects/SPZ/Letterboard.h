@@ -5,12 +5,23 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    Hitbox hitbox;
+    uint16 aniFrames;
+    uint16 sfxLetterTurn;
+    uint16 sfxWin;
 } ObjectLetterboard;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    StateMachine(state);
+    bool32 controller;
+    uint8 letterID;
+    int32 spinSpeed;
+    int32 timer;
+    Animator animatorFront;
+    Animator animatorBack;
 } EntityLetterboard;
 
 // Object Struct
@@ -30,6 +41,8 @@ void Letterboard_EditorLoad(void);
 void Letterboard_Serialize(void);
 
 // Extra Entity Functions
-
+void Letterboard_State_Controller(void);
+void Letterboard_State_CheckPlayerSpin(void);
+void Letterboard_State_Spun(void);
 
 #endif //!OBJ_LETTERBOARD_H

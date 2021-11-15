@@ -3,6 +3,11 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    AIZ_BG_BEACH,
+    AIZ_BG_JUNGLE,
+} BGSwitchIDsAIZ;
+
 // Object Class
 typedef struct {
     RSDK_OBJECT

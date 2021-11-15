@@ -96,6 +96,7 @@ void BoundsMarker_CheckAllBounds(void *p, bool32 setPos)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void BoundsMarker_EditorDraw(void)
 {
     RSDK_THIS(BoundsMarker);
@@ -122,6 +123,7 @@ void BoundsMarker_EditorDraw(void)
 }
 
 void BoundsMarker_EditorLoad(void) { BoundsMarker->spriteIndex = RSDK.LoadSpriteAnimation("Editor/EditorIcons.bin", SCOPE_STAGE); }
+#endif
 
 void BoundsMarker_Serialize(void)
 {

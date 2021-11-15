@@ -12,7 +12,7 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    int32 field_58;
+    bool32 showRingCount;
     int32 timer;
     uint8 palID;
     Animator animator1;

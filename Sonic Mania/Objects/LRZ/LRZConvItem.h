@@ -3,14 +3,28 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    LRZCONVITEM_ROCK,
+    LRZCONVITEM_SPIKEBALL,
+}LRZConvItemTypes;
+
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    Hitbox hitbox1;
+    Hitbox hitbox2;
+    uint16 aniFrames;
+    uint16 sfxSizzle;
 } ObjectLRZConvItem;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    StateMachine(state);
+    uint8 type;
+    Vector2 startPos;
+    int32 field_68;
+    Animator animator;
 } EntityLRZConvItem;
 
 // Object Struct
@@ -30,6 +44,10 @@ void LRZConvItem_EditorLoad(void);
 void LRZConvItem_Serialize(void);
 
 // Extra Entity Functions
+void LRZConvItem_SetupHitboxes(void);
+Vector2 LRZConvItem_Unknown2(void *e);
 
+void LRZConvItem_State_Unknown1(void);
+void LRZConvItem_State_Unknown2(void);
 
 #endif //!OBJ_LRZCONVITEM_H

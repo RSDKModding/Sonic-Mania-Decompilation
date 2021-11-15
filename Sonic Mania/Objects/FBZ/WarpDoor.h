@@ -66,12 +66,12 @@ void WarpDoor_EditorLoad(void);
 void WarpDoor_Serialize(void);
 
 // Extra Entity Functions
-void WarpDoor_Unknown1(void);
+void WarpDoor_SetupPlayerCamera(void);
 void WarpDoor_SetStageBounds(void);
 void WarpDoor_SetWarpBounds(uint8 id);
-void WarpDoor_Unknown4(void);
-bool32 WarpDoor_Unknown5(int16 a1, Vector2 *posPtr);
+void WarpDoor_CheckAllBounds(void);
+bool32 WarpDoor_SetupBoundaries(int16 boundsID, Vector2 *posPtr);
 void WarpDoor_DrawDebug(void);
-void WarpDoor_Unknown7(void);
+void WarpDoor_SetupHitbox(void);
 
 #endif //!OBJ_WARPDOOR_H

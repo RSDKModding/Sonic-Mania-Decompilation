@@ -148,12 +148,9 @@ void MSZSpotlight_EditorLoad(void)
     MSZSpotlight->spriteIndex = RSDK.LoadSpriteAnimation("MSZ/HeavyMystic.bin", SCOPE_STAGE);
 
     RSDK_ACTIVE_VAR(MSZSpotlight, color);
-    RSDK_ENUM_VAR(MSZSPOTLIGHT_RED);
-    RSDK_ENUM_VAR(MSZSPOTLIGHT_GREEN);
-    RSDK_ENUM_VAR(MSZSPOTLIGHT_BLUE);
-    // RSDK.AddVarEnumValue("Red");
-    // RSDK.AddVarEnumValue("Green");
-    // RSDK.AddVarEnumValue("Blue");
+    RSDK_ENUM_VAR("Red", MSZSPOTLIGHT_RED);
+    RSDK_ENUM_VAR("Green", MSZSPOTLIGHT_GREEN);
+    RSDK_ENUM_VAR("Blue", MSZSPOTLIGHT_BLUE);
 }
 #endif
 

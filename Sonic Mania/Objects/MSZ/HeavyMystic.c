@@ -1638,12 +1638,12 @@ void HeavyMystic_EditorLoad(void)
     HeavyMystic->rouguesFrames = RSDK.LoadSpriteAnimation("MSZ/Rogues.bin", SCOPE_STAGE);
 
     RSDK_ACTIVE_VAR(HeavyMystic, type);
-    RSDK_ENUM_VAR(MYSTIC_MISCHIEF);
-    RSDK_ENUM_VAR(MYSTIC_BOSS);
-    RSDK_ENUM_VAR(MYSTIC_BOX);
-    RSDK_ENUM_VAR(MYSTIC_CORK);
-    RSDK_ENUM_VAR(MYSTIC_BOMB);
-    RSDK_ENUM_VAR(MYSTIC_DEBRIS);
+    RSDK_ENUM_VAR("Mischief", MYSTIC_MISCHIEF);
+    RSDK_ENUM_VAR("Boss", MYSTIC_BOSS);
+    RSDK_ENUM_VAR("Box", MYSTIC_BOX);
+    RSDK_ENUM_VAR("Cork", MYSTIC_CORK);
+    RSDK_ENUM_VAR("Bomb", MYSTIC_BOMB);
+    RSDK_ENUM_VAR("Debris", MYSTIC_DEBRIS);
 }
 #endif
 

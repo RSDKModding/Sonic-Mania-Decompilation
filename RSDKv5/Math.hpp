@@ -104,31 +104,37 @@ uint8 ArcTanLookup(int32 x, int32 y);
 
 extern uint32 randKey;
 
-inline void setRandKey(int32 key) { randKey = key; }
-inline int32 RSDK_random(int32 min, int32 max)
+inline void SetRandKey(int32 key) { randKey = key; }
+inline int32 GetRandomValue(int32 min, int32 max)
 {
     int32 val = 1103515245 * randKey + 12345;
-    randKey = 1103515245 * (1103515245 * val + 12345) + 12345;
+    int32 val2 = 1103515245 * val + 12345;
+    randKey      = 1103515245 * val2 + 12345;
+    int32 result = (randKey >> 16) & 0x7FF ^ (((val2 >> 16) & 0x7FF ^ (val >> 6) & 0x1FFC00) << 10);
+    int32 size   = abs(max - min);
 
     if (min > max)
-        return max + ((((((val >> 16) & 0x7FF) << 10) ^ ((1103515245 * val + 12345) >> 16) & 0x7FF) << 10) ^ (randKey >> 16) & 0x7FF) % (min - max);
+        return (result - result / size * size + max);
     else if (min < max)
-        return min + ((((((val >> 16) & 0x7FF) << 10) ^ ((1103515245 * val + 12345) >> 16) & 0x7FF) << 10) ^ (randKey >> 16) & 0x7FF) % (max - min);
+        return (result - result / size * size + min);
     else 
         return max;
 }
-inline int32 RSDK_random2(int32 min, int32 max, int32 *randKey)
+inline int32 GetSeededRandomValue(int32 min, int32 max, int32 *randKey)
 {
     if (!randKey)
         return 0;
 
-    int32 val = 1103515245 * *randKey + 12345;
-    *randKey = 1103515245 * (1103515245 * val + 12345) + 12345;
+    int32 val    = 1103515245 * *randKey + 12345;
+    int32 val2   = 1103515245 * val + 12345;
+    *randKey     = 1103515245 * val2 + 12345;
+    int32 result = (*randKey >> 16) & 0x7FF ^ (((val2 >> 16) & 0x7FF ^ (val >> 6) & 0x1FFC00) << 10);
+    int32 size   = abs(max - min);
 
     if (min > max)
-        return max + ((((((val >> 16) & 0x7FF) << 10) ^ ((1103515245 * val + 12345) >> 16) & 0x7FF) << 10) ^ (*randKey >> 16) & 0x7FF) % (min - max);
+        return (result - result / size * size + max);
     else if (min < max)
-        return min + ((((((val >> 16) & 0x7FF) << 10) ^ ((1103515245 * val + 12345) >> 16) & 0x7FF) << 10) ^ (*randKey >> 16) & 0x7FF) % (max - min);
+        return (result - result / size * size + min);
     else
         return max;
 }

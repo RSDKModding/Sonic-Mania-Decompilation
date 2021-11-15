@@ -231,9 +231,17 @@ void Shield_State_Insta(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void Shield_EditorDraw(void) {}
+void Shield_EditorDraw(void)
+{
+    RSDK_THIS(Shield);
+    RSDK.SetSpriteAnimation(Shield->spriteIndex, 0, &entity->animator, false, 0);
+    entity->inkEffect = INK_ADD;
+    entity->alpha     = 0x80;
 
-void Shield_EditorLoad(void) {}
+    RSDK.DrawSprite(&entity->animator, NULL, false);
+}
+
+void Shield_EditorLoad(void) { Shield->spriteIndex = RSDK.LoadSpriteAnimation("Global/Shields.bin", SCOPE_STAGE); }
 #endif
 
 void Shield_Serialize(void) {}

@@ -11,7 +11,7 @@ void Redz_Update(void)
 
     if (entity->state != Redz_State_Setup && entity->state != Redz_State_Flame && entity->state != Redz_State_FlameSetup) {
         Redz_HandlePlayerInteractions();
-        if (!RSDK.CheckOnScreen(RSDK_sceneInfo->entity, 0) && !RSDK.CheckPosOnScreen(&entity->startPos, &entity->updateRange)) {
+        if (!RSDK.CheckOnScreen(entity, NULL) && !RSDK.CheckPosOnScreen(&entity->startPos, &entity->updateRange)) {
             entity->direction  = entity->startDir;
             entity->position.x = entity->startPos.x;
             entity->position.y = entity->startPos.y;
@@ -46,32 +46,38 @@ void Redz_Create(void *data)
 
 void Redz_StageLoad(void)
 {
-    //if (RSDK.CheckStageFolder("HPZ"))
+    if (RSDK.CheckStageFolder("HPZ"))
         Redz->aniFrames = RSDK.LoadSpriteAnimation("HPZ/Redz.bin", SCOPE_STAGE);
+
     Redz->hitboxBadnik.left   = -16;
     Redz->hitboxBadnik.top    = -16;
     Redz->hitboxBadnik.right  = 16;
     Redz->hitboxBadnik.bottom = 16;
+
     Redz->hitbox2.left        = -64;
     Redz->hitbox2.top         = -96;
     Redz->hitbox2.right       = 0;
     Redz->hitbox2.bottom      = -8;
+
     Redz->hitboxFlame.left    = -7;
     Redz->hitboxFlame.top     = -7;
     Redz->hitboxFlame.right   = 7;
     Redz->hitboxFlame.bottom  = -7;
+
     Redz->hitboxRange.left    = 0;
     Redz->hitboxRange.top     = 0;
     Redz->hitboxRange.right   = 0;
     Redz->hitboxRange.bottom  = 0;
+
     Redz->sfxFlame            = RSDK.GetSFX("Stage/Flame.wav");
     DEBUGMODE_ADD_OBJ(Redz);
 }
 
 void Redz_DebugSpawn(void)
 {
-    RSDK_THIS(Redz);
-    EntityRedz *redz = CREATE_ENTITY(Redz, NULL, RSDK_sceneInfo->entity->position.x, RSDK_sceneInfo->entity->position.y);
+    RSDK_THIS(DebugMode);
+
+    EntityRedz *redz = CREATE_ENTITY(Redz, NULL, entity->position.x, entity->position.y);
     redz->direction  = entity->direction;
     redz->startDir   = entity->direction;
 }
@@ -222,9 +228,22 @@ void Redz_State_Flame(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void Redz_EditorDraw(void) {}
+void Redz_EditorDraw(void)
+{
+    RSDK_THIS(Redz);
+    RSDK.SetSpriteAnimation(Redz->aniFrames, 0, &entity->animator, true, 0);
 
-void Redz_EditorLoad(void) {}
+    Redz_Draw();
+}
+
+void Redz_EditorLoad(void)
+{
+    Redz->aniFrames = RSDK.LoadSpriteAnimation("HPZ/Redz.bin", SCOPE_STAGE);
+
+    RSDK_ACTIVE_VAR(Redz, direction);
+    RSDK_ENUM_VAR("No Flip", FLIP_NONE);
+    RSDK_ENUM_VAR("Flip X", FLIP_X);
+}
 #endif
 
 void Redz_Serialize(void) { RSDK_EDITABLE_VAR(Redz, VAR_UINT8, direction); }

@@ -4,6 +4,27 @@
 #include "SonicMania.h"
 
 #if RETRO_USE_PLUS
+
+#define Replay_Signature (0xF6057BED)
+
+typedef enum {
+    REPLAY_HDR_SIG,
+    REPLAY_HDR_VER,
+    REPLAY_HDR_PACKED2,
+    REPLAY_HDR_PACKED,
+    REPLAY_HDR_FRAMECOUNT2,
+    REPLAY_HDR_FRAMECOUNT,
+    REPLAY_HDR_ZONEID,
+    REPLAY_HDR_ACTID,
+    REPLAY_HDR_CHARID,
+    REPLAY_HDR_ISPLUSLAYOUT,
+    REPLAY_HDR_OSC,
+    REPLAY_HDR_COMPSIZE,
+    REPLAY_HDR_12,
+    REPLAY_HDR_13,
+    REPLAY_HDR_SIZE,
+}ReplayHeaderInfo;
+
 // Object Class
 typedef struct {
     RSDK_OBJECT

@@ -13,9 +13,6 @@ void SaveGame_StageLoad(void)
     SaveGame_LoadSaveData();
 #endif
 }
-void SaveGame_EditorDraw(void) {}
-void SaveGame_EditorLoad(void) {}
-void SaveGame_Serialize(void) {}
 
 #if RETRO_USE_PLUS
 int32 *SaveGame_GetDataPtr(int32 slot, bool32 encore)
@@ -392,3 +389,9 @@ void SaveGame_SaveFile_CB(int32 status)
         SaveGame->saveEntityPtr = NULL;
     }
 }
+
+#if RETRO_INCLUDE_EDITOR
+void SaveGame_EditorDraw(void) {}
+void SaveGame_EditorLoad(void) {}
+#endif
+void SaveGame_Serialize(void) {}

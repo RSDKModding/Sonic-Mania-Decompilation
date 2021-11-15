@@ -240,9 +240,25 @@ void Bomb_State_Shrapnel(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void Bomb_EditorDraw(void) {}
+void Bomb_EditorDraw(void)
+{
+    RSDK_THIS(Bomb);
+    Bomb_Draw();
+}
 
-void Bomb_EditorLoad(void) {}
+void Bomb_EditorLoad(void)
+{
+    Bomb->aniFrames = RSDK.LoadSpriteAnimation("MMZ/Bomb.bin", SCOPE_STAGE);
+
+    RSDK_ACTIVE_VAR(Bomb, planeFilter);
+    RSDK_ENUM_VAR("No Filter", PLANEFILTER_NONE);
+    RSDK_ENUM_VAR("Plane A", PLANEFILTER_A);
+    RSDK_ENUM_VAR("Plane B", PLANEFILTER_B);
+
+    RSDK_ACTIVE_VAR(Bomb, direction);
+    RSDK_ENUM_VAR("No Flip", FLIP_NONE);
+    RSDK_ENUM_VAR("Flip X", FLIP_X);
+}
 #endif
 
 void Bomb_Serialize(void)

@@ -5,12 +5,24 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    uint16 aniFrames;
+    Hitbox hitbox;
+    uint16 sfxFireball;
 } ObjectLRZFireball;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    StateMachine(state);
+    StateMachine(stateDraw);
+    Animator animator;
+    uint8 type;
+    uint16 interval;
+    uint16 intervalOffset;
+    int32 field_80;
+    int32 field_84;
+    int32 field_88;
 } EntityLRZFireball;
 
 // Object Struct
@@ -30,6 +42,18 @@ void LRZFireball_EditorLoad(void);
 void LRZFireball_Serialize(void);
 
 // Extra Entity Functions
+void LRZFireball_CheckPlayerCollisions(void);
+void LRZFireball_CheckOnScreen(void);
+void LRZFireball_CheckTileCollisions(void);
 
+void LRZFireball_State_Type0(void);
+void LRZFireball_State_Type1(void);
+void LRZFireball_State_Type2(void);
+
+void LRZFireball_StateChild_Type0(void);
+void LRZFireball_StateChild_Type1(void);
+void LRZFireball_StateChild_Type2(void);
+
+void LRZFireball_StateDraw_Visible(void);
 
 #endif //!OBJ_LRZFIREBALL_H

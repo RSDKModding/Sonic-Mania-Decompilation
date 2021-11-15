@@ -262,7 +262,7 @@ void Firework_HandleMoveDir(void)
 
     int rx = abs(entity->field_98.x - entity->position.x) >> 16;
     int ry = abs(entity->field_98.y - entity->position.y) >> 16;
-    entity->field_8C += MathHelpers_Unknown6(rx * rx + ry * ry);
+    entity->field_8C += MathHelpers_SquareRoot(rx * rx + ry * ry);
     entity->field_98.x = entity->position.x;
     entity->field_98.y = entity->position.y;
 }

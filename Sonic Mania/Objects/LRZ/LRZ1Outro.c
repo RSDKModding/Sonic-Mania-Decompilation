@@ -163,7 +163,6 @@ bool32 LRZ1Outro_CutsceneState1_Unknown4(EntityCutsceneSeq *host)
     RSDK_THIS(LRZ1Outro);
     EntityDashLift *lift = entity->lift;
 
-    entity = 0;
     foreach_active(Player, player)
     {
         player->jumpPress = false;

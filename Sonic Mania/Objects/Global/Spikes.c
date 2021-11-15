@@ -555,6 +555,7 @@ void Spikes_CheckHit(EntityPlayer *player, int32 playerVelX, int32 playerVelY)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void Spikes_EditorDraw(void)
 {
     RSDK_THIS(Spikes);
@@ -631,16 +632,17 @@ void Spikes_EditorLoad(void)
     RSDK.SetSpriteAnimation(Spikes->spriteIndex, 1, &Spikes->hData, true, 0);
 
     RSDK_ACTIVE_VAR(Spikes, type);
-    RSDK_ENUM_VAR(SPIKES_UP);
-    RSDK_ENUM_VAR(SPIKES_DOWN);
-    RSDK_ENUM_VAR(SPIKES_LEFT);
-    RSDK_ENUM_VAR(SPIKES_RIGHT);
+    RSDK_ENUM_VAR("Up", SPIKES_UP);
+    RSDK_ENUM_VAR("Down", SPIKES_DOWN);
+    RSDK_ENUM_VAR("Left", SPIKES_LEFT);
+    RSDK_ENUM_VAR("Right", SPIKES_RIGHT);
 
     RSDK_ACTIVE_VAR(Spikes, planeFilter);
-    RSDK_ENUM_VAR(PLANEFILTER_NONE);
-    RSDK_ENUM_VAR(PLANEFILTER_A);
-    RSDK_ENUM_VAR(PLANEFILTER_B);
+    RSDK_ENUM_VAR("No Filter", PLANEFILTER_NONE);
+    RSDK_ENUM_VAR("Plane A", PLANEFILTER_A);
+    RSDK_ENUM_VAR("Plane B", PLANEFILTER_B);
 }
+#endif
 
 void Spikes_Serialize(void)
 {

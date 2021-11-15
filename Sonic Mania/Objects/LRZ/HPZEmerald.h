@@ -3,6 +3,12 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    HPZEMERALD_MASTER,
+    HPZEMERALD_EMERALD_LOW,
+    HPZEMERALD_EMERALD_HIGH,
+}HPZEmeraldTypes;
+
 // Object Class
 typedef struct {
     RSDK_OBJECT
@@ -14,7 +20,7 @@ typedef struct {
     RSDK_ENTITY
     int32 field_58;
     int32 type;
-    int32 field_60;
+    bool32 solid;
     Vector2 startPos;
     Hitbox *hitbox;
     Animator animator2;

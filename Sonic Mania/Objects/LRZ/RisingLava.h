@@ -6,7 +6,7 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    Animator;
+    Animator animator;
     uint16 aniFrames;
     uint16 sfxRumble;
 } ObjectRisingLava;

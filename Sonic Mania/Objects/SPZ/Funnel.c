@@ -266,7 +266,7 @@ void Funnel_Create(void *data)
         entity->active        = ACTIVE_BOUNDS;
         entity->updateRange.x = 0x1000000;
         entity->updateRange.y = 0x1000000;
-        entity->visible       = 1;
+        entity->visible       = true;
         entity->drawOrder     = Zone->drawOrderHigh + 1;
         entity->state         = Funnel_Unknown1;
     }
@@ -287,9 +287,17 @@ void Funnel_StageLoad(void)
 void Funnel_Unknown1(void) {}
 
 #if RETRO_INCLUDE_EDITOR
-void Funnel_EditorDraw(void) {}
+void Funnel_EditorDraw(void)
+{
+    RSDK_THIS(Funnel);
+    entity->animator.frameID = 1;
+    RSDK.DrawSprite(&entity->animator, NULL, false);
 
-void Funnel_EditorLoad(void) {}
+    entity->animator.frameID = 0;
+    RSDK.DrawSprite(&entity->animator, NULL, false);
+}
+
+void Funnel_EditorLoad(void) { Funnel->aniFrames = RSDK.LoadSpriteAnimation("SPZ2/Funnel.bin", SCOPE_STAGE); }
 #endif
 
 void Funnel_Serialize(void) {}
