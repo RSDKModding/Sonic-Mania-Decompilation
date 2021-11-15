@@ -462,6 +462,10 @@ extern RSDKFunctionTable RSDK;
 #define isMainGameMode() (globals->gameMode == MODE_NOSAVE || globals->gameMode == MODE_MANIA)
 #endif
 
+#if RETRO_INCLUDE_EDITOR
+#define showGizmos() RSDK_sceneInfo->listPos == RSDK_sceneInfo->entitySlot || RSDK_sceneInfo->effectGizmo
+#endif
+
 DLLExport void LinkGameLogicDLL(GameInfo *gameInfo);
 #if RETRO_USE_MOD_LOADER
 DLLExport bool32 LinkModLogic(GameInfo *info, const char *id);

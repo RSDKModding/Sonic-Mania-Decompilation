@@ -528,14 +528,17 @@ void WalkerLegs_EditorDraw(void)
     entity->inkEffect = INK_NONE;
     WalkerLegs_DrawSprites();
 
-    int dist = (0x40 * entity->steps) << 16;
+    //Draw Distance
+    if (showGizmos()) {
+        int dist = (0x40 * entity->steps) << 16;
 
-    entity->inkEffect = INK_BLEND;
-    entity->field_68[1].x += entity->direction ? -dist : dist;
-    entity->field_68[2].x += entity->direction ? -dist : dist;
-    WalkerLegs_DrawSprites();
+        entity->inkEffect = INK_BLEND;
+        entity->field_68[1].x += entity->direction ? -dist : dist;
+        entity->field_68[2].x += entity->direction ? -dist : dist;
+        WalkerLegs_DrawSprites();
 
-    RSDK.DrawLine(entity->position.x, entity->position.y, entity->field_68[1].x, entity->field_68[1].y, 0x00FF00, 0xFF, INK_NONE, false);
+        RSDK.DrawLine(entity->position.x, entity->position.y, entity->field_68[1].x, entity->field_68[1].y, 0x00FF00, 0xFF, INK_NONE, false);
+    }
 }
 
 void WalkerLegs_EditorLoad(void)
