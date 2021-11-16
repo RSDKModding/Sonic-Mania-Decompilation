@@ -18,13 +18,13 @@ bool32 PlayerHelpers_CheckPlayerPos(int32 x1, int32 y1, int32 x2, int32 y2)
 {
     int32 px = 0;
     int32 py = 0;
-    if (!Player)
-        return px >= x1 && px <= x2 && py >= y1 && py <= y2;
-    foreach_all(Player, player)
-    {
-        if ((globals->playerID & player->characterID) > 0) {
-            px = player->position.x;
-            py = player->position.y;
+    if (Player) {
+        foreach_all(Player, player)
+        {
+            if ((globals->playerID & player->characterID) > 0) {
+                px = player->position.x;
+                py = player->position.y;
+            }
         }
     }
     return px >= x1 && px <= x2 && py >= y1 && py <= y2;

@@ -30,7 +30,7 @@ void DERobot_Create(void *data)
             if (data)
                 entity->aniID = voidToInt(data);
             switch (entity->aniID) {
-                case 0:
+                case DEROBOT_BODY:
                     entity->active    = ACTIVE_BOUNDS;
                     entity->parts[3]  = RSDK_GET_ENTITY(slotID - 7, );
                     entity->parts[4]  = RSDK_GET_ENTITY(slotID - 6, );
@@ -50,7 +50,7 @@ void DERobot_Create(void *data)
                     entity->stateDraw = DERobot_StateDraw_Unknown3;
                     RSDK.SetSpriteAnimation(DERobot->aniFrames, entity->aniID, &entity->animator1, true, entity->frameID);
                     break;
-                case 1:
+                case DEROBOT_HEAD:
                     entity->dword70   = RSDK.GetEntityByID(slotID + 1);
                     entity->stateDraw = DERobot_StateDraw_Unknown1;
                     entity->drawFX    = FX_ROTATE;
@@ -58,7 +58,7 @@ void DERobot_Create(void *data)
                     entity->offset.y  = -0x240000;
                     RSDK.SetSpriteAnimation(DERobot->aniFrames, entity->aniID, &entity->animator1, true, entity->frameID);
                     break;
-                case 2:
+                case DEROBOT_ARM:
                     if (entity->frameID == 2) {
                         RSDK.SetSpriteAnimation(DERobot->aniFrames, 5, &entity->animator2, true, 0);
                         RSDK.SetSpriteAnimation(DERobot->aniFrames, 4, &entity->animator3, true, 0);
@@ -77,7 +77,7 @@ void DERobot_Create(void *data)
                     }
                     RSDK.SetSpriteAnimation(DERobot->aniFrames, entity->aniID, &entity->animator1, true, entity->frameID);
                     break;
-                case 3:
+                case DEROBOT_LEG:
                     if (entity->frameID) {
                         entity->stateDraw = DERobot_StateDraw_Unknown3;
                     }
@@ -89,7 +89,7 @@ void DERobot_Create(void *data)
                         entity->drawFX = FX_ROTATE;
                     RSDK.SetSpriteAnimation(DERobot->aniFrames, entity->aniID, &entity->animator1, true, entity->frameID);
                     break;
-                case 6:
+                case DEROBOT_TARGET_EDGE:
                     entity->active     = ACTIVE_NORMAL;
                     entity->visible    = true;
                     entity->drawFX     = FX_FLIP;
@@ -100,14 +100,14 @@ void DERobot_Create(void *data)
                     entity->stateDraw = DERobot_StateDraw_Unknown5;
                     RSDK.SetSpriteAnimation(DERobot->aniFrames, entity->aniID, &entity->animator1, true, entity->frameID);
                     break;
-                case 9:
+                case DEROBOT_BOMB:
                     entity->active    = ACTIVE_NORMAL;
                     entity->visible   = true;
                     entity->state     = DERobot_Unknown28;
                     entity->stateDraw = DERobot_StateDraw_Unknown3;
                     RSDK.SetSpriteAnimation(DERobot->aniFrames, entity->aniID, &entity->animator1, true, entity->frameID);
                     break;
-                case 10:
+                case DEROBOT_BODY_CUTSCENE:
                     entity->active    = ACTIVE_BOUNDS;
                     entity->visible   = true;
                     entity->stateDraw = DERobot_StateDraw_Unknown3;
@@ -1131,8 +1131,8 @@ void DERobot_Unknown38(void)
         foreach_active(DERobot, robot)
         {
             switch (robot->aniID) {
-                case 0: break;
-                case 1:
+                case DEROBOT_BODY: break;
+                case DEROBOT_HEAD:
                     robot->velocity.x = -0x10000;
                     robot->velocity.y = -0x40000;
                     robot->field_B0   = -8;
@@ -1140,12 +1140,12 @@ void DERobot_Unknown38(void)
                     robot->state      = DERobot_Unknown41;
                     robot->stateDraw  = DERobot_StateDraw_Unknown3;
                     break;
-                case 2:
-                case 3:
-                case 4:
-                case 5:
-                case 6:
-                case 7:
+                case DEROBOT_ARM:
+                case DEROBOT_LEG:
+                case DEROBOT_SPIKES:
+                case DEROBOT_ARM_THREAD:
+                case DEROBOT_TARGET_EDGE:
+                case DEROBOT_TARGET_CENTER:
                     robot->velocity.x = RSDK.Rand(-0x40000, 0x40000);
                     robot->velocity.y = RSDK.Rand(-0x40000, -0x10000);
                     robot->field_B0   = RSDK.Rand(-16, 16);
@@ -1290,19 +1290,25 @@ void DERobot_EditorDraw(void)
 {
     RSDK_THIS(DERobot);
 
+    entity->drawFX  = FX_NONE;
+    entity->dword70 = (Entity *)entity;
     switch (entity->aniID) {
-        case 0:
+        case DEROBOT_BODY:
             entity->stateDraw = DERobot_StateDraw_Unknown3;
             RSDK.SetSpriteAnimation(DERobot->aniFrames, entity->aniID, &entity->animator1, true, entity->frameID);
+
+            if (showGizmos()) {
+                DrawHelpers_DrawArenaBounds(0x00C0F0, 1 | 0 | 4 | 8, -212 + 128, -SCREEN_YSIZE, 212 + 128, 0);
+            }
             break;
-        case 1:
+        case DEROBOT_HEAD:
             entity->stateDraw = DERobot_StateDraw_Unknown1;
             entity->drawFX    = FX_ROTATE;
             entity->offset.x  = -0x160000;
             entity->offset.y  = -0x240000;
             RSDK.SetSpriteAnimation(DERobot->aniFrames, entity->aniID, &entity->animator1, true, entity->frameID);
             break;
-        case 2:
+        case DEROBOT_ARM:
             if (entity->frameID == 2) {
                 RSDK.SetSpriteAnimation(DERobot->aniFrames, 5, &entity->animator2, true, 0);
                 RSDK.SetSpriteAnimation(DERobot->aniFrames, 4, &entity->animator3, true, 0);
@@ -1320,7 +1326,7 @@ void DERobot_EditorDraw(void)
             }
             RSDK.SetSpriteAnimation(DERobot->aniFrames, entity->aniID, &entity->animator1, true, entity->frameID);
             break;
-        case 3:
+        case DEROBOT_LEG:
             if (entity->frameID) {
                 entity->stateDraw = DERobot_StateDraw_Unknown3;
             }
@@ -1332,22 +1338,10 @@ void DERobot_EditorDraw(void)
                 entity->drawFX = FX_ROTATE;
             RSDK.SetSpriteAnimation(DERobot->aniFrames, entity->aniID, &entity->animator1, true, entity->frameID);
             break;
-        case 6:
-            entity->active     = ACTIVE_NORMAL;
-            entity->visible    = true;
+        case DEROBOT_TARGET_EDGE:
             entity->drawFX     = FX_FLIP;
-            entity->drawOrder  = Zone->drawOrderHigh;
             RSDK.SetSpriteAnimation(DERobot->aniFrames, 7, &entity->animator2, true, 0);
-            entity->state     = DERobot_Unknown33;
             entity->stateDraw = DERobot_StateDraw_Unknown5;
-            RSDK.SetSpriteAnimation(DERobot->aniFrames, entity->aniID, &entity->animator1, true, entity->frameID);
-            break;
-        case 9:
-            entity->stateDraw = DERobot_StateDraw_Unknown3;
-            RSDK.SetSpriteAnimation(DERobot->aniFrames, entity->aniID, &entity->animator1, true, entity->frameID);
-            break;
-        case 10:
-            entity->stateDraw = DERobot_StateDraw_Unknown3;
             RSDK.SetSpriteAnimation(DERobot->aniFrames, entity->aniID, &entity->animator1, true, entity->frameID);
             break;
         default:
@@ -1359,7 +1353,23 @@ void DERobot_EditorDraw(void)
     StateMachine_Run(entity->stateDraw);
 }
 
-void DERobot_EditorLoad(void) {}
+void DERobot_EditorLoad(void)
+{
+    DERobot->aniFrames = RSDK.LoadSpriteAnimation("GHZ/DERobot.bin", SCOPE_STAGE);
+
+    RSDK_ACTIVE_VAR(DERobot, aniID);
+    RSDK_ENUM_VAR("Body", DEROBOT_BODY);
+    RSDK_ENUM_VAR("Head", DEROBOT_HEAD);
+    RSDK_ENUM_VAR("Arm", DEROBOT_ARM);
+    RSDK_ENUM_VAR("Leg", DEROBOT_LEG);
+    RSDK_ENUM_VAR("Spikes", DEROBOT_SPIKES);
+    RSDK_ENUM_VAR("Arm Thread", DEROBOT_ARM_THREAD);
+    RSDK_ENUM_VAR("Target Edge", DEROBOT_TARGET_EDGE);
+    RSDK_ENUM_VAR("Target Center", DEROBOT_TARGET_CENTER);
+    RSDK_ENUM_VAR("Target Lock", DEROBOT_TARGET_LOCK);
+    RSDK_ENUM_VAR("Bomb", DEROBOT_BOMB);
+    RSDK_ENUM_VAR("Body (Cutscene)", DEROBOT_BODY_CUTSCENE);
+}
 #endif
 
 void DERobot_Serialize(void)

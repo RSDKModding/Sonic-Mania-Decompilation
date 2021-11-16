@@ -110,16 +110,14 @@ void Clapperboard_StateCollide_NoFlip(void)
 {
     RSDK_THIS(Clapperboard);
 
-    int power    = entity->dword74 >> 8;
-    int negAngle = -(-entity->angle >> 2);
+    uint8 negAngle = -(-entity->angle >> 2);
 
-    int val1 = ((entity->dword78 >> 8) * RSDK.Cos256(negAngle)) - (power * RSDK.Sin256(negAngle));
-    int val2 = (entity->dword80 >> 8) * RSDK.Cos256(negAngle);
-    int val3 = (entity->dword7C >> 8) * RSDK.Sin256(negAngle);
+    int val1 = (entity->dword78 >> 8) * RSDK.Cos256(negAngle) - (entity->dword74 >> 8) * RSDK.Sin256(negAngle);
+    int val2 = (entity->dword80 >> 8) * RSDK.Cos256(negAngle) - (entity->dword7C >> 8) * RSDK.Sin256(negAngle);
 
-    entity->hitbox.left  = ((entity->dword78 >> 8) * RSDK.Sin256(negAngle) + power * RSDK.Cos256(negAngle)) >> 16;
+    entity->hitbox.left  = ((entity->dword78 >> 8) * RSDK.Sin256(negAngle) + (entity->dword74 >> 8) * RSDK.Cos256(negAngle)) >> 16;
     entity->hitbox.right = ((entity->dword80 >> 8) * RSDK.Sin256(negAngle) + (entity->dword7C >> 8) * RSDK.Cos256(negAngle)) >> 16;
-    int sizeX            = entity->hitbox.left - entity->hitbox.right;
+    int sizeX            = entity->hitbox.right - entity->hitbox.left;
     entity->direction ^= FLIP_X;
     bool32 clapFlag = false;
 
@@ -135,7 +133,7 @@ void Clapperboard_StateCollide_NoFlip(void)
         }
 
         int angVal            = entity->hitbox.right - dist;
-        int top               = ((val2 - val3) >> 16) + (((val2 - val3) >> 16) - (val1 >> 16)) * angVal / sizeX - (entity->field_64 & 0xFFFF);
+        int top               = (val2 >> 16) + ((val2 >> 16) - (val1 >> 16)) * angVal / sizeX - (entity->field_64 & 0xFFFF);
         entity->hitbox.top    = top;
         entity->hitbox.bottom = top + 24;
         if (Player_CheckCollisionPlatform(player, entity, &entity->hitbox)) {
@@ -172,7 +170,7 @@ void Clapperboard_StateCollide_NoFlip(void)
     }
 
     entity->direction ^= FLIP_X;
-    if (clapFlag == true)
+    if (clapFlag)
         ++entity->takeID;
 }
 
@@ -239,6 +237,7 @@ void Clapperboard_StateCollide_FlipX(void)
             }
         }
     }
+
     if (clapFlag)
         ++entity->takeID;
 }
@@ -319,6 +318,10 @@ void Clapperboard_EditorLoad(void)
         Clapperboard->aniFrames = RSDK.LoadSpriteAnimation("SPZ1/Clapperboard.bin", SCOPE_STAGE);
     else
         Clapperboard->aniFrames = RSDK.LoadSpriteAnimation("SPZ2/Clapperboard.bin", SCOPE_STAGE);
+
+    RSDK_ACTIVE_VAR(Clapperboard, direction);
+    RSDK_ENUM_VAR("No Flip", FLIP_NONE);
+    RSDK_ENUM_VAR("Flip X", FLIP_X);
 }
 #endif
 

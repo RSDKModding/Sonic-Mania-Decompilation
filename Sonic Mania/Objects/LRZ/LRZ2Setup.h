@@ -4,7 +4,7 @@
 #include "SonicMania.h"
 
 typedef enum {
-    GENERICTRIGGER_OUTRO
+    GENERICTRIGGER_LRZ2_OUTRO
 }GenericTriggerTypesLRZ2;
 
 // Object Class

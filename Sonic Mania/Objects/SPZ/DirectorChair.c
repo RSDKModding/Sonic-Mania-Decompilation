@@ -112,8 +112,10 @@ void DirectorChair_StateCollide_Chair(void)
     {
         bool32 prevOnGround = player->onGround;
         if (Player_CheckCollisionPlatform(player, entity, &DirectorChair->hitbox1)) {
+#if RETRO_USE_PLUS
             if (entity->state == DirectorChair_Unknown2 && player->state == Player_State_MightyHammerDrop)
                 player->state = Player_State_Air;
+#endif
             entity->collapseDelay = 0;
             if (!prevOnGround) {
                 entity->stoodPlayers |= 1 << playerID;

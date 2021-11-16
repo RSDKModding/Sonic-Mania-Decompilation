@@ -27,18 +27,10 @@ void SPZ1Intro_Draw(void) {}
 void SPZ1Intro_Create(void *data)
 {
     RSDK_THIS(SPZ1Intro);
-    entity->active  = ACTIVE_NORMAL;
-    entity->visible = false;
-    if (!entity->size.x)
-        entity->size.x = 0x1A80000;
-    if (!entity->size.y)
-        entity->size.y = 0xF00000;
-    entity->updateRange.x = 0x800000 + entity->size.x;
-    entity->updateRange.y = 0x800000 + entity->size.y;
-    entity->hitbox.left   = -entity->size.x >> 17;
-    entity->hitbox.right  = entity->size.x >> 17;
-    entity->hitbox.top    = -entity->size.y >> 17;
-    entity->hitbox.bottom = entity->size.y >> 17;
+
+    INIT_ENTITY(entity);
+    CutsceneRules_SetupEntity(entity, &entity->size, &entity->hitbox);
+    entity->active = ACTIVE_NORMAL;
 }
 
 void SPZ1Intro_StageLoad(void)
@@ -74,7 +66,7 @@ bool32 SPZ1Intro_CutsceneState_Unknown1(EntityCutsceneSeq *host)
             player2->stateInput     = StateMachine_None;
             RSDK.SetSpriteAnimation(player2->spriteIndex, ANI_JUMP, &player2->playerAnimator, false, 0);
         }
-        EntityDebris *debris  = (EntityDebris *)RSDK.CreateEntity(Debris->objectID, 0, curEnt->position.x, curEnt->position.y + 0x390000);
+        EntityDebris *debris  = CREATE_ENTITY(Debris, NULL, curEnt->position.x, curEnt->position.y + 0x390000);
         debris->drawOrder     = Zone->playerDrawHigh;
         debris->state         = StateMachine_None;
         debris->drawFX        = FX_SCALE | FX_ROTATE;
@@ -125,12 +117,12 @@ bool32 SPZ1Intro_CutsceneState_Unknown2(EntityCutsceneSeq *host)
 
     if (!host->timer) {
         player1->velocity.x      = 0;
-        player1->velocity.y      = -524288;
+        player1->velocity.y      = -0x80000;
         player1->state           = Player_State_Air;
         player1->nextAirState    = 0;
         player1->nextGroundState = 0;
-        RSDK.PlaySfx(SPZ1Intro->sfxGasPop, 0, 255);
-        RSDK.PlaySfx(SPZ1Intro->sfxPon, 0, 255);
+        RSDK.PlaySfx(SPZ1Intro->sfxGasPop, false, 255);
+        RSDK.PlaySfx(SPZ1Intro->sfxPon, false, 255);
         RSDK.StopSFX(Player->sfx_Roll);
         Camera_ShakeScreen(0, 0, 2);
         EntityDebris *debris = SPZ1Intro->debris;
@@ -182,8 +174,15 @@ bool32 SPZ1Intro_CutsceneState_Unknown3(EntityCutsceneSeq *host)
     return false;
 }
 
-void SPZ1Intro_EditorDraw(void) {}
+#if RETRO_INCLUDE_EDITOR
+void SPZ1Intro_EditorDraw(void)
+{
+    RSDK_THIS(SPZ1Intro);
+    if (showGizmos())
+        CutsceneRules_DrawCutsceneBounds(entity, &entity->size);
+}
 
 void SPZ1Intro_EditorLoad(void) {}
+#endif
 
 void SPZ1Intro_Serialize(void) { RSDK_EDITABLE_VAR(SPZ1Intro, VAR_VECTOR2, size); }

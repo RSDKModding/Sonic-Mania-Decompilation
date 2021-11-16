@@ -60,9 +60,8 @@ void Launcher_Unknown1(void)
             }
             else {
                 player->position.x     = entity->drawPos.x;
-                player->direction  = entity->direction;
-                player->velocity.x = 0;
-                player->groundVel  = entity->velocity.x;
+                player->direction      = entity->direction;
+                player->velocity.x     = 0;
                 player->groundVel      = clampVal(entity->velocity.x, -0x60000, 0x60000);
                 player->pushing        = false;
                 player->tileCollisions = true;
@@ -85,7 +84,7 @@ void Launcher_Unknown3(void)
     entity->drawPos.x += entity->velocity.x;
 
     if (--entity->field_D0 >= 0) {
-        entity->velocity.x *= 2;
+        entity->velocity.x <<= 1;
     }
 
     if (--entity->field_CC < 0) {

@@ -1182,7 +1182,7 @@ void HeavyRider_EditorDraw(void)
 
     StateMachine_Run(entity->stateDraw);
 
-    if (entity->type == HEAVYRIDER_RIDER) {
+    if (entity->type == HEAVYRIDER_RIDER && showGizmos()) {
         DrawHelpers_DrawArenaBounds(0x00C0F0, 1 | 0 | 4 | 0, -424, -SCREEN_YSIZE, 424, SCREEN_YSIZE);
     }
 }

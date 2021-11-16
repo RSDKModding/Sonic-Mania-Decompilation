@@ -3476,7 +3476,7 @@ void Player_State_Ground(void)
         entity->nextAirState = Player_State_Air;
         if (entity->skidding <= 0) {
             if (entity->pushing > -3 && entity->pushing < 3) {
-                if (entity->groundVel || (entity->angle >= 32 && entity->angle <= 224 && !entity->invertGravity)) {
+                if (entity->groundVel || (entity->angle >= 0x20 && entity->angle <= 0xE0 && !entity->invertGravity)) {
                     entity->timer          = 0;
                     entity->outtaHereTimer = 0;
                     if (abs(entity->groundVel) >= entity->maxWalkSpeed) {

@@ -127,9 +127,9 @@ void LRZ2Setup_StageLoad(void)
     LRZ2Setup->dstPal = 1;
     LRZ2Setup->srcPal = 2;
     if (globals->gameMode == MODE_TIMEATTACK || globals->gameMode == MODE_COMPETITION)
-        GenericTrigger->callbacks[GENERICTRIGGER_OUTRO] = NULL;
+        GenericTrigger->callbacks[GENERICTRIGGER_LRZ2_OUTRO] = NULL;
     else
-        GenericTrigger->callbacks[GENERICTRIGGER_OUTRO] = LRZ2Setup_GenericTrigger_CB;
+        GenericTrigger->callbacks[GENERICTRIGGER_LRZ2_OUTRO] = LRZ2Setup_GenericTrigger_CB;
 }
 
 void LRZ2Setup_HandleStageReload(void)
@@ -290,7 +290,7 @@ void LRZ2Setup_EditorDraw(void) {}
 void LRZ2Setup_EditorLoad(void)
 {
     RSDK_ACTIVE_VAR(GenericTrigger, triggerID);
-    RSDK_ENUM_VAR("LRZ2 Outro", GENERICTRIGGER_OUTRO);
+    RSDK_ENUM_VAR("LRZ2 Outro", GENERICTRIGGER_LRZ2_OUTRO);
 }
 #endif
 

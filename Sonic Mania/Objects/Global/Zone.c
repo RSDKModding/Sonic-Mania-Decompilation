@@ -912,12 +912,12 @@ void Zone_Unknown19(void)
     int32 screenBoundsT1[4];
     int32 screenBoundsR1[4];
     int32 screenBoundsL1[4];
-    int32 layerIDs[8];
+    int32 layerIDs[LAYER_COUNT];
 
 #if RETRO_USE_PLUS
     for (int32 p = 0; p < Player->playerCount; ++p) {
         EntityPlayer *player = RSDK_GET_ENTITY(Zone->playerIDs[p], Player);
-        RSDK.CopyEntity(Zone->entityData[p], player, false);
+        RSDK.CopyEntity(&Zone->entityData[p], player, false);
 
         screenBoundsL1[p]     = Zone->screenBoundsL1[p];
         screenBoundsR1[p]     = Zone->screenBoundsR1[p];
@@ -1039,17 +1039,266 @@ void Zone_Unknown19(void)
             cam->position.x = playerPtr->position.x;
             cam->position.y = playerPtr->position.y;
         }
-        memset(&Zone->entityData[p + p], 0, ENTITY_SIZE);
+        memset(&Zone->entityData[0 + p], 0, ENTITY_SIZE);
         memset(&Zone->entityData[4 + p], 0, ENTITY_SIZE);
         memset(&Zone->entityData[8 + p], 0, ENTITY_SIZE);
         memset(&Zone->entityData[12 + p], 0, ENTITY_SIZE);
+    }
+#else
+
+    int playerIDs[] = { 0, 1, 1, 1 };
+    int playerIDs2[] = { 1, 0, 0 ,0 };
+
+    EntityPlayer *playerPtrs[] = { NULL, NULL, NULL, NULL };
+    EntityShield *shieldPtrs[] = { NULL, NULL, NULL, NULL };
+    EntityCamera *cameraPtrs[] = { NULL, NULL, NULL, NULL };
+    Entity *powerupPtrs[] = { NULL, NULL, NULL, NULL };
+    Vector2 screenPos[4];
+
+    for (int32 p = 0; p < Player->playerCount; ++p) {
+        EntityPlayer *player = RSDK_GET_ENTITY(playerIDs[p], Player);
+
+        playerPtrs[p] = (EntityPlayer*)RSDK.CreateEntity(TYPE_BLANK, NULL, 0, 0);
+        RSDK.CopyEntity(playerPtrs[p], player, false);
+
+        screenBoundsL1[p] = Zone->screenBoundsL1[p];
+        screenBoundsR1[p] = Zone->screenBoundsR1[p];
+        screenBoundsT1[p] = Zone->screenBoundsT1[p];
+        screenBoundsB1[p] = Zone->screenBoundsB1[p];
+        screenBoundsL2[p] = Zone->screenBoundsL2[p];
+        screenBoundsR2[p] = Zone->screenBoundsR2[p];
+        screenBoundsT2[p] = Zone->screenBoundsT2[p];
+        screenBoundsB2[p] = Zone->screenBoundsB2[p];
+        deathBounds[p] = Zone->deathBoundary[p];
+        playerBoundActiveL[p] = Zone->playerBoundActiveL[p];
+        playerBoundActiveR[p] = Zone->playerBoundActiveR[p];
+        playerBoundActiveT[p] = Zone->playerBoundActiveT[p];
+        playerBoundActiveB[p] = Zone->playerBoundActiveB[p];
+
+        uint8 *layerPlanes = (uint8 *)&layerIDs[2 * p];
+        for (int32 l = 0; l < LAYER_COUNT; ++l) {
+            TileLayer *layer = RSDK.GetSceneLayer(l);
+            if (layer)
+                layerPlanes[l] = layer->drawLayer[playerIDs[p]];
+            else
+                layerPlanes[l] = DRAWLAYER_COUNT;
+        }
+
+        EntityCamera *camera = player->camera;
+        cameraPtrs[p] = (EntityCamera *)RSDK.CreateEntity(TYPE_BLANK, NULL, 0, 0);
+        RSDK.CopyEntity(cameraPtrs[p], camera, false);
+        screenPos[p].x = RSDK_screens[camera->screenID].position.x;
+        screenPos[p].y = RSDK_screens[camera->screenID].position.y;
+
+        shieldPtrs[p] = (EntityShield *)RSDK.CreateEntity(TYPE_BLANK, NULL, 0, 0);
+        powerupPtrs[p] = RSDK.CreateEntity(TYPE_BLANK, NULL, 0, 0);
+        RSDK.CopyEntity(shieldPtrs[p], RSDK_GET_ENTITY(Player->playerCount + playerIDs[p], ), false);
+        RSDK.CopyEntity(powerupPtrs[p], RSDK_GET_ENTITY((2 * Player->playerCount) + playerIDs[p], ), false);
+    }
+
+    for (int32 p = 0; p < Player->playerCount; ++p) {
+        EntityPlayer *playerPtr = (EntityPlayer *)RSDK_GET_ENTITY(playerIDs2[p], Player);
+        EntityPlayer *player = (EntityPlayer *)playerPtrs[p];
+        void *state = player->state;
+
+        if (state == Player_State_Ground || state == Player_State_Air || state == Player_State_Roll || state == Player_State_ForceRoll_Ground
+            || state == Player_State_ForceRoll_Air) {
+            playerPtr->state = state;
+            playerPtr->nextAirState = player->nextAirState;
+            playerPtr->nextGroundState = player->nextGroundState;
+            playerPtr->onGround = player->onGround;
+            playerPtr->groundedStore = player->groundedStore;
+            for (int i = 0; i < 8; ++i) {
+                playerPtr->abilityValues[i] = player->abilityValues[i];
+                playerPtr->abilityPtrs[i] = player->abilityPtrs[i];
+            }
+            playerPtr->angle = player->angle;
+            playerPtr->rotation = player->rotation;
+            playerPtr->direction = player->direction;
+            playerPtr->tileCollisions = player->tileCollisions;
+            playerPtr->interaction = player->interaction;
+            RSDK.SetSpriteAnimation(playerPtr->spriteIndex, player->playerAnimator.animationID, &playerPtr->playerAnimator, false, 0);
+        }
+        else {
+            playerPtr->state = Player_State_Air;
+            RSDK.SetSpriteAnimation(playerPtr->spriteIndex, ANI_JUMP, &playerPtr->playerAnimator, false, 0);
+            playerPtr->tileCollisions = true;
+            playerPtr->interaction = true;
+        }
+
+        playerPtr->position.x = player->position.x;
+        playerPtr->position.y = player->position.y;
+        playerPtr->velocity.x = player->velocity.x;
+        playerPtr->velocity.y = player->velocity.y;
+        playerPtr->groundVel = player->groundVel;
+        playerPtr->shield = player->shield;
+        playerPtr->collisionLayers = player->collisionLayers;
+        playerPtr->collisionPlane = player->collisionPlane;
+        playerPtr->collisionMode = player->collisionMode;
+        playerPtr->invincibleTimer = player->invincibleTimer;
+        playerPtr->speedShoesTimer = player->speedShoesTimer;
+        playerPtr->blinkTimer = player->blinkTimer;
+        playerPtr->visible = player->visible;
+        Player_ChangePhysicsState(playerPtr);
+        Zone->screenBoundsL1[playerIDs2[p]] = screenBoundsL1[p];
+        Zone->screenBoundsR1[playerIDs2[p]] = screenBoundsR1[p];
+        Zone->screenBoundsT1[playerIDs2[p]] = screenBoundsT1[p];
+        Zone->screenBoundsB1[playerIDs2[p]] = screenBoundsB1[p];
+        Zone->screenBoundsL2[playerIDs2[p]] = screenBoundsL2[p];
+        Zone->screenBoundsR2[playerIDs2[p]] = screenBoundsR2[p];
+        Zone->screenBoundsT2[playerIDs2[p]] = screenBoundsT2[p];
+        Zone->screenBoundsB2[playerIDs2[p]] = screenBoundsB2[p];
+        Zone->deathBoundary[playerIDs2[p]] = deathBounds[p];
+        Zone->playerBoundActiveL[playerIDs2[p]] = playerBoundActiveL[p];
+        Zone->playerBoundActiveR[playerIDs2[p]] = playerBoundActiveR[p];
+        Zone->playerBoundActiveT[playerIDs2[p]] = playerBoundActiveT[p];
+        Zone->playerBoundActiveB[playerIDs2[p]] = playerBoundActiveB[p];
+
+        uint8 *layerPlanes = (uint8 *)&layerIDs[2 * p];
+        for (int32 l = 0; l < LAYER_COUNT; ++l) {
+            TileLayer *layer = RSDK.GetSceneLayer(l);
+            layer->drawLayer[playerIDs[p]] = layerPlanes[l];
+        }
+
+        EntityCamera *camera = playerPtr->camera;
+        void *camTarget = camera->targetPtr;
+        void *camState = camera->state;
+        int32 camScreen = camera->screenID;
+        RSDK.CopyEntity(camera, cameraPtrs[p], false);
+        camera->targetPtr = camTarget;
+        camera->screenID = camScreen;
+        camera->state = camState;
+        RSDK_screens[camScreen].position.x = screenPos[p].x;
+        RSDK_screens[camScreen].position.y = screenPos[p].y;
+
+        EntityShield *shield = RSDK_GET_ENTITY(Player->playerCount + playerIDs[p], Shield);
+        RSDK.CopyEntity(shield, shieldPtrs[p], false);
+        shield->player = player;
+
+        EntityImageTrail *trail = RSDK_GET_ENTITY(Player->playerCount + playerIDs[p], ImageTrail);
+        RSDK.CopyEntity(trail, powerupPtrs[p], false);
+        trail->player = (Entity *)player;
+
+        EntityCamera *cam = player->camera;
+        if (cam) {
+            cam->position.x = playerPtr->position.x;
+            cam->position.y = playerPtr->position.y;
+        }
+
+        destroyEntity(playerPtrs[p]);
+        destroyEntity(shieldPtrs[p]);
+        destroyEntity(cameraPtrs[p]);
+        destroyEntity(powerupPtrs[p]);
     }
 #endif
 }
 
 void Zone_Unknown20(void)
 {
-    // TODO
+    RSDK_THIS(Zone);
+
+    if (entity->timer > 512) {
+        entity->timer = entity->timer - entity->fadeSpeed;
+#if RETRO_USE_PLUS
+        Zone->flag    = true;
+#endif
+    }
+    else {
+#if RETRO_USE_PLUS
+        Zone->playerCount = 0;
+        Zone->playerID    = 0;
+
+        for (Zone->playerID = 0; Zone->playerID < Player->playerCount; ++Zone->playerID) {
+            Zone->playerFlags[Zone->playerID] = 1;
+            EntityPlayer *player              = RSDK_GET_ENTITY(Zone->playerID, Player);
+
+            if (!Player_CheckValidState(player) || !player->interaction || !player->tileCollisions) {
+                Zone->playerFlags[Zone->playerID] = 0;
+            }
+
+            EntityCompetition *competition = (EntityCompetition *)Competition->activeEntity;
+
+            if (competition) {
+                if (competition->playerFlags[Zone->playerID])
+                    Zone->playerFlags[Zone->playerID] = 0;
+            }
+
+            for (int i = 0; i < Zone->callbackCount; ++i) {
+                StateMachine_Run(Zone->callbacks[i]);
+            }
+
+            if (Zone->playerFlags[Zone->playerID]) {
+                Zone->playerIDs[Zone->playerCount] = Zone->playerID;
+                ++Zone->playerCount;
+            }
+        }
+
+        if (Zone->playerCount <= 1) {
+            RSDK.PlaySfx(Zone->sfx_fail, false, 255);
+        }
+        else {
+            EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
+
+            uint8 flags = 0;
+            if (session->unknown29) {
+                if (session->unknown29 == 1) {
+                    for (Zone->playerID = 0; Zone->playerID < Zone->playerCount; ++Zone->playerID) {
+                        Zone->playerIDs2[Zone->playerID] = Zone->playerIDs[Zone->playerID];
+                    }
+
+                    Zone->playerID = 0;
+                    for (Zone->playerID = 0; Zone->playerID < Zone->playerCount; ++Zone->playerID) {
+                        do {
+                            Zone->playerIDs2[Zone->playerID] = Zone->playerIDs[RSDK.Rand(0, Zone->playerCount)];
+                        } while ((1 << Zone->playerIDs2[Zone->playerID]) & flags);
+
+                        if (Zone->playerIDs2[Zone->playerID] != Zone->playerIDs[Zone->playerID]) {
+                            flags |= 1 << Zone->playerIDs2[Zone->playerID++];
+                            if (Zone->playerID >= Zone->playerCount)
+                                break;
+                        }
+                        else if (Zone->playerID >= Zone->playerCount - 1) {
+                            int id                           = RSDK.Rand(0, Zone->playerID - 1);
+                            int store                        = Zone->playerIDs2[id];
+                            Zone->playerIDs2[id]             = Zone->playerIDs2[Zone->playerID];
+                            Zone->playerIDs2[Zone->playerID] = store;
+                            flags |= 1 << Zone->playerIDs2[id];
+                            flags |= 1 << Zone->playerIDs2[Zone->playerID++];
+                        }
+                    }
+                }
+            }
+            else {
+                for (Zone->playerID = 1; Zone->playerID < Zone->playerCount; ++Zone->playerID) {
+                    Zone->playerIDs2[Zone->playerID] = Zone->playerIDs[Zone->playerID];
+                }
+                Zone->playerIDs2[0] = Zone->playerIDs[Zone->playerCount];
+            }
+#else
+        Zone->playerFlags = 1;
+        for (int p = 0; p < Player->playerCount; ++p) {
+            EntityPlayer *player = RSDK_GET_ENTITY(p, Player);
+            if (player->state == Player_State_Drown || player->state == Player_State_None || player->state == Player_State_Die
+                || !player->interaction || !player->tileCollisions)
+                Zone->playerFlags = false;
+        }
+
+        if (Competition->activeEntity)
+            Zone->playerFlags = 0;
+
+        for (int i = 0; i < Zone->callbackCount; ++i) {
+            StateMachine_Run(Zone->callbacks[i]);
+        }
+
+        if (Zone->playerFlags) {
+#endif
+            Zone_Unknown19();
+        }
+        entity->state = Zone_Unknown21;
+#if RETRO_USE_PLUS
+        Zone->flag    = true;
+#endif
+    }
 }
 
 void Zone_Unknown21(void)

@@ -46,8 +46,8 @@ void CPZSetup_EditorLoad(void);
 void CPZSetup_Serialize(void);
 
 // Extra Entity Functions
-void CPZSetup_BGSwitchCB1(void);
-void CPZSetup_BGSwitchCB2(void);
+void CPZSetup_BGSwitchCB_Act2BG(void);
+void CPZSetup_BGSwitchCB_Act1BG(void);
 void CPZSetup_StageFinishCBAct1(void);
 void CPZSetup_StageFinishCBAct2(void);
 

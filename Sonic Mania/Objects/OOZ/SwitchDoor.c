@@ -9,13 +9,13 @@ void SwitchDoor_Update(void)
     {
         if (Player_CheckCollisionTouch(player, entity, &SwitchDoor->hitbox)) {
             if (entity->go) {
-                FBZSetup_BGSwitchCB_B();
+                FBZSetup_BGSwitchCB_ShowInside2();
                 if (entity->reversible)
                     entity->go = false;
                 entity->field_60 = true;
             }
             else {
-                FBZSetup_BGSwitchCB_A();
+                FBZSetup_BGSwitchCB_ShowInside1();
                 if (entity->reversible) {
                     entity->go = true;
                 }

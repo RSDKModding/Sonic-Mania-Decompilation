@@ -3,6 +3,14 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    DDWRECKER_SETUP,
+    DDWRECKER_MAIN_1,
+    DDWRECKER_MAIN_2,
+    DDWRECKER_CHAIN,
+    DDWRECKER_CORE,
+}DDWreckerTypes;
+
 // Object Class
 typedef struct {
     RSDK_OBJECT

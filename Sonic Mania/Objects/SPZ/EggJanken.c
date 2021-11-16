@@ -1193,7 +1193,8 @@ void EggJanken_EditorDraw(void)
     RSDK_THIS(EggJanken);
     EggJanken_StateDraw_Unknown1();
 
-    DrawHelpers_DrawArenaBounds(0x00C0F0, 1 | 0 | 4 | 8, -212, -SCREEN_YSIZE, 212, 208);
+    if (showGizmos())
+        DrawHelpers_DrawArenaBounds(0x00C0F0, 1 | 0 | 4 | 8, -212, -SCREEN_YSIZE, 212, 208);
 }
 
 void EggJanken_EditorLoad(void)

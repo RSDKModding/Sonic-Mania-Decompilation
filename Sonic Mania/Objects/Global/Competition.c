@@ -1,6 +1,5 @@
 #include "SonicMania.h"
 
-#if RETRO_USE_PLUS
 ObjectCompetition *Competition;
 
 void Competition_Update(void)
@@ -16,18 +15,23 @@ void Competition_StaticUpdate(void) {}
 void Competition_Draw(void)
 {
     RSDK_THIS(Competition);
+    #if RETRO_USE_PLUS
     if (RSDK_GET_ENTITY(RSDK_sceneInfo->currentScreenID, Player)->objectID == Player->objectID) {
+#endif
         if (!entity->playerFlags[RSDK_sceneInfo->currentScreenID]) {
             Vector2 drawPos;
-            drawPos.y                = 0x1A0000;
             drawPos.x                = (RSDK_screens[RSDK_sceneInfo->currentScreenID].centerX - 4) << 16;
+            drawPos.y                = 0x1A0000;
             entity->animator.frameID = entity->timer / 10;
             RSDK.DrawSprite(&entity->animator, &drawPos, true);
+
             drawPos.x += 0x80000;
             entity->animator.frameID = entity->timer % 10;
             RSDK.DrawSprite(&entity->animator, &drawPos, true);
         }
+#if RETRO_USE_PLUS
     }
+#endif
 }
 
 void Competition_Create(void *data)
@@ -64,6 +68,7 @@ void Competition_State_Manager(void)
 {
     RSDK_THIS(Competition);
 
+#if RETRO_USE_PLUS
     if (entity->timer <= 0) {
         Zone->gotTimeOver           = true;
         RSDK_sceneInfo->timeEnabled = false;
@@ -96,8 +101,25 @@ void Competition_State_Manager(void)
             }
         }
     }
+#else
+    if (entity->timer > 0) {
+        if (entity->timer != RSDK_sceneInfo->seconds) {
+            entity->timer--;
+            entity->seconds = RSDK_sceneInfo->seconds;
+
+            for (int32 p = 0; p < Player->playerCount; ++p) {
+                if (!entity->playerFlags[p]) {
+                    EntityPlayer *player = RSDK_GET_ENTITY(p, Player);
+                    player->hurtFlag     = 1;
+                    entity->state        = StateMachine_None;
+                }
+            }
+        }
+    }
+#endif
 }
 
+#if RETRO_USE_PLUS
 void Competition_ResetOptions(void)
 {
     EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
@@ -232,6 +254,7 @@ void Competition_CalculateScore(int32 playerID, uint8 flags)
         }
     }
 }
+#endif
 
 #if RETRO_INCLUDE_EDITOR
 void Competition_EditorDraw(void) {}
@@ -240,4 +263,3 @@ void Competition_EditorLoad(void) {}
 #endif
 
 void Competition_Serialize(void) {}
-#endif

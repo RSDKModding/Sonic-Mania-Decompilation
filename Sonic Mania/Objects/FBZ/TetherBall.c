@@ -28,14 +28,14 @@ void TetherBall_Draw(void)
 
     TetherBall->animator.frameID = 3;
     drawPos                      = entity->position;
-    drawPos.x += (i + 512) * RSDK.Cos1024(entity->angle);
-    drawPos.y += (i + 512) * RSDK.Sin1024(entity->angle);
+    drawPos.x += (i + 0x200) * RSDK.Cos1024(entity->angle);
+    drawPos.y += (i + 0x200) * RSDK.Sin1024(entity->angle);
     RSDK.DrawSprite(&TetherBall->animator, &drawPos, false);
 
     entity->posUnknown           = drawPos;
     TetherBall->animator.frameID = entity->type >> 1;
     entity->drawFX               = FX_FLIP;
-    RSDK.DrawSprite(&TetherBall->animator, 0, false);
+    RSDK.DrawSprite(&TetherBall->animator, NULL, false);
 
     entity->drawFX = FX_NONE;
 }
@@ -50,12 +50,13 @@ void TetherBall_Create(void *data)
         case 3: entity->direction = FLIP_X; break;
         default: break;
     }
+
     if (!RSDK_sceneInfo->inEditor) {
         entity->active            = ACTIVE_BOUNDS;
-        entity->size              = (entity->chainCount << 10) + 512;
+        entity->size              = (entity->chainCount << 10) + 0x200;
         entity->updateRange.x     = 0x1000000;
         entity->updateRange.y     = 0x1000000;
-        entity->visible           = 1;
+        entity->visible           = true;
         entity->drawOrder         = Zone->drawOrderLow;
         TetherBall->hitbox.top    = -40;
         TetherBall->hitbox.left   = -40;
@@ -63,8 +64,9 @@ void TetherBall_Create(void *data)
         TetherBall->hitbox.bottom = 40;
         entity->angle             = entity->angleStart;
         if (entity->angleStart > entity->angleEnd) {
-            entity->angleEnd   = entity->angleStart;
+            int start   = entity->angleStart;
             entity->angleStart = entity->angleEnd;
+            entity->angleEnd   = start;
         }
         entity->state = TetherBall_Unknown1;
     }
@@ -88,7 +90,7 @@ void TetherBall_Unknown1(void)
     {
         if (!player->sidekick) {
             if (Player_CheckCollisionTouch(player, entity, &TetherBall->hitbox)) {
-                switch (entity->angle >> 8) {
+                switch ((entity->angle >> 8) & 3) {
                     case 0:
                         if (!player->onGround && player->groundedStore) {
                             if (player->rotation > 112 && player->rotation < 144) {
@@ -149,7 +151,7 @@ void TetherBall_Unknown2(void)
     RSDK_THIS(TetherBall);
     entity->rotation += entity->field_70;
     entity->angle = entity->rotation >> 16;
-    if (entity->angle > 0x2FF)
+    if ((uint32)(entity->angle - 0x101) > 0x1FE)
         entity->field_70 += 0x1800;
     else
         entity->field_70 -= 0x1800;
@@ -238,9 +240,30 @@ void TetherBall_Unknown3(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void TetherBall_EditorDraw(void) {}
+void TetherBall_EditorDraw(void)
+{
+    RSDK_THIS(TetherBall);
 
-void TetherBall_EditorLoad(void) {}
+    switch (entity->type) {
+        case TETHERBALL_0:
+        case TETHERBALL_2: entity->direction = FLIP_NONE; break;
+        case TETHERBALL_1: entity->direction = FLIP_Y; break;
+        case TETHERBALL_3: entity->direction = FLIP_X; break;
+        default: break;
+    }
+
+    entity->size              = (entity->chainCount << 10) + 0x200;
+    entity->updateRange.x     = 0x1000000;
+    entity->updateRange.y     = 0x1000000;
+
+    TetherBall_Draw();
+}
+
+void TetherBall_EditorLoad(void)
+{
+    TetherBall->aniFrames = RSDK.LoadSpriteAnimation("FBZ/TetherBall.bin", SCOPE_STAGE);
+    RSDK.SetSpriteAnimation(TetherBall->aniFrames, 0, &TetherBall->animator, true, 0);
+}
 #endif
 
 void TetherBall_Serialize(void)

@@ -840,7 +840,7 @@ void WeatherTV_State_Unknown9(void)
             entity->stateDraw = WeatherTV_StateDraw_Unknown10;
             entity->state     = WeatherTV_State_Unknown10;
             if (entity->eggman->health > 0) {
-                EntityWeatherMobile *child = CREATE_ENTITY(WeatherMobile, intToVoid(WEATHERMOBILE_1), entity->position.x, entity->position.y);
+                EntityWeatherMobile *child = CREATE_ENTITY(WeatherMobile, intToVoid(WEATHERMOBILE_LIGHTS), entity->position.x, entity->position.y);
                 child->isPermanent         = true;
                 child->parent              = (Entity *)entity->eggman;
             }
@@ -934,7 +934,7 @@ void WeatherTV_State_Unknown15(void)
     if (entity->animator6.frameID == 2) {
         entity->state = WeatherTV_State_Unknown16;
         if (entity->eggman->health > 0) {
-            EntityWeatherMobile *child = CREATE_ENTITY(WeatherMobile, intToVoid(WEATHERMOBILE_2), entity->position.x, entity->position.y);
+            EntityWeatherMobile *child = CREATE_ENTITY(WeatherMobile, intToVoid(WEATHERMOBILE_WIND_MANAGER), entity->position.x, entity->position.y);
             child->isPermanent         = true;
             child->parent              = (Entity *)entity->eggman;
         }
@@ -1007,7 +1007,7 @@ void WeatherTV_State_Unknown18(void)
         entity->field_AC   = 0;
         RSDK.SetSpriteAnimation(WeatherTV->aniFrames, 5, &entity->animator6, true, 0);
         if (entity->eggman->health > 0) {
-            EntityWeatherMobile *child = CREATE_ENTITY(WeatherMobile, intToVoid(WEATHERMOBILE_4), entity->position.x, entity->position.y);
+            EntityWeatherMobile *child = CREATE_ENTITY(WeatherMobile, intToVoid(WEATHERMOBILE_RAIN_MANAGER), entity->position.x, entity->position.y);
             child->isPermanent         = true;
             child->parent              = (Entity *)entity->eggman;
         }
@@ -1052,7 +1052,6 @@ void WeatherTV_State_Outro(void)
 {
     RSDK_THIS(WeatherTV);
 
-    ++entity->timer2;
     entity->field_C8.x = RSDK.Cos512(2 * entity->timer2++);
     entity->field_C8.y = 0x200;
 }

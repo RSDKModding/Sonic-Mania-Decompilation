@@ -161,8 +161,13 @@ void LottoMachine_StageLoad(void)
 
 void LottoMachine_ZoneCB(void)
 {
+#if RETRO_USE_PLUS
     if ((1 << Zone->playerID) & LottoMachine->activePlayers)
         Zone->playerFlags[Zone->playerID] = 0;
+#else
+    if (LottoMachine->activePlayers)
+        Zone->playerFlags = 0;
+#endif
 }
 
 void LottoMachine_CheckPlayerCollisions(void)

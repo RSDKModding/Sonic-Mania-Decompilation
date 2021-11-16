@@ -670,7 +670,7 @@ void SpiderMobile_StateBody_SetupBounds(void)
             SpiderMobile->boundT        = (Zone->screenBoundsT1[0] + 48) << 16;
             SpiderMobile->boundB        = (Zone->screenBoundsB1[0] - 8) << 16;
             entity->state               = SpiderMobile_StateBody_SetupArena;
-            FBZSetup_GenericTriggerCB_B();
+            FBZSetup_GenericTriggerCB_ShowInterior();
         }
         else {
             entity->timer = 8;
@@ -732,8 +732,8 @@ void SpiderMobile_StateBody_SetupArena(void)
             entity->field_84   = 64;
             entity->active     = ACTIVE_NORMAL;
             BGSwitch->screenID = 0;
-            FBZSetup_BGSwitchCB_B();
-            FBZSetup_BGSwitchCB_A();
+            FBZSetup_BGSwitchCB_ShowInside2();
+            FBZSetup_BGSwitchCB_ShowInside1();
 
             TileLayer *overlay    = RSDK.GetSceneLayer(RSDK.GetSceneLayerID("Exterior Overlay"));
             overlay->drawLayer[0] = 0;

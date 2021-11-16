@@ -3,7 +3,6 @@
 
 #include "SonicMania.h"
 
-#if RETRO_USE_PLUS
 // Object Class
 typedef struct {
     RSDK_OBJECT
@@ -50,6 +49,7 @@ void Competition_Serialize(void);
 // Extra Entity Functions
 void Competition_State_Manager(void);
 
+#if RETRO_USE_PLUS
 void Competition_ResetOptions(void);
 void Competition_ClearMatchData(void);
 void Competition_CalculateScore(int32 playerID, uint8 flags);

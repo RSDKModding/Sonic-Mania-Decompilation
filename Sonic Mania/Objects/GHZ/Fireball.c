@@ -35,7 +35,6 @@ void Fireball_Create(void *data)
         entity->stateDraw = Fireball_StateDraw_Normal;
     }
     else {
-
         switch (entity->type) {
             default: entity->groundVel <<= 7;
             case 0: entity->state = Fireball_State_Unknown1; break;

@@ -447,13 +447,11 @@ void SignPost_CheckTouch(void)
                         }
 
                         EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
-#if RETRO_USE_PLUS
                         EntityCompetition *manager = (EntityCompetition *)Competition->activeEntity;
                         if (!manager) {
                             Competition->activeEntity = (Entity *)CREATE_ENTITY(Competition, NULL, entity->position.x, entity->position.y);
                         }
                         manager->playerFlags[player->playerID] = true;
-#endif
                         session->rings[player->playerID]             = player->rings;
                         session->time[player->playerID].minutes      = RSDK_sceneInfo->minutes;
                         session->time[player->playerID].seconds      = RSDK_sceneInfo->seconds;

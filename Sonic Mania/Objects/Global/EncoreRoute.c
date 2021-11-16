@@ -65,7 +65,9 @@ void EncoreRoute_EditorDraw(void)
     Vector2 size;
     size.x = TILE_SIZE * entity->size.x;
     size.y = TILE_SIZE * entity->size.y;
-    for (int i = 0; i < 2; ++i) {
+
+    int count = showGizmos() ? 2 : 1;
+    for (int i = 0; i < count; ++i) {
         drawPos.x = positions[i]->x;
         drawPos.y = positions[i]->y;
 
@@ -87,8 +89,10 @@ void EncoreRoute_EditorDraw(void)
         RSDK.DrawSprite(&EncoreRoute->animator, &drawPos, false);
     }
 
-    DrawHelpers_DrawArrow(0xE0E0E0, entity->position.x + (size.x >> 1), entity->position.y + (size.y >> 1), entity->offset.x + (size.x >> 1),
-                          entity->offset.y + (size.y >> 1));
+    if (showGizmos()) {
+        DrawHelpers_DrawArrow(0xE0E0E0, entity->position.x + (size.x >> 1), entity->position.y + (size.y >> 1), entity->offset.x + (size.x >> 1),
+                              entity->offset.y + (size.y >> 1));
+    }
 }
 
 void EncoreRoute_EditorLoad(void)

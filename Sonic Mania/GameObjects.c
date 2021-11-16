@@ -150,8 +150,8 @@ void LinkGameLogicDLL(GameInfo *info)
     RSDK_ADD_OBJECT(CollapsingPlatform);
     RSDK_ADD_OBJECT(CollapsingSand);
     RSDK_ADD_OBJECT(ColorHelpers);
-#if RETRO_USE_PLUS
     RSDK_ADD_OBJECT(Competition);
+#if RETRO_USE_PLUS
     RSDK_ADD_OBJECT(CompetitionMenu);
 #endif
     RSDK_ADD_OBJECT(CompetitionSession);

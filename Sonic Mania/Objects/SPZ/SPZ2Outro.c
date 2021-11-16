@@ -213,8 +213,8 @@ bool32 SPZ2Outro_CutsceneState_Unknown3(EntityCutsceneSeq *host)
                 RSDK.SetSpriteAnimation(player2->spriteIndex, ANI_RUN, &player2->playerAnimator, true, 0);
                 player2->drawOrder       = Zone->playerDrawLow;
                 player2->state           = Player_State_None;
-                player2->nextAirState    = 0;
-                player2->nextGroundState = 0;
+                player2->nextAirState    = StateMachine_None;
+                player2->nextGroundState = StateMachine_None;
                 player2->position.x      = player1->position.x - 0x100000;
                 player2->position.y      = player1->position.y;
                 player2->onGround        = false;
@@ -230,12 +230,11 @@ bool32 SPZ2Outro_CutsceneState_Unknown3(EntityCutsceneSeq *host)
     }
 
     EntityPlayer *players[2] = { player1, player2 };
-    bool32 playerFlags[2]    = { true, true };
 
     bool32 flag = true;
     for (int i = 0; i < 2; ++i) {
         if (i == 1 && (player2->objectID != Player->objectID || SPZ2Outro->flag)) {
-            flag = playerFlags[0];
+            //do nothing, if P1 set the flag, then that'll count 
         }
         else {
             EntityPlayer *playerPtr = players[i];
@@ -297,7 +296,8 @@ bool32 SPZ2Outro_CutsceneState_Unknown4(EntityCutsceneSeq *host)
 void SPZ2Outro_EditorDraw(void)
 {
     RSDK_THIS(SPZ2Outro);
-    CutsceneRules_DrawCutsceneBounds(entity, &entity->size);
+    if (showGizmos())
+        CutsceneRules_DrawCutsceneBounds(entity, &entity->size);
 }
 
 void SPZ2Outro_EditorLoad(void) {}
