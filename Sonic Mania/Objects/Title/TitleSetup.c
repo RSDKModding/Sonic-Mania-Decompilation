@@ -28,8 +28,8 @@ void TitleSetup_Create(void *data)
         entity->visible   = true;
         entity->drawOrder = 12;
         entity->drawFX    = FX_FLIP;
-        entity->state     = TitleSetup_Unknown4;
-        entity->stateDraw = TitleSetup_Unknown13;
+        entity->state     = TitleSetup_Wait;
+        entity->stateDraw = TitleSetup_DrawState_FadeBlack;
         entity->timer     = 1024;
         entity->drawPos.x = 0x1000000;
         entity->drawPos.y = 0x6C0000;
@@ -123,13 +123,13 @@ bool32 TitleSetup_IntroCallback(void)
     return false;
 }
 
-void TitleSetup_Unknown4(void)
+void TitleSetup_Wait(void)
 {
     RSDK_THIS(TitleSetup);
     if (entity->timer <= -0x400) {
         entity->timer     = 0;
-        entity->state     = TitleSetup_Unknown5;
-        entity->stateDraw = TitleSetup_Unknown14;
+        entity->state     = TitleSetup_AnimateUntilFlash;
+        entity->stateDraw = TitleSetup_DrawState_DrawRing;
         Music_PlayTrack(TRACK_STAGE);
     }
     else {
@@ -137,7 +137,7 @@ void TitleSetup_Unknown4(void)
     }
 }
 
-void TitleSetup_Unknown5(void)
+void TitleSetup_AnimateUntilFlash(void)
 {
     RSDK_THIS(TitleSetup);
     RSDK.ProcessAnimation(&entity->animator);
@@ -192,7 +192,7 @@ void TitleSetup_Unknown6(void)
         TitleBG_SetupFX();
         entity->timer     = 0x300;
         entity->state     = TitleSetup_Unknown7;
-        entity->stateDraw = TitleSetup_Unknown15;
+        entity->stateDraw = TitleSetup_DrawState_Flash;
     }
 }
 
@@ -306,12 +306,12 @@ void TitleSetup_Unknown10(void)
         API_AssignControllerID(1, id);
         RSDK.StopChannel(Music->channelID);
         entity->state     = TitleSetup_Unknown11;
-        entity->stateDraw = TitleSetup_Unknown13;
+        entity->stateDraw = TitleSetup_DrawState_FadeBlack;
     }
     else if (++entity->timer == 800) {
         entity->timer     = 0;
         entity->state     = TitleSetup_Unknown12;
-        entity->stateDraw = TitleSetup_Unknown13;
+        entity->stateDraw = TitleSetup_DrawState_FadeBlack;
     }
 }
 
@@ -348,13 +348,13 @@ void TitleSetup_Unknown12(void)
     }
 }
 
-void TitleSetup_Unknown13(void)
+void TitleSetup_DrawState_FadeBlack(void)
 {
     RSDK_THIS(TitleSetup);
     RSDK.FillScreen(0x000000, entity->timer, entity->timer - 128, entity->timer - 256);
 }
 
-void TitleSetup_Unknown14(void)
+void TitleSetup_DrawState_DrawRing(void)
 {
     RSDK_THIS(TitleSetup);
     entity->direction = FLIP_NONE;
@@ -363,7 +363,7 @@ void TitleSetup_Unknown14(void)
     RSDK.DrawSprite(&entity->animator, &entity->drawPos, 0);
 }
 
-void TitleSetup_Unknown15(void)
+void TitleSetup_DrawState_Flash(void)
 {
     RSDK_THIS(TitleSetup);
     RSDK.FillScreen(0xF0F0F0, entity->timer, entity->timer - 128, entity->timer - 256);

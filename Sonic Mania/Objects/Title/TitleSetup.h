@@ -46,8 +46,8 @@ void TitleSetup_HandleCheatInputs(void);
 void TitleSetup_CheckCheatCode(void);
 bool32 TitleSetup_IntroCallback(void);
 
-void TitleSetup_Unknown4(void);
-void TitleSetup_Unknown5(void);
+void TitleSetup_Wait(void);
+void TitleSetup_AnimateUntilFlash(void);
 void TitleSetup_Unknown6(void);
 void TitleSetup_Unknown7(void);
 void TitleSetup_SetupLogo(void);
@@ -57,8 +57,8 @@ void TitleSetup_SetupLogo_Plus(void);
 void TitleSetup_Unknown10(void);
 void TitleSetup_Unknown11(void);
 void TitleSetup_Unknown12(void);
-void TitleSetup_Unknown13(void);
-void TitleSetup_Unknown14(void);
-void TitleSetup_Unknown15(void);
+void TitleSetup_DrawState_FadeBlack(void);
+void TitleSetup_DrawState_DrawRing(void);
+void TitleSetup_DrawState_Flash(void);
 
 #endif //!OBJ_TITLESETUP_H
