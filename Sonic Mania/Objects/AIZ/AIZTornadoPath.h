@@ -12,7 +12,7 @@ typedef enum {
     AIZTORNADOPATH_5,
     AIZTORNADOPATH_6,
     AIZTORNADOPATH_7,
-} TornadoPathTypes;
+} AIZTornadoPathTypes;
 
 // Object Class
 typedef struct {
