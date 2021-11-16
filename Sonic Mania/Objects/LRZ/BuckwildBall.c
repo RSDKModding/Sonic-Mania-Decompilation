@@ -149,8 +149,12 @@ void BuckwildBall_HandleRollCrush(void)
     foreach_active(Iwamodoki, iwamodoki)
     {
         if (RSDK.CheckObjectCollisionTouchBox(entity, &BuckwildBall->hitbox, iwamodoki, &crushHitbox)) {
+#if RETRO_USE_PLUS
             CREATE_ENTITY(Animals, intToVoid(Animals->animalTypes[RSDK.Random(0, 32, &Zone->randKey) >> 4] + 1), iwamodoki->position.x,
                           iwamodoki->position.y);
+#else
+            CREATE_ENTITY(Animals, intToVoid(Animals->animalTypes[RSDK.Rand(0, 32) >> 4] + 1), iwamodoki->position.x, iwamodoki->position.y);
+#endif
             CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), iwamodoki->position.x, iwamodoki->position.y)->drawOrder = Zone->drawOrderHigh;
             RSDK.PlaySfx(Explosion->sfxDestroy, false, 255);
             destroyEntity(iwamodoki);
@@ -160,8 +164,13 @@ void BuckwildBall_HandleRollCrush(void)
     foreach_active(Fireworm, fireworm)
     {
         if (RSDK.CheckObjectCollisionTouchBox(entity, &BuckwildBall->hitbox, fireworm, &crushHitbox)) {
+#if RETRO_USE_PLUS
             CREATE_ENTITY(Animals, intToVoid(Animals->animalTypes[RSDK.Random(0, 32, &Zone->randKey) >> 4] + 1), fireworm->position.x,
                           fireworm->position.y);
+#else
+            CREATE_ENTITY(Animals, intToVoid(Animals->animalTypes[RSDK.Rand(0, 32) >> 4] + 1), fireworm->position.x,
+                          fireworm->position.y);
+#endif
             CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), fireworm->position.x, fireworm->position.y)->drawOrder = Zone->drawOrderHigh;
             RSDK.PlaySfx(Explosion->sfxDestroy, false, 255);
             destroyEntity(fireworm);
@@ -172,8 +181,12 @@ void BuckwildBall_HandleRollCrush(void)
     {
         if (RSDK.CheckObjectCollisionTouchBox(entity, &BuckwildBall->hitbox, toxomister, &crushHitbox)) {
             if (toxomister->state == Toxomister_State_Unknown1) {
+#if RETRO_USE_PLUS
                 CREATE_ENTITY(Animals, intToVoid(Animals->animalTypes[RSDK.Random(0, 32, &Zone->randKey) >> 4] + 1), toxomister->position.x,
                               toxomister->position.y);
+#else
+                CREATE_ENTITY(Animals, intToVoid(Animals->animalTypes[RSDK.Rand(0, 32) >> 4] + 1), toxomister->position.x, toxomister->position.y);
+#endif
                 CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), toxomister->position.x, toxomister->position.y)->drawOrder = Zone->drawOrderHigh;
                 RSDK.PlaySfx(Explosion->sfxDestroy, false, 255);
                 destroyEntity(toxomister);

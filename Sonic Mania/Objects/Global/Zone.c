@@ -1072,7 +1072,17 @@ void Zone_Unknown21(void)
 #if RETRO_INCLUDE_EDITOR
 void Zone_EditorDraw(void) {}
 
-void Zone_EditorLoad(void) {}
+void Zone_EditorLoad(void)
+{
+
+    Zone->fgLayerLow     = 0;
+    Zone->drawOrderLow   = 2;
+    Zone->playerDrawLow  = 4;
+    Zone->fgLayerHigh    = 6;
+    Zone->drawOrderHigh  = 8;
+    Zone->playerDrawHigh = 12;
+    Zone->hudDrawOrder   = 14;
+}
 #endif
 
 void Zone_Serialize(void) {}

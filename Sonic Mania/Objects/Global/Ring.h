@@ -79,6 +79,6 @@ void Ring_State_Track(void);
 void Ring_CheckObjectCollisions(int32 offsetX, int32 offsetY);
 uint8 Ring_CheckPlatformCollisions(EntityPlatform *platform);
 void Ring_Collect(void);
-void Ring_FakeLoseRings(Entity *entity, int32 ringCount, uint8 drawOrder);
+void Ring_FakeLoseRings(Vector2 *entity, int32 ringCount, uint8 drawOrder);
 
 #endif //!OBJ_RING_H

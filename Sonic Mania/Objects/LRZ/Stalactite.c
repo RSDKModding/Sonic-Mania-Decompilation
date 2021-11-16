@@ -79,8 +79,8 @@ void Stalactite_State_Unknown2(void)
 #if RETRO_USE_PLUS
             if (Player_CheckMightyShellHit(player, entity))
                 entity->state = Stalactite_State_Unknown5;
-#endif
             else
+#endif
                 Player_CheckHit(player, entity);
         }
     }
@@ -115,8 +115,8 @@ void Stalactite_State_Unknown4(void)
 #if RETRO_USE_PLUS
             if (Player_CheckMightyShellHit(player, entity))
                 entity->state = Stalactite_State_Unknown5;
-#endif
             else
+#endif
                 Player_CheckHit(player, entity);
         }
     }

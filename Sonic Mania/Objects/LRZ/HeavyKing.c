@@ -435,7 +435,9 @@ void HeavyKing_State_HandleCutsceneSetup(void)
         player1->right            = true;
         player1->pushing          = false;
         player1->state            = Player_State_Ground;
+#if RETRO_USE_PLUS
         Player->disableP2KeyCheck = true;
+#endif
         if (player1->velocity.x > 0x20000) {
             player1->groundVel  = 0x20000;
             player1->velocity.x = 0x20000;
@@ -715,7 +717,9 @@ void HeavyKing_State_CutsceneUnknown10(void)
         RSDK.SetSpriteAnimation(HeavyKing->aniFrames, 4, &entity->animator1, false, 0);
         RSDK.SetSpriteAnimation(HeavyKing->aniFrames, 13, &entity->animator2, false, 0);
         HeavyKing_Unknown8(0);
+#if RETRO_USE_PLUS
         Player->disableP2KeyCheck = false;
+#endif
         player1->stateInput       = Player_ProcessP1Input;
 
         EntityPlayer *player2 = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);

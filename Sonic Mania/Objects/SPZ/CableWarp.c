@@ -29,14 +29,14 @@ void CableWarp_Create(void *data)
         entity->updateRange.x = 0x400000;
         entity->updateRange.y = 0x400000;
         entity->drawOrder     = Zone->drawOrderHigh;
-        entity->alpha         = 256;
+        entity->alpha         = 0x100;
         switch (entity->type) {
-            case CABLEWARP_CAP:
+            case CABLEWARP_ENTRY:
                 entity->visible = true;
                 RSDK.SetSpriteAnimation(CableWarp->aniFrames, 0, &entity->animator, true, 0);
                 entity->state = CableWarp_State0_Unknown;
                 break;
-            case CABLEWARP_ENTRY:
+            case CABLEWARP_EXIT:
                 entity->visible = true;
                 RSDK.SetSpriteAnimation(CableWarp->aniFrames, 0, &entity->animator, true, 2);
                 entity->state = CableWarp_State1_Unknown;
@@ -334,9 +334,31 @@ void CableWarp_State3_Unknown5(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void CableWarp_EditorDraw(void) {}
+void CableWarp_EditorDraw(void)
+{
+    RSDK_THIS(CableWarp);
 
-void CableWarp_EditorLoad(void) { CableWarp->aniFrames = RSDK.LoadSpriteAnimation("SPZ2/CableWarp.bin", SCOPE_STAGE); }
+    entity->updateRange.x = 0x400000;
+    entity->updateRange.y = 0x400000;
+    switch (entity->type) {
+        case CABLEWARP_ENTRY: RSDK.SetSpriteAnimation(CableWarp->aniFrames, 0, &entity->animator, true, 0); break;
+        case CABLEWARP_EXIT: RSDK.SetSpriteAnimation(CableWarp->aniFrames, 0, &entity->animator, true, 2); break;
+        case CABLEWARP_NODE: RSDK.SetSpriteAnimation(0xFFFF, 0, &entity->animator, true, 2); break;
+        default: break;
+    }
+
+    CableWarp_Draw();
+}
+
+void CableWarp_EditorLoad(void)
+{
+    CableWarp->aniFrames = RSDK.LoadSpriteAnimation("SPZ2/CableWarp.bin", SCOPE_STAGE);
+
+    RSDK_ACTIVE_VAR(CableWarp, type);
+    RSDK_ENUM_VAR("Entry", CABLEWARP_ENTRY);
+    RSDK_ENUM_VAR("Exit", CABLEWARP_EXIT);
+    RSDK_ENUM_VAR("Warp Node", CABLEWARP_NODE);
+}
 #endif
 
 void CableWarp_Serialize(void) { RSDK_EDITABLE_VAR(CableWarp, VAR_ENUM, type); }

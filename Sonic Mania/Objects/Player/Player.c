@@ -3295,19 +3295,17 @@ void Player_CheckStartFlyCarry(EntityPlayer *player1)
         off = entity->position.y + 0x210000;
     else
         off = entity->position.y + 0x1C0000;
-    int32 dif  = off - player1->position.y;
-    int32 dif2 = entity->position.x - player1->position.x;
 
     if (player1->state != Player_State_FlyCarried && (!player1->onGround || entity->velocity.y < 0)) {
         bool32 flag = (player1->state == Player_State_Roll || player1->state == Player_State_LookUp || player1->state == Player_State_Crouch
                        || player1->state == Player_State_Air || player1->state == Player_State_Ground);
         if (LottoMachine) {
-            // flag = (((1 << RSDK.GetEntityID(player1)) & LottoMachine[5].objectID) == 0) && flag;
+            flag = (!((1 << RSDK.GetEntityID(player1)) & LottoMachine->activePlayers)) && flag;
         }
 
         if (flag && (player1->playerAnimator.animationID != ANI_FAN)) {
-            if (abs(dif2) < 0xC0000) {
-                if (abs(dif) < 0xC0000 && !entity->flyCarryTimer && !player1->down && !player1->onGround) {
+            if (abs(entity->position.x - player1->position.x) < 0xC0000) {
+                if (abs(off - player1->position.y) < 0xC0000 && !entity->flyCarryTimer && !player1->down && !player1->onGround) {
                     RSDK.SetSpriteAnimation(player1->spriteIndex, ANI_HANG, &player1->playerAnimator, false, 0);
                     player1->state           = Player_State_FlyCarried;
                     player1->nextAirState    = StateMachine_None;
@@ -6344,60 +6342,60 @@ void Player_ProcessP1Input(void)
             entity->jumpPress = controller->keyA.press || controller->keyB.press || controller->keyC.press || controller->keyX.press;
             entity->jumpHold  = controller->keyA.down || controller->keyB.down || controller->keyC.down || controller->keyX.down;
 
-            // if (!LottoMachine || !((1 << entity->playerID) & LottoMachine->activePlayers)) {
+            if (!LottoMachine || !((1 << entity->playerID) & LottoMachine->activePlayers)) {
 #if RETRO_USE_PLUS
-            if (sku_platform == PLATFORM_DEV && controller->keyZ.press) {
-                Zone->swapGameMode = true;
-                RSDK.PlaySfx(Player->sfx_Transform2, false, 0xFE);
-                Zone_StartFadeOut(64, 0xF0F0F0);
-            }
-            // TEMP!! I SOULD REMOVE THIS!!!
-            else if (sku_platform == PLATFORM_DEV && controller->keySelect.press) {
-                entity->characterID <<= 1;
-                if (entity->characterID > ID_RAY)
-                    entity->characterID = 1;
-                Player_ChangeCharacter(entity, entity->characterID);
-            }
+                if (sku_platform == PLATFORM_DEV && controller->keyZ.press) {
+                    Zone->swapGameMode = true;
+                    RSDK.PlaySfx(Player->sfx_Transform2, false, 0xFE);
+                    Zone_StartFadeOut(64, 0xF0F0F0);
+                }
+                // TEMP!! I SOULD REMOVE THIS!!!
+                else if (sku_platform == PLATFORM_DEV && controller->keySelect.press) {
+                    entity->characterID <<= 1;
+                    if (entity->characterID > ID_RAY)
+                        entity->characterID = 1;
+                    Player_ChangeCharacter(entity, entity->characterID);
+                }
 
-            if (globals->gameMode == MODE_ENCORE && controller->keyY.press) {
-                if (!HUD->swapCooldown && Player_CheckValidState(entity)) {
-                    if (Player_SwapMainPlayer(false)) {
-                        return;
+                if (globals->gameMode == MODE_ENCORE && controller->keyY.press) {
+                    if (!HUD->swapCooldown && Player_CheckValidState(entity)) {
+                        if (Player_SwapMainPlayer(false)) {
+                            return;
+                        }
+                        else {
+                            RSDK.PlaySfx(Player->sfx_SwapFail, false, 0xFF);
+                        }
                     }
                     else {
                         RSDK.PlaySfx(Player->sfx_SwapFail, false, 0xFF);
                     }
                 }
-                else {
-                    RSDK.PlaySfx(Player->sfx_SwapFail, false, 0xFF);
-                }
-            }
 #else
-            // TEMP!! I SOULD REMOVE THIS!!!
-            if (RSDK_info->platform == PLATFORM_DEV && controller->keySelect.press) {
-                entity->characterID <<= 1;
-                if (entity->characterID > ID_KNUCKLES)
-                    entity->characterID = 1;
-                Player_ChangeCharacter(entity, entity->characterID);
-            }
+                // TEMP!! I SOULD REMOVE THIS!!!
+                if (RSDK_info->platform == PLATFORM_DEV && controller->keySelect.press) {
+                    entity->characterID <<= 1;
+                    if (entity->characterID > ID_KNUCKLES)
+                        entity->characterID = 1;
+                    Player_ChangeCharacter(entity, entity->characterID);
+                }
 #endif
 
-            if (entity->controllerID == CONT_P1 && RSDK_sceneInfo->debugMode && entity->state != Player_State_Transform
-                && RSDK_controller[CONT_P1].keyX.press && globals->gameMode != MODE_TIMEATTACK) {
-                entity->objectID   = DebugMode->objectID;
-                entity->velocity.x = 0;
-                entity->velocity.y = 0;
-                entity->groundVel  = 0;
-                entity->drawOrder  = Zone->playerDrawHigh;
-                RSDK.SetSpriteAnimation(entity->spriteIndex, ANI_AIRWALK, &entity->playerAnimator, true, 0);
-                RSDK.SetGameMode(ENGINESTATE_REGULAR);
-                entity->jumpHold       = false;
-                entity->jumpPress      = false;
-                entity->visible        = true;
-                entity->active         = ACTIVE_NORMAL;
-                DebugMode->debugActive = true;
+                if (entity->controllerID == CONT_P1 && RSDK_sceneInfo->debugMode && entity->state != Player_State_Transform
+                    && RSDK_controller[CONT_P1].keyX.press && globals->gameMode != MODE_TIMEATTACK) {
+                    entity->objectID   = DebugMode->objectID;
+                    entity->velocity.x = 0;
+                    entity->velocity.y = 0;
+                    entity->groundVel  = 0;
+                    entity->drawOrder  = Zone->playerDrawHigh;
+                    RSDK.SetSpriteAnimation(entity->spriteIndex, ANI_AIRWALK, &entity->playerAnimator, true, 0);
+                    RSDK.SetGameMode(ENGINESTATE_REGULAR);
+                    entity->jumpHold       = false;
+                    entity->jumpPress      = false;
+                    entity->visible        = true;
+                    entity->active         = ACTIVE_NORMAL;
+                    DebugMode->debugActive = true;
+                }
             }
-            //}
 
 #if RETRO_USE_PLUS
             if (RSDK_controller[entity->controllerID].keyStart.press || RSDK_unknown->field_10 == 1) {
