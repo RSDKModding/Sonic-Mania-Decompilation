@@ -46,8 +46,8 @@ void ShopWindow_Serialize(void);
 void ShopWindow_State_Shard(void);
 void ShopWindow_State_Shattered(void);
 void ShopWindow_State_Silhouette(void);
-void ShopWindow_Draw_Normal(void);
-void ShopWindow_State_Draw_Shard(void);
-void ShopWindow_State_Draw_Shattered(void);
+void ShopWindow_StateDraw_Normal(void);
+void ShopWindow_StateDraw_Shard(void);
+void ShopWindow_StateDraw_Shattered(void);
 
 #endif //!OBJ_SHOPWINDOW_H

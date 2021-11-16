@@ -429,7 +429,15 @@ void PopcornMachine_EditorDraw(void)
     PopcornMachine_Draw();
 }
 
-void PopcornMachine_EditorLoad(void) { PopcornMachine->aniFrames = RSDK.LoadSpriteAnimation("SPZ1/PopcornMachine.bin", SCOPE_STAGE); }
+void PopcornMachine_EditorLoad(void)
+{
+    PopcornMachine->aniFrames = RSDK.LoadSpriteAnimation("SPZ1/PopcornMachine.bin", SCOPE_STAGE);
+
+    RSDK_ACTIVE_VAR(PopcornMachine, type);
+    RSDK_ENUM_VAR("Left Entry", POPCORNMACHINE_LEFT);
+    RSDK_ENUM_VAR("Right Entry", POPCORNMACHINE_RIGHT);
+    RSDK_ENUM_VAR("Double Entry", POPCORNMACHINE_BOTH);
+}
 #endif
 
 void PopcornMachine_Serialize(void)

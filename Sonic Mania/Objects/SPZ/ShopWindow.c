@@ -43,7 +43,7 @@ void ShopWindow_Create(void *data)
             entity->scale.x       = 0x200;
             entity->scale.y       = 0x200;
             entity->state         = ShopWindow_State_Shard;
-            entity->stateDraw     = ShopWindow_State_Draw_Shard;
+            entity->stateDraw     = ShopWindow_StateDraw_Shard;
         }
         else {
             entity->active        = ACTIVE_BOUNDS;
@@ -69,7 +69,7 @@ void ShopWindow_Create(void *data)
                 entity->windowHitbox.bottom = entity->size.y >> 1;
                 entity->state               = ShopWindow_State_Silhouette;
             }
-            entity->stateDraw      = ShopWindow_Draw_Normal;
+            entity->stateDraw      = ShopWindow_StateDraw_Normal;
             entity->hitbox2.top    = -8 - entity->size.y;
             entity->hitbox2.right  = entity->size.x + 8;
             entity->hitbox2.bottom = entity->size.y + 8;
@@ -151,14 +151,14 @@ void ShopWindow_State_Silhouette(void)
         {
             if (abs(player->velocity.x) >= 0xA0000) {
                 if (Player_CheckCollisionTouch(player, entity, &entity->hitbox)) {
-                    entity->stateDraw = ShopWindow_State_Draw_Shattered;
+                    entity->stateDraw = ShopWindow_StateDraw_Shattered;
                     entity->state     = ShopWindow_State_Shattered;
                 }
             }
 
             if (abs(player->velocity.y) >= 0xA0000) {
                 if (Player_CheckCollisionTouch(player, entity, &entity->windowHitbox)) {
-                    entity->stateDraw = ShopWindow_State_Draw_Shattered;
+                    entity->stateDraw = ShopWindow_StateDraw_Shattered;
                     entity->state     = ShopWindow_State_Shattered;
                 }
             }
@@ -166,7 +166,7 @@ void ShopWindow_State_Silhouette(void)
     }
 }
 
-void ShopWindow_Draw_Normal(void)
+void ShopWindow_StateDraw_Normal(void)
 {
     RSDK_THIS(ShopWindow);
     Vector2 drawPos;
@@ -208,13 +208,13 @@ void ShopWindow_Draw_Normal(void)
     }
 }
 
-void ShopWindow_State_Draw_Shard(void)
+void ShopWindow_StateDraw_Shard(void)
 {
     RSDK_THIS(ShopWindow);
     RSDK.DrawSprite(&entity->animator, NULL, false);
 }
 
-void ShopWindow_State_Draw_Shattered(void)
+void ShopWindow_StateDraw_Shattered(void)
 {
     RSDK_THIS(ShopWindow);
     ScreenInfo *screen = &RSDK_screens[RSDK_sceneInfo->currentScreenID];

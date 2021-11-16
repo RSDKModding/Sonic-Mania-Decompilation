@@ -3,6 +3,12 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    POPCORNMACHINE_LEFT,
+    POPCORNMACHINE_RIGHT,
+    POPCORNMACHINE_BOTH,
+}PopcornMachineTypes;
+
 // Object Class
 typedef struct {
     RSDK_OBJECT
