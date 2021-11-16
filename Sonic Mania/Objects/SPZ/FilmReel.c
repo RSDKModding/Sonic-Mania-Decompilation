@@ -396,7 +396,28 @@ void FilmReel_SpinRight(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void FilmReel_EditorDraw(void) { FilmReel_Draw(); }
+void FilmReel_EditorDraw(void)
+{
+    RSDK_THIS(FilmReel);
+
+    entity->field_74      = entity->position;
+    entity->drawPos       = entity->position;
+    entity->endPos.x      = entity->pathSize.x + entity->drawPos.x;
+    entity->endPos.y      = entity->pathSize.y + entity->drawPos.y;
+    entity->active        = ACTIVE_BOUNDS;
+    entity->updateRange.x = 0xC00000;
+    entity->updateRange.y = 0xC00000;
+    entity->scale.x       = 0x200;
+    entity->scale.y       = 0x200;
+
+    entity->angle     = RSDK.ATan2(entity->pathSize.x, entity->pathSize.y);
+    entity->field_94  = entity->angle >> 6;
+    entity->field_90  = 1;
+    entity->visible   = true;
+    entity->drawOrder = Zone->drawOrderLow;
+    
+    FilmReel_Draw();
+}
 
 void FilmReel_EditorLoad(void)
 {

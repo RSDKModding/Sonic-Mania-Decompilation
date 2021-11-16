@@ -9,7 +9,7 @@ typedef struct {
 	Hitbox hitbox;
 	Hitbox checkbox;
 	uint32 pictureCount;
-	uint16 animID;
+	uint16 aniFrames;
 	uint16 snapSfx;
 } ObjectShutterbug;
 
@@ -28,7 +28,6 @@ typedef struct {
 	uint8 turnTimer;
 	uint8 moveDir;
 	uint8 flickerTimer;
-	uint8 field_8B;
 	Hitbox focusBox;
 	Animator animator;
 	Animator overlayAnim;

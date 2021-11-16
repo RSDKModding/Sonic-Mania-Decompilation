@@ -29,41 +29,41 @@ void Shutterbug_Create(void *data)
     RSDK_THIS(Shutterbug);
     entity->visible   = true;
     entity->drawOrder = Zone->drawOrderHigh;
-    if (RSDK_sceneInfo->inEditor)
-        return;
-    entity->active        = ACTIVE_BOUNDS;
-    entity->updateRange.x = 0x800000;
-    entity->updateRange.y = 0x800000;
-    if (entity->range.x == 0) {
-        entity->range.x = 0x7FFF0000;
-        entity->range.y = 0x7FFF0000;
-    }
-    entity->drawFX |= FX_FLIP;
-    entity->focusBox.left   = (-entity->range.x) >> 16;
-    entity->focusBox.top    = (-entity->range.y) >> 16;
-    entity->focusBox.bottom = entity->range.y >> 16;
-    entity->focusBox.right  = entity->range.x >> 16;
-    entity->direction       = FLIP_X;
-    entity->moveDir         = FLIP_X;
-    if (!entity->snaps)
-        entity->numSnaps = 0xFF;
-    else
-        entity->numSnaps = entity->snaps;
-    entity->focus     = NULL;
-    entity->alpha     = 0xC0;
-    entity->snapTimer = 16;
+    if (!RSDK_sceneInfo->inEditor) {
+        entity->active        = ACTIVE_BOUNDS;
+        entity->updateRange.x = 0x800000;
+        entity->updateRange.y = 0x800000;
+        if (!entity->range.x) {
+            entity->range.x = 0x7FFF0000;
+            entity->range.y = 0x7FFF0000;
+        }
+        entity->drawFX |= FX_FLIP;
+        entity->focusBox.left   = (-entity->range.x) >> 16;
+        entity->focusBox.top    = (-entity->range.y) >> 16;
+        entity->focusBox.bottom = entity->range.y >> 16;
+        entity->focusBox.right  = entity->range.x >> 16;
+        entity->direction       = FLIP_X;
+        entity->moveDir         = FLIP_X;
+        if (!entity->snaps)
+            entity->numSnaps = 0xFF;
+        else
+            entity->numSnaps = entity->snaps;
+        entity->focus     = NULL;
+        entity->alpha     = 0xC0;
+        entity->snapTimer = 16;
 
-    RSDK.SetSpriteAnimation(Shutterbug->animID, 0, &entity->animator, true, 0);
-    RSDK.SetSpriteAnimation(Shutterbug->animID, 1, &entity->overlayAnim, true, 0);
-    entity->state = Shutterbug_CreateState;
+        RSDK.SetSpriteAnimation(Shutterbug->aniFrames, 0, &entity->animator, true, 0);
+        RSDK.SetSpriteAnimation(Shutterbug->aniFrames, 1, &entity->overlayAnim, true, 0);
+        entity->state = Shutterbug_CreateState;
+    }
 }
 
 void Shutterbug_StageLoad(void)
 {
     if (RSDK.CheckStageFolder("SPZ1"))
-        Shutterbug->animID = RSDK.LoadSpriteAnimation("SPZ1/Shutterbug.bin", SCOPE_STAGE);
+        Shutterbug->aniFrames = RSDK.LoadSpriteAnimation("SPZ1/Shutterbug.bin", SCOPE_STAGE);
     else
-        Shutterbug->animID = RSDK.LoadSpriteAnimation("SPZ2/Shutterbug.bin", SCOPE_STAGE);
+        Shutterbug->aniFrames = RSDK.LoadSpriteAnimation("SPZ2/Shutterbug.bin", SCOPE_STAGE);
     Shutterbug->hitbox.left     = -15;
     Shutterbug->hitbox.top      = -12;
     Shutterbug->hitbox.right    = 15;
@@ -77,29 +77,17 @@ void Shutterbug_StageLoad(void)
     Shutterbug->snapSfx = RSDK.GetSFX("SPZ/ShBugSnap.wav");
 }
 
-#if RETRO_INCLUDE_EDITOR
-void Shutterbug_EditorDraw(void) { Shutterbug_Draw(); }
-
-void Shutterbug_EditorLoad(void) { Shutterbug_StageLoad(); }
-#endif
-
-void Shutterbug_Serialize(void)
+void Shutterbug_DebugSpawn(void)
 {
-    RSDK_EDITABLE_VAR(Shutterbug, VAR_UINT8, snaps);
-    RSDK_EDITABLE_VAR(Shutterbug, VAR_BOOL, passThrough);
-    RSDK_EDITABLE_VAR(Shutterbug, VAR_VECTOR2, range);
+    RSDK_THIS(DebugMode);
+
+    CREATE_ENTITY(Shutterbug, NULL, entity->position.x, entity->position.y);
 }
 
 void Shutterbug_DebugDraw(void)
 {
-    RSDK.SetSpriteAnimation(Shutterbug->animID, 0, &DebugMode->animator, true, 0);
+    RSDK.SetSpriteAnimation(Shutterbug->aniFrames, 0, &DebugMode->animator, true, 0);
     RSDK.DrawSprite(&DebugMode->animator, NULL, false);
-}
-
-void Shutterbug_DebugSpawn(void)
-{
-    RSDK_THIS(Shutterbug);
-    RSDK.CreateEntity(Shutterbug->objectID, 0, entity->position.x, entity->position.y);
 }
 
 void Shutterbug_CheckOnScreen(void)
@@ -170,6 +158,9 @@ void Shutterbug_ShakeFly()
         entity->offset.y = entity->focus->position.y;
     }
     else if (!entity->offset.x) {
+        entity->offset.x = 0;
+        entity->offset.y = 0;
+
         while (abs(entity->offset.x) < 4) entity->offset.x = RSDK.Rand(-16, 17);
         while (abs(entity->offset.y) < 4) entity->offset.y = RSDK.Rand(-16, 17);
         entity->offset.x = entity->position.x + (entity->offset.x << 17);
@@ -304,4 +295,31 @@ void Shutterbug_HandleBodyAnim(void)
     else {
         entity->animator.frameID = (animTimer >> 1) + (((28 - --entity->flickerTimer) >> 1) & ~1);
     }
+}
+
+#if RETRO_INCLUDE_EDITOR
+void Shutterbug_EditorDraw(void)
+{
+    RSDK_THIS(Shutterbug);
+    RSDK.SetSpriteAnimation(Shutterbug->aniFrames, 0, &entity->animator, true, 0);
+    RSDK.SetSpriteAnimation(Shutterbug->aniFrames, 1, &entity->overlayAnim, true, 0);
+    entity->drawFX = FX_FLIP;
+
+    Shutterbug_Draw();
+}
+
+void Shutterbug_EditorLoad(void)
+{
+    if (RSDK.CheckStageFolder("SPZ1"))
+        Shutterbug->aniFrames = RSDK.LoadSpriteAnimation("SPZ1/Shutterbug.bin", SCOPE_STAGE);
+    else
+        Shutterbug->aniFrames = RSDK.LoadSpriteAnimation("SPZ2/Shutterbug.bin", SCOPE_STAGE);
+}
+#endif
+
+void Shutterbug_Serialize(void)
+{
+    RSDK_EDITABLE_VAR(Shutterbug, VAR_UINT8, snaps);
+    RSDK_EDITABLE_VAR(Shutterbug, VAR_BOOL, passThrough);
+    RSDK_EDITABLE_VAR(Shutterbug, VAR_VECTOR2, range);
 }
