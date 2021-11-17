@@ -85,7 +85,7 @@ void PKingAttack_CheckPlayerCollisions(void)
                     int angle = RSDK.ATan2(player->position.x - entity->position.x, player->position.y - entity->position.y);
                     if (entity->state == PKingAttack_Unknown4) {
                         player->blinkTimer = 120;
-                        Player_LoseRings(player, minVal(player->rings, 8), player->collisionPlane);
+                        Ring_LoseRings(player, minVal(player->rings, 8), player->collisionPlane);
                         player->rings -= minVal(player->rings, 8);
                         RSDK.PlaySfx(Player->sfxLoseRings, false, 255);
                     }

@@ -21,8 +21,8 @@ void RingField_Update(void)
                 ring->animator.animationSpeed = 512;
                 ring->state               = Ring_State_Normal;
                 ring->drawOrder           = Zone->drawOrderLow;
-                ring->stateDraw           = Ring_StateDraw_Normal;
-                ring->moveType            = RING_MOVE_NONE;
+                ring->stateDraw           = Ring_Draw_Normal;
+                ring->moveType            = RING_MOVE_FIXED;
                 RSDK.SetSpriteAnimation(RingField->aniFrames, 0, &ring->animator, true, 0);
 
                 int32 sx = (ScreenInfo->centerX + ScreenInfo->position.x) << 16;

@@ -280,7 +280,7 @@ void EggPrison_State_Activated(void)
                     angle = 208;
                 ring->alpha     = 0x100;
                 ring->state     = Ring_State_Bounce;
-                ring->stateDraw = Ring_StateDraw_Normal;
+                ring->stateDraw = Ring_Draw_Normal;
             }
             break;
         }

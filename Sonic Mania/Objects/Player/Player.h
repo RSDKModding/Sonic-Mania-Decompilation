@@ -445,8 +445,6 @@ void Player_BlendSuperRayColours(int32 bankID);
 #endif
 void Player_HandleSuperForm(void);
 bool32 Player_CheckKeyPress(void);
-void Player_LoseRings(EntityPlayer *player, int32 rings, uint8 cPlane);
-void Player_LoseHyperRings(EntityPlayer *player, int32 rings, uint8 cPlane);
 //returns the pointer to the nearest player to the current entity on the x axis only
 EntityPlayer *Player_GetNearestPlayerX(void);
 // returns the pointer to the nearest player to the current entity on both the x & y axis'

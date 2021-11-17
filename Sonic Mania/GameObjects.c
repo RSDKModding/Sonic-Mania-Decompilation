@@ -852,8 +852,8 @@ void LinkGameLogicDLL(EngineInfo *info)
         ADD_PUBLIC_FUNC(Player_ApplyShieldEffect);
         ADD_PUBLIC_FUNC(Player_ChangeCharacter);
         ADD_PUBLIC_FUNC(Player_CheckGoSuper);
-        ADD_PUBLIC_FUNC(Player_LoseRings);
-        ADD_PUBLIC_FUNC(Player_LoseHyperRings);
+        ADD_PUBLIC_FUNC(Ring_LoseRings);
+        ADD_PUBLIC_FUNC(Ring_LoseHyperRings);
         ADD_PUBLIC_FUNC(Player_HandleDeath);
         ADD_PUBLIC_FUNC(Player_ResetState);
 

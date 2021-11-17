@@ -1653,112 +1653,6 @@ bool32 Player_CheckKeyPress(void)
            || ControllerInfo[entity->controllerID].keyA.down || ControllerInfo[entity->controllerID].keyB.down
            || ControllerInfo[entity->controllerID].keyC.down || ControllerInfo[entity->controllerID].keyX.down;
 }
-void Player_LoseRings(EntityPlayer *player, int32 rings, uint8 cPlane)
-{
-    RSDK_THIS(Player);
-    int32 ringCntA = rings;
-    int32 ringCntB = rings - 16;
-    int32 ringCntC = rings - 32;
-
-    ringCntA = clampVal(ringCntA, 0, 16);
-    ringCntB = clampVal(ringCntB, 0, 16);
-    ringCntC = clampVal(ringCntC, 0, 16);
-
-    int32 angleStart = 0xC0 - 8 * (ringCntB & -2);
-    int32 angle      = angleStart + 8;
-    if (!(ringCntB & 1))
-        angle = angleStart - 8;
-
-    for (int32 i = 0; i < ringCntB; ++i) {
-        EntityRing *ring              = CREATE_ENTITY(Ring, player, player->position.x, player->position.y);
-        ring->velocity.x              = RSDK.Cos256(angle) << 9;
-        ring->velocity.y              = RSDK.Sin256(angle) << 9;
-        ring->animator.animationSpeed = 0x200;
-        ring->collisionPlane          = cPlane;
-        ring->inkEffect               = INK_ALPHA;
-        ring->alpha                   = 0x100;
-        ring->isPermanent             = true;
-        ring->state                   = Ring_State_Bounce;
-        ring->stateDraw               = Ring_StateDraw_Normal;
-        ring->drawOrder               = entity->drawOrder;
-        ring->moveType                = RING_MOVE_NORMAL;
-        angle += 16;
-    }
-
-    angleStart = 0xC0 - 8 * (ringCntA & -2);
-    angle      = angleStart + 8;
-    if (!(ringCntA & 1))
-        angle = angleStart - 8;
-
-    for (int32 i = 0; i < ringCntA; ++i) {
-        EntityRing *ring              = CREATE_ENTITY(Ring, player, player->position.x, player->position.y);
-        ring->velocity.x              = RSDK.Cos256(angle) << 10;
-        ring->velocity.y              = RSDK.Sin256(angle) << 10;
-        ring->animator.animationSpeed = 512;
-        ring->collisionPlane          = cPlane;
-        ring->inkEffect               = INK_ALPHA;
-        ring->alpha                   = 256;
-        ring->isPermanent             = true;
-        ring->state                   = Ring_State_Bounce;
-        ring->stateDraw               = Ring_StateDraw_Normal;
-        ring->drawOrder               = entity->drawOrder;
-        angle += 16;
-    }
-
-    angleStart = 0xC0 - 8 * (ringCntC & -2);
-    angle      = angleStart + 8;
-    if (!(ringCntC & 1))
-        angle = angleStart - 8;
-
-    for (int32 i = 0; i < ringCntC; ++i) {
-        EntityRing *ring = CREATE_ENTITY(Ring, player, player->position.x, player->position.y);
-        ring->velocity.x = RSDK.Cos256(angle) << 11;
-        ring->velocity.y = RSDK.Sin256(angle) << 11;
-        RSDK.SetSpriteAnimation(Ring->aniFrames, 1, &ring->animator, true, 0);
-        ring->scale.x                 = 0x100;
-        ring->animator.animationSpeed = 0x200;
-        ring->scale.y                 = 0x100;
-        ring->drawFX                  = FX_FLIP | FX_ROTATE | FX_SCALE;
-        ring->state                   = Ring_State_Grow;
-        ring->stateDraw               = Ring_StateDraw_Normal;
-        angle += 16;
-    }
-}
-void Player_LoseHyperRings(EntityPlayer *player, int32 rings, uint8 cPlane)
-{
-    int32 ringCnt = rings >> 2;
-    if (ringCnt <= 8) {
-        if (ringCnt < 1)
-            ringCnt = 1;
-    }
-    else {
-        ringCnt = 8;
-    }
-    int32 ringValue = rings / ringCnt;
-
-    int32 startAngle = 0xC0 - 0x10 * (ringCnt & 0xFFFFFFFE);
-    int32 angle      = startAngle + 0x10;
-    if (!(ringCnt & 1))
-        angle = startAngle - 0x10;
-
-    for (int32 i = 0; i < ringCnt; ++i) {
-        EntityRing *ring = (EntityRing *)RSDK.CreateEntity(Ring->objectID, player, player->position.x, player->position.y);
-        RSDK.SetSpriteAnimation(Ring->aniFrames, 1, &ring->animator, true, 0);
-        ring->type                    = 1;
-        ring->velocity.x              = 0x300 * RSDK.Cos256(angle);
-        ring->isPermanent             = true;
-        ring->drawFX                  = 5;
-        ring->alpha                   = 0x100;
-        ring->velocity.y              = 0x300 * RSDK.Sin256(angle);
-        ring->animator.animationSpeed = 0x180;
-        ring->collisionPlane          = cPlane;
-        ring->angle                   = i << 6;
-        ring->ringAmount              = ringValue;
-        ring->state                   = Ring_State_Big;
-        ring->stateDraw               = Ring_StateDraw_Normal;
-        angle += 32;
-    }
-}
 EntityPlayer *Player_GetNearestPlayerX(void)
 {
     int32 distance = 0x7FFFFFFF;
@@ -3259,9 +3153,9 @@ void Player_Hit(EntityPlayer *player)
             }
 
             if (player->hyperRing)
-                Player_LoseHyperRings(player, player->rings, player->collisionPlane);
+                Ring_LoseHyperRings(player, player->rings, player->collisionPlane);
             else
-                Player_LoseRings(player, player->rings, player->collisionPlane);
+                Ring_LoseRings(player, player->rings, player->collisionPlane);
             player->hyperRing     = 0;
             player->rings         = 0;
             player->ringExtraLife = 100;

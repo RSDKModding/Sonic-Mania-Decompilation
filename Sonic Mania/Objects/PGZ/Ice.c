@@ -602,7 +602,7 @@ Entity *Ice_Shatter(EntityIce *ice, int32 velX, int32 velY)
                 ring->state          = Ring_State_Bounce;
                 ring->position.y += (0x50000 * ice->type) - 0x50000;
                 ring->animator.animationSpeed = 512;
-                ring->stateDraw               = Ring_StateDraw_Normal;
+                ring->stateDraw               = Ring_Draw_Normal;
                 angle += 16;
             }
             break;

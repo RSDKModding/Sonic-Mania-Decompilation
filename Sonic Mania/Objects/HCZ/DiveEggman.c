@@ -452,9 +452,9 @@ void DiveEggman_State2_Unknown3(void)
                         else {
                             player1->blinkTimer = 120;
                             if (!player1->hyperRing)
-                                Player_LoseRings(player1, player1->rings, player1->collisionPlane);
+                                Ring_LoseRings(player1, player1->rings, player1->collisionPlane);
                             else
-                                Player_LoseHyperRings(player1, player1->rings, player1->collisionPlane);
+                                Ring_LoseHyperRings(player1, player1->rings, player1->collisionPlane);
                             player1->hyperRing     = false;
                             player1->rings         = 0;
                             player1->ringExtraLife = 100;

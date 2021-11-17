@@ -149,7 +149,7 @@ void SpecialRing_State_Warp(void)
             EntityRing *ring = CREATE_ENTITY(Ring, NULL, (RSDK.Rand(-0x200000, 0x20000) + entity->dword68) + entity->position.x,
                                              entity->position.y + RSDK.Rand(-0x200000, 0x200000));
             ring->state     = Ring_State_Sparkle;
-            ring->stateDraw = Ring_StateDraw_Sparkle;
+            ring->stateDraw = Ring_Draw_Sparkle;
             ring->active    = ACTIVE_NORMAL;
             ring->visible   = 0;
             ring->drawOrder = Zone->drawOrderLow;

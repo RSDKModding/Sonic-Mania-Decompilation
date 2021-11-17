@@ -223,7 +223,7 @@ void SignPost_SpawnSparkle(void)
         EntityRing *ring =
             CREATE_ENTITY(Ring, 0, entity->position.x + RSDK.Rand(-0x180000, 0x180000), entity->position.y + RSDK.Rand(-0x200000, 0x80000));
         ring->state      = Ring_State_Sparkle;
-        ring->stateDraw  = Ring_StateDraw_Sparkle;
+        ring->stateDraw  = Ring_Draw_Sparkle;
         ring->active     = ACTIVE_NORMAL;
         ring->visible    = false;
         RSDK.SetSpriteAnimation(Ring->aniFrames, entity->sparkleType + 2, &ring->animator, true, 0);
