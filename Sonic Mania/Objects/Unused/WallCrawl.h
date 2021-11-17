@@ -7,8 +7,8 @@
 typedef struct {
     RSDK_OBJECT
     Hitbox hitbox;
-    Hitbox hitbox2;
-    Hitbox hitbox3;
+    Hitbox checkbox;
+    Hitbox attackbox;
     Hitbox projectileHurtbox;
     uint16 aniFrames;
 } ObjectWallCrawl;

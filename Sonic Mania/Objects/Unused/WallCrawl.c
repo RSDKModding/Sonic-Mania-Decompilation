@@ -45,19 +45,19 @@ void WallCrawl_Create(void *data)
 
 void WallCrawl_StageLoad(void)
 {
-    WallCrawl->aniFrames               = RSDK.LoadSpriteAnimation("Blueprint/WallCrawl.bin", SCOPE_STAGE);
-    WallCrawl->hitbox.left       = -14;
-    WallCrawl->hitbox.top        = -14;
-    WallCrawl->hitbox.right      = 14;
-    WallCrawl->hitbox.bottom     = 14;
-    WallCrawl->hitbox2.left            = -128;
-    WallCrawl->hitbox2.top             = -128;
-    WallCrawl->hitbox2.right           = 128;
-    WallCrawl->hitbox2.bottom          = 128;
-    WallCrawl->hitbox3.left            = -132;
-    WallCrawl->hitbox3.top             = 8;
-    WallCrawl->hitbox3.right           = 132;
-    WallCrawl->hitbox3.bottom          = -8;
+    WallCrawl->aniFrames                = RSDK.LoadSpriteAnimation("Blueprint/WallCrawl.bin", SCOPE_STAGE);
+    WallCrawl->hitbox.left              = -14;
+    WallCrawl->hitbox.top               = -14;
+    WallCrawl->hitbox.right             = 14;
+    WallCrawl->hitbox.bottom            = 14;
+    WallCrawl->checkbox.left            = -128;
+    WallCrawl->checkbox.top             = -128;
+    WallCrawl->checkbox.right           = 128;
+    WallCrawl->checkbox.bottom          = 128;
+    WallCrawl->attackbox.left           = -132;
+    WallCrawl->attackbox.top            = 8;
+    WallCrawl->attackbox.right          = 132;
+    WallCrawl->attackbox.bottom         = -8;
     WallCrawl->projectileHurtbox.left   = -24;
     WallCrawl->projectileHurtbox.top    = -1;
     WallCrawl->projectileHurtbox.right  = 24;
@@ -85,7 +85,7 @@ void WallCrawl_HandlePlayerInteractions(void)
     foreach_active(Player, player)
     {
         if (!entity->timer) {
-            if (Player_CheckCollisionTouch(player, entity, &WallCrawl->hitbox2)) {
+            if (Player_CheckCollisionTouch(player, entity, &WallCrawl->checkbox)) {
                 if (entity->playerPtr) {
                     if (abs(player->position.x - entity->position.x) < abs(entity->playerPtr->position.x - entity->position.x))
                         entity->playerPtr = player;
@@ -136,8 +136,8 @@ void WallCrawl_State_Main(void)
         entity->timer--;
     EntityPlayer *playerPtr = entity->playerPtr;
     if (playerPtr) {
-        if (Player_CheckCollisionTouch(playerPtr, entity, &WallCrawl->hitbox2)) {
-            if (!Player_CheckCollisionTouch(playerPtr, entity, &WallCrawl->hitbox3)) {
+        if (Player_CheckCollisionTouch(playerPtr, entity, &WallCrawl->checkbox)) {
+            if (!Player_CheckCollisionTouch(playerPtr, entity, &WallCrawl->attackbox)) {
                 entity->animator.animationSpeed = 48;
                 if (playerPtr->position.y <= entity->position.y) {
                     entity->direction &= ~FX_ROTATE;
