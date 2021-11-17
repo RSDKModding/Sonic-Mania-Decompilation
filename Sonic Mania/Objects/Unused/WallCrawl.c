@@ -46,10 +46,10 @@ void WallCrawl_Create(void *data)
 void WallCrawl_StageLoad(void)
 {
     WallCrawl->aniFrames               = RSDK.LoadSpriteAnimation("Blueprint/WallCrawl.bin", SCOPE_STAGE);
-    WallCrawl->hitboxBadnik.left       = -14;
-    WallCrawl->hitboxBadnik.top        = -14;
-    WallCrawl->hitboxBadnik.right      = 14;
-    WallCrawl->hitboxBadnik.bottom     = 14;
+    WallCrawl->hitbox.left       = -14;
+    WallCrawl->hitbox.top        = -14;
+    WallCrawl->hitbox.right      = 14;
+    WallCrawl->hitbox.bottom     = 14;
     WallCrawl->hitbox2.left            = -128;
     WallCrawl->hitbox2.top             = -128;
     WallCrawl->hitbox2.right           = 128;
@@ -58,10 +58,10 @@ void WallCrawl_StageLoad(void)
     WallCrawl->hitbox3.top             = 8;
     WallCrawl->hitbox3.right           = 132;
     WallCrawl->hitbox3.bottom          = -8;
-    WallCrawl->hitboxProjectile.left   = -24;
-    WallCrawl->hitboxProjectile.top    = -1;
-    WallCrawl->hitboxProjectile.right  = 24;
-    WallCrawl->hitboxProjectile.bottom = 9;
+    WallCrawl->projectileHurtbox.left   = -24;
+    WallCrawl->projectileHurtbox.top    = -1;
+    WallCrawl->projectileHurtbox.right  = 24;
+    WallCrawl->projectileHurtbox.bottom = 9;
     DEBUGMODE_ADD_OBJ(WallCrawl);
 }
 
@@ -95,7 +95,7 @@ void WallCrawl_HandlePlayerInteractions(void)
                 }
             }
         }
-        if (Player_CheckBadnikTouch(player, entity, &WallCrawl->hitboxBadnik))
+        if (Player_CheckBadnikTouch(player, entity, &WallCrawl->hitbox))
             Player_CheckBadnikBreak(entity, player, true);
     }
 }
@@ -220,7 +220,7 @@ void WallCrawl_State_Projectile(void)
 
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionTouch(player, entity, &WallCrawl->hitboxProjectile)) {
+        if (Player_CheckCollisionTouch(player, entity, &WallCrawl->projectileHurtbox)) {
             Player_CheckHit(player, entity);
         }
     }
