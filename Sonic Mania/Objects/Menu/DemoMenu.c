@@ -150,7 +150,7 @@ void DemoMenu_State_Load(void)
 
         foreach_all(TitleSetup, titleSetup)
         {
-            titleSetup->state     = TitleSetup_Unknown11;
+            titleSetup->state     = TitleSetup_FadeToMenu;
             titleSetup->stateDraw = TitleSetup_DrawState_FadeBlack;
         }
         entity->state = DemoMenu_State_Disappear;

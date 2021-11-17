@@ -154,11 +154,11 @@ void TitleSetup_AnimateUntilFlash(void)
                 }
             }
         }
-        entity->state = TitleSetup_Unknown6;
+        entity->state = TitleSetup_Flash;
     }
 }
 
-void TitleSetup_Unknown6(void)
+void TitleSetup_Flash(void)
 {
     RSDK_THIS(TitleSetup);
 
@@ -191,12 +191,12 @@ void TitleSetup_Unknown6(void)
 
         TitleBG_SetupFX();
         entity->timer     = 0x300;
-        entity->state     = TitleSetup_Unknown7;
+        entity->state     = TitleSetup_WaitForSonic;
         entity->stateDraw = TitleSetup_DrawState_Flash;
     }
 }
 
-void TitleSetup_Unknown7(void)
+void TitleSetup_WaitForSonic(void)
 {
     RSDK_THIS(TitleSetup);
     TitleSetup_CheckCheatCode();
@@ -236,7 +236,7 @@ void TitleSetup_SetupLogo(void)
             }
         }
         entity->timer = 0;
-        entity->state = TitleSetup_Unknown10;
+        entity->state = TitleSetup_WaitForEnter;
     }
 }
 #if RETRO_USE_PLUS
@@ -276,19 +276,19 @@ void TitleSetup_SetupLogo_Plus(void)
 }
 #endif
 
-void TitleSetup_Unknown10(void)
+void TitleSetup_WaitForEnter(void)
 {
     RSDK_THIS(TitleSetup);
-    bool32 skipped = RSDK_controller->keyA.press || RSDK_controller->keyB.press || RSDK_controller->keyC.press || RSDK_controller->keyX.press
+    bool32 anyButton = RSDK_controller->keyA.press || RSDK_controller->keyB.press || RSDK_controller->keyC.press || RSDK_controller->keyX.press
                      || RSDK_controller->keyY.press || RSDK_controller->keyZ.press || RSDK_controller->keyStart.press
                      || RSDK_controller->keySelect.press;
 #if RETRO_USE_PLUS
-    bool32 skipped2 = (!RSDK_touchMouse->count && entity->touched) || RSDK_unknown->field_28;
+    bool32 anyClick = (!RSDK_touchMouse->count && entity->touched) || RSDK_unknown->field_28;
 #else
-    bool32 skipped2 = !RSDK_touchMouse->count && entity->touched;
+    bool32 anyClick = !RSDK_touchMouse->count && entity->touched;
 #endif
     entity->touched = RSDK_touchMouse->count > 0;
-    if (skipped2 || skipped) {
+    if (anyClick || anyButton) {
         RSDK.PlaySfx(TitleSetup->sfxMenuAccept, 0, 255);
         entity->timer = 0;
         const char *nextScene = "Menu";
@@ -305,17 +305,17 @@ void TitleSetup_Unknown10(void)
         API_ResetControllerAssignments();
         API_AssignControllerID(1, id);
         RSDK.StopChannel(Music->channelID);
-        entity->state     = TitleSetup_Unknown11;
+        entity->state     = TitleSetup_FadeToMenu;
         entity->stateDraw = TitleSetup_DrawState_FadeBlack;
     }
     else if (++entity->timer == 800) {
         entity->timer     = 0;
-        entity->state     = TitleSetup_Unknown12;
+        entity->state     = TitleSetup_FadeToVideo;
         entity->stateDraw = TitleSetup_DrawState_FadeBlack;
     }
 }
 
-void TitleSetup_Unknown11(void)
+void TitleSetup_FadeToMenu(void)
 {
     RSDK_THIS(TitleSetup);
     if (entity->timer >= 1024) {
@@ -326,7 +326,7 @@ void TitleSetup_Unknown11(void)
     }
 }
 
-void TitleSetup_Unknown12(void)
+void TitleSetup_FadeToVideo(void)
 {
     RSDK_THIS(TitleSetup);
     if (entity->timer >= 1024) {

@@ -5,13 +5,11 @@ ObjectTitle3DSprite *Title3DSprite;
 void Title3DSprite_Update(void)
 {
     RSDK_THIS(Title3DSprite);
-    int32 sinY         = (entity->position.y >> 8) * RSDK.Sin1024(TitleBG->angle);
-    int32 cosY         = (entity->position.y >> 8) * RSDK.Cos1024(TitleBG->angle);
-    entity->field_5C = sinY + (entity->position.x >> 8) * RSDK.Cos1024(TitleBG->angle);
-    entity->field_60 = cosY - (entity->position.x >> 8) * RSDK.Sin1024(TitleBG->angle);
-    entity->field_60 >>= 10;
-    entity->depth3D  = entity->field_60;
-    entity->field_5C = -entity->field_5C >> 10;
+    int32 sinY      = (entity->position.y >> 8) * RSDK.Sin1024(TitleBG->angle);
+    int32 cosY      = (entity->position.y >> 8) * RSDK.Cos1024(TitleBG->angle);
+    entity->relX    = (-sinY - (entity->position.x >> 8) * RSDK.Cos1024(TitleBG->angle)) >> 10;
+    entity->relY    = (cosY - (entity->position.x >> 8) * RSDK.Sin1024(TitleBG->angle)) >> 10;
+    entity->depth3D = entity->relY;
 }
 
 void Title3DSprite_LateUpdate(void) {}
@@ -21,17 +19,17 @@ void Title3DSprite_StaticUpdate(void) {}
 void Title3DSprite_Draw(void)
 {
     RSDK_THIS(Title3DSprite);
-    int32 depth = entity->depth3D + Title3DSprite->field_C;
+    int32 depth = entity->depth3D + Title3DSprite->baseDepth;
     if (depth && depth >= 256) {
-        int32 scale = 0x18000 * Title3DSprite->field_4 / depth;
+        int32 scale = 0x18000 * Title3DSprite->islandSize / depth;
         if (scale > 0x200)
             scale = 0x200;
         entity->scale.x = scale;
         entity->scale.y = scale;
 
         Vector2 drawPos;
-        drawPos.x = (RSDK_screens->centerX + Title3DSprite->field_4 * entity->field_5C / depth) << 16;
-        drawPos.y = (Title3DSprite->field_4 * Title3DSprite->field_8 / depth + 152) << 16;
+        drawPos.x = (Title3DSprite->islandSize * entity->relX / depth + RSDK_screens->centerX) << 16;
+        drawPos.y = (Title3DSprite->islandSize * Title3DSprite->height / depth + 152) << 16;
         RSDK.DrawSprite(&entity->animator, &drawPos, true);
     }
 }
@@ -52,10 +50,10 @@ void Title3DSprite_Create(void *data)
 
 void Title3DSprite_StageLoad(void)
 {
-    Title3DSprite->aniFrames = RSDK.LoadSpriteAnimation("Title/Background.bin", SCOPE_STAGE);
-    Title3DSprite->field_4     = 0x90;
-    Title3DSprite->field_8     = 0x2800;
-    Title3DSprite->field_C     = 0xA000;
+    Title3DSprite->aniFrames  = RSDK.LoadSpriteAnimation("Title/Background.bin", SCOPE_STAGE);
+    Title3DSprite->islandSize = 0x90;
+    Title3DSprite->height     = 0x2800;
+    Title3DSprite->baseDepth  = 0xA000;
 }
 
 #if RETRO_INCLUDE_EDITOR

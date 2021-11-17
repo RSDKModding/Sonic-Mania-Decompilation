@@ -48,15 +48,15 @@ bool32 TitleSetup_IntroCallback(void);
 
 void TitleSetup_Wait(void);
 void TitleSetup_AnimateUntilFlash(void);
-void TitleSetup_Unknown6(void);
-void TitleSetup_Unknown7(void);
+void TitleSetup_Flash(void);
+void TitleSetup_WaitForSonic(void);
 void TitleSetup_SetupLogo(void);
 #if RETRO_USE_PLUS
 void TitleSetup_SetupLogo_Plus(void);
 #endif
-void TitleSetup_Unknown10(void);
-void TitleSetup_Unknown11(void);
-void TitleSetup_Unknown12(void);
+void TitleSetup_WaitForEnter(void);
+void TitleSetup_FadeToMenu(void);
+void TitleSetup_FadeToVideo(void);
 void TitleSetup_DrawState_FadeBlack(void);
 void TitleSetup_DrawState_DrawRing(void);
 void TitleSetup_DrawState_Flash(void);
