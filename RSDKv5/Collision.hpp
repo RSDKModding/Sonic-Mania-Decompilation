@@ -53,19 +53,19 @@ extern Entity *collisionEntity;
 extern CollisionSensor sensors[6];
 
 bool32 CheckObjectCollisionTouch(Entity *thisEntity, Hitbox *thisHitbox, Entity *otherEntity, Hitbox *otherHitbox);
-inline bool32 CheckObjectCollisionCircle(Entity *thisEntity, int32 thisOffset, Entity *otherEntity, int32 otherOffset)
+inline bool32 CheckObjectCollisionCircle(Entity *thisEntity, int32 thisRadius, Entity *otherEntity, int32 otherRadius)
 {
     int x = (thisEntity->position.x - otherEntity->position.x) >> 16;
     int y = (thisEntity->position.y - otherEntity->position.y) >> 16;
-    int r = (thisOffset + otherOffset) >> 16;
+    int r = (thisRadius + otherRadius) >> 16;
 
 #if !RETRO_USE_ORIGINAL_CODE
     if (showHitboxes) {
         bool32 collided = x * x + y * y < r * r;
         Hitbox thisHitbox;
         Hitbox otherHitbox;
-        thisHitbox.left = thisOffset >> 16;
-        otherHitbox.left = otherOffset >> 16;
+        thisHitbox.left = thisRadius >> 16;
+        otherHitbox.left = otherRadius >> 16;
 
         int thisHitboxID  = addDebugHitbox(H_TYPE_CIRCLE, FLIP_NONE, thisEntity, &thisHitbox);
         int otherHitboxID = addDebugHitbox(H_TYPE_CIRCLE, FLIP_NONE, otherEntity, &otherHitbox);
