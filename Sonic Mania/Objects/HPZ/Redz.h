@@ -7,7 +7,7 @@
 typedef struct {
     RSDK_OBJECT
     Hitbox hitboxBadnik;
-    Hitbox hitbox2;
+    Hitbox attackbox;
     Hitbox hitboxFlame;
     Hitbox hitboxRange;
     uint16 aniFrames;
@@ -48,11 +48,11 @@ void Redz_DebugDraw(void);
 void Redz_HandlePlayerInteractions(void);
 
 void Redz_State_Setup(void);
-void Redz_State_Unknown(void);
-void Redz_State_Unknown2(void);
-void Redz_State_Unknown3(void);
-void Redz_State_Unknown4(void);
-void Redz_State_FlameSetup(void);
-void Redz_State_Flame(void);
+void Redz_State_Walk(void);
+void Redz_State_Turn(void);
+void Redz_State_PrepareAttack(void);
+void Redz_State_Attack(void);
+void Redz_Flame_Setup(void);
+void Redz_Flame_State(void);
 
 #endif //!OBJ_REDZ_H
