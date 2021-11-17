@@ -34,7 +34,7 @@ typedef struct {
     uint16 layerID;
     int32 timer;
     Vector2 tilePos;
-    int32 dword88;
+    int32 tileRotation;
     int32 gravityStrength;
     Hitbox hitbox;
 } EntityBreakableWall;
