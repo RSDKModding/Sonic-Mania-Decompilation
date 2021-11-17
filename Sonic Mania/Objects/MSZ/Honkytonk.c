@@ -41,7 +41,7 @@ void Honkytonk_Update(void)
             player->jumpAbility = 0;
             player->velocity.y  = -0x80000;
             if (player->playerAnimator.animationID != ANI_JUMP)
-                RSDK.SetSpriteAnimation(player->spriteIndex, ANI_SPRINGCS, &player->playerAnimator, true, 0);
+                RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGCS, &player->playerAnimator, true, 0);
 
             player->velocity.y = clampVal(player->velocity.y, -0x80000, -0x20000);
 

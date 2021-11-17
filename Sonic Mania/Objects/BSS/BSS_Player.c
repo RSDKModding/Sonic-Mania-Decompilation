@@ -12,8 +12,8 @@ void BSS_Player_Update(void)
         if (entity->jumpPress) {
             entity->velocity.y = -0x100000;
             entity->onGround   = false;
-            RSDK.SetSpriteAnimation(entity->spriteIndex, 2, &entity->playerAnimator, false, 0);
-            RSDK.PlaySfx(BSS_Player->sfx_Jump, 0, 255);
+            RSDK.SetSpriteAnimation(entity->aniFrames, 2, &entity->playerAnimator, false, 0);
+            RSDK.PlaySfx(BSS_Player->sfxJump, 0, 255);
         }
     }
     else {
@@ -33,9 +33,9 @@ void BSS_Player_Update(void)
             }
 
             if (setup->maxSpeed)
-                RSDK.SetSpriteAnimation(entity->spriteIndex, 1, &entity->playerAnimator, false, 0);
+                RSDK.SetSpriteAnimation(entity->aniFrames, 1, &entity->playerAnimator, false, 0);
             else
-                RSDK.SetSpriteAnimation(entity->spriteIndex, 0, &entity->playerAnimator, false, 0);
+                RSDK.SetSpriteAnimation(entity->aniFrames, 0, &entity->playerAnimator, false, 0);
         }
     }
 
@@ -103,18 +103,18 @@ void BSS_Player_Create(void *data)
         entity->updateRange.y = 0x800000;
         switch (globals->playerID & 0xFF) {
             case ID_TAILS:
-                entity->spriteIndex = BSS_Player->tailsSpriteIndex;
-                RSDK.SetSpriteAnimation(entity->spriteIndex, 4, &entity->tailAnimator, true, 0);
+                entity->aniFrames = BSS_Player->tailsSpriteIndex;
+                RSDK.SetSpriteAnimation(entity->aniFrames, 4, &entity->tailAnimator, true, 0);
                 break;
-            case ID_KNUCKLES: entity->spriteIndex = BSS_Player->knuxSpriteIndex; break;
+            case ID_KNUCKLES: entity->aniFrames = BSS_Player->knuxSpriteIndex; break;
 #if RETRO_USE_PLUS
-            case ID_MIGHTY: entity->spriteIndex = BSS_Player->mightySpriteIndex; break;
+            case ID_MIGHTY: entity->aniFrames = BSS_Player->mightySpriteIndex; break;
             case ID_RAY:
-                entity->spriteIndex = BSS_Player->raySpriteIndex;
-                RSDK.SetSpriteAnimation(entity->spriteIndex, 4, &entity->tailAnimator, true, 0);
+                entity->aniFrames = BSS_Player->raySpriteIndex;
+                RSDK.SetSpriteAnimation(entity->aniFrames, 4, &entity->tailAnimator, true, 0);
                 break;
 #endif
-            default: entity->spriteIndex = BSS_Player->sonicSpriteIndex; break;
+            default: entity->aniFrames = BSS_Player->sonicSpriteIndex; break;
         }
 
         if (RSDK_sceneInfo->entitySlot) {
@@ -126,7 +126,7 @@ void BSS_Player_Create(void *data)
             entity->controllerID = CONT_P1;
             entity->sideKick     = false;
         }
-        RSDK.SetSpriteAnimation(entity->spriteIndex, 0, &entity->playerAnimator, true, 0);
+        RSDK.SetSpriteAnimation(entity->aniFrames, 0, &entity->playerAnimator, true, 0);
     }
 }
 
@@ -140,7 +140,7 @@ void BSS_Player_StageLoad(void)
     if (globals->playerID == ID_NONE)
         globals->playerID = ID_DEFAULT_PLAYER;
     RSDK.ResetEntitySlot(SLOT_PLAYER1, BSS_Player->objectID, NULL);
-    BSS_Player->sfx_Jump = RSDK.GetSFX("Global/Jump.wav");
+    BSS_Player->sfxJump = RSDK.GetSFX("Global/Jump.wav");
 }
 
 void BSS_Player_ProcessP1Input(void)

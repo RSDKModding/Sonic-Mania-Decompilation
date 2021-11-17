@@ -43,7 +43,7 @@ void Whirlpool_Update(void)
                             entity->field_278[playerID] = 0;
                         else
                             entity->field_278[playerID] = 512;
-                        RSDK.SetSpriteAnimation(player->spriteIndex, ANI_FAN, &player->playerAnimator, true, 0);
+                        RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->playerAnimator, true, 0);
                     }
                 }
 

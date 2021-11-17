@@ -53,7 +53,7 @@ void PlaneSwitch_Draw(void)
 void PlaneSwitch_Create(void *data)
 {
     RSDK_THIS(PlaneSwitch);
-    RSDK.SetSpriteAnimation(PlaneSwitch->spriteIndex, 0, &entity->animator, true, 0);
+    RSDK.SetSpriteAnimation(PlaneSwitch->aniFrames, 0, &entity->animator, true, 0);
     if (!RSDK_sceneInfo->inEditor) {
         entity->active = ACTIVE_BOUNDS;
 
@@ -77,7 +77,7 @@ void PlaneSwitch_Create(void *data)
     }
 }
 
-void PlaneSwitch_StageLoad(void) { PlaneSwitch->spriteIndex = RSDK.LoadSpriteAnimation("Global/PlaneSwitch.bin", SCOPE_STAGE); }
+void PlaneSwitch_StageLoad(void) { PlaneSwitch->aniFrames = RSDK.LoadSpriteAnimation("Global/PlaneSwitch.bin", SCOPE_STAGE); }
 
 void PlaneSwitch_CheckCollisions(EntityPlaneSwitch *entity, void *o, int32 flags, int32 size, bool32 switchDrawOrder, uint8 low, uint8 high)
 {

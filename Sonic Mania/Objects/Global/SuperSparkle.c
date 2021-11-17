@@ -24,7 +24,7 @@ void SuperSparkle_Update(void)
                 debris->alpha        = 256;
                 debris->drawOrder    = Zone->drawOrderHigh;
                 debris->drawOrder    = player->drawOrder;
-                RSDK.SetSpriteAnimation(SuperSparkle->spriteIndex, 0, &debris->animator, true, 0);
+                RSDK.SetSpriteAnimation(SuperSparkle->aniFrames, 0, &debris->animator, true, 0);
             }
         }
         else {
@@ -40,7 +40,7 @@ void SuperSparkle_Update(void)
             ring->visible    = 0;
             ring->velocity.y = -0x10000;
             ring->drawOrder  = player->drawOrder;
-            RSDK.SetSpriteAnimation(Ring->spriteIndex, Zone->timer % 3 + 2, &ring->animator, true, 0);
+            RSDK.SetSpriteAnimation(Ring->aniFrames, Zone->timer % 3 + 2, &ring->animator, true, 0);
             int32 cnt = ring->animator.frameCount;
             if (ring->animator.animationID == 2) {
                 ring->alpha = 224;
@@ -69,7 +69,7 @@ void SuperSparkle_Create(void *data)
     }
 }
 
-void SuperSparkle_StageLoad(void) { SuperSparkle->spriteIndex = RSDK.LoadSpriteAnimation("Global/SuperSparkle.bin", SCOPE_STAGE); }
+void SuperSparkle_StageLoad(void) { SuperSparkle->aniFrames = RSDK.LoadSpriteAnimation("Global/SuperSparkle.bin", SCOPE_STAGE); }
 
 #if RETRO_INCLUDE_EDITOR
 void SuperSparkle_EditorDraw(void) {}

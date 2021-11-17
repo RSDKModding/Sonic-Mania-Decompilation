@@ -167,7 +167,7 @@ void Piston_Launch(void)
                 player->velocity.y = -0x100000;
                 player->state      = Player_State_Air;
                 player->onGround   = false;
-                RSDK.SetSpriteAnimation(player->spriteIndex, ANI_SPRINGTWIRL, &player->playerAnimator, true, 0);
+                RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGTWIRL, &player->playerAnimator, true, 0);
             }
         }
         entity->moveTimer = entity->distance;
@@ -241,7 +241,7 @@ void Piston_LaunchAndWait(void)
                 player->velocity.y = -0x100000;
                 player->state      = Player_State_Air;
                 player->onGround   = false;
-                RSDK.SetSpriteAnimation(player->spriteIndex, ANI_SPRINGTWIRL, &player->playerAnimator, true, 0);
+                RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGTWIRL, &player->playerAnimator, true, 0);
             }
         }
         entity->state = Piston_WaitForPlayers;

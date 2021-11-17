@@ -821,29 +821,29 @@ void ReplayRecorder_SetGimmickState(EntityReplayRecorder *recorder, bool32 flag)
                 if (RSDK.CheckStageFolder("MMZ")) {
                     switch (player->characterID) {
                         case ID_TAILS:
-                            player->spriteIndex     = SizeLaser->tailsIndex;
+                            player->aniFrames     = SizeLaser->tailsIndex;
                             player->tailSpriteIndex = SizeLaser->tailSpriteIndex;
                             break;
-                        case ID_KNUCKLES: player->spriteIndex = SizeLaser->knuxIndex; break;
-                        case ID_MIGHTY: player->spriteIndex = SizeLaser->mightyIndex; break;
-                        case ID_RAY: player->spriteIndex = SizeLaser->rayIndex; break;
-                        default: player->spriteIndex = SizeLaser->sonicIndex; break;
+                        case ID_KNUCKLES: player->aniFrames = SizeLaser->knuxIndex; break;
+                        case ID_MIGHTY: player->aniFrames = SizeLaser->mightyIndex; break;
+                        case ID_RAY: player->aniFrames = SizeLaser->rayIndex; break;
+                        default: player->aniFrames = SizeLaser->sonicIndex; break;
                     }
                 }
                 else if (RSDK.CheckStageFolder("PSZ2")) {
-                    player->spriteIndex = Ice->aniFrames;
+                    player->aniFrames = Ice->aniFrames;
                 }
             }
             else {
                 switch (player->characterID) {
                     case ID_TAILS:
-                        player->spriteIndex     = Player->tailsSpriteIndex;
+                        player->aniFrames     = Player->tailsSpriteIndex;
                         player->tailSpriteIndex = Player->tailsTailsSpriteIndex;
                         break;
-                    case ID_KNUCKLES: player->spriteIndex = Player->knuxSpriteIndex; break;
-                    case ID_MIGHTY: player->spriteIndex = Player->mightySpriteIndex; break;
-                    case ID_RAY: player->spriteIndex = Player->raySpriteIndex; break;
-                    default: player->spriteIndex = Player->sonicSpriteIndex; break;
+                    case ID_KNUCKLES: player->aniFrames = Player->knuxSpriteIndex; break;
+                    case ID_MIGHTY: player->aniFrames = Player->mightySpriteIndex; break;
+                    case ID_RAY: player->aniFrames = Player->raySpriteIndex; break;
+                    default: player->aniFrames = Player->sonicSpriteIndex; break;
                 }
             }
         }
@@ -862,7 +862,7 @@ void ReplayRecorder_ApplyFrameData(EntityReplayRecorder *recorder, uint8 *buffer
         player->direction  = buffer[3];
         player->rotation   = bufferPtr[5];
         ReplayRecorder_SetGimmickState(recorder, ((buffer[1] & 8) > 0));
-        RSDK.SetSpriteAnimation(player->spriteIndex, buffer[24], &player->playerAnimator, true, buffer[25]);
+        RSDK.SetSpriteAnimation(player->aniFrames, buffer[24], &player->playerAnimator, true, buffer[25]);
         player->playerAnimator.animationSpeed = 0;
     }
 }
@@ -887,10 +887,10 @@ void ReplayRecorder_Unknown19(EntityReplayRecorder *recorder, uint8 *buffer)
         ReplayRecorder_SetGimmickState(recorder, ((buffer[1] & 8) > 0));
 
         if (buffer[1] & 0x40) {
-            RSDK.SetSpriteAnimation(player->spriteIndex, buffer[24], &player->playerAnimator, true, buffer[25]);
+            RSDK.SetSpriteAnimation(player->aniFrames, buffer[24], &player->playerAnimator, true, buffer[25]);
         }
         else if ((buffer[1] & 0x80)) {
-            RSDK.SetSpriteAnimation(player->spriteIndex, player->playerAnimator.animationID, &player->playerAnimator, true, buffer[25]);
+            RSDK.SetSpriteAnimation(player->aniFrames, player->playerAnimator.animationID, &player->playerAnimator, true, buffer[25]);
         }
         player->playerAnimator.animationSpeed = 0;
     }

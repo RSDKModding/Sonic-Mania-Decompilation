@@ -450,7 +450,7 @@ void EggJanken_State1_Destroyed(void)
             Music_TransitionTrack(TRACK_STAGE, 0.0125);
             break;
         case 180: {
-            RSDK.PlaySfx(SignPost->sfx_Twinkle, false, 255);
+            RSDK.PlaySfx(SignPost->sfxTwinkle, false, 255);
             EntitySignPost *signPost = RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot + 1, SignPost);
             signPost->position.x     = entity->position.x;
             signPost->state          = SignPost_State_Fall;

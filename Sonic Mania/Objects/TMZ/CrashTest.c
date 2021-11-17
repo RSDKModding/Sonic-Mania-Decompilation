@@ -206,8 +206,8 @@ void CrashTest_CheckPlayerRide(void)
             if (Player_CheckCollisionTouch(player, entity, &entity->hitbox1)) {
                 entity->activePlayers |= 1 << playerID;
                 player->groundVel = 0;
-                RSDK.PlaySfx(Player->sfx_Grab, false, 255);
-                RSDK.SetSpriteAnimation(player->spriteIndex, ANI_HURT, &player->playerAnimator, false, 4);
+                RSDK.PlaySfx(Player->sfxGrab, false, 255);
+                RSDK.SetSpriteAnimation(player->aniFrames, ANI_HURT, &player->playerAnimator, false, 4);
                 player->nextGroundState = StateMachine_None;
                 player->nextAirState    = StateMachine_None;
                 player->state           = Player_State_None;

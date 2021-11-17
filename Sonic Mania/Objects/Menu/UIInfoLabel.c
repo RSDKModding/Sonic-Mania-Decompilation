@@ -61,7 +61,7 @@ void UIInfoLabel_DrawSprites(void)
     UIWidgets_Unknown7(entity->size.y >> 0x10, size, entity->width, 0, 0, 0, entity->position.x, entity->position.y);
 
     if (RSDK_sceneInfo->inEditor) {
-        RSDK.SetSpriteAnimation(UIInfoLabel->spriteIndex, 12, &entity->animator2, true, 2);
+        RSDK.SetSpriteAnimation(UIInfoLabel->aniFrames, 12, &entity->animator2, true, 2);
         drawPos.y -= 0x40000;
         RSDK.DrawSprite(&entity->animator2, &drawPos, false);
     }

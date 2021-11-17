@@ -36,7 +36,7 @@ void VanishPlatform_Create(void *data)
     RSDK_THIS(VanishPlatform);
     entity->collision = PLATFORM_C_0;
     Platform_Create(NULL);
-    RSDK.SetSpriteAnimation(Platform->spriteIndex, 3, &entity->animator, true, 0);
+    RSDK.SetSpriteAnimation(Platform->aniFrames, 3, &entity->animator, true, 0);
     entity->drawFX  = FX_SCALE;
     entity->scale.x = 0;
     entity->scale.y = 0x200;

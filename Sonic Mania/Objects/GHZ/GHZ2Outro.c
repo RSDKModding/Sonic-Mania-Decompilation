@@ -128,7 +128,7 @@ bool32 GHZ2Outro_CutsceneState2_Unknown1(EntityCutsceneSeq *host)
         foreach_active(Player, player)
         {
             player->stateInput = StateMachine_None;
-            RSDK.SetSpriteAnimation(player->spriteIndex, ANI_JUMP, &player->playerAnimator, false, 0);
+            RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->playerAnimator, false, 0);
         }
 
         foreach_all(CutsceneHBH, cutsceneHBH) { cutsceneHBH->drawOrder = Zone->drawOrderLow; }
@@ -146,7 +146,7 @@ bool32 GHZ2Outro_CutsceneState2_Unknown1(EntityCutsceneSeq *host)
         CutsceneHBH_Unknown10();
         CutsceneHBH_Unknown9();
         EntityEggman *eggman = (EntityEggman *)entity->eggman;
-        RSDK.SetSpriteAnimation(Eggman->spriteIndex, 9, &eggman->animator, true, 0);
+        RSDK.SetSpriteAnimation(Eggman->aniFrames, 9, &eggman->animator, true, 0);
         eggman->direction = FLIP_NONE;
         eggman->state     = Eggman_Unknown1;
 
@@ -180,9 +180,9 @@ bool32 GHZ2Outro_CutsceneState2_Unknown2(EntityCutsceneSeq *host)
                 if (player->onGround && player->groundedStore) {
                     player->state = Player_State_None;
                     if (player->characterID == ID_TAILS)
-                        RSDK.SetSpriteAnimation(player->spriteIndex, ANI_BALANCE2, &player->playerAnimator, false, 0);
+                        RSDK.SetSpriteAnimation(player->aniFrames, ANI_BALANCE2, &player->playerAnimator, false, 0);
                     else
-                        RSDK.SetSpriteAnimation(player->spriteIndex, ANI_IDLE, &player->playerAnimator, false, 0);
+                        RSDK.SetSpriteAnimation(player->aniFrames, ANI_IDLE, &player->playerAnimator, false, 0);
                 }
             }
         }
@@ -224,7 +224,7 @@ bool32 GHZ2Outro_CutsceneState2_Unknown3(EntityCutsceneSeq *host)
 
     EntityEggman *eggman = (EntityEggman *)entity->eggman;
     if (host->timer == 90) {
-        RSDK.SetSpriteAnimation(Eggman->spriteIndex, 5, &eggman->animator, true, 2);
+        RSDK.SetSpriteAnimation(Eggman->aniFrames, 5, &eggman->animator, true, 2);
         eggman->timer      = 30;
         eggman->velocity.x = 0;
         eggman->velocity.y = -0x30000;
@@ -261,7 +261,7 @@ bool32 GHZ2Outro_CutsceneState2_Unknown3(EntityCutsceneSeq *host)
         if (rider) {
             if (rider->direction == FLIP_X) {
                 rider->timer = 0;
-                RSDK.SetSpriteAnimation(rider->spriteIndex, 2, &rider->animator, true, 0);
+                RSDK.SetSpriteAnimation(rider->aniFrames, 2, &rider->animator, true, 0);
             }
             rider->state = CutsceneHBH_Unknown17;
         }
@@ -275,7 +275,7 @@ bool32 GHZ2Outro_CutsceneState2_Unknown3(EntityCutsceneSeq *host)
     if (host->timer == 320) {
         EntityCutsceneHBH *gunner = CutsceneHBH_GetEntity(HBH_GUNNER);
         if (gunner) {
-            RSDK.SetSpriteAnimation(gunner->spriteIndex, 4, &gunner->animator, true, 0);
+            RSDK.SetSpriteAnimation(gunner->aniFrames, 4, &gunner->animator, true, 0);
             gunner->state = CutsceneHBH_Unknown12;
         }
 
@@ -304,7 +304,7 @@ bool32 GHZ2Outro_CutsceneState2_Unknown4(EntityCutsceneSeq *host)
         if (ruby->state == PhantomRuby_Unknown5) {
             if (player2->objectID == Player->objectID && player2->characterID == ID_TAILS) {
                 player2->state = Player_State_None;
-                RSDK.SetSpriteAnimation(player2->spriteIndex, ANI_SKID, &player2->playerAnimator, false, 0);
+                RSDK.SetSpriteAnimation(player2->aniFrames, ANI_SKID, &player2->playerAnimator, false, 0);
             }
             return true;
         }
@@ -374,7 +374,7 @@ bool32 GHZ2Outro_CutsceneState2_Unknown6(EntityCutsceneSeq *host)
                     EntityPlayer *player = RSDK_GET_ENTITY(id++, Player);
                     if (!player || player->objectID == TYPE_BLANK)
                         break;
-                    RSDK.SetSpriteAnimation(player->spriteIndex, ANI_FAN, &player->playerAnimator, false, 0);
+                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->playerAnimator, false, 0);
 
                     int32 valX = (ruby->position.x - 0x400000) - player->position.x;
                     int32 valY = (ruby->position.y - (0xA00000 + 944)) - player->position.y;

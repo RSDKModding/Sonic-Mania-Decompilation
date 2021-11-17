@@ -17,13 +17,13 @@ void PlatformNode_StageLoad(void) {}
 void PlatformNode_EditorDraw(void)
 {
     RSDK_THIS(PlatformNode);
-    RSDK.SetSpriteAnimation(PlatformNode->spriteIndex, 0, &entity->animator, false, 7);
+    RSDK.SetSpriteAnimation(PlatformNode->aniFrames, 0, &entity->animator, false, 7);
     RSDK.DrawSprite(&entity->animator, NULL, false);
 }
 
 void PlatformNode_EditorLoad(void)
 {
-    PlatformNode->spriteIndex = RSDK.LoadSpriteAnimation("Editor/EditorIcons.bin", SCOPE_STAGE);
+    PlatformNode->aniFrames = RSDK.LoadSpriteAnimation("Editor/EditorIcons.bin", SCOPE_STAGE);
 }
 
 void PlatformNode_Serialize(void) { RSDK_EDITABLE_VAR(PlatformNode, VAR_ENUM, nodeFlag); }

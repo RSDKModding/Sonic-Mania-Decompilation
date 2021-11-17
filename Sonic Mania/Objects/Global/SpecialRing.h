@@ -6,10 +6,10 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    uint16 spriteIndex;
+    uint16 aniFrames;
     Hitbox hitbox;
-    uint16 sfx_SpecialRing;
-    uint16 sfx_SpecialWarp;
+    uint16 sfxSpecialRing;
+    uint16 sfxSpecialWarp;
     uint16 modelIndex;
     uint16 sceneIndex;
 } ObjectSpecialRing;

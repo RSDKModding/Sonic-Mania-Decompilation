@@ -23,7 +23,7 @@ void DashLift_Create(void *data)
 
     if (!RSDK_sceneInfo->inEditor) {
         entity->drawOrder = Zone->playerDrawHigh;
-        RSDK.SetSpriteAnimation(Platform->spriteIndex, 2, &entity->animator, true, 4);
+        RSDK.SetSpriteAnimation(Platform->aniFrames, 2, &entity->animator, true, 4);
 
         entity->drawPos.y += entity->startOff << 15;
         entity->updateRange.y = entity->length << 15;
@@ -171,7 +171,7 @@ void DashLift_EditorDraw(void)
     RSDK_THIS(DashLift);
 
     entity->drawPos = entity->position;
-    RSDK.SetSpriteAnimation(Platform->spriteIndex, 2, &entity->animator, true, 4);
+    RSDK.SetSpriteAnimation(Platform->aniFrames, 2, &entity->animator, true, 4);
 
     DashLift_Draw();
 }

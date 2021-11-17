@@ -117,7 +117,7 @@ void EscapeCar_StateMania_Unknown1(void)
                 player->position.x -= 0xC0000;
                 player->position.y -= 0x80000;
             }
-            RSDK.SetSpriteAnimation(player->spriteIndex, ANI_RIDE, &player->playerAnimator, false, 0);
+            RSDK.SetSpriteAnimation(player->aniFrames, ANI_RIDE, &player->playerAnimator, false, 0);
             player->playerAnimator.animationSpeed = 0;
         }
         else {
@@ -149,7 +149,7 @@ void EscapeCar_StateMania_CheckPlayerCollisions(void)
         RSDK.SetSpriteAnimation(EscapeCar->aniFrames, 1, &entity->animator3, true, 0);
 
     if (entity->timer == 160) {
-        foreach_active(Player, player) { RSDK.SetSpriteAnimation(player->spriteIndex, ANI_RIDE, &player->playerAnimator, true, 0); }
+        foreach_active(Player, player) { RSDK.SetSpriteAnimation(player->aniFrames, ANI_RIDE, &player->playerAnimator, true, 0); }
         entity->timer      = 0;
         entity->velocity.x = 0x10000;
         entity->state      = EscapeCar_StateMania_Ride;
@@ -236,7 +236,7 @@ void EscapeCar_StateEncore_GoodEnd(void)
         debris->scale.y      = 0x200;
         debris->drawOrder    = Zone->drawOrderLow + 1;
         debris->rotSpeed     = 2;
-        RSDK.SetSpriteAnimation(Eggman->spriteIndex, 7, &debris->animator, true, 0);
+        RSDK.SetSpriteAnimation(Eggman->aniFrames, 7, &debris->animator, true, 0);
         debris->animator.rotationFlag = 1;
         debris->isPermanent           = true;
 

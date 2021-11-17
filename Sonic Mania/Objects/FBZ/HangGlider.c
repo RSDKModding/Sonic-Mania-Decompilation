@@ -69,11 +69,11 @@ void HangGlider_Unknown1(void)
                 player->active     = ACTIVE_NEVER;
                 player->visible    = 0;
                 entity->velocity.x = (192 * player->velocity.x) >> 8;
-                RSDK.SetSpriteAnimation(player->spriteIndex, 12, &entity->animator3, true, 0);
+                RSDK.SetSpriteAnimation(player->aniFrames, 12, &entity->animator3, true, 0);
                 entity->animator3.rotationFlag = 1;
                 entity->rotation               = 128;
                 entity->drawFX                 = FX_ROTATE;
-                RSDK.PlaySfx(Player->sfx_Grab, false, 255);
+                RSDK.PlaySfx(Player->sfxGrab, false, 255);
                 entity->state = HangGlider_Unknown2;
             }
         }

@@ -119,8 +119,8 @@ void PSZLauncher_Unknown4(void)
                 player->groundVel        = 0;
                 player->state            = Player_State_Air;
                 player->onGround         = false;
-                RSDK.PlaySfx(Player->sfx_Release, false, 255);
-                RSDK.SetSpriteAnimation(player->spriteIndex, ANI_JUMP, &player->playerAnimator, false, 0);
+                RSDK.PlaySfx(Player->sfxRelease, false, 255);
+                RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->playerAnimator, false, 0);
             }
         }
         else {

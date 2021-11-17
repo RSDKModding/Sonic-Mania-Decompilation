@@ -44,7 +44,7 @@ void TwistingSlide_Update(void)
                             player->state          = Player_State_None;
                             player->velocity.x     = 0;
                             player->velocity.y     = 0;
-                            RSDK.SetSpriteAnimation(player->spriteIndex, ANI_JUMP, &player->playerAnimator, false, 0);
+                            RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->playerAnimator, false, 0);
                             entity->field_64[playerID] = (player->position.y - entity->position.y + 0x4A0000) >> 16;
                             entity->activePlayers |= (1 << playerID);
                         }
@@ -92,7 +92,7 @@ void TwistingSlide_Update(void)
                         player->state          = Player_State_None;
                         player->velocity.x     = 0;
                         player->velocity.y     = 0;
-                        RSDK.SetSpriteAnimation(player->spriteIndex, ANI_JUMP, &player->playerAnimator, false, 0);
+                        RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->playerAnimator, false, 0);
                         entity->field_64[playerID] = (player->position.y + (entity->endLen << 15) - entity->position.y) >> 16;
                         entity->activePlayers |= (1 << playerID);
                     }
@@ -127,7 +127,7 @@ void TwistingSlide_Update(void)
                             player->state          = Player_State_None;
                             player->velocity.x     = 0;
                             player->velocity.y     = 0;
-                            RSDK.SetSpriteAnimation(player->spriteIndex, ANI_JUMP, &player->playerAnimator, false, 0);
+                            RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->playerAnimator, false, 0);
                             entity->field_64[playerID] = (player->position.y - entity->position.y + 0x4A0000) >> 16;
                             entity->activePlayers |= (1 << playerID);
                         }
@@ -175,7 +175,7 @@ void TwistingSlide_Update(void)
                         player->state          = Player_State_None;
                         player->velocity.x     = 0;
                         player->velocity.y     = 0;
-                        RSDK.SetSpriteAnimation(player->spriteIndex, ANI_JUMP, &player->playerAnimator, false, 0);
+                        RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->playerAnimator, false, 0);
                         entity->field_64[playerID] = (player->position.y + (entity->endLen << 15) - entity->position.y) >> 16;
                         entity->activePlayers |= (1 << playerID);
                     }

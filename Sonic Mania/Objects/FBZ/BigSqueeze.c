@@ -301,7 +301,7 @@ void BigSqueeze_State1_SetupEggman(void)
         entity->timer2++;
         EntityEggman *eggmanPtr = (EntityEggman *)entity->eggman;
         if (entity->timer2 == 104)
-            RSDK.SetSpriteAnimation(Eggman->spriteIndex, 5, &eggmanPtr->animator, true, 0);
+            RSDK.SetSpriteAnimation(Eggman->aniFrames, 5, &eggmanPtr->animator, true, 0);
         if (entity->timer2 == 120) {
             entity->timer2        = 0;
             entity->state         = BigSqueeze_State1_SetupBossArena;
@@ -321,7 +321,7 @@ void BigSqueeze_State1_SetupEggman(void)
             foreach_active(Eggman, eggman)
             {
                 entity->eggman = (Entity *)eggman;
-                RSDK.SetSpriteAnimation(Eggman->spriteIndex, 2, &eggman->animator, true, 0);
+                RSDK.SetSpriteAnimation(Eggman->aniFrames, 2, &eggman->animator, true, 0);
                 eggman->state  = Eggman_Unknown2;
                 eggman->animID = 0;
             }
@@ -471,7 +471,7 @@ void BigSqueeze_State2_SpawnSignPost(void)
             signPost->position.x = entity->position.x;
             signPost->active     = ACTIVE_NORMAL;
             signPost->state      = SignPost_State_Fall;
-            RSDK.PlaySfx(SignPost->sfx_Twinkle, false, 255);
+            RSDK.PlaySfx(SignPost->sfxTwinkle, false, 255);
         }
 
         entity->state = StateMachine_None;

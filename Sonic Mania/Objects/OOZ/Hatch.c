@@ -181,9 +181,9 @@ void Hatch_Unknown1(void)
                     player->interaction     = false;
 
                     if (player->playerAnimator.animationID != ANI_JUMP)
-                        RSDK.PlaySfx(Player->sfx_Roll, false, 255);
+                        RSDK.PlaySfx(Player->sfxRoll, false, 255);
 
-                    RSDK.SetSpriteAnimation(player->spriteIndex, ANI_JUMP, &player->playerAnimator, false, 0);
+                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->playerAnimator, false, 0);
                     player->state = Player_State_None;
                     RSDK.SetSpriteAnimation(Hatch->aniFrames, 2, &entity->animator2, false, 0);
                     entity->state = Hatch_Unknown2;

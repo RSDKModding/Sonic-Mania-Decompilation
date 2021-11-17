@@ -20,10 +20,10 @@ typedef struct {
     int32 specialStageID;
     int32 machQuotas[3];
     uint8 playFieldLayer;
-    uint16 sfx_BlueSphere;
-    uint16 sfx_SSExit;
-    uint16 sfx_Emerald;
-    uint16 sfx_Event;
+    uint16 sfxBlueSphere;
+    uint16 sfxSSExit;
+    uint16 sfxEmerald;
+    uint16 sfxEvent;
     bool32 resetToTitle;
 } ObjectUFO_Setup;
 

@@ -373,37 +373,37 @@ void ActClear_Create(void *data)
         entity->posUnknown5.y = 0x980000;
         entity->posUnknown6.x = -0x5480000;
         entity->posUnknown6.y = 0xC00000;
-        RSDK.SetSpriteAnimation(ActClear->spriteIndex, 0, &entity->hudElementsAnimator, true, 0);
-        RSDK.SetSpriteAnimation(ActClear->spriteIndex, 1, &entity->numbersAnimator, true, 0);
+        RSDK.SetSpriteAnimation(ActClear->aniFrames, 0, &entity->hudElementsAnimator, true, 0);
+        RSDK.SetSpriteAnimation(ActClear->aniFrames, 1, &entity->numbersAnimator, true, 0);
 #if RETRO_USE_PLUS
-        RSDK.SetSpriteAnimation(ActClear->spriteIndex, 0, &entity->timeElementsAnimator, true, 12);
+        RSDK.SetSpriteAnimation(ActClear->aniFrames, 0, &entity->timeElementsAnimator, true, 12);
 #endif
         switch (globals->playerID & 0xFF) {
-            case ID_TAILS: RSDK.SetSpriteAnimation(ActClear->spriteIndex, 3, &entity->playerNameAnimator, true, 1); break;
-            case ID_KNUCKLES: RSDK.SetSpriteAnimation(ActClear->spriteIndex, 3, &entity->playerNameAnimator, true, 2); break;
+            case ID_TAILS: RSDK.SetSpriteAnimation(ActClear->aniFrames, 3, &entity->playerNameAnimator, true, 1); break;
+            case ID_KNUCKLES: RSDK.SetSpriteAnimation(ActClear->aniFrames, 3, &entity->playerNameAnimator, true, 2); break;
 #if RETRO_USE_PLUS
-            case ID_MIGHTY: RSDK.SetSpriteAnimation(ActClear->spriteIndex, 3, &entity->playerNameAnimator, true, 3); break;
-            case ID_RAY: RSDK.SetSpriteAnimation(ActClear->spriteIndex, 3, &entity->playerNameAnimator, true, 4); break;
+            case ID_MIGHTY: RSDK.SetSpriteAnimation(ActClear->aniFrames, 3, &entity->playerNameAnimator, true, 3); break;
+            case ID_RAY: RSDK.SetSpriteAnimation(ActClear->aniFrames, 3, &entity->playerNameAnimator, true, 4); break;
 #endif
-            default: RSDK.SetSpriteAnimation(ActClear->spriteIndex, 3, &entity->playerNameAnimator, true, 0); break;
+            default: RSDK.SetSpriteAnimation(ActClear->aniFrames, 3, &entity->playerNameAnimator, true, 0); break;
         }
-        RSDK.SetSpriteAnimation(ActClear->spriteIndex, 4, &entity->gotThroughAnimator, true, 0);
+        RSDK.SetSpriteAnimation(ActClear->aniFrames, 4, &entity->gotThroughAnimator, true, 0);
 
         if (ActClear->actID <= 0)
-            RSDK.SetSpriteAnimation(ActClear->spriteIndex, 5, &entity->actNumAnimator, true, Zone->actID);
+            RSDK.SetSpriteAnimation(ActClear->aniFrames, 5, &entity->actNumAnimator, true, Zone->actID);
         else
-            RSDK.SetSpriteAnimation(ActClear->spriteIndex, 5, &entity->actNumAnimator, true, ActClear->actID - 1);
+            RSDK.SetSpriteAnimation(ActClear->aniFrames, 5, &entity->actNumAnimator, true, ActClear->actID - 1);
     }
 }
 
 void ActClear_StageLoad(void)
 {
-    ActClear->spriteIndex    = RSDK.LoadSpriteAnimation("Global/HUD.bin", SCOPE_STAGE);
-    ActClear->sfx_ScoreAdd   = RSDK.GetSFX("Global/ScoreAdd.wav");
-    ActClear->sfx_ScoreTotal = RSDK.GetSFX("Global/ScoreTotal.wav");
+    ActClear->aniFrames    = RSDK.LoadSpriteAnimation("Global/HUD.bin", SCOPE_STAGE);
+    ActClear->sfxScoreAdd   = RSDK.GetSFX("Global/ScoreAdd.wav");
+    ActClear->sfxScoreTotal = RSDK.GetSFX("Global/ScoreTotal.wav");
 #if RETRO_USE_PLUS
     ActClear->dword34     = 0;
-    ActClear->sfx_Event   = RSDK.GetSFX("Special/Event.wav");
+    ActClear->sfxEvent   = RSDK.GetSFX("Special/Event.wav");
     ActClear->forceNoSave = false;
 #endif
 }
@@ -487,7 +487,7 @@ void ActClear_CheckPlayerVictory(void)
             player->nextGroundState = 0;
             if (Zone->forcePlayerOnScreenFlag)
                 player->stateInput = StateMachine_None;
-            RSDK.SetSpriteAnimation(player->spriteIndex, ANI_VICTORY, &player->playerAnimator, true, 0);
+            RSDK.SetSpriteAnimation(player->aniFrames, ANI_VICTORY, &player->playerAnimator, true, 0);
         }
     }
 }
@@ -642,11 +642,11 @@ void ActClear_TallyScore(void)
     if (entity->scoreBonus + entity->ringBonus + entity->coolBonus <= 0) {
         entity->timer = 0;
         entity->state = ActClear_LoadNextScene;
-        RSDK.PlaySfx(ActClear->sfx_ScoreTotal, 0, 255);
+        RSDK.PlaySfx(ActClear->sfxScoreTotal, 0, 255);
     }
     else if (++entity->timer == 2) {
         entity->timer = 0;
-        RSDK.PlaySfx(ActClear->sfx_ScoreAdd, 0, 255);
+        RSDK.PlaySfx(ActClear->sfxScoreAdd, 0, 255);
     }
     Music->nextTrack = -1;
     ActClear_CheckPlayerVictory();
@@ -762,7 +762,7 @@ void ActClear_State_TAResults(void)
                 if (TimeAttackData->dbRank == 1)
                     entity->field_80 = 1;
                 entity->field_7C = 1;
-                RSDK.PlaySfx(ActClear->sfx_Event, 0, 255);
+                RSDK.PlaySfx(ActClear->sfxEvent, 0, 255);
             }
 
             if (entity->dword78 != 30) {
@@ -770,7 +770,7 @@ void ActClear_State_TAResults(void)
             }
             else {
                 if (TimeAttackData->dbRank == 1) {
-                    RSDK.PlaySfx(Announcer->sfx_NewRecordTop, 0, 255);
+                    RSDK.PlaySfx(Announcer->sfxNewRecordTop, 0, 255);
                     --entity->dword78;
                 }
                 else {
@@ -778,7 +778,7 @@ void ActClear_State_TAResults(void)
                         --entity->dword78;
                     }
                     else {
-                        RSDK.PlaySfx(Announcer->sfx_NewRecordMid, 0, 255);
+                        RSDK.PlaySfx(Announcer->sfxNewRecordMid, 0, 255);
                         --entity->dword78;
                     }
                 }
@@ -819,7 +819,7 @@ void ActClear_State_TAResults(void)
         }
 
         if (RSDK_controller->keyStart.press) {
-            RSDK.PlaySfx(UIWidgets->sfx_Accept, false, 255);
+            RSDK.PlaySfx(UIWidgets->sfxAccept, false, 255);
 
             RSDK_THIS(ActClear);
             if (ActClear->actID > 0 || Zone->stageFinishCallback) {
@@ -952,7 +952,7 @@ void ActClear_ForcePlayerOnScreen(void)
         if (player2->state == Player_State_FlyIn || player2->state == Player_State_JumpIn) {
             if (player2->position.x < screenOffX) {
                 if (player2->onGround && !player2->groundVel) {
-                    RSDK.SetSpriteAnimation(player2->spriteIndex, ANI_IDLE, &player2->playerAnimator, false, 0);
+                    RSDK.SetSpriteAnimation(player2->aniFrames, ANI_IDLE, &player2->playerAnimator, false, 0);
                     player2->direction = FLIP_NONE;
                     finishedP2         = true;
                 }
@@ -960,7 +960,7 @@ void ActClear_ForcePlayerOnScreen(void)
         }
         else if (player2->position.x >= screenOffX) {
             player2->stateInput = Player_ProcessP2Input_AI;
-            RSDK.SetSpriteAnimation(player2->spriteIndex, ANI_RUN, &player2->playerAnimator, false, 0);
+            RSDK.SetSpriteAnimation(player2->aniFrames, ANI_RUN, &player2->playerAnimator, false, 0);
             player2->state     = Player_State_Ground;
             player2->groundVel = -0x40000;
             player2->left      = true;
@@ -968,7 +968,7 @@ void ActClear_ForcePlayerOnScreen(void)
 
             if (player2->position.x < screenOffX) {
                 if (player2->onGround && !player2->groundVel) {
-                    RSDK.SetSpriteAnimation(player2->spriteIndex, ANI_IDLE, &player2->playerAnimator, false, 0);
+                    RSDK.SetSpriteAnimation(player2->aniFrames, ANI_IDLE, &player2->playerAnimator, false, 0);
                     player2->direction = FLIP_NONE;
                     finishedP2         = true;
                 }
@@ -976,7 +976,7 @@ void ActClear_ForcePlayerOnScreen(void)
         }
         else {
             if (player2->onGround && !player2->groundVel) {
-                RSDK.SetSpriteAnimation(player2->spriteIndex, ANI_IDLE, &player2->playerAnimator, false, 0);
+                RSDK.SetSpriteAnimation(player2->aniFrames, ANI_IDLE, &player2->playerAnimator, false, 0);
                 player2->direction = FLIP_NONE;
                 finishedP2         = true;
             }
@@ -984,7 +984,7 @@ void ActClear_ForcePlayerOnScreen(void)
     }
 
     if (finishedP1) {
-        RSDK.SetSpriteAnimation(player1->spriteIndex, ANI_IDLE, &player1->playerAnimator, false, 0);
+        RSDK.SetSpriteAnimation(player1->aniFrames, ANI_IDLE, &player1->playerAnimator, false, 0);
         player1->direction = FLIP_NONE;
     }
 

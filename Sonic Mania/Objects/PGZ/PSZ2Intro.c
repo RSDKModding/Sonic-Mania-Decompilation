@@ -62,7 +62,7 @@ bool32 PSZ2Intro_CutsceneState_Unknown1(EntityCutsceneSeq *host)
             ActClear->actID = 1;
             post->state     = SignPost_State_Fall;
             post->active    = ACTIVE_NORMAL;
-            RSDK.PlaySfx(SignPost->sfx_Twinkle, false, 255);
+            RSDK.PlaySfx(SignPost->sfxTwinkle, false, 255);
             return true;
         }
     }
@@ -98,7 +98,7 @@ bool32 PSZ2Intro_CutsceneState_Unknown3(EntityCutsceneSeq *host)
         RSDK.GetLayerSize(Zone->fgLow, &size, true);
         Zone->screenBoundsR1[0] = size.x;
         Zone->screenBoundsR1[1] = size.x;
-        RSDK.SetSpriteAnimation(player1->spriteIndex, ANI_IDLE, &player1->playerAnimator, true, 0);
+        RSDK.SetSpriteAnimation(player1->aniFrames, ANI_IDLE, &player1->playerAnimator, true, 0);
         player1->state      = Player_State_Ground;
         player1->up         = false;
         player1->stateInput = StateMachine_None;
@@ -108,7 +108,7 @@ bool32 PSZ2Intro_CutsceneState_Unknown3(EntityCutsceneSeq *host)
         player1->left      = false;
         player1->down      = false;
         if (player2->objectID == Player->objectID) {
-            RSDK.SetSpriteAnimation(player2->spriteIndex, ANI_IDLE, &player1->playerAnimator, true, 0);
+            RSDK.SetSpriteAnimation(player2->aniFrames, ANI_IDLE, &player1->playerAnimator, true, 0);
             player2->state      = Player_State_Ground;
             player2->up         = false;
             player2->stateInput = Player_ProcessP2Input_AI;

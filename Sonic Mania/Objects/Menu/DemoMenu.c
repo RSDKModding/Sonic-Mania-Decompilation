@@ -25,53 +25,54 @@ void DemoMenu_StaticUpdate(void) {}
 void DemoMenu_Draw(void)
 {
     RSDK_THIS(DemoMenu);
-    RSDK.DrawSprite(&entity->zoneSelData, & entity->drawPosA, false);
-    DemoMenu_DrawStagePreview(&entity->drawPosB, &entity->GHZData, 0);
-    DemoMenu_DrawStagePreview(&entity->drawPosC, &entity->SPZData, 1);
+    RSDK.DrawSprite(&entity->animatorZoneSel, &entity->ZoneSelPos, false);
+    DemoMenu_DrawStagePreview(&entity->GHZPos, &entity->animatorGHZ, 0);
+    DemoMenu_DrawStagePreview(&entity->SPZPos, &entity->animatorSPZ, 1);
 }
 
 void DemoMenu_Create(void *data)
 {
     RSDK_THIS(DemoMenu);
-    RSDK.SetSpriteAnimation(DemoMenu->spriteIndex, 0, &entity->zoneSelData, true, 0);
-    RSDK.SetSpriteAnimation(DemoMenu->spriteIndex, 1, &entity->barBlackData, true, 0);
-    RSDK.SetSpriteAnimation(DemoMenu->spriteIndex, 2, &entity->barFlashingData, true, 0);
-    RSDK.SetSpriteAnimation(DemoMenu->spriteIndex, 3, &entity->GHZData, true, 0);
-    RSDK.SetSpriteAnimation(DemoMenu->spriteIndex, 4, &entity->SPZData, true, 0);
-    entity->ghzFrame = RSDK.GetFrame(DemoMenu->spriteIndex, 3, 2);
-    entity->spzFrame = RSDK.GetFrame(DemoMenu->spriteIndex, 4, 2);
+    RSDK.SetSpriteAnimation(DemoMenu->aniFrames, 0, &entity->animatorZoneSel, true, 0);
+    RSDK.SetSpriteAnimation(DemoMenu->aniFrames, 1, &entity->animatorBlackBar, true, 0);
+    RSDK.SetSpriteAnimation(DemoMenu->aniFrames, 2, &entity->animatorFlashBar, true, 0);
+    RSDK.SetSpriteAnimation(DemoMenu->aniFrames, 3, &entity->animatorGHZ, true, 0);
+    RSDK.SetSpriteAnimation(DemoMenu->aniFrames, 4, &entity->animatorSPZ, true, 0);
+    entity->ghzFrame = RSDK.GetFrame(DemoMenu->aniFrames, 3, 2);
+    entity->spzFrame = RSDK.GetFrame(DemoMenu->aniFrames, 4, 2);
+
     if (!RSDK_sceneInfo->inEditor) {
-        entity->drawPosA.x = 0x1000000;
-        entity->drawPosA.y = -0x200000;
-        entity->drawPosB.x = -0x800000;
-        entity->drawPosB.y = 0x680000;
-        entity->drawPosC.x = 0x2800000;
-        entity->drawPosC.y = 0xB80000;
-        entity->active     = ACTIVE_NORMAL;
-        entity->visible    = true;
-        entity->drawOrder  = 4;
-        entity->state      = DemoMenu_State_Appear;
+        entity->ZoneSelPos.x = 0x1000000;
+        entity->ZoneSelPos.y = -0x200000;
+        entity->GHZPos.x     = -0x800000;
+        entity->GHZPos.y     = 0x680000;
+        entity->SPZPos.x     = 0x2800000;
+        entity->SPZPos.y     = 0xB80000;
+        entity->active       = ACTIVE_NORMAL;
+        entity->visible      = true;
+        entity->drawOrder    = 4;
+        entity->state        = DemoMenu_State_Appear;
     }
 }
 
-void DemoMenu_StageLoad(void) { DemoMenu->spriteIndex = RSDK.LoadSpriteAnimation("Title/DemoMenu.bin", SCOPE_STAGE); }
+void DemoMenu_StageLoad(void) { DemoMenu->aniFrames = RSDK.LoadSpriteAnimation("Title/DemoMenu.bin", SCOPE_STAGE); }
 
 void DemoMenu_DrawStagePreview(Vector2 *pos, Animator *animator, int32 zoneID)
 {
     RSDK_THIS(DemoMenu);
     animator->frameID = 0;
-    RSDK.DrawSprite(animator, pos, 0);
+    RSDK.DrawSprite(animator, pos, false);
 
-    entity->barBlackData.frameID = 0;
-    RSDK.DrawSprite(&entity->barBlackData, pos, false);
+    entity->animatorBlackBar.frameID = 0;
+    RSDK.DrawSprite(&entity->animatorBlackBar, pos, false);
 
-    entity->barBlackData.frameID = 1;
-    entity->inkEffect            = INK_BLEND;
-    RSDK.DrawSprite(&entity->barBlackData, pos, false);
+    entity->animatorBlackBar.frameID = 1;
+    entity->inkEffect                = INK_BLEND;
+    RSDK.DrawSprite(&entity->animatorBlackBar, pos, false);
 
     entity->inkEffect = INK_NONE;
     if (zoneID == entity->selectedZone) {
-        RSDK.DrawSprite(&entity->barFlashingData, pos, false);
+        RSDK.DrawSprite(&entity->animatorFlashBar, pos, false);
 
         animator->frameID = 1;
         RSDK.DrawSprite(animator, pos, false);
@@ -83,7 +84,7 @@ void DemoMenu_DrawStagePreview(Vector2 *pos, Animator *animator, int32 zoneID)
         animator->frameID = 1;
         RSDK.DrawSprite(animator, pos, false);
 
-        animator->frameID     = 2;
+        animator->frameID = 2;
         entity->inkEffect = INK_BLEND;
         RSDK.DrawSprite(animator, pos, false);
 
@@ -93,17 +94,17 @@ void DemoMenu_DrawStagePreview(Vector2 *pos, Animator *animator, int32 zoneID)
 void DemoMenu_State_Appear(void)
 {
     RSDK_THIS(DemoMenu);
-    if (entity->drawPosA.y < 0x280000)
-        entity->drawPosA.y += 0x80000;
+    if (entity->ZoneSelPos.y < 0x280000)
+        entity->ZoneSelPos.y += 0x80000;
 
-    if (entity->drawPosB.x < 0x1000000)
-        entity->drawPosB.x += 0x200000;
+    if (entity->GHZPos.x < 0x1000000)
+        entity->GHZPos.x += 0x200000;
 
-    if (entity->drawPosC.x <= 0x1000000) {
+    if (entity->SPZPos.x <= 0x1000000) {
         entity->state = DemoMenu_State_Selection;
     }
     else {
-        entity->drawPosC.x -= 0x200000;
+        entity->SPZPos.x -= 0x200000;
     }
 }
 void DemoMenu_State_Selection(void)
@@ -111,7 +112,7 @@ void DemoMenu_State_Selection(void)
     RSDK_THIS(DemoMenu);
     if (RSDK_controller->keyUp.press || RSDK_controller->keyDown.press) {
         entity->selectedZone ^= 1;
-        RSDK.PlaySfx(TitleSetup->sfx_MenuBleep, 0, 255);
+        RSDK.PlaySfx(TitleSetup->sfxMenuBleep, false, 255);
     }
     else {
         float vDelta   = RSDK_stickL->vDelta;
@@ -123,7 +124,7 @@ void DemoMenu_State_Selection(void)
                 vDelta = -vDelta;
             if (vDelta > 0.5) {
                 entity->selectedZone ^= 1;
-                RSDK.PlaySfx(TitleSetup->sfx_MenuBleep, 0, 255);
+                RSDK.PlaySfx(TitleSetup->sfxMenuBleep, false, 255);
             }
             entity->vDelta = RSDK_stickL->vDelta;
         }
@@ -132,13 +133,13 @@ void DemoMenu_State_Selection(void)
     if (RSDK_controller->keyStart.press || RSDK_controller->keyA.press) {
         entity->state = DemoMenu_State_Load;
         RSDK.StopChannel(Music->channelID);
-        RSDK.PlaySfx(TitleSetup->sfx_MenuAccept, 0, 255);
+        RSDK.PlaySfx(TitleSetup->sfxMenuAccept, false, 255);
     }
 }
 void DemoMenu_State_Load(void)
 {
     RSDK_THIS(DemoMenu);
-    RSDK.ProcessAnimation(&entity->barFlashingData);
+    RSDK.ProcessAnimation(&entity->animatorFlashBar);
 
     if (++entity->timer == 30) {
         entity->timer = 0;
@@ -150,27 +151,37 @@ void DemoMenu_State_Load(void)
         foreach_all(TitleSetup, titleSetup)
         {
             titleSetup->state     = TitleSetup_Unknown11;
-            titleSetup->stateDraw = TitleSetup_Unknown13;
+            titleSetup->stateDraw = TitleSetup_DrawState_FadeBlack;
         }
         entity->state = DemoMenu_State_Disappear;
     }
 }
 void DemoMenu_State_Disappear(void)
 {
-    EntityDemoMenu *entity; // eax
+    RSDK_THIS(DemoMenu);
 
-    entity = (EntityDemoMenu *)RSDK_sceneInfo->entity;
-    entity->drawPosA.y -= 0x80000;
-    entity->drawPosB.x += 0x200000;
-    entity->drawPosC.x -= 0x200000;
+    entity->ZoneSelPos.y -= 0x80000;
+    entity->GHZPos.x += 0x200000;
+    entity->SPZPos.x -= 0x200000;
     if (++entity->timer == 30)
-        RSDK.ResetEntityPtr(entity, 0, 0);
+        destroyEntity(entity);
 }
 
 #if RETRO_INCLUDE_EDITOR
-void DemoMenu_EditorDraw(void) {}
+void DemoMenu_EditorDraw(void)
+{
+    RSDK_THIS(DemoMenu);
+    entity->ZoneSelPos.x = entity->position.x + 0x1000000;
+    entity->ZoneSelPos.y = entity->position.y + -0x200000;
+    entity->GHZPos.x     = entity->position.x + -0x800000;
+    entity->GHZPos.y     = entity->position.y + 0x680000;
+    entity->SPZPos.x     = entity->position.x + 0x2800000;
+    entity->SPZPos.y     = entity->position.y + 0xB80000;
 
-void DemoMenu_EditorLoad(void) {}
+    DemoMenu_Draw();
+}
+
+void DemoMenu_EditorLoad(void) { DemoMenu->aniFrames = RSDK.LoadSpriteAnimation("Title/DemoMenu.bin", SCOPE_STAGE); }
 #endif
 
 void DemoMenu_Serialize(void) {}

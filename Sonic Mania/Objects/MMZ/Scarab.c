@@ -134,7 +134,7 @@ void Scarab_CheckPlayerCollisions(void)
                 if (Player_CheckCollisionTouch(player, entity, &Scarab->hitboxGrab)) {
                     if (!((1 << playerID) & entity->grabbedPlayers) && !entity->playerTimers[playerID]) {
                         entity->grabbedPlayers |= (1 << playerID);
-                        RSDK.SetSpriteAnimation(player->spriteIndex, ANI_JUMP, &player->playerAnimator, false, 0);
+                        RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->playerAnimator, false, 0);
                         player->groundVel       = 0;
                         player->onGround        = false;
                         player->tileCollisions  = false;

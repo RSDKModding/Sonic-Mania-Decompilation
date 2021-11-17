@@ -278,7 +278,7 @@ void UISubHeading_Unknown11(void)
             UISubHeading_Unknown4(control->buttons[control->activeEntityID]->stopMusic);
             ManiaModeMenu->field_24 = 1;
         }
-        RSDK.PlaySfx(UIWidgets->sfx_Accept, false, 255);
+        RSDK.PlaySfx(UIWidgets->sfxAccept, false, 255);
         UIControl->inputLocked = true;
 
         UITransition_StartTransition(UISubHeading_SecretsTransitionCB, 0);

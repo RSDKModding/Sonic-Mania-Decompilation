@@ -841,7 +841,7 @@ void MetalSonic_State_Unknown5(void)
         entity->targetPos  = player1->position;
         entity->velocity.x = 0xA00 * RSDK.Cos256(angle);
         entity->velocity.y = 0xA00 * RSDK.Sin256(angle);
-        RSDK.PlaySfx(Player->sfx_PeelRelease, false, 255);
+        RSDK.PlaySfx(Player->sfxPeelRelease, false, 255);
         entity->timer2 = 15;
         entity->state  = MetalSonic_State_Unknown6;
     }
@@ -1225,7 +1225,7 @@ void MetalSonic_State_Unknown15(void)
             player->groundVel   = 0xE0000;
             player->controlLock = 60;
             player->direction   = FLIP_NONE;
-            RSDK.SetSpriteAnimation(player->spriteIndex, ANI_RUN, &player->playerAnimator, false, 0);
+            RSDK.SetSpriteAnimation(player->aniFrames, ANI_RUN, &player->playerAnimator, false, 0);
             player->state = Player_State_Ground;
         }
 
@@ -1763,7 +1763,7 @@ void MetalSonic_State_Unknown24(void)
         entity->field_9C.x = -1;
         entity->timer2 = 8;
         entity->velocity = entity->targetPos;
-        RSDK.PlaySfx(Player->sfx_PeelRelease, false, 0xFF);
+        RSDK.PlaySfx(Player->sfxPeelRelease, false, 0xFF);
         entity->state = MetalSonic_State_Unknown25;
     }
 
@@ -1887,7 +1887,7 @@ void MetalSonic_State_Explode(void)
         for (int i = 2; i < 10; ++i) {
             EntityPlatform *wall = RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot + i, Platform);
             EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, wall->position.x, wall->position.y);
-            RSDK.SetSpriteAnimation(Platform->spriteIndex, 0, &debris->animator, true, 1);
+            RSDK.SetSpriteAnimation(Platform->aniFrames, 0, &debris->animator, true, 1);
             debris->velocity.x = RSDK.Rand(6, 11) << 16;
             debris->velocity.y = RSDK.Rand(-0x20000, -0x10000);
             debris->gravity = 0x4800;

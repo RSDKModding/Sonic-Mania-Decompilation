@@ -56,14 +56,14 @@ void UFO_Ring_Create(void *data)
             entity->height = 12;
         entity->height <<= 16;
         entity->state = UFO_Ring_Unknown2;
-        RSDK.SetSpriteAnimation(UFO_Ring->spriteIndex, 1, &entity->animator, true, 0);
+        RSDK.SetSpriteAnimation(UFO_Ring->aniFrames, 1, &entity->animator, true, 0);
     }
 }
 
 void UFO_Ring_StageLoad(void)
 {
-    UFO_Ring->spriteIndex = RSDK.LoadSpriteAnimation("Global/Ring.bin", SCOPE_STAGE);
-    UFO_Ring->sfx_Ring    = RSDK.GetSFX("Global/Ring.wav");
+    UFO_Ring->aniFrames = RSDK.LoadSpriteAnimation("Global/Ring.bin", SCOPE_STAGE);
+    UFO_Ring->sfxRing    = RSDK.GetSFX("Global/Ring.wav");
 }
 
 void UFO_Ring_PlayRingSFX(void)
@@ -73,12 +73,12 @@ void UFO_Ring_PlayRingSFX(void)
     }
 
     if (UFO_Setup->ringPan) {
-        int32 channel = RSDK.PlaySfx(UFO_Ring->sfx_Ring, 0, 255);
+        int32 channel = RSDK.PlaySfx(UFO_Ring->sfxRing, 0, 255);
         RSDK.SetChannelAttributes(channel, 1.0, -1.0, 1.0);
         UFO_Setup->ringPan = 0;
     }
     else {
-        int32 channel = RSDK.PlaySfx(UFO_Ring->sfx_Ring, 0, 255);
+        int32 channel = RSDK.PlaySfx(UFO_Ring->sfxRing, 0, 255);
         RSDK.SetChannelAttributes(channel, 1.0, 1.0, 1.0);
         UFO_Setup->ringPan = 1;
     }
@@ -117,7 +117,7 @@ void UFO_Ring_Unknown2(void)
 
         int32 pr = UFO_Player->maxSpeed >> 9;
         if (((entity->position.x - player->position.x) >> 16) * ((entity->position.x - player->position.x) >> 16) + radius < pr) {
-            RSDK.SetSpriteAnimation(UFO_Ring->spriteIndex, 2, &entity->animator, true, 4);
+            RSDK.SetSpriteAnimation(UFO_Ring->aniFrames, 2, &entity->animator, true, 4);
             ++entity->drawOrder;
             entity->state = UFO_Ring_Unknown3;
             UFO_Ring_PlayRingSFX();
@@ -159,10 +159,10 @@ void UFO_Ring_Unknown4(void)
 void UFO_Ring_EditorDraw(void)
 {
     RSDK_THIS(UFO_Ring);
-    RSDK.SetSpriteAnimation(UFO_Ring->spriteIndex, 1, &entity->animator, true, 0);
+    RSDK.SetSpriteAnimation(UFO_Ring->aniFrames, 1, &entity->animator, true, 0);
     RSDK.DrawSprite(&entity->animator, NULL, true);
 }
 
-void UFO_Ring_EditorLoad(void) { UFO_Ring->spriteIndex = RSDK.LoadSpriteAnimation("Global/Ring.bin", SCOPE_STAGE); }
+void UFO_Ring_EditorLoad(void) { UFO_Ring->aniFrames = RSDK.LoadSpriteAnimation("Global/Ring.bin", SCOPE_STAGE); }
 
 void UFO_Ring_Serialize(void) { RSDK_EDITABLE_VAR(UFO_Ring, VAR_ENUM, height); }

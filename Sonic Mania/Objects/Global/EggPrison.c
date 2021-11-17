@@ -69,7 +69,7 @@ void EggPrison_Update(void)
                         player->state      = Player_State_Air;
                         player->onGround   = false;
                         player->velocity.y = -0xA0000;
-                        RSDK.SetSpriteAnimation(player->spriteIndex, ANI_SPRINGTWIRL, &player->playerAnimator, true, 0);
+                        RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGTWIRL, &player->playerAnimator, true, 0);
                         RSDK.PlaySfx(EggPrison->sfxSpring, 0, 255);
                     }
                     else {
@@ -144,10 +144,10 @@ void EggPrison_Create(void *data)
             if (data)
                 entity->type = voidToInt(data);
             if (entity->type == EGGPRISON_FLYING) {
-                RSDK.SetSpriteAnimation(EggPrison->spriteIndex, 0, &entity->animator1, true, 1);
-                RSDK.SetSpriteAnimation(EggPrison->spriteIndex, 1, &entity->animator4, true, 0);
-                RSDK.SetSpriteAnimation(EggPrison->spriteIndex, 2, &entity->animator3, true, 1);
-                RSDK.SetSpriteAnimation(EggPrison->spriteIndex, 3, &entity->animator2, true, 0);
+                RSDK.SetSpriteAnimation(EggPrison->aniFrames, 0, &entity->animator1, true, 1);
+                RSDK.SetSpriteAnimation(EggPrison->aniFrames, 1, &entity->animator4, true, 0);
+                RSDK.SetSpriteAnimation(EggPrison->aniFrames, 2, &entity->animator3, true, 1);
+                RSDK.SetSpriteAnimation(EggPrison->aniFrames, 3, &entity->animator2, true, 0);
                 entity->hitbox2.left   = -16;
                 entity->hitbox2.top    = 24;
                 entity->hitbox2.right  = 16;
@@ -161,9 +161,9 @@ void EggPrison_Create(void *data)
                 entity->velocity.y     = 0x4000;
             }
             else {
-                RSDK.SetSpriteAnimation(EggPrison->spriteIndex, 0, &entity->animator1, true, 0);
-                RSDK.SetSpriteAnimation(EggPrison->spriteIndex, 1, &entity->animator4, true, 0);
-                RSDK.SetSpriteAnimation(EggPrison->spriteIndex, 2, &entity->animator3, true, 0);
+                RSDK.SetSpriteAnimation(EggPrison->aniFrames, 0, &entity->animator1, true, 0);
+                RSDK.SetSpriteAnimation(EggPrison->aniFrames, 1, &entity->animator4, true, 0);
+                RSDK.SetSpriteAnimation(EggPrison->aniFrames, 2, &entity->animator3, true, 0);
                 entity->hitbox2.left   = -16;
                 entity->hitbox2.top    = -38;
                 entity->hitbox2.right  = 16;
@@ -193,7 +193,7 @@ void EggPrison_Create(void *data)
 
 void EggPrison_StageLoad(void)
 {
-    EggPrison->spriteIndex = RSDK.LoadSpriteAnimation("Global/EggPrison.bin", SCOPE_STAGE);
+    EggPrison->aniFrames = RSDK.LoadSpriteAnimation("Global/EggPrison.bin", SCOPE_STAGE);
     EggPrison->sfxDestroy  = RSDK.GetSFX("Global/Destroy.wav");
     EggPrison->sfxSpring   = RSDK.GetSFX("Global/Spring.wav");
 }
@@ -323,7 +323,7 @@ void EggPrison_Activated(void)
     }
 
     EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, entity->position.x - 0x160000, entity->position.y);
-    RSDK.SetSpriteAnimation(EggPrison->spriteIndex, 2, &debris->animator, true, 2);
+    RSDK.SetSpriteAnimation(EggPrison->aniFrames, 2, &debris->animator, true, 2);
     debris->velocity.x    = -0x20000;
     debris->velocity.y    = -0x20000;
     debris->gravity       = 0x3800;
@@ -334,7 +334,7 @@ void EggPrison_Activated(void)
     debris->updateRange.y = 0x800000;
 
     debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, entity->position.x, entity->position.y);
-    RSDK.SetSpriteAnimation(EggPrison->spriteIndex, 2, &debris->animator, true, 3);
+    RSDK.SetSpriteAnimation(EggPrison->aniFrames, 2, &debris->animator, true, 3);
     debris->velocity.x    = 0;
     debris->velocity.y    = -0x30000;
     debris->gravity       = 0x3800;
@@ -345,7 +345,7 @@ void EggPrison_Activated(void)
     debris->updateRange.y = 0x800000;
 
     debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, entity->position.x + 0x160000, entity->position.y);
-    RSDK.SetSpriteAnimation(EggPrison->spriteIndex, 2, &debris->animator, true, 4);
+    RSDK.SetSpriteAnimation(EggPrison->aniFrames, 2, &debris->animator, true, 4);
     debris->velocity.x    = 0x20000;
     debris->velocity.y    = -0x20000;
     debris->gravity       = 0x3800;
@@ -433,10 +433,10 @@ void EggPrison_EditorDraw(void)
     Vector2 drawPos;
 
     if (entity->type == EGGPRISON_FLYING) {
-        RSDK.SetSpriteAnimation(EggPrison->spriteIndex, 0, &entity->animator1, true, 1);
-        RSDK.SetSpriteAnimation(EggPrison->spriteIndex, 1, &entity->animator4, true, 0);
-        RSDK.SetSpriteAnimation(EggPrison->spriteIndex, 2, &entity->animator3, true, 1);
-        RSDK.SetSpriteAnimation(EggPrison->spriteIndex, 3, &entity->animator2, true, 0);
+        RSDK.SetSpriteAnimation(EggPrison->aniFrames, 0, &entity->animator1, true, 1);
+        RSDK.SetSpriteAnimation(EggPrison->aniFrames, 1, &entity->animator4, true, 0);
+        RSDK.SetSpriteAnimation(EggPrison->aniFrames, 2, &entity->animator3, true, 1);
+        RSDK.SetSpriteAnimation(EggPrison->aniFrames, 3, &entity->animator2, true, 0);
 
         entity->direction = FLIP_Y;
         drawPos.x         = entity->position.x;
@@ -452,9 +452,9 @@ void EggPrison_EditorDraw(void)
         entity->direction = FLIP_NONE;
     }
     else {
-        RSDK.SetSpriteAnimation(EggPrison->spriteIndex, 0, &entity->animator1, true, 0);
-        RSDK.SetSpriteAnimation(EggPrison->spriteIndex, 1, &entity->animator4, true, 0);
-        RSDK.SetSpriteAnimation(EggPrison->spriteIndex, 2, &entity->animator3, true, 0);
+        RSDK.SetSpriteAnimation(EggPrison->aniFrames, 0, &entity->animator1, true, 0);
+        RSDK.SetSpriteAnimation(EggPrison->aniFrames, 1, &entity->animator4, true, 0);
+        RSDK.SetSpriteAnimation(EggPrison->aniFrames, 2, &entity->animator3, true, 0);
 
         drawPos.x = entity->position.x;
         drawPos.y = entity->position.y;
@@ -467,7 +467,7 @@ void EggPrison_EditorDraw(void)
 
 void EggPrison_EditorLoad(void)
 {
-    EggPrison->spriteIndex = RSDK.LoadSpriteAnimation("Global/EggPrison.bin", SCOPE_STAGE);
+    EggPrison->aniFrames = RSDK.LoadSpriteAnimation("Global/EggPrison.bin", SCOPE_STAGE);
 
     RSDK_ACTIVE_VAR(EggPrison, type);
     RSDK_ENUM_VAR("Normal", EGGPRISON_NORMAL);

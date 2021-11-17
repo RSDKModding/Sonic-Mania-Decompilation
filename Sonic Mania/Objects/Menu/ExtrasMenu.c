@@ -128,7 +128,7 @@ void ExtrasMenu_ProcessInputs(void)
         ExtrasMenu_ProcessMedallionCheat();
         if (ExtrasMenu_CheckMedallionCheat()) {
             if (!globals->medallionDebug) {
-                RSDK.PlaySfx(UIWidgets->sfx_Event, false, 255);
+                RSDK.PlaySfx(UIWidgets->sfxEvent, false, 255);
                 globals->medallionDebug = true;
                 ExtrasMenu_Unknown2();
             }

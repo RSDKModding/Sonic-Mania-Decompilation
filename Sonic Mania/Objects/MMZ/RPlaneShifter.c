@@ -95,7 +95,7 @@ void RPlaneShifter_HandlePlaneShift(EntityPlayer *player)
     player->nextGroundState = StateMachine_None;
     player->nextAirState    = StateMachine_None;
     player->groundVel       = 0;
-    RSDK.SetSpriteAnimation(player->spriteIndex, ANI_IDLE, &player->playerAnimator, false, 0);
+    RSDK.SetSpriteAnimation(player->aniFrames, ANI_IDLE, &player->playerAnimator, false, 0);
 
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     if (player->sidekick && (!player->sidekick || (entity->prevActivePlayers1 & 1))) {
@@ -156,7 +156,7 @@ void RPlaneShifter_Unknown3(void)
                 player->velocity.x = 0;
                 player->velocity.y = 0;
                 player->position.x = entity->position.x;
-                RSDK.SetSpriteAnimation(player->spriteIndex, ANI_IDLE, &player->playerAnimator, false, 0);
+                RSDK.SetSpriteAnimation(player->aniFrames, ANI_IDLE, &player->playerAnimator, false, 0);
                 player->state           = Player_State_None;
                 player->nextGroundState = StateMachine_None;
                 player->nextAirState    = StateMachine_None;
@@ -277,7 +277,7 @@ void RPlaneShifter_Unknown4(void)
             player->velocity.x = 0;
             player->velocity.y = 0;
             player->position.x = entity->position.x;
-            RSDK.SetSpriteAnimation(player->spriteIndex, ANI_IDLE, &player->playerAnimator, false, 0);
+            RSDK.SetSpriteAnimation(player->aniFrames, ANI_IDLE, &player->playerAnimator, false, 0);
             player->state           = Player_State_None;
             player->nextGroundState = 0;
             player->nextAirState    = 0;
@@ -285,7 +285,7 @@ void RPlaneShifter_Unknown4(void)
         }
 
         if ((1 << playerID) & entity->activePlayers1) {
-            RSDK.SetSpriteAnimation(player->spriteIndex, ANI_TWISTER, &player->playerAnimator, false, 0);
+            RSDK.SetSpriteAnimation(player->aniFrames, ANI_TWISTER, &player->playerAnimator, false, 0);
 
             int32 rot = (entity->field_78 >> 16) & 0xFF;
             int32 val = 0xFF - rot;

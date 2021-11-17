@@ -288,10 +288,10 @@ typedef struct {
     void (*Draw3DScene)(uint16 index);
     uint16 (*LoadSpriteAnimation)(const char *path, Scopes scope);
     uint16 (*CreateSpriteAnimation)(const char *filename, uint32 frameCount, uint32 animCount, Scopes scope);
-    void (*SetSpriteAnimation)(uint16 spriteIndex, uint16 animationID, Animator *animator, bool32 forceApply, int16 frameID);
-    void (*EditSpriteAnimation)(uint16 spriteIndex, uint16 animID, const char *name, int32 frameOffset, uint16 frameCount, int16 animSpeed,
+    void (*SetSpriteAnimation)(uint16 aniFrames, uint16 animationID, Animator *animator, bool32 forceApply, int16 frameID);
+    void (*EditSpriteAnimation)(uint16 aniFrames, uint16 animID, const char *name, int32 frameOffset, uint16 frameCount, int16 animSpeed,
                                 uint8 loopIndex, uint8 rotationFlag);
-    void (*SetSpriteString)(uint16 spriteIndex, uint16 animID, TextInfo *info);
+    void (*SetSpriteString)(uint16 aniFrames, uint16 animID, TextInfo *info);
     void *(*GetSpriteAnimation)(uint16 sprIndex, const char *name);
     SpriteFrame *(*GetFrame)(uint16 sprIndex, uint16 anim, int32 frame);
     Hitbox *(*GetHitbox)(Animator *animator, uint8 hitboxID);

@@ -43,13 +43,13 @@ void BurningLog_Create(void *data)
     entity->drawOrder     = Zone->drawOrderLow;
     if (data)
         entity->timer = voidToInt(data);
-    RSDK.SetSpriteAnimation(BurningLog->spriteIndex, 0, &entity->animator, true, 0);
+    RSDK.SetSpriteAnimation(BurningLog->aniFrames, 0, &entity->animator, true, 0);
 }
 
 void BurningLog_StageLoad(void)
 {
     if (RSDK.CheckStageFolder("GHZ"))
-        BurningLog->spriteIndex = RSDK.LoadSpriteAnimation("GHZ/Fireball.bin", SCOPE_STAGE);
+        BurningLog->aniFrames = RSDK.LoadSpriteAnimation("GHZ/Fireball.bin", SCOPE_STAGE);
     BurningLog->hitbox.left    = -8;
     BurningLog->hitbox.top     = -8;
     BurningLog->hitbox.right   = 8;
@@ -63,7 +63,7 @@ void BurningLog_StageLoad(void)
 #if RETRO_INCLUDE_EDITOR
 void BurningLog_EditorDraw(void) { BurningLog_Draw(); }
 
-void BurningLog_EditorLoad(void) { BurningLog->spriteIndex = RSDK.LoadSpriteAnimation("GHZ/Fireball.bin", SCOPE_STAGE); }
+void BurningLog_EditorLoad(void) { BurningLog->aniFrames = RSDK.LoadSpriteAnimation("GHZ/Fireball.bin", SCOPE_STAGE); }
 #endif
 
 void BurningLog_Serialize(void) { RSDK_EDITABLE_VAR(BurningLog, VAR_ENUM, timer); }

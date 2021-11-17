@@ -188,13 +188,13 @@ bool32 Shiversaw_CheckSawHit(EntityPlayer *player, int32 sawID)
         player->velocity.y = -0x28000;
         player->blinkTimer = 60;
         player->state      = Player_State_Hit;
-        RSDK.StopSFX(Player->sfx_MightyDrill);
+        RSDK.StopSFX(Player->sfxMightyDrill);
         player->onGround         = false;
         player->jumpAbility      = 0;
         player->jumpAbilityTimer = 0;
         if (player->state == Player_State_Hit) {
-            RSDK.SetSpriteAnimation(player->spriteIndex, ANI_HURT, &player->playerAnimator, false, 0);
-            RSDK.PlaySfx(Spikes->sfx_Spike, false, 255);
+            RSDK.SetSpriteAnimation(player->aniFrames, ANI_HURT, &player->playerAnimator, false, 0);
+            RSDK.PlaySfx(Spikes->sfxSpike, false, 255);
         }
         int32 storeX         = entity->position.x;
         int32 storeY         = entity->position.y;
@@ -833,7 +833,7 @@ void Shiversaw_Unknown13(void)
             signPost->position.x = entity->position.x;
             signPost->position.y = (RSDK_screens->position.y - 64) << 16;
             signPost->state      = SignPost_State_Fall;
-            RSDK.PlaySfx(SignPost->sfx_Twinkle, false, 255);
+            RSDK.PlaySfx(SignPost->sfxTwinkle, false, 255);
         }
         destroyEntity(entity);
     }

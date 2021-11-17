@@ -100,7 +100,7 @@ void Zone_LateUpdate(void)
             RSDK_sceneInfo->seconds      = 59;
             RSDK_sceneInfo->milliseconds = 99;
             RSDK_sceneInfo->timeEnabled  = false;
-            RSDK.PlaySfx(Player->sfx_Hurt, 0, 255);
+            RSDK.PlaySfx(Player->sfxHurt, 0, 255);
             EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
             foreach_active(Player, playerLoop)
             {
@@ -447,7 +447,7 @@ void Zone_StageLoad(void)
             break;
         default: break;
     }
-    Zone->sfx_fail = RSDK.GetSFX("Stage/Fail.wav");
+    Zone->sfxfail = RSDK.GetSFX("Stage/Fail.wav");
 }
 
 int32 Zone_GetZoneID(void)
@@ -972,11 +972,11 @@ void Zone_Unknown19(void)
             playerPtr->direction      = player->direction;
             playerPtr->tileCollisions = player->tileCollisions;
             playerPtr->interaction    = player->interaction;
-            RSDK.SetSpriteAnimation(playerPtr->spriteIndex, player->playerAnimator.animationID, &playerPtr->playerAnimator, false, 0);
+            RSDK.SetSpriteAnimation(playerPtr->aniFrames, player->playerAnimator.animationID, &playerPtr->playerAnimator, false, 0);
         }
         else {
             playerPtr->state = Player_State_Air;
-            RSDK.SetSpriteAnimation(playerPtr->spriteIndex, ANI_JUMP, &playerPtr->playerAnimator, false, 0);
+            RSDK.SetSpriteAnimation(playerPtr->aniFrames, ANI_JUMP, &playerPtr->playerAnimator, false, 0);
             playerPtr->tileCollisions = true;
             playerPtr->interaction    = true;
         }
@@ -1117,11 +1117,11 @@ void Zone_Unknown19(void)
             playerPtr->direction = player->direction;
             playerPtr->tileCollisions = player->tileCollisions;
             playerPtr->interaction = player->interaction;
-            RSDK.SetSpriteAnimation(playerPtr->spriteIndex, player->playerAnimator.animationID, &playerPtr->playerAnimator, false, 0);
+            RSDK.SetSpriteAnimation(playerPtr->aniFrames, player->playerAnimator.animationID, &playerPtr->playerAnimator, false, 0);
         }
         else {
             playerPtr->state = Player_State_Air;
-            RSDK.SetSpriteAnimation(playerPtr->spriteIndex, ANI_JUMP, &playerPtr->playerAnimator, false, 0);
+            RSDK.SetSpriteAnimation(playerPtr->aniFrames, ANI_JUMP, &playerPtr->playerAnimator, false, 0);
             playerPtr->tileCollisions = true;
             playerPtr->interaction = true;
         }
@@ -1234,7 +1234,7 @@ void Zone_Unknown20(void)
         }
 
         if (Zone->playerCount <= 1) {
-            RSDK.PlaySfx(Zone->sfx_fail, false, 255);
+            RSDK.PlaySfx(Zone->sfxfail, false, 255);
         }
         else {
             EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;

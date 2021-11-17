@@ -49,7 +49,7 @@ void SSZ1Intro_Unknown1(EntityPlayer *player1, EntityCutsceneSeq *host, EntityPl
         EntityPlayer *playerPtr = players[i];
         if (!playerPtr)
             break;
-        RSDK.SetSpriteAnimation(playerPtr->spriteIndex, ANI_FAN, &playerPtr->playerAnimator, false, 0);
+        RSDK.SetSpriteAnimation(playerPtr->aniFrames, ANI_FAN, &playerPtr->playerAnimator, false, 0);
         playerPtr->position.x += (playerPtr->position.x - playerPtr->position.x) >> 3;
         playerPtr->position.y += (offset + 0xA00 * RSDK.Sin256(2 * (angle + host->timer - host->field_68)) - playerPtr->position.y) >> 3;
         playerPtr->state = Player_State_None;
@@ -128,9 +128,9 @@ bool32 SSZ1Intro_CutsceneState_Unknown3(EntityCutsceneSeq *host)
     RSDK_GET_PLAYER(player1, player2, camera);
 
     if (!host->timer) {
-        RSDK.SetSpriteAnimation(player1->spriteIndex, ANI_IDLE, &player1->playerAnimator, true, 0);
+        RSDK.SetSpriteAnimation(player1->aniFrames, ANI_IDLE, &player1->playerAnimator, true, 0);
         if (player2->objectID == Player->objectID) {
-            RSDK.SetSpriteAnimation(player2->spriteIndex, ANI_IDLE, &player2->playerAnimator, true, 0);
+            RSDK.SetSpriteAnimation(player2->aniFrames, ANI_IDLE, &player2->playerAnimator, true, 0);
             player2->up = false;
         }
     }

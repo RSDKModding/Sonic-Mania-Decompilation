@@ -449,7 +449,7 @@ void HeavyKing_State_HandleCutsceneSetup(void)
         player1->velocity.x = 0;
         player1->right      = false;
         player1->state      = Player_State_None;
-        RSDK.SetSpriteAnimation(player1->spriteIndex, ANI_LOOKUP, &player1->playerAnimator, false, 0);
+        RSDK.SetSpriteAnimation(player1->aniFrames, ANI_LOOKUP, &player1->playerAnimator, false, 0);
 
         EntityPlayer *player2 = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
         if (player2->objectID == Player->objectID) {
@@ -506,7 +506,7 @@ void HeavyKing_State_CutsceneUnknown2(void)
 #if RETRO_USE_PLUS
         if (player1->characterID == ID_KNUCKLES)
 #endif
-            RSDK.SetSpriteAnimation(player1->spriteIndex, ANI_IDLE, &player1->playerAnimator, false, 0);
+            RSDK.SetSpriteAnimation(player1->aniFrames, ANI_IDLE, &player1->playerAnimator, false, 0);
     }
     HeavyKing_HandleClawMovement();
 }
@@ -592,8 +592,8 @@ void HeavyKing_State_CutsceneUnknown6(void)
                 RSDK.SetSpriteAnimation(HeavyKing->cutsceneFrames, 4, &player1->playerAnimator, false, 0);
             break;
         case 90:
-            RSDK.PlaySfx(Player->sfx_Jump, false, 255);
-            RSDK.SetSpriteAnimation(player1->spriteIndex, ANI_JUMP, &player1->playerAnimator, false, 0);
+            RSDK.PlaySfx(Player->sfxJump, false, 255);
+            RSDK.SetSpriteAnimation(player1->aniFrames, ANI_JUMP, &player1->playerAnimator, false, 0);
             player1->velocity.x  = 0x2C000;
             player1->velocity.y  = -0x50000;
             player1->jumpAbility = 0;
@@ -601,8 +601,8 @@ void HeavyKing_State_CutsceneUnknown6(void)
             player1->state       = Player_State_Air;
             break;
         case 124:
-            RSDK.PlaySfx(Player->sfx_Jump, false, 255);
-            RSDK.SetSpriteAnimation(player1->spriteIndex, ANI_JUMP, &player1->playerAnimator, false, 0);
+            RSDK.PlaySfx(Player->sfxJump, false, 255);
+            RSDK.SetSpriteAnimation(player1->aniFrames, ANI_JUMP, &player1->playerAnimator, false, 0);
             player1->velocity.x  = -0x1C000;
             player1->velocity.y  = -0x66000;
             player1->jumpAbility = 0;
@@ -618,7 +618,7 @@ void HeavyKing_State_CutsceneUnknown6(void)
                     RSDK.SetSpriteAnimation(HeavyKing->cutsceneFrames, 3, &player1->playerAnimator, false, 0);
 #if RETRO_USE_PLUS
                 else
-                    RSDK.SetSpriteAnimation(player1->spriteIndex, ANI_IDLE, &player1->playerAnimator, false, 0);
+                    RSDK.SetSpriteAnimation(player1->aniFrames, ANI_IDLE, &player1->playerAnimator, false, 0);
 #endif
                 player1->position.y -= player1->cameraOffset;
                 player1->state           = Player_State_None;

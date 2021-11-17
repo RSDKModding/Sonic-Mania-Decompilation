@@ -550,7 +550,7 @@ void MSZSetup_Unknown16(void)
 
         foreach_active(Player, player)
         {
-            RSDK.SetSpriteAnimation(player->spriteIndex, ANI_IDLE, &player->playerAnimator, true, 0);
+            RSDK.SetSpriteAnimation(player->aniFrames, ANI_IDLE, &player->playerAnimator, true, 0);
             player->up        = false;
             player->down      = false;
             player->left      = false;

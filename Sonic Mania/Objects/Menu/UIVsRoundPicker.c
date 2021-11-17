@@ -136,7 +136,7 @@ void UIVsRoundPicker_Apply(void)
 {
     RSDK_THIS(UIVsRoundPicker);
 
-    RSDK.PlaySfx(UIWidgets->sfx_Bleep, false, 255);
+    RSDK.PlaySfx(UIWidgets->sfxBleep, false, 255);
 
     entity->field_12C = -0x20000;
     entity->field_130 = -0x20000;

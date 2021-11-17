@@ -54,7 +54,7 @@ void BuzzBomber_Create(void *data)
         entity->active        = ACTIVE_NORMAL;
         entity->updateRange.x = 0x200000;
         entity->updateRange.y = 0x200000;
-        RSDK.SetSpriteAnimation(BuzzBomber->spriteIndex, 4, &entity->animator1, true, 0);
+        RSDK.SetSpriteAnimation(BuzzBomber->aniFrames, 4, &entity->animator1, true, 0);
         RSDK.SetSpriteAnimation(0xFFFF, 0, &entity->animator2, true, 0);
         RSDK.SetSpriteAnimation(0xFFFF, 0, &entity->animator3, true, 0);
         entity->state = BuzzBomber_Unknown6;
@@ -63,9 +63,9 @@ void BuzzBomber_Create(void *data)
         entity->active        = ACTIVE_BOUNDS;
         entity->updateRange.x = 0x800000;
         entity->updateRange.y = 0x800000;
-        RSDK.SetSpriteAnimation(BuzzBomber->spriteIndex, 0, &entity->animator1, true, 0);
-        RSDK.SetSpriteAnimation(BuzzBomber->spriteIndex, 2, &entity->animator2, true, 0);
-        RSDK.SetSpriteAnimation(BuzzBomber->spriteIndex, 3, &entity->animator3, true, 0);
+        RSDK.SetSpriteAnimation(BuzzBomber->aniFrames, 0, &entity->animator1, true, 0);
+        RSDK.SetSpriteAnimation(BuzzBomber->aniFrames, 2, &entity->animator2, true, 0);
+        RSDK.SetSpriteAnimation(BuzzBomber->aniFrames, 3, &entity->animator3, true, 0);
         entity->state = BuzzBomber_Unknown2;
         entity->alpha = 0xC0;
     }
@@ -74,9 +74,9 @@ void BuzzBomber_Create(void *data)
 void BuzzBomber_StageLoad(void)
 {
     if (RSDK.CheckStageFolder("GHZ"))
-        BuzzBomber->spriteIndex = RSDK.LoadSpriteAnimation("GHZ/BuzzBomber.bin", SCOPE_STAGE);
+        BuzzBomber->aniFrames = RSDK.LoadSpriteAnimation("GHZ/BuzzBomber.bin", SCOPE_STAGE);
     else if (RSDK.CheckStageFolder("Blueprint"))
-        BuzzBomber->spriteIndex = RSDK.LoadSpriteAnimation("Blueprint/BuzzBomber.bin", SCOPE_STAGE);
+        BuzzBomber->aniFrames = RSDK.LoadSpriteAnimation("Blueprint/BuzzBomber.bin", SCOPE_STAGE);
 
     BuzzBomber->hitbox1.left   = -24;
     BuzzBomber->hitbox1.top    = -12;
@@ -92,7 +92,7 @@ void BuzzBomber_StageLoad(void)
 
 void BuzzBomber_DebugDraw(void)
 {
-    RSDK.SetSpriteAnimation(BuzzBomber->spriteIndex, 0, &DebugMode->animator, true, 0);
+    RSDK.SetSpriteAnimation(BuzzBomber->aniFrames, 0, &DebugMode->animator, true, 0);
     RSDK.DrawSprite(&DebugMode->animator, NULL, false);
 }
 
@@ -180,7 +180,7 @@ void BuzzBomber_Unknown4(void)
 
     if (!--entity->timer) {
         entity->timer = 128;
-        RSDK.SetSpriteAnimation(BuzzBomber->spriteIndex, 3, &entity->animator3, true, 0);
+        RSDK.SetSpriteAnimation(BuzzBomber->aniFrames, 3, &entity->animator3, true, 0);
         entity->state = BuzzBomber_Unknown3;
     }
     RSDK.ProcessAnimation(&entity->animator1);
@@ -200,7 +200,7 @@ void BuzzBomber_Unknown5(void)
 
     entity->timer--;
     if (entity->timer == 82) {
-        RSDK.SetSpriteAnimation(BuzzBomber->spriteIndex, 1, &entity->animator1, true, 0);
+        RSDK.SetSpriteAnimation(BuzzBomber->aniFrames, 1, &entity->animator1, true, 0);
     }
     else if (entity->timer == 45) {
         EntityBuzzBomber *projectile = (EntityBuzzBomber *)RSDK.CreateEntity(BuzzBomber->objectID, (void *)1, entity->position.x, entity->position.y);
@@ -221,9 +221,9 @@ void BuzzBomber_Unknown5(void)
         entity->projectile     = (Entity *)projectile;
     }
     else if (!entity->timer) {
-        RSDK.SetSpriteAnimation(BuzzBomber->spriteIndex, 0, &entity->animator1, true, 0);
+        RSDK.SetSpriteAnimation(BuzzBomber->aniFrames, 0, &entity->animator1, true, 0);
         entity->timer = 128;
-        RSDK.SetSpriteAnimation(BuzzBomber->spriteIndex, 3, &entity->animator3, true, 0);
+        RSDK.SetSpriteAnimation(BuzzBomber->aniFrames, 3, &entity->animator3, true, 0);
         entity->state = BuzzBomber_Unknown3;
     }
 }
@@ -265,9 +265,9 @@ void BuzzBomber_EditorDraw(void) { BuzzBomber_Draw(); }
 void BuzzBomber_EditorLoad(void)
 {
     if (RSDK.CheckStageFolder("GHZ"))
-        BuzzBomber->spriteIndex = RSDK.LoadSpriteAnimation("GHZ/BuzzBomber.bin", SCOPE_STAGE);
+        BuzzBomber->aniFrames = RSDK.LoadSpriteAnimation("GHZ/BuzzBomber.bin", SCOPE_STAGE);
     else if (RSDK.CheckStageFolder("Blueprint"))
-        BuzzBomber->spriteIndex = RSDK.LoadSpriteAnimation("Blueprint/BuzzBomber.bin", SCOPE_STAGE);
+        BuzzBomber->aniFrames = RSDK.LoadSpriteAnimation("Blueprint/BuzzBomber.bin", SCOPE_STAGE);
 }
 #endif
 

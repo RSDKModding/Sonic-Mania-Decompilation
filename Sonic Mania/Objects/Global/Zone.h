@@ -65,7 +65,7 @@ typedef struct {
     uint8 playerDrawLow;
     uint8 playerDrawHigh;
     uint8 hudDrawOrder;
-    uint16 sfx_fail;
+    uint16 sfxfail;
 #if RETRO_USE_PLUS
     uint8 entityData[16][ENTITY_SIZE];
     int32 screenPosX[PLAYER_MAX];

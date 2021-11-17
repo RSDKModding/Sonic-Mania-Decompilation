@@ -6,8 +6,8 @@ void UIText_Update(void)
 {
     RSDK_THIS(UIText);
     if (entity->animator.animationID != entity->highlighted + entity->listID) {
-        if (!UIWidgets || UIText->spriteIndex)
-            RSDK.SetSpriteAnimation(UIText->spriteIndex, entity->highlighted + entity->listID, &entity->animator, true, 0);
+        if (!UIWidgets || UIText->aniFrames)
+            RSDK.SetSpriteAnimation(UIText->aniFrames, entity->highlighted + entity->listID, &entity->animator, true, 0);
         else
             RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, entity->highlighted + entity->listID, &entity->animator, true, 0);
     }
@@ -25,8 +25,8 @@ void UIText_Draw(void)
     drawPos.y = entity->position.y;
 
     uint16 spr = -1;
-    if (!UIWidgets || UIText->spriteIndex)
-        spr = UIText->spriteIndex;
+    if (!UIWidgets || UIText->aniFrames)
+        spr = UIText->aniFrames;
     else
         spr = UIWidgets->uiSpriteIndex;
     int32 width = RSDK.GetStringWidth(spr, entity->listID, &entity->text, 0, entity->text.textLength, 0);
@@ -42,8 +42,8 @@ void UIText_Draw(void)
 void UIText_Create(void *data)
 {
     RSDK_THIS(UIText);
-    if (!UIWidgets || UIText->spriteIndex)
-        RSDK.SetSpriteAnimation(UIText->spriteIndex, entity->listID, &entity->animator, true, 0);
+    if (!UIWidgets || UIText->aniFrames)
+        RSDK.SetSpriteAnimation(UIText->aniFrames, entity->listID, &entity->animator, true, 0);
     else
         RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, entity->listID, &entity->animator, true, 0);
 
@@ -53,8 +53,8 @@ void UIText_Create(void *data)
         entity->drawOrder = 2;
         if (!entity->text.text)
             RSDK.SetText(&entity->text, "UNTITLED", false);
-        if (!UIWidgets || UIText->spriteIndex)
-            RSDK.SetSpriteString(UIText->spriteIndex, entity->listID, &entity->text);
+        if (!UIWidgets || UIText->aniFrames)
+            RSDK.SetSpriteString(UIText->aniFrames, entity->listID, &entity->text);
         else
             RSDK.SetSpriteString(UIWidgets->uiSpriteIndex, entity->listID, &entity->text);
     }
@@ -66,8 +66,8 @@ void UIText_StageLoad(void) {}
 void UIText_EditorDraw(void)
 {
     RSDK_THIS(UIText);
-    if (!UIWidgets || UIText->spriteIndex)
-        RSDK.SetSpriteAnimation(UIText->spriteIndex, entity->highlighted + entity->listID, &entity->animator, true, 0);
+    if (!UIWidgets || UIText->aniFrames)
+        RSDK.SetSpriteAnimation(UIText->aniFrames, entity->highlighted + entity->listID, &entity->animator, true, 0);
     else
         RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, entity->listID, &entity->animator, true, 0);
 

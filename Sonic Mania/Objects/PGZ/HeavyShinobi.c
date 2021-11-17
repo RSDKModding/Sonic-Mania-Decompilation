@@ -691,7 +691,7 @@ void HeavyShinobi_State2_Unknown1(void)
                 int32 anim = player->playerAnimator.animationID;
                 if (player->characterID == ID_MIGHTY && (anim == ANI_CROUCH || anim == ANI_JUMP || anim == ANI_SPINDASH || anim == ANI_DROPDASH)) {
                     if (!player->uncurlTimer) {
-                        RSDK.PlaySfx(Player->sfx_PimPom, false, 255);
+                        RSDK.PlaySfx(Player->sfxPimPom, false, 255);
                         player->uncurlTimer = 30;
                     }
                     int32 angle           = RSDK.ATan2(player->position.x - entity->position.x, player->position.y - entity->position.y);
@@ -877,7 +877,7 @@ void HeavyShinobi_State3_Unknown1(void)
                 int32 anim = player->playerAnimator.animationID;
                 if (player->characterID == ID_MIGHTY && (anim == ANI_CROUCH || anim == ANI_JUMP || anim == ANI_SPINDASH || anim == ANI_DROPDASH)) {
                     if (!player->uncurlTimer) {
-                        RSDK.PlaySfx(Player->sfx_PimPom, false, 255);
+                        RSDK.PlaySfx(Player->sfxPimPom, false, 255);
                         player->uncurlTimer = 30;
                     }
                     int32 angle           = RSDK.ATan2(player->position.x - entity->position.x, player->position.y - entity->position.y);

@@ -40,15 +40,15 @@ void SizeLaser_Create(void *data)
             switch (entity->orientation) {
                 case 0:
                     entity->direction = FLIP_NONE;
-                    RSDK.SetSpriteAnimation(SizeLaser->spriteIndex, 2 * entity->type, &entity->animator1, true, 0);
+                    RSDK.SetSpriteAnimation(SizeLaser->aniFrames, 2 * entity->type, &entity->animator1, true, 0);
                     break;
                 case 1:
                     entity->direction = FLIP_NONE;
-                    RSDK.SetSpriteAnimation(SizeLaser->spriteIndex, 2 * entity->type + 1, &entity->animator1, true, 0);
+                    RSDK.SetSpriteAnimation(SizeLaser->aniFrames, 2 * entity->type + 1, &entity->animator1, true, 0);
                     break;
                 case 2:
                     entity->direction = FLIP_X;
-                    RSDK.SetSpriteAnimation(SizeLaser->spriteIndex, 2 * entity->type + 1, &entity->animator1, true, 0);
+                    RSDK.SetSpriteAnimation(SizeLaser->aniFrames, 2 * entity->type + 1, &entity->animator1, true, 0);
                     break;
             }
         }
@@ -63,19 +63,19 @@ void SizeLaser_Create(void *data)
                 default:
                 case 0:
                     entity->velocity.y = 0x40000;
-                    RSDK.SetSpriteAnimation(SizeLaser->spriteIndex, 2 * (entity->type + 2), &entity->animator1, true, 0);
-                    RSDK.SetSpriteAnimation(SizeLaser->spriteIndex, 2 * (entity->type + 4), &entity->animator2, true, 0);
+                    RSDK.SetSpriteAnimation(SizeLaser->aniFrames, 2 * (entity->type + 2), &entity->animator1, true, 0);
+                    RSDK.SetSpriteAnimation(SizeLaser->aniFrames, 2 * (entity->type + 4), &entity->animator2, true, 0);
                     break;
                 case 1:
                     entity->velocity.x = 0x40000;
-                    RSDK.SetSpriteAnimation(SizeLaser->spriteIndex, 2 * entity->type + 5, &entity->animator1, true, 0);
-                    RSDK.SetSpriteAnimation(SizeLaser->spriteIndex, 2 * entity->type + 9, &entity->animator2, true, 0);
+                    RSDK.SetSpriteAnimation(SizeLaser->aniFrames, 2 * entity->type + 5, &entity->animator1, true, 0);
+                    RSDK.SetSpriteAnimation(SizeLaser->aniFrames, 2 * entity->type + 9, &entity->animator2, true, 0);
                     break;
                 case 2:
                     entity->direction  = FLIP_X;
                     entity->velocity.x = -0x40000;
-                    RSDK.SetSpriteAnimation(SizeLaser->spriteIndex, 2 * entity->type + 5, &entity->animator1, true, 0);
-                    RSDK.SetSpriteAnimation(SizeLaser->spriteIndex, 2 * entity->type + 9, &entity->animator2, true, 0);
+                    RSDK.SetSpriteAnimation(SizeLaser->aniFrames, 2 * entity->type + 5, &entity->animator1, true, 0);
+                    RSDK.SetSpriteAnimation(SizeLaser->aniFrames, 2 * entity->type + 9, &entity->animator2, true, 0);
                     break;
             }
         }
@@ -84,7 +84,7 @@ void SizeLaser_Create(void *data)
 
 void SizeLaser_StageLoad(void)
 {
-    SizeLaser->spriteIndex = RSDK.LoadSpriteAnimation("MMZ/SizeLaser.bin", SCOPE_STAGE);
+    SizeLaser->aniFrames = RSDK.LoadSpriteAnimation("MMZ/SizeLaser.bin", SCOPE_STAGE);
     switch (globals->playerID & 0xFF) {
         case ID_SONIC: SizeLaser->sonicIndex = RSDK.LoadSpriteAnimation("Players/ChibiSonic.bin", SCOPE_STAGE); break;
         case ID_TAILS:
@@ -139,29 +139,29 @@ void SizeLaser_SetP2State(EntityPlayer *player, bool32 chibiFlag)
     if (chibiFlag) {
         switch (player->characterID) {
             case ID_TAILS:
-                player->spriteIndex     = SizeLaser->tailsIndex;
+                player->aniFrames     = SizeLaser->tailsIndex;
                 player->tailSpriteIndex = SizeLaser->tailSpriteIndex;
                 player->isChibi         = chibiFlag;
                 break;
             case ID_KNUCKLES:
-                player->spriteIndex     = SizeLaser->knuxIndex;
+                player->aniFrames     = SizeLaser->knuxIndex;
                 player->tailSpriteIndex = -1;
                 player->isChibi         = chibiFlag;
                 break;
 #if RETRO_USE_PLUS
             case ID_MIGHTY:
-                player->spriteIndex     = SizeLaser->mightyIndex;
+                player->aniFrames     = SizeLaser->mightyIndex;
                 player->tailSpriteIndex = -1;
                 player->isChibi         = chibiFlag;
                 break;
             case ID_RAY:
-                player->spriteIndex     = SizeLaser->rayIndex;
+                player->aniFrames     = SizeLaser->rayIndex;
                 player->tailSpriteIndex = -1;
                 player->isChibi         = chibiFlag;
                 break;
 #endif
             default:
-                player->spriteIndex     = SizeLaser->sonicIndex;
+                player->aniFrames     = SizeLaser->sonicIndex;
                 player->tailSpriteIndex = -1;
                 player->isChibi         = chibiFlag;
                 break;
@@ -170,29 +170,29 @@ void SizeLaser_SetP2State(EntityPlayer *player, bool32 chibiFlag)
     else {
         switch (player->characterID) {
             case ID_TAILS:
-                player->spriteIndex     = Player->tailsSpriteIndex;
+                player->aniFrames     = Player->tailsSpriteIndex;
                 player->tailSpriteIndex = Player->tailsTailsSpriteIndex;
                 player->isChibi         = false;
                 break;
             case ID_KNUCKLES:
-                player->spriteIndex     = Player->knuxSpriteIndex;
+                player->aniFrames     = Player->knuxSpriteIndex;
                 player->tailSpriteIndex = -1;
                 player->isChibi         = chibiFlag;
                 break;
 #if RETRO_USE_PLUS
             case ID_MIGHTY:
-                player->spriteIndex     = Player->mightySpriteIndex;
+                player->aniFrames     = Player->mightySpriteIndex;
                 player->tailSpriteIndex = -1;
                 player->isChibi         = chibiFlag;
                 break;
             case ID_RAY:
-                player->spriteIndex     = Player->raySpriteIndex;
+                player->aniFrames     = Player->raySpriteIndex;
                 player->tailSpriteIndex = -1;
                 player->isChibi         = chibiFlag;
                 break;
 #endif
             default:
-                player->spriteIndex     = Player->sonicSpriteIndex;
+                player->aniFrames     = Player->sonicSpriteIndex;
                 player->tailSpriteIndex = -1;
                 player->isChibi         = chibiFlag;
                 break;
@@ -283,30 +283,30 @@ void SizeLaser_P2JumpInShrink(void)
     if (entity->scale.x <= 0x140) {
         switch (entity->characterID) {
             case ID_TAILS:
-                entity->spriteIndex     = SizeLaser->tailsIndex;
+                entity->aniFrames     = SizeLaser->tailsIndex;
                 entity->tailSpriteIndex = SizeLaser->tailSpriteIndex;
                 break;
             case ID_KNUCKLES:
-                entity->spriteIndex     = SizeLaser->knuxIndex;
+                entity->aniFrames     = SizeLaser->knuxIndex;
                 entity->tailSpriteIndex = -1;
                 break;
 #if RETRO_USE_PLUS
             case ID_MIGHTY:
-                entity->spriteIndex     = SizeLaser->mightyIndex;
+                entity->aniFrames     = SizeLaser->mightyIndex;
                 entity->tailSpriteIndex = -1;
                 break;
             case ID_RAY:
-                entity->spriteIndex     = SizeLaser->rayIndex;
+                entity->aniFrames     = SizeLaser->rayIndex;
                 entity->tailSpriteIndex = -1;
                 break;
 #endif
             default:
-                entity->spriteIndex     = SizeLaser->sonicIndex;
+                entity->aniFrames     = SizeLaser->sonicIndex;
                 entity->tailSpriteIndex = -1;
                 break;
         }
         entity->cameraOffset = 0x40000;
-        RSDK.SetSpriteAnimation(entity->spriteIndex, ANI_HURT, &entity->playerAnimator, false, 0);
+        RSDK.SetSpriteAnimation(entity->aniFrames, ANI_HURT, &entity->playerAnimator, false, 0);
         entity->isChibi = true;
         entity->drawFX &= ~FX_SCALE;
         entity->scale.x     = 0x200;
@@ -421,7 +421,7 @@ void SizeLaser_Unknown3(void)
                         player->scale.x        = 0x200;
                         player->scale.y        = 0x200;
                         player->tileCollisions = true;
-                        RSDK.SetSpriteAnimation(player->spriteIndex, ANI_HURT, &player->playerAnimator, false, 0);
+                        RSDK.SetSpriteAnimation(player->aniFrames, ANI_HURT, &player->playerAnimator, false, 0);
                         player->abilityPtrs[0] = Player_State_Hit;
                         player->state          = SizeLaser_PlayerState_Grow;
                     }
@@ -441,32 +441,32 @@ void SizeLaser_Unknown3(void)
                     player->scale.y = 0x140;
                     switch (player->characterID) {
                         case ID_TAILS:
-                            player->spriteIndex     = Player->tailsSpriteIndex;
+                            player->aniFrames     = Player->tailsSpriteIndex;
                             player->tailSpriteIndex = Player->tailsTailsSpriteIndex;
                             break;
                         case ID_KNUCKLES:
-                            player->spriteIndex     = Player->knuxSpriteIndex;
+                            player->aniFrames     = Player->knuxSpriteIndex;
                             player->tailSpriteIndex = -1;
                             break;
 #if RETRO_USE_PLUS
                         case ID_MIGHTY:
-                            player->spriteIndex     = Player->mightySpriteIndex;
+                            player->aniFrames     = Player->mightySpriteIndex;
                             player->tailSpriteIndex = -1;
                             break;
                         case ID_RAY:
-                            player->spriteIndex     = Player->raySpriteIndex;
+                            player->aniFrames     = Player->raySpriteIndex;
                             player->tailSpriteIndex = -1;
                             break;
 #endif
                         default:
                             if (player->superState == SUPERSTATE_SUPER)
-                                player->spriteIndex = Player->superSpriteIndex;
+                                player->aniFrames = Player->superSpriteIndex;
                             else
-                                player->spriteIndex = Player->sonicSpriteIndex;
+                                player->aniFrames = Player->sonicSpriteIndex;
                             player->tailSpriteIndex = -1;
                             break;
                     }
-                    RSDK.SetSpriteAnimation(player->spriteIndex, ANI_HURT, &player->playerAnimator, false, 0);
+                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_HURT, &player->playerAnimator, false, 0);
                     RSDK.PlaySfx(SizeLaser->sfxGrow2, false, 255);
                     player->tileCollisions = true;
                     player->abilityPtrs[0] = Player_State_Hit;
@@ -486,7 +486,7 @@ void SizeLaser_Unknown3(void)
                 player->drawFX |= FX_SCALE;
                 player->scale.x = 0x200;
                 player->scale.y = 0x200;
-                RSDK.SetSpriteAnimation(player->spriteIndex, ANI_HURT, &player->playerAnimator, false, 0);
+                RSDK.SetSpriteAnimation(player->aniFrames, ANI_HURT, &player->playerAnimator, false, 0);
                 RSDK.PlaySfx(SizeLaser->sfxShrink2, 0, 255);
                 player->tileCollisions = true;
                 player->abilityPtrs[0] = Player_State_Hit;
@@ -542,15 +542,15 @@ void SizeLaser_EditorDraw(void) {
     switch (entity->orientation) {
         case 0:
             entity->direction = FLIP_NONE;
-            RSDK.SetSpriteAnimation(SizeLaser->spriteIndex, 2 * entity->type, &entity->animator1, true, 0);
+            RSDK.SetSpriteAnimation(SizeLaser->aniFrames, 2 * entity->type, &entity->animator1, true, 0);
             break;
         case 1:
             entity->direction = FLIP_NONE;
-            RSDK.SetSpriteAnimation(SizeLaser->spriteIndex, 2 * entity->type + 1, &entity->animator1, true, 0);
+            RSDK.SetSpriteAnimation(SizeLaser->aniFrames, 2 * entity->type + 1, &entity->animator1, true, 0);
             break;
         case 2:
             entity->direction = FLIP_X;
-            RSDK.SetSpriteAnimation(SizeLaser->spriteIndex, 2 * entity->type + 1, &entity->animator1, true, 0);
+            RSDK.SetSpriteAnimation(SizeLaser->aniFrames, 2 * entity->type + 1, &entity->animator1, true, 0);
             break;
     }
 
@@ -558,7 +558,7 @@ void SizeLaser_EditorDraw(void) {
     RSDK.DrawSprite(&entity->animator2, NULL, false);
 }
 
-void SizeLaser_EditorLoad(void) { SizeLaser->spriteIndex = RSDK.LoadSpriteAnimation("MMZ/SizeLaser.bin", SCOPE_STAGE); }
+void SizeLaser_EditorLoad(void) { SizeLaser->aniFrames = RSDK.LoadSpriteAnimation("MMZ/SizeLaser.bin", SCOPE_STAGE); }
 #endif
 
 void SizeLaser_Serialize(void)

@@ -104,7 +104,7 @@ void PathInverter_HandlePathSwitch(void *p)
             player->direction &= ~FLIP_Y;
         else
             player->direction |= FLIP_Y;
-        RSDK.SetSpriteAnimation(player->spriteIndex, ANI_SPRINGCS, &player->playerAnimator, true, frame);
+        RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGCS, &player->playerAnimator, true, frame);
     }
     player->onGround   = true;
     player->position.y = entity->playerFlipFlags[player->playerID] * RSDK.Cos512(angle) + entity->position.y;
@@ -136,7 +136,7 @@ void PathInverter_State_Horizontal(void)
                         player->direction &= FLIP_X;
                         player->direction ^= FLIP_X;
                         player->state = Player_State_Ground;
-                        RSDK.SetSpriteAnimation(player->spriteIndex, ANI_JOG, &player->playerAnimator, false, 0);
+                        RSDK.SetSpriteAnimation(player->aniFrames, ANI_JOG, &player->playerAnimator, false, 0);
                         player->rotation = player->angle << 1;
                     }
                     player->tileCollisions = true;

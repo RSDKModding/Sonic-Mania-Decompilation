@@ -29,7 +29,7 @@ void Crabmeat_Create(void *data)
         entity->active        = ACTIVE_NORMAL;
         entity->updateRange.x = 0x400000;
         entity->updateRange.y = 0x400000;
-        RSDK.SetSpriteAnimation(Crabmeat->spriteIndex, 3, &entity->animator, true, 0);
+        RSDK.SetSpriteAnimation(Crabmeat->aniFrames, 3, &entity->animator, true, 0);
         entity->state = Crabmeat_State_Projectile;
     }
     else {
@@ -40,7 +40,7 @@ void Crabmeat_Create(void *data)
         entity->active        = ACTIVE_BOUNDS;
         entity->updateRange.x = 0x800000;
         entity->updateRange.y = 0x800000;
-        RSDK.SetSpriteAnimation(Crabmeat->spriteIndex, 0, &entity->animator, true, 0);
+        RSDK.SetSpriteAnimation(Crabmeat->aniFrames, 0, &entity->animator, true, 0);
         entity->state = Crabmeat_Unknown1;
     }
 }
@@ -48,7 +48,7 @@ void Crabmeat_Create(void *data)
 void Crabmeat_StageLoad(void)
 {
     if (RSDK.CheckStageFolder("GHZ"))
-        Crabmeat->spriteIndex = RSDK.LoadSpriteAnimation("GHZ/Crabmeat.bin", SCOPE_STAGE);
+        Crabmeat->aniFrames = RSDK.LoadSpriteAnimation("GHZ/Crabmeat.bin", SCOPE_STAGE);
     Crabmeat->hitbox.left             = -14;
     Crabmeat->hitbox.top              = -14;
     Crabmeat->hitbox.right            = 14;
@@ -63,7 +63,7 @@ void Crabmeat_StageLoad(void)
 
 void Crabmeat_DebugDraw(void)
 {
-    RSDK.SetSpriteAnimation(Crabmeat->spriteIndex, 0, &DebugMode->animator, true, 0);
+    RSDK.SetSpriteAnimation(Crabmeat->aniFrames, 0, &DebugMode->animator, true, 0);
     RSDK.DrawSprite(&DebugMode->animator, NULL, false);
 }
 void Crabmeat_DebugSpawn(void)
@@ -81,9 +81,9 @@ void Crabmeat_State_Main(void)
         || (!RSDK.ObjectTileGrip(entity, Zone->fgLayers, 0, 0, ((entity->velocity.x >> 31) & 0xFFE40000) + 0xE0000, 0xF0000, 8))) {
         entity->timer = 0;
         if (entity->dword60 == 0)
-            RSDK.SetSpriteAnimation(Crabmeat->spriteIndex, 0, &entity->animator, true, 0);
+            RSDK.SetSpriteAnimation(Crabmeat->aniFrames, 0, &entity->animator, true, 0);
         else
-            RSDK.SetSpriteAnimation(Crabmeat->spriteIndex, 2, &entity->animator, true, 0);
+            RSDK.SetSpriteAnimation(Crabmeat->aniFrames, 2, &entity->animator, true, 0);
         entity->state = Crabmeat_State_Shoot;
     }
     else {
@@ -125,7 +125,7 @@ void Crabmeat_State_Shoot(void)
                     break;
             case 0:
                 entity->dword60 = 1;
-                RSDK.SetSpriteAnimation(Crabmeat->spriteIndex, 1, &entity->animator, true, 0);
+                RSDK.SetSpriteAnimation(Crabmeat->aniFrames, 1, &entity->animator, true, 0);
                 entity->direction ^= 1u;
                 entity->velocity.x = -entity->velocity.x;
                 entity->timer      = 0;
@@ -159,7 +159,7 @@ void Crabmeat_Unknown1(void)
 
     entity->active     = ACTIVE_NORMAL;
     entity->velocity.x = -0x8000;
-    RSDK.SetSpriteAnimation(Crabmeat->spriteIndex, 1, &entity->animator, true, 0);
+    RSDK.SetSpriteAnimation(Crabmeat->aniFrames, 1, &entity->animator, true, 0);
     entity->state = Crabmeat_State_Main;
     Crabmeat_State_Main();
 }
@@ -189,7 +189,7 @@ void Crabmeat_CheckPlayerCollisions(void)
 #if RETRO_INCLUDE_EDITOR
 void Crabmeat_EditorDraw(void) { Crabmeat_Draw(); }
 
-void Crabmeat_EditorLoad(void) { Crabmeat->spriteIndex = RSDK.LoadSpriteAnimation("GHZ/Crabmeat.bin", SCOPE_STAGE); }
+void Crabmeat_EditorLoad(void) { Crabmeat->aniFrames = RSDK.LoadSpriteAnimation("GHZ/Crabmeat.bin", SCOPE_STAGE); }
 #endif
 
 void Crabmeat_Serialize(void) {}

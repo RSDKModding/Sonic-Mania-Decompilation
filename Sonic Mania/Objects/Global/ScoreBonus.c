@@ -24,7 +24,7 @@ void ScoreBonus_Draw(void)
 void ScoreBonus_Create(void *data)
 {
     RSDK_THIS(ScoreBonus);
-    RSDK.SetSpriteAnimation(ScoreBonus->spriteIndex, 0, &entity->animator, true, 0);
+    RSDK.SetSpriteAnimation(ScoreBonus->aniFrames, 0, &entity->animator, true, 0);
     if (!RSDK_sceneInfo->inEditor) {
         entity->active    = ACTIVE_NORMAL;
         entity->visible   = true;
@@ -33,12 +33,12 @@ void ScoreBonus_Create(void *data)
     }
 }
 
-void ScoreBonus_StageLoad(void) { ScoreBonus->spriteIndex = RSDK.LoadSpriteAnimation("Global/ScoreBonus.bin", SCOPE_STAGE); }
+void ScoreBonus_StageLoad(void) { ScoreBonus->aniFrames = RSDK.LoadSpriteAnimation("Global/ScoreBonus.bin", SCOPE_STAGE); }
 
 #if RETRO_INCLUDE_EDITOR
 void ScoreBonus_EditorDraw(void) { ScoreBonus_Draw(); }
 
-void ScoreBonus_EditorLoad(void) { ScoreBonus->spriteIndex = RSDK.LoadSpriteAnimation("Global/ScoreBonus.bin", SCOPE_STAGE); }
+void ScoreBonus_EditorLoad(void) { ScoreBonus->aniFrames = RSDK.LoadSpriteAnimation("Global/ScoreBonus.bin", SCOPE_STAGE); }
 #endif
 
 void ScoreBonus_Serialize(void) {}

@@ -25,7 +25,7 @@ void UIMedallionPanel_Create(void *data)
     entity->updateRange.y          = 0x800000;
 }
 
-void UIMedallionPanel_StageLoad(void) { UIMedallionPanel->spriteIndex = RSDK.LoadSpriteAnimation("UI/MedallionPanel.bin", SCOPE_STAGE); }
+void UIMedallionPanel_StageLoad(void) { UIMedallionPanel->aniFrames = RSDK.LoadSpriteAnimation("UI/MedallionPanel.bin", SCOPE_STAGE); }
 
 void UIMedallionPanel_DrawPanel(void)
 {
@@ -37,13 +37,13 @@ void UIMedallionPanel_DrawPanel(void)
         drawPos.x = (entity->position.x - 0x310000) + 0xE0000 * (m % 8);
         drawPos.y = (entity->position.y - 0x150000) + 0xE0000 * (m / 8);
         if (RSDK_sceneInfo->inEditor) {
-            RSDK.SetSpriteAnimation(UIMedallionPanel->spriteIndex, 0, &entity->animator, true, (m & 1) + 1);
+            RSDK.SetSpriteAnimation(UIMedallionPanel->aniFrames, 0, &entity->animator, true, (m & 1) + 1);
         }
         else if (progress) {
-            RSDK.SetSpriteAnimation(UIMedallionPanel->spriteIndex, 0, &entity->animator, true, progress->medals[m]);
+            RSDK.SetSpriteAnimation(UIMedallionPanel->aniFrames, 0, &entity->animator, true, progress->medals[m]);
         }
         else {
-            RSDK.SetSpriteAnimation(UIMedallionPanel->spriteIndex, 0, &entity->animator, true, 0);
+            RSDK.SetSpriteAnimation(UIMedallionPanel->aniFrames, 0, &entity->animator, true, 0);
         }
 
         if (!RSDK_sceneInfo->inEditor && !entity->animator.frameID)
@@ -56,7 +56,7 @@ void UIMedallionPanel_DrawPanel(void)
 #if RETRO_INCLUDE_EDITOR
 void UIMedallionPanel_EditorDraw(void) { UIMedallionPanel_DrawPanel(); }
 
-void UIMedallionPanel_EditorLoad(void) { UIMedallionPanel->spriteIndex = RSDK.LoadSpriteAnimation("UI/MedallionPanel.bin", SCOPE_STAGE); }
+void UIMedallionPanel_EditorLoad(void) { UIMedallionPanel->aniFrames = RSDK.LoadSpriteAnimation("UI/MedallionPanel.bin", SCOPE_STAGE); }
 #endif
 
 void UIMedallionPanel_Serialize(void) {}

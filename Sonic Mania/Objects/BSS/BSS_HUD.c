@@ -59,15 +59,15 @@ void BSS_HUD_Create(void *data)
         entity->drawOrder     = DRAWLAYER_COUNT - 1;
         entity->updateRange.x = 0x800000;
         entity->updateRange.y = 0x800000;
-        RSDK.SetSpriteAnimation(BSS_HUD->spriteIndex, 0, &entity->animator1, true, 0);
-        RSDK.SetSpriteAnimation(BSS_HUD->spriteIndex, 0, &entity->animator2, true, 1);
-        RSDK.SetSpriteAnimation(BSS_HUD->spriteIndex, 1, &entity->numbersAnimator, true, 0);
+        RSDK.SetSpriteAnimation(BSS_HUD->aniFrames, 0, &entity->animator1, true, 0);
+        RSDK.SetSpriteAnimation(BSS_HUD->aniFrames, 0, &entity->animator2, true, 1);
+        RSDK.SetSpriteAnimation(BSS_HUD->aniFrames, 1, &entity->numbersAnimator, true, 0);
     }
 }
 
 void BSS_HUD_StageLoad(void)
 {
-    BSS_HUD->spriteIndex = RSDK.LoadSpriteAnimation("SpecialBS/HUD.bin", SCOPE_STAGE);
+    BSS_HUD->aniFrames = RSDK.LoadSpriteAnimation("SpecialBS/HUD.bin", SCOPE_STAGE);
     RSDK.ResetEntitySlot(SLOT_BSS_HUD, BSS_HUD->objectID, 0);
 }
 

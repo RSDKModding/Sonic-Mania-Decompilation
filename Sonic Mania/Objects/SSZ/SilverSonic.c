@@ -171,7 +171,7 @@ void SilverSonic_CheckPlayerCollisions_Ball(void)
                     }
 
                     if (player->characterID == ID_KNUCKLES && player->playerAnimator.animationID == 48) {
-                        RSDK.SetSpriteAnimation(player->spriteIndex, ANI_FLYTIRED, &player->playerAnimator, false, 0);
+                        RSDK.SetSpriteAnimation(player->aniFrames, ANI_FLYTIRED, &player->playerAnimator, false, 0);
                         player->state = Player_State_KnuxGlideDrop;
                     }
                     entity->invincibilityTimer = 8;

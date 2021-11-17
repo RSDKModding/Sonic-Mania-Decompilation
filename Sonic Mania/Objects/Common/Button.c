@@ -55,8 +55,8 @@ void Button_Create(void *data)
         switch (entity->type) {
             case 0:
                 entity->direction = FLIP_NONE;
-                RSDK.SetSpriteAnimation(Button->spriteIndex, 0, &entity->animator1, true, 0);
-                RSDK.SetSpriteAnimation(Button->spriteIndex, 0, &entity->animator2, true, 1);
+                RSDK.SetSpriteAnimation(Button->aniFrames, 0, &entity->animator1, true, 0);
+                RSDK.SetSpriteAnimation(Button->aniFrames, 0, &entity->animator2, true, 1);
                 entity->hitbox.left   = Button->hitboxV.left;
                 entity->hitbox.top    = Button->hitboxV.top;
                 entity->hitbox.right  = Button->hitboxV.right;
@@ -64,8 +64,8 @@ void Button_Create(void *data)
                 break;
             case 1:
                 entity->direction = FLIP_Y;
-                RSDK.SetSpriteAnimation(Button->spriteIndex, 0, &entity->animator1, true, 0);
-                RSDK.SetSpriteAnimation(Button->spriteIndex, 0, &entity->animator2, true, 1);
+                RSDK.SetSpriteAnimation(Button->aniFrames, 0, &entity->animator1, true, 0);
+                RSDK.SetSpriteAnimation(Button->aniFrames, 0, &entity->animator2, true, 1);
                 entity->hitbox.left   = Button->hitboxV.left;
                 entity->hitbox.top    = Button->hitboxV.top;
                 entity->hitbox.right  = Button->hitboxV.right;
@@ -73,8 +73,8 @@ void Button_Create(void *data)
                 break;
             case 2:
                 entity->direction = FLIP_NONE;
-                RSDK.SetSpriteAnimation(Button->spriteIndex, 1, &entity->animator1, true, 0);
-                RSDK.SetSpriteAnimation(Button->spriteIndex, 1, &entity->animator2, true, 1);
+                RSDK.SetSpriteAnimation(Button->aniFrames, 1, &entity->animator1, true, 0);
+                RSDK.SetSpriteAnimation(Button->aniFrames, 1, &entity->animator2, true, 1);
                 entity->hitbox.left   = Button->hitboxH.left;
                 entity->hitbox.top    = Button->hitboxH.top;
                 entity->hitbox.right  = Button->hitboxH.right;
@@ -82,8 +82,8 @@ void Button_Create(void *data)
                 break;
             case 3:
                 entity->direction = FLIP_X;
-                RSDK.SetSpriteAnimation(Button->spriteIndex, 1, &entity->animator1, true, 0);
-                RSDK.SetSpriteAnimation(Button->spriteIndex, 1, &entity->animator2, true, 1);
+                RSDK.SetSpriteAnimation(Button->aniFrames, 1, &entity->animator1, true, 0);
+                RSDK.SetSpriteAnimation(Button->aniFrames, 1, &entity->animator2, true, 1);
                 entity->hitbox.left   = Button->hitboxH.left;
                 entity->hitbox.top    = Button->hitboxH.top;
                 entity->hitbox.right  = Button->hitboxH.right;
@@ -102,42 +102,42 @@ void Button_Create(void *data)
 void Button_StageLoad(void)
 {
     if (RSDK.CheckStageFolder("MMZ")) {
-        Button->spriteIndex = RSDK.LoadSpriteAnimation("MMZ/Button.bin", SCOPE_STAGE);
+        Button->aniFrames = RSDK.LoadSpriteAnimation("MMZ/Button.bin", SCOPE_STAGE);
         Button->field_20    = 0x80000;
         Button->field_24    = 0x50000;
         Button->field_28    = 13;
         Button->field_2C    = 5;
     }
     else if (RSDK.CheckStageFolder("FBZ")) {
-        Button->spriteIndex = RSDK.LoadSpriteAnimation("FBZ/Button.bin", SCOPE_STAGE);
+        Button->aniFrames = RSDK.LoadSpriteAnimation("FBZ/Button.bin", SCOPE_STAGE);
         Button->field_20    = 0x80000;
         Button->field_24    = 0x50000;
         Button->field_28    = 13;
         Button->field_2C    = 5;
     }
     else if (RSDK.CheckStageFolder("LRZ1")) {
-        Button->spriteIndex = RSDK.LoadSpriteAnimation("LRZ1/Button.bin", SCOPE_STAGE);
+        Button->aniFrames = RSDK.LoadSpriteAnimation("LRZ1/Button.bin", SCOPE_STAGE);
         Button->field_20    = 0x40000;
         Button->field_24    = 0x30000;
         Button->field_28    = 7;
         Button->field_2C    = 3;
     }
     else if (RSDK.CheckStageFolder("LRZ2")) {
-        Button->spriteIndex = RSDK.LoadSpriteAnimation("LRZ2/Button.bin", SCOPE_STAGE);
+        Button->aniFrames = RSDK.LoadSpriteAnimation("LRZ2/Button.bin", SCOPE_STAGE);
         Button->field_20    = 0x40000;
         Button->field_24    = 0x30000;
         Button->field_28    = 7;
         Button->field_2C    = 3;
     }
     else if (RSDK.CheckStageFolder("HCZ")) {
-        Button->spriteIndex = RSDK.LoadSpriteAnimation("HCZ/Button.bin", SCOPE_STAGE);
+        Button->aniFrames = RSDK.LoadSpriteAnimation("HCZ/Button.bin", SCOPE_STAGE);
         Button->field_20    = 0x30000;
         Button->field_24    = 0x30000;
         Button->field_28    = 9;
         Button->field_2C    = 6;
     }
     else if (RSDK.CheckStageFolder("TMZ3")) {
-        Button->spriteIndex = RSDK.LoadSpriteAnimation("TMZ1/Button.bin", SCOPE_STAGE);
+        Button->aniFrames = RSDK.LoadSpriteAnimation("TMZ1/Button.bin", SCOPE_STAGE);
         Button->field_20    = 0x30000;
         Button->field_24    = 0x30000;
         Button->field_28    = 9;
@@ -505,23 +505,23 @@ void Button_EditorDraw(void)
     switch (entity->type) {
         case 0:
             entity->direction = FLIP_NONE;
-            RSDK.SetSpriteAnimation(Button->spriteIndex, 0, &entity->animator1, true, 0);
-            RSDK.SetSpriteAnimation(Button->spriteIndex, 0, &entity->animator2, true, 1);
+            RSDK.SetSpriteAnimation(Button->aniFrames, 0, &entity->animator1, true, 0);
+            RSDK.SetSpriteAnimation(Button->aniFrames, 0, &entity->animator2, true, 1);
             break;
         case 1:
             entity->direction = FLIP_Y;
-            RSDK.SetSpriteAnimation(Button->spriteIndex, 0, &entity->animator1, true, 0);
-            RSDK.SetSpriteAnimation(Button->spriteIndex, 0, &entity->animator2, true, 1);
+            RSDK.SetSpriteAnimation(Button->aniFrames, 0, &entity->animator1, true, 0);
+            RSDK.SetSpriteAnimation(Button->aniFrames, 0, &entity->animator2, true, 1);
             break;
         case 2:
             entity->direction = FLIP_NONE;
-            RSDK.SetSpriteAnimation(Button->spriteIndex, 1, &entity->animator1, true, 0);
-            RSDK.SetSpriteAnimation(Button->spriteIndex, 1, &entity->animator2, true, 1);
+            RSDK.SetSpriteAnimation(Button->aniFrames, 1, &entity->animator1, true, 0);
+            RSDK.SetSpriteAnimation(Button->aniFrames, 1, &entity->animator2, true, 1);
             break;
         case 3:
             entity->direction = FLIP_X;
-            RSDK.SetSpriteAnimation(Button->spriteIndex, 1, &entity->animator1, true, 0);
-            RSDK.SetSpriteAnimation(Button->spriteIndex, 1, &entity->animator2, true, 1);
+            RSDK.SetSpriteAnimation(Button->aniFrames, 1, &entity->animator1, true, 0);
+            RSDK.SetSpriteAnimation(Button->aniFrames, 1, &entity->animator2, true, 1);
             break;
         default: break;
     }
@@ -539,42 +539,42 @@ void Button_EditorDraw(void)
 void Button_EditorLoad(void)
 {
     if (RSDK.CheckStageFolder("MMZ")) {
-        Button->spriteIndex = RSDK.LoadSpriteAnimation("MMZ/Button.bin", SCOPE_STAGE);
+        Button->aniFrames = RSDK.LoadSpriteAnimation("MMZ/Button.bin", SCOPE_STAGE);
         Button->field_20    = 0x80000;
         Button->field_24    = 0x50000;
         Button->field_28    = 13;
         Button->field_2C    = 5;
     }
     else if (RSDK.CheckStageFolder("FBZ")) {
-        Button->spriteIndex = RSDK.LoadSpriteAnimation("FBZ/Button.bin", SCOPE_STAGE);
+        Button->aniFrames = RSDK.LoadSpriteAnimation("FBZ/Button.bin", SCOPE_STAGE);
         Button->field_20    = 0x80000;
         Button->field_24    = 0x50000;
         Button->field_28    = 13;
         Button->field_2C    = 5;
     }
     else if (RSDK.CheckStageFolder("LRZ1")) {
-        Button->spriteIndex = RSDK.LoadSpriteAnimation("LRZ1/Button.bin", SCOPE_STAGE);
+        Button->aniFrames = RSDK.LoadSpriteAnimation("LRZ1/Button.bin", SCOPE_STAGE);
         Button->field_20    = 0x40000;
         Button->field_24    = 0x30000;
         Button->field_28    = 7;
         Button->field_2C    = 3;
     }
     else if (RSDK.CheckStageFolder("LRZ2")) {
-        Button->spriteIndex = RSDK.LoadSpriteAnimation("LRZ2/Button.bin", SCOPE_STAGE);
+        Button->aniFrames = RSDK.LoadSpriteAnimation("LRZ2/Button.bin", SCOPE_STAGE);
         Button->field_20    = 0x40000;
         Button->field_24    = 0x30000;
         Button->field_28    = 7;
         Button->field_2C    = 3;
     }
     else if (RSDK.CheckStageFolder("HCZ")) {
-        Button->spriteIndex = RSDK.LoadSpriteAnimation("HCZ/Button.bin", SCOPE_STAGE);
+        Button->aniFrames = RSDK.LoadSpriteAnimation("HCZ/Button.bin", SCOPE_STAGE);
         Button->field_20    = 0x30000;
         Button->field_24    = 0x30000;
         Button->field_28    = 9;
         Button->field_2C    = 6;
     }
     else if (RSDK.CheckStageFolder("TMZ3")) {
-        Button->spriteIndex = RSDK.LoadSpriteAnimation("TMZ1/Button.bin", SCOPE_STAGE);
+        Button->aniFrames = RSDK.LoadSpriteAnimation("TMZ1/Button.bin", SCOPE_STAGE);
         Button->field_20    = 0x30000;
         Button->field_24    = 0x30000;
         Button->field_28    = 9;

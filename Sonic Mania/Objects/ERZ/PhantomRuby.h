@@ -17,8 +17,8 @@ typedef enum {
 typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
-    uint16 sfx_L[7];
-    uint16 sfx_R[7];
+    uint16 sfxL[7];
+    uint16 sfxR[7];
 } ObjectPhantomRuby;
 
 // Entity Class

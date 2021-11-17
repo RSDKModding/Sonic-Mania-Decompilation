@@ -144,7 +144,7 @@ void SP500_Unknown1(void)
             if (entity->state == SP500_Unknown2 && !player->sidekick) {
                 if (!((1 << playerID) & entity->activePlayers)) {
                     entity->activePlayers |= (1 << playerID);
-                    RSDK.SetSpriteAnimation(player->spriteIndex, ANI_JUMP, &player->playerAnimator, false, 0);
+                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->playerAnimator, false, 0);
                     player->interaction     = false;
                     player->tileCollisions  = false;
                     player->groundVel       = 0;
@@ -236,7 +236,7 @@ void SP500_Unknown5(void)
         entity->timer = 0;
         for (int32 i = 0; i < Player->playerCount; ++i) {
             if ((1 << i) & entity->activePlayers) {
-                RSDK.PlaySfx(Player->sfx_Release, false, 255);
+                RSDK.PlaySfx(Player->sfxRelease, false, 255);
                 EntityPlayer *player     = RSDK_GET_ENTITY(i, Player);
                 player->visible          = true;
                 player->interaction      = true;
@@ -383,7 +383,7 @@ void SP500_Unknown9(void)
         case 90:
             for (int32 i = SLOT_PLAYER1; i < Player->playerCount; ++i) {
                 if ((1 << i) & entity->activePlayers) {
-                    RSDK.PlaySfx(Player->sfx_Release, false, 255);
+                    RSDK.PlaySfx(Player->sfxRelease, false, 255);
                     EntityPlayer *player     = RSDK_GET_ENTITY(i, Player);
                     player->visible          = true;
                     player->interaction      = true;

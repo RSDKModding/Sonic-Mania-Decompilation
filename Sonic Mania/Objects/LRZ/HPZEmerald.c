@@ -78,17 +78,17 @@ void HPZEmerald_Create(void *data)
         entity->updateRange.y = 0x800000;
         entity->onGround      = true;
         if (entity->type) {
-            RSDK.SetSpriteAnimation(HPZEmerald->spriteIndex, 1, &entity->animator2, true, 0);
+            RSDK.SetSpriteAnimation(HPZEmerald->aniFrames, 1, &entity->animator2, true, 0);
         }
         else {
-            RSDK.SetSpriteAnimation(HPZEmerald->spriteIndex, 0, &entity->animator2, true, 0);
-            RSDK.SetSpriteAnimation(HPZEmerald->spriteIndex, 0, &entity->animator, true, 1);
+            RSDK.SetSpriteAnimation(HPZEmerald->aniFrames, 0, &entity->animator2, true, 0);
+            RSDK.SetSpriteAnimation(HPZEmerald->aniFrames, 0, &entity->animator, true, 1);
         }
         entity->hitbox = RSDK.GetHitbox(&entity->animator2, 0);
     }
 }
 
-void HPZEmerald_StageLoad(void) { HPZEmerald->spriteIndex = RSDK.LoadSpriteAnimation("LRZ3/Emerald.bin", SCOPE_STAGE); }
+void HPZEmerald_StageLoad(void) { HPZEmerald->aniFrames = RSDK.LoadSpriteAnimation("LRZ3/Emerald.bin", SCOPE_STAGE); }
 
 #if RETRO_INCLUDE_EDITOR
 void HPZEmerald_EditorDraw(void)
@@ -104,11 +104,11 @@ void HPZEmerald_EditorDraw(void)
     }
 
     if (entity->type) {
-        RSDK.SetSpriteAnimation(HPZEmerald->spriteIndex, 1, &entity->animator2, true, 0);
+        RSDK.SetSpriteAnimation(HPZEmerald->aniFrames, 1, &entity->animator2, true, 0);
     }
     else {
-        RSDK.SetSpriteAnimation(HPZEmerald->spriteIndex, 0, &entity->animator2, true, 0);
-        RSDK.SetSpriteAnimation(HPZEmerald->spriteIndex, 0, &entity->animator, true, 1);
+        RSDK.SetSpriteAnimation(HPZEmerald->aniFrames, 0, &entity->animator2, true, 0);
+        RSDK.SetSpriteAnimation(HPZEmerald->aniFrames, 0, &entity->animator, true, 1);
     }
 
     HPZEmerald_Draw();
@@ -116,7 +116,7 @@ void HPZEmerald_EditorDraw(void)
 
 void HPZEmerald_EditorLoad(void)
 {
-    HPZEmerald->spriteIndex = RSDK.LoadSpriteAnimation("LRZ3/Emerald.bin", SCOPE_STAGE);
+    HPZEmerald->aniFrames = RSDK.LoadSpriteAnimation("LRZ3/Emerald.bin", SCOPE_STAGE);
 
     RSDK_ACTIVE_VAR(HPZEmerald, type);
     RSDK_ENUM_VAR("Master Emerald", HPZEMERALD_MASTER);

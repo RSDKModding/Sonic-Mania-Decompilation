@@ -101,7 +101,7 @@ void PushSpring_HandlePlayerCollisions_Top(void)
                     player->storedAnim = player->playerAnimator.animationID;
                 else
                     player->storedAnim = ANI_WALK;
-                RSDK.SetSpriteAnimation(player->spriteIndex, ANI_SPRINGDIAGONAL, &player->playerAnimator, true, 0);
+                RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGDIAGONAL, &player->playerAnimator, true, 0);
                 RSDK.PlaySfx(PushSpring->sfxSpring, false, 255);
                 entity->state = PushSpring_Unknown11;
             }

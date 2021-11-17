@@ -33,7 +33,7 @@ void Mine_Update(void)
                     && RSDK.CheckObjectCollisionTouchBox(missile, &FBZMissile->hitbox3, entity, &FBZMissile->hitbox1)) {
                     if (--missile->timer <= 0) {
                         destroyEntity(missile);
-                        RSDK.PlaySfx(Player->sfx_Release, false, 255);
+                        RSDK.PlaySfx(Player->sfxRelease, false, 255);
                     }
                     CREATE_ENTITY(Explosion, intToVoid(3), entity->position.x, entity->position.y + 0x30000)->drawOrder = Zone->drawOrderHigh;
                     RSDK.PlaySfx(FBZMissile->sfxExplosion, false, 255);

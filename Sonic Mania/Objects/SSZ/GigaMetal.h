@@ -24,7 +24,7 @@ typedef struct {
     RSDK_OBJECT
     int32 invincibleTimer;
     int32 field_8;
-    uint16 spriteIndex;
+    uint16 aniFrames;
     uint16 sfxRoar;
     uint16 sfxImpact;
     uint16 sfxTarget;

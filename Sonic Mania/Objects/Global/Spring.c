@@ -35,7 +35,7 @@ void Spring_Create(void *data)
             entity->type     = (propertyVal >> 0) & 0xFF;
             entity->flipFlag = (propertyVal >> 8) & 0xFF;
         }
-        RSDK.SetSpriteAnimation(Spring->spriteIndex, entity->type, &entity->animator, true, 0);
+        RSDK.SetSpriteAnimation(Spring->aniFrames, entity->type, &entity->animator, true, 0);
         entity->active                  = ACTIVE_BOUNDS;
         entity->animator.animationSpeed = 0;
         entity->updateRange.x           = 0x600000;
@@ -101,8 +101,8 @@ void Spring_Create(void *data)
 
 void Spring_StageLoad(void)
 {
-    Spring->spriteIndex = RSDK.LoadSpriteAnimation("Global/Springs.bin", SCOPE_STAGE);
-    Spring->sfx_Spring  = RSDK.GetSFX("Global/Spring.wav");
+    Spring->aniFrames = RSDK.LoadSpriteAnimation("Global/Springs.bin", SCOPE_STAGE);
+    Spring->sfxSpring  = RSDK.GetSFX("Global/Spring.wav");
 }
 
 void Spring_State_Vertical(void)
@@ -126,7 +126,7 @@ void Spring_State_Vertical(void)
                             player->state = Player_State_ForceRoll_Air;
                         }
                         else {
-                            RSDK.SetSpriteAnimation(player->spriteIndex, ANI_SPRINGTWIRL, &player->playerAnimator, true, 0);
+                            RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGTWIRL, &player->playerAnimator, true, 0);
                             player->state = Player_State_Air;
                         }
                     }
@@ -137,7 +137,7 @@ void Spring_State_Vertical(void)
                     entity->animator.animationTimer = 0;
                     entity->animator.frameID        = 1;
                     if (entity->timer == 0) {
-                        RSDK.PlaySfx(Spring->sfx_Spring, 0, 255);
+                        RSDK.PlaySfx(Spring->sfxSpring, 0, 255);
                         entity->timer = 8;
                     }
                 }
@@ -162,7 +162,7 @@ void Spring_State_Vertical(void)
                 entity->animator.animationTimer = 0;
                 entity->animator.frameID        = 1;
                 if (!entity->timer) {
-                    RSDK.PlaySfx(Spring->sfx_Spring, 0, 255);
+                    RSDK.PlaySfx(Spring->sfxSpring, 0, 255);
                     entity->timer = 8;
                 }
             }
@@ -206,7 +206,7 @@ void Spring_State_Horizontal(void)
                 entity->animator.animationTimer = 0;
                 entity->animator.frameID        = 1;
                 if (entity->timer == 0) {
-                    RSDK.PlaySfx(Spring->sfx_Spring, 0, 255);
+                    RSDK.PlaySfx(Spring->sfxSpring, 0, 255);
                     entity->timer = 8;
                 }
             }
@@ -246,7 +246,7 @@ void Spring_State_Horizontal(void)
                 entity->animator.animationTimer = 0;
                 entity->animator.frameID        = 1;
                 if (entity->timer == 0) {
-                    RSDK.PlaySfx(Spring->sfx_Spring, 0, 255);
+                    RSDK.PlaySfx(Spring->sfxSpring, 0, 255);
                     entity->timer = 8;
                 }
             }
@@ -295,7 +295,7 @@ void Spring_State_Diagonal(void)
                                 player->storedAnim = player->playerAnimator.animationID;
                             else
                                 player->storedAnim = ANI_WALK;
-                            RSDK.SetSpriteAnimation(player->spriteIndex, ANI_SPRINGDIAGONAL, &player->playerAnimator, true, 0);
+                            RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGDIAGONAL, &player->playerAnimator, true, 0);
                         }
                     }
                     player->direction               = entity->direction & 1;
@@ -307,7 +307,7 @@ void Spring_State_Diagonal(void)
                     entity->animator.animationTimer = 0;
                     entity->animator.frameID        = 1;
                     if (entity->timer == 0) {
-                        RSDK.PlaySfx(Spring->sfx_Spring, 0, 255);
+                        RSDK.PlaySfx(Spring->sfxSpring, 0, 255);
                         entity->timer = 8;
                     }
                 }
@@ -320,14 +320,14 @@ void Spring_State_Diagonal(void)
 void Spring_EditorDraw(void)
 {
     RSDK_THIS(Spring);
-    RSDK.SetSpriteAnimation(Spring->spriteIndex, entity->type, &entity->animator, true, 0);
+    RSDK.SetSpriteAnimation(Spring->aniFrames, entity->type, &entity->animator, true, 0);
     entity->direction = entity->flipFlag;
     RSDK.DrawSprite(&entity->animator, NULL, false);
 }
 
 void Spring_EditorLoad(void)
 {
-    Spring->spriteIndex = RSDK.LoadSpriteAnimation("Global/Springs.bin", SCOPE_STAGE);
+    Spring->aniFrames = RSDK.LoadSpriteAnimation("Global/Springs.bin", SCOPE_STAGE);
 
     RSDK_ACTIVE_VAR(Spring, type);
     RSDK_ENUM_VAR("Vertical (Red)", SPRING_VERT_RED);

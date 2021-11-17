@@ -49,7 +49,7 @@ void PlayerProbe_StaticUpdate(void) {}
 void PlayerProbe_Create(void *data)
 {
     RSDK_THIS(PlayerProbe);
-    RSDK.SetSpriteAnimation(PlaneSwitch->spriteIndex, 0, &entity->animator, true, 0);
+    RSDK.SetSpriteAnimation(PlaneSwitch->aniFrames, 0, &entity->animator, true, 0);
 
     entity->drawFX |= FX_FLIP;
     entity->active       = ACTIVE_BOUNDS;
@@ -74,7 +74,7 @@ void PlayerProbe_Create(void *data)
     entity->negAngle      = (uint8)-entity->angle;
 }
 
-void PlayerProbe_StageLoad(void) { PlayerProbe->spriteIndex = RSDK.LoadSpriteAnimation("Global/PlaneSwitch.bin", SCOPE_STAGE); }
+void PlayerProbe_StageLoad(void) { PlayerProbe->aniFrames = RSDK.LoadSpriteAnimation("Global/PlaneSwitch.bin", SCOPE_STAGE); }
 
 void PlayerProbe_Print(EntityPlayer *player)
 {

@@ -42,9 +42,9 @@ void GameOver_Create(void *data)
         entity->visible = true;
         entity->drawFX  = FX_ROTATE | FX_SCALE;
         if (data)
-            RSDK.SetSpriteAnimation(GameOver->spriteIndex, 7, &entity->animator, true, 1);
+            RSDK.SetSpriteAnimation(GameOver->aniFrames, 7, &entity->animator, true, 1);
         else
-            RSDK.SetSpriteAnimation(GameOver->spriteIndex, 6, &entity->animator, true, 0);
+            RSDK.SetSpriteAnimation(GameOver->aniFrames, 6, &entity->animator, true, 0);
 
         entity->unknownPos1[0].x = -0x480000;
         entity->unknownPos1[1].x = -0x370000;
@@ -84,7 +84,7 @@ void GameOver_Create(void *data)
 
 void GameOver_StageLoad(void)
 {
-    GameOver->spriteIndex   = RSDK.LoadSpriteAnimation("Global/HUD.bin", SCOPE_STAGE);
+    GameOver->aniFrames   = RSDK.LoadSpriteAnimation("Global/HUD.bin", SCOPE_STAGE);
     GameOver->activeScreens = 0;
 }
 

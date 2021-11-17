@@ -3,13 +3,26 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    TITLELOGO_EMBLEM,
+    TITLELOGO_RIBBON,
+    TITLELOGO_GAMETITLE,
+    TITLELOGO_POWERLED,
+    TITLELOGO_COPYRIGHT,
+    TITLELOGO_RINGBOTTOM,
+    TITLELOGO_PRESSSTART,
+#if RETRO_USE_PLUS
+    TITLELOGO_PLUS,
+#endif
+}TitleLogoTypes;
+
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    uint16 logoIndex;
+    uint16 aniFrames;
 #if RETRO_USE_PLUS
-    uint16 plusIndex;
-    uint16 sfx_Plus;
+    uint16 plusFrames;
+    uint16 sfxPlus;
 #endif
 } ObjectTitleLogo;
 
@@ -47,13 +60,13 @@ void TitleLogo_EditorLoad(void);
 void TitleLogo_Serialize(void);
 
 // Extra Entity Functions
-void TitleLogo_Unknown1(void);
+void TitleLogo_SetupPressStart(void);
 #if RETRO_USE_PLUS
-void TitleLogo_Unknown2(void);
-void TitleLogo_Unknown3(void);
-void TitleLogo_Unknown4(void);
-void TitleLogo_Unknown5(void);
-void TitleLogo_Unknown6(void);
+void TitleLogo_State_Ribbon(void);
+void TitleLogo_State_PressStart(void);
+void TitleLogo_State_HandleSetup(void);
+void TitleLogo_State_PlusLogo(void);
+void TitleLogo_State_PlusShine(void);
 #endif
 
 #endif //!OBJ_TITLELOGO_H

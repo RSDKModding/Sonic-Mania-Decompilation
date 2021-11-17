@@ -192,7 +192,7 @@ bool32 Tubinaut_CheckAttacking(EntityPlayer *player)
 #if RETRO_USE_PLUS
     if (!flag && player->characterID == ID_MIGHTY && player->playerAnimator.animationID == ANI_CROUCH) {
         if (!player->uncurlTimer) {
-            RSDK.PlaySfx(Player->sfx_PimPom, false, 255);
+            RSDK.PlaySfx(Player->sfxPimPom, false, 255);
             player->uncurlTimer = 30;
             if (entity->position.x > player->position.x)
                 player->groundVel = -0x10000;

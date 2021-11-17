@@ -28,14 +28,14 @@ void SpikeLog_Create(void *data)
     entity->updateRange.y = 0x400000;
     entity->frame *= 4;
     entity->drawOrder = Zone->drawOrderLow;
-    RSDK.SetSpriteAnimation(SpikeLog->spriteIndex, 0, &entity->animator, true, 0);
+    RSDK.SetSpriteAnimation(SpikeLog->aniFrames, 0, &entity->animator, true, 0);
     entity->state = SpikeLog_State_Main;
 }
 
 void SpikeLog_StageLoad(void)
 {
     if (RSDK.CheckStageFolder("GHZ"))
-        SpikeLog->spriteIndex = RSDK.LoadSpriteAnimation("GHZ/SpikeLog.bin", SCOPE_STAGE);
+        SpikeLog->aniFrames = RSDK.LoadSpriteAnimation("GHZ/SpikeLog.bin", SCOPE_STAGE);
     SpikeLog->hitbox.left       = -8;
     SpikeLog->hitbox.top        = -16;
     SpikeLog->hitbox.right      = 8;
@@ -66,12 +66,12 @@ void SpikeLog_State_Main(void)
                                 player->onGround         = 0;
                                 player->jumpAbility      = 0;
                                 player->jumpAbilityTimer = 0;
-                                RSDK.SetSpriteAnimation(player->spriteIndex, ANI_FLY, &player->playerAnimator, 0, 0);
-                                RSDK.PlaySfx(Player->sfx_MightyUnspin, 0, 255);
+                                RSDK.SetSpriteAnimation(player->aniFrames, ANI_FLY, &player->playerAnimator, 0, 0);
+                                RSDK.PlaySfx(Player->sfxMightyUnspin, 0, 255);
                             }
                             if (!player->uncurlTimer) {
                                 player->uncurlTimer = 15;
-                                RSDK.PlaySfx(Player->sfx_PimPom, 0, 255);
+                                RSDK.PlaySfx(Player->sfxPimPom, 0, 255);
                             }
                         }
                     }
@@ -128,7 +128,7 @@ void SpikeLog_EditorDraw(void)
     RSDK.DrawSprite(&entity->animator, NULL, false);
 }
 
-void SpikeLog_EditorLoad(void) { SpikeLog->spriteIndex = RSDK.LoadSpriteAnimation("GHZ/SpikeLog.bin", SCOPE_STAGE); }
+void SpikeLog_EditorLoad(void) { SpikeLog->aniFrames = RSDK.LoadSpriteAnimation("GHZ/SpikeLog.bin", SCOPE_STAGE); }
 #endif
 
 void SpikeLog_Serialize(void) { RSDK_EDITABLE_VAR(SpikeLog, VAR_UINT8, frame); }

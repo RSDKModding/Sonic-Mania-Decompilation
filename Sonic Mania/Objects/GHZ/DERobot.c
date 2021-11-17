@@ -916,7 +916,7 @@ void DERobot_Unknown34(void)
         entity->field_B0     = -0x10000;
         entity->state        = DERobot_Unknown35;
         EntityEggman *eggman = (EntityEggman *)entity->parts[2];
-        RSDK.SetSpriteAnimation(Eggman->spriteIndex, 2, &eggman->animator, true, 0);
+        RSDK.SetSpriteAnimation(Eggman->aniFrames, 2, &eggman->animator, true, 0);
         eggman->state = Eggman_Unknown2;
         Camera_ShakeScreen(0, 0, 8);
         RSDK.PlaySfx(DERobot->sfxLedgeBreak, 0, 255);
@@ -946,7 +946,7 @@ void DERobot_Unknown35(void)
         entity->field_D4     = 8;
         entity->field_D8     = 0x10000;
         entity->field_DC     = -0x1000;
-        RSDK.SetSpriteAnimation(Eggman->spriteIndex, 3, &eggman->animator, true, 0);
+        RSDK.SetSpriteAnimation(Eggman->aniFrames, 3, &eggman->animator, true, 0);
         eggman->state                              = Eggman_Unknown2;
         ((EntityDERobot *)entity->parts[0])->state = DERobot_Unknown27;
         entity->state                              = DERobot_Unknown36;
@@ -1158,7 +1158,7 @@ void DERobot_Unknown38(void)
         }
 
         EntityEggman *eggman = (EntityEggman *)entity->parts[2];
-        RSDK.SetSpriteAnimation(Eggman->spriteIndex, 4, &eggman->animator, true, 0);
+        RSDK.SetSpriteAnimation(Eggman->aniFrames, 4, &eggman->animator, true, 0);
         entity->timer      = 0;
         entity->offset.x   = 0;
         entity->velocity.y = -0x40000;

@@ -34,14 +34,14 @@ void InkWipe_Create(void* data)
         entity->drawOrder     = Zone->drawOrderHigh;
         entity->updateRange.x = 0x800000;
         entity->updateRange.y = 0x800000;
-        RSDK.SetSpriteAnimation(InkWipe->spriteIndex, 0, &entity->animator, true, 0);
+        RSDK.SetSpriteAnimation(InkWipe->aniFrames, 0, &entity->animator, true, 0);
     }
 }
 
 void InkWipe_StageLoad(void)
 {
     if (RSDK.CheckStageFolder("PSZ1"))
-        InkWipe->spriteIndex = RSDK.LoadSpriteAnimation("PSZ1/InkWipe.bin", SCOPE_STAGE);
+        InkWipe->aniFrames = RSDK.LoadSpriteAnimation("PSZ1/InkWipe.bin", SCOPE_STAGE);
 }
 
 #if RETRO_INCLUDE_EDITOR

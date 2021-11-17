@@ -45,7 +45,7 @@ void Decoration_Create(void *data)
 
         entity->updateRange.x = 0x800000;
         entity->updateRange.y = 0x800000;
-        RSDK.SetSpriteAnimation(Decoration->spriteIndex, entity->type, &entity->animator, true, 0);
+        RSDK.SetSpriteAnimation(Decoration->aniFrames, entity->type, &entity->animator, true, 0);
         if (RSDK.GetFrameID(&entity->animator))
             entity->drawOrder = Zone->drawOrderHigh;
         else
@@ -56,29 +56,29 @@ void Decoration_Create(void *data)
 void Decoration_StageLoad(void)
 {
     if (RSDK.CheckStageFolder("GHZ"))
-        Decoration->spriteIndex = RSDK.LoadSpriteAnimation("GHZ/Decoration.bin", SCOPE_STAGE);
+        Decoration->aniFrames = RSDK.LoadSpriteAnimation("GHZ/Decoration.bin", SCOPE_STAGE);
     else if (RSDK.CheckStageFolder("CPZ"))
-        Decoration->spriteIndex = RSDK.LoadSpriteAnimation("CPZ/Decoration.bin", SCOPE_STAGE);
+        Decoration->aniFrames = RSDK.LoadSpriteAnimation("CPZ/Decoration.bin", SCOPE_STAGE);
     else if (RSDK.CheckStageFolder("SPZ1"))
-        Decoration->spriteIndex = RSDK.LoadSpriteAnimation("SPZ1/Decoration.bin", SCOPE_STAGE);
+        Decoration->aniFrames = RSDK.LoadSpriteAnimation("SPZ1/Decoration.bin", SCOPE_STAGE);
     else if (RSDK.CheckStageFolder("FBZ"))
-        Decoration->spriteIndex = RSDK.LoadSpriteAnimation("FBZ/Decoration.bin", SCOPE_STAGE);
+        Decoration->aniFrames = RSDK.LoadSpriteAnimation("FBZ/Decoration.bin", SCOPE_STAGE);
     else if (RSDK.CheckStageFolder("SSZ1") || RSDK.CheckStageFolder("SSZ2"))
-        Decoration->spriteIndex = RSDK.LoadSpriteAnimation("SSZ/Decoration.bin", SCOPE_STAGE);
+        Decoration->aniFrames = RSDK.LoadSpriteAnimation("SSZ/Decoration.bin", SCOPE_STAGE);
     else if (RSDK.CheckStageFolder("MMZ1") || RSDK.CheckStageFolder("MMZ2"))
-        Decoration->spriteIndex = RSDK.LoadSpriteAnimation("MMZ/Decoration.bin", SCOPE_STAGE);
+        Decoration->aniFrames = RSDK.LoadSpriteAnimation("MMZ/Decoration.bin", SCOPE_STAGE);
     else if (RSDK.CheckStageFolder("MSZ"))
-        Decoration->spriteIndex = RSDK.LoadSpriteAnimation("MSZ/Decoration.bin", SCOPE_STAGE);
+        Decoration->aniFrames = RSDK.LoadSpriteAnimation("MSZ/Decoration.bin", SCOPE_STAGE);
     else if (RSDK.CheckStageFolder("MSZEnding"))
-        Decoration->spriteIndex = RSDK.LoadSpriteAnimation("MSZ/Ending.bin", SCOPE_STAGE);
+        Decoration->aniFrames = RSDK.LoadSpriteAnimation("MSZ/Ending.bin", SCOPE_STAGE);
     else if (RSDK.CheckStageFolder("HCZ"))
-        Decoration->spriteIndex = RSDK.LoadSpriteAnimation("HCZ/Decoration.bin", SCOPE_STAGE);
+        Decoration->aniFrames = RSDK.LoadSpriteAnimation("HCZ/Decoration.bin", SCOPE_STAGE);
     else if (RSDK.CheckStageFolder("TMZ1") || RSDK.CheckStageFolder("TMZ2"))
-        Decoration->spriteIndex = RSDK.LoadSpriteAnimation("TMZ1/Decoration.bin", SCOPE_STAGE);
+        Decoration->aniFrames = RSDK.LoadSpriteAnimation("TMZ1/Decoration.bin", SCOPE_STAGE);
     else if (RSDK.CheckStageFolder("TMZ3"))
-        Decoration->spriteIndex = RSDK.LoadSpriteAnimation("Phantom/Decoration.bin", SCOPE_STAGE);
+        Decoration->aniFrames = RSDK.LoadSpriteAnimation("Phantom/Decoration.bin", SCOPE_STAGE);
     else if (RSDK.CheckStageFolder("AIZ"))
-        Decoration->spriteIndex = RSDK.LoadSpriteAnimation("AIZ/Decoration.bin", SCOPE_STAGE);
+        Decoration->aniFrames = RSDK.LoadSpriteAnimation("AIZ/Decoration.bin", SCOPE_STAGE);
 }
 
 void Decoration_DrawSprite(void)
@@ -105,7 +105,7 @@ void Decoration_DrawSprite(void)
 void Decoration_EditorDraw(void)
 {
     RSDK_THIS(Decoration);
-    RSDK.SetSpriteAnimation(Decoration->spriteIndex, entity->type, &entity->animator, true, 0);
+    RSDK.SetSpriteAnimation(Decoration->aniFrames, entity->type, &entity->animator, true, 0);
     if (entity->rotSpeed)
         entity->drawFX |= FX_ROTATE;
     else

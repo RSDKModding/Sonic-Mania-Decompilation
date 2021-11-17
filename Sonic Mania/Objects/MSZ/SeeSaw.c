@@ -135,9 +135,9 @@ void SeeSaw_Update(void)
                         player->state    = Player_State_Air;
                         player->onGround = false;
                         if (entity->state == SeeSaw_Unknown4 || entity->field_68)
-                            RSDK.SetSpriteAnimation(player->spriteIndex, ANI_JUMP, &player->playerAnimator, true, 0);
+                            RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->playerAnimator, true, 0);
                         else
-                            RSDK.SetSpriteAnimation(player->spriteIndex, ANI_SPRINGTWIRL, &player->playerAnimator, true, 0);
+                            RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGTWIRL, &player->playerAnimator, true, 0);
                         RSDK.PlaySfx(SeeSaw->sfxSpring, false, 255);
                         player->velocity.y = -SeeSaw->value3;
                     }

@@ -35,14 +35,14 @@ void SpearBlock_Create(void *data)
     entity->active           = ACTIVE_BOUNDS;
     entity->updateRange.x    = 0x400000;
     entity->updateRange.y    = 0x400000;
-    RSDK.SetSpriteAnimation(SpearBlock->spriteIndex, 1, &entity->animator, true, 0);
-    RSDK.SetSpriteAnimation(SpearBlock->spriteIndex, 0, &SpearBlock->animator, true, 0);
+    RSDK.SetSpriteAnimation(SpearBlock->aniFrames, 1, &entity->animator, true, 0);
+    RSDK.SetSpriteAnimation(SpearBlock->aniFrames, 0, &SpearBlock->animator, true, 0);
     entity->state = SpearBlock_State_SetupSpears;
 }
 
 void SpearBlock_StageLoad(void)
 {
-    SpearBlock->spriteIndex = RSDK.LoadSpriteAnimation("Blueprint/SpearBlock.bin", SCOPE_STAGE);
+    SpearBlock->aniFrames = RSDK.LoadSpriteAnimation("Blueprint/SpearBlock.bin", SCOPE_STAGE);
 
     SpearBlock->blockHitbox.left        = -16;
     SpearBlock->blockHitbox.top         = -16;
@@ -70,7 +70,7 @@ void SpearBlock_StageLoad(void)
 
 void SpearBlock_DebugDraw(void)
 {
-    RSDK.SetSpriteAnimation(SpearBlock->spriteIndex, 0, &DebugMode->animator, true, 0);
+    RSDK.SetSpriteAnimation(SpearBlock->aniFrames, 0, &DebugMode->animator, true, 0);
     RSDK.DrawSprite(&DebugMode->animator, NULL, false);
 }
 void SpearBlock_DebugSpawn(void)

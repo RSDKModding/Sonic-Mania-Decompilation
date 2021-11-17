@@ -59,10 +59,10 @@ void UFO_Setup_StageLoad(void)
     RSDK.SetDrawLayerProperties(1, false, UFO_Setup_DrawLayerCallback);
     RSDK.SetDrawLayerProperties(3, false, UFO_Setup_DrawLayerCallback);
     RSDK.SetDrawLayerProperties(4, true, NULL);
-    UFO_Setup->sfx_BlueSphere = RSDK.GetSFX("Special/BlueSphere2.wav");
-    UFO_Setup->sfx_SSExit     = RSDK.GetSFX("Special/SSExit.wav");
-    UFO_Setup->sfx_Emerald    = RSDK.GetSFX("Special/Emerald.wav");
-    UFO_Setup->sfx_Event      = RSDK.GetSFX("Special/Event.wav");
+    UFO_Setup->sfxBlueSphere = RSDK.GetSFX("Special/BlueSphere2.wav");
+    UFO_Setup->sfxSSExit     = RSDK.GetSFX("Special/SSExit.wav");
+    UFO_Setup->sfxEmerald    = RSDK.GetSFX("Special/Emerald.wav");
+    UFO_Setup->sfxEvent      = RSDK.GetSFX("Special/Event.wav");
     RSDK.CopyPalette(0, 0, 7, 0, 128);
     RSDK.CopyPalette(1, 96, 0, 96, 32);
     RSDK.SetLimitedFade(1, 0, 7, 36, 160, 255);
@@ -270,12 +270,12 @@ void UFO_Setup_ScanlineCallback_3DRoof(ScanlineInfo *scanlines)
 void UFO_Setup_PlaySphereSFX(void)
 {
     if (UFO_Setup->spherePan) {
-        int32 channel = RSDK.PlaySfx(UFO_Setup->sfx_BlueSphere, 0, 255);
+        int32 channel = RSDK.PlaySfx(UFO_Setup->sfxBlueSphere, 0, 255);
         RSDK.SetChannelAttributes(channel, 1.0, -1.0, 1.0);
         UFO_Setup->spherePan = 0;
     }
     else {
-        int32 channel = RSDK.PlaySfx(UFO_Setup->sfx_BlueSphere, 0, 255);
+        int32 channel = RSDK.PlaySfx(UFO_Setup->sfxBlueSphere, 0, 255);
         RSDK.SetChannelAttributes(channel, 1.0, 1.0, 1.0);
         UFO_Setup->spherePan = 1;
     }
@@ -298,7 +298,7 @@ void UFO_Setup_Finish_Win(void)
     saveRAM->nextSpecialStage = (saveRAM->nextSpecialStage + 1) % 7;
     setup->visible = true;
     setup->state   = UFO_Setup_Unknown12;
-    RSDK.PlaySfx(UFO_Setup->sfx_SSExit, 0, 255);
+    RSDK.PlaySfx(UFO_Setup->sfxSSExit, 0, 255);
     Music_FadeOut(0.025);
     PauseMenu->disableEvents = true;
 }
@@ -314,7 +314,7 @@ void UFO_Setup_Finish_Fail(void)
 
     setup->visible = true;
     setup->state   = UFO_Setup_Unknown12;
-    RSDK.PlaySfx(UFO_Setup->sfx_SSExit, 0, 255);
+    RSDK.PlaySfx(UFO_Setup->sfxSSExit, 0, 255);
     Music_FadeOut(0.025);
     PauseMenu->disableEvents = true;
 }

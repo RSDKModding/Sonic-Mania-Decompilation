@@ -56,7 +56,7 @@ void ConveyorPlatform_Create(void *data)
     if (entity->type)
         entity->type = PLATFORM_5;
     Platform_Create(NULL);
-    RSDK.SetSpriteAnimation(Platform->spriteIndex, 2, &entity->animator, true, 0);
+    RSDK.SetSpriteAnimation(Platform->aniFrames, 2, &entity->animator, true, 0);
     entity->drawFX |= FX_FLIP;
     entity->stateCollide = Platform_CollisionState_AllSolid;
     entity->collision    = PLATFORM_C_1;

@@ -172,7 +172,7 @@ bool32 TMZ2Outro_CutsceneState_EggmanFall(EntityCutsceneSeq *host)
     foreach_active(Eggman, eggman)
     {
         if (eggman->onGround) {
-            RSDK.SetSpriteAnimation(Eggman->spriteIndex, 8, &eggman->animator, true, 0);
+            RSDK.SetSpriteAnimation(Eggman->aniFrames, 8, &eggman->animator, true, 0);
             foreach_active(Player, player) { player->up = false; }
             flag = true;
             foreach_break;
@@ -338,7 +338,7 @@ bool32 TMZ2Outro_CutsceneState_Panic(EntityCutsceneSeq *host)
     if (host->timer == 90) {
         foreach_active(Eggman, eggman)
         {
-            RSDK.SetSpriteAnimation(Eggman->spriteIndex, 9, &eggman->animator, true, 0);
+            RSDK.SetSpriteAnimation(Eggman->aniFrames, 9, &eggman->animator, true, 0);
             eggman->direction  = FLIP_NONE;
             eggman->state      = Eggman_Unknown7;
             eggman->velocity.x = 0x10000;
@@ -368,7 +368,7 @@ bool32 TMZ2Outro_CutsceneState_Panic(EntityCutsceneSeq *host)
         {
             player->up    = false;
             player->state = Player_State_None;
-            RSDK.SetSpriteAnimation(player->spriteIndex, ANI_BALANCE1 + player->playerID, &player->playerAnimator, false, 0);
+            RSDK.SetSpriteAnimation(player->aniFrames, ANI_BALANCE1 + player->playerID, &player->playerAnimator, false, 0);
         }
 
         RSDK.PlaySfx(TMZ2Outro->sfxRumble, false, 255);
@@ -412,7 +412,7 @@ bool32 TMZ2Outro_CutsceneState_OuttaHere_BadEnd(EntityCutsceneSeq *host)
 
     if (host->timer == 240) {
         if (entity->heavyKing) {
-            RSDK.SetSpriteAnimation(entity->heavyKing->spriteIndex, 3, &entity->heavyKing->animator, false, 0);
+            RSDK.SetSpriteAnimation(entity->heavyKing->aniFrames, 3, &entity->heavyKing->animator, false, 0);
             foreach_active(PhantomRuby, ruby)
             {
                 ruby->startPos.y -= 0x100000;
@@ -435,7 +435,7 @@ bool32 TMZ2Outro_CutsceneState_OuttaHere_BadEnd(EntityCutsceneSeq *host)
 
     if (host->timer == 408) {
         if (entity->heavyKing) {
-            RSDK.SetSpriteAnimation(entity->heavyKing->spriteIndex, 4, &entity->heavyKing->animator, false, 0);
+            RSDK.SetSpriteAnimation(entity->heavyKing->aniFrames, 4, &entity->heavyKing->animator, false, 0);
             foreach_active(PhantomRuby, ruby)
             {
                 ruby->startPos.y += 0x180000;
@@ -466,7 +466,7 @@ bool32 TMZ2Outro_CutsceneState_OuttaHere(EntityCutsceneSeq *host)
                 player->onGround   = false;
                 player->velocity.x = 0x20000;
                 player->velocity.y = -0x40000;
-                RSDK.SetSpriteAnimation(player->spriteIndex, ANI_HURT, &player->playerAnimator, false, 0);
+                RSDK.SetSpriteAnimation(player->aniFrames, ANI_HURT, &player->playerAnimator, false, 0);
             }
 
             Zone->screenBoundsR1[0]     = 0x2000;
@@ -504,7 +504,7 @@ bool32 TMZ2Outro_CutsceneState_OuttaHere(EntityCutsceneSeq *host)
     if (host->timer == 90) {
         foreach_active(Eggman, eggman)
         {
-            RSDK.SetSpriteAnimation(Eggman->spriteIndex, 9, &eggman->animator, true, 0);
+            RSDK.SetSpriteAnimation(Eggman->aniFrames, 9, &eggman->animator, true, 0);
             eggman->direction  = FLIP_NONE;
             eggman->state      = Eggman_Unknown7;
             eggman->velocity.x = 0x10000;
@@ -595,7 +595,7 @@ bool32 TMZ2Outro_CutsceneState_TeamEscape(EntityCutsceneSeq *host)
             }
         }
         Zone->deathBoundary[0] = 0x8000000;
-        RSDK.PlaySfx(Player->sfx_Transform2, false, 255);
+        RSDK.PlaySfx(Player->sfxTransform2, false, 255);
         Music_FadeOut(0.0125);
     }
     if (host->timer == 420)
@@ -609,8 +609,8 @@ bool32 TMZ2Outro_CutsceneState_TeamEscape(EntityCutsceneSeq *host)
         fxFade->fadeOutBlack = 1;
         fxFade->isPermanent  = true;
 
-        RSDK.SetChannelAttributes(RSDK.PlaySfx(PhantomRuby->sfx_L[0], false, 0), 1.0, -1.0, 1.0);
-        RSDK.SetChannelAttributes(RSDK.PlaySfx(PhantomRuby->sfx_R[0], false, 0), 1.0, 1.0, 1.0);
+        RSDK.SetChannelAttributes(RSDK.PlaySfx(PhantomRuby->sfxL[0], false, 0), 1.0, -1.0, 1.0);
+        RSDK.SetChannelAttributes(RSDK.PlaySfx(PhantomRuby->sfxR[0], false, 0), 1.0, 1.0, 1.0);
         return true;
     }
     return false;

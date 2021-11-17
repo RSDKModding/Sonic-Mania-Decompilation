@@ -112,9 +112,9 @@ bool32 ERZOutro_CutsceneState_AttackEggman(EntityCutsceneSeq *host)
         host->field_64 = player1->rings;
         eggman->state  = StateMachine_None;
         if (player1->characterID == ID_KNUCKLES)
-            RSDK.SetSpriteAnimation(player1->spriteIndex, ANI_FLY, &player1->playerAnimator, false, 6);
+            RSDK.SetSpriteAnimation(player1->aniFrames, ANI_FLY, &player1->playerAnimator, false, 6);
         else
-            RSDK.SetSpriteAnimation(player1->spriteIndex, ANI_RUN, &player1->playerAnimator, false, 0);
+            RSDK.SetSpriteAnimation(player1->aniFrames, ANI_RUN, &player1->playerAnimator, false, 0);
         player1->state           = ERZStart_State_PlayerSuperFly;
         player1->nextAirState    = StateMachine_None;
         player1->nextGroundState = StateMachine_None;
@@ -144,9 +144,9 @@ bool32 ERZOutro_CutsceneState_AttackEggman(EntityCutsceneSeq *host)
     }
     else if (host->timer < 120) {
         if (player1->characterID == ID_KNUCKLES)
-            RSDK.SetSpriteAnimation(player1->spriteIndex, ANI_FLY, &player1->playerAnimator, false, 6);
+            RSDK.SetSpriteAnimation(player1->aniFrames, ANI_FLY, &player1->playerAnimator, false, 6);
         else
-            RSDK.SetSpriteAnimation(player1->spriteIndex, ANI_RUN, &player1->playerAnimator, false, 0);
+            RSDK.SetSpriteAnimation(player1->aniFrames, ANI_RUN, &player1->playerAnimator, false, 0);
         int x             = player1->position.x;
         int y             = player1->position.y;
         player1->position = MathHelpers_Unknown5((host->timer << 16) / 120, ERZOutro->field_8, ERZOutro->field_C, ERZOutro->field_8,
@@ -221,7 +221,7 @@ bool32 ERZOutro_CutsceneState_AttackRecoil(EntityCutsceneSeq *host)
             player1->state      = Player_State_None;
             player1->superState = SUPERSTATE_FADEOUT;
             player1->shield     = SHIELD_NONE;
-            RSDK.SetSpriteAnimation(player1->spriteIndex, ANI_HURT, &player1->playerAnimator, true, 0);
+            RSDK.SetSpriteAnimation(player1->aniFrames, ANI_HURT, &player1->playerAnimator, true, 0);
             host->field_6C[0] = 1;
             fxRuby->state     = FXRuby_Unknown3;
             fxRuby->drawOrder = Zone->drawOrderLow - 1;
@@ -254,7 +254,7 @@ bool32 ERZOutro_CutsceneState_AttackRecoil(EntityCutsceneSeq *host)
         if (!host->field_6C[2]) {
             player1->velocity.y += 0x3800;
             if (player1->velocity.y > 0 && player1->position.y >= host->field_68) {
-                RSDK.SetSpriteAnimation(player1->spriteIndex, ANI_FAN, &player1->playerAnimator, true, 0);
+                RSDK.SetSpriteAnimation(player1->aniFrames, ANI_FAN, &player1->playerAnimator, true, 0);
                 player1->position.y = host->field_68;
                 player1->velocity.x = 0;
                 player1->velocity.y = 0;

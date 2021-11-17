@@ -740,7 +740,7 @@ void HeavyGunner_State4_Unknown1(void)
     if (entity->velocity.y > 0) {
         if (entity->position.y > parent->position.y - 0x200000) {
             RSDK.SetSpriteAnimation(HeavyGunner->aniFrames, 1, &parent->animator9, true, 0);
-            RSDK.PlaySfx(Player->sfx_Grab, false, 255);
+            RSDK.PlaySfx(Player->sfxGrab, false, 255);
             entity->drawOrder = Zone->hudDrawOrder;
             entity->state     = HeavyGunner_State4_Unknown2;
             entity->timer     = 0x200;

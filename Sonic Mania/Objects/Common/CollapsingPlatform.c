@@ -16,7 +16,7 @@ void CollapsingPlatform_Update(void)
             {
                 if (Player_CheckCollisionTouch(player, entity, &entity->hitbox) && player->characterID == ID_MIGHTY && player->jumpAbilityTimer > 1) {
                     StateMachine_Run(entity->state);
-                    RSDK.PlaySfx(CollapsingPlatform->sfx_Crumble, 0, 255);
+                    RSDK.PlaySfx(CollapsingPlatform->sfxCrumble, 0, 255);
                     if (entity->respawn) {
                         entity->collapseDelay = 0;
                         entity->playerPos.x   = 0;
@@ -31,7 +31,7 @@ void CollapsingPlatform_Update(void)
 #endif
         if (--entity->collapseDelay == 0) {
             StateMachine_Run(entity->state);
-            RSDK.PlaySfx(CollapsingPlatform->sfx_Crumble, 0, 255);
+            RSDK.PlaySfx(CollapsingPlatform->sfxCrumble, 0, 255);
             if (entity->respawn) {
                 entity->collapseDelay = 0;
                 entity->playerPos.x   = 0;
@@ -54,7 +54,7 @@ void CollapsingPlatform_Update(void)
 #if RETRO_USE_PLUS
                 if (player->characterID == ID_MIGHTY && player->jumpAbilityTimer > 1) {
                     StateMachine_Run(entity->state);
-                    RSDK.PlaySfx(CollapsingPlatform->sfx_Crumble, 0, 255);
+                    RSDK.PlaySfx(CollapsingPlatform->sfxCrumble, 0, 255);
                     if (entity->respawn) {
                         entity->collapseDelay = 0;
                         entity->playerPos.x   = 0;
@@ -72,7 +72,7 @@ void CollapsingPlatform_Update(void)
             entity->collapseDelay = entity->delay;
             if (!entity->delay) {
                 StateMachine_Run(entity->state);
-                RSDK.PlaySfx(CollapsingPlatform->sfx_Crumble, 0, 255);
+                RSDK.PlaySfx(CollapsingPlatform->sfxCrumble, 0, 255);
                 if (entity->respawn) {
                     entity->collapseDelay = 0;
                     entity->playerPos.x   = 0;
@@ -87,7 +87,7 @@ void CollapsingPlatform_Update(void)
         entity->collapseDelay = entity->delay;
         if (!entity->delay) {
             StateMachine_Run(entity->state);
-            RSDK.PlaySfx(CollapsingPlatform->sfx_Crumble, 0, 255);
+            RSDK.PlaySfx(CollapsingPlatform->sfxCrumble, 0, 255);
             if (entity->respawn) {
                 entity->collapseDelay = 0;
                 entity->playerPos.x   = 0;
@@ -187,17 +187,17 @@ void CollapsingPlatform_Create(void *data)
 
 void CollapsingPlatform_StageLoad(void)
 {
-    CollapsingPlatform->spriteIndex = RSDK.LoadSpriteAnimation("Global/TicMark.bin", SCOPE_STAGE);
-    RSDK.SetSpriteAnimation(CollapsingPlatform->spriteIndex, 0, &CollapsingPlatform->animator, true, 0);
+    CollapsingPlatform->aniFrames = RSDK.LoadSpriteAnimation("Global/TicMark.bin", SCOPE_STAGE);
+    RSDK.SetSpriteAnimation(CollapsingPlatform->aniFrames, 0, &CollapsingPlatform->animator, true, 0);
     if (RSDK.CheckStageFolder("OOZ1") || RSDK.CheckStageFolder("OOZ2"))
         CollapsingPlatform->shift = 1;
 
     if (RSDK.CheckStageFolder("FBZ") || RSDK.CheckStageFolder("HCZ") || RSDK.CheckStageFolder("LRZ1") || RSDK.CheckStageFolder("LRZ2")
         || RSDK.CheckStageFolder("AIZ")) {
-        CollapsingPlatform->sfx_Crumble = RSDK.GetSFX("Stage/LedgeBreak3.wav");
+        CollapsingPlatform->sfxCrumble = RSDK.GetSFX("Stage/LedgeBreak3.wav");
     }
     else {
-        CollapsingPlatform->sfx_Crumble = RSDK.GetSFX("Stage/LedgeBreak.wav");
+        CollapsingPlatform->sfxCrumble = RSDK.GetSFX("Stage/LedgeBreak.wav");
     }
 }
 
@@ -361,8 +361,8 @@ void CollapsingPlatform_EditorDraw(void)
 
 void CollapsingPlatform_EditorLoad(void)
 {
-    CollapsingPlatform->spriteIndex = RSDK.LoadSpriteAnimation("Global/TicMark.bin", SCOPE_STAGE);
-    RSDK.SetSpriteAnimation(CollapsingPlatform->spriteIndex, 0, &CollapsingPlatform->animator, true, 0);
+    CollapsingPlatform->aniFrames = RSDK.LoadSpriteAnimation("Global/TicMark.bin", SCOPE_STAGE);
+    RSDK.SetSpriteAnimation(CollapsingPlatform->aniFrames, 0, &CollapsingPlatform->animator, true, 0);
 }
 
 void CollapsingPlatform_Serialize(void)

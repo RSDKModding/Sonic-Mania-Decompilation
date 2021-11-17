@@ -97,7 +97,7 @@ void Platform_Draw(void)
     if (entity->frameID >= 0) {
         if ((entity->state != Platform_State_Circular || !entity->hasTension)
             && (entity->state != Platform_State_Swing && entity->state != Platform_State_14 && entity->type != PLATFORM_12)) {
-            if (Platform->spriteIndex == 0xFFFF)
+            if (Platform->aniFrames == 0xFFFF)
                 RSDK.DrawRect(entity->drawPos.x - 0x200000, entity->drawPos.y - 0x100000, 0x400000, 0x200000, 0x8080A0, 255, INK_NONE, false);
             else
                 RSDK.DrawSprite(&entity->animator, &entity->drawPos, false);
@@ -130,7 +130,7 @@ void Platform_Draw(void)
             RSDK.DrawSprite(&entity->animator, &entity->centerPos, false);
             entity->animator.frameID = entity->frameID;
 
-            if (Platform->spriteIndex == 0xFFFF)
+            if (Platform->aniFrames == 0xFFFF)
                 RSDK.DrawRect(entity->drawPos.x - 0x200000, entity->drawPos.y - 0x100000, 0x400000, 0x200000, 0x8080A0, 255, INK_NONE, false);
             else
                 RSDK.DrawSprite(&entity->animator, &entity->drawPos, false);
@@ -150,7 +150,7 @@ void Platform_Create(void *data)
     entity->centerPos.y = entity->position.y;
     entity->drawPos.x   = entity->position.x;
     entity->drawPos.y   = entity->position.y;
-    RSDK.SetSpriteAnimation(Platform->spriteIndex, 0, &entity->animator, true, 0);
+    RSDK.SetSpriteAnimation(Platform->aniFrames, 0, &entity->animator, true, 0);
     entity->animator.frameID = entity->frameID;
     if (!RSDK_sceneInfo->inEditor && RSDK.GetFrameID(&entity->animator) == 108)
         entity->drawOrder = Zone->drawOrderLow;
@@ -229,7 +229,7 @@ void Platform_Create(void *data)
         case PLATFORM_4:
             entity->updateRange.x = (abs(entity->amplitude.y) + 512) << 14;
             entity->updateRange.y = (abs(entity->amplitude.y) + 512) << 14;
-            RSDK.SetSpriteAnimation(Platform->spriteIndex, 1, &entity->animator, true, 0);
+            RSDK.SetSpriteAnimation(Platform->aniFrames, 1, &entity->animator, true, 0);
             entity->amplitude.y *= 16;
             entity->groundVel = 4 * entity->angle;
             entity->angle     = entity->groundVel + 256 + (entity->amplitude.x * RSDK.Sin1024(entity->speed * entity->collapseDelay) >> 14);
@@ -269,7 +269,7 @@ void Platform_Create(void *data)
         case PLATFORM_14:
             entity->updateRange.x = (abs(entity->amplitude.y) + 512) << 14;
             entity->updateRange.y = (abs(entity->amplitude.y) + 512) << 14;
-            RSDK.SetSpriteAnimation(Platform->spriteIndex, 1, &entity->animator, true, 0);
+            RSDK.SetSpriteAnimation(Platform->aniFrames, 1, &entity->animator, true, 0);
             entity->amplitude.y *= 16;
             entity->groundVel = 4 * entity->angle;
             entity->angle     = entity->groundVel + 256 + (entity->amplitude.x * RSDK.Sin1024(entity->speed * entity->collapseDelay) >> 14);
@@ -300,7 +300,7 @@ void Platform_Create(void *data)
             if (!entity->animator.frameCount)
                 break;
             f -= entity->animator.frameCount;
-            RSDK.SetSpriteAnimation(Platform->spriteIndex, ++anim, &entity->animator, true, 0);
+            RSDK.SetSpriteAnimation(Platform->aniFrames, ++anim, &entity->animator, true, 0);
         }
         entity->frameID          = f;
         entity->animator.frameID = f;
@@ -312,7 +312,7 @@ void Platform_Create(void *data)
     if (!RSDK_sceneInfo->inEditor) {
         if (entity->collision != PLATFORM_C_4) {
             Hitbox *hitbox = RSDK.GetHitbox(&entity->animator, entity->collision != PLATFORM_C_0);
-            if (Platform->spriteIndex != 0xFFFF && hitbox) {
+            if (Platform->aniFrames != 0xFFFF && hitbox) {
                 entity->hitbox.left   = hitbox->left;
                 entity->hitbox.top    = hitbox->top;
                 entity->hitbox.right  = hitbox->right;
@@ -367,72 +367,72 @@ void Platform_StageLoad(void)
 {
     Platform->useClack = false;
     if (RSDK.CheckStageFolder("GHZ")) {
-        Platform->spriteIndex = RSDK.LoadSpriteAnimation("GHZ/Platform.bin", SCOPE_STAGE);
+        Platform->aniFrames = RSDK.LoadSpriteAnimation("GHZ/Platform.bin", SCOPE_STAGE);
     }
     else if (RSDK.CheckStageFolder("GHZCutscene")) {
-        Platform->spriteIndex = RSDK.LoadSpriteAnimation("GHZCutscene/Platform.bin", SCOPE_STAGE);
+        Platform->aniFrames = RSDK.LoadSpriteAnimation("GHZCutscene/Platform.bin", SCOPE_STAGE);
     }
     else if (RSDK.CheckStageFolder("CPZ")) {
-        Platform->spriteIndex = RSDK.LoadSpriteAnimation("CPZ/Platform.bin", SCOPE_STAGE);
+        Platform->aniFrames = RSDK.LoadSpriteAnimation("CPZ/Platform.bin", SCOPE_STAGE);
     }
     else if (RSDK.CheckStageFolder("SPZ1")) {
-        Platform->spriteIndex = RSDK.LoadSpriteAnimation("SPZ1/Platform.bin", SCOPE_STAGE);
+        Platform->aniFrames = RSDK.LoadSpriteAnimation("SPZ1/Platform.bin", SCOPE_STAGE);
     }
     else if (RSDK.CheckStageFolder("SPZ2")) {
-        Platform->spriteIndex = RSDK.LoadSpriteAnimation("SPZ2/Platform.bin", SCOPE_STAGE);
+        Platform->aniFrames = RSDK.LoadSpriteAnimation("SPZ2/Platform.bin", SCOPE_STAGE);
     }
     else if (RSDK.CheckStageFolder("FBZ")) {
-        Platform->spriteIndex = RSDK.LoadSpriteAnimation("FBZ/Platform.bin", SCOPE_STAGE);
-        Platform->sfx_Clack   = RSDK.GetSFX("Stage/Clack2.wav");
+        Platform->aniFrames = RSDK.LoadSpriteAnimation("FBZ/Platform.bin", SCOPE_STAGE);
+        Platform->sfxClack   = RSDK.GetSFX("Stage/Clack2.wav");
         Platform->useClack    = true;
     }
     else if (RSDK.CheckStageFolder("PSZ1")) {
-        Platform->spriteIndex = RSDK.LoadSpriteAnimation("PSZ1/Platform.bin", SCOPE_STAGE);
+        Platform->aniFrames = RSDK.LoadSpriteAnimation("PSZ1/Platform.bin", SCOPE_STAGE);
     }
     else if (RSDK.CheckStageFolder("PSZ2")) {
-        Platform->spriteIndex = RSDK.LoadSpriteAnimation("PSZ2/Platform.bin", SCOPE_STAGE);
+        Platform->aniFrames = RSDK.LoadSpriteAnimation("PSZ2/Platform.bin", SCOPE_STAGE);
     }
     else if (RSDK.CheckStageFolder("SSZ1")) {
-        Platform->spriteIndex = RSDK.LoadSpriteAnimation("SSZ1/Platform.bin", SCOPE_STAGE);
+        Platform->aniFrames = RSDK.LoadSpriteAnimation("SSZ1/Platform.bin", SCOPE_STAGE);
     }
     else if (RSDK.CheckStageFolder("SSZ2")) {
-        Platform->spriteIndex = RSDK.LoadSpriteAnimation("SSZ2/Platform.bin", SCOPE_STAGE);
+        Platform->aniFrames = RSDK.LoadSpriteAnimation("SSZ2/Platform.bin", SCOPE_STAGE);
     }
     else if (RSDK.CheckStageFolder("HCZ")) {
-        Platform->spriteIndex = RSDK.LoadSpriteAnimation("HCZ/Platform.bin", SCOPE_STAGE);
-        Platform->sfx_Clack   = RSDK.GetSFX("Stage/Clack2.wav");
+        Platform->aniFrames = RSDK.LoadSpriteAnimation("HCZ/Platform.bin", SCOPE_STAGE);
+        Platform->sfxClack   = RSDK.GetSFX("Stage/Clack2.wav");
         Platform->useClack    = true;
     }
     else if (RSDK.CheckStageFolder("MSZ")) {
-        Platform->spriteIndex = RSDK.LoadSpriteAnimation("MSZ/Platform.bin", SCOPE_STAGE);
+        Platform->aniFrames = RSDK.LoadSpriteAnimation("MSZ/Platform.bin", SCOPE_STAGE);
     }
     else if (RSDK.CheckStageFolder("OOZ1") || RSDK.CheckStageFolder("OOZ2")) {
-        Platform->spriteIndex = RSDK.LoadSpriteAnimation("OOZ/Platform.bin", SCOPE_STAGE);
+        Platform->aniFrames = RSDK.LoadSpriteAnimation("OOZ/Platform.bin", SCOPE_STAGE);
     }
     else if (RSDK.CheckStageFolder("LRZ1")) {
-        Platform->spriteIndex = RSDK.LoadSpriteAnimation("LRZ1/Platform.bin", SCOPE_STAGE);
+        Platform->aniFrames = RSDK.LoadSpriteAnimation("LRZ1/Platform.bin", SCOPE_STAGE);
     }
     else if (RSDK.CheckStageFolder("LRZ2") || RSDK.CheckStageFolder("LRZ3")) {
-        Platform->spriteIndex = RSDK.LoadSpriteAnimation("LRZ2/Platform.bin", SCOPE_STAGE);
+        Platform->aniFrames = RSDK.LoadSpriteAnimation("LRZ2/Platform.bin", SCOPE_STAGE);
     }
     else if (RSDK.CheckStageFolder("MMZ")) {
-        Platform->spriteIndex = RSDK.LoadSpriteAnimation("MMZ/Platform.bin", SCOPE_STAGE);
+        Platform->aniFrames = RSDK.LoadSpriteAnimation("MMZ/Platform.bin", SCOPE_STAGE);
     }
     else if (RSDK.CheckStageFolder("TMZ1") || RSDK.CheckStageFolder("TMZ2")) {
-        Platform->spriteIndex = RSDK.LoadSpriteAnimation("TMZ1/Platform.bin", SCOPE_STAGE);
+        Platform->aniFrames = RSDK.LoadSpriteAnimation("TMZ1/Platform.bin", SCOPE_STAGE);
     }
     else if (RSDK.CheckStageFolder("AIZ")) {
-        Platform->spriteIndex = RSDK.LoadSpriteAnimation("AIZ/Platform.bin", SCOPE_STAGE);
+        Platform->aniFrames = RSDK.LoadSpriteAnimation("AIZ/Platform.bin", SCOPE_STAGE);
     }
     else if (RSDK.CheckStageFolder("Blueprint")) {
-        Platform->spriteIndex = RSDK.LoadSpriteAnimation("Blueprint/Platform.bin", SCOPE_STAGE);
+        Platform->aniFrames = RSDK.LoadSpriteAnimation("Blueprint/Platform.bin", SCOPE_STAGE);
     }
 
-    Platform->sfx_Clacker = RSDK.GetSFX("Stage/Clacker.wav");
-    Platform->sfx_Clang   = RSDK.GetSFX("Stage/Clang.wav");
-    Platform->sfx_Push    = RSDK.GetSFX("Global/Push.wav");
+    Platform->sfxClacker = RSDK.GetSFX("Stage/Clacker.wav");
+    Platform->sfxClang   = RSDK.GetSFX("Stage/Clang.wav");
+    Platform->sfxPush    = RSDK.GetSFX("Global/Push.wav");
     if (Platform->playingPushSFX) {
-        RSDK.StopSFX(Platform->sfx_Push);
+        RSDK.StopSFX(Platform->sfxPush);
         Platform->playingPushSFX = 0;
     }
 }
@@ -576,7 +576,7 @@ void Platform_State_PlayerActivated(void)
             if (entity->amplitude.y <= 0) {
                 entity->amplitude.y = 0;
                 if (entity->activeScreens && Platform->useClack)
-                    RSDK.PlaySfx(Platform->sfx_Clack, 0, 255);
+                    RSDK.PlaySfx(Platform->sfxClack, 0, 255);
             }
         }
     }
@@ -586,7 +586,7 @@ void Platform_State_PlayerActivated(void)
             if (entity->amplitude.y >= entity->amplitude.x) {
                 entity->amplitude.y = entity->amplitude.x;
                 if (entity->activeScreens && Platform->useClack)
-                    RSDK.PlaySfx(Platform->sfx_Clack, 0, 255);
+                    RSDK.PlaySfx(Platform->sfxClack, 0, 255);
             }
         }
     }
@@ -651,7 +651,7 @@ void Platform_State_Pushable(void)
 
     if (entity->velocity.x > 0 || entity->velocity.x < 0) {
         if (!Platform->playingPushSFX) {
-            RSDK.PlaySfx(Platform->sfx_Push, true, 255);
+            RSDK.PlaySfx(Platform->sfxPush, true, 255);
             Platform->playingPushSFX = true;
         }
     }
@@ -664,7 +664,7 @@ void Platform_State_Pushable(void)
     }
     else {
         if (Platform->playingPushSFX) {
-            RSDK.StopSFX(Platform->sfx_Push);
+            RSDK.StopSFX(Platform->sfxPush);
             Platform->playingPushSFX = false;
         }
         if (entity->collapseDelay < 4) {
@@ -726,7 +726,7 @@ void Platform_State_Pushable(void)
         entity->velocity.y = 0;
         entity->visible    = false;
         if (Platform->playingPushSFX) {
-            RSDK.StopSFX(Platform->sfx_Push);
+            RSDK.StopSFX(Platform->sfxPush);
             Platform->playingPushSFX = false;
         }
         entity->state = Platform_State_OffScreenReset;
@@ -763,7 +763,7 @@ void Platform_State_MovingSpike(void)
     entity->drawPos.y = entity->centerPos.y + y1 - y2;
     if (((move >> 16) & 1) != entity->hasTension) {
         if (entity->activeScreens)
-            RSDK.PlaySfx(Platform->sfx_Clang, 0, 255);
+            RSDK.PlaySfx(Platform->sfxClang, 0, 255);
         entity->hasTension = (move >> 16) & 1;
     }
     entity->velocity.x = entity->drawPos.x + drawX;
@@ -858,7 +858,7 @@ void Platform_State_14(void)
                 entity->angle = entity->groundVel + 0x100;
             }
             else {
-                RSDK.PlaySfx(Platform->sfx_Clacker, 0, 255);
+                RSDK.PlaySfx(Platform->sfxClacker, 0, 255);
                 entity->angle = entity->groundVel + 0x100;
             }
         }
@@ -868,7 +868,7 @@ void Platform_State_14(void)
             entity->angle = entity->groundVel + 0x100;
         }
         else {
-            RSDK.PlaySfx(Platform->sfx_Clacker, 0, 255);
+            RSDK.PlaySfx(Platform->sfxClacker, 0, 255);
             entity->angle = entity->groundVel + 0x100;
         }
     }
@@ -1844,7 +1844,7 @@ void Platform_CollisionState_TurnTable(void)
                         player->velocity.y      = 0;
                         player->groundVel       = 0;
                         if (entity->objectID == Platform->objectID)
-                            RSDK.SetSpriteAnimation(player->spriteIndex, ANI_TURNTABLE, &player->playerAnimator, false, 0);
+                            RSDK.SetSpriteAnimation(player->aniFrames, ANI_TURNTABLE, &player->playerAnimator, false, 0);
                         player->playerAnimator.animationSpeed = 64;
                         player->direction                     = FLIP_NONE;
                         if (!player->sidekick && entity->state == Platform_State_Collapsing && !entity->collapseDelay) {
@@ -1939,7 +1939,7 @@ void Platform_CollisionState_Twister(void)
                 if ((1 << pid) & stoodPlayers) {
                     if (player->state == Player_State_None) {
                         player->state = Player_State_Air;
-                        RSDK.SetSpriteAnimation(player->spriteIndex, ANI_AIRWALK, &player->playerAnimator, false, 0);
+                        RSDK.SetSpriteAnimation(player->aniFrames, ANI_AIRWALK, &player->playerAnimator, false, 0);
                     }
                 }
                 break;
@@ -1955,7 +1955,7 @@ void Platform_CollisionState_Twister(void)
                         player->velocity.y      = 0;
                         player->groundVel       = 0;
                         if (entity->objectID == Platform->objectID)
-                            RSDK.SetSpriteAnimation(player->spriteIndex, ANI_TWISTER, &player->playerAnimator, false, 0);
+                            RSDK.SetSpriteAnimation(player->aniFrames, ANI_TWISTER, &player->playerAnimator, false, 0);
                         player->playerAnimator.animationSpeed = 64;
                         player->direction                     = FLIP_X;
                         if (!player->sidekick) {

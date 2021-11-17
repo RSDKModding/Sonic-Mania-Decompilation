@@ -8,8 +8,8 @@ typedef struct {
     RSDK_OBJECT
     uint8 shift;
     Animator animator;
-    uint16 spriteIndex;
-    uint16 sfx_Crumble;
+    uint16 aniFrames;
+    uint16 sfxCrumble;
 } ObjectCollapsingPlatform;
 
 // Entity Class

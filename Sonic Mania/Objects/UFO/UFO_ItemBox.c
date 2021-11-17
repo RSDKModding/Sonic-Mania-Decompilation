@@ -90,9 +90,9 @@ void UFO_ItemBox_StageLoad(void)
     RSDK.SetDiffuseColour(UFO_ItemBox->sceneIndex, 160, 160, 0);
     RSDK.SetDiffuseIntensity(UFO_ItemBox->sceneIndex, 8, 8, 0);
     RSDK.SetSpecularIntensity(UFO_ItemBox->sceneIndex, 14, 14, 0);
-    UFO_ItemBox->sfx_Destroy      = RSDK.GetSFX("Global/Destroy.wav");
-    UFO_ItemBox->sfx_RockemSockem = RSDK.GetSFX("Stage/RockemSockem.wav");
-    UFO_ItemBox->sfx_Bumper       = RSDK.GetSFX("Stage/Bumper.wav");
+    UFO_ItemBox->sfxDestroy      = RSDK.GetSFX("Global/Destroy.wav");
+    UFO_ItemBox->sfxRockemSockem = RSDK.GetSFX("Stage/RockemSockem.wav");
+    UFO_ItemBox->sfxBumper       = RSDK.GetSFX("Stage/Bumper.wav");
 }
 
 void UFO_ItemBox_Unknown1(void)
@@ -117,11 +117,11 @@ void UFO_ItemBox_Unknown1(void)
                     player->state           = UFO_Player_StateJump;
                     RSDK.SetModelAnimation(UFO_Player->jumpModel, &player->playerAnimator, 128, 0, true, 0);
                     if (entity->type >= 3) {
-                        RSDK.PlaySfx(UFO_ItemBox->sfx_Bumper, 0, 255);
+                        RSDK.PlaySfx(UFO_ItemBox->sfxBumper, 0, 255);
                         entity->timer = 16;
                     }
                     else {
-                        RSDK.PlaySfx(UFO_ItemBox->sfx_Destroy, 0, 255);
+                        RSDK.PlaySfx(UFO_ItemBox->sfxDestroy, 0, 255);
                         entity->drawOrder = 12;
                         entity->active    = 2;
                         entity->state     = UFO_ItemBox_Unknown2;

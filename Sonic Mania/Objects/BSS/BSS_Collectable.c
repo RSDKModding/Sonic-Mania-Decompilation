@@ -87,20 +87,20 @@ void BSS_Collectable_Create(void *data)
         entity->updateRange.y = 0x800000;
 
         for (int32 i = 0; i < 8; ++i)
-            RSDK.SetSpriteAnimation(BSS_Collectable->spriteIndex, i, &BSS_Collectable->sphereData[i + 1], true, 0);
+            RSDK.SetSpriteAnimation(BSS_Collectable->aniFrames, i, &BSS_Collectable->sphereData[i + 1], true, 0);
         // RSDK.SetSpriteAnimation(BSS_Collectable->textSpriteIndex, 0, (Animator *)&BSS_Collectable[2].ringScaleTableX[21], true, 0);
         RSDK.SetSpriteAnimation(BSS_Collectable->ringSpriteIndex, 0, &BSS_Collectable->sphereData[7], true, 0);
         RSDK.SetSpriteAnimation(BSS_Collectable->ringSpriteIndex, 1, &BSS_Collectable->sphereData[15], true, 0);
-        RSDK.SetSpriteAnimation(BSS_Collectable->spriteIndex, 6, &BSS_Collectable->sphereData[16], true, 0);
-        RSDK.SetSpriteAnimation(BSS_Collectable->spriteIndex, 7, &BSS_Collectable->sphereData[17], true, 0);
-        RSDK.SetSpriteAnimation(BSS_Collectable->spriteIndex, 8, &BSS_Collectable->sphereData[18], true, 0);
-        RSDK.SetSpriteAnimation(BSS_Collectable->spriteIndex, 9, &BSS_Collectable->sphereData[19], true, 0);
+        RSDK.SetSpriteAnimation(BSS_Collectable->aniFrames, 6, &BSS_Collectable->sphereData[16], true, 0);
+        RSDK.SetSpriteAnimation(BSS_Collectable->aniFrames, 7, &BSS_Collectable->sphereData[17], true, 0);
+        RSDK.SetSpriteAnimation(BSS_Collectable->aniFrames, 8, &BSS_Collectable->sphereData[18], true, 0);
+        RSDK.SetSpriteAnimation(BSS_Collectable->aniFrames, 9, &BSS_Collectable->sphereData[19], true, 0);
     }
 }
 
 void BSS_Collectable_StageLoad(void)
 {
-    BSS_Collectable->spriteIndex     = RSDK.LoadSpriteAnimation("SpecialBS/StageObjects.bin", SCOPE_STAGE);
+    BSS_Collectable->aniFrames     = RSDK.LoadSpriteAnimation("SpecialBS/StageObjects.bin", SCOPE_STAGE);
     BSS_Collectable->ringSpriteIndex = RSDK.LoadSpriteAnimation("SpecialBS/Ring.bin", SCOPE_STAGE);
 
     if (!BSS_Collectable->loadedTables) {

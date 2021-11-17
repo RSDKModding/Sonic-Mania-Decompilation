@@ -6,7 +6,7 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    uint16 spriteIndex;
+    uint16 aniFrames;
 } ObjectDemoMenu;
 
 // Entity Class
@@ -15,15 +15,15 @@ typedef struct {
     StateMachine(state);
     int32 timer;
     int32 selectedZone;
-    Vector2 drawPosA;
-    Vector2 drawPosB;
-    Vector2 drawPosC;
+    Vector2 ZoneSelPos;
+    Vector2 GHZPos;
+    Vector2 SPZPos;
     float vDelta;
-    Animator zoneSelData;
-    Animator barBlackData;
-    Animator barFlashingData;
-    Animator GHZData;
-    Animator SPZData;
+    Animator animatorZoneSel;
+    Animator animatorBlackBar;
+    Animator animatorFlashBar;
+    Animator animatorGHZ;
+    Animator animatorSPZ;
     SpriteFrame *ghzFrame;
     SpriteFrame *spzFrame;
 } EntityDemoMenu;

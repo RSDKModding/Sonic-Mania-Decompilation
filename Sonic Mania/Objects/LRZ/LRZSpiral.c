@@ -66,7 +66,7 @@ void LRZSpiral_Unknown1(void *p)
 {
     EntityPlayer *player = (EntityPlayer *)p;
     if (abs(player->groundVel) < player->maxRunSpeed) {
-        RSDK.SetSpriteAnimation(player->spriteIndex, ANI_RUN, &player->playerAnimator, false, 1);
+        RSDK.SetSpriteAnimation(player->aniFrames, ANI_RUN, &player->playerAnimator, false, 1);
         player->playerAnimator.animationSpeed = (abs(player->groundVel) >> 12) + 96;
         if (player->playerAnimator.animationSpeed > 0x200)
             player->playerAnimator.animationSpeed = 0x200;
@@ -74,7 +74,7 @@ void LRZSpiral_Unknown1(void *p)
         player->maxRunSpeed = 0xC0000;
     }
     else {
-        RSDK.SetSpriteAnimation(player->spriteIndex, ANI_DASH, &player->playerAnimator, false, 1);
+        RSDK.SetSpriteAnimation(player->aniFrames, ANI_DASH, &player->playerAnimator, false, 1);
         player->maxRunSpeed = 0xB8000;
     }
 }
@@ -135,7 +135,7 @@ void LRZSpiral_Unknown2(void)
                 player->velocity.y = 0;
                 if (player->groundVel < 0x60000)
                     player->groundVel = 0x60000;
-                RSDK.SetSpriteAnimation(player->spriteIndex, ANI_SPIRALRUN, &player->playerAnimator, false, 0);
+                RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPIRALRUN, &player->playerAnimator, false, 0);
                 player->playerAnimator.animationSpeed = 0;
                 player->state                         = Player_State_None;
                 player->nextAirState                  = StateMachine_None;
@@ -197,7 +197,7 @@ void LRZSpiral_Unknown3(void)
                 player->velocity.y = 0;
                 if (player->groundVel < 0x40000)
                     player->groundVel = 0x40000;
-                RSDK.SetSpriteAnimation(player->spriteIndex, ANI_TWISTRUN, &player->playerAnimator, false, 0);
+                RSDK.SetSpriteAnimation(player->aniFrames, ANI_TWISTRUN, &player->playerAnimator, false, 0);
                 player->playerAnimator.animationSpeed = 0;
                 player->state                         = Player_State_None;
                 player->nextAirState                  = StateMachine_None;
@@ -260,7 +260,7 @@ void LRZSpiral_Unknown4(void)
                 player->velocity.y = 0;
                 if (player->groundVel > -0x40000)
                     player->groundVel = -0x40000;
-                RSDK.SetSpriteAnimation(player->spriteIndex, ANI_TWISTRUN, &player->playerAnimator, false, 0);
+                RSDK.SetSpriteAnimation(player->aniFrames, ANI_TWISTRUN, &player->playerAnimator, false, 0);
                 player->playerAnimator.animationSpeed = 0;
                 player->state                         = Player_State_None;
                 player->nextAirState                  = StateMachine_None;

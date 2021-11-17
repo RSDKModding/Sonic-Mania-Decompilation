@@ -85,7 +85,7 @@ void Ice_Create(void *data)
                 case 3: RSDK.SetSpriteAnimation(Ice->aniFrames, ICEANI_RINGS, &entity->animator2, true, 2); break;
                 case 4:
                     entity->subType = entity->subType & 3;
-                    RSDK.SetSpriteAnimation(Spikes->spriteIndex, entity->subType >> 1, &entity->animator2, true, 0);
+                    RSDK.SetSpriteAnimation(Spikes->aniFrames, entity->subType >> 1, &entity->animator2, true, 0);
                     if (!entity->size) {
                         switch (entity->subType) {
                             case 0:
@@ -110,7 +110,7 @@ void Ice_Create(void *data)
                     break;
                 case 18:
                     if (entity->subType >= 3)
-                        RSDK.SetSpriteAnimation(Spring->spriteIndex, (entity->subType - 3), &entity->animator2, true, 0);
+                        RSDK.SetSpriteAnimation(Spring->aniFrames, (entity->subType - 3), &entity->animator2, true, 0);
                     else
                        RSDK.SetSpriteAnimation(IceSpring->animID, entity->subType, &entity->animator2, true, 0);
                     if (entity->size) {
@@ -182,9 +182,9 @@ void Ice_Create(void *data)
                     }
                     break;
                 default:
-                    RSDK.SetSpriteAnimation(ItemBox->spriteIndex, 0, &entity->animator2, true, 0);
-                    RSDK.SetSpriteAnimation(ItemBox->spriteIndex, 0, &entity->animator2, true, 0);
-                    RSDK.SetSpriteAnimation(ItemBox->spriteIndex, 2, &entity->animator3, true, (entity->type > 12 ? 2 : 0) + entity->type - 5);
+                    RSDK.SetSpriteAnimation(ItemBox->aniFrames, 0, &entity->animator2, true, 0);
+                    RSDK.SetSpriteAnimation(ItemBox->aniFrames, 0, &entity->animator2, true, 0);
+                    RSDK.SetSpriteAnimation(ItemBox->aniFrames, 2, &entity->animator3, true, (entity->type > 12 ? 2 : 0) + entity->type - 5);
                     if (entity->type != 12) {
                         if (globals->gameMode == MODE_COMPETITION) {
                             if (globals->itemMode == 1) {
@@ -338,7 +338,7 @@ void Ice_FreezePlayer(void *p)
         player->nextGroundState               = StateMachine_None;
         player->state                         = Ice_State_FrozenPlayer;
         player->velocity.y                    = 0;
-        RSDK.SetSpriteAnimation(player->spriteIndex, ANI_JUMP, &player->playerAnimator, false, 0);
+        RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->playerAnimator, false, 0);
         player->abilityPtrs[0] = entity;
         player->abilityPtrs[1] = ice;
         if (!entity->collisionMode) {
@@ -431,7 +431,7 @@ void Ice_State_FrozenPlayer(void)
             entity->state      = Player_State_Air;
             entity->velocity.y = -entity->jumpStrength >> 1;
             entity->onGround   = false;
-            RSDK.SetSpriteAnimation(entity->spriteIndex, ANI_JUMP, &entity->playerAnimator, true, 0);
+            RSDK.SetSpriteAnimation(entity->aniFrames, ANI_JUMP, &entity->playerAnimator, true, 0);
             Ice_ShatterGenerator(24, 20, 64, 0, 0, 2);
             RSDK.PlaySfx(Ice->sfxWindowShatter, 0, 255);
             Ice->playerTimers[RSDK.GetEntityID(entity)] = 30;
@@ -454,7 +454,7 @@ void Ice_State_FrozenPlayer(void)
                     entity->state      = Player_State_Air;
                     entity->velocity.y = -entity->jumpStrength >> 1;
                     entity->onGround   = false;
-                    RSDK.SetSpriteAnimation(entity->spriteIndex, ANI_JUMP, &entity->playerAnimator, true, 0);
+                    RSDK.SetSpriteAnimation(entity->aniFrames, ANI_JUMP, &entity->playerAnimator, true, 0);
                     Ice_ShatterGenerator(24, 20, 64, 0, 0, 2);
                     RSDK.PlaySfx(Ice->sfxWindowShatter, 0, 255);
                     Ice->playerTimers[RSDK.GetEntityID(entity)] = 30;
@@ -550,7 +550,7 @@ void Ice_Unknown8(Entity *p)
         player->outerbox = NULL;
         player->innerbox = NULL;
         player->state    = Player_State_Hit;
-        RSDK.SetSpriteAnimation(player->spriteIndex, ANI_HURT, &player->playerAnimator, true, 0);
+        RSDK.SetSpriteAnimation(player->aniFrames, ANI_HURT, &player->playerAnimator, true, 0);
         player->velocity.y = -0x38000;
         player->onGround   = false;
         if (player->gravityStrength == 0x1000) {

@@ -148,7 +148,7 @@ void RollerMKII_CheckPlayerCollisions_Rolling(void)
                         player->groundVel   = velX;
                         player->jumpAbility = 0;
                         if (player->characterID == ID_KNUCKLES && player->playerAnimator.animationID == ANI_FLY) {
-                            RSDK.SetSpriteAnimation(player->spriteIndex, ANI_FLYTIRED, &player->playerAnimator, false, 0);
+                            RSDK.SetSpriteAnimation(player->aniFrames, ANI_FLYTIRED, &player->playerAnimator, false, 0);
                             player->state = Player_State_KnuxGlideDrop;
                         }
                         player->velocity.y     = velY;
@@ -434,7 +434,7 @@ void RollerMKII_State_Unknown4(void)
                 Hitbox *hitbox = RSDK.GetHitbox(&entity->animator, 0);
 
                 EntityDust *dust = CREATE_ENTITY(Dust, entity, entity->position.x, entity->position.y + 0xE0000);
-                RSDK.SetSpriteAnimation(Dust->spriteIndex, 2, &dust->animator, true, 0);
+                RSDK.SetSpriteAnimation(Dust->aniFrames, 2, &dust->animator, true, 0);
                 dust->state = Dust_State_DropDash;
                 dust->position.y += hitbox->bottom << 16;
                 dust->direction = entity->direction;

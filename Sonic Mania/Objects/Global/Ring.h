@@ -21,8 +21,8 @@ typedef struct {
     RSDK_OBJECT
     Hitbox hitbox;
     int32 pan;
-    uint16 spriteIndex;
-    uint16 sfx_Ring;
+    uint16 aniFrames;
+    uint16 sfxRing;
 } ObjectRing;
 
 // Entity Class

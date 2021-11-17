@@ -23,7 +23,7 @@ void UIPicture_Draw(void)
 void UIPicture_Create(void *data)
 {
     RSDK_THIS(UIPicture);
-    RSDK.SetSpriteAnimation(UIPicture->spriteIndex, entity->listID, &entity->animator, true, entity->frameID);
+    RSDK.SetSpriteAnimation(UIPicture->aniFrames, entity->listID, &entity->animator, true, entity->frameID);
     if (!RSDK_sceneInfo->inEditor) {
         if (RSDK.CheckStageFolder("Menu")) {
             entity->active    = ACTIVE_BOUNDS;
@@ -42,16 +42,16 @@ void UIPicture_Create(void *data)
 void UIPicture_StageLoad(void)
 {
     if (RSDK.CheckStageFolder("Menu")) 
-        UIPicture->spriteIndex = RSDK.LoadSpriteAnimation("UI/Picture.bin", SCOPE_STAGE);
+        UIPicture->aniFrames = RSDK.LoadSpriteAnimation("UI/Picture.bin", SCOPE_STAGE);
     else if (RSDK.CheckStageFolder("Logos")) 
-        UIPicture->spriteIndex = RSDK.LoadSpriteAnimation("Logos/Logos.bin", SCOPE_STAGE);
+        UIPicture->aniFrames = RSDK.LoadSpriteAnimation("Logos/Logos.bin", SCOPE_STAGE);
 }
 
 #if RETRO_INCLUDE_EDITOR
 void UIPicture_EditorDraw(void)
 {
     RSDK_THIS(UIPicture);
-    RSDK.SetSpriteAnimation(UIPicture->spriteIndex, entity->listID, &entity->animator, true, entity->frameID);
+    RSDK.SetSpriteAnimation(UIPicture->aniFrames, entity->listID, &entity->animator, true, entity->frameID);
 
     RSDK.DrawSprite(&entity->animator, NULL, false);
 }
@@ -59,9 +59,9 @@ void UIPicture_EditorDraw(void)
 void UIPicture_EditorLoad(void)
 {
     if (RSDK.CheckStageFolder("Menu"))
-        UIPicture->spriteIndex = RSDK.LoadSpriteAnimation("UI/Picture.bin", SCOPE_STAGE);
+        UIPicture->aniFrames = RSDK.LoadSpriteAnimation("UI/Picture.bin", SCOPE_STAGE);
     else if (RSDK.CheckStageFolder("Logos"))
-        UIPicture->spriteIndex = RSDK.LoadSpriteAnimation("Logos/Logos.bin", SCOPE_STAGE);
+        UIPicture->aniFrames = RSDK.LoadSpriteAnimation("Logos/Logos.bin", SCOPE_STAGE);
 }
 #endif
 

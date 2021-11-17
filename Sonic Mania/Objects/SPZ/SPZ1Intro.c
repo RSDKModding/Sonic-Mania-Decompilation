@@ -55,7 +55,7 @@ bool32 SPZ1Intro_CutsceneState_Unknown1(EntityCutsceneSeq *host)
         player1->state          = Player_State_None;
         player1->stateInput     = StateMachine_None;
         CutsceneSeq_LockAllPlayerControl();
-        RSDK.SetSpriteAnimation(player1->spriteIndex, ANI_JUMP, &player1->playerAnimator, false, 0);
+        RSDK.SetSpriteAnimation(player1->aniFrames, ANI_JUMP, &player1->playerAnimator, false, 0);
         if (player2->objectID == Player->objectID) {
             player2->position.x     = player1->position.x;
             player2->position.y     = player1->position.y;
@@ -64,7 +64,7 @@ bool32 SPZ1Intro_CutsceneState_Unknown1(EntityCutsceneSeq *host)
             player2->velocity.y     = -1;
             player2->state          = Player_State_None;
             player2->stateInput     = StateMachine_None;
-            RSDK.SetSpriteAnimation(player2->spriteIndex, ANI_JUMP, &player2->playerAnimator, false, 0);
+            RSDK.SetSpriteAnimation(player2->aniFrames, ANI_JUMP, &player2->playerAnimator, false, 0);
         }
         EntityDebris *debris  = CREATE_ENTITY(Debris, NULL, curEnt->position.x, curEnt->position.y + 0x390000);
         debris->drawOrder     = Zone->playerDrawHigh;
@@ -98,7 +98,7 @@ bool32 SPZ1Intro_CutsceneState_Unknown1(EntityCutsceneSeq *host)
     }
 
     if (host->timer == 45)
-        RSDK.PlaySfx(Player->sfx_Roll, 0, 255);
+        RSDK.PlaySfx(Player->sfxRoll, 0, 255);
     if (host->timer == 90) {
         return true;
     }
@@ -123,7 +123,7 @@ bool32 SPZ1Intro_CutsceneState_Unknown2(EntityCutsceneSeq *host)
         player1->nextGroundState = 0;
         RSDK.PlaySfx(SPZ1Intro->sfxGasPop, false, 255);
         RSDK.PlaySfx(SPZ1Intro->sfxPon, false, 255);
-        RSDK.StopSFX(Player->sfx_Roll);
+        RSDK.StopSFX(Player->sfxRoll);
         Camera_ShakeScreen(0, 0, 2);
         EntityDebris *debris = SPZ1Intro->debris;
         debris->state        = Debris_State_Fall;

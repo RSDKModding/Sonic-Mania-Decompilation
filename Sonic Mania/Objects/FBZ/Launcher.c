@@ -24,7 +24,7 @@ void Launcher_Create(void *data)
     RSDK_THIS(Launcher);
     entity->active = ACTIVE_BOUNDS;
     Platform_Create(NULL);
-    RSDK.SetSpriteAnimation(Platform->spriteIndex, 1, &entity->animator, true, 0);
+    RSDK.SetSpriteAnimation(Platform->aniFrames, 1, &entity->animator, true, 0);
     entity->drawFX           = FX_FLIP;
     entity->animator.frameID = 4;
     entity->stateCollide     = Launcher_Unknown1;

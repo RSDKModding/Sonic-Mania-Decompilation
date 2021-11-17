@@ -9,7 +9,7 @@
 typedef struct {
     RSDK_OBJECT
     int32 activeScreens;
-    uint16 spriteIndex;
+    uint16 aniFrames;
 } ObjectGameOver;
 
 // Entity Class

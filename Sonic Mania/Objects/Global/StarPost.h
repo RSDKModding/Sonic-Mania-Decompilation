@@ -15,9 +15,9 @@ typedef struct {
     uint8 storedSeconds;
     uint8 storedMS;
     uint8 activePlayers;
-    uint16 spriteIndex;
-    uint16 sfx_StarPost;
-    uint16 sfx_Warp;
+    uint16 aniFrames;
+    uint16 sfxStarPost;
+    uint16 sfxWarp;
 } ObjectStarPost;
 
 // Entity Class

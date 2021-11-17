@@ -45,7 +45,7 @@ void Current_Create(void *data)
 #endif
             }
             else {
-                RSDK.SetSpriteAnimation(Water->spriteIndex, 5, &entity->animator, true, 0);
+                RSDK.SetSpriteAnimation(Water->aniFrames, 5, &entity->animator, true, 0);
                 entity->alpha = 512;
             }
             entity->state = Current_State_LaundoMobile;
@@ -265,7 +265,7 @@ void Current_State_Type0(void)
                             player->velocity.x      = -0x8000 * entity->strength;
                             player->groundVel       = player->velocity.x;
                             if (!flag) {
-                                RSDK.SetSpriteAnimation(player->spriteIndex, ANI_FAN, &player->playerAnimator, false, 0);
+                                RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->playerAnimator, false, 0);
                                 player->tileCollisions  = true;
                                 player->nextAirState    = StateMachine_None;
                                 player->nextGroundState = StateMachine_None;
@@ -337,7 +337,7 @@ void Current_State_Type1(void)
                             player->velocity.x      = entity->strength << 15;
                             player->groundVel       = player->velocity.x;
                             if (!flag) {
-                                RSDK.SetSpriteAnimation(player->spriteIndex, ANI_FAN, &player->playerAnimator, false, 0);
+                                RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->playerAnimator, false, 0);
                                 player->tileCollisions  = true;
                                 player->nextAirState    = StateMachine_None;
                                 player->nextGroundState = StateMachine_None;
@@ -409,7 +409,7 @@ void Current_State_Type2(void)
                             player->nextAirState    = StateMachine_None;
                             player->velocity.y      = -0x8000 * entity->strength;
                             if (!flag) {
-                                RSDK.SetSpriteAnimation(player->spriteIndex, ANI_FAN, &player->playerAnimator, false, 0);
+                                RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->playerAnimator, false, 0);
                                 player->tileCollisions  = true;
                                 player->nextAirState    = StateMachine_None;
                                 player->nextGroundState = StateMachine_None;
@@ -485,7 +485,7 @@ void Current_State_Type3(void)
                             player->nextAirState    = StateMachine_None;
                             player->velocity.y      = entity->strength << 15;
                             if (!flag) {
-                                RSDK.SetSpriteAnimation(player->spriteIndex, ANI_FAN, &player->playerAnimator, false, 0);
+                                RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->playerAnimator, false, 0);
                                 player->tileCollisions  = true;
                                 player->nextAirState    = StateMachine_None;
                                 player->nextGroundState = StateMachine_None;

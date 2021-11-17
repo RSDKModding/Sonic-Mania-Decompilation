@@ -123,7 +123,7 @@ void CircleBumper_Unknown1(void)
 
 #if RETRO_USE_PLUS
             if (player->state == Player_State_MightyHammerDrop) {
-                RSDK.SetSpriteAnimation(player->spriteIndex, ANI_JUMP, &player->playerAnimator, false, 0);
+                RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->playerAnimator, false, 0);
             }
             else {
 #endif

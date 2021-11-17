@@ -8,7 +8,7 @@ typedef struct {
     RSDK_OBJECT
     bool32 hasAchievement;
     uint8 timer;
-    uint16 spriteIndex;
+    uint16 aniFrames;
     Hitbox hitbox;
     Hitbox burnHitbox;
 } ObjectSpikeLog;

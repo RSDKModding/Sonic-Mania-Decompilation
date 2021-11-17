@@ -525,7 +525,7 @@ void TVVan_State_Unknown1(void)
                 player->interaction     = false;
                 player->visible         = false;
                 player->blinkTimer      = 0;
-                RSDK.SetSpriteAnimation(player->spriteIndex, ANI_JUMP, &player->playerAnimator, false, 0);
+                RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->playerAnimator, false, 0);
                 player->playerAnimator.animationSpeed = 120;
                 flag                                    = true;
                 entity->player                        = player;
@@ -858,7 +858,7 @@ void TVVan_State15_Unknown5(void)
         if (++entity->timer != 32)
             return;
         player->state = Player_State_Air;
-        RSDK.SetSpriteAnimation(player->spriteIndex, 10, &player->playerAnimator, false, 0);
+        RSDK.SetSpriteAnimation(player->aniFrames, 10, &player->playerAnimator, false, 0);
         player->velocity.x                    = 0;
         player->playerAnimator.animationSpeed = 120;
         player->velocity.y                    = -0x80000;
@@ -888,7 +888,7 @@ void TVVan_State15_Unknown5(void)
         debris->drawFX     = FX_FLIP;
         debris->direction  = i & 3;
         debris->drawOrder  = Zone->drawOrderHigh;
-        RSDK.SetSpriteAnimation(ItemBox->spriteIndex, 6, &debris->animator, true, RSDK.Rand(0, 4));
+        RSDK.SetSpriteAnimation(ItemBox->aniFrames, 6, &debris->animator, true, RSDK.Rand(0, 4));
     
     }
 

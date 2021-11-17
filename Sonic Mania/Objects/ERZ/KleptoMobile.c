@@ -723,7 +723,7 @@ void KleptoMobile_CheckPlayerCollisions_Arm(void)
                         player->groundVel  = player->velocity.x;
                     }
                     player->rotation = 0;
-                    RSDK.SetSpriteAnimation(player->spriteIndex, ANI_RUN, &player->playerAnimator, false, 0);
+                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_RUN, &player->playerAnimator, false, 0);
                     player->state = ERZStart_State_PlayerRebound;
                 }
             }

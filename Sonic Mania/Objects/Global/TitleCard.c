@@ -51,10 +51,10 @@ void TitleCard_Create(void *data)
 
         entity->decorationPos.y = -0x340000;
         entity->decorationPos.x = (RSDK_screens->width - 160) << 16;
-        RSDK.SetSpriteAnimation(TitleCard->spriteIndex, 0, &entity->decorationData, true, 0);
-        RSDK.SetSpriteAnimation(TitleCard->spriteIndex, 1, &entity->nameLetterData, true, 0);
-        RSDK.SetSpriteAnimation(TitleCard->spriteIndex, 2, &entity->zoneLetterData, true, 0);
-        RSDK.SetSpriteAnimation(TitleCard->spriteIndex, 3, &entity->actNumbersData, true, 0);
+        RSDK.SetSpriteAnimation(TitleCard->aniFrames, 0, &entity->decorationData, true, 0);
+        RSDK.SetSpriteAnimation(TitleCard->aniFrames, 1, &entity->nameLetterData, true, 0);
+        RSDK.SetSpriteAnimation(TitleCard->aniFrames, 2, &entity->zoneLetterData, true, 0);
+        RSDK.SetSpriteAnimation(TitleCard->aniFrames, 3, &entity->actNumbersData, true, 0);
         if (entity->actID > 3)
             entity->actID = 3;
 
@@ -81,7 +81,7 @@ void TitleCard_Create(void *data)
             RSDK_sceneInfo->timeEnabled  = true;
             EntityPlayer *player         = (EntityPlayer *)RSDK.GetEntityByID(SLOT_PLAYER1);
             RSDK.CopyEntity(player, (Entity *)Zone->entityData, false);
-            RSDK.SetSpriteAnimation(player->spriteIndex, player->playerAnimator.animationID, &player->playerAnimator, false,
+            RSDK.SetSpriteAnimation(player->aniFrames, player->playerAnimator.animationID, &player->playerAnimator, false,
                                     player->playerAnimator.frameID);
 
             if (player->camera)
@@ -104,7 +104,7 @@ void TitleCard_Create(void *data)
 
 void TitleCard_StageLoad(void)
 {
-    TitleCard->spriteIndex = RSDK.LoadSpriteAnimation("Global/TitleCard.bin", SCOPE_STAGE);
+    TitleCard->aniFrames = RSDK.LoadSpriteAnimation("Global/TitleCard.bin", SCOPE_STAGE);
 
     foreach_all(TitleCard, titleCard) {
         Zone->actID = titleCard->actID;
@@ -236,7 +236,7 @@ void TitleCard_Unknown2(void)
     RSDK_THIS(TitleCard);
     if (!entity->zoneName.text)
         RSDK.SetText(&entity->zoneName, "UNTITLED", 0);
-    RSDK.SetSpriteString(TitleCard->spriteIndex, 1, &entity->zoneName);
+    RSDK.SetSpriteString(TitleCard->aniFrames, 1, &entity->zoneName);
 
     int32 offset       = 0x280000;
     for (int32 c = 0; c < entity->zoneName.textLength; ++c) {
@@ -257,11 +257,11 @@ void TitleCard_Unknown2(void)
     }
 
     if (entity->word2Offset) {
-        entity->field_2E0 = (RSDK.GetStringWidth(TitleCard->spriteIndex, 1, &entity->zoneName, 0, entity->word2Offset - 1, 1) + 24) << 16;
-        entity->field_2E4 = (RSDK.GetStringWidth(TitleCard->spriteIndex, 1, &entity->zoneName, entity->word2Offset, 0, 1) + 24) << 16;
+        entity->field_2E0 = (RSDK.GetStringWidth(TitleCard->aniFrames, 1, &entity->zoneName, 0, entity->word2Offset - 1, 1) + 24) << 16;
+        entity->field_2E4 = (RSDK.GetStringWidth(TitleCard->aniFrames, 1, &entity->zoneName, entity->word2Offset, 0, 1) + 24) << 16;
     }
     else {
-        entity->field_2E4 = (RSDK.GetStringWidth(TitleCard->spriteIndex, 1, &entity->zoneName, 0, 0, 1) + 24) << 16;
+        entity->field_2E4 = (RSDK.GetStringWidth(TitleCard->aniFrames, 1, &entity->zoneName, 0, 0, 1) + 24) << 16;
     }
 
     entity->dword1E8 = (RSDK_screens->centerX - ((RSDK_screens->centerX - 160) >> 3) + 72) << 16;
@@ -824,11 +824,11 @@ void TitleCard_Unknown14(void)
 void TitleCard_EditorDraw(void)
 {
     RSDK_THIS(TitleCard);
-    RSDK.SetSpriteAnimation(TitleCard->spriteIndex, 0, &entity->decorationData, true, 3);
+    RSDK.SetSpriteAnimation(TitleCard->aniFrames, 0, &entity->decorationData, true, 3);
     RSDK.DrawSprite(&entity->decorationData, NULL, false);
 }
 
-void TitleCard_EditorLoad(void) { TitleCard->spriteIndex = RSDK.LoadSpriteAnimation("Editor/EditorIcons.bin", SCOPE_STAGE); }
+void TitleCard_EditorLoad(void) { TitleCard->aniFrames = RSDK.LoadSpriteAnimation("Editor/EditorIcons.bin", SCOPE_STAGE); }
 #endif
 
 void TitleCard_Serialize(void)

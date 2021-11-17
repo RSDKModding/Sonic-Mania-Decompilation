@@ -44,13 +44,13 @@ void SpecialRing_Create(void *data)
         else
             entity->drawOrder = Zone->drawOrderLow;
         entity->state = SpecialRing_State_Normal;
-        RSDK.SetSpriteAnimation(SpecialRing->spriteIndex, 0, &entity->warpAnimator, true, 0);
+        RSDK.SetSpriteAnimation(SpecialRing->aniFrames, 0, &entity->warpAnimator, true, 0);
     }
 }
 
 void SpecialRing_StageLoad(void)
 {
-    SpecialRing->spriteIndex = RSDK.LoadSpriteAnimation("Global/SpecialRing.bin", SCOPE_STAGE);
+    SpecialRing->aniFrames = RSDK.LoadSpriteAnimation("Global/SpecialRing.bin", SCOPE_STAGE);
     SpecialRing->modelIndex  = RSDK.LoadMesh("Global/SpecialRing.bin", SCOPE_STAGE);
     SpecialRing->sceneIndex  = RSDK.Create3DScene("View:SpecialRing", 512, SCOPE_STAGE);
 
@@ -65,8 +65,8 @@ void SpecialRing_StageLoad(void)
     RSDK.SetDiffuseIntensity(SpecialRing->sceneIndex, 8, 8, 8);
     // sets specular (highlight) intensity (16-0, 16 = none, 0 = all)
     RSDK.SetSpecularIntensity(SpecialRing->sceneIndex, 14, 14, 14);
-    SpecialRing->sfx_SpecialRing = RSDK.GetSFX("Global/SpecialRing.wav");
-    SpecialRing->sfx_SpecialWarp = RSDK.GetSFX("Global/SpecialWarp.wav");
+    SpecialRing->sfxSpecialRing = RSDK.GetSFX("Global/SpecialRing.wav");
+    SpecialRing->sfxSpecialWarp = RSDK.GetSFX("Global/SpecialWarp.wav");
 
     DEBUGMODE_ADD_OBJ(SpecialRing);
 
@@ -112,7 +112,7 @@ void SpecialRing_StageLoad(void)
 
 void SpecialRing_DebugDraw(void)
 {
-    RSDK.SetSpriteAnimation(Ring->spriteIndex, 1, &DebugMode->animator, true, 0);
+    RSDK.SetSpriteAnimation(Ring->aniFrames, 1, &DebugMode->animator, true, 0);
     RSDK.DrawSprite(&DebugMode->animator, NULL, false);
 }
 void SpecialRing_DebugSpawn(void)
@@ -126,7 +126,7 @@ void SpecialRing_StartWarp(void)
     RSDK_THIS(SpecialRing);
     if (++entity->warpTimer == 30) {
         SaveGame_SaveGameState();
-        RSDK.PlaySfx(SpecialRing->sfx_SpecialWarp, 0, 254);
+        RSDK.PlaySfx(SpecialRing->sfxSpecialWarp, 0, 254);
         destroyEntity(entity);
         EntitySaveGame *saveRAM = SaveGame->saveRAM;
         saveRAM->storedStageID  = RSDK_sceneInfo->listPos;
@@ -153,7 +153,7 @@ void SpecialRing_State_Warp(void)
             ring->active    = ACTIVE_NORMAL;
             ring->visible   = 0;
             ring->drawOrder = Zone->drawOrderLow;
-            RSDK.SetSpriteAnimation(Ring->spriteIndex, i % 3 + 2, &ring->animator, true, 0);
+            RSDK.SetSpriteAnimation(Ring->aniFrames, i % 3 + 2, &ring->animator, true, 0);
             int32 cnt = ring->animator.frameCount;
             if (ring->animator.animationID == 2) {
                 ring->alpha = 224;
@@ -230,7 +230,7 @@ void SpecialRing_State_Normal(void)
                             globals->specialRingID = entity->id;
                         saveRAM->collectedSpecialRings |= 1 << (16 * Zone->actID - 1 + entity->id);
                     }
-                    RSDK.PlaySfx(SpecialRing->sfx_SpecialRing, 0, 254);
+                    RSDK.PlaySfx(SpecialRing->sfxSpecialRing, 0, 254);
                 }
             }
         }
@@ -241,13 +241,13 @@ void SpecialRing_State_Normal(void)
 void SpecialRing_EditorDraw(void)
 {
     RSDK_THIS(SpecialRing);
-    RSDK.SetSpriteAnimation(SpecialRing->spriteIndex, 0, &entity->warpAnimator, true, 7);
+    RSDK.SetSpriteAnimation(SpecialRing->aniFrames, 0, &entity->warpAnimator, true, 7);
     RSDK.DrawSprite(&entity->warpAnimator, NULL, false);
 }
 
 void SpecialRing_EditorLoad(void)
 {
-    SpecialRing->spriteIndex = RSDK.LoadSpriteAnimation("Global/SpecialRing.bin", SCOPE_STAGE);
+    SpecialRing->aniFrames = RSDK.LoadSpriteAnimation("Global/SpecialRing.bin", SCOPE_STAGE);
 
     RSDK_ACTIVE_VAR(SpecialRing, planeFilter);
     RSDK_ENUM_VAR("No Filter", PLANEFILTER_NONE);

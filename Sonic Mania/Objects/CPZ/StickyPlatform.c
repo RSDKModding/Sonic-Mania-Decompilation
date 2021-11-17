@@ -165,7 +165,7 @@ void StickyPlatform_Interact(void)
                                     break;
                                 default: break;
                             }
-                            RSDK.SetSpriteAnimation(player->spriteIndex, animID, &player->playerAnimator, false, 0);
+                            RSDK.SetSpriteAnimation(player->aniFrames, animID, &player->playerAnimator, false, 0);
                         }
                     }
                     else

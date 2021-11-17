@@ -7,7 +7,7 @@
 typedef struct {
     RSDK_OBJECT
     Hitbox hitbox;
-    uint16 spriteIndex;
+    uint16 aniFrames;
 } ObjectMotobug;
 
 // Entity Class

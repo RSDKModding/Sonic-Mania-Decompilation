@@ -5,6 +5,7 @@ ObjectTitleBG *TitleBG;
 void TitleBG_Update(void)
 {
     RSDK_THIS(TitleBG);
+
     if (entity->type == 4) {
         ++entity->timer;
         entity->position.y += 0x10000;
@@ -30,46 +31,48 @@ void TitleBG_StaticUpdate(void)
     TitleBG->angle &= 0x3FF;
     if (++TitleBG->palTimer == 6) {
         TitleBG->palTimer = 0;
-        RSDK.RotatePalette(0, 140, 143, 0);
+        RSDK.RotatePalette(0, 140, 143, false);
     }
 }
 
 void TitleBG_Draw(void)
 {
     RSDK_THIS(TitleBG);
+
     RSDK.SetClipBounds(0, 0, 0, RSDK_screens->width, RSDK_screens->height);
-    RSDK.DrawSprite(&entity->animator, 0, 0);
+    RSDK.DrawSprite(&entity->animator, NULL, false);
 }
 
 void TitleBG_Create(void *data)
 {
     RSDK_THIS(TitleBG);
+
     if (!RSDK_sceneInfo->inEditor) {
-        RSDK.SetSpriteAnimation(TitleBG->spriteIndex, entity->type, &entity->animator, true, 0);
+        RSDK.SetSpriteAnimation(TitleBG->aniFrames, entity->type, &entity->animator, true, 0);
         entity->active    = ACTIVE_NORMAL;
-        entity->visible   = 0;
+        entity->visible   = false;
         entity->drawOrder = 1;
         entity->alpha     = 0xFF;
         entity->drawFX    = FX_FLIP;
-        switch (entity->type - 1) {
-            case 0: entity->inkEffect = INK_BLEND; break;
-            case 1:
-            case 2:
+        switch (entity->type) {
+            case TITLEBG_MOUNTAIN2: entity->inkEffect = INK_BLEND; break;
+            case TITLEBG_REFLECTION:
+            case TITLEBG_WATERSPARKLE:
                 entity->inkEffect = INK_ADD;
                 entity->alpha     = 0x80;
                 break;
-            case 3:
+            case TITLEBG_WINGSHINE:
                 entity->drawOrder = 4;
                 entity->inkEffect = INK_MASKED;
                 break;
-            default: return;
+            default: break;
         }
     }
 }
 
 void TitleBG_StageLoad(void)
 {
-    TitleBG->spriteIndex = RSDK.LoadSpriteAnimation("Title/Background.bin", SCOPE_STAGE);
+    TitleBG->aniFrames = RSDK.LoadSpriteAnimation("Title/Background.bin", SCOPE_STAGE);
     RSDK.SetPaletteEntry(0, 55, 0x202030);
 }
 
@@ -80,21 +83,21 @@ void TitleBG_SetupFX(void)
 
     TileLayer *bg1        = RSDK.GetSceneLayer(2);
     bg1->drawLayer[0]     = 0;
-    bg1->scanlineCallback = TitleBG_ScanlineCallbackA;
+    bg1->scanlineCallback = TitleBG_ScanlineCallback_Clouds;
 
     TileLayer *bg2        = RSDK.GetSceneLayer(3);
     bg2->drawLayer[0]     = 1;
-    bg2->scanlineCallback = TitleBG_ScanlineCallbackB;
+    bg2->scanlineCallback = TitleBG_ScanlineCallback_Island;
 
     foreach_all(TitleBG, titleBG) titleBG->visible = true;
     foreach_all(Title3DSprite, title3DSprite) title3DSprite->visible = true;
 
-    RSDK.SetPaletteEntry(0, 55, 0xFF00);
-    RSDK.SetPaletteMask(0xFF00);
-    RSDK.SetDrawLayerProperties(2, true, 0);
+    RSDK.SetPaletteEntry(0, 55, 0x00FF00);
+    RSDK.SetPaletteMask(0x00FF00);
+    RSDK.SetDrawLayerProperties(2, true, NULL);
 }
 
-void TitleBG_ScanlineCallbackA(ScanlineInfo *scanlines)
+void TitleBG_ScanlineCallback_Clouds(ScanlineInfo *scanlines)
 {
     RSDK.SetClipBounds(0, 0, 0, RSDK_screens->width, SCREEN_YSIZE / 2);
     int32 sine   = RSDK.Sin256(0);
@@ -115,7 +118,7 @@ void TitleBG_ScanlineCallbackA(ScanlineInfo *scanlines)
     }
 }
 
-void TitleBG_ScanlineCallbackB(ScanlineInfo *scanlines)
+void TitleBG_ScanlineCallback_Island(ScanlineInfo *scanlines)
 {
     RSDK.SetClipBounds(0, 0, 168, RSDK_screens->width, SCREEN_YSIZE);
     int32 sine            = RSDK.Sin1024(-TitleBG->angle) >> 2;
@@ -135,9 +138,41 @@ void TitleBG_ScanlineCallbackB(ScanlineInfo *scanlines)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void TitleBG_EditorDraw(void) {}
+void TitleBG_EditorDraw(void)
+{
+    RSDK_THIS(TitleBG);
+    RSDK.SetSpriteAnimation(TitleBG->aniFrames, entity->type, &entity->animator, true, 0);
+    entity->alpha  = 0xFF;
+    entity->drawFX = FX_FLIP;
+    entity->inkEffect = INK_NONE;
+    switch (entity->type) {
+        case TITLEBG_MOUNTAIN2: entity->inkEffect = INK_BLEND; break;
+        case TITLEBG_REFLECTION:
+        case TITLEBG_WATERSPARKLE:
+            entity->inkEffect = INK_ADD;
+            entity->alpha     = 0x80;
+            break;
+        case TITLEBG_WINGSHINE:
+            entity->drawOrder = 4;
+            entity->inkEffect = INK_MASKED;
+            break;
+        default: break;
+    }
 
-void TitleBG_EditorLoad(void) {}
+    RSDK.DrawSprite(&entity->animator, NULL, false);
+}
+
+void TitleBG_EditorLoad(void)
+{
+    TitleBG->aniFrames = RSDK.LoadSpriteAnimation("Title/Background.bin", SCOPE_STAGE);
+
+    RSDK_ACTIVE_VAR(TitleBG, type);
+    RSDK_ENUM_VAR("Mountain Top 1", TITLEBG_MOUNTAIN1);
+    RSDK_ENUM_VAR("Mountain Top 2", TITLEBG_MOUNTAIN2);
+    RSDK_ENUM_VAR("Reflection", TITLEBG_REFLECTION);
+    RSDK_ENUM_VAR("Water Sparkle", TITLEBG_WATERSPARKLE);
+    RSDK_ENUM_VAR("Wing Shine", TITLEBG_WINGSHINE);
+}
 #endif
 
 void TitleBG_Serialize(void) { RSDK_EDITABLE_VAR(TitleBG, VAR_ENUM, type); }

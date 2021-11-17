@@ -43,7 +43,7 @@ void PSZ1Intro_HandleGliderJump(EntityHangGlider *glider)
         player->velocity.y = -0x20000;
         player->active     = ACTIVE_NORMAL;
         player->stateInput = StateMachine_None;
-        RSDK.SetSpriteAnimation(player->spriteIndex, ANI_JUMP, &player->playerAnimator, true, 0);
+        RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->playerAnimator, true, 0);
         glider->playerPtr = NULL;
     }
 }
@@ -68,7 +68,7 @@ bool32 PSZ1Intro_CutsceneState_Unknown1(EntityCutsceneSeq *host)
             glider->playerPtr    = (Entity *)player;
             glider->velocity.x   = 0x40000;
             glider->velocity.y   = -0x20000;
-            RSDK.SetSpriteAnimation(player->spriteIndex, ANI_SPRINGDIAGONAL, &glider->animator3, true, 0);
+            RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGDIAGONAL, &glider->animator3, true, 0);
             glider->animator3.rotationFlag = 1;
             glider->rotation               = 128;
             glider->drawFX                 = FX_ROTATE;

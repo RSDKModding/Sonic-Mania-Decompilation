@@ -36,7 +36,7 @@ void Chopper_Create(void *data)
 void Chopper_StageLoad(void)
 {
     if (RSDK.CheckStageFolder("GHZ"))
-        Chopper->spriteIndex = RSDK.LoadSpriteAnimation("GHZ/Chopper.bin", SCOPE_STAGE);
+        Chopper->aniFrames = RSDK.LoadSpriteAnimation("GHZ/Chopper.bin", SCOPE_STAGE);
     Chopper->hitbox.left    = -10;
     Chopper->hitbox.top     = -20;
     Chopper->hitbox.right   = 6;
@@ -58,7 +58,7 @@ void Chopper_StageLoad(void)
 }
 void Chopper_DebugDraw(void)
 {
-    RSDK.SetSpriteAnimation(Chopper->spriteIndex, 0, &DebugMode->animator, true, 0);
+    RSDK.SetSpriteAnimation(Chopper->aniFrames, 0, &DebugMode->animator, true, 0);
     RSDK.DrawSprite(&DebugMode->animator, NULL, false);
 }
 
@@ -86,12 +86,12 @@ void Chopper_Unknown3(void)
     entity->active     = ACTIVE_NORMAL;
     entity->velocity.x = -0x10000;
     if (entity->type == 0) {
-        RSDK.SetSpriteAnimation(Chopper->spriteIndex, 0, &entity->animator, true, 0);
+        RSDK.SetSpriteAnimation(Chopper->aniFrames, 0, &entity->animator, true, 0);
         entity->state = Chopper_Unknown4;
         Chopper_Unknown4();
     }
     else {
-        RSDK.SetSpriteAnimation(Chopper->spriteIndex, 1, &entity->animator, true, 0);
+        RSDK.SetSpriteAnimation(Chopper->aniFrames, 1, &entity->animator, true, 0);
         entity->state = Chopper_Unknown5;
         entity->timer = 512;
 
@@ -158,7 +158,7 @@ void Chopper_Unknown5(void)
         {
             if (Player_CheckCollisionTouch(player, entity, &Chopper->hitbox3)) {
                 entity->state = Chopper_Unknown6;
-                RSDK.SetSpriteAnimation(Chopper->spriteIndex, 2, &entity->animator, false, 0);
+                RSDK.SetSpriteAnimation(Chopper->aniFrames, 2, &entity->animator, false, 0);
                 entity->timer = 16;
                 if (!entity->direction)
                     entity->velocity.x = -0x20000;
@@ -210,7 +210,7 @@ void Chopper_Unknown7(void)
     }
 
     if (flag) {
-        RSDK.SetSpriteAnimation(Chopper->spriteIndex, 1, &entity->animator, false, 0);
+        RSDK.SetSpriteAnimation(Chopper->aniFrames, 1, &entity->animator, false, 0);
         entity->timer      = 512;
         entity->velocity.y = 0;
         if (entity->direction == FLIP_X)
@@ -235,7 +235,7 @@ void Chopper_Unknown7(void)
     }
 
     if (flag) {
-        RSDK.SetSpriteAnimation(Chopper->spriteIndex, 1, &entity->animator, false, 0);
+        RSDK.SetSpriteAnimation(Chopper->aniFrames, 1, &entity->animator, false, 0);
         entity->timer      = 512;
         entity->velocity.y = 0;
         if (entity->direction == FLIP_NONE)
@@ -277,14 +277,14 @@ void Chopper_EditorDraw(void)
 {
     RSDK_THIS(Chopper);
     if (entity->type == 0)
-        RSDK.SetSpriteAnimation(Chopper->spriteIndex, 0, &entity->animator, true, 0);
+        RSDK.SetSpriteAnimation(Chopper->aniFrames, 0, &entity->animator, true, 0);
     else
-        RSDK.SetSpriteAnimation(Chopper->spriteIndex, 1, &entity->animator, true, 0);
+        RSDK.SetSpriteAnimation(Chopper->aniFrames, 1, &entity->animator, true, 0);
 
     Chopper_Draw();
 }
 
-void Chopper_EditorLoad(void) { Chopper->spriteIndex = RSDK.LoadSpriteAnimation("GHZ/Chopper.bin", SCOPE_STAGE); }
+void Chopper_EditorLoad(void) { Chopper->aniFrames = RSDK.LoadSpriteAnimation("GHZ/Chopper.bin", SCOPE_STAGE); }
 #endif
 
 void Chopper_Serialize(void)

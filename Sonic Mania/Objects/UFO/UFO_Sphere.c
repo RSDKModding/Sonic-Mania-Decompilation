@@ -78,15 +78,15 @@ void UFO_Sphere_Create(void *data)
                 RSDK.MatrixMultiply(&entity->matrix, &matrix, &entity->matrix);
                 break;
         }
-        RSDK.SetSpriteAnimation(UFO_Sphere->spriteIndex, entity->type, &entity->animator, true, 0);
+        RSDK.SetSpriteAnimation(UFO_Sphere->aniFrames, entity->type, &entity->animator, true, 0);
     }
 }
 
 void UFO_Sphere_StageLoad(void)
 {
-    UFO_Sphere->spriteIndex    = RSDK.LoadSpriteAnimation("SpecialUFO/Spheres.bin", SCOPE_STAGE);
-    UFO_Sphere->sfx_MachSpeed  = RSDK.GetSFX("Special/MachSpeed.wav");
-    UFO_Sphere->sfx_LedgeBreak = RSDK.GetSFX("Stage/LedgeBreak.wav");
+    UFO_Sphere->aniFrames    = RSDK.LoadSpriteAnimation("SpecialUFO/Spheres.bin", SCOPE_STAGE);
+    UFO_Sphere->sfxMachSpeed  = RSDK.GetSFX("Special/MachSpeed.wav");
+    UFO_Sphere->sfxLedgeBreak = RSDK.GetSFX("Stage/LedgeBreak.wav");
 }
 
 void UFO_Sphere_CheckPlayerCollision(void)
@@ -128,12 +128,12 @@ void UFO_Sphere_CheckPlayerCollision(void)
                         RSDK.SetModelAnimation(UFO_Player->tumbleModel, &player->playerAnimator, 80, 0, false, 0);
                         player->state = UFO_Player_Unknown8;
                         if (UFO_Setup->rings > 0)
-                            RSDK.PlaySfx(UFO_Player->sfx_LoseRings, 0, 255);
+                            RSDK.PlaySfx(UFO_Player->sfxLoseRings, 0, 255);
                         UFO_Ring_LoseRings(player);
-                        RSDK.SetSpriteAnimation(UFO_Sphere->spriteIndex, 4, &entity->animator, true, 0);
+                        RSDK.SetSpriteAnimation(UFO_Sphere->aniFrames, 4, &entity->animator, true, 0);
                         entity->dword9C = 0x1800000;
                         entity->state   = UFO_Sphere_Unknown5;
-                        RSDK.PlaySfx(UFO_Sphere->sfx_LedgeBreak, 0, 255);
+                        RSDK.PlaySfx(UFO_Sphere->sfxLedgeBreak, 0, 255);
                     }
                 }
             }
@@ -151,7 +151,7 @@ void UFO_Sphere_CheckPlayerCollision(void)
                         RSDK.SetModelAnimation(UFO_Player->tumbleModel, &player->playerAnimator, 80, 0, false, 0);
                         player->state = UFO_Player_Unknown8;
                         if (UFO_Setup->rings > 0)
-                            RSDK.PlaySfx(UFO_Player->sfx_LoseRings, 0, 255);
+                            RSDK.PlaySfx(UFO_Player->sfxLoseRings, 0, 255);
                         UFO_Ring_LoseRings(player);
                     }
                 }
@@ -240,12 +240,12 @@ void UFO_Sphere_Unknown5(void)
 void UFO_Sphere_EditorDraw(void)
 {
     RSDK_THIS(UFO_Sphere);
-    RSDK.SetSpriteAnimation(UFO_Sphere->spriteIndex, entity->type, &entity->animator, true, 0);
+    RSDK.SetSpriteAnimation(UFO_Sphere->aniFrames, entity->type, &entity->animator, true, 0);
 
     RSDK.DrawSprite(&entity->animator, &entity->drawPos, true);
 }
 
-void UFO_Sphere_EditorLoad(void) { UFO_Sphere->spriteIndex = RSDK.LoadSpriteAnimation("SpecialUFO/Spheres.bin", SCOPE_STAGE); }
+void UFO_Sphere_EditorLoad(void) { UFO_Sphere->aniFrames = RSDK.LoadSpriteAnimation("SpecialUFO/Spheres.bin", SCOPE_STAGE); }
 
 void UFO_Sphere_Serialize(void)
 {

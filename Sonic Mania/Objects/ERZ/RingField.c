@@ -23,7 +23,7 @@ void RingField_Update(void)
                 ring->drawOrder           = Zone->drawOrderLow;
                 ring->stateDraw           = Ring_StateDraw_Normal;
                 ring->moveType            = RING_MOVE_NONE;
-                RSDK.SetSpriteAnimation(RingField->spriteIndex, 0, &ring->animator, true, 0);
+                RSDK.SetSpriteAnimation(RingField->aniFrames, 0, &ring->animator, true, 0);
 
                 int32 sx = (RSDK_screens->centerX + RSDK_screens->position.x) << 16;
                 int32 sy = (RSDK_screens->position.y + RSDK_screens->centerY) << 16;
@@ -90,7 +90,7 @@ void RingField_Create(void *data)
     entity->hitbox.bottom = entity->size.y >> 17;
 }
 
-void RingField_StageLoad(void) { RingField->spriteIndex = RSDK.LoadSpriteAnimation("Global/Ring.bin", SCOPE_STAGE); }
+void RingField_StageLoad(void) { RingField->aniFrames = RSDK.LoadSpriteAnimation("Global/Ring.bin", SCOPE_STAGE); }
 
 void RingField_GetPos(Vector2 *pos)
 {

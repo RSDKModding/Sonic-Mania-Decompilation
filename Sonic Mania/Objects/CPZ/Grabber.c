@@ -116,7 +116,7 @@ void Grabber_CheckPlayerCollisions(void)
                     player->nextGroundState = StateMachine_None;
                     player->onGround        = false;
                     player->direction       = entity->direction;
-                    RSDK.SetSpriteAnimation(player->spriteIndex, ANI_FAN, &player->playerAnimator, true, 0);
+                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->playerAnimator, true, 0);
                     player->playerAnimator.animationSpeed = 0;
                     player->direction                     = entity->direction ^ 1;
                 }

@@ -38,7 +38,7 @@ void CutsceneHBH_Create(void *data)
     entity->active        = ACTIVE_BOUNDS;
     entity->drawOrder     = Zone->drawOrderHigh;
     entity->visible       = !entity->hiddenAtStart;
-    entity->spriteIndex   = 0;
+    entity->aniFrames   = 0;
     entity->dword70       = entity->position.x;
     entity->dword74       = entity->position.y;
     entity->drawFX        = FX_FLIP;
@@ -179,69 +179,69 @@ void CutsceneHBH_LoadSprites(void)
     RSDK_THIS(CutsceneHBH);
     switch (entity->characterID) {
         case HBH_GUNNER:
-            if (!entity->spriteIndex)
-                entity->spriteIndex = RSDK.LoadSpriteAnimation("SPZ1/Boss.bin", SCOPE_STAGE);
-            RSDK.SetSpriteAnimation(entity->spriteIndex, 5, &entity->animator, true, 0);
+            if (!entity->aniFrames)
+                entity->aniFrames = RSDK.LoadSpriteAnimation("SPZ1/Boss.bin", SCOPE_STAGE);
+            RSDK.SetSpriteAnimation(entity->aniFrames, 5, &entity->animator, true, 0);
             RSDK.SetSpriteAnimation(0xFFFF, 0, &entity->animator2, true, 0);
             break;
         case HBH_SHINOBI:
-            if (!entity->spriteIndex)
-                entity->spriteIndex = RSDK.LoadSpriteAnimation("PSZ2/Shinobi.bin", SCOPE_STAGE);
-            RSDK.SetSpriteAnimation(entity->spriteIndex, 0, &entity->animator, true, 0);
-            RSDK.SetSpriteAnimation(entity->spriteIndex, 5, &entity->animator2, true, 0);
+            if (!entity->aniFrames)
+                entity->aniFrames = RSDK.LoadSpriteAnimation("PSZ2/Shinobi.bin", SCOPE_STAGE);
+            RSDK.SetSpriteAnimation(entity->aniFrames, 0, &entity->animator, true, 0);
+            RSDK.SetSpriteAnimation(entity->aniFrames, 5, &entity->animator2, true, 0);
             break;
         case HBH_MYSTIC:
-            if (!entity->spriteIndex)
-                entity->spriteIndex = RSDK.LoadSpriteAnimation("MSZ/HeavyMystic.bin", SCOPE_STAGE);
-            RSDK.SetSpriteAnimation(entity->spriteIndex, 0, &entity->animator, true, 0);
+            if (!entity->aniFrames)
+                entity->aniFrames = RSDK.LoadSpriteAnimation("MSZ/HeavyMystic.bin", SCOPE_STAGE);
+            RSDK.SetSpriteAnimation(entity->aniFrames, 0, &entity->animator, true, 0);
             RSDK.SetSpriteAnimation(0xFFFF, 0, &entity->animator2, true, 0);
             break;
         case HBH_RIDER:
-            if (!entity->spriteIndex)
-                entity->spriteIndex = RSDK.LoadSpriteAnimation("LRZ3/HeavyRider.bin", SCOPE_STAGE);
-            RSDK.SetSpriteAnimation(entity->spriteIndex, 3, &entity->animator, true, 0);
+            if (!entity->aniFrames)
+                entity->aniFrames = RSDK.LoadSpriteAnimation("LRZ3/HeavyRider.bin", SCOPE_STAGE);
+            RSDK.SetSpriteAnimation(entity->aniFrames, 3, &entity->animator, true, 0);
             RSDK.SetSpriteAnimation(0xFFFF, 0, &entity->animator2, true, 0);
             break;
         case HBH_KING:
-            if (!entity->spriteIndex)
-                entity->spriteIndex = RSDK.LoadSpriteAnimation("LRZ3/HeavyKing.bin", SCOPE_STAGE);
-            RSDK.SetSpriteAnimation(entity->spriteIndex, 7, &entity->animator, true, 0);
-            RSDK.SetSpriteAnimation(entity->spriteIndex, 16, &entity->animator2, true, 0);
+            if (!entity->aniFrames)
+                entity->aniFrames = RSDK.LoadSpriteAnimation("LRZ3/HeavyKing.bin", SCOPE_STAGE);
+            RSDK.SetSpriteAnimation(entity->aniFrames, 7, &entity->animator, true, 0);
+            RSDK.SetSpriteAnimation(entity->aniFrames, 16, &entity->animator2, true, 0);
             break;
         case HBH_ROUGESA:
-            if (!entity->spriteIndex)
-                entity->spriteIndex = RSDK.LoadSpriteAnimation("MSZ/Rogues.bin", SCOPE_STAGE);
-            RSDK.SetSpriteAnimation(entity->spriteIndex, 0, &entity->animator, true, 0);
+            if (!entity->aniFrames)
+                entity->aniFrames = RSDK.LoadSpriteAnimation("MSZ/Rogues.bin", SCOPE_STAGE);
+            RSDK.SetSpriteAnimation(entity->aniFrames, 0, &entity->animator, true, 0);
             RSDK.SetSpriteAnimation(0xFFFF, 0, &entity->animator2, true, 0);
             break;
         case HBH_ROUGESB:
-            if (!entity->spriteIndex)
-                entity->spriteIndex = RSDK.LoadSpriteAnimation("MSZ/Rogues.bin", SCOPE_STAGE);
-            RSDK.SetSpriteAnimation(entity->spriteIndex, 5, &entity->animator, true, 0);
+            if (!entity->aniFrames)
+                entity->aniFrames = RSDK.LoadSpriteAnimation("MSZ/Rogues.bin", SCOPE_STAGE);
+            RSDK.SetSpriteAnimation(entity->aniFrames, 5, &entity->animator, true, 0);
             RSDK.SetSpriteAnimation(0xFFFF, 0, &entity->animator2, true, 0);
             break;
         case HBH_ROUGESC:
-            if (!entity->spriteIndex)
-                entity->spriteIndex = RSDK.LoadSpriteAnimation("MSZ/Rogues.bin", SCOPE_STAGE);
-            RSDK.SetSpriteAnimation(entity->spriteIndex, 12, &entity->animator, true, 0);
+            if (!entity->aniFrames)
+                entity->aniFrames = RSDK.LoadSpriteAnimation("MSZ/Rogues.bin", SCOPE_STAGE);
+            RSDK.SetSpriteAnimation(entity->aniFrames, 12, &entity->animator, true, 0);
             RSDK.SetSpriteAnimation(0xFFFF, 0, &entity->animator2, true, 0);
             break;
         case HBH_KINGDAMAGED:
-            if (!entity->spriteIndex)
-                entity->spriteIndex = RSDK.LoadSpriteAnimation("Cutscene/DamagedKing.bin", SCOPE_STAGE);
-            RSDK.SetSpriteAnimation(entity->spriteIndex, 0, &entity->animator, true, 0);
-            RSDK.SetSpriteAnimation(entity->spriteIndex, 1, &entity->animator2, true, 0);
+            if (!entity->aniFrames)
+                entity->aniFrames = RSDK.LoadSpriteAnimation("Cutscene/DamagedKing.bin", SCOPE_STAGE);
+            RSDK.SetSpriteAnimation(entity->aniFrames, 0, &entity->animator, true, 0);
+            RSDK.SetSpriteAnimation(entity->aniFrames, 1, &entity->animator2, true, 0);
             break;
         case HBH_PILE:
-            if (!entity->spriteIndex)
-                entity->spriteIndex = RSDK.LoadSpriteAnimation("Cutscene/HBHPile.bin", SCOPE_STAGE);
-            RSDK.SetSpriteAnimation(entity->spriteIndex, 0, &entity->animator, true, 0);
+            if (!entity->aniFrames)
+                entity->aniFrames = RSDK.LoadSpriteAnimation("Cutscene/HBHPile.bin", SCOPE_STAGE);
+            RSDK.SetSpriteAnimation(entity->aniFrames, 0, &entity->animator, true, 0);
             RSDK.SetSpriteAnimation(0xFFFF, 0, &entity->animator2, true, 0);
             break;
         case HBH_KINGTMZ2:
-            if (!entity->spriteIndex)
-                entity->spriteIndex = RSDK.LoadSpriteAnimation("Cutscene/KingTMZ2.bin", SCOPE_STAGE);
-            RSDK.SetSpriteAnimation(entity->spriteIndex, 0, &entity->animator, true, 0);
+            if (!entity->aniFrames)
+                entity->aniFrames = RSDK.LoadSpriteAnimation("Cutscene/KingTMZ2.bin", SCOPE_STAGE);
+            RSDK.SetSpriteAnimation(entity->aniFrames, 0, &entity->animator, true, 0);
             RSDK.SetSpriteAnimation(0xFFFF, 0, &entity->animator2, true, 0);
             break;
         default: break;
@@ -263,7 +263,7 @@ void CutsceneHBH_Unknown7(void)
 {
     EntityCutsceneHBH *entity = CutsceneHBH_GetEntity(HBH_SHINOBI);
     if (entity) {
-        RSDK.SetSpriteAnimation(entity->spriteIndex, 3, &entity->animator, true, 0);
+        RSDK.SetSpriteAnimation(entity->aniFrames, 3, &entity->animator, true, 0);
         entity->velocity.x = 0x10000;
         entity->velocity.y = -0x60000;
         entity->direction ^= FLIP_X;
@@ -278,7 +278,7 @@ void CutsceneHBH_Unknown8(void)
 {
     EntityCutsceneHBH *entity = CutsceneHBH_GetEntity(HBH_SHINOBI);
     if (entity) {
-        RSDK.SetSpriteAnimation(entity->spriteIndex, 1, &entity->animator, true, 0);
+        RSDK.SetSpriteAnimation(entity->aniFrames, 1, &entity->animator, true, 0);
         RSDK.SetSpriteAnimation(0xFFFF, 0, &entity->animator2, true, 0);
         entity->state = CutsceneHBH_Unknown13;
     }
@@ -288,7 +288,7 @@ void CutsceneHBH_Unknown9(void)
 {
     EntityCutsceneHBH *entity = CutsceneHBH_GetEntity(HBH_RIDER);
     if (entity) {
-        RSDK.SetSpriteAnimation(entity->spriteIndex, 0, &entity->animator, true, 0);
+        RSDK.SetSpriteAnimation(entity->aniFrames, 0, &entity->animator, true, 0);
         RSDK.SetSpriteAnimation(0xFFFF, 0, &entity->animator2, true, 0);
         entity->timer      = 0;
         entity->originPos.x   = entity->position.x;
@@ -302,8 +302,8 @@ void CutsceneHBH_Unknown10(void)
 {
     EntityCutsceneHBH *entity = CutsceneHBH_GetEntity(HBH_KING);
     if (entity) {
-        RSDK.SetSpriteAnimation(entity->spriteIndex, 0, &entity->animator, true, 0);
-        RSDK.SetSpriteAnimation(entity->spriteIndex, 9, &entity->animator2, true, 0);
+        RSDK.SetSpriteAnimation(entity->aniFrames, 0, &entity->animator, true, 0);
+        RSDK.SetSpriteAnimation(entity->aniFrames, 9, &entity->animator2, true, 0);
     }
 }
 
@@ -311,7 +311,7 @@ void CutsceneHBH_Unknown11(void)
 {
     EntityCutsceneHBH *entity = CutsceneHBH_GetEntity(HBH_KINGTMZ2);
     if (entity) {
-        RSDK.SetSpriteAnimation(entity->spriteIndex, 1, &entity->animator, true, 0);
+        RSDK.SetSpriteAnimation(entity->aniFrames, 1, &entity->animator, true, 0);
         entity->timer      = 0;
         entity->velocity.x = 0;
         entity->velocity.y = 0;
@@ -336,7 +336,7 @@ void CutsceneHBH_Unknown13(void)
         entity->velocity.y += 0x2000;
         entity->position.y += entity->velocity.y;
         if (RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x2E0000, true)) {
-            RSDK.SetSpriteAnimation(entity->spriteIndex, 1, &entity->animator, true, 0);
+            RSDK.SetSpriteAnimation(entity->aniFrames, 1, &entity->animator, true, 0);
             entity->velocity.y = -0x20000;
             entity->timer      = 3;
         }
@@ -383,14 +383,14 @@ void CutsceneHBH_Unknown16(void)
         if (entity->direction == FLIP_NONE) {
             if (entity->position.x - entity->originPos.x > 0x300000) {
                 entity->timer = 1;
-                RSDK.SetSpriteAnimation(entity->spriteIndex, 2, &entity->animator, true, 0);
+                RSDK.SetSpriteAnimation(entity->aniFrames, 2, &entity->animator, true, 0);
             }
             RSDK.ObjectTileGrip(entity, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x300000, 8);
         }
         else {
             if (entity->animator.frameID == entity->animator.frameCount - 1) {
                 entity->direction = FLIP_NONE;
-                RSDK.SetSpriteAnimation(entity->spriteIndex, 0, &entity->animator, true, 0);
+                RSDK.SetSpriteAnimation(entity->aniFrames, 0, &entity->animator, true, 0);
             }
             RSDK.ObjectTileGrip(entity, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x300000, 8);
         }
@@ -402,14 +402,14 @@ void CutsceneHBH_Unknown16(void)
         if (entity->direction != FLIP_X) {
             if (entity->animator.frameID == entity->animator.frameCount - 1) {
                 entity->direction = FLIP_X;
-                RSDK.SetSpriteAnimation(entity->spriteIndex, 0, &entity->animator, true, 0);
+                RSDK.SetSpriteAnimation(entity->aniFrames, 0, &entity->animator, true, 0);
             }
             RSDK.ObjectTileGrip(entity, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x300000, 8);
         }
         else {
             if (entity->position.x - entity->originPos.x < -0x300000) {
                 entity->timer = 0;
-                RSDK.SetSpriteAnimation(entity->spriteIndex, 2, &entity->animator, true, 0);
+                RSDK.SetSpriteAnimation(entity->aniFrames, 2, &entity->animator, true, 0);
             }
             RSDK.ObjectTileGrip(entity, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x300000, 8);
         }
@@ -425,7 +425,7 @@ void CutsceneHBH_Unknown17(void)
         entity->velocity.x += 0x4000;
     if (entity->direction == FLIP_X && entity->animator.frameID == entity->animator.frameCount - 1) {
         entity->direction = FLIP_NONE;
-        RSDK.SetSpriteAnimation(entity->spriteIndex, 0, &entity->animator, true, 0);
+        RSDK.SetSpriteAnimation(entity->aniFrames, 0, &entity->animator, true, 0);
     }
     RSDK.ObjectTileGrip(entity, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x300000, 8);
     if (!RSDK.CheckOnScreen(entity, NULL))
@@ -436,7 +436,7 @@ void CutsceneHBH_Unknown18(void)
 {
     RSDK_THIS(CutsceneHBH);
     if (++entity->timer == 16) {
-        RSDK.SetSpriteAnimation(entity->spriteIndex, 3, &entity->animator, true, 0);
+        RSDK.SetSpriteAnimation(entity->aniFrames, 3, &entity->animator, true, 0);
     }
     else if (entity->timer > 16 && entity->animator.frameID > 4) {
         entity->velocity.x = 0x28000;
@@ -464,7 +464,7 @@ void CutsceneHBH_Unknown20(void)
     entity->position.y += entity->velocity.y;
 
     if (RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_FLOOR, entity->collisionPlane, 0, 0x2C0000, true)) {
-        RSDK.SetSpriteAnimation(entity->spriteIndex, 2, &entity->animator, true, 0);
+        RSDK.SetSpriteAnimation(entity->aniFrames, 2, &entity->animator, true, 0);
         entity->velocity.y = 0;
         entity->state      = CutsceneHBH_Unknown21;
         Camera_ShakeScreen(0, 0, 4);
@@ -476,7 +476,7 @@ void CutsceneHBH_Unknown21(void)
     RSDK_THIS(CutsceneHBH);
 
     if (entity->animator.frameID != entity->animator.frameCount - 1) {
-        RSDK.SetSpriteAnimation(entity->spriteIndex, 0, &entity->animator, true, 0);
+        RSDK.SetSpriteAnimation(entity->aniFrames, 0, &entity->animator, true, 0);
         entity->state = StateMachine_None;
     }
 }

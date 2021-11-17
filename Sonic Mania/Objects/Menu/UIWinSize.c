@@ -135,7 +135,7 @@ void UIWinSize_SetupText(EntityUIWinSize *entityPtr)
 void UIWinSize_ApplySettings(void)
 {
     RSDK_THIS(UIWinSize);
-    RSDK.PlaySfx(UIWidgets->sfx_Bleep, false, 255);
+    RSDK.PlaySfx(UIWidgets->sfxBleep, false, 255);
     entity->field_128 = -0x20000;
     entity->field_12C = -0x20000;
     entity->field_120 = 0;

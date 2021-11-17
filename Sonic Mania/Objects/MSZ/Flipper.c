@@ -22,7 +22,7 @@ void Flipper_Update(void)
             if (Player_CheckCollisionPlatform(player, entity, &entity->hitbox)) {
                 entity->activePlayers |= (1 << playerID);
                 player->position.y += 0x80000;
-                RSDK.SetSpriteAnimation(player->spriteIndex, ANI_JUMP, &player->playerAnimator, false, 0);
+                RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->playerAnimator, false, 0);
                 if (player->jumpPress) {
                     for (int i = SLOT_PLAYER1; i < Player->playerCount; ++i) {
                         if ((1 << i) & entity->activePlayers) {
@@ -70,7 +70,7 @@ void Flipper_Update(void)
             if (Player_CheckCollisionPlatform(player, entity, &entity->hitbox)) {
                 entity->activePlayers |= (1 << playerID);
                 player->position.y += 0x80000;
-                RSDK.SetSpriteAnimation(player->spriteIndex, ANI_JUMP, &player->playerAnimator, false, 0);
+                RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->playerAnimator, false, 0);
                 if (player->jumpPress) {
                     for (int i = SLOT_PLAYER1; i < Player->playerCount; ++i) {
                         if ((1 << i) & entity->activePlayers) {

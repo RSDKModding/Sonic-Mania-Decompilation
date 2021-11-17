@@ -22,14 +22,14 @@ typedef struct {
     int32 xVelocityUnknown[3];
     TABLE(int32 angleOffsets1[6], { -64, -32, -16, 16, 32, 64 });
     TABLE(int32 angleOffsets2[6], { 32, 48, 64, 80, 96, 128 });
-    uint16 spriteIndex;
-    uint16 sfx_BossHit;
-    uint16 sfx_Explosion;
-    uint16 sfx_Drop;
-    uint16 sfx_Impact;
-    uint16 sfx_Assemble;
-    uint16 sfx_Rotate;
-    uint16 sfx_Sharp;
+    uint16 aniFrames;
+    uint16 sfxBossHit;
+    uint16 sfxExplosion;
+    uint16 sfxDrop;
+    uint16 sfxImpact;
+    uint16 sfxAssemble;
+    uint16 sfxRotate;
+    uint16 sfxSharp;
 } ObjectDDWrecker;
 
 // Entity Class

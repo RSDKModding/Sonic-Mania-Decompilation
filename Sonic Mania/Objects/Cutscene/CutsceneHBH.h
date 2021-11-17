@@ -45,7 +45,7 @@ typedef struct {
     colour colours[128];
     bool32 paletteFlag;
     bool32 timerFlag;
-    uint16 spriteIndex;
+    uint16 aniFrames;
     uint16 field_296;
     Animator animator;
     Animator animator2;

@@ -45,12 +45,12 @@ typedef enum {
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    uint16 spriteIndex;
+    uint16 aniFrames;
     Vector2 stoodPos[4];
-    uint16 sfx_Clacker;
-    uint16 sfx_Clang;
-    uint16 sfx_Push;
-    uint16 sfx_Clack;
+    uint16 sfxClacker;
+    uint16 sfxClang;
+    uint16 sfxPush;
+    uint16 sfxClack;
     bool32 playingPushSFX;
     bool32 useClack;
 } ObjectPlatform;

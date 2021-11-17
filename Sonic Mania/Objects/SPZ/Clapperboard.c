@@ -154,7 +154,7 @@ void Clapperboard_StateCollide_NoFlip(void)
                         player->storedAnim = player->playerAnimator.animationID;
                     else
                         player->storedAnim = ANI_WALK;
-                    RSDK.SetSpriteAnimation(player->spriteIndex, ANI_SPRINGDIAGONAL, &player->playerAnimator, true, 0);
+                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGDIAGONAL, &player->playerAnimator, true, 0);
                     RSDK.PlaySfx(Clapperboard->sfxWhack, false, 255);
                     clapFlag = true;
                 }
@@ -222,7 +222,7 @@ void Clapperboard_StateCollide_FlipX(void)
                         player->storedAnim = player->playerAnimator.animationID;
                     else
                         player->storedAnim = ANI_WALK;
-                    RSDK.SetSpriteAnimation(player->spriteIndex, ANI_SPRINGDIAGONAL, &player->playerAnimator, true, 0);
+                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGDIAGONAL, &player->playerAnimator, true, 0);
                     RSDK.PlaySfx(Clapperboard->sfxWhack, false, 255);
                     clapFlag = true;
                     clapFlag = true;

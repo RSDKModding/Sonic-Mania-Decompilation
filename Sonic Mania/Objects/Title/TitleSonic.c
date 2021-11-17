@@ -5,9 +5,9 @@ ObjectTitleSonic *TitleSonic;
 void TitleSonic_Update(void)
 {
     RSDK_THIS(TitleSonic);
-    RSDK.ProcessAnimation(&entity->animator1);
-    if (entity->animator1.frameID == entity->animator1.frameCount - 1)
-        RSDK.ProcessAnimation(&entity->animator2);
+    RSDK.ProcessAnimation(&entity->animatorSonic);
+    if (entity->animatorSonic.frameID == entity->animatorSonic.frameCount - 1)
+        RSDK.ProcessAnimation(&entity->animatorFinger);
 }
 
 void TitleSonic_LateUpdate(void) {}
@@ -18,17 +18,17 @@ void TitleSonic_Draw(void)
 {
     RSDK_THIS(TitleSonic);
     RSDK.SetClipBounds(0, 0, 0, RSDK_screens->width, 160);
-    RSDK.DrawSprite(&entity->animator1, 0, 0);
+    RSDK.DrawSprite(&entity->animatorSonic, NULL, false);
     RSDK.SetClipBounds(0, 0, 0, RSDK_screens->width, RSDK_screens->height);
-    if (entity->animator1.frameID == entity->animator1.frameCount - 1)
-        RSDK.DrawSprite(&entity->animator2, 0, false);
+    if (entity->animatorSonic.frameID == entity->animatorSonic.frameCount - 1)
+        RSDK.DrawSprite(&entity->animatorFinger, NULL, false);
 }
 
 void TitleSonic_Create(void *data)
 {
     RSDK_THIS(TitleSonic);
-    RSDK.SetSpriteAnimation(TitleSonic->spriteIndex, 0, &entity->animator1, true, 0);
-    RSDK.SetSpriteAnimation(TitleSonic->spriteIndex, 1, &entity->animator2, true, 0);
+    RSDK.SetSpriteAnimation(TitleSonic->aniFrames, 0, &entity->animatorSonic, true, 0);
+    RSDK.SetSpriteAnimation(TitleSonic->aniFrames, 1, &entity->animatorFinger, true, 0);
     if (!RSDK_sceneInfo->inEditor) {
         entity->visible   = false;
         entity->active    = ACTIVE_NEVER;
@@ -36,12 +36,19 @@ void TitleSonic_Create(void *data)
     }
 }
 
-void TitleSonic_StageLoad(void) { TitleSonic->spriteIndex = RSDK.LoadSpriteAnimation("Title/Sonic.bin", SCOPE_STAGE); }
+void TitleSonic_StageLoad(void) { TitleSonic->aniFrames = RSDK.LoadSpriteAnimation("Title/Sonic.bin", SCOPE_STAGE); }
 
 #if RETRO_INCLUDE_EDITOR
-void TitleSonic_EditorDraw(void) {}
+void TitleSonic_EditorDraw(void)
+{
+    RSDK_THIS(TitleSonic);
+    entity->animatorSonic.frameID = entity->animatorSonic.frameCount - 1;
 
-void TitleSonic_EditorLoad(void) {}
+    RSDK.DrawSprite(&entity->animatorSonic, NULL, false);
+    RSDK.DrawSprite(&entity->animatorFinger, NULL, false);
+}
+
+void TitleSonic_EditorLoad(void) { TitleSonic->aniFrames = RSDK.LoadSpriteAnimation("Title/Sonic.bin", SCOPE_STAGE); }
 #endif
 
 void TitleSonic_Serialize(void) {}

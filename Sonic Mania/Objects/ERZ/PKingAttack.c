@@ -87,7 +87,7 @@ void PKingAttack_CheckPlayerCollisions(void)
                         player->blinkTimer = 120;
                         Player_LoseRings(player, minVal(player->rings, 8), player->collisionPlane);
                         player->rings -= minVal(player->rings, 8);
-                        RSDK.PlaySfx(Player->sfx_LoseRings, false, 255);
+                        RSDK.PlaySfx(Player->sfxLoseRings, false, 255);
                     }
                     else {
                         RSDK.PlaySfx(PKingAttack->sfxPulse, false, 255);

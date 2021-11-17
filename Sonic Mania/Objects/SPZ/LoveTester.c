@@ -213,7 +213,7 @@ void LoveTester_CheckPlayerCollisions2(bool32 flag)
             if (!((1 << playerID) & entity->activePlayers)) {
                 if (Player_CheckBadnikTouch(player, entity, &LoveTester->hitbox1)) {
                     entity->activePlayers |= 1 << playerID;
-                    RSDK.SetSpriteAnimation(player->spriteIndex, ANI_JUMP, &player->playerAnimator, true, 0);
+                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->playerAnimator, true, 0);
                     player->nextGroundState = 0;
                     player->nextAirState    = 0;
                     player->velocity.x >>= 15;
@@ -231,7 +231,7 @@ void LoveTester_CheckPlayerCollisions2(bool32 flag)
             }
 
             if ((1 << playerID) & entity->activePlayers) {
-                RSDK.SetSpriteAnimation(player->spriteIndex, ANI_JUMP, &player->playerAnimator, false, 0);
+                RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->playerAnimator, false, 0);
                 player->position.x += (entity->position.x - player->position.x) >> 1;
                 player->position.y += (entity->position.y + 0x10000 - player->position.y) >> 1;
                 player->state = Player_State_None;

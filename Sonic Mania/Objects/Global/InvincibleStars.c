@@ -130,14 +130,14 @@ void InvincibleStars_Create(void *data)
         entity->starAngle[0] = 180;
         entity->starAngle[1] = 0;
         entity->alpha        = 255;
-        RSDK.SetSpriteAnimation(InvincibleStars->spriteIndex, 0, entity->starsData, true, 0);
-        RSDK.SetSpriteAnimation(InvincibleStars->spriteIndex, 1, &entity->starsData[1], true, 0);
-        RSDK.SetSpriteAnimation(InvincibleStars->spriteIndex, 2, &entity->starsData[2], true, 0);
-        RSDK.SetSpriteAnimation(InvincibleStars->spriteIndex, 3, &entity->starsData[3], true, 0);
+        RSDK.SetSpriteAnimation(InvincibleStars->aniFrames, 0, entity->starsData, true, 0);
+        RSDK.SetSpriteAnimation(InvincibleStars->aniFrames, 1, &entity->starsData[1], true, 0);
+        RSDK.SetSpriteAnimation(InvincibleStars->aniFrames, 2, &entity->starsData[2], true, 0);
+        RSDK.SetSpriteAnimation(InvincibleStars->aniFrames, 3, &entity->starsData[3], true, 0);
     }
 }
 
-void InvincibleStars_StageLoad(void) { InvincibleStars->spriteIndex = RSDK.LoadSpriteAnimation("Global/Invincible.bin", SCOPE_STAGE); }
+void InvincibleStars_StageLoad(void) { InvincibleStars->aniFrames = RSDK.LoadSpriteAnimation("Global/Invincible.bin", SCOPE_STAGE); }
 
 #if RETRO_INCLUDE_EDITOR
 void InvincibleStars_EditorDraw(void) {}

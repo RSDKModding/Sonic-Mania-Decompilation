@@ -196,8 +196,8 @@ void HangConveyor_Unknown2(void)
                                 entity->activePlayers3 |= 1 << playerID;
                                 player->position.y = entity->position.y + 0x150000;
                             }
-                            RSDK.PlaySfx(Player->sfx_Grab, false, 255);
-                            RSDK.SetSpriteAnimation(player->spriteIndex, ANI_POLESWINGH, &player->playerAnimator, true, 0);
+                            RSDK.PlaySfx(Player->sfxGrab, false, 255);
+                            RSDK.SetSpriteAnimation(player->aniFrames, ANI_POLESWINGH, &player->playerAnimator, true, 0);
                             player->playerAnimator.animationSpeed = 0;
                             player->nextGroundState               = StateMachine_None;
                             player->nextAirState                  = StateMachine_None;
@@ -222,20 +222,20 @@ void HangConveyor_Unknown2(void)
                 bool32 passFlag = false;
                 if (((1 << playerID) & entity->activePlayers1)) {
                     if (entity->field_C4[playerID] > 0) {
-                        RSDK.SetSpriteAnimation(player->spriteIndex, ANI_POLESWINGH, &player->playerAnimator, true, entity->field_C4[playerID] >> 1);
+                        RSDK.SetSpriteAnimation(player->aniFrames, ANI_POLESWINGH, &player->playerAnimator, true, entity->field_C4[playerID] >> 1);
                         player->playerAnimator.animationSpeed = 0;
                     }
                     else if (player->left) {
-                        RSDK.SetSpriteAnimation(player->spriteIndex, ANI_SHIMMYMOVE, &player->playerAnimator, false, 0);
+                        RSDK.SetSpriteAnimation(player->aniFrames, ANI_SHIMMYMOVE, &player->playerAnimator, false, 0);
                         player->direction = FLIP_X;
                     }
                     else if (player->right) {
-                        RSDK.SetSpriteAnimation(player->spriteIndex, ANI_SHIMMYMOVE, &player->playerAnimator, false, 0);
+                        RSDK.SetSpriteAnimation(player->aniFrames, ANI_SHIMMYMOVE, &player->playerAnimator, false, 0);
                         player->direction = FLIP_NONE;
                     }
                     else {
                         if (!(player->playerAnimator.animationID == ANI_POLESWINGH && !player->playerAnimator.frameID)) {
-                            RSDK.SetSpriteAnimation(player->spriteIndex, ANI_POLESWINGH, &player->playerAnimator, false, 0);
+                            RSDK.SetSpriteAnimation(player->aniFrames, ANI_POLESWINGH, &player->playerAnimator, false, 0);
                             player->playerAnimator.animationSpeed = 0;
                         }
                     }
@@ -298,7 +298,7 @@ void HangConveyor_Unknown2(void)
                         entity->activePlayers1 &= ~(1 << playerID);
                         player->position.y += 0x180000;
                         if (!player->jumpPress || player->down) {
-                            RSDK.SetSpriteAnimation(player->spriteIndex, ANI_JUMP, &player->playerAnimator, true, 0);
+                            RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->playerAnimator, true, 0);
                             player->state = Player_State_Air;
                         }
                         else {

@@ -9,7 +9,7 @@ typedef struct {
     int32 field_4;
     int32 field_8;
     int32 field_C;
-    uint16 spriteIndex;
+    uint16 aniFrames;
 } ObjectTitle3DSprite;
 
 // Entity Class

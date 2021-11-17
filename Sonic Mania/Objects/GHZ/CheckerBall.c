@@ -638,7 +638,7 @@ void CheckerBall_Unknown5(void)
             itemBox->active        = 1;
             itemBox->velocity.y    = -0x20000;
             itemBox->state         = ItemBox_State_Contents;
-            RSDK.SetSpriteAnimation(ItemBox->spriteIndex, 1, &itemBox->animatorBox, true, 0);
+            RSDK.SetSpriteAnimation(ItemBox->aniFrames, 1, &itemBox->animatorBox, true, 0);
             itemBox->animatorBox.frameID = ItemBox->brokenFrame++;
             ItemBox->brokenFrame %= 3;
             RSDK.SetSpriteAnimation(0xFFFF, 0, &itemBox->animatorOverlay, true, 0);
@@ -657,10 +657,10 @@ void CheckerBall_Unknown5(void)
                 debris->drawFX     = FX_FLIP;
                 debris->direction  = i & 3;
                 debris->drawOrder  = Zone->drawOrderHigh;
-                RSDK.SetSpriteAnimation(ItemBox->spriteIndex, 6, &debris->animator, true, RSDK.Rand(0, 4));
+                RSDK.SetSpriteAnimation(ItemBox->aniFrames, 6, &debris->animator, true, RSDK.Rand(0, 4));
             }
 
-            RSDK.PlaySfx(ItemBox->sfx_Destroy, 0, 255);
+            RSDK.PlaySfx(ItemBox->sfxDestroy, 0, 255);
             itemBox->active = ACTIVE_NORMAL;
             if (itemBox->type == 13) {
                 if (itemBox->type == 7) {
@@ -706,7 +706,7 @@ void CheckerBall_Unknown5(void)
                     arrayPtr += 2;
                 }
             }
-            RSDK.PlaySfx(BreakableWall->sfx_Break, 0, 255);
+            RSDK.PlaySfx(BreakableWall->sfxBreak, 0, 255);
             RSDK.ResetEntityPtr(breakableWall, TYPE_BLANK, NULL);
         }
     }
@@ -736,15 +736,15 @@ void CheckerBall_Unknown5(void)
                     if (result == 4) {
                         entity->onGround   = false;
                         entity->velocity.y = spring->velocity.y;
-                        RSDK.SetSpriteAnimation(Spring->spriteIndex, spring->type, &spring->animator, true, 0);
-                        RSDK.PlaySfx(Spring->sfx_Spring, 0, 255);
+                        RSDK.SetSpriteAnimation(Spring->aniFrames, spring->type, &spring->animator, true, 0);
+                        RSDK.PlaySfx(Spring->sfxSpring, 0, 255);
                     }
                 }
                 else if (result == 1) {
                     entity->onGround = false;
                     entity->velocity.y = spring->velocity.y;
-                    RSDK.SetSpriteAnimation(Spring->spriteIndex, spring->type, &spring->animator, true, 0);
-                    RSDK.PlaySfx(Spring->sfx_Spring, 0, 255);
+                    RSDK.SetSpriteAnimation(Spring->aniFrames, spring->type, &spring->animator, true, 0);
+                    RSDK.PlaySfx(Spring->sfxSpring, 0, 255);
                 }
             }
             else {
@@ -756,8 +756,8 @@ void CheckerBall_Unknown5(void)
                         entity->onGround   = false;
                         entity->velocity.x = spring->velocity.x;
                         entity->velocity.y = spring->velocity.y;
-                        RSDK.SetSpriteAnimation(Spring->spriteIndex, spring->type, &spring->animator, true, 0);
-                        RSDK.PlaySfx(Spring->sfx_Spring, 0, 255);
+                        RSDK.SetSpriteAnimation(Spring->aniFrames, spring->type, &spring->animator, true, 0);
+                        RSDK.PlaySfx(Spring->sfxSpring, 0, 255);
                     }
                 }
                 else if (spring->state == Spring_State_Horizontal) {
@@ -766,8 +766,8 @@ void CheckerBall_Unknown5(void)
                             if (!spring->onGround || entity->onGround) {
                                 entity->velocity.x = spring->velocity.x;
                                 entity->groundVel  = spring->velocity.x;
-                                RSDK.SetSpriteAnimation(Spring->spriteIndex, spring->type, &spring->animator, true, 0);
-                                RSDK.PlaySfx(Spring->sfx_Spring, 0, 255);
+                                RSDK.SetSpriteAnimation(Spring->aniFrames, spring->type, &spring->animator, true, 0);
+                                RSDK.PlaySfx(Spring->sfxSpring, 0, 255);
                             }
                         }
                     }
@@ -776,8 +776,8 @@ void CheckerBall_Unknown5(void)
                             if (!spring->onGround || entity->onGround) {
                                 entity->velocity.x = spring->velocity.x;
                                 entity->groundVel  = spring->velocity.x;
-                                RSDK.SetSpriteAnimation(Spring->spriteIndex, spring->type, &spring->animator, true, 0);
-                                RSDK.PlaySfx(Spring->sfx_Spring, 0, 255);
+                                RSDK.SetSpriteAnimation(Spring->aniFrames, spring->type, &spring->animator, true, 0);
+                                RSDK.PlaySfx(Spring->sfxSpring, 0, 255);
                             }
                         }
                     }

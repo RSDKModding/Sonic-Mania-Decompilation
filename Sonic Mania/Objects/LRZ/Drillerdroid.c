@@ -1050,7 +1050,7 @@ void Drillerdroid_State_DropSignPost(void)
         {
             signPost->active = ACTIVE_NORMAL;
             signPost->state  = SignPost_State_Fall;
-            RSDK.PlaySfx(SignPost->sfx_Twinkle, false, 255);
+            RSDK.PlaySfx(SignPost->sfxTwinkle, false, 255);
         }
 
         LRZ1Setup->fadeTimer = 1;

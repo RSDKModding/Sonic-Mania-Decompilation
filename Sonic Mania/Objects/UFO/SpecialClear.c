@@ -269,37 +269,37 @@ void SpecialClear_Create(void *data)
         entity->emeraldSpeeds[5]    = -0xD2000;
         entity->emeraldPositions[6] = 0x1D00000;
         entity->emeraldSpeeds[6]    = -0xDC000;
-        RSDK.SetSpriteAnimation(SpecialClear->spriteIndex, SC_ANI_BONUS, &entity->animator2, true, 0);
-        RSDK.SetSpriteAnimation(SpecialClear->spriteIndex, SC_ANI_NUMBERS, &entity->animator3, true, 0);
-        RSDK.SetSpriteAnimation(SpecialClear->spriteIndex, SC_ANI_EMERALDS, &entity->animator4, true, 0);
+        RSDK.SetSpriteAnimation(SpecialClear->aniFrames, SC_ANI_BONUS, &entity->animator2, true, 0);
+        RSDK.SetSpriteAnimation(SpecialClear->aniFrames, SC_ANI_NUMBERS, &entity->animator3, true, 0);
+        RSDK.SetSpriteAnimation(SpecialClear->aniFrames, SC_ANI_EMERALDS, &entity->animator4, true, 0);
         switch (globals->playerID & 0xFF) {
-            case ID_TAILS: RSDK.SetSpriteAnimation(SpecialClear->spriteIndex, SC_ANI_TAILS, &entity->animator1, true, 0);
+            case ID_TAILS: RSDK.SetSpriteAnimation(SpecialClear->aniFrames, SC_ANI_TAILS, &entity->animator1, true, 0);
 #if RETRO_USE_PLUS
-                RSDK.SetSpriteAnimation(SpecialClear->spriteIndex, SC_ANI_CONTINUE, &entity->animator5, true, SC_ANI_TAILS);
+                RSDK.SetSpriteAnimation(SpecialClear->aniFrames, SC_ANI_CONTINUE, &entity->animator5, true, SC_ANI_TAILS);
 #else
                 RSDK.SetSpriteAnimation(SpecialClear->continueFrames, 0, &entity->animator5, true, SC_ANI_TAILS);
 #endif
                 break;
-            case ID_KNUCKLES: RSDK.SetSpriteAnimation(SpecialClear->spriteIndex, SC_ANI_KNUX, &entity->animator1, true, 0);
+            case ID_KNUCKLES: RSDK.SetSpriteAnimation(SpecialClear->aniFrames, SC_ANI_KNUX, &entity->animator1, true, 0);
 #if RETRO_USE_PLUS
-                RSDK.SetSpriteAnimation(SpecialClear->spriteIndex, SC_ANI_CONTINUE, &entity->animator5, true, SC_ANI_KNUX);
+                RSDK.SetSpriteAnimation(SpecialClear->aniFrames, SC_ANI_CONTINUE, &entity->animator5, true, SC_ANI_KNUX);
 #else
                 RSDK.SetSpriteAnimation(SpecialClear->continueFrames, 0, &entity->animator5, true, SC_ANI_TAILS);
 #endif
                 break;
 #if RETRO_USE_PLUS
             case ID_MIGHTY:
-                RSDK.SetSpriteAnimation(SpecialClear->spriteIndex, SC_ANI_MIGHTY, &entity->animator1, true, 0);
-                RSDK.SetSpriteAnimation(SpecialClear->spriteIndex, SC_ANI_CONTINUE, &entity->animator5, true, 3);
+                RSDK.SetSpriteAnimation(SpecialClear->aniFrames, SC_ANI_MIGHTY, &entity->animator1, true, 0);
+                RSDK.SetSpriteAnimation(SpecialClear->aniFrames, SC_ANI_CONTINUE, &entity->animator5, true, 3);
                 break;
             case ID_RAY:
-                RSDK.SetSpriteAnimation(SpecialClear->spriteIndex, SC_ANI_RAY, &entity->animator1, true, 0);
-                RSDK.SetSpriteAnimation(SpecialClear->spriteIndex, SC_ANI_CONTINUE, &entity->animator5, true, SC_ANI_RAY);
+                RSDK.SetSpriteAnimation(SpecialClear->aniFrames, SC_ANI_RAY, &entity->animator1, true, 0);
+                RSDK.SetSpriteAnimation(SpecialClear->aniFrames, SC_ANI_CONTINUE, &entity->animator5, true, SC_ANI_RAY);
                 break;
 #endif
-            default: RSDK.SetSpriteAnimation(SpecialClear->spriteIndex, SC_ANI_SONIC, &entity->animator1, true, 0);
+            default: RSDK.SetSpriteAnimation(SpecialClear->aniFrames, SC_ANI_SONIC, &entity->animator1, true, 0);
 #if RETRO_USE_PLUS
-                RSDK.SetSpriteAnimation(SpecialClear->spriteIndex, SC_ANI_CONTINUE, &entity->animator5, true, SC_ANI_SONIC);
+                RSDK.SetSpriteAnimation(SpecialClear->aniFrames, SC_ANI_CONTINUE, &entity->animator5, true, SC_ANI_SONIC);
 #else
                 RSDK.SetSpriteAnimation(SpecialClear->continueFrames, 0, &entity->animator5, true, SC_ANI_TAILS);
 #endif
@@ -310,16 +310,16 @@ void SpecialClear_Create(void *data)
 
 void SpecialClear_StageLoad(void)
 {
-    SpecialClear->spriteIndex     = RSDK.LoadSpriteAnimation("Special/Results.bin", SCOPE_STAGE);
+    SpecialClear->aniFrames     = RSDK.LoadSpriteAnimation("Special/Results.bin", SCOPE_STAGE);
 #if !RETRO_USE_PLUS
     SpecialClear->continueFrames = RSDK.LoadSpriteAnimation("Players/Continue.bin", SCOPE_STAGE);
 #endif
-    SpecialClear->sfx_ScoreAdd    = RSDK.GetSFX("Global/ScoreAdd.wav");
-    SpecialClear->sfx_ScoreTotal  = RSDK.GetSFX("Global/ScoreTotal.wav");
-    SpecialClear->sfx_Event       = RSDK.GetSFX("Special/Event.wav");
-    SpecialClear->sfx_SpecialWarp = RSDK.GetSFX("Global/SpecialWarp.wav");
-    SpecialClear->sfx_Continue    = RSDK.GetSFX("Special/Continue.wav");
-    SpecialClear->sfx_Emerald     = RSDK.GetSFX("Special/Emerald.wav");
+    SpecialClear->sfxScoreAdd    = RSDK.GetSFX("Global/ScoreAdd.wav");
+    SpecialClear->sfxScoreTotal  = RSDK.GetSFX("Global/ScoreTotal.wav");
+    SpecialClear->sfxEvent       = RSDK.GetSFX("Special/Event.wav");
+    SpecialClear->sfxSpecialWarp = RSDK.GetSFX("Global/SpecialWarp.wav");
+    SpecialClear->sfxContinue    = RSDK.GetSFX("Special/Continue.wav");
+    SpecialClear->sfxEmerald     = RSDK.GetSFX("Special/Emerald.wav");
 }
 
 void SpecialClear_DrawNumbers(Vector2 *pos, int32 value)
@@ -435,11 +435,11 @@ void SpecialClear_TallyScore(void)
             entity->state = SpecialClear_Unknown9;
         else
             entity->state = SpecialClear_Unknown10;
-        RSDK.PlaySfx(SpecialClear->sfx_ScoreTotal, 0, 255);
+        RSDK.PlaySfx(SpecialClear->sfxScoreTotal, 0, 255);
     }
     else if (++entity->timer == 2) {
         entity->timer = 0;
-        RSDK.PlaySfx(SpecialClear->sfx_ScoreAdd, 0, 255);
+        RSDK.PlaySfx(SpecialClear->sfxScoreAdd, 0, 255);
     }
 }
 
@@ -538,7 +538,7 @@ void SpecialClear_Unknown7(void)
         entity->timer = 0;
         entity->state = SpecialClear_TallyScore;
         if (entity->finishType)
-            RSDK.PlaySfx(SpecialClear->sfx_Emerald, 0, 255);
+            RSDK.PlaySfx(SpecialClear->sfxEmerald, 0, 255);
     }
     SpecialClear_HandlePositions();
 }
@@ -548,7 +548,7 @@ void SpecialClear_Unknown9(void)
     RSDK_THIS(SpecialClear);
 
     if (++entity->timer == 120) {
-        RSDK.PlaySfx(SpecialClear->sfx_Continue, 0, 255);
+        RSDK.PlaySfx(SpecialClear->sfxContinue, 0, 255);
 
         if (globals->continues < 25)
             globals->continues++;
@@ -577,7 +577,7 @@ void SpecialClear_Unknown9(void)
         else {
             entity->timer = 0;
             entity->flag  = 1;
-            RSDK.PlaySfx(SpecialClear->sfx_SpecialWarp, 0, 255);
+            RSDK.PlaySfx(SpecialClear->sfxSpecialWarp, 0, 255);
             entity->state = SpecialClear_Unknown15;
         }
     }
@@ -597,7 +597,7 @@ void SpecialClear_Unknown10(void)
         else {
             entity->timer = 0;
             entity->flag  = 1;
-            RSDK.PlaySfx(SpecialClear->sfx_SpecialWarp, 0, 255);
+            RSDK.PlaySfx(SpecialClear->sfxSpecialWarp, 0, 255);
             entity->state = SpecialClear_Unknown15;
         }
     }
@@ -623,7 +623,7 @@ void SpecialClear_Unknown12(void)
         entity->positions[0].x -= 0x180000;
 
     if (entity->positions[1].x >= 0) {
-        RSDK.PlaySfx(SpecialClear->sfx_Event, 0, 255);
+        RSDK.PlaySfx(SpecialClear->sfxEvent, 0, 255);
         entity->state = SpecialClear_Unknown13;
     }
     else {
@@ -637,7 +637,7 @@ void SpecialClear_Unknown13(void)
     if (++entity->timer == 160) {
         entity->timer = 0;
         entity->flag  = true;
-        RSDK.PlaySfx(SpecialClear->sfx_SpecialWarp, 0, 255);
+        RSDK.PlaySfx(SpecialClear->sfxSpecialWarp, 0, 255);
         entity->state = SpecialClear_Unknown15;
     }
 }

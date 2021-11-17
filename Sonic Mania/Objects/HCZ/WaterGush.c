@@ -19,7 +19,7 @@ void WaterGush_Update(void)
                     entity->flag = true;
                 RSDK.PlaySfx(WaterGush->sfxGush, false, 255);
                 entity->activePlayers |= 1 << playerID;
-                RSDK.SetSpriteAnimation(player->spriteIndex, ANI_HURT, &player->playerAnimator, true, 6);
+                RSDK.SetSpriteAnimation(player->aniFrames, ANI_HURT, &player->playerAnimator, true, 6);
                 player->nextGroundState = StateMachine_None;
                 player->nextAirState    = StateMachine_None;
                 player->velocity.x      = 0;
@@ -72,7 +72,7 @@ void WaterGush_Update(void)
 
     if (entity->flag) {
         if (!flag) {
-            RSDK.PlaySfx(Water->sfx_Splash, false, 255);
+            RSDK.PlaySfx(Water->sfxSplash, false, 255);
             WaterGush_Unknown3();
         }
 

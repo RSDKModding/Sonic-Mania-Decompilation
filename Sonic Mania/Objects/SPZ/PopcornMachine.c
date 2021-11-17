@@ -171,7 +171,7 @@ void PopcornMachine_LinkPlayer(EntityPlayer *player)
     else
         player->velocity.x = -0xA0000;
     player->tileCollisions = false;
-    RSDK.SetSpriteAnimation(player->spriteIndex, ANI_JUMP, &player->playerAnimator, false, 0);
+    RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->playerAnimator, false, 0);
 
     EntityPopcornMachine *machine = CREATE_ENTITY(PopcornMachine, player, entity->position.x, entity->position.y);
     machine->isPermanent          = true;
@@ -383,7 +383,7 @@ void PopcornMachine_State2_Unknown3(void)
             player->gravityStrength = 0x80;
             player->velocity.y      = -0xD8000 - (parent->height << 16);
             player->position.y += player->velocity.y;
-            RSDK.SetSpriteAnimation(player->spriteIndex, ANI_FAN, &player->playerAnimator, false, 0);
+            RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->playerAnimator, false, 0);
             if (!player->sidekick)
                 Zone->screenBoundsB1[player->playerID] = entity->bounds[player->playerID];
             entity->state = PopcornMachine_State2_Unknown4;

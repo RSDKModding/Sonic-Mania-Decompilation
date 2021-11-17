@@ -53,7 +53,7 @@ void GasPlatform_Create(void *data)
     entity->frameID   = 2;
     entity->collision = PLATFORM_C_0;
     Platform_Create(NULL);
-    RSDK.SetSpriteAnimation(Platform->spriteIndex, 2, &entity->animator2, true, 0);
+    RSDK.SetSpriteAnimation(Platform->aniFrames, 2, &entity->animator2, true, 0);
     entity->stateCollide = Platform_CollisionState_AllSolid;
     entity->state        = Platform_State_Normal;
 }
@@ -129,7 +129,7 @@ void GasPlatform_Unknown2(void)
                     player->velocity.y = -0x100000;
                     player->state      = Player_State_Air;
                     player->onGround   = false;
-                    RSDK.SetSpriteAnimation(player->spriteIndex, ANI_SPRINGTWIRL, &player->playerAnimator, true, 0);
+                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGTWIRL, &player->playerAnimator, true, 0);
                     RSDK.PlaySfx(GasPlatform->sfxSpring, false, 255);
                     entity->collapseDelay = 240;
                     entity->state         = GasPlatform_Unknown3;

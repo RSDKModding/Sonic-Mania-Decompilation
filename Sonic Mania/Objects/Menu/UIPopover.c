@@ -262,7 +262,7 @@ void UIPopover_Unknown9(void)
     RSDK_THIS(UIPopover);
 
     if (entity->timer == 1) {
-        RSDK.PlaySfx(UIWidgets->sfx_Woosh, false, 255);
+        RSDK.PlaySfx(UIWidgets->sfxWoosh, false, 255);
         EntityUIControl *control = (EntityUIControl *)entity->parent;
         UIControl_Unknown12((Entity *)control);
         control->selectionDisabled = false;

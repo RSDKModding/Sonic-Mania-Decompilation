@@ -44,7 +44,7 @@ void SDashWheel_Update(void)
                         entity->rotateOffset = -32;
                     else
                         entity->rotateOffset = 32;
-                    RSDK.SetSpriteAnimation(player->spriteIndex, ANI_JUMP, &player->playerAnimator, false, 0);
+                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->playerAnimator, false, 0);
                 }
 
                 int32 angle = RSDK.ATan2(player->position.x - entity->position.x, player->position.y - entity->position.y);

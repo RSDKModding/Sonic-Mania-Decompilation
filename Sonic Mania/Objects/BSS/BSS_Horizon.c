@@ -50,13 +50,13 @@ void BSS_Horizon_Create(void* data)
         entity->visible              = true;
         entity->drawOrder            = 2;
         entity->drawFX               = FX_FLIP;
-        RSDK.SetSpriteAnimation(BSS_Horizon->spriteIndex, 0, &entity->horizonData, true, 0);
+        RSDK.SetSpriteAnimation(BSS_Horizon->aniFrames, 0, &entity->horizonData, true, 0);
     }
 }
 
 void BSS_Horizon_StageLoad(void)
 {
-    BSS_Horizon->spriteIndex = RSDK.LoadSpriteAnimation("SpecialBS/Horizon.bin", SCOPE_STAGE);
+    BSS_Horizon->aniFrames = RSDK.LoadSpriteAnimation("SpecialBS/Horizon.bin", SCOPE_STAGE);
     RSDK.ResetEntitySlot(SLOT_BSS_HORIZON, BSS_Horizon->objectID, 0);
 }
 

@@ -74,7 +74,7 @@ void ShopWindow_Create(void *data)
             entity->hitbox2.right  = entity->size.x + 8;
             entity->hitbox2.bottom = entity->size.y + 8;
             entity->hitbox2.left   = -8 - entity->size.x;
-            RSDK.SetSpriteAnimation(ShopWindow->spriteIndex, 0, &entity->animator, false, 0);
+            RSDK.SetSpriteAnimation(ShopWindow->aniFrames, 0, &entity->animator, false, 0);
         }
         
         foreach_all(CircleBumper, bumper) {
@@ -86,7 +86,7 @@ void ShopWindow_Create(void *data)
 
 void ShopWindow_StageLoad(void)
 {
-    ShopWindow->spriteIndex = RSDK.LoadSpriteAnimation("SPZ1/ShopWindow.bin", SCOPE_STAGE);
+    ShopWindow->aniFrames = RSDK.LoadSpriteAnimation("SPZ1/ShopWindow.bin", SCOPE_STAGE);
     RSDK.SetPaletteMask(RSDK.GetPaletteEntry(0, 253));
     ShopWindow->sfxShatter = RSDK.GetSFX("Stage/WindowShatter.wav");
 }
@@ -122,10 +122,10 @@ void ShopWindow_State_Shattered(void)
                 EntityShopWindow *shard = (EntityShopWindow *)RSDK.CreateEntity(ShopWindow->objectID, (void *)1, posX + ((RSDK.Rand(0, 8) - 4) << 16),
                                                                                 posY + ((RSDK.Rand(0, 8) - 4) << 16));
                 if (RSDK.Rand(0, 3) == 1) {
-                    RSDK.SetSpriteAnimation(ShopWindow->spriteIndex, 3, &shard->animator, 0, RSDK.Rand(0, 18));
+                    RSDK.SetSpriteAnimation(ShopWindow->aniFrames, 3, &shard->animator, 0, RSDK.Rand(0, 18));
                 }
                 else {
-                    RSDK.SetSpriteAnimation(ShopWindow->spriteIndex, 2, &shard->animator, 0, RSDK.Rand(0, 21));
+                    RSDK.SetSpriteAnimation(ShopWindow->aniFrames, 2, &shard->animator, 0, RSDK.Rand(0, 21));
                 }
                 shard->field_88.x = RSDK.Rand(1, 16);
                 shard->field_88.y = RSDK.Rand(1, 16);
@@ -236,7 +236,7 @@ void ShopWindow_EditorDraw(void)
 
     entity->inkEffect = INK_ADD;
     entity->alpha     = 0x80;
-    RSDK.SetSpriteAnimation(ShopWindow->spriteIndex, 0, &entity->animator, false, 0);
+    RSDK.SetSpriteAnimation(ShopWindow->aniFrames, 0, &entity->animator, false, 0);
 
     Vector2 size;
     size.x = entity->size.x >> 16;
@@ -281,7 +281,7 @@ void ShopWindow_EditorDraw(void)
     DrawHelpers_DrawRectOutline(0xFFFF00, entity->position.x, entity->position.y, entity->size.x * 2, entity->size.y * 2);
 }
 
-void ShopWindow_EditorLoad(void) { ShopWindow->spriteIndex = RSDK.LoadSpriteAnimation("SPZ1/ShopWindow.bin", SCOPE_STAGE); }
+void ShopWindow_EditorLoad(void) { ShopWindow->aniFrames = RSDK.LoadSpriteAnimation("SPZ1/ShopWindow.bin", SCOPE_STAGE); }
 #endif
 
 void ShopWindow_Serialize(void)

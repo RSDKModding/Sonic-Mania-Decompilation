@@ -217,7 +217,7 @@ void BreakBar_State_Main(void)
                     entity->direction |= FLIP_Y;
                 if (Player_CheckCollisionTouch(player, entity, &entity->hitbox)) {
                     entity->activePlayersGrabbed |= 1 << playerID;
-                    RSDK.PlaySfx(Player->sfx_Grab, false, 255);
+                    RSDK.PlaySfx(Player->sfxGrab, false, 255);
                 }
             }
 
@@ -227,7 +227,7 @@ void BreakBar_State_Main(void)
                         entity->activePlayersReleased |= (1 << playerID);
                     }
                     else {
-                        RSDK.SetSpriteAnimation(player->spriteIndex, ANI_CLING, &player->playerAnimator, false, 0);
+                        RSDK.SetSpriteAnimation(player->aniFrames, ANI_CLING, &player->playerAnimator, false, 0);
                         player->onGround        = false;
                         player->nextGroundState = StateMachine_None;
                         player->nextAirState    = StateMachine_None;
@@ -247,7 +247,7 @@ void BreakBar_State_Main(void)
                 else if (!player->sidekick && !entity->destroyFlag) {
                     BreakBar_HandlePlayerInteractions(player);
                 }
-                RSDK.SetSpriteAnimation(player->spriteIndex, ANI_FAN, &player->playerAnimator, false, 0);
+                RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->playerAnimator, false, 0);
                 player->state = Player_State_None;
             }
         }

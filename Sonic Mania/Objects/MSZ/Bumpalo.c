@@ -550,7 +550,7 @@ void Bumpalo_State_Unknown6(void)
     entity->onGround |= RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0xF0000, true);
     if (entity->onGround == true) {
         entity->velocity.y = 0;
-        RSDK.PlaySfx(Player->sfx_Land, false, 255);
+        RSDK.PlaySfx(Player->sfxLand, false, 255);
         RSDK.SetSpriteAnimation(Bumpalo->aniFrames, 4, &entity->animator1, true, 0);
         entity->state = Bumpalo_State_Unknown5;
     }

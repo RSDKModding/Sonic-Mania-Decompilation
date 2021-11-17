@@ -75,12 +75,12 @@ void FilmProjector_Draw(void)
 void FilmProjector_Create(void *data)
 {
     RSDK_THIS(FilmProjector);
-    RSDK.SetSpriteAnimation(FilmProjector->spriteIndex, 0, &entity->animator1, true, 0);
-    RSDK.SetSpriteAnimation(FilmProjector->spriteIndex, 0, &entity->animator2, true, 1);
-    RSDK.SetSpriteAnimation(FilmProjector->spriteIndex, 1, &entity->animator3, true, 0);
-    RSDK.SetSpriteAnimation(FilmProjector->spriteIndex, 1, &entity->animator4, true, 1);
-    RSDK.SetSpriteAnimation(FilmProjector->spriteIndex, 2, &entity->animator5, true, 0);
-    RSDK.SetSpriteAnimation(FilmProjector->spriteIndex, 3, &entity->animator6, true, 1);
+    RSDK.SetSpriteAnimation(FilmProjector->aniFrames, 0, &entity->animator1, true, 0);
+    RSDK.SetSpriteAnimation(FilmProjector->aniFrames, 0, &entity->animator2, true, 1);
+    RSDK.SetSpriteAnimation(FilmProjector->aniFrames, 1, &entity->animator3, true, 0);
+    RSDK.SetSpriteAnimation(FilmProjector->aniFrames, 1, &entity->animator4, true, 1);
+    RSDK.SetSpriteAnimation(FilmProjector->aniFrames, 2, &entity->animator5, true, 0);
+    RSDK.SetSpriteAnimation(FilmProjector->aniFrames, 3, &entity->animator6, true, 1);
     if (!RSDK_sceneInfo->inEditor) {
         entity->active        = ACTIVE_BOUNDS;
         entity->updateRange.x = 0x1000000;
@@ -96,7 +96,7 @@ void FilmProjector_Create(void *data)
     }
 }
 
-void FilmProjector_StageLoad(void) { FilmProjector->spriteIndex = RSDK.LoadSpriteAnimation("SPZ1/FilmProjector.bin", SCOPE_STAGE); }
+void FilmProjector_StageLoad(void) { FilmProjector->aniFrames = RSDK.LoadSpriteAnimation("SPZ1/FilmProjector.bin", SCOPE_STAGE); }
 
 #if RETRO_INCLUDE_EDITOR
 void FilmProjector_EditorDraw(void)
@@ -160,7 +160,7 @@ void FilmProjector_EditorDraw(void)
     entity->inkEffect = INK_NONE;
 }
 
-void FilmProjector_EditorLoad(void) { FilmProjector->spriteIndex = RSDK.LoadSpriteAnimation("SPZ1/FilmProjector.bin", SCOPE_STAGE); }
+void FilmProjector_EditorLoad(void) { FilmProjector->aniFrames = RSDK.LoadSpriteAnimation("SPZ1/FilmProjector.bin", SCOPE_STAGE); }
 #endif
 
 void FilmProjector_Serialize(void)

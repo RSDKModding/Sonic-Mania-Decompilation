@@ -61,8 +61,8 @@ void InvisibleBlock_Create(void *data)
 
 void InvisibleBlock_StageLoad(void)
 {
-    InvisibleBlock->spriteIndex = RSDK.LoadSpriteAnimation("Global/ItemBox.bin", SCOPE_STAGE);
-    RSDK.SetSpriteAnimation(InvisibleBlock->spriteIndex, 2, &InvisibleBlock->animator, true, 0);
+    InvisibleBlock->aniFrames = RSDK.LoadSpriteAnimation("Global/ItemBox.bin", SCOPE_STAGE);
+    RSDK.SetSpriteAnimation(InvisibleBlock->aniFrames, 2, &InvisibleBlock->animator, true, 0);
     InvisibleBlock->animator.frameID = 10;
 }
 
@@ -97,8 +97,8 @@ void InvisibleBlock_EditorDraw(void)
 
 void InvisibleBlock_EditorLoad(void)
 {
-    InvisibleBlock->spriteIndex = RSDK.LoadSpriteAnimation("Global/ItemBox.bin", SCOPE_STAGE);
-    RSDK.SetSpriteAnimation(InvisibleBlock->spriteIndex, 2, &InvisibleBlock->animator, true, 0);
+    InvisibleBlock->aniFrames = RSDK.LoadSpriteAnimation("Global/ItemBox.bin", SCOPE_STAGE);
+    RSDK.SetSpriteAnimation(InvisibleBlock->aniFrames, 2, &InvisibleBlock->animator, true, 0);
     InvisibleBlock->animator.frameID = 10;
 
     RSDK_ACTIVE_VAR(InvisibleBlock, planeFilter);

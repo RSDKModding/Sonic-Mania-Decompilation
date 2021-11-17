@@ -49,7 +49,7 @@ void UIWaitSpinner_Create(void *data)
     entity->active    = ACTIVE_ALWAYS;
     entity->visible   = 1;
     entity->drawOrder = 15;
-    RSDK.SetSpriteAnimation(UIWaitSpinner->spriteIndex, 0, &entity->animator, true, 0);
+    RSDK.SetSpriteAnimation(UIWaitSpinner->aniFrames, 0, &entity->animator, true, 0);
     entity->state = UIWaitSpinner_State_Wait;
 }
 
@@ -57,7 +57,7 @@ void UIWaitSpinner_StageLoad(void)
 {
     UIWaitSpinner->timer         = 0;
     UIWaitSpinner->activeSpinner = 0;
-    UIWaitSpinner->spriteIndex   = RSDK.LoadSpriteAnimation("UI/WaitSpinner.bin", SCOPE_STAGE);
+    UIWaitSpinner->aniFrames   = RSDK.LoadSpriteAnimation("UI/WaitSpinner.bin", SCOPE_STAGE);
 }
 
 void UIWaitSpinner_Wait(void)

@@ -79,32 +79,32 @@ void Shield_Create(void *data)
     entity->state  = Shield_State_Generic;
     switch (entity->type) {
         case SHIELD_BLUE:
-            RSDK.SetSpriteAnimation(Shield->spriteIndex, 0, &entity->animator, true, 0);
+            RSDK.SetSpriteAnimation(Shield->aniFrames, 0, &entity->animator, true, 0);
             entity->inkEffect = INK_ADD;
             entity->alpha     = 0x80;
             break;
         case SHIELD_BUBBLE:
-            RSDK.SetSpriteAnimation(Shield->spriteIndex, 5, &entity->animator2, true, 0);
-            RSDK.SetSpriteAnimation(Shield->spriteIndex, 6, &entity->animator, true, 0);
+            RSDK.SetSpriteAnimation(Shield->aniFrames, 5, &entity->animator2, true, 0);
+            RSDK.SetSpriteAnimation(Shield->aniFrames, 6, &entity->animator, true, 0);
             entity->alpha = 0x100;
             break;
-        case SHIELD_FIRE: RSDK.SetSpriteAnimation(Shield->spriteIndex, 1, &entity->animator, true, 0); break;
-        case SHIELD_LIGHTNING: RSDK.SetSpriteAnimation(Shield->spriteIndex, 3, &entity->animator, true, 0); break;
+        case SHIELD_FIRE: RSDK.SetSpriteAnimation(Shield->aniFrames, 1, &entity->animator, true, 0); break;
+        case SHIELD_LIGHTNING: RSDK.SetSpriteAnimation(Shield->aniFrames, 3, &entity->animator, true, 0); break;
         default: break;
     }
 }
 
 void Shield_StageLoad(void)
 {
-    Shield->spriteIndex         = RSDK.LoadSpriteAnimation("Global/Shields.bin", SCOPE_STAGE);
-    Shield->sfx_BlueShield      = RSDK.GetSFX("Global/BlueShield.wav");
-    Shield->sfx_BubbleShield    = RSDK.GetSFX("Global/BubbleShield.wav");
-    Shield->sfx_FireShield      = RSDK.GetSFX("Global/FireShield.wav");
-    Shield->sfx_LightningShield = RSDK.GetSFX("Global/LightningShield.wav");
-    Shield->sfx_InstaShield     = RSDK.GetSFX("Global/InstaShield.wav");
-    Shield->sfx_BubbleBounce    = RSDK.GetSFX("Global/BubbleBounce.wav");
-    Shield->sfx_FireDash        = RSDK.GetSFX("Global/FireDash.wav");
-    Shield->sfx_LightningJump   = RSDK.GetSFX("Global/LightningJump.wav");
+    Shield->aniFrames         = RSDK.LoadSpriteAnimation("Global/Shields.bin", SCOPE_STAGE);
+    Shield->sfxBlueShield      = RSDK.GetSFX("Global/BlueShield.wav");
+    Shield->sfxBubbleShield    = RSDK.GetSFX("Global/BubbleShield.wav");
+    Shield->sfxFireShield      = RSDK.GetSFX("Global/FireShield.wav");
+    Shield->sfxLightningShield = RSDK.GetSFX("Global/LightningShield.wav");
+    Shield->sfxInstaShield     = RSDK.GetSFX("Global/InstaShield.wav");
+    Shield->sfxBubbleBounce    = RSDK.GetSFX("Global/BubbleBounce.wav");
+    Shield->sfxFireDash        = RSDK.GetSFX("Global/FireDash.wav");
+    Shield->sfxLightningJump   = RSDK.GetSFX("Global/LightningJump.wav");
 }
 
 void Shield_State_Generic(void)
@@ -124,7 +124,7 @@ void Shield_State_Bubble(void)
     entity->frameID   = RSDK.GetFrameID(&entity->animator) & 7;
     entity->direction = entity->frameID & 3;
     if (entity->animator2.frameID == entity->animator2.frameCount - 1) {
-        RSDK.SetSpriteAnimation(Shield->spriteIndex, 9, &entity->animator2, true, 0);
+        RSDK.SetSpriteAnimation(Shield->aniFrames, 9, &entity->animator2, true, 0);
         RSDK.SetSpriteAnimation(0xFFFF, 0, &entity->animator, true, 0);
         entity->state = Shield_State_BubbleAlt;
     }
@@ -138,8 +138,8 @@ void Shield_State_BubbleAlt(void)
     entity->frameID   = RSDK.GetFrameID(&entity->animator) & 7;
     entity->direction = entity->frameID & 3;
     if (entity->animator2.frameID == entity->animator2.frameCount - 1) {
-        RSDK.SetSpriteAnimation(Shield->spriteIndex, 5, &entity->animator2, true, 0);
-        RSDK.SetSpriteAnimation(Shield->spriteIndex, 6, &entity->animator, true, 0);
+        RSDK.SetSpriteAnimation(Shield->aniFrames, 5, &entity->animator2, true, 0);
+        RSDK.SetSpriteAnimation(Shield->aniFrames, 6, &entity->animator, true, 0);
         entity->state = Shield_State_Generic;
     }
 }
@@ -152,7 +152,7 @@ void Shield_State_Fire(void)
     ++entity->timer;
     if (entity->timer > 24) {
         entity->timer = 0;
-        RSDK.SetSpriteAnimation(Shield->spriteIndex, 1, &entity->animator, true, 0);
+        RSDK.SetSpriteAnimation(Shield->aniFrames, 1, &entity->animator, true, 0);
         entity->state = Shield_State_Generic;
     }
 }
@@ -173,7 +173,7 @@ void Shield_State_Lightning(void)
     debris->velocity.x   = -0x20000;
     debris->velocity.y   = -0x20000;
     debris->drawOrder    = Zone->playerDrawHigh;
-    RSDK.SetSpriteAnimation(Shield->spriteIndex, 4, &debris->animator, true, 0);
+    RSDK.SetSpriteAnimation(Shield->aniFrames, 4, &debris->animator, true, 0);
     if (entity->drawFX & FX_SCALE) {
         debris->drawFX |= FX_SCALE;
         debris->scale.x = entity->scale.x;
@@ -185,7 +185,7 @@ void Shield_State_Lightning(void)
     debris->velocity.x = 0x20000;
     debris->velocity.y = -0x20000;
     debris->drawOrder  = Zone->playerDrawHigh;
-    RSDK.SetSpriteAnimation(Shield->spriteIndex, 4, &debris->animator, true, 0);
+    RSDK.SetSpriteAnimation(Shield->aniFrames, 4, &debris->animator, true, 0);
     if (entity->drawFX & FX_SCALE) {
         debris->drawFX |= FX_SCALE;
         debris->scale.x = entity->scale.x;
@@ -197,7 +197,7 @@ void Shield_State_Lightning(void)
     debris->velocity.x = -0x20000;
     debris->velocity.y = 0x20000;
     debris->drawOrder  = Zone->playerDrawHigh;
-    RSDK.SetSpriteAnimation(Shield->spriteIndex, 4, &debris->animator, true, 0);
+    RSDK.SetSpriteAnimation(Shield->aniFrames, 4, &debris->animator, true, 0);
     if (entity->drawFX & FX_SCALE) {
         debris->drawFX |= FX_SCALE;
         debris->scale.x = entity->scale.x;
@@ -209,7 +209,7 @@ void Shield_State_Lightning(void)
     debris->velocity.x = 0x20000;
     debris->velocity.y = 0x20000;
     debris->drawOrder  = Zone->playerDrawHigh;
-    RSDK.SetSpriteAnimation(Shield->spriteIndex, 4, &debris->animator, true, 0);
+    RSDK.SetSpriteAnimation(Shield->aniFrames, 4, &debris->animator, true, 0);
     if (entity->drawFX & FX_SCALE) {
         debris->drawFX |= FX_SCALE;
         debris->scale.x = entity->scale.x;
@@ -234,14 +234,14 @@ void Shield_State_Insta(void)
 void Shield_EditorDraw(void)
 {
     RSDK_THIS(Shield);
-    RSDK.SetSpriteAnimation(Shield->spriteIndex, 0, &entity->animator, false, 0);
+    RSDK.SetSpriteAnimation(Shield->aniFrames, 0, &entity->animator, false, 0);
     entity->inkEffect = INK_ADD;
     entity->alpha     = 0x80;
 
     RSDK.DrawSprite(&entity->animator, NULL, false);
 }
 
-void Shield_EditorLoad(void) { Shield->spriteIndex = RSDK.LoadSpriteAnimation("Global/Shields.bin", SCOPE_STAGE); }
+void Shield_EditorLoad(void) { Shield->aniFrames = RSDK.LoadSpriteAnimation("Global/Shields.bin", SCOPE_STAGE); }
 #endif
 
 void Shield_Serialize(void) {}

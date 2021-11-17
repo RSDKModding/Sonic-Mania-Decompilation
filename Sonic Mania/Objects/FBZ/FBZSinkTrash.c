@@ -12,7 +12,7 @@ void FBZSinkTrash_Update(void)
             foreach_active(SignPost, signPost)
             {
                 if (signPost->state == SignPost_State_Fall && signPost->position.y + 0x180000 > entity->position.y - (entity->size.y >> 1)) {
-                    RSDK.PlaySfx(SignPost->sfx_Slide, 0, 255);
+                    RSDK.PlaySfx(SignPost->sfxSlide, 0, 255);
                     signPost->spinCount  = 4;
                     signPost->position.y = entity->position.y - (entity->size.y >> 1) - 0x180000;
                     signPost->velocity.y = 0;

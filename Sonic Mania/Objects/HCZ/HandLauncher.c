@@ -7,10 +7,10 @@ void HandLauncher_Update(void)
     RSDK_THIS(HandLauncher);
 
     if (entity->animator2.animationID == 2 && entity->animator2.frameID == entity->animator2.frameCount - 1) {
-        RSDK.SetSpriteAnimation(HandLauncher->spriteIndex, 3, &entity->animator2, true, 0);
+        RSDK.SetSpriteAnimation(HandLauncher->aniFrames, 3, &entity->animator2, true, 0);
     }
     else if (entity->animator2.animationID == 4 && entity->animator2.frameID == entity->animator2.frameCount - 1) {
-        RSDK.SetSpriteAnimation(HandLauncher->spriteIndex, 1, &entity->animator2, true, 0);
+        RSDK.SetSpriteAnimation(HandLauncher->aniFrames, 1, &entity->animator2, true, 0);
     }
     StateMachine_Run(entity->state);
     if (entity->field_80 > 0)
@@ -59,7 +59,7 @@ void HandLauncher_Create(void *data)
 void HandLauncher_StageLoad(void)
 {
     HandLauncher->active         = ACTIVE_ALWAYS;
-    HandLauncher->spriteIndex    = RSDK.LoadSpriteAnimation("HCZ/HandLauncher.bin", SCOPE_STAGE);
+    HandLauncher->aniFrames    = RSDK.LoadSpriteAnimation("HCZ/HandLauncher.bin", SCOPE_STAGE);
     HandLauncher->sfxDunkey      = RSDK.GetSFX("HCZ/Dunkey.wav");
     HandLauncher->hitbox1.left   = -24;
     HandLauncher->hitbox1.top    = -240;
@@ -91,11 +91,11 @@ void HandLauncher_CheckPlayerCollisions(void)
                             if (HandLauncher->dunkeyMode)
                                 RSDK.PlaySfx(HandLauncher->sfxDunkey, 0, 255);
                             else
-                                RSDK.PlaySfx(Player->sfx_Roll, 0, 255);
+                                RSDK.PlaySfx(Player->sfxRoll, 0, 255);
                         }
                         if (!HandLauncher->dunkeyMode)
-                            RSDK.PlaySfx(Player->sfx_Grab, 0, 255);
-                        RSDK.SetSpriteAnimation(player->spriteIndex, ANI_RUN, &player->playerAnimator, false, 0);
+                            RSDK.PlaySfx(Player->sfxGrab, 0, 255);
+                        RSDK.SetSpriteAnimation(player->aniFrames, ANI_RUN, &player->playerAnimator, false, 0);
                         player->nextGroundState = StateMachine_None;
                         player->nextAirState    = StateMachine_None;
                         player->rotation        = 0;
@@ -172,9 +172,9 @@ void HandLauncher_Unknown5(void)
     entity->playerPos.y -= 0x360000;
     entity->position.x = entity->field_74.x;
     entity->position.y = entity->field_74.y;
-    RSDK.SetSpriteAnimation(HandLauncher->spriteIndex, 0, &entity->animator1, true, 0);
+    RSDK.SetSpriteAnimation(HandLauncher->aniFrames, 0, &entity->animator1, true, 0);
     entity->animator1.animationSpeed = 0;
-    RSDK.SetSpriteAnimation(HandLauncher->spriteIndex, 1, &entity->animator2, true, 0);
+    RSDK.SetSpriteAnimation(HandLauncher->aniFrames, 1, &entity->animator2, true, 0);
     entity->state = HandLauncher_Unknown6;
 }
 
@@ -204,7 +204,7 @@ void HandLauncher_Unknown7(void)
 
     HandLauncher_CheckPlayerCollisions();
     if (entity->activePlayers) {
-        RSDK.SetSpriteAnimation(HandLauncher->spriteIndex, 2, &entity->animator2, true, 0);
+        RSDK.SetSpriteAnimation(HandLauncher->aniFrames, 2, &entity->animator2, true, 0);
         entity->field_7C                 = 0;
         entity->animator1.animationSpeed = 1;
         entity->state                    = HandLauncher_Unknown8;
@@ -253,9 +253,9 @@ void HandLauncher_Unknown8(void)
         else {
             HandLauncher_State_Release();
             if (!HandLauncher->dunkeyMode) {
-                RSDK.PlaySfx(Player->sfx_Release, 0, 255);
+                RSDK.PlaySfx(Player->sfxRelease, 0, 255);
             }
-            RSDK.SetSpriteAnimation(HandLauncher->spriteIndex, 4, &entity->animator2, true, 0);
+            RSDK.SetSpriteAnimation(HandLauncher->aniFrames, 4, &entity->animator2, true, 0);
             entity->position                 = entity->playerPos;
             entity->field_80                 = 30;
             entity->field_7C                 = 0;
@@ -271,14 +271,14 @@ void HandLauncher_Unknown8(void)
 void HandLauncher_EditorDraw(void)
 {
     RSDK_THIS(HandLauncher);
-    RSDK.SetSpriteAnimation(HandLauncher->spriteIndex, 0, &entity->animator1, true, 0);
-    RSDK.SetSpriteAnimation(HandLauncher->spriteIndex, 1, &entity->animator2, true, 0);
+    RSDK.SetSpriteAnimation(HandLauncher->aniFrames, 0, &entity->animator1, true, 0);
+    RSDK.SetSpriteAnimation(HandLauncher->aniFrames, 1, &entity->animator2, true, 0);
 
     RSDK.DrawSprite(&entity->animator1, NULL, false);
     RSDK.DrawSprite(&entity->animator2, NULL, false);
 }
 
-void HandLauncher_EditorLoad(void) { HandLauncher->spriteIndex = RSDK.LoadSpriteAnimation("HCZ/HandLauncher.bin", SCOPE_STAGE); }
+void HandLauncher_EditorLoad(void) { HandLauncher->aniFrames = RSDK.LoadSpriteAnimation("HCZ/HandLauncher.bin", SCOPE_STAGE); }
 #endif
 
 void HandLauncher_Serialize(void)

@@ -7,7 +7,7 @@
 typedef struct {
     RSDK_OBJECT
     int32 timer;
-    uint16 spriteIndex;
+    uint16 aniFrames;
 } ObjectUFO_Water;
 
 // Entity Class

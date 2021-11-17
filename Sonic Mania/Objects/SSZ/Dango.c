@@ -104,7 +104,7 @@ void Dango_CheckPlayerCollisions(void)
 
             if (flag) {
                 if (anim != ANI_JUMP)
-                    RSDK.SetSpriteAnimation(player->spriteIndex, ANI_JUMP, &player->playerAnimator, false, 0);
+                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->playerAnimator, false, 0);
                 RSDK.PlaySfx(Dango->sfxBumper, false, 255);
 
                 if (player->velocity.x <= 0) {

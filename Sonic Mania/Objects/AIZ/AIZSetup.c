@@ -395,7 +395,7 @@ bool32 AIZSetup_Cutscene1_Unknown3(Entity *h)
     }
     else {
         player1->state = Player_State_None;
-        RSDK.SetSpriteAnimation(player1->spriteIndex, ANI_SKID, &player1->playerAnimator, false, 0);
+        RSDK.SetSpriteAnimation(player1->aniFrames, ANI_SKID, &player1->playerAnimator, false, 0);
         player1->groundVel  = host->field_64;
         player1->velocity.x = host->field_64;
         player1->right      = false;
@@ -421,7 +421,7 @@ bool32 AIZSetup_Cutscene1_Unknown4(Entity *h)
         if (player2->onGround) {
             player2->stateInput = StateMachine_None;
             player2->direction  = FLIP_NONE;
-            RSDK.SetSpriteAnimation(player2->spriteIndex, 0, &player2->playerAnimator, true, 0);
+            RSDK.SetSpriteAnimation(player2->aniFrames, 0, &player2->playerAnimator, true, 0);
             player2->state = Player_State_None;
             return true;
         }
@@ -553,7 +553,7 @@ bool32 AIZSetup_Cutscene1_Unknown7(Entity *h)
             ((EntityDecoration *)AIZSetup->decorations[0])->rotSpeed = 0;
             ((EntityDecoration *)AIZSetup->decorations[1])->rotSpeed = 0;
             if ((globals->playerID & 0xFFFFFF00) == 512)
-                RSDK.SetSpriteAnimation(player2->spriteIndex, ANI_SKID, &player2->playerAnimator, true, 0);
+                RSDK.SetSpriteAnimation(player2->aniFrames, ANI_SKID, &player2->playerAnimator, true, 0);
             RSDK.PlaySfx(AIZSetup->sfxBreak, 0, 0);
             Music_TransitionTrack(TRACK_EGGMAN1, 0.05);
         }
@@ -621,7 +621,7 @@ bool32 AIZSetup_Cutscene1_Unknown9(Entity *h)
                     EntityPlayer *player = RSDK_GET_ENTITY(id++, Player);
                     if (!player || player->objectID == TYPE_BLANK)
                         break;
-                    RSDK.SetSpriteAnimation(player->spriteIndex, ANI_FAN, &player->playerAnimator, false, 0);
+                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->playerAnimator, false, 0);
 
                     int32 valX = (player->position.x - player->position.x) >> 3;
                     int32 valY = (0xA00 * RSDK.Sin256(2 * (host->timer + angle - host->field_68)) + ruby->position.y - player->position.y) >> 3;

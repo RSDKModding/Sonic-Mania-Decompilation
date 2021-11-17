@@ -37,7 +37,7 @@ void BarStool_Update(void)
             flag = flag && player->state != Player_State_MightyHammerDrop;
 #endif
             if (flag) {
-                RSDK.SetSpriteAnimation(player->spriteIndex, ANI_TURNTABLE, &player->playerAnimator, false, 0);
+                RSDK.SetSpriteAnimation(player->aniFrames, ANI_TURNTABLE, &player->playerAnimator, false, 0);
                 if (player->state != Player_State_None) {
                     if (velY >= 0)
                         entity->spinSpeed += player->velocity.x;
@@ -98,7 +98,7 @@ void BarStool_Update(void)
                         player->onGround   = false;
                         player->velocity.y = -0x20000;
                         player->state      = Player_State_Air;
-                        RSDK.SetSpriteAnimation(player->spriteIndex, ANI_AIRWALK, &player->playerAnimator, false, 0);
+                        RSDK.SetSpriteAnimation(player->aniFrames, ANI_AIRWALK, &player->playerAnimator, false, 0);
                         RSDK.PlaySfx(BarStool->sfxHop, false, 0xFF);
                     }
                 }
@@ -115,7 +115,7 @@ void BarStool_Update(void)
                     player->onGround   = false;
                     player->velocity.y = -0x40000;
                     player->state      = Player_State_Air;
-                    RSDK.SetSpriteAnimation(player->spriteIndex, ANI_JUMP, &player->playerAnimator, false, 0);
+                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->playerAnimator, false, 0);
                 }
 
                 entity->activePlayers |= 1 << playerID;

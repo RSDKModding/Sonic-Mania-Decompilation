@@ -88,7 +88,7 @@ void EncoreGoodEnd_Unknown2(int32 id)
         case ID_SONIC: EncoreGoodEnd->decorations[5]->visible = false; break;
         case ID_TAILS:
             EncoreGoodEnd->decorations[6]->visible = false;
-            RSDK.SetSpriteAnimation(Decoration->spriteIndex, 23, &EncoreGoodEnd->decorations[1]->animator, false, 0);
+            RSDK.SetSpriteAnimation(Decoration->aniFrames, 23, &EncoreGoodEnd->decorations[1]->animator, false, 0);
             break;
         case ID_KNUCKLES:
             EncoreGoodEnd->decorations[7]->visible  = false;
@@ -100,7 +100,7 @@ void EncoreGoodEnd_Unknown2(int32 id)
             break;
         case ID_RAY:
             EncoreGoodEnd->decorations[9]->visible = false;
-            RSDK.SetSpriteAnimation(Decoration->spriteIndex, 23, &EncoreGoodEnd->decorations[4]->animator, false, 0);
+            RSDK.SetSpriteAnimation(Decoration->aniFrames, 23, &EncoreGoodEnd->decorations[4]->animator, false, 0);
             break;
         default: return;
     }
@@ -123,7 +123,7 @@ void EncoreGoodEnd_Unknown9(void)
             case ID_SONIC:
                 entity->visible                                   = false;
                 EncoreGoodEnd->decorations[playerID + 5]->visible = true;
-                RSDK.SetSpriteAnimation(Decoration->spriteIndex, ANI_JOG, &EncoreGoodEnd->decorations[playerID + 5]->animator, true, 0);
+                RSDK.SetSpriteAnimation(Decoration->aniFrames, ANI_JOG, &EncoreGoodEnd->decorations[playerID + 5]->animator, true, 0);
                 entity->velocity.x = 0;
                 entity->groundVel  = 0;
                 entity->state      = EncoreGoodEnd_Unknown11;
@@ -162,27 +162,27 @@ void EncoreGoodEnd_Unknown10(void)
             EncoreGoodEnd->decorations[playerID + 5]->visible = true;
             switch (entity->characterID) {
                 case ID_TAILS:
-                    RSDK.SetSpriteAnimation(Decoration->spriteIndex, 22, &EncoreGoodEnd->decorations[playerID + 5]->animator, true, 0);
-                    RSDK.SetSpriteAnimation(Decoration->spriteIndex, 0, &EncoreGoodEnd->decorations[1]->animator, true, 0);
+                    RSDK.SetSpriteAnimation(Decoration->aniFrames, 22, &EncoreGoodEnd->decorations[playerID + 5]->animator, true, 0);
+                    RSDK.SetSpriteAnimation(Decoration->aniFrames, 0, &EncoreGoodEnd->decorations[1]->animator, true, 0);
                     entity->state = Player_State_None;
                     break;
                 case ID_KNUCKLES:
-                    RSDK.SetSpriteAnimation(Decoration->spriteIndex, 13, &EncoreGoodEnd->decorations[playerID + 5]->animator, true, 0);
+                    RSDK.SetSpriteAnimation(Decoration->aniFrames, 13, &EncoreGoodEnd->decorations[playerID + 5]->animator, true, 0);
                     EncoreGoodEnd->decorations[10]->visible = true;
-                    RSDK.SetSpriteAnimation(Decoration->spriteIndex, 14, &EncoreGoodEnd->decorations[10]->animator, true, 0);
+                    RSDK.SetSpriteAnimation(Decoration->aniFrames, 14, &EncoreGoodEnd->decorations[10]->animator, true, 0);
                     EncoreGoodEnd->decorations[10]->animator.animationSpeed = 0;
                     entity->state                                           = Player_State_None;
                     break;
                 case ID_MIGHTY:
-                    RSDK.SetSpriteAnimation(Decoration->spriteIndex, 18, &EncoreGoodEnd->decorations[playerID + 5]->animator, true, 0);
+                    RSDK.SetSpriteAnimation(Decoration->aniFrames, 18, &EncoreGoodEnd->decorations[playerID + 5]->animator, true, 0);
                     EncoreGoodEnd->decorations[11]->visible = true;
-                    RSDK.SetSpriteAnimation(Decoration->spriteIndex, 19, &EncoreGoodEnd->decorations[11]->animator, true, 0);
+                    RSDK.SetSpriteAnimation(Decoration->aniFrames, 19, &EncoreGoodEnd->decorations[11]->animator, true, 0);
                     EncoreGoodEnd->decorations[11]->animator.animationSpeed = 0;
                     entity->state                                           = Player_State_None;
                     break;
                 case ID_RAY:
-                    RSDK.SetSpriteAnimation(Decoration->spriteIndex, 5, &EncoreGoodEnd->decorations[playerID + 5]->animator, true, 0);
-                    RSDK.SetSpriteAnimation(Decoration->spriteIndex, 0, &EncoreGoodEnd->decorations[4]->animator, true, 0);
+                    RSDK.SetSpriteAnimation(Decoration->aniFrames, 5, &EncoreGoodEnd->decorations[playerID + 5]->animator, true, 0);
+                    RSDK.SetSpriteAnimation(Decoration->aniFrames, 0, &EncoreGoodEnd->decorations[4]->animator, true, 0);
                     entity->state = Player_State_None;
                     break;
                 default: entity->state = Player_State_None; break;
@@ -328,7 +328,7 @@ bool32 EncoreGoodEnd_CutsceneState_Unknown1(EntityCutsceneSeq *host)
         camera->targetPtr  = (Entity *)EncoreGoodEnd->decorations[5];
         entity->position.y = EncoreGoodEnd->decorations[0]->position.y;
         EncoreGoodEnd->decorations[0]->position.y += 0x500000;
-        RSDK.SetSpriteAnimation(Decoration->spriteIndex, 7, &EncoreGoodEnd->decorations[5]->animator, true, 21);
+        RSDK.SetSpriteAnimation(Decoration->aniFrames, 7, &EncoreGoodEnd->decorations[5]->animator, true, 21);
         foreach_all(UICreditsText, label) { label->active = ACTIVE_NEVER; }
     }
     else if (host->timer == 120) {
@@ -365,16 +365,16 @@ bool32 EncoreGoodEnd_CutsceneState_Unknown2(EntityCutsceneSeq *host)
 bool32 EncoreGoodEnd_CutsceneState_Unknown3(EntityCutsceneSeq *host)
 {
     if (host->timer == 60) {
-        RSDK.SetSpriteAnimation(Decoration->spriteIndex, 10, &EncoreGoodEnd->decorations[7]->animator, true, 0);
-        RSDK.SetSpriteAnimation(Decoration->spriteIndex, 11, &EncoreGoodEnd->decorations[10]->animator, true, 0);
-        RSDK.SetSpriteAnimation(Decoration->spriteIndex, 16, &EncoreGoodEnd->decorations[8]->animator, true, 0);
-        RSDK.SetSpriteAnimation(Decoration->spriteIndex, 17, &EncoreGoodEnd->decorations[11]->animator, true, 0);
+        RSDK.SetSpriteAnimation(Decoration->aniFrames, 10, &EncoreGoodEnd->decorations[7]->animator, true, 0);
+        RSDK.SetSpriteAnimation(Decoration->aniFrames, 11, &EncoreGoodEnd->decorations[10]->animator, true, 0);
+        RSDK.SetSpriteAnimation(Decoration->aniFrames, 16, &EncoreGoodEnd->decorations[8]->animator, true, 0);
+        RSDK.SetSpriteAnimation(Decoration->aniFrames, 17, &EncoreGoodEnd->decorations[11]->animator, true, 0);
     }
     else if (host->timer == 120) {
-        RSDK.SetSpriteAnimation(Decoration->spriteIndex, 9, &EncoreGoodEnd->decorations[7]->animator, true, 0);
-        RSDK.SetSpriteAnimation(Decoration->spriteIndex, 14, &EncoreGoodEnd->decorations[10]->animator, true, 0);
-        RSDK.SetSpriteAnimation(Decoration->spriteIndex, 15, &EncoreGoodEnd->decorations[8]->animator, true, 0);
-        RSDK.SetSpriteAnimation(Decoration->spriteIndex, 19, &EncoreGoodEnd->decorations[11]->animator, true, 0);
+        RSDK.SetSpriteAnimation(Decoration->aniFrames, 9, &EncoreGoodEnd->decorations[7]->animator, true, 0);
+        RSDK.SetSpriteAnimation(Decoration->aniFrames, 14, &EncoreGoodEnd->decorations[10]->animator, true, 0);
+        RSDK.SetSpriteAnimation(Decoration->aniFrames, 15, &EncoreGoodEnd->decorations[8]->animator, true, 0);
+        RSDK.SetSpriteAnimation(Decoration->aniFrames, 19, &EncoreGoodEnd->decorations[11]->animator, true, 0);
     }
     else if (host->timer == 180) {
         EncoreGoodEnd->decorations[0]->velocity.y = -0x60000;
@@ -392,21 +392,21 @@ bool32 EncoreGoodEnd_CutsceneState_Unknown4(EntityCutsceneSeq *host)
     if (decor->velocity.y > 0) {
         if (decor->position.y >= entity->position.y) {
             decor->position.y = entity->position.y;
-            RSDK.SetSpriteAnimation(Decoration->spriteIndex, 8, &EncoreGoodEnd->decorations[5]->animator, true, 0);
-            RSDK.SetSpriteAnimation(Decoration->spriteIndex, 21, &EncoreGoodEnd->decorations[6]->animator, true, 0);
-            RSDK.SetSpriteAnimation(Decoration->spriteIndex, 12, &EncoreGoodEnd->decorations[7]->animator, true, 0);
-            RSDK.SetSpriteAnimation(Decoration->spriteIndex, 20, &EncoreGoodEnd->decorations[8]->animator, true, 0);
+            RSDK.SetSpriteAnimation(Decoration->aniFrames, 8, &EncoreGoodEnd->decorations[5]->animator, true, 0);
+            RSDK.SetSpriteAnimation(Decoration->aniFrames, 21, &EncoreGoodEnd->decorations[6]->animator, true, 0);
+            RSDK.SetSpriteAnimation(Decoration->aniFrames, 12, &EncoreGoodEnd->decorations[7]->animator, true, 0);
+            RSDK.SetSpriteAnimation(Decoration->aniFrames, 20, &EncoreGoodEnd->decorations[8]->animator, true, 0);
 
             EncoreGoodEnd->decorations[9]->direction = FLIP_NONE;
-            RSDK.SetSpriteAnimation(Decoration->spriteIndex, 6, &EncoreGoodEnd->decorations[9]->animator, true, 0);
-            RSDK.SetSpriteAnimation(Decoration->spriteIndex, 23, &EncoreGoodEnd->decorations[1]->animator, false, 0);
-            RSDK.SetSpriteAnimation(Decoration->spriteIndex, 23, &EncoreGoodEnd->decorations[4]->animator, false, 0);
-            RSDK.SetSpriteAnimation(Decoration->spriteIndex, 24, &EncoreGoodEnd->decorations[10]->animator, true, 0);
+            RSDK.SetSpriteAnimation(Decoration->aniFrames, 6, &EncoreGoodEnd->decorations[9]->animator, true, 0);
+            RSDK.SetSpriteAnimation(Decoration->aniFrames, 23, &EncoreGoodEnd->decorations[1]->animator, false, 0);
+            RSDK.SetSpriteAnimation(Decoration->aniFrames, 23, &EncoreGoodEnd->decorations[4]->animator, false, 0);
+            RSDK.SetSpriteAnimation(Decoration->aniFrames, 24, &EncoreGoodEnd->decorations[10]->animator, true, 0);
             EncoreGoodEnd->decorations[10]->drawFX |= FX_SCALE;
             EncoreGoodEnd->decorations[10]->position.x += 0x80000;
             EncoreGoodEnd->decorations[10]->rotation = -32;
 
-            RSDK.SetSpriteAnimation(Decoration->spriteIndex, 25, &EncoreGoodEnd->decorations[11]->animator, true, 0);
+            RSDK.SetSpriteAnimation(Decoration->aniFrames, 25, &EncoreGoodEnd->decorations[11]->animator, true, 0);
             EncoreGoodEnd->decorations[11]->drawFX |= FX_SCALE;
             EncoreGoodEnd->decorations[11]->position.x -= 0x80000;
             EncoreGoodEnd->decorations[11]->rotation = 32;

@@ -21,7 +21,7 @@ void Dust_Draw(void)
 void Dust_Create(void *data)
 {
     RSDK_THIS(Dust);
-    RSDK.SetSpriteAnimation(Dust->spriteIndex, 0, &entity->animator, true, 0);
+    RSDK.SetSpriteAnimation(Dust->aniFrames, 0, &entity->animator, true, 0);
     if (!RSDK_sceneInfo->inEditor) {
         entity->active    = ACTIVE_NORMAL;
         entity->visible   = true;
@@ -31,7 +31,7 @@ void Dust_Create(void *data)
     }
 }
 
-void Dust_StageLoad(void) { Dust->spriteIndex = RSDK.LoadSpriteAnimation("Global/Dust.bin", SCOPE_STAGE); }
+void Dust_StageLoad(void) { Dust->aniFrames = RSDK.LoadSpriteAnimation("Global/Dust.bin", SCOPE_STAGE); }
 
 void Dust_State_DropDash(void)
 {

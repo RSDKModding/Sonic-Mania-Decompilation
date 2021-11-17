@@ -260,7 +260,7 @@ void DiveEggman_State_Unknown5(void)
     if (entity->position.y >= Water->waterLevel) {
         entity->velocity.y >>= 2;
         CREATE_ENTITY(Water, intToVoid(WATER_SPLASH), entity->position.x, Water->waterLevel);
-        RSDK.PlaySfx(Water->sfx_Splash, false, 255);
+        RSDK.PlaySfx(Water->sfxSplash, false, 255);
         if (entity->direction == FLIP_NONE)
             entity->velocity.x = -0x10000;
         else
@@ -326,7 +326,7 @@ void DiveEggman_State_Finish(void)
         entity->velocity.y >>= 2;
         entity->timer = 0x1000;
         CREATE_ENTITY(Water, intToVoid(WATER_SPLASH), entity->position.x, Water->waterLevel);
-        RSDK.PlaySfx(Water->sfx_Splash, false, 255);
+        RSDK.PlaySfx(Water->sfxSplash, false, 255);
     }
 
     if (!RSDK.CheckOnScreen(entity, NULL)) {
@@ -349,7 +349,7 @@ bool32 DiveEggman_Unknown10(void)
         water->angle       = 2 * RSDK.Rand(0, 256);
         water->field_68    = water->position.x;
         water->childPtr    = 0;
-        RSDK.SetSpriteAnimation(Water->spriteIndex, 3, &water->animator, true, 0);
+        RSDK.SetSpriteAnimation(Water->aniFrames, 3, &water->animator, true, 0);
         destroyEntity(entity);
         return false;
     }
@@ -441,12 +441,12 @@ void DiveEggman_State2_Unknown3(void)
                             destroyEntity(shield);
                         player1->shield     = SHIELD_NONE;
                         player1->blinkTimer = 120;
-                        RSDK.PlaySfx(Player->sfx_Hurt, false, 255);
+                        RSDK.PlaySfx(Player->sfxHurt, false, 255);
                     }
                     else {
                         if (player1->rings <= 0) {
                             player1->hurtFlag = 1;
-                            RSDK.PlaySfx(Player->sfx_Hurt, false, 255);
+                            RSDK.PlaySfx(Player->sfxHurt, false, 255);
                             ScrewMobile->shouldPlayFanSfx = 0;
                         }
                         else {
@@ -458,7 +458,7 @@ void DiveEggman_State2_Unknown3(void)
                             player1->hyperRing     = false;
                             player1->rings         = 0;
                             player1->ringExtraLife = 100;
-                            RSDK.PlaySfx(Player->sfx_LoseRings, false, 255);
+                            RSDK.PlaySfx(Player->sfxLoseRings, false, 255);
                         }
                     }
                     DiveEggman_Unknown10();
@@ -486,7 +486,7 @@ void DiveEggman_State2_Unknown4(void)
         if (entity->position.y >= Water->waterLevel) {
             entity->velocity.y >>= 2;
             CREATE_ENTITY(Water, intToVoid(WATER_SPLASH), entity->position.x, Water->waterLevel);
-            RSDK.PlaySfx(Water->sfx_Splash, false, 255);
+            RSDK.PlaySfx(Water->sfxSplash, false, 255);
             entity->state = DiveEggman_State2_Unknown1;
         }
     }

@@ -10,7 +10,7 @@ typedef struct {
     Hitbox hitbox2;
     Hitbox hitbox3;
     Hitbox hitbox4;
-    uint16 spriteIndex;
+    uint16 aniFrames;
 } ObjectChopper;
 
 // Entity Class

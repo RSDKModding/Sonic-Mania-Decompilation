@@ -130,7 +130,7 @@ void WallBumper_HandleInteractions(void)
                     player->velocity.y = 0x80000;
             }
             RSDK.PlaySfx(WallBumper->sfxBouncer, false, 255);
-            RSDK.SetSpriteAnimation(player->spriteIndex, ANI_SPRINGCS, &player->playerAnimator, false, 0);
+            RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGCS, &player->playerAnimator, false, 0);
 
             if (player->state == Player_State_FlyCarried) {
                 RSDK_GET_ENTITY(SLOT_PLAYER2, Player)->flyCarryTimer = 30;

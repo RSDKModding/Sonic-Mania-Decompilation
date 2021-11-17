@@ -6,7 +6,7 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    int32 spriteIndex;
+    int32 aniFrames;
     Hitbox hitbox;
     Hitbox hitbox2;
 } ObjectBurningLog;

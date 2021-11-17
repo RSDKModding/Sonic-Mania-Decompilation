@@ -32,7 +32,7 @@ void PropellerShaft_Update(void)
                     else
                         player->velocity.x = 0x100000;
                     player->velocity.y = -0x18000;
-                    RSDK.SetSpriteAnimation(player->spriteIndex, ANI_JUMP, &player->playerAnimator, false, 0);
+                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->playerAnimator, false, 0);
                     player->drawOrder = Zone->playerDrawLow;
                     player->state     = Player_State_Air;
                 }
@@ -45,7 +45,7 @@ void PropellerShaft_Update(void)
             else {
                 if (Player_CheckCollisionTouch(player, entity, &entity->hitbox)) {
                     entity->activePlayers |= 1 << pID;
-                    RSDK.PlaySfx(Player->sfx_Grab, 0, 255);
+                    RSDK.PlaySfx(Player->sfxGrab, 0, 255);
                     player->velocity.x = 0;
                     player->velocity.y = 0;
                     player->groundVel  = 0;
@@ -54,7 +54,7 @@ void PropellerShaft_Update(void)
                         player->position.y = entity->position.y - (entity->size << 16) + 0x90000;
                     if (player->position.y > ((entity->size - 9) << 16) + entity->position.y)
                         player->position.y = ((entity->size - 9) << 16) + entity->position.y;
-                    RSDK.SetSpriteAnimation(player->spriteIndex, ANI_SHAFTSWING, &player->playerAnimator, false, 0);
+                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_SHAFTSWING, &player->playerAnimator, false, 0);
                     player->rotation        = 0;
                     player->direction       = FLIP_NONE;
                     player->onGround        = false;

@@ -42,14 +42,14 @@ void BSS_Message_Create(void *data)
                 entity->colour = 0xF0F0F0;
                 entity->timer  = 512;
                 entity->state  = BSS_Message_State_GetBS;
-                RSDK.SetSpriteAnimation(BSS_Message->spriteIndex, 2, &entity->leftData, true, 0);
-                RSDK.SetSpriteAnimation(BSS_Message->spriteIndex, 2, &entity->rightData, true, 1);
+                RSDK.SetSpriteAnimation(BSS_Message->aniFrames, 2, &entity->leftData, true, 0);
+                RSDK.SetSpriteAnimation(BSS_Message->aniFrames, 2, &entity->rightData, true, 1);
                 break;
             case 1:
                 entity->timer2 = 320;
                 entity->state  = BSS_Message_State_Perfect;
-                RSDK.SetSpriteAnimation(BSS_Message->spriteIndex, 3, &entity->leftData, true, 0);
-                RSDK.SetSpriteAnimation(BSS_Message->spriteIndex, 3, &entity->rightData, true, 1);
+                RSDK.SetSpriteAnimation(BSS_Message->aniFrames, 3, &entity->leftData, true, 0);
+                RSDK.SetSpriteAnimation(BSS_Message->aniFrames, 3, &entity->rightData, true, 1);
                 break;
             case 2:
                 entity->flag   = true;
@@ -62,7 +62,7 @@ void BSS_Message_Create(void *data)
 
 void BSS_Message_StageLoad(void)
 {
-    BSS_Message->spriteIndex = RSDK.LoadSpriteAnimation("SpecialBS/HUD.bin", SCOPE_STAGE);
+    BSS_Message->aniFrames = RSDK.LoadSpriteAnimation("SpecialBS/HUD.bin", SCOPE_STAGE);
     RSDK.ResetEntitySlot(SLOT_BSS_MESSAGE, BSS_Message->objectID, 0);
 }
 
@@ -96,7 +96,7 @@ void BSS_Message_State_GetBSWait(void)
             setup->globeSpeed    = 16;
             setup->globeSpeedInc = 2;
             if (player->onGround)
-                RSDK.SetSpriteAnimation(player->spriteIndex, 1, &player->playerAnimator, 0, 0);
+                RSDK.SetSpriteAnimation(player->aniFrames, 1, &player->playerAnimator, 0, 0);
             entity->state = BSS_Message_State_Idle;
         }
         if (!setup->globeTimer && setup->state == BSS_Setup_State_HandleStage) {
@@ -113,7 +113,7 @@ void BSS_Message_State_GetBSWait(void)
         setup->globeSpeed    = 16;
         setup->globeSpeedInc = 2;
         if (player->onGround)
-            RSDK.SetSpriteAnimation(player->spriteIndex, 1, &player->playerAnimator, 0, 0);
+            RSDK.SetSpriteAnimation(player->aniFrames, 1, &player->playerAnimator, 0, 0);
         entity->state = BSS_Message_State_Finish;
     }
 }

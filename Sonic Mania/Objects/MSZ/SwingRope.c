@@ -43,7 +43,7 @@ void SwingRope_Update(void)
                     player->jumpAbilityTimer = 1;
                     player->state            = Player_State_Air;
                     player->drawOrder        = entity->playerLayers[player->playerID];
-                    RSDK.SetSpriteAnimation(player->spriteIndex, ANI_JUMP, &player->playerAnimator, false, 0);
+                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->playerAnimator, false, 0);
                     player->velocity.x = entity->velocity.x >> 1;
                     if (player->left) {
                         player->velocity.x = -0x20000;
@@ -73,13 +73,13 @@ void SwingRope_Update(void)
                 entity->playerLayers[player->playerID] = player->drawOrder;
                 player->drawOrder                      = Zone->drawOrderLow;
                 player->state                          = Player_State_None;
-                RSDK.SetSpriteAnimation(player->spriteIndex, ANI_HANG, &player->playerAnimator, 0, 0);
+                RSDK.SetSpriteAnimation(player->aniFrames, ANI_HANG, &player->playerAnimator, 0, 0);
                 player->velocity.x = 0;
                 player->velocity.y = 0;
                 player->groundVel  = 0;
                 player->position.x = -0x800 * RSDK.Sin512(entity->angle) + rotateX;
                 player->position.y = rotateY - ((playerHitbox->top + 2) << 16);
-                RSDK.PlaySfx(Player->sfx_Grab, false, 255);
+                RSDK.PlaySfx(Player->sfxGrab, false, 255);
             }
         }
     }
@@ -132,18 +132,18 @@ void SwingRope_Create(void *data)
         entity->active        = ACTIVE_BOUNDS;
         entity->updateRange.x = 0x800000;
         entity->updateRange.y = 0x800000;
-        RSDK.SetSpriteAnimation(SwingRope->spriteIndex, 0, &entity->ropeData, true, 0);
-        RSDK.SetSpriteAnimation(SwingRope->spriteIndex, 1, &entity->handleData, true, 0);
-        RSDK.SetSpriteAnimation(SwingRope->spriteIndex, 2, &entity->pivotData, true, 0);
+        RSDK.SetSpriteAnimation(SwingRope->aniFrames, 0, &entity->ropeData, true, 0);
+        RSDK.SetSpriteAnimation(SwingRope->aniFrames, 1, &entity->handleData, true, 0);
+        RSDK.SetSpriteAnimation(SwingRope->aniFrames, 2, &entity->pivotData, true, 0);
     }
 }
 
 void SwingRope_StageLoad(void)
 {
     if (RSDK.CheckStageFolder("MSZ"))
-        SwingRope->spriteIndex = RSDK.LoadSpriteAnimation("MSZ/SwingRope.bin", SCOPE_STAGE);
+        SwingRope->aniFrames = RSDK.LoadSpriteAnimation("MSZ/SwingRope.bin", SCOPE_STAGE);
     else if (RSDK.CheckStageFolder("AIZ"))
-        SwingRope->spriteIndex = RSDK.LoadSpriteAnimation("AIZ/SwingRope.bin", SCOPE_STAGE);
+        SwingRope->aniFrames = RSDK.LoadSpriteAnimation("AIZ/SwingRope.bin", SCOPE_STAGE);
 
     SwingRope->hitbox1.left   = -10;
     SwingRope->hitbox1.top    = -8;
@@ -159,7 +159,7 @@ void SwingRope_StageLoad(void)
 
 void SwingRope_DebugDraw(void)
 {
-    RSDK.SetSpriteAnimation(SwingRope->spriteIndex, 2, &DebugMode->animator, true, 0);
+    RSDK.SetSpriteAnimation(SwingRope->aniFrames, 2, &DebugMode->animator, true, 0);
     RSDK.DrawSprite(&DebugMode->animator, 0, 0);
 }
 void SwingRope_DebugSpawn(void)
@@ -172,9 +172,9 @@ void SwingRope_DebugSpawn(void)
 void SwingRope_EditorDraw(void)
 {
     RSDK_THIS(SwingRope);
-    RSDK.SetSpriteAnimation(SwingRope->spriteIndex, 0, &entity->ropeData, true, 0);
-    RSDK.SetSpriteAnimation(SwingRope->spriteIndex, 1, &entity->handleData, true, 0);
-    RSDK.SetSpriteAnimation(SwingRope->spriteIndex, 2, &entity->pivotData, true, 0);
+    RSDK.SetSpriteAnimation(SwingRope->aniFrames, 0, &entity->ropeData, true, 0);
+    RSDK.SetSpriteAnimation(SwingRope->aniFrames, 1, &entity->handleData, true, 0);
+    RSDK.SetSpriteAnimation(SwingRope->aniFrames, 2, &entity->pivotData, true, 0);
 
     entity->rotatedAngle  = 11 * RSDK.Sin512(entity->angleOffset);
     entity->rotatedOffset = entity->rotatedAngle >> 3;
@@ -185,9 +185,9 @@ void SwingRope_EditorDraw(void)
 void SwingRope_EditorLoad(void)
 {
     if (RSDK.CheckStageFolder("MSZ"))
-        SwingRope->spriteIndex = RSDK.LoadSpriteAnimation("MSZ/SwingRope.bin", SCOPE_STAGE);
+        SwingRope->aniFrames = RSDK.LoadSpriteAnimation("MSZ/SwingRope.bin", SCOPE_STAGE);
     else if (RSDK.CheckStageFolder("AIZ"))
-        SwingRope->spriteIndex = RSDK.LoadSpriteAnimation("AIZ/SwingRope.bin", SCOPE_STAGE);
+        SwingRope->aniFrames = RSDK.LoadSpriteAnimation("AIZ/SwingRope.bin", SCOPE_STAGE);
 }
 
 void SwingRope_Serialize(void)

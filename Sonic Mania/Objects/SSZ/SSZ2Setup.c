@@ -153,7 +153,7 @@ void SSZ2Setup_GenericTriggerCallback1(void)
             RSDK.CreateEntity(Animals->objectID, (Animals->animalTypes[RSDK.Random(0, 32, &Zone->randKey) >> 4] + 1), boss->position.x,
                               boss->position.y);
             RSDK.CreateEntity(Explosion->objectID, intToVoid(1), boss->position.x, boss->position.y)->drawOrder = Zone->drawOrderHigh;
-            RSDK.PlaySfx(Explosion->sfx_Destroy, 0, 255);
+            RSDK.PlaySfx(Explosion->sfxDestroy, 0, 255);
             destroyEntity(boss);
         }*/
     }

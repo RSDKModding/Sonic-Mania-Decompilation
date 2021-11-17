@@ -8,15 +8,15 @@ typedef struct {
     RSDK_OBJECT
     int32 maxSpeed;
     int32 field_8;
-    uint16 sfx_Jump;
-    uint16 sfx_Charge;
-    uint16 sfx_Release;
-    uint16 sfx_LoseRings;
-    uint16 sfx_Drop;
-    uint16 sfx_Bumper;
-    uint16 sfx_Spring;
-    uint16 sfx_Skid;
-    uint16 sfx_GrittyGround;
+    uint16 sfxJump;
+    uint16 sfxCharge;
+    uint16 sfxRelease;
+    uint16 sfxLoseRings;
+    uint16 sfxDrop;
+    uint16 sfxBumper;
+    uint16 sfxSpring;
+    uint16 sfxSkid;
+    uint16 sfxGrittyGround;
     uint16 jogModel;
     uint16 dashModel;
     uint16 jumpModel;

@@ -84,13 +84,13 @@ void CableWarp_State0_Unknown(void)
             ) {
                 if (player->state == Player_State_DropDash) {
                     player->velocity.y = -0x10000;
-                    RSDK.SetSpriteAnimation(player->spriteIndex, ANI_JUMP, &player->playerAnimator, false, 0);
+                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->playerAnimator, false, 0);
                     player->state = Player_State_Air;
                 }
 #if RETRO_USE_PLUS
                 else if (player->state == Player_State_MightyHammerDrop) {
                     player->velocity.y = velY;
-                    RSDK.SetSpriteAnimation(player->spriteIndex, ANI_JUMP, &player->playerAnimator, false, 0);
+                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->playerAnimator, false, 0);
                     player->state = Player_State_Air;
                 }
 #endif
@@ -137,7 +137,7 @@ void CableWarp_State1_Unknown(void)
             player->onGround        = false;
             player->velocity.x      = 0;
             player->velocity.y      = 0;
-            RSDK.SetSpriteAnimation(player->spriteIndex, ANI_JUMP, &player->playerAnimator, false, 0);
+            RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->playerAnimator, false, 0);
 
             EntityCableWarp *warp = CREATE_ENTITY(CableWarp, intToVoid(CABLEWARP_TRANSPORT), entity->position.x, entity->position.y);
             warp->isPermanent     = true;

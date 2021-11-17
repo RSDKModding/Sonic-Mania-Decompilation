@@ -103,7 +103,7 @@ void Turbine_CheckPlayerCollisions(void)
                     player->groundVel       = 0;
                     player->onGround        = false;
                     player->state           = Player_State_None;
-                    RSDK.SetSpriteAnimation(player->spriteIndex, ANI_POLESWINGH, &player->playerAnimator, true, 0);
+                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_POLESWINGH, &player->playerAnimator, true, 0);
                     player->playerAnimator.animationSpeed = 0;
 
                     if (player->position.y >= entity->position.y)
@@ -111,7 +111,7 @@ void Turbine_CheckPlayerCollisions(void)
                     else
                         entity->playerAngles[playerID] = 0x180;
                     entity->playerAngles[playerID] += entity->angle & 0x3F;
-                    RSDK.PlaySfx(Player->sfx_Grab, false, 255);
+                    RSDK.PlaySfx(Player->sfxGrab, false, 255);
                 }
             }
         }
@@ -134,9 +134,9 @@ void Turbine_CheckPlayerCollisions(void)
             if (player->jumpPress) {
                 player->velocity.y = 0x600 * RSDK.Cos512(entity->playerAngles[playerID]);
                 if (player->velocity.y < 0)
-                    RSDK.SetSpriteAnimation(player->spriteIndex, ANI_SPRINGTWIRL, &player->playerAnimator, true, 0);
+                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGTWIRL, &player->playerAnimator, true, 0);
                 else
-                    RSDK.SetSpriteAnimation(player->spriteIndex, ANI_WALK, &player->playerAnimator, true, 0);
+                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_WALK, &player->playerAnimator, true, 0);
 
                 entity->activePlayers &= ~(1 << playerID);
                 player->state                  = Player_State_Air;

@@ -98,9 +98,9 @@ void FlameSpring_State_Unknown1(void)
                         else
                             player->storedAnim = ANI_WALK;
                         if (entity->playerAni)
-                            RSDK.SetSpriteAnimation(player->spriteIndex, ANI_SPRINGTWIRL, &player->playerAnimator, true, 0);
+                            RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGTWIRL, &player->playerAnimator, true, 0);
                         else
-                            RSDK.SetSpriteAnimation(player->spriteIndex, ANI_SPRINGDIAGONAL, &player->playerAnimator, true, 0);
+                            RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGDIAGONAL, &player->playerAnimator, true, 0);
                         player->state      = Player_State_Air;
                         player->onGround   = false;
                         player->velocity.y = entity->velocity.y;

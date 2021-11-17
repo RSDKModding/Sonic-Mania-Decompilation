@@ -86,7 +86,7 @@ bool32 OOZ1Outro_Unknown1(EntityCutsceneSeq *host)
             signpost->active = ACTIVE_NORMAL;
         }
 
-        RSDK.PlaySfx(SignPost->sfx_Twinkle, false, 255);
+        RSDK.PlaySfx(SignPost->sfxTwinkle, false, 255);
         return true;
     }
     return false;
@@ -108,7 +108,7 @@ bool32 OOZ1Outro_Unknown2(EntityCutsceneSeq *host)
             player->interaction    = false;
             player->velocity.y     = -0x20000;
             player->stateInput     = StateMachine_None;
-            RSDK.SetSpriteAnimation(player->spriteIndex, ANI_HURT, &player->playerAnimator, false, 0);
+            RSDK.SetSpriteAnimation(player->aniFrames, ANI_HURT, &player->playerAnimator, false, 0);
         }
         Zone->screenBoundsL1[0] = entity->boundsL;
         Zone->screenBoundsR1[0] = entity->boundsR;

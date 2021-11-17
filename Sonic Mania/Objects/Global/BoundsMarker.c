@@ -101,7 +101,7 @@ void BoundsMarker_EditorDraw(void)
 {
     RSDK_THIS(BoundsMarker);
     Animator animator;
-    RSDK.SetSpriteAnimation(BoundsMarker->spriteIndex, 0, &animator, true, 2);
+    RSDK.SetSpriteAnimation(BoundsMarker->aniFrames, 0, &animator, true, 2);
     RSDK.DrawSprite(&animator, NULL, false);
 
     Vector2 drawPos;
@@ -122,7 +122,7 @@ void BoundsMarker_EditorDraw(void)
     }
 }
 
-void BoundsMarker_EditorLoad(void) { BoundsMarker->spriteIndex = RSDK.LoadSpriteAnimation("Editor/EditorIcons.bin", SCOPE_STAGE); }
+void BoundsMarker_EditorLoad(void) { BoundsMarker->aniFrames = RSDK.LoadSpriteAnimation("Editor/EditorIcons.bin", SCOPE_STAGE); }
 #endif
 
 void BoundsMarker_Serialize(void)

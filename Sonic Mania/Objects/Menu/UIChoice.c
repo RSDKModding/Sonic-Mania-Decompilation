@@ -16,12 +16,12 @@ void UIChoice_Update(void)
     if (parent && (disabled || parent->disabled))
         disabled = true;
 
-    if (entity->spriteIndex != UIWidgets->textSpriteIndex || entity->isDisabled != disabled) {
+    if (entity->aniFrames != UIWidgets->textSpriteIndex || entity->isDisabled != disabled) {
         if (disabled)
             RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, 7, &entity->animator1, true, 0);
         else
             RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, entity->listID, &entity->animator1, true, entity->frameID);
-        entity->spriteIndex = UIWidgets->textSpriteIndex;
+        entity->aniFrames = UIWidgets->textSpriteIndex;
         entity->isDisabled  = disabled;
     }
 
@@ -119,7 +119,7 @@ void UIChoice_Create(void *data)
         entity->textFlag      = true;
         entity->touchCB       = UIChoice_CheckTouch;
         RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, entity->listID, &entity->animator1, true, entity->frameID);
-        entity->spriteIndex = UIWidgets->textSpriteIndex;
+        entity->aniFrames = UIWidgets->textSpriteIndex;
         RSDK.SetSpriteAnimation(UIChoice->aniFrames, entity->auxListID, &entity->animator2, true, entity->auxFrameID);
         RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 2, &entity->animator3, true, 0);
         RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 2, &entity->animator4, true, 1);
@@ -178,7 +178,7 @@ void UIChoice_TouchedCB_Left(void)
 
     if (id != parent->selection) {
         UIButton_SetChoiceSelectionWithCB(parent, id);
-        RSDK.PlaySfx(UIWidgets->sfx_Bleep, 0, 255);
+        RSDK.PlaySfx(UIWidgets->sfxBleep, 0, 255);
     }
 }
 
@@ -201,7 +201,7 @@ void UIChoice_TouchedCB_Right(void)
 
     if (id != parent->selection) {
         UIButton_SetChoiceSelectionWithCB(parent, id);
-        RSDK.PlaySfx(UIWidgets->sfx_Bleep, 0, 255);
+        RSDK.PlaySfx(UIWidgets->sfxBleep, 0, 255);
     }
 }
 
@@ -307,7 +307,7 @@ void UIChoice_EditorDraw(void)
     entity->size.y        = abs(entity->size.y);
     entity->textFlag      = true;
     RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, entity->listID, &entity->animator1, true, entity->frameID);
-    entity->spriteIndex = UIWidgets->textSpriteIndex;
+    entity->aniFrames = UIWidgets->textSpriteIndex;
     RSDK.SetSpriteAnimation(UIChoice->aniFrames, entity->auxListID, &entity->animator2, true, entity->auxFrameID);
     RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 2, &entity->animator3, true, 0);
     RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 2, &entity->animator4, true, 1);

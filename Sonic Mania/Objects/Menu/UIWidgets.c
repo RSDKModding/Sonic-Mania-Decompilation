@@ -30,12 +30,12 @@ void UIWidgets_StageLoad(void)
     UIWidgets_ApplyLanguage();
     RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 1, &UIWidgets->animator1, true, 0);
     RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 2, &UIWidgets->animator2, true, 0);
-    UIWidgets->sfx_Bleep  = RSDK.GetSFX("Global/MenuBleep.wav");
-    UIWidgets->sfx_Accept = RSDK.GetSFX("Global/MenuAccept.wav");
-    UIWidgets->sfx_Warp   = RSDK.GetSFX("Global/SpecialWarp.wav");
-    UIWidgets->sfx_Event  = RSDK.GetSFX("Special/Event.wav");
-    UIWidgets->sfx_Woosh  = RSDK.GetSFX("Global/MenuWoosh.wav");
-    UIWidgets->sfx_Fail   = RSDK.GetSFX("Stage/Fail.wav");
+    UIWidgets->sfxBleep  = RSDK.GetSFX("Global/MenuBleep.wav");
+    UIWidgets->sfxAccept = RSDK.GetSFX("Global/MenuAccept.wav");
+    UIWidgets->sfxWarp   = RSDK.GetSFX("Global/SpecialWarp.wav");
+    UIWidgets->sfxEvent  = RSDK.GetSFX("Special/Event.wav");
+    UIWidgets->sfxWoosh  = RSDK.GetSFX("Global/MenuWoosh.wav");
+    UIWidgets->sfxFail   = RSDK.GetSFX("Stage/Fail.wav");
 
 #if RETRO_USE_PLUS
     UIWidgets->buttonColours[0]  = 0xB00000;

@@ -38,13 +38,13 @@ void MSZSpotlight_Create(void *data)
         entity->active        = ACTIVE_BOUNDS;
         entity->updateRange.x = 0x800000;
         entity->updateRange.y = 0x800000;
-        RSDK.SetSpriteAnimation(MSZSpotlight->spriteIndex, 9, &entity->animator, true, entity->color);
+        RSDK.SetSpriteAnimation(MSZSpotlight->aniFrames, 9, &entity->animator, true, entity->color);
     }
 }
 
 void MSZSpotlight_StageLoad(void)
 {
-    MSZSpotlight->spriteIndex = RSDK.LoadSpriteAnimation("MSZ/HeavyMystic.bin", SCOPE_STAGE);
+    MSZSpotlight->aniFrames = RSDK.LoadSpriteAnimation("MSZ/HeavyMystic.bin", SCOPE_STAGE);
 
     RSDK_ACTIVE_VAR(MSZSpotlight, color);
     RSDK.AddVarEnumValue("Red");
@@ -139,13 +139,13 @@ void MSZSpotlight_Unknown5(void)
 void MSZSpotlight_EditorDraw(void)
 {
     RSDK_THIS(MSZSpotlight);
-    RSDK.SetSpriteAnimation(MSZSpotlight->spriteIndex, 9, &entity->animator, true, entity->color);
+    RSDK.SetSpriteAnimation(MSZSpotlight->aniFrames, 9, &entity->animator, true, entity->color);
     RSDK.DrawSprite(&entity->animator, NULL, false);
 }
 
 void MSZSpotlight_EditorLoad(void)
 {
-    MSZSpotlight->spriteIndex = RSDK.LoadSpriteAnimation("MSZ/HeavyMystic.bin", SCOPE_STAGE);
+    MSZSpotlight->aniFrames = RSDK.LoadSpriteAnimation("MSZ/HeavyMystic.bin", SCOPE_STAGE);
 
     RSDK_ACTIVE_VAR(MSZSpotlight, color);
     RSDK_ENUM_VAR("Red", MSZSPOTLIGHT_RED);

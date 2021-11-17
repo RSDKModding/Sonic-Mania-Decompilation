@@ -84,7 +84,7 @@ void AIZRockPile_Draw(void)
 void AIZRockPile_Create(void *data)
 {
     RSDK_THIS(AIZRockPile);
-    RSDK.SetSpriteAnimation(AIZRockPile->spriteIndex, 0, &entity->animator, true, entity->size + 3);
+    RSDK.SetSpriteAnimation(AIZRockPile->aniFrames, 0, &entity->animator, true, entity->size + 3);
     if (!RSDK_sceneInfo->inEditor) {
         switch (entity->size) {
             case 0:
@@ -120,8 +120,8 @@ void AIZRockPile_Create(void *data)
 
 void AIZRockPile_StageLoad(void)
 {
-    AIZRockPile->spriteIndex = RSDK.LoadSpriteAnimation("AIZ/Platform.bin", SCOPE_STAGE);
-    AIZRockPile->sfx_Break   = RSDK.GetSFX("Stage/LedgeBreak3.wav");
+    AIZRockPile->aniFrames = RSDK.LoadSpriteAnimation("AIZ/Platform.bin", SCOPE_STAGE);
+    AIZRockPile->sfxBreak   = RSDK.GetSFX("Stage/LedgeBreak3.wav");
 }
 
 void AIZRockPile_SpawnRocks(int32 *speeds)
@@ -132,7 +132,7 @@ void AIZRockPile_SpawnRocks(int32 *speeds)
         EntityDebris *debris =
             (EntityDebris *)RSDK.CreateEntity(Debris->objectID, Debris_State_Fall, entity->position.x + entity->rockPositions[2 * i],
                                               entity->position.y + entity->rockPositions[(2 * i) + 1]);
-        RSDK.SetSpriteAnimation(AIZRockPile->spriteIndex, 1, &debris->animator, true, 0);
+        RSDK.SetSpriteAnimation(AIZRockPile->aniFrames, 1, &debris->animator, true, 0);
         debris->velocity.x    = speeds[2 * i];
         debris->velocity.y    = speeds[(2 * i) + 1];
         debris->drawOrder     = Zone->drawOrderHigh;
@@ -141,14 +141,14 @@ void AIZRockPile_SpawnRocks(int32 *speeds)
         debris->gravity       = 0x1800;
     }
 
-    RSDK.PlaySfx(AIZRockPile->sfx_Break, 0, 255);
+    RSDK.PlaySfx(AIZRockPile->sfxBreak, 0, 255);
     destroyEntity(entity);
 }
 
 #if RETRO_INCLUDE_EDITOR
 void AIZRockPile_EditorDraw(void) { AIZRockPile_Draw(); }
 
-void AIZRockPile_EditorLoad(void) { AIZRockPile->spriteIndex = RSDK.LoadSpriteAnimation("AIZ/Platform.bin", SCOPE_STAGE); }
+void AIZRockPile_EditorLoad(void) { AIZRockPile->aniFrames = RSDK.LoadSpriteAnimation("AIZ/Platform.bin", SCOPE_STAGE); }
 #endif
 
 void AIZRockPile_Serialize(void)

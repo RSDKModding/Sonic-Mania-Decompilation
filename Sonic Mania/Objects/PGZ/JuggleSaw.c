@@ -369,7 +369,7 @@ void JuggleSaw_Saw_Handle(void)
                 if (player->characterID == ID_MIGHTY
                     && (animID == ANI_CROUCH || animID == ANI_JUMP || animID == ANI_SPINDASH || animID == ANI_DROPDASH)) {
                     if (!player->uncurlTimer) {
-                        RSDK.PlaySfx(Player->sfx_PimPom, 0, 0xFF);
+                        RSDK.PlaySfx(Player->sfxPimPom, 0, 0xFF);
                         player->uncurlTimer = 30;
                     }
                     int32 targetAngle     = RSDK.ATan2(player->position.x - entity->position.x, player->position.y - entity->position.y);

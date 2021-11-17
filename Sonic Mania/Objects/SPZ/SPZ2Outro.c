@@ -115,12 +115,12 @@ bool32 SPZ2Outro_CutsceneState_Unknown1(EntityCutsceneSeq *host)
     }
 
     if (host->timer == 15) {
-        RSDK.SetSpriteAnimation(player1->spriteIndex, ANI_LOOKUP, &player1->playerAnimator, true, 0);
+        RSDK.SetSpriteAnimation(player1->aniFrames, ANI_LOOKUP, &player1->playerAnimator, true, 0);
         player1->state     = Player_State_LookUp;
         player1->up        = true;
         player1->direction = player1->position.x > weatherTV->position.x;
         if (player2->objectID == Player->objectID) {
-            RSDK.SetSpriteAnimation(player2->spriteIndex, ANI_LOOKUP, &player2->playerAnimator, true, 0);
+            RSDK.SetSpriteAnimation(player2->aniFrames, ANI_LOOKUP, &player2->playerAnimator, true, 0);
             player2->state     = Player_State_LookUp;
             player2->up        = true;
             player2->direction = player2->position.x > weatherTV->position.x;
@@ -147,13 +147,13 @@ bool32 SPZ2Outro_CutsceneState_Unknown2(EntityCutsceneSeq *host)
     unused(camera);
 
     if (!host->timer) {
-        RSDK.SetSpriteAnimation(player1->spriteIndex, 0, &player1->playerAnimator, true, 0);
+        RSDK.SetSpriteAnimation(player1->aniFrames, 0, &player1->playerAnimator, true, 0);
         player1->state = Player_State_Ground;
         player1->up    = false;
         player1->right = true;
         if (player2) {
             if (player2->objectID == Player->objectID && !SPZ2Outro->flag) {
-                RSDK.SetSpriteAnimation(player2->spriteIndex, ANI_IDLE, &player2->playerAnimator, true, 0);
+                RSDK.SetSpriteAnimation(player2->aniFrames, ANI_IDLE, &player2->playerAnimator, true, 0);
                 player2->state      = Player_State_Ground;
                 player2->up         = false;
                 player2->stateInput = Player_ProcessP2Input_AI;
@@ -193,7 +193,7 @@ bool32 SPZ2Outro_CutsceneState_Unknown3(EntityCutsceneSeq *host)
 
     if (!host->timer) {
         RSDK.SetDrawLayerProperties(Zone->playerDrawLow, false, SPZ2Outro_DrawLayerCB);
-        RSDK.SetSpriteAnimation(player1->spriteIndex, ANI_RUN, &player1->playerAnimator, true, 0);
+        RSDK.SetSpriteAnimation(player1->aniFrames, ANI_RUN, &player1->playerAnimator, true, 0);
         player1->drawOrder       = Zone->playerDrawLow;
         player1->state           = Player_State_None;
         player1->nextAirState    = StateMachine_None;
@@ -210,7 +210,7 @@ bool32 SPZ2Outro_CutsceneState_Unknown3(EntityCutsceneSeq *host)
         player1->drawFX          = FX_SCALE | FX_FLIP;
         if (player2) {
             if (player2->objectID == Player->objectID && !SPZ2Outro->flag) {
-                RSDK.SetSpriteAnimation(player2->spriteIndex, ANI_RUN, &player2->playerAnimator, true, 0);
+                RSDK.SetSpriteAnimation(player2->aniFrames, ANI_RUN, &player2->playerAnimator, true, 0);
                 player2->drawOrder       = Zone->playerDrawLow;
                 player2->state           = Player_State_None;
                 player2->nextAirState    = StateMachine_None;
@@ -239,13 +239,13 @@ bool32 SPZ2Outro_CutsceneState_Unknown3(EntityCutsceneSeq *host)
         else {
             EntityPlayer *playerPtr = players[i];
             if (playerPtr->position.x >= weatherTV->position.x && !playerPtr->velocity.y && playerPtr->playerAnimator.animationID == ANI_RUN) {
-                RSDK.SetSpriteAnimation(playerPtr->spriteIndex, ANI_JUMP, &playerPtr->playerAnimator, true, 0);
-                RSDK.PlaySfx(Player->sfx_Jump, false, 255);
+                RSDK.SetSpriteAnimation(playerPtr->aniFrames, ANI_JUMP, &playerPtr->playerAnimator, true, 0);
+                RSDK.PlaySfx(Player->sfxJump, false, 255);
                 playerPtr->velocity.y = -0x20000;
             }
             if (playerPtr->position.y <= tvFlyingBattery->position.y - 0x80000 && playerPtr->playerAnimator.animationID == ANI_JUMP) {
-                RSDK.PlaySfx(Player->sfx_Grab, false, 255);
-                RSDK.SetSpriteAnimation(playerPtr->spriteIndex, ANI_CLING, &playerPtr->playerAnimator, true, 0);
+                RSDK.PlaySfx(Player->sfxGrab, false, 255);
+                RSDK.SetSpriteAnimation(playerPtr->aniFrames, ANI_CLING, &playerPtr->playerAnimator, true, 0);
                 playerPtr->velocity.y = 0;
                 playerPtr->direction  = FLIP_X;
             }

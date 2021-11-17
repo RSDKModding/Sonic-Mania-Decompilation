@@ -8,7 +8,7 @@ typedef struct {
     RSDK_OBJECT
     Hitbox hitbox1;
     Hitbox hitbox2;
-    uint16 spriteIndex;
+    uint16 aniFrames;
 } ObjectBuzzBomber;
 
 // Entity Class

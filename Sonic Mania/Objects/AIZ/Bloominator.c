@@ -31,11 +31,11 @@ void Bloominator_Create(void *data)
 
     if (data) {
         --entity->drawOrder;
-        RSDK.SetSpriteAnimation(Bloominator->spriteIndex, 2, &entity->animator, true, 0);
+        RSDK.SetSpriteAnimation(Bloominator->aniFrames, 2, &entity->animator, true, 0);
         entity->state = Bloominator_State_Spikeball;
     }
     else {
-        RSDK.SetSpriteAnimation(Bloominator->spriteIndex, 0, &entity->animator, true, 0);
+        RSDK.SetSpriteAnimation(Bloominator->aniFrames, 0, &entity->animator, true, 0);
         entity->state = Bloominator_State_Setup;
     }
 }
@@ -43,7 +43,7 @@ void Bloominator_Create(void *data)
 void Bloominator_StageLoad(void)
 {
     if (RSDK.CheckStageFolder("AIZ"))
-        Bloominator->spriteIndex = RSDK.LoadSpriteAnimation("AIZ/Bloominator.bin", SCOPE_STAGE);
+        Bloominator->aniFrames = RSDK.LoadSpriteAnimation("AIZ/Bloominator.bin", SCOPE_STAGE);
     Bloominator->hitbox.left             = -12;
     Bloominator->hitbox.top              = -20;
     Bloominator->hitbox.right            = 12;
@@ -59,7 +59,7 @@ void Bloominator_StageLoad(void)
 
 void Bloominator_DebugDraw(void)
 {
-    RSDK.SetSpriteAnimation(Bloominator->spriteIndex, 0, &DebugMode->animator, true, 0);
+    RSDK.SetSpriteAnimation(Bloominator->aniFrames, 0, &DebugMode->animator, true, 0);
     RSDK.DrawSprite(&DebugMode->animator, NULL, false);
 }
 
@@ -85,7 +85,7 @@ void Bloominator_Idle(void)
     if (entity->activeScreens) {
         if (++entity->timer >= 60) {
             entity->timer = 0;
-            RSDK.SetSpriteAnimation(Bloominator->spriteIndex, 1, &entity->animator, true, 0);
+            RSDK.SetSpriteAnimation(Bloominator->aniFrames, 1, &entity->animator, true, 0);
             entity->state = Bloominator_State_Firing;
         }
     }
@@ -117,7 +117,7 @@ void Bloominator_State_Firing(void)
             break;
         case 50:
             entity->timer = -60;
-            RSDK.SetSpriteAnimation(Bloominator->spriteIndex, 0, &entity->animator, true, 0);
+            RSDK.SetSpriteAnimation(Bloominator->aniFrames, 0, &entity->animator, true, 0);
             entity->state = Bloominator_Idle;
             break;
     }
@@ -160,7 +160,7 @@ void Bloominator_State_Spikeball(void)
 #if RETRO_INCLUDE_EDITOR
 void Bloominator_EditorDraw(void) { Bloominator_Draw(); }
 
-void Bloominator_EditorLoad(void) { Bloominator->spriteIndex = RSDK.LoadSpriteAnimation("AIZ/Bloominator.bin", SCOPE_STAGE); }
+void Bloominator_EditorLoad(void) { Bloominator->aniFrames = RSDK.LoadSpriteAnimation("AIZ/Bloominator.bin", SCOPE_STAGE); }
 #endif
 
 void Bloominator_Serialize(void) {}

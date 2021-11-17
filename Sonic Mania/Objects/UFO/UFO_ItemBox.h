@@ -12,9 +12,9 @@ typedef struct {
     uint16 itemBoxSprite;
     uint16 itemBoxModel;
     uint16 sceneIndex;
-    uint16 sfx_Destroy;
-    uint16 sfx_RockemSockem;
-    uint16 sfx_Bumper;
+    uint16 sfxDestroy;
+    uint16 sfxRockemSockem;
+    uint16 sfxBumper;
 } ObjectUFO_ItemBox;
 
 // Entity Class

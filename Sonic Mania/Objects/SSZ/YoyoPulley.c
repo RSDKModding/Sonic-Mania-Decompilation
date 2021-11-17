@@ -40,7 +40,7 @@ void YoyoPulley_Update(void)
                     entity->activePlayers &= ~(1 << playerID);
                     entity->playerTimers[playerID] = 30;
                     player->tileCollisions         = true;
-                    RSDK.SetSpriteAnimation(player->spriteIndex, ANI_JUMP, &player->playerAnimator, false, 0);
+                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->playerAnimator, false, 0);
                     player->playerAnimator.animationSpeed = 48;
                     player->onGround                      = false;
                     player->state                         = Player_State_Air;
@@ -74,9 +74,9 @@ void YoyoPulley_Update(void)
                 player->position.x += 0xE0000 * (2 * (entity->direction == FLIP_NONE) - 1);
                 player->position.y += 0xC0000;
                 player->tileCollisions = false;
-                RSDK.SetSpriteAnimation(player->spriteIndex, ANI_PULLEYHOLD, &player->playerAnimator, true, 0);
+                RSDK.SetSpriteAnimation(player->aniFrames, ANI_PULLEYHOLD, &player->playerAnimator, true, 0);
                 player->state = Player_State_None;
-                RSDK.PlaySfx(Player->sfx_Grab, false, 255);
+                RSDK.PlaySfx(Player->sfxGrab, false, 255);
             }
         }
 

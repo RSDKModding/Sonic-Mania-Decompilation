@@ -106,7 +106,7 @@ void MagnetSphere_CheckPlayerCollision(void)
                 player->state             = Player_State_Air;
                 entity->playerTimers[pid] = 30;
                 entity->activePlayers &= ~(1 << pid);
-                RSDK.PlaySfx(Player->sfx_Jump, 0, 255);
+                RSDK.PlaySfx(Player->sfxJump, 0, 255);
             }
         }
         else {
@@ -126,7 +126,7 @@ void MagnetSphere_CheckPlayerCollision(void)
                     player->velocity.x = 0;
                     player->velocity.y = 0;
                     player->groundVel  = 0;
-                    RSDK.SetSpriteAnimation(player->spriteIndex, 10, &player->playerAnimator, 0, 0);
+                    RSDK.SetSpriteAnimation(player->aniFrames, 10, &player->playerAnimator, 0, 0);
                     player->onGround        = 0;
                     player->tileCollisions  = 0;
                     player->state           = Player_State_None;

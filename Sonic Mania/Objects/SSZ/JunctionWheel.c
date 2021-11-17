@@ -32,7 +32,7 @@ void JunctionWheel_Update(void)
                         player->velocity.x     = 0;
                         player->velocity.y     = 0x80000;
                         player->onGround       = false;
-                        RSDK.PlaySfx(Player->sfx_Release, false, 255);
+                        RSDK.PlaySfx(Player->sfxRelease, false, 255);
                     }
 
                     if (entity->field_88 == 1 && entity->rotation == 284) {
@@ -42,7 +42,7 @@ void JunctionWheel_Update(void)
                         player->velocity.x     = 0x80000;
                         player->velocity.y     = 0x40000;
                         player->onGround       = false;
-                        RSDK.PlaySfx(Player->sfx_Release, false, 255);
+                        RSDK.PlaySfx(Player->sfxRelease, false, 255);
                     }
                 }
             }
@@ -52,7 +52,7 @@ void JunctionWheel_Update(void)
 
             if (Player_CheckCollisionTouch(player, entity, &JunctionWheel->hitbox5)) {
                 player->state = Player_State_None;
-                RSDK.SetSpriteAnimation(player->spriteIndex, ANI_JUMP, &player->playerAnimator, false, 0);
+                RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->playerAnimator, false, 0);
                 player->onGround  = false;
                 player->groundVel       = -0x1C00;
 
@@ -61,7 +61,7 @@ void JunctionWheel_Update(void)
                 player->nextGroundState = 0;
                 player->velocity.x      = 0;
                 player->velocity.y      = 0;
-                RSDK.PlaySfx(Player->sfx_Roll, false, 255);
+                RSDK.PlaySfx(Player->sfxRoll, false, 255);
             }
             if (player->velocity.y < 0 || (player->onGround && player->collisionMode))
                 Player_CheckCollisionBox(player, entity, &JunctionWheel->hitbox4);
@@ -76,7 +76,7 @@ void JunctionWheel_Update(void)
                 Player_CheckCollisionBox(player, entity, &JunctionWheel->hitbox2);
                 if (Player_CheckCollisionTouch(player, entity, &JunctionWheel->hitbox6)) {
                     player->state = Player_State_None;
-                    RSDK.SetSpriteAnimation(player->spriteIndex, 10, &player->playerAnimator, false, 0);
+                    RSDK.SetSpriteAnimation(player->aniFrames, 10, &player->playerAnimator, false, 0);
                     player->onGround  = false;
                     player->groundVel = -0x1800;
                 }
@@ -85,7 +85,7 @@ void JunctionWheel_Update(void)
                 player->nextGroundState = 0;
                 player->velocity.x      = 0;
                 player->velocity.y      = 0;
-                RSDK.PlaySfx(Player->sfx_Roll, false, 255);
+                RSDK.PlaySfx(Player->sfxRoll, false, 255);
             }
             if (player->velocity.y < 0 || (player->onGround && player->collisionMode))
                 Player_CheckCollisionBox(player, entity, &JunctionWheel->hitbox4);

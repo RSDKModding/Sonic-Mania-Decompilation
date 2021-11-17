@@ -57,7 +57,7 @@ void Turntable_Update(void)
                     entity->field_98[pID] = 0;
                 }
                 entity->field_88[pID] = dist;
-                RSDK.SetSpriteAnimation(player->spriteIndex, 34, &player->playerAnimator, true, entity->field_98[pID]);
+                RSDK.SetSpriteAnimation(player->aniFrames, 34, &player->playerAnimator, true, entity->field_98[pID]);
                 Hitbox *hitbox     = Player_GetHitbox(player);
                 player->position.y = entity->position.y - (hitbox->bottom << 16) - (entity->size.y >> 1);
             }

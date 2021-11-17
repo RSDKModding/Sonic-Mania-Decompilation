@@ -97,7 +97,7 @@ bool32 MSZCutsceneST_CutsceneState_Unknown1(EntityCutsceneSeq *host)
     EntitySignPost *signPost  = (EntitySignPost *)MSZCutsceneST->signPost;
     EntityCutsceneHBH *mystic = MSZCutsceneST->mystic;
     if (!host->timer) {
-        RSDK.PlaySfx(SignPost->sfx_Twinkle, false, 255);
+        RSDK.PlaySfx(SignPost->sfxTwinkle, false, 255);
         signPost->state = SignPost_State_Fall;
         mystic->visible = true;
         foreach_all(ParallaxSprite, sprite) { sprite->visible = true; }
@@ -107,7 +107,7 @@ bool32 MSZCutsceneST_CutsceneState_Unknown1(EntityCutsceneSeq *host)
     if (signPost->position.y >= MSZCutsceneST->signPostOffsets[mystic->animator.frameID] + mystic->position.y - 0x3D0000) {
         signPost->position.y = MSZCutsceneST->signPostOffsets[mystic->animator.frameID] + mystic->position.y - 0x3D0000;
         signPost->state      = SignPost_State_Land;
-        RSDK.PlaySfx(SignPost->sfx_Slide, false, 255);
+        RSDK.PlaySfx(SignPost->sfxSlide, false, 255);
         signPost->spinCount  = 4;
         signPost->velocity.y = 0;
         Music_FadeOut(0.025);
@@ -163,7 +163,7 @@ bool32 MSZCutsceneST_CutsceneState_Unknown3(EntityCutsceneSeq *host)
 
     if (!host->timer) {
         Music_PlayTrack(TRACK_HBHMISCHIEF);
-        RSDK.SetSpriteAnimation(player1->spriteIndex, ANI_RIDE, &player1->playerAnimator, false, 0);
+        RSDK.SetSpriteAnimation(player1->aniFrames, ANI_RIDE, &player1->playerAnimator, false, 0);
         player1->direction = FLIP_NONE;
     }
 
@@ -277,9 +277,9 @@ bool32 MSZCutsceneST_CutsceneState_ShowRougeA(EntityCutsceneSeq *host)
 
     if (host->field_6C[0] && !host->field_6C[1]) {
         if (!rouge->animator.animationID)
-            RSDK.SetSpriteAnimation(rouge->spriteIndex, 1, &rouge->animator, true, 0);
+            RSDK.SetSpriteAnimation(rouge->aniFrames, 1, &rouge->animator, true, 0);
         if (rouge->animator.animationID == 1 && rouge->animator.frameID == rouge->animator.frameCount - 1 && rouge->animator.animationTimer == 12) {
-            RSDK.SetSpriteAnimation(rouge->spriteIndex, 2, &rouge->animator, true, 0);
+            RSDK.SetSpriteAnimation(rouge->aniFrames, 2, &rouge->animator, true, 0);
             rouge->velocity.y = -0x20000;
             RSDK.PlaySfx(HeavyMystic->sfxPon, false, 255);
             EntityDebris *debris = CREATE_ENTITY(Debris, NULL, rouge->position.x, rouge->position.y - 0x40000);
@@ -289,7 +289,7 @@ bool32 MSZCutsceneST_CutsceneState_ShowRougeA(EntityCutsceneSeq *host)
             debris->state      = Debris_State_LightningSpark;
             debris->direction  = FLIP_X;
             debris->drawFX     = FX_FLIP;
-            RSDK.SetSpriteAnimation(rouge->spriteIndex, 4, &debris->animator, true, 0);
+            RSDK.SetSpriteAnimation(rouge->aniFrames, 4, &debris->animator, true, 0);
             MSZCutsceneST->projectile = (Entity *)debris;
         }
         if (rouge->animator.animationID == 2) {
@@ -303,7 +303,7 @@ bool32 MSZCutsceneST_CutsceneState_ShowRougeA(EntityCutsceneSeq *host)
         rouge->position.y = armadiloid->position.y - 0x200000;
         rouge->velocity.y = 0;
         if (rouge->animator.animationID == 2) {
-            RSDK.SetSpriteAnimation(rouge->spriteIndex, 1, &rouge->animator, true, 2);
+            RSDK.SetSpriteAnimation(rouge->aniFrames, 1, &rouge->animator, true, 2);
             rouge->animator.loopIndex = 3;
             host->field_6C[1]         = 1;
         }
@@ -343,7 +343,7 @@ bool32 MSZCutsceneST_CutsceneState_ShowRougeB(EntityCutsceneSeq *host)
 
     if (host->field_6C[0] && !host->field_6C[1]) {
         if (rouge->animator.animationID == 5) {
-            RSDK.SetSpriteAnimation(rouge->spriteIndex, 7, &rouge->animator, true, 0);
+            RSDK.SetSpriteAnimation(rouge->aniFrames, 7, &rouge->animator, true, 0);
         }
         if (rouge->animator.animationID == 7) {
             if (rouge->animator.frameID == 2 && !MSZCutsceneST->projectile) {
@@ -355,11 +355,11 @@ bool32 MSZCutsceneST_CutsceneState_ShowRougeB(EntityCutsceneSeq *host)
                 debris->gravity    = 0x3800;
                 debris->drawOrder  = Zone->playerDrawHigh;
                 debris->state      = Debris_State_Fall;
-                RSDK.SetSpriteAnimation(rouge->spriteIndex, 11, &debris->animator, true, 0);
+                RSDK.SetSpriteAnimation(rouge->aniFrames, 11, &debris->animator, true, 0);
                 MSZCutsceneST->projectile = (Entity *)debris;
             }
             if (rouge->animator.animationID == 7 && rouge->animator.frameID == 5 && rouge->animator.animationTimer == 2) {
-                RSDK.SetSpriteAnimation(rouge->spriteIndex, 5, &rouge->animator, true, 0);
+                RSDK.SetSpriteAnimation(rouge->aniFrames, 5, &rouge->animator, true, 0);
                 host->field_6C[1] = 1;
             }
         }
@@ -402,7 +402,7 @@ bool32 MSZCutsceneST_CutsceneState_ShowRougeC(EntityCutsceneSeq *host)
 
     if (host->field_6C[0] && !host->field_6C[1]) {
         if (rouge->animator.animationID == 12)
-            RSDK.SetSpriteAnimation(rouge->spriteIndex, 14, &rouge->animator, true, 0);
+            RSDK.SetSpriteAnimation(rouge->aniFrames, 14, &rouge->animator, true, 0);
         if (rouge->animator.animationID == 14) {
             if (rouge->animator.frameID == 3 && rouge->animator.animationTimer == 1) {
                 RSDK.PlaySfx(HeavyMystic->sfxImpact2, false, 255);
@@ -412,7 +412,7 @@ bool32 MSZCutsceneST_CutsceneState_ShowRougeC(EntityCutsceneSeq *host)
                 RSDK.SetSpriteAnimation(Armadiloid->aniFrames, 2, &armadiloid->animator2, true, 0);
             }
             if (rouge->animator.animationID == 14 && rouge->animator.frameID == 7 && rouge->animator.animationTimer == 2) {
-                RSDK.SetSpriteAnimation(rouge->spriteIndex, 12, &rouge->animator, true, 0);
+                RSDK.SetSpriteAnimation(rouge->aniFrames, 12, &rouge->animator, true, 0);
                 host->field_6C[1] = 1;
             }
         }
@@ -455,7 +455,7 @@ bool32 MSZCutsceneST_CutsceneState_Unknown6(EntityCutsceneSeq *host)
         tornado->rotation  = 48;
         player1->state     = Player_State_None;
         player1->direction = FLIP_X;
-        RSDK.SetSpriteAnimation(player1->spriteIndex, ANI_CLING, &player1->playerAnimator, true, 0);
+        RSDK.SetSpriteAnimation(player1->aniFrames, ANI_CLING, &player1->playerAnimator, true, 0);
         player1->rotation = tornado->rotation;
         tornado->active   = ACTIVE_NORMAL;
         nodePtr->state    = TornadoPath_Unknown3;

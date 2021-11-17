@@ -24,8 +24,8 @@ void SpikeCrusher_Create(void *data)
     Platform_Create(NULL);
     if (!RSDK_sceneInfo->inEditor) {
         entity->drawOrder = Zone->drawOrderHigh;
-        RSDK.SetSpriteAnimation(Platform->spriteIndex, 3, &entity->animator, true, 4);
-        RSDK.SetSpriteAnimation(Platform->spriteIndex, 3, &entity->animator2, true, 5);
+        RSDK.SetSpriteAnimation(Platform->aniFrames, 3, &entity->animator, true, 4);
+        RSDK.SetSpriteAnimation(Platform->aniFrames, 3, &entity->animator2, true, 5);
 
         while (!RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x7FFF0000, true)) {
             entity->position.y += 0x10000;
@@ -174,8 +174,8 @@ void SpikeCrusher_EditorDraw(void)
 {
     RSDK_THIS(SpikeCrusher);
     entity->drawPos = entity->position;
-    RSDK.SetSpriteAnimation(Platform->spriteIndex, 3, &entity->animator, true, 4);
-    RSDK.SetSpriteAnimation(Platform->spriteIndex, 3, &entity->animator2, true, 5);
+    RSDK.SetSpriteAnimation(Platform->aniFrames, 3, &entity->animator, true, 4);
+    RSDK.SetSpriteAnimation(Platform->aniFrames, 3, &entity->animator2, true, 5);
 
     SpikeCrusher_Draw();
 }

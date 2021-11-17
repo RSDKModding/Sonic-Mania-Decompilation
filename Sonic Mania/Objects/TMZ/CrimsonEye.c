@@ -412,7 +412,7 @@ void CrimsonEye_StateBody_Explode(void)
 
     if (entity->timer < 48) {
         if (!(Zone->timer & 3)) {
-            RSDK.PlaySfx(ItemBox->sfx_Destroy, false, 255);
+            RSDK.PlaySfx(ItemBox->sfxDestroy, false, 255);
             int x                      = entity->position.x + RSDK.Rand(-0x200000, 0x200000);
             int y                      = entity->position.y + RSDK.Rand(-0x800000, 0x800000);
             EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), x, y);
@@ -910,7 +910,7 @@ void CrimsonEye_StateCore_SpawnSignPost(void)
             signPost->position.x = entity->position.x;
             signPost->position.y = (RSDK_screens->position.y - 64) << 16;
             signPost->state      = SignPost_State_Fall;
-            RSDK.PlaySfx(SignPost->sfx_Twinkle, false, 255);
+            RSDK.PlaySfx(SignPost->sfxTwinkle, false, 255);
         }
 
         destroyEntity(entity);

@@ -137,12 +137,12 @@ void HangPoint_Update(void)
                         }
                     }
                     entity->activePlayers |= (1 << playerID);
-                    RSDK.SetSpriteAnimation(player->spriteIndex, ANI_HANG, &player->playerAnimator, false, 0);
+                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_HANG, &player->playerAnimator, false, 0);
                     player->nextAirState    = StateMachine_None;
                     player->nextGroundState = StateMachine_None;
                     player->state           = Player_State_None;
                     player->abilityValues[0]   = RSDK.Rand(0, 2);
-                    RSDK.PlaySfx(Player->sfx_Grab, false, 255);
+                    RSDK.PlaySfx(Player->sfxGrab, false, 255);
                     entity->active = ACTIVE_NORMAL;
                 }
             }
@@ -183,7 +183,7 @@ void HangPoint_Update(void)
 
                         if (player->jumpPress) {
                             player->velocity.y = -0x40000;
-                            RSDK.SetSpriteAnimation(player->spriteIndex, ANI_JUMP, &player->playerAnimator, false, 0);
+                            RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->playerAnimator, false, 0);
                             player->playerAnimator.animationSpeed = 48;
                             player->jumpAbility                   = 0;
                             player->jumpAbilityTimer              = 1;
@@ -219,13 +219,13 @@ void HangPoint_Update(void)
 #if RETRO_USE_PLUS
                                                 if (player->characterID == ID_RAY) {
                                                     if (player->abilityValues[0])
-                                                        RSDK.SetSpriteAnimation(player->spriteIndex, ANI_HANGMOVE, &player->playerAnimator, false, 6);
+                                                        RSDK.SetSpriteAnimation(player->aniFrames, ANI_HANGMOVE, &player->playerAnimator, false, 6);
                                                     else
-                                                        RSDK.SetSpriteAnimation(player->spriteIndex, ANI_HANGMOVE, &player->playerAnimator, false, 1);
+                                                        RSDK.SetSpriteAnimation(player->aniFrames, ANI_HANGMOVE, &player->playerAnimator, false, 1);
                                                 }
                                                 else {
 #endif
-                                                    RSDK.SetSpriteAnimation(player->spriteIndex, ANI_HANGMOVE, &player->playerAnimator, false, 3);
+                                                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_HANGMOVE, &player->playerAnimator, false, 3);
 #if RETRO_USE_PLUS
                                                 }
 #endif
@@ -256,15 +256,15 @@ void HangPoint_Update(void)
 #if RETRO_USE_PLUS
                                                 if (player->characterID == ID_RAY) {
                                                     if (!player->abilityValues[0]) {
-                                                        RSDK.SetSpriteAnimation(player->spriteIndex, ANI_HANGMOVE, &player->playerAnimator, false, 0);
+                                                        RSDK.SetSpriteAnimation(player->aniFrames, ANI_HANGMOVE, &player->playerAnimator, false, 0);
                                                     }
                                                     else {
-                                                        RSDK.SetSpriteAnimation(player->spriteIndex, ANI_HANGMOVE, &player->playerAnimator, false, 6);
+                                                        RSDK.SetSpriteAnimation(player->aniFrames, ANI_HANGMOVE, &player->playerAnimator, false, 6);
                                                     }
                                                 }
                                                 else {
 #endif
-                                                    RSDK.SetSpriteAnimation(player->spriteIndex, ANI_HANGMOVE, &player->playerAnimator, false, 3);
+                                                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_HANGMOVE, &player->playerAnimator, false, 3);
 #if RETRO_USE_PLUS
                                                 }
 #endif
@@ -283,20 +283,20 @@ void HangPoint_Update(void)
                             if (!flag) {
 #if RETRO_USE_PLUS
                                 if (player->characterID == ID_RAY && player->abilityValues[0] == 1)
-                                    RSDK.SetSpriteAnimation(player->spriteIndex, ANI_DROPDASH, &player->playerAnimator, false, 0);
+                                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_DROPDASH, &player->playerAnimator, false, 0);
                                 else
 #endif
-                                    RSDK.SetSpriteAnimation(player->spriteIndex, ANI_HANG, &player->playerAnimator, false, 0);
+                                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_HANG, &player->playerAnimator, false, 0);
                                 HangPoint_Unknown1(entity, player, playerID);
                             }
                         }
                         else {
 #if RETRO_USE_PLUS
                             if (player->characterID == ID_RAY && player->abilityValues[0] == 1)
-                                RSDK.SetSpriteAnimation(player->spriteIndex, ANI_DROPDASH, &player->playerAnimator, false, 0);
+                                RSDK.SetSpriteAnimation(player->aniFrames, ANI_DROPDASH, &player->playerAnimator, false, 0);
                             else
 #endif
-                                RSDK.SetSpriteAnimation(player->spriteIndex, ANI_HANG, &player->playerAnimator, false, 0);
+                                RSDK.SetSpriteAnimation(player->aniFrames, ANI_HANG, &player->playerAnimator, false, 0);
                             HangPoint_Unknown1(entity, player, playerID);
                         }
                     }
@@ -386,7 +386,7 @@ void HangPoint_Unknown1(EntityHangPoint *entity, void *p, int32 playerID)
             entity->field_5C[playerID] += 0x15556;
             if (entity->field_5C[playerID] >= 0) {
                 entity->field_5C[playerID] = 0;
-                RSDK.PlaySfx(Player->sfx_Grab, false, 255);
+                RSDK.PlaySfx(Player->sfxGrab, false, 255);
                 player->abilityValues[0] ^= 1;
             }
         }
@@ -394,7 +394,7 @@ void HangPoint_Unknown1(EntityHangPoint *entity, void *p, int32 playerID)
             entity->field_5C[playerID] -= 0x15556;
             if (entity->field_5C[playerID] <= 0) {
                 entity->field_5C[playerID] = 0;
-                RSDK.PlaySfx(Player->sfx_Grab, false, 255);
+                RSDK.PlaySfx(Player->sfxGrab, false, 255);
                 player->abilityValues[0] ^= 1;
             }
         }
@@ -402,7 +402,7 @@ void HangPoint_Unknown1(EntityHangPoint *entity, void *p, int32 playerID)
         player->position.x += entity->field_5C[playerID] & 0xFFFF0000;
         if (player->jumpPress) {
             player->velocity.y = -0x40000;
-            RSDK.SetSpriteAnimation(player->spriteIndex, ANI_JUMP, &player->playerAnimator, false, 0);
+            RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->playerAnimator, false, 0);
             player->jumpAbility                   = 0;
             player->playerAnimator.animationSpeed = 48;
             player->jumpAbilityTimer              = 1;

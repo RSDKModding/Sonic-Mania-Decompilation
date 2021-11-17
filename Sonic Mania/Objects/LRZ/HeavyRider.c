@@ -51,7 +51,7 @@ void HeavyRider_Create(void *data)
                     entity->stateDraw     = HeavyRider_StateDraw_Unknown;
                     break;
                 case HEAVYRIDER_PLANESWITCH:
-                    RSDK.SetSpriteAnimation(PlaneSwitch->spriteIndex, 0, &entity->animator1, true, 0);
+                    RSDK.SetSpriteAnimation(PlaneSwitch->aniFrames, 0, &entity->animator1, true, 0);
                     entity->active        = ACTIVE_BOUNDS;
                     entity->updateRange.x = 0x200000;
                     entity->updateRange.y = (entity->size + 0x400) << 11;
@@ -64,7 +64,7 @@ void HeavyRider_Create(void *data)
                 case HEAVYRIDER_FORCECHARGE_RIGHT:
                 case HEAVYRIDER_4:
                 case HEAVYRIDER_5:
-                    RSDK.SetSpriteAnimation(PlaneSwitch->spriteIndex, 0, &entity->animator1, true, ((entity->type - 2) >> 1) + 4);
+                    RSDK.SetSpriteAnimation(PlaneSwitch->aniFrames, 0, &entity->animator1, true, ((entity->type - 2) >> 1) + 4);
                     entity->active        = ACTIVE_BOUNDS;
                     entity->updateRange.x = 0x200000;
                     entity->updateRange.y = 0x200000;
@@ -1164,14 +1164,14 @@ void HeavyRider_EditorDraw(void)
             entity->stateDraw     = HeavyRider_StateDraw_Unknown;
             break;
         case HEAVYRIDER_PLANESWITCH:
-            RSDK.SetSpriteAnimation(PlaneSwitch->spriteIndex, 0, &entity->animator1, true, 0);
+            RSDK.SetSpriteAnimation(PlaneSwitch->aniFrames, 0, &entity->animator1, true, 0);
             entity->updateRange.x = 0x200000;
             entity->updateRange.y = (entity->size + 0x400) << 11;
             entity->stateDraw     = HeavyRider_StateDraw1_Unknown;
             break;
         case HEAVYRIDER_FORCECHARGE_LEFT:
         case HEAVYRIDER_FORCECHARGE_RIGHT:
-            RSDK.SetSpriteAnimation(PlaneSwitch->spriteIndex, 0, &entity->animator1, true, ((entity->type - 2) >> 1) + 4);
+            RSDK.SetSpriteAnimation(PlaneSwitch->aniFrames, 0, &entity->animator1, true, ((entity->type - 2) >> 1) + 4);
             entity->updateRange.x = 0x200000;
             entity->updateRange.y = 0x200000;
             entity->state         = HeavyRider_State_ChargeTrigger;

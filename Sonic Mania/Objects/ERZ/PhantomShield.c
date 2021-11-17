@@ -117,7 +117,7 @@ void PhantomShield_Unknown2(void)
                     }
                 }
                 if (player->characterID == ID_KNUCKLES && player->playerAnimator.animationID == ANI_FLY) {
-                    RSDK.SetSpriteAnimation(player->spriteIndex, ANI_FLYTIRED, &player->playerAnimator, false, 0);
+                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_FLYTIRED, &player->playerAnimator, false, 0);
                     player->state = Player_State_KnuxGlideDrop;
                 }
                 player->velocity.x     = velX;

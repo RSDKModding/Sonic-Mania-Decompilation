@@ -255,7 +255,7 @@ void UIVsZoneButton_Options3CB(void)
     EntityMenuParam *param  = (EntityMenuParam *)globals->menuParam;
 
     parent->state = StateMachine_None;
-    RSDK.PlaySfx(UIWidgets->sfx_Accept, false, 255);
+    RSDK.PlaySfx(UIWidgets->sfxAccept, false, 255);
     RSDK.StopChannel(Music->channelID);
     TimeAttackData_ClearOptions();
     param->vsZoneID = entity->zoneID;

@@ -56,8 +56,8 @@ void LevelSelect_StageLoad(void)
     LevelSelect->sfxMedalGot = RSDK.GetSFX("Special/MedalCaught.wav");
 #endif
     RSDK.ResetEntitySlot(0, LevelSelect->objectID, NULL);
-    UIPicture->spriteIndex    = RSDK.LoadSpriteAnimation("LSelect/Icons.bin", SCOPE_STAGE);
-    UIText->spriteIndex       = RSDK.LoadSpriteAnimation("LSelect/Text.bin", SCOPE_STAGE);
+    UIPicture->aniFrames    = RSDK.LoadSpriteAnimation("LSelect/Icons.bin", SCOPE_STAGE);
+    UIText->aniFrames       = RSDK.LoadSpriteAnimation("LSelect/Text.bin", SCOPE_STAGE);
     LevelSelect->startMusicID = 0;
     LevelSelect->soundTestMax = 0;
     foreach_all(Music, music)
@@ -458,9 +458,9 @@ void LevelSelect_Unknown2(void)
 
     EntityUIPicture *zoneIcon = (EntityUIPicture *)entity->zoneIcon;
     if (entity->labelID >= entity->labelCount - 1)
-        RSDK.SetSpriteAnimation(UIPicture->spriteIndex, 2, &zoneIcon->animator, true, entity->playerID);
+        RSDK.SetSpriteAnimation(UIPicture->aniFrames, 2, &zoneIcon->animator, true, entity->playerID);
     else
-        RSDK.SetSpriteAnimation(UIPicture->spriteIndex, 1, &zoneIcon->animator, true, ((EntityUIText *)entity->labelPtrs[entity->labelID])->data1);
+        RSDK.SetSpriteAnimation(UIPicture->aniFrames, 1, &zoneIcon->animator, true, ((EntityUIText *)entity->labelPtrs[entity->labelID])->data1);
 }
 
 void LevelSelect_Unknown3(void)

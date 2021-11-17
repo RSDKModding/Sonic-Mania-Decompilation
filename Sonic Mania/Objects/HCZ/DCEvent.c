@@ -65,7 +65,7 @@ void DCEvent_Create(void *data)
                 water->position.y = y;
                 water->childPtr   = 0;
                 water->speed      = -1;
-                RSDK.SetSpriteAnimation(Water->spriteIndex, 3, &water->animator, true, 0);
+                RSDK.SetSpriteAnimation(Water->aniFrames, 3, &water->animator, true, 0);
                 break;
             }
         }
@@ -188,7 +188,7 @@ void DCEvent_StateInput_Unknown2(void)
     entity->jumpPress = false;
     entity->jumpHold  = false;
     if (entity->onGround)
-        RSDK.SetSpriteAnimation(entity->spriteIndex, ANI_CROUCH, &entity->playerAnimator, false, 1);
+        RSDK.SetSpriteAnimation(entity->aniFrames, ANI_CROUCH, &entity->playerAnimator, false, 1);
 }
 
 void DCEvent_State_Unknown2(void)
@@ -331,7 +331,7 @@ void DCEvent_State2_Unknown1(void)
         water->childPtr    = 0;
         water->angle       = 2 * RSDK.Rand(0, 256);
         water->field_68    = water->position.x;
-        RSDK.SetSpriteAnimation(Water->spriteIndex, 3, &water->animator, true, 0);
+        RSDK.SetSpriteAnimation(Water->aniFrames, 3, &water->animator, true, 0);
 
         EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
         if (entity->position.x >= player1->position.x)
@@ -394,7 +394,7 @@ void DCEvent_EditorDraw(void)
             break;
         case 2:
             if (Water)
-                RSDK.SetSpriteAnimation(Water->spriteIndex, 3, &entity->animator, true, 0);
+                RSDK.SetSpriteAnimation(Water->aniFrames, 3, &entity->animator, true, 0);
             break;
     }
 

@@ -108,7 +108,7 @@ void Crane_HandlePlayerInteractions(void)
                     player->nextAirState    = 0;
                     player->onGround        = false;
                     player->direction       = entity->direction;
-                    RSDK.SetSpriteAnimation(player->spriteIndex, ANI_FAN, &player->playerAnimator, true, 0);
+                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->playerAnimator, true, 0);
                     player->playerAnimator.animationSpeed = 0;
                 }
             }

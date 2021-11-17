@@ -49,7 +49,7 @@ void ZipLine_Update(void)
                         if (!entity->grabDelay[pid] && player->jumpPress) {
                             player->velocity.y       = -0x40000;
                             player->jumpAbilityTimer = 1;
-                            RSDK.SetSpriteAnimation(player->spriteIndex, ANI_JUMP, &player->playerAnimator, 0, 0);
+                            RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->playerAnimator, 0, 0);
                             player->playerAnimator.animationSpeed = 48;
                             player->state                         = Player_State_Air;
                             entity->grabDelay[pid]                = 60;
@@ -106,11 +106,11 @@ void ZipLine_Update(void)
                         player->position.y +=
                             ((ZipLine->hitbox.top - playerHitbox->top) << 16) + (((ZipLine->hitbox.bottom - ZipLine->hitbox.top) << 15) & 0xFFFF0000);
                         player->tileCollisions = false;
-                        RSDK.SetSpriteAnimation(player->spriteIndex, ANI_HANG, &player->playerAnimator, true, 0);
+                        RSDK.SetSpriteAnimation(player->aniFrames, ANI_HANG, &player->playerAnimator, true, 0);
                         player->state           = Player_State_None;
                         player->nextAirState    = StateMachine_None;
                         player->nextGroundState = StateMachine_None;
-                        RSDK.PlaySfx(Player->sfx_Grab, 0, 0xFF);
+                        RSDK.PlaySfx(Player->sfxGrab, 0, 0xFF);
                         entity->grabDelay[pid] = 15;
                         entity->active         = ACTIVE_NORMAL;
                     }
@@ -152,11 +152,11 @@ void ZipLine_Update(void)
                                     player->position.y += ((ZipLine->hitbox.top - playerHitbox->top) << 16)
                                                           + (((ZipLine->hitbox.bottom - ZipLine->hitbox.top) << 15) & 0xFFFF0000);
                                     player->tileCollisions = false;
-                                    RSDK.SetSpriteAnimation(player->spriteIndex, ANI_HANG, &player->playerAnimator, true, 0);
+                                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_HANG, &player->playerAnimator, true, 0);
                                     player->state           = Player_State_None;
                                     player->nextAirState    = StateMachine_None;
                                     player->nextGroundState = StateMachine_None;
-                                    RSDK.PlaySfx(Player->sfx_Grab, 0, 0xFF);
+                                    RSDK.PlaySfx(Player->sfxGrab, 0, 0xFF);
                                     entity->grabDelay[pid] = 15;
                                     entity->active         = ACTIVE_NORMAL;
                                 }
@@ -186,11 +186,11 @@ void ZipLine_Update(void)
                                     player->position.y += ((ZipLine->hitbox.top - playerHitbox->top) << 16)
                                                           + (((ZipLine->hitbox.bottom - ZipLine->hitbox.top) << 15) & 0xFFFF0000);
                                     player->tileCollisions = false;
-                                    RSDK.SetSpriteAnimation(player->spriteIndex, ANI_HANG, &player->playerAnimator, true, 0);
+                                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_HANG, &player->playerAnimator, true, 0);
                                     player->state           = Player_State_None;
                                     player->nextAirState    = StateMachine_None;
                                     player->nextGroundState = StateMachine_None;
-                                    RSDK.PlaySfx(Player->sfx_Grab, 0, 0xFF);
+                                    RSDK.PlaySfx(Player->sfxGrab, 0, 0xFF);
                                     entity->grabDelay[pid] = 15;
                                     entity->active         = ACTIVE_NORMAL;
                                 }
@@ -214,11 +214,11 @@ void ZipLine_Update(void)
                                         player->position.y += ((ZipLine->hitbox.top - playerHitbox->top) << 16)
                                                               + (((ZipLine->hitbox.bottom - ZipLine->hitbox.top) << 15) & 0xFFFF0000);
                                         player->tileCollisions = false;
-                                        RSDK.SetSpriteAnimation(player->spriteIndex, ANI_HANG, &player->playerAnimator, true, 0);
+                                        RSDK.SetSpriteAnimation(player->aniFrames, ANI_HANG, &player->playerAnimator, true, 0);
                                         player->state           = Player_State_None;
                                         player->nextAirState    = StateMachine_None;
                                         player->nextGroundState = StateMachine_None;
-                                        RSDK.PlaySfx(Player->sfx_Grab, 0, 0xFF);
+                                        RSDK.PlaySfx(Player->sfxGrab, 0, 0xFF);
                                         entity->grabDelay[pid] = 15;
                                         entity->active         = ACTIVE_NORMAL;
                                     }
@@ -238,11 +238,11 @@ void ZipLine_Update(void)
                                     player->position.y += ((ZipLine->hitbox.top - playerHitbox->top) << 16)
                                                           + (((ZipLine->hitbox.bottom - ZipLine->hitbox.top) << 15) & 0xFFFF0000);
                                     player->tileCollisions = false;
-                                    RSDK.SetSpriteAnimation(player->spriteIndex, ANI_HANG, &player->playerAnimator, true, 0);
+                                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_HANG, &player->playerAnimator, true, 0);
                                     player->state           = Player_State_None;
                                     player->nextAirState    = StateMachine_None;
                                     player->nextGroundState = StateMachine_None;
-                                    RSDK.PlaySfx(Player->sfx_Grab, 0, 0xFF);
+                                    RSDK.PlaySfx(Player->sfxGrab, 0, 0xFF);
                                     entity->grabDelay[pid] = 15;
                                     entity->active         = ACTIVE_NORMAL;
                                 }

@@ -81,7 +81,7 @@ void RockemSockem_Update(void)
                         else
                             spd = -0x700 * RSDK.Sin256(angle);
                         player->velocity.y = -spd;
-                        RSDK.SetSpriteAnimation(player->spriteIndex, ANI_SPRINGCS, &player->playerAnimator, false, 0);
+                        RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGCS, &player->playerAnimator, false, 0);
                     }
                     else if ((((angle - 32) >> 6) & 3) != 3) {
                         int32 spd            = 0;
@@ -105,7 +105,7 @@ void RockemSockem_Update(void)
                     else
                         spd = -0x500 * RSDK.Sin256(angle);
                     player->velocity.y = -spd;
-                    RSDK.SetSpriteAnimation(player->spriteIndex, ANI_SPRINGCS, &player->playerAnimator, false, 0);
+                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGCS, &player->playerAnimator, false, 0);
                 }
 
                 if (entity->ballAnimator.animationID != 3)

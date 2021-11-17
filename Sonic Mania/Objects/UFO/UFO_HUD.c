@@ -82,16 +82,16 @@ void UFO_HUD_Create(void *data)
         entity->scale.x       = 0x200;
         entity->scale.y       = 0x200;
         entity->palID         = 2;
-        RSDK.SetSpriteAnimation(UFO_HUD->spriteIndex, 0, &entity->animator1, true, 0);
-        RSDK.SetSpriteAnimation(UFO_HUD->spriteIndex, 1, &entity->animator2, true, 0);
-        RSDK.SetSpriteAnimation(UFO_HUD->spriteIndex, 2, &entity->animator3, true, 0);
-        RSDK.SetSpriteAnimation(UFO_HUD->spriteIndex, 3, &entity->animator4, true, 0);
+        RSDK.SetSpriteAnimation(UFO_HUD->aniFrames, 0, &entity->animator1, true, 0);
+        RSDK.SetSpriteAnimation(UFO_HUD->aniFrames, 1, &entity->animator2, true, 0);
+        RSDK.SetSpriteAnimation(UFO_HUD->aniFrames, 2, &entity->animator3, true, 0);
+        RSDK.SetSpriteAnimation(UFO_HUD->aniFrames, 3, &entity->animator4, true, 0);
     }
 }
 
 void UFO_HUD_StageLoad(void)
 {
-    UFO_HUD->spriteIndex = RSDK.LoadSpriteAnimation("SpecialUFO/HUD.bin", SCOPE_STAGE);
+    UFO_HUD->aniFrames = RSDK.LoadSpriteAnimation("SpecialUFO/HUD.bin", SCOPE_STAGE);
     RSDK.ResetEntitySlot(SLOT_UFO_HUD, UFO_HUD->objectID, NULL);
 }
 
@@ -112,7 +112,7 @@ void UFO_HUD_CheckLevelUp(void)
         UFO_Player_ChangeMachState();
         hud->scale.x = 768;
         hud->scale.y = 768;
-        RSDK.PlaySfx(UFO_Sphere->sfx_MachSpeed, 0, 255);
+        RSDK.PlaySfx(UFO_Sphere->sfxMachSpeed, 0, 255);
     }
 
     if (hud->scale.x == 512) {
@@ -139,7 +139,7 @@ void UFO_HUD_LevelUpMach(void)
     UFO_Player_ChangeMachState();
     hud->scale.x = 0x300;
     hud->scale.y = 0x300;
-    RSDK.PlaySfx(UFO_Sphere->sfx_MachSpeed, false, 255);
+    RSDK.PlaySfx(UFO_Sphere->sfxMachSpeed, false, 255);
 }
 
 void UFO_HUD_DrawNumbers(Vector2 *drawPos, int32 value)

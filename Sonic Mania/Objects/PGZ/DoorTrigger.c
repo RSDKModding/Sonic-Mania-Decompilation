@@ -60,7 +60,7 @@ void DoorTrigger_Update(void)
                     entity->animator2.frameID = 1;
                     if (player->characterID == ID_KNUCKLES && player->playerAnimator.animationID == ANI_FLY) {
                         player->velocity.x = -player->velocity.x >> 1;
-                        RSDK.SetSpriteAnimation(player->spriteIndex, 49, &player->playerAnimator, false, 0);
+                        RSDK.SetSpriteAnimation(player->aniFrames, 49, &player->playerAnimator, false, 0);
                         player->state = Player_State_KnuxGlideDrop;
                     }
                     else {
@@ -119,7 +119,7 @@ void DoorTrigger_Update(void)
                         shard->drawFX     = FX_FLIP;
                         shard->direction  = i & 3;
                         shard->drawOrder  = Zone->drawOrderHigh;
-                        RSDK.SetSpriteAnimation(ItemBox->spriteIndex, 6, &shard->animator, true, RSDK.Rand(0, 4));
+                        RSDK.SetSpriteAnimation(ItemBox->aniFrames, 6, &shard->animator, true, RSDK.Rand(0, 4));
                     }
                     RSDK.CreateEntity(Explosion->objectID, intToVoid(1), spawnX, spawnY)->drawOrder = Zone->drawOrderHigh;
                 }

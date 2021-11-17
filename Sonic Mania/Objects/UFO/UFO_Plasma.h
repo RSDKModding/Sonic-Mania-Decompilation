@@ -9,7 +9,7 @@ typedef struct {
     int32 field_4;
     ScanlineInfo *scanlines;
     uint8 scanlineData[0x100 * sizeof(ScanlineInfo)];
-    uint16 spriteIndex;
+    uint16 aniFrames;
     int32 field_1010;
 } ObjectUFO_Plasma;
 

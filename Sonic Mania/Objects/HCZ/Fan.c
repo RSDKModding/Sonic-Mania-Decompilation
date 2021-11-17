@@ -289,9 +289,9 @@ void Fan_HandlePlayerInteractions_Top(void)
             if (anim != ANI_HURT && anim != ANI_DIE && anim != ANI_DROWN
                 && RSDK.CheckObjectCollisionTouchBox(entity, &Fan->hitbox1, player, &Fan->playerHitbox)) {
                 if (Water && player->position.y > Water->waterLevel)
-                    RSDK.SetSpriteAnimation(player->spriteIndex, ANI_FAN, &player->playerAnimator, false, 1);
+                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->playerAnimator, false, 1);
                 else
-                    RSDK.SetSpriteAnimation(player->spriteIndex, ANI_SPRINGCS, &player->playerAnimator, false, 1);
+                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGCS, &player->playerAnimator, false, 1);
 
                 player->state          = Player_State_Air;
                 player->tileCollisions = true;

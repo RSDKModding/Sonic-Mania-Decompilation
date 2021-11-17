@@ -509,9 +509,9 @@ void OOZSetup_PlayerState_OilSlide(void)
         entity->controlLock = 30;
         entity->direction   = (RSDK.Sin256(entity->angle) << 13 >> 8) + entity->groundVel < 0;
 #if RETRO_USE_PLUS
-        RSDK.SetSpriteAnimation(entity->spriteIndex, ANI_FLUME, &entity->playerAnimator, false, 0);
+        RSDK.SetSpriteAnimation(entity->aniFrames, ANI_FLUME, &entity->playerAnimator, false, 0);
 #else
-        RSDK.SetSpriteAnimation(entity->spriteIndex, ANI_HURT, &entity->playerAnimator, false, 2);
+        RSDK.SetSpriteAnimation(entity->aniFrames, ANI_HURT, &entity->playerAnimator, false, 2);
 #endif
     }
 
@@ -557,7 +557,7 @@ void OOZSetup_PlayerState_OilFall(void)
     }
     if (!entity->left && !entity->right)
         entity->velocity.x -= entity->velocity.x >> 4;
-    RSDK.SetSpriteAnimation(entity->spriteIndex, ANI_JUMP, &entity->playerAnimator, false, 0);
+    RSDK.SetSpriteAnimation(entity->aniFrames, ANI_JUMP, &entity->playerAnimator, false, 0);
     Player_HandleGroundMovement();
 
     if (entity->camera)

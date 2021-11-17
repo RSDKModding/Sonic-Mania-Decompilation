@@ -302,12 +302,12 @@ void MegaChopper_State_Unknown3(void)
                 else {
                     player->rings--;
                     if (Ring->pan) {
-                        int channel = RSDK.PlaySfx(Ring->sfx_Ring, false, 255);
+                        int channel = RSDK.PlaySfx(Ring->sfxRing, false, 255);
                         RSDK.SetChannelAttributes(channel, 1.0, -1.0, 1.0);
                         Ring->pan = 0;
                     }
                     else {
-                        int channel = RSDK.PlaySfx(Ring->sfx_Ring, false, 255);
+                        int channel = RSDK.PlaySfx(Ring->sfxRing, false, 255);
                         RSDK.SetChannelAttributes(channel, 1.0, 1.0, 1.0);
                         Ring->pan = 1;
                     }

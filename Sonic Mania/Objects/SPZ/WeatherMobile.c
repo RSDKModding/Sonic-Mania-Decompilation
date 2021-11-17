@@ -631,7 +631,7 @@ void WeatherMobile_State2_Unknown2(void)
     {
         if (player->state != Player_State_None && !player->blinkTimer) {
             if (player->playerAnimator.animationID != ANI_JUMP)
-                RSDK.SetSpriteAnimation(player->spriteIndex, ANI_FAN, &player->playerAnimator, false, 0);
+                RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->playerAnimator, false, 0);
             player->onGround = false;
             player->velocity.y -= 0x5800;
         }

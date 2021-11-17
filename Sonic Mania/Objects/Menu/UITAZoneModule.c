@@ -25,14 +25,14 @@ void UITAZoneModule_Update(void)
     if (entity->announceTimer) {
         --entity->announceTimer;
         if (entity->announceTimer == 121) {
-            RSDK.PlaySfx(UIWidgets->sfx_Event, false, 0xFF);
+            RSDK.PlaySfx(UIWidgets->sfxEvent, false, 0xFF);
         }
         if (entity->announceTimer == 30) {
             if (entity->field_138 == 1) {
-                RSDK.PlaySfx(Announcer->sfx_NewRecordTop, false, 0xFF);
+                RSDK.PlaySfx(Announcer->sfxNewRecordTop, false, 0xFF);
             }
             else if (entity->field_138 <= 3) {
-                RSDK.PlaySfx(Announcer->sfx_NewRecordMid, false, 0xFF);
+                RSDK.PlaySfx(Announcer->sfxNewRecordMid, false, 0xFF);
             }
         }
     }
@@ -362,7 +362,7 @@ void UITAZoneModule_Unknown6(void)
     }
 }
 
-void UITAZoneModule_FailCB(void) { RSDK.PlaySfx(UIWidgets->sfx_Fail, false, 255); }
+void UITAZoneModule_FailCB(void) { RSDK.PlaySfx(UIWidgets->sfxFail, false, 255); }
 
 void UITAZoneModule_Options3CB(void)
 {
@@ -378,7 +378,7 @@ void UITAZoneModule_Options3CB(void)
             module->state = UITAZoneModule_Unknown29;
     }
 #endif
-    RSDK.PlaySfx(UIWidgets->sfx_Accept, false, 255);
+    RSDK.PlaySfx(UIWidgets->sfxAccept, false, 255);
 #if RETRO_USE_PLUS
     if (TimeAttackMenu->encoreMode)
         RSDK.CopyPalette(((entity->zoneID % 12) >> 3) + 4, (32 * (entity->zoneID % 12)), 0, 224, 32);
@@ -752,7 +752,7 @@ void UITAZoneModule_Unknown22(void)
         entity->timer = 0;
         entity->state = UITAZoneModule_Unknown21;
         RSDK.StopChannel(Music->channelID);
-        RSDK.PlaySfx(UIWidgets->sfx_Accept, false, 0xFF);
+        RSDK.PlaySfx(UIWidgets->sfxAccept, false, 0xFF);
     }
 }
 
@@ -769,7 +769,7 @@ void UITAZoneModule_Unknown23(void)
     entity->timer = 0;
     entity->state = UITAZoneModule_Unknown21;
     RSDK.StopChannel(Music->channelID);
-    RSDK.PlaySfx(UIWidgets->sfx_Accept, false, 0xFF);
+    RSDK.PlaySfx(UIWidgets->sfxAccept, false, 0xFF);
 }
 
 void UITAZoneModule_Unknown24(void)
@@ -780,13 +780,13 @@ void UITAZoneModule_Unknown24(void)
     if (UIControl->keyLeft && entity->actID == 1 && (entity->zoneID != 7 || entity->characterID == 3)) {
         entity->actID = 0;
         entity->rank  = 0;
-        RSDK.PlaySfx(UIWidgets->sfx_Accept, false, 0xFF);
+        RSDK.PlaySfx(UIWidgets->sfxAccept, false, 0xFF);
         entity->field_140 = 0;
     }
     if (UIControl->keyRight && !entity->actID && (entity->zoneID != 7 || entity->characterID == 3)) {
         entity->actID     = 1;
         entity->rank  = 0;
-        RSDK.PlaySfx(UIWidgets->sfx_Accept, false, 0xFF);
+        RSDK.PlaySfx(UIWidgets->sfxAccept, false, 0xFF);
         entity->field_140 = 0;
     }
     else if (UIControl->keyConfirm) {
@@ -798,12 +798,12 @@ void UITAZoneModule_Unknown24(void)
         entity->timer = 0;
         entity->state = UITAZoneModule_Unknown21;
         RSDK.StopChannel(Music->channelID);
-        RSDK.PlaySfx(UIWidgets->sfx_Accept, false, 0xFF);
+        RSDK.PlaySfx(UIWidgets->sfxAccept, false, 0xFF);
     }
     else {
         if (MenuSetup && UIControl->keyY) {
             UITAZoneModule_Unknown25(entity->characterID, entity->zoneID, entity->actID, 0, UITAZoneModule_Unknown14);
-            RSDK.PlaySfx(UIWidgets->sfx_Accept, false, 0xFF);
+            RSDK.PlaySfx(UIWidgets->sfxAccept, false, 0xFF);
         }
         if (UIControl->keyBack) {
             entity->timer           = 0;

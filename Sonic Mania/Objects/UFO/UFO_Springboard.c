@@ -26,13 +26,13 @@ void UFO_Springboard_Update(void)
                             player->onGround        = 0;
                             player->state           = UFO_Player_HandleTilt;
                             RSDK.SetModelAnimation(UFO_Player->jumpModel, &player->playerAnimator, 128, 0, true, 0);
-                            RSDK.PlaySfx(UFO_Player->sfx_Spring, 0, 255);
+                            RSDK.PlaySfx(UFO_Player->sfxSpring, 0, 255);
                         }
                         else {
                             player->bumperTimer = 16;
                             player->velocity.x  = -player->velocity.x;
                             player->velocity.y  = -player->velocity.y;
-                            RSDK.PlaySfx(UFO_Player->sfx_Bumper, 0, 255);
+                            RSDK.PlaySfx(UFO_Player->sfxBumper, 0, 255);
                         }
                     }
                 }

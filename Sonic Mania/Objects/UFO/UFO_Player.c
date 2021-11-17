@@ -147,15 +147,15 @@ void UFO_Player_StageLoad(void)
         RSDK.CopyEntity(player1, player, true);
     }
 
-    UFO_Player->sfx_Jump         = RSDK.GetSFX("Global/Jump.wav");
-    UFO_Player->sfx_Charge       = RSDK.GetSFX("Global/Charge.wav");
-    UFO_Player->sfx_Release      = RSDK.GetSFX("Global/Release.wav");
-    UFO_Player->sfx_LoseRings    = RSDK.GetSFX("Global/LoseRings.wav");
-    UFO_Player->sfx_Drop         = RSDK.GetSFX("Stage/Drop.wav");
-    UFO_Player->sfx_Bumper       = RSDK.GetSFX("Stage/Bumper.wav");
-    UFO_Player->sfx_Spring       = RSDK.GetSFX("Global/Spring.wav");
-    UFO_Player->sfx_Skid         = RSDK.GetSFX("Special/Skid.wav");
-    UFO_Player->sfx_GrittyGround = RSDK.GetSFX("Special/GrittyGround.wav");
+    UFO_Player->sfxJump         = RSDK.GetSFX("Global/Jump.wav");
+    UFO_Player->sfxCharge       = RSDK.GetSFX("Global/Charge.wav");
+    UFO_Player->sfxRelease      = RSDK.GetSFX("Global/Release.wav");
+    UFO_Player->sfxLoseRings    = RSDK.GetSFX("Global/LoseRings.wav");
+    UFO_Player->sfxDrop         = RSDK.GetSFX("Stage/Drop.wav");
+    UFO_Player->sfxBumper       = RSDK.GetSFX("Stage/Bumper.wav");
+    UFO_Player->sfxSpring       = RSDK.GetSFX("Global/Spring.wav");
+    UFO_Player->sfxSkid         = RSDK.GetSFX("Special/Skid.wav");
+    UFO_Player->sfxGrittyGround = RSDK.GetSFX("Special/GrittyGround.wav");
 
     EntityUFO_Player *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, UFO_Player);
     RSDK.ClearCameras();
@@ -326,7 +326,7 @@ void UFO_Player_HandleBumperTiles(void)
 
     if (flags) {
         if (!entity->bumperTimer)
-            RSDK.PlaySfx(UFO_Player->sfx_Bumper, 0, 255);
+            RSDK.PlaySfx(UFO_Player->sfxBumper, 0, 255);
         entity->bumperTimer = 16;
         switch (flags) {
             case 1:
@@ -374,7 +374,7 @@ void UFO_Player_HandleSpeedUp(void)
             entity->camera->state = UFO_Camera_Unknown3;
 
             if (!UFO_Setup->timedOut)
-                RSDK.PlaySfx(UFO_Player->sfx_Drop, 0, 255);
+                RSDK.PlaySfx(UFO_Player->sfxDrop, 0, 255);
             return;
         }
     }
@@ -389,7 +389,7 @@ void UFO_Player_HandleSpeedUp(void)
 
             if (!(UFO_Setup->timer & 3)) {
                 RSDK.CreateEntity(UFO_Dust->objectID, 0, entity->position.x, entity->position.y);
-                RSDK.PlaySfx(UFO_Player->sfx_GrittyGround, 0, 255);
+                RSDK.PlaySfx(UFO_Player->sfxGrittyGround, 0, 255);
             }
         }
         else {
@@ -438,7 +438,7 @@ void UFO_Player_StateRun(void)
                 RSDK.CreateEntity(UFO_Dust->objectID, 0, entity->position.x, entity->position.y);
             }
             if (!(UFO_Setup->timer & 7))
-                RSDK.PlaySfx(UFO_Player->sfx_Skid, 0, 255);
+                RSDK.PlaySfx(UFO_Player->sfxSkid, 0, 255);
         }
         else {
             entity->field_90++;
@@ -474,7 +474,7 @@ void UFO_Player_StateRun(void)
         entity->onGround        = 0;
         entity->state           = UFO_Player_StateJump;
         RSDK.SetModelAnimation(UFO_Player->jumpModel, &entity->playerAnimator, 128, 0, true, 0);
-        RSDK.PlaySfx(UFO_Player->sfx_Jump, 0, 255);
+        RSDK.PlaySfx(UFO_Player->sfxJump, 0, 255);
         UFO_Player_HandleBumperTiles();
     }
 }
@@ -639,7 +639,7 @@ void UFO_Player_Unknown10(void)
     entity->field_74 = (entity->field_74 - (UFO_Player->maxSpeed >> 13)) & 0x3FF;
     if (entity->timer == 2) {
         RSDK.SetModelAnimation(UFO_Player->jumpModel, &entity->playerAnimator, 128, 0, true, 0);
-        RSDK.PlaySfx(UFO_Player->sfx_Charge, 0, 255);
+        RSDK.PlaySfx(UFO_Player->sfxCharge, 0, 255);
     }
     if (entity->timer >= 30) {
         entity->timer           = 0;
@@ -648,7 +648,7 @@ void UFO_Player_Unknown10(void)
         entity->velocity.y      = (entity->circuitPtr->position.y - entity->position.y) >> 4;
         entity->state           = UFO_Player_Unknown11;
         entity->gravityStrength = (entity->circuitPtr->height - entity->height + 0x200000) >> 4;
-        RSDK.PlaySfx(UFO_Player->sfx_Release, 0, 255);
+        RSDK.PlaySfx(UFO_Player->sfxRelease, 0, 255);
     }
 }
 

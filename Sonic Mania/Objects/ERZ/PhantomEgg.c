@@ -1063,7 +1063,7 @@ void PhantomEgg_State_Unknown19(void)
         entity->stateDraw = StateMachine_None;
 
         EntityEggman *eggman = CREATE_ENTITY(Eggman, NULL, entity->position.x, entity->position.y + 0x100000);
-        RSDK.SetSpriteAnimation(Eggman->spriteIndex, 7, &eggman->animator, true, 0);
+        RSDK.SetSpriteAnimation(Eggman->aniFrames, 7, &eggman->animator, true, 0);
         eggman->onGround = false;
         eggman->state    = Eggman_Unknown6;
     }

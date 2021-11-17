@@ -27,7 +27,7 @@ void Eggman_Create(void *data)
     RSDK_THIS(Eggman);
     if (!RSDK_sceneInfo->inEditor) {
         if (globals->gameMode < MODE_TIMEATTACK) {
-            RSDK.SetSpriteAnimation(Eggman->spriteIndex, 0, &entity->animator, true, 0);
+            RSDK.SetSpriteAnimation(Eggman->aniFrames, 0, &entity->animator, true, 0);
             entity->active        = ACTIVE_NORMAL;
             entity->visible       = true;
             entity->drawFX        = FX_FLIP;
@@ -49,13 +49,13 @@ void Eggman_Create(void *data)
 void Eggman_StageLoad(void)
 {
     if (RSDK.CheckStageFolder("GHZCutscene"))
-        Eggman->spriteIndex = RSDK.LoadSpriteAnimation("Eggman/EggmanGHZCutt.bin", SCOPE_STAGE);
+        Eggman->aniFrames = RSDK.LoadSpriteAnimation("Eggman/EggmanGHZCutt.bin", SCOPE_STAGE);
     else if (RSDK.CheckStageFolder("FBZ"))
-        Eggman->spriteIndex = RSDK.LoadSpriteAnimation("Eggman/EggmanFBZ.bin", SCOPE_STAGE);
+        Eggman->aniFrames = RSDK.LoadSpriteAnimation("Eggman/EggmanFBZ.bin", SCOPE_STAGE);
     else if (RSDK.CheckStageFolder("TMZ3"))
-        Eggman->spriteIndex = RSDK.LoadSpriteAnimation("Eggman/EggmanTMZ.bin", SCOPE_STAGE);
+        Eggman->aniFrames = RSDK.LoadSpriteAnimation("Eggman/EggmanTMZ.bin", SCOPE_STAGE);
     else
-        Eggman->spriteIndex = RSDK.LoadSpriteAnimation("Eggman/EggmanAll.bin", SCOPE_STAGE);
+        Eggman->aniFrames = RSDK.LoadSpriteAnimation("Eggman/EggmanAll.bin", SCOPE_STAGE);
 }
 
 void Eggman_Unknown1(void)
@@ -70,7 +70,7 @@ void Eggman_Unknown2(void)
 
     RSDK.ProcessAnimation(&entity->animator);
     if (entity->animator.frameID >= entity->animator.frameCount - 1) {
-        RSDK.SetSpriteAnimation(Eggman->spriteIndex, entity->animID, &entity->animator, true, 0);
+        RSDK.SetSpriteAnimation(Eggman->aniFrames, entity->animID, &entity->animator, true, 0);
         entity->state = Eggman_Unknown1;
     }
 }
@@ -89,7 +89,7 @@ void Eggman_Unknown4(void)
 
     RSDK.ProcessAnimation(&entity->animator);
     if (entity->onGround) {
-        RSDK.SetSpriteAnimation(Eggman->spriteIndex, entity->animID, &entity->animator, true, 0);
+        RSDK.SetSpriteAnimation(Eggman->aniFrames, entity->animID, &entity->animator, true, 0);
         entity->state = Eggman_Unknown1;
     }
     else {
@@ -104,7 +104,7 @@ void Eggman_Unknown5(void)
     RSDK_THIS(Eggman);
     RSDK.ProcessAnimation(&entity->animator);
     if (entity->timer <= 0) {
-        RSDK.SetSpriteAnimation(Eggman->spriteIndex, entity->animID, &entity->animator, true, 0);
+        RSDK.SetSpriteAnimation(Eggman->aniFrames, entity->animID, &entity->animator, true, 0);
         entity->velocity.x = 0;
         entity->velocity.y = 0;
         entity->state      = entity->stateStore;

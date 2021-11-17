@@ -53,7 +53,7 @@ void Animals_Create(void *data)
         entity->hitbox.left   = -4;
         entity->hitbox.right  = 4;
         entity->hitbox.bottom = Animals->hitboxes[entity->type] >> 16;
-        RSDK.SetSpriteAnimation(Animals->spriteIndex, 2 * entity->type, &entity->animator, true, 0);
+        RSDK.SetSpriteAnimation(Animals->aniFrames, 2 * entity->type, &entity->animator, true, 0);
     }
     else if (type) {
         entity->velocity.y    = -0x40000;
@@ -63,7 +63,7 @@ void Animals_Create(void *data)
         entity->hitbox.left   = -4;
         entity->hitbox.right  = 4;
         entity->hitbox.bottom = Animals->hitboxes[entity->type] >> 16;
-        RSDK.SetSpriteAnimation(Animals->spriteIndex, 2 * entity->type, &entity->animator, true, 0);
+        RSDK.SetSpriteAnimation(Animals->aniFrames, 2 * entity->type, &entity->animator, true, 0);
     }
     else if (entity->behaviour == 1) {
         entity->active = ACTIVE_BOUNDS;
@@ -88,7 +88,7 @@ void Animals_Create(void *data)
             entity->velocity.x = -Animals->xVelocity[entity->type];
         else
             entity->velocity.x = Animals->xVelocity[entity->type];
-        RSDK.SetSpriteAnimation(Animals->spriteIndex, 2 * entity->type + 1, &entity->animator, true, 0);
+        RSDK.SetSpriteAnimation(Animals->aniFrames, 2 * entity->type + 1, &entity->animator, true, 0);
     }
     else {
         entity->state = Animals_State_BounceAround;
@@ -97,7 +97,7 @@ void Animals_Create(void *data)
 
 void Animals_StageLoad(void)
 {
-    Animals->spriteIndex = RSDK.LoadSpriteAnimation("Global/Animals.bin", SCOPE_STAGE);
+    Animals->aniFrames = RSDK.LoadSpriteAnimation("Global/Animals.bin", SCOPE_STAGE);
     if (RSDK.GetObjectIDByName("Platform"))
         Animals->hasPlatform = true;
     if (RSDK.GetObjectIDByName("Bridge"))
@@ -225,7 +225,7 @@ void Animals_State_Freed(void)
     entity->velocity.y += 0x3800;
     RSDK.ProcessAnimation(&entity->animator);
     if (Animals_CheckGroundCollision()) {
-        RSDK.SetSpriteAnimation(Animals->spriteIndex, 2 * entity->type + 1, &entity->animator, true, 0);
+        RSDK.SetSpriteAnimation(Animals->aniFrames, 2 * entity->type + 1, &entity->animator, true, 0);
         switch (entity->type) {
             case 0:
             case 5:
@@ -288,15 +288,15 @@ void Animals_EditorDraw(void)
 
     switch (entity->behaviour) {
         default: break;
-        case 0: RSDK.SetSpriteAnimation(Animals->spriteIndex, 2 * entity->type, &entity->animator, true, 0); break;
+        case 0: RSDK.SetSpriteAnimation(Animals->aniFrames, 2 * entity->type, &entity->animator, true, 0); break;
         case 1:
-        case 2: RSDK.SetSpriteAnimation(Animals->spriteIndex, 2 * entity->type + 1, &entity->animator, true, 0); break;
+        case 2: RSDK.SetSpriteAnimation(Animals->aniFrames, 2 * entity->type + 1, &entity->animator, true, 0); break;
     }
 
     RSDK.DrawSprite(&entity->animator, NULL, false);
 }
 
-void Animals_EditorLoad(void) { Animals->spriteIndex = RSDK.LoadSpriteAnimation("Global/Animals.bin", SCOPE_STAGE); }
+void Animals_EditorLoad(void) { Animals->aniFrames = RSDK.LoadSpriteAnimation("Global/Animals.bin", SCOPE_STAGE); }
 #endif
 
 void Animals_Serialize(void)

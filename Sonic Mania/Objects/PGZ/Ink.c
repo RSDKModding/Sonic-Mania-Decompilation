@@ -21,7 +21,7 @@ void Ink_Update(void)
                     case ID_KNUCKLES: RSDK.CopyPalette(entity->type + 3, 80, 0, 80, 6); break;
                 }
                 Ink->playerColours[playerID] = entity->type + 1;
-                RSDK.SetSpriteAnimation(Ink->spriteIndex, entity->type + 6, &entity->animator3, true, 0);
+                RSDK.SetSpriteAnimation(Ink->aniFrames, entity->type + 6, &entity->animator3, true, 0);
             }
         }
         else {
@@ -55,15 +55,15 @@ void Ink_Create(void *data)
         entity->alpha         = 0x180;
         entity->updateRange.x = 0x800000;
         entity->updateRange.y = 0x800000;
-        RSDK.SetSpriteAnimation(Ink->spriteIndex, entity->type, &entity->animator1, true, 0);
-        RSDK.SetSpriteAnimation(Ink->spriteIndex, entity->type + 3, &entity->animator2, true, 0);
+        RSDK.SetSpriteAnimation(Ink->aniFrames, entity->type, &entity->animator1, true, 0);
+        RSDK.SetSpriteAnimation(Ink->aniFrames, entity->type + 3, &entity->animator2, true, 0);
     }
 }
 
 void Ink_StageLoad(void)
 {
     if (RSDK.CheckStageFolder("PSZ1"))
-        Ink->spriteIndex = RSDK.LoadSpriteAnimation("PSZ1/Ink.bin", SCOPE_STAGE);
+        Ink->aniFrames = RSDK.LoadSpriteAnimation("PSZ1/Ink.bin", SCOPE_STAGE);
     Ink->hitbox.left    = -24;
     Ink->hitbox.top     = -30;
     Ink->hitbox.right   = -16;

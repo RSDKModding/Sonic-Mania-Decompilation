@@ -93,7 +93,7 @@ void Debris_State_FallAndFlicker(void)
     RSDK_sceneInfo->entity->visible = Zone->timer & 1;
 }
 
-void Debris_FallFlickerAnimSetup(int32 spriteIndex, int32 *entryPtr, int32 animationID)
+void Debris_FallFlickerAnimSetup(int32 aniFrames, int32 *entryPtr, int32 animationID)
 {
     RSDK_THIS(Debris);
     if (entryPtr) {
@@ -108,7 +108,7 @@ void Debris_FallFlickerAnimSetup(int32 spriteIndex, int32 *entryPtr, int32 anima
         entity->drawFX = FX_FLIP;
         for (int32 *entry = entryPtr + 1; cnt > 0; entry += 4, --cnt) {
             EntityDebris *debris = CREATE_ENTITY(Debris, (void *)Debris_State_FallAndFlicker, entity->position.x, entity->position.y);
-            RSDK.SetSpriteAnimation(spriteIndex, animationID, &debris->animator, true, entry[0]);
+            RSDK.SetSpriteAnimation(aniFrames, animationID, &debris->animator, true, entry[0]);
             debris->direction     = entry[1];
             debris->velocity.x    = entry[2];
             debris->velocity.y    = entry[3];
@@ -120,7 +120,7 @@ void Debris_FallFlickerAnimSetup(int32 spriteIndex, int32 *entryPtr, int32 anima
     }
 }
 
-void Debris_FallFlickerSetup(int32 spriteIndex, int32 *entryPtr)
+void Debris_FallFlickerSetup(int32 aniFrames, int32 *entryPtr)
 {
     RSDK_THIS(Debris);
     if (entryPtr) {
@@ -138,7 +138,7 @@ void Debris_FallFlickerSetup(int32 spriteIndex, int32 *entryPtr)
         for (int32 *entry = entryPtr + 1; cnt > 0; entry += 6, --cnt) {
             EntityDebris *debris =
                 CREATE_ENTITY(Debris, (void *)Debris_State_FallAndFlicker, entity->position.x + entry[4], entity->position.y + entry[5]);
-            RSDK.SetSpriteAnimation(spriteIndex, 0, &debris->animator, true, entry[0]);
+            RSDK.SetSpriteAnimation(aniFrames, 0, &debris->animator, true, entry[0]);
             debris->direction     = entry[1];
             debris->velocity.x    = entry[2];
             debris->velocity.y    = entry[3];

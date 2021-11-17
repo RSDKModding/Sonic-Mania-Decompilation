@@ -42,9 +42,9 @@ void ThanksSetup_Create(void *data)
 
 void ThanksSetup_StageLoad(void)
 {
-    ThanksSetup->sfx_Sega = RSDK.GetSFX("Stage/Sega.wav");
+    ThanksSetup->sfxSega = RSDK.GetSFX("Stage/Sega.wav");
     RSDK.ResetEntitySlot(0, ThanksSetup->objectID, 0);
-    UIPicture->spriteIndex = RSDK.LoadSpriteAnimation("Thanks/Decorations.bin", SCOPE_STAGE);
+    UIPicture->aniFrames = RSDK.LoadSpriteAnimation("Thanks/Decorations.bin", SCOPE_STAGE);
     for (int32 i = 0; i < 16; ++i) {
         RSDK.StopChannel(i);
     }
@@ -92,7 +92,7 @@ void ThanksSetup_Unknown3(void)
         picture->drawFX          = FX_SCALE;
         picture->scale.x         = RSDK.Cos512(entity->rotation);
         if (entity->rotation == 128) {
-            RSDK.SetSpriteAnimation(UIPicture->spriteIndex, 2, &picture->animator, true, 0);
+            RSDK.SetSpriteAnimation(UIPicture->aniFrames, 2, &picture->animator, true, 0);
             entity->timer = 0;
             entity->state = ThanksSetup_Unknown4;
         }

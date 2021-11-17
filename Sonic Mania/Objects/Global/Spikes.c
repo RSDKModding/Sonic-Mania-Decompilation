@@ -11,7 +11,7 @@ void Spikes_Update(void)
                 if ((Zone->timer & 0x3F) == entity->timer) {
                     entity->stateMove++;
                     if (entity->activeScreens == 1)
-                        RSDK.PlaySfx(Spikes->sfx_Move, 0, 255);
+                        RSDK.PlaySfx(Spikes->sfxMove, 0, 255);
                 }
             }
             break;
@@ -29,7 +29,7 @@ void Spikes_Update(void)
             if ((Zone->timer & 0x3F) == entity->timer) {
                 entity->stateMove++;
                 if (entity->activeScreens == 1)
-                    RSDK.PlaySfx(Spikes->sfx_Move, 0, 255);
+                    RSDK.PlaySfx(Spikes->sfxMove, 0, 255);
             }
             break;
         case 4:
@@ -228,9 +228,9 @@ void Spikes_Update(void)
         if (--entity->timer2 <= 0) {
             switch (entity->type) {
                 case 1:
-                case 4: RSDK.SetSpriteAnimation(Spikes->spriteIndex, 2, &entity->animator, true, 0); break;
+                case 4: RSDK.SetSpriteAnimation(Spikes->aniFrames, 2, &entity->animator, true, 0); break;
                 case 2:
-                case 3: RSDK.SetSpriteAnimation(Spikes->spriteIndex, 3, &entity->animator, true, 0); break;
+                case 3: RSDK.SetSpriteAnimation(Spikes->aniFrames, 3, &entity->animator, true, 0); break;
                 default: break;
             }
             entity->timer2 = RSDK.Rand(0, 240) + 30;
@@ -318,21 +318,21 @@ void Spikes_StageLoad(void)
 {
     Spikes->stateDraw = Spikes_StateDraw_Stage;
     if (RSDK.CheckStageFolder("FBZ")) {
-        Spikes->spriteIndex = RSDK.LoadSpriteAnimation("FBZ/Spikes.bin", SCOPE_STAGE);
+        Spikes->aniFrames = RSDK.LoadSpriteAnimation("FBZ/Spikes.bin", SCOPE_STAGE);
     }
     if (RSDK.CheckStageFolder("PSZ2")) {
-        Spikes->spriteIndex = RSDK.LoadSpriteAnimation("PSZ2/Spikes.bin", SCOPE_STAGE);
+        Spikes->aniFrames = RSDK.LoadSpriteAnimation("PSZ2/Spikes.bin", SCOPE_STAGE);
     }
     else {
-        Spikes->spriteIndex = RSDK.LoadSpriteAnimation("Global/Spikes.bin", SCOPE_STAGE);
+        Spikes->aniFrames = RSDK.LoadSpriteAnimation("Global/Spikes.bin", SCOPE_STAGE);
         Spikes->stateDraw   = Spikes_StateDraw_Global;
     }
-    RSDK.SetSpriteAnimation(Spikes->spriteIndex, 0, &Spikes->vData, true, 0);
-    RSDK.SetSpriteAnimation(Spikes->spriteIndex, 1, &Spikes->hData, true, 0);
+    RSDK.SetSpriteAnimation(Spikes->aniFrames, 0, &Spikes->vData, true, 0);
+    RSDK.SetSpriteAnimation(Spikes->aniFrames, 1, &Spikes->hData, true, 0);
     Spikes->dword3C   = 0x100000;
     Spikes->dword40   = 0x100000;
-    Spikes->sfx_Move  = RSDK.GetSFX("Global/SpikesMove.wav");
-    Spikes->sfx_Spike = RSDK.GetSFX("Global/Spike.wav");
+    Spikes->sfxMove  = RSDK.GetSFX("Global/SpikesMove.wav");
+    Spikes->sfxSpike = RSDK.GetSFX("Global/Spike.wav");
 }
 
 void Spikes_StateDraw_Global(void)
@@ -453,7 +453,7 @@ void Spikes_CheckHit(EntityPlayer *player, int32 playerVelX, int32 playerVelY)
                             player->velocity.x = 0x28000;
                         player->blinkTimer = 60;
                         player->state      = Player_State_Hit;
-                        RSDK.StopSFX(Player->sfx_MightyDrill);
+                        RSDK.StopSFX(Player->sfxMightyDrill);
                     }
 
                     player->velocity.x -= player->velocity.x >> 2;
@@ -479,15 +479,15 @@ void Spikes_CheckHit(EntityPlayer *player, int32 playerVelX, int32 playerVelY)
             player->jumpAbility      = 0;
             player->jumpAbilityTimer = 0;
             if (player->state == Player_State_Hit) {
-                RSDK.SetSpriteAnimation(player->spriteIndex, ANI_HURT, &player->playerAnimator, false, 0);
-                RSDK.PlaySfx(Spikes->sfx_Spike, 0, 255);
+                RSDK.SetSpriteAnimation(player->aniFrames, ANI_HURT, &player->playerAnimator, false, 0);
+                RSDK.PlaySfx(Spikes->sfxSpike, 0, 255);
             }
             else {
-                RSDK.SetSpriteAnimation(player->spriteIndex, ANI_FLY, &player->playerAnimator, false, 0);
-                RSDK.PlaySfx(Player->sfx_MightyUnspin, 0, 255);
+                RSDK.SetSpriteAnimation(player->aniFrames, ANI_FLY, &player->playerAnimator, false, 0);
+                RSDK.PlaySfx(Player->sfxMightyUnspin, 0, 255);
             }
             if (player->playerAnimator.animationID != ANI_FLY)
-                RSDK.PlaySfx(Player->sfx_PimPom, 0, 255);
+                RSDK.PlaySfx(Player->sfxPimPom, 0, 255);
             if (player->underwater) {
                 player->velocity.x >>= 1;
                 player->velocity.y >>= 1;
@@ -506,15 +506,15 @@ void Spikes_CheckHit(EntityPlayer *player, int32 playerVelX, int32 playerVelY)
                 player->jumpAbility      = 0;
                 player->jumpAbilityTimer = 0;
                 if (player->state == Player_State_Hit) {
-                    RSDK.SetSpriteAnimation(player->spriteIndex, ANI_HURT, &player->playerAnimator, false, 0);
-                    RSDK.PlaySfx(Spikes->sfx_Spike, 0, 255);
+                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_HURT, &player->playerAnimator, false, 0);
+                    RSDK.PlaySfx(Spikes->sfxSpike, 0, 255);
                 }
                 else {
-                    RSDK.SetSpriteAnimation(player->spriteIndex, ANI_FLY, &player->playerAnimator, false, 0);
-                    RSDK.PlaySfx(Player->sfx_MightyUnspin, 0, 255);
+                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_FLY, &player->playerAnimator, false, 0);
+                    RSDK.PlaySfx(Player->sfxMightyUnspin, 0, 255);
                 }
                 if (player->playerAnimator.animationID != ANI_FLY)
-                    RSDK.PlaySfx(Player->sfx_PimPom, 0, 255);
+                    RSDK.PlaySfx(Player->sfxPimPom, 0, 255);
                 if (player->underwater) {
                     player->velocity.x >>= 1;
                     player->velocity.y >>= 1;
@@ -527,7 +527,7 @@ void Spikes_CheckHit(EntityPlayer *player, int32 playerVelX, int32 playerVelY)
                     player->onGround         = false;
                     player->jumpAbility      = 0;
                     player->jumpAbilityTimer = 0;
-                    RSDK.PlaySfx(Player->sfx_PimPom, 0, 255);
+                    RSDK.PlaySfx(Player->sfxPimPom, 0, 255);
                 }
 
                 player->groundedStore   = true;
@@ -547,11 +547,11 @@ void Spikes_CheckHit(EntityPlayer *player, int32 playerVelX, int32 playerVelY)
     Player_Hit(player);
     if (player->hurtFlag == 1) {
         player->hurtFlag = 2;
-        RSDK.PlaySfx(Spikes->sfx_Spike, 0, 255);
+        RSDK.PlaySfx(Spikes->sfxSpike, 0, 255);
     }
     else if (player->state == Player_State_Hit && (player->shield || player->sidekick)) {
-        RSDK.StopSFX(Player->sfx_Hurt);
-        RSDK.PlaySfx(Spikes->sfx_Spike, 0, 255);
+        RSDK.StopSFX(Player->sfxHurt);
+        RSDK.PlaySfx(Spikes->sfxSpike, 0, 255);
     }
 }
 
@@ -619,17 +619,17 @@ void Spikes_EditorLoad(void)
 {
     Spikes->stateDraw = Spikes_StateDraw_Stage;
     if (RSDK.CheckStageFolder("FBZ")) {
-        Spikes->spriteIndex = RSDK.LoadSpriteAnimation("FBZ/Spikes.bin", SCOPE_STAGE);
+        Spikes->aniFrames = RSDK.LoadSpriteAnimation("FBZ/Spikes.bin", SCOPE_STAGE);
     }
     if (RSDK.CheckStageFolder("PSZ2")) {
-        Spikes->spriteIndex = RSDK.LoadSpriteAnimation("PSZ2/Spikes.bin", SCOPE_STAGE);
+        Spikes->aniFrames = RSDK.LoadSpriteAnimation("PSZ2/Spikes.bin", SCOPE_STAGE);
     }
     else {
-        Spikes->spriteIndex = RSDK.LoadSpriteAnimation("Global/Spikes.bin", SCOPE_STAGE);
+        Spikes->aniFrames = RSDK.LoadSpriteAnimation("Global/Spikes.bin", SCOPE_STAGE);
         Spikes->stateDraw   = Spikes_StateDraw_Global;
     }
-    RSDK.SetSpriteAnimation(Spikes->spriteIndex, 0, &Spikes->vData, true, 0);
-    RSDK.SetSpriteAnimation(Spikes->spriteIndex, 1, &Spikes->hData, true, 0);
+    RSDK.SetSpriteAnimation(Spikes->aniFrames, 0, &Spikes->vData, true, 0);
+    RSDK.SetSpriteAnimation(Spikes->aniFrames, 1, &Spikes->hData, true, 0);
 
     RSDK_ACTIVE_VAR(Spikes, type);
     RSDK_ENUM_VAR("Up", SPIKES_UP);

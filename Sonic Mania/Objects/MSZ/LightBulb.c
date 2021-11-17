@@ -122,7 +122,7 @@ void LightBulb_State_CheckPlayerCollisions(void)
                 debris->drawFX     = FX_FLIP;
                 debris->direction  = i & 3;
                 debris->drawOrder  = Zone->drawOrderHigh;
-                RSDK.SetSpriteAnimation(ItemBox->spriteIndex, 6, &debris->animator, true, RSDK.Rand(0, 4));
+                RSDK.SetSpriteAnimation(ItemBox->aniFrames, 6, &debris->animator, true, RSDK.Rand(0, 4));
             }
 
             entity->state   = LightBulb_State_Destroyed;

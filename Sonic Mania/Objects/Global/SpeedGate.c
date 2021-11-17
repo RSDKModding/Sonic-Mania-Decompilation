@@ -116,10 +116,10 @@ void SpeedGate_Draw(void)
 void SpeedGate_Create(void *data)
 {
     RSDK_THIS(SpeedGate);
-    RSDK.SetSpriteAnimation(SpeedGate->spriteIndex, 0, &entity->baseData, true, 0);
-    RSDK.SetSpriteAnimation(SpeedGate->spriteIndex, 1, &entity->topData, true, 0);
-    RSDK.SetSpriteAnimation(SpeedGate->spriteIndex, 2, &entity->timerData, true, 0);
-    RSDK.SetSpriteAnimation(SpeedGate->spriteIndex, 5, &entity->bubbleData, true, 0);
+    RSDK.SetSpriteAnimation(SpeedGate->aniFrames, 0, &entity->baseData, true, 0);
+    RSDK.SetSpriteAnimation(SpeedGate->aniFrames, 1, &entity->topData, true, 0);
+    RSDK.SetSpriteAnimation(SpeedGate->aniFrames, 2, &entity->timerData, true, 0);
+    RSDK.SetSpriteAnimation(SpeedGate->aniFrames, 5, &entity->bubbleData, true, 0);
     if (!RSDK_sceneInfo->inEditor) {
         entity->visible       = true;
         entity->drawOrder     = Zone->playerDrawHigh;
@@ -129,12 +129,12 @@ void SpeedGate_Create(void *data)
         entity->scale.y       = 0x200;
         if (entity->timer < 1) {
             RSDK.SetSpriteAnimation(0xFFFF, 0, &entity->timerData, true, 0);
-            RSDK.SetSpriteAnimation(SpeedGate->spriteIndex, 4, &entity->finsData, true, 0);
+            RSDK.SetSpriteAnimation(SpeedGate->aniFrames, 4, &entity->finsData, true, 0);
             entity->posUnknown.x = entity->position.x;
             entity->posUnknown.y = entity->position.y - 0x200000;
         }
         else {
-            RSDK.SetSpriteAnimation(SpeedGate->spriteIndex, 3, &entity->finsData, true, 0);
+            RSDK.SetSpriteAnimation(SpeedGate->aniFrames, 3, &entity->finsData, true, 0);
             entity->posUnknown.x = entity->position.x;
             entity->state        = SpeedGate_State_Unknown1;
             entity->posUnknown.y = entity->position.y - 0x200000;
@@ -144,8 +144,8 @@ void SpeedGate_Create(void *data)
 
 void SpeedGate_StageLoad(void)
 {
-    SpeedGate->spriteIndex   = RSDK.LoadSpriteAnimation("Global/SpeedGate.bin", SCOPE_STAGE);
-    SpeedGate->sfx_StarPost  = RSDK.GetSFX("Global/StarPost.wav");
+    SpeedGate->aniFrames   = RSDK.LoadSpriteAnimation("Global/SpeedGate.bin", SCOPE_STAGE);
+    SpeedGate->sfxStarPost  = RSDK.GetSFX("Global/StarPost.wav");
     SpeedGate->hitbox.left   = -8;
     SpeedGate->hitbox.top    = -44;
     SpeedGate->hitbox.right  = 8;
@@ -170,7 +170,7 @@ void SpeedGate_State_Unknown1(void)
                 entity->timer2 = 0;
                 if (entity->field_70 < 0)
                     entity->timer2 = 0x200;
-                RSDK.PlaySfx(SpeedGate->sfx_StarPost, 0, 255);
+                RSDK.PlaySfx(SpeedGate->sfxStarPost, 0, 255);
                 foreach_return;
             }
         }
@@ -227,11 +227,11 @@ void SpeedGate_State_Unknown2(void)
                 thisEntity->timer3       = entity->timer3;
                 thisEntity->active       = ACTIVE_NORMAL;
                 thisEntity->state        = SpeedGate_State_Unknown3;
-                RSDK.SetSpriteAnimation(SpeedGate->spriteIndex, 2, &thisEntity->timerData, true, 0);
+                RSDK.SetSpriteAnimation(SpeedGate->aniFrames, 2, &thisEntity->timerData, true, 0);
                 thisEntity->timer2 = 0;
                 if (thisEntity->field_70 < 0)
                     thisEntity->timer2 = 0x200;
-                RSDK.PlaySfx(SpeedGate->sfx_StarPost, 0, 255);
+                RSDK.PlaySfx(SpeedGate->sfxStarPost, 0, 255);
             }
         }
     }
@@ -272,11 +272,11 @@ void SpeedGate_EditorDraw(void)
     RSDK_THIS(SpeedGate);
     Vector2 drawPos;
 
-    RSDK.SetSpriteAnimation(SpeedGate->spriteIndex, 0, &entity->baseData, true, 0);
-    RSDK.SetSpriteAnimation(SpeedGate->spriteIndex, 1, &entity->topData, true, 0);
-    RSDK.SetSpriteAnimation(SpeedGate->spriteIndex, 2, &entity->timerData, true, 0);
-    RSDK.SetSpriteAnimation(SpeedGate->spriteIndex, 5, &entity->bubbleData, true, 0);
-    RSDK.SetSpriteAnimation(SpeedGate->spriteIndex, 3, &entity->finsData, true, 0);
+    RSDK.SetSpriteAnimation(SpeedGate->aniFrames, 0, &entity->baseData, true, 0);
+    RSDK.SetSpriteAnimation(SpeedGate->aniFrames, 1, &entity->topData, true, 0);
+    RSDK.SetSpriteAnimation(SpeedGate->aniFrames, 2, &entity->timerData, true, 0);
+    RSDK.SetSpriteAnimation(SpeedGate->aniFrames, 5, &entity->bubbleData, true, 0);
+    RSDK.SetSpriteAnimation(SpeedGate->aniFrames, 3, &entity->finsData, true, 0);
 
     entity->rotation = entity->timer2;
     entity->drawFX   = FX_ROTATE;
@@ -322,7 +322,7 @@ void SpeedGate_EditorDraw(void)
     RSDK.DrawSprite(&entity->bubbleData, NULL, false);
 }
 
-void SpeedGate_EditorLoad(void) { SpeedGate->spriteIndex = RSDK.LoadSpriteAnimation("Global/SpeedGate.bin", SCOPE_STAGE); }
+void SpeedGate_EditorLoad(void) { SpeedGate->aniFrames = RSDK.LoadSpriteAnimation("Global/SpeedGate.bin", SCOPE_STAGE); }
 #endif
 
 void SpeedGate_Serialize(void)

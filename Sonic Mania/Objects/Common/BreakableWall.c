@@ -103,12 +103,12 @@ void BreakableWall_Create(void *data)
 
 void BreakableWall_StageLoad(void)
 {
-    BreakableWall->spriteIndex = RSDK.LoadSpriteAnimation("Global/TicMark.bin", SCOPE_STAGE);
-    RSDK.SetSpriteAnimation(BreakableWall->spriteIndex, 0, &BreakableWall->animator, true, 0);
+    BreakableWall->aniFrames = RSDK.LoadSpriteAnimation("Global/TicMark.bin", SCOPE_STAGE);
+    RSDK.SetSpriteAnimation(BreakableWall->aniFrames, 0, &BreakableWall->animator, true, 0);
     if (RSDK.CheckStageFolder("AIZ"))
-        BreakableWall->sfx_Break = RSDK.GetSFX("Stage/LedgeBreak3.wav");
+        BreakableWall->sfxBreak = RSDK.GetSFX("Stage/LedgeBreak3.wav");
     else
-        BreakableWall->sfx_Break = RSDK.GetSFX("Stage/LedgeBreak.wav");
+        BreakableWall->sfxBreak = RSDK.GetSFX("Stage/LedgeBreak.wav");
     BreakableWall->farPlaneLayer = RSDK.GetSceneLayerID("Far Plane");
 }
 
@@ -311,7 +311,7 @@ void BreakableWall_HandleTopBreak_All(void)
                             th += 0x100000;
                         }
 
-                        RSDK.PlaySfx(BreakableWall->sfx_Break, 0, 255);
+                        RSDK.PlaySfx(BreakableWall->sfxBreak, 0, 255);
                         BreakableWall_GiveScoreBonus(player);
 #if RETRO_USE_PLUS
                         if (player->characterID == ID_MIGHTY && player->state == Player_State_MightyHammerDrop)
@@ -425,7 +425,7 @@ void BreakableWall_HandleSidesBreak(void)
                                 player->abilitySpeed -= player->abilitySpeed >> 2;
                                 player->velocity.x -= player->velocity.x >> 2;
                                 if (abs(player->velocity.x) <= 0x30000) {
-                                    RSDK.SetSpriteAnimation(player->spriteIndex, ANI_FLYTIRED, &player->playerAnimator, 0, 0);
+                                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_FLYTIRED, &player->playerAnimator, 0, 0);
                                     player->state = Player_State_KnuxGlideDrop;
                                 }
                             }
@@ -434,7 +434,7 @@ void BreakableWall_HandleSidesBreak(void)
                                 player->velocity.x -= player->velocity.x >> 2;
                             }
                         }
-                        RSDK.PlaySfx(BreakableWall->sfx_Break, 0, 255);
+                        RSDK.PlaySfx(BreakableWall->sfxBreak, 0, 255);
                         RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL);
                     }
                     continue; // skip to next loop, so we dont do the box collision
@@ -534,7 +534,7 @@ void BreakableWall_HandleBottomBreak_All(void)
                         offsetY += 0x100000;
                     }
 
-                    RSDK.PlaySfx(BreakableWall->sfx_Break, 0, 255);
+                    RSDK.PlaySfx(BreakableWall->sfxBreak, 0, 255);
                     player->velocity.y = velY;
                     destroyEntity(entity);
                 }
@@ -602,7 +602,7 @@ void BreakableWall_HandleBlockBreak_V(void)
     entity->size.y     = sizeY;
     entity->position.x = posX;
     entity->position.y = posY;
-    RSDK.PlaySfx(BreakableWall->sfx_Break, false, 255);
+    RSDK.PlaySfx(BreakableWall->sfxBreak, false, 255);
 }
 void BreakableWall_HandleBlockBreak_H(EntityBreakableWall *entity, uint8 flip)
 {
@@ -733,8 +733,8 @@ void BreakableWall_EditorDraw(void)
 
 void BreakableWall_EditorLoad(void)
 {
-    BreakableWall->spriteIndex = RSDK.LoadSpriteAnimation("Global/TicMark.bin", SCOPE_STAGE);
-    RSDK.SetSpriteAnimation(BreakableWall->spriteIndex, 0, &BreakableWall->animator, true, 0);
+    BreakableWall->aniFrames = RSDK.LoadSpriteAnimation("Global/TicMark.bin", SCOPE_STAGE);
+    RSDK.SetSpriteAnimation(BreakableWall->aniFrames, 0, &BreakableWall->animator, true, 0);
 }
 
 void BreakableWall_Serialize(void)

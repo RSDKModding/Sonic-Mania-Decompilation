@@ -18,7 +18,7 @@ void TippingPlatform_Update(void)
         if (!entity->stoodAngle && entity->bossID > 2 && entity->syringe->activated) {
             entity->stoodAngle    = 1;
             entity->collapseDelay = entity->intervalOffset + 1;
-            RSDK.SetSpriteAnimation(Platform->spriteIndex, 1, &entity->animator, true, 0);
+            RSDK.SetSpriteAnimation(Platform->aniFrames, 1, &entity->animator, true, 0);
             entity->state = TippingPlatform_Unknown5;
         }
     }
@@ -27,11 +27,11 @@ void TippingPlatform_Update(void)
             int32 timer = (Zone->timer + entity->intervalOffset) % entity->interval;
             if (timer >= entity->duration) {
                 if (timer >= entity->duration + 22) {
-                    RSDK.SetSpriteAnimation(Platform->spriteIndex, 2, &entity->animator, true, 6);
+                    RSDK.SetSpriteAnimation(Platform->aniFrames, 2, &entity->animator, true, 6);
                 }
                 else {
                     entity->active = ACTIVE_NORMAL;
-                    RSDK.SetSpriteAnimation(Platform->spriteIndex, 2, &entity->animator, true, (timer - entity->duration) >> 2);
+                    RSDK.SetSpriteAnimation(Platform->aniFrames, 2, &entity->animator, true, (timer - entity->duration) >> 2);
                     entity->state = TippingPlatform_Unknown4;
                 }
             }
@@ -39,11 +39,11 @@ void TippingPlatform_Update(void)
                 entity->active        = ACTIVE_NORMAL;
                 entity->collapseDelay = entity->duration - timer;
                 if (entity->duration - timer < entity->duration - 24) {
-                    RSDK.SetSpriteAnimation(Platform->spriteIndex, 1, &entity->animator, true, 6);
+                    RSDK.SetSpriteAnimation(Platform->aniFrames, 1, &entity->animator, true, 6);
                     entity->state = TippingPlatform_Unknown3;
                 }
                 else {
-                    RSDK.SetSpriteAnimation(Platform->spriteIndex, 1, &entity->animator, true, timer >> 2);
+                    RSDK.SetSpriteAnimation(Platform->aniFrames, 1, &entity->animator, true, timer >> 2);
                     entity->state                   = TippingPlatform_Unknown3;
                     entity->animator.animationTimer = (entity->duration - entity->collapseDelay) & 3;
                 }
@@ -88,11 +88,11 @@ void TippingPlatform_Create(void *data)
     Platform_Create(NULL);
 
     if (entity->bossID) {
-        RSDK.SetSpriteAnimation(Platform->spriteIndex, 1, &entity->animator, true, 0);
+        RSDK.SetSpriteAnimation(Platform->aniFrames, 1, &entity->animator, true, 0);
         entity->animator.animationSpeed = 0;
     }
     else {
-        RSDK.SetSpriteAnimation(Platform->spriteIndex, 2, &entity->animator, true, 6);
+        RSDK.SetSpriteAnimation(Platform->aniFrames, 2, &entity->animator, true, 6);
     }
 
     entity->state = Platform_State_Normal;
@@ -156,7 +156,7 @@ void TippingPlatform_Unknown3(void)
 {
     RSDK_THIS(TippingPlatform);
     if (--entity->collapseDelay <= 0) {
-        RSDK.SetSpriteAnimation(Platform->spriteIndex, 2, &entity->animator, true, 0);
+        RSDK.SetSpriteAnimation(Platform->aniFrames, 2, &entity->animator, true, 0);
         entity->state = TippingPlatform_Unknown2;
     }
 }
@@ -181,11 +181,11 @@ void TippingPlatform_EditorDraw(void)
 {
     RSDK_THIS(TippingPlatform);
     if (entity->bossID) {
-        RSDK.SetSpriteAnimation(Platform->spriteIndex, 1, &entity->animator, true, 0);
+        RSDK.SetSpriteAnimation(Platform->aniFrames, 1, &entity->animator, true, 0);
         entity->animator.animationSpeed = 0;
     }
     else {
-        RSDK.SetSpriteAnimation(Platform->spriteIndex, 2, &entity->animator, true, 6);
+        RSDK.SetSpriteAnimation(Platform->aniFrames, 2, &entity->animator, true, 6);
     }
 
     TippingPlatform_Draw();

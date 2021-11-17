@@ -23,7 +23,7 @@ void TitleSetup_Create(void *data)
 {
     RSDK_THIS(TitleSetup);
     if (!RSDK_sceneInfo->inEditor) {
-        RSDK.SetSpriteAnimation(TitleSetup->spriteIndex, 0, &entity->animator, true, 0);
+        RSDK.SetSpriteAnimation(TitleSetup->aniFrames, 0, &entity->animator, true, 0);
         entity->active    = ACTIVE_ALWAYS;
         entity->visible   = true;
         entity->drawOrder = 12;
@@ -66,10 +66,10 @@ void TitleSetup_StageLoad(void)
     globals->taTableID         = -1;
     globals->taTableLoaded     = STATUS_NONE;
 #endif
-    TitleSetup->spriteIndex    = RSDK.LoadSpriteAnimation("Title/Electricity.bin", SCOPE_STAGE);
-    TitleSetup->sfx_MenuBleep  = RSDK.GetSFX("Global/MenuBleep.wav");
-    TitleSetup->sfx_MenuAccept = RSDK.GetSFX("Global/MenuAccept.wav");
-    TitleSetup->sfx_Ring       = RSDK.GetSFX("Global/Ring.wav");
+    TitleSetup->aniFrames    = RSDK.LoadSpriteAnimation("Title/Electricity.bin", SCOPE_STAGE);
+    TitleSetup->sfxMenuBleep  = RSDK.GetSFX("Global/MenuBleep.wav");
+    TitleSetup->sfxMenuAccept = RSDK.GetSFX("Global/MenuAccept.wav");
+    TitleSetup->sfxRing       = RSDK.GetSFX("Global/Ring.wav");
     RSDK.ResetEntitySlot(0, TitleSetup->objectID, NULL);
 }
 
@@ -102,7 +102,7 @@ void TitleSetup_CheckCheatCode(void)
         && TitleSetup->cheatCode[4] == 1 && TitleSetup->cheatCode[5] == 1 && TitleSetup->cheatCode[6] == 1 && TitleSetup->cheatCode[7] == 1) {
 #if RETRO_USE_PLUS
         if (!globals->superSecret) {
-            RSDK.PlaySfx(TitleSetup->sfx_Ring, 0, 255);
+            RSDK.PlaySfx(TitleSetup->sfxRing, false, 255);
             globals->superSecret = true;
         }
 #endif
@@ -144,12 +144,12 @@ void TitleSetup_AnimateUntilFlash(void)
     if (entity->animator.frameID == 31) {
         foreach_all(TitleLogo, titleLogo)
         {
-            if (titleLogo->type >= 0) {
-                if (titleLogo->type <= 1) {
+            if (titleLogo->type >= TITLELOGO_EMBLEM) {
+                if (titleLogo->type <= TITLELOGO_RIBBON) {
                     titleLogo->active  = ACTIVE_NORMAL;
                     titleLogo->visible = true;
                 }
-                else if (titleLogo->type == 3) {
+                else if (titleLogo->type == TITLELOGO_POWERLED) {
                     destroyEntity(titleLogo);
                 }
             }
@@ -167,19 +167,19 @@ void TitleSetup_Unknown6(void)
         foreach_all(TitleLogo, titleLogo)
         {
 #if RETRO_USE_PLUS
-            if (titleLogo->type == 7) {
+            if (titleLogo->type == TITLELOGO_PLUS) {
                 titleLogo->position.y -= 0x200000;
             }
-            else if (titleLogo->type != 6) {
+            else if (titleLogo->type != TITLELOGO_PRESSSTART) {
 #else
-            if (titleLogo->type != 6) {
+            if (titleLogo->type != TITLELOGO_PRESSSTART) {
 #endif
                 titleLogo->active  = ACTIVE_NORMAL;
                 titleLogo->visible = true;
             }
-            if (titleLogo->type == 1) {
+            if (titleLogo->type == TITLELOGO_RIBBON) {
                 titleLogo->flag = true;
-                RSDK.SetSpriteAnimation(TitleLogo->logoIndex, 2, &titleLogo->animator1, true, 0);
+                RSDK.SetSpriteAnimation(TitleLogo->aniFrames, 2, &titleLogo->animator1, true, 0);
             }
         }
 
@@ -224,13 +224,13 @@ void TitleSetup_SetupLogo(void)
     if (++entity->timer == 120) {
         foreach_all(TitleLogo, titleLogo)
         {
-            if (titleLogo->type == 6) {
+            if (titleLogo->type == TITLELOGO_PRESSSTART) {
                 titleLogo->active      = ACTIVE_NORMAL;
                 titleLogo->visible = true;
 #if RETRO_USE_PLUS
                 Entity *store          = RSDK_sceneInfo->entity;
                 RSDK_sceneInfo->entity = (Entity *)titleLogo;
-                TitleLogo_Unknown1();
+                TitleLogo_SetupPressStart();
                 RSDK_sceneInfo->entity = store;
 #endif
             }
@@ -249,27 +249,27 @@ void TitleSetup_SetupLogo_Plus(void)
         foreach_all(TitleLogo, titleLogo)
         {
             switch (titleLogo->type) {
-                case 1:
-                case 2:
+                case TITLELOGO_RIBBON:
+                case TITLELOGO_GAMETITLE:
                     titleLogo->storeY     = titleLogo->position.y - 0x70000;
                     titleLogo->velocity.y = -0x30000;
                     titleLogo->timer      = 2;
-                    titleLogo->state      = TitleLogo_Unknown4;
-                    RSDK.PlaySfx(TitleLogo->sfx_Plus, 0, 255);
+                    titleLogo->state      = TitleLogo_State_HandleSetup;
+                    RSDK.PlaySfx(TitleLogo->sfxPlus, false, 255);
                     break;
-                case 6: titleLogo->position.y += 0x80000; break;
-                case 7:
+                case TITLELOGO_PRESSSTART: titleLogo->position.y += 0x80000; break;
+                case TITLELOGO_PLUS:
                     titleLogo->active  = ACTIVE_NORMAL;
                     titleLogo->visible = true;
                     titleLogo->timer   = 2;
                     titleLogo->position.y -= 0x40000;
-                    titleLogo->state = TitleLogo_Unknown4;
+                    titleLogo->state = TitleLogo_State_HandleSetup;
                     break;
                 default: break;
             }
         }
 
-        RSDK.CreateEntity(TitleEggman->objectID, 0, 0, 0xC00000);
+        CREATE_ENTITY(TitleEggman, NULL, 0, 0xC00000);
         entity->timer = 0;
         entity->state = TitleSetup_SetupLogo;
     }
@@ -289,7 +289,7 @@ void TitleSetup_Unknown10(void)
 #endif
     entity->touched = RSDK_touchMouse->count > 0;
     if (skipped2 || skipped) {
-        RSDK.PlaySfx(TitleSetup->sfx_MenuAccept, 0, 255);
+        RSDK.PlaySfx(TitleSetup->sfxMenuAccept, 0, 255);
         entity->timer = 0;
         const char *nextScene = "Menu";
 #if RETRO_GAMEVER == VER_100
@@ -351,21 +351,25 @@ void TitleSetup_Unknown12(void)
 void TitleSetup_DrawState_FadeBlack(void)
 {
     RSDK_THIS(TitleSetup);
+
     RSDK.FillScreen(0x000000, entity->timer, entity->timer - 128, entity->timer - 256);
 }
 
 void TitleSetup_DrawState_DrawRing(void)
 {
     RSDK_THIS(TitleSetup);
+
     entity->direction = FLIP_NONE;
-    RSDK.DrawSprite(&entity->animator, &entity->drawPos, 0);
+    RSDK.DrawSprite(&entity->animator, &entity->drawPos, false);
+
     entity->direction = FLIP_X;
-    RSDK.DrawSprite(&entity->animator, &entity->drawPos, 0);
+    RSDK.DrawSprite(&entity->animator, &entity->drawPos, false);
 }
 
 void TitleSetup_DrawState_Flash(void)
 {
     RSDK_THIS(TitleSetup);
+
     RSDK.FillScreen(0xF0F0F0, entity->timer, entity->timer - 128, entity->timer - 256);
 }
 

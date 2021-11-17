@@ -80,7 +80,7 @@ void MSZCutsceneK_SetupP2(int posX, int posY)
     player2->characterID     = ID_SONIC;
     player2->position.x      = posX;
     player2->position.y      = posY;
-    player2->spriteIndex     = Player->sonicSpriteIndex;
+    player2->aniFrames     = Player->sonicSpriteIndex;
     player2->tailSpriteIndex = -1;
     player2->cameraOffset    = 0x50000;
     player2->movesetState    = Player_SonicJumpAbility;

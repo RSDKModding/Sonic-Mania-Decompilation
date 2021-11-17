@@ -87,7 +87,7 @@ void UIKeyBinder_Update(void)
                 UIKeyBinder->activeBinder = 0;
                 parent->childHasFocus     = false;
                 RSDK.SetSettingsValue(SETTINGS_CHANGED, 1);
-                RSDK.PlaySfx(UIWidgets->sfx_Accept, false, 255);
+                RSDK.PlaySfx(UIWidgets->sfxAccept, false, 255);
             }
         }
         else {
@@ -294,7 +294,7 @@ void UIKeyBinder_Options3CB(void)
         parent->selectionDisabled = true;
         UIKeyBinder->activeBinder = (Entity *)entity;
         entity->state             = UIKeyBinder_Unknown14;
-        RSDK.PlaySfx(UIWidgets->sfx_Accept, false, 255);
+        RSDK.PlaySfx(UIWidgets->sfxAccept, false, 255);
         UIKeyBinder_SetMappings(entity->inputID + 1, entity->type, -1);
     }
 }

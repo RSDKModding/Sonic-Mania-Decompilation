@@ -427,7 +427,7 @@ void CPZBoss_State_HandleBossMatchFinish(void)
                 player->onGround   = false;
                 player->velocity.y = -0x20000;
                 RSDK.AddDrawListRef(Zone->playerDrawLow, RSDK.GetEntityID(&player));
-                RSDK.SetSpriteAnimation(player->spriteIndex, ANI_HURT, &player->playerAnimator, false, 0);
+                RSDK.SetSpriteAnimation(player->aniFrames, ANI_HURT, &player->playerAnimator, false, 0);
                 RSDK.SetSpriteAnimation(0xFFFF, 0, &entity->animator1, false, 0);
                 RSDK.SetSpriteAnimation(CPZBoss->playerFrames, 1, &entity->playerAnimator, true, 0);
             }
@@ -480,7 +480,7 @@ void CPZBoss_State_Unknown11(void)
             player->position.y      = entity->position.y;
             player->velocity.x      = 0;
             player->velocity.y      = -0x80000;
-            RSDK.SetSpriteAnimation(player->spriteIndex, ANI_JUMP, &player->playerAnimator, false, 0);
+            RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->playerAnimator, false, 0);
             Zone->playerBoundActiveR[player->playerID] = true;
         }
 

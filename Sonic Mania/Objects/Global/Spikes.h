@@ -16,11 +16,11 @@ typedef struct {
     StateMachine(stateDraw);
     Animator vData;
     Animator hData;
-    uint16 spriteIndex;
+    uint16 aniFrames;
     int32 dword3C;
     int32 dword40;
-    uint16 sfx_Move;
-    uint16 sfx_Spike;
+    uint16 sfxMove;
+    uint16 sfxSpike;
 } ObjectSpikes;
 
 // Entity Class

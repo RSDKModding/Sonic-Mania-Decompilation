@@ -487,7 +487,7 @@ void BSS_Setup_HandleSteppedObjects(void)
                 EntityBSS_Player *player = RSDK_GET_ENTITY(SLOT_PLAYER1, BSS_Player);
                 player->velocity.y       = -0x180000;
                 player->onGround         = 0;
-                RSDK.SetSpriteAnimation(player->spriteIndex, 3, &player->playerAnimator, 0, 0);
+                RSDK.SetSpriteAnimation(player->aniFrames, 3, &player->playerAnimator, 0, 0);
                 BSS_Player->field_6 = 4;
                 entity->globeSpeed *= 2;
                 entity->spinState     = 0;
@@ -593,7 +593,7 @@ void BSS_Setup_HandleSteppedObjects(void)
                 EntityBSS_Player *player = RSDK_GET_ENTITY(SLOT_PLAYER1, BSS_Player);
                 player->velocity.y       = -0x180000;
                 player->onGround         = 0;
-                RSDK.SetSpriteAnimation(player->spriteIndex, 3, &player->playerAnimator, 0, 0);
+                RSDK.SetSpriteAnimation(player->aniFrames, 3, &player->playerAnimator, 0, 0);
                 BSS_Player->field_6 = 4;
                 entity->globeSpeed *= 2;
                 entity->spinState     = 0;
@@ -767,8 +767,8 @@ void BSS_Setup_State_PinkSphereWarp(void)
     if (entity->alpha == 320) {
         EntityBSS_Player *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, BSS_Player);
         EntityBSS_Player *player2 = RSDK_GET_ENTITY(SLOT_PLAYER2, BSS_Player);
-        RSDK.SetSpriteAnimation(player1->spriteIndex, 0, &player1->playerAnimator, true, 0);
-        RSDK.SetSpriteAnimation(player2->spriteIndex, 0, &player2->playerAnimator, true, 0);
+        RSDK.SetSpriteAnimation(player1->aniFrames, 0, &player1->playerAnimator, true, 0);
+        RSDK.SetSpriteAnimation(player2->aniFrames, 0, &player2->playerAnimator, true, 0);
 
         int32 count   = BSS_Setup->pinkSphereCount;
         int32 val     = RSDK.Rand(0, count - 1);
@@ -1068,11 +1068,11 @@ void BSS_Setup_State_Unknown23(void)
 
         EntityBSS_Player *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, BSS_Player);
         if (player1->onGround)
-            RSDK.SetSpriteAnimation(player1->spriteIndex, 1, &player1->playerAnimator, 0, 0);
+            RSDK.SetSpriteAnimation(player1->aniFrames, 1, &player1->playerAnimator, 0, 0);
 
         EntityBSS_Player *player2 = (EntityBSS_Player *)RSDK.GetEntityByID(SLOT_PLAYER2);
         if (player2->onGround)
-            RSDK.SetSpriteAnimation(player2->spriteIndex, 1, &player2->playerAnimator, 0, 0);
+            RSDK.SetSpriteAnimation(player2->aniFrames, 1, &player2->playerAnimator, 0, 0);
     }
     BSS_Setup_HandleCollectableMovement();
 }

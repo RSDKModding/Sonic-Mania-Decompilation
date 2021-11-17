@@ -336,7 +336,7 @@ void LaundroMobile_HandleStageWrap(void)
                             player->velocity.x = LaundroMobile->currentVelocity + ((entity->position.x - player->position.x + 0xC00000) >> 6);
                             player->groundVel  = player->velocity.x;
                         }
-                        RSDK.SetSpriteAnimation(player->spriteIndex, ANI_FAN, &player->playerAnimator, false, 0);
+                        RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->playerAnimator, false, 0);
                     }
                     if (player->up)
                         player->velocity.y = -0x18000;
@@ -907,7 +907,7 @@ void LaundroMobile_State_Unknown13(void)
             CREATE_ENTITY(Water, intToVoid(WATER_SPLASH), entity->position.x, Water->waterLevel);
             CREATE_ENTITY(LaundroMobile, intToVoid(LAUNDROMOBILE_6), entity->position.x - 0x100000, Water->waterLevel);
             CREATE_ENTITY(LaundroMobile, intToVoid(LAUNDROMOBILE_6), entity->position.x + 0x100000, Water->waterLevel);
-            RSDK.PlaySfx(Water->sfx_Splash, false, 255);
+            RSDK.PlaySfx(Water->sfxSplash, false, 255);
             if (--LaundroMobile->attackDelay <= 0) {
                 entity->onGround = false;
                 entity->state    = LaundroMobile_State_Unknown14;
@@ -923,7 +923,7 @@ void LaundroMobile_State_Unknown13(void)
         CREATE_ENTITY(Water, intToVoid(WATER_SPLASH), entity->position.x, Water->waterLevel);
         CREATE_ENTITY(LaundroMobile, intToVoid(LAUNDROMOBILE_6), entity->position.x - 0x100000, Water->waterLevel);
         CREATE_ENTITY(LaundroMobile, intToVoid(LAUNDROMOBILE_6), entity->position.x + 0x100000, Water->waterLevel);
-        RSDK.PlaySfx(Water->sfx_Splash, false, 255);
+        RSDK.PlaySfx(Water->sfxSplash, false, 255);
     }
     LaundroMobile_HandleMissileMovement();
     LaundroMobile_CheckPlayerCollisions();
@@ -1078,7 +1078,7 @@ void LaundroMobile_State_Unknown17(void)
                         LaundroMobile->playerAngles[playerID] = 0;
                     }
                     LaundroMobile->playerRadius[playerID] >>= 8;
-                    RSDK.SetSpriteAnimation(player->spriteIndex, ANI_FAN, &player->playerAnimator, false, 0);
+                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->playerAnimator, false, 0);
                     player->state = Player_State_None;
                 }
             }
@@ -1224,7 +1224,7 @@ void LaundroMobile_State_StartOutro(void)
             player1->state        = Player_State_Ground;
             player1->direction    = FLIP_NONE;
             player1->stateInput   = StateMachine_None;
-            RSDK.SetSpriteAnimation(player1->spriteIndex, ANI_IDLE, &player1->playerAnimator, true, 0);
+            RSDK.SetSpriteAnimation(player1->aniFrames, ANI_IDLE, &player1->playerAnimator, true, 0);
 
             EntityPlayer *player2 = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
             if (player2->objectID == Player->objectID) {
@@ -1232,7 +1232,7 @@ void LaundroMobile_State_StartOutro(void)
                 player2->state      = Player_State_Ground;
                 player2->direction  = FLIP_NONE;
                 player2->stateInput = StateMachine_None;
-                RSDK.SetSpriteAnimation(player2->spriteIndex, ANI_IDLE, &player2->playerAnimator, true, 0);
+                RSDK.SetSpriteAnimation(player2->aniFrames, ANI_IDLE, &player2->playerAnimator, true, 0);
             }
             entity->state = LaundroMobile_State_OutroRumble;
         }
@@ -1290,7 +1290,7 @@ void LaundroMobile_State_OutroRumble(void)
         RSDK.CopyTileLayer(Zone->fgHigh, 1763, 172, Zone->fgHigh, 1919, 172, 11, 4);
         RSDK.PlaySfx(LaundroMobile->sfxImpact, false, 255);
         RSDK.PlaySfx(WaterGush->sfxGush, false, 255);
-        RSDK.PlaySfx(Water->sfx_Splash, false, 255);
+        RSDK.PlaySfx(Water->sfxSplash, false, 255);
         entity->state = LaundroMobile_State_OutroWaterGush;
     }
 }
@@ -1554,7 +1554,7 @@ void LaundroMobile_State1_Unknown3(void)
             water->velocity.x  = (LaundroMobile->currentVelocity + (LaundroMobile->currentVelocity >> 2)) + (LaundroMobile->currentVelocity >> 1);
             water->field_68    = water->position.x;
             water->childPtr    = 0;
-            RSDK.SetSpriteAnimation(Water->spriteIndex, 3, &water->animator, false, 5);
+            RSDK.SetSpriteAnimation(Water->aniFrames, 3, &water->animator, false, 5);
             water->tileCollisions = true;
 
             if (!LaundroMobile->invincibilityTimer) {

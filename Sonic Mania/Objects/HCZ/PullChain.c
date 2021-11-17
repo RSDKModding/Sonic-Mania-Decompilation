@@ -42,10 +42,10 @@ void PullChain_Update(void)
                             && !entity->timer[plrID]) {
                             entity->activePlayers1 |= (1 << plrID);
                             entity->activePlayers2 |= (1 << plrID);
-                            RSDK.PlaySfx(Player->sfx_Grab, 0, 255);
+                            RSDK.PlaySfx(Player->sfxGrab, 0, 255);
                             if (!player->sidekick)
                                 RSDK.PlaySfx(PullChain->sfxPullChain, 0, 255);
-                            RSDK.SetSpriteAnimation(player->spriteIndex, ANI_HANG, &player->playerAnimator, true, 6);
+                            RSDK.SetSpriteAnimation(player->aniFrames, ANI_HANG, &player->playerAnimator, true, 6);
                             player->nextGroundState = StateMachine_None;
                             player->nextAirState    = StateMachine_None;
                             player->velocity.x      = 0;
@@ -68,7 +68,7 @@ void PullChain_Update(void)
 #if RETRO_GAMEVER == VER_100
                 if (!player->sidekick && PullChain_HandleDunkeyCode(player)) {
                     HandLauncher->dunkeyMode = true;
-                    RSDK.PlaySfx(Ring->sfx_Ring, false, 0xFF);
+                    RSDK.PlaySfx(Ring->sfxRing, false, 0xFF);
                 }
 #endif
                 if (player->jumpPress || player->playerAnimator.animationID != ANI_HANG || player->velocity.x || player->velocity.y) {
@@ -76,7 +76,7 @@ void PullChain_Update(void)
                     if (player->jumpPress) {
                         if (entity->chainOffset < 0x100000 && !player->sidekick)
                             RSDK.StopSFX(PullChain->sfxPullChain);
-                        RSDK.SetSpriteAnimation(player->spriteIndex, ANI_JUMP, &player->playerAnimator, true, 0);
+                        RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->playerAnimator, true, 0);
                         player->velocity.x = 0;
                         player->velocity.y = -0x20000;
                         player->state      = Player_State_Air;

@@ -37,9 +37,9 @@ void LogoSetup_Create(void *data)
 
 void LogoSetup_StageLoad(void)
 {
-    LogoSetup->sfx_Sega = RSDK.GetSFX("Stage/Sega.wav");
+    LogoSetup->sfxSega = RSDK.GetSFX("Stage/Sega.wav");
     RSDK.ResetEntitySlot(0, LogoSetup->objectID, NULL);
-    UIPicture->spriteIndex = RSDK.LoadSpriteAnimation("Logos/Logos.bin", SCOPE_STAGE);
+    UIPicture->aniFrames = RSDK.LoadSpriteAnimation("Logos/Logos.bin", SCOPE_STAGE);
 
     if (RSDK_sceneInfo->listPos > 2) {
         switch (RSDK_sceneInfo->listPos) {
@@ -81,7 +81,7 @@ void LogoSetup_SegaScreen(void)
     RSDK_THIS(LogoSetup);
     if (entity->timer <= 0) {
         if (!RSDK_screens->position.y)
-            RSDK.PlaySfx(LogoSetup->sfx_Sega, 0, 0xFF);
+            RSDK.PlaySfx(LogoSetup->sfxSega, 0, 0xFF);
         entity->timer     = 0;
         entity->state     = LogoSetup_Unknown2;
         entity->stateDraw = 0;

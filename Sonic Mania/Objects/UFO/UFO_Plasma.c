@@ -26,7 +26,7 @@ void UFO_Plasma_Draw(void)
         y += data->deform.y;
         ++scanlinePtr;
     }
-    RSDK.DrawDeformedSprite(UFO_Plasma->spriteIndex, INK_MASKED, 0x100);
+    RSDK.DrawDeformedSprite(UFO_Plasma->aniFrames, INK_MASKED, 0x100);
     RSDK.SetClipBounds(0, 0, 0, RSDK_screens->width, RSDK_screens->height);
     RSDK.SetActivePalette(0, 0, RSDK_screens->height);
 }
@@ -43,7 +43,7 @@ void UFO_Plasma_Create(void *data)
 
 void UFO_Plasma_StageLoad(void)
 {
-    UFO_Plasma->spriteIndex = RSDK.LoadSpriteSheet("SpecialUFO/Plasma.gif", SCOPE_STAGE);
+    UFO_Plasma->aniFrames = RSDK.LoadSpriteSheet("SpecialUFO/Plasma.gif", SCOPE_STAGE);
     UFO_Plasma->scanlines   = RSDK.GetScanlines();
 
     int32 angle   = 0;

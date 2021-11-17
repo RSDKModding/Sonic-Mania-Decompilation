@@ -34,7 +34,7 @@ void RubyPortal_Create(void *data)
         entity->drawOrder     = Zone->drawOrderLow;
         entity->updateRange.x = 0x800000;
         entity->updateRange.y = 0x800000;
-        RSDK.SetSpriteAnimation(RubyPortal->spriteIndex, 0, &entity->animator, true, 0);
+        RSDK.SetSpriteAnimation(RubyPortal->aniFrames, 0, &entity->animator, true, 0);
 #if RETRO_USE_PLUS
         if (data) {
             entity->state = (Type_StateMachine)data;
@@ -84,15 +84,15 @@ void RubyPortal_Create(void *data)
 void RubyPortal_StageLoad(void)
 {
     if (RSDK.CheckStageFolder("ERZ"))
-        RubyPortal->spriteIndex = RSDK.LoadSpriteAnimation("Phantom/Portal.bin", SCOPE_STAGE);
+        RubyPortal->aniFrames = RSDK.LoadSpriteAnimation("Phantom/Portal.bin", SCOPE_STAGE);
 #if RETRO_USE_PLUS
     else if (RSDK.CheckStageFolder("AIZ"))
-        RubyPortal->spriteIndex = RSDK.LoadSpriteAnimation("AIZ/Portal.bin", SCOPE_STAGE);
+        RubyPortal->aniFrames = RSDK.LoadSpriteAnimation("AIZ/Portal.bin", SCOPE_STAGE);
     else
 #else // preplus has an explicit check
     else if (RSDK.CheckStageFolder("TMZ2"))
 #endif
-        RubyPortal->spriteIndex = RSDK.LoadSpriteAnimation("TMZ1/Portal.bin", SCOPE_STAGE);
+        RubyPortal->aniFrames = RSDK.LoadSpriteAnimation("TMZ1/Portal.bin", SCOPE_STAGE);
 
     RubyPortal->hitbox.left   = -24;
     RubyPortal->hitbox.top    = -24;
@@ -379,7 +379,7 @@ void RubyPortal_EditorDraw(void)
     entity->scale.x       = 0x200;
     entity->scale.y       = 0x200;
     entity->alpha         = 0xFF;
-    RSDK.SetSpriteAnimation(RubyPortal->spriteIndex, 0, &entity->animator, true, 0);
+    RSDK.SetSpriteAnimation(RubyPortal->aniFrames, 0, &entity->animator, true, 0);
 
     RSDK.DrawSprite(&entity->animator, NULL, false);
 }
@@ -387,15 +387,15 @@ void RubyPortal_EditorDraw(void)
 void RubyPortal_EditorLoad(void)
 {
     if (RSDK.CheckStageFolder("ERZ"))
-        RubyPortal->spriteIndex = RSDK.LoadSpriteAnimation("Phantom/Portal.bin", SCOPE_STAGE);
+        RubyPortal->aniFrames = RSDK.LoadSpriteAnimation("Phantom/Portal.bin", SCOPE_STAGE);
 #if RETRO_USE_PLUS
     else if (RSDK.CheckStageFolder("AIZ"))
-        RubyPortal->spriteIndex = RSDK.LoadSpriteAnimation("AIZ/Portal.bin", SCOPE_STAGE);
+        RubyPortal->aniFrames = RSDK.LoadSpriteAnimation("AIZ/Portal.bin", SCOPE_STAGE);
     else
 #else // preplus has an explicit check
     else if (RSDK.CheckStageFolder("TMZ2"))
 #endif
-        RubyPortal->spriteIndex = RSDK.LoadSpriteAnimation("TMZ1/Portal.bin", SCOPE_STAGE);
+        RubyPortal->aniFrames = RSDK.LoadSpriteAnimation("TMZ1/Portal.bin", SCOPE_STAGE);
 }
 #endif
 

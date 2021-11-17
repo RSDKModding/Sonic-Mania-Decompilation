@@ -11,17 +11,17 @@ void ItemBox_Update(void)
     if (entity->type == ITEMBOX_STOCK) {
         if (entity->animatorContents.animationID == 2 || entity->animatorContents.animationID == 7 || entity->animatorContents.animationID == 8) {
             if (globals->characterFlags == 0x1F && globals->gameMode == MODE_ENCORE) {
-                RSDK.SetSpriteAnimation(ItemBox->spriteIndex, 8, &entity->animatorContents, false, 0);
+                RSDK.SetSpriteAnimation(ItemBox->aniFrames, 8, &entity->animatorContents, false, 0);
             }
             else {
-                RSDK.SetSpriteAnimation(ItemBox->spriteIndex, 7, &entity->animatorContents, false, 0);
+                RSDK.SetSpriteAnimation(ItemBox->aniFrames, 7, &entity->animatorContents, false, 0);
                 if (globals->gameMode == MODE_ENCORE) {
                     int32 id = 0;
                     while ((1 << entity->animatorContents.frameID) & globals->characterFlags) {
                         if (++entity->animatorContents.frameID > 4)
                             entity->animatorContents.frameID = 0;
                         if (++id > 5) {
-                            RSDK.SetSpriteAnimation(ItemBox->spriteIndex, 8, &entity->animatorContents, false, 0);
+                            RSDK.SetSpriteAnimation(ItemBox->aniFrames, 8, &entity->animatorContents, false, 0);
                             RSDK.PrintLog(PRINT_NORMAL, "Bad Change Item State");
                         }
                     }
@@ -76,10 +76,10 @@ void ItemBox_Create(void *data)
     if (data)
         entity->type = voidToInt(data);
     if (entity->state != ItemBox_State_Broken) {
-        RSDK.SetSpriteAnimation(ItemBox->spriteIndex, 0, &entity->animatorBox, true, 0);
-        RSDK.SetSpriteAnimation(ItemBox->spriteIndex, 2, &entity->animatorContents, true, 0);
-        RSDK.SetSpriteAnimation(ItemBox->spriteIndex, 3, &entity->animatorOverlay, true, 0);
-        RSDK.SetSpriteAnimation(ItemBox->spriteIndex, 4, &entity->animatorDebris, true, 0);
+        RSDK.SetSpriteAnimation(ItemBox->aniFrames, 0, &entity->animatorBox, true, 0);
+        RSDK.SetSpriteAnimation(ItemBox->aniFrames, 2, &entity->animatorContents, true, 0);
+        RSDK.SetSpriteAnimation(ItemBox->aniFrames, 3, &entity->animatorOverlay, true, 0);
+        RSDK.SetSpriteAnimation(ItemBox->aniFrames, 4, &entity->animatorDebris, true, 0);
 
         EntityPlayer *player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
         switch (entity->type) {
@@ -139,7 +139,7 @@ void ItemBox_Create(void *data)
 
         entity->alpha = 0xFF;
         if (entity->state == ItemBox_State_Broken) {
-            RSDK.SetSpriteAnimation(ItemBox->spriteIndex, 1, &entity->animatorBox, true, entity->animatorBox.frameID);
+            RSDK.SetSpriteAnimation(ItemBox->aniFrames, 1, &entity->animatorBox, true, entity->animatorBox.frameID);
         }
         else if (entity->hidden) {
             entity->state = StateMachine_None;
@@ -160,7 +160,7 @@ void ItemBox_Create(void *data)
 
 void ItemBox_StageLoad(void)
 {
-    ItemBox->spriteIndex         = RSDK.LoadSpriteAnimation("Global/ItemBox.bin", SCOPE_STAGE);
+    ItemBox->aniFrames         = RSDK.LoadSpriteAnimation("Global/ItemBox.bin", SCOPE_STAGE);
     ItemBox->hitbox.left         = -15;
     ItemBox->hitbox.top          = -16;
     ItemBox->hitbox.right        = 15;
@@ -181,20 +181,20 @@ void ItemBox_StageLoad(void)
         }
     }
 
-    ItemBox->sfx_Destroy   = RSDK.GetSFX("Global/Destroy.wav");
-    ItemBox->sfx_Teleport  = RSDK.GetSFX("Global/Teleport.wav");
-    ItemBox->sfx_HyperRing = RSDK.GetSFX("Global/HyperRing.wav");
-    ItemBox->sfx_PowerDown = RSDK.GetSFX("Stage/PowerDown.wav");
-    ItemBox->sfx_Revovery  = RSDK.GetSFX("Global/Recovery.wav");
+    ItemBox->sfxDestroy   = RSDK.GetSFX("Global/Destroy.wav");
+    ItemBox->sfxTeleport  = RSDK.GetSFX("Global/Teleport.wav");
+    ItemBox->sfxHyperRing = RSDK.GetSFX("Global/HyperRing.wav");
+    ItemBox->sfxPowerDown = RSDK.GetSFX("Stage/PowerDown.wav");
+    ItemBox->sfxRevovery  = RSDK.GetSFX("Global/Recovery.wav");
 }
 
 void ItemBox_DebugDraw(void)
 {
     RSDK_THIS(ItemBox);
     DebugMode->subtypeCount = ITEMBOX_COUNT;
-    RSDK.SetSpriteAnimation(ItemBox->spriteIndex, 0, &DebugMode->animator, true, 0);
+    RSDK.SetSpriteAnimation(ItemBox->aniFrames, 0, &DebugMode->animator, true, 0);
     RSDK.DrawSprite(&DebugMode->animator, NULL, false);
-    RSDK.SetSpriteAnimation(ItemBox->spriteIndex, 2, &DebugMode->animator, true, DebugMode->itemSubType);
+    RSDK.SetSpriteAnimation(ItemBox->aniFrames, 2, &DebugMode->animator, true, DebugMode->itemSubType);
     Vector2 drawPos;
     drawPos.x = entity->position.x;
     drawPos.y = entity->position.y - 0x30000;
@@ -232,7 +232,7 @@ void ItemBox_State_Contents(void)
     if (entity->contentsSpeed >= 0) {
         entity->contentsSpeed = 0;
         ItemBox_GivePowerup();
-        RSDK.SetSpriteAnimation(ItemBox->spriteIndex, 5, &entity->animatorContents, true, 0);
+        RSDK.SetSpriteAnimation(ItemBox->aniFrames, 5, &entity->animatorContents, true, 0);
         entity->state = ItemBox_State_Unknown;
     }
 }
@@ -462,24 +462,24 @@ void ItemBox_GivePowerup(void)
             case ITEMBOX_BLUESHIELD:
                 player->shield = SHIELD_BLUE;
                 Player_ApplyShieldEffect(player);
-                RSDK.PlaySfx(Shield->sfx_BlueShield, false, 255);
+                RSDK.PlaySfx(Shield->sfxBlueShield, false, 255);
                 return;
             case ITEMBOX_BUBBLESHIELD:
                 player->shield = SHIELD_BUBBLE;
                 Player_ApplyShieldEffect(player);
-                RSDK.PlaySfx(Shield->sfx_BubbleShield, false, 255);
+                RSDK.PlaySfx(Shield->sfxBubbleShield, false, 255);
                 player->airTimer = 0;
                 Music_ResumePrevTrack(TRACK_DROWNING, false);
                 return;
             case ITEMBOX_FIRESHIELD:
                 player->shield = SHIELD_FIRE;
                 Player_ApplyShieldEffect(player);
-                RSDK.PlaySfx(Shield->sfx_FireShield, false, 255);
+                RSDK.PlaySfx(Shield->sfxFireShield, false, 255);
                 return;
             case ITEMBOX_LIGHTNINGSHIELD:
                 player->shield = SHIELD_LIGHTNING;
                 Player_ApplyShieldEffect(player);
-                RSDK.PlaySfx(Shield->sfx_LightningShield, false, 255);
+                RSDK.PlaySfx(Shield->sfxLightningShield, false, 255);
                 return;
             case ITEMBOX_INVINCIBLE:
                 if (player->superState == SUPERSTATE_NONE) {
@@ -509,14 +509,14 @@ void ItemBox_GivePowerup(void)
                 return;
             case ITEMBOX_EGGMAN: Player_CheckHit(player, entity); return;
             case ITEMBOX_HYPERRING:
-                RSDK.PlaySfx(ItemBox->sfx_HyperRing, 0, 255);
+                RSDK.PlaySfx(ItemBox->sfxHyperRing, 0, 255);
                 player->hyperRing = true;
                 return;
             case ITEMBOX_SWAP:
 #if RETRO_USE_PLUS
                 if (globals->gameMode == MODE_ENCORE) {
                     if (!globals->stock || player->playerAnimator.animationID == ANI_TRANSFORM) {
-                        RSDK.PlaySfx(Player->sfx_SwapFail, 0, 255);
+                        RSDK.PlaySfx(Player->sfxSwapFail, 0, 255);
                         return;
                     }
                     int32 charID = player->characterID;
@@ -531,15 +531,15 @@ void ItemBox_GivePowerup(void)
                     globals->stock |= charID;
                     EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid(1), player->position.x, player->position.y);
                     explosion->drawOrder       = Zone->drawOrderHigh;
-                    RSDK.PlaySfx(ItemBox->sfx_PowerDown, 0, 255);
+                    RSDK.PlaySfx(ItemBox->sfxPowerDown, 0, 255);
                 }
                 else if (globals->gameMode != MODE_COMPETITION) {
-                    RSDK.PlaySfx(Player->sfx_SwapFail, 0, 255);
+                    RSDK.PlaySfx(Player->sfxSwapFail, 0, 255);
                 }
                 else {
 #endif
                     Zone_StartTeleportAction();
-                    RSDK.PlaySfx(ItemBox->sfx_Teleport, 0, 255);
+                    RSDK.PlaySfx(ItemBox->sfxTeleport, 0, 255);
 #if RETRO_USE_PLUS
                 }
 #endif
@@ -549,7 +549,7 @@ void ItemBox_GivePowerup(void)
                 uint8 playerIDs[5]    = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
                 uint8 newPlayerIDs[5] = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
                 if (player->playerAnimator.animationID == ANI_TRANSFORM) {
-                    RSDK.PlaySfx(Player->sfx_SwapFail, false, 255);
+                    RSDK.PlaySfx(Player->sfxSwapFail, false, 255);
                 }
                 else {
                     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
@@ -564,7 +564,7 @@ void ItemBox_GivePowerup(void)
                     playerIDs[1] = charID;
 
                     if (playerIDs[1] == 0xFF) {
-                        RSDK.PlaySfx(Player->sfx_SwapFail, false, 255);
+                        RSDK.PlaySfx(Player->sfxSwapFail, false, 255);
                     }
                     else {
                         for (int32 i = 0; i < 3; ++i) {
@@ -640,7 +640,7 @@ void ItemBox_GivePowerup(void)
                         explosion            = CREATE_ENTITY(Explosion, intToVoid(1), player2->position.x, player2->position.y);
                         explosion->drawOrder = Zone->drawOrderHigh;
 
-                        RSDK.PlaySfx(ItemBox->sfx_PowerDown, 0, 255);
+                        RSDK.PlaySfx(ItemBox->sfxPowerDown, 0, 255);
                     }
                 }
                 return;
@@ -732,7 +732,7 @@ void ItemBox_GivePowerup(void)
                                 }
                             }
                         }
-                        RSDK.PlaySfx(ItemBox->sfx_Revovery, 0, 255);
+                        RSDK.PlaySfx(ItemBox->sfxRevovery, 0, 255);
                     }
                     else {
                         switch (entity->animatorContents.frameID) {
@@ -745,7 +745,7 @@ void ItemBox_GivePowerup(void)
                         }
                         EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid(1), player->position.x, player->position.y);
                         explosion->drawOrder       = Zone->drawOrderHigh;
-                        RSDK.PlaySfx(ItemBox->sfx_PowerDown, 0, 255);
+                        RSDK.PlaySfx(ItemBox->sfxPowerDown, 0, 255);
                     }
                 }
                 else {
@@ -791,7 +791,7 @@ void ItemBox_Break(EntityItemBox *itemBox, void *p)
     itemBox->velocity.y    = -0x20000;
     itemBox->isContents    = true;
     itemBox->state         = ItemBox_State_Contents;
-    RSDK.SetSpriteAnimation(ItemBox->spriteIndex, 1, &itemBox->animatorBox, true, 0);
+    RSDK.SetSpriteAnimation(ItemBox->aniFrames, 1, &itemBox->animatorBox, true, 0);
     itemBox->animatorBox.frameID = ItemBox->brokenFrame++;
     ItemBox->brokenFrame %= 3;
     RSDK.SetSpriteAnimation(0xFFFF, 0, &itemBox->animatorOverlay, true, 0);
@@ -812,10 +812,10 @@ void ItemBox_Break(EntityItemBox *itemBox, void *p)
         debris->drawFX     = 1;
         debris->direction  = d & 3;
         debris->drawOrder  = Zone->drawOrderHigh;
-        RSDK.SetSpriteAnimation(ItemBox->spriteIndex, 6, &debris->animator, true, RSDK.Rand(0, 4));
+        RSDK.SetSpriteAnimation(ItemBox->aniFrames, 6, &debris->animator, true, RSDK.Rand(0, 4));
     }
 
-    RSDK.PlaySfx(ItemBox->sfx_Destroy, 0, 255);
+    RSDK.PlaySfx(ItemBox->sfxDestroy, 0, 255);
     itemBox->active = ACTIVE_NORMAL;
     if (itemBox->type == ITEMBOX_RANDOM) {
 #if RETRO_USE_PLUS
@@ -1126,7 +1126,7 @@ void ItemBox_EditorDraw(void)
 
 void ItemBox_EditorLoad(void)
 {
-    ItemBox->spriteIndex = RSDK.LoadSpriteAnimation("Global/ItemBox.bin", SCOPE_STAGE);
+    ItemBox->aniFrames = RSDK.LoadSpriteAnimation("Global/ItemBox.bin", SCOPE_STAGE);
 
     RSDK_ACTIVE_VAR(ItemBox, type);
     RSDK_ENUM_VAR("Rings", ITEMBOX_RING);

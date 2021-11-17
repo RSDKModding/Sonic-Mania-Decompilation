@@ -130,7 +130,7 @@ void Funnel_Update(void)
                         entity->playerScoreTimer[p] = 0;
                         entity->playerYVel[p] = 0;
                         entity->activePlayers |= 1 << p;
-                        RSDK.SetSpriteAnimation(player->spriteIndex, ANI_JUMP, &player->playerAnimator, false, 0);
+                        RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->playerAnimator, false, 0);
                         player->interaction     = false;
                         player->tileCollisions  = false;
                         player->state           = Player_State_None;

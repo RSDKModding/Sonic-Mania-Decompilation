@@ -1146,7 +1146,7 @@ void HotaruHiWatt_State_Finished(void)
             signPost->position.x = entity->position.x;
             signPost->active     = ACTIVE_NORMAL;
             signPost->state      = SignPost_State_Fall;
-            RSDK.PlaySfx(SignPost->sfx_Twinkle, false, 255);
+            RSDK.PlaySfx(SignPost->sfxTwinkle, false, 255);
         }
         destroyEntity(entity);
     }

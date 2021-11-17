@@ -210,7 +210,7 @@ void LottoMachine_CheckPlayerCollisions(void)
                         player->velocity.y             = -0xA0000;
                         player->jumpAbility            = 0;
                         entity->playerAngles[playerID] = 16;
-                        RSDK.PlaySfx(Player->sfx_Release, false, 255);
+                        RSDK.PlaySfx(Player->sfxRelease, false, 255);
                         RSDK.PlaySfx(LottoMachine->sfxFail, false, 255);
                     }
                 }
@@ -232,7 +232,7 @@ void LottoMachine_CheckPlayerCollisions(void)
                     if (player->state == Player_State_FlyCarried)
                         RSDK_GET_ENTITY(SLOT_PLAYER2, Player)->flyCarryTimer = 30;
                     player->state = Player_State_Air;
-                    RSDK.SetSpriteAnimation(player->spriteIndex, ANI_JUMP, &player->playerAnimator, true, 0);
+                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->playerAnimator, true, 0);
                 }
                 player->velocity.x             = velX;
                 player->groundVel              = velX;
@@ -275,8 +275,8 @@ void LottoMachine_CheckPlayerCollisions2(void)
                         player->position.y = entity->position.y + 0x980000;
                         player->velocity.x = 0;
                         player->velocity.y = 0;
-                        RSDK.SetSpriteAnimation(player->spriteIndex, ANI_JUMP, &player->playerAnimator, true, 0);
-                        RSDK.PlaySfx(Player->sfx_Roll, false, 255);
+                        RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->playerAnimator, true, 0);
+                        RSDK.PlaySfx(Player->sfxRoll, false, 255);
                         LottoMachine->activePlayers |= 1 << player->playerID;
                         if (!entity->timer)
                             entity->timer = 1;
@@ -402,7 +402,7 @@ void LottoMachine_GiveRings(void)
             int ringCount = count - rings * multiplier;
             Player_GiveRings(ringCount, player, false);
             if (ringCount > 0) {
-                RSDK.PlaySfx(Ring->sfx_Ring, false, 255);
+                RSDK.PlaySfx(Ring->sfxRing, false, 255);
             }
             else if (!ringCount) {
                 RSDK.PlaySfx(LottoMachine->sfxFail, false, 255);
@@ -412,9 +412,9 @@ void LottoMachine_GiveRings(void)
                 pos.x = entity->position.x;
                 pos.y = entity->position.y + 0x540000;
                 Ring_FakeLoseRings(&pos, -ringCount, entity->drawOrder);
-                RSDK.PlaySfx(Player->sfx_LoseRings, false, 255);
+                RSDK.PlaySfx(Player->sfxLoseRings, false, 255);
                 player->state = Player_State_Hit;
-                RSDK.SetSpriteAnimation(player->spriteIndex, ANI_HURT, &player->playerAnimator, false, 0);
+                RSDK.SetSpriteAnimation(player->aniFrames, ANI_HURT, &player->playerAnimator, false, 0);
                 player->velocity.y      = -0x40000;
                 player->onGround        = false;
                 player->nextAirState    = StateMachine_None;
@@ -450,7 +450,7 @@ void LottoMachine_State_Unknown1(void)
         entity->timer++;
         if (entity->timer > 60) {
             entity->timer = 0;
-            RSDK.PlaySfx(Player->sfx_Release, false, 255);
+            RSDK.PlaySfx(Player->sfxRelease, false, 255);
             for (int p = 0; p < entity->playerCount; ++p) {
                 EntityPlayer *player = (EntityPlayer *)entity->playerPtrs[p];
                 if (player) {
@@ -642,7 +642,7 @@ void LottoMachine_State_Unknown5(void)
                         player->groundVel    = 0;
                         player->onGround     = false;
                         player->jumpAbility  = 0;
-                        RSDK.SetSpriteAnimation(player->spriteIndex, ANI_JUMP, &player->playerAnimator, true, 0);
+                        RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->playerAnimator, true, 0);
                         int playerID                   = RSDK.GetEntityID(player);
                         Zone->screenBoundsB1[playerID] = entity->playerTimers[playerID];
                     }
@@ -675,7 +675,7 @@ void LottoMachine_State_Unknown6(void)
                     player->state      = Player_State_Air;
                     player->velocity.y = 0x40000;
                     LottoMachine->activePlayers &= ~(1 << RSDK.GetEntityID(player));
-                    RSDK.PlaySfx(Player->sfx_Release, false, 255);
+                    RSDK.PlaySfx(Player->sfxRelease, false, 255);
                     entity->playerAngles[RSDK.GetEntityID(player)] = 32;
                 }
             }

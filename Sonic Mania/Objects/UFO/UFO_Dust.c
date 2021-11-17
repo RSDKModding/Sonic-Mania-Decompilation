@@ -55,11 +55,11 @@ void UFO_Dust_Create(void *data)
         entity->position.x += RSDK.Rand(-0x80000, 0x80000);
         entity->position.y += RSDK.Rand(-0x80000, 0x80000);
         entity->height = RSDK.Rand(0x40000, 0x100000);
-        RSDK.SetSpriteAnimation(UFO_Dust->spriteIndex, 0, &entity->animator, true, 0);
+        RSDK.SetSpriteAnimation(UFO_Dust->aniFrames, 0, &entity->animator, true, 0);
     }
 }
 
-void UFO_Dust_StageLoad(void) { UFO_Dust->spriteIndex = RSDK.LoadSpriteAnimation("SpecialUFO/Dust.bin", SCOPE_STAGE); }
+void UFO_Dust_StageLoad(void) { UFO_Dust->aniFrames = RSDK.LoadSpriteAnimation("SpecialUFO/Dust.bin", SCOPE_STAGE); }
 
 #if RETRO_INCLUDE_EDITOR
 void UFO_Dust_EditorDraw(void) {}

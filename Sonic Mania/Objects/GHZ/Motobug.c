@@ -32,12 +32,12 @@ void Motobug_Create(void *data)
     entity->updateRange.y = 0x800000;
     entity->wasTurning    = true;
     if (data) {
-        RSDK.SetSpriteAnimation(Motobug->spriteIndex, 3, &entity->animator, true, 0);
+        RSDK.SetSpriteAnimation(Motobug->aniFrames, 3, &entity->animator, true, 0);
         entity->state = Motobug_State_Smoke;
     }
     else {
         entity->timer = 16;
-        RSDK.SetSpriteAnimation(Motobug->spriteIndex, 0, &entity->animator, true, 0);
+        RSDK.SetSpriteAnimation(Motobug->aniFrames, 0, &entity->animator, true, 0);
         entity->state = Motobug_State_Move;
     }
 }
@@ -45,9 +45,9 @@ void Motobug_Create(void *data)
 void Motobug_StageLoad(void)
 {
     if (RSDK.CheckStageFolder("GHZ"))
-        Motobug->spriteIndex = RSDK.LoadSpriteAnimation("GHZ/Motobug.bin", SCOPE_STAGE);
+        Motobug->aniFrames = RSDK.LoadSpriteAnimation("GHZ/Motobug.bin", SCOPE_STAGE);
     else if (RSDK.CheckStageFolder("Blueprint"))
-        Motobug->spriteIndex = RSDK.LoadSpriteAnimation("Blueprint/Motobug.bin", SCOPE_STAGE);
+        Motobug->aniFrames = RSDK.LoadSpriteAnimation("Blueprint/Motobug.bin", SCOPE_STAGE);
 
     Motobug->hitbox.left   = -14;
     Motobug->hitbox.top    = -14;
@@ -59,7 +59,7 @@ void Motobug_StageLoad(void)
 
 void Motobug_DebugDraw(void)
 {
-    RSDK.SetSpriteAnimation(Motobug->spriteIndex, 0, &DebugMode->animator, true, 0);
+    RSDK.SetSpriteAnimation(Motobug->aniFrames, 0, &DebugMode->animator, true, 0);
     RSDK.DrawSprite(&DebugMode->animator, NULL, false);
 }
 void Motobug_DebugSpawn(void)
@@ -97,7 +97,7 @@ void Motobug_State_Fall(void)
     if (RSDK.ObjectTileGrip(entity, Zone->fgLayers, 0, 0, 0, 0xF0000, 8)) {
         entity->wasTurning = true;
         entity->velocity.y = 0;
-        RSDK.SetSpriteAnimation(Motobug->spriteIndex, 0, &entity->animator, true, 0);
+        RSDK.SetSpriteAnimation(Motobug->aniFrames, 0, &entity->animator, true, 0);
         entity->state = Motobug_State_HandleMove;
         Motobug_State_HandleMove();
     }
@@ -111,7 +111,7 @@ void Motobug_State_HandleMove(void)
     RSDK_THIS(Motobug);
     entity->position.x += RSDK_sceneInfo->entity->velocity.x;
     if (!RSDK.ObjectTileGrip(entity, Zone->fgLayers, 0, 0, 0, 0xF0000, 8)) {
-        RSDK.SetSpriteAnimation(Motobug->spriteIndex, 1, &entity->animator, true, 0);
+        RSDK.SetSpriteAnimation(Motobug->aniFrames, 1, &entity->animator, true, 0);
         entity->turnTimer = 0;
 
         bool32 collided = false;
@@ -151,13 +151,13 @@ void Motobug_State_Move2(void)
     if (collided) {
         ++entity->turnTimer;
         if (entity->turnTimer == 30) {
-            RSDK.SetSpriteAnimation(Motobug->spriteIndex, 2, &entity->animator, true, 0);
+            RSDK.SetSpriteAnimation(Motobug->aniFrames, 2, &entity->animator, true, 0);
             entity->state      = Motobug_State_Turn;
         }
     }
     else {
         entity->wasTurning = false;
-        RSDK.SetSpriteAnimation(Motobug->spriteIndex, 0, &entity->animator, true, 0);
+        RSDK.SetSpriteAnimation(Motobug->aniFrames, 0, &entity->animator, true, 0);
         entity->state = Motobug_State_Fall;
         entity->direction ^= FLIP_X;
         entity->velocity.x = -entity->velocity.x;
@@ -194,7 +194,7 @@ void Motobug_State_Turn(void)
 
     if (collided) {
         if (entity->animator.frameID == entity->animator.frameCount - 1) {
-            RSDK.SetSpriteAnimation(Motobug->spriteIndex, 0, &entity->animator, true, 0);
+            RSDK.SetSpriteAnimation(Motobug->aniFrames, 0, &entity->animator, true, 0);
             entity->direction ^= FLIP_X;
             entity->velocity.x = -entity->velocity.x;
             entity->state      = Motobug_State_HandleMove;
@@ -207,7 +207,7 @@ void Motobug_State_Turn(void)
     }
     else {
         entity->wasTurning = false;
-        RSDK.SetSpriteAnimation(Motobug->spriteIndex, 0, &entity->animator, true, 0);
+        RSDK.SetSpriteAnimation(Motobug->aniFrames, 0, &entity->animator, true, 0);
         entity->state = Motobug_State_Fall;
         entity->direction ^= FLIP_X;
         entity->velocity.x = -entity->velocity.x;
@@ -219,9 +219,9 @@ void Motobug_EditorDraw(void) { Motobug_Draw(); }
 
 void Motobug_EditorLoad(void) {
     if (RSDK.CheckStageFolder("GHZ"))
-        Motobug->spriteIndex = RSDK.LoadSpriteAnimation("GHZ/Motobug.bin", SCOPE_STAGE);
+        Motobug->aniFrames = RSDK.LoadSpriteAnimation("GHZ/Motobug.bin", SCOPE_STAGE);
     else if (RSDK.CheckStageFolder("Blueprint"))
-        Motobug->spriteIndex = RSDK.LoadSpriteAnimation("Blueprint/Motobug.bin", SCOPE_STAGE);
+        Motobug->aniFrames = RSDK.LoadSpriteAnimation("Blueprint/Motobug.bin", SCOPE_STAGE);
 }
 #endif
 

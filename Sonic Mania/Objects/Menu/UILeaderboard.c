@@ -446,7 +446,7 @@ void UILeaderboard_ProcessButtonCB(void)
         LogHelpers_Print("old: %d, new: %d", entity->entryOffset, newID);
         entity->entryOffset = newID;
         UILeaderboard_LoadEntries(entity);
-        RSDK.PlaySfx(UIWidgets->sfx_Bleep, false, 255);
+        RSDK.PlaySfx(UIWidgets->sfxBleep, false, 255);
         if (entryCount.x <= 1 || newID >= entryCount.x + 2) {
             if (newID > (entryCount.x + entryCount.y - 7)) {
                 LogHelpers_Print("Load down");
@@ -478,13 +478,13 @@ void UILeaderboard_ProcessButtonCB(void)
     if (entity->entryLength && entity->entryOffset != newID) {
         entity->entryOffset = newID;
         UILeaderboard_LoadEntries(entity);
-        RSDK.PlaySfx(UIWidgets->sfx_Bleep, false, 255);
+        RSDK.PlaySfx(UIWidgets->sfxBleep, false, 255);
     }
 #endif
 
     if (UIControl->keyY && entity->field_1D8) {
         entity->yPressCB();
-        RSDK.PlaySfx(UIWidgets->sfx_Bleep, false, 255);
+        RSDK.PlaySfx(UIWidgets->sfxBleep, false, 255);
     }
     if (entity->state == UILeaderboard_State_Unknown2 || !entity->flag) {
         entity->flag      = true;

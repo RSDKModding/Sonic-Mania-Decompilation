@@ -126,7 +126,7 @@ void ScrewMobile_State_Unknown1(void)
             player2->position.x     = entity->position.x;
             player2->position.y     = entity->position.y - 0x100000;
             player2->tileCollisions = true;
-            RSDK.SetSpriteAnimation(player2->spriteIndex, ANI_IDLE, &player2->playerAnimator, true, 0);
+            RSDK.SetSpriteAnimation(player2->aniFrames, ANI_IDLE, &player2->playerAnimator, true, 0);
         }
     }
 
@@ -144,7 +144,7 @@ void ScrewMobile_State_Unknown1(void)
         player1->position.x         = entity->position.x;
         player1->position.y         = entity->position.y - 0x100000;
         player1->tileCollisions     = true;
-        RSDK.SetSpriteAnimation(player1->spriteIndex, ANI_IDLE, &player1->playerAnimator, true, 0);
+        RSDK.SetSpriteAnimation(player1->aniFrames, ANI_IDLE, &player1->playerAnimator, true, 0);
 
         Music_TransitionTrack(TRACK_MINIBOSS, 0.0125);
         RSDK.PlaySfx(ScrewMobile->sfxEggMobile, false, 255);
@@ -174,7 +174,7 @@ void ScrewMobile_State_Unknown2(void)
         player1->velocity.x     = 0;
         player1->velocity.y     = 0;
         player1->outtaHereTimer = 0;
-        RSDK.SetSpriteAnimation(player1->spriteIndex, ANI_IDLE, &player1->playerAnimator, true, 0);
+        RSDK.SetSpriteAnimation(player1->aniFrames, ANI_IDLE, &player1->playerAnimator, true, 0);
 
         if (player1->left || player1->right) {
             if (player1->left) {
@@ -239,7 +239,7 @@ void ScrewMobile_State_Unknown2(void)
                 player2->velocity.y     = 0;
                 player2->outtaHereTimer = 0;
                 player2->direction      = entity->direction ^ FLIP_X;
-                RSDK.SetSpriteAnimation(player2->spriteIndex, ANI_IDLE, &player2->playerAnimator, true, 0);
+                RSDK.SetSpriteAnimation(player2->aniFrames, ANI_IDLE, &player2->playerAnimator, true, 0);
             }
             else if (Player_CheckCollisionTouch(player2, entity, &ScrewMobile->hitbox1)) {
                 player2->state          = Player_State_None;
@@ -252,7 +252,7 @@ void ScrewMobile_State_Unknown2(void)
                 player2->drawOrder      = Zone->playerDrawLow;
                 player2->tileCollisions = true;
                 player2->direction      = entity->direction ^ FLIP_X;
-                RSDK.SetSpriteAnimation(player2->spriteIndex, ANI_IDLE, &player2->playerAnimator, true, 0);
+                RSDK.SetSpriteAnimation(player2->aniFrames, ANI_IDLE, &player2->playerAnimator, true, 0);
             }
         }
     }
@@ -398,7 +398,7 @@ void ScrewMobile_State_Idle(void)
             player1->velocity.y     = 0;
             player1->outtaHereTimer = 0;
             player1->direction      = entity->direction ^ FLIP_X;
-            RSDK.SetSpriteAnimation(player1->spriteIndex, ANI_IDLE, &player1->playerAnimator, true, 0);
+            RSDK.SetSpriteAnimation(player1->aniFrames, ANI_IDLE, &player1->playerAnimator, true, 0);
         }
     }
     else if (player1->velocity.y >= 0 && Player_CheckCollisionTouch(player1, entity, &ScrewMobile->hitbox1)) {
@@ -413,7 +413,7 @@ void ScrewMobile_State_Idle(void)
         player1->drawOrder      = Zone->playerDrawLow;
         player1->tileCollisions = true;
         player1->direction      = entity->direction ^ FLIP_X;
-        RSDK.SetSpriteAnimation(player1->spriteIndex, ANI_IDLE, &player1->playerAnimator, true, 0);
+        RSDK.SetSpriteAnimation(player1->aniFrames, ANI_IDLE, &player1->playerAnimator, true, 0);
     }
 
     if (Player->playerCount >= 2) {
@@ -430,7 +430,7 @@ void ScrewMobile_State_Idle(void)
                 player2->velocity.y     = 0;
                 player2->outtaHereTimer = 0;
                 player2->direction      = entity->direction ^ FLIP_X;
-                RSDK.SetSpriteAnimation(player2->spriteIndex, ANI_IDLE, &player2->playerAnimator, true, 0);
+                RSDK.SetSpriteAnimation(player2->aniFrames, ANI_IDLE, &player2->playerAnimator, true, 0);
             }
         }
         else if (player2->velocity.y >= 0) {
@@ -446,7 +446,7 @@ void ScrewMobile_State_Idle(void)
                 player2->drawOrder      = Zone->playerDrawLow;
                 player2->tileCollisions = true;
                 player2->direction      = entity->direction ^ FLIP_X;
-                RSDK.SetSpriteAnimation(player2->spriteIndex, ANI_IDLE, &player2->playerAnimator, true, 0);
+                RSDK.SetSpriteAnimation(player2->aniFrames, ANI_IDLE, &player2->playerAnimator, true, 0);
             }
         }
     }
@@ -524,7 +524,7 @@ void ScrewMobile_State2_Unknown1(void)
             entity->velocity.y = entity->velocity.y >> 2;
             entity->field_74   = 0;
             CREATE_ENTITY(Water, intToVoid(WATER_SPLASH), entity->position.x, Water->waterLevel);
-            RSDK.PlaySfx(Water->sfx_Splash, false, 255);
+            RSDK.PlaySfx(Water->sfxSplash, false, 255);
         }
         entity->velocity.y += entity->field_74;
 
@@ -541,7 +541,7 @@ void ScrewMobile_State2_Unknown1(void)
                     water->angle      = 2 * RSDK.Rand(0, 256);
                     water->field_68   = water->position.x;
                     water->childPtr   = 0;
-                    RSDK.SetSpriteAnimation(Water->spriteIndex, 3, &water->animator, true, 0);
+                    RSDK.SetSpriteAnimation(Water->aniFrames, 3, &water->animator, true, 0);
                     destroyEntity(eggman);
                     destroyEntity(entity);
                     foreach_break;

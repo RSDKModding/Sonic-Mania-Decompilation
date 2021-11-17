@@ -73,7 +73,7 @@ bool32 LRZ1Outro_CutsceneState2_Unknown1(EntityCutsceneSeq *host)
         player->onGround      = true;
         player->groundedStore = true;
         player->direction     = FLIP_X;
-        RSDK.SetSpriteAnimation(player->spriteIndex, ANI_SPINDASH, &player->playerAnimator, true, 0);
+        RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPINDASH, &player->playerAnimator, true, 0);
         player->state      = Player_State_Spindash;
         player->stateInput = 0;
         player->down       = true;
@@ -218,7 +218,7 @@ bool32 LRZ1Outro_CutsceneState2_Unknown2(EntityCutsceneSeq *host)
             player->groundVel  = 0x20000;
             player->velocity.y = -0x50000;
             player->state      = Player_State_Air;
-            RSDK.SetSpriteAnimation(player->spriteIndex, ANI_JUMP, &player->playerAnimator, true, 0);
+            RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->playerAnimator, true, 0);
         }
         return true;
     }

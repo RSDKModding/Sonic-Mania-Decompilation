@@ -133,9 +133,9 @@ bool32 LRZ3OutroK_CutsceneState_Unknown3(EntityCutsceneSeq *host)
             player->nextAirState    = 0;
             RSDK.SetSpriteAnimation(SkyTeleporter->aniFrames, 1, &teleporter->animator, true, 0);
             if (player->characterID == ID_KNUCKLES)
-                RSDK.SetSpriteAnimation(player->spriteIndex, ANI_FLYTIRED, &player->playerAnimator, true, 3);
+                RSDK.SetSpriteAnimation(player->aniFrames, ANI_FLYTIRED, &player->playerAnimator, true, 3);
             else
-                RSDK.SetSpriteAnimation(player->spriteIndex, ANI_SPRINGDIAGONAL, &player->playerAnimator, false, 0);
+                RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGDIAGONAL, &player->playerAnimator, false, 0);
             entity->playerPos[player->playerID].x = player->position.x;
             entity->playerPos[player->playerID].y = player->position.y;
         }
@@ -143,7 +143,7 @@ bool32 LRZ3OutroK_CutsceneState_Unknown3(EntityCutsceneSeq *host)
         RSDK.PlaySfx(LRZ3OutroK->sfxWarp, false, 255);
     }
     if (host->timer == 60) {
-        foreach_active(Player, player) { RSDK.SetSpriteAnimation(player->spriteIndex, ANI_SPRINGTWIRL, &player->playerAnimator, false, 3); }
+        foreach_active(Player, player) { RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGTWIRL, &player->playerAnimator, false, 3); }
     }
 
     int x = teleporter->position.x;

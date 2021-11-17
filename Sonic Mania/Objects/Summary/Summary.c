@@ -46,8 +46,8 @@ void Summary_StageLoad(void)
 {
     RSDK.ResetEntitySlot(0, Summary->objectID, 0);
 
-    UIPicture->spriteIndex = RSDK.LoadSpriteAnimation("LSelect/Icons.bin", SCOPE_STAGE);
-    UIText->spriteIndex    = RSDK.LoadSpriteAnimation("LSelect/Text.bin", SCOPE_STAGE);
+    UIPicture->aniFrames = RSDK.LoadSpriteAnimation("LSelect/Icons.bin", SCOPE_STAGE);
+    UIText->aniFrames    = RSDK.LoadSpriteAnimation("LSelect/Text.bin", SCOPE_STAGE);
 }
 
 void Summary_State_Draw(void)
@@ -162,15 +162,15 @@ void Summary_State_Unknown3(void)
 void Summary_SetTextString(uint8 anim, void *text, const char *str)
 {
     EntityUIText *uiText = (EntityUIText *)text;
-    if (!UIWidgets || UIText->spriteIndex)
-        RSDK.SetSpriteAnimation(UIText->spriteIndex, anim, &uiText->animator, true, 0);
+    if (!UIWidgets || UIText->aniFrames)
+        RSDK.SetSpriteAnimation(UIText->aniFrames, anim, &uiText->animator, true, 0);
     else
         RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, anim, &uiText->animator, true, 0);
 
     RSDK.PrependText(&uiText->text, str);
     uiText->listID = anim;
-    if (!UIWidgets || UIText->spriteIndex)
-        RSDK.SetSpriteString(UIText->spriteIndex, uiText->listID, &uiText->text);
+    if (!UIWidgets || UIText->aniFrames)
+        RSDK.SetSpriteString(UIText->aniFrames, uiText->listID, &uiText->text);
     else
         RSDK.SetSpriteString(UIWidgets->uiSpriteIndex, uiText->listID, &uiText->text);
 }

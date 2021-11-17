@@ -63,7 +63,7 @@ void JacobsLadder_Update(void)
                     if (Player_CheckCollisionTouch(player, entity, &entity->hitbox)) {
                         if (player->shield == SHIELD_LIGHTNING) {
                             if (player->state != Player_State_None) {
-                                RSDK.SetSpriteAnimation(player->spriteIndex, ANI_JUMP, &player->playerAnimator, false, 0);
+                                RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->playerAnimator, false, 0);
                                 player->state                       = Player_State_None;
                                 player->nextAirState                = StateMachine_None;
                                 player->nextGroundState             = StateMachine_None;

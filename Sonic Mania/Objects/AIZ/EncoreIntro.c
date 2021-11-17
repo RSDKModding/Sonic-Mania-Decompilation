@@ -224,7 +224,7 @@ bool32 EncoreIntro_CutsceneState_Unknown1(EntityCutsceneSeq *host)
         }
 
         if (host->timer < 360) {
-            RSDK.SetSpriteAnimation(player1->spriteIndex, ANI_FAN, &player1->playerAnimator, false, 0);
+            RSDK.SetSpriteAnimation(player1->aniFrames, ANI_FAN, &player1->playerAnimator, false, 0);
             player1->position.x += (player1->position.x - player1->position.x) >> 3;
             player1->position.y += (0xA00 * RSDK.Sin256(2 * (host->timer - host->field_68)) + ruby->position.y - player1->position.y) >> 3;
             player1->state = Player_State_None;
@@ -248,7 +248,7 @@ bool32 EncoreIntro_CutsceneState_Unknown2(EntityCutsceneSeq *host)
         if (player->alpha >= 0x100) {
             player->inkEffect = INK_NONE;
             RSDK.Sin256(2 * (host->timer - host->field_68));
-            RSDK.SetSpriteAnimation(player->spriteIndex, ANI_FAN, &player->playerAnimator, false, 0);
+            RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->playerAnimator, false, 0);
             player->state     = Player_State_Air;
             player->up        = true;
             host->field_6C[0] = 1;
@@ -373,15 +373,15 @@ bool32 EncoreIntro_CutsceneState_Unknown8(EntityCutsceneSeq *host)
             StarPost->playerPositions[1] = player->position;
             player->state                = EncoreIntro_PlayerState_BuddySel;
             player->stateInput           = EncoreIntro_PlayerState_InputNone;
-            RSDK.SetSpriteAnimation(player->spriteIndex, 0, &player->playerAnimator, true, 0);
+            RSDK.SetSpriteAnimation(player->aniFrames, 0, &player->playerAnimator, true, 0);
 
             EntityPlayer *buddy1 = RSDK_GET_ENTITY(SLOT_PLAYER3, Player);
             buddy1->state        = Player_State_Ground;
-            RSDK.SetSpriteAnimation(buddy1->spriteIndex, 0, &buddy1->playerAnimator, true, 0);
+            RSDK.SetSpriteAnimation(buddy1->aniFrames, 0, &buddy1->playerAnimator, true, 0);
 
             EntityPlayer *buddy2 = RSDK_GET_ENTITY(SLOT_PLAYER4, Player);
             buddy2->state        = Player_State_Ground;
-            RSDK.SetSpriteAnimation(buddy2->spriteIndex, 0, &buddy2->playerAnimator, true, 0);
+            RSDK.SetSpriteAnimation(buddy2->aniFrames, 0, &buddy2->playerAnimator, true, 0);
             return true;
         }
     }
@@ -461,7 +461,7 @@ bool32 EncoreIntro_CutsceneState_Unknown10(EntityCutsceneSeq *host)
 
     HeavyMystic_Unknown2();
     if (player->onGround) {
-        RSDK.SetSpriteAnimation(player->spriteIndex, ANI_IDLE, &player->playerAnimator, true, 0);
+        RSDK.SetSpriteAnimation(player->aniFrames, ANI_IDLE, &player->playerAnimator, true, 0);
         player->velocity.x = 0;
         player->groundVel  = 0;
     }
@@ -469,7 +469,7 @@ bool32 EncoreIntro_CutsceneState_Unknown10(EntityCutsceneSeq *host)
         player->direction = ruby->position.x < player->position.x;
 
     if (buddy->onGround) {
-        RSDK.SetSpriteAnimation(buddy->spriteIndex, ANI_IDLE, &buddy->playerAnimator, true, 0);
+        RSDK.SetSpriteAnimation(buddy->aniFrames, ANI_IDLE, &buddy->playerAnimator, true, 0);
         buddy->velocity.x = 0;
         buddy->groundVel  = 0;
     }
@@ -493,7 +493,7 @@ bool32 EncoreIntro_CutsceneState_Unknown10(EntityCutsceneSeq *host)
         if (host->timer != 420) {
             if (host->timer == 480) {
                 EntityCutsceneHBH *mystic = CutsceneHBH_GetEntity(HBH_MYSTIC);
-                RSDK.SetSpriteAnimation(mystic->spriteIndex, 1, &mystic->animator, true, 0);
+                RSDK.SetSpriteAnimation(mystic->aniFrames, 1, &mystic->animator, true, 0);
             }
             else {
                 if (host->timer == 496) {
@@ -502,7 +502,7 @@ bool32 EncoreIntro_CutsceneState_Unknown10(EntityCutsceneSeq *host)
                 else if (host->timer < 570) {
                     EntityCutsceneHBH *mystic = CutsceneHBH_GetEntity(HBH_MYSTIC);
                     if (mystic->animator.frameID == mystic->animator.frameCount - 1)
-                        RSDK.SetSpriteAnimation(mystic->spriteIndex, 0, &mystic->animator, true, 0);
+                        RSDK.SetSpriteAnimation(mystic->aniFrames, 0, &mystic->animator, true, 0);
                 }
                 else {
                     return true;
@@ -529,7 +529,7 @@ bool32 EncoreIntro_CutsceneState_Unknown10(EntityCutsceneSeq *host)
                 player->state        = Player_State_Air;
                 player->onGround     = false;
                 player->velocity.y   = -0x38000;
-                RSDK.SetSpriteAnimation(player->spriteIndex, ANI_HURT, &player->playerAnimator, false, 0);
+                RSDK.SetSpriteAnimation(player->aniFrames, ANI_HURT, &player->playerAnimator, false, 0);
             }
         }
     }
@@ -570,11 +570,11 @@ bool32 EncoreIntro_CutsceneState_Unknown11(EntityCutsceneSeq *host)
         mystic->position.y -= 0x18000;
         mystic->velocity.y = -0x18000;
         if (host->timer > 24) {
-            RSDK.SetSpriteAnimation(player->spriteIndex, ANI_LOOKUP, &player->playerAnimator, false, 1);
+            RSDK.SetSpriteAnimation(player->aniFrames, ANI_LOOKUP, &player->playerAnimator, false, 1);
             if (player->playerAnimator.frameID == 5)
                 player->playerAnimator.animationSpeed = 0;
 
-            RSDK.SetSpriteAnimation(buddy->spriteIndex, ANI_LOOKUP, &buddy->playerAnimator, false, 1);
+            RSDK.SetSpriteAnimation(buddy->aniFrames, ANI_LOOKUP, &buddy->playerAnimator, false, 1);
             if (buddy->playerAnimator.frameID == 5)
                 buddy->playerAnimator.animationSpeed = 0;
         }
@@ -583,11 +583,11 @@ bool32 EncoreIntro_CutsceneState_Unknown11(EntityCutsceneSeq *host)
         HeavyMystic_Unknown2();
     }
     else {
-        RSDK.SetSpriteAnimation(player->spriteIndex, ANI_LOOKUP, &player->playerAnimator, false, 1);
+        RSDK.SetSpriteAnimation(player->aniFrames, ANI_LOOKUP, &player->playerAnimator, false, 1);
         if (player->playerAnimator.frameID == 5)
             player->playerAnimator.animationSpeed = 0;
 
-        RSDK.SetSpriteAnimation(buddy->spriteIndex, ANI_LOOKUP, &buddy->playerAnimator, false, 1);
+        RSDK.SetSpriteAnimation(buddy->aniFrames, ANI_LOOKUP, &buddy->playerAnimator, false, 1);
         if (buddy->playerAnimator.frameID == 5)
             buddy->playerAnimator.animationSpeed = 0;
 
@@ -598,7 +598,7 @@ bool32 EncoreIntro_CutsceneState_Unknown11(EntityCutsceneSeq *host)
             HeavyMystic_Unknown2();
         }
         else {
-            RSDK.SetSpriteAnimation(mystic->spriteIndex, 2, &mystic->animator, true, 0);
+            RSDK.SetSpriteAnimation(mystic->aniFrames, 2, &mystic->animator, true, 0);
             return true;
         }
     }
@@ -631,7 +631,7 @@ bool32 EncoreIntro_CutsceneState_Unknown12(EntityCutsceneSeq *host)
             ruby->visible = false;
         }
         else if (host->timer == 75) {
-            RSDK.SetSpriteAnimation(mystic->spriteIndex, 0, &mystic->animator, true, 0);
+            RSDK.SetSpriteAnimation(mystic->aniFrames, 0, &mystic->animator, true, 0);
             Zone->screenBoundsR1[0] = 16 * RSDK.GetSceneLayer(Zone->fgLow)->width;
             Zone->screenBoundsR2[0] = 16 * RSDK.GetSceneLayer(Zone->fgLow)->width;
             Zone->screenBoundsT1[0] = 784;
@@ -666,11 +666,11 @@ bool32 EncoreIntro_CutsceneState_Unknown13(EntityCutsceneSeq *host)
 
         player->state      = Player_State_Ground;
         player->stateInput = Player_ProcessP1Input;
-        RSDK.SetSpriteAnimation(player->spriteIndex, ANI_IDLE, &player->playerAnimator, true, 0);
+        RSDK.SetSpriteAnimation(player->aniFrames, ANI_IDLE, &player->playerAnimator, true, 0);
 
         buddy->state      = Player_State_Ground;
         buddy->stateInput = Player_ProcessP2Input_AI;
-        RSDK.SetSpriteAnimation(buddy->spriteIndex, ANI_IDLE, &buddy->playerAnimator, true, 0);
+        RSDK.SetSpriteAnimation(buddy->aniFrames, ANI_IDLE, &buddy->playerAnimator, true, 0);
         return true;
     }
     else {
@@ -755,7 +755,7 @@ bool32 EncoreIntro_CutsceneState_Unknown15(EntityCutsceneSeq *host)
         if (buddy->state == Player_State_Ground && buddy->position.x >= player->position.x - 0x200000)
             buddy->velocity.x = player->velocity.x;
         if (entity->velocity.x <= -0x2D000) {
-            RSDK.SetSpriteAnimation(mystic->spriteIndex, 2, &mystic->animator, true, 0);
+            RSDK.SetSpriteAnimation(mystic->aniFrames, 2, &mystic->animator, true, 0);
             entity->velocity.x = 0;
             return true;
         }
@@ -825,7 +825,7 @@ bool32 EncoreIntro_CutsceneState_Unknown16(EntityCutsceneSeq *host)
             HeavyMystic_Unknown2();
             break;
         case 75:
-            RSDK.SetSpriteAnimation(mystic->spriteIndex, 0, &mystic->animator, true, 0);
+            RSDK.SetSpriteAnimation(mystic->aniFrames, 0, &mystic->animator, true, 0);
             player->up = false;
             buddy->up  = false;
             HeavyMystic_Unknown2();
@@ -837,8 +837,8 @@ bool32 EncoreIntro_CutsceneState_Unknown16(EntityCutsceneSeq *host)
             else {
                 ruby->position.y = king->position.y + 0x60000;
                 ruby->state      = StateMachine_None;
-                RSDK.PlaySfx(Player->sfx_Grab, 0, 255);
-                RSDK.SetSpriteAnimation(king->spriteIndex, 3, &king->animator2, true, 0);
+                RSDK.PlaySfx(Player->sfxGrab, 0, 255);
+                RSDK.SetSpriteAnimation(king->aniFrames, 3, &king->animator2, true, 0);
                 return true;
             }
             break;
@@ -864,7 +864,7 @@ bool32 EncoreIntro_CutsceneState_Unknown17(EntityCutsceneSeq *host)
             HeavyMystic_Unknown2();
             break;
         case 42:
-            RSDK.SetSpriteAnimation(king->spriteIndex, 2, &king->animator, true, 0);
+            RSDK.SetSpriteAnimation(king->aniFrames, 2, &king->animator, true, 0);
             HeavyMystic_Unknown2();
             break;
         case 58:
@@ -943,7 +943,7 @@ bool32 EncoreIntro_CutsceneState_Unknown19(EntityCutsceneSeq *host)
                     if (!players[i])
                         break;
                     EntityPlayer *playerPtr = players[i];
-                    RSDK.SetSpriteAnimation(playerPtr->spriteIndex, ANI_FAN, &playerPtr->playerAnimator, false, 0);
+                    RSDK.SetSpriteAnimation(playerPtr->aniFrames, ANI_FAN, &playerPtr->playerAnimator, false, 0);
 
                     playerPtr->position.x += (playerPtr->position.x - playerPtr->position.x) >> 3;
                     playerPtr->position.y +=
@@ -1025,7 +1025,7 @@ bool32 EncoreIntro_CutsceneState_Unknown22(EntityCutsceneSeq *host)
         ruby->inkEffect = INK_NONE;
 
         player->inkEffect = INK_NONE;
-        RSDK.SetSpriteAnimation(player->spriteIndex, ANI_FAN, &player->playerAnimator, false, 0);
+        RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->playerAnimator, false, 0);
         player->state          = Player_State_Air;
         player->up             = true;
         player->camera         = NULL;

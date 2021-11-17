@@ -48,29 +48,29 @@ void PhantomRuby_Create(void *data)
 void PhantomRuby_StageLoad(void)
 {
     PhantomRuby->aniFrames = RSDK.LoadSpriteAnimation("Global/PhantomRuby.bin", SCOPE_STAGE);
-    PhantomRuby->sfx_L[0]  = RSDK.GetSFX("Ruby/Attack1_L.wav");
-    PhantomRuby->sfx_R[0]  = RSDK.GetSFX("Ruby/Attack1_R.wav");
-    PhantomRuby->sfx_L[1]  = RSDK.GetSFX("Ruby/Attack2_L.wav");
-    PhantomRuby->sfx_R[1]  = RSDK.GetSFX("Ruby/Attack2_R.wav");
-    PhantomRuby->sfx_L[2]  = RSDK.GetSFX("Ruby/Attack3_L.wav");
-    PhantomRuby->sfx_R[2]  = RSDK.GetSFX("Ruby/Attack3_R.wav");
-    PhantomRuby->sfx_L[3]  = RSDK.GetSFX("Ruby/Attack4_L.wav");
-    PhantomRuby->sfx_R[3]  = RSDK.GetSFX("Ruby/Attack4_R.wav");
-    PhantomRuby->sfx_L[4]  = RSDK.GetSFX("Ruby/Attack5_L.wav");
-    PhantomRuby->sfx_R[4]  = RSDK.GetSFX("Ruby/Attack5_R.wav");
-    PhantomRuby->sfx_L[5]  = RSDK.GetSFX("Ruby/Attack6_L.wav");
-    PhantomRuby->sfx_R[5]  = RSDK.GetSFX("Ruby/Attack6_R.wav");
-    PhantomRuby->sfx_L[6]  = RSDK.GetSFX("Ruby/RedCube_L.wav");
-    PhantomRuby->sfx_R[6]  = RSDK.GetSFX("Ruby/RedCube_R.wav");
+    PhantomRuby->sfxL[0]  = RSDK.GetSFX("Ruby/Attack1_L.wav");
+    PhantomRuby->sfxR[0]  = RSDK.GetSFX("Ruby/Attack1_R.wav");
+    PhantomRuby->sfxL[1]  = RSDK.GetSFX("Ruby/Attack2_L.wav");
+    PhantomRuby->sfxR[1]  = RSDK.GetSFX("Ruby/Attack2_R.wav");
+    PhantomRuby->sfxL[2]  = RSDK.GetSFX("Ruby/Attack3_L.wav");
+    PhantomRuby->sfxR[2]  = RSDK.GetSFX("Ruby/Attack3_R.wav");
+    PhantomRuby->sfxL[3]  = RSDK.GetSFX("Ruby/Attack4_L.wav");
+    PhantomRuby->sfxR[3]  = RSDK.GetSFX("Ruby/Attack4_R.wav");
+    PhantomRuby->sfxL[4]  = RSDK.GetSFX("Ruby/Attack5_L.wav");
+    PhantomRuby->sfxR[4]  = RSDK.GetSFX("Ruby/Attack5_R.wav");
+    PhantomRuby->sfxL[5]  = RSDK.GetSFX("Ruby/Attack6_L.wav");
+    PhantomRuby->sfxR[5]  = RSDK.GetSFX("Ruby/Attack6_R.wav");
+    PhantomRuby->sfxL[6]  = RSDK.GetSFX("Ruby/RedCube_L.wav");
+    PhantomRuby->sfxR[6]  = RSDK.GetSFX("Ruby/RedCube_R.wav");
 }
 
 void PhantomRuby_PlaySFX(uint8 sfxID)
 {
     if (sfxID) {
         uint8 sfx    = sfxID - 1;
-        int32 channel = RSDK.PlaySfx(PhantomRuby->sfx_L[sfx], 0, 0);
+        int32 channel = RSDK.PlaySfx(PhantomRuby->sfxL[sfx], 0, 0);
         RSDK.SetChannelAttributes(channel, 1.0, -1.0, 1.0);
-        channel = RSDK.PlaySfx(PhantomRuby->sfx_R[sfx], 0, 0);
+        channel = RSDK.PlaySfx(PhantomRuby->sfxR[sfx], 0, 0);
         RSDK.SetChannelAttributes(channel, 1.0, 1.0, 1.0);
     }
 }

@@ -22,12 +22,12 @@ typedef struct {
 #endif
     uint16 textSpriteIndex;
     uint16 labelSpriteIndex;
-    uint16 sfx_Bleep;
-    uint16 sfx_Accept;
-    uint16 sfx_Warp;
-    uint16 sfx_Event;
-    uint16 sfx_Woosh;
-    uint16 sfx_Fail;
+    uint16 sfxBleep;
+    uint16 sfxAccept;
+    uint16 sfxWarp;
+    uint16 sfxEvent;
+    uint16 sfxWoosh;
+    uint16 sfxFail;
 #if RETRO_USE_PLUS
     colour buttonColour;
 #endif

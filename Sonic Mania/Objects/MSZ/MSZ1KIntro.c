@@ -90,7 +90,7 @@ bool32 MSZ1KIntro_CutsceneState_Unknown2(EntityCutsceneSeq *host)
     if (host->timer == 180)
         RSDK.SetSpriteAnimation(MSZ1KIntro->playerFrames, 3, &player1->playerAnimator, true, 0);
     if (player1->playerAnimator.animationID == 3 && player1->playerAnimator.frameID == player1->playerAnimator.frameCount - 1) {
-        RSDK.SetSpriteAnimation(player1->spriteIndex, 0, &player1->playerAnimator, true, 0);
+        RSDK.SetSpriteAnimation(player1->aniFrames, 0, &player1->playerAnimator, true, 0);
         return true;
     }
     return false;

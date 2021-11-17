@@ -800,7 +800,7 @@ void UISaveSlot_ProcessButtonCB(void)
             if (UIControl->keyLeft) {
                 if (control->activeEntityID > 0) {
                     control->activeEntityID--;
-                    RSDK.PlaySfx(UIWidgets->sfx_Bleep, false, 255);
+                    RSDK.PlaySfx(UIWidgets->sfxBleep, false, 255);
                     UISaveSlot_Unknown21();
                     return;
                 }
@@ -808,7 +808,7 @@ void UISaveSlot_ProcessButtonCB(void)
             else if (UIControl->keyRight) {
                 if (control->activeEntityID < control->buttonCount - 1) {
                     control->activeEntityID++;
-                    RSDK.PlaySfx(UIWidgets->sfx_Bleep, false, 255);
+                    RSDK.PlaySfx(UIWidgets->sfxBleep, false, 255);
                     UISaveSlot_Unknown21();
                     return;
                 }
@@ -889,7 +889,7 @@ void UISaveSlot_SelectedSave(void)
 #endif
         API_ResetControllerAssignments();
         API_AssignControllerID(1, id);
-        RSDK.PlaySfx(UIWidgets->sfx_Accept, false, 255);
+        RSDK.PlaySfx(UIWidgets->sfxAccept, false, 255);
         RSDK.StopChannel(Music->channelID);
     }
 }
@@ -911,7 +911,7 @@ void UISaveSlot_NextCharacter(void)
     entity->frameID   = player;
     entity->field_14C = 0x8000;
     entity->field_144 = 0;
-    RSDK.PlaySfx(UIWidgets->sfx_Bleep, false, 255);
+    RSDK.PlaySfx(UIWidgets->sfxBleep, false, 255);
     UISaveSlot_Unknown8();
 }
 
@@ -932,7 +932,7 @@ void UISaveSlot_PrevCharacter(void)
     entity->frameID   = player;
     entity->field_14C = 0x8000;
     entity->field_144 = 0;
-    RSDK.PlaySfx(UIWidgets->sfx_Bleep, false, 255);
+    RSDK.PlaySfx(UIWidgets->sfxBleep, false, 255);
     UISaveSlot_Unknown8();
 }
 
@@ -948,7 +948,7 @@ void UISaveSlot_NextZone(void)
         if (entity->saveZoneID > 11)
             entity->saveZoneID = 0;
     }
-    RSDK.PlaySfx(UIWidgets->sfx_Bleep, false, 255);
+    RSDK.PlaySfx(UIWidgets->sfxBleep, false, 255);
     UISaveSlot_Unknown8();
 }
 
@@ -964,7 +964,7 @@ void UISaveSlot_PrevZone(void)
         if (entity->saveZoneID < 0)
             entity->saveZoneID = 11;
     }
-    RSDK.PlaySfx(UIWidgets->sfx_Bleep, false, 255);
+    RSDK.PlaySfx(UIWidgets->sfxBleep, false, 255);
     UISaveSlot_Unknown8();
 }
 
@@ -1151,7 +1151,7 @@ void UISaveSlot_Unknown28(void)
     else {
 #endif
         if (entity->timer == 32)
-            RSDK.PlaySfx(UIWidgets->sfx_Warp, false, 255);
+            RSDK.PlaySfx(UIWidgets->sfxWarp, false, 255);
         if (entity->timer > 32) {
             entity->alpha += 32;
             entity->radius += 12;

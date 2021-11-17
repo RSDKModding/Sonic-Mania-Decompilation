@@ -74,7 +74,7 @@ void CPZ1Intro_Unknown3(Entity *player1, Entity *cutSeq, Entity *player2, int32 
 
         int32 valX = (player->position.x - player->position.x) >> 3;
         int32 valY = (val + 0xA00 * RSDK.Sin256(2 * (angle + seq->timer - seq->field_68)) - player->position.y) >> 3;
-        RSDK.SetSpriteAnimation(player->spriteIndex, ANI_FAN, &player->playerAnimator, false, 0);
+        RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->playerAnimator, false, 0);
         player->position.x += valX;
         player->position.y += valY;
         player->state = Player_State_None;
@@ -105,7 +105,7 @@ bool32 CPZ1Intro_CheckTailsAnimFinish(int32 timer)
     }
 #else
     if (timer == 60) {
-        RSDK.SetSpriteAnimation(player1->spriteIndex, ANI_IDLE, &player1->playerAnimator, true, 0);
+        RSDK.SetSpriteAnimation(player1->aniFrames, ANI_IDLE, &player1->playerAnimator, true, 0);
         player1->up = false;
         return true;
     }
@@ -229,15 +229,15 @@ bool32 CPZ1Intro_Unknown7(void *h)
         player1->state = Player_State_None;
         if (player2->objectID == Player->objectID) {
             player2->state = Player_State_None;
-            RSDK.SetSpriteAnimation(player2->spriteIndex, ANI_IDLE, &player2->playerAnimator, true, 0);
+            RSDK.SetSpriteAnimation(player2->aniFrames, ANI_IDLE, &player2->playerAnimator, true, 0);
         }
     }
 
     if (host->timer == 30) {
         if ((globals->playerID & 0xFF) == ID_SONIC)
-            RSDK.SetSpriteAnimation(player1->spriteIndex, ANI_BORED2, &player1->playerAnimator, false, 0);
+            RSDK.SetSpriteAnimation(player1->aniFrames, ANI_BORED2, &player1->playerAnimator, false, 0);
         else
-            RSDK.SetSpriteAnimation(player1->spriteIndex, ANI_BORED1, &player1->playerAnimator, false, 0);
+            RSDK.SetSpriteAnimation(player1->aniFrames, ANI_BORED1, &player1->playerAnimator, false, 0);
     }
     return host->timer == 60;
 }
@@ -272,7 +272,7 @@ bool32 CPZ1Intro_Unknown8(void *h)
         ParticleHelpers_Unknown1(debris->position.x, playerY);
         destroyEntity(debris);
         if ((globals->playerID & 0xFFFFFF00) == ID_TAILS_ASSIST)
-            RSDK.SetSpriteAnimation(player2->spriteIndex, ANI_SKID, &player2->playerAnimator, true, 0);
+            RSDK.SetSpriteAnimation(player2->aniFrames, ANI_SKID, &player2->playerAnimator, true, 0);
         return true;
     }
 
@@ -303,7 +303,7 @@ bool32 CPZ1Intro_Unknown9(void *h)
                 player1->playerAnimator.animationID     = 0xFF;
                 player1->playerAnimator.prevAnimationID = 0xFF;
 #else
-                RSDK.SetSpriteAnimation(player1->spriteIndex, ANI_LOOKUP, &player1->playerAnimator, true, 0);
+                RSDK.SetSpriteAnimation(player1->aniFrames, ANI_LOOKUP, &player1->playerAnimator, true, 0);
                 player1->up    = true;
                 player1->state = Player_State_LookUp;
 #endif
@@ -332,7 +332,7 @@ bool32 CPZ1Intro_Unknown9(void *h)
     }
 
     if (host->timer == 60 && player2->objectID == Player->objectID) {
-        RSDK.SetSpriteAnimation(player2->spriteIndex, ANI_LOOKUP, &player2->playerAnimator, true, 0);
+        RSDK.SetSpriteAnimation(player2->aniFrames, ANI_LOOKUP, &player2->playerAnimator, true, 0);
         player2->up    = true;
         player2->state = Player_State_LookUp;
     }
@@ -356,9 +356,9 @@ bool32 CPZ1Intro_Unknown15(void *h)
     RSDK_GET_PLAYER(player1, player2, camera);
 
     if (!host->timer) {
-        RSDK.SetSpriteAnimation(player1->spriteIndex, ANI_IDLE, &player1->playerAnimator, true, 0);
+        RSDK.SetSpriteAnimation(player1->aniFrames, ANI_IDLE, &player1->playerAnimator, true, 0);
         if (player2->objectID == Player->objectID) {
-            RSDK.SetSpriteAnimation(player2->spriteIndex, ANI_IDLE, &player2->playerAnimator, true, 0);
+            RSDK.SetSpriteAnimation(player2->aniFrames, ANI_IDLE, &player2->playerAnimator, true, 0);
             player2->up = false;
         }
     }

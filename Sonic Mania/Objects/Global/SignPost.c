@@ -66,19 +66,19 @@ void SignPost_Create(void *data)
 
     if (!RSDK_sceneInfo->inEditor) {
         if (globals->gameMode != MODE_TIMEATTACK) {
-            RSDK.SetSpriteAnimation(SignPost->spriteIndex, SIGNPOSTANI_EGGMAN, &entity->eggPlateAnim, true, 0);
+            RSDK.SetSpriteAnimation(SignPost->aniFrames, SIGNPOSTANI_EGGMAN, &entity->eggPlateAnim, true, 0);
             switch (globals->playerID & 0xFF) {
-                case ID_TAILS: RSDK.SetSpriteAnimation(SignPost->spriteIndex, SIGNPOSTANI_TAILS, &entity->facePlateAnim, true, 0); break;
-                case ID_KNUCKLES: RSDK.SetSpriteAnimation(SignPost->spriteIndex, SIGNPOSTANI_KNUX, &entity->facePlateAnim, true, 0); break;
+                case ID_TAILS: RSDK.SetSpriteAnimation(SignPost->aniFrames, SIGNPOSTANI_TAILS, &entity->facePlateAnim, true, 0); break;
+                case ID_KNUCKLES: RSDK.SetSpriteAnimation(SignPost->aniFrames, SIGNPOSTANI_KNUX, &entity->facePlateAnim, true, 0); break;
 #if RETRO_USE_PLUS
-                case ID_MIGHTY: RSDK.SetSpriteAnimation(SignPost->spriteIndex, SIGNPOSTANI_MIGHTY, &entity->facePlateAnim, true, 0); break;
-                case ID_RAY: RSDK.SetSpriteAnimation(SignPost->spriteIndex, SIGNPOSTANI_RAY, &entity->facePlateAnim, true, 0); break;
+                case ID_MIGHTY: RSDK.SetSpriteAnimation(SignPost->aniFrames, SIGNPOSTANI_MIGHTY, &entity->facePlateAnim, true, 0); break;
+                case ID_RAY: RSDK.SetSpriteAnimation(SignPost->aniFrames, SIGNPOSTANI_RAY, &entity->facePlateAnim, true, 0); break;
 #endif
-                default: RSDK.SetSpriteAnimation(SignPost->spriteIndex, SIGNPOSTANI_SONIC, &entity->facePlateAnim, true, 0); break;
+                default: RSDK.SetSpriteAnimation(SignPost->aniFrames, SIGNPOSTANI_SONIC, &entity->facePlateAnim, true, 0); break;
             }
-            RSDK.SetSpriteAnimation(SignPost->spriteIndex, SIGNPOSTANI_POST, &entity->postTopData, true, 0);
-            RSDK.SetSpriteAnimation(SignPost->spriteIndex, SIGNPOSTANI_POST, &entity->sidebarData, true, 1);
-            RSDK.SetSpriteAnimation(SignPost->spriteIndex, SIGNPOSTANI_POST, &entity->standData, true, 2);
+            RSDK.SetSpriteAnimation(SignPost->aniFrames, SIGNPOSTANI_POST, &entity->postTopData, true, 0);
+            RSDK.SetSpriteAnimation(SignPost->aniFrames, SIGNPOSTANI_POST, &entity->sidebarData, true, 1);
+            RSDK.SetSpriteAnimation(SignPost->aniFrames, SIGNPOSTANI_POST, &entity->standData, true, 2);
             entity->updateRange.x = 0x400000;
             entity->updateRange.y = 0x400000;
             if (globals->gameMode == MODE_COMPETITION) {
@@ -162,7 +162,7 @@ void SignPost_Create(void *data)
 
 void SignPost_StageLoad(void)
 {
-    SignPost->spriteIndex          = RSDK.LoadSpriteAnimation("Global/SignPost.bin", SCOPE_STAGE);
+    SignPost->aniFrames          = RSDK.LoadSpriteAnimation("Global/SignPost.bin", SCOPE_STAGE);
     SignPost->hitbox.left          = -24;
     SignPost->hitbox.top           = -22;
     SignPost->hitbox.right         = 24;
@@ -174,11 +174,11 @@ void SignPost_StageLoad(void)
     SignPost->maxPlayerCount       = (1 << Player->playerCount) - 1;
 
     DEBUGMODE_ADD_OBJ(SignPost);
-    SignPost->sfx_SignPost     = RSDK.GetSFX("Global/SignPost.wav");
-    SignPost->sfx_SignPost2P   = RSDK.GetSFX("Global/SignPost2p.wav");
-    SignPost->sfx_Twinkle      = RSDK.GetSFX("Global/Twinkle.wav");
-    SignPost->sfx_BubbleBounce = RSDK.GetSFX("Global/BubbleBounce.wav");
-    SignPost->sfx_Slide        = RSDK.GetSFX("Global/Slide.wav");
+    SignPost->sfxSignPost     = RSDK.GetSFX("Global/SignPost.wav");
+    SignPost->sfxSignPost2P   = RSDK.GetSFX("Global/SignPost2p.wav");
+    SignPost->sfxTwinkle      = RSDK.GetSFX("Global/Twinkle.wav");
+    SignPost->sfxBubbleBounce = RSDK.GetSFX("Global/BubbleBounce.wav");
+    SignPost->sfxSlide        = RSDK.GetSFX("Global/Slide.wav");
 }
 
 void SignPost_DebugSpawn(void)
@@ -189,11 +189,11 @@ void SignPost_DebugSpawn(void)
 }
 void SignPost_DebugDraw(void)
 {
-    RSDK.SetSpriteAnimation(SignPost->spriteIndex, SIGNPOSTANI_POST, &DebugMode->animator, true, 0);
+    RSDK.SetSpriteAnimation(SignPost->aniFrames, SIGNPOSTANI_POST, &DebugMode->animator, true, 0);
     RSDK.DrawSprite(&DebugMode->animator, NULL, false);
-    RSDK.SetSpriteAnimation(SignPost->spriteIndex, SIGNPOSTANI_EGGMAN, &DebugMode->animator, true, 0);
+    RSDK.SetSpriteAnimation(SignPost->aniFrames, SIGNPOSTANI_EGGMAN, &DebugMode->animator, true, 0);
     RSDK.DrawSprite(&DebugMode->animator, NULL, false);
-    RSDK.SetSpriteAnimation(SignPost->spriteIndex, SIGNPOSTANI_POST, &DebugMode->animator, true, 2);
+    RSDK.SetSpriteAnimation(SignPost->aniFrames, SIGNPOSTANI_POST, &DebugMode->animator, true, 2);
     RSDK.DrawSprite(&DebugMode->animator, NULL, false);
 }
 void SignPost_SpinSpeed(void)
@@ -226,7 +226,7 @@ void SignPost_SpawnSparkle(void)
         ring->stateDraw  = Ring_StateDraw_Sparkle;
         ring->active     = ACTIVE_NORMAL;
         ring->visible    = false;
-        RSDK.SetSpriteAnimation(Ring->spriteIndex, entity->sparkleType + 2, &ring->animator, true, 0);
+        RSDK.SetSpriteAnimation(Ring->aniFrames, entity->sparkleType + 2, &ring->animator, true, 0);
         int32 cnt = ring->animator.frameCount;
         if (ring->animator.animationID == 2) {
             ring->alpha = 224;
@@ -304,13 +304,13 @@ void SignPost_State_Fall(void)
         entity->type = 0;
         if (globals->gameMode < MODE_COMPETITION) {
             switch (globals->playerID & 0xFF) {
-                case ID_TAILS: RSDK.SetSpriteAnimation(SignPost->spriteIndex, SIGNPOSTANI_TAILS, &entity->facePlateAnim, true, 0); break;
-                case ID_KNUCKLES: RSDK.SetSpriteAnimation(SignPost->spriteIndex, SIGNPOSTANI_KNUX, &entity->facePlateAnim, true, 0); break;
+                case ID_TAILS: RSDK.SetSpriteAnimation(SignPost->aniFrames, SIGNPOSTANI_TAILS, &entity->facePlateAnim, true, 0); break;
+                case ID_KNUCKLES: RSDK.SetSpriteAnimation(SignPost->aniFrames, SIGNPOSTANI_KNUX, &entity->facePlateAnim, true, 0); break;
 #if RETRO_USE_PLUS
-                case ID_MIGHTY: RSDK.SetSpriteAnimation(SignPost->spriteIndex, SIGNPOSTANI_MIGHTY, &entity->facePlateAnim, true, 0); break;
-                case ID_RAY: RSDK.SetSpriteAnimation(SignPost->spriteIndex, SIGNPOSTANI_RAY, &entity->facePlateAnim, true, 0); break;
+                case ID_MIGHTY: RSDK.SetSpriteAnimation(SignPost->aniFrames, SIGNPOSTANI_MIGHTY, &entity->facePlateAnim, true, 0); break;
+                case ID_RAY: RSDK.SetSpriteAnimation(SignPost->aniFrames, SIGNPOSTANI_RAY, &entity->facePlateAnim, true, 0); break;
 #endif
-                default: RSDK.SetSpriteAnimation(SignPost->spriteIndex, SIGNPOSTANI_SONIC, &entity->facePlateAnim, true, 0); break;
+                default: RSDK.SetSpriteAnimation(SignPost->aniFrames, SIGNPOSTANI_SONIC, &entity->facePlateAnim, true, 0); break;
             }
         }
     }
@@ -321,7 +321,7 @@ void SignPost_State_Fall(void)
                 if (Player_CheckCollisionTouch(player, entity, &SignPost->hitbox)) {
                     entity->velocity.x = (entity->position.x - player->position.x) >> 4;
                     entity->velocity.y = -0x20000;
-                    RSDK.PlaySfx(SignPost->sfx_Twinkle, 0, 255);
+                    RSDK.PlaySfx(SignPost->sfxTwinkle, 0, 255);
                     EntityScoreBonus *scoreBonus = CREATE_ENTITY(ScoreBonus, NULL, entity->position.x, entity->position.y);
                     scoreBonus->drawOrder    = Zone->drawOrderHigh;
                     scoreBonus->animator.frameID = 0;
@@ -360,7 +360,7 @@ void SignPost_State_Fall(void)
         foreach_active(ItemBox, itemBox) {
             if (itemBox->hidden) {
                 if (RSDK.CheckObjectCollisionTouchBox(itemBox, &ItemBox->hiddenHitbox, entity, &SignPost->itemBoxHitbox)) {
-                    RSDK.PlaySfx(SignPost->sfx_BubbleBounce, 0, 255);
+                    RSDK.PlaySfx(SignPost->sfxBubbleBounce, 0, 255);
                     itemBox->velocity.y = -0x50000;
                     itemBox->hidden     = 0;
                     itemBox->state      = ItemBox_State_Falling;
@@ -372,7 +372,7 @@ void SignPost_State_Fall(void)
             }
         }
         if (entity->velocity.y >= 0) {
-            RSDK.PlaySfx(SignPost->sfx_Slide, 0, 255);
+            RSDK.PlaySfx(SignPost->sfxSlide, 0, 255);
             entity->spinCount  = 4;
             entity->velocity.y = 0;
             Music_FadeOut(0.025);
@@ -416,7 +416,7 @@ void SignPost_CheckTouch(void)
                 if (flag) {
                     if (!((1 << p) & entity->activePlayers) && globals->gameMode == MODE_COMPETITION)
                         Announcer_AnnounceGoal(player->camera->screenID);
-                    RSDK.PlaySfx(SignPost->sfx_SignPost, 0, 255);
+                    RSDK.PlaySfx(SignPost->sfxSignPost, 0, 255);
                     entity->active = ACTIVE_NORMAL;
                     if (player->superState == SUPERSTATE_SUPER)
                         player->superState = SUPERSTATE_FADEOUT;
@@ -433,17 +433,17 @@ void SignPost_CheckTouch(void)
                         entity->active = ACTIVE_NORMAL;
                         if (!entity->activePlayers) {
                             switch (player->characterID) {
-                                case ID_TAILS: RSDK.SetSpriteAnimation(SignPost->spriteIndex, SIGNPOSTANI_TAILS, &entity->facePlateAnim, true, 0); break;
+                                case ID_TAILS: RSDK.SetSpriteAnimation(SignPost->aniFrames, SIGNPOSTANI_TAILS, &entity->facePlateAnim, true, 0); break;
                                 case ID_KNUCKLES:
-                                    RSDK.SetSpriteAnimation(SignPost->spriteIndex, SIGNPOSTANI_KNUX, &entity->facePlateAnim, true, 0);
+                                    RSDK.SetSpriteAnimation(SignPost->aniFrames, SIGNPOSTANI_KNUX, &entity->facePlateAnim, true, 0);
                                     break;
 #if RETRO_USE_PLUS
-                                case ID_MIGHTY: RSDK.SetSpriteAnimation(SignPost->spriteIndex, SIGNPOSTANI_MIGHTY, &entity->facePlateAnim, true, 0); break;
-                                case ID_RAY: RSDK.SetSpriteAnimation(SignPost->spriteIndex, SIGNPOSTANI_RAY, &entity->facePlateAnim, true, 0); break;
+                                case ID_MIGHTY: RSDK.SetSpriteAnimation(SignPost->aniFrames, SIGNPOSTANI_MIGHTY, &entity->facePlateAnim, true, 0); break;
+                                case ID_RAY: RSDK.SetSpriteAnimation(SignPost->aniFrames, SIGNPOSTANI_RAY, &entity->facePlateAnim, true, 0); break;
 #endif
-                                default: RSDK.SetSpriteAnimation(SignPost->spriteIndex, SIGNPOSTANI_SONIC, &entity->facePlateAnim, true, 0); break;
+                                default: RSDK.SetSpriteAnimation(SignPost->aniFrames, SIGNPOSTANI_SONIC, &entity->facePlateAnim, true, 0); break;
                             }
-                            RSDK.PlaySfx(SignPost->sfx_SignPost2P, 0, 255);
+                            RSDK.PlaySfx(SignPost->sfxSignPost2P, 0, 255);
                         }
 
                         EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
@@ -473,13 +473,13 @@ void SignPost_CheckTouch(void)
 #if RETRO_USE_PLUS
                         if (globals->gameMode == MODE_ENCORE) {
                             switch (globals->playerID & 0xFF) {
-                                case ID_TAILS: RSDK.SetSpriteAnimation(SignPost->spriteIndex, SIGNPOSTANI_TAILS, &entity->facePlateAnim, true, 0); break;
+                                case ID_TAILS: RSDK.SetSpriteAnimation(SignPost->aniFrames, SIGNPOSTANI_TAILS, &entity->facePlateAnim, true, 0); break;
                                 case ID_KNUCKLES:
-                                    RSDK.SetSpriteAnimation(SignPost->spriteIndex, SIGNPOSTANI_KNUX, &entity->facePlateAnim, true, 0);
+                                    RSDK.SetSpriteAnimation(SignPost->aniFrames, SIGNPOSTANI_KNUX, &entity->facePlateAnim, true, 0);
                                     break;
-                                case ID_MIGHTY: RSDK.SetSpriteAnimation(SignPost->spriteIndex, SIGNPOSTANI_MIGHTY, &entity->facePlateAnim, true, 0); break;
-                                case ID_RAY: RSDK.SetSpriteAnimation(SignPost->spriteIndex, SIGNPOSTANI_RAY, &entity->facePlateAnim, true, 0); break;
-                                default: RSDK.SetSpriteAnimation(SignPost->spriteIndex, SIGNPOSTANI_SONIC, &entity->facePlateAnim, true, 0); break;
+                                case ID_MIGHTY: RSDK.SetSpriteAnimation(SignPost->aniFrames, SIGNPOSTANI_MIGHTY, &entity->facePlateAnim, true, 0); break;
+                                case ID_RAY: RSDK.SetSpriteAnimation(SignPost->aniFrames, SIGNPOSTANI_RAY, &entity->facePlateAnim, true, 0); break;
+                                default: RSDK.SetSpriteAnimation(SignPost->aniFrames, SIGNPOSTANI_SONIC, &entity->facePlateAnim, true, 0); break;
                             }
                         }
 #endif
@@ -551,10 +551,10 @@ void SignPost_EditorDraw(void)
     RSDK_THIS(SignPost);
     Vector2 drawPos;
 
-    RSDK.SetSpriteAnimation(SignPost->spriteIndex, SIGNPOSTANI_EGGMAN, &entity->eggPlateAnim, true, 0);
-    RSDK.SetSpriteAnimation(SignPost->spriteIndex, SIGNPOSTANI_POST, &entity->postTopData, true, 0);
-    RSDK.SetSpriteAnimation(SignPost->spriteIndex, SIGNPOSTANI_POST, &entity->sidebarData, true, 1);
-    RSDK.SetSpriteAnimation(SignPost->spriteIndex, SIGNPOSTANI_POST, &entity->standData, true, 2);
+    RSDK.SetSpriteAnimation(SignPost->aniFrames, SIGNPOSTANI_EGGMAN, &entity->eggPlateAnim, true, 0);
+    RSDK.SetSpriteAnimation(SignPost->aniFrames, SIGNPOSTANI_POST, &entity->postTopData, true, 0);
+    RSDK.SetSpriteAnimation(SignPost->aniFrames, SIGNPOSTANI_POST, &entity->sidebarData, true, 1);
+    RSDK.SetSpriteAnimation(SignPost->aniFrames, SIGNPOSTANI_POST, &entity->standData, true, 2);
 
     entity->drawFX = FX_SCALE;
     drawPos.y      = entity->position.y;
@@ -585,7 +585,7 @@ void SignPost_EditorDraw(void)
     RSDK.DrawSprite(&entity->standData, NULL, false);
 }
 
-void SignPost_EditorLoad(void) { SignPost->spriteIndex = RSDK.LoadSpriteAnimation("Global/SignPost.bin", SCOPE_STAGE); }
+void SignPost_EditorLoad(void) { SignPost->aniFrames = RSDK.LoadSpriteAnimation("Global/SignPost.bin", SCOPE_STAGE); }
 #endif
 
 void SignPost_Serialize(void)

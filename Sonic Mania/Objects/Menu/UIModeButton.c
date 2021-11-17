@@ -184,10 +184,10 @@ void UIModeButton_Options3CB(void)
     entity->flag         = false;
     entity->state        = UIModeButton_Unknown10;
     parent->backoutTimer = 30;
-    RSDK.PlaySfx(UIWidgets->sfx_Accept, false, 255);
+    RSDK.PlaySfx(UIWidgets->sfxAccept, false, 255);
 }
 
-void UIModeButton_FailCB(void) { RSDK.PlaySfx(UIWidgets->sfx_Fail, false, 255); }
+void UIModeButton_FailCB(void) { RSDK.PlaySfx(UIWidgets->sfxFail, false, 255); }
 
 void UIModeButton_Options6CB(void)
 {

@@ -214,7 +214,7 @@ void Stegway_Unknown9(void)
         entity->state = Stegway_Unknown10;
         EntityDust *dust =
             CREATE_ENTITY(Dust, entity, entity->position.x - 0xA0000 * (2 * (entity->direction != FLIP_NONE) - 1), entity->position.y + 0x100000);
-        RSDK.SetSpriteAnimation(Dust->spriteIndex, 2, &dust->animator, true, 0);
+        RSDK.SetSpriteAnimation(Dust->aniFrames, 2, &dust->animator, true, 0);
         dust->state     = Dust_State_DropDash;
         dust->direction = 1 - entity->direction;
         dust->drawOrder = entity->drawOrder;

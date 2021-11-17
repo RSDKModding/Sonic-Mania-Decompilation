@@ -13,7 +13,7 @@ typedef struct {
     uint16 knuxSpriteIndex;
     uint16 mightySpriteIndex;
     uint16 raySpriteIndex;
-    uint16 sfx_Jump;
+    uint16 sfxJump;
 } ObjectBSS_Player;
 
 // Entity Class
@@ -30,7 +30,7 @@ typedef struct {
     bool32 jumpPress;
     Animator playerAnimator;
     Animator tailAnimator;
-    uint16 spriteIndex;
+    uint16 aniFrames;
     uint16 field_AE;
 #if RETRO_USE_TOUCH_CONTROLS
     int32 touchJump;

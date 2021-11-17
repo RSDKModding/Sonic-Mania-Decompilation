@@ -8,9 +8,9 @@ typedef struct {
     RSDK_OBJECT
     int32 field_4;
     TABLE(int32 defaultHeights[4], { 12, 12, 16, 16 });
-    uint16 spriteIndex;
-    uint16 sfx_MachSpeed;
-    uint16 sfx_LedgeBreak;
+    uint16 aniFrames;
+    uint16 sfxMachSpeed;
+    uint16 sfxLedgeBreak;
 } ObjectUFO_Sphere;
 
 // Entity Class

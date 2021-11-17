@@ -86,7 +86,7 @@ void TurretSwitch_Break(EntityTurretSwitch *entity, EntityPlayer *player)
 {
     player->velocity.y = -(player->velocity.y + 2 * player->gravityStrength);
     RSDK.CreateEntity(Explosion->objectID, 0, entity->position.x, entity->position.y)->drawOrder = Zone->drawOrderHigh;
-    RSDK.PlaySfx(ItemBox->sfx_Destroy, false, 255);
+    RSDK.PlaySfx(ItemBox->sfxDestroy, false, 255);
     entity->visible   = 0;
     entity->state     = 0;
     entity->activated = true;

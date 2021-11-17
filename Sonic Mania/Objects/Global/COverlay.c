@@ -34,13 +34,13 @@ void COverlay_Create(void *data)
 
 void COverlay_StageLoad(void)
 {
-    COverlay->spriteIndex = RSDK.LoadSpriteAnimation("Global/PlaneSwitch.bin", SCOPE_STAGE);
+    COverlay->aniFrames = RSDK.LoadSpriteAnimation("Global/PlaneSwitch.bin", SCOPE_STAGE);
     DEBUGMODE_ADD_OBJ(COverlay);
 }
 
 void COverlay_DebugDraw(void)
 {
-    RSDK.SetSpriteAnimation(COverlay->spriteIndex, 0, &DebugMode->animator, true, 0);
+    RSDK.SetSpriteAnimation(COverlay->aniFrames, 0, &DebugMode->animator, true, 0);
     DebugMode->animator.frameID = 4;
     RSDK.DrawSprite(&DebugMode->animator, NULL, false);
 }

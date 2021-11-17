@@ -285,7 +285,7 @@ void PaperRoller_Unknown4(void)
             int32 distX = abs(entity->position.x - player->position.x);
             int32 distY = abs(entity->position.y - player->position.y);
             if (MathHelpers_SquareRoot((distX >> 16) * (distX >> 16) + (distY >> 16) * (distY >> 16)) <= 40 && !entity->playerTimer[playerID]) {
-                RSDK.PlaySfx(Player->sfx_Release, false, 255);
+                RSDK.PlaySfx(Player->sfxRelease, false, 255);
                 int32 angle = RSDK.ATan2(player->position.x - entity->position.x, player->position.y - entity->position.y);
 
                 int32 ang = 0;
@@ -301,7 +301,7 @@ void PaperRoller_Unknown4(void)
                 player->velocity.x = RSDK.Cos256(ang) << 11;
                 player->velocity.y = RSDK.Sin256(ang) << 11;
                 player->state      = Player_State_Air;
-                RSDK.SetSpriteAnimation(player->spriteIndex, ANI_JUMP, &player->playerAnimator, false, 0);
+                RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->playerAnimator, false, 0);
                 player->nextAirState           = 0;
                 player->nextGroundState        = 0;
                 player->onGround               = false;
@@ -378,7 +378,7 @@ void PaperRoller_Unknown5(void)
                     player->velocity = vel;
 
                     player->state = Player_State_Air;
-                    RSDK.SetSpriteAnimation(player->spriteIndex, ANI_JUMP, &player->playerAnimator, false, 0);
+                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->playerAnimator, false, 0);
                     player->nextAirState     = 0;
                     player->nextGroundState  = 0;
                     player->onGround         = false;
@@ -433,7 +433,7 @@ void PaperRoller_Unknown5(void)
                     player->velocity = vel;
 
                     player->state = Player_State_Air;
-                    RSDK.SetSpriteAnimation(player->spriteIndex, ANI_JUMP, &player->playerAnimator, false, 0);
+                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->playerAnimator, false, 0);
                     player->nextAirState     = StateMachine_None;
                     player->nextGroundState  = StateMachine_None;
                     player->onGround         = false;
