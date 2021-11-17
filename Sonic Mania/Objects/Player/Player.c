@@ -4308,7 +4308,7 @@ void Player_State_DropDash(void)
             vel = 0xC0000;
             cap = 0xD0000;
             if (entity->camera)
-                Camera_ShakeScreen(6, entity->camera->screenID, 6);
+                Camera_ShakeScreen(entity->camera->screenID, 6, 6);
         }
         else {
             vel = 0x80000;
@@ -5099,7 +5099,7 @@ void Player_State_MightyHammerDrop(void)
             entity->playerAnimator.animationSpeed = 0xF0;
         RSDK.StopSFX(Player->sfxMightyDrill);
         RSDK.PlaySfx(Player->sfxMightyLand, false, 0xFF);
-        Camera_ShakeScreen(0, RSDK.GetEntityID(entity), 4);
+        Camera_ShakeScreen(RSDK.GetEntityID(entity), 0, 4);
 
         Hitbox *hitbox = RSDK.GetHitbox(&entity->playerAnimator, 0);
         Player_SpawnMightyHammerdropDust(0x10000, hitbox);

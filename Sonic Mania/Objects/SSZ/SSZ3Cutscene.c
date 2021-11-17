@@ -263,7 +263,7 @@ bool32 SSZ3Cutscene_OutroState_Unknown5(EntityCutsceneSeq *host)
         fxRuby            = CREATE_ENTITY(FXRuby, NULL, ruby->position.x, ruby->position.y);
         fxRuby->drawOrder = Zone->playerDrawHigh;
         entity->fxRuby    = fxRuby;
-        Camera_ShakeScreen(4, 0, 4);
+        Camera_ShakeScreen(0, 4, 4);
         player1->drawOrder = Zone->playerDrawHigh + 1;
         if (player2->objectID == Player->objectID)
             player2->drawOrder = Zone->playerDrawHigh + 1;
@@ -276,13 +276,13 @@ bool32 SSZ3Cutscene_OutroState_Unknown5(EntityCutsceneSeq *host)
                     fxRuby->field_74 = 64;
                     fxRuby->state    = FXRuby_Unknown6;
                     PhantomRuby_PlaySFX(RUBYSFX_ATTACK4);
-                    Camera_ShakeScreen(4, 0, 4);
+                    Camera_ShakeScreen(0, 4, 4);
                 }
                 else if (host->timer == host->field_68 + 180) {
                     fxRuby->field_74 = 32;
                     fxRuby->state    = FXRuby_Unknown6;
                     PhantomRuby_PlaySFX(RUBYSFX_ATTACK1);
-                    Camera_ShakeScreen(4, 0, 4);
+                    Camera_ShakeScreen(0, 4, 4);
                     Music_FadeOut(0.025);
                     host->field_68    = host->timer;
                     host->field_6C[0] = 1;

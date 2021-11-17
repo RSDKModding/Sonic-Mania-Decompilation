@@ -16,7 +16,13 @@ typedef enum {
     ANIMAL_TOCKY,
     ANIMAL_WOCKY,
     ANIMAL_MICKY,
-} ANIMAL_TYPES;
+} AnimalTypes;
+
+typedef enum {
+    ANIMAL_BEHAVE_BOUNCEAROUND,
+    ANIMAL_BEHAVE_FOLLOW,
+    ANIMAL_BEHAVE_BOUNCEAROUND_BOUNDS,
+} AnimalBehaviours;
 
 // Object Class
 typedef struct {
@@ -36,8 +42,8 @@ typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 delay;
-    int32 type;
-    int32 behaviour;
+    AnimalTypes type;
+    AnimalBehaviours behaviour;
     Animator animator;
     Hitbox hitbox;
 } EntityAnimals;

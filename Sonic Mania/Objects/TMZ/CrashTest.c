@@ -351,7 +351,7 @@ void CrashTest_State_Move(void)
     if (flag) {
         int32 x = entity->dword84 * (2 * (entity->direction != FLIP_NONE) - 1) + entity->startPos.x;
 
-        Camera_ShakeScreen(5, 0, 5);
+        Camera_ShakeScreen(0, 5, 5);
         CrashTest_CheckPlayerCrash();
         entity->timer = 0;
         RSDK.PlaySfx(CrashTest->sfxCrash, false, 255);

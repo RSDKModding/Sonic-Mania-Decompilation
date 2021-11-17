@@ -475,7 +475,7 @@ void MSZSetup_Unknown10(void)
         RSDK.SetChannelAttributes(MSZSetup->chuggaChannel, 0.0, 0.0, 1.0);
         MSZSetup_Unknown2();
         MSZSetup_Unknown4(0);
-        Camera_ShakeScreen(4, 0, 4);
+        Camera_ShakeScreen(0, 4, 4);
         RSDK.CopyTileLayer(4, 640, 94, 5, 0, 0, 62, 16);
         RSDK.CopyTileLayer(4, 655, 0, 5, 0, 0, 17, 70);
         RSDK.CopyTileLayer(3, 655, 0, 5, 0, 0, 17, 70);

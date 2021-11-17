@@ -41,8 +41,8 @@ typedef struct {
     int32 totalScore;
     int32 time;
     int32 dword78;
-    int32 field_7C;
-    int32 field_80;
+    bool32 achievedRank;
+    bool32 isNewRecord;
     int32 field_84;
     Vector2 posUnknown;
     Vector2 posUnknown3;
@@ -79,7 +79,7 @@ void ActClear_Serialize(void);
 
 // Extra Entity Functions
 #if RETRO_USE_PLUS
-void ActClear_DrawTime(int32 mins, Vector2 *pos, int32 secs, int32 millisecs);
+void ActClear_DrawTime(Vector2 *pos, int32 mins, int32 secs, int32 millisecs);
 #endif
 void ActClear_DrawNumbers(Vector2 *pos, int32 value, int32 maxVals);
 void ActClear_CheckPlayerVictory(void);

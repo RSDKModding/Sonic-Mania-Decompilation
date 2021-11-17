@@ -464,7 +464,7 @@ void HeavyKing_State_HandleCutsceneSetup(void)
         claw->state     = KingClaw_Unknown2;
         entity->visible = true;
         entity->state   = HeavyKing_State_CutsceneUnknown1;
-        Camera_ShakeScreen(6, 0, 6);
+        Camera_ShakeScreen(0, 6, 6);
         RSDK.PlaySfx(HeavyKing->sfxImpact6, false, 255);
     }
 }
@@ -541,7 +541,7 @@ void HeavyKing_State_CutsceneUnknown4(void)
     }
     if (entity->timer == 240) {
         entity->timer = 0;
-        Camera_ShakeScreen(6, 0, 6);
+        Camera_ShakeScreen(0, 6, 6);
         RSDK.PlaySfx(HeavyKing->sfxImpact6, false, 255);
         EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
 #if RETRO_USE_PLUS

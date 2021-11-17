@@ -47,9 +47,9 @@ void HUD_LateUpdate(void)
     else if (globals->gameMode == MODE_TIMEATTACK) {
         if (HUD->showTAPrompt) {
             if (sku_platform == PLATFORM_PC || sku_platform == PLATFORM_SWITCH || sku_platform == PLATFORM_DEV) {
-                HUD_GetKeyFrame(&entity->superButtonAnimator2, 3);
-                HUD_GetKeyFrame(&entity->taAnimator3, 3);
-                HUD_GetKeyFrame(&entity->taAnimator4, 4);
+                HUD_GetKeyFrame(&entity->superButtonAnimator2, KEY_Y);
+                HUD_GetKeyFrame(&entity->taAnimator3, KEY_Y);
+                HUD_GetKeyFrame(&entity->taAnimator4, KEY_START);
             }
             if (entity->superButtonPos < 0x180000)
                 entity->superButtonPos += 0x80000;
@@ -541,10 +541,10 @@ void HUD_GetKeyFrame(Animator *animator, int32 buttonID)
 void HUD_GetSuperFrames(void)
 {
     RSDK_THIS(HUD);
-    HUD_GetKeyFrame(&entity->superButtonAnimator2, 3);
+    HUD_GetKeyFrame(&entity->superButtonAnimator2, KEY_Y);
 #if RETRO_USE_PLUS
-    HUD_GetKeyFrame(&entity->taAnimator3, 3);
-    HUD_GetKeyFrame(&entity->taAnimator4, 4);
+    HUD_GetKeyFrame(&entity->taAnimator3, KEY_Y);
+    HUD_GetKeyFrame(&entity->taAnimator4, KEY_START);
 #endif
 }
 #endif

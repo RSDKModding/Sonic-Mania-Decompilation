@@ -145,7 +145,7 @@ void BreakBar_HandlePlayerInteractions(void *p)
                     frame = 2;
                 else
                     frame = i != 0;
-                EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_LightningSpark, spawnX, spawnY);
+                EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Move, spawnX, spawnY);
                 debris->drawOrder    = Zone->drawOrderLow;
                 if (player->underwater)
                     debris->gravity = 0x2000;

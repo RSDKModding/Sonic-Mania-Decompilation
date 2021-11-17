@@ -307,7 +307,7 @@ void CrimsonEye_StateBody_Unknown4(void)
         }
         if (entity->timer <= 0) {
             RSDK.PlaySfx(CrimsonEye->sfxElevator, false, 255);
-            Camera_ShakeScreen(4, 0, 8);
+            Camera_ShakeScreen(0, 4, 8);
             RSDK.PlaySfx(CrimsonEye->sfxHullClose, false, 255);
             entity->timer           = RSDK.Rand(120, 180);
             CrimsonEye->scrollLimit = CrimsonEye->value14;

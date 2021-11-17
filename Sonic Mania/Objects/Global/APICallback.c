@@ -211,7 +211,7 @@ LeaderboardEntry *APICallback_ReadLeaderboardEntry(int32 rankID)
 
 void APICallback_NotifyAutoSave_OK(void)
 {
-    APICallback->notifyAutoSaveFlag = false;
+    APICallback->isAutoSaving = false;
     globals->notifiedAutosave       = true;
     UIWaitSpinner_Wait2();
 }
@@ -219,7 +219,7 @@ void APICallback_NotifyAutoSave_OK(void)
 void APICallback_NotifyAutoSave_CB(void)
 {
     RSDK_THIS(APICallback);
-    if (APICallback->notifyAutoSaveFlag) {
+    if (APICallback->isAutoSaving) {
         if (!UIDialog->activeDialog) {
             TextInfo info;
             Localization_GetString(&info, STR_SIGNOUTDETECTED);
@@ -399,11 +399,11 @@ int32 APICallback_GetUserAuthStatus(void)
     }
 
     if (APICallback->saveStatus || APICallback->authStatus != STATUS_ERROR) {
-        if (APICallback->authStatus == STATUS_FORBIDDEN && !APICallback->authFlag) {
+        if (APICallback->authStatus == STATUS_FORBIDDEN && !APICallback->authForbiddenFlag) {
             EntityAPICallback *entity = CREATE_ENTITY(APICallback, APICallback_CheckUserAuth_CB, 0, 0);
             entity->active            = ACTIVE_ALWAYS;
             APICallback->activeEntity = (Entity *)entity;
-            APICallback->authFlag     = true;
+            APICallback->authForbiddenFlag     = true;
         }
     }
     else {
@@ -753,9 +753,9 @@ void APICallback_CheckUserAuth_CB(void)
         if (dialog) {
             if (dialog->state != UIDialog_Unknown13) {
                 dialog->parent->selectionDisabled = true;
-                dialog->field_5C                  = 0;
+                dialog->timer                     = 0;
                 dialog->state                     = UIDialog_Unknown13;
-                dialog->curCallback              = NULL;
+                dialog->curCallback               = NULL;
             }
         }
         else {
@@ -792,11 +792,9 @@ void APICallback_ManageNotifs(void)
         if (!UIDialog->activeDialog) {
             int32 str = GameProgress_GetNotifStringID(GameProgress_GetNextNotif());
             Localization_GetString(&info, str);
-            EntityUIDialog *dialog = UIDialog_CreateActiveDialog(&info);
-            dialog->field_B4       = true;
+            EntityUIDialog *dialog = UIDialog_CreateDialogOk(&info, APICallback_GetNextNotif, true);
+            dialog->playEventSfx   = true;
             dialog->field_B8       = true;
-            UIDialog_AddButton(DIALOG_OK, dialog, APICallback_GetNextNotif, true);
-            UIDialog_Setup(dialog);
         }
     }
     else {
@@ -818,13 +816,13 @@ bool32 APICallback_CheckUnreadNotifs(void)
 
 bool32 APICallback_NotifyAutosave(void)
 {
-    if (!APICallback->notifyAutoSaveFlag && !APICallback->activeEntity) {
+    if (!APICallback->isAutoSaving && !APICallback->activeEntity) {
         return false;
     }
 
-    if (!APICallback->activeEntity || (!globals->notifiedAutosave && !APICallback->notifyAutoSaveFlag)) {
+    if (!APICallback->activeEntity || (!globals->notifiedAutosave && !APICallback->isAutoSaving)) {
         UIWaitSpinner_Wait();
-        APICallback->notifyAutoSaveFlag = true;
+        APICallback->isAutoSaving = true;
         globals->notifiedAutosave       = false;
         LogHelpers_Print("DUMMY NotifyAutosave()");
         EntityAPICallback *dialogRunner = CREATE_ENTITY(APICallback, APICallback_NotifyAutoSave_CB, 0, 0);

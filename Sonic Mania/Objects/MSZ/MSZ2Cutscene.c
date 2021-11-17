@@ -84,7 +84,7 @@ bool32 MSZ2Cutscene_CutsceneState_Unknown1(EntityCutsceneSeq *host)
         parallaxSprite->drawFX  = FX_SCALE;
         parallaxSprite->scale.x = 0x200;
         parallaxSprite->scale.y = 0x200;
-        prison->activated       = true;
+        prison->notSolid        = true;
 
         Vector2 size;
         RSDK.GetLayerSize(Zone->fgLow, &size, true);

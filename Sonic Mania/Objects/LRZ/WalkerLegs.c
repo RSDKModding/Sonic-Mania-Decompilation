@@ -416,7 +416,7 @@ void WalkerLegs_CreateSmoke(bool32 flag)
                     spawnY = entity->field_A4;
                 else
                     spawnY = entity->field_A0;
-                EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_LightningSpark, spawnX, spawnY);
+                EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Move, spawnX, spawnY);
                 RSDK.SetSpriteAnimation(Explosion->aniFrames, 3, &debris->animator, true, 0);
                 debris->velocity.x = 0;
                 debris->velocity.y = -0x1000 * RSDK.Rand(0, 4);

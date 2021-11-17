@@ -23,8 +23,8 @@ void AIZRockPile_Update(void)
                 
                 if (entity->smashSides || entity->smashTop) {
                     int32 side = Player_CheckCollisionBox(player, entity, hitbox);
-                    if (entity->smashSides && (side == 2 || side == 3)) {
-                        if (side == 2 || side == 3) {
+                    if (entity->smashSides && (side == C_LEFT || side == C_RIGHT)) {
+                        if (side == C_LEFT || side == C_RIGHT) {
                             bool32 flag = jumping && player->onGround && abs(groundVel) >= 0x48000;
                             if (player->shield == SHIELD_FIRE) {
                                 EntityShield *shield = RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntityID(player), Shield);
@@ -47,7 +47,7 @@ void AIZRockPile_Update(void)
                         }
                     }
 
-                    if (entity->smashTop && side == 1) {
+                    if (entity->smashTop && side == C_TOP) {
                         bool32 flag = jumping;
                         flag |= player->characterID == ID_SONIC && player->playerAnimator.animationID == ANI_DROPDASH;
                         flag |= player->characterID == ID_MIGHTY && player->state == Player_State_MightyHammerDrop;
@@ -87,21 +87,21 @@ void AIZRockPile_Create(void *data)
     RSDK.SetSpriteAnimation(AIZRockPile->aniFrames, 0, &entity->animator, true, entity->size + 3);
     if (!RSDK_sceneInfo->inEditor) {
         switch (entity->size) {
-            case 0:
+            case AIZROCKPILE_SMALL:
                 entity->size          = 4;
                 entity->rockPositions = AIZRockPile->rockPositions_small;
                 entity->rockSpeedsT   = AIZRockPile->rockSpeedsT_small;
                 entity->rockSpeedsL   = AIZRockPile->rockSpeedsL_small;
                 entity->rockSpeedsR   = AIZRockPile->rockSpeedsR_small;
                 break;
-            case 1:
+            case AIZROCKPILE_MED:
                 entity->size          = 5;
                 entity->rockPositions = AIZRockPile->rockPositions_med;
                 entity->rockSpeedsT   = AIZRockPile->rockSpeedsT_med;
                 entity->rockSpeedsL   = AIZRockPile->rockSpeedsL_med;
                 entity->rockSpeedsR   = AIZRockPile->rockSpeedsR_med;
                 break;
-            case 2:
+            case AIZROCKPILE_BIG:
                 entity->size          = 8;
                 entity->rockPositions = AIZRockPile->rockPositions_large;
                 entity->rockSpeedsT   = AIZRockPile->rockSpeedsT_large;
@@ -129,9 +129,8 @@ void AIZRockPile_SpawnRocks(int32 *speeds)
     RSDK_THIS(AIZRockPile);
 
     for (int32 i = 0; i < entity->size; ++i) {
-        EntityDebris *debris =
-            (EntityDebris *)RSDK.CreateEntity(Debris->objectID, Debris_State_Fall, entity->position.x + entity->rockPositions[2 * i],
-                                              entity->position.y + entity->rockPositions[(2 * i) + 1]);
+        EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Fall, entity->position.x + entity->rockPositions[2 * i],
+                                             entity->position.y + entity->rockPositions[(2 * i) + 1]);
         RSDK.SetSpriteAnimation(AIZRockPile->aniFrames, 1, &debris->animator, true, 0);
         debris->velocity.x    = speeds[2 * i];
         debris->velocity.y    = speeds[(2 * i) + 1];
@@ -141,14 +140,28 @@ void AIZRockPile_SpawnRocks(int32 *speeds)
         debris->gravity       = 0x1800;
     }
 
-    RSDK.PlaySfx(AIZRockPile->sfxBreak, 0, 255);
+    RSDK.PlaySfx(AIZRockPile->sfxBreak, false, 255);
     destroyEntity(entity);
 }
 
 #if RETRO_INCLUDE_EDITOR
-void AIZRockPile_EditorDraw(void) { AIZRockPile_Draw(); }
+void AIZRockPile_EditorDraw(void)
+{
+    RSDK_THIS(AIZRockPile);
+    RSDK.SetSpriteAnimation(AIZRockPile->aniFrames, 0, &entity->animator, true, entity->size + 3);
 
-void AIZRockPile_EditorLoad(void) { AIZRockPile->aniFrames = RSDK.LoadSpriteAnimation("AIZ/Platform.bin", SCOPE_STAGE); }
+    AIZRockPile_Draw();
+}
+
+void AIZRockPile_EditorLoad(void)
+{
+    AIZRockPile->aniFrames = RSDK.LoadSpriteAnimation("AIZ/Platform.bin", SCOPE_STAGE);
+
+    RSDK_ACTIVE_VAR(AIZRockPile, size);
+    RSDK_ENUM_VAR("Small", AIZROCKPILE_SMALL);
+    RSDK_ENUM_VAR("Medium", AIZROCKPILE_MED);
+    RSDK_ENUM_VAR("Large", AIZROCKPILE_BIG);
+}
 #endif
 
 void AIZRockPile_Serialize(void)

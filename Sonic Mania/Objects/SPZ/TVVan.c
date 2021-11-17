@@ -630,7 +630,7 @@ void TVVan_State15_Unknown2(void)
     entity->position.x += 0xC00 * RSDK.Cos256(entity->angle);
     entity->position.y += 0xC00 * RSDK.Sin256(entity->angle);
     
-    EntityDebris *debris        = CREATE_ENTITY(Debris, Debris_State_LightningSpark, entity->position.x, entity->position.y);
+    EntityDebris *debris        = CREATE_ENTITY(Debris, Debris_State_Move, entity->position.x, entity->position.y);
     debris->timer = 16;
     debris->drawOrder = entity->drawOrder;
     debris->drawFX    = FX_ROTATE;

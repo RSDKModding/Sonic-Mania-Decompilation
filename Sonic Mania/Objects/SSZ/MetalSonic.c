@@ -420,7 +420,7 @@ void MetalSonic_State_WaitForHologram(void)
             entity->animator.animationSpeed = 0;
             entity->active                  = ACTIVE_NORMAL;
             entity->state                   = MetalSonic_State_Appear;
-            Camera_ShakeScreen(6, 0, 6);
+            Camera_ShakeScreen(0, 6, 6);
             foreach_break;
         }
     }

@@ -5,12 +5,12 @@ ObjectTornado *Tornado;
 void Tornado_Update(void)
 {
     RSDK_THIS(Tornado);
-    entity->field_7C = entity->position.y;
+    entity->prevPosY = entity->position.y;
     StateMachine_Run(entity->state);
-    entity->animator1.frameID = entity->field_64 >> 4;
-    RSDK.ProcessAnimation(&entity->animator2);
-    RSDK.ProcessAnimation(&entity->animator3);
-    RSDK.ProcessAnimation(&entity->animator4);
+    entity->animatorTornado.frameID = entity->turnAngle >> 4;
+    RSDK.ProcessAnimation(&entity->animatorPropeller);
+    RSDK.ProcessAnimation(&entity->animatorPilot);
+    RSDK.ProcessAnimation(&entity->animatorFlame);
     RSDK.ProcessAnimation(&entity->animatorKnux);
 }
 
@@ -23,20 +23,20 @@ void Tornado_Draw(void)
     RSDK_THIS(Tornado);
     Vector2 drawPos;
 
-    RSDK.DrawSprite(&entity->animator3, NULL, false);
-    RSDK.DrawSprite(&entity->animator2, NULL, false);
-    RSDK.DrawSprite(&entity->animator1, NULL, false);
+    RSDK.DrawSprite(&entity->animatorPilot, NULL, false);
+    RSDK.DrawSprite(&entity->animatorPropeller, NULL, false);
+    RSDK.DrawSprite(&entity->animatorTornado, NULL, false);
 
-    if (entity->field_70) {
+    if (entity->showFlame) {
         drawPos = entity->position;
-        drawPos.y += Tornado->offsets[entity->animator1.frameID];
-        RSDK.DrawSprite(&entity->animator4, &drawPos, false);
+        drawPos.y += Tornado->flameOffsets[entity->animatorTornado.frameID];
+        RSDK.DrawSprite(&entity->animatorFlame, &drawPos, false);
     }
 
     if (!MSZSetup->flag) {
         drawPos = entity->position;
-        drawPos.x += entity->field_8C.x;
-        drawPos.y += entity->field_8C.y;
+        drawPos.x += entity->knuxOffset.x;
+        drawPos.y += entity->knuxOffset.y;
         RSDK.DrawSprite(&entity->animatorKnux, &drawPos, false);
     }
 }
@@ -50,26 +50,26 @@ void Tornado_Create(void *data)
         entity->updateRange.y = 0x1000000;
         entity->drawFX        = FX_FLIP;
         entity->drawOrder     = Zone->drawOrderLow;
-        entity->field_84      = entity->position;
-        entity->field_64      = 48;
-        entity->field_6C      = 1;
-        entity->field_9C      = 0x80000;
+        entity->movePos       = entity->position;
+        entity->turnAngle     = 48;
+        entity->isStood       = true;
+        entity->offsetX       = 0x80000;
         entity->active        = ACTIVE_BOUNDS;
         entity->state         = Tornado_State_Setup;
-        entity->field_8C.x    = -0x140000;
-        entity->field_8C.y    = -0x160000;
-        RSDK.SetSpriteAnimation(Tornado->aniFrames, 0, &entity->animator1, true, 0);
-        RSDK.SetSpriteAnimation(Tornado->aniFrames, 1, &entity->animator2, true, 0);
-        RSDK.SetSpriteAnimation(Tornado->aniFrames, 2, &entity->animator4, true, 0);
+        entity->knuxOffset.x  = -0x140000;
+        entity->knuxOffset.y  = -0x160000;
+        RSDK.SetSpriteAnimation(Tornado->aniFrames, 0, &entity->animatorTornado, true, 0);
+        RSDK.SetSpriteAnimation(Tornado->aniFrames, 1, &entity->animatorPropeller, true, 0);
+        RSDK.SetSpriteAnimation(Tornado->aniFrames, 2, &entity->animatorFlame, true, 0);
         if ((globals->playerID & 0xFF) == ID_TAILS
 #if RETRO_USE_PLUS
             || (globals->playerID & 0xFF) == ID_MIGHTY || (globals->playerID & 0xFF) == ID_RAY
 #endif
         ) {
-            RSDK.SetSpriteAnimation(Tornado->aniFrames, 3, &entity->animator3, true, 0);
+            RSDK.SetSpriteAnimation(Tornado->aniFrames, 3, &entity->animatorPilot, true, 0);
         }
         else {
-            RSDK.SetSpriteAnimation(Tornado->aniFrames, 6, &entity->animator3, true, 0);
+            RSDK.SetSpriteAnimation(Tornado->aniFrames, 6, &entity->animatorPilot, true, 0);
         }
         if ((globals->playerID & 0xFF) != ID_KNUCKLES && !StarPost->postIDs[0])
             RSDK.SetSpriteAnimation(Tornado->knuxFrames, 6, &entity->animatorKnux, false, 0);
@@ -97,14 +97,14 @@ void Tornado_State_Setup(void)
     if (RSDK.CheckStageFolder("MSZ"))
         entity->state = Tornado_State_SetupPlayers;
     else
-        entity->state = Tornado_Unknown5;
+        entity->state = Tornado_HandlePlayerCollisions;
     StateMachine_Run(entity->state);
 }
 
 void Tornado_State_SetupPlayers(void)
 {
     RSDK_THIS(Tornado);
-    Tornado_Unknown5();
+    Tornado_HandlePlayerCollisions();
     if (StarPost->postIDs[0]) {
         RSDK.SetSpriteAnimation(0xFFFF, 0, &entity->animatorKnux, false, 0);
         entity->state = Tornado_Unknown6;
@@ -130,12 +130,12 @@ void Tornado_State_SetupPlayers(void)
 void Tornado_Unknown3(void)
 {
     RSDK_THIS(Tornado);
-    Tornado_Unknown5();
+    Tornado_HandlePlayerCollisions();
     if (++entity->timer == 180) {
         entity->timer = 0;
         RSDK.PlaySfx(Tornado->sfxImpact, false, 255);
-        entity->field_94 = -0x20000;
-        entity->field_98 = -0x40000;
+        entity->knuxVel.x = -0x20000;
+        entity->knuxVel.y = -0x40000;
         RSDK.SetSpriteAnimation(Tornado->knuxFrames, 4, &entity->animatorKnux, false, 0);
         entity->state = Tornado_Unknown4;
         foreach_active(Player, player) { player->stateInput = Player_ProcessP1Input; }
@@ -146,9 +146,9 @@ void Tornado_Unknown4(void)
 {
     RSDK_THIS(Tornado);
     Tornado_Unknown6();
-    entity->field_98 += 0x3800;
-    entity->field_8C.x += entity->field_94;
-    entity->field_8C.y += entity->field_98;
+    entity->knuxVel.y += 0x3800;
+    entity->knuxOffset.x += entity->knuxVel.x;
+    entity->knuxOffset.y += entity->knuxVel.y;
     if (++entity->timer == 120) {
         entity->timer = 0;
         RSDK.SetSpriteAnimation(0xFFFF, 0, &entity->animatorKnux, false, 0);
@@ -156,28 +156,28 @@ void Tornado_Unknown4(void)
     }
 }
 
-void Tornado_Unknown5(void)
+void Tornado_HandlePlayerCollisions(void)
 {
     RSDK_THIS(Tornado);
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
-    Hitbox *hitbox        = RSDK.GetHitbox(&entity->animator1, 0);
-    entity->field_7C      = entity->position.y;
-    entity->field_64      = 32;
+    Hitbox *hitbox        = RSDK.GetHitbox(&entity->animatorTornado, 0);
+    entity->prevPosY      = entity->position.y;
+    entity->turnAngle     = 32;
     player1->drawOrder    = entity->drawOrder + 1;
-    entity->field_7C &= 0xFFFF0000;
-    entity->field_80   = (entity->position.y & 0xFFFF0000) - entity->field_7C;
-    entity->position.y = entity->field_7C;
-    entity->field_6C   = 0;
-    int32 velY           = player1->velocity.y;
+    entity->prevPosY &= 0xFFFF0000;
+    entity->moveVelocityY = (entity->position.y & 0xFFFF0000) - entity->prevPosY;
+    entity->position.y    = entity->prevPosY;
+    entity->isStood       = false;
+    int32 velY            = player1->velocity.y;
     if (Player_CheckCollisionPlatform(player1, entity, hitbox)) {
-        player1->position.x += TornadoPath->field_8.x;
-        player1->position.y += entity->field_80;
-        player1->flailing = 0;
-        entity->field_6C  = 1;
+        player1->position.x += TornadoPath->moveVel.x;
+        player1->position.y += entity->moveVelocityY;
+        player1->flailing = false;
+        entity->isStood   = true;
         if (velY > 0x10000) {
-            entity->field_5C = 0;
-            entity->field_78 = 0x20000;
-            entity->field_68 = 3;
+            entity->collideTimer = 0;
+            entity->gravityForce = 0x20000;
+            entity->collideMode  = 3;
         }
     }
 
@@ -203,74 +203,74 @@ void Tornado_Unknown6(void)
 {
     RSDK_THIS(Tornado);
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
-    Hitbox *hitbox        = RSDK.GetHitbox(&entity->animator1, TornadoPath->hitboxID);
-    entity->field_7C      = entity->position.y;
-    if (entity->field_64 < 32)
+    Hitbox *hitbox        = RSDK.GetHitbox(&entity->animatorTornado, TornadoPath->hitboxID);
+    entity->prevPosY      = entity->position.y;
+    if (entity->turnAngle < 32)
         player1->drawOrder = entity->drawOrder;
     else
         player1->drawOrder = entity->drawOrder + 1;
 
     if (player1->state == Player_State_Roll) {
-        player1->groundVel  = clampVal(player1->groundVel, -entity->field_9C, entity->field_9C);
+        player1->groundVel  = clampVal(player1->groundVel, -entity->offsetX, entity->offsetX);
         player1->velocity.x = player1->groundVel;
     }
 
-    switch (entity->field_68) {
+    switch (entity->collideMode) {
         case 0:
             if (player1->velocity.y < 0 && player1->jumpPress) {
-                if (abs(TornadoPath->field_8.x) > 0x40000) {
-                    if (abs(player1->velocity.x) < abs(TornadoPath->field_8.x) && !TornadoPath->hitboxID)
-                        player1->velocity.x = abs(TornadoPath->field_8.x);
+                if (abs(TornadoPath->moveVel.x) > 0x40000) {
+                    if (abs(player1->velocity.x) < abs(TornadoPath->moveVel.x) && !TornadoPath->hitboxID)
+                        player1->velocity.x = abs(TornadoPath->moveVel.x);
                 }
 
-                ++entity->field_68;
-                entity->field_78 = 0x20000;
-                entity->field_74 = entity->position.y;
+                ++entity->collideMode;
+                entity->gravityForce = 0x20000;
+                entity->storeY       = entity->position.y;
             }
             else {
                 if (entity->velocity.y > 0) {
-                    if (entity->field_64 < 64)
-                        entity->field_64 += 4;
+                    if (entity->turnAngle < 64)
+                        entity->turnAngle += 4;
                 }
                 else if (entity->velocity.y >= 0) {
-                    if (entity->field_64 > 32)
-                        entity->field_64 -= 4;
-                    else if (entity->field_64 < 32)
-                        entity->field_64 += 4;
+                    if (entity->turnAngle > 32)
+                        entity->turnAngle -= 4;
+                    else if (entity->turnAngle < 32)
+                        entity->turnAngle += 4;
                 }
-                else if (entity->field_64 > 0)
-                    entity->field_64 -= 4;
+                else if (entity->turnAngle > 0)
+                    entity->turnAngle -= 4;
             }
             break;
         case 1:
-            entity->field_78 -= 0x2000;
-            entity->position.y += entity->field_78;
-            if (entity->field_78 < 0)
-                entity->field_68 = 2;
+            entity->gravityForce -= 0x2000;
+            entity->position.y += entity->gravityForce;
+            if (entity->gravityForce < 0)
+                entity->collideMode = 2;
             break;
         case 2:
-            entity->field_78 -= 4096;
-            entity->position.y += entity->field_78;
-            if (entity->position.y <= entity->field_74) {
-                entity->position.y = entity->field_74;
-                entity->field_68   = 0;
-                entity->field_78   = 0;
+            entity->gravityForce -= 0x1000;
+            entity->position.y += entity->gravityForce;
+            if (entity->position.y <= entity->storeY) {
+                entity->position.y   = entity->storeY;
+                entity->collideMode  = 0;
+                entity->gravityForce = 0;
             }
             break;
         case 3:
-            entity->field_78 -= 0x2000;
-            entity->position.y += entity->field_78;
-            if (++entity->field_5C == 24) {
-                entity->field_68 = 0;
-                entity->field_78 = 0;
+            entity->gravityForce -= 0x2000;
+            entity->position.y += entity->gravityForce;
+            if (++entity->collideTimer == 24) {
+                entity->collideMode  = 0;
+                entity->gravityForce = 0;
             }
             break;
         default: break;
     }
 
-    if (entity->field_6C) {
-        entity->position.x += TornadoPath->field_8.x;
-        entity->position.y += TornadoPath->field_8.y;
+    if (entity->isStood) {
+        entity->position.x += TornadoPath->moveVel.x;
+        entity->position.y += TornadoPath->moveVel.y;
         if (player1->stateInput) {
             entity->velocity.y = 0;
             if (player1->up) {
@@ -282,8 +282,8 @@ void Tornado_Unknown6(void)
         }
     }
     else if (TornadoPath->hitboxID == 1) {
-        entity->position.x += TornadoPath->field_8.x;
-        entity->position.y += TornadoPath->field_8.y;
+        entity->position.x += TornadoPath->moveVel.x;
+        entity->position.y += TornadoPath->moveVel.y;
     }
     else {
         entity->velocity.y = 0;
@@ -294,36 +294,36 @@ void Tornado_Unknown6(void)
     if (entity->position.y > (RSDK_screens->height + RSDK_screens->position.y - 32) << 16)
         entity->position.y = (RSDK_screens->height + RSDK_screens->position.y - 32) << 16;
 
-    int32 storeX       = entity->position.x;
-    int32 storeY       = entity->position.y + entity->velocity.y;
-    entity->field_6C = 0;
-    entity->field_7C &= 0xFFFF0000;
-    entity->field_80   = (storeY & 0xFFFF0000) - entity->field_7C;
-    entity->position.y = entity->field_7C;
-    int32 velY           = player1->velocity.y;
-    int32 posX           = entity->position.x;
+    int32 storeX    = entity->position.x;
+    int32 storeY    = entity->position.y + entity->velocity.y;
+    entity->isStood = false;
+    entity->prevPosY &= 0xFFFF0000;
+    entity->moveVelocityY = (storeY & 0xFFFF0000) - entity->prevPosY;
+    entity->position.y    = entity->prevPosY;
+    int32 velY            = player1->velocity.y;
+    int32 posX            = entity->position.x;
 
     if (Player_CheckCollisionPlatform(player1, entity, hitbox)) {
-        player1->position.x += TornadoPath->field_8.x;
-        player1->position.y += entity->field_80;
-        player1->flailing = 0;
-        entity->field_6C  = true;
+        player1->position.x += TornadoPath->moveVel.x;
+        player1->position.y += entity->moveVelocityY;
+        player1->flailing = false;
+        entity->isStood   = true;
         if (velY > 0x10000) {
-            entity->field_5C = 0;
-            entity->field_78 = 0x20000;
-            entity->field_68 = 3;
+            entity->collideTimer = 0;
+            entity->gravityForce = 0x20000;
+            entity->collideMode  = 3;
         }
     }
     else if (TornadoPath->hitboxID == 1) {
-        player1->position.x += TornadoPath->field_8.x;
+        player1->position.x += TornadoPath->moveVel.x;
     }
 
     int32 offsetX = 0;
     entity->position.x += 0x1E0000;
     if (abs(posX + 0x1E0000 - player1->position.x) > 0x100000) {
-        offsetX = entity->field_9C;
+        offsetX = entity->offsetX;
         if (player1->position.x <= posX + 0x1E0000) {
-            offsetX = -offsetX;
+            offsetX   = -offsetX;
             int32 pos = player1->position.x - (posX + 0x1E0000) + 0x100000;
             if (pos > offsetX)
                 offsetX = pos;
@@ -364,8 +364,8 @@ void Tornado_Unknown6(void)
 void Tornado_Unknown7(void)
 {
     RSDK_THIS(Tornado);
-    entity->position.x += TornadoPath->field_8.x;
-    entity->position.y += TornadoPath->field_8.y;
+    entity->position.x += TornadoPath->moveVel.x;
+    entity->position.y += TornadoPath->moveVel.y;
     if (!(Zone->timer % 3)) {
         if (entity->onGround) {
             RSDK.PlaySfx(Tornado->sfxExplosion, false, 255);
@@ -399,13 +399,13 @@ void Tornado_Unknown9(void)
 void Tornado_EditorDraw(void)
 {
     RSDK_THIS(Tornado);
-    RSDK.SetSpriteAnimation(Tornado->aniFrames, 0, &entity->animator1, true, 0);
-    RSDK.SetSpriteAnimation(Tornado->aniFrames, 1, &entity->animator2, true, 0);
-    RSDK.SetSpriteAnimation(Tornado->aniFrames, 2, &entity->animator4, true, 0);
+    RSDK.SetSpriteAnimation(Tornado->aniFrames, 0, &entity->animatorTornado, true, 0);
+    RSDK.SetSpriteAnimation(Tornado->aniFrames, 1, &entity->animatorPropeller, true, 0);
+    RSDK.SetSpriteAnimation(Tornado->aniFrames, 2, &entity->animatorFlame, true, 0);
 
-    RSDK.DrawSprite(&entity->animator3, NULL, false);
-    RSDK.DrawSprite(&entity->animator2, NULL, false);
-    RSDK.DrawSprite(&entity->animator1, NULL, false);
+    RSDK.DrawSprite(&entity->animatorPilot, NULL, false);
+    RSDK.DrawSprite(&entity->animatorPropeller, NULL, false);
+    RSDK.DrawSprite(&entity->animatorTornado, NULL, false);
 }
 
 void Tornado_EditorLoad(void) { Tornado->aniFrames = RSDK.LoadSpriteAnimation("MSZ/Tornado.bin", SCOPE_STAGE); }

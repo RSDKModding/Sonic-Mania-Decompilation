@@ -57,7 +57,7 @@ void ProcessAudioMixing(float *dst, const float *src, int len, ChannelInfo *chan
 #endif
 
 void LoadStream(ChannelInfo *channel);
-int PlayStream(const char *filename, unsigned int slot, int a3, unsigned int loopPoint, bool32 loadASync);
+int PlayStream(const char *filename, uint32 slot, int startPos, uint32 loopPoint, bool32 loadASync);
 
 void LoadSfx(char *filePath, byte plays, byte scope);
 bool32 LoadGlobalSFX();

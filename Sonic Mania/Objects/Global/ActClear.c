@@ -36,6 +36,7 @@ void ActClear_Draw(void)
         verts[2].x   = drawPos.x + 0x440000;
         verts[3].x   = drawPos.x - 0x810000;
         RSDK.DrawQuad(verts, 4, 0, 0, 0, 255, INK_NONE);
+
         drawPos.x  = entity->posUnknown.x;
         drawPos.y  = entity->posUnknown.y;
         drawPos.x  = center + 2 * drawPos.x;
@@ -48,6 +49,7 @@ void ActClear_Draw(void)
         verts[2].y = drawPos.y + 0x2C0000;
         verts[3].y = drawPos.y + 0x2C0000;
         RSDK.DrawQuad(verts, 4, 0, 0, 0, 255, INK_NONE);
+
         drawPos.x = entity->posUnknown.x;
         drawPos.y = entity->posUnknown.y;
         drawPos.x += center;
@@ -71,6 +73,7 @@ void ActClear_Draw(void)
         verts[2].x   = drawPos.x + 0x440000;
         verts[3].x   = drawPos.x - 0x5D0000;
         RSDK.DrawQuad(verts, 4, 0, 0, 0, 255, INK_NONE);
+
         drawPos.x  = entity->posUnknown.x;
         drawPos.y  = entity->posUnknown.y;
         drawPos.x  = center + 2 * drawPos.x;
@@ -83,10 +86,12 @@ void ActClear_Draw(void)
         verts[2].y = drawPos.y + 0x2C0000;
         verts[3].y = drawPos.y + 0x2C0000;
         RSDK.DrawQuad(verts, 4, 0, 0, 0, 255, INK_NONE);
+
         drawPos.x = entity->posUnknown.x;
         drawPos.y = entity->posUnknown.y;
         drawPos.x += center;
         RSDK.DrawSprite(&entity->playerNameAnimator, &drawPos, true);
+
 #if RETRO_USE_PLUS
         if ((globals->playerID & 0xFF) == ID_MIGHTY)
             entity->gotThroughAnimator.frameID = 2;
@@ -130,7 +135,7 @@ void ActClear_Draw(void)
     if (globals->gameMode == MODE_TIMEATTACK) {
         drawPos.x = dx - 0x620000;
         drawPos.y = dy - 0xE0000;
-        ActClear_DrawTime(RSDK_sceneInfo->minutes, &drawPos, RSDK_sceneInfo->seconds, RSDK_sceneInfo->milliseconds);
+        ActClear_DrawTime(&drawPos, RSDK_sceneInfo->minutes, RSDK_sceneInfo->seconds, RSDK_sceneInfo->milliseconds);
     }
     else {
 #endif
@@ -177,8 +182,8 @@ void ActClear_Draw(void)
         TimeAttackData_GetTimeFromValue(entity->time, &minsPtr, &secsPtr, &millisecsPtr);
         drawPos.x -= 0x620000;
         drawPos.y -= 0xE0000;
-        if (!entity->field_80 || (entity->field_80 == 1 && (Zone->timer & 8)))
-            ActClear_DrawTime(minsPtr, &drawPos, secsPtr, millisecsPtr);
+        if (!entity->isNewRecord || (entity->isNewRecord && (Zone->timer & 8)))
+            ActClear_DrawTime(&drawPos, minsPtr, secsPtr, millisecsPtr);
     }
     else {
 #endif
@@ -223,13 +228,12 @@ void ActClear_Draw(void)
         }
         else {
             if (!TimeAttackData->dbRank) {
-                entity                    = (EntityActClear *)RSDK_sceneInfo->entity;
                 entity->numbersAnimator.frameID = 16;
                 RSDK.DrawSprite(&entity->numbersAnimator, &drawPos, true);
 
                 drawPos.x -= 0x90000;
             }
-            else if (!entity->field_7C || (entity->field_7C == 1 && (Zone->timer & 8)))
+            else if (!entity->achievedRank || (entity->achievedRank && (Zone->timer & 8)))
                 ActClear_DrawNumbers(&drawPos, TimeAttackData->dbRank, 0);
         }
 #endif
@@ -356,8 +360,8 @@ void ActClear_Create(void *data)
         if (globals->gameMode == MODE_TIMEATTACK) {
             EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
             entity->time = TimeAttackData_GetScore(param->zoneID, param->characterID, param->actID, RSDK_sceneInfo->filter == SCN_FILTER_ENCORE, 1);
-            entity->field_7C = 0;
-            entity->field_80 = 0;
+            entity->achievedRank = false;
+            entity->isNewRecord  = false;
         }
 #endif
         entity->field_84      = 1;
@@ -409,7 +413,7 @@ void ActClear_StageLoad(void)
 }
 
 #if RETRO_USE_PLUS
-void ActClear_DrawTime(int32 mins, Vector2 *pos, int32 secs, int32 millisecs)
+void ActClear_DrawTime(Vector2 *pos, int32 mins, int32 secs, int32 millisecs)
 {
     Vector2 drawPos;
     RSDK_THIS(ActClear);
@@ -760,8 +764,8 @@ void ActClear_State_TAResults(void)
         else {
             if (entity->dword78 == 120) {
                 if (TimeAttackData->dbRank == 1)
-                    entity->field_80 = 1;
-                entity->field_7C = 1;
+                    entity->isNewRecord = true;
+                entity->achievedRank = true;
                 RSDK.PlaySfx(ActClear->sfxEvent, 0, 255);
             }
 

@@ -83,7 +83,7 @@ bool32 GHZ2Outro_CutsceneState1_Unknown1(EntityCutsceneSeq *host)
     Zone->deathBoundary[1] += 0x4000 << 0x10;
     Music_PlayTrack(TRACK_STAGE);
 
-    foreach_active(EggPrison, prison) { prison->state = EggPrison_Unknown5; }
+    foreach_active(EggPrison, prison) { prison->state = EggPrison_State_FlyOffScreen; }
 
     return true;
 }
@@ -339,7 +339,7 @@ bool32 GHZ2Outro_CutsceneState2_Unknown6(EntityCutsceneSeq *host)
         fxRuby            = (EntityFXRuby *)RSDK.CreateEntity(FXRuby->objectID, 0, ruby->position.x, ruby->position.y);
         fxRuby->drawOrder = Zone->playerDrawHigh;
         entity->fxRuby    = (Entity *)fxRuby;
-        Camera_ShakeScreen(4, 0, 4);
+        Camera_ShakeScreen(0, 4, 4);
         player1->drawOrder = Zone->playerDrawHigh + 1;
         if (player2->objectID == Player->objectID)
             player2->drawOrder = Zone->playerDrawHigh + 1;
@@ -352,13 +352,13 @@ bool32 GHZ2Outro_CutsceneState2_Unknown6(EntityCutsceneSeq *host)
                     fxRuby->field_74 = 64;
                     fxRuby->state     = FXRuby_Unknown6;
                     PhantomRuby_PlaySFX(RUBYSFX_ATTACK4);
-                    Camera_ShakeScreen(4, 0, 4);
+                    Camera_ShakeScreen(0, 4, 4);
                 }
                 else if (host->timer == host->field_68 + 180) {
                     fxRuby->field_74 = 32;
                     fxRuby->state     = FXRuby_Unknown6;
                     PhantomRuby_PlaySFX(RUBYSFX_ATTACK1);
-                    Camera_ShakeScreen(4, 0, 4);
+                    Camera_ShakeScreen(0, 4, 4);
                     Music_FadeOut(0.025);
                     host->field_68    = host->timer;
                     host->field_6C[0] = true;

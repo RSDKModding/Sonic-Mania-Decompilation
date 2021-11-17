@@ -109,7 +109,9 @@ void TitleLogo_Create(void *data)
             case TITLELOGO_COPYRIGHT:
             case TITLELOGO_RINGBOTTOM:
             case TITLELOGO_PRESSSTART:
+#if RETRO_USE_PLUS
             case TITLELOGO_PLUS:
+#endif
                 entity->visible   = false;
                 entity->active    = ACTIVE_NEVER;
                 entity->drawOrder = 4;

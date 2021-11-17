@@ -286,7 +286,7 @@ bool32 MSZCutsceneST_CutsceneState_ShowRougeA(EntityCutsceneSeq *host)
             debris->position.x -= 0x180000;
             debris->velocity.x = -0x20000;
             debris->drawOrder  = Zone->playerDrawHigh;
-            debris->state      = Debris_State_LightningSpark;
+            debris->state      = Debris_State_Move;
             debris->direction  = FLIP_X;
             debris->drawFX     = FX_FLIP;
             RSDK.SetSpriteAnimation(rouge->aniFrames, 4, &debris->animator, true, 0);
@@ -448,8 +448,8 @@ bool32 MSZCutsceneST_CutsceneState_Unknown6(EntityCutsceneSeq *host)
         RSDK.PlaySfx(MSZCutsceneST->sfxExplosion3, false, 255);
         host->fillTimerA        = 512;
         MSZCutsceneST->isMayday = true;
-        RSDK.SetSpriteAnimation(0xFFFF, 0, &tornado->animator2, true, 0);
-        RSDK.SetSpriteAnimation(0xFFFF, 0, &tornado->animator3, true, 0);
+        RSDK.SetSpriteAnimation(0xFFFF, 0, &tornado->animatorPropeller, true, 0);
+        RSDK.SetSpriteAnimation(0xFFFF, 0, &tornado->animatorPilot, true, 0);
         tornado->drawFX |= FX_ROTATE;
         tornado->state     = Tornado_Unknown7;
         tornado->rotation  = 48;
@@ -458,7 +458,7 @@ bool32 MSZCutsceneST_CutsceneState_Unknown6(EntityCutsceneSeq *host)
         RSDK.SetSpriteAnimation(player1->aniFrames, ANI_CLING, &player1->playerAnimator, true, 0);
         player1->rotation = tornado->rotation;
         tornado->active   = ACTIVE_NORMAL;
-        nodePtr->state    = TornadoPath_Unknown3;
+        nodePtr->state    = TornadoPath_State_SetTornadoSpeed;
         destroyEntity(MSZCutsceneST->rouges[MSZCutsceneST->rougeID]);
         destroyEntity(MSZCutsceneST->rougePlatforms[MSZCutsceneST->rougeID]);
 
@@ -506,10 +506,10 @@ bool32 MSZCutsceneST_CutsceneState_Unknown6(EntityCutsceneSeq *host)
             player2->active = ACTIVE_NORMAL;
         }
     }
-    if (TornadoPath->field_8.y > 0 && !(Zone->timer % 5))
-        Camera_ShakeScreen(2, 0, 2);
+    if (TornadoPath->moveVel.y > 0 && !(Zone->timer % 5))
+        Camera_ShakeScreen(0, 2, 2);
 
-    if (TornadoPath->field_8.y < 0 && !host->field_6C[3]) {
+    if (TornadoPath->moveVel.y < 0 && !host->field_6C[3]) {
         MSZCutsceneST->isMayday = false;
         Camera_ShakeScreen(0, 0, 5);
         MSZSetup_Unknown4(512);
@@ -525,7 +525,7 @@ bool32 MSZCutsceneST_CutsceneState_Unknown6(EntityCutsceneSeq *host)
         debris->position.x += 0x2C0000;
         debris->position.y += 0xC0000;
         debris->drawOrder = Zone->drawOrderLow;
-        debris->state     = Debris_State_LightningSpark;
+        debris->state     = Debris_State_Move;
         debris->timer     = 53;
         RSDK.SetSpriteAnimation(UberCaterkiller->aniFrames, 4, &debris->animator, true, 0);
         MSZCutsceneST->projectile = (Entity *)debris;

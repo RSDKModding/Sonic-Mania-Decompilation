@@ -23,12 +23,12 @@ void Animals_Draw(void)
 void Animals_Create(void *data)
 {
     RSDK_THIS(Animals);
-    if (entity->behaviour == 2)
+    if (entity->behaviour == ANIMAL_BEHAVE_BOUNCEAROUND_BOUNDS)
         entity->active = ACTIVE_BOUNDS;
     else
         entity->active = ACTIVE_NORMAL;
     entity->drawFX |= FX_FLIP;
-    int32 type              = 2;
+    int32 type            = ANIMAL_POCKY;
     entity->visible       = true;
     entity->updateRange.x = 0x400000;
     entity->updateRange.y = 0x400000;
@@ -45,7 +45,7 @@ void Animals_Create(void *data)
         RSDK.Rand(0, 256) == 21
 #endif
     ) {
-        type                  = 2;
+        type                  = ANIMAL_POCKY;
         entity->velocity.y    = -0x40000;
         entity->type          = type - 1;
         entity->state         = Animals_State_Freed;
@@ -65,21 +65,21 @@ void Animals_Create(void *data)
         entity->hitbox.bottom = Animals->hitboxes[entity->type] >> 16;
         RSDK.SetSpriteAnimation(Animals->aniFrames, 2 * entity->type, &entity->animator, true, 0);
     }
-    else if (entity->behaviour == 1) {
+    else if (entity->behaviour == ANIMAL_BEHAVE_FOLLOW) {
         entity->active = ACTIVE_BOUNDS;
         switch (entity->type) {
-            case 0:
-            case 5:
-            case 8: entity->state = Animals_State_FollowPlayer_Bird; break;
-            case 1:
-            case 2:
-            case 3:
-            case 4:
-            case 6:
-            case 7:
-            case 9:
-            case 10:
-            case 11: entity->state = Animals_State_FollowPlayer_Normal; break;
+            case ANIMAL_FLICKY:
+            case ANIMAL_CUCKY:
+            case ANIMAL_LOCKY: entity->state = Animals_State_FollowPlayer_Bird; break;
+            case ANIMAL_RICKY:
+            case ANIMAL_POCKY:
+            case ANIMAL_PECKY:
+            case ANIMAL_PICKY:
+            case ANIMAL_ROCKY:
+            case ANIMAL_BECKY:
+            case ANIMAL_TOCKY:
+            case ANIMAL_WOCKY:
+            case ANIMAL_MICKY: entity->state = Animals_State_FollowPlayer_Normal; break;
             default: break;
         }
         Animals_CheckPlayerPos();
@@ -110,8 +110,8 @@ void Animals_CheckPlayerPos(void)
 
     switch (entity->behaviour) {
         default:
-        case 0: entity->direction = FLIP_X; break;
-        case 1: {
+        case ANIMAL_BEHAVE_BOUNCEAROUND: entity->direction = FLIP_X; break;
+        case ANIMAL_BEHAVE_FOLLOW: {
             EntityPlayer *player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
             if (!player) {
                 entity->direction = FLIP_NONE;
@@ -124,7 +124,7 @@ void Animals_CheckPlayerPos(void)
             }
             break;
         }
-        case 2:
+        case ANIMAL_BEHAVE_BOUNCEAROUND_BOUNDS:
 #if RETRO_USE_PLUS
             entity->direction = RSDK.Random(0, 2, &Zone->randKey); 
 #else
@@ -227,18 +227,18 @@ void Animals_State_Freed(void)
     if (Animals_CheckGroundCollision()) {
         RSDK.SetSpriteAnimation(Animals->aniFrames, 2 * entity->type + 1, &entity->animator, true, 0);
         switch (entity->type) {
-            case 0:
-            case 5:
-            case 8: entity->state = Animals_State_FollowPlayer_Bird; break;
-            case 1:
-            case 2:
-            case 3:
-            case 4:
-            case 6:
-            case 7:
-            case 9:
-            case 0xA:
-            case 0xB: entity->state = Animals_State_FollowPlayer_Normal; break;
+            case ANIMAL_FLICKY:
+            case ANIMAL_CUCKY:
+            case ANIMAL_LOCKY: entity->state = Animals_State_FollowPlayer_Bird; break;
+            case ANIMAL_RICKY:
+            case ANIMAL_POCKY:
+            case ANIMAL_PECKY:
+            case ANIMAL_PICKY:
+            case ANIMAL_ROCKY:
+            case ANIMAL_BECKY:
+            case ANIMAL_TOCKY:
+            case ANIMAL_WOCKY:
+            case ANIMAL_MICKY: entity->state = Animals_State_FollowPlayer_Normal; break;
             default: break;
         }
         Animals_CheckPlayerPos();
@@ -288,15 +288,37 @@ void Animals_EditorDraw(void)
 
     switch (entity->behaviour) {
         default: break;
-        case 0: RSDK.SetSpriteAnimation(Animals->aniFrames, 2 * entity->type, &entity->animator, true, 0); break;
-        case 1:
-        case 2: RSDK.SetSpriteAnimation(Animals->aniFrames, 2 * entity->type + 1, &entity->animator, true, 0); break;
+        case ANIMAL_BEHAVE_BOUNCEAROUND: RSDK.SetSpriteAnimation(Animals->aniFrames, 2 * entity->type, &entity->animator, true, 0); break;
+        case ANIMAL_BEHAVE_FOLLOW:
+        case ANIMAL_BEHAVE_BOUNCEAROUND_BOUNDS: RSDK.SetSpriteAnimation(Animals->aniFrames, 2 * entity->type + 1, &entity->animator, true, 0); break;
     }
 
     RSDK.DrawSprite(&entity->animator, NULL, false);
 }
 
-void Animals_EditorLoad(void) { Animals->aniFrames = RSDK.LoadSpriteAnimation("Global/Animals.bin", SCOPE_STAGE); }
+void Animals_EditorLoad(void)
+{
+    Animals->aniFrames = RSDK.LoadSpriteAnimation("Global/Animals.bin", SCOPE_STAGE);
+
+    RSDK_ACTIVE_VAR(Animals, type);
+    RSDK_ENUM_VAR("Flicky", ANIMAL_FLICKY);
+    RSDK_ENUM_VAR("Ricky", ANIMAL_RICKY);
+    RSDK_ENUM_VAR("Pocky", ANIMAL_POCKY);
+    RSDK_ENUM_VAR("Pecky", ANIMAL_PECKY);
+    RSDK_ENUM_VAR("Picky", ANIMAL_PICKY);
+    RSDK_ENUM_VAR("Cucky", ANIMAL_CUCKY);
+    RSDK_ENUM_VAR("Rocky", ANIMAL_ROCKY);
+    RSDK_ENUM_VAR("Becky", ANIMAL_BECKY);
+    RSDK_ENUM_VAR("Locky", ANIMAL_LOCKY);
+    RSDK_ENUM_VAR("Tocky", ANIMAL_TOCKY);
+    RSDK_ENUM_VAR("Wocky", ANIMAL_WOCKY);
+    RSDK_ENUM_VAR("Mickey", ANIMAL_MICKY);
+
+    RSDK_ACTIVE_VAR(Animals, behaviour);
+    RSDK_ENUM_VAR("Bounce Around (No Bounds)", ANIMAL_BEHAVE_BOUNCEAROUND);
+    RSDK_ENUM_VAR("Follow Player", ANIMAL_BEHAVE_FOLLOW);
+    RSDK_ENUM_VAR("Bounce Around (Bounds)", ANIMAL_BEHAVE_BOUNCEAROUND_BOUNDS);
+}
 #endif
 
 void Animals_Serialize(void)

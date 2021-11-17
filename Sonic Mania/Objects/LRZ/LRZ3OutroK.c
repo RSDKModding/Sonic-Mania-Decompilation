@@ -76,7 +76,7 @@ bool32 LRZ3OutroK_CutsceneState_Unknown1(EntityCutsceneSeq *host)
     Vector2 size;
     RSDK.GetLayerSize(Zone->fgLow, &size, true);
     if (!host->timer) {
-        LRZ3OutroK->prison->activated = true;
+        LRZ3OutroK->prison->notSolid = true;
         Zone->screenBoundsT1[0]       = 0;
         Zone->screenBoundsT1[1]       = 0;
         Zone->screenBoundsR1[0]       = (entity->position.x + entity->size.x) >> 16;

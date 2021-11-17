@@ -272,7 +272,7 @@ void Firework_HandleDebrisSpawn(void)
     RSDK_THIS(Firework);
 
     if (!(entity->timer % 5)) {
-        EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_LightningSpark, entity->position.x, entity->position.y);
+        EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Move, entity->position.x, entity->position.y);
         RSDK.SetSpriteAnimation(Explosion->aniFrames, 3, &debris->animator, true, 0);
         debris->position.x -= 0x600 * RSDK.Cos1024(entity->angle);
         debris->position.y -= 0x600 * RSDK.Sin1024(entity->angle);

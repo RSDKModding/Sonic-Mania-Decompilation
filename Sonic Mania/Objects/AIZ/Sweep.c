@@ -6,7 +6,7 @@ void Sweep_Update(void)
 {
     RSDK_THIS(Sweep);
     StateMachine_Run(entity->state);
-    if (entity->state != Sweep_Unknown11) {
+    if (entity->state != Sweep_State_Projectile) {
         EntityWater *water = (EntityWater *)entity->waterPtr;
         if (water)
             entity->position.y = water->position.y - (water->size.y >> 1) - 0x90000;
@@ -42,7 +42,7 @@ void Sweep_Create(void *data)
             entity->updateRange.x = 0x200000;
             entity->updateRange.y = 0x200000;
             RSDK.SetSpriteAnimation(Sweep->aniFrames, 4, &entity->animator, true, 0);
-            entity->state = Sweep_Unknown11;
+            entity->state = Sweep_State_Projectile;
         }
         else {
             entity->active        = ACTIVE_BOUNDS;
@@ -64,45 +64,44 @@ void Sweep_Create(void *data)
                 hitbox.top    = 64;
                 hitbox.right  = 1;
                 hitbox.bottom = 64;
-                if (water->type == 1 && RSDK.CheckObjectCollisionTouchBox(water, &waterHitbox, entity, &hitbox)) {
+                if (water->type == WATER_RECT && RSDK.CheckObjectCollisionTouchBox(water, &waterHitbox, entity, &hitbox)) {
                     entity->waterPtr = (Entity *)water;
                 }
             }
-            entity->state = Sweep_Unknown5;
+            entity->state = Sweep_State_Setup;
         }
     }
 }
 
 void Sweep_StageLoad(void)
 {
-    if (RSDK.CheckStageFolder("CPZ")) {
+    if (RSDK.CheckStageFolder("CPZ"))
         Sweep->aniFrames = RSDK.LoadSpriteAnimation("CPZ/Sweep.bin", SCOPE_STAGE);
-    }
 #if RETRO_USE_PLUS
-    else if (RSDK.CheckStageFolder("AIZ")) {
+    else if (RSDK.CheckStageFolder("AIZ"))
         Sweep->aniFrames = RSDK.LoadSpriteAnimation("AIZ/Sweep.bin", SCOPE_STAGE);
-    }
 #endif
-    Sweep->hitbox1.left   = -10;
-    Sweep->hitbox1.top    = -7;
-    Sweep->hitbox1.right  = 10;
-    Sweep->hitbox1.bottom = 4;
-    Sweep->hitbox2.left   = -256;
-    Sweep->hitbox2.top    = -16;
-    Sweep->hitbox2.right  = 0;
-    Sweep->hitbox2.bottom = 16;
-    Sweep->hitbox3.left   = -13;
-    Sweep->hitbox3.top    = -3;
-    Sweep->hitbox3.right  = -8;
-    Sweep->hitbox3.bottom = 3;
-    Sweep->sfxPon         = RSDK.GetSFX("Stage/Pon.wav");
+    Sweep->hitboxBadnik.left       = -10;
+    Sweep->hitboxBadnik.top        = -7;
+    Sweep->hitboxBadnik.right      = 10;
+    Sweep->hitboxBadnik.bottom     = 4;
+    Sweep->hitboxRange.left        = -256;
+    Sweep->hitboxRange.top         = -16;
+    Sweep->hitboxRange.right       = 0;
+    Sweep->hitboxRange.bottom      = 16;
+    Sweep->hitboxProjectile.left   = -13;
+    Sweep->hitboxProjectile.top    = -3;
+    Sweep->hitboxProjectile.right  = -8;
+    Sweep->hitboxProjectile.bottom = 3;
+    Sweep->sfxPon                  = RSDK.GetSFX("Stage/Pon.wav");
     DEBUGMODE_ADD_OBJ(Sweep);
 }
 
 void Sweep_DebugSpawn(void)
 {
-    RSDK_THIS(Sweep);
-    EntitySweep *sweep = CREATE_ENTITY(Sweep, NULL, RSDK_sceneInfo->entity->position.x, RSDK_sceneInfo->entity->position.y);
+    RSDK_THIS(DebugMode);
+
+    EntitySweep *sweep = CREATE_ENTITY(Sweep, NULL, entity->position.x, entity->position.y);
     sweep->direction   = entity->direction;
     sweep->startDir    = entity->direction;
 }
@@ -110,13 +109,13 @@ void Sweep_DebugSpawn(void)
 void Sweep_DebugDraw(void)
 {
     RSDK.SetSpriteAnimation(Sweep->aniFrames, 0, &DebugMode->animator, true, 0);
-    RSDK.DrawSprite(&DebugMode->animator, 0, false);
+    RSDK.DrawSprite(&DebugMode->animator, NULL, false);
 }
 
 void Sweep_CheckOnScreen(void)
 {
     RSDK_THIS(Sweep);
-    if (!RSDK.CheckOnScreen(RSDK_sceneInfo->entity, 0) && !RSDK.CheckPosOnScreen(&entity->startPos, &entity->updateRange)) {
+    if (!RSDK.CheckOnScreen(entity, NULL) && !RSDK.CheckPosOnScreen(&entity->startPos, &entity->updateRange)) {
         entity->position  = entity->startPos;
         entity->direction = entity->startDir;
         Sweep_Create(NULL);
@@ -142,9 +141,10 @@ void Sweep_HandleInteractions(void)
             playerHitbox  = &hitbox;
         }
 
-        int32 side = RSDK.CheckObjectCollisionBox(entity, &Sweep->hitbox1, player, playerHitbox, false);
+        int32 side = RSDK.CheckObjectCollisionBox(entity, &Sweep->hitboxBadnik, player, playerHitbox, false);
         if (side) {
-            if (entity->state != Sweep_Unknown10 && ((entity->direction == FLIP_NONE && side == 2) || (entity->direction == FLIP_X && side == 3)))
+            if (entity->state != Sweep_State_Turn
+                && ((entity->direction == FLIP_NONE && side == C_LEFT) || (entity->direction == FLIP_X && side == C_RIGHT)))
                 Player_CheckHit(player, entity);
             else
                 Player_CheckBadnikBreak(entity, player, true);
@@ -157,10 +157,9 @@ void Sweep_CheckShoot(void)
     RSDK_THIS(Sweep);
 
     if (!entity->hasShot && entity->timer <= 16) {
-
         foreach_active(Player, player)
         {
-            if (Player_CheckCollisionTouch(player, entity, &Sweep->hitbox2)) {
+            if (Player_CheckCollisionTouch(player, entity, &Sweep->hitboxRange)) {
                 RSDK.SetSpriteAnimation(Sweep->aniFrames, 3, &entity->animator, true, 0);
                 EntitySweep *projectile = CREATE_ENTITY(Sweep, intToVoid(true), entity->position.x, entity->position.y);
                 if (!entity->direction)
@@ -169,28 +168,28 @@ void Sweep_CheckShoot(void)
                     projectile->velocity.x = 0x30000;
                 projectile->direction = entity->direction;
                 projectile->active    = ACTIVE_NORMAL;
-                RSDK.PlaySfx(Sweep->sfxPon, 0, 255);
+                RSDK.PlaySfx(Sweep->sfxPon, false, 255);
                 entity->hasShot    = true;
                 entity->stateStore = entity->state;
-                entity->state      = Sweep_Unknown9;
+                entity->state      = Sweep_State_FiredShot;
                 foreach_break;
             }
         }
     }
 }
 
-void Sweep_Unknown5(void)
+void Sweep_State_Setup(void)
 {
     RSDK_THIS(Sweep);
 
     entity->active  = ACTIVE_NORMAL;
     entity->timer   = 32;
     entity->hasShot = false;
-    entity->state   = Sweep_Unknown6;
-    Sweep_Unknown6();
+    entity->state   = Sweep_State_Idle;
+    Sweep_State_Idle();
 }
 
-void Sweep_Unknown6(void)
+void Sweep_State_Idle(void)
 {
     RSDK_THIS(Sweep);
 
@@ -202,13 +201,13 @@ void Sweep_Unknown6(void)
         entity->hasShot = false;
         entity->timer   = 64;
         RSDK.SetSpriteAnimation(Sweep->aniFrames, 0, &entity->animator, true, 1);
-        entity->state = Sweep_Unknown7;
+        entity->state = Sweep_State_Dash;
     }
     Sweep_HandleInteractions();
     Sweep_CheckOnScreen();
 }
 
-void Sweep_Unknown7(void)
+void Sweep_State_Dash(void)
 {
     RSDK_THIS(Sweep);
 
@@ -218,7 +217,7 @@ void Sweep_Unknown7(void)
         entity->timer   = 32;
         entity->hasShot = false;
         RSDK.SetSpriteAnimation(Sweep->aniFrames, 1, &entity->animator, true, 0);
-        entity->state = Sweep_Unknown8;
+        entity->state = Sweep_State_Stop;
     }
     else {
         if (entity->direction && entity->velocity.x < 0x20000) {
@@ -234,7 +233,7 @@ void Sweep_Unknown7(void)
     Sweep_CheckOnScreen();
 }
 
-void Sweep_Unknown8(void)
+void Sweep_State_Stop(void)
 {
     RSDK_THIS(Sweep);
 
@@ -242,7 +241,7 @@ void Sweep_Unknown8(void)
     entity->timer--;
     if (entity->timer <= 0) {
         RSDK.SetSpriteAnimation(Sweep->aniFrames, 2, &entity->animator, true, 0);
-        entity->state = Sweep_Unknown10;
+        entity->state = Sweep_State_Turn;
     }
     else if (!entity->velocity.x) {
         Sweep_CheckShoot();
@@ -267,7 +266,7 @@ void Sweep_Unknown8(void)
     Sweep_CheckOnScreen();
 }
 
-void Sweep_Unknown9(void)
+void Sweep_State_FiredShot(void)
 {
     RSDK_THIS(Sweep);
 
@@ -283,7 +282,7 @@ void Sweep_Unknown9(void)
     }
 }
 
-void Sweep_Unknown10(void)
+void Sweep_State_Turn(void)
 {
     RSDK_THIS(Sweep);
 
@@ -292,9 +291,9 @@ void Sweep_Unknown10(void)
     if (entity->animator.frameID == entity->animator.frameCount - 1) {
         RSDK.SetSpriteAnimation(Sweep->aniFrames, 0, &entity->animator, true, 0);
         entity->timer = 32;
-        entity->direction ^= 1;
-        entity->state = Sweep_Unknown6;
-        Sweep_Unknown6();
+        entity->direction ^= FLIP_X;
+        entity->state = Sweep_State_Idle;
+        Sweep_State_Idle();
     }
     else {
         Sweep_HandleInteractions();
@@ -302,16 +301,16 @@ void Sweep_Unknown10(void)
     }
 }
 
-void Sweep_Unknown11(void)
+void Sweep_State_Projectile(void)
 {
     RSDK_THIS(Sweep);
     entity->position.x += entity->velocity.x;
-    if (RSDK.CheckOnScreen(entity, 0)) {
+    if (RSDK.CheckOnScreen(entity, NULL)) {
         RSDK.ProcessAnimation(&entity->animator);
 
         foreach_active(Player, player)
         {
-            if (Player_CheckCollisionTouch(player, entity, &Sweep->hitbox3)) {
+            if (Player_CheckCollisionTouch(player, entity, &Sweep->hitboxProjectile)) {
                 Player_CheckProjectileHit(player, entity);
             }
         }

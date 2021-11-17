@@ -4,10 +4,10 @@
 #include "SonicMania.h"
 
 typedef enum {
-    TORNADOPATH_0,
-    TORNADOPATH_1,
-    TORNADOPATH_2,
-    TORNADOPATH_3,
+    TORNADOPATH_START,
+    TORNADOPATH_DUD,
+    TORNADOPATH_SETSPEED,
+    TORNADOPATH_SETCAMERA,
     TORNADOPATH_4,
     TORNADOPATH_5,
     TORNADOPATH_6,
@@ -24,7 +24,7 @@ typedef enum {
 typedef struct {
     RSDK_OBJECT
     EntityCamera *cameraPtr;
-    Vector2 field_8;
+    Vector2 moveVel;
     int32 hitboxID;
     uint16 aniFrames;
     Animator animator;
@@ -65,13 +65,13 @@ void TornadoPath_Serialize(void);
 
 // Extra Entity Functions
 void TornadoPath_SetupHitbox(void);
-void TornadoPath_Unknown2(void);
-void TornadoPath_Unknown3(void);
+void TornadoPath_HandleMoveSpeed(void);
+void TornadoPath_State_SetTornadoSpeed(void);
 void TornadoPath_State_ReturnCamera(void);
-void TornadoPath_Unknown5(void);
+void TornadoPath_State_DisablePlayerInteractions(void);
 void TornadoPath_Unknown6(void);
-void TornadoPath_Unknown7(void);
-void TornadoPath_Unknown8(void);
+void TornadoPath_State_MoveRightJump(void);
+void TornadoPath_State_FlyOff(void);
 void TornadoPath_Unknown9(void);
 void TornadoPath_Unknown10(void);
 void TornadoPath_Unknown11(void);

@@ -140,9 +140,9 @@ bool32 MSZCutsceneK_CutsceneState_Unknown2(EntityCutsceneSeq *host)
     }
     tornado->position.x += tornado->velocity.x;
     tornado->position.y += tornado->velocity.y;
-    if (tornado->velocity.y >= tornado->field_84.y) {
+    if (tornado->velocity.y >= tornado->movePos.y) {
         tornado->velocity.y = 0;
-        tornado->position.y = tornado->field_84.y;
+        tornado->position.y = tornado->movePos.y;
     }
     else {
         tornado->velocity.y += 0x3800;

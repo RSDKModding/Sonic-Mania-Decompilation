@@ -320,7 +320,7 @@ typedef struct {
     uint8 (*GetTileBehaviour)(uint16 tileID, uint8 cPlane);
     void (*SetTileBehaviour)(uint16 tileID, uint8 cPlane, uint8 value);
     int32 (*GetSFX)(const char *path);
-    int32 (*PlaySfx)(uint16 sfx, int32 loop, int32 pan);
+    int32 (*PlaySfx)(uint16 sfx, int32 loop, int32 unknown);
     void (*StopSFX)(uint16 sfx);
     int32 (*PlayStream)(const char *filename, uint32 slot, uint32 startPos, uint32 loopPoint, bool32 loadASync);
     int32 (*SetChannelAttributes)(uint8 slot, float volume, float pan, float speed);

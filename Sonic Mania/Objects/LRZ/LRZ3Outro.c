@@ -58,7 +58,7 @@ void LRZ3Outro_State_Unknown1(void)
 
     ++entity->timer;
     if (!(entity->timer & 7))
-        Camera_ShakeScreen(3, 0, 2);
+        Camera_ShakeScreen(0, 3, 2);
 
     if (entity->timer == 1) {
         entity->blastoffChannel = RSDK.PlaySfx(LRZ3Outro->sfxBlastoff, 56628, 0xFF);
@@ -87,7 +87,7 @@ void LRZ3Outro_State_Unknown2(void)
 
     if (entity->timer <= 120) {
         if (!(entity->timer & 7)) {
-            Camera_ShakeScreen(RSDK.Rand(-6, 6), 0, 4);
+            Camera_ShakeScreen(0, RSDK.Rand(-6, 6), 4);
         }
     }
     else {

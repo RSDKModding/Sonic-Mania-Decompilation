@@ -38,7 +38,7 @@ void Debris_Serialize(void);
 
 // Extra Entity Functions
 void Debris_State_Fall(void);
-void Debris_State_LightningSpark(void);
+void Debris_State_Move(void);
 void Debris_State_FallAndFlicker(void);
 
 void Debris_FallFlickerAnimSetup(int32 aniFrames, int32 *a2, int32 animationID);

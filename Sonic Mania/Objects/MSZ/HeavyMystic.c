@@ -16,8 +16,8 @@ void HeavyMystic_Update(void)
 
     StateMachine_Run(entity->state);
 
-    entity->position.x += TornadoPath->field_8.x;
-    entity->position.y += TornadoPath->field_8.y;
+    entity->position.x += TornadoPath->moveVel.x;
+    entity->position.y += TornadoPath->moveVel.y;
 }
 
 void HeavyMystic_LateUpdate(void) {}
@@ -176,7 +176,7 @@ void HeavyMystic_Unknown1(int32 x, int32 y)
     int32 velX = RSDK.Rand(-0xC000, 0xC000);
     int32 velY = RSDK.Rand(-0xC000, 0xC000);
 
-    EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_LightningSpark, x, y);
+    EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Move, x, y);
     debris->drawOrder    = Zone->drawOrderLow;
     debris->drawFX       = FX_FLIP;
     debris->direction    = RSDK.Rand(0, 4);
@@ -187,7 +187,7 @@ void HeavyMystic_Unknown1(int32 x, int32 y)
     RSDK.SetSpriteAnimation(HeavyMystic->aniFrames, RSDK.Rand(0, 2) + 5, &debris->animator, true, 0);
     debris->timer = 3 * debris->animator.frameCount;
 
-    debris             = CREATE_ENTITY(Debris, Debris_State_LightningSpark, x, y);
+    debris             = CREATE_ENTITY(Debris, Debris_State_Move, x, y);
     debris->velocity.x = velX;
     debris->velocity.y = velY;
     debris->drawOrder  = Zone->drawOrderLow;

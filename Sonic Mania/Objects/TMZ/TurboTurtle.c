@@ -282,7 +282,7 @@ void TurboTurtle_HandleFanDebris(uint8 type, int strength, int length)
             }
 
             timer += RSDK.Rand(-5, 5);
-            EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_LightningSpark, spawnX, spawnY);
+            EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Move, spawnX, spawnY);
             RSDK.SetSpriteAnimation(TurboTurtle->aniFrames, anim, &debris->animator, true, frame);
             debris->velocity.x = velX;
             debris->velocity.y = velY;

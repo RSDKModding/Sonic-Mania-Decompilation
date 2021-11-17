@@ -18,7 +18,7 @@ void SuperSparkle_Update(void)
             if (++entity->timer == 12) {
                 entity->timer        = 0;
                 EntityDebris *debris = (EntityDebris *)RSDK.CreateEntity(Debris->objectID, 0, player->position.x, player->position.y);
-                debris->state        = Debris_State_LightningSpark;
+                debris->state        = Debris_State_Move;
                 debris->timer        = 16;
                 debris->inkEffect    = INK_ADD;
                 debris->alpha        = 256;

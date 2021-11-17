@@ -91,7 +91,7 @@ void ERZGunner_Explode(void)
     if (!(Zone->timer & 7)) {
         int x                = RSDK.Sin512(entity->rotation) << 11;
         int y                = RSDK.Cos512(entity->rotation) << 11;
-        EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_LightningSpark, entity->position.x + x, entity->position.y - y);
+        EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Move, entity->position.x + x, entity->position.y - y);
         RSDK.SetSpriteAnimation(Explosion->aniFrames, 3, &debris->animator, true, 0);
         debris->velocity.x = RSDK.Sin512(entity->rotation) << 8;
         debris->velocity.y = RSDK.Sin512(entity->rotation) << 4;
@@ -108,7 +108,7 @@ void ERZGunner_Explode2(void)
         if ((Zone->timer & 3) == 2) {
             int x                = 0x600 * RSDK.Sin512(entity->rotation);
             int y                = 0x600 * RSDK.Cos512(entity->rotation);
-            EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_LightningSpark, entity->position.x + x, entity->position.y - y);
+            EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Move, entity->position.x + x, entity->position.y - y);
             RSDK.SetSpriteAnimation(Explosion->aniFrames, 2, &debris->animator, true, 0);
             debris->drawOrder = Zone->drawOrderHigh;
             debris->drawFX    = FX_SCALE;
@@ -120,7 +120,7 @@ void ERZGunner_Explode2(void)
     else {
         int x                = RSDK.Sin512(entity->rotation) << 11;
         int y                = RSDK.Cos512(entity->rotation) << 11;
-        EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_LightningSpark, entity->position.x + x, entity->position.y - y);
+        EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Move, entity->position.x + x, entity->position.y - y);
         RSDK.SetSpriteAnimation(Explosion->aniFrames, 3, &debris->animator, true, 0);
         debris->velocity.x = RSDK.Sin512(entity->rotation) << 8;
         debris->velocity.y = RSDK.Sin512(entity->rotation) << 4;

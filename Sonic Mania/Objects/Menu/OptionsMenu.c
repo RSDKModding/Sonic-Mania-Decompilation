@@ -397,7 +397,7 @@ void OptionsMenu_Unknown7(void)
         Localization_GetString(&info, STR_VIDEOCHANGESAPPLIED);
         EntityUIDialog *dialog = UIDialog_CreateActiveDialog(&info);
         if (dialog) {
-            dialog->timer = 900;
+            dialog->closeDelay = 900;
             UIDialog_AddButton(DIALOG_NO, dialog, OptionsMenu_Unknown11, true);
             UIDialog_AddButton(DIALOG_YES, dialog, OptionsMenu_Unknown13, true);
             UIDialog_Setup(dialog);
@@ -413,7 +413,7 @@ void OptionsMenu_Unknown8(void)
     Localization_GetString(&info, STR_VIDEOCHANGESAPPLIED);
     EntityUIDialog *dialog = UIDialog_CreateActiveDialog(&info);
     if (dialog) {
-        dialog->timer = 900;
+        dialog->closeDelay = 900;
         UIDialog_AddButton(DIALOG_NO, dialog, OptionsMenu_Unknown12, true);
         UIDialog_AddButton(DIALOG_YES, dialog, OptionsMenu_Unknown14, true);
         UIDialog_Setup(dialog);

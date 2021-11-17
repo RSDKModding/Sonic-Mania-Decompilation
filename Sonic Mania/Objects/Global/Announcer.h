@@ -74,7 +74,7 @@ void Announcer_StartCountdown(void);
 void Announcer_AnnounceGoal(int32 screen);
 void Announcer_Unknown3(void);
 void Announcer_Unknown4(void);
-void Announcer_Unknown5(void);
+void Announcer_State_CountDown(void);
 void Announcer_Unknown6(void);
 void Announcer_State_AnnounceWinner(void);
 void Announcer_State_AnnounceDraw(void);

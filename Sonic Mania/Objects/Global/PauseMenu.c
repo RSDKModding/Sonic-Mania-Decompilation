@@ -827,7 +827,7 @@ void PauseMenu_Unknown33(void)
             if (dialog) {
                 if (dialog->state != UIDialog_Unknown13) {
                     dialog->parent->selectionDisabled = true;
-                    dialog->field_5C                  = 0;
+                    dialog->timer                     = 0;
                     dialog->state                     = UIDialog_Unknown13;
                     dialog->curCallback               = NULL;
                 }

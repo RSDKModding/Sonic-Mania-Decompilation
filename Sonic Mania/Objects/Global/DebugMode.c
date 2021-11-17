@@ -47,7 +47,7 @@ void DebugMode_Update(void)
     bool32 keyBack = RSDK_controller[CONT_P1].keyY.press;
     bool32 keySpawn = RSDK_controller[CONT_P1].keyX.press;
 #else
-    bool32 spawnKey = RSDK_controller[CONT_P1].keyX.press;
+    bool32 keyBack  = RSDK_controller[CONT_P1].keyX.press;
     bool32 keySpawn = RSDK_controller[CONT_P1].keyY.press;
 #endif
 

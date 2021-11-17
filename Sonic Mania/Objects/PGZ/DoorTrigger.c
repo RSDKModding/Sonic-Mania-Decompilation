@@ -20,7 +20,7 @@ void DoorTrigger_Update(void)
 
             EntityDebris *shard =
                 CREATE_ENTITY(Debris, NULL, (RSDK.Rand(-4, 5) << 16) + entity->position.x, (RSDK.Rand(-4, 5) << 16) + entity->position.y);
-            shard->state     = Debris_State_LightningSpark;
+            shard->state     = Debris_State_Move;
             shard->drawFX    = FX_FLIP;
             shard->direction = entity->direction;
             shard->drawOrder = Zone->drawOrderHigh - 1;

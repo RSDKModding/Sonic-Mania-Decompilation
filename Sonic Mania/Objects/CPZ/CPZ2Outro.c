@@ -63,7 +63,7 @@ bool32 CPZ2Outro_CutsceneSeq(void *h)
     RSDK.GetLayerSize(Zone->fgLow, &size, true);
 
     if (!host->timer) {
-        ((EntityEggPrison *)CPZ2Outro->prisonPtr)->activated = true;
+        ((EntityEggPrison *)CPZ2Outro->prisonPtr)->notSolid = true;
         Zone->screenBoundsT1[0]                              = 0;
         Zone->screenBoundsT1[1]                              = 0;
         Zone->screenBoundsR1[0]                              = size.x;

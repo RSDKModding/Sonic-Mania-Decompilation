@@ -403,7 +403,7 @@ bool32 ERZStart_CutsceneState_Unknown7(EntityCutsceneSeq *host)
         eggman->position.x = king->posUnknown.x - 0x580000;
         eggman->velocity.x = 0;
         eggman->velocity.y = 0;
-        Camera_ShakeScreen(5, 0, 0);
+        Camera_ShakeScreen(0, 5, 0);
         RSDK.PlaySfx(ERZStart->sfxHullClose, false, 255);
         return true;
     }
@@ -431,7 +431,7 @@ bool32 ERZStart_CutsceneState_Unknown8(EntityCutsceneSeq *host)
     EntityPhantomKing *kingChild2 = RSDK_GET_ENTITY(kingSlot + 1, PhantomKing);
 
     if (host->timer > 6 && !(host->timer % 6))
-        Camera_ShakeScreen(1, 0, 0);
+        Camera_ShakeScreen(0, 1, 0);
     if (!(host->timer % 37))
         RSDK.PlaySfx(ERZStart->sfxRumble, false, 255);
     if (host->timer == 120) {

@@ -12,19 +12,19 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    int32 field_58;
+    StateMachine(state); // unused
     bool32 oscillate;
     bool32 forKnux;
-    int32 field_64;
-    Vector2 unknownPos;
+    int32 unused1;
+    Vector2 movePos;
     Vector2 startPos;
-    int32 field_78;
+    int32 unused2;
     int32 oscillateOffset;
-    int32 field_80;
-    int32 field_84;
-    Animator animator1;
-    Animator animator2;
-    Animator animator3;
+    int32 unused3;
+    int32 unused4;
+    Animator animatorBody;
+    Animator animatorArm;
+    Animator animatorLegs;
 } EntityAIZEggRobo;
 
 // Object Struct

@@ -758,7 +758,7 @@ void Shiversaw_State_Destroyed(void)
 
     Shiversaw_Unknown4();
     if (!(Zone->timer % 5))
-        Camera_ShakeScreen(1, 0, 1);
+        Camera_ShakeScreen(0, 1, 1);
 
     if (--entity->timer <= 0) {
         if (Zone->stageFinishCallback) {
@@ -790,7 +790,7 @@ void Shiversaw_Unknown11(void)
     RSDK.ProcessAnimation(&entity->animator2);
     Shiversaw_Unknown4();
     if (!(Zone->timer % 5))
-        Camera_ShakeScreen(2, 0, 2);
+        Camera_ShakeScreen(0, 2, 2);
 
     if (entity->timer < 120) {
         entity->circleRadius = 6 * entity->timer;

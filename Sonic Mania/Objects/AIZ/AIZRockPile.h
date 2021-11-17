@@ -4,6 +4,13 @@
 #include "SonicMania.h"
 
 #if RETRO_USE_PLUS
+
+typedef enum {
+    AIZROCKPILE_SMALL,
+    AIZROCKPILE_MED,
+    AIZROCKPILE_BIG,
+}AIZRockPileTypes;
+
 // Object Class
 typedef struct {
     RSDK_OBJECT

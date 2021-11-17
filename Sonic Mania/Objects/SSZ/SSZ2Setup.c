@@ -18,7 +18,7 @@ void SSZ2Setup_StaticUpdate(void)
 
             if (RSDK.GetTileBehaviour(tile, player->collisionPlane) && (abs(player->groundVel) > 0x80000 && player->onGround)) {
                 EntityDebris *debris =
-                    CREATE_ENTITY(Debris, Debris_State_LightningSpark, player->position.x, player->position.y + (hitbox->bottom << 16));
+                    CREATE_ENTITY(Debris, Debris_State_Move, player->position.x, player->position.y + (hitbox->bottom << 16));
                 RSDK.SetSpriteAnimation(SparkRail->aniFrames, 0, &debris->animator, true, 0);
                 debris->drawFX     = FX_FLIP;
                 debris->direction  = player->velocity.x < 0;

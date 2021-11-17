@@ -16,12 +16,12 @@ typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
-    int32 field_60;
+    int32 startY;
     Vector2 ballPos[12];
     Vector2 clawPos;
     Entity *grabbedEntities[8];
-    int32 count;
-    int32 field_F0;
+    int32 grabCount;
+    int32 unused1;
     Animator animator1;
     Animator animator2;
     Animator animator3;
@@ -45,7 +45,7 @@ void AIZKingClaw_EditorLoad(void);
 void AIZKingClaw_Serialize(void);
 
 // Extra Entity Functions
-void AIZKingClaw_Unknown1(void);
-void AIZKingClaw_Unknown2(void);
+void AIZKingClaw_HandleClawPositions(void);
+void AIZKingClaw_State_Grab(void);
 
 #endif //!OBJ_AIZKINGCLAW_H

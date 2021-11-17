@@ -168,7 +168,7 @@ void Shield_State_Lightning(void)
         entity->position.y = entity->player->position.y;
     }
 
-    EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_LightningSpark, entity->position.x, entity->position.y);
+    EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Move, entity->position.x, entity->position.y);
     debris->timer        = 22;
     debris->velocity.x   = -0x20000;
     debris->velocity.y   = -0x20000;
@@ -180,7 +180,7 @@ void Shield_State_Lightning(void)
         debris->scale.y = entity->scale.y;
     }
 
-    debris             = CREATE_ENTITY(Debris, Debris_State_LightningSpark, entity->position.x, entity->position.y);
+    debris             = CREATE_ENTITY(Debris, Debris_State_Move, entity->position.x, entity->position.y);
     debris->timer      = 22;
     debris->velocity.x = 0x20000;
     debris->velocity.y = -0x20000;
@@ -192,7 +192,7 @@ void Shield_State_Lightning(void)
         debris->scale.y = entity->scale.y;
     }
 
-    debris             = CREATE_ENTITY(Debris, Debris_State_LightningSpark, entity->position.x, entity->position.y);
+    debris             = CREATE_ENTITY(Debris, Debris_State_Move, entity->position.x, entity->position.y);
     debris->timer      = 22;
     debris->velocity.x = -0x20000;
     debris->velocity.y = 0x20000;
@@ -204,7 +204,7 @@ void Shield_State_Lightning(void)
         debris->scale.y = entity->scale.y;
     }
 
-    debris             = CREATE_ENTITY(Debris, Debris_State_LightningSpark, entity->position.x, entity->position.y);
+    debris             = CREATE_ENTITY(Debris, Debris_State_Move, entity->position.x, entity->position.y);
     debris->timer      = 22;
     debris->velocity.x = 0x20000;
     debris->velocity.y = 0x20000;

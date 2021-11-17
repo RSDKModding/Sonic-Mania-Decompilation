@@ -4,8 +4,8 @@
 #include "SonicMania.h"
 
 typedef enum {
-    AIZ_BG_BEACH,
     AIZ_BG_JUNGLE,
+    AIZ_BG_SKY,
 } BGSwitchIDsAIZ;
 
 // Object Class
@@ -20,7 +20,7 @@ typedef struct {
     TABLE(int32 aniTiles6[14], { 12, 6, 4, 3, 2, 3, 4, 30, 4, 3, 2, 3, 4, 6 });
 #endif
     bool32 cutsceneInit;
-    int32 dword154;
+    bool32 playDrillSfxFlag;
     bool32 playingDrillSFX;
     TileLayer *bg1Info;
     TileLayer *bg2Info;
@@ -71,8 +71,8 @@ void AIZSetup_Serialize(void);
 
 // Extra Entity Functions
 #if RETRO_USE_PLUS
-void AIZSetup_bgSwitch1_CB(void);
-void AIZSetup_bgSwitch2_CB(void);
+void AIZSetup_BGSwitchCB_Jungle(void);
+void AIZSetup_BGSwitchCB_Sky(void);
 #endif
 
 void AIZSetup_Unknown4(void);

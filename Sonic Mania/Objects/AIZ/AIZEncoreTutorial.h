@@ -16,7 +16,7 @@ typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
-    int32 timer2;
+    int32 swapCount;
     Animator animator1;
     Animator animator2;
     Animator animator3;
@@ -41,11 +41,11 @@ void AIZEncoreTutorial_EditorLoad(void);
 void AIZEncoreTutorial_Serialize(void);
 
 // Extra Entity Functions
-void AIZEncoreTutorial_Unknown1(void);
-void AIZEncoreTutorial_Unknown2(void);
-void AIZEncoreTutorial_Unknown3(void);
-void AIZEncoreTutorial_Unknown4(void);
-void AIZEncoreTutorial_Unknown5(void);
+void AIZEncoreTutorial_State_ShowTutBubble(void);
+void AIZEncoreTutorial_State_EnterTutorial(void);
+void AIZEncoreTutorial_State_ShowSwapTutorial(void);
+void AIZEncoreTutorial_State_ExitTutorial(void);
+void AIZEncoreTutorial_State_ReturnToCutscene(void);
 
 #endif
 

@@ -86,7 +86,7 @@ void Announcer_StartCountdown(void)
 {
     Announcer->finishedCountdown = false;
     EntityAnnouncer *announcer = CREATE_ENTITY(Announcer, NULL, 0, 0);
-    announcer->state     = Announcer_Unknown5;
+    announcer->state     = Announcer_State_CountDown;
     announcer->stateDraw = Announcer_Unknown3;
     announcer->playerID  = 3;
     announcer->scale.x   = 0x200;
@@ -99,7 +99,7 @@ void Announcer_AnnounceGoal(int32 screen)
     entity->stateDraw       = Announcer_Unknown4;
     entity->screen          = screen;
     RSDK.SetSpriteAnimation(Announcer->aniFrames, 0, &entity->animator, true, 0);
-    RSDK.PlaySfx(Announcer->sfxGoal, 0, 255);
+    RSDK.PlaySfx(Announcer->sfxGoal, false, 255);
 }
 void Announcer_Unknown3(void)
 {
@@ -146,7 +146,7 @@ void Announcer_Unknown4(void)
         RSDK.DrawSprite(&entity->animator, &drawPos, true);
     }
 }
-void Announcer_Unknown5(void)
+void Announcer_State_CountDown(void)
 {
     RSDK_THIS(Announcer);
 
@@ -157,7 +157,7 @@ void Announcer_Unknown5(void)
         }
         else {
             if (!entity->timer) {
-                RSDK.PlaySfx(Announcer->sfxGo, 0, 255);
+                RSDK.PlaySfx(Announcer->sfxGo, false, 255);
                 RSDK.SetSpriteAnimation(Announcer->aniFrames, 1, &entity->animator, true, 3);
             }
 
@@ -183,15 +183,15 @@ void Announcer_Unknown5(void)
                 switch (entity->playerID) {
                     default: break;
                     case 1:
-                        RSDK.PlaySfx(Announcer->sfxOne, 0, 255);
+                        RSDK.PlaySfx(Announcer->sfxOne, false, 255);
                         RSDK.SetSpriteAnimation(Announcer->aniFrames, 1, &entity->animator, true, 2);
                         break;
                     case 2:
-                        RSDK.PlaySfx(Announcer->sfxTwo, 0, 255);
+                        RSDK.PlaySfx(Announcer->sfxTwo, false, 255);
                         RSDK.SetSpriteAnimation(Announcer->aniFrames, 1, &entity->animator, true, 1);
                         break;
                     case 3:
-                        RSDK.PlaySfx(Announcer->sfxThree, 0, 255);
+                        RSDK.PlaySfx(Announcer->sfxThree, false, 255);
                         RSDK.SetSpriteAnimation(Announcer->aniFrames, 1, &entity->animator, true, 0);
                         break;
                 }

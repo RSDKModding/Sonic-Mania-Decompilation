@@ -81,11 +81,11 @@ typedef struct {
     int32 (*GetControllerType)(int32 id, int32);
     int32(*ShowSteamControllerOverlay)(int32);
     int32 saveStatus;
-    bool32 authFlag;
+    bool32 authForbiddenFlag;
     bool32 signoutFlag;
     int32 prevLeaderboardEntry;
-    int32 playerFlipFlags;
-    int32 notifyAutoSaveFlag;
+    int32 unknown2;
+    int32 isAutoSaving;
     int32 unknown;
     int32 leaderboardsStatus;
     int32 leaderboardEntryCount;

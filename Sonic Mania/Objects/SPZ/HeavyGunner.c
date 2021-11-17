@@ -869,7 +869,7 @@ void HeavyGunner_State6_Unknown4(void)
                 RSDK.PlaySfx(HeavyGunner->sfxExplosion3, false, 255);
                 int y                = RSDK.Sin512(entity->rotation) << 11;
                 int x                = RSDK.Cos512(entity->rotation) << 11;
-                EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_LightningSpark, x + entity->position.x, y + entity->position.y);
+                EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Move, x + entity->position.x, y + entity->position.y);
                 RSDK.SetSpriteAnimation(Explosion->aniFrames, EXPLOSION_BOSS, &debris->animator, true, 0);
                 debris->velocity.x = entity->velocity.x + Zone->autoScrollSpeed;
                 debris->drawOrder  = Zone->drawOrderLow;
@@ -899,7 +899,7 @@ void HeavyGunner_State6_Unknown5(void)
     if (entity->rotation == 0x400) {
         EntityHeavyGunner *parent = (EntityHeavyGunner *)entity->parent;
         if (parent->animator9.animationID == 3) {
-            EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_LightningSpark, entity->position.x, entity->position.y);
+            EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Move, entity->position.x, entity->position.y);
             RSDK.SetSpriteAnimation(Explosion->aniFrames, 2, &debris->animator, true, 0);
             debris->velocity.x = Zone->autoScrollSpeed;
             debris->drawOrder  = Zone->drawOrderHigh;
@@ -947,7 +947,7 @@ void HeavyGunner_State6_Unknown6(void)
             if ((Zone->timer & 3) == 2) {
                 int x                = 0x600 * RSDK.Cos512(entity->rotation);
                 int y                = 0x600 * RSDK.Sin512(entity->rotation);
-                EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_LightningSpark, entity->position.x - x, entity->position.y - y);
+                EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Move, entity->position.x - x, entity->position.y - y);
                 RSDK.SetSpriteAnimation(Explosion->aniFrames, 2, &debris->animator, true, 0);
                 debris->velocity.x = Zone->autoScrollSpeed;
                 debris->drawOrder  = Zone->drawOrderHigh;
@@ -960,7 +960,7 @@ void HeavyGunner_State6_Unknown6(void)
         else {
             int x                = RSDK.Cos512(entity->rotation) << 11;
             int y                = RSDK.Sin512(entity->rotation) << 11;
-            EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_LightningSpark, x + entity->position.x, y + entity->position.y);
+            EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Move, x + entity->position.x, y + entity->position.y);
             RSDK.SetSpriteAnimation(Explosion->aniFrames, EXPLOSION_BOSSPUFF, &debris->animator, true, 0);
             debris->velocity.x = (RSDK.Cos512(entity->rotation) << 8) + Zone->autoScrollSpeed;
             debris->velocity.y = 16 * RSDK.Cos512(entity->rotation);
@@ -993,7 +993,7 @@ void HeavyGunner_State6_Unknown6(void)
             if ((Zone->timer & 3) == 2) {
                 int x                = 0x600 * RSDK.Cos512(entity->rotation);
                 int y                = 0x600 * RSDK.Sin512(entity->rotation);
-                EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_LightningSpark, entity->position.x - x, entity->position.y - y);
+                EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Move, entity->position.x - x, entity->position.y - y);
                 RSDK.SetSpriteAnimation(Explosion->aniFrames, EXPLOSION_BOSS, &debris->animator, true, 0);
                 debris->velocity.x = Zone->autoScrollSpeed;
                 debris->drawOrder  = Zone->drawOrderHigh;
@@ -1006,7 +1006,7 @@ void HeavyGunner_State6_Unknown6(void)
         else {
             int x                = RSDK.Cos512(entity->rotation) << 11;
             int y                = RSDK.Sin512(entity->rotation) << 11;
-            EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_LightningSpark, entity->position.x - (x << 11), entity->position.y - y);
+            EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Move, entity->position.x - (x << 11), entity->position.y - y);
             RSDK.SetSpriteAnimation(Explosion->aniFrames, EXPLOSION_BOSSPUFF, &debris->animator, true, 0);
             debris->velocity.x = Zone->autoScrollSpeed - (RSDK.Cos512(entity->rotation) << 8);
             debris->velocity.y = -16 * RSDK.Cos512(entity->rotation);
@@ -1044,7 +1044,7 @@ void HeavyGunner_State6_Unknown7(void)
         if ((Zone->timer & 3) == 2) {
             int x                = 0x600 * RSDK.Cos512(entity->rotation);
             int y                = 0x600 * RSDK.Sin512(entity->rotation);
-            EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_LightningSpark, entity->position.x - x, entity->position.y - y);
+            EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Move, entity->position.x - x, entity->position.y - y);
             RSDK.SetSpriteAnimation(Explosion->aniFrames, 2, &debris->animator, true, 0);
             debris->velocity.x = Zone->autoScrollSpeed;
             debris->drawOrder  = Zone->drawOrderHigh;
@@ -1057,7 +1057,7 @@ void HeavyGunner_State6_Unknown7(void)
     else {
         int x                = RSDK.Cos512(entity->rotation) << 11;
         int y                = RSDK.Sin512(entity->rotation) << 11;
-        EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_LightningSpark, x + entity->position.x, y + entity->position.y);
+        EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Move, x + entity->position.x, y + entity->position.y);
         RSDK.SetSpriteAnimation(Explosion->aniFrames, EXPLOSION_BOSSPUFF, &debris->animator, true, 0);
         debris->velocity.x = (RSDK.Cos512(entity->rotation) << 8) + Zone->autoScrollSpeed;
         debris->velocity.y = 16 * RSDK.Cos512(entity->rotation);
@@ -1083,7 +1083,7 @@ void HeavyGunner_State6_Unknown7(void)
                 debris->drawFX = FX_SCALE | FX_ROTATE;
         }
 
-        EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_LightningSpark, parent->position.x, parent->position.y);
+        EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Move, parent->position.x, parent->position.y);
         RSDK.SetSpriteAnimation(Explosion->aniFrames, EXPLOSION_ENEMY, &debris->animator, true, 0);
         debris->velocity.x    = Zone->autoScrollSpeed;
         debris->drawOrder     = Zone->drawOrderHigh;
@@ -1120,7 +1120,7 @@ void HeavyGunner_State6_Unknown8(void)
         if ((Zone->timer & 3) == 2) {
             int x                = 0x600 * RSDK.Cos512(entity->rotation);
             int y                = 0x600 * RSDK.Sin512(entity->rotation);
-            EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_LightningSpark, entity->position.x - x, entity->position.y - y);
+            EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Move, entity->position.x - x, entity->position.y - y);
             RSDK.SetSpriteAnimation(Explosion->aniFrames, 2, &debris->animator, true, 0);
             debris->velocity.x = Zone->autoScrollSpeed;
             debris->drawOrder  = Zone->drawOrderHigh;
@@ -1133,7 +1133,7 @@ void HeavyGunner_State6_Unknown8(void)
     else {
         int x                = RSDK.Cos512(entity->rotation) << 11;
         int y                = RSDK.Sin512(entity->rotation) << 11;
-        EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_LightningSpark, x + entity->position.x, y + entity->position.y);
+        EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Move, x + entity->position.x, y + entity->position.y);
         RSDK.SetSpriteAnimation(Explosion->aniFrames, EXPLOSION_BOSSPUFF, &debris->animator, true, 0);
         debris->velocity.x = (RSDK.Cos512(entity->rotation) << 8) + Zone->autoScrollSpeed;
         debris->velocity.y = 16 * RSDK.Cos512(entity->rotation);
@@ -1165,7 +1165,7 @@ void HeavyGunner_State6_Unknown8(void)
         debris->gravity    = 0x3800;
         debris->drawOrder  = Zone->drawOrderHigh;
 
-        debris = CREATE_ENTITY(Debris, Debris_State_LightningSpark, entity->position.x + 0x60000, entity->position.y - 0x40000);
+        debris = CREATE_ENTITY(Debris, Debris_State_Move, entity->position.x + 0x60000, entity->position.y - 0x40000);
         RSDK.SetSpriteAnimation(Explosion->aniFrames, EXPLOSION_BOSS, &debris->animator, true, 0);
         debris->velocity.x = Zone->autoScrollSpeed;
         debris->drawOrder  = Zone->drawOrderHigh;
@@ -1199,7 +1199,7 @@ void HeavyGunner_State2_Unknown1(void)
         entity->velocity.y = 0;
         entity->drawFX     = FX_ROTATE;
         entity->state      = HeavyGunner_State2_Unknown2;
-        Camera_ShakeScreen(12, 0, 12);
+        Camera_ShakeScreen(0, 12, 12);
         RSDK.PlaySfx(HeavyGunner->sfxRumble, false, 255);
         RSDK.PlaySfx(HeavyGunner->sfxWooshIn, false, 255);
         Zone->deathBoundary[0] += 0x8000000;
@@ -1318,7 +1318,7 @@ void HeavyGunner_State2_Unknown4(void)
 
         ++entity->field_7C;
 
-        EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_LightningSpark, entity->position.x - 0x200000, entity->position.y - 0x140000);
+        EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Move, entity->position.x - 0x200000, entity->position.y - 0x140000);
         RSDK.SetSpriteAnimation(HeavyGunner->aniFrames, 27, &debris->animator, true, 0);
         debris->timer      = 22;
         debris->drawOrder  = Zone->drawOrderHigh;

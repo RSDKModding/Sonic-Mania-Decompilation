@@ -15,11 +15,11 @@ typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
-    int32 timer2;
+    int32 buzzCount;
     EntityPlayer *targetPtr;
     Vector2 startPos;
-    Animator animator1;
-    Animator animator2;
+    Animator bodyAnimator;
+    Animator wingAnimator;
 } EntityWisp;
 
 // Object Entity
@@ -46,8 +46,8 @@ void Wisp_HandlePlayerInteractions(void);
 void Wisp_CheckOnScreen(void);
 
 void Wisp_State_Setup(void);
-void Wisp_Unknown5(void);
-void Wisp_Unknown6(void);
-void Wisp_Unknown7(void);
+void Wisp_WaitInPlace(void);
+void Wisp_FlyTowardTarget(void);
+void Wisp_BasicFly(void);
 
 #endif //!OBJ_WISP_H

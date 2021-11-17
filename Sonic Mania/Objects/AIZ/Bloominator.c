@@ -102,18 +102,16 @@ void Bloominator_State_Firing(void)
 
     switch (++entity->timer) {
         case 15:
-            spikeBall =
-                (EntityBloominator *)RSDK.CreateEntity(Bloominator->objectID, (void *)1, entity->position.x - 0x10000, entity->position.y - 0x160000);
+            spikeBall             = CREATE_ENTITY(Bloominator, intToVoid(true), entity->position.x - 0x10000, entity->position.y - 0x160000);
             spikeBall->velocity.x = -0x10000;
             spikeBall->velocity.y = -0x50000;
-            RSDK.PlaySfx(Bloominator->sfxShot, 0, 255);
+            RSDK.PlaySfx(Bloominator->sfxShot, false, 255);
             break;
         case 45:
-            spikeBall =
-                (EntityBloominator *)RSDK.CreateEntity(Bloominator->objectID, (void *)1, entity->position.x - 0x10000, entity->position.y - 0x160000);
+            spikeBall             = CREATE_ENTITY(Bloominator, intToVoid(true), entity->position.x - 0x10000, entity->position.y - 0x160000);
             spikeBall->velocity.x = 0x10000;
             spikeBall->velocity.y = -0x50000;
-            RSDK.PlaySfx(Bloominator->sfxShot, 0, 255);
+            RSDK.PlaySfx(Bloominator->sfxShot, false, 255);
             break;
         case 50:
             entity->timer = -60;

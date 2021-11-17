@@ -373,7 +373,7 @@ void SilverSonic_State2_Unknown6(void)
         if (entity->velocity.x < 0) {
             entity->direction  = FLIP_NONE;
             entity->velocity.x = -entity->velocity.x;
-            Camera_ShakeScreen(2, 0, 0);
+            Camera_ShakeScreen(0, 2, 0);
             RSDK.PlaySfx(SilverSonic->sfxRebound, false, 255);
         }
     }
@@ -381,7 +381,7 @@ void SilverSonic_State2_Unknown6(void)
         if (entity->velocity.x > 0) {
             entity->direction  = FLIP_X;
             entity->velocity.x = -entity->velocity.x;
-            Camera_ShakeScreen(2, 0, 0);
+            Camera_ShakeScreen(0, 2, 0);
             RSDK.PlaySfx(SilverSonic->sfxRebound, false, 255);
         }
     }
@@ -405,7 +405,7 @@ void SilverSonic_State2_Unknown6(void)
             entity->velocity.y  = 0;
             entity->state       = SilverSonic_State2_Explode;
             MetalSonic->field_8 = 32;
-            Camera_ShakeScreen(-4, 0, 1);
+            Camera_ShakeScreen(0, -4, 1);
             metal->health -= RETRO_USE_PLUS ? 2 : 1;
             if (metal->health <= 0) {
                 metal->timer = 0;

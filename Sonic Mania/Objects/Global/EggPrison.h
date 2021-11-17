@@ -28,15 +28,15 @@ typedef struct {
     int32 timer;
     int32 originY;
     int32 buttonPos;
-    int32 activated;
-    int32 field_70;
-    Hitbox hitbox1;
-    Hitbox hitbox2;
-    Hitbox hitbox3;
-    Animator animator1;
-    Animator animator2;
-    Animator animator3;
-    Animator animator4;
+    int32 notSolid;
+    int32 checkTileCollisions;
+    Hitbox hitboxSolid;
+    Hitbox hitboxButton;
+    Hitbox hitboxButtonTrigger;
+    Animator capsuleAnimator;
+    Animator propellerAnimator;
+    Animator panelAnimator;
+    Animator buttonAnimator;
 } EntityEggPrison;
 
 // Object Struct
@@ -57,11 +57,11 @@ void EggPrison_Serialize(void);
 
 // Extra Entity Functions
 void EggPrison_HandleMovement(void);
-void EggPrison_Activated(void);
-void EggPrison_Unknown1(void);
-void EggPrison_Unknown2(void);
-void EggPrison_Unknown3(void);
-void EggPrison_Unknown4(void);
-void EggPrison_Unknown5(void);
+void EggPrison_State_Activated(void);
+void EggPrison_State_Setup(void);
+void EggPrison_State_HandleBounds(void);
+void EggPrison_State_Explode(void);
+void EggPrison_State_SetupActClear(void);
+void EggPrison_State_FlyOffScreen(void);
 
 #endif //!OBJ_EGGPRISON_H

@@ -145,7 +145,7 @@ void CollapsingSand_State_CollapseLeft(void)
                     }
 
                     if (flag) {
-                        EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_LightningSpark, x, y);
+                        EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Move, x, y);
                         RSDK.SetSpriteAnimation(CollapsingSand->aniFrames, 0, &debris->animator, true, 0);
                         debris->drawOrder = Zone->drawOrderHigh;
                         debris->timer     = 44;
@@ -203,7 +203,7 @@ void CollapsingSand_State_CollapseLeft(void)
                     }
 
                     if (flag) {
-                        EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_LightningSpark, x, y);
+                        EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Move, x, y);
                         RSDK.SetSpriteAnimation(CollapsingSand->aniFrames, 0, &debris->animator, true, 0);
                         debris->drawOrder = Zone->drawOrderHigh;
                         debris->timer     = 44;
@@ -259,7 +259,7 @@ void CollapsingSand_State_CollapseRight(void)
                     }
 
                     if (flag) {
-                        EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_LightningSpark, x, y);
+                        EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Move, x, y);
                         RSDK.SetSpriteAnimation(CollapsingSand->aniFrames, 0, &debris->animator, true, 0);
                         debris->drawOrder = Zone->drawOrderHigh;
                         debris->timer     = 44;
@@ -316,7 +316,7 @@ void CollapsingSand_State_CollapseRight(void)
                     }
 
                     if (flag) {
-                        EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_LightningSpark, x, y);
+                        EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Move, x, y);
                         RSDK.SetSpriteAnimation(CollapsingSand->aniFrames, 0, &debris->animator, true, 0);
                         debris->drawOrder = Zone->drawOrderHigh;
                         debris->timer     = 44;

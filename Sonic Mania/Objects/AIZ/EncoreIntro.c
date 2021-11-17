@@ -214,7 +214,7 @@ bool32 EncoreIntro_CutsceneState_Unknown1(EntityCutsceneSeq *host)
             fxRuby->field_74 = 32;
             fxRuby->state    = FXRuby_Unknown6;
             PhantomRuby_PlaySFX(RUBYSFX_ATTACK4);
-            Camera_ShakeScreen(4, 0, 4);
+            Camera_ShakeScreen(0, 4, 4);
             Music_TransitionTrack(TRACK_EGGMAN1, 0.01);
             foreach_active(Animals, animal)
             {
@@ -711,7 +711,7 @@ bool32 EncoreIntro_CutsceneState_Unknown14(EntityCutsceneSeq *host)
         if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->objectID) {
             EntityCutsceneSeq *cutsceneSeq = RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq);
             cutsceneSeq->skipType         = SKIPTYPE_CALLBACK;
-            cutsceneSeq->skipCallback      = AIZEncoreTutorial_Unknown5;
+            cutsceneSeq->skipCallback      = AIZEncoreTutorial_State_ReturnToCutscene;
         }
         foreach_active(HUD, hud) { hud->state = HUD_State_GoOffScreen; }
         return true;
@@ -905,7 +905,7 @@ bool32 EncoreIntro_CutsceneState_Unknown19(EntityCutsceneSeq *host)
         fxRuby->drawOrder   = Zone->playerDrawHigh + 1;
         EncoreIntro->fxRuby = (Entity *)fxRuby;
         PhantomRuby_PlaySFX(7);
-        Camera_ShakeScreen(4, 0, 4);
+        Camera_ShakeScreen(0, 4, 4);
         player->drawOrder = Zone->playerDrawHigh + 1;
         if (buddy->objectID == Player->objectID)
             buddy->drawOrder = Zone->playerDrawHigh + 1;
@@ -918,13 +918,13 @@ bool32 EncoreIntro_CutsceneState_Unknown19(EntityCutsceneSeq *host)
                     fxRuby->field_74 = 64;
                     fxRuby->state    = FXRuby_Unknown6;
                     PhantomRuby_PlaySFX(4);
-                    Camera_ShakeScreen(4, 0, 4);
+                    Camera_ShakeScreen(0, 4, 4);
                 }
                 else if (host->timer == host->field_68 + 210) {
                     fxRuby->field_74 = 32;
                     fxRuby->state    = FXRuby_Unknown6;
                     PhantomRuby_PlaySFX(RUBYSFX_ATTACK1);
-                    Camera_ShakeScreen(4, 0, 4);
+                    Camera_ShakeScreen(0, 4, 4);
                     Music_FadeOut(0.025);
                     host->field_68    = host->timer;
                     host->field_6C[0] = 1;

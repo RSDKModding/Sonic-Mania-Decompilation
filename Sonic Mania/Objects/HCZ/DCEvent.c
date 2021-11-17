@@ -324,7 +324,7 @@ void DCEvent_State2_Unknown1(void)
         CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSS), entity->position.x, entity->position.y)->drawOrder = Zone->drawOrderHigh;
         RSDK.PlaySfx(DCEvent->sfxImpact6, false, 255);
         RSDK.PlaySfx(DCEvent->sfxExplosion, false, 255);
-        Camera_ShakeScreen(4, 0, 0);
+        Camera_ShakeScreen(0, 4, 0);
 
         EntityWater *water = CREATE_ENTITY(Water, intToVoid(WATER_BUBBLE), entity->position.x, entity->position.y);
         water->velocity.y  = -0x8800;

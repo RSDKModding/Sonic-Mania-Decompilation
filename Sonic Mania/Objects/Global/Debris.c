@@ -35,6 +35,7 @@ void Debris_StaticUpdate(void) {}
 void Debris_Draw(void)
 {
     RSDK_THIS(Debris);
+
     RSDK.DrawSprite(&entity->animator, NULL, false);
 }
 
@@ -53,7 +54,7 @@ void Debris_State_Fall(void)
 {
     RSDK_THIS(Debris);
 
-    entity->position.x += RSDK_sceneInfo->entity->velocity.x;
+    entity->position.x += entity->velocity.x;
     entity->position.y += entity->velocity.y;
     entity->velocity.y += entity->gravity;
 
@@ -68,7 +69,7 @@ void Debris_State_Fall(void)
     }
 }
 
-void Debris_State_LightningSpark(void)
+void Debris_State_Move(void)
 {
     RSDK_THIS(Debris);
 

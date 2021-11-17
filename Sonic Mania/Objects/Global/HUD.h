@@ -8,7 +8,15 @@ typedef enum {
     HUDOFF_TIME,
     HUDOFF_RINGS,
     HUDOFF_LIFE,
-}HUDOffsetTypes;
+} HUDOffsetTypes;
+
+typedef enum {
+    KEY_A,
+    KEY_B,
+    KEY_X,
+    KEY_Y,
+    KEY_START,
+} HUDOffsetTypes;
 
 // Object Class
 typedef struct {

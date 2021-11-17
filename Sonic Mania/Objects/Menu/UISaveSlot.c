@@ -753,7 +753,7 @@ void UISaveSlot_DeleteDLG_CB(void)
 {
     EntityUIDialog *dialog     = (EntityUIDialog *)UIDialog->activeDialog;
     EntityUISaveSlot *saveSlot = (EntityUISaveSlot *)dialog->entityPtr;
-    dialog->parent->state      = 0;
+    dialog->parent->state      = StateMachine_None;
     UIWaitSpinner_Wait();
 #if RETRO_USE_PLUS
     int32 *saveRAM = SaveGame_GetDataPtr(saveSlot->slotID % 8, saveSlot->encoreMode);
@@ -771,7 +771,7 @@ void UISaveSlot_DeleteSaveCB(int32 status)
     UIWaitSpinner_Wait2();
     if (dialog->state != UIDialog_Unknown13) {
         dialog->parent->selectionDisabled = true;
-        dialog->field_5C                  = 0;
+        dialog->timer                     = 0;
         dialog->state                     = UIDialog_Unknown13;
         dialog->curCallback               = NULL;
     }

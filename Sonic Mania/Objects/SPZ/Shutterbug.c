@@ -295,7 +295,7 @@ void Shutterbug_HandleBodyAnim(void)
         entity->animator.frameID = (animTimer >> 1) + (entity->turnTimer & ~1);
     }
     else {
-        entity->animator.frameID = (animTimer >> 1) + (((28 - --entity->flickerTimer) >> 1) & ~1);
+        entity->animator.frameID = (animTimer >> 1) + (((28 - entity->flickerTimer--) >> 1) & ~1);
     }
 }
 

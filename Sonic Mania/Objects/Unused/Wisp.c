@@ -37,7 +37,7 @@ void Wisp_Create(void *data)
     entity->targetPtr     = NULL;
     entity->alpha         = 0xC0;
     entity->timer         = 16;
-    entity->timer2        = 4;
+    entity->buzzCount        = 4;
     RSDK.SetSpriteAnimation(Wisp->aniFrames, 0, &entity->bodyAnimator, true, 0);
     RSDK.SetSpriteAnimation(Wisp->aniFrames, 1, &entity->wingAnimator, true, 0);
     entity->state = Wisp_State_Setup;
@@ -55,14 +55,15 @@ void Wisp_StageLoad(void)
 
 void Wisp_DebugSpawn(void)
 {
-    RSDK_THIS(Wisp);
+    RSDK_THIS(DebugMode);
+
     CREATE_ENTITY(Wisp, NULL, entity->position.x, entity->position.y);
 }
 
 void Wisp_DebugDraw(void)
 {
     RSDK.SetSpriteAnimation(Wisp->aniFrames, 0, &DebugMode->animator, true, 0);
-    RSDK.DrawSprite(&DebugMode->animator, 0, false);
+    RSDK.DrawSprite(&DebugMode->animator, NULL, false);
 }
 
 void Wisp_HandlePlayerInteractions(void)
@@ -107,10 +108,8 @@ void Wisp_WaitInPlace(void)
 {
     RSDK_THIS(Wisp);
 
-    entity->timer--;
-    if (!entity->timer) {
-        entity->timer2--;
-        if (entity->timer2) {
+    if (!--entity->timer) {
+        if (--entity->buzzCount) {
             entity->velocity.y = -0x10000;
             entity->timer      = 96;
             entity->state      = Wisp_FlyTowardTarget;

@@ -3,6 +3,8 @@
 
 #include "SonicMania.h"
 
+#define UIDialog_OptionCount (3)
+
 typedef enum {
     DIALOG_YES,
     DIALOG_NO,
@@ -23,20 +25,20 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    int32 field_5C;
     int32 timer;
+    int32 closeDelay;
     TextInfo textInfo;
     int32 id;
     Vector2 field_70;
     Vector2 drawPos;
     EntityUIControl *parent;
     Entity* entityPtr;
-    uint8 buttonFrames[3];
-    void (*callbacks[3])(void);
-    bool32 flags[3];
-    EntityUIButton *entPtrs[3];
-    void (*curCallback)(void);
-    int32 field_B4;
+    uint8 buttonFrames[UIDialog_OptionCount];
+    StateMachine(callbacks[UIDialog_OptionCount]);
+    bool32 flags[UIDialog_OptionCount];
+    EntityUIButton *entPtrs[UIDialog_OptionCount];
+    StateMachine(curCallback);
+    bool32 playEventSfx;
     int32 field_B8;
     int32 lineLength[3];
     int32 lineCount;
@@ -69,7 +71,7 @@ void UIDialog_Unknown4(EntityUIDialog *entity, void (*callback)(void));
 void UIDialog_Unknown6(void);
 void UIDialog_Unknown7(void);
 void UIDialog_Close(void);
-bool32 UIDialog_Unknown9(void);
+bool32 UIDialog_HandleAutoClose(void);
 void UIDialog_Unknown10(void);
 void UIDialog_Unknown11(void);
 void UIDialog_Unknown12(void);

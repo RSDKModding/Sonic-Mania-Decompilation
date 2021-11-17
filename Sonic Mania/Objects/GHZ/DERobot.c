@@ -1217,7 +1217,7 @@ void DERobot_Unknown40(void)
         EntityEggPrison *prison = (EntityEggPrison *)entity->parts[2];
         RSDK.ResetEntityPtr(prison, EggPrison->objectID, intToVoid(1));
         prison->position.x = (RSDK_screens->position.x + RSDK_screens->centerX) << 16;
-        prison->field_70   = 1;
+        prison->checkTileCollisions = true;
         prison->position.y = (RSDK_screens->position.y - 48) << 16;
 
         foreach_all(BoundsMarker, marker) { destroyEntity(marker); }

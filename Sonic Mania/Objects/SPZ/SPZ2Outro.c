@@ -72,7 +72,7 @@ bool32 SPZ2Outro_CutsceneState_Unknown1(EntityCutsceneSeq *host)
         }
 
         EntityEggPrison *prison     = SPZ2Outro->prison;
-        prison->activated           = true;
+        prison->notSolid            = true;
         prison->drawOrder           = Zone->playerDrawHigh;
         tvFlyingBattery->position.y = 0x81E0000;
         tvFlyingBattery->active     = ACTIVE_NORMAL;

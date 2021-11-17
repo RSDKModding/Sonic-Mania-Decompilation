@@ -19,7 +19,7 @@ void TornadoPath_Create(void *data)
     RSDK_THIS(TornadoPath);
     if (!RSDK_sceneInfo->inEditor) {
         switch (entity->type) {
-            case TORNADOPATH_0:
+            case TORNADOPATH_START:
                 if (!StarPost->postIDs[0]
                     && PlayerHelpers_CheckPlayerPos(entity->position.x - (entity->size.x >> 1), entity->position.y - (entity->size.y >> 1), 
                                                     entity->position.x + (entity->size.x >> 1), entity->position.y + (entity->size.y >> 1))) {
@@ -34,24 +34,24 @@ void TornadoPath_Create(void *data)
                     }
                     foreach_all(Player, player) { player->camera = NULL; }
                     RSDK_screens->position.y = (entity->position.y >> 16) - RSDK_screens->centerY;
-                    entity->state            = TornadoPath_Unknown3;
+                    entity->state            = TornadoPath_State_SetTornadoSpeed;
                     entity->targetSpeedStore = entity->targetSpeed;
                 }
                 break;
-            case TORNADOPATH_1: entity->active = ACTIVE_NEVER; break;
-            case TORNADOPATH_2:
+            case TORNADOPATH_DUD: entity->active = ACTIVE_NEVER; break;
+            case TORNADOPATH_SETSPEED:
             case TORNADOPATH_10:
                 entity->active = ACTIVE_NEVER;
                 entity->timer  = 1;
-                entity->state  = TornadoPath_Unknown3;
+                entity->state  = TornadoPath_State_SetTornadoSpeed;
                 break;
-            case TORNADOPATH_3:
+            case TORNADOPATH_SETCAMERA:
                 entity->active = ACTIVE_NEVER;
                 entity->state  = TornadoPath_State_ReturnCamera;
                 break;
             case TORNADOPATH_4:
                 entity->active = ACTIVE_NEVER;
-                entity->state  = TornadoPath_Unknown5;
+                entity->state  = TornadoPath_State_DisablePlayerInteractions;
                 break;
             case TORNADOPATH_5:
             case TORNADOPATH_6:
@@ -64,12 +64,12 @@ void TornadoPath_Create(void *data)
                     || !PlayerHelpers_CheckPlayerPos(entity->position.y - (entity->size.y >> 1), entity->position.x - (entity->size.x >> 1),
                                                      entity->position.x + (entity->size.x >> 1), entity->position.y + (entity->size.y >> 1))) {
                     entity->active           = ACTIVE_XBOUNDS;
-                    entity->state            = TornadoPath_Unknown7;
+                    entity->state            = TornadoPath_State_MoveRightJump;
                     entity->targetSpeedStore = entity->targetSpeed;
                 }
                 else {
                     entity->active           = ACTIVE_NEVER;
-                    entity->state            = TornadoPath_Unknown7;
+                    entity->state            = TornadoPath_State_MoveRightJump;
                     entity->targetSpeedStore = entity->targetSpeed;
                 }
                 break;
@@ -98,8 +98,8 @@ void TornadoPath_Create(void *data)
 
 void TornadoPath_StageLoad(void)
 {
-    TornadoPath->field_8.x = 0;
-    TornadoPath->field_8.y = 0;
+    TornadoPath->moveVel.x = 0;
+    TornadoPath->moveVel.y = 0;
     TornadoPath->hitboxID  = 0;
 }
 
@@ -112,7 +112,7 @@ void TornadoPath_SetupHitbox(void)
     entity->hitbox.bottom = entity->size.y >> 17;
 }
 
-void TornadoPath_Unknown2(void)
+void TornadoPath_HandleMoveSpeed(void)
 {
     RSDK_THIS(TornadoPath);
     EntityCamera *camera = TornadoPath->cameraPtr;
@@ -135,12 +135,12 @@ void TornadoPath_Unknown2(void)
             else
                 node->targetSpeedStore = entity->targetSpeed;
         }
-        TornadoPath->field_8.x = (camera->position.x & 0xFFFF0000) - cx;
-        TornadoPath->field_8.y = (camera->position.y & 0xFFFF0000) - cy;
+        TornadoPath->moveVel.x = (camera->position.x & 0xFFFF0000) - cx;
+        TornadoPath->moveVel.y = (camera->position.y & 0xFFFF0000) - cy;
     }
 }
 
-void TornadoPath_Unknown3(void)
+void TornadoPath_State_SetTornadoSpeed(void)
 {
     RSDK_THIS(TornadoPath);
     if (entity->type == TORNADOPATH_10) {
@@ -164,7 +164,7 @@ void TornadoPath_Unknown3(void)
         entity->targetSpeedStore = entity->forceSpeed;
 
     if (entity->timer <= 0) {
-        TornadoPath_Unknown2();
+        TornadoPath_HandleMoveSpeed();
     }
     else {
         entity->timer--;
@@ -178,7 +178,7 @@ void TornadoPath_State_ReturnCamera(void)
     player1->camera               = TornadoPath->cameraPtr;
 }
 
-void TornadoPath_Unknown5(void)
+void TornadoPath_State_DisablePlayerInteractions(void)
 {
     RSDK_THIS(TornadoPath);
     EntityPlayer *player1   = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
@@ -187,8 +187,8 @@ void TornadoPath_Unknown5(void)
 
     foreach_active(Tornado, tornado) { tornado->drawOrder = Zone->playerDrawHigh; }
 
-    TornadoPath_Unknown2();
-    entity->state = TornadoPath_Unknown3;
+    TornadoPath_HandleMoveSpeed();
+    entity->state = TornadoPath_State_SetTornadoSpeed;
 }
 
 void TornadoPath_Unknown6(void)
@@ -233,7 +233,7 @@ void TornadoPath_Unknown6(void)
     entity->active         = ACTIVE_NEVER;
 }
 
-void TornadoPath_Unknown7(void)
+void TornadoPath_State_MoveRightJump(void)
 {
     RSDK_THIS(TornadoPath);
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
@@ -248,7 +248,7 @@ void TornadoPath_Unknown7(void)
     if (!flag) {
         if (player1->position.x > entity->position.x && player1->position.y < entity->position.y) {
             entity->active      = ACTIVE_NORMAL;
-            player1->stateInput = 0;
+            player1->stateInput = StateMachine_None;
             player1->left       = false;
             player1->right      = true;
             if (player1->pushing > 0) {
@@ -256,16 +256,16 @@ void TornadoPath_Unknown7(void)
                     player1->jumpPress = true;
                 player1->jumpHold = true;
             }
-            if (player1->onGround == false) {
-                entity->state          = TornadoPath_Unknown8;
-                TornadoPath->field_8.x = 0;
-                TornadoPath->field_8.y = 0;
+            if (!player1->onGround) {
+                entity->state          = TornadoPath_State_FlyOff;
+                TornadoPath->moveVel.x = 0;
+                TornadoPath->moveVel.y = 0;
             }
         }
     }
 }
 
-void TornadoPath_Unknown8(void)
+void TornadoPath_State_FlyOff(void)
 {
     RSDK_THIS(TornadoPath);
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
@@ -275,8 +275,8 @@ void TornadoPath_Unknown8(void)
         {
             tornado->position.x = player1->position.x - 0x1400000;
             tornado->position.y = player1->position.y + 0x400000;
-            tornado->field_9C   = 0xA0000;
-            tornado->field_70   = 1;
+            tornado->offsetX   = 0xA0000;
+            tornado->showFlame  = true;
             tornado->state      = Tornado_Unknown6;
             tornado->active     = ACTIVE_NORMAL;
         }
@@ -317,10 +317,10 @@ void TornadoPath_Unknown8(void)
         {
             tornado->position.x += velX;
             tornado->position.y += velY;
-            tornado->field_9C = 0x80000;
-            tornado->field_70 = 0;
+            tornado->offsetX = 0x80000;
+            tornado->showFlame = false;
         }
-        entity->state = TornadoPath_Unknown3;
+        entity->state = TornadoPath_State_SetTornadoSpeed;
     }
 }
 
@@ -329,20 +329,20 @@ void TornadoPath_Unknown9(void)
     RSDK_THIS(TornadoPath);
     entity->state            = TornadoPath_Unknown10;
     entity->targetSpeedStore = 0;
-    TornadoPath->field_8.x   = 0;
-    TornadoPath->field_8.y   = 0;
+    TornadoPath->moveVel.x   = 0;
+    TornadoPath->moveVel.y   = 0;
     if (UberCaterkiller->defeated)
-       entity->state = TornadoPath_Unknown3;
+       entity->state = TornadoPath_State_SetTornadoSpeed;
 }
 
 void TornadoPath_Unknown10(void)
 {
     RSDK_THIS(TornadoPath);
     entity->targetSpeedStore = 0;
-    TornadoPath->field_8.x   = 0;
-    TornadoPath->field_8.y   = 0;
+    TornadoPath->moveVel.x   = 0;
+    TornadoPath->moveVel.y   = 0;
     if (UberCaterkiller->defeated)
-       entity->state = TornadoPath_Unknown3;
+       entity->state = TornadoPath_State_SetTornadoSpeed;
 }
 
 void TornadoPath_Unknown11(void)
@@ -350,8 +350,8 @@ void TornadoPath_Unknown11(void)
     RSDK_THIS(TornadoPath);
     EntityPlayer *player1    = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     entity->targetSpeedStore = 0;
-    TornadoPath->field_8.x   = 0;
-    TornadoPath->field_8.y   = 0;
+    TornadoPath->moveVel.x   = 0;
+    TornadoPath->moveVel.y   = 0;
     if (player1->onGround) {
         int32 velocityX = 0;
         int32 velocityY = 0;
@@ -372,8 +372,8 @@ void TornadoPath_Unknown11(void)
         {
             tornado->position.x += velocityX;
             tornado->position.y += velocityY;
-            tornado->field_9C = 0x80000;
-            tornado->field_70 = 0;
+            tornado->offsetX = 0x80000;
+            tornado->showFlame = false;
         }
     }
 }
@@ -392,8 +392,8 @@ void TornadoPath_Unknown12(void)
 
 void TornadoPath_Unknown13(void)
 {
-    TornadoPath->field_8.x = 0;
-    TornadoPath->field_8.y = 0;
+    TornadoPath->moveVel.x = 0;
+    TornadoPath->moveVel.y = 0;
     TornadoPath->flag  = true;
 }
 
@@ -410,10 +410,10 @@ void TornadoPath_EditorLoad(void)
     RSDK.SetSpriteAnimation(TornadoPath->aniFrames, 0, &TornadoPath->animator, true, 7);
 
     RSDK_ACTIVE_VAR(TornadoPath, type);
-    RSDK_ENUM_VAR("Type 0", TORNADOPATH_0);
-    RSDK_ENUM_VAR("Type 1", TORNADOPATH_1);
-    RSDK_ENUM_VAR("Type 2", TORNADOPATH_2);
-    RSDK_ENUM_VAR("Type 3", TORNADOPATH_3);
+    RSDK_ENUM_VAR("Start Node", TORNADOPATH_START);
+    RSDK_ENUM_VAR("Blank Node", TORNADOPATH_DUD);
+    RSDK_ENUM_VAR("Set Tornado Speed", TORNADOPATH_SETSPEED);
+    RSDK_ENUM_VAR("Return Player Camera", TORNADOPATH_SETCAMERA);
     RSDK_ENUM_VAR("Type 4", TORNADOPATH_4);
     RSDK_ENUM_VAR("Type 5", TORNADOPATH_5);
     RSDK_ENUM_VAR("Type 6", TORNADOPATH_6);

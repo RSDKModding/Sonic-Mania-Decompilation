@@ -120,7 +120,7 @@ EntityCamera *Camera_SetTargetEntity(int32 screen, void *t)
     }
     return NULL;
 }
-void Camera_ShakeScreen(int32 shakeX, int32 screen, int32 shakeY)
+void Camera_ShakeScreen(int32 screen, int32 shakeX, int32 shakeY)
 {
     foreach_all(Camera, camera)
     {

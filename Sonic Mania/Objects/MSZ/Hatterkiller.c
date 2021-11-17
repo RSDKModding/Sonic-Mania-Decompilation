@@ -9,13 +9,13 @@ void Hatterkiller_Update(void)
     for (int s = 0; s < Hatterkiller_SegmentCount; ++s) {
         if (entity->delays[s] <= 0) {
             entity->velocities[s].y += 0x3800;
-            entity->positions[s].x += entity->velocities[s].x + TornadoPath->field_8.x;
-            entity->positions[s].y += entity->velocities[s].y + TornadoPath->field_8.y;
+            entity->positions[s].x += entity->velocities[s].x + TornadoPath->moveVel.x;
+            entity->positions[s].y += entity->velocities[s].y + TornadoPath->moveVel.y;
         }
         else {
             entity->delays[s]--;
-            entity->positions[s].x += TornadoPath->field_8.x;
-            entity->positions[s].y += TornadoPath->field_8.y;
+            entity->positions[s].x += TornadoPath->moveVel.x;
+            entity->positions[s].y += TornadoPath->moveVel.y;
         }
     }
 

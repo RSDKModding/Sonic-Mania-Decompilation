@@ -944,7 +944,7 @@ void LinkGameLogicDLL(GameInfo *info)
         ADD_PUBLIC_FUNC(Dust_State_EggLoco);
 
         ADD_PUBLIC_FUNC(Debris_State_Fall);
-        ADD_PUBLIC_FUNC(Debris_State_LightningSpark);
+        ADD_PUBLIC_FUNC(Debris_State_Move);
         ADD_PUBLIC_FUNC(Debris_State_FallAndFlicker);
         ADD_PUBLIC_FUNC(Debris_FallFlickerAnimSetup);
         ADD_PUBLIC_FUNC(Debris_FallFlickerSetup);

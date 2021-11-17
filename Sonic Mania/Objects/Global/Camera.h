@@ -55,7 +55,7 @@ void Camera_Serialize(void);
 // Extra Entity Functions
 void Camera_SetCameraBounds(EntityCamera *entity);
 EntityCamera *Camera_SetTargetEntity(int32 screen, void *t);
-void Camera_ShakeScreen(int32 shakeX, int32 screen, int32 shakeY);
+void Camera_ShakeScreen(int32 screen, int32 shakeX, int32 shakeY);
 void Camera_HandleHBounds(void);
 void Camera_HandleVBounds(void);
 void Camera_SetupLerp(int32 type, int32 screen, int32 x, int32 y, int32 speed);
