@@ -57,7 +57,7 @@ void BladePole_DrawSprites(void)
     drawPos.x = entity->position.x;
     drawPos.y = entity->position.y - 0x180000;
     RSDK.DrawSprite(&entity->animator2, &drawPos, false);
-    if (RSDK_sceneInfo->inEditor) {
+    if (SceneInfo->inEditor) {
         drawPos.y += 0x180000;
     }
     else {

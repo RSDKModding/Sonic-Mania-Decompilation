@@ -30,7 +30,7 @@ void DiveEggman_Create(void *data)
     }
     else {
         entity->drawFX = FX_FLIP;
-        if (!RSDK_sceneInfo->inEditor) {
+        if (!SceneInfo->inEditor) {
             entity->visible = true;
             if (data) {
                 if (voidToInt(data) == 1) {
@@ -48,7 +48,7 @@ void DiveEggman_Create(void *data)
                 entity->startY          = entity->position.y;
                 entity->updateRange.y   = 0x800000;
                 entity->health          = 4;
-                DiveEggman->screwMobile = (Entity *)RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot - 1, ScrewMobile);
+                DiveEggman->screwMobile = (Entity *)RSDK_GET_ENTITY(SceneInfo->entitySlot - 1, ScrewMobile);
                 RSDK.SetSpriteAnimation(DiveEggman->diveFrames, 0, &entity->animator, true, 0);
                 entity->state = DiveEggman_State_Unknown1;
             }
@@ -230,7 +230,7 @@ void DiveEggman_State_Unknown4(void)
                 entity->timer               = 120;
                 entity->drawOrder           = Zone->hudDrawOrder - 1;
                 entity->state               = DiveEggman_State_Destroyed;
-                RSDK_sceneInfo->timeEnabled = false;
+                SceneInfo->timeEnabled = false;
                 Player_GiveScore(RSDK_GET_ENTITY(SLOT_PLAYER1, Player), 1000);
             }
             screwMobile->whirlPoolTimer = 60;

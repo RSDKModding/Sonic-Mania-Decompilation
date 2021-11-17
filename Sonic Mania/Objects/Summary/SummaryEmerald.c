@@ -23,7 +23,7 @@ void SummaryEmerald_Create(void *data)
     entity->visible       = true;
     entity->updateRange.x = 0x800000;
     entity->updateRange.y = 0x800000;
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         if ((1 << entity->emeraldID) & SaveGame->saveRAM->chaosEmeralds)
             RSDK.SetSpriteAnimation(SummaryEmerald->aniFrames, 0, &entity->animator, true, entity->emeraldID % 7);
         else

@@ -47,7 +47,7 @@ void ItemBox_Draw(void)
     RSDK_THIS(ItemBox);
     if (!entity->hidden) {
         if (entity->isContents) {
-            if (RSDK_sceneInfo->currentDrawGroup == Zone->playerDrawHigh) {
+            if (SceneInfo->currentDrawGroup == Zone->playerDrawHigh) {
                 entity->drawFX = FX_NONE;
                 RSDK.DrawSprite(&entity->animatorContents, &entity->contentsPos, false);
             }
@@ -55,7 +55,7 @@ void ItemBox_Draw(void)
                 entity->drawFX    = FX_FLIP;
                 entity->inkEffect = INK_NONE;
                 RSDK.DrawSprite(&entity->animatorBox, NULL, false);
-                RSDK.AddDrawListRef(Zone->playerDrawHigh, RSDK_sceneInfo->entitySlot);
+                RSDK.AddDrawListRef(Zone->playerDrawHigh, SceneInfo->entitySlot);
             }
         }
         else {
@@ -126,7 +126,7 @@ void ItemBox_Create(void *data)
     }
 
     entity->drawFX = FX_FLIP;
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->direction *= FLIP_Y;
         entity->active        = ACTIVE_BOUNDS;
         entity->updateRange.x = 0x400000;
@@ -672,7 +672,7 @@ void ItemBox_GivePowerup(void)
                                 dust->visible         = 0;
                                 dust->active          = ACTIVE_NEVER;
                                 dust->isPermanent     = true;
-                                dust->position.y      = (RSDK_screens->position.y - 128) << 16;
+                                dust->position.y      = (ScreenInfo->position.y - 128) << 16;
                                 player2->playerID     = 1;
                                 EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
                                 if (player1->state == Player_State_Die || player1->state == Player_State_Drown) {
@@ -696,7 +696,7 @@ void ItemBox_GivePowerup(void)
                                     }
                                     else {
                                         player2->state         = Player_State_JumpIn;
-                                        player2->abilityValues[0] = ((RSDK_screens->position.y + RSDK_screens->height + 16) << 16) - player->position.y;
+                                        player2->abilityValues[0] = ((ScreenInfo->position.y + ScreenInfo->height + 16) << 16) - player->position.y;
                                         player2->drawFX |= FX_SCALE;
                                         player2->scale.x = 1024;
                                         player2->scale.y = 1024;

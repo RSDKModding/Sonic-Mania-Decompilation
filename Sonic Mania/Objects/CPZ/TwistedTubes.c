@@ -58,7 +58,7 @@ void TwistedTubes_Create(void *data)
     RSDK_THIS(TwistedTubes);
 
     entity->drawFX = FX_FLIP;
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         if (data) {
             entity->active    = ACTIVE_NORMAL;
             entity->playerPtr = (EntityPlayer *)data;
@@ -277,7 +277,7 @@ void TwistedTubes_Unknown8(void)
 {
     RSDK_THIS(TwistedTubes);
     EntityPlayer *player = entity->playerPtr;
-    player->position.y   = RSDK_sceneInfo->entity->position.y;
+    player->position.y   = entity->position.y;
 
     if (player->velocity.x >= 0x80000)
         destroyEntity(entity);

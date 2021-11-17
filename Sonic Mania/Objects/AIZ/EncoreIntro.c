@@ -47,7 +47,7 @@ void EncoreIntro_Draw(void) {}
 void EncoreIntro_Create(void *data)
 {
     RSDK_THIS(EncoreIntro);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         INIT_ENTITY(entity);
         CutsceneRules_SetupEntity(entity, &entity->size, &entity->hitbox);
         EncoreIntro_SetupEntities();
@@ -165,7 +165,7 @@ void EncoreIntro_SetupCutscenePart2(void)
     Zone->screenBoundsR1[0]     = size.x;
     Zone->screenBoundsR2[0]     = size.x << 16;
     Zone->playerBoundActiveR[0] = true;
-    Zone->screenBoundsL1[0]     = (entity->position.x >> 16) - RSDK_screens->centerX;
+    Zone->screenBoundsL1[0]     = (entity->position.x >> 16) - ScreenInfo->centerX;
     Zone->screenBoundsL2[0]     = Zone->screenBoundsL1[0] << 16;
     Zone->playerBoundActiveL[0] = true;
 
@@ -185,7 +185,7 @@ bool32 EncoreIntro_CutsceneState_Unknown1(EntityCutsceneSeq *host)
 
     EntityPhantomRuby *ruby = (EntityPhantomRuby *)EncoreIntro->phantomRuby;
     EntityFXRuby *fxRuby    = (EntityFXRuby *)EncoreIntro->fxRuby;
-    if (RSDK_sceneInfo->minutes || RSDK_sceneInfo->seconds) {
+    if (SceneInfo->minutes || SceneInfo->seconds) {
         host->stateID   = 21;
         host->skipType = SKIPTYPE_DISABLED;
     }
@@ -333,7 +333,7 @@ bool32 EncoreIntro_CutsceneState_Unknown7(EntityCutsceneSeq *host)
     EntityPhantomRuby *ruby = (EntityPhantomRuby *)EncoreIntro->phantomRuby;
 
     if (player->position.x <= entity->position.x + 0x2000000) {
-        Zone->screenBoundsL1[0]     = RSDK_screens->position.x;
+        Zone->screenBoundsL1[0]     = ScreenInfo->position.x;
         Zone->screenBoundsL2[0]     = Zone->screenBoundsL1[0] << 16;
         Zone->playerBoundActiveL[0] = true;
     }
@@ -662,7 +662,7 @@ bool32 EncoreIntro_CutsceneState_Unknown13(EntityCutsceneSeq *host)
         mystic->position.y -= 0x800000;
         mystic->position.x = CutsceneHBH_GetEntity(HBH_KINGDAMAGED)->position.x - 0x580000;
         ruby->position.y -= 0x800000;
-        RSDK_sceneInfo->timeEnabled = true;
+        SceneInfo->timeEnabled = true;
 
         player->state      = Player_State_Ground;
         player->stateInput = Player_ProcessP1Input;
@@ -731,9 +731,9 @@ bool32 EncoreIntro_CutsceneState_Unknown15(EntityCutsceneSeq *host)
         if (entity->velocity.x == 0x60000) {
             player->groundVel  = 0x30000;
             player->velocity.x = 0x30000;
-            player->position.x = (RSDK_screens->position.x - 32) << 16;
+            player->position.x = (ScreenInfo->position.x - 32) << 16;
             buddy->groundVel   = 0x30000;
-            buddy->position.x  = (RSDK_screens->position.x - 96) << 16;
+            buddy->position.x  = (ScreenInfo->position.x - 96) << 16;
             buddy->velocity.x  = 0x30000;
             buddy->drawFX &= ~FX_SCALE;
             buddy->position.y     = player->position.y;
@@ -1046,7 +1046,7 @@ bool32 EncoreIntro_CutsceneState_Unknown22(EntityCutsceneSeq *host)
             player->position.y += 0x80000;
         }
 
-        if (!RSDK_sceneInfo->minutes && !RSDK_sceneInfo->seconds) {
+        if (!SceneInfo->minutes && !SceneInfo->seconds) {
             EntityTitleCard *titleCard = (EntityTitleCard *)CutsceneSeq_GetEntity(TitleCard->objectID);
             titleCard->active          = ACTIVE_NORMAL;
             titleCard->state           = TitleCard_Unknown6;
@@ -1197,16 +1197,16 @@ void EncoreIntro_PlayerState_HandleAir(void)
 void EncoreIntro_PlayerState_InputNone(void)
 {
     RSDK_THIS(Player);
-    RSDK_controller[1].keyX.down       = false;
-    RSDK_controller[1].keyX.press      = false;
-    RSDK_controller[1].keyY.down       = false;
-    RSDK_controller[1].keyY.press      = false;
-    RSDK_controller[1].keyZ.down       = false;
-    RSDK_controller[1].keyZ.press      = false;
-    RSDK_controller[1].keyStart.down   = false;
-    RSDK_controller[1].keyStart.press  = false;
-    RSDK_controller[1].keySelect.down  = false;
-    RSDK_controller[1].keySelect.press = false;
+    ControllerInfo[1].keyX.down       = false;
+    ControllerInfo[1].keyX.press      = false;
+    ControllerInfo[1].keyY.down       = false;
+    ControllerInfo[1].keyY.press      = false;
+    ControllerInfo[1].keyZ.down       = false;
+    ControllerInfo[1].keyZ.press      = false;
+    ControllerInfo[1].keyStart.down   = false;
+    ControllerInfo[1].keyStart.press  = false;
+    ControllerInfo[1].keySelect.down  = false;
+    ControllerInfo[1].keySelect.press = false;
     Player_ProcessP1Input();
     entity->up        = false;
     entity->down      = false;

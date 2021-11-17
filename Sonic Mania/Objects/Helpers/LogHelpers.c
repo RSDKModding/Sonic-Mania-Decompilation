@@ -16,7 +16,7 @@ void LogHelpers_StageLoad(void) {}
 
 void LogHelpers_Print(const char *message, ...)
 {
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         char buffer[0x100];
 
         // make the full string

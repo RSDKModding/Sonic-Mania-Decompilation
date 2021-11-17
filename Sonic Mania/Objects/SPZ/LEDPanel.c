@@ -22,7 +22,7 @@ void LEDPanel_Draw(void)
     RSDK.DrawRect(entity->position.x - (entity->size.x >> 1) + 0x80000, entity->position.y - (entity->size.y >> 1), entity->size.x - 0x100000,
                   entity->size.y, LEDPanel->storedColour, 512, INK_NONE, false);
 
-    ScreenInfo *screen = &RSDK_screens[RSDK_sceneInfo->currentScreenID];
+    RSDKScreenInfo *screen = &ScreenInfo[SceneInfo->currentScreenID];
 
     int clipX1 = screen->clipBound_X1;
     int clipX2 = screen->clipBound_X2;
@@ -34,7 +34,7 @@ void LEDPanel_Draw(void)
     int clipBound_Y1 = (entity->position.y >> 16) + entity->top - screen->position.y;
     int clipBound_Y2 = (entity->position.y >> 16) + entity->bottom - screen->position.y;
 
-    RSDK.SetClipBounds(RSDK_sceneInfo->currentScreenID, clipBound_X1, clipBound_Y1, clipBound_X2, clipBound_Y2);
+    RSDK.SetClipBounds(SceneInfo->currentScreenID, clipBound_X1, clipBound_Y1, clipBound_X2, clipBound_Y2);
 
     for (int r = 0; r < LEDPanel_RowCount; ++r) {
         RSDK.DrawText(&entity->animatorText, &entity->textPos[r], &entity->activeText[r], 0, entity->activeText[r].textLength, ALIGN_RIGHT, 0, 0,
@@ -45,7 +45,7 @@ void LEDPanel_Draw(void)
     screen->clipBound_X2 = clipX2;
     screen->clipBound_Y1 = clipY1;
     screen->clipBound_Y2 = clipY2;
-    RSDK.SetClipBounds(RSDK_sceneInfo->currentScreenID, clipX1, clipY1, clipX2, clipY2);
+    RSDK.SetClipBounds(SceneInfo->currentScreenID, clipX1, clipY1, clipX2, clipY2);
 }
 
 void LEDPanel_Create(void *data)
@@ -57,7 +57,7 @@ void LEDPanel_Create(void *data)
     entity->drawOrder   = Zone->drawOrderLow;
     entity->updateRange = entity->size;
     RSDK.SetSpriteAnimation(LEDPanel->aniFrames, 0, &entity->animatorText, true, 0);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         for (int i = 0; i < LEDPanel_TextCount; ++i) {
             RSDK.SetSpriteString(LEDPanel->aniFrames, 0, &entity->text[i]);
             entity->textPtrs[i] = &entity->text[i];

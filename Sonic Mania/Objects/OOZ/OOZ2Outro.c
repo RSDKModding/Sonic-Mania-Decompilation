@@ -42,7 +42,7 @@ void OOZ2Outro_Draw(void) {}
 void OOZ2Outro_Create(void *data)
 {
     RSDK_THIS(OOZ2Outro);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         if (globals->gameMode < MODE_TIMEATTACK) {
             entity->active  = ACTIVE_BOUNDS;
             entity->visible = false;
@@ -100,7 +100,7 @@ void OOZ2Outro_Unknown2(void)
 
 void OOZ2Outro_CheckSkip(void)
 {
-    if (RSDK_controller->keyStart.press && !(RSDK_sceneInfo->state & 1)) {
+    if (ControllerInfo->keyStart.press && !(SceneInfo->state & 1)) {
         globals->suppressTitlecard = false;
         globals->suppressAutoMusic = false;
         globals->enableIntro       = false;

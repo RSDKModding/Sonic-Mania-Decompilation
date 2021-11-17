@@ -27,13 +27,13 @@ void PBL_Crane_Draw(void)
 void PBL_Crane_Create(void *data)
 {
     RSDK_THIS(PBL_Crane);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->drawOrder = 9;
         entity->active    = ACTIVE_NORMAL;
         entity->type      = voidToInt(data);
         switch (entity->type) {
             case 0:
-                entity->position.x = RSDK_screens->centerX << 16;
+                entity->position.x = ScreenInfo->centerX << 16;
                 entity->position.y = 0;
                 entity->alpha      = 0xFF;
                 entity->scale.x    = 0x600;
@@ -174,18 +174,18 @@ void PBL_Crane_HandlePrizes(void)
 void PBL_Crane_StateDraw_Unknown1(void)
 {
     RSDK_THIS(PBL_Crane);
-    entity->position.x = RSDK_screens->centerX << 16;
-    if (RSDK_sceneInfo->currentDrawGroup == entity->drawOrder) {
+    entity->position.x = ScreenInfo->centerX << 16;
+    if (SceneInfo->currentDrawGroup == entity->drawOrder) {
         entity->animator1.frameID = 1;
         entity->inkEffect         = INK_NONE;
         RSDK.DrawSprite(&entity->animator1, NULL, true);
         RSDK.DrawSprite(&entity->animator5, NULL, true);
 
-        RSDK.AddDrawListRef(11, RSDK_sceneInfo->entitySlot);
-        RSDK.SetClipBounds(0, RSDK_screens->centerX - 96, 0, RSDK_screens->centerX + 96, (entity->position.y >> 16) + 64);
+        RSDK.AddDrawListRef(11, SceneInfo->entitySlot);
+        RSDK.SetClipBounds(0, ScreenInfo->centerX - 96, 0, ScreenInfo->centerX + 96, (entity->position.y >> 16) + 64);
     }
     else {
-        RSDK.SetClipBounds(0, 0, 0, RSDK_screens->width, RSDK_screens->height);
+        RSDK.SetClipBounds(0, 0, 0, ScreenInfo->width, ScreenInfo->height);
         entity->animator1.frameID = 0;
         RSDK.DrawSprite(&entity->animator1, NULL, true);
 
@@ -318,7 +318,7 @@ void PBL_Crane_State_Unknown2(void)
 {
     RSDK_THIS(PBL_Crane);
 
-    entity->velocity.x = (-((RSDK_controller[1].keyLeft.down || RSDK_stickL[1].keyLeft.down) != 0) & 0xFFFF0000) + 0x8000;
+    entity->velocity.x = (-((ControllerInfo[1].keyLeft.down || AnalogStickInfoL[1].keyLeft.down) != 0) & 0xFFFF0000) + 0x8000;
     if (++entity->timer == 30) {
         entity->timer = 0;
         entity->state = PBL_Crane_State_Unknown3;
@@ -331,17 +331,17 @@ void PBL_Crane_State_Unknown3(void)
     RSDK_THIS(PBL_Crane);
     EntityPBL_Crane *parent = (EntityPBL_Crane *)entity->parent;
 
-    if (RSDK_stickL[1].keyLeft.press || RSDK_controller[1].keyLeft.press) {
+    if (AnalogStickInfoL[1].keyLeft.press || ControllerInfo[1].keyLeft.press) {
         ++entity->timer;
         entity->velocity.x = -0x18000;
         RSDK.PlaySfx(PBL_Crane->sfxCraneMove, false, 255);
     }
-    else if (RSDK_stickL[1].keyRight.press || RSDK_controller[1].keyRight.press) {
+    else if (AnalogStickInfoL[1].keyRight.press || ControllerInfo[1].keyRight.press) {
         ++entity->timer;
         entity->velocity.x = 0x18000;
         RSDK.PlaySfx(PBL_Crane->sfxCraneMove, false, 255);
     }
-    else if (RSDK_stickL[1].keyDown.press || RSDK_controller[1].keyDown.press) {
+    else if (AnalogStickInfoL[1].keyDown.press || ControllerInfo[1].keyDown.press) {
         entity->timer = 4;
     }
 

@@ -25,10 +25,10 @@ void RingField_Update(void)
                 ring->moveType            = RING_MOVE_NONE;
                 RSDK.SetSpriteAnimation(RingField->aniFrames, 0, &ring->animator, true, 0);
 
-                int32 sx = (RSDK_screens->centerX + RSDK_screens->position.x) << 16;
-                int32 sy = (RSDK_screens->position.y + RSDK_screens->centerY) << 16;
-                int32 x  = (RSDK.Rand(-RSDK_screens->centerX, RSDK_screens->centerX) << 15) + sx;
-                int32 y  = RSDK.Rand(-RSDK_screens->centerY, RSDK_screens->centerY);
+                int32 sx = (ScreenInfo->centerX + ScreenInfo->position.x) << 16;
+                int32 sy = (ScreenInfo->position.y + ScreenInfo->centerY) << 16;
+                int32 x  = (RSDK.Rand(-ScreenInfo->centerX, ScreenInfo->centerX) << 15) + sx;
+                int32 y  = RSDK.Rand(-ScreenInfo->centerY, ScreenInfo->centerY);
 
                 int32 angle = RSDK.ATan2(x - pos.x, (y << 15) + sy - pos.y);
                 ring->velocity.x = RSDK.Cos256(angle) << 9;
@@ -100,30 +100,30 @@ void RingField_GetPos(Vector2 *pos)
     switch (rand) {
         case 0:
         case 1:
-            y = RSDK.Rand(-RSDK_screens->height, RSDK_screens->height) << 15;
+            y = RSDK.Rand(-ScreenInfo->height, ScreenInfo->height) << 15;
             switch (rand) {
-                case 0: x += -0x100000 - (RSDK_screens->centerX << 16); break;
-                case 1: x += (RSDK_screens->centerX + 16) << 16; break;
-                case 2: y += -0x100000 - (RSDK_screens->centerY << 16); break;
-                case 3: y += (RSDK_screens->centerY + 16) << 16; break;
+                case 0: x += -0x100000 - (ScreenInfo->centerX << 16); break;
+                case 1: x += (ScreenInfo->centerX + 16) << 16; break;
+                case 2: y += -0x100000 - (ScreenInfo->centerY << 16); break;
+                case 3: y += (ScreenInfo->centerY + 16) << 16; break;
                 default: break;
             }
             break;
         case 2:
         case 3:
-            x = RSDK.Rand(-RSDK_screens->width, RSDK_screens->width) << 15;
+            x = RSDK.Rand(-ScreenInfo->width, ScreenInfo->width) << 15;
             switch (rand) {
-                case 0: x += -0x100000 - (RSDK_screens->centerX << 16); break;
-                case 1: x += (RSDK_screens->centerX + 16) << 16; break;
-                case 2: y += -0x100000 - (RSDK_screens->centerY << 16); break;
-                case 3: y += (RSDK_screens->centerY + 16) << 16; break;
+                case 0: x += -0x100000 - (ScreenInfo->centerX << 16); break;
+                case 1: x += (ScreenInfo->centerX + 16) << 16; break;
+                case 2: y += -0x100000 - (ScreenInfo->centerY << 16); break;
+                case 3: y += (ScreenInfo->centerY + 16) << 16; break;
                 default: break;
             }
             break;
         default: break;
     }
-    pos->x = x + ((RSDK_screens->position.x + RSDK_screens->centerX) << 16);
-    pos->y = y + ((RSDK_screens->position.y + RSDK_screens->centerY) << 16);
+    pos->x = x + ((ScreenInfo->position.x + ScreenInfo->centerX) << 16);
+    pos->y = y + ((ScreenInfo->position.y + ScreenInfo->centerY) << 16);
 }
 
 #if RETRO_INCLUDE_EDITOR

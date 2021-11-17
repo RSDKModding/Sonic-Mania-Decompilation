@@ -138,7 +138,7 @@ void TurretSwitch_State_Turret(void)
 void TurretSwitch_State_Projectile(void)
 {
     RSDK_THIS(TurretSwitch);
-    if (!RSDK.CheckOnScreen(RSDK_sceneInfo->entity, NULL)) {
+    if (!RSDK.CheckOnScreen(SceneInfo->entity, NULL)) {
         destroyEntity(entity);
     }
     else {

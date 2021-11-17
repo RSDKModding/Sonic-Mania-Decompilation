@@ -27,7 +27,7 @@ void MMZWheel_Update(void)
 
     entity->offset.x += entity->position.x;
     entity->offset.y += entity->position.y;
-    int32 id = RSDK_sceneInfo->entitySlot;
+    int32 id = SceneInfo->entitySlot;
     for (int32 i = 0; i < entity->childCount; ++i) {
         Entity *child = RSDK.GetEntityByID(++id);
         child->position.x += entity->offset.x;
@@ -51,7 +51,7 @@ void MMZWheel_Create(void *data)
     entity->active    = ACTIVE_BOUNDS;
     entity->visible   = 1;
     entity->drawOrder = Zone->drawOrderLow;
-    if (RSDK_sceneInfo->inEditor && !entity->speed)
+    if (SceneInfo->inEditor && !entity->speed)
         entity->speed = 1;
     entity->updateRange.y = 0x800000;
     entity->updateRange.x = (entity->amplitude + 0x80) << 16;

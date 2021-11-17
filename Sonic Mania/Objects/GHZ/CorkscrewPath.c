@@ -71,7 +71,7 @@ void CorkscrewPath_Draw(void) {}
 void CorkscrewPath_Create(void *data)
 {
     RSDK_THIS(CorkscrewPath);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->amplitude <<= 6;
         entity->periodShifted = abs(entity->period) >> 1;
         entity->period        = abs(entity->period);

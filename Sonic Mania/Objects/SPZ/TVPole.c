@@ -41,7 +41,7 @@ void TVPole_Create(void *data)
     entity->drawOrder = Zone->drawOrderLow;
     entity->visible   = true;
     entity->drawFX    = FX_FLIP;
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->updateRange.x = 0x1000000;
         entity->updateRange.y = 0x1000000;
 

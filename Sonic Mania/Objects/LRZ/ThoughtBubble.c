@@ -43,7 +43,7 @@ void ThoughtBubble_Draw(void)
 void ThoughtBubble_Create(void *data)
 {
     RSDK_THIS(ThoughtBubble);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->visible       = true;
         entity->drawOrder     = Zone->drawOrderHigh;
         entity->active        = ACTIVE_BOUNDS;

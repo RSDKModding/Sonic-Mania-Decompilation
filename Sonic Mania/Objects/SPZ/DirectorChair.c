@@ -56,7 +56,7 @@ void DirectorChair_Create(void *data)
 
     RSDK.SetSpriteAnimation(DirectorChair->aniFrames, 0, &entity->animator2, true, 0);
     RSDK.SetSpriteAnimation(DirectorChair->aniFrames, 1, &entity->animator, true, 0);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->centerPos     = entity->position;
         entity->drawPos.x     = entity->position.x;
         entity->active        = ACTIVE_BOUNDS;

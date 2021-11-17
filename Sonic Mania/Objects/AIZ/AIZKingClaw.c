@@ -36,7 +36,7 @@ void AIZKingClaw_StaticUpdate(void)
 void AIZKingClaw_Draw(void)
 {
     RSDK_THIS(AIZKingClaw);
-    if (RSDK_sceneInfo->currentDrawGroup == Zone->drawOrderLow) {
+    if (SceneInfo->currentDrawGroup == Zone->drawOrderLow) {
         RSDK.DrawSprite(&entity->animator3, &entity->clawPos, false);
     }
     else {
@@ -51,7 +51,7 @@ void AIZKingClaw_Draw(void)
 void AIZKingClaw_Create(void *data)
 {
     RSDK_THIS(AIZKingClaw);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->visible       = true;
         entity->drawFX        = FX_ROTATE;
         entity->drawOrder     = Zone->drawOrderLow;

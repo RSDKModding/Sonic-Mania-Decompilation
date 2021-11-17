@@ -138,7 +138,7 @@ bool32 PSZ2Intro_CutsceneState_Unknown4(EntityCutsceneSeq *host)
     RSDK_GET_PLAYER(player1, player2, camera);
     unused(camera);
 
-    if (RSDK_screens->position.x < Zone->screenBoundsL1[0]) {
+    if (ScreenInfo->position.x < Zone->screenBoundsL1[0]) {
         if (player1->groundVel < 0x20000)
             player1->groundVel = 0x20000;
         if (player2->objectID == Player->objectID) {

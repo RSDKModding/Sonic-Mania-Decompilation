@@ -52,7 +52,7 @@ void PuyoAttack_Draw(void)
 void PuyoAttack_Create(void *data)
 {
     RSDK_THIS(PuyoAttack);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->delay     = 16;
         entity->radius    = 512;
         entity->drawOrder = Zone->hudDrawOrder;

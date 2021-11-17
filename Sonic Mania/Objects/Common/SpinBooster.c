@@ -64,7 +64,7 @@ void SpinBooster_Create(void *data)
     entity->drawFX |= FX_FLIP;
     entity->animator.frameID = 4;
     entity->activePlayers    = 0;
-    if (RSDK_sceneInfo->inEditor) {
+    if (SceneInfo->inEditor) {
         if (!entity->boostPower)
             entity->boostPower = 15;
     }
@@ -337,7 +337,7 @@ void SpinBooster_DrawSprites(void)
         drawPos.y += RSDK.Cos256(entity->angle) << 12;
     }
 
-    if (RSDK_sceneInfo->inEditor) {
+    if (SceneInfo->inEditor) {
         uint8 negAngle = -entity->angle;
         int32 power     = entity->boostPower;
         int32 x        = entity->position.x;

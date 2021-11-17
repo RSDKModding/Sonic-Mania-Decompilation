@@ -37,7 +37,7 @@ void FlingRamp_Draw(void) {}
 void FlingRamp_Create(void *data)
 {
     RSDK_THIS(FlingRamp);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->active  = ACTIVE_BOUNDS;
         entity->visible = false;
     }

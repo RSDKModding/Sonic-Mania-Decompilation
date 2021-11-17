@@ -39,7 +39,7 @@ void TitleBG_Draw(void)
 {
     RSDK_THIS(TitleBG);
 
-    RSDK.SetClipBounds(0, 0, 0, RSDK_screens->width, RSDK_screens->height);
+    RSDK.SetClipBounds(0, 0, 0, ScreenInfo->width, ScreenInfo->height);
     RSDK.DrawSprite(&entity->animator, NULL, false);
 }
 
@@ -47,7 +47,7 @@ void TitleBG_Create(void *data)
 {
     RSDK_THIS(TitleBG);
 
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         RSDK.SetSpriteAnimation(TitleBG->aniFrames, entity->type, &entity->animator, true, 0);
         entity->active    = ACTIVE_NORMAL;
         entity->visible   = false;
@@ -99,7 +99,7 @@ void TitleBG_SetupFX(void)
 
 void TitleBG_ScanlineCallback_Clouds(ScanlineInfo *scanlines)
 {
-    RSDK.SetClipBounds(0, 0, 0, RSDK_screens->width, SCREEN_YSIZE / 2);
+    RSDK.SetClipBounds(0, 0, 0, ScreenInfo->width, SCREEN_YSIZE / 2);
     int32 sine   = RSDK.Sin256(0);
     int32 cosine = RSDK.Cos256(0);
 
@@ -110,8 +110,8 @@ void TitleBG_ScanlineCallback_Clouds(ScanlineInfo *scanlines)
         int32 cVal              = cosine * val;
         scanlines->deform.x   = (-cVal >> 7);
         scanlines->deform.y   = sVal >> 7;
-        scanlines->position.x = sVal - RSDK_screens->centerX * (-cVal >> 7);
-        scanlines->position.y = TitleBG->timer + 2 * cVal - RSDK_screens->centerX * (sVal >> 7);
+        scanlines->position.x = sVal - ScreenInfo->centerX * (-cVal >> 7);
+        scanlines->position.y = TitleBG->timer + 2 * cVal - ScreenInfo->centerX * (sVal >> 7);
 
         off -= 0x4000;
         scanlines++;
@@ -120,7 +120,7 @@ void TitleBG_ScanlineCallback_Clouds(ScanlineInfo *scanlines)
 
 void TitleBG_ScanlineCallback_Island(ScanlineInfo *scanlines)
 {
-    RSDK.SetClipBounds(0, 0, 168, RSDK_screens->width, SCREEN_YSIZE);
+    RSDK.SetClipBounds(0, 0, 168, ScreenInfo->width, SCREEN_YSIZE);
     int32 sine            = RSDK.Sin1024(-TitleBG->angle) >> 2;
     int32 cosine          = RSDK.Cos1024(-TitleBG->angle) >> 2;
     ScanlineInfo *scnln = &scanlines[168];
@@ -131,8 +131,8 @@ void TitleBG_ScanlineCallback_Island(ScanlineInfo *scanlines)
         int32 cVal          = cosine * val;
         scnln->deform.y   = sVal >> 7;
         scnln->deform.x   = -cVal >> 7;
-        scnln->position.y = cVal - RSDK_screens->centerX * scnln->deform.y - 0xA000 * cosine + 0x2000000;
-        scnln->position.x = sVal - RSDK_screens->centerX * scnln->deform.x - 0xA000 * sine + 0x2000000;
+        scnln->position.y = cVal - ScreenInfo->centerX * scnln->deform.y - 0xA000 * cosine + 0x2000000;
+        scnln->position.x = sVal - ScreenInfo->centerX * scnln->deform.x - 0xA000 * sine + 0x2000000;
         ++scnln;
     }
 }

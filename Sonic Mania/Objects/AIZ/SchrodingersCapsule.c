@@ -108,7 +108,7 @@ void SchrodingersCapsule_Create(void *data)
 {
     RSDK_THIS(SchrodingersCapsule);
     entity->drawFX = FX_FLIP;
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         RSDK.SetSpriteAnimation(SchrodingersCapsule->aniFrames, 0, &entity->mainAnimator, true, 0);
         RSDK.SetSpriteAnimation(SchrodingersCapsule->aniFrames, 1, &entity->buttonAnimator, true, 0);
         RSDK.SetSpriteAnimation(SchrodingersCapsule->aniFrames, 2, &entity->glassAnimator, true, 0);
@@ -164,8 +164,8 @@ void SchrodingersCapsule_Unknown2(void)
                 if (abs(entity->position.y - player->position.y) < 0x1000000 && entity->position.x - (Zone->screenBoundsR1[p] << 16) < 0x1000000) {
                     Zone->playerBoundActiveL[p] = true;
                     Zone->playerBoundActiveR[p] = true;
-                    Zone->screenBoundsL1[p]     = (entity->position.x >> 16) - RSDK_screens[p].centerX;
-                    Zone->screenBoundsR1[p]     = (entity->position.x >> 16) + RSDK_screens[p].centerX;
+                    Zone->screenBoundsL1[p]     = (entity->position.x >> 16) - ScreenInfo[p].centerX;
+                    Zone->screenBoundsR1[p]     = (entity->position.x >> 16) + ScreenInfo[p].centerX;
                 }
             }
         }
@@ -180,7 +180,7 @@ void SchrodingersCapsule_Unknown3(void)
     RSDK.ProcessAnimation(&entity->rayAnimator);
     RSDK.SetSpriteAnimation(0xFFFF, 0, &entity->glassAnimator, true, 0);
     entity->state               = SchrodingersCapsule_Unknown4;
-    RSDK_sceneInfo->timeEnabled = false;
+    SceneInfo->timeEnabled = false;
 }
 
 void SchrodingersCapsule_Unknown4(void)

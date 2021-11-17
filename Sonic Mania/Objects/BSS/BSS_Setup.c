@@ -8,7 +8,7 @@ void BSS_Setup_Update(void)
     RSDK_THIS(BSS_Setup);
 
     StateMachine_Run(entity->state);
-    RSDK_screens->position.x = 0x100 - RSDK_screens->centerX;
+    ScreenInfo->position.x = 0x100 - ScreenInfo->centerX;
 
     if (entity->palettePage) {
         RSDK.CopyPalette(2, 16 * entity->paletteLine, 0, 128, 16);
@@ -48,7 +48,7 @@ void BSS_Setup_Draw(void)
 void BSS_Setup_Create(void *data)
 {
     RSDK_THIS(BSS_Setup);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->active          = ACTIVE_BOUNDS;
         entity->visible         = true;
         entity->drawOrder       = 2;
@@ -218,10 +218,10 @@ void BSS_Setup_StageLoad(void)
 
 int32 BSS_Setup_GetStageID(void)
 {
-    int32 pos = RSDK_sceneInfo->listPos;
+    int32 pos = SceneInfo->listPos;
     RSDK.SetScene("Blue Spheres", "");
-    int32 id                  = (pos - RSDK_sceneInfo->listPos) % 32;
-    RSDK_sceneInfo->listPos = pos;
+    int32 id                  = (pos - SceneInfo->listPos) % 32;
+    SceneInfo->listPos = pos;
     return id;
 }
 
@@ -715,7 +715,7 @@ void BSS_Setup_HandleCollectableMovement(void)
                     else
                         worldX = (finalX - distX) >> 4;
 
-                    collectable->position.x = (worldX + RSDK_screens->centerX) << 16;
+                    collectable->position.x = (worldX + ScreenInfo->centerX) << 16;
                     collectable->position.y = (BSS_Setup->screenYTable[y] + worldX * worldX / entity->divisor) << 16;
                     ++slot;
                 }
@@ -1106,7 +1106,7 @@ void BSS_Setup_LaunchSpheres(void)
     RSDK_THIS(BSS_Setup);
     int32 x              = entity->spinTimer + 0x100;
     int32 y              = entity->spinTimer << 17;
-    ScreenInfo *screen = RSDK_screens;
+    RSDKScreenInfo *screen = ScreenInfo;
 
     int32 i                              = RESERVE_ENTITY_COUNT;
     EntityBSS_Collectable *collectable = NULL;

@@ -22,7 +22,7 @@ void BoundsMarker_Create(void *data)
 {
     RSDK_THIS(BoundsMarker);
 
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         if (entity->vsDisable && globals->gameMode == MODE_COMPETITION) {
             destroyEntity(entity);
         }

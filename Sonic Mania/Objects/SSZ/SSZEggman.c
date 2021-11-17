@@ -33,7 +33,7 @@ void SSZEggman_Draw(void)
 void SSZEggman_Create(void *data)
 {
     RSDK_THIS(SSZEggman);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->visible       = true;
         entity->drawOrder     = Zone->drawOrderLow;
         entity->drawFX        = FX_FLIP;

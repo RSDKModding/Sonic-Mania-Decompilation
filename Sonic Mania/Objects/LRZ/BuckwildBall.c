@@ -37,7 +37,7 @@ void BuckwildBall_Create(void *data)
 {
     RSDK_THIS(BuckwildBall);
 
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->active        = ACTIVE_BOUNDS;
         entity->drawOrder     = Zone->drawOrderLow;
         entity->startPos.x    = entity->position.x;

@@ -21,12 +21,12 @@ void AIZSetup_StaticUpdate(void)
 #if RETRO_USE_PLUS
     if (AIZSetup->bg4Info) {
 #endif
-        if (RSDK_screens->position.x <= 4096)
+        if (ScreenInfo->position.x <= 4096)
             AIZSetup->bg2Info->scrollPos = 0;
         else
             AIZSetup->bg2Info->scrollPos = 0x1000000;
 
-        if (RSDK_screens->position.x <= 8704) {
+        if (ScreenInfo->position.x <= 8704) {
             AIZSetup->bg2Info->drawLayer[0] = 0;
             AIZSetup->bg3Info->drawLayer[0] = DRAWLAYER_COUNT;
         }
@@ -241,7 +241,7 @@ void AIZSetup_Unknown24(void)
             x = robo->position.x;
     }
 
-    if (x < (RSDK_screens->position.x + RSDK_screens->width + 32) << 16) {
+    if (x < (ScreenInfo->position.x + ScreenInfo->width + 32) << 16) {
         foreach_all(AIZEggRobo, robo)
         {
             if (robo->forKnux)
@@ -347,8 +347,8 @@ bool32 AIZSetup_Cutscene1_Unknown1(Entity *h)
     Zone->playerBoundActiveL[0] = false;
     if (player2->objectID == Player->objectID)
         player2->state = AIZSetup_Unknown4;
-    if (tornado->position.x < RSDK_screens->width << 16)
-        camera->position.x = RSDK_screens->width << 16;
+    if (tornado->position.x < ScreenInfo->width << 16)
+        camera->position.x = ScreenInfo->width << 16;
     return tornado->disableInteractions;
 }
 bool32 AIZSetup_Cutscene1_Unknown2(Entity *h)

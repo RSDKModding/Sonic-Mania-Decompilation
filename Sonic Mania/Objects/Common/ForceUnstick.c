@@ -27,7 +27,7 @@ void ForceUnstick_Draw(void) { ForceUnstick_DrawSprites(); }
 void ForceUnstick_Create(void *data)
 {
     RSDK_THIS(ForceUnstick);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->updateRange.x = entity->width << 19;
         entity->updateRange.y = entity->height << 19;
         entity->hitbox.right  = 8 * entity->width + 8;

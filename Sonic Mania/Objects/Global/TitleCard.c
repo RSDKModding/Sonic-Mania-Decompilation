@@ -21,13 +21,13 @@ void TitleCard_Draw(void)
 void TitleCard_Create(void *data)
 {
     RSDK_THIS(TitleCard);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->active      = ACTIVE_ALWAYS;
         entity->visible     = true;
         entity->drawOrder   = Zone->hudDrawOrder;
         entity->enableIntro = globals->enableIntro;
         if (!globals->suppressTitlecard || globals->enableIntro || globals->gameMode == MODE_TIMEATTACK)
-            RSDK_sceneInfo->timeEnabled = false;
+            SceneInfo->timeEnabled = false;
         TitleCard_SetColours();
 
         if (globals->suppressTitlecard) {
@@ -42,15 +42,15 @@ void TitleCard_Create(void *data)
             entity->stateDraw = TitleCard_StateDraw_Default;
         }
 
-        entity->dword70 = (RSDK_screens->centerX - 152) << 16;
-        entity->dword74 = (RSDK_screens->centerX - 152) << 16;
-        entity->dword78 = (RSDK_screens->centerX - 160) << 16;
-        entity->dword7C = (RSDK_screens->centerX + 20) << 16;
+        entity->dword70 = (ScreenInfo->centerX - 152) << 16;
+        entity->dword74 = (ScreenInfo->centerX - 152) << 16;
+        entity->dword78 = (ScreenInfo->centerX - 160) << 16;
+        entity->dword7C = (ScreenInfo->centerX + 20) << 16;
         TitleCard_Unknown2();
         TitleCard_SetPoints();
 
         entity->decorationPos.y = -0x340000;
-        entity->decorationPos.x = (RSDK_screens->width - 160) << 16;
+        entity->decorationPos.x = (ScreenInfo->width - 160) << 16;
         RSDK.SetSpriteAnimation(TitleCard->aniFrames, 0, &entity->decorationData, true, 0);
         RSDK.SetSpriteAnimation(TitleCard->aniFrames, 1, &entity->nameLetterData, true, 0);
         RSDK.SetSpriteAnimation(TitleCard->aniFrames, 2, &entity->zoneLetterData, true, 0);
@@ -60,7 +60,7 @@ void TitleCard_Create(void *data)
 
         entity->actNumbersData.frameID = entity->actID;
         entity->drawPos2.y             = 0xA80000;
-        entity->drawPos2.x             = (RSDK_screens->centerX + 106) << 16;
+        entity->drawPos2.x             = (ScreenInfo->centerX + 106) << 16;
         entity->dword2F4               = -0x400;
         if (entity->dword2EC - entity->field_2E4 < 0x100000) {
             int32 dif = (entity->dword2EC - entity->field_2E4) - 0x100000;
@@ -75,10 +75,10 @@ void TitleCard_Create(void *data)
             Zone->swapGameMode           = false;
             globals->enableIntro         = false;
             globals->suppressTitlecard   = false;
-            RSDK_sceneInfo->milliseconds = globals->restartMilliseconds;
-            RSDK_sceneInfo->seconds      = globals->restartSeconds;
-            RSDK_sceneInfo->minutes      = globals->restartMinutes;
-            RSDK_sceneInfo->timeEnabled  = true;
+            SceneInfo->milliseconds = globals->restartMilliseconds;
+            SceneInfo->seconds      = globals->restartSeconds;
+            SceneInfo->minutes      = globals->restartMinutes;
+            SceneInfo->timeEnabled  = true;
             EntityPlayer *player         = (EntityPlayer *)RSDK.GetEntityByID(SLOT_PLAYER1);
             RSDK.CopyEntity(player, (Entity *)Zone->entityData, false);
             RSDK.SetSpriteAnimation(player->aniFrames, player->playerAnimator.animationID, &player->playerAnimator, false,
@@ -115,7 +115,7 @@ void TitleCard_SetColours(void)
 {
     RSDK_THIS(TitleCard);
 #if RETRO_USE_PLUS
-    if (RSDK_sceneInfo->filter == SCN_FILTER_ENCORE) {
+    if (SceneInfo->filter == SCN_FILTER_ENCORE) {
         entity->colours[0] = 0x3751A2;
         entity->colours[1] = 0xC7525B;
         entity->colours[2] = 0x428FC3;
@@ -167,7 +167,7 @@ void TitleCard_SetPoints(void)
     entity->points2[3].x = -entity->field_2E4;
     entity->points2[3].y = 0xCA0000;
 
-    entity->points3[0].x = RSDK_screens->width << 16;
+    entity->points3[0].x = ScreenInfo->width << 16;
     entity->points3[0].y = 0x9A0000;
     entity->points3[1].x = 0x780000 + entity->points3[0].x;
     entity->points3[1].y = 0x9A0000;
@@ -223,9 +223,9 @@ void TitleCard_SetPoints(void)
 
     entity->points9[0].x = (entity->points4[1].x + entity->points4[0].x) >> 1;
     entity->points9[0].y = 0;
-    entity->points9[1].x = RSDK_screens->width << 16;
+    entity->points9[1].x = ScreenInfo->width << 16;
     entity->points9[1].y = 0;
-    entity->points9[2].x = RSDK_screens->width << 16;
+    entity->points9[2].x = ScreenInfo->width << 16;
     entity->points9[2].y = 0xF00000;
     entity->points9[3].x = (entity->points4[3].x + entity->points4[2].x) >> 1;
     entity->points9[3].y = 0xF00000;
@@ -264,8 +264,8 @@ void TitleCard_Unknown2(void)
         entity->field_2E4 = (RSDK.GetStringWidth(TitleCard->aniFrames, 1, &entity->zoneName, 0, 0, 1) + 24) << 16;
     }
 
-    entity->dword1E8 = (RSDK_screens->centerX - ((RSDK_screens->centerX - 160) >> 3) + 72) << 16;
-    entity->dword2EC = (RSDK_screens->centerX - ((RSDK_screens->centerX - 160) >> 3) + 72) << 16;
+    entity->dword1E8 = (ScreenInfo->centerX - ((ScreenInfo->centerX - 160) >> 3) + 72) << 16;
+    entity->dword2EC = (ScreenInfo->centerX - ((ScreenInfo->centerX - 160) >> 3) + 72) << 16;
     if (entity->field_2E4 < 0x800000)
         entity->dword2EC -= 0x280000;
     entity->field_2E8 = entity->field_2E0 - entity->field_2E4 + entity->dword2EC - 0x200000;
@@ -575,7 +575,7 @@ void TitleCard_Unknown10(void)
 
     if (entity->field_60 == 6) {
         if (globals->gameMode < MODE_TIMEATTACK) {
-            RSDK_sceneInfo->timeEnabled = true;
+            SceneInfo->timeEnabled = true;
         }
     }
     if (entity->field_60 > 80) {
@@ -607,7 +607,7 @@ void TitleCard_Unknown11(void)
     RSDK.SetGameMode(ENGINESTATE_REGULAR);
     globals->atlEnabled = false;
     if (globals->gameMode == MODE_TIMEATTACK || globals->enableIntro)
-        RSDK_sceneInfo->timeEnabled = false;
+        SceneInfo->timeEnabled = false;
 
     entity->active = ACTIVE_NEVER;
     if ((globals->suppressTitlecard && !entity->enableIntro) || globals->gameMode == MODE_TIMEATTACK) {
@@ -623,30 +623,30 @@ void TitleCard_StateDraw_Default(void)
     RSDK_THIS(TitleCard);
     if (!globals->atlEnabled && !globals->suppressTitlecard) {
         if (entity->timer < 256)
-            RSDK.DrawRect(0, 0, RSDK_screens->width, RSDK_screens->height, 0, 0xFF, INK_NONE, true);
+            RSDK.DrawRect(0, 0, ScreenInfo->width, ScreenInfo->height, 0, 0xFF, INK_NONE, true);
 
         if (entity->timer < 512)
-            RSDK.DrawRect(0, RSDK_screens->centerY - (entity->timer >> 1), RSDK_screens->width, entity->timer, entity->colours[3], 0xFF, INK_NONE,
+            RSDK.DrawRect(0, ScreenInfo->centerY - (entity->timer >> 1), ScreenInfo->width, entity->timer, entity->colours[3], 0xFF, INK_NONE,
                           true);
 
         int32 val = entity->timer - 128;
         if (val > 0) {
             if (val < 512)
-                RSDK.DrawRect(0, RSDK_screens->centerY - (val >> 1), RSDK_screens->width, val, entity->colours[2], 0xFF, INK_NONE, true);
+                RSDK.DrawRect(0, ScreenInfo->centerY - (val >> 1), ScreenInfo->width, val, entity->colours[2], 0xFF, INK_NONE, true);
 
             val -= 128;
             if (val > 0) {
                 if (val < 512)
-                    RSDK.DrawRect(0, RSDK_screens->centerY - (val >> 1), RSDK_screens->width, val, entity->colours[0], 0xFF, INK_NONE, true);
+                    RSDK.DrawRect(0, ScreenInfo->centerY - (val >> 1), ScreenInfo->width, val, entity->colours[0], 0xFF, INK_NONE, true);
 
                 val -= 128;
                 if (val > 0) {
                     if (val < 512)
-                        RSDK.DrawRect(0, RSDK_screens->centerY - (val >> 1), RSDK_screens->width, val, entity->colours[1], 0xFF, INK_NONE, true);
+                        RSDK.DrawRect(0, ScreenInfo->centerY - (val >> 1), ScreenInfo->width, val, entity->colours[1], 0xFF, INK_NONE, true);
 
                     val -= 128;
                     if (val > 0)
-                        RSDK.DrawRect(0, RSDK_screens->centerY - (val >> 1), RSDK_screens->width, val, entity->colours[4], 0xFF, INK_NONE, true);
+                        RSDK.DrawRect(0, ScreenInfo->centerY - (val >> 1), ScreenInfo->width, val, entity->colours[4], 0xFF, INK_NONE, true);
                 }
             }
         }
@@ -657,7 +657,7 @@ void TitleCard_StateDraw_Default(void)
     RSDK.DrawQuad(entity->points2, 4, 0x00, 0x00, 0x00, 0xFF, INK_NONE);
     RSDK.DrawQuad(entity->points3, 4, 0xF0, 0xF0, 0xF0, 0xFF, INK_NONE);
 #if RETRO_USE_PLUS
-    entity->decorationData.frameID = 2 * (RSDK_sceneInfo->filter == SCN_FILTER_ENCORE) + 1;
+    entity->decorationData.frameID = 2 * (SceneInfo->filter == SCN_FILTER_ENCORE) + 1;
 #else
     entity->decorationData.frameID = 2 * 0 + 1;
 #endif
@@ -668,7 +668,7 @@ void TitleCard_Unknown13(void)
 {
     RSDK_THIS(TitleCard);
     if (!globals->atlEnabled && !globals->suppressTitlecard)
-        RSDK.DrawRect(0, 0, RSDK_screens->width, RSDK_screens->height, entity->colours[4], 0xFF, INK_NONE, true);
+        RSDK.DrawRect(0, 0, ScreenInfo->width, ScreenInfo->height, entity->colours[4], 0xFF, INK_NONE, true);
     if (entity->points0[1].x < 0xF00000)
         RSDK.DrawQuad(entity->points6, 4, (entity->colours[0] >> 16) & 0xFF, (entity->colours[0] >> 8) & 0xFF, (entity->colours[0] >> 0) & 0xFF, 0xFF,
                       INK_NONE);
@@ -683,7 +683,7 @@ void TitleCard_Unknown13(void)
                       INK_NONE);
     if (!globals->atlEnabled && globals->suppressTitlecard == false) {
 #if RETRO_USE_PLUS
-        entity->decorationData.frameID = 2 * (RSDK_sceneInfo->filter == SCN_FILTER_ENCORE) + 1;
+        entity->decorationData.frameID = 2 * (SceneInfo->filter == SCN_FILTER_ENCORE) + 1;
 #else
         entity->decorationData.frameID = 2 * 0 + 1;
 #endif
@@ -697,7 +697,7 @@ void TitleCard_Unknown13(void)
 
     Vector2 drawPos;
     drawPos.x = entity->dword1E8;
-    RSDK.SetClipBounds(RSDK_sceneInfo->currentScreenID, 0, 170, RSDK_screens[RSDK_sceneInfo->currentScreenID].width, 240);
+    RSDK.SetClipBounds(SceneInfo->currentScreenID, 0, 170, ScreenInfo[SceneInfo->currentScreenID].width, 240);
 
     for (int32 i = 0; i < 4; ++i) {
         entity->zoneLetterData.frameID = i;
@@ -706,19 +706,19 @@ void TitleCard_Unknown13(void)
     }
 
     if (entity->word2Offset > 0) {
-        RSDK.SetClipBounds(RSDK_sceneInfo->currentScreenID, 0, 0, RSDK_screens[RSDK_sceneInfo->currentScreenID].width, 130);
+        RSDK.SetClipBounds(SceneInfo->currentScreenID, 0, 0, ScreenInfo[SceneInfo->currentScreenID].width, 130);
         drawPos.y = 0x720000;
         drawPos.x = entity->field_2E8 - 0x140000;
         RSDK.DrawText(&entity->nameLetterData, &drawPos, &entity->zoneName, 0, entity->word2Offset, ALIGN_RIGHT, 1, 0, entity->charPos, true);
     }
 
-    RSDK.SetClipBounds(RSDK_sceneInfo->currentScreenID, 0, 0, RSDK_screens[RSDK_sceneInfo->currentScreenID].width, 170);
+    RSDK.SetClipBounds(SceneInfo->currentScreenID, 0, 0, ScreenInfo[SceneInfo->currentScreenID].width, 170);
     drawPos.y = 0x9A0000;
     drawPos.x = entity->dword2EC - 0x140000;
     RSDK.DrawText(&entity->nameLetterData, &drawPos, &entity->zoneName, entity->word2Offset, 0, ALIGN_RIGHT, 1, 0, entity->charPos, true);
 
-    RSDK.SetClipBounds(RSDK_sceneInfo->currentScreenID, 0, 0, RSDK_screens[RSDK_sceneInfo->currentScreenID].width,
-                       RSDK_screens[RSDK_sceneInfo->currentScreenID].height);
+    RSDK.SetClipBounds(SceneInfo->currentScreenID, 0, 0, ScreenInfo[SceneInfo->currentScreenID].width,
+                       ScreenInfo[SceneInfo->currentScreenID].height);
     if (entity->actID != 3) {
         if (entity->dword2F4 > 0) {
             entity->drawFX  = FX_SCALE;
@@ -729,7 +729,7 @@ void TitleCard_Unknown13(void)
                 entity->scale.x = entity->dword2F4;
 
 #if RETRO_USE_PLUS
-            entity->decorationData.frameID = (RSDK_sceneInfo->filter == SCN_FILTER_ENCORE) ? 2 : 0;
+            entity->decorationData.frameID = (SceneInfo->filter == SCN_FILTER_ENCORE) ? 2 : 0;
 #else
             entity->decorationData.frameID = 0;
 #endif
@@ -773,7 +773,7 @@ void TitleCard_Unknown14(void)
 
     if (!globals->atlEnabled && !globals->suppressTitlecard) {
 #if RETRO_USE_PLUS
-        entity->decorationData.frameID = 2 * (RSDK_sceneInfo->filter == SCN_FILTER_ENCORE) + 1;
+        entity->decorationData.frameID = 2 * (SceneInfo->filter == SCN_FILTER_ENCORE) + 1;
 #else
         entity->decorationData.frameID = 2 * 0 + 1;
 #endif
@@ -782,7 +782,7 @@ void TitleCard_Unknown14(void)
 
     if (entity->actID != 3 && entity->dword2F4 > 0) {
 #if RETRO_USE_PLUS
-        entity->decorationData.frameID = (RSDK_sceneInfo->filter == SCN_FILTER_ENCORE) ? 2 : 0;
+        entity->decorationData.frameID = (SceneInfo->filter == SCN_FILTER_ENCORE) ? 2 : 0;
 #else
         entity->decorationData.frameID = 0;
 #endif

@@ -417,8 +417,8 @@ extern RSDKFunctionTable RSDK;
 #define RSDK_ADD_OBJECT_CONTAINER(object) RSDK.RegisterObjectContainer((void **)&object, #object, sizeof(Object##object))
 #endif
 
-#define RSDK_THIS(type)             Entity##type *entity = (Entity##type *)RSDK_sceneInfo->entity
-#define RSDK_THIS_GEN()             Entity *entity = RSDK_sceneInfo->entity
+#define RSDK_THIS(type)             Entity##type *entity = (Entity##type *)SceneInfo->entity
+#define RSDK_THIS_GEN()             Entity *entity = SceneInfo->entity
 #define RSDK_GET_ENTITY(slot, type) ((Entity##type *)RSDK.GetEntityByID(slot))
 #define CREATE_ENTITY(obj, data, x, y) ((Entity##obj *)RSDK.CreateEntity(obj->objectID, data, x, y))
 
@@ -463,12 +463,12 @@ extern RSDKFunctionTable RSDK;
 #endif
 
 #if RETRO_INCLUDE_EDITOR
-#define showGizmos() RSDK_sceneInfo->listPos == RSDK_sceneInfo->entitySlot || RSDK_sceneInfo->effectGizmo
+#define showGizmos() SceneInfo->listPos == SceneInfo->entitySlot || SceneInfo->effectGizmo
 #endif
 
-DLLExport void LinkGameLogicDLL(GameInfo *gameInfo);
+DLLExport void LinkGameLogicDLL(EngineInfo *info);
 #if RETRO_USE_MOD_LOADER
-DLLExport bool32 LinkModLogic(GameInfo *info, const char *id);
+DLLExport bool32 LinkModLogic(EngineInfo *info, const char *id);
 #endif
 
 #endif //! GAMEOBJECTS_H

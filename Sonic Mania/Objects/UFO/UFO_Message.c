@@ -17,18 +17,18 @@ void UFO_Message_Draw(void)
     RSDK_THIS(UFO_Message);
     Vector2 drawPos;
 
-    drawPos.x = (RSDK_screens->centerX - entity->timer) << 16;
+    drawPos.x = (ScreenInfo->centerX - entity->timer) << 16;
     drawPos.y = 0x580000;
     RSDK.DrawSprite(&entity->animator1, &drawPos, true);
 
-    drawPos.x = (entity->timer + RSDK_screens->centerX) << 16;
+    drawPos.x = (entity->timer + ScreenInfo->centerX) << 16;
     RSDK.DrawSprite(&entity->animator2, &drawPos, true);
 }
 
 void UFO_Message_Create(void *data)
 {
     RSDK_THIS(UFO_Message);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->active    = ACTIVE_NORMAL;
         entity->visible   = true;
         entity->drawOrder = 12;

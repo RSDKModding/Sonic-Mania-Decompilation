@@ -29,7 +29,7 @@ void HotaruMKII_Draw(void)
 void HotaruMKII_Create(void *data)
 {
     RSDK_THIS(HotaruMKII);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->drawOrder     = Zone->drawOrderHigh;
         entity->startPos      = entity->position;
         entity->startDir      = entity->direction;
@@ -221,7 +221,7 @@ void HotaruMKII_State_Unknown1(void)
 
                 entity->position.x = RSDK.Cos256(entity->origin) << 17;
                 entity->position.y = RSDK.Sin256(entity->origin) << 17;
-                ScreenInfo *screen = &RSDK_screens[screenID];
+                RSDKScreenInfo *screen = &ScreenInfo[screenID];
 
                 if (entity->position.x > (screen->width & 0xFFFFFFFE) << 15)
                     entity->position.x = (screen->width & 0xFFFFFFFE) << 15;
@@ -276,7 +276,7 @@ void HotaruMKII_State_Unknown2(void)
     RSDK_THIS(HotaruMKII);
     EntityPlayer *player = (EntityPlayer *)entity->playerPtr;
 
-    entity->position.x += RSDK_sceneInfo->entity->velocity.x;
+    entity->position.x += entity->velocity.x;
     entity->position.y += entity->velocity.y;
 
     if (player && !Player_CheckValidState(player)) {

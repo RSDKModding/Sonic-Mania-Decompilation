@@ -126,7 +126,7 @@ void SwingRope_Draw(void)
 void SwingRope_Create(void *data)
 {
     RSDK_THIS(SwingRope);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->visible       = true;
         entity->drawOrder     = Zone->drawOrderLow;
         entity->active        = ACTIVE_BOUNDS;

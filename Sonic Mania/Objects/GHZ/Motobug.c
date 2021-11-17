@@ -70,7 +70,7 @@ void Motobug_DebugSpawn(void)
 void Motobug_CheckOnScreen(void)
 {
     RSDK_THIS(Motobug);
-    if (!RSDK.CheckOnScreen(RSDK_sceneInfo->entity, NULL) && !RSDK.CheckPosOnScreen(&entity->startPos, &entity->updateRange)) {
+    if (!RSDK.CheckOnScreen(SceneInfo->entity, NULL) && !RSDK.CheckPosOnScreen(&entity->startPos, &entity->updateRange)) {
         entity->position.x = entity->startPos.x;
         entity->position.y = entity->startPos.y;
         entity->direction  = entity->startDir;
@@ -109,7 +109,8 @@ void Motobug_State_Fall(void)
 void Motobug_State_HandleMove(void)
 {
     RSDK_THIS(Motobug);
-    entity->position.x += RSDK_sceneInfo->entity->velocity.x;
+
+    entity->position.x += entity->velocity.x;
     if (!RSDK.ObjectTileGrip(entity, Zone->fgLayers, 0, 0, 0, 0xF0000, 8)) {
         RSDK.SetSpriteAnimation(Motobug->aniFrames, 1, &entity->animator, true, 0);
         entity->turnTimer = 0;

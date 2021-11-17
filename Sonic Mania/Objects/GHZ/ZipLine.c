@@ -290,7 +290,7 @@ void ZipLine_Create(void *data)
     entity->endPos.x    = entity->position.x + (entity->length << 8) * RSDK.Cos256(entity->angle);
     entity->endPos.y    = entity->position.y + (entity->length << 8) * RSDK.Sin256(entity->angle);
 
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->position.x += (entity->endPos.x - entity->startPos.x) >> 1;
         entity->position.y += (entity->endPos.y - entity->startPos.y) >> 1;
         entity->updateRange.x = (abs(entity->endPos.x - entity->startPos.x) >> 1) + 0x400000;
@@ -351,7 +351,7 @@ void ZipLine_Unknown2(void)
 Vector2 ZipLine_Unknown3(void)
 {
     RSDK_THIS(ZipLine);
-    EntityZipLine *endMarker = RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot - 1, ZipLine);
+    EntityZipLine *endMarker = RSDK_GET_ENTITY(SceneInfo->entitySlot - 1, ZipLine);
     Vector2 result;
     result.x = 0;
     result.y = 0;
@@ -451,7 +451,7 @@ void ZipLine_Unknown4(void)
         }
 
         if (RSDK.CheckObjectCollisionTouchBox(entity, &ZipLine->hitbox, entity, &otherHitbox)) {
-            EntityZipLine *endMarker = RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot - 1, ZipLine);
+            EntityZipLine *endMarker = RSDK_GET_ENTITY(SceneInfo->entitySlot - 1, ZipLine);
             endMarker->handlePos.x   = entity->field_98.x;
             endMarker->handlePos.y   = entity->field_98.y;
             endMarker->onGround      = true;

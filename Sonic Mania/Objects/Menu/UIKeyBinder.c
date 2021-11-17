@@ -147,7 +147,7 @@ void UIKeyBinder_Create(void *data)
     entity->frameID         = UIKeyBinder_Unknown4(entity->type);
     RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, entity->listID, &entity->animator1, true, entity->frameID);
     entity->textSpriteIndex = UIWidgets->textSpriteIndex;
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         int32 mappings = UIKeyBinder_GetMappings(entity->inputID + 1, entity->type);
         int32 frame    = UIButtonPrompt_MappingsToFrame(mappings);
         RSDK.SetSpriteAnimation(UIKeyBinder->aniFrames, UIKeyBinder_GetButtonListID(), &entity->animator2, true, frame);
@@ -175,15 +175,15 @@ int32 UIKeyBinder_GetButtonListID(void)
 int32 UIKeyBinder_GetMappings(int32 input, int32 button)
 {
     switch (button) {
-        case 0: return RSDK_controller[input].keyUp.keyMap; break;
-        case 1: return RSDK_controller[input].keyDown.keyMap; break;
-        case 2: return RSDK_controller[input].keyLeft.keyMap; break;
-        case 3: return RSDK_controller[input].keyRight.keyMap; break;
-        case 4: return RSDK_controller[input].keyA.keyMap; break;
-        case 5: return RSDK_controller[input].keyB.keyMap; break;
-        case 6: return RSDK_controller[input].keyX.keyMap; break;
-        case 7: return RSDK_controller[input].keyY.keyMap; break;
-        case 8: return RSDK_controller[input].keyStart.keyMap; break;
+        case 0: return ControllerInfo[input].keyUp.keyMap; break;
+        case 1: return ControllerInfo[input].keyDown.keyMap; break;
+        case 2: return ControllerInfo[input].keyLeft.keyMap; break;
+        case 3: return ControllerInfo[input].keyRight.keyMap; break;
+        case 4: return ControllerInfo[input].keyA.keyMap; break;
+        case 5: return ControllerInfo[input].keyB.keyMap; break;
+        case 6: return ControllerInfo[input].keyX.keyMap; break;
+        case 7: return ControllerInfo[input].keyY.keyMap; break;
+        case 8: return ControllerInfo[input].keyStart.keyMap; break;
         default: break;
     }
     return 0;
@@ -192,15 +192,15 @@ int32 UIKeyBinder_GetMappings(int32 input, int32 button)
 void UIKeyBinder_SetMappings(int32 input, int32 button, int32 mappings)
 {
     switch (button) {
-        case 0: RSDK_controller[input].keyUp.keyMap = mappings; break;
-        case 1: RSDK_controller[input].keyDown.keyMap = mappings; break;
-        case 2: RSDK_controller[input].keyLeft.keyMap = mappings; break;
-        case 3: RSDK_controller[input].keyRight.keyMap = mappings; break;
-        case 4: RSDK_controller[input].keyA.keyMap = mappings; break;
-        case 5: RSDK_controller[input].keyB.keyMap = mappings; break;
-        case 6: RSDK_controller[input].keyX.keyMap = mappings; break;
-        case 7: RSDK_controller[input].keyY.keyMap = mappings; break;
-        case 8: RSDK_controller[input].keyStart.keyMap = mappings; break;
+        case 0: ControllerInfo[input].keyUp.keyMap = mappings; break;
+        case 1: ControllerInfo[input].keyDown.keyMap = mappings; break;
+        case 2: ControllerInfo[input].keyLeft.keyMap = mappings; break;
+        case 3: ControllerInfo[input].keyRight.keyMap = mappings; break;
+        case 4: ControllerInfo[input].keyA.keyMap = mappings; break;
+        case 5: ControllerInfo[input].keyB.keyMap = mappings; break;
+        case 6: ControllerInfo[input].keyX.keyMap = mappings; break;
+        case 7: ControllerInfo[input].keyY.keyMap = mappings; break;
+        case 8: ControllerInfo[input].keyStart.keyMap = mappings; break;
         default: break;
     }
 }

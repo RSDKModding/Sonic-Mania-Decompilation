@@ -51,7 +51,7 @@ void MSZCutsceneK_StageLoad(void)
 void MSZCutsceneK_SkipCB(void)
 {
     RSDK.SetScene("Mania Mode", "");
-    RSDK_sceneInfo->listPos += TimeAttackData_GetManiaListPos(7, 3, 0);
+    SceneInfo->listPos += TimeAttackData_GetManiaListPos(7, 3, 0);
 }
 
 void MSZCutsceneK_StartCutscene(void)
@@ -99,8 +99,8 @@ bool32 MSZCutsceneK_CutsceneState_Unknown1(EntityCutsceneSeq *host)
     EntityHeavyMystic *mystic = (EntityHeavyMystic *)MSZCutsceneK->mystic;
     EntityTornado *tornado    = (EntityTornado *)MSZCutsceneK->tornado;
     if (!host->timer) {
-        RSDK_sceneInfo->timeEnabled  = false;
-        RSDK_sceneInfo->milliseconds = 0;
+        SceneInfo->timeEnabled  = false;
+        SceneInfo->milliseconds = 0;
         player1->state               = Player_State_None;
         player1->stateInput          = 0;
         CutsceneSeq_LockAllPlayerControl();
@@ -163,7 +163,7 @@ bool32 MSZCutsceneK_CutsceneState_Unknown2(EntityCutsceneSeq *host)
             globals->suppressAutoMusic = true;
             globals->enableIntro       = 1;
             RSDK.SetScene("Mania Mode", "");
-            RSDK_sceneInfo->listPos += TimeAttackData_GetManiaListPos(7, 3, 0);
+            SceneInfo->listPos += TimeAttackData_GetManiaListPos(7, 3, 0);
             Zone_StartFadeOut(10, 0x000000);
         }
         else if (host->timer - host->field_68 == 60) {

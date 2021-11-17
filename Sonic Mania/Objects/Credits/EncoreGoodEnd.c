@@ -40,7 +40,7 @@ void EncoreGoodEnd_Draw(void) {}
 void EncoreGoodEnd_Create(void *data)
 {
     RSDK_THIS(EncoreGoodEnd);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->active        = ACTIVE_NORMAL;
         entity->visible       = false;
         entity->updateRange.x = 0x800000;
@@ -51,7 +51,7 @@ void EncoreGoodEnd_Create(void *data)
             entity->size.y = 0xF00000;
         entity->updateRange.x       = 0x800000 + entity->size.x;
         entity->updateRange.y       = 0x800000 + entity->size.y;
-        RSDK_sceneInfo->timeEnabled = false;
+        SceneInfo->timeEnabled = false;
         EncoreGoodEnd->field_4      = 0;
         Player->playerCount         = 4;
 
@@ -443,8 +443,8 @@ bool32 EncoreGoodEnd_CutsceneState_Unknown5(EntityCutsceneSeq *host)
                     decor->position.y += 0x20000;
             }
         }
-        RSDK.SetActivePalette(0, 0, RSDK_screens->height);
-        RSDK.SetActivePalette(1, 2 * host->timer, RSDK_screens->height - 2 * host->timer);
+        RSDK.SetActivePalette(0, 0, ScreenInfo->height);
+        RSDK.SetActivePalette(1, 2 * host->timer, ScreenInfo->height - 2 * host->timer);
     }
     return host->timer == 240;
 }

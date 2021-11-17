@@ -28,7 +28,7 @@ void InkWipe_Draw(void)
 void InkWipe_Create(void* data)
 {
     RSDK_THIS(InkWipe);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->active        = ACTIVE_BOUNDS;
         entity->visible       = true;
         entity->drawOrder     = Zone->drawOrderHigh;

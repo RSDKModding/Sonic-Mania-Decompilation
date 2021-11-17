@@ -29,7 +29,7 @@ void PetalPile_Create(void *data)
     entity->drawFX        = FX_FLIP;
     entity->updateRange.x = 0x100000;
     entity->updateRange.y = 0x100000;
-    if (RSDK_sceneInfo->inEditor) {
+    if (SceneInfo->inEditor) {
         if (!entity->maxSpeed.x)
             entity->maxSpeed.x = 0x18000;
         if (!entity->pileSize.x && !entity->pileSize.y) {

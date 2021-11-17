@@ -55,8 +55,8 @@ void WarpDoor_Update(void)
                             LogHelpers_Print("newCamPos = <%d, %d>", screenX >> 16, screenY >> 16);
                             camera->position.x                        = screenX;
                             camera->position.y                        = screenY;
-                            RSDK_screens[camera->screenID].position.x = (camera->position.x >> 16);
-                            RSDK_screens[camera->screenID].position.y = (camera->position.y >> 16);
+                            ScreenInfo[camera->screenID].position.x = (camera->position.x >> 16);
+                            ScreenInfo[camera->screenID].position.y = (camera->position.y >> 16);
                             camera->state                             = Camera_State_Follow;
                             player->scrollDelay                       = 0;
                             WarpDoor_SetupBoundaries(boundID, &posPtr);
@@ -188,7 +188,7 @@ void WarpDoor_Create(void *data)
     RSDK_THIS(WarpDoor);
     RSDK.SetSpriteAnimation(WarpDoor->aniFrames, 0, &entity->animator, true, 0);
     WarpDoor_SetupHitbox();
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->active        = ACTIVE_ALWAYS;
         entity->updateRange.x = 0x800000;
         entity->updateRange.y = 0x800000;
@@ -362,7 +362,7 @@ void WarpDoor_DrawDebug(void)
         }
     }
 
-    if (RSDK_sceneInfo->inEditor) {
+    if (SceneInfo->inEditor) {
         int32 colour = 0xFF0000;
         if (!entity->go)
             colour = 0x0000FF;

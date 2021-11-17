@@ -140,7 +140,7 @@ void PSZDoor_Create(void *data)
     RSDK_THIS(PSZDoor);
     if (!entity->speed)
         entity->speed = 8;
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->active        = ACTIVE_BOUNDS;
         entity->visible       = true;
         entity->drawOrder     = Zone->drawOrderLow;

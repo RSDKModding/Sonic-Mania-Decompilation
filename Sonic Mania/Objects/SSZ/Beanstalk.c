@@ -148,7 +148,7 @@ void Beanstalk_Unknown4(void)
     if (!entity->forceEnd) {
         EntityBeanstalk *next = RSDK_GET_ENTITY(RSDK.GetEntityID(entity) + 1, Beanstalk);
         if (next->objectID == Beanstalk->objectID) {
-            if (RSDK_sceneInfo->inEditor) {
+            if (SceneInfo->inEditor) {
                 entity->field_74 = Beanstalk_Unknown1();
                 entity->field_80 = 0x10000;
             }
@@ -156,7 +156,7 @@ void Beanstalk_Unknown4(void)
                 entity->field_74 = Beanstalk_Unknown1();
 
             if (entity->field_74) {
-                if (entity->field_88 == 0 || RSDK_sceneInfo->inEditor) {
+                if (entity->field_88 == 0 || SceneInfo->inEditor) {
                     int val          = Beanstalk_Unknown2();
                     entity->field_88 = 1;
                     entity->field_85 = (val / 0xA0000 / 3) % 9;

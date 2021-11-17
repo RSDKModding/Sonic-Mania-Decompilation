@@ -20,7 +20,7 @@ void UIInfoLabel_Create(void *data)
     entity->updateRange.x = 0x800000;
     entity->updateRange.y = 0x300000;
     entity->width         = entity->size.y >> 0x10;
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         RSDK.SetSpriteAnimation(UIWidgets->labelSpriteIndex, 0, &entity->animator2, true, 0);
         RSDK.SetSpriteString(UIWidgets->labelSpriteIndex, 0, &entity->text);
     }
@@ -30,9 +30,9 @@ void UIInfoLabel_StageLoad(void) {}
 
 void UIInfoLabel_SetText(EntityUIInfoLabel *label, char *text)
 {
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         RSDK.SetText(&label->text, text, 0);
-        if (!RSDK_sceneInfo->inEditor) {
+        if (!SceneInfo->inEditor) {
             RSDK.SetSpriteAnimation(UIWidgets->labelSpriteIndex, 0, &label->animator2, true, 0);
             RSDK.SetSpriteString(UIWidgets->labelSpriteIndex, 0, &label->text);
         }
@@ -40,9 +40,9 @@ void UIInfoLabel_SetText(EntityUIInfoLabel *label, char *text)
 }
 void UIInfoLabel_SetString(EntityUIInfoLabel *entity, TextInfo *text)
 {
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         RSDK.CopyString(&entity->text, text);
-        if (!RSDK_sceneInfo->inEditor) {
+        if (!SceneInfo->inEditor) {
             RSDK.SetSpriteAnimation(UIWidgets->labelSpriteIndex, 0, &entity->animator2, true, 0);
             RSDK.SetSpriteString(UIWidgets->labelSpriteIndex, 0, &entity->text);
         }
@@ -60,7 +60,7 @@ void UIInfoLabel_DrawSprites(void)
     drawPos.y = entity->position.y;
     UIWidgets_Unknown7(entity->size.y >> 0x10, size, entity->width, 0, 0, 0, entity->position.x, entity->position.y);
 
-    if (RSDK_sceneInfo->inEditor) {
+    if (SceneInfo->inEditor) {
         RSDK.SetSpriteAnimation(UIInfoLabel->aniFrames, 12, &entity->animator2, true, 2);
         drawPos.y -= 0x40000;
         RSDK.DrawSprite(&entity->animator2, &drawPos, false);

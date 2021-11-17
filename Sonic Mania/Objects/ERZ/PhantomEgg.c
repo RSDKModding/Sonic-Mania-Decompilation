@@ -28,8 +28,8 @@ void PhantomEgg_Create(void *data)
 {
     RSDK_THIS(PhantomEgg);
 
-    RSDK_sceneInfo->entity->drawFX = FX_FLIP;
-    if (!RSDK_sceneInfo->inEditor) {
+    entity->drawFX = FX_FLIP;
+    if (!SceneInfo->inEditor) {
         entity->active           = ACTIVE_BOUNDS;
         entity->updateRange.x    = 0x800000;
         entity->updateRange.y    = 0x1000000;
@@ -62,7 +62,7 @@ void PhantomEgg_StageLoad(void)
     PhantomEgg->aniFrames         = RSDK.LoadSpriteAnimation("Phantom/PhantomEgg.bin", SCOPE_STAGE);
     PhantomEgg->savedGameProgress = false;
 #if RETRO_USE_PLUS
-    if (RSDK_sceneInfo->filter & FILTER_ENCORE) {
+    if (SceneInfo->filter & FILTER_ENCORE) {
         RSDK.LoadPalette(0, "EncoreTMZ3.act", 0xFF);
         RSDK.LoadPalette(1, "EncoreTMZ3.act", 0xFF);
     }
@@ -157,7 +157,7 @@ void PhantomEgg_Hit(void)
         entity->state               = PhantomEgg_State_Unknown16;
         entity->timer               = 0;
         PhantomEgg->superFlag       = true;
-        RSDK_sceneInfo->timeEnabled = false;
+        SceneInfo->timeEnabled = false;
         Player_GiveScore(RSDK_GET_ENTITY(SLOT_PLAYER1, Player), 1000);
     }
     else {
@@ -224,8 +224,8 @@ void PhantomEgg_SetupScanlineCB(void)
 {
     foreach_all(PhantomEgg, phantomEgg)
     {
-        PhantomEgg->startScanline                          = RSDK_screens->centerY;
-        PhantomEgg->endScanline                            = RSDK_screens->height;
+        PhantomEgg->startScanline                          = ScreenInfo->centerY;
+        PhantomEgg->endScanline                            = ScreenInfo->height;
         RSDK.GetSceneLayer(Zone->fgLow)->scanlineCallback  = PhantomEgg_ScanlineCB;
         RSDK.GetSceneLayer(Zone->fgHigh)->scanlineCallback = PhantomEgg_ScanlineCB;
         PhantomRuby_PlaySFX(RUBYSFX_ATTACK1);
@@ -374,7 +374,7 @@ void PhantomEgg_HandleReturnWarp(void)
     camera->boundsT      = Zone->screenBoundsT1[0];
     camera->boundsB      = Zone->screenBoundsB1[0];
     camera->position.x   = PhantomEgg->boundsM;
-    camera->position.y   = PhantomEgg->boundsStoreB1 - (RSDK_screens->centerY << 16);
+    camera->position.y   = PhantomEgg->boundsStoreB1 - (ScreenInfo->centerY << 16);
 
     foreach_active(Player, player)
     {
@@ -399,11 +399,11 @@ void PhantomEgg_ScanlineCB(ScanlineInfo *scanlines)
     for (int l = 0; l < line; ++l) scanlines[l].position.y = lineY;
 
     line = PhantomEgg->startScanline + PhantomEgg->endScanline;
-    if (line > RSDK_screens->height)
-        line = RSDK_screens->height;
+    if (line > ScreenInfo->height)
+        line = ScreenInfo->height;
 
     lineY = scanlines[line].position.y;
-    for (int l = line; l < RSDK_screens->height; ++l) scanlines[l].position.y = lineY;
+    for (int l = line; l < ScreenInfo->height; ++l) scanlines[l].position.y = lineY;
 }
 
 void PhantomEgg_StateDraw_Normal(void)
@@ -480,9 +480,9 @@ void PhantomEgg_State_SetupArena(void)
         entity->timer               = 0;
         Zone->playerBoundActiveL[0] = true;
         Zone->playerBoundActiveR[0] = true;
-        Zone->screenBoundsL1[0]     = (entity->position.x >> 16) - RSDK_screens->centerX;
-        Zone->screenBoundsR1[0]     = (entity->position.x >> 16) + RSDK_screens->centerX;
-        Zone->screenBoundsT1[0]     = Zone->screenBoundsB1[0] - RSDK_screens->height;
+        Zone->screenBoundsL1[0]     = (entity->position.x >> 16) - ScreenInfo->centerX;
+        Zone->screenBoundsR1[0]     = (entity->position.x >> 16) + ScreenInfo->centerX;
+        Zone->screenBoundsT1[0]     = Zone->screenBoundsB1[0] - ScreenInfo->height;
         PhantomEgg->boundsL         = (Zone->screenBoundsL1[0] + 64) << 16;
         PhantomEgg->boundsR         = (Zone->screenBoundsR1[0] - 64) << 16;
         PhantomEgg->boundsM         = entity->position.x;
@@ -530,7 +530,7 @@ void PhantomEgg_State_Unknown1(void)
     }
     else {
         if (RSDK_GET_ENTITY(SLOT_PLAYER1, Player)->position.x > entity->position.x) {
-            RSDK_sceneInfo->timeEnabled = false;
+            SceneInfo->timeEnabled = false;
             ++entity->timer;
         }
     }
@@ -594,9 +594,9 @@ void PhantomEgg_State_Unknown4(void)
 
     if (entity->timer == 3960) {
         RSDK.SetSpriteAnimation(PhantomEgg->aniFrames, 14, &entity->animator7, true, 0);
-        RSDK_sceneInfo->milliseconds = 0;
-        RSDK_sceneInfo->seconds      = 0;
-        RSDK_sceneInfo->minutes      = 0;
+        SceneInfo->milliseconds = 0;
+        SceneInfo->seconds      = 0;
+        SceneInfo->minutes      = 0;
         PhantomRuby_PlaySFX(1);
     }
 
@@ -624,7 +624,7 @@ void PhantomEgg_State_Unknown5(void)
 
     if (++entity->timer == 30) {
         entity->timer               = 0;
-        RSDK_sceneInfo->timeEnabled = true;
+        SceneInfo->timeEnabled = true;
         if (Player_GetNearestPlayerX()->position.x < entity->position.x)
             entity->velocity.x = -0x60000;
         else
@@ -900,7 +900,7 @@ void PhantomEgg_State_Unknown14(void)
 {
     RSDK_THIS(PhantomEgg);
 
-    if (PhantomEgg->endScanline >= RSDK_screens->height) {
+    if (PhantomEgg->endScanline >= ScreenInfo->height) {
         RSDK.GetSceneLayer(Zone->fgLow)->scanlineCallback  = NULL;
         RSDK.GetSceneLayer(Zone->fgHigh)->scanlineCallback = NULL;
 
@@ -923,7 +923,7 @@ void PhantomEgg_State_Unknown15(void)
 {
     RSDK_THIS(PhantomEgg);
 
-    if (PhantomEgg->endScanline >= RSDK_screens->height) {
+    if (PhantomEgg->endScanline >= ScreenInfo->height) {
         RSDK.GetSceneLayer(Zone->fgLow)->scanlineCallback  = NULL;
         RSDK.GetSceneLayer(Zone->fgHigh)->scanlineCallback = NULL;
 
@@ -1014,7 +1014,7 @@ void PhantomEgg_State_Unknown17(void)
                          && SaveGame->saveRAM->chaosEmeralds == 0x7F;
 
 #if RETRO_USE_PLUS
-        if (RSDK_sceneInfo->filter & FILTER_ENCORE)
+        if (SceneInfo->filter & FILTER_ENCORE)
             goodEnd = false; // no ERZ for encore modes
 #endif
         if (goodEnd) {
@@ -1143,7 +1143,7 @@ void PhantomEgg_State_Unknown21(void)
         }
 
         if (globals->saveSlotID == NO_SAVE_SLOT || PhantomEgg->savedGameProgress) {
-            ++RSDK_sceneInfo->listPos;
+            ++SceneInfo->listPos;
             RSDK.LoadScene();
             entity->state = 0;
         }

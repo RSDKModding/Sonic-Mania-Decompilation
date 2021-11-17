@@ -51,7 +51,7 @@ void PBL_Sector_Draw(void) {}
 void PBL_Sector_Create(void *data)
 {
     RSDK_THIS(PBL_Sector);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->updateRange.x = entity->size.x;
         entity->updateRange.y = entity->size.y;
         if (entity->craneID == PBL_Setup->sectorID) {

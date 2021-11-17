@@ -102,8 +102,8 @@ void UIVsCharSelector_SetupText(void)
 void UIVsCharSelector_Unknown2(void)
 {
     RSDK_THIS(UIVsCharSelector);
-    if (!RSDK_sceneInfo->inEditor)
-        UIWidgets_Unknown3(96, 96, RSDK_sceneInfo->entity->position.x + 0x30000, RSDK_sceneInfo->entity->position.y + 0x30000);
+    if (!SceneInfo->inEditor)
+        UIWidgets_Unknown3(96, 96, entity->position.x + 0x30000, entity->position.y + 0x30000);
     if (entity->flag)
         UIWidgets_Unknown4(96, 96, entity->position.x, entity->position.y);
     else
@@ -238,9 +238,9 @@ void UIVsCharSelector_ProcessButtonCB(void)
 
         bool32 pressed = false;
         if (API_GetConfirmButtonFlip())
-            pressed = RSDK_controller[entity->playerID + 1].keyB.press;
+            pressed = ControllerInfo[entity->playerID + 1].keyB.press;
         else
-            pressed = RSDK_controller[entity->playerID + 1].keyA.press;
+            pressed = ControllerInfo[entity->playerID + 1].keyA.press;
         if (pressed) {
             entity->timer           = 0;
             entity->state           = UIVsCharSelector_Unknown11;
@@ -265,9 +265,9 @@ void UIVsCharSelector_ProcessButtonCB_Alt(void)
 
         bool32 pressed = false;
         if (API_GetConfirmButtonFlip())
-            pressed = RSDK_controller[entity->playerID + 1].keyB.press;
+            pressed = ControllerInfo[entity->playerID + 1].keyB.press;
         else
-            pressed = RSDK_controller[entity->playerID + 1].keyA.press;
+            pressed = ControllerInfo[entity->playerID + 1].keyA.press;
         if (pressed) {
             entity->timer = 0;
             UIVsCharSelector_Unknown7();

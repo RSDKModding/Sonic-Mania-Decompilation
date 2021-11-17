@@ -54,7 +54,7 @@ void Kabasira_Create(void *data)
     entity->drawFX    = FX_FLIP | FX_ROTATE | FX_SCALE;
     entity->scale.x   = 0x200;
     entity->scale.y   = 0x200;
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->visible       = true;
         entity->drawOrder     = Zone->drawOrderLow;
         entity->startPos      = entity->position;

@@ -41,7 +41,7 @@ void Technosqueek_Create(void *data)
     entity->visible   = true;
     entity->drawOrder = Zone->drawOrderLow;
     entity->drawFX |= FX_FLIP;
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->startPos.x    = entity->position.x;
         entity->startPos.y    = entity->position.y;
         entity->startDir      = entity->direction;
@@ -144,7 +144,7 @@ void Technosqueek_State_Unknown2(void)
 {
     RSDK_THIS(Technosqueek);
 
-    RSDK_sceneInfo->entity->position.x += entity->groundVel;
+    entity->position.x += entity->groundVel;
     if (entity->field_60) {
         entity->field_60--;
     }

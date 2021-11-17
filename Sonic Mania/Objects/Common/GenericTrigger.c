@@ -24,7 +24,7 @@ void GenericTrigger_Draw(void) {}
 void GenericTrigger_Create(void *data)
 {
     RSDK_THIS(GenericTrigger);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->triggerID &= 0xF;
         entity->updateRange.x = entity->size.x;
         entity->updateRange.y = entity->size.y;

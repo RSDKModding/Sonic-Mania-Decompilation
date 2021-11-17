@@ -215,7 +215,7 @@ void SeeSaw_Create(void *data)
     RSDK_THIS(SeeSaw);
 
     entity->drawFX = FX_FLIP;
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         RSDK.SetSpriteAnimation(SeeSaw->aniFrames, 0, &entity->animator1, true, 0);
         RSDK.SetSpriteAnimation(SeeSaw->aniFrames, 1, &entity->animator2, true, 0);
         RSDK.SetSpriteAnimation(SeeSaw->aniFrames, 2, &entity->animator3, true, 0);

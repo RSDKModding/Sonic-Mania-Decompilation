@@ -63,7 +63,7 @@ void Flamethrower_Create(void *data)
     entity->drawFX        = FX_ROTATE | FX_FLIP;
     entity->updateRange.x = 0x800000;
     entity->updateRange.y = 0x800000;
-    if (RSDK_sceneInfo->inEditor) {
+    if (SceneInfo->inEditor) {
         if (!entity->maxDist)
             entity->maxDist = 96;
         if (!entity->spread)
@@ -139,7 +139,7 @@ void Flamethrower_CheckOnScreen(void)
 {
     RSDK_THIS(Flamethrower);
 
-    if (!RSDK.CheckOnScreen(RSDK_sceneInfo->entity, NULL)) {
+    if (!RSDK.CheckOnScreen(SceneInfo->entity, NULL)) {
         entity->active = ACTIVE_BOUNDS;
         entity->state  = Flamethrower_State_Unknown2;
     }

@@ -20,7 +20,7 @@ void PuyoMatch_Draw(void)
     RSDK_THIS(PuyoMatch);
     Vector2 drawPos;
 
-    if (RSDK_sceneInfo->currentDrawGroup != Zone->hudDrawOrder) {
+    if (SceneInfo->currentDrawGroup != Zone->hudDrawOrder) {
         drawPos.x = entity->position.x;
         drawPos.y = entity->position.y - 0x80000;
         RSDK.DrawSprite(&entity->animator1, &drawPos, false);
@@ -35,7 +35,7 @@ void PuyoMatch_Create(void *data)
 {
     RSDK_THIS(PuyoMatch);
 
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->active        = ACTIVE_BOUNDS;
         entity->visible       = true;
         entity->drawOrder     = Zone->drawOrderLow;
@@ -43,7 +43,7 @@ void PuyoMatch_Create(void *data)
         entity->updateRange.y = 0x800000;
         entity->stateInput    = PuyoBean_StateInput_HandlePlayerInputs;
         entity->field_80      = PuyoMatch->value2;
-        entity->beanDropPos   = RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot + 1, PlatformNode)->position;
+        entity->beanDropPos   = RSDK_GET_ENTITY(SceneInfo->entitySlot + 1, PlatformNode)->position;
         entity->timer         = 60;
         RSDK.SetSpriteAnimation(PuyoMatch->aniFrames, 1, &entity->animator3, true, 0);
     }
@@ -291,7 +291,7 @@ void PuyoMatch_State_Unknown2(void)
     if (!entity->playerID)
         slot = 2;
 
-    EntityPuyoMatch *match = RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot + slot, PuyoMatch);
+    EntityPuyoMatch *match = RSDK_GET_ENTITY(SceneInfo->entitySlot + slot, PuyoMatch);
 
     EntityPuyoAttack *attack = CREATE_ENTITY(PuyoAttack, intToVoid(entity->playerID ^ 1), targetBean->position.x, targetBean->position.y);
     attack->targetPos.x      = match->beanDropPos.x - 0x100000;

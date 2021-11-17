@@ -32,8 +32,8 @@ void PBL_Ring_Draw(void)
     if (entity->depth3D >= 0x100) {
         Vector2 drawPos;
         entity->direction = entity->animator.frameID > 8;
-        drawPos.x         = (RSDK_screens->centerX + (entity->worldX << 8) / entity->depth3D) << 16;
-        drawPos.y         = (RSDK_screens->centerY - (entity->worldY << 8) / entity->depth3D) << 16;
+        drawPos.x         = (ScreenInfo->centerX + (entity->worldX << 8) / entity->depth3D) << 16;
+        drawPos.y         = (ScreenInfo->centerY - (entity->worldY << 8) / entity->depth3D) << 16;
         entity->scale.x   = 0x1000000 / entity->depth3D;
         entity->scale.y   = 0x1000000 / entity->depth3D;
         if (entity->state == PBL_Ring_State_Ring)
@@ -45,7 +45,7 @@ void PBL_Ring_Draw(void)
 void PBL_Ring_Create(void *data)
 {
     RSDK_THIS(PBL_Ring);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->visible       = true;
         entity->drawFX        = FX_SCALE | FX_FLIP;
         entity->drawOrder     = 4;

@@ -103,7 +103,7 @@ void WallCrawl_HandlePlayerInteractions(void)
 void WallCrawl_CheckOnScreen(void)
 {
     RSDK_THIS(WallCrawl);
-    if (!RSDK.CheckOnScreen(RSDK_sceneInfo->entity, 0) && !RSDK.CheckPosOnScreen(&entity->startPos, &entity->updateRange)) {
+    if (!RSDK.CheckOnScreen(SceneInfo->entity, 0) && !RSDK.CheckPosOnScreen(&entity->startPos, &entity->updateRange)) {
         entity->position  = entity->startPos;
         entity->direction = entity->startDir;
         WallCrawl_Create(NULL);

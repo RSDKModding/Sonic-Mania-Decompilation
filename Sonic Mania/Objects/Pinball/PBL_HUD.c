@@ -16,7 +16,7 @@ void PBL_HUD_StaticUpdate(void) {}
 void PBL_HUD_Draw(void)
 {
     RSDK_THIS(PBL_HUD);
-    entity->position.x = RSDK_screens->centerX << 16;
+    entity->position.x = ScreenInfo->centerX << 16;
     if (entity->stateDraw) {
         StateMachine_Run(entity->stateDraw);
     }
@@ -29,7 +29,7 @@ void PBL_HUD_Draw(void)
 void PBL_HUD_Create(void *data)
 {
     RSDK_THIS(PBL_HUD);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->visible    = true;
         entity->drawOrder  = 12;
         entity->active     = ACTIVE_NORMAL;
@@ -233,9 +233,9 @@ void PBL_HUD_StateDraw_Unknown2(void)
     position.y = entity->position.y;
     position.x += entity->offset.x;
     position.y += entity->offset.y;
-    RSDK.SetClipBounds(RSDK_sceneInfo->currentScreenID, RSDK_screens->centerX - 55, 40, RSDK_screens->centerX + 56, 58);
+    RSDK.SetClipBounds(SceneInfo->currentScreenID, ScreenInfo->centerX - 55, 40, ScreenInfo->centerX + 56, 58);
     RSDK.DrawText(&entity->animator3, &position, &entity->text, 0, 0, 0, 1, 0, 0, true);
-    RSDK.SetClipBounds(RSDK_sceneInfo->currentScreenID, 0, 0, RSDK_screens->width, RSDK_screens->height);
+    RSDK.SetClipBounds(SceneInfo->currentScreenID, 0, 0, ScreenInfo->width, ScreenInfo->height);
 }
 
 void PBL_HUD_StateDraw_Unknown3(void)

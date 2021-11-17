@@ -97,7 +97,7 @@ void YoyoPulley_Draw(void) { YoyoPulley_DrawSprites(); }
 void YoyoPulley_Create(void *data)
 {
     RSDK_THIS(YoyoPulley);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->pullDir ^= 1;
         entity->speed <<= 6;
         entity->pulleyLength = 0;

@@ -66,7 +66,7 @@ void ForceSpin_Create(void *data)
     RSDK.SetSpriteAnimation(ForceSpin->aniFrames, 0, &entity->animator, true, 0);
     entity->drawFX |= FX_FLIP;
     entity->animator.frameID = 4;
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->active = ACTIVE_BOUNDS;
 
         int32 x = 0;
@@ -95,7 +95,7 @@ void ForceSpin_DrawSprites(void)
     Vector2 drawPos;
 
     RSDK_THIS(ForceSpin);
-    drawPos.x = RSDK_sceneInfo->entity->position.x;
+    drawPos.x = entity->position.x;
     drawPos.y = entity->position.y;
     drawPos.y -= entity->size << 19;
     Zone_Unknown3(&entity->position, &drawPos, entity->angle);

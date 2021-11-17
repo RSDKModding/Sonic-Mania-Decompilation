@@ -49,18 +49,18 @@ void WeatherTV_Draw(void)
 {
     RSDK_THIS(WeatherTV);
 
-    int x      = (entity->position.x >> 16) - RSDK_screens->position.x;
-    int y      = (entity->position.y >> 16) - RSDK_screens->position.y;
+    int x      = (entity->position.x >> 16) - ScreenInfo->position.x;
+    int y      = (entity->position.y >> 16) - ScreenInfo->position.y;
     RSDK.SetClipBounds(0, x - 96, y - 64, x + 96, y + 64);
     StateMachine_Run(entity->stateDraw);
-    RSDK.SetClipBounds(0, 0, 0, RSDK_screens->width, RSDK_screens->height);
+    RSDK.SetClipBounds(0, 0, 0, ScreenInfo->width, ScreenInfo->height);
 }
 
 void WeatherTV_Create(void* data)
 {
     RSDK_THIS(WeatherTV);
 
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->visible       = true;
         entity->drawOrder     = Zone->drawOrderLow;
         entity->active        = ACTIVE_BOUNDS;
@@ -497,7 +497,7 @@ void WeatherTV_StateDraw_Unknown14(void)
     RSDK_THIS(WeatherTV);
     Vector2 drawPos;
 
-    if (RSDK_sceneInfo->currentDrawGroup == Zone->drawOrderHigh) {
+    if (SceneInfo->currentDrawGroup == Zone->drawOrderHigh) {
         drawPos.x                 = entity->position.x + 0x400000;
         drawPos.y                 = entity->position.y - 0x180000;
         entity->animator3.frameID = 4;

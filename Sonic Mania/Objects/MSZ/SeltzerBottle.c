@@ -73,7 +73,7 @@ void SeltzerBottle_Draw(void)
 void SeltzerBottle_Create(void *data)
 {
     RSDK_THIS(SeltzerBottle);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         RSDK.SetSpriteAnimation(SeltzerBottle->aniFrames, 0, &entity->animator1, true, 0);
         RSDK.SetSpriteAnimation(SeltzerBottle->aniFrames, 1, &entity->animator2, true, 0);
         RSDK.SetSpriteAnimation(SeltzerBottle->aniFrames, 2, &entity->animator3, true, 0);
@@ -121,7 +121,7 @@ void SeltzerBottle_Unknown1(void)
     spray->field_64  = RSDK.Rand(0xA00, 0xC00);
     spray->field_5C  = RSDK.Rand(0, 0x100);
     spray->drawOrder = Zone->playerDrawLow;
-    spray->nodeSlot  = RSDK_sceneInfo->entitySlot + 1;
+    spray->nodeSlot  = SceneInfo->entitySlot + 1;
 
     int32 storeX = entity->position.x;
     int32 storeY = entity->position.y;

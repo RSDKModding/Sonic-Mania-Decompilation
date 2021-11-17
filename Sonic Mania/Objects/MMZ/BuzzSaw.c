@@ -28,7 +28,7 @@ void BuzzSaw_Create(void *data)
     else
         entity->inkEffect = INK_ADD;
 
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         RSDK.SetSpriteAnimation(BuzzSaw->aniFrames, entity->type, &entity->animator, true, 0);
         entity->active        = ACTIVE_BOUNDS;
         entity->updateRange.x = (abs(entity->speed * entity->amplitude.x) + 64) << 17;
@@ -61,8 +61,8 @@ void BuzzSaw_StageLoad(void)
 
 bool32 BuzzSaw_CheckCB(void)
 {
-    int32 worldX = (RSDK_screens->position.x + RSDK_screens->centerX) << 16;
-    int32 worldY = (RSDK_screens->position.y + RSDK_screens->centerY) << 16;
+    int32 worldX = (ScreenInfo->position.x + ScreenInfo->centerX) << 16;
+    int32 worldY = (ScreenInfo->position.y + ScreenInfo->centerY) << 16;
 
     int32 count = 0;
 
@@ -81,8 +81,8 @@ bool32 BuzzSaw_CheckCB(void)
 void BuzzSaw_UpdateCB(int32 sfx)
 {
     int32 dist   = 0x7FFF0000;
-    int32 worldX = (RSDK_screens->position.x + RSDK_screens->centerX) << 16;
-    int32 worldY = (RSDK_screens->position.y + RSDK_screens->centerY) << 16;
+    int32 worldX = (ScreenInfo->position.x + ScreenInfo->centerX) << 16;
+    int32 worldY = (ScreenInfo->position.y + ScreenInfo->centerY) << 16;
 
     foreach_all(BuzzSaw, saw)
     {

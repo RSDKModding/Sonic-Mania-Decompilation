@@ -30,7 +30,7 @@ void PushSpring_Create(void *data)
 {
     RSDK_THIS(PushSpring);
     entity->drawFX = FX_FLIP;
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->active        = ACTIVE_BOUNDS;
         entity->visible       = true;
         entity->drawOrder     = Zone->drawOrderLow;

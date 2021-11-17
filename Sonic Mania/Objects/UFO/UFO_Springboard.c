@@ -90,7 +90,7 @@ void UFO_Springboard_Draw(void)
 void UFO_Springboard_Create(void *data)
 {
     RSDK_THIS(UFO_Springboard);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->visible       = true;
         entity->drawOrder     = 4;
         entity->active        = ACTIVE_BOUNDS;

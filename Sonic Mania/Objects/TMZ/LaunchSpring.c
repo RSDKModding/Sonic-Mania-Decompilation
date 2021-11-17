@@ -41,7 +41,7 @@ void LaunchSpring_Create(void *data)
 
     entity->drawFX   = FX_ROTATE | FX_FLIP;
     entity->rotation = entity->angle << 6;
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->active        = ACTIVE_BOUNDS;
         entity->visible       = RSDK.CheckStageFolder("SSZ1") || RSDK.CheckStageFolder("SSZ2");
         entity->updateRange.x = 0x800000;
@@ -196,7 +196,7 @@ void LaunchSpring_Unknown5(void)
     RSDK_THIS(LaunchSpring);
     EntityPlayer *player = (EntityPlayer *)entity->playerPtr;
 
-    player->position.x = RSDK_sceneInfo->entity->position.x;
+    player->position.x = entity->position.x;
     player->position.y = entity->position.y;
     player->position.x += RSDK.Cos512(entity->rotation - 128) << 12;
     player->position.y += RSDK.Sin512(entity->rotation - 128) << 12;

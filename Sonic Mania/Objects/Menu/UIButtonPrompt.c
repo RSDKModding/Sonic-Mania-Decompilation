@@ -112,7 +112,7 @@ void UIButtonPrompt_Draw(void)
 void UIButtonPrompt_Create(void *data)
 {
     RSDK_THIS(UIButtonPrompt);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->startPos      = entity->position;
         entity->visible       = true;
         entity->drawOrder     = 2;
@@ -147,12 +147,12 @@ void UIButtonPrompt_StageLoad(void)
 int32 UIButtonPrompt_GetButtonMappings(int32 input, int32 button)
 {
     switch (button) {
-        case 0: return RSDK_controller[input].keyA.keyMap;
-        case 1: return RSDK_controller[input].keyB.keyMap;
-        case 2: return RSDK_controller[input].keyX.keyMap;
-        case 3: return RSDK_controller[input].keyY.keyMap;
-        case 4: return RSDK_controller[input].keyStart.keyMap;
-        case 5: return RSDK_controller[input].keySelect.keyMap;
+        case 0: return ControllerInfo[input].keyA.keyMap;
+        case 1: return ControllerInfo[input].keyB.keyMap;
+        case 2: return ControllerInfo[input].keyX.keyMap;
+        case 3: return ControllerInfo[input].keyY.keyMap;
+        case 4: return ControllerInfo[input].keyStart.keyMap;
+        case 5: return ControllerInfo[input].keySelect.keyMap;
         default: break;
     }
     return 0;
@@ -291,7 +291,7 @@ uint8 UIButtonPrompt_MappingsToFrame(int32 mappings)
 void UIButtonPrompt_Unknown4(void)
 {
     RSDK_THIS(UIButtonPrompt);
-    if (RSDK_sceneInfo->inEditor) {
+    if (SceneInfo->inEditor) {
         RSDK.SetSpriteAnimation(UIButtonPrompt->aniFrames, 2, &entity->animator2, true, entity->buttonID);
     }
     else {
@@ -315,16 +315,16 @@ bool32 UIButtonPrompt_CheckTouch(void)
     RSDK_THIS(UIButtonPrompt);
     EntityUIControl *control = (EntityUIControl *)entity->parent;
     if (control && !control->dialogHasFocus && !control->selectionDisabled) {
-        if (RSDK_touchMouse->count) {
-            int32 screenX = (RSDK_screens->position.x << 16);
-            int32 screenY = (RSDK_screens->position.y << 16);
+        if (TouchInfo->count) {
+            int32 screenX = (ScreenInfo->position.x << 16);
+            int32 screenY = (ScreenInfo->position.y << 16);
             int32 sizeX   = entity->touchSize.x >> 1;
             int32 sizeY   = entity->touchSize.y >> 1;
 
             bool32 flag = false;
-            for (int32 i = 0; i < RSDK_touchMouse->count; ++i) {
-                int32 x = screenX - ((RSDK_touchMouse->x[i] * RSDK_screens->width) * -65536.0f);
-                int32 y = screenY - ((RSDK_touchMouse->y[i] * RSDK_screens->height) * -65536.0f);
+            for (int32 i = 0; i < TouchInfo->count; ++i) {
+                int32 x = screenX - ((TouchInfo->x[i] * ScreenInfo->width) * -65536.0f);
+                int32 y = screenY - ((TouchInfo->y[i] * ScreenInfo->height) * -65536.0f);
 
                 int32 touchX = abs(entity->touchPos.x + entity->position.x - x);
                 int32 touchY = abs(entity->touchPos.y + entity->position.y - y);

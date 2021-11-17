@@ -12,7 +12,7 @@ void FernParallax_StaticUpdate(void) {}
 void FernParallax_Draw(void)
 {
     RSDK_THIS(FernParallax);
-    ScreenInfo *screen = &RSDK_screens[RSDK_sceneInfo->currentScreenID];
+    RSDKScreenInfo *screen = &ScreenInfo[SceneInfo->currentScreenID];
 
     int32 screenX = (screen->position.x + screen->centerX) << 16;
     int32 screenY = (screen->position.y + screen->centerY) << 16;

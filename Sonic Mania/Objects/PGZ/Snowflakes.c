@@ -9,12 +9,12 @@ void Snowflakes_Update(void)
         for (int32 i = 0; i < 0x40; ++i) {
             if (!entity->positions[i].x && !entity->positions[i].y) {
                 if ((i & 0x8000) == 0) {
-                    int32 screenY            = RSDK_screens->position.y;
-                    int32 scrX    = RSDK_screens->position.x % RSDK_screens->width;
+                    int32 screenY            = ScreenInfo->position.y;
+                    int32 scrX    = ScreenInfo->position.x % ScreenInfo->width;
 #if RETRO_USE_PLUS
-                    int32 posX               = (scrX + RSDK.Random(0, RSDK_screens->width, &Zone->randKey)) % RSDK_screens->width;
+                    int32 posX               = (scrX + RSDK.Random(0, ScreenInfo->width, &Zone->randKey)) % ScreenInfo->width;
 #else
-                    int32 posX             = (scrX + RSDK.Rand(0, RSDK_screens->width)) % RSDK_screens->width;
+                    int32 posX             = (scrX + RSDK.Rand(0, ScreenInfo->width)) % ScreenInfo->width;
 #endif
                     entity->positions[i].y = (screenY - 5) << 16;
                     entity->positions[i].x = posX << 16;
@@ -99,7 +99,7 @@ void Snowflakes_Draw(void)
 {
     RSDK_THIS(Snowflakes);
     int32 drawHigh  = Zone->drawOrderHigh;
-    int32 drawLayer = RSDK_sceneInfo->currentDrawGroup;
+    int32 drawLayer = SceneInfo->currentDrawGroup;
 
     for (int32 i = 0; i < 0x40; ++i) {
         if (entity->positions[i].x || entity->positions[i].y) {
@@ -159,19 +159,19 @@ Vector2 Snowflakes_Unknown1(int32 id)
     if (!entity->flipFlags[id])
         mult = 64;
 
-    int32 i = x - (RSDK_screens->position.x << 8) * mult;
-    while (i < 0) i += RSDK_screens->width << 16;
+    int32 i = x - (ScreenInfo->position.x << 8) * mult;
+    while (i < 0) i += ScreenInfo->width << 16;
 
-    int32 posX = RSDK_screens->position.x / RSDK_screens->width;
-    if ((i % (RSDK_screens->width << 16)) >> 16 < RSDK_screens->position.x % RSDK_screens->width)
-        posX = RSDK_screens->position.x / RSDK_screens->width + 1;
+    int32 posX = ScreenInfo->position.x / ScreenInfo->width;
+    if ((i % (ScreenInfo->width << 16)) >> 16 < ScreenInfo->position.x % ScreenInfo->width)
+        posX = ScreenInfo->position.x / ScreenInfo->width + 1;
 
     int32 posY = 0;
-    if (y > (RSDK_screens->height + RSDK_screens->position.y) << 16)
-        posY = -RSDK_screens->height;
+    if (y > (ScreenInfo->height + ScreenInfo->position.y) << 16)
+        posY = -ScreenInfo->height;
 
     Vector2 pos;
-    pos.x = (posX * RSDK_screens->width << 16) + (i % (RSDK_screens->width << 16));
+    pos.x = (posX * ScreenInfo->width << 16) + (i % (ScreenInfo->width << 16));
     pos.y = (posY << 16) + y;
     return pos;
 }

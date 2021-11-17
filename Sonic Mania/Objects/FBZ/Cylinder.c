@@ -17,7 +17,7 @@ void Cylinder_Draw(void) {}
 void Cylinder_Create(void *data)
 {
     RSDK_THIS(Cylinder);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->active    = ACTIVE_BOUNDS;
         entity->visible   = false;
         entity->drawOrder = Zone->drawOrderLow;

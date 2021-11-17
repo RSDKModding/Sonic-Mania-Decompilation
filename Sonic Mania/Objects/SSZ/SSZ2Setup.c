@@ -61,7 +61,7 @@ void SSZ2Setup_StageLoad(void)
 #endif
     }
 #if RETRO_USE_PLUS
-    if ((RSDK_sceneInfo->filter & FILTER_ENCORE))
+    if ((SceneInfo->filter & FILTER_ENCORE))
         RSDK.LoadPalette(0, "EncoreSSZ2.act", 0xFF);
 #endif
     GenericTrigger->callbacks[0] = SSZ2Setup_GenericTriggerCallback1;
@@ -75,17 +75,17 @@ void SSZ2Setup_StageFinishCallback(void) { CREATE_ENTITY(SSZ3Cutscene, intToVoid
 
 void SSZ2Setup_TowerDrawLayerCallback(void)
 {
-    RSDK.SetActivePalette(0, 0, RSDK_screens->height);
-    RSDK.SetClipBounds(0, 0, 0, RSDK_screens->width, RSDK_screens->height);
+    RSDK.SetActivePalette(0, 0, ScreenInfo->height);
+    RSDK.SetClipBounds(0, 0, 0, ScreenInfo->width, ScreenInfo->height);
 }
 
 void SSZ2Setup_TowerScanlineCallback(ScanlineInfo *scanlines)
 {
-    RSDK.SetClipBounds(0, RSDK_screens->centerX - 144, 0, RSDK_screens->centerX + 144, RSDK_screens->height);
+    RSDK.SetClipBounds(0, ScreenInfo->centerX - 144, 0, ScreenInfo->centerX + 144, ScreenInfo->height);
     RSDK.ProcessParallax(SSZ2Setup->towerLayer);
-    RSDK.SetActivePalette(3, 0, RSDK_screens->height);
+    RSDK.SetActivePalette(3, 0, ScreenInfo->height);
 
-    ScanlineInfo *scanlinePtr = &scanlines[RSDK_screens->centerX - 64];
+    ScanlineInfo *scanlinePtr = &scanlines[ScreenInfo->centerX - 64];
     int32 x1                    = scanlinePtr->position.x;
     int32 offset                = 0x10000;
     for (int32 i = 2; i - 2 < 80;) {
@@ -114,7 +114,7 @@ void SSZ2Setup_TowerScanlineCallback(ScanlineInfo *scanlines)
         i += 5;
     }
 
-    scanlinePtr = &scanlines[RSDK_screens->centerX + 64];
+    scanlinePtr = &scanlines[ScreenInfo->centerX + 64];
     x1          = scanlinePtr->position.x;
     offset      = 0x10000;
 
@@ -162,7 +162,7 @@ void SSZ2Setup_GenericTriggerCallback1(void)
 void SSZ2Setup_GenericTriggerCallback2(void)
 {
     if (!SSZ2Setup->hasAchievement) {
-        if (!RSDK_sceneInfo->minutes) {
+        if (!SceneInfo->minutes) {
 #if RETRO_USE_PLUS
             API.UnlockAchievement("ACH_SSZ");
 #else
@@ -175,18 +175,18 @@ void SSZ2Setup_GenericTriggerCallback2(void)
 
 void SSZ2Setup_GenericTriggerCallback3(void)
 {
-    Entity *entity = RSDK_sceneInfo->entity;
+    Entity *entity = SceneInfo->entity;
     if (isMainGameMode()) {
         EntityPlayer *player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
         if (player->stateInput) {
             player->stateInput      = 0;
             player->left            = false;
             player->right           = true;
-            Zone->screenBoundsR1[0] = RSDK_screens->centerX + (entity->position.x >> 16);
-            Zone->screenBoundsR1[1] = RSDK_screens->centerX + (entity->position.x >> 16);
+            Zone->screenBoundsR1[0] = ScreenInfo->centerX + (entity->position.x >> 16);
+            Zone->screenBoundsR1[1] = ScreenInfo->centerX + (entity->position.x >> 16);
 #if RETRO_USE_PLUS
-            Zone->screenBoundsR1[2] = RSDK_screens->centerX + (entity->position.x >> 16);
-            Zone->screenBoundsR1[3] = RSDK_screens->centerX + (entity->position.x >> 16);
+            Zone->screenBoundsR1[2] = ScreenInfo->centerX + (entity->position.x >> 16);
+            Zone->screenBoundsR1[3] = ScreenInfo->centerX + (entity->position.x >> 16);
 #endif
 
             for (int32 i = 0; i < Player->playerCount; ++i) {
@@ -196,7 +196,7 @@ void SSZ2Setup_GenericTriggerCallback3(void)
             SaveGame_SavePlayerState();
             globals->suppressAutoMusic = true;
             globals->suppressTitlecard = true;
-            ++RSDK_sceneInfo->listPos;
+            ++SceneInfo->listPos;
             if (!RSDK.CheckValidScene())
                 RSDK.SetScene("Presentation", "Title Screen");
             Zone_StartFadeOut(10, 0x000000);

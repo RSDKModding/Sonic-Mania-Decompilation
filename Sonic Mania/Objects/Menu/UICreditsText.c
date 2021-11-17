@@ -30,10 +30,10 @@ void UICreditsText_Draw(void)
         RSDK.DrawSprite(&entity->animator, 0, false);
     }
     else {
-        RSDK.SetClipBounds(RSDK_sceneInfo->currentScreenID, 0, 0, RSDK_screens->width,
-                           (entity->position.y >> 16) + entity->clipY2 - RSDK_screens[RSDK_sceneInfo->currentScreenID].position.y);
+        RSDK.SetClipBounds(SceneInfo->currentScreenID, 0, 0, ScreenInfo->width,
+                           (entity->position.y >> 16) + entity->clipY2 - ScreenInfo[SceneInfo->currentScreenID].position.y);
         RSDK.DrawText(&entity->animator, &drawPos, &entity->text, 0, 0, ALIGN_LEFT, 0, 0, entity->charPositions, false);
-        RSDK.SetClipBounds(RSDK_sceneInfo->currentScreenID, 0, 0, RSDK_screens->width, RSDK_screens->height);
+        RSDK.SetClipBounds(SceneInfo->currentScreenID, 0, 0, ScreenInfo->width, ScreenInfo->height);
     }
 }
 
@@ -41,7 +41,7 @@ void UICreditsText_Create(void *data)
 {
     RSDK_THIS(UICreditsText);
     RSDK.SetSpriteAnimation(UICreditsText->aniFrames, entity->listID, &entity->animator, true, 0);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->active        = ACTIVE_BOUNDS;
         entity->updateRange.x = 0x800000;
         entity->updateRange.y = 0x800000;
@@ -73,7 +73,7 @@ void UICreditsText_SetText(int32 animID, EntityUICreditsText *label, TextInfo *t
 void UICreditsText_State_Setup(void)
 {
     RSDK_THIS(UICreditsText);
-    if ((entity->position.y >> 16) - RSDK_screens->position.y - RSDK_screens->centerY < RSDK_screens->centerY - 16) {
+    if ((entity->position.y >> 16) - ScreenInfo->position.y - ScreenInfo->centerY < ScreenInfo->centerY - 16) {
         entity->active  = ACTIVE_NORMAL;
         entity->visible = true;
         if (entity->animator.animationID == 7) {
@@ -175,7 +175,7 @@ void UICreditsText_State_FadeIn(void)
 void UICreditsText_SetupIdleDelay(void)
 {
     RSDK_THIS(UICreditsText);
-    if ((entity->position.y >> 16) - RSDK_screens->position.y < 32) {
+    if ((entity->position.y >> 16) - ScreenInfo->position.y < 32) {
         if (entity->animator.animationID == 7) {
             entity->drawFX = FX_SCALE;
             entity->state  = UICreditsText_State_ScaleOut;

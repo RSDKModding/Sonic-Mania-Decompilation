@@ -12,9 +12,9 @@ void COverlay_Draw(void)
 {
     RSDK_THIS(COverlay);
     int32 tileX          = 0;
-    for (entity->position.x = (RSDK_screens->position.x & 0xFFFFFFF0) << 16; tileX < (RSDK_screens->width >> 4) + 2; ++tileX) {
+    for (entity->position.x = (ScreenInfo->position.x & 0xFFFFFFF0) << 16; tileX < (ScreenInfo->width >> 4) + 2; ++tileX) {
         int32 tileY = 0;
-        for (entity->position.y = (RSDK_screens->position.y & 0xFFFFFFF0) << 16; tileY < (RSDK_screens->height >> 4) + 2; ++tileY) {
+        for (entity->position.y = (ScreenInfo->position.y & 0xFFFFFFF0) << 16; tileY < (ScreenInfo->height >> 4) + 2; ++tileY) {
             COverlay_DrawTile();
             entity->position.y += 16 << 0x10;
         }
@@ -25,7 +25,7 @@ void COverlay_Draw(void)
 void COverlay_Create(void *data)
 {
     RSDK_THIS(COverlay);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->active    = ACTIVE_ALWAYS;
         entity->visible   = true;
         entity->drawOrder = Zone->drawOrderHigh;

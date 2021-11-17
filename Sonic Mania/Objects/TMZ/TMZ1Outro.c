@@ -29,7 +29,7 @@ void TMZ1Outro_Draw(void) {}
 void TMZ1Outro_Create(void *data)
 {
     RSDK_THIS(TMZ1Outro);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->active  = ACTIVE_NORMAL;
         entity->visible = false;
     }
@@ -138,7 +138,7 @@ bool32 TMZ1Outro_Cutscene1_State4(EntityCutsceneSeq *host)
     if (entity->alpha == 320) {
         globals->suppressTitlecard = true;
         globals->suppressAutoMusic = true;
-        Zone_StoreEntities((RSDK_screens->position.x + RSDK_screens->centerX) << 16, (RSDK_screens->height + RSDK_screens->position.y) << 16);
+        Zone_StoreEntities((ScreenInfo->position.x + ScreenInfo->centerX) << 16, (ScreenInfo->height + ScreenInfo->position.y) << 16);
         RSDK.LoadScene();
         return true;
     }

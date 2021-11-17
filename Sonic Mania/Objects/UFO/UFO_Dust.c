@@ -33,8 +33,8 @@ void UFO_Dust_Draw(void)
 
     if (entity->depth3D >= 0x400) {
         Vector2 drawPos;
-        drawPos.x = (RSDK_screens->centerX + (entity->worldX << 8) / entity->depth3D) << 16;
-        drawPos.y = (RSDK_screens->centerY - (entity->worldY << 8) / entity->depth3D) << 16;
+        drawPos.x = (ScreenInfo->centerX + (entity->worldX << 8) / entity->depth3D) << 16;
+        drawPos.y = (ScreenInfo->centerY - (entity->worldY << 8) / entity->depth3D) << 16;
 
         entity->scale.x = 0x1000000 / entity->depth3D;
         entity->scale.y = 0x1000000 / entity->depth3D;
@@ -45,7 +45,7 @@ void UFO_Dust_Draw(void)
 void UFO_Dust_Create(void *data)
 {
     RSDK_THIS(UFO_Dust);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->visible       = true;
         entity->drawFX        = FX_SCALE | FX_FLIP;
         entity->drawOrder     = 4;

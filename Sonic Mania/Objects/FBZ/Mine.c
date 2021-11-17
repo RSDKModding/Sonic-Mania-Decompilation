@@ -77,7 +77,7 @@ void Mine_Draw(void)
 void Mine_Create(void *data)
 {
     RSDK_THIS(Mine);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->active        = ACTIVE_BOUNDS;
         entity->visible       = true;
         entity->drawOrder     = Zone->drawOrderLow;

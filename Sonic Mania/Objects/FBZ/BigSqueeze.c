@@ -26,7 +26,7 @@ void BigSqueeze_Draw(void)
 void BigSqueeze_Create(void *data)
 {
     RSDK_THIS(BigSqueeze);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         if (globals->gameMode < MODE_TIMEATTACK) {
             entity->active = ACTIVE_BOUNDS;
             switch (entity->type) {
@@ -95,7 +95,7 @@ void BigSqueeze_StageLoad(void)
     Soundboard_LoadSFX("Stage/Rumble.wav", true, BigSqueeze_RumbleCheckCB, NULL);
 }
 
-bool32 BigSqueeze_RumbleCheckCB(void) { return BigSqueeze->isRumbling && RSDK_sceneInfo->state == ENGINESTATE_REGULAR; }
+bool32 BigSqueeze_RumbleCheckCB(void) { return BigSqueeze->isRumbling && SceneInfo->state == ENGINESTATE_REGULAR; }
 
 void BigSqueeze_HandleWallCollisions(void)
 {
@@ -176,7 +176,7 @@ void BigSqueeze_Hit(void)
 
         entity->state               = BigSqueeze_State2_Die;
         entity->timer2              = 0;
-        RSDK_sceneInfo->timeEnabled = false;
+        SceneInfo->timeEnabled = false;
         EntityPlayer *player        = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
         Player_GiveScore(player, 1000);
     }
@@ -338,7 +338,7 @@ void BigSqueeze_State1_SetupBossArena(void)
 
         Zone->screenBoundsR1[0] = (entity->position.x >> 16) + 212;
         Zone->screenBoundsB1[0] = 1792;
-        Zone->screenBoundsT1[0] = Zone->screenBoundsB1[0] - RSDK_screens->height;
+        Zone->screenBoundsT1[0] = Zone->screenBoundsB1[0] - ScreenInfo->height;
 
         BigSqueeze->value7 = (Zone->screenBoundsB1[0] - 16) << 16;
         eggman->state      = Eggman_Unknown2;

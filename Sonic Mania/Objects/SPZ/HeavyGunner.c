@@ -22,7 +22,7 @@ void HeavyGunner_Create(void *data)
 {
     RSDK_THIS(HeavyGunner);
 
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         if (globals->gameMode < MODE_TIMEATTACK) {
             if (data) {
                 entity->type      = voidToInt(data);
@@ -304,7 +304,7 @@ void HeavyGunner_State_SetupArena(void)
             HeavyGunner->boundsB        = 0xC00;
             HeavyGunner->field_14       = true;
 
-            int mult = -0x1E00 * RSDK_screens->position.y;
+            int mult = -0x1E00 * ScreenInfo->position.y;
 
             TileLayer *bg1 = RSDK.GetSceneLayer(0);
             bg1->scrollPos += mult;
@@ -326,42 +326,42 @@ void HeavyGunner_State_SetupArena(void)
 
             Zone->autoScrollSpeed = player1->velocity.x;
 
-            EntityHeavyGunner *robo1 = RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot + 1, HeavyGunner);
+            EntityHeavyGunner *robo1 = RSDK_GET_ENTITY(SceneInfo->entitySlot + 1, HeavyGunner);
             int x                    = robo1->position.x;
             int y                    = robo1->position.y;
-            RSDK.ResetEntitySlot(RSDK_sceneInfo->entitySlot + 1, HeavyGunner->objectID, intToVoid(HEAVYGUNNER_EGGROBO));
+            RSDK.ResetEntitySlot(SceneInfo->entitySlot + 1, HeavyGunner->objectID, intToVoid(HEAVYGUNNER_EGGROBO));
             robo1->position.x = x;
             robo1->position.y = y;
-            robo1->parent     = (Entity *)RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot + 4, HeavyGunner);
+            robo1->parent     = (Entity *)RSDK_GET_ENTITY(SceneInfo->entitySlot + 4, HeavyGunner);
             robo1->angle      = 0;
             RSDK.SetSpriteAnimation(HeavyGunner->aniFrames, 22, &robo1->animator10, true, 0);
 
-            EntityHeavyGunner *robo2 = RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot + 2, HeavyGunner);
+            EntityHeavyGunner *robo2 = RSDK_GET_ENTITY(SceneInfo->entitySlot + 2, HeavyGunner);
             x                        = robo2->position.x;
             y                        = robo2->position.y;
-            RSDK.ResetEntitySlot(RSDK_sceneInfo->entitySlot + 2, HeavyGunner->objectID, intToVoid(HEAVYGUNNER_EGGROBO));
+            RSDK.ResetEntitySlot(SceneInfo->entitySlot + 2, HeavyGunner->objectID, intToVoid(HEAVYGUNNER_EGGROBO));
             robo2->position.x = x;
             robo2->position.y = y;
-            robo2->parent     = (Entity *)RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot + 4, HeavyGunner);
+            robo2->parent     = (Entity *)RSDK_GET_ENTITY(SceneInfo->entitySlot + 4, HeavyGunner);
             robo2->angle      = 80;
             RSDK.SetSpriteAnimation(HeavyGunner->aniFrames, 23, &robo2->animator10, true, 0);
 
-            EntityHeavyGunner *robo3 = RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot + 3, HeavyGunner);
+            EntityHeavyGunner *robo3 = RSDK_GET_ENTITY(SceneInfo->entitySlot + 3, HeavyGunner);
             x                        = robo3->position.x;
             y                        = robo3->position.y;
-            RSDK.ResetEntitySlot(RSDK_sceneInfo->entitySlot + 3, HeavyGunner->objectID, intToVoid(HEAVYGUNNER_EGGROBO));
+            RSDK.ResetEntitySlot(SceneInfo->entitySlot + 3, HeavyGunner->objectID, intToVoid(HEAVYGUNNER_EGGROBO));
             robo3->position.x = x;
             robo3->position.y = y;
-            robo3->parent     = (Entity *)RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot + 4, HeavyGunner);
+            robo3->parent     = (Entity *)RSDK_GET_ENTITY(SceneInfo->entitySlot + 4, HeavyGunner);
             robo3->angle      = 160;
             robo3->timer      = 0;
             robo3->state      = HeavyGunner_State3_Unknown2;
             RSDK.SetSpriteAnimation(HeavyGunner->aniFrames, 19, &robo3->animator10, true, 0);
 
-            EntityHeavyGunner *heli = RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot + 4, HeavyGunner);
+            EntityHeavyGunner *heli = RSDK_GET_ENTITY(SceneInfo->entitySlot + 4, HeavyGunner);
             x                       = heli->position.x;
             y                       = heli->position.y;
-            RSDK.ResetEntitySlot(RSDK_sceneInfo->entitySlot + 4, HeavyGunner->objectID, intToVoid(HEAVYGUNNER_HELI));
+            RSDK.ResetEntitySlot(SceneInfo->entitySlot + 4, HeavyGunner->objectID, intToVoid(HEAVYGUNNER_HELI));
             heli->position.x = x;
             heli->position.y = y;
 
@@ -394,8 +394,8 @@ void HeavyGunner_State_Unknown3(void)
             }
         }
 
-        Zone->screenBoundsL1[0] = (entity->position.x >> 16) - RSDK_screens->centerX;
-        Zone->screenBoundsR1[0] = (entity->position.x >> 16) + RSDK_screens->centerX;
+        Zone->screenBoundsL1[0] = (entity->position.x >> 16) - ScreenInfo->centerX;
+        Zone->screenBoundsR1[0] = (entity->position.x >> 16) + ScreenInfo->centerX;
         Zone->screenBoundsL2[0] = Zone->screenBoundsL1[0] << 16;
         Zone->screenBoundsR2[0] = Zone->screenBoundsR1[0] << 16;
         EntityCamera *camera    = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
@@ -406,15 +406,15 @@ void HeavyGunner_State_Unknown3(void)
             if (!RSDK.ObjectTileGrip(entity, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x800000, 0x40))
                 entity->position.y += 0x80000;
             Zone->screenBoundsB1[0] = (entity->position.y >> 16) + 168;
-            Zone->screenBoundsT1[0] = Zone->screenBoundsB1[0] - RSDK_screens->height;
+            Zone->screenBoundsT1[0] = Zone->screenBoundsB1[0] - ScreenInfo->height;
         }
         else {
             entity->field_68++;
         }
     }
     else if (entity->position.x < 0x49800000) {
-        Zone->screenBoundsL1[0] = (entity->position.x >> 16) - RSDK_screens->centerX;
-        Zone->screenBoundsR1[0] = (entity->position.x >> 16) + RSDK_screens->centerX;
+        Zone->screenBoundsL1[0] = (entity->position.x >> 16) - ScreenInfo->centerX;
+        Zone->screenBoundsR1[0] = (entity->position.x >> 16) + ScreenInfo->centerX;
         Zone->screenBoundsL2[0] = Zone->screenBoundsL1[0] << 16;
         Zone->screenBoundsR2[0] = Zone->screenBoundsR1[0] << 16;
         EntityCamera *camera    = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
@@ -425,7 +425,7 @@ void HeavyGunner_State_Unknown3(void)
             if (!RSDK.ObjectTileGrip(entity, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x800000, 0x40))
                 entity->position.y += 0x80000;
             Zone->screenBoundsB1[0] = (entity->position.y >> 16) + 168;
-            Zone->screenBoundsT1[0] = Zone->screenBoundsB1[0] - RSDK_screens->height;
+            Zone->screenBoundsT1[0] = Zone->screenBoundsB1[0] - ScreenInfo->height;
         }
         else {
             entity->field_68++;
@@ -556,13 +556,13 @@ void HeavyGunner_State_Unknown2(void)
         HeavyGunner->field_14       = true;
         entity->state               = HeavyGunner_State_Unknown3;
 
-        EntityHeavyGunner *heli = RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot + 4, HeavyGunner);
+        EntityHeavyGunner *heli = RSDK_GET_ENTITY(SceneInfo->entitySlot + 4, HeavyGunner);
         heli->position.x        = camera->position.x - 0x1200000;
         heli->position.y        = camera->position.y - 0xC00000;
         RSDK.SetSpriteAnimation(HeavyGunner->aniFrames, 1, &heli->animator9, true, 0);
         heli->state = HeavyGunner_State2_Unknown1;
         for (int c = 3 - heli->field_74; c > 0; --c) {
-            EntityHeavyGunner *robo = RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot + c, HeavyGunner);
+            EntityHeavyGunner *robo = RSDK_GET_ENTITY(SceneInfo->entitySlot + c, HeavyGunner);
             robo->position.x        = camera->position.x - 0x200000;
             robo->position.y        = camera->position.y - 0xC00000;
         }
@@ -1182,7 +1182,7 @@ void HeavyGunner_State6_Unknown8(void)
         RSDK.SetSpriteAnimation(0xFFFF, 0, &parent->animator2, true, 0);
         --parent->field_7C;
         parent->state               = HeavyGunner_State2_Unknown8;
-        RSDK_sceneInfo->timeEnabled = false;
+        SceneInfo->timeEnabled = false;
         Player_GiveScore(RSDK_GET_ENTITY(SLOT_PLAYER1, Player), 1000);
         RSDK.PlaySfx(HeavyGunner->sfxExplosion3, false, 255);
         entity->field_80 = 1;
@@ -1227,7 +1227,7 @@ void HeavyGunner_State2_Unknown2(void)
     if (entity->rotation < 0)
         entity->rotation = 0;
     RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x800000, true);
-    if (entity->position.x > Zone->screenBoundsL2[0] + ((RSDK_screens->centerX - 16) << 16))
+    if (entity->position.x > Zone->screenBoundsL2[0] + ((ScreenInfo->centerX - 16) << 16))
         entity->state = HeavyGunner_State2_Unknown3;
 }
 
@@ -1254,7 +1254,7 @@ void HeavyGunner_State2_Unknown3(void)
 
     bool32 collided = RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x800000, true);
     if (entity->velocity.x < 0 && collided) {
-        if (entity->position.x < Zone->screenBoundsL2[0] + ((RSDK_screens->centerX - 16) << 16)) {
+        if (entity->position.x < Zone->screenBoundsL2[0] + ((ScreenInfo->centerX - 16) << 16)) {
             entity->velocity.x = 0;
             entity->drawFX     = 0;
             if (entity->field_74 > 0)
@@ -1350,7 +1350,7 @@ void HeavyGunner_State2_Unknown5(void)
     if (entity->rotation > 0)
         entity->rotation = 0;
 
-    if (entity->position.x > Zone->screenBoundsL2[0] + ((RSDK_screens->centerX - 16) << 16)) {
+    if (entity->position.x > Zone->screenBoundsL2[0] + ((ScreenInfo->centerX - 16) << 16)) {
         entity->velocity.x = 0;
         entity->drawFX     = 0;
         entity->state      = HeavyGunner_State2_Unknown4;
@@ -1528,7 +1528,7 @@ void HeavyGunner_State2_Unknown9(void)
         Zone->autoScrollSpeed       = 0;
         Zone->screenBoundsR1[0]     = HeavyGunner->boundsR;
         Zone->playerBoundActiveR[0] = false;
-        destroyEntitySlot(RSDK_sceneInfo->entitySlot - 4);
+        destroyEntitySlot(SceneInfo->entitySlot - 4);
     }
 }
 

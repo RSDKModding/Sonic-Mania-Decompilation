@@ -27,14 +27,14 @@ void PhantomMystic_Draw(void)
 {
     RSDK_THIS(PhantomMystic);
 
-    RSDK.SetActivePalette(4, 0, RSDK_screens[RSDK_sceneInfo->currentScreenID].height);
+    RSDK.SetActivePalette(4, 0, ScreenInfo[SceneInfo->currentScreenID].height);
     if (entity->stateDraw) {
         StateMachine_Run(entity->stateDraw);
     }
     else {
         RSDK.DrawSprite(&entity->animator1, NULL, false);
     }
-    RSDK.SetActivePalette(0, 0, RSDK_screens[RSDK_sceneInfo->currentScreenID].height);
+    RSDK.SetActivePalette(0, 0, ScreenInfo[SceneInfo->currentScreenID].height);
 }
 
 void PhantomMystic_Create(void* data)
@@ -42,7 +42,7 @@ void PhantomMystic_Create(void* data)
     RSDK_THIS(PhantomMystic);
 
     entity->drawFX = FX_FLIP;
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->visible       = true;
         entity->drawOrder     = Zone->drawOrderLow;
         entity->active        = ACTIVE_NEVER;

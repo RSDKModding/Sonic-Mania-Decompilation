@@ -31,7 +31,7 @@ void Shutterbug_Create(void *data)
     RSDK_THIS(Shutterbug);
     entity->visible   = true;
     entity->drawOrder = Zone->drawOrderHigh;
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->active        = ACTIVE_BOUNDS;
         entity->updateRange.x = 0x800000;
         entity->updateRange.y = 0x800000;
@@ -228,7 +228,7 @@ int Shutterbug_BounceX(void)
     // hi rmg here you may be wondering why the hell CMODE_FLOOR is used
     // oh lemme tell ya buddy i have no fuckin idea
 
-    int x   = (RSDK_sceneInfo->entity->velocity.x <= 0) ? -0x90000 : 0x90000;
+    int x   = (entity->velocity.x <= 0) ? -0x90000 : 0x90000;
     int res = RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_FLOOR, 0, x, 0x80000, false)
               | RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_FLOOR, 0, x, -0x80000, false);
     if (res == 1)
@@ -240,7 +240,7 @@ int Shutterbug_BounceY(void)
     RSDK_THIS(Shutterbug);
 
     // makes sense here though!
-    int y   = (RSDK_sceneInfo->entity->velocity.y <= 0) ? -0x90000 : 0x90000;
+    int y   = (entity->velocity.y <= 0) ? -0x90000 : 0x90000;
     int res = RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_FLOOR, 0, 0x80000, y, false)
               | RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_FLOOR, 0, -0x80000, y, false);
     if (res == 1)

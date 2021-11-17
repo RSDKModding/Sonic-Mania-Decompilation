@@ -26,21 +26,21 @@ void FXRuby_Draw(void)
     RSDK_THIS(FXRuby);
     RSDK.SetLookupTable(FXRuby->lookupTable);
 
-    if (entity->fadeWhite >= 512 || entity->fadeBlack >= 512 || RSDK_sceneInfo->currentDrawGroup != entity->drawOrder) {
+    if (entity->fadeWhite >= 512 || entity->fadeBlack >= 512 || SceneInfo->currentDrawGroup != entity->drawOrder) {
         if (entity->fadeWhite > 0)
             RSDK.FillScreen(0xFFF0F0, entity->fadeWhite, entity->fadeWhite - 0x100, entity->fadeWhite - 0x100);
         if (entity->fadeBlack > 0)
             RSDK.FillScreen(0, entity->fadeBlack, entity->fadeBlack - 0x80, entity->fadeBlack - 0x100);
     }
     else {
-        if (entity->outerRadius <= RSDK_screens->width) {
+        if (entity->outerRadius <= ScreenInfo->width) {
             if (entity->innerRadius)
                 RSDK.DrawCircleOutline(entity->position.x, entity->position.y, entity->innerRadius, entity->outerRadius, 0, 0xFF, INK_LOOKUP, false);
             else
                 RSDK.DrawCircle(entity->position.x, entity->position.y, entity->outerRadius, 0, 0xFF, INK_LOOKUP, false);
         }
         else {
-            RSDK.DrawRect(0, 0, RSDK_screens->width, RSDK_screens->height, 0, 255, INK_LOOKUP, true);
+            RSDK.DrawRect(0, 0, ScreenInfo->width, ScreenInfo->height, 0, 255, INK_LOOKUP, true);
         }
     }
 }
@@ -48,7 +48,7 @@ void FXRuby_Draw(void)
 void FXRuby_Create(void *data)
 {
     RSDK_THIS(FXRuby);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->visible = true;
         entity->active  = ACTIVE_NORMAL;
         if (Zone)
@@ -128,7 +128,7 @@ void FXRuby_Unknown3(void)
 {
     RSDK_THIS(FXRuby);
     entity->outerRadius += entity->radiusSpeed;
-    if (entity->outerRadius > RSDK_screens->width) {
+    if (entity->outerRadius > ScreenInfo->width) {
         entity->flag  = true;
         entity->state = FXRuby_Unknown5;
     }

@@ -6,7 +6,7 @@ void LogoSetup_Update(void)
 {
     RSDK_THIS(LogoSetup);
     StateMachine_Run(entity->state);
-    RSDK_screens->position.x = 256 - RSDK_screens->centerX;
+    ScreenInfo->position.x = 256 - ScreenInfo->centerX;
 }
 
 void LogoSetup_LateUpdate(void) {}
@@ -22,7 +22,7 @@ void LogoSetup_Draw(void)
 void LogoSetup_Create(void *data)
 {
     RSDK_THIS(LogoSetup);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->active    = ACTIVE_ALWAYS;
         entity->visible   = true;
         entity->drawOrder = 12;
@@ -41,8 +41,8 @@ void LogoSetup_StageLoad(void)
     RSDK.ResetEntitySlot(0, LogoSetup->objectID, NULL);
     UIPicture->aniFrames = RSDK.LoadSpriteAnimation("Logos/Logos.bin", SCOPE_STAGE);
 
-    if (RSDK_sceneInfo->listPos > 2) {
-        switch (RSDK_sceneInfo->listPos) {
+    if (SceneInfo->listPos > 2) {
+        switch (SceneInfo->listPos) {
             case 3: globals->playerID = ID_SONIC; break;
             case 4: globals->playerID = ID_TAILS; break;
             case 5: globals->playerID = ID_KNUCKLES; break;
@@ -58,7 +58,7 @@ void LogoSetup_StageLoad(void)
 bool32 LogoSetup_ImageCallback(void)
 {
     if (LogoSetup->timer > 120
-        && (RSDK_controller->keyA.press || RSDK_controller->keyB.press || RSDK_controller->keyStart.press || LogoSetup->timer >= 300)) {
+        && (ControllerInfo->keyA.press || ControllerInfo->keyB.press || ControllerInfo->keyStart.press || LogoSetup->timer >= 300)) {
         return true;
     }
     LogoSetup->timer++;
@@ -80,7 +80,7 @@ void LogoSetup_SegaScreen(void)
 {
     RSDK_THIS(LogoSetup);
     if (entity->timer <= 0) {
-        if (!RSDK_screens->position.y)
+        if (!ScreenInfo->position.y)
             RSDK.PlaySfx(LogoSetup->sfxSega, 0, 0xFF);
         entity->timer     = 0;
         entity->state     = LogoSetup_Unknown2;
@@ -94,7 +94,7 @@ void LogoSetup_Unknown2(void)
 {
     RSDK_THIS(LogoSetup);
     ++entity->timer;
-    if (+entity->timer > 120 || (entity->timer > 30 && RSDK_controller->keyStart.press)) {
+    if (+entity->timer > 120 || (entity->timer > 30 && ControllerInfo->keyStart.press)) {
         entity->timer     = 0;
         entity->state     = LogoSetup_Unknown3;
         entity->stateDraw = LogoSetup_Unknown4;
@@ -104,12 +104,12 @@ void LogoSetup_Unknown3(void)
 {
     RSDK_THIS(LogoSetup);
     if (entity->timer >= 1024) {
-        if (RSDK_screens->position.y >= SCREEN_YSIZE) {
-            ++RSDK_sceneInfo->listPos;
+        if (ScreenInfo->position.y >= SCREEN_YSIZE) {
+            ++SceneInfo->listPos;
             RSDK.LoadScene();
         }
         else {
-            RSDK_screens->position.y += SCREEN_YSIZE;
+            ScreenInfo->position.y += SCREEN_YSIZE;
             entity->state     = LogoSetup_SegaScreen;
             entity->stateDraw = LogoSetup_Unknown4;
             entity->timer     = 1024;

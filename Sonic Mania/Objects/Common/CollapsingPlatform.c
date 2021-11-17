@@ -153,7 +153,7 @@ void CollapsingPlatform_Create(void *data)
         entity->drawOrder   = Zone->drawOrderHigh;
     }
 
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->active        = ACTIVE_BOUNDS;
         entity->updateRange.x = 0x800000;
         entity->updateRange.y = 0x800000;

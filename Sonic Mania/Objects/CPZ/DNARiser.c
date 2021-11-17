@@ -39,7 +39,7 @@ void DNARiser_Create(void *data)
     entity->active    = ACTIVE_BOUNDS;
     entity->drawOrder = Zone->drawOrderLow + 1;
     entity->field_CC  = 0x2E0000;
-    if (RSDK_sceneInfo->inEditor) {
+    if (SceneInfo->inEditor) {
         entity->speed.x = 0;
         if (!entity->speed.y)
             entity->speed.y = 0x60000;
@@ -470,7 +470,7 @@ void DNARiser_StateDraw_Main(void)
     entity->scale.x = 0x200;
     entity->scale.y = 0x200;
     entity->drawFX  = FX_NONE;
-    if (RSDK_sceneInfo->currentDrawGroup == Zone->drawOrderHigh) {
+    if (SceneInfo->currentDrawGroup == Zone->drawOrderHigh) {
         if (flag) {
             drawPos.x = sineOff + entity->position.x;
             drawPos.y = entity->position.y;
@@ -541,7 +541,7 @@ void DNARiser_StateDraw_Helix(void)
     entity->scale.y = 0x200;
     entity->drawFX  = FX_NONE;
     entity->drawFX  = INK_NONE;
-    if (RSDK_sceneInfo->currentDrawGroup != Zone->drawOrderHigh && !(entity->field_A4 & 1)) {
+    if (SceneInfo->currentDrawGroup != Zone->drawOrderHigh && !(entity->field_A4 & 1)) {
         if (flag) {
             drawPos.x = entity->position.x - sineOff;
             drawPos.y = entity->position.y;
@@ -577,7 +577,7 @@ void DNARiser_StateDraw_Helix(void)
 
         for (int32 i = 0; i < 8; ++i) {
             bool32 flagA = (flag && i <= 3) || (!flag && i >= 4);
-            bool32 flagB = RSDK_sceneInfo->currentDrawGroup == Zone->drawOrderHigh ? ((flag && !flagA) || (!flag && flagA))
+            bool32 flagB = SceneInfo->currentDrawGroup == Zone->drawOrderHigh ? ((flag && !flagA) || (!flag && flagA))
                                                                                    : ((flag && flagA) || (!flag && !flagA));
 
             if (flagArray[i] && flagB) {
@@ -591,7 +591,7 @@ void DNARiser_StateDraw_Helix(void)
         }
     }
 
-    if (RSDK_sceneInfo->currentDrawGroup == Zone->drawOrderHigh && !(entity->field_A4 & 1)) {
+    if (SceneInfo->currentDrawGroup == Zone->drawOrderHigh && !(entity->field_A4 & 1)) {
         if (flag) {
             drawPos.x = sineOff + entity->position.x;
             drawPos.y = entity->position.y;

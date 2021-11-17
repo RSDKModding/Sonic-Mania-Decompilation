@@ -28,7 +28,7 @@ void Sweep_Draw(void)
 void Sweep_Create(void *data)
 {
     RSDK_THIS(Sweep);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->visible = true;
         entity->drawFX |= FX_FLIP;
         entity->drawOrder = Zone->drawOrderLow;

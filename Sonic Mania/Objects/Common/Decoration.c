@@ -31,7 +31,7 @@ void Decoration_Create(void *data)
     RSDK_THIS(Decoration);
 
     entity->drawFX = FX_FLIP;
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->active  = ACTIVE_BOUNDS;
         entity->visible = true;
         if (entity->rotSpeed)

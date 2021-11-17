@@ -41,7 +41,7 @@ void BSS_Player_Update(void)
 
     int32 grav           = (entity->gravityStrength >> 1) - (entity->gravityStrength >> 4);
     entity->position.y = grav;
-    if (RSDK_sceneInfo->entitySlot)
+    if (SceneInfo->entitySlot)
         entity->position.y += 0xBA0000;
     else
         entity->position.y += 0xAA0000;
@@ -78,9 +78,9 @@ void BSS_Player_Draw(void)
 {
     RSDK_THIS(BSS_Player);
     Vector2 drawPos;
-    drawPos.x = RSDK_sceneInfo->entity->position.x;
+    drawPos.x = entity->position.x;
     drawPos.y = entity->position.y;
-    drawPos.x = RSDK_screens->centerX << 16;
+    drawPos.x = ScreenInfo->centerX << 16;
     RSDK.DrawSprite(&entity->playerAnimator, &drawPos, true);
 
     uint8 charID = globals->playerID & 0xFF;
@@ -95,7 +95,7 @@ void BSS_Player_Draw(void)
 void BSS_Player_Create(void *data)
 {
     RSDK_THIS(BSS_Player);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->active        = ACTIVE_NORMAL;
         entity->visible       = true;
         entity->drawOrder     = 4;
@@ -117,7 +117,7 @@ void BSS_Player_Create(void *data)
             default: entity->aniFrames = BSS_Player->sonicSpriteIndex; break;
         }
 
-        if (RSDK_sceneInfo->entitySlot) {
+        if (SceneInfo->entitySlot) {
             entity->stateInput = BSS_Player_ProcessP2Input;
             entity->sideKick   = true;
         }
@@ -148,33 +148,33 @@ void BSS_Player_ProcessP1Input(void)
     RSDK_THIS(BSS_Player);
     if (entity->controllerID < PLAYER_MAX) {
 #if RETRO_USE_TOUCH_CONTROLS
-        for (int32 t = 0; t < RSDK_touchMouse->count; ++t) {
-            int32 tx = (RSDK_touchMouse->x[t] * RSDK_screens->width);
-            int32 ty = (RSDK_touchMouse->y[t] * RSDK_screens->height);
+        for (int32 t = 0; t < TouchInfo->count; ++t) {
+            int32 tx = (TouchInfo->x[t] * ScreenInfo->width);
+            int32 ty = (TouchInfo->y[t] * ScreenInfo->height);
 
-            if (RSDK_touchMouse->down[t]) {
-                if (tx >= 0 && ty >= 96 && tx <= RSDK_screens->centerX && ty <= RSDK_screens->height) {
-                    int32 tx = (RSDK_touchMouse->x[t] * RSDK_screens->width);
-                    int32 ty = (RSDK_touchMouse->y[t] * RSDK_screens->height);
+            if (TouchInfo->down[t]) {
+                if (tx >= 0 && ty >= 96 && tx <= ScreenInfo->centerX && ty <= ScreenInfo->height) {
+                    int32 tx = (TouchInfo->x[t] * ScreenInfo->width);
+                    int32 ty = (TouchInfo->y[t] * ScreenInfo->height);
                     tx -= 64;
                     ty -= 192;
 
                     switch (((RSDK.ATan2(tx, ty) + 32) & 0xFF) >> 6) {
                         case 0:
-                            RSDK_controller->keyRight.down |= true;
-                            RSDK_controller[entity->controllerID].keyRight.down = true;
+                            ControllerInfo->keyRight.down |= true;
+                            ControllerInfo[entity->controllerID].keyRight.down = true;
                             break;
                         case 1:
-                            RSDK_controller->keyDown.down |= true;
-                            RSDK_controller[entity->controllerID].keyDown.down = true;
+                            ControllerInfo->keyDown.down |= true;
+                            ControllerInfo[entity->controllerID].keyDown.down = true;
                             break;
                         case 2:
-                            RSDK_controller->keyLeft.down |= true;
-                            RSDK_controller[entity->controllerID].keyLeft.down = true;
+                            ControllerInfo->keyLeft.down |= true;
+                            ControllerInfo[entity->controllerID].keyLeft.down = true;
                             break;
                         case 3:
-                            RSDK_controller->keyUp.down |= true;
-                            RSDK_controller[entity->controllerID].keyUp.down = true;
+                            ControllerInfo->keyUp.down |= true;
+                            ControllerInfo[entity->controllerID].keyUp.down = true;
                             break;
                     }
                     break;
@@ -182,32 +182,32 @@ void BSS_Player_ProcessP1Input(void)
             }
         }
 
-        for (int32 t = 0; t < RSDK_touchMouse->count; ++t) {
-            int32 tx = (RSDK_touchMouse->x[t] * RSDK_screens->width);
-            int32 ty = (RSDK_touchMouse->y[t] * RSDK_screens->height);
+        for (int32 t = 0; t < TouchInfo->count; ++t) {
+            int32 tx = (TouchInfo->x[t] * ScreenInfo->width);
+            int32 ty = (TouchInfo->y[t] * ScreenInfo->height);
 
-            if (RSDK_touchMouse->down[t]) {
-                if (tx >= RSDK_screens->centerX && ty >= 96 && tx <= RSDK_screens->width && ty <= RSDK_screens->height) {
-                    RSDK_controller->keyA.down |= true;
-                    RSDK_controller[entity->controllerID].keyA.down = true;
+            if (TouchInfo->down[t]) {
+                if (tx >= ScreenInfo->centerX && ty >= 96 && tx <= ScreenInfo->width && ty <= ScreenInfo->height) {
+                    ControllerInfo->keyA.down |= true;
+                    ControllerInfo[entity->controllerID].keyA.down = true;
                     break;
                 }
             }
         }
 
         if (!entity->touchJump) {
-            RSDK_controller->keyA.press |= RSDK_controller->keyA.down;
-            RSDK_controller[entity->controllerID].keyA.press |= RSDK_controller[entity->controllerID].keyA.down;
+            ControllerInfo->keyA.press |= ControllerInfo->keyA.down;
+            ControllerInfo[entity->controllerID].keyA.press |= ControllerInfo[entity->controllerID].keyA.down;
         }
-        entity->touchJump = RSDK_controller[entity->controllerID].keyA.down;
+        entity->touchJump = ControllerInfo[entity->controllerID].keyA.down;
 
-        for (int32 t = 0; t < RSDK_touchMouse->count; ++t) {
-            int32 tx = (RSDK_touchMouse->x[t] * RSDK_screens->width);
-            int32 ty = (RSDK_touchMouse->y[t] * RSDK_screens->height);
+        for (int32 t = 0; t < TouchInfo->count; ++t) {
+            int32 tx = (TouchInfo->x[t] * ScreenInfo->width);
+            int32 ty = (TouchInfo->y[t] * ScreenInfo->height);
 
-            if (RSDK_touchMouse->down[t]) {
-                if (tx >= RSDK_screens->width - 0x80 && ty >= 0 && tx <= RSDK_screens->width && ty <= 0x40) {
-                    if (RSDK_sceneInfo->state == ENGINESTATE_REGULAR) {
+            if (TouchInfo->down[t]) {
+                if (tx >= ScreenInfo->width - 0x80 && ty >= 0 && tx <= ScreenInfo->width && ty <= 0x40) {
+                    if (SceneInfo->state == ENGINESTATE_REGULAR) {
                         EntityPauseMenu *pauseMenu = RSDK.GetEntityByID(SLOT_PAUSEMENU);
                         if (!pauseMenu->objectID) {
                             RSDK.ResetEntitySlot(SLOT_PAUSEMENU, PauseMenu->objectID, NULL);
@@ -221,20 +221,20 @@ void BSS_Player_ProcessP1Input(void)
         }
 #endif
 
-        ControllerState *controller = &RSDK_controller[entity->controllerID];
+        RSDKControllerState *controller = &ControllerInfo[entity->controllerID];
         entity->up                  = controller->keyUp.down;
         entity->down                = controller->keyDown.down;
         entity->left                = controller->keyLeft.down;
         entity->right               = controller->keyRight.down;
 
-        entity->up |= RSDK_stickL[entity->controllerID].keyUp.down;
-        entity->down |= RSDK_stickL[entity->controllerID].keyDown.down;
-        entity->left |= RSDK_stickL[entity->controllerID].keyLeft.down;
-        entity->right |= RSDK_stickL[entity->controllerID].keyRight.down;
-        entity->up |= RSDK_stickL[entity->controllerID].vDelta > 0.3;
-        entity->down |= RSDK_stickL[entity->controllerID].vDelta < -0.3;
-        entity->left |= RSDK_stickL[entity->controllerID].hDelta < -0.3;
-        entity->right |= RSDK_stickL[entity->controllerID].hDelta > 0.3;
+        entity->up |= AnalogStickInfoL[entity->controllerID].keyUp.down;
+        entity->down |= AnalogStickInfoL[entity->controllerID].keyDown.down;
+        entity->left |= AnalogStickInfoL[entity->controllerID].keyLeft.down;
+        entity->right |= AnalogStickInfoL[entity->controllerID].keyRight.down;
+        entity->up |= AnalogStickInfoL[entity->controllerID].vDelta > 0.3;
+        entity->down |= AnalogStickInfoL[entity->controllerID].vDelta < -0.3;
+        entity->left |= AnalogStickInfoL[entity->controllerID].hDelta < -0.3;
+        entity->right |= AnalogStickInfoL[entity->controllerID].hDelta > 0.3;
 
         if (entity->left && entity->right) {
             entity->left  = false;
@@ -243,12 +243,12 @@ void BSS_Player_ProcessP1Input(void)
         entity->jumpPress = controller->keyA.press || controller->keyB.press || controller->keyC.press || controller->keyX.press;
 
 #if RETRO_USE_PLUS
-        if (RSDK_controller[entity->controllerID].keyStart.press || RSDK_unknown->field_10 == 1) {
+        if (controller->keyStart.press || UnknownInfo->field_10 == 1) {
 #else
-        if (RSDK_controller[entity->controllerID].keyStart.press) {
+        if (controller->keyStart.press) {
 #endif
 
-            if (RSDK_sceneInfo->state == ENGINESTATE_REGULAR) {
+            if (SceneInfo->state == ENGINESTATE_REGULAR) {
                 EntityPauseMenu *pauseMenu = RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu);
                 if (!pauseMenu->objectID) {
                     RSDK.ResetEntitySlot(SLOT_PAUSEMENU, PauseMenu->objectID, NULL);

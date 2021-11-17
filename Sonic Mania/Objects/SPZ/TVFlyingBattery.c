@@ -41,11 +41,11 @@ void TVFlyingBattery_StaticUpdate(void)
 void TVFlyingBattery_Draw(void)
 {
     EntityWeatherTV *weatherTV = (EntityWeatherTV *)TVFlyingBattery->weatherTV;
-    int x                      = (weatherTV->position.x >> 16) - RSDK_screens->position.x;
-    int y                      = (weatherTV->position.y >> 16) - RSDK_screens->position.y;
+    int x                      = (weatherTV->position.x >> 16) - ScreenInfo->position.x;
+    int y                      = (weatherTV->position.y >> 16) - ScreenInfo->position.y;
     RSDK.SetClipBounds(0, x - 96, y - 64, x + 96, y + 64);
     TVFlyingBattery_DrawSprites();
-    RSDK.SetClipBounds(0, 0, 0, RSDK_screens->width, RSDK_screens->height);
+    RSDK.SetClipBounds(0, 0, 0, ScreenInfo->width, ScreenInfo->height);
 }
 
 void TVFlyingBattery_Create(void *data)

@@ -33,7 +33,7 @@ void SpecialRing_Draw(void)
 void SpecialRing_Create(void *data)
 {
     RSDK_THIS(SpecialRing);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->active        = ACTIVE_BOUNDS;
         entity->visible       = true;
         entity->updateRange.x = 0x900000;
@@ -101,9 +101,9 @@ void SpecialRing_StageLoad(void)
                         }
                     }
                 }
-                RSDK_sceneInfo->milliseconds = globals->tempMilliseconds;
-                RSDK_sceneInfo->seconds      = globals->tempSeconds;
-                RSDK_sceneInfo->minutes      = globals->tempMinutes;
+                SceneInfo->milliseconds = globals->tempMilliseconds;
+                SceneInfo->seconds      = globals->tempSeconds;
+                SceneInfo->minutes      = globals->tempMinutes;
             }
         }
     }
@@ -129,12 +129,12 @@ void SpecialRing_StartWarp(void)
         RSDK.PlaySfx(SpecialRing->sfxSpecialWarp, 0, 254);
         destroyEntity(entity);
         EntitySaveGame *saveRAM = SaveGame->saveRAM;
-        saveRAM->storedStageID  = RSDK_sceneInfo->listPos;
+        saveRAM->storedStageID  = SceneInfo->listPos;
         RSDK.SetScene("Special Stage", "");
-        RSDK_sceneInfo->listPos += saveRAM->nextSpecialStage;
+        SceneInfo->listPos += saveRAM->nextSpecialStage;
 #if RETRO_USE_PLUS
         if (globals->gameMode == MODE_ENCORE)
-            RSDK_sceneInfo->listPos += 7;
+            SceneInfo->listPos += 7;
 #endif
         Zone_StartFadeOut(10, 0xF0F0F0);
         RSDK.StopChannel(Music->channelID);
@@ -206,7 +206,7 @@ void SpecialRing_State_Normal(void)
     if (entity->enabled && entity->scale.x > 0x100) {
         foreach_active(Player, player) {
             if ((entity->planeFilter <= 0 || player->collisionPlane == (((uint8)entity->planeFilter - 1) & 1)) && !player->sidekick) {
-                if (Player_CheckCollisionTouch(player, entity, &SpecialRing->hitbox) && RSDK_sceneInfo->timeEnabled) {
+                if (Player_CheckCollisionTouch(player, entity, &SpecialRing->hitbox) && SceneInfo->timeEnabled) {
                     entity->dword68 = 0x100000;
                     entity->state   = SpecialRing_State_Warp;
                     EntitySaveGame *saveRAM = SaveGame->saveRAM;
@@ -219,7 +219,7 @@ void SpecialRing_State_Normal(void)
 #endif
                         player->visible             = false;
                         player->active              = ACTIVE_NEVER;
-                        RSDK_sceneInfo->timeEnabled = false;
+                        SceneInfo->timeEnabled = false;
                     }
                     else {
                         Player_GiveRings(50, player, true);

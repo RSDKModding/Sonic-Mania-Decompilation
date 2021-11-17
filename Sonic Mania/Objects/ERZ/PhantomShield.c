@@ -37,7 +37,7 @@ void PhantomShield_Create(void *data)
 {
     RSDK_THIS(PhantomShield);
 
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->visible       = true;
         entity->drawOrder     = Zone->drawOrderLow;
         entity->parent        = (Entity *)data;

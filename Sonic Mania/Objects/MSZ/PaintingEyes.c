@@ -46,16 +46,16 @@ void PaintingEyes_Draw(void)
     RSDK_THIS(PaintingEyes);
     Vector2 drawPos;
 
-    drawPos.x = clampVal(((RSDK_screens->position.x + RSDK_screens->centerX) << 10) - (entity->position.x >> 6), -0x10000, 0x10000)
+    drawPos.x = clampVal(((ScreenInfo->position.x + ScreenInfo->centerX) << 10) - (entity->position.x >> 6), -0x10000, 0x10000)
                 + entity->position.x;
     drawPos.y =
-        clampVal(((RSDK_screens->position.y + RSDK_screens->centerY) << 10) - (entity->position.y >> 6), -0x10000, 0x10000) + entity->position.y;
+        clampVal(((ScreenInfo->position.y + ScreenInfo->centerY) << 10) - (entity->position.y >> 6), -0x10000, 0x10000) + entity->position.y;
     RSDK.DrawSprite(&entity->animator2, &drawPos, false);
 
     drawPos.x =
-        clampVal(((RSDK_screens->position.x + RSDK_screens->centerX) << 11) - (entity->position.x >> 5), -0x10000, 0x20000) + entity->position.x;
+        clampVal(((ScreenInfo->position.x + ScreenInfo->centerX) << 11) - (entity->position.x >> 5), -0x10000, 0x20000) + entity->position.x;
     drawPos.y =
-        clampVal(((RSDK_screens->position.y + RSDK_screens->centerY) << 11) - (entity->position.y >> 5), -0x10000, 0x20000) + entity->position.y;
+        clampVal(((ScreenInfo->position.y + ScreenInfo->centerY) << 11) - (entity->position.y >> 5), -0x10000, 0x20000) + entity->position.y;
     RSDK.DrawSprite(&entity->animator3, &drawPos, false);
 
     drawPos.x = entity->position.x;
@@ -66,7 +66,7 @@ void PaintingEyes_Draw(void)
 void PaintingEyes_Create(void *data)
 {
     RSDK_THIS(PaintingEyes);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         RSDK.SetSpriteAnimation(PaintingEyes->aniFrames, 0, &entity->animator1, true, 0);
         RSDK.SetSpriteAnimation(PaintingEyes->aniFrames, 0, &entity->animator2, true, 1);
         RSDK.SetSpriteAnimation(PaintingEyes->aniFrames, 0, &entity->animator3, true, 2);

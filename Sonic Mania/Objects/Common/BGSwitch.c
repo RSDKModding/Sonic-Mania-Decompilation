@@ -33,7 +33,7 @@ void BGSwitch_Draw(void) {}
 void BGSwitch_Create(void *data)
 {
     RSDK_THIS(BGSwitch);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->updateRange.x = entity->size.x;
         entity->updateRange.y = entity->size.y;
         entity->active        = ACTIVE_BOUNDS;

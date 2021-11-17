@@ -124,7 +124,7 @@ bool32 ERZOutro_CutsceneState_AttackEggman(EntityCutsceneSeq *host)
         fxRuby->fadeWhite           = 768;
         Zone->playerBoundActiveT[0] = false;
         CutsceneSeq_LockPlayerControl(player1);
-        RSDK_sceneInfo->timeEnabled = false;
+        SceneInfo->timeEnabled = false;
 
         foreach_all(RingField, field) { field->running = false; }
         foreach_all(Ring, ring) { destroyEntity(ring); }

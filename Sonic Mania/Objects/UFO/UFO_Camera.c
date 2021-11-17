@@ -52,15 +52,15 @@ void UFO_Camera_Unknown1(void)
         val3 = val2 + 0x400;
 
     if (abs(val2) >= abs(val3))
-        RSDK_screens->position.x -= 2 * val3;
+        ScreenInfo->position.x -= 2 * val3;
     else
-        RSDK_screens->position.x -= 2 * val2;
+        ScreenInfo->position.x -= 2 * val2;
 
     int32 offset               = ((RSDK.Sin1024(-entity->angleX) << 12) << 8) / div;
-    RSDK_screens->position.y = offset - RSDK_screens->centerY + 512;
+    ScreenInfo->position.y = offset - ScreenInfo->centerY + 512;
     entity->dword6C          = entity->angle;
 
-    entity->clipY = clampVal(RSDK_screens->centerY - offset + 8, -0x40, RSDK_screens->height);
+    entity->clipY = clampVal(ScreenInfo->centerY - offset + 8, -0x40, ScreenInfo->height);
 }
 
 void UFO_Camera_Unknown2(void)

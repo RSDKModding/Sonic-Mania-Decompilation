@@ -28,7 +28,7 @@ void SeltzerWater_Draw(void)
 void SeltzerWater_Create(void *data)
 {
     RSDK_THIS(SeltzerWater);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         RSDK.SetSpriteAnimation(SeltzerWater->aniFrames, 4, &entity->animator, true, RSDK.Rand(0, 8));
         entity->active        = ACTIVE_NORMAL;
         entity->updateRange.x = 0x100000;

@@ -56,24 +56,24 @@ void UIRankButton_Draw(void)
     if (entity->field_14C || entity->field_148)
         setClip = false;
 
-    int32 clipX1 = RSDK_screens->clipBound_X1;
-    int32 clipY1 = RSDK_screens->clipBound_Y1;
-    int32 clipX2 = RSDK_screens->clipBound_X2;
-    int32 clipY2 = RSDK_screens->clipBound_Y2;
+    int32 clipX1 = ScreenInfo->clipBound_X1;
+    int32 clipY1 = ScreenInfo->clipBound_Y1;
+    int32 clipX2 = ScreenInfo->clipBound_X2;
+    int32 clipY2 = ScreenInfo->clipBound_Y2;
     if (setClip)
-        RSDK.SetClipBounds(RSDK_sceneInfo->currentScreenID, (newClipX1 >> 16) - RSDK_screens->position.x - (newClipX2 >> 17),
-                           (newClipY1 >> 16) - RSDK_screens->position.y - (newClipY2 >> 17),
-                           (newClipX1 >> 16) - RSDK_screens->position.x + (newClipX2 >> 17),
-                           (newClipX2 >> 17) + (newClipY1 >> 16) - RSDK_screens->position.y);
+        RSDK.SetClipBounds(SceneInfo->currentScreenID, (newClipX1 >> 16) - ScreenInfo->position.x - (newClipX2 >> 17),
+                           (newClipY1 >> 16) - ScreenInfo->position.y - (newClipY2 >> 17),
+                           (newClipX1 >> 16) - ScreenInfo->position.x + (newClipX2 >> 17),
+                           (newClipX2 >> 17) + (newClipY1 >> 16) - ScreenInfo->position.y);
     UIRankButton_Unknown4();
     if (setClip)
-        RSDK.SetClipBounds(RSDK_sceneInfo->currentScreenID, clipX1, clipY1, clipX2, clipY2);
+        RSDK.SetClipBounds(SceneInfo->currentScreenID, clipX1, clipY1, clipX2, clipY2);
 }
 
 void UIRankButton_Create(void *data)
 {
     RSDK_THIS(UIRankButton);
-    entity->posUnknown2.x = RSDK_sceneInfo->entity->position.x;
+    entity->posUnknown2.x = entity->position.x;
     entity->posUnknown2.y = entity->position.y;
     entity->visible       = true;
     entity->drawOrder     = 2;
@@ -87,7 +87,7 @@ void UIRankButton_Create(void *data)
     entity->rank          = 0;
     entity->score         = 0;
     entity->row           = 0;
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         RSDK.SetText(&entity->rankText, "", 0);
         RSDK.SetText(&entity->nameTimeText, "-----", 0);
         RSDK.SetSpriteString(UIWidgets->labelSpriteIndex, 0, &entity->nameTimeText);
@@ -132,7 +132,7 @@ void UIRankButton_Unknown2(int32 rank, EntityUIRankButton *button, int32 score, 
 
     button->leaderboardEntry = NULL;
     button->dword12C         = 0;
-    if (!RSDK_sceneInfo->inEditor)
+    if (!SceneInfo->inEditor)
         UIRankButton_SetRankText(button, rank);
 }
 
@@ -189,7 +189,7 @@ void UIRankButton_Unknown4(void)
     int32 drawY = drawPos.y;
     UIRankButton_Unknown5(0x000000, drawX, drawPos.y, val, 0x100000);
     if (entity->state != UIRankButton_Unknown14 || !((entity->timer >> 1) % 2)) {
-        if (!RSDK_sceneInfo->inEditor) {
+        if (!SceneInfo->inEditor) {
             drawPos.x = drawPos.x + entity->field_14C;
             drawPos.y = entity->field_148 + drawPos.y + entity->field_14C;
 
@@ -203,7 +203,7 @@ void UIRankButton_Unknown4(void)
             RSDK.DrawText(&entity->animator2, &drawPos, &entity->rankText, 0, entity->rankText.textLength, ALIGN_LEFT, 0, 2, 0, false);
         }
 
-        if (entity->showsName && !RSDK_sceneInfo->inEditor) {
+        if (entity->showsName && !SceneInfo->inEditor) {
             drawPos.x = drawX - (val >> 1) + 0x20000;
             drawPos.x += entity->field_14C;
             drawPos.y = drawY + entity->field_14C;
@@ -222,7 +222,7 @@ void UIRankButton_Unknown4(void)
 
         UIWidgets_Unknown11(entity->score / 6000, entity->score % 6000 / 100, entity->score % 100, drawPos.x, drawPos.y);
 
-        if (!RSDK_sceneInfo->inEditor) {
+        if (!SceneInfo->inEditor) {
             if (API.CheckDLC(DLC_PLUS)) {
                 if (entity->row) {
                     drawPos.x = entity->position.x + ((val + 0x150000) >> 1);

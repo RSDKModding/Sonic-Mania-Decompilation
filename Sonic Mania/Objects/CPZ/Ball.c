@@ -256,7 +256,7 @@ void Ball_State3_Unknown1(void)
 void Ball_State4_Unknown1(void)
 {
     RSDK_THIS(Ball);
-    EntityBall *child = RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot - 1, Ball);
+    EntityBall *child = RSDK_GET_ENTITY(SceneInfo->entitySlot - 1, Ball);
     if (child->objectID != Ball->objectID) {
         RSDK.ResetEntityPtr(child, Ball->objectID, NULL);
         child->active     = ACTIVE_NORMAL;

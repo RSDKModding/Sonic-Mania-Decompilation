@@ -27,7 +27,7 @@ void Ice_Draw(void)
 void Ice_Create(void *data)
 {
     RSDK_THIS(Ice);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->drawFX    = FX_FLIP;
         entity->drawOrder = Zone->playerDrawLow + 1;
         entity->visible   = true;
@@ -380,12 +380,12 @@ bool32 Ice_Unknown4(void)
         if (abs(entity->skidding) <= abs(entity->pushing)) {
             if (entity->pushing > 0) {
                 if ((entity->angle & 0xFF) < 0x20) {
-                    Ice_Unknown8(RSDK_sceneInfo->entity);
+                    Ice_Unknown8(SceneInfo->entity);
                     return true;
                 }
             }
             if (entity->pushing && (entity->angle + 0x80) < 0x20) {
-                Ice_Unknown8(RSDK_sceneInfo->entity);
+                Ice_Unknown8(SceneInfo->entity);
                 return true;
             }
         }
@@ -962,12 +962,12 @@ void Ice_Unknown15(void)
                     Ice_Unknown8((Entity *)ice->playerPtr);
                 }
                 else {
-                    Entity *storeEntity    = RSDK_sceneInfo->entity;
-                    RSDK_sceneInfo->entity = (Entity *)ice;
+                    Entity *storeEntity    = SceneInfo->entity;
+                    SceneInfo->entity = (Entity *)ice;
                     if (ice->type == 4 || (ice->type == 18 && ice->subType < 3))
                         ice->type = 0;
                     Ice_Shatter(ice, 0, 0);
-                    RSDK_sceneInfo->entity = storeEntity;
+                    SceneInfo->entity = storeEntity;
                 }
             }
 
@@ -1149,7 +1149,7 @@ void Ice_StateDraw_Unknown1(void)
     RSDK.DrawSprite(&entity->animator3, &drawPos, false);
 
 #if RETRO_USE_PLUS
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->inkEffect = INK_ADD;
         if (!entity->dwordE4)
             entity->animator1.frameID += 4;
@@ -1176,7 +1176,7 @@ void Ice_StateDraw_PlayerBlock(void)
     RSDK_THIS(Ice);
     Vector2 drawPos;
 
-    drawPos.x = RSDK_sceneInfo->entity->position.x;
+    drawPos.x = entity->position.x;
     drawPos.y = entity->position.y;
     drawPos.x += entity->dwordDC.x;
     drawPos.y += entity->dwordDC.y;

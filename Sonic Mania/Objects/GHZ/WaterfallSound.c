@@ -28,7 +28,7 @@ void WaterfallSound_Draw(void)
 void WaterfallSound_Create(void *data)
 {
     RSDK_THIS(WaterfallSound);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->updateRange.x = TILE_SIZE * entity->size.x;
         entity->updateRange.y = TILE_SIZE * entity->size.y;
         entity->visible       = true;
@@ -47,8 +47,8 @@ void WaterfallSound_StageLoad(void)
 
 bool32 WaterfallSound_CheckCB(void)
 {
-    int32 worldCenterX = (RSDK_screens->position.x + RSDK_screens->centerX) << 16;
-    int32 worldCenterY = (RSDK_screens->position.y + RSDK_screens->centerY) << 16;
+    int32 worldCenterX = (ScreenInfo->position.x + ScreenInfo->centerX) << 16;
+    int32 worldCenterY = (ScreenInfo->position.y + ScreenInfo->centerY) << 16;
 
     WaterfallSound->activeCount = 0;
     int32 count                   = 0;
@@ -110,10 +110,10 @@ bool32 WaterfallSound_CheckCB(void)
 }
 void WaterfallSound_UpdateCB(int32 sfxID)
 {
-    int32 worldCenterX = (RSDK_screens->position.x + RSDK_screens->centerX) << 16;
-    int32 worldCenterY = (RSDK_screens->position.y + RSDK_screens->centerY) << 16;
-    int32 worldLeft    = worldCenterX - (RSDK_screens->centerX << 16);
-    int32 worldRight   = worldCenterX + (RSDK_screens->centerX << 16);
+    int32 worldCenterX = (ScreenInfo->position.x + ScreenInfo->centerX) << 16;
+    int32 worldCenterY = (ScreenInfo->position.y + ScreenInfo->centerY) << 16;
+    int32 worldLeft    = worldCenterX - (ScreenInfo->centerX << 16);
+    int32 worldRight   = worldCenterX + (ScreenInfo->centerX << 16);
 
     float pan        = 0.0f;
     float volDivisor = 0.0f;
@@ -131,7 +131,7 @@ void WaterfallSound_UpdateCB(int32 sfxID)
             if (sound->posUnk.x > worldLeft) {
                 distance = 1.0;
                 if (sound->posUnk.x < worldRight) {
-                    distance = (((sound->posUnk.x - worldCenterX) >> 16) / (float)RSDK_screens->centerX);
+                    distance = (((sound->posUnk.x - worldCenterX) >> 16) / (float)ScreenInfo->centerX);
                 }
             }
             volDivisor += volume;

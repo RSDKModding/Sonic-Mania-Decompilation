@@ -97,7 +97,7 @@ void E3MenuSetup_Unknown3(void)
     EntityUITAZoneModule *module = (EntityUITAZoneModule *)control->buttons[control->activeEntityID];
     param->zoneID                = module->zoneID;
     param->actID                 = module->actID;
-    RSDK_sceneInfo->listPos += TimeAttackData_GetManiaListPos(param->zoneID, param->characterID, param->actID);
+    SceneInfo->listPos += TimeAttackData_GetManiaListPos(param->zoneID, param->characterID, param->actID);
     switch (param->characterID) {
         default: break;
         case 1: globals->playerID = ID_SONIC; break;

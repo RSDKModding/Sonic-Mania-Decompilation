@@ -62,18 +62,18 @@ void DrawHelpers_DrawDebug4(uint32 colour, int32 a2, int32 alpha, int32 x1, int3
     verts[2].x = (RSDK.Cos256(angle - 64) << 9) + x1;
     verts[2].y = (RSDK.Sin256(angle - 64) << 9) + y1;
 
-    if (RSDK_sceneInfo->inEditor) {
+    if (SceneInfo->inEditor) {
         RSDK.DrawLine(verts[0].x, verts[0].y, verts[1].x, verts[1].y, colour, 0xFF, INK_NONE, false);
         RSDK.DrawLine(verts[1].x, verts[1].y, verts[2].x, verts[2].y, colour, 0xFF, INK_NONE, false);
         RSDK.DrawLine(verts[2].x, verts[2].y, verts[0].x, verts[0].y, colour, 0xFF, INK_NONE, false);
     }
     else {
-        verts[0].x -= RSDK_screens->position.x << 16;
-        verts[0].y -= RSDK_screens->position.y << 16;
-        verts[1].x -= RSDK_screens->position.x << 16;
-        verts[1].y -= RSDK_screens->position.y << 16;
-        verts[2].x -= RSDK_screens->position.x << 16;
-        verts[2].y -= RSDK_screens->position.y << 16;
+        verts[0].x -= ScreenInfo->position.x << 16;
+        verts[0].y -= ScreenInfo->position.y << 16;
+        verts[1].x -= ScreenInfo->position.x << 16;
+        verts[1].y -= ScreenInfo->position.y << 16;
+        verts[2].x -= ScreenInfo->position.x << 16;
+        verts[2].y -= ScreenInfo->position.y << 16;
         RSDK.DrawQuad(verts, 3, (colour >> 16) & 0xFF, (colour >> 8) & 0xFF, (colour >> 0) & 0xFF, alpha, INK_ALPHA);
     }
 }

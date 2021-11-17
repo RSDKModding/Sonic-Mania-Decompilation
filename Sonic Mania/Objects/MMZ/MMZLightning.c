@@ -17,18 +17,18 @@ void MMZLightning_Draw(void)
 {
     RSDK_THIS(MMZLightning);
 
-    RSDK.SetActivePalette(1, 0, RSDK_screens->height);
+    RSDK.SetActivePalette(1, 0, ScreenInfo->height);
 
     RSDK.DrawSprite(&entity->animator, 0, true);
 
-    RSDK.SetActivePalette(0, 0, RSDK_screens->height);
+    RSDK.SetActivePalette(0, 0, ScreenInfo->height);
 }
 
 void MMZLightning_Create(void *data)
 {
     RSDK_THIS(MMZLightning);
 
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->active = ACTIVE_NORMAL;
         entity->state  = (Type_StateMachine)data;
     }
@@ -61,7 +61,7 @@ void MMZLightning_Unknown3(void)
 {
     RSDK_THIS(MMZLightning);
     RSDK.SetSpriteAnimation(MMZLightning->aniFrames, 0, &entity->animator, true, 0);
-    entity->position.x = (RSDK_screens->centerX + RSDK.Rand(-140, 140)) << 16;
+    entity->position.x = (ScreenInfo->centerX + RSDK.Rand(-140, 140)) << 16;
     entity->position.y = RSDK.Rand(0x200000, 0x400000);
     entity->visible    = true;
     entity->drawFX     = FX_FLIP;
@@ -95,7 +95,7 @@ void MMZLightning_Unknown6(void)
 {
     RSDK_THIS(MMZLightning);
     RSDK.SetSpriteAnimation(MMZLightning->aniFrames, 1, &entity->animator, true, RSDK.Rand(0, 4));
-    entity->position.x = (RSDK_screens->centerX + RSDK.Rand(-64, 64)) << 16;
+    entity->position.x = (ScreenInfo->centerX + RSDK.Rand(-64, 64)) << 16;
     entity->position.y = RSDK.Rand(0x400000, 0x600000);
     entity->visible    = true;
     entity->drawFX     = FX_FLIP;

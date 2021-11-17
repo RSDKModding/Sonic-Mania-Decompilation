@@ -72,7 +72,7 @@ void MMZSetup_StageLoad(void)
 
 #if RETRO_USE_PLUS
         for (int32 i = 3; i < 5; ++i) {
-            RSDK.GetSceneLayer(i)->scrollInfo[0].scrollPos = (256 - RSDK_screens->centerX) << 16;
+            RSDK.GetSceneLayer(i)->scrollInfo[0].scrollPos = (256 - ScreenInfo->centerX) << 16;
         }
 #endif
 
@@ -106,7 +106,7 @@ void MMZSetup_StageLoad(void)
     }
 
 #if RETRO_USE_PLUS
-    if (RSDK_sceneInfo->filter & FILTER_ENCORE) {
+    if (SceneInfo->filter & FILTER_ENCORE) {
         RSDK.LoadPalette(0, "EncoreMMZ.act", 0xFF);
         RSDK.LoadPalette(3, "EncoreMMZfp.act", 0xFF);
         RSDK.LoadPalette(4, "EncoreMMZf.act", 0xFF);
@@ -116,7 +116,7 @@ void MMZSetup_StageLoad(void)
 
 void MMZSetup_StageFinishCB_Act1(void)
 {
-    Zone_StoreEntities((Zone->screenBoundsL1[0] + RSDK_screens->centerX) << 16, Zone->screenBoundsB1[0] << 16);
+    Zone_StoreEntities((Zone->screenBoundsL1[0] + ScreenInfo->centerX) << 16, Zone->screenBoundsB1[0] << 16);
     RSDK.LoadScene();
 }
 #if RETRO_USE_PLUS

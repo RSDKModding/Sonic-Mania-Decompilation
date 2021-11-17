@@ -67,7 +67,7 @@ void FXWaveRing_Draw(void)
 void FXWaveRing_Create(void *data)
 {
     RSDK_THIS(FXWaveRing);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->visible      = true;
         entity->active       = ACTIVE_NORMAL;
         entity->drawOrder    = Zone->drawOrderHigh;

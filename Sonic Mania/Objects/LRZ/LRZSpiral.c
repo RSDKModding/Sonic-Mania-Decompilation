@@ -17,7 +17,7 @@ void LRZSpiral_Draw(void) {}
 void LRZSpiral_Create(void *data)
 {
     RSDK_THIS(LRZSpiral);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->active    = ACTIVE_BOUNDS;
         entity->visible   = false;
         entity->drawOrder = Zone->drawOrderLow;

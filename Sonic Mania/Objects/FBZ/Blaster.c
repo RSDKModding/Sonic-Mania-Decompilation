@@ -99,7 +99,7 @@ void Blaster_HandlePlayerInteractions(void)
 void Blaster_CheckOnScreen(void)
 {
     RSDK_THIS(Blaster);
-    if (!RSDK.CheckOnScreen(RSDK_sceneInfo->entity, NULL) && !RSDK.CheckPosOnScreen(&entity->startPos, &entity->updateRange)) {
+    if (!RSDK.CheckOnScreen(SceneInfo->entity, NULL) && !RSDK.CheckPosOnScreen(&entity->startPos, &entity->updateRange)) {
         entity->position  = entity->startPos;
         entity->direction = entity->startDir;
         Blaster_Create(NULL);
@@ -223,7 +223,7 @@ void Blaster_State_MagnetAttract(void)
         entity->velocity.y = 0;
     Blaster_HandlePlayerInteractions();
 
-    if (RSDK.CheckOnScreen(RSDK_sceneInfo->entity, NULL)) {
+    if (RSDK.CheckOnScreen(SceneInfo->entity, NULL)) {
         entity->state = Blaster_State_Unknown4;
     }
     else {

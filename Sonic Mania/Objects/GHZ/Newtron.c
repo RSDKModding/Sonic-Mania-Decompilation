@@ -23,7 +23,7 @@ void Newtron_Draw(void)
 void Newtron_Create(void *data)
 {
     RSDK_THIS(Newtron);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->drawFX |= FX_FLIP;
         entity->startPos.x = entity->position.x;
         entity->startPos.y = entity->position.y;
@@ -112,7 +112,7 @@ void Newtron_CheckHit(void)
 void Newtron_CheckOnScreen(void)
 {
     RSDK_THIS(Newtron);
-    if (!RSDK.CheckOnScreen(RSDK_sceneInfo->entity, NULL) && !RSDK.CheckPosOnScreen(&entity->startPos, &entity->updateRange)) {
+    if (!RSDK.CheckOnScreen(SceneInfo->entity, NULL) && !RSDK.CheckPosOnScreen(&entity->startPos, &entity->updateRange)) {
         entity->position.x = entity->startPos.x;
         entity->position.y = entity->startPos.y;
         entity->velocity.x = 0;

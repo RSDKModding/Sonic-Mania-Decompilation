@@ -226,7 +226,7 @@ void Rattlekiller_Draw(void)
 {
     RSDK_THIS(Rattlekiller);
 
-    if (RSDK_sceneInfo->currentDrawGroup == entity->drawOrder) {
+    if (SceneInfo->currentDrawGroup == entity->drawOrder) {
         for (int i = 0; i < Rattlekiller_SegmentCount; ++i) {
             int id = entity->bodyIDs[i];
             if (entity->field_1A4[id] > 0) {
@@ -253,7 +253,7 @@ void Rattlekiller_Draw(void)
 void Rattlekiller_Create(void *data)
 {
     RSDK_THIS(Rattlekiller);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->visible       = true;
         entity->drawOrder     = Zone->drawOrderLow;
         entity->startPos      = entity->position;

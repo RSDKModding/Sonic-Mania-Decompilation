@@ -33,7 +33,7 @@ void PhantomKing_Create(void *data)
     RSDK_THIS(PhantomKing);
 
     entity->drawFX = FX_FLIP;
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->updateRange.x = 0x800000;
         entity->updateRange.y = 0x1000000;
         entity->drawOrder     = Zone->drawOrderLow;
@@ -124,7 +124,7 @@ void PhantomKing_Hit(void)
         }
 
         if (KleptoMobile->defeated)
-            RSDK_sceneInfo->timeEnabled = false;
+            SceneInfo->timeEnabled = false;
         Player_GiveScore(RSDK_GET_ENTITY(SLOT_PLAYER1, Player), 1000);
     }
     else {
@@ -366,7 +366,7 @@ void PhantomKing_State_Unknown2(void)
 
     entity->direction = RSDK_GET_ENTITY(SLOT_PLAYER1, Player)->position.x < entity->position.x;
     if (++entity->timer == 30) {
-        EntityPhantomKing *arm1 = RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot - 1, PhantomKing);
+        EntityPhantomKing *arm1 = RSDK_GET_ENTITY(SceneInfo->entitySlot - 1, PhantomKing);
         RSDK.ResetEntityPtr(arm1, PhantomKing->objectID, intToVoid(1));
         arm1->position.x = entity->position.x;
         arm1->position.y = entity->position.y;
@@ -375,7 +375,7 @@ void PhantomKing_State_Unknown2(void)
         arm1->field_120  = 96;
         arm1->field_124  = 32;
 
-        EntityPhantomKing *arm2 = RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot + 1, PhantomKing);
+        EntityPhantomKing *arm2 = RSDK_GET_ENTITY(SceneInfo->entitySlot + 1, PhantomKing);
         RSDK.ResetEntityPtr(arm2, PhantomKing->objectID, intToVoid(2));
         arm2->position.x = entity->position.x;
         arm2->position.y = entity->position.y;
@@ -402,7 +402,7 @@ void PhantomKing_State_Unknown3(void)
         entity->posUnknown.x                                                = entity->position.x;
         entity->posUnknown.y                                                = entity->posUnknown.y;
         entity->position.y                                                  = entity->posUnknown.y;
-        RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot - 1, PhantomKing)->state = PhantomKing_StateArm1_Unknown1;
+        RSDK_GET_ENTITY(SceneInfo->entitySlot - 1, PhantomKing)->state = PhantomKing_StateArm1_Unknown1;
         entity->velocity.y                                                  = 0;
         entity->state                                                       = PhantomKing_State_Unknown4;
     }
@@ -443,7 +443,7 @@ void PhantomKing_State_Unknown5(void)
 
     PhantomKing_HandleFrames();
     if (++entity->timer >= 180) {
-        RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot - 1, PhantomKing)->state = PhantomKing_StateArm1_Unknown2;
+        RSDK_GET_ENTITY(SceneInfo->entitySlot - 1, PhantomKing)->state = PhantomKing_StateArm1_Unknown2;
         entity->velocity.x                                                  = 0;
         entity->velocity.y                                                  = 0;
         entity->state                                                       = PhantomKing_State_Unknown6;

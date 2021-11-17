@@ -93,8 +93,8 @@ void UICharButton_StageLoad(void) { UICharButton->aniFrames = RSDK.LoadSpriteAni
 void UICharButton_Unknown1(void)
 {
     RSDK_THIS(UICharButton);
-    if (!RSDK_sceneInfo->inEditor)
-        UIWidgets_Unknown3(96, 96, RSDK_sceneInfo->entity->position.x + 0x30000, RSDK_sceneInfo->entity->position.y + 0x30000);
+    if (!SceneInfo->inEditor)
+        UIWidgets_Unknown3(96, 96, entity->position.x + 0x30000, entity->position.y + 0x30000);
 
     if (entity->flag)
         UIWidgets_Unknown4(96, 96, entity->position.x, entity->position.y);
@@ -105,8 +105,7 @@ void UICharButton_Unknown1(void)
 void UICharButton_Unknown2(void)
 {
     RSDK_THIS(UICharButton);
-    UIWidgets_Unknown5(232, (entity->field_10C >> 11), 40, 88, RSDK_sceneInfo->entity->position.x - 0x2D0000,
-                       RSDK_sceneInfo->entity->position.y - 0x2D0000);
+    UIWidgets_Unknown5(232, (entity->field_10C >> 11), 40, 88, entity->position.x - 0x2D0000, entity->position.y - 0x2D0000);
     UIWidgets_Unknown5(96, (-64 * entity->field_10C) >> 16, 160, 176, entity->position.x + 0x2D0000, entity->position.y + 0x2C0000);
     UIWidgets_Unknown5(88, (-44 * entity->field_10C) >> 16, 112, 224, entity->position.x + 0x2D0000, entity->position.y + 0x2C0000);
 }

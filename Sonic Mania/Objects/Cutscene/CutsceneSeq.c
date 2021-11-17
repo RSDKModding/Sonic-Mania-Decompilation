@@ -13,9 +13,9 @@ void CutsceneSeq_LateUpdate(void)
     RSDK_THIS(CutsceneSeq);
     entity->currentState      = (bool32(*)(Entity *))entity->cutsceneStates[entity->stateID];
     if (entity->currentState) {
-        RSDK_sceneInfo->entity         = entity->cutsceneCurEntity;
+        SceneInfo->entity         = entity->cutsceneCurEntity;
         bool32 stateComplete           = entity->currentState((Entity*)entity);
-        RSDK_sceneInfo->entity         = (Entity *)entity;
+        SceneInfo->entity         = (Entity *)entity;
         ++entity->timer;
         if (stateComplete) {
             LogHelpers_Print("State completed");
@@ -122,15 +122,15 @@ void CutsceneSeq_LockPlayerControl(void *plr)
 
 void CutsceneSeq_CheckSkip(uint8 skipType, EntityCutsceneSeq *entity, void (*skipCallback)(void))
 {
-    bool32 skipPress = RSDK_controller->keyStart.press;
+    bool32 skipPress = ControllerInfo->keyStart.press;
 #if RETRO_USE_TOUCH_CONTROLS
-    skipPress |= RSDK_touchMouse->count;
+    skipPress |= TouchInfo->count;
 #endif
 
-    if (skipType && skipPress && (RSDK_sceneInfo->state & 1)) {
+    if (skipType && skipPress && (SceneInfo->state & 1)) {
         bool32 load = false;
         if (skipType == SKIPTYPE_NEXTSCENE) {
-            ++RSDK_sceneInfo->listPos;
+            ++SceneInfo->listPos;
             load = true;
         }
         else {
@@ -187,7 +187,7 @@ void CutsceneSeq_StartSequence(Entity *host, void **states)
     EntityCutsceneSeq *cutsceneSeq = (EntityCutsceneSeq *)RSDK.GetEntityByID(SLOT_CUTSCENESEQ);
     cutsceneSeq->position.x   = 0;
     cutsceneSeq->position.y   = 0;
-    cutsceneSeq->cutsceneCurEntity = RSDK_sceneInfo->entity;
+    cutsceneSeq->cutsceneCurEntity = SceneInfo->entity;
     cutsceneSeq->hostEntity        = host;
     int32 id                         = 0;
     while (states[id]) {

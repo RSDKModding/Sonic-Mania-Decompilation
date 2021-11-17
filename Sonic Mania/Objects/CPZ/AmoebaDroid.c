@@ -27,7 +27,7 @@ void AmoebaDroid_Draw(void)
 void AmoebaDroid_Create(void *data)
 {
     RSDK_THIS(AmoebaDroid);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         if (globals->gameMode < MODE_TIMEATTACK) {
             entity->active        = ACTIVE_BOUNDS;
             entity->updateRange.x = 0x800000;
@@ -159,7 +159,7 @@ void AmoebaDroid_CheckHit(void)
                 AmoebaDroid_HandleDropletRelease(false);
                 entity->state               = AmoebaDroid_StateMain_Death;
                 entity->timer               = 0;
-                RSDK_sceneInfo->timeEnabled = false;
+                SceneInfo->timeEnabled = false;
                 Player_GiveScore(RSDK_GET_ENTITY(SLOT_PLAYER1, Player), 1000);
             }
             else {
@@ -244,10 +244,10 @@ void AmoebaDroid_StateMain_Setup(void)
     if (++entity->timer >= 8) {
         entity->timer               = 0;
         Zone->playerBoundActiveL[0] = true;
-        Zone->screenBoundsL1[0]     = (entity->position.x >> 16) - RSDK_screens->centerX;
+        Zone->screenBoundsL1[0]     = (entity->position.x >> 16) - ScreenInfo->centerX;
         Zone->playerBoundActiveR[0] = true;
-        Zone->screenBoundsR1[0]     = RSDK_screens->centerX + (entity->position.x >> 16);
-        Zone->screenBoundsT1[0]     = (entity->position.y >> 16) - RSDK_screens->height;
+        Zone->screenBoundsR1[0]     = ScreenInfo->centerX + (entity->position.x >> 16);
+        Zone->screenBoundsT1[0]     = (entity->position.y >> 16) - ScreenInfo->height;
         Zone->screenBoundsB1[0]     = (entity->position.y >> 16);
         AmoebaDroid->arenaLeft      = (Zone->screenBoundsL1[0] + 64) << 16;
         AmoebaDroid->arenaRight     = (Zone->screenBoundsR1[0] - 64) << 16;
@@ -266,7 +266,7 @@ void AmoebaDroid_StateMain_SetupWaterLevel(void)
         if (entity->timer == 120) {
             entity->timer   = 0;
             entity->visible = true;
-            entity->position.y += -0x400000 - (RSDK_screens->height << 16);
+            entity->position.y += -0x400000 - (ScreenInfo->height << 16);
             entity->state = AmoebaDroid_StateMain_Unknown1;
         }
     }

@@ -45,7 +45,7 @@ void UILeaderboard_Create(void *data)
     entity->state           = UILeaderboard_State_Unknown1;
     UILeaderboard_SetupEntrySprites(entity);
     entity->textSpriteIndex = UIWidgets->textSpriteIndex;
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         RSDK.SetText(entity->text1, "", 0);
         RSDK.SetText(&entity->text1[1], "", 0);
         RSDK.SetText(&entity->text1[2], "", 0);
@@ -124,7 +124,7 @@ void UILeaderboard_SetupLeaderboard(EntityUILeaderboard *leaderboard, uint8 play
     UILeaderboard_SetupEntrySprites(leaderboard);
     Localization_GetZoneName(&leaderboard->field_1E0, zone);
     RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 3, &leaderboard->animator4, true, 0);
-    if (!RSDK_sceneInfo->inEditor)
+    if (!SceneInfo->inEditor)
         RSDK.SetSpriteString(UIWidgets->uiSpriteIndex, 3, &leaderboard->field_1E0);
 }
 
@@ -132,7 +132,7 @@ void UILeaderboard_SetupLeaderboard(EntityUILeaderboard *leaderboard, uint8 play
 
 void UILeaderboard_LoadEntries(EntityUILeaderboard *entity)
 {
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         for (int32 i = 0; i < 5; ++i) {
             LeaderboardEntry *entry = API_ReadLeaderboardEntry(i + entity->entryOffset);
 #if RETRO_USE_PLUS
@@ -184,7 +184,7 @@ void UILeaderboard_DrawPrimitives(void)
     RSDK_THIS(UILeaderboard);
     Vector2 drawPos;
 
-    if (!RSDK_sceneInfo->inEditor)
+    if (!SceneInfo->inEditor)
         UIWidgets_Unknown3(158, 414, entity->position.x + 0x30000, entity->position.y + 0x30000);
 
     UIWidgets_Unknown2(158, 414, entity->position.x, entity->position.y);
@@ -259,7 +259,7 @@ void UILeaderboard_DrawEntries(void)
     UILeaderboard_Unknown3();
     drawPos.x = entity->position.x - 0x8C0000;
     drawPos.y = entity->position.y - 0x4C0000;
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         drawPos.x += 0xC0000;
         drawPos.y += 0x70000;
         RSDK.DrawText(&entity->animator4, &drawPos, &entity->field_1E0, 0, entity->field_1E0.textLength, ALIGN_LEFT, 0, 0, 0, false);
@@ -311,7 +311,7 @@ void UILeaderboard_Unknown3(void)
     drawPos.y = entity->position.y - 0x380000;
     UIWidgets_Unknown2(40, 72, drawPos.x, drawPos.y);
 
-    if (RSDK_sceneInfo->inEditor) {
+    if (SceneInfo->inEditor) {
         entity->direction = entity->editorFlip;
         entity->drawFX    = FX_FLIP;
         RSDK.DrawSprite(&entity->animator6, &drawPos, false);
@@ -381,7 +381,7 @@ void UILeaderboard_DrawRank(int32 id)
 
     drawPos.x -= 0x7A0000;
     if (!entity->isUser[id] || !(UIControl->timer & 4)) {
-        if (RSDK_sceneInfo->inEditor) {
+        if (SceneInfo->inEditor) {
             drawPos.x += 0xE60000;
         }
         else {

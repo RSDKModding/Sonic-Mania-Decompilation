@@ -83,7 +83,7 @@ void UIWinSize_Draw(void)
 void UIWinSize_Create(void *data)
 {
     RSDK_THIS(UIWinSize);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         int32 winHeight         = RSDK.GetSettingsValue(SETTINGS_WINDOW_HEIGHT);
         entity->visible       = true;
         entity->drawOrder     = 2;
@@ -142,8 +142,8 @@ void UIWinSize_ApplySettings(void)
     entity->offset    = -0x20000;
     UIWinSize_SetupText(entity);
 
-    RSDK.SetSettingsValue(SETTINGS_WINDOW_WIDTH, entity->selection * RSDK_screens->width);
-    RSDK.SetSettingsValue(SETTINGS_WINDOW_HEIGHT, entity->selection * RSDK_screens->height);
+    RSDK.SetSettingsValue(SETTINGS_WINDOW_WIDTH, entity->selection * ScreenInfo->width);
+    RSDK.SetSettingsValue(SETTINGS_WINDOW_HEIGHT, entity->selection * ScreenInfo->height);
 #if RETRO_USE_PLUS
     RSDK.SetSettingsValue(SETTINGS_CHANGED, true);
 #else
@@ -188,12 +188,12 @@ bool32 UIWinSize_ProcessTouchCB(void)
 
     bool32 pressed = false;
     for (int32 i = 0; i < 2; ++i) {
-        if (RSDK_touchMouse->count) {
+        if (TouchInfo->count) {
             int32 sizeX = touchStart[i].x >> 1;
             int32 sizeY = touchStart[i].y >> 1;
-            for (int32 t = 0; t < RSDK_touchMouse->count; ++t) {
-                int32 x = (RSDK_screens->position.x << 16) - ((RSDK_touchMouse->x[t] * RSDK_screens->width) * -65536.0f);
-                int32 y = (RSDK_screens->position.y << 16) - ((RSDK_touchMouse->y[t] * RSDK_screens->height) * -65536.0f);
+            for (int32 t = 0; t < TouchInfo->count; ++t) {
+                int32 x = (ScreenInfo->position.x << 16) - ((TouchInfo->x[t] * ScreenInfo->width) * -65536.0f);
+                int32 y = (ScreenInfo->position.y << 16) - ((TouchInfo->y[t] * ScreenInfo->height) * -65536.0f);
 
                 int32 touchX = abs(touchEnd[i].x + entity->position.x - x);
                 int32 touchY = abs(touchEnd[i].y + entity->position.y - y);

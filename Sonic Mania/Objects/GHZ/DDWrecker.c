@@ -24,7 +24,7 @@ void DDWrecker_Draw(void)
 {
     RSDK_THIS(DDWrecker);
     if (entity->type == DDWRECKER_MAIN_1 || entity->type == DDWRECKER_MAIN_2) {
-        RSDK.SetActivePalette(1, 0, RSDK_screens->height);
+        RSDK.SetActivePalette(1, 0, ScreenInfo->height);
         entity->direction = entity->animator.frameID >= 16;
         if ((entity->invincible & 2) == 0) {
             RSDK.SetLimitedFade(1, 2, 3, entity->blendAmount, 1, 28);
@@ -36,13 +36,13 @@ void DDWrecker_Draw(void)
         }
     }
     RSDK.DrawSprite(&entity->animator, NULL, false);
-    RSDK.SetActivePalette(0, 0, RSDK_screens->height);
+    RSDK.SetActivePalette(0, 0, ScreenInfo->height);
 }
 
 void DDWrecker_Create(void *data)
 {
     RSDK_THIS(DDWrecker);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         if (globals->gameMode == MODE_TIMEATTACK || globals->gameMode >= MODE_TIMEATTACK) {
             destroyEntity(entity);
         }
@@ -97,7 +97,7 @@ void DDWrecker_State_Init(void)
 {
     RSDK_THIS(DDWrecker);
     if (++entity->timer >= 8) {
-        ScreenInfo *screen             = RSDK_screens;
+        RSDKScreenInfo *screen             = ScreenInfo;
         entity->timer                  = 0;
         Zone->playerBoundActiveL[0]    = true;
         Zone->screenBoundsL1[0]        = (entity->position.x >> 0x10) - screen->centerX;
@@ -130,31 +130,31 @@ void DDWrecker_State_InitChildren(void)
     if (entity->timer) {
         entity->timer++;
         if (entity->timer == 60) {
-            EntityDDWrecker *child = RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot + 1, DDWrecker);
+            EntityDDWrecker *child = RSDK_GET_ENTITY(SceneInfo->entitySlot + 1, DDWrecker);
             RSDK.ResetEntityPtr(child, DDWrecker->objectID, intToVoid(DDWRECKER_CHAIN));
             child->position.x = entity->position.x;
             child->position.y = entity->position.y;
             child->position.y += 0x400000;
 
-            child = RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot + 2, DDWrecker);
+            child = RSDK_GET_ENTITY(SceneInfo->entitySlot + 2, DDWrecker);
             RSDK.ResetEntityPtr(child, DDWrecker->objectID, intToVoid(DDWRECKER_CHAIN));
             child->position.x = entity->position.x;
             child->position.y = entity->position.y;
             child->position.y += 0x400000;
 
-            child = RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot + 4, DDWrecker);
+            child = RSDK_GET_ENTITY(SceneInfo->entitySlot + 4, DDWrecker);
             RSDK.ResetEntityPtr(child, DDWrecker->objectID, intToVoid(DDWRECKER_CHAIN));
             child->position.x = entity->position.x;
             child->position.y = entity->position.y;
             child->position.y += 0x400000;
 
-            child = RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot + 5, DDWrecker);
+            child = RSDK_GET_ENTITY(SceneInfo->entitySlot + 5, DDWrecker);
             RSDK.ResetEntityPtr(child, DDWrecker->objectID, intToVoid(DDWRECKER_CHAIN));
             child->position.x = entity->position.x;
             child->position.y = entity->position.y;
             child->position.y += 0x400000;
 
-            child = RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot + 3, DDWrecker);
+            child = RSDK_GET_ENTITY(SceneInfo->entitySlot + 3, DDWrecker);
             RSDK.ResetEntityPtr(child, DDWrecker->objectID, intToVoid(DDWRECKER_CORE));
             child->position.x = entity->position.x;
             child->position.y = entity->position.y;
@@ -163,44 +163,44 @@ void DDWrecker_State_InitChildren(void)
             child->startPos.y = entity->position.y;
             child->startPos.y -= 0x800000;
             child->velocity.y = -0x98000;
-            child->slots[0]   = RSDK_sceneInfo->entitySlot + 6;
-            child->slots[1]   = RSDK_sceneInfo->entitySlot + 1;
-            child->slots[2]   = RSDK_sceneInfo->entitySlot + 2;
-            child->slots[3]   = RSDK_sceneInfo->entitySlot + 4;
-            child->slots[4]   = RSDK_sceneInfo->entitySlot + 5;
-            child->slots[5]   = RSDK_sceneInfo->entitySlot + 7;
-            child->bodyA      = RSDK.GetEntityByID(RSDK_sceneInfo->entitySlot + 6);
-            child->bodyB      = RSDK.GetEntityByID(RSDK_sceneInfo->entitySlot + 7);
+            child->slots[0]   = SceneInfo->entitySlot + 6;
+            child->slots[1]   = SceneInfo->entitySlot + 1;
+            child->slots[2]   = SceneInfo->entitySlot + 2;
+            child->slots[3]   = SceneInfo->entitySlot + 4;
+            child->slots[4]   = SceneInfo->entitySlot + 5;
+            child->slots[5]   = SceneInfo->entitySlot + 7;
+            child->bodyA      = RSDK.GetEntityByID(SceneInfo->entitySlot + 6);
+            child->bodyB      = RSDK.GetEntityByID(SceneInfo->entitySlot + 7);
             child->state      = DDWrecker_State_Assemble;
 
-            child = RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot + 6, DDWrecker); // bodyA
+            child = RSDK_GET_ENTITY(SceneInfo->entitySlot + 6, DDWrecker); // bodyA
             RSDK.ResetEntityPtr(child, DDWrecker->objectID, intToVoid(DDWRECKER_MAIN_1));
             child->position.x = entity->position.x;
             child->position.y = entity->position.y;
             child->position.y += 0x400000;
-            child->slots[0]  = RSDK_sceneInfo->entitySlot + 1;
-            child->slots[1]  = RSDK_sceneInfo->entitySlot + 2;
-            child->slots[2]  = RSDK_sceneInfo->entitySlot + 3;
-            child->slots[3]  = RSDK_sceneInfo->entitySlot + 4;
-            child->slots[4]  = RSDK_sceneInfo->entitySlot + 5;
-            child->slots[5]  = RSDK_sceneInfo->entitySlot + 7;
-            child->bodyA     = RSDK.GetEntityByID(RSDK_sceneInfo->entitySlot + 6);
-            child->bodyB     = RSDK.GetEntityByID(RSDK_sceneInfo->entitySlot + 7);
+            child->slots[0]  = SceneInfo->entitySlot + 1;
+            child->slots[1]  = SceneInfo->entitySlot + 2;
+            child->slots[2]  = SceneInfo->entitySlot + 3;
+            child->slots[3]  = SceneInfo->entitySlot + 4;
+            child->slots[4]  = SceneInfo->entitySlot + 5;
+            child->slots[5]  = SceneInfo->entitySlot + 7;
+            child->bodyA     = RSDK.GetEntityByID(SceneInfo->entitySlot + 6);
+            child->bodyB     = RSDK.GetEntityByID(SceneInfo->entitySlot + 7);
             child->arcOffset = 64;
 
-            child = RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot + 7, DDWrecker); // bodyB
+            child = RSDK_GET_ENTITY(SceneInfo->entitySlot + 7, DDWrecker); // bodyB
             RSDK.ResetEntityPtr(child, DDWrecker->objectID, intToVoid(DDWRECKER_MAIN_2));
             child->position.x = entity->position.x;
             child->position.y = entity->position.y;
             child->position.y += 0x400000;
-            child->slots[0]  = RSDK_sceneInfo->entitySlot + 1;
-            child->slots[1]  = RSDK_sceneInfo->entitySlot + 2;
-            child->slots[2]  = RSDK_sceneInfo->entitySlot + 3;
-            child->slots[3]  = RSDK_sceneInfo->entitySlot + 4;
-            child->slots[4]  = RSDK_sceneInfo->entitySlot + 5;
-            child->slots[5]  = RSDK_sceneInfo->entitySlot + 6;
-            child->bodyB     = RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot + 7, DDWrecker);
-            child->bodyA     = RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot + 6, DDWrecker);
+            child->slots[0]  = SceneInfo->entitySlot + 1;
+            child->slots[1]  = SceneInfo->entitySlot + 2;
+            child->slots[2]  = SceneInfo->entitySlot + 3;
+            child->slots[3]  = SceneInfo->entitySlot + 4;
+            child->slots[4]  = SceneInfo->entitySlot + 5;
+            child->slots[5]  = SceneInfo->entitySlot + 6;
+            child->bodyB     = RSDK_GET_ENTITY(SceneInfo->entitySlot + 7, DDWrecker);
+            child->bodyA     = RSDK_GET_ENTITY(SceneInfo->entitySlot + 6, DDWrecker);
             child->arcOffset = 64;
 
             destroyEntity(entity);
@@ -866,7 +866,7 @@ void DDWrecker_State_Die(void)
             entity->timer               = 0;
             entity->visible             = false;
             entity->state               = DDWrecker_State_SpawnSignpost;
-            RSDK_sceneInfo->timeEnabled = false;
+            SceneInfo->timeEnabled = false;
             Player_GiveScore(RSDK_GET_ENTITY(SLOT_PLAYER1, Player), 1000);
         }
     }

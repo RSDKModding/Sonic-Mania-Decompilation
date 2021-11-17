@@ -47,7 +47,7 @@ void AIZEncoreTutorial_Draw(void)
 void AIZEncoreTutorial_Create(void *data)
 {
     RSDK_THIS(AIZEncoreTutorial);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->visible       = true;
         entity->drawOrder     = Zone->drawOrderHigh;
         entity->active        = ACTIVE_BOUNDS;

@@ -19,7 +19,7 @@ void ChemicalPool_StaticUpdate(void) {}
 void ChemicalPool_Draw(void)
 {
     RSDK_THIS(ChemicalPool);
-    ScreenInfo *screen = &RSDK_screens[RSDK_sceneInfo->currentScreenID];
+    RSDKScreenInfo *screen = &ScreenInfo[SceneInfo->currentScreenID];
     Vector2 drawPos;
     Vector2 verts[4];
 
@@ -64,9 +64,9 @@ void ChemicalPool_Draw(void)
     {
         int32 x = ((entity->position.x - entity->updateRange.x) >> 16) - screen->position.x;
         int32 y = ((entity->position.y - entity->updateRange.y) >> 16) - screen->position.y;
-        RSDK.SetClipBounds(RSDK_sceneInfo->currentScreenID, x, y, x + (entity->size.x >> 16), y + (entity->size.y >> 16));
+        RSDK.SetClipBounds(SceneInfo->currentScreenID, x, y, x + (entity->size.x >> 16), y + (entity->size.y >> 16));
 
-        drawPos.x = entity->position.x - ((entity->position.x - (screen->position.x << 16) - (RSDK_screens->centerX << 16)) >> 1);
+        drawPos.x = entity->position.x - ((entity->position.x - (screen->position.x << 16) - (ScreenInfo->centerX << 16)) >> 1);
 
         int32 offset = 0x800000 - entity->size.y;
         offset     = minVal(offset, 0x400000);
@@ -75,14 +75,14 @@ void ChemicalPool_Draw(void)
         drawPos.y =
             offset + entity->position.y + entity->field_78 - ((entity->position.y - (screen->centerY << 16) - (screen->position.y << 16)) >> 4);
         RSDK.DrawSprite(&entity->animator, &drawPos, false);
-        RSDK.SetClipBounds(RSDK_sceneInfo->currentScreenID, 0, 0, screen->width, screen->height);
+        RSDK.SetClipBounds(SceneInfo->currentScreenID, 0, 0, screen->width, screen->height);
     }
 }
 
 void ChemicalPool_Create(void *data)
 {
     RSDK_THIS(ChemicalPool);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->inkEffect     = INK_ADD;
         entity->visible       = true;
         entity->alpha         = 0xFF;

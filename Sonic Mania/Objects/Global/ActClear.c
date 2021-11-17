@@ -29,7 +29,7 @@ void ActClear_Draw(void)
     verts[2].y = drawPos.y - 0x40000;
     verts[3].y = drawPos.y - 0x40000;
     if ((globals->playerID & 0xFF) == ID_KNUCKLES) {
-        int32 center = (RSDK_screens->centerX << 16) + 0x100000;
+        int32 center = (ScreenInfo->centerX << 16) + 0x100000;
         drawPos.x    = center + 2 * entity->posUnknown3.x;
         verts[0].x   = drawPos.x - 0x910000;
         verts[1].x   = drawPos.x + 0x340000;
@@ -66,7 +66,7 @@ void ActClear_Draw(void)
         offset = center - 0xA0000;
     }
     else {
-        int32 center = (RSDK_screens->centerX << 16) + 0x100000;
+        int32 center = (ScreenInfo->centerX << 16) + 0x100000;
         drawPos.x    = center + 2 * entity->posUnknown3.x;
         verts[0].x   = drawPos.x - 0x6D0000;
         verts[1].x   = drawPos.x + 0x340000;
@@ -135,7 +135,7 @@ void ActClear_Draw(void)
     if (globals->gameMode == MODE_TIMEATTACK) {
         drawPos.x = dx - 0x620000;
         drawPos.y = dy - 0xE0000;
-        ActClear_DrawTime(&drawPos, RSDK_sceneInfo->minutes, RSDK_sceneInfo->seconds, RSDK_sceneInfo->milliseconds);
+        ActClear_DrawTime(&drawPos, SceneInfo->minutes, SceneInfo->seconds, SceneInfo->milliseconds);
     }
     else {
 #endif
@@ -287,7 +287,7 @@ void ActClear_Draw(void)
 void ActClear_Create(void *data)
 {
     RSDK_THIS(ActClear);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
 #if RETRO_USE_PLUS
         ActClear->dword34 = 1;
 #endif
@@ -302,7 +302,7 @@ void ActClear_Create(void *data)
 
         if (Zone_GetZoneID() >= 0) {
             StatInfo stat;
-            uint16 time = RSDK_sceneInfo->milliseconds + 100 * (RSDK_sceneInfo->seconds + 60 * RSDK_sceneInfo->minutes);
+            uint16 time = SceneInfo->milliseconds + 100 * (SceneInfo->seconds + 60 * SceneInfo->minutes);
             switch (globals->playerID & 0xFF) {
                 case ID_SONIC: TimeAttackData_TrackActClear(Zone->actID, Zone_GetZoneID(), &stat, 1, time, player1->rings, player1->score); break;
                 case ID_TAILS: TimeAttackData_TrackActClear(Zone->actID, Zone_GetZoneID(), &stat, 2, time, player1->rings, player1->score); break;
@@ -327,20 +327,20 @@ void ActClear_Create(void *data)
 #if RETRO_USE_PLUS
         if (!ActClear->disableTimeBonus) {
 #endif
-            switch (RSDK_sceneInfo->minutes) {
+            switch (SceneInfo->minutes) {
                 case 0:
-                    if (RSDK_sceneInfo->seconds >= 30)
-                        entity->scoreBonus = RSDK_sceneInfo->seconds < 45 ? 10000 : 5000;
+                    if (SceneInfo->seconds >= 30)
+                        entity->scoreBonus = SceneInfo->seconds < 45 ? 10000 : 5000;
                     else
                         entity->scoreBonus = 50000;
                     break;
-                case 1: entity->scoreBonus = RSDK_sceneInfo->seconds < 30 ? 4000 : 3000; break;
+                case 1: entity->scoreBonus = SceneInfo->seconds < 30 ? 4000 : 3000; break;
                 case 2: entity->scoreBonus = 2000; break;
                 case 3: entity->scoreBonus = 1000; break;
                 case 4: entity->scoreBonus = 500; break;
                 case 5: entity->scoreBonus = 100; break;
                 case 9:
-                    if (!RSDK_sceneInfo->debugMode && globals->gameMode < MODE_TIMEATTACK && RSDK_sceneInfo->seconds == 59) {
+                    if (!SceneInfo->debugMode && globals->gameMode < MODE_TIMEATTACK && SceneInfo->seconds == 59) {
 #if RETRO_USE_PLUS
                         if (globals->gameMode != MODE_ENCORE && !(globals->medalMods & getMod(MEDAL_NOTIMEOVER)))
 #endif
@@ -359,7 +359,7 @@ void ActClear_Create(void *data)
 #if RETRO_USE_PLUS
         if (globals->gameMode == MODE_TIMEATTACK) {
             EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
-            entity->time = TimeAttackData_GetScore(param->zoneID, param->characterID, param->actID, RSDK_sceneInfo->filter == SCN_FILTER_ENCORE, 1);
+            entity->time = TimeAttackData_GetScore(param->zoneID, param->characterID, param->actID, SceneInfo->filter == SCN_FILTER_ENCORE, 1);
             entity->achievedRank = false;
             entity->isNewRecord  = false;
         }
@@ -508,16 +508,16 @@ void ActClear_Unknown5(void)
     if (player2) {
         if (player2->sidekick) {
             if (player2->state != Player_State_FlyIn && player2->state != Player_State_JumpIn) {
-                if (player2->position.x <= (RSDK_screens->width + RSDK_screens->position.x) << 16
+                if (player2->position.x <= (ScreenInfo->width + ScreenInfo->position.x) << 16
                     || abs(player2->position.y - player1->position.y) > 0x100000) {
                     Player->jumpInDelay    = 240;
-                    Entity *entStore       = RSDK_sceneInfo->entity;
-                    RSDK_sceneInfo->entity = (Entity *)player2;
+                    Entity *entStore       = SceneInfo->entity;
+                    SceneInfo->entity = (Entity *)player2;
                     Player_P2JumpBackIn();
-                    RSDK_sceneInfo->entity = entStore;
+                    SceneInfo->entity = entStore;
                     if (player2->state == Player_State_FlyIn || player2->state == Player_State_JumpIn || player2->state == Player_State_StartJumpIn) {
                         player2->active     = ACTIVE_NORMAL;
-                        player2->position.y = ((RSDK_screens->position.y - 16) << 16);
+                        player2->position.y = ((ScreenInfo->position.y - 16) << 16);
                     }
                 }
                 else {
@@ -632,9 +632,9 @@ void ActClear_TallyScore(void)
     }
 
 #if RETRO_USE_TOUCH_CONTROLS
-    if (RSDK_controller[player->controllerID].keyA.press || RSDK_controller[player->controllerID].keyStart.press || RSDK_touchMouse->count) {
+    if (ControllerInfo[player->controllerID].keyA.press || ControllerInfo[player->controllerID].keyStart.press || TouchInfo->count) {
 #else
-    if (RSDK_controller[player->controllerID].keyA.press || RSDK_controller[player->controllerID].keyStart.press) {
+    if (ControllerInfo[player->controllerID].keyA.press || ControllerInfo[player->controllerID].keyStart.press) {
 #endif
         Player_GiveScore(player, entity->scoreBonus + entity->ringBonus + entity->coolBonus);
         entity->totalScore += entity->scoreBonus + entity->ringBonus + entity->coolBonus;
@@ -674,7 +674,7 @@ void ActClear_LoadNextScene(void)
                 uint8 zoneID                 = param->zoneID;
                 uint8 actID                  = param->actID;
 
-                int32 time = 6000 * RSDK_sceneInfo->minutes + 100 * RSDK_sceneInfo->seconds + RSDK_sceneInfo->milliseconds;
+                int32 time = 6000 * SceneInfo->minutes + 100 * SceneInfo->seconds + SceneInfo->milliseconds;
 
                 uint16 *record = TimeAttackData_GetRecordedTime(zoneID, actID, playerID, 1);
                 int32 rank     = 0;
@@ -715,7 +715,7 @@ void ActClear_LoadNextScene(void)
                     ActClear->finishedSavingGame = true;
                     SaveGame_SaveFile(ActClear_SaveGameCallback);
                 }
-                ++RSDK_sceneInfo->listPos;
+                ++SceneInfo->listPos;
                 if (!RSDK.CheckValidScene())
                     RSDK.SetScene("Presentation", "Title Screen");
             }
@@ -792,22 +792,22 @@ void ActClear_State_TAResults(void)
 
     if (!ActClear->finishedSavingGame && !ActClear->disableResultsInput) {
 #if RETRO_USE_TOUCH_CONTROLS
-        for (int32 t = 0; t < RSDK_touchMouse->count; ++t) {
-            int32 tx = (RSDK_touchMouse->x[t] * RSDK_screens->width);
-            int32 ty = (RSDK_touchMouse->y[t] * RSDK_screens->height);
+        for (int32 t = 0; t < TouchInfo->count; ++t) {
+            int32 tx = (TouchInfo->x[t] * ScreenInfo->width);
+            int32 ty = (TouchInfo->y[t] * ScreenInfo->height);
 
-            if (RSDK_touchMouse->down[t]) {
-                if (tx >= RSDK_screens->width - 0x80 && ty >= 0 && tx <= RSDK_screens->width && ty <= 0x40) {
-                    RSDK_controller->keyY.press |= 1;
+            if (TouchInfo->down[t]) {
+                if (tx >= ScreenInfo->width - 0x80 && ty >= 0 && tx <= ScreenInfo->width && ty <= 0x40) {
+                    ControllerInfo->keyY.press |= 1;
                     break;
                 }
             }
         }
 
-        RSDK_controller->keyStart.press |= RSDK_touchMouse->count && !RSDK_controller->keyY.press;
+        ControllerInfo->keyStart.press |= TouchInfo->count && !ControllerInfo->keyY.press;
 #endif
 
-        if (RSDK_controller->keyY.press) {
+        if (ControllerInfo->keyY.press) {
             if (!ActClear->hasSavedReplay) {
                 if (HUD->replaySaveEnabled) {
                     if (!UIDialog->activeDialog) {
@@ -822,7 +822,7 @@ void ActClear_State_TAResults(void)
             }
         }
 
-        if (RSDK_controller->keyStart.press) {
+        if (ControllerInfo->keyStart.press) {
             RSDK.PlaySfx(UIWidgets->sfxAccept, false, 255);
 
             RSDK_THIS(ActClear);
@@ -895,9 +895,9 @@ void ActClear_State_ActFinish(void)
         else {
             ActClear->finished           = true;
             ActClear->actID              = 0;
-            RSDK_sceneInfo->milliseconds = 0;
-            RSDK_sceneInfo->seconds      = 0;
-            RSDK_sceneInfo->minutes      = 0;
+            SceneInfo->milliseconds = 0;
+            SceneInfo->seconds      = 0;
+            SceneInfo->minutes      = 0;
             foreach_active(Player, player)
             {
                 player->ringExtraLife = 100;
@@ -916,7 +916,7 @@ void ActClear_ForcePlayerOnScreen(void)
     EntityPlayer *player2 = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
     bool32 finishedP2     = false;
     bool32 finishedP1     = false;
-    int32 screenOffX      = RSDK_screens->width - 16 + RSDK_screens->position.x;
+    int32 screenOffX      = ScreenInfo->width - 16 + ScreenInfo->position.x;
     screenOffX <<= 16;
     player1->up        = false;
     player1->down      = false;
@@ -931,7 +931,7 @@ void ActClear_ForcePlayerOnScreen(void)
         player1->right      = false;
     }
     else {
-        if ((!player1->onGround || player1->groundVel) && player1->position.x < screenOffX - (RSDK_screens->centerX << 15)) {
+        if ((!player1->onGround || player1->groundVel) && player1->position.x < screenOffX - (ScreenInfo->centerX << 15)) {
             player1->right = true;
             if (!player1->skidding) {
                 if (!player1->left)

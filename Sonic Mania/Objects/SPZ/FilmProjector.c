@@ -21,7 +21,7 @@ void FilmProjector_StaticUpdate(void) {}
 void FilmProjector_Draw(void)
 {
     RSDK_THIS(FilmProjector);
-    if (RSDK_sceneInfo->currentDrawGroup == Zone->drawOrderHigh) {
+    if (SceneInfo->currentDrawGroup == Zone->drawOrderHigh) {
         Vector2 drawPos;
         entity->drawFX &= ~FX_FLIP;
 
@@ -56,7 +56,7 @@ void FilmProjector_Draw(void)
         entity->drawFX &= ~FX_ROTATE;
         RSDK.DrawSprite(&entity->animator4, &drawPos, false);
 
-        RSDK_sceneInfo->effectGizmo = true;
+        SceneInfo->effectGizmo = true;
         entity->drawFX |= FX_FLIP;
         RSDK.DrawSprite(&entity->animator1, NULL, false);
 
@@ -68,7 +68,7 @@ void FilmProjector_Draw(void)
     else {
         RSDK.DrawSprite(&entity->animator2, &entity->posUnknown, false);
         RSDK.DrawSprite(&entity->animator6, &entity->posUnknown, false);
-        RSDK.AddDrawListRef(Zone->drawOrderHigh, RSDK_sceneInfo->entitySlot);
+        RSDK.AddDrawListRef(Zone->drawOrderHigh, SceneInfo->entitySlot);
     }
 }
 
@@ -81,7 +81,7 @@ void FilmProjector_Create(void *data)
     RSDK.SetSpriteAnimation(FilmProjector->aniFrames, 1, &entity->animator4, true, 1);
     RSDK.SetSpriteAnimation(FilmProjector->aniFrames, 2, &entity->animator5, true, 0);
     RSDK.SetSpriteAnimation(FilmProjector->aniFrames, 3, &entity->animator6, true, 1);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->active        = ACTIVE_BOUNDS;
         entity->updateRange.x = 0x1000000;
         entity->updateRange.y = 0x1000000;
@@ -150,7 +150,7 @@ void FilmProjector_EditorDraw(void)
     entity->drawFX &= ~FX_ROTATE;
     RSDK.DrawSprite(&entity->animator4, &drawPos, false);
 
-    RSDK_sceneInfo->effectGizmo = true;
+    SceneInfo->effectGizmo = true;
     entity->drawFX |= FX_FLIP;
     RSDK.DrawSprite(&entity->animator1, NULL, false);
 

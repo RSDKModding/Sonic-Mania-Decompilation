@@ -46,9 +46,9 @@ void UIVsResults_Create(void *data)
     UIVsResults_SetupSprites();
     entity->textSpriteIndex = UIWidgets->textSpriteIndex;
 
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         for (int32 i = 0; i < entity->numRows; ++i) {
-            if (!RSDK_sceneInfo->inEditor) {
+            if (!SceneInfo->inEditor) {
                 RSDK.SetText(&entity->rowText[i], "00", 0);
                 RSDK.SetSpriteString(UIVsResults->aniFrames, 18, &entity->rowText[i]);
             }
@@ -68,7 +68,7 @@ void UIVsResults_SetupSprites(void)
     EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
 
     entity->characterID = entity->playerID;
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         switch (session->characterFlags[entity->playerID]) {
             case ID_SONIC: entity->characterID = 0; break;
             case ID_TAILS: entity->characterID = 1; break;
@@ -105,7 +105,7 @@ void UIVsResults_Unknown2(void)
     RSDK_THIS(UIVsResults);
 
     int32 y = (entity->field_1D0 >> 1) + entity->position.y - 0x1D8000;
-    if (!RSDK_sceneInfo->inEditor)
+    if (!SceneInfo->inEditor)
         UIWidgets_Unknown3(entity->field_1D0 >> 16, 96, entity->position.x + 0x30000, y);
 
     if (!entity->field_1D4)
@@ -142,7 +142,7 @@ void UIVsResults_DrawRow(int32 row, int32 posX, int32 posY)
     drawPos.y = posY + 0x80000;
     drawPos.x = posX + 0x10000;
     RSDK.DrawSprite(&entity->rowAnimators[row], &drawPos, false);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         drawPos.y = posY + 0x80000;
         drawPos.x = posX + 0x590000;
         int32 width = RSDK.GetStringWidth(UIVsResults->aniFrames, 18, &entity->rowText[row], 0, entity->rowText[row].textLength, 0);

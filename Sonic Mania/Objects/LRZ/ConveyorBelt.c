@@ -29,7 +29,7 @@ void ConveyorBelt_Create(void *data)
     entity->updateRange.x = 0x400000;
     entity->updateRange.y = 0x400000;
     entity->drawOrder     = Zone->drawOrderHigh;
-    if (RSDK_sceneInfo->inEditor) {
+    if (SceneInfo->inEditor) {
         if (!entity->speed)
             entity->speed = -8;
         if (!entity->size.x)

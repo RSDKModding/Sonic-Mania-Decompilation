@@ -58,7 +58,7 @@ void GigaMetal_Draw(void)
 void GigaMetal_Create(void *data)
 {
     RSDK_THIS(GigaMetal);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         if (globals->gameMode < MODE_TIMEATTACK) {
             entity->drawOrder     = Zone->drawOrderLow - 1;
             entity->updateRange.x = 0x800000;
@@ -324,8 +324,8 @@ void GigaMetal_StateDraw10_Unknown(void)
     RSDK_THIS(GigaMetal);
     Vector2 vertices[3];
 
-    int x = RSDK_screens[RSDK_sceneInfo->currentScreenID].position.x << 16;
-    int y = RSDK_screens[RSDK_sceneInfo->currentScreenID].position.y << 16;
+    int x = ScreenInfo[SceneInfo->currentScreenID].position.x << 16;
+    int y = ScreenInfo[SceneInfo->currentScreenID].position.y << 16;
 
     int angle     = entity->angle + entity->field_100;
     vertices[0].x = entity->scale.x * RSDK.Sin1024(angle) - x + entity->position.x;
@@ -391,7 +391,7 @@ void GigaMetal_Hit(void)
 
         entity->timer               = 0;
         entity->state               = GigaMetal_State_Destroyed;
-        RSDK_sceneInfo->timeEnabled = false;
+        SceneInfo->timeEnabled = false;
         Player_GiveScore(RSDK_GET_ENTITY(SLOT_PLAYER1, Player), 1000);
     }
     else {
@@ -411,8 +411,8 @@ void GigaMetal_State_SetupBounds(void)
     if (player1->position.y < entity->position.y && !player1->collisionPlane) {
         Zone->playerBoundActiveL[0] = true;
         Zone->playerBoundActiveR[0] = true;
-        Zone->screenBoundsL1[0]     = (entity->position.x >> 16) - RSDK_screens->centerX + 32;
-        Zone->screenBoundsR1[0]     = (entity->position.x >> 16) + RSDK_screens->centerX + 32;
+        Zone->screenBoundsL1[0]     = (entity->position.x >> 16) - ScreenInfo->centerX + 32;
+        Zone->screenBoundsR1[0]     = (entity->position.x >> 16) + ScreenInfo->centerX + 32;
         Zone->screenBoundsB1[0]     = (entity->position.y >> 16) + 16;
         Zone->deathBoundary[0]      = (entity->position.y >> 16) + 16;
 
@@ -612,15 +612,15 @@ void GigaMetal_State_Unknown5(void)
     GigaMetal_CheckPlayerCollisions();
 
     if ((Zone->timer & 7) == 2) {
-        int endX = ((RSDK_screens->width + RSDK_screens->position.x) >> 4) + 1;
-        int endY = (RSDK_screens->height + RSDK_screens->position.y) >> 4;
+        int endX = ((ScreenInfo->width + ScreenInfo->position.x) >> 4) + 1;
+        int endY = (ScreenInfo->height + ScreenInfo->position.y) >> 4;
 
         RSDK.CopyTileLayer(Zone->fgHigh, endX, endY - 5, Zone->fgHigh, endX, endY - 5 + 8, 1, 6);
         if (endX > 224)
             RSDK.CopyTileLayer(Zone->fgHigh, endX - 224, endY - 5, Zone->fgHigh, endX - 224, endY - 5 + 8, 1, 6);
 
         int delay  = 4;
-        int tileX  = (RSDK_screens->position.x >> 4) + 8;
+        int tileX  = (ScreenInfo->position.x >> 4) + 8;
         int spawnY = (endY << 20) + 0x80000;
 
         for (int delay = 4; delay < 40; delay += 6) {
@@ -727,13 +727,13 @@ void GigaMetal_State_Destroyed(void)
         Zone->autoScrollSpeed = 0;
         RSDK.PlaySfx(MetalSonic->sfxExplosion3, false, 255);
 
-        EntityDango *dango = CREATE_ENTITY(Dango, NULL, (RSDK_screens->position.x - 64) << 16, (RSDK_screens->position.y + 200) << 16);
+        EntityDango *dango = CREATE_ENTITY(Dango, NULL, (ScreenInfo->position.x - 64) << 16, (ScreenInfo->position.y + 200) << 16);
         dango->timer       = 0;
         dango->direction   = FLIP_X;
         dango->state       = Dango_StateTaunt_Unknown1;
 
-        int tileX = RSDK_screens->position.x >> 4;
-        int tileY = ((RSDK_screens->height + RSDK_screens->position.y) >> 4) - 5;
+        int tileX = ScreenInfo->position.x >> 4;
+        int tileY = ((ScreenInfo->height + ScreenInfo->position.y) >> 4) - 5;
 
         int spawnX = (tileX << 20) + 0x80000;
         for (int x = 0; x < 32; ++x) {

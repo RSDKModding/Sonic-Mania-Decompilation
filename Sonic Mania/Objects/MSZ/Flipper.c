@@ -123,7 +123,7 @@ void Flipper_Create(void *data)
     RSDK_THIS(Flipper);
 
     entity->drawFX = FX_FLIP;
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         RSDK.SetSpriteAnimation(Flipper->aniFrames, 0, &entity->animator, true, 0);
         entity->active        = ACTIVE_BOUNDS;
         entity->updateRange.x = 0x800000;

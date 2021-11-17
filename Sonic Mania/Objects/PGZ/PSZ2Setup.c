@@ -45,7 +45,7 @@ void PSZ2Setup_StaticUpdate(void)
 
                 if (RSDK.GetTileBehaviour(tile, player->collisionPlane)) {
                     if (abs(player->groundVel) >= 0x60000 || player->state == Player_State_DropDash) {
-                        EntityPetalPile *pile = (EntityPetalPile *)RSDK.CreateEntity(PetalPile->objectID, RSDK_sceneInfo->entity, player->position.x,
+                        EntityPetalPile *pile = (EntityPetalPile *)RSDK.CreateEntity(PetalPile->objectID, SceneInfo->entity, player->position.x,
                                                                                      player->position.y + (playerHitbox->bottom << 16));
                         pile->leafPattern     = 4;
                         pile->tileLayer       = lowFlag;
@@ -97,7 +97,7 @@ void PSZ2Setup_StageLoad(void)
         Zone->stageFinishCallback = PSZ2Setup_StageFinishCB;
 
 #if RETRO_USE_PLUS
-    if (RSDK_sceneInfo->filter & FILTER_ENCORE)
+    if (SceneInfo->filter & FILTER_ENCORE)
         RSDK.LoadPalette(0, "EncorePSZ2.act", 0xFF);
     Animals->animalTypes[0] = ANIMAL_POCKY;
     Animals->animalTypes[1] = ANIMAL_BECKY;

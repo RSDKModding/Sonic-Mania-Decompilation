@@ -37,7 +37,7 @@ void SpiralPlatform_Create(void *data)
     entity->tileSize.y  = 0x300000;
     TilePlatform_Create(NULL);
 
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->offRange.y <<= 10;
         entity->drawPos.y += entity->offRange.x;
         entity->hitbox.left += 17;

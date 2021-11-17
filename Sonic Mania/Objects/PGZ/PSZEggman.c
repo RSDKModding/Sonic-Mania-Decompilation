@@ -31,7 +31,7 @@ void PSZEggman_Draw(void)
 void PSZEggman_Create(void *data)
 {
     RSDK_THIS(PSZEggman);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->visible       = true;
         entity->drawOrder     = Zone->drawOrderLow;
         entity->drawPos.x     = entity->position.x - 0x180000;

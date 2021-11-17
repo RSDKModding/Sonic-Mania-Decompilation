@@ -147,7 +147,7 @@ void OOZSetup_StaticUpdate(void)
         }
     }
 
-    if (OOZSetup->flags && RSDK_sceneInfo->timeEnabled) {
+    if (OOZSetup->flags && SceneInfo->timeEnabled) {
         if (OOZSetup->fadeTimer < 0x10000)
             OOZSetup->fadeTimer++;
     }
@@ -185,7 +185,7 @@ void OOZSetup_Draw(void)
 {
     RSDK_THIS(OOZSetup);
 #if RETRO_USE_PLUS
-    if (RSDK_sceneInfo->currentDrawGroup != entity->drawOrder) {
+    if (SceneInfo->currentDrawGroup != entity->drawOrder) {
         foreach_active(Player, player)
         {
             if ((1 << RSDK.GetEntityID(player)) & OOZSetup->activePlayers)
@@ -257,7 +257,7 @@ void OOZSetup_StageLoad(void)
         if (isMainGameMode() && PlayerHelpers_CheckAct2())
             Zone->stageFinishCallback = OOZ2Outro_StageFinishCB_Act2;
 
-        if (RSDK_sceneInfo->filter & FILTER_ENCORE) {
+        if (SceneInfo->filter & FILTER_ENCORE) {
             RSDK.LoadPalette(0, "EncoreOOZ2.act", 255);
             RSDK.LoadPalette(2, "EncoreOOZSmog.act", 255);
             RSDK.CopyPalette(0, 128, 1, 128, 128);
@@ -271,7 +271,7 @@ void OOZSetup_StageLoad(void)
 #endif
     }
 #if RETRO_USE_PLUS
-    else if (RSDK_sceneInfo->filter & FILTER_ENCORE) {
+    else if (SceneInfo->filter & FILTER_ENCORE) {
         RSDK.LoadPalette(0, "EncoreOOZ1.act", 255);
         RSDK.CopyPalette(0, 128, 1, 128, 80);
         RSDK.CopyPalette(0, 128, 3, 128, 80);

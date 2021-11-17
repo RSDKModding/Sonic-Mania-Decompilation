@@ -28,7 +28,7 @@ void RPlaneShifter_Create(void *data)
     entity->drawOrder = Zone->drawOrderLow;
     entity->active    = ACTIVE_BOUNDS;
     entity->angle     = 0;
-    if (RSDK_sceneInfo->inEditor && !entity->height)
+    if (SceneInfo->inEditor && !entity->height)
         entity->height = 10;
     entity->updateRange.x = 0x800000;
     entity->updateRange.y = 0x800000;
@@ -52,7 +52,7 @@ void RPlaneShifter_DrawSprites(void)
 
     drawPos.x = entity->position.x;
     drawPos.y = entity->position.y;
-    if (RSDK_sceneInfo->inEditor || RSDK_sceneInfo->currentDrawGroup == Zone->playerDrawHigh + 1)
+    if (SceneInfo->inEditor || SceneInfo->currentDrawGroup == Zone->playerDrawHigh + 1)
         RSDK.DrawSprite(&entity->animator, &drawPos, false);
 
     drawPos.y -= 0x80000;
@@ -63,12 +63,12 @@ void RPlaneShifter_DrawSprites(void)
         drawPos.y -= 0x100000;
         for (int32 p = 0; p < 3; ++p) {
             drawPos.x = entity->position.x;
-            if (RSDK_sceneInfo->inEditor) {
+            if (SceneInfo->inEditor) {
                 drawPos.x += 0x1C00 * RSDK.Cos256(poleAngles[p]);
                 RSDK.DrawSprite(&RPlaneShifter->animator, &drawPos, false);
             }
-            else if (RSDK_sceneInfo->currentDrawGroup != Zone->playerDrawHigh + 1) {
-                if ((poleAngles[p] >= 0 && poleAngles[p] < 0x80) || RSDK_sceneInfo->currentDrawGroup == Zone->playerDrawHigh + 1) {
+            else if (SceneInfo->currentDrawGroup != Zone->playerDrawHigh + 1) {
+                if ((poleAngles[p] >= 0 && poleAngles[p] < 0x80) || SceneInfo->currentDrawGroup == Zone->playerDrawHigh + 1) {
                     drawPos.x += 0x1C00 * RSDK.Cos256(poleAngles[p]);
                     RSDK.DrawSprite(&RPlaneShifter->animator, &drawPos, false);
                 }
@@ -82,7 +82,7 @@ void RPlaneShifter_DrawSprites(void)
 
     drawPos.x = entity->position.x;
     drawPos.y -= 0x80000;
-    if (RSDK_sceneInfo->inEditor || RSDK_sceneInfo->currentDrawGroup == Zone->playerDrawHigh + 1)
+    if (SceneInfo->inEditor || SceneInfo->currentDrawGroup == Zone->playerDrawHigh + 1)
         RSDK.DrawSprite(&entity->animator, &drawPos, false);
 }
 

@@ -21,7 +21,7 @@ void PhantomShinobi_Draw(void)
 {
     RSDK_THIS(PhantomShinobi);
 
-    RSDK.SetActivePalette(4, 0, RSDK_screens[RSDK_sceneInfo->currentScreenID].height);
+    RSDK.SetActivePalette(4, 0, ScreenInfo[SceneInfo->currentScreenID].height);
 
     if (entity->invincibilityTimer & 1)
         RSDK.CopyPalette(6, 128, 4, 128, 128);
@@ -47,14 +47,14 @@ void PhantomShinobi_Draw(void)
     if (entity->invincibilityTimer & 1)
         RSDK.CopyPalette(5, 128, 4, 128, 128);
 
-    RSDK.SetActivePalette(0, 0, RSDK_screens[RSDK_sceneInfo->currentScreenID].height);
+    RSDK.SetActivePalette(0, 0, ScreenInfo[SceneInfo->currentScreenID].height);
 }
 
 void PhantomShinobi_Create(void *data)
 {
     RSDK_THIS(PhantomShinobi);
 
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->visible         = true;
         entity->drawFX          = FX_ROTATE | FX_FLIP;
         entity->drawOrder       = Zone->drawOrderLow;

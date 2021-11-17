@@ -253,7 +253,7 @@ void Funnel_Draw(void)
 {
     RSDK_THIS(Funnel);
 
-    entity->animator.frameID = RSDK_sceneInfo->currentDrawGroup == entity->drawOrder;
+    entity->animator.frameID = SceneInfo->currentDrawGroup == entity->drawOrder;
     RSDK.DrawSprite(&entity->animator, NULL, false);
 }
 
@@ -262,7 +262,7 @@ void Funnel_Create(void *data)
     RSDK_THIS(Funnel);
 
     RSDK.SetSpriteAnimation(Funnel->aniFrames, 0, &entity->animator, true, 0);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->active        = ACTIVE_BOUNDS;
         entity->updateRange.x = 0x1000000;
         entity->updateRange.y = 0x1000000;

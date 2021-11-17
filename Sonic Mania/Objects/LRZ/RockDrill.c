@@ -83,7 +83,7 @@ void RockDrill_Create(void *data)
 {
     RSDK_THIS(RockDrill);
 
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->active        = ACTIVE_BOUNDS;
         entity->visible       = true;
         entity->updateRange.x = 0x800000;
@@ -158,8 +158,7 @@ void RockDrill_SpawnDebris(int offset)
 {
     RSDK_THIS(RockDrill);
 
-    EntityDebris *debris =
-        CREATE_ENTITY(Debris, Debris_State_Fall, offset + RSDK_sceneInfo->entity->position.x, RSDK_sceneInfo->entity->position.y + 0x400000);
+    EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Fall, offset + entity->position.x, entity->position.y + 0x400000);
     RSDK.SetSpriteAnimation(RockDrill->aniFrames, 1, &debris->animator, true, RSDK.Rand(0, 8));
     debris->velocity.x    = RSDK.Rand(0, 6) << 15;
     debris->velocity.y    = RSDK.Rand(-12, -8) << 15;
@@ -182,7 +181,7 @@ void RockDrill_State_Unknown1(void)
 {
     RSDK_THIS(RockDrill);
 
-    int slot                           = RSDK_sceneInfo->entitySlot - 1;
+    int slot                           = SceneInfo->entitySlot - 1;
     EntityCollapsingPlatform *platform = RSDK_GET_ENTITY(slot--, CollapsingPlatform);
     while (platform->objectID == CollapsingPlatform->objectID) {
         platform->active = ACTIVE_NEVER;
@@ -196,8 +195,8 @@ void RockDrill_State_Unknown1(void)
         entity->boundsR         = Zone->screenBoundsR1[0];
         entity->boundsT         = Zone->screenBoundsT1[0];
         entity->boundsB         = Zone->screenBoundsB1[0];
-        Zone->screenBoundsL1[0] = (entity->position.x >> 16) - RSDK_screens->centerX - 96;
-        Zone->screenBoundsR1[0] = (entity->position.x >> 16) + RSDK_screens->centerX - 96;
+        Zone->screenBoundsL1[0] = (entity->position.x >> 16) - ScreenInfo->centerX - 96;
+        Zone->screenBoundsR1[0] = (entity->position.x >> 16) + ScreenInfo->centerX - 96;
         Zone->screenBoundsB1[0] = (entity->position.y >> 16) + 96;
     }
     entity->timer = 120;

@@ -16,15 +16,15 @@ void LRZ1Intro_StaticUpdate(void) {}
 void LRZ1Intro_Draw(void)
 {
     RSDK_THIS(LRZ1Intro);
-    RSDK.SetActivePalette(6, 0, RSDK_screens->height);
+    RSDK.SetActivePalette(6, 0, ScreenInfo->height);
     RSDK.DrawSprite(&entity->animator, 0, false);
-    RSDK.SetActivePalette(0, 0, RSDK_screens->height);
+    RSDK.SetActivePalette(0, 0, ScreenInfo->height);
 }
 
 void LRZ1Intro_Create(void *data)
 {
     RSDK_THIS(LRZ1Intro);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->active        = ACTIVE_NORMAL;
         entity->visible       = true;
         entity->drawOrder     = Zone->drawOrderLow;

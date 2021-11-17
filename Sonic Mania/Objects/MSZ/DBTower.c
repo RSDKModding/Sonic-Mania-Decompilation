@@ -40,7 +40,7 @@ void DBTower_Draw(void)
 void DBTower_Create(void *data)
 {
     RSDK_THIS(DBTower);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         if (globals->gameMode < MODE_TIMEATTACK) {
             entity->drawFX        = FX_ROTATE | FX_FLIP;
             entity->updateRange.x = 0x400000;
@@ -68,7 +68,7 @@ void DBTower_Create(void *data)
                     entity->bodyAngles[i]   = 0xC0;
                 }
                 entity->animatorPtrs[0]    = &entity->animator1;
-                entity->bodyPositions[0].x = entity->position.x + ((RSDK_screens->centerX - 64) << 16);
+                entity->bodyPositions[0].x = entity->position.x + ((ScreenInfo->centerX - 64) << 16);
                 entity->bodyPositions[0].y = entity->position.y + 0xA20000;
 
                 entity->field_68.x  = entity->position.x;
@@ -128,7 +128,7 @@ void DBTower_CheckPlayerCollisions(void)
                 if (Player_CheckBadnikTouch(player, entity, &DBTower->hitbox) && Player_CheckBossHit(player, entity)) {
                     entity->field_D0[1] = 2048;
                     if (--entity->health <= 0) {
-                        RSDK_sceneInfo->timeEnabled = false;
+                        SceneInfo->timeEnabled = false;
                         Player_GiveScore(RSDK_GET_ENTITY(SLOT_PLAYER1, Player), 1000);
                         RSDK.PlaySfx(DBTower->sfxExplosion2, false, 255);
                         entity->timer = 120;
@@ -192,13 +192,13 @@ void DBTower_State_SetupArena(void)
 
     if (RSDK_GET_ENTITY(SLOT_PLAYER1, Player)->position.x > entity->position.x) {
         Zone->playerBoundActiveL[0] = true;
-        Zone->screenBoundsL1[0]     = (entity->position.x >> 16) - RSDK_screens->centerX;
+        Zone->screenBoundsL1[0]     = (entity->position.x >> 16) - ScreenInfo->centerX;
         Zone->playerBoundActiveR[0] = true;
-        Zone->screenBoundsR1[0]     = (entity->position.x >> 16) + RSDK_screens->centerX;
+        Zone->screenBoundsR1[0]     = (entity->position.x >> 16) + ScreenInfo->centerX;
         entity->active              = ACTIVE_NORMAL;
         entity->timer               = 0;
         entity->field_68.y += 0xA20000;
-        entity->position.x += (RSDK_screens->centerX - 64) << 16;
+        entity->position.x += (ScreenInfo->centerX - 64) << 16;
 
         entity->field_68.x         = entity->position.x;
         entity->bodyPositions[0].x = entity->position.x;
@@ -211,7 +211,7 @@ void DBTower_State_SetupArena(void)
         Music_TransitionTrack(TRACK_MINIBOSS, 0.0125);
 
 #if RETRO_USE_PLUS
-        if (RSDK_sceneInfo->filter == SCN_FILTER_ENCORE) {
+        if (SceneInfo->filter == SCN_FILTER_ENCORE) {
             entity->timer = 60;
             entity->state = DBTower_State_Setup_Encore;
         }
@@ -363,7 +363,7 @@ void DBTower_State_Finish(void)
         Music_TransitionTrack(TRACK_STAGE, 0.0125);
 
 #if RETRO_USE_PLUS
-        if (RSDK_sceneInfo->filter == SCN_FILTER_ENCORE) {
+        if (SceneInfo->filter == SCN_FILTER_ENCORE) {
             entity->timer = 0;
             entity->state = DBTower_State_SpawnSignPost;
         }

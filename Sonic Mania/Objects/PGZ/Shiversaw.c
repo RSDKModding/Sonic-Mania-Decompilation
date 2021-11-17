@@ -86,7 +86,7 @@ void Shiversaw_Create(void *data)
     RSDK_THIS(Shiversaw);
     entity->drawFX = FX_ROTATE | FX_FLIP;
 
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         if (globals->gameMode < MODE_TIMEATTACK) {
             entity->active    = ACTIVE_BOUNDS;
             entity->visible   = false;
@@ -266,7 +266,7 @@ void Shiversaw_CheckPlayerCollisions(void)
                     entity->position.y          = v15;
                     entity->timer               = 120;
                     entity->state               = Shiversaw_State_Destroyed;
-                    RSDK_sceneInfo->timeEnabled = false;
+                    SceneInfo->timeEnabled = false;
                     EntityPlayer *player1       = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
                     Player_GiveScore(player1, 1000);
                 }
@@ -539,7 +539,7 @@ void Shiversaw_State_SetupBounds(void)
         entity->timer               = 0;
 #endif
         Zone->playerBoundActiveL[0] = true;
-        Zone->screenBoundsL1[0]     = RSDK_screens->position.x;
+        Zone->screenBoundsL1[0]     = ScreenInfo->position.x;
         EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
         if (player1->position.x > entity->position.x + 0x500000) {
             if (player1->position.y > entity->field_84) {
@@ -800,8 +800,8 @@ void Shiversaw_Unknown11(void)
         foreach_all(SignPost, signPost)
         {
             signPost->active     = ACTIVE_NORMAL;
-            signPost->position.x = (RSDK_screens->position.x + RSDK_screens->centerX) << 16;
-            signPost->position.y = (RSDK_screens->position.y - 64) << 16;
+            signPost->position.x = (ScreenInfo->position.x + ScreenInfo->centerX) << 16;
+            signPost->position.y = (ScreenInfo->position.y - 64) << 16;
         }
         entity->state = Shiversaw_Unknown10;
     }
@@ -831,7 +831,7 @@ void Shiversaw_Unknown13(void)
         foreach_all(SignPost, signPost)
         {
             signPost->position.x = entity->position.x;
-            signPost->position.y = (RSDK_screens->position.y - 64) << 16;
+            signPost->position.y = (ScreenInfo->position.y - 64) << 16;
             signPost->state      = SignPost_State_Fall;
             RSDK.PlaySfx(SignPost->sfxTwinkle, false, 255);
         }
@@ -1138,7 +1138,7 @@ void Shiversaw_ProcessSawMovement(int32 sawID)
 void Shiversaw_StateDust_Unknown(void)
 {
     RSDK_THIS(Dust);
-    entity->position.x += RSDK_sceneInfo->entity->velocity.x;
+    entity->position.x += entity->velocity.x;
     entity->position.y += entity->velocity.y;
     entity->visible ^= 1;
     entity->position.x += entity->velocity.x;

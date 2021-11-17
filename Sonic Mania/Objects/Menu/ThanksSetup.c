@@ -6,7 +6,7 @@ void ThanksSetup_Update(void)
 {
     RSDK_THIS(ThanksSetup);
     StateMachine_Run(entity->state);
-    RSDK_screens->position.x = 0x100 - RSDK_screens->centerX;
+    ScreenInfo->position.x = 0x100 - ScreenInfo->centerX;
 }
 
 void ThanksSetup_LateUpdate(void) {}
@@ -22,7 +22,7 @@ void ThanksSetup_Draw(void)
 void ThanksSetup_Create(void *data)
 {
     RSDK_THIS(ThanksSetup);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->active           = ACTIVE_ALWAYS;
         entity->visible          = true;
         entity->drawOrder        = 12;
@@ -128,7 +128,7 @@ void ThanksSetup_Unknown5(void)
     RSDK_THIS(ThanksSetup);
 
     if (entity->timer >= 1024) {
-        RSDK_sceneInfo->listPos = 0;
+        SceneInfo->listPos = 0;
         RSDK.LoadScene();
     }
     else {

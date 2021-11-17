@@ -85,7 +85,7 @@ void AIZRockPile_Create(void *data)
 {
     RSDK_THIS(AIZRockPile);
     RSDK.SetSpriteAnimation(AIZRockPile->aniFrames, 0, &entity->animator, true, entity->size + 3);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         switch (entity->size) {
             case AIZROCKPILE_SMALL:
                 entity->size          = 4;

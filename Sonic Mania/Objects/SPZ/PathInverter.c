@@ -22,7 +22,7 @@ void PathInverter_Create(void *data)
 {
     RSDK_THIS(PathInverter);
     RSDK.SetSpriteAnimation(PathInverter->aniFrames, entity->type, &entity->animator, true, 0);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->active        = ACTIVE_BOUNDS;
         Hitbox *hitbox        = RSDK.GetHitbox(&entity->animator, 0);
         entity->size.x        = hitbox->right;

@@ -33,14 +33,14 @@ void GHZCutsceneST_Draw(void) {}
 void GHZCutsceneST_Create(void *data)
 {
     RSDK_THIS(GHZCutsceneST);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         INIT_ENTITY(entity);
         CutsceneRules_SetupEntity(entity, &entity->size, &entity->hitbox);
         entity->active = ACTIVE_BOUNDS;
 
         GHZCutsceneST_SetupObjects();
 
-        RSDK_sceneInfo->timeEnabled = false;
+        SceneInfo->timeEnabled = false;
     }
 }
 
@@ -75,7 +75,7 @@ void GHZCutsceneST_SetupObjects(void)
         fxRuby->state          = 0;
         fxRuby->fadeBlack      = 512;
         fxRuby->fadeWhite      = 512;
-        fxRuby->outerRadius    = RSDK_screens->width;
+        fxRuby->outerRadius    = ScreenInfo->width;
         fxRuby->field_70      = 64;
         foreach_break;
     }
@@ -260,7 +260,7 @@ bool32 GHZCutsceneST_CutsceneState_LoadNextStage(EntityCutsceneSeq *host)
     EntityPlayer *player       = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     player->onGround           = true;
     player->state              = Player_State_Ground;
-    Zone_StoreEntities((RSDK_screens->position.x + RSDK_screens->centerX) << 16, (RSDK_screens->height + RSDK_screens->position.y) << 16);
+    Zone_StoreEntities((ScreenInfo->position.x + ScreenInfo->centerX) << 16, (ScreenInfo->height + ScreenInfo->position.y) << 16);
     RSDK.LoadScene();
     return true;
 }

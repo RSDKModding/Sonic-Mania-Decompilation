@@ -28,7 +28,7 @@ void TitleLogo_Draw(void)
     RSDK_THIS(TitleLogo);
     switch (entity->type) {
         case TITLELOGO_EMBLEM:
-            RSDK.SetClipBounds(0, 0, 0, RSDK_screens->width, RSDK_screens->height);
+            RSDK.SetClipBounds(0, 0, 0, ScreenInfo->width, ScreenInfo->height);
             entity->direction = FLIP_NONE;
             RSDK.DrawSprite(&entity->animator1, NULL, false);
 
@@ -69,7 +69,7 @@ void TitleLogo_Create(void *data)
     RSDK_THIS(TitleLogo);
 
     entity->drawFX = FX_FLIP;
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         switch (entity->type) {
             case TITLELOGO_EMBLEM: RSDK.SetSpriteAnimation(TitleLogo->aniFrames, 0, &entity->animator1, true, 0); break;
             case TITLELOGO_RIBBON: RSDK.SetSpriteAnimation(TitleLogo->aniFrames, 1, &entity->animator1, true, 0);

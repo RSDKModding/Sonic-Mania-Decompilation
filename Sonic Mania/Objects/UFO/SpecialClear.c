@@ -18,7 +18,7 @@ void SpecialClear_Draw(void)
     Vector2 vertPos[4];
     Vector2 drawPos;
 
-    int32 centerX             = RSDK_screens->centerX << 16;
+    int32 centerX             = ScreenInfo->centerX << 16;
     drawPos.x               = centerX - 0x600000;
     EntitySaveGame *saveRAM = SaveGame->saveRAM;
 
@@ -209,7 +209,7 @@ void SpecialClear_Draw(void)
 void SpecialClear_Create(void *data)
 {
     RSDK_THIS(SpecialClear);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->active     = ACTIVE_NORMAL;
         entity->visible    = true;
         entity->drawOrder  = 14;
@@ -399,7 +399,7 @@ void SpecialClear_LoadScene(void)
             else
 #endif
                 RSDK.SetScene("Mania Mode", "");
-            RSDK_sceneInfo->listPos = saveRAM->storedStageID;
+            SceneInfo->listPos = saveRAM->storedStageID;
             RSDK.LoadScene();
         }
     }
@@ -422,7 +422,7 @@ void SpecialClear_TallyScore(void)
         entity->machBonus -= 100;
         SpecialClear_GiveScoreBonus(100);
     }
-    if (RSDK_controller->keyA.press || RSDK_controller->keyStart.press) {
+    if (ControllerInfo->keyA.press || ControllerInfo->keyStart.press) {
         SpecialClear_GiveScoreBonus(entity->machBonus + entity->ringBonus + entity->perfectBonus);
         entity->ringBonus    = 0;
         entity->perfectBonus = 0;

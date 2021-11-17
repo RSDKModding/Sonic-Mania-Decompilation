@@ -34,7 +34,7 @@ void CrashTest_Draw(void)
     drawPos3.x = (2 * (entity->direction != FLIP_NONE) - 1) * (entity->length << 16) + entity->startPos.x
                  + 0x340000 * (2 * (entity->direction != FLIP_NONE) - 1);
     drawPos3.y = entity->startPos.y;
-    if (RSDK_sceneInfo->currentDrawGroup == Zone->playerDrawLow + 1) {
+    if (SceneInfo->currentDrawGroup == Zone->playerDrawLow + 1) {
         if (entity->state != CrashTest_State_Unknown4)
             RSDK.DrawSprite(&entity->animator1, &drawPos, false);
     }

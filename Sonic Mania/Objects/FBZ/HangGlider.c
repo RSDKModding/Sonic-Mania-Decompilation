@@ -16,12 +16,12 @@ void HangGlider_StaticUpdate(void) {}
 void HangGlider_Draw(void)
 {
     RSDK_THIS(HangGlider);
-    if (RSDK_sceneInfo->currentDrawGroup == RSDK_sceneInfo->entity->drawOrder) {
+    if (SceneInfo->currentDrawGroup == entity->drawOrder) {
         RSDK.DrawSprite(&entity->animator1, NULL, false);
         RSDK.DrawSprite(&entity->animator2, NULL, false);
         if (entity->playerPtr)
             RSDK.DrawSprite(&entity->animator3, NULL, false);
-        RSDK.AddDrawListRef(Zone->drawOrderHigh, RSDK_sceneInfo->entitySlot);
+        RSDK.AddDrawListRef(Zone->drawOrderHigh, SceneInfo->entitySlot);
     }
     else {
         RSDK.DrawSprite(&entity->animator4, NULL, false);
@@ -31,7 +31,7 @@ void HangGlider_Draw(void)
 void HangGlider_Create(void *data)
 {
     RSDK_THIS(HangGlider);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->visible       = true;
         entity->drawOrder     = Zone->drawOrderLow;
         entity->active        = ACTIVE_BOUNDS;

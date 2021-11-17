@@ -52,7 +52,7 @@ void LRZFireball_Create(void *data)
                 break;
         }
 
-        if (!RSDK_sceneInfo->inEditor)
+        if (!SceneInfo->inEditor)
             entity->groundVel <<= 7;
     }
 }

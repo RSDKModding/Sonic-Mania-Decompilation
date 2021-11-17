@@ -17,7 +17,7 @@ void UIVideo_Draw(void) {}
 void UIVideo_Create(void *data)
 {
     RSDK_THIS(UIVideo);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->active    = ACTIVE_NORMAL;
         entity->visible   = true;
         entity->drawOrder = 0;
@@ -30,13 +30,13 @@ void UIVideo_StageLoad(void) {}
 
 bool32 UIVideo_SkipCallback(void)
 {
-    if (RSDK_controller->keyStart.press || RSDK_controller->keyA.press || RSDK_controller->keyB.press) {
+    if (ControllerInfo->keyStart.press || ControllerInfo->keyA.press || ControllerInfo->keyB.press) {
         Music_FadeOut(0.0125);
         UIVideo->playing = true;
         return true;
     }
 #if RETRO_USE_TOUCH_CONTROLS
-    else if (RSDK_touchMouse->count) {
+    else if (TouchInfo->count) {
         Music_FadeOut(0.0125);
         UIVideo->playing = true;
         return true;

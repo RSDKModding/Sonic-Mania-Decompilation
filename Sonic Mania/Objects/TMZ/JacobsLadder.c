@@ -42,9 +42,9 @@ void JacobsLadder_Update(void)
                         entity->activePlayers &= ~(1 << playerID);
                         player->jumpAbilityTimer = 1;
                         player->state            = Player_State_Air;
-                        RSDK_sceneInfo->entity   = (Entity *)player;
+                        SceneInfo->entity   = (Entity *)player;
                         player->movesetState();
-                        RSDK_sceneInfo->entity = (Entity *)entity;
+                        SceneInfo->entity = (Entity *)entity;
                     }
                     else {
                         player->position.x = entity->position.x + entity->playerPositions[playerID].x;

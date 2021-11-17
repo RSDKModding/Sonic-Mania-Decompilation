@@ -34,7 +34,7 @@ void SSZSpotlight_Draw(void)
     Vector2 vertPos[4];
     colour vertClrs[4];
 
-    int32 screenX = entity->position.x - (RSDK_screens[RSDK_sceneInfo->currentScreenID].position.x << 16);
+    int32 screenX = entity->position.x - (ScreenInfo[SceneInfo->currentScreenID].position.x << 16);
 
     for (int32 i = 0; i < 6; i += 2) {
         vertPos[0].x = screenX + vertPosPtr[i + 0].x;
@@ -60,7 +60,7 @@ void SSZSpotlight_Draw(void)
 void SSZSpotlight_Create(void *data)
 {
     RSDK_THIS(SSZSpotlight);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->visible = true;
         switch (entity->drawFlag) {
             default: break;
@@ -107,7 +107,7 @@ void SSZSpotlight_Create(void *data)
         entity->vertStore[5].y = 0x1000000;
         entity->vertStore[7].y = 0x1000000;
 #if RETRO_USE_PLUS
-        if (RSDK_sceneInfo->filter & FILTER_ENCORE) {
+        if (SceneInfo->filter & FILTER_ENCORE) {
             if (entity->color)
                 entity->vertClrPtrs = SSZSpotlight->coloursEncoreB;
             else

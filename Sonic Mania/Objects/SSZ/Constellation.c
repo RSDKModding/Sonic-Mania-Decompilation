@@ -15,7 +15,7 @@ void Constellation_StaticUpdate(void) {}
 void Constellation_Draw(void)
 {
     RSDK_THIS(Constellation);
-    ScreenInfo *screen = &RSDK_screens[RSDK_sceneInfo->currentScreenID];
+    RSDKScreenInfo *screen = &ScreenInfo[SceneInfo->currentScreenID];
     Vector2 drawPos;
 
     drawPos.y = entity->startPos.y - ((screen->position.y * Constellation->bg1->parallaxFactor / 256) << 16);
@@ -36,7 +36,7 @@ void Constellation_Create(void *data)
     entity->drawFX        = FX_FLIP;
     entity->updateRange.x = 0x800000;
     entity->updateRange.y = 0x3000000;
-    if (!RSDK_sceneInfo->inEditor)
+    if (!SceneInfo->inEditor)
         Constellation_SetupInfo();
     RSDK.SetSpriteAnimation(Constellation->aniFrames, entity->shape, &entity->animator, true, 0);
 }
@@ -57,7 +57,7 @@ void Constellation_SetupInfo(void)
     if (entity->scrollInfo) {
         int factor = entity->scrollInfo->parallaxFactor;
         if (factor > 0) {
-            entity->updateRange.x += ((RSDK_screens->width << 8) / factor) << 16;
+            entity->updateRange.x += ((ScreenInfo->width << 8) / factor) << 16;
         }
     }
 }

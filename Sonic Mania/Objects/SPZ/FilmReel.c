@@ -205,7 +205,7 @@ void FilmReel_Create(void *data)
     RSDK.SetSpriteAnimation(FilmReel->aniFrames, 1, &entity->animator2, true, 0);
     RSDK.SetSpriteAnimation(FilmReel->aniFrames, 2, &entity->animator3, true, 0);
     RSDK.SetSpriteAnimation(FilmReel->aniFrames, 3, &entity->animator4, true, 0);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->field_74      = entity->position;
         entity->drawPos       = entity->position;
         entity->endPos.x      = entity->pathSize.x + entity->drawPos.x;

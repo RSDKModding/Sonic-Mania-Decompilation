@@ -82,7 +82,7 @@ void UIButton_Draw(void)
 void UIButton_Create(void *data)
 {
     RSDK_THIS(UIButton);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->drawOrder       = 2;
         entity->visible         = !entity->invisible;
         entity->active          = ACTIVE_BOUNDS;
@@ -190,10 +190,10 @@ void UIButton_SetChoiceSelectionWithCB(EntityUIButton *button, int32 selection)
         }
 
         if (button->choiceChangeCB) {
-            Entity *entStore       = RSDK_sceneInfo->entity;
-            RSDK_sceneInfo->entity = (Entity *)button;
+            Entity *entStore       = SceneInfo->entity;
+            SceneInfo->entity = (Entity *)button;
             button->choiceChangeCB();
-            RSDK_sceneInfo->entity = entStore;
+            SceneInfo->entity = entStore;
         }
     }
 }
@@ -373,12 +373,12 @@ bool32 UIButton_TouchCB_Alt(void)
         Vector2 touchPos1 = entity->touchPos1[i];
         Vector2 touchPos2 = entity->touchPos2[i];
 
-        if (RSDK_touchMouse->count) {
-            int32 screenX = RSDK_screens->position.x << 16;
-            int32 screenY = RSDK_screens->position.y << 16;
-            for (int32 t = 0; t < RSDK_touchMouse->count; ++t) {
-                int32 x = abs(touchPos2.x + entity->position.x - (screenX - (int32)((RSDK_touchMouse->x[t] * RSDK_screens->width) * -65536.0f)));
-                int32 y = abs(touchPos2.y + entity->position.y - (screenY - (int32)((RSDK_touchMouse->y[t] * RSDK_screens->height) * -65536.0f)));
+        if (TouchInfo->count) {
+            int32 screenX = ScreenInfo->position.x << 16;
+            int32 screenY = ScreenInfo->position.y << 16;
+            for (int32 t = 0; t < TouchInfo->count; ++t) {
+                int32 x = abs(touchPos2.x + entity->position.x - (screenX - (int32)((TouchInfo->x[t] * ScreenInfo->width) * -65536.0f)));
+                int32 y = abs(touchPos2.y + entity->position.y - (screenY - (int32)((TouchInfo->y[t] * ScreenInfo->height) * -65536.0f)));
 
                 int32 x2 = touchPos1.x >> 1;
                 int32 y2 = touchPos1.y >> 1;
@@ -413,15 +413,15 @@ bool32 UIButton_ProcessTouch(void)
 
     bool32 touchFlag = false;
     if (entity->objectID != UIButton->objectID || !entity->invisible) {
-        if (RSDK_touchMouse->count) {
-            int32 screenX = (RSDK_screens->position.x << 16);
-            int32 screenY = (RSDK_screens->position.y << 16);
+        if (TouchInfo->count) {
+            int32 screenX = (ScreenInfo->position.x << 16);
+            int32 screenY = (ScreenInfo->position.y << 16);
             int32 sizeX   = entity->touchPosStart.x >> 1;
             int32 sizeY   = entity->touchPosStart.y >> 1;
 
-            for (int32 i = 0; i < RSDK_touchMouse->count; ++i) {
-                int32 x = screenX - ((RSDK_touchMouse->x[i] * RSDK_screens->width) * -65536.0f);
-                int32 y = screenY - ((RSDK_touchMouse->y[i] * RSDK_screens->height) * -65536.0f);
+            for (int32 i = 0; i < TouchInfo->count; ++i) {
+                int32 x = screenX - ((TouchInfo->x[i] * ScreenInfo->width) * -65536.0f);
+                int32 y = screenY - ((TouchInfo->y[i] * ScreenInfo->height) * -65536.0f);
 
                 int32 touchX = abs(entity->touchPosEnd.x + entity->position.x - x);
                 int32 touchY = abs(entity->touchPosEnd.y + entity->position.y - y);
@@ -468,12 +468,12 @@ bool32 UIButton_ProcessTouch(void)
     if (entity->objectID == UIButton->objectID && entity->choiceCount > 0) {
         EntityUIButton *entPtr = UIButton_GetChoicePtr(entity, entity->selection);
         if (entPtr) {
-            Entity *entStore       = RSDK_sceneInfo->entity;
-            RSDK_sceneInfo->entity = (Entity *)entPtr;
+            Entity *entStore       = SceneInfo->entity;
+            SceneInfo->entity = (Entity *)entPtr;
             if (entPtr->touchCB) {
                 childTouchFlag = entPtr->touchCB();
             }
-            RSDK_sceneInfo->entity = entStore;
+            SceneInfo->entity = entStore;
         }
     }
     return entity->touchPressed || childTouchFlag;
@@ -511,10 +511,10 @@ void UIButton_ProcessButtonInputs(void)
     int32 selection = entity->selection;
     bool32 flag2  = 0;
     if (entPtr && entity->choiceCount == 1 && entPtr->processButtonCB && !entity->choiceDir && !entity->disabled) {
-        Entity *entStore       = RSDK_sceneInfo->entity;
-        RSDK_sceneInfo->entity = (Entity *)entPtr;
+        Entity *entStore       = SceneInfo->entity;
+        SceneInfo->entity = (Entity *)entPtr;
         entPtr->processButtonCB();
-        RSDK_sceneInfo->entity = entStore;
+        SceneInfo->entity = entStore;
     }
     else {
         if (UIControl->keyLeft) {

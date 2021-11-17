@@ -19,7 +19,7 @@ void LRZ3Outro_Create(void *data)
 {
     RSDK_THIS(LRZ3Outro);
 
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->active      = ACTIVE_NORMAL;
         entity->isPermanent = true;
         entity->bg1         = RSDK.GetSceneLayer(1);
@@ -39,8 +39,8 @@ void LRZ3Outro_HandleExplosions(void)
 {
     RSDK_THIS(LRZ3Outro);
 
-    int x                      = (RSDK.Rand(-RSDK_screens->centerX, RSDK_screens->centerX) + RSDK_screens->centerX + RSDK_screens->position.x);
-    int y                      = (RSDK_screens->position.y + 32 + RSDK_screens->height);
+    int x                      = (RSDK.Rand(-ScreenInfo->centerX, ScreenInfo->centerX) + ScreenInfo->centerX + ScreenInfo->position.x);
+    int y                      = (ScreenInfo->position.y + 32 + ScreenInfo->height);
     EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), x << 16, y << 16);
 
     explosion->velocity.x = RSDK.Rand(-0x20000, 0x20000);

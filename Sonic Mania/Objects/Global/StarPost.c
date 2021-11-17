@@ -41,7 +41,7 @@ void StarPost_Create(void *data)
         RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL);
     }
     else {
-        if (!RSDK_sceneInfo->inEditor) {
+        if (!SceneInfo->inEditor) {
             entity->visible       = true;
             entity->drawOrder     = Zone->drawOrderLow;
             entity->active        = ACTIVE_BOUNDS;
@@ -95,14 +95,14 @@ void StarPost_StageLoad(void)
 
             if (!globals->specialRingID) {
                 if (globals->gameMode < MODE_TIMEATTACK) {
-                    int32 ms = RSDK_sceneInfo->milliseconds;
-                    int32 s  = RSDK_sceneInfo->minutes;
-                    int32 m  = RSDK_sceneInfo->seconds;
-                    if ((RSDK_sceneInfo->milliseconds || RSDK_sceneInfo->seconds || RSDK_sceneInfo->minutes) || ms != globals->tempMilliseconds
+                    int32 ms = SceneInfo->milliseconds;
+                    int32 s  = SceneInfo->minutes;
+                    int32 m  = SceneInfo->seconds;
+                    if ((SceneInfo->milliseconds || SceneInfo->seconds || SceneInfo->minutes) || ms != globals->tempMilliseconds
                         || s != globals->tempSeconds || m != globals->tempMinutes) {
-                        RSDK_sceneInfo->milliseconds = StarPost->storedMS;
-                        RSDK_sceneInfo->seconds      = StarPost->storedSeconds;
-                        RSDK_sceneInfo->minutes      = StarPost->storedMinutes;
+                        SceneInfo->milliseconds = StarPost->storedMS;
+                        SceneInfo->seconds      = StarPost->storedSeconds;
+                        SceneInfo->minutes      = StarPost->storedMinutes;
                     }
                 }
 
@@ -153,7 +153,12 @@ void StarPost_DebugDraw(void)
     RSDK.SetSpriteAnimation(StarPost->aniFrames, 0, &DebugMode->animator, true, 1);
     RSDK.DrawSprite(&DebugMode->animator, NULL, false);
 }
-void StarPost_DebugSpawn(void) { RSDK.CreateEntity(StarPost->objectID, NULL, RSDK_sceneInfo->entity->position.x, RSDK_sceneInfo->entity->position.y); }
+void StarPost_DebugSpawn(void)
+{
+    RSDK_THIS(DebugMode);
+    
+    CREATE_ENTITY(StarPost, NULL, entity->position.x, entity->position.y);
+}
 void StarPost_ResetStarPosts(void)
 {
     for (int32 i = 0; i < Player->playerCount; ++i) StarPost->postIDs[i] = 0;
@@ -195,16 +200,16 @@ void StarPost_CheckBonusStageEntry(void)
 #if RETRO_USE_PLUS
                 EntityGameProgress *progress = GameProgress_GetGameProgress();
                 if ((API.CheckDLC(DLC_PLUS) && progress && progress->allGoldMedals) || globals->gameMode == MODE_ENCORE) {
-                    SaveGame->saveRAM->storedStageID = RSDK_sceneInfo->listPos;
+                    SaveGame->saveRAM->storedStageID = SceneInfo->listPos;
                     RSDK.SetScene("Pinball", "");
                     Zone_StartFadeOut(10, 0xF0F0F0);
                     RSDK.StopChannel(Music->channelID);
                 }
                 else {
 #endif
-                    SaveGame->saveRAM->storedStageID = RSDK_sceneInfo->listPos;
+                    SaveGame->saveRAM->storedStageID = SceneInfo->listPos;
                     RSDK.SetScene("Blue Spheres", "");
-                    RSDK_sceneInfo->listPos += globals->blueSpheresID;
+                    SceneInfo->listPos += globals->blueSpheresID;
                     Zone_StartFadeOut(10, 0xF0F0F0);
                     RSDK.StopChannel(Music->channelID);
 #if RETRO_USE_PLUS
@@ -231,14 +236,14 @@ void StarPost_CheckCollisions(void)
                     }
                 }
 
-                StarPost->postIDs[playerSlot]           = RSDK_sceneInfo->entitySlot;
+                StarPost->postIDs[playerSlot]           = SceneInfo->entitySlot;
                 StarPost->playerPositions[playerSlot].x = entity->position.x;
                 StarPost->playerPositions[playerSlot].y = entity->position.y;
                 StarPost->playerDirections[playerSlot]  = entity->direction;
                 if (globals->gameMode < MODE_TIMEATTACK) {
-                    StarPost->storedMS      = RSDK_sceneInfo->milliseconds;
-                    StarPost->storedSeconds = RSDK_sceneInfo->seconds;
-                    StarPost->storedMinutes = RSDK_sceneInfo->minutes;
+                    StarPost->storedMS      = SceneInfo->milliseconds;
+                    StarPost->storedSeconds = SceneInfo->seconds;
+                    StarPost->storedMinutes = SceneInfo->minutes;
                 }
 
                 int32 speed = 0;

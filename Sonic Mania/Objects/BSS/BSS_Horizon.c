@@ -21,9 +21,9 @@ void BSS_Horizon_Draw(void)
 {
     Vector2 drawPos; 
     drawPos.y                   = 0;
-    EntityBSS_Horizon *entity   = (EntityBSS_Horizon *)RSDK_sceneInfo->entity;
+    EntityBSS_Horizon *entity   = (EntityBSS_Horizon *)SceneInfo->entity;
 
-    drawPos.x                   = RSDK_screens->centerX << 16;
+    drawPos.x                   = ScreenInfo->centerX << 16;
     entity->horizonData.frameID = 0;
     entity->alpha          = BSS_Palette->alpha1;
     entity->direction      = FLIP_NONE;
@@ -43,8 +43,8 @@ void BSS_Horizon_Draw(void)
 
 void BSS_Horizon_Create(void* data)
 {
-    EntityBSS_Horizon *entity = (EntityBSS_Horizon *)RSDK_sceneInfo->entity;
-    if (!RSDK_sceneInfo->inEditor) {
+    EntityBSS_Horizon *entity = (EntityBSS_Horizon *)SceneInfo->entity;
+    if (!SceneInfo->inEditor) {
         entity->active               = ACTIVE_NORMAL;
         entity->inkEffect            = INK_ADD;
         entity->visible              = true;

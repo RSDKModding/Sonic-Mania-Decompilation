@@ -535,30 +535,30 @@ void OptionsMenu_Unknown21(void)
 
 void OptionsMenu_Unknown22(void)
 {
-    RSDK_controller[1].keyUp.keyMap     = 38;
-    RSDK_controller[1].keyDown.keyMap   = 40;
-    RSDK_controller[1].keyLeft.keyMap   = 37;
-    RSDK_controller[1].keyRight.keyMap  = 39;
-    RSDK_controller[1].keyA.keyMap      = 65;
-    RSDK_controller[1].keyB.keyMap      = 83;
-    RSDK_controller[1].keyC.keyMap      = 0;
-    RSDK_controller[1].keyX.keyMap      = 81;
-    RSDK_controller[1].keyY.keyMap      = 87;
-    RSDK_controller[1].keyZ.keyMap      = 0;
-    RSDK_controller[1].keyStart.keyMap  = 13;
-    RSDK_controller[1].keySelect.keyMap = 9;
-    RSDK_controller[2].keyUp.keyMap     = 104;
-    RSDK_controller[2].keyDown.keyMap   = 101;
-    RSDK_controller[2].keyLeft.keyMap   = 100;
-    RSDK_controller[2].keyRight.keyMap  = 102;
-    RSDK_controller[2].keyA.keyMap      = 74;
-    RSDK_controller[2].keyB.keyMap      = 75;
-    RSDK_controller[2].keyC.keyMap      = 0;
-    RSDK_controller[2].keyX.keyMap      = 85;
-    RSDK_controller[2].keyY.keyMap      = 73;
-    RSDK_controller[2].keyZ.keyMap      = 0;
-    RSDK_controller[2].keyStart.keyMap  = 219;
-    RSDK_controller[2].keySelect.keyMap = 221;
+    ControllerInfo[1].keyUp.keyMap     = 38;
+    ControllerInfo[1].keyDown.keyMap   = 40;
+    ControllerInfo[1].keyLeft.keyMap   = 37;
+    ControllerInfo[1].keyRight.keyMap  = 39;
+    ControllerInfo[1].keyA.keyMap      = 65;
+    ControllerInfo[1].keyB.keyMap      = 83;
+    ControllerInfo[1].keyC.keyMap      = 0;
+    ControllerInfo[1].keyX.keyMap      = 81;
+    ControllerInfo[1].keyY.keyMap      = 87;
+    ControllerInfo[1].keyZ.keyMap      = 0;
+    ControllerInfo[1].keyStart.keyMap  = 13;
+    ControllerInfo[1].keySelect.keyMap = 9;
+    ControllerInfo[2].keyUp.keyMap     = 104;
+    ControllerInfo[2].keyDown.keyMap   = 101;
+    ControllerInfo[2].keyLeft.keyMap   = 100;
+    ControllerInfo[2].keyRight.keyMap  = 102;
+    ControllerInfo[2].keyA.keyMap      = 74;
+    ControllerInfo[2].keyB.keyMap      = 75;
+    ControllerInfo[2].keyC.keyMap      = 0;
+    ControllerInfo[2].keyX.keyMap      = 85;
+    ControllerInfo[2].keyY.keyMap      = 73;
+    ControllerInfo[2].keyZ.keyMap      = 0;
+    ControllerInfo[2].keyStart.keyMap  = 219;
+    ControllerInfo[2].keySelect.keyMap = 221;
     RSDK.SetSettingsValue(SETTINGS_CHANGED, true);
 }
 
@@ -805,7 +805,7 @@ void OptionsMenu_EraseAllSaveData(void)
     memset(globals->noSaveSlot, 0, 0x400);
     globals->continues = 0;
     if (!checkNoSave && SaveGame->saveRAM && globals->saveLoaded == STATUS_OK) {
-        SaveGame->saveEntityPtr = RSDK_sceneInfo->entity;
+        SaveGame->saveEntityPtr = SceneInfo->entity;
         SaveGame->saveCallback  = OptionsMenu_EraseSaveDataCB;
         API_SaveUserFile("SaveData.bin", globals->saveRAM, 0x10000, SaveGame_SaveFile_CB, false);
     }
@@ -830,7 +830,7 @@ void OptionsMenu_EraseAllData(void)
     GameProgress_ClearProgress();
     API.RemoveAllDBRows(globals->taTableID);
     if (!checkNoSave && SaveGame->saveRAM && globals->saveLoaded == STATUS_OK) {
-        SaveGame->saveEntityPtr = RSDK_sceneInfo->entity;
+        SaveGame->saveEntityPtr = SceneInfo->entity;
         SaveGame->saveCallback  = OptionsMenu_EraseSaveDataCB;
         API_SaveUserFile("SaveData.bin", globals->saveRAM, 0x10000, SaveGame_SaveFile_CB, false);
     }

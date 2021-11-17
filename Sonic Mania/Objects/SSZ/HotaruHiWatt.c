@@ -32,7 +32,7 @@ void HotaruHiWatt_Create(void *data)
 {
     RSDK_THIS(HotaruHiWatt);
 
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         if (globals->gameMode < MODE_TIMEATTACK) {
             entity->active        = ACTIVE_XBOUNDS;
             entity->updateRange.x = 0xC00000;
@@ -210,7 +210,7 @@ void HotaruHiWatt_CheckPlayerCollisions(void)
                 entity->stateDraw           = HotaruHiWatt_StateDraw_Destroyed;
                 entity->state               = HotaruHiWatt_State_Destroyed;
                 entity->timer               = 0;
-                RSDK_sceneInfo->timeEnabled = false;
+                SceneInfo->timeEnabled = false;
                 Player_GiveScore(RSDK_GET_ENTITY(SLOT_PLAYER1, Player), 1000);
             }
             else {
@@ -257,7 +257,7 @@ void HotaruHiWatt_CheckPlayerCollisions4(void)
                         entity->stateDraw           = HotaruHiWatt_StateDraw_Destroyed;
                         entity->state               = HotaruHiWatt_State_Destroyed;
                         entity->timer               = 0;
-                        RSDK_sceneInfo->timeEnabled = false;
+                        SceneInfo->timeEnabled = false;
                         Player_GiveScore(RSDK_GET_ENTITY(SLOT_PLAYER1, Player), 1000);
                     }
                     else {
@@ -456,9 +456,9 @@ void HotaruHiWatt_State_SetupBounds(void)
         entity->timer               = 0;
         Zone->playerBoundActiveL[0] = true;
         Zone->playerBoundActiveR[0] = true;
-        Zone->screenBoundsL1[0]     = (entity->position.x >> 16) - RSDK_screens->centerX;
-        Zone->screenBoundsR1[0]     = (entity->position.x >> 16) + RSDK_screens->centerX;
-        Zone->screenBoundsT1[0]     = (entity->position.y >> 16) - RSDK_screens->height;
+        Zone->screenBoundsL1[0]     = (entity->position.x >> 16) - ScreenInfo->centerX;
+        Zone->screenBoundsR1[0]     = (entity->position.x >> 16) + ScreenInfo->centerX;
+        Zone->screenBoundsT1[0]     = (entity->position.y >> 16) - ScreenInfo->height;
         Zone->screenBoundsB1[0]     = (entity->position.y >> 16);
         HotaruHiWatt->boundsL       = (Zone->screenBoundsL1[0] + 64) << 16;
         HotaruHiWatt->boundsR       = (Zone->screenBoundsR1[0] - 64) << 16;
@@ -480,7 +480,7 @@ void HotaruHiWatt_State_WaitForPlayer(void)
     RSDK_THIS(HotaruHiWatt);
 
     if (RSDK_GET_ENTITY(SLOT_PLAYER1, Player)->position.x > entity->position.x) {
-        entity->position.y += -0x100000 - (RSDK_screens->centerY << 16);
+        entity->position.y += -0x100000 - (ScreenInfo->centerY << 16);
         HotaruHiWatt->value7 = entity->position.y;
         entity->state        = HotaruHiWatt_State_Unknown1;
         entity->nextState    = HotaruHiWatt_State_Unknown5;

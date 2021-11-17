@@ -96,7 +96,7 @@ void Octus_CheckPlayerCollisions(void)
 void Octus_CheckOnScreen(void)
 {
     RSDK_THIS(Octus);
-    if (!RSDK.CheckOnScreen(RSDK_sceneInfo->entity, NULL) && !RSDK.CheckPosOnScreen(&entity->startPos, &entity->updateRange)) {
+    if (!RSDK.CheckOnScreen(SceneInfo->entity, NULL) && !RSDK.CheckPosOnScreen(&entity->startPos, &entity->updateRange)) {
         entity->position.x = entity->startPos.x;
         entity->position.y = entity->startPos.y;
         entity->direction  = entity->startDir;

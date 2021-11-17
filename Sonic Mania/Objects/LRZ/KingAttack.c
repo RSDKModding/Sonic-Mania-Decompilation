@@ -16,8 +16,8 @@ void KingAttack_Draw(void)
 {
     RSDK_THIS(KingAttack);
 
-    int x = RSDK_screens->position.x << 16;
-    int y = RSDK_screens->position.y << 16;
+    int x = ScreenInfo->position.x << 16;
+    int y = ScreenInfo->position.y << 16;
 
     switch (entity->type) {
         case 0:
@@ -56,7 +56,7 @@ void KingAttack_Create(void *data)
 {
     RSDK_THIS(KingAttack);
 
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->drawOrder     = Zone->drawOrderHigh;
         entity->active        = ACTIVE_NORMAL;
         entity->updateRange.x = 0x800000;

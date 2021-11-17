@@ -158,11 +158,11 @@ int32 TimeAttackData_LoadCB(int32 statusCode)
     LogHelpers_Print("Replay DB Slot => %d, Load Status => %d", globals->taTableID, globals->taTableLoaded);
 
     if (TimeAttackData->loadCallback) {
-        Entity *entStore = RSDK_sceneInfo->entity;
+        Entity *entStore = SceneInfo->entity;
         if (TimeAttackData->loadEntityPtr)
-            RSDK_sceneInfo->entity = TimeAttackData->loadEntityPtr;
+            SceneInfo->entity = TimeAttackData->loadEntityPtr;
         TimeAttackData->loadCallback(statusCode == STATUS_OK);
-        RSDK_sceneInfo->entity        = entStore;
+        SceneInfo->entity        = entStore;
         TimeAttackData->loadCallback  = NULL;
         TimeAttackData->loadEntityPtr = NULL;
     }
@@ -291,7 +291,7 @@ int32 TimeAttackData_SaveTimeAttackDB(void (*callback)(int32))
     }
     else {
         LogHelpers_Print("Saving Time Attack DB");
-        TimeAttackData->saveEntityPtr = RSDK_sceneInfo->entity;
+        TimeAttackData->saveEntityPtr = SceneInfo->entity;
         TimeAttackData->saveCallback  = callback;
         API.SaveUserDB(globals->taTableID, TimeAttackData_SaveTimeAttackDB_CB);
     }
@@ -301,11 +301,11 @@ int32 TimeAttackData_SaveTimeAttackDB(void (*callback)(int32))
 void TimeAttackData_SaveTimeAttackDB_CB(int32 statusCode)
 {
     if (TimeAttackData->saveCallback) {
-        Entity *entStore = RSDK_sceneInfo->entity;
+        Entity *entStore = SceneInfo->entity;
         if (TimeAttackData->saveEntityPtr)
-            RSDK_sceneInfo->entity = TimeAttackData->saveEntityPtr;
+            SceneInfo->entity = TimeAttackData->saveEntityPtr;
         TimeAttackData->saveCallback(statusCode == STATUS_OK);
-        RSDK_sceneInfo->entity        = entStore;
+        SceneInfo->entity        = entStore;
         TimeAttackData->saveCallback  = NULL;
         TimeAttackData->saveEntityPtr = NULL;
     }

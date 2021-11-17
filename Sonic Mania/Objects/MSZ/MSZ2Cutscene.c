@@ -176,13 +176,13 @@ bool32 MSZ2Cutscene_CutsceneState_Unknown3(EntityCutsceneSeq *host)
         player1->jumpHold  = false;
     }
 
-    if (player1->position.y < (curEntity->position.y - (RSDK_screens->centerY << 16) - 0x100000)) {
+    if (player1->position.y < (curEntity->position.y - (ScreenInfo->centerY << 16) - 0x100000)) {
         player1->state      = Player_State_None;
         player1->velocity.x = 0;
         player1->velocity.y = 0;
         player1->position.y = 0;
     }
-    if (player2->objectID == Player->objectID && player2->position.y < (curEntity->position.y - (RSDK_screens->centerY << 16) - 0x100000)) {
+    if (player2->objectID == Player->objectID && player2->position.y < (curEntity->position.y - (ScreenInfo->centerY << 16) - 0x100000)) {
         player2->state      = Player_State_None;
         player2->velocity.x = 0;
         player2->velocity.y = 0;

@@ -82,7 +82,7 @@ void PSZ1Setup_StaticUpdate(void)
                 EntityCamera *camera = player->camera;
                 camera->position.y += 0xA000000;
                 camera->center.y += 0xA00;
-                RSDK_screens[camera->screenID].position.y += 0xA00;
+                ScreenInfo[camera->screenID].position.y += 0xA00;
                 player->position.y += 0xA000000;
                 TileLayer *bg1 = RSDK.GetSceneLayer(0);
                 TileLayer *bg2 = RSDK.GetSceneLayer(1);
@@ -94,15 +94,15 @@ void PSZ1Setup_StaticUpdate(void)
                 if (bg2->scrollPos < 0)
                     bg2->scrollPos += 0x6000000;
 
-                if (RSDK_screens->position.y >= 0x180) 
-                    RSDK_screens->position.y += 0xA00;
+                if (ScreenInfo->position.y >= 0x180) 
+                    ScreenInfo->position.y += 0xA00;
             }
         }
         else {
             EntityCamera *camera = player->camera;
             camera->position.y -= 0xA000000;
             camera->center.y -= 0xA00;
-            RSDK_screens[camera->screenID].position.y -= 0xA00;
+            ScreenInfo[camera->screenID].position.y -= 0xA00;
             player->position.y -= 0xA000000;
             TileLayer *bg1 = RSDK.GetSceneLayer(0);
             TileLayer *bg2 = RSDK.GetSceneLayer(1);
@@ -115,8 +115,8 @@ void PSZ1Setup_StaticUpdate(void)
             if (bg2->scrollPos >= 0x6E000000)
                 bg2->scrollPos -= 0x6000000;
 
-            if (RSDK_screens->position.y >= 0xA00)
-                RSDK_screens->position.y -= 0xA00;
+            if (ScreenInfo->position.y >= 0xA00)
+                ScreenInfo->position.y -= 0xA00;
         }
 
         int32 camY = player->camera->position.y;
@@ -149,7 +149,7 @@ void PSZ1Setup_StaticUpdate(void)
 
                 if (RSDK.GetTileBehaviour(tile, player->collisionPlane)) {
                     if (abs(player->groundVel) >= 0x60000 || player->state == Player_State_DropDash) {
-                        EntityPetalPile *pile = (EntityPetalPile *)RSDK.CreateEntity(PetalPile->objectID, RSDK_sceneInfo->entity, player->position.x,
+                        EntityPetalPile *pile = (EntityPetalPile *)RSDK.CreateEntity(PetalPile->objectID, SceneInfo->entity, player->position.x,
                                                                                      player->position.y + (playerHitbox->bottom << 16));
                         pile->leafPattern     = 4;
                         pile->tileLayer       = lowFlag;
@@ -209,7 +209,7 @@ void PSZ1Setup_StageLoad(void)
         Zone->stageFinishCallback = PSZ1Setup_ActTransitionCB;
 
 #if RETRO_USE_PLUS
-    if (RSDK_sceneInfo->filter & FILTER_ENCORE)
+    if (SceneInfo->filter & FILTER_ENCORE)
         RSDK.LoadPalette(0, "EncorePSZ1.act", 0xFF);
     Animals->animalTypes[0] = ANIMAL_POCKY;
     Animals->animalTypes[1]     = ANIMAL_BECKY;
@@ -271,7 +271,7 @@ void PSZ1Setup_TriggerCB3(void)
 
 void PSZ1Setup_ActTransitionCB(void)
 {
-    ++RSDK_sceneInfo->listPos;
+    ++SceneInfo->listPos;
     globals->enableIntro       = true;
     globals->suppressTitlecard = true;
     globals->suppressAutoMusic = true;

@@ -70,7 +70,7 @@ void Spear_Draw(void)
 void Spear_Create(void *data)
 {
     RSDK_THIS(Spear);
-    if (RSDK_sceneInfo->inEditor) {
+    if (SceneInfo->inEditor) {
         if (!entity->interval)
             entity->interval = 120;
         if (!entity->duration)

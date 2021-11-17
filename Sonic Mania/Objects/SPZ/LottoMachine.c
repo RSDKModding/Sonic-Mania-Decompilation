@@ -41,7 +41,7 @@ void LottoMachine_Draw(void)
     RSDK_THIS(LottoMachine);
     Vector2 drawPos;
 
-    if (RSDK_sceneInfo->currentDrawGroup == RSDK_sceneInfo->entity->drawOrder) {
+    if (SceneInfo->currentDrawGroup == entity->drawOrder) {
         entity->direction = FLIP_NONE;
         entity->rotation  = entity->angle >> 16;
         RSDK.DrawSprite(&entity->animator2, NULL, false);
@@ -90,7 +90,7 @@ void LottoMachine_Draw(void)
             RSDK.DrawSprite(&entity->animator1, NULL, false);
         }
     }
-    else if (RSDK_sceneInfo->currentDrawGroup == entity->drawOrderHigh) {
+    else if (SceneInfo->currentDrawGroup == entity->drawOrderHigh) {
         drawPos.x = entity->position.x;
         drawPos.y = entity->position.y + 0x6C0000 + entity->field_A0;
         RSDK.DrawSprite(&entity->animator3, &drawPos, false);
@@ -122,7 +122,7 @@ void LottoMachine_Create(void *data)
     RSDK.SetSpriteAnimation(LottoMachine->aniFrames, 2, &entity->animator3, true, 0);
     RSDK.SetSpriteAnimation(LottoMachine->aniFrames, 3, &entity->animator4, true, 0);
     RSDK.SetSpriteAnimation(LottoMachine->aniFrames, 4, &entity->animator5, true, 0);
-    if (RSDK_sceneInfo->inEditor) {
+    if (SceneInfo->inEditor) {
         entity->drawFX = FX_FLIP;
     }
     else {
@@ -421,7 +421,7 @@ void LottoMachine_GiveRings(void)
                 player->nextGroundState = StateMachine_None;
             }
 
-            EntityLottoBall *ball               = CREATE_ENTITY(LottoBall, NULL, RSDK_screens->centerX << 16, (RSDK_screens->height - 48) << 16);
+            EntityLottoBall *ball               = CREATE_ENTITY(LottoBall, NULL, ScreenInfo->centerX << 16, (ScreenInfo->height - 48) << 16);
             ball->type                          = LOTTOBALL_BIG;
             ball->screenRelative                = true;
             ball->ringCount                     = ringCount;
@@ -572,8 +572,8 @@ void LottoMachine_State_Unknown3(void)
             ballPtr->velocity.y     = 0;
             ballPtr->angle          = 0;
             ballPtr->angleVel       = 0;
-            ballPtr->field_70       = (RSDK_screens->centerX - (entity->field_8C << 6) + 96) << 16;
-            ballPtr->field_74       = (RSDK_screens->height - 48) << 16;
+            ballPtr->field_70       = (ScreenInfo->centerX - (entity->field_8C << 6) + 96) << 16;
+            ballPtr->field_74       = (ScreenInfo->height - 48) << 16;
             ballPtr->timer          = 0;
             ballPtr->screenFlags[0] = false;
             for (int p = 0; p < entity->playerCount; ++p) {

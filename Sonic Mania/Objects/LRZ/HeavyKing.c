@@ -43,7 +43,7 @@ void HeavyKing_Create(void *data)
 {
     RSDK_THIS(HeavyKing);
 
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         if (globals->gameMode == MODE_TIMEATTACK) {
             destroyEntity(entity);
         }
@@ -131,7 +131,7 @@ void HeavyKing_Hit(void)
         entity->timer      = 0;
         RSDK.StopSFX(HeavyKing->sfxTwinCharge);
         foreach_active(KingAttack, attack) { destroyEntity(attack); }
-        RSDK_sceneInfo->timeEnabled = false;
+        SceneInfo->timeEnabled = false;
         Player_GiveScore(RSDK_GET_ENTITY(SLOT_PLAYER1, Player), 1000);
     }
     else {

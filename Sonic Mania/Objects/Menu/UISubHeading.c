@@ -45,7 +45,7 @@ void UISubHeading_Draw(void)
 void UISubHeading_Create(void *data)
 {
     RSDK_THIS(UISubHeading);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->offset <<= 16;
         entity->visible       = true;
         entity->drawOrder     = 2;
@@ -367,7 +367,7 @@ void UISubHeading_StartNewSave(void)
             globals->suppressTitlecard = true;
             RSDK.SetScene("Cutscenes", "Angel Island Zone Encore");
         }
-        else if (((globals->medalMods & getMod(MEDAL_DEBUGMODE)) && (RSDK_controller->keyC.down || RSDK_controller->keyX.down)) && entity->type == 1) {
+        else if (((globals->medalMods & getMod(MEDAL_DEBUGMODE)) && (ControllerInfo->keyC.down || ControllerInfo->keyX.down)) && entity->type == 1) {
             RSDK.SetScene("Presentation", "Level Select");
         }
         else {
@@ -379,11 +379,11 @@ void UISubHeading_StartNewSave(void)
         globals->stock          = saveRAM->stock;
         globals->characterFlags = saveRAM->characterFlags;
         RSDK.SetScene("Encore Mode", "");
-        RSDK_sceneInfo->listPos += TimeAttackData_GetEncoreListPos(entity->saveZoneID, entity->frameID, 0);
+        SceneInfo->listPos += TimeAttackData_GetEncoreListPos(entity->saveZoneID, entity->frameID, 0);
     }
     else {
         RSDK.SetScene("Mania Mode", "");
-        RSDK_sceneInfo->listPos += TimeAttackData_GetManiaListPos(entity->saveZoneID, entity->frameID, 0);
+        SceneInfo->listPos += TimeAttackData_GetManiaListPos(entity->saveZoneID, entity->frameID, 0);
     }
 
     if (!loadingSave) {

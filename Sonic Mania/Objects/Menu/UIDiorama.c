@@ -51,9 +51,9 @@ void UIDiorama_Draw(void)
 {
     RSDK_THIS(UIDiorama);
     if (entity->timer <= 0) {
-        if (RSDK_sceneInfo->currentDrawGroup == entity->drawOrder) {
+        if (SceneInfo->currentDrawGroup == entity->drawOrder) {
             RSDK.DrawSprite(&entity->animator1, NULL, false);
-            RSDK.DrawRect(entity->position.x, entity->dioramaPos.y, RSDK_screens->width, entity->dioramaSize.y, entity->maskColour, 255, INK_NONE,
+            RSDK.DrawRect(entity->position.x, entity->dioramaPos.y, ScreenInfo->width, entity->dioramaSize.y, entity->maskColour, 255, INK_NONE,
                           false);
                           
             entity->dioramaPos.x  = entity->position.x;
@@ -76,7 +76,7 @@ void UIDiorama_Draw(void)
 void UIDiorama_Create(void *data)
 {
     RSDK_THIS(UIDiorama);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->dioramaSubID = -1;
         RSDK.SetSpriteAnimation(UIDiorama->aniFrames, 0, &entity->animator1, true, 0);
         RSDK.SetSpriteAnimation(UIDiorama->aniFrames, 1, &entity->animator2, true, 0);
@@ -520,7 +520,7 @@ void UIDiorama_StateDraw_ManiaMode(void)
     int32 frameWidths[] = { 0x400, 0x200, 0x200, 0x200, 0x200, 0x129 };
     int32 frameSpeeds[] = { 0x100, 0x30, 0x30, 0x30, 0x60, 0x80 };
 
-    if (RSDK_sceneInfo->currentDrawGroup == entity->drawOrder) {
+    if (SceneInfo->currentDrawGroup == entity->drawOrder) {
         drawPos.x = entity->position.x + 0x380000;
         drawPos.y = entity->position.y + 0x1D0000;
         drawPos.x = entity->field_FC.x + entity->position.x + 0x380000;
@@ -566,7 +566,7 @@ void UIDiorama_StateDraw_PlusUpsell(void)
 
     drawPos.x = entity->position.x;
     drawPos.y = entity->position.y;
-    if (RSDK_sceneInfo->currentDrawGroup == entity->drawOrder) {
+    if (SceneInfo->currentDrawGroup == entity->drawOrder) {
         RSDK.DrawSprite(&entity->animators[0], &drawPos, false);
         drawPos.x = entity->position.x + 0x500000;
         drawPos.y = entity->position.y + 0x2E0000;
@@ -640,7 +640,7 @@ void UIDiorama_StateDraw_EncoreMode(void)
 
     drawPos.x = entity->position.x;
     drawPos.y = entity->position.y;
-    if (RSDK_sceneInfo->currentDrawGroup == entity->drawOrder) {
+    if (SceneInfo->currentDrawGroup == entity->drawOrder) {
         entity->animators[0].frameID = 0;
         RSDK.DrawSprite(&entity->animators[0], &drawPos, false);
     }
@@ -677,7 +677,7 @@ void UIDiorama_StateDraw_TimeAttack(void)
 
     drawPos.x = entity->position.x;
     drawPos.y = entity->position.y;
-    if (RSDK_sceneInfo->currentDrawGroup == entity->drawOrder) {
+    if (SceneInfo->currentDrawGroup == entity->drawOrder) {
         entity->animators[0].frameID = 0;
         RSDK.DrawSprite(&entity->animators[0], &drawPos, false);
     }
@@ -759,7 +759,7 @@ void UIDiorama_StateDraw_Competition(void)
 
     drawPos.x = entity->position.x;
     drawPos.y = entity->position.y;
-    if (RSDK_sceneInfo->currentDrawGroup == entity->drawOrder) {
+    if (SceneInfo->currentDrawGroup == entity->drawOrder) {
         drawPos.x = entity->position.x + 0xAB0000;
         drawPos.y = entity->position.y - 0x190000;
         for (int32 i = 0; i < 3; ++i) {
@@ -809,7 +809,7 @@ void UIDiorama_StateDraw_Options(void)
 
     drawPos.x = entity->position.x;
     drawPos.y = entity->position.y;
-    if (RSDK_sceneInfo->currentDrawGroup != entity->drawOrder) {
+    if (SceneInfo->currentDrawGroup != entity->drawOrder) {
         Vector2 *offsets  = &entity->field_FC;
         Vector2 *offsets2 = &entity->field_114;
         int32 *alpha        = &entity->field_BC;
@@ -854,7 +854,7 @@ void UIDiorama_StateDraw_Extras(void)
 
     drawPos.x = entity->position.x;
     drawPos.y = entity->position.y;
-    if (RSDK_sceneInfo->currentDrawGroup != entity->drawOrder) {
+    if (SceneInfo->currentDrawGroup != entity->drawOrder) {
         entity->inkEffect = INK_NONE;
         drawPos.x         = entity->position.x + 0x520000;
         drawPos.y         = entity->position.y - 0x150000;
@@ -876,7 +876,7 @@ void UIDiorama_StateDraw_Exit(void)
 
     drawPos.x = entity->position.x;
     drawPos.y = entity->position.y;
-    if (RSDK_sceneInfo->currentDrawGroup != entity->drawOrder) {
+    if (SceneInfo->currentDrawGroup != entity->drawOrder) {
         entity->inkEffect = INK_NONE;
         drawPos.x += 0x480000;
         drawPos.y += 0xD0000;

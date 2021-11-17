@@ -235,7 +235,7 @@ bool32 TMZ2Outro_CutsceneState_HurryToCar(EntityCutsceneSeq *host)
     if (host->timer == 384) {
         Zone->screenBoundsR1[0] = 0x2000;
         EntityCamera *camera    = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
-        camera->position.x      = (camera->boundsR - RSDK_screens->centerX) << 16;
+        camera->position.x      = (camera->boundsR - ScreenInfo->centerX) << 16;
         camera->boundsR         = 0x2000;
         camera->state           = StateMachine_None;
         entity->velocity.x      = 0;
@@ -285,13 +285,13 @@ bool32 TMZ2Outro_CutsceneState_StartRubyRampage(EntityCutsceneSeq *host)
     if (host->timer == 60) {
         foreach_active(PhantomRuby, ruby)
         {
-            int pos = RSDK_screens->position.x;
+            int pos = ScreenInfo->position.x;
             if (SaveGame->saveRAM->chaosEmeralds == 0x7F)
                 pos += 64;
             else
                 pos += 96;
             ruby->startPos.x  = pos << 16;
-            ruby->startPos.y  = (RSDK_screens->position.y + RSDK_screens->centerY) << 16;
+            ruby->startPos.y  = (ScreenInfo->position.y + ScreenInfo->centerY) << 16;
             ruby->velocity.y  = 0;
             ruby->isPermanent = true;
             ruby->drawOrder   = Zone->drawOrderHigh;
@@ -303,7 +303,7 @@ bool32 TMZ2Outro_CutsceneState_StartRubyRampage(EntityCutsceneSeq *host)
     if (host->timer > 60) {
         foreach_active(Player, player)
         {
-            if (player->position.x >= (RSDK_screens->centerX - 64 + RSDK_screens->position.x) << 16) {
+            if (player->position.x >= (ScreenInfo->centerX - 64 + ScreenInfo->position.x) << 16) {
                 player->left  = true;
                 player->right = false;
                 if (player->groundVel < -0x20000)
@@ -327,8 +327,8 @@ bool32 TMZ2Outro_CutsceneState_StartRubyRampage(EntityCutsceneSeq *host)
 
         for (int i = 0; i < 7; ++i) RSDK.SetPaletteEntry(2, i - 96, TMZ2Outro->colours[i]);
         if (SaveGame->saveRAM->chaosEmeralds == 0x7F)
-            CREATE_ENTITY(RubyPortal, RubyPortal_Unknown8, (RSDK_screens->position.x + 64) << 16,
-                          (RSDK_screens->position.y + RSDK_screens->centerY) << 16);
+            CREATE_ENTITY(RubyPortal, RubyPortal_Unknown8, (ScreenInfo->position.x + 64) << 16,
+                          (ScreenInfo->position.y + ScreenInfo->centerY) << 16);
         return true;
     }
     return false;
@@ -349,7 +349,7 @@ bool32 TMZ2Outro_CutsceneState_Panic(EntityCutsceneSeq *host)
     if (host->timer < 120) {
         foreach_active(Player, player)
         {
-            if (player->position.x >= (RSDK_screens->centerX - 64 + RSDK_screens->position.x) << 16) {
+            if (player->position.x >= (ScreenInfo->centerX - 64 + ScreenInfo->position.x) << 16) {
                 player->left  = true;
                 player->right = false;
                 if (player->groundVel < -0x20000)
@@ -486,7 +486,7 @@ bool32 TMZ2Outro_CutsceneState_OuttaHere(EntityCutsceneSeq *host)
     else {
         foreach_active(Player, player)
         {
-            if (player->position.x >= (RSDK_screens->centerX - 64 + RSDK_screens->position.x) << 16) {
+            if (player->position.x >= (ScreenInfo->centerX - 64 + ScreenInfo->position.x) << 16) {
                 player->left  = true;
                 player->right = false;
                 if (player->groundVel < -0x20000)
@@ -573,7 +573,7 @@ bool32 TMZ2Outro_CutsceneState_TeamEscape(EntityCutsceneSeq *host)
         player5->playerID = 5;
         Player_ChangeCharacter(player5, ID_RAY);
 
-        RSDK_sceneInfo->timeEnabled = true;
+        SceneInfo->timeEnabled = true;
 
         Player_CheckGoSuper(player1, 0xFF);
         EntitySuperSparkle *sparkle = RSDK_GET_ENTITY(Player->playerCount, SuperSparkle);
@@ -626,7 +626,7 @@ bool32 TMZ2Outro_CutsceneState_FinishSequence(EntityCutsceneSeq *host)
 {
     bool32 goodEndingFlag = false;
 #if RETRO_USE_PLUS
-    if (!(RSDK_sceneInfo->filter & FILTER_ENCORE))
+    if (!(SceneInfo->filter & FILTER_ENCORE))
 #endif
         goodEndingFlag =
             (checkPlayerID(ID_SONIC, 1) || (checkPlayerID(ID_KNUCKLES, 1) && checkPlayerID(ID_KNUCKLES, 2))) && SaveGame->saveRAM->chaosEmeralds == 0x7F;
@@ -654,7 +654,7 @@ bool32 TMZ2Outro_CutsceneState_FinishSequence(EntityCutsceneSeq *host)
     }
 
     if (goodEndingFlag) {
-        ++RSDK_sceneInfo->listPos;
+        ++SceneInfo->listPos;
         RSDK.LoadScene();
         return true;
     }

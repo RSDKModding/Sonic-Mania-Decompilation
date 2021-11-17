@@ -15,7 +15,7 @@ void Grabber_StaticUpdate(void) {}
 void Grabber_Draw(void)
 {
     RSDK_THIS(Grabber);
-    if (RSDK_sceneInfo->currentDrawGroup == entity->drawOrder) {
+    if (SceneInfo->currentDrawGroup == entity->drawOrder) {
         RSDK.DrawLine(entity->position.x, entity->startPos.y - 0x100000, entity->position.x, entity->position.y, 0x202020, 0, INK_NONE, false);
         RSDK.DrawLine(entity->position.x - 0x10000, entity->startPos.y - 0x100000, entity->position.x - 0x10000, entity->position.y, 0xE0E0E0, 0,
                       INK_NONE, false);
@@ -28,8 +28,8 @@ void Grabber_Draw(void)
         RSDK.DrawSprite(&entity->animator3, &drawPos, false);
         entity->direction = dir;
         RSDK.DrawSprite(&entity->animator1, NULL, false);
-        if (!RSDK_sceneInfo->currentScreenID)
-            RSDK.AddDrawListRef(Zone->drawOrderHigh, RSDK_sceneInfo->entitySlot);
+        if (!SceneInfo->currentScreenID)
+            RSDK.AddDrawListRef(Zone->drawOrderHigh, SceneInfo->entitySlot);
     }
     else {
         RSDK.DrawSprite(&entity->animator2, NULL, false);
@@ -135,7 +135,7 @@ void Grabber_CheckPlayerCollisions(void)
 void Grabber_CheckOnScreen(void)
 {
     RSDK_THIS(Grabber);
-    if (!RSDK.CheckOnScreen(RSDK_sceneInfo->entity, NULL) && !RSDK.CheckPosOnScreen(&entity->startPos, &entity->updateRange)) {
+    if (!RSDK.CheckOnScreen(SceneInfo->entity, NULL) && !RSDK.CheckPosOnScreen(&entity->startPos, &entity->updateRange)) {
         entity->position      = entity->startPos;
         entity->field_A8      = 0;
         entity->struggleFlags = 0;

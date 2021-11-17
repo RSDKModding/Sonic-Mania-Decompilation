@@ -35,7 +35,7 @@ void PimPom_Create(void *data)
 {
     RSDK_THIS(PimPom);
 
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->active  = ACTIVE_BOUNDS;
         entity->visible = true;
 
@@ -396,7 +396,7 @@ void PimPom_StateMove_Normal(void)
     int moveX         = entity->drawPos.x - drawX;
     int moveY         = entity->drawPos.y - drawY;
 
-    int slot = RSDK_sceneInfo->entitySlot + 1;
+    int slot = SceneInfo->entitySlot + 1;
     for (int i = 0; i < entity->numChildren; ++i) {
         Entity *child = RSDK_GET_ENTITY(slot + i, );
         child->position.x += moveX;
@@ -415,7 +415,7 @@ void PimPom_StateMove_Circle(void)
     int moveX         = entity->drawPos.x - drawX;
     int moveY         = entity->drawPos.y - drawY;
 
-    int slot = RSDK_sceneInfo->entitySlot + 1;
+    int slot = SceneInfo->entitySlot + 1;
     for (int i = 0; i < entity->numChildren; ++i) {
         Entity *child = RSDK_GET_ENTITY(slot + i, );
         child->position.x += moveX;
@@ -451,7 +451,7 @@ void PimPom_StateMove_ToTarget(void)
     int moveX = entity->drawPos.x - drawX;
     int moveY = entity->drawPos.y - drawY;
 
-    int slot = RSDK_sceneInfo->entitySlot + 1;
+    int slot = SceneInfo->entitySlot + 1;
     for (int i = 0; i < entity->numChildren; ++i) {
         Entity *child = RSDK_GET_ENTITY(slot + i, );
         child->position.x += moveX;
@@ -478,7 +478,7 @@ void PimPom_StateMove3_Unknown(void)
     int moveX = entity->drawPos.x - drawX;
     int moveY = entity->drawPos.y - drawY;
 
-    int slot = RSDK_sceneInfo->entitySlot + 1;
+    int slot = SceneInfo->entitySlot + 1;
     for (int i = 0; i < entity->numChildren; ++i) {
         Entity *child = RSDK_GET_ENTITY(slot + i, );
         child->position.x += moveX;

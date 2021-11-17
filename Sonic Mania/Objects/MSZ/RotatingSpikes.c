@@ -53,7 +53,7 @@ void RotatingSpikes_Draw(void)
 void RotatingSpikes_Create(void *data)
 {
     RSDK_THIS(RotatingSpikes);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->active        = ACTIVE_BOUNDS;
         entity->visible       = true;
         entity->updateRange.x = 0x800000;

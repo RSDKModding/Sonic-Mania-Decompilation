@@ -32,7 +32,7 @@ void Kanabun_Create(void *data)
     }
 
     entity->drawFX = FX_FLIP | FX_ROTATE | FX_SCALE;
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->visible       = true;
         entity->drawOrder     = Zone->drawOrderLow;
         entity->startPos      = entity->position;

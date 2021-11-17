@@ -44,7 +44,7 @@ void Tornado_Draw(void)
 void Tornado_Create(void *data)
 {
     RSDK_THIS(Tornado);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->visible       = true;
         entity->updateRange.x = 0x1000000;
         entity->updateRange.y = 0x1000000;
@@ -183,16 +183,16 @@ void Tornado_HandlePlayerCollisions(void)
 
     EntityCamera *camera = TornadoPath->cameraPtr;
     if (camera) {
-        int32 screenX = camera->position.x - (RSDK_screens->centerX << 16) + 0xC0000;
+        int32 screenX = camera->position.x - (ScreenInfo->centerX << 16) + 0xC0000;
         if (player1->position.x < screenX)
             player1->position.x = screenX;
 
-        int32 screenY = ((RSDK_screens->centerX - 12) << 16) + camera->position.x;
+        int32 screenY = ((ScreenInfo->centerX - 12) << 16) + camera->position.x;
         if (player1->position.x > screenY)
             player1->position.x = screenY;
 
         if (player1->objectID == Player->objectID) {
-            int32 deathBounds = (camera->position.y + ((RSDK_screens[camera->screenID].centerY + 16) << 16));
+            int32 deathBounds = (camera->position.y + ((ScreenInfo[camera->screenID].centerY + 16) << 16));
             if (player1->position.y > deathBounds)
                 player1->hurtFlag = 1;
         }
@@ -289,10 +289,10 @@ void Tornado_Unknown6(void)
         entity->velocity.y = 0;
     }
 
-    if (entity->position.y < (RSDK_screens->position.y + 72) << 16)
-        entity->position.y = (RSDK_screens->position.y + 72) << 16;
-    if (entity->position.y > (RSDK_screens->height + RSDK_screens->position.y - 32) << 16)
-        entity->position.y = (RSDK_screens->height + RSDK_screens->position.y - 32) << 16;
+    if (entity->position.y < (ScreenInfo->position.y + 72) << 16)
+        entity->position.y = (ScreenInfo->position.y + 72) << 16;
+    if (entity->position.y > (ScreenInfo->height + ScreenInfo->position.y - 32) << 16)
+        entity->position.y = (ScreenInfo->height + ScreenInfo->position.y - 32) << 16;
 
     int32 storeX    = entity->position.x;
     int32 storeY    = entity->position.y + entity->velocity.y;
@@ -340,21 +340,21 @@ void Tornado_Unknown6(void)
 
     EntityCamera *camera = TornadoPath->cameraPtr;
     if (camera) {
-        int32 screenX = camera->position.x - (RSDK_screens->centerX << 16) + 0xC0000;
+        int32 screenX = camera->position.x - (ScreenInfo->centerX << 16) + 0xC0000;
         if (player1->position.x < screenX)
             player1->position.x = screenX;
 
-        int32 screenY = ((RSDK_screens->centerX - 12) << 16) + camera->position.x;
+        int32 screenY = ((ScreenInfo->centerX - 12) << 16) + camera->position.x;
         if (player1->position.x > screenY)
             player1->position.x = screenY;
 
         if (player1->objectID == Player->objectID) {
-            if (player1->position.y > (camera->position.y + ((RSDK_screens[camera->screenID].centerY + 16) << 16)))
+            if (player1->position.y > (camera->position.y + ((ScreenInfo[camera->screenID].centerY + 16) << 16)))
                 player1->hurtFlag = 1;
         }
     }
     if (player1->state == Player_State_TailsFlight) {
-        if (player1->position.y < ((RSDK_screens->position.y + 20) << 16) && player1->velocity.y < 0) {
+        if (player1->position.y < ((ScreenInfo->position.y + 20) << 16) && player1->velocity.y < 0) {
             player1->velocity.y   = 0;
             player1->abilitySpeed = 0x8000;
         }

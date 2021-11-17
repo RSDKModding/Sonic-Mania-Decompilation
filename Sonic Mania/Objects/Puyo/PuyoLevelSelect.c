@@ -11,14 +11,14 @@ void PuyoLevelSelect_Update(void)
         int32 controllerID  = entity->playerID + 1;
 
 #if RETRO_USE_TOUCH_CONTROLS
-        for (int32 t = 0; t < RSDK_touchMouse->count; ++t) {
-            int32 tx = (RSDK_touchMouse->x[t] * RSDK_screens->width);
-            int32 ty = (RSDK_touchMouse->y[t] * RSDK_screens->height);
+        for (int32 t = 0; t < TouchInfo->count; ++t) {
+            int32 tx = (TouchInfo->x[t] * ScreenInfo->width);
+            int32 ty = (TouchInfo->y[t] * ScreenInfo->height);
 
-            if (RSDK_touchMouse->down[t]) {
-                if (tx >= 0 && ty >= 96 && tx <= RSDK_screens->centerX && ty <= RSDK_screens->height) {
-                    int32 tx = (RSDK_touchMouse->x[t] * RSDK_screens->width);
-                    int32 ty = (RSDK_touchMouse->y[t] * RSDK_screens->height);
+            if (TouchInfo->down[t]) {
+                if (tx >= 0 && ty >= 96 && tx <= ScreenInfo->centerX && ty <= ScreenInfo->height) {
+                    int32 tx = (TouchInfo->x[t] * ScreenInfo->width);
+                    int32 ty = (TouchInfo->y[t] * ScreenInfo->height);
                     tx -= 64;
                     ty -= 192;
 
@@ -26,14 +26,14 @@ void PuyoLevelSelect_Update(void)
                         case 0:
                             break;
                         case 1:
-                            RSDK_controller->keyDown.down |= true;
-                            RSDK_controller[controllerID].keyDown.down = true;
+                            ControllerInfo->keyDown.down |= true;
+                            ControllerInfo[controllerID].keyDown.down = true;
                             break;
                         case 2:
                             break;
                         case 3:
-                            RSDK_controller->keyUp.down |= true;
-                            RSDK_controller[controllerID].keyUp.down = true;
+                            ControllerInfo->keyUp.down |= true;
+                            ControllerInfo[controllerID].keyUp.down = true;
                             break;
                     }
                     break;
@@ -41,57 +41,57 @@ void PuyoLevelSelect_Update(void)
             }
         }
         if (!getBit(entity->touchFlags, 0)) {
-            RSDK_controller->keyUp.press |= RSDK_controller->keyUp.down;
-            RSDK_controller[controllerID].keyUp.press |= RSDK_controller[controllerID].keyUp.down;
+            ControllerInfo->keyUp.press |= ControllerInfo->keyUp.down;
+            ControllerInfo[controllerID].keyUp.press |= ControllerInfo[controllerID].keyUp.down;
         }
         if (!getBit(entity->touchFlags, 1)) {
-            RSDK_controller->keyDown.press |= RSDK_controller->keyDown.down;
-            RSDK_controller[controllerID].keyDown.press |= RSDK_controller[controllerID].keyDown.down;
+            ControllerInfo->keyDown.press |= ControllerInfo->keyDown.down;
+            ControllerInfo[controllerID].keyDown.press |= ControllerInfo[controllerID].keyDown.down;
         }
-        setBit(entity->touchFlags, RSDK_controller[controllerID].keyUp.down, 0);
-        setBit(entity->touchFlags, RSDK_controller[controllerID].keyDown.down, 1);
+        setBit(entity->touchFlags, ControllerInfo[controllerID].keyUp.down, 0);
+        setBit(entity->touchFlags, ControllerInfo[controllerID].keyDown.down, 1);
 
-        int32 halfX = RSDK_screens->centerX / 2;
-        for (int32 t = 0; t < RSDK_touchMouse->count; ++t) {
-            int32 tx = (RSDK_touchMouse->x[t] * RSDK_screens->width);
-            int32 ty = (RSDK_touchMouse->y[t] * RSDK_screens->height);
+        int32 halfX = ScreenInfo->centerX / 2;
+        for (int32 t = 0; t < TouchInfo->count; ++t) {
+            int32 tx = (TouchInfo->x[t] * ScreenInfo->width);
+            int32 ty = (TouchInfo->y[t] * ScreenInfo->height);
 
-            if (RSDK_touchMouse->down[t]) {
-                if (tx >= RSDK_screens->centerX && ty >= 96 && tx <= (RSDK_screens->width - halfX) && ty <= RSDK_screens->height) {
-                    RSDK_controller->keyB.down |= true;
-                    RSDK_controller[controllerID].keyB.down = true;
+            if (TouchInfo->down[t]) {
+                if (tx >= ScreenInfo->centerX && ty >= 96 && tx <= (ScreenInfo->width - halfX) && ty <= ScreenInfo->height) {
+                    ControllerInfo->keyB.down |= true;
+                    ControllerInfo[controllerID].keyB.down = true;
                     break;
                 }
-                else if (tx >= (RSDK_screens->centerX + halfX) && ty >= 96 && tx <= RSDK_screens->width && ty <= RSDK_screens->height) {
-                    RSDK_controller->keyA.down |= true;
-                    RSDK_controller[controllerID].keyA.down = true;
+                else if (tx >= (ScreenInfo->centerX + halfX) && ty >= 96 && tx <= ScreenInfo->width && ty <= ScreenInfo->height) {
+                    ControllerInfo->keyA.down |= true;
+                    ControllerInfo[controllerID].keyA.down = true;
                     break;
                 }
             }
         }
 
         if (!getBit(entity->touchFlags, 2)) {
-            RSDK_controller->keyA.press |= RSDK_controller->keyA.down;
-            RSDK_controller[controllerID].keyA.press |= RSDK_controller[controllerID].keyA.down;
+            ControllerInfo->keyA.press |= ControllerInfo->keyA.down;
+            ControllerInfo[controllerID].keyA.press |= ControllerInfo[controllerID].keyA.down;
         }
         if (!getBit(entity->touchFlags, 3)) {
-            RSDK_controller->keyB.press |= RSDK_controller->keyB.down;
-            RSDK_controller[controllerID].keyB.press |= RSDK_controller[controllerID].keyB.down;
+            ControllerInfo->keyB.press |= ControllerInfo->keyB.down;
+            ControllerInfo[controllerID].keyB.press |= ControllerInfo[controllerID].keyB.down;
         }
-        setBit(entity->touchFlags, RSDK_controller[controllerID].keyA.down, 2);
-        setBit(entity->touchFlags, RSDK_controller[controllerID].keyB.down, 3);
+        setBit(entity->touchFlags, ControllerInfo[controllerID].keyA.down, 2);
+        setBit(entity->touchFlags, ControllerInfo[controllerID].keyB.down, 3);
 #endif
 
-        entity->up      = RSDK_controller[controllerID].keyUp.press || RSDK_stickL[controllerID].keyUp.press;
-        entity->down    = RSDK_controller[controllerID].keyDown.press || RSDK_stickL[controllerID].keyDown.press;
+        entity->up      = ControllerInfo[controllerID].keyUp.press || AnalogStickInfoL[controllerID].keyUp.press;
+        entity->down    = ControllerInfo[controllerID].keyDown.press || AnalogStickInfoL[controllerID].keyDown.press;
 
         if (API_GetConfirmButtonFlip()) {
-            entity->confirmPress = RSDK_controller[controllerID].keyB.press;
-            entity->backPress    = RSDK_controller[controllerID].keyA.press;
+            entity->confirmPress = ControllerInfo[controllerID].keyB.press;
+            entity->backPress    = ControllerInfo[controllerID].keyA.press;
         }
         else {
-            entity->confirmPress = RSDK_controller[controllerID].keyA.press;
-            entity->backPress    = RSDK_controller[controllerID].keyB.press;
+            entity->confirmPress = ControllerInfo[controllerID].keyA.press;
+            entity->backPress    = ControllerInfo[controllerID].keyB.press;
         }
         PuyoLevelSelect_HandleMenuMovement();
     }

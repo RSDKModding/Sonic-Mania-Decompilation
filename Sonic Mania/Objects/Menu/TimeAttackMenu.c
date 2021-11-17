@@ -689,9 +689,9 @@ void TimeAttackMenu_Unknown27(void)
         RSDK.SetScene("Mania Mode", "");
 
     if (param->isEncoreMode)
-        RSDK_sceneInfo->listPos += TimeAttackData_GetEncoreListPos(param->zoneID, param->characterID, param->actID);
+        SceneInfo->listPos += TimeAttackData_GetEncoreListPos(param->zoneID, param->characterID, param->actID);
     else
-        RSDK_sceneInfo->listPos += TimeAttackData_GetManiaListPos(param->zoneID, param->characterID, param->actID);
+        SceneInfo->listPos += TimeAttackData_GetManiaListPos(param->zoneID, param->characterID, param->actID);
 
     switch (param->characterID) {
         case 1: globals->playerID = ID_SONIC; break;
@@ -743,7 +743,7 @@ void TimeAttackMenu_ResetTimes_YesCB(void)
     control->activeEntityID = 0;
     if (!API.GetUserStorageNoSave() && globals->taTableID != 0xFFFF && globals->taTableLoaded == STATUS_OK) {
         LogHelpers_Print("Saving Time Attack DB");
-        TimeAttackData->saveEntityPtr = RSDK_sceneInfo->entity;
+        TimeAttackData->saveEntityPtr = SceneInfo->entity;
         TimeAttackData->saveCallback  = NULL;
         API.SaveUserDB(globals->taTableID, TimeAttackData_SaveTimeAttackDB_CB);
     }

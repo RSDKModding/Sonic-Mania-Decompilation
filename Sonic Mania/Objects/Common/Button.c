@@ -51,7 +51,7 @@ void Button_Create(void *data)
     RSDK_THIS(Button);
 
     entity->drawFX = FX_FLIP;
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         switch (entity->type) {
             case 0:
                 entity->direction = FLIP_NONE;

@@ -61,7 +61,7 @@ void SP500_Create(void *data)
     RSDK_THIS(SP500);
     entity->drawFX = FX_FLIP;
 
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         if (data) {
             entity->active  = ACTIVE_NORMAL;
             entity->visible = false;

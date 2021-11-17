@@ -108,7 +108,7 @@ void UIChoice_Draw(void)
 void UIChoice_Create(void *data)
 {
     RSDK_THIS(UIChoice);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->visible       = true;
         entity->drawOrder     = 2;
         entity->active        = ACTIVE_NEVER;
@@ -227,12 +227,12 @@ bool32 UIChoice_CheckTouch(void)
 
     bool32 pressed = false;
     for (int32 i = 0; i < 2; ++i) {
-        if (RSDK_touchMouse->count) {
+        if (TouchInfo->count) {
             int32 sizeX = touchStart[i].x >> 1;
             int32 sizeY = touchStart[i].y >> 1;
-            for (int32 t = 0; t < RSDK_touchMouse->count; ++t) {
-                int32 x = (RSDK_screens->position.x << 16) - ((RSDK_touchMouse->x[t] * RSDK_screens->width) * -65536.0f);
-                int32 y = (RSDK_screens->position.y << 16) - ((RSDK_touchMouse->y[t] * RSDK_screens->height) * -65536.0f);
+            for (int32 t = 0; t < TouchInfo->count; ++t) {
+                int32 x = (ScreenInfo->position.x << 16) - ((TouchInfo->x[t] * ScreenInfo->width) * -65536.0f);
+                int32 y = (ScreenInfo->position.y << 16) - ((TouchInfo->y[t] * ScreenInfo->height) * -65536.0f);
 
                 int32 touchX = abs(touchEnd[i].x + entity->position.x - x);
                 int32 touchY = abs(touchEnd[i].y + entity->position.y - y);

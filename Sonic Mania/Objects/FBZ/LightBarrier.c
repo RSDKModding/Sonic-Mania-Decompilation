@@ -13,7 +13,7 @@ void LightBarrier_LateUpdate(void)
 
         foreach_active(Player, player)
         {
-            if (entity->position.x > (RSDK_screens->position.x + RSDK_screens->centerX) << 16 || player->velocity.x < 0) {
+            if (entity->position.x > (ScreenInfo->position.x + ScreenInfo->centerX) << 16 || player->velocity.x < 0) {
                 Player_CheckCollisionBox(player, entity, &entity->hitbox);
             }
         }
@@ -64,7 +64,7 @@ void LightBarrier_Create(void *data)
     RSDK_THIS(LightBarrier);
 
     entity->drawFX = FX_FLIP;
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->active        = ACTIVE_BOUNDS;
         entity->visible       = true;
         entity->drawOrder     = Zone->drawOrderHigh;

@@ -43,7 +43,7 @@ void LavaGeyser_Draw(void)
 void LavaGeyser_Create(void *data)
 {
     RSDK_THIS(LavaGeyser);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->active        = ACTIVE_BOUNDS;
         entity->visible       = true;
         entity->updateRange.x = 0x800000;

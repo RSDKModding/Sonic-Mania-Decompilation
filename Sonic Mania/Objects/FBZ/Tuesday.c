@@ -22,7 +22,7 @@ void Tuesday_StaticUpdate(void)
 void Tuesday_Draw(void)
 {
     RSDK_THIS(Tuesday);
-    if (RSDK_sceneInfo->currentDrawGroup == RSDK_sceneInfo->entity->drawOrder) {
+    if (SceneInfo->currentDrawGroup == entity->drawOrder) {
         RSDK.DrawSprite(&entity->animator1, &entity->drawPos, false);
         if (!entity->type)
             RSDK.DrawSprite(&entity->animator2, &entity->drawPos, false);
@@ -355,7 +355,7 @@ void Tuesday_Unknown2(void)
     if (++entity->field_92 == 240) {
         RSDK.PlaySfx(Tuesday->sfxElecCharge, false, 255);
         entity->timer          = 120;
-        int32 slotID             = RSDK_sceneInfo->entitySlot + 1;
+        int32 slotID             = SceneInfo->entitySlot + 1;
         EntityTuesday *tuesday = RSDK_GET_ENTITY(slotID, Tuesday);
         int32 count              = entity->field_94;
         for (int32 i = 0; i < count;) {
@@ -394,7 +394,7 @@ void Tuesday_Unknown2(void)
 void Tuesday_Unknown3(void)
 {
     RSDK_THIS(Tuesday);
-    EntityPlatform *platform = RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot - 1, Platform);
+    EntityPlatform *platform = RSDK_GET_ENTITY(SceneInfo->entitySlot - 1, Platform);
     if (platform->objectID == Platform->objectID && platform->childCount > 0) {
         entity->position.x -= platform->collisionOffset.x;
         entity->position.y -= platform->collisionOffset.y;

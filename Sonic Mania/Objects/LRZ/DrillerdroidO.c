@@ -35,7 +35,7 @@ void DrillerdroidO_Create(void *data)
 {
     RSDK_THIS(DrillerdroidO);
 
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         if (globals->gameMode < MODE_TIMEATTACK) {
             entity->visible = true;
             if (data)
@@ -49,7 +49,7 @@ void DrillerdroidO_Create(void *data)
                     RSDK.SetSpriteAnimation(DrillerdroidO->aniFrames, 5, &entity->animator2, true, 0);
                     entity->drawOrder             = Zone->drawOrderHigh;
                     DrillerdroidO->boss           = (Entity *)entity;
-                    DrillerdroidO->childSlotStart = RSDK_sceneInfo->entitySlot + 2;
+                    DrillerdroidO->childSlotStart = SceneInfo->entitySlot + 2;
                     DrillerdroidO->field_8C       = 4;
                     entity->state                 = DrillerdroidO_State_SetupArena;
                     entity->stateDraw             = DrillerdroidO_StateDraw_Boss;
@@ -192,7 +192,7 @@ void DrillerdroidO_CheckPlayerCollisions(void)
                         player->position.y = playerX;
                         if (Player_CheckBossHit(player, entity)) {
                             if (!--entity->health) {
-                                RSDK_sceneInfo->timeEnabled = false;
+                                SceneInfo->timeEnabled = false;
                                 Player_GiveScore(RSDK_GET_ENTITY(SLOT_PLAYER1, Player), 1000);
                                 entity->invincibilityTimer = 60;
                                 DrillerdroidO->emitFireballs = false;
@@ -277,12 +277,12 @@ void DrillerdroidO_State_SetupArena(void)
         entity->timer               = 0;
         Zone->playerBoundActiveR[0] = true;
         Zone->playerBoundActiveB[0] = true;
-        Zone->screenBoundsR1[0]     = (entity->position.x >> 16) + RSDK_screens->centerX;
+        Zone->screenBoundsR1[0]     = (entity->position.x >> 16) + ScreenInfo->centerX;
         Zone->screenBoundsB1[0]     = (entity->position.y >> 16) + 96;
         Zone->screenBoundsT1[0]     = Zone->screenBoundsB1[0] - 240;
         entity->startY              = entity->position.y;
         entity->active              = ACTIVE_NORMAL;
-        entity->position.y          = (RSDK_screens->position.y - 192) << 16;
+        entity->position.y          = (ScreenInfo->position.y - 192) << 16;
         entity->visible             = true;
         entity->state               = DrillerdroidO_State_StartBoss;
     }
@@ -293,11 +293,11 @@ void DrillerdroidO_State_StartBoss(void)
     RSDK_THIS(DrillerdroidO);
 
     Zone->playerBoundActiveL[0] = true;
-    Zone->screenBoundsL1[0]     = RSDK_screens->position.x;
+    Zone->screenBoundsL1[0]     = ScreenInfo->position.x;
 
     if (RSDK_GET_ENTITY(SLOT_PLAYER1, Player)->position.x > entity->position.x) {
         Zone->playerBoundActiveL[0] = true;
-        Zone->screenBoundsL1[0]     = (entity->position.x >> 16) - RSDK_screens->centerX;
+        Zone->screenBoundsL1[0]     = (entity->position.x >> 16) - ScreenInfo->centerX;
         Music_TransitionTrack(TRACK_MINIBOSS, 0.0125);
         entity->health = 6;
         CREATE_ENTITY(DrillerdroidO, intToVoid(DRILLERDROIDO_TARGET), entity->position.x, entity->startY);
@@ -336,7 +336,7 @@ void DrillerdroidO_State_Unknown2(void)
             }
         }
 
-        EntityLRZRockPile *pile = RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot + 1, LRZRockPile);
+        EntityLRZRockPile *pile = RSDK_GET_ENTITY(SceneInfo->entitySlot + 1, LRZRockPile);
         pile->timer             = 1;
         pile->flag              = true;
         entity->timer           = 60;
@@ -628,7 +628,7 @@ void DrillerdroidO_State_Unknown15(void)
 {
     RSDK_THIS(DrillerdroidO);
 
-    Zone->screenBoundsT1[0] = RSDK_screens->position.y;
+    Zone->screenBoundsT1[0] = ScreenInfo->position.y;
     if (Zone->screenBoundsT1[0] == Zone->screenBoundsB1[0] - 240) {
         EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
         CREATE_ENTITY(DrillerdroidO, intToVoid(DRILLERDROIDO_TARGET), player1->position.x, player1->position.y)->target = (Entity *)player1;

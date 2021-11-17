@@ -19,15 +19,15 @@ void TryAgainE_StaticUpdate(void)
 void TryAgainE_Draw(void)
 {
     RSDK_THIS(TryAgainE);
-    if (RSDK_sceneInfo->currentDrawGroup == RSDK_sceneInfo->entity->drawOrder) {
+    if (SceneInfo->currentDrawGroup == entity->drawOrder) {
         Vector2 drawPos;
 
-        RSDK.SetActivePalette(3, 0, RSDK_screens->height);
+        RSDK.SetActivePalette(3, 0, ScreenInfo->height);
         entity->animator1.frameID = 0;
         RSDK.DrawSprite(&entity->animator1, NULL, false);
         entity->animator1.frameID = 1;
         RSDK.DrawSprite(&entity->animator1, NULL, false);
-        RSDK.SetActivePalette(0, 0, RSDK_screens->height);
+        RSDK.SetActivePalette(0, 0, ScreenInfo->height);
 
         drawPos.x = entity->position.x;
         drawPos.y = entity->position.y + 0x2E0000;
@@ -63,7 +63,7 @@ void TryAgainE_Draw(void)
 void TryAgainE_Create(void *data)
 {
     RSDK_THIS(TryAgainE);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->visible       = true;
         entity->drawOrder     = 1;
         entity->active        = ACTIVE_BOUNDS;
@@ -164,10 +164,10 @@ void TryAgainE_Unknown2(void)
         }
     }
 
-    if (RSDK_controller->keyA.press || RSDK_controller->keyStart.press)
+    if (ControllerInfo->keyA.press || ControllerInfo->keyStart.press)
         entity->timer = 600;
 #if RETRO_USE_TOUCH_CONTROLS
-    else if (RSDK_touchMouse->count)
+    else if (TouchInfo->count)
         entity->timer = 600;
 #endif
 

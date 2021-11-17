@@ -39,7 +39,7 @@ void SpikeFlail_Draw(void)
     int scaleVal = (((16 * entity->chainLength + 34) * RSDK.Cos512(0)) << 7) + entity->position.x;
 
     if (entity->angle >= 256) {
-        if (RSDK_sceneInfo->currentDrawGroup != Zone->drawOrderHigh) {
+        if (SceneInfo->currentDrawGroup != Zone->drawOrderHigh) {
             entity->scale = SpikeFlail_GetScale(scaleVal, entity->angle);
             RSDK.DrawSprite(&entity->animator2, &drawPos2, false);
 
@@ -64,7 +64,7 @@ void SpikeFlail_Draw(void)
         }
     }
     else {
-        if (RSDK_sceneInfo->currentDrawGroup != Zone->drawOrderHigh) {
+        if (SceneInfo->currentDrawGroup != Zone->drawOrderHigh) {
             entity->scale.x = 0x200;
             entity->scale.y = 0x200;
             RSDK.DrawSprite(&entity->animator1, NULL, false);

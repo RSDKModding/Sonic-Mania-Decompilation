@@ -25,7 +25,7 @@ void PopcornKernel_Create(void *data)
 {
     RSDK_THIS(PopcornKernel);
 
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->drawFX = FX_ROTATE;
         entity->state  = PopcornKernel_Unknown1;
         RSDK.SetSpriteAnimation(PopcornKernel->aniFrames, 1, &entity->animator, true, RSDK.Rand(0, 7));

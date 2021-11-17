@@ -41,7 +41,7 @@ void DemoMenu_Create(void *data)
     entity->ghzFrame = RSDK.GetFrame(DemoMenu->aniFrames, 3, 2);
     entity->spzFrame = RSDK.GetFrame(DemoMenu->aniFrames, 4, 2);
 
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->ZoneSelPos.x = 0x1000000;
         entity->ZoneSelPos.y = -0x200000;
         entity->GHZPos.x     = -0x800000;
@@ -110,13 +110,13 @@ void DemoMenu_State_Appear(void)
 void DemoMenu_State_Selection(void)
 {
     RSDK_THIS(DemoMenu);
-    if (RSDK_controller->keyUp.press || RSDK_controller->keyDown.press) {
+    if (ControllerInfo->keyUp.press || ControllerInfo->keyDown.press) {
         entity->selectedZone ^= 1;
         RSDK.PlaySfx(TitleSetup->sfxMenuBleep, false, 255);
     }
     else {
-        float vDelta   = RSDK_stickL->vDelta;
-        float deltaDif = RSDK_stickL->vDelta - entity->vDelta;
+        float vDelta   = AnalogStickInfoL->vDelta;
+        float deltaDif = AnalogStickInfoL->vDelta - entity->vDelta;
         if (deltaDif < 0.0)
             deltaDif = -deltaDif;
         if (deltaDif > 0.5) {
@@ -126,11 +126,11 @@ void DemoMenu_State_Selection(void)
                 entity->selectedZone ^= 1;
                 RSDK.PlaySfx(TitleSetup->sfxMenuBleep, false, 255);
             }
-            entity->vDelta = RSDK_stickL->vDelta;
+            entity->vDelta = AnalogStickInfoL->vDelta;
         }
     }
 
-    if (RSDK_controller->keyStart.press || RSDK_controller->keyA.press) {
+    if (ControllerInfo->keyStart.press || ControllerInfo->keyA.press) {
         entity->state = DemoMenu_State_Load;
         RSDK.StopChannel(Music->channelID);
         RSDK.PlaySfx(TitleSetup->sfxMenuAccept, false, 255);

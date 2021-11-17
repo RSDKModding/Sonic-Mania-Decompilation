@@ -105,7 +105,7 @@ void EggLoco_Draw(void)
 void EggLoco_Create(void *data)
 {
     RSDK_THIS(EggLoco);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->visible       = true;
         entity->drawOrder     = Zone->drawOrderLow;
         entity->active        = ACTIVE_BOUNDS;
@@ -139,8 +139,8 @@ void EggLoco_StageLoad(void)
 bool32 EggLoco_CheckCB(void)
 {
     int32 count   = 0;
-    int32 screenX = (RSDK_screens->position.x + RSDK_screens->centerX) << 16;
-    int32 screenY = (RSDK_screens->position.y + RSDK_screens->centerY) << 16;
+    int32 screenX = (ScreenInfo->position.x + ScreenInfo->centerX) << 16;
+    int32 screenY = (ScreenInfo->position.y + ScreenInfo->centerY) << 16;
     foreach_all(EggLoco, eggLoco)
     {
         int32 distX = abs(screenX - eggLoco->position.x);
@@ -154,8 +154,8 @@ bool32 EggLoco_CheckCB(void)
 
 void EggLoco_UpdateCB(int32 sfx)
 {
-    int32 screenX = (RSDK_screens->position.x + RSDK_screens->centerX) << 16;
-    int32 screenY = (RSDK_screens->position.y + RSDK_screens->centerY) << 16;
+    int32 screenX = (ScreenInfo->position.x + ScreenInfo->centerX) << 16;
+    int32 screenY = (ScreenInfo->position.y + ScreenInfo->centerY) << 16;
     foreach_all(EggLoco, eggLoco)
     {
         int32 distX = abs(screenX - eggLoco->position.x);

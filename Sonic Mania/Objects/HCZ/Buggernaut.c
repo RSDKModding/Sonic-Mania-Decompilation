@@ -29,7 +29,7 @@ void Buggernaut_Create(void *data)
 
     entity->visible   = true;
     entity->drawOrder = Zone->drawOrderLow + 1;
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->drawFX |= FX_FLIP;
         entity->startPos.x    = entity->position.x;
         entity->startPos.y    = entity->position.y;
@@ -244,7 +244,7 @@ void Buggernaut_State_Unknown2(void)
 void Buggernaut_State_Unknown3(void)
 {
     RSDK_THIS(Buggernaut);
-    entity->position.x += RSDK_sceneInfo->entity->velocity.x;
+    entity->position.x += entity->velocity.x;
     entity->position.y += entity->velocity.y;
     RSDK.ProcessAnimation(&entity->animator2);
     if (!entity->animator1.animationID)

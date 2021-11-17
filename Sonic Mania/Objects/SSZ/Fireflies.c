@@ -21,7 +21,7 @@ void Fireflies_Draw(void)
 void Fireflies_Create(void *data)
 {
     RSDK_THIS(Fireflies);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->active        = ACTIVE_NORMAL;
         entity->drawOrder     = Zone->drawOrderLow;
         entity->visible       = true;
@@ -50,7 +50,7 @@ void Fireflies_State_Unknown1(void)
         if (Fireflies->field_8 < 48) {
             Vector2 pos1, pos2;
 
-            ScreenInfo *screen = &RSDK_screens[entity->screenID];
+            RSDKScreenInfo *screen = &ScreenInfo[entity->screenID];
             int x              = ((screen->width & 0xFFFFFFFE) + 2 * screen->position.x) << 15;
             int y              = ((screen->height & 0xFFFFFFFE) + 2 * screen->position.y) << 15;
 #if RETRO_USE_PLUS
@@ -139,7 +139,7 @@ void Fireflies_State_Unknown2(void)
             frame = 0;
             anim2 = 5;
             anim  = 2;
-            if (RSDK_sceneInfo->entity->drawOrder == Zone->drawOrderHigh)
+            if (entity->drawOrder == Zone->drawOrderHigh)
                 anim = anim2;
 
             RSDK.SetSpriteAnimation(Fireflies->aniFrames, anim, &entity->animator, true, frame);
@@ -149,7 +149,7 @@ void Fireflies_State_Unknown2(void)
         frame = entity->animator.animationID % 3;
         anim  = 1;
         anim2 = 4;
-        if (RSDK_sceneInfo->entity->drawOrder == Zone->drawOrderHigh)
+        if (entity->drawOrder == Zone->drawOrderHigh)
             anim = anim2;
 
         RSDK.SetSpriteAnimation(Fireflies->aniFrames, anim, &entity->animator, true, frame);

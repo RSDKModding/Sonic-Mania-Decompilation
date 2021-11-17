@@ -48,19 +48,19 @@ void Clapperboard_Draw(void)
     RSDK.DrawSprite(&entity->animator4, &drawPos, false);
 
     drawPos.x += 0x120000;
-    entity->animator4.frameID = RSDK_sceneInfo->minutes % 10;
+    entity->animator4.frameID = SceneInfo->minutes % 10;
     RSDK.DrawSprite(&entity->animator4, &drawPos, false);
 
     drawPos.x += 0x120000;
-    entity->animator4.frameID = RSDK_sceneInfo->seconds / 10;
+    entity->animator4.frameID = SceneInfo->seconds / 10;
     RSDK.DrawSprite(&entity->animator4, &drawPos, false);
 
     drawPos.x += 0xD0000;
-    entity->animator4.frameID = RSDK_sceneInfo->seconds % 10;
+    entity->animator4.frameID = SceneInfo->seconds % 10;
     RSDK.DrawSprite(&entity->animator4, &drawPos, false);
 
     drawPos.x += 0x110000;
-    entity->animator4.frameID = RSDK_sceneInfo->milliseconds / 10;
+    entity->animator4.frameID = SceneInfo->milliseconds / 10;
     RSDK.DrawSprite(&entity->animator4, &drawPos, false);
 }
 
@@ -72,7 +72,7 @@ void Clapperboard_Create(void *data)
     RSDK.SetSpriteAnimation(Clapperboard->aniFrames, 0, &entity->animator2, true, 1);
     RSDK.SetSpriteAnimation(Clapperboard->aniFrames, 0, &entity->animator3, true, 2);
     RSDK.SetSpriteAnimation(Clapperboard->aniFrames, 1, &entity->animator4, true, 0);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->active        = ACTIVE_BOUNDS;
         entity->updateRange.x = 0x800000;
         entity->updateRange.y = 0x800000;

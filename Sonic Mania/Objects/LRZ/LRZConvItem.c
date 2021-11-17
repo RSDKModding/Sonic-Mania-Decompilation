@@ -34,7 +34,7 @@ void LRZConvItem_Create(void *data)
     entity->updateRange.y = 0x800000;
     RSDK.SetSpriteAnimation(LRZConvItem->aniFrames, entity->type, &entity->animator, true, 0);
 
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         switch (entity->type) {
             case 0: entity->state = LRZConvItem_State_Unknown1; break;
             case 1: entity->state = LRZConvItem_State_Unknown2; break;

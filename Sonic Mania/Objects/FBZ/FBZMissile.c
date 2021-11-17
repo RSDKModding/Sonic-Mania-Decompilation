@@ -25,7 +25,7 @@ void FBZMissile_Create(void *data)
     if (entity->type != 2 && !entity->interval)
         entity->interval = -16;
     entity->drawFX = FX_FLIP;
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->active        = ACTIVE_BOUNDS;
         entity->visible       = true;
         entity->drawOrder     = Zone->drawOrderLow;

@@ -73,7 +73,7 @@ void FBZFan_Draw(void)
 void FBZFan_Create(void *data)
 {
     RSDK_THIS(FBZFan);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->active        = ACTIVE_BOUNDS;
         entity->visible       = true;
         entity->drawOrder     = Zone->drawOrderLow + 1;

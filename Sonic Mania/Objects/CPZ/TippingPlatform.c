@@ -96,7 +96,7 @@ void TippingPlatform_Create(void *data)
     }
 
     entity->state = Platform_State_Normal;
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         if (entity->bossID > 1) {
             foreach_all(Syringe, syringe)
             {

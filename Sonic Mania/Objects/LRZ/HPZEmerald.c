@@ -55,7 +55,7 @@ void HPZEmerald_Draw(void)
 void HPZEmerald_Create(void *data)
 {
     RSDK_THIS(HPZEmerald);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->visible = true;
 
         switch (entity->type) {

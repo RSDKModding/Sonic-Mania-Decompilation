@@ -21,7 +21,7 @@ void DERobot_Draw(void)
 void DERobot_Create(void *data)
 {
     RSDK_THIS(DERobot);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         if (globals->gameMode < MODE_TIMEATTACK) {
             entity->drawOrder     = Zone->drawOrderLow;
             entity->updateRange.x = 0x800000;
@@ -158,10 +158,10 @@ void DERobot_StageLoad(void)
 void DERobot_Unknown1(void)
 {
     RSDK_THIS(DERobot);
-    int32 x = (entity->position.x >> 16) - RSDK_screens->centerX + 128;
+    int32 x = (entity->position.x >> 16) - ScreenInfo->centerX + 128;
     if (x > Zone->screenBoundsL1[0]) {
         Zone->screenBoundsL1[0]                        = x;
-        Zone->screenBoundsR1[0]                        = RSDK_screens->width + 96 + x;
+        Zone->screenBoundsR1[0]                        = ScreenInfo->width + 96 + x;
         Zone->screenBoundsL2[0]                        = Zone->screenBoundsL1[0] << 16;
         Zone->screenBoundsR2[0]                        = Zone->screenBoundsR1[0] << 16;
         Zone->playerBoundActiveB[0]                    = 0;
@@ -318,7 +318,7 @@ void DERobot_Unknown7(void)
     if (--entity->field_C8 <= 0) {
         entity->timer               = 0;
         entity->state               = DERobot_Unknown38;
-        RSDK_sceneInfo->timeEnabled = false;
+        SceneInfo->timeEnabled = false;
         Player_GiveScore(RSDK_GET_ENTITY(SLOT_PLAYER1, Player), 1000);
         ((EntityDERobot *)entity->parts[10])->state = DERobot_Unknown22;
         ((EntityDERobot *)entity->parts[12])->state = DERobot_Unknown22;
@@ -505,7 +505,7 @@ void DERobot_StateDraw_Unknown4(void)
     RSDK_THIS(DERobot);
 
     entity->drawFX   = FX_NONE;
-    entity->rotation = -(RSDK_sceneInfo->entity->angle >> 1);
+    entity->rotation = -(entity->angle >> 1);
     RSDK.DrawSprite(&entity->animator1, NULL, false);
 
     entity->drawFX = FX_ROTATE;
@@ -765,8 +765,8 @@ void DERobot_Unknown31(void)
         EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
         if (player1->position.y <= entity->position.y + 0x200000 && player1->state != Player_State_ForceRoll_Ground) {
             for (int32 i = 0; i < Player->playerCount; ++i) {
-                Zone->screenBoundsL1[i]     = (entity->position.x >> 16) - RSDK_screens->centerX + 128;
-                Zone->screenBoundsR1[i]     = RSDK_screens->centerX + 128 + (entity->position.x >> 16);
+                Zone->screenBoundsL1[i]     = (entity->position.x >> 16) - ScreenInfo->centerX + 128;
+                Zone->screenBoundsR1[i]     = ScreenInfo->centerX + 128 + (entity->position.x >> 16);
                 Zone->screenBoundsB1[i]     = entity->position.y >> 16;
                 Zone->screenBoundsB2[i]     = Zone->screenBoundsB1[i] << 16;
                 Zone->playerBoundActiveL[i] = true;
@@ -1216,9 +1216,9 @@ void DERobot_Unknown40(void)
 
         EntityEggPrison *prison = (EntityEggPrison *)entity->parts[2];
         RSDK.ResetEntityPtr(prison, EggPrison->objectID, intToVoid(1));
-        prison->position.x = (RSDK_screens->position.x + RSDK_screens->centerX) << 16;
+        prison->position.x = (ScreenInfo->position.x + ScreenInfo->centerX) << 16;
         prison->checkTileCollisions = true;
-        prison->position.y = (RSDK_screens->position.y - 48) << 16;
+        prison->position.y = (ScreenInfo->position.y - 48) << 16;
 
         foreach_all(BoundsMarker, marker) { destroyEntity(marker); }
         entity->state = DERobot_Unknown42;

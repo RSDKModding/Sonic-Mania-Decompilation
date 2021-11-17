@@ -36,7 +36,7 @@ void ContinueSetup_Draw(void)
 
     Vector2 drawPos;
     drawPos.y = 0x600000;
-    drawPos.x = ((RSDK_screens->centerX + 4) << 16) - (globals->continues << 19);
+    drawPos.x = ((ScreenInfo->centerX + 4) << 16) - (globals->continues << 19);
     if (entity->dword74 == 1 && globals->continues > 0) {
         RSDK.DrawSprite(&ContinueSetup->animator, &drawPos, true);
     }
@@ -51,7 +51,7 @@ void ContinueSetup_Draw(void)
 void ContinueSetup_Create(void *data)
 {
     RSDK_THIS(ContinueSetup);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->active        = ACTIVE_NORMAL;
         entity->visible       = true;
         entity->drawOrder     = 1;
@@ -72,7 +72,7 @@ void ContinueSetup_Create(void *data)
 #endif
             default: RSDK.SetSpriteAnimation(ContinuePlayer->aniFrames, CONTPLR_ANI_ICON, &ContinueSetup->animator, true, 0); break;
         }
-        RSDK.SetActivePalette(1, 0, RSDK_screens->height);
+        RSDK.SetActivePalette(1, 0, ScreenInfo->height);
     }
 }
 
@@ -115,7 +115,7 @@ void ContinueSetup_Unknown2(void)
             entity->colour = RSDK.GetPaletteEntry(2, entity->alpha);
         }
     }
-    if (RSDK_controller->keyA.press || RSDK_controller->keyStart.press || RSDK_touchMouse->count) {
+    if (ControllerInfo->keyA.press || ControllerInfo->keyStart.press || TouchInfo->count) {
         foreach_active(ContinuePlayer, player)
         {
             if (!player->isPlayer2)
@@ -153,7 +153,7 @@ void ContinueSetup_Unknown3(void)
 #endif
             RSDK.SetScene("Mania Mode", "");
         SaveGame->saveRAM->continues   = globals->continues;
-        RSDK_sceneInfo->listPos = SaveGame->saveRAM->storedStageID;
+        SceneInfo->listPos = SaveGame->saveRAM->storedStageID;
         RSDK.LoadScene();
     }
 

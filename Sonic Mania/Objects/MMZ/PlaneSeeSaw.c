@@ -31,8 +31,9 @@ void PlaneSeeSaw_Draw(void)
 void PlaneSeeSaw_Create(void *data)
 {
     RSDK_THIS(PlaneSeeSaw);
-    RSDK_sceneInfo->entity->drawFX = FX_FLIP;
-    if (!RSDK_sceneInfo->inEditor) {
+    entity->drawFX = FX_FLIP;
+
+    if (!SceneInfo->inEditor) {
         entity->visible       = true;
         entity->drawOrder     = Zone->drawOrderLow;
         entity->active        = ACTIVE_BOUNDS;
@@ -169,7 +170,7 @@ void PlaneSeeSaw_State_Launch(void)
 
 void PlaneSeeSaw_PlayerState_ToBG(void)
 {
-    EntityPlayer *entity = RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot, Player);
+    EntityPlayer *entity = RSDK_GET_ENTITY(SceneInfo->entitySlot, Player);
     entity->left         = false;
     entity->right        = false;
     if (((entity->abilityValues[0] ^ entity->position.x) & 0xFFFF0000)) {
@@ -179,7 +180,7 @@ void PlaneSeeSaw_PlayerState_ToBG(void)
             entity->position.x -= 0x8000;
     }
 
-    RSDK_controller[entity->controllerID].keyY.press = false;
+    ControllerInfo[entity->controllerID].keyY.press = false;
     Player_State_Air();
 
     entity->tileCollisions = false;
@@ -207,7 +208,7 @@ void PlaneSeeSaw_PlayerState_ToBG(void)
 
 void PlaneSeeSaw_PlayerState_ToFG(void)
 {
-    EntityPlayer *entity = RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot, Player);
+    EntityPlayer *entity = RSDK_GET_ENTITY(SceneInfo->entitySlot, Player);
 
     entity->left  = false;
     entity->right = false;
@@ -217,7 +218,7 @@ void PlaneSeeSaw_PlayerState_ToFG(void)
         else
             entity->position.x -= 0x8000;
     }
-    RSDK_controller[entity->controllerID].keyY.press = false;
+    ControllerInfo[entity->controllerID].keyY.press = false;
     Player_State_Air();
 
     entity->tileCollisions = false;

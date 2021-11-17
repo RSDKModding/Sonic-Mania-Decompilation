@@ -7,7 +7,7 @@ void Summary_Update(void)
 {
     RSDK_THIS(Summary);
     StateMachine_Run(entity->state);
-    RSDK_screens->position.x = 0x100 - RSDK_screens->centerX;
+    ScreenInfo->position.x = 0x100 - ScreenInfo->centerX;
 }
 
 void Summary_LateUpdate(void) {}
@@ -32,7 +32,7 @@ void Summary_Draw(void)
 void Summary_Create(void *data)
 {
     RSDK_THIS(Summary);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->active    = ACTIVE_ALWAYS;
         entity->visible   = true;
         entity->drawOrder = 12;
@@ -127,9 +127,9 @@ void Summary_State_FadeIn(void)
 void Summary_State_Wait(void)
 {
     RSDK_THIS(Summary);
-    if (RSDK_controller->keyStart.press || (API_GetConfirmButtonFlip() ? RSDK_controller->keyB.press : RSDK_controller->keyA.press)
+    if (ControllerInfo->keyStart.press || (API_GetConfirmButtonFlip() ? ControllerInfo->keyB.press : ControllerInfo->keyA.press)
 #if RETRO_USE_TOUCH_CONTROLS
-        || RSDK_touchMouse->count
+        || TouchInfo->count
 #endif
     ) {
         RSDK.SetScene("Presentation", "Menu");

@@ -39,7 +39,7 @@ void GHZ2Outro_Draw(void) {}
 void GHZ2Outro_Create(void *data)
 {
     RSDK_THIS(GHZ2Outro);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->activated = data != NULL;
 
         foreach_all(DERobot, robot) { entity->DERobot = (Entity *)robot; }
@@ -109,7 +109,7 @@ bool32 GHZ2Outro_CutsceneState1_Unknown2(EntityCutsceneSeq *host)
             player->position.x = robot->position.x - 0x200000;
     }
     
-    if (player->position.y > (RSDK_screens->position.y + 0x200) << 16) {
+    if (player->position.y > (ScreenInfo->position.y + 0x200) << 16) {
         foreach_active(Player, player) { player->active = ACTIVE_NEVER; }
         RSDK.SetScene("Cutscenes", "Green Hill Zone 2");
 

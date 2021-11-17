@@ -255,7 +255,7 @@ void Spikes_Create(void *data)
     entity->drawFX = FX_FLIP;
     if (entity->count < 2)
         entity->count = 2;
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         if (data)
             entity->type = voidToInt(data);
 

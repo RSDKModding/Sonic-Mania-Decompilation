@@ -190,7 +190,7 @@ void FBZSinkTrash_Draw(void)
 void FBZSinkTrash_Create(void *data)
 {
     RSDK_THIS(FBZSinkTrash);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->updateRange.x = entity->size.x >> 1;
         entity->updateRange.y = (entity->size.y >> 1) + 0x400000;
         entity->active        = ACTIVE_BOUNDS;

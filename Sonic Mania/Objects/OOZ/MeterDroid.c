@@ -53,7 +53,7 @@ void MeterDroid_Draw(void)
 void MeterDroid_Create(void *data)
 {
     RSDK_THIS(MeterDroid);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         if (globals->gameMode == MODE_TIMEATTACK) {
             destroyEntity(entity);
         }
@@ -194,7 +194,7 @@ void MeterDroid_Hit(void)
             CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSS), x + entity->field_88.x, y + entity->field_88.y)->drawOrder = Zone->drawOrderHigh;
             entity->stateDraw                                                                                 = MeterDroid_StateDraw_Unknown1;
         }
-        RSDK_sceneInfo->timeEnabled = false;
+        SceneInfo->timeEnabled = false;
         Player_GiveScore(RSDK_GET_ENTITY(SLOT_PLAYER1, Player), 1000);
     }
     else {
@@ -246,8 +246,9 @@ void MeterDroid_StateDraw_Unknown1(void)
 {
     RSDK_THIS(MeterDroid);
 
-    RSDK_sceneInfo->entity->drawFX = FX_FLIP;
+    entity->drawFX = FX_FLIP;
     RSDK.DrawSprite(&entity->animator1, NULL, false);
+
     entity->drawFX = FX_NONE;
     RSDK.DrawSprite(&entity->animator2, NULL, false);
 }
@@ -269,7 +270,7 @@ void MeterDroid_StateDraw_Unknown2(void)
 {
     RSDK_THIS(MeterDroid);
 
-    RSDK_sceneInfo->entity->drawFX = FX_FLIP;
+    entity->drawFX = FX_FLIP;
     RSDK.DrawSprite(&entity->animator1, NULL, false);
 
     entity->drawFX = FX_NONE;
@@ -285,10 +286,10 @@ void MeterDroid_State_Setup(void)
     if (++entity->timer >= 8) {
         entity->timer               = 0;
         Zone->playerBoundActiveL[0] = true;
-        Zone->screenBoundsL1[0]     = (entity->position.x >> 16) - RSDK_screens->centerX;
+        Zone->screenBoundsL1[0]     = (entity->position.x >> 16) - ScreenInfo->centerX;
         Zone->playerBoundActiveR[0] = true;
-        Zone->screenBoundsR1[0]     = (entity->position.x >> 16) + RSDK_screens->centerX;
-        Zone->screenBoundsT1[0]     = Zone->screenBoundsB1[0] - RSDK_screens->height - 64;
+        Zone->screenBoundsR1[0]     = (entity->position.x >> 16) + ScreenInfo->centerX;
+        Zone->screenBoundsT1[0]     = Zone->screenBoundsB1[0] - ScreenInfo->height - 64;
         MeterDroid->boundsL         = (Zone->screenBoundsL1[0] + 64) << 16;
         MeterDroid->boundsR         = (Zone->screenBoundsR1[0] - 64) << 16;
         MeterDroid->startX          = entity->position.x;
@@ -623,8 +624,8 @@ void MeterDroid_State_Die(void)
 
         if (Zone->timer & 4) {
             EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid(2 * (RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS),
-                                                       (RSDK.Rand(-208, 208) + RSDK_screens->centerX + RSDK_screens->position.x) << 16,
-                                                       (RSDK.Rand(-112, 112) + RSDK_screens->centerY + RSDK_screens->position.y) << 16);
+                                                       (RSDK.Rand(-208, 208) + ScreenInfo->centerX + ScreenInfo->position.x) << 16,
+                                                       (RSDK.Rand(-112, 112) + ScreenInfo->centerY + ScreenInfo->position.y) << 16);
             explosion->drawOrder       = Zone->drawOrderHigh;
         }
     }
@@ -666,8 +667,8 @@ void MeterDroid_State_FinishAct(void)
 
         if (Zone->timer & 4) {
             EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid(2 * (RSDK.Rand(0, 256) > 192) + 1),
-                                                       (RSDK.Rand(-208, 208) + RSDK_screens->centerX + RSDK_screens->position.x) << 16,
-                                                       (RSDK.Rand(-112, 112) + RSDK_screens->centerY + RSDK_screens->position.y) << 16);
+                                                       (RSDK.Rand(-208, 208) + ScreenInfo->centerX + ScreenInfo->position.x) << 16,
+                                                       (RSDK.Rand(-112, 112) + ScreenInfo->centerY + ScreenInfo->position.y) << 16);
             explosion->drawOrder       = Zone->drawOrderHigh;
         }
     }
@@ -678,7 +679,7 @@ void MeterDroid_State_FinishAct(void)
 
         SaveGame_SavePlayerState();
         globals->enableIntro = true;
-        ++RSDK_sceneInfo->listPos;
+        ++SceneInfo->listPos;
         if (!RSDK.CheckValidScene())
             RSDK.SetScene("Presentation", "Title Screen");
         Zone_StartFadeOut(10, 0xF0F0F0);

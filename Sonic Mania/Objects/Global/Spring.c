@@ -28,7 +28,7 @@ void Spring_Create(void *data)
 {
     RSDK_THIS(Spring);
     entity->drawFX = FX_FLIP;
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->type %= 6;
         if (data) {
             int32 propertyVal  = voidToInt(data);

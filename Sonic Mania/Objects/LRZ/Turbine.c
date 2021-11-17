@@ -46,7 +46,7 @@ void Turbine_Draw(void)
 void Turbine_Create(void *data)
 {
     RSDK_THIS(Turbine);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->active        = ACTIVE_BOUNDS;
         entity->visible       = true;
         entity->updateRange.x = 0x800000;

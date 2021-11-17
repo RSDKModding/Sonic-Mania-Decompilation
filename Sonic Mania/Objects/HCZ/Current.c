@@ -27,7 +27,7 @@ void Current_Create(void *data)
     RSDK_THIS(Current);
 
     entity->drawFX = FX_FLIP;
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         if (data) {
             entity->active        = ACTIVE_NORMAL;
             entity->inkEffect     = INK_ADD;
@@ -142,22 +142,22 @@ Vector2 Current_Unknown2(uint8 a1)
     int x = 0;
     if (a1) {
         x = entity->position.x - (entity->size.x >> 1) - 0x200000;
-        if ((RSDK_screens->position.x - 64) << 16 > x)
-            x = (RSDK_screens->position.x - 64) << 16;
+        if ((ScreenInfo->position.x - 64) << 16 > x)
+            x = (ScreenInfo->position.x - 64) << 16;
     }
     else {
         x = (entity->size.x >> 1) + entity->position.x + 0x200000;
-        if ((RSDK_screens->position.x + 64 + RSDK_screens->width) << 16 < x)
-            x = (RSDK_screens->position.x + 64 + RSDK_screens->width) << 16;
+        if ((ScreenInfo->position.x + 64 + ScreenInfo->width) << 16 < x)
+            x = (ScreenInfo->position.x + 64 + ScreenInfo->width) << 16;
     }
 
     int startY = entity->size.y >> 1;
 
     int finalY = entity->position.y - startY - 0x200000;
-    if ((RSDK_screens->position.y - 64) << 16 > finalY)
-        finalY = (RSDK_screens->position.y - 64) << 16;
+    if ((ScreenInfo->position.y - 64) << 16 > finalY)
+        finalY = (ScreenInfo->position.y - 64) << 16;
 
-    int screenY = (RSDK_screens->position.y + 64 + RSDK_screens->height) << 16;
+    int screenY = (ScreenInfo->position.y + 64 + ScreenInfo->height) << 16;
     int minY    = startY + entity->position.y + 0x200000;
     if (screenY < minY)
         minY = screenY;
@@ -186,21 +186,21 @@ Vector2 Current_Unknown3(uint8 a1)
     int y = 0;
     if (a1) {
         y = entity->position.y - (entity->size.y >> 1) - 0x200000;
-        if ((RSDK_screens->position.y - 64) << 16 > y)
-            y = (RSDK_screens->position.y - 64) << 16;
+        if ((ScreenInfo->position.y - 64) << 16 > y)
+            y = (ScreenInfo->position.y - 64) << 16;
     }
     else {
         y = (entity->size.y >> 1) + entity->position.y + 0x200000;
-        if ((RSDK_screens->position.y + 64 + RSDK_screens->height) << 16 < y)
-            y = (RSDK_screens->position.y + 64 + RSDK_screens->height) << 16;
+        if ((ScreenInfo->position.y + 64 + ScreenInfo->height) << 16 < y)
+            y = (ScreenInfo->position.y + 64 + ScreenInfo->height) << 16;
     }
 
     int startX = entity->size.x >> 1;
     int finalX = entity->position.x - startX - 0x200000;
-    if ((RSDK_screens->position.x - 64) << 16 > finalX)
-        finalX = (RSDK_screens->position.x - 64) << 16;
+    if ((ScreenInfo->position.x - 64) << 16 > finalX)
+        finalX = (ScreenInfo->position.x - 64) << 16;
 
-    int screenX = (RSDK_screens->position.x + 64 + RSDK_screens->width) << 16;
+    int screenX = (ScreenInfo->position.x + 64 + ScreenInfo->width) << 16;
     int minX    = startX + entity->position.x + 0x200000;
     if (screenX < minX)
         minX = screenX;

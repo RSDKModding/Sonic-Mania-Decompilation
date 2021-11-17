@@ -58,7 +58,7 @@ void TTCutscene_SkipCB(void)
     else
 #endif
         RSDK.SetScene("Mania Mode", "Stardust Speedway Zone 1");
-    ++RSDK_sceneInfo->listPos;
+    ++SceneInfo->listPos;
 }
 
 bool32 TTCutscene_CutsceneState_Setup(EntityCutsceneSeq *host)
@@ -79,7 +79,7 @@ bool32 TTCutscene_CutsceneState_Setup(EntityCutsceneSeq *host)
         CutsceneSeq_LockAllPlayerControl();
         player1->state      = Player_State_None;
         player1->position.x = player1->position.x;
-        player1->position.y = (RSDK_screens->position.y + 32 + RSDK_screens->height) << 16;
+        player1->position.y = (ScreenInfo->position.y + 32 + ScreenInfo->height) << 16;
         RSDK.SetSpriteAnimation(player1->aniFrames, ANI_SPRINGTWIRL, &player1->playerAnimator, false, 0);
 
         if (player2->objectID == Player->objectID) {
@@ -99,8 +99,8 @@ bool32 TTCutscene_CutsceneState_FlyIn(EntityCutsceneSeq *host)
     RSDK_GET_PLAYER(player1, player2, camera);
     unused(camera);
 
-    int32 scrY  = (RSDK_screens->position.y + RSDK_screens->centerY) << 16;
-    int32 scrY2 = (RSDK_screens->position.y + RSDK_screens->height + 32) << 16;
+    int32 scrY  = (ScreenInfo->position.y + ScreenInfo->centerY) << 16;
+    int32 scrY2 = (ScreenInfo->position.y + ScreenInfo->height + 32) << 16;
 
     int32 timerP1 = host->timer;
     if (timerP1) {
@@ -143,9 +143,9 @@ bool32 TTCutscene_CutsceneState_Wait(EntityCutsceneSeq *host)
     RSDK_GET_PLAYER(player1, player2, camera);
     unused(camera);
     
-    player1->position.y = (RSDK_screens->centerY + RSDK_screens->position.y) << 16;
+    player1->position.y = (ScreenInfo->centerY + ScreenInfo->position.y) << 16;
     if (player2->objectID == Player->objectID)
-        player2->position.y = (RSDK_screens->centerY + RSDK_screens->position.y) << 16;
+        player2->position.y = (ScreenInfo->centerY + ScreenInfo->position.y) << 16;
 
     return host->timer == 100;
 }
@@ -155,8 +155,8 @@ bool32 TTCutscene_CutsceneState_FlyOut(EntityCutsceneSeq *host)
     RSDK_GET_PLAYER(player1, player2, camera);
     unused(camera);
 
-    int32 scrY  = (RSDK_screens->position.y + RSDK_screens->centerY) << 16;
-    int32 scrY2 = (RSDK_screens->position.y - 32) << 16;
+    int32 scrY  = (ScreenInfo->position.y + ScreenInfo->centerY) << 16;
+    int32 scrY2 = (ScreenInfo->position.y - 32) << 16;
 
     int32 timerP1 = host->timer;
     if (timerP1) {
@@ -211,7 +211,7 @@ bool32 TTCutscene_CutsceneState_NextScene(EntityCutsceneSeq *host)
         else
 #endif
             RSDK.SetScene("Mania Mode", "Stardust Speedway Zone 1");
-        ++RSDK_sceneInfo->listPos;
+        ++SceneInfo->listPos;
         Zone_StartFadeOut(10, 0x000000);
         return true;
     }

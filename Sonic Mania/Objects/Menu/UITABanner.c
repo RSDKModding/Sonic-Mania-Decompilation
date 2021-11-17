@@ -44,7 +44,7 @@ void UITABanner_Create(void *data)
     entity->drawFX        = FX_FLIP;
     entity->updateRange.x = 0x800000;
     entity->updateRange.y = 0x300000;
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         RSDK.SetText(&entity->text, "", 0);
         RSDK.SetSpriteAnimation(UIWidgets->labelSpriteIndex, 0, &entity->labelAnimator, true, 0);
     }
@@ -69,7 +69,7 @@ void UITABanner_Unknown1(uint8 characterID, EntityUITABanner *banner, uint8 zone
 
 void UITABanner_Unknown2(int32 drawX, int32 drawY, bool32 isEncore)
 {
-    if (!RSDK_sceneInfo->inEditor)
+    if (!SceneInfo->inEditor)
         RSDK.DrawRect(drawX - 0x990000, drawY - 0x1E8000, 0x1320000, 0x3D0000, 0xFFFFFF, 127, INK_BLEND, false);
 
     UIWidgets_Unknown5(88, -58, 112, 224, drawX + 0x790000, drawY + 0x1D8000);
@@ -83,7 +83,7 @@ void UITABanner_Unknown2(int32 drawX, int32 drawY, bool32 isEncore)
         colour = 0x5FA0B0;
     UIWidgets_Unknown5((colour >> 16) & 0xFF, -58, (colour >> 8) & 0xFF, colour & 0xFF, drawX + 0x990000, drawY + 0x1D8000);
 
-    if (!RSDK_sceneInfo->inEditor)
+    if (!SceneInfo->inEditor)
         UIWidgets_Unknown3(67, 312, drawX + 0x30000, drawY + 0x30000);
     UIWidgets_Unknown2(67, 312, drawX, drawY);
 }
@@ -148,14 +148,14 @@ void UITABanner_Unknown4(int32 drawX, int32 drawY, int32 zoneID)
 
     drawPos.y = drawY;
     drawPos.x = drawX - 0x690000;
-    if (!RSDK_sceneInfo->inEditor && (control->active == ACTIVE_ALWAYS || control->dialogHasFocus == 1 || control->popoverHasFocus == 1)) {
-        int32 clipY  = (drawY >> 16) - RSDK_screens->position.y;
-        int32 clipX  = ((drawX - 0x690000) >> 16) - RSDK_screens->position.x;
-        int32 clipX1 = RSDK_screens->clipBound_X1;
-        int32 clipY1 = RSDK_screens->clipBound_Y1;
-        int32 clipX2 = RSDK_screens->clipBound_X2;
-        int32 clipY2 = RSDK_screens->clipBound_Y2;
-        RSDK.SetClipBounds(RSDK_sceneInfo->currentScreenID, clipX - 48, clipY - 27, clipX + 48, clipY + 27);
+    if (!SceneInfo->inEditor && (control->active == ACTIVE_ALWAYS || control->dialogHasFocus == 1 || control->popoverHasFocus == 1)) {
+        int32 clipY  = (drawY >> 16) - ScreenInfo->position.y;
+        int32 clipX  = ((drawX - 0x690000) >> 16) - ScreenInfo->position.x;
+        int32 clipX1 = ScreenInfo->clipBound_X1;
+        int32 clipY1 = ScreenInfo->clipBound_Y1;
+        int32 clipX2 = ScreenInfo->clipBound_X2;
+        int32 clipY2 = ScreenInfo->clipBound_Y2;
+        RSDK.SetClipBounds(SceneInfo->currentScreenID, clipX - 48, clipY - 27, clipX + 48, clipY + 27);
 
         SpriteFrame *frame = RSDK.GetFrame(UITABanner->aniFrames, 11, zoneID);
         frame->pivotX      = -45;
@@ -174,7 +174,7 @@ void UITABanner_Unknown4(int32 drawX, int32 drawY, int32 zoneID)
             frame->width = width;
             RSDK.DrawSprite(&entity->animator1, &drawPos, false);
         }
-        RSDK.SetClipBounds(RSDK_sceneInfo->currentScreenID, clipX1, clipY1, clipX2, clipY2);
+        RSDK.SetClipBounds(SceneInfo->currentScreenID, clipX1, clipY1, clipX2, clipY2);
     }
     else {
         entity->direction = entity->startDir;
@@ -195,7 +195,7 @@ void UITABanner_Unknown5(uint8 actID, uint8 zoneID, uint8 characterID, bool32 is
     UITABanner_Unknown4(drawX, drawY, zoneID);
     drawPos.y = drawY - 0x100000;
     drawPos.x = drawX - 0x390000;
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         if (zoneID == 5 || zoneID == 10) {
             RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 5, &entity->animator5, true, 0);
         }

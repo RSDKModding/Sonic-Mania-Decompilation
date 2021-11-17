@@ -24,7 +24,7 @@ void PSZLauncher_Create(void *data)
     entity->visible   = 1;
     entity->drawOrder = Zone->drawOrderHigh - 1;
     entity->drawFX    = FX_FLIP;
-    if (RSDK_sceneInfo->inEditor && !entity->power)
+    if (SceneInfo->inEditor && !entity->power)
         entity->power = 10;
     entity->active        = ACTIVE_BOUNDS;
     entity->updateRange.x = 0x800000;

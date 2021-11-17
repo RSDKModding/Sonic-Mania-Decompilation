@@ -23,7 +23,7 @@ void PuyoBean_Draw(void)
 {
     RSDK_THIS(PuyoBean);
 
-    if (RSDK_sceneInfo->state != ENGINESTATE_FROZEN) {
+    if (SceneInfo->state != ENGINESTATE_FROZEN) {
         if (entity->flag)
             RSDK.DrawSprite(&PuyoBean->animator, NULL, false);
         else
@@ -34,7 +34,7 @@ void PuyoBean_Draw(void)
 void PuyoBean_Create(void *data)
 {
     RSDK_THIS(PuyoBean);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->visible = true;
         if (PuyoGame)
             entity->drawOrder = Zone->drawOrderLow;
@@ -93,33 +93,33 @@ void PuyoBean_StateInput_HandlePlayerInputs(void)
 
     if (entity->controllerID < PLAYER_MAX) {
 #if RETRO_USE_TOUCH_CONTROLS
-        for (int32 t = 0; t < RSDK_touchMouse->count; ++t) {
-            int32 tx = (RSDK_touchMouse->x[t] * RSDK_screens->width);
-            int32 ty = (RSDK_touchMouse->y[t] * RSDK_screens->height);
+        for (int32 t = 0; t < TouchInfo->count; ++t) {
+            int32 tx = (TouchInfo->x[t] * ScreenInfo->width);
+            int32 ty = (TouchInfo->y[t] * ScreenInfo->height);
 
-            if (RSDK_touchMouse->down[t]) {
-                if (tx >= 0 && ty >= 96 && tx <= RSDK_screens->centerX && ty <= RSDK_screens->height) {
-                    int32 tx = (RSDK_touchMouse->x[t] * RSDK_screens->width);
-                    int32 ty = (RSDK_touchMouse->y[t] * RSDK_screens->height);
+            if (TouchInfo->down[t]) {
+                if (tx >= 0 && ty >= 96 && tx <= ScreenInfo->centerX && ty <= ScreenInfo->height) {
+                    int32 tx = (TouchInfo->x[t] * ScreenInfo->width);
+                    int32 ty = (TouchInfo->y[t] * ScreenInfo->height);
                     tx -= 64;
                     ty -= 192;
 
                     switch (((RSDK.ATan2(tx, ty) + 32) & 0xFF) >> 6) {
                         case 0:
-                            RSDK_controller->keyRight.down |= true;
-                            RSDK_controller[entity->controllerID].keyRight.down = true;
+                            ControllerInfo->keyRight.down |= true;
+                            ControllerInfo[entity->controllerID].keyRight.down = true;
                             break;
                         case 1:
-                            RSDK_controller->keyDown.down |= true;
-                            RSDK_controller[entity->controllerID].keyDown.down = true;
+                            ControllerInfo->keyDown.down |= true;
+                            ControllerInfo[entity->controllerID].keyDown.down = true;
                             break;
                         case 2:
-                            RSDK_controller->keyLeft.down |= true;
-                            RSDK_controller[entity->controllerID].keyLeft.down = true;
+                            ControllerInfo->keyLeft.down |= true;
+                            ControllerInfo[entity->controllerID].keyLeft.down = true;
                             break;
                         case 3:
-                            RSDK_controller->keyUp.down |= true;
-                            RSDK_controller[entity->controllerID].keyUp.down = true;
+                            ControllerInfo->keyUp.down |= true;
+                            ControllerInfo[entity->controllerID].keyUp.down = true;
                             break;
                     }
                     break;
@@ -127,43 +127,43 @@ void PuyoBean_StateInput_HandlePlayerInputs(void)
             }
         }
 
-        int32 halfX = RSDK_screens->centerX / 2;
-        for (int32 t = 0; t < RSDK_touchMouse->count; ++t) {
-            int32 tx = (RSDK_touchMouse->x[t] * RSDK_screens->width);
-            int32 ty = (RSDK_touchMouse->y[t] * RSDK_screens->height);
+        int32 halfX = ScreenInfo->centerX / 2;
+        for (int32 t = 0; t < TouchInfo->count; ++t) {
+            int32 tx = (TouchInfo->x[t] * ScreenInfo->width);
+            int32 ty = (TouchInfo->y[t] * ScreenInfo->height);
 
-            if (RSDK_touchMouse->down[t]) {
-                if (tx >= RSDK_screens->centerX && ty >= 96 && tx <= (RSDK_screens->width - halfX) && ty <= RSDK_screens->height) {
-                    RSDK_controller->keyA.down |= true;
-                    RSDK_controller[entity->controllerID].keyA.down = true;
+            if (TouchInfo->down[t]) {
+                if (tx >= ScreenInfo->centerX && ty >= 96 && tx <= (ScreenInfo->width - halfX) && ty <= ScreenInfo->height) {
+                    ControllerInfo->keyA.down |= true;
+                    ControllerInfo[entity->controllerID].keyA.down = true;
                     break;
                 }
-                else if (tx >= (RSDK_screens->centerX + halfX) && ty >= 96 && tx <= RSDK_screens->width && ty <= RSDK_screens->height) {
-                    RSDK_controller->keyB.down |= true;
-                    RSDK_controller[entity->controllerID].keyB.down = true;
+                else if (tx >= (ScreenInfo->centerX + halfX) && ty >= 96 && tx <= ScreenInfo->width && ty <= ScreenInfo->height) {
+                    ControllerInfo->keyB.down |= true;
+                    ControllerInfo[entity->controllerID].keyB.down = true;
                     break;
                 }
             }
         }
 
         if (!entity->touchLeft) {
-            RSDK_controller->keyA.press |= RSDK_controller->keyB.down;
-            RSDK_controller[entity->controllerID].keyB.press |= RSDK_controller[entity->controllerID].keyB.down;
+            ControllerInfo->keyA.press |= ControllerInfo->keyB.down;
+            ControllerInfo[entity->controllerID].keyB.press |= ControllerInfo[entity->controllerID].keyB.down;
         }
         if (!entity->touchRight) {
-            RSDK_controller->keyA.press |= RSDK_controller->keyA.down;
-            RSDK_controller[entity->controllerID].keyA.press |= RSDK_controller[entity->controllerID].keyA.down;
+            ControllerInfo->keyA.press |= ControllerInfo->keyA.down;
+            ControllerInfo[entity->controllerID].keyA.press |= ControllerInfo[entity->controllerID].keyA.down;
         }
-        entity->touchLeft = RSDK_controller[entity->controllerID].keyB.down;
-        entity->touchRight = RSDK_controller[entity->controllerID].keyA.down;
+        entity->touchLeft = ControllerInfo[entity->controllerID].keyB.down;
+        entity->touchRight = ControllerInfo[entity->controllerID].keyA.down;
 
-        for (int32 t = 0; t < RSDK_touchMouse->count; ++t) {
-            int32 tx = (RSDK_touchMouse->x[t] * RSDK_screens->width);
-            int32 ty = (RSDK_touchMouse->y[t] * RSDK_screens->height);
+        for (int32 t = 0; t < TouchInfo->count; ++t) {
+            int32 tx = (TouchInfo->x[t] * ScreenInfo->width);
+            int32 ty = (TouchInfo->y[t] * ScreenInfo->height);
 
-            if (RSDK_touchMouse->down[t]) {
-                if (tx >= RSDK_screens->width - 0x80 && ty >= 0 && tx <= RSDK_screens->width && ty <= 0x40) {
-                    if (RSDK_sceneInfo->state == ENGINESTATE_REGULAR) {
+            if (TouchInfo->down[t]) {
+                if (tx >= ScreenInfo->width - 0x80 && ty >= 0 && tx <= ScreenInfo->width && ty <= 0x40) {
+                    if (SceneInfo->state == ENGINESTATE_REGULAR) {
                         EntityPauseMenu *pauseMenu = RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu);
                         if (!pauseMenu->objectID) {
                             RSDK.ResetEntitySlot(SLOT_PAUSEMENU, PauseMenu->objectID, NULL);
@@ -178,19 +178,19 @@ void PuyoBean_StateInput_HandlePlayerInputs(void)
         }
 #endif
 
-        entity->down  = RSDK_controller[entity->controllerID].keyDown.down;
-        entity->left  = RSDK_controller[entity->controllerID].keyLeft.down;
-        entity->right = RSDK_controller[entity->controllerID].keyRight.down;
-        entity->down |= RSDK_stickL[entity->controllerID].vDelta < -0.3;
-        entity->left |= RSDK_stickL[entity->controllerID].hDelta < -0.3;
-        entity->right |= RSDK_stickL[entity->controllerID].hDelta > 0.3;
+        entity->down  = ControllerInfo[entity->controllerID].keyDown.down;
+        entity->left  = ControllerInfo[entity->controllerID].keyLeft.down;
+        entity->right = ControllerInfo[entity->controllerID].keyRight.down;
+        entity->down |= AnalogStickInfoL[entity->controllerID].vDelta < -0.3;
+        entity->left |= AnalogStickInfoL[entity->controllerID].hDelta < -0.3;
+        entity->right |= AnalogStickInfoL[entity->controllerID].hDelta > 0.3;
         if (entity->left && entity->right) {
             entity->left  = false;
             entity->right = false;
         }
-        entity->rotateLeft = RSDK_controller[entity->controllerID].keyB.press || RSDK_controller[entity->controllerID].keyC.press
-                             || RSDK_controller[entity->controllerID].keyY.press;
-        entity->rotateRight      = RSDK_controller[entity->controllerID].keyA.press || RSDK_controller[entity->controllerID].keyX.press;
+        entity->rotateLeft = ControllerInfo[entity->controllerID].keyB.press || ControllerInfo[entity->controllerID].keyC.press
+                             || ControllerInfo[entity->controllerID].keyY.press;
+        entity->rotateRight      = ControllerInfo[entity->controllerID].keyA.press || ControllerInfo[entity->controllerID].keyX.press;
         entity->forceRotateLeft  = false;
         entity->forceRotateRight = false;
     }

@@ -47,7 +47,7 @@ void UITransition_StartTransition(void (*callback)(void), int32 timeLimit)
         transition->timer      = 0;
         transition->timeLimit  = timeLimit;
         transition->callback   = callback;
-        transition->prevEntity = RSDK_sceneInfo->entity;
+        transition->prevEntity = SceneInfo->entity;
     }
 
     EntityUIControl *control = UIControl_GetUIControl();
@@ -82,8 +82,8 @@ void UITransition_DrawShapes(void)
     colours[1] = 0x1888F0;
     colours[2] = 0xE82858;
 
-    int32 screenCenterX = (RSDK_screens->position.x + RSDK_screens->centerX) << 16;
-    int32 screenCenterY = (RSDK_screens->position.y + RSDK_screens->centerY) << 16;
+    int32 screenCenterX = (ScreenInfo->position.x + ScreenInfo->centerX) << 16;
+    int32 screenCenterY = (ScreenInfo->position.y + ScreenInfo->centerY) << 16;
     positions[0].x    = screenCenterX + entity->drawPos[0].x - 0xF00000;
     positions[0].y    = screenCenterY + entity->drawPos[0].y;
     positions[1].x    = screenCenterX + entity->drawPos[1].x;
@@ -262,11 +262,11 @@ void UITransition_State_TransitionOut(void)
         entity->field_6C                            = true;
         UIControl_GetUIControl()->selectionDisabled = false;
         if (entity->callback && !UIDialog->activeDialog) {
-            Entity *storeEntity    = RSDK_sceneInfo->entity;
-            RSDK_sceneInfo->entity = entity->prevEntity;
+            Entity *storeEntity    = SceneInfo->entity;
+            SceneInfo->entity = entity->prevEntity;
             entity->callback();
             entity->callback       = StateMachine_None;
-            RSDK_sceneInfo->entity = storeEntity;
+            SceneInfo->entity = storeEntity;
         }
         if (MenuSetup) {
 #if RETRO_USE_PLUS

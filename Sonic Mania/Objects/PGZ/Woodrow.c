@@ -27,7 +27,7 @@ void Woodrow_Create(void *data)
     entity->active        = ACTIVE_BOUNDS;
     entity->updateRange.x = 0x800000;
     entity->updateRange.y = 0x800000;
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         if (entity->type == 1) {
             entity->startPos.x = entity->position.x;
             entity->startPos.y = entity->position.y;
@@ -41,7 +41,7 @@ void Woodrow_Create(void *data)
         else {
             entity->drawOrder = Zone->drawOrderHigh;
             entity->bombCount      = 0;
-            int32 pos           = RSDK_sceneInfo->entitySlot + 1;
+            int32 pos           = SceneInfo->entitySlot + 1;
             EntityWoodrow *bombSpawn                   = RSDK_GET_ENTITY(pos, Woodrow);
             while (bombSpawn->objectID == Woodrow->objectID) {
                 if (bombSpawn->type != 1)
@@ -228,7 +228,7 @@ void Woodrow_Unknown4(void)
             Woodrow_CheckOnScreen();
         }
         else {
-            int32 pos = RSDK_sceneInfo->entitySlot + 1;
+            int32 pos = SceneInfo->entitySlot + 1;
 
             EntityWoodrow *bombSpawn = NULL;
             do {

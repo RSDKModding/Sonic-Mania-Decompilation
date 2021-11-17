@@ -50,7 +50,7 @@ void CollapsingSand_Create(void *data)
     entity->drawFX |= FX_FLIP;
     entity->position.x &= 0xFFF80000;
     entity->position.y &= 0xFFF80000;
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->active        = ACTIVE_BOUNDS;
         entity->updateRange.x = 0x800000;
         entity->updateRange.y = 0x800000;

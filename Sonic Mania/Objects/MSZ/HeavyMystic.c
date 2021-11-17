@@ -49,7 +49,7 @@ void HeavyMystic_Draw(void)
 void HeavyMystic_Create(void *data)
 {
     RSDK_THIS(HeavyMystic);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         if (globals->gameMode < MODE_TIMEATTACK) {
             entity->updateRange.x = 0x800000;
             entity->updateRange.y = 0x800000;
@@ -228,7 +228,7 @@ void HeavyMystic_Hit(void)
     if (entity->health <= 0) {
         RSDK.PlaySfx(HeavyMystic->sfxExplosion, false, 255);
         entity->timer               = 120;
-        RSDK_sceneInfo->timeEnabled = false;
+        SceneInfo->timeEnabled = false;
         Player_GiveScore(RSDK_GET_ENTITY(SLOT_PLAYER1, Player), 1000);
         entity->state = HeavyMystic_State_Destroyed;
     }
@@ -341,7 +341,7 @@ void HeavyMystic_ScanlineCB(ScanlineInfo *scanlines)
     int move       = (0x1100000 - curtainPos) >> 6;
     int max        = maxVal(curtainPos - 0x400000, 0x100000);
 
-    int posY = (RSDK_screens->position.y + 207) << 16;
+    int posY = (ScreenInfo->position.y + 207) << 16;
     if (curtainPos > max) {
         int id = HeavyMystic->curtainLinePos >> 16;
 
@@ -394,7 +394,7 @@ void HeavyMystic_State1_Unknown2(void)
     if (entity->timer) {
         entity->timer++;
         if (entity->timer == 120) {
-            Zone->screenBoundsT1[0] = Zone->screenBoundsB1[0] - RSDK_screens->height;
+            Zone->screenBoundsT1[0] = Zone->screenBoundsB1[0] - ScreenInfo->height;
             MSZSetup_Unknown1(entity->position.x + 0x4000000, 0);
             entity->position.y += 0x500000;
             entity->targetPos.x                                 = entity->position.x;
@@ -413,8 +413,8 @@ void HeavyMystic_State1_Unknown2(void)
             Music_TransitionTrack(TRACK_HBHBOSS, 0.0125);
             Zone->playerBoundActiveL[0] = true;
             Zone->playerBoundActiveR[0] = true;
-            Zone->screenBoundsL1[0]     = (entity->position.x >> 16) - RSDK_screens->centerX;
-            Zone->screenBoundsR1[0]     = (entity->position.x >> 16) + RSDK_screens->centerX;
+            Zone->screenBoundsL1[0]     = (entity->position.x >> 16) - ScreenInfo->centerX;
+            Zone->screenBoundsR1[0]     = (entity->position.x >> 16) + ScreenInfo->centerX;
             Zone->screenBoundsB1[0]     = (entity->position.y >> 16) + 256;
             ++entity->timer;
             entity->active = ACTIVE_NORMAL;
@@ -467,11 +467,11 @@ void HeavyMystic_State1_Unknown3(void)
 {
     RSDK_THIS(HeavyMystic);
 
-    if (RSDK_sceneInfo->entity->alpha > 0xC0)
+    if (entity->alpha > 0xC0)
         HeavyMystic_Unknown2();
 
 #if RETRO_USE_PLUS
-    if (RSDK_sceneInfo->filter & FILTER_ENCORE) {
+    if (SceneInfo->filter & FILTER_ENCORE) {
         if (entity->timer < 256) {
             entity->timer += 3;
             RSDK.SetLimitedFade(0, 1, 5, entity->timer, 128, 255);
@@ -657,7 +657,7 @@ void HeavyMystic_State_CloseCurtains(void)
     RSDK_THIS(HeavyMystic);
 
 #if RETRO_USE_PLUS
-    if (RSDK_sceneInfo->filter & FILTER_ENCORE) {
+    if (SceneInfo->filter & FILTER_ENCORE) {
         if (entity->timer < 256) {
             entity->timer += 3;
             RSDK.SetLimitedFade(0, 5, 1, entity->timer, 128, 255);
@@ -992,10 +992,10 @@ void HeavyMystic_State1_Unknown12(void)
     entity->velocity.y += 0x3800;
 
     if (entity->velocity.x >= 0) {
-        if (entity->position.x > (RSDK_screens->position.x + RSDK_screens->width - 16) << 16)
+        if (entity->position.x > (ScreenInfo->position.x + ScreenInfo->width - 16) << 16)
             entity->velocity.x = -entity->velocity.x;
     }
-    else if (entity->position.x < (RSDK_screens->position.x + 16) << 16)
+    else if (entity->position.x < (ScreenInfo->position.x + 16) << 16)
         entity->velocity.x = -entity->velocity.x;
 
     RSDK.ProcessAnimation(&entity->animator);
@@ -1040,10 +1040,10 @@ void HeavyMystic_State_RougeHit(void)
     entity->velocity.y += 0x3800;
 
     if (entity->velocity.x >= 0) {
-        if (entity->position.x > (RSDK_screens->position.x + RSDK_screens->width - 16) << 16)
+        if (entity->position.x > (ScreenInfo->position.x + ScreenInfo->width - 16) << 16)
             entity->velocity.x = 0;
     }
-    else if (entity->position.x < (RSDK_screens->position.x + 16) << 16)
+    else if (entity->position.x < (ScreenInfo->position.x + 16) << 16)
         entity->velocity.x = 0;
 
     entity->visible ^= 1;
@@ -1113,9 +1113,9 @@ void HeavyMystic_State1_Unknown21(void)
             Camera_ShakeScreen(0, 0, 2);
 
         if (!(Zone->timer & 0xF)) {
-            int x = RSDK.Rand(0, RSDK_screens->width >> 5);
-            EntityHeavyMystic *boss = CREATE_ENTITY(HeavyMystic, intToVoid(MYSTIC_DEBRIS), (RSDK_screens->position.x + 16 + 32 * x) << 16,
-                                                    (RSDK_screens->position.y - 16) << 16);
+            int x = RSDK.Rand(0, ScreenInfo->width >> 5);
+            EntityHeavyMystic *boss = CREATE_ENTITY(HeavyMystic, intToVoid(MYSTIC_DEBRIS), (ScreenInfo->position.x + 16 + 32 * x) << 16,
+                                                    (ScreenInfo->position.y - 16) << 16);
             boss->animator.frameID = RSDK.Rand(0, 6);
         }
     }
@@ -1133,10 +1133,10 @@ void HeavyMystic_State1_Unknown19(void)
     entity->velocity.y += 0x3800;
 
     if (entity->velocity.x >= 0) {
-        if (entity->position.x > (RSDK_screens->position.x + RSDK_screens->width - 16) << 16)
+        if (entity->position.x > (ScreenInfo->position.x + ScreenInfo->width - 16) << 16)
             entity->velocity.x = -entity->velocity.x;
     }
-    else if (entity->position.x < (RSDK_screens->position.x + 16) << 16)
+    else if (entity->position.x < (ScreenInfo->position.x + 16) << 16)
         entity->velocity.x = -entity->velocity.x;
 
     RSDK.ProcessAnimation(&entity->animator);
@@ -1242,10 +1242,10 @@ void HeavyMystic_State1_Unknown15(void)
     entity->velocity.y += 0x3800;
 
     if (entity->velocity.x >= 0) {
-        if (entity->position.x > (RSDK_screens->position.x + RSDK_screens->width - 16) << 16)
+        if (entity->position.x > (ScreenInfo->position.x + ScreenInfo->width - 16) << 16)
             entity->velocity.x = -entity->velocity.x;
     }
-    else if (entity->position.x < (RSDK_screens->position.x + 16) << 16)
+    else if (entity->position.x < (ScreenInfo->position.x + 16) << 16)
         entity->velocity.x = -entity->velocity.x;
 
     RSDK.ProcessAnimation(&entity->animator);
@@ -1535,7 +1535,7 @@ void HeavyMystic_StateDraw2_Unknown1(void)
     RSDK_THIS(HeavyMystic);
     Vector2 drawPos;
 
-    if (RSDK_sceneInfo->currentDrawGroup == RSDK_sceneInfo->entity->drawOrder) {
+    if (SceneInfo->currentDrawGroup == entity->drawOrder) {
         entity->drawFX           = FX_NONE;
         entity->animator.frameID = 0;
         RSDK.DrawSprite(&entity->animator, NULL, false);
@@ -1559,7 +1559,7 @@ void HeavyMystic_StateDraw2_Unknown2(void)
     RSDK_THIS(HeavyMystic);
     Vector2 drawPos;
 
-    if (RSDK_sceneInfo->currentDrawGroup == RSDK_sceneInfo->entity->drawOrder) {
+    if (SceneInfo->currentDrawGroup == entity->drawOrder) {
         entity->drawFX = FX_NONE;
         if (entity->state != HeavyMystic_State2_Unknown5) {
             entity->animator.frameID = 0;
@@ -1589,7 +1589,7 @@ void HeavyMystic_StateDraw2_Unknown3(void)
     RSDK_THIS(HeavyMystic);
     Vector2 drawPos;
 
-    if (RSDK_sceneInfo->currentDrawGroup == RSDK_sceneInfo->entity->drawOrder) {
+    if (SceneInfo->currentDrawGroup == entity->drawOrder) {
         entity->drawFX           = FX_SCALE | FX_ROTATE;
         entity->animator.frameID = 3;
         RSDK.DrawSprite(&entity->animator, NULL, false);

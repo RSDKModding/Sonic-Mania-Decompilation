@@ -52,8 +52,8 @@ void UFO_ItemBox_Draw(void)
                                &entity->matrix3, 0xFFFF00);
         RSDK.Draw3DScene(UFO_ItemBox->sceneIndex);
 
-        entity->drawPos.x = (RSDK_screens->centerX + (entity->worldX << 8) / entity->depth3D) << 16;
-        entity->drawPos.y = (RSDK_screens->centerY - (entity->worldY << 8) / entity->depth3D) << 16;
+        entity->drawPos.x = (ScreenInfo->centerX + (entity->worldX << 8) / entity->depth3D) << 16;
+        entity->drawPos.y = (ScreenInfo->centerY - (entity->worldY << 8) / entity->depth3D) << 16;
         entity->scale.x   = 0x2000000 / entity->depth3D;
         entity->scale.y   = 0x2000000 / entity->depth3D;
     }
@@ -63,7 +63,7 @@ void UFO_ItemBox_Draw(void)
 void UFO_ItemBox_Create(void *data)
 {
     RSDK_THIS(UFO_ItemBox);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->visible       = true;
         entity->drawFX        = FX_SCALE;
         entity->drawOrder     = 4;
@@ -137,8 +137,8 @@ void UFO_ItemBox_Unknown2(void)
 {
     RSDK_THIS(UFO_ItemBox);
 
-    entity->drawPos.x += ((RSDK_screens->centerX << 16) - entity->drawPos.x) >> 3;
-    entity->drawPos.y += (((RSDK_screens->centerX - 4) << 16) - entity->drawPos.y) >> 3;
+    entity->drawPos.x += ((ScreenInfo->centerX << 16) - entity->drawPos.x) >> 3;
+    entity->drawPos.y += (((ScreenInfo->centerX - 4) << 16) - entity->drawPos.y) >> 3;
 
     int32 scale       = entity->scale.x + ((512 - entity->scale.x) >> 3);
     entity->scale.x = scale;

@@ -63,7 +63,7 @@ void FXTrail_Draw(void)
 void FXTrail_Create(void *data)
 {
     RSDK_THIS(FXTrail);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         Entity *parent    = (Entity *)data;
         entity->active    = ACTIVE_ALWAYS;
         entity->visible   = true;

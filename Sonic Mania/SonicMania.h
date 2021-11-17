@@ -110,23 +110,23 @@ typedef enum { DLC_PLUS } GameDLC;
 #include "GameVariables.h"
 #include "GameObjects.h"
 
-extern SceneInfo *RSDK_sceneInfo;
-extern EngineInfo *RSDK_info;
+extern RSDKSceneInfo *SceneInfo;
+extern RSDKGameInfo *GameInfo;
 #if RETRO_USE_PLUS
-extern SKUInfo *RSDK_sku;
+extern RSDKSKUInfo *SKU;
 #endif
-extern ControllerState *RSDK_controller;
-extern AnalogState *RSDK_stickL;
+extern RSDKControllerState *ControllerInfo;
+extern RSDKAnalogState *AnalogStickInfoL;
 #if RETRO_USE_PLUS
-extern AnalogState *RSDK_stickR;
-extern TriggerState *RSDK_triggerL;
-extern TriggerState *RSDK_triggerR;
+extern RSDKAnalogState *AnalogStickInfoR;
+extern RSDKTriggerState *TriggerInfoL;
+extern RSDKTriggerState *TriggerInfoR;
 #endif
-extern TouchMouseData *RSDK_touchMouse;
+extern RSDKTouchInfo *TouchInfo;
 #if RETRO_USE_PLUS
-extern UnknownInfo *RSDK_unknown;
+extern RSDKUnknownInfo *UnknownInfo;
 #endif
-extern ScreenInfo *RSDK_screens;
+extern RSDKScreenInfo *ScreenInfo;
 
 static const char *PlayerNames[] = { "Invalid", "Sonic", "Tails", "Knuckles", "Mighty", "Ray" };
 static const char *ActNames[]    = { "Act 1", "Act 2", "Act 3" };

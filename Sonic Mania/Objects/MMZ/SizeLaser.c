@@ -27,7 +27,7 @@ void SizeLaser_Create(void *data)
     RSDK_THIS(SizeLaser);
 
     entity->drawFX = FX_FLIP;
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         int32 type            = voidToInt(data);
         entity->visible       = true;
         entity->updateRange.x = 0x800000;
@@ -202,7 +202,7 @@ void SizeLaser_SetP2State(EntityPlayer *player, bool32 chibiFlag)
 
 void SizeLaser_P2JumpInResize(void)
 {
-    EntityPlayer *entity  = RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot, Player);
+    EntityPlayer *entity  = RSDK_GET_ENTITY(SceneInfo->entitySlot, Player);
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
 
     entity->position.x = player1->position.x;
@@ -250,7 +250,7 @@ void SizeLaser_P2JumpInResize(void)
 
 void SizeLaser_P2JumpInGrow(void)
 {
-    EntityPlayer *entity = RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot, Player);
+    EntityPlayer *entity = RSDK_GET_ENTITY(SceneInfo->entitySlot, Player);
     StateMachine(state)  = entity->abilityPtrs[0];
     StateMachine_Run(state);
 
@@ -276,7 +276,7 @@ void SizeLaser_P2JumpInGrow(void)
 
 void SizeLaser_P2JumpInShrink(void)
 {
-    EntityPlayer *entity = RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot, Player);
+    EntityPlayer *entity = RSDK_GET_ENTITY(SceneInfo->entitySlot, Player);
     StateMachine(state)  = entity->abilityPtrs[0];
     StateMachine_Run(state);
 
@@ -324,7 +324,7 @@ void SizeLaser_P2JumpInShrink(void)
 
 void SizeLaser_PlayerState_Grow(void)
 {
-    EntityPlayer *entity = RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot, Player);
+    EntityPlayer *entity = RSDK_GET_ENTITY(SceneInfo->entitySlot, Player);
 
     StateMachine(state) = entity->abilityPtrs[0];
     StateMachine_Run(state);

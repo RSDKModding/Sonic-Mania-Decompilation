@@ -36,7 +36,7 @@ void Platform_Update(void)
 
         entity->position.x = entity->centerPos.x;
         entity->position.y = entity->centerPos.y;
-        for (int32 s = RSDK_sceneInfo->entitySlot + 1, i = 0; i < entity->childCount; ++i) {
+        for (int32 s = SceneInfo->entitySlot + 1, i = 0; i < entity->childCount; ++i) {
             Entity *child = RSDK.GetEntityByID(s++);
             if (child->objectID == ItemBox->objectID) {
                 if (!child->scale.y) {
@@ -152,7 +152,7 @@ void Platform_Create(void *data)
     entity->drawPos.y   = entity->position.y;
     RSDK.SetSpriteAnimation(Platform->aniFrames, 0, &entity->animator, true, 0);
     entity->animator.frameID = entity->frameID;
-    if (!RSDK_sceneInfo->inEditor && RSDK.GetFrameID(&entity->animator) == 108)
+    if (!SceneInfo->inEditor && RSDK.GetFrameID(&entity->animator) == 108)
         entity->drawOrder = Zone->drawOrderLow;
 
     switch (entity->type) {
@@ -192,7 +192,7 @@ void Platform_Create(void *data)
         case PLATFORM_6:
             entity->updateRange.x = 0x800000;
             entity->updateRange.y = 0x800000;
-            if (!RSDK_sceneInfo->inEditor) {
+            if (!SceneInfo->inEditor) {
                 entity->speed <<= 11;
                 entity->position.x += 0x8000;
             }
@@ -309,7 +309,7 @@ void Platform_Create(void *data)
         RSDK.SetSpriteAnimation(0xFFFF, 0, &entity->animator, true, 0);
     }
 
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         if (entity->collision != PLATFORM_C_4) {
             Hitbox *hitbox = RSDK.GetHitbox(&entity->animator, entity->collision != PLATFORM_C_0);
             if (Platform->aniFrames != 0xFFFF && hitbox) {
@@ -1084,19 +1084,19 @@ void Platform_Unknown8(void)
         entity->velocity.y = 0;
     }
     else {
-        int32 slot                        = RSDK_sceneInfo->entitySlot - 1;
-        EntityPlatformControl *controller = RSDK_GET_ENTITY(slot, PlatformControl);
-        if (controller->objectID == PlatformControl->objectID) {
-            controller->setActive = true;
+        int32 slot                        = SceneInfo->entitySlot - 1;
+        EntityPlatformControl *ControllerInfo = RSDK_GET_ENTITY(slot, PlatformControl);
+        if (ControllerInfo->objectID == PlatformControl->objectID) {
+            ControllerInfo->setActive = true;
             entity->state         = Platform_Unknown4;
             entity->velocity.x    = 0;
             entity->velocity.y    = 0;
         }
         else {
-            while (controller->objectID == Platform->objectID || controller->objectID == PlatformNode->objectID) {
-                controller = RSDK_GET_ENTITY(slot--, PlatformControl);
-                if (controller->objectID == PlatformControl->objectID) {
-                    controller->setActive = true;
+            while (ControllerInfo->objectID == Platform->objectID || ControllerInfo->objectID == PlatformNode->objectID) {
+                ControllerInfo = RSDK_GET_ENTITY(slot--, PlatformControl);
+                if (ControllerInfo->objectID == PlatformControl->objectID) {
+                    ControllerInfo->setActive = true;
                     entity->state         = Platform_Unknown4;
                     entity->velocity.x    = 0;
                     entity->velocity.y    = 0;

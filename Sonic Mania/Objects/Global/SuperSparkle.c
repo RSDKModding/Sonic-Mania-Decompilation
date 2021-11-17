@@ -63,7 +63,7 @@ void SuperSparkle_Draw(void) {}
 void SuperSparkle_Create(void *data)
 {
     RSDK_THIS(SuperSparkle);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->active = ACTIVE_NORMAL;
         entity->player = (EntityPlayer *)data;
     }

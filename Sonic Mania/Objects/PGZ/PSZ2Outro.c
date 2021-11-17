@@ -26,7 +26,7 @@ void PSZ2Outro_Draw(void) {}
 void PSZ2Outro_Create(void *data)
 {
     RSDK_THIS(PSZ2Outro);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         foreach_all(PSZEggman, eggman) { entity->eggman = (Entity *)eggman; }
 
         entity->active  = ACTIVE_NORMAL;
@@ -74,7 +74,7 @@ bool32 PSZ2Outro_CutsceneState_Unknown2(EntityCutsceneSeq *host)
     if (host->timer == 180) {
         foreach_active(Player, player)
         {
-            player->position.x = camera->position.x - (RSDK_screens->centerX << 16) - 0x400000;
+            player->position.x = camera->position.x - (ScreenInfo->centerX << 16) - 0x400000;
             player->position.y = eggman->position.y;
             player->state      = Player_State_Ground;
             if (!player->sidekick)

@@ -117,7 +117,7 @@ void Fireball_State_Unknown3(void)
 void Fireball_State_Unknown4(void)
 {
     RSDK_THIS(Fireball);
-    entity->position.x += RSDK_sceneInfo->entity->velocity.x;
+    entity->position.x += entity->velocity.x;
     entity->position.y += entity->velocity.y;
     entity->groundVel += 24;
     entity->velocity.x = entity->groundVel * RSDK.Sin512(256 - entity->angle);
@@ -134,10 +134,10 @@ void Fireball_State_Unknown4(void)
 void Fireball_State_Unknown5(void)
 {
     RSDK_THIS(Fireball);
-    entity->position.x += RSDK_sceneInfo->entity->velocity.x;
+    entity->position.x += entity->velocity.x;
     entity->position.y += entity->velocity.y;
 
-    if (RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_FLOOR, 0, RSDK.Sin512(512 - RSDK_sceneInfo->entity->rotation) << 10,
+    if (RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_FLOOR, 0, RSDK.Sin512(512 - entity->rotation) << 10,
                                  RSDK.Cos512(512 - entity->rotation) << 10, true)) {
         entity->state = Fireball_State_Unknown7;
         RSDK.SetSpriteAnimation(Fireball->aniFrames, 1, &entity->animator, true, 0);
@@ -161,7 +161,7 @@ void Fireball_State_Unknown6(void)
     entity->position.y += entity->velocity.y;
     entity->velocity.y += 0x3800;
 
-    if (RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_FLOOR, 0, RSDK.Sin512(512 - RSDK_sceneInfo->entity->rotation) << 10,
+    if (RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_FLOOR, 0, RSDK.Sin512(512 - entity->rotation) << 10,
                                  RSDK.Cos512(512 - entity->rotation) << 10, true)) {
         entity->state = Fireball_State_Unknown7;
         RSDK.SetSpriteAnimation(Fireball->aniFrames, 1, &entity->animator, true, 0);

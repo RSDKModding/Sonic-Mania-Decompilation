@@ -23,7 +23,7 @@ void Gachapandora_Create(void *data)
     RSDK_THIS(Gachapandora);
 
     entity->drawFX = FX_FLIP;
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         if (globals->gameMode < MODE_TIMEATTACK) {
             entity->active = ACTIVE_BOUNDS;
             if (data)
@@ -418,10 +418,10 @@ void Gachapandora_State_SetupArena(void)
         entity->timer               = 0;
         Zone->playerBoundActiveR[0] = true;
         Zone->playerBoundActiveB[0] = true;
-        Zone->screenBoundsR1[0]     = (entity->position.x >> 16) + RSDK_screens->centerX;
+        Zone->screenBoundsR1[0]     = (entity->position.x >> 16) + ScreenInfo->centerX;
         Zone->screenBoundsB1[0]     = (entity->position.y >> 16) + 128;
 
-        entity->position.y = (RSDK_screens->position.y - 192) << 16;
+        entity->position.y = (ScreenInfo->position.y - 192) << 16;
         entity->active     = ACTIVE_NORMAL;
         entity->visible    = true;
         entity->state      = Gachapandora_State_Unknown1;
@@ -433,11 +433,11 @@ void Gachapandora_State_Unknown1(void)
     RSDK_THIS(Gachapandora);
 
     Zone->playerBoundActiveL[0] = true;
-    Zone->screenBoundsL1[0]     = RSDK_screens->position.x;
+    Zone->screenBoundsL1[0]     = ScreenInfo->position.x;
 
     if (RSDK_GET_ENTITY(SLOT_PLAYER1, Player)->position.x > entity->position.x) {
         Zone->playerBoundActiveL[0] = true;
-        Zone->screenBoundsL1[0]     = (entity->position.x >> 16) - RSDK_screens->centerX;
+        Zone->screenBoundsL1[0]     = (entity->position.x >> 16) - ScreenInfo->centerX;
         Music_TransitionTrack(TRACK_EGGMAN2, 0.0125);
         entity->health = 9;
         entity->state  = Gachapandora_State_Unknown2;
@@ -463,7 +463,7 @@ void Gachapandora_State_Unknown2(void)
         entity->angle        = 0;
         entity->state        = Gachapandora_State_Unknown3;
     }
-    RSDK.AddDrawListRef(Zone->drawOrderLow + 1, RSDK_sceneInfo->entitySlot);
+    RSDK.AddDrawListRef(Zone->drawOrderLow + 1, SceneInfo->entitySlot);
 }
 
 void Gachapandora_State_Unknown3(void)
@@ -485,8 +485,8 @@ void Gachapandora_State_Unknown3(void)
         }
     }
     else {
-        if (entity->position.x < (RSDK_screens->position.x + 64) << 16
-            || entity->position.x > (RSDK_screens->position.x + RSDK_screens->width - 64) << 16)
+        if (entity->position.x < (ScreenInfo->position.x + 64) << 16
+            || entity->position.x > (ScreenInfo->position.x + ScreenInfo->width - 64) << 16)
             entity->velocity.x = -entity->velocity.x;
         entity->position.x += entity->velocity.x;
     }
@@ -692,9 +692,9 @@ void Gachapandora_State_Unknown6(void)
     Gachapandora_HandleChildren();
     entity->position.y += entity->velocity.y;
     entity->velocity.y -= 0x1800;
-    if (entity->position.y < (RSDK_screens->position.y - 192) << 16) {
-        entity->position.y = (RSDK_screens->position.y - 192) << 16;
-        entity->position.x = (RSDK_screens->position.x + RSDK_screens->centerX) << 16;
+    if (entity->position.y < (ScreenInfo->position.y - 192) << 16) {
+        entity->position.y = (ScreenInfo->position.y - 192) << 16;
+        entity->position.x = (ScreenInfo->position.x + ScreenInfo->centerX) << 16;
         entity->state      = Gachapandora_State_Unknown7;
     }
 }
@@ -731,8 +731,8 @@ void Gachapandora_State_Unknown8(void)
     }
     Gachapandora_HandleChildren();
 
-    if (entity->position.x < (RSDK_screens->position.x + 32) << 16
-        || entity->position.x > (RSDK_screens->position.x + RSDK_screens->width - 32) << 16)
+    if (entity->position.x < (ScreenInfo->position.x + 32) << 16
+        || entity->position.x > (ScreenInfo->position.x + ScreenInfo->width - 32) << 16)
         entity->velocity.x = -entity->velocity.x;
     entity->position.x = entity->position.x + entity->velocity.x;
 
@@ -810,7 +810,7 @@ void Gachapandora_State_Unknown10(void)
     entity->position.y += entity->velocity.y;
     entity->velocity.y -= 0x800;
     if (!--entity->invincibilityTimer) {
-        RSDK_sceneInfo->timeEnabled = false;
+        SceneInfo->timeEnabled = false;
         Player_GiveScore(RSDK_GET_ENTITY(SLOT_PLAYER1, Player), 1000);
         entity->invincibilityTimer = 120;
         entity->state              = Gachapandora_State_Finish;
@@ -835,7 +835,7 @@ void Gachapandora_State_Finish(void)
         entity->position.y += entity->velocity.y;
         entity->velocity.y += 0x1800;
 
-        if (entity->position.y > (RSDK_screens->position.y + RSDK_screens->height + 128) << 16) {
+        if (entity->position.y > (ScreenInfo->position.y + ScreenInfo->height + 128) << 16) {
             Zone->screenBoundsR1[0] += 424;
             entity->state = StateMachine_None;
             Music_TransitionTrack(TRACK_STAGE, 0.0125);
@@ -850,7 +850,7 @@ void Gachapandora_StateDraw_Unknown1(void)
 
     drawPos.x = entity->position.x;
     drawPos.y = entity->position.y;
-    if (RSDK_sceneInfo->currentDrawGroup == Zone->drawOrderLow) {
+    if (SceneInfo->currentDrawGroup == Zone->drawOrderLow) {
         entity->animator1.frameID = 4;
         RSDK.DrawSprite(&entity->animator1, NULL, false);
         entity->animator1.frameID = 5;
@@ -916,7 +916,7 @@ void Gachapandora_StateDraw_Unknown2(void)
     int storeDir = entity->direction;
     drawPos.x    = entity->position.x;
     drawPos.y    = entity->position.y;
-    if (RSDK_sceneInfo->currentDrawGroup == Zone->drawOrderLow) {
+    if (SceneInfo->currentDrawGroup == Zone->drawOrderLow) {
         entity->animator1.frameID = 0;
         RSDK.DrawSprite(&entity->animator1, NULL, false);
 
@@ -1126,8 +1126,8 @@ void Gachapandora_State2_Unknown4(void)
     entity->position.y += entity->velocity.y;
     entity->position.x += entity->velocity.x;
 
-    if (entity->position.x < (RSDK_screens->position.x - 64) << 16
-        || entity->position.x > (RSDK_screens->position.x + RSDK_screens->width + 64) << 16) {
+    if (entity->position.x < (ScreenInfo->position.x - 64) << 16
+        || entity->position.x > (ScreenInfo->position.x + ScreenInfo->width + 64) << 16) {
         entity->direction ^= FLIP_X;
         entity->velocity.x = -entity->velocity.x;
     }
@@ -1160,8 +1160,8 @@ void Gachapandora_State2_Unknown5(void)
         entity->position.y = BadnikHelpers_Oscillate(entity->posUnknown.y, 4, 9);
     }
 
-    if (entity->position.x < (RSDK_screens->position.x + 16) << 16
-        || entity->position.x > (RSDK_screens->position.x + RSDK_screens->width - 16) << 16) {
+    if (entity->position.x < (ScreenInfo->position.x + 16) << 16
+        || entity->position.x > (ScreenInfo->position.x + ScreenInfo->width - 16) << 16) {
         entity->startY = 1;
         entity->direction ^= FLIP_X;
         entity->velocity.y = 0x18000;
@@ -1295,7 +1295,7 @@ void Gachapandora_State2_Unknown6(void)
 
     EntityPlayer *player = Player_GetNearestPlayer();
 
-    if (entity->position.x < (RSDK_screens->position.x + 8) << 16 || entity->position.x > (RSDK_screens->width + RSDK_screens->position.x - 8) << 16
+    if (entity->position.x < (ScreenInfo->position.x + 8) << 16 || entity->position.x > (ScreenInfo->width + ScreenInfo->position.x - 8) << 16
         || Player_CheckCollisionTouch(player, entity, &Gachapandora->hitbox2)) {
         if (abs(player->position.x - entity->position.x) > 0x80000)
             entity->direction = player->position.x > entity->position.x;
@@ -1433,8 +1433,8 @@ void Gachapandora_State2_Unknown8(void)
         if (RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0xC0000, true)) {
             entity->velocity.y   = 0;
             EntityPlayer *player = Player_GetNearestPlayer();
-            if (entity->position.x < (RSDK_screens->position.x + 8) << 16
-                || entity->position.x > (RSDK_screens->width + RSDK_screens->position.x - 8) << 16
+            if (entity->position.x < (ScreenInfo->position.x + 8) << 16
+                || entity->position.x > (ScreenInfo->width + ScreenInfo->position.x - 8) << 16
                 || Player_CheckCollisionTouch(player, entity, &Gachapandora->hitbox2)) {
                 RSDK.SetSpriteAnimation(Gachapandora->aniFrames, 9, &entity->animator1, true, 0);
                 entity->state = Gachapandora_State2_Unknown6;

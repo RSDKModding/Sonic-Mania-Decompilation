@@ -170,7 +170,7 @@ void MainMenu_StartExitGame(void)
 
 void MainMenu_ChangeMenu(void)
 {
-    EntityUIButton *button = (EntityUIButton *)RSDK_sceneInfo->entity;
+    EntityUIButton *button = (EntityUIButton *)SceneInfo->entity;
     switch (button->frameID) {
         case 0:
             if (checkNoSave) {
@@ -183,10 +183,10 @@ void MainMenu_ChangeMenu(void)
                 saveSelect->dwordCC     = 0;
                 ManiaModeMenu->field_28 = -1;
                 for (int32 i = 0; i < saveSelect->buttonCount; ++i) {
-                    Entity *store          = RSDK_sceneInfo->entity;
-                    RSDK_sceneInfo->entity = (Entity *)saveSelect->buttons[i];
+                    Entity *store          = SceneInfo->entity;
+                    SceneInfo->entity = (Entity *)saveSelect->buttons[i];
                     UISaveSlot_Unknown21();
-                    RSDK_sceneInfo->entity = store;
+                    SceneInfo->entity = store;
                 }
 #endif
                 UIControl_MatchMenuTag("Save Select");
@@ -223,10 +223,10 @@ void MainMenu_ChangeMenu(void)
                 encoreSaveSel->activeEntityID  = 1;
                 encoreSaveSel->dwordCC         = 0;
                 for (int32 i = 0; i < encoreSaveSel->buttonCount; ++i) {
-                    Entity *store          = RSDK_sceneInfo->entity;
-                    RSDK_sceneInfo->entity = (Entity *)encoreSaveSel->buttons[i];
+                    Entity *store          = SceneInfo->entity;
+                    SceneInfo->entity = (Entity *)encoreSaveSel->buttons[i];
                     UISaveSlot_Unknown21();
-                    RSDK_sceneInfo->entity = store;
+                    SceneInfo->entity = store;
                 }
                 UIControl_MatchMenuTag("Encore Mode");
             }

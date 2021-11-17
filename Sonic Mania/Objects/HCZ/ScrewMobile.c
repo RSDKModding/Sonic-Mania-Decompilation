@@ -48,7 +48,7 @@ void ScrewMobile_Create(void *data)
     }
     else {
         entity->drawFX = FX_FLIP;
-        if (!RSDK_sceneInfo->inEditor) {
+        if (!SceneInfo->inEditor) {
             entity->visible = true;
             if (data) {
                 if (voidToInt(data) == 1) {
@@ -365,13 +365,13 @@ void ScrewMobile_State_BossFinished(void)
     player1->jumpPress    = false;
     player1->jumpHold     = false;
     ScrewMobile_State_Unknown2();
-    Zone->screenBoundsL1[0] = RSDK_screens->position.x;
+    Zone->screenBoundsL1[0] = ScreenInfo->position.x;
     Zone->screenBoundsL2[0] = Zone->screenBoundsL1[0] << 16;
 
     if (RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_LWALL, 0, 0x200000, 0, true)) {
         EntityCamera *camera = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
         Zone->screenBoundsL1[0] += 2;
-        RSDK_screens->position.x = Zone->screenBoundsL1[0];
+        ScreenInfo->position.x = Zone->screenBoundsL1[0];
         Zone->screenBoundsL2[0]  = Zone->screenBoundsL1[0] << 16;
         camera->position.x       = Zone->screenBoundsL1[0] << 16;
         if (Zone->screenBoundsL1[0] >= (entity->position.x >> 16) - 32)
@@ -457,7 +457,7 @@ void ScrewMobile_StateDraw1_Unknown(void)
     RSDK_THIS(ScrewMobile);
     Vector2 drawPos;
 
-    if (RSDK_sceneInfo->currentDrawGroup == Zone->playerDrawLow - 1) {
+    if (SceneInfo->currentDrawGroup == Zone->playerDrawLow - 1) {
         entity->animator1.frameID = 1;
         RSDK.DrawSprite(&entity->animator1, NULL, false);
     }

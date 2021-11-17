@@ -24,7 +24,7 @@ void CPZBoss_Draw(void)
 void CPZBoss_Create(void *data)
 {
     RSDK_THIS(CPZBoss);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         if (globals->gameMode == MODE_TIMEATTACK) {
             destroyEntity(entity);
         }
@@ -60,8 +60,8 @@ void CPZBoss_StageLoad(void)
     RSDK.SetDrawLayerProperties(Zone->drawOrderHigh + 1, false, NULL);
 }
 
-void CPZBoss_DrawLayerCB_1(void) { RSDK.SetClipBounds(0, 0, 24, RSDK_screens->width, RSDK_screens->height); }
-void CPZBoss_DrawLayerCB_2(void) { RSDK.SetClipBounds(0, 0, 0, RSDK_screens->width, RSDK_screens->height); }
+void CPZBoss_DrawLayerCB_1(void) { RSDK.SetClipBounds(0, 0, 24, ScreenInfo->width, ScreenInfo->height); }
+void CPZBoss_DrawLayerCB_2(void) { RSDK.SetClipBounds(0, 0, 0, ScreenInfo->width, ScreenInfo->height); }
 
 bool32 CPZBoss_Unknown1(void)
 {
@@ -78,7 +78,7 @@ bool32 CPZBoss_Unknown1(void)
         foreach_all(PuyoBean, bean) { destroyEntity(bean); }
         int32 layerID = RSDK.GetSceneLayerID("FG High");
         RSDK.CopyTileLayer(layerID, 438, 150, layerID, 452, 150, 6, 2);
-        RSDK_sceneInfo->timeEnabled = true;
+        SceneInfo->timeEnabled = true;
         CPZBoss_Create(NULL);
         return true;
     }
@@ -89,10 +89,10 @@ void CPZBoss_State_SetupPlayer(void)
 {
     RSDK_THIS(CPZBoss);
     if (++entity->timer >= 8) {
-        RSDK_sceneInfo->timeEnabled = false;
+        SceneInfo->timeEnabled = false;
         Music_SetMusicTrack("BossPuyo.ogg", TRACK_EGGMAN2, 846720);
         Music_TransitionTrack(TRACK_EGGMAN2, 0.0125);
-        Entity *entPtr = RSDK.GetEntityByID(RSDK_sceneInfo->entitySlot + 1);
+        Entity *entPtr = RSDK.GetEntityByID(SceneInfo->entitySlot + 1);
         Camera_SetupLerp(2, 0, entPtr->position.x, entPtr->position.y, 8);
         foreach_active(HUD, hud)
         {
@@ -260,7 +260,7 @@ void CPZBoss_State_HandleBossMatch(void)
             RSDK.SetSpriteAnimation(CPZBoss->playerFrames, 2, &entity->animator1, false, 0);
         }
 
-        if (RSDK_controller[1].keyStart.press) {
+        if (ControllerInfo[1].keyStart.press) {
             if (RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu)->objectID == TYPE_BLANK) {
                 RSDK.ResetEntitySlot(SLOT_PAUSEMENU, PauseMenu->objectID, NULL);
                 RSDK.PlaySfx(PauseMenu->sfxAccept, 0, 255);
@@ -304,7 +304,7 @@ void CPZBoss_State_HandlePlayerMatch(void)
                     PuyoBean_Unknown2();
                     entity->state    = CPZBoss_State_HandlePlayerMatchFinish;
                     entity->field_6C = entity->position.x + 0x400000;
-                    entity->field_70 = (RSDK_screens->height + RSDK_screens->position.y) << 16;
+                    entity->field_70 = (ScreenInfo->height + ScreenInfo->position.y) << 16;
                     RSDK.SetSpriteAnimation(CPZBoss->aniFrames, 3, &entity->animator1, false, 0);
                 }
             }
@@ -484,7 +484,7 @@ void CPZBoss_State_Unknown11(void)
             Zone->playerBoundActiveR[player->playerID] = true;
         }
 
-        EntityTransportTube *tube = RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot + 3, TransportTube);
+        EntityTransportTube *tube = RSDK_GET_ENTITY(SceneInfo->entitySlot + 3, TransportTube);
         tube->dirMask             = 10;
         TransportTube_SetupDirections(tube);
 

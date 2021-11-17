@@ -13,7 +13,7 @@ void BSS_Palette_Draw(void) {}
 void BSS_Palette_Create(void *data)
 {
     RSDK_THIS(BSS_Palette);
-    if (!RSDK_sceneInfo->inEditor)
+    if (!SceneInfo->inEditor)
         destroyEntity(entity);
 }
 

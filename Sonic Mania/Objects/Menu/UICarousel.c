@@ -25,7 +25,7 @@ void UICarousel_Draw(void) {}
 void UICarousel_Create(void *data)
 {
     RSDK_THIS(UICarousel);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->startPos.x    = entity->position.x;
         entity->startPos.y    = entity->position.y;
         entity->active        = ACTIVE_BOUNDS;

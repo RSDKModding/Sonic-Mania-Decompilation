@@ -117,7 +117,7 @@ void Ring_StateDraw_Oscillating(void)
 void Ring_StateDraw_Sparkle(void)
 {
     RSDK_THIS(Ring);
-    if (RSDK_sceneInfo->entity->alpha == 0xE0) {
+    if (entity->alpha == 0xE0) {
         entity->animator.frameID += 16;
         entity->inkEffect = INK_ADD;
         RSDK.DrawSprite(&entity->animator, NULL, false);

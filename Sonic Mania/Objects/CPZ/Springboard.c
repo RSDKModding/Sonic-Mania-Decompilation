@@ -172,7 +172,7 @@ void Springboard_Create(void *data)
     entity->active        = ACTIVE_BOUNDS;
     entity->updateRange.x = 0x400000;
     entity->updateRange.y = 0x400000;
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->force = (entity->force + 8) << 15;
         RSDK.SetSpriteAnimation(Springboard->aniFrames, 0, &entity->animator, true, 3);
     }

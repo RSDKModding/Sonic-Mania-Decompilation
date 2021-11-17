@@ -30,7 +30,7 @@ void TMZAlert_Draw(void)
 void TMZAlert_Create(void *data)
 {
     RSDK_THIS(TMZAlert);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->inkEffect     = INK_ALPHA;
         entity->visible       = true;
         entity->drawFX        = FX_SCALE;

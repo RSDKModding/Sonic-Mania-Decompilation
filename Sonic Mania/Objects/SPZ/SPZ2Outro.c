@@ -161,7 +161,7 @@ bool32 SPZ2Outro_CutsceneState_Unknown2(EntityCutsceneSeq *host)
         }
     }
 
-    int posX = ((RSDK_screens->width + RSDK_screens->position.x) << 16) + 0x100000;
+    int posX = ((ScreenInfo->width + ScreenInfo->position.x) << 16) + 0x100000;
     if (player1->position.x > posX) {
         player1->right = false;
         if (player2->objectID != Player->objectID || SPZ2Outro->flag || player2->position.x > posX) {
@@ -179,8 +179,8 @@ bool32 SPZ2Outro_CutsceneState_Unknown2(EntityCutsceneSeq *host)
 void SPZ2Outro_DrawLayerCB(void)
 {
     EntityWeatherTV *weatherTV = (EntityWeatherTV *)SPZ2Outro->weatherTV;
-    int x                      = (weatherTV->position.x >> 16) - RSDK_screens->position.x;
-    int y                      = (weatherTV->position.y >> 16) - RSDK_screens->position.y;
+    int x                      = (weatherTV->position.x >> 16) - ScreenInfo->position.x;
+    int y                      = (weatherTV->position.y >> 16) - ScreenInfo->position.y;
     RSDK.SetClipBounds(0, x - 96, y - 64, x + 96, y + 64);
 }
 

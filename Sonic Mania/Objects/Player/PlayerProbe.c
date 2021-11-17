@@ -46,40 +46,34 @@ void PlayerProbe_LateUpdate(void) {}
 
 void PlayerProbe_StaticUpdate(void) {}
 
+void PlayerProbe_Draw(void) { PlayerProbe_DrawSprites(); }
+
 void PlayerProbe_Create(void *data)
 {
     RSDK_THIS(PlayerProbe);
     RSDK.SetSpriteAnimation(PlaneSwitch->aniFrames, 0, &entity->animator, true, 0);
 
     entity->drawFX |= FX_FLIP;
-    entity->active       = ACTIVE_BOUNDS;
+    entity->active           = ACTIVE_BOUNDS;
     entity->animator.frameID = 4;
 
-    int32 x = 0;
-    if (entity->size * RSDK.Sin256(entity->angle) << 11 >= 0)
-        x = entity->size * RSDK.Sin256(entity->angle) << 11;
-    else
-        x = -0x800 * entity->size * RSDK.Sin256(entity->angle);
-    entity->updateRange.x = x + 0x200000;
-
-    int32 y = 0;
-    if (entity->size * RSDK.Cos256(entity->angle) << 11 >= 0)
-        y = entity->size * RSDK.Cos256(entity->angle) << 11;
-    else
-        y = -0x800 * entity->size * RSDK.Cos256(entity->angle);
+    entity->updateRange.x = abs(entity->size * RSDK.Sin256(entity->angle) << 11) + 0x200000;
+    entity->updateRange.y = abs(entity->size * RSDK.Cos256(entity->angle) << 11) + 0x200000;
     entity->visible       = false;
-    entity->updateRange.y = y + 0x200000;
     entity->drawOrder     = Zone->drawOrderLow;
     entity->activePlayers = 0;
-    entity->negAngle      = (uint8)-entity->angle;
+    entity->negAngle      = (uint8) - (entity->angle & 0xFF);
 }
 
-void PlayerProbe_StageLoad(void) { PlayerProbe->aniFrames = RSDK.LoadSpriteAnimation("Global/PlaneSwitch.bin", SCOPE_STAGE); }
+void PlayerProbe_StageLoad(void)
+{
+    PlayerProbe->aniFrames = RSDK.LoadSpriteAnimation("Global/PlaneSwitch.bin", SCOPE_STAGE);
+}
 
 void PlayerProbe_Print(EntityPlayer *player)
 {
     RSDK_THIS(PlayerProbe);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         LogHelpers_Print("====================");
         LogHelpers_Print("= Begin Probe      =");
         LogHelpers_Print("====================");
@@ -95,7 +89,7 @@ void PlayerProbe_Print(EntityPlayer *player)
             LogHelpers_Print("self->direction = FACING_LEFT");
         else
             LogHelpers_Print("self->direction = FACING_RIGHT");
-        LogHelpers_Print("playerPtr->groundVel = %1", player->groundVel);
+        LogHelpers_Print("playerPtr->groundVel = %i", player->groundVel);
         LogHelpers_Print("playerPtr->angle = %i", player->angle);
         LogHelpers_Print("playerPtr->collisionMode = %i", player->collisionMode);
         LogHelpers_Print("playerPtr->onGround = %i", player->onGround);
@@ -105,26 +99,26 @@ void PlayerProbe_Print(EntityPlayer *player)
     }
 }
 
-void PlayerProbe_Draw(void)
+void PlayerProbe_DrawSprites(void)
 {
-    Vector2 drawPos;
     RSDK_THIS(PlayerProbe);
+    Vector2 drawPos;
 
-    drawPos.x = RSDK_sceneInfo->entity->position.x;
+    drawPos.x = entity->position.x;
     drawPos.y = entity->position.y;
     drawPos.y -= entity->size << 19;
     Zone_Unknown3(&entity->position, &drawPos, entity->angle);
     for (int32 i = 0; i < entity->size; ++i) {
-        RSDK.DrawSprite(&entity->animator, &drawPos, 0);
+        RSDK.DrawSprite(&entity->animator, &drawPos, false);
         drawPos.x += RSDK.Sin256(entity->angle) << 12;
         drawPos.y += RSDK.Cos256(entity->angle) << 12;
     }
 
-    if (RSDK_sceneInfo->inEditor) {
-        int32 x2     = entity->position.x;
-        int32 y2     = entity->position.y;
-        int32 x1     = entity->position.x;
-        int32 y1     = entity->position.y;
+    if (SceneInfo->inEditor) {
+        int32 x2    = entity->position.x;
+        int32 y2    = entity->position.y;
+        int32 x1    = entity->position.x;
+        int32 y1    = entity->position.y;
         uint8 angle = -(uint8)(entity->angle);
         if (entity->direction)
             angle = -0x80 - (uint8)(entity->angle);
@@ -147,9 +141,27 @@ void PlayerProbe_DrawEditor(uint32 colour, int32 x1, int32 y1, int32 x2, int32 y
 }
 
 #if RETRO_INCLUDE_EDITOR
-void PlayerProbe_EditorDraw(void) {}
+void PlayerProbe_EditorDraw(void)
+{
+    RSDK_THIS(PlayerProbe);
+    entity->updateRange.x = abs(entity->size * RSDK.Sin256(entity->angle) << 11) + 0x200000;
+    entity->updateRange.y = abs(entity->size * RSDK.Cos256(entity->angle) << 11) + 0x200000;
+    entity->visible       = false;
+    entity->drawOrder     = Zone->drawOrderLow;
+    entity->activePlayers = 0;
+    entity->negAngle      = (uint8) - (entity->angle & 0xFF);
 
-void PlayerProbe_EditorLoad(void) {}
+    PlayerProbe_Draw();
+}
+
+void PlayerProbe_EditorLoad(void)
+{
+    PlayerProbe->aniFrames = RSDK.LoadSpriteAnimation("Global/PlaneSwitch.bin", SCOPE_STAGE);
+
+    RSDK_ACTIVE_VAR(PlayerProbe, direction);
+    RSDK_ENUM_VAR("No Flip", FLIP_NONE);
+    RSDK_ENUM_VAR("Flip X", FLIP_X);
+}
 #endif
 
 void PlayerProbe_Serialize(void)

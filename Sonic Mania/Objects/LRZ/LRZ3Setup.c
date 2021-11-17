@@ -15,7 +15,7 @@ void LRZ3Setup_Create(void *data) {}
 void LRZ3Setup_StageLoad(void)
 {
 #if RETRO_USE_PLUS
-    if (RSDK_sceneInfo->filter & FILTER_ENCORE) {
+    if (SceneInfo->filter & FILTER_ENCORE) {
         RSDK.LoadPalette(0, "EncoreLRZ3.act", 255);
         RSDK.CopyPalette(0, 240, 1, 240, 16);
     }

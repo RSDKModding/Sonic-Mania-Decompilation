@@ -17,7 +17,7 @@ void RisingLava_Draw(void) {}
 void RisingLava_Create(void *data)
 {
     RSDK_THIS(RisingLava);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->hitbox.right  = entity->size.x >> 17;
         entity->hitbox.left   = -entity->hitbox.right;
         entity->hitbox.bottom = entity->size.y >> 17;

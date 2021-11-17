@@ -26,7 +26,7 @@ void UIHeading_Draw(void)
 void UIHeading_Create(void *data)
 {
     RSDK_THIS(UIHeading);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->startPos      = entity->position;
         entity->visible       = true;
         entity->drawOrder     = 2;

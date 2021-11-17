@@ -74,7 +74,7 @@ void GasPlatform_Unknown1(void)
 {
     RSDK_THIS(GasPlatform);
 
-    if (RSDK.CheckOnScreen(RSDK_sceneInfo->entity, &GasPlatform->range))
+    if (RSDK.CheckOnScreen(SceneInfo->entity, &GasPlatform->range))
         RSDK.PlaySfx(GasPlatform->sfxGasPop, false, 255);
     entity->active     = ACTIVE_NORMAL;
     entity->velocity.y = -0x96800;

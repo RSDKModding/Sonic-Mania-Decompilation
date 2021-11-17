@@ -84,7 +84,7 @@ void Gondola_StageLoad(void) { Gondola->aniFrames = RSDK.LoadSpriteAnimation("HC
 int32 Gondola_GetWaterLevel(void)
 {
     RSDK_THIS(Gondola);
-    if (RSDK_sceneInfo->entity->position.y < Water->waterLevel) {
+    if (entity->position.y < Water->waterLevel) {
         foreach_active(Water, water)
         {
             if (water->type == WATER_RECT && RSDK.CheckObjectCollisionTouchBox(water, &water->hitbox, entity, &Water->hitbox)) {
@@ -166,7 +166,7 @@ void Gondola_Unknown3(void)
 void Gondola_Unknown4(void)
 {
     RSDK_THIS(Gondola);
-    if (!RSDK_sceneInfo->entity->onGround) {
+    if (!entity->onGround) {
         foreach_active(Player, player)
         {
             int32 playerID = RSDK.GetEntityID(player);

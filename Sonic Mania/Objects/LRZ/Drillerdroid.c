@@ -35,7 +35,7 @@ void Drillerdroid_Create(void *data)
 {
     RSDK_THIS(Drillerdroid);
 
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         if (globals->gameMode < MODE_TIMEATTACK) {
             entity->visible = true;
             if (data)
@@ -145,7 +145,7 @@ void Drillerdroid_Hit(void)
         entity->invincibilityTimer = 45;
     }
     else {
-        RSDK_sceneInfo->timeEnabled = false;
+        SceneInfo->timeEnabled = false;
         Player_GiveScore(RSDK_GET_ENTITY(SLOT_PLAYER1, Player), 1000);
         entity->invincibilityTimer = 60;
         entity->state              = Drillerdroid_State_Destroyed;
@@ -260,7 +260,7 @@ void Drillerdroid_State_SetupArena(void)
         Zone->screenBoundsT1[0]     = Zone->screenBoundsB1[0] - 240;
         entity->startY            = entity->position.y;
         entity->active              = ACTIVE_NORMAL;
-        entity->position.y          = (RSDK_screens->position.y - 192) << 16;
+        entity->position.y          = (ScreenInfo->position.y - 192) << 16;
         entity->visible             = true;
         entity->state               = Drillerdroid_State_StartBoss;
     }
@@ -272,7 +272,7 @@ void Drillerdroid_State_StartBoss(void)
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
 
     Zone->playerBoundActiveL[0] = true;
-    Zone->screenBoundsL1[0]     = RSDK_screens->position.x;
+    Zone->screenBoundsL1[0]     = ScreenInfo->position.x;
     if (player1->position.x > entity->position.x) {
         Zone->playerBoundActiveL[0] = true;
         Zone->screenBoundsL1[0]     = (entity->position.x >> 16) - 328;
@@ -423,7 +423,7 @@ void Drillerdroid_State_Unknown7(void)
                 RSDK.PlaySfx(Drillerdroid->sfxDrop, false, 255);
                 EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
 
-                EntityBuckwildBall *ball = CREATE_ENTITY(BuckwildBall, NULL, entity->position.x, RSDK_screens->position.y << 16);
+                EntityBuckwildBall *ball = CREATE_ENTITY(BuckwildBall, NULL, entity->position.x, ScreenInfo->position.y << 16);
                 ball->startPos.x         = 0;
 
                 int value = 0;
@@ -528,9 +528,9 @@ void Drillerdroid_State_Unknown8(void)
 
     if (!(Zone->timer & 7)) {
         if (Zone->timer & 0xF) {
-            int offset = RSDK.Rand(0, RSDK_screens->width >> 5);
+            int offset = RSDK.Rand(0, ScreenInfo->width >> 5);
             EntityDebris *debris =
-                CREATE_ENTITY(Debris, Debris_State_Fall, (32 * offset + RSDK_screens->position.x) << 16, (RSDK_screens->position.y + 24) << 16);
+                CREATE_ENTITY(Debris, Debris_State_Fall, (32 * offset + ScreenInfo->position.x) << 16, (ScreenInfo->position.y + 24) << 16);
             RSDK.SetSpriteAnimation(Drillerdroid->aniFrames, 7, &debris->animator, true, RSDK.Rand(0, 4));
             debris->gravity       = 0x1800;
             debris->drawOrder     = Zone->drawOrderLow;
@@ -538,10 +538,10 @@ void Drillerdroid_State_Unknown8(void)
             debris->updateRange.y = 0x400000;
         }
         else {
-            int offset = RSDK.Rand(0, RSDK_screens->width / 48);
+            int offset = RSDK.Rand(0, ScreenInfo->width / 48);
             EntityStalactite *stalactite =
-                CREATE_ENTITY(Stalactite, Stalactite_State_Unknown4, (48 * offset + Drillerdroid->field_70 + RSDK_screens->position.x) << 16,
-                              (RSDK_screens->position.y + 24) << 16);
+                CREATE_ENTITY(Stalactite, Stalactite_State_Unknown4, (48 * offset + Drillerdroid->field_70 + ScreenInfo->position.x) << 16,
+                              (ScreenInfo->position.y + 24) << 16);
             stalactite->updateRange.x = 0x400000;
             stalactite->updateRange.y = 0x400000;
         }
@@ -792,7 +792,7 @@ void Drillerdroid_State_Unknown17(void)
             entity->state = Drillerdroid_State_Unknown18;
         }
         else if (id == 1) {
-            EntityLRZRockPile *rocks                       = RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot + 1 + Drillerdroid->field_61, LRZRockPile);
+            EntityLRZRockPile *rocks                       = RSDK_GET_ENTITY(SceneInfo->entitySlot + 1 + Drillerdroid->field_61, LRZRockPile);
             rocks->active                                  = ACTIVE_NORMAL;
             rocks->timer                                   = 120;
             rocks->flag                                    = true;

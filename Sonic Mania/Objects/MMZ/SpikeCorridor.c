@@ -25,7 +25,7 @@ void SpikeCorridor_Create(void *data)
     entity->visible   = true;
     entity->drawOrder = Zone->drawOrderLow;
     entity->active    = ACTIVE_BOUNDS;
-    if (RSDK_sceneInfo->inEditor) {
+    if (SceneInfo->inEditor) {
         if (entity->colWidth < 20)
             entity->colWidth = 20;
         if (entity->rowHeight < 1)
@@ -315,8 +315,8 @@ void SpikeCorridor_StateDraw_DropWarn(void)
     RSDK_THIS(SpikeCorridor);
 
     int32 yOff = 0;
-    if ((RSDK_screens->position.y << 16) - entity->startPos.y > 0)
-        yOff = (RSDK_screens->position.y << 16) - entity->startPos.y;
+    if ((ScreenInfo->position.y << 16) - entity->startPos.y > 0)
+        yOff = (ScreenInfo->position.y << 16) - entity->startPos.y;
     SpikeCorridor_HandleDrawing(&animator, yOff, entity->field_77, true);
 }
 

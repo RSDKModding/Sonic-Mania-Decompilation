@@ -105,7 +105,7 @@ void UncurlPlant_Draw(void)
 void UncurlPlant_Create(void *data)
 {
     RSDK_THIS(UncurlPlant);
-    if (RSDK_sceneInfo->inEditor) {
+    if (SceneInfo->inEditor) {
         entity->segments[0] = 0x00;
         entity->segments[1] = 0x10;
         entity->segments[2] = 0x40;

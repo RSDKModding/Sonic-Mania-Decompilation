@@ -125,15 +125,15 @@ void UIWidgets_Unknown5(int32 red, int32 a2, int32 green, int32 blue, int32 x, i
             verts[2].y = (a2 << 16) + y;
         }
 
-        if (RSDK_sceneInfo->inEditor) {
+        if (SceneInfo->inEditor) {
             colour clr = blue | (green << 8) | (red << 16);
             RSDK.DrawLine(verts[0].x, verts[0].y, verts[1].x, verts[1].y, clr, 0xFF, INK_NONE, false);
             RSDK.DrawLine(verts[1].x, verts[1].y, verts[2].x, verts[2].y, clr, 0xFF, INK_NONE, false);
             RSDK.DrawLine(verts[2].x, verts[2].y, verts[0].x, verts[0].y, clr, 0xFF, INK_NONE, false);
         }
         else {
-            int32 sx = RSDK_screens->position.x << 16;
-            int32 sy = RSDK_screens->position.y << 16;
+            int32 sx = ScreenInfo->position.x << 16;
+            int32 sy = ScreenInfo->position.y << 16;
             verts[0].x -= sx;
             verts[0].y -= sy;
             verts[1].x -= sx;
@@ -161,15 +161,15 @@ void UIWidgets_Unknown6(char a1, int32 red, int32 green, int32 blue, InkEffects 
             verts[2].y = y + 0x80000;
         }
 
-        if (RSDK_sceneInfo->inEditor) {
+        if (SceneInfo->inEditor) {
             colour clr = blue | (green << 8) | (red << 16);
             RSDK.DrawLine(verts[0].x, verts[0].y, verts[1].x, verts[1].y, clr, 0xFF, ink, false);
             RSDK.DrawLine(verts[1].x, verts[1].y, verts[2].x, verts[2].y, clr, 0xFF, ink, false);
             RSDK.DrawLine(verts[2].x, verts[2].y, verts[0].x, verts[0].y, clr, 0xFF, ink, false);
         }
         else {
-            int32 sx = RSDK_screens->position.x << 16;
-            int32 sy = RSDK_screens->position.y << 16;
+            int32 sx = ScreenInfo->position.x << 16;
+            int32 sy = ScreenInfo->position.y << 16;
             verts[1].y -= sy;
             verts[2].x -= sx;
             verts[0].x -= sx;
@@ -214,7 +214,7 @@ void UIWidgets_Unknown7(int32 a1, int32 a2, int32 a3, int32 red, int32 green, in
         verts[3].x = v8 - v13;
     }
 
-    if (RSDK_sceneInfo->inEditor) {
+    if (SceneInfo->inEditor) {
         colour clr = blue | (green << 8) | (red << 16);
         RSDK.DrawLine(v8, Y1, v9, verts[1].y, clr, 0xFF, INK_NONE, false);
         RSDK.DrawLine(verts[1].x, verts[1].y, verts[2].x, verts[2].y, clr, 255, INK_NONE, false);
@@ -222,8 +222,8 @@ void UIWidgets_Unknown7(int32 a1, int32 a2, int32 a3, int32 red, int32 green, in
         RSDK.DrawLine(verts[3].x, verts[3].y, verts[0].x, verts[0].y, clr, 255, INK_NONE, false);
     }
     else {
-        int32 sx = RSDK_screens->position.x << 16;
-        int32 sy = RSDK_screens->position.y << 16;
+        int32 sx = ScreenInfo->position.x << 16;
+        int32 sy = ScreenInfo->position.y << 16;
         verts[1].y -= sy;
         verts[2].y -= sy;
         verts[3].y -= sy;

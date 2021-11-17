@@ -105,8 +105,8 @@ void Announcer_Unknown3(void)
 {
     Vector2 drawPos;
     RSDK_THIS(Announcer);
-    drawPos.y = (RSDK_screens->centerY - 32) << 16;
-    drawPos.x = RSDK_screens->centerX << 16;
+    drawPos.y = (ScreenInfo->centerY - 32) << 16;
+    drawPos.x = ScreenInfo->centerX << 16;
     drawPos.x += entity->pos.x;
     drawPos.y += entity->pos.y;
     RSDK.DrawSprite(&entity->animator, &drawPos, true);
@@ -116,7 +116,7 @@ void Announcer_Unknown3(void)
 
         int32 frame                         = 0;
         EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
-        switch (session->characterFlags[RSDK_sceneInfo->currentScreenID]) {
+        switch (session->characterFlags[SceneInfo->currentScreenID]) {
             case ID_TAILS: frame = 1; break;
             case ID_KNUCKLES: frame = 2; break;
 #if RETRO_USE_PLUS
@@ -127,8 +127,8 @@ void Announcer_Unknown3(void)
         }
         RSDK.SetSpriteAnimation(Announcer->aniFrames, 2, &entity->animator2, true, frame);
 
-        drawPos.x = RSDK_screens->centerX << 16;
-        drawPos.y = (RSDK_screens->centerY + 48) << 16;
+        drawPos.x = ScreenInfo->centerX << 16;
+        drawPos.y = (ScreenInfo->centerY + 48) << 16;
         RSDK.DrawSprite(&entity->animator2, &drawPos, true);
         entity->inkEffect = INK_ALPHA;
     }
@@ -138,9 +138,9 @@ void Announcer_Unknown4(void)
     Vector2 drawPos;
     RSDK_THIS(Announcer);
 
-    if (RSDK_sceneInfo->currentScreenID == entity->screen) {
-        drawPos.x = RSDK_screens->centerX << 16;
-        drawPos.y = (RSDK_screens->centerY - 32) << 16;
+    if (SceneInfo->currentScreenID == entity->screen) {
+        drawPos.x = ScreenInfo->centerX << 16;
+        drawPos.y = (ScreenInfo->centerY - 32) << 16;
         drawPos.x += entity->pos.x;
         drawPos.y += entity->pos.y;
         RSDK.DrawSprite(&entity->animator, &drawPos, true);
@@ -174,7 +174,7 @@ void Announcer_State_CountDown(void)
             entity->playerID--;
             if (!entity->playerID) {
                 Announcer->finishedCountdown = true;
-                RSDK_sceneInfo->timeEnabled  = true;
+                SceneInfo->timeEnabled  = true;
             }
         }
         else {
@@ -215,7 +215,7 @@ void Announcer_Unknown6(void)
             }
             else {
                 entity->visible = true;
-                MathHelpers_Lerp1(&entity->pos, ((entity->timer - 76) << 8) / 16, 0, 0, RSDK_screens->width << 16, 0);
+                MathHelpers_Lerp1(&entity->pos, ((entity->timer - 76) << 8) / 16, 0, 0, ScreenInfo->width << 16, 0);
                 ++entity->timer;
             }
         }
@@ -228,7 +228,7 @@ void Announcer_Unknown6(void)
     else {
         entity->visible = true;
         int32 t           = 16 * entity->timer;
-        int32 val         = -0x10000 * RSDK_screens->width;
+        int32 val         = -0x10000 * ScreenInfo->width;
         if (t > 0) {
             if (t < 256)
                 entity->pos.x = val + t * (-val >> 8);

@@ -64,7 +64,7 @@ void SignPost_Create(void *data)
     if (!entity->vsExtendBottom)
         entity->vsExtendBottom = 120;
 
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         if (globals->gameMode != MODE_TIMEATTACK) {
             RSDK.SetSpriteAnimation(SignPost->aniFrames, SIGNPOSTANI_EGGMAN, &entity->eggPlateAnim, true, 0);
             switch (globals->playerID & 0xFF) {
@@ -272,7 +272,7 @@ void SignPost_State_CompetitionFinish(void)
         if (entity->activePlayers >= SignPost->maxPlayerCount) {
             entity->type                = 3;
             entity->state               = SignPost_State_Finish;
-            RSDK_sceneInfo->timeEnabled = false;
+            SceneInfo->timeEnabled = false;
             Zone_StartFadeOut(10, 0x000000);
         }
         else {
@@ -299,7 +299,7 @@ void SignPost_State_Fall(void)
 {
     RSDK_THIS(SignPost);
     entity->active              = ACTIVE_NORMAL;
-    RSDK_sceneInfo->timeEnabled = false;
+    SceneInfo->timeEnabled = false;
     if (entity->type == 1) {
         entity->type = 0;
         if (globals->gameMode < MODE_COMPETITION) {
@@ -339,7 +339,7 @@ void SignPost_State_Fall(void)
     entity->spinCount = 16;
 
     if (entity->velocity.x >= 0) {
-        if (entity->position.x > (RSDK_screens->position.x + RSDK_screens->width - 32) << 16) {
+        if (entity->position.x > (ScreenInfo->position.x + ScreenInfo->width - 32) << 16) {
             entity->velocity.x = -entity->velocity.x;
         }
         else if (RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_LWALL, 0, 0x180000, 0, true)) {
@@ -347,7 +347,7 @@ void SignPost_State_Fall(void)
         }
     }
     else {
-        if (entity->position.x < (RSDK_screens->position.x + 32) << 16) {
+        if (entity->position.x < (ScreenInfo->position.x + 32) << 16) {
             entity->velocity.x = -entity->velocity.x;
         }
         else if (RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_RWALL, 0, -0x180000, 0, true)) {
@@ -453,9 +453,9 @@ void SignPost_CheckTouch(void)
                         }
                         manager->playerFlags[player->playerID] = true;
                         session->rings[player->playerID]             = player->rings;
-                        session->time[player->playerID].minutes      = RSDK_sceneInfo->minutes;
-                        session->time[player->playerID].seconds      = RSDK_sceneInfo->seconds;
-                        session->time[player->playerID].milliseconds = RSDK_sceneInfo->milliseconds;
+                        session->time[player->playerID].minutes      = SceneInfo->minutes;
+                        session->time[player->playerID].seconds      = SceneInfo->seconds;
+                        session->time[player->playerID].milliseconds = SceneInfo->milliseconds;
                         session->score[player->playerID]             = player->score;
                         session->lives[player->playerID]             = player->lives;
 #if RETRO_USE_PLUS
@@ -484,7 +484,7 @@ void SignPost_CheckTouch(void)
                         }
 #endif
 
-                        RSDK_sceneInfo->timeEnabled = false;
+                        SceneInfo->timeEnabled = false;
                         if (vel >= 0x40000) {
                             entity->state = SignPost_State_Launched;
                         }
@@ -523,8 +523,8 @@ void SignPost_HandleCompetition(void)
                 if (Player_CheckCollisionTouch(player, entity, &hitbox)) {
                     entity->position.x      = ex;
                     entity->position.y      = ey;
-                    Zone->screenBoundsL1[p] = (entity->position.x >> 0x10) - RSDK_screens[p].centerX;
-                    Zone->screenBoundsR1[p] = RSDK_screens[p].centerX + (entity->position.x >> 0x10);
+                    Zone->screenBoundsL1[p] = (entity->position.x >> 0x10) - ScreenInfo[p].centerX;
+                    Zone->screenBoundsR1[p] = ScreenInfo[p].centerX + (entity->position.x >> 0x10);
                     if (globals->gameMode == MODE_COMPETITION)
                         Zone->playerBoundActiveR[p] = true;
                 }
@@ -535,8 +535,8 @@ void SignPost_HandleCompetition(void)
             }
             else {
                 if (entity->position.x - player->position.x < 0x1000000 || entity->position.x - (Zone->screenBoundsR1[p] << 16) < 0x1000000) {
-                    Zone->screenBoundsL1[p] = (entity->position.x >> 0x10) - RSDK_screens[p].centerX;
-                    Zone->screenBoundsR1[p] = RSDK_screens[p].centerX + (entity->position.x >> 0x10);
+                    Zone->screenBoundsL1[p] = (entity->position.x >> 0x10) - ScreenInfo[p].centerX;
+                    Zone->screenBoundsR1[p] = ScreenInfo[p].centerX + (entity->position.x >> 0x10);
                     if (globals->gameMode == MODE_COMPETITION)
                         Zone->playerBoundActiveR[p] = true;
                 }

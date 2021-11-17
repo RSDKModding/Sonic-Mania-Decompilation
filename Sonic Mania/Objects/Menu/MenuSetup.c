@@ -137,7 +137,7 @@ void MenuSetup_StageLoad(void)
     Music->activeTrack   = -1;
 #endif
 
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         switch (sku_platform) {
             case PLATFORM_PC: LogHelpers_Print("PC SKU"); break;
             case PLATFORM_PS4: LogHelpers_Print("PS4 SKU"); break;
@@ -478,7 +478,7 @@ void MenuSetup_Unknown3(void)
         switch (button->listID) {
             case 17:
                 if (!button->frameID) {
-                    if (RSDK_info->platform == PLATFORM_PC || RSDK_info->platform == PLATFORM_DEV) {
+                    if (GameInfo->platform == PLATFORM_PC || GameInfo->platform == PLATFORM_DEV) {
                         button->options2 = MenuSetup_ExitGame_Confirm;
                     }
                     else {
@@ -672,7 +672,7 @@ void MenuSetup_Unknown3(void)
     extras->processButtonInputCB = MenuSetup_Extras_ProcessButtonCB;
 
     options->unknownCallback3 = MenuSetup_Options_Unknown25;
-    if (RSDK_info->platform == PLATFORM_DEV || RSDK_info->platform == PLATFORM_SWITCH)
+    if (GameInfo->platform == PLATFORM_DEV || GameInfo->platform == PLATFORM_SWITCH)
         options->yPressCB = MenuSetup_Options_LaunchManual;
     else
         MenuSetup->optionsPrompt->visible = false;
@@ -1090,7 +1090,7 @@ void MenuSetup_StartNewSave(void)
     }
 
     if (entity->type == 1 || entity->isNewSave) {
-        if (((globals->medalMods & getMod(MEDAL_DEBUGMODE)) && (RSDK_controller->keyC.down || RSDK_controller->keyX.down)) && entity->type == 1) {
+        if (((globals->medalMods & getMod(MEDAL_DEBUGMODE)) && (ControllerInfo->keyC.down || ControllerInfo->keyX.down)) && entity->type == 1) {
             RSDK.SetScene("Presentation", "Level Select");
         }
         else {
@@ -1099,7 +1099,7 @@ void MenuSetup_StartNewSave(void)
     }
     else {
         RSDK.SetScene("Mania Mode", "");
-        RSDK_sceneInfo->listPos += TimeAttackData_GetManiaListPos(entity->saveZoneID, entity->frameID, 0);
+        SceneInfo->listPos += TimeAttackData_GetManiaListPos(entity->saveZoneID, entity->frameID, 0);
     }
 
     if (!loadingSave) {
@@ -1204,7 +1204,7 @@ void MenuSetup_TA_StartAttempt(void)
     globals->medalMods  = 0;
 
     RSDK.SetScene("Mania Mode", "");
-    RSDK_sceneInfo->listPos += TimeAttackData_GetManiaListPos(param->zoneID, param->characterID, param->actID);
+    SceneInfo->listPos += TimeAttackData_GetManiaListPos(param->zoneID, param->characterID, param->actID);
 
     switch (param->characterID) {
         case 1: globals->playerID = ID_SONIC; break;
@@ -1318,10 +1318,10 @@ void MenuSetup_VS_Unknown50(void)
         for (int32 i = 0; i < control->buttonCount; ++i) {
             EntityUIVsCharSelector *button = (EntityUIVsCharSelector *)control->buttons[i];
 
-            Entity *entStore       = RSDK_sceneInfo->entity;
-            RSDK_sceneInfo->entity = (Entity *)button;
+            Entity *entStore       = SceneInfo->entity;
+            SceneInfo->entity = (Entity *)button;
             StateMachine_Run(button->processButtonCB);
-            RSDK_sceneInfo->entity = entStore;
+            SceneInfo->entity = entStore;
 
             if (flag) {
                 if (button->ready)
@@ -1363,7 +1363,7 @@ void MenuSetup_VS_StartMatch(void)
     session->actID      = param->vsActID;
 
     RSDK.SetScene("Mania Mode", "");
-    RSDK_sceneInfo->listPos += TimeAttackData_GetManiaListPos(param->vsZoneID, 0, param->vsActID);
+    SceneInfo->listPos += TimeAttackData_GetManiaListPos(param->vsZoneID, 0, param->vsActID);
     SaveGame_ResetPlayerState();
     memset(globals->noSaveSlot, 0, 0x400);
 
@@ -1510,31 +1510,31 @@ void MenuSetup_VS_Unknown54(void)
         memset(buffer, 0, sizeof(buffer));
 
         sprintf(buffer, "%d", session->rings[p]);
-        if (!RSDK_sceneInfo->inEditor) {
+        if (!SceneInfo->inEditor) {
             RSDK.SetText(&results->rowText[0], buffer, 0);
             RSDK.SetSpriteString(UIVsResults->aniFrames, 18, &results->rowText[0]);
         }
 
         printf(buffer, "%d", session->totalRings[p]);
-        if (!RSDK_sceneInfo->inEditor) {
+        if (!SceneInfo->inEditor) {
             RSDK.SetText(&results->rowText[1], buffer, 0);
             RSDK.SetSpriteString(UIVsResults->aniFrames, 18, &results->rowText[1]);
         }
 
         sprintf(buffer, "%d", session->score[p]);
-        if (!RSDK_sceneInfo->inEditor) {
+        if (!SceneInfo->inEditor) {
             RSDK.SetText(&results->rowText[2], buffer, 0);
             RSDK.SetSpriteString(UIVsResults->aniFrames, 18, &results->rowText[2]);
         }
 
         sprintf(buffer, "%d", session->items[p]);
-        if (!RSDK_sceneInfo->inEditor) {
+        if (!SceneInfo->inEditor) {
             RSDK.SetText(&results->rowText[3], buffer, 0);
             RSDK.SetSpriteString(UIVsResults->aniFrames, 18, &results->rowText[3]);
         }
 
         sprintf(buffer, "%d'%02d\"%02d", session->time[p].minutes, session->time[p].seconds, session->time[p].milliseconds);
-        if (!RSDK_sceneInfo->inEditor) {
+        if (!SceneInfo->inEditor) {
             RSDK.SetText(&results->rowText[4], buffer, 0);
             RSDK.SetSpriteString(UIVsResults->aniFrames, 18, &results->rowText[4]);
         }
@@ -1663,7 +1663,7 @@ void MenuSetup_VS_Unknown56(void)
         for (int32 r = 0; r < results->numRows; ++r) {
             char buffer[0x40];
             sprintf(buffer, "%d", session->winnerFlags[r]);
-            if (!RSDK_sceneInfo->inEditor) {
+            if (!SceneInfo->inEditor) {
                 RSDK.SetText(&results->rowText[r], buffer, 0);
                 RSDK.SetSpriteString(UIVsResults->aniFrames, 18, &results->rowText[r]);
             }
@@ -1813,34 +1813,34 @@ void MenuSetup_Options_OpenControlsMenu(void)
 
 void MenuSetup_Options_Unknown22_P1(void)
 {
-    RSDK_controller[1].keyUp.keyMap     = 38;
-    RSDK_controller[1].keyDown.keyMap   = 40;
-    RSDK_controller[1].keyLeft.keyMap   = 37;
-    RSDK_controller[1].keyRight.keyMap  = 39;
-    RSDK_controller[1].keyA.keyMap      = 65;
-    RSDK_controller[1].keyB.keyMap      = 83;
-    RSDK_controller[1].keyC.keyMap      = 0;
-    RSDK_controller[1].keyX.keyMap      = 81;
-    RSDK_controller[1].keyY.keyMap      = 87;
-    RSDK_controller[1].keyZ.keyMap      = 0;
-    RSDK_controller[1].keyStart.keyMap  = 13;
-    RSDK_controller[1].keySelect.keyMap = 9;
+    ControllerInfo[1].keyUp.keyMap     = 38;
+    ControllerInfo[1].keyDown.keyMap   = 40;
+    ControllerInfo[1].keyLeft.keyMap   = 37;
+    ControllerInfo[1].keyRight.keyMap  = 39;
+    ControllerInfo[1].keyA.keyMap      = 65;
+    ControllerInfo[1].keyB.keyMap      = 83;
+    ControllerInfo[1].keyC.keyMap      = 0;
+    ControllerInfo[1].keyX.keyMap      = 81;
+    ControllerInfo[1].keyY.keyMap      = 87;
+    ControllerInfo[1].keyZ.keyMap      = 0;
+    ControllerInfo[1].keyStart.keyMap  = 13;
+    ControllerInfo[1].keySelect.keyMap = 9;
 }
 
 void MenuSetup_Options_Unknown22_P2(void)
 {
-    RSDK_controller[2].keyUp.keyMap     = 104;
-    RSDK_controller[2].keyDown.keyMap   = 101;
-    RSDK_controller[2].keyLeft.keyMap   = 100;
-    RSDK_controller[2].keyRight.keyMap  = 102;
-    RSDK_controller[2].keyA.keyMap      = 74;
-    RSDK_controller[2].keyB.keyMap      = 75;
-    RSDK_controller[2].keyC.keyMap      = 0;
-    RSDK_controller[2].keyX.keyMap      = 85;
-    RSDK_controller[2].keyY.keyMap      = 73;
-    RSDK_controller[2].keyZ.keyMap      = 0;
-    RSDK_controller[2].keyStart.keyMap  = 219;
-    RSDK_controller[2].keySelect.keyMap = 221;
+    ControllerInfo[2].keyUp.keyMap     = 104;
+    ControllerInfo[2].keyDown.keyMap   = 101;
+    ControllerInfo[2].keyLeft.keyMap   = 100;
+    ControllerInfo[2].keyRight.keyMap  = 102;
+    ControllerInfo[2].keyA.keyMap      = 74;
+    ControllerInfo[2].keyB.keyMap      = 75;
+    ControllerInfo[2].keyC.keyMap      = 0;
+    ControllerInfo[2].keyX.keyMap      = 85;
+    ControllerInfo[2].keyY.keyMap      = 73;
+    ControllerInfo[2].keyZ.keyMap      = 0;
+    ControllerInfo[2].keyStart.keyMap  = 219;
+    ControllerInfo[2].keySelect.keyMap = 221;
 }
 
 void MenuSetup_Options_Unknown51(int32 id)

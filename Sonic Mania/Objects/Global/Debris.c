@@ -89,9 +89,11 @@ void Debris_State_Move(void)
 
 void Debris_State_FallAndFlicker(void)
 {
+    RSDK_THIS(Debris);
+
     Debris_State_Fall(); // is this cheating
 
-    RSDK_sceneInfo->entity->visible = Zone->timer & 1;
+    entity->visible = Zone->timer & 1;
 }
 
 void Debris_FallFlickerAnimSetup(int32 aniFrames, int32 *entryPtr, int32 animationID)

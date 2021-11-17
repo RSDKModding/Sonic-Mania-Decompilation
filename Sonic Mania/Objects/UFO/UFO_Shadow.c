@@ -52,7 +52,7 @@ void UFO_Shadow_Draw(void)
 void UFO_Shadow_Create(void *data)
 {
     RSDK_THIS(UFO_Shadow);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->inkEffect     = INK_BLEND;
         entity->visible       = true;
         entity->drawFX        = FX_SCALE;

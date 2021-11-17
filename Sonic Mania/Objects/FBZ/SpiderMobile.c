@@ -32,7 +32,7 @@ void SpiderMobile_Create(void *data)
     }
     else {
         entity->drawFX = FX_FLIP;
-        if (!RSDK_sceneInfo->inEditor) {
+        if (!SceneInfo->inEditor) {
             if (globals->gameMode >= MODE_TIMEATTACK) {
                 destroyEntity(entity);
             }
@@ -269,7 +269,7 @@ void SpiderMobile_Hit(void)
     if (--entity->health <= 0) {
         entity->state               = SpiderMobile_StateBody_Destroyed;
         entity->timer               = 0;
-        RSDK_sceneInfo->timeEnabled = false;
+        SceneInfo->timeEnabled = false;
         Player_GiveScore(RSDK.GetEntityByID(SLOT_PLAYER1), 1000);
         RSDK.SetSpriteAnimation(SpiderMobile->aniFrames, 10, &entity->eggmanAnimator, true, 0);
     }
@@ -662,7 +662,7 @@ void SpiderMobile_StateBody_SetupBounds(void)
             Zone->playerBoundActiveR[0] = true;
             Zone->screenBoundsL1[0]     = (entity->position.x >> 16) - 212;
             Zone->screenBoundsR1[0]     = (entity->position.x >> 16) + 212;
-            Zone->screenBoundsT1[0]     = (entity->position.y >> 16) - RSDK_screens->height;
+            Zone->screenBoundsT1[0]     = (entity->position.y >> 16) - ScreenInfo->height;
             Zone->screenBoundsB1[0]     = (entity->position.y >> 16);
             SpiderMobile->boundL        = (Zone->screenBoundsL1[0] + 64) << 16;
             SpiderMobile->boundR        = (Zone->screenBoundsR1[0] - 64) << 16;
@@ -728,7 +728,7 @@ void SpiderMobile_StateBody_SetupArena(void)
 
             entity->origin.y -= 0x1200000;
             entity->field_88 = -0x10000;
-            entity->position.y += -0x800000 - (RSDK_screens->height << 16);
+            entity->position.y += -0x800000 - (ScreenInfo->height << 16);
             entity->field_84   = 64;
             entity->active     = ACTIVE_NORMAL;
             BGSwitch->screenID = 0;

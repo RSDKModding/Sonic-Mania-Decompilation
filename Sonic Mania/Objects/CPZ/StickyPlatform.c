@@ -44,7 +44,7 @@ void StickyPlatform_Create(void *data)
 {
     RSDK_THIS(StickyPlatform);
     entity->drawFX = FX_FLIP;
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->visible       = true;
         entity->active        = ACTIVE_BOUNDS;
         entity->drawOrder     = Zone->drawOrderHigh - 2;

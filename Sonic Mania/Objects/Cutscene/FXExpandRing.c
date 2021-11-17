@@ -34,7 +34,7 @@ void FXExpandRing_Draw(void)
 void FXExpandRing_Create(void *data)
 {
     RSDK_THIS(FXExpandRing);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->visible     = true;
         entity->active      = ACTIVE_NORMAL;
         entity->drawOrder   = Zone->drawOrderHigh;

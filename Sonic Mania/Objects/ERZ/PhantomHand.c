@@ -35,7 +35,7 @@ void PhantomHand_Create(void *data)
 {
     RSDK_THIS(PhantomHand);
 
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->visible       = true;
         entity->drawOrder     = Zone->drawOrderLow;
         entity->parent        = (Entity *)data;

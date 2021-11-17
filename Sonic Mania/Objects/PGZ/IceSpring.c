@@ -130,7 +130,7 @@ void IceSpring_Create(void *data)
     RSDK_THIS(IceSpring);
 
     entity->drawFX = FX_FLIP;
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->type %= 3;
         if (data) {
             entity->type     = voidToInt(data);

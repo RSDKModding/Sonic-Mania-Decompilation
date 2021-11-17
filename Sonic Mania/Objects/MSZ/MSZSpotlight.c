@@ -21,7 +21,7 @@ void MSZSpotlight_Draw(void)
 void MSZSpotlight_Create(void *data)
 {
     RSDK_THIS(MSZSpotlight);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->visible    = true;
         entity->drawOrder  = Zone->drawOrderHigh;
         entity->startPos.x = entity->position.x;

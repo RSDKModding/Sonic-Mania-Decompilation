@@ -143,7 +143,7 @@ void BarStool_Draw(void)
 void BarStool_Create(void *data)
 {
     RSDK_THIS(BarStool);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         RSDK.SetSpriteAnimation(BarStool->aniFrames, 0, &entity->animator1, true, 0);
         RSDK.SetSpriteAnimation(BarStool->aniFrames, 1, &entity->animator2, true, entity->height);
         entity->active        = ACTIVE_BOUNDS;

@@ -26,7 +26,7 @@ void ERZRider_Draw(void)
 void ERZRider_Create(void *data)
 {
     RSDK_THIS(ERZRider);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->visible       = true;
         entity->drawOrder     = Zone->drawOrderLow;
         entity->active        = ACTIVE_NORMAL;

@@ -58,14 +58,14 @@ void PBL_Camera_Unknown1(void)
         ang2 = ang + 0x400;
 
     if (abs(ang) >= abs(ang2))
-        RSDK_screens->position.x -= 2 * ang2;
+        ScreenInfo->position.x -= 2 * ang2;
     else
-        RSDK_screens->position.x -= 2 * ang;
+        ScreenInfo->position.x -= 2 * ang;
 
     int32 height               = ((RSDK.Sin1024(-entity->rotationY) << 12) << 8) / angle;
-    RSDK_screens->position.y = height - RSDK_screens->centerY + 512;
+    ScreenInfo->position.y = height - ScreenInfo->centerY + 512;
     entity->field_7C         = entity->angle;
-    entity->field_80         = clampVal(RSDK_screens->centerY - height + 8, -64, RSDK_screens->height);
+    entity->field_80         = clampVal(ScreenInfo->centerY - height + 8, -64, ScreenInfo->height);
 }
 
 void PBL_Camera_Unknown2(void)

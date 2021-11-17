@@ -18,16 +18,16 @@ void UberCaterkiller_StaticUpdate(void)
 void UberCaterkiller_Draw(void)
 {
     RSDK_THIS(UberCaterkiller);
-    int clipY2 = RSDK_screens->clipBound_Y2;
+    int clipY2 = ScreenInfo->clipBound_Y2;
     if (entity->aniID) {
         if (entity->invincibilityTimer & 1)
             RSDK.SetPaletteEntry(0, 160, 0xE0E0E0);
 
-        if (entity->bodyScales[0] < 0x200 == (RSDK_sceneInfo->currentDrawGroup == entity->drawOrder)) {
+        if (entity->bodyScales[0] < 0x200 == (SceneInfo->currentDrawGroup == entity->drawOrder)) {
             int clip = ((entity->bodyScales[0] - 256) >> 1) + 160;
-            if (RSDK_screens->height < clip)
-                clip = RSDK_screens->height;
-            RSDK_screens->clipBound_Y2 = clip;
+            if (ScreenInfo->height < clip)
+                clip = ScreenInfo->height;
+            ScreenInfo->clipBound_Y2 = clip;
             entity->scale.x            = entity->bodyScales[0];
             entity->scale.y            = entity->bodyScales[0];
             RSDK.DrawSprite(entity->bodyAnimators[0], entity->bodyPositions, false);
@@ -37,12 +37,12 @@ void UberCaterkiller_Draw(void)
         entity->direction ^= FLIP_X;
         for (int i = 1; i < UberCaterkiller_SegmentCount; ++i) {
             int clip = ((entity->bodyScales[i] - 0x100) >> 1) + 160;
-            if (RSDK_screens->height < clip)
-                clip = RSDK_screens->height;
-            RSDK_screens->clipBound_Y2 = clip;
+            if (ScreenInfo->height < clip)
+                clip = ScreenInfo->height;
+            ScreenInfo->clipBound_Y2 = clip;
 
             entity->rotation = (2 * entity->bodyAngles[i] - 15) & 0x1E;
-            if (entity->bodyScales[i] < 0x200 == (RSDK_sceneInfo->currentDrawGroup == entity->drawOrder)) {
+            if (entity->bodyScales[i] < 0x200 == (SceneInfo->currentDrawGroup == entity->drawOrder)) {
                 entity->scale.x           = entity->bodyScales[1];
                 entity->scale.y           = entity->bodyScales[1];
                 entity->animator2.frameID = entity->bodyAngles[i] >> 4;
@@ -57,11 +57,11 @@ void UberCaterkiller_Draw(void)
 
         for (int i = UberCaterkiller_SegmentCount - 1; i > 0; --i) {
             int clip = ((entity->bodyScales[i] - 256) >> 1) + 160;
-            if (RSDK_screens->height < clip)
-                clip = RSDK_screens->height;
-            RSDK_screens->clipBound_Y2 = clip;
+            if (ScreenInfo->height < clip)
+                clip = ScreenInfo->height;
+            ScreenInfo->clipBound_Y2 = clip;
             entity->rotation           = (2 * entity->bodyAngles[i] - 15) & 0x1E;
-            if (entity->bodyScales[i] < 0x200 == (RSDK_sceneInfo->currentDrawGroup == entity->drawOrder)) {
+            if (entity->bodyScales[i] < 0x200 == (SceneInfo->currentDrawGroup == entity->drawOrder)) {
                 entity->scale.x           = entity->bodyScales[i];
                 entity->scale.y           = entity->bodyScales[i];
                 entity->animator2.frameID = entity->bodyAngles[i] >> 4;
@@ -74,24 +74,24 @@ void UberCaterkiller_Draw(void)
         if (entity->invincibilityTimer & 1)
             RSDK.SetPaletteEntry(0, 160, 0xE0E0E0);
 
-        if (entity->bodyScales[0] < 512 == (RSDK_sceneInfo->currentDrawGroup == entity->drawOrder)) {
+        if (entity->bodyScales[0] < 512 == (SceneInfo->currentDrawGroup == entity->drawOrder)) {
             int clip = ((entity->bodyScales[0] - 256) >> 1) + 160;
-            if (RSDK_screens->height < clip)
-                clip = RSDK_screens->height;
-            RSDK_screens->clipBound_Y2 = clip;
+            if (ScreenInfo->height < clip)
+                clip = ScreenInfo->height;
+            ScreenInfo->clipBound_Y2 = clip;
             entity->scale.x            = entity->bodyScales[0];
             entity->scale.y            = entity->bodyScales[0];
             RSDK.DrawSprite(entity->bodyAnimators[0], &entity->bodyPositions[0], false);
         }
         RSDK.SetPaletteEntry(0, 160, 0x200000);
     }
-    RSDK_screens->clipBound_Y2 = clipY2;
+    ScreenInfo->clipBound_Y2 = clipY2;
 }
 
 void UberCaterkiller_Create(void *data)
 {
     RSDK_THIS(UberCaterkiller);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->visible       = false;
         entity->drawFX        = FX_SCALE | FX_ROTATE | FX_FLIP;
         entity->drawOrder     = Zone->drawOrderLow - 1;
@@ -167,7 +167,7 @@ void UberCaterkiller_CheckPlayerCollisions(void)
 
                 if ((scale > 0x1C0 && scale < 0x240) && Player_CheckBadnikTouch(player, entity, &hitbox) && Player_CheckBossHit(player, entity)) {
                     if (--entity->health <= 0) {
-                        RSDK_sceneInfo->timeEnabled = false;
+                        SceneInfo->timeEnabled = false;
                         Player_GiveScore(RSDK_GET_ENTITY(SLOT_PLAYER1, Player), 1000);
                         RSDK.PlaySfx(UberCaterkiller->sfxExplosion2, false, 255);
                         entity->timer = 120;
@@ -241,11 +241,11 @@ void UberCaterkiller_Unknown5(int id)
             if (pos > 256)
                 pos = 256;
 
-            if ((entity->bodyPositions[id].y >> 16) - RSDK_screens->position.y > pos) {
+            if ((entity->bodyPositions[id].y >> 16) - ScreenInfo->position.y > pos) {
                 RSDK.PlaySfx(UberCaterkiller->sfxSandSwim, false, 255);
                 EntityExplosion *explosion =
                     CREATE_ENTITY(Explosion, NULL, entity->bodyPositions[id].x,
-                                  (((entity->bodyScales[id] << 15) - 0x7F8001) & 0xFFFF0000) + ((RSDK_screens->position.y + 160) << 16));
+                                  (((entity->bodyScales[id] << 15) - 0x7F8001) & 0xFFFF0000) + ((ScreenInfo->position.y + 160) << 16));
                 RSDK.SetSpriteAnimation(UberCaterkiller->aniFrames, 4, &explosion->animator, true, 0);
                 explosion->drawFX       = FX_SCALE;
                 explosion->scale.x      = entity->bodyScales[id];
@@ -261,11 +261,11 @@ void UberCaterkiller_Unknown5(int id)
         if (pos > 256)
             pos = 256;
 
-        if ((entity->bodyPositions[id].y >> 16) - RSDK_screens->position.y < pos) {
+        if ((entity->bodyPositions[id].y >> 16) - ScreenInfo->position.y < pos) {
             RSDK.PlaySfx(UberCaterkiller->sfxSandSwim, false, 255);
             EntityExplosion *explosion =
                 CREATE_ENTITY(Explosion, NULL, entity->bodyPositions[id].x,
-                              (((entity->bodyScales[id] << 15) - 0x7F8001) & 0xFFFF0000) + ((RSDK_screens->position.y + 160) << 16));
+                              (((entity->bodyScales[id] << 15) - 0x7F8001) & 0xFFFF0000) + ((ScreenInfo->position.y + 160) << 16));
             RSDK.SetSpriteAnimation(UberCaterkiller->aniFrames, 4, &explosion->animator, true, 0);
             explosion->drawFX       = FX_SCALE;
             explosion->scale.x      = entity->bodyScales[id];
@@ -302,7 +302,7 @@ void UberCaterkiller_State_SetupArena(void)
     if (++entity->timer == 60) {
         entity->timer   = 0;
         entity->visible = true;
-        for (int i = 0; i < UberCaterkiller_SegmentCount; ++i) entity->bodyPositions[i].x = (RSDK_screens->position.x + 64) << 16;
+        for (int i = 0; i < UberCaterkiller_SegmentCount; ++i) entity->bodyPositions[i].x = (ScreenInfo->position.x + 64) << 16;
 
         entity->position.x    = entity->bodyPositions[0].x;
         entity->position.y    = entity->bodyPositions[0].y;
@@ -328,7 +328,7 @@ void UberCaterkiller_State_Unknown1(void)
     if (!(Zone->timer & 3)) {
         EntityExplosion *explosion =
             CREATE_ENTITY(Explosion, NULL, entity->bodyPositions[0].x,
-                          (((entity->bodyScales[0] << 15) - 0x7F8001) & 0xFFFF0000) + ((RSDK_screens->position.y + 160) << 16));
+                          (((entity->bodyScales[0] << 15) - 0x7F8001) & 0xFFFF0000) + ((ScreenInfo->position.y + 160) << 16));
         RSDK.SetSpriteAnimation(UberCaterkiller->aniFrames, 4, &explosion->animator, true, 0);
         explosion->drawFX     = FX_SCALE;
         explosion->scale.x    = entity->bodyScales[0];
@@ -368,7 +368,7 @@ void UberCaterkiller_State_Unknown2(void)
     if (!(Zone->timer & 3)) {
         EntityExplosion *explosion =
             CREATE_ENTITY(Explosion, NULL, entity->bodyPositions[0].x,
-                          (((entity->bodyScales[0] << 15) - 0x7F8001) & 0xFFFF0000) + ((RSDK_screens->position.y + 160) << 16));
+                          (((entity->bodyScales[0] << 15) - 0x7F8001) & 0xFFFF0000) + ((ScreenInfo->position.y + 160) << 16));
         RSDK.SetSpriteAnimation(UberCaterkiller->aniFrames, 4, &explosion->animator, true, 0);
         explosion->drawFX     = FX_SCALE;
         explosion->scale.x    = entity->bodyScales[0];
@@ -408,7 +408,7 @@ void UberCaterkiller_State_Unknown3(void)
             entity->bodyVelocity[i].y  = -0x80000;
             entity->bodyTimers[i]      = delay;
             entity->bodyPositions[i].x = entity->bodyStartX;
-            entity->bodyPositions[i].y = (RSDK_screens->position.y + 240) << 16;
+            entity->bodyPositions[i].y = (ScreenInfo->position.y + 240) << 16;
             entity->bodyScales[i]      = 0x200;
 
             delay++;
@@ -418,7 +418,7 @@ void UberCaterkiller_State_Unknown3(void)
         entity->position.y = entity->bodyPositions[0].y;
         entity->bodyStartX = 0;
 
-        if (entity->bodyPositions[UberCaterkiller_SegmentCount - 1].x <= (RSDK_screens->position.x + RSDK_screens->centerX) << 16)
+        if (entity->bodyPositions[UberCaterkiller_SegmentCount - 1].x <= (ScreenInfo->position.x + ScreenInfo->centerX) << 16)
             UberCaterkiller_SetupUnknown(0x40000, -0x60000);
         else
             UberCaterkiller_SetupUnknown(-0x40000, -0x60000);
@@ -450,14 +450,14 @@ void UberCaterkiller_State_Unknown4(void)
 
     UberCaterkiller_CheckPlayerCollisions();
 
-    if (entity->bodyPositions[UberCaterkiller_SegmentCount - 1].y > (RSDK_screens->position.y + RSDK_screens->height + 64) << 16) {
+    if (entity->bodyPositions[UberCaterkiller_SegmentCount - 1].y > (ScreenInfo->position.y + ScreenInfo->height + 64) << 16) {
         entity->unknownValue2 = 0x100;
         UberCaterkiller_SetupBodySizes();
 
         switch (RSDK.Rand(0, 3) - 1) {
             default: break;
-            case 0: entity->bodyStartX = (RSDK_screens->position.x - 32) << 16; break;
-            case 1: entity->bodyStartX = (RSDK_screens->position.x + RSDK_screens->width + 32) << 16; break;
+            case 0: entity->bodyStartX = (ScreenInfo->position.x - 32) << 16; break;
+            case 1: entity->bodyStartX = (ScreenInfo->position.x + ScreenInfo->width + 32) << 16; break;
         }
     }
 }
@@ -475,7 +475,7 @@ void UberCaterkiller_State_Unknown5(void)
             entity->bodyVelocity[i].x  = 0;
             entity->bodyVelocity[i].y  = -0x80000;
             entity->bodyTimers[i]      = delay;
-            entity->bodyPositions[i].y = (RSDK_screens->position.y + 160) << 16;
+            entity->bodyPositions[i].y = (ScreenInfo->position.y + 160) << 16;
             entity->bodyScales[i]      = entity->unknownValue2;
 
             delay++;
@@ -485,7 +485,7 @@ void UberCaterkiller_State_Unknown5(void)
         entity->position.y   = entity->bodyPositions[0].y;
         entity->unknownValue = RSDK.Rand(0, 2);
 
-        if (entity->bodyPositions[UberCaterkiller_SegmentCount - 1].x <= (RSDK_screens->position.x + RSDK_screens->centerX) << 16)
+        if (entity->bodyPositions[UberCaterkiller_SegmentCount - 1].x <= (ScreenInfo->position.x + ScreenInfo->centerX) << 16)
             UberCaterkiller_SetupUnknown(0x18000, -0x80000);
         else
             UberCaterkiller_SetupUnknown(-0x18000, -0x80000);
@@ -518,19 +518,19 @@ void UberCaterkiller_State_Unknown6(void)
 
     UberCaterkiller_CheckPlayerCollisions();
 
-    if (entity->bodyPositions[UberCaterkiller_SegmentCount - 1].y > (RSDK_screens->position.y + RSDK_screens->height + 64) << 16) {
+    if (entity->bodyPositions[UberCaterkiller_SegmentCount - 1].y > (ScreenInfo->position.y + ScreenInfo->height + 64) << 16) {
         RSDK.PlaySfx(UberCaterkiller->sfxSandSwim, false, 255);
         EntityExplosion *explosion =
             CREATE_ENTITY(Explosion, NULL, entity->bodyPositions[0].x,
-                          (((entity->bodyScales[0] << 15) - 0x7F8001) & 0xFFFF0000) + ((RSDK_screens->position.y + 160) << 16));
+                          (((entity->bodyScales[0] << 15) - 0x7F8001) & 0xFFFF0000) + ((ScreenInfo->position.y + 160) << 16));
         RSDK.SetSpriteAnimation(UberCaterkiller->aniFrames, 4, &explosion->animator, true, 0);
         explosion->drawFX    = FX_SCALE;
         explosion->scale.x   = 0x80;
         explosion->scale.y   = 0x80;
         explosion->drawOrder = entity->drawOrder + 1;
         if (entity->unknownValue) {
-            entity->position.y = (RSDK_screens->position.y + RSDK_screens->height + 64) << 16;
-            if (entity->bodyPositions[UberCaterkiller_SegmentCount - 1].x <= (RSDK_screens->position.x + RSDK_screens->centerX) << 16)
+            entity->position.y = (ScreenInfo->position.y + ScreenInfo->height + 64) << 16;
+            if (entity->bodyPositions[UberCaterkiller_SegmentCount - 1].x <= (ScreenInfo->position.x + ScreenInfo->centerX) << 16)
                 UberCaterkiller_SetupUnknown(0x18000, -0xB8000);
             else
                 UberCaterkiller_SetupUnknown(-0x18000, -0xB8000);
@@ -578,12 +578,12 @@ void UberCaterkiller_State_Unknown7(void)
     }
 
     UberCaterkiller_CheckPlayerCollisions();
-    if (entity->bodyPositions[UberCaterkiller_SegmentCount - 1].y > (RSDK_screens->height + RSDK_screens->position.y + 64) << 16) {
+    if (entity->bodyPositions[UberCaterkiller_SegmentCount - 1].y > (ScreenInfo->height + ScreenInfo->position.y + 64) << 16) {
         if (!entity->aniID)
             --entity->unknownValue;
         if (entity->unknownValue) {
-            entity->position.y = (RSDK_screens->height + RSDK_screens->position.y + 64) << 16;
-            if (entity->bodyPositions[UberCaterkiller_SegmentCount - 1].x <= (RSDK_screens->position.x + RSDK_screens->centerX) << 16)
+            entity->position.y = (ScreenInfo->height + ScreenInfo->position.y + 64) << 16;
+            if (entity->bodyPositions[UberCaterkiller_SegmentCount - 1].x <= (ScreenInfo->position.x + ScreenInfo->centerX) << 16)
                 UberCaterkiller_SetupUnknown(0x18000, -0xB8000);
             else
                 UberCaterkiller_SetupUnknown(-0x18000, -0xB8000);
@@ -596,8 +596,8 @@ void UberCaterkiller_State_Unknown7(void)
 
             switch (RSDK.Rand(0, 3) - 1) {
                 default: break;
-                case 0: entity->bodyStartX = (RSDK_screens->position.x - 32) << 16; break;
-                case 1: entity->bodyStartX = (RSDK_screens->position.x + RSDK_screens->width + 32) << 16; break;
+                case 0: entity->bodyStartX = (ScreenInfo->position.x - 32) << 16; break;
+                case 1: entity->bodyStartX = (ScreenInfo->position.x + ScreenInfo->width + 32) << 16; break;
             }
         }
         RSDK.SetSpriteAnimation(UberCaterkiller->aniFrames, entity->aniID, &entity->animator1, true, 0);

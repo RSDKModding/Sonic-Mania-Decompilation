@@ -84,12 +84,12 @@ void UITAZoneModule_Draw(void)
     RSDK_THIS(UITAZoneModule);
     
     if (entity->field_138_2 >= 1) {
-        RSDK.SetClipBounds(RSDK_sceneInfo->currentScreenID, ((entity->drawPos.x - 0x990000) >> 16) - RSDK_screens->position.x,
-                           ((entity->drawPos.y + 0x240000) >> 16) - 16 - RSDK_screens->position.y,
-                           ((entity->drawPos.x - 0x990000) >> 16) + 306 - RSDK_screens->position.x,
-                           ((entity->drawPos.y + 0x240000 + entity->field_138_2) >> 16) - RSDK_screens->position.y);
+        RSDK.SetClipBounds(SceneInfo->currentScreenID, ((entity->drawPos.x - 0x990000) >> 16) - ScreenInfo->position.x,
+                           ((entity->drawPos.y + 0x240000) >> 16) - 16 - ScreenInfo->position.y,
+                           ((entity->drawPos.x - 0x990000) >> 16) + 306 - ScreenInfo->position.x,
+                           ((entity->drawPos.y + 0x240000 + entity->field_138_2) >> 16) - ScreenInfo->position.y);
         UITAZoneModule_Unknown7();
-        RSDK.SetClipBounds(RSDK_sceneInfo->currentScreenID, 0, 0, RSDK_screens->width, RSDK_screens->height);
+        RSDK.SetClipBounds(SceneInfo->currentScreenID, 0, 0, ScreenInfo->width, ScreenInfo->height);
     }
 #endif
 }
@@ -107,7 +107,7 @@ void UITAZoneModule_Create(void *data)
     entity->updateRange.y   = 0x300000;
     entity->processButtonCB = UIButton_Unknown6;
     entity->state           = UITAZoneModule_Unknown15;
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         RSDK.SetText(&entity->text3, "", false);
         RSDK.SetText(&entity->text4, "", false);
         RSDK.CopyString(&entity->text3, &entity->text1);
@@ -173,7 +173,7 @@ void UITAZoneModule_Setup(void)
 void UITAZoneModule_SetupText(void)
 {
     RSDK_THIS(UITAZoneModule);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         if (!entity->text1.text)
             RSDK.SetText(&entity->text1, "", 0);
         if (!entity->text2.text)
@@ -215,7 +215,7 @@ void UITAZoneModule_Unknown3(void)
     UIWidgets_Unknown5((colour >> 16) & 0xFF, -71, (colour >> 8) & 0xFF, colour & 0xFF, entity->drawPos.x + 0x990000, entity->drawPos.y + 0x230000);
 
 #if RETRO_USE_PLUS
-    if (!RSDK_sceneInfo->inEditor)
+    if (!SceneInfo->inEditor)
         UIWidgets_Unknown3(78, 312, entity->position.x + 0x30000, entity->position.y + 0x30000);
 
     if (entity->flag)
@@ -223,7 +223,7 @@ void UITAZoneModule_Unknown3(void)
     else
         UIWidgets_Unknown2(78, 312, entity->position.x, entity->position.y);
 #else
-    if (!RSDK_sceneInfo->inEditor)
+    if (!SceneInfo->inEditor)
         UIWidgets_Unknown3(78 + (entity->field_138_2 >> 16), 312, entity->position.x + 0x30000, entity->position.y + 0x30000);
 
     if (entity->flag || entity->value)
@@ -275,7 +275,7 @@ void UITAZoneModule_Unknown4(void)
 
     drawPos.x += 0x100000;
     drawPos.y -= 0x20000;
-    if (RSDK_sceneInfo->inEditor || !entity->characterID) {
+    if (SceneInfo->inEditor || !entity->characterID) {
         UITAZoneModule_DrawTime(&drawPos, 0, 0, 0);
     }
     else {
@@ -302,7 +302,7 @@ void UITAZoneModule_Unknown5(void)
     drawPos.x = entity->drawPos.x - 0x690000;
     drawPos.y = entity->drawPos.y;
     UIWidgets_Unknown2(72, 96, drawPos.x, drawPos.y);
-    if (RSDK_sceneInfo->inEditor || !entity->flag || entity->disabled) {
+    if (SceneInfo->inEditor || !entity->flag || entity->disabled) {
         entity->direction = entity->field_138;
         entity->drawFX    = FX_FLIP;
         RSDK.DrawSprite(&entity->animator2, &drawPos, false);
@@ -344,7 +344,7 @@ void UITAZoneModule_Unknown6(void)
     drawPos.x = entity->drawPos.x;
     drawPos.y = entity->drawPos.y;
     if (entity->state != UITAZoneModule_Unknown18 || !(entity->timer & 2)) {
-        if (!RSDK_sceneInfo->inEditor) {
+        if (!SceneInfo->inEditor) {
             drawPos.x = entity->drawPos.x - 0x370000;
             if (entity->text2.textLength) {
                 drawPos.y = entity->drawPos.y - 0x160000;
@@ -848,8 +848,8 @@ void UITAZoneModule_Unknown26(EntityUIControl *control, uint8 characterID, uint3
     control->position.y = module->posUnknown2.y;
     control->posUnknown = module->posUnknown2;
 
-    RSDK_screens->position.x = (module->posUnknown2.x >> 16) - RSDK_screens->centerX;
-    RSDK_screens->position.y = (control->position.y >> 16) - RSDK_screens->centerY;
+    ScreenInfo->position.x = (module->posUnknown2.x >> 16) - ScreenInfo->centerX;
+    ScreenInfo->position.y = (control->position.y >> 16) - ScreenInfo->centerY;
     RSDK.CopyPalette((zoneID >> 3) + 1, 32 * zoneID, 0LL, 0xE0, 0x20);
     module->actID        = actID;
     module->state        = UITAZoneModule_Unknown27;
@@ -868,7 +868,7 @@ void UITAZoneModule_Unknown26(EntityUIControl *control, uint8 characterID, uint3
             button->state      = UITAZoneModule_Unknown30;
             button->value      = 0;
             button->flag       = false;
-            button->position.x = button->posUnknown2.x + (RSDK_screens->width << 16);
+            button->position.x = button->posUnknown2.x + (ScreenInfo->width << 16);
         }
     }
 
@@ -902,8 +902,8 @@ void UITAZoneModule_Unknown27(void)
                 hitbox.bottom = (parent->size.y) >> 17;
 
                 if (MathHelpers_PointInHitbox(FLIP_NONE, posX, posY, &hitbox, prompt->position.x, prompt->position.y)) {
-                    if (prompt->startPos.y >> 16 < RSDK_screens->position.y) {
-                        prompt->position.y = (RSDK_screens->position.y << 16) + 0x180000;
+                    if (prompt->startPos.y >> 16 < ScreenInfo->position.y) {
+                        prompt->position.y = (ScreenInfo->position.y << 16) + 0x180000;
                         if (prompt == promptPtr)
                             promptPtr->position.y += 0x180000;
                     }
@@ -911,21 +911,21 @@ void UITAZoneModule_Unknown27(void)
             }
         }
 
-        heading->position.y     = (RSDK_screens->position.y << 16) + 0x1C0000;
+        heading->position.y     = (ScreenInfo->position.y << 16) + 0x1C0000;
         entity->timer           = 0;
         entity->state           = UITAZoneModule_Unknown19;
         entity->processButtonCB = UITAZoneModule_Unknown24;
         entity->touchCB         = UIButton_TouchCB_Alt;
     }
     else {
-        if (heading->startPos.y >> 16 < RSDK_screens->position.y) {
-            int32 pos = (RSDK_screens->position.y << 16) - 0x1C0000;
+        if (heading->startPos.y >> 16 < ScreenInfo->position.y) {
+            int32 pos = (ScreenInfo->position.y << 16) - 0x1C0000;
             if (entity->timer >= 1) {
-                int32 pos = (RSDK_screens->position.y << 16) + 0x1C0000;
+                int32 pos = (ScreenInfo->position.y << 16) + 0x1C0000;
                 if (16 * entity->timer <= 255)
                     pos += 0x3800 * (RSDK.Sin1024(16 * entity->timer) >> 2);
                 else
-                    pos = (RSDK_screens->position.y << 16) + 0x1C0000;
+                    pos = (ScreenInfo->position.y << 16) + 0x1C0000;
             }
             heading->position.y = pos;
         }
@@ -943,7 +943,7 @@ void UITAZoneModule_Unknown27(void)
             if (MathHelpers_PointInHitbox(FLIP_NONE, posX, posY, &hitbox, prompt->position.x, prompt->position.y)) {
                 if (!prompt->buttonID)
                     prompt->promptID = 4;
-                if (prompt->startPos.y >> 16 < RSDK_screens->position.y) {
+                if (prompt->startPos.y >> 16 < ScreenInfo->position.y) {
                     int32 offset1, offset2;
                     if (prompt == promptPtr)
                         offset1 = 0x300000;
@@ -954,12 +954,12 @@ void UITAZoneModule_Unknown27(void)
                     else
                         offset2 = -0x300000;
 
-                    int32 pos = (RSDK_screens->position.y << 16) + offset2;
+                    int32 pos = (ScreenInfo->position.y << 16) + offset2;
                     if (entity->timer >= 1) {
                         if (16 * entity->timer <= 255)
-                            pos += (RSDK.Sin1024(16 * entity->timer) >> 2) * ((((RSDK_screens->position.y) << 16) + offset1 - pos) >> 8);
+                            pos += (RSDK.Sin1024(16 * entity->timer) >> 2) * ((((ScreenInfo->position.y) << 16) + offset1 - pos) >> 8);
                         else
-                            pos = (RSDK_screens->position.y) << 16 + offset1;
+                            pos = (ScreenInfo->position.y) << 16 + offset1;
                     }
                     prompt->position.y = pos;
                 }
@@ -1010,7 +1010,7 @@ void UITAZoneModule_Unknown28(void)
                 if (MathHelpers_PointInHitbox(FLIP_NONE, posX, posY, &hitbox, prompt->position.x, prompt->position.y)) {
                     if (!prompt->buttonID)
                         prompt->promptID = 0;
-                    if (prompt->startPos.y >> 16 < RSDK_screens->position.y)
+                    if (prompt->startPos.y >> 16 < ScreenInfo->position.y)
                         prompt->position.y = prompt->startPos.y;
                 }
             }
@@ -1033,13 +1033,13 @@ void UITAZoneModule_Unknown28(void)
         }
     }
     else {
-        if (heading->startPos.y >> 16 < RSDK_screens->position.y) {
-            int32 pos = (RSDK_screens->position.y << 16) + 0x1C0000;
+        if (heading->startPos.y >> 16 < ScreenInfo->position.y) {
+            int32 pos = (ScreenInfo->position.y << 16) + 0x1C0000;
             if (entity->timer >= 1) {
                 if (16 * entity->timer <= 255)
                     pos -= 0x3800 * (RSDK.Sin1024(16 * entity->timer) >> 2);
                 else
-                    pos = (RSDK_screens->position.y << 16) - 0x1C0000;
+                    pos = (ScreenInfo->position.y << 16) - 0x1C0000;
             }
             heading->position.y = pos;
         }
@@ -1055,7 +1055,7 @@ void UITAZoneModule_Unknown28(void)
             hitbox.bottom = (parent->size.y) >> 17;
 
             if (MathHelpers_PointInHitbox(FLIP_NONE, posX, posY, &hitbox, prompt->position.x, prompt->position.y)) {
-                if (prompt->startPos.y >> 16 < RSDK_screens->position.y) {
+                if (prompt->startPos.y >> 16 < ScreenInfo->position.y) {
                     int32 offset1, offset2;
                     if (prompt == promptPtr)
                         offset1 = -0x180000;
@@ -1066,15 +1066,15 @@ void UITAZoneModule_Unknown28(void)
                     else
                         offset2 = 0x180000;
                     if (entity->timer >= 1) {
-                        int32 pos = (RSDK_screens->position.y << 16) + offset2;
+                        int32 pos = (ScreenInfo->position.y << 16) + offset2;
                         if (16 * entity->timer <= 255)
-                            pos += (RSDK.Sin1024(16 * entity->timer) >> 2) * (((RSDK_screens->position.y) << 16 + offset1 - pos) >> 8);
+                            pos += (RSDK.Sin1024(16 * entity->timer) >> 2) * (((ScreenInfo->position.y) << 16 + offset1 - pos) >> 8);
                         else
-                            pos = (RSDK_screens->position.y) << 16 + offset1;
+                            pos = (ScreenInfo->position.y) << 16 + offset1;
                         prompt->position.y = pos;
                     }
                     else {
-                        prompt->position.y = (RSDK_screens->position.y) << 16 + offset2;
+                        prompt->position.y = (ScreenInfo->position.y) << 16 + offset2;
                     }
                 }
             }
@@ -1099,12 +1099,12 @@ void UITAZoneModule_Unknown29(void)
     RSDK.ProcessAnimation(&entity->animator2);
     entity->field_138  = entity->animator2.frameID & 3;
     entity->velocity.x = 0x200000;
-    if ((entity->position.x - entity->posUnknown2.x) >> 16 < RSDK_screens->width) {
+    if ((entity->position.x - entity->posUnknown2.x) >> 16 < ScreenInfo->width) {
         entity->position.x += 0x200000;
         entity->position.y += entity->velocity.y;
     }
-    if ((entity->position.x - entity->posUnknown2.x) >> 16 >= RSDK_screens->width) {
-        entity->position.x = entity->posUnknown2.x + (RSDK_screens->width << 16);
+    if ((entity->position.x - entity->posUnknown2.x) >> 16 >= ScreenInfo->width) {
+        entity->position.x = entity->posUnknown2.x + (ScreenInfo->width << 16);
         entity->state      = UITAZoneModule_Unknown30;
     }
 }
@@ -1112,7 +1112,7 @@ void UITAZoneModule_Unknown29(void)
 void UITAZoneModule_Unknown30(void)
 {
     RSDK_THIS(UITAZoneModule);
-    entity->position.x = entity->posUnknown2.x + (RSDK_screens->width << 16);
+    entity->position.x = entity->posUnknown2.x + (ScreenInfo->width << 16);
 }
 
 void UITAZoneModule_Unknown31(void)

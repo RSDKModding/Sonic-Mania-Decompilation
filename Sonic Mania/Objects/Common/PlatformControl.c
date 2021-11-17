@@ -77,7 +77,7 @@ void PlatformControl_Update(void)
         }
     }
     else {
-        EntityButton *control = (EntityButton *)entity->controller;
+        EntityButton *control = (EntityButton *)entity->ControllerInfo;
         if (control && control->activated)
             entity->setActive = true;
         if (entity->setActive) {
@@ -123,7 +123,7 @@ void PlatformControl_Draw(void) {}
 void PlatformControl_Create(void *data)
 {
     RSDK_THIS(PlatformControl);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->active = ACTIVE_BOUNDS;
         int32 id         = RSDK.GetEntityID(entity) + 1;
         for (int32 i = 0; i < entity->nodeCount; ++i) {
@@ -177,7 +177,7 @@ void PlatformControl_Create(void *data)
 
         if ((Button && control->objectID == Button->objectID) || (SDashWheel && control->objectID == SDashWheel->objectID)
             || (PullChain && control->objectID == PullChain->objectID)) {
-            entity->controller = control;
+            entity->ControllerInfo = control;
             if (entity->updateRange.y < 0x800000 + abs(entity->position.x - control->position.x)) {
                 entity->updateRange.y = 0x800000 + abs(entity->position.x - control->position.x);
             }
@@ -186,7 +186,7 @@ void PlatformControl_Create(void *data)
             }
         }
         else {
-            entity->controller = NULL;
+            entity->ControllerInfo = NULL;
         }
     }
 }

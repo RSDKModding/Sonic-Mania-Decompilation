@@ -116,7 +116,7 @@ void UIVsZoneButton_StageLoad(void)
 void UIVsZoneButton_SetupAnimators(void)
 {
     RSDK_THIS(UIVsZoneButton);
-    if (RSDK_sceneInfo->inEditor || entity->zoneID == 12 || entity->xOut)
+    if (SceneInfo->inEditor || entity->zoneID == 12 || entity->xOut)
         RSDK.SetSpriteAnimation(UIVsZoneButton->aniFrames, 16, &entity->zoneAnimator, false, 0);
     else
         RSDK.SetSpriteAnimation(UIVsZoneButton->aniFrames, 17, &entity->zoneAnimator, false, entity->zoneID);
@@ -131,7 +131,7 @@ void UIVsZoneButton_SetupAnimators(void)
 void UIVsZoneButton_SetNameText(void)
 {
     RSDK_THIS(UIVsZoneButton);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         RSDK.SetSpriteAnimation(UIWidgets->labelSpriteIndex, 0, &entity->textAnimator, true, 0);
         if (entity->obfuscate) {
             RSDK.PrependText(&entity->nameText, "???");
@@ -152,7 +152,7 @@ void UIVsZoneButton_SetNameText(void)
 void UIVsZoneButton_Unknown3(void)
 {
     RSDK_THIS(UIVsZoneButton);
-    if (!RSDK_sceneInfo->inEditor)
+    if (!SceneInfo->inEditor)
         UIWidgets_Unknown3(56, 80, entity->position.x + 0x30000, entity->position.y + 0x30000);
     if (entity->flag)
         UIWidgets_Unknown4(56, 80, entity->position.x, entity->position.y);
@@ -178,7 +178,7 @@ void UIVsZoneButton_Unknown5(void)
     drawPos.y = entity->position.y;
 
     if (parent && (parent->active == ACTIVE_ALWAYS || parent->dialogHasFocus) && RSDK.CheckOnScreen(parent, &parent->updateRange)
-        && !RSDK_sceneInfo->inEditor && entity->zoneID != 12 && !entity->xOut) {
+        && !SceneInfo->inEditor && entity->zoneID != 12 && !entity->xOut) {
         RSDK.CopyPalette(((entity->zoneID >> 3) + 1), (32 * entity->zoneID), 0, 224, 32);
     }
     RSDK.DrawRect(drawPos.x - 0x180000, drawPos.y - 0x140000, 0x300000, 0x280000, 0, 255, INK_BLEND, false);
@@ -228,7 +228,7 @@ void UIVsZoneButton_Unknown6(void)
     drawPos.y += entity->field_13C;
     UIWidgets_Unknown7(entity->field_11C >> 16, size, entity->field_120, 0, 0, 0, drawPos.x, drawPos.y);
 
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         int32 width = RSDK.GetStringWidth(UIWidgets->labelSpriteIndex, 0, &entity->nameText, 0, entity->nameText.textLength, 0);
         drawPos.y -= 0x10000;
         drawPos.x -= width << 15;

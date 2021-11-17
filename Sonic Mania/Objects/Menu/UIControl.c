@@ -35,14 +35,14 @@ void UIControl_StaticUpdate(void)
 void UIControl_Draw(void)
 {
     RSDK_THIS(UIControl);
-    RSDK_screens->position.x = (entity->position.x >> 0x10) - RSDK_screens->centerX;
-    RSDK_screens->position.y = (entity->position.y >> 0x10) - RSDK_screens->centerY;
+    ScreenInfo->position.x = (entity->position.x >> 0x10) - ScreenInfo->centerX;
+    ScreenInfo->position.y = (entity->position.y >> 0x10) - ScreenInfo->centerY;
 }
 
 void UIControl_Create(void *data)
 {
     RSDK_THIS(UIControl);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         if (data) {
             Vector2 *size  = (Vector2 *)data;
             entity->size.x = size->x;
@@ -91,10 +91,10 @@ void UIControl_Create(void *data)
         }
 #endif
 
-        RSDK_stickL[1].deadzone = 0.75f;
-        RSDK_stickL[2].deadzone = 0.75f;
-        RSDK_stickL[3].deadzone = 0.75f;
-        RSDK_stickL[4].deadzone = 0.75f;
+        AnalogStickInfoL[1].deadzone = 0.75f;
+        AnalogStickInfoL[2].deadzone = 0.75f;
+        AnalogStickInfoL[3].deadzone = 0.75f;
+        AnalogStickInfoL[4].deadzone = 0.75f;
         UIControl_Unknown7();
         if (entity->noWidgets) {
             entity->active  = ACTIVE_NORMAL;
@@ -178,10 +178,10 @@ void UIControl_ProcessInputs(void)
 
     if (!UIControl->inputLocked) {
         for (int32 i = 0; i < 4; ++i) {
-            UIControl->upPress[i]    = RSDK_controller[i + 1].keyUp.press || RSDK_stickL[i + 1].keyUp.press;
-            UIControl->downPress[i]  = RSDK_controller[i + 1].keyDown.press || RSDK_stickL[i + 1].keyDown.press;
-            UIControl->leftPress[i]  = RSDK_controller[i + 1].keyLeft.press || RSDK_stickL[i + 1].keyLeft.press;
-            UIControl->rightPress[i] = RSDK_controller[i + 1].keyRight.press || RSDK_stickL[i + 1].keyRight.press;
+            UIControl->upPress[i]    = ControllerInfo[i + 1].keyUp.press || AnalogStickInfoL[i + 1].keyUp.press;
+            UIControl->downPress[i]  = ControllerInfo[i + 1].keyDown.press || AnalogStickInfoL[i + 1].keyDown.press;
+            UIControl->leftPress[i]  = ControllerInfo[i + 1].keyLeft.press || AnalogStickInfoL[i + 1].keyLeft.press;
+            UIControl->rightPress[i] = ControllerInfo[i + 1].keyRight.press || AnalogStickInfoL[i + 1].keyRight.press;
 
             if (UIControl->upPress[i] && UIControl->downPress[i]) // up and down? neither!
             {
@@ -194,40 +194,40 @@ void UIControl_ProcessInputs(void)
                 UIControl->rightPress[i] = false;
             }
 
-            UIControl->yPress[i] = RSDK_controller[i + 1].keyY.press;
-            UIControl->xPress[i] = RSDK_controller[i + 1].keyX.press;
+            UIControl->yPress[i] = ControllerInfo[i + 1].keyY.press;
+            UIControl->xPress[i] = ControllerInfo[i + 1].keyX.press;
 #if RETRO_USE_PLUS
-            UIControl->startPress[i] = RSDK_controller[i + 1].keyStart.press;
+            UIControl->startPress[i] = ControllerInfo[i + 1].keyStart.press;
 #endif
             if (API_GetConfirmButtonFlip()) {
-                UIControl->confirmPress[i] = RSDK_controller[i + 1].keyStart.press || RSDK_controller[i + 1].keyB.press;
-                UIControl->backPress[i]    = RSDK_controller[i + 1].keyA.press;
+                UIControl->confirmPress[i] = ControllerInfo[i + 1].keyStart.press || ControllerInfo[i + 1].keyB.press;
+                UIControl->backPress[i]    = ControllerInfo[i + 1].keyA.press;
             }
             else {
-                UIControl->confirmPress[i] = RSDK_controller[i + 1].keyStart.press || RSDK_controller[i + 1].keyA.press;
-                UIControl->backPress[i]    = RSDK_controller[i + 1].keyB.press;
+                UIControl->confirmPress[i] = ControllerInfo[i + 1].keyStart.press || ControllerInfo[i + 1].keyA.press;
+                UIControl->backPress[i]    = ControllerInfo[i + 1].keyB.press;
             }
         }
 
-        UIControl->keyUp    = RSDK_controller->keyUp.press || RSDK_stickL->keyUp.press;
-        UIControl->keyDown  = RSDK_controller->keyDown.press || RSDK_stickL->keyDown.press;
-        UIControl->keyLeft  = RSDK_controller->keyLeft.press || RSDK_stickL->keyLeft.press;
-        UIControl->keyRight = RSDK_controller->keyRight.press || RSDK_stickL->keyRight.press;
-        UIControl->keyY     = RSDK_controller->keyY.press;
-        UIControl->keyX     = RSDK_controller->keyX.press;
+        UIControl->keyUp    = ControllerInfo->keyUp.press || AnalogStickInfoL->keyUp.press;
+        UIControl->keyDown  = ControllerInfo->keyDown.press || AnalogStickInfoL->keyDown.press;
+        UIControl->keyLeft  = ControllerInfo->keyLeft.press || AnalogStickInfoL->keyLeft.press;
+        UIControl->keyRight = ControllerInfo->keyRight.press || AnalogStickInfoL->keyRight.press;
+        UIControl->keyY     = ControllerInfo->keyY.press;
+        UIControl->keyX     = ControllerInfo->keyX.press;
 #if RETRO_USE_PLUS
-        UIControl->keyStart = RSDK_controller->keyStart.press;
+        UIControl->keyStart = ControllerInfo->keyStart.press;
 #endif
         if (API_GetConfirmButtonFlip()) {
-            UIControl->keyConfirm    = RSDK_controller->keyStart.press || RSDK_controller->keyB.press;
-            UIControl->keyBack = RSDK_controller->keyA.press;
+            UIControl->keyConfirm    = ControllerInfo->keyStart.press || ControllerInfo->keyB.press;
+            UIControl->keyBack = ControllerInfo->keyA.press;
         }
         else {
-            UIControl->keyConfirm    = RSDK_controller->keyStart.press || RSDK_controller->keyA.press;
-            UIControl->keyBack = RSDK_controller->keyB.press;
+            UIControl->keyConfirm    = ControllerInfo->keyStart.press || ControllerInfo->keyA.press;
+            UIControl->keyBack = ControllerInfo->keyB.press;
         }
 #if RETRO_USE_PLUS
-        UIControl->keyBack |= RSDK_unknown->field_10;
+        UIControl->keyBack |= UnknownInfo->field_10;
 #else
 
 #endif
@@ -332,13 +332,13 @@ int32 UIControl_Unknown1(EntityUIControl *control, EntityUIButton *entity)
 
 void UIControl_Unknown2(EntityUIControl *control)
 {
-    Entity *storeEntity = RSDK_sceneInfo->entity;
+    Entity *storeEntity = SceneInfo->entity;
     for (int32 i = 0; i < SCENEENTITY_COUNT; ++i) {
         EntityUIButton *entity = RSDK.GetEntityByID(i);
         if (entity) {
-            int32 h          = RSDK_screens->height;
-            int32 centerX    = -RSDK_screens->width >> 1;
-            int32 centerX2   = RSDK_screens->width >> 1;
+            int32 h          = ScreenInfo->height;
+            int32 centerX    = -ScreenInfo->width >> 1;
+            int32 centerX2   = ScreenInfo->width >> 1;
             int32 centerY    = h >> 1;
             int32 negCenterY = -h >> 1;
 
@@ -355,7 +355,7 @@ void UIControl_Unknown2(EntityUIControl *control)
             if (entity->position.x >= control->position.x + (x << 16) && entity->position.x <= control->position.x + (centerX << 16)) {
                 if (entity->position.y >= control->position.y + (y << 16) && entity->position.y <= control->position.y + (negCenterY << 16)) {
                     int32 id                 = RSDK.GetEntityID(entity);
-                    RSDK_sceneInfo->entity = (Entity *)entity;
+                    SceneInfo->entity = (Entity *)entity;
                     if (UIButton && entity->objectID == UIButton->objectID) {
                         UIButton_Unknown1(entity);
                         UIButton_Update();
@@ -375,7 +375,7 @@ void UIControl_Unknown2(EntityUIControl *control)
 #if RETRO_USE_PLUS
                         UIModeButton_Update();
 #else
-                        EntityUIModeButton *modeButton = (EntityUIModeButton *)RSDK_sceneInfo->entity;
+                        EntityUIModeButton *modeButton = (EntityUIModeButton *)SceneInfo->entity;
                         modeButton->touchPosStart.x    = 0xB80000;
                         modeButton->touchPosStart.y    = 0x3E0000;
                         modeButton->touchPosEnd.x      = 0;
@@ -400,7 +400,7 @@ void UIControl_Unknown2(EntityUIControl *control)
                     }
                     if (entity->visible)
                         RSDK.AddDrawListRef(entity->drawOrder, id);
-                    RSDK_sceneInfo->entity = storeEntity;
+                    SceneInfo->entity = storeEntity;
                 }
             }
         }
@@ -433,7 +433,7 @@ void UIControl_Unknown4(EntityUIControl *entity)
     }
 
     RSDK.ClearCameras();
-    RSDK.AddCamera(&entity->position, RSDK_screens->width << 16, RSDK_screens->height << 16, true);
+    RSDK.AddCamera(&entity->position, ScreenInfo->width << 16, ScreenInfo->height << 16, true);
     UIControl_Unknown2(entity);
     if (!entity->childHasFocus && (entity->resetSelection || !entity->dwordCC)) {
         entity->position.x   = entity->startPos.x;
@@ -451,10 +451,10 @@ void UIControl_Unknown4(EntityUIControl *entity)
     }
 #endif
     if (entity->unknownCallback3) {
-        Entity *storeEntity    = RSDK_sceneInfo->entity;
-        RSDK_sceneInfo->entity = (Entity *)entity;
+        Entity *storeEntity    = SceneInfo->entity;
+        SceneInfo->entity = (Entity *)entity;
         entity->unknownCallback3();
-        RSDK_sceneInfo->entity = storeEntity;
+        SceneInfo->entity = storeEntity;
     }
 }
 
@@ -688,10 +688,10 @@ void UIControl_Unknown15(EntityUIControl *entity, int32 x, int32 y)
 #endif
         int32 startX = entity->startPos.x - entity->cameraOffset.x;
         int32 startY = entity->startPos.y - entity->cameraOffset.y;
-        int32 x1     = startX + (RSDK_screens->width << 15) - (entity->size.x >> 1);
-        int32 x2     = startX + (entity->size.x >> 1) - (RSDK_screens->width << 15);
-        int32 y1     = startY + (RSDK_screens->height << 15) - (entity->size.y >> 1);
-        int32 y2     = startY + (entity->size.y >> 1) - (RSDK_screens->height << 15);
+        int32 x1     = startX + (ScreenInfo->width << 15) - (entity->size.x >> 1);
+        int32 x2     = startX + (entity->size.x >> 1) - (ScreenInfo->width << 15);
+        int32 y1     = startY + (ScreenInfo->height << 15) - (entity->size.y >> 1);
+        int32 y2     = startY + (entity->size.y >> 1) - (ScreenInfo->height << 15);
         if (x < x2)
             x2 = x;
         finalX = x2;
@@ -741,17 +741,17 @@ void UIControl_ProcessButtonInput(void)
     RSDK_THIS(UIControl);
 
     bool32 flag = false;
-    if (RSDK_touchMouse->count || UIControl->field_C8) {
+    if (TouchInfo->count || UIControl->field_C8) {
         EntityUIButton *activeButton = 0;
-        UIControl->field_C8          = RSDK_touchMouse->count != 0;
+        UIControl->field_C8          = TouchInfo->count != 0;
         UIControl->field_4           = 1;
 
         for (int32 i = 0; i < entity->buttonCount; ++i) {
             if (entity->buttons[i]) {
                 EntityUIButton *button = entity->buttons[i];
 
-                Entity *storeEntity    = RSDK_sceneInfo->entity;
-                RSDK_sceneInfo->entity = (Entity *)button;
+                Entity *storeEntity    = SceneInfo->entity;
+                SceneInfo->entity = (Entity *)button;
                 if (button->touchCB && !entity->dialogHasFocus
 #if RETRO_USE_PLUS
                     && !entity->popoverHasFocus
@@ -768,11 +768,11 @@ void UIControl_ProcessButtonInput(void)
                         }
                     }
                 }
-                RSDK_sceneInfo->entity = storeEntity;
+                SceneInfo->entity = storeEntity;
             }
         }
 
-        if (RSDK_touchMouse->count) {
+        if (TouchInfo->count) {
             if (flag) {
                 int32 id = -1;
                 for (int32 i = 0; i < entity->buttonCount; ++i) {
@@ -784,11 +784,11 @@ void UIControl_ProcessButtonInput(void)
 
                 entity->activeEntityID = id;
                 if (activeButton->flag) {
-                    Entity *storeEntity    = RSDK_sceneInfo->entity;
-                    RSDK_sceneInfo->entity = (Entity *)activeButton;
+                    Entity *storeEntity    = SceneInfo->entity;
+                    SceneInfo->entity = (Entity *)activeButton;
                     activeButton->flag     = true;
                     StateMachine_Run(activeButton->options5);
-                    RSDK_sceneInfo->entity = storeEntity;
+                    SceneInfo->entity = storeEntity;
                 }
             }
             else {
@@ -803,13 +803,13 @@ void UIControl_ProcessButtonInput(void)
         if (entity->activeEntityID < entity->buttonCount) {
             EntityUIButton *button = entity->buttons[entity->activeEntityID];
             if (button) {
-                Entity *storeEntity    = RSDK_sceneInfo->entity;
-                RSDK_sceneInfo->entity = (Entity *)button;
+                Entity *storeEntity    = SceneInfo->entity;
+                SceneInfo->entity = (Entity *)button;
                 if (button->processButtonCB) {
                     if (!button->options8 || !button->options8())
                         button->processButtonCB();
                 }
-                RSDK_sceneInfo->entity = storeEntity;
+                SceneInfo->entity = storeEntity;
             }
         }
     }

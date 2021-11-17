@@ -70,7 +70,7 @@ void NoSwap_Draw(void)
 void NoSwap_Create(void *data)
 {
     RSDK_THIS(NoSwap);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->updateRange.x = 16 * entity->size.x;
         entity->updateRange.y = 16 * entity->size.y;
 

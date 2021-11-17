@@ -80,7 +80,7 @@ void Hatterkiller_Update(void)
                 ++HeavyMystic->curtainLinePos;
             }
             CREATE_ENTITY(UberCaterkiller, NULL, entity->positions[Hatterkiller_SegmentCount - 1].x,
-                          (RSDK_screens->position.y + 64 + RSDK_screens->height) << 16);
+                          (ScreenInfo->position.y + 64 + ScreenInfo->height) << 16);
             destroyEntity(entity);
         }
     }
@@ -109,7 +109,7 @@ void Hatterkiller_Create(void *data)
 {
     RSDK_THIS(Hatterkiller);
 
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->visible       = true;
         entity->active        = ACTIVE_NORMAL;
         entity->drawOrder     = Zone->drawOrderLow + 1;

@@ -32,7 +32,7 @@ void ShopWindow_Draw(void)
 void ShopWindow_Create(void *data)
 {
     RSDK_THIS(ShopWindow);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->visible = true;
         if (data) {
             entity->active        = ACTIVE_NORMAL;
@@ -170,11 +170,11 @@ void ShopWindow_StateDraw_Normal(void)
 {
     RSDK_THIS(ShopWindow);
     Vector2 drawPos;
-    ScreenInfo *screen = &RSDK_screens[RSDK_sceneInfo->currentScreenID];
+    RSDKScreenInfo *screen = &ScreenInfo[SceneInfo->currentScreenID];
 
     int32 x = (entity->position.x >> 0x10) - screen->position.x - entity->size.x;
     int32 y = (entity->position.y >> 0x10) - screen->position.y - entity->size.y;
-    RSDK.SetClipBounds(RSDK_sceneInfo->currentScreenID, x, y, x + 2 * entity->size.x, y + 2 * entity->size.y + 1);
+    RSDK.SetClipBounds(SceneInfo->currentScreenID, x, y, x + 2 * entity->size.x, y + 2 * entity->size.y + 1);
 
     drawPos.x = (x - (uint8)(x + (screen->position.x >> 1))) << 16;
     drawPos.y = (y - (uint8)(y + (screen->position.y >> 1))) << 16;
@@ -194,7 +194,7 @@ void ShopWindow_StateDraw_Normal(void)
     RSDK.DrawSprite(&entity->animator, &drawPos, true);
 
     if (!entity->shatter) {
-        RSDK.SetClipBounds(RSDK_sceneInfo->currentScreenID, 0, 0, screen->width, screen->height);
+        RSDK.SetClipBounds(SceneInfo->currentScreenID, 0, 0, screen->width, screen->height);
     }
     else {
         drawPos.x            = entity->position.x - (entity->size.x << 16) + 0x180000;
@@ -204,7 +204,7 @@ void ShopWindow_StateDraw_Normal(void)
         RSDK.DrawSprite(&entity->animator, &drawPos, false);
 
         entity->inkEffect = INK_ADD;
-        RSDK.SetClipBounds(RSDK_sceneInfo->currentScreenID, 0, 0, screen->width, screen->height);
+        RSDK.SetClipBounds(SceneInfo->currentScreenID, 0, 0, screen->width, screen->height);
     }
 }
 
@@ -217,7 +217,7 @@ void ShopWindow_StateDraw_Shard(void)
 void ShopWindow_StateDraw_Shattered(void)
 {
     RSDK_THIS(ShopWindow);
-    ScreenInfo *screen = &RSDK_screens[RSDK_sceneInfo->currentScreenID];
+    RSDKScreenInfo *screen = &ScreenInfo[SceneInfo->currentScreenID];
     RSDK.DrawRect((entity->position.x >> 0x10) - screen->position.x - entity->size.x,
                   (entity->position.y >> 0x10) - screen->position.y - entity->size.y, 2 * entity->size.x, 2 * entity->size.y, 0xF0F0F0, 255, 0, true);
 }
@@ -243,11 +243,11 @@ void ShopWindow_EditorDraw(void)
     size.y = entity->size.y >> 16;
 
     Vector2 drawPos;
-    ScreenInfo *screen = &RSDK_screens[RSDK_sceneInfo->currentScreenID];
+    RSDKScreenInfo *screen = &ScreenInfo[SceneInfo->currentScreenID];
 
     int32 x = (entity->position.x >> 0x10) - screen->position.x - size.x;
     int32 y = (entity->position.y >> 0x10) - screen->position.y - size.y;
-    RSDK.SetClipBounds(RSDK_sceneInfo->currentScreenID, x, y, x + 2 * size.x, y + 2 * size.y + 1);
+    RSDK.SetClipBounds(SceneInfo->currentScreenID, x, y, x + 2 * size.x, y + 2 * size.y + 1);
 
     drawPos.x = (x + screen->position.x) << 16;
     drawPos.y = (y + screen->position.y) << 16;
@@ -265,7 +265,7 @@ void ShopWindow_EditorDraw(void)
     RSDK.DrawSprite(&entity->animator, &drawPos, false);
 
     if (!entity->shatter) {
-        RSDK.SetClipBounds(RSDK_sceneInfo->currentScreenID, 0, 0, screen->width, screen->height);
+        RSDK.SetClipBounds(SceneInfo->currentScreenID, 0, 0, screen->width, screen->height);
     }
     else {
         drawPos.x                = entity->position.x - (size.x << 16) + 0x180000;
@@ -275,7 +275,7 @@ void ShopWindow_EditorDraw(void)
         RSDK.DrawSprite(&entity->animator, &drawPos, false);
 
         entity->inkEffect = INK_ADD;
-        RSDK.SetClipBounds(RSDK_sceneInfo->currentScreenID, 0, 0, screen->width, screen->height);
+        RSDK.SetClipBounds(SceneInfo->currentScreenID, 0, 0, screen->width, screen->height);
     }
 
     DrawHelpers_DrawRectOutline(0xFFFF00, entity->position.x, entity->position.y, entity->size.x * 2, entity->size.y * 2);

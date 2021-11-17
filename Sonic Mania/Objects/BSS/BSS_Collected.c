@@ -71,7 +71,7 @@ void BSS_Collected_Draw(void) {}
 void BSS_Collected_Create(void *data)
 {
     RSDK_THIS(BSS_Collected);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->active = ACTIVE_NORMAL;
         entity->type   = voidToInt(data);
     }

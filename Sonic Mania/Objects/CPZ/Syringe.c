@@ -56,7 +56,7 @@ void Syringe_Draw(void)
 void Syringe_Create(void *data)
 {
     RSDK_THIS(Syringe);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->visible       = true;
         entity->drawOrder     = Zone->drawOrderLow;
         entity->active        = ACTIVE_BOUNDS;

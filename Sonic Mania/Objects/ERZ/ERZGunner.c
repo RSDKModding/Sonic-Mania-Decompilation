@@ -28,7 +28,7 @@ void ERZGunner_Create(void *data)
 {
     RSDK_THIS(ERZGunner);
 
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->visible       = true;
         entity->drawOrder     = 1;
         entity->active        = ACTIVE_NORMAL;
@@ -42,7 +42,7 @@ void ERZGunner_Create(void *data)
                 RSDK.SetSpriteAnimation(ERZGunner->aniFrames, 1, &entity->animator2, true, 0);
 
                 entity->posUnknown1 = entity->position;
-                entity->posUnknown2 = RSDK_screens->position;
+                entity->posUnknown2 = ScreenInfo->position;
                 entity->stateDraw   = ERZGunner_StateDraw_Unknown0;
                 entity->state       = ERZGunner_State_Unknown1;
                 break;
@@ -246,14 +246,14 @@ void ERZGunner_StateDraw_Unknown1(void)
     RSDK_THIS(ERZGunner);
     EntityERZGunner *parent = (EntityERZGunner *)entity->parent;
 
-    RSDK.SetClipBounds(0, 0, 0, RSDK_screens->width, ((entity->posUnknown1.y + parent->position.y) >> 16) - RSDK_screens->position.y);
+    RSDK.SetClipBounds(0, 0, 0, ScreenInfo->width, ((entity->posUnknown1.y + parent->position.y) >> 16) - ScreenInfo->position.y);
 
     Vector2 drawPos;
     drawPos.x = parent->position.x + entity->posUnknown1.x;
     drawPos.y = entity->position.y;
     RSDK.DrawSprite(&entity->animator1, &drawPos, false);
 
-    RSDK.SetClipBounds(0, 0, 0, RSDK_screens->width, RSDK_screens->height);
+    RSDK.SetClipBounds(0, 0, 0, ScreenInfo->width, ScreenInfo->height);
     drawPos.y = entity->posUnknown1.y + parent->position.y;
     RSDK.DrawSprite(&entity->animator2, &drawPos, false);
 }
@@ -277,8 +277,8 @@ void ERZGunner_State_Unknown1(void)
     entity->angle      = (entity->angle + 3) & 0xFF;
     entity->position.y = (RSDK.Sin256(entity->angle) << 11) + entity->posUnknown1.y;
 
-    entity->position.x += (RSDK_screens->position.x - entity->posUnknown2.x) << 15;
-    entity->posUnknown2 = RSDK_screens->position;
+    entity->position.x += (ScreenInfo->position.x - entity->posUnknown2.x) << 15;
+    entity->posUnknown2 = ScreenInfo->position;
     RSDK.ProcessAnimation(&entity->animator2);
 
     entity->timer3 = 8;
@@ -310,8 +310,8 @@ void ERZGunner_State_Unknown2(void)
     entity->angle      = (entity->angle + 3) & 0xFF;
     entity->position.y = (RSDK.Sin256(entity->angle) << 11) + entity->posUnknown1.y;
 
-    entity->position.x += (RSDK_screens->position.x - entity->posUnknown2.x) << 15;
-    entity->posUnknown2 = RSDK_screens->position;
+    entity->position.x += (ScreenInfo->position.x - entity->posUnknown2.x) << 15;
+    entity->posUnknown2 = ScreenInfo->position;
     RSDK.ProcessAnimation(&entity->animator1);
     RSDK.ProcessAnimation(&entity->animator2);
 
@@ -358,7 +358,7 @@ void ERZGunner_State1_Unknown1(void)
             entity->type = (ERZGunner->value2 & 1) + 2;
         ++ERZGunner->value2;
         entity->drawOrder  = Zone->drawOrderLow;
-        entity->position.y = (RSDK_screens->position.y - 64) << 16;
+        entity->position.y = (ScreenInfo->position.y - 64) << 16;
 
         bool32 flag = false;
         while (!flag) {
@@ -424,7 +424,7 @@ void ERZGunner_State1_Unknown2(void)
 
     ERZGunner_CheckPlayerMissileCollisions();
     if (entity->objectID) {
-        if (RSDK.ObjectTileCollision(RSDK_sceneInfo->entity, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x100000, true)) {
+        if (RSDK.ObjectTileCollision(SceneInfo->entity, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x100000, true)) {
             if (entity->type == 3) {
                 EntityERZGunner *child = CREATE_ENTITY(ERZGunner, intToVoid(5), entity->position.x, entity->position.y);
                 if (entity->velocity.y > 0x20000)
@@ -452,7 +452,7 @@ void ERZGunner_State1_Unknown3(void)
 
     ERZGunner_CheckPlayerMissileCollisions();
     if (entity->objectID) {
-        if (RSDK.ObjectTileCollision(RSDK_sceneInfo->entity, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x100000, true)) {
+        if (RSDK.ObjectTileCollision(SceneInfo->entity, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x100000, true)) {
             if (entity->type == 3) {
                 EntityERZGunner *child = CREATE_ENTITY(ERZGunner, intToVoid(5), entity->position.x, entity->position.y);
                 if (entity->velocity.y > 0x20000)
@@ -607,7 +607,7 @@ void ERZGunner_EditorDraw(void)
     RSDK.SetSpriteAnimation(ERZGunner->aniFrames, 1, &entity->animator2, false, 0);
 
     entity->posUnknown1 = entity->position;
-    entity->posUnknown2 = RSDK_screens->position;
+    entity->posUnknown2 = ScreenInfo->position;
 
     ERZGunner_StateDraw_Unknown0();
 }

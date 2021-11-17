@@ -61,7 +61,7 @@ void OrbitSpike_Draw(void)
 void OrbitSpike_Create(void *data)
 {
     RSDK_THIS(OrbitSpike);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->center.x      = entity->position.x;
         entity->center.y      = entity->position.y;
         entity->active        = ACTIVE_BOUNDS;

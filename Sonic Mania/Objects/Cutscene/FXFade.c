@@ -21,7 +21,7 @@ void FXFade_Draw(void)
 void FXFade_Create(void *data)
 {
     RSDK_THIS(FXFade);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->visible = true;
         entity->active  = ACTIVE_NORMAL;
         if (RSDK.CheckStageFolder("Menu")) {

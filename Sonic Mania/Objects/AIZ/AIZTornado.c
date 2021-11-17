@@ -36,7 +36,7 @@ void AIZTornado_Draw(void)
 void AIZTornado_Create(void *data)
 {
     RSDK_THIS(AIZTornado);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->visible       = true;
         entity->updateRange.x = 0x1000000;
         entity->updateRange.y = 0x1000000;

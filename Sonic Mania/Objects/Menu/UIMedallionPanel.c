@@ -36,7 +36,7 @@ void UIMedallionPanel_DrawPanel(void)
     for (int32 m = 0; m < 0x20; ++m) {
         drawPos.x = (entity->position.x - 0x310000) + 0xE0000 * (m % 8);
         drawPos.y = (entity->position.y - 0x150000) + 0xE0000 * (m / 8);
-        if (RSDK_sceneInfo->inEditor) {
+        if (SceneInfo->inEditor) {
             RSDK.SetSpriteAnimation(UIMedallionPanel->aniFrames, 0, &entity->animator, true, (m & 1) + 1);
         }
         else if (progress) {
@@ -46,7 +46,7 @@ void UIMedallionPanel_DrawPanel(void)
             RSDK.SetSpriteAnimation(UIMedallionPanel->aniFrames, 0, &entity->animator, true, 0);
         }
 
-        if (!RSDK_sceneInfo->inEditor && !entity->animator.frameID)
+        if (!SceneInfo->inEditor && !entity->animator.frameID)
             RSDK.DrawCircleOutline(drawPos.x, drawPos.y, 5, 6, 0, 255, INK_BLEND, false);
         drawPos.x += 0x10000;
         RSDK.DrawSprite(&entity->animator, &drawPos, false);

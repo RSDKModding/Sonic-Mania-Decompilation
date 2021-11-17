@@ -88,7 +88,7 @@ void Caterkiller_DebugSpawn(void)
 void Caterkiller_CheckOnScreen(void)
 {
     RSDK_THIS(Caterkiller);
-    if (!RSDK.CheckOnScreen(RSDK_sceneInfo->entity, NULL) && !RSDK.CheckPosOnScreen(&entity->startPos, &entity->updateRange)) {
+    if (!RSDK.CheckOnScreen(SceneInfo->entity, NULL) && !RSDK.CheckPosOnScreen(&entity->startPos, &entity->updateRange)) {
         entity->position  = entity->startPos;
         entity->direction = entity->startDir;
         Caterkiller_Create(NULL);

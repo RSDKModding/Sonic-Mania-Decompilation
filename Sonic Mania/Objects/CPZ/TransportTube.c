@@ -19,7 +19,7 @@ void TransportTube_Create(void *data)
     RSDK_THIS(TransportTube);
 
     entity->drawFX = FX_FLIP;
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->active        = ACTIVE_BOUNDS;
         entity->updateRange.x = 0xC00000;
         entity->updateRange.y = 0xC00000;
@@ -173,7 +173,7 @@ void TransportTube_State_Type23(void)
                     TransportTube->field_4[i] = 1;
                 else
                     TransportTube->field_4[i] = -1;
-                EntityTransportTube *entPtr = RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot + TransportTube->field_4[i], TransportTube);
+                EntityTransportTube *entPtr = RSDK_GET_ENTITY(SceneInfo->entitySlot + TransportTube->field_4[i], TransportTube);
                 int32 angle          = RSDK.ATan2((entPtr->position.x - player->position.x) >> 16, (entPtr->position.y - player->position.y) >> 16);
                 player->velocity.x = 0xC00 * RSDK.Cos256(angle);
                 player->velocity.y = 0xC00 * RSDK.Sin256(angle);
@@ -195,7 +195,7 @@ void TransportTube_State_Type4(void)
                 int32 rx = (player->position.x - entity->position.x) >> 16;
                 int32 ry = (player->position.y - entity->position.y) >> 16;
                 if (rx * rx + ry * ry < 192) {
-                    EntityTransportTube *tube = RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot + TransportTube->field_4[i], TransportTube);
+                    EntityTransportTube *tube = RSDK_GET_ENTITY(SceneInfo->entitySlot + TransportTube->field_4[i], TransportTube);
                     player->position.x        = entity->position.x;
                     player->position.y        = entity->position.y;
                     int32 angle             = RSDK.ATan2((tube->position.x - player->position.x) >> 16, (tube->position.y - player->position.y) >> 16);

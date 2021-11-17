@@ -15,19 +15,19 @@ void TryAgain_StaticUpdate(void) {}
 void TryAgain_Draw(void)
 {
     RSDK_THIS(TryAgain);
-    RSDK.SetActivePalette(0, 0, RSDK_screens->height);
-    RSDK.SetClipBounds(0, 0, 0, RSDK_screens->width, (entity->position.y >> 16));
+    RSDK.SetActivePalette(0, 0, ScreenInfo->height);
+    RSDK.SetClipBounds(0, 0, 0, ScreenInfo->width, (entity->position.y >> 16));
     RSDK.DrawSprite(&entity->animator2, &entity->unknownPos1, false);
     RSDK.DrawSprite(&entity->animator3, &entity->unknownPos2, false);
-    RSDK.SetClipBounds(0, 0, 0, RSDK_screens->width, RSDK_screens->height);
+    RSDK.SetClipBounds(0, 0, 0, ScreenInfo->width, ScreenInfo->height);
     RSDK.DrawSprite(&entity->animator1, NULL, false);
-    RSDK.SetActivePalette(1, 0, RSDK_screens->height);
+    RSDK.SetActivePalette(1, 0, ScreenInfo->height);
 }
 
 void TryAgain_Create(void *data)
 {
     RSDK_THIS(TryAgain);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->unknownPos1.x = entity->position.x;
         entity->unknownPos1.y = entity->position.y;
         entity->unknownPos1.y += 0x100000;
@@ -125,10 +125,10 @@ void TryAgain_Unknown4(void)
     }
 
     ++entity->timer;
-    if (RSDK_controller->keyA.press || RSDK_controller->keyStart.press)
+    if (ControllerInfo->keyA.press || ControllerInfo->keyStart.press)
         entity->timer = 600;
 #if RETRO_USE_TOUCH_CONTROLS
-    else if (RSDK_touchMouse->count)
+    else if (TouchInfo->count)
         entity->timer = 600;
 #endif
 

@@ -17,8 +17,8 @@ void MonarchBG_Draw(void)
     RSDK_THIS(MonarchBG);
     Vector2 drawPos;
     
-    drawPos.x         = entity->position.x - ((entity->position.x - ((RSDK_screens->position.x + RSDK_screens->centerX) << 16)) >> 1);
-    drawPos.y         = entity->position.y - 208 * ((entity->position.y - ((RSDK_screens->position.y + RSDK_screens->centerY) << 16)) >> 8);
+    drawPos.x         = entity->position.x - ((entity->position.x - ((ScreenInfo->position.x + ScreenInfo->centerX) << 16)) >> 1);
+    drawPos.y         = entity->position.y - 208 * ((entity->position.y - ((ScreenInfo->position.y + ScreenInfo->centerY) << 16)) >> 8);
     entity->direction = FLIP_NONE;
     RSDK.DrawSprite(&entity->animatorTop, &drawPos, false);
     RSDK.DrawSprite(&entity->animatorBottom, &drawPos, false);
@@ -30,7 +30,7 @@ void MonarchBG_Draw(void)
 void MonarchBG_Create(void *data)
 {
     RSDK_THIS(MonarchBG);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->visible       = true;
         entity->drawFX        = FX_FLIP;
         entity->drawOrder     = 1;

@@ -237,13 +237,13 @@ void UISaveSlot_Draw(void)
 #endif
         }
     }
-    RSDK.DrawCircle(RSDK_screens->centerX, RSDK_screens->centerY, entity->radius, 0, entity->alpha, INK_ALPHA, true);
+    RSDK.DrawCircle(ScreenInfo->centerX, ScreenInfo->centerY, entity->radius, 0, entity->alpha, INK_ALPHA, true);
 }
 
 void UISaveSlot_Create(void *data)
 {
     RSDK_THIS(UISaveSlot);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->visible         = true;
         entity->drawOrder       = 2;
         entity->active          = ACTIVE_BOUNDS;
@@ -375,7 +375,7 @@ void UISaveSlot_Unknown3(int32 drawX, int32 drawY)
         entity->animator2.frameID = frames[entity->frameID];
 #if RETRO_USE_PLUS
     }
-    else if (!RSDK_sceneInfo->inEditor) {
+    else if (!SceneInfo->inEditor) {
         if (!entity->isNewSave && entity->type != 1) {
             playerID = entity->saveEncorePlayer;
             buddyID  = entity->saveEncoreBuddy;
@@ -477,7 +477,7 @@ void UISaveSlot_DrawPlayerInfo(int32 drawX, int32 drawY)
         if (entity->isNewSave || entity->type == 1)
             return;
 
-        if (entity->debugEncoreDraw && RSDK_sceneInfo->inEditor) {
+        if (entity->debugEncoreDraw && SceneInfo->inEditor) {
             switch (UISaveSlot_Unknown1(entity->dCharPoint)) {
                 case ID_TAILS: playerID = 1; break;
                 case ID_KNUCKLES: playerID = 2; break;
@@ -776,11 +776,11 @@ void UISaveSlot_DeleteSaveCB(int32 status)
         dialog->curCallback               = NULL;
     }
 
-    Entity *storeEntity    = RSDK_sceneInfo->entity;
-    RSDK_sceneInfo->entity = (Entity *)saveSlot;
+    Entity *storeEntity    = SceneInfo->entity;
+    SceneInfo->entity = (Entity *)saveSlot;
     UISaveSlot_LoadSaveInfo();
     UISaveSlot_Unknown8();
-    RSDK_sceneInfo->entity = storeEntity;
+    SceneInfo->entity = storeEntity;
 }
 
 void UISaveSlot_ProcessButtonCB(void)

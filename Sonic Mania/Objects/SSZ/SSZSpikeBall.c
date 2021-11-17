@@ -43,7 +43,7 @@ void SSZSpikeBall_Create(void *data)
     if (!entity->interval)
         entity->interval = 120;
 
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         RSDK.SetSpriteAnimation(SSZSpikeBall->aniFrames, 0, &entity->animator1, true, 0);
         RSDK.SetSpriteAnimation(SSZSpikeBall->aniFrames, 1, &entity->animator2, true, 0);
 

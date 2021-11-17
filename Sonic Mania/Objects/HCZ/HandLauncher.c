@@ -29,7 +29,7 @@ void HandLauncher_StaticUpdate(void)
 void HandLauncher_Draw(void)
 {
     RSDK_THIS(HandLauncher);
-    if (RSDK_sceneInfo->currentDrawGroup == Zone->playerDrawHigh) {
+    if (SceneInfo->currentDrawGroup == Zone->playerDrawHigh) {
         if (entity->state == HandLauncher_Unknown8)
             RSDK.DrawSprite(&entity->animator2, NULL, false);
     }

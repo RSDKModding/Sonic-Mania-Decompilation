@@ -6,7 +6,7 @@ void UFO_HUD_Update(void)
 {
     RSDK_THIS(UFO_HUD);
 #if RETRO_USE_PLUS && RETRO_GAMEVER != VER_107
-    if (RSDK_controller->keyY.press)
+    if (ControllerInfo->keyY.press)
         UFO_HUD_LevelUpMach();
 #endif
 
@@ -42,7 +42,7 @@ void UFO_HUD_Draw(void)
 
     Vector2 drawPos;
     drawPos.y = 0x240000;
-    drawPos.x = RSDK_screens->centerX << 16;
+    drawPos.x = ScreenInfo->centerX << 16;
     if (entity->scale.x > 0x200)
         entity->drawFX = FX_SCALE;
     RSDK.DrawSprite(&entity->animator1, &drawPos, true);
@@ -52,7 +52,7 @@ void UFO_HUD_Draw(void)
         drawPos.x += 0xA0000;
     }
 
-    drawPos.x = RSDK_screens->centerX << 16;
+    drawPos.x = ScreenInfo->centerX << 16;
     if (!(entity->timer & 4) && entity->timer) {
         entity->animator3.frameID = 3;
         RSDK.DrawSprite(&entity->animator3, &drawPos, true);
@@ -73,7 +73,7 @@ void UFO_HUD_Draw(void)
 void UFO_HUD_Create(void *data)
 {
     RSDK_THIS(UFO_HUD);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->active        = ACTIVE_NORMAL;
         entity->visible       = true;
         entity->drawOrder     = 12;

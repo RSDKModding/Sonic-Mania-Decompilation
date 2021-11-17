@@ -31,15 +31,15 @@ void TMZBarrier_Draw(void) {}
 void TMZBarrier_Create(void *data)
 {
     RSDK_THIS(TMZBarrier);
-    if (!RSDK_sceneInfo->inEditor)
+    if (!SceneInfo->inEditor)
         entity->active = ACTIVE_NORMAL;
 }
 
 void TMZBarrier_StageLoad(void)
 {
-    if (RSDK_sceneInfo->minutes || RSDK_sceneInfo->seconds || RSDK_sceneInfo->milliseconds) {
-        if (RSDK_sceneInfo->minutes != globals->tempMinutes || RSDK_sceneInfo->seconds != globals->tempSeconds
-            || RSDK_sceneInfo->milliseconds != globals->tempMilliseconds) {
+    if (SceneInfo->minutes || SceneInfo->seconds || SceneInfo->milliseconds) {
+        if (SceneInfo->minutes != globals->tempMinutes || SceneInfo->seconds != globals->tempSeconds
+            || SceneInfo->milliseconds != globals->tempMilliseconds) {
             TMZBarrier->flags = globals->restartFlags;
         }
         else {

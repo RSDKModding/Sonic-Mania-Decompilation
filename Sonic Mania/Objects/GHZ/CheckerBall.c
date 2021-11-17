@@ -121,7 +121,9 @@ void CheckerBall_StageLoad(void)
 
 void CheckerBall_DebugSpawn(void)
 {
-    RSDK.CreateEntity(CheckerBall->objectID, 0, RSDK_sceneInfo->entity->position.x, RSDK_sceneInfo->entity->position.y);
+    RSDK_THIS(DebugMode);
+
+    CREATE_ENTITY(CheckerBall, NULL, entity->position.x, entity->position.y);
 }
 
 void CheckerBall_DebugDraw(void)

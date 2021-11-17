@@ -17,8 +17,8 @@ void Music_Draw(void) {}
 void Music_Create(void *data)
 {
     RSDK_THIS(Music);
-    if (!RSDK_sceneInfo->inEditor) {
-        entity->active = ((RSDK_sceneInfo->state & 3) != 3) + ACTIVE_ALWAYS;
+    if (!SceneInfo->inEditor) {
+        entity->active = ((SceneInfo->state & 3) != 3) + ACTIVE_ALWAYS;
         if (entity->trackFile.textLength) {
             if (entity->trackID != TRACK_NOLOAD) {
                 RSDK.GetCString(Music->trackNames[entity->trackID], &entity->trackFile);

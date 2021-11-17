@@ -76,7 +76,7 @@ void SideBarrel_Create(void *data)
     RSDK_THIS(SideBarrel);
     entity->visible   = true;
     entity->drawOrder = Zone->drawOrderLow;
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         RSDK.SetSpriteAnimation(SideBarrel->aniFrames, 0, &entity->animator, true, 0);
         entity->active        = ACTIVE_BOUNDS;
         entity->updateRange.x = 0x800000;

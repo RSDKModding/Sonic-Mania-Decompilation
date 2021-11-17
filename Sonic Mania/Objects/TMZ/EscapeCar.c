@@ -15,10 +15,10 @@ void EscapeCar_StaticUpdate(void) {}
 void EscapeCar_Draw(void)
 {
     RSDK_THIS(EscapeCar);
-    if (RSDK_sceneInfo->currentDrawGroup == Zone->drawOrderLow) {
+    if (SceneInfo->currentDrawGroup == Zone->drawOrderLow) {
         RSDK.DrawSprite(&entity->animator2, NULL, false);
-        if (!RSDK_sceneInfo->currentScreenID)
-            RSDK.AddDrawListRef(Zone->drawOrderHigh, RSDK_sceneInfo->entitySlot);
+        if (!SceneInfo->currentScreenID)
+            RSDK.AddDrawListRef(Zone->drawOrderHigh, SceneInfo->entitySlot);
     }
     else {
         RSDK.DrawSprite(&entity->animator1, NULL, false);
@@ -30,7 +30,7 @@ void EscapeCar_Create(void *data)
 {
     RSDK_THIS(EscapeCar);
 
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->visible       = true;
         entity->drawOrder     = Zone->drawOrderLow;
         entity->active        = ACTIVE_BOUNDS;
@@ -190,7 +190,7 @@ void EscapeCar_StateEncore_Unknown1(void)
 {
     RSDK_THIS(EscapeCar);
 
-    if (entity->position.x - 0x800000 < (RSDK_screens->position.x + RSDK_screens->centerX) << 16) {
+    if (entity->position.x - 0x800000 < (ScreenInfo->position.x + ScreenInfo->centerX) << 16) {
         RSDK.SetSpriteAnimation(EscapeCar->aniFrames, 1, &entity->animator3, true, 0);
         entity->velocity.x = 0x6000;
         if (SaveGame->saveRAM->chaosEmeralds == 0x7F)

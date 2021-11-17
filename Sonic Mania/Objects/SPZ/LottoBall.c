@@ -19,7 +19,7 @@ void LottoBall_Draw(void)
     RSDK_THIS(LottoBall);
     Vector2 drawPos;
 
-    if (entity->screenFlags[RSDK_sceneInfo->currentScreenID] || (!entity->screenRelative && entity->state != LottoBall_Unknown4)) {
+    if (entity->screenFlags[SceneInfo->currentScreenID] || (!entity->screenRelative && entity->state != LottoBall_Unknown4)) {
         RSDK.DrawSprite(&entity->animator1, NULL, entity->screenRelative);
         switch (entity->type) {
             case LOTTOBALL_BLUE:
@@ -61,7 +61,7 @@ void LottoBall_Create(void *data)
 {
     RSDK_THIS(LottoBall);
 
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->drawFX = FX_ROTATE;
         RSDK.SetSpriteAnimation(LottoBall->aniFrames, 0, &entity->animator1, true, entity->type);
         switch (entity->type) {
@@ -244,7 +244,7 @@ void LottoBall_Unknown4(void)
             RSDK.SetSpriteAnimation(LottoBall->aniFrames, (entity->animator3.animationID + 3), &entity->animator3, true, entity->animator3.frameID);
             entity->position.x = entity->field_70 - 0x1880000;
             entity->velocity.x = 0x80000;
-            entity->position.y = ((RSDK_screens->height - 160) << 16);
+            entity->position.y = ((ScreenInfo->height - 160) << 16);
             entity->velocity.y = 0x40000;
         }
     }
@@ -276,7 +276,7 @@ void LottoBall_Unknown6(void)
     RSDK_THIS(LottoBall);
 
     ++entity->timer;
-    entity->position.x += ((RSDK_screens->centerX << 16) - entity->position.x) >> 3;
+    entity->position.x += ((ScreenInfo->centerX << 16) - entity->position.x) >> 3;
     if (entity->timer > 24) {
         entity->scale.x -= (entity->scale.x >> 3);
         entity->scale.y -= (entity->scale.y >> 3);

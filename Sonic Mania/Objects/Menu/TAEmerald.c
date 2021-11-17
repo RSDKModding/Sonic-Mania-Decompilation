@@ -15,14 +15,14 @@ void TAEmerald_StaticUpdate(void) {}
 void TAEmerald_Draw(void)
 {
     RSDK_THIS(TAEmerald);
-    RSDK.SetActivePalette(3, 0, RSDK_screens->height);
+    RSDK.SetActivePalette(3, 0, ScreenInfo->height);
     RSDK.DrawSprite(&entity->animator, NULL, false);
 }
 
 void TAEmerald_Create(void *data)
 {
     RSDK_THIS(TAEmerald);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->startPos.x    = entity->position.x;
         entity->startPos.y    = entity->position.y;
         entity->angle         = 16 * entity->color;
@@ -45,7 +45,7 @@ void TAEmerald_StageLoad(void) { TAEmerald->aniFrames = RSDK.LoadSpriteAnimation
 void TAEmerald_Unknown1(void)
 {
     RSDK_THIS(TAEmerald);
-    entity->position.y = (RSDK.Sin256(RSDK_sceneInfo->entity->angle) << 11) + entity->startPos.y;
+    entity->position.y = (RSDK.Sin256(entity->angle) << 11) + entity->startPos.y;
     entity->angle      = (entity->angle + 4);
 }
 

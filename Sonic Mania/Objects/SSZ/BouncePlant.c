@@ -153,7 +153,7 @@ void BouncePlant_Draw(void)
 void BouncePlant_Create(void *data)
 {
     RSDK_THIS(BouncePlant);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->visible       = true;
         entity->drawOrder     = Zone->drawOrderLow;
         entity->active        = ACTIVE_BOUNDS;

@@ -61,7 +61,7 @@ void ConveyorPlatform_Create(void *data)
     entity->stateCollide = Platform_CollisionState_AllSolid;
     entity->collision    = PLATFORM_C_1;
     entity->timer        = 0;
-    if (!RSDK_sceneInfo->inEditor)
+    if (!SceneInfo->inEditor)
         entity->flipCount *= 12;
 }
 

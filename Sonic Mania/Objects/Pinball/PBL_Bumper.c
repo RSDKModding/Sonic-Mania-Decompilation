@@ -47,7 +47,7 @@ void PBL_Bumper_Draw(void)
 void PBL_Bumper_Create(void *data)
 {
     RSDK_THIS(PBL_Bumper);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->visible       = true;
         entity->drawOrder     = 4;
         entity->active        = ACTIVE_BOUNDS;

@@ -43,7 +43,7 @@ void CaterkillerJr_Draw(void)
 void CaterkillerJr_Create(void *data)
 {
     RSDK_THIS(CaterkillerJr);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->visible           = true;
         entity->drawOrder         = Zone->drawOrderHigh;
         entity->headStartPos.x    = entity->position.x;

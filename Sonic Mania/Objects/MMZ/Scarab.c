@@ -42,7 +42,7 @@ void Scarab_StaticUpdate(void)
 void Scarab_Draw(void)
 {
     RSDK_THIS(Scarab);
-    if (RSDK_sceneInfo->currentDrawGroup == entity->drawOrderHigh) {
+    if (SceneInfo->currentDrawGroup == entity->drawOrderHigh) {
         RSDK.DrawSprite(&entity->animator3, NULL, false);
     }
     else {
@@ -153,7 +153,7 @@ void Scarab_HandleChildMove(void)
 {
     RSDK_THIS(Scarab);
 
-    int32 slot = RSDK_sceneInfo->entitySlot + 1;
+    int32 slot = SceneInfo->entitySlot + 1;
     for (int32 c = 0; c < entity->childCount; ++c) {
         EntityItemBox *child = RSDK_GET_ENTITY(slot + c, ItemBox);
         child->position.x += entity->moveOffset.x;

@@ -68,7 +68,7 @@ void Hotaru_Draw(void)
 void Hotaru_Create(void *data)
 {
     RSDK_THIS(Hotaru);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->distX1 <<= 16;
         entity->distX2 <<= 16;
         entity->speed <<= 15;
@@ -266,7 +266,7 @@ void Hotaru_State_Unknown3(void)
 {
     RSDK_THIS(Hotaru);
     EntityPlayer *player = (EntityPlayer *)entity->playerPtr;
-    ScreenInfo *screen   = &RSDK_screens[entity->screenID];
+    RSDKScreenInfo *screen   = &ScreenInfo[entity->screenID];
 
     int screenX = (screen->position.x + screen->centerX) << 16;
     int screenY = (screen->position.y + screen->centerY) << 16;
@@ -304,7 +304,7 @@ void Hotaru_State_Unknown3(void)
 void Hotaru_State_Unknown4(void)
 {
     RSDK_THIS(Hotaru);
-    ScreenInfo *screen = &RSDK_screens[entity->screenID];
+    RSDKScreenInfo *screen = &ScreenInfo[entity->screenID];
 
     entity->position.x = (screen->position.x + screen->centerX) << 16;
     entity->position.y = (screen->position.y + screen->centerY) << 16;

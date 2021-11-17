@@ -80,8 +80,8 @@ bool32 SPZ1Intro_CutsceneState_Unknown1(EntityCutsceneSeq *host)
 
     if (RSDK.GetEntityCount(TitleCard->objectID, 0) || RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu)->objectID) {
         if (!host->field_6C[0]) {
-            RSDK_sceneInfo->timeEnabled  = false;
-            RSDK_sceneInfo->milliseconds = 0;
+            SceneInfo->timeEnabled  = false;
+            SceneInfo->milliseconds = 0;
             camera->state                = StateMachine_None;
             return false;
         }
@@ -90,8 +90,8 @@ bool32 SPZ1Intro_CutsceneState_Unknown1(EntityCutsceneSeq *host)
         host->field_6C[0] = 1;
         host->field_68    = host->timer;
         if (!host->field_6C[0]) {
-            RSDK_sceneInfo->timeEnabled  = false;
-            RSDK_sceneInfo->milliseconds = 0;
+            SceneInfo->timeEnabled  = false;
+            SceneInfo->milliseconds = 0;
             camera->state                = StateMachine_None;
             return false;
         }
@@ -103,8 +103,8 @@ bool32 SPZ1Intro_CutsceneState_Unknown1(EntityCutsceneSeq *host)
         return true;
     }
     else {
-        RSDK_sceneInfo->timeEnabled  = false;
-        RSDK_sceneInfo->milliseconds = 0;
+        SceneInfo->timeEnabled  = false;
+        SceneInfo->milliseconds = 0;
         camera->state                = StateMachine_None;
         return false;
     }
@@ -168,7 +168,7 @@ bool32 SPZ1Intro_CutsceneState_Unknown3(EntityCutsceneSeq *host)
         player1->camera     = camera;
         if (player2->objectID == Player->objectID)
             player2->stateInput = Player_ProcessP2Input_AI;
-        RSDK_sceneInfo->timeEnabled = true;
+        SceneInfo->timeEnabled = true;
         return true;
     }
     return false;

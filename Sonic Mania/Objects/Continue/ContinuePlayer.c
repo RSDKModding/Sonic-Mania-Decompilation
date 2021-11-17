@@ -22,7 +22,7 @@ void ContinuePlayer_Draw(void)
 void ContinuePlayer_Create(void *data)
 {
     RSDK_THIS(ContinuePlayer);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->visible   = true;
         entity->drawOrder = 1;
         entity->active    = ACTIVE_NORMAL;

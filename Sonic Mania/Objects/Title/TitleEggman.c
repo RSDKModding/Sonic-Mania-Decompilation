@@ -43,7 +43,7 @@ void TitleEggman_Draw(void)
 void TitleEggman_Create(void *data)
 {
     RSDK_THIS(TitleEggman);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->visible   = true;
         entity->drawOrder = 3;
         entity->active    = ACTIVE_NORMAL;

@@ -59,7 +59,7 @@ void EggPrison_Update(void)
                 if (Player_CheckCollisionBox(player, entity, &entity->hitboxButton) == C_TOP) {
                     entity->buttonPos = 0x80000;
                     if (entity->type < EGGPRISON_DUD)
-                        RSDK_sceneInfo->timeEnabled = false;
+                        SceneInfo->timeEnabled = false;
                     if (entity->type == EGGPRISON_ANIMALS) {
                         int32 anim = player->playerAnimator.animationID;
                         if (anim == ANI_WALK || (anim > ANI_AIRWALK && anim <= ANI_DASH))
@@ -143,7 +143,7 @@ void EggPrison_Create(void *data)
     RSDK_THIS(EggPrison);
     if (globals->gameMode < MODE_TIMEATTACK || entity->type >= EGGPRISON_FLYING) {
         entity->drawFX = FX_FLIP;
-        if (!RSDK_sceneInfo->inEditor) {
+        if (!SceneInfo->inEditor) {
             if (data)
                 entity->type = voidToInt(data);
             if (entity->type == EGGPRISON_FLYING) {
@@ -215,13 +215,13 @@ void EggPrison_HandleMovement(void)
     }
 
     if (!flag) {
-        if (entity->originY < (RSDK_screens->position.y + 64) << 16)
+        if (entity->originY < (ScreenInfo->position.y + 64) << 16)
             entity->originY += entity->velocity.y;
     }
 
     if (entity->state != EggPrison_State_FlyOffScreen) {
         if (entity->velocity.x > 0) {
-            if (entity->position.x <= (RSDK_screens->position.x + RSDK_screens->width - 48) << 16) {
+            if (entity->position.x <= (ScreenInfo->position.x + ScreenInfo->width - 48) << 16) {
                 if (RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_LWALL, 0, 0x400000, 0, true))
                     entity->velocity.x = -entity->velocity.x;
             }
@@ -229,7 +229,7 @@ void EggPrison_HandleMovement(void)
                 entity->velocity.x = -entity->velocity.x;
             }
         }
-        else if (entity->position.x < (RSDK_screens->position.x + 48) << 16) {
+        else if (entity->position.x < (ScreenInfo->position.x + 48) << 16) {
             entity->velocity.x = -entity->velocity.x;
         }
         else {
@@ -377,8 +377,8 @@ void EggPrison_State_HandleBounds(void)
                     Zone->playerBoundActiveL[p] = true;
                     Zone->playerBoundActiveR[p] = true;
                     if (entity->type == EGGPRISON_NORMAL) {
-                        Zone->screenBoundsL1[p] = (entity->position.x >> 0x10) - RSDK_screens[p].centerX;
-                        Zone->screenBoundsR1[p] = (entity->position.x >> 0x10) + RSDK_screens[p].centerX;
+                        Zone->screenBoundsL1[p] = (entity->position.x >> 0x10) - ScreenInfo[p].centerX;
+                        Zone->screenBoundsR1[p] = (entity->position.x >> 0x10) + ScreenInfo[p].centerX;
                     }
                 }
             }

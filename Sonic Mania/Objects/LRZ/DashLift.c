@@ -21,7 +21,7 @@ void DashLift_Create(void *data)
     entity->collision = PLATFORM_C_1;
     Platform_Create(NULL);
 
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->drawOrder = Zone->playerDrawHigh;
         RSDK.SetSpriteAnimation(Platform->aniFrames, 2, &entity->animator, true, 4);
 

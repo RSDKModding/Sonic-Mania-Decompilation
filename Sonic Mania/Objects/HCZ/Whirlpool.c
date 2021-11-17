@@ -148,7 +148,7 @@ void Whirlpool_Create(void *data)
     entity->hitbox.left   = -(entity->size.x >> 17);
     entity->hitbox.bottom = entity->size.y >> 17;
     entity->hitbox.top    = -(entity->size.y >> 17);
-    if (RSDK_sceneInfo->inEditor) {
+    if (SceneInfo->inEditor) {
         if (!entity->size.x && !entity->size.y) {
             entity->size.x = 0x800000;
             entity->size.y = 0x800000;

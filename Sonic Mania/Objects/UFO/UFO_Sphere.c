@@ -31,8 +31,8 @@ void UFO_Sphere_Draw(void)
     if (entity->drawOrder == 4) {
         if (entity->depth3D >= 0x100) {
             entity->direction = entity->animator.frameID > 8;
-            entity->drawPos.x = (RSDK_screens->centerX + (entity->worldPos.x << 8) / entity->depth3D) << 16;
-            entity->drawPos.y = (RSDK_screens->centerY - (entity->worldPos.y << 8) / entity->depth3D) << 16;
+            entity->drawPos.x = (ScreenInfo->centerX + (entity->worldPos.x << 8) / entity->depth3D) << 16;
+            entity->drawPos.y = (ScreenInfo->centerY - (entity->worldPos.y << 8) / entity->depth3D) << 16;
             entity->scale.x   = entity->dword9C / entity->depth3D;
             entity->scale.y   = entity->dword9C / entity->depth3D;
         }
@@ -43,7 +43,7 @@ void UFO_Sphere_Draw(void)
 void UFO_Sphere_Create(void *data)
 {
     RSDK_THIS(UFO_Sphere);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->visible       = true;
         entity->drawFX        = FX_SCALE | FX_FLIP;
         entity->drawOrder     = 4;
@@ -198,7 +198,7 @@ void UFO_Sphere_Unknown3(void)
 {
     RSDK_THIS(UFO_Sphere);
 
-    entity->drawPos.x += ((((RSDK_screens->centerX - 38) << 16) - entity->drawPos.x) >> 3);
+    entity->drawPos.x += ((((ScreenInfo->centerX - 38) << 16) - entity->drawPos.x) >> 3);
     entity->drawPos.y += ((0x1C0000 - entity->drawPos.y) >> 3);
     entity->scale.x = entity->scale.x + ((128 - entity->scale.x) >> 3);
     entity->scale.y = entity->scale.x + ((128 - entity->scale.x) >> 3);

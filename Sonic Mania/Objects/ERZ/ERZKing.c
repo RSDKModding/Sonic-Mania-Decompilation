@@ -33,7 +33,7 @@ void ERZKing_Create(void *data)
     RSDK_THIS(ERZKing);
 
     entity->drawFX = FX_FLIP;
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->active        = ACTIVE_BOUNDS;
         entity->updateRange.x = 0x800000;
         entity->updateRange.y = 0x1000000;
@@ -97,7 +97,7 @@ void ERZKing_CheckPlayerCollisions(void)
                 entity->state               = ERZKing_State_Explode;
                 entity->velocity.y          = -0x10000;
                 entity->timer               = 0;
-                RSDK_sceneInfo->timeEnabled = false;
+                SceneInfo->timeEnabled = false;
             }
             else {
                 entity->invincibilityTimer = 48;
@@ -232,7 +232,7 @@ void ERZKing_State_Unknown1(void)
         Zone->screenBoundsL1[0]     = (entity->position.x >> 16) - 320;
         Zone->playerBoundActiveR[0] = true;
         Zone->screenBoundsR1[0]     = (entity->position.x >> 16) + 320;
-        Zone->screenBoundsT1[0]     = Zone->screenBoundsB1[0] - RSDK_screens->height;
+        Zone->screenBoundsT1[0]     = Zone->screenBoundsB1[0] - ScreenInfo->height;
         ERZKing->boundsL            = (Zone->screenBoundsL1[0] + 64) << 16;
         ERZKing->boundsR            = (Zone->screenBoundsR1[0] - 64) << 16;
         ERZKing->boundsM            = entity->position.x;
@@ -251,13 +251,13 @@ void ERZKing_State_Unknown2(void)
     if (entity->timer) {
         entity->direction = RSDK_GET_ENTITY(SLOT_PLAYER1, Player)->position.x < entity->position.x;
         if (++entity->timer == 30) {
-            EntityERZKing *leftArm = RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot - 1, ERZKing);
+            EntityERZKing *leftArm = RSDK_GET_ENTITY(SceneInfo->entitySlot - 1, ERZKing);
             RSDK.ResetEntityPtr(leftArm, ERZKing->objectID, intToVoid(1));
             leftArm->position.x = entity->position.x;
             leftArm->position.y = entity->position.y;
             leftArm->parent     = (Entity *)entity;
 
-            EntityERZKing *rightArm = RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot + 1, ERZKing);
+            EntityERZKing *rightArm = RSDK_GET_ENTITY(SceneInfo->entitySlot + 1, ERZKing);
             RSDK.ResetEntityPtr(rightArm, ERZKing->objectID, intToVoid(1));
             rightArm->position.x = entity->position.x;
             rightArm->position.y = entity->position.y;

@@ -51,7 +51,7 @@ void TetherBall_Create(void *data)
         default: break;
     }
 
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->active            = ACTIVE_BOUNDS;
         entity->size              = (entity->chainCount << 10) + 0x200;
         entity->updateRange.x     = 0x1000000;

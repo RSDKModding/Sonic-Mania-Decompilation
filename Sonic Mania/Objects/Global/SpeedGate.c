@@ -120,7 +120,7 @@ void SpeedGate_Create(void *data)
     RSDK.SetSpriteAnimation(SpeedGate->aniFrames, 1, &entity->topData, true, 0);
     RSDK.SetSpriteAnimation(SpeedGate->aniFrames, 2, &entity->timerData, true, 0);
     RSDK.SetSpriteAnimation(SpeedGate->aniFrames, 5, &entity->bubbleData, true, 0);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->visible       = true;
         entity->drawOrder     = Zone->playerDrawHigh;
         entity->active        = ACTIVE_BOUNDS;
@@ -214,7 +214,7 @@ void SpeedGate_State_Unknown2(void)
             entity->posUnknown.y = entity->field_84;
             entity->posUnknown.x += player->position.x;
             entity->posUnknown.y += player->position.y;
-            EntitySpeedGate *thisEntity = RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot + 1, SpeedGate);
+            EntitySpeedGate *thisEntity = RSDK_GET_ENTITY(SceneInfo->entitySlot + 1, SpeedGate);
             if (Player_CheckCollisionTouch(player, &thisEntity, &SpeedGate->hitbox)) {
                 RSDK.SetSpriteAnimation(0xFFFF, 0, &entity->timerData, true, 0);
                 entity->state            = 0;
@@ -242,7 +242,7 @@ void SpeedGate_State_Unknown3(void)
     RSDK_THIS(SpeedGate);
     int32 y = entity->position.y - 0x200000;
 
-    entity->velocity.x += ((RSDK_sceneInfo->entity->position.x - entity->posUnknown.x) >> 5) - (entity->velocity.x >> 3);
+    entity->velocity.x += ((entity->position.x - entity->posUnknown.x) >> 5) - (entity->velocity.x >> 3);
     entity->velocity.y += ((y - entity->posUnknown.y) >> 5) - (entity->velocity.y >> 3);
     entity->posUnknown.x += entity->velocity.x;
     entity->posUnknown.y += entity->velocity.y;

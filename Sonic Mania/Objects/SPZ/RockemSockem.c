@@ -155,7 +155,7 @@ void RockemSockem_Create(void *data)
     RSDK.SetSpriteAnimation(RockemSockem->aniFrames, 0, &entity->baseAnimator, true, 0);
     RSDK.SetSpriteAnimation(RockemSockem->aniFrames, 1, &entity->jointAnimator, true, 0);
     RSDK.SetSpriteAnimation(RockemSockem->aniFrames, 2, &entity->ballAnimator, true, 0);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->drawPos.x = entity->position.x;
         entity->drawPos.y = entity->position.y;
         entity->position.y -= (0xE0000 + (0x50000 * RockemSockem_coilCount));

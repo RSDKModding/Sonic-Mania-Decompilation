@@ -81,7 +81,7 @@ void Press_Create(void *data)
     entity->active    = ACTIVE_BOUNDS;
     entity->visible   = true;
     entity->drawOrder = Zone->drawOrderLow;
-    if (RSDK_sceneInfo->inEditor != true) {
+    if (SceneInfo->inEditor != true) {
         entity->size *= 8;
         int32 size = entity->size;
         entity->speed <<= 15;

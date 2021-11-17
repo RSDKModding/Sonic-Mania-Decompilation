@@ -210,7 +210,7 @@ void Dango_State_Unknown1(void)
 {
     RSDK_THIS(Dango);
 
-    if (RSDK.ObjectTileCollision(RSDK_sceneInfo->entity, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0xD0000, false)) {
+    if (RSDK.ObjectTileCollision(SceneInfo->entity, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0xD0000, false)) {
         RSDK.ProcessAnimation(&entity->animator);
         Dango_CheckPlayerCollisions();
         Dango_CheckOnScreen();

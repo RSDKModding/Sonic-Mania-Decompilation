@@ -173,7 +173,7 @@ void MatryoshkaBom_CheckPlayerCollisions(void)
 void MatryoshkaBom_CheckOnScreen(void)
 {
     RSDK_THIS(MatryoshkaBom);
-    if (!RSDK.CheckOnScreen(RSDK_sceneInfo->entity, NULL) && !RSDK.CheckPosOnScreen(&entity->startPos, &entity->updateRange)) {
+    if (!RSDK.CheckOnScreen(SceneInfo->entity, NULL) && !RSDK.CheckPosOnScreen(&entity->startPos, &entity->updateRange)) {
         if (entity->destroyOffscreen) {
             destroyEntity(entity);
         }

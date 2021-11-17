@@ -15,9 +15,9 @@ void PuyoGame_Update(void)
     RSDK.ProcessAnimation(&entity->animator);
 
 #if RETRO_USE_PLUS
-    if ((RSDK_controller->keyStart.press || RSDK_unknown->field_10) && !RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu)->objectID) {
+    if ((ControllerInfo->keyStart.press || UnknownInfo->field_10) && !RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu)->objectID) {
 #else
-    if ((RSDK_controller->keyStart.press) && !RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu)->objectID) {
+    if ((ControllerInfo->keyStart.press) && !RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu)->objectID) {
 #endif
         RSDK.ResetEntitySlot(SLOT_PAUSEMENU, PauseMenu->objectID, NULL);
         RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu)->triggerPlayer = 1;
@@ -43,8 +43,8 @@ void PuyoGame_Create(void *data)
     entity->drawFX        = FX_FLIP;
     entity->updateRange.x = 0x800000;
     entity->updateRange.y = 0x800000;
-    if (!RSDK_sceneInfo->inEditor)
-        RSDK.AddCamera(&entity->position, RSDK_screens->centerX << 16, RSDK_screens->centerY << 16, true);
+    if (!SceneInfo->inEditor)
+        RSDK.AddCamera(&entity->position, ScreenInfo->centerX << 16, ScreenInfo->centerY << 16, true);
     entity->state = PuyoGame_Unknown6;
 }
 
@@ -65,8 +65,8 @@ void PuyoGame_SetupStartingEntities(void)
     EntityMenuParam *param            = (EntityMenuParam *)globals->menuParam;
     EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
 
-    RSDK_screens->position.x = (entity->position.x >> 16) - RSDK_screens->centerX;
-    RSDK_screens->position.y = (entity->position.y >> 16) - RSDK_screens->centerY;
+    ScreenInfo->position.x = (entity->position.x >> 16) - ScreenInfo->centerX;
+    ScreenInfo->position.y = (entity->position.y >> 16) - ScreenInfo->centerY;
 
     foreach_all(PuyoScore, score)
     {
@@ -306,7 +306,7 @@ void PuyoGame_Unknown12(void)
         int count    = 2 - (param->selectionFlag < 2);
         bool32 flags = false;
 
-        ControllerState *controller = &RSDK_controller[1];
+        RSDKControllerState *controller = &ControllerInfo[1];
         for (int i = 0; i < count; ++i) {
             flags |= controller[i].keyA.down || controller[i].keyB.down || controller[i].keyC.down || controller[i].keyX.down
                      || controller[i].keyY.down || controller[i].keyZ.down;
@@ -332,7 +332,7 @@ void PuyoGame_Unknown13(void)
         int count    = 2 - (param->selectionFlag < 2);
         bool32 flags = false;
 
-        ControllerState *controller = &RSDK_controller[1];
+        RSDKControllerState *controller = &ControllerInfo[CONT_P1];
         for (int i = 0; i < count; ++i) {
             flags |= controller[i].keyA.down || controller[i].keyB.down || controller[i].keyC.down || controller[i].keyX.down
                      || controller[i].keyY.down || controller[i].keyZ.down;

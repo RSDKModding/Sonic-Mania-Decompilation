@@ -21,7 +21,7 @@ void CrimsonEye_Draw(void)
 void CrimsonEye_Create(void *data)
 {
     RSDK_THIS(CrimsonEye);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         if (globals->gameMode < MODE_TIMEATTACK) {
             if (data)
                 entity->type = voidToInt(data);
@@ -209,9 +209,9 @@ void CrimsonEye_HandleBGMovement(void)
     RSDK.SetDrawLayerProperties(Zone->hudDrawOrder, false, CrimsonEye_DrawLayerCB_B);
 }
 
-void CrimsonEye_DrawLayerCB_B(void) { RSDK.SetActivePalette(0, 0, RSDK_screens->height); }
+void CrimsonEye_DrawLayerCB_B(void) { RSDK.SetActivePalette(0, 0, ScreenInfo->height); }
 
-void CrimsonEye_DrawLayerCB_A(void) { RSDK.SetActivePalette(5u, 0, RSDK_screens->height); }
+void CrimsonEye_DrawLayerCB_A(void) { RSDK.SetActivePalette(5u, 0, ScreenInfo->height); }
 
 void CrimsonEye_SetArrowDir(int type)
 {
@@ -229,15 +229,15 @@ void CrimsonEye_StateBody_Unknown1(void)
         entity->timer               = 0;
         Zone->playerBoundActiveR[0] = true;
         Zone->playerBoundActiveB[0] = true;
-        Zone->screenBoundsR1[0]     = (entity->position.x >> 16) + RSDK_screens->centerX + 80;
+        Zone->screenBoundsR1[0]     = (entity->position.x >> 16) + ScreenInfo->centerX + 80;
         Zone->screenBoundsB1[0]     = (entity->position.y >> 16) + 124;
-        Zone->screenBoundsT1[0]     = Zone->screenBoundsB1[0] - RSDK_screens->height;
+        Zone->screenBoundsT1[0]     = Zone->screenBoundsB1[0] - ScreenInfo->height;
         entity->active              = ACTIVE_NORMAL;
         CREATE_ENTITY(TMZ1Setup, NULL, 0, 0);
 
-        RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot + 1, CrimsonEye)->active = ACTIVE_NORMAL;
+        RSDK_GET_ENTITY(SceneInfo->entitySlot + 1, CrimsonEye)->active = ACTIVE_NORMAL;
         for (int i = 2; i < 14; ++i) {
-            EntityCrimsonEye *child = RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot + i, CrimsonEye);
+            EntityCrimsonEye *child = RSDK_GET_ENTITY(SceneInfo->entitySlot + i, CrimsonEye);
             child->active           = ACTIVE_NORMAL;
             if (i < 10)
                 child->angle = 32 * (9 - i);
@@ -252,17 +252,17 @@ void CrimsonEye_StateBody_Unknown2(void)
     RSDK_THIS(CrimsonEye);
     CrimsonEye->value4 += 4;
     Zone->playerBoundActiveL[0] = true;
-    Zone->screenBoundsL1[0]     = RSDK_screens->position.x;
+    Zone->screenBoundsL1[0]     = ScreenInfo->position.x;
     EntityPlayer *player1       = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
 
-    if (!entity->timer && RSDK_screens->position.x + RSDK_screens->centerX > (entity->position.x >> 16) - 256) {
+    if (!entity->timer && ScreenInfo->position.x + ScreenInfo->centerX > (entity->position.x >> 16) - 256) {
         CrimsonEye_HandleBGMovement();
         entity->timer = 1;
     }
 
     if (player1->position.x > entity->position.x - 0x500000) {
         Zone->playerBoundActiveL[0] = true;
-        Zone->screenBoundsL1[0]     = (entity->position.x >> 16) - RSDK_screens->centerX - 80;
+        Zone->screenBoundsL1[0]     = (entity->position.x >> 16) - ScreenInfo->centerX - 80;
         Music_TransitionTrack(TRACK_MINIBOSS, 0.0125);
         RSDK.PlaySfx(CrimsonEye->sfxElevator, false, 255);
         EntityCamera *camera = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
@@ -311,7 +311,7 @@ void CrimsonEye_StateBody_Unknown4(void)
             RSDK.PlaySfx(CrimsonEye->sfxHullClose, false, 255);
             entity->timer           = RSDK.Rand(120, 180);
             CrimsonEye->scrollLimit = CrimsonEye->value14;
-            EntityCrimsonEye *child = RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot + 1, CrimsonEye);
+            EntityCrimsonEye *child = RSDK_GET_ENTITY(SceneInfo->entitySlot + 1, CrimsonEye);
 
             if (CrimsonEye->scrollLimit != -0x80000) {
                 if (!CrimsonEye->scrollLimit) {
@@ -573,8 +573,7 @@ void CrimsonEye_ShootShot(void)
 {
     RSDK_THIS(CrimsonEye);
 
-    EntityCrimsonEye *child =
-        CREATE_ENTITY(CrimsonEye, intToVoid(CRIMSONEYE_SHOT), RSDK_sceneInfo->entity->position.x + 0x260000, RSDK_sceneInfo->entity->position.y);
+    EntityCrimsonEye *child = CREATE_ENTITY(CrimsonEye, intToVoid(CRIMSONEYE_SHOT), entity->position.x + 0x260000, entity->position.y);
     child->velocity.x = 0x280 * RSDK.Cos512(entity->rotation);
     child->velocity.y = -0x280 * RSDK.Sin512(entity->rotation);
     if (entity->rotation < 256)
@@ -614,7 +613,7 @@ void CrimsonEye_DestroyBall(void)
 {
     RSDK_THIS(CrimsonEye);
     if (CrimsonEye->destroyedBallCount < 8) {
-        EntityCrimsonEye *child = RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot + CrimsonEye->ballDestroyOrder[CrimsonEye->destroyedBallCount], CrimsonEye);
+        EntityCrimsonEye *child = RSDK_GET_ENTITY(SceneInfo->entitySlot + CrimsonEye->ballDestroyOrder[CrimsonEye->destroyedBallCount], CrimsonEye);
         child->state            = CrimsonEye_StateBall_Unknown2;
         child->timer            = 30;
         child->drawOrder        = Zone->drawOrderLow;
@@ -767,7 +766,7 @@ void CrimsonEye_CheckPlayerCollisions(void)
                     debris->updateRange.y = 0x400000;
                     debris->delay      = 60;
 
-                    RSDK_sceneInfo->timeEnabled = false;
+                    SceneInfo->timeEnabled = false;
                     Player_GiveScore(RSDK.GetEntityByID(SLOT_PLAYER1), 1000);
                     entity->visible = false;
                     entity->state   = CrimsonEye_StateCore_Explode;
@@ -908,7 +907,7 @@ void CrimsonEye_StateCore_SpawnSignPost(void)
         foreach_all(SignPost, signPost)
         {
             signPost->position.x = entity->position.x;
-            signPost->position.y = (RSDK_screens->position.y - 64) << 16;
+            signPost->position.y = (ScreenInfo->position.y - 64) << 16;
             signPost->state      = SignPost_State_Fall;
             RSDK.PlaySfx(SignPost->sfxTwinkle, false, 255);
         }

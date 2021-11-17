@@ -17,7 +17,7 @@ void PopcornMachine_Draw(void)
     RSDK_THIS(PopcornMachine);
     Vector2 drawPos;
 
-    drawPos.x = RSDK_sceneInfo->entity->position.x;
+    drawPos.x = entity->position.x;
     drawPos.y = entity->position.y;
     drawPos.x += entity->field_84;
     drawPos.y                = drawPos.y - 0x200000 + entity->field_88;
@@ -78,11 +78,11 @@ void PopcornMachine_Draw(void)
         RSDK.DrawSprite(&entity->animator, &drawPos, false);
     }
 
-    ScreenInfo *screen = &RSDK_screens[RSDK_sceneInfo->currentScreenID];
+    RSDKScreenInfo *screen = &ScreenInfo[SceneInfo->currentScreenID];
 
     entity->inkEffect        = INK_ADD;
     entity->animator.frameID = 8;
-    RSDK.SetClipBounds(RSDK_sceneInfo->currentScreenID, 0, (storeY1 >> 16) - screen->position.y, screen->width,
+    RSDK.SetClipBounds(SceneInfo->currentScreenID, 0, (storeY1 >> 16) - screen->position.y, screen->width,
                        (storeY2 >> 16) - screen->position.y + 1);
     drawPos = entity->position;
     drawPos.x -= 0x600000;
@@ -96,14 +96,14 @@ void PopcornMachine_Draw(void)
 
     entity->direction = FLIP_NONE;
     entity->inkEffect = INK_NONE;
-    RSDK.SetClipBounds(RSDK_sceneInfo->currentScreenID, 0, 0, screen->width, screen->height);
+    RSDK.SetClipBounds(SceneInfo->currentScreenID, 0, 0, screen->width, screen->height);
 }
 
 void PopcornMachine_Create(void *data)
 {
     RSDK_THIS(PopcornMachine);
 
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         if (data) {
             entity->active  = ACTIVE_NORMAL;
             entity->visible = false;

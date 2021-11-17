@@ -22,7 +22,7 @@ void SpikeCrusher_Create(void *data)
 
     entity->collision = PLATFORM_C_6;
     Platform_Create(NULL);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->drawOrder = Zone->drawOrderHigh;
         RSDK.SetSpriteAnimation(Platform->aniFrames, 3, &entity->animator, true, 4);
         RSDK.SetSpriteAnimation(Platform->aniFrames, 3, &entity->animator2, true, 5);

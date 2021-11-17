@@ -236,7 +236,7 @@ void TwistingSlide_Draw(void) {}
 void TwistingSlide_Create(void *data)
 {
     RSDK_THIS(TwistingSlide);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->active = ACTIVE_BOUNDS;
         switch (entity->type) {
             case 0:

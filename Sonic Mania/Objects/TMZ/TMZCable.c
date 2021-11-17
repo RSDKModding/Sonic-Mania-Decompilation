@@ -27,7 +27,7 @@ void TMZCable_Create(void *data)
 {
     RSDK_THIS(TMZCable);
 
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->visible   = true;
         entity->drawOrder = Zone->drawOrderLow;
         entity->cableID &= 3;

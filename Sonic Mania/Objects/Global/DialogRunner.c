@@ -231,7 +231,7 @@ void DialogRunner_ManageNotifs(int32 a1)
 void DialogRunner_Wait(int32 success) { UIWaitSpinner_Wait2(); }
 void DialogRunner_GetNextNotif(void)
 {
-    if (RSDK_sceneInfo->inEditor || API.GetUserStorageNoSave() || globals->saveLoaded != STATUS_OK) {
+    if (SceneInfo->inEditor || API.GetUserStorageNoSave() || globals->saveLoaded != STATUS_OK) {
         LogHelpers_Print("WARNING GameProgress Attempted to save before loading SaveGame file");
         return;
     }

@@ -93,7 +93,7 @@ void PullSwitch_Create(void *data)
 {
     RSDK_THIS(PullSwitch);
     entity->drawFX = FX_FLIP;
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->active        = ACTIVE_BOUNDS;
         entity->visible       = true;
         entity->drawFX        = FX_FLIP;

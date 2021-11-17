@@ -21,7 +21,7 @@ void CPZShutter_Draw(void)
 void CPZShutter_Create(void *data)
 {
     RSDK_THIS(CPZShutter);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->visible       = true;
         entity->active        = ACTIVE_BOUNDS;
         entity->drawOrder     = Zone->drawOrderHigh - 2;

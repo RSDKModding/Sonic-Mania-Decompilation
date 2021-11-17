@@ -33,7 +33,7 @@ void Valve_Create(void *data)
 {
     RSDK_THIS(Valve);
     entity->drawFX = FX_FLIP;
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->active        = ACTIVE_BOUNDS;
         entity->visible       = true;
         entity->drawOrder     = Zone->drawOrderLow - 1;

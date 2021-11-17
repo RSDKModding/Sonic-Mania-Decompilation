@@ -39,7 +39,7 @@ void SpinSign_Draw(void)
 void SpinSign_Create(void *data)
 {
     RSDK_THIS(SpinSign);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         RSDK.SetSpriteAnimation(SpinSign->aniFrames, 3, &entity->animator1, true, 0);
         RSDK.SetSpriteAnimation(SpinSign->aniFrames, 4, &entity->animator3, true, 0);
         entity->active        = ACTIVE_BOUNDS;

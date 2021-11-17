@@ -40,7 +40,7 @@ void TimeAttackGate_Draw(void)
 void TimeAttackGate_Create(void *data)
 {
     RSDK_THIS(TimeAttackGate);
-    if (RSDK_sceneInfo->inEditor || globals->gameMode == MODE_TIMEATTACK) {
+    if (SceneInfo->inEditor || globals->gameMode == MODE_TIMEATTACK) {
         RSDK.SetSpriteAnimation(TimeAttackGate->aniFrames, 0, &entity->baseAnimator, true, 0);
         RSDK.SetSpriteAnimation(TimeAttackGate->aniFrames, 1, &entity->topAnimator, true, 0);
         entity->visible = true;
@@ -49,7 +49,7 @@ void TimeAttackGate_Create(void *data)
         else
             RSDK.SetSpriteAnimation(TimeAttackGate->aniFrames, 3, &entity->finAnimator, true, 0);
 
-        if (!RSDK_sceneInfo->inEditor) {
+        if (!SceneInfo->inEditor) {
             if (data == intToVoid(1)) {
                 entity->drawOrder = 14;
                 entity->active    = ACTIVE_ALWAYS;
@@ -104,7 +104,7 @@ void TimeAttackGate_StageLoad(void)
     TimeAttackGate->sfxTeleport   = RSDK.GetSFX("Global/Teleport.wav");
     TimeAttackGate->started       = false;
     TimeAttackGate->debugEnabled  = false;
-    RSDK_sceneInfo->timeEnabled   = false;
+    SceneInfo->timeEnabled   = false;
     if (globals->suppressTitlecard)
         TimeAttackGate->suppressedTitlecard = true;
 }
@@ -189,7 +189,7 @@ void TimeAttackGate_HandleStart(void)
                 RSDK.PlaySfx(TimeAttackGate->sfxSignpost, false, 255);
                 TimeAttackGate->playerPtr       = player1;
                 TimeAttackGate->started         = true;
-                RSDK_sceneInfo->timeEnabled     = true;
+                SceneInfo->timeEnabled     = true;
                 EntityTimeAttackGate *restarter = CREATE_ENTITY(TimeAttackGate, intToVoid(1), entity->position.x, entity->position.y);
                 TimeAttackGate->activeEntity    = (Entity *)restarter;
                 restarter->isPermanent          = true;
@@ -204,7 +204,7 @@ void TimeAttackGate_HandleStart(void)
             RSDK.PlaySfx(TimeAttackGate->sfxSignpost, false, 255);
             TimeAttackGate->playerPtr   = NULL;
             TimeAttackGate->started     = false;
-            RSDK_sceneInfo->timeEnabled = false;
+            SceneInfo->timeEnabled = false;
 #if RETRO_USE_PLUS
             StateMachine_Run(TimeAttackGate->endCB);
 #endif
@@ -232,9 +232,9 @@ void TimeAttackGate_Unknown1(void)
         EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
         int32 playerID = param->characterID;
         int32 zone     = param->zoneID;
-        int32 time     = (RSDK_sceneInfo->milliseconds + 100 * (RSDK_sceneInfo->seconds + 60 * RSDK_sceneInfo->minutes));
+        int32 time     = (SceneInfo->milliseconds + 100 * (SceneInfo->seconds + 60 * SceneInfo->minutes));
         int32 act      = param->actID;
-        int32 mode     = RSDK_sceneInfo->filter == SCN_FILTER_ENCORE;
+        int32 mode     = SceneInfo->filter == SCN_FILTER_ENCORE;
 
         param->dbRowID = TimeAttackData_AddTADBEntry(zone, playerID, act, mode, time, TimeAttackGate_LeaderboardCB);
         TimeAttackData_AddLeaderboardEntry(zone, playerID, act, mode, time);
@@ -280,10 +280,10 @@ void TimeAttackGate_CheckTouch(void)
         }
 
         if (flag) {
-            Zone->screenBoundsL1[i] = (entity->position.x >> 16) - RSDK_screens[i].centerX;
-            Zone->screenBoundsR1[i] = (entity->position.x >> 16) + RSDK_screens[i].centerX;
+            Zone->screenBoundsL1[i] = (entity->position.x >> 16) - ScreenInfo[i].centerX;
+            Zone->screenBoundsR1[i] = (entity->position.x >> 16) + ScreenInfo[i].centerX;
             if (entity->topBoundary)
-                Zone->screenBoundsT1[i] = (entity->position.y) - RSDK_screens[i].centerY;
+                Zone->screenBoundsT1[i] = (entity->position.y) - ScreenInfo[i].centerY;
         }
     }
 }
@@ -366,10 +366,10 @@ void TimeAttackGate_State_Restarter(void)
                 entity->radius       = (720 * entity->restartTimer / 35);
             }
             else {
-                if (RSDK_controller[player->controllerID].keyY.press) {
+                if (ControllerInfo[player->controllerID].keyY.press) {
                     entity->restartTimer = 0;
                 }
-                if (!RSDK_controller[player->controllerID].keyY.down) {
+                if (!ControllerInfo[player->controllerID].keyY.down) {
                     if (entity->restartTimer > 0) {
                         TimeAttackGate->dword30 = 0xFFFF;
                         RSDK.StopSFX(TimeAttackGate->sfxTeleport);

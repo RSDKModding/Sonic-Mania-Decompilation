@@ -54,8 +54,8 @@ EntityUIPopover *UIPopover_CreatePopover(void)
         else {
             RSDK.ResetEntitySlot(SLOT_POPOVER, UIPopover->objectID, NULL);
             EntityUIPopover *popover = RSDK.GetEntityByID(SLOT_POPOVER);
-            popover->position.x      = (RSDK_screens->position.x + RSDK_screens->centerX) << 16;
-            popover->position.y      = (RSDK_screens->position.y + RSDK_screens->centerY) << 16;
+            popover->position.x      = (ScreenInfo->position.x + ScreenInfo->centerX) << 16;
+            popover->position.y      = (ScreenInfo->position.y + ScreenInfo->centerY) << 16;
             UIPopover->activeEntity  = (Entity *)popover;
             return popover;
         }
@@ -74,8 +74,8 @@ void UIPopover_AddButton(EntityUIPopover *popover, uint8 frameID, void (*callbac
         RSDK.ResetEntitySlot(slot, UIButton->objectID, 0);
         EntityUIButton *button = RSDK_GET_ENTITY(slot, UIButton);
 
-        button->position.x = (RSDK_screens->position.x + RSDK_screens->centerX) << 16;
-        button->position.y = (RSDK_screens->position.y + RSDK_screens->centerY) << 16;
+        button->position.x = (ScreenInfo->position.x + ScreenInfo->centerX) << 16;
+        button->position.y = (ScreenInfo->position.y + ScreenInfo->centerY) << 16;
         RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, 16, &button->animator, true, frameID);
         button->textSpriteIndex = UIWidgets->textSpriteIndex;
         button->options2        = UIPopover_Unknown8;
@@ -101,8 +101,8 @@ void UIPopover_Setup(EntityUIPopover *popover, int32 posX, int32 posY)
 {
     if (popover) {
         Vector2 size;
-        size.x = RSDK_screens->width << 16;
-        size.y = RSDK_screens->height << 16;
+        size.x = ScreenInfo->width << 16;
+        size.y = ScreenInfo->height << 16;
 
         bool32 controlFlag = false;
         foreach_all(UIControl, controlPtr)
@@ -119,8 +119,8 @@ void UIPopover_Setup(EntityUIPopover *popover, int32 posX, int32 posY)
         RSDK.ResetEntitySlot(SLOT_POPOVER_UICONTROL, UIControl->objectID, &size);
         EntityUIControl *control   = RSDK.GetEntityByID(SLOT_POPOVER_UICONTROL);
         control->dwordCC           = true;
-        control->position.x        = (RSDK_screens->position.x + RSDK_screens->centerX) << 16;
-        control->position.y        = (RSDK_screens->position.y + RSDK_screens->centerY) << 16;
+        control->position.x        = (ScreenInfo->position.x + ScreenInfo->centerX) << 16;
+        control->position.y        = (ScreenInfo->position.y + ScreenInfo->centerY) << 16;
         control->rowCount          = popover->buttonCount;
         control->columnCount       = 1;
         control->activeEntityID    = 0;

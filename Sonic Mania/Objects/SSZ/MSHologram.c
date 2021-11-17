@@ -49,7 +49,7 @@ void MSHologram_Create(void *data)
 {
     RSDK_THIS(MSHologram);
 
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         if (globals->gameMode == MODE_TIMEATTACK) {
             destroyEntity(entity);
         }

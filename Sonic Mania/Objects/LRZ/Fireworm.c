@@ -39,7 +39,7 @@ void Fireworm_Create(void *data)
     entity->drawFX |= FX_FLIP;
     RSDK.SetSpriteAnimation(Fireworm->aniFrames, 0, entity->animators1, true, 0);
 
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         for (int i = 0; i < Fireworm_SegmentCount; ++i) {
             entity->positions[i].x = entity->position.x;
             entity->positions[i].y = entity->position.y;

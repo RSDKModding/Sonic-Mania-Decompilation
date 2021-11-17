@@ -25,7 +25,7 @@ void Eggman_Draw(void)
 void Eggman_Create(void *data)
 {
     RSDK_THIS(Eggman);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         if (globals->gameMode < MODE_TIMEATTACK) {
             RSDK.SetSpriteAnimation(Eggman->aniFrames, 0, &entity->animator, true, 0);
             entity->active        = ACTIVE_NORMAL;

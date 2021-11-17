@@ -117,7 +117,7 @@ void WoodChipper_Create(void *data)
     entity->active    = ACTIVE_BOUNDS;
     entity->visible   = 1;
     entity->drawOrder = Zone->drawOrderLow;
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         if (data) {
             --entity->drawOrder;
             entity->active        = ACTIVE_NORMAL;

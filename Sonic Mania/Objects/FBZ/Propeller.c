@@ -62,7 +62,7 @@ void Propeller_Draw(void)
 void Propeller_Create(void* data)
 {
     RSDK_THIS(Propeller);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->active              = ACTIVE_BOUNDS;
         entity->visible             = true;
         entity->drawOrder           = Zone->drawOrderHigh;

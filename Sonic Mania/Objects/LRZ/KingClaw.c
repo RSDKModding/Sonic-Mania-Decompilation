@@ -27,7 +27,7 @@ void KingClaw_Draw(void)
         }
     }
     else {
-        if (RSDK_sceneInfo->currentDrawGroup != Zone->drawOrderLow) {
+        if (SceneInfo->currentDrawGroup != Zone->drawOrderLow) {
             RSDK.DrawSprite(&entity->animator3, &entity->drawPos, false);
         }
         else {
@@ -44,7 +44,7 @@ void KingClaw_Create(void *data)
 {
     RSDK_THIS(KingClaw);
 
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->visible       = true;
         entity->drawFX        = FX_ROTATE;
         entity->drawOrder     = Zone->drawOrderLow;

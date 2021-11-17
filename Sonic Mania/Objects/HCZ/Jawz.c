@@ -88,26 +88,26 @@ void Jawz_CheckPlayerTrigger(void)
                     if (player->position.x > entity->position.x) {
                         entity->direction  = FLIP_X;
                         entity->velocity.x = 0x20000;
-                        entity->position.x = (RSDK_screens[playerID].position.x - 64) << 16;
+                        entity->position.x = (ScreenInfo[playerID].position.x - 64) << 16;
                     }
                     else if (player->position.x <= entity->position.x) {
                         entity->direction  = FLIP_NONE;
                         entity->velocity.x = -0x20000;
-                        entity->position.x = (RSDK_screens[playerID].position.x + RSDK_screens[playerID].width + 64) << 16;
+                        entity->position.x = (ScreenInfo[playerID].position.x + ScreenInfo[playerID].width + 64) << 16;
                     }
                     break;
                 case 1:
                     if (player->position.x < entity->position.x) {
                         entity->direction  = FLIP_NONE;
                         entity->velocity.x = -0x20000;
-                        entity->position.x = (RSDK_screens[playerID].position.x + RSDK_screens[playerID].width + 64) << 16;
+                        entity->position.x = (ScreenInfo[playerID].position.x + ScreenInfo[playerID].width + 64) << 16;
                     }
                     break;
                 case 2:
                     if (player->position.x > entity->position.x) {
                         entity->direction  = FLIP_X;
                         entity->velocity.x = 0x20000;
-                        entity->position.x = (RSDK_screens[playerID].position.x - 64) << 16;
+                        entity->position.x = (ScreenInfo[playerID].position.x - 64) << 16;
                     }
                     break;
             }

@@ -49,10 +49,15 @@ void Batbrain_StageLoad(void)
 void Batbrain_DebugDraw(void)
 {
     RSDK.SetSpriteAnimation(Batbrain->aniFrames, 0, &DebugMode->animator, true, 0);
-    RSDK.DrawSprite(&DebugMode->animator, 0, 0);
+    RSDK.DrawSprite(&DebugMode->animator, NULL, false);
 }
 
-void Batbrain_DebugSpawn(void) { RSDK.CreateEntity(Batbrain->objectID, 0, RSDK_sceneInfo->entity->position.x, RSDK_sceneInfo->entity->position.y); }
+void Batbrain_DebugSpawn(void)
+{
+    RSDK_THIS(Batbrain);
+
+    CREATE_ENTITY(Batbrain, NULL, entity->position.x, entity->position.y);
+}
 
 void Batbrain_CheckHit(void)
 {

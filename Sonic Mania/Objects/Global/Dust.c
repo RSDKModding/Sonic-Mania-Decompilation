@@ -22,7 +22,7 @@ void Dust_Create(void *data)
 {
     RSDK_THIS(Dust);
     RSDK.SetSpriteAnimation(Dust->aniFrames, 0, &entity->animator, true, 0);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->active    = ACTIVE_NORMAL;
         entity->visible   = true;
         entity->drawFX    = FX_FLIP | FX_ROTATE;
@@ -36,7 +36,7 @@ void Dust_StageLoad(void) { Dust->aniFrames = RSDK.LoadSpriteAnimation("Global/D
 void Dust_State_DropDash(void)
 {
     RSDK_THIS(Dust);
-    entity->position.x += RSDK_sceneInfo->entity->velocity.x;
+    entity->position.x += entity->velocity.x;
     entity->position.y += entity->velocity.y;
     RSDK.ProcessAnimation(&entity->animator);
     if (entity->animator.frameID == entity->animator.frameCount - 1)

@@ -30,7 +30,7 @@ void Toxomister_Create(void *data)
     RSDK_THIS(Toxomister);
 
     entity->drawFX |= FX_FLIP;
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->startDir      = entity->direction;
         entity->startPos.x    = entity->position.x;
         entity->startPos.y    = entity->position.y;
@@ -124,7 +124,7 @@ void Toxomister_CheckOnScreen(void)
 void Toxomister_CheckMistOnScreen(void)
 {
     RSDK_THIS(Toxomister);
-    if (!RSDK.CheckOnScreen(RSDK_sceneInfo->entity, NULL)) {
+    if (!RSDK.CheckOnScreen(SceneInfo->entity, NULL)) {
         ((EntityToxomister *)entity->link)->link = NULL;
         destroyEntity(entity);
     }

@@ -28,7 +28,7 @@ void RubyPortal_Create(void *data)
 
     entity->drawFX    = FX_SCALE;
     entity->inkEffect = INK_ALPHA;
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->active        = ACTIVE_BOUNDS;
         entity->visible       = true;
         entity->drawOrder     = Zone->drawOrderLow;
@@ -43,7 +43,7 @@ void RubyPortal_Create(void *data)
             entity->state = StateMachine_None;
         }
         else if (RSDK.CheckStageFolder("TMZ2")) {
-            EntityWarpDoor *door = RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot - 1, WarpDoor);
+            EntityWarpDoor *door = RSDK_GET_ENTITY(SceneInfo->entitySlot - 1, WarpDoor);
             if (door->objectID == WarpDoor->objectID) {
                 entity->hitbox      = door->hitbox;
                 door->hitbox.left   = 0;
@@ -63,7 +63,7 @@ void RubyPortal_Create(void *data)
 #else
         entity->state = StateMachine_None;
         if (!RSDK.CheckStageFolder("ERZ")) {
-            EntityWarpDoor *door = RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot - 1, WarpDoor);
+            EntityWarpDoor *door = RSDK_GET_ENTITY(SceneInfo->entitySlot - 1, WarpDoor);
             if (door->objectID == WarpDoor->objectID) {
                 entity->hitbox      = door->hitbox;
                 door->hitbox.left   = 0;
@@ -231,7 +231,7 @@ void RubyPortal_Unknown4(void)
                 else {
                     player1->invincibleTimer = 1;
                 }
-                ++RSDK_sceneInfo->listPos;
+                ++SceneInfo->listPos;
                 if (!RSDK.CheckValidScene())
                     RSDK.SetScene("Presentation", "Title Screen");
                 Zone_StartFadeOut(16, 0xF0F0F0);
@@ -268,7 +268,7 @@ void RubyPortal_Unknown6(void)
     RSDK_THIS(RubyPortal);
 
     if (entity->alpha >= 256) {
-        EntityWarpDoor *warpDoor = RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot - 1, WarpDoor);
+        EntityWarpDoor *warpDoor = RSDK_GET_ENTITY(SceneInfo->entitySlot - 1, WarpDoor);
         if (warpDoor->objectID == WarpDoor->objectID)
             warpDoor->hitbox = entity->hitbox;
         entity->state = StateMachine_None;

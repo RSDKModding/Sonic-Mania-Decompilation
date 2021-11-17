@@ -57,7 +57,7 @@ void DAControl_Draw(void)
 
     drawPos.x = entity->position.x - 0x800000;
     drawPos.y = entity->position.y;
-    if (!RSDK_sceneInfo->inEditor)
+    if (!SceneInfo->inEditor)
         RSDK.DrawText(&entity->animator4, &drawPos, &entity->text, 0, entity->text.textLength, ALIGN_LEFT, 0, 0, 0, false);
 }
 
@@ -66,7 +66,7 @@ void DAControl_Create(void *data)
     RSDK_THIS(DAControl);
 
     entity->drawFX = FX_FLIP;
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->visible       = true;
         entity->drawOrder     = 2;
         entity->active        = ACTIVE_BOUNDS;

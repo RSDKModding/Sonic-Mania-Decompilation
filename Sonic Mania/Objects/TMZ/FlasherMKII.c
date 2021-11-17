@@ -24,7 +24,7 @@ void FlasherMKII_Create(void *data)
     RSDK_THIS(FlasherMKII);
     entity->drawFX |= FX_FLIP;
 
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->active        = ACTIVE_BOUNDS;
         entity->updateRange.x = 0x800000;
         entity->updateRange.y = 0x800000;
@@ -82,7 +82,7 @@ void FlasherMKII_DebugDraw(void)
 void FlasherMKII_CheckOnScreen(void)
 {
     RSDK_THIS(FlasherMKII);
-    if (!RSDK.CheckOnScreen(RSDK_sceneInfo->entity, NULL) && !RSDK.CheckPosOnScreen(&entity->startPos, &entity->updateRange))
+    if (!RSDK.CheckOnScreen(SceneInfo->entity, NULL) && !RSDK.CheckPosOnScreen(&entity->startPos, &entity->updateRange))
         FlasherMKII_Create(NULL);
 }
 

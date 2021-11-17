@@ -23,7 +23,7 @@ void HeavyRider_Create(void *data)
     RSDK_THIS(HeavyRider);
 
     entity->drawFX = FX_ROTATE | FX_FLIP;
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         if (globals->gameMode < MODE_TIMEATTACK) {
             if (!entity->type)
                 entity->type = voidToInt(data);
@@ -229,8 +229,8 @@ void HeavyRider_CheckObjectCollisions(void)
                             HeavyRider_SpawnDebris(2, Zone->drawOrderHigh, spawnX + angle * cos, entity->position.y - 0x210000);
                             HeavyRider->field_4 = 0;
 
-                            RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot + 1, Flamethrower)->interval = -1;
-                            RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot + 2, Flamethrower)->interval = -1;
+                            RSDK_GET_ENTITY(SceneInfo->entitySlot + 1, Flamethrower)->interval = -1;
+                            RSDK_GET_ENTITY(SceneInfo->entitySlot + 2, Flamethrower)->interval = -1;
                             HeavyRider->field_20                                                    = 0;
                             RSDK.SetSpriteAnimation(0xFFFF, 0, &entity->animator4, true, 0);
                         }
@@ -238,7 +238,7 @@ void HeavyRider_CheckObjectCollisions(void)
                             HeavyRider_SpawnDebris(2, Zone->drawOrderHigh, HeavyRider->debrisPos.x, HeavyRider->debrisPos.y);
                             HeavyRider->field_4 = 0;
                         }
-                        RSDK_sceneInfo->timeEnabled = false;
+                        SceneInfo->timeEnabled = false;
                         Player_GiveScore(RSDK_GET_ENTITY(SLOT_PLAYER1, Player), 1000);
                         entity->state = HeavyRider_State_Destroyed;
                     }
@@ -368,7 +368,7 @@ void HeavyRider_Unknown4(void)
     RSDK_THIS(HeavyRider);
 
     if (entity->direction == FLIP_X) {
-        if (entity->position.x < (RSDK_screens->position.x + 48) << 16) {
+        if (entity->position.x < (ScreenInfo->position.x + 48) << 16) {
             HeavyRider_Unknown6();
             RSDK.SetSpriteAnimation(HeavyRider->aniFrames, 2, &entity->animator1, true, 0);
             RSDK.SetSpriteAnimation(0xFFFF, 0, &entity->animator2, true, 0);
@@ -376,7 +376,7 @@ void HeavyRider_Unknown4(void)
         }
     }
     else {
-        if (entity->position.x > (RSDK_screens->position.x + RSDK_screens->width - 48) << 16) {
+        if (entity->position.x > (ScreenInfo->position.x + ScreenInfo->width - 48) << 16) {
             HeavyRider_Unknown6();
             RSDK.SetSpriteAnimation(HeavyRider->aniFrames, 2, &entity->animator1, true, 0);
             RSDK.SetSpriteAnimation(0xFFFF, 0, &entity->animator2, true, 0);
@@ -475,7 +475,7 @@ void HeavyRider_State_StartFight(void)
     RSDK_THIS(HeavyRider);
 
     Zone->playerBoundActiveL[0] = true;
-    Zone->screenBoundsL1[0]     = RSDK_screens->position.x;
+    Zone->screenBoundsL1[0]     = ScreenInfo->position.x;
     EntityPlayer *player1       = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     if (player1->position.x > entity->position.x - 0x500000) {
         Zone->playerBoundActiveL[0] = true;
@@ -539,8 +539,8 @@ void HeavyRider_State_Unknown1(void)
             }
             else {
                 entity->onGround                                                        = false;
-                RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot + 1, Flamethrower)->interval = -1;
-                RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot + 2, Flamethrower)->interval = -1;
+                RSDK_GET_ENTITY(SceneInfo->entitySlot + 1, Flamethrower)->interval = -1;
+                RSDK_GET_ENTITY(SceneInfo->entitySlot + 2, Flamethrower)->interval = -1;
             }
         }
     }
@@ -680,8 +680,8 @@ void HeavyRider_State_Unknown2(void)
 
     HeavyRider_State_Unknown1();
     if (entity->type != HEAVYRIDER_JIMMY && entity->timer == 30) {
-        RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot + 1, Flamethrower)->interval = 0;
-        RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot + 2, Flamethrower)->interval = 0;
+        RSDK_GET_ENTITY(SceneInfo->entitySlot + 1, Flamethrower)->interval = 0;
+        RSDK_GET_ENTITY(SceneInfo->entitySlot + 2, Flamethrower)->interval = 0;
     }
 
     if (--entity->timer > 0) {
@@ -739,7 +739,7 @@ void HeavyRider_State_Charge(void)
         for (int i = 0; i < 0x60; ++i) {
             int x                 = RSDK.Rand(-128, 129);
             int y                 = 2 * RSDK.Rand(4, 16);
-            EntityDebris *debris  = CREATE_ENTITY(Debris, NULL, (x << 16) + entity->position.x, (RSDK_screens->position.y - y) << 16);
+            EntityDebris *debris  = CREATE_ENTITY(Debris, NULL, (x << 16) + entity->position.x, (ScreenInfo->position.y - y) << 16);
             debris->updateRange.x = 0x2000000;
             debris->updateRange.y = 0x2000000;
             debris->state         = Debris_State_Fall;
@@ -847,8 +847,8 @@ void HeavyRider_State_Finish(void)
     if (!RSDK.CheckOnScreen(entity, &entity->updateRange)) {
         Music_TransitionTrack(TRACK_STAGE, 0.0125);
 
-        entity->position.x      = (RSDK_screens->position.x + RSDK_screens->centerX) << 16;
-        entity->position.y      = (RSDK_screens->position.y - 48) << 16;
+        entity->position.x      = (ScreenInfo->position.x + ScreenInfo->centerX) << 16;
+        entity->position.y      = (ScreenInfo->position.y - 48) << 16;
         EntityEggPrison *prison = CREATE_ENTITY(EggPrison, intToVoid(EGGPRISON_FLYING), entity->position.x, entity->position.y);
         prison->isPermanent     = true;
         prison->drawOrder       = Zone->drawOrderHigh;

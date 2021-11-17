@@ -45,7 +45,7 @@ void TMZ1Setup_StaticUpdate(void)
     }
 
     if (TMZ1Setup->stageState < 2) {
-        int32 posY = RSDK_screens->centerY + RSDK_screens->position.y;
+        int32 posY = ScreenInfo->centerY + ScreenInfo->position.y;
         if (posY >= 4192) {
             if (posY > 4528 && TMZ1Setup->stageState != 1 && !RSDK.GetEntityCount(TMZ1Setup->objectID, true))
                 RSDK.CreateEntity(TMZ1Setup->objectID, intToVoid(1), 0, 0);
@@ -70,7 +70,7 @@ void TMZ1Setup_Draw(void) {}
 void TMZ1Setup_Create(void *data)
 {
     RSDK_THIS(TMZ1Setup);
-    RSDK_sceneInfo->entity->active = ACTIVE_NORMAL;
+    entity->active = ACTIVE_NORMAL;
 
     switch (TMZ1Setup->stageState) {
         default: entity->state = TMZ1Setup_StateUnknown4; break;
@@ -98,7 +98,7 @@ void TMZ1Setup_StageLoad(void)
     RSDK.GetSceneLayer(3)->scrollPos = -0x1000000;
     if (!TMZ1Setup->paletteInit) {
 #if RETRO_USE_PLUS
-        if (RSDK_sceneInfo->filter & FILTER_ENCORE) {
+        if (SceneInfo->filter & FILTER_ENCORE) {
             RSDK.LoadPalette(0, "EncoreTMZ1.act", 0xFF);
             RSDK.LoadPalette(1, "EncoreTMZ1d.act", 0xFF);
             RSDK.LoadPalette(2, "EncoreTMZ1l.act", 0xFF);
@@ -171,7 +171,7 @@ void TMZ1Setup_StateUnknown3(void)
 {
     RSDK_THIS(TMZ1Setup);
     if (++entity->timer >= 2) {
-        if (RSDK_screens->position.y + RSDK_screens->centerY > 4192)
+        if (ScreenInfo->position.y + ScreenInfo->centerY > 4192)
             entity->state = TMZ1Setup_StateUnknown5;
         else
             entity->state = TMZ1Setup_StateUnknown6;

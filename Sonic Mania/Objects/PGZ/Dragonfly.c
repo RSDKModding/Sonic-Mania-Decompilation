@@ -38,7 +38,7 @@ void Dragonfly_Create(void *data)
     entity->visible   = true;
     entity->drawOrder = Zone->drawOrderLow;
 
-    if (RSDK_sceneInfo->inEditor)
+    if (SceneInfo->inEditor)
         return;
     if (!entity->speed) {
         entity->dist  = 0x40;
@@ -111,7 +111,11 @@ void Dragonfly_CheckOnScreen(void)
     }
 }
 
-void Dragonfly_DebugSpawn(void) { RSDK.CreateEntity(Dragonfly->objectID, 0, RSDK_sceneInfo->entity->position.x, RSDK_sceneInfo->entity->position.y); }
+void Dragonfly_DebugSpawn(void)
+{
+    RSDK_THIS(Dragonfly);
+    CREATE_ENTITY(Dragonfly, NULL, entity->position.x, entity->position.y);
+}
 
 void Dragonfly_Collide(void)
 {

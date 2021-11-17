@@ -187,8 +187,8 @@ bool32 MSZCutsceneST_CutsceneState_Unknown3(EntityCutsceneSeq *host)
     signPost->position.y = mystic->position.y - 0x3D0000 + MSZCutsceneST->signPostOffsets[mystic->animator.frameID];
 
     Vector2 range;
-    range.x = RSDK_screens->width << 16;
-    range.y = RSDK_screens->height << 16;
+    range.x = ScreenInfo->width << 16;
+    range.y = ScreenInfo->height << 16;
     if (!RSDK.CheckOnScreen(mystic, &range)) {
         host->field_6C[2] = 1;
         destroyEntity(mystic);

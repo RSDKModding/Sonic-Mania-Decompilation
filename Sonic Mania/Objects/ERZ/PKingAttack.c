@@ -25,7 +25,7 @@ void PKingAttack_Create(void *data)
 {
     RSDK_THIS(PKingAttack);
 
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->drawOrder     = Zone->drawOrderHigh;
         entity->type          = voidToInt(data);
         entity->active        = ACTIVE_NORMAL;

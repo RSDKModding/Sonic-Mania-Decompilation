@@ -35,8 +35,8 @@ void FXSpinRay_Draw(void)
 {
     RSDK_THIS(FXSpinRay);
 
-    int32 scrX = entity->position.x - (RSDK_screens->position.x << 16);
-    int32 scrY = entity->position.y - (RSDK_screens->position.y << 16);
+    int32 scrX = entity->position.x - (ScreenInfo->position.x << 16);
+    int32 scrY = entity->position.y - (ScreenInfo->position.y << 16);
     for (int32 i = 0; i < 20; i += 4) {
         Vector2 vertices[4];
         vertices[0].x = scrX + entity->vertices[i + 0].x;
@@ -54,7 +54,7 @@ void FXSpinRay_Draw(void)
 void FXSpinRay_Create(void *data)
 {
     RSDK_THIS(FXSpinRay);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->visible       = true;
         entity->active        = ACTIVE_NORMAL;
         entity->drawOrder     = Zone->drawOrderHigh;

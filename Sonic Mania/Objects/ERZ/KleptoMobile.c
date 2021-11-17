@@ -29,7 +29,7 @@ void KleptoMobile_Create(void *data)
 {
     RSDK_THIS(KleptoMobile);
 
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         if (globals->gameMode < MODE_TIMEATTACK) {
             entity->updateRange.x   = 0x800000;
             entity->updateRange.y   = 0x800000;
@@ -166,7 +166,7 @@ void KleptoMobile_Hit(void)
         entity->state = KleptoMobile_State_Destroyed;
         entity->timer = 0;
         if (PhantomKing->defeated)
-            RSDK_sceneInfo->timeEnabled = false;
+            SceneInfo->timeEnabled = false;
 
         Player_GiveScore(RSDK_GET_ENTITY(SLOT_PLAYER1, Player), 1000);
     }
@@ -183,11 +183,11 @@ void KleptoMobile_Hit(void)
             ruby->velocity.y = -0x40000;
             ruby->state      = PhantomRuby_Unknown6;
 
-            EntityKleptoMobile *arm1 = RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot - 1, KleptoMobile);
+            EntityKleptoMobile *arm1 = RSDK_GET_ENTITY(SceneInfo->entitySlot - 1, KleptoMobile);
             arm1->timer              = 0;
             arm1->state              = KleptoMobile_State1_Unknown1;
 
-            EntityKleptoMobile *arm2 = RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot + 1, KleptoMobile);
+            EntityKleptoMobile *arm2 = RSDK_GET_ENTITY(SceneInfo->entitySlot + 1, KleptoMobile);
             arm2->timer              = 0;
             arm2->state              = KleptoMobile_State1_Unknown1;
         }
@@ -317,19 +317,19 @@ void KleptoMobile_State_SetupArena(void)
 
     entity->active = ACTIVE_NORMAL;
 
-    EntityKleptoMobile *hand = RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot - 2, KleptoMobile);
+    EntityKleptoMobile *hand = RSDK_GET_ENTITY(SceneInfo->entitySlot - 2, KleptoMobile);
     RSDK.ResetEntityPtr(hand, KleptoMobile->objectID, intToVoid(3));
     hand->position.x = entity->position.x;
     hand->position.y = entity->position.y;
     hand->parent     = (Entity *)entity;
 
-    EntityKleptoMobile *arm2 = RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot - 1, KleptoMobile);
+    EntityKleptoMobile *arm2 = RSDK_GET_ENTITY(SceneInfo->entitySlot - 1, KleptoMobile);
     RSDK.ResetEntityPtr(arm2, KleptoMobile->objectID, intToVoid(2));
     arm2->position.x = entity->position.x;
     arm2->position.y = entity->position.y;
     arm2->parent     = (Entity *)entity;
 
-    EntityKleptoMobile *arm1 = RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot + 1, KleptoMobile);
+    EntityKleptoMobile *arm1 = RSDK_GET_ENTITY(SceneInfo->entitySlot + 1, KleptoMobile);
     RSDK.ResetEntityPtr(arm1, KleptoMobile->objectID, intToVoid(1));
     arm1->position.x = entity->position.x;
     arm1->position.y = entity->position.y;
@@ -408,11 +408,11 @@ void KleptoMobile_State_Unknown2(void)
         entity->field_10C = 0;
         entity->timer     = 0;
         RSDK.PlaySfx(KleptoMobile->sfxPowerUp, false, 255);
-        EntityKleptoMobile *arm2 = RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot - 1, KleptoMobile);
+        EntityKleptoMobile *arm2 = RSDK_GET_ENTITY(SceneInfo->entitySlot - 1, KleptoMobile);
         arm2->timer              = 0;
         arm2->state              = KleptoMobile_State1_Unknown4;
 
-        EntityKleptoMobile *arm1 = RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot + 1, KleptoMobile);
+        EntityKleptoMobile *arm1 = RSDK_GET_ENTITY(SceneInfo->entitySlot + 1, KleptoMobile);
         arm1->timer              = 0;
         arm1->state              = KleptoMobile_State1_Unknown4;
         entity->state            = KleptoMobile_State_Unknown3;
@@ -422,7 +422,7 @@ void KleptoMobile_State_Unknown2(void)
             if (entity->field_10C <= 0 && ++entity->timer == 15) {
                 entity->timer = 0;
                 RSDK.PlaySfx(KleptoMobile->sfxFlail, false, 0xFF);
-                int armSlot = entity->field_110 ? RSDK_sceneInfo->entitySlot + 1 : RSDK_sceneInfo->entitySlot - 1;
+                int armSlot = entity->field_110 ? SceneInfo->entitySlot + 1 : SceneInfo->entitySlot - 1;
 
                 EntityKleptoMobile *arm = RSDK_GET_ENTITY(armSlot, KleptoMobile);
 

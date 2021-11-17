@@ -18,11 +18,11 @@ void BSS_Message_Draw(void)
     RSDK_THIS(BSS_Message);
     Vector2 drawPos;
 
-    drawPos.x = (RSDK_screens->centerX - entity->timer2) << 16;
+    drawPos.x = (ScreenInfo->centerX - entity->timer2) << 16;
     drawPos.y = 0x680000;
     RSDK.DrawSprite(&entity->leftData, &drawPos, true);
 
-    drawPos.x = (RSDK_screens->centerX + entity->timer2) << 16;
+    drawPos.x = (ScreenInfo->centerX + entity->timer2) << 16;
     RSDK.DrawSprite(&entity->rightData, &drawPos, true);
     if (entity->flag)
         RSDK.FillScreen(entity->colour, entity->timer, entity->timer - 128, entity->timer - 256);
@@ -31,7 +31,7 @@ void BSS_Message_Draw(void)
 void BSS_Message_Create(void *data)
 {
     RSDK_THIS(BSS_Message);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->active    = ACTIVE_NORMAL;
         entity->visible   = 1;
         entity->drawOrder = 15;
@@ -184,7 +184,7 @@ void BSS_Message_LoadPrevScene(void)
                 else
 #endif
                     RSDK.SetScene("Mania Mode", "");
-                RSDK_sceneInfo->listPos = saveRAM->storedStageID;
+                SceneInfo->listPos = saveRAM->storedStageID;
                 RSDK.LoadScene();
                 entity->state = StateMachine_None;
             }
@@ -211,7 +211,7 @@ void BSS_Message_LoadGameState(void)
         else
 #endif
             RSDK.SetScene("Mania Mode", "");
-        RSDK_sceneInfo->listPos = saveRAM->storedStageID;
+        SceneInfo->listPos = saveRAM->storedStageID;
         RSDK.LoadScene();
         entity->state = StateMachine_None;
     }

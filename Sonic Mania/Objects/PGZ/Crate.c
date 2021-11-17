@@ -37,7 +37,7 @@ void Crate_Create(void *data)
     Platform_Create(NULL);
     entity->frameID = frameID;
 
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->hitbox.left   = -24;
         entity->hitbox.top    = -24;
         entity->hitbox.right  = 24;
@@ -243,7 +243,7 @@ void Crate_Null1(void) {
 void Crate_ApplyGravity(void)
 {
     RSDK_THIS(Crate);
-    RSDK_sceneInfo->entity->position.y -= 0x10000;
+    entity->position.y -= 0x10000;
     foreach_active(Crate, crate)
     {
         if (crate != entity && crate->state == Crate_Null1

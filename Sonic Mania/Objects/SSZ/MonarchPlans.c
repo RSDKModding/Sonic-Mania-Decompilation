@@ -34,7 +34,7 @@ void MonarchPlans_Create(void *data)
 {
     RSDK_THIS(MonarchPlans);
 
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->active        = ACTIVE_BOUNDS;
         entity->inkEffect     = INK_BLEND;
         entity->visible       = true;

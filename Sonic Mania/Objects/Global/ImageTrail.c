@@ -110,7 +110,7 @@ void ImageTrail_Draw(void)
 void ImageTrail_Create(void *data)
 {
     RSDK_THIS(ImageTrail);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         EntityPlayer *player = (EntityPlayer *)data;
         entity->active       = ACTIVE_ALWAYS;
         entity->visible      = true;

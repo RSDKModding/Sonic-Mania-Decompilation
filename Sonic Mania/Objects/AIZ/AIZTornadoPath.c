@@ -17,7 +17,7 @@ void AIZTornadoPath_Draw(void) {}
 void AIZTornadoPath_Create(void *data)
 {
     RSDK_THIS(AIZTornadoPath);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         switch (entity->type) {
             case AIZTORNADOPATH_START:
                 if (!StarPost->postIDs[0]) {
@@ -33,7 +33,7 @@ void AIZTornadoPath_Create(void *data)
                     foreach_all(Player, player) { player->camera = NULL; }
 
                     foreach_all(AIZTornado, tornado) { AIZTornadoPath->tornado = tornado; }
-                    RSDK_screens->position.y = (entity->position.y >> 0x10) - RSDK_screens->centerY;
+                    ScreenInfo->position.y = (entity->position.y >> 0x10) - ScreenInfo->centerY;
                     entity->speed            = entity->targetSpeed;
                     entity->state            = AIZTornadoPath_State_SetTornadoSpeed;
                 }
@@ -87,7 +87,7 @@ void AIZTornadoPath_HandleMoveSpeed(void)
     EntityAIZTornado *tornado = AIZTornadoPath->tornado;
 
     int32 x = 0, y = 0;
-    if (camera && camera->position.x >= RSDK_screens->width << 16) {
+    if (camera && camera->position.x >= ScreenInfo->width << 16) {
         x    = camera->position.x;
         y    = camera->position.y;
         flag = true;
@@ -96,7 +96,7 @@ void AIZTornadoPath_HandleMoveSpeed(void)
         x = tornado->newPos.x;
         y = tornado->newPos.y;
     }
-    EntityAIZTornadoPath *node = (EntityAIZTornadoPath *)RSDK.GetEntityByID(RSDK_sceneInfo->entitySlot + 1);
+    EntityAIZTornadoPath *node = (EntityAIZTornadoPath *)RSDK.GetEntityByID(SceneInfo->entitySlot + 1);
     int32 xDist                  = (x - node->position.x) >> 16;
     int32 yDist                  = (y - node->position.y) >> 16;
     entity->angle              = RSDK.ATan2(xDist, yDist);

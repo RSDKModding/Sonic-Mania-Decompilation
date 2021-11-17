@@ -17,7 +17,7 @@ void TornadoPath_Draw(void) {}
 void TornadoPath_Create(void *data)
 {
     RSDK_THIS(TornadoPath);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         switch (entity->type) {
             case TORNADOPATH_START:
                 if (!StarPost->postIDs[0]
@@ -33,7 +33,7 @@ void TornadoPath_Create(void *data)
                         TornadoPath->cameraPtr = camera;
                     }
                     foreach_all(Player, player) { player->camera = NULL; }
-                    RSDK_screens->position.y = (entity->position.y >> 16) - RSDK_screens->centerY;
+                    ScreenInfo->position.y = (entity->position.y >> 16) - ScreenInfo->centerY;
                     entity->state            = TornadoPath_State_SetTornadoSpeed;
                     entity->targetSpeedStore = entity->targetSpeed;
                 }
@@ -117,7 +117,7 @@ void TornadoPath_HandleMoveSpeed(void)
     RSDK_THIS(TornadoPath);
     EntityCamera *camera = TornadoPath->cameraPtr;
     if (camera) {
-        EntityTornadoPath *node = RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot + 1, TornadoPath);
+        EntityTornadoPath *node = RSDK_GET_ENTITY(SceneInfo->entitySlot + 1, TornadoPath);
         int32 y                   = (camera->position.y - node->position.y) >> 16;
         int32 x                   = (camera->position.x - node->position.x) >> 16;
         entity->angle           = RSDK.ATan2(x, y);

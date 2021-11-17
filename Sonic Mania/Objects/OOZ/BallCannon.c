@@ -23,7 +23,7 @@ void BallCannon_Create(void *data)
     RSDK_THIS(BallCannon);
     entity->drawOrder = Zone->playerDrawLow;
     entity->visible   = true;
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         if (data) {
             entity->visible       = true;
             entity->drawFX        = FX_ROTATE;
@@ -248,7 +248,7 @@ void BallCannon_Unknown7(void)
 {
     RSDK_THIS(BallCannon);
 
-    if (RSDK.CheckOnScreen(RSDK_sceneInfo->entity, NULL)) {
+    if (RSDK.CheckOnScreen(SceneInfo->entity, NULL)) {
         foreach_active(Player, player)
         {
             int32 playerID = RSDK.GetEntityID(player);

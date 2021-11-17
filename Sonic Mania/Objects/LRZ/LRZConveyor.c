@@ -46,7 +46,7 @@ void LRZConveyor_Create(void *data)
     entity->drawFX        = FX_FLIP;
     entity->isOff         = entity->off;
     entity->startDir      = entity->direction;
-    if (RSDK_sceneInfo->inEditor) {
+    if (SceneInfo->inEditor) {
         if (!entity->speed)
             entity->speed = 8;
     }

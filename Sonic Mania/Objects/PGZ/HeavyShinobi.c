@@ -23,7 +23,7 @@ void HeavyShinobi_Create(void *data)
     RSDK_THIS(HeavyShinobi);
 
     entity->drawFX = FX_ROTATE | FX_FLIP;
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         if (globals->gameMode < MODE_TIMEATTACK) {
             entity->type = voidToInt(data);
             switch (entity->type) {
@@ -265,10 +265,10 @@ void HeavyShinobi_State_Setup(void)
     if (++entity->timer >= 2) {
         entity->timer               = 0;
         Zone->playerBoundActiveR[0] = true;
-        Zone->screenBoundsR1[0]     = RSDK_screens->centerX + 80 + (entity->position.x >> 16);
+        Zone->screenBoundsR1[0]     = ScreenInfo->centerX + 80 + (entity->position.x >> 16);
         Zone->playerBoundActiveB[0] = true;
         Zone->screenBoundsB1[0]     = (entity->position.y >> 16) + 68;
-        entity->position.y          = (RSDK_screens->position.y - 192) << 16;
+        entity->position.y          = (ScreenInfo->position.y - 192) << 16;
         for (int32 i = 0; i < 16; ++i) HeavyShinobi->storePos[i] = entity->position;
 
         entity->active = ACTIVE_NORMAL;
@@ -281,10 +281,10 @@ void HeavyShinobi_State_SetupArena(void)
     RSDK_THIS(HeavyShinobi);
 
     Zone->playerBoundActiveL[0] = true;
-    Zone->screenBoundsL1[0]     = RSDK_screens->position.x;
+    Zone->screenBoundsL1[0]     = ScreenInfo->position.x;
     if (RSDK_GET_ENTITY(SLOT_PLAYER1, Player)->position.x > entity->position.x - 0x500000) {
         Zone->playerBoundActiveL[0] = true;
-        Zone->screenBoundsL1[0]     = (entity->position.x >> 16) - RSDK_screens->centerX - 80;
+        Zone->screenBoundsL1[0]     = (entity->position.x >> 16) - ScreenInfo->centerX - 80;
         CREATE_ENTITY(HeavyShinobi, intToVoid(SHINOBI_BOUNDS), (Zone->screenBoundsL1[0] + 40) << 16, (Zone->screenBoundsB1[0] - 376) << 16);
         EntityHeavyShinobi *child =
             CREATE_ENTITY(HeavyShinobi, intToVoid(SHINOBI_BOUNDS), (Zone->screenBoundsR1[0] - 40) << 16, (Zone->screenBoundsB1[0] - 376) << 16);
@@ -300,10 +300,10 @@ void HeavyShinobi_State_StartFight(void)
     RSDK_THIS(HeavyShinobi);
 
     Zone->playerBoundActiveL[0] = true;
-    Zone->screenBoundsL1[0]     = RSDK_screens->position.x;
+    Zone->screenBoundsL1[0]     = ScreenInfo->position.x;
     if (RSDK_GET_ENTITY(SLOT_PLAYER1, Player)->position.x > entity->position.x) {
         Zone->playerBoundActiveL[0] = true;
-        Zone->screenBoundsL1[0]     = (entity->position.x >> 16) - RSDK_screens->centerX - 80;
+        Zone->screenBoundsL1[0]     = (entity->position.x >> 16) - ScreenInfo->centerX - 80;
         Music_TransitionTrack(TRACK_HBHBOSS, 0.0125);
         entity->visible = true;
         HeavyShinobi_Unknown3();
@@ -541,7 +541,7 @@ void HeavyShinobi_State_Glitched(void)
                     HeavyShinobi->invincibilityTimer = 30;
                 }
                 else {
-                    RSDK_sceneInfo->timeEnabled = false;
+                    SceneInfo->timeEnabled = false;
                     Player_GiveScore(RSDK.GetEntityByID(SLOT_PLAYER1), 1000);
                     RSDK.PlaySfx(HeavyShinobi->sfxExplosion, false, 255);
                     entity->timer = 120;

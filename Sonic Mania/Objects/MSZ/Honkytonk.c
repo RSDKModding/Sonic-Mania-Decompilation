@@ -111,7 +111,7 @@ void Honkytonk_Draw(void)
 void Honkytonk_Create(void *data)
 {
     RSDK_THIS(Honkytonk);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         RSDK.SetSpriteAnimation(Honkytonk->aniFrames, 0, &entity->animator, true, 0);
         entity->active        = ACTIVE_BOUNDS;
         entity->updateRange.x = 0x800000;

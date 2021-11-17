@@ -24,9 +24,9 @@ void ERZStart_Update(void)
 
     if (--entity->timer <= 0) {
         entity->timer                = 15 * RSDK.Rand(0, 4);
-        RSDK_sceneInfo->seconds      = RSDK.Rand(0, 100);
-        RSDK_sceneInfo->milliseconds = RSDK.Rand(0, 100);
-        RSDK_sceneInfo->minutes      = RSDK.Rand(0, 9);
+        SceneInfo->seconds      = RSDK.Rand(0, 100);
+        SceneInfo->milliseconds = RSDK.Rand(0, 100);
+        SceneInfo->minutes      = RSDK.Rand(0, 9);
     }
 
 #if !RETRO_USE_PLUS
@@ -52,7 +52,7 @@ void ERZStart_Draw(void) {}
 void ERZStart_Create(void *data)
 {
     RSDK_THIS(ERZStart);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         INIT_ENTITY(entity);
         CutsceneRules_SetupEntity(entity, &entity->size, &entity->hitbox);
         entity->active = ACTIVE_NORMAL;
@@ -84,7 +84,7 @@ void ERZStart_SetupObjects(void)
         fxRuby->state       = 0;
         fxRuby->fadeBlack   = 0x200;
         fxRuby->fadeWhite   = 0x200;
-        fxRuby->outerRadius = RSDK_screens->width;
+        fxRuby->outerRadius = ScreenInfo->width;
         fxRuby->field_70    = 64;
         foreach_break;
     }
@@ -137,12 +137,12 @@ bool32 ERZStart_CutsceneState_Unknown1(EntityCutsceneSeq *host)
         camera->position.x = 0;
         camera->position.y = 0;
 
-        RSDK_screens->position.x = 0;
-        RSDK_screens->position.y = 0;
+        ScreenInfo->position.x = 0;
+        ScreenInfo->position.y = 0;
         Zone->screenBoundsT2[0]  = 0;
         Zone->screenBoundsT1[0]  = 0;
         camera->boundsT          = 0;
-        Zone->screenBoundsB2[0]  = RSDK_screens->height;
+        Zone->screenBoundsB2[0]  = ScreenInfo->height;
         Zone->screenBoundsB1[0]  = Zone->screenBoundsB2[0];
         camera->boundsB          = Zone->screenBoundsB1[0];
         ruby->state              = ERZStart_RubyHover;
@@ -298,7 +298,7 @@ bool32 ERZStart_CutsceneState_Unknown6(EntityCutsceneSeq *host)
     ERZStart_HandlePlayerHover(host, player1, ruby->startPos.y);
 
     if (host->timer == 30)
-        Camera_SetupLerp(0, 0, camera->position.x - (RSDK_screens->width << 16), camera->position.y, 3);
+        Camera_SetupLerp(0, 0, camera->position.x - (ScreenInfo->width << 16), camera->position.y, 3);
     if (host->timer == 45)
         RSDK.PlaySfx(ERZStart->sfxFlyIn, false, 255);
     return host->timer == 120;
@@ -337,8 +337,8 @@ bool32 ERZStart_CutsceneState_Unknown7(EntityCutsceneSeq *host)
 
         eggman->state = KleptoMobile_State_Unknown1;
         RSDK.SetSpriteAnimation(KleptoMobile->aniFrames, 11, &eggmanHand->animator8, true, 0);
-        eggman->position.x = camera->position.x - (RSDK_screens->width << 16);
-        eggman->field_70.x = camera->position.x - (RSDK_screens->width << 16);
+        eggman->position.x = camera->position.x - (ScreenInfo->width << 16);
+        eggman->field_70.x = camera->position.x - (ScreenInfo->width << 16);
         eggman->position.y = king->posUnknown.y + 0x100000;
         eggman->field_70.y = king->posUnknown.y + 0x100000;
         eggman->direction  = FLIP_X;
@@ -510,9 +510,9 @@ bool32 ERZStart_CutsceneState_Unknown10(EntityCutsceneSeq *host)
 
     ERZStart_HandlePlayerHover(host, player1, ruby->startPos.y);
     if (host->timer == 30)
-        Camera_SetupLerp(0, 0, RSDK_screens->centerX << 16, camera->position.y, 2);
+        Camera_SetupLerp(0, 0, ScreenInfo->centerX << 16, camera->position.y, 2);
     if (!host->field_6C[0]) {
-        if (camera->position.x == RSDK_screens->centerX << 16) {
+        if (camera->position.x == ScreenInfo->centerX << 16) {
             host->field_6C[0] = 1;
             host->field_68    = host->timer;
         }
@@ -622,7 +622,7 @@ bool32 ERZStart_CutsceneState_StartFight(EntityCutsceneSeq *host)
         camera->state     = Camera_State_Follow;
         player1->camera   = camera;
         foreach_all(RingField, field) { field->running = true; }
-        RSDK_sceneInfo->timeEnabled = true;
+        SceneInfo->timeEnabled = true;
         return true;
     }
     return false;

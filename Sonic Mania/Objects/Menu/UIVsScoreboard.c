@@ -32,7 +32,7 @@ void UIVsScoreboard_Create(void *data)
     entity->updateRange.x = 0x800000;
     entity->updateRange.y = 0x300000;
     UIVsScoreboard_SetupSprites();
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         char buffer[0x40];
         memset(buffer, 0, sizeof(buffer));
         sprintf(buffer, "%d : %d", entity->p1Score, entity->p2Score);
@@ -54,9 +54,9 @@ void UIVsScoreboard_SetupSprites(void)
 
 void UIVsScoreboard_SetText(EntityUIVsScoreboard *entity, const char *text)
 {
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         RSDK.SetText(&entity->scoreText, text, 0);
-        if (!RSDK_sceneInfo->inEditor) {
+        if (!SceneInfo->inEditor) {
             RSDK.SetSpriteAnimation(UIVsScoreboard->aniFrames, 18, &entity->textAnimator, true, 0);
             RSDK.SetSpriteString(UIVsScoreboard->aniFrames, 18, &entity->scoreText);
         }
@@ -78,7 +78,7 @@ void UIVsScoreboard_DrawSprites(void)
     drawPos.y += 0x120000;
     UIWidgets_Unknown7(entity->size.y >> 16, (entity->size.y + entity->size.x) >> 16, entity->sizeY, 0, 0, 0, drawPos.x, drawPos.y);
 
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         int32 width = RSDK.GetStringWidth(UIVsScoreboard->aniFrames, 18, &entity->scoreText, 0, entity->scoreText.textLength, 0);
         drawPos.x -= width << 15;
         RSDK.DrawText(&entity->textAnimator, &drawPos, &entity->scoreText, 0, entity->scoreText.textLength, ALIGN_LEFT, 0, 0, 0, false);
@@ -92,7 +92,7 @@ void UIVsScoreboard_DrawSprites(void)
         RSDK.DrawSprite(&entity->animator3, &drawPos, false);
     }
 
-    if (RSDK_sceneInfo->inEditor) {
+    if (SceneInfo->inEditor) {
         if (entity->position.y != entity->offset.y)
             DrawHelpers_DrawArrow(0xFFFF, entity->position.x, entity->position.y, entity->offset.x + entity->position.x,
                                    entity->offset.y + entity->position.y);

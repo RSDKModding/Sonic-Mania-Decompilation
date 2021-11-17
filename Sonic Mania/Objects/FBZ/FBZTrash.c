@@ -21,7 +21,7 @@ void FBZTrash_Draw(void)
 void FBZTrash_Create(void *data)
 {
     RSDK_THIS(FBZTrash);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->active  = ACTIVE_BOUNDS;
         entity->visible = true;
         entity->drawFX  = FX_FLIP;

@@ -36,7 +36,7 @@ void IceBomba_Create(void *data)
     RSDK_THIS(IceBomba);
     entity->visible   = true;
     entity->drawOrder = Zone->drawOrderLow;
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->dip <<= 7;
         entity->drawFX |= FX_FLIP;
         if (data) {

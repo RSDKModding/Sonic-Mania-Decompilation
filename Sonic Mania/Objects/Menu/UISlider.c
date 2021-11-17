@@ -206,13 +206,13 @@ bool32 UISlider_TouchCB(void)
     RSDK_THIS(UISlider);
 
     bool32 touchFlag = false;
-    if (RSDK_touchMouse->count) {
+    if (TouchInfo->count) {
         if (!UISlider->entityPtr || UISlider->entityPtr == (Entity *)entity) {
             int32 sizeX = entity->touchPosStart.x >> 1;
             int32 sizeY = entity->touchPosStart.y >> 1;
-            for (int32 i = 0; i < RSDK_touchMouse->count; ++i) {
-                int32 x = (RSDK_screens->position.x << 16) - ((RSDK_touchMouse->x[i] * RSDK_screens->width) * -65536.0f);
-                int32 y = (RSDK_screens->position.y << 16) - ((RSDK_touchMouse->y[i] * RSDK_screens->height) * -65536.0f);
+            for (int32 i = 0; i < TouchInfo->count; ++i) {
+                int32 x = (ScreenInfo->position.x << 16) - ((TouchInfo->x[i] * ScreenInfo->width) * -65536.0f);
+                int32 y = (ScreenInfo->position.y << 16) - ((TouchInfo->y[i] * ScreenInfo->height) * -65536.0f);
 
                 int32 touchX = abs(entity->touchPosEnd.x + entity->position.x - x);
                 int32 touchY = abs(entity->touchPosEnd.y + entity->position.y - y);

@@ -409,10 +409,10 @@ void CompetitionMenu_VS_ProcessInputCB(void)
         for (int32 i = 0; i < control->buttonCount; ++i) {
             EntityUIVsCharSelector *button = (EntityUIVsCharSelector *)control->buttons[i];
 
-            Entity *entStore       = RSDK_sceneInfo->entity;
-            RSDK_sceneInfo->entity = (Entity *)button;
+            Entity *entStore       = SceneInfo->entity;
+            SceneInfo->entity = (Entity *)button;
             StateMachine_Run(button->processButtonCB);
-            RSDK_sceneInfo->entity = entStore;
+            SceneInfo->entity = entStore;
 
             RSDK.ControllerIDForInputID(button->playerID + 1);
         }
@@ -486,7 +486,7 @@ void CompetitionMenu_StartMatch(void)
         RSDK.SetScene("Encore Mode", "");
     else
         RSDK.SetScene("Mania Mode", "");
-    RSDK_sceneInfo->listPos += TimeAttackData_GetManiaListPos(param->vsZoneID, 0, param->vsActID);
+    SceneInfo->listPos += TimeAttackData_GetManiaListPos(param->vsZoneID, 0, param->vsActID);
     SaveGame_ResetPlayerState();
     memset(globals->noSaveSlot, 0, 0x400);
 
@@ -660,31 +660,31 @@ void CompetitionMenu_Round_UnknownCB3(void)
         memset(buffer, 0, sizeof(buffer));
 
         sprintf(buffer, "%d", session->rings[p]);
-        if (!RSDK_sceneInfo->inEditor) {
+        if (!SceneInfo->inEditor) {
             RSDK.SetText(&results->rowText[0], buffer, 0);
             RSDK.SetSpriteString(UIVsResults->aniFrames, 18, &results->rowText[0]);
         }
 
         printf(buffer, "%d", session->totalRings[p]);
-        if (!RSDK_sceneInfo->inEditor) {
+        if (!SceneInfo->inEditor) {
             RSDK.SetText(&results->rowText[1], buffer, 0);
             RSDK.SetSpriteString(UIVsResults->aniFrames, 18, &results->rowText[1]);
         }
 
         sprintf(buffer, "%d", session->score[p]);
-        if (!RSDK_sceneInfo->inEditor) {
+        if (!SceneInfo->inEditor) {
             RSDK.SetText(&results->rowText[2], buffer, 0);
             RSDK.SetSpriteString(UIVsResults->aniFrames, 18, &results->rowText[2]);
         }
 
         sprintf(buffer, "%d", session->items[p]);
-        if (!RSDK_sceneInfo->inEditor) {
+        if (!SceneInfo->inEditor) {
             RSDK.SetText(&results->rowText[3], buffer, 0);
             RSDK.SetSpriteString(UIVsResults->aniFrames, 18, &results->rowText[3]);
         }
 
         sprintf(buffer, "%d'%02d\"%02d", session->time[p].minutes, session->time[p].seconds, session->time[p].milliseconds);
-        if (!RSDK_sceneInfo->inEditor) {
+        if (!SceneInfo->inEditor) {
             RSDK.SetText(&results->rowText[4], buffer, 0);
             RSDK.SetSpriteString(UIVsResults->aniFrames, 18, &results->rowText[4]);
         }
@@ -814,7 +814,7 @@ void CompetitionMenu_Results_UnknownCB3(void)
         for (int32 r = 0; r < results->numRows; ++r) {
             char buffer[0x40];
             sprintf(buffer, "%d", session->winnerFlags[r]);
-            if (!RSDK_sceneInfo->inEditor) {
+            if (!SceneInfo->inEditor) {
                 RSDK.SetText(&results->rowText[r], buffer, 0);
                 RSDK.SetSpriteString(UIVsResults->aniFrames, 18, &results->rowText[r]);
             }

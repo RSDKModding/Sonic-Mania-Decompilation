@@ -21,7 +21,7 @@ void ChemBubble_Draw(void)
 void ChemBubble_Create(void *data)
 {
     RSDK_THIS(ChemBubble);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->visible    = true;
         entity->active     = ACTIVE_NORMAL;
         entity->drawOrder  = Zone->drawOrderHigh - 2;

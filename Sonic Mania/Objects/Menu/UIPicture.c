@@ -24,7 +24,7 @@ void UIPicture_Create(void *data)
 {
     RSDK_THIS(UIPicture);
     RSDK.SetSpriteAnimation(UIPicture->aniFrames, entity->listID, &entity->animator, true, entity->frameID);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         if (RSDK.CheckStageFolder("Menu")) {
             entity->active    = ACTIVE_BOUNDS;
             entity->visible   = true;

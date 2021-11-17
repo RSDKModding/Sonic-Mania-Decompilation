@@ -6,7 +6,7 @@ void TitleSetup_Update(void)
 {
     RSDK_THIS(TitleSetup);
     StateMachine_Run(entity->state);
-    RSDK_screens->position.x = 0x100 - RSDK_screens->centerX;
+    ScreenInfo->position.x = 0x100 - ScreenInfo->centerX;
 }
 
 void TitleSetup_LateUpdate(void) {}
@@ -22,7 +22,7 @@ void TitleSetup_Draw(void)
 void TitleSetup_Create(void *data)
 {
     RSDK_THIS(TitleSetup);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         RSDK.SetSpriteAnimation(TitleSetup->aniFrames, 0, &entity->animator, true, 0);
         entity->active    = ACTIVE_ALWAYS;
         entity->visible   = true;
@@ -76,10 +76,10 @@ void TitleSetup_StageLoad(void)
 void TitleSetup_HandleCheatInputs(void)
 {
     uint8 keyState = 0;
-    if (RSDK_controller->keyUp.press || RSDK_stickL->keyUp.press) {
+    if (ControllerInfo->keyUp.press || AnalogStickInfoL->keyUp.press) {
         keyState = 1;
     }
-    if (RSDK_controller->keyDown.press || RSDK_stickL->keyDown.press) {
+    if (ControllerInfo->keyDown.press || AnalogStickInfoL->keyDown.press) {
         keyState = 2;
     }
 
@@ -110,12 +110,12 @@ void TitleSetup_CheckCheatCode(void)
 }
 bool32 TitleSetup_IntroCallback(void)
 {
-    if (RSDK_controller->keyA.press || RSDK_controller->keyB.press || RSDK_controller->keyStart.press) {
+    if (ControllerInfo->keyA.press || ControllerInfo->keyB.press || ControllerInfo->keyStart.press) {
         RSDK.StopChannel(Music->channelID);
         return true;
     }
 #if RETRO_USE_TOUCH_CONTROLS
-    else if (RSDK_touchMouse->count) {
+    else if (TouchInfo->count) {
         RSDK.StopChannel(Music->channelID);
         return true;
     }
@@ -228,10 +228,10 @@ void TitleSetup_SetupLogo(void)
                 titleLogo->active      = ACTIVE_NORMAL;
                 titleLogo->visible = true;
 #if RETRO_USE_PLUS
-                Entity *store          = RSDK_sceneInfo->entity;
-                RSDK_sceneInfo->entity = (Entity *)titleLogo;
+                Entity *store          = SceneInfo->entity;
+                SceneInfo->entity = (Entity *)titleLogo;
                 TitleLogo_SetupPressStart();
-                RSDK_sceneInfo->entity = store;
+                SceneInfo->entity = store;
 #endif
             }
         }
@@ -279,21 +279,21 @@ void TitleSetup_SetupLogo_Plus(void)
 void TitleSetup_WaitForEnter(void)
 {
     RSDK_THIS(TitleSetup);
-    bool32 anyButton = RSDK_controller->keyA.press || RSDK_controller->keyB.press || RSDK_controller->keyC.press || RSDK_controller->keyX.press
-                     || RSDK_controller->keyY.press || RSDK_controller->keyZ.press || RSDK_controller->keyStart.press
-                     || RSDK_controller->keySelect.press;
+    bool32 anyButton = ControllerInfo->keyA.press || ControllerInfo->keyB.press || ControllerInfo->keyC.press || ControllerInfo->keyX.press
+                     || ControllerInfo->keyY.press || ControllerInfo->keyZ.press || ControllerInfo->keyStart.press
+                     || ControllerInfo->keySelect.press;
 #if RETRO_USE_PLUS
-    bool32 anyClick = (!RSDK_touchMouse->count && entity->touched) || RSDK_unknown->field_28;
+    bool32 anyClick = (!TouchInfo->count && entity->touched) || UnknownInfo->field_28;
 #else
-    bool32 anyClick = !RSDK_touchMouse->count && entity->touched;
+    bool32 anyClick = !TouchInfo->count && entity->touched;
 #endif
-    entity->touched = RSDK_touchMouse->count > 0;
+    entity->touched = TouchInfo->count > 0;
     if (anyClick || anyButton) {
         RSDK.PlaySfx(TitleSetup->sfxMenuAccept, 0, 255);
         entity->timer = 0;
         const char *nextScene = "Menu";
 #if RETRO_GAMEVER == VER_100
-        if (RSDK_controller->keyA.down && (RSDK_controller->keyX.down || RSDK_controller->keyC.down))
+        if (ControllerInfo->keyA.down && (ControllerInfo->keyX.down || ControllerInfo->keyC.down))
             nextScene = "Level Select";
 #endif
         RSDK.SetScene("Presentation", nextScene);

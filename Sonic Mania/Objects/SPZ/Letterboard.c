@@ -27,12 +27,12 @@ void Letterboard_Create(void *data)
 {
     RSDK_THIS(Letterboard);
 
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         RSDK.SetSpriteAnimation(Letterboard->aniFrames, 0, &entity->animatorBack, true, 0);
         RSDK.SetSpriteAnimation(Letterboard->aniFrames, 1, &entity->animatorFront, true, 0);
 
-        if (entity->controller || !entity->letterID) {
-            if (entity->controller)
+        if (entity->ControllerInfo || !entity->letterID) {
+            if (entity->ControllerInfo)
                 entity->state = Letterboard_State_Controller;
         }
         else {
@@ -69,7 +69,7 @@ void Letterboard_State_Controller(void)
 
     bool32 flag = true;
     int count   = 0;
-    int slot    = RSDK_sceneInfo->entitySlot + 1;
+    int slot    = SceneInfo->entitySlot + 1;
     for (int i = 0; i < entity->letterID; ++i) {
         EntityLetterboard *letterboard = RSDK_GET_ENTITY(slot + i, Letterboard);
         if (letterboard->state)
@@ -106,7 +106,7 @@ void Letterboard_State_CheckPlayerSpin(void)
                     entity->spinSpeed = 8;
 
                 entity->timer = 2;
-                int slot      = RSDK_sceneInfo->entitySlot;
+                int slot      = SceneInfo->entitySlot;
 
                 EntityLetterboard *letterboard = entity;
                 while (slot >= 0) {
@@ -144,7 +144,7 @@ void Letterboard_EditorDraw(void)
     RSDK.SetSpriteAnimation(Letterboard->aniFrames, 0, &entity->animatorBack, true, 0);
     RSDK.SetSpriteAnimation(Letterboard->aniFrames, 1, &entity->animatorFront, true, 0);
 
-    if (!entity->controller && entity->letterID) {
+    if (!entity->ControllerInfo && entity->letterID) {
         entity->animatorFront.frameID = entity->letterID - 1;
         RSDK.DrawSprite(&entity->animatorFront, NULL, false);
     }
@@ -158,6 +158,6 @@ void Letterboard_EditorLoad(void) { Letterboard->aniFrames = RSDK.LoadSpriteAnim
 
 void Letterboard_Serialize(void)
 {
-    RSDK_EDITABLE_VAR(Letterboard, VAR_BOOL, controller);
+    RSDK_EDITABLE_VAR(Letterboard, VAR_BOOL, ControllerInfo);
     RSDK_EDITABLE_VAR(Letterboard, VAR_UINT8, letterID);
 }

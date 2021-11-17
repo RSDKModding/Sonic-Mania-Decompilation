@@ -23,7 +23,7 @@ void DCEvent_Create(void *data)
     RSDK_THIS(DCEvent);
 
     entity->drawFX = FX_FLIP;
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->visible = true;
 
         int type = 2;
@@ -110,7 +110,7 @@ void DCEvent_State_Collapse(void)
         player->moveOffset.y = move->scrollPos;
     }
 
-    int slot = RSDK_sceneInfo->entitySlot + 1;
+    int slot = SceneInfo->entitySlot + 1;
     for (int i = 0; i < entity->numChildren; ++i) {
         Entity *child = RSDK_GET_ENTITY(slot + i, );
         child->position.y += 0x8000;

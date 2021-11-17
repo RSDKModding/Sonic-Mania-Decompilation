@@ -47,7 +47,7 @@ void UIText_Create(void *data)
     else
         RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, entity->listID, &entity->animator, true, 0);
 
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->active    = 2;
         entity->visible   = 1;
         entity->drawOrder = 2;

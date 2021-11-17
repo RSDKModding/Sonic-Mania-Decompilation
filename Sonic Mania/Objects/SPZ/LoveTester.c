@@ -119,7 +119,7 @@ void LoveTester_DrawSprites(void)
 
     int storeX = entity->position.x;
     int storeY = entity->position.y;
-    if (RSDK_sceneInfo->currentDrawGroup != Zone->drawOrderHigh || RSDK_sceneInfo->inEditor) {
+    if (SceneInfo->currentDrawGroup != Zone->drawOrderHigh || SceneInfo->inEditor) {
         RSDK.SetSpriteAnimation(LoveTester->aniFrames, 1, &entity->animator1, true, 0);
         RSDK.DrawSprite(&entity->animator1, NULL, false);
 
@@ -147,7 +147,7 @@ void LoveTester_DrawSprites(void)
         entity->position.y = storeY;
     }
 
-    if (RSDK_sceneInfo->currentDrawGroup == Zone->drawOrderHigh || RSDK_sceneInfo->inEditor) {
+    if (SceneInfo->currentDrawGroup == Zone->drawOrderHigh || SceneInfo->inEditor) {
         RSDK.SetSpriteAnimation(LoveTester->aniFrames, 0, &entity->animator1, true, 0);
         RSDK.DrawSprite(&entity->animator1, NULL, false);
     }

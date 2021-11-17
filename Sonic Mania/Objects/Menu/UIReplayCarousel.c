@@ -75,7 +75,7 @@ void UIReplayCarousel_Draw(void)
 void UIReplayCarousel_Create(void *data)
 {
     RSDK_THIS(UIReplayCarousel);
-    entity->posUnknown2     = RSDK_sceneInfo->entity->position;
+    entity->posUnknown2     = entity->position;
     entity->active          = ACTIVE_BOUNDS;
     entity->drawOrder       = 2;
     entity->visible         = true;
@@ -87,7 +87,7 @@ void UIReplayCarousel_Create(void *data)
     entity->state           = UIReplayCarousel_Unknown16;
     entity->dbUnknownCount  = 0;
     UIReplayCarousel_Unknown2();
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         for (int32 i = 0; i < 4; ++i) {
             RSDK.SetText(&entity->zoneNameText[i], "", 0);
             RSDK.SetText(&entity->createdAtText[i], "", 0);
@@ -286,7 +286,7 @@ void UIReplayCarousel_TouchedCB(void)
 void UIReplayCarousel_Unknown6(void)
 {
     RSDK_THIS(UIReplayCarousel);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         char buffer[0x20];
         for (int32 i = 0; i < 4; ++i) {
             int32 id = i + entity->dbUnknownID;
@@ -314,7 +314,7 @@ void UIReplayCarousel_Unknown6(void)
 void UIReplayCarousel_Unknown7(int32 a1, int16 a2, int32 a3, int32 a4)
 {
     RSDK_THIS(UIReplayCarousel);
-    if (!RSDK_sceneInfo->inEditor)
+    if (!SceneInfo->inEditor)
         RSDK.DrawRect(a3 - 0x990000, a4 - 0x2A8000, 0x1320000, 0x550000, 0xFFFFFF, 127, INK_BLEND, false);
 
     UIWidgets_Unknown5(88, -76, 112, 224, a3 + 0x790000, a4 + 0x298000);
@@ -331,7 +331,7 @@ void UIReplayCarousel_Unknown7(int32 a1, int16 a2, int32 a3, int32 a4)
         colour = 0xF26C4F;
     UIWidgets_Unknown5((colour >> 16) & 0xFF, -76, (colour >> 8) & 0xFF, colour & 0xFF, a3 + 0x990000, a4 + 0x298000);
 
-    if (!RSDK_sceneInfo->inEditor)
+    if (!SceneInfo->inEditor)
         UIWidgets_Unknown3(91, 312, a3 + 0x30000, a4 + 0x30000);
 
     if (entity->field_164 == a2)
@@ -366,7 +366,7 @@ void UIReplayCarousel_Unknown8(uint8 a1, uint8 a2, int32 a3, int32 a4, int32 arg
         }
     }
 
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         int32 id    = a7 - entity->dbUnknownID;
         drawPos.x = drawOffsets[0].x + 0x1E0000;
         drawPos.y = drawOffsets[0].y;
@@ -400,7 +400,7 @@ void UIReplayCarousel_Unknown9(uint8 a1, int16 a2, int32 a4, int32 a5)
     drawPos.y = a5 - 0x70000;
     UIWidgets_Unknown2(72, 96, a4 - 0x690000, a5 - 0x70000);
 
-    if (RSDK_sceneInfo->inEditor || entity->field_164 != a2 || entity->disabled) {
+    if (SceneInfo->inEditor || entity->field_164 != a2 || entity->disabled) {
         entity->direction = entity->field_158;
         entity->drawFX    = FX_FLIP;
         RSDK.DrawSprite(&entity->animator2, &drawPos, false);
@@ -439,7 +439,7 @@ void UIReplayCarousel_Unknown10(uint8 zoneID, int32 a2, uint8 a3, uint8 a4, int3
     Vector2 drawPos;
     drawPos.x = drawX;
     drawPos.y = drawY - 0x160000;
-    if ((entity->state != UIReplayCarousel_Unknown19 || entity->field_164 != a2 || !(entity->timer & 2)) && !RSDK_sceneInfo->inEditor) {
+    if ((entity->state != UIReplayCarousel_Unknown19 || entity->field_164 != a2 || !(entity->timer & 2)) && !SceneInfo->inEditor) {
         int32 id    = a2 - entity->dbUnknownID;
         drawPos.x = drawX - 0x390000;
         if (zoneID == 5 || zoneID == 10) {

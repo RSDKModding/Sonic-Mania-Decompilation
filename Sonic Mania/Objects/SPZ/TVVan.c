@@ -21,14 +21,14 @@ void TVVan_StaticUpdate(void)
 void TVVan_Draw(void)
 {
     RSDK_THIS(TVVan);
-    StateMachine_Run(entity->stateDraw[RSDK_sceneInfo->currentDrawGroup]);
+    StateMachine_Run(entity->stateDraw[SceneInfo->currentDrawGroup]);
 }
 
 void TVVan_Create(void* data)
 {
     RSDK_THIS(TVVan);
 
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         if (data)
             entity->type = voidToInt(data);
 
@@ -248,7 +248,7 @@ void TVVan_StateDraw_Low(void)
 
     entity->drawFX |= FX_ROTATE;
     RSDK.DrawSprite(&entity->animator2, 0, false);
-    RSDK.AddDrawListRef(Zone->drawOrderHigh, RSDK_sceneInfo->entitySlot);
+    RSDK.AddDrawListRef(Zone->drawOrderHigh, SceneInfo->entitySlot);
 }
 
 void TVVan_StateDraw_High(void)

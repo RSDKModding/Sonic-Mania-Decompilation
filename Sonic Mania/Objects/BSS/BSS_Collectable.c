@@ -79,7 +79,7 @@ void BSS_Collectable_Draw(void)
 void BSS_Collectable_Create(void *data)
 {
     RSDK_THIS(BSS_Collectable);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->active        = ACTIVE_NORMAL;
         entity->visible       = true;
         entity->drawOrder     = 3;

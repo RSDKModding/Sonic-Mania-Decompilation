@@ -62,8 +62,8 @@ void UFO_SpeedLines_Draw(void)
             int32 drawY = mat->values[1][3] + (y * mat->values[1][1] >> 8) + (z * mat->values[1][2] >> 8) + (x * mat->values[1][0] >> 8);
             int32 drawX = mat->values[0][3] + (y * mat->values[0][1] >> 8) + (z * mat->values[0][2] >> 8) + (x * mat->values[0][0] >> 8);
 
-            RSDK.DrawLine(RSDK_screens->centerX + (drawX << 8) / depth, RSDK_screens->centerY - (drawY << 8) / depth,
-                          RSDK_screens->centerX + (drawX << 8) / (depth + 0x2000), RSDK_screens->centerY - (drawY << 8) / (depth + 0x2000), 0xD0E0F0,
+            RSDK.DrawLine(ScreenInfo->centerX + (drawX << 8) / depth, ScreenInfo->centerY - (drawY << 8) / depth,
+                          ScreenInfo->centerX + (drawX << 8) / (depth + 0x2000), ScreenInfo->centerY - (drawY << 8) / (depth + 0x2000), 0xD0E0F0,
                           entity->lineAlpha[i], INK_ALPHA, true);
         }
     }
@@ -72,7 +72,7 @@ void UFO_SpeedLines_Draw(void)
 void UFO_SpeedLines_Create(void *data)
 {
     RSDK_THIS(UFO_SpeedLines);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->visible          = true;
         entity->drawFX           = FX_SCALE | FX_FLIP;
         entity->drawOrder        = 5;

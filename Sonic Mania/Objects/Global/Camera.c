@@ -48,10 +48,10 @@ void Camera_Create(void *data)
     int32 screen = voidToInt(data);
     RSDK_THIS(Camera);
     entity->offset.x = 0x80000;
-    entity->centerY  = RSDK_screens->centerY - 16;
+    entity->centerY  = ScreenInfo->centerY - 16;
     if (entity->active != ACTIVE_NORMAL) {
         entity->screenID = screen;
-        RSDK.AddCamera(&entity->center, RSDK_screens[screen].centerX << 16, RSDK_screens[screen].centerY << 16, false);
+        RSDK.AddCamera(&entity->center, ScreenInfo[screen].centerX << 16, ScreenInfo[screen].centerY << 16, false);
     }
     entity->boundsOffset.x = 3;
     entity->boundsOffset.y = 2;
@@ -84,7 +84,7 @@ void Camera_StageLoad(void)
 
 void Camera_SetCameraBounds(EntityCamera *entity)
 {
-    ScreenInfo *screen = &RSDK_screens[entity->screenID];
+    RSDKScreenInfo *screen = &ScreenInfo[entity->screenID];
     screen->position.x = (entity->position.x >> 0x10) + entity->lookPos.x - screen->centerX;
     screen->position.y = (entity->position.y >> 0x10) + entity->lookPos.y - entity->centerY;
 
@@ -134,7 +134,7 @@ void Camera_ShakeScreen(int32 screen, int32 shakeX, int32 shakeY)
 void Camera_HandleHBounds(void)
 {
     RSDK_THIS(Camera);
-    ScreenInfo *screen = &RSDK_screens[entity->screenID];
+    RSDKScreenInfo *screen = &ScreenInfo[entity->screenID];
 
     if (Zone->screenBoundsL1[entity->screenID] > entity->boundsL) {
         if (screen->position.x > Zone->screenBoundsL1[entity->screenID])
@@ -185,7 +185,7 @@ void Camera_HandleHBounds(void)
 void Camera_HandleVBounds(void)
 {
     RSDK_THIS(Camera);
-    ScreenInfo *screen = &RSDK_screens[entity->screenID];
+    RSDKScreenInfo *screen = &ScreenInfo[entity->screenID];
 
     if (Zone->screenBoundsT1[entity->screenID] > entity->boundsT) {
         if (screen->position.y <= entity->boundsT)
@@ -256,25 +256,25 @@ void Camera_State_Roam(void)
 {
     RSDK_THIS(Camera);
     int32 speed = 0x100000;
-    if (!RSDK_controller[CONT_P1].keyA.down)
+    if (!ControllerInfo[CONT_P1].keyA.down)
         speed = 0x40000;
 
-    if (RSDK_controller[CONT_P1].keyUp.down) {
+    if (ControllerInfo[CONT_P1].keyUp.down) {
         entity->position.y -= speed;
     }
-    else if (RSDK_controller[CONT_P1].keyDown.down) {
+    else if (ControllerInfo[CONT_P1].keyDown.down) {
         entity->position.y += speed;
     }
-    if (RSDK_controller[CONT_P1].keyLeft.down) {
+    if (ControllerInfo[CONT_P1].keyLeft.down) {
         entity->position.x -= speed;
     }
-    else if (RSDK_controller[CONT_P1].keyRight.down) {
+    else if (ControllerInfo[CONT_P1].keyRight.down) {
         entity->position.x += speed;
     }
 
     entity->position.x = entity->position.x >> 0x10;
     entity->position.y = entity->position.y >> 0x10;
-    ScreenInfo *screen = &RSDK_screens[entity->screenID];
+    RSDKScreenInfo *screen = &ScreenInfo[entity->screenID];
 
     if (entity->position.x >= screen->centerX) {
         if (entity->position.x > Zone->screenBoundsR1[entity->screenID] - screen->centerX)

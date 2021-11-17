@@ -116,7 +116,7 @@ void InvincibleStars_Draw(void)
 void InvincibleStars_Create(void *data)
 {
     RSDK_THIS(InvincibleStars);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         Entity *player  = (Entity *)data;
         entity->active  = ACTIVE_NORMAL;
         entity->visible = true;

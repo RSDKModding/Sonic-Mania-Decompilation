@@ -58,7 +58,7 @@ void CPZSetup_StageLoad(void)
     }
 
 #if RETRO_USE_PLUS
-    if (RSDK_sceneInfo->filter & FILTER_ENCORE) {
+    if (SceneInfo->filter & FILTER_ENCORE) {
         RSDK.LoadPalette(0, "EncoreCPZ.act", 0xFF);
         RSDK.LoadPalette(2, "EncoreCPZw.act", 0xFF);
         RSDK.CopyPalette(0, 128, 1, 0, 10);
@@ -167,7 +167,7 @@ void CPZSetup_BGSwitchCB_Act1BG(void)
 void CPZSetup_StageFinishCBAct1(void)
 {
     RSDK.GetSceneLayer(0);
-    Zone_StoreEntities((RSDK_screens->position.x + RSDK_screens->centerX) << 16, (RSDK_screens->height + RSDK_screens->position.y) << 16);
+    Zone_StoreEntities((ScreenInfo->position.x + ScreenInfo->centerX) << 16, (ScreenInfo->height + ScreenInfo->position.y) << 16);
     RSDK.LoadScene();
 }
 

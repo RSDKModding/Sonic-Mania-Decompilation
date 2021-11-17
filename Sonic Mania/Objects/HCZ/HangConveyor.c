@@ -57,7 +57,7 @@ void HangConveyor_DrawSprites(void)
     RSDK_THIS(HangConveyor);
     Vector2 drawPos;
 
-    drawPos.x = RSDK_sceneInfo->entity->position.x;
+    drawPos.x = entity->position.x;
     drawPos.y = entity->position.y;
     drawPos.x += -0x80000 * (entity->length != 1 ? entity->length - 1 : 0);
     int32 dirStore = entity->direction;

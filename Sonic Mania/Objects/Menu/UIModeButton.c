@@ -29,7 +29,7 @@ void UIModeButton_Draw(void)
     RSDK_THIS(UIModeButton);
     Vector2 drawPos;
 
-    RSDK.SetClipBounds(0, 0, 0, RSDK_screens->width, (entity->position.y >> 16) - RSDK_screens->position.y);
+    RSDK.SetClipBounds(0, 0, 0, ScreenInfo->width, (entity->position.y >> 16) - ScreenInfo->position.y);
     drawPos = entity->position;
     drawPos.y += entity->field_118;
     RSDK.DrawSprite(&entity->animator4, &drawPos, false);
@@ -46,7 +46,7 @@ void UIModeButton_Draw(void)
     drawPos.y += entity->field_11C >> 1;
     RSDK.DrawSprite(&entity->animator1, &drawPos, false);
 
-    RSDK.SetClipBounds(0, 0, 0, RSDK_screens->width, RSDK_screens->height);
+    RSDK.SetClipBounds(0, 0, 0, ScreenInfo->width, ScreenInfo->height);
     drawPos = entity->position;
     drawPos.x -= entity->field_11C;
     drawPos.y -= entity->field_11C;
@@ -67,7 +67,7 @@ void UIModeButton_Draw(void)
 void UIModeButton_Create(void *data)
 {
     RSDK_THIS(UIModeButton);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->visible         = true;
         entity->drawOrder       = 2;
         entity->active          = ACTIVE_BOUNDS;

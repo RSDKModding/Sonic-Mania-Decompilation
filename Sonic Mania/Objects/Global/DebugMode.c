@@ -16,20 +16,20 @@ void DebugMode_Update(void)
 #endif
     //if (Zone)
     //    Zone->stageFinishCallback = NULL;
-    if (RSDK_controller[CONT_P1].keyUp.down || (RSDK_stickL[CONT_P1].vDelta > 0.3)) {
+    if (ControllerInfo[CONT_P1].keyUp.down || (AnalogStickInfoL[CONT_P1].vDelta > 0.3)) {
         entity->position.y -= entity->velocity.y;
         flag = true;
     }
-    else if (RSDK_controller[CONT_P1].keyDown.down || (RSDK_stickL[CONT_P1].vDelta < -0.3)) {
+    else if (ControllerInfo[CONT_P1].keyDown.down || (AnalogStickInfoL[CONT_P1].vDelta < -0.3)) {
         entity->position.y += entity->velocity.y;
         flag = true;
     }
 
-    if (RSDK_controller[CONT_P1].keyLeft.down || (RSDK_stickL[CONT_P1].hDelta < -0.3)) {
+    if (ControllerInfo[CONT_P1].keyLeft.down || (AnalogStickInfoL[CONT_P1].hDelta < -0.3)) {
         entity->position.x -= entity->velocity.y;
         flag = true;
     }
-    else if (RSDK_controller[CONT_P1].keyRight.down || (RSDK_stickL[CONT_P1].hDelta > 0.3)) {
+    else if (ControllerInfo[CONT_P1].keyRight.down || (AnalogStickInfoL[CONT_P1].hDelta > 0.3)) {
         entity->position.x += entity->velocity.y;
         flag = true;
     }
@@ -44,20 +44,20 @@ void DebugMode_Update(void)
     }
 
 #if RETRO_GAMEVER != VER_100
-    bool32 keyBack = RSDK_controller[CONT_P1].keyY.press;
-    bool32 keySpawn = RSDK_controller[CONT_P1].keyX.press;
+    bool32 keyBack = ControllerInfo[CONT_P1].keyY.press;
+    bool32 keySpawn = ControllerInfo[CONT_P1].keyX.press;
 #else
-    bool32 keyBack  = RSDK_controller[CONT_P1].keyX.press;
-    bool32 keySpawn = RSDK_controller[CONT_P1].keyY.press;
+    bool32 keyBack  = ControllerInfo[CONT_P1].keyX.press;
+    bool32 keySpawn = ControllerInfo[CONT_P1].keyY.press;
 #endif
 
-    if (RSDK_controller[CONT_P1].keyA.press) {
+    if (ControllerInfo[CONT_P1].keyA.press) {
         ++DebugMode->objID;
         DebugMode->objID %= DebugMode->itemCount;
         DebugMode->itemSubType = 0;
     }
     else if (keySpawn) {
-        EntityPlayer *player        = (EntityPlayer *)RSDK_sceneInfo->entity;
+        EntityPlayer *player        = (EntityPlayer *)SceneInfo->entity;
         player->objectID            = Player->objectID;
         player->groundVel           = 0;
         player->velocity.x          = 0;
@@ -68,32 +68,32 @@ void DebugMode_Update(void)
         player->interaction         = true;
         player->visible             = true;
         player->drawOrder           = Zone->playerDrawLow;
-        RSDK_sceneInfo->timeEnabled = true;
-        if (RSDK_sceneInfo->minutes == 9 && RSDK_sceneInfo->seconds == 59 && RSDK_sceneInfo->milliseconds == 99) {
-            RSDK_sceneInfo->minutes      = 0;
-            RSDK_sceneInfo->seconds      = 0;
-            RSDK_sceneInfo->milliseconds = 0;
+        SceneInfo->timeEnabled = true;
+        if (SceneInfo->minutes == 9 && SceneInfo->seconds == 59 && SceneInfo->milliseconds == 99) {
+            SceneInfo->minutes      = 0;
+            SceneInfo->seconds      = 0;
+            SceneInfo->milliseconds = 0;
         }
         DebugMode->debugActive = false;
     }
-    else if (RSDK_controller[CONT_P1].keyA.down) {
-        if (RSDK_controller[CONT_P1].keyC.press || keyBack) {
+    else if (ControllerInfo[CONT_P1].keyA.down) {
+        if (ControllerInfo[CONT_P1].keyC.press || keyBack) {
             --DebugMode->objID;
             if (DebugMode->objID < 0) {
                 DebugMode->objID = DebugMode->itemCount - 1;
             }
             DebugMode->itemSubType = 0;
         }
-        if (RSDK_controller[CONT_P1].keyB.press) {
+        if (ControllerInfo[CONT_P1].keyB.press) {
             DebugMode->itemSubType--;
             if (DebugMode->itemSubType >= DebugMode->subtypeCount)
                 DebugMode->itemSubType = DebugMode->subtypeCount - 1;
         }
     }
-    else if (RSDK_controller[CONT_P1].keyC.press || keyBack) {
+    else if (ControllerInfo[CONT_P1].keyC.press || keyBack) {
         StateMachine_Run(DebugMode->spawn[DebugMode->objID]);
     }
-    else if (RSDK_controller[CONT_P1].keyB.press) {
+    else if (ControllerInfo[CONT_P1].keyB.press) {
         if (DebugMode->itemSubType >= DebugMode->subtypeCount - 1)
             DebugMode->itemSubType = 0;
         else

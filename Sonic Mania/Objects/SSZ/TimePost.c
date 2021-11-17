@@ -56,7 +56,7 @@ void TimePost_Create(void *data)
 {
     RSDK_THIS(TimePost);
 
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         RSDK.SetSpriteAnimation(TimePost->aniFrames, 0, &entity->animator1, true, 0);
         RSDK.SetSpriteAnimation(TimePost->aniFrames, 0, &entity->animator2, true, 1);
         RSDK.SetSpriteAnimation(TimePost->aniFrames, 0, &entity->animator3, true, 2);
@@ -126,7 +126,7 @@ void TimePost_CheckPlayerCollisions(void)
                 vel = player->velocity.x;
             entity->velocity.y          = -(vel >> 1);
             entity->field_64            = vel / 96;
-            RSDK_sceneInfo->timeEnabled = false;
+            SceneInfo->timeEnabled = false;
             entity->state               = TimePost_State_Spin;
         }
         ++playerID;

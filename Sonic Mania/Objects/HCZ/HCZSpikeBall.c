@@ -43,7 +43,7 @@ void HCZSpikeBall_StageLoad(void) { HCZSpikeBall->aniFrames = RSDK.LoadSpriteAni
 void HCZSpikeBall_HandleConveyorSetup(void)
 {
     RSDK_THIS(HCZSpikeBall);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         foreach_all(HangConveyor, conveyor)
         {
             if (MathHelpers_PointInHitbox(conveyor->direction, conveyor->position.x, conveyor->position.y, &conveyor->hitbox3, entity->position.x,

@@ -63,7 +63,7 @@ void SP500MkII_StageLoad(void)
 void SP500MkII_Unknown1(void)
 {
     RSDK_THIS(SP500MkII);
-    if (RSDK_sceneInfo->inEditor || DebugMode->debugActive) {
+    if (SceneInfo->inEditor || DebugMode->debugActive) {
         int32 storeX = entity->position.x;
         int32 storeY = entity->position.y;
         entity->position.x += entity->field_98;

@@ -41,7 +41,7 @@ void Hatch_StaticUpdate(void)
 void Hatch_Draw(void)
 {
     RSDK_THIS(Hatch);
-    if (RSDK_sceneInfo->currentDrawGroup == RSDK_sceneInfo->entity->drawOrder) {
+    if (SceneInfo->currentDrawGroup == entity->drawOrder) {
         RSDK.DrawSprite(&entity->animator2, NULL, false);
     }
     else {
@@ -56,7 +56,7 @@ void Hatch_Create(void *data)
     RSDK_THIS(Hatch);
 
     entity->drawFX = FX_FLIP;
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->active    = ACTIVE_BOUNDS;
         entity->drawOrder = Zone->drawOrderLow + 1;
 
@@ -72,7 +72,7 @@ void Hatch_Create(void *data)
         entity->hitbox.bottom = (entity->subOff2.y >> 12) - ((entity->position.y >> 16) & 0xF) + 16;
         entity->startPos      = entity->position;
 
-        EntityWarpDoor *warpDoor = RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot - 1, WarpDoor);
+        EntityWarpDoor *warpDoor = RSDK_GET_ENTITY(SceneInfo->entitySlot - 1, WarpDoor);
         if (warpDoor->objectID == WarpDoor->objectID) {
             entity->warpHitbox  = warpDoor->hitbox;
             warpDoor->hitbox.left   = 0;
@@ -103,7 +103,7 @@ void Hatch_Create(void *data)
                 else {
                     entity->vScrollPos += entity->depth << 16;
                     entity->position.y += entity->depth << 16;
-                    destroyEntity(RSDK.GetEntityByID(RSDK_sceneInfo->entitySlot - 1));
+                    destroyEntity(RSDK.GetEntityByID(SceneInfo->entitySlot - 1));
                     entity->flag = true;
                 }
                 break;
@@ -261,7 +261,7 @@ void Hatch_Unknown3(void)
         }
         else {
             player->state            = Player_State_Air;
-            EntityWarpDoor *warpDoor = RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot - 1, WarpDoor);
+            EntityWarpDoor *warpDoor = RSDK_GET_ENTITY(SceneInfo->entitySlot - 1, WarpDoor);
             if (warpDoor->objectID == WarpDoor->objectID) {
                 Zone->screenBoundsB1[RSDK.GetEntityID(player)] = 0x7FFF;
                 warpDoor->hitbox                               = entity->warpHitbox;
@@ -289,7 +289,7 @@ void Hatch_Unknown4(void)
     entity->position.x += entity->dest << 16;
     player->position.x += entity->dest << 16;
     player->camera->position.x += entity->dest << 16;
-    RSDK_screens[player->camera->screenID].position.x += entity->dest;
+    ScreenInfo[player->camera->screenID].position.x += entity->dest;
     entity->timer = 0;
     RSDK.PlaySfx(Hatch->sfxSurface, false, 255);
     entity->state = Hatch_Unknown5;
@@ -403,7 +403,7 @@ void Hatch_Unknown10(void)
 
     zone->timer += 8;
     if (zone->timer >= 512) {
-        EntityWarpDoor *warpDoor = RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot - 1, WarpDoor);
+        EntityWarpDoor *warpDoor = RSDK_GET_ENTITY(SceneInfo->entitySlot - 1, WarpDoor);
 
         if (warpDoor->objectID == WarpDoor->objectID) {
             Zone->screenBoundsB1[RSDK.GetEntityID(player)] = 0x7FFF;

@@ -43,7 +43,7 @@ void SilverSonic_Draw(void)
 void SilverSonic_Create(void *data)
 {
     RSDK_THIS(SilverSonic);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->active          = ACTIVE_BOUNDS;
         entity->visible         = true;
         entity->updateRange.x   = 0x800000;

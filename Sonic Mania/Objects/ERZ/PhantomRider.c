@@ -20,7 +20,7 @@ void PhantomRider_Draw(void)
 {
     RSDK_THIS(PhantomRider);
 
-    RSDK.SetActivePalette(4, 0, RSDK_screens[RSDK_sceneInfo->currentScreenID].height);
+    RSDK.SetActivePalette(4, 0, ScreenInfo[SceneInfo->currentScreenID].height);
 
     if (entity->invincibilityTimer & 1)
         RSDK.CopyPalette(6, 128, 4, 128, 128);
@@ -35,14 +35,14 @@ void PhantomRider_Draw(void)
     if (entity->invincibilityTimer & 1)
         RSDK.CopyPalette(5, 128, 4, 128, 128);
 
-    RSDK.SetActivePalette(0, 0, RSDK_screens[RSDK_sceneInfo->currentScreenID].height);
+    RSDK.SetActivePalette(0, 0, ScreenInfo[SceneInfo->currentScreenID].height);
 }
 
 void PhantomRider_Create(void *data)
 {
     RSDK_THIS(PhantomRider);
 
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->visible       = true;
         entity->drawOrder     = Zone->drawOrderLow;
         entity->updateRange.x = 0x800000;
@@ -211,7 +211,7 @@ void PhantomRider_State_Unknown3(void)
     entity->prevOnGround = entity->onGround;
     RSDK.ProcessTileCollisions(entity, &entity->outerBox, &entity->innerBox);
 
-    EntityPlatformNode *marker = RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot + 1, PlatformNode);
+    EntityPlatformNode *marker = RSDK_GET_ENTITY(SceneInfo->entitySlot + 1, PlatformNode);
     if (entity->position.x > marker->position.x)
         entity->state = PhantomRider_State_Unknown4;
 }
@@ -303,11 +303,11 @@ void PhantomRider_State2_Unknown(void)
 
     foreach_active(Player, player)
     {
-        int x = entity->position.x - (RSDK_screens->centerX << 16) + 0x100000;
+        int x = entity->position.x - (ScreenInfo->centerX << 16) + 0x100000;
         if (player->position.x < x)
             player->position.x = x;
 
-        int y = ((RSDK_screens->centerX - 16) << 16) + entity->position.x;
+        int y = ((ScreenInfo->centerX - 16) << 16) + entity->position.x;
         if (player->position.x > y)
             player->position.x = y;
     }

@@ -231,7 +231,7 @@ void HangPoint_Update(void)
 #endif
 
                                                 player->position.x = point->position.x;
-                                                if (RSDK.GetEntityID(point) < RSDK_sceneInfo->entitySlot)
+                                                if (RSDK.GetEntityID(point) < SceneInfo->entitySlot)
                                                     HangPoint_Unknown1(point, player, playerID);
                                                 HangPoint_Unknown1(entity, player, playerID);
                                                 flag = true;
@@ -270,7 +270,7 @@ void HangPoint_Update(void)
 #endif
 
                                                 player->position.x = point->position.x;
-                                                if (RSDK.GetEntityID(point) < RSDK_sceneInfo->entitySlot)
+                                                if (RSDK.GetEntityID(point) < SceneInfo->entitySlot)
                                                     HangPoint_Unknown1(point, player, playerID);
                                                 HangPoint_Unknown1(entity, player, playerID);
                                                 flag = true;
@@ -358,7 +358,7 @@ void HangPoint_Create(void *data)
     entity->visible       = true;
     entity->updateRange.y = (entity->length + 64) << 16;
     entity->drawOrder     = Zone->drawOrderLow;
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->length   = entity->length << 16;
         entity->field_80 = entity->speed << 15;
         if (entity->direction == FLIP_X)

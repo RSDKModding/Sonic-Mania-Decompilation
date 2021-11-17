@@ -102,7 +102,7 @@ void Water_Create(void *data)
     RSDK_THIS(Water);
 
     entity->visible = true;
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         if (data)
             entity->type = voidToInt(data);
         switch (entity->type) {
@@ -251,7 +251,7 @@ void Water_StageLoad(void)
 
 void Water_SetWaterLevel(void)
 {
-    ScreenInfo *screen = &RSDK_screens[RSDK_sceneInfo->currentScreenID];
+    RSDKScreenInfo *screen = &ScreenInfo[SceneInfo->currentScreenID];
     int32 waterDrawPos   = (Water->waterLevel >> 0x10) - screen->position.y;
     if (waterDrawPos >= 0) {
         if (waterDrawPos > screen->height)
@@ -261,10 +261,10 @@ void Water_SetWaterLevel(void)
         waterDrawPos = 0;
     }
     RSDK.SetActivePalette(Water->waterPalette, waterDrawPos, screen->height);
-    RSDK_screens[RSDK_sceneInfo->currentScreenID].waterDrawPos = waterDrawPos;
+    ScreenInfo[SceneInfo->currentScreenID].waterDrawPos = waterDrawPos;
 }
 
-void Water_RemoveWaterEffect(void) { RSDK.SetActivePalette(0, 0, RSDK_screens[RSDK_sceneInfo->currentScreenID].height); }
+void Water_RemoveWaterEffect(void) { RSDK.SetActivePalette(0, 0, ScreenInfo[SceneInfo->currentScreenID].height); }
 
 void Water_CheckButtonTag(void)
 {
@@ -1205,7 +1205,7 @@ void Water_State_Draw_Palette(void)
     Vector2 drawPos;
 
     RSDK_THIS(Water);
-    ScreenInfo *screen = &RSDK_screens[RSDK_sceneInfo->currentScreenID];
+    RSDKScreenInfo *screen = &ScreenInfo[SceneInfo->currentScreenID];
     drawPos.x          = ((screen->position.x & 0xFFFFFFC0) + 32) << 16;
     drawPos.y          = Water->waterLevel;
     for (int32 i = (screen->width >> 6) + 2; i > 0; --i) {

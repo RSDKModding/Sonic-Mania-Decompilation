@@ -20,7 +20,7 @@ void Crane_StaticUpdate(void)
 void Crane_Draw(void)
 {
     RSDK_THIS(Crane);
-    if (RSDK_sceneInfo->currentDrawGroup == entity->drawOrder) {
+    if (SceneInfo->currentDrawGroup == entity->drawOrder) {
         SpriteFrame *frame = RSDK.GetFrame(Crane->aniFrames, 4, 0);
         int32 height         = (entity->position.y - entity->startPos.y) >> 16;
         frame->sprY        = 230 - height;
@@ -119,7 +119,7 @@ void Crane_HandlePlayerInteractions(void)
 void Crane_CheckOnScreen(void)
 {
     RSDK_THIS(Crane);
-    if (!RSDK.CheckOnScreen(RSDK_sceneInfo->entity, &entity->updateRange)) {
+    if (!RSDK.CheckOnScreen(SceneInfo->entity, &entity->updateRange)) {
         int32 x              = entity->position.x;
         int32 y              = entity->position.y;
         entity->position.x = entity->startPos.x;
@@ -142,7 +142,7 @@ void Crane_CheckOnScreen(void)
 void Crane_State_CheckOnScreen(void)
 {
     RSDK_THIS(Crane);
-    if (!RSDK.CheckOnScreen(RSDK_sceneInfo->entity, &RSDK_sceneInfo->entity->updateRange)) {
+    if (!RSDK.CheckOnScreen(entity, &entity->updateRange)) {
         entity->state = Crane_State_Unknown1;
         Crane_Create(NULL);
     }

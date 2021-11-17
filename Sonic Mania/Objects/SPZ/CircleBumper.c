@@ -27,7 +27,7 @@ void CircleBumper_Create(void *data)
     entity->originPos.x = entity->position.x;
     entity->originPos.y = entity->position.y;
     entity->active      = ACTIVE_BOUNDS;
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->amplitude.x >>= 10;
         entity->amplitude.y >>= 10;
     }
@@ -195,7 +195,7 @@ void CircleBumper_Unknown6(void)
 void CircleBumper_Unknown7(void)
 {
     RSDK_THIS(CircleBumper);
-    entity->originPos.x += RSDK_sceneInfo->entity->velocity.x;
+    entity->originPos.x += entity->velocity.x;
     entity->originPos.y += entity->velocity.y;
     Entity *ent = RSDK.GetEntityByID(entity->speed);
 
@@ -220,7 +220,7 @@ void CircleBumper_Unknown8(void)
 {
     RSDK_THIS(CircleBumper);
     int32 val = Zone->timer << 7;
-    if (((val >> 16) & 1) == RSDK_sceneInfo->entity->direction) {
+    if (((val >> 16) & 1) == entity->direction) {
         entity->originPos.x = entity->position.x + (val * entity->amplitude.x >> 6) - (entity->amplitude.x << 15);
         entity->originPos.y = entity->position.y + (val * entity->amplitude.y >> 6) - (entity->amplitude.y << 15);
     }

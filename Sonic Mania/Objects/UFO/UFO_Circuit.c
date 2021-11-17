@@ -49,7 +49,7 @@ void UFO_Circuit_Draw(void)
 void UFO_Circuit_Create(void *data)
 {
     RSDK_THIS(UFO_Circuit);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->startPos.x = entity->position.x;
         entity->startPos.y = entity->position.y;
         int32 id             = RSDK.GetEntityID(entity);
@@ -292,7 +292,7 @@ void UFO_Circuit_Unknown4(void)
                     player->stateInput          = StateMachine_None;
                     player->state               = UFO_Player_Unknown10;
                     entity->state               = UFO_Circuit_Unknown5;
-                    RSDK_sceneInfo->timeEnabled = false;
+                    SceneInfo->timeEnabled = false;
                 }
             }
         }

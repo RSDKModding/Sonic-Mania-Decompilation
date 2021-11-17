@@ -7,8 +7,8 @@ void PauseMenu_Update(void)
     RSDK_THIS(PauseMenu);
     StateMachine_Run(entity->state);
 
-    entity->position.x = (RSDK_screens->position.x + RSDK_screens->centerX) << 16;
-    entity->position.y = (RSDK_screens->position.y + RSDK_screens->centerY) << 16;
+    entity->position.x = (ScreenInfo->position.x + ScreenInfo->centerX) << 16;
+    entity->position.y = (ScreenInfo->position.y + ScreenInfo->centerY) << 16;
     if (entity->manager) {
         entity->manager->position.x = entity->position.x;
         entity->manager->position.y = entity->position.y;
@@ -41,7 +41,7 @@ void PauseMenu_LateUpdate(void)
 
 void PauseMenu_StaticUpdate(void)
 {
-    if (RSDK_sceneInfo->state == ENGINESTATE_REGULAR) {
+    if (SceneInfo->state == ENGINESTATE_REGULAR) {
         int32 cnt = 0;
         if (TitleCard)
             cnt = RSDK.GetEntityCount(TitleCard->objectID, true);
@@ -102,7 +102,7 @@ void PauseMenu_Draw(void)
 void PauseMenu_Create(void *data)
 {
     RSDK_THIS(PauseMenu);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->active = ACTIVE_ALWAYS;
         if (data == intToVoid(1)) {
             entity->active    = ACTIVE_ALWAYS;
@@ -172,17 +172,17 @@ void PauseMenu_Unknown3(void)
     RSDK_THIS(PauseMenu);
     Vector2 drawPos;
 
-    drawPos.x = RSDK_sceneInfo->entity->position.x;
+    drawPos.x = entity->position.x;
     drawPos.y = entity->position.y - 0x600000;
-    drawPos.x += 0x640000 + entity->field_68.x + -0x10000 * RSDK_screens->centerX;
+    drawPos.x += 0x640000 + entity->field_68.x + -0x10000 * ScreenInfo->centerX;
     drawPos.y += entity->field_68.y;
     UIWidgets_Unknown7(68, 200, 68, 232, 40, 88, drawPos.x, drawPos.y);
     drawPos.y += 0x60000;
     drawPos.x += 0xA0000;
     UIWidgets_Unknown7(24, 115, 24, 0, 0, 0, drawPos.x, drawPos.y);
     RSDK.DrawSprite(&entity->animator, &drawPos, 0);
-    UIWidgets_Unknown5(240, -232, 216, 8, entity->field_70.x + (RSDK_screens->centerX << 16) + entity->position.x,
-                       entity->field_70.y + (RSDK_screens->centerY << 16) + entity->position.y);
+    UIWidgets_Unknown5(240, -232, 216, 8, entity->field_70.x + (ScreenInfo->centerX << 16) + entity->position.x,
+                       entity->field_70.y + (ScreenInfo->centerY << 16) + entity->position.y);
 }
 
 void PauseMenu_HandleButtonPositions(void)
@@ -190,8 +190,8 @@ void PauseMenu_HandleButtonPositions(void)
     RSDK_THIS(PauseMenu);
 
     Vector2 pos;
-    pos.x = ((RSDK_screens->centerX - 69) << 16) + entity->position.x + entity->field_70.x;
-    pos.y = (RSDK_sceneInfo->entity->position.y + 0x380000) + entity->field_70.y - 0x240000;
+    pos.x = ((ScreenInfo->centerX - 69) << 16) + entity->position.x + entity->field_70.x;
+    pos.y = (entity->position.y + 0x380000) + entity->field_70.y - 0x240000;
     if (entity->buttonCount == 2) {
         pos.x -= 0x240000;
         pos.y += 0x240000;
@@ -223,8 +223,8 @@ void PauseMenu_AddButton(uint8 id, void *action)
         RSDK.ResetEntitySlot(buttonSlot, UIButton->objectID, NULL);
         EntityUIButton *button = RSDK_GET_ENTITY(buttonSlot, UIButton);
 
-        button->position.x = (RSDK_screens->position.x + RSDK_screens->centerX) << 16;
-        button->position.y = (RSDK_screens->position.y + RSDK_screens->centerY) << 16;
+        button->position.x = (ScreenInfo->position.x + ScreenInfo->centerX) << 16;
+        button->position.y = (ScreenInfo->position.y + ScreenInfo->centerY) << 16;
         RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, 10, &button->animator, true, id);
         button->options2             = PauseMenu_Unknown16;
         button->size.x               = 0x3C0000;
@@ -243,14 +243,14 @@ void PauseMenu_SetupMenu(void)
     RSDK_THIS(PauseMenu);
 
     Vector2 size;
-    size.x = RSDK_screens->width << 16;
-    size.y = RSDK_screens->height << 16;
+    size.x = ScreenInfo->width << 16;
+    size.y = ScreenInfo->height << 16;
     RSDK.ResetEntitySlot(SLOT_PAUSEMENU_UICONTROL, UIControl->objectID, &size);
 
     EntityUIControl *control = RSDK_GET_ENTITY(SLOT_PAUSEMENU_UICONTROL, UIControl);
 
-    control->position.x = (RSDK_screens->position.x + RSDK_screens->centerX) << 16;
-    control->position.y = (RSDK_screens->position.y + RSDK_screens->centerY) << 16;
+    control->position.x = (ScreenInfo->position.x + ScreenInfo->centerX) << 16;
+    control->position.y = (ScreenInfo->position.y + ScreenInfo->centerY) << 16;
 
     control->rowCount       = 3;
     control->columnCount    = 1;
@@ -386,8 +386,8 @@ void PauseMenu_RestartDialog_YesCB(void)
         StarPost->postIDs[3] = 0;
     }
     RSDK.StopChannel(Music->channelID);
-    EntityPauseMenu *entity = CREATE_ENTITY(PauseMenu, intToVoid(1), (RSDK_screens->position.x + RSDK_screens->centerX) << 16,
-                                             (RSDK_screens->position.y + RSDK_screens->centerY) << 16);
+    EntityPauseMenu *entity = CREATE_ENTITY(PauseMenu, intToVoid(1), (ScreenInfo->position.x + ScreenInfo->centerX) << 16,
+                                             (ScreenInfo->position.y + ScreenInfo->centerY) << 16);
     entity->funcPtrUnknown = PauseMenu_Unknown8;
     entity->state          = PauseMenu_Unknown27;
 }
@@ -429,8 +429,8 @@ void PauseMenu_ExitDialog_YesCB(void)
     }
 
     RSDK.StopChannel(Music->channelID);
-    EntityPauseMenu *entity = CREATE_ENTITY(PauseMenu, intToVoid(1), (RSDK_screens->position.x + RSDK_screens->centerX) << 16,
-                                            (RSDK_screens->position.y + RSDK_screens->centerY) << 16);
+    EntityPauseMenu *entity = CREATE_ENTITY(PauseMenu, intToVoid(1), (ScreenInfo->position.x + ScreenInfo->centerX) << 16,
+                                            (ScreenInfo->position.y + ScreenInfo->centerY) << 16);
     entity->funcPtrUnknown = PauseMenu_Unknown9;
     entity->state          = PauseMenu_Unknown27;
 }
@@ -561,7 +561,7 @@ void PauseMenu_Unknown22(void)
 
     EntityUIControl *manager = (EntityUIControl *)entity->manager;
 #if RETRO_USE_PLUS
-    if (RSDK_unknown->field_10 && !manager->dialogHasFocus) {
+    if (UnknownInfo->field_10 && !manager->dialogHasFocus) {
 #else
     if (/*RSDK_touchMouse->flag10*/ false && !manager->dialogHasFocus) {
 #endif
@@ -905,7 +905,7 @@ void PauseMenu_Unknown36(void)
     RSDK_THIS(PauseMenu);
     if (entity->state != PauseMenu_Unknown27) {
         RSDK.SetLookupTable(PauseMenu->lookupTable);
-        RSDK.DrawRect(0, 0, RSDK_screens->width, RSDK_screens->height, 0, entity->field_64, INK_LOOKUP, true);
+        RSDK.DrawRect(0, 0, ScreenInfo->width, ScreenInfo->height, 0, entity->field_64, INK_LOOKUP, true);
         PauseMenu_Unknown3();
     }
 }
@@ -915,7 +915,7 @@ void PauseMenu_Unknown37(void)
     RSDK_THIS(PauseMenu);
     if (entity->state != PauseMenu_Unknown27) {
         RSDK.SetLookupTable(PauseMenu->lookupTable);
-        RSDK.DrawRect(0, 0, RSDK_screens->width, RSDK_screens->height, 0, entity->field_64, INK_LOOKUP, true);
+        RSDK.DrawRect(0, 0, ScreenInfo->width, ScreenInfo->height, 0, entity->field_64, INK_LOOKUP, true);
     }
 }
 

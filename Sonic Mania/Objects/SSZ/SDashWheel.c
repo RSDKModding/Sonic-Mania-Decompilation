@@ -87,7 +87,7 @@ void SDashWheel_Create(void *data)
 {
     RSDK_THIS(SDashWheel);
 
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->active        = ACTIVE_BOUNDS;
         entity->visible       = true;
         entity->drawFX        = FX_ROTATE | FX_FLIP;
@@ -120,7 +120,7 @@ bool32 SDashWheel_CheckCB(void)
     int32 count = 0;
     foreach_active(PlatformControl, control)
     {
-        if (control->controller && control->field_6C && control->speed > 0)
+        if (control->ControllerInfo && control->field_6C && control->speed > 0)
             ++count;
     }
     return count > 0;

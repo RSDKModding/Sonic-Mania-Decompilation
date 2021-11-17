@@ -99,7 +99,7 @@ void Spiny_CheckPlayerCollisions(void)
 void Spiny_CheckOnScreen(void)
 {
     RSDK_THIS(Spiny);
-    if (!RSDK.CheckOnScreen(RSDK_sceneInfo->entity, NULL) && !RSDK.CheckPosOnScreen(&entity->startPos, &entity->updateRange)) {
+    if (!RSDK.CheckOnScreen(SceneInfo->entity, NULL) && !RSDK.CheckPosOnScreen(&entity->startPos, &entity->updateRange)) {
         entity->position  = entity->startPos;
         entity->timer2    = 0;
         entity->timer     = 128;

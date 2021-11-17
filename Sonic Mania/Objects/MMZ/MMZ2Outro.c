@@ -132,9 +132,9 @@ bool32 MMZ2Outro_CutsceneState_Unknown3(EntityCutsceneSeq *host)
         Zone->screenBoundsR2[p] += 0x2400000;
     }
 
-    entity->position.x                                = (Zone->screenBoundsR1[0] - RSDK_screens->centerX) << 16;
-    entity->position.y                                = (Zone->screenBoundsB1[0] - RSDK_screens->centerY) << 16;
-    RSDK_GET_ENTITY(SLOT_CAMERA1, Camera)->position.x = (RSDK_screens->position.x + RSDK_screens->centerX) << 16;
+    entity->position.x                                = (Zone->screenBoundsR1[0] - ScreenInfo->centerX) << 16;
+    entity->position.y                                = (Zone->screenBoundsB1[0] - ScreenInfo->centerY) << 16;
+    RSDK_GET_ENTITY(SLOT_CAMERA1, Camera)->position.x = (ScreenInfo->position.x + ScreenInfo->centerX) << 16;
     Camera_SetupLerp(3, 0, entity->position.x, entity->position.y, 2);
     return true;
 }

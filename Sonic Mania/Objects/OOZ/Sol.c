@@ -375,7 +375,7 @@ void Sol_Unknown10(void)
 void Sol_Unknown11(void)
 {
     RSDK_THIS(Sol);
-    if (RSDK.CheckOnScreen(RSDK_sceneInfo->entity, &RSDK_sceneInfo->entity->updateRange)) {
+    if (RSDK.CheckOnScreen(entity, &entity->updateRange)) {
         bool32 collided = RSDK.ObjectTileGrip(entity, Zone->fgLayers, CMODE_FLOOR, 1, 0, 0x80000, 16);
         if (!collided)
             collided = RSDK.ObjectTileGrip(entity, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x80000, 16);

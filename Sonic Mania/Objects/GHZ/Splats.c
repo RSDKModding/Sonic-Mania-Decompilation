@@ -140,7 +140,7 @@ void Splats_CheckPlayerCollisions(void)
 void Splats_CheckOnScreen(void)
 {
     RSDK_THIS(Splats);
-    if (!RSDK.CheckOnScreen(RSDK_sceneInfo->entity, 0) && !RSDK.CheckPosOnScreen(&entity->startPos, &entity->updateRange)) {
+    if (!RSDK.CheckOnScreen(SceneInfo->entity, 0) && !RSDK.CheckPosOnScreen(&entity->startPos, &entity->updateRange)) {
         entity->position.x = entity->startPos.x;
         entity->position.y = entity->startPos.y;
         entity->direction  = entity->startDir;

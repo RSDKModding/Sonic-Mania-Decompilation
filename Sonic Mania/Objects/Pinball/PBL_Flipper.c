@@ -9,15 +9,15 @@ void PBL_Flipper_Update(void)
 
     if (entity->direction) {
         entity->buttonPress =
-            RSDK_triggerL[1].key1.press || RSDK_controller[1].keyA.press || RSDK_controller[1].keyC.press || RSDK_controller[1].keyX.press;
+            TriggerInfoL[1].key1.press || ControllerInfo[1].keyA.press || ControllerInfo[1].keyC.press || ControllerInfo[1].keyX.press;
         entity->buttonDown =
-            RSDK_triggerL[1].key1.down || RSDK_controller[1].keyA.down || RSDK_controller[1].keyC.down || RSDK_controller[1].keyX.down;
+            TriggerInfoL[1].key1.down || ControllerInfo[1].keyA.down || ControllerInfo[1].keyC.down || ControllerInfo[1].keyX.down;
     }
     else {
         entity->buttonPress =
-            RSDK_triggerR[1].key1.press || RSDK_controller[1].keyA.press || RSDK_controller[1].keyB.press || RSDK_controller[1].keyC.press;
+            TriggerInfoR[1].key1.press || ControllerInfo[1].keyA.press || ControllerInfo[1].keyB.press || ControllerInfo[1].keyC.press;
         entity->buttonDown =
-            RSDK_triggerR[1].key1.down || RSDK_controller[1].keyA.down || RSDK_controller[1].keyB.down || RSDK_controller[1].keyC.down;
+            TriggerInfoR[1].key1.down || ControllerInfo[1].keyA.down || ControllerInfo[1].keyB.down || ControllerInfo[1].keyC.down;
     }
 
     StateMachine_Run(entity->state);
@@ -85,7 +85,7 @@ void PBL_Flipper_Draw(void)
 void PBL_Flipper_Create(void *data)
 {
     RSDK_THIS(PBL_Flipper);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->visible = true;
         if (entity->direction == FLIP_NONE)
             entity->scale.x = 0x100;

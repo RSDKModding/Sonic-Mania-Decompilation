@@ -16,7 +16,26 @@ void PlaneSwitch_LateUpdate(void) {}
 
 void PlaneSwitch_StaticUpdate(void) {}
 
-void PlaneSwitch_Draw(void)
+void PlaneSwitch_Draw(void) { PlaneSwitch_DrawSprites(); }
+
+void PlaneSwitch_Create(void *data)
+{
+    RSDK_THIS(PlaneSwitch);
+    RSDK.SetSpriteAnimation(PlaneSwitch->aniFrames, 0, &entity->animator, true, 0);
+    if (!SceneInfo->inEditor) {
+        entity->active = ACTIVE_BOUNDS;
+
+        entity->updateRange.x = abs(entity->size * RSDK.Sin256(entity->angle) << 11) + 0x200000;
+        entity->updateRange.y = abs(entity->size * RSDK.Cos256(entity->angle) << 11) + 0x200000;
+        entity->visible       = false;
+        entity->drawOrder     = Zone->drawOrderLow;
+        entity->negAngle      = (uint8) - (entity->angle & 0xFF);
+    }
+}
+
+void PlaneSwitch_StageLoad(void) { PlaneSwitch->aniFrames = RSDK.LoadSpriteAnimation("Global/PlaneSwitch.bin", SCOPE_STAGE); }
+
+void PlaneSwitch_DrawSprites(void)
 {
     RSDK_THIS(PlaneSwitch);
     Vector2 drawPos;
@@ -29,7 +48,7 @@ void PlaneSwitch_Draw(void)
 
     entity->animator.frameID = entity->flags & 3;
     for (int32 i = 0; i < entity->size; ++i) {
-        RSDK.DrawSprite(&entity->animator, &drawPos, 0);
+        RSDK.DrawSprite(&entity->animator, &drawPos, false);
         drawPos.x += RSDK.Sin256(entity->angle) << 12;
         drawPos.y += RSDK.Cos256(entity->angle) << 12;
     }
@@ -37,47 +56,18 @@ void PlaneSwitch_Draw(void)
     drawPos.x = entity->position.x + 0x80000;
     drawPos.y = entity->position.y - (entity->size << 19);
 
-    int32 dx    = (drawPos.x + 0x80000 - entity->position.x) >> 8;
-    int32 dy    = (drawPos.y - entity->position.y) >> 8;
+    int32 dx  = (drawPos.x + 0x80000 - entity->position.x) >> 8;
+    int32 dy  = (drawPos.y - entity->position.y) >> 8;
     drawPos.x = (dy * RSDK.Sin256(entity->angle)) + dx * RSDK.Cos256(entity->angle) + entity->position.x;
     drawPos.y = (dy * RSDK.Cos256(entity->angle)) - dx * RSDK.Sin256(entity->angle) + entity->position.y;
 
     entity->animator.frameID = (entity->flags >> 2) & 3;
     for (int32 i = 0; i < entity->size; ++i) {
-        RSDK.DrawSprite(&entity->animator, &drawPos, 0);
+        RSDK.DrawSprite(&entity->animator, &drawPos, false);
         drawPos.x += RSDK.Sin256(entity->angle) << 12;
         drawPos.y += RSDK.Cos256(entity->angle) << 12;
     }
 }
-
-void PlaneSwitch_Create(void *data)
-{
-    RSDK_THIS(PlaneSwitch);
-    RSDK.SetSpriteAnimation(PlaneSwitch->aniFrames, 0, &entity->animator, true, 0);
-    if (!RSDK_sceneInfo->inEditor) {
-        entity->active = ACTIVE_BOUNDS;
-
-        int32 x = 0;
-        if (entity->size * RSDK.Sin256(entity->angle) << 11 >= 0)
-            x = entity->size * RSDK.Sin256(entity->angle) << 11;
-        else
-            x = -(entity->size * RSDK.Sin256(entity->angle) << 11);
-        entity->updateRange.x = x + 0x200000;
-
-        int32 y = 0;
-        if (entity->size * RSDK.Cos256(entity->angle) << 11 >= 0)
-            y = entity->size * RSDK.Cos256(entity->angle) << 11;
-        else
-            y = -(entity->size * RSDK.Cos256(entity->angle) << 11);
-
-        entity->visible       = false;
-        entity->updateRange.y = y + 0x200000;
-        entity->drawOrder     = Zone->drawOrderLow;
-        entity->negAngle      = (uint8) - (uint8)entity->angle;
-    }
-}
-
-void PlaneSwitch_StageLoad(void) { PlaneSwitch->aniFrames = RSDK.LoadSpriteAnimation("Global/PlaneSwitch.bin", SCOPE_STAGE); }
 
 void PlaneSwitch_CheckCollisions(EntityPlaneSwitch *entity, void *o, int32 flags, int32 size, bool32 switchDrawOrder, uint8 low, uint8 high)
 {
@@ -118,7 +108,17 @@ void PlaneSwitch_CheckCollisions(EntityPlaneSwitch *entity, void *o, int32 flags
 }
 
 #if RETRO_INCLUDE_EDITOR
-void PlaneSwitch_EditorDraw(void) { PlaneSwitch_Draw(); }
+void PlaneSwitch_EditorDraw(void)
+{
+    RSDK_THIS(PlaneSwitch);
+    entity->updateRange.x = abs(entity->size * RSDK.Sin256(entity->angle) << 11) + 0x200000;
+    entity->updateRange.y = abs(entity->size * RSDK.Cos256(entity->angle) << 11) + 0x200000;
+    entity->visible       = false;
+    entity->drawOrder     = Zone->drawOrderLow;
+    entity->negAngle      = (uint8) - (uint8)entity->angle;
+
+    PlaneSwitch_DrawSprites();
+}
 
 void PlaneSwitch_EditorLoad(void)
 {

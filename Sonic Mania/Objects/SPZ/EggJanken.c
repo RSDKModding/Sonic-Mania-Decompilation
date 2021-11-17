@@ -198,10 +198,10 @@ void EggJanken_HandleMovement(void)
     RSDK_THIS(EggJanken);
 
     if (entity->velocity.x >= 0) {
-        if (entity->startPos.x >= (RSDK_screens->position.x + RSDK_screens->width - 48) << 16)
+        if (entity->startPos.x >= (ScreenInfo->position.x + ScreenInfo->width - 48) << 16)
             entity->velocity.x = -entity->velocity.x;
     }
-    else if (entity->startPos.x <= (RSDK_screens->position.x + 48) << 16)
+    else if (entity->startPos.x <= (ScreenInfo->position.x + 48) << 16)
         entity->velocity.x = -entity->velocity.x;
 
     entity->startPos.x += entity->velocity.x;
@@ -243,7 +243,7 @@ void EggJanken_State1_SetupArena(void)
         entity->timer               = 0;
         Zone->playerBoundActiveR[0] = true;
         Zone->playerBoundActiveB[0] = true;
-        Zone->screenBoundsR1[0]     = (entity->position.x >> 16) + RSDK_screens->centerX;
+        Zone->screenBoundsR1[0]     = (entity->position.x >> 16) + ScreenInfo->centerX;
         Zone->screenBoundsB1[0]     = (entity->position.y >> 16) + 208;
         entity->startPos.y -= 0x1000000;
         entity->active = ACTIVE_NORMAL;
@@ -256,12 +256,12 @@ void EggJanken_State1_StartFight(void)
     RSDK_THIS(EggJanken);
 
     Zone->playerBoundActiveL[0] = true;
-    Zone->screenBoundsL1[0]     = RSDK_screens->position.x;
+    Zone->screenBoundsL1[0]     = ScreenInfo->position.x;
 
     if (RSDK_GET_ENTITY(SLOT_PLAYER1, Player)->position.x > entity->position.x) {
         entity->visible             = true;
         Zone->playerBoundActiveL[0] = true;
-        Zone->screenBoundsR1[0]     = (entity->position.x >> 16) - RSDK_screens->centerX;
+        Zone->screenBoundsR1[0]     = (entity->position.x >> 16) - ScreenInfo->centerX;
         entity->state1              = EggJanken_State1_Unknown1;
         entity->stateDraw           = EggJanken_StateDraw_Unknown1;
         entity->timer               = 272;
@@ -451,7 +451,7 @@ void EggJanken_State1_Destroyed(void)
             break;
         case 180: {
             RSDK.PlaySfx(SignPost->sfxTwinkle, false, 255);
-            EntitySignPost *signPost = RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot + 1, SignPost);
+            EntitySignPost *signPost = RSDK_GET_ENTITY(SceneInfo->entitySlot + 1, SignPost);
             signPost->position.x     = entity->position.x;
             signPost->state          = SignPost_State_Fall;
             entity->state1           = EggJanken_State1_Unknown6;
@@ -523,7 +523,7 @@ void EggJanken_State1_Unknown9(void)
         entity->timer        = 0;
         if (!entity->health) {
             entity->isMoving            = false;
-            RSDK_sceneInfo->timeEnabled = false;
+            SceneInfo->timeEnabled = false;
             entity->state1              = EggJanken_State1_Destroyed;
             EntityPlayer *player1       = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
             if (player1->superState == SUPERSTATE_SUPER)

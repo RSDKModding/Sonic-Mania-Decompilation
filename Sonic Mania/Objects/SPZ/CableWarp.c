@@ -22,7 +22,7 @@ void CableWarp_Create(void *data)
 {
     RSDK_THIS(CableWarp);
 
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         if (data)
             entity->type = voidToInt(data);
         entity->active        = ACTIVE_BOUNDS;
@@ -142,7 +142,7 @@ void CableWarp_State1_Unknown(void)
             EntityCableWarp *warp = CREATE_ENTITY(CableWarp, intToVoid(CABLEWARP_TRANSPORT), entity->position.x, entity->position.y);
             warp->isPermanent     = true;
             warp->playerPtr       = (Entity *)player;
-            warp->slotID          = RSDK_sceneInfo->entitySlot;
+            warp->slotID          = SceneInfo->entitySlot;
             if (entity->type) {
                 warp->nextSlot            = warp->slotID - 1;
                 EntityCableWarp *nextNode = RSDK_GET_ENTITY(warp->nextSlot, CableWarp);

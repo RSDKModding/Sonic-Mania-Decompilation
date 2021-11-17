@@ -238,9 +238,9 @@ bool32 FBZ1Outro_CutsceneState_Unknown4(EntityCutsceneSeq *host)
     if (player2->objectID == Player->objectID)
         RSDK.SetSpriteAnimation(player2->aniFrames, ANI_IDLE, &player2->playerAnimator, false, 0);
 
-    if (camera->offset.x || RSDK_screens->position.x < Zone->screenBoundsL1[0] || host->timer < 30) {
-        if (RSDK_screens->position.x < Zone->screenBoundsL1[0])
-            RSDK_screens->position.x++;
+    if (camera->offset.x || ScreenInfo->position.x < Zone->screenBoundsL1[0] || host->timer < 30) {
+        if (ScreenInfo->position.x < Zone->screenBoundsL1[0])
+            ScreenInfo->position.x++;
         if (camera->offset.x > 0)
             camera->offset.x -= 0x10000;
     }
@@ -251,12 +251,12 @@ bool32 FBZ1Outro_CutsceneState_Unknown4(EntityCutsceneSeq *host)
         int32 id           = 0;
         TileLayer *layer = RSDK.GetSceneLayer(1);
         for (int32 i = 0; i < layer->scrollInfoCount; ++i) {
-            globals->parallaxOffset[id++] = layer->scrollInfo[i].scrollPos + layer->scrollInfo[i].parallaxFactor * RSDK_screens->position.x;
+            globals->parallaxOffset[id++] = layer->scrollInfo[i].scrollPos + layer->scrollInfo[i].parallaxFactor * ScreenInfo->position.x;
         }
 
         foreach_all(ParallaxSprite, parallaxSprite)
         {
-            globals->parallaxOffset[id++] = parallaxSprite->scrollPos.x + parallaxSprite->parallaxFactor.x * RSDK_screens->position.x;
+            globals->parallaxOffset[id++] = parallaxSprite->scrollPos.x + parallaxSprite->parallaxFactor.x * ScreenInfo->position.x;
         }
 
         return true;

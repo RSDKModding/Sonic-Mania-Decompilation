@@ -17,8 +17,8 @@ void FBZStorm_Update(void)
 
     for (int32 p = 0; p < Player->playerCount; ++p) {
         if (!RSDK_GET_ENTITY(p, Player)->sidekick) {
-            entity->screenPosX[p] = RSDK_screens[p].position.x;
-            int32 x                 = ((entity->screenPosX[p] << 14) - (RSDK_screens[p].position.x << 14)) + entity->velocity.x;
+            entity->screenPosX[p] = ScreenInfo[p].position.x;
+            int32 x                 = ((entity->screenPosX[p] << 14) - (ScreenInfo[p].position.x << 14)) + entity->velocity.x;
             entity->stormAngle[p] = RSDK.ATan2(entity->velocity.y, -x) << 1;
             Vector2 *pos          = &FBZStorm->positions[0x40 * p];
 
@@ -75,13 +75,13 @@ void FBZStorm_StaticUpdate(void)
 void FBZStorm_Draw(void)
 {
     RSDK_THIS(FBZStorm);
-    ScreenInfo *screen = &RSDK_screens[RSDK_sceneInfo->currentScreenID];
+    RSDKScreenInfo *screen = &ScreenInfo[SceneInfo->currentScreenID];
 
     int32 centerX      = screen->centerX << 16;
     int32 centerY      = screen->centerY << 16;
-    entity->rotation = entity->stormAngle[RSDK_sceneInfo->currentScreenID];
+    entity->rotation = entity->stormAngle[SceneInfo->currentScreenID];
 
-    Vector2 *pos = &FBZStorm->positions[0x40 * RSDK_sceneInfo->currentScreenID];
+    Vector2 *pos = &FBZStorm->positions[0x40 * SceneInfo->currentScreenID];
     for (int32 i = 0; i < 0x40; ++i) {
         Vector2 drawPos;
         drawPos.x = centerX + pos->x;
@@ -94,7 +94,7 @@ void FBZStorm_Draw(void)
 void FBZStorm_Create(void *data)
 {
     RSDK_THIS(FBZStorm);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->active     = ACTIVE_NORMAL;
         entity->drawOrder  = Zone->drawOrderHigh;
         entity->drawFX     = FX_ROTATE;

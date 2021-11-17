@@ -38,9 +38,10 @@ void Ink_Draw(void)
 {
     RSDK_THIS(Ink);
 
-    RSDK_sceneInfo->entity->inkEffect = INK_SUB;
+    entity->inkEffect = INK_SUB;
     RSDK.DrawSprite(&entity->animator3, NULL, false);
     RSDK.DrawSprite(&entity->animator2, NULL, false);
+
     entity->inkEffect = INK_NONE;
     RSDK.DrawSprite(&entity->animator1, NULL, false);
 }
@@ -48,7 +49,7 @@ void Ink_Draw(void)
 void Ink_Create(void *data)
 {
     RSDK_THIS(Ink);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->active        = ACTIVE_BOUNDS;
         entity->visible       = true;
         entity->drawOrder     = Zone->drawOrderLow;

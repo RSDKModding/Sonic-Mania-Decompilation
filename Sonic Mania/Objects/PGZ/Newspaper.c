@@ -30,7 +30,7 @@ void Newspaper_Create(void *data)
 {
     RSDK_THIS(Newspaper);
 #if RETRO_USE_PLUS
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->visible       = true;
         entity->active        = ACTIVE_BOUNDS;
         entity->updateRange.x = 0x400000;

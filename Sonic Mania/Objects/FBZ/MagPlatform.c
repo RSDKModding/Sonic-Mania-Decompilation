@@ -28,7 +28,7 @@ void MagPlatform_Create(void *data)
     RSDK_THIS(MagPlatform);
     Platform_Create(NULL);
     RSDK.SetSpriteAnimation(Platform->aniFrames, 3, &entity->animator, true, 0);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->length <<= 16;
         entity->stateCollide = MagPlatform_Unknown1;
         entity->state        = MagPlatform_Unknown2;

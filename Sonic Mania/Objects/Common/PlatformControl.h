@@ -18,7 +18,7 @@ typedef struct {
     uint8 type;
     int32 field_6C;
     int32 buttonTag;
-    Entity *controller;
+    Entity *ControllerInfo;
 } EntityPlatformControl;
 
 // Object Struct

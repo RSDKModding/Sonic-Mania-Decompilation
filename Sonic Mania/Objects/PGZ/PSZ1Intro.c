@@ -21,7 +21,7 @@ void PSZ1Intro_Draw(void) {}
 void PSZ1Intro_Create(void *data)
 {
     RSDK_THIS(PSZ1Intro);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->active      = ACTIVE_NORMAL;
         entity->isPermanent = true;
         if (!isMainGameMode() || !globals->enableIntro || PlayerHelpers_CheckStageReload()) {

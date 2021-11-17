@@ -163,7 +163,7 @@ void Fan_Create(void *data)
     RSDK_THIS(Fan);
 
     entity->drawFX = FX_FLIP;
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->active        = ACTIVE_BOUNDS;
         entity->visible       = true;
         entity->drawOrder     = Zone->drawOrderLow + 1;
@@ -450,7 +450,7 @@ void Fan_Unknown9(void)
 void Fan_Unknown10(void)
 {
     RSDK_THIS(Fan);
-    int32 slot                 = RSDK_sceneInfo->entitySlot - 1;
+    int32 slot                 = SceneInfo->entitySlot - 1;
     EntityPlatform *platform = RSDK_GET_ENTITY(slot, Platform);
     while (platform->objectID == Fan->objectID) {
         --slot;

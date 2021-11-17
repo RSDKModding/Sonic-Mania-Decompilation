@@ -46,7 +46,7 @@ void ERZShinobi_Draw(void)
 void ERZShinobi_Create(void *data)
 {
     RSDK_THIS(ERZShinobi);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->visible         = true;
         entity->drawFX          = FX_ROTATE | FX_FLIP;
         entity->drawOrder       = Zone->drawOrderLow;

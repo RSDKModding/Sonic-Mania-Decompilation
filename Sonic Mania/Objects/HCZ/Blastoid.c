@@ -24,7 +24,7 @@ void Blastoid_Create(void *data)
     entity->visible   = true;
     entity->drawOrder = Zone->drawOrderLow;
     entity->drawFX |= FX_FLIP;
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         if (data) {
             entity->active        = ACTIVE_NORMAL;
             entity->updateRange.x = 0x200000;
@@ -77,7 +77,7 @@ void Blastoid_CheckPlayerCollisions(void)
     foreach_active(Player, player)
     {
         if (Player_CheckBadnikTouch(player, entity, &Blastoid->hitboxBody) && Player_CheckBadnikBreak(entity, player, false)) {
-            EntityCollapsingPlatform *platform = RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot - 1, CollapsingPlatform);
+            EntityCollapsingPlatform *platform = RSDK_GET_ENTITY(SceneInfo->entitySlot - 1, CollapsingPlatform);
             if (platform->objectID == CollapsingPlatform->objectID) {
                 platform->active        = ACTIVE_NORMAL;
                 platform->collapseDelay = 30;
@@ -91,8 +91,8 @@ void Blastoid_CheckPlayerCollisions(void)
 void Blastoid_State_Setup(void)
 {
     RSDK_THIS(Blastoid);
-    RSDK_sceneInfo->entity->active     = ACTIVE_NORMAL;
-    EntityCollapsingPlatform *platform = RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot - 1, CollapsingPlatform);
+    entity->active     = ACTIVE_NORMAL;
+    EntityCollapsingPlatform *platform = RSDK_GET_ENTITY(SceneInfo->entitySlot - 1, CollapsingPlatform);
     if (platform->objectID == CollapsingPlatform->objectID)
         platform->active = ACTIVE_NEVER;
     entity->state = Blastoid_State_Body;
@@ -142,7 +142,7 @@ void Blastoid_State_Body(void)
 void Blastoid_State_Projectile(void)
 {
     RSDK_THIS(Blastoid);
-    if (RSDK.CheckOnScreen(RSDK_sceneInfo->entity, NULL)) {
+    if (RSDK.CheckOnScreen(SceneInfo->entity, NULL)) {
         entity->position.x += entity->velocity.x;
         entity->position.y += entity->velocity.y;
         RSDK.ProcessAnimation(&entity->animator);

@@ -74,7 +74,7 @@ void SPZ2Setup_Draw(void)
 void SPZ2Setup_Create(void *data)
 {
     RSDK_THIS(SPZ2Setup);
-    entity            = (EntitySPZ2Setup *)RSDK_sceneInfo->entity;
+    entity            = (EntitySPZ2Setup *)SceneInfo->entity;
     entity->active    = ACTIVE_NORMAL;
     entity->visible   = true;
     entity->timer     = 384;
@@ -98,7 +98,7 @@ void SPZ2Setup_StageLoad(void)
 
     if (isMainGameMode() && globals->atlEnabled) {
         if (!PlayerHelpers_CheckStageReload()) {
-            Zone->screenBoundsL1[0] = 256 - RSDK_screens->centerX;
+            Zone->screenBoundsL1[0] = 256 - ScreenInfo->centerX;
             Zone_ReloadStoredEntities(0x5600000, 0x1000000, true);
             RSDK.CreateEntity(SPZ2Setup->objectID, 0, 0, 0);
         }
@@ -111,7 +111,7 @@ void SPZ2Setup_StageLoad(void)
     }
 
 #if RETRO_USE_PLUS
-    if (RSDK_sceneInfo->filter & FILTER_ENCORE) {
+    if (SceneInfo->filter & FILTER_ENCORE) {
         RSDK.LoadPalette(4, "EncoreSPZ1.act", 255);
         RSDK.LoadPalette(0, "EncoreSPZ2.act", 255);
         RSDK.CopyPalette(0, 128, 5, 128, 128);

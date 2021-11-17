@@ -30,7 +30,7 @@ void UIShifter_Draw(void) {}
 void UIShifter_Create(void *data)
 {
     RSDK_THIS(UIShifter);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->startPos.x    = entity->position.x;
         entity->startPos.y    = entity->position.y;
         entity->active        = ACTIVE_BOUNDS;

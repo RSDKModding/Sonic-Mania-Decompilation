@@ -22,7 +22,7 @@ void Vultron_Draw(void)
 void Vultron_Create(void *data)
 {
     RSDK_THIS(Vultron);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->visible   = true;
         entity->drawOrder = Zone->drawOrderLow;
         entity->drawFX    = FX_FLIP;
@@ -43,7 +43,7 @@ void Vultron_Create(void *data)
                 entity->updateRange.x  = 0x800000;
                 entity->updateRange.y  = 0x800000;
                 entity->drawFX         = FX_ROTATE;
-                entity->rotation       = 192 * (RSDK_sceneInfo->createSlot & 1) + 320;
+                entity->rotation       = 192 * (SceneInfo->createSlot & 1) + 320;
                 entity->hitbox.left  = -12;
                 entity->hitbox.top  = -8;
                 entity->hitbox.right = 12;
@@ -300,7 +300,7 @@ void Vultron_EditorDraw(void)
             break;
         case 1:
             entity->drawFX   = FX_ROTATE;
-            entity->rotation = 192 * (RSDK_sceneInfo->createSlot & 1) + 320;
+            entity->rotation = 192 * (SceneInfo->createSlot & 1) + 320;
             RSDK.SetSpriteAnimation(Vultron->aniFrames, 1, &entity->animator1, false, 0);
             RSDK.SetSpriteAnimation(Vultron->aniFrames, 2, &entity->animator2, false, 0);
             break;

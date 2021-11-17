@@ -6,14 +6,14 @@ void AnimalHBH_Update(void)
 {
     RSDK_THIS(AnimalHBH);
     entity->position.x -= 0x10000;
-    int32 pos = entity->position.x - (RSDK_screens->position.x << 16) - (RSDK_screens->centerX << 16);
+    int32 pos = entity->position.x - (ScreenInfo->position.x << 16) - (ScreenInfo->centerX << 16);
     if (pos < 0)
-        pos = ((RSDK_screens->position.x + RSDK_screens->centerX) << 16) - entity->position.x;
+        pos = ((ScreenInfo->position.x + ScreenInfo->centerX) << 16) - entity->position.x;
     if (pos < 0x800000)
         AnimalHBH->palCnt = 0x20 * entity->type;
     if (!entity->type) {
         ++entity->timer;
-        if ((RSDK_controller->keyA.press || RSDK_controller->keyStart.press))
+        if ((ControllerInfo->keyA.press || ControllerInfo->keyStart.press))
             entity->timer = 1400;
         if (entity->timer == 1400) {
             EntityFXFade *fxFade = CREATE_ENTITY(FXFade, NULL, entity->position.x, entity->position.y);
@@ -42,22 +42,22 @@ void AnimalHBH_Draw(void)
     RSDK_THIS(AnimalHBH);
     Vector2 drawPos;
 
-    drawPos.x = 2 * (entity->position.x - ((RSDK_screens->position.x + RSDK_screens->centerX) << 15));
+    drawPos.x = 2 * (entity->position.x - ((ScreenInfo->position.x + ScreenInfo->centerX) << 15));
     drawPos.y = entity->position.y;
 
-    RSDK.SetActivePalette(1, 0, RSDK_screens->height);
+    RSDK.SetActivePalette(1, 0, ScreenInfo->height);
     RSDK.DrawSprite(&entity->silhouetteData, &drawPos, 0);
 
-    RSDK.SetActivePalette(4, 0, RSDK_screens->height);
+    RSDK.SetActivePalette(4, 0, ScreenInfo->height);
     RSDK.DrawSprite(&entity->animalHBHData, NULL, 0);
 
-    RSDK.SetActivePalette(1, 0, RSDK_screens->height);
+    RSDK.SetActivePalette(1, 0, ScreenInfo->height);
 }
 
 void AnimalHBH_Create(void *data)
 {
     RSDK_THIS(AnimalHBH);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->visible       = true;
         entity->drawOrder     = 2;
         entity->active        = ACTIVE_NORMAL;

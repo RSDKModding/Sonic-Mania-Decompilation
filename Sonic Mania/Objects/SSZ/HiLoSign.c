@@ -41,7 +41,7 @@ void HiLoSign_Create(void *data)
 {
     RSDK_THIS(HiLoSign);
 
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         RSDK.SetSpriteAnimation(HiLoSign->aniFrames, 0, &entity->animator1, true, 0);
         RSDK.SetSpriteAnimation(HiLoSign->aniFrames, 1, &entity->animator2, true, 0);
         entity->active        = ACTIVE_BOUNDS;
@@ -123,7 +123,7 @@ void HiLoSign_State_Spinning2(void)
     RSDK_THIS(HiLoSign);
 
     int prevAng = entity->angle & 0xFFFF0000;
-    if (RSDK_sceneInfo->entity->direction)
+    if (entity->direction)
         entity->angle -= entity->spinSpeed;
     else
         entity->angle += entity->spinSpeed;

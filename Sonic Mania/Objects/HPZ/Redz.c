@@ -202,7 +202,7 @@ void Redz_State_FlameSetup(void)
 {
     RSDK_THIS(Redz);
 
-    RSDK_sceneInfo->entity->active = ACTIVE_NORMAL;
+    entity->active = ACTIVE_NORMAL;
     RSDK.SetSpriteAnimation(Redz->aniFrames, 2, &entity->animator, true, 0);
     entity->animator.frameID        = 0;
     entity->state                   = Redz_State_Flame;

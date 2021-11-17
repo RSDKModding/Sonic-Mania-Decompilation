@@ -21,7 +21,7 @@ void Reagent_Draw(void)
 void Reagent_Create(void *data)
 {
     RSDK_THIS(Reagent);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->visible       = true;
         entity->drawOrder     = Zone->drawOrderLow;
         entity->active        = ACTIVE_NORMAL;

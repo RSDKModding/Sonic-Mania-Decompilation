@@ -5,7 +5,7 @@ ObjectJunctionWheel *JunctionWheel;
 void JunctionWheel_Update(void)
 {
     RSDK_THIS(JunctionWheel);
-    if (RSDK_GET_ENTITY((RSDK_sceneInfo->entitySlot - 1), Button)->activated)
+    if (RSDK_GET_ENTITY((SceneInfo->entitySlot - 1), Button)->activated)
         entity->field_88 ^= 1;
     if (entity->field_88)
         entity->rotation += 4;

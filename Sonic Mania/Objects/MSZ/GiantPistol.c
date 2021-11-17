@@ -15,10 +15,10 @@ void GiantPistol_StaticUpdate(void) {}
 void GiantPistol_Draw(void)
 {
     RSDK_THIS(GiantPistol);
-    if (RSDK_sceneInfo->currentDrawGroup == Zone->drawOrderLow) {
+    if (SceneInfo->currentDrawGroup == Zone->drawOrderLow) {
         RSDK.DrawSprite(&entity->animator2, NULL, false);
         RSDK.DrawSprite(&entity->animator5, NULL, false);
-        RSDK.AddDrawListRef(Zone->drawOrderHigh, RSDK_sceneInfo->entitySlot);
+        RSDK.AddDrawListRef(Zone->drawOrderHigh, SceneInfo->entitySlot);
     }
     else {
         RSDK.DrawSprite(&entity->animator7, NULL, false);
@@ -35,7 +35,7 @@ void GiantPistol_Create(void *data)
     RSDK_THIS(GiantPistol);
 
     entity->drawFX = FX_FLIP;
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         RSDK.SetSpriteAnimation(GiantPistol->aniFrames, 0, &entity->animator1, true, 0);
         RSDK.SetSpriteAnimation(GiantPistol->aniFrames, 0, &entity->animator2, true, 1);
         RSDK.SetSpriteAnimation(GiantPistol->aniFrames, 5, &entity->animator3, true, 0);
@@ -237,7 +237,7 @@ void GiantPistol_State_Aiming(void)
 #endif
         if (entity->angle == 118 && entity->activePlayers > 0) {
 #if RETRO_USE_PLUS
-            if (RSDK_sceneInfo->filter & FILTER_ENCORE) {
+            if (SceneInfo->filter & FILTER_ENCORE) {
                 MSZSetup_Unknown3();
                 MSZSetup_Unknown4(0);
             }
@@ -283,7 +283,7 @@ void GiantPistol_State_Aiming(void)
                 }
 
 #if RETRO_USE_PLUS
-                if (RSDK_sceneInfo->filter == SCN_FILTER_ENCORE && GiantPistol->flag) {
+                if (SceneInfo->filter == SCN_FILTER_ENCORE && GiantPistol->flag) {
                     player->velocity.x += 0x18000;
                     player->state           = GiantPistol_Player_State_Unknown1;
                     player->nextGroundState = GiantPistol_Player_State_Unknown2;

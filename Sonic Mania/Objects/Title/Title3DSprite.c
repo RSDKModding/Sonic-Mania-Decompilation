@@ -28,7 +28,7 @@ void Title3DSprite_Draw(void)
         entity->scale.y = scale;
 
         Vector2 drawPos;
-        drawPos.x = (Title3DSprite->islandSize * entity->relX / depth + RSDK_screens->centerX) << 16;
+        drawPos.x = (Title3DSprite->islandSize * entity->relX / depth + ScreenInfo->centerX) << 16;
         drawPos.y = (Title3DSprite->islandSize * Title3DSprite->height / depth + 152) << 16;
         RSDK.DrawSprite(&entity->animator, &drawPos, true);
     }
@@ -37,7 +37,7 @@ void Title3DSprite_Draw(void)
 void Title3DSprite_Create(void *data)
 {
     RSDK_THIS(Title3DSprite);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         RSDK.SetSpriteAnimation(Title3DSprite->aniFrames, 5, &entity->animator, true, entity->frame);
         entity->position.x -= 0x2000000;
         entity->position.y -= 0x2000000;

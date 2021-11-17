@@ -11,7 +11,7 @@ void LevelSelect_Update(void)
         text->visible = API.CheckDLC(DLC_PLUS);
 #endif
     StateMachine_Run(entity->state);
-    RSDK_screens->position.x = 256 - RSDK_screens->centerX;
+    ScreenInfo->position.x = 256 - ScreenInfo->centerX;
 }
 
 void LevelSelect_LateUpdate(void) {}
@@ -36,7 +36,7 @@ void LevelSelect_Draw(void)
 void LevelSelect_Create(void *data)
 {
     RSDK_THIS(LevelSelect);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->active    = ACTIVE_ALWAYS;
         entity->visible   = true;
         entity->drawOrder = 12;
@@ -159,7 +159,7 @@ void LevelSelect_CheatActivated_UnlockAllMedals(void)
     if (globals->superSecret && (globals->secrets & getMod(SECRET_RICKYMODE))) {
         RSDK.PlaySfx(LevelSelect->sfxMedalGot, 0, 255);
         GameProgress_UnlockAllMedals();
-        if (RSDK_sceneInfo->inEditor || API.GetUserStorageNoSave() || globals->saveLoaded != STATUS_OK) {
+        if (SceneInfo->inEditor || API.GetUserStorageNoSave() || globals->saveLoaded != STATUS_OK) {
             LogHelpers_Print("WARNING GameProgress Attempted to unlock all before loading SaveGame file");
         }
         else {
@@ -356,11 +356,11 @@ void LevelSelect_Unknown2(void)
 
     bool32 confirmPress = false;
     if (API_GetConfirmButtonFlip())
-        confirmPress = RSDK_controller->keyB.press;
+        confirmPress = ControllerInfo->keyB.press;
     else
-        confirmPress = RSDK_controller->keyA.press;
+        confirmPress = ControllerInfo->keyA.press;
 
-    if (RSDK_controller->keyUp.down || RSDK_stickL->keyUp.down) {
+    if (ControllerInfo->keyUp.down || AnalogStickInfoL->keyUp.down) {
         entity->timer = (entity->timer + 1) & 0xF;
         if (entity->timer == 1) {
             LevelSelect_SetLabelHighlighted(false);
@@ -374,7 +374,7 @@ void LevelSelect_Unknown2(void)
         }
     }
     else {
-        if (RSDK_controller->keyDown.down || RSDK_stickL->keyDown.down) {
+        if (ControllerInfo->keyDown.down || AnalogStickInfoL->keyDown.down) {
             entity->timer = (entity->timer + 1) & 0xF;
             if (entity->timer == 1) {
                 LevelSelect_SetLabelHighlighted(false);
@@ -388,10 +388,10 @@ void LevelSelect_Unknown2(void)
             }
         }
         else {
-            if (RSDK_stickL->keyLeft.press || RSDK_controller->keyLeft.press || RSDK_controller->keyRight.press || RSDK_stickL->keyRight.press) {
+            if (AnalogStickInfoL->keyLeft.press || ControllerInfo->keyLeft.press || ControllerInfo->keyRight.press || AnalogStickInfoL->keyRight.press) {
                 entity->timer = 0;
                 if (entity->labelID >= entity->labelCount - 1) {
-                    if (RSDK_stickL->keyLeft.press || RSDK_controller->keyLeft.press) {
+                    if (AnalogStickInfoL->keyLeft.press || ControllerInfo->keyLeft.press) {
                         if (--entity->soundTestID < 0)
                             entity->soundTestID = LevelSelect->soundTestMax - 1;
                     }
@@ -407,8 +407,8 @@ void LevelSelect_Unknown2(void)
                 }
             }
             else {
-                if (confirmPress || RSDK_controller->keyStart.press) {
-                    if (entity->labelID < entity->labelCount - 1 || RSDK_controller->keyStart.press) {
+                if (confirmPress || ControllerInfo->keyStart.press) {
+                    if (entity->labelID < entity->labelCount - 1 || ControllerInfo->keyStart.press) {
 #if RETRO_USE_PLUS
                         if (entity->labelID != 28 || API.CheckDLC(DLC_PLUS))
                             LevelSelect_Unknown7();
@@ -447,11 +447,11 @@ void LevelSelect_Unknown2(void)
         }
     }
 
-    if (RSDK_controller->keyX.press) {
+    if (ControllerInfo->keyX.press) {
         ++entity->playerID;
         LevelSelect_ManagePlayerIcon();
     }
-    if (RSDK_controller->keyY.press) {
+    if (ControllerInfo->keyY.press) {
         ++entity->player2ID;
         LevelSelect_ManagePlayerIcon();
     }
@@ -542,17 +542,17 @@ void LevelSelect_Unknown7(void)
         char buffer[32];
         RSDK.GetCString(buffer, &curLabel->tag);
         RSDK.SetScene(buffer, "");
-        RSDK_sceneInfo->listPos += curLabel->data0;
+        SceneInfo->listPos += curLabel->data0;
 
 #if RETRO_USE_PLUS
         if (entity->labelID == entity->labelCount - 4) {
-            RSDK_sceneInfo->listPos += entity->field_18C;
+            SceneInfo->listPos += entity->field_18C;
         }
         else if (entity->labelID == entity->labelCount - 3) {
-            RSDK_sceneInfo->listPos += entity->field_190;
+            SceneInfo->listPos += entity->field_190;
         }
         else if (globals->gameMode == MODE_ENCORE) {
-            RSDK_sceneInfo->listPos = Zone_GetEncoreStageID();
+            SceneInfo->listPos = Zone_GetEncoreStageID();
         }
 #endif
 
@@ -566,7 +566,7 @@ void LevelSelect_Unknown7(void)
         globals->playerID = p1ID | (p2ID << 8);
 
         if ((globals->playerID & 0xFF) == ID_KNUCKLES && curLabel->data0 == 15)
-            ++RSDK_sceneInfo->listPos;
+            ++SceneInfo->listPos;
         entity->timer     = 0;
         entity->state     = LevelSelect_Unknown3;
         entity->stateDraw = LevelSelect_StateDraw_Fade;

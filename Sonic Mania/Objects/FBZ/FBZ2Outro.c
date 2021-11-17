@@ -100,7 +100,7 @@ bool32 FBZ2Outro_CutsceneState_Unknown2(EntityCutsceneSeq *host)
     }
     else {
         for (int32 p = 0; p < Player->playerCount; ++p) {
-            Zone->screenBoundsT1[p] = Zone->screenBoundsB1[p] - RSDK_screens->height;
+            Zone->screenBoundsT1[p] = Zone->screenBoundsB1[p] - ScreenInfo->height;
         }
         return true;
     }

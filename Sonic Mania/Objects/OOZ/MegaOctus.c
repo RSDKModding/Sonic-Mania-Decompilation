@@ -30,7 +30,7 @@ void MegaOctus_Create(void *data)
     RSDK_THIS(MegaOctus);
 
     entity->drawFX = FX_FLIP;
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         if (globals->gameMode < MODE_TIMEATTACK) {
             entity->active = ACTIVE_BOUNDS;
             if (data)
@@ -244,7 +244,7 @@ void MegaOctus_CheckPlayerCollisions_Body(void)
                     MegaOctus->spawnHarpoon    = 1;
                 }
                 else {
-                    RSDK_sceneInfo->timeEnabled = false;
+                    SceneInfo->timeEnabled = false;
                     Player_GiveScore(RSDK.GetEntityByID(SLOT_PLAYER1), 1000);
                     RSDK.PlaySfx(MegaOctus->sfxExplosion, false, 255);
                     entity->invincibilityTimer = 120;
@@ -384,7 +384,7 @@ void MegaOctus_State_SetupArena(void)
 {
     RSDK_THIS(MegaOctus);
     Zone->playerBoundActiveL[0] = true;
-    Zone->screenBoundsL1[0]     = RSDK_screens->position.x;
+    Zone->screenBoundsL1[0]     = ScreenInfo->position.x;
 
     if (RSDK_GET_ENTITY(SLOT_PLAYER1, Player)->position.x > entity->origin.x) {
         RSDK.GetSceneLayer(Zone->fgLow)->drawLayer[0] = 2;
@@ -994,7 +994,7 @@ void MegaOctus_StateOrb_Idle(void)
 {
     RSDK_THIS(MegaOctus);
 
-    entity->angle = (RSDK_sceneInfo->entity->angle + 6) & 0x1FF;
+    entity->angle = (entity->angle + 6) & 0x1FF;
     RSDK.ProcessAnimation(&entity->animator2);
     if (MegaOctus->field_D4) {
         entity->invincibilityTimer = 60;
@@ -1280,8 +1280,8 @@ void MegaOctus_StateDraw_Arm_Unknown1(void)
         pos += 0x6000;
         if (pos >= 0x60000) {
             if (i < 0x400000) {
-                if ((RSDK_sceneInfo->currentDrawGroup == Zone->drawOrderLow + 1 && angle < 0x80)
-                    || (RSDK_sceneInfo->currentDrawGroup == Zone->drawOrderLow && angle >= 0x80))
+                if ((SceneInfo->currentDrawGroup == Zone->drawOrderLow + 1 && angle < 0x80)
+                    || (SceneInfo->currentDrawGroup == Zone->drawOrderLow && angle >= 0x80))
                     RSDK.DrawSprite(&entity->animator1, &drawPos, false);
             }
             angle -= 32;
@@ -1307,8 +1307,8 @@ void MegaOctus_StateDraw_Arm_Unknown2(void)
     for (int32 i = 0; i < count; ++i) {
         pos += 0x6000;
         if (pos >= 0x60000) {
-            if ((RSDK_sceneInfo->currentDrawGroup == Zone->drawOrderLow + 1 && angle2 < 0x80)
-                || (RSDK_sceneInfo->currentDrawGroup == Zone->drawOrderLow && angle2 >= 0x80))
+            if ((SceneInfo->currentDrawGroup == Zone->drawOrderLow + 1 && angle2 < 0x80)
+                || (SceneInfo->currentDrawGroup == Zone->drawOrderLow && angle2 >= 0x80))
                 RSDK.DrawSprite(&entity->animator1, &drawPos, false);
             angle2 += 32;
             drawPos.x -= 0x60000;
@@ -1399,7 +1399,7 @@ void MegaOctus_StateDraw_OrbShot(void)
 #if RETRO_USE_PLUS
 void MegaOctus_TilePlatformState_Unknown(void)
 {
-    EntityTilePlatform *entity = RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot, TilePlatform);
+    EntityTilePlatform *entity = RSDK_GET_ENTITY(SceneInfo->entitySlot, TilePlatform);
 
     if (entity->velocity.y <= 0x10000) {
         foreach_active(Player, player)

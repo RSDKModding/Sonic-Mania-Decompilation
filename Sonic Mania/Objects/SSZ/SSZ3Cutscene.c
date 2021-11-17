@@ -127,11 +127,11 @@ bool32 SSZ3Cutscene_OutroState_Unknown1(EntityCutsceneSeq *host)
 
     FXRuby_SetupLayerDeformation();
 
-    int32 pos  = ((RSDK_screens->width + RSDK_screens->position.x) >> 4) + 2;
+    int32 pos  = ((ScreenInfo->width + ScreenInfo->position.x) >> 4) + 2;
     int32 pos2 = 0;
     if (pos < 220) {
-        pos2                    = ((RSDK_screens->width + RSDK_screens->position.x) >> 4) + 2;
-        Zone->screenBoundsR1[0] = 16 * (((RSDK_screens->width + RSDK_screens->position.x) >> 4) + 38);
+        pos2                    = ((ScreenInfo->width + ScreenInfo->position.x) >> 4) + 2;
+        Zone->screenBoundsR1[0] = 16 * (((ScreenInfo->width + ScreenInfo->position.x) >> 4) + 38);
     }
     else {
         pos                     = 0;

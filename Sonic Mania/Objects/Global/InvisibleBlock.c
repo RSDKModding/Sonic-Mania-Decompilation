@@ -41,7 +41,7 @@ void InvisibleBlock_Draw(void) { InvisibleBlock_DrawSprites(); }
 void InvisibleBlock_Create(void *data)
 {
     RSDK_THIS(InvisibleBlock);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         if (entity->timeAttackOnly && globals->gameMode < MODE_TIMEATTACK) {
             destroyEntity(entity);
         }

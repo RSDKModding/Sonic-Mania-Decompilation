@@ -35,18 +35,18 @@ void FarPlane_StaticUpdate(void) {}
 void FarPlane_Draw(void)
 {
     RSDK_THIS(FarPlane);
-    if (RSDK_sceneInfo->currentDrawGroup) {
-        RSDK.SetActivePalette(0, 0, RSDK_screens->height);
+    if (SceneInfo->currentDrawGroup) {
+        RSDK.SetActivePalette(0, 0, ScreenInfo->height);
     }
     else {
-        int32 x                = (RSDK_screens->position.x + RSDK_screens->centerX) << 16;
-        int32 y                = (RSDK_screens->position.y + RSDK_screens->centerY) << 16;
+        int32 x                = (ScreenInfo->position.x + ScreenInfo->centerX) << 16;
+        int32 y                = (ScreenInfo->position.y + ScreenInfo->centerY) << 16;
         FarPlane->field_8.x  = (x + entity->origin.x - entity->position.x) & 0xFFFE0000;
         FarPlane->field_8.y  = (y + entity->origin.y - entity->position.y) & 0xFFFE0000;
         FarPlane->field_10.x = entity->position.x - ((entity->position.x - x) >> 1) + 0x8000;
         FarPlane->field_10.y = entity->position.y - ((entity->position.y - y) >> 1) + 0x8000;
-        if (!RSDK_sceneInfo->currentScreenID)
-            RSDK.AddDrawListRef(1, RSDK_sceneInfo->entitySlot);
+        if (!SceneInfo->currentScreenID)
+            RSDK.AddDrawListRef(1, SceneInfo->entitySlot);
     }
 }
 
@@ -54,7 +54,7 @@ void FarPlane_Create(void *data)
 {
     RSDK_THIS(FarPlane);
 
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->updateRange.x = entity->size.x + (entity->size.x >> 1);
         entity->updateRange.y = entity->size.y + (entity->size.y >> 1);
         entity->active        = ACTIVE_ALWAYS;
@@ -78,7 +78,7 @@ void FarPlane_StageLoad(void)
         RSDK.CopyPalette(0, 144, 3, 144, 112);
         RSDK.CopyPalette(3, 0, 4, 0, 255);
 #if RETRO_USE_PLUS
-        if (RSDK_sceneInfo->filter & FILTER_MANIA)
+        if (SceneInfo->filter & FILTER_MANIA)
 #endif
             RSDK.SetLimitedFade(4, 0, 3, 96, 128, 143);
         RSDK.CopyTileLayer(FarPlane->layerID, 0, 192, Zone->fgLow, 0, 192, 1024, 208);
@@ -98,7 +98,7 @@ void FarPlane_StageLoad(void)
         ++Zone->playerDrawHigh;
         RSDK.ClearCameras();
         EntityCamera *camera = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
-        RSDK.AddCamera(&camera->center, RSDK_screens[camera->screenID].centerX << 16, RSDK_screens[camera->screenID].centerY << 16, 0);
+        RSDK.AddCamera(&camera->center, ScreenInfo[camera->screenID].centerX << 16, ScreenInfo[camera->screenID].centerY << 16, 0);
     }
 }
 
@@ -269,9 +269,9 @@ void FarPlane_DrawLayerCB_High(void)
 
 void FarPlane_ScanlineCB(ScanlineInfo *scanline)
 {
-    int32 x = FarPlane->field_8.x - (RSDK_screens->centerX << 17);
-    int32 y = FarPlane->field_8.y - (RSDK_screens->centerY << 17);
-    for (int32 h = 0; h < RSDK_screens->height; ++h) {
+    int32 x = FarPlane->field_8.x - (ScreenInfo->centerX << 17);
+    int32 y = FarPlane->field_8.y - (ScreenInfo->centerY << 17);
+    for (int32 h = 0; h < ScreenInfo->height; ++h) {
         scanline->position.x = x;
         scanline->position.y = y;
 
@@ -281,7 +281,7 @@ void FarPlane_ScanlineCB(ScanlineInfo *scanline)
         scanline++;
     }
     RSDK.CopyPalette(0, 0, 4, 0, 128);
-    RSDK.SetActivePalette(4, 0, RSDK_screens->height);
+    RSDK.SetActivePalette(4, 0, ScreenInfo->height);
 }
 
 #if RETRO_INCLUDE_EDITOR

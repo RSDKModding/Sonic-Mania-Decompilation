@@ -79,7 +79,7 @@ void WeatherMobile_Create(void *data)
 {
     RSDK_THIS(WeatherMobile);
 
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         if (globals->gameMode < MODE_TIMEATTACK) {
             entity->active        = ACTIVE_BOUNDS;
             entity->updateRange.x = 0x800000;
@@ -247,7 +247,7 @@ void WeatherMobile_HandleDefeat(void)
             case WEATHERMOBILE_WIND_MANAGER:
             case WEATHERMOBILE_RAIN_MANAGER:
                 destroyEntity(weatherMobile);
-                Zone->screenBoundsT1[0] = Zone->screenBoundsB1[0] - RSDK_screens->height;
+                Zone->screenBoundsT1[0] = Zone->screenBoundsB1[0] - ScreenInfo->height;
                 break;
             case WEATHERMOBILE_CLOUD:
                 if (weatherMobile->state != WeatherMobile_State6_Unknown4) {
@@ -261,7 +261,7 @@ void WeatherMobile_HandleDefeat(void)
     }
 
     foreach_active(TVPole, pole) { pole->state = TVPole_State_ForceRelease; }
-    RSDK_sceneInfo->timeEnabled = false;
+    SceneInfo->timeEnabled = false;
     Player_GiveScore(RSDK_GET_ENTITY(SLOT_PLAYER1, Player), 1000);
 }
 
@@ -299,7 +299,7 @@ void WeatherMobile_StateDraw1_Unknown(void)
     entity->direction = FLIP_NONE;
     entity->alpha     = 3 * entity->timer2;
     drawPos.y         = entity->position.y;
-    for (drawPos.x = 0x200000; drawPos.x < (RSDK_screens->width + 32) << 16; drawPos.x += 0x400000) {
+    for (drawPos.x = 0x200000; drawPos.x < (ScreenInfo->width + 32) << 16; drawPos.x += 0x400000) {
         entity->inkEffect         = INK_NONE;
         entity->animator1.frameID = 0;
         RSDK.DrawSprite(&entity->animator1, &drawPos, true);
@@ -313,17 +313,17 @@ void WeatherMobile_StateDraw1_Unknown(void)
     entity->direction = entity->parent->direction;
     RSDK.DrawSprite(&entity->animator3, &entity->parent->position, false);
 
-    drawPos.x     = (entity->parent->position.x >> 16) - RSDK_screens->position.x;
-    drawPos.y     = (entity->parent->position.y >> 16) - RSDK_screens->position.y;
+    drawPos.x     = (entity->parent->position.x >> 16) - ScreenInfo->position.x;
+    drawPos.y     = (entity->parent->position.y >> 16) - ScreenInfo->position.y;
     colour colour = RSDK.GetPaletteEntry(0, 151);
     if (entity->direction) {
-        RSDK.DrawRect(0, 0, drawPos.x - 36, RSDK_screens->height, colour, entity->alpha, INK_ADD, true);
-        RSDK.DrawRect(drawPos.x + 28, 0, RSDK_screens->width, RSDK_screens->height, colour, entity->alpha, INK_ADD, true);
+        RSDK.DrawRect(0, 0, drawPos.x - 36, ScreenInfo->height, colour, entity->alpha, INK_ADD, true);
+        RSDK.DrawRect(drawPos.x + 28, 0, ScreenInfo->width, ScreenInfo->height, colour, entity->alpha, INK_ADD, true);
         RSDK.DrawRect(drawPos.x - 36, 0, 64, drawPos.y - 29, colour, entity->alpha, INK_ADD, true);
     }
     else {
-        RSDK.DrawRect(0, 0, drawPos.x - 28, RSDK_screens->height, colour, entity->alpha, INK_ADD, true);
-        RSDK.DrawRect(drawPos.x + 36, 0, RSDK_screens->width, RSDK_screens->height, colour, entity->alpha, INK_ADD, true);
+        RSDK.DrawRect(0, 0, drawPos.x - 28, ScreenInfo->height, colour, entity->alpha, INK_ADD, true);
+        RSDK.DrawRect(drawPos.x + 36, 0, ScreenInfo->width, ScreenInfo->height, colour, entity->alpha, INK_ADD, true);
         RSDK.DrawRect(drawPos.x - 28, 0, 64, drawPos.y - 29, colour, entity->alpha, INK_ADD, true);
     }
 }
@@ -344,9 +344,9 @@ void WeatherMobile_State_SetupArena(void)
         entity->timer               = 0;
         Zone->playerBoundActiveL[0] = true;
         Zone->playerBoundActiveR[0] = true;
-        Zone->screenBoundsL1[0]     = (entity->position.x >> 16) - RSDK_screens->centerX;
-        Zone->screenBoundsR1[0]     = RSDK_screens->centerX + (entity->position.x >> 16);
-        Zone->screenBoundsT1[0]     = (entity->position.y >> 16) - RSDK_screens->height;
+        Zone->screenBoundsL1[0]     = (entity->position.x >> 16) - ScreenInfo->centerX;
+        Zone->screenBoundsR1[0]     = ScreenInfo->centerX + (entity->position.x >> 16);
+        Zone->screenBoundsT1[0]     = (entity->position.y >> 16) - ScreenInfo->height;
         Zone->screenBoundsB1[0]     = (entity->position.y >> 16);
         WeatherMobile->boundsL      = (Zone->screenBoundsL1[0] + 64) << 16;
         WeatherMobile->boundsR      = (Zone->screenBoundsR1[0] - 64) << 16;
@@ -368,7 +368,7 @@ void WeatherMobile_State_StartBoss(void)
             entity->timer   = 0;
             entity->visible = true;
             entity->state   = WeatherMobile_State_Unknown2;
-            entity->position.y += -0x400000 - (RSDK_screens->height << 16);
+            entity->position.y += -0x400000 - (ScreenInfo->height << 16);
 
             foreach_active(WeatherTV, weatherTV)
             {
@@ -929,8 +929,8 @@ void WeatherMobile_State_Unknown9(void)
 
     if (!RSDK.CheckOnScreen(entity, NULL)) {
         RSDK.ResetEntityPtr(entity, EggPrison->objectID, intToVoid(EGGPRISON_FLYING));
-        entity->position.x = (RSDK_screens->position.x + RSDK_screens->centerX) << 16;
-        entity->position.y = (RSDK_screens->position.y - 48) << 16;
+        entity->position.x = (ScreenInfo->position.x + ScreenInfo->centerX) << 16;
+        entity->position.y = (ScreenInfo->position.y - 48) << 16;
     }
 }
 

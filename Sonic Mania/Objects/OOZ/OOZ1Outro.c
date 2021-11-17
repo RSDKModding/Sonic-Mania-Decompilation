@@ -24,7 +24,7 @@ void OOZ1Outro_Draw(void) {}
 void OOZ1Outro_Create(void *data)
 {
     RSDK_THIS(OOZ1Outro);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->active  = ACTIVE_NORMAL;
         entity->visible = false;
         if (!entity->size.x)
@@ -66,10 +66,10 @@ bool32 OOZ1Outro_Unknown1(EntityCutsceneSeq *host)
         entity->boundsR         = Zone->screenBoundsR1[0];
         entity->boundsT         = Zone->screenBoundsT1[0];
         entity->boundsB         = Zone->screenBoundsB1[0];
-        Zone->screenBoundsL1[0] = (entity->position.x >> 16) - RSDK_screens->centerX;
-        Zone->screenBoundsR1[0] = (entity->position.x >> 16) + RSDK_screens->centerX;
-        Zone->screenBoundsT1[0] = (entity->position.y >> 16) - RSDK_screens->centerY;
-        Zone->screenBoundsB1[0] = (entity->position.y >> 16) + RSDK_screens->centerY;
+        Zone->screenBoundsL1[0] = (entity->position.x >> 16) - ScreenInfo->centerX;
+        Zone->screenBoundsR1[0] = (entity->position.x >> 16) + ScreenInfo->centerX;
+        Zone->screenBoundsT1[0] = (entity->position.y >> 16) - ScreenInfo->centerY;
+        Zone->screenBoundsB1[0] = (entity->position.y >> 16) + ScreenInfo->centerY;
         EntityCamera *camera    = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
         camera->boundsL         = Zone->screenBoundsL1[0];
         camera->boundsR         = Zone->screenBoundsR1[0];

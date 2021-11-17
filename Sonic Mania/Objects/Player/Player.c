@@ -205,7 +205,7 @@ void Player_LateUpdate(void)
                     EntityPlayer *sidekick = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
                     if (!globals->stock && !sidekick->objectID) {
                         RSDK.SetGameMode(ENGINESTATE_FROZEN);
-                        RSDK_sceneInfo->timeEnabled = false;
+                        SceneInfo->timeEnabled = false;
                     }
 
                     if (entity->camera) {
@@ -216,7 +216,7 @@ void Player_LateUpdate(void)
 #endif
                 else {
                     RSDK.SetGameMode(ENGINESTATE_FROZEN);
-                    RSDK_sceneInfo->timeEnabled = false;
+                    SceneInfo->timeEnabled = false;
                     if (entity->camera) {
                         entity->scrollDelay   = 2;
                         entity->camera->state = StateMachine_None;
@@ -238,7 +238,7 @@ void Player_LateUpdate(void)
 #else
                     else {
 #endif
-                        RSDK_sceneInfo->timeEnabled = false;
+                        SceneInfo->timeEnabled = false;
 
                         if (entity->camera) {
                             entity->scrollDelay   = 2;
@@ -249,7 +249,7 @@ void Player_LateUpdate(void)
                     else {
                         EntityPlayer *sidekick = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
                         if (globals->stock == 0 && !sidekick->objectID) {
-                            RSDK_sceneInfo->timeEnabled = false;
+                            SceneInfo->timeEnabled = false;
                         }
 
                         if (entity->camera) {
@@ -364,7 +364,7 @@ void Player_StaticUpdate(void)
 
     bool32 flying = false;
     bool32 tired  = false;
-    if (RSDK_sceneInfo->state == ENGINESTATE_REGULAR) {
+    if (SceneInfo->state == ENGINESTATE_REGULAR) {
         foreach_active(Player, player)
         {
             if (player->characterID == ID_TAILS) {
@@ -509,7 +509,7 @@ void Player_Draw(void)
 void Player_Create(void *data)
 {
     RSDK_THIS(Player);
-    if (RSDK_sceneInfo->inEditor) {
+    if (SceneInfo->inEditor) {
         RSDK.SetSpriteAnimation(Player->sonicSpriteIndex, ANI_IDLE, &entity->playerAnimator, true, 0);
         // entity->characterID = ID_SONIC;
     }
@@ -577,11 +577,11 @@ void Player_Create(void *data)
         entity->controllerID   = entity->playerID + 1;
         entity->state          = Player_State_Ground;
 
-        if (!RSDK_sceneInfo->entitySlot || globals->gameMode == MODE_COMPETITION) {
+        if (!SceneInfo->entitySlot || globals->gameMode == MODE_COMPETITION) {
             entity->stateInput = Player_ProcessP1Input;
         }
 #if RETRO_USE_PLUS
-        else if (RSDK_sceneInfo->entitySlot == 1 && globals->gameMode == MODE_TIMEATTACK) {
+        else if (SceneInfo->entitySlot == 1 && globals->gameMode == MODE_TIMEATTACK) {
             StateMachine_Run(Player->configureGhostCB);
         }
 #endif
@@ -595,7 +595,7 @@ void Player_Create(void *data)
             entity->sidekick   = true;
         }
 
-        RSDK_stickL[entity->controllerID].deadzone = 0.3;
+        AnalogStickInfoL[entity->controllerID].deadzone = 0.3;
         entity->rings                              = Player->rings;
         entity->ringExtraLife                      = Player->ringExtraLife;
         Player->rings                              = 0;
@@ -647,10 +647,10 @@ void Player_StageLoad(void)
     if (!globals->playerID)
         globals->playerID = RSDK.CheckStageFolder("MSZCutscene") ? ID_KNUCKLES : ID_DEFAULT_PLAYER;
 
-    RSDK_sceneInfo->debugMode = globals->medalMods & getMod(MEDAL_DEBUGMODE);
-    RSDK_sceneInfo->debugMode = true; // TEMP
+    SceneInfo->debugMode = globals->medalMods & getMod(MEDAL_DEBUGMODE);
+    SceneInfo->debugMode = true; // TEMP
 #if RETRO_USE_PLUS
-    RSDK.SetDebugValue("Debug Mode", &RSDK_sceneInfo->debugMode, DTYPE_BOOL, false, true);
+    RSDK.SetDebugValue("Debug Mode", &SceneInfo->debugMode, DTYPE_BOOL, false, true);
 #endif
     if (globals->medalMods & getMod(MEDAL_ANDKNUCKLES)) {
         globals->playerID &= 0xFF;
@@ -753,7 +753,7 @@ void Player_LoadSprites(void)
             EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
             RSDK.CopyEntity(player1, entity, true);
             player1->camera = Camera_SetTargetEntity(0, (Entity *)player1);
-            RSDK.AddCamera(&player1->position, RSDK_screens->centerX << 16, RSDK_screens->centerY << 16, true);
+            RSDK.AddCamera(&player1->position, ScreenInfo->centerX << 16, ScreenInfo->centerY << 16, true);
         }
         else {
             destroyEntity(entity);
@@ -772,7 +772,7 @@ void Player_LoadSprites(void)
         player2->position.y = player1->position.y;
 
         if (globals->gameMode != MODE_TIMEATTACK) {
-            RSDK.AddCamera(&player2->position, RSDK_screens->centerX << 16, RSDK_screens->centerY << 16, true);
+            RSDK.AddCamera(&player2->position, ScreenInfo->centerX << 16, ScreenInfo->centerY << 16, true);
             player2->position.x -= 0x100000;
         }
 
@@ -1114,7 +1114,7 @@ bool32 Player_CheckGoSuper(EntityPlayer *player, uint8 emeraldflags)
     uint8 emeralds = 127;
     // if (emeraldflags != 255)
     //    emeralds = emeraldflags;
-    if (!RSDK_sceneInfo->timeEnabled && !ERZStart && (!PhantomEgg || PhantomEgg->superFlag)) {
+    if (!SceneInfo->timeEnabled && !ERZStart && (!PhantomEgg || PhantomEgg->superFlag)) {
         return false;
     }
 
@@ -1557,7 +1557,7 @@ void Player_HandleSuperForm(void)
 
     if (entity->superState == SUPERSTATE_SUPER) {
         bool32 flag = false;
-        if (!RSDK_sceneInfo->timeEnabled && !ERZStart) {
+        if (!SceneInfo->timeEnabled && !ERZStart) {
             if (!PhantomEgg || PhantomEgg->superFlag) {
                 entity->superState = SUPERSTATE_FADEOUT;
                 flag               = true;
@@ -1648,10 +1648,10 @@ bool32 Player_CheckKeyPress(void)
         return false;
 #endif
 
-    return RSDK_controller[entity->controllerID].keyUp.down || RSDK_controller[entity->controllerID].keyDown.down
-           || RSDK_controller[entity->controllerID].keyLeft.down || RSDK_controller[entity->controllerID].keyRight.down
-           || RSDK_controller[entity->controllerID].keyA.down || RSDK_controller[entity->controllerID].keyB.down
-           || RSDK_controller[entity->controllerID].keyC.down || RSDK_controller[entity->controllerID].keyX.down;
+    return ControllerInfo[entity->controllerID].keyUp.down || ControllerInfo[entity->controllerID].keyDown.down
+           || ControllerInfo[entity->controllerID].keyLeft.down || ControllerInfo[entity->controllerID].keyRight.down
+           || ControllerInfo[entity->controllerID].keyA.down || ControllerInfo[entity->controllerID].keyB.down
+           || ControllerInfo[entity->controllerID].keyC.down || ControllerInfo[entity->controllerID].keyX.down;
 }
 void Player_LoseRings(EntityPlayer *player, int32 rings, uint8 cPlane)
 {
@@ -1845,7 +1845,7 @@ void Player_HandleDeath(EntityPlayer *player)
         dust->visible       = false;
         dust->active        = ACTIVE_NEVER;
         dust->isPermanent   = true;
-        dust->position.y    = (RSDK_screens->position.y - 128) << 16;
+        dust->position.y    = (ScreenInfo->position.y - 128) << 16;
 #if RETRO_USE_PLUS
         EntityPlayer *leader = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
         if (globals->gameMode != MODE_ENCORE || (leader->state != Player_State_Die && leader->state != Player_State_Drown)) {
@@ -1988,7 +1988,7 @@ void Player_HandleDeath(EntityPlayer *player)
 #endif
 
                             if (globals->saveSlotID != NO_SAVE_SLOT && !checkNoSave && SaveGame->saveRAM && globals->saveLoaded == STATUS_OK) {
-                                SaveGame->saveEntityPtr = RSDK_sceneInfo->entity;
+                                SaveGame->saveEntityPtr = SceneInfo->entity;
                                 SaveGame->saveCallback  = NULL;
 #if RETRO_USE_PLUS
                                 API_SaveUserFile("SaveData.bin", globals->saveRAM, 0x10000, SaveGame_SaveFile_CB, false);
@@ -2000,7 +2000,7 @@ void Player_HandleDeath(EntityPlayer *player)
                             EntityGameOver *gameOver = RSDK_GET_ENTITY(SLOT_GAMEOVER, GameOver);
                             gameOver->activeScreens |= 1 << player->playerID;
                             RSDK.SetGameMode(ENGINESTATE_FROZEN);
-                            RSDK_sceneInfo->timeEnabled = false;
+                            SceneInfo->timeEnabled = false;
                         }
                     }
                     else if (globals->gameMode != MODE_COMPETITION) {
@@ -2023,7 +2023,7 @@ void Player_HandleDeath(EntityPlayer *player)
 #endif
 
                             if (globals->saveSlotID != NO_SAVE_SLOT && !checkNoSave && SaveGame->saveRAM && globals->saveLoaded == STATUS_OK) {
-                                SaveGame->saveEntityPtr = RSDK_sceneInfo->entity;
+                                SaveGame->saveEntityPtr = SceneInfo->entity;
                                 SaveGame->saveCallback  = NULL;
 #if RETRO_USE_PLUS
                                 API_SaveUserFile("SaveData.bin", globals->saveRAM, 0x10000, SaveGame_SaveFile_CB, false);
@@ -2072,7 +2072,7 @@ void Player_HandleDeath(EntityPlayer *player)
                         gameOver->playerID = RSDK.GetEntityID(player);
                         GameOver->activeScreens |= 1 << screenID;
                         RSDK.SetGameMode(ENGINESTATE_FROZEN);
-                        RSDK_sceneInfo->timeEnabled = false;
+                        SceneInfo->timeEnabled = false;
                     }
                 }
 
@@ -2100,7 +2100,7 @@ void Player_HandleDeath(EntityPlayer *player)
                     gameOver->playerID = RSDK.GetEntityID(player);
                     GameOver->activeScreens |= 1 << screenID;
                     RSDK.SetGameMode(ENGINESTATE_FROZEN);
-                    RSDK_sceneInfo->timeEnabled = false;
+                    SceneInfo->timeEnabled = false;
 
                     if (player->objectID == Player->objectID) {
                         player->abilityValues[0] = 0;
@@ -2467,7 +2467,7 @@ bool32 Player_CheckBadnikBreak(void *e, EntityPlayer *player, bool32 destroy)
 
             StatInfo info;
 #if RETRO_USE_PLUS
-            TimeAttackData_TrackEnemyDefeat(Zone->actID, Zone_GetZoneID(), &info, id, RSDK_sceneInfo->filter == SCN_FILTER_ENCORE,
+            TimeAttackData_TrackEnemyDefeat(Zone->actID, Zone_GetZoneID(), &info, id, SceneInfo->filter == SCN_FILTER_ENCORE,
                                             (entity->position.x >> 0x10), (entity->position.y >> 0x10));
             API.TryTrackStat(&info);
 #else
@@ -3038,7 +3038,7 @@ bool32 Player_SwapMainPlayer(bool32 flag)
         return false;
 
     if (!flag) {
-        if (Player->cantSwap || entity->drawOrder == 2 || !RSDK_sceneInfo->timeEnabled)
+        if (Player->cantSwap || entity->drawOrder == 2 || !SceneInfo->timeEnabled)
             return false;
         if (Player->jumpInDelay) {
             Player->jumpInDelay = 240;
@@ -3369,9 +3369,9 @@ void Player_P2JumpBackIn(void)
     RSDK_THIS(Player);
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     if (player1->objectID == Player->objectID && (player1->drawOrder != 2 || entity->drawOrder != 2)) {
-        int32 rx = abs((entity->position.x >> 0x10) - RSDK_screens->position.x - RSDK_screens->centerX);
-        int32 ry = abs((entity->position.y >> 0x10) - RSDK_screens->position.y - RSDK_screens->centerY);
-        if (rx >= RSDK_screens->centerX + 96 || ry >= RSDK_screens->centerY + 96) {
+        int32 rx = abs((entity->position.x >> 0x10) - ScreenInfo->position.x - ScreenInfo->centerX);
+        int32 ry = abs((entity->position.y >> 0x10) - ScreenInfo->position.y - ScreenInfo->centerY);
+        if (rx >= ScreenInfo->centerX + 96 || ry >= ScreenInfo->centerY + 96) {
             ++Player->jumpInDelay;
         }
         else {
@@ -4447,7 +4447,7 @@ void Player_State_TailsFlight(void)
         uint8 slot = 0;
         entity->velocity.y += entity->abilitySpeed;
         if (!entity->sidekick)
-            slot = RSDK_sceneInfo->entitySlot;
+            slot = SceneInfo->entitySlot;
         if (entity->position.y < Zone->screenBoundsT2[slot] + 0x100000 && entity->velocity.y < 0)
             entity->velocity.y = 0;
 
@@ -4654,7 +4654,7 @@ void Player_State_KnuxGlideLeft(void)
         }
     }
 
-    if (entity->position.y < Zone->screenBoundsT2[RSDK_sceneInfo->entitySlot] + 0x100000) {
+    if (entity->position.y < Zone->screenBoundsT2[SceneInfo->entitySlot] + 0x100000) {
         entity->velocity.x   = 0;
         entity->abilitySpeed = 0;
     }
@@ -4775,7 +4775,7 @@ void Player_State_KnuxGlideRight(void)
         }
     }
 
-    if (entity->position.y < Zone->screenBoundsT2[RSDK_sceneInfo->entitySlot] + 0x100000) {
+    if (entity->position.y < Zone->screenBoundsT2[SceneInfo->entitySlot] + 0x100000) {
         entity->velocity.x   = 0;
         entity->abilitySpeed = 0;
     }
@@ -4825,7 +4825,7 @@ void Player_State_KnuxGlideDrop(void)
 void Player_State_GlideSlide(void)
 {
     RSDK_THIS(Player);
-    if (!RSDK_sceneInfo->entity->onGround) {
+    if (!entity->onGround) {
         entity->timer = 0;
         RSDK.SetSpriteAnimation(entity->aniFrames, ANI_FLYTIRED, &entity->playerAnimator, false, 0);
         entity->state = Player_State_KnuxGlideDrop;
@@ -4884,7 +4884,7 @@ void Player_State_GlideSlide(void)
 void Player_State_KnuxWallClimb(void)
 {
     RSDK_THIS(Player);
-    if (RSDK_sceneInfo->entity->onGround) {
+    if (entity->onGround) {
         entity->state = Player_State_Ground;
         if (entity->camera)
             entity->camera->offsetYFlag = false;
@@ -4897,7 +4897,7 @@ void Player_State_KnuxWallClimb(void)
             else
                 entity->velocity.y = -0x10000;
 
-            int32 bounds = Zone->screenBoundsT2[RSDK_sceneInfo->entitySlot] + 0x140000;
+            int32 bounds = Zone->screenBoundsT2[SceneInfo->entitySlot] + 0x140000;
             if (entity->position.y < bounds)
                 entity->position.y = bounds;
         }
@@ -5182,7 +5182,7 @@ void Player_SpawnMightyHammerdropDust(int32 speed, Hitbox *hitbox)
 }
 bool32 Player_CheckMightyUnspin(int32 bounceDistance, EntityPlayer *player, bool32 checkHammerDrop, int32 *uncurlTimer)
 {
-    Entity *entity = RSDK_sceneInfo->entity;
+    Entity *entity = SceneInfo->entity;
     if (player->characterID != ID_MIGHTY)
         return false;
 
@@ -5431,8 +5431,8 @@ void Player_State_FlyIn(void)
         entity->drawOrder = Zone->playerDrawHigh;
 
     Entity *parent = entity->abilityPtrs[0];
-    int32 screenX  = (RSDK_screens->width + RSDK_screens->centerX) << 16;
-    int32 screenY  = (RSDK_screens->height + RSDK_screens->centerY) << 16;
+    int32 screenX  = (ScreenInfo->width + ScreenInfo->centerX) << 16;
+    int32 screenY  = (ScreenInfo->height + ScreenInfo->centerY) << 16;
     if (parent->position.x >= player1->position.x - screenX && parent->position.x <= screenX + player1->position.x
         && parent->position.y >= player1->position.y - screenY && parent->position.y <= player1->position.y + screenY) {
         // le troll
@@ -5440,7 +5440,7 @@ void Player_State_FlyIn(void)
     else {
         parent->position.x = player1->position.x;
         parent->position.y = player1->position.y;
-        parent->position.y = (RSDK_screens->position.y - 128) << 16;
+        parent->position.y = (ScreenInfo->position.y - 128) << 16;
     }
 
     if (entity->camera && entity->camera->targetPtr != parent) {
@@ -5518,8 +5518,8 @@ void Player_State_FlyIn(void)
     else {
         entity->drawOrder  = Zone->playerDrawHigh;
         parent->position.x = Player->curFlyCarryPos.x;
-        parent->position.y = (RSDK_screens->centerY + 32 + RSDK_screens->position.y) << 16;
-        parent->position.y += (RSDK_screens->centerY - 32) * RSDK.Sin512(entity->angle) << 8;
+        parent->position.y = (ScreenInfo->centerY + 32 + ScreenInfo->position.y) << 16;
+        parent->position.y += (ScreenInfo->centerY - 32) * RSDK.Sin512(entity->angle) << 8;
         entity->drawFX |= FX_SCALE;
         entity->scale.x = 0x2000 - 16 * entity->angle - 8 * entity->angle;
         entity->scale.y = 0x2000 - 16 * entity->angle - 8 * entity->angle;
@@ -5602,7 +5602,7 @@ void Player_State_StartJumpIn(void)
             dust->visible     = false;
             dust->active      = ACTIVE_NEVER;
             dust->isPermanent = true;
-            dust->position.y  = (RSDK_screens->position.y - 128) << 16;
+            dust->position.y  = (ScreenInfo->position.y - 128) << 16;
 #if RETRO_USE_PLUS
             entity->tileCollisions = false;
             entity->interaction    = false;
@@ -5616,7 +5616,7 @@ void Player_State_StartJumpIn(void)
                 entity->scale.x = 0x400;
                 entity->scale.y = 0x400;
 
-                entity->abilityValues[0] = 0x100000 - player1->position.y + ((RSDK_screens->height + RSDK_screens->position.y) << 16);
+                entity->abilityValues[0] = 0x100000 - player1->position.y + ((ScreenInfo->height + ScreenInfo->position.y) << 16);
                 if (entity->abilityValues[0] < 0xA80000) {
                     entity->velocity.y = entity->abilityValues[0] / -12;
                 }
@@ -5757,7 +5757,7 @@ void Player_State_EncoreRespawn(void)
             dust->visible            = false;
             dust->active             = ACTIVE_NEVER;
             dust->isPermanent        = true;
-            dust->position.y         = (RSDK_screens->position.y - 128) << 16;
+            dust->position.y         = (ScreenInfo->position.y - 128) << 16;
             player1->angle           = 128;
             entity->state            = Player_State_FlyIn;
             entity->abilityPtrs[0]   = dust;
@@ -5999,7 +5999,7 @@ void Player_SonicJumpAbility(void)
             }
 #if RETRO_GAMEVER != VER_100
             else {
-                if (RSDK_controller[entity->controllerID].keyY.press)
+                if (ControllerInfo[entity->controllerID].keyY.press)
                     Player_CheckGoSuper(entity, SaveGame->saveRAM->chaosEmeralds);
             }
 #endif
@@ -6048,7 +6048,7 @@ void Player_TailsJumpAbility(void)
     }
 #if RETRO_GAMEVER != VER_100
     else {
-        if (RSDK_controller[entity->controllerID].keyY.press)
+        if (ControllerInfo[entity->controllerID].keyY.press)
             Player_CheckGoSuper(entity, SaveGame->saveRAM->chaosEmeralds);
     }
 #endif
@@ -6090,7 +6090,7 @@ void Player_KnuxJumpAbility(void)
     }
 #if RETRO_GAMEVER != VER_100
     else {
-        if (RSDK_controller[entity->controllerID].keyY.press)
+        if (ControllerInfo[entity->controllerID].keyY.press)
             Player_CheckGoSuper(entity, SaveGame->saveRAM->chaosEmeralds);
     }
 #endif
@@ -6125,7 +6125,7 @@ void Player_MightyJumpAbility(void)
             }
         }
         else {
-            if (RSDK_controller[entity->controllerID].keyY.press)
+            if (ControllerInfo[entity->controllerID].keyY.press)
                 Player_CheckGoSuper(entity, SaveGame->saveRAM->chaosEmeralds);
         }
     }
@@ -6192,7 +6192,7 @@ void Player_RayJumpAbility(void)
         }
     }
     else {
-        if (RSDK_controller[entity->controllerID].keyY.press)
+        if (ControllerInfo[entity->controllerID].keyY.press)
             Player_CheckGoSuper(entity, SaveGame->saveRAM->chaosEmeralds);
     }
 }
@@ -6216,33 +6216,33 @@ void Player_ProcessP1Input(void)
     if (entity->controllerID < PLAYER_MAX) {
         if (globals->gameMode != MODE_COMPETITION || Announcer->finishedCountdown) {
 #if RETRO_USE_TOUCH_CONTROLS
-            for (int32 t = 0; t < RSDK_touchMouse->count; ++t) {
-                int32 tx = (RSDK_touchMouse->x[t] * RSDK_screens->width);
-                int32 ty = (RSDK_touchMouse->y[t] * RSDK_screens->height);
+            for (int32 t = 0; t < TouchInfo->count; ++t) {
+                int32 tx = (TouchInfo->x[t] * ScreenInfo->width);
+                int32 ty = (TouchInfo->y[t] * ScreenInfo->height);
 
-                if (RSDK_touchMouse->down[t]) {
-                    if (tx >= 0 && ty >= 96 && tx <= RSDK_screens->centerX && ty <= RSDK_screens->height) {
-                        int32 tx = (RSDK_touchMouse->x[t] * RSDK_screens->width);
-                        int32 ty = (RSDK_touchMouse->y[t] * RSDK_screens->height);
+                if (TouchInfo->down[t]) {
+                    if (tx >= 0 && ty >= 96 && tx <= ScreenInfo->centerX && ty <= ScreenInfo->height) {
+                        int32 tx = (TouchInfo->x[t] * ScreenInfo->width);
+                        int32 ty = (TouchInfo->y[t] * ScreenInfo->height);
                         tx -= 64;
                         ty -= 192;
 
                         switch (((RSDK.ATan2(tx, ty) + 32) & 0xFF) >> 6) {
                             case 0:
-                                RSDK_controller->keyRight.down |= true;
-                                RSDK_controller[entity->controllerID].keyRight.down = true;
+                                ControllerInfo->keyRight.down |= true;
+                                ControllerInfo[entity->controllerID].keyRight.down = true;
                                 break;
                             case 1:
-                                RSDK_controller->keyDown.down |= true;
-                                RSDK_controller[entity->controllerID].keyDown.down = true;
+                                ControllerInfo->keyDown.down |= true;
+                                ControllerInfo[entity->controllerID].keyDown.down = true;
                                 break;
                             case 2:
-                                RSDK_controller->keyLeft.down |= true;
-                                RSDK_controller[entity->controllerID].keyLeft.down = true;
+                                ControllerInfo->keyLeft.down |= true;
+                                ControllerInfo[entity->controllerID].keyLeft.down = true;
                                 break;
                             case 3:
-                                RSDK_controller->keyUp.down |= true;
-                                RSDK_controller[entity->controllerID].keyUp.down = true;
+                                ControllerInfo->keyUp.down |= true;
+                                ControllerInfo[entity->controllerID].keyUp.down = true;
                                 break;
                         }
                         break;
@@ -6250,32 +6250,32 @@ void Player_ProcessP1Input(void)
                 }
             }
 
-            for (int32 t = 0; t < RSDK_touchMouse->count; ++t) {
-                int32 tx = (RSDK_touchMouse->x[t] * RSDK_screens->width);
-                int32 ty = (RSDK_touchMouse->y[t] * RSDK_screens->height);
+            for (int32 t = 0; t < TouchInfo->count; ++t) {
+                int32 tx = (TouchInfo->x[t] * ScreenInfo->width);
+                int32 ty = (TouchInfo->y[t] * ScreenInfo->height);
 
-                if (RSDK_touchMouse->down[t]) {
-                    if (tx >= RSDK_screens->centerX && ty >= 96 && tx <= RSDK_screens->width && ty <= RSDK_screens->height) {
-                        RSDK_controller->keyA.down |= true;
-                        RSDK_controller[entity->controllerID].keyA.down = true;
+                if (TouchInfo->down[t]) {
+                    if (tx >= ScreenInfo->centerX && ty >= 96 && tx <= ScreenInfo->width && ty <= ScreenInfo->height) {
+                        ControllerInfo->keyA.down |= true;
+                        ControllerInfo[entity->controllerID].keyA.down = true;
                         break;
                     }
                 }
             }
 
             if (!entity->touchJump) {
-                RSDK_controller->keyA.press |= RSDK_controller->keyA.down;
-                RSDK_controller[entity->controllerID].keyA.press |= RSDK_controller[entity->controllerID].keyA.down;
+                ControllerInfo->keyA.press |= ControllerInfo->keyA.down;
+                ControllerInfo[entity->controllerID].keyA.press |= ControllerInfo[entity->controllerID].keyA.down;
             }
-            entity->touchJump = RSDK_controller[entity->controllerID].keyA.down;
+            entity->touchJump = ControllerInfo[entity->controllerID].keyA.down;
 
-            for (int32 t = 0; t < RSDK_touchMouse->count; ++t) {
-                int32 tx = (RSDK_touchMouse->x[t] * RSDK_screens->width);
-                int32 ty = (RSDK_touchMouse->y[t] * RSDK_screens->height);
+            for (int32 t = 0; t < TouchInfo->count; ++t) {
+                int32 tx = (TouchInfo->x[t] * ScreenInfo->width);
+                int32 ty = (TouchInfo->y[t] * ScreenInfo->height);
 
-                if (RSDK_touchMouse->down[t]) {
-                    if (tx >= RSDK_screens->width - 0x80 && ty >= 0 && tx <= RSDK_screens->width && ty <= 0x40) {
-                        if (RSDK_sceneInfo->state == ENGINESTATE_REGULAR) {
+                if (TouchInfo->down[t]) {
+                    if (tx >= ScreenInfo->width - 0x80 && ty >= 0 && tx <= ScreenInfo->width && ty <= 0x40) {
+                        if (SceneInfo->state == ENGINESTATE_REGULAR) {
                             EntityPauseMenu *pauseMenu = RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu);
                             bool32 flag                = true;
 #if RETRO_USE_PLUS
@@ -6295,12 +6295,12 @@ void Player_ProcessP1Input(void)
             }
 
 #if RETRO_USE_PLUS
-            for (int32 t = 0; t < RSDK_touchMouse->count; ++t) {
-                int32 tx = (RSDK_touchMouse->x[t] * RSDK_screens->width);
-                int32 ty = (RSDK_touchMouse->y[t] * RSDK_screens->height);
+            for (int32 t = 0; t < TouchInfo->count; ++t) {
+                int32 tx = (TouchInfo->x[t] * ScreenInfo->width);
+                int32 ty = (TouchInfo->y[t] * ScreenInfo->height);
 
-                if (RSDK_touchMouse->down[t]) {
-                    if (tx >= RSDK_screens->width - 0x100 && ty >= 0 && tx <= RSDK_screens->width - 0x80 && ty <= 0x40) {
+                if (TouchInfo->down[t]) {
+                    if (tx >= ScreenInfo->width - 0x100 && ty >= 0 && tx <= ScreenInfo->width - 0x80 && ty <= 0x40) {
                         if (globals->gameMode == MODE_ENCORE) {
                             if (!HUD->swapCooldown && Player_CheckValidState(entity)) {
                                 if (Player_SwapMainPlayer(false)) {
@@ -6321,20 +6321,20 @@ void Player_ProcessP1Input(void)
 #endif
 #endif
 
-            ControllerState *controller = &RSDK_controller[entity->controllerID];
+            RSDKControllerState *controller = &ControllerInfo[entity->controllerID];
             entity->up                  = controller->keyUp.down;
             entity->down                = controller->keyDown.down;
             entity->left                = controller->keyLeft.down;
             entity->right               = controller->keyRight.down;
 
-            entity->up |= RSDK_stickL[entity->controllerID].keyUp.down;
-            entity->down |= RSDK_stickL[entity->controllerID].keyDown.down;
-            entity->left |= RSDK_stickL[entity->controllerID].keyLeft.down;
-            entity->right |= RSDK_stickL[entity->controllerID].keyRight.down;
-            entity->up |= RSDK_stickL[entity->controllerID].vDelta > 0.3;
-            entity->down |= RSDK_stickL[entity->controllerID].vDelta < -0.3;
-            entity->left |= RSDK_stickL[entity->controllerID].hDelta < -0.3;
-            entity->right |= RSDK_stickL[entity->controllerID].hDelta > 0.3;
+            entity->up |= AnalogStickInfoL[entity->controllerID].keyUp.down;
+            entity->down |= AnalogStickInfoL[entity->controllerID].keyDown.down;
+            entity->left |= AnalogStickInfoL[entity->controllerID].keyLeft.down;
+            entity->right |= AnalogStickInfoL[entity->controllerID].keyRight.down;
+            entity->up |= AnalogStickInfoL[entity->controllerID].vDelta > 0.3;
+            entity->down |= AnalogStickInfoL[entity->controllerID].vDelta < -0.3;
+            entity->left |= AnalogStickInfoL[entity->controllerID].hDelta < -0.3;
+            entity->right |= AnalogStickInfoL[entity->controllerID].hDelta > 0.3;
             if (entity->left && entity->right) {
                 entity->left  = false;
                 entity->right = false;
@@ -6372,7 +6372,7 @@ void Player_ProcessP1Input(void)
                 }
 #else
                 // TEMP!! I SOULD REMOVE THIS!!!
-                if (RSDK_info->platform == PLATFORM_DEV && controller->keySelect.press) {
+                if (GameInfo->platform == PLATFORM_DEV && controller->keySelect.press) {
                     entity->characterID <<= 1;
                     if (entity->characterID > ID_KNUCKLES)
                         entity->characterID = 1;
@@ -6380,8 +6380,8 @@ void Player_ProcessP1Input(void)
                 }
 #endif
 
-                if (entity->controllerID == CONT_P1 && RSDK_sceneInfo->debugMode && entity->state != Player_State_Transform
-                    && RSDK_controller[CONT_P1].keyX.press && globals->gameMode != MODE_TIMEATTACK) {
+                if (entity->controllerID == CONT_P1 && SceneInfo->debugMode && entity->state != Player_State_Transform
+                    && ControllerInfo[CONT_P1].keyX.press && globals->gameMode != MODE_TIMEATTACK) {
                     entity->objectID   = DebugMode->objectID;
                     entity->velocity.x = 0;
                     entity->velocity.y = 0;
@@ -6398,12 +6398,12 @@ void Player_ProcessP1Input(void)
             }
 
 #if RETRO_USE_PLUS
-            if (RSDK_controller[entity->controllerID].keyStart.press || RSDK_unknown->field_10 == 1) {
+            if (controller->keyStart.press || UnknownInfo->field_10 == 1) {
 #else
-            if (RSDK_controller[entity->controllerID].keyStart.press) {
+            if (controller->keyStart.press) {
 #endif
 
-                if (RSDK_sceneInfo->state == ENGINESTATE_REGULAR) {
+                if (SceneInfo->state == ENGINESTATE_REGULAR) {
                     EntityPauseMenu *pauseMenu = RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu);
                     bool32 flag                = true;
 #if RETRO_USE_PLUS
@@ -6630,22 +6630,22 @@ void Player_ProcessP2Input_Player(void)
 #else
         if (false) {
 #endif
-            entity->up    = RSDK_controller[entity->controllerID].keyUp.down;
-            entity->down  = RSDK_controller[entity->controllerID].keyDown.down;
-            entity->left  = RSDK_controller[entity->controllerID].keyLeft.down;
-            entity->right = RSDK_controller[entity->controllerID].keyRight.down;
-            entity->up |= RSDK_stickL[entity->controllerID].vDelta > 0.3;
-            entity->down |= RSDK_stickL[entity->controllerID].vDelta < -0.3;
-            entity->left |= RSDK_stickL[entity->controllerID].hDelta < -0.3;
-            entity->right |= RSDK_stickL[entity->controllerID].hDelta > 0.3;
+            entity->up    = ControllerInfo[entity->controllerID].keyUp.down;
+            entity->down  = ControllerInfo[entity->controllerID].keyDown.down;
+            entity->left  = ControllerInfo[entity->controllerID].keyLeft.down;
+            entity->right = ControllerInfo[entity->controllerID].keyRight.down;
+            entity->up |= AnalogStickInfoL[entity->controllerID].vDelta > 0.3;
+            entity->down |= AnalogStickInfoL[entity->controllerID].vDelta < -0.3;
+            entity->left |= AnalogStickInfoL[entity->controllerID].hDelta < -0.3;
+            entity->right |= AnalogStickInfoL[entity->controllerID].hDelta > 0.3;
             if (entity->left && entity->right) {
                 entity->left  = false;
                 entity->right = false;
             }
-            entity->jumpPress = RSDK_controller[entity->controllerID].keyA.press || RSDK_controller[entity->controllerID].keyB.press
-                                || RSDK_controller[entity->controllerID].keyC.press || RSDK_controller[entity->controllerID].keyX.press;
-            entity->jumpHold = RSDK_controller[entity->controllerID].keyA.down || RSDK_controller[entity->controllerID].keyB.down
-                               || RSDK_controller[entity->controllerID].keyC.down || RSDK_controller[entity->controllerID].keyX.down;
+            entity->jumpPress = ControllerInfo[entity->controllerID].keyA.press || ControllerInfo[entity->controllerID].keyB.press
+                                || ControllerInfo[entity->controllerID].keyC.press || ControllerInfo[entity->controllerID].keyX.press;
+            entity->jumpHold = ControllerInfo[entity->controllerID].keyA.down || ControllerInfo[entity->controllerID].keyB.down
+                               || ControllerInfo[entity->controllerID].keyC.down || ControllerInfo[entity->controllerID].keyX.down;
             if (entity->right || entity->up || entity->down || entity->left) {
                 Player->p2InputDelay = 0;
             }
@@ -6658,7 +6658,7 @@ void Player_ProcessP2Input_Player(void)
 #endif
             }
 
-            if (RSDK_controller[entity->controllerID].keyStart.press && RSDK_sceneInfo->state == ENGINESTATE_REGULAR) {
+            if (ControllerInfo[entity->controllerID].keyStart.press && SceneInfo->state == ENGINESTATE_REGULAR) {
                 EntityPauseMenu *pauseMenu = RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu);
                 if (!RSDK.GetEntityCount(TitleCard->objectID, 0) && !pauseMenu->objectID) {
                     RSDK.ResetEntitySlot(SLOT_PAUSEMENU, PauseMenu->objectID, NULL);

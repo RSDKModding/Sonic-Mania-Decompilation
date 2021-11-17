@@ -27,7 +27,7 @@ void MSFactory_Create(void *data)
 {
     RSDK_THIS(MSFactory);
 
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->visible       = false;
         entity->drawOrder     = Zone->drawOrderLow;
         entity->drawPos       = entity->position;
@@ -55,9 +55,9 @@ void MSFactory_Unknown1(void)
         if (player1->position.y > entity->position.y - 0x1000000) {
             Zone->playerBoundActiveL[0] = true;
             Zone->playerBoundActiveR[0] = true;
-            Zone->screenBoundsL1[0]     = (entity->position.x >> 16) - RSDK_screens->centerX;
-            Zone->screenBoundsR1[0]     = (entity->position.x >> 16) + RSDK_screens->centerX;
-            Zone->screenBoundsT1[0]     = (entity->position.y >> 16) - RSDK_screens->height + 44;
+            Zone->screenBoundsL1[0]     = (entity->position.x >> 16) - ScreenInfo->centerX;
+            Zone->screenBoundsR1[0]     = (entity->position.x >> 16) + ScreenInfo->centerX;
+            Zone->screenBoundsT1[0]     = (entity->position.y >> 16) - ScreenInfo->height + 44;
             Zone->screenBoundsB1[0]     = (entity->position.y >> 16) + 44;
             entity->state               = MSFactory_Unknown2;
         }

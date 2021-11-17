@@ -86,15 +86,15 @@ void GreenScreen_Unknown2(void)
     RSDK_THIS(GreenScreen);
 
     int clipX1 = 0, clipY1 = 0, clipX2 = 0, clipY2 = 0;
-    if (!RSDK_sceneInfo->inEditor) {
-        clipX1 = RSDK_screens->clipBound_X1;
-        clipY1 = RSDK_screens->clipBound_Y1;
-        clipX2 = RSDK_screens->clipBound_X2;
-        clipY2 = RSDK_screens->clipBound_Y2;
-        RSDK.SetClipBounds(RSDK_sceneInfo->currentScreenID, (entity->position.x >> 16) + GreenScreen->hitbox.left - RSDK_screens->position.x,
-                           (entity->position.y >> 16) + GreenScreen->hitbox.top - RSDK_screens->position.y,
-                           (entity->position.x >> 16) + GreenScreen->hitbox.right - RSDK_screens->position.x,
-                           (entity->position.y >> 16) + GreenScreen->hitbox.bottom - RSDK_screens->position.y);
+    if (!SceneInfo->inEditor) {
+        clipX1 = ScreenInfo->clipBound_X1;
+        clipY1 = ScreenInfo->clipBound_Y1;
+        clipX2 = ScreenInfo->clipBound_X2;
+        clipY2 = ScreenInfo->clipBound_Y2;
+        RSDK.SetClipBounds(SceneInfo->currentScreenID, (entity->position.x >> 16) + GreenScreen->hitbox.left - ScreenInfo->position.x,
+                           (entity->position.y >> 16) + GreenScreen->hitbox.top - ScreenInfo->position.y,
+                           (entity->position.x >> 16) + GreenScreen->hitbox.right - ScreenInfo->position.x,
+                           (entity->position.y >> 16) + GreenScreen->hitbox.bottom - ScreenInfo->position.y);
     }
 
     for (int i = 0; i < 5; ++i) {
@@ -102,18 +102,18 @@ void GreenScreen_Unknown2(void)
                              entity->position.y - entity->startPos.y + entity->paraOffset.y);
     }
 
-    if (!RSDK_sceneInfo->inEditor)
-        RSDK.SetClipBounds(RSDK_sceneInfo->currentScreenID, clipX1, clipY1, clipX2, clipY2);
+    if (!SceneInfo->inEditor)
+        RSDK.SetClipBounds(SceneInfo->currentScreenID, clipX1, clipY1, clipX2, clipY2);
 }
 
 void GreenScreen_DrawSprites(void)
 {
     RSDK_THIS(GreenScreen);
 
-    if ((RSDK_sceneInfo->currentDrawGroup != Zone->drawOrderHigh && entity->field_6C) || (RSDK_sceneInfo->inEditor && entity->paraPreview))
+    if ((SceneInfo->currentDrawGroup != Zone->drawOrderHigh && entity->field_6C) || (SceneInfo->inEditor && entity->paraPreview))
         GreenScreen_Unknown2();
 
-    if (RSDK_sceneInfo->currentDrawGroup == Zone->drawOrderHigh || RSDK_sceneInfo->inEditor) {
+    if (SceneInfo->currentDrawGroup == Zone->drawOrderHigh || SceneInfo->inEditor) {
         RSDK.SetSpriteAnimation(GreenScreen->aniFrames, 0, &entity->animator, true, 0);
         RSDK.DrawSprite(&entity->animator, NULL, false);
     }

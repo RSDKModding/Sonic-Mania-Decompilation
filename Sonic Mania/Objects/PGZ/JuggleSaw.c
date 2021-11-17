@@ -29,7 +29,7 @@ void JuggleSaw_Create(void *data)
     entity->active        = ACTIVE_BOUNDS;
     entity->updateRange.x = 0xC00000;
     entity->updateRange.y = 0xC00000;
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         if (data) {
             RSDK.SetSpriteAnimation(JuggleSaw->animID, 6, &entity->animator, true, 0);
             entity->state = JuggleSaw_Saw_Handle;
@@ -101,15 +101,17 @@ void JuggleSaw_StageLoad(void)
     JuggleSaw->throwSFX   = RSDK.GetSFX("PSZ/JuggleThrow.wav");
 }
 
+void JuggleSaw_DebugSpawn(void)
+{
+    RSDK_THIS(DebugMode);
+
+    CREATE_ENTITY(JuggleSaw, NULL, entity->position.x, entity->position.y)->sawDelay = 30;
+}
+
 void JuggleSaw_DebugDraw(void)
 {
     RSDK.SetSpriteAnimation(JuggleSaw->animID, 0, &DebugMode->animator, true, 0);
-    RSDK.DrawSprite(&DebugMode->animator, 0, false);
-}
-
-void JuggleSaw_DebugSpawn(void)
-{
-    CREATE_ENTITY(JuggleSaw, 0, RSDK_sceneInfo->entity->position.x, RSDK_sceneInfo->entity->position.y)->sawDelay = 30;
+    RSDK.DrawSprite(&DebugMode->animator, NULL, false);
 }
 
 void JuggleSaw_Crab_Collide(void)

@@ -27,7 +27,7 @@ void PhantomMissile_Draw(void)
 void PhantomMissile_Create(void *data)
 {
     RSDK_THIS(PhantomMissile);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->visible       = true;
         entity->drawOrder     = Zone->drawOrderLow;
         entity->drawFX        = FX_ROTATE;

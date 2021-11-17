@@ -99,7 +99,7 @@ void FBZSetup_StageLoad(void)
     if (isMainGameMode() && PlayerHelpers_CheckAct2())
         Zone->stageFinishCallback = FBZSetup_StageFinishCB_Act2;
 
-    if ((RSDK_sceneInfo->filter & FILTER_ENCORE)) {
+    if ((SceneInfo->filter & FILTER_ENCORE)) {
         RSDK.LoadPalette(0, "EncoreFBZ.act", 0xFF);
         RSDK.CopyPalette(0, 1, 1, 1, 0xFF);
         RSDK.LoadPalette(2, "EncoreFBZs.act", 0xFF);
@@ -132,7 +132,7 @@ void FBZSetup_ActTransitionLoad(void)
 
 void FBZSetup_HandleScanlines(ScanlineInfo *scanlines, int32 a1, int32 a3, int32 a4, int32 a5, int32 a6)
 {
-    ScreenInfo *screen = &RSDK_screens[RSDK_sceneInfo->currentScreenID];
+    RSDKScreenInfo *screen = &ScreenInfo[SceneInfo->currentScreenID];
 
     int32 val          = (a3 * screen->position.y) >> 8;
     int32 start        = a4 - val;
@@ -160,7 +160,7 @@ void FBZSetup_HandleScanlines(ScanlineInfo *scanlines, int32 a1, int32 a3, int32
 
 void FBZSetup_ScanlineCallback(ScanlineInfo *scanlines)
 {
-    ScreenInfo *screen        = &RSDK_screens[RSDK_sceneInfo->currentScreenID];
+    RSDKScreenInfo *screen        = &ScreenInfo[SceneInfo->currentScreenID];
     int32 y                   = screen->position.y >> 3;
     ScanlineInfo *scanlinePtr = scanlines;
 

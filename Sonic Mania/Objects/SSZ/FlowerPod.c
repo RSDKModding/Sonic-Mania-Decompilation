@@ -22,7 +22,7 @@ void FlowerPod_Draw(void)
 void FlowerPod_Create(void *data)
 {
     RSDK_THIS(FlowerPod);
-    if (RSDK_sceneInfo->inEditor != true) {
+    if (SceneInfo->inEditor != true) {
         entity->active        = ACTIVE_BOUNDS;
         entity->visible       = true;
         entity->drawFX        = FX_FLIP;

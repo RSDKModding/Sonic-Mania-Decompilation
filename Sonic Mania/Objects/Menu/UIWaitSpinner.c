@@ -38,8 +38,8 @@ void UIWaitSpinner_Draw(void)
     Vector2 drawPos;
 
     drawPos.y = 0;
-    drawPos.x = (RSDK_screens->width - 24) << 16;
-    drawPos.y = (RSDK_screens->height - 24) << 16;
+    drawPos.x = (ScreenInfo->width - 24) << 16;
+    drawPos.y = (ScreenInfo->height - 24) << 16;
     RSDK.DrawSprite(&entity->animator, &drawPos, true);
 }
 

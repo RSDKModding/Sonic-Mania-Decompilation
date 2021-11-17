@@ -66,7 +66,7 @@ void UFO_Decoration_Draw(void)
 void UFO_Decoration_Create(void *data)
 {
     RSDK_THIS(UFO_Decoration);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         if (!entity->size)
             entity->size = 0x400;
         entity->visible       = true;

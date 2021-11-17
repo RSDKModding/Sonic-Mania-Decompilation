@@ -25,7 +25,7 @@ void ScoreBonus_Create(void *data)
 {
     RSDK_THIS(ScoreBonus);
     RSDK.SetSpriteAnimation(ScoreBonus->aniFrames, 0, &entity->animator, true, 0);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         entity->active    = ACTIVE_NORMAL;
         entity->visible   = true;
         entity->drawOrder = Zone->drawOrderLow;

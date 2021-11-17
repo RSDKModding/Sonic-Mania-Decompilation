@@ -312,7 +312,7 @@ void Tubinaut_HandleOrbs(void)
 {
     RSDK_THIS(Tubinaut);
 
-    entity->position.y = (RSDK.Sin256(RSDK_sceneInfo->entity->angle) << 10) + entity->startPos.y;
+    entity->position.y = (RSDK.Sin256(entity->angle) << 10) + entity->startPos.y;
     entity->angle      = (entity->angle + 4) & 0xFF;
 
     for (int i = 0; i < Tubinaut_OrbCount; ++i) {

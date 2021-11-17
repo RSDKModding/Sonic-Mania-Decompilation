@@ -126,7 +126,7 @@ void SPZ1Setup_StageLoad(void)
     }
 
 #if RETRO_USE_PLUS
-    if (RSDK_sceneInfo->filter & FILTER_ENCORE) {
+    if (SceneInfo->filter & FILTER_ENCORE) {
         RSDK.LoadPalette(0, "EncoreSPZ1.act", 255);
         RSDK.LoadPalette(1, "EncoreSPZ1b1.act", 255);
         RSDK.LoadPalette(2, "EncoreSPZ1b2.act", 255);
@@ -137,7 +137,7 @@ void SPZ1Setup_StageLoad(void)
 
 void SPZ1Setup_SetupActTransition(void)
 {
-    Zone_StoreEntities((Zone->screenBoundsL1[0] + RSDK_screens->centerX) << 16, Zone->screenBoundsB1[0] << 16);
+    Zone_StoreEntities((Zone->screenBoundsL1[0] + ScreenInfo->centerX) << 16, Zone->screenBoundsB1[0] << 16);
     RSDK.LoadScene();
 }
 

@@ -15,7 +15,7 @@ void ParallaxSprite_StaticUpdate(void) {}
 void ParallaxSprite_Draw(void)
 {
     RSDK_THIS(ParallaxSprite);
-    ScreenInfo *screen = &RSDK_screens[RSDK_sceneInfo->currentScreenID];
+    RSDKScreenInfo *screen = &ScreenInfo[SceneInfo->currentScreenID];
     Vector2 drawPos;
 
     int32 scrollPosX = ((entity->scrollPos.x + entity->parallaxFactor.x * screen->position.x) & 0x7FFF0000) % entity->loopPoint.x;
@@ -72,7 +72,7 @@ void ParallaxSprite_Create(void *data)
             break;
         case PSPRITE_ATTR_2:
 #if RETRO_USE_PLUS
-            if (RSDK_sceneInfo->filter & FILTER_ENCORE) {
+            if (SceneInfo->filter & FILTER_ENCORE) {
                 entity->colour1 = 0x189098;
                 entity->colour2 = 0x00D098;
             }

@@ -89,8 +89,8 @@ int32 APICallback_GetUserLanguage(void)
         return APICallback->GetUserLanguage();
     }
     else {
-        LogHelpers_Print("EMPTY GetUserLanguage() -> GameInfo->language (%d)", RSDK_info->language);
-        return RSDK_info->language;
+        LogHelpers_Print("EMPTY GetUserLanguage() -> GameInfo->language (%d)", GameInfo->language);
+        return GameInfo->language;
     }
 }
 
@@ -161,7 +161,7 @@ LeaderboardEntry *APICallback_ReadLeaderboardEntry(int32 rankID)
 {
     if (APICallback->LeaderboardReadEntry)
         return APICallback->LeaderboardReadEntry(rankID);
-    if (!RSDK_info->platform) {
+    if (!GameInfo->platform) {
         LogHelpers_Print("EMPTY LeaderboardReadEntry()");
         return NULL;
     }
@@ -246,11 +246,11 @@ void APICallback_PromptSavePreference_CB(void)
             switch (entity->status) {
                 case STATUS_ERROR:
                     stringID = STR_NOXBOXPROFILE;
-                    if (RSDK_info->platform != PLATFORM_XB1)
+                    if (GameInfo->platform != PLATFORM_XB1)
                         stringID = STR_SAVELOADFAIL;
                     break;
                 case STATUS_CORRUPT: stringID = STR_CORRUPTSAVE; break;
-                case STATUS_NOSPACE: stringID = (RSDK_info->platform == PLATFORM_XB1) + STR_NOSAVESPACE; break;
+                case STATUS_NOSPACE: stringID = (GameInfo->platform == PLATFORM_XB1) + STR_NOSAVESPACE; break;
             }
             Localization_GetString(&info, stringID);
 
@@ -325,7 +325,7 @@ int32 APICallback_LeaderboardStatus(void)
         return APICallback->LeaderboardStatus();
 
     int32 status = 0;
-    if (RSDK_info->platform < PLATFORM_PS4) {
+    if (GameInfo->platform < PLATFORM_PS4) {
         LogHelpers_Print("EMPTY LeaderboardStatus()");
         status = 0;
     }
@@ -351,7 +351,7 @@ int32 APICallback_LeaderboardEntryCount(void)
 {
     if (APICallback->LeaderboardEntryCount)
         return APICallback->LeaderboardEntryCount();
-    if (RSDK_info->platform < PLATFORM_PS4) {
+    if (GameInfo->platform < PLATFORM_PS4) {
         LogHelpers_Print("EMPTY LeaderboardEntryCount()");
     }
     else {
@@ -367,7 +367,7 @@ void APICallback_LaunchManual()
     if (APICallback->LaunchManual) {
         APICallback->LaunchManual();
     }
-    else if (RSDK_info->platform == PLATFORM_DEV) {
+    else if (GameInfo->platform == PLATFORM_DEV) {
         LogHelpers_Print("DUMMY LaunchManual()");
     }
     else {
@@ -421,7 +421,7 @@ int32 APICallback_GetStorageStatus(void)
     if (APICallback->GetStorageStatus) {
         status = APICallback->GetStorageStatus(0);
     }
-    else if (RSDK_info->platform >= PLATFORM_PS4) {
+    else if (GameInfo->platform >= PLATFORM_PS4) {
         if (APICallback->activeEntity) {
             status = STATUS_CONTINUE;
         }
@@ -467,14 +467,14 @@ int32 APICallback_GetControllerType(int32 id)
     if (APICallback->GetControllerType)
         return APICallback->GetControllerType(id, 0);
     else
-        return RSDK_info->platform == PLATFORM_DEV;
+        return GameInfo->platform == PLATFORM_DEV;
 }
 
 int32 APICallback_FetchLeaderboardData(uint8 zoneID, uint8 actID, int32 playerID, int32 start, int32 end, bool32 isUser)
 {
     if (APICallback->FetchLeaderboard)
         return APICallback->FetchLeaderboard(zoneID, actID, playerID, start, end, isUser);
-    if (RSDK_info->platform < PLATFORM_PS4) {
+    if (GameInfo->platform < PLATFORM_PS4) {
         LogHelpers_Print("EMPTY FetchLeaderboardData(%d, %d, %d, %d, %d, %d)", zoneID, actID, playerID, start, end, isUser);
         return 0;
     }
@@ -503,7 +503,7 @@ void APICallback_ExitGame(void)
         APICallback->ExitGame();
     }
     else {
-        if (RSDK_info->platform == PLATFORM_DEV)
+        if (GameInfo->platform == PLATFORM_DEV)
             exit(0);
         LogHelpers_Print("EMPTY ExitGame()");
     }
@@ -679,7 +679,7 @@ bool32 APICallback_GetUsername(TextInfo *info)
         return true;
     }
     else {
-        if (RSDK_info->platform == PLATFORM_DEV) {
+        if (GameInfo->platform == PLATFORM_DEV) {
             LogHelpers_Print("DUMMY GetUsername()");
             RSDK.SetText(info, "IntegerGeorge802", false);
             return true;
@@ -696,7 +696,7 @@ void APICallback_ClearAchievements(void)
     if (APICallback->ClearAchievements) {
         APICallback->ClearAchievements();
     }
-    else if (RSDK_info->platform == PLATFORM_DEV) {
+    else if (GameInfo->platform == PLATFORM_DEV) {
         LogHelpers_Print("DUMMY ClearAchievements()");
     }
     else {
@@ -712,7 +712,7 @@ void APICallback_UnlockAchievement(const char *name)
     else if (APICallback->UnlockAchievement) {
         APICallback->UnlockAchievement(name);
     }
-    else if (RSDK_info->platform == PLATFORM_DEV) {
+    else if (GameInfo->platform == PLATFORM_DEV) {
         LogHelpers_Print("DUMMY UnlockAchievement(%s)", name);
     }
     else {
@@ -774,7 +774,7 @@ void APICallback_Wait(int32 success) { UIWaitSpinner_Wait2(); }
 
 void APICallback_GetNextNotif(void)
 {
-    if (RSDK_sceneInfo->inEditor || globals->noSave || globals->saveLoaded != STATUS_OK) {
+    if (SceneInfo->inEditor || globals->noSave || globals->saveLoaded != STATUS_OK) {
         return;
     }
     else {
