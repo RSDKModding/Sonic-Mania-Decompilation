@@ -15,10 +15,10 @@ void Wisp_StaticUpdate(void) {}
 void Wisp_Draw(void)
 {
     RSDK_THIS(Wisp);
-    RSDK.DrawSprite(&entity->animator1, NULL, false);
+    RSDK.DrawSprite(&entity->bodyAnimator, NULL, false);
 
     entity->inkEffect = INK_ALPHA;
-    RSDK.DrawSprite(&entity->animator2, NULL, false);
+    RSDK.DrawSprite(&entity->wingAnimator, NULL, false);
 
     entity->inkEffect = INK_NONE;
 }
@@ -38,8 +38,8 @@ void Wisp_Create(void *data)
     entity->alpha         = 0xC0;
     entity->timer         = 16;
     entity->timer2        = 4;
-    RSDK.SetSpriteAnimation(Wisp->aniFrames, 0, &entity->animator1, true, 0);
-    RSDK.SetSpriteAnimation(Wisp->aniFrames, 1, &entity->animator2, true, 0);
+    RSDK.SetSpriteAnimation(Wisp->aniFrames, 0, &entity->bodyAnimator, true, 0);
+    RSDK.SetSpriteAnimation(Wisp->aniFrames, 1, &entity->wingAnimator, true, 0);
     entity->state = Wisp_State_Setup;
 }
 
@@ -99,11 +99,11 @@ void Wisp_State_Setup(void)
     entity->active     = ACTIVE_NORMAL;
     entity->velocity.x = 0;
     entity->velocity.y = 0;
-    entity->state      = Wisp_Unknown5;
-    Wisp_Unknown5();
+    entity->state      = Wisp_WaitInPlace;
+    Wisp_WaitInPlace();
 }
 
-void Wisp_Unknown5(void)
+void Wisp_WaitInPlace(void)
 {
     RSDK_THIS(Wisp);
 
@@ -113,20 +113,20 @@ void Wisp_Unknown5(void)
         if (entity->timer2) {
             entity->velocity.y = -0x10000;
             entity->timer      = 96;
-            entity->state      = Wisp_Unknown6;
+            entity->state      = Wisp_FlyTowardTarget;
         }
         else {
             entity->velocity.x = -0x20000;
             entity->velocity.y = -0x20000;
-            entity->state      = Wisp_Unknown7;
+            entity->state      = Wisp_BasicFly;
         }
     }
-    RSDK.ProcessAnimation(&entity->animator2);
+    RSDK.ProcessAnimation(&entity->wingAnimator);
     Wisp_HandlePlayerInteractions();
     Wisp_CheckOnScreen();
 }
 
-void Wisp_Unknown6(void)
+void Wisp_FlyTowardTarget(void)
 {
     RSDK_THIS(Wisp);
 
@@ -163,22 +163,22 @@ void Wisp_Unknown6(void)
     entity->timer--;
     if (!entity->timer) {
         entity->timer      = RSDK.Rand(0, 32);
-        entity->state      = Wisp_Unknown5;
+        entity->state      = Wisp_WaitInPlace;
         entity->velocity.x = 0;
         entity->velocity.y = 0;
         entity->direction  = FLIP_NONE;
     }
-    RSDK.ProcessAnimation(&entity->animator2);
+    RSDK.ProcessAnimation(&entity->wingAnimator);
     Wisp_HandlePlayerInteractions();
     Wisp_CheckOnScreen();
 }
 
-void Wisp_Unknown7(void)
+void Wisp_BasicFly(void)
 {
     RSDK_THIS(Wisp);
     entity->position.x += entity->velocity.x;
     entity->position.y += entity->velocity.y;
-    RSDK.ProcessAnimation(&entity->animator2);
+    RSDK.ProcessAnimation(&entity->wingAnimator);
     Wisp_HandlePlayerInteractions();
     Wisp_CheckOnScreen();
 }

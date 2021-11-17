@@ -7,7 +7,7 @@ void Batbot_Update(void)
     RSDK_THIS(Batbot);
     RSDK.ProcessAnimation(&entity->animator1);
     if (entity->animator1.animationID == 1)
-        entity->direction = entity->field_88 ^ Batbot->dirFlag[entity->animator1.frameID];
+        entity->direction = entity->lastDir ^ Batbot->dirFlag[entity->animator1.frameID];
 
     StateMachine_Run(entity->state);
 
@@ -29,7 +29,7 @@ void Batbot_Draw(void)
 {
     RSDK_THIS(Batbot);
     RSDK.DrawSprite(&entity->animator1, NULL, false);
-    if (entity->flag)
+    if (entity->showWings)
         RSDK.DrawSprite(&entity->animator2, NULL, false);
 }
 
@@ -51,31 +51,31 @@ void Batbot_StageLoad(void)
 {
     if (RSDK.CheckStageFolder("HPZ"))
         Batbot->aniFrames = RSDK.LoadSpriteAnimation("HPZ/Batbot.bin", SCOPE_STAGE);
-    Batbot->hitboxBadnik.left   = -16;
-    Batbot->hitboxBadnik.top    = -12;
-    Batbot->hitboxBadnik.right  = 16;
-    Batbot->hitboxBadnik.bottom = 12;
+    Batbot->hitbox.left   = -16;
+    Batbot->hitbox.top    = -12;
+    Batbot->hitbox.right  = 16;
+    Batbot->hitbox.bottom = 12;
 
-    Batbot->hitbox2.left        = -96;
-    Batbot->hitbox2.top         = -64;
-    Batbot->hitbox2.right       = 96;
-    Batbot->hitbox2.bottom      = 128;
+    Batbot->spinbox.left   = -96;
+    Batbot->spinbox.top    = -64;
+    Batbot->spinbox.right  = 96;
+    Batbot->spinbox.bottom = 128;
 
-    Batbot->hitbox3.left        = -80;
-    Batbot->hitbox3.top         = -64;
-    Batbot->hitbox3.right       = 80;
-    Batbot->hitbox3.bottom      = 96;
+    Batbot->attackbox.left   = -80;
+    Batbot->attackbox.top    = -64;
+    Batbot->attackbox.right  = 80;
+    Batbot->attackbox.bottom = 96;
 
     Batbot->hitboxPlayer.left   = 0;
     Batbot->hitboxPlayer.top    = 0;
     Batbot->hitboxPlayer.right  = 0;
     Batbot->hitboxPlayer.bottom = 0;
 
-    Batbot->dirFlag[0]          = 0;
-    Batbot->dirFlag[1]          = 0;
-    Batbot->dirFlag[2]          = 0;
-    Batbot->dirFlag[3]          = 1;
-    Batbot->dirFlag[4]          = 1;
+    Batbot->dirFlag[0] = 0;
+    Batbot->dirFlag[1] = 0;
+    Batbot->dirFlag[2] = 0;
+    Batbot->dirFlag[3] = 1;
+    Batbot->dirFlag[4] = 1;
     DEBUGMODE_ADD_OBJ(Batbot);
 }
 
@@ -99,7 +99,7 @@ void Batbot_HandlePlayerInteractions(void)
     RSDK_THIS(Batbot);
     foreach_active(Player, player)
     {
-        if (Player_CheckBadnikTouch(player, entity, &Batbot->hitboxBadnik))
+        if (Player_CheckBadnikTouch(player, entity, &Batbot->hitbox))
             Player_CheckBadnikBreak(entity, player, true);
     }
 }
@@ -107,11 +107,11 @@ void Batbot_HandlePlayerInteractions(void)
 void Batbot_State_Setup(void)
 {
     RSDK_THIS(Batbot);
-    entity->timer    = 0;
-    entity->field_90 = 0;
-    entity->field_6C = entity->position.y;
-    entity->active   = ACTIVE_NORMAL;
-    entity->flag     = true;
+    entity->timer     = 0;
+    entity->unused3   = 0;
+    entity->startY    = entity->position.y;
+    entity->active    = ACTIVE_NORMAL;
+    entity->showWings = true;
     RSDK.SetSpriteAnimation(Batbot->aniFrames, 3, &entity->animator2, true, 0);
     RSDK.SetSpriteAnimation(Batbot->aniFrames, 0, &entity->animator1, true, 0);
     entity->state = Batbot_State_Idle;
@@ -122,49 +122,49 @@ void Batbot_State_Idle(void)
 {
     RSDK_THIS(Batbot);
 
-    entity->field_68   = (entity->field_68 + 8) & 0x1FF;
-    entity->position.y = (RSDK.Sin512(entity->field_68) << 9) + entity->field_6C;
-    bool32 flag        = false;
+    entity->arcAngle   = (entity->arcAngle + 8) & 0x1FF;
+    entity->position.y = (RSDK.Sin512(entity->arcAngle) << 9) + entity->startY;
+    bool32 spin        = false;
 
     foreach_active(Player, player)
     {
-        if (RSDK.CheckObjectCollisionTouchBox(player, &Batbot->hitboxPlayer, entity, &Batbot->hitbox2)) {
+        if (RSDK.CheckObjectCollisionTouchBox(player, &Batbot->hitboxPlayer, entity, &Batbot->spinbox)) {
             RSDK.SetSpriteAnimation(Batbot->aniFrames, 1, &entity->animator1, false, 0);
-            flag = true;
+            spin = true;
         }
-        if (RSDK.CheckObjectCollisionTouchBox(player, &Batbot->hitboxPlayer, entity, &Batbot->hitbox3)) {
+        if (RSDK.CheckObjectCollisionTouchBox(player, &Batbot->hitboxPlayer, entity, &Batbot->attackbox)) {
             entity->playerPtr = (Entity *)player;
             entity->state     = Batbot_State_Attack;
         }
     }
 
-    if (!flag)
+    if (!spin)
         RSDK.SetSpriteAnimation(Batbot->aniFrames, 0, &entity->animator1, false, 0);
 }
 
 void Batbot_State_Attack(void)
 {
     RSDK_THIS(Batbot);
-    if (entity->field_68) {
-        entity->field_68   = (entity->field_68 + 8) & 0x1FF;
-        entity->position.y = (RSDK.Sin512(entity->field_68) << 9) + entity->field_6C;
+    if (entity->arcAngle) {
+        entity->arcAngle   = (entity->arcAngle + 8) & 0x1FF;
+        entity->position.y = (RSDK.Sin512(entity->arcAngle) << 9) + entity->startY;
     }
     if (++entity->timer == 20) {
-        entity->timer      = 0;
-        entity->posUnknown = entity->position;
+        entity->timer   = 0;
+        entity->landPos = entity->position;
         if (entity->playerPtr->position.x <= entity->position.x) {
-            entity->posUnknown.x -= 0x500000;
+            entity->landPos.x -= 0x500000;
             entity->swoopAngle = 0;
-            entity->field_88   = 0;
+            entity->lastDir    = FLIP_NONE;
             entity->state      = Batbot_State_SwoopRight;
         }
         else {
-            entity->posUnknown.x += 0x500000;
+            entity->landPos.x += 0x500000;
             entity->swoopAngle = 256;
-            entity->field_88   = 1;
+            entity->lastDir    = FLIP_X;
             entity->state      = Batbot_State_SwoopLeft;
         }
-        entity->flag = false;
+        entity->showWings = false;
         RSDK.SetSpriteAnimation(Batbot->aniFrames, 2, &entity->animator1, true, 0);
     }
 }
@@ -173,10 +173,10 @@ void Batbot_State_SwoopRight(void)
 {
     RSDK_THIS(Batbot);
     entity->swoopAngle += 4;
-    entity->position.x = entity->posUnknown.x + 0x2800 * RSDK.Cos512(entity->swoopAngle);
-    entity->position.y = entity->posUnknown.y + 0x2800 * RSDK.Sin512(entity->swoopAngle);
+    entity->position.x = entity->landPos.x + 0x2800 * RSDK.Cos512(entity->swoopAngle);
+    entity->position.y = entity->landPos.y + 0x2800 * RSDK.Sin512(entity->swoopAngle);
     if (entity->swoopAngle == 256) {
-        entity->flag = true;
+        entity->showWings = true;
         RSDK.SetSpriteAnimation(Batbot->aniFrames, 0, &entity->animator1, true, 0);
         entity->state = Batbot_State_Idle;
     }
@@ -186,10 +186,10 @@ void Batbot_State_SwoopLeft(void)
 {
     RSDK_THIS(Batbot);
     entity->swoopAngle -= 4;
-    entity->position.x = entity->posUnknown.x + 0x2800 * RSDK.Cos512(entity->swoopAngle);
-    entity->position.y = entity->posUnknown.y + 0x2800 * RSDK.Sin512(entity->swoopAngle);
+    entity->position.x = entity->landPos.x + 0x2800 * RSDK.Cos512(entity->swoopAngle);
+    entity->position.y = entity->landPos.y + 0x2800 * RSDK.Sin512(entity->swoopAngle);
     if (entity->swoopAngle == 0) {
-        entity->flag = true;
+        entity->showWings = true;
         RSDK.SetSpriteAnimation(Batbot->aniFrames, 0, &entity->animator1, true, 0);
         entity->state = Batbot_State_Idle;
     }

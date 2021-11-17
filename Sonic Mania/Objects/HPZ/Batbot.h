@@ -6,9 +6,9 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    Hitbox hitboxBadnik;
-    Hitbox hitbox2;
-    Hitbox hitbox3;
+    Hitbox hitbox;
+    Hitbox spinbox;
+    Hitbox attackbox;
     Hitbox hitboxPlayer;
     uint16 aniFrames;
     uint8 dirFlag[5];
@@ -21,16 +21,16 @@ typedef struct {
     Vector2 startPos;
     uint8 startDir;
     uint16 timer;
-    int32 field_68;
-    int32 field_6C;
-    Vector2 posUnknown;
-    int32 field_78;
-    int32 field_7C;
+    int32 arcAngle;
+    int32 startY;
+    Vector2 landPos;
+    int32 unused1;
+    int32 unused2;
     int32 swoopAngle;
     Entity *playerPtr;
-    uint8 field_88;
-    bool32 flag;
-    uint16 field_90;
+    uint8 lastDir;
+    bool32 showWings;
+    uint16 unused3; // set to 0, not used
     Animator animator1;
     Animator animator2;
 } EntityBatbot;

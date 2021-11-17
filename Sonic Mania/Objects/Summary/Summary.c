@@ -107,16 +107,16 @@ void Summary_State_SetupText(void)
     picture->animator.frameID = entity->player2ID;
 
     Summary_LoadTimes();
-    entity->state = Summary_State_Unknown;
+    entity->state = Summary_State_FadeIn;
 }
 
-void Summary_State_Unknown(void)
+void Summary_State_FadeIn(void)
 {
     RSDK_THIS(Summary);
 
     if (entity->timer <= 0) {
         entity->timer     = 0;
-        entity->state     = Summary_State_Unknown2;
+        entity->state     = Summary_State_Wait;
         entity->stateDraw = StateMachine_None;
     }
     else {
@@ -124,34 +124,29 @@ void Summary_State_Unknown(void)
     }
 }
 
-void Summary_State_Unknown2(void)
+void Summary_State_Wait(void)
 {
     RSDK_THIS(Summary);
-    if (RSDK_controller->keyStart.press || (API_GetConfirmButtonFlip() ? RSDK_controller->keyB.press : RSDK_controller->keyA.press)) {
-        RSDK.SetScene("Presentation", "Menu");
-        entity->timer     = 0;
-        entity->state     = Summary_State_Unknown3;
-        entity->stateDraw = Summary_State_Draw;
-        Music_FadeOut(0.01);
-    }
+    if (RSDK_controller->keyStart.press || (API_GetConfirmButtonFlip() ? RSDK_controller->keyB.press : RSDK_controller->keyA.press)
 #if RETRO_USE_TOUCH_CONTROLS
-    else if (RSDK_touchMouse->count) {
+        || RSDK_touchMouse->count
+#endif
+    ) {
         RSDK.SetScene("Presentation", "Menu");
         entity->timer     = 0;
-        entity->state     = Summary_State_Unknown3;
+        entity->state     = Summary_State_FadeOut;
         entity->stateDraw = Summary_State_Draw;
         Music_FadeOut(0.01);
     }
-#endif
     else {
         entity->timer = 0;
     }
 }
 
-void Summary_State_Unknown3(void)
+void Summary_State_FadeOut(void)
 {
     RSDK_THIS(Summary);
-    if (entity->timer >= 1024) {
+    if (entity->timer >= 0x400) {
         RSDK.LoadScene();
     }
     else {

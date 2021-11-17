@@ -18,8 +18,8 @@ typedef struct {
     StateMachine(state);
     StateMachine(stateDraw);
     int32 timer;
-    int32 field_64;
-    int32 field_68;
+    int32 unused1;
+    int32 unused2;
     int32 player1ID;
     int32 player2ID;
     void *gameModeText;
@@ -51,9 +51,9 @@ void Summary_Serialize(void);
 void Summary_State_Draw(void);
 
 void Summary_State_SetupText(void);
-void Summary_State_Unknown(void);
-void Summary_State_Unknown2(void);
-void Summary_State_Unknown3(void);
+void Summary_State_FadeIn(void);
+void Summary_State_Wait(void);
+void Summary_State_FadeOut(void);
 
 void Summary_SetTextString(uint8 anim, void *text, const char *str);
 void Summary_SetStageTime(char *buffer, int32 time);

@@ -2,6 +2,8 @@
 
 ObjectShutterbug *Shutterbug;
 
+//cleanup note: look in Unused/Wisp
+
 void Shutterbug_Update(void)
 {
     RSDK_THIS(Shutterbug);
