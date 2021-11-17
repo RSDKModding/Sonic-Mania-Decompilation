@@ -227,9 +227,21 @@ void WallCrawl_State_Projectile(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void WallCrawl_EditorDraw(void) {}
+void WallCrawl_EditorDraw(void) {
+    RSDK_THIS(WallCrawl);
+    RSDK.SetSpriteAnimation(WallCrawl->aniFrames, 2, &entity->animator, true, 0);
+    RSDK.DrawSprite(&entity->animator, NULL, false);
+}
 
-void WallCrawl_EditorLoad(void) {}
+void WallCrawl_EditorLoad(void) {
+    WallCrawl->aniFrames = RSDK.LoadSpriteAnimation("Blueprint/WallCrawl.bin", SCOPE_STAGE);
+
+    RSDK_ACTIVE_VAR(WallCrawl, direction);
+    RSDK_ENUM_VAR("No Flip", FLIP_NONE);
+    RSDK_ENUM_VAR("Flip X", FLIP_X);
+    RSDK_ENUM_VAR("Flip Y", FLIP_Y);
+    RSDK_ENUM_VAR("Flip X & Y", FLIP_XY);
+}
 #endif
 
 void WallCrawl_Serialize(void) { RSDK_EDITABLE_VAR(WallCrawl, VAR_UINT8, direction); }
