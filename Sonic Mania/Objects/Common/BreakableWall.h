@@ -12,6 +12,11 @@ typedef enum {
     BREAKWALL_TYPE_BOTTOMFULL
 } BreakableWallTypes;
 
+typedef enum {
+    BREAKWALL_TILE_FIXED = 1,
+    BREAKWALL_TILE_DYNAMIC,
+} BreakableWallTileTypes;
+
 // Object Class
 typedef struct {
     RSDK_OBJECT
@@ -22,10 +27,10 @@ typedef struct {
                                -0x80000, 0x180000, 0x80000, 0x180000 });
     TABLE(int32 unused2[16], { -0x60000, -0x60000, -0x40000, -0x50000, -0x120000, -0x20000, -0x60000, -0x10000, -0x80000, 0x20000, -0x60000, 0x10000,
                                -0x60000, 0x60000, -0x40000, 0x50000 });
-    TABLE(int32 unused3[16], { 0x40000, -0x50000, 0x60000, -0x60000, 0x60000, -0x10000, 0x80000, -0x20000, 0x60000, 0x10000, 0x80000, 0x20000,
-                               0x40000, 0x50000, 0x60000, 0x60000 });
-    TABLE(int32 unused4[8], { -0x80000, -0x80000, 0x80000, -0x80000, -0x80000, 0x80000, 0x80000, 0x80000 });
-    TABLE(int32 unused5[8], { -0x20000, -0x20000, 0x20000, -0x20000, -0x10000, -0x10000, 0x10000, -0x10000 });
+    TABLE(int32 breakOffsets[16], { 0x40000, -0x50000, 0x60000, -0x60000, 0x60000, -0x10000, 0x80000, -0x20000, 0x60000, 0x10000, 0x80000, 0x20000,
+                                    0x40000, 0x50000, 0x60000, 0x60000 });
+    TABLE(int32 breakVelocitiesL[8], { -0x80000, -0x80000, 0x80000, -0x80000, -0x80000, 0x80000, 0x80000, 0x80000 });
+    TABLE(int32 breakVelocitiesR[8], { -0x20000, -0x20000, 0x20000, -0x20000, -0x10000, -0x10000, 0x10000, -0x10000 });
     uint16 sfxBreak;
     uint16 farPlaneLayer;
 } ObjectBreakableWall;
@@ -77,9 +82,9 @@ void BreakableWall_State_Top(void);
 void BreakableWall_State_TopChunks(void);
 
 // Draw States
-void BreakableWall_StateDraw_Outline(void);
-void BreakableWall_StateDraw_Outline2(void);
-void BreakableWall_StateDraw_Tile(void);
+void BreakableWall_Draw_Outline(void);
+void BreakableWall_Draw_Outline2(void);
+void BreakableWall_Draw_Tile(void);
 
 // Breaking
 void BreakableWall_HandleTopBreak_All(void);

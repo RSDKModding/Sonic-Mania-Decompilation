@@ -14,7 +14,7 @@ typedef struct {
     int32 stageState;
     int32 field_1C;
     int32 field_20;
-    bool32 reloadFlag;
+    bool32 hasAchievement;
     uint16 aniTiles;
     TileLayer* bgPtr;
 } ObjectTMZ1Setup;

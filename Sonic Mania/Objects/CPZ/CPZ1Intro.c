@@ -251,8 +251,7 @@ bool32 CPZ1Intro_Unknown8(void *h)
 
     if (!host->timer) {
         RSDK.PlaySfx(CPZ1Intro->sfxChemDrop, 0, 255);
-        EntityDebris *debris =
-            (EntityDebris *)RSDK.CreateEntity(Debris->objectID, 0, player1->position.x + 0x20000, (ScreenInfo->position.y - 8) << 16);
+        EntityDebris *debris  = CREATE_ENTITY(Debris, NULL, player1->position.x + 0x20000, (ScreenInfo->position.y - 8) << 16);
         debris->updateRange.x = 0x800000;
         debris->updateRange.y = 0x800000;
         debris->active        = ACTIVE_NORMAL;

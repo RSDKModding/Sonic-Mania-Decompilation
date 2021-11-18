@@ -4,7 +4,7 @@
 #include "SonicMania.h"
 
 // remind me to do it 
-typedef enum {} StegwayAnimTypes;
+typedef enum {STEGWAY_ANIM_NONE} StegwayAnimTypes;
 
 // Object Class
 typedef struct {

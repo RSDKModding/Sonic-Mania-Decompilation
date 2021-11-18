@@ -209,13 +209,13 @@ void Bridge_Burn(int32 offset)
     int32 ang    = 0x80000;
     for (int32 i = 0; i < size; ++i) {
         int32 sine = RSDK.Sin512((ang << 7) / self->stoodPos);
-        RSDK.CreateEntity(BurningLog->objectID, intToVoid(8 * abs(off++) + 16), spawnX, (self->field_6C * sine >> 9) + self->position.y);
+        CREATE_ENTITY(BurningLog, intToVoid(8 * abs(off++) + 16), spawnX, (self->field_6C * sine >> 9) + self->position.y);
         ang += 0x100000;
         spawnX += 0x100000;
     }
 
     int32 id = size;
-    RSDK.CreateEntity(BurningLog->objectID, intToVoid(8 * abs(id++ - offset) + 16), spawnX, self->field_6C + self->position.y);
+    CREATE_ENTITY(BurningLog, intToVoid(8 * abs(id++ - offset) + 16), spawnX, self->field_6C + self->position.y);
 
     spawnX      = self->endPos - 0x80000;
     int32 divisor = self->endPos - self->startPos - self->stoodPos;
@@ -227,7 +227,7 @@ void Bridge_Burn(int32 offset)
         off = offset - id;
         for (; id < self->length; ++id, --off) {
             int32 spawnY = (self->field_6C * RSDK.Sin512((ang << 7) / divisor) >> 9) + self->position.y;
-            RSDK.CreateEntity(BurningLog->objectID, intToVoid(8 * abs(self->length - abs(off) - offset) + 16), spawnX, spawnY);
+            CREATE_ENTITY(BurningLog, intToVoid(8 * abs(self->length - abs(off) - offset) + 16), spawnX, spawnY);
             ang += 0x100000;
             spawnX -= 0x100000;
         }

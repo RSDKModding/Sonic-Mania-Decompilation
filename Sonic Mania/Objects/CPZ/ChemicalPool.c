@@ -306,9 +306,8 @@ void ChemicalPool_State_HarmfulBlue(void)
 
     self->hitbox.top = topStore;
     if (!(Zone->timer & 3)) {
-        EntityChemBubble *bubble = (EntityChemBubble *)RSDK.CreateEntity(
-            ChemBubble->objectID, NULL, self->position.x + RSDK.Rand(-self->updateRange.x, self->updateRange.x),
-            self->position.y + self->updateRange.y);
+        EntityChemBubble *bubble = CREATE_ENTITY(ChemBubble, NULL, self->position.x + RSDK.Rand(-self->updateRange.x, self->updateRange.x),
+                                                 self->position.y + self->updateRange.y);
         bubble->parent = (Entity *)self;
     }
 }

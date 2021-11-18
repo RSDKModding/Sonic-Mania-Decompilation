@@ -230,9 +230,9 @@ void Newtron_Unknown9(void)
         case 30:
             RSDK.SetSpriteAnimation(Newtron->aniFrames, 1, &self->animator1, true, 0);
             if (self->direction)
-                RSDK.CreateEntity(Newtron->objectID, (void *)2, self->position.x - 0x140000, self->position.y - 0x80000)->velocity.x = -0x20000;
+                CREATE_ENTITY(Newtron, intToVoid(2), self->position.x - 0x140000, self->position.y - 0x80000)->velocity.x = -0x20000;
             else
-                RSDK.CreateEntity(Newtron->objectID, (void *)2, self->position.x + 0x140000, self->position.y - 0x80000)->velocity.x = 0x20000;
+                CREATE_ENTITY(Newtron, intToVoid(2), self->position.x + 0x140000, self->position.y - 0x80000)->velocity.x = 0x20000;
             break;
         case 45: RSDK.SetSpriteAnimation(Newtron->aniFrames, 0, &self->animator1, true, 0); break;
         case 90: self->state = Newtron_Unknown10; break;

@@ -336,7 +336,7 @@ bool32 GHZ2Outro_CutsceneState2_Unknown6(EntityCutsceneSeq *host)
         fxRuby = (EntityFXRuby *)self->fxRuby;
     }
     else {
-        fxRuby            = (EntityFXRuby *)RSDK.CreateEntity(FXRuby->objectID, 0, ruby->position.x, ruby->position.y);
+        fxRuby            = CREATE_ENTITY(FXRuby, 0, ruby->position.x, ruby->position.y);
         fxRuby->drawOrder = Zone->playerDrawHigh;
         self->fxRuby    = (Entity *)fxRuby;
         Camera_ShakeScreen(0, 4, 4);

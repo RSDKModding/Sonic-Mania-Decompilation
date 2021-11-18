@@ -469,16 +469,16 @@ void CheckerBall_Unknown5(void)
 
     foreach_active(Platform, platform)
     {
-        if (platform->state != Platform_State_Falling && platform->state != Platform_State_OffScreenReset) {
+        if (platform->state != Platform_State_Collapse_Falling && platform->state != Platform_State_Collapse_CheckReset) {
             platform->position.y = platform->drawPos.y - platform->collisionOffset.y;
-            int32 result           = 0;
+            int32 side           = 0;
             if (platform->collision)
-                result = RSDK.CheckObjectCollisionBox(platform, &platform->hitbox, self, &CheckerBall->hitbox, true);
+                side = RSDK.CheckObjectCollisionBox(platform, &platform->hitbox, self, &CheckerBall->hitbox, true);
             else
-                result = RSDK.CheckObjectCollisionPlatform(platform, &platform->hitbox, self, &CheckerBall->hitbox, true);
-            if (result == 1) {
-                if (platform->state == Platform_State_Collapsing && !platform->collapseDelay)
-                    platform->collapseDelay = 30;
+                side = RSDK.CheckObjectCollisionPlatform(platform, &platform->hitbox, self, &CheckerBall->hitbox, true);
+            if (side == C_TOP) {
+                if (platform->state == Platform_State_Collapse && !platform->timer)
+                    platform->timer = 30;
                 platform->stood = true;
                 self->position.x += platform->collisionOffset.x;
                 self->position.y += platform->collisionOffset.y;
@@ -633,7 +633,7 @@ void CheckerBall_Unknown5(void)
     {
         if ((itemBox->state == ItemBox_State_Normal || itemBox->state == ItemBox_State_Falling)
             && RSDK.CheckObjectCollisionTouchBox(itemBox, &ItemBox->hitbox, self, &CheckerBall->hitbox)) {
-            RSDK.CreateEntity(TYPE_BLANK, 0, itemBox->position.x, itemBox->position.y);
+            RSDK.CreateEntity(TYPE_BLANK, NULL, itemBox->position.x, itemBox->position.y);
             itemBox->storedEntity  = (Entity *)player1;
             itemBox->alpha         = 0x100;
             itemBox->contentsSpeed = -0x38000;
@@ -648,7 +648,7 @@ void CheckerBall_Unknown5(void)
             RSDK.CreateEntity(Explosion->objectID, 0, itemBox->position.x, itemBox->position.y - 0x100000);
 
             for (int32 i = 0; i < 6; ++i) {
-                EntityDebris *debris = (EntityDebris *)RSDK.CreateEntity(Debris->objectID, 0, itemBox->position.x + RSDK.Rand(-0x80000, 0x80000),
+                EntityDebris *debris = CREATE_ENTITY(Debris, NULL, itemBox->position.x + RSDK.Rand(-0x80000, 0x80000),
                                                                          itemBox->position.y + RSDK.Rand(-0x80000, 0x80000));
                 debris->state        = Debris_State_Fall;
                 debris->gravity      = 0x4000;
@@ -662,17 +662,17 @@ void CheckerBall_Unknown5(void)
                 RSDK.SetSpriteAnimation(ItemBox->aniFrames, 6, &debris->animator, true, RSDK.Rand(0, 4));
             }
 
-            RSDK.PlaySfx(ItemBox->sfxDestroy, 0, 255);
+            RSDK.PlaySfx(ItemBox->sfxDestroy, false, 255);
             itemBox->active = ACTIVE_NORMAL;
-            if (itemBox->type == 13) {
-                if (itemBox->type == 7) {
+            if (itemBox->type == ITEMBOX_RANDOM) {
+                if (itemBox->type == ITEMBOX_1UP_SONIC) {
                     switch (player1->characterID) {
-                        case ID_SONIC: itemBox->type = 7; break;
-                        case ID_TAILS: itemBox->type = 8; break;
-                        case ID_KNUCKLES: itemBox->type = 9; break;
+                        case ID_SONIC: itemBox->type = ITEMBOX_1UP_SONIC; break;
+                        case ID_TAILS: itemBox->type = ITEMBOX_1UP_TAILS; break;
+                        case ID_KNUCKLES: itemBox->type = ITEMBOX_1UP_KNUX; break;
 #if RETRO_USE_PLUS
-                        case ID_MIGHTY: itemBox->type = 15; break;
-                        case ID_RAY: itemBox->type = 16; break;
+                        case ID_MIGHTY: itemBox->type = ITEMBOX_1UP_MIGHTY; break;
+                        case ID_RAY: itemBox->type = ITEMBOX_1UP_RAY; break;
 #endif
                         default: break;
                     }
@@ -686,30 +686,29 @@ void CheckerBall_Unknown5(void)
     {
         if (breakableWall->state == BreakableWall_State_BreakableSides
             && RSDK.CheckObjectCollisionTouchBox(breakableWall, &breakableWall->hitbox, self, &CheckerBall->hitbox)) {
-            int32 *arrayPtr2 = BreakableWall->value3;
+            int32 *offsets = BreakableWall->breakOffsets;
 
-            int32 *arrayPtr = NULL;
+            int32 *velocities = NULL;
             if (self->position.x >= breakableWall->position.x)
-                arrayPtr = BreakableWall->value5;
+                velocities = BreakableWall->breakVelocitiesR;
             else
-                arrayPtr = BreakableWall->value4;
+                velocities = BreakableWall->breakVelocitiesL;
 
             for (int32 y = 0; y < 4; ++y) {
                 for (int32 x = 0; x < 2; ++x) {
-                    EntityBreakableWall *block = (EntityBreakableWall *)RSDK.CreateEntity(
-                        BreakableWall->objectID, intToVoid(1), breakableWall->position.x + arrayPtr2[0], arrayPtr2[1] + breakableWall->position.y);
-                    block->tileInfo   = RSDK.GetTileInfo(Zone->fgHigh, (breakableWall->position.x + arrayPtr2[0]) >> 20,
-                                                       (arrayPtr2[1] + breakableWall->position.y) >> 20);
-                    block->velocity.x = arrayPtr[0];
-                    block->velocity.y = arrayPtr[1];
-                    RSDK.SetTileInfo(Zone->fgHigh, (breakableWall->position.x + arrayPtr2[0]) >> 20, (arrayPtr2[1] + breakableWall->position.y) >> 20,
-                                     0xFFFF);
-                    arrayPtr2 += 2;
-                    arrayPtr += 2;
+                    int tx                      = breakableWall->position.x + offsets[0];
+                    int ty                      = breakableWall->position.y + offsets[1];
+                    EntityBreakableWall *tile = CREATE_ENTITY(BreakableWall, intToVoid(BREAKWALL_TILE_FIXED), tx, ty);
+                    tile->tileInfo             = RSDK.GetTileInfo(Zone->fgHigh, tx >> 20, ty >> 20);
+                    tile->velocity.x = velocities[0];
+                    tile->velocity.y = velocities[1];
+                    RSDK.SetTileInfo(Zone->fgHigh, tx >> 20, ty >> 20, 0xFFFF);
+                    offsets += 2;
+                    velocities += 2;
                 }
             }
-            RSDK.PlaySfx(BreakableWall->sfxBreak, 0, 255);
-            RSDK.ResetEntityPtr(breakableWall, TYPE_BLANK, NULL);
+            RSDK.PlaySfx(BreakableWall->sfxBreak, false, 255);
+            destroyEntity(breakableWall);
         }
     }
 

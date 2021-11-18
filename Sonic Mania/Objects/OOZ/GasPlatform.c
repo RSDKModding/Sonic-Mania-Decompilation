@@ -5,7 +5,7 @@ ObjectGasPlatform *GasPlatform;
 void GasPlatform_Update(void)
 {
     RSDK_THIS(GasPlatform);
-    if (self->state == Platform_State_Normal) {
+    if (self->state == Platform_State_Fixed) {
         switch (self->type) {
             case 0:
                 if (!((Zone->timer + self->intervalOffset) % self->interval))
@@ -51,11 +51,11 @@ void GasPlatform_Create(void *data)
     if (!self->interval)
         self->interval = 1;
     self->frameID   = 2;
-    self->collision = PLATFORM_C_0;
+    self->collision = PLATFORM_C_SOLID_TOP;
     Platform_Create(NULL);
     RSDK.SetSpriteAnimation(Platform->aniFrames, 2, &self->animator2, true, 0);
     self->stateCollide = Platform_CollisionState_AllSolid;
-    self->state        = Platform_State_Normal;
+    self->state        = Platform_State_Fixed;
 }
 
 void GasPlatform_StageLoad(void)
@@ -90,7 +90,7 @@ void GasPlatform_Unknown2(void)
         self->drawPos.y = self->centerPos.y;
         if (self->velocity.y <= 0x10000) {
             self->active = ACTIVE_BOUNDS;
-            self->state  = Platform_State_Normal;
+            self->state  = Platform_State_Fixed;
             return;
         }
         self->velocity.y = -(self->velocity.y >> 2);
@@ -131,7 +131,7 @@ void GasPlatform_Unknown2(void)
                     player->onGround   = false;
                     RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGTWIRL, &player->animator, true, 0);
                     RSDK.PlaySfx(GasPlatform->sfxSpring, false, 255);
-                    self->collapseDelay = 240;
+                    self->timer = 240;
                     self->state         = GasPlatform_Unknown3;
                 }
             }
@@ -166,7 +166,7 @@ void GasPlatform_Unknown3(void)
 
     self->position.x = storeX;
     self->position.y = storeY;
-    if (!--self->collapseDelay) {
+    if (!--self->timer) {
         self->velocity.y = 0;
         self->state      = GasPlatform_Unknown2;
     }
@@ -177,14 +177,14 @@ void GasPlatform_Unknown4(void)
     RSDK_THIS(GasPlatform);
     self->drawPos.x = (RSDK.Rand(-1, 1) << 16) + self->centerPos.x;
     self->drawPos.y = (RSDK.Rand(-2, 2) << 16) + self->centerPos.y;
-    if (self->collapseDelay <= 0) {
+    if (self->timer <= 0) {
         RSDK.PlaySfx(GasPlatform->sfxGasPop, false, 255);
         self->active     = ACTIVE_NORMAL;
         self->velocity.y = -0x8C000;
         self->state      = GasPlatform_Unknown2;
     }
     else {
-        self->collapseDelay--;
+        self->timer--;
     }
 }
 

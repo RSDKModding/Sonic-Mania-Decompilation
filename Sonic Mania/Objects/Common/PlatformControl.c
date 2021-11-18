@@ -9,7 +9,7 @@ void PlatformControl_Update(void)
     int32 nodeSlot  = RSDK.GetEntityID(self) + 1;
     int32 platSlot   = nodeSlot + self->nodeCount;
 
-    if (self->field_6C) {
+    if (self->isActive) {
         for (int32 c = 0; c < self->childCount; ++c) {
             EntityPlatform *platform = RSDK_GET_ENTITY(platSlot, Platform);
             EntityPlatformNode *node = RSDK_GET_ENTITY(platform->speed, PlatformNode);
@@ -32,7 +32,7 @@ void PlatformControl_Update(void)
             }
 
             if (flags == 3) {
-                platform->collapseDelay = node->nodeFlag;
+                platform->timer = node->nodeFlag;
                 if (platform->direction < 4) {
                     if (++platform->speed - nodeSlot >= self->nodeCount) {
                         switch (self->type) {
@@ -70,31 +70,31 @@ void PlatformControl_Update(void)
                         }
                     }
                 }
-                PlatformControl_ManagePlatformVelocity(platform, RSDK.GetEntityByID(platform->speed));
+                PlatformControl_ManagePlatformVelocity(platform, (Entity*)RSDK_GET_ENTITY(platform->speed, PlatformNode));
             }
 
             platSlot += platform->childCount + 1;
         }
     }
     else {
-        EntityButton *control = (EntityButton *)self->ControllerInfo;
-        if (control && control->activated)
+        EntityButton *button = (EntityButton *)self->taggedButton;
+        if (button && button->activated)
             self->setActive = true;
         if (self->setActive) {
             for (int32 c = 0; c < self->childCount; ++c) {
                 EntityPlatform *platform = RSDK_GET_ENTITY(platSlot, Platform);
-                if (platform->state == Platform_State_Nothing)
-                    platform->state = Platform_Unknown4;
-                if (platform->state == Platform_Unknown8) {
+                if (platform->state == Platform_State_WaitForControl)
+                    platform->state = Platform_State_Controlled;
+                if (platform->state == Platform_State_ActivateControlOnStood) {
                     self->setActive = false;
                     return;
                 }
                 platform->speed += nodeSlot;
                 platform->active = ACTIVE_NORMAL;
-                PlatformControl_ManagePlatformVelocity(platform, RSDK.GetEntityByID(platform->speed));
+                PlatformControl_ManagePlatformVelocity(platform, (Entity *)RSDK_GET_ENTITY(platform->speed, PlatformNode));
                 platSlot += platform->childCount + 1;
             }
-            self->field_6C = 1;
+            self->isActive = true;
         }
     }
 
@@ -103,14 +103,14 @@ void PlatformControl_Update(void)
         int32 slot       = nodeSlot + self->nodeCount;
         for (int32 c = 0; c < self->childCount; ++c) {
             EntityPlatform *platform = RSDK_GET_ENTITY(slot, Platform);
-            if (platform->state == Platform_Unknown4) {
+            if (platform->state == Platform_State_Controlled) {
                 platform->speed -= nodeSlot;
-                platform->state  = Platform_State_Nothing;
+                platform->state  = Platform_State_WaitForControl;
                 platform->active = ACTIVE_BOUNDS;
             }
             slot += platform->childCount + 1;
         }
-        self->field_6C = 0;
+        self->isActive = false;
     }
 }
 
@@ -128,13 +128,13 @@ void PlatformControl_Create(void *data)
         int32 id         = RSDK.GetEntityID(self) + 1;
         for (int32 i = 0; i < self->nodeCount; ++i) {
             Entity *node = RSDK.GetEntityByID(id++);
-            if (abs(node->position.x - self->position.x) > self->updateRange.x) {
+            if (abs(node->position.x - self->position.x) > self->updateRange.x) 
                 self->updateRange.x = abs(node->position.x - self->position.x);
-            }
-            if (abs(node->position.y - self->position.y) > self->updateRange.y) {
+
+            if (abs(node->position.y - self->position.y) > self->updateRange.y) 
                 self->updateRange.y = abs(node->position.y - self->position.y);
-            }
         }
+
         if (!self->speed)
             self->speed = 4;
         self->updateRange.x += 0x800000;
@@ -177,7 +177,7 @@ void PlatformControl_Create(void *data)
 
         if ((Button && control->objectID == Button->objectID) || (SDashWheel && control->objectID == SDashWheel->objectID)
             || (PullChain && control->objectID == PullChain->objectID)) {
-            self->ControllerInfo = control;
+            self->taggedButton = control;
             if (self->updateRange.y < 0x800000 + abs(self->position.x - control->position.x)) {
                 self->updateRange.y = 0x800000 + abs(self->position.x - control->position.x);
             }
@@ -186,7 +186,7 @@ void PlatformControl_Create(void *data)
             }
         }
         else {
-            self->ControllerInfo = NULL;
+            self->taggedButton = NULL;
         }
     }
 }

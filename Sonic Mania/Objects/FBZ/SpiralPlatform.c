@@ -6,12 +6,12 @@ void SpiralPlatform_Update(void)
 {
     RSDK_THIS(SpiralPlatform);
 
-    self->collision = PLATFORM_C_2;
+    self->collision = PLATFORM_C_USE_TILES;
     Platform_Update();
 
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionBox(player, self, &SpiralPlatform->hitbox) == 4) {
+        if (Player_CheckCollisionBox(player, self, &SpiralPlatform->hitbox) == C_BOTTOM) {
             if (player->onGround && !player->collisionMode)
                 player->hurtFlag = 1;
         }
@@ -25,7 +25,7 @@ void SpiralPlatform_StaticUpdate(void) {}
 void SpiralPlatform_Draw(void)
 {
     RSDK_THIS(SpiralPlatform);
-    RSDK.DrawTile(self->tiles, self->tileSize.x >> 20, self->tileSize.y >> 20, &self->drawPos, 0, false);
+    RSDK.DrawTile(self->tiles, self->tileSize.x >> 20, self->tileSize.y >> 20, &self->drawPos, NULL, false);
 }
 
 void SpiralPlatform_Create(void *data)

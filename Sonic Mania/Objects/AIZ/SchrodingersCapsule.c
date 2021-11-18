@@ -269,7 +269,7 @@ void SchrodingersCapsule_Unknown4(void)
         self->timer = 0;
         self->state = SchrodingersCapsule_Unknown5;
 
-        EntityFXFade *fade = (EntityFXFade *)RSDK.CreateEntity(FXFade->objectID, intToVoid(0xF0F0F0), self->position.x, self->position.y);
+        EntityFXFade *fade = CREATE_ENTITY(FXFade, intToVoid(0xF0F0F0), self->position.x, self->position.y);
         fade->speedIn      = 256;
         fade->speedOut     = 32;
     }

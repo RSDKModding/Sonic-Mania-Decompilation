@@ -1407,8 +1407,7 @@ void HeavyMystic_State2_Unknown5(void)
         RSDK.PlaySfx(HeavyMystic->sfxMagicBox, false, 255);
         int x = RSDK.Rand(-24, 25) << 16;
         int y = RSDK.Rand(-24, 25) << 16;
-        RSDK.CreateEntity(Explosion->objectID, intToVoid(EXPLOSION_ENEMY), x + self->position.x, y + self->position.y)->drawOrder =
-            Zone->drawOrderHigh + 2;
+        CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), x + self->position.x, y + self->position.y)->drawOrder = Zone->drawOrderHigh + 2;
     }
 
     self->scale.x = RSDK.Cos256(self->angle + 64) + 0x200;

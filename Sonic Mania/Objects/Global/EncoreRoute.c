@@ -68,10 +68,13 @@ void EncoreRoute_EditorDraw(void)
 
     int count = showGizmos() ? 2 : 1;
     for (int i = 0; i < count; ++i) {
+        drawPos.x = positions[i]->x + (size.x >> 1);
+        drawPos.y = positions[i]->y + (size.y >> 1);
+
+        DrawHelpers_DrawRectOutline(0xFFFF00, drawPos.x, drawPos.y, size.x, size.y);
+
         drawPos.x = positions[i]->x;
         drawPos.y = positions[i]->y;
-
-        DrawHelpers_DrawRectOutline(0xFFFF00, positions[i]->x, positions[i]->y, size.x, size.y);
 
         self->direction = FLIP_NONE;
         RSDK.DrawSprite(&EncoreRoute->animator, &drawPos, false);

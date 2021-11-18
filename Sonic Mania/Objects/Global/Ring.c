@@ -377,28 +377,28 @@ uint8 Ring_CheckPlatformCollisions(EntityPlatform *platform)
     RSDK_THIS(Ring);
 
     int32 side = C_NONE;
-    if (platform->state != Platform_State_Falling && platform->state != Platform_State_OffScreenReset) {
+    if (platform->state != Platform_State_Collapse_Falling && platform->state != Platform_State_Collapse_CheckReset) {
         platform->position.x = platform->drawPos.x - platform->collisionOffset.x;
         platform->position.y = platform->drawPos.y - platform->collisionOffset.y;
         switch (platform->collision) {
-            case PLATFORM_C_0:
+            case PLATFORM_C_SOLID_TOP:
                 side = RSDK.CheckObjectCollisionPlatform(platform, RSDK.GetHitbox(&platform->animator, 0), self, &Ring->hitbox, true);
                 break;
-            case PLATFORM_C_1:
-            case PLATFORM_C_5:
-            case PLATFORM_C_6:
-            case PLATFORM_C_7:
-            case PLATFORM_C_8:
-            case PLATFORM_C_9:
-            case PLATFORM_C_10:
-            case PLATFORM_C_11:
-            case PLATFORM_C_12:
-            case PLATFORM_C_13:
-            case PLATFORM_C_14:
-            case PLATFORM_C_15:
+            case PLATFORM_C_SOLID_ALL:
+            case PLATFORM_C_HAZARD_SIDES:
+            case PLATFORM_C_HAZARD_BOTTOM:
+            case PLATFORM_C_HAZARD_TOP:
+            case PLATFORM_C_TWISTER:
+            case PLATFORM_C_STICKY_ALL:
+            case PLATFORM_C_STICKY_TOP:
+            case PLATFORM_C_STICKY_LEFT:
+            case PLATFORM_C_STICKY_RIGHT:
+            case PLATFORM_C_STICKY_BOTTOM:
+            case PLATFORM_C_TURNTABLE:
+            case PLATFORM_C_SOLID_ALL_NOCRUSH:
                 side = RSDK.CheckObjectCollisionBox(platform, RSDK.GetHitbox(&platform->animator, 1), self, &Ring->hitbox, true);
                 break;
-            case PLATFORM_C_2:
+            case PLATFORM_C_USE_TILES:
                 side = C_NONE;
                 if (RSDK.CheckObjectCollisionTouchBox(platform, &platform->hitbox, self, &Ring->hitbox) && self->collisionLayers & Zone->moveID) {
                     TileLayer *moveLayer  = RSDK.GetSceneLayer(Zone->moveLayer);

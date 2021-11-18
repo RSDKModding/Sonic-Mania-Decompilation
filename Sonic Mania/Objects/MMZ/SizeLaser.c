@@ -501,7 +501,7 @@ void SizeLaser_Unknown8(void)
     RSDK_THIS(SizeLaser);
 
     if (self->timer < 24 && !(self->timer & 1))
-        RSDK.CreateEntity(SizeLaser->objectID, intToVoid(self->type + 4 * self->orientation + 1), self->position.x, self->position.y);
+        CREATE_ENTITY(SizeLaser, intToVoid(self->type + 4 * self->orientation + 1), self->position.x, self->position.y);
     SizeLaser_Unknown3();
     self->timer = (self->timer + 1) & 0x1F;
 }

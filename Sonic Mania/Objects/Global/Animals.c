@@ -144,7 +144,7 @@ bool32 Animals_CheckPlatformCollision(void *plat)
     RSDK_THIS(Animals);
     EntityPlatform *platform = (EntityPlatform *)plat;
     bool32 flag              = false;
-    if (platform->state != Platform_State_Falling && platform->state != Platform_State_OffScreenReset) {
+    if (platform->state != Platform_State_Collapse_Falling && platform->state != Platform_State_Collapse_CheckReset) {
         platform->position.x = platform->drawPos.x - platform->collisionOffset.x;
         platform->position.y = platform->drawPos.y - platform->collisionOffset.y;
         if (platform->collision <= 1) {

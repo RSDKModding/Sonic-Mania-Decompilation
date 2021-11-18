@@ -180,7 +180,7 @@ void Ball_State_Unknown2(void)
 
     if (abs(self->position.x - playerPtr->position.x) < 0x100000) {
         if (abs(0x500000 + self->position.y - playerPtr->position.y) < 0x100000 && RSDK.CheckOnScreen(self, &self->updateRange)) {
-            RSDK.CreateEntity(Explosion->objectID, intToVoid(EXPLOSION_ENEMY), self->position.x, self->position.y)->drawOrder = Zone->drawOrderHigh;
+            CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), self->position.x, self->position.y)->drawOrder = Zone->drawOrderHigh;
             RSDK.PlaySfx(Explosion->sfxDestroy, false, 255);
             self->velocity.y = 0;
             RSDK.SetSpriteAnimation(Ball->aniFrames, 1, &self->animator, true, 0);

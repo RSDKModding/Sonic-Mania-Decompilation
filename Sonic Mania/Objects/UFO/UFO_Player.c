@@ -388,8 +388,8 @@ void UFO_Player_HandleSpeedUp(void)
                 self->groundVel = self->groundVel - (self->groundVel >> 5);
 
             if (!(UFO_Setup->timer & 3)) {
-                RSDK.CreateEntity(UFO_Dust->objectID, 0, self->position.x, self->position.y);
-                RSDK.PlaySfx(UFO_Player->sfxGrittyGround, 0, 255);
+                CREATE_ENTITY(UFO_Dust, NULL, self->position.x, self->position.y);
+                RSDK.PlaySfx(UFO_Player->sfxGrittyGround, false, 255);
             }
         }
         else {
@@ -435,10 +435,10 @@ void UFO_Player_StateRun(void)
     else {
         if (self->field_90 >= 16) {
             if (!(UFO_Setup->timer & 3)) {
-                RSDK.CreateEntity(UFO_Dust->objectID, 0, self->position.x, self->position.y);
+                CREATE_ENTITY(UFO_Dust, NULL, self->position.x, self->position.y);
             }
             if (!(UFO_Setup->timer & 7))
-                RSDK.PlaySfx(UFO_Player->sfxSkid, 0, 255);
+                RSDK.PlaySfx(UFO_Player->sfxSkid, false, 255);
         }
         else {
             self->field_90++;
@@ -619,7 +619,7 @@ void UFO_Player_Unknown9(void)
         else if (self->timer == 16) {
             if (!UFO_Setup->timedOut) {
                 UFO_Setup->timedOut = true;
-                RSDK.CreateEntity(UFO_Message->objectID, (void *)2, self->position.x, self->position.y);
+                CREATE_ENTITY(UFO_Message, intToVoid(2), self->position.x, self->position.y);
             }
         }
     }

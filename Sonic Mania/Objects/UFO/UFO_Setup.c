@@ -349,7 +349,7 @@ void UFO_Setup_Unknown11(void)
         self->visible             = false;
         self->state               = UFO_Setup_Unknown13;
         SceneInfo->timeEnabled = true;
-        RSDK.CreateEntity(UFO_Message->objectID, 0, self->position.x, self->position.y);
+        CREATE_ENTITY(UFO_Message, intToVoid(0), self->position.x, self->position.y);
     }
     else {
         self->timer -= 0x10;
@@ -406,7 +406,7 @@ void UFO_Setup_Unknown13(void)
 
         if (!UFO_Setup->rings && !UFO_Setup->timedOut) {
             UFO_Setup->timedOut = true;
-            RSDK.CreateEntity(UFO_Message->objectID, (void *)3, self->position.x, self->position.y);
+            CREATE_ENTITY(UFO_Message, intToVoid(3), self->position.x, self->position.y);
             self->state = UFO_Setup_Unknown14;
         }
     }

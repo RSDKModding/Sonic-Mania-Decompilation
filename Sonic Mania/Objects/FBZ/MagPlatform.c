@@ -50,26 +50,26 @@ void MagPlatform_Unknown1(void)
     {
         bool32 groundStore = player->onGround;
         switch (Player_CheckCollisionBox(player, self, hitbox)) {
-            case 1:
+            case C_TOP:
                 if (!groundStore) {
                     self->stood = true;
-                    if (self->state == Platform_State_Collapsing && !self->collapseDelay)
-                        self->collapseDelay = 30;
+                    if (self->state == Platform_State_Collapse && !self->timer)
+                        self->timer = 30;
                     self->stoodPlayers |= 1 << playerID;
                     player->position.x += self->collisionOffset.x;
                     player->position.y += self->collisionOffset.y;
                     player->position.y &= 0xFFFF0000;
                 }
                 break;
-            case 2:
+            case C_LEFT:
                 if (player->onGround && player->right)
                     self->pushPlayersL |= 1 << playerID;
                 break;
-            case 3:
+            case C_RIGHT:
                 if (player->onGround && player->left)
                     self->pushPlayersR |= 1 << playerID;
                 break;
-            case 4:
+            case C_BOTTOM:
                 if (!player->onGround) {
 #if RETRO_USE_PLUS
                     if (!Player_CheckMightyUnspin(0x400, player, true, &player->uncurlTimer)) 

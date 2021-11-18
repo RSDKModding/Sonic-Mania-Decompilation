@@ -626,7 +626,7 @@ void GigaMetal_State_Unknown5(void)
             uint16 tile = RSDK.GetTileInfo(Zone->fgHigh, tileX, endY);
 
             if (tile != 0xFFFF) {
-                EntityBreakableWall *block = CREATE_ENTITY(BreakableWall, intToVoid(2), (tileX << 20) + 0x80000, spawnY);
+                EntityBreakableWall *block = CREATE_ENTITY(BreakableWall, intToVoid(BREAKWALL_TILE_DYNAMIC), (tileX << 20) + 0x80000, spawnY);
                 block->drawOrder           = Zone->drawOrderHigh;
                 block->layerID             = Zone->fgHigh;
                 block->tileInfo            = tile;
@@ -635,7 +635,7 @@ void GigaMetal_State_Unknown5(void)
                 block->timer               = delay;
                 block->active              = ACTIVE_NORMAL;
                 if (tileX > 224) {
-                    block                = CREATE_ENTITY(BreakableWall, intToVoid(2), (tileX << 20) - 0xDF80000, spawnY);
+                    block                = CREATE_ENTITY(BreakableWall, intToVoid(BREAKWALL_TILE_DYNAMIC), (tileX << 20) - 0xDF80000, spawnY);
                     block->drawOrder     = Zone->drawOrderHigh;
                     block->layerID       = Zone->fgHigh;
                     block->tileInfo      = tile;
@@ -741,7 +741,7 @@ void GigaMetal_State_Destroyed(void)
                 uint16 tile = RSDK.GetTileInfo(Zone->fgHigh, tileX, tileY);
                 if (tile != 0xFFFF) {
                     RSDK.SetTileInfo(Zone->fgHigh, tileX, tileY, 0xFFFF);
-                    EntityBreakableWall *block = CREATE_ENTITY(BreakableWall, intToVoid(1), spawnX, spawnY);
+                    EntityBreakableWall *block = CREATE_ENTITY(BreakableWall, intToVoid(BREAKWALL_TILE_FIXED), spawnX, spawnY);
                     block->drawOrder           = Zone->drawOrderHigh;
                     block->visible             = true;
                     block->tileInfo            = tile;

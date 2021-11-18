@@ -195,8 +195,8 @@ bool32 MMZ2Outro_CutsceneState_Unknown6(EntityCutsceneSeq *host)
     RSDK_THIS(MMZ2Outro);
 
     if (--self->flashTimer < 1) {
-        RSDK.CreateEntity(MMZLightning->objectID, MMZLightning_Unknown1, 0, 0);
-        RSDK.CreateEntity(MMZLightning->objectID, MMZLightning_Unknown3, 0, 0);
+        CREATE_ENTITY(MMZLightning, MMZLightning_Unknown1, 0, 0);
+        CREATE_ENTITY(MMZLightning, MMZLightning_Unknown3, 0, 0);
         RSDK.PlaySfx(MMZ2Outro->sfxThunda, false, 255);
         self->flashTimer = RSDK.Rand(120, 240);
 

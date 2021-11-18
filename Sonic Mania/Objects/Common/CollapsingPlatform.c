@@ -16,7 +16,7 @@ void CollapsingPlatform_Update(void)
             {
                 if (Player_CheckCollisionTouch(player, self, &self->hitbox) && player->characterID == ID_MIGHTY && player->jumpAbilityTimer > 1) {
                     StateMachine_Run(self->state);
-                    RSDK.PlaySfx(CollapsingPlatform->sfxCrumble, 0, 255);
+                    RSDK.PlaySfx(CollapsingPlatform->sfxCrumble, false, 255);
                     if (self->respawn) {
                         self->collapseDelay = 0;
                         self->playerPos.x   = 0;
@@ -31,7 +31,7 @@ void CollapsingPlatform_Update(void)
 #endif
         if (--self->collapseDelay == 0) {
             StateMachine_Run(self->state);
-            RSDK.PlaySfx(CollapsingPlatform->sfxCrumble, 0, 255);
+            RSDK.PlaySfx(CollapsingPlatform->sfxCrumble, false, 255);
             if (self->respawn) {
                 self->collapseDelay = 0;
                 self->playerPos.x   = 0;
@@ -54,7 +54,7 @@ void CollapsingPlatform_Update(void)
 #if RETRO_USE_PLUS
                 if (player->characterID == ID_MIGHTY && player->jumpAbilityTimer > 1) {
                     StateMachine_Run(self->state);
-                    RSDK.PlaySfx(CollapsingPlatform->sfxCrumble, 0, 255);
+                    RSDK.PlaySfx(CollapsingPlatform->sfxCrumble, false, 255);
                     if (self->respawn) {
                         self->collapseDelay = 0;
                         self->playerPos.x   = 0;
@@ -72,7 +72,7 @@ void CollapsingPlatform_Update(void)
             self->collapseDelay = self->delay;
             if (!self->delay) {
                 StateMachine_Run(self->state);
-                RSDK.PlaySfx(CollapsingPlatform->sfxCrumble, 0, 255);
+                RSDK.PlaySfx(CollapsingPlatform->sfxCrumble, false, 255);
                 if (self->respawn) {
                     self->collapseDelay = 0;
                     self->playerPos.x   = 0;
@@ -87,7 +87,7 @@ void CollapsingPlatform_Update(void)
         self->collapseDelay = self->delay;
         if (!self->delay) {
             StateMachine_Run(self->state);
-            RSDK.PlaySfx(CollapsingPlatform->sfxCrumble, 0, 255);
+            RSDK.PlaySfx(CollapsingPlatform->sfxCrumble, false, 255);
             if (self->respawn) {
                 self->collapseDelay = 0;
                 self->playerPos.x   = 0;
@@ -216,7 +216,7 @@ void CollapsingPlatform_State_Left(void)
 
     for (int32 y = 0; y < sy; ++y) {
         for (int32 x = 0; x < sx; ++x) {
-            EntityBreakableWall *tileChunk = CREATE_ENTITY(BreakableWall, intToVoid(2), tx, ty);
+            EntityBreakableWall *tileChunk = CREATE_ENTITY(BreakableWall, intToVoid(BREAKWALL_TILE_DYNAMIC), tx, ty);
             tx += 0x100000;
             tileChunk->layerID   = self->targetLayer;
             tileChunk->tileInfo  = *tiles;
@@ -248,7 +248,7 @@ void CollapsingPlatform_State_Right(void)
     int32 sy = self->size.y >> 20;
     for (int32 y = 0; y < sy; ++y) {
         for (int32 x = 0; x < sx; ++x) {
-            EntityBreakableWall *tileChunk = CREATE_ENTITY(BreakableWall, intToVoid(2), tx, ty);
+            EntityBreakableWall *tileChunk = CREATE_ENTITY(BreakableWall, intToVoid(BREAKWALL_TILE_DYNAMIC), tx, ty);
             tx += 0x100000;
             tileChunk->layerID   = self->targetLayer;
             tileChunk->tileInfo  = *tiles;
@@ -281,7 +281,7 @@ void CollapsingPlatform_State_Center(void)
     int32 sy = self->size.y >> 20;
     for (int32 y = 0; y < sy; ++y) {
         for (int32 x = 0; x < sx; ++x) {
-            EntityBreakableWall *tileChunk = CREATE_ENTITY(BreakableWall, intToVoid(2), tx, ty);
+            EntityBreakableWall *tileChunk = CREATE_ENTITY(BreakableWall, intToVoid(BREAKWALL_TILE_DYNAMIC), tx, ty);
             tx += 0x100000;
             tileChunk->layerID   = self->targetLayer;
             tileChunk->tileInfo  = *tiles;

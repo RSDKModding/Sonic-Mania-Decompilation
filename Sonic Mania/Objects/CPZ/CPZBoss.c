@@ -365,7 +365,7 @@ void CPZBoss_State_PlayerWin(void)
             {
                 if (platform->bossID == 2) {
                     platform->state         = TippingPlatform_Unknown1;
-                    platform->collapseDelay = 120;
+                    platform->timer = 120;
                 }
             }
 
@@ -412,7 +412,7 @@ void CPZBoss_State_HandleBossMatchFinish(void)
             {
                 if (platform->bossID == 1) {
                     platform->state         = TippingPlatform_Unknown1;
-                    platform->collapseDelay = 120;
+                    platform->timer = 120;
                 }
             }
 

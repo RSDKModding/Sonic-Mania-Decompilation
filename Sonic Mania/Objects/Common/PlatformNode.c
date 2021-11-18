@@ -14,6 +14,7 @@ void PlatformNode_Create(void *data) {}
 
 void PlatformNode_StageLoad(void) {}
 
+#if RETRO_INCLUDE_EDITOR
 void PlatformNode_EditorDraw(void)
 {
     RSDK_THIS(PlatformNode);
@@ -21,9 +22,7 @@ void PlatformNode_EditorDraw(void)
     RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
-void PlatformNode_EditorLoad(void)
-{
-    PlatformNode->aniFrames = RSDK.LoadSpriteAnimation("Editor/EditorIcons.bin", SCOPE_STAGE);
-}
+void PlatformNode_EditorLoad(void) { PlatformNode->aniFrames = RSDK.LoadSpriteAnimation("Editor/EditorIcons.bin", SCOPE_STAGE); }
+#endif
 
 void PlatformNode_Serialize(void) { RSDK_EDITABLE_VAR(PlatformNode, VAR_ENUM, nodeFlag); }

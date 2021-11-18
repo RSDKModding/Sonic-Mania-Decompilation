@@ -848,8 +848,9 @@ void DDWrecker_State_Die(void)
     if (!(Zone->timer % 3)) {
         RSDK.PlaySfx(DDWrecker->sfxExplosion, 0, 255);
         if (Zone->timer & 4) {
-            Entity *explosion = RSDK.CreateEntity(Explosion->objectID, intToVoid((RSDK.Rand(0, 256) > 192) + 2),
-                                                  (RSDK.Rand(-20, 20) << 16) + self->position.x, (RSDK.Rand(-20, 20) << 16) + self->position.y);
+            int x = self->position.x + (RSDK.Rand(-20, 20) << 16);
+            int y = self->position.y + (RSDK.Rand(-20, 20) << 16);
+            EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y);
 
             explosion->drawOrder = Zone->drawOrderHigh;
         }

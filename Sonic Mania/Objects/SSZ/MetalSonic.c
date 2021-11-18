@@ -1956,7 +1956,7 @@ void MetalSonic_StateWall_Fall(void)
         self->velocity.y = 0;
         self->drawPos.y = self->position.y;
         self->centerPos.y = self->position.y;
-        self->state = Platform_State_Normal;
+        self->state = Platform_State_Fixed;
         Camera_ShakeScreen(0, 0, 4);
         RSDK.PlaySfx(MetalSonic->sfxHit, false, 0xFF);
     }

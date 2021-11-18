@@ -48,20 +48,16 @@ void TMZ1Setup_StaticUpdate(void)
         int32 posY = ScreenInfo->centerY + ScreenInfo->position.y;
         if (posY >= 4192) {
             if (posY > 4528 && TMZ1Setup->stageState != 1 && !RSDK.GetEntityCount(TMZ1Setup->objectID, true))
-                RSDK.CreateEntity(TMZ1Setup->objectID, intToVoid(1), 0, 0);
+                CREATE_ENTITY(TMZ1Setup, intToVoid(1), 0, 0);
         }
         else if (TMZ1Setup->stageState && !RSDK.GetEntityCount(TMZ1Setup->objectID, true)) {
-            RSDK.CreateEntity(TMZ1Setup->objectID, intToVoid(0), 0, 0);
+            CREATE_ENTITY(TMZ1Setup, intToVoid(0), 0, 0);
         }
     }
     EntityActClear *actClear = RSDK_GET_ENTITY(SLOT_ACTCLEAR, ActClear);
-    if (!TMZ1Setup->reloadFlag && actClear->objectID == ActClear->objectID && actClear->state == ActClear_Unknown6 && !Player->gotHit[0]) {
-#if RETRO_USE_PLUS 
-        API.UnlockAchievement("ACH_TMZ");
-#else
-        APICallback_UnlockAchievement("ACH_TMZ");
-#endif
-        TMZ1Setup->reloadFlag = true;
+    if (!TMZ1Setup->hasAchievement && actClear->objectID == ActClear->objectID && actClear->state == ActClear_Unknown6 && !Player->gotHit[0]) {
+        API_UnlockAchievement("ACH_TMZ");
+        TMZ1Setup->hasAchievement = true;
     }
 }
 
@@ -119,7 +115,7 @@ void TMZ1Setup_StageLoad(void)
     if (isMainGameMode() && PlayerHelpers_CheckAct1())
         Zone->stageFinishCallback = TMZ1Setup_StageFinishCB;
     if (PlayerHelpers_CheckStageReload())
-        TMZ1Setup->reloadFlag = true;
+        TMZ1Setup->hasAchievement = true;
 }
 
 void TMZ1Setup_BGCallback_A(void)

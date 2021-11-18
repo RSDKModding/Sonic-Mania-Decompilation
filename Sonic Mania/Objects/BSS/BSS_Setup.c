@@ -318,8 +318,8 @@ void BSS_Setup_CollectRing(void)
     if (BSS_Setup->ringCount > 0) {
         BSS_Setup->ringCount--;
         if (!BSS_Setup->ringCount) {
-            RSDK.CreateEntity(BSS_Message->objectID, intToVoid(1), self->position.x, self->position.y);
-            RSDK.PlaySfx(BSS_Setup->sfxEvent, 0, 255);
+            CREATE_ENTITY(BSS_Message, intToVoid(1), self->position.x, self->position.y);
+            RSDK.PlaySfx(BSS_Setup->sfxEvent, false, 255);
         }
     }
 
@@ -848,7 +848,7 @@ void BSS_Setup_State_Exit(void)
     PauseMenu->disableEvents = true;
     self->maxSpeed         = 0;
     if (self->spinTimer <= 0) {
-        RSDK.CreateEntity(BSS_Message->objectID, intToVoid(2), self->position.x, self->position.y);
+        CREATE_ENTITY(BSS_Message, intToVoid(2), self->position.x, self->position.y);
         foreach_active(BSS_Player, player) { player->stateInput = StateMachine_None; }
     }
     else {

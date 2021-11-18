@@ -18,7 +18,7 @@ void RotatingStair_Create(void *data)
 {
     RSDK_THIS(RotatingStair);
     self->frameID   = 2;
-    self->collision = PLATFORM_C_1;
+    self->collision = PLATFORM_C_SOLID_ALL;
     self->speed     = 3;
     if (self->direction)
         self->amplitude.x = -self->amplitude.x;

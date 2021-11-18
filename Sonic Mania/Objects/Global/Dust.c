@@ -63,7 +63,7 @@ void Dust_State_GlideSlide(void)
         self->visible = false;
         if (self->timer == 0 && player->onGround) {
             Hitbox *playerHitbox = Player_GetHitbox(player);
-            EntityDust *dust     = (EntityDust *)RSDK.CreateEntity(Dust->objectID, self, player->position.x, player->position.y - 0x40000);
+            EntityDust *dust     = CREATE_ENTITY(Dust, self, player->position.x, player->position.y - 0x40000);
             dust->state          = Dust_State_DropDash;
             dust->position.y += playerHitbox->bottom << 16;
             dust->drawOrder = player->drawOrder;
@@ -84,7 +84,7 @@ void Dust_State_Skid(void)
         self->visible = false;
         if (self->timer == 0 && player->onGround) {
             Hitbox *playerHitbox = Player_GetHitbox(player);
-            EntityDust *dust     = (EntityDust *)RSDK.CreateEntity(Dust->objectID, self, player->position.x, player->position.y);
+            EntityDust *dust     = CREATE_ENTITY(Dust, self, player->position.x, player->position.y);
             dust->state          = Dust_State_DropDash;
             dust->position.y += playerHitbox->bottom << 16;
             dust->drawOrder = player->drawOrder;

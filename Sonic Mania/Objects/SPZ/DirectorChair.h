@@ -38,7 +38,7 @@ typedef struct {
     Vector2 drawPos;
     Vector2 collisionOffset;
     int32 stood;
-    int32 collapseDelay;
+    int32 timer;
     int32 size;
     uint8 stoodPlayers;
     uint8 pushPlayersL;

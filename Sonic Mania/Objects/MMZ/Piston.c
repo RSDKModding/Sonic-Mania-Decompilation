@@ -37,7 +37,7 @@ void Piston_Create(void *data)
     int32 type              = self->type;
     self->spawnType     = type;
     self->type            = PLATFORM_FIXED;
-    self->collisionType   = PLATFORM_C_1;
+    self->collisionType   = PLATFORM_C_SOLID_ALL;
     if (type > 3)
         self->size += 3;
     Platform_Create(NULL);

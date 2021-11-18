@@ -116,7 +116,7 @@ void DirectorChair_StateCollide_Chair(void)
             if (self->state == DirectorChair_Unknown2 && player->state == Player_State_MightyHammerDrop)
                 player->state = Player_State_Air;
 #endif
-            self->collapseDelay = 0;
+            self->timer = 0;
             if (!prevOnGround) {
                 self->stoodPlayers |= 1 << playerID;
                 self->stood = true;
@@ -126,7 +126,7 @@ void DirectorChair_StateCollide_Chair(void)
             }
         }
         if (Player_CheckCollisionBox(player, self, &DirectorChair->hitbox2) == C_TOP) {
-            self->collapseDelay = 0;
+            self->timer = 0;
             if (!prevOnGround) {
                 self->stoodPlayers |= 1 << playerID;
                 player->position.x += self->collisionOffset.x;
@@ -135,7 +135,7 @@ void DirectorChair_StateCollide_Chair(void)
             }
         }
         if (Player_CheckCollisionBox(player, self, &DirectorChair->hitbox3) == C_TOP) {
-            self->collapseDelay = 0;
+            self->timer = 0;
             if (!prevOnGround) {
                 self->stoodPlayers |= 1 << playerID;
                 player->position.x += self->collisionOffset.x;
@@ -239,8 +239,8 @@ void DirectorChair_Unknown5(void)
 {
     RSDK_THIS(DirectorChair);
 
-    if (++self->collapseDelay >= 60) {
-        self->collapseDelay = 0;
+    if (++self->timer >= 60) {
+        self->timer = 0;
         self->field_E4      = 0;
         if (!self->type) {
             ++DirectorChair->field_4;

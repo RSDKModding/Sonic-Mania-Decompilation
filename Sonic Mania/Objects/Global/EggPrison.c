@@ -255,8 +255,7 @@ void EggPrison_State_Activated(void)
         case EGGPRISON_FLYING:
         case EGGPRISON_DUD:
             for (int32 i = 0; i < 10; ++i) {
-                EntityAnimals *animals =
-                    (EntityAnimals *)RSDK.CreateEntity(Animals->objectID, intToVoid(Animals->animalTypes[i & 1] + 1),
+                EntityAnimals *animals = CREATE_ENTITY(Animals, intToVoid(Animals->animalTypes[i & 1] + 1),
                                                        (((RSDK.Rand(0, 48) & -4) - 24) << 16) + self->position.x, self->position.y + 0x40000);
                 animals->delay     = 4 * i;
                 animals->state     = Animals_State_BounceAround;
@@ -267,8 +266,7 @@ void EggPrison_State_Activated(void)
         case EGGPRISON_RINGS: {
             int32 angle = 144;
             for (int32 r = 0; r < 6; ++r) {
-                EntityRing *ring = (EntityRing *)RSDK.CreateEntity(
-                    Ring->objectID, self, (((RSDK.Rand(0, 48) & 0xFFFFFFFC) - 24) << 16) + self->position.x, self->position.y);
+                EntityRing *ring = CREATE_ENTITY(Ring, self, (((RSDK.Rand(0, 48) & 0xFFFFFFFC) - 24) << 16) + self->position.x, self->position.y);
                 ring->velocity.x              = RSDK.Cos256(angle) << 9;
                 ring->velocity.y              = RSDK.Sin256(angle) << 9;
                 ring->animator.animationSpeed = 512;
@@ -314,9 +312,8 @@ void EggPrison_State_Activated(void)
         }
         case EGGPRISON_ANIMALS:
             for (int32 a = 0; a < 10; ++a) {
-                EntityAnimals *animals = (EntityAnimals *)RSDK.CreateEntity(Animals->objectID, intToVoid(Animals->animalTypes[a & 1] + 1),
-                                                                            (((RSDK.Rand(0, 48) & 0xFFFFFFFC) - 24) << 16) + self->position.x,
-                                                                            self->position.y + 0x40000);
+                EntityAnimals *animals = CREATE_ENTITY(Animals, intToVoid(Animals->animalTypes[a & 1] + 1),
+                                                       (((RSDK.Rand(0, 48) & 0xFFFFFFFC) - 24) << 16) + self->position.x, self->position.y + 0x40000);
                 animals->delay         = 4 * a;
                 animals->state         = Animals_State_BounceAround;
                 animals->behaviour     = 1;

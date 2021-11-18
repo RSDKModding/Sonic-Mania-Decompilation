@@ -232,7 +232,7 @@ void MeterDroid_PopPlatforms(void)
     foreach_active(GasPlatform, platform)
     {
         platform->type          = 2;
-        platform->collapseDelay = delay;
+        platform->timer = delay;
         delay += 16;
         platform->state = GasPlatform_Unknown4;
     }

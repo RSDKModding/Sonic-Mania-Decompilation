@@ -53,8 +53,8 @@ void Newspaper_Create(void *data)
         self->hitbox.bottom = 16;
     }
 #else
-    self->collision = PLATFORM_C_1;
-    self->type      = PLATFORM_5;
+    self->collision = PLATFORM_C_SOLID_ALL;
+    self->type      = PLATFORM_CONTROLLED;
     Platform_Create(NULL);
     RSDK.SetSpriteAnimation(Newspaper->aniFrames, 0, &self->animator, true, 0);
 #endif

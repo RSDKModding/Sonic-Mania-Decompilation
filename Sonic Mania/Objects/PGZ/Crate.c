@@ -31,9 +31,9 @@ void Crate_Create(void *data)
 
     int32 frameID = self->frameID;
     if (frameID == 3)
-        self->collision = PLATFORM_C_4;
+        self->collision = PLATFORM_C_SOLID_NONE;
     else
-        self->collision = PLATFORM_C_1;
+        self->collision = PLATFORM_C_SOLID_ALL;
     Platform_Create(NULL);
     self->frameID = frameID;
 
@@ -252,13 +252,13 @@ void Crate_ApplyGravity(void)
         }
     }
     self->position.y += 0x10000;
-    self->collapseDelay = 15;
+    self->timer = 15;
     self->state         = Crate_WaitToFall;
 }
 void Crate_WaitToFall(void)
 {
     RSDK_THIS(Crate);
-    if (--self->collapseDelay <= 0)
+    if (--self->timer <= 0)
         self->state = Crate_Fall;
 }
 void Crate_Fall(void)

@@ -17,7 +17,7 @@ void TilePlatform_Draw(void)
 void TilePlatform_Create(void *data)
 {
     RSDK_THIS(TilePlatform);
-    self->collision = PLATFORM_C_2;
+    self->collision = PLATFORM_C_USE_TILES;
     Platform_Create(NULL);
     if (!SceneInfo->inEditor) {
         self->hitbox.bottom = self->size.y >> 17;

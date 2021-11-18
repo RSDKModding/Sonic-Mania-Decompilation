@@ -207,12 +207,12 @@ bool32 RollerMKII_HandlePlatformCollisions(EntityPlatform *platform)
     RSDK_THIS(RollerMKII);
     bool32 flag = false;
 
-    if (platform->state != Platform_State_Falling && platform->state != Platform_State_OffScreenReset) {
+    if (platform->state != Platform_State_Collapse_Falling && platform->state != Platform_State_Collapse_CheckReset) {
         platform->position.x = platform->drawPos.x - platform->collisionOffset.x;
         platform->position.y = platform->drawPos.y - platform->collisionOffset.y;
         if (platform->collision) {
-            if (platform->collision != PLATFORM_C_1) {
-                if (platform->collision == PLATFORM_C_2
+            if (platform->collision != PLATFORM_C_SOLID_ALL) {
+                if (platform->collision == PLATFORM_C_USE_TILES
                     && RSDK.CheckObjectCollisionTouchBox(platform, &platform->hitbox, self, &RollerMKII->hitbox2)) {
                     if (self->collisionLayers & Zone->moveID) {
                         TileLayer *move  = RSDK.GetSceneLayer(Zone->moveLayer);

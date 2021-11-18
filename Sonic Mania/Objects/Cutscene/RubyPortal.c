@@ -117,7 +117,7 @@ void RubyPortal_Unknown1(void)
             for (int32 y = 4; y < 52; y += 3) {
                 uint16 tile = RSDK.GetTileInfo(Zone->fgLow, tx, ty);
                 if (tile != 0xFFFF) {
-                    EntityBreakableWall *wall = CREATE_ENTITY(BreakableWall, intToVoid(1), spawnX, spawnY);
+                    EntityBreakableWall *wall = CREATE_ENTITY(BreakableWall, intToVoid(BREAKWALL_TILE_FIXED), spawnX, spawnY);
                     wall->drawOrder           = Zone->drawOrderLow + 1;
                     wall->layerID             = Zone->fgLow;
                     wall->tileInfo            = tile;
@@ -136,7 +136,7 @@ void RubyPortal_Unknown1(void)
 
                 tile = RSDK.GetTileInfo(Zone->fgHigh, tx, ty);
                 if (tile != 0xFFFF) {
-                    EntityBreakableWall *wall = CREATE_ENTITY(BreakableWall, intToVoid(1), spawnX, spawnY);
+                    EntityBreakableWall *wall = CREATE_ENTITY(BreakableWall, intToVoid(BREAKWALL_TILE_FIXED), spawnX, spawnY);
                     wall->drawOrder           = Zone->drawOrderHigh;
                     wall->layerID             = Zone->fgHigh;
                     wall->tileInfo            = tile;

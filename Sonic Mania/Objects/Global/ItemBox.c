@@ -777,7 +777,7 @@ void ItemBox_Break(EntityItemBox *itemBox, void *p)
         EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
         ++session->items[RSDK.GetEntityID(player)];
     }
-    RSDK.CreateEntity(TYPE_BLANK, 0, itemBox->position.x, itemBox->position.y);
+    RSDK.CreateEntity(TYPE_BLANK, NULL, itemBox->position.x, itemBox->position.y);
 #if RETRO_USE_PLUS
     if (player->characterID == ID_MIGHTY && player->animator.animationID == ANI_DROPDASH)
         player->velocity.y -= 0x10000;
@@ -785,7 +785,7 @@ void ItemBox_Break(EntityItemBox *itemBox, void *p)
 #endif
         player->velocity.y = -(player->velocity.y + 2 * player->gravityStrength);
     itemBox->storedEntity  = (Entity *)player;
-    itemBox->alpha         = 256;
+    itemBox->alpha         = 0x100;
     itemBox->contentsSpeed = -0x30000;
     itemBox->active        = ACTIVE_NORMAL;
     itemBox->velocity.y    = -0x20000;
@@ -797,12 +797,12 @@ void ItemBox_Break(EntityItemBox *itemBox, void *p)
     RSDK.SetSpriteAnimation(0xFFFF, 0, &itemBox->animatorOverlay, true, 0);
     RSDK.SetSpriteAnimation(0xFFFF, 0, &itemBox->animatorDebris, true, 0);
 
-    EntityExplosion *explosion = (EntityExplosion *)RSDK.CreateEntity(Explosion->objectID, 0, itemBox->position.x, itemBox->position.y - 0x100000);
+    EntityExplosion *explosion = CREATE_ENTITY(Explosion, NULL, itemBox->position.x, itemBox->position.y - 0x100000);
     explosion->drawOrder       = Zone->drawOrderHigh;
 
     for (int32 d = 0; d < 6; ++d) {
-        EntityDebris *debris = (EntityDebris *)RSDK.CreateEntity(Debris->objectID, 0, itemBox->position.x + RSDK.Rand(-0x80000, 0x80000),
-                                                                 itemBox->position.y + RSDK.Rand(-0x80000, 0x80000));
+        EntityDebris *debris =
+            CREATE_ENTITY(Debris, NULL, itemBox->position.x + RSDK.Rand(-0x80000, 0x80000), itemBox->position.y + RSDK.Rand(-0x80000, 0x80000));
         debris->state        = Debris_State_Fall;
         debris->gravity      = 0x4000;
         debris->velocity.x   = RSDK.Rand(0, 0x20000);
@@ -815,7 +815,7 @@ void ItemBox_Break(EntityItemBox *itemBox, void *p)
         RSDK.SetSpriteAnimation(ItemBox->aniFrames, 6, &debris->animator, true, RSDK.Rand(0, 4));
     }
 
-    RSDK.PlaySfx(ItemBox->sfxDestroy, 0, 255);
+    RSDK.PlaySfx(ItemBox->sfxDestroy, false, 255);
     itemBox->active = ACTIVE_NORMAL;
     if (itemBox->type == ITEMBOX_RANDOM) {
 #if RETRO_USE_PLUS
@@ -901,7 +901,7 @@ bool32 ItemBox_HandlePlatformCollision(void *p)
     RSDK_THIS(ItemBox);
 
     bool32 collided = false;
-    if (platform->state != Platform_State_Falling && platform->state != Platform_State_OffScreenReset) {
+    if (platform->state != Platform_State_Collapse_Falling && platform->state != Platform_State_Collapse_CheckReset) {
         platform->position.x = platform->drawPos.x - platform->collisionOffset.x;
         platform->position.y = platform->drawPos.y - platform->collisionOffset.y;
         if (platform->collision) {
@@ -946,8 +946,8 @@ bool32 ItemBox_HandlePlatformCollision(void *p)
         self->updateRange.y = platform->updateRange.y;
         if (self->state == ItemBox_State_Falling)
             self->state = ItemBox_State_Normal;
-        if (platform->state == Platform_State_Collapsing && !platform->collapseDelay)
-            platform->collapseDelay = 30;
+        if (platform->state == Platform_State_Collapse && !platform->timer)
+            platform->timer = 30;
         platform->stood      = true;
         self->velocity.y   = 0;
         platform->position.x = platform->centerPos.x;
@@ -1154,6 +1154,10 @@ void ItemBox_EditorLoad(void)
     RSDK_ENUM_VAR("No Filter", PLANEFILTER_NONE);
     RSDK_ENUM_VAR("Plane A", PLANEFILTER_A);
     RSDK_ENUM_VAR("Plane B", PLANEFILTER_B);
+
+    RSDK_ACTIVE_VAR(ItemBox, direction);
+    RSDK_ENUM_VAR("No Flip", FLIP_NONE);
+    RSDK_ENUM_VAR("Flip Y", FLIP_X);
 }
 #endif
 

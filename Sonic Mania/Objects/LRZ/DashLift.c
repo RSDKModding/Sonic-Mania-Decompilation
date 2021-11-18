@@ -18,7 +18,7 @@ void DashLift_Create(void *data)
 {
     RSDK_THIS(DashLift);
 
-    self->collision = PLATFORM_C_1;
+    self->collision = PLATFORM_C_SOLID_ALL;
     Platform_Create(NULL);
 
     if (!SceneInfo->inEditor) {

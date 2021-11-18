@@ -58,15 +58,17 @@ void BGSwitch_EditorDraw(void)
     RSDK.SetSpriteAnimation(BGSwitch->aniFrames, 0, &self->animator, true, 5);
     RSDK.DrawSprite(&self->animator, NULL, false);
 
-    //Bounds
-    RSDK.DrawLine(self->position.x - self->size.x, self->position.y - self->size.y,
-                  self->position.x + self->size.x, self->position.y - self->size.y, 0xFFFF00, 0xFF, INK_NONE, false);
-    RSDK.DrawLine(self->position.x - self->size.x, self->position.y + self->size.y,
-                  self->position.x + self->size.x, self->position.y + self->size.y, 0xFFFF00, 0xFF, INK_NONE, false);
-    RSDK.DrawLine(self->position.x - self->size.x, self->position.y - self->size.y,
-                  self->position.x - self->size.x, self->position.y + self->size.y, 0xFFFF00, 0xFF, INK_NONE, false);
-    RSDK.DrawLine(self->position.x + self->size.x, self->position.y - self->size.y,
-                  self->position.x + self->size.x, self->position.y + self->size.y, 0xFFFF00, 0xFF, INK_NONE, false);
+    if (showGizmos()) {
+        // Bounds
+        RSDK.DrawLine(self->position.x - self->size.x, self->position.y - self->size.y, self->position.x + self->size.x,
+                      self->position.y - self->size.y, 0xFFFF00, 0xFF, INK_NONE, false);
+        RSDK.DrawLine(self->position.x - self->size.x, self->position.y + self->size.y, self->position.x + self->size.x,
+                      self->position.y + self->size.y, 0xFFFF00, 0xFF, INK_NONE, false);
+        RSDK.DrawLine(self->position.x - self->size.x, self->position.y - self->size.y, self->position.x - self->size.x,
+                      self->position.y + self->size.y, 0xFFFF00, 0xFF, INK_NONE, false);
+        RSDK.DrawLine(self->position.x + self->size.x, self->position.y - self->size.y, self->position.x + self->size.x,
+                      self->position.y + self->size.y, 0xFFFF00, 0xFF, INK_NONE, false);
+    }
 }
 
 void BGSwitch_EditorLoad(void) { BGSwitch->aniFrames = RSDK.LoadSpriteAnimation("Editor/EditorIcons.bin", SCOPE_STAGE); }

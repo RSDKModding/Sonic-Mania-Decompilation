@@ -22,8 +22,9 @@ void FBZMissile_Draw(void)
 void FBZMissile_Create(void *data)
 {
     RSDK_THIS(FBZMissile);
-    if (self->type != 2 && !self->interval)
+    if (self->type != FBZMISSILE_HULL && !self->interval)
         self->interval = -16;
+
     self->drawFX = FX_FLIP;
     if (!SceneInfo->inEditor) {
         self->active        = ACTIVE_BOUNDS;
@@ -35,27 +36,27 @@ void FBZMissile_Create(void *data)
             self->type = voidToInt(data);
 
         switch (self->type) {
-            case 0:
+            case FBZMISSILE_LAUNCHER_V:
                 RSDK.SetSpriteAnimation(FBZMissile->aniFrames, 0, &self->animator, true, 0);
                 self->direction *= FLIP_Y;
                 self->drawOrder = Zone->drawOrderHigh;
-                self->state     = FBZMissile_Unknown1;
+                self->state     = FBZMissile_StateLauncher_Delay;
                 break;
-            case 1:
+            case FBZMISSILE_LAUNCHER_H:
                 RSDK.SetSpriteAnimation(FBZMissile->aniFrames, 1, &self->animator, true, 0);
                 self->state = FBZMissile_Unknown3;
                 break;
-            case 2:
+            case FBZMISSILE_HULL:
                 RSDK.SetSpriteAnimation(FBZMissile->aniFrames, 3, &self->animator, true, 0);
                 self->drawOrder = Zone->drawOrderHigh;
                 self->timer     = self->interval;
-                self->state     = FBZMissile_Unknown8;
+                self->state     = FBZMissile_State_Hull;
                 break;
-            case 3:
+            case FBZMISSILE_VERTICAL:
                 RSDK.SetSpriteAnimation(FBZMissile->aniFrames, 2, &self->animator, true, 0);
-                self->state = FBZMissile_Unknown5;
+                self->state = FBZMissile_StateVertical_Rise;
                 break;
-            case 4:
+            case FBZMISSILE_HORIZONTAL:
                 RSDK.SetSpriteAnimation(FBZMissile->aniFrames, 1, &self->animator, true, 0);
                 self->state = FBZMissile_Unknown7;
                 break;
@@ -84,13 +85,13 @@ void FBZMissile_StageLoad(void)
     FBZMissile->sfxExplosion   = RSDK.GetSFX("Stage/Explosion2.wav");
 }
 
-void FBZMissile_Unknown1(void)
+void FBZMissile_StateLauncher_Delay(void)
 {
     RSDK_THIS(FBZMissile);
 
     if (!((Zone->timer + self->intervalOffset) % self->interval)) {
         self->timer = 42;
-        self->state = FBZMissile_Unknown2;
+        self->state = FBZMissile_StateLauncher_Launch;
     }
     if (!(Zone->timer & 1)) {
         if (self->animator.frameID > 0)
@@ -98,7 +99,7 @@ void FBZMissile_Unknown1(void)
     }
 }
 
-void FBZMissile_Unknown2(void)
+void FBZMissile_StateLauncher_Launch(void)
 {
     RSDK_THIS(FBZMissile);
 
@@ -107,14 +108,13 @@ void FBZMissile_Unknown2(void)
             self->animator.frameID++;
     }
 
-    self->timer--;
-    switch (self->timer) {
-        case 1: self->state = FBZMissile_Unknown1; break;
+    switch (--self->timer) {
+        case 1: self->state = FBZMissile_StateLauncher_Delay; break;
         case 9:
         case 25:
         case 41: {
             RSDK.PlaySfx(FBZMissile->sfxPush, false, 255);
-            EntityFBZMissile *missile = CREATE_ENTITY(FBZMissile, intToVoid(3), self->position.x, self->position.y);
+            EntityFBZMissile *missile = CREATE_ENTITY(FBZMissile, intToVoid(FBZMISSILE_VERTICAL), self->position.x, self->position.y);
             missile->isPermanent      = true;
             missile->velocity.y       = -0x60000;
             missile->drawOrder        = self->drawOrder - 1;
@@ -132,7 +132,7 @@ void FBZMissile_Unknown3(void)
 
     if (!((Zone->timer + self->intervalOffset) % self->interval)) {
         RSDK.PlaySfx(FBZMissile->sfxPush2, false, 255);
-        EntityFBZMissile *missile = CREATE_ENTITY(FBZMissile, intToVoid(4), self->position.x, self->position.y);
+        EntityFBZMissile *missile = CREATE_ENTITY(FBZMissile, intToVoid(FBZMISSILE_HORIZONTAL), self->position.x, self->position.y);
         missile->drawOrder        = self->drawOrder;
         missile->direction        = self->direction;
         if (self->direction) {
@@ -162,7 +162,7 @@ void FBZMissile_Unknown4(void)
     }
 }
 
-void FBZMissile_Unknown5(void)
+void FBZMissile_StateVertical_Rise(void)
 {
     RSDK_THIS(FBZMissile);
 
@@ -170,7 +170,7 @@ void FBZMissile_Unknown5(void)
     self->velocity.y += 0x1800;
     if (self->velocity.y >= 0) {
         self->drawOrder = Zone->drawOrderLow;
-        self->state     = FBZMissile_Unknown6;
+        self->state     = FBZMissile_StateVertical_Fall;
     }
     if (self->velocity.y > -0x1D000)
         self->position.x += self->velocity.x;
@@ -179,7 +179,7 @@ void FBZMissile_Unknown5(void)
         destroyEntity(self);
 }
 
-void FBZMissile_Unknown6(void)
+void FBZMissile_StateVertical_Fall(void)
 {
     RSDK_THIS(FBZMissile);
 
@@ -213,19 +213,19 @@ void FBZMissile_Unknown6(void)
         if (!RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0xC0000, false)) {
             foreach_active(FBZMissile, missile)
             {
-                if (missile->type == 2 && RSDK.CheckObjectCollisionTouchBox(missile, &FBZMissile->hitbox3, self, &FBZMissile->hitbox1)) {
+                if (missile->type == FBZMISSILE_HULL && RSDK.CheckObjectCollisionTouchBox(missile, &FBZMissile->hitbox3, self, &FBZMissile->hitbox1)) {
                     if (--missile->timer <= 0) {
                         destroyEntity(missile);
                         RSDK.PlaySfx(Player->sfxRelease, false, 255);
                     }
-                    CREATE_ENTITY(Explosion, intToVoid(3), self->position.x, self->position.y + 0x30000)->drawOrder = Zone->drawOrderHigh;
+                    CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSSPUFF), self->position.x, self->position.y + 0x30000)->drawOrder = Zone->drawOrderHigh;
                     RSDK.PlaySfx(FBZMissile->sfxExplosion, false, 255);
                     destroyEntity(self);
                 }
             }
         }
         else {
-            CREATE_ENTITY(Explosion, intToVoid(3), self->position.x, self->position.y + 0x30000)->drawOrder = Zone->drawOrderHigh;
+            CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSSPUFF), self->position.x, self->position.y + 0x30000)->drawOrder = Zone->drawOrderHigh;
             RSDK.PlaySfx(FBZMissile->sfxExplosion, false, 255);
             destroyEntity(self);
         }
@@ -257,7 +257,7 @@ void FBZMissile_Unknown7(void)
     }
 }
 
-void FBZMissile_Unknown8(void)
+void FBZMissile_State_Hull(void)
 {
     RSDK_THIS(FBZMissile);
     self->position.x += self->velocity.x;
@@ -280,9 +280,45 @@ void FBZMissile_Unknown8(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void FBZMissile_EditorDraw(void) {}
+void FBZMissile_EditorDraw(void)
+{
+    RSDK_THIS(FBZMissile);
 
-void FBZMissile_EditorLoad(void) {}
+    int dir = self->direction;
+    switch (self->type) {
+        case FBZMISSILE_LAUNCHER_V:
+            RSDK.SetSpriteAnimation(FBZMissile->aniFrames, 0, &self->animator, true, 0);
+            self->direction *= FLIP_Y;
+            self->drawOrder = Zone->drawOrderHigh;
+            break;
+        case FBZMISSILE_LAUNCHER_H:
+            RSDK.SetSpriteAnimation(FBZMissile->aniFrames, 1, &self->animator, true, 0);
+            break;
+        case FBZMISSILE_HULL:
+            RSDK.SetSpriteAnimation(FBZMissile->aniFrames, 3, &self->animator, true, 0);
+            self->drawOrder = Zone->drawOrderHigh;
+            break;
+        default: break;
+    }
+
+    FBZMissile_Draw();
+
+    self->direction = dir;
+}
+
+void FBZMissile_EditorLoad(void)
+{
+    FBZMissile->aniFrames = RSDK.LoadSpriteAnimation("FBZ/Missile.bin", SCOPE_STAGE);
+
+    RSDK_ACTIVE_VAR(FBZMissile, type);
+    RSDK_ENUM_VAR("Launcher (Vertical)", FBZMISSILE_LAUNCHER_V);
+    RSDK_ENUM_VAR("Launcher (Horizontal)", FBZMISSILE_LAUNCHER_H);
+    RSDK_ENUM_VAR("Hull", FBZMISSILE_HULL);
+
+    RSDK_ACTIVE_VAR(FBZMissile, direction);
+    RSDK_ENUM_VAR("No Flip", FLIP_NONE);
+    RSDK_ENUM_VAR("Flip", FLIP_X);
+}
 #endif
 
 void FBZMissile_Serialize(void)

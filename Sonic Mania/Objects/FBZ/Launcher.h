@@ -12,8 +12,8 @@ typedef struct {
 // Entity Class
 typedef struct {
     MANIA_PLATFORM_BASE
-    int32 field_CC;
-    int32 field_D0;
+    int32 releaseDelay;
+    int32 speedIncDelay;
 } EntityLauncher;
 
 // Object Struct
@@ -33,9 +33,9 @@ void Launcher_EditorLoad(void);
 void Launcher_Serialize(void);
 
 // Extra Entity Functions
-void Launcher_Unknown1(void);
-void Launcher_Unknown2(void);
-void Launcher_Unknown3(void);
-void Launcher_Unknown4(void);
+void Launcher_StateCollide(void);
+void Launcher_State_None(void);
+void Launcher_State_HandleLaunch(void);
+void Launcher_State_ReturnToStart(void);
 
 #endif //!OBJ_LAUNCHER_H

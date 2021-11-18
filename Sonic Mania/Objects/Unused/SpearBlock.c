@@ -75,8 +75,9 @@ void SpearBlock_DebugDraw(void)
 }
 void SpearBlock_DebugSpawn(void)
 {
-    RSDK_THIS(SpearBlock);
-    RSDK.CreateEntity(SpearBlock->objectID, NULL, self->position.x, self->position.y);
+    RSDK_THIS(DebugMode);
+
+    CREATE_ENTITY(SpearBlock, NULL, self->position.x, self->position.y);
 }
 
 void SpearBlock_CheckPlayerCollisions(void)

@@ -9,7 +9,7 @@ void Syringe_Update(void)
         if (self->offsetY < 0x280000) {
             self->offsetY += 0x8000;
             if (!(Zone->timer & 3))
-                RSDK.CreateEntity(Reagent->objectID, intToVoid(self->type), self->position.x, self->position.y + 0x680000);
+                CREATE_ENTITY(Reagent, intToVoid(self->type), self->position.x, self->position.y + 0x680000);
         }
         self->active = ACTIVE_NORMAL;
     }

@@ -13,7 +13,7 @@ void Turntable_Update(void)
     {
         int32 pID = RSDK.GetEntityID(player);
         if (!((1 << pID) & self->activePlayers)) {
-            if (Player_CheckCollisionBox(player, self, &self->hitbox) == 1) {
+            if (Player_CheckCollisionBox(player, self, &self->hitbox) == C_TOP) {
 #if RETRO_USE_PLUS
                 if (player->state == Player_State_MightyHammerDrop || player->state == Player_State_BubbleBounce)
                     continue;
@@ -28,19 +28,19 @@ void Turntable_Update(void)
                 player->velocity.x      = 0;
                 player->velocity.y      = 0;
                 player->groundVel       = 0;
-                player->onGround        = 1;
+                player->onGround        = true;
                 player->state           = Player_State_None;
 
                 int32 dist = abs(player->position.x - self->position.x) >> 0x10;
 
                 if (dist >= 0x10) {
                     if (player->position.x <= self->position.x) {
-                        self->field_78[pID] = 512;
-                        self->field_98[pID] = 12;
+                        self->playerAngles[pID] = 512;
+                        self->playerFrames[pID] = 12;
                     }
                     else {
-                        self->field_78[pID] = 0;
-                        self->field_98[pID] = 0;
+                        self->playerAngles[pID] = 0;
+                        self->playerFrames[pID] = 0;
                     }
                 }
                 else {
@@ -53,11 +53,11 @@ void Turntable_Update(void)
                     if (player->position.x >= self->position.x)
                         angX = distX;
                     dist                  = 0x10;
-                    self->field_78[pID] = 4 * RSDK.ATan2(angX, angY);
-                    self->field_98[pID] = 0;
+                    self->playerAngles[pID] = 4 * RSDK.ATan2(angX, angY);
+                    self->playerFrames[pID] = 0;
                 }
-                self->field_88[pID] = dist;
-                RSDK.SetSpriteAnimation(player->aniFrames, 34, &player->animator, true, self->field_98[pID]);
+                self->playerDistance[pID] = dist;
+                RSDK.SetSpriteAnimation(player->aniFrames, ANI_TWISTER, &player->animator, true, self->playerFrames[pID]);
                 Hitbox *hitbox     = Player_GetHitbox(player);
                 player->position.y = self->position.y - (hitbox->bottom << 16) - (self->size.y >> 1);
             }
@@ -66,21 +66,21 @@ void Turntable_Update(void)
             player->velocity.x    = 0;
             player->velocity.y    = 0;
             player->groundVel     = 0;
-            self->field_78[pID] = (self->angleVel + self->field_78[pID]) & 0x3FF;
+            self->playerAngles[pID] = (self->angleVel + self->playerAngles[pID]) & 0x3FF;
             player->position.x    = self->position.x;
-            player->position.x += (RSDK.Cos1024(self->field_78[pID]) << 6) * self->field_88[pID];
+            player->position.x += (RSDK.Cos1024(self->playerAngles[pID]) << 6) * self->playerDistance[pID];
 
             int32 frame = 0;
             if (player->direction)
-                frame = 24 - self->field_78[pID] / 42;
+                frame = 24 - self->playerAngles[pID] / 42;
             else
-                frame = self->field_78[pID] / 42 % 24;
+                frame = self->playerAngles[pID] / 42 % 24;
 
-            if (self->field_78[pID] < 512)
+            if (self->playerAngles[pID] < 512)
                 player->drawOrder = Zone->playerDrawHigh;
             else
                 player->drawOrder = Zone->playerDrawLow;
-            player->animator.frameID = (self->field_98[pID] + frame) % -24;
+            player->animator.frameID = (self->playerFrames[pID] + frame) % -24;
             if (player->jumpPress) {
                 Player_StartJump(player);
             }
@@ -143,9 +143,9 @@ void Turntable_SetupSize(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void Turntable_EditorDraw(void) {}
+void Turntable_EditorDraw(void) { Turntable_Draw(); }
 
-void Turntable_EditorLoad(void) {}
+void Turntable_EditorLoad(void) { Turntable->aniFrames = RSDK.LoadSpriteAnimation("PSZ1/Turntable.bin", SCOPE_STAGE); }
 #endif
 
 void Turntable_Serialize(void)

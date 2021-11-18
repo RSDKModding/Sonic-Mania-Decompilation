@@ -583,7 +583,7 @@ bool32 AIZSetup_Cutscene1_Unknown9(Entity *h)
         fxRuby = (EntityFXRuby *)AIZSetup->fxRuby;
     }
     else {
-        fxRuby            = (EntityFXRuby *)RSDK.CreateEntity(FXRuby->objectID, 0, ruby->position.x, ruby->position.y);
+        fxRuby            = CREATE_ENTITY(FXRuby, NULL, ruby->position.x, ruby->position.y);
         fxRuby->drawOrder = Zone->playerDrawHigh;
         AIZSetup->fxRuby  = (Entity *)fxRuby;
         Camera_ShakeScreen(0, 4, 4);

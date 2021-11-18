@@ -1234,7 +1234,7 @@ void MegaOctus_StateArm_Unknown4(void)
 #if RETRO_USE_PLUS
     if (parent) {
         parent->state         = MegaOctus_TilePlatformState_Unknown;
-        parent->collapseDelay = 4;
+        parent->timer      = 4;
         parent->velocity.y    = -0x8000;
 
         if (parent->drawPos.y > self->tilePlatY)

@@ -16,7 +16,7 @@ typedef enum {
     KEY_X,
     KEY_Y,
     KEY_START,
-} HUDOffsetTypes;
+} KeyIDs;
 
 // Object Class
 typedef struct {

@@ -9,21 +9,21 @@ void TippingPlatform_Update(void)
     if (self->bossID) {
         if (self->animator.frameID) {
             self->stateCollide = Platform_CollisionState_None;
-            self->collision    = PLATFORM_C_4;
+            self->collision    = PLATFORM_C_SOLID_NONE;
         }
         else {
             self->stateCollide = Platform_CollisionState_TopSolid;
-            self->collision    = PLATFORM_C_0;
+            self->collision    = PLATFORM_C_SOLID_TOP;
         }
         if (!self->stoodAngle && self->bossID > 2 && self->syringe->activated) {
             self->stoodAngle    = 1;
-            self->collapseDelay = self->intervalOffset + 1;
+            self->timer = self->intervalOffset + 1;
             RSDK.SetSpriteAnimation(Platform->aniFrames, 1, &self->animator, true, 0);
             self->state = TippingPlatform_Unknown5;
         }
     }
     else {
-        if (self->state == Platform_State_Normal) {
+        if (self->state == Platform_State_Fixed) {
             int32 timer = (Zone->timer + self->intervalOffset) % self->interval;
             if (timer >= self->duration) {
                 if (timer >= self->duration + 22) {
@@ -37,7 +37,7 @@ void TippingPlatform_Update(void)
             }
             else {
                 self->active        = ACTIVE_NORMAL;
-                self->collapseDelay = self->duration - timer;
+                self->timer = self->duration - timer;
                 if (self->duration - timer < self->duration - 24) {
                     RSDK.SetSpriteAnimation(Platform->aniFrames, 1, &self->animator, true, 6);
                     self->state = TippingPlatform_Unknown3;
@@ -45,7 +45,7 @@ void TippingPlatform_Update(void)
                 else {
                     RSDK.SetSpriteAnimation(Platform->aniFrames, 1, &self->animator, true, timer >> 2);
                     self->state                   = TippingPlatform_Unknown3;
-                    self->animator.animationTimer = (self->duration - self->collapseDelay) & 3;
+                    self->animator.animationTimer = (self->duration - self->timer) & 3;
                 }
             }
         }
@@ -57,11 +57,11 @@ void TippingPlatform_Update(void)
             flag = self->animator.frameID == 6;
         if (flag) {
             self->stateCollide = Platform_CollisionState_TopSolid;
-            self->collision    = PLATFORM_C_0;
+            self->collision    = PLATFORM_C_SOLID_TOP;
         }
         else {
             self->stateCollide = Platform_CollisionState_None;
-            self->collision    = PLATFORM_C_4;
+            self->collision    = PLATFORM_C_SOLID_NONE;
         }
     }
     Platform_Update();
@@ -84,7 +84,7 @@ void TippingPlatform_Create(void *data)
         self->interval = -16;
     if (!self->duration)
         self->duration = 120;
-    self->collision = PLATFORM_C_0;
+    self->collision = PLATFORM_C_SOLID_TOP;
     Platform_Create(NULL);
 
     if (self->bossID) {
@@ -95,7 +95,7 @@ void TippingPlatform_Create(void *data)
         RSDK.SetSpriteAnimation(Platform->aniFrames, 2, &self->animator, true, 6);
     }
 
-    self->state = Platform_State_Normal;
+    self->state = Platform_State_Fixed;
     if (!SceneInfo->inEditor) {
         if (self->bossID > 1) {
             foreach_all(Syringe, syringe)
@@ -107,7 +107,7 @@ void TippingPlatform_Create(void *data)
                         self->updateRange.y = abs(self->position.y - syringe->position.y) + 0x400000;
                     }
                     self->stateCollide = Platform_CollisionState_AllSolid;
-                    self->collision    = PLATFORM_C_1;
+                    self->collision    = PLATFORM_C_SOLID_ALL;
                     foreach_break;
                 }
             }
@@ -130,12 +130,12 @@ void TippingPlatform_Unknown1(void)
         self->animator.frameID++;
     }
 
-    if (--self->collapseDelay <= 0) {
+    if (--self->timer <= 0) {
         self->active = ACTIVE_BOUNDS;
         if (self->bossID < 3)
             self->state = TippingPlatform_Unknown2;
         else
-            self->state = Platform_State_Normal;
+            self->state = Platform_State_Fixed;
     }
 }
 
@@ -144,7 +144,7 @@ void TippingPlatform_Unknown2(void)
     RSDK_THIS(TippingPlatform);
     if (self->animator.frameID <= 0) {
         self->active = ACTIVE_BOUNDS;
-        self->state  = Platform_State_Normal;
+        self->state  = Platform_State_Fixed;
     }
     else if (++self->animator.animationTimer == 4) {
         self->animator.animationTimer = 0;
@@ -155,7 +155,7 @@ void TippingPlatform_Unknown2(void)
 void TippingPlatform_Unknown3(void)
 {
     RSDK_THIS(TippingPlatform);
-    if (--self->collapseDelay <= 0) {
+    if (--self->timer <= 0) {
         RSDK.SetSpriteAnimation(Platform->aniFrames, 2, &self->animator, true, 0);
         self->state = TippingPlatform_Unknown2;
     }
@@ -166,14 +166,14 @@ void TippingPlatform_Unknown4(void)
     RSDK_THIS(TippingPlatform);
     if (self->animator.frameID == 6) {
         self->active = ACTIVE_BOUNDS;
-        self->state  = Platform_State_Normal;
+        self->state  = Platform_State_Fixed;
     }
 }
 
 void TippingPlatform_Unknown5(void)
 {
     RSDK_THIS(TippingPlatform);
-    if (--self->collapseDelay <= 0)
+    if (--self->timer <= 0)
         self->state = TippingPlatform_Unknown1;
 }
 

@@ -87,14 +87,14 @@ void UFO_Ring_PlayRingSFX(void)
 void UFO_Ring_LoseRings(EntityUFO_Player *player)
 {
     UFO_Setup->rings -= 10;
-    int32 i = 10;
+    int32 ringCount = 10;
     if (UFO_Setup->rings < 0) {
-        i                = UFO_Setup->rings + 10;
+        ringCount                = UFO_Setup->rings + 10;
         UFO_Setup->rings = 0;
     }
 
-    for (; i >= 0; --i) {
-        EntityUFO_Ring *ring      = (EntityUFO_Ring *)RSDK.CreateEntity(UFO_Ring->objectID, 0, player->position.x, player->position.y);
+    for (; ringCount >= 0; --ringCount) {
+        EntityUFO_Ring *ring          = CREATE_ENTITY(UFO_Ring, NULL, player->position.x, player->position.y);
         ring->height              = player->height + 0x80000;
         ring->velocity.x          = player->velocity.x + RSDK.Rand(-0x40000, 0x40000);
         ring->velocity.y          = player->velocity.y + RSDK.Rand(-0x40000, 0x40000);

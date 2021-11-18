@@ -66,7 +66,8 @@ void Bloominator_DebugDraw(void)
 void Bloominator_DebugSpawn(void)
 {
     RSDK_THIS(Bloominator);
-    RSDK.CreateEntity(Bloominator->objectID, 0, self->position.x, self->position.y);
+
+    CREATE_ENTITY(Bloominator, NULL, self->position.x, self->position.y);
 }
 
 void Bloominator_CheckHit(void)

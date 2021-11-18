@@ -5,7 +5,7 @@ ObjectPrintBlock *PrintBlock;
 void PrintBlock_Update(void)
 {
     RSDK_THIS(PrintBlock);
-    if (self->state == Platform_State_Normal) {
+    if (self->state == Platform_State_Fixed) {
         if (self->interval != 0xFFFF) {
             int32 timer = (Zone->timer + self->intervalOffset) % self->interval;
             if (timer >= self->duration) {
@@ -16,21 +16,21 @@ void PrintBlock_Update(void)
                 else {
                     self->active                  = ACTIVE_NORMAL;
                     self->state                   = PrintBlock_Unknown2;
-                    self->collapseDelay           = timer - self->duration;
-                    self->animator.frameID        = 4 - self->collapseDelay / 3;
-                    self->animator.animationTimer = self->collapseDelay % 3;
+                    self->timer           = timer - self->duration;
+                    self->animator.frameID        = 4 - self->timer / 3;
+                    self->animator.animationTimer = self->timer % 3;
                 }
             }
             else {
                 self->active        = ACTIVE_NORMAL;
-                self->collapseDelay = timer;
-                if (self->collapseDelay > 12) {
+                self->timer = timer;
+                if (self->timer > 12) {
                     self->animator.frameID        = 4;
                     self->animator.animationTimer = 0;
                 }
                 else {
-                    self->animator.animationTimer = self->collapseDelay % 3;
-                    self->animator.frameID        = self->collapseDelay / 3 + 1;
+                    self->animator.animationTimer = self->timer % 3;
+                    self->animator.frameID        = self->timer / 3 + 1;
                 }
 
                 Vector2 pos;
@@ -73,12 +73,12 @@ void PrintBlock_Draw(void)
 void PrintBlock_Create(void *data)
 {
     RSDK_THIS(PrintBlock);
-    self->collision = PLATFORM_C_1;
+    self->collision = PLATFORM_C_SOLID_ALL;
     Platform_Create(NULL);
     RSDK.SetSpriteAnimation(PrintBlock->aniFrames, self->letter, &self->animator, true, 0);
     self->alpha     = 128;
     self->drawOrder = Zone->drawOrderLow;
-    self->state     = Platform_State_Normal;
+    self->state     = Platform_State_Fixed;
 }
 
 void PrintBlock_StageLoad(void)
@@ -92,14 +92,14 @@ void PrintBlock_StageLoad(void)
 void PrintBlock_Unknown1(void)
 {
     RSDK_THIS(PrintBlock);
-    ++self->collapseDelay;
+    ++self->timer;
     if (++self->animator.animationTimer == 3) {
         self->animator.animationTimer = 0;
         if (self->animator.frameID < 4)
             self->animator.frameID++;
     }
 
-    if (self->collapseDelay == self->duration)
+    if (self->timer == self->duration)
         self->state = PrintBlock_Unknown2;
 }
 
@@ -110,7 +110,7 @@ void PrintBlock_Unknown2(void)
         self->animator.animationTimer = 0;
         if (self->animator.frameID <= 1) {
             self->active = ACTIVE_BOUNDS;
-            self->state  = Platform_State_Normal;
+            self->state  = Platform_State_Fixed;
         }
         else {
             self->animator.frameID--;

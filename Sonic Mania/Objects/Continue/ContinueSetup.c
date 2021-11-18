@@ -128,7 +128,7 @@ void ContinueSetup_Unknown2(void)
     if (!self->countTimer && ++self->timer == 60) {
         self->timer      = 0;
         self->state      = ContinueSetup_Unknown4;
-        EntityFXFade *fade = (EntityFXFade *)RSDK.CreateEntity(FXFade->objectID, NULL, self->position.x, self->position.y);
+        EntityFXFade *fade = CREATE_ENTITY(FXFade, NULL, self->position.x, self->position.y);
         fade->speedIn      = 12;
         fade->wait         = 240;
     }
@@ -141,7 +141,7 @@ void ContinueSetup_Unknown3(void)
         Music_FadeOut(0.0125);
     }
     if (self->timer == 180) {
-        EntityFXFade *fade = (EntityFXFade *)RSDK.CreateEntity(FXFade->objectID, NULL, self->position.x, self->position.y);
+        EntityFXFade *fade = CREATE_ENTITY(FXFade, NULL, self->position.x, self->position.y);
         fade->speedIn      = 12;
         fade->wait         = 240;
     }

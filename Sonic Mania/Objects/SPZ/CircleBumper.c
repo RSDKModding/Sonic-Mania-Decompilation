@@ -146,7 +146,7 @@ void CircleBumper_Unknown1(void)
             player->onGround       = false;
             player->tileCollisions = true;
             if (self->hitCount) {
-                EntityScoreBonus *bonus = (EntityScoreBonus *)RSDK.CreateEntity(ScoreBonus->objectID, NULL, self->position.x, self->position.y);
+                EntityScoreBonus *bonus = CREATE_ENTITY(ScoreBonus, NULL, self->position.x, self->position.y);
                 bonus->animator.frameID     = 16;
                 Player_GiveScore(player, 10);
                 --self->hitCount;

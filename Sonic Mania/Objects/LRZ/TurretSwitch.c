@@ -85,7 +85,7 @@ void TurretSwitch_CheckPlayerCollisions(void)
 void TurretSwitch_Break(EntityTurretSwitch *self, EntityPlayer *player)
 {
     player->velocity.y = -(player->velocity.y + 2 * player->gravityStrength);
-    RSDK.CreateEntity(Explosion->objectID, 0, self->position.x, self->position.y)->drawOrder = Zone->drawOrderHigh;
+    CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ITEMBOX), self->position.x, self->position.y)->drawOrder = Zone->drawOrderHigh;
     RSDK.PlaySfx(ItemBox->sfxDestroy, false, 255);
     self->visible   = 0;
     self->state     = 0;

@@ -119,8 +119,8 @@ void ShopWindow_State_Shattered(void)
         for (int32 y = 0; y < cntY; ++y) {
             int32 posX = self->position.x - (self->size.x << 16) + 0x80000;
             for (int32 x = 0; x < cntX; ++x) {
-                EntityShopWindow *shard = (EntityShopWindow *)RSDK.CreateEntity(ShopWindow->objectID, (void *)1, posX + ((RSDK.Rand(0, 8) - 4) << 16),
-                                                                                posY + ((RSDK.Rand(0, 8) - 4) << 16));
+                EntityShopWindow *shard =
+                    CREATE_ENTITY(ShopWindow, intToVoid(1), posX + ((RSDK.Rand(0, 8) - 4) << 16), posY + ((RSDK.Rand(0, 8) - 4) << 16));
                 if (RSDK.Rand(0, 3) == 1) {
                     RSDK.SetSpriteAnimation(ShopWindow->aniFrames, 3, &shard->animator, 0, RSDK.Rand(0, 18));
                 }

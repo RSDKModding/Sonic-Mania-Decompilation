@@ -14,7 +14,7 @@ void TwistingDoor_Update(void)
             if (self->autoOpen) {
                 switch (self->type) {
                     case PLATFORM_FIXED:
-                    case PLATFORM_3: {
+                    case PLATFORM_CIRCULAR: {
                         int32 x  = 0;
                         int32 x2 = 0;
                         if (self->autoOpen) {
@@ -33,7 +33,7 @@ void TwistingDoor_Update(void)
                             if (abs(player1->position.y - self->position.y) < 0x400000) {
                                 self->state         = TwistingDoor_Unknown2;
                                 self->active        = ACTIVE_NORMAL;
-                                self->collapseDelay = self->type < PLATFORM_MOVING ? 64 : 128;
+                                self->timer = self->type < PLATFORM_MOVING ? 64 : 128;
                             }
                         }
                         break;
@@ -59,7 +59,7 @@ void TwistingDoor_Update(void)
                             if (abs(player1->position.x - self->position.x) < 0x400000) {
                                 self->state         = TwistingDoor_Unknown2;
                                 self->active        = ACTIVE_NORMAL;
-                                self->collapseDelay = self->type < PLATFORM_MOVING ? 64 : 128;
+                                self->timer = self->type < PLATFORM_MOVING ? 64 : 128;
                             }
                         }
                         break;
@@ -84,13 +84,13 @@ void TwistingDoor_Draw(void)
 void TwistingDoor_Create(void *data)
 {
     RSDK_THIS(TwistingDoor);
-    self->collision = PLATFORM_C_1;
+    self->collision = PLATFORM_C_SOLID_ALL;
     Platform_Create(NULL);
 
     self->drawFX = FX_FLIP;
     RSDK.SetSpriteAnimation(TwistingDoor->aniFrames, self->type, &self->animator, true, 0);
 
-    if (self->type == PLATFORM_FIXED || self->type == PLATFORM_3) {
+    if (self->type == PLATFORM_FIXED || self->type == PLATFORM_CIRCULAR) {
         if (!self->direction)
             self->groundVel = -0x10000;
         else
@@ -136,7 +136,7 @@ void TwistingDoor_Unknown1(void)
         RSDK.PlaySfx(TwistingDoor->sfxOpen, false, 255);
         self->active        = ACTIVE_NORMAL;
         self->state         = TwistingDoor_Unknown2;
-        self->collapseDelay = self->type < PLATFORM_MOVING ? 64 : 128;
+        self->timer = self->type < PLATFORM_MOVING ? 64 : 128;
     }
     self->velocity.y = 0;
     self->velocity.x = 0;
@@ -156,9 +156,9 @@ void TwistingDoor_Unknown2(void)
         self->velocity.y = self->groundVel;
     }
 
-    if (--self->collapseDelay <= 0) {
+    if (--self->timer <= 0) {
         if (self->close)
-            self->collapseDelay = 180;
+            self->timer = 180;
         else
             self->active = ACTIVE_NORMAL;
         self->state = TwistingDoor_Unknown3;
@@ -171,9 +171,9 @@ void TwistingDoor_Unknown3(void)
 
     self->velocity.x = 0;
     self->velocity.y = 0;
-    if (self->close && --self->collapseDelay <= 0) {
+    if (self->close && --self->timer <= 0) {
         self->state         = TwistingDoor_Unknown4;
-        self->collapseDelay = self->type < 2 ? 64 : 128;
+        self->timer = self->type < 2 ? 64 : 128;
     }
 }
 
@@ -192,7 +192,7 @@ void TwistingDoor_Unknown4(void)
         self->velocity.y = self->groundVel;
     }
 
-    if (--self->collapseDelay <= 0) {
+    if (--self->timer <= 0) {
         self->active = ACTIVE_BOUNDS;
         self->state  = TwistingDoor_Unknown1;
     }

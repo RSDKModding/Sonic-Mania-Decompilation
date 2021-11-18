@@ -120,7 +120,7 @@ bool32 SDashWheel_CheckCB(void)
     int32 count = 0;
     foreach_active(PlatformControl, control)
     {
-        if (control->ControllerInfo && control->field_6C && control->speed > 0)
+        if (control->taggedButton && control->isActive && control->speed > 0)
             ++count;
     }
     return count > 0;

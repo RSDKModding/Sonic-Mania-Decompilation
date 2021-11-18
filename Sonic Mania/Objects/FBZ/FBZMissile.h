@@ -3,6 +3,14 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    FBZMISSILE_LAUNCHER_V,
+    FBZMISSILE_LAUNCHER_H,
+    FBZMISSILE_HULL,
+    FBZMISSILE_VERTICAL,
+    FBZMISSILE_HORIZONTAL,
+}FBZMissileTypes;
+
 // Object Class
 typedef struct {
     RSDK_OBJECT
@@ -22,7 +30,7 @@ typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
-    int32 type;
+    FBZMissileTypes type;
     uint8 interval;
     uint8 intervalOffset;
     int32 timer;
@@ -46,13 +54,13 @@ void FBZMissile_EditorLoad(void);
 void FBZMissile_Serialize(void);
 
 // Extra Entity Functions
-void FBZMissile_Unknown1(void);
-void FBZMissile_Unknown2(void);
+void FBZMissile_StateLauncher_Delay(void);
+void FBZMissile_StateLauncher_Launch(void);
 void FBZMissile_Unknown3(void);
 void FBZMissile_Unknown4(void);
-void FBZMissile_Unknown5(void);
-void FBZMissile_Unknown6(void);
+void FBZMissile_StateVertical_Rise(void);
+void FBZMissile_StateVertical_Fall(void);
 void FBZMissile_Unknown7(void);
-void FBZMissile_Unknown8(void);
+void FBZMissile_State_Hull(void);
 
 #endif //!OBJ_FBZMISSILE_H

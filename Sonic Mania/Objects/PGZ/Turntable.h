@@ -17,10 +17,10 @@ typedef struct {
     uint8 activePlayers;
     Vector2 size;
     Vector2 origin;
-    int32 field_74;
-    int32 field_78[4];
-    int32 field_88[4];
-    int32 field_98[4];
+    int32 unused;
+    int32 playerAngles[PLAYER_MAX];
+    int32 playerDistance[PLAYER_MAX];
+    int32 playerFrames[PLAYER_MAX];
     Hitbox hitbox;
     Animator animator;
 } EntityTurntable;

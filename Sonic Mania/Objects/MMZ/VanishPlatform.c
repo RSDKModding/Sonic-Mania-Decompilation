@@ -5,18 +5,18 @@ ObjectVanishPlatform *VanishPlatform;
 void VanishPlatform_Update(void)
 {
     RSDK_THIS(VanishPlatform);
-    if (!((Zone->timer + self->intervalOffset) % self->interval) && self->state == Platform_State_Normal) {
+    if (!((Zone->timer + self->intervalOffset) % self->interval) && self->state == Platform_State_Fixed) {
         self->active        = ACTIVE_NORMAL;
-        self->collapseDelay = self->duration;
+        self->timer = self->duration;
         self->state         = VanishPlatform_Unknown1;
     }
     if (self->scale.x <= 336) {
         self->stateCollide = Platform_CollisionState_None;
-        self->collision    = PLATFORM_C_4;
+        self->collision    = PLATFORM_C_SOLID_NONE;
     }
     else {
         self->stateCollide = Platform_CollisionState_TopSolid;
-        self->collision    = PLATFORM_C_0;
+        self->collision    = PLATFORM_C_SOLID_TOP;
     }
     Platform_Update();
 }
@@ -34,13 +34,13 @@ void VanishPlatform_Draw(void)
 void VanishPlatform_Create(void *data)
 {
     RSDK_THIS(VanishPlatform);
-    self->collision = PLATFORM_C_0;
+    self->collision = PLATFORM_C_SOLID_TOP;
     Platform_Create(NULL);
     RSDK.SetSpriteAnimation(Platform->aniFrames, 3, &self->animator, true, 0);
     self->drawFX  = FX_SCALE;
     self->scale.x = 0;
     self->scale.y = 0x200;
-    self->state   = Platform_State_Normal;
+    self->state   = Platform_State_Fixed;
 }
 
 void VanishPlatform_StageLoad(void) {}
@@ -52,7 +52,7 @@ void VanishPlatform_Unknown1(void)
     if (self->scale.x < 0x200)
         self->scale.x += 22;
 
-    if (--self->collapseDelay <= 0)
+    if (--self->timer <= 0)
         self->state = VanishPlatform_Unknown2;
 }
 
@@ -62,7 +62,7 @@ void VanishPlatform_Unknown2(void)
 
     if (self->scale.x <= 0) {
         self->active = ACTIVE_BOUNDS;
-        self->state  = Platform_State_Normal;
+        self->state  = Platform_State_Fixed;
     }
     else {
         self->scale.x -= 22;

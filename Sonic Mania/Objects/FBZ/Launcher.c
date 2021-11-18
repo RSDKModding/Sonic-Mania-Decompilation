@@ -27,35 +27,36 @@ void Launcher_Create(void *data)
     RSDK.SetSpriteAnimation(Platform->aniFrames, 1, &self->animator, true, 0);
     self->drawFX           = FX_FLIP;
     self->animator.frameID = 4;
-    self->stateCollide     = Launcher_Unknown1;
-    self->state            = Launcher_Unknown2;
+    self->stateCollide     = Launcher_StateCollide;
+    self->state            = Launcher_State_None;
 }
 
 void Launcher_StageLoad(void) { Launcher->sfxLaunch = RSDK.GetSFX("Stage/Launch.wav"); }
 
-void Launcher_Unknown1(void)
+void Launcher_StateCollide(void)
 {
     RSDK_THIS(Launcher);
+    int32 stoodPlayers = self->stoodPlayers;
     self->stoodPlayers = 0;
-    Hitbox *hitbox       = RSDK.GetHitbox(&self->animator, 0);
+    Hitbox *hitbox     = RSDK.GetHitbox(&self->animator, 0);
 
     foreach_active(Player, player)
     {
         if (Player_CheckCollisionPlatform(player, self, hitbox)) {
             self->stoodPlayers |= (1 << RSDK.GetEntityID(player));
-            if (self->state == Launcher_Unknown2) {
+            if (self->state == Launcher_State_None) {
                 self->active = ACTIVE_NORMAL;
                 if (self->direction == FLIP_NONE)
                     self->velocity.x = 0x10000;
                 else
                     self->velocity.x = -0x10000;
-                self->field_CC = 12;
-                self->field_D0 = 4;
+                self->releaseDelay  = 12;
+                self->speedIncDelay = 4;
                 RSDK.PlaySfx(Launcher->sfxLaunch, false, 255);
-                self->state = Launcher_Unknown3;
+                self->state = Launcher_State_HandleLaunch;
             }
 
-            if (self->state == Launcher_Unknown4) {
+            if (self->state == Launcher_State_ReturnToStart) {
                 player->position.x += self->collisionOffset.x;
             }
             else {
@@ -69,25 +70,25 @@ void Launcher_Unknown1(void)
                     player->state = Player_State_Ground;
             }
         }
-        else if (((1 << RSDK.GetEntityID(player)) & self->stoodPlayers) && self->state != Launcher_Unknown4) {
+        else if (((1 << RSDK.GetEntityID(player)) & stoodPlayers) && self->state != Launcher_State_ReturnToStart) {
             player->velocity.x = self->velocity.x;
             player->groundVel  = self->velocity.x;
         }
     }
 }
 
-void Launcher_Unknown2(void) {}
+void Launcher_State_None(void) {}
 
-void Launcher_Unknown3(void)
+void Launcher_State_HandleLaunch(void)
 {
     RSDK_THIS(Launcher);
     self->drawPos.x += self->velocity.x;
 
-    if (--self->field_D0 >= 0) {
+    if (--self->speedIncDelay >= 0) {
         self->velocity.x <<= 1;
     }
 
-    if (--self->field_CC < 0) {
+    if (--self->releaseDelay < 0) {
         foreach_active(Player, player)
         {
             if (((1 << RSDK.GetEntityID(player)) & self->stoodPlayers)) {
@@ -95,11 +96,11 @@ void Launcher_Unknown3(void)
                 player->velocity.x = self->velocity.x;
             }
         }
-        self->state = Launcher_Unknown4;
+        self->state = Launcher_State_ReturnToStart;
     }
 }
 
-void Launcher_Unknown4(void)
+void Launcher_State_ReturnToStart(void)
 {
     RSDK_THIS(Launcher);
     if (self->direction)
@@ -109,14 +110,29 @@ void Launcher_Unknown4(void)
 
     if (self->drawPos.x == self->centerPos.x) {
         self->active = ACTIVE_BOUNDS;
-        self->state  = Launcher_Unknown2;
+        self->state  = Launcher_State_None;
     }
 }
 
 #if RETRO_INCLUDE_EDITOR
-void Launcher_EditorDraw(void) {}
+void Launcher_EditorDraw(void)
+{
+    RSDK_THIS(Launcher);
+    RSDK.SetSpriteAnimation(Platform->aniFrames, 1, &self->animator, true, 0);
+    self->drawFX           = FX_FLIP;
+    self->animator.frameID = 4;
+    self->drawPos          = self->position;
 
-void Launcher_EditorLoad(void) {}
+    Launcher_Draw();
+}
+
+void Launcher_EditorLoad(void)
+{
+
+    RSDK_ACTIVE_VAR(Launcher, direction);
+    RSDK_ENUM_VAR("No Flip", FLIP_NONE);
+    RSDK_ENUM_VAR("Flip X", FLIP_X);
+}
 #endif
 
-void Launcher_Serialize(void) { RSDK_EDITABLE_VAR(FoldingPlatform, VAR_UINT8, direction); }
+void Launcher_Serialize(void) { RSDK_EDITABLE_VAR(Launcher, VAR_UINT8, direction); }

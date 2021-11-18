@@ -17,7 +17,7 @@ void SuperSparkle_Update(void)
         if (self->activeFlag) {
             if (++self->timer == 12) {
                 self->timer        = 0;
-                EntityDebris *debris = (EntityDebris *)RSDK.CreateEntity(Debris->objectID, 0, player->position.x, player->position.y);
+                EntityDebris *debris = CREATE_ENTITY(Debris, NULL, player->position.x, player->position.y);
                 debris->state        = Debris_State_Move;
                 debris->timer        = 16;
                 debris->inkEffect    = INK_ADD;

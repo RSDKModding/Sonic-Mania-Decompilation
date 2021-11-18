@@ -39,10 +39,9 @@ void FBZSinkTrash_Update(void)
                             }
                         }
 #endif
-                        if ((Zone->timer & 7) == 0) {
-                            EntityDebris *debris = (EntityDebris *)RSDK.CreateEntity(Debris->objectID, Debris_State_Fall,
-                                                                                     player->position.x + RSDK.Rand(-0x40000, 0x40000),
-                                                                                     player->position.y + RSDK.Rand(-0x100000, 0));
+                        if (!(Zone->timer & 7)) {
+                            EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Fall, player->position.x + RSDK.Rand(-0x40000, 0x40000),
+                                                                  player->position.y + RSDK.Rand(-0x100000, 0));
                             RSDK.SetSpriteAnimation(FBZSinkTrash->aniFrames, 0, &debris->animator, false, RSDK.Rand(0, 20));
                             debris->velocity.x    = RSDK.Rand(-0x20000, 0x20000);
                             debris->velocity.y    = player->velocity.y;
@@ -59,10 +58,9 @@ void FBZSinkTrash_Update(void)
                         player->velocity.y = player->velocity.y - (player->velocity.y >> 5) - (player->velocity.y >> 4);
                         if (player->velocity.y >= 0x30000) {
                             int32 speed = abs(player->velocity.y + player->velocity.x);
-                            if (speed > 0x10000 && (Zone->timer & 7) == 0) {
-                                EntityDebris *debris = (EntityDebris *)RSDK.CreateEntity(Debris->objectID, Debris_State_Fall,
-                                                                                         player->position.x + RSDK.Rand(-0x40000, 0x40000),
-                                                                                         player->position.y + 0x40000 + RSDK.Rand(-0x40000, 0x40000));
+                            if (speed > 0x10000 && !(Zone->timer & 7)) {
+                                EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Fall, player->position.x + RSDK.Rand(-0x40000, 0x40000),
+                                                                     player->position.y + 0x40000 + RSDK.Rand(-0x40000, 0x40000));
                                 RSDK.SetSpriteAnimation(FBZSinkTrash->aniFrames, RSDK.Rand(0, 2) + 9, &debris->animator, false, 0);
                                 debris->velocity.x    = RSDK.Rand(-0x20000, 0x20000);
                                 debris->velocity.y    = -0x20000;
@@ -80,10 +78,9 @@ void FBZSinkTrash_Update(void)
                             player->angle         = 0;
                             player->position.y += 0x10000;
                             int32 speed = abs(player->velocity.y + player->velocity.x);
-                            if (speed > 0x10000 && (Zone->timer & 7) == 0) {
-                                EntityDebris *debris = (EntityDebris *)RSDK.CreateEntity(Debris->objectID, Debris_State_Fall,
-                                                                                         player->position.x + RSDK.Rand(-0x40000, 0x40000),
-                                                                                         player->position.y + 0x40000 + RSDK.Rand(-0x40000, 0x40000));
+                            if (speed > 0x10000 && !(Zone->timer & 7)) {
+                                EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Fall, player->position.x + RSDK.Rand(-0x40000, 0x40000),
+                                                                     player->position.y + 0x40000 + RSDK.Rand(-0x40000, 0x40000));
                                 RSDK.SetSpriteAnimation(FBZSinkTrash->aniFrames, RSDK.Rand(0, 2) + 9, &debris->animator, false, 0);
                                 debris->velocity.x    = RSDK.Rand(-0x20000, 0x20000);
                                 debris->velocity.y    = -0x20000;
@@ -102,10 +99,9 @@ void FBZSinkTrash_Update(void)
                         player->angle         = 0;
                         player->position.y += 0x10000;
                         int32 speed = abs(player->velocity.y + player->velocity.x);
-                        if (speed > 0x10000 && (Zone->timer & 7) == 0) {
-                            EntityDebris *debris = (EntityDebris *)RSDK.CreateEntity(Debris->objectID, Debris_State_Fall,
-                                                                                     player->position.x + RSDK.Rand(-0x40000, 0x40000),
-                                                                                     player->position.y + 0x40000 + RSDK.Rand(-0x40000, 0x40000));
+                        if (speed > 0x10000 && !(Zone->timer & 7)) {
+                            EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Fall, player->position.x + RSDK.Rand(-0x40000, 0x40000),
+                                                                 player->position.y + 0x40000 + RSDK.Rand(-0x40000, 0x40000));
                             RSDK.SetSpriteAnimation(FBZSinkTrash->aniFrames, RSDK.Rand(0, 2) + 9, &debris->animator, false, 0);
                             debris->velocity.x    = RSDK.Rand(-0x20000, 0x20000);
                             debris->velocity.y    = -0x20000;

@@ -64,8 +64,9 @@ void Chopper_DebugDraw(void)
 
 void Chopper_DebugSpawn(void)
 {
-    RSDK_THIS(Chopper);
-    RSDK.CreateEntity(Chopper->objectID, 0, self->position.x, self->position.y);
+    RSDK_THIS(DebugMode);
+
+    CREATE_ENTITY(Chopper, 0, self->position.x, self->position.y);
 }
 
 void Chopper_CheckOnScreen(void)

@@ -251,14 +251,14 @@ void Bumpalo_HandlePlatformCollisions(void *p)
     RSDK_THIS(Bumpalo);
     EntityPlatform *platform = (EntityPlatform *)p;
 
-    if (platform->state != Platform_State_Falling && platform->state != Platform_State_OffScreenReset) {
+    if (platform->state != Platform_State_Collapse_Falling && platform->state != Platform_State_Collapse_CheckReset) {
         platform->position.x = platform->drawPos.x - platform->collisionOffset.x;
         platform->position.y = platform->drawPos.y - platform->collisionOffset.y;
 
         bool32 flag = false;
         if (platform->collision) {
-            if (platform->collision != PLATFORM_C_1) {
-                if (platform->collision == PLATFORM_C_2
+            if (platform->collision != PLATFORM_C_SOLID_ALL) {
+                if (platform->collision == PLATFORM_C_USE_TILES
                     && RSDK.CheckObjectCollisionTouchBox(platform, &platform->hitbox, self, &Bumpalo->hitboxBadnik)) {
                     if ((self->collisionLayers & Zone->moveID) != 0) {
                         TileLayer *move  = RSDK.GetSceneLayer(Zone->moveLayer);

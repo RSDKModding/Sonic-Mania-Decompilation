@@ -5,36 +5,36 @@ ObjectConveyorPlatform *ConveyorPlatform;
 void ConveyorPlatform_Update(void)
 {
     RSDK_THIS(ConveyorPlatform);
-    if (self->state == Platform_Unknown4) {
-        if (self->collapseDelay || self->timer) {
-            if (++self->timer == 24) {
+    if (self->state == Platform_State_Controlled) {
+        if (self->timer || self->timer2) {
+            if (++self->timer2 == 24) {
                 self->stateCollide = Platform_CollisionState_AllSolid;
-                self->collision    = PLATFORM_C_1;
-                self->timer        = 0;
+                self->collision    = PLATFORM_C_SOLID_ALL;
+                self->timer2       = 0;
             }
             else {
                 self->stateCollide = Platform_CollisionState_None;
-                self->collision    = PLATFORM_C_4;
+                self->collision    = PLATFORM_C_SOLID_NONE;
             }
-            self->animator.frameID = ConveyorPlatform->frameIDs[self->timer];
-            self->direction        = ConveyorPlatform->directionIDs[self->timer];
+            self->animator.frameID = ConveyorPlatform->frameIDs[self->timer2];
+            self->direction        = ConveyorPlatform->directionIDs[self->timer2];
         }
     }
     else {
-        if (self->timer) {
-            self->timer++;
-            if (self->timer >= self->flipCount) {
+        if (self->timer2) {
+            self->timer2++;
+            if (self->timer2 >= self->flipCount) {
                 self->stateCollide = Platform_CollisionState_AllSolid;
-                self->collision    = PLATFORM_C_1;
-                self->timer        = 0;
+                self->collision    = PLATFORM_C_SOLID_ALL;
+                self->timer2       = 0;
             }
-            self->animator.frameID = ConveyorPlatform->frameIDs[self->timer % 24];
-            self->direction        = ConveyorPlatform->directionIDs[self->timer % 24];
+            self->animator.frameID = ConveyorPlatform->frameIDs[self->timer2 % 24];
+            self->direction        = ConveyorPlatform->directionIDs[self->timer2 % 24];
         }
-        if (!((Zone->timer + self->intervalOffset) % self->interval) && !self->timer) {
+        if (!((Zone->timer2 + self->intervalOffset) % self->interval) && !self->timer2) {
             self->stateCollide = Platform_CollisionState_None;
-            self->collision    = PLATFORM_C_4;
-            self->timer        = 1;
+            self->collision    = PLATFORM_C_SOLID_NONE;
+            self->timer2       = 1;
         }
     }
     Platform_Update();
@@ -54,13 +54,13 @@ void ConveyorPlatform_Create(void *data)
 {
     RSDK_THIS(ConveyorPlatform);
     if (self->type)
-        self->type = PLATFORM_5;
+        self->type = PLATFORM_CONTROLLED;
     Platform_Create(NULL);
     RSDK.SetSpriteAnimation(Platform->aniFrames, 2, &self->animator, true, 0);
     self->drawFX |= FX_FLIP;
     self->stateCollide = Platform_CollisionState_AllSolid;
-    self->collision    = PLATFORM_C_1;
-    self->timer        = 0;
+    self->collision    = PLATFORM_C_SOLID_ALL;
+    self->timer2       = 0;
     if (!SceneInfo->inEditor)
         self->flipCount *= 12;
 }

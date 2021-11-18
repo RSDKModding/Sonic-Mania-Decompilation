@@ -69,7 +69,7 @@ void Crabmeat_DebugDraw(void)
 void Crabmeat_DebugSpawn(void)
 {
     RSDK_THIS(Crabmeat);
-    RSDK.CreateEntity(Crabmeat->objectID, 0, self->position.x, self->position.y);
+    CREATE_ENTITY(Crabmeat, NULL, self->position.x, self->position.y);
 }
 
 void Crabmeat_State_Main(void)

@@ -99,7 +99,7 @@ void SPZ2Setup_StageLoad(void)
         if (!PlayerHelpers_CheckStageReload()) {
             Zone->screenBoundsL1[0] = 256 - ScreenInfo->centerX;
             Zone_ReloadStoredEntities(0x5600000, 0x1000000, true);
-            RSDK.CreateEntity(SPZ2Setup->objectID, 0, 0, 0);
+            CREATE_ENTITY(SPZ2Setup, NULL, 0, 0);
         }
     }
 

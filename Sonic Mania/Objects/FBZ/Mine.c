@@ -20,8 +20,7 @@ void Mine_Update(void)
     }
     else {
         self->animator.frameID ^= 1;
-        self->timer--;
-        if (self->timer) {
+        if (--self->timer) {
 #if RETRO_USE_PLUS 
             Mine_CheckMightyHit();
 #endif
@@ -35,7 +34,7 @@ void Mine_Update(void)
                         destroyEntity(missile);
                         RSDK.PlaySfx(Player->sfxRelease, false, 255);
                     }
-                    CREATE_ENTITY(Explosion, intToVoid(3), self->position.x, self->position.y + 0x30000)->drawOrder = Zone->drawOrderHigh;
+                    CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSSPUFF), self->position.x, self->position.y + 0x30000)->drawOrder = Zone->drawOrderHigh;
                     RSDK.PlaySfx(FBZMissile->sfxExplosion, false, 255);
                     destroyEntity(self);
                     foreach_return;
@@ -46,7 +45,7 @@ void Mine_Update(void)
             {
                 if (Player_CheckCollisionTouch(player, self, &Mine->hitbox)) {
 #if RETRO_USE_PLUS
-                    if (Player_CheckMightyUnspin(1024, player, true, &player->uncurlTimer))
+                    if (Player_CheckMightyUnspin(0x400, player, true, &player->uncurlTimer))
                         player->onGround = false;
                     else
 #endif
@@ -54,7 +53,7 @@ void Mine_Update(void)
                 }
             }
 
-            CREATE_ENTITY(Explosion, intToVoid(1), self->position.x, self->position.y - 0x30000)->drawOrder = Zone->drawOrderHigh;
+            CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), self->position.x, self->position.y - 0x30000)->drawOrder = Zone->drawOrderHigh;
             RSDK.PlaySfx(Mine->sfxExplosion, false, 255);
 #if RETRO_USE_PLUS
             Mine_CheckMightyHit();
@@ -111,9 +110,16 @@ void Mine_CheckMightyHit(void)
 #endif
 
 #if RETRO_INCLUDE_EDITOR
-void Mine_EditorDraw(void) {}
+void Mine_EditorDraw(void)
+{
+    RSDK_THIS(Mine);
+    self->drawOrder = Zone->drawOrderLow;
+    RSDK.SetSpriteAnimation(Mine->aniFrames, 0, &self->animator, true, 0);
 
-void Mine_EditorLoad(void) {}
+    Mine_Draw();
+}
+
+void Mine_EditorLoad(void) { Mine->aniFrames = RSDK.LoadSpriteAnimation("FBZ/Mine.bin", SCOPE_STAGE); }
 #endif
 
 void Mine_Serialize(void) {}
