@@ -5,9 +5,9 @@ ObjectTTCutscene *TTCutscene;
 void TTCutscene_Update(void)
 {
     RSDK_THIS(TTCutscene);
-    if (!entity->activated) {
+    if (!self->activated) {
         TTCutscene_StartCutscene();
-        entity->activated = true;
+        self->activated = true;
     }
 }
 
@@ -21,9 +21,9 @@ void TTCutscene_Create(void *data)
 {
     RSDK_THIS(TTCutscene);
 
-    entity->active  = ACTIVE_NORMAL;
-    entity->visible = false;
-    CutsceneRules_SetupEntity(entity, &entity->size, &entity->hitbox);
+    self->active  = ACTIVE_NORMAL;
+    self->visible = false;
+    CutsceneRules_SetupEntity(self, &self->size, &self->hitbox);
 }
 
 void TTCutscene_StageLoad(void)
@@ -42,7 +42,7 @@ void TTCutscene_StartCutscene(void)
                                 TTCutscene_CutsceneState_FlyOut, TTCutscene_CutsceneState_NextScene, NULL };
 
     RSDK_THIS(TTCutscene);
-    CutsceneSeq_StartSequence((Entity *)entity, cutsceneStates);
+    CutsceneSeq_StartSequence((Entity *)self, cutsceneStates);
     EntityCutsceneSeq *cutsceneSeq = RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq);
     if (cutsceneSeq->objectID != TYPE_BLANK) {
         cutsceneSeq->skipType    = SKIPTYPE_CALLBACK;
@@ -222,7 +222,7 @@ bool32 TTCutscene_CutsceneState_NextScene(EntityCutsceneSeq *host)
 void TTCutscene_EditorDraw(void)
 {
     RSDK_THIS(TTCutscene);
-    CutsceneRules_DrawCutsceneBounds(entity, &entity->size);
+    CutsceneRules_DrawCutsceneBounds(self, &self->size);
 }
 
 void TTCutscene_EditorLoad(void) {}

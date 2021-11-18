@@ -5,7 +5,7 @@ ObjectTwistedTubes *TwistedTubes;
 void TwistedTubes_Update(void)
 {
     RSDK_THIS(TwistedTubes);
-    StateMachine_Run(entity->state);
+    StateMachine_Run(self->state);
 }
 
 void TwistedTubes_LateUpdate(void) {}
@@ -17,68 +17,68 @@ void TwistedTubes_Draw(void)
     RSDK_THIS(TwistedTubes);
     Vector2 drawPos;
 
-    drawPos.x = entity->position.x;
-    drawPos.y = entity->position.y;
-    RSDK.DrawSprite(&entity->animator1, &drawPos, false);
+    drawPos.x = self->position.x;
+    drawPos.y = self->position.y;
+    RSDK.DrawSprite(&self->animator1, &drawPos, false);
 
     drawPos.y += 0x400000;
-    RSDK.DrawSprite(&entity->animator2, &drawPos, false);
+    RSDK.DrawSprite(&self->animator2, &drawPos, false);
 
-    RSDK.DrawSprite(&entity->animator3, &drawPos, false);
+    RSDK.DrawSprite(&self->animator3, &drawPos, false);
 
-    entity->direction = FLIP_X;
-    RSDK.DrawSprite(&entity->animator3, &drawPos, false);
+    self->direction = FLIP_X;
+    RSDK.DrawSprite(&self->animator3, &drawPos, false);
 
     drawPos.y += 0x200000;
-    for (int32 h = 0; h < entity->height; ++h) {
-        entity->direction = FLIP_NONE;
-        RSDK.DrawSprite(&entity->animator2, &drawPos, false);
+    for (int32 h = 0; h < self->height; ++h) {
+        self->direction = FLIP_NONE;
+        RSDK.DrawSprite(&self->animator2, &drawPos, false);
 
-        RSDK.DrawSprite(&entity->animator4, &drawPos, false);
+        RSDK.DrawSprite(&self->animator4, &drawPos, false);
 
-        entity->direction = FLIP_X;
-        RSDK.DrawSprite(&entity->animator4, &drawPos, false);
+        self->direction = FLIP_X;
+        RSDK.DrawSprite(&self->animator4, &drawPos, false);
 
         drawPos.y += 0x200000;
     }
 
-    entity->direction = FLIP_NONE;
-    RSDK.DrawSprite(&entity->animator2, &drawPos, false);
+    self->direction = FLIP_NONE;
+    RSDK.DrawSprite(&self->animator2, &drawPos, false);
 
-    RSDK.DrawSprite(&entity->animator5, &drawPos, false);
+    RSDK.DrawSprite(&self->animator5, &drawPos, false);
 
-    entity->direction = FLIP_X;
-    RSDK.DrawSprite(&entity->animator5, &drawPos, false);
+    self->direction = FLIP_X;
+    RSDK.DrawSprite(&self->animator5, &drawPos, false);
 
-    entity->direction = FLIP_NONE;
+    self->direction = FLIP_NONE;
 }
 
 void TwistedTubes_Create(void *data)
 {
     RSDK_THIS(TwistedTubes);
 
-    entity->drawFX = FX_FLIP;
+    self->drawFX = FX_FLIP;
     if (!SceneInfo->inEditor) {
         if (data) {
-            entity->active    = ACTIVE_NORMAL;
-            entity->playerPtr = (EntityPlayer *)data;
-            if (entity->playerPtr->position.x > entity->position.x)
-                entity->state = TwistedTubes_Unknown3;
+            self->active    = ACTIVE_NORMAL;
+            self->playerPtr = (EntityPlayer *)data;
+            if (self->playerPtr->position.x > self->position.x)
+                self->state = TwistedTubes_Unknown3;
             else
-                entity->state = TwistedTubes_Unknown2;
+                self->state = TwistedTubes_Unknown2;
         }
         else {
-            entity->visible       = true;
-            entity->drawOrder     = Zone->drawOrderHigh;
-            entity->active        = ACTIVE_BOUNDS;
-            entity->updateRange.y = (entity->height + 4) << 21;
-            entity->updateRange.x = 0x800000;
-            RSDK.SetSpriteAnimation(TwistedTubes->aniFrames, 0, &entity->animator1, true, 0);
-            RSDK.SetSpriteAnimation(TwistedTubes->aniFrames, 0, &entity->animator2, true, 1);
-            RSDK.SetSpriteAnimation(TwistedTubes->aniFrames, 0, &entity->animator3, true, 2);
-            RSDK.SetSpriteAnimation(TwistedTubes->aniFrames, 0, &entity->animator4, true, 3);
-            RSDK.SetSpriteAnimation(TwistedTubes->aniFrames, 0, &entity->animator5, true, 4);
-            entity->state = TwistedTubes_HandleInteractions;
+            self->visible       = true;
+            self->drawOrder     = Zone->drawOrderHigh;
+            self->active        = ACTIVE_BOUNDS;
+            self->updateRange.y = (self->height + 4) << 21;
+            self->updateRange.x = 0x800000;
+            RSDK.SetSpriteAnimation(TwistedTubes->aniFrames, 0, &self->animator1, true, 0);
+            RSDK.SetSpriteAnimation(TwistedTubes->aniFrames, 0, &self->animator2, true, 1);
+            RSDK.SetSpriteAnimation(TwistedTubes->aniFrames, 0, &self->animator3, true, 2);
+            RSDK.SetSpriteAnimation(TwistedTubes->aniFrames, 0, &self->animator4, true, 3);
+            RSDK.SetSpriteAnimation(TwistedTubes->aniFrames, 0, &self->animator5, true, 4);
+            self->state = TwistedTubes_HandleInteractions;
         }
     }
 }
@@ -112,20 +112,20 @@ void TwistedTubes_HandleInteractions(void)
     foreach_active(Player, player)
     {
         if (player->state != Player_State_TransportTube) {
-            Player_CheckCollisionBox(player, entity, &TwistedTubes->hitbox1);
+            Player_CheckCollisionBox(player, self, &TwistedTubes->hitbox1);
             int32 pID = RSDK.GetEntityID(player);
 
             bool32 flag = false;
-            if (Player_CheckCollisionTouch(player, entity, &TwistedTubes->hitbox2)) {
-                EntityTwistedTubes *tube = CREATE_ENTITY(TwistedTubes, player, entity->position.x, entity->position.y + 0x300000);
+            if (Player_CheckCollisionTouch(player, self, &TwistedTubes->hitbox2)) {
+                EntityTwistedTubes *tube = CREATE_ENTITY(TwistedTubes, player, self->position.x, self->position.y + 0x300000);
                 tube->isPermanent        = true;
-                tube->height             = entity->height + 2;
+                tube->height             = self->height + 2;
                 flag                     = true;
             }
-            else if (Player_CheckCollisionTouch(player, entity, &TwistedTubes->hitbox3)) {
-                EntityTwistedTubes *tube = CREATE_ENTITY(TwistedTubes, player, entity->position.x, entity->position.y + 0x300000);
+            else if (Player_CheckCollisionTouch(player, self, &TwistedTubes->hitbox3)) {
+                EntityTwistedTubes *tube = CREATE_ENTITY(TwistedTubes, player, self->position.x, self->position.y + 0x300000);
                 tube->isPermanent        = true;
-                tube->height             = entity->height + 3;
+                tube->height             = self->height + 3;
                 flag                     = true;
             }
 
@@ -151,140 +151,140 @@ void TwistedTubes_HandleInteractions(void)
 void TwistedTubes_Unknown2(void)
 {
     RSDK_THIS(TwistedTubes);
-    EntityPlayer *player = entity->playerPtr;
-    player->position.x += (entity->position.x - player->position.x - 0x380000) >> 3;
-    player->position.y += (entity->position.y - player->position.y - 0x80000) >> 3;
-    if (++entity->timer == 8) {
-        entity->timer     = 0;
-        entity->direction = FLIP_NONE;
-        entity->state     = TwistedTubes_Unknown6;
+    EntityPlayer *player = self->playerPtr;
+    player->position.x += (self->position.x - player->position.x - 0x380000) >> 3;
+    player->position.y += (self->position.y - player->position.y - 0x80000) >> 3;
+    if (++self->timer == 8) {
+        self->timer     = 0;
+        self->direction = FLIP_NONE;
+        self->state     = TwistedTubes_Unknown6;
     }
 }
 
 void TwistedTubes_Unknown3(void)
 {
     RSDK_THIS(TwistedTubes);
-    EntityPlayer *player = entity->playerPtr;
-    player->position.x += (entity->position.x - player->position.x + 0x380000) >> 3;
-    player->position.y += (entity->position.y - player->position.y - 0x80000) >> 3;
-    if (++entity->timer == 8) {
-        entity->timer     = 0;
-        entity->direction = FLIP_X;
-        entity->state     = TwistedTubes_Unknown4;
+    EntityPlayer *player = self->playerPtr;
+    player->position.x += (self->position.x - player->position.x + 0x380000) >> 3;
+    player->position.y += (self->position.y - player->position.y - 0x80000) >> 3;
+    if (++self->timer == 8) {
+        self->timer     = 0;
+        self->direction = FLIP_X;
+        self->state     = TwistedTubes_Unknown4;
     }
 }
 
 void TwistedTubes_Unknown4(void)
 {
     RSDK_THIS(TwistedTubes);
-    EntityPlayer *player = entity->playerPtr;
-    entity->angle += 8;
-    player->position.x = entity->position.x + 0x3800 * RSDK.Cos256(entity->angle);
-    player->position.y = entity->position.y - (RSDK.Cos256(entity->angle) << 12);
+    EntityPlayer *player = self->playerPtr;
+    self->angle += 8;
+    player->position.x = self->position.x + 0x3800 * RSDK.Cos256(self->angle);
+    player->position.y = self->position.y - (RSDK.Cos256(self->angle) << 12);
     player->velocity.x = -0x400000;
     player->velocity.y = 0x10000;
-    if (entity->angle >= 128) {
-        entity->position.y += 0x100000;
-        entity->angle = 0;
-        entity->state = TwistedTubes_Unknown5;
+    if (self->angle >= 128) {
+        self->position.y += 0x100000;
+        self->angle = 0;
+        self->state = TwistedTubes_Unknown5;
     }
 
     if (!Player_CheckValidState(player)) {
         TwistedTubes->playerFlags[RSDK.GetEntityID(player)] = false;
-        destroyEntity(entity);
+        destroyEntity(self);
     }
 }
 
 void TwistedTubes_Unknown5(void)
 {
     RSDK_THIS(TwistedTubes);
-    EntityPlayer *player = entity->playerPtr;
-    entity->angle += 8;
-    player->position.x = entity->position.x - 0x3800 * RSDK.Cos256(entity->angle);
-    player->position.y = entity->position.y - (RSDK.Cos256(entity->angle) << 9);
+    EntityPlayer *player = self->playerPtr;
+    self->angle += 8;
+    player->position.x = self->position.x - 0x3800 * RSDK.Cos256(self->angle);
+    player->position.y = self->position.y - (RSDK.Cos256(self->angle) << 9);
     player->velocity.x = 0x40000;
     player->velocity.y = 0x10000;
 
-    if (entity->angle < 128) {
-        if (entity->angle >= 64 && entity->direction == FLIP_X && entity->height == 1) {
-            player->position.y                                  = entity->position.y;
+    if (self->angle < 128) {
+        if (self->angle >= 64 && self->direction == FLIP_X && self->height == 1) {
+            player->position.y                                  = self->position.y;
             player->velocity.x                                  = 0xC0000;
             player->velocity.y                                  = 0;
-            entity->state                                       = TwistedTubes_Unknown8;
+            self->state                                       = TwistedTubes_Unknown8;
             TwistedTubes->playerFlags[RSDK.GetEntityID(player)] = false;
         }
     }
     else {
-        entity->angle = 0;
-        if (--entity->height) {
-            entity->position.y += 0x100000;
-            entity->state = TwistedTubes_Unknown4;
+        self->angle = 0;
+        if (--self->height) {
+            self->position.y += 0x100000;
+            self->state = TwistedTubes_Unknown4;
         }
         else {
-            player->position.y = entity->position.y;
+            player->position.y = self->position.y;
             player->velocity.y = 0;
-            if (entity->direction == FLIP_X)
-                entity->state = TwistedTubes_Unknown8;
+            if (self->direction == FLIP_X)
+                self->state = TwistedTubes_Unknown8;
             else
-                entity->state = TwistedTubes_Unknown7;
+                self->state = TwistedTubes_Unknown7;
             TwistedTubes->playerFlags[RSDK.GetEntityID(player)] = false;
         }
     }
 
     if (!Player_CheckValidState(player)) {
         TwistedTubes->playerFlags[RSDK.GetEntityID(player)] = false;
-        destroyEntity(entity);
+        destroyEntity(self);
     }
 }
 
 void TwistedTubes_Unknown6(void)
 {
     RSDK_THIS(TwistedTubes);
-    EntityPlayer *player = entity->playerPtr;
-    entity->angle += 8;
-    player->position.x = entity->position.x - 0x3800 * RSDK.Cos256(entity->angle);
-    player->position.y = entity->position.y - (RSDK.Cos256(entity->angle) << 12);
+    EntityPlayer *player = self->playerPtr;
+    self->angle += 8;
+    player->position.x = self->position.x - 0x3800 * RSDK.Cos256(self->angle);
+    player->position.y = self->position.y - (RSDK.Cos256(self->angle) << 12);
     player->velocity.x = 0x40000;
     player->velocity.y = 0x10000;
 
-    if (entity->angle >= 128) {
-        entity->position.y += 0x200000;
-        entity->angle = 0;
-        entity->state = TwistedTubes_Unknown4;
+    if (self->angle >= 128) {
+        self->position.y += 0x200000;
+        self->angle = 0;
+        self->state = TwistedTubes_Unknown4;
     }
 
     if (!Player_CheckValidState(player)) {
         TwistedTubes->playerFlags[RSDK.GetEntityID(player)] = false;
-        destroyEntity(entity);
+        destroyEntity(self);
     }
 }
 
 void TwistedTubes_Unknown7(void)
 {
     RSDK_THIS(TwistedTubes);
-    EntityPlayer *player = entity->playerPtr;
-    player->position.y   = entity->position.y;
+    EntityPlayer *player = self->playerPtr;
+    player->position.y   = self->position.y;
     if (player->velocity.x <= -0x80000)
-        destroyEntity(entity);
+        destroyEntity(self);
     else
         player->velocity.x -= 0x8000;
 
     if (!Player_CheckValidState(player))
-        destroyEntity(entity);
+        destroyEntity(self);
 }
 
 void TwistedTubes_Unknown8(void)
 {
     RSDK_THIS(TwistedTubes);
-    EntityPlayer *player = entity->playerPtr;
-    player->position.y   = entity->position.y;
+    EntityPlayer *player = self->playerPtr;
+    player->position.y   = self->position.y;
 
     if (player->velocity.x >= 0x80000)
-        destroyEntity(entity);
+        destroyEntity(self);
     else
         player->velocity.x += 0x8000;
     if (!Player_CheckValidState(player))
-        destroyEntity(entity);
+        destroyEntity(self);
 }
 
 #if RETRO_INCLUDE_EDITOR
@@ -292,13 +292,13 @@ void TwistedTubes_EditorDraw(void)
 {
     RSDK_THIS(TwistedTubes);
 
-    entity->updateRange.y = (entity->height + 4) << 21;
-    entity->updateRange.x = 0x800000;
-    RSDK.SetSpriteAnimation(TwistedTubes->aniFrames, 0, &entity->animator1, true, 0);
-    RSDK.SetSpriteAnimation(TwistedTubes->aniFrames, 0, &entity->animator2, true, 1);
-    RSDK.SetSpriteAnimation(TwistedTubes->aniFrames, 0, &entity->animator3, true, 2);
-    RSDK.SetSpriteAnimation(TwistedTubes->aniFrames, 0, &entity->animator4, true, 3);
-    RSDK.SetSpriteAnimation(TwistedTubes->aniFrames, 0, &entity->animator5, true, 4);
+    self->updateRange.y = (self->height + 4) << 21;
+    self->updateRange.x = 0x800000;
+    RSDK.SetSpriteAnimation(TwistedTubes->aniFrames, 0, &self->animator1, true, 0);
+    RSDK.SetSpriteAnimation(TwistedTubes->aniFrames, 0, &self->animator2, true, 1);
+    RSDK.SetSpriteAnimation(TwistedTubes->aniFrames, 0, &self->animator3, true, 2);
+    RSDK.SetSpriteAnimation(TwistedTubes->aniFrames, 0, &self->animator4, true, 3);
+    RSDK.SetSpriteAnimation(TwistedTubes->aniFrames, 0, &self->animator5, true, 4);
     
     TwistedTubes_Draw();
 }

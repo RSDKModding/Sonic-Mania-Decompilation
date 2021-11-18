@@ -11,22 +11,22 @@ void GHZ2Outro_Update(void)
                               GHZ2Outro_LoadNextStage,           NULL };
 
     RSDK_THIS(GHZ2Outro);
-    if (!entity->activated) {
-        CutsceneSeq_StartSequence((Entity *)entity, states_Outro);
+    if (!self->activated) {
+        CutsceneSeq_StartSequence((Entity *)self, states_Outro);
         if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->objectID) {
             EntityCutsceneSeq *seq = RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq);
             seq->skipType         = SKIPTYPE_CALLBACK;
             seq->skipCallback      = GHZ2Outro_Cutscene_SkipCB;
         }
-        entity->active = ACTIVE_NEVER;
+        self->active = ACTIVE_NEVER;
     }
     else {
-        CutsceneSeq_StartSequence((Entity *)entity, states_GHZ2);
+        CutsceneSeq_StartSequence((Entity *)self, states_GHZ2);
         if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->objectID)
             RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->skipType = SKIPTYPE_RELOADSCN;
 
         foreach_active(HUD, hud) { hud->state = HUD_State_GoOffScreen; }
-        entity->active = ACTIVE_NEVER;
+        self->active = ACTIVE_NEVER;
     }
 }
 
@@ -40,13 +40,13 @@ void GHZ2Outro_Create(void *data)
 {
     RSDK_THIS(GHZ2Outro);
     if (!SceneInfo->inEditor) {
-        entity->activated = data != NULL;
+        self->activated = data != NULL;
 
-        foreach_all(DERobot, robot) { entity->DERobot = (Entity *)robot; }
-        foreach_all(Eggman, eggman) { entity->eggman = (Entity *)eggman; }
+        foreach_all(DERobot, robot) { self->DERobot = (Entity *)robot; }
+        foreach_all(Eggman, eggman) { self->eggman = (Entity *)eggman; }
 
-        entity->active  = ACTIVE_NORMAL;
-        entity->visible = false;
+        self->active  = ACTIVE_NORMAL;
+        self->visible = false;
     }
 }
 
@@ -60,7 +60,7 @@ void GHZ2Outro_StageLoad(void)
 bool32 GHZ2Outro_CutsceneState1_Unknown1(EntityCutsceneSeq *host)
 {
     RSDK_THIS(GHZ2Outro);
-    EntityDERobot *robot = (EntityDERobot *)entity->DERobot;
+    EntityDERobot *robot = (EntityDERobot *)self->DERobot;
     robot->state       = StateMachine_None;
     robot->active = ACTIVE_NEVER;
 
@@ -90,7 +90,7 @@ bool32 GHZ2Outro_CutsceneState1_Unknown1(EntityCutsceneSeq *host)
 bool32 GHZ2Outro_CutsceneState1_Unknown2(EntityCutsceneSeq *host)
 {
     RSDK_THIS(GHZ2Outro);
-    EntityDERobot *robot = (EntityDERobot *)entity->DERobot;
+    EntityDERobot *robot = (EntityDERobot *)self->DERobot;
 
     foreach_active(Player, player)
     {
@@ -139,20 +139,20 @@ bool32 GHZ2Outro_CutsceneState2_Unknown1(EntityCutsceneSeq *host)
             robot->active  = ACTIVE_NORMAL;
             robot->visible = true;
         }
-        EntityDERobot *deRobot = (EntityDERobot *)entity->DERobot;
+        EntityDERobot *deRobot = (EntityDERobot *)self->DERobot;
         deRobot->state  = DERobot_Unknown43;
 
-        CutsceneHBH_Unknown8();
-        CutsceneHBH_Unknown10();
-        CutsceneHBH_Unknown9();
-        EntityEggman *eggman = (EntityEggman *)entity->eggman;
+        CutsceneHBH_ShinobiBounceSetup();
+        CutsceneHBH_KingSetup();
+        CutsceneHBH_RiderSetup();
+        EntityEggman *eggman = (EntityEggman *)self->eggman;
         RSDK.SetSpriteAnimation(Eggman->aniFrames, 9, &eggman->animator, true, 0);
         eggman->direction = FLIP_NONE;
         eggman->state     = Eggman_Unknown1;
 
         foreach_all(PhantomRuby, ruby)
         {
-            entity->phantomRuby = (Entity *)ruby;
+            self->phantomRuby = (Entity *)ruby;
             ruby->state         = PhantomRuby_Unknown7;
             ruby->drawFX        = FX_ROTATE;
         }
@@ -190,7 +190,7 @@ bool32 GHZ2Outro_CutsceneState2_Unknown2(EntityCutsceneSeq *host)
             player->right = true;
         }
 
-        if (player->position.x > entity->position.x - 0x180000 * player->playerID - 0xE00000) {
+        if (player->position.x > self->position.x - 0x180000 * player->playerID - 0xE00000) {
             player->right     = FLIP_NONE;
             player->direction = FLIP_NONE;
             if (!player->skidding && player->groundVel > 0) {
@@ -207,7 +207,7 @@ bool32 GHZ2Outro_CutsceneState2_Unknown2(EntityCutsceneSeq *host)
         Music_TransitionTrack(TRACK_HBHMISCHIEF, 0.0125);
     }
     if (host->timer == 120)
-        Camera_SetupLerp(3, 0, entity->position.x, entity->position.y, 4);
+        Camera_SetupLerp(3, 0, self->position.x, self->position.y, 4);
     if (host->timer >= 208) {
         foreach_active(Player, player)
         {
@@ -222,7 +222,7 @@ bool32 GHZ2Outro_CutsceneState2_Unknown3(EntityCutsceneSeq *host)
 {
     RSDK_THIS(GHZ2Outro);
 
-    EntityEggman *eggman = (EntityEggman *)entity->eggman;
+    EntityEggman *eggman = (EntityEggman *)self->eggman;
     if (host->timer == 90) {
         RSDK.SetSpriteAnimation(Eggman->aniFrames, 5, &eggman->animator, true, 2);
         eggman->timer      = 30;
@@ -239,7 +239,7 @@ bool32 GHZ2Outro_CutsceneState2_Unknown3(EntityCutsceneSeq *host)
                 robot->state = DERobot_Unknown23;
             }
         }
-        RSDK.PlaySfx(DERobot->sfxButton2, 0, 255);
+        RSDK.PlaySfx(DERobot->sfxButton2, false, 255);
     }
     if (host->timer == 240) {
         eggman->state  = Eggman_Unknown2;
@@ -249,10 +249,10 @@ bool32 GHZ2Outro_CutsceneState2_Unknown3(EntityCutsceneSeq *host)
     }
 
     if (host->timer == 272) {
-        EntityCutsceneHBH *shinobi = CutsceneHBH_GetEntity(HBH_MYSTIC);
-        if (shinobi)
-            shinobi->state = CutsceneHBH_Unknown15;
-        Camera_SetupLerp(0, 0, entity->position.x, entity->position.y - 0x400000, 1);
+        EntityCutsceneHBH *mystic = CutsceneHBH_GetEntity(HBH_MYSTIC);
+        if (mystic)
+            mystic->state = CutsceneHBH_State_MysticExit;
+        Camera_SetupLerp(0, 0, self->position.x, self->position.y - 0x400000, 1);
         RSDK.PlaySfx(GHZ2Outro->sfxRocketJet, 0, 255);
     }
 
@@ -263,30 +263,30 @@ bool32 GHZ2Outro_CutsceneState2_Unknown3(EntityCutsceneSeq *host)
                 rider->timer = 0;
                 RSDK.SetSpriteAnimation(rider->aniFrames, 2, &rider->animator, true, 0);
             }
-            rider->state = CutsceneHBH_Unknown17;
+            rider->state = CutsceneHBH_State_RiderExit;
         }
-        RSDK.PlaySfx(GHZ2Outro->sfxHeliWoosh, 0, 255);
+        RSDK.PlaySfx(GHZ2Outro->sfxHeliWoosh, false, 255);
     }
     if (host->timer == 304) {
-        CutsceneHBH_Unknown7();
-        RSDK.PlaySfx(GHZ2Outro->sfxShinobiJump, 0, 255);
+        CutsceneHBH_ShinobiJumpSetup();
+        RSDK.PlaySfx(GHZ2Outro->sfxShinobiJump, false, 255);
     }
 
     if (host->timer == 320) {
         EntityCutsceneHBH *gunner = CutsceneHBH_GetEntity(HBH_GUNNER);
         if (gunner) {
             RSDK.SetSpriteAnimation(gunner->aniFrames, 4, &gunner->animator, true, 0);
-            gunner->state = CutsceneHBH_Unknown12;
+            gunner->state = CutsceneHBH_State_GunnerExit;
         }
 
         EntityCutsceneHBH *king = CutsceneHBH_GetEntity(HBH_KING);
         if (king) {
             king->direction ^= FLIP_X;
-            king->state = CutsceneHBH_Unknown18;
+            king->state = CutsceneHBH_State_KingExit;
         }
         RSDK.PlaySfx(GHZ2Outro->sfxRocketJet, 0, 255);
         foreach_active(Player, player) { player->down = false; }
-        EntityPhantomRuby *ruby = (EntityPhantomRuby *)entity->phantomRuby;
+        EntityPhantomRuby *ruby = (EntityPhantomRuby *)self->phantomRuby;
         ruby->startPos.x        = ruby->position.x;
         ruby->startPos.y        = ruby->position.y;
         ruby->state             = PhantomRuby_Unknown5;
@@ -298,7 +298,7 @@ bool32 GHZ2Outro_CutsceneState2_Unknown4(EntityCutsceneSeq *host)
 {
     RSDK_THIS(GHZ2Outro);
     EntityPlayer *player2   = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
-    EntityPhantomRuby *ruby = (EntityPhantomRuby *)entity->phantomRuby;
+    EntityPhantomRuby *ruby = (EntityPhantomRuby *)self->phantomRuby;
 
     if (ruby) {
         if (ruby->state == PhantomRuby_Unknown5) {
@@ -314,7 +314,7 @@ bool32 GHZ2Outro_CutsceneState2_Unknown4(EntityCutsceneSeq *host)
 bool32 GHZ2Outro_CutsceneState2_Unknown5(EntityCutsceneSeq *host)
 {
     RSDK_THIS(GHZ2Outro);
-    EntityPhantomRuby *ruby = (EntityPhantomRuby *)entity->phantomRuby;
+    EntityPhantomRuby *ruby = (EntityPhantomRuby *)self->phantomRuby;
     if (!host->timer)
         PhantomRuby_Unknown2(ruby);
 
@@ -327,18 +327,18 @@ bool32 GHZ2Outro_CutsceneState2_Unknown5(EntityCutsceneSeq *host)
 bool32 GHZ2Outro_CutsceneState2_Unknown6(EntityCutsceneSeq *host)
 {
     RSDK_THIS(GHZ2Outro);
-    EntityPhantomRuby *ruby = (EntityPhantomRuby *)entity->phantomRuby;
+    EntityPhantomRuby *ruby = (EntityPhantomRuby *)self->phantomRuby;
     EntityPlayer *player1  = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     EntityPlayer *player2  = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
 
     EntityFXRuby *fxRuby = NULL;
     if (host->timer) {
-        fxRuby = (EntityFXRuby *)entity->fxRuby;
+        fxRuby = (EntityFXRuby *)self->fxRuby;
     }
     else {
         fxRuby            = (EntityFXRuby *)RSDK.CreateEntity(FXRuby->objectID, 0, ruby->position.x, ruby->position.y);
         fxRuby->drawOrder = Zone->playerDrawHigh;
-        entity->fxRuby    = (Entity *)fxRuby;
+        self->fxRuby    = (Entity *)fxRuby;
         Camera_ShakeScreen(0, 4, 4);
         player1->drawOrder = Zone->playerDrawHigh + 1;
         if (player2->objectID == Player->objectID)
@@ -436,7 +436,7 @@ void GHZ2Outro_Cutscene_SkipCB(void)
 void GHZ2Outro_EditorDraw(void)
 {
     RSDK_THIS(GHZ2Outro);
-    CutsceneRules_DrawCutsceneBounds(entity, &entity->size);
+    CutsceneRules_DrawCutsceneBounds(self, &self->size);
 }
 
 void GHZ2Outro_EditorLoad(void) {}

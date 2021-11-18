@@ -5,7 +5,7 @@ ObjectBall *Ball = NULL;
 void Ball_Update(void)
 {
     RSDK_THIS(Ball);
-    StateMachine_Run(entity->state);
+    StateMachine_Run(self->state);
 }
 
 void Ball_LateUpdate(void) {}
@@ -15,29 +15,29 @@ void Ball_StaticUpdate(void) {}
 void Ball_Draw(void)
 {
     RSDK_THIS(Ball);
-    RSDK.DrawSprite(&entity->animator, NULL, false);
+    RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
 void Ball_Create(void *data)
 {
     RSDK_THIS(Ball);
-    entity->visible       = true;
-    entity->drawOrder     = Zone->drawOrderLow;
-    entity->active        = ACTIVE_BOUNDS;
-    entity->updateRange.x = 0x800000;
-    entity->updateRange.y = 0x800000;
+    self->visible       = true;
+    self->drawOrder     = Zone->drawOrderLow;
+    self->active        = ACTIVE_BOUNDS;
+    self->updateRange.x = 0x800000;
+    self->updateRange.y = 0x800000;
     if (data) {
-        RSDK.SetSpriteAnimation(Ball->aniFrames, 2, &entity->animator, true, 0);
-        entity->state = Ball_State2_Unknown1;
+        RSDK.SetSpriteAnimation(Ball->aniFrames, 2, &self->animator, true, 0);
+        self->state = Ball_State2_Unknown1;
     }
     else {
-        entity->startPos = entity->position;
-        if (!entity->type) {
-            RSDK.SetSpriteAnimation(Ball->aniFrames, 0, &entity->animator, true, 0);
-            entity->state = Ball_State_Setup;
+        self->startPos = self->position;
+        if (!self->type) {
+            RSDK.SetSpriteAnimation(Ball->aniFrames, 0, &self->animator, true, 0);
+            self->state = Ball_State_Setup;
         }
         else {
-            entity->state = Ball_State4_Unknown1;
+            self->state = Ball_State4_Unknown1;
         }
     }
 }
@@ -61,7 +61,7 @@ void Ball_StageLoad(void)
 void Ball_DebugSpawn(void)
 {
     RSDK_THIS(Ball);
-    CREATE_ENTITY(Ball, NULL, entity->position.x, entity->position.y);
+    CREATE_ENTITY(Ball, NULL, self->position.x, self->position.y);
 }
 
 void Ball_DebugDraw(void)
@@ -75,13 +75,13 @@ void Ball_HandleInteractions(void)
     RSDK_THIS(Ball);
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionTouch(player, entity, &Ball->hitbox1)) {
-            Player_CheckHit(player, entity);
-            CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), entity->position.x, entity->position.y)->drawOrder = Zone->drawOrderHigh;
+        if (Player_CheckCollisionTouch(player, self, &Ball->hitbox1)) {
+            Player_CheckHit(player, self);
+            CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), self->position.x, self->position.y)->drawOrder = Zone->drawOrderHigh;
             RSDK.PlaySfx(Explosion->sfxDestroy, false, 255);
-            entity->velocity.y = 0;
-            RSDK.SetSpriteAnimation(Ball->aniFrames, 1, &entity->animator, true, 0);
-            entity->state = Ball_State_Unknown3;
+            self->velocity.y = 0;
+            RSDK.SetSpriteAnimation(Ball->aniFrames, 1, &self->animator, true, 0);
+            self->state = Ball_State_Unknown3;
         }
     }
 }
@@ -89,11 +89,11 @@ void Ball_HandleInteractions(void)
 void Ball_CheckOnScreen(void)
 {
     RSDK_THIS(Ball);
-    if (!RSDK.CheckOnScreen(entity, NULL) && !RSDK.CheckPosOnScreen(&entity->startPos, &entity->updateRange)) {
-        entity->position   = entity->startPos;
-        entity->direction  = FLIP_NONE;
-        entity->velocity.x = 0;
-        entity->velocity.y = 0;
+    if (!RSDK.CheckOnScreen(self, NULL) && !RSDK.CheckPosOnScreen(&self->startPos, &self->updateRange)) {
+        self->position   = self->startPos;
+        self->direction  = FLIP_NONE;
+        self->velocity.x = 0;
+        self->velocity.y = 0;
         Ball_Create(NULL);
     }
 }
@@ -103,7 +103,7 @@ void Ball_SpawnChildren(void)
     RSDK_THIS(Ball);
     RSDK.PlaySfx(Ball->sfxSplash, false, 255);
     for (int32 i = 0; i < 5; ++i) {
-        EntityBall *ball = CREATE_ENTITY(Ball, intToVoid(true), entity->position.x, entity->position.y);
+        EntityBall *ball = CREATE_ENTITY(Ball, intToVoid(true), self->position.x, self->position.y);
         ball->drawOrder  = Zone->drawOrderHigh;
         ball->velocity.x = RSDK.Rand(-0x100, 0x100) << 10;
         if (ball->velocity.x < 0)
@@ -111,40 +111,40 @@ void Ball_SpawnChildren(void)
         ball->velocity.x -= 0x10000;
         if (i > 0)
             ball->velocity.y = RSDK.Rand(-0x400, 0x400) << 8;
-        ball->velocity.y -= entity->velocity.y >> 1;
+        ball->velocity.y -= self->velocity.y >> 1;
     }
-    destroyEntity(entity);
+    destroyEntity(self);
 }
 
 void Ball_State_Setup(void)
 {
     RSDK_THIS(Ball);
-    entity->active = ACTIVE_NORMAL;
-    entity->state  = Ball_State_Unknown1;
+    self->active = ACTIVE_NORMAL;
+    self->state  = Ball_State_Unknown1;
     Ball_State_Unknown1();
 }
 
 void Ball_State_Unknown1(void)
 {
     RSDK_THIS(Ball);
-    if (entity->direction == FLIP_X) {
-        entity->velocity.y += 0x800;
-        if (entity->velocity.y >= 0xC000)
-            entity->direction = FLIP_NONE;
+    if (self->direction == FLIP_X) {
+        self->velocity.y += 0x800;
+        if (self->velocity.y >= 0xC000)
+            self->direction = FLIP_NONE;
     }
     else {
-        entity->velocity.y -= 0x800;
-        if (entity->velocity.y <= -0xC000)
-            entity->direction = FLIP_X;
+        self->velocity.y -= 0x800;
+        if (self->velocity.y <= -0xC000)
+            self->direction = FLIP_X;
     }
-    entity->position.y += entity->velocity.y;
-    RSDK.ProcessAnimation(&entity->animator);
+    self->position.y += self->velocity.y;
+    RSDK.ProcessAnimation(&self->animator);
 
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionTouch(player, entity, &Ball->hitbox2)) {
-            entity->playerPtr = (Entity *)player;
-            entity->state     = Ball_State_Unknown2;
+        if (Player_CheckCollisionTouch(player, self, &Ball->hitbox2)) {
+            self->playerPtr = (Entity *)player;
+            self->state     = Ball_State_Unknown2;
         }
     }
     Ball_HandleInteractions();
@@ -154,40 +154,40 @@ void Ball_State_Unknown1(void)
 void Ball_State_Unknown2(void)
 {
     RSDK_THIS(Ball);
-    Entity *playerPtr = entity->playerPtr;
-    if (entity->position.x <= playerPtr->position.x) {
-        entity->velocity.x += 0x1000;
-        if (entity->velocity.x > 0x20000)
-            entity->velocity.x = 0x20000;
+    Entity *playerPtr = self->playerPtr;
+    if (self->position.x <= playerPtr->position.x) {
+        self->velocity.x += 0x1000;
+        if (self->velocity.x > 0x20000)
+            self->velocity.x = 0x20000;
     }
     else {
-        entity->velocity.x -= 0x1000;
-        if (entity->velocity.x < -0x20000)
-            entity->velocity.x = -0x20000;
+        self->velocity.x -= 0x1000;
+        if (self->velocity.x < -0x20000)
+            self->velocity.x = -0x20000;
     }
-    if (entity->position.y <= playerPtr->position.y - 0x400000) {
-        entity->velocity.y += 0x1000;
-        if (entity->velocity.y > 0x20000)
-            entity->velocity.y = 0x20000;
+    if (self->position.y <= playerPtr->position.y - 0x400000) {
+        self->velocity.y += 0x1000;
+        if (self->velocity.y > 0x20000)
+            self->velocity.y = 0x20000;
     }
     else {
-        entity->velocity.y -= 0x1000;
-        if (entity->velocity.y < -0x20000)
-            entity->velocity.y = -0x20000;
+        self->velocity.y -= 0x1000;
+        if (self->velocity.y < -0x20000)
+            self->velocity.y = -0x20000;
     }
-    entity->position.x += entity->velocity.x;
-    entity->position.y += entity->velocity.y;
+    self->position.x += self->velocity.x;
+    self->position.y += self->velocity.y;
 
-    if (abs(entity->position.x - playerPtr->position.x) < 0x100000) {
-        if (abs(0x500000 + entity->position.y - playerPtr->position.y) < 0x100000 && RSDK.CheckOnScreen(entity, &entity->updateRange)) {
-            RSDK.CreateEntity(Explosion->objectID, intToVoid(EXPLOSION_ENEMY), entity->position.x, entity->position.y)->drawOrder = Zone->drawOrderHigh;
+    if (abs(self->position.x - playerPtr->position.x) < 0x100000) {
+        if (abs(0x500000 + self->position.y - playerPtr->position.y) < 0x100000 && RSDK.CheckOnScreen(self, &self->updateRange)) {
+            RSDK.CreateEntity(Explosion->objectID, intToVoid(EXPLOSION_ENEMY), self->position.x, self->position.y)->drawOrder = Zone->drawOrderHigh;
             RSDK.PlaySfx(Explosion->sfxDestroy, false, 255);
-            entity->velocity.y = 0;
-            RSDK.SetSpriteAnimation(Ball->aniFrames, 1, &entity->animator, true, 0);
-            entity->state = Ball_State_Unknown3;
+            self->velocity.y = 0;
+            RSDK.SetSpriteAnimation(Ball->aniFrames, 1, &self->animator, true, 0);
+            self->state = Ball_State_Unknown3;
         }
     }
-    RSDK.ProcessAnimation(&entity->animator);
+    RSDK.ProcessAnimation(&self->animator);
     Ball_HandleInteractions();
     Ball_CheckOnScreen();
 }
@@ -195,24 +195,23 @@ void Ball_State_Unknown2(void)
 void Ball_State_Unknown3(void)
 {
     RSDK_THIS(Ball);
-    RSDK.ProcessAnimation(&entity->animator);
-    if (RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0xB0000, false)) {
+    RSDK.ProcessAnimation(&self->animator);
+    if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0xB0000, false)) {
         Ball_SpawnChildren();
     }
     else {
-        entity->position.y += entity->velocity.y;
-        entity->velocity.y += 0x3800;
+        self->position.y += self->velocity.y;
+        self->velocity.y += 0x3800;
         foreach_active(Player, player)
         {
-            if (Player_CheckCollisionTouch(player, entity, &Ball->hitbox1)) {
-                if (player->shield != SHIELD_BUBBLE)
-                    Player_CheckHit(player, entity);
+            if (Player_CheckCollisionTouch(player, self, &Ball->hitbox1)) {
+                Player_CheckElementalHit(player, self, SHIELD_BUBBLE);
                 Ball_SpawnChildren();
             }
         }
 
-        if (!RSDK.CheckOnScreen(entity, &entity->updateRange))
-            destroyEntity(entity);
+        if (!RSDK.CheckOnScreen(self, &self->updateRange))
+            destroyEntity(self);
     }
 }
 
@@ -220,35 +219,35 @@ void Ball_State2_Unknown1(void)
 {
     RSDK_THIS(Ball);
 
-    entity->position.x += entity->velocity.x;
-    entity->position.y += entity->velocity.y;
-    entity->velocity.y += 0x3800;
-    if (!RSDK.CheckOnScreen(entity, &entity->updateRange))
-        destroyEntity(entity);
+    self->position.x += self->velocity.x;
+    self->position.y += self->velocity.y;
+    self->velocity.y += 0x3800;
+    if (!RSDK.CheckOnScreen(self, &self->updateRange))
+        destroyEntity(self);
 }
 
 void Ball_State3_Unknown1(void)
 {
     RSDK_THIS(Ball);
-    RSDK.ProcessAnimation(&entity->animator);
+    RSDK.ProcessAnimation(&self->animator);
 
-    entity->position.x += entity->velocity.x;
-    entity->position.y += entity->velocity.y;
+    self->position.x += self->velocity.x;
+    self->position.y += self->velocity.y;
 
-    if (entity->velocity.x < 0)
-        entity->velocity.x += 0x400;
-    if (entity->velocity.x > 0)
-        entity->velocity.x -= 0x400;
+    if (self->velocity.x < 0)
+        self->velocity.x += 0x400;
+    if (self->velocity.x > 0)
+        self->velocity.x -= 0x400;
 
-    if (entity->velocity.y < 0)
-        entity->velocity.y += 0x400;
-    if (entity->velocity.y > 0)
-        entity->velocity.y -= 0x400;
+    if (self->velocity.y < 0)
+        self->velocity.y += 0x400;
+    if (self->velocity.y > 0)
+        self->velocity.y -= 0x400;
 
-    if (!entity->velocity.x && !entity->velocity.y) {
-        entity->startPos.x = entity->position.x;
-        entity->startPos.y = entity->position.y;
-        entity->state      = Ball_State_Unknown1;
+    if (!self->velocity.x && !self->velocity.y) {
+        self->startPos.x = self->position.x;
+        self->startPos.y = self->position.y;
+        self->state      = Ball_State_Unknown1;
     }
     Ball_HandleInteractions();
 }
@@ -260,10 +259,10 @@ void Ball_State4_Unknown1(void)
     if (child->objectID != Ball->objectID) {
         RSDK.ResetEntityPtr(child, Ball->objectID, NULL);
         child->active     = ACTIVE_NORMAL;
-        child->position.x = entity->position.x;
-        child->position.y = entity->position.y;
+        child->position.x = self->position.x;
+        child->position.y = self->position.y;
         child->state      = Ball_State3_Unknown1;
-        switch (entity->type) {
+        switch (self->type) {
             case 1: child->velocity.x = -0x20000; break;
             case 2:
                 child->velocity.y = -0x20000;
@@ -287,11 +286,11 @@ void Ball_EditorDraw(void)
 {
     RSDK_THIS(Ball);
 
-    entity->startPos = entity->position;
-    if (!entity->type) 
-        RSDK.SetSpriteAnimation(Ball->aniFrames, 0, &entity->animator, true, 0);
+    self->startPos = self->position;
+    if (!self->type) 
+        RSDK.SetSpriteAnimation(Ball->aniFrames, 0, &self->animator, true, 0);
     else 
-        RSDK.SetSpriteAnimation(0xFFFF, 0, &entity->animator, true, 0);
+        RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator, true, 0);
 
     Ball_Draw();
 }

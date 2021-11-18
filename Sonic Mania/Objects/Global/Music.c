@@ -5,7 +5,7 @@ ObjectMusic *Music;
 void Music_Update(void)
 {
     RSDK_THIS(Music);
-    StateMachine_Run(entity->state);
+    StateMachine_Run(self->state);
 }
 
 void Music_LateUpdate(void) {}
@@ -18,15 +18,15 @@ void Music_Create(void *data)
 {
     RSDK_THIS(Music);
     if (!SceneInfo->inEditor) {
-        entity->active = ((SceneInfo->state & 3) != 3) + ACTIVE_ALWAYS;
-        if (entity->trackFile.textLength) {
-            if (entity->trackID != TRACK_NOLOAD) {
-                RSDK.GetCString(Music->trackNames[entity->trackID], &entity->trackFile);
-                Music->trackLoops[entity->trackID] = entity->trackLoop;
-                if (entity->playOnLoad)
-                    entity->state = Music_State_PlayMusic;
+        self->active = ((SceneInfo->state & 3) != 3) + ACTIVE_ALWAYS;
+        if (self->trackFile.textLength) {
+            if (self->trackID != TRACK_NOLOAD) {
+                RSDK.GetCString(Music->trackNames[self->trackID], &self->trackFile);
+                Music->trackLoops[self->trackID] = self->trackLoop;
+                if (self->playOnLoad)
+                    self->state = Music_State_PlayMusic;
                 else
-                    destroyEntity(entity);
+                    destroyEntity(self);
             }
         }
     }
@@ -90,15 +90,15 @@ void Music_State_PlayMusic(void)
         switch (Music->activeTrack) {
             case TRACK_INVINCIBLE:
             case TRACK_SNEAKERS:
-            case TRACK_1UP: Music_TransitionTrack(entity->trackID, 0.025); break;
+            case TRACK_1UP: Music_TransitionTrack(self->trackID, 0.025); break;
             case TRACK_SUPER: Music_Unknown2(Music->activeTrack); break;
             default: break;
         }
     }
     else {
-        Music_PlayTrack(entity->trackID);
+        Music_PlayTrack(self->trackID);
     }
-    destroyEntity(entity);
+    destroyEntity(self);
 }
 
 void Music_PlayMusicTrack(uint8 trackID)
@@ -206,7 +206,7 @@ void Music_PlayTrackPtr(EntityMusic *entity)
 {
     RSDK.GetCString(Music->trackNames[0], &entity->trackFile);
     Music->trackLoops[0] = entity->trackLoop;
-    RSDK.ResetEntitySlot(SLOT_MUSIC, TYPE_BLANK, NULL);
+    destroyEntitySlot(SLOT_MUSIC);
     RSDK.StopChannel(Music->channelID);
     Music->activeTrack   = 0;
     Music->trackStartPos = 0;
@@ -480,31 +480,31 @@ void Music_FadeOut(float fadeSpeed)
 void Music_State_Unknown11(void)
 {
     RSDK_THIS(Music);
-    if (Music->activeTrack == entity->trackID && RSDK.GetChannelPos(Music->channelID) > entity->trackStartPos) {
-        entity->trackStartPos = 0;
-        if (entity->volume < 1.0) {
-            entity->volume += entity->fadeSpeed;
-            RSDK.SetChannelAttributes(Music->channelID, entity->volume, 0.0, 1.0);
-            if (entity->volume >= 1.0)
-                entity->volume = 1.0;
+    if (Music->activeTrack == self->trackID && RSDK.GetChannelPos(Music->channelID) > self->trackStartPos) {
+        self->trackStartPos = 0;
+        if (self->volume < 1.0) {
+            self->volume += self->fadeSpeed;
+            RSDK.SetChannelAttributes(Music->channelID, self->volume, 0.0, 1.0);
+            if (self->volume >= 1.0)
+                self->volume = 1.0;
         }
     }
 
-    if (entity->timer > 0) {
-        entity->timer--;
-        if (!entity->timer)
-            Music_Unknown7(entity);
+    if (self->timer > 0) {
+        self->timer--;
+        if (!self->timer)
+            Music_Unknown7(self);
     }
 }
 void Music_State_FadeTrackOut(void)
 {
     RSDK_THIS(Music);
-    if (entity->volume > -0.5) {
-        entity->volume -= entity->fadeSpeed;
-        if (Music->activeTrack == entity->trackID)
-            RSDK.SetChannelAttributes(Music->channelID, entity->volume, 0.0, 1.0);
-        if (entity->volume <= -0.5)
-            Music_Unknown7(entity);
+    if (self->volume > -0.5) {
+        self->volume -= self->fadeSpeed;
+        if (Music->activeTrack == self->trackID)
+            RSDK.SetChannelAttributes(Music->channelID, self->volume, 0.0, 1.0);
+        if (self->volume <= -0.5)
+            Music_Unknown7(self);
     }
 }
 void Music_State_FadeTrackIn(void)
@@ -512,31 +512,31 @@ void Music_State_FadeTrackIn(void)
     RSDK_THIS(Music);
     if (RSDK.GetChannelPos(Music->channelID) > Music->trackStartPos) {
         Music->trackStartPos = 0;
-        entity->volume += entity->fadeSpeed;
-        RSDK.SetChannelAttributes(Music->channelID, entity->volume, 0.0, 1.0);
-        if (entity->volume >= 1.0) {
-            entity->volume = 1.0;
-            destroyEntity(entity);
+        self->volume += self->fadeSpeed;
+        RSDK.SetChannelAttributes(Music->channelID, self->volume, 0.0, 1.0);
+        if (self->volume >= 1.0) {
+            self->volume = 1.0;
+            destroyEntity(self);
         }
     }
 }
 void Music_State_FadeOut(void)
 {
     RSDK_THIS(Music);
-    entity->volume -= entity->fadeSpeed;
-    RSDK.SetChannelAttributes(Music->channelID, entity->volume, 0.0, 1.0);
-    if (entity->volume < -0.5) {
+    self->volume -= self->fadeSpeed;
+    RSDK.SetChannelAttributes(Music->channelID, self->volume, 0.0, 1.0);
+    if (self->volume < -0.5) {
         RSDK.StopChannel(Music->channelID);
-        destroyEntity(entity);
+        destroyEntity(self);
     }
 }
 
 void Music_State_TransitionTrack(void)
 {
     RSDK_THIS(Music);
-    entity->volume -= entity->fadeSpeed;
-    RSDK.SetChannelAttributes(Music->channelID, entity->volume, 0.0, 1.0);
-    if (entity->volume < -0.5) {
+    self->volume -= self->fadeSpeed;
+    RSDK.SetChannelAttributes(Music->channelID, self->volume, 0.0, 1.0);
+    if (self->volume < -0.5) {
         RSDK.StopChannel(Music->channelID);
         Music->activeTrack   = Music->nextTrack;
         Music->trackStartPos = 0;
@@ -546,7 +546,7 @@ void Music_State_TransitionTrack(void)
             RSDK.SetChannelAttributes(Music->channelID, 1.0, 0.0, 0.75);
 #endif
         Music->nextTrack = TRACK_NONE;
-        destroyEntity(entity);
+        destroyEntity(self);
     }
 }
 
@@ -554,8 +554,8 @@ void Music_State_TransitionTrack(void)
 void Music_EditorDraw(void)
 {
     RSDK_THIS(Music);
-    RSDK.SetSpriteAnimation(Music->aniFrames, 0, &entity->animator, true, 1);
-    RSDK.DrawSprite(&entity->animator, NULL, false);
+    RSDK.SetSpriteAnimation(Music->aniFrames, 0, &self->animator, true, 1);
+    RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
 void Music_EditorLoad(void) { Music->aniFrames = RSDK.LoadSpriteAnimation("Editor/EditorIcons.bin", SCOPE_STAGE); }

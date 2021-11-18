@@ -593,7 +593,7 @@ void OptionsMenu_Unknown24(void)
     EntityUIControl *control = (EntityUIControl *)OptionsMenu->controlsControl_Windows;
 
     for (int32 i = 0; i < control->buttonCount; ++i) {
-        if (entity == control->buttons[i]) {
+        if (self == control->buttons[i]) {
             OptionsMenu_Unknown23(i);
             UIControl_MatchMenuTag("Controls KB");
         }
@@ -638,7 +638,7 @@ void OptionsMenu_Unknown29(int32 status)
 void OptionsMenu_Unknown30(void)
 {
     RSDK_THIS(UIButton);
-    EntityUIControl *control = (EntityUIControl *)entity->parent;
+    EntityUIControl *control = (EntityUIControl *)self->parent;
     Options_SetLanguage(control->activeEntityID);
     Localization->language     = control->activeEntityID;
     control->selectionDisabled = true;
@@ -650,9 +650,9 @@ void OptionsMenu_Unknown31(void)
 {
     RSDK_THIS(UIButton);
     EntityOptions *options  = (EntityOptions *)globals->optionsRAM;
-    options->screenShader = entity->selection;
+    options->screenShader = self->selection;
     options->field_60 = true;
-    RSDK.SetSettingsValue(SETTINGS_SHADERID, entity->selection);
+    RSDK.SetSettingsValue(SETTINGS_SHADERID, self->selection);
     RSDK.SetSettingsValue(SETTINGS_CHANGED, false);
     Options->state = 1;
 }
@@ -662,11 +662,11 @@ void OptionsMenu_Unknown32(void)
     RSDK_THIS(UIButton);
 
     EntityOptions *options = (EntityOptions *)globals->optionsRAM;
-    if (entity->selection != 4) {
-        RSDK.SetSettingsValue(SETTINGS_WINDOW_WIDTH, 424 * (entity->selection + 1));
-        RSDK.SetSettingsValue(SETTINGS_WINDOW_HEIGHT, SCREEN_YSIZE * (entity->selection + 1));
+    if (self->selection != 4) {
+        RSDK.SetSettingsValue(SETTINGS_WINDOW_WIDTH, 424 * (self->selection + 1));
+        RSDK.SetSettingsValue(SETTINGS_WINDOW_HEIGHT, SCREEN_YSIZE * (self->selection + 1));
 
-        options->windowSize = entity->selection;
+        options->windowSize = self->selection;
         Options->state   = 1;
     }
 }
@@ -676,8 +676,8 @@ void OptionsMenu_Unknown33(void)
     RSDK_THIS(UIButton);
     EntityOptions *options  = (EntityOptions *)globals->optionsRAM;
 
-    options->windowBorder = entity->selection;
-    RSDK.SetSettingsValue(SETTINGS_BORDERED, entity->selection);
+    options->windowBorder = self->selection;
+    RSDK.SetSettingsValue(SETTINGS_BORDERED, self->selection);
     Options->state = 1;
 }
 
@@ -686,8 +686,8 @@ void OptionsMenu_Unknown34(void)
     RSDK_THIS(UIButton);
     EntityOptions *options = (EntityOptions *)globals->optionsRAM;
 
-    options->windowed = entity->selection ^ 1;
-    RSDK.SetSettingsValue(SETTINGS_WINDOWED, entity->selection ^ 1);
+    options->windowed = self->selection ^ 1;
+    RSDK.SetSettingsValue(SETTINGS_WINDOWED, self->selection ^ 1);
     Options->state = 1;
 }
 
@@ -696,8 +696,8 @@ void OptionsMenu_Unknown35(void)
     RSDK_THIS(UIButton);
     EntityOptions *options = (EntityOptions *)globals->optionsRAM;
 
-    options->vSync = entity->selection;
-    RSDK.SetSettingsValue(SETTINGS_VSYNC, entity->selection);
+    options->vSync = self->selection;
+    RSDK.SetSettingsValue(SETTINGS_VSYNC, self->selection);
     Options->state = 1;
 }
 
@@ -706,8 +706,8 @@ void OptionsMenu_Unknown36(void)
     RSDK_THIS(UIButton);
     EntityOptions *options = (EntityOptions *)globals->optionsRAM;
 
-    options->tripleBuffering = entity->selection;
-    RSDK.SetSettingsValue(SETTINGS_TRIPLEBUFFERED, entity->selection);
+    options->tripleBuffering = self->selection;
+    RSDK.SetSettingsValue(SETTINGS_TRIPLEBUFFERED, self->selection);
     Options->state = 1;
 }
 
@@ -719,43 +719,43 @@ void OptionsMenu_UISlider_ChangedCB(void)
     // what the hell is up with this???????
     // it'd only ever be 0 or 1 why are F1,F2,F4,F5 & FC options?????
     // this is a CB for the slider why are the boolean values here???
-    bool32 value = entity->frameID != 1;
+    bool32 value = self->frameID != 1;
     switch (value) {
         case 0xF1:
-            options->windowed = entity->sliderPos;
+            options->windowed = self->sliderPos;
             RSDK.SetSettingsValue(SETTINGS_WINDOWED, options->windowed);
             Options->state = 1;
             break;
         case 0xF2:
-            options->windowBorder = entity->sliderPos;
+            options->windowBorder = self->sliderPos;
             RSDK.SetSettingsValue(SETTINGS_BORDERED, options->windowBorder);
             Options->state = 1;
             break;
         case 0xF4:
-            options->vSync = entity->sliderPos;
+            options->vSync = self->sliderPos;
             RSDK.SetSettingsValue(SETTINGS_VSYNC, options->vSync);
             Options->state = 1;
             break;
         case 0xF5:
-            options->tripleBuffering = entity->sliderPos;
+            options->tripleBuffering = self->sliderPos;
             RSDK.SetSettingsValue(SETTINGS_TRIPLEBUFFERED, options->tripleBuffering);
             Options->state = 1;
             break;
         case 0xFC:
-            options->screenShader = entity->sliderPos;
+            options->screenShader = self->sliderPos;
             options->field_60   = true;
             RSDK.SetSettingsValue(SETTINGS_SHADERID, options->screenShader);
             RSDK.SetSettingsValue(SETTINGS_CHANGED, 0);
             Options->state = 1;
             break;
         case 0:
-            options->volMusic = entity->sliderPos;
+            options->volMusic = self->sliderPos;
             options->field_68   = 1;
             RSDK.SetSettingsValue(SETTINGS_STREAM_VOL, options->volMusic);
             Options->state = 1;
             break;
         case 1:
-            options->volSfx   = entity->sliderPos;
+            options->volSfx   = self->sliderPos;
             options->field_70   = true;
             RSDK.SetSettingsValue(SETTINGS_SFX_VOL, options->volSfx);
             Options->state = 1;

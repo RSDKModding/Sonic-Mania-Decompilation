@@ -5,7 +5,7 @@ ObjectOrbinaut *Orbinaut = NULL;
 void Orbinaut_Update(void)
 {
     RSDK_THIS(Orbinaut);
-    StateMachine_Run(entity->state);
+    StateMachine_Run(self->state);
 }
 
 void Orbinaut_LateUpdate(void) {}
@@ -16,46 +16,46 @@ void Orbinaut_Draw(void)
 {
     RSDK_THIS(Orbinaut);
     for (int32 o = 0; o < Orbinaut_MaxOrbs; ++o) {
-        if ((1 << o) & entity->activeOrbs) {
-            RSDK.DrawSprite(&entity->animatorOrb, &entity->orbPositions[o], false);
+        if ((1 << o) & self->activeOrbs) {
+            RSDK.DrawSprite(&self->animatorOrb, &self->orbPositions[o], false);
         }
     }
 
-    RSDK.DrawSprite(&entity->animatorFace, NULL, false);
+    RSDK.DrawSprite(&self->animatorFace, NULL, false);
 }
 
 void Orbinaut_Create(void *data)
 {
     RSDK_THIS(Orbinaut);
 
-    entity->visible = true;
-    if (entity->planeFilter > 0 && ((entity->planeFilter - 1) & 2))
-        entity->drawOrder = Zone->drawOrderHigh;
+    self->visible = true;
+    if (self->planeFilter > 0 && ((self->planeFilter - 1) & 2))
+        self->drawOrder = Zone->drawOrderHigh;
     else
-        entity->drawOrder = Zone->drawOrderLow;
-    entity->drawFX |= FX_FLIP;
-    entity->startPos      = entity->position;
-    entity->startDir      = entity->direction;
-    entity->active        = ACTIVE_BOUNDS;
-    entity->updateRange.x = 0x800000;
-    entity->updateRange.y = 0x800000;
-    entity->activeOrbs    = 1 | 2 | 4 | 8;
+        self->drawOrder = Zone->drawOrderLow;
+    self->drawFX |= FX_FLIP;
+    self->startPos      = self->position;
+    self->startDir      = self->direction;
+    self->active        = ACTIVE_BOUNDS;
+    self->updateRange.x = 0x800000;
+    self->updateRange.y = 0x800000;
+    self->activeOrbs    = 1 | 2 | 4 | 8;
     if (data) {
-        RSDK.SetSpriteAnimation(Orbinaut->aniFrames, 1, &entity->animatorFace, true, 0);
-        entity->state = Orbinaut_State_Orb;
+        RSDK.SetSpriteAnimation(Orbinaut->aniFrames, 1, &self->animatorFace, true, 0);
+        self->state = Orbinaut_State_Orb;
     }
     else {
-        RSDK.SetSpriteAnimation(Orbinaut->aniFrames, 0, &entity->animatorFace, true, 0);
-        RSDK.SetSpriteAnimation(Orbinaut->aniFrames, 1, &entity->animatorOrb, true, 0);
-        entity->state = Orbinaut_State_Setup;
-        if (entity->fireOrbs) {
-            entity->velocity.x = 0;
+        RSDK.SetSpriteAnimation(Orbinaut->aniFrames, 0, &self->animatorFace, true, 0);
+        RSDK.SetSpriteAnimation(Orbinaut->aniFrames, 1, &self->animatorOrb, true, 0);
+        self->state = Orbinaut_State_Setup;
+        if (self->fireOrbs) {
+            self->velocity.x = 0;
         }
         else {
-            if (entity->direction == FLIP_NONE)
-                entity->velocity.x = -0x4000;
+            if (self->direction == FLIP_NONE)
+                self->velocity.x = -0x4000;
             else
-                entity->velocity.x = 0x4000;
+                self->velocity.x = 0x4000;
         }
     }
 }
@@ -78,7 +78,7 @@ void Orbinaut_StageLoad(void)
 void Orbinaut_DebugSpawn(void)
 {
     RSDK_THIS(Orbinaut);
-    CREATE_ENTITY(Orbinaut, NULL, entity->position.x, entity->position.y);
+    CREATE_ENTITY(Orbinaut, NULL, self->position.x, self->position.y);
 }
 
 void Orbinaut_DebugDraw(void)
@@ -91,35 +91,35 @@ void Orbinaut_HandlePlayerInteractions(void)
 {
     RSDK_THIS(Orbinaut);
 
-    int32 storeX = entity->position.x;
-    int32 storeY = entity->position.y;
+    int32 storeX = self->position.x;
+    int32 storeY = self->position.y;
     for (int32 i = 0; i < Orbinaut_MaxOrbs; ++i) {
-        if ((1 << i) & entity->activeOrbs) {
-            entity->position.x = entity->orbPositions[i].x;
-            entity->position.y = entity->orbPositions[i].y;
+        if ((1 << i) & self->activeOrbs) {
+            self->position.x = self->orbPositions[i].x;
+            self->position.y = self->orbPositions[i].y;
             foreach_active(Player, player)
             {
-                if (entity->planeFilter <= 0 || player->collisionPlane == (uint8)((entity->planeFilter - 1) & 1)) {
-                    if (Player_CheckCollisionTouch(player, entity, &Orbinaut->hitbox2)) {
-                        Player_CheckHit(player, entity);
+                if (self->planeFilter <= 0 || player->collisionPlane == (uint8)((self->planeFilter - 1) & 1)) {
+                    if (Player_CheckCollisionTouch(player, self, &Orbinaut->hitbox2)) {
+                        Player_CheckHit(player, self);
                     }
                 }
             }
         }
     }
 
-    entity->position.x = storeX;
-    entity->position.y = storeY;
+    self->position.x = storeX;
+    self->position.y = storeY;
 
     foreach_active(Player, player)
     {
-        if (Player_CheckBadnikTouch(player, entity, &Orbinaut->hitbox1) && Player_CheckBadnikBreak(entity, player, false)) {
-            int32 angle = entity->angle;
+        if (Player_CheckBadnikTouch(player, self, &Orbinaut->hitbox1) && Player_CheckBadnikBreak(self, player, false)) {
+            int32 angle = self->angle;
             for (int32 i = 0; i < Orbinaut_MaxOrbs; ++i) {
-                if ((1 << i) & entity->activeOrbs) {
-                    entity->position.x = entity->orbPositions[i].x;
-                    entity->position.y = entity->orbPositions[i].y;
-                    EntityOrbinaut *orb = CREATE_ENTITY(Orbinaut, intToVoid(1), entity->orbPositions[i].x, entity->orbPositions[i].y);
+                if ((1 << i) & self->activeOrbs) {
+                    self->position.x = self->orbPositions[i].x;
+                    self->position.y = self->orbPositions[i].y;
+                    EntityOrbinaut *orb = CREATE_ENTITY(Orbinaut, intToVoid(1), self->orbPositions[i].x, self->orbPositions[i].y);
 
                     orb->state = Orbinaut_Unknown10;
                     orb->velocity.x = 0x380 * RSDK.Cos256(angle);
@@ -127,7 +127,7 @@ void Orbinaut_HandlePlayerInteractions(void)
                 }
                 angle += (0x100 / Orbinaut_MaxOrbs);
             }
-            destroyEntity(entity);
+            destroyEntity(self);
         }
     }
 }
@@ -136,16 +136,16 @@ void Orbinaut_HandleRotation(void)
 {
     RSDK_THIS(Orbinaut);
 
-    int32 angle = entity->angle;
-    if (entity->direction)
-        entity->angle = (angle - 1) & 0xFF;
+    int32 angle = self->angle;
+    if (self->direction)
+        self->angle = (angle - 1) & 0xFF;
     else
-        entity->angle = (angle + 1) & 0xFF;
+        self->angle = (angle + 1) & 0xFF;
 
     for (int32 i = 0; i < Orbinaut_MaxOrbs; ++i) {
-        if ((1 << i) & entity->activeOrbs) {
-            entity->orbPositions[i].x = (RSDK.Cos256(angle) << 12) + entity->position.x;
-            entity->orbPositions[i].y = (RSDK.Sin256(angle) << 12) + entity->position.y;
+        if ((1 << i) & self->activeOrbs) {
+            self->orbPositions[i].x = (RSDK.Cos256(angle) << 12) + self->position.x;
+            self->orbPositions[i].y = (RSDK.Sin256(angle) << 12) + self->position.y;
         }
         angle += (0x100 / Orbinaut_MaxOrbs);
     }
@@ -154,9 +154,9 @@ void Orbinaut_HandleRotation(void)
 void Orbinaut_CheckOnScreen(void)
 {
     RSDK_THIS(Orbinaut);
-    if (!RSDK.CheckOnScreen(entity, NULL) && !RSDK.CheckPosOnScreen(&entity->startPos, &entity->updateRange)) {
-        entity->position  = entity->startPos;
-        entity->direction = entity->startDir;
+    if (!RSDK.CheckOnScreen(self, NULL) && !RSDK.CheckPosOnScreen(&self->startPos, &self->updateRange)) {
+        self->position  = self->startPos;
+        self->direction = self->startDir;
         Orbinaut_Create(NULL);
     }
 }
@@ -164,8 +164,8 @@ void Orbinaut_CheckOnScreen(void)
 void Orbinaut_State_Setup(void)
 {
     RSDK_THIS(Orbinaut);
-    entity->active = ACTIVE_NORMAL;
-    entity->state  = Orbinaut_Unknown6;
+    self->active = ACTIVE_NORMAL;
+    self->state  = Orbinaut_Unknown6;
     Orbinaut_Unknown6();
 }
 
@@ -173,29 +173,29 @@ void Orbinaut_Unknown6(void)
 {
     RSDK_THIS(Orbinaut);
 
-    entity->position.x += entity->velocity.x;
+    self->position.x += self->velocity.x;
     Orbinaut_HandleRotation();
     Orbinaut_HandlePlayerInteractions();
 
-    if (entity->fireOrbs) {
+    if (self->fireOrbs) {
         EntityPlayer *playerPtr = NULL;
         int32 distanceX           = 0x7FFFFFFF;
         int32 distanceY           = 0x7FFFFFFF;
         foreach_active(Player, player)
         {
-            if (abs(player->position.y - entity->position.y) < distanceY)
-                distanceY = abs(player->position.y - entity->position.y);
+            if (abs(player->position.y - self->position.y) < distanceY)
+                distanceY = abs(player->position.y - self->position.y);
 
-            if (abs(player->position.y - entity->position.y) < 0x400000) {
+            if (abs(player->position.y - self->position.y) < 0x400000) {
                 if (!playerPtr) {
-                    if (abs(player->position.x - entity->position.x) < distanceX) {
-                        distanceX = abs(player->position.x - entity->position.x);
+                    if (abs(player->position.x - self->position.x) < distanceX) {
+                        distanceX = abs(player->position.x - self->position.x);
                         playerPtr = player;
                     }
                 }
                 else {
-                    if (abs(player->position.x - entity->position.x) < distanceX) {
-                        distanceX = abs(player->position.x - entity->position.x);
+                    if (abs(player->position.x - self->position.x) < distanceX) {
+                        distanceX = abs(player->position.x - self->position.x);
                         playerPtr = player;
                     }
                 }
@@ -206,11 +206,11 @@ void Orbinaut_Unknown6(void)
             playerPtr = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
 
         if (distanceX <= 0x800000) {
-            entity->state             = Orbinaut_Unknown7;
-            entity->animatorFace.frameID = 1;
+            self->state             = Orbinaut_Unknown7;
+            self->animatorFace.frameID = 1;
         }
 
-        entity->direction = playerPtr->position.x >= entity->position.x;
+        self->direction = playerPtr->position.x >= self->position.x;
     }
 
     Orbinaut_CheckOnScreen();
@@ -220,15 +220,15 @@ void Orbinaut_Unknown7(void)
 {
     RSDK_THIS(Orbinaut);
 
-    int32 angle = entity->angle;
+    int32 angle = self->angle;
     Orbinaut_HandleRotation();
 
     for (int32 i = 0; i < Orbinaut_MaxOrbs; ++i) {
         if (angle == 64) {
-            if ((1 << i) & entity->activeOrbs) {
-                entity->activeOrbs &= ~(1 << i);
-                EntityOrbinaut *sol = CREATE_ENTITY(Orbinaut, intToVoid(true), entity->orbPositions[i].x, entity->orbPositions[i].y);
-                if (entity->direction == FLIP_NONE)
+            if ((1 << i) & self->activeOrbs) {
+                self->activeOrbs &= ~(1 << i);
+                EntityOrbinaut *sol = CREATE_ENTITY(Orbinaut, intToVoid(true), self->orbPositions[i].x, self->orbPositions[i].y);
+                if (self->direction == FLIP_NONE)
                     sol->velocity.x = -0x20000;
                 else
                     sol->velocity.x = 0x20000;
@@ -238,18 +238,18 @@ void Orbinaut_Unknown7(void)
     }
     Orbinaut_HandlePlayerInteractions();
 
-    if (!entity->activeOrbs) {
-        entity->state = Orbinaut_Unknown8;
-        if (entity->direction == FLIP_NONE)
-            entity->velocity.x = -0x4000;
+    if (!self->activeOrbs) {
+        self->state = Orbinaut_Unknown8;
+        if (self->direction == FLIP_NONE)
+            self->velocity.x = -0x4000;
         else
-            entity->velocity.x = 0x4000;
+            self->velocity.x = 0x4000;
     }
 
-    if (entity->animatorFace.animationTimer >= 0x10)
-        entity->animatorFace.frameID = 2;
+    if (self->animatorFace.animationTimer >= 0x10)
+        self->animatorFace.frameID = 2;
     else
-        entity->animatorFace.animationTimer++;
+        self->animatorFace.animationTimer++;
 
     Orbinaut_CheckOnScreen();
 }
@@ -257,7 +257,7 @@ void Orbinaut_Unknown7(void)
 void Orbinaut_Unknown8(void)
 {
     RSDK_THIS(Orbinaut);
-    entity->position.x += entity->velocity.x;
+    self->position.x += self->velocity.x;
     Orbinaut_HandlePlayerInteractions();
     Orbinaut_CheckOnScreen();
 }
@@ -265,33 +265,33 @@ void Orbinaut_Unknown8(void)
 void Orbinaut_State_Orb(void)
 {
     RSDK_THIS(Orbinaut);
-    if (RSDK.CheckOnScreen(entity, &entity->updateRange)) {
-        entity->position.x += entity->velocity.x;
+    if (RSDK.CheckOnScreen(self, &self->updateRange)) {
+        self->position.x += self->velocity.x;
 
         foreach_active(Player, player)
         {
-            if (entity->planeFilter <= 0 || player->collisionPlane == (uint8)((entity->planeFilter - 1) & 1)) {
-                if (Player_CheckCollisionTouch(player, entity, &Sol->hitbox2)) {
-                    Player_CheckElementalHit(player, entity, SHIELD_FIRE);
+            if (self->planeFilter <= 0 || player->collisionPlane == (uint8)((self->planeFilter - 1) & 1)) {
+                if (Player_CheckCollisionTouch(player, self, &Sol->hitbox2)) {
+                    Player_CheckElementalHit(player, self, SHIELD_FIRE);
                 }
             }
         }
     }
     else {
-        destroyEntity(entity);
+        destroyEntity(self);
     }
 }
 
 void Orbinaut_Unknown10(void)
 {
     RSDK_THIS(Orbinaut);
-    if (RSDK.CheckOnScreen(entity, &entity->updateRange)) {
-        entity->position.x += entity->velocity.x;
-        entity->position.y += entity->velocity.y;
-        entity->velocity.y += 0x3800;
+    if (RSDK.CheckOnScreen(self, &self->updateRange)) {
+        self->position.x += self->velocity.x;
+        self->position.y += self->velocity.y;
+        self->velocity.y += 0x3800;
     }
     else {
-        destroyEntity(entity);
+        destroyEntity(self);
     }
 }
 

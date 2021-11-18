@@ -8,22 +8,22 @@ void CorkscrewPath_Update(void)
     foreach_active(Player, player)
     {
         int32 playerID = RSDK.GetEntityID(player);
-        if (abs(entity->position.x - player->position.x) >> 16 > entity->periodShifted) {
-            entity->activePlayers &= ~playerID;
+        if (abs(self->position.x - player->position.x) >> 16 > self->periodShifted) {
+            self->activePlayers &= ~playerID;
             if (player->playerAnimator.animationID != ANI_SPRINGCS)
                 player->direction &= ~FLIP_Y;
         }
         else {
-            int32 x     = entity->periodShifted + ((player->position.x - entity->position.x) >> 16);
-            int32 frame = 24 * x / entity->period;
-            int32 arc   = entity->amplitude * RSDK.Cos1024((x << 10) / entity->period);
-            if (!(playerID & entity->activePlayers)) {
-                if (abs(arc + entity->position.y - player->position.y) >= 0x100000) {
-                    entity->activePlayers &= ~playerID;
+            int32 x     = self->periodShifted + ((player->position.x - self->position.x) >> 16);
+            int32 frame = 24 * x / self->period;
+            int32 arc   = self->amplitude * RSDK.Cos1024((x << 10) / self->period);
+            if (!(playerID & self->activePlayers)) {
+                if (abs(arc + self->position.y - player->position.y) >= 0x100000) {
+                    self->activePlayers &= ~playerID;
                 }
                 else {
                     if (abs(player->groundVel) > 0x40000 && player->velocity.y > -0x40000 && player->groundedStore) {
-                        player->position.y = arc + entity->position.y;
+                        player->position.y = arc + self->position.y;
                         player->velocity.y = 0;
                         player->onGround   = true;
                         if (player->playerAnimator.animationID != ANI_JUMP) {
@@ -38,13 +38,13 @@ void CorkscrewPath_Update(void)
                         }
                     }
                     else {
-                        entity->activePlayers &= ~playerID;
+                        self->activePlayers &= ~playerID;
                     }
                 }
             }
             else if (abs(player->groundVel) > 0x40000 && player->groundedStore && abs(arc + player->position.y - player->position.y) < 0x100000) {
-                entity->activePlayers |= playerID;
-                player->position.y = arc + entity->position.y;
+                self->activePlayers |= playerID;
+                player->position.y = arc + self->position.y;
                 player->velocity.y = 0;
                 player->onGround   = true;
                 if (player->playerAnimator.animationID != ANI_JUMP) {
@@ -72,12 +72,12 @@ void CorkscrewPath_Create(void *data)
 {
     RSDK_THIS(CorkscrewPath);
     if (!SceneInfo->inEditor) {
-        entity->amplitude <<= 6;
-        entity->periodShifted = abs(entity->period) >> 1;
-        entity->period        = abs(entity->period);
-        entity->active        = ACTIVE_BOUNDS;
-        entity->updateRange.x = abs(entity->period) << 15;
-        entity->updateRange.y = 4 * entity->amplitude;
+        self->amplitude <<= 6;
+        self->periodShifted = abs(self->period) >> 1;
+        self->period        = abs(self->period);
+        self->active        = ACTIVE_BOUNDS;
+        self->updateRange.x = abs(self->period) << 15;
+        self->updateRange.y = 4 * self->amplitude;
     }
 }
 
@@ -87,23 +87,23 @@ void CorkscrewPath_StageLoad(void) {}
 void CorkscrewPath_EditorDraw(void)
 {
     RSDK_THIS(CorkscrewPath);
-    RSDK.SetSpriteAnimation(CorkscrewPath->aniFrames, 0, &entity->animator, true, 4);
-    RSDK.DrawSprite(&entity->animator, NULL, false);
+    RSDK.SetSpriteAnimation(CorkscrewPath->aniFrames, 0, &self->animator, true, 4);
+    RSDK.DrawSprite(&self->animator, NULL, false);
 
     // Bounds
     Vector2 drawPos;
 
     Vector2 size;
-    size.x = abs(entity->period) << 15;
-    size.y = (entity->amplitude << 6) * RSDK.Cos1024(0);
+    size.x = abs(self->period) << 15;
+    size.y = (self->amplitude << 6) * RSDK.Cos1024(0);
 
-    RSDK.DrawLine(entity->position.x - size.x, entity->position.y - size.y, entity->position.x + size.x, entity->position.y - size.y, 0xFFFF00, 0xFF,
+    RSDK.DrawLine(self->position.x - size.x, self->position.y - size.y, self->position.x + size.x, self->position.y - size.y, 0xFFFF00, 0xFF,
                   INK_NONE, false);
-    RSDK.DrawLine(entity->position.x - size.x, entity->position.y + size.y, entity->position.x + size.x, entity->position.y + size.y, 0xFFFF00, 0xFF,
+    RSDK.DrawLine(self->position.x - size.x, self->position.y + size.y, self->position.x + size.x, self->position.y + size.y, 0xFFFF00, 0xFF,
                   INK_NONE, false);
-    RSDK.DrawLine(entity->position.x - size.x, entity->position.y - size.y, entity->position.x - size.x, entity->position.y + size.y, 0xFFFF00, 0xFF,
+    RSDK.DrawLine(self->position.x - size.x, self->position.y - size.y, self->position.x - size.x, self->position.y + size.y, 0xFFFF00, 0xFF,
                   INK_NONE, false);
-    RSDK.DrawLine(entity->position.x + size.x, entity->position.y - size.y, entity->position.x + size.x, entity->position.y + size.y, 0xFFFF00, 0xFF,
+    RSDK.DrawLine(self->position.x + size.x, self->position.y - size.y, self->position.x + size.x, self->position.y + size.y, 0xFFFF00, 0xFF,
                   INK_NONE, false);
 }
 

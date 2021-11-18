@@ -5,7 +5,7 @@ ObjectCactula *Cactula;
 void Cactula_Update(void)
 {
     RSDK_THIS(Cactula);
-    StateMachine_Run(entity->state);
+    StateMachine_Run(self->state);
 }
 
 void Cactula_LateUpdate(void) {}
@@ -17,28 +17,28 @@ void Cactula_Draw(void)
     RSDK_THIS(Cactula);
     Vector2 drawPos;
 
-    drawPos.x = entity->position.x;
-    drawPos.y = entity->position.y;
-    drawPos.y += entity->offsetY;
-    RSDK.DrawSprite(&entity->animator2, &drawPos, false);
-    RSDK.DrawSprite(&entity->animator3, &drawPos, false);
-    RSDK.DrawSprite(&entity->animator1, NULL, false);
+    drawPos.x = self->position.x;
+    drawPos.y = self->position.y;
+    drawPos.y += self->offsetY;
+    RSDK.DrawSprite(&self->animator2, &drawPos, false);
+    RSDK.DrawSprite(&self->animator3, &drawPos, false);
+    RSDK.DrawSprite(&self->animator1, NULL, false);
 }
 
 void Cactula_Create(void *data)
 {
     RSDK_THIS(Cactula);
-    entity->visible       = true;
-    entity->drawOrder     = Zone->drawOrderLow + 1;
-    entity->drawFX        = FX_FLIP;
-    entity->active        = ACTIVE_BOUNDS;
-    entity->updateRange.x = 0x800000;
-    entity->updateRange.y = 0x800000;
-    entity->offsetY       = 0x80000;
-    RSDK.SetSpriteAnimation(Cactula->aniFrames, 0, &entity->animator1, true, 0);
-    RSDK.SetSpriteAnimation(Cactula->aniFrames, 0, &entity->animator2, true, 1);
-    RSDK.SetSpriteAnimation(Cactula->aniFrames, 1, &entity->animator3, true, 0);
-    entity->state = Cactula_State_Unknown1;
+    self->visible       = true;
+    self->drawOrder     = Zone->drawOrderLow + 1;
+    self->drawFX        = FX_FLIP;
+    self->active        = ACTIVE_BOUNDS;
+    self->updateRange.x = 0x800000;
+    self->updateRange.y = 0x800000;
+    self->offsetY       = 0x80000;
+    RSDK.SetSpriteAnimation(Cactula->aniFrames, 0, &self->animator1, true, 0);
+    RSDK.SetSpriteAnimation(Cactula->aniFrames, 0, &self->animator2, true, 1);
+    RSDK.SetSpriteAnimation(Cactula->aniFrames, 1, &self->animator3, true, 0);
+    self->state = Cactula_State_Unknown1;
 }
 
 void Cactula_StageLoad(void)
@@ -58,7 +58,7 @@ void Cactula_StageLoad(void)
 void Cactula_DebugSpawn(void)
 {
     RSDK_THIS(DebugMode);
-    CREATE_ENTITY(Cactula, NULL, entity->position.x, entity->position.y);
+    CREATE_ENTITY(Cactula, NULL, self->position.x, self->position.y);
 }
 
 void Cactula_DebugDraw(void)
@@ -72,8 +72,8 @@ void Cactula_CheckPlayerCollisions(void)
     RSDK_THIS(Cactula);
     foreach_active(Player, player)
     {
-        if (Player_CheckBadnikTouch(player, entity, &Cactula->hitbox))
-            Player_CheckBadnikBreak(entity, player, true);
+        if (Player_CheckBadnikTouch(player, self, &Cactula->hitbox))
+            Player_CheckBadnikBreak(self, player, true);
     }
 }
 
@@ -94,9 +94,9 @@ void Cactula_State_Unknown1(void)
 
     EntityPlayer *player = Player_GetNearestPlayerX();
 
-    if (abs(entity->position.x - player->position.x) < 0x800000) {
-        entity->velocity.y = -0x20000;
-        entity->state      = Cactula_State_Unknown2;
+    if (abs(self->position.x - player->position.x) < 0x800000) {
+        self->velocity.y = -0x20000;
+        self->state      = Cactula_State_Unknown2;
     }
     Cactula_CheckPlayerCollisions();
 }
@@ -104,13 +104,13 @@ void Cactula_State_Unknown1(void)
 void Cactula_State_Unknown2(void)
 {
     RSDK_THIS(Cactula);
-    RSDK.ProcessAnimation(&entity->animator3);
-    entity->offsetY += entity->velocity.y;
-    entity->velocity.y += 0x4000;
-    if (entity->offsetY >= 0 && entity->velocity.y >= 0) {
-        entity->offsetY    = 0;
-        entity->velocity.y = -0xA000;
-        entity->state      = Cactula_State_Unknown3;
+    RSDK.ProcessAnimation(&self->animator3);
+    self->offsetY += self->velocity.y;
+    self->velocity.y += 0x4000;
+    if (self->offsetY >= 0 && self->velocity.y >= 0) {
+        self->offsetY    = 0;
+        self->velocity.y = -0xA000;
+        self->state      = Cactula_State_Unknown3;
     }
     Cactula_CheckPlayerCollisions();
 }
@@ -118,19 +118,19 @@ void Cactula_State_Unknown2(void)
 void Cactula_State_Unknown3(void)
 {
     RSDK_THIS(Cactula);
-    RSDK.ProcessAnimation(&entity->animator3);
-    entity->velocity.y += 0x100;
-    entity->position.y += entity->velocity.y;
+    RSDK.ProcessAnimation(&self->animator3);
+    self->velocity.y += 0x100;
+    self->position.y += self->velocity.y;
 
     EntityPlayer *player = Player_GetNearestPlayerX();
-    if (!RSDK.CheckOnScreen(entity, NULL) && entity->position.y > player->position.y) {
-        destroyEntity(entity);
+    if (!RSDK.CheckOnScreen(self, NULL) && self->position.y > player->position.y) {
+        destroyEntity(self);
     }
     else {
-        if (!entity->flag) {
-            if (abs(entity->position.x - player->position.x) < 0x100000) {
+        if (!self->flag) {
+            if (abs(self->position.x - player->position.x) < 0x100000) {
                 RSDK.PlaySfx(Cactula->sfxCactDrop, false, 255);
-                EntityProjectile *projectile = CREATE_ENTITY(Projectile, Projectile_State_MoveGravity, entity->position.x, entity->position.y);
+                EntityProjectile *projectile = CREATE_ENTITY(Projectile, Projectile_State_MoveGravity, self->position.x, self->position.y);
                 projectile->gravityStrength  = 0x3800;
                 projectile->drawOrder        = Zone->drawOrderLow;
                 projectile->hitbox.left      = -6;
@@ -140,11 +140,11 @@ void Cactula_State_Unknown3(void)
                 projectile->type             = 7;
                 projectile->hurtDelay        = 16;
                 RSDK.SetSpriteAnimation(Cactula->aniFrames, 2, &projectile->animator, true, 0);
-                entity->flag = true;
+                self->flag = true;
             }
         }
 
-        if (RSDK.GetTileInfo(Zone->fgHigh, entity->position.x >> 20, entity->position.y >> 20) == 0xFFFF)
+        if (RSDK.GetTileInfo(Zone->fgHigh, self->position.x >> 20, self->position.y >> 20) == 0xFFFF)
             Cactula_CheckPlayerCollisions();
     }
 }

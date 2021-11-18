@@ -5,55 +5,55 @@ ObjectSideBarrel *SideBarrel;
 void SideBarrel_Update(void)
 {
     RSDK_THIS(SideBarrel);
-    if (entity->activePlayers <= 0)
-        entity->animator.animationSpeed = 0;
+    if (self->activePlayers <= 0)
+        self->animator.animationSpeed = 0;
     else
-        entity->animator.animationSpeed = 128;
-    RSDK.ProcessAnimation(&entity->animator);
+        self->animator.animationSpeed = 128;
+    RSDK.ProcessAnimation(&self->animator);
 
     int playerID = 0;
     foreach_active(Player, player)
     {
-        if (globals->gameMode >= MODE_TIMEATTACK && entity->timeAttackFreeze) {
-            entity->hitbox.bottom = -8;
-            entity->hitbox.top    = -24;
-            Player_CheckCollisionPlatform(player, entity, &entity->hitbox);
+        if (globals->gameMode >= MODE_TIMEATTACK && self->timeAttackFreeze) {
+            self->hitbox.bottom = -8;
+            self->hitbox.top    = -24;
+            Player_CheckCollisionPlatform(player, self, &self->hitbox);
         }
         else {
             if (player->state == Player_State_KnuxGlideDrop) {
-                entity->field_74[playerID] = 0;
-                entity->field_64[playerID] = 128;
+                self->field_74[playerID] = 0;
+                self->field_64[playerID] = 128;
             }
 
-            if (entity->field_74[playerID]) {
-                entity->field_74[playerID]--;
-                if (entity->field_74[playerID] <= 0) {
-                    entity->activePlayers &= ~(1 << playerID);
+            if (self->field_74[playerID]) {
+                self->field_74[playerID]--;
+                if (self->field_74[playerID] <= 0) {
+                    self->activePlayers &= ~(1 << playerID);
                 }
             }
             else {
-                if ((1 << playerID) & entity->activePlayers)
-                    entity->field_64[playerID] += 2;
+                if ((1 << playerID) & self->activePlayers)
+                    self->field_64[playerID] += 2;
                 else
-                    entity->field_64[playerID] = 128;
+                    self->field_64[playerID] = 128;
 
-                entity->hitbox.top    = (RSDK.Cos256(entity->field_64[playerID]) >> 3) - 4;
-                entity->hitbox.bottom = entity->hitbox.top + 16;
-                if (Player_CheckCollisionPlatform(player, entity, &entity->hitbox)) {
+                self->hitbox.top    = (RSDK.Cos256(self->field_64[playerID]) >> 3) - 4;
+                self->hitbox.bottom = self->hitbox.top + 16;
+                if (Player_CheckCollisionPlatform(player, self, &self->hitbox)) {
                     player->position.y += 0x40000;
                     if (player->state != Player_State_KnuxGlideDrop) {
-                        if (entity->field_64[playerID] > 176) {
+                        if (self->field_64[playerID] > 176) {
                             RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGCS, &player->playerAnimator, false, 1);
                             player->onGround           = false;
                             player->state              = Player_State_Air;
-                            entity->field_74[playerID] = 48;
+                            self->field_74[playerID] = 48;
                             RSDK.PlaySfx(SideBarrel->sfxDrop, false, 255);
                         }
-                        entity->activePlayers |= (1 << playerID);
+                        self->activePlayers |= (1 << playerID);
                     }
                 }
                 else {
-                    entity->field_64[playerID] = 128;
+                    self->field_64[playerID] = 128;
                 }
             }
         }
@@ -68,23 +68,23 @@ void SideBarrel_StaticUpdate(void) {}
 void SideBarrel_Draw(void)
 {
     RSDK_THIS(SideBarrel);
-    RSDK.DrawSprite(&entity->animator, NULL, false);
+    RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
 void SideBarrel_Create(void *data)
 {
     RSDK_THIS(SideBarrel);
-    entity->visible   = true;
-    entity->drawOrder = Zone->drawOrderLow;
+    self->visible   = true;
+    self->drawOrder = Zone->drawOrderLow;
     if (!SceneInfo->inEditor) {
-        RSDK.SetSpriteAnimation(SideBarrel->aniFrames, 0, &entity->animator, true, 0);
-        entity->active        = ACTIVE_BOUNDS;
-        entity->updateRange.x = 0x800000;
-        entity->updateRange.y = 0x800000;
-        entity->hitbox.left   = -32;
-        entity->hitbox.top    = -32;
-        entity->hitbox.right  = 32;
-        entity->hitbox.bottom = 32;
+        RSDK.SetSpriteAnimation(SideBarrel->aniFrames, 0, &self->animator, true, 0);
+        self->active        = ACTIVE_BOUNDS;
+        self->updateRange.x = 0x800000;
+        self->updateRange.y = 0x800000;
+        self->hitbox.left   = -32;
+        self->hitbox.top    = -32;
+        self->hitbox.right  = 32;
+        self->hitbox.bottom = 32;
     }
 }
 

@@ -16,20 +16,20 @@ void SSZ3Cutscene_Update(void)
                         SSZ3Cutscene_OutroState_LoadNextScene,
                         NULL };
 
-    if (!entity->flag) {
-        CutsceneSeq_StartSequence((Entity *)entity, statesIntro);
-        entity->active = ACTIVE_NEVER;
+    if (!self->flag) {
+        CutsceneSeq_StartSequence((Entity *)self, statesIntro);
+        self->active = ACTIVE_NEVER;
     }
     else {
-        CutsceneSeq_StartSequence((Entity *)entity, statesOutro);
+        CutsceneSeq_StartSequence((Entity *)self, statesOutro);
         foreach_active(HUD, hud) { hud->state = HUD_State_GoOffScreen; }
         if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->objectID)
             RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->skipType = SKIPTYPE_RELOADSCN;
-        entity->active = ACTIVE_NEVER;
+        self->active = ACTIVE_NEVER;
     }
 #else
-    CutsceneSeq_StartSequence((Entity *)entity, statesIntro);
-    entity->active = ACTIVE_NEVER;
+    CutsceneSeq_StartSequence((Entity *)self, statesIntro);
+    self->active = ACTIVE_NEVER;
 #endif
 }
 
@@ -42,9 +42,9 @@ void SSZ3Cutscene_Draw(void) {}
 void SSZ3Cutscene_Create(void *data)
 {
     RSDK_THIS(SSZ3Cutscene);
-    entity->active = ACTIVE_NORMAL;
+    self->active = ACTIVE_NORMAL;
 #if RETRO_USE_PLUS
-    entity->flag   = voidToInt(data);
+    self->flag   = voidToInt(data);
 #endif
 }
 
@@ -153,7 +153,7 @@ bool32 SSZ3Cutscene_OutroState_Unknown1(EntityCutsceneSeq *host)
         ruby->startPos.y = 0x1A00000;
         ruby->position   = ruby->startPos;
         ruby->drawOrder  = Zone->drawOrderLow;
-        entity->ruby     = ruby;
+        self->ruby     = ruby;
     }
 
     return true;
@@ -161,7 +161,7 @@ bool32 SSZ3Cutscene_OutroState_Unknown1(EntityCutsceneSeq *host)
 bool32 SSZ3Cutscene_OutroState_Unknown2(EntityCutsceneSeq *host)
 {
     RSDK_THIS(SSZ3Cutscene);
-    EntityPhantomRuby *ruby = entity->ruby;
+    EntityPhantomRuby *ruby = self->ruby;
     EntityPlayer *player    = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     SSZ3Cutscene_HandleRubyFX();
     if (abs(player->position.x - ruby->position.x) < 0x900000) {
@@ -177,10 +177,10 @@ bool32 SSZ3Cutscene_OutroState_Unknown3(EntityCutsceneSeq *host)
 
     SSZ3Cutscene_HandleRubyFX();
     if (RSDK.GetEntityCount(PhantomRuby->objectID, true) > 0) {
-        foreach_active(PhantomRuby, ruby) { entity->ruby = ruby; }
+        foreach_active(PhantomRuby, ruby) { self->ruby = ruby; }
     }
 
-    EntityPhantomRuby *ruby = entity->ruby;
+    EntityPhantomRuby *ruby = self->ruby;
     if (ruby) {
         if (ruby->state == PhantomRuby_Unknown5)
             return true;
@@ -191,7 +191,7 @@ bool32 SSZ3Cutscene_OutroState_Unknown4(EntityCutsceneSeq *host)
 {
     RSDK_THIS(SSZ3Cutscene);
 
-    EntityPhantomRuby *ruby = entity->ruby;
+    EntityPhantomRuby *ruby = self->ruby;
     SSZ3Cutscene_HandleRubyFX();
     if (!host->timer)
         PhantomRuby_Unknown2(ruby);
@@ -251,18 +251,18 @@ bool32 SSZ3Cutscene_OutroState_Unknown5(EntityCutsceneSeq *host)
     unused(camera);
     
     RSDK_THIS(SSZ3Cutscene);
-    EntityPhantomRuby *ruby = entity->ruby;
+    EntityPhantomRuby *ruby = self->ruby;
 
     SSZ3Cutscene_HandleRubyFX();
 
     EntityFXRuby *fxRuby = NULL;
     if (host->timer) {
-        fxRuby = entity->fxRuby;
+        fxRuby = self->fxRuby;
     }
     else {
         fxRuby            = CREATE_ENTITY(FXRuby, NULL, ruby->position.x, ruby->position.y);
         fxRuby->drawOrder = Zone->playerDrawHigh;
-        entity->fxRuby    = fxRuby;
+        self->fxRuby    = fxRuby;
         Camera_ShakeScreen(0, 4, 4);
         player1->drawOrder = Zone->playerDrawHigh + 1;
         if (player2->objectID == Player->objectID)

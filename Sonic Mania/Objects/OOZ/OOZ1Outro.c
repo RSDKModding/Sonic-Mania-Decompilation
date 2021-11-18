@@ -9,10 +9,10 @@ void OOZ1Outro_Update(void)
     void *states[] = { OOZ1Outro_Unknown1, OOZ1Outro_Unknown2, OOZ1Outro_Unknown3, OOZ1Outro_Unknown4, NULL };
 
     if (isMainGameMode() && globals->enableIntro && !PlayerHelpers_CheckStageReload()) {
-        entity->activated = true;
-        CutsceneSeq_StartSequence((Entity*)entity, states);
+        self->activated = true;
+        CutsceneSeq_StartSequence((Entity*)self, states);
     }
-    entity->active = ACTIVE_NEVER;
+    self->active = ACTIVE_NEVER;
 }
 
 void OOZ1Outro_LateUpdate(void) {}
@@ -25,19 +25,19 @@ void OOZ1Outro_Create(void *data)
 {
     RSDK_THIS(OOZ1Outro);
     if (!SceneInfo->inEditor) {
-        entity->active  = ACTIVE_NORMAL;
-        entity->visible = false;
-        if (!entity->size.x)
-            entity->size.x = 0x1A80000;
-        if (!entity->size.y)
-            entity->size.y = 0xF00000;
-        entity->updateRange.x += entity->size.x;
-        entity->updateRange.y += entity->size.y;
+        self->active  = ACTIVE_NORMAL;
+        self->visible = false;
+        if (!self->size.x)
+            self->size.x = 0x1A80000;
+        if (!self->size.y)
+            self->size.y = 0xF00000;
+        self->updateRange.x += self->size.x;
+        self->updateRange.y += self->size.y;
 
-        entity->hitbox.left   = -entity->size.x >> 17;
-        entity->hitbox.right  = entity->size.x >> 17;
-        entity->hitbox.top    = -entity->size.y >> 17;
-        entity->hitbox.bottom = entity->size.y >> 17;
+        self->hitbox.left   = -self->size.x >> 17;
+        self->hitbox.right  = self->size.x >> 17;
+        self->hitbox.top    = -self->size.y >> 17;
+        self->hitbox.bottom = self->size.y >> 17;
     }
 }
 
@@ -58,18 +58,18 @@ bool32 OOZ1Outro_Unknown1(EntityCutsceneSeq *host)
     if (host->timer == 1) {
         foreach_all(Player, player)
         {
-            player->position.x = entity->position.x;
-            player->position.y = entity->position.y;
-            player->position.y += (entity->size.y >> 1) - 0x400000;
+            player->position.x = self->position.x;
+            player->position.y = self->position.y;
+            player->position.y += (self->size.y >> 1) - 0x400000;
         }
 
-        entity->boundsR         = Zone->screenBoundsR1[0];
-        entity->boundsT         = Zone->screenBoundsT1[0];
-        entity->boundsB         = Zone->screenBoundsB1[0];
-        Zone->screenBoundsL1[0] = (entity->position.x >> 16) - ScreenInfo->centerX;
-        Zone->screenBoundsR1[0] = (entity->position.x >> 16) + ScreenInfo->centerX;
-        Zone->screenBoundsT1[0] = (entity->position.y >> 16) - ScreenInfo->centerY;
-        Zone->screenBoundsB1[0] = (entity->position.y >> 16) + ScreenInfo->centerY;
+        self->boundsR         = Zone->screenBoundsR1[0];
+        self->boundsT         = Zone->screenBoundsT1[0];
+        self->boundsB         = Zone->screenBoundsB1[0];
+        Zone->screenBoundsL1[0] = (self->position.x >> 16) - ScreenInfo->centerX;
+        Zone->screenBoundsR1[0] = (self->position.x >> 16) + ScreenInfo->centerX;
+        Zone->screenBoundsT1[0] = (self->position.y >> 16) - ScreenInfo->centerY;
+        Zone->screenBoundsB1[0] = (self->position.y >> 16) + ScreenInfo->centerY;
         EntityCamera *camera    = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
         camera->boundsL         = Zone->screenBoundsL1[0];
         camera->boundsR         = Zone->screenBoundsR1[0];
@@ -110,10 +110,10 @@ bool32 OOZ1Outro_Unknown2(EntityCutsceneSeq *host)
             player->stateInput     = StateMachine_None;
             RSDK.SetSpriteAnimation(player->aniFrames, ANI_HURT, &player->playerAnimator, false, 0);
         }
-        Zone->screenBoundsL1[0] = entity->boundsL;
-        Zone->screenBoundsR1[0] = entity->boundsR;
-        Zone->screenBoundsT1[0] = entity->boundsT;
-        Zone->screenBoundsB1[0] = entity->boundsB;
+        Zone->screenBoundsL1[0] = self->boundsL;
+        Zone->screenBoundsR1[0] = self->boundsR;
+        Zone->screenBoundsT1[0] = self->boundsT;
+        Zone->screenBoundsB1[0] = self->boundsB;
         if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->objectID)
             RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->skipType = SKIPTYPE_RELOADSCN;
         return true;
@@ -162,14 +162,14 @@ void OOZ1Outro_EditorDraw(void)
     RSDK_THIS(OOZ1Outro);
     Vector2 drawPos;
 
-    drawPos.x = entity->position.x;
-    drawPos.y = entity->position.y;
-    drawPos.x -= entity->size.x >> 1;
-    drawPos.y -= entity->size.y >> 1;
-    RSDK.DrawLine(drawPos.x, drawPos.y, drawPos.x + entity->size.x, drawPos.y, 0xFFFF00, 0, INK_NONE, false);
-    RSDK.DrawLine(drawPos.x, entity->size.y + drawPos.y, drawPos.x + entity->size.x, entity->size.y + drawPos.y, 0xFFFF00, 0, INK_NONE, false);
-    RSDK.DrawLine(drawPos.x, drawPos.y, drawPos.x, drawPos.y + entity->size.y, 0xFFFF00, 0, INK_NONE, false);
-    RSDK.DrawLine(drawPos.x + entity->size.x, drawPos.y, drawPos.x + entity->size.x, drawPos.y + entity->size.y, 0xFFFF00, 0, INK_NONE, false);
+    drawPos.x = self->position.x;
+    drawPos.y = self->position.y;
+    drawPos.x -= self->size.x >> 1;
+    drawPos.y -= self->size.y >> 1;
+    RSDK.DrawLine(drawPos.x, drawPos.y, drawPos.x + self->size.x, drawPos.y, 0xFFFF00, 0, INK_NONE, false);
+    RSDK.DrawLine(drawPos.x, self->size.y + drawPos.y, drawPos.x + self->size.x, self->size.y + drawPos.y, 0xFFFF00, 0, INK_NONE, false);
+    RSDK.DrawLine(drawPos.x, drawPos.y, drawPos.x, drawPos.y + self->size.y, 0xFFFF00, 0, INK_NONE, false);
+    RSDK.DrawLine(drawPos.x + self->size.x, drawPos.y, drawPos.x + self->size.x, drawPos.y + self->size.y, 0xFFFF00, 0, INK_NONE, false);
 }
 
 void OOZ1Outro_EditorLoad(void) {}

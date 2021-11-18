@@ -5,7 +5,7 @@ ObjectStarPost *StarPost;
 void StarPost_Update(void)
 {
     RSDK_THIS(StarPost);
-    StateMachine_Run(entity->state);
+    StateMachine_Run(self->state);
 }
 
 void StarPost_LateUpdate(void) {}
@@ -15,20 +15,20 @@ void StarPost_StaticUpdate(void) {}
 void StarPost_Draw(void)
 {
     RSDK_THIS(StarPost);
-    RSDK.DrawSprite(&entity->poleData, &entity->position, false);
+    RSDK.DrawSprite(&self->poleData, &self->position, false);
 
-    entity->ballPos.x = entity->position.x - 640 * RSDK.Cos1024(entity->angle);
-    entity->ballPos.y = entity->position.y - 640 * RSDK.Sin1024(entity->angle) - 0xE0000;
-    RSDK.DrawSprite(&entity->ballData, &entity->ballPos, false);
+    self->ballPos.x = self->position.x - 640 * RSDK.Cos1024(self->angle);
+    self->ballPos.y = self->position.y - 640 * RSDK.Sin1024(self->angle) - 0xE0000;
+    RSDK.DrawSprite(&self->ballData, &self->ballPos, false);
 
     Vector2 drawPos;
-    if (entity->starFlag > 0) {
-        int32 angle2 = entity->starAngle2;
-        int32 angle  = 3 * RSDK.Sin512(entity->starAngle);
+    if (self->starFlag > 0) {
+        int32 angle2 = self->starAngle2;
+        int32 angle  = 3 * RSDK.Sin512(self->starAngle);
         for (int32 i = 0; i < 4; ++i) {
-            drawPos.x = entity->position.x + ((RSDK.Sin512(angle2) << 12) * entity->starOffset >> 7);
-            drawPos.y = (((angle * RSDK.Sin512(angle2)) + (RSDK.Cos512(angle2) << 10)) * entity->starOffset >> 7) + entity->position.y - 0x320000;
-            RSDK.DrawSprite(&entity->starData, &drawPos, false);
+            drawPos.x = self->position.x + ((RSDK.Sin512(angle2) << 12) * self->starOffset >> 7);
+            drawPos.y = (((angle * RSDK.Sin512(angle2)) + (RSDK.Cos512(angle2) << 10)) * self->starOffset >> 7) + self->position.y - 0x320000;
+            RSDK.DrawSprite(&self->starData, &drawPos, false);
             angle2 += 128;
         }
     }
@@ -37,31 +37,31 @@ void StarPost_Draw(void)
 void StarPost_Create(void *data)
 {
     RSDK_THIS(StarPost);
-    if (globals->gameMode == MODE_TIMEATTACK || (globals->gameMode == MODE_COMPETITION && entity->vsRemove)) {
-        RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL);
+    if (globals->gameMode == MODE_TIMEATTACK || (globals->gameMode == MODE_COMPETITION && self->vsRemove)) {
+        RSDK.ResetEntityPtr(self, TYPE_BLANK, NULL);
     }
     else {
         if (!SceneInfo->inEditor) {
-            entity->visible       = true;
-            entity->drawOrder     = Zone->drawOrderLow;
-            entity->active        = ACTIVE_BOUNDS;
-            entity->updateRange.x = 0x400000;
-            entity->updateRange.y = 0x400000;
-            entity->state         = StarPost_State_Idle;
-            entity->angle         = 256;
+            self->visible       = true;
+            self->drawOrder     = Zone->drawOrderLow;
+            self->active        = ACTIVE_BOUNDS;
+            self->updateRange.x = 0x400000;
+            self->updateRange.y = 0x400000;
+            self->state         = StarPost_State_Idle;
+            self->angle         = 256;
         }
 
-        RSDK.SetSpriteAnimation(StarPost->aniFrames, 0, &entity->poleData, true, 0);
-        if (entity->activated) {
-            RSDK.SetSpriteAnimation(StarPost->aniFrames, 2, &entity->ballData, true, 0);
-            entity->ballData.animationSpeed = 64;
+        RSDK.SetSpriteAnimation(StarPost->aniFrames, 0, &self->poleData, true, 0);
+        if (self->activated) {
+            RSDK.SetSpriteAnimation(StarPost->aniFrames, 2, &self->ballData, true, 0);
+            self->ballData.animationSpeed = 64;
         }
         else {
-            RSDK.SetSpriteAnimation(StarPost->aniFrames, 1, &entity->ballData, true, 0);
+            RSDK.SetSpriteAnimation(StarPost->aniFrames, 1, &self->ballData, true, 0);
         }
-        RSDK.SetSpriteAnimation(StarPost->aniFrames, 3, &entity->starData, true, 0);
-        entity->ballPos.x = entity->position.x;
-        entity->ballPos.y = entity->position.y - 0x180000;
+        RSDK.SetSpriteAnimation(StarPost->aniFrames, 3, &self->starData, true, 0);
+        self->ballPos.x = self->position.x;
+        self->ballPos.y = self->position.y - 0x180000;
     }
 }
 
@@ -157,7 +157,7 @@ void StarPost_DebugSpawn(void)
 {
     RSDK_THIS(DebugMode);
     
-    CREATE_ENTITY(StarPost, NULL, entity->position.x, entity->position.y);
+    CREATE_ENTITY(StarPost, NULL, self->position.x, self->position.y);
 }
 void StarPost_ResetStarPosts(void)
 {
@@ -169,31 +169,31 @@ void StarPost_ResetStarPosts(void)
 void StarPost_CheckBonusStageEntry(void)
 {
     RSDK_THIS(StarPost);
-    entity->starAngle += 4;
-    entity->starAngle &= 0x1FF;
-    entity->starAngle2 += 18;
-    entity->starAngle2 &= 0x1FF;
+    self->starAngle += 4;
+    self->starAngle &= 0x1FF;
+    self->starAngle2 += 18;
+    self->starAngle2 &= 0x1FF;
 
-    if (entity->starTimer > 472) {
-        --entity->starOffset;
+    if (self->starTimer > 472) {
+        --self->starOffset;
     }
-    else if (entity->starTimer < 0x80) {
-        ++entity->starOffset;
+    else if (self->starTimer < 0x80) {
+        ++self->starOffset;
     }
 
-    if (++entity->starTimer == 600) {
-        entity->starTimer = 0;
-        entity->starFlag  = 0;
-        entity->active    = ACTIVE_BOUNDS;
+    if (++self->starTimer == 600) {
+        self->starTimer = 0;
+        self->starFlag  = 0;
+        self->active    = ACTIVE_BOUNDS;
     }
-    entity->starData.frameID  = (entity->starAngle >> 3) & 3;
-    entity->starHitbox.left   = -(entity->starOffset >> 2);
-    entity->starHitbox.top    = -48;
-    entity->starHitbox.right  = entity->starOffset >> 2;
-    entity->starHitbox.bottom = -40;
-    if (entity->starTimer >= 60) {
+    self->starData.frameID  = (self->starAngle >> 3) & 3;
+    self->starHitbox.left   = -(self->starOffset >> 2);
+    self->starHitbox.top    = -48;
+    self->starHitbox.right  = self->starOffset >> 2;
+    self->starHitbox.bottom = -40;
+    if (self->starTimer >= 60) {
         if (!globals->recallEntities) {
-            if (Player_CheckCollisionTouch(RSDK.GetEntityByID(SLOT_PLAYER1), entity, &entity->starHitbox)) {
+            if (Player_CheckCollisionTouch(RSDK.GetEntityByID(SLOT_PLAYER1), self, &self->starHitbox)) {
                 SaveGame_SaveGameState();
                 RSDK.PlaySfx(StarPost->sfxWarp, 0, 0xFE);
                 RSDK.SetGameMode(ENGINESTATE_FROZEN);
@@ -224,12 +224,12 @@ void StarPost_CheckCollisions(void)
     RSDK_THIS(StarPost);
     foreach_active(Player, player) {
         int32 playerSlot = RSDK.GetEntityID(player);
-        if (!((1 << playerSlot) & entity->activated) && !player->sidekick) {
-            if (Player_CheckCollisionTouch(player, entity, &StarPost->hitbox)) {
-                entity->state = StarPost_State_BallSpin;
+        if (!((1 << playerSlot) & self->activated) && !player->sidekick) {
+            if (Player_CheckCollisionTouch(player, self, &StarPost->hitbox)) {
+                self->state = StarPost_State_BallSpin;
                 if (!TMZ2Setup) {
                     foreach_all(StarPost, starPost) {
-                        if (starPost->id < entity->id && !starPost->activated) {
+                        if (starPost->id < self->id && !starPost->activated) {
                             starPost->activated = 1 << playerSlot;
                             RSDK.SetSpriteAnimation(StarPost->aniFrames, 2, &starPost->ballData, true, 0);
                         }
@@ -237,9 +237,9 @@ void StarPost_CheckCollisions(void)
                 }
 
                 StarPost->postIDs[playerSlot]           = SceneInfo->entitySlot;
-                StarPost->playerPositions[playerSlot].x = entity->position.x;
-                StarPost->playerPositions[playerSlot].y = entity->position.y;
-                StarPost->playerDirections[playerSlot]  = entity->direction;
+                StarPost->playerPositions[playerSlot].x = self->position.x;
+                StarPost->playerPositions[playerSlot].y = self->position.y;
+                StarPost->playerDirections[playerSlot]  = self->direction;
                 if (globals->gameMode < MODE_TIMEATTACK) {
                     StarPost->storedMS      = SceneInfo->milliseconds;
                     StarPost->storedSeconds = SceneInfo->seconds;
@@ -257,30 +257,30 @@ void StarPost_CheckCollisions(void)
                 else
                     speed -= 32;
 
-                int32 ballSpeed = entity->ballSpeed;
+                int32 ballSpeed = self->ballSpeed;
                 if (!ballSpeed) {
-                    entity->ballSpeed = speed;
+                    self->ballSpeed = speed;
                 }
                 else if (ballSpeed <= 0) {
                     if (speed < ballSpeed) {
-                        entity->ballSpeed = speed;
+                        self->ballSpeed = speed;
                     }
                     else if (speed > 0) {
                         speed += ballSpeed;
-                        entity->ballSpeed = speed;
+                        self->ballSpeed = speed;
                     }
                 }
                 else {
                     if (speed > ballSpeed) {
-                        entity->ballSpeed = speed;
+                        self->ballSpeed = speed;
                     }
                     else if (speed < 0) {
                         speed += ballSpeed;
-                        entity->ballSpeed = speed;
+                        self->ballSpeed = speed;
                     }
                 }
 
-                entity->timer = 0;
+                self->timer = 0;
                 if (globals->gameMode < MODE_TIMEATTACK) {
                     int32 quota = 50;
 #if RETRO_USE_PLUS
@@ -288,20 +288,20 @@ void StarPost_CheckCollisions(void)
                         quota = 25;
 #endif
                     if (player->rings >= quota) {
-                        entity->starTimer  = 0;
-                        entity->starAngle  = 0;
-                        entity->starAngle2 = 0;
-                        entity->starOffset = 0;
-                        entity->starFlag   = (player->rings - 20) % 3 + 1;
+                        self->starTimer  = 0;
+                        self->starAngle  = 0;
+                        self->starAngle2 = 0;
+                        self->starOffset = 0;
+                        self->starFlag   = (player->rings - 20) % 3 + 1;
                     }
                 }
 
-                if (!entity->activated) {
-                    RSDK.SetSpriteAnimation(StarPost->aniFrames, 2, &entity->ballData, true, 0);
-                    entity->ballData.animationSpeed = 0;
+                if (!self->activated) {
+                    RSDK.SetSpriteAnimation(StarPost->aniFrames, 2, &self->ballData, true, 0);
+                    self->ballData.animationSpeed = 0;
                 }
-                entity->activated |= 1 << playerSlot;
-                entity->active = ACTIVE_NORMAL;
+                self->activated |= 1 << playerSlot;
+                self->active = ACTIVE_NORMAL;
                 RSDK.PlaySfx(StarPost->sfxStarPost, 0, 255);
             }
         }
@@ -310,20 +310,20 @@ void StarPost_CheckCollisions(void)
 void StarPost_State_Idle(void)
 {
     RSDK_THIS(StarPost);
-    if (entity->activated < StarPost->activePlayers)
+    if (self->activated < StarPost->activePlayers)
         StarPost_CheckCollisions();
-    if (entity->starFlag > 0)
+    if (self->starFlag > 0)
         StarPost_CheckBonusStageEntry();
-    RSDK.ProcessAnimation(&entity->ballData);
+    RSDK.ProcessAnimation(&self->ballData);
 }
 void StarPost_State_BallSpin(void)
 {
     RSDK_THIS(StarPost);
-    if (entity->activated < StarPost->activePlayers)
+    if (self->activated < StarPost->activePlayers)
         StarPost_CheckCollisions();
 
-    entity->angle += entity->ballSpeed;
-    if (!StarPost->hasAchievement && entity->timer == 10) {
+    self->angle += self->ballSpeed;
+    if (!StarPost->hasAchievement && self->timer == 10) {
 #if RETRO_USE_PLUS
         API.UnlockAchievement("ACH_STARPOST");
 #else
@@ -333,41 +333,41 @@ void StarPost_State_BallSpin(void)
     }
 
     bool32 flag = false;
-    if (entity->ballSpeed <= 0) {
-        if (entity->angle <= -768) {
-            ++entity->timer;
-            entity->angle += 1024;
-            if (entity->ballSpeed + 8 > -32)
-                entity->ballSpeed = -32;
+    if (self->ballSpeed <= 0) {
+        if (self->angle <= -768) {
+            ++self->timer;
+            self->angle += 1024;
+            if (self->ballSpeed + 8 > -32)
+                self->ballSpeed = -32;
             else
-                entity->ballSpeed += 8;
-            flag = entity->ballSpeed == -32;
+                self->ballSpeed += 8;
+            flag = self->ballSpeed == -32;
         }
     }
     else {
-        if (entity->angle >= 1280) {
-            ++entity->timer;
-            entity->angle -= 0x400;
-            if (entity->ballSpeed - 8 < 32)
-                entity->ballSpeed = 32;
+        if (self->angle >= 1280) {
+            ++self->timer;
+            self->angle -= 0x400;
+            if (self->ballSpeed - 8 < 32)
+                self->ballSpeed = 32;
             else
-                entity->ballSpeed -= 8;
-            flag = entity->ballSpeed == 32;
+                self->ballSpeed -= 8;
+            flag = self->ballSpeed == 32;
         }
     }
 
     if (flag) {
-        entity->state                   = StarPost_State_Idle;
-        entity->ballData.animationSpeed = 64;
-        entity->ballSpeed               = 0;
-        entity->angle                   = 256;
-        if (entity->starFlag == 0)
-            entity->active = ACTIVE_BOUNDS;
+        self->state                   = StarPost_State_Idle;
+        self->ballData.animationSpeed = 64;
+        self->ballSpeed               = 0;
+        self->angle                   = 256;
+        if (self->starFlag == 0)
+            self->active = ACTIVE_BOUNDS;
     }
 
-    if (entity->starFlag > 0)
+    if (self->starFlag > 0)
         StarPost_CheckBonusStageEntry();
-    RSDK.ProcessAnimation(&entity->ballData);
+    RSDK.ProcessAnimation(&self->ballData);
 }
 
 #if RETRO_INCLUDE_EDITOR

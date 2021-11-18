@@ -6,42 +6,42 @@ void Player_Update(void)
 {
     RSDK_THIS(Player);
 #if RETRO_USE_PLUS
-    if (!API.CheckDLC(DLC_PLUS) && entity->characterID > ID_KNUCKLES)
-        Player_ChangeCharacter(entity, ID_SONIC);
+    if (!API.CheckDLC(DLC_PLUS) && self->characterID > ID_KNUCKLES)
+        Player_ChangeCharacter(self, ID_SONIC);
 #endif
 
-    StateMachine_Run(entity->stateInputReplay);
-    StateMachine_Run(entity->stateInput);
+    StateMachine_Run(self->stateInputReplay);
+    StateMachine_Run(self->stateInput);
 
-    if (entity->objectID == Player->objectID) {
-        if (entity->camera) {
-            if (entity->scrollDelay > 0) {
-                entity->scrollDelay--;
-                if (!entity->scrollDelay)
-                    entity->camera->state = Camera_State_Follow;
+    if (self->objectID == Player->objectID) {
+        if (self->camera) {
+            if (self->scrollDelay > 0) {
+                self->scrollDelay--;
+                if (!self->scrollDelay)
+                    self->camera->state = Camera_State_Follow;
             }
-            else if (entity->state != Player_State_LookUp && entity->state != Player_State_Crouch) {
-                if (entity->camera->lookPos.y > 0) {
-                    entity->camera->lookPos.y -= 2;
+            else if (self->state != Player_State_LookUp && self->state != Player_State_Crouch) {
+                if (self->camera->lookPos.y > 0) {
+                    self->camera->lookPos.y -= 2;
                 }
-                else if (entity->camera->lookPos.y < 0) {
-                    entity->camera->lookPos.y += 2;
+                else if (self->camera->lookPos.y < 0) {
+                    self->camera->lookPos.y += 2;
                 }
             }
         }
 
-        if (entity->invincibleTimer) {
-            if (entity->invincibleTimer <= 0) {
-                entity->invincibleTimer++;
+        if (self->invincibleTimer) {
+            if (self->invincibleTimer <= 0) {
+                self->invincibleTimer++;
             }
             else {
-                entity->invincibleTimer--;
-                if (!entity->invincibleTimer) {
-                    Player_ApplyShieldEffect(entity);
+                self->invincibleTimer--;
+                if (!self->invincibleTimer) {
+                    Player_ApplyShieldEffect(self);
 #if RETRO_USE_PLUS
-                    if (globals->gameMode != MODE_ENCORE || !entity->sidekick) {
+                    if (globals->gameMode != MODE_ENCORE || !self->sidekick) {
 #else
-                    if (!entity->sidekick) {
+                    if (!self->sidekick) {
 #endif
                         bool32 flag = true;
                         foreach_active(Player, player)
@@ -56,10 +56,10 @@ void Player_Update(void)
             }
         }
 
-        if (entity->speedShoesTimer > 0) {
-            entity->speedShoesTimer--;
-            if (!entity->speedShoesTimer) {
-                Player_ChangePhysicsState(entity);
+        if (self->speedShoesTimer > 0) {
+            self->speedShoesTimer--;
+            if (!self->speedShoesTimer) {
+                Player_ChangePhysicsState(self);
                 bool32 flag = true;
                 foreach_active(Player, player)
                 {
@@ -71,63 +71,63 @@ void Player_Update(void)
             }
         }
 
-        if (entity->state != Player_State_Hit) {
-            if (entity->blinkTimer > 0) {
-                entity->blinkTimer--;
-                entity->visible = !(entity->blinkTimer & 4);
+        if (self->state != Player_State_Hit) {
+            if (self->blinkTimer > 0) {
+                self->blinkTimer--;
+                self->visible = !(self->blinkTimer & 4);
             }
         }
 
 #if RETRO_USE_PLUS
-        if (entity->characterID == ID_RAY && entity->state != Player_State_RayGlide && !entity->isGhost) {
+        if (self->characterID == ID_RAY && self->state != Player_State_RayGlide && !self->isGhost) {
             Player->raySwoopTimer = 0;
             Player->rayDiveTimer  = 0;
         }
 
-        if (entity->uncurlTimer > 0)
-            entity->uncurlTimer--;
+        if (self->uncurlTimer > 0)
+            self->uncurlTimer--;
 #endif
 
         Player_HandleSuperForm();
-        if (entity->characterID == ID_TAILS && entity->state != Player_State_TailsFlight && entity->abilitySpeed)
-            entity->abilitySpeed = 0;
+        if (self->characterID == ID_TAILS && self->state != Player_State_TailsFlight && self->abilitySpeed)
+            self->abilitySpeed = 0;
 
         // Hurt Player if we're touching T/B or L/R sides at same time
-        if (entity->collisionFlagH == 3 || entity->collisionFlagV == 3)
-            entity->hurtFlag = HURTFLAG_HURT;
+        if (self->collisionFlagH == 3 || self->collisionFlagV == 3)
+            self->hurtFlag = HURTFLAG_HURT;
 
-        entity->collisionFlagH = 0;
-        entity->collisionFlagV = 0;
-        if (entity->collisionLayers & Zone->moveID) {
+        self->collisionFlagH = 0;
+        self->collisionFlagV = 0;
+        if (self->collisionLayers & Zone->moveID) {
             TileLayer *move  = RSDK.GetSceneLayer(Zone->moveLayer);
-            move->position.x = -entity->moveOffset.x >> 16;
-            move->position.y = -entity->moveOffset.y >> 16;
+            move->position.x = -self->moveOffset.x >> 16;
+            move->position.y = -self->moveOffset.y >> 16;
         }
 
-        if (entity->forceJumpIn)
-            entity->state = Player_State_StartJumpIn;
-        if (entity->forceTransform)
-            entity->state = Player_State_Transform;
+        if (self->forceJumpIn)
+            self->state = Player_State_StartJumpIn;
+        if (self->forceTransform)
+            self->state = Player_State_Transform;
 
-        StateMachine_Run(entity->state);
+        StateMachine_Run(self->state);
 
-        if (entity->objectID == Player->objectID) {
-            entity->flailing      = false;
-            entity->invertGravity = false;
-            if (entity->outerbox) {
-                entity->groundedStore = entity->onGround;
-                RSDK.ProcessTileCollisions(entity, entity->outerbox, entity->innerbox);
+        if (self->objectID == Player->objectID) {
+            self->flailing      = false;
+            self->invertGravity = false;
+            if (self->outerbox) {
+                self->groundedStore = self->onGround;
+                RSDK.ProcessTileCollisions(self, self->outerbox, self->innerbox);
             }
             else {
-                entity->outerbox      = RSDK.GetHitbox(&entity->playerAnimator, 0);
-                entity->innerbox      = RSDK.GetHitbox(&entity->playerAnimator, 1);
-                entity->groundedStore = entity->onGround;
-                RSDK.ProcessTileCollisions(entity, entity->outerbox, entity->innerbox);
-                entity->outerbox = NULL;
+                self->outerbox      = RSDK.GetHitbox(&self->playerAnimator, 0);
+                self->innerbox      = RSDK.GetHitbox(&self->playerAnimator, 1);
+                self->groundedStore = self->onGround;
+                RSDK.ProcessTileCollisions(self, self->outerbox, self->innerbox);
+                self->outerbox = NULL;
             }
-            entity->collisionLayers &= ~Zone->moveID;
-            if (entity->onGround && !entity->collisionMode)
-                entity->collisionFlagV |= 1;
+            self->collisionLayers &= ~Zone->moveID;
+            if (self->onGround && !self->collisionMode)
+                self->collisionFlagV |= 1;
         }
     }
 }
@@ -135,69 +135,69 @@ void Player_Update(void)
 void Player_LateUpdate(void)
 {
     RSDK_THIS(Player);
-    if (entity->superState == SUPERSTATE_FADEIN && entity->state != Player_State_Transform)
-        Player_CheckGoSuper(entity, 0x7F);
-    if (entity->state == Player_State_FlyCarried) {
-        entity->leaderPos.x = entity->position.x >> 0x10 << 0x10;
-        entity->leaderPos.y = entity->position.y >> 0x10 << 0x10;
+    if (self->superState == SUPERSTATE_FADEIN && self->state != Player_State_Transform)
+        Player_CheckGoSuper(self, 0x7F);
+    if (self->state == Player_State_FlyCarried) {
+        self->leaderPos.x = self->position.x >> 0x10 << 0x10;
+        self->leaderPos.y = self->position.y >> 0x10 << 0x10;
     }
 
-    if (entity->hurtFlag) {
-        entity->abilityValues[0] = 0;
+    if (self->hurtFlag) {
+        self->abilityValues[0] = 0;
 #if RETRO_USE_PLUS
-        if (!entity->sidekick)
-            RSDK.CopyEntity(Zone->entityData[1], entity, false);
+        if (!self->sidekick)
+            RSDK.CopyEntity(Zone->entityData[1], self, false);
 #endif
 
-        bool32 flag = entity->sidekick || globals->gameMode == MODE_COMPETITION;
+        bool32 flag = self->sidekick || globals->gameMode == MODE_COMPETITION;
 #if RETRO_USE_PLUS
         flag |= globals->gameMode == MODE_ENCORE;
 #endif
 
         if (flag) {
-            if (entity->invincibleTimer > 1)
-                entity->invincibleTimer = 1;
-            if (entity->speedShoesTimer > 1)
-                entity->speedShoesTimer = 1;
+            if (self->invincibleTimer > 1)
+                self->invincibleTimer = 1;
+            if (self->speedShoesTimer > 1)
+                self->speedShoesTimer = 1;
         }
         else {
-            entity->invincibleTimer = 0;
-            entity->speedShoesTimer = 0;
+            self->invincibleTimer = 0;
+            self->speedShoesTimer = 0;
         }
-        if (entity->gravityStrength <= 1)
-            entity->direction |= FLIP_Y;
+        if (self->gravityStrength <= 1)
+            self->direction |= FLIP_Y;
         else
-            entity->direction &= ~FLIP_Y;
-        entity->visible         = true;
-        entity->onGround        = false;
-        entity->groundVel       = 0;
-        entity->velocity.x      = 0;
-        entity->nextGroundState = StateMachine_None;
-        entity->nextAirState    = StateMachine_None;
-        entity->interaction     = false;
-        entity->tileCollisions  = false;
+            self->direction &= ~FLIP_Y;
+        self->visible         = true;
+        self->onGround        = false;
+        self->groundVel       = 0;
+        self->velocity.x      = 0;
+        self->nextGroundState = StateMachine_None;
+        self->nextAirState    = StateMachine_None;
+        self->interaction     = false;
+        self->tileCollisions  = false;
         if (globals->gameMode != MODE_COMPETITION)
-            entity->active = ACTIVE_ALWAYS;
-        entity->shield         = SHIELD_NONE;
-        entity->collisionFlagH = 0;
-        entity->collisionFlagV = 0;
-        entity->underwater     = false;
-        Player_ChangePhysicsState(entity);
-        destroyEntity(RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntityID(entity), Shield));
+            self->active = ACTIVE_ALWAYS;
+        self->shield         = SHIELD_NONE;
+        self->collisionFlagH = 0;
+        self->collisionFlagV = 0;
+        self->underwater     = false;
+        Player_ChangePhysicsState(self);
+        destroyEntity(RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntityID(self), Shield));
 
-        switch (entity->hurtFlag) {
+        switch (self->hurtFlag) {
             default: break;
             case HURTFLAG_HURT: RSDK.PlaySfx(Player->sfxHurt, false, 255);
             case HURTFLAG_DIE:
-                entity->hurtFlag   = HURTFLAG_NONE;
-                entity->velocity.y = -0x68000;
-                entity->state      = Player_State_Die;
-                if (!(entity->drawFX & FX_SCALE) || entity->scale.x == 0x200)
-                    entity->drawOrder = Zone->playerDrawHigh;
-                if (entity->sidekick || globals->gameMode == MODE_COMPETITION) {
-                    if (entity->camera) {
-                        entity->scrollDelay   = 2;
-                        entity->camera->state = StateMachine_None;
+                self->hurtFlag   = HURTFLAG_NONE;
+                self->velocity.y = -0x68000;
+                self->state      = Player_State_Die;
+                if (!(self->drawFX & FX_SCALE) || self->scale.x == 0x200)
+                    self->drawOrder = Zone->playerDrawHigh;
+                if (self->sidekick || globals->gameMode == MODE_COMPETITION) {
+                    if (self->camera) {
+                        self->scrollDelay   = 2;
+                        self->camera->state = StateMachine_None;
                     }
                 }
 #if RETRO_USE_PLUS
@@ -208,28 +208,28 @@ void Player_LateUpdate(void)
                         SceneInfo->timeEnabled = false;
                     }
 
-                    if (entity->camera) {
-                        entity->scrollDelay   = 2;
-                        entity->camera->state = StateMachine_None;
+                    if (self->camera) {
+                        self->scrollDelay   = 2;
+                        self->camera->state = StateMachine_None;
                     }
                 }
 #endif
                 else {
                     RSDK.SetGameMode(ENGINESTATE_FROZEN);
                     SceneInfo->timeEnabled = false;
-                    if (entity->camera) {
-                        entity->scrollDelay   = 2;
-                        entity->camera->state = StateMachine_None;
+                    if (self->camera) {
+                        self->scrollDelay   = 2;
+                        self->camera->state = StateMachine_None;
                     }
                 }
                 break;
             case HURTFLAG_DROWN:
-                entity->hurtFlag        = HURTFLAG_NONE;
-                entity->gravityStrength = 0x1000;
-                entity->velocity.y      = 0;
+                self->hurtFlag        = HURTFLAG_NONE;
+                self->gravityStrength = 0x1000;
+                self->velocity.y      = 0;
                 RSDK.PlaySfx(Water->sfxDrown, false, 255);
-                entity->state = Player_State_Drown;
-                if (!entity->sidekick) {
+                self->state = Player_State_Drown;
+                if (!self->sidekick) {
                     if (globals->gameMode == MODE_COMPETITION) {
                         Music_ResumePrevTrack(TRACK_DROWNING, false);
                     }
@@ -240,9 +240,9 @@ void Player_LateUpdate(void)
 #endif
                         SceneInfo->timeEnabled = false;
 
-                        if (entity->camera) {
-                            entity->scrollDelay   = 2;
-                            entity->camera->state = StateMachine_None;
+                        if (self->camera) {
+                            self->scrollDelay   = 2;
+                            self->camera->state = StateMachine_None;
                         }
                     }
 #if RETRO_USE_PLUS
@@ -252,99 +252,99 @@ void Player_LateUpdate(void)
                             SceneInfo->timeEnabled = false;
                         }
 
-                        if (entity->camera) {
-                            entity->scrollDelay   = 2;
-                            entity->camera->state = StateMachine_None;
+                        if (self->camera) {
+                            self->scrollDelay   = 2;
+                            self->camera->state = StateMachine_None;
                         }
                     }
 #endif
                 }
-                if (entity->camera) {
-                    entity->scrollDelay   = 2;
-                    entity->camera->state = StateMachine_None;
+                if (self->camera) {
+                    self->scrollDelay   = 2;
+                    self->camera->state = StateMachine_None;
                 }
                 break;
         }
     }
 
-    if (entity->onGround) {
-        if (entity->nextGroundState) {
-            entity->state           = entity->nextGroundState;
-            entity->nextGroundState = StateMachine_None;
-            if (entity->sidekick) {
+    if (self->onGround) {
+        if (self->nextGroundState) {
+            self->state           = self->nextGroundState;
+            self->nextGroundState = StateMachine_None;
+            if (self->sidekick) {
                 EntityPlayer *player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
                 player->scoreBonus   = 0;
             }
             else {
-                EntityPlayer *player = entity;
+                EntityPlayer *player = self;
                 player->scoreBonus   = 0;
             }
         }
 
-        if (entity->camera) {
-            if (entity->playerAnimator.animationID == ANI_JUMP)
-                entity->camera->adjustY = entity->cameraOffset;
+        if (self->camera) {
+            if (self->playerAnimator.animationID == ANI_JUMP)
+                self->camera->adjustY = self->cameraOffset;
             else
-                entity->camera->adjustY = 0;
+                self->camera->adjustY = 0;
         }
     }
     else {
-        if (entity->nextAirState) {
-            entity->state        = entity->nextAirState;
-            entity->nextAirState = StateMachine_None;
+        if (self->nextAirState) {
+            self->state        = self->nextAirState;
+            self->nextAirState = StateMachine_None;
         }
     }
 
-    if (entity->tailSpriteIndex != 0xFFFF) {
-        switch (entity->playerAnimator.animationID) {
+    if (self->tailSpriteIndex != 0xFFFF) {
+        switch (self->playerAnimator.animationID) {
             case ANI_IDLE:
             case ANI_BORED1:
             case ANI_LOOKUP:
             case ANI_CROUCH:
-                RSDK.SetSpriteAnimation(entity->tailSpriteIndex, 0, &entity->tailAnimator, false, 0);
-                entity->tailDirection = entity->direction;
-                entity->tailRotation  = entity->rotation;
+                RSDK.SetSpriteAnimation(self->tailSpriteIndex, 0, &self->tailAnimator, false, 0);
+                self->tailDirection = self->direction;
+                self->tailRotation  = self->rotation;
                 break;
             case ANI_JUMP:
-                RSDK.SetSpriteAnimation(entity->tailSpriteIndex, 1, &entity->tailAnimator, false, 0);
-                if (entity->onGround) {
-                    entity->tailRotation  = entity->rotation;
-                    entity->tailDirection = entity->groundVel <= 0;
+                RSDK.SetSpriteAnimation(self->tailSpriteIndex, 1, &self->tailAnimator, false, 0);
+                if (self->onGround) {
+                    self->tailRotation  = self->rotation;
+                    self->tailDirection = self->groundVel <= 0;
                 }
                 else {
-                    entity->tailRotation = RSDK.ATan2(entity->velocity.x, entity->velocity.y) << 1;
-                    if (entity->direction == FLIP_X)
-                        entity->tailRotation = (entity->tailRotation - 256) & 0x1FF;
-                    entity->tailDirection = entity->direction;
+                    self->tailRotation = RSDK.ATan2(self->velocity.x, self->velocity.y) << 1;
+                    if (self->direction == FLIP_X)
+                        self->tailRotation = (self->tailRotation - 256) & 0x1FF;
+                    self->tailDirection = self->direction;
                 }
                 break;
             case ANI_SKID:
             case ANI_PUSH:
             case ANI_HANG:
-                RSDK.SetSpriteAnimation(entity->tailSpriteIndex, 3, &entity->tailAnimator, false, 0);
-                entity->tailDirection = entity->direction;
+                RSDK.SetSpriteAnimation(self->tailSpriteIndex, 3, &self->tailAnimator, false, 0);
+                self->tailDirection = self->direction;
                 break;
             case ANI_SPINDASH:
-                RSDK.SetSpriteAnimation(entity->tailSpriteIndex, 2, &entity->tailAnimator, false, 0);
-                entity->tailDirection = entity->direction;
+                RSDK.SetSpriteAnimation(self->tailSpriteIndex, 2, &self->tailAnimator, false, 0);
+                self->tailDirection = self->direction;
                 break;
             case ANI_HANGMOVE:
-                RSDK.SetSpriteAnimation(entity->tailSpriteIndex, 4, &entity->tailAnimator, false, 0);
-                entity->tailDirection = entity->direction;
+                RSDK.SetSpriteAnimation(self->tailSpriteIndex, 4, &self->tailAnimator, false, 0);
+                self->tailDirection = self->direction;
                 break;
             case ANI_PULLEYHOLD:
-                RSDK.SetSpriteAnimation(entity->tailSpriteIndex, 5, &entity->tailAnimator, false, 0);
-                entity->tailDirection = entity->direction;
-                if (entity->tailDirection)
-                    entity->tailRotation = entity->rotation + 32;
+                RSDK.SetSpriteAnimation(self->tailSpriteIndex, 5, &self->tailAnimator, false, 0);
+                self->tailDirection = self->direction;
+                if (self->tailDirection)
+                    self->tailRotation = self->rotation + 32;
                 else
-                    entity->tailRotation = entity->rotation - 32;
+                    self->tailRotation = self->rotation - 32;
                 break;
-            default: RSDK.SetSpriteAnimation(0xFFFF, 0, &entity->tailAnimator, false, 0); break;
+            default: RSDK.SetSpriteAnimation(0xFFFF, 0, &self->tailAnimator, false, 0); break;
         }
-        RSDK.ProcessAnimation(&entity->tailAnimator);
+        RSDK.ProcessAnimation(&self->tailAnimator);
     }
-    RSDK.ProcessAnimation(&entity->playerAnimator);
+    RSDK.ProcessAnimation(&self->playerAnimator);
 }
 
 void Player_StaticUpdate(void)
@@ -416,40 +416,40 @@ void Player_Draw(void)
 {
     RSDK_THIS(Player);
 #if RETRO_USE_PLUS
-    if (entity->isGhost) {
-        entity->inkEffect = INK_BLEND;
-        entity->alpha     = 0x7F;
+    if (self->isGhost) {
+        self->inkEffect = INK_BLEND;
+        self->alpha     = 0x7F;
     }
 #endif
-    Entity *parent   = entity->abilityPtrs[0];
-    Vector2 posStore = entity->position;
-    if (entity->state == Player_State_FlyIn && parent) {
-        entity->position.x = parent->position.x;
-        entity->position.y = parent->position.y;
+    Entity *parent   = self->abilityPtrs[0];
+    Vector2 posStore = self->position;
+    if (self->state == Player_State_FlyIn && parent) {
+        self->position.x = parent->position.x;
+        self->position.y = parent->position.y;
     }
-    if (entity->tailSpriteIndex != 0xFFFF) {
-        int32 rotStore    = entity->rotation;
-        int32 dirStore    = entity->direction;
-        entity->rotation  = entity->tailRotation;
-        entity->direction = entity->tailDirection;
-        RSDK.DrawSprite(&entity->tailAnimator, NULL, false);
-        entity->rotation  = rotStore;
-        entity->direction = dirStore;
+    if (self->tailSpriteIndex != 0xFFFF) {
+        int32 rotStore    = self->rotation;
+        int32 dirStore    = self->direction;
+        self->rotation  = self->tailRotation;
+        self->direction = self->tailDirection;
+        RSDK.DrawSprite(&self->tailAnimator, NULL, false);
+        self->rotation  = rotStore;
+        self->direction = dirStore;
     }
 
-    if (entity->playerID != 1 || (globals->playerID & 0xFF) != ((globals->playerID >> 8) & 0xFF) || globals->gameMode == MODE_TIMEATTACK) {
-        RSDK.DrawSprite(&entity->playerAnimator, NULL, false);
+    if (self->playerID != 1 || (globals->playerID & 0xFF) != ((globals->playerID >> 8) & 0xFF) || globals->gameMode == MODE_TIMEATTACK) {
+        RSDK.DrawSprite(&self->playerAnimator, NULL, false);
     }
     else {
         uint32 colourStore[6];
-        switch (entity->characterID) {
+        switch (self->characterID) {
             case ID_SONIC:
                 for (int32 c = 0; c < 6; ++c) {
                     colourStore[c] = RSDK.GetPaletteEntry(0, c + 0x40);
                     RSDK.SetPaletteEntry(0, c + 0x40, Player->superPalette_Sonic[c]);
                 }
 
-                RSDK.DrawSprite(&entity->playerAnimator, NULL, false);
+                RSDK.DrawSprite(&self->playerAnimator, NULL, false);
 
                 for (int32 c = 0; c < 6; ++c) RSDK.SetPaletteEntry(0, c + 0x40, colourStore[c]);
                 break;
@@ -459,7 +459,7 @@ void Player_Draw(void)
                     RSDK.SetPaletteEntry(0, c + 0x46, Player->superPalette_Tails[c]);
                 }
 
-                RSDK.DrawSprite(&entity->playerAnimator, NULL, false);
+                RSDK.DrawSprite(&self->playerAnimator, NULL, false);
 
                 for (int32 c = 0; c < 6; ++c) RSDK.SetPaletteEntry(0, c + 0x46, colourStore[c]);
                 break;
@@ -469,7 +469,7 @@ void Player_Draw(void)
                     RSDK.SetPaletteEntry(0, c + 0x50, Player->superPalette_Knux[c]);
                 }
 
-                RSDK.DrawSprite(&entity->playerAnimator, NULL, false);
+                RSDK.DrawSprite(&self->playerAnimator, NULL, false);
 
                 for (int32 c = 0; c < 6; ++c) RSDK.SetPaletteEntry(0, c + 0x50, colourStore[c]);
                 break;
@@ -480,7 +480,7 @@ void Player_Draw(void)
                     RSDK.SetPaletteEntry(0, c + 96, Player->superPalette_Mighty[c]);
                 }
 
-                RSDK.DrawSprite(&entity->playerAnimator, NULL, false);
+                RSDK.DrawSprite(&self->playerAnimator, NULL, false);
 
                 for (int32 c = 0; c < 6; ++c) RSDK.SetPaletteEntry(0, c + 96, colourStore[c]);
                 break;
@@ -490,7 +490,7 @@ void Player_Draw(void)
                     RSDK.SetPaletteEntry(0, c + 113, Player->superPalette_Ray[c]);
                 }
 
-                RSDK.DrawSprite(&entity->playerAnimator, NULL, false);
+                RSDK.DrawSprite(&self->playerAnimator, NULL, false);
 
                 for (int32 c = 0; c < 6; ++c) RSDK.SetPaletteEntry(0, c + 113, colourStore[c]);
                 break;
@@ -498,10 +498,10 @@ void Player_Draw(void)
         }
     }
 
-    if (entity->state == Player_State_FlyIn) {
+    if (self->state == Player_State_FlyIn) {
         if (parent) {
-            entity->position.x = posStore.x;
-            entity->position.y = posStore.y;
+            self->position.x = posStore.x;
+            self->position.y = posStore.y;
         }
     }
 }
@@ -510,75 +510,75 @@ void Player_Create(void *data)
 {
     RSDK_THIS(Player);
     if (SceneInfo->inEditor) {
-        RSDK.SetSpriteAnimation(Player->sonicSpriteIndex, ANI_IDLE, &entity->playerAnimator, true, 0);
-        // entity->characterID = ID_SONIC;
+        RSDK.SetSpriteAnimation(Player->sonicSpriteIndex, ANI_IDLE, &self->playerAnimator, true, 0);
+        // self->characterID = ID_SONIC;
     }
     else {
-        entity->playerID = RSDK.GetEntityID(entity);
-        switch (entity->characterID) {
+        self->playerID = RSDK.GetEntityID(self);
+        switch (self->characterID) {
             case ID_TAILS:
-                entity->aniFrames     = Player->tailsSpriteIndex;
-                entity->tailSpriteIndex = Player->tailsTailsSpriteIndex;
-                entity->cameraOffset    = 0;
-                entity->movesetState    = Player_TailsJumpAbility;
-                entity->sensorY         = 0x100000;
+                self->aniFrames     = Player->tailsSpriteIndex;
+                self->tailSpriteIndex = Player->tailsTailsSpriteIndex;
+                self->cameraOffset    = 0;
+                self->movesetState    = Player_TailsJumpAbility;
+                self->sensorY         = 0x100000;
                 break;
             case ID_KNUCKLES:
-                entity->aniFrames     = Player->knuxSpriteIndex;
-                entity->tailSpriteIndex = -1;
-                entity->cameraOffset    = 0x50000;
-                entity->movesetState    = Player_KnuxJumpAbility;
-                entity->sensorY         = 0x140000;
+                self->aniFrames     = Player->knuxSpriteIndex;
+                self->tailSpriteIndex = -1;
+                self->cameraOffset    = 0x50000;
+                self->movesetState    = Player_KnuxJumpAbility;
+                self->sensorY         = 0x140000;
                 break;
 #if RETRO_USE_PLUS
             case ID_MIGHTY:
-                entity->aniFrames     = Player->mightySpriteIndex;
-                entity->tailSpriteIndex = -1;
-                entity->cameraOffset    = 0x50000;
-                entity->movesetState    = Player_MightyJumpAbility;
-                entity->sensorY         = 0x140000;
+                self->aniFrames     = Player->mightySpriteIndex;
+                self->tailSpriteIndex = -1;
+                self->cameraOffset    = 0x50000;
+                self->movesetState    = Player_MightyJumpAbility;
+                self->sensorY         = 0x140000;
                 break;
             case ID_RAY:
-                entity->aniFrames     = Player->raySpriteIndex;
-                entity->tailSpriteIndex = -1;
-                entity->cameraOffset    = 0x50000;
-                entity->movesetState    = Player_RayJumpAbility;
-                entity->sensorY         = 0x140000;
+                self->aniFrames     = Player->raySpriteIndex;
+                self->tailSpriteIndex = -1;
+                self->cameraOffset    = 0x50000;
+                self->movesetState    = Player_RayJumpAbility;
+                self->sensorY         = 0x140000;
                 break;
 #endif
             default:
-                entity->aniFrames     = Player->sonicSpriteIndex;
-                entity->tailSpriteIndex = -1;
-                entity->cameraOffset    = 0x50000;
-                entity->movesetState    = Player_SonicJumpAbility;
-                entity->sensorY         = 0x140000;
+                self->aniFrames     = Player->sonicSpriteIndex;
+                self->tailSpriteIndex = -1;
+                self->cameraOffset    = 0x50000;
+                self->movesetState    = Player_SonicJumpAbility;
+                self->sensorY         = 0x140000;
                 if (globals->medalMods & getMod(MEDAL_PEELOUT)) {
-                    entity->peeloutState = Player_StartPeelout;
+                    self->peeloutState = Player_StartPeelout;
                     for (int32 f = 0; f < 4; ++f) {
-                        SpriteFrame *dst = RSDK.GetFrame(entity->aniFrames, ANI_DASH, f);
-                        SpriteFrame *src = RSDK.GetFrame(entity->aniFrames, ANI_FLY, f);
+                        SpriteFrame *dst = RSDK.GetFrame(self->aniFrames, ANI_DASH, f);
+                        SpriteFrame *src = RSDK.GetFrame(self->aniFrames, ANI_FLY, f);
 
                         *dst = *src;
                     }
                 }
                 break;
         }
-        entity->sensorX[0]     = 0xA0000;
-        entity->sensorX[1]     = 0x50000;
-        entity->sensorX[2]     = 0;
-        entity->sensorX[3]     = -0x50000;
-        entity->sensorX[4]     = -0xA0000;
-        entity->active         = ACTIVE_NORMAL;
-        entity->tileCollisions = true;
-        entity->visible        = true;
-        entity->drawOrder      = Zone->playerDrawLow;
-        entity->scale.x        = 0x200;
-        entity->scale.y        = 0x200;
-        entity->controllerID   = entity->playerID + 1;
-        entity->state          = Player_State_Ground;
+        self->sensorX[0]     = 0xA0000;
+        self->sensorX[1]     = 0x50000;
+        self->sensorX[2]     = 0;
+        self->sensorX[3]     = -0x50000;
+        self->sensorX[4]     = -0xA0000;
+        self->active         = ACTIVE_NORMAL;
+        self->tileCollisions = true;
+        self->visible        = true;
+        self->drawOrder      = Zone->playerDrawLow;
+        self->scale.x        = 0x200;
+        self->scale.y        = 0x200;
+        self->controllerID   = self->playerID + 1;
+        self->state          = Player_State_Ground;
 
         if (!SceneInfo->entitySlot || globals->gameMode == MODE_COMPETITION) {
-            entity->stateInput = Player_ProcessP1Input;
+            self->stateInput = Player_ProcessP1Input;
         }
 #if RETRO_USE_PLUS
         else if (SceneInfo->entitySlot == 1 && globals->gameMode == MODE_TIMEATTACK) {
@@ -587,58 +587,58 @@ void Player_Create(void *data)
 #endif
         else {
 #if RETRO_USE_PLUS
-            RSDK.AssignControllerID(entity->controllerID, CONT_AUTOASSIGN);
+            RSDK.AssignControllerID(self->controllerID, CONT_AUTOASSIGN);
 #else
-            APICallback_AssignControllerID(entity->controllerID, CONT_AUTOASSIGN);
+            APICallback_AssignControllerID(self->controllerID, CONT_AUTOASSIGN);
 #endif
-            entity->stateInput = Player_ProcessP2Input_AI;
-            entity->sidekick   = true;
+            self->stateInput = Player_ProcessP2Input_AI;
+            self->sidekick   = true;
         }
 
-        AnalogStickInfoL[entity->controllerID].deadzone = 0.3;
-        entity->rings                              = Player->rings;
-        entity->ringExtraLife                      = Player->ringExtraLife;
+        AnalogStickInfoL[self->controllerID].deadzone = 0.3;
+        self->rings                              = Player->rings;
+        self->ringExtraLife                      = Player->ringExtraLife;
         Player->rings                              = 0;
         Player->ringExtraLife                      = 100;
-        entity->hyperRing                          = (Player->powerups >> 6) & 1;
+        self->hyperRing                          = (Player->powerups >> 6) & 1;
         Player->powerups &= ~0x40;
         if (Player->powerups >= 0x80) {
-            entity->state = Player_ForceSuperTransform;
+            self->state = Player_ForceSuperTransform;
             Player->powerups &= ~0x80;
         }
         if (Player->powerups) {
-            entity->shield = Player->powerups;
-            Player_ApplyShieldEffect(entity);
+            self->shield = Player->powerups;
+            Player_ApplyShieldEffect(self);
         }
 
         Player->powerups                  = 0;
         EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
         if (globals->gameMode == MODE_COMPETITION) {
-            entity->lives    = session->lives[entity->playerID];
-            entity->score    = 0;
-            entity->score1UP = 50000;
+            self->lives    = session->lives[self->playerID];
+            self->score    = 0;
+            self->score1UP = 50000;
         }
         else if (globals->gameMode == MODE_TIMEATTACK) {
-            entity->lives    = 1;
-            entity->score    = 0;
-            entity->score1UP = 50000;
+            self->lives    = 1;
+            self->score    = 0;
+            self->score1UP = 50000;
         }
         else {
-            entity->lives    = Player->savedLives;
-            entity->score    = Player->savedScore;
-            entity->score1UP = Player->savedScore1UP;
+            self->lives    = Player->savedLives;
+            self->score    = Player->savedScore;
+            self->score1UP = Player->savedScore1UP;
         }
 
-        int32 target = entity->score1UP;
-        while (entity->score1UP <= target) entity->score1UP += 50000;
+        int32 target = self->score1UP;
+        while (self->score1UP <= target) self->score1UP += 50000;
 
-        entity->collisionLayers = Zone->fgLayers;
-        entity->drawFX          = FX_ROTATE | FX_FLIP;
-        RSDK.SetSpriteAnimation(entity->aniFrames, ANI_IDLE, &entity->playerAnimator, true, 0);
-        Player_ChangePhysicsState(entity);
-        entity->maxWalkSpeed = 0x40000;
-        entity->maxJogSpeed  = 0x60000;
-        entity->maxRunSpeed  = 0xC0000;
+        self->collisionLayers = Zone->fgLayers;
+        self->drawFX          = FX_ROTATE | FX_FLIP;
+        RSDK.SetSpriteAnimation(self->aniFrames, ANI_IDLE, &self->playerAnimator, true, 0);
+        Player_ChangePhysicsState(self);
+        self->maxWalkSpeed = 0x40000;
+        self->maxJogSpeed  = 0x60000;
+        self->maxRunSpeed  = 0xC0000;
     }
 }
 
@@ -831,12 +831,12 @@ void Player_LoadSpritesVS(void)
 }
 void Player_SaveValues(void)
 {
-    EntityPlayer *entity     = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
-    Player->savedLives       = entity->lives;
+    EntityPlayer *player1     = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
+    Player->savedLives       = player1->lives;
     globals->restartLives[0] = Player->savedLives;
-    Player->savedScore       = entity->score;
+    Player->savedScore       = player1->score;
     globals->restartScore    = Player->savedScore;
-    Player->savedScore1UP    = entity->score1UP;
+    Player->savedScore1UP    = player1->score1UP;
     globals->restartScore1UP = Player->savedScore1UP;
 }
 void Player_GiveScore(EntityPlayer *player, int32 score)
@@ -924,7 +924,7 @@ void Player_ApplyShieldEffect(EntityPlayer *player)
 }
 void Player_ChangeCharacter(EntityPlayer *entity, int32 character)
 {
-    uint16 playerID     = entity->playerID;
+    uint16 playerID   = entity->playerID;
     entity->characterID = character;
     globals->playerID &= ~(255 << 8 * playerID);
     globals->playerID |= character << 8 * entity->playerID;
@@ -1209,135 +1209,135 @@ bool32 Player_CheckGoSuper(EntityPlayer *player, uint8 emeraldflags)
 void Player_BlendSuperSonicColours(int32 bankID)
 {
     RSDK_THIS(Player);
-    if (entity->superState == SUPERSTATE_SUPER) {
-        if (entity->superBlendState & 1) {
-            if (entity->superBlendAmount <= 0)
-                entity->superBlendState &= 2;
+    if (self->superState == SUPERSTATE_SUPER) {
+        if (self->superBlendState & 1) {
+            if (self->superBlendAmount <= 0)
+                self->superBlendState &= 2;
             else
-                entity->superBlendAmount -= 4;
+                self->superBlendAmount -= 4;
         }
-        else if (entity->superBlendAmount >= 256) {
-            entity->superBlendState |= 1;
-            if (entity->superBlendState == 1) {
+        else if (self->superBlendAmount >= 256) {
+            self->superBlendState |= 1;
+            if (self->superBlendState == 1) {
                 for (int32 i = 0; i < 6; ++i) {
                     RSDK.SetPaletteEntry(6, i + 0x40, Player->superPalette_Sonic[i + 6]);
                     RSDK.SetPaletteEntry(7, i + 0x40, Player->superPalette_Sonic[i + 12]);
                 }
-                entity->superBlendState  = 2;
-                entity->superBlendAmount = 0;
+                self->superBlendState  = 2;
+                self->superBlendAmount = 0;
             }
         }
         else {
-            entity->superBlendAmount += 4;
+            self->superBlendAmount += 4;
         }
     }
     else {
-        if (entity->superBlendAmount <= 0)
-            entity->superState = SUPERSTATE_NONE;
+        if (self->superBlendAmount <= 0)
+            self->superState = SUPERSTATE_NONE;
         else
-            entity->superBlendAmount -= 4;
+            self->superBlendAmount -= 4;
     }
-    RSDK.SetLimitedFade(bankID, 6, 7, entity->superBlendAmount, 64, 69);
+    RSDK.SetLimitedFade(bankID, 6, 7, self->superBlendAmount, 64, 69);
 }
 void Player_BlendSuperTailsColours(int32 bankID)
 {
     RSDK_THIS(Player);
-    if (entity->superState != SUPERSTATE_SUPER) {
-        if (entity->superBlendAmount <= 0)
-            entity->superState = SUPERSTATE_NONE;
+    if (self->superState != SUPERSTATE_SUPER) {
+        if (self->superBlendAmount <= 0)
+            self->superState = SUPERSTATE_NONE;
         else
-            entity->superBlendAmount -= 4;
+            self->superBlendAmount -= 4;
     }
-    else if (entity->superBlendState) {
-        if (entity->superBlendAmount <= 0)
-            entity->superBlendState = 0;
+    else if (self->superBlendState) {
+        if (self->superBlendAmount <= 0)
+            self->superBlendState = 0;
         else
-            entity->superBlendAmount -= 4;
+            self->superBlendAmount -= 4;
     }
     else {
-        if (entity->superBlendAmount >= 256)
-            entity->superBlendState = 1;
+        if (self->superBlendAmount >= 256)
+            self->superBlendState = 1;
         else
-            entity->superBlendAmount += 4;
+            self->superBlendAmount += 4;
     }
-    RSDK.SetLimitedFade(bankID, 6, 7, entity->superBlendAmount, 70, 76);
+    RSDK.SetLimitedFade(bankID, 6, 7, self->superBlendAmount, 70, 76);
 }
 void Player_BlendSuperKnuxColours(int32 bankID)
 {
     RSDK_THIS(Player);
-    if (entity->superState != SUPERSTATE_SUPER) {
-        if (entity->superBlendAmount <= 0)
-            entity->superState = SUPERSTATE_NONE;
+    if (self->superState != SUPERSTATE_SUPER) {
+        if (self->superBlendAmount <= 0)
+            self->superState = SUPERSTATE_NONE;
         else
-            entity->superBlendAmount -= 4;
+            self->superBlendAmount -= 4;
     }
-    else if (entity->superBlendState) {
-        if (entity->superBlendAmount <= 0)
-            entity->superBlendState = 0;
+    else if (self->superBlendState) {
+        if (self->superBlendAmount <= 0)
+            self->superBlendState = 0;
         else
-            entity->superBlendAmount -= 4;
+            self->superBlendAmount -= 4;
     }
     else {
-        if (entity->superBlendAmount >= 256)
-            entity->superBlendState = 1;
+        if (self->superBlendAmount >= 256)
+            self->superBlendState = 1;
         else
-            entity->superBlendAmount += 4;
+            self->superBlendAmount += 4;
     }
-    RSDK.SetLimitedFade(bankID, 6, 7, entity->superBlendAmount, 80, 86);
+    RSDK.SetLimitedFade(bankID, 6, 7, self->superBlendAmount, 80, 86);
 }
 #if RETRO_USE_PLUS
 void Player_BlendSuperMightyColours(int32 bankID)
 {
     RSDK_THIS(Player);
-    if (entity->superState != SUPERSTATE_SUPER) {
-        if (entity->superBlendAmount <= 0)
-            entity->superState = SUPERSTATE_NONE;
+    if (self->superState != SUPERSTATE_SUPER) {
+        if (self->superBlendAmount <= 0)
+            self->superState = SUPERSTATE_NONE;
         else
-            entity->superBlendAmount -= 4;
+            self->superBlendAmount -= 4;
     }
-    else if (entity->superBlendState) {
-        if (entity->superBlendAmount <= 0)
-            entity->superBlendState = 0;
+    else if (self->superBlendState) {
+        if (self->superBlendAmount <= 0)
+            self->superBlendState = 0;
         else
-            entity->superBlendAmount -= 4;
+            self->superBlendAmount -= 4;
     }
     else {
-        if (entity->superBlendAmount >= 256)
-            entity->superBlendState = 1;
+        if (self->superBlendAmount >= 256)
+            self->superBlendState = 1;
         else
-            entity->superBlendAmount += 4;
+            self->superBlendAmount += 4;
     }
-    RSDK.SetLimitedFade(bankID, 6, 7, entity->superBlendAmount, 96, 102);
+    RSDK.SetLimitedFade(bankID, 6, 7, self->superBlendAmount, 96, 102);
 }
 void Player_BlendSuperRayColours(int32 bankID)
 {
     RSDK_THIS(Player);
-    if (entity->superState != SUPERSTATE_SUPER) {
-        if (entity->superBlendAmount <= 0)
-            entity->superState = SUPERSTATE_NONE;
+    if (self->superState != SUPERSTATE_SUPER) {
+        if (self->superBlendAmount <= 0)
+            self->superState = SUPERSTATE_NONE;
         else
-            entity->superBlendAmount -= 4;
+            self->superBlendAmount -= 4;
     }
-    else if (entity->superBlendState) {
-        if (entity->superBlendAmount <= 0)
-            entity->superBlendState = 0;
+    else if (self->superBlendState) {
+        if (self->superBlendAmount <= 0)
+            self->superBlendState = 0;
         else
-            entity->superBlendAmount -= 4;
+            self->superBlendAmount -= 4;
     }
     else {
-        if (entity->superBlendAmount >= 256)
-            entity->superBlendState = 1;
+        if (self->superBlendAmount >= 256)
+            self->superBlendState = 1;
         else
-            entity->superBlendAmount += 4;
+            self->superBlendAmount += 4;
     }
-    RSDK.SetLimitedFade(bankID, 6, 7, entity->superBlendAmount, 113, 119);
+    RSDK.SetLimitedFade(bankID, 6, 7, self->superBlendAmount, 113, 119);
 }
 #endif
 void Player_HandleSuperForm(void)
 {
     RSDK_THIS(Player);
-    if (entity->superState != SUPERSTATE_NONE) {
-        switch (entity->characterID) {
+    if (self->superState != SUPERSTATE_NONE) {
+        switch (self->characterID) {
             case ID_SONIC:
                 Player_BlendSuperSonicColours(0);
                 if (FarPlane) {
@@ -1348,7 +1348,7 @@ void Player_HandleSuperForm(void)
                     RSDK.CopyPalette(0, 64, 2, 64, 6);
                 }
                 else if (HCZSetup) {
-                    if (entity->superBlendState > 1) {
+                    if (self->superBlendState > 1) {
                         for (int32 i = 0; i < 6; ++i) {
                             RSDK.SetPaletteEntry(6, i + 0x40, Player->superPalette_Sonic_HCZ[i + 6]);
                             RSDK.SetPaletteEntry(7, i + 0x40, Player->superPalette_Sonic_HCZ[i + 12]);
@@ -1363,7 +1363,7 @@ void Player_HandleSuperForm(void)
 
                     Player_BlendSuperSonicColours(1);
 
-                    if (entity->superBlendState > 1) {
+                    if (self->superBlendState > 1) {
                         for (int32 i = 0; i < 6; ++i) {
                             RSDK.SetPaletteEntry(6, i + 0x40, Player->superPalette_Sonic[i + 6]);
                             RSDK.SetPaletteEntry(7, i + 0x40, Player->superPalette_Sonic[i + 12]);
@@ -1377,7 +1377,7 @@ void Player_HandleSuperForm(void)
                     }
                 }
                 else if (CPZSetup) {
-                    if (entity->superBlendState > 1) {
+                    if (self->superBlendState > 1) {
                         for (int32 i = 0; i < 6; ++i) {
                             RSDK.SetPaletteEntry(6, i + 0x40, Player->superPalette_Sonic_CPZ[i + 6]);
                             RSDK.SetPaletteEntry(7, i + 0x40, Player->superPalette_Sonic_CPZ[i + 12]);
@@ -1392,7 +1392,7 @@ void Player_HandleSuperForm(void)
 
                     Player_BlendSuperSonicColours(2);
 
-                    if (entity->superBlendState > 1) {
+                    if (self->superBlendState > 1) {
                         for (int32 i = 0; i < 6; ++i) {
                             RSDK.SetPaletteEntry(6, i + 0x40, Player->superPalette_Sonic[i + 6]);
                             RSDK.SetPaletteEntry(7, i + 0x40, Player->superPalette_Sonic[i + 12]);
@@ -1555,52 +1555,52 @@ void Player_HandleSuperForm(void)
         }
     }
 
-    if (entity->superState == SUPERSTATE_SUPER) {
+    if (self->superState == SUPERSTATE_SUPER) {
         bool32 flag = false;
         if (!SceneInfo->timeEnabled && !ERZStart) {
             if (!PhantomEgg || PhantomEgg->superFlag) {
-                entity->superState = SUPERSTATE_FADEOUT;
+                self->superState = SUPERSTATE_FADEOUT;
                 flag               = true;
             }
         }
 
         if (!flag) {
-            entity->invincibleTimer = 60;
-            if (--entity->superSecondTimer <= 0) {
-                entity->superSecondTimer = 60;
-                if (--entity->rings <= 0) {
-                    entity->rings      = 0;
-                    entity->superState = SUPERSTATE_FADEOUT;
+            self->invincibleTimer = 60;
+            if (--self->superSecondTimer <= 0) {
+                self->superSecondTimer = 60;
+                if (--self->rings <= 0) {
+                    self->rings      = 0;
+                    self->superState = SUPERSTATE_FADEOUT;
                 }
             }
         }
     }
 
-    if (entity->superState == SUPERSTATE_FADEOUT) {
-        switch (entity->characterID) {
+    if (self->superState == SUPERSTATE_FADEOUT) {
+        switch (self->characterID) {
             case ID_SONIC:
-                entity->movesetState = Player_SonicJumpAbility;
+                self->movesetState = Player_SonicJumpAbility;
                 for (int32 i = 0; i < 6; ++i) {
                     RSDK.SetPaletteEntry(6, i + 0x40, Player->superPalette_Sonic[i]);
                     RSDK.SetPaletteEntry(7, i + 0x40, Player->superPalette_Sonic[i + 6]);
                 }
-                entity->superBlendAmount = 256;
-                entity->superBlendState  = 1;
+                self->superBlendAmount = 256;
+                self->superBlendState  = 1;
                 break;
-            case ID_TAILS: entity->movesetState = Player_TailsJumpAbility; break;
-            case ID_KNUCKLES: entity->movesetState = Player_KnuxJumpAbility; break;
+            case ID_TAILS: self->movesetState = Player_TailsJumpAbility; break;
+            case ID_KNUCKLES: self->movesetState = Player_KnuxJumpAbility; break;
 #if RETRO_USE_PLUS
-            case ID_MIGHTY: entity->movesetState = Player_MightyJumpAbility; break;
-            case ID_RAY: entity->movesetState = Player_RayJumpAbility; break;
+            case ID_MIGHTY: self->movesetState = Player_MightyJumpAbility; break;
+            case ID_RAY: self->movesetState = Player_RayJumpAbility; break;
 #endif
             default: break;
         }
 
         if (ERZStart) {
-            entity->shield   = SHIELD_NONE;
-            entity->rotation = 0;
-            if (entity->state == ERZStart_State_PlayerSuperFly || entity->state == ERZStart_State_PlayerRebound)
-                RSDK.SetSpriteAnimation(entity->aniFrames, ANI_HURT, &entity->playerAnimator, false, 0);
+            self->shield   = SHIELD_NONE;
+            self->rotation = 0;
+            if (self->state == ERZStart_State_PlayerSuperFly || self->state == ERZStart_State_PlayerRebound)
+                RSDK.SetSpriteAnimation(self->aniFrames, ANI_HURT, &self->playerAnimator, false, 0);
         }
         else {
             bool32 superActive = false;
@@ -1612,23 +1612,23 @@ void Player_HandleSuperForm(void)
 
             if (superActive)
                 Music_ResumePrevTrack(TRACK_SUPER, true);
-            if (entity->state == ERZStart_State_PlayerSuperFly || entity->state == ERZStart_State_PlayerRebound)
-                entity->state = Player_State_Air;
+            if (self->state == ERZStart_State_PlayerSuperFly || self->state == ERZStart_State_PlayerRebound)
+                self->state = Player_State_Air;
         }
 
-        if (entity->characterID == ID_SONIC && !entity->isChibi) {
-            entity->aniFrames = Player->sonicSpriteIndex;
-            if (!entity->playerAnimator.animationID)
-                entity->playerAnimator.frameID = 0;
-            RSDK.SetSpriteAnimation(entity->aniFrames, entity->playerAnimator.animationID, &entity->playerAnimator, true,
-                                    entity->playerAnimator.frameID);
+        if (self->characterID == ID_SONIC && !self->isChibi) {
+            self->aniFrames = Player->sonicSpriteIndex;
+            if (!self->playerAnimator.animationID)
+                self->playerAnimator.frameID = 0;
+            RSDK.SetSpriteAnimation(self->aniFrames, self->playerAnimator.animationID, &self->playerAnimator, true,
+                                    self->playerAnimator.frameID);
         }
 
-        entity->invincibleTimer = 0;
-        if (entity->shield)
-            Player_ApplyShieldEffect(entity);
-        entity->superState = SUPERSTATE_DONE;
-        Player_ChangePhysicsState(entity);
+        self->invincibleTimer = 0;
+        if (self->shield)
+            Player_ApplyShieldEffect(self);
+        self->superState = SUPERSTATE_DONE;
+        Player_ChangePhysicsState(self);
     }
 }
 bool32 Player_CheckKeyPress(void)
@@ -1641,17 +1641,17 @@ bool32 Player_CheckKeyPress(void)
 #endif
 
 #if RETRO_USE_PLUS
-    if (entity->controllerID > PLAYER_MAX || Player->disableP2KeyCheck)
+    if (self->controllerID > PLAYER_MAX || Player->disableP2KeyCheck)
         return false;
 #else
-    if (entity->controllerID > PLAYER_MAX)
+    if (self->controllerID > PLAYER_MAX)
         return false;
 #endif
 
-    return ControllerInfo[entity->controllerID].keyUp.down || ControllerInfo[entity->controllerID].keyDown.down
-           || ControllerInfo[entity->controllerID].keyLeft.down || ControllerInfo[entity->controllerID].keyRight.down
-           || ControllerInfo[entity->controllerID].keyA.down || ControllerInfo[entity->controllerID].keyB.down
-           || ControllerInfo[entity->controllerID].keyC.down || ControllerInfo[entity->controllerID].keyX.down;
+    return ControllerInfo[self->controllerID].keyUp.down || ControllerInfo[self->controllerID].keyDown.down
+           || ControllerInfo[self->controllerID].keyLeft.down || ControllerInfo[self->controllerID].keyRight.down
+           || ControllerInfo[self->controllerID].keyA.down || ControllerInfo[self->controllerID].keyB.down
+           || ControllerInfo[self->controllerID].keyC.down || ControllerInfo[self->controllerID].keyX.down;
 }
 EntityPlayer *Player_GetNearestPlayerX(void)
 {
@@ -1660,7 +1660,7 @@ EntityPlayer *Player_GetNearestPlayerX(void)
     EntityPlayer *returnPlayer = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     foreach_active(Player, player)
     {
-        int32 distX = abs(player->position.x - entity->position.x);
+        int32 distX = abs(player->position.x - self->position.x);
         if (distX < distance) {
             distance     = distX;
             returnPlayer = player;
@@ -1675,8 +1675,8 @@ EntityPlayer *Player_GetNearestPlayer(void)
     EntityPlayer *returnPlayer = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     foreach_active(Player, player)
     {
-        int32 distX = abs(player->position.x - entity->position.x);
-        int32 distY = abs(player->position.y - entity->position.y);
+        int32 distX = abs(player->position.x - self->position.x);
+        int32 distY = abs(player->position.y - self->position.y);
         if (distX + distY < distance) {
             distance     = distX + distY;
             returnPlayer = player;
@@ -2628,130 +2628,130 @@ void Player_HandleGroundMovement(void)
 {
     RSDK_THIS(Player);
 
-    if (entity->controlLock > 0) {
-        entity->controlLock--;
-        if (!entity->invertGravity) {
-            entity->groundVel += RSDK.Sin256(entity->angle) << 13 >> 8;
+    if (self->controlLock > 0) {
+        self->controlLock--;
+        if (!self->invertGravity) {
+            self->groundVel += RSDK.Sin256(self->angle) << 13 >> 8;
         }
     }
     else {
         bool32 left  = false;
         bool32 right = false;
-        if (entity->invertGravity) {
-            right = entity->left;
-            left  = entity->right;
+        if (self->invertGravity) {
+            right = self->left;
+            left  = self->right;
         }
         else {
-            left  = entity->left;
-            right = entity->right;
+            left  = self->left;
+            right = self->right;
         }
         if (left) {
-            if (entity->groundVel > -entity->topSpeed) {
-                if (entity->groundVel <= 0) {
-                    entity->groundVel -= entity->acceleration;
+            if (self->groundVel > -self->topSpeed) {
+                if (self->groundVel <= 0) {
+                    self->groundVel -= self->acceleration;
                 }
                 else {
-                    if (!entity->collisionMode && entity->groundVel > 0x40000 && !Zone->autoScrollSpeed) {
-                        entity->direction = FLIP_NONE;
-                        entity->skidding  = 24;
+                    if (!self->collisionMode && self->groundVel > 0x40000 && !Zone->autoScrollSpeed) {
+                        self->direction = FLIP_NONE;
+                        self->skidding  = 24;
                     }
-                    int32 skid = entity->skidSpeed;
-                    if (entity->groundVel < skid) {
-                        entity->groundVel = -abs(skid);
+                    int32 skid = self->skidSpeed;
+                    if (self->groundVel < skid) {
+                        self->groundVel = -abs(skid);
                     }
                     else {
-                        entity->groundVel -= skid;
+                        self->groundVel -= skid;
                     }
                 }
             }
-            if (entity->groundVel <= 0 && entity->skidding < 1)
-                entity->direction = FLIP_X;
+            if (self->groundVel <= 0 && self->skidding < 1)
+                self->direction = FLIP_X;
         }
         if (right) {
-            if (entity->groundVel < entity->topSpeed) {
-                if (entity->groundVel >= 0) {
-                    entity->groundVel += entity->acceleration;
+            if (self->groundVel < self->topSpeed) {
+                if (self->groundVel >= 0) {
+                    self->groundVel += self->acceleration;
                 }
                 else {
-                    if (!entity->collisionMode && entity->groundVel < -0x40000 && !Zone->autoScrollSpeed) {
-                        entity->direction = FLIP_X;
-                        entity->skidding  = 24;
+                    if (!self->collisionMode && self->groundVel < -0x40000 && !Zone->autoScrollSpeed) {
+                        self->direction = FLIP_X;
+                        self->skidding  = 24;
                     }
 
-                    if (entity->groundVel > -entity->skidSpeed) {
-                        entity->groundVel = abs(entity->skidSpeed);
+                    if (self->groundVel > -self->skidSpeed) {
+                        self->groundVel = abs(self->skidSpeed);
                     }
                     else {
-                        entity->groundVel += entity->skidSpeed;
+                        self->groundVel += self->skidSpeed;
                     }
                 }
             }
 
-            if (entity->groundVel >= 0 && entity->skidding < 1)
-                entity->direction = FLIP_NONE;
+            if (self->groundVel >= 0 && self->skidding < 1)
+                self->direction = FLIP_NONE;
         }
 
-        if (entity->left || entity->right) {
-            if (!entity->invertGravity) {
-                entity->groundVel += RSDK.Sin256(entity->angle) << 13 >> 8;
+        if (self->left || self->right) {
+            if (!self->invertGravity) {
+                self->groundVel += RSDK.Sin256(self->angle) << 13 >> 8;
 
-                if (entity->right) {
-                    if (!entity->left) {
-                        if (entity->angle > 0xC0 && entity->angle < 0xE4) {
-                            if (entity->groundVel > -0x20000 && entity->groundVel < 0x28000) {
-                                entity->controlLock = 30;
+                if (self->right) {
+                    if (!self->left) {
+                        if (self->angle > 0xC0 && self->angle < 0xE4) {
+                            if (self->groundVel > -0x20000 && self->groundVel < 0x28000) {
+                                self->controlLock = 30;
                             }
                         }
                     }
                 }
-                else if (entity->left) {
-                    if (entity->angle > 0x1C && entity->angle < 0x40) {
-                        if (entity->groundVel > -0x28000 && entity->groundVel < 0x20000) {
-                            entity->controlLock = 30;
+                else if (self->left) {
+                    if (self->angle > 0x1C && self->angle < 0x40) {
+                        if (self->groundVel > -0x28000 && self->groundVel < 0x20000) {
+                            self->controlLock = 30;
                         }
                     }
                 }
             }
         }
         else {
-            if (entity->groundVel <= 0) {
-                entity->groundVel += entity->deceleration;
-                if (entity->groundVel > 0)
-                    entity->groundVel = 0;
+            if (self->groundVel <= 0) {
+                self->groundVel += self->deceleration;
+                if (self->groundVel > 0)
+                    self->groundVel = 0;
             }
             else {
-                entity->groundVel -= entity->deceleration;
-                if (entity->groundVel < 0)
-                    entity->groundVel = 0;
+                self->groundVel -= self->deceleration;
+                if (self->groundVel < 0)
+                    self->groundVel = 0;
             }
 
-            if (!entity->invertGravity) {
-                if (entity->groundVel > 0x2000 || entity->groundVel < -0x2000)
-                    entity->groundVel += RSDK.Sin256(entity->angle) << 13 >> 8;
+            if (!self->invertGravity) {
+                if (self->groundVel > 0x2000 || self->groundVel < -0x2000)
+                    self->groundVel += RSDK.Sin256(self->angle) << 13 >> 8;
 
-                if (entity->angle > 0xC0 && entity->angle < 0xE4) {
-                    if (entity->groundVel > -0x10000 && entity->groundVel < 0x10000) {
-                        entity->controlLock = 30;
+                if (self->angle > 0xC0 && self->angle < 0xE4) {
+                    if (self->groundVel > -0x10000 && self->groundVel < 0x10000) {
+                        self->controlLock = 30;
                     }
                 }
-                if (entity->angle > 0x1C && entity->angle < 0x40) {
-                    if (entity->groundVel > -0x10000 && entity->groundVel < 0x10000) {
-                        entity->controlLock = 30;
+                if (self->angle > 0x1C && self->angle < 0x40) {
+                    if (self->groundVel > -0x10000 && self->groundVel < 0x10000) {
+                        self->controlLock = 30;
                     }
                 }
             }
         }
     }
 
-    if (!entity->invertGravity) {
-        if (entity->collisionMode && entity->collisionMode <= CMODE_RWALL) {
-            if (entity->angle >= 0x40 && entity->angle <= 0xC0) {
-                if (entity->groundVel > -0x20000 && entity->groundVel < 0x20000) {
-                    entity->velocity.x    = entity->groundVel * RSDK.Cos256(entity->angle) >> 8;
-                    entity->onGround      = false;
-                    entity->angle         = 0;
-                    entity->collisionMode = CMODE_FLOOR;
-                    entity->velocity.y    = (entity->groundVel * RSDK.Sin256(entity->angle)) >> 8;
+    if (!self->invertGravity) {
+        if (self->collisionMode && self->collisionMode <= CMODE_RWALL) {
+            if (self->angle >= 0x40 && self->angle <= 0xC0) {
+                if (self->groundVel > -0x20000 && self->groundVel < 0x20000) {
+                    self->velocity.x    = self->groundVel * RSDK.Cos256(self->angle) >> 8;
+                    self->onGround      = false;
+                    self->angle         = 0;
+                    self->collisionMode = CMODE_FLOOR;
+                    self->velocity.y    = (self->groundVel * RSDK.Sin256(self->angle)) >> 8;
                 }
             }
         }
@@ -2761,57 +2761,57 @@ void Player_HandleGroundRotation(void)
 {
     RSDK_THIS(Player);
 
-    if (entity->angle <= 4 || entity->angle >= 252) {
-        if (entity->angle <= 16 || entity->angle >= 232) {
-            entity->rotation = 0;
+    if (self->angle <= 4 || self->angle >= 252) {
+        if (self->angle <= 16 || self->angle >= 232) {
+            self->rotation = 0;
         }
         else {
-            entity->rotation <<= 1;
+            self->rotation <<= 1;
         }
     }
     else {
-        int32 vel    = (abs(entity->groundVel) <= 0x60000) + 1;
+        int32 vel    = (abs(self->groundVel) <= 0x60000) + 1;
         int32 newRot = 0;
-        if (entity->angle <= 16 || entity->angle >= 232)
+        if (self->angle <= 16 || self->angle >= 232)
             newRot = 0;
         else
-            newRot = entity->angle << 1;
-        int32 dif = newRot - entity->rotation;
+            newRot = self->angle << 1;
+        int32 dif = newRot - self->rotation;
 
         int32 rot = 0;
         if (dif >= 0)
-            rot = newRot - entity->rotation;
+            rot = newRot - self->rotation;
         else
-            rot = entity->rotation - newRot;
+            rot = self->rotation - newRot;
 
         int32 rot2 = 0;
         if (dif + 0x200 >= 0)
             rot2 = dif + 0x200;
         else
-            rot2 = entity->rotation - newRot - 0x200;
+            rot2 = self->rotation - newRot - 0x200;
 
         int32 check = dif - 0x200;
         if (dif - 0x200 < 0)
-            check = entity->rotation - newRot + 0x200;
+            check = self->rotation - newRot + 0x200;
 
         if (rot >= check) {
             if (check < rot2) {
-                entity->rotation += (dif - 0x200) >> vel;
-                entity->rotation &= 0x1FF;
+                self->rotation += (dif - 0x200) >> vel;
+                self->rotation &= 0x1FF;
             }
             else {
-                entity->rotation += (dif + 0x200) >> vel;
-                entity->rotation &= 0x1FF;
+                self->rotation += (dif + 0x200) >> vel;
+                self->rotation &= 0x1FF;
             }
         }
         else {
             if (rot < rot2) {
-                entity->rotation += (dif >> vel);
-                entity->rotation &= 0x1FF;
+                self->rotation += (dif >> vel);
+                self->rotation &= 0x1FF;
             }
             else {
-                entity->rotation += (dif + 0x200) >> vel;
-                entity->rotation &= 0x1FF;
+                self->rotation += (dif + 0x200) >> vel;
+                self->rotation &= 0x1FF;
             }
         }
     }
@@ -2820,62 +2820,62 @@ void Player_HandleAirMovement(void)
 {
     RSDK_THIS(Player);
 
-    if (entity->camera) {
-        entity->camera->offsetYFlag = true;
-        entity->camera->offset.y    = 0x200000;
+    if (self->camera) {
+        self->camera->offsetYFlag = true;
+        self->camera->offset.y    = 0x200000;
     }
-    entity->velocity.y += entity->gravityStrength;
-    if (entity->velocity.y < entity->jumpCap && entity->playerAnimator.animationID == ANI_JUMP && !entity->jumpHold && entity->jumpAbility == 1) {
-        entity->velocity.y = entity->jumpCap;
-        entity->velocity.x = entity->velocity.x - (entity->velocity.x >> 5);
+    self->velocity.y += self->gravityStrength;
+    if (self->velocity.y < self->jumpCap && self->playerAnimator.animationID == ANI_JUMP && !self->jumpHold && self->jumpAbility == 1) {
+        self->velocity.y = self->jumpCap;
+        self->velocity.x = self->velocity.x - (self->velocity.x >> 5);
     }
 
-    entity->collisionMode = CMODE_FLOOR;
-    entity->pushing       = 0;
-    if (entity->rotation >= 256) {
-        if (entity->rotation < 512) {
-            entity->rotation += 4;
+    self->collisionMode = CMODE_FLOOR;
+    self->pushing       = 0;
+    if (self->rotation >= 256) {
+        if (self->rotation < 512) {
+            self->rotation += 4;
         }
     }
-    else if (entity->rotation > 0) {
-        entity->rotation -= 4;
-        entity->rotation = entity->rotation;
+    else if (self->rotation > 0) {
+        self->rotation -= 4;
+        self->rotation = self->rotation;
     }
     else
-        entity->rotation = 0;
+        self->rotation = 0;
 }
 void Player_HandleAirFriction(void)
 {
     RSDK_THIS(Player);
 
-    if (entity->velocity.y > -0x40000 && entity->velocity.y < 0)
-        entity->velocity.x -= entity->velocity.x >> 5;
+    if (self->velocity.y > -0x40000 && self->velocity.y < 0)
+        self->velocity.x -= self->velocity.x >> 5;
 
-    if (entity->velocity.x <= -entity->topSpeed) {
-        if (entity->left) {
-            entity->direction = FLIP_X;
+    if (self->velocity.x <= -self->topSpeed) {
+        if (self->left) {
+            self->direction = FLIP_X;
         }
     }
     else {
-        if (entity->left) {
-            entity->velocity.x -= entity->airAcceleration;
-            entity->direction = FLIP_X;
+        if (self->left) {
+            self->velocity.x -= self->airAcceleration;
+            self->direction = FLIP_X;
         }
     }
 
-    if (entity->velocity.x >= entity->topSpeed) {
-        if (entity->right)
-            entity->direction = FLIP_NONE;
+    if (self->velocity.x >= self->topSpeed) {
+        if (self->right)
+            self->direction = FLIP_NONE;
     }
-    else if (entity->right) {
-        entity->direction = 0;
-        entity->velocity.x += entity->airAcceleration;
+    else if (self->right) {
+        self->direction = 0;
+        self->velocity.x += self->airAcceleration;
     }
 }
 void Player_StartJump(EntityPlayer *entity)
 {
     entity->controlLock = 0;
-    entity->onGround    = 0;
+    entity->onGround    = false;
     if (entity->collisionMode == CMODE_FLOOR && entity->state != Player_State_Roll)
         entity->position.y += entity->cameraOffset;
 
@@ -2907,20 +2907,20 @@ void Player_StartJump(EntityPlayer *entity)
 void Player_StartRoll(void)
 {
     RSDK_THIS(Player);
-    RSDK.SetSpriteAnimation(entity->aniFrames, ANI_JUMP, &entity->playerAnimator, false, 0);
-    entity->pushing = 0;
-    entity->state   = Player_State_Roll;
-    if (entity->collisionMode == CMODE_FLOOR) {
-        entity->position.y += entity->cameraOffset;
+    RSDK.SetSpriteAnimation(self->aniFrames, ANI_JUMP, &self->playerAnimator, false, 0);
+    self->pushing = 0;
+    self->state   = Player_State_Roll;
+    if (self->collisionMode == CMODE_FLOOR) {
+        self->position.y += self->cameraOffset;
     }
 }
 void Player_StartPeelout(void)
 {
     RSDK_THIS(Player);
-    RSDK.SetSpriteAnimation(entity->aniFrames, ANI_WALK, &entity->playerAnimator, true, 0);
-    entity->state          = Player_State_Peelout;
-    entity->abilityTimer   = 0;
-    entity->spindashCharge = 0;
+    RSDK.SetSpriteAnimation(self->aniFrames, ANI_WALK, &self->playerAnimator, true, 0);
+    self->state          = Player_State_Peelout;
+    self->abilityTimer   = 0;
+    self->spindashCharge = 0;
     RSDK.PlaySfx(Player->sfxPeelCharge, false, 255);
 }
 #if RETRO_USE_PLUS
@@ -2932,21 +2932,21 @@ bool32 Player_SwapMainPlayer(bool32 flag)
         return false;
 
     if (!flag) {
-        if (Player->cantSwap || entity->drawOrder == 2 || !SceneInfo->timeEnabled)
+        if (Player->cantSwap || self->drawOrder == 2 || !SceneInfo->timeEnabled)
             return false;
         if (Player->jumpInDelay) {
             Player->jumpInDelay = 240;
             return false;
         }
 
-        if (entity->state == Player_State_Die || entity->state == Player_State_Drown) {
+        if (self->state == Player_State_Die || self->state == Player_State_Drown) {
             if (sidekick->state == Player_State_Die || sidekick->state == Player_State_Drown || sidekick->state == Player_State_EncoreRespawn
                 || sidekick->state == Player_State_None) {
                 return false;
             }
         }
         else {
-            if (entity->state != Player_State_Ground && entity->state != Player_State_Roll)
+            if (self->state != Player_State_Ground && self->state != Player_State_Roll)
                 return false;
             if (sidekick->state != Player_State_Ground && sidekick->state != Player_State_Roll)
                 return false;
@@ -2971,22 +2971,22 @@ bool32 Player_SwapMainPlayer(bool32 flag)
     RSDK.CopyEntity(sidekick, (Entity *)Zone->entityData, 0);
 
     sidekick->state         = Player_State_Air;
-    entity->controllerID    = sidekick->controllerID;
-    entity->stateInput      = sidekick->stateInput;
-    entity->sidekick        = false;
-    entity->score           = sidekick->score;
-    entity->score1UP        = sidekick->score1UP;
-    entity->rings           = sidekick->rings;
-    entity->ringExtraLife   = sidekick->ringExtraLife;
-    entity->shield          = sidekick->shield;
-    entity->camera          = sidekick->camera;
-    entity->invincibleTimer = sidekick->invincibleTimer;
-    entity->speedShoesTimer = sidekick->speedShoesTimer;
-    entity->hyperRing       = sidekick->hyperRing;
-    entity->playerID        = sidekick->playerID;
-    entity->scrollDelay     = 0;
-    entity->camera->state   = Camera_State_Follow;
-    Player_ChangePhysicsState(entity);
+    self->controllerID    = sidekick->controllerID;
+    self->stateInput      = sidekick->stateInput;
+    self->sidekick        = false;
+    self->score           = sidekick->score;
+    self->score1UP        = sidekick->score1UP;
+    self->rings           = sidekick->rings;
+    self->ringExtraLife   = sidekick->ringExtraLife;
+    self->shield          = sidekick->shield;
+    self->camera          = sidekick->camera;
+    self->invincibleTimer = sidekick->invincibleTimer;
+    self->speedShoesTimer = sidekick->speedShoesTimer;
+    self->hyperRing       = sidekick->hyperRing;
+    self->playerID        = sidekick->playerID;
+    self->scrollDelay     = 0;
+    self->camera->state   = Camera_State_Follow;
+    Player_ChangePhysicsState(self);
     sidekick->controllerID    = sidekickController;
     sidekick->stateInput      = sidekickInputState;
     sidekick->sidekick        = true;
@@ -3002,8 +3002,8 @@ bool32 Player_SwapMainPlayer(bool32 flag)
     sidekick->playerID        = RSDK.GetEntityID(sidekick);
     Player_ChangePhysicsState(sidekick);
     if (sidekick->superState == SUPERSTATE_SUPER)
-        Player_CheckGoSuper(entity, 0xFF);
-    globals->playerID = entity->characterID + (sidekick->characterID << 8);
+        Player_CheckGoSuper(self, 0xFF);
+    globals->playerID = self->characterID + (sidekick->characterID << 8);
     RSDK.PlaySfx(Player->sfxSwap, false, 255);
     HUD->swapCooldown = 60;
     return true;
@@ -3014,84 +3014,84 @@ bool32 Player_SwapMainPlayer(bool32 flag)
 void Player_HandleRollDeceleration(void)
 {
     RSDK_THIS(Player);
-    int32 initialVel = entity->groundVel;
-    if (entity->right && entity->groundVel < 0)
-        entity->groundVel += entity->rollingDeceleration;
+    int32 initialVel = self->groundVel;
+    if (self->right && self->groundVel < 0)
+        self->groundVel += self->rollingDeceleration;
 
-    if (entity->left && entity->groundVel > 0)
-        entity->groundVel -= entity->rollingDeceleration;
+    if (self->left && self->groundVel > 0)
+        self->groundVel -= self->rollingDeceleration;
 
-    if (entity->groundVel) {
-        if (entity->groundVel < 0) {
-            entity->groundVel += entity->rollingFriction;
+    if (self->groundVel) {
+        if (self->groundVel < 0) {
+            self->groundVel += self->rollingFriction;
 
-            if (RSDK.Sin256(entity->angle) >= 0)
-                entity->groundVel += 0x1400 * RSDK.Sin256(entity->angle) >> 8;
+            if (RSDK.Sin256(self->angle) >= 0)
+                self->groundVel += 0x1400 * RSDK.Sin256(self->angle) >> 8;
             else
-                entity->groundVel += 0x5000 * RSDK.Sin256(entity->angle) >> 8;
+                self->groundVel += 0x5000 * RSDK.Sin256(self->angle) >> 8;
 
-            if (entity->groundVel < -0x120000)
-                entity->groundVel = -0x120000;
+            if (self->groundVel < -0x120000)
+                self->groundVel = -0x120000;
         }
         else {
-            entity->groundVel -= entity->rollingFriction;
-            if (RSDK.Sin256(entity->angle) <= 0)
-                entity->groundVel += 0x1400 * RSDK.Sin256(entity->angle) >> 8;
+            self->groundVel -= self->rollingFriction;
+            if (RSDK.Sin256(self->angle) <= 0)
+                self->groundVel += 0x1400 * RSDK.Sin256(self->angle) >> 8;
             else
-                entity->groundVel += 0x5000 * RSDK.Sin256(entity->angle) >> 8;
+                self->groundVel += 0x5000 * RSDK.Sin256(self->angle) >> 8;
 
-            if (entity->groundVel > 0x120000)
-                entity->groundVel = 0x120000;
+            if (self->groundVel > 0x120000)
+                self->groundVel = 0x120000;
         }
     }
     else {
-        entity->groundVel += 0x5000 * RSDK.Sin256(entity->angle) >> 8;
+        self->groundVel += 0x5000 * RSDK.Sin256(self->angle) >> 8;
     }
 
-    switch (entity->collisionMode) {
+    switch (self->collisionMode) {
         case CMODE_FLOOR:
-            if (entity->state == Player_State_ForceRoll_Ground) {
-                if (abs(entity->groundVel) < 0x10000) {
-                    if (entity->direction & FLIP_Y)
-                        entity->groundVel = -0x40000;
+            if (self->state == Player_State_ForceRoll_Ground) {
+                if (abs(self->groundVel) < 0x10000) {
+                    if (self->direction & FLIP_Y)
+                        self->groundVel = -0x40000;
                     else
-                        entity->groundVel = 0x40000;
+                        self->groundVel = 0x40000;
                 }
             }
             else {
-                if ((entity->groundVel >= 0 && initialVel <= 0) || (entity->groundVel <= 0 && initialVel >= 0)) {
-                    entity->groundVel = 0;
-                    entity->state     = Player_State_Ground;
+                if ((self->groundVel >= 0 && initialVel <= 0) || (self->groundVel <= 0 && initialVel >= 0)) {
+                    self->groundVel = 0;
+                    self->state     = Player_State_Ground;
                 }
             }
             break;
         case CMODE_LWALL:
         case CMODE_RWALL:
-            if (entity->angle >= 0x40 && entity->angle <= 0xC0) {
-                if (abs(entity->groundVel) < 0x20000) {
-                    entity->velocity.x    = entity->groundVel * RSDK.Cos256(entity->angle) >> 8;
-                    entity->velocity.y    = entity->groundVel * RSDK.Sin256(entity->angle) >> 8;
-                    entity->onGround      = false;
-                    entity->angle         = 0;
-                    entity->collisionMode = CMODE_FLOOR;
+            if (self->angle >= 0x40 && self->angle <= 0xC0) {
+                if (abs(self->groundVel) < 0x20000) {
+                    self->velocity.x    = self->groundVel * RSDK.Cos256(self->angle) >> 8;
+                    self->velocity.y    = self->groundVel * RSDK.Sin256(self->angle) >> 8;
+                    self->onGround      = false;
+                    self->angle         = 0;
+                    self->collisionMode = CMODE_FLOOR;
                 }
             }
             break;
         case CMODE_ROOF:
-            if (entity->invertGravity) {
-                if ((entity->groundVel >= 0 && initialVel <= 0) || (entity->groundVel <= 0 && initialVel >= 0)) {
-                    entity->groundVel = 0;
-                    entity->state     = Player_State_Ground;
+            if (self->invertGravity) {
+                if ((self->groundVel >= 0 && initialVel <= 0) || (self->groundVel <= 0 && initialVel >= 0)) {
+                    self->groundVel = 0;
+                    self->state     = Player_State_Ground;
                 }
             }
             else {
-                if (entity->angle >= 0x40 && entity->angle <= 0xC0) {
-                    if (abs(entity->groundVel) < 0x20000) {
-                        entity->velocity.x    = entity->groundVel * RSDK.Cos256(entity->angle) >> 8;
-                        entity->velocity.y    = entity->groundVel * RSDK.Sin256(entity->angle) >> 8;
-                        entity->onGround      = false;
-                        entity->angle         = 0;
-                        entity->collisionMode = CMODE_FLOOR;
+                if (self->angle >= 0x40 && self->angle <= 0xC0) {
+                    if (abs(self->groundVel) < 0x20000) {
+                        self->velocity.x    = self->groundVel * RSDK.Cos256(self->angle) >> 8;
+                        self->velocity.y    = self->groundVel * RSDK.Sin256(self->angle) >> 8;
+                        self->onGround      = false;
+                        self->angle         = 0;
+                        self->collisionMode = CMODE_FLOOR;
                     }
                 }
             }
@@ -3181,16 +3181,16 @@ void Player_CheckStartFlyCarry(EntityPlayer *player1)
 {
     RSDK_THIS(Player);
 
-    if (entity->flyCarryTimer > 0)
-        entity->flyCarryTimer--;
+    if (self->flyCarryTimer > 0)
+        self->flyCarryTimer--;
 
     int32 off;
     if (player1->playerAnimator.animationID == ANI_JUMP)
-        off = entity->position.y + 0x210000;
+        off = self->position.y + 0x210000;
     else
-        off = entity->position.y + 0x1C0000;
+        off = self->position.y + 0x1C0000;
 
-    if (player1->state != Player_State_FlyCarried && (!player1->onGround || entity->velocity.y < 0)) {
+    if (player1->state != Player_State_FlyCarried && (!player1->onGround || self->velocity.y < 0)) {
         bool32 flag = (player1->state == Player_State_Roll || player1->state == Player_State_LookUp || player1->state == Player_State_Crouch
                        || player1->state == Player_State_Air || player1->state == Player_State_Ground);
         if (LottoMachine) {
@@ -3198,8 +3198,8 @@ void Player_CheckStartFlyCarry(EntityPlayer *player1)
         }
 
         if (flag && (player1->playerAnimator.animationID != ANI_FAN)) {
-            if (abs(entity->position.x - player1->position.x) < 0xC0000) {
-                if (abs(off - player1->position.y) < 0xC0000 && !entity->flyCarryTimer && !player1->down && !player1->onGround) {
+            if (abs(self->position.x - player1->position.x) < 0xC0000) {
+                if (abs(off - player1->position.y) < 0xC0000 && !self->flyCarryTimer && !player1->down && !player1->onGround) {
                     RSDK.SetSpriteAnimation(player1->aniFrames, ANI_HANG, &player1->playerAnimator, false, 0);
                     player1->state           = Player_State_FlyCarried;
                     player1->nextAirState    = StateMachine_None;
@@ -3211,26 +3211,26 @@ void Player_CheckStartFlyCarry(EntityPlayer *player1)
     }
 
     if (player1->state == Player_State_FlyCarried) {
-        int32 entityXPos        = entity->position.x;
-        int32 entityYPos        = entity->position.y;
-        int32 entityXVel        = entity->velocity.x;
-        int32 entityYVel        = entity->velocity.y;
-        Hitbox *player2OuterBox = RSDK.GetHitbox(&entity->playerAnimator, 0);
-        Hitbox *player2InnerBox = RSDK.GetHitbox(&entity->playerAnimator, 1);
-        if (entity->collisionLayers & Zone->moveID) {
+        int32 entityXPos        = self->position.x;
+        int32 entityYPos        = self->position.y;
+        int32 entityXVel        = self->velocity.x;
+        int32 entityYVel        = self->velocity.y;
+        Hitbox *player2OuterBox = RSDK.GetHitbox(&self->playerAnimator, 0);
+        Hitbox *player2InnerBox = RSDK.GetHitbox(&self->playerAnimator, 1);
+        if (self->collisionLayers & Zone->moveID) {
             TileLayer *move  = RSDK.GetSceneLayer(Zone->moveLayer);
-            move->position.x = -entity->moveOffset.x >> 16;
-            move->position.y = -entity->moveOffset.y >> 16;
+            move->position.x = -self->moveOffset.x >> 16;
+            move->position.y = -self->moveOffset.y >> 16;
         }
-        RSDK.ProcessTileCollisions(entity, player2OuterBox, player2InnerBox);
-        if (entity->onGround && !entity->collisionMode)
-            entity->collisionFlagV |= 1;
-        player1->sidekickPos.x = entity->position.x & 0xFFFF0000;
-        player1->sidekickPos.y = entity->position.y & 0xFFFF0000;
-        entity->velocity.y     = entityYVel;
-        entity->position.x     = entityXPos;
-        entity->position.y     = entityYPos;
-        entity->velocity.x     = entityXVel;
+        RSDK.ProcessTileCollisions(self, player2OuterBox, player2InnerBox);
+        if (self->onGround && !self->collisionMode)
+            self->collisionFlagV |= 1;
+        player1->sidekickPos.x = self->position.x & 0xFFFF0000;
+        player1->sidekickPos.y = self->position.y & 0xFFFF0000;
+        self->velocity.y     = entityYVel;
+        self->position.x     = entityXPos;
+        self->position.y     = entityYPos;
+        self->velocity.x     = entityXVel;
         player1->velocity.y    = entityYVel;
         player1->position.y    = entityYPos;
         player1->position.y += 0x1C0000;
@@ -3252,8 +3252,8 @@ void Player_CheckStartFlyCarry(EntityPlayer *player1)
         RSDK.ProcessTileCollisions(player1, player1OuterBox, player1InnerBox);
         if (player1->onGround)
             player1->collisionFlagV |= 1;
-        player1->collisionPlane = entity->collisionPlane;
-        player1->direction      = entity->direction;
+        player1->collisionPlane = self->collisionPlane;
+        player1->direction      = self->direction;
         player1->velocity.x     = 0;
         player1->velocity.y     = 0;
     }
@@ -3262,9 +3262,9 @@ void Player_P2JumpBackIn(void)
 {
     RSDK_THIS(Player);
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
-    if (player1->objectID == Player->objectID && (player1->drawOrder != 2 || entity->drawOrder != 2)) {
-        int32 rx = abs((entity->position.x >> 0x10) - ScreenInfo->position.x - ScreenInfo->centerX);
-        int32 ry = abs((entity->position.y >> 0x10) - ScreenInfo->position.y - ScreenInfo->centerY);
+    if (player1->objectID == Player->objectID && (player1->drawOrder != 2 || self->drawOrder != 2)) {
+        int32 rx = abs((self->position.x >> 0x10) - ScreenInfo->position.x - ScreenInfo->centerX);
+        int32 ry = abs((self->position.y >> 0x10) - ScreenInfo->position.y - ScreenInfo->centerY);
         if (rx >= ScreenInfo->centerX + 96 || ry >= ScreenInfo->centerY + 96) {
             ++Player->jumpInDelay;
         }
@@ -3274,31 +3274,31 @@ void Player_P2JumpBackIn(void)
 
         if (Player->jumpInDelay >= 240) {
             Player->jumpInDelay      = 0;
-            entity->state            = Player_State_StartJumpIn;
-            entity->forceJumpIn      = true;
-            entity->position.x       = -0x400000;
-            entity->position.y       = -0x400000;
-            entity->abilityValues[0] = 0;
-            entity->drawFX &= ~FX_SCALE;
-            entity->nextAirState    = StateMachine_None;
-            entity->nextGroundState = StateMachine_None;
-            entity->stateInput      = Player_ProcessP2InputLag;
-            entity->scale.x         = 0x200;
-            entity->scale.y         = 0x200;
-            entity->velocity.x      = 0;
-            entity->velocity.y      = 0;
-            entity->groundVel       = 0;
-            entity->tileCollisions  = false;
-            entity->interaction     = false;
-            entity->blinkTimer      = 0;
-            entity->visible         = true;
+            self->state            = Player_State_StartJumpIn;
+            self->forceJumpIn      = true;
+            self->position.x       = -0x400000;
+            self->position.y       = -0x400000;
+            self->abilityValues[0] = 0;
+            self->drawFX &= ~FX_SCALE;
+            self->nextAirState    = StateMachine_None;
+            self->nextGroundState = StateMachine_None;
+            self->stateInput      = Player_ProcessP2InputLag;
+            self->scale.x         = 0x200;
+            self->scale.y         = 0x200;
+            self->velocity.x      = 0;
+            self->velocity.y      = 0;
+            self->groundVel       = 0;
+            self->tileCollisions  = false;
+            self->interaction     = false;
+            self->blinkTimer      = 0;
+            self->visible         = true;
             if (player1->underwater && player1->position.y < Water->waterLevel) {
-                entity->drawOrder = player1->drawOrder;
-                entity->airTimer  = 0;
+                self->drawOrder = player1->drawOrder;
+                self->airTimer  = 0;
             }
             else {
-                entity->drawOrder = Zone->playerDrawHigh;
-                entity->airTimer  = 0;
+                self->drawOrder = Zone->playerDrawHigh;
+                self->airTimer  = 0;
             }
         }
     }
@@ -3306,16 +3306,16 @@ void Player_P2JumpBackIn(void)
 void Player_ForceSuperTransform(void)
 {
     RSDK_THIS(Player);
-    if (entity->characterID == ID_SONIC)
-        entity->aniFrames = Player->superSpriteIndex;
-    entity->superState = SUPERSTATE_SUPER;
-    destroyEntity(RSDK.GetEntityByID(entity->playerID + Player->playerCount));
-    entity->invincibleTimer = 60;
-    entity->superState      = SUPERSTATE_SUPER;
-    Player_ChangePhysicsState(entity);
-    RSDK.ResetEntityPtr(RSDK.GetEntityByID(entity->playerID + 2 * Player->playerCount), ImageTrail->objectID, entity);
-    RSDK.ResetEntityPtr(RSDK.GetEntityByID(entity->playerID + Player->playerCount), SuperSparkle->objectID, entity);
-    entity->state = Player_State_Ground;
+    if (self->characterID == ID_SONIC)
+        self->aniFrames = Player->superSpriteIndex;
+    self->superState = SUPERSTATE_SUPER;
+    destroyEntity(RSDK.GetEntityByID(self->playerID + Player->playerCount));
+    self->invincibleTimer = 60;
+    self->superState      = SUPERSTATE_SUPER;
+    Player_ChangePhysicsState(self);
+    RSDK.ResetEntityPtr(RSDK.GetEntityByID(self->playerID + 2 * Player->playerCount), ImageTrail->objectID, self);
+    RSDK.ResetEntityPtr(RSDK.GetEntityByID(self->playerID + Player->playerCount), SuperSparkle->objectID, self);
+    self->state = Player_State_Ground;
     Player_State_Ground();
 }
 
@@ -3325,228 +3325,228 @@ void Player_State_None(void)
 void Player_State_Ground(void)
 {
     RSDK_THIS(Player);
-    if (!entity->onGround) {
-        entity->state = Player_State_Air;
+    if (!self->onGround) {
+        self->state = Player_State_Air;
         Player_HandleAirMovement();
     }
     else {
-        if (!entity->groundVel) {
-            if (entity->left) {
-                --entity->pushing;
+        if (!self->groundVel) {
+            if (self->left) {
+                --self->pushing;
             }
-            else if (entity->right) {
-                ++entity->pushing;
+            else if (self->right) {
+                ++self->pushing;
             }
             else {
-                entity->pushing = 0;
+                self->pushing = 0;
             }
         }
         else {
-            if (!entity->left && !entity->right) {
-                entity->pushing = 0;
+            if (!self->left && !self->right) {
+                self->pushing = 0;
             }
             else {
-                if (abs(entity->groundVel) > 0x10000)
-                    entity->pushing = 0;
+                if (abs(self->groundVel) > 0x10000)
+                    self->pushing = 0;
             }
         }
 
-        if (entity->invertGravity) {
-            if (entity->collisionMode != CMODE_ROOF) {
-                entity->pushing = 0;
+        if (self->invertGravity) {
+            if (self->collisionMode != CMODE_ROOF) {
+                self->pushing = 0;
             }
         }
-        else if (entity->collisionMode != CMODE_FLOOR) {
-            entity->pushing = 0;
+        else if (self->collisionMode != CMODE_FLOOR) {
+            self->pushing = 0;
         }
 
         Player_HandleGroundRotation();
         Player_HandleGroundMovement();
 
-        if (entity->camera)
-            entity->camera->offsetYFlag = false;
-        entity->jumpAbilityTimer = 0;
+        if (self->camera)
+            self->camera->offsetYFlag = false;
+        self->jumpAbilityTimer = 0;
 
-        entity->nextAirState = Player_State_Air;
-        if (entity->skidding <= 0) {
-            if (entity->pushing > -3 && entity->pushing < 3) {
-                if (entity->groundVel || (entity->angle >= 0x20 && entity->angle <= 0xE0 && !entity->invertGravity)) {
-                    entity->timer          = 0;
-                    entity->outtaHereTimer = 0;
-                    if (abs(entity->groundVel) >= entity->maxWalkSpeed) {
-                        if (abs(entity->groundVel) >= entity->maxJogSpeed) {
-                            if (abs(entity->groundVel) < entity->maxRunSpeed) {
-                                RSDK.SetSpriteAnimation(entity->aniFrames, ANI_RUN, &entity->playerAnimator, false,
-                                                        entity->playerAnimator.animationID - ANI_RUN > 1);
+        self->nextAirState = Player_State_Air;
+        if (self->skidding <= 0) {
+            if (self->pushing > -3 && self->pushing < 3) {
+                if (self->groundVel || (self->angle >= 0x20 && self->angle <= 0xE0 && !self->invertGravity)) {
+                    self->timer          = 0;
+                    self->outtaHereTimer = 0;
+                    if (abs(self->groundVel) >= self->maxWalkSpeed) {
+                        if (abs(self->groundVel) >= self->maxJogSpeed) {
+                            if (abs(self->groundVel) < self->maxRunSpeed) {
+                                RSDK.SetSpriteAnimation(self->aniFrames, ANI_RUN, &self->playerAnimator, false,
+                                                        self->playerAnimator.animationID - ANI_RUN > 1);
 
-                                entity->playerAnimator.animationSpeed = (abs(entity->groundVel) >> 12);
-                                if ((abs(entity->groundVel) >> 12) + 96 > 0x200)
-                                    entity->playerAnimator.animationSpeed = 0x200;
-                                entity->maxJogSpeed = 0x58000;
-                                entity->maxRunSpeed = 0xC0000;
+                                self->playerAnimator.animationSpeed = (abs(self->groundVel) >> 12);
+                                if ((abs(self->groundVel) >> 12) + 96 > 0x200)
+                                    self->playerAnimator.animationSpeed = 0x200;
+                                self->maxJogSpeed = 0x58000;
+                                self->maxRunSpeed = 0xC0000;
                             }
                             else {
-                                RSDK.SetSpriteAnimation(entity->aniFrames, ANI_DASH, &entity->playerAnimator, false,
-                                                        entity->playerAnimator.animationID - ANI_RUN > 1);
-                                entity->maxRunSpeed = 0xB8000;
+                                RSDK.SetSpriteAnimation(self->aniFrames, ANI_DASH, &self->playerAnimator, false,
+                                                        self->playerAnimator.animationID - ANI_RUN > 1);
+                                self->maxRunSpeed = 0xB8000;
                             }
                         }
                         else {
-                            if (entity->playerAnimator.animationID != ANI_WALK || entity->playerAnimator.frameID == 3)
-                                RSDK.SetSpriteAnimation(entity->aniFrames, ANI_JOG, &entity->playerAnimator, false, 0);
-                            entity->playerAnimator.animationSpeed = (abs(entity->groundVel) >> 12) + 64;
-                            entity->maxWalkSpeed                  = 0x38000;
-                            entity->maxJogSpeed                   = 0x60000;
+                            if (self->playerAnimator.animationID != ANI_WALK || self->playerAnimator.frameID == 3)
+                                RSDK.SetSpriteAnimation(self->aniFrames, ANI_JOG, &self->playerAnimator, false, 0);
+                            self->playerAnimator.animationSpeed = (abs(self->groundVel) >> 12) + 64;
+                            self->maxWalkSpeed                  = 0x38000;
+                            self->maxJogSpeed                   = 0x60000;
                         }
                     }
                     else {
-                        if (entity->playerAnimator.animationID == ANI_JOG) {
-                            if (entity->playerAnimator.frameID == 9)
-                                RSDK.SetSpriteAnimation(entity->aniFrames, ANI_WALK, &entity->playerAnimator, false, 9);
+                        if (self->playerAnimator.animationID == ANI_JOG) {
+                            if (self->playerAnimator.frameID == 9)
+                                RSDK.SetSpriteAnimation(self->aniFrames, ANI_WALK, &self->playerAnimator, false, 9);
                         }
-                        else if (entity->playerAnimator.animationID == ANI_AIRWALK) {
-                            RSDK.SetSpriteAnimation(entity->aniFrames, ANI_WALK, &entity->playerAnimator, false, entity->playerAnimator.frameID);
+                        else if (self->playerAnimator.animationID == ANI_AIRWALK) {
+                            RSDK.SetSpriteAnimation(self->aniFrames, ANI_WALK, &self->playerAnimator, false, self->playerAnimator.frameID);
                         }
                         else {
-                            RSDK.SetSpriteAnimation(entity->aniFrames, ANI_WALK, &entity->playerAnimator, false, 0);
+                            RSDK.SetSpriteAnimation(self->aniFrames, ANI_WALK, &self->playerAnimator, false, 0);
                         }
-                        entity->playerAnimator.animationSpeed = (abs(entity->groundVel) >> 12) + 48;
-                        entity->maxWalkSpeed                  = 0x40000;
+                        self->playerAnimator.animationSpeed = (abs(self->groundVel) >> 12) + 48;
+                        self->maxWalkSpeed                  = 0x40000;
                     }
                 }
                 else {
-                    entity->maxWalkSpeed = 0x40000;
-                    entity->maxJogSpeed  = 0x60000;
-                    entity->maxRunSpeed  = 0xC0000;
+                    self->maxWalkSpeed = 0x40000;
+                    self->maxJogSpeed  = 0x60000;
+                    self->maxRunSpeed  = 0xC0000;
                     Vector2 posStore;
-                    posStore = entity->position;
-                    entity->flailing |= RSDK.ObjectTileGrip(entity, entity->collisionLayers, CMODE_FLOOR, entity->collisionPlane, entity->sensorX[0],
-                                                            entity->sensorY, 10)
+                    posStore = self->position;
+                    self->flailing |= RSDK.ObjectTileGrip(self, self->collisionLayers, CMODE_FLOOR, self->collisionPlane, self->sensorX[0],
+                                                            self->sensorY, 10)
                                         << 0;
-                    entity->flailing |= RSDK.ObjectTileGrip(entity, entity->collisionLayers, CMODE_FLOOR, entity->collisionPlane, entity->sensorX[1],
-                                                            entity->sensorY, 10)
+                    self->flailing |= RSDK.ObjectTileGrip(self, self->collisionLayers, CMODE_FLOOR, self->collisionPlane, self->sensorX[1],
+                                                            self->sensorY, 10)
                                         << 1;
-                    entity->flailing |= RSDK.ObjectTileGrip(entity, entity->collisionLayers, CMODE_FLOOR, entity->collisionPlane, entity->sensorX[2],
-                                                            entity->sensorY, 10)
+                    self->flailing |= RSDK.ObjectTileGrip(self, self->collisionLayers, CMODE_FLOOR, self->collisionPlane, self->sensorX[2],
+                                                            self->sensorY, 10)
                                         << 2;
-                    entity->flailing |= RSDK.ObjectTileGrip(entity, entity->collisionLayers, CMODE_FLOOR, entity->collisionPlane, entity->sensorX[3],
-                                                            entity->sensorY, 10)
+                    self->flailing |= RSDK.ObjectTileGrip(self, self->collisionLayers, CMODE_FLOOR, self->collisionPlane, self->sensorX[3],
+                                                            self->sensorY, 10)
                                         << 3;
-                    entity->flailing |= RSDK.ObjectTileGrip(entity, entity->collisionLayers, CMODE_FLOOR, entity->collisionPlane, entity->sensorX[4],
-                                                            entity->sensorY, 10)
+                    self->flailing |= RSDK.ObjectTileGrip(self, self->collisionLayers, CMODE_FLOOR, self->collisionPlane, self->sensorX[4],
+                                                            self->sensorY, 10)
                                         << 4;
 
-                    entity->position = posStore;
-                    switch (entity->flailing - 1) {
+                    self->position = posStore;
+                    switch (self->flailing - 1) {
                         case 0:
                         case 2:
-                            if (entity->direction == FLIP_X || (entity->characterID == ID_SONIC && entity->superState == SUPERSTATE_SUPER)
-                                || entity->isChibi) {
-                                entity->direction = FLIP_X;
-                                RSDK.SetSpriteAnimation(entity->aniFrames, ANI_BALANCE1, &entity->playerAnimator, false, 0);
+                            if (self->direction == FLIP_X || (self->characterID == ID_SONIC && self->superState == SUPERSTATE_SUPER)
+                                || self->isChibi) {
+                                self->direction = FLIP_X;
+                                RSDK.SetSpriteAnimation(self->aniFrames, ANI_BALANCE1, &self->playerAnimator, false, 0);
                             }
                             else {
-                                RSDK.SetSpriteAnimation(entity->aniFrames, ANI_BALANCE2, &entity->playerAnimator, false, 0);
+                                RSDK.SetSpriteAnimation(self->aniFrames, ANI_BALANCE2, &self->playerAnimator, false, 0);
                             }
                             break;
                         case 15:
                         case 23:
-                            if (entity->direction && (entity->characterID != ID_SONIC || entity->superState != SUPERSTATE_SUPER)
-                                && !entity->isChibi) {
-                                RSDK.SetSpriteAnimation(entity->aniFrames, ANI_BALANCE2, &entity->playerAnimator, false, 0);
+                            if (self->direction && (self->characterID != ID_SONIC || self->superState != SUPERSTATE_SUPER)
+                                && !self->isChibi) {
+                                RSDK.SetSpriteAnimation(self->aniFrames, ANI_BALANCE2, &self->playerAnimator, false, 0);
                             }
                             else {
-                                entity->direction = FLIP_NONE;
-                                RSDK.SetSpriteAnimation(entity->aniFrames, ANI_BALANCE1, &entity->playerAnimator, false, 0);
+                                self->direction = FLIP_NONE;
+                                RSDK.SetSpriteAnimation(self->aniFrames, ANI_BALANCE1, &self->playerAnimator, false, 0);
                             }
                             break;
                         case 110:
-                        case 115: RSDK.SetSpriteAnimation(entity->aniFrames, ANI_BALANCE1, &entity->playerAnimator, false, 0); break;
+                        case 115: RSDK.SetSpriteAnimation(self->aniFrames, ANI_BALANCE1, &self->playerAnimator, false, 0); break;
                         default:
-                            switch (entity->characterID) {
+                            switch (self->characterID) {
                                 case ID_SONIC:
 #if !RETRO_USE_PLUS
                                     // pre-1.05 super sonic didn't have a "bored" anim
-                                    if (entity->superState != SUPERSTATE_SUPER) {
+                                    if (self->superState != SUPERSTATE_SUPER) {
 #endif
-                                        if (entity->timer != 720 || entity->isChibi || entity->superState == SUPERSTATE_SUPER) {
-                                            if (entity->timer < 240) {
-                                                entity->timer++;
-                                                RSDK.SetSpriteAnimation(entity->aniFrames, ANI_IDLE, &entity->playerAnimator, false, 0);
+                                        if (self->timer != 720 || self->isChibi || self->superState == SUPERSTATE_SUPER) {
+                                            if (self->timer < 240) {
+                                                self->timer++;
+                                                RSDK.SetSpriteAnimation(self->aniFrames, ANI_IDLE, &self->playerAnimator, false, 0);
                                             }
                                             else {
-                                                entity->timer++;
-                                                if (entity->playerAnimator.animationID == ANI_BORED1) {
-                                                    if (entity->playerAnimator.frameID == 41)
-                                                        entity->timer = 0;
+                                                self->timer++;
+                                                if (self->playerAnimator.animationID == ANI_BORED1) {
+                                                    if (self->playerAnimator.frameID == 41)
+                                                        self->timer = 0;
                                                 }
                                                 else
-                                                    RSDK.SetSpriteAnimation(entity->aniFrames, ANI_BORED1, &entity->playerAnimator, false, 0);
+                                                    RSDK.SetSpriteAnimation(self->aniFrames, ANI_BORED1, &self->playerAnimator, false, 0);
                                             }
                                         }
                                         else {
-                                            if (entity->playerAnimator.animationID == ANI_BORED2) {
-                                                if (entity->playerAnimator.frameID == 67)
-                                                    entity->timer = 0;
+                                            if (self->playerAnimator.animationID == ANI_BORED2) {
+                                                if (self->playerAnimator.frameID == 67)
+                                                    self->timer = 0;
                                             }
                                             else
-                                                RSDK.SetSpriteAnimation(entity->aniFrames, ANI_BORED2, &entity->playerAnimator, false, 0);
+                                                RSDK.SetSpriteAnimation(self->aniFrames, ANI_BORED2, &self->playerAnimator, false, 0);
                                         }
 #if !RETRO_USE_PLUS
                                     }
                                     else {
-                                        RSDK.SetSpriteAnimation(entity->aniFrames, ANI_IDLE, &entity->playerAnimator, false, 0);
+                                        RSDK.SetSpriteAnimation(self->aniFrames, ANI_IDLE, &self->playerAnimator, false, 0);
                                     }
 #endif
                                     break;
                                 case ID_TAILS:
-                                    if (entity->timer < 240) {
-                                        entity->timer++;
-                                        RSDK.SetSpriteAnimation(entity->aniFrames, ANI_IDLE, &entity->playerAnimator, false, 0);
+                                    if (self->timer < 240) {
+                                        self->timer++;
+                                        RSDK.SetSpriteAnimation(self->aniFrames, ANI_IDLE, &self->playerAnimator, false, 0);
                                     }
-                                    else if (entity->playerAnimator.animationID == ANI_BORED1) {
-                                        if (entity->playerAnimator.frameID == 45)
-                                            entity->timer = 0;
+                                    else if (self->playerAnimator.animationID == ANI_BORED1) {
+                                        if (self->playerAnimator.frameID == 45)
+                                            self->timer = 0;
                                     }
                                     else
-                                        RSDK.SetSpriteAnimation(entity->aniFrames, ANI_BORED1, &entity->playerAnimator, false, 0);
+                                        RSDK.SetSpriteAnimation(self->aniFrames, ANI_BORED1, &self->playerAnimator, false, 0);
                                     break;
                                 case ID_KNUCKLES:
-                                    if (entity->timer < 240) {
-                                        entity->timer++;
-                                        RSDK.SetSpriteAnimation(entity->aniFrames, ANI_IDLE, &entity->playerAnimator, false, 0);
+                                    if (self->timer < 240) {
+                                        self->timer++;
+                                        RSDK.SetSpriteAnimation(self->aniFrames, ANI_IDLE, &self->playerAnimator, false, 0);
                                     }
-                                    else if (entity->playerAnimator.animationID == ANI_BORED1) {
-                                        if (entity->playerAnimator.frameID == 69)
-                                            entity->timer = 0;
+                                    else if (self->playerAnimator.animationID == ANI_BORED1) {
+                                        if (self->playerAnimator.frameID == 69)
+                                            self->timer = 0;
                                     }
                                     else
-                                        RSDK.SetSpriteAnimation(entity->aniFrames, ANI_BORED1, &entity->playerAnimator, false, 0);
+                                        RSDK.SetSpriteAnimation(self->aniFrames, ANI_BORED1, &self->playerAnimator, false, 0);
                                     break;
 #if RETRO_USE_PLUS
                                 case ID_MIGHTY:
-                                    if (entity->timer < 240) {
-                                        entity->timer++;
-                                        RSDK.SetSpriteAnimation(entity->aniFrames, ANI_IDLE, &entity->playerAnimator, false, 0);
+                                    if (self->timer < 240) {
+                                        self->timer++;
+                                        RSDK.SetSpriteAnimation(self->aniFrames, ANI_IDLE, &self->playerAnimator, false, 0);
                                     }
-                                    else if (entity->playerAnimator.animationID == ANI_BORED1) {
-                                        if (entity->playerAnimator.frameID == 35)
-                                            entity->timer = 0;
+                                    else if (self->playerAnimator.animationID == ANI_BORED1) {
+                                        if (self->playerAnimator.frameID == 35)
+                                            self->timer = 0;
                                     }
                                     else
-                                        RSDK.SetSpriteAnimation(entity->aniFrames, ANI_BORED1, &entity->playerAnimator, false, 0);
+                                        RSDK.SetSpriteAnimation(self->aniFrames, ANI_BORED1, &self->playerAnimator, false, 0);
                                     break;
                                 case ID_RAY:
-                                    if (entity->timer < 240) {
-                                        entity->timer++;
-                                        RSDK.SetSpriteAnimation(entity->aniFrames, ANI_IDLE, &entity->playerAnimator, false, 0);
+                                    if (self->timer < 240) {
+                                        self->timer++;
+                                        RSDK.SetSpriteAnimation(self->aniFrames, ANI_IDLE, &self->playerAnimator, false, 0);
                                     }
-                                    else if (entity->playerAnimator.animationID == ANI_BORED1) {
-                                        if (entity->playerAnimator.frameID == 55)
-                                            entity->timer = 0;
+                                    else if (self->playerAnimator.animationID == ANI_BORED1) {
+                                        if (self->playerAnimator.frameID == 55)
+                                            self->timer = 0;
                                     }
                                     else {
-                                        RSDK.SetSpriteAnimation(entity->aniFrames, ANI_BORED1, &entity->playerAnimator, false, 0);
+                                        RSDK.SetSpriteAnimation(self->aniFrames, ANI_BORED1, &self->playerAnimator, false, 0);
                                     }
                                     break;
 #endif
@@ -3555,92 +3555,92 @@ void Player_State_Ground(void)
                             break;
                     }
 
-                    if (++entity->outtaHereTimer >= 72000000) {
-                        RSDK.SetSpriteAnimation(entity->aniFrames, ANI_OUTTAHERE, &entity->playerAnimator, false, 0);
-                        entity->state           = Player_State_OuttaHere;
-                        entity->tileCollisions  = false;
-                        entity->interaction     = false;
-                        entity->nextAirState    = StateMachine_None;
-                        entity->nextGroundState = StateMachine_None;
-                        entity->velocity.x      = 0;
-                        entity->velocity.y      = 0;
+                    if (++self->outtaHereTimer >= 72000000) {
+                        RSDK.SetSpriteAnimation(self->aniFrames, ANI_OUTTAHERE, &self->playerAnimator, false, 0);
+                        self->state           = Player_State_OuttaHere;
+                        self->tileCollisions  = false;
+                        self->interaction     = false;
+                        self->nextAirState    = StateMachine_None;
+                        self->nextGroundState = StateMachine_None;
+                        self->velocity.x      = 0;
+                        self->velocity.y      = 0;
                         RSDK.PlaySfx(Player->sfxOuttahere, false, 255);
                     }
                 }
             }
             else {
-                if (entity->pushing < -3)
-                    entity->pushing = -3;
-                if (entity->pushing > 3)
-                    entity->pushing = 3;
-                RSDK.SetSpriteAnimation(entity->aniFrames, ANI_PUSH, &entity->playerAnimator, false, 0);
+                if (self->pushing < -3)
+                    self->pushing = -3;
+                if (self->pushing > 3)
+                    self->pushing = 3;
+                RSDK.SetSpriteAnimation(self->aniFrames, ANI_PUSH, &self->playerAnimator, false, 0);
             }
         }
         else {
-            if (entity->playerAnimator.animationID != ANI_SKID) {
-                if (entity->playerAnimator.animationID == ANI_SKIDTURN) {
-                    if (entity->playerAnimator.frameID == entity->playerAnimator.frameCount - 1) {
-                        entity->direction ^= FLIP_X;
-                        entity->skidding = 1;
-                        RSDK.SetSpriteAnimation(entity->aniFrames, ANI_WALK, &entity->playerAnimator, false, 0);
+            if (self->playerAnimator.animationID != ANI_SKID) {
+                if (self->playerAnimator.animationID == ANI_SKIDTURN) {
+                    if (self->playerAnimator.frameID == self->playerAnimator.frameCount - 1) {
+                        self->direction ^= FLIP_X;
+                        self->skidding = 1;
+                        RSDK.SetSpriteAnimation(self->aniFrames, ANI_WALK, &self->playerAnimator, false, 0);
                     }
                 }
                 else {
-                    RSDK.SetSpriteAnimation(entity->aniFrames, ANI_SKID, &entity->playerAnimator, false, 0);
-                    if (abs(entity->groundVel) >= 0x60000) {
-                        if (abs(entity->groundVel) >= 0xA0000)
-                            entity->playerAnimator.animationSpeed = 64;
+                    RSDK.SetSpriteAnimation(self->aniFrames, ANI_SKID, &self->playerAnimator, false, 0);
+                    if (abs(self->groundVel) >= 0x60000) {
+                        if (abs(self->groundVel) >= 0xA0000)
+                            self->playerAnimator.animationSpeed = 64;
                         else
-                            entity->playerAnimator.animationSpeed = 144;
+                            self->playerAnimator.animationSpeed = 144;
                     }
                     else {
-                        entity->skidding -= 8;
+                        self->skidding -= 8;
                     }
                     RSDK.PlaySfx(Player->sfxSkidding, false, 255);
-                    EntityDust *dust = CREATE_ENTITY(Dust, entity, entity->position.x, entity->position.y);
+                    EntityDust *dust = CREATE_ENTITY(Dust, self, self->position.x, self->position.y);
                     dust->state      = Dust_State_Skid;
                 }
             }
             else {
-                int32 spd = entity->playerAnimator.animationSpeed;
-                if (entity->direction) {
-                    if (entity->groundVel >= 0) {
-                        RSDK.SetSpriteAnimation(entity->aniFrames, ANI_SKIDTURN, &entity->playerAnimator, false, 0);
+                int32 spd = self->playerAnimator.animationSpeed;
+                if (self->direction) {
+                    if (self->groundVel >= 0) {
+                        RSDK.SetSpriteAnimation(self->aniFrames, ANI_SKIDTURN, &self->playerAnimator, false, 0);
                     }
                 }
-                else if (entity->groundVel <= 0) {
-                    RSDK.SetSpriteAnimation(entity->aniFrames, ANI_SKIDTURN, &entity->playerAnimator, false, 0);
+                else if (self->groundVel <= 0) {
+                    RSDK.SetSpriteAnimation(self->aniFrames, ANI_SKIDTURN, &self->playerAnimator, false, 0);
                 }
-                entity->playerAnimator.animationSpeed = spd;
+                self->playerAnimator.animationSpeed = spd;
             }
-            --entity->skidding;
+            --self->skidding;
         }
 
-        if (entity->jumpPress) {
-            Player_StartJump(entity);
-            entity->timer = 0;
+        if (self->jumpPress) {
+            Player_StartJump(self);
+            self->timer = 0;
         }
         else {
-            if (entity->groundVel) {
+            if (self->groundVel) {
                 int32 cap = 0x8800;
-                if (entity->state == Player_State_Crouch)
+                if (self->state == Player_State_Crouch)
                     cap = 0x11000;
-                if (abs(entity->groundVel) >= cap && !entity->left && !entity->right && entity->down) {
+                if (abs(self->groundVel) >= cap && !self->left && !self->right && self->down) {
                     Player_StartRoll();
                     RSDK.PlaySfx(Player->sfxRoll, false, 255);
                 }
             }
             else {
-                if (((entity->angle < 0x20 || entity->angle > 0xE0) && !entity->collisionMode) || (entity->invertGravity && entity->angle == 0x80)) {
-                    if (entity->up) {
-                        RSDK.SetSpriteAnimation(entity->aniFrames, ANI_LOOKUP, &entity->playerAnimator, true, 1);
-                        entity->timer = 0;
-                        entity->state = Player_State_LookUp;
+                if (((self->angle < 0x20 || self->angle > 0xE0) && !self->collisionMode) || (self->invertGravity && self->angle == 0x80)) {
+                    if (self->up) {
+                        RSDK.SetSpriteAnimation(self->aniFrames, ANI_LOOKUP, &self->playerAnimator, true, 1);
+                        self->timer = 0;
+                        self->state = Player_State_LookUp;
                     }
-                    else if (entity->down) {
-                        RSDK.SetSpriteAnimation(entity->aniFrames, ANI_CROUCH, &entity->playerAnimator, true, 1);
-                        entity->timer = 0;
-                        entity->state = Player_State_Crouch;
+                    else if (self->down) {
+                        RSDK.SetSpriteAnimation(self->aniFrames, ANI_CROUCH, &self->playerAnimator, true, 1);
+                        self->timer = 0;
+                        self->state = Player_State_Crouch;
                     }
                 }
             }
@@ -3650,52 +3650,52 @@ void Player_State_Ground(void)
 void Player_State_Air(void)
 {
     RSDK_THIS(Player);
-    entity->tileCollisions = true;
+    self->tileCollisions = true;
     Player_HandleAirFriction();
-    if (entity->onGround) {
-        entity->state = Player_State_Ground;
-        if (entity->camera)
-            entity->camera->offsetYFlag = false;
-        entity->jumpAbilityTimer = 0;
+    if (self->onGround) {
+        self->state = Player_State_Ground;
+        if (self->camera)
+            self->camera->offsetYFlag = false;
+        self->jumpAbilityTimer = 0;
     }
     else {
         Player_HandleAirMovement();
-        entity->nextGroundState = Player_State_Ground;
-        if (entity->velocity.y > 0) {
-            if (entity->playerAnimator.animationID >= ANI_SPRINGTWIRL) {
-                if (entity->playerAnimator.animationID <= ANI_SPRINGDIAGONAL) {
-                    RSDK.SetSpriteAnimation(entity->aniFrames, entity->storedAnim, &entity->playerAnimator, false, 0);
+        self->nextGroundState = Player_State_Ground;
+        if (self->velocity.y > 0) {
+            if (self->playerAnimator.animationID >= ANI_SPRINGTWIRL) {
+                if (self->playerAnimator.animationID <= ANI_SPRINGDIAGONAL) {
+                    RSDK.SetSpriteAnimation(self->aniFrames, self->storedAnim, &self->playerAnimator, false, 0);
                 }
-                else if (entity->playerAnimator.animationID == ANI_SPRINGCS && !entity->playerAnimator.frameID) {
-                    RSDK.SetSpriteAnimation(entity->aniFrames, ANI_AIRWALK, &entity->playerAnimator, false, 0);
+                else if (self->playerAnimator.animationID == ANI_SPRINGCS && !self->playerAnimator.frameID) {
+                    RSDK.SetSpriteAnimation(self->aniFrames, ANI_AIRWALK, &self->playerAnimator, false, 0);
                 }
             }
         }
 
-        switch (entity->playerAnimator.animationID) {
+        switch (self->playerAnimator.animationID) {
             case ANI_IDLE:
             case ANI_WALK:
-                if (entity->playerAnimator.animationSpeed < 64)
-                    entity->playerAnimator.animationSpeed = 64;
-                RSDK.SetSpriteAnimation(entity->aniFrames, ANI_AIRWALK, &entity->playerAnimator, false, entity->playerAnimator.frameID);
+                if (self->playerAnimator.animationSpeed < 64)
+                    self->playerAnimator.animationSpeed = 64;
+                RSDK.SetSpriteAnimation(self->aniFrames, ANI_AIRWALK, &self->playerAnimator, false, self->playerAnimator.frameID);
                 break;
             case ANI_LOOKUP:
             case ANI_CROUCH:
-            case ANI_SKIDTURN: RSDK.SetSpriteAnimation(entity->aniFrames, ANI_AIRWALK, &entity->playerAnimator, false, 0); break;
-            case ANI_JOG: RSDK.SetSpriteAnimation(entity->aniFrames, ANI_AIRWALK, &entity->playerAnimator, false, 0); break;
+            case ANI_SKIDTURN: RSDK.SetSpriteAnimation(self->aniFrames, ANI_AIRWALK, &self->playerAnimator, false, 0); break;
+            case ANI_JOG: RSDK.SetSpriteAnimation(self->aniFrames, ANI_AIRWALK, &self->playerAnimator, false, 0); break;
             case ANI_JUMP:
-                if (entity->velocity.y >= entity->jumpCap)
-                    StateMachine_Run(entity->movesetState);
+                if (self->velocity.y >= self->jumpCap)
+                    StateMachine_Run(self->movesetState);
                 break;
             case ANI_SKID:
-                if (entity->skidding < 1) {
-                    RSDK.SetSpriteAnimation(entity->aniFrames, ANI_AIRWALK, &entity->playerAnimator, false, entity->playerAnimator.frameID);
+                if (self->skidding < 1) {
+                    RSDK.SetSpriteAnimation(self->aniFrames, ANI_AIRWALK, &self->playerAnimator, false, self->playerAnimator.frameID);
                 }
                 else {
-                    entity->skidding--;
+                    self->skidding--;
                 }
                 break;
-            case ANI_SPINDASH: RSDK.SetSpriteAnimation(entity->aniFrames, ANI_JUMP, &entity->playerAnimator, false, 0); break;
+            case ANI_SPINDASH: RSDK.SetSpriteAnimation(self->aniFrames, ANI_JUMP, &self->playerAnimator, false, 0); break;
             default: break;
         }
     }
@@ -3705,185 +3705,185 @@ void Player_State_Roll(void)
     RSDK_THIS(Player);
     Player_HandleGroundRotation();
     Player_HandleRollDeceleration();
-    entity->jumpAbility = 0;
-    if (!entity->onGround) {
-        entity->state = Player_State_Air;
+    self->jumpAbility = 0;
+    if (!self->onGround) {
+        self->state = Player_State_Air;
         Player_HandleAirMovement();
     }
     else {
-        if (entity->characterID == ID_TAILS) {
-            entity->playerAnimator.animationSpeed = 120;
+        if (self->characterID == ID_TAILS) {
+            self->playerAnimator.animationSpeed = 120;
         }
         else {
-            entity->playerAnimator.animationSpeed = ((abs(entity->groundVel) * 0xF0) / 0x60000) + 0x30;
+            self->playerAnimator.animationSpeed = ((abs(self->groundVel) * 0xF0) / 0x60000) + 0x30;
         }
-        if (entity->playerAnimator.animationSpeed > 0xF0)
-            entity->playerAnimator.animationSpeed = 0xF0;
-        if (entity->camera)
-            entity->camera->offsetYFlag = false;
-        entity->jumpAbilityTimer = 0;
-        if (entity->jumpPress)
-            Player_StartJump(entity);
+        if (self->playerAnimator.animationSpeed > 0xF0)
+            self->playerAnimator.animationSpeed = 0xF0;
+        if (self->camera)
+            self->camera->offsetYFlag = false;
+        self->jumpAbilityTimer = 0;
+        if (self->jumpPress)
+            Player_StartJump(self);
     }
 }
 void Player_State_ForceRoll_Ground(void)
 {
     RSDK_THIS(Player);
     Player_HandleGroundRotation();
-    bool32 left  = entity->left;
-    bool32 right = entity->right;
-    if (entity->controlLock > 0) {
-        entity->left  = false;
-        entity->right = false;
-        entity->controlLock--;
+    bool32 left  = self->left;
+    bool32 right = self->right;
+    if (self->controlLock > 0) {
+        self->left  = false;
+        self->right = false;
+        self->controlLock--;
     }
     Player_HandleRollDeceleration();
-    entity->left        = left;
-    entity->right       = right;
-    entity->jumpAbility = 0;
-    if (!entity->onGround) {
-        entity->state = Player_State_ForceRoll_Air;
+    self->left        = left;
+    self->right       = right;
+    self->jumpAbility = 0;
+    if (!self->onGround) {
+        self->state = Player_State_ForceRoll_Air;
         Player_HandleAirMovement();
     }
     else {
-        if (entity->characterID == ID_TAILS) {
-            entity->playerAnimator.animationSpeed = 120;
+        if (self->characterID == ID_TAILS) {
+            self->playerAnimator.animationSpeed = 120;
         }
         else {
-            entity->playerAnimator.animationSpeed = ((abs(entity->groundVel) * 0xF0) / 0x60000) + 0x30;
+            self->playerAnimator.animationSpeed = ((abs(self->groundVel) * 0xF0) / 0x60000) + 0x30;
         }
-        if (entity->playerAnimator.animationSpeed > 0xF0)
-            entity->playerAnimator.animationSpeed = 0xF0;
-        if (entity->camera) {
-            entity->camera->offsetYFlag = false;
+        if (self->playerAnimator.animationSpeed > 0xF0)
+            self->playerAnimator.animationSpeed = 0xF0;
+        if (self->camera) {
+            self->camera->offsetYFlag = false;
         }
-        entity->jumpAbilityTimer = 0;
+        self->jumpAbilityTimer = 0;
     }
 }
 void Player_State_ForceRoll_Air(void)
 {
     RSDK_THIS(Player);
     Player_HandleGroundRotation();
-    bool32 left  = entity->left;
-    bool32 right = entity->right;
-    if (entity->controlLock > 0) {
-        entity->left  = false;
-        entity->right = false;
-        entity->controlLock--;
+    bool32 left  = self->left;
+    bool32 right = self->right;
+    if (self->controlLock > 0) {
+        self->left  = false;
+        self->right = false;
+        self->controlLock--;
     }
     Player_HandleAirFriction();
 
-    entity->left            = left;
-    entity->right           = right;
-    entity->jumpAbility     = 0;
-    entity->nextGroundState = Player_State_ForceRoll_Ground;
-    if (!entity->onGround) {
+    self->left            = left;
+    self->right           = right;
+    self->jumpAbility     = 0;
+    self->nextGroundState = Player_State_ForceRoll_Ground;
+    if (!self->onGround) {
         Player_HandleAirMovement();
     }
     else {
-        entity->state = Player_State_ForceRoll_Ground;
-        if (entity->camera) {
-            entity->camera->offsetYFlag = false;
+        self->state = Player_State_ForceRoll_Ground;
+        if (self->camera) {
+            self->camera->offsetYFlag = false;
         }
-        entity->jumpAbilityTimer = 0;
+        self->jumpAbilityTimer = 0;
     }
 }
 void Player_State_LookUp(void)
 {
     RSDK_THIS(Player);
-    if (entity->invertGravity)
-        entity->rotation = 0x80;
-    entity->left  = 0;
-    entity->right = 0;
+    if (self->invertGravity)
+        self->rotation = 0x80;
+    self->left  = 0;
+    self->right = 0;
     Player_HandleGroundMovement();
-    if (entity->camera)
-        entity->camera->offsetYFlag = false;
-    entity->jumpAbilityTimer = 0;
-    entity->nextAirState     = Player_State_Air;
-    if (entity->up) {
-        RSDK.SetSpriteAnimation(entity->aniFrames, ANI_LOOKUP, &entity->playerAnimator, false, 1);
-        if (entity->playerAnimator.frameID == 5)
-            entity->playerAnimator.animationSpeed = 0;
+    if (self->camera)
+        self->camera->offsetYFlag = false;
+    self->jumpAbilityTimer = 0;
+    self->nextAirState     = Player_State_Air;
+    if (self->up) {
+        RSDK.SetSpriteAnimation(self->aniFrames, ANI_LOOKUP, &self->playerAnimator, false, 1);
+        if (self->playerAnimator.frameID == 5)
+            self->playerAnimator.animationSpeed = 0;
 
-        if (entity->timer < 60) {
-            entity->timer++;
+        if (self->timer < 60) {
+            self->timer++;
         }
-        else if (entity->camera) {
-            if (entity->invertGravity) {
-                if (entity->camera->lookPos.y < 96)
-                    entity->camera->lookPos.y += 2;
+        else if (self->camera) {
+            if (self->invertGravity) {
+                if (self->camera->lookPos.y < 96)
+                    self->camera->lookPos.y += 2;
             }
             else {
-                if (entity->camera->lookPos.y > -96)
-                    entity->camera->lookPos.y -= 2;
+                if (self->camera->lookPos.y > -96)
+                    self->camera->lookPos.y -= 2;
             }
         }
-        if (entity->jumpPress) {
-            if (entity->peeloutState) {
-                StateMachine_Run(entity->peeloutState);
+        if (self->jumpPress) {
+            if (self->peeloutState) {
+                StateMachine_Run(self->peeloutState);
             }
             else {
-                Player_StartJump(entity);
+                Player_StartJump(self);
             }
         }
     }
     else {
-        entity->playerAnimator.animationSpeed = 64;
-        if (entity->playerAnimator.frameID == 0 || entity->left || entity->right)
-            entity->state = Player_State_Ground;
-        if (entity->jumpPress)
-            Player_StartJump(entity);
+        self->playerAnimator.animationSpeed = 64;
+        if (self->playerAnimator.frameID == 0 || self->left || self->right)
+            self->state = Player_State_Ground;
+        if (self->jumpPress)
+            Player_StartJump(self);
     }
 }
 void Player_State_Crouch(void)
 {
     RSDK_THIS(Player);
-    if (entity->invertGravity)
-        entity->rotation = 0x80;
-    entity->left  = 0;
-    entity->right = 0;
+    if (self->invertGravity)
+        self->rotation = 0x80;
+    self->left  = 0;
+    self->right = 0;
     Player_HandleGroundMovement();
-    if (entity->camera)
-        entity->camera->offsetYFlag = false;
-    entity->jumpAbilityTimer = 0;
-    entity->nextAirState     = Player_State_Air;
-    if (entity->down) {
-        RSDK.SetSpriteAnimation(entity->aniFrames, ANI_CROUCH, &entity->playerAnimator, false, 1);
-        if (entity->playerAnimator.frameID == 4)
-            entity->playerAnimator.animationSpeed = 0;
+    if (self->camera)
+        self->camera->offsetYFlag = false;
+    self->jumpAbilityTimer = 0;
+    self->nextAirState     = Player_State_Air;
+    if (self->down) {
+        RSDK.SetSpriteAnimation(self->aniFrames, ANI_CROUCH, &self->playerAnimator, false, 1);
+        if (self->playerAnimator.frameID == 4)
+            self->playerAnimator.animationSpeed = 0;
 
-        if (entity->timer < 60) {
-            entity->timer++;
+        if (self->timer < 60) {
+            self->timer++;
         }
-        else if (entity->camera) {
-            if (entity->invertGravity) {
-                if (entity->camera->lookPos.y > -96)
-                    entity->camera->lookPos.y -= 2;
+        else if (self->camera) {
+            if (self->invertGravity) {
+                if (self->camera->lookPos.y > -96)
+                    self->camera->lookPos.y -= 2;
             }
             else {
-                if (entity->camera->lookPos.y < 96)
-                    entity->camera->lookPos.y += 2;
+                if (self->camera->lookPos.y < 96)
+                    self->camera->lookPos.y += 2;
             }
         }
 
-        if (entity->jumpPress) {
-            EntityDust *dust = CREATE_ENTITY(Dust, entity, entity->position.x, entity->position.y);
+        if (self->jumpPress) {
+            EntityDust *dust = CREATE_ENTITY(Dust, self, self->position.x, self->position.y);
             RSDK.SetSpriteAnimation(Dust->aniFrames, 1, &dust->animator, true, 0);
             dust->state     = Dust_State_Spindash;
-            dust->drawOrder = entity->drawOrder;
-            RSDK.SetSpriteAnimation(entity->aniFrames, ANI_SPINDASH, &entity->playerAnimator, true, 0);
-            entity->state          = Player_State_Spindash;
-            entity->abilityTimer   = 0;
-            entity->spindashCharge = 0;
+            dust->drawOrder = self->drawOrder;
+            RSDK.SetSpriteAnimation(self->aniFrames, ANI_SPINDASH, &self->playerAnimator, true, 0);
+            self->state          = Player_State_Spindash;
+            self->abilityTimer   = 0;
+            self->spindashCharge = 0;
             RSDK.PlaySfx(Player->sfxCharge, false, 255);
         }
     }
     else {
-        entity->playerAnimator.animationSpeed = 128;
-        if (entity->playerAnimator.frameID == 0 || entity->left || entity->right)
-            entity->state = Player_State_Ground;
-        if (entity->jumpPress)
-            Player_StartJump(entity);
+        self->playerAnimator.animationSpeed = 128;
+        if (self->playerAnimator.frameID == 0 || self->left || self->right)
+            self->state = Player_State_Ground;
+        if (self->jumpPress)
+            Player_StartJump(self);
     }
 }
 void Player_State_Spindash(void)
@@ -3891,172 +3891,172 @@ void Player_State_Spindash(void)
     RSDK_THIS(Player);
     float chargeSpeeds[13] = { 1.0,       1.0614005, 1.125531,  1.1926451, 1.2630343, 1.3370349, 1.4150375,
                                1.4974997, 1.5849625, 1.6780719, 1.7776076, 1.8845228, 2.00000000 };
-    if (entity->jumpPress) {
-        entity->abilityTimer += 0x20000;
-        if (entity->abilityTimer > 0x90000)
-            entity->abilityTimer = 0x90000;
+    if (self->jumpPress) {
+        self->abilityTimer += 0x20000;
+        if (self->abilityTimer > 0x90000)
+            self->abilityTimer = 0x90000;
 
-        if (entity->spindashCharge < 12)
-            entity->spindashCharge++;
-        if (entity->spindashCharge < 0)
-            entity->spindashCharge = 0;
+        if (self->spindashCharge < 12)
+            self->spindashCharge++;
+        if (self->spindashCharge < 0)
+            self->spindashCharge = 0;
 
-        RSDK.SetSpriteAnimation(entity->aniFrames, ANI_SPINDASH, &entity->playerAnimator, true, 0);
+        RSDK.SetSpriteAnimation(self->aniFrames, ANI_SPINDASH, &self->playerAnimator, true, 0);
         int32 channel = RSDK.PlaySfx(Player->sfxCharge, false, 255);
-        RSDK.SetChannelAttributes(channel, 1.0, 0.0, chargeSpeeds[entity->spindashCharge]);
+        RSDK.SetChannelAttributes(channel, 1.0, 0.0, chargeSpeeds[self->spindashCharge]);
     }
     else {
-        entity->abilityTimer -= entity->abilityTimer >> 5;
+        self->abilityTimer -= self->abilityTimer >> 5;
     }
 
-    if (!entity->down) {
-        RSDK.SetSpriteAnimation(entity->aniFrames, ANI_JUMP, &entity->playerAnimator, false, 0);
+    if (!self->down) {
+        RSDK.SetSpriteAnimation(self->aniFrames, ANI_JUMP, &self->playerAnimator, false, 0);
 
-        if (entity->camera && !Zone->autoScrollSpeed) {
-            entity->scrollDelay   = 15;
-            entity->camera->state = Camera_State_VLock;
+        if (self->camera && !Zone->autoScrollSpeed) {
+            self->scrollDelay   = 15;
+            self->camera->state = Camera_State_VLock;
         }
 
         int32 vel = 0;
-        if (entity->superState == SUPERSTATE_SUPER)
-            vel = (((uint32)entity->abilityTimer >> 1) & 0x7FFF8000) + 0xB0000;
+        if (self->superState == SUPERSTATE_SUPER)
+            vel = (((uint32)self->abilityTimer >> 1) & 0x7FFF8000) + 0xB0000;
         else
-            vel = (((uint32)entity->abilityTimer >> 1) & 0x7FFF8000) + 0x80000;
+            vel = (((uint32)self->abilityTimer >> 1) & 0x7FFF8000) + 0x80000;
 
-        if (entity->direction)
-            entity->groundVel = -vel;
+        if (self->direction)
+            self->groundVel = -vel;
         else
-            entity->groundVel = vel;
+            self->groundVel = vel;
 
         RSDK.StopSFX(Player->sfxCharge);
         RSDK.PlaySfx(Player->sfxRelease, false, 0xFF);
-        RSDK.SetSpriteAnimation(entity->aniFrames, ANI_JUMP, &entity->playerAnimator, false, 0);
-        if (!entity->collisionMode) {
-            entity->position.y += entity->cameraOffset;
+        RSDK.SetSpriteAnimation(self->aniFrames, ANI_JUMP, &self->playerAnimator, false, 0);
+        if (!self->collisionMode) {
+            self->position.y += self->cameraOffset;
         }
-        entity->pushing = 0;
-        entity->state   = Player_State_Roll;
+        self->pushing = 0;
+        self->state   = Player_State_Roll;
     }
 }
 void Player_State_Peelout(void)
 {
     RSDK_THIS(Player);
-    if (entity->gravityStrength == 0x1000) {
-        if (entity->superState == SUPERSTATE_SUPER) {
-            entity->abilityTimer += 0xA000;
-            if (entity->abilityTimer > 0x70000)
-                entity->abilityTimer = 0x70000;
+    if (self->gravityStrength == 0x1000) {
+        if (self->superState == SUPERSTATE_SUPER) {
+            self->abilityTimer += 0xA000;
+            if (self->abilityTimer > 0x70000)
+                self->abilityTimer = 0x70000;
         }
         else {
-            entity->abilityTimer += 0x6000;
-            if (entity->abilityTimer > 0x60000)
-                entity->abilityTimer = 0x60000;
+            self->abilityTimer += 0x6000;
+            if (self->abilityTimer > 0x60000)
+                self->abilityTimer = 0x60000;
         }
     }
-    else if (entity->superState == SUPERSTATE_SUPER) {
-        entity->abilityTimer += 0xC000;
-        if (entity->abilityTimer > 0xD0000)
-            entity->abilityTimer = 0xD0000;
+    else if (self->superState == SUPERSTATE_SUPER) {
+        self->abilityTimer += 0xC000;
+        if (self->abilityTimer > 0xD0000)
+            self->abilityTimer = 0xD0000;
     }
     else {
-        entity->abilityTimer += 0x8000;
-        if (entity->abilityTimer > 0xC0000)
-            entity->abilityTimer = 0xC0000;
+        self->abilityTimer += 0x8000;
+        if (self->abilityTimer > 0xC0000)
+            self->abilityTimer = 0xC0000;
     }
 
-    if (entity->abilityTimer >= entity->maxWalkSpeed) {
-        if (entity->abilityTimer >= entity->maxJogSpeed) {
-            if (entity->abilityTimer < entity->maxRunSpeed) {
-                RSDK.SetSpriteAnimation(entity->aniFrames, ANI_JOG, &entity->playerAnimator, false, entity->playerAnimator.animationID - 8 > 1);
-                entity->playerAnimator.animationSpeed = (entity->abilityTimer >> 12) + 96;
-                if (entity->playerAnimator.animationSpeed > 0x200)
-                    entity->playerAnimator.animationSpeed = 512;
-                entity->maxRunSpeed = 0xC0000;
-                entity->maxJogSpeed = 0x58000;
+    if (self->abilityTimer >= self->maxWalkSpeed) {
+        if (self->abilityTimer >= self->maxJogSpeed) {
+            if (self->abilityTimer < self->maxRunSpeed) {
+                RSDK.SetSpriteAnimation(self->aniFrames, ANI_JOG, &self->playerAnimator, false, self->playerAnimator.animationID - 8 > 1);
+                self->playerAnimator.animationSpeed = (self->abilityTimer >> 12) + 96;
+                if (self->playerAnimator.animationSpeed > 0x200)
+                    self->playerAnimator.animationSpeed = 512;
+                self->maxRunSpeed = 0xC0000;
+                self->maxJogSpeed = 0x58000;
             }
             else {
-                RSDK.SetSpriteAnimation(entity->aniFrames, ANI_DASH, &entity->playerAnimator, false, entity->playerAnimator.animationID - 8 > 1);
-                entity->maxRunSpeed = 0xB8000;
+                RSDK.SetSpriteAnimation(self->aniFrames, ANI_DASH, &self->playerAnimator, false, self->playerAnimator.animationID - 8 > 1);
+                self->maxRunSpeed = 0xB8000;
             }
         }
         else {
-            if (entity->playerAnimator.animationID != ANI_WALK || entity->playerAnimator.frameID == 3)
-                RSDK.SetSpriteAnimation(entity->aniFrames, ANI_RUN, &entity->playerAnimator, false, 0);
-            entity->playerAnimator.animationSpeed = (entity->abilityTimer >> 12) + 64;
-            entity->maxWalkSpeed                  = 0x38000;
-            entity->maxJogSpeed                   = 0x60000;
+            if (self->playerAnimator.animationID != ANI_WALK || self->playerAnimator.frameID == 3)
+                RSDK.SetSpriteAnimation(self->aniFrames, ANI_RUN, &self->playerAnimator, false, 0);
+            self->playerAnimator.animationSpeed = (self->abilityTimer >> 12) + 64;
+            self->maxWalkSpeed                  = 0x38000;
+            self->maxJogSpeed                   = 0x60000;
         }
     }
     else {
-        if (entity->playerAnimator.animationID == ANI_JOG) {
-            if (entity->playerAnimator.frameID == ANI_DASH)
-                RSDK.SetSpriteAnimation(entity->aniFrames, ANI_WALK, &entity->playerAnimator, false, 9);
+        if (self->playerAnimator.animationID == ANI_JOG) {
+            if (self->playerAnimator.frameID == ANI_DASH)
+                RSDK.SetSpriteAnimation(self->aniFrames, ANI_WALK, &self->playerAnimator, false, 9);
         }
-        else if (entity->playerAnimator.animationID == ANI_AIRWALK) {
-            RSDK.SetSpriteAnimation(entity->aniFrames, ANI_WALK, &entity->playerAnimator, false, entity->playerAnimator.frameID);
+        else if (self->playerAnimator.animationID == ANI_AIRWALK) {
+            RSDK.SetSpriteAnimation(self->aniFrames, ANI_WALK, &self->playerAnimator, false, self->playerAnimator.frameID);
         }
         else {
-            RSDK.SetSpriteAnimation(entity->aniFrames, ANI_WALK, &entity->playerAnimator, false, 0);
+            RSDK.SetSpriteAnimation(self->aniFrames, ANI_WALK, &self->playerAnimator, false, 0);
         }
-        entity->playerAnimator.animationSpeed = (entity->abilityTimer >> 12) + 48;
-        entity->maxWalkSpeed                  = 0x40000;
+        self->playerAnimator.animationSpeed = (self->abilityTimer >> 12) + 48;
+        self->maxWalkSpeed                  = 0x40000;
     }
 
-    if (!entity->up) {
+    if (!self->up) {
         RSDK.StopSFX(Player->sfxPeelCharge);
-        if (entity->abilityTimer >= 0x60000) {
-            if (entity->camera && !Zone->autoScrollSpeed) {
-                entity->scrollDelay   = 15;
-                entity->camera->state = Camera_State_VLock;
+        if (self->abilityTimer >= 0x60000) {
+            if (self->camera && !Zone->autoScrollSpeed) {
+                self->scrollDelay   = 15;
+                self->camera->state = Camera_State_VLock;
             }
 
-            if (entity->direction)
-                entity->groundVel = -entity->abilityTimer;
+            if (self->direction)
+                self->groundVel = -self->abilityTimer;
             else
-                entity->groundVel = entity->abilityTimer;
+                self->groundVel = self->abilityTimer;
             RSDK.PlaySfx(Player->sfxPeelRelease, false, 0xFF);
         }
-        entity->state = Player_State_Ground;
+        self->state = Player_State_Ground;
     }
 }
 void Player_State_OuttaHere(void)
 {
     RSDK_THIS(Player);
-    if (entity->onGround) {
-        if (entity->playerAnimator.frameID == 14) {
-            entity->jumpAbility = 0;
-            if (entity->direction == FLIP_X)
-                entity->velocity.x = -0x10000;
+    if (self->onGround) {
+        if (self->playerAnimator.frameID == 14) {
+            self->jumpAbility = 0;
+            if (self->direction == FLIP_X)
+                self->velocity.x = -0x10000;
             else
-                entity->velocity.x = 0x10000;
-            entity->velocity.y = -0x58000;
-            entity->onGround   = false;
-            entity->stateInput = StateMachine_None;
-            if (entity->camera)
-                entity->camera->state = StateMachine_None;
+                self->velocity.x = 0x10000;
+            self->velocity.y = -0x58000;
+            self->onGround   = false;
+            self->stateInput = StateMachine_None;
+            if (self->camera)
+                self->camera->state = StateMachine_None;
         }
     }
     else {
         Player_HandleAirMovement();
-        if (entity->velocity.y > 0x100000) {
+        if (self->velocity.y > 0x100000) {
             RSDK.ResetEntitySlot(SLOT_GAMEOVER, GameOver->objectID, intToVoid(false));
-            destroyEntity(entity);
+            destroyEntity(self);
         }
     }
 }
 void Player_State_Transform(void)
 {
     RSDK_THIS(Player);
-    entity->position.x += Zone->autoScrollSpeed;
-    entity->invincibleTimer = 60;
-    RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x140000, true);
-    if (++entity->timer != 36) {
-        if (!entity->isChibi) {
-            if (entity->playerAnimator.frameID == entity->playerAnimator.frameCount - 1) {
-                entity->forceTransform = false;
-                entity->interaction    = true;
-                entity->state          = Player_State_Air;
-                RSDK.SetSpriteAnimation(entity->aniFrames, ANI_WALK, &entity->playerAnimator, false, 3);
+    self->position.x += Zone->autoScrollSpeed;
+    self->invincibleTimer = 60;
+    RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x140000, true);
+    if (++self->timer != 36) {
+        if (!self->isChibi) {
+            if (self->playerAnimator.frameID == self->playerAnimator.frameCount - 1) {
+                self->forceTransform = false;
+                self->interaction    = true;
+                self->state          = Player_State_Air;
+                RSDK.SetSpriteAnimation(self->aniFrames, ANI_WALK, &self->playerAnimator, false, 3);
 
 #if RETRO_USE_PLUS
                 if (!ERZStart && globals->superMusicEnabled)
@@ -4068,22 +4068,22 @@ void Player_State_Transform(void)
         }
     }
     else {
-        EntityImageTrail *trail = RSDK_GET_ENTITY(2 * Player->playerCount + entity->playerID, ImageTrail);
-        RSDK.ResetEntityPtr(trail, ImageTrail->objectID, entity);
+        EntityImageTrail *trail = RSDK_GET_ENTITY(2 * Player->playerCount + self->playerID, ImageTrail);
+        RSDK.ResetEntityPtr(trail, ImageTrail->objectID, self);
         if (ERZStart)
-            entity->shield = SHIELD_LIGHTNING;
+            self->shield = SHIELD_LIGHTNING;
         RSDK.PlaySfx(Player->sfxTransform2, false, 255);
 
-        EntityShield *shield = RSDK_GET_ENTITY(Player->playerCount + entity->playerID, Shield);
-        RSDK.ResetEntityPtr(shield, SuperSparkle->objectID, entity);
-        entity->superState = SUPERSTATE_SUPER;
-        Player_ChangePhysicsState(entity);
+        EntityShield *shield = RSDK_GET_ENTITY(Player->playerCount + self->playerID, Shield);
+        RSDK.ResetEntityPtr(shield, SuperSparkle->objectID, self);
+        self->superState = SUPERSTATE_SUPER;
+        Player_ChangePhysicsState(self);
 
-        if (!entity->isChibi) {
-            if (entity->playerAnimator.frameID == entity->playerAnimator.frameCount - 1) {
-                entity->forceTransform = false;
-                entity->interaction    = true;
-                entity->state          = Player_State_Air;
+        if (!self->isChibi) {
+            if (self->playerAnimator.frameID == self->playerAnimator.frameCount - 1) {
+                self->forceTransform = false;
+                self->interaction    = true;
+                self->state          = Player_State_Air;
 
 #if RETRO_USE_PLUS
                 if (!ERZStart && globals->superMusicEnabled)
@@ -4094,10 +4094,10 @@ void Player_State_Transform(void)
             }
         }
         else {
-            entity->forceTransform = false;
-            entity->interaction    = true;
-            entity->state          = Player_State_Air;
-            RSDK.SetSpriteAnimation(entity->aniFrames, ANI_WALK, &entity->playerAnimator, false, 3);
+            self->forceTransform = false;
+            self->interaction    = true;
+            self->state          = Player_State_Air;
+            RSDK.SetSpriteAnimation(self->aniFrames, ANI_WALK, &self->playerAnimator, false, 3);
             Music_PlayMusicTrack(TRACK_SUPER);
         }
     }
@@ -4105,305 +4105,305 @@ void Player_State_Transform(void)
 void Player_State_Hit(void)
 {
     RSDK_THIS(Player);
-    if (entity->onGround) {
-        entity->state = Player_State_Ground;
-        if (entity->velocity.x >= -0x20000) {
-            if (entity->velocity.x <= 0x20000)
-                entity->groundVel = 0;
+    if (self->onGround) {
+        self->state = Player_State_Ground;
+        if (self->velocity.x >= -0x20000) {
+            if (self->velocity.x <= 0x20000)
+                self->groundVel = 0;
             else
-                entity->groundVel -= 0x20000;
+                self->groundVel -= 0x20000;
         }
         else {
-            entity->groundVel += 0x20000;
+            self->groundVel += 0x20000;
         }
-        entity->pushing     = 0;
-        entity->controlLock = 0;
-        if (entity->camera)
-            entity->camera->offsetYFlag = false;
-        entity->jumpAbilityTimer = 0;
-        entity->skidding         = 0;
+        self->pushing     = 0;
+        self->controlLock = 0;
+        if (self->camera)
+            self->camera->offsetYFlag = false;
+        self->jumpAbilityTimer = 0;
+        self->skidding         = 0;
     }
     else {
-        if (entity->camera) {
-            entity->camera->offsetYFlag = true;
-            entity->camera->offset.y    = 0x200000;
+        if (self->camera) {
+            self->camera->offsetYFlag = true;
+            self->camera->offset.y    = 0x200000;
         }
-        entity->skidding = 0;
-        if (!entity->underwater)
-            entity->velocity.y += 0x3000;
+        self->skidding = 0;
+        if (!self->underwater)
+            self->velocity.y += 0x3000;
         else
-            entity->velocity.y += 0xF00;
+            self->velocity.y += 0xF00;
     }
 }
 void Player_State_Die(void)
 {
     RSDK_THIS(Player);
-    if (entity->superState == SUPERSTATE_SUPER)
-        entity->superState = SUPERSTATE_FADEOUT;
+    if (self->superState == SUPERSTATE_SUPER)
+        self->superState = SUPERSTATE_FADEOUT;
 
-    if (entity->blinkTimer) {
-        entity->blinkTimer = 0;
-        entity->visible    = true;
+    if (self->blinkTimer) {
+        self->blinkTimer = 0;
+        self->visible    = true;
     }
-    entity->velocity.y += entity->gravityStrength;
-    entity->velocity.x = 0;
-    RSDK.SetSpriteAnimation(entity->aniFrames, ANI_DIE, &entity->playerAnimator, false, 0);
+    self->velocity.y += self->gravityStrength;
+    self->velocity.x = 0;
+    RSDK.SetSpriteAnimation(self->aniFrames, ANI_DIE, &self->playerAnimator, false, 0);
 
-    if (!entity->sidekick) {
-        if (entity->camera) {
-            int32 y = entity->camera->position.y - entity->camera->field_6C.y + 0x1800000;
-            if (entity->position.y > y)
-                entity->position.y = y;
-            entity->scrollDelay = 2;
+    if (!self->sidekick) {
+        if (self->camera) {
+            int32 y = self->camera->position.y - self->camera->field_6C.y + 0x1800000;
+            if (self->position.y > y)
+                self->position.y = y;
+            self->scrollDelay = 2;
         }
     }
 
-    if (entity->velocity.y > 0x100000)
-        Player_HandleDeath(entity);
+    if (self->velocity.y > 0x100000)
+        Player_HandleDeath(self);
 }
 void Player_State_Drown(void)
 {
     RSDK_THIS(Player);
-    if (entity->superState == SUPERSTATE_SUPER)
-        entity->superState = SUPERSTATE_FADEOUT;
+    if (self->superState == SUPERSTATE_SUPER)
+        self->superState = SUPERSTATE_FADEOUT;
 
-    if (entity->blinkTimer) {
-        entity->blinkTimer = 0;
-        entity->visible    = true;
+    if (self->blinkTimer) {
+        self->blinkTimer = 0;
+        self->visible    = true;
     }
-    entity->velocity.y += entity->gravityStrength;
-    entity->velocity.x = 0;
-    RSDK.SetSpriteAnimation(entity->aniFrames, ANI_DROWN, &entity->playerAnimator, false, 0);
-    if (!entity->sidekick) {
-        if (entity->camera) {
-            int32 y = entity->camera->position.y + 0x1000000;
-            if (entity->position.y > y)
-                entity->position.y = y;
+    self->velocity.y += self->gravityStrength;
+    self->velocity.x = 0;
+    RSDK.SetSpriteAnimation(self->aniFrames, ANI_DROWN, &self->playerAnimator, false, 0);
+    if (!self->sidekick) {
+        if (self->camera) {
+            int32 y = self->camera->position.y + 0x1000000;
+            if (self->position.y > y)
+                self->position.y = y;
         }
     }
-    if (entity->velocity.y > 0x100000)
-        Player_HandleDeath(entity);
+    if (self->velocity.y > 0x100000)
+        Player_HandleDeath(self);
 }
 void Player_State_DropDash(void)
 {
     RSDK_THIS(Player);
-    if (entity->onGround) {
-        if (entity->camera)
-            entity->camera->offsetYFlag = false;
-        entity->jumpAbilityTimer = 0;
-        if (entity->right)
-            entity->direction = FLIP_NONE;
-        if (entity->left)
-            entity->direction = FLIP_X;
+    if (self->onGround) {
+        if (self->camera)
+            self->camera->offsetYFlag = false;
+        self->jumpAbilityTimer = 0;
+        if (self->right)
+            self->direction = FLIP_NONE;
+        if (self->left)
+            self->direction = FLIP_X;
 
         int32 vel = 0;
         int32 cap = 0;
-        if (entity->superState == SUPERSTATE_SUPER) {
+        if (self->superState == SUPERSTATE_SUPER) {
             vel = 0xC0000;
             cap = 0xD0000;
-            if (entity->camera)
-                Camera_ShakeScreen(entity->camera->screenID, 6, 6);
+            if (self->camera)
+                Camera_ShakeScreen(self->camera->screenID, 6, 6);
         }
         else {
             vel = 0x80000;
             cap = 0xC0000;
         }
 
-        if (entity->direction) {
-            if (entity->velocity.x <= 0) {
-                entity->groundVel = (entity->groundVel >> 2) - vel;
-                if (entity->groundVel < -cap)
-                    entity->groundVel = -cap;
+        if (self->direction) {
+            if (self->velocity.x <= 0) {
+                self->groundVel = (self->groundVel >> 2) - vel;
+                if (self->groundVel < -cap)
+                    self->groundVel = -cap;
             }
-            else if (entity->angle) {
-                entity->groundVel = (entity->groundVel >> 1) - vel;
+            else if (self->angle) {
+                self->groundVel = (self->groundVel >> 1) - vel;
             }
             else {
-                entity->groundVel = -vel;
+                self->groundVel = -vel;
             }
         }
         else {
-            if (entity->velocity.x >= 0) {
-                entity->groundVel = vel + (entity->groundVel >> 2);
-                if (entity->groundVel > cap)
-                    entity->groundVel = cap;
+            if (self->velocity.x >= 0) {
+                self->groundVel = vel + (self->groundVel >> 2);
+                if (self->groundVel > cap)
+                    self->groundVel = cap;
             }
-            else if (entity->angle) {
-                entity->groundVel = vel + (entity->groundVel >> 1);
+            else if (self->angle) {
+                self->groundVel = vel + (self->groundVel >> 1);
             }
             else {
-                entity->groundVel = vel;
+                self->groundVel = vel;
             }
         }
 
-        if (entity->camera && !Zone->autoScrollSpeed) {
-            entity->scrollDelay   = 8;
-            entity->camera->state = Camera_State_VLock;
+        if (self->camera && !Zone->autoScrollSpeed) {
+            self->scrollDelay   = 8;
+            self->camera->state = Camera_State_VLock;
         }
-        EntityDust *dust = CREATE_ENTITY(Dust, entity, entity->position.x, entity->position.y);
+        EntityDust *dust = CREATE_ENTITY(Dust, self, self->position.x, self->position.y);
         RSDK.SetSpriteAnimation(Dust->aniFrames, 2, &dust->animator, true, 0);
         dust->state = Dust_State_DropDash;
-        dust->position.y += RSDK.GetHitbox(&entity->playerAnimator, 0)->bottom << 16;
-        dust->direction = entity->direction;
-        dust->drawOrder = entity->drawOrder;
+        dust->position.y += RSDK.GetHitbox(&self->playerAnimator, 0)->bottom << 16;
+        dust->direction = self->direction;
+        dust->drawOrder = self->drawOrder;
         RSDK.StopSFX(Player->sfxDropdash);
-        if (entity->superState == SUPERSTATE_SUPER)
+        if (self->superState == SUPERSTATE_SUPER)
             RSDK.PlaySfx(Player->sfxPeelRelease, false, 255);
         else
             RSDK.PlaySfx(Player->sfxRelease, false, 255);
 
-        RSDK.SetSpriteAnimation(entity->aniFrames, ANI_JUMP, &entity->playerAnimator, false, 0);
-        if (!entity->collisionMode) {
-            entity->position.y += entity->cameraOffset;
+        RSDK.SetSpriteAnimation(self->aniFrames, ANI_JUMP, &self->playerAnimator, false, 0);
+        if (!self->collisionMode) {
+            self->position.y += self->cameraOffset;
         }
-        entity->pushing = 0;
-        entity->state   = Player_State_Roll;
+        self->pushing = 0;
+        self->state   = Player_State_Roll;
     }
-    else if (entity->jumpHold) {
+    else if (self->jumpHold) {
         Player_HandleAirFriction();
         Player_HandleAirMovement();
-        entity->playerAnimator.animationSpeed += 8;
-        if (entity->playerAnimator.animationSpeed > 0x100)
-            entity->playerAnimator.animationSpeed = 0x100;
+        self->playerAnimator.animationSpeed += 8;
+        if (self->playerAnimator.animationSpeed > 0x100)
+            self->playerAnimator.animationSpeed = 0x100;
     }
     else {
-        entity->jumpAbilityTimer = 0;
-        RSDK.SetSpriteAnimation(entity->aniFrames, ANI_JUMP, &entity->playerAnimator, false, 0);
-        entity->state = Player_State_Air;
+        self->jumpAbilityTimer = 0;
+        RSDK.SetSpriteAnimation(self->aniFrames, ANI_JUMP, &self->playerAnimator, false, 0);
+        self->state = Player_State_Air;
     }
 }
 void Player_State_BubbleBounce(void)
 {
     RSDK_THIS(Player);
-    if (entity->shield == SHIELD_BUBBLE && !entity->invincibleTimer && entity->superState != SUPERSTATE_SUPER) {
-        if (!entity->onGround) {
+    if (self->shield == SHIELD_BUBBLE && !self->invincibleTimer && self->superState != SUPERSTATE_SUPER) {
+        if (!self->onGround) {
             Player_HandleAirFriction();
             Player_HandleAirMovement();
         }
         else {
-            entity->controlLock = 0;
+            self->controlLock = 0;
             int32 vel           = 0;
-            if (!entity->underwater)
-                vel = entity->gravityStrength + 0x78000;
+            if (!self->underwater)
+                vel = self->gravityStrength + 0x78000;
             else
-                vel = entity->gravityStrength + 0x40000;
-            entity->onGround = false;
+                vel = self->gravityStrength + 0x40000;
+            self->onGround = false;
 
-            entity->velocity.x = (entity->groundVel * RSDK.Cos256(entity->angle) + (vel * RSDK.Sin256(entity->angle))) >> 8;
-            entity->velocity.y = (entity->groundVel * RSDK.Sin256(entity->angle) - (vel * RSDK.Cos256(entity->angle))) >> 8;
+            self->velocity.x = (self->groundVel * RSDK.Cos256(self->angle) + (vel * RSDK.Sin256(self->angle))) >> 8;
+            self->velocity.y = (self->groundVel * RSDK.Sin256(self->angle) - (vel * RSDK.Cos256(self->angle))) >> 8;
 
-            if (entity->camera) {
-                entity->camera->offsetYFlag = true;
-                entity->camera->offset.y    = 0x200000;
+            if (self->camera) {
+                self->camera->offsetYFlag = true;
+                self->camera->offset.y    = 0x200000;
             }
 
-            RSDK.SetSpriteAnimation(entity->aniFrames, ANI_JUMP, &entity->playerAnimator, false, 0);
-            entity->playerAnimator.animationSpeed = (abs(entity->groundVel) >> 12) + 48;
+            RSDK.SetSpriteAnimation(self->aniFrames, ANI_JUMP, &self->playerAnimator, false, 0);
+            self->playerAnimator.animationSpeed = (abs(self->groundVel) >> 12) + 48;
 
-            EntityShield *shield = RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntityID(entity), Shield);
+            EntityShield *shield = RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntityID(self), Shield);
             RSDK.SetSpriteAnimation(Shield->aniFrames, 9, &shield->animator2, true, 0);
             RSDK.SetSpriteAnimation(0xFFFF, 0, &shield->animator, true, 0);
             shield->state = Shield_State_BubbleAlt;
-            if (entity->playerAnimator.animationSpeed > 0xF0)
-                entity->playerAnimator.animationSpeed = 0xF0;
-            entity->angle            = 0;
-            entity->collisionMode    = CMODE_FLOOR;
-            entity->jumpAbility      = 0;
-            entity->jumpAbilityTimer = 1;
+            if (self->playerAnimator.animationSpeed > 0xF0)
+                self->playerAnimator.animationSpeed = 0xF0;
+            self->angle            = 0;
+            self->collisionMode    = CMODE_FLOOR;
+            self->jumpAbility      = 0;
+            self->jumpAbilityTimer = 1;
             RSDK.PlaySfx(Shield->sfxBubbleBounce, false, 255);
-            entity->state = Player_State_Air;
+            self->state = Player_State_Air;
         }
     }
     else {
-        entity->state = Player_State_Air;
+        self->state = Player_State_Air;
     }
 }
 void Player_State_TailsFlight(void)
 {
     RSDK_THIS(Player);
     Player_HandleAirFriction();
-    if (entity->onGround) {
-        entity->state = Player_State_Ground;
+    if (self->onGround) {
+        self->state = Player_State_Ground;
         Player_HandleAirMovement();
     }
     else {
-        if (entity->velocity.y < -0x10000) {
-            entity->abilitySpeed = 0x800;
+        if (self->velocity.y < -0x10000) {
+            self->abilitySpeed = 0x800;
         }
 
-        if (entity->velocity.y <= 0) {
-            if (entity->abilityValue >= 60)
-                entity->abilitySpeed = 0x800;
+        if (self->velocity.y <= 0) {
+            if (self->abilityValue >= 60)
+                self->abilitySpeed = 0x800;
             else
-                entity->abilityValue++;
+                self->abilityValue++;
         }
 
         uint8 slot = 0;
-        entity->velocity.y += entity->abilitySpeed;
-        if (!entity->sidekick)
+        self->velocity.y += self->abilitySpeed;
+        if (!self->sidekick)
             slot = SceneInfo->entitySlot;
-        if (entity->position.y < Zone->screenBoundsT2[slot] + 0x100000 && entity->velocity.y < 0)
-            entity->velocity.y = 0;
+        if (self->position.y < Zone->screenBoundsT2[slot] + 0x100000 && self->velocity.y < 0)
+            self->velocity.y = 0;
 
         EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
-        if (globals->gameMode != MODE_COMPETITION && !entity->isChibi && !player1->isChibi)
+        if (globals->gameMode != MODE_COMPETITION && !self->isChibi && !player1->isChibi)
             Player_CheckStartFlyCarry(player1);
 
-        if (entity->timer >= 480) {
-            if (!entity->underwater) {
+        if (self->timer >= 480) {
+            if (!self->underwater) {
                 if (player1->state == Player_State_FlyCarried)
-                    RSDK.SetSpriteAnimation(entity->aniFrames, ANI_FLYLIFTTIRED, &entity->playerAnimator, false, 0);
+                    RSDK.SetSpriteAnimation(self->aniFrames, ANI_FLYLIFTTIRED, &self->playerAnimator, false, 0);
                 else
-                    RSDK.SetSpriteAnimation(entity->aniFrames, ANI_FLYTIRED, &entity->playerAnimator, false, 0);
+                    RSDK.SetSpriteAnimation(self->aniFrames, ANI_FLYTIRED, &self->playerAnimator, false, 0);
             }
             else {
                 if (player1->state == Player_State_FlyCarried)
-                    RSDK.SetSpriteAnimation(entity->aniFrames, ANI_SWIMLIFT, &entity->playerAnimator, false, 0);
+                    RSDK.SetSpriteAnimation(self->aniFrames, ANI_SWIMLIFT, &self->playerAnimator, false, 0);
                 else
-                    RSDK.SetSpriteAnimation(entity->aniFrames, ANI_SWIMTIRED, &entity->playerAnimator, false, 0);
+                    RSDK.SetSpriteAnimation(self->aniFrames, ANI_SWIMTIRED, &self->playerAnimator, false, 0);
             }
         }
         else {
-            if (entity->underwater) {
+            if (self->underwater) {
                 if (player1->state == Player_State_FlyCarried) {
-                    RSDK.SetSpriteAnimation(entity->aniFrames, ANI_SWIMLIFT, &entity->playerAnimator, false, 0);
+                    RSDK.SetSpriteAnimation(self->aniFrames, ANI_SWIMLIFT, &self->playerAnimator, false, 0);
                 }
                 else {
-                    RSDK.SetSpriteAnimation(entity->aniFrames, ANI_SWIM, &entity->playerAnimator, false, 0);
-                    entity->playerAnimator.animationSpeed = 128;
-                    if (entity->velocity.y >= 0)
-                        entity->playerAnimator.animationSpeed = 64;
+                    RSDK.SetSpriteAnimation(self->aniFrames, ANI_SWIM, &self->playerAnimator, false, 0);
+                    self->playerAnimator.animationSpeed = 128;
+                    if (self->velocity.y >= 0)
+                        self->playerAnimator.animationSpeed = 64;
                 }
             }
             else {
-                if (player1->state != Player_State_FlyCarried || entity->velocity.y >= 0)
-                    RSDK.SetSpriteAnimation(entity->aniFrames, ANI_FLY, &entity->playerAnimator, false, 0);
+                if (player1->state != Player_State_FlyCarried || self->velocity.y >= 0)
+                    RSDK.SetSpriteAnimation(self->aniFrames, ANI_FLY, &self->playerAnimator, false, 0);
                 else
-                    RSDK.SetSpriteAnimation(entity->aniFrames, ANI_FLYLIFT, &entity->playerAnimator, false, 0);
+                    RSDK.SetSpriteAnimation(self->aniFrames, ANI_FLYLIFT, &self->playerAnimator, false, 0);
 
-                if (entity->velocity.y >= 0)
-                    entity->playerAnimator.animationSpeed = 128;
+                if (self->velocity.y >= 0)
+                    self->playerAnimator.animationSpeed = 128;
                 else
-                    entity->playerAnimator.animationSpeed = 256;
+                    self->playerAnimator.animationSpeed = 256;
             }
 
-            if (++entity->timer == 480) {
-                if (!entity->underwater) {
+            if (++self->timer == 480) {
+                if (!self->underwater) {
                     if (player1->state == Player_State_FlyCarried)
-                        RSDK.SetSpriteAnimation(entity->aniFrames, ANI_FLYLIFTTIRED, &entity->playerAnimator, false, 0);
+                        RSDK.SetSpriteAnimation(self->aniFrames, ANI_FLYLIFTTIRED, &self->playerAnimator, false, 0);
                     else
-                        RSDK.SetSpriteAnimation(entity->aniFrames, ANI_FLYTIRED, &entity->playerAnimator, false, 0);
+                        RSDK.SetSpriteAnimation(self->aniFrames, ANI_FLYTIRED, &self->playerAnimator, false, 0);
                 }
                 else {
                     if (player1->state == Player_State_FlyCarried)
-                        RSDK.SetSpriteAnimation(entity->aniFrames, ANI_SWIMLIFT, &entity->playerAnimator, false, 0);
+                        RSDK.SetSpriteAnimation(self->aniFrames, ANI_SWIMLIFT, &self->playerAnimator, false, 0);
                     else
-                        RSDK.SetSpriteAnimation(entity->aniFrames, ANI_SWIMTIRED, &entity->playerAnimator, false, 0);
+                        RSDK.SetSpriteAnimation(self->aniFrames, ANI_SWIMTIRED, &self->playerAnimator, false, 0);
                 }
             }
-            else if (entity->jumpPress && (!entity->underwater || player1->state != Player_State_FlyCarried)) {
-                entity->abilitySpeed = -0x2000;
-                entity->abilityValue = 0;
+            else if (self->jumpPress && (!self->underwater || player1->state != Player_State_FlyCarried)) {
+                self->abilitySpeed = -0x2000;
+                self->abilityValue = 0;
             }
         }
     }
@@ -4413,19 +4413,19 @@ void Player_State_FlyCarried(void)
     RSDK_THIS(Player);
     EntityPlayer *player2 = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
     if (player2->state != Player_State_TailsFlight)
-        entity->state = Player_State_Air;
-    if (entity->sidekickPos.x != entity->leaderPos.x)
-        entity->state = Player_State_Air;
-    if (entity->onGround && entity->velocity.y >= 0)
-        entity->state = Player_State_Ground;
-    if (entity->state == Player_State_FlyCarried) {
-        if (entity->jumpPress && entity->down) {
-            entity->state = Player_State_Air;
-            if (!entity->underwater)
-                entity->velocity.y = -0x40000;
+        self->state = Player_State_Air;
+    if (self->sidekickPos.x != self->leaderPos.x)
+        self->state = Player_State_Air;
+    if (self->onGround && self->velocity.y >= 0)
+        self->state = Player_State_Ground;
+    if (self->state == Player_State_FlyCarried) {
+        if (self->jumpPress && self->down) {
+            self->state = Player_State_Air;
+            if (!self->underwater)
+                self->velocity.y = -0x40000;
             else
-                entity->velocity.y = -0x20000;
-            RSDK.SetSpriteAnimation(entity->aniFrames, ANI_JUMP, &entity->playerAnimator, false, 0);
+                self->velocity.y = -0x20000;
+            RSDK.SetSpriteAnimation(self->aniFrames, ANI_JUMP, &self->playerAnimator, false, 0);
         }
     }
     else {
@@ -4435,35 +4435,35 @@ void Player_State_FlyCarried(void)
 void Player_State_KnuxGlideLeft(void)
 {
     RSDK_THIS(Player);
-    if (!entity->onGround) {
-        if (!entity->jumpHold) {
-            entity->timer        = 0;
-            entity->abilitySpeed = 0;
-            entity->velocity.x >>= 2;
-            RSDK.SetSpriteAnimation(entity->aniFrames, ANI_FLYTIRED, &entity->playerAnimator, false, 0);
-            entity->state = Player_State_KnuxGlideDrop;
+    if (!self->onGround) {
+        if (!self->jumpHold) {
+            self->timer        = 0;
+            self->abilitySpeed = 0;
+            self->velocity.x >>= 2;
+            RSDK.SetSpriteAnimation(self->aniFrames, ANI_FLYTIRED, &self->playerAnimator, false, 0);
+            self->state = Player_State_KnuxGlideDrop;
         }
         else {
-            if (entity->timer == 256) {
-                if (entity->abilitySpeed < 0x180000) {
-                    entity->abilitySpeed += 0x400;
+            if (self->timer == 256) {
+                if (self->abilitySpeed < 0x180000) {
+                    self->abilitySpeed += 0x400;
                 }
             }
-            else if (entity->abilitySpeed < 0x40000) {
-                entity->abilitySpeed += 0x1000;
+            else if (self->abilitySpeed < 0x40000) {
+                self->abilitySpeed += 0x1000;
             }
 
-            if (entity->velocity.y <= 0x8000)
-                entity->velocity.y += 0x2000;
+            if (self->velocity.y <= 0x8000)
+                self->velocity.y += 0x2000;
             else
-                entity->velocity.y -= 0x2000;
+                self->velocity.y -= 0x2000;
 
-            if (entity->timer < 256)
-                entity->timer += 4;
-            int32 storeX = entity->position.x;
+            if (self->timer < 256)
+                self->timer += 4;
+            int32 storeX = self->position.x;
 
             int32 y1, y2;
-            if (entity->isChibi) {
+            if (self->isChibi) {
                 y1 = -0x10000;
                 y2 = 0x30000;
             }
@@ -4474,117 +4474,117 @@ void Player_State_KnuxGlideLeft(void)
 
             bool32 collidedA, collidedB;
             int32 oldPos = 0, newPos = 0;
-            if (entity->timer >= 128) {
-                entity->position.x += entity->velocity.x;
-                collidedA = RSDK.ObjectTileCollision(entity, entity->collisionLayers, CMODE_RWALL, entity->collisionPlane, -0xC0000, y1, true);
-                oldPos    = entity->position.x;
-                entity->position.x += entity->velocity.x;
-                collidedB = RSDK.ObjectTileCollision(entity, entity->collisionLayers, CMODE_RWALL, entity->collisionPlane, -0xC0000, y2, true);
-                newPos    = entity->position.x;
+            if (self->timer >= 128) {
+                self->position.x += self->velocity.x;
+                collidedA = RSDK.ObjectTileCollision(self, self->collisionLayers, CMODE_RWALL, self->collisionPlane, -0xC0000, y1, true);
+                oldPos    = self->position.x;
+                self->position.x += self->velocity.x;
+                collidedB = RSDK.ObjectTileCollision(self, self->collisionLayers, CMODE_RWALL, self->collisionPlane, -0xC0000, y2, true);
+                newPos    = self->position.x;
             }
             else {
                 collidedA = false;
                 collidedB = false;
             }
-            int32 vx           = entity->velocity.x;
-            bool32 flag        = entity->velocity.x;
-            entity->velocity.x = entity->abilitySpeed * RSDK.Cos512(entity->timer) >> 9;
-            if (!vx && entity->velocity.x) {
-                entity->abilitySpeed = 0x40000;
+            int32 vx           = self->velocity.x;
+            bool32 flag        = self->velocity.x;
+            self->velocity.x = self->abilitySpeed * RSDK.Cos512(self->timer) >> 9;
+            if (!vx && self->velocity.x) {
+                self->abilitySpeed = 0x40000;
                 flag                 = false;
-                entity->velocity.x   = entity->abilitySpeed * RSDK.Cos512(entity->timer) >> 9;
+                self->velocity.x   = self->abilitySpeed * RSDK.Cos512(self->timer) >> 9;
             }
 
-            entity->position.x = storeX;
-            if (entity->right) {
-                entity->state                         = Player_State_KnuxGlideRight;
-                entity->direction                     = 0;
-                entity->playerAnimator.frameID        = 0;
-                entity->playerAnimator.animationTimer = 0;
+            self->position.x = storeX;
+            if (self->right) {
+                self->state                         = Player_State_KnuxGlideRight;
+                self->direction                     = 0;
+                self->playerAnimator.frameID        = 0;
+                self->playerAnimator.animationTimer = 0;
             }
             else {
-                if (flag || entity->timer != 256) {
+                if (flag || self->timer != 256) {
                 }
                 else if (collidedA || collidedB) {
-                    entity->abilitySpeed = 0;
-                    entity->timer        = 0;
+                    self->abilitySpeed = 0;
+                    self->timer        = 0;
                     if (oldPos == newPos) {
-                        entity->state      = Player_State_KnuxWallClimb;
-                        entity->velocity.x = 0;
-                        entity->velocity.y = 0;
+                        self->state      = Player_State_KnuxWallClimb;
+                        self->velocity.x = 0;
+                        self->velocity.y = 0;
                         RSDK.PlaySfx(Player->sfxGrab, false, 255);
                     }
                     else {
-                        entity->velocity.x >>= 2;
-                        RSDK.SetSpriteAnimation(entity->aniFrames, ANI_FLYTIRED, &entity->playerAnimator, false, 0);
-                        entity->state = Player_State_KnuxGlideDrop;
+                        self->velocity.x >>= 2;
+                        RSDK.SetSpriteAnimation(self->aniFrames, ANI_FLYTIRED, &self->playerAnimator, false, 0);
+                        self->state = Player_State_KnuxGlideDrop;
                     }
                 }
                 else if (collidedA) {
-                    entity->timer        = 0;
-                    entity->abilitySpeed = 0;
-                    entity->velocity.x >>= 2;
-                    RSDK.SetSpriteAnimation(entity->aniFrames, ANI_FLYTIRED, &entity->playerAnimator, false, 0);
-                    entity->state = Player_State_KnuxGlideDrop;
+                    self->timer        = 0;
+                    self->abilitySpeed = 0;
+                    self->velocity.x >>= 2;
+                    RSDK.SetSpriteAnimation(self->aniFrames, ANI_FLYTIRED, &self->playerAnimator, false, 0);
+                    self->state = Player_State_KnuxGlideDrop;
                 }
             }
         }
     }
     else {
-        if (entity->collisionMode) {
-            entity->state = Player_State_Ground;
-            if (entity->camera)
-                entity->camera->offsetYFlag = false;
-            entity->jumpAbilityTimer = 0;
-            entity->skidding         = 0;
+        if (self->collisionMode) {
+            self->state = Player_State_Ground;
+            if (self->camera)
+                self->camera->offsetYFlag = false;
+            self->jumpAbilityTimer = 0;
+            self->skidding         = 0;
         }
         else {
-            entity->timer = 0;
-            entity->state = Player_State_GlideSlide;
-            RSDK.SetSpriteAnimation(entity->aniFrames, ANI_FLYLIFTTIRED, &entity->playerAnimator, false, 0);
-            entity->groundVel = entity->velocity.x;
-            EntityDust *dust  = CREATE_ENTITY(Dust, entity, entity->position.x, entity->position.y);
+            self->timer = 0;
+            self->state = Player_State_GlideSlide;
+            RSDK.SetSpriteAnimation(self->aniFrames, ANI_FLYLIFTTIRED, &self->playerAnimator, false, 0);
+            self->groundVel = self->velocity.x;
+            EntityDust *dust  = CREATE_ENTITY(Dust, self, self->position.x, self->position.y);
             dust->state       = Dust_State_GlideSlide;
         }
     }
 
-    if (entity->position.y < Zone->screenBoundsT2[SceneInfo->entitySlot] + 0x100000) {
-        entity->velocity.x   = 0;
-        entity->abilitySpeed = 0;
+    if (self->position.y < Zone->screenBoundsT2[SceneInfo->entitySlot] + 0x100000) {
+        self->velocity.x   = 0;
+        self->abilitySpeed = 0;
     }
 }
 void Player_State_KnuxGlideRight(void)
 {
     RSDK_THIS(Player);
-    if (!entity->onGround) {
-        if (!entity->jumpHold) {
-            entity->timer        = 0;
-            entity->abilitySpeed = 0;
-            entity->velocity.x >>= 2;
-            RSDK.SetSpriteAnimation(entity->aniFrames, ANI_FLYTIRED, &entity->playerAnimator, false, 0);
-            entity->state = Player_State_KnuxGlideDrop;
+    if (!self->onGround) {
+        if (!self->jumpHold) {
+            self->timer        = 0;
+            self->abilitySpeed = 0;
+            self->velocity.x >>= 2;
+            RSDK.SetSpriteAnimation(self->aniFrames, ANI_FLYTIRED, &self->playerAnimator, false, 0);
+            self->state = Player_State_KnuxGlideDrop;
         }
         else {
-            if (!entity->timer) {
-                if (entity->abilitySpeed < 0x180000) {
-                    entity->abilitySpeed += 0x400;
+            if (!self->timer) {
+                if (self->abilitySpeed < 0x180000) {
+                    self->abilitySpeed += 0x400;
                 }
             }
-            else if (entity->abilitySpeed < 0x40000) {
-                entity->abilitySpeed += 0x1000;
+            else if (self->abilitySpeed < 0x40000) {
+                self->abilitySpeed += 0x1000;
             }
 
-            if (entity->velocity.y <= 0x8000)
-                entity->velocity.y += 0x2000;
+            if (self->velocity.y <= 0x8000)
+                self->velocity.y += 0x2000;
             else
-                entity->velocity.y -= 0x2000;
+                self->velocity.y -= 0x2000;
 
-            if (entity->timer > 0)
-                entity->timer -= 4;
-            int32 storeX = entity->position.x;
+            if (self->timer > 0)
+                self->timer -= 4;
+            int32 storeX = self->position.x;
 
             int32 y1, y2;
-            if (entity->isChibi) {
+            if (self->isChibi) {
                 y1 = -0x10000;
                 y2 = 0x30000;
             }
@@ -4595,120 +4595,120 @@ void Player_State_KnuxGlideRight(void)
 
             bool32 collidedA, collidedB;
             int32 oldPos = 0, newPos = 0;
-            if (entity->timer < 128) {
-                entity->position.x += entity->velocity.x;
-                collidedA = RSDK.ObjectTileCollision(entity, entity->collisionLayers, CMODE_LWALL, entity->collisionPlane, 0xC0000, y1, true);
-                oldPos    = entity->position.x;
-                entity->position.x += entity->velocity.x;
-                collidedB = RSDK.ObjectTileCollision(entity, entity->collisionLayers, CMODE_LWALL, entity->collisionPlane, 0xC0000, y2, true);
-                newPos    = entity->position.x;
+            if (self->timer < 128) {
+                self->position.x += self->velocity.x;
+                collidedA = RSDK.ObjectTileCollision(self, self->collisionLayers, CMODE_LWALL, self->collisionPlane, 0xC0000, y1, true);
+                oldPos    = self->position.x;
+                self->position.x += self->velocity.x;
+                collidedB = RSDK.ObjectTileCollision(self, self->collisionLayers, CMODE_LWALL, self->collisionPlane, 0xC0000, y2, true);
+                newPos    = self->position.x;
             }
             else {
                 collidedA = false;
                 collidedB = false;
             }
-            int32 vx           = entity->velocity.x;
-            bool32 flag        = entity->velocity.x;
-            entity->velocity.x = entity->abilitySpeed * RSDK.Cos512(entity->timer) >> 9;
-            if (!vx && entity->velocity.x) {
-                entity->abilitySpeed = 0x40000;
+            int32 vx           = self->velocity.x;
+            bool32 flag        = self->velocity.x;
+            self->velocity.x = self->abilitySpeed * RSDK.Cos512(self->timer) >> 9;
+            if (!vx && self->velocity.x) {
+                self->abilitySpeed = 0x40000;
                 flag                 = false;
-                entity->velocity.x   = entity->abilitySpeed * RSDK.Cos512(entity->timer) >> 9;
+                self->velocity.x   = self->abilitySpeed * RSDK.Cos512(self->timer) >> 9;
             }
 
-            entity->position.x = storeX;
-            if (entity->left) {
-                entity->state                         = Player_State_KnuxGlideLeft;
-                entity->direction                     = FLIP_X;
-                entity->playerAnimator.frameID        = 0;
-                entity->playerAnimator.animationTimer = 0;
+            self->position.x = storeX;
+            if (self->left) {
+                self->state                         = Player_State_KnuxGlideLeft;
+                self->direction                     = FLIP_X;
+                self->playerAnimator.frameID        = 0;
+                self->playerAnimator.animationTimer = 0;
             }
             else {
-                if (!flag && !entity->timer) {
+                if (!flag && !self->timer) {
                     if (collidedA || collidedB) {
-                        entity->abilitySpeed = 0;
-                        entity->timer        = 0;
+                        self->abilitySpeed = 0;
+                        self->timer        = 0;
                         if (oldPos == newPos) {
-                            entity->state      = Player_State_KnuxWallClimb;
-                            entity->velocity.x = 0;
-                            entity->velocity.y = 0;
+                            self->state      = Player_State_KnuxWallClimb;
+                            self->velocity.x = 0;
+                            self->velocity.y = 0;
                             RSDK.PlaySfx(Player->sfxGrab, false, 255);
                         }
                         else {
-                            entity->velocity.x >>= 2;
-                            RSDK.SetSpriteAnimation(entity->aniFrames, ANI_FLYTIRED, &entity->playerAnimator, false, 0);
-                            entity->state = Player_State_KnuxGlideDrop;
+                            self->velocity.x >>= 2;
+                            RSDK.SetSpriteAnimation(self->aniFrames, ANI_FLYTIRED, &self->playerAnimator, false, 0);
+                            self->state = Player_State_KnuxGlideDrop;
                         }
                     }
                     else if (collidedA) {
-                        entity->timer        = 0;
-                        entity->abilitySpeed = 0;
-                        entity->velocity.x >>= 2;
-                        RSDK.SetSpriteAnimation(entity->aniFrames, ANI_FLYTIRED, &entity->playerAnimator, false, 0);
-                        entity->state = Player_State_KnuxGlideDrop;
+                        self->timer        = 0;
+                        self->abilitySpeed = 0;
+                        self->velocity.x >>= 2;
+                        RSDK.SetSpriteAnimation(self->aniFrames, ANI_FLYTIRED, &self->playerAnimator, false, 0);
+                        self->state = Player_State_KnuxGlideDrop;
                     }
                 }
             }
         }
     }
     else {
-        if (entity->collisionMode) {
-            entity->state = Player_State_Ground;
-            if (entity->camera)
-                entity->camera->offsetYFlag = false;
-            entity->jumpAbilityTimer = 0;
-            entity->skidding         = 0;
+        if (self->collisionMode) {
+            self->state = Player_State_Ground;
+            if (self->camera)
+                self->camera->offsetYFlag = false;
+            self->jumpAbilityTimer = 0;
+            self->skidding         = 0;
         }
         else {
-            entity->timer = 0;
-            entity->state = Player_State_GlideSlide;
-            RSDK.SetSpriteAnimation(entity->aniFrames, ANI_FLYLIFTTIRED, &entity->playerAnimator, false, 0);
-            entity->groundVel = entity->velocity.x;
-            EntityDust *dust  = CREATE_ENTITY(Dust, entity, entity->position.x, entity->position.y);
+            self->timer = 0;
+            self->state = Player_State_GlideSlide;
+            RSDK.SetSpriteAnimation(self->aniFrames, ANI_FLYLIFTTIRED, &self->playerAnimator, false, 0);
+            self->groundVel = self->velocity.x;
+            EntityDust *dust  = CREATE_ENTITY(Dust, self, self->position.x, self->position.y);
             dust->state       = Dust_State_GlideSlide;
         }
     }
 
-    if (entity->position.y < Zone->screenBoundsT2[SceneInfo->entitySlot] + 0x100000) {
-        entity->velocity.x   = 0;
-        entity->abilitySpeed = 0;
+    if (self->position.y < Zone->screenBoundsT2[SceneInfo->entitySlot] + 0x100000) {
+        self->velocity.x   = 0;
+        self->abilitySpeed = 0;
     }
 }
 void Player_State_KnuxGlideDrop(void)
 {
     RSDK_THIS(Player);
-    if (entity->onGround) {
-        if (!entity->timer)
+    if (self->onGround) {
+        if (!self->timer)
             RSDK.PlaySfx(Player->sfxLand, false, 255);
 
-        if (entity->camera)
-            entity->camera->offsetYFlag = false;
-        entity->jumpAbilityTimer = 0;
+        if (self->camera)
+            self->camera->offsetYFlag = false;
+        self->jumpAbilityTimer = 0;
 
         if (abs(Zone->autoScrollSpeed) > 0x20000) {
             if (Zone->autoScrollSpeed <= 0) {
-                entity->groundVel  = Zone->autoScrollSpeed + 0x20000;
-                entity->velocity.x = Zone->autoScrollSpeed + 0x20000;
+                self->groundVel  = Zone->autoScrollSpeed + 0x20000;
+                self->velocity.x = Zone->autoScrollSpeed + 0x20000;
             }
             else {
-                entity->groundVel  = Zone->autoScrollSpeed - 0x20000;
-                entity->velocity.x = Zone->autoScrollSpeed - 0x20000;
+                self->groundVel  = Zone->autoScrollSpeed - 0x20000;
+                self->velocity.x = Zone->autoScrollSpeed - 0x20000;
             }
-            entity->timer = 16;
+            self->timer = 16;
         }
         else {
-            entity->groundVel  = 0;
-            entity->velocity.x = 0;
-            RSDK.SetSpriteAnimation(entity->aniFrames, ANI_FLYLIFT, &entity->playerAnimator, false, 0);
+            self->groundVel  = 0;
+            self->velocity.x = 0;
+            RSDK.SetSpriteAnimation(self->aniFrames, ANI_FLYLIFT, &self->playerAnimator, false, 0);
         }
 
-        if (entity->timer >= 16) {
-            entity->state    = Player_State_Ground;
-            entity->skidding = 0;
-            entity->timer    = 0;
+        if (self->timer >= 16) {
+            self->state    = Player_State_Ground;
+            self->skidding = 0;
+            self->timer    = 0;
         }
         else {
-            entity->timer++;
+            self->timer++;
         }
     }
     else {
@@ -4719,58 +4719,58 @@ void Player_State_KnuxGlideDrop(void)
 void Player_State_GlideSlide(void)
 {
     RSDK_THIS(Player);
-    if (!entity->onGround) {
-        entity->timer = 0;
-        RSDK.SetSpriteAnimation(entity->aniFrames, ANI_FLYTIRED, &entity->playerAnimator, false, 0);
-        entity->state = Player_State_KnuxGlideDrop;
+    if (!self->onGround) {
+        self->timer = 0;
+        RSDK.SetSpriteAnimation(self->aniFrames, ANI_FLYTIRED, &self->playerAnimator, false, 0);
+        self->state = Player_State_KnuxGlideDrop;
     }
     else {
 
-        if (entity->groundVel && !Zone->autoScrollSpeed) {
-            if (!entity->timer)
+        if (self->groundVel && !Zone->autoScrollSpeed) {
+            if (!self->timer)
                 RSDK.PlaySfx(Player->sfxSlide, false, 255);
 
-            entity->timer = (entity->timer + 1) & 7;
-            if (entity->playerAnimator.frameID == 2) {
-                entity->playerAnimator.animationSpeed = 0;
-                entity->playerAnimator.animationTimer = 0;
+            self->timer = (self->timer + 1) & 7;
+            if (self->playerAnimator.frameID == 2) {
+                self->playerAnimator.animationSpeed = 0;
+                self->playerAnimator.animationTimer = 0;
             }
 
             bool32 flag = true;
-            if (entity->groundVel <= 0) {
-                entity->groundVel += 0x2000;
-                if (entity->groundVel < 0)
+            if (self->groundVel <= 0) {
+                self->groundVel += 0x2000;
+                if (self->groundVel < 0)
                     flag = false;
             }
             else {
-                entity->groundVel -= 0x2000;
-                if (entity->groundVel > 0)
+                self->groundVel -= 0x2000;
+                if (self->groundVel > 0)
                     flag = false;
             }
             if (flag) {
-                entity->playerAnimator.frameID = 3;
-                entity->timer                  = 0;
-                entity->groundVel              = 0;
+                self->playerAnimator.frameID = 3;
+                self->timer                  = 0;
+                self->groundVel              = 0;
             }
 
-            if (!entity->jumpHold) {
-                entity->groundVel              = 0;
-                entity->timer                  = 0;
-                entity->playerAnimator.frameID = 3;
+            if (!self->jumpHold) {
+                self->groundVel              = 0;
+                self->timer                  = 0;
+                self->playerAnimator.frameID = 3;
             }
         }
         else {
-            if (entity->camera)
-                entity->camera->offsetYFlag = false;
-            entity->jumpAbilityTimer              = 0;
-            entity->playerAnimator.animationSpeed = 1;
+            if (self->camera)
+                self->camera->offsetYFlag = false;
+            self->jumpAbilityTimer              = 0;
+            self->playerAnimator.animationSpeed = 1;
 
-            if (entity->timer >= 16) {
-                entity->state    = Player_State_Ground;
-                entity->skidding = 0;
+            if (self->timer >= 16) {
+                self->state    = Player_State_Ground;
+                self->skidding = 0;
             }
             else {
-                entity->timer++;
+                self->timer++;
             }
         }
     }
@@ -4778,65 +4778,65 @@ void Player_State_GlideSlide(void)
 void Player_State_KnuxWallClimb(void)
 {
     RSDK_THIS(Player);
-    if (entity->onGround) {
-        entity->state = Player_State_Ground;
-        if (entity->camera)
-            entity->camera->offsetYFlag = false;
-        entity->jumpAbilityTimer = 0;
+    if (self->onGround) {
+        self->state = Player_State_Ground;
+        if (self->camera)
+            self->camera->offsetYFlag = false;
+        self->jumpAbilityTimer = 0;
     }
     else {
-        if (entity->up) {
-            if (entity->superState == SUPERSTATE_SUPER)
-                entity->velocity.y = -0x20000;
+        if (self->up) {
+            if (self->superState == SUPERSTATE_SUPER)
+                self->velocity.y = -0x20000;
             else
-                entity->velocity.y = -0x10000;
+                self->velocity.y = -0x10000;
 
             int32 bounds = Zone->screenBoundsT2[SceneInfo->entitySlot] + 0x140000;
-            if (entity->position.y < bounds)
-                entity->position.y = bounds;
+            if (self->position.y < bounds)
+                self->position.y = bounds;
         }
-        else if (entity->down) {
-            if (entity->superState == SUPERSTATE_SUPER)
-                entity->velocity.y = 0x20000;
+        else if (self->down) {
+            if (self->superState == SUPERSTATE_SUPER)
+                self->velocity.y = 0x20000;
             else
-                entity->velocity.y = 0x10000;
+                self->velocity.y = 0x10000;
         }
         else {
-            entity->velocity.y = 0;
+            self->velocity.y = 0;
         }
-        if (entity->jumpPress) {
-            RSDK.SetSpriteAnimation(entity->aniFrames, ANI_JUMP, &entity->playerAnimator, false, 0);
-            entity->state            = Player_State_Air;
-            entity->jumpAbility      = 0;
-            entity->jumpAbilityTimer = 1;
+        if (self->jumpPress) {
+            RSDK.SetSpriteAnimation(self->aniFrames, ANI_JUMP, &self->playerAnimator, false, 0);
+            self->state            = Player_State_Air;
+            self->jumpAbility      = 0;
+            self->jumpAbilityTimer = 1;
 
             RSDK.PlaySfx(Player->sfxJump, false, 255);
-            if (entity->direction == FLIP_X) {
-                entity->velocity.x = 0x40000;
-                entity->groundVel  = 0x40000;
-                entity->direction  = FLIP_NONE;
+            if (self->direction == FLIP_X) {
+                self->velocity.x = 0x40000;
+                self->groundVel  = 0x40000;
+                self->direction  = FLIP_NONE;
             }
             else {
-                entity->velocity.x = -0x40000;
-                entity->groundVel  = -0x40000;
-                entity->direction  = FLIP_X;
+                self->velocity.x = -0x40000;
+                self->groundVel  = -0x40000;
+                self->direction  = FLIP_X;
             }
 
-            entity->velocity.y = -0x38000;
-            if (entity->underwater) {
-                entity->velocity.x >>= 1;
-                entity->groundVel >>= 1;
-                entity->velocity.y = -0x1C000;
+            self->velocity.y = -0x38000;
+            if (self->underwater) {
+                self->velocity.x >>= 1;
+                self->groundVel >>= 1;
+                self->velocity.y = -0x1C000;
             }
         }
         else {
-            Hitbox *hitbox = Player_GetHitbox(entity);
-            int32 storeX   = entity->position.x;
+            Hitbox *hitbox = Player_GetHitbox(self);
+            int32 storeX   = self->position.x;
 
             int32 y1 = 0;
             int32 y2 = 0;
             int32 y3 = 0;
-            if (entity->isChibi) {
+            if (self->isChibi) {
                 y1 = -0x40000;
                 y2 = 0x40000;
                 y3 = -0xC0000;
@@ -4849,60 +4849,60 @@ void Player_State_KnuxWallClimb(void)
 
             int32 x = 0;
             bool32 collidedA, collidedB;
-            if (entity->direction) {
-                collidedA          = RSDK.ObjectTileGrip(entity, entity->collisionLayers, 3, entity->collisionPlane, hitbox->left << 16, y1, 8);
-                int32 sx           = entity->position.x;
-                entity->position.x = storeX;
-                collidedB          = RSDK.ObjectTileGrip(entity, entity->collisionLayers, 3, entity->collisionPlane, hitbox->left << 16, y2, 8);
-                if (entity->velocity.y < 0 && entity->position.x < sx)
-                    entity->velocity.y = 0;
+            if (self->direction) {
+                collidedA          = RSDK.ObjectTileGrip(self, self->collisionLayers, 3, self->collisionPlane, hitbox->left << 16, y1, 8);
+                int32 sx           = self->position.x;
+                self->position.x = storeX;
+                collidedB          = RSDK.ObjectTileGrip(self, self->collisionLayers, 3, self->collisionPlane, hitbox->left << 16, y2, 8);
+                if (self->velocity.y < 0 && self->position.x < sx)
+                    self->velocity.y = 0;
                 x = -0x40000;
             }
             else {
-                collidedA          = RSDK.ObjectTileGrip(entity, entity->collisionLayers, 1, entity->collisionPlane, hitbox->right << 16, y1, 8);
-                int32 sx           = entity->position.x;
-                entity->position.x = storeX;
-                collidedB          = RSDK.ObjectTileGrip(entity, entity->collisionLayers, 1, entity->collisionPlane, hitbox->right << 16, y2, 8);
-                if (entity->velocity.y < 0 && entity->position.x > sx)
-                    entity->velocity.y = 0;
+                collidedA          = RSDK.ObjectTileGrip(self, self->collisionLayers, 1, self->collisionPlane, hitbox->right << 16, y1, 8);
+                int32 sx           = self->position.x;
+                self->position.x = storeX;
+                collidedB          = RSDK.ObjectTileGrip(self, self->collisionLayers, 1, self->collisionPlane, hitbox->right << 16, y2, 8);
+                if (self->velocity.y < 0 && self->position.x > sx)
+                    self->velocity.y = 0;
                 x = 0x40000;
             }
-            entity->position.y += entity->velocity.y;
-            if (RSDK.ObjectTileCollision(entity, entity->collisionLayers, 2, entity->collisionPlane, x, y3, true))
-                entity->velocity.y = 0;
+            self->position.y += self->velocity.y;
+            if (RSDK.ObjectTileCollision(self, self->collisionLayers, 2, self->collisionPlane, x, y3, true))
+                self->velocity.y = 0;
 
             if (collidedA) {
                 if (collidedB) {
-                    if (entity->velocity.y >= 0) {
-                        if (entity->velocity.y <= 0)
-                            RSDK.SetSpriteAnimation(entity->aniFrames, ANI_SWIM, &entity->playerAnimator, false, 0);
+                    if (self->velocity.y >= 0) {
+                        if (self->velocity.y <= 0)
+                            RSDK.SetSpriteAnimation(self->aniFrames, ANI_SWIM, &self->playerAnimator, false, 0);
                         else
-                            RSDK.SetSpriteAnimation(entity->aniFrames, ANI_SWIMLIFT, &entity->playerAnimator, false, 0);
+                            RSDK.SetSpriteAnimation(self->aniFrames, ANI_SWIMLIFT, &self->playerAnimator, false, 0);
                     }
                     else {
-                        RSDK.SetSpriteAnimation(entity->aniFrames, ANI_SWIMTIRED, &entity->playerAnimator, false, 0);
+                        RSDK.SetSpriteAnimation(self->aniFrames, ANI_SWIMTIRED, &self->playerAnimator, false, 0);
                     }
-                    entity->velocity.y = 0;
+                    self->velocity.y = 0;
                 }
                 else {
-                    RSDK.SetSpriteAnimation(entity->aniFrames, ANI_FLYTIRED, &entity->playerAnimator, false, 2);
-                    entity->velocity.y = 0;
-                    entity->state      = Player_State_KnuxGlideDrop;
+                    RSDK.SetSpriteAnimation(self->aniFrames, ANI_FLYTIRED, &self->playerAnimator, false, 2);
+                    self->velocity.y = 0;
+                    self->state      = Player_State_KnuxGlideDrop;
                 }
             }
             else {
-                entity->position.y &= 0xFFF00000;
-                if (entity->isChibi)
-                    entity->position.y -= 0x10000;
+                self->position.y &= 0xFFF00000;
+                if (self->isChibi)
+                    self->position.y -= 0x10000;
                 else
-                    entity->position.y += 0xA0000;
+                    self->position.y += 0xA0000;
 
-                entity->velocity.y     = 0;
-                entity->position.x     = storeX;
-                entity->state          = Player_State_KnuxLedgePullUp;
-                entity->timer          = 1;
-                entity->tileCollisions = 0;
-                entity->velocity.y     = 0;
+                self->velocity.y     = 0;
+                self->position.x     = storeX;
+                self->state          = Player_State_KnuxLedgePullUp;
+                self->timer          = 1;
+                self->tileCollisions = 0;
+                self->velocity.y     = 0;
             }
         }
     }
@@ -4910,60 +4910,60 @@ void Player_State_KnuxWallClimb(void)
 void Player_State_KnuxLedgePullUp(void)
 {
     RSDK_THIS(Player);
-    entity->left  = false;
-    entity->right = false;
-    RSDK.SetSpriteAnimation(entity->aniFrames, ANI_DROPDASH, &entity->playerAnimator, false, 1);
+    self->left  = false;
+    self->right = false;
+    RSDK.SetSpriteAnimation(self->aniFrames, ANI_DROPDASH, &self->playerAnimator, false, 1);
 
-    RSDK.ProcessAnimation(&entity->playerAnimator);
-    if (entity->timer != entity->playerAnimator.frameID) {
-        if (entity->playerAnimator.frameID >= 6) {
-            if (entity->playerAnimator.frameID == 6) {
-                entity->onGround       = true;
-                entity->tileCollisions = true;
+    RSDK.ProcessAnimation(&self->playerAnimator);
+    if (self->timer != self->playerAnimator.frameID) {
+        if (self->playerAnimator.frameID >= 6) {
+            if (self->playerAnimator.frameID == 6) {
+                self->onGround       = true;
+                self->tileCollisions = true;
             }
 
-            if (entity->playerAnimator.frameID == entity->playerAnimator.frameCount - 1) {
-                entity->timer = 0;
-                entity->state = Player_State_Ground;
+            if (self->playerAnimator.frameID == self->playerAnimator.frameCount - 1) {
+                self->timer = 0;
+                self->state = Player_State_Ground;
             }
         }
         else {
-            entity->timer = entity->playerAnimator.frameID;
-            if (!entity->isChibi) {
-                if (entity->direction == FLIP_X)
-                    entity->position.x -= 0x50000;
+            self->timer = self->playerAnimator.frameID;
+            if (!self->isChibi) {
+                if (self->direction == FLIP_X)
+                    self->position.x -= 0x50000;
                 else
-                    entity->position.x += 0x50000;
-                entity->position.y -= 0x80000;
+                    self->position.x += 0x50000;
+                self->position.y -= 0x80000;
             }
             else {
-                if (entity->direction == FLIP_X)
-                    entity->position.x -= 0x40000;
+                if (self->direction == FLIP_X)
+                    self->position.x -= 0x40000;
                 else
-                    entity->position.x += 0x40000;
-                entity->position.y -= 0x40000;
+                    self->position.x += 0x40000;
+                self->position.y -= 0x40000;
             }
 
-            if (entity->playerAnimator.frameID == 6) {
-                entity->onGround       = true;
-                entity->tileCollisions = true;
+            if (self->playerAnimator.frameID == 6) {
+                self->onGround       = true;
+                self->tileCollisions = true;
             }
 
-            if (entity->playerAnimator.frameID == entity->playerAnimator.frameCount - 1) {
-                entity->timer = 0;
-                entity->state = Player_State_Ground;
+            if (self->playerAnimator.frameID == self->playerAnimator.frameCount - 1) {
+                self->timer = 0;
+                self->state = Player_State_Ground;
             }
         }
     }
     else {
-        if (entity->playerAnimator.frameID == 6) {
-            entity->onGround       = true;
-            entity->tileCollisions = true;
+        if (self->playerAnimator.frameID == 6) {
+            self->onGround       = true;
+            self->tileCollisions = true;
         }
 
-        if (entity->playerAnimator.frameID == entity->playerAnimator.frameCount - 1) {
-            entity->timer = 0;
-            entity->state = Player_State_Ground;
+        if (self->playerAnimator.frameID == self->playerAnimator.frameCount - 1) {
+            self->timer = 0;
+            self->state = Player_State_Ground;
         }
     }
 }
@@ -4971,31 +4971,31 @@ void Player_State_KnuxLedgePullUp(void)
 void Player_State_MightyHammerDrop(void)
 {
     RSDK_THIS(Player);
-    if (entity->onGround) {
-        entity->controlLock = 0;
+    if (self->onGround) {
+        self->controlLock = 0;
         int32 vel           = 0x10000;
-        if (!entity->underwater)
+        if (!self->underwater)
             vel = 0x20000;
-        entity->onGround = false;
+        self->onGround = false;
 
-        entity->velocity.x = (entity->gravityStrength + vel) * RSDK.Sin256(entity->angle);
-        entity->velocity.x = (((entity->groundVel - (entity->groundVel >> 2)) * RSDK.Cos256(entity->angle)) + entity->velocity.x) >> 8;
-        entity->velocity.y = (entity->groundVel - (entity->groundVel >> 2)) * RSDK.Sin256(entity->angle);
-        entity->velocity.y = (entity->velocity.y - (entity->gravityStrength + vel) * RSDK.Cos256(entity->angle)) >> 8;
-        if (entity->camera) {
-            entity->camera->offsetYFlag = true;
-            entity->camera->offset.y    = 0x200000;
+        self->velocity.x = (self->gravityStrength + vel) * RSDK.Sin256(self->angle);
+        self->velocity.x = (((self->groundVel - (self->groundVel >> 2)) * RSDK.Cos256(self->angle)) + self->velocity.x) >> 8;
+        self->velocity.y = (self->groundVel - (self->groundVel >> 2)) * RSDK.Sin256(self->angle);
+        self->velocity.y = (self->velocity.y - (self->gravityStrength + vel) * RSDK.Cos256(self->angle)) >> 8;
+        if (self->camera) {
+            self->camera->offsetYFlag = true;
+            self->camera->offset.y    = 0x200000;
         }
 
-        RSDK.SetSpriteAnimation(entity->aniFrames, ANI_JUMP, &entity->playerAnimator, false, 0);
-        entity->playerAnimator.animationSpeed = (abs(entity->groundVel) >> 12) + 48;
-        if (entity->playerAnimator.animationSpeed > 0xF0)
-            entity->playerAnimator.animationSpeed = 0xF0;
+        RSDK.SetSpriteAnimation(self->aniFrames, ANI_JUMP, &self->playerAnimator, false, 0);
+        self->playerAnimator.animationSpeed = (abs(self->groundVel) >> 12) + 48;
+        if (self->playerAnimator.animationSpeed > 0xF0)
+            self->playerAnimator.animationSpeed = 0xF0;
         RSDK.StopSFX(Player->sfxMightyDrill);
         RSDK.PlaySfx(Player->sfxMightyLand, false, 0xFF);
-        Camera_ShakeScreen(RSDK.GetEntityID(entity), 0, 4);
+        Camera_ShakeScreen(RSDK.GetEntityID(self), 0, 4);
 
-        Hitbox *hitbox = RSDK.GetHitbox(&entity->playerAnimator, 0);
+        Hitbox *hitbox = RSDK.GetHitbox(&self->playerAnimator, 0);
         Player_SpawnMightyHammerdropDust(0x10000, hitbox);
         Player_SpawnMightyHammerdropDust(-0x10000, hitbox);
         Player_SpawnMightyHammerdropDust(0x18000, hitbox);
@@ -5003,26 +5003,26 @@ void Player_State_MightyHammerDrop(void)
         Player_SpawnMightyHammerdropDust(0x20000, hitbox);
         Player_SpawnMightyHammerdropDust(-0x20000, hitbox);
 
-        entity->angle            = 0;
-        entity->collisionMode    = CMODE_FLOOR;
-        entity->jumpAbility      = 0;
-        entity->jumpAbilityTimer = 3;
-        if (entity->invincibleTimer > 0) {
-            if (entity->invincibleTimer < 8)
-                entity->invincibleTimer = 8;
-            entity->state = Player_State_Air;
+        self->angle            = 0;
+        self->collisionMode    = CMODE_FLOOR;
+        self->jumpAbility      = 0;
+        self->jumpAbilityTimer = 3;
+        if (self->invincibleTimer > 0) {
+            if (self->invincibleTimer < 8)
+                self->invincibleTimer = 8;
+            self->state = Player_State_Air;
         }
         else {
-            entity->invincibleTimer = -8;
-            entity->state           = Player_State_Air;
+            self->invincibleTimer = -8;
+            self->state           = Player_State_Air;
         }
     }
     else {
         Player_HandleAirFriction();
         Player_HandleAirMovement();
-        if (entity->velocity.y <= 0x10000) {
-            entity->state = Player_State_Air;
-            RSDK.SetSpriteAnimation(entity->aniFrames, ANI_JUMP, &entity->playerAnimator, false, 0);
+        if (self->velocity.y <= 0x10000) {
+            self->state = Player_State_Air;
+            RSDK.SetSpriteAnimation(self->aniFrames, ANI_JUMP, &self->playerAnimator, false, 0);
         }
     }
 }
@@ -5030,42 +5030,42 @@ void Player_State_MightyUnspin(void)
 {
     RSDK_THIS(Player);
     Player_HandleAirFriction();
-    if (entity->onGround) {
-        entity->state = Player_State_Ground;
-        if (entity->camera)
-            entity->camera->offsetYFlag = false;
-        entity->jumpAbilityTimer = 0;
+    if (self->onGround) {
+        self->state = Player_State_Ground;
+        if (self->camera)
+            self->camera->offsetYFlag = false;
+        self->jumpAbilityTimer = 0;
     }
     else {
-        ++entity->blinkTimer;
-        if (entity->camera) {
-            entity->camera->offsetYFlag = true;
-            entity->camera->offset.y    = 0x200000;
+        ++self->blinkTimer;
+        if (self->camera) {
+            self->camera->offsetYFlag = true;
+            self->camera->offset.y    = 0x200000;
         }
         Player_HandleAirMovement();
-        entity->nextGroundState = Player_State_Ground;
+        self->nextGroundState = Player_State_Ground;
     }
 }
 void Player_SpawnMightyHammerdropDust(int32 speed, Hitbox *hitbox)
 {
     RSDK_THIS(Player);
-    EntityDust *dust = CREATE_ENTITY(Dust, entity, entity->position.x, entity->position.y);
+    EntityDust *dust = CREATE_ENTITY(Dust, self, self->position.x, self->position.y);
     dust->state      = Dust_State_HammerDrop;
     dust->position.y += hitbox->bottom << 16;
-    dust->drawOrder       = entity->drawOrder;
-    dust->collisionPlane  = entity->collisionPlane;
+    dust->drawOrder       = self->drawOrder;
+    dust->collisionPlane  = self->collisionPlane;
     dust->collisionMode   = 0;
-    dust->collisionLayers = entity->collisionLayers;
+    dust->collisionLayers = self->collisionLayers;
     dust->tileCollisions  = 1;
     dust->animator.frameDelay += 4 * (4 - (abs(speed) >> 15));
-    dust->velocity.x = dust->groundVel = entity->velocity.x * (Zone->autoScrollSpeed != 0) + (speed >> entity->isChibi);
-    if (entity->isChibi) {
+    dust->velocity.x = dust->groundVel = self->velocity.x * (Zone->autoScrollSpeed != 0) + (speed >> self->isChibi);
+    if (self->isChibi) {
         dust->drawFX |= FX_SCALE;
         dust->scale.x = 256;
         dust->scale.y = 256;
     }
 
-    if (!entity->angle)
+    if (!self->angle)
         RSDK.ObjectTileGrip(dust, dust->collisionLayers, CMODE_FLOOR, dust->collisionPlane, 0, 0, 4);
 
     for (int32 i = 0; i < 0x10; ++i) {
@@ -5076,7 +5076,8 @@ void Player_SpawnMightyHammerdropDust(int32 speed, Hitbox *hitbox)
 }
 bool32 Player_CheckMightyUnspin(int32 bounceDistance, EntityPlayer *player, bool32 checkHammerDrop, int32 *uncurlTimer)
 {
-    Entity *entity = SceneInfo->entity;
+    RSDK_THIS_GEN();
+
     if (player->characterID != ID_MIGHTY)
         return false;
 
@@ -5087,7 +5088,7 @@ bool32 Player_CheckMightyUnspin(int32 bounceDistance, EntityPlayer *player, bool
 
     int32 anim = player->playerAnimator.animationID;
     if (anim == ANI_JUMP || anim == ANI_SPINDASH || anim == ANI_DROPDASH) {
-        int32 angle = RSDK.ATan2(player->position.x - entity->position.x, player->position.y - entity->position.y);
+        int32 angle = RSDK.ATan2(player->position.x - self->position.x, player->position.y - self->position.y);
         if (player->playerAnimator.animationID != ANI_FLY) {
             player->velocity.x = bounceDistance * RSDK.Cos256(angle);
             player->groundVel  = player->velocity.x;
@@ -5141,7 +5142,7 @@ bool32 Player_CheckMightyUnspin(int32 bounceDistance, EntityPlayer *player, bool
         if (!player->uncurlTimer) {
             RSDK.PlaySfx(Player->sfxPimPom, false, 255);
             player->uncurlTimer = 30;
-            if (entity->position.x > player->position.x)
+            if (self->position.x > player->position.x)
                 player->groundVel = -0x10000;
             else
                 player->groundVel = 0x10000;
@@ -5153,135 +5154,135 @@ bool32 Player_CheckMightyUnspin(int32 bounceDistance, EntityPlayer *player, bool
 void Player_State_RayGlide(void)
 {
     RSDK_THIS(Player);
-    if (entity->rotation) {
-        if (entity->abilityValue < 112)
-            entity->abilityValue += 8;
+    if (self->rotation) {
+        if (self->abilityValue < 112)
+            self->abilityValue += 8;
     }
     else {
-        if (entity->abilityValue > 16)
-            entity->abilityValue -= 8;
+        if (self->abilityValue > 16)
+            self->abilityValue -= 8;
     }
 
-    if (entity->abilitySpeed) {
-        entity->velocity.y += entity->abilitySpeed >> (2 - (entity->underwater != 0));
-        if (entity->velocity.y < entity->abilitySpeed) {
-            entity->velocity.y   = entity->abilitySpeed;
-            entity->abilitySpeed = 0;
+    if (self->abilitySpeed) {
+        self->velocity.y += self->abilitySpeed >> (2 - (self->underwater != 0));
+        if (self->velocity.y < self->abilitySpeed) {
+            self->velocity.y   = self->abilitySpeed;
+            self->abilitySpeed = 0;
         }
     }
     else {
-        entity->velocity.y += entity->gravityStrength * RSDK.Cos512(entity->abilityValue) >> 9;
+        self->velocity.y += self->gravityStrength * RSDK.Cos512(self->abilityValue) >> 9;
     }
 
-    if (entity->velocity.y < -0x60000)
-        entity->velocity.y = -0x60000;
-    if (entity->rotation == 1) {
-        if (entity->velocity.y > 0x10000)
-            entity->velocity.y = entity->velocity.y - (entity->velocity.y >> 2);
+    if (self->velocity.y < -0x60000)
+        self->velocity.y = -0x60000;
+    if (self->rotation == 1) {
+        if (self->velocity.y > 0x10000)
+            self->velocity.y = self->velocity.y - (self->velocity.y >> 2);
     }
 
-    if (entity->velocity.y <= 0) {
-        entity->abilityValues[0] -= 22 * RSDK.Sin256(80 - entity->abilityValue);
-        if (entity->abilityValues[0] < 0x40000)
-            entity->abilityValues[0] = 0x40000;
+    if (self->velocity.y <= 0) {
+        self->abilityValues[0] -= 22 * RSDK.Sin256(80 - self->abilityValue);
+        if (self->abilityValues[0] < 0x40000)
+            self->abilityValues[0] = 0x40000;
     }
-    else if (entity->velocity.y > entity->abilityValues[0]) {
-        entity->abilityValues[0] = entity->velocity.y - (entity->velocity.y >> 6);
+    else if (self->velocity.y > self->abilityValues[0]) {
+        self->abilityValues[0] = self->velocity.y - (self->velocity.y >> 6);
     }
 
-    if (entity->velocity.x) {
-        int32 angle = 80 - entity->abilityValue;
-        if (entity->direction) {
-            entity->velocity.x -= 22 * RSDK.Sin256(angle) >> (uint8)(entity->underwater != 0);
-            if (entity->velocity.x > -0x10000)
-                entity->velocity.x = -0x10000;
+    if (self->velocity.x) {
+        int32 angle = 80 - self->abilityValue;
+        if (self->direction) {
+            self->velocity.x -= 22 * RSDK.Sin256(angle) >> (uint8)(self->underwater != 0);
+            if (self->velocity.x > -0x10000)
+                self->velocity.x = -0x10000;
 
-            if (entity->velocity.x < -entity->abilityValues[0])
-                entity->velocity.x = -entity->abilityValues[0];
+            if (self->velocity.x < -self->abilityValues[0])
+                self->velocity.x = -self->abilityValues[0];
         }
         else {
-            entity->velocity.x += 22 * RSDK.Sin256(angle) >> (uint8)(entity->underwater != 0);
-            if (entity->velocity.x < 0x10000)
-                entity->velocity.x = 0x10000;
+            self->velocity.x += 22 * RSDK.Sin256(angle) >> (uint8)(self->underwater != 0);
+            if (self->velocity.x < 0x10000)
+                self->velocity.x = 0x10000;
 
-            if (entity->velocity.x > entity->abilityValues[0]) {
-                entity->velocity.x = entity->abilityValues[0];
+            if (self->velocity.x > self->abilityValues[0]) {
+                self->velocity.x = self->abilityValues[0];
             }
         }
     }
 
-    if (entity->controlLock) {
-        entity->controlLock--;
+    if (self->controlLock) {
+        self->controlLock--;
     }
-    else if ((!entity->right || entity->abilityValue != 16) && entity->direction == FLIP_X) {
-        if (entity->left && entity->abilityValue == 112 && entity->rotation == 1) {
-            entity->abilitySpeed = 0;
-            entity->rotation     = 0;
-            RSDK.SetSpriteAnimation(entity->aniFrames, ANI_FLYTIRED, &entity->playerAnimator, false, 0);
+    else if ((!self->right || self->abilityValue != 16) && self->direction == FLIP_X) {
+        if (self->left && self->abilityValue == 112 && self->rotation == 1) {
+            self->abilitySpeed = 0;
+            self->rotation     = 0;
+            RSDK.SetSpriteAnimation(self->aniFrames, ANI_FLYTIRED, &self->playerAnimator, false, 0);
         }
     }
-    else if ((!entity->left || entity->abilityValue != 16) && entity->direction == FLIP_NONE) {
-        if (entity->right && entity->abilityValue == 112 && entity->rotation == 1) {
-            entity->abilitySpeed = 0;
-            entity->rotation     = 0;
-            RSDK.SetSpriteAnimation(entity->aniFrames, ANI_FLYTIRED, &entity->playerAnimator, false, 0);
+    else if ((!self->left || self->abilityValue != 16) && self->direction == FLIP_NONE) {
+        if (self->right && self->abilityValue == 112 && self->rotation == 1) {
+            self->abilitySpeed = 0;
+            self->rotation     = 0;
+            RSDK.SetSpriteAnimation(self->aniFrames, ANI_FLYTIRED, &self->playerAnimator, false, 0);
         }
     }
-    else if (!entity->rotation) {
-        entity->rotation = 1;
-        if (entity->velocity.y > 0x28000 || entity->abilityTimer == 256 || (entity->underwater && entity->velocity.y > 0x18000)) {
-            int32 xVel = abs(entity->velocity.x);
+    else if (!self->rotation) {
+        self->rotation = 1;
+        if (self->velocity.y > 0x28000 || self->abilityTimer == 256 || (self->underwater && self->velocity.y > 0x18000)) {
+            int32 xVel = abs(self->velocity.x);
 
-            entity->abilitySpeed = -(entity->abilityTimer * ((xVel >> 1) + (xVel >> 2) + (xVel >> 4)) >> 8);
-            if (entity->underwater)
-                entity->abilitySpeed = (entity->abilitySpeed >> 1) + (entity->abilitySpeed >> 3);
-            if (entity->abilityTimer > 16)
-                entity->abilityTimer = entity->abilityTimer - 32;
-            if (entity->abilitySpeed < -0x60000)
-                entity->abilitySpeed = -0x60000;
+            self->abilitySpeed = -(self->abilityTimer * ((xVel >> 1) + (xVel >> 2) + (xVel >> 4)) >> 8);
+            if (self->underwater)
+                self->abilitySpeed = (self->abilitySpeed >> 1) + (self->abilitySpeed >> 3);
+            if (self->abilityTimer > 16)
+                self->abilityTimer = self->abilityTimer - 32;
+            if (self->abilitySpeed < -0x60000)
+                self->abilitySpeed = -0x60000;
         }
-        RSDK.SetSpriteAnimation(entity->aniFrames, ANI_FLY, &entity->playerAnimator, false, 0);
+        RSDK.SetSpriteAnimation(self->aniFrames, ANI_FLY, &self->playerAnimator, false, 0);
     }
 
-    if (!entity->isGhost && !entity->underwater) {
-        if (entity->playerAnimator.animationID == ANI_FLYTIRED) {
+    if (!self->isGhost && !self->underwater) {
+        if (self->playerAnimator.animationID == ANI_FLYTIRED) {
             Player->rayDiveTimer = 256;
         }
-        else if (entity->playerAnimator.animationID == ANI_FLY) {
+        else if (self->playerAnimator.animationID == ANI_FLY) {
             Player->raySwoopTimer = 256;
         }
     }
 
-    if (entity->onGround) {
-        if (abs(entity->groundVel) < 0x20000)
-            entity->groundVel <<= 1;
-        entity->state = Player_State_Ground;
-        if (entity->camera)
-            entity->camera->offsetYFlag = false;
-        entity->jumpAbilityTimer = 0;
-        entity->skidding         = 0;
-        entity->abilityValue     = 0;
+    if (self->onGround) {
+        if (abs(self->groundVel) < 0x20000)
+            self->groundVel <<= 1;
+        self->state = Player_State_Ground;
+        if (self->camera)
+            self->camera->offsetYFlag = false;
+        self->jumpAbilityTimer = 0;
+        self->skidding         = 0;
+        self->abilityValue     = 0;
     }
     else {
-        if (!entity->jumpHold || entity->position.y < Zone->screenBoundsT2[entity->playerID] + 0x100000) {
-            RSDK.SetSpriteAnimation(entity->aniFrames, ANI_JUMP, &entity->playerAnimator, false, 0);
-            entity->state = Player_State_Air;
+        if (!self->jumpHold || self->position.y < Zone->screenBoundsT2[self->playerID] + 0x100000) {
+            RSDK.SetSpriteAnimation(self->aniFrames, ANI_JUMP, &self->playerAnimator, false, 0);
+            self->state = Player_State_Air;
         }
-        else if (abs(entity->velocity.x) < 0x10000) {
-            RSDK.SetSpriteAnimation(entity->aniFrames, ANI_JUMP, &entity->playerAnimator, false, 0);
-            entity->state = Player_State_Air;
+        else if (abs(self->velocity.x) < 0x10000) {
+            RSDK.SetSpriteAnimation(self->aniFrames, ANI_JUMP, &self->playerAnimator, false, 0);
+            self->state = Player_State_Air;
         }
     }
 
-    if (RSDK.ObjectTileCollision(entity, entity->collisionLayers, 2, entity->collisionPlane, 0, -0x100000, 0))
-        entity->abilitySpeed = 0;
+    if (RSDK.ObjectTileCollision(self, self->collisionLayers, 2, self->collisionPlane, 0, -0x100000, 0))
+        self->abilitySpeed = 0;
 }
 #endif
 void Player_State_FlyIn(void)
 {
     RSDK_THIS(Player);
     EntityPlayer *player1 = NULL;
-    if (entity->playerID)
+    if (self->playerID)
         player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
 #if RETRO_USE_PLUS
     else
@@ -5289,42 +5290,42 @@ void Player_State_FlyIn(void)
 #endif
 
     Player->jumpInDelay    = 0;
-    entity->tileCollisions = false;
-    entity->interaction    = false;
+    self->tileCollisions = false;
+    self->interaction    = false;
 #if RETRO_GAMEVER != VER_100
     if (SizeLaser) {
-        if (player1->isChibi != entity->isChibi)
-            SizeLaser_SetP2State(entity, player1->isChibi);
+        if (player1->isChibi != self->isChibi)
+            SizeLaser_SetP2State(self, player1->isChibi);
     }
 #endif
 
-    if (entity->characterID == ID_TAILS) {
-        if (entity->underwater) {
-            RSDK.SetSpriteAnimation(entity->aniFrames, ANI_SWIM, &entity->playerAnimator, false, 0);
+    if (self->characterID == ID_TAILS) {
+        if (self->underwater) {
+            RSDK.SetSpriteAnimation(self->aniFrames, ANI_SWIM, &self->playerAnimator, false, 0);
         }
         else {
-            RSDK.SetSpriteAnimation(entity->aniFrames, ANI_FLY, &entity->playerAnimator, false, 0);
+            RSDK.SetSpriteAnimation(self->aniFrames, ANI_FLY, &self->playerAnimator, false, 0);
         }
-        entity->scale.x = 0x200;
-        entity->scale.y = 0x200;
-        entity->drawFX &= ~FX_SCALE;
+        self->scale.x = 0x200;
+        self->scale.y = 0x200;
+        self->drawFX &= ~FX_SCALE;
     }
-    else if (entity->characterID == ID_KNUCKLES) {
-        RSDK.SetSpriteAnimation(entity->aniFrames, ANI_FLY, &entity->playerAnimator, false, 0);
-        entity->scale.x = 0x200;
-        entity->scale.y = 0x200;
-        entity->drawFX &= ~FX_SCALE;
+    else if (self->characterID == ID_KNUCKLES) {
+        RSDK.SetSpriteAnimation(self->aniFrames, ANI_FLY, &self->playerAnimator, false, 0);
+        self->scale.x = 0x200;
+        self->scale.y = 0x200;
+        self->drawFX &= ~FX_SCALE;
     }
     else {
-        RSDK.SetSpriteAnimation(entity->aniFrames, ANI_JUMP, &entity->playerAnimator, false, 0);
+        RSDK.SetSpriteAnimation(self->aniFrames, ANI_JUMP, &self->playerAnimator, false, 0);
     }
 
     if (player1->underwater && player1->position.y < Water->waterLevel)
-        entity->drawOrder = player1->drawOrder;
+        self->drawOrder = player1->drawOrder;
     else
-        entity->drawOrder = Zone->playerDrawHigh;
+        self->drawOrder = Zone->playerDrawHigh;
 
-    Entity *parent = entity->abilityPtrs[0];
+    Entity *parent = self->abilityPtrs[0];
     int32 screenX  = (ScreenInfo->width + ScreenInfo->centerX) << 16;
     int32 screenY  = (ScreenInfo->height + ScreenInfo->centerY) << 16;
     if (parent->position.x >= player1->position.x - screenX && parent->position.x <= screenX + player1->position.x
@@ -5337,31 +5338,31 @@ void Player_State_FlyIn(void)
         parent->position.y = (ScreenInfo->position.y - 128) << 16;
     }
 
-    if (entity->camera && entity->camera->targetPtr != parent) {
+    if (self->camera && self->camera->targetPtr != parent) {
 #if RETRO_USE_PLUS
         if (globals->gameMode != MODE_ENCORE) {
 #endif
-            entity->camera->position.x = parent->position.x;
-            entity->camera->position.y = parent->position.y;
-            Camera_SetTargetEntity(entity->camera->screenID, parent);
+            self->camera->position.x = parent->position.x;
+            self->camera->position.y = parent->position.y;
+            Camera_SetTargetEntity(self->camera->screenID, parent);
 #if RETRO_USE_PLUS
         }
 #endif
     }
 
     int32 xDif = 0;
-    if (entity->abilityValues[0] || entity->characterID == ID_TAILS || entity->characterID == ID_KNUCKLES) {
+    if (self->abilityValues[0] || self->characterID == ID_TAILS || self->characterID == ID_KNUCKLES) {
         int32 xDif3 = Player->curFlyCarryPos.x - parent->position.x;
         int32 xDif2 = (Player->curFlyCarryPos.x - parent->position.x) >> 4;
         xDif        = Player->curFlyCarryPos.x - parent->position.x;
 
-        if (entity->characterID != ID_TAILS && entity->characterID != ID_KNUCKLES) {
+        if (self->characterID != ID_TAILS && self->characterID != ID_KNUCKLES) {
             xDif2 = ((Player->curFlyCarryPos.x - parent->position.x) >> 5) + ((Player->curFlyCarryPos.x - parent->position.x) >> 4);
         }
 
         if (parent->position.x > Player->curFlyCarryPos.x - 0x40000) {
             if (parent->position.x >= Player->curFlyCarryPos.x + 0x40000) {
-                entity->direction = FLIP_X;
+                self->direction = FLIP_X;
                 if (xDif2 < -0xC0000)
                     xDif2 = -0xC0000;
                 if (player1->velocity.x < 0)
@@ -5374,7 +5375,7 @@ void Player_State_FlyIn(void)
             }
         }
         else {
-            entity->direction = FLIP_NONE;
+            self->direction = FLIP_NONE;
             if (xDif2 > 0xC0000)
                 xDif2 = 0xC0000;
             if (player1->velocity.x < 0)
@@ -5388,7 +5389,7 @@ void Player_State_FlyIn(void)
         parent->position.x += xDif2;
 
         int32 spd = 0;
-        if (entity->characterID == ID_TAILS || entity->characterID == ID_KNUCKLES) {
+        if (self->characterID == ID_TAILS || self->characterID == ID_KNUCKLES) {
             spd = 0x10000;
 #if RETRO_USE_PLUS
             if (globals->gameMode == MODE_ENCORE)
@@ -5410,25 +5411,25 @@ void Player_State_FlyIn(void)
         parent->position.y &= 0xFFFF0000;
     }
     else {
-        entity->drawOrder  = Zone->playerDrawHigh;
+        self->drawOrder  = Zone->playerDrawHigh;
         parent->position.x = Player->curFlyCarryPos.x;
         parent->position.y = (ScreenInfo->centerY + 32 + ScreenInfo->position.y) << 16;
-        parent->position.y += (ScreenInfo->centerY - 32) * RSDK.Sin512(entity->angle) << 8;
-        entity->drawFX |= FX_SCALE;
-        entity->scale.x = 0x2000 - 16 * entity->angle - 8 * entity->angle;
-        entity->scale.y = 0x2000 - 16 * entity->angle - 8 * entity->angle;
-        if (entity->scale.x < 0x200) {
-            entity->scale.x = 0x200;
-            entity->scale.y = 0x200;
+        parent->position.y += (ScreenInfo->centerY - 32) * RSDK.Sin512(self->angle) << 8;
+        self->drawFX |= FX_SCALE;
+        self->scale.x = 0x2000 - 16 * self->angle - 8 * self->angle;
+        self->scale.y = 0x2000 - 16 * self->angle - 8 * self->angle;
+        if (self->scale.x < 0x200) {
+            self->scale.x = 0x200;
+            self->scale.y = 0x200;
         }
 
-        entity->angle += 3;
-        if ((entity->angle >= 512 || (entity->angle - 3) >= 368) && parent->position.y >= player1->position.y) {
-            entity->abilityValues[0] = 1;
-            entity->drawFX &= ~FX_SCALE;
-            entity->scale.x    = 0x200;
-            entity->scale.y    = 0x200;
-            entity->position.x = parent->position.x;
+        self->angle += 3;
+        if ((self->angle >= 512 || (self->angle - 3) >= 368) && parent->position.y >= player1->position.y) {
+            self->abilityValues[0] = 1;
+            self->drawFX &= ~FX_SCALE;
+            self->scale.x    = 0x200;
+            self->scale.y    = 0x200;
+            self->position.x = parent->position.x;
         }
     }
 
@@ -5436,7 +5437,7 @@ void Player_State_FlyIn(void)
         if (player1->state != Player_State_Die && player1->state != Player_State_Drown && player1->state != Player_State_ForceRoll_Ground) {
             if (abs(xDif) <= 0x40000) {
                 if (abs(Player->curFlyCarryPos.y - parent->position.y) < 0x20000)
-                    Player_EndFlyJumpIn(entity, player1);
+                    Player_EndFlyJumpIn(self, player1);
             }
         }
     }
@@ -5445,50 +5446,50 @@ void Player_State_JumpIn(void)
 {
     RSDK_THIS(Player);
     EntityPlayer *player1 = NULL;
-    if (entity->playerID)
+    if (self->playerID)
         player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
 #if RETRO_USE_PLUS
     else
         player1 = (EntityPlayer *)Zone->entityData[1];
 #endif
 
-    RSDK.SetSpriteAnimation(entity->aniFrames, ANI_JUMP, &entity->playerAnimator, false, 0);
-    Entity *parent = entity->abilityPtrs[0];
+    RSDK.SetSpriteAnimation(self->aniFrames, ANI_JUMP, &self->playerAnimator, false, 0);
+    Entity *parent = self->abilityPtrs[0];
     if (Player_CheckValidState(player1)) {
         parent->position.x = player1->position.x;
         parent->position.y = player1->position.y;
         parent->position.y -= 0x180000;
     }
 
-    entity->velocity.y += 0x4800;
-    entity->onGround   = false;
-    entity->velocity.x = 0;
-    entity->abilityValues[0] += entity->velocity.y;
-    entity->position.x = parent->position.x;
-    entity->position.y = parent->position.y + entity->abilityValues[0];
+    self->velocity.y += 0x4800;
+    self->onGround   = false;
+    self->velocity.x = 0;
+    self->abilityValues[0] += self->velocity.y;
+    self->position.x = parent->position.x;
+    self->position.y = parent->position.y + self->abilityValues[0];
 
-    if (entity->scale.x > 512) {
-        entity->scale.x -= 10;
-        if (entity->scale.x <= 0x200) {
-            entity->drawFX &= ~FX_SCALE;
-            entity->scale.x = 0x200;
+    if (self->scale.x > 512) {
+        self->scale.x -= 10;
+        if (self->scale.x <= 0x200) {
+            self->drawFX &= ~FX_SCALE;
+            self->scale.x = 0x200;
         }
-        entity->scale.y = entity->scale.x;
+        self->scale.y = self->scale.x;
     }
 
-    if (entity->velocity.y >= 0) {
-        if (entity->position.y >= parent->position.y) {
-            entity->drawFX &= ~FX_SCALE;
-            entity->scale.x = 0x200;
-            entity->scale.y = 0x200;
-            Player_EndFlyJumpIn(entity, player1);
+    if (self->velocity.y >= 0) {
+        if (self->position.y >= parent->position.y) {
+            self->drawFX &= ~FX_SCALE;
+            self->scale.x = 0x200;
+            self->scale.y = 0x200;
+            Player_EndFlyJumpIn(self, player1);
         }
     }
 }
 void Player_State_StartJumpIn(void)
 {
     RSDK_THIS(Player);
-    if (++entity->abilityValues[0] == 2) {
+    if (++self->abilityValues[0] == 2) {
         EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
 
         if (player1->objectID == Player->objectID) {
@@ -5498,34 +5499,34 @@ void Player_State_StartJumpIn(void)
             dust->isPermanent = true;
             dust->position.y  = (ScreenInfo->position.y - 128) << 16;
 #if RETRO_USE_PLUS
-            entity->tileCollisions = false;
-            entity->interaction    = false;
-            entity->forceJumpIn    = false;
-            entity->drawOrder      = Zone->playerDrawHigh + 1;
-            entity->angle          = 128;
+            self->tileCollisions = false;
+            self->interaction    = false;
+            self->forceJumpIn    = false;
+            self->drawOrder      = Zone->playerDrawHigh + 1;
+            self->angle          = 128;
 
-            if ((entity->characterID != ID_TAILS && entity->characterID != ID_KNUCKLES) || globals->gameMode == MODE_ENCORE) {
-                entity->state = Player_State_JumpIn;
-                entity->drawFX |= FX_SCALE;
-                entity->scale.x = 0x400;
-                entity->scale.y = 0x400;
+            if ((self->characterID != ID_TAILS && self->characterID != ID_KNUCKLES) || globals->gameMode == MODE_ENCORE) {
+                self->state = Player_State_JumpIn;
+                self->drawFX |= FX_SCALE;
+                self->scale.x = 0x400;
+                self->scale.y = 0x400;
 
-                entity->abilityValues[0] = 0x100000 - player1->position.y + ((ScreenInfo->height + ScreenInfo->position.y) << 16);
-                if (entity->abilityValues[0] < 0xA80000) {
-                    entity->velocity.y = entity->abilityValues[0] / -12;
+                self->abilityValues[0] = 0x100000 - player1->position.y + ((ScreenInfo->height + ScreenInfo->position.y) << 16);
+                if (self->abilityValues[0] < 0xA80000) {
+                    self->velocity.y = self->abilityValues[0] / -12;
                 }
                 else
-                    entity->velocity.y = -0xE0000;
+                    self->velocity.y = -0xE0000;
             }
             else {
-                entity->state            = Player_State_FlyIn;
-                entity->abilityValues[0] = 0;
+                self->state            = Player_State_FlyIn;
+                self->abilityValues[0] = 0;
             }
 #else
-            entity->forceJumpIn = false;
-            entity->state = Player_State_FlyIn;
+            self->forceJumpIn = false;
+            self->state = Player_State_FlyIn;
 #endif
-            entity->abilityPtrs[0] = dust;
+            self->abilityPtrs[0] = dust;
         }
     }
 }
@@ -5582,7 +5583,7 @@ void Player_EndFlyJumpIn(EntityPlayer *thisEntity, EntityPlayer *player)
             case ID_RAY: thisEntity->aniFrames = Player->raySpriteIndex; break;
 #endif
             default:
-                if (entity->superState == SUPERSTATE_SUPER)
+                if (self->superState == SUPERSTATE_SUPER)
                     thisEntity->aniFrames = Player->superSpriteIndex;
                 else
                     thisEntity->aniFrames = Player->sonicSpriteIndex;
@@ -5645,7 +5646,7 @@ void Player_State_EncoreRespawn(void)
     if (player1->state != Player_State_Die && player1->state != Player_State_Drown) {
 #if RETRO_USE_PLUS
         if (globals->stock) {
-            Player_ChangeCharacter(entity, globals->stock & 0xFF);
+            Player_ChangeCharacter(self, globals->stock & 0xFF);
             globals->stock >>= 8;
             EntityDust *dust         = CREATE_ENTITY(Dust, intToVoid(1), player1->position.x, player1->position.y);
             dust->visible            = false;
@@ -5653,22 +5654,22 @@ void Player_State_EncoreRespawn(void)
             dust->isPermanent        = true;
             dust->position.y         = (ScreenInfo->position.y - 128) << 16;
             player1->angle           = 128;
-            entity->state            = Player_State_FlyIn;
-            entity->abilityPtrs[0]   = dust;
-            entity->abilityValues[0] = 0;
-            entity->nextAirState     = StateMachine_None;
-            entity->nextGroundState  = StateMachine_None;
-            entity->stateInput       = Player_ProcessP2InputLag;
-            entity->position.x       = -0x400000;
-            entity->position.y       = -0x400000;
-            entity->velocity.x       = 0;
-            entity->velocity.y       = 0;
-            entity->groundVel        = 0;
-            entity->tileCollisions   = false;
-            entity->interaction      = false;
-            entity->drawOrder        = Zone->playerDrawHigh;
-            entity->airTimer         = 0;
-            entity->active           = ACTIVE_NORMAL;
+            self->state            = Player_State_FlyIn;
+            self->abilityPtrs[0]   = dust;
+            self->abilityValues[0] = 0;
+            self->nextAirState     = StateMachine_None;
+            self->nextGroundState  = StateMachine_None;
+            self->stateInput       = Player_ProcessP2InputLag;
+            self->position.x       = -0x400000;
+            self->position.y       = -0x400000;
+            self->velocity.x       = 0;
+            self->velocity.y       = 0;
+            self->groundVel        = 0;
+            self->tileCollisions   = false;
+            self->interaction      = false;
+            self->drawOrder        = Zone->playerDrawHigh;
+            self->airTimer         = 0;
+            self->active           = ACTIVE_NORMAL;
         }
         else {
 #endif
@@ -5682,69 +5683,69 @@ void Player_State_EncoreRespawn(void)
 void Player_State_Victory(void)
 {
     RSDK_THIS(Player);
-    entity->jumpAbility = 0;
-    entity->airTimer    = 0;
+    self->jumpAbility = 0;
+    self->airTimer    = 0;
 
-    if (!entity->onGround) {
+    if (!self->onGround) {
         Player_HandleAirMovement();
     }
     else {
-        switch (entity->characterID) {
+        switch (self->characterID) {
             case ID_SONIC:
-                if (entity->playerAnimator.frameID != 3) {
-                    entity->groundVel = 0;
+                if (self->playerAnimator.frameID != 3) {
+                    self->groundVel = 0;
                 }
                 else {
-                    entity->velocity.y = -0x32000;
-                    if (entity->direction == FLIP_X)
-                        entity->velocity.x = -0xE000;
+                    self->velocity.y = -0x32000;
+                    if (self->direction == FLIP_X)
+                        self->velocity.x = -0xE000;
                     else
-                        entity->velocity.x = 0xE000;
-                    entity->onGround = false;
+                        self->velocity.x = 0xE000;
+                    self->onGround = false;
                 }
                 break;
             case ID_KNUCKLES:
-                if (entity->playerAnimator.frameID != 2 || entity->playerAnimator.animationTimer != 3) {
-                    entity->groundVel = 0;
+                if (self->playerAnimator.frameID != 2 || self->playerAnimator.animationTimer != 3) {
+                    self->groundVel = 0;
                 }
                 else {
-                    entity->velocity.y = -0x30000;
-                    if (entity->direction == FLIP_X)
-                        entity->velocity.x = -0xE000;
+                    self->velocity.y = -0x30000;
+                    if (self->direction == FLIP_X)
+                        self->velocity.x = -0xE000;
                     else
-                        entity->velocity.x = 0xE000;
-                    entity->onGround = false;
+                        self->velocity.x = 0xE000;
+                    self->onGround = false;
                 }
                 break;
 #if RETRO_USE_PLUS
             case ID_MIGHTY:
             case ID_RAY:
-                entity->nextAirState    = StateMachine_None;
-                entity->nextGroundState = StateMachine_None;
-                entity->groundVel       = 0;
-                entity->velocity.x      = 0;
-                entity->velocity.y      = 0;
-                if (entity->playerAnimator.animationID == ANI_VICTORY) {
-                    if (entity->playerAnimator.animationTimer != 1) {
-                        entity->velocity.x = 0;
-                        entity->groundVel  = 0;
+                self->nextAirState    = StateMachine_None;
+                self->nextGroundState = StateMachine_None;
+                self->groundVel       = 0;
+                self->velocity.x      = 0;
+                self->velocity.y      = 0;
+                if (self->playerAnimator.animationID == ANI_VICTORY) {
+                    if (self->playerAnimator.animationTimer != 1) {
+                        self->velocity.x = 0;
+                        self->groundVel  = 0;
                     }
                     else {
-                        int32 id = RSDK.GetFrameID(&entity->playerAnimator) - 48;
-                        if (!entity->direction)
-                            entity->groundVel = -(id << 16);
+                        int32 id = RSDK.GetFrameID(&self->playerAnimator) - 48;
+                        if (!self->direction)
+                            self->groundVel = -(id << 16);
                         else
-                            entity->groundVel = (id << 16);
+                            self->groundVel = (id << 16);
                     }
                 }
                 break;
 #endif
-            default: entity->groundVel = 0; break;
+            default: self->groundVel = 0; break;
         }
 
-        if (entity->camera)
-            entity->camera->offsetYFlag = false;
-        entity->jumpAbilityTimer = 0;
+        if (self->camera)
+            self->camera->offsetYFlag = false;
+        self->jumpAbilityTimer = 0;
     }
 }
 void Player_State_Bubble(void)
@@ -5754,56 +5755,56 @@ void Player_State_Bubble(void)
 void Player_State_WaterSlide(void)
 {
     RSDK_THIS(Player);
-    if (!entity->onGround) {
-        entity->state = Player_State_Air;
+    if (!self->onGround) {
+        self->state = Player_State_Air;
         Player_HandleAirMovement();
-        if (entity->jumpPress) {
-            Player_StartJump(entity);
-            if (entity->angle <= 128) {
-                if (entity->velocity.x < 0)
-                    entity->velocity.x += (entity->jumpStrength + (entity->jumpStrength >> 1)) * RSDK.Sin256(entity->angle) >> 8;
+        if (self->jumpPress) {
+            Player_StartJump(self);
+            if (self->angle <= 128) {
+                if (self->velocity.x < 0)
+                    self->velocity.x += (self->jumpStrength + (self->jumpStrength >> 1)) * RSDK.Sin256(self->angle) >> 8;
             }
-            else if (entity->velocity.x <= 0) {
+            else if (self->velocity.x <= 0) {
             }
             else {
-                entity->velocity.x += (entity->jumpStrength + (entity->jumpStrength >> 1)) * RSDK.Sin256(entity->angle) >> 8;
+                self->velocity.x += (self->jumpStrength + (self->jumpStrength >> 1)) * RSDK.Sin256(self->angle) >> 8;
             }
         }
     }
     else {
-        if (entity->camera)
-            entity->camera->offsetYFlag = false;
-        entity->jumpAbilityTimer = 0;
+        if (self->camera)
+            self->camera->offsetYFlag = false;
+        self->jumpAbilityTimer = 0;
 
-        if (entity->angle) {
-            if (entity->angle <= 128) {
-                if (entity->groundVel < 0x80000) {
-                    entity->groundVel += 0x4000;
+        if (self->angle) {
+            if (self->angle <= 128) {
+                if (self->groundVel < 0x80000) {
+                    self->groundVel += 0x4000;
                 }
             }
-            else if (entity->groundVel > -0x80000) {
-                entity->groundVel -= 0x4000;
+            else if (self->groundVel > -0x80000) {
+                self->groundVel -= 0x4000;
             }
         }
 
-        int32 vel = RSDK.Sin256(entity->angle) << 13 >> 8;
-        entity->groundVel += vel;
-        entity->controlLock = 30;
-        entity->direction   = vel + entity->groundVel < 0;
+        int32 vel = RSDK.Sin256(self->angle) << 13 >> 8;
+        self->groundVel += vel;
+        self->controlLock = 30;
+        self->direction   = vel + self->groundVel < 0;
 #if RETRO_USE_PLUS
-        RSDK.SetSpriteAnimation(entity->aniFrames, ANI_FLUME, &entity->playerAnimator, false, 0);
+        RSDK.SetSpriteAnimation(self->aniFrames, ANI_FLUME, &self->playerAnimator, false, 0);
 #endif
 
-        if (entity->jumpPress) {
-            Player_StartJump(entity);
-            if (entity->angle <= 128) {
-                if (entity->velocity.x < 0)
-                    entity->velocity.x += (entity->jumpStrength + (entity->jumpStrength >> 1)) * RSDK.Sin256(entity->angle) >> 8;
+        if (self->jumpPress) {
+            Player_StartJump(self);
+            if (self->angle <= 128) {
+                if (self->velocity.x < 0)
+                    self->velocity.x += (self->jumpStrength + (self->jumpStrength >> 1)) * RSDK.Sin256(self->angle) >> 8;
             }
-            else if (entity->velocity.x <= 0) {
+            else if (self->velocity.x <= 0) {
             }
             else {
-                entity->velocity.x += (entity->jumpStrength + (entity->jumpStrength >> 1)) * RSDK.Sin256(entity->angle) >> 8;
+                self->velocity.x += (self->jumpStrength + (self->jumpStrength >> 1)) * RSDK.Sin256(self->angle) >> 8;
             }
         }
     }
@@ -5813,32 +5814,32 @@ void Player_SonicJumpAbility(void)
 {
     RSDK_THIS(Player);
     bool32 flag = false;
-    if (entity->jumpAbilityTimer == 1) {
+    if (self->jumpAbilityTimer == 1) {
 #if RETRO_USE_PLUS
-        if (entity->stateInput != Player_ProcessP2Input_AI || (entity->up && globals->gameMode != MODE_ENCORE)) {
+        if (self->stateInput != Player_ProcessP2Input_AI || (self->up && globals->gameMode != MODE_ENCORE)) {
 #else
-        if (entity->stateInput != Player_ProcessP2Input_AI) {
+        if (self->stateInput != Player_ProcessP2Input_AI) {
 #endif
-            if (entity->jumpPress
+            if (self->jumpPress
 #if RETRO_GAMEVER == VER_100
-                && !Player_CheckGoSuper(entity, SaveGame->saveRAM->chaosEmeralds)
+                && !Player_CheckGoSuper(self, SaveGame->saveRAM->chaosEmeralds)
 #endif
             ) {
-                EntityShield *shield = RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntityID(entity), Shield);
-                if (entity->invincibleTimer) {
+                EntityShield *shield = RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntityID(self), Shield);
+                if (self->invincibleTimer) {
                     if (shield->objectID != Shield->objectID || shield->animator.animationID != ANI_JUMP) {
                         if (!(globals->medalMods & getMod(MEDAL_NODROPDASH)))
-                            ++entity->jumpAbilityTimer;
+                            ++self->jumpAbilityTimer;
                     }
                 }
                 else {
-                    switch (entity->shield) {
+                    switch (self->shield) {
                         case SHIELD_NONE:
                             if (globals->medalMods & getMod(MEDAL_INSTASHIELD)) {
-                                entity->invincibleTimer  = -8;
-                                entity->jumpAbilityTimer = 0;
+                                self->invincibleTimer  = -8;
+                                self->jumpAbilityTimer = 0;
                                 RSDK.PlaySfx(Shield->sfxInstaShield, false, 255);
-                                RSDK.ResetEntityPtr(shield, Shield->objectID, entity);
+                                RSDK.ResetEntityPtr(shield, Shield->objectID, self);
                                 shield->inkEffect = INK_ADD;
                                 shield->alpha     = 0x100;
                                 RSDK.SetSpriteAnimation(Shield->aniFrames, 10, &shield->animator, true, 0);
@@ -5849,41 +5850,41 @@ void Player_SonicJumpAbility(void)
                             // returns 1 if dropdash is enabled and instashield (bit 3) is disabled
                             // returns 2 if dropdash AND instashield are enabled
                             if (!(globals->medalMods & getMod(MEDAL_NODROPDASH)))
-                                entity->jumpAbilityTimer = ((~(globals->medalMods & 0xFF) >> 3) & 2);
+                                self->jumpAbilityTimer = ((~(globals->medalMods & 0xFF) >> 3) & 2);
                             break;
                         case SHIELD_BUBBLE:
-                            entity->velocity.x >>= 1;
-                            entity->velocity.y      = 0x80000;
-                            entity->state           = Player_State_BubbleBounce;
-                            entity->nextGroundState = StateMachine_None;
-                            entity->nextAirState    = StateMachine_None;
+                            self->velocity.x >>= 1;
+                            self->velocity.y      = 0x80000;
+                            self->state           = Player_State_BubbleBounce;
+                            self->nextGroundState = StateMachine_None;
+                            self->nextAirState    = StateMachine_None;
                             RSDK.SetSpriteAnimation(Shield->aniFrames, 7, &shield->animator2, true, 0);
                             RSDK.SetSpriteAnimation(Shield->aniFrames, 8, &shield->animator, true, 0);
                             shield->state = Shield_State_Bubble;
                             RSDK.PlaySfx(Shield->sfxBubbleBounce, false, 255);
                             break;
                         case SHIELD_FIRE:
-                            entity->jumpAbilityTimer = 0;
-                            if (entity->direction == FLIP_X)
-                                entity->velocity.x = -0x80000;
+                            self->jumpAbilityTimer = 0;
+                            if (self->direction == FLIP_X)
+                                self->velocity.x = -0x80000;
                             else
-                                entity->velocity.x = 0x80000;
-                            entity->velocity.y = 0;
+                                self->velocity.x = 0x80000;
+                            self->velocity.y = 0;
                             RSDK.SetSpriteAnimation(Shield->aniFrames, 2, &shield->animator, true, 0);
                             shield->state     = Shield_State_Fire;
-                            shield->direction = entity->direction;
-                            if (entity->camera && !Zone->autoScrollSpeed) {
-                                entity->scrollDelay   = 15;
-                                entity->camera->state = Camera_State_VLock;
+                            shield->direction = self->direction;
+                            if (self->camera && !Zone->autoScrollSpeed) {
+                                self->scrollDelay   = 15;
+                                self->camera->state = Camera_State_VLock;
                             }
                             RSDK.PlaySfx(Shield->sfxFireDash, false, 255);
                             break;
                         case SHIELD_LIGHTNING:
-                            entity->jumpAbilityTimer = 0;
-                            if (entity->invertGravity)
-                                entity->velocity.y = 0x58000;
+                            self->jumpAbilityTimer = 0;
+                            if (self->invertGravity)
+                                self->velocity.y = 0x58000;
                             else
-                                entity->velocity.y = -0x58000;
+                                self->velocity.y = -0x58000;
                             shield->state = Shield_State_Lightning;
                             RSDK.PlaySfx(Shield->sfxLightningJump, false, 255);
                             break;
@@ -5893,8 +5894,8 @@ void Player_SonicJumpAbility(void)
             }
 #if RETRO_GAMEVER != VER_100
             else {
-                if (ControllerInfo[entity->controllerID].keyY.press)
-                    Player_CheckGoSuper(entity, SaveGame->saveRAM->chaosEmeralds);
+                if (ControllerInfo[self->controllerID].keyY.press)
+                    Player_CheckGoSuper(self, SaveGame->saveRAM->chaosEmeralds);
             }
 #endif
             return;
@@ -5902,13 +5903,13 @@ void Player_SonicJumpAbility(void)
         flag = true;
     }
 
-    if ((entity->jumpAbilityTimer >= 2 || flag) && entity->jumpHold) {
-        entity->jumpAbilityTimer++;
-        if (entity->jumpAbilityTimer > 22) {
-            entity->state           = Player_State_DropDash;
-            entity->nextGroundState = StateMachine_None;
-            entity->nextAirState    = StateMachine_None;
-            RSDK.SetSpriteAnimation(entity->aniFrames, ANI_DROPDASH, &entity->playerAnimator, false, 0);
+    if ((self->jumpAbilityTimer >= 2 || flag) && self->jumpHold) {
+        self->jumpAbilityTimer++;
+        if (self->jumpAbilityTimer > 22) {
+            self->state           = Player_State_DropDash;
+            self->nextGroundState = StateMachine_None;
+            self->nextAirState    = StateMachine_None;
+            RSDK.SetSpriteAnimation(self->aniFrames, ANI_DROPDASH, &self->playerAnimator, false, 0);
             RSDK.PlaySfx(Player->sfxDropdash, false, 255);
         }
     }
@@ -5916,34 +5917,34 @@ void Player_SonicJumpAbility(void)
 void Player_TailsJumpAbility(void)
 {
     RSDK_THIS(Player);
-    if (entity->jumpPress && entity->jumpAbilityTimer == 1
-        && (entity->stateInput != Player_ProcessP2Input_AI
-            || (entity->up
+    if (self->jumpPress && self->jumpAbilityTimer == 1
+        && (self->stateInput != Player_ProcessP2Input_AI
+            || (self->up
 #if RETRO_USE_PLUS
                 && globals->gameMode != MODE_ENCORE
 #endif
                 ))
 #if RETRO_GAMEVER == VER_100
-        && !Player_CheckGoSuper(entity, SaveGame->saveRAM->chaosEmeralds)
+        && !Player_CheckGoSuper(self, SaveGame->saveRAM->chaosEmeralds)
 #endif
     ) {
-        if (!entity->invertGravity) {
-            entity->jumpAbilityTimer = 0;
-            entity->timer            = 0;
-            entity->abilitySpeed     = 0x800;
-            if (!entity->underwater)
-                RSDK.SetSpriteAnimation(entity->aniFrames, ANI_FLY, &entity->playerAnimator, false, 0);
+        if (!self->invertGravity) {
+            self->jumpAbilityTimer = 0;
+            self->timer            = 0;
+            self->abilitySpeed     = 0x800;
+            if (!self->underwater)
+                RSDK.SetSpriteAnimation(self->aniFrames, ANI_FLY, &self->playerAnimator, false, 0);
             else
-                RSDK.SetSpriteAnimation(entity->aniFrames, ANI_SWIM, &entity->playerAnimator, false, 0);
-            entity->state           = Player_State_TailsFlight;
-            entity->nextGroundState = StateMachine_None;
-            entity->nextAirState    = StateMachine_None;
+                RSDK.SetSpriteAnimation(self->aniFrames, ANI_SWIM, &self->playerAnimator, false, 0);
+            self->state           = Player_State_TailsFlight;
+            self->nextGroundState = StateMachine_None;
+            self->nextAirState    = StateMachine_None;
         }
     }
 #if RETRO_GAMEVER != VER_100
     else {
-        if (ControllerInfo[entity->controllerID].keyY.press)
-            Player_CheckGoSuper(entity, SaveGame->saveRAM->chaosEmeralds);
+        if (ControllerInfo[self->controllerID].keyY.press)
+            Player_CheckGoSuper(self, SaveGame->saveRAM->chaosEmeralds);
     }
 #endif
 }
@@ -5951,41 +5952,41 @@ void Player_KnuxJumpAbility(void)
 {
     RSDK_THIS(Player);
 
-    if (entity->jumpPress && entity->jumpAbilityTimer == 1
-        && (entity->stateInput != Player_ProcessP2Input_AI
-            || (entity->up
+    if (self->jumpPress && self->jumpAbilityTimer == 1
+        && (self->stateInput != Player_ProcessP2Input_AI
+            || (self->up
 #if RETRO_USE_PLUS
                 && globals->gameMode != MODE_ENCORE
 #endif
                 ))
 #if RETRO_GAMEVER == VER_100
-        && !Player_CheckGoSuper(entity, SaveGame->saveRAM->chaosEmeralds)
+        && !Player_CheckGoSuper(self, SaveGame->saveRAM->chaosEmeralds)
 #endif
     ) {
-        if (!entity->invertGravity) {
-            entity->jumpAbilityTimer = 0;
-            entity->abilitySpeed     = 0x40000;
-            if (entity->velocity.y < 0)
-                entity->velocity.y = 0;
-            if (entity->direction) {
-                entity->state      = Player_State_KnuxGlideLeft;
-                entity->velocity.x = -0x40000;
-                entity->timer      = 0x100;
+        if (!self->invertGravity) {
+            self->jumpAbilityTimer = 0;
+            self->abilitySpeed     = 0x40000;
+            if (self->velocity.y < 0)
+                self->velocity.y = 0;
+            if (self->direction) {
+                self->state      = Player_State_KnuxGlideLeft;
+                self->velocity.x = -0x40000;
+                self->timer      = 0x100;
             }
             else {
-                entity->state      = Player_State_KnuxGlideRight;
-                entity->velocity.x = 0x40000;
-                entity->timer      = 0;
+                self->state      = Player_State_KnuxGlideRight;
+                self->velocity.x = 0x40000;
+                self->timer      = 0;
             }
-            entity->nextGroundState = StateMachine_None;
-            entity->nextAirState    = StateMachine_None;
-            RSDK.SetSpriteAnimation(entity->aniFrames, ANI_FLY, &entity->playerAnimator, false, 6);
+            self->nextGroundState = StateMachine_None;
+            self->nextAirState    = StateMachine_None;
+            RSDK.SetSpriteAnimation(self->aniFrames, ANI_FLY, &self->playerAnimator, false, 6);
         }
     }
 #if RETRO_GAMEVER != VER_100
     else {
-        if (ControllerInfo[entity->controllerID].keyY.press)
-            Player_CheckGoSuper(entity, SaveGame->saveRAM->chaosEmeralds);
+        if (ControllerInfo[self->controllerID].keyY.press)
+            Player_CheckGoSuper(self, SaveGame->saveRAM->chaosEmeralds);
     }
 #endif
 }
@@ -5993,101 +5994,101 @@ void Player_KnuxJumpAbility(void)
 void Player_MightyJumpAbility(void)
 {
     RSDK_THIS(Player);
-    if (entity->jumpAbilityTimer <= 1) {
-        if (entity->jumpPress && entity->jumpAbilityTimer == 1
-            && (entity->stateInput != Player_ProcessP2Input_AI || (entity->up && globals->gameMode != MODE_ENCORE))) {
-            if (!entity->invertGravity) {
-                entity->velocity.x >>= 1;
-                if (entity->underwater)
-                    entity->velocity.y = 0x80000;
+    if (self->jumpAbilityTimer <= 1) {
+        if (self->jumpPress && self->jumpAbilityTimer == 1
+            && (self->stateInput != Player_ProcessP2Input_AI || (self->up && globals->gameMode != MODE_ENCORE))) {
+            if (!self->invertGravity) {
+                self->velocity.x >>= 1;
+                if (self->underwater)
+                    self->velocity.y = 0x80000;
                 else
-                    entity->velocity.y = 0xC0000;
-                entity->jumpAbilityTimer = 0;
-                RSDK.SetSpriteAnimation(entity->aniFrames, ANI_DROPDASH, &entity->playerAnimator, false, 2);
-                entity->nextAirState    = StateMachine_None;
-                entity->nextGroundState = StateMachine_None;
+                    self->velocity.y = 0xC0000;
+                self->jumpAbilityTimer = 0;
+                RSDK.SetSpriteAnimation(self->aniFrames, ANI_DROPDASH, &self->playerAnimator, false, 2);
+                self->nextAirState    = StateMachine_None;
+                self->nextGroundState = StateMachine_None;
                 RSDK.PlaySfx(Player->sfxRelease, false, 0xFF);
 
-                EntityImageTrail *trail = RSDK_GET_ENTITY(2 * Player->playerCount + RSDK.GetEntityID(entity), ImageTrail);
-                RSDK.ResetEntityPtr(trail, ImageTrail->objectID, entity);
-                if (entity->camera && !Zone->autoScrollSpeed) {
-                    entity->scrollDelay   = 8;
-                    entity->camera->state = Camera_State_HLock;
+                EntityImageTrail *trail = RSDK_GET_ENTITY(2 * Player->playerCount + RSDK.GetEntityID(self), ImageTrail);
+                RSDK.ResetEntityPtr(trail, ImageTrail->objectID, self);
+                if (self->camera && !Zone->autoScrollSpeed) {
+                    self->scrollDelay   = 8;
+                    self->camera->state = Camera_State_HLock;
                 }
                 RSDK.PlaySfx(Player->sfxMightyDrill, false, 0xFE);
-                entity->state = Player_State_MightyHammerDrop;
+                self->state = Player_State_MightyHammerDrop;
             }
         }
         else {
-            if (ControllerInfo[entity->controllerID].keyY.press)
-                Player_CheckGoSuper(entity, SaveGame->saveRAM->chaosEmeralds);
+            if (ControllerInfo[self->controllerID].keyY.press)
+                Player_CheckGoSuper(self, SaveGame->saveRAM->chaosEmeralds);
         }
     }
     else {
-        entity->jumpAbilityTimer--;
-        if (entity->jumpAbilityTimer == 1)
-            entity->jumpAbilityTimer = 0;
+        self->jumpAbilityTimer--;
+        if (self->jumpAbilityTimer == 1)
+            self->jumpAbilityTimer = 0;
     }
 }
 void Player_RayJumpAbility(void)
 {
     RSDK_THIS(Player);
 
-    if (entity->jumpPress && entity->jumpAbilityTimer == 1
-        && (entity->stateInput != Player_ProcessP2Input_AI || (entity->up && globals->gameMode != MODE_ENCORE))) {
-        if (!entity->invertGravity) {
-            int32 xDif               = entity->velocity.x - (entity->velocity.x >> 3);
-            entity->jumpAbilityTimer = 0;
-            if (entity->direction) {
+    if (self->jumpPress && self->jumpAbilityTimer == 1
+        && (self->stateInput != Player_ProcessP2Input_AI || (self->up && globals->gameMode != MODE_ENCORE))) {
+        if (!self->invertGravity) {
+            int32 xDif               = self->velocity.x - (self->velocity.x >> 3);
+            self->jumpAbilityTimer = 0;
+            if (self->direction) {
                 int32 spd = -0x30000;
-                if (entity->underwater)
+                if (self->underwater)
                     spd = -0x18000;
                 if (xDif > spd)
                     xDif = spd;
-                entity->velocity.x = xDif;
+                self->velocity.x = xDif;
             }
             else {
-                entity->velocity.x = xDif;
+                self->velocity.x = xDif;
                 int32 spd          = 0x30000;
-                if (entity->underwater)
+                if (self->underwater)
                     spd = 0x18000;
                 if (xDif < spd)
-                    entity->velocity.x = spd;
+                    self->velocity.x = spd;
             }
 
-            if ((entity->direction || !entity->right) && (entity->direction != FLIP_X || !entity->left)) {
-                if (!entity->underwater)
+            if ((self->direction || !self->right) && (self->direction != FLIP_X || !self->left)) {
+                if (!self->underwater)
                     Player->raySwoopTimer = 256;
-                RSDK.SetSpriteAnimation(entity->aniFrames, ANI_FLY, &entity->playerAnimator, false, 3);
-                entity->rotation = 1;
+                RSDK.SetSpriteAnimation(self->aniFrames, ANI_FLY, &self->playerAnimator, false, 3);
+                self->rotation = 1;
 
-                entity->velocity.x >>= 1;
-                int32 spd = -((abs(entity->velocity.x) >> 1) + (abs(entity->velocity.x) >> 2) + (abs(entity->velocity.x) >> 4))
-                            >> (uint8)(entity->underwater != 0);
+                self->velocity.x >>= 1;
+                int32 spd = -((abs(self->velocity.x) >> 1) + (abs(self->velocity.x) >> 2) + (abs(self->velocity.x) >> 4))
+                            >> (uint8)(self->underwater != 0);
                 if (spd > 0x40000)
                     spd = 0x40000;
-                entity->abilitySpeed = spd;
+                self->abilitySpeed = spd;
             }
             else {
-                if (!entity->underwater)
+                if (!self->underwater)
                     Player->rayDiveTimer = 256;
-                RSDK.SetSpriteAnimation(entity->aniFrames, ANI_FLYTIRED, &entity->playerAnimator, false, 3);
-                entity->rotation     = 0;
-                entity->abilitySpeed = 0;
+                RSDK.SetSpriteAnimation(self->aniFrames, ANI_FLYTIRED, &self->playerAnimator, false, 3);
+                self->rotation     = 0;
+                self->abilitySpeed = 0;
             }
-            entity->velocity.y >>= 1;
-            entity->abilityValue     = 64;
-            entity->controlLock      = 0;
-            entity->abilityValues[0] = abs(entity->velocity.x);
-            entity->state            = Player_State_RayGlide;
-            entity->abilityTimer     = 256;
-            entity->nextAirState     = StateMachine_None;
-            entity->timer            = 0;
+            self->velocity.y >>= 1;
+            self->abilityValue     = 64;
+            self->controlLock      = 0;
+            self->abilityValues[0] = abs(self->velocity.x);
+            self->state            = Player_State_RayGlide;
+            self->abilityTimer     = 256;
+            self->nextAirState     = StateMachine_None;
+            self->timer            = 0;
         }
     }
     else {
-        if (ControllerInfo[entity->controllerID].keyY.press)
-            Player_CheckGoSuper(entity, SaveGame->saveRAM->chaosEmeralds);
+        if (ControllerInfo[self->controllerID].keyY.press)
+            Player_CheckGoSuper(self, SaveGame->saveRAM->chaosEmeralds);
     }
 }
 
@@ -6107,7 +6108,7 @@ void Player_UpdateRaySwoopSFX(int32 sfxID)
 void Player_ProcessP1Input(void)
 {
     RSDK_THIS(Player);
-    if (entity->controllerID < PLAYER_MAX) {
+    if (self->controllerID < PLAYER_MAX) {
         if (globals->gameMode != MODE_COMPETITION || Announcer->finishedCountdown) {
 #if RETRO_USE_TOUCH_CONTROLS
             for (int32 t = 0; t < TouchInfo->count; ++t) {
@@ -6124,19 +6125,19 @@ void Player_ProcessP1Input(void)
                         switch (((RSDK.ATan2(tx, ty) + 32) & 0xFF) >> 6) {
                             case 0:
                                 ControllerInfo->keyRight.down |= true;
-                                ControllerInfo[entity->controllerID].keyRight.down = true;
+                                ControllerInfo[self->controllerID].keyRight.down = true;
                                 break;
                             case 1:
                                 ControllerInfo->keyDown.down |= true;
-                                ControllerInfo[entity->controllerID].keyDown.down = true;
+                                ControllerInfo[self->controllerID].keyDown.down = true;
                                 break;
                             case 2:
                                 ControllerInfo->keyLeft.down |= true;
-                                ControllerInfo[entity->controllerID].keyLeft.down = true;
+                                ControllerInfo[self->controllerID].keyLeft.down = true;
                                 break;
                             case 3:
                                 ControllerInfo->keyUp.down |= true;
-                                ControllerInfo[entity->controllerID].keyUp.down = true;
+                                ControllerInfo[self->controllerID].keyUp.down = true;
                                 break;
                         }
                         break;
@@ -6151,17 +6152,17 @@ void Player_ProcessP1Input(void)
                 if (TouchInfo->down[t]) {
                     if (tx >= ScreenInfo->centerX && ty >= 96 && tx <= ScreenInfo->width && ty <= ScreenInfo->height) {
                         ControllerInfo->keyA.down |= true;
-                        ControllerInfo[entity->controllerID].keyA.down = true;
+                        ControllerInfo[self->controllerID].keyA.down = true;
                         break;
                     }
                 }
             }
 
-            if (!entity->touchJump) {
+            if (!self->touchJump) {
                 ControllerInfo->keyA.press |= ControllerInfo->keyA.down;
-                ControllerInfo[entity->controllerID].keyA.press |= ControllerInfo[entity->controllerID].keyA.down;
+                ControllerInfo[self->controllerID].keyA.press |= ControllerInfo[self->controllerID].keyA.down;
             }
-            entity->touchJump = ControllerInfo[entity->controllerID].keyA.down;
+            self->touchJump = ControllerInfo[self->controllerID].keyA.down;
 
             for (int32 t = 0; t < TouchInfo->count; ++t) {
                 int32 tx = (TouchInfo->x[t] * ScreenInfo->width);
@@ -6178,7 +6179,7 @@ void Player_ProcessP1Input(void)
 #endif
                             if (!RSDK.GetEntityCount(TitleCard->objectID, 0) && !pauseMenu->objectID && flag) {
                                 RSDK.ResetEntitySlot(SLOT_PAUSEMENU, PauseMenu->objectID, NULL);
-                                pauseMenu->triggerPlayer = entity->playerID;
+                                pauseMenu->triggerPlayer = self->playerID;
                                 if (globals->gameMode == MODE_COMPETITION)
                                     pauseMenu->disableRestart = true;
                             }
@@ -6196,7 +6197,7 @@ void Player_ProcessP1Input(void)
                 if (TouchInfo->down[t]) {
                     if (tx >= ScreenInfo->width - 0x100 && ty >= 0 && tx <= ScreenInfo->width - 0x80 && ty <= 0x40) {
                         if (globals->gameMode == MODE_ENCORE) {
-                            if (!HUD->swapCooldown && Player_CheckValidState(entity)) {
+                            if (!HUD->swapCooldown && Player_CheckValidState(self)) {
                                 if (Player_SwapMainPlayer(false)) {
                                     return;
                                 }
@@ -6215,28 +6216,28 @@ void Player_ProcessP1Input(void)
 #endif
 #endif
 
-            RSDKControllerState *controller = &ControllerInfo[entity->controllerID];
-            entity->up                  = controller->keyUp.down;
-            entity->down                = controller->keyDown.down;
-            entity->left                = controller->keyLeft.down;
-            entity->right               = controller->keyRight.down;
+            RSDKControllerState *controller = &ControllerInfo[self->controllerID];
+            self->up                  = controller->keyUp.down;
+            self->down                = controller->keyDown.down;
+            self->left                = controller->keyLeft.down;
+            self->right               = controller->keyRight.down;
 
-            entity->up |= AnalogStickInfoL[entity->controllerID].keyUp.down;
-            entity->down |= AnalogStickInfoL[entity->controllerID].keyDown.down;
-            entity->left |= AnalogStickInfoL[entity->controllerID].keyLeft.down;
-            entity->right |= AnalogStickInfoL[entity->controllerID].keyRight.down;
-            entity->up |= AnalogStickInfoL[entity->controllerID].vDelta > 0.3;
-            entity->down |= AnalogStickInfoL[entity->controllerID].vDelta < -0.3;
-            entity->left |= AnalogStickInfoL[entity->controllerID].hDelta < -0.3;
-            entity->right |= AnalogStickInfoL[entity->controllerID].hDelta > 0.3;
-            if (entity->left && entity->right) {
-                entity->left  = false;
-                entity->right = false;
+            self->up |= AnalogStickInfoL[self->controllerID].keyUp.down;
+            self->down |= AnalogStickInfoL[self->controllerID].keyDown.down;
+            self->left |= AnalogStickInfoL[self->controllerID].keyLeft.down;
+            self->right |= AnalogStickInfoL[self->controllerID].keyRight.down;
+            self->up |= AnalogStickInfoL[self->controllerID].vDelta > 0.3;
+            self->down |= AnalogStickInfoL[self->controllerID].vDelta < -0.3;
+            self->left |= AnalogStickInfoL[self->controllerID].hDelta < -0.3;
+            self->right |= AnalogStickInfoL[self->controllerID].hDelta > 0.3;
+            if (self->left && self->right) {
+                self->left  = false;
+                self->right = false;
             }
-            entity->jumpPress = controller->keyA.press || controller->keyB.press || controller->keyC.press || controller->keyX.press;
-            entity->jumpHold  = controller->keyA.down || controller->keyB.down || controller->keyC.down || controller->keyX.down;
+            self->jumpPress = controller->keyA.press || controller->keyB.press || controller->keyC.press || controller->keyX.press;
+            self->jumpHold  = controller->keyA.down || controller->keyB.down || controller->keyC.down || controller->keyX.down;
 
-            if (!LottoMachine || !((1 << entity->playerID) & LottoMachine->activePlayers)) {
+            if (!LottoMachine || !((1 << self->playerID) & LottoMachine->activePlayers)) {
 #if RETRO_USE_PLUS
                 if (sku_platform == PLATFORM_DEV && controller->keyZ.press) {
                     Zone->swapGameMode = true;
@@ -6245,14 +6246,14 @@ void Player_ProcessP1Input(void)
                 }
                 // TEMP!! I SOULD REMOVE THIS!!!
                 else if (sku_platform == PLATFORM_DEV && controller->keySelect.press) {
-                    entity->characterID <<= 1;
-                    if (entity->characterID > ID_RAY)
-                        entity->characterID = 1;
-                    Player_ChangeCharacter(entity, entity->characterID);
+                    self->characterID <<= 1;
+                    if (self->characterID > ID_RAY)
+                        self->characterID = 1;
+                    Player_ChangeCharacter(self, self->characterID);
                 }
 
                 if (globals->gameMode == MODE_ENCORE && controller->keyY.press) {
-                    if (!HUD->swapCooldown && Player_CheckValidState(entity)) {
+                    if (!HUD->swapCooldown && Player_CheckValidState(self)) {
                         if (Player_SwapMainPlayer(false)) {
                             return;
                         }
@@ -6267,26 +6268,26 @@ void Player_ProcessP1Input(void)
 #else
                 // TEMP!! I SOULD REMOVE THIS!!!
                 if (GameInfo->platform == PLATFORM_DEV && controller->keySelect.press) {
-                    entity->characterID <<= 1;
-                    if (entity->characterID > ID_KNUCKLES)
-                        entity->characterID = 1;
-                    Player_ChangeCharacter(entity, entity->characterID);
+                    self->characterID <<= 1;
+                    if (self->characterID > ID_KNUCKLES)
+                        self->characterID = 1;
+                    Player_ChangeCharacter(self, self->characterID);
                 }
 #endif
 
-                if (entity->controllerID == CONT_P1 && SceneInfo->debugMode && entity->state != Player_State_Transform
+                if (self->controllerID == CONT_P1 && SceneInfo->debugMode && self->state != Player_State_Transform
                     && ControllerInfo[CONT_P1].keyX.press && globals->gameMode != MODE_TIMEATTACK) {
-                    entity->objectID   = DebugMode->objectID;
-                    entity->velocity.x = 0;
-                    entity->velocity.y = 0;
-                    entity->groundVel  = 0;
-                    entity->drawOrder  = Zone->playerDrawHigh;
-                    RSDK.SetSpriteAnimation(entity->aniFrames, ANI_AIRWALK, &entity->playerAnimator, true, 0);
+                    self->objectID   = DebugMode->objectID;
+                    self->velocity.x = 0;
+                    self->velocity.y = 0;
+                    self->groundVel  = 0;
+                    self->drawOrder  = Zone->playerDrawHigh;
+                    RSDK.SetSpriteAnimation(self->aniFrames, ANI_AIRWALK, &self->playerAnimator, true, 0);
                     RSDK.SetGameMode(ENGINESTATE_REGULAR);
-                    entity->jumpHold       = false;
-                    entity->jumpPress      = false;
-                    entity->visible        = true;
-                    entity->active         = ACTIVE_NORMAL;
+                    self->jumpHold       = false;
+                    self->jumpPress      = false;
+                    self->visible        = true;
+                    self->active         = ACTIVE_NORMAL;
                     DebugMode->debugActive = true;
                 }
             }
@@ -6306,7 +6307,7 @@ void Player_ProcessP1Input(void)
 #endif
                     if (!RSDK.GetEntityCount(TitleCard->objectID, 0) && !pauseMenu->objectID && flag) {
                         RSDK.ResetEntitySlot(SLOT_PAUSEMENU, PauseMenu->objectID, NULL);
-                        pauseMenu->triggerPlayer = entity->playerID;
+                        pauseMenu->triggerPlayer = self->playerID;
                         if (globals->gameMode == MODE_COMPETITION)
                             pauseMenu->disableRestart = true;
                     }
@@ -6351,12 +6352,12 @@ void Player_ProcessP2InputLag(void)
         Player->jumpPressState <<= 15;
         Player->jumpHoldState <<= 15;
     }
-    entity->up        = Player->upState >> 15;
-    entity->down      = Player->downState >> 15;
-    entity->left      = Player->leftState >> 15;
-    entity->right     = Player->rightState >> 15;
-    entity->jumpPress = Player->jumpPressState >> 15;
-    entity->jumpHold  = Player->jumpHoldState >> 15;
+    self->up        = Player->upState >> 15;
+    self->down      = Player->downState >> 15;
+    self->left      = Player->leftState >> 15;
+    self->right     = Player->rightState >> 15;
+    self->jumpPress = Player->jumpPressState >> 15;
+    self->jumpHold  = Player->jumpHoldState >> 15;
 
     if (Player_CheckValidState(player1)) {
         Player->flyCarryPositions[Player->flyCarryPosB].x = player1->position.x;
@@ -6387,13 +6388,13 @@ void Player_ProcessP2Input_AI(void)
     RSDK_THIS(Player);
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     Player_ProcessP2InputLag();
-    if (entity->state == Player_State_TailsFlight && player1->state == Player_State_FlyCarried) {
-        entity->up        = player1->up;
-        entity->down      = player1->down;
-        entity->left      = player1->left;
-        entity->right     = player1->right;
-        entity->jumpHold  = player1->jumpHold;
-        entity->jumpPress = player1->jumpPress;
+    if (self->state == Player_State_TailsFlight && player1->state == Player_State_FlyCarried) {
+        self->up        = player1->up;
+        self->down      = player1->down;
+        self->left      = player1->left;
+        self->right     = player1->right;
+        self->jumpHold  = player1->jumpHold;
+        self->jumpPress = player1->jumpPress;
     }
     else {
         if (player1->objectID == Player->objectID && player1->state != Player_State_FlyCarried) {
@@ -6407,42 +6408,42 @@ void Player_ProcessP2Input_AI(void)
                 }
             }
 
-            int32 dif = val - entity->position.x;
+            int32 dif = val - self->position.x;
             if (dif) {
                 if (dif >= 0) {
                     if (dif >= 0x300000) {
-                        entity->left  = false;
-                        entity->right = true;
+                        self->left  = false;
+                        self->right = true;
                     }
-                    if (entity->groundVel && entity->direction == FLIP_NONE) {
-                        entity->position.x += 0xC0 * RSDK.Cos256(entity->angle);
+                    if (self->groundVel && self->direction == FLIP_NONE) {
+                        self->position.x += 0xC0 * RSDK.Cos256(self->angle);
                     }
                 }
                 else {
                     if (dif <= -0x300000) {
-                        entity->right = false;
-                        entity->left  = true;
+                        self->right = false;
+                        self->left  = true;
                     }
 
-                    if (entity->groundVel && entity->direction == FLIP_X) {
-                        entity->position.x -= 0xC0 * RSDK.Cos256(entity->angle);
+                    if (self->groundVel && self->direction == FLIP_X) {
+                        self->position.x -= 0xC0 * RSDK.Cos256(self->angle);
                     }
                 }
             }
 
             bool32 jumpFlag = false;
-            if (entity->playerAnimator.animationID == ANI_PUSH) {
+            if (self->playerAnimator.animationID == ANI_PUSH) {
                 ++Player->P2JumpActionDelay;
-                if (player1->direction == entity->direction && player1->playerAnimator.animationID == ANI_PUSH)
+                if (player1->direction == self->direction && player1->playerAnimator.animationID == ANI_PUSH)
                     Player->P2JumpActionDelay = 0;
                 jumpFlag = Player->P2JumpActionDelay < 30;
             }
             else {
-                if (entity->position.y - Player->curFlyCarryPos.y <= 0x200000) {
+                if (self->position.y - Player->curFlyCarryPos.y <= 0x200000) {
                     Player->P2JumpActionDelay = 0;
-                    if (entity->controlLock > 0) {
-                        if (abs(entity->groundVel) < 0x8000)
-                            entity->stateInput = Player_ProcessP2Input_None;
+                    if (self->controlLock > 0) {
+                        if (abs(self->groundVel) < 0x8000)
+                            self->stateInput = Player_ProcessP2Input_None;
                     }
                     jumpFlag = 2;
                 }
@@ -6453,48 +6454,48 @@ void Player_ProcessP2Input_AI(void)
             }
 
             if (jumpFlag == true) {
-                entity->jumpHold = true;
+                self->jumpHold = true;
             }
             else if (jumpFlag == false) {
-                if (entity->onGround) {
-                    if (!entity->jumpHold)
-                        entity->jumpPress = true;
-                    entity->jumpHold = true;
+                if (self->onGround) {
+                    if (!self->jumpHold)
+                        self->jumpPress = true;
+                    self->jumpHold = true;
                 }
-                entity->jumpAbility       = 0;
+                self->jumpAbility       = 0;
                 Player->P2JumpActionDelay = 0;
             }
 
-            if (entity->controlLock > 0) {
-                if (abs(entity->groundVel) < 0x8000)
-                    entity->stateInput = Player_ProcessP2Input_None;
+            if (self->controlLock > 0) {
+                if (abs(self->groundVel) < 0x8000)
+                    self->stateInput = Player_ProcessP2Input_None;
             }
         }
     }
     if (Player_CheckKeyPress())
-        entity->stateInput = Player_ProcessP2Input_Player;
+        self->stateInput = Player_ProcessP2Input_Player;
     Player_P2JumpBackIn();
 }
 void Player_ProcessP2Input_None(void)
 {
     RSDK_THIS(Player);
-    entity->up        = false;
-    entity->down      = false;
-    entity->left      = false;
-    entity->right     = false;
-    entity->jumpPress = false;
-    entity->jumpHold  = false;
-    if (!entity->controlLock && entity->onGround && entity->groundVel < 0x4000) {
-        entity->groundVel         = 0;
-        entity->stateInput        = Player_ProcessP2Input_Unknown;
+    self->up        = false;
+    self->down      = false;
+    self->left      = false;
+    self->right     = false;
+    self->jumpPress = false;
+    self->jumpHold  = false;
+    if (!self->controlLock && self->onGround && self->groundVel < 0x4000) {
+        self->groundVel         = 0;
+        self->stateInput        = Player_ProcessP2Input_Unknown;
         Player->P2JumpActionDelay = 1;
-        if (entity->playerAnimator.animationID != ANI_SPINDASH) {
-            entity->down      = true;
-            entity->direction = entity->position.x >= Player->curFlyCarryPos.x;
+        if (self->playerAnimator.animationID != ANI_SPINDASH) {
+            self->down      = true;
+            self->direction = self->position.x >= Player->curFlyCarryPos.x;
         }
     }
     if (Player_CheckKeyPress())
-        entity->stateInput = Player_ProcessP2Input_Player;
+        self->stateInput = Player_ProcessP2Input_Player;
     Player_P2JumpBackIn();
 }
 void Player_ProcessP2Input_Unknown(void)
@@ -6502,57 +6503,57 @@ void Player_ProcessP2Input_Unknown(void)
     RSDK_THIS(Player);
     if (Player->P2JumpActionDelay >= 64) {
         Player->P2JumpActionDelay = 0;
-        entity->down              = false;
-        entity->jumpPress         = false;
-        entity->stateInput        = Player_ProcessP2Input_AI;
+        self->down              = false;
+        self->jumpPress         = false;
+        self->stateInput        = Player_ProcessP2Input_AI;
     }
     else {
-        entity->down      = true;
-        entity->jumpPress = !(Player->P2JumpActionDelay & 0xF);
+        self->down      = true;
+        self->jumpPress = !(Player->P2JumpActionDelay & 0xF);
         ++Player->P2JumpActionDelay;
     }
     if (Player_CheckKeyPress())
-        entity->stateInput = Player_ProcessP2Input_Player;
+        self->stateInput = Player_ProcessP2Input_Player;
     Player_P2JumpBackIn();
 }
 void Player_ProcessP2Input_Player(void)
 {
     RSDK_THIS(Player);
-    if (entity->controllerID <= CONT_P4) {
+    if (self->controllerID <= CONT_P4) {
 #if RETRO_USE_PLUS
-        if (!RSDK.InputIDIsDisconnected(entity->controllerID)) {
+        if (!RSDK.InputIDIsDisconnected(self->controllerID)) {
 #else
         if (false) {
 #endif
-            entity->up    = ControllerInfo[entity->controllerID].keyUp.down;
-            entity->down  = ControllerInfo[entity->controllerID].keyDown.down;
-            entity->left  = ControllerInfo[entity->controllerID].keyLeft.down;
-            entity->right = ControllerInfo[entity->controllerID].keyRight.down;
-            entity->up |= AnalogStickInfoL[entity->controllerID].vDelta > 0.3;
-            entity->down |= AnalogStickInfoL[entity->controllerID].vDelta < -0.3;
-            entity->left |= AnalogStickInfoL[entity->controllerID].hDelta < -0.3;
-            entity->right |= AnalogStickInfoL[entity->controllerID].hDelta > 0.3;
-            if (entity->left && entity->right) {
-                entity->left  = false;
-                entity->right = false;
+            self->up    = ControllerInfo[self->controllerID].keyUp.down;
+            self->down  = ControllerInfo[self->controllerID].keyDown.down;
+            self->left  = ControllerInfo[self->controllerID].keyLeft.down;
+            self->right = ControllerInfo[self->controllerID].keyRight.down;
+            self->up |= AnalogStickInfoL[self->controllerID].vDelta > 0.3;
+            self->down |= AnalogStickInfoL[self->controllerID].vDelta < -0.3;
+            self->left |= AnalogStickInfoL[self->controllerID].hDelta < -0.3;
+            self->right |= AnalogStickInfoL[self->controllerID].hDelta > 0.3;
+            if (self->left && self->right) {
+                self->left  = false;
+                self->right = false;
             }
-            entity->jumpPress = ControllerInfo[entity->controllerID].keyA.press || ControllerInfo[entity->controllerID].keyB.press
-                                || ControllerInfo[entity->controllerID].keyC.press || ControllerInfo[entity->controllerID].keyX.press;
-            entity->jumpHold = ControllerInfo[entity->controllerID].keyA.down || ControllerInfo[entity->controllerID].keyB.down
-                               || ControllerInfo[entity->controllerID].keyC.down || ControllerInfo[entity->controllerID].keyX.down;
-            if (entity->right || entity->up || entity->down || entity->left) {
+            self->jumpPress = ControllerInfo[self->controllerID].keyA.press || ControllerInfo[self->controllerID].keyB.press
+                                || ControllerInfo[self->controllerID].keyC.press || ControllerInfo[self->controllerID].keyX.press;
+            self->jumpHold = ControllerInfo[self->controllerID].keyA.down || ControllerInfo[self->controllerID].keyB.down
+                               || ControllerInfo[self->controllerID].keyC.down || ControllerInfo[self->controllerID].keyX.down;
+            if (self->right || self->up || self->down || self->left) {
                 Player->p2InputDelay = 0;
             }
             else if (++Player->p2InputDelay >= 600) {
-                entity->stateInput = Player_ProcessP2Input_AI;
+                self->stateInput = Player_ProcessP2Input_AI;
 #if RETRO_USE_PLUS
-                RSDK.AssignControllerID(entity->controllerID, CONT_AUTOASSIGN);
+                RSDK.AssignControllerID(self->controllerID, CONT_AUTOASSIGN);
 #else
-                APICallback_AssignControllerID(entity->controllerID, CONT_AUTOASSIGN);
+                APICallback_AssignControllerID(self->controllerID, CONT_AUTOASSIGN);
 #endif
             }
 
-            if (ControllerInfo[entity->controllerID].keyStart.press && SceneInfo->state == ENGINESTATE_REGULAR) {
+            if (ControllerInfo[self->controllerID].keyStart.press && SceneInfo->state == ENGINESTATE_REGULAR) {
                 EntityPauseMenu *pauseMenu = RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu);
                 if (!RSDK.GetEntityCount(TitleCard->objectID, 0) && !pauseMenu->objectID) {
                     RSDK.ResetEntitySlot(SLOT_PAUSEMENU, PauseMenu->objectID, NULL);
@@ -6562,11 +6563,11 @@ void Player_ProcessP2Input_Player(void)
             Player_P2JumpBackIn();
         }
         else {
-            entity->stateInput = Player_ProcessP2Input_AI;
+            self->stateInput = Player_ProcessP2Input_AI;
 #if RETRO_USE_PLUS
-            RSDK.AssignControllerID(entity->controllerID, CONT_AUTOASSIGN);
+            RSDK.AssignControllerID(self->controllerID, CONT_AUTOASSIGN);
 #else
-            APICallback_AssignControllerID(entity->controllerID, CONT_AUTOASSIGN);
+            APICallback_AssignControllerID(self->controllerID, CONT_AUTOASSIGN);
 #endif
         }
     }
@@ -6576,8 +6577,8 @@ void Player_ProcessP2Input_Player(void)
 void Player_EditorDraw(void)
 {
     RSDK_THIS(Player);
-    RSDK.SetSpriteAnimation(Player->sonicSpriteIndex, 0, &entity->playerAnimator, true, entity->characterID);
-    RSDK.DrawSprite(&entity->playerAnimator, NULL, false);
+    RSDK.SetSpriteAnimation(Player->sonicSpriteIndex, 0, &self->playerAnimator, true, self->characterID);
+    RSDK.DrawSprite(&self->playerAnimator, NULL, false);
 }
 
 void Player_EditorLoad(void)

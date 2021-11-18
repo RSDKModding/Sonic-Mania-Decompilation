@@ -14,7 +14,7 @@ void BSS_Palette_Create(void *data)
 {
     RSDK_THIS(BSS_Palette);
     if (!SceneInfo->inEditor)
-        destroyEntity(entity);
+        destroyEntity(self);
 }
 
 void BSS_Palette_StageLoad(void)

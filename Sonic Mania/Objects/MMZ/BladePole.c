@@ -5,9 +5,9 @@ ObjectBladePole *BladePole;
 void BladePole_Update(void)
 {
     RSDK_THIS(BladePole);
-    RSDK.ProcessAnimation(&entity->animator2);
-    RSDK.ProcessAnimation(&entity->animator3);
-    StateMachine_Run(entity->state);
+    RSDK.ProcessAnimation(&self->animator2);
+    RSDK.ProcessAnimation(&self->animator3);
+    StateMachine_Run(self->state);
 }
 
 void BladePole_LateUpdate(void) {}
@@ -19,15 +19,15 @@ void BladePole_Draw(void) { BladePole_DrawSprites(); }
 void BladePole_Create(void *data)
 {
     RSDK_THIS(BladePole);
-    entity->active        = ACTIVE_BOUNDS;
-    entity->visible       = true;
-    entity->drawOrder     = Zone->drawOrderLow;
-    entity->drawFX        = FX_FLIP;
-    entity->updateRange.x = 0x800000;
-    entity->updateRange.y = 0x800000;
-    RSDK.SetSpriteAnimation(BladePole->aniFrames, 0, &entity->animator1, true, 0);
-    RSDK.SetSpriteAnimation(BladePole->aniFrames, 1, &entity->animator2, true, 0);
-    RSDK.SetSpriteAnimation(BladePole->aniFrames, 1, &entity->animator3, true, 0);
+    self->active        = ACTIVE_BOUNDS;
+    self->visible       = true;
+    self->drawOrder     = Zone->drawOrderLow;
+    self->drawFX        = FX_FLIP;
+    self->updateRange.x = 0x800000;
+    self->updateRange.y = 0x800000;
+    RSDK.SetSpriteAnimation(BladePole->aniFrames, 0, &self->animator1, true, 0);
+    RSDK.SetSpriteAnimation(BladePole->aniFrames, 1, &self->animator2, true, 0);
+    RSDK.SetSpriteAnimation(BladePole->aniFrames, 1, &self->animator3, true, 0);
     BladePole->hitbox2.top    = 20;
     BladePole->hitbox2.bottom = BladePole->hitbox2.top + 24;
     BladePole->hitbox2.left   = -24;
@@ -36,7 +36,7 @@ void BladePole_Create(void *data)
     BladePole->hitbox1.bottom = BladePole->hitbox1.top + 24;
     BladePole->hitbox1.left   = -24;
     BladePole->hitbox1.right  = 24;
-    entity->state             = BladePole_Unknown4;
+    self->state             = BladePole_Unknown4;
 }
 
 void BladePole_StageLoad(void) { BladePole->aniFrames = RSDK.LoadSpriteAnimation("MMZ/BladePole.bin", SCOPE_STAGE); }
@@ -46,27 +46,27 @@ void BladePole_DrawSprites(void)
     RSDK_THIS(BladePole);
     Vector2 drawPos;
 
-    entity->direction = FLIP_NONE;
-    drawPos.x         = entity->position.x;
-    drawPos.y         = entity->position.y;
-    RSDK.DrawSprite(&entity->animator1, &drawPos, false);
+    self->direction = FLIP_NONE;
+    drawPos.x         = self->position.x;
+    drawPos.y         = self->position.y;
+    RSDK.DrawSprite(&self->animator1, &drawPos, false);
     drawPos.y -= 0xC0000;
-    RSDK.DrawSprite(&entity->animator1, &drawPos, false);
+    RSDK.DrawSprite(&self->animator1, &drawPos, false);
     drawPos.y -= 0xC0000;
-    RSDK.DrawSprite(&entity->animator1, &drawPos, false);
-    drawPos.x = entity->position.x;
-    drawPos.y = entity->position.y - 0x180000;
-    RSDK.DrawSprite(&entity->animator2, &drawPos, false);
+    RSDK.DrawSprite(&self->animator1, &drawPos, false);
+    drawPos.x = self->position.x;
+    drawPos.y = self->position.y - 0x180000;
+    RSDK.DrawSprite(&self->animator2, &drawPos, false);
     if (SceneInfo->inEditor) {
         drawPos.y += 0x180000;
     }
     else {
-        entity->direction = FLIP_Y;
+        self->direction = FLIP_Y;
         drawPos.y += 0x3C0000;
     }
 
-    RSDK.DrawSprite(&entity->animator3, &drawPos, false);
-    entity->direction = FLIP_NONE;
+    RSDK.DrawSprite(&self->animator3, &drawPos, false);
+    self->direction = FLIP_NONE;
 }
 
 bool32 BladePole_SetAnimation(Animator *animator)
@@ -80,7 +80,7 @@ bool32 BladePole_SetAnimation(Animator *animator)
                 RSDK.SetSpriteAnimation(BladePole->aniFrames, 3, animator, true, 0);
             break;
         case 3:
-            if (entity->timer >= 74 && !animator->frameID)
+            if (self->timer >= 74 && !animator->frameID)
                 RSDK.SetSpriteAnimation(BladePole->aniFrames, 4, animator, true, 0);
             break;
         case 4:
@@ -100,19 +100,16 @@ void BladePole_CheckPlayerCollisions(Hitbox *hitbox)
 
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionTouch(player, entity, hitbox)) {
-            int32 storeX         = entity->position.x;
-            int32 storeY         = entity->position.y;
-            entity->position.y = ((BladePole->hitbox2.bottom - BladePole->hitbox2.top) << 15) + storeY;
+        if (Player_CheckCollisionTouch(player, self, hitbox)) {
+            int32 storeX         = self->position.x;
+            int32 storeY         = self->position.y;
+            self->position.y = ((BladePole->hitbox2.bottom - BladePole->hitbox2.top) << 15) + storeY;
 #if RETRO_USE_PLUS
-            if (!Player_CheckMightyUnspin(1024, player, 2, &player->uncurlTimer)) {
+            if (!Player_CheckMightyUnspin(0x400, player, 2, &player->uncurlTimer))
 #endif
-                Player_CheckHit(player, entity);
-#if RETRO_USE_PLUS
-            }
-#endif
-            entity->position.x = storeX;
-            entity->position.y = storeY;
+                Player_CheckHit(player, self);
+            self->position.x = storeX;
+            self->position.y = storeY;
         }
     }
 }
@@ -121,26 +118,26 @@ void BladePole_Unknown4(void)
 {
     RSDK_THIS(BladePole);
 
-    if (BladePole_SetAnimation(&entity->animator2)) {
-        entity->state = BladePole_Unknown5;
-        entity->timer = 0;
+    if (BladePole_SetAnimation(&self->animator2)) {
+        self->state = BladePole_Unknown5;
+        self->timer = 0;
     }
-    if (entity->animator2.animationID == 3)
+    if (self->animator2.animationID == 3)
         BladePole_CheckPlayerCollisions(&BladePole->hitbox1);
-    ++entity->timer;
+    ++self->timer;
 }
 
 void BladePole_Unknown5(void)
 {
     RSDK_THIS(BladePole);
 
-    if (BladePole_SetAnimation(&entity->animator3)) {
-        entity->state = BladePole_Unknown4;
-        entity->timer = 0;
+    if (BladePole_SetAnimation(&self->animator3)) {
+        self->state = BladePole_Unknown4;
+        self->timer = 0;
     }
-    if (entity->animator3.animationID == 3)
+    if (self->animator3.animationID == 3)
         BladePole_CheckPlayerCollisions(&BladePole->hitbox2);
-    ++entity->timer;
+    ++self->timer;
 }
 
 #if RETRO_INCLUDE_EDITOR

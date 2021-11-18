@@ -7,13 +7,13 @@ void SPZ1Intro_Update(void)
     void *states[] = { SPZ1Intro_CutsceneState_Unknown1, SPZ1Intro_CutsceneState_Unknown2, SPZ1Intro_CutsceneState_Unknown3, NULL };
 
     RSDK_THIS(SPZ1Intro);
-    if (!entity->timer) {
+    if (!self->timer) {
         if (!isMainGameMode() || !globals->enableIntro || PlayerHelpers_CheckStageReload()) {
-            entity->active = ACTIVE_NEVER;
+            self->active = ACTIVE_NEVER;
         }
         else {
-            entity->timer = 1;
-            CutsceneSeq_StartSequence((Entity *)entity, states);
+            self->timer = 1;
+            CutsceneSeq_StartSequence((Entity *)self, states);
         }
     }
 }
@@ -28,9 +28,9 @@ void SPZ1Intro_Create(void *data)
 {
     RSDK_THIS(SPZ1Intro);
 
-    INIT_ENTITY(entity);
-    CutsceneRules_SetupEntity(entity, &entity->size, &entity->hitbox);
-    entity->active = ACTIVE_NORMAL;
+    INIT_ENTITY(self);
+    CutsceneRules_SetupEntity(self, &self->size, &self->hitbox);
+    self->active = ACTIVE_NORMAL;
 }
 
 void SPZ1Intro_StageLoad(void)
@@ -46,8 +46,8 @@ bool32 SPZ1Intro_CutsceneState_Unknown1(EntityCutsceneSeq *host)
     RSDK_GET_PLAYER(player1, player2, camera);
     Entity *curEnt = host->cutsceneCurEntity;
     if (!host->timer) {
-        player1->position.x = entity->position.x;
-        camera->position.x  = entity->position.x;
+        player1->position.x = self->position.x;
+        camera->position.x  = self->position.x;
         player1->position.y += 0x250000;
         player1->camera         = StateMachine_None;
         player1->tileCollisions = false;
@@ -179,7 +179,7 @@ void SPZ1Intro_EditorDraw(void)
 {
     RSDK_THIS(SPZ1Intro);
     if (showGizmos())
-        CutsceneRules_DrawCutsceneBounds(entity, &entity->size);
+        CutsceneRules_DrawCutsceneBounds(self, &self->size);
 }
 
 void SPZ1Intro_EditorLoad(void) {}

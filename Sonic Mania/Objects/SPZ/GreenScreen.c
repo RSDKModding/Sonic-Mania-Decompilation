@@ -23,17 +23,17 @@ void GreenScreen_Create(void *data)
 {
     RSDK_THIS(GreenScreen);
 
-    entity->active        = ACTIVE_BOUNDS;
-    entity->drawOrder     = Zone->drawOrderLow;
-    entity->startPos.x    = entity->position.x;
-    entity->startPos.y    = entity->position.y;
-    entity->visible       = true;
-    entity->drawFX        = FX_FLIP;
-    entity->updateRange.x = 0x800000;
-    entity->updateRange.y = 0x800000;
-    entity->field_6C      = true;
-    if (!entity->paraYFactor)
-        entity->paraYFactor = 32;
+    self->active        = ACTIVE_BOUNDS;
+    self->drawOrder     = Zone->drawOrderLow;
+    self->startPos.x    = self->position.x;
+    self->startPos.y    = self->position.y;
+    self->visible       = true;
+    self->drawFX        = FX_FLIP;
+    self->updateRange.x = 0x800000;
+    self->updateRange.y = 0x800000;
+    self->field_6C      = true;
+    if (!self->paraYFactor)
+        self->paraYFactor = 32;
     GreenScreen->hitbox.left   = -104;
     GreenScreen->hitbox.top    = -64;
     GreenScreen->hitbox.right  = 104;
@@ -69,14 +69,14 @@ void GreenScreen_Unknown1(int fieldC, uint8 id, int a3, int a4)
         offset -= GreenScreen->field_20[id];
     }
 
-    drawPos = entity->position;
-    drawPos.y += (entity->paraYFactor * (-a4 / 128));
+    drawPos = self->position;
+    drawPos.y += (self->paraYFactor * (-a4 / 128));
     drawPos.x += offset + (GreenScreen->hitbox.left << 16);
 
-    int sizwX = entity->position.x + (GreenScreen->hitbox.right << 16);
-    RSDK.SetSpriteAnimation(GreenScreen->aniFrames, 1, &entity->animator, true, id);
+    int sizwX = self->position.x + (GreenScreen->hitbox.right << 16);
+    RSDK.SetSpriteAnimation(GreenScreen->aniFrames, 1, &self->animator, true, id);
     while (drawPos.x < sizwX) {
-        RSDK.DrawSprite(&entity->animator, &drawPos, false);
+        RSDK.DrawSprite(&self->animator, &drawPos, false);
         drawPos.x += GreenScreen->field_20[id];
     }
 }
@@ -91,15 +91,15 @@ void GreenScreen_Unknown2(void)
         clipY1 = ScreenInfo->clipBound_Y1;
         clipX2 = ScreenInfo->clipBound_X2;
         clipY2 = ScreenInfo->clipBound_Y2;
-        RSDK.SetClipBounds(SceneInfo->currentScreenID, (entity->position.x >> 16) + GreenScreen->hitbox.left - ScreenInfo->position.x,
-                           (entity->position.y >> 16) + GreenScreen->hitbox.top - ScreenInfo->position.y,
-                           (entity->position.x >> 16) + GreenScreen->hitbox.right - ScreenInfo->position.x,
-                           (entity->position.y >> 16) + GreenScreen->hitbox.bottom - ScreenInfo->position.y);
+        RSDK.SetClipBounds(SceneInfo->currentScreenID, (self->position.x >> 16) + GreenScreen->hitbox.left - ScreenInfo->position.x,
+                           (self->position.y >> 16) + GreenScreen->hitbox.top - ScreenInfo->position.y,
+                           (self->position.x >> 16) + GreenScreen->hitbox.right - ScreenInfo->position.x,
+                           (self->position.y >> 16) + GreenScreen->hitbox.bottom - ScreenInfo->position.y);
     }
 
     for (int i = 0; i < 5; ++i) {
-        GreenScreen_Unknown1(GreenScreen->field_C[i], i, entity->position.x - entity->startPos.x + entity->paraOffset.x,
-                             entity->position.y - entity->startPos.y + entity->paraOffset.y);
+        GreenScreen_Unknown1(GreenScreen->field_C[i], i, self->position.x - self->startPos.x + self->paraOffset.x,
+                             self->position.y - self->startPos.y + self->paraOffset.y);
     }
 
     if (!SceneInfo->inEditor)
@@ -110,12 +110,12 @@ void GreenScreen_DrawSprites(void)
 {
     RSDK_THIS(GreenScreen);
 
-    if ((SceneInfo->currentDrawGroup != Zone->drawOrderHigh && entity->field_6C) || (SceneInfo->inEditor && entity->paraPreview))
+    if ((SceneInfo->currentDrawGroup != Zone->drawOrderHigh && self->field_6C) || (SceneInfo->inEditor && self->paraPreview))
         GreenScreen_Unknown2();
 
     if (SceneInfo->currentDrawGroup == Zone->drawOrderHigh || SceneInfo->inEditor) {
-        RSDK.SetSpriteAnimation(GreenScreen->aniFrames, 0, &entity->animator, true, 0);
-        RSDK.DrawSprite(&entity->animator, NULL, false);
+        RSDK.SetSpriteAnimation(GreenScreen->aniFrames, 0, &self->animator, true, 0);
+        RSDK.DrawSprite(&self->animator, NULL, false);
     }
 }
 

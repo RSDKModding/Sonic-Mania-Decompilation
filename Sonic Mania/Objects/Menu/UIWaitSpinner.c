@@ -5,27 +5,27 @@ ObjectUIWaitSpinner *UIWaitSpinner;
 void UIWaitSpinner_Update(void)
 {
     RSDK_THIS(UIWaitSpinner);
-    StateMachine_Run(entity->state);
+    StateMachine_Run(self->state);
 
-    entity->visible = true;
-    if (entity->timer < 16) {
-        if (entity->timer == 8) {
-            entity->inkEffect = INK_BLEND;
+    self->visible = true;
+    if (self->timer < 16) {
+        if (self->timer == 8) {
+            self->inkEffect = INK_BLEND;
         }
-        else if (!entity->timer) {
-            entity->visible = false;
+        else if (!self->timer) {
+            self->visible = false;
         }
     }
     else {
-        entity->inkEffect = INK_NONE;
+        self->inkEffect = INK_NONE;
     }
 
-    entity->inkEffect = INK_ALPHA;
-    if (16 * entity->timer < 255)
-        entity->alpha = 16 * entity->timer;
+    self->inkEffect = INK_ALPHA;
+    if (16 * self->timer < 255)
+        self->alpha = 16 * self->timer;
     else
-        entity->alpha = 255;
-    RSDK.ProcessAnimation(&entity->animator);
+        self->alpha = 255;
+    RSDK.ProcessAnimation(&self->animator);
 }
 
 void UIWaitSpinner_LateUpdate(void) {}
@@ -40,17 +40,17 @@ void UIWaitSpinner_Draw(void)
     drawPos.y = 0;
     drawPos.x = (ScreenInfo->width - 24) << 16;
     drawPos.y = (ScreenInfo->height - 24) << 16;
-    RSDK.DrawSprite(&entity->animator, &drawPos, true);
+    RSDK.DrawSprite(&self->animator, &drawPos, true);
 }
 
 void UIWaitSpinner_Create(void *data)
 {
     RSDK_THIS(UIWaitSpinner);
-    entity->active    = ACTIVE_ALWAYS;
-    entity->visible   = 1;
-    entity->drawOrder = 15;
-    RSDK.SetSpriteAnimation(UIWaitSpinner->aniFrames, 0, &entity->animator, true, 0);
-    entity->state = UIWaitSpinner_State_Wait;
+    self->active    = ACTIVE_ALWAYS;
+    self->visible   = 1;
+    self->drawOrder = 15;
+    RSDK.SetSpriteAnimation(UIWaitSpinner->aniFrames, 0, &self->animator, true, 0);
+    self->state = UIWaitSpinner_State_Wait;
 }
 
 void UIWaitSpinner_StageLoad(void)
@@ -100,30 +100,30 @@ void UIWaitSpinner_Wait2(void)
 void UIWaitSpinner_State_Wait(void)
 {
     RSDK_THIS(UIWaitSpinner);
-    if (entity->timer >= 16) {
-        entity->timer = 16;
-        entity->flag  = true;
+    if (self->timer >= 16) {
+        self->timer = 16;
+        self->flag  = true;
     }
     else {
-        entity->timer += 3;
+        self->timer += 3;
     }
 }
 void UIWaitSpinner_State_Wait2(void)
 {
     RSDK_THIS(UIWaitSpinner);
-    if (entity->timer <= 0) {
+    if (self->timer <= 0) {
         UIWaitSpinner->activeSpinner = NULL;
-        destroyEntity(entity);
+        destroyEntity(self);
     }
-    else if (entity->flag) {
-        entity->timer -= 3;
+    else if (self->flag) {
+        self->timer -= 3;
     }
-    else if (entity->timer >= 16) {
-        entity->timer = 16;
-        entity->flag  = true;
+    else if (self->timer >= 16) {
+        self->timer = 16;
+        self->flag  = true;
     }
     else {
-        entity->timer += 3;
+        self->timer += 3;
     }
 }
 

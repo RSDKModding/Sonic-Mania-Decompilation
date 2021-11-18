@@ -5,9 +5,9 @@ ObjectMagnetSphere *MagnetSphere;
 void MagnetSphere_Update(void)
 {
     RSDK_THIS(MagnetSphere);
-    RSDK.ProcessAnimation(&entity->animator3);
-    RSDK.ProcessAnimation(&entity->animator4);
-    RSDK.ProcessAnimation(&entity->animator5);
+    RSDK.ProcessAnimation(&self->animator3);
+    RSDK.ProcessAnimation(&self->animator4);
+    RSDK.ProcessAnimation(&self->animator5);
     MagnetSphere_CheckPlayerCollision();
 }
 
@@ -19,33 +19,33 @@ void MagnetSphere_Draw(void)
 {
     RSDK_THIS(MagnetSphere);
 
-    entity->inkEffect = INK_SUB;
-    RSDK.DrawSprite(&entity->animator1, NULL, false);
-    entity->inkEffect = INK_ADD;
-    RSDK.DrawSprite(&entity->animator3, NULL, false);
-    entity->direction = INK_ADD;
-    RSDK.DrawSprite(&entity->animator4, NULL, false);
-    entity->direction = INK_NONE;
-    RSDK.DrawSprite(&entity->animator2, NULL, false);
-    entity->inkEffect = INK_NONE;
-    RSDK.DrawSprite(&entity->animator5, NULL, false);
+    self->inkEffect = INK_SUB;
+    RSDK.DrawSprite(&self->animator1, NULL, false);
+    self->inkEffect = INK_ADD;
+    RSDK.DrawSprite(&self->animator3, NULL, false);
+    self->direction = INK_ADD;
+    RSDK.DrawSprite(&self->animator4, NULL, false);
+    self->direction = INK_NONE;
+    RSDK.DrawSprite(&self->animator2, NULL, false);
+    self->inkEffect = INK_NONE;
+    RSDK.DrawSprite(&self->animator5, NULL, false);
 }
 
 void MagnetSphere_Create(void *data)
 {
     RSDK_THIS(MagnetSphere);
-    entity->drawFX        = FX_FLIP;
-    entity->visible       = true;
-    entity->drawOrder     = Zone->drawOrderHigh;
-    entity->active        = ACTIVE_BOUNDS;
-    entity->alpha         = 255;
-    entity->updateRange.x = 0x400000;
-    entity->updateRange.y = 0x400000;
-    RSDK.SetSpriteAnimation(MagnetSphere->aniFrames, 0, &entity->animator1, true, 0);
-    RSDK.SetSpriteAnimation(MagnetSphere->aniFrames, 0, &entity->animator2, true, 1);
-    RSDK.SetSpriteAnimation(MagnetSphere->aniFrames, 1, &entity->animator3, true, 0);
-    RSDK.SetSpriteAnimation(MagnetSphere->aniFrames, 1, &entity->animator4, true, 8);
-    RSDK.SetSpriteAnimation(MagnetSphere->aniFrames, 2, &entity->animator5, true, 0);
+    self->drawFX        = FX_FLIP;
+    self->visible       = true;
+    self->drawOrder     = Zone->drawOrderHigh;
+    self->active        = ACTIVE_BOUNDS;
+    self->alpha         = 255;
+    self->updateRange.x = 0x400000;
+    self->updateRange.y = 0x400000;
+    RSDK.SetSpriteAnimation(MagnetSphere->aniFrames, 0, &self->animator1, true, 0);
+    RSDK.SetSpriteAnimation(MagnetSphere->aniFrames, 0, &self->animator2, true, 1);
+    RSDK.SetSpriteAnimation(MagnetSphere->aniFrames, 1, &self->animator3, true, 0);
+    RSDK.SetSpriteAnimation(MagnetSphere->aniFrames, 1, &self->animator4, true, 8);
+    RSDK.SetSpriteAnimation(MagnetSphere->aniFrames, 2, &self->animator5, true, 0);
 }
 
 void MagnetSphere_StageLoad(void)
@@ -64,7 +64,7 @@ void MagnetSphere_StageLoad(void)
 void MagnetSphere_DebugSpawn(void)
 {
     RSDK_THIS(DebugMode);
-    CREATE_ENTITY(MagnetSphere, NULL, entity->position.x, entity->position.y);
+    CREATE_ENTITY(MagnetSphere, NULL, self->position.x, self->position.y);
 }
 
 void MagnetSphere_DebugDraw(void)
@@ -80,10 +80,10 @@ void MagnetSphere_CheckPlayerCollision(void)
     {
         int32 pid = RSDK.GetEntityID(player);
 
-        if ((1 << pid) & entity->activePlayers) {
+        if ((1 << pid) & self->activePlayers) {
             if (player->state != Player_State_None) {
-                entity->playerTimers[pid] = 30;
-                entity->activePlayers &= ~(1 << pid);
+                self->playerTimers[pid] = 30;
+                self->activePlayers &= ~(1 << pid);
                 if (player->state != Player_State_Die)
                     player->tileCollisions = true;
             }
@@ -104,15 +104,15 @@ void MagnetSphere_CheckPlayerCollision(void)
                 player->jumpAbilityTimer  = 1;
                 player->tileCollisions    = true;
                 player->state             = Player_State_Air;
-                entity->playerTimers[pid] = 30;
-                entity->activePlayers &= ~(1 << pid);
+                self->playerTimers[pid] = 30;
+                self->activePlayers &= ~(1 << pid);
                 RSDK.PlaySfx(Player->sfxJump, 0, 255);
             }
         }
         else {
-            if (!entity->playerTimers[pid] && player->state != Player_State_None) {
-                if (Player_CheckCollisionTouch(player, entity, &MagnetSphere->hitbox)) {
-                    int32 angle = RSDK.ATan2(entity->position.x - player->position.x, entity->position.y - player->position.y);
+            if (!self->playerTimers[pid] && player->state != Player_State_None) {
+                if (Player_CheckCollisionTouch(player, self, &MagnetSphere->hitbox)) {
+                    int32 angle = RSDK.ATan2(self->position.x - player->position.x, self->position.y - player->position.y);
 
                     if (angle >= 128) {
                         MagnetSphere->sphereAngle[pid]  = -128;
@@ -132,12 +132,12 @@ void MagnetSphere_CheckPlayerCollision(void)
                     player->state           = Player_State_None;
                     player->nextAirState    = 0;
                     player->nextGroundState = 0;
-                    entity->activePlayers |= 1 << pid;
+                    self->activePlayers |= 1 << pid;
                     MagnetSphere_MovePlayer(player, pid);
                 }
             }
-            else if (entity->playerTimers[pid]) {
-                entity->playerTimers[pid]--;
+            else if (self->playerTimers[pid]) {
+                self->playerTimers[pid]--;
             }
         }
     }
@@ -151,8 +151,8 @@ void MagnetSphere_MovePlayer(void *p, int32 playerID)
     int32 ang            = 56 * RSDK.Cos256(MagnetSphere->sphereAngle[playerID]) >> 8;
     player->velocity.x = -RSDK.Sin256(MagnetSphere->playerAngles[playerID]);
     player->velocity.y = RSDK.Cos256(MagnetSphere->playerAngles[playerID]);
-    player->position.x = entity->position.x - (ang * RSDK.Sin256(MagnetSphere->playerAngles[playerID]) << 8);
-    player->position.y = entity->position.y + (ang * RSDK.Cos256(MagnetSphere->playerAngles[playerID]) << 8);
+    player->position.x = self->position.x - (ang * RSDK.Sin256(MagnetSphere->playerAngles[playerID]) << 8);
+    player->position.y = self->position.y + (ang * RSDK.Cos256(MagnetSphere->playerAngles[playerID]) << 8);
 
     if (MagnetSphere->sphereAngle[playerID] >= 0x80) {
         player->drawOrder = Zone->playerDrawHigh;

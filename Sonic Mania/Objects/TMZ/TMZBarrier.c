@@ -5,13 +5,13 @@ ObjectTMZBarrier *TMZBarrier;
 void TMZBarrier_Update(void)
 {
     RSDK_THIS(TMZBarrier);
-    if (entity->field_5C) {
-        TMZBarrier->flags |= 1 << entity->iD;
-        if (entity->type)
-            RSDK.CopyTileLayer(Zone->fgLow, entity->position.x >> 20, entity->position.y >> 20, Zone->moveLayer, 59, 32, 2, 4);
+    if (self->field_5C) {
+        TMZBarrier->flags |= 1 << self->iD;
+        if (self->type)
+            RSDK.CopyTileLayer(Zone->fgLow, self->position.x >> 20, self->position.y >> 20, Zone->moveLayer, 59, 32, 2, 4);
         else
-            RSDK.CopyTileLayer(Zone->fgLow, entity->position.x >> 20, entity->position.y >> 20, Zone->moveLayer, 56, 32, 2, 9);
-        destroyEntity(entity);
+            RSDK.CopyTileLayer(Zone->fgLow, self->position.x >> 20, self->position.y >> 20, Zone->moveLayer, 56, 32, 2, 9);
+        destroyEntity(self);
     }
 }
 
@@ -32,7 +32,7 @@ void TMZBarrier_Create(void *data)
 {
     RSDK_THIS(TMZBarrier);
     if (!SceneInfo->inEditor)
-        entity->active = ACTIVE_NORMAL;
+        self->active = ACTIVE_NORMAL;
 }
 
 void TMZBarrier_StageLoad(void)

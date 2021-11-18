@@ -198,18 +198,18 @@ void PuyoAI_SetupInputs(void *b, bool32 flag)
 void PuyoAI_StateInput(void)
 {
     RSDK_THIS(PuyoBean);
-    EntityPuyoBean *partner = (EntityPuyoBean *)entity->partner;
+    EntityPuyoBean *partner = (EntityPuyoBean *)self->partner;
 
-    entity->left        = false;
-    entity->right       = false;
-    entity->rotateLeft  = false;
-    entity->rotateRight = false;
-    if (PuyoAI->value3[entity->playerID]) {
+    self->left        = false;
+    self->right       = false;
+    self->rotateLeft  = false;
+    self->rotateRight = false;
+    if (PuyoAI->value3[self->playerID]) {
         bool32 flag1 = false;
         bool32 flag2 = false;
-        if (PuyoAI->controlInterval[entity->playerID]) {
-            flag1 = !(RSDK.Rand(0, 1024) % PuyoAI->controlInterval[entity->playerID]);
-            flag2 = !(Zone->timer % (4 * PuyoAI->controlInterval[entity->playerID]));
+        if (PuyoAI->controlInterval[self->playerID]) {
+            flag1 = !(RSDK.Rand(0, 1024) % PuyoAI->controlInterval[self->playerID]);
+            flag2 = !(Zone->timer % (4 * PuyoAI->controlInterval[self->playerID]));
         }
         else {
             flag1 = true;
@@ -217,29 +217,29 @@ void PuyoAI_StateInput(void)
         }
 
         if (flag1 || flag2) {
-            Vector2 pos = PuyoAI_GetBeanPos(entity->playerID);
+            Vector2 pos = PuyoAI_GetBeanPos(self->playerID);
             if (pos.x >= 0 || pos.y >= 0) {
-                bool32 flag = PuyoBean_Unknown6(entity);
-                if (RSDK.Rand(0, 100) < PuyoAI->controlChance[entity->playerID]) {
-                    PuyoAI_SetupInputs(entity, flag);
+                bool32 flag = PuyoBean_Unknown6(self);
+                if (RSDK.Rand(0, 100) < PuyoAI->controlChance[self->playerID]) {
+                    PuyoAI_SetupInputs(self, flag);
                 }
                 else {
-                    PuyoAI_Unknown2(entity->playerID);
+                    PuyoAI_Unknown2(self->playerID);
 
                     uint8 flags = 0;
-                    if (entity->stillPos.y == partner->stillPos.y) {
-                        if (entity->stillPos.x >= partner->stillPos.x) {
-                            if (entity->stillPos.y == partner->stillPos.y) {
-                                if (entity->stillPos.x > partner->stillPos.x) {
+                    if (self->stillPos.y == partner->stillPos.y) {
+                        if (self->stillPos.x >= partner->stillPos.x) {
+                            if (self->stillPos.y == partner->stillPos.y) {
+                                if (self->stillPos.x > partner->stillPos.x) {
                                     flags = 2;
                                 }
                             }
                         }
                     }
 
-                    if (flags != 2 && entity->stillPos.x == partner->stillPos.x) {
-                        if (entity->stillPos.y >= partner->stillPos.y) {
-                            if (entity->stillPos.x == partner->stillPos.x && entity->stillPos.y > partner->stillPos.y)
+                    if (flags != 2 && self->stillPos.x == partner->stillPos.x) {
+                        if (self->stillPos.y >= partner->stillPos.y) {
+                            if (self->stillPos.x == partner->stillPos.x && self->stillPos.y > partner->stillPos.y)
                                 flags = 3;
                         }
                         else {
@@ -247,36 +247,36 @@ void PuyoAI_StateInput(void)
                         }
                     }
 
-                    int32 val = PuyoAI->value6[entity->playerID] - flags;
+                    int32 val = PuyoAI->value6[self->playerID] - flags;
                     if (val == 3)
                         val = -1;
                     if (flag2) {
                         if (flag) {
                             if (val == 2) {
-                                entity->rotateLeft = true;
+                                self->rotateLeft = true;
                                 flag1              = false;
                             }
                         }
                         else {
                             if (val > 0) {
-                                entity->rotateLeft = true;
+                                self->rotateLeft = true;
                                 flag1              = false;
                             }
                             else if (val < 0) {
-                                entity->rotateRight = true;
+                                self->rotateRight = true;
                                 flag1               = false;
                             }
                         }
                     }
 
                     if (flag1) {
-                        entity->left  = pos.x > PuyoAI->targetX[entity->playerID];
-                        entity->right = pos.x < PuyoAI->targetX[entity->playerID];
-                        if (!val && !entity->left && !entity->right && pos.x == PuyoAI->targetX[entity->playerID]) {
-                            entity->down = true;
+                        self->left  = pos.x > PuyoAI->targetX[self->playerID];
+                        self->right = pos.x < PuyoAI->targetX[self->playerID];
+                        if (!val && !self->left && !self->right && pos.x == PuyoAI->targetX[self->playerID]) {
+                            self->down = true;
                         }
                         else {
-                            entity->down = false;
+                            self->down = false;
                         }
                     }
                 }

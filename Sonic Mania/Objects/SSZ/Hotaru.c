@@ -5,7 +5,7 @@ ObjectHotaru *Hotaru;
 void Hotaru_Update(void)
 {
     RSDK_THIS(Hotaru);
-    StateMachine_Run(entity->state);
+    StateMachine_Run(self->state);
 }
 
 void Hotaru_LateUpdate(void) {}
@@ -17,51 +17,51 @@ void Hotaru_Draw(void)
     RSDK_THIS(Hotaru);
     Vector2 drawPos;
 
-    entity->direction = entity->field_88;
-    if (entity->field_A2 == 2) {
-        entity->inkEffect = INK_ADD;
-        entity->alpha     = 0x80;
-        drawPos.x         = entity->position.x + entity->offset.x;
-        drawPos.y         = entity->offset.y + 0xC0000 + entity->position.y;
-        drawPos.x += entity->offset2.x;
-        drawPos.y += entity->offset2.y;
-        RSDK.DrawSprite(&entity->animator3, &drawPos, false);
+    self->direction = self->field_88;
+    if (self->field_A2 == 2) {
+        self->inkEffect = INK_ADD;
+        self->alpha     = 0x80;
+        drawPos.x         = self->position.x + self->offset.x;
+        drawPos.y         = self->offset.y + 0xC0000 + self->position.y;
+        drawPos.x += self->offset2.x;
+        drawPos.y += self->offset2.y;
+        RSDK.DrawSprite(&self->animator3, &drawPos, false);
 
-        drawPos.x += entity->offset2.x;
-        drawPos.y += entity->offset2.y;
-        RSDK.DrawSprite(&entity->animator3, &drawPos, false);
+        drawPos.x += self->offset2.x;
+        drawPos.y += self->offset2.y;
+        RSDK.DrawSprite(&self->animator3, &drawPos, false);
 
-        drawPos.x += entity->offset2.x;
-        drawPos.y += entity->offset2.y;
-        RSDK.DrawSprite(&entity->animator3, &drawPos, false);
+        drawPos.x += self->offset2.x;
+        drawPos.y += self->offset2.y;
+        RSDK.DrawSprite(&self->animator3, &drawPos, false);
 
-        entity->alpha     = 0x100;
-        entity->inkEffect = INK_NONE;
+        self->alpha     = 0x100;
+        self->inkEffect = INK_NONE;
     }
 
-    if (!(entity->flags & 1)) {
-        drawPos.x = entity->position.x + entity->dist2.x;
-        drawPos.y = entity->position.y + entity->dist2.y;
-        if (entity->alpha > 0 && (((Zone->timer & 1) << (entity->state == Hotaru_State_Unknown7)) & 0x7FFFFFFF)) {
-            entity->inkEffect = INK_ADD;
-            RSDK.DrawSprite(&entity->animator2, &drawPos, false);
+    if (!(self->flags & 1)) {
+        drawPos.x = self->position.x + self->dist2.x;
+        drawPos.y = self->position.y + self->dist2.y;
+        if (self->alpha > 0 && (((Zone->timer & 1) << (self->state == Hotaru_State_Unknown7)) & 0x7FFFFFFF)) {
+            self->inkEffect = INK_ADD;
+            RSDK.DrawSprite(&self->animator2, &drawPos, false);
 
-            entity->inkEffect = INK_NONE;
+            self->inkEffect = INK_NONE;
         }
-        RSDK.DrawSprite(&entity->animator1, &drawPos, false);
+        RSDK.DrawSprite(&self->animator1, &drawPos, false);
     }
 
-    if (!(entity->flags & 2)) {
-        entity->direction ^= FLIP_X;
-        drawPos.x = entity->position.x + entity->offset.x;
-        drawPos.y = entity->position.y + entity->offset.y;
-        if (entity->alpha > 0 && (((Zone->timer & 1) << (entity->state == Hotaru_State_Unknown7)) & 0x7FFFFFFF)) {
-            entity->inkEffect = INK_ADD;
-            RSDK.DrawSprite(&entity->animator2, &drawPos, false);
+    if (!(self->flags & 2)) {
+        self->direction ^= FLIP_X;
+        drawPos.x = self->position.x + self->offset.x;
+        drawPos.y = self->position.y + self->offset.y;
+        if (self->alpha > 0 && (((Zone->timer & 1) << (self->state == Hotaru_State_Unknown7)) & 0x7FFFFFFF)) {
+            self->inkEffect = INK_ADD;
+            RSDK.DrawSprite(&self->animator2, &drawPos, false);
 
-            entity->inkEffect = INK_NONE;
+            self->inkEffect = INK_NONE;
         }
-        RSDK.DrawSprite(&entity->animator1, &drawPos, false);
+        RSDK.DrawSprite(&self->animator1, &drawPos, false);
     }
 }
 
@@ -69,30 +69,30 @@ void Hotaru_Create(void *data)
 {
     RSDK_THIS(Hotaru);
     if (!SceneInfo->inEditor) {
-        entity->distX1 <<= 16;
-        entity->distX2 <<= 16;
-        entity->speed <<= 15;
-        entity->offset.x  = -entity->dist.x;
-        entity->offset.y  = -entity->dist.y;
-        entity->dist2.x   = entity->dist.x;
-        entity->dist2.y   = entity->dist.y;
-        entity->visible   = true;
-        entity->drawOrder = Zone->drawOrderLow;
-        entity->active    = ACTIVE_BOUNDS;
-        if (entity->distX1 <= entity->distX2)
-            entity->updateRange.x = entity->distX2 + 0x400000;
+        self->distX1 <<= 16;
+        self->distX2 <<= 16;
+        self->speed <<= 15;
+        self->offset.x  = -self->dist.x;
+        self->offset.y  = -self->dist.y;
+        self->dist2.x   = self->dist.x;
+        self->dist2.y   = self->dist.y;
+        self->visible   = true;
+        self->drawOrder = Zone->drawOrderLow;
+        self->active    = ACTIVE_BOUNDS;
+        if (self->distX1 <= self->distX2)
+            self->updateRange.x = self->distX2 + 0x400000;
         else
-            entity->updateRange.x = entity->distX1 + 0x400000;
-        entity->updateRange.y = entity->dist.y + 0x400000;
+            self->updateRange.x = self->distX1 + 0x400000;
+        self->updateRange.y = self->dist.y + 0x400000;
 
-        entity->drawFX     = FX_ROTATE | FX_FLIP;
-        entity->startPos.x = entity->position.x;
-        entity->startPos.y = entity->position.y;
-        entity->startDir   = entity->direction;
-        RSDK.SetSpriteAnimation(Hotaru->aniFrames, entity->quality, &entity->animator1, true, 0);
-        RSDK.SetSpriteAnimation(Hotaru->aniFrames, 2, &entity->animator2, true, 0);
-        RSDK.SetSpriteAnimation(Hotaru->aniFrames, 3, &entity->animator3, true, 0);
-        entity->state = Hotaru_State_Setup;
+        self->drawFX     = FX_ROTATE | FX_FLIP;
+        self->startPos.x = self->position.x;
+        self->startPos.y = self->position.y;
+        self->startDir   = self->direction;
+        RSDK.SetSpriteAnimation(Hotaru->aniFrames, self->quality, &self->animator1, true, 0);
+        RSDK.SetSpriteAnimation(Hotaru->aniFrames, 2, &self->animator2, true, 0);
+        RSDK.SetSpriteAnimation(Hotaru->aniFrames, 3, &self->animator3, true, 0);
+        self->state = Hotaru_State_Setup;
     }
 }
 
@@ -122,7 +122,7 @@ void Hotaru_StageLoad(void)
 void Hotaru_DebugSpawn(void)
 {
     RSDK_THIS(DebugMode);
-    CREATE_ENTITY(Hotaru, NULL, entity->position.x, entity->position.y);
+    CREATE_ENTITY(Hotaru, NULL, self->position.x, self->position.y);
 }
 
 void Hotaru_DebugDraw(void)
@@ -135,30 +135,30 @@ void Hotaru_CheckPlayerCollisions(void)
 {
     RSDK_THIS(Hotaru);
 
-    int storeX = entity->position.x;
-    int storeY = entity->position.y;
+    int storeX = self->position.x;
+    int storeY = self->position.y;
 
     foreach_active(Player, player)
     {
-        if (!(entity->flags & 1)) {
-            entity->position.x += entity->dist2.x;
-            entity->position.y += entity->dist2.y;
-            if (Player_CheckBadnikTouch(player, entity, &Hotaru->hitbox1) && Player_CheckBadnikBreak(entity, player, false)) {
-                entity->flags |= 1;
-                entity->field_A2 = 0;
+        if (!(self->flags & 1)) {
+            self->position.x += self->dist2.x;
+            self->position.y += self->dist2.y;
+            if (Player_CheckBadnikTouch(player, self, &Hotaru->hitbox1) && Player_CheckBadnikBreak(self, player, false)) {
+                self->flags |= 1;
+                self->field_A2 = 0;
             }
-            entity->position.x = storeX;
-            entity->position.y = storeY;
+            self->position.x = storeX;
+            self->position.y = storeY;
         }
-        if (!(entity->flags & 2)) {
-            entity->position.x += entity->offset.x;
-            entity->position.y += entity->offset.y;
-            if (Player_CheckBadnikTouch(player, entity, &Hotaru->hitbox1) && Player_CheckBadnikBreak(&entity, player, false)) {
-                entity->flags |= 2;
-                entity->field_A2 = 0;
+        if (!(self->flags & 2)) {
+            self->position.x += self->offset.x;
+            self->position.y += self->offset.y;
+            if (Player_CheckBadnikTouch(player, self, &Hotaru->hitbox1) && Player_CheckBadnikBreak(&self, player, false)) {
+                self->flags |= 2;
+                self->field_A2 = 0;
             }
-            entity->position.x = storeX;
-            entity->position.y = storeY;
+            self->position.x = storeX;
+            self->position.y = storeY;
         }
     }
 }
@@ -167,13 +167,13 @@ void Hotaru_CheckOnScreen(void)
 {
     RSDK_THIS(Hotaru);
 
-    if (!RSDK.CheckOnScreen(entity, NULL) && !RSDK.CheckPosOnScreen(&entity->startPos, &entity->updateRange)) {
-        entity->speed >>= 15;
-        entity->position.x = entity->startPos.x;
-        entity->position.y = entity->startPos.y;
-        entity->distX1     = (entity->distX1 >> 16);
-        entity->distX2     = (entity->distX2 >> 16);
-        entity->direction  = entity->startDir;
+    if (!RSDK.CheckOnScreen(self, NULL) && !RSDK.CheckPosOnScreen(&self->startPos, &self->updateRange)) {
+        self->speed >>= 15;
+        self->position.x = self->startPos.x;
+        self->position.y = self->startPos.y;
+        self->distX1     = (self->distX1 >> 16);
+        self->distX2     = (self->distX2 >> 16);
+        self->direction  = self->startDir;
         Hotaru_Create(NULL);
     }
 }
@@ -182,11 +182,11 @@ void Hotaru_State_Setup(void)
 {
     RSDK_THIS(Hotaru);
 
-    entity->active   = ACTIVE_NORMAL;
-    entity->field_88 = 0;
-    entity->alpha    = 0;
-    entity->field_A2 = 0;
-    entity->state    = Hotaru_State_Unknown1;
+    self->active   = ACTIVE_NORMAL;
+    self->field_88 = 0;
+    self->alpha    = 0;
+    self->field_A2 = 0;
+    self->state    = Hotaru_State_Unknown1;
     Hotaru_State_Unknown1();
 }
 
@@ -194,107 +194,107 @@ void Hotaru_State_Unknown1(void)
 {
     RSDK_THIS(Hotaru);
 
-    if (entity->field_88) {
-        entity->offset.x -= entity->speed;
-        entity->dist2.x += entity->speed;
-        if (entity->dist2.x >= entity->distX2) {
-            entity->offset.x = -entity->distX2;
-            entity->dist2.x  = entity->distX2;
-            entity->field_88 = 0;
+    if (self->field_88) {
+        self->offset.x -= self->speed;
+        self->dist2.x += self->speed;
+        if (self->dist2.x >= self->distX2) {
+            self->offset.x = -self->distX2;
+            self->dist2.x  = self->distX2;
+            self->field_88 = 0;
         }
     }
     else {
-        entity->offset.x += entity->speed;
-        entity->dist2.x -= entity->speed;
-        if (entity->offset.x >= entity->distX1) {
-            entity->offset.x = entity->distX1;
-            entity->dist2.x  = -entity->distX1;
-            entity->field_88 = 1;
+        self->offset.x += self->speed;
+        self->dist2.x -= self->speed;
+        if (self->offset.x >= self->distX1) {
+            self->offset.x = self->distX1;
+            self->dist2.x  = -self->distX1;
+            self->field_88 = 1;
         }
     }
     Hotaru_CheckPlayerCollisions();
-    int storeX = entity->position.x;
-    int storeY = entity->position.y;
+    int storeX = self->position.x;
+    int storeY = self->position.y;
 
     foreach_active(Player, player)
     {
         bool32 flag = false;
-        if (!(entity->flags & 1)) {
-            entity->position.x += entity->dist2.x;
-            entity->position.y += entity->dist2.y;
-            if (Player_CheckCollisionTouch(player, entity, &Hotaru->hitbox2)) {
+        if (!(self->flags & 1)) {
+            self->position.x += self->dist2.x;
+            self->position.y += self->dist2.y;
+            if (Player_CheckCollisionTouch(player, self, &Hotaru->hitbox2)) {
                 flag = true;
             }
         }
-        entity->position.x = storeX;
-        entity->position.y = storeY;
+        self->position.x = storeX;
+        self->position.y = storeY;
 
-        if (!(entity->flags & 2) && !flag) {
-            entity->position.x += entity->offset.x;
-            entity->position.y += entity->offset.y;
-            if (Player_CheckCollisionTouch(player, entity, &Hotaru->hitbox2)) {
+        if (!(self->flags & 2) && !flag) {
+            self->position.x += self->offset.x;
+            self->position.y += self->offset.y;
+            if (Player_CheckCollisionTouch(player, self, &Hotaru->hitbox2)) {
                 flag = true;
             }
         }
 
         if (flag) {
-            entity->playerPtr = (Entity *)player;
+            self->playerPtr = (Entity *)player;
             if (player->sidekick)
-                entity->screenID = 0;
+                self->screenID = 0;
             else
-                entity->screenID = player->camera->screenID;
+                self->screenID = player->camera->screenID;
 
-            entity->position.x = storeX;
-            entity->position.y = storeY;
-            entity->state      = Hotaru_State_Unknown2;
+            self->position.x = storeX;
+            self->position.y = storeY;
+            self->state      = Hotaru_State_Unknown2;
             foreach_break;
         }
 
-        entity->position.x = storeX;
-        entity->position.y = storeY;
+        self->position.x = storeX;
+        self->position.y = storeY;
     }
 }
 
 void Hotaru_State_Unknown2(void)
 {
     RSDK_THIS(Hotaru);
-    entity->state = Hotaru_State_Unknown3;
+    self->state = Hotaru_State_Unknown3;
     Hotaru_State_Unknown3();
 }
 
 void Hotaru_State_Unknown3(void)
 {
     RSDK_THIS(Hotaru);
-    EntityPlayer *player = (EntityPlayer *)entity->playerPtr;
-    RSDKScreenInfo *screen   = &ScreenInfo[entity->screenID];
+    EntityPlayer *player = (EntityPlayer *)self->playerPtr;
+    RSDKScreenInfo *screen   = &ScreenInfo[self->screenID];
 
     int screenX = (screen->position.x + screen->centerX) << 16;
     int screenY = (screen->position.y + screen->centerY) << 16;
 
-    if (entity->position.x <= screenX) {
-        entity->position.x += player->velocity.x + 0x20000;
-        if (entity->position.x > screenX)
-            entity->position.x = screenX;
+    if (self->position.x <= screenX) {
+        self->position.x += player->velocity.x + 0x20000;
+        if (self->position.x > screenX)
+            self->position.x = screenX;
     }
     else {
-        entity->position.x -= player->velocity.x - 0x20000;
-        if (entity->position.x < screenX)
-            entity->position.x = screenX;
+        self->position.x -= player->velocity.x - 0x20000;
+        if (self->position.x < screenX)
+            self->position.x = screenX;
     }
 
-    if (entity->position.y <= screenY) {
-        entity->position.y += player->velocity.y + 0x20000;
-        if (entity->position.y > screenY)
-            entity->position.y = screenY;
+    if (self->position.y <= screenY) {
+        self->position.y += player->velocity.y + 0x20000;
+        if (self->position.y > screenY)
+            self->position.y = screenY;
     }
     else {
-        entity->position.y -= player->velocity.y - 0x20000;
-        if (entity->position.y < screenY)
-            entity->position.y = screenY;
+        self->position.y -= player->velocity.y - 0x20000;
+        if (self->position.y < screenY)
+            self->position.y = screenY;
     }
-    if (entity->position.x == screenX && entity->position.y == screenY) {
-        entity->timer = 100;
-        entity->state = Hotaru_State_Unknown4;
+    if (self->position.x == screenX && self->position.y == screenY) {
+        self->timer = 100;
+        self->state = Hotaru_State_Unknown4;
     }
 
     Hotaru_CheckPlayerCollisions();
@@ -304,14 +304,14 @@ void Hotaru_State_Unknown3(void)
 void Hotaru_State_Unknown4(void)
 {
     RSDK_THIS(Hotaru);
-    RSDKScreenInfo *screen = &ScreenInfo[entity->screenID];
+    RSDKScreenInfo *screen = &ScreenInfo[self->screenID];
 
-    entity->position.x = (screen->position.x + screen->centerX) << 16;
-    entity->position.y = (screen->position.y + screen->centerY) << 16;
-    if (++entity->rotation == 128) {
-        entity->rotation          = 0;
-        entity->animator1.frameID = 1;
-        entity->state             = Hotaru_State_Unknown5;
+    self->position.x = (screen->position.x + screen->centerX) << 16;
+    self->position.y = (screen->position.y + screen->centerY) << 16;
+    if (++self->rotation == 128) {
+        self->rotation          = 0;
+        self->animator1.frameID = 1;
+        self->state             = Hotaru_State_Unknown5;
     }
     Hotaru_CheckPlayerCollisions();
     Hotaru_CheckOnScreen();
@@ -321,43 +321,43 @@ void Hotaru_State_Unknown5(void)
 {
     RSDK_THIS(Hotaru);
 
-    if (entity->alpha >= 128) {
+    if (self->alpha >= 128) {
         Hitbox hitbox;
-        if (entity->offset.x >= entity->dist2.x) {
-            hitbox.left  = entity->dist2.x >> 16;
-            hitbox.right = entity->offset.x >> 16;
+        if (self->offset.x >= self->dist2.x) {
+            hitbox.left  = self->dist2.x >> 16;
+            hitbox.right = self->offset.x >> 16;
         }
         else {
-            hitbox.left  = entity->offset.x >> 16;
-            hitbox.right = entity->dist2.x >> 16;
+            hitbox.left  = self->offset.x >> 16;
+            hitbox.right = self->dist2.x >> 16;
         }
 
-        if (entity->offset.y >= entity->dist2.y) {
-            hitbox.top    = entity->dist2.y >> 16;
-            hitbox.bottom = entity->offset.y >> 16;
+        if (self->offset.y >= self->dist2.y) {
+            hitbox.top    = self->dist2.y >> 16;
+            hitbox.bottom = self->offset.y >> 16;
         }
         else {
-            hitbox.top    = entity->offset.y >> 16;
-            hitbox.bottom = entity->dist2.y >> 16;
+            hitbox.top    = self->offset.y >> 16;
+            hitbox.bottom = self->dist2.y >> 16;
         }
 
         foreach_active(Player, player)
         {
-            if (Player_CheckCollisionTouch(player, entity, &hitbox)) {
-                entity->field_A2 = 1;
+            if (Player_CheckCollisionTouch(player, self, &hitbox)) {
+                self->field_A2 = 1;
             }
         }
     }
 
-    entity->alpha += 2;
-    if (entity->alpha == 256) {
-        entity->timer = 128;
-        if (!entity->flags && !entity->quality) {
-            ++entity->field_A2;
-            entity->offset2.x = (entity->dist2.x - entity->offset.x) >> 2;
-            entity->offset2.y = (entity->dist2.y - entity->offset.y) >> 2;
+    self->alpha += 2;
+    if (self->alpha == 256) {
+        self->timer = 128;
+        if (!self->flags && !self->quality) {
+            ++self->field_A2;
+            self->offset2.x = (self->dist2.x - self->offset.x) >> 2;
+            self->offset2.y = (self->dist2.y - self->offset.y) >> 2;
         }
-        entity->state = Hotaru_State_Unknown6;
+        self->state = Hotaru_State_Unknown6;
     }
     Hotaru_CheckPlayerCollisions();
     Hotaru_CheckOnScreen();
@@ -367,31 +367,31 @@ void Hotaru_State_Unknown6(void)
 {
     RSDK_THIS(Hotaru);
 
-    RSDK.ProcessAnimation(&entity->animator3);
-    if (--entity->timer <= 0) {
-        entity->field_A2 = 0;
-        entity->alpha    = 192;
-        entity->state    = Hotaru_State_Unknown7;
+    RSDK.ProcessAnimation(&self->animator3);
+    if (--self->timer <= 0) {
+        self->field_A2 = 0;
+        self->alpha    = 192;
+        self->state    = Hotaru_State_Unknown7;
     }
     Hotaru_CheckPlayerCollisions();
 
-    if (entity->field_A2 == 2) {
-        int storeX = entity->position.x;
-        int storeY = entity->position.y;
+    if (self->field_A2 == 2) {
+        int storeX = self->position.x;
+        int storeY = self->position.y;
 
         foreach_active(Player, player)
         {
-            entity->position.x += entity->offset.x;
-            entity->position.y += entity->offset.y;
+            self->position.x += self->offset.x;
+            self->position.y += self->offset.y;
             for (int i = 0; i < 3; ++i) {
-                entity->position.x += entity->offset2.x;
-                entity->position.y += entity->offset2.y;
-                if (Player_CheckCollisionTouch(player, entity, &Hotaru->hitbox3)) {
-                    Player_CheckElementalHit(player, entity, SHIELD_LIGHTNING);
+                self->position.x += self->offset2.x;
+                self->position.y += self->offset2.y;
+                if (Player_CheckCollisionTouch(player, self, &Hotaru->hitbox3)) {
+                    Player_CheckElementalHit(player, self, SHIELD_LIGHTNING);
                 }
             }
-            entity->position.x = storeX;
-            entity->position.y = storeY;
+            self->position.x = storeX;
+            self->position.y = storeY;
         }
     }
     Hotaru_CheckOnScreen();
@@ -400,7 +400,7 @@ void Hotaru_State_Unknown6(void)
 void Hotaru_State_Unknown7(void)
 {
     RSDK_THIS(Hotaru);
-    entity->position.y -= 0x20000;
+    self->position.y -= 0x20000;
     Hotaru_CheckPlayerCollisions();
     Hotaru_CheckOnScreen();
 }
@@ -410,22 +410,22 @@ void Hotaru_EditorDraw(void)
 {
     RSDK_THIS(Hotaru);
 
-    entity->drawOrder = Zone->drawOrderLow;
-    entity->active    = ACTIVE_BOUNDS;
-    if (entity->distX1 <= entity->distX2)
-        entity->updateRange.x = (entity->distX2 << 16) + 0x400000;
+    self->drawOrder = Zone->drawOrderLow;
+    self->active    = ACTIVE_BOUNDS;
+    if (self->distX1 <= self->distX2)
+        self->updateRange.x = (self->distX2 << 16) + 0x400000;
     else
-        entity->updateRange.x = (entity->distX1 << 16) + 0x400000;
-    entity->updateRange.y = entity->dist.y + 0x400000;
+        self->updateRange.x = (self->distX1 << 16) + 0x400000;
+    self->updateRange.y = self->dist.y + 0x400000;
 
-    entity->drawFX     = FX_ROTATE | FX_FLIP;
-    entity->offset.x   = -entity->dist.x;
-    entity->offset.y   = -entity->dist.y;
-    entity->dist2.x    = entity->dist.x;
-    entity->dist2.y    = entity->dist.y;
-    RSDK.SetSpriteAnimation(Hotaru->aniFrames, entity->quality, &entity->animator1, true, 0);
-    RSDK.SetSpriteAnimation(Hotaru->aniFrames, 2, &entity->animator2, true, 0);
-    RSDK.SetSpriteAnimation(Hotaru->aniFrames, 3, &entity->animator3, true, 0);
+    self->drawFX     = FX_ROTATE | FX_FLIP;
+    self->offset.x   = -self->dist.x;
+    self->offset.y   = -self->dist.y;
+    self->dist2.x    = self->dist.x;
+    self->dist2.y    = self->dist.y;
+    RSDK.SetSpriteAnimation(Hotaru->aniFrames, self->quality, &self->animator1, true, 0);
+    RSDK.SetSpriteAnimation(Hotaru->aniFrames, 2, &self->animator2, true, 0);
+    RSDK.SetSpriteAnimation(Hotaru->aniFrames, 3, &self->animator3, true, 0);
 
     Hotaru_Draw();
 }

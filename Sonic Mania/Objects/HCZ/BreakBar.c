@@ -5,7 +5,7 @@ ObjectBreakBar *BreakBar;
 void BreakBar_Update(void)
 {
     RSDK_THIS(BreakBar);
-    StateMachine_Run(entity->state);
+    StateMachine_Run(self->state);
 }
 
 void BreakBar_LateUpdate(void) { BreakBar_CheckPlayerCollisions(); }
@@ -17,26 +17,26 @@ void BreakBar_Draw(void) { BreakBar_DrawSprites(); }
 void BreakBar_Create(void *data)
 {
     RSDK_THIS(BreakBar);
-    entity->active        = ACTIVE_BOUNDS;
-    entity->drawOrder     = Zone->drawOrderLow;
-    entity->startPos      = entity->position;
-    entity->visible       = true;
-    entity->updateRange.x = 0x800000;
-    entity->updateRange.y = 0x800000;
+    self->active        = ACTIVE_BOUNDS;
+    self->drawOrder     = Zone->drawOrderLow;
+    self->startPos      = self->position;
+    self->visible       = true;
+    self->updateRange.x = 0x800000;
+    self->updateRange.y = 0x800000;
 
-    entity->hitbox.left   = 24;
-    entity->hitbox.top    = 24;
-    entity->hitbox.right  = 32;
-    entity->hitbox.bottom = 32;
-    if (!entity->orientation) {
-        entity->hitbox.top    = -8 - ((8 * entity->length) >> 1);
-        entity->hitbox.bottom = ((8 * entity->length) >> 1) + 8;
+    self->hitbox.left   = 24;
+    self->hitbox.top    = 24;
+    self->hitbox.right  = 32;
+    self->hitbox.bottom = 32;
+    if (!self->orientation) {
+        self->hitbox.top    = -8 - ((8 * self->length) >> 1);
+        self->hitbox.bottom = ((8 * self->length) >> 1) + 8;
     }
     else {
-        entity->hitbox.left  = -8 - ((8 * entity->length) >> 1);
-        entity->hitbox.right = ((8 * entity->length) >> 1) + 8;
+        self->hitbox.left  = -8 - ((8 * self->length) >> 1);
+        self->hitbox.right = ((8 * self->length) >> 1) + 8;
     }
-    entity->state = BreakBar_State_Setup;
+    self->state = BreakBar_State_Setup;
 }
 
 void BreakBar_StageLoad(void)
@@ -50,37 +50,37 @@ void BreakBar_DrawSprites(void)
     RSDK_THIS(BreakBar);
     Vector2 drawPos;
 
-    drawPos.x = entity->position.x;
-    drawPos.y = entity->position.y;
-    if (entity->orientation) {
-        drawPos.x += -0x40000 - (((8 * entity->length) >> 1) << 16);
-        RSDK.SetSpriteAnimation(BreakBar->aniFrames, 1, &entity->animator, true, 0);
-        RSDK.DrawSprite(&entity->animator, &drawPos, false);
+    drawPos.x = self->position.x;
+    drawPos.y = self->position.y;
+    if (self->orientation) {
+        drawPos.x += -0x40000 - (((8 * self->length) >> 1) << 16);
+        RSDK.SetSpriteAnimation(BreakBar->aniFrames, 1, &self->animator, true, 0);
+        RSDK.DrawSprite(&self->animator, &drawPos, false);
 
         drawPos.x += 0x80000;
-        RSDK.SetSpriteAnimation(BreakBar->aniFrames, 1, &entity->animator, true, 1);
-        for (int32 i = 0; i < entity->length; ++i) {
-            RSDK.DrawSprite(&entity->animator, &drawPos, false);
+        RSDK.SetSpriteAnimation(BreakBar->aniFrames, 1, &self->animator, true, 1);
+        for (int32 i = 0; i < self->length; ++i) {
+            RSDK.DrawSprite(&self->animator, &drawPos, false);
             drawPos.x += 0x80000;
         }
 
-        RSDK.SetSpriteAnimation(BreakBar->aniFrames, 1, &entity->animator, true, 2);
+        RSDK.SetSpriteAnimation(BreakBar->aniFrames, 1, &self->animator, true, 2);
     }
     else {
-        drawPos.y += -0x40000 - (((8 * entity->length) >> 1) << 16);
-        RSDK.SetSpriteAnimation(BreakBar->aniFrames, 0, &entity->animator, true, 0);
-        RSDK.DrawSprite(&entity->animator, &drawPos, false);
+        drawPos.y += -0x40000 - (((8 * self->length) >> 1) << 16);
+        RSDK.SetSpriteAnimation(BreakBar->aniFrames, 0, &self->animator, true, 0);
+        RSDK.DrawSprite(&self->animator, &drawPos, false);
 
         drawPos.y += 0x80000;
-        RSDK.SetSpriteAnimation(BreakBar->aniFrames, 0, &entity->animator, true, 1);
-        for (int32 i = 0; i < entity->length; ++i) {
-            RSDK.DrawSprite(&entity->animator, &drawPos, false);
+        RSDK.SetSpriteAnimation(BreakBar->aniFrames, 0, &self->animator, true, 1);
+        for (int32 i = 0; i < self->length; ++i) {
+            RSDK.DrawSprite(&self->animator, &drawPos, false);
             drawPos.y += 0x80000;
         }
 
-        RSDK.SetSpriteAnimation(BreakBar->aniFrames, 0, &entity->animator, true, 2);
+        RSDK.SetSpriteAnimation(BreakBar->aniFrames, 0, &self->animator, true, 2);
     }
-    RSDK.DrawSprite(&entity->animator, &drawPos, false);
+    RSDK.DrawSprite(&self->animator, &drawPos, false);
 }
 
 void BreakBar_CheckPlayerCollisions(void)
@@ -90,14 +90,14 @@ void BreakBar_CheckPlayerCollisions(void)
     foreach_active(Player, player)
     {
         int32 playerID = RSDK.GetEntityID(player);
-        if (((1 << playerID) & entity->activePlayersGrabbed) && !((1 << playerID) & entity->activePlayersReleased)) {
+        if (((1 << playerID) & self->activePlayersGrabbed) && !((1 << playerID) & self->activePlayersReleased)) {
             if (!Player_CheckValidState(player)) {
-                entity->activePlayersGrabbed &= ~(1 << playerID);
+                self->activePlayersGrabbed &= ~(1 << playerID);
             }
             else {
                 player->direction = FLIP_NONE;
-                if (entity->orientation) {
-                    player->position.y = entity->startPos.y;
+                if (self->orientation) {
+                    player->position.y = self->startPos.y;
                     if (player->velocity.y <= 0) {
                         player->position.y -= 0x140000;
                         player->rotation = 384;
@@ -108,7 +108,7 @@ void BreakBar_CheckPlayerCollisions(void)
                     }
                 }
                 else {
-                    player->position.x = entity->startPos.x;
+                    player->position.x = self->startPos.x;
                     if (player->velocity.x <= 0) {
                         player->position.x -= 0x140000;
                         player->rotation = 256;
@@ -128,20 +128,20 @@ void BreakBar_HandlePlayerInteractions(void *p)
     RSDK_THIS(BreakBar);
     EntityPlayer *player = (EntityPlayer *)p;
 
-    if (!entity->destroyFlag) {
-        int32 spawnX = entity->position.x;
-        int32 spawnY = entity->position.y;
+    if (!self->destroyFlag) {
+        int32 spawnX = self->position.x;
+        int32 spawnY = self->position.y;
 
-        if (entity->orientation)
-            spawnX += -0x40000 - ((8 * entity->length) >> 1 << 16);
+        if (self->orientation)
+            spawnX += -0x40000 - ((8 * self->length) >> 1 << 16);
         else
-            spawnY += -0x40000 - ((8 * entity->length) >> 1 << 16);
+            spawnY += -0x40000 - ((8 * self->length) >> 1 << 16);
 
-        if (entity->length != 0xFFFE) {
-            int32 len = (entity->length + 2) << 19;
-            for (int32 i = 0; i < entity->length + 2; ++i) {
+        if (self->length != 0xFFFE) {
+            int32 len = (self->length + 2) << 19;
+            for (int32 i = 0; i < self->length + 2; ++i) {
                 int32 frame = 0;
-                if (i == entity->length + 1)
+                if (i == self->length + 1)
                     frame = 2;
                 else
                     frame = i != 0;
@@ -154,7 +154,7 @@ void BreakBar_HandlePlayerInteractions(void *p)
                 debris->velocity.x = player->velocity.x >> 3;
                 debris->velocity.y = player->velocity.y >> 3;
 
-                if (entity->orientation) {
+                if (self->orientation) {
                     RSDK.SetSpriteAnimation(BreakBar->aniFrames, 1, &debris->animator, true, frame);
                     debris->velocity.x = abs(debris->position.x - player->position.x) >> 6;
                     if (debris->position.x < player->position.x)
@@ -181,17 +181,17 @@ void BreakBar_HandlePlayerInteractions(void *p)
             }
         }
         RSDK.PlaySfx(BreakBar->sfxBreak, false, 255);
-        entity->destroyFlag = true;
+        self->destroyFlag = true;
     }
 }
 
 void BreakBar_State_Setup(void)
 {
     RSDK_THIS(BreakBar);
-    entity->activePlayersGrabbed  = 0;
-    entity->activePlayersReleased = 0;
-    entity->releaseTimer          = 0;
-    entity->state                 = BreakBar_State_Main;
+    self->activePlayersGrabbed  = 0;
+    self->activePlayersReleased = 0;
+    self->releaseTimer          = 0;
+    self->state                 = BreakBar_State_Main;
 }
 
 void BreakBar_State_Main(void)
@@ -201,30 +201,30 @@ void BreakBar_State_Main(void)
     {
         int32 playerID = RSDK.GetEntityID(player);
         if ((player->sidekick && Player->jumpInDelay >= 239) || !Player_CheckValidState(player)) {
-            entity->activePlayersReleased &= ~(1 << playerID);
-            entity->activePlayersGrabbed &= ~(1 << playerID);
-            entity->playerTimers[playerID] = 8;
+            self->activePlayersReleased &= ~(1 << playerID);
+            self->activePlayersGrabbed &= ~(1 << playerID);
+            self->playerTimers[playerID] = 8;
         }
         else {
-            if (entity->playerTimers[playerID]) {
-                entity->playerTimers[playerID]--;
+            if (self->playerTimers[playerID]) {
+                self->playerTimers[playerID]--;
             }
-            else if (!((1 << playerID) & entity->activePlayersGrabbed) && !((1 << playerID) & entity->activePlayersReleased)) {
-                entity->direction = FLIP_NONE;
+            else if (!((1 << playerID) & self->activePlayersGrabbed) && !((1 << playerID) & self->activePlayersReleased)) {
+                self->direction = FLIP_NONE;
                 if (player->velocity.x < 0)
-                    entity->direction = FLIP_X;
+                    self->direction = FLIP_X;
                 if (player->velocity.y < 0)
-                    entity->direction |= FLIP_Y;
-                if (Player_CheckCollisionTouch(player, entity, &entity->hitbox)) {
-                    entity->activePlayersGrabbed |= 1 << playerID;
+                    self->direction |= FLIP_Y;
+                if (Player_CheckCollisionTouch(player, self, &self->hitbox)) {
+                    self->activePlayersGrabbed |= 1 << playerID;
                     RSDK.PlaySfx(Player->sfxGrab, false, 255);
                 }
             }
 
-            if (((1 << playerID) & entity->activePlayersGrabbed)) {
-                if (!((1 << playerID) & entity->activePlayersReleased)) {
-                    if (player->jumpPress || entity->releaseTimer >= 240 || entity->destroyFlag) {
-                        entity->activePlayersReleased |= (1 << playerID);
+            if (((1 << playerID) & self->activePlayersGrabbed)) {
+                if (!((1 << playerID) & self->activePlayersReleased)) {
+                    if (player->jumpPress || self->releaseTimer >= 240 || self->destroyFlag) {
+                        self->activePlayersReleased |= (1 << playerID);
                     }
                     else {
                         RSDK.SetSpriteAnimation(player->aniFrames, ANI_CLING, &player->playerAnimator, false, 0);
@@ -234,17 +234,17 @@ void BreakBar_State_Main(void)
                         player->state           = Player_State_None;
                     }
                     if (!player->sidekick && globals->gameMode != MODE_COMPETITION)
-                        ++entity->releaseTimer;
+                        ++self->releaseTimer;
                 }
             }
 
-            if (((1 << playerID) & entity->activePlayersReleased)) {
+            if (((1 << playerID) & self->activePlayersReleased)) {
                 if (globals->gameMode == MODE_COMPETITION) {
-                    entity->activePlayersReleased &= ~(1 << playerID);
-                    entity->activePlayersGrabbed &= ~(1 << playerID);
-                    entity->playerTimers[playerID] = 8;
+                    self->activePlayersReleased &= ~(1 << playerID);
+                    self->activePlayersGrabbed &= ~(1 << playerID);
+                    self->playerTimers[playerID] = 8;
                 }
-                else if (!player->sidekick && !entity->destroyFlag) {
+                else if (!player->sidekick && !self->destroyFlag) {
                     BreakBar_HandlePlayerInteractions(player);
                 }
                 RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->playerAnimator, false, 0);
@@ -253,8 +253,8 @@ void BreakBar_State_Main(void)
         }
     }
 
-    if (entity->destroyFlag)
-        destroyEntity(entity);
+    if (self->destroyFlag)
+        destroyEntity(self);
 }
 
 #if RETRO_INCLUDE_EDITOR

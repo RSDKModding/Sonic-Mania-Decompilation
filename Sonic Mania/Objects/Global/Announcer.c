@@ -5,7 +5,7 @@ ObjectAnnouncer *Announcer;
 void Announcer_Update(void)
 {
     RSDK_THIS(Announcer);
-    StateMachine_Run(entity->state);
+    StateMachine_Run(self->state);
 }
 
 void Announcer_LateUpdate(void) {}
@@ -15,19 +15,19 @@ void Announcer_StaticUpdate(void) {}
 void Announcer_Draw(void)
 {
     RSDK_THIS(Announcer);
-    StateMachine_Run(entity->stateDraw);
+    StateMachine_Run(self->stateDraw);
 }
 
 void Announcer_Create(void *data)
 {
     RSDK_THIS(Announcer);
-    entity->active        = ACTIVE_NORMAL;
-    entity->drawOrder     = 13;
-    entity->visible       = true;
-    entity->drawFX        = FX_FLIP | FX_SCALE;
-    entity->isPermanent   = true;
-    entity->updateRange.x = 0x800000;
-    entity->updateRange.y = 0x800000;
+    self->active        = ACTIVE_NORMAL;
+    self->drawOrder     = 13;
+    self->visible       = true;
+    self->drawFX        = FX_FLIP | FX_SCALE;
+    self->isPermanent   = true;
+    self->updateRange.x = 0x800000;
+    self->updateRange.y = 0x800000;
 }
 
 void Announcer_StageLoad(void)
@@ -94,11 +94,11 @@ void Announcer_StartCountdown(void)
 }
 void Announcer_AnnounceGoal(int32 screen)
 {
-    EntityAnnouncer *entity = CREATE_ENTITY(Announcer, NULL, 0, 0);
-    entity->state           = Announcer_Unknown6;
-    entity->stateDraw       = Announcer_Unknown4;
-    entity->screen          = screen;
-    RSDK.SetSpriteAnimation(Announcer->aniFrames, 0, &entity->animator, true, 0);
+    EntityAnnouncer *announcer = CREATE_ENTITY(Announcer, NULL, 0, 0);
+    announcer->state           = Announcer_Unknown6;
+    announcer->stateDraw       = Announcer_Unknown4;
+    announcer->screen          = screen;
+    RSDK.SetSpriteAnimation(Announcer->aniFrames, 0, &announcer->animator, true, 0);
     RSDK.PlaySfx(Announcer->sfxGoal, false, 255);
 }
 void Announcer_Unknown3(void)
@@ -107,12 +107,12 @@ void Announcer_Unknown3(void)
     RSDK_THIS(Announcer);
     drawPos.y = (ScreenInfo->centerY - 32) << 16;
     drawPos.x = ScreenInfo->centerX << 16;
-    drawPos.x += entity->pos.x;
-    drawPos.y += entity->pos.y;
-    RSDK.DrawSprite(&entity->animator, &drawPos, true);
+    drawPos.x += self->pos.x;
+    drawPos.y += self->pos.y;
+    RSDK.DrawSprite(&self->animator, &drawPos, true);
 
-    if (entity->playerID > 0) {
-        entity->inkEffect = INK_NONE;
+    if (self->playerID > 0) {
+        self->inkEffect = INK_NONE;
 
         int32 frame                         = 0;
         EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
@@ -125,12 +125,12 @@ void Announcer_Unknown3(void)
 #endif
             default: frame = 0; break;
         }
-        RSDK.SetSpriteAnimation(Announcer->aniFrames, 2, &entity->animator2, true, frame);
+        RSDK.SetSpriteAnimation(Announcer->aniFrames, 2, &self->animator2, true, frame);
 
         drawPos.x = ScreenInfo->centerX << 16;
         drawPos.y = (ScreenInfo->centerY + 48) << 16;
-        RSDK.DrawSprite(&entity->animator2, &drawPos, true);
-        entity->inkEffect = INK_ALPHA;
+        RSDK.DrawSprite(&self->animator2, &drawPos, true);
+        self->inkEffect = INK_ALPHA;
     }
 }
 void Announcer_Unknown4(void)
@@ -138,117 +138,117 @@ void Announcer_Unknown4(void)
     Vector2 drawPos;
     RSDK_THIS(Announcer);
 
-    if (SceneInfo->currentScreenID == entity->screen) {
+    if (SceneInfo->currentScreenID == self->screen) {
         drawPos.x = ScreenInfo->centerX << 16;
         drawPos.y = (ScreenInfo->centerY - 32) << 16;
-        drawPos.x += entity->pos.x;
-        drawPos.y += entity->pos.y;
-        RSDK.DrawSprite(&entity->animator, &drawPos, true);
+        drawPos.x += self->pos.x;
+        drawPos.y += self->pos.y;
+        RSDK.DrawSprite(&self->animator, &drawPos, true);
     }
 }
 void Announcer_State_CountDown(void)
 {
     RSDK_THIS(Announcer);
 
-    entity->inkEffect = INK_ALPHA;
-    if (entity->playerID <= 0) {
-        if (entity->timer >= 60) {
-            destroyEntity(entity);
+    self->inkEffect = INK_ALPHA;
+    if (self->playerID <= 0) {
+        if (self->timer >= 60) {
+            destroyEntity(self);
         }
         else {
-            if (!entity->timer) {
+            if (!self->timer) {
                 RSDK.PlaySfx(Announcer->sfxGo, false, 255);
-                RSDK.SetSpriteAnimation(Announcer->aniFrames, 1, &entity->animator, true, 3);
+                RSDK.SetSpriteAnimation(Announcer->aniFrames, 1, &self->animator, true, 3);
             }
 
             int32 val = 0;
-            if (entity->timer - 15 > 0)
-                val = (entity->timer - 15) << 9;
-            entity->alpha = 512 - val / 45;
-            entity->timer++;
+            if (self->timer - 15 > 0)
+                val = (self->timer - 15) << 9;
+            self->alpha = 512 - val / 45;
+            self->timer++;
         }
     }
     else {
-        if (entity->timer >= 45) {
-            entity->timer = 0;
-            entity->playerID--;
-            if (!entity->playerID) {
+        if (self->timer >= 45) {
+            self->timer = 0;
+            self->playerID--;
+            if (!self->playerID) {
                 Announcer->finishedCountdown = true;
                 SceneInfo->timeEnabled  = true;
             }
         }
         else {
 
-            if (!entity->timer) {
-                switch (entity->playerID) {
+            if (!self->timer) {
+                switch (self->playerID) {
                     default: break;
                     case 1:
                         RSDK.PlaySfx(Announcer->sfxOne, false, 255);
-                        RSDK.SetSpriteAnimation(Announcer->aniFrames, 1, &entity->animator, true, 2);
+                        RSDK.SetSpriteAnimation(Announcer->aniFrames, 1, &self->animator, true, 2);
                         break;
                     case 2:
                         RSDK.PlaySfx(Announcer->sfxTwo, false, 255);
-                        RSDK.SetSpriteAnimation(Announcer->aniFrames, 1, &entity->animator, true, 1);
+                        RSDK.SetSpriteAnimation(Announcer->aniFrames, 1, &self->animator, true, 1);
                         break;
                     case 3:
                         RSDK.PlaySfx(Announcer->sfxThree, false, 255);
-                        RSDK.SetSpriteAnimation(Announcer->aniFrames, 1, &entity->animator, true, 0);
+                        RSDK.SetSpriteAnimation(Announcer->aniFrames, 1, &self->animator, true, 0);
                         break;
                 }
             }
-            entity->pos.x = 0;
-            entity->pos.y = 0;
-            entity->alpha = 512 - (entity->timer << 9) / 45;
-            entity->timer++;
+            self->pos.x = 0;
+            self->pos.y = 0;
+            self->alpha = 512 - (self->timer << 9) / 45;
+            self->timer++;
         }
     }
 }
 void Announcer_Unknown6(void)
 {
     RSDK_THIS(Announcer);
-    entity->scale.x = 0x200;
-    entity->scale.y = 0x200;
-    if (entity->timer >= 16) {
-        if (entity->timer >= 76) {
-            if (entity->timer >= 92) {
-                destroyEntity(entity);
+    self->scale.x = 0x200;
+    self->scale.y = 0x200;
+    if (self->timer >= 16) {
+        if (self->timer >= 76) {
+            if (self->timer >= 92) {
+                destroyEntity(self);
             }
             else {
-                entity->visible = true;
-                MathHelpers_Lerp1(&entity->pos, ((entity->timer - 76) << 8) / 16, 0, 0, ScreenInfo->width << 16, 0);
-                ++entity->timer;
+                self->visible = true;
+                MathHelpers_Lerp1(&self->pos, ((self->timer - 76) << 8) / 16, 0, 0, ScreenInfo->width << 16, 0);
+                ++self->timer;
             }
         }
         else {
-            ++entity->timer;
-            entity->pos.x = 0;
-            entity->pos.y = 0;
+            ++self->timer;
+            self->pos.x = 0;
+            self->pos.y = 0;
         }
     }
     else {
-        entity->visible = true;
-        int32 t           = 16 * entity->timer;
+        self->visible = true;
+        int32 t           = 16 * self->timer;
         int32 val         = -0x10000 * ScreenInfo->width;
         if (t > 0) {
             if (t < 256)
-                entity->pos.x = val + t * (-val >> 8);
+                self->pos.x = val + t * (-val >> 8);
             else
-                entity->pos.x = 0;
-            entity->pos.y = 0;
-            ++entity->timer;
+                self->pos.x = 0;
+            self->pos.y = 0;
+            ++self->timer;
         }
         else {
-            entity->pos.x = val;
-            entity->pos.y = 0;
-            ++entity->timer;
+            self->pos.x = val;
+            self->pos.y = 0;
+            ++self->timer;
         }
     }
 }
 void Announcer_State_AnnounceWinner(void)
 {
     RSDK_THIS(Announcer);
-    if (entity->timer >= 150) {
-        switch (entity->playerID) {
+    if (self->timer >= 150) {
+        switch (self->playerID) {
             case 0: RSDK.PlaySfx(Announcer->sfxPlayer1, 0, 255); break;
             case 1: RSDK.PlaySfx(Announcer->sfxPlayer2, 0, 255); break;
 #if RETRO_USE_PLUS
@@ -257,35 +257,35 @@ void Announcer_State_AnnounceWinner(void)
 #endif
             default: break;
         }
-        destroyEntity(entity);
+        destroyEntity(self);
     }
     else {
-        if (entity->timer == 30)
+        if (self->timer == 30)
             RSDK.PlaySfx(Announcer->sfxTheWinnerIs, 0, 255);
-        ++entity->timer;
+        ++self->timer;
     }
 }
 void Announcer_State_AnnounceDraw(void)
 {
     RSDK_THIS(Announcer);
-    if (entity->timer < 30) {
-        entity->timer++;
+    if (self->timer < 30) {
+        self->timer++;
     }
     else {
-        if (!entity->playerID) {
+        if (!self->playerID) {
             RSDK.PlaySfx(Announcer->sfxItsADraw, 0, 255);
         }
-        else if (entity->playerID == 1) {
+        else if (self->playerID == 1) {
             RSDK.PlaySfx(Announcer->sfxItsADraw_Set, 0, 255);
         }
-        destroyEntity(entity);
+        destroyEntity(self);
     }
 }
 void Announcer_State_AnnounceWinPlayer(void)
 {
     RSDK_THIS(Announcer);
-    if (entity->timer >= 30) {
-        switch (entity->playerID) {
+    if (self->timer >= 30) {
+        switch (self->playerID) {
             case ID_SONIC: RSDK.PlaySfx(Announcer->sfxSonicWins, 0, 255); break;
             case ID_TAILS: RSDK.PlaySfx(Announcer->sfxTailsWins, 0, 255); break;
             case ID_KNUCKLES: RSDK.PlaySfx(Announcer->sfxKnuxWins, 0, 255); break;
@@ -295,10 +295,10 @@ void Announcer_State_AnnounceWinPlayer(void)
 #endif
             default: break;
         }
-        destroyEntity(entity);
+        destroyEntity(self);
     }
     else {
-        entity->timer++;
+        self->timer++;
     }
 }
 

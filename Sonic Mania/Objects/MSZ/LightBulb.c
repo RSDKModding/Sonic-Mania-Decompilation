@@ -5,7 +5,7 @@ ObjectLightBulb *LightBulb;
 void LightBulb_Update(void)
 {
     RSDK_THIS(LightBulb);
-    StateMachine_Run(entity->state);
+    StateMachine_Run(self->state);
 }
 
 void LightBulb_LateUpdate(void) {}
@@ -16,35 +16,35 @@ void LightBulb_Draw(void)
 {
     RSDK_THIS(LightBulb);
 
-    entity->alpha            = 0x200;
-    entity->inkEffect        = INK_SUB;
-    entity->animator.frameID = 0;
-    RSDK.DrawSprite(&entity->animator, NULL, false);
+    self->alpha            = 0x200;
+    self->inkEffect        = INK_SUB;
+    self->animator.frameID = 0;
+    RSDK.DrawSprite(&self->animator, NULL, false);
 
-    entity->inkEffect        = INK_ADD;
-    entity->alpha            = (RSDK.Sin256(4 * Zone->timer) >> 2) + 192;
-    entity->animator.frameID = 2;
-    RSDK.DrawSprite(&entity->animator, NULL, false);
+    self->inkEffect        = INK_ADD;
+    self->alpha            = (RSDK.Sin256(4 * Zone->timer) >> 2) + 192;
+    self->animator.frameID = 2;
+    RSDK.DrawSprite(&self->animator, NULL, false);
 
-    entity->alpha            = 0x200;
-    entity->animator.frameID = 1;
-    RSDK.DrawSprite(&entity->animator, NULL, false);
+    self->alpha            = 0x200;
+    self->animator.frameID = 1;
+    RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
 void LightBulb_Create(void *data)
 {
     RSDK_THIS(LightBulb);
-    if (entity->priority)
-        entity->drawOrder = Zone->drawOrderLow;
+    if (self->priority)
+        self->drawOrder = Zone->drawOrderLow;
     else
-        entity->drawOrder = Zone->drawOrderHigh;
-    entity->visible       = true;
-    entity->alpha         = 256;
-    entity->active        = ACTIVE_BOUNDS;
-    entity->updateRange.x = 0x400000;
-    entity->updateRange.y = 0x400000;
-    entity->state         = LightBulb_State_CheckPlayerCollisions;
-    RSDK.SetSpriteAnimation(LightBulb->aniFrames, 0, &entity->animator, true, 0);
+        self->drawOrder = Zone->drawOrderHigh;
+    self->visible       = true;
+    self->alpha         = 256;
+    self->active        = ACTIVE_BOUNDS;
+    self->updateRange.x = 0x400000;
+    self->updateRange.y = 0x400000;
+    self->state         = LightBulb_State_CheckPlayerCollisions;
+    RSDK.SetSpriteAnimation(LightBulb->aniFrames, 0, &self->animator, true, 0);
 }
 
 void LightBulb_StageLoad(void)
@@ -61,7 +61,7 @@ void LightBulb_StageLoad(void)
 void LightBulb_DebugSpawn(void)
 {
     RSDK_THIS(DebugMode);
-    CREATE_ENTITY(LightBulb, NULL, entity->position.x, entity->position.y);
+    CREATE_ENTITY(LightBulb, NULL, self->position.x, self->position.y);
 }
 
 void LightBulb_DebugDraw(void)
@@ -76,7 +76,7 @@ void LightBulb_State_CheckPlayerCollisions(void)
 
     foreach_active(Player, player)
     {
-        if (player->playerAnimator.animationID != ANI_HURT && Player_CheckCollisionTouch(player, entity, &LightBulb->hitbox)) {
+        if (player->playerAnimator.animationID != ANI_HURT && Player_CheckCollisionTouch(player, self, &LightBulb->hitbox)) {
             RSDK.PlaySfx(LightBulb->sfxBulbPop, false, 255);
 
 #if RETRO_USE_PLUS
@@ -104,19 +104,19 @@ void LightBulb_State_CheckPlayerCollisions(void)
 #if RETRO_USE_PLUS
             }
 #endif
-            CREATE_ENTITY(ScoreBonus, NULL, entity->position.x, entity->position.y)->animator.frameID = 16;
+            CREATE_ENTITY(ScoreBonus, NULL, self->position.x, self->position.y)->animator.frameID = 16;
             Player_GiveScore(player, 10);
-            CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSSPUFF), entity->position.x, entity->position.y - 0x100000)->drawOrder =
+            CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSSPUFF), self->position.x, self->position.y - 0x100000)->drawOrder =
                 Zone->drawOrderHigh;
 
             for (int i = 0; i < 6; ++i) {
-                int x                = entity->position.x + RSDK.Rand(-0x80000, 0x80000);
-                int y                = entity->position.y + RSDK.Rand(-0x80000, 0x80000);
+                int x                = self->position.x + RSDK.Rand(-0x80000, 0x80000);
+                int y                = self->position.y + RSDK.Rand(-0x80000, 0x80000);
                 EntityDebris *debris = CREATE_ENTITY(Debris, NULL, x, y);
                 debris->state        = Debris_State_Fall;
                 debris->gravity      = 0x4000;
                 debris->velocity.x   = RSDK.Rand(0, 0x20000);
-                if (debris->position.x < entity->position.x)
+                if (debris->position.x < self->position.x)
                     debris->velocity.x = -debris->velocity.x;
                 debris->velocity.y = RSDK.Rand(-0x40000, -0x10000);
                 debris->drawFX     = FX_FLIP;
@@ -125,9 +125,9 @@ void LightBulb_State_CheckPlayerCollisions(void)
                 RSDK.SetSpriteAnimation(ItemBox->aniFrames, 6, &debris->animator, true, RSDK.Rand(0, 4));
             }
 
-            entity->state   = LightBulb_State_Destroyed;
-            entity->visible = false;
-            entity->active  = ACTIVE_NORMAL;
+            self->state   = LightBulb_State_Destroyed;
+            self->visible = false;
+            self->active  = ACTIVE_NORMAL;
         }
     }
 }
@@ -140,10 +140,10 @@ void LightBulb_State_Destroyed(void)
     range.x = 0x1000000;
     range.y = 0x1000000;
 
-    if (!RSDK.CheckOnScreen(entity, &range)) {
-        entity->state   = LightBulb_State_CheckPlayerCollisions;
-        entity->visible = true;
-        entity->active  = ACTIVE_BOUNDS;
+    if (!RSDK.CheckOnScreen(self, &range)) {
+        self->state   = LightBulb_State_CheckPlayerCollisions;
+        self->visible = true;
+        self->active  = ACTIVE_BOUNDS;
     }
 }
 

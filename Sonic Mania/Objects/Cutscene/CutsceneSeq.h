@@ -54,7 +54,7 @@ void CutsceneSeq_Serialize(void);
 Entity *CutsceneSeq_GetEntity(int32 type);
 void CutsceneSeq_LockAllPlayerControl(void);
 void CutsceneSeq_LockPlayerControl(void *plr);
-void CutsceneSeq_CheckSkip(uint8 skipType, EntityCutsceneSeq *entity, void (*skipCallback)(void));
+void CutsceneSeq_CheckSkip(uint8 skipType, EntityCutsceneSeq *self, void (*skipCallback)(void));
 void CutsceneSeq_NewState(int32 nextState, EntityCutsceneSeq *CutsceneSeq);
 void CutsceneSeq_StartSequence(Entity *host, void **states);
 

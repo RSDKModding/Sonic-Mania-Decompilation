@@ -5,7 +5,7 @@ ObjectStaircase *Staircase;
 void Staircase_Update(void)
 {
     RSDK_THIS(Staircase);
-    StateMachine_Run(entity->state);
+    StateMachine_Run(self->state);
 }
 
 void Staircase_LateUpdate(void) {}
@@ -15,34 +15,34 @@ void Staircase_StaticUpdate(void) {}
 void Staircase_Draw(void)
 {
     RSDK_THIS(Staircase);
-    StateMachine_Run(entity->drawState);
+    StateMachine_Run(self->drawState);
 }
 
 void Staircase_Create(void *data)
 {
     RSDK_THIS(Staircase);
 
-    entity->visible               = true;
-    entity->drawOrder             = Zone->drawOrderLow;
-    entity->active                = ACTIVE_BOUNDS;
-    entity->updateRange.x         = 0x1000000;
-    entity->updateRange.y         = 0x1000000;
+    self->visible               = true;
+    self->drawOrder             = Zone->drawOrderLow;
+    self->active                = ACTIVE_BOUNDS;
+    self->updateRange.x         = 0x1000000;
+    self->updateRange.y         = 0x1000000;
     Staircase->blockHitbox.top    = -16;
     Staircase->blockHitbox.left   = -16;
     Staircase->blockHitbox.bottom = 16;
     Staircase->blockHitbox.right  = 16;
 
-    int32 add = (entity->direction) ? -0x200000 : 0x200000;
+    int32 add = (self->direction) ? -0x200000 : 0x200000;
 
     for (int i = 0; i < Starcase_StairCount; ++i) {
-        entity->blocks[i].x = entity->position.x + i * add;
-        entity->blocks[i].y = entity->position.y;
+        self->blocks[i].x = self->position.x + i * add;
+        self->blocks[i].y = self->position.y;
     }
 
-    RSDK.SetSpriteAnimation(Staircase->animID, 0, &entity->animator, true, 0);
+    RSDK.SetSpriteAnimation(Staircase->animID, 0, &self->animator, true, 0);
 
-    entity->state     = Staircase_MainState;
-    entity->drawState = Staircase_DrawBlocks;
+    self->state     = Staircase_MainState;
+    self->drawState = Staircase_DrawBlocks;
 }
 
 void Staircase_StageLoad(void)
@@ -67,92 +67,92 @@ bool32 Staircase_CheckCB(void)
 void Staircase_MainState(void)
 {
     RSDK_THIS(Staircase);
-    Vector2 oldpos = entity->position;
+    Vector2 oldpos = self->position;
     foreach_active(Player, player)
     {
         for (int32 i = 0; i < 4; i++) {
-            entity->position = entity->blocks[i];
-            int32 side          = Player_CheckCollisionBox(player, entity, &Staircase->blockHitbox);
+            self->position = self->blocks[i];
+            int32 side          = Player_CheckCollisionBox(player, self, &Staircase->blockHitbox);
             if (side == C_BOTTOM) {
                 //bumpable would prolly be used here :D
-                entity->active    = ACTIVE_NORMAL;
-                entity->timer     = 59;
-                entity->state     = Staircase_Wait;
-                entity->drawState = Staircase_DrawShake;
+                self->active    = ACTIVE_NORMAL;
+                self->timer     = 59;
+                self->state     = Staircase_Wait;
+                self->drawState = Staircase_DrawShake;
                 if (player->onGround)
                     player->hurtFlag = 1;
             }
             else if (side == C_TOP) {
-                entity->active = ACTIVE_NORMAL;
-                entity->timer  = 32;
-                entity->state  = Staircase_Wait;
+                self->active = ACTIVE_NORMAL;
+                self->timer  = 32;
+                self->state  = Staircase_Wait;
             }
         }
     }
-    entity->position = oldpos;
+    self->position = oldpos;
 }
 
 void Staircase_Wait(void)
 {
     RSDK_THIS(Staircase);
-    Vector2 oldpos = entity->position;
+    Vector2 oldpos = self->position;
     foreach_active(Player, player)
     {
         for (int32 i = 0; i < Starcase_StairCount; i++) {
-            entity->position = entity->blocks[i];
-            Player_CheckCollisionBox(player, entity, &Staircase->blockHitbox);
+            self->position = self->blocks[i];
+            Player_CheckCollisionBox(player, self, &Staircase->blockHitbox);
         }
     }
-    entity->position = oldpos;
+    self->position = oldpos;
 
-    if (--entity->timer < 0) {
-        entity->timer = 128;
+    if (--self->timer < 0) {
+        self->timer = 128;
         if (!RSDK.IsSFXPlaying(Staircase->sfxID))
             RSDK.PlaySfx(Staircase->sfxID, false, 255);
-        entity->state     = Staircase_MoveBlocks;
-        entity->drawState = Staircase_DrawBlocks;
+        self->state     = Staircase_MoveBlocks;
+        self->drawState = Staircase_DrawBlocks;
     }
-    if (!RSDK.CheckOnScreen(entity, &entity->updateRange))
+    if (!RSDK.CheckOnScreen(self, &self->updateRange))
         Staircase_Create(NULL);
 }
 
 void Staircase_MoveBlocks(void)
 {
     RSDK_THIS(Staircase);
-    int32 add        = (entity->type) ? -0x4000 : 0x4000;
-    Vector2 oldpos = entity->position;
+    int32 add        = (self->type) ? -0x4000 : 0x4000;
+    Vector2 oldpos = self->position;
     foreach_active(Player, player)
     {
         for (int32 i = 0; i < Starcase_StairCount; i++) {
-            entity->position = entity->blocks[i];
-            if (Player_CheckCollisionBox(player, entity, &Staircase->blockHitbox) == 1)
+            self->position = self->blocks[i];
+            if (Player_CheckCollisionBox(player, self, &Staircase->blockHitbox) == 1)
                 player->position.y += add * (i + 1);
         }
     }
-    entity->position = oldpos;
+    self->position = oldpos;
 
-    for (int i = 0; i < Starcase_StairCount; ++i) entity->blocks[i].y += (i + 1) * add;
+    for (int i = 0; i < Starcase_StairCount; ++i) self->blocks[i].y += (i + 1) * add;
 
-    if (--entity->timer <= 0)
-        entity->state = Staircase_BasicCollision;
-    if (!RSDK.CheckOnScreen(entity, &entity->updateRange))
+    if (--self->timer <= 0)
+        self->state = Staircase_BasicCollision;
+    if (!RSDK.CheckOnScreen(self, &self->updateRange))
         Staircase_Create(NULL);
 }
 
 void Staircase_BasicCollision(void)
 {
     RSDK_THIS(Staircase);
-    Vector2 oldpos = entity->position;
+    Vector2 oldpos = self->position;
     foreach_active(Player, player)
     {
         for (int32 i = 0; i < Starcase_StairCount; i++) {
-            entity->position = entity->blocks[i];
-            if (Player_CheckCollisionBox(player, entity, &Staircase->blockHitbox) == C_BOTTOM && player->onGround)
+            self->position = self->blocks[i];
+            if (Player_CheckCollisionBox(player, self, &Staircase->blockHitbox) == C_BOTTOM && player->onGround)
                 player->hurtFlag = 1;
         }
     }
-    entity->position = oldpos;
-    if (!RSDK.CheckOnScreen(entity, &entity->updateRange))
+    self->position = oldpos;
+    if (!RSDK.CheckOnScreen(self, &self->updateRange))
         Staircase_Create(NULL);
 }
 
@@ -160,15 +160,15 @@ void Staircase_DrawBlocks(void)
 {
     RSDK_THIS(Staircase);
     for (int32 i = 0; i < Starcase_StairCount; i++) {
-        RSDK.DrawSprite(&entity->animator, &entity->blocks[i], false);
+        RSDK.DrawSprite(&self->animator, &self->blocks[i], false);
     }
 }
 void Staircase_DrawShake(void) {
     RSDK_THIS(Staircase);
     for (int32 i = 0; i < Starcase_StairCount; i++) {
-        Vector2 drawPos = entity->blocks[i];
-        drawPos.y += ((entity->timer - i * 4) << 14) & 0x10000;
-        RSDK.DrawSprite(&entity->animator, &drawPos, false);
+        Vector2 drawPos = self->blocks[i];
+        drawPos.y += ((self->timer - i * 4) << 14) & 0x10000;
+        RSDK.DrawSprite(&self->animator, &drawPos, false);
     }
 }
 
@@ -177,11 +177,11 @@ void Staircase_EditorDraw(void)
 {
     RSDK_THIS(Staircase);
 
-    int32 add = (entity->direction) ? -0x200000 : 0x200000;
+    int32 add = (self->direction) ? -0x200000 : 0x200000;
 
     for (int i = 0; i < Starcase_StairCount; ++i) {
-        entity->blocks[i].x = entity->position.x + i * add;
-        entity->blocks[i].y = entity->position.y;
+        self->blocks[i].x = self->position.x + i * add;
+        self->blocks[i].y = self->position.y;
     }
 
     Staircase_DrawBlocks();

@@ -5,7 +5,7 @@ ObjectPlaneSeeSaw *PlaneSeeSaw;
 void PlaneSeeSaw_Update(void)
 {
     RSDK_THIS(PlaneSeeSaw);
-    StateMachine_Run(entity->state);
+    StateMachine_Run(self->state);
 }
 
 void PlaneSeeSaw_LateUpdate(void) {}
@@ -17,34 +17,34 @@ void PlaneSeeSaw_Draw(void)
     RSDK_THIS(PlaneSeeSaw);
     Vector2 drawPos;
 
-    drawPos.x         = entity->position.x;
-    drawPos.y         = entity->position.y + entity->scale.y * (entity->seeSawPos >> 9);
-    entity->direction = FLIP_X;
-    RSDK.DrawSprite(&entity->animator2, NULL, false);
+    drawPos.x         = self->position.x;
+    drawPos.y         = self->position.y + self->scale.y * (self->seeSawPos >> 9);
+    self->direction = FLIP_X;
+    RSDK.DrawSprite(&self->animator2, NULL, false);
 
-    entity->direction = FLIP_NONE;
-    RSDK.DrawSprite(&entity->animator2, NULL, false);
-    RSDK.DrawSprite(&entity->animator3, &drawPos, false);
-    RSDK.DrawSprite(&entity->animator1, NULL, false);
+    self->direction = FLIP_NONE;
+    RSDK.DrawSprite(&self->animator2, NULL, false);
+    RSDK.DrawSprite(&self->animator3, &drawPos, false);
+    RSDK.DrawSprite(&self->animator1, NULL, false);
 }
 
 void PlaneSeeSaw_Create(void *data)
 {
     RSDK_THIS(PlaneSeeSaw);
-    entity->drawFX = FX_FLIP;
+    self->drawFX = FX_FLIP;
 
     if (!SceneInfo->inEditor) {
-        entity->visible       = true;
-        entity->drawOrder     = Zone->drawOrderLow;
-        entity->active        = ACTIVE_BOUNDS;
-        entity->updateRange.x = 0x800000;
-        entity->updateRange.y = 0x800000;
-        entity->scale.x       = 0x200;
-        entity->scale.y       = 0x200;
-        entity->state         = PlaneSeeSaw_State_WaitForPlayer;
-        RSDK.SetSpriteAnimation(PlaneSeeSaw->aniFrames, 0, &entity->animator2, true, 0);
-        RSDK.SetSpriteAnimation(PlaneSeeSaw->aniFrames, 1, &entity->animator1, true, 0);
-        RSDK.SetSpriteAnimation(PlaneSeeSaw->aniFrames, 2, &entity->animator3, true, 0);
+        self->visible       = true;
+        self->drawOrder     = Zone->drawOrderLow;
+        self->active        = ACTIVE_BOUNDS;
+        self->updateRange.x = 0x800000;
+        self->updateRange.y = 0x800000;
+        self->scale.x       = 0x200;
+        self->scale.y       = 0x200;
+        self->state         = PlaneSeeSaw_State_WaitForPlayer;
+        RSDK.SetSpriteAnimation(PlaneSeeSaw->aniFrames, 0, &self->animator2, true, 0);
+        RSDK.SetSpriteAnimation(PlaneSeeSaw->aniFrames, 1, &self->animator1, true, 0);
+        RSDK.SetSpriteAnimation(PlaneSeeSaw->aniFrames, 2, &self->animator3, true, 0);
     }
 }
 
@@ -59,15 +59,15 @@ void PlaneSeeSaw_State_WaitForPlayer(void)
 {
     RSDK_THIS(PlaneSeeSaw);
 
-    Hitbox *hitbox = RSDK.GetHitbox(&entity->animator1, 0);
+    Hitbox *hitbox = RSDK.GetHitbox(&self->animator1, 0);
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionPlatform(player, entity, hitbox)) {
+        if (Player_CheckCollisionPlatform(player, self, hitbox)) {
 #if RETRO_USE_PLUS
             if (player->state == Player_State_MightyHammerDrop)
                 player->state = Player_State_Air;
 #endif
-            entity->state = PlaneSeeSaw_State_PlayerPushDown;
+            self->state = PlaneSeeSaw_State_PlayerPushDown;
         }
     }
 }
@@ -76,32 +76,32 @@ void PlaneSeeSaw_State_PlayerPushDown(void)
 {
     RSDK_THIS(PlaneSeeSaw);
 
-    Hitbox *hitboxOld = RSDK.GetHitbox(&entity->animator1, 0);
-    if (entity->animator1.frameID >= entity->animator1.frameCount - 1) {
-        entity->velocity.y += 0x3800;
-        entity->seeSawPos += entity->velocity.y;
+    Hitbox *hitboxOld = RSDK.GetHitbox(&self->animator1, 0);
+    if (self->animator1.frameID >= self->animator1.frameCount - 1) {
+        self->velocity.y += 0x3800;
+        self->seeSawPos += self->velocity.y;
     }
     else {
-        ++entity->animator2.frameID;
-        ++entity->animator1.frameID;
-        if (entity->animator1.frameID == entity->animator1.frameCount - 1) {
-            entity->velocity.y = -0x60000;
+        ++self->animator2.frameID;
+        ++self->animator1.frameID;
+        if (self->animator1.frameID == self->animator1.frameCount - 1) {
+            self->velocity.y = -0x60000;
             RSDK.PlaySfx(PlaneSeeSaw->sfxFlipper, false, 255);
         }
-        entity->seeSawPos = RSDK.GetHitbox(&entity->animator2, 0)->top << 16;
+        self->seeSawPos = RSDK.GetHitbox(&self->animator2, 0)->top << 16;
     }
 
-    Hitbox *hitboxNew = RSDK.GetHitbox(&entity->animator1, 0);
+    Hitbox *hitboxNew = RSDK.GetHitbox(&self->animator1, 0);
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionPlatform(player, entity, hitboxOld))
+        if (Player_CheckCollisionPlatform(player, self, hitboxOld))
             player->position.y += (hitboxNew->bottom - hitboxOld->bottom) << 16;
     }
 
-    if (entity->seeSawPos > -0x230000 && entity->velocity.y > 0) {
-        entity->velocity.y = 0;
-        entity->seeSawPos  = -0x230000;
-        entity->state      = PlaneSeeSaw_State_Launch;
+    if (self->seeSawPos > -0x230000 && self->velocity.y > 0) {
+        self->velocity.y = 0;
+        self->seeSawPos  = -0x230000;
+        self->state      = PlaneSeeSaw_State_Launch;
         RSDK.PlaySfx(PlaneSeeSaw->sfxSpring, false, 255);
     }
 }
@@ -109,23 +109,23 @@ void PlaneSeeSaw_State_PlayerPushDown(void)
 void PlaneSeeSaw_State_Launch(void)
 {
     RSDK_THIS(PlaneSeeSaw);
-    Hitbox *hitboxOld = RSDK.GetHitbox(&entity->animator1, 0);
-    if (entity->animator1.frameID <= 0) {
-        entity->state = PlaneSeeSaw_State_WaitForPlayer;
+    Hitbox *hitboxOld = RSDK.GetHitbox(&self->animator1, 0);
+    if (self->animator1.frameID <= 0) {
+        self->state = PlaneSeeSaw_State_WaitForPlayer;
     }
     else {
-        --entity->animator2.frameID;
-        --entity->animator1.frameID;
-        entity->seeSawPos = RSDK.GetHitbox(&entity->animator2, 0)->top << 16;
+        --self->animator2.frameID;
+        --self->animator1.frameID;
+        self->seeSawPos = RSDK.GetHitbox(&self->animator2, 0)->top << 16;
     }
 
-    Hitbox *hitboxNew = RSDK.GetHitbox(&entity->animator1, 0);
+    Hitbox *hitboxNew = RSDK.GetHitbox(&self->animator1, 0);
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionPlatform(player, entity, hitboxOld)) {
+        if (Player_CheckCollisionPlatform(player, self, hitboxOld)) {
             player->position.y += (hitboxNew->bottom - hitboxOld->bottom) << 16;
-            if (entity->animator1.frameID < 4) {
-                if (entity->scale.x == 0x100) {
+            if (self->animator1.frameID < 4) {
+                if (self->scale.x == 0x100) {
                     player->position.x -= FarPlane->field_18.x;
                     player->position.y -= FarPlane->field_18.y;
                     player->position.x += FarPlane->field_20.x;
@@ -148,7 +148,7 @@ void PlaneSeeSaw_State_Launch(void)
                     player->state      = PlaneSeeSaw_PlayerState_ToBG;
                     player->velocity.y = -0xA0000;
                 }
-                player->abilityValues[0]    = entity->position.x;
+                player->abilityValues[0]    = self->position.x;
                 player->nextAirState     = StateMachine_None;
                 player->nextGroundState  = StateMachine_None;
                 player->interaction      = false;
@@ -170,74 +170,74 @@ void PlaneSeeSaw_State_Launch(void)
 
 void PlaneSeeSaw_PlayerState_ToBG(void)
 {
-    EntityPlayer *entity = RSDK_GET_ENTITY(SceneInfo->entitySlot, Player);
-    entity->left         = false;
-    entity->right        = false;
-    if (((entity->abilityValues[0] ^ entity->position.x) & 0xFFFF0000)) {
-        if (entity->position.x <= entity->abilityValues[0])
-            entity->position.x += 0x8000;
+    EntityPlayer *self = RSDK_GET_ENTITY(SceneInfo->entitySlot, Player);
+    self->left         = false;
+    self->right        = false;
+    if (((self->abilityValues[0] ^ self->position.x) & 0xFFFF0000)) {
+        if (self->position.x <= self->abilityValues[0])
+            self->position.x += 0x8000;
         else
-            entity->position.x -= 0x8000;
+            self->position.x -= 0x8000;
     }
 
-    ControllerInfo[entity->controllerID].keyY.press = false;
+    ControllerInfo[self->controllerID].keyY.press = false;
     Player_State_Air();
 
-    entity->tileCollisions = false;
-    if (entity->scale.x <= 0x100) {
-        entity->interaction    = true;
-        entity->tileCollisions = true;
-        entity->drawOrder      = 2;
-        entity->position.x -= FarPlane->field_20.x;
-        entity->position.y -= FarPlane->field_20.y;
-        entity->position.x += FarPlane->field_18.x;
-        entity->position.y += FarPlane->field_18.y;
+    self->tileCollisions = false;
+    if (self->scale.x <= 0x100) {
+        self->interaction    = true;
+        self->tileCollisions = true;
+        self->drawOrder      = 2;
+        self->position.x -= FarPlane->field_20.x;
+        self->position.y -= FarPlane->field_20.y;
+        self->position.x += FarPlane->field_18.x;
+        self->position.y += FarPlane->field_18.y;
         Zone->deathBoundary[0] += 0x8000000;
-        entity->state = Player_State_Air;
-        if (entity->camera) {
-            entity->camera->field_6C.x = FarPlane->field_20.x - FarPlane->field_18.x;
-            entity->camera->field_6C.y = FarPlane->field_20.y - FarPlane->field_18.y;
+        self->state = Player_State_Air;
+        if (self->camera) {
+            self->camera->field_6C.x = FarPlane->field_20.x - FarPlane->field_18.x;
+            self->camera->field_6C.y = FarPlane->field_20.y - FarPlane->field_18.y;
         }
-        entity->scale.y = entity->scale.x;
+        self->scale.y = self->scale.x;
     }
     else {
-        entity->scale.x -= 4;
-        entity->scale.y = entity->scale.x;
+        self->scale.x -= 4;
+        self->scale.y = self->scale.x;
     }
 }
 
 void PlaneSeeSaw_PlayerState_ToFG(void)
 {
-    EntityPlayer *entity = RSDK_GET_ENTITY(SceneInfo->entitySlot, Player);
+    EntityPlayer *self = RSDK_GET_ENTITY(SceneInfo->entitySlot, Player);
 
-    entity->left  = false;
-    entity->right = false;
-    if (((entity->abilityValues[0] ^ entity->position.x) & 0xFFFF0000)) {
-        if (entity->position.x <= entity->abilityValues[0])
-            entity->position.x += 0x8000;
+    self->left  = false;
+    self->right = false;
+    if (((self->abilityValues[0] ^ self->position.x) & 0xFFFF0000)) {
+        if (self->position.x <= self->abilityValues[0])
+            self->position.x += 0x8000;
         else
-            entity->position.x -= 0x8000;
+            self->position.x -= 0x8000;
     }
-    ControllerInfo[entity->controllerID].keyY.press = false;
+    ControllerInfo[self->controllerID].keyY.press = false;
     Player_State_Air();
 
-    entity->tileCollisions = false;
-    if (entity->scale.x >= 0x200) {
-        entity->interaction    = true;
-        entity->tileCollisions = true;
+    self->tileCollisions = false;
+    if (self->scale.x >= 0x200) {
+        self->interaction    = true;
+        self->tileCollisions = true;
         Zone->deathBoundary[0] -= 0x8000000;
-        entity->drawFX &= ~FX_SCALE;
-        entity->state = Player_State_Air;
+        self->drawFX &= ~FX_SCALE;
+        self->state = Player_State_Air;
 
-        EntityShield *shield = RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntityID(entity), Shield);
+        EntityShield *shield = RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntityID(self), Shield);
         if (shield && shield->objectID) {
             shield->drawFX &= ~FX_SCALE;
         }
-        entity->scale.y = entity->scale.x;
+        self->scale.y = self->scale.x;
     }
     else {
-        entity->scale.x += 4;
-        entity->scale.y = entity->scale.x;
+        self->scale.x += 4;
+        self->scale.y = self->scale.x;
     }
 }
 
@@ -245,9 +245,9 @@ void PlaneSeeSaw_PlayerState_ToFG(void)
 void PlaneSeeSaw_EditorDraw(void)
 {
     RSDK_THIS(PlaneSeeSaw);
-    RSDK.SetSpriteAnimation(PlaneSeeSaw->aniFrames, 0, &entity->animator2, false, 0);
-    RSDK.SetSpriteAnimation(PlaneSeeSaw->aniFrames, 1, &entity->animator1, false, 0);
-    RSDK.SetSpriteAnimation(PlaneSeeSaw->aniFrames, 2, &entity->animator3, false, 0);
+    RSDK.SetSpriteAnimation(PlaneSeeSaw->aniFrames, 0, &self->animator2, false, 0);
+    RSDK.SetSpriteAnimation(PlaneSeeSaw->aniFrames, 1, &self->animator1, false, 0);
+    RSDK.SetSpriteAnimation(PlaneSeeSaw->aniFrames, 2, &self->animator3, false, 0);
 
     PlaneSeeSaw_Draw();
 }

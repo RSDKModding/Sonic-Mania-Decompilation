@@ -147,15 +147,19 @@ void SSZ2Setup_TowerScanlineCallback(ScanlineInfo *scanlines)
 
 void SSZ2Setup_GenericTriggerCallback1(void)
 {
-    foreach_active(HotaruMKII, boss)
+    foreach_active(HotaruMKII, hotaru)
     {
-        /*if (!boss->field_A4) {
-            RSDK.CreateEntity(Animals->objectID, (Animals->animalTypes[RSDK.Random(0, 32, &Zone->randKey) >> 4] + 1), boss->position.x,
-                              boss->position.y);
-            RSDK.CreateEntity(Explosion->objectID, intToVoid(1), boss->position.x, boss->position.y)->drawOrder = Zone->drawOrderHigh;
-            RSDK.PlaySfx(Explosion->sfxDestroy, 0, 255);
-            destroyEntity(boss);
-        }*/
+        if (!hotaru->type) {
+#if RETRO_USE_PLUS
+            CREATE_ENTITY(Animals, intToVoid(Animals->animalTypes[RSDK.Random(0, 32, &Zone->randKey) >> 4] + 1), hotaru->position.x,
+                          hotaru->position.y);
+#else
+            CREATE_ENTITY(Animals, intToVoid(Animals->animalTypes[RSDK.Rand(0, 32) >> 4] + 1), hotaru->position.x, hotaru->position.y);
+#endif
+            CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), hotaru->position.x, hotaru->position.y)->drawOrder = Zone->drawOrderHigh;
+            RSDK.PlaySfx(Explosion->sfxDestroy, false, 255);
+            destroyEntity(hotaru);
+        }
     }
 }
 
@@ -163,11 +167,7 @@ void SSZ2Setup_GenericTriggerCallback2(void)
 {
     if (!SSZ2Setup->hasAchievement) {
         if (!SceneInfo->minutes) {
-#if RETRO_USE_PLUS
-            API.UnlockAchievement("ACH_SSZ");
-#else
-            APICallback_UnlockAchievement("ACH_SSZ");
-#endif
+            API_UnlockAchievement("ACH_SSZ");
             SSZ2Setup->hasAchievement = true;
         }
     }
@@ -175,18 +175,19 @@ void SSZ2Setup_GenericTriggerCallback2(void)
 
 void SSZ2Setup_GenericTriggerCallback3(void)
 {
-    Entity *entity = SceneInfo->entity;
+    RSDK_THIS(GenericTrigger);
+
     if (isMainGameMode()) {
         EntityPlayer *player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
         if (player->stateInput) {
             player->stateInput      = 0;
             player->left            = false;
             player->right           = true;
-            Zone->screenBoundsR1[0] = ScreenInfo->centerX + (entity->position.x >> 16);
-            Zone->screenBoundsR1[1] = ScreenInfo->centerX + (entity->position.x >> 16);
+            Zone->screenBoundsR1[0] = ScreenInfo->centerX + (self->position.x >> 16);
+            Zone->screenBoundsR1[1] = ScreenInfo->centerX + (self->position.x >> 16);
 #if RETRO_USE_PLUS
-            Zone->screenBoundsR1[2] = ScreenInfo->centerX + (entity->position.x >> 16);
-            Zone->screenBoundsR1[3] = ScreenInfo->centerX + (entity->position.x >> 16);
+            Zone->screenBoundsR1[2] = ScreenInfo->centerX + (self->position.x >> 16);
+            Zone->screenBoundsR1[3] = ScreenInfo->centerX + (self->position.x >> 16);
 #endif
 
             for (int32 i = 0; i < Player->playerCount; ++i) {

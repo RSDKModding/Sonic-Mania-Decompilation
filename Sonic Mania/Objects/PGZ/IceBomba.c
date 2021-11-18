@@ -5,7 +5,7 @@ ObjectIceBomba *IceBomba;
 void IceBomba_Update(void)
 {
     RSDK_THIS(IceBomba);
-    StateMachine_Run(entity->state);
+    StateMachine_Run(self->state);
 }
 
 void IceBomba_LateUpdate(void) {}
@@ -15,58 +15,58 @@ void IceBomba_StaticUpdate(void) {}
 void IceBomba_Draw(void)
 {
     RSDK_THIS(IceBomba);
-    Vector2 drawPos = entity->position;
+    Vector2 drawPos = self->position;
     drawPos.x += 0x40000;
     drawPos.y += 0x1A0000;
 
-    int32 dirStore      = entity->direction;
-    entity->direction = FLIP_NONE;
-    RSDK.DrawSprite(&entity->bombAnimator, &drawPos, false);
-    RSDK.DrawSprite(&entity->animator, NULL, false);
+    int32 dirStore      = self->direction;
+    self->direction = FLIP_NONE;
+    RSDK.DrawSprite(&self->bombAnimator, &drawPos, false);
+    RSDK.DrawSprite(&self->animator, NULL, false);
 
-    entity->direction = dirStore;
-    entity->inkEffect = INK_ALPHA;
-    RSDK.DrawSprite(&entity->wingAnimator, NULL, false);
+    self->direction = dirStore;
+    self->inkEffect = INK_ALPHA;
+    RSDK.DrawSprite(&self->wingAnimator, NULL, false);
 
-    entity->inkEffect = INK_NONE;
+    self->inkEffect = INK_NONE;
 }
 
 void IceBomba_Create(void *data)
 {
     RSDK_THIS(IceBomba);
-    entity->visible   = true;
-    entity->drawOrder = Zone->drawOrderLow;
+    self->visible   = true;
+    self->drawOrder = Zone->drawOrderLow;
     if (!SceneInfo->inEditor) {
-        entity->dip <<= 7;
-        entity->drawFX |= FX_FLIP;
+        self->dip <<= 7;
+        self->drawFX |= FX_FLIP;
         if (data) {
-            entity->active        = ACTIVE_NORMAL;
-            entity->updateRange.x = 0x400000;
-            entity->updateRange.y = 0x800000;
-            RSDK.SetSpriteAnimation(IceBomba->animID, 2, &entity->animator, true, 0);
-            entity->state = IceBomba_Bomb_Handle;
+            self->active        = ACTIVE_NORMAL;
+            self->updateRange.x = 0x400000;
+            self->updateRange.y = 0x800000;
+            RSDK.SetSpriteAnimation(IceBomba->animID, 2, &self->animator, true, 0);
+            self->state = IceBomba_Bomb_Handle;
         }
         else {
-            entity->active        = ACTIVE_BOUNDS;
-            entity->alpha         = 0x80;
-            entity->spawnDist     = entity->dist;
-            entity->updateRange.x = (entity->dist + 0x80) << 16;
-            entity->updateRange.y = (entity->dip + 0x8000) << 8;
-            entity->spawnPos.x    = entity->position.x;
-            entity->spawnPos.y    = entity->position.y;
-            RSDK.SetSpriteAnimation(IceBomba->animID, 0, &entity->animator, true, 0);
-            RSDK.SetSpriteAnimation(IceBomba->animID, 1, &entity->wingAnimator, true, 0);
-            RSDK.SetSpriteAnimation(IceBomba->animID, 2, &entity->bombAnimator, true, 0);
-            entity->direction = entity->dir;
-            if (entity->dir) {
-                entity->animator.frameID     = 4;
-                entity->bombAnimator.frameID = 4;
+            self->active        = ACTIVE_BOUNDS;
+            self->alpha         = 0x80;
+            self->spawnDist     = self->dist;
+            self->updateRange.x = (self->dist + 0x80) << 16;
+            self->updateRange.y = (self->dip + 0x8000) << 8;
+            self->spawnPos.x    = self->position.x;
+            self->spawnPos.y    = self->position.y;
+            RSDK.SetSpriteAnimation(IceBomba->animID, 0, &self->animator, true, 0);
+            RSDK.SetSpriteAnimation(IceBomba->animID, 1, &self->wingAnimator, true, 0);
+            RSDK.SetSpriteAnimation(IceBomba->animID, 2, &self->bombAnimator, true, 0);
+            self->direction = self->dir;
+            if (self->dir) {
+                self->animator.frameID     = 4;
+                self->bombAnimator.frameID = 4;
             }
             else {
-                entity->animator.frameID     = 0;
-                entity->bombAnimator.frameID = 0;
+                self->animator.frameID     = 0;
+                self->bombAnimator.frameID = 0;
             }
-            entity->state = IceBomba_Fly_Create;
+            self->state = IceBomba_Fly_Create;
         }
     }
 }
@@ -104,66 +104,66 @@ void IceBomba_DebugDraw(void)
 void IceBomba_DebugSpawn(void)
 {
     RSDK_THIS(IceBomba);
-    CREATE_ENTITY(IceBomba, NULL, entity->position.x, entity->position.y);
+    CREATE_ENTITY(IceBomba, NULL, self->position.x, self->position.y);
 }
 
 void IceBomba_Fly_Collide(void)
 {
     RSDK_THIS(IceBomba);
-    int32 oldDir        = entity->direction;
-    entity->direction = 0;
+    int32 oldDir        = self->direction;
+    self->direction = 0;
     foreach_active(Player, player)
     {
-        if (Player_CheckBadnikTouch(player, entity, &IceBomba->flyHitbox)) {
-            if (Player_CheckBadnikBreak(entity, player, false)) {
-                if (entity->state != IceBomba_Fly_FlyAway) {
-                    EntityIceBomba *bomb = CREATE_ENTITY(IceBomba, intToVoid(1), entity->position.x, entity->position.y);
-                    if (entity->direction)
+        if (Player_CheckBadnikTouch(player, self, &IceBomba->flyHitbox)) {
+            if (Player_CheckBadnikBreak(self, player, false)) {
+                if (self->state != IceBomba_Fly_FlyAway) {
+                    EntityIceBomba *bomb = CREATE_ENTITY(IceBomba, intToVoid(1), self->position.x, self->position.y);
+                    if (self->direction)
                         bomb->position.x -= 0x40000;
                     else
                         bomb->position.x += 0x40000;
                     bomb->position.y += 0x1A0000;
-                    bomb->direction = entity->direction;
+                    bomb->direction = self->direction;
                 }
-                destroyEntity(entity);
+                destroyEntity(self);
             }
         }
-        else if (entity->state != IceBomba_Fly_FlyAway) {
-            Vector2 prePos = entity->position;
-            entity->position.x += 0x40000 * (entity->direction ? -1 : 1);
-            entity->position.y += 0x1A0000;
-            if (Player_CheckCollisionTouch(player, entity, &IceBomba->bombHitbox)) {
+        else if (self->state != IceBomba_Fly_FlyAway) {
+            Vector2 prePos = self->position;
+            self->position.x += 0x40000 * (self->direction ? -1 : 1);
+            self->position.y += 0x1A0000;
+            if (Player_CheckCollisionTouch(player, self, &IceBomba->bombHitbox)) {
                 RSDK.PlaySfx(IceBomba->explosionSFX, 0, 255);
-                CREATE_ENTITY(Explosion, intToVoid(1), entity->position.x, entity->position.y)->drawOrder = Zone->drawOrderHigh;
-                RSDK.SetSpriteAnimation(0xFFFF, 0, &entity->bombAnimator, true, 0);
-                entity->state = IceBomba_Fly_FlyAway;
+                CREATE_ENTITY(Explosion, intToVoid(1), self->position.x, self->position.y)->drawOrder = Zone->drawOrderHigh;
+                RSDK.SetSpriteAnimation(0xFFFF, 0, &self->bombAnimator, true, 0);
+                self->state = IceBomba_Fly_FlyAway;
                 Ice_FreezePlayer((Entity*)player);
             }
-            entity->position = prePos;
+            self->position = prePos;
         }
     }
-    entity->direction = oldDir;
+    self->direction = oldDir;
 }
 
 void IceBomba_Fly_Create(void)
 {
     RSDK_THIS(IceBomba);
-    entity->active     = ACTIVE_NORMAL;
-    entity->angle      = 0;
-    entity->direction  = entity->dir;
-    entity->unused_62  = entity->dir;
-    entity->velocity.x = 0x8000 * (entity->dir ? 1 : -1);
-    entity->state      = IceBomba_Fly_Idle;
+    self->active     = ACTIVE_NORMAL;
+    self->angle      = 0;
+    self->direction  = self->dir;
+    self->unused_62  = self->dir;
+    self->velocity.x = 0x8000 * (self->dir ? 1 : -1);
+    self->state      = IceBomba_Fly_Idle;
     IceBomba_Fly_Idle();
 }
 
 void IceBomba_CheckOnScreen(void)
 {
     RSDK_THIS(IceBomba);
-    if (!RSDK.CheckOnScreen(entity, 0) && !RSDK.CheckPosOnScreen(&entity->spawnPos, &entity->updateRange)) {
-        entity->dip >>= 7;
-        entity->position.x = entity->spawnPos.x;
-        entity->position.y = entity->spawnPos.y;
+    if (!RSDK.CheckOnScreen(self, 0) && !RSDK.CheckPosOnScreen(&self->spawnPos, &self->updateRange)) {
+        self->dip >>= 7;
+        self->position.x = self->spawnPos.x;
+        self->position.y = self->spawnPos.y;
         IceBomba_Create(NULL);
     }
 }
@@ -171,23 +171,23 @@ void IceBomba_CheckOnScreen(void)
 void IceBomba_Fly_Idle(void)
 {
     RSDK_THIS(IceBomba);
-    RSDK.ProcessAnimation(&entity->wingAnimator);
-    entity->angle += 4;
-    entity->position.x += entity->velocity.x;
-    entity->position.y = entity->dip * RSDK.Sin1024(entity->angle) + entity->spawnPos.y;
-    if (--entity->spawnDist <= 0) {
-        RSDK.SetSpriteAnimation(0xFFFF, 1, &entity->wingAnimator, true, 0);
-        entity->state = IceBomba_Fly_Turn;
+    RSDK.ProcessAnimation(&self->wingAnimator);
+    self->angle += 4;
+    self->position.x += self->velocity.x;
+    self->position.y = self->dip * RSDK.Sin1024(self->angle) + self->spawnPos.y;
+    if (--self->spawnDist <= 0) {
+        RSDK.SetSpriteAnimation(0xFFFF, 1, &self->wingAnimator, true, 0);
+        self->state = IceBomba_Fly_Turn;
     }
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionTouch(player, entity, &IceBomba->checkbox)) {
-            EntityIceBomba *bomb = CREATE_ENTITY(IceBomba, intToVoid(1), entity->position.x, entity->position.y);
-            bomb->position.x += 0x40000 * (entity->direction ? -1 : 1);
+        if (Player_CheckCollisionTouch(player, self, &IceBomba->checkbox)) {
+            EntityIceBomba *bomb = CREATE_ENTITY(IceBomba, intToVoid(1), self->position.x, self->position.y);
+            bomb->position.x += 0x40000 * (self->direction ? -1 : 1);
             bomb->position.y += 0x1A0000;
-            bomb->direction = entity->direction;
-            RSDK.SetSpriteAnimation(0xFFFF, 0, &entity->bombAnimator, true, 0);
-            entity->state = IceBomba_Fly_FlyAway;
+            bomb->direction = self->direction;
+            RSDK.SetSpriteAnimation(0xFFFF, 0, &self->bombAnimator, true, 0);
+            self->state = IceBomba_Fly_FlyAway;
             foreach_break;
         }
     }
@@ -198,35 +198,35 @@ void IceBomba_Fly_Idle(void)
 void IceBomba_Fly_Turn(void)
 {
     RSDK_THIS(IceBomba);
-    entity->angle += 4;
-    entity->position.x += entity->velocity.x;
-    entity->position.y = entity->dip * RSDK.Sin1024(entity->angle) + entity->spawnPos.y;
-    entity->velocity.x += 0x1000 * (entity->direction ? -1 : 1);
-    int32 animTimer = ++entity->animator.animationTimer;
-    if (entity->direction) {
+    self->angle += 4;
+    self->position.x += self->velocity.x;
+    self->position.y = self->dip * RSDK.Sin1024(self->angle) + self->spawnPos.y;
+    self->velocity.x += 0x1000 * (self->direction ? -1 : 1);
+    int32 animTimer = ++self->animator.animationTimer;
+    if (self->direction) {
         if (animTimer >= 3) {
-            --entity->bombAnimator.frameID;
-            --entity->animator.frameID;
-            entity->animator.animationTimer = 0;
-            if (entity->animator.frameID <= 0) {
-                entity->direction ^= 1;
-                entity->spawnDist = 2 * entity->dist;
-                entity->velocity.x = 0x8000 * (entity->direction ? 1 : -1);
-                RSDK.SetSpriteAnimation(IceBomba->animID, 1, &entity->wingAnimator, true, 0);
-                entity->state = IceBomba_Fly_Idle;
+            --self->bombAnimator.frameID;
+            --self->animator.frameID;
+            self->animator.animationTimer = 0;
+            if (self->animator.frameID <= 0) {
+                self->direction ^= 1;
+                self->spawnDist = 2 * self->dist;
+                self->velocity.x = 0x8000 * (self->direction ? 1 : -1);
+                RSDK.SetSpriteAnimation(IceBomba->animID, 1, &self->wingAnimator, true, 0);
+                self->state = IceBomba_Fly_Idle;
             }
         }
     }
     else if (animTimer >= 3) {
-        ++entity->bombAnimator.frameID;
-        ++entity->animator.frameID;
-        entity->animator.animationTimer = 0;
-        if (entity->animator.frameID >= 4) {
-            entity->direction  ^= 1; //ida says its a direct =. this does not make any sense
-            entity->spawnDist  = 2 * entity->dist;
-            entity->velocity.x = 0x8000;
-            RSDK.SetSpriteAnimation(IceBomba->animID, 1, &entity->wingAnimator, true, 0);
-            entity->state = IceBomba_Fly_Idle;
+        ++self->bombAnimator.frameID;
+        ++self->animator.frameID;
+        self->animator.animationTimer = 0;
+        if (self->animator.frameID >= 4) {
+            self->direction  ^= 1; //ida says its a direct =. this does not make any sense
+            self->spawnDist  = 2 * self->dist;
+            self->velocity.x = 0x8000;
+            RSDK.SetSpriteAnimation(IceBomba->animID, 1, &self->wingAnimator, true, 0);
+            self->state = IceBomba_Fly_Idle;
         }
     }
     IceBomba_Fly_Collide();
@@ -236,21 +236,21 @@ void IceBomba_Fly_Turn(void)
 void IceBomba_Fly_FlyAway(void)
 {
     RSDK_THIS(IceBomba);
-    RSDK.ProcessAnimation(&entity->wingAnimator);
-    if (entity->direction) {
-        if (entity->animator.frameID < 4) {
-            ++entity->animator.frameID;
-            ++entity->bombAnimator.frameID;
+    RSDK.ProcessAnimation(&self->wingAnimator);
+    if (self->direction) {
+        if (self->animator.frameID < 4) {
+            ++self->animator.frameID;
+            ++self->bombAnimator.frameID;
         }
     }
     else {
-        if (entity->animator.frameID > 0) {
-            --entity->animator.frameID;
-            --entity->bombAnimator.frameID;
+        if (self->animator.frameID > 0) {
+            --self->animator.frameID;
+            --self->bombAnimator.frameID;
         }
     }
-    entity->position.x += entity->velocity.x;
-    entity->position.y -= 0x20000;
+    self->position.x += self->velocity.x;
+    self->position.y -= 0x20000;
     IceBomba_Fly_Collide();
     IceBomba_CheckOnScreen();
 }
@@ -258,29 +258,29 @@ void IceBomba_Fly_FlyAway(void)
 void IceBomba_Bomb_Handle(void)
 {
     RSDK_THIS(IceBomba);
-    entity->position.y += entity->velocity.y;
-    entity->velocity.y += 0x3800;
-    if (RSDK.CheckOnScreen(entity, 0)) {
-        if (RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x100000, true)) {
+    self->position.y += self->velocity.y;
+    self->velocity.y += 0x3800;
+    if (RSDK.CheckOnScreen(self, 0)) {
+        if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x100000, true)) {
             RSDK.PlaySfx(IceBomba->explosionSFX, 0, 255);
-            CREATE_ENTITY(Explosion, intToVoid(1), entity->position.x, entity->position.y)->drawOrder = Zone->drawOrderHigh;
-            CREATE_ENTITY(Ice, intToVoid(2), entity->position.x, entity->position.y + 0x100000);
+            CREATE_ENTITY(Explosion, intToVoid(1), self->position.x, self->position.y)->drawOrder = Zone->drawOrderHigh;
+            CREATE_ENTITY(Ice, intToVoid(2), self->position.x, self->position.y + 0x100000);
             RSDK.PlaySfx(IceBomba->freezeSFX, 0, 255);
-            destroyEntity(entity);
+            destroyEntity(self);
         }
         foreach_active(Player, player)
         {
-            if (Player_CheckCollisionTouch(player, entity, &IceBomba->bombHitbox)) {
+            if (Player_CheckCollisionTouch(player, self, &IceBomba->bombHitbox)) {
                 RSDK.PlaySfx(IceBomba->explosionSFX, 0, 255);
-                CREATE_ENTITY(Explosion, intToVoid(1), entity->position.x, entity->position.y)->drawOrder = Zone->drawOrderHigh;
+                CREATE_ENTITY(Explosion, intToVoid(1), self->position.x, self->position.y)->drawOrder = Zone->drawOrderHigh;
                 Ice_FreezePlayer((Entity*)player);
-                destroyEntity(entity);
+                destroyEntity(self);
                 foreach_return;
             }
         }
     }
     else
-        destroyEntity(entity);
+        destroyEntity(self);
 }
 
 void IceBomba_EditorDraw(void) { IceBomba_DebugDraw(); }

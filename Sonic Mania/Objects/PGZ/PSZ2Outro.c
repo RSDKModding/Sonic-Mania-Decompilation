@@ -10,11 +10,11 @@ void PSZ2Outro_Update(void)
                        PSZ2Outro_CutsceneState_Unknown5,      PSZ2Outro_CutsceneState_Unknown6,
                        PSZ2Outro_CutsceneState_LoadNextScene, NULL };
 
-    CutsceneSeq_StartSequence((Entity *)entity, states);
+    CutsceneSeq_StartSequence((Entity *)self, states);
     if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->objectID)
         RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->skipType = SKIPTYPE_RELOADSCN;
     foreach_active(HUD, hud) { hud->state = HUD_State_GoOffScreen; }
-    entity->active = ACTIVE_NEVER;
+    self->active = ACTIVE_NEVER;
 }
 
 void PSZ2Outro_LateUpdate(void) {}
@@ -27,10 +27,10 @@ void PSZ2Outro_Create(void *data)
 {
     RSDK_THIS(PSZ2Outro);
     if (!SceneInfo->inEditor) {
-        foreach_all(PSZEggman, eggman) { entity->eggman = (Entity *)eggman; }
+        foreach_all(PSZEggman, eggman) { self->eggman = (Entity *)eggman; }
 
-        entity->active  = ACTIVE_NORMAL;
-        entity->visible = false;
+        self->active  = ACTIVE_NORMAL;
+        self->visible = false;
     }
 }
 
@@ -39,7 +39,7 @@ void PSZ2Outro_StageLoad(void) {}
 bool32 PSZ2Outro_CutsceneState_Unknown1(EntityCutsceneSeq *host)
 {
     RSDK_THIS(PSZ2Outro);
-    EntityPSZEggman *eggman = (EntityPSZEggman *)entity->eggman;
+    EntityPSZEggman *eggman = (EntityPSZEggman *)self->eggman;
 
     foreach_active(Player, player)
     {
@@ -68,7 +68,7 @@ bool32 PSZ2Outro_CutsceneState_Unknown1(EntityCutsceneSeq *host)
 bool32 PSZ2Outro_CutsceneState_Unknown2(EntityCutsceneSeq *host)
 {
     RSDK_THIS(PSZ2Outro);
-    EntityPSZEggman *eggman = (EntityPSZEggman *)entity->eggman;
+    EntityPSZEggman *eggman = (EntityPSZEggman *)self->eggman;
     EntityCamera *camera    = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
 
     if (host->timer == 180) {
@@ -88,7 +88,7 @@ bool32 PSZ2Outro_CutsceneState_Unknown2(EntityCutsceneSeq *host)
 bool32 PSZ2Outro_CutsceneState_Unknown3(EntityCutsceneSeq *host)
 {
     RSDK_THIS(PSZ2Outro);
-    EntityPSZEggman *eggman = (EntityPSZEggman *)entity->eggman;
+    EntityPSZEggman *eggman = (EntityPSZEggman *)self->eggman;
     EntityCamera *camera    = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
 
     foreach_active(Player, player)
@@ -130,11 +130,11 @@ bool32 PSZ2Outro_CutsceneState_Unknown4(EntityCutsceneSeq *host)
     EntityPlayer *player2 = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
 
     if (RSDK.GetEntityCount(PhantomRuby->objectID, true) > 0) {
-        foreach_active(PhantomRuby, ruby) { entity->ruby = ruby; }
+        foreach_active(PhantomRuby, ruby) { self->ruby = ruby; }
     }
 
-    if (entity->ruby) {
-        if (entity->ruby->state == PhantomRuby_Unknown5) {
+    if (self->ruby) {
+        if (self->ruby->state == PhantomRuby_Unknown5) {
             if (player2->objectID == Player->objectID) {
                 player2->state = Player_State_None;
                 RSDK.SetSpriteAnimation(player2->aniFrames, ANI_SKID, &player2->playerAnimator, false, 0);
@@ -148,10 +148,10 @@ bool32 PSZ2Outro_CutsceneState_Unknown4(EntityCutsceneSeq *host)
 bool32 PSZ2Outro_CutsceneState_Unknown5(EntityCutsceneSeq *host)
 {
     RSDK_THIS(PSZ2Outro);
-    EntityPSZEggman *eggman = (EntityPSZEggman *)entity->eggman;
+    EntityPSZEggman *eggman = (EntityPSZEggman *)self->eggman;
 
     if (!host->timer)
-        PhantomRuby_Unknown2(entity->ruby);
+        PhantomRuby_Unknown2(self->ruby);
     if (eggman->ruby) {
         PhantomRuby_PlaySFX(RUBYSFX_REDCUBE);
         return true;
@@ -162,18 +162,18 @@ bool32 PSZ2Outro_CutsceneState_Unknown5(EntityCutsceneSeq *host)
 bool32 PSZ2Outro_CutsceneState_Unknown6(EntityCutsceneSeq *host)
 {
     RSDK_THIS(PSZ2Outro);
-    EntityPSZEggman *eggman = (EntityPSZEggman *)entity->eggman;
+    EntityPSZEggman *eggman = (EntityPSZEggman *)self->eggman;
     RSDK_GET_PLAYER(player1, player2, camera);
     unused(camera);
 
     EntityFXRuby *fxRuby = NULL;
     if (host->timer) {
-        fxRuby = entity->fxRuby;
+        fxRuby = self->fxRuby;
     }
     else {
         fxRuby            = CREATE_ENTITY(FXRuby, NULL, eggman->position.x, eggman->position.y);
         fxRuby->drawOrder = Zone->playerDrawHigh;
-        entity->fxRuby    = fxRuby;
+        self->fxRuby    = fxRuby;
         Camera_ShakeScreen(0, 4, 4);
         player1->drawOrder = Zone->playerDrawHigh + 1;
         if (player2->objectID == Player->objectID)

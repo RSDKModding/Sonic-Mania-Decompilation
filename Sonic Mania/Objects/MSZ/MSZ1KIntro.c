@@ -5,15 +5,15 @@ ObjectMSZ1KIntro *MSZ1KIntro;
 void MSZ1KIntro_Update(void)
 {
     RSDK_THIS(MSZ1KIntro);
-    if (!entity->activated) {
+    if (!self->activated) {
         if (isMainGameMode() || !globals->enableIntro || PlayerHelpers_CheckStageReload()) {
-            entity->active = ACTIVE_NEVER;
+            self->active = ACTIVE_NEVER;
         }
         else {
             void *states[] = { MSZ1KIntro_CutsceneState_Unknown1, MSZ1KIntro_CutsceneState_Unknown2, MSZ1KIntro_CutsceneState_Unknown3, NULL };
 
-            entity->activated = true;
-            CutsceneSeq_StartSequence((Entity *)entity, states);
+            self->activated = true;
+            CutsceneSeq_StartSequence((Entity *)self, states);
             if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->objectID)
                 RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->skipType = SKIPTYPE_RELOADSCN;
         }
@@ -30,11 +30,11 @@ void MSZ1KIntro_Create(void *data)
 {
     RSDK_THIS(MSZ1KIntro);
 
-    INIT_ENTITY(entity);
-    CutsceneRules_SetupEntity(entity, &entity->size, &entity->hitbox);
-    entity->active = ACTIVE_NORMAL;
+    INIT_ENTITY(self);
+    CutsceneRules_SetupEntity(self, &self->size, &self->hitbox);
+    self->active = ACTIVE_NORMAL;
     if (!globals->suppressTitlecard)
-        destroyEntity(entity);
+        destroyEntity(self);
 }
 
 void MSZ1KIntro_StageLoad(void)
@@ -123,7 +123,7 @@ bool32 MSZ1KIntro_CutsceneState_Unknown3(EntityCutsceneSeq *host)
 void MSZ1KIntro_EditorDraw(void)
 {
     RSDK_THIS(MSZ1KIntro);
-    CutsceneRules_DrawCutsceneBounds(entity, &entity->size);
+    CutsceneRules_DrawCutsceneBounds(self, &self->size);
 }
 
 void MSZ1KIntro_EditorLoad(void) {}

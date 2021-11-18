@@ -6,155 +6,155 @@ void FilmReel_Update(void)
 {
     RSDK_THIS(FilmReel);
 
-    entity->velocity.x = (entity->field_8C * RSDK.Cos256(entity->angle)) >> 9;
-    entity->velocity.y = (entity->field_8C * RSDK.Sin256(entity->angle)) >> 9;
-    entity->field_74.x += entity->velocity.x;
-    entity->field_74.y += entity->velocity.y;
-    entity->field_90 = 0;
+    self->velocity.x = (self->field_8C * RSDK.Cos256(self->angle)) >> 9;
+    self->velocity.y = (self->field_8C * RSDK.Sin256(self->angle)) >> 9;
+    self->field_74.x += self->velocity.x;
+    self->field_74.y += self->velocity.y;
+    self->field_90 = 0;
 
-    switch (entity->field_94) {
+    switch (self->field_94) {
         case 0:
-            if (entity->drawPos.x != entity->endPos.x) {
-                if (entity->field_74.x <= entity->drawPos.x) {
-                    entity->field_74.x = entity->drawPos.x;
-                    entity->field_90   = 1;
+            if (self->drawPos.x != self->endPos.x) {
+                if (self->field_74.x <= self->drawPos.x) {
+                    self->field_74.x = self->drawPos.x;
+                    self->field_90   = 1;
                 }
-                if (entity->field_74.x >= entity->endPos.x) {
-                    entity->field_90 |= 2;
-                    entity->field_74.x = entity->endPos.x;
+                if (self->field_74.x >= self->endPos.x) {
+                    self->field_90 |= 2;
+                    self->field_74.x = self->endPos.x;
                 }
             }
 
-            if (entity->drawPos.y != entity->endPos.y) {
-                if (entity->field_74.y <= entity->drawPos.y) {
-                    entity->field_90 |= 1;
-                    entity->field_74.y = entity->drawPos.y;
+            if (self->drawPos.y != self->endPos.y) {
+                if (self->field_74.y <= self->drawPos.y) {
+                    self->field_90 |= 1;
+                    self->field_74.y = self->drawPos.y;
                 }
-                if (entity->field_74.y >= entity->endPos.y) {
-                    entity->field_90 |= 2;
-                    entity->field_74.y = entity->field_74.y;
+                if (self->field_74.y >= self->endPos.y) {
+                    self->field_90 |= 2;
+                    self->field_74.y = self->field_74.y;
                 }
             }
             break;
         case 1:
-            if (entity->endPos.x != entity->endPos.x) {
-                if (entity->field_74.x <= entity->endPos.x) {
-                    entity->field_74.x = entity->endPos.x;
-                    entity->field_90   = 2;
+            if (self->endPos.x != self->endPos.x) {
+                if (self->field_74.x <= self->endPos.x) {
+                    self->field_74.x = self->endPos.x;
+                    self->field_90   = 2;
                 }
-                if (entity->field_74.x >= entity->endPos.x) {
-                    entity->field_90 |= 1;
-                    entity->field_74.x = entity->drawPos.x;
+                if (self->field_74.x >= self->endPos.x) {
+                    self->field_90 |= 1;
+                    self->field_74.x = self->drawPos.x;
                 }
             }
 
-            if (entity->drawPos.y != entity->endPos.y) {
-                if (entity->field_74.y <= entity->drawPos.y) {
-                    entity->field_90 |= 1;
-                    entity->field_74.y = entity->drawPos.y;
+            if (self->drawPos.y != self->endPos.y) {
+                if (self->field_74.y <= self->drawPos.y) {
+                    self->field_90 |= 1;
+                    self->field_74.y = self->drawPos.y;
                 }
-                if (entity->field_74.y >= entity->endPos.y) {
-                    entity->field_90 |= 2;
-                    entity->field_74.y = entity->field_74.y;
+                if (self->field_74.y >= self->endPos.y) {
+                    self->field_90 |= 2;
+                    self->field_74.y = self->field_74.y;
                 }
             }
             break;
         case 2:
-            if (entity->drawPos.x != entity->endPos.x) {
-                if (entity->field_74.x <= entity->endPos.x) {
-                    entity->field_74.x = entity->endPos.x;
-                    entity->field_90   = 2;
+            if (self->drawPos.x != self->endPos.x) {
+                if (self->field_74.x <= self->endPos.x) {
+                    self->field_74.x = self->endPos.x;
+                    self->field_90   = 2;
                 }
-                if (entity->field_74.x >= entity->drawPos.x) {
-                    entity->field_90 |= 1;
-                    entity->field_74.x = entity->drawPos.x;
+                if (self->field_74.x >= self->drawPos.x) {
+                    self->field_90 |= 1;
+                    self->field_74.x = self->drawPos.x;
                 }
             }
 
-            if (entity->drawPos.y != entity->endPos.y) {
-                if (entity->field_74.y <= entity->endPos.y) {
-                    entity->field_90 |= 2;
-                    entity->field_74.y = entity->endPos.y;
+            if (self->drawPos.y != self->endPos.y) {
+                if (self->field_74.y <= self->endPos.y) {
+                    self->field_90 |= 2;
+                    self->field_74.y = self->endPos.y;
                 }
-                if (entity->field_74.y >= entity->drawPos.y) {
-                    entity->field_90 |= 1;
-                    entity->field_74.y = entity->drawPos.y;
+                if (self->field_74.y >= self->drawPos.y) {
+                    self->field_90 |= 1;
+                    self->field_74.y = self->drawPos.y;
                 }
             }
             break;
         case 3:
-            if (entity->drawPos.x != entity->endPos.x) {
-                if (entity->field_74.x <= entity->drawPos.x) {
-                    entity->field_74.x = entity->drawPos.x;
-                    entity->field_90   = 1;
+            if (self->drawPos.x != self->endPos.x) {
+                if (self->field_74.x <= self->drawPos.x) {
+                    self->field_74.x = self->drawPos.x;
+                    self->field_90   = 1;
                 }
-                if (entity->field_74.x >= entity->endPos.x) {
-                    entity->field_90 |= 2;
-                    entity->field_74.x = entity->endPos.x;
+                if (self->field_74.x >= self->endPos.x) {
+                    self->field_90 |= 2;
+                    self->field_74.x = self->endPos.x;
                 }
             }
 
-            if (entity->drawPos.y != entity->endPos.y) {
-                if (entity->field_74.y <= entity->endPos.y) {
-                    entity->field_90 |= 2;
-                    entity->field_74.y = entity->endPos.y;
+            if (self->drawPos.y != self->endPos.y) {
+                if (self->field_74.y <= self->endPos.y) {
+                    self->field_90 |= 2;
+                    self->field_74.y = self->endPos.y;
                 }
-                if (entity->field_74.y >= entity->drawPos.y) {
-                    entity->field_90 |= 1;
-                    entity->field_74.y = entity->drawPos.y;
+                if (self->field_74.y >= self->drawPos.y) {
+                    self->field_90 |= 1;
+                    self->field_74.y = self->drawPos.y;
                 }
             }
             break;
         default: break;
     }
 
-    if (entity->field_90) {
-        if (!entity->field_90) {
+    if (self->field_90) {
+        if (!self->field_90) {
             RSDK.PlaySfx(FilmReel->sfxLanding, false, 255);
             RSDK.StopSFX(FilmReel->sfxUnravel);
-            if (entity->field_90 == 1)
-                entity->active = ACTIVE_BOUNDS;
+            if (self->field_90 == 1)
+                self->active = ACTIVE_BOUNDS;
         }
     }
     else {
         if (!(Zone->timer & 7))
             RSDK.PlaySfx(FilmReel->sfxUnravel, false, 255);
-        entity->active = ACTIVE_NORMAL;
+        self->active = ACTIVE_NORMAL;
     }
 
-    entity->field_8C -= 0x2000;
-    entity->field_7C.x = (entity->field_74.x & 0xFFFF0000) - (entity->position.x & 0xFFFF0000);
-    entity->field_7C.y = (entity->field_74.y & 0xFFFF0000) - (entity->position.y & 0xFFFF0000);
-    if (!entity->spinDirection)
+    self->field_8C -= 0x2000;
+    self->field_7C.x = (self->field_74.x & 0xFFFF0000) - (self->position.x & 0xFFFF0000);
+    self->field_7C.y = (self->field_74.y & 0xFFFF0000) - (self->position.y & 0xFFFF0000);
+    if (!self->spinDirection)
         FilmReel_SpinLeft();
     else
         FilmReel_SpinRight();
-    entity->field_8C = clampVal(entity->field_8C, -0x80000, 0x80000);
+    self->field_8C = clampVal(self->field_8C, -0x80000, 0x80000);
 
-    entity->position = entity->field_74;
-    if (!entity->field_90) {
-        if (entity->spinDirection)
-            entity->field_84 -= entity->field_8C;
+    self->position = self->field_74;
+    if (!self->field_90) {
+        if (self->spinDirection)
+            self->field_84 -= self->field_8C;
         else
-            entity->field_84 += entity->field_8C;
-        entity->rotation = (entity->field_84 >> 16) & 0x1FF;
+            self->field_84 += self->field_8C;
+        self->rotation = (self->field_84 >> 16) & 0x1FF;
     }
 
-    if (abs(entity->pathSize.x) <= abs(entity->pathSize.y)) {
-        int scale = (abs(entity->endPos.y - entity->position.y) >> 8) / (abs(entity->pathSize.x) >> 16) + 256;
+    if (abs(self->pathSize.x) <= abs(self->pathSize.y)) {
+        int scale = (abs(self->endPos.y - self->position.y) >> 8) / (abs(self->pathSize.x) >> 16) + 256;
         if (scale > 512)
             scale = 512;
-        entity->scale.x = scale;
-        entity->scale.y = scale;
+        self->scale.x = scale;
+        self->scale.y = scale;
     }
     else {
-        int scale = (abs(entity->endPos.x - entity->position.x) >> 8) / (abs(entity->pathSize.x) >> 16) + 256;
+        int scale = (abs(self->endPos.x - self->position.x) >> 8) / (abs(self->pathSize.x) >> 16) + 256;
         if (scale > 512)
             scale = 512;
-        entity->scale.x = scale;
-        entity->scale.y = scale;
+        self->scale.x = scale;
+        self->scale.y = scale;
     }
-    entity->field_98 = abs(entity->position.x - entity->drawPos.x) <= abs(entity->pathSize.y - entity->drawPos.y);
+    self->field_98 = abs(self->position.x - self->drawPos.x) <= abs(self->pathSize.y - self->drawPos.y);
 }
 
 void FilmReel_LateUpdate(void) {}
@@ -165,62 +165,62 @@ void FilmReel_Draw(void)
 {
     RSDK_THIS(FilmReel);
 
-    int angle = (entity->angle - 64) & 0xFF;
-    int x2    = (16 * entity->scale.x * RSDK.Cos256(angle) + entity->position.x) & 0xFFFF0000;
-    int y2    = (16 * entity->scale.x * RSDK.Sin256(angle) + entity->position.y) & 0xFFFF0000;
+    int angle = (self->angle - 64) & 0xFF;
+    int x2    = (16 * self->scale.x * RSDK.Cos256(angle) + self->position.x) & 0xFFFF0000;
+    int y2    = (16 * self->scale.x * RSDK.Sin256(angle) + self->position.y) & 0xFFFF0000;
 
-    entity->animator2.frameID = (entity->rotation >> 4) & 1;
+    self->animator2.frameID = (self->rotation >> 4) & 1;
     colour colour1            = 0x3868A8;
-    if (entity->animator2.frameID)
+    if (self->animator2.frameID)
         colour1 = 0x204078;
     colour colour2 = 0x204078;
-    if (entity->animator2.frameID)
+    if (self->animator2.frameID)
         colour2 = 0x182850;
 
-    if (entity->field_98) {
-        RSDK.DrawLine(entity->drawPos.x, entity->drawPos.y, x2, y2, colour1, 255, INK_NONE, false);
-        RSDK.DrawLine(entity->drawPos.x, entity->drawPos.y + 0x18000, x2, y2 + 0x18000, colour2, 255, INK_NONE, false);
+    if (self->field_98) {
+        RSDK.DrawLine(self->drawPos.x, self->drawPos.y, x2, y2, colour1, 255, INK_NONE, false);
+        RSDK.DrawLine(self->drawPos.x, self->drawPos.y + 0x18000, x2, y2 + 0x18000, colour2, 255, INK_NONE, false);
     }
     else {
-        RSDK.DrawLine(entity->drawPos.x, entity->drawPos.y, x2, y2, colour1, 255, INK_NONE, false);
-        RSDK.DrawLine(entity->drawPos.x - 0x18000, entity->drawPos.y, x2 - 0x18000, y2, colour2, 255, INK_NONE, false);
+        RSDK.DrawLine(self->drawPos.x, self->drawPos.y, x2, y2, colour1, 255, INK_NONE, false);
+        RSDK.DrawLine(self->drawPos.x - 0x18000, self->drawPos.y, x2 - 0x18000, y2, colour2, 255, INK_NONE, false);
     }
-    RSDK.DrawSprite(&entity->animator4, &entity->drawPos, false);
+    RSDK.DrawSprite(&self->animator4, &self->drawPos, false);
 
-    entity->drawFX = FX_SCALE;
-    RSDK.DrawSprite(&entity->animator2, NULL, false);
+    self->drawFX = FX_SCALE;
+    RSDK.DrawSprite(&self->animator2, NULL, false);
 
-    entity->drawFX = FX_ROTATE;
-    RSDK.DrawSprite(&entity->animator1, NULL, false);
+    self->drawFX = FX_ROTATE;
+    RSDK.DrawSprite(&self->animator1, NULL, false);
 
-    entity->drawFX = FX_NONE;
-    RSDK.DrawSprite(&entity->animator3, NULL, false);
+    self->drawFX = FX_NONE;
+    RSDK.DrawSprite(&self->animator3, NULL, false);
 }
 
 void FilmReel_Create(void *data)
 {
     RSDK_THIS(FilmReel);
 
-    RSDK.SetSpriteAnimation(FilmReel->aniFrames, 0, &entity->animator1, true, 0);
-    RSDK.SetSpriteAnimation(FilmReel->aniFrames, 1, &entity->animator2, true, 0);
-    RSDK.SetSpriteAnimation(FilmReel->aniFrames, 2, &entity->animator3, true, 0);
-    RSDK.SetSpriteAnimation(FilmReel->aniFrames, 3, &entity->animator4, true, 0);
+    RSDK.SetSpriteAnimation(FilmReel->aniFrames, 0, &self->animator1, true, 0);
+    RSDK.SetSpriteAnimation(FilmReel->aniFrames, 1, &self->animator2, true, 0);
+    RSDK.SetSpriteAnimation(FilmReel->aniFrames, 2, &self->animator3, true, 0);
+    RSDK.SetSpriteAnimation(FilmReel->aniFrames, 3, &self->animator4, true, 0);
     if (!SceneInfo->inEditor) {
-        entity->field_74      = entity->position;
-        entity->drawPos       = entity->position;
-        entity->endPos.x      = entity->pathSize.x + entity->drawPos.x;
-        entity->endPos.y      = entity->pathSize.y + entity->drawPos.y;
-        entity->active        = ACTIVE_BOUNDS;
-        entity->updateRange.x = 0xC00000;
-        entity->updateRange.y = 0xC00000;
-        entity->scale.x       = 0x200;
-        entity->scale.y       = 0x200;
+        self->field_74      = self->position;
+        self->drawPos       = self->position;
+        self->endPos.x      = self->pathSize.x + self->drawPos.x;
+        self->endPos.y      = self->pathSize.y + self->drawPos.y;
+        self->active        = ACTIVE_BOUNDS;
+        self->updateRange.x = 0xC00000;
+        self->updateRange.y = 0xC00000;
+        self->scale.x       = 0x200;
+        self->scale.y       = 0x200;
 
-        entity->angle     = RSDK.ATan2(entity->pathSize.x, entity->pathSize.y);
-        entity->field_94  = entity->angle >> 6;
-        entity->field_90  = 1;
-        entity->visible   = true;
-        entity->drawOrder = Zone->drawOrderLow;
+        self->angle     = RSDK.ATan2(self->pathSize.x, self->pathSize.y);
+        self->field_94  = self->angle >> 6;
+        self->field_90  = 1;
+        self->visible   = true;
+        self->drawOrder = Zone->drawOrderLow;
     }
 }
 
@@ -246,30 +246,30 @@ void FilmReel_SpinLeft(void)
 
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionTouch(player, entity, &FilmReel->hitbox)) {
+        if (Player_CheckCollisionTouch(player, self, &FilmReel->hitbox)) {
             player->collisionLayers |= Zone->moveID;
-            player->moveOffset.x = FilmReel->offsetPos.x - entity->field_74.x;
-            player->moveOffset.y = FilmReel->offsetPos.y - entity->field_74.y;
+            player->moveOffset.x = FilmReel->offsetPos.x - self->field_74.x;
+            player->moveOffset.y = FilmReel->offsetPos.y - self->field_74.y;
             if (!player->sidekick) {
-                if (player->onGround || RSDK.CheckObjectCollisionTouchCircle(entity, 0x400000, player, 0x100000)) {
+                if (player->onGround || RSDK.CheckObjectCollisionTouchCircle(self, 0x400000, player, 0x100000)) {
 
                     bool32 flag = true;
-                    switch (entity->field_90) {
+                    switch (self->field_90) {
                         case 0:
                             if (player->collisionMode || !player->left && !player->right && player->state != Player_State_Roll) {
                                 flag = false;
                             }
 
-                            if (abs(player->position.x - entity->position.x) < 2 * abs(player->groundVel) && flag) {
+                            if (abs(player->position.x - self->position.x) < 2 * abs(player->groundVel) && flag) {
                                 if (player->groundVel < -0x60000)
                                     player->groundVel = -0x60000;
                                 if (player->direction == FLIP_X) {
-                                    player->position.x = entity->position.x;
-                                    entity->field_8C -= player->groundVel;
+                                    player->position.x = self->position.x;
+                                    self->field_8C -= player->groundVel;
                                 }
                             }
                             else {
-                                player->groundVel += entity->field_8C >> 5;
+                                player->groundVel += self->field_8C >> 5;
                                 if (player->groundVel < -0x60000)
                                     player->groundVel = -0x60000;
                             }
@@ -277,38 +277,38 @@ void FilmReel_SpinLeft(void)
                         case 1:
                             if (!player->collisionMode && (player->left || player->right || player->state == Player_State_Roll)
                                 && player->direction == FLIP_X) {
-                                if (abs(player->position.x - entity->position.x) < 2 * abs(player->groundVel)) {
+                                if (abs(player->position.x - self->position.x) < 2 * abs(player->groundVel)) {
                                     if (player->groundVel < 0)
-                                        player->position.x = entity->position.x;
-                                    entity->field_8C -= player->groundVel;
+                                        player->position.x = self->position.x;
+                                    self->field_8C -= player->groundVel;
                                 }
                             }
                             break;
                         case 2:
-                            if (abs(player->position.x - entity->position.x) >= 2 * abs(player->groundVel) || player->collisionMode
-                                || player->position.x <= entity->position.x) {
+                            if (abs(player->position.x - self->position.x) >= 2 * abs(player->groundVel) || player->collisionMode
+                                || player->position.x <= self->position.x) {
                                 if (player->left)
-                                    entity->field_8C -= player->groundVel;
+                                    self->field_8C -= player->groundVel;
                             }
                             else {
                                 if (player->groundVel > 0)
-                                    player->position.x = entity->position.x;
-                                entity->field_8C -= player->groundVel;
+                                    player->position.x = self->position.x;
+                                self->field_8C -= player->groundVel;
                             }
                             break;
                     }
 
-                    if (player->camera && entity->flag) {
+                    if (player->camera && self->flag) {
                         player->camera->state = 0;
-                        player->camera->position.x += entity->field_7C.x + ((entity->position.x - player->camera->position.x) >> 3);
-                        player->camera->position.y += entity->field_7C.y + ((entity->position.y - player->camera->position.y - 0x200000) >> 3);
+                        player->camera->position.x += self->field_7C.x + ((self->position.x - player->camera->position.x) >> 3);
+                        player->camera->position.y += self->field_7C.y + ((self->position.y - player->camera->position.y - 0x200000) >> 3);
                     }
-                    player->position.x += entity->field_7C.x;
-                    player->position.y += entity->field_7C.y;
+                    player->position.x += self->field_7C.x;
+                    player->position.y += self->field_7C.y;
                 }
                 else {
                     if (player->camera) {
-                        if (entity->flag)
+                        if (self->flag)
                             player->camera->state = Camera_State_Follow;
                     }
                 }
@@ -323,30 +323,30 @@ void FilmReel_SpinRight(void)
 
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionTouch(player, entity, &FilmReel->hitbox)) {
+        if (Player_CheckCollisionTouch(player, self, &FilmReel->hitbox)) {
             player->collisionLayers |= Zone->moveID;
-            player->moveOffset.x = FilmReel->offsetPos.x - entity->field_74.x;
-            player->moveOffset.y = FilmReel->offsetPos.y - entity->field_74.y;
+            player->moveOffset.x = FilmReel->offsetPos.x - self->field_74.x;
+            player->moveOffset.y = FilmReel->offsetPos.y - self->field_74.y;
             if (!player->sidekick) {
-                if (player->onGround || RSDK.CheckObjectCollisionTouchCircle(entity, 0x400000, player, 0x100000)) {
+                if (player->onGround || RSDK.CheckObjectCollisionTouchCircle(self, 0x400000, player, 0x100000)) {
 
                     bool32 flag = true;
-                    switch (entity->field_90) {
+                    switch (self->field_90) {
                         case 0:
                             if (player->collisionMode || (!player->left && !player->right && player->state != Player_State_Roll)) {
                                 flag = false;
                             }
 
-                            if (abs(player->position.x - entity->position.x) < 2 * abs(player->groundVel) && flag) {
+                            if (abs(player->position.x - self->position.x) < 2 * abs(player->groundVel) && flag) {
                                 if (player->groundVel > 0x60000)
                                     player->groundVel = 0x60000;
                                 if (player->direction == FLIP_NONE) {
-                                    player->position.x = entity->position.x;
-                                    entity->field_8C += player->groundVel;
+                                    player->position.x = self->position.x;
+                                    self->field_8C += player->groundVel;
                                 }
                             }
                             else {
-                                player->groundVel -= entity->field_8C >> 5;
+                                player->groundVel -= self->field_8C >> 5;
                                 if (player->groundVel > 0x60000)
                                     player->groundVel = 0x60000;
                             }
@@ -358,35 +358,35 @@ void FilmReel_SpinRight(void)
                             }
 
                             if (flag) {
-                                if (abs(player->position.x - entity->position.x) < 2 * abs(player->groundVel) && player->groundVel > 0) {
-                                    player->position.x = entity->position.x;
+                                if (abs(player->position.x - self->position.x) < 2 * abs(player->groundVel) && player->groundVel > 0) {
+                                    player->position.x = self->position.x;
                                 }
-                                entity->field_8C += player->groundVel;
+                                self->field_8C += player->groundVel;
                             }
                             break;
                         case 2:
-                            if (abs(player->position.x - entity->position.x) >= 2 * abs(player->groundVel) || player->collisionMode
-                                || player->position.x >= entity->position.x) {
+                            if (abs(player->position.x - self->position.x) >= 2 * abs(player->groundVel) || player->collisionMode
+                                || player->position.x >= self->position.x) {
                                 if (player->right)
-                                    entity->field_8C += player->groundVel;
+                                    self->field_8C += player->groundVel;
                             }
                             else {
                                 if (player->groundVel < 0)
-                                    player->position.x = entity->position.x;
-                                entity->field_8C += player->groundVel;
+                                    player->position.x = self->position.x;
+                                self->field_8C += player->groundVel;
                             }
                             break;
                     }
 
-                    if (player->camera && entity->flag) {
+                    if (player->camera && self->flag) {
                         player->camera->state = StateMachine_None;
-                        player->camera->position.x += entity->field_7C.x + ((entity->position.x - player->camera->position.x) >> 3);
-                        player->camera->position.y += entity->field_7C.y + ((entity->position.y - player->camera->position.y - 0x200000) >> 3);
+                        player->camera->position.x += self->field_7C.x + ((self->position.x - player->camera->position.x) >> 3);
+                        player->camera->position.y += self->field_7C.y + ((self->position.y - player->camera->position.y - 0x200000) >> 3);
                     }
                 }
                 else {
                     if (player->camera) {
-                        if (entity->flag)
+                        if (self->flag)
                             player->camera->state = Camera_State_Follow;
                     }
                 }
@@ -400,21 +400,21 @@ void FilmReel_EditorDraw(void)
 {
     RSDK_THIS(FilmReel);
 
-    entity->field_74      = entity->position;
-    entity->drawPos       = entity->position;
-    entity->endPos.x      = entity->pathSize.x + entity->drawPos.x;
-    entity->endPos.y      = entity->pathSize.y + entity->drawPos.y;
-    entity->active        = ACTIVE_BOUNDS;
-    entity->updateRange.x = 0xC00000;
-    entity->updateRange.y = 0xC00000;
-    entity->scale.x       = 0x200;
-    entity->scale.y       = 0x200;
+    self->field_74      = self->position;
+    self->drawPos       = self->position;
+    self->endPos.x      = self->pathSize.x + self->drawPos.x;
+    self->endPos.y      = self->pathSize.y + self->drawPos.y;
+    self->active        = ACTIVE_BOUNDS;
+    self->updateRange.x = 0xC00000;
+    self->updateRange.y = 0xC00000;
+    self->scale.x       = 0x200;
+    self->scale.y       = 0x200;
 
-    entity->angle     = RSDK.ATan2(entity->pathSize.x, entity->pathSize.y);
-    entity->field_94  = entity->angle >> 6;
-    entity->field_90  = 1;
-    entity->visible   = true;
-    entity->drawOrder = Zone->drawOrderLow;
+    self->angle     = RSDK.ATan2(self->pathSize.x, self->pathSize.y);
+    self->field_94  = self->angle >> 6;
+    self->field_90  = 1;
+    self->visible   = true;
+    self->drawOrder = Zone->drawOrderLow;
     
     FilmReel_Draw();
 }

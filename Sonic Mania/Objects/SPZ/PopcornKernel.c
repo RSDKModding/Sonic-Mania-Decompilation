@@ -6,9 +6,9 @@ void PopcornKernel_Update(void)
 {
     RSDK_THIS(PopcornKernel);
 
-    StateMachine_Run(entity->state);
-    entity->angle += entity->angleVel;
-    entity->rotation = (entity->angle >> 15) & 0x1FF;
+    StateMachine_Run(self->state);
+    self->angle += self->angleVel;
+    self->rotation = (self->angle >> 15) & 0x1FF;
 }
 
 void PopcornKernel_LateUpdate(void) {}
@@ -18,7 +18,7 @@ void PopcornKernel_StaticUpdate(void) {}
 void PopcornKernel_Draw(void)
 {
     RSDK_THIS(PopcornKernel);
-    RSDK.DrawSprite(&entity->animator, NULL, false);
+    RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
 void PopcornKernel_Create(void *data)
@@ -26,20 +26,20 @@ void PopcornKernel_Create(void *data)
     RSDK_THIS(PopcornKernel);
 
     if (!SceneInfo->inEditor) {
-        entity->drawFX = FX_ROTATE;
-        entity->state  = PopcornKernel_Unknown1;
-        RSDK.SetSpriteAnimation(PopcornKernel->aniFrames, 1, &entity->animator, true, RSDK.Rand(0, 7));
-        if (entity->animator.frameID >= 0 && (entity->animator.frameID <= 1 || entity->animator.frameID == 5))
-            entity->drawOrder = Zone->drawOrderLow - 1;
+        self->drawFX = FX_ROTATE;
+        self->state  = PopcornKernel_Unknown1;
+        RSDK.SetSpriteAnimation(PopcornKernel->aniFrames, 1, &self->animator, true, RSDK.Rand(0, 7));
+        if (self->animator.frameID >= 0 && (self->animator.frameID <= 1 || self->animator.frameID == 5))
+            self->drawOrder = Zone->drawOrderLow - 1;
         else
-            entity->drawOrder = Zone->drawOrderLow;
-        entity->active        = ACTIVE_NORMAL;
-        entity->updateRange.x = 0x800000;
-        entity->updateRange.y = 0x2000000;
-        entity->field_64      = 0x4000;
-        entity->scale.x       = 0x200;
-        entity->scale.y       = 0x200;
-        entity->visible       = true;
+            self->drawOrder = Zone->drawOrderLow;
+        self->active        = ACTIVE_NORMAL;
+        self->updateRange.x = 0x800000;
+        self->updateRange.y = 0x2000000;
+        self->field_64      = 0x4000;
+        self->scale.x       = 0x200;
+        self->scale.y       = 0x200;
+        self->visible       = true;
     }
 }
 
@@ -49,37 +49,37 @@ void PopcornKernel_Unknown1(void)
 {
     RSDK_THIS(PopcornKernel);
 
-    entity->velocity.y += entity->field_64;
-    entity->position.x += entity->velocity.x;
-    entity->position.y += entity->velocity.y;
+    self->velocity.y += self->field_64;
+    self->position.x += self->velocity.x;
+    self->position.y += self->velocity.y;
 
-    if (entity->velocity.y >= 0) {
+    if (self->velocity.y >= 0) {
         foreach_active(PopcornKernel, kernel)
         {
-            if (kernel != entity) {
-                int rx = (entity->position.x - kernel->position.x) >> 16;
-                int ry = (entity->position.y - kernel->position.y) >> 16;
-                if (rx * rx + ry * ry < 256) {
-                    int angle          = RSDK.ATan2(rx, ry);
-                    entity->velocity.x = RSDK.Cos256(angle) << 17 >> 8;
-                    entity->velocity.y = RSDK.Sin256(angle) << 17 >> 8;
+            if (kernel != self) {
+                int rx = (self->position.x - kernel->position.x) >> 16;
+                int ry = (self->position.y - kernel->position.y) >> 16;
+                if (rx * rx + ry * ry < 0x100) {
+                    int angle        = RSDK.ATan2(rx, ry);
+                    self->velocity.x = RSDK.Cos256(angle) << 17 >> 8;
+                    self->velocity.y = RSDK.Sin256(angle) << 17 >> 8;
                 }
             }
         }
     }
 
-    if (entity->position.x < entity->bounds.x - 0x680000) {
-        entity->position.x = entity->bounds.x - 0x680000;
-        entity->velocity.x = -entity->velocity.x;
+    if (self->position.x < self->bounds.x - 0x680000) {
+        self->position.x = self->bounds.x - 0x680000;
+        self->velocity.x = -self->velocity.x;
     }
-    else if (entity->position.x > entity->bounds.x + 0x680000) {
-        entity->position.x = entity->bounds.x + 0x680000;
-        entity->velocity.x = -entity->velocity.x;
+    else if (self->position.x > self->bounds.x + 0x680000) {
+        self->position.x = self->bounds.x + 0x680000;
+        self->velocity.x = -self->velocity.x;
     }
 
-    if (entity->position.y > entity->bounds.y - 0x380000) {
-        entity->position.y = entity->bounds.y - 0x380000;
-        entity->velocity.y = -entity->velocity.y >> 1;
+    if (self->position.y > self->bounds.y - 0x380000) {
+        self->position.y = self->bounds.y - 0x380000;
+        self->velocity.y = -self->velocity.y >> 1;
     }
 }
 
@@ -87,11 +87,11 @@ void PopcornKernel_Unknown2(void)
 {
     RSDK_THIS(PopcornKernel);
 
-    entity->velocity.y += 0x800;
-    entity->position.x += entity->velocity.x;
-    entity->position.y += entity->velocity.y;
-    if (entity->position.y < entity->field_68) {
-        entity->state = PopcornKernel_Unknown3;
+    self->velocity.y += 0x800;
+    self->position.x += self->velocity.x;
+    self->position.y += self->velocity.y;
+    if (self->position.y < self->field_68) {
+        self->state = PopcornKernel_Unknown3;
         //???
         // Dunno why this is here but removing it would change the internal randKey
         RSDK.Rand(-0x80000, 0x80000);
@@ -102,18 +102,18 @@ void PopcornKernel_Unknown3(void)
 {
     RSDK_THIS(PopcornKernel);
 
-    entity->velocity.y += 0x3800;
-    entity->position.x += entity->velocity.x;
-    entity->position.y += entity->velocity.y;
-    if (!RSDK.CheckOnScreen(entity, NULL))
-        destroyEntity(entity);
+    self->velocity.y += 0x3800;
+    self->position.x += self->velocity.x;
+    self->position.y += self->velocity.y;
+    if (!RSDK.CheckOnScreen(self, NULL))
+        destroyEntity(self);
 }
 
 #if RETRO_INCLUDE_EDITOR
 void PopcornKernel_EditorDraw(void)
 {
     RSDK_THIS(PopcornKernel);
-    RSDK.SetSpriteAnimation(PopcornKernel->aniFrames, 1, &entity->animator, true, 0);
+    RSDK.SetSpriteAnimation(PopcornKernel->aniFrames, 1, &self->animator, true, 0);
 
     PopcornKernel_Draw();
 }

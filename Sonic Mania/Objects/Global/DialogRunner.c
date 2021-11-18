@@ -6,7 +6,7 @@ ObjectDialogRunner *DialogRunner;
 void DialogRunner_Update(void)
 {
     RSDK_THIS(DialogRunner);
-    StateMachine_Run(entity->state);
+    StateMachine_Run(self->state);
 }
 
 void DialogRunner_LateUpdate(void) {}
@@ -18,11 +18,11 @@ void DialogRunner_Draw(void) {}
 void DialogRunner_Create(void *data)
 {
     RSDK_THIS(DialogRunner);
-    entity->active         = ACTIVE_ALWAYS;
-    entity->visible        = false;
-    entity->state          = (Type_StateMachine)data;
-    entity->timer          = 0;
-    entity->useGenericText = false;
+    self->active         = ACTIVE_ALWAYS;
+    self->visible        = false;
+    self->state          = (Type_StateMachine)data;
+    self->timer          = 0;
+    self->useGenericText = false;
 }
 
 void DialogRunner_StageLoad(void)
@@ -60,13 +60,13 @@ void DialogRunner_StageLoad(void)
 void DialogRunner_HandleCallback(void)
 {
     RSDK_THIS(DialogRunner);
-    if (entity->timer <= 0) {
-        LogHelpers_Print("Callback: %x", entity->callback);
-        StateMachine_Run(entity->callback);
-        destroyEntity(entity);
+    if (self->timer <= 0) {
+        LogHelpers_Print("Callback: %x", self->callback);
+        StateMachine_Run(self->callback);
+        destroyEntity(self);
     }
     else {
-        entity->timer--;
+        self->timer--;
     }
 }
 
@@ -92,7 +92,7 @@ void DialogRunner_NotifyAutoSave(void)
     }
     else {
         DialogRunner->entityPtr = NULL;
-        destroyEntity(entity);
+        destroyEntity(self);
     }
 }
 
@@ -117,7 +117,7 @@ void DialogRunner_PromptSavePreference_CB(void)
     if (API.GetSaveStatus() == STATUS_CONTINUE) {
         if (!UIDialog->activeDialog) {
             int32 stringID = STR_SAVELOADFAIL;
-            switch (entity->status) {
+            switch (self->status) {
                 case STATUS_ERROR:
                     stringID = STR_NOXBOXPROFILE;
                     if (sku_platform != PLATFORM_XB1)
@@ -133,13 +133,13 @@ void DialogRunner_PromptSavePreference_CB(void)
     }
     else {
         DialogRunner->entityPtr = NULL;
-        destroyEntity(entity);
+        destroyEntity(self);
     }
 }
 void DialogRunner_CheckUserAuth_CB(int32 a1, int32 a2)
 {
     RSDK_THIS(DialogRunner);
-    if (entity->timer) {
+    if (self->timer) {
         if (DialogRunner->signoutFlag) {
             if (!UIDialog->activeDialog) {
                 if (Zone && Zone_GetZoneID() != -1) {
@@ -161,7 +161,7 @@ void DialogRunner_CheckUserAuth_CB(int32 a1, int32 a2)
                 }
                 else if (FXFade) {
                     RSDK.SetScene("Presentation", "Title Screen");
-                    EntityFXFade *fxFade    = CREATE_ENTITY(FXFade, NULL, entity->position.x, entity->position.y);
+                    EntityFXFade *fxFade    = CREATE_ENTITY(FXFade, NULL, self->position.x, self->position.y);
                     fxFade->active          = ACTIVE_ALWAYS;
                     fxFade->timer           = 0;
                     fxFade->speedIn         = 16;
@@ -173,13 +173,13 @@ void DialogRunner_CheckUserAuth_CB(int32 a1, int32 a2)
                     fxFade->transitionScene = true;
                 }
                 DialogRunner->entityPtr = NULL;
-                destroyEntity(entity);
+                destroyEntity(self);
             }
         }
         else if (!UIDialog->activeDialog) {
             TextInfo info;
             int32 id = STR_SIGNOUTDETECTED;
-            if (entity->useGenericText)
+            if (self->useGenericText)
                 id = STR_RETRURNINGTOTITLE;
             Localization_GetString(&info, id);
             EntityUIDialog *dialog = UIDialog_CreateDialogOk(&info, DialogRunner_SignedOutCB, true);
@@ -203,7 +203,7 @@ void DialogRunner_CheckUserAuth_CB(int32 a1, int32 a2)
             }
             RSDK.SetGameMode(ENGINESTATE_FROZEN);
             RSDK.StopChannel(Music->channelID);
-            entity->timer = 1;
+            self->timer = 1;
         }
     }
 }
@@ -225,7 +225,7 @@ void DialogRunner_ManageNotifs(int32 a1)
         DialogRunner->entityPtr = NULL;
         UIWaitSpinner_Wait();
         GameProgress_TrackGameProgress(DialogRunner_Wait);
-        destroyEntity(entity);
+        destroyEntity(self);
     }
 }
 void DialogRunner_Wait(int32 success) { UIWaitSpinner_Wait2(); }

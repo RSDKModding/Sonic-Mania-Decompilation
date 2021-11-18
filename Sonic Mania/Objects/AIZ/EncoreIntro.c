@@ -6,21 +6,21 @@ ObjectEncoreIntro *EncoreIntro;
 void EncoreIntro_Update(void)
 {
     RSDK_THIS(EncoreIntro);
-    if (!entity->activated) {
+    if (!self->activated) {
         foreach_active(Player, player)
         {
-            if (Player_CheckCollisionTouch(player, entity, &entity->hitbox)) {
+            if (Player_CheckCollisionTouch(player, self, &self->hitbox)) {
                 EncoreIntro_SetupCutscene();
                 EntityCutsceneSeq *seq = RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq);
                 if (seq->objectID)
                     seq->skipType = SKIPTYPE_RELOADSCN;
-                entity->activated = true;
+                self->activated = true;
             }
         }
     }
 
     //skip part 2 flag
-    if (entity->field_64) {
+    if (self->field_64) {
         void *states[] = { EncoreIntro_CutsceneState_Unknown7,  EncoreIntro_CutsceneState_Unknown8,
                            EncoreIntro_CutsceneState_Unknown9,  EncoreIntro_CutsceneState_Unknown10,
                            EncoreIntro_CutsceneState_Unknown11, EncoreIntro_CutsceneState_Unknown12,
@@ -33,8 +33,8 @@ void EncoreIntro_Update(void)
                            EncoreIntro_CutsceneState_Unknown21, NULL };
 
         EncoreIntro_SetupCutscenePart2();
-        CutsceneSeq_StartSequence((Entity *)entity, states);
-        entity->field_64 = false;
+        CutsceneSeq_StartSequence((Entity *)self, states);
+        self->field_64 = false;
     }
 }
 
@@ -48,8 +48,8 @@ void EncoreIntro_Create(void *data)
 {
     RSDK_THIS(EncoreIntro);
     if (!SceneInfo->inEditor) {
-        INIT_ENTITY(entity);
-        CutsceneRules_SetupEntity(entity, &entity->size, &entity->hitbox);
+        INIT_ENTITY(self);
+        CutsceneRules_SetupEntity(self, &self->size, &self->hitbox);
         EncoreIntro_SetupEntities();
 
         if (globals->enableIntro) {
@@ -71,7 +71,7 @@ void EncoreIntro_Create(void *data)
             ruby->animator2.animationID = -1;
         }
         else {
-            int32 id = RSDK.GetEntityID(entity);
+            int32 id = RSDK.GetEntityID(self);
 
             foreach_all(Animals, animal)
             {
@@ -84,8 +84,8 @@ void EncoreIntro_Create(void *data)
             }
             RSDK.ResetEntitySlot(id - 3, TYPE_BLANK, NULL);
             RSDK.ResetEntitySlot(id - 2, TYPE_BLANK, NULL);
-            entity->activated = true;
-            entity->field_64  = true;
+            self->activated = true;
+            self->field_64  = true;
         }
     }
 }
@@ -142,7 +142,7 @@ void EncoreIntro_SetupCutscene(void)
                        EncoreIntro_CutsceneState_Unknown21, NULL };
     RSDK_THIS(EncoreIntro);
 
-    CutsceneSeq_StartSequence((Entity *)entity, states);
+    CutsceneSeq_StartSequence((Entity *)self, states);
 }
 
 void EncoreIntro_SetupCutscenePart2(void)
@@ -165,7 +165,7 @@ void EncoreIntro_SetupCutscenePart2(void)
     Zone->screenBoundsR1[0]     = size.x;
     Zone->screenBoundsR2[0]     = size.x << 16;
     Zone->playerBoundActiveR[0] = true;
-    Zone->screenBoundsL1[0]     = (entity->position.x >> 16) - ScreenInfo->centerX;
+    Zone->screenBoundsL1[0]     = (self->position.x >> 16) - ScreenInfo->centerX;
     Zone->screenBoundsL2[0]     = Zone->screenBoundsL1[0] << 16;
     Zone->playerBoundActiveL[0] = true;
 
@@ -332,7 +332,7 @@ bool32 EncoreIntro_CutsceneState_Unknown7(EntityCutsceneSeq *host)
     RSDK_THIS(EncoreIntro);
     EntityPhantomRuby *ruby = (EntityPhantomRuby *)EncoreIntro->phantomRuby;
 
-    if (player->position.x <= entity->position.x + 0x2000000) {
+    if (player->position.x <= self->position.x + 0x2000000) {
         Zone->screenBoundsL1[0]     = ScreenInfo->position.x;
         Zone->screenBoundsL2[0]     = Zone->screenBoundsL1[0] << 16;
         Zone->playerBoundActiveL[0] = true;
@@ -358,15 +358,15 @@ bool32 EncoreIntro_CutsceneState_Unknown8(EntityCutsceneSeq *host)
 
     RSDK_THIS(EncoreIntro);
     EntityActClear *actClear = RSDK_GET_ENTITY(SLOT_ACTCLEAR, ActClear);
-    if (!entity->field_88) {
+    if (!self->field_88) {
         if (actClear->objectID == ActClear->objectID)
-            entity->field_88 = 1;
+            self->field_88 = 1;
     }
     else {
         player->velocity.x = 0;
         player->groundVel  = 0;
         if (actClear->objectID != ActClear->objectID) {
-            entity->field_88 = false;
+            self->field_88 = false;
             Music_TransitionTrack(TRACK_EGGMAN2, 0.05);
 
             StarPost->playerPositions[0] = player->position;
@@ -486,8 +486,8 @@ bool32 EncoreIntro_CutsceneState_Unknown10(EntityCutsceneSeq *host)
         EntityPlayer *otherBuddy = RSDK_GET_ENTITY(SLOT_PLAYER3, Player);
         if (!otherBuddy->objectID)
             otherBuddy = RSDK_GET_ENTITY(SLOT_PLAYER4, Player);
-        entity->position.x = otherBuddy->position.x;
-        entity->position.y = otherBuddy->position.y;
+        self->position.x = otherBuddy->position.x;
+        self->position.y = otherBuddy->position.y;
     }
     else {
         if (host->timer != 420) {
@@ -578,8 +578,8 @@ bool32 EncoreIntro_CutsceneState_Unknown11(EntityCutsceneSeq *host)
             if (buddy->playerAnimator.frameID == 5)
                 buddy->playerAnimator.animationSpeed = 0;
         }
-        entity->position.x = mystic->position.x;
-        entity->position.y = mystic->position.y;
+        self->position.x = mystic->position.x;
+        self->position.y = mystic->position.y;
         HeavyMystic_Unknown2();
     }
     else {
@@ -593,8 +593,8 @@ bool32 EncoreIntro_CutsceneState_Unknown11(EntityCutsceneSeq *host)
 
         if (mystic->position.y > ruby->startPos.y + 0x140000) {
             mystic->position.y += mystic->velocity.y;
-            entity->position.x = mystic->position.x;
-            entity->position.y = mystic->position.y;
+            self->position.x = mystic->position.x;
+            self->position.y = mystic->position.y;
             HeavyMystic_Unknown2();
         }
         else {
@@ -641,8 +641,8 @@ bool32 EncoreIntro_CutsceneState_Unknown12(EntityCutsceneSeq *host)
         }
     }
 
-    entity->position.x = mystic->position.x;
-    entity->position.y = mystic->position.y;
+    self->position.x = mystic->position.x;
+    self->position.y = mystic->position.y;
     HeavyMystic_Unknown2();
     return false;
 }
@@ -680,8 +680,8 @@ bool32 EncoreIntro_CutsceneState_Unknown13(EntityCutsceneSeq *host)
         if (mystic->activeScreens == 1)
             --host->timer;
         mystic->position.x += mystic->velocity.x;
-        entity->position.x = mystic->position.x;
-        entity->position.y = mystic->position.y;
+        self->position.x = mystic->position.x;
+        self->position.y = mystic->position.y;
         HeavyMystic_Unknown2();
     }
     return false;
@@ -696,8 +696,8 @@ bool32 EncoreIntro_CutsceneState_Unknown14(EntityCutsceneSeq *host)
     EntityCutsceneHBH *king = CutsceneHBH_GetEntity(HBH_KINGDAMAGED);
 
     if (player->position.x >= king->position.x - 0x2600000) {
-        entity->position.x = player->position.x;
-        entity->position.y = player->position.y;
+        self->position.x = player->position.x;
+        self->position.y = player->position.y;
         player->stateInput = StateMachine_None;
         if (player->onGround)
             player->state = Player_State_Ground;
@@ -706,8 +706,8 @@ bool32 EncoreIntro_CutsceneState_Unknown14(EntityCutsceneSeq *host)
         player->right = true;
         if (player->velocity.x >= 0x20000)
             player->velocity.x = 0x20000;
-        entity->velocity.x = player->velocity.x;
-        camera->targetPtr  = (Entity *)entity;
+        self->velocity.x = player->velocity.x;
+        camera->targetPtr = (Entity *)self;
         if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->objectID) {
             EntityCutsceneSeq *cutsceneSeq = RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq);
             cutsceneSeq->skipType         = SKIPTYPE_CALLBACK;
@@ -727,8 +727,8 @@ bool32 EncoreIntro_CutsceneState_Unknown15(EntityCutsceneSeq *host)
     EntityPlayer *player      = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     EntityPlayer *buddy       = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
 
-    if (entity->position.x >= king->position.x - 0x880000) {
-        if (entity->velocity.x == 0x60000) {
+    if (self->position.x >= king->position.x - 0x880000) {
+        if (self->velocity.x == 0x60000) {
             player->groundVel  = 0x30000;
             player->velocity.x = 0x30000;
             player->position.x = (ScreenInfo->position.x - 32) << 16;
@@ -745,8 +745,8 @@ bool32 EncoreIntro_CutsceneState_Unknown15(EntityCutsceneSeq *host)
             buddy->drawOrder      = player->drawOrder - 1;
         }
 
-        entity->velocity.x -= 0x1800;
-        if (entity->velocity.x < 0x4C000) {
+        self->velocity.x -= 0x1800;
+        if (self->velocity.x < 0x4C000) {
             player->right = false;
             buddy->right  = false;
             player->up    = true;
@@ -754,16 +754,16 @@ bool32 EncoreIntro_CutsceneState_Unknown15(EntityCutsceneSeq *host)
         }
         if (buddy->state == Player_State_Ground && buddy->position.x >= player->position.x - 0x200000)
             buddy->velocity.x = player->velocity.x;
-        if (entity->velocity.x <= -0x2D000) {
+        if (self->velocity.x <= -0x2D000) {
             RSDK.SetSpriteAnimation(mystic->aniFrames, 2, &mystic->animator, true, 0);
-            entity->velocity.x = 0;
+            self->velocity.x = 0;
             return true;
         }
     }
     else {
-        entity->velocity.x += 0x6000;
-        if (entity->velocity.x > 0x60000)
-            entity->velocity.x = 0x60000;
+        self->velocity.x += 0x6000;
+        if (self->velocity.x > 0x60000)
+            self->velocity.x = 0x60000;
 
         player->state = Player_State_Ground;
         player->right = true;
@@ -773,22 +773,22 @@ bool32 EncoreIntro_CutsceneState_Unknown15(EntityCutsceneSeq *host)
             buddy->groundVel = 0x20000;
     }
 
-    if (entity->velocity.x > 0)
-        entity->position.x += entity->velocity.x;
+    if (self->velocity.x > 0)
+        self->position.x += self->velocity.x;
 
-    entity->position.y = mystic->position.y;
-    if (entity->position.x <= mystic->position.x) {
-        int32 storeX         = entity->position.x;
-        int32 storeY         = entity->position.y;
-        entity->position.x = mystic->position.x;
-        entity->position.y = mystic->position.y;
+    self->position.y = mystic->position.y;
+    if (self->position.x <= mystic->position.x) {
+        int32 storeX         = self->position.x;
+        int32 storeY         = self->position.y;
+        self->position.x = mystic->position.x;
+        self->position.y = mystic->position.y;
         HeavyMystic_Unknown2();
-        entity->position.x = storeX;
-        entity->position.y = storeY;
+        self->position.x = storeX;
+        self->position.y = storeY;
     }
     else {
-        entity->position.x = mystic->position.x;
-        entity->position.y = mystic->position.y;
+        self->position.x = mystic->position.x;
+        self->position.y = mystic->position.y;
         HeavyMystic_Unknown2();
     }
 
@@ -996,7 +996,7 @@ bool32 EncoreIntro_CutsceneState_Unknown20(EntityCutsceneSeq *host)
             return true;
     }
     RSDK.LoadScene();
-    destroyEntity(entity);
+    destroyEntity(self);
 
     return false;
 }
@@ -1006,7 +1006,7 @@ bool32 EncoreIntro_CutsceneState_Unknown21(EntityCutsceneSeq *host)
     RSDK_THIS(EncoreIntro);
     if (!EncoreIntro->field_28) {
         RSDK.LoadScene();
-        destroyEntity(entity);
+        destroyEntity(self);
     }
     return false;
 }
@@ -1120,71 +1120,71 @@ void EncoreIntro_SaveGameCB(int32 status)
 
 void EncoreIntro_PhantomRuby_Unknown1(void)
 {
-    EntityPhantomRuby *entity = (EntityPhantomRuby *)EncoreIntro->phantomRuby;
+    EntityPhantomRuby *ruby = (EntityPhantomRuby *)EncoreIntro->phantomRuby;
     EntityFXRuby *fxRuby      = (EntityFXRuby *)EncoreIntro->fxRuby;
-    entity->angle += 2;
-    entity->position.y = (RSDK.Sin256(entity->angle) << 10) + entity->startPos.y;
-    fxRuby->position.x = entity->position.x;
-    fxRuby->position.y = entity->position.y;
+    ruby->angle += 2;
+    ruby->position.y = (RSDK.Sin256(ruby->angle) << 10) + ruby->startPos.y;
+    fxRuby->position.x = ruby->position.x;
+    fxRuby->position.y = ruby->position.y;
 }
 void EncoreIntro_PhantomRuby_Unknown2(void)
 {
-    EntityPhantomRuby *entity = (EntityPhantomRuby *)EncoreIntro->phantomRuby;
+    EntityPhantomRuby *ruby = (EntityPhantomRuby *)EncoreIntro->phantomRuby;
 
-    if (entity->velocity.x < 0x40000)
-        entity->velocity.x += 0x1800;
-    entity->angle += 2;
-    entity->position.x += entity->velocity.x;
-    entity->position.y = (RSDK.Sin256(entity->angle) << 10) + entity->startPos.y;
+    if (ruby->velocity.x < 0x40000)
+        ruby->velocity.x += 0x1800;
+    ruby->angle += 2;
+    ruby->position.x += ruby->velocity.x;
+    ruby->position.y = (RSDK.Sin256(ruby->angle) << 10) + ruby->startPos.y;
 }
 void EncoreIntro_PhantomRuby_Unknown3(void)
 {
-    EntityPhantomRuby *entity = (EntityPhantomRuby *)EncoreIntro->phantomRuby;
-    entity->position.x += entity->velocity.x;
-    entity->position.y += entity->velocity.y;
-    entity->velocity.y += 0x3800;
+    EntityPhantomRuby *ruby = (EntityPhantomRuby *)EncoreIntro->phantomRuby;
+    ruby->position.x += ruby->velocity.x;
+    ruby->position.y += ruby->velocity.y;
+    ruby->velocity.y += 0x3800;
 }
 void EncoreIntro_PhantomRuby_Unknown4(void)
 {
-    EntityPhantomRuby *entity = (EntityPhantomRuby *)EncoreIntro->phantomRuby;
+    EntityPhantomRuby *ruby = (EntityPhantomRuby *)EncoreIntro->phantomRuby;
 
-    entity->active = ACTIVE_NORMAL;
-    if (entity->velocity.y <= -0x60000) {
-        entity->velocity.y = -entity->velocity.y;
-        entity->velocity.x = 0;
-        entity->state      = EncoreIntro_PhantomRuby_Unknown5;
+    ruby->active = ACTIVE_NORMAL;
+    if (ruby->velocity.y <= -0x60000) {
+        ruby->velocity.y = -ruby->velocity.y;
+        ruby->velocity.x = 0;
+        ruby->state      = EncoreIntro_PhantomRuby_Unknown5;
     }
     else {
-        entity->position.y += entity->velocity.y;
-        entity->velocity.y -= 0x3800;
+        ruby->position.y += ruby->velocity.y;
+        ruby->velocity.y -= 0x3800;
     }
-    RSDK.SetChannelAttributes(Music->channelID, 1.0 - (((entity->startPos.y - entity->position.y) >> 16) / 120.0), 0.0, 1.0);
+    RSDK.SetChannelAttributes(Music->channelID, 1.0 - (((ruby->startPos.y - ruby->position.y) >> 16) / 120.0), 0.0, 1.0);
 }
 void EncoreIntro_PhantomRuby_Unknown5(void)
 {
-    EntityPhantomRuby *entity = (EntityPhantomRuby *)EncoreIntro->phantomRuby;
+    EntityPhantomRuby *ruby = (EntityPhantomRuby *)EncoreIntro->phantomRuby;
 
-    if (entity->velocity.x >= 60) {
-        if (entity->velocity.y <= 0) {
-            entity->velocity.y = 0;
-            entity->active     = ACTIVE_BOUNDS;
-            entity->state      = EncoreIntro_PhantomRuby_Unknown1;
+    if (ruby->velocity.x >= 60) {
+        if (ruby->velocity.y <= 0) {
+            ruby->velocity.y = 0;
+            ruby->active     = ACTIVE_BOUNDS;
+            ruby->state      = EncoreIntro_PhantomRuby_Unknown1;
         }
         else {
-            entity->velocity.y -= 0x3800;
-            entity->position.y += entity->velocity.y;
+            ruby->velocity.y -= 0x3800;
+            ruby->position.y += ruby->velocity.y;
         }
-        RSDK.SetChannelAttributes(Music->channelID, 1.0 - (((entity->startPos.y - entity->position.y) >> 16) / 120.0), 0.0, 1.0);
+        RSDK.SetChannelAttributes(Music->channelID, 1.0 - (((ruby->startPos.y - ruby->position.y) >> 16) / 120.0), 0.0, 1.0);
     }
     else {
-        entity->velocity.x++;
+        ruby->velocity.x++;
     }
 }
 
 void EncoreIntro_PlayerState_BuddySel(void)
 {
     RSDK_THIS(Player);
-    entity->groundVel = clampVal(entity->groundVel, -0x20000, 0x20000);
+    self->groundVel = clampVal(self->groundVel, -0x20000, 0x20000);
     Player_State_Ground();
 }
 
@@ -1208,17 +1208,17 @@ void EncoreIntro_PlayerState_InputNone(void)
     ControllerInfo[1].keySelect.down  = false;
     ControllerInfo[1].keySelect.press = false;
     Player_ProcessP1Input();
-    entity->up        = false;
-    entity->down      = false;
-    entity->jumpPress = false;
-    entity->jumpHold  = false;
+    self->up        = false;
+    self->down      = false;
+    self->jumpPress = false;
+    self->jumpHold  = false;
 }
 
 #if RETRO_INCLUDE_EDITOR
 void EncoreIntro_EditorDraw(void)
 {
     RSDK_THIS(EncoreIntro);
-    CutsceneRules_DrawCutsceneBounds(entity, &entity->size);
+    CutsceneRules_DrawCutsceneBounds(self, &self->size);
 }
 
 void EncoreIntro_EditorLoad(void) {}

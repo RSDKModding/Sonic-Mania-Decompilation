@@ -5,7 +5,7 @@ ObjectCylinder *Cylinder;
 void Cylinder_Update(void)
 {
     RSDK_THIS(Cylinder);
-    StateMachine_Run(entity->state);
+    StateMachine_Run(self->state);
 }
 
 void Cylinder_LateUpdate(void) {}
@@ -18,91 +18,91 @@ void Cylinder_Create(void *data)
 {
     RSDK_THIS(Cylinder);
     if (!SceneInfo->inEditor) {
-        entity->active    = ACTIVE_BOUNDS;
-        entity->visible   = false;
-        entity->drawOrder = Zone->drawOrderLow;
-        switch (entity->type) {
+        self->active    = ACTIVE_BOUNDS;
+        self->visible   = false;
+        self->drawOrder = Zone->drawOrderLow;
+        switch (self->type) {
             case 0:
-                entity->updateRange.x = entity->length << 16;
-                entity->updateRange.y = entity->radius << 16;
+                self->updateRange.x = self->length << 16;
+                self->updateRange.y = self->radius << 16;
 
-                entity->hitbox1.left   = -entity->length;
-                entity->hitbox1.top    = -entity->radius;
-                entity->hitbox1.right  = entity->length;
-                entity->hitbox1.bottom = entity->radius;
-                entity->hitbox2.left   = -entity->length;
-                entity->hitbox2.top    = -entity->radius;
-                entity->hitbox2.right  = entity->length;
-                entity->hitbox2.bottom = -entity->radius + 8;
-                entity->state          = Cylinder_State_Unknown1;
+                self->hitbox1.left   = -self->length;
+                self->hitbox1.top    = -self->radius;
+                self->hitbox1.right  = self->length;
+                self->hitbox1.bottom = self->radius;
+                self->hitbox2.left   = -self->length;
+                self->hitbox2.top    = -self->radius;
+                self->hitbox2.right  = self->length;
+                self->hitbox2.bottom = -self->radius + 8;
+                self->state          = Cylinder_State_Unknown1;
                 break;
             case 1:
-                entity->updateRange.x  = entity->radius << 16;
-                entity->updateRange.y  = entity->length << 16;
-                entity->state          = Cylinder_State_Unknown2;
-                entity->hitbox1.left   = -entity->radius;
-                entity->hitbox1.top    = -entity->length;
-                entity->hitbox1.right  = entity->radius;
-                entity->hitbox1.bottom = entity->length;
+                self->updateRange.x  = self->radius << 16;
+                self->updateRange.y  = self->length << 16;
+                self->state          = Cylinder_State_Unknown2;
+                self->hitbox1.left   = -self->radius;
+                self->hitbox1.top    = -self->length;
+                self->hitbox1.right  = self->radius;
+                self->hitbox1.bottom = self->length;
                 break;
             case 2:
-                entity->updateRange.x  = (entity->radius + 112) << 16;
-                entity->updateRange.y  = entity->length << 16;
-                entity->hitbox1.left   = -64 - entity->radius;
-                entity->hitbox1.right  = entity->radius + 64;
-                entity->hitbox1.top    = -entity->length;
-                entity->hitbox1.bottom = entity->length;
-                entity->hitbox3.left   = -112 - entity->radius;
-                entity->hitbox3.right  = -entity->radius;
-                entity->hitbox3.top    = -entity->length;
-                entity->hitbox3.bottom = 64 - entity->length;
-                entity->hitbox4.left   = entity->radius;
-                entity->hitbox4.top    = entity->length - 64;
-                entity->hitbox4.right  = entity->length + 112;
-                entity->hitbox4.bottom = entity->length;
-                entity->state          = Cylinder_State_Unknown3;
+                self->updateRange.x  = (self->radius + 112) << 16;
+                self->updateRange.y  = self->length << 16;
+                self->hitbox1.left   = -64 - self->radius;
+                self->hitbox1.right  = self->radius + 64;
+                self->hitbox1.top    = -self->length;
+                self->hitbox1.bottom = self->length;
+                self->hitbox3.left   = -112 - self->radius;
+                self->hitbox3.right  = -self->radius;
+                self->hitbox3.top    = -self->length;
+                self->hitbox3.bottom = 64 - self->length;
+                self->hitbox4.left   = self->radius;
+                self->hitbox4.top    = self->length - 64;
+                self->hitbox4.right  = self->length + 112;
+                self->hitbox4.bottom = self->length;
+                self->state          = Cylinder_State_Unknown3;
                 break;
             case 3:
-                entity->updateRange.x = (entity->radius + 112) << 16;
-                entity->updateRange.y = entity->length << 16;
+                self->updateRange.x = (self->radius + 112) << 16;
+                self->updateRange.y = self->length << 16;
 
-                entity->hitbox1.left   = -64 - entity->radius;
-                entity->hitbox1.top    = -entity->length;
-                entity->hitbox1.right  = entity->radius + 64;
-                entity->hitbox1.bottom = entity->length;
-                entity->hitbox3.left   = -112 - entity->radius;
-                entity->hitbox3.top    = entity->length - 64;
-                entity->hitbox3.right  = -entity->radius;
-                entity->hitbox3.bottom = entity->length;
-                entity->hitbox4.left   = entity->radius;
-                entity->hitbox4.top    = -entity->length;
-                entity->hitbox4.right  = entity->radius + 112;
-                entity->hitbox4.bottom = 64 - entity->length;
-                entity->state          = Cylinder_State_Unknown3;
+                self->hitbox1.left   = -64 - self->radius;
+                self->hitbox1.top    = -self->length;
+                self->hitbox1.right  = self->radius + 64;
+                self->hitbox1.bottom = self->length;
+                self->hitbox3.left   = -112 - self->radius;
+                self->hitbox3.top    = self->length - 64;
+                self->hitbox3.right  = -self->radius;
+                self->hitbox3.bottom = self->length;
+                self->hitbox4.left   = self->radius;
+                self->hitbox4.top    = -self->length;
+                self->hitbox4.right  = self->radius + 112;
+                self->hitbox4.bottom = 64 - self->length;
+                self->state          = Cylinder_State_Unknown3;
                 break;
             case 4:
-                entity->updateRange.x  = entity->length << 16;
-                entity->updateRange.y  = entity->radius << 16;
-                entity->hitbox1.left   = 16 - entity->length;
-                entity->hitbox1.top    = ~entity->radius;
-                entity->hitbox1.right  = entity->length - 16;
-                entity->hitbox1.bottom = entity->radius + 1;
-                entity->hitbox2.left   = -entity->length;
-                entity->hitbox2.top    = -entity->radius;
-                entity->hitbox2.right  = entity->length;
-                entity->hitbox2.bottom = entity->radius;
-                entity->state          = Cylinder_State_Unknown4;
+                self->updateRange.x  = self->length << 16;
+                self->updateRange.y  = self->radius << 16;
+                self->hitbox1.left   = 16 - self->length;
+                self->hitbox1.top    = ~self->radius;
+                self->hitbox1.right  = self->length - 16;
+                self->hitbox1.bottom = self->radius + 1;
+                self->hitbox2.left   = -self->length;
+                self->hitbox2.top    = -self->radius;
+                self->hitbox2.right  = self->length;
+                self->hitbox2.bottom = self->radius;
+                self->state          = Cylinder_State_Unknown4;
                 break;
             case 7:
-                entity->visible        = true;
-                entity->updateRange.x  = entity->radius << 17;
-                entity->updateRange.y  = entity->length << 17;
-                entity->hitbox1.left   = -16 - entity->radius;
-                entity->hitbox1.top    = -entity->length;
-                entity->hitbox1.right  = entity->radius + 16;
-                entity->hitbox1.bottom = entity->length;
-                entity->length         = 2 * entity->length;
-                entity->state          = Cylinder_State_Unknown5;
+                self->visible        = true;
+                self->updateRange.x  = self->radius << 17;
+                self->updateRange.y  = self->length << 17;
+                self->hitbox1.left   = -16 - self->radius;
+                self->hitbox1.top    = -self->length;
+                self->hitbox1.right  = self->radius + 16;
+                self->hitbox1.bottom = self->length;
+                self->length         = 2 * self->length;
+                self->state          = Cylinder_State_Unknown5;
                 break;
             default: return;
         }
@@ -116,25 +116,25 @@ void Cylinder_State_Unknown1(void)
     foreach_active(Player, player)
     {
         Hitbox *playerHitbox = Player_GetHitbox(player);
-        int32 radius           = (entity->radius - playerHitbox->bottom) << 6;
+        int32 radius           = (self->radius - playerHitbox->bottom) << 6;
 
-        if (entity->playerFrameIDs[player->playerID]) {
-            if (!Player_CheckCollisionTouch(player, entity, &entity->hitbox1) || player->velocity.y <= -0x40000) {
-                if (((entity->playerAngles[player->playerID] + 128) & 0x3FF) < 0x100)
+        if (self->playerFrameIDs[player->playerID]) {
+            if (!Player_CheckCollisionTouch(player, self, &self->hitbox1) || player->velocity.y <= -0x40000) {
+                if (((self->playerAngles[player->playerID] + 128) & 0x3FF) < 0x100)
                     player->velocity.y >>= 1;
                 else
                     player->velocity.y = 0;
                 if (!player->onGround && player->velocity.y >= 0 && player->state != Player_State_FlyCarried
                     && player->playerAnimator.animationID != ANI_SKID) {
                     RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGCS, &player->playerAnimator, true,
-                                            24 * entity->playerAngles[player->playerID] / 1024);
+                                            24 * self->playerAngles[player->playerID] / 1024);
                 }
                 player->onGround                         = false;
-                entity->playerFrameIDs[player->playerID] = 0;
+                self->playerFrameIDs[player->playerID] = 0;
             }
             else {
-                entity->playerAngles[player->playerID] = (entity->playerAngles[player->playerID] + 16) & 0x3FF;
-                player->position.y                     = radius * RSDK.Cos1024(entity->playerAngles[player->playerID]) + entity->position.y;
+                self->playerAngles[player->playerID] = (self->playerAngles[player->playerID] + 16) & 0x3FF;
+                player->position.y                     = radius * RSDK.Cos1024(self->playerAngles[player->playerID]) + self->position.y;
 
                 if (player->state == Player_State_LookUp || player->state == Player_State_Crouch)
                     player->state = Player_State_Ground;
@@ -148,19 +148,19 @@ void Cylinder_State_Unknown1(void)
                 }
                 else {
                     RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGCS, &player->playerAnimator, true,
-                                            24 * entity->playerAngles[player->playerID] / 1024);
+                                            24 * self->playerAngles[player->playerID] / 1024);
                     player->onGround = true;
                 }
             }
         }
         else {
-            if (Player_CheckCollisionTouch(player, entity, &entity->hitbox1)) {
-                if (player->position.y - entity->position.y > radius << 10 && player->velocity.y >= 0) {
-                    player->position.y                       = entity->position.y + (radius << 10);
+            if (Player_CheckCollisionTouch(player, self, &self->hitbox1)) {
+                if (player->position.y - self->position.y > radius << 10 && player->velocity.y >= 0) {
+                    player->position.y                       = self->position.y + (radius << 10);
                     player->onGround                         = true;
                     player->velocity.y                       = 0;
-                    entity->playerAngles[player->playerID]   = 0;
-                    entity->playerFrameIDs[player->playerID] = 1;
+                    self->playerAngles[player->playerID]   = 0;
+                    self->playerFrameIDs[player->playerID] = 1;
                 }
             }
         }
@@ -174,15 +174,15 @@ void Cylinder_State_Unknown2(void)
     foreach_active(Player, player)
     {
         Hitbox *playerHitbox = Player_GetHitbox(player);
-        int32 radius           = (entity->radius - playerHitbox->bottom) << 6;
+        int32 radius           = (self->radius - playerHitbox->bottom) << 6;
 
-        if (entity->playerFrameIDs[player->playerID]) {
-            if (Player_CheckCollisionTouch(player, entity, &entity->hitbox1)) {
-                entity->playerAngles[player->playerID] = (entity->playerAngles[player->playerID] + 16) & 0x3FF;
-                player->position.x                     = radius * RSDK.Cos1024(entity->playerAngles[player->playerID]) + entity->position.x;
+        if (self->playerFrameIDs[player->playerID]) {
+            if (Player_CheckCollisionTouch(player, self, &self->hitbox1)) {
+                self->playerAngles[player->playerID] = (self->playerAngles[player->playerID] + 16) & 0x3FF;
+                player->position.x                     = radius * RSDK.Cos1024(self->playerAngles[player->playerID]) + self->position.x;
                 player->rotation                       = 128;
                 RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGCS, &player->playerAnimator, true,
-                                        (24 * entity->playerAngles[player->playerID] / 1024 + 12) % 24);
+                                        (24 * self->playerAngles[player->playerID] / 1024 + 12) % 24);
                 player->playerAnimator.rotationFlag = 1;
                 player->direction                   = player->velocity.y < 0;
             }
@@ -195,24 +195,24 @@ void Cylinder_State_Unknown2(void)
                 }
                 player->onGround                         = false;
                 player->state                            = Player_State_Air;
-                entity->playerFrameIDs[player->playerID] = 0;
+                self->playerFrameIDs[player->playerID] = 0;
             }
         }
         else {
-            if (Player_CheckCollisionTouch(player, entity, &entity->hitbox1)) {
-                if (abs(player->position.x - entity->position.x) > (radius - 896) << 10) {
-                    if (player->position.x - entity->position.x <= 0) {
+            if (Player_CheckCollisionTouch(player, self, &self->hitbox1)) {
+                if (abs(player->position.x - self->position.x) > (radius - 896) << 10) {
+                    if (player->position.x - self->position.x <= 0) {
                         player->collisionMode                  = CMODE_RWALL;
-                        entity->playerAngles[player->playerID] = 512;
+                        self->playerAngles[player->playerID] = 512;
                     }
                     else {
                         player->collisionMode                  = CMODE_LWALL;
-                        entity->playerAngles[player->playerID] = 0;
+                        self->playerAngles[player->playerID] = 0;
                     }
                     player->state                            = Player_State_Air;
                     player->nextAirState                     = StateMachine_None;
                     player->nextGroundState                  = StateMachine_None;
-                    entity->playerFrameIDs[player->playerID] = 1;
+                    self->playerFrameIDs[player->playerID] = 1;
                 }
             }
         }
@@ -226,19 +226,19 @@ void Cylinder_State_Unknown3(void)
     foreach_active(Player, player)
     {
         Hitbox *playerHitbox = Player_GetHitbox(player);
-        int32 radius           = (entity->radius - playerHitbox->bottom - 12) << 6;
+        int32 radius           = (self->radius - playerHitbox->bottom - 12) << 6;
 
-        switch (entity->playerFrameIDs[player->playerID]) {
+        switch (self->playerFrameIDs[player->playerID]) {
             case 0:
                 if (player->onGround) {
                     bool32 flag = true;
-                    if (!Player_CheckCollisionTouch(player, entity, &entity->hitbox3) || player->groundVel <= 0x30000) {
-                        if (!Player_CheckCollisionTouch(player, entity, &entity->hitbox4) || player->groundVel >= -0x30000) {
+                    if (!Player_CheckCollisionTouch(player, self, &self->hitbox3) || player->groundVel <= 0x30000) {
+                        if (!Player_CheckCollisionTouch(player, self, &self->hitbox4) || player->groundVel >= -0x30000) {
                             flag = false;
                         }
                     }
                     if (flag) {
-                        entity->playerFrameIDs[player->playerID] = 1;
+                        self->playerFrameIDs[player->playerID] = 1;
                         player->state                            = Cylinder_Player_State_Unknown1;
                     }
                 }
@@ -247,16 +247,16 @@ void Cylinder_State_Unknown3(void)
                 if (player->groundVel <= 0x30000) {
                     if (player->groundVel >= -0x30000) {
                         player->onGround                         = false;
-                        entity->playerFrameIDs[player->playerID] = 0;
+                        self->playerFrameIDs[player->playerID] = 0;
                     }
                     else {
-                        if (player->position.x <= entity->position.x) {
-                            entity->playerAngles[player->playerID]   = 768;
+                        if (player->position.x <= self->position.x) {
+                            self->playerAngles[player->playerID]   = 768;
                             player->tileCollisions                   = false;
-                            entity->playerFrameIDs[player->playerID] = 2;
+                            self->playerFrameIDs[player->playerID] = 2;
                         }
-                        int32 distance = (player->position.x - entity->position.x) >> 16;
-                        int32 right    = entity->hitbox4.right - 48;
+                        int32 distance = (player->position.x - self->position.x) >> 16;
+                        int32 right    = self->hitbox4.right - 48;
                         if (distance < right) {
                             player->rotation  = 256;
                             player->direction = FLIP_NONE;
@@ -268,13 +268,13 @@ void Cylinder_State_Unknown3(void)
                     }
                 }
                 else {
-                    if (player->position.x >= entity->position.x) {
-                        entity->playerAngles[player->playerID]   = 768;
+                    if (player->position.x >= self->position.x) {
+                        self->playerAngles[player->playerID]   = 768;
                         player->tileCollisions                   = false;
-                        entity->playerFrameIDs[player->playerID] = 2;
+                        self->playerFrameIDs[player->playerID] = 2;
                     }
-                    int32 distance = (entity->position.x - player->position.x) >> 16;
-                    int32 right    = -48 - entity->hitbox3.left;
+                    int32 distance = (self->position.x - player->position.x) >> 16;
+                    int32 right    = -48 - self->hitbox3.left;
                     if (distance < right) {
                         player->rotation  = 256;
                         player->direction = FLIP_X;
@@ -288,10 +288,10 @@ void Cylinder_State_Unknown3(void)
                 }
                 break;
             case 2:
-                entity->playerAngles[player->playerID] = (entity->playerAngles[player->playerID] + (player->groundVel >> 15)) & 0x3FF;
-                player->position.x                     = radius * RSDK.Cos1024(entity->playerAngles[player->playerID]) + entity->position.x;
+                self->playerAngles[player->playerID] = (self->playerAngles[player->playerID] + (player->groundVel >> 15)) & 0x3FF;
+                player->position.x                     = radius * RSDK.Cos1024(self->playerAngles[player->playerID]) + self->position.x;
 
-                if (entity->hitbox3.top >= entity->hitbox4.top)
+                if (self->hitbox3.top >= self->hitbox4.top)
                     player->position.y -= (player->groundVel >> 2) & 0xFFFFE000;
                 else
                     player->position.y += (player->groundVel >> 2) & 0xFFFFE000;
@@ -300,15 +300,15 @@ void Cylinder_State_Unknown3(void)
                 int32 frame = 0;
                 if (player->groundVel <= 0) {
                     player->rotation = 128;
-                    frame            = 35 - 24 * entity->playerAngles[player->playerID] / 1024;
+                    frame            = 35 - 24 * self->playerAngles[player->playerID] / 1024;
                 }
                 else {
                     player->rotation = 384;
-                    frame            = 24 * entity->playerAngles[player->playerID] / 1024;
+                    frame            = 24 * self->playerAngles[player->playerID] / 1024;
                 }
 
                 if (player->velocity.y < -0x40000) {
-                    entity->playerFrameIDs[player->playerID] = 0;
+                    self->playerFrameIDs[player->playerID] = 0;
                     player->tileCollisions                   = true;
                 }
                 else {
@@ -319,22 +319,22 @@ void Cylinder_State_Unknown3(void)
 
                     if (player->groundVel <= 0) {
                         if (player->groundVel >= -0x30000) {
-                            entity->playerFrameIDs[player->playerID] = 0;
+                            self->playerFrameIDs[player->playerID] = 0;
                             player->tileCollisions                   = true;
                         }
                         else {
-                            if (entity->hitbox3.top < entity->hitbox4.top) {
-                                int32 maxY = entity->position.y - (playerHitbox->bottom << 16) - entity->updateRange.y + 0x400000;
+                            if (self->hitbox3.top < self->hitbox4.top) {
+                                int32 maxY = self->position.y - (playerHitbox->bottom << 16) - self->updateRange.y + 0x400000;
                                 if (player->position.y <= maxY) {
                                     player->position.y                       = maxY;
-                                    entity->playerFrameIDs[player->playerID] = 3;
+                                    self->playerFrameIDs[player->playerID] = 3;
                                     player->tileCollisions                   = true;
                                 }
                             }
                             else {
-                                if (player->position.y >= entity->updateRange.y - (playerHitbox->bottom << 16) + entity->position.y) {
-                                    player->position.y = entity->updateRange.y - (playerHitbox->bottom << 16) + entity->position.y;
-                                    entity->playerFrameIDs[player->playerID] = 3;
+                                if (player->position.y >= self->updateRange.y - (playerHitbox->bottom << 16) + self->position.y) {
+                                    player->position.y = self->updateRange.y - (playerHitbox->bottom << 16) + self->position.y;
+                                    self->playerFrameIDs[player->playerID] = 3;
                                     player->tileCollisions                   = true;
                                 }
                             }
@@ -342,21 +342,21 @@ void Cylinder_State_Unknown3(void)
                     }
                     else {
                         if (player->groundVel <= 0x30000) {
-                            entity->playerFrameIDs[player->playerID] = 0;
+                            self->playerFrameIDs[player->playerID] = 0;
                             player->tileCollisions                   = true;
                         }
-                        else if (entity->hitbox3.top >= entity->hitbox4.top) {
-                            int32 maxY = entity->position.y - (playerHitbox->bottom << 16) - entity->updateRange.y + 0x400000;
+                        else if (self->hitbox3.top >= self->hitbox4.top) {
+                            int32 maxY = self->position.y - (playerHitbox->bottom << 16) - self->updateRange.y + 0x400000;
                             if (player->position.y <= maxY) {
                                 player->position.y                       = maxY;
-                                entity->playerFrameIDs[player->playerID] = 3;
+                                self->playerFrameIDs[player->playerID] = 3;
                                 player->tileCollisions                   = true;
                             }
                         }
                         else {
-                            if (player->position.y >= entity->updateRange.y - (playerHitbox->bottom << 16) + entity->position.y) {
-                                player->position.y                       = entity->updateRange.y - (playerHitbox->bottom << 16) + entity->position.y;
-                                entity->playerFrameIDs[player->playerID] = 3;
+                            if (player->position.y >= self->updateRange.y - (playerHitbox->bottom << 16) + self->position.y) {
+                                player->position.y                       = self->updateRange.y - (playerHitbox->bottom << 16) + self->position.y;
+                                self->playerFrameIDs[player->playerID] = 3;
                                 player->tileCollisions                   = true;
                             }
                         }
@@ -364,9 +364,9 @@ void Cylinder_State_Unknown3(void)
                 }
                 break;
             case 3:
-                if (Player_CheckCollisionTouch(player, entity, &entity->hitbox1)) {
+                if (Player_CheckCollisionTouch(player, self, &self->hitbox1)) {
                     if (abs(player->groundVel) <= 0x30000) {
-                        entity->playerFrameIDs[player->playerID] = 0;
+                        self->playerFrameIDs[player->playerID] = 0;
                         player->state                            = Player_State_Ground;
                         if (player->groundVel <= 0) {
                             if (player->groundVel < 0)
@@ -380,8 +380,8 @@ void Cylinder_State_Unknown3(void)
                         player->onGround   = true;
                         player->velocity.y = 0;
                         if (player->groundVel >= 0) {
-                            int32 distance = (player->position.x - entity->position.x) >> 16;
-                            int32 right    = entity->hitbox4.right - 48;
+                            int32 distance = (player->position.x - self->position.x) >> 16;
+                            int32 right    = self->hitbox4.right - 48;
                             if (distance < right) {
                                 player->rotation  = 256;
                                 player->direction = FLIP_X;
@@ -390,8 +390,8 @@ void Cylinder_State_Unknown3(void)
                             }
                         }
                         else {
-                            int32 distance = (entity->position.x - player->position.x) >> 16;
-                            int32 right    = -48 - entity->hitbox3.left;
+                            int32 distance = (self->position.x - player->position.x) >> 16;
+                            int32 right    = -48 - self->hitbox3.left;
                             if (distance < right) {
                                 player->rotation  = 256;
                                 player->direction = FLIP_NONE;
@@ -402,7 +402,7 @@ void Cylinder_State_Unknown3(void)
                     }
                 }
                 else {
-                    entity->playerFrameIDs[player->playerID] = 0;
+                    self->playerFrameIDs[player->playerID] = 0;
                     player->state                            = Player_State_Ground;
                     if (player->groundVel <= 0) {
                         if (player->groundVel < 0)
@@ -425,12 +425,12 @@ void Cylinder_State_Unknown4(void)
     foreach_active(Player, player)
     {
         Hitbox *playerHitbox = Player_GetHitbox(player);
-        int32 radius           = (entity->radius + playerHitbox->bottom) << 6;
-        if (entity->playerFrameIDs[player->playerID]) {
-            int32 angle = (entity->playerAngles[player->playerID] + 8) & 0x3FF;
-            if (Player_CheckCollisionTouch(player, entity, &entity->hitbox1) && !player->onGround) {
-                if ((player->position.y < entity->position.y && player->velocity.y >= 0)
-                    || (player->position.y >= entity->position.y && player->velocity.y <= 0)) {
+        int32 radius           = (self->radius + playerHitbox->bottom) << 6;
+        if (self->playerFrameIDs[player->playerID]) {
+            int32 angle = (self->playerAngles[player->playerID] + 8) & 0x3FF;
+            if (Player_CheckCollisionTouch(player, self, &self->hitbox1) && !player->onGround) {
+                if ((player->position.y < self->position.y && player->velocity.y >= 0)
+                    || (player->position.y >= self->position.y && player->velocity.y <= 0)) {
 
                     bool32 flag = true;
                     if (player->state == Cylinder_Player_State_Unknown2) {
@@ -460,17 +460,17 @@ void Cylinder_State_Unknown4(void)
                             player->drawOrder = Zone->playerDrawHigh;
                         else
                             player->drawOrder = Zone->playerDrawLow;
-                        entity->playerAngles[player->playerID] = angle;
-                        player->position.y                     = radius * RSDK.Cos1024(angle) + entity->position.y;
+                        self->playerAngles[player->playerID] = angle;
+                        player->position.y                     = radius * RSDK.Cos1024(angle) + self->position.y;
 
-                        if (player->position.y < entity->position.y)
+                        if (player->position.y < self->position.y)
                             player->abilityValue = 0;
                         else
                             player->abilityValue = 128;
                         player->onGround = true;
                     }
                     else {
-                        entity->playerFrameIDs[player->playerID] = 0;
+                        self->playerFrameIDs[player->playerID] = 0;
                     }
                 }
             }
@@ -490,11 +490,11 @@ void Cylinder_State_Unknown4(void)
                     player->onGround = false;
                 }
 
-                entity->playerFrameIDs[player->playerID] = 0;
+                self->playerFrameIDs[player->playerID] = 0;
             }
         }
         else {
-            if (Player_CheckCollisionTouch(player, entity, &entity->hitbox1) && !player->onGround) {
+            if (Player_CheckCollisionTouch(player, self, &self->hitbox1) && !player->onGround) {
                 if (
 #if RETRO_USE_PLUS
                     player->state == Player_State_MightyHammerDrop ||
@@ -502,20 +502,20 @@ void Cylinder_State_Unknown4(void)
                     player->state == Player_State_BubbleBounce) {
                     player->onGround = true;
                 }
-                else if ((player->position.y < entity->position.y && player->velocity.y >= 0)
-                         || (player->position.y >= entity->position.y && player->velocity.y <= 0)) {
-                    if (player->position.y >= entity->position.y) {
-                        player->position.y                     = entity->position.y + (radius << 10);
-                        entity->playerAngles[player->playerID] = 0;
+                else if ((player->position.y < self->position.y && player->velocity.y >= 0)
+                         || (player->position.y >= self->position.y && player->velocity.y <= 0)) {
+                    if (player->position.y >= self->position.y) {
+                        player->position.y                     = self->position.y + (radius << 10);
+                        self->playerAngles[player->playerID] = 0;
                     }
                     else {
-                        player->position.y                     = entity->position.y - (radius << 10);
-                        entity->playerAngles[player->playerID] = 512;
+                        player->position.y                     = self->position.y - (radius << 10);
+                        self->playerAngles[player->playerID] = 512;
                     }
                     player->onGround                         = true;
                     player->velocity.y                       = 0;
-                    entity->playerFrameIDs[player->playerID] = 1;
-                    int32 frame = (ANI_STANDCS - 24 * ((entity->playerAngles[player->playerID] + 8) & 0x3FF) / 1024) % ANI_STANDCS;
+                    self->playerFrameIDs[player->playerID] = 1;
+                    int32 frame = (ANI_STANDCS - 24 * ((self->playerAngles[player->playerID] + 8) & 0x3FF) / 1024) % ANI_STANDCS;
                     if (player->groundVel)
                         RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGCS, &player->playerAnimator, true, frame);
                     else
@@ -539,10 +539,10 @@ void Cylinder_State_Unknown5(void)
     foreach_active(Player, player)
     {
         Hitbox *playerHitbox = Player_GetHitbox(player);
-        int32 top              = entity->position.y + (entity->hitbox1.top << 16);
-        int32 radius           = (entity->radius + playerHitbox->bottom) << 6;
+        int32 top              = self->position.y + (self->hitbox1.top << 16);
+        int32 radius           = (self->radius + playerHitbox->bottom) << 6;
 
-        if (entity->playerFrameIDs[player->playerID]) {
+        if (self->playerFrameIDs[player->playerID]) {
             bool32 inputFlag = false;
             if (player->groundVel > 0) {
                 if (player->left)
@@ -558,7 +558,7 @@ void Cylinder_State_Unknown5(void)
                 }
             }
 
-            if (Player_CheckCollisionTouch(player, entity, &entity->hitbox1)) {
+            if (Player_CheckCollisionTouch(player, self, &self->hitbox1)) {
                 if (player->onGround) {
                     if (inputFlag) {
                         if (player->velocity.y > 0x18000)
@@ -574,7 +574,7 @@ void Cylinder_State_Unknown5(void)
                     }
                     player->position.y += player->velocity.y;
 
-                    int32 len   = minVal(abs(player->position.y - top) >> 16, entity->length);
+                    int32 len   = minVal(abs(player->position.y - top) >> 16, self->length);
                     int32 frame = 0;
 
                     int32 angle = ((len << 10) / 192 + (((uint32)player->groundVel >> 22) & 0x200)) & 0x3FF;
@@ -590,8 +590,8 @@ void Cylinder_State_Unknown5(void)
                         player->rotation  = 384;
                     }
 
-                    player->position.x                     = radius * RSDK.Cos1024(angle) + entity->position.x;
-                    entity->playerAngles[player->playerID] = angle;
+                    player->position.x                     = radius * RSDK.Cos1024(angle) + self->position.x;
+                    self->playerAngles[player->playerID] = angle;
                     if (angle >= 512)
                         player->drawOrder = Zone->playerDrawHigh;
                     else
@@ -600,14 +600,14 @@ void Cylinder_State_Unknown5(void)
                     RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGCS, &player->playerAnimator, true, frame);
 
                     player->playerAnimator.rotationFlag = 1;
-                    if (player->position.x < entity->position.x)
+                    if (player->position.x < self->position.x)
                         player->abilityValue = 0;
                     else
                         player->abilityValue = 128;
                     player->onGround = true;
                     if (player->jumpPress) {
                         RSDK.PlaySfx(Player->sfxJump, false, 255);
-                        if (player->position.x < entity->position.x)
+                        if (player->position.x < self->position.x)
                             player->velocity.x = -0x60000;
                         else
                             player->velocity.x = 0x60000;
@@ -624,7 +624,7 @@ void Cylinder_State_Unknown5(void)
                 }
                 else if (player->onGround) {
                     player->state = Player_State_Ground;
-                    if (player->position.x >= entity->position.x) {
+                    if (player->position.x >= self->position.x) {
                         player->angle     = 64;
                         player->direction = FLIP_NONE;
                         if (inputFlag || player->groundVel < player->velocity.y)
@@ -656,28 +656,28 @@ void Cylinder_State_Unknown5(void)
                     player->onGround       = true;
                     player->tileCollisions = true;
                 }
-                entity->playerFrameIDs[player->playerID] = 0;
+                self->playerFrameIDs[player->playerID] = 0;
             }
         }
         else {
-            if (Player_CheckCollisionTouch(player, entity, &entity->hitbox1) && player->onGround) {
+            if (Player_CheckCollisionTouch(player, self, &self->hitbox1) && player->onGround) {
                 if ((player->angle == 64 && player->groundVel > 0) || (player->angle == 192 && player->groundVel < 0)) {
                     if (player->angle == 64 && player->direction == FLIP_X)
                         player->direction = FLIP_NONE;
                     if (player->angle == 192 && player->direction == FLIP_NONE)
                         player->direction = FLIP_X;
 
-                    if (player->position.x >= entity->position.x) {
-                        player->position.x                     = entity->position.x + (radius << 10);
-                        entity->playerAngles[player->playerID] = 0;
+                    if (player->position.x >= self->position.x) {
+                        player->position.x                     = self->position.x + (radius << 10);
+                        self->playerAngles[player->playerID] = 0;
                     }
                     else {
-                        player->position.x                     = entity->position.x - (radius << 10);
-                        entity->playerAngles[player->playerID] = 512;
+                        player->position.x                     = self->position.x - (radius << 10);
+                        self->playerAngles[player->playerID] = 512;
                     }
                     player->onGround                         = true;
                     player->velocity.x                       = 0;
-                    entity->playerFrameIDs[player->playerID] = 1;
+                    self->playerFrameIDs[player->playerID] = 1;
                     player->nextAirState                     = 0;
                     player->nextGroundState                  = 0;
                     player->state                            = Cylinder_Player_State_Unknown4;
@@ -707,28 +707,28 @@ void Cylinder_Player_State_Unknown2(void)
 {
     RSDK_THIS(Player);
     Player_HandleGroundMovement();
-    entity->skidding = 0;
-    if (entity->camera)
-        entity->camera->offsetYFlag = false;
-    entity->jumpAbilityTimer = 0;
+    self->skidding = 0;
+    if (self->camera)
+        self->camera->offsetYFlag = false;
+    self->jumpAbilityTimer = 0;
 
-    if (entity->jumpPress) {
-        Player_StartJump(entity);
-        if (entity->abilityValue == 128) {
-            entity->velocity.y = -entity->velocity.y;
+    if (self->jumpPress) {
+        Player_StartJump(self);
+        if (self->abilityValue == 128) {
+            self->velocity.y = -self->velocity.y;
         }
-        entity->direction ^= 1;
-        entity->timer = 0;
+        self->direction ^= 1;
+        self->timer = 0;
     }
     else {
-        if (abs(entity->groundVel) >= 0x8800 && !entity->left && !entity->right && entity->down) {
-            if (entity->abilityValue == 128)
-                entity->position.y -= entity->cameraOffset;
+        if (abs(self->groundVel) >= 0x8800 && !self->left && !self->right && self->down) {
+            if (self->abilityValue == 128)
+                self->position.y -= self->cameraOffset;
             else
-                entity->position.y += entity->cameraOffset;
-            RSDK.SetSpriteAnimation(entity->aniFrames, ANI_JUMP, &entity->playerAnimator, false, 0);
-            entity->direction ^= 1;
-            entity->state = Cylinder_Player_State_Unknown3;
+                self->position.y += self->cameraOffset;
+            RSDK.SetSpriteAnimation(self->aniFrames, ANI_JUMP, &self->playerAnimator, false, 0);
+            self->direction ^= 1;
+            self->state = Cylinder_Player_State_Unknown3;
             RSDK.PlaySfx(Player->sfxRoll, false, 255);
         }
     }
@@ -737,48 +737,48 @@ void Cylinder_Player_State_Unknown2(void)
 void Cylinder_Player_State_Unknown3(void)
 {
     RSDK_THIS(Player);
-    int32 angle     = entity->angle;
-    entity->angle = 0;
+    int32 angle     = self->angle;
+    self->angle = 0;
     Player_HandleRollDeceleration();
-    if (entity->state == Player_State_Ground) {
-        entity->direction ^= 1;
-        entity->state = Cylinder_Player_State_Unknown2;
+    if (self->state == Player_State_Ground) {
+        self->direction ^= 1;
+        self->state = Cylinder_Player_State_Unknown2;
     }
-    if (entity->characterID == ID_TAILS) {
-        entity->playerAnimator.animationSpeed = 120;
+    if (self->characterID == ID_TAILS) {
+        self->playerAnimator.animationSpeed = 120;
     }
     else {
-        entity->playerAnimator.animationSpeed = ((abs(entity->groundVel) * 0xF0) / 0x60000) + 0x30;
+        self->playerAnimator.animationSpeed = ((abs(self->groundVel) * 0xF0) / 0x60000) + 0x30;
     }
 
-    if (entity->playerAnimator.animationSpeed > 0xF0)
-        entity->playerAnimator.animationSpeed = 0xF0;
+    if (self->playerAnimator.animationSpeed > 0xF0)
+        self->playerAnimator.animationSpeed = 0xF0;
 
-    if (entity->camera)
-        entity->camera->offsetYFlag = false;
-    entity->jumpAbilityTimer = 0;
-    entity->angle            = angle;
-    if (entity->jumpPress) {
-        Player_StartJump(entity);
-        if (entity->abilityValue == 128) {
-            entity->velocity.y = -entity->velocity.y;
+    if (self->camera)
+        self->camera->offsetYFlag = false;
+    self->jumpAbilityTimer = 0;
+    self->angle            = angle;
+    if (self->jumpPress) {
+        Player_StartJump(self);
+        if (self->abilityValue == 128) {
+            self->velocity.y = -self->velocity.y;
         }
-        entity->timer = 0;
+        self->timer = 0;
     }
 }
 
 void Cylinder_Player_State_Unknown4(void)
 {
     RSDK_THIS(Player);
-    if (entity->onGround) {
-        entity->rotation = (2 * entity->angle);
+    if (self->onGround) {
+        self->rotation = (2 * self->angle);
     }
 }
 
 void Cylinder_Player_State_Unknown1(void)
 {
     RSDK_THIS(Player);
-    entity->down = false;
+    self->down = false;
     Player_State_Ground();
 }
 

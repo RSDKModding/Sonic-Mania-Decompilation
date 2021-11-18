@@ -8,18 +8,18 @@ void UFO_Springboard_Update(void)
     foreach_active(UFO_Player, player)
     {
         if (player->bumperTimer <= 12 && player->stateInput) {
-            int32 xDif = (player->position.x - entity->position.x) >> 8;
-            int32 yDif = (player->position.y - entity->position.y) >> 8;
-            int32 valX  = (yDif * RSDK.Sin256(entity->angle >> 2)) + xDif * RSDK.Cos256(entity->angle >> 2) + entity->position.x;
-            int32 valY = (entity->position.y - xDif * RSDK.Sin256(entity->angle >> 2)) + yDif * RSDK.Cos256(entity->angle >> 2);
+            int32 xDif = (player->position.x - self->position.x) >> 8;
+            int32 yDif = (player->position.y - self->position.y) >> 8;
+            int32 valX  = (yDif * RSDK.Sin256(self->angle >> 2)) + xDif * RSDK.Cos256(self->angle >> 2) + self->position.x;
+            int32 valY = (self->position.y - xDif * RSDK.Sin256(self->angle >> 2)) + yDif * RSDK.Cos256(self->angle >> 2);
 
-            RSDK.Sin256(entity->angle >> 2);
-            RSDK.Cos256(entity->angle >> 2);
-            RSDK.Cos256(entity->angle >> 2);
-            RSDK.Sin256(entity->angle >> 2);
-            if (abs(entity->position.x - valX) < 0x180000) {
-                if (abs(entity->position.y - valY) < 0x180000) {
-                    int32 val3 = 32 * ((valY - entity->position.y + 0x180000) / 48);
+            RSDK.Sin256(self->angle >> 2);
+            RSDK.Cos256(self->angle >> 2);
+            RSDK.Cos256(self->angle >> 2);
+            RSDK.Sin256(self->angle >> 2);
+            if (abs(self->position.x - valX) < 0x180000) {
+                if (abs(self->position.y - valY) < 0x180000) {
+                    int32 val3 = 32 * ((valY - self->position.y + 0x180000) / 48);
                     if (player->height < val3) {
                         if (val3 - player->height <= 0xC0000) {
                             player->gravityStrength = 0xC0000;
@@ -40,31 +40,31 @@ void UFO_Springboard_Update(void)
         }
     }
 
-    if (RSDK.CheckOnScreen(entity, 0)) {
-        if (entity->scale.x < 256)
-            entity->scale.x += 16;
-        entity->active = ACTIVE_NORMAL;
+    if (RSDK.CheckOnScreen(self, 0)) {
+        if (self->scale.x < 256)
+            self->scale.x += 16;
+        self->active = ACTIVE_NORMAL;
     }
     else {
-        entity->scale.x = 0;
-        entity->active  = ACTIVE_BOUNDS;
+        self->scale.x = 0;
+        self->active  = ACTIVE_BOUNDS;
     }
 }
 
 void UFO_Springboard_LateUpdate(void)
 {
     RSDK_THIS(UFO_Springboard);
-    int32 z       = entity->position.y;
-    int32 y       = entity->height;
-    int32 x       = entity->position.x;
+    int32 z       = self->position.y;
+    int32 y       = self->height;
+    int32 x       = self->position.x;
     Matrix *mat = &UFO_Camera->matWorld;
 
-    entity->depth3D = mat->values[2][1] * (y >> 16) + mat->values[2][2] * (z >> 16) + mat->values[2][0] * (x >> 16) + mat->values[2][3];
-    if (entity->depth3D >= 0x4000) {
+    self->depth3D = mat->values[2][1] * (y >> 16) + mat->values[2][2] * (z >> 16) + mat->values[2][0] * (x >> 16) + mat->values[2][3];
+    if (self->depth3D >= 0x4000) {
         int32 depth = (int32)((mat->values[0][3] << 8) + (mat->values[0][2] * (z >> 8) & 0xFFFFFF00) + (mat->values[0][0] * (x >> 8) & 0xFFFFFF00)
-                     + (mat->values[0][1] * (entity->height >> 8) & 0xFFFFFF00))
-                    / entity->depth3D;
-        entity->visible = abs(depth) < 256;
+                     + (mat->values[0][1] * (self->height >> 8) & 0xFFFFFF00))
+                    / self->depth3D;
+        self->visible = abs(depth) < 256;
     }
 }
 
@@ -73,16 +73,16 @@ void UFO_Springboard_StaticUpdate(void) {}
 void UFO_Springboard_Draw(void)
 {
     RSDK_THIS(UFO_Springboard);
-    if (entity->depth3D >= 0x4000) {
+    if (self->depth3D >= 0x4000) {
         RSDK.Prepare3DScene(UFO_Springboard->sceneIndex);
-        RSDK.MatrixScaleXYZ(&entity->matrix1, 0x100, entity->scale.x, 0x100);
-        RSDK.MatrixTranslateXYZ(&entity->matrix1, entity->position.x, entity->height, entity->position.y, 0);
-        RSDK.MatrixRotateY(&entity->matrix3, entity->angle);
-        RSDK.MatrixMultiply(&entity->matrix2, &entity->matrix3, &entity->matrix1);
-        RSDK.MatrixMultiply(&entity->matrix2, &entity->matrix2, &UFO_Camera->matWorld);
-        RSDK.MatrixMultiply(&entity->matrix3, &entity->matrix3, &UFO_Camera->matView);
-        RSDK.AddMeshFrameTo3DScene(UFO_Springboard->modelIndex, UFO_Springboard->sceneIndex, &entity->animator, S3D_FLATCLR_SHADED_BLENDED_SCREEN,
-                                   &entity->matrix2, &entity->matrix3, 0xFFFFFF);
+        RSDK.MatrixScaleXYZ(&self->matrix1, 0x100, self->scale.x, 0x100);
+        RSDK.MatrixTranslateXYZ(&self->matrix1, self->position.x, self->height, self->position.y, 0);
+        RSDK.MatrixRotateY(&self->matrix3, self->angle);
+        RSDK.MatrixMultiply(&self->matrix2, &self->matrix3, &self->matrix1);
+        RSDK.MatrixMultiply(&self->matrix2, &self->matrix2, &UFO_Camera->matWorld);
+        RSDK.MatrixMultiply(&self->matrix3, &self->matrix3, &UFO_Camera->matView);
+        RSDK.AddMeshFrameTo3DScene(UFO_Springboard->modelIndex, UFO_Springboard->sceneIndex, &self->animator, S3D_FLATCLR_SHADED_BLENDED_SCREEN,
+                                   &self->matrix2, &self->matrix3, 0xFFFFFF);
         RSDK.Draw3DScene(UFO_Springboard->sceneIndex);
     }
 }
@@ -91,11 +91,11 @@ void UFO_Springboard_Create(void *data)
 {
     RSDK_THIS(UFO_Springboard);
     if (!SceneInfo->inEditor) {
-        entity->visible       = true;
-        entity->drawOrder     = 4;
-        entity->active        = ACTIVE_BOUNDS;
-        entity->updateRange.x = 0x5000000;
-        entity->updateRange.y = 0x5000000;
+        self->visible       = true;
+        self->drawOrder     = 4;
+        self->active        = ACTIVE_BOUNDS;
+        self->updateRange.x = 0x5000000;
+        self->updateRange.y = 0x5000000;
     }
 }
 

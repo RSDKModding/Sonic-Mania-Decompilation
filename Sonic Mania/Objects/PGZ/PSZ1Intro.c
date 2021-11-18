@@ -8,8 +8,8 @@ void PSZ1Intro_Update(void)
     RSDK_THIS(PSZ1Intro);
     void *states[] = { PSZ1Intro_CutsceneState_Unknown1, PSZ1Intro_CutsceneState_Unknown2, PSZ1Intro_CutsceneState_Unknown3, NULL };
 
-    CutsceneSeq_StartSequence((Entity *)entity, states);
-    entity->active = ACTIVE_NEVER;
+    CutsceneSeq_StartSequence((Entity *)self, states);
+    self->active = ACTIVE_NEVER;
 }
 
 void PSZ1Intro_LateUpdate(void) {}
@@ -22,10 +22,10 @@ void PSZ1Intro_Create(void *data)
 {
     RSDK_THIS(PSZ1Intro);
     if (!SceneInfo->inEditor) {
-        entity->active      = ACTIVE_NORMAL;
-        entity->isPermanent = true;
+        self->active      = ACTIVE_NORMAL;
+        self->isPermanent = true;
         if (!isMainGameMode() || !globals->enableIntro || PlayerHelpers_CheckStageReload()) {
-            destroyEntity(entity);
+            destroyEntity(self);
             foreach_all(HangGlider, glider) { destroyEntity(glider); }
         }
     }
@@ -85,7 +85,7 @@ bool32 PSZ1Intro_CutsceneState_Unknown1(EntityCutsceneSeq *host)
                 glider->velocity.x = 0x38000;
                 glider->field_60   = 0xE00;
             }
-            entity->gliders[id] = glider;
+            self->gliders[id] = glider;
         }
         ++id;
     }
@@ -100,14 +100,14 @@ bool32 PSZ1Intro_CutsceneState_Unknown1(EntityCutsceneSeq *host)
 bool32 PSZ1Intro_CutsceneState_Unknown2(EntityCutsceneSeq *host)
 {
     RSDK_THIS(PSZ1Intro);
-    if (++entity->timer == 90) {
-        if (entity->gliders[0])
-            PSZ1Intro_HandleGliderJump(entity->gliders[0]);
+    if (++self->timer == 90) {
+        if (self->gliders[0])
+            PSZ1Intro_HandleGliderJump(self->gliders[0]);
     }
-    if (entity->timer == 120) {
-        entity->timer = 0;
-        if (entity->gliders[1])
-            PSZ1Intro_HandleGliderJump(entity->gliders[1]);
+    if (self->timer == 120) {
+        self->timer = 0;
+        if (self->gliders[1])
+            PSZ1Intro_HandleGliderJump(self->gliders[1]);
         return true;
     }
     return false;

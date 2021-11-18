@@ -5,7 +5,7 @@ ObjectTitleSetup *TitleSetup;
 void TitleSetup_Update(void)
 {
     RSDK_THIS(TitleSetup);
-    StateMachine_Run(entity->state);
+    StateMachine_Run(self->state);
     ScreenInfo->position.x = 0x100 - ScreenInfo->centerX;
 }
 
@@ -16,23 +16,23 @@ void TitleSetup_StaticUpdate(void) {}
 void TitleSetup_Draw(void)
 {
     RSDK_THIS(TitleSetup);
-    StateMachine_Run(entity->stateDraw);
+    StateMachine_Run(self->stateDraw);
 }
 
 void TitleSetup_Create(void *data)
 {
     RSDK_THIS(TitleSetup);
     if (!SceneInfo->inEditor) {
-        RSDK.SetSpriteAnimation(TitleSetup->aniFrames, 0, &entity->animator, true, 0);
-        entity->active    = ACTIVE_ALWAYS;
-        entity->visible   = true;
-        entity->drawOrder = 12;
-        entity->drawFX    = FX_FLIP;
-        entity->state     = TitleSetup_Wait;
-        entity->stateDraw = TitleSetup_DrawState_FadeBlack;
-        entity->timer     = 1024;
-        entity->drawPos.x = 0x1000000;
-        entity->drawPos.y = 0x6C0000;
+        RSDK.SetSpriteAnimation(TitleSetup->aniFrames, 0, &self->animator, true, 0);
+        self->active    = ACTIVE_ALWAYS;
+        self->visible   = true;
+        self->drawOrder = 12;
+        self->drawFX    = FX_FLIP;
+        self->state     = TitleSetup_Wait;
+        self->stateDraw = TitleSetup_DrawState_FadeBlack;
+        self->timer     = 1024;
+        self->drawPos.x = 0x1000000;
+        self->drawPos.y = 0x6C0000;
     }
 }
 
@@ -126,22 +126,22 @@ bool32 TitleSetup_IntroCallback(void)
 void TitleSetup_Wait(void)
 {
     RSDK_THIS(TitleSetup);
-    if (entity->timer <= -0x400) {
-        entity->timer     = 0;
-        entity->state     = TitleSetup_AnimateUntilFlash;
-        entity->stateDraw = TitleSetup_DrawState_DrawRing;
+    if (self->timer <= -0x400) {
+        self->timer     = 0;
+        self->state     = TitleSetup_AnimateUntilFlash;
+        self->stateDraw = TitleSetup_DrawState_DrawRing;
         Music_PlayTrack(TRACK_STAGE);
     }
     else {
-        entity->timer -= 16;
+        self->timer -= 16;
     }
 }
 
 void TitleSetup_AnimateUntilFlash(void)
 {
     RSDK_THIS(TitleSetup);
-    RSDK.ProcessAnimation(&entity->animator);
-    if (entity->animator.frameID == 31) {
+    RSDK.ProcessAnimation(&self->animator);
+    if (self->animator.frameID == 31) {
         foreach_all(TitleLogo, titleLogo)
         {
             if (titleLogo->type >= TITLELOGO_EMBLEM) {
@@ -154,7 +154,7 @@ void TitleSetup_AnimateUntilFlash(void)
                 }
             }
         }
-        entity->state = TitleSetup_Flash;
+        self->state = TitleSetup_Flash;
     }
 }
 
@@ -162,8 +162,8 @@ void TitleSetup_Flash(void)
 {
     RSDK_THIS(TitleSetup);
 
-    RSDK.ProcessAnimation(&entity->animator);
-    if (entity->animator.frameID == entity->animator.frameCount - 1) {
+    RSDK.ProcessAnimation(&self->animator);
+    if (self->animator.frameID == self->animator.frameCount - 1) {
         foreach_all(TitleLogo, titleLogo)
         {
 #if RETRO_USE_PLUS
@@ -190,9 +190,9 @@ void TitleSetup_Flash(void)
         }
 
         TitleBG_SetupFX();
-        entity->timer     = 0x300;
-        entity->state     = TitleSetup_WaitForSonic;
-        entity->stateDraw = TitleSetup_DrawState_Flash;
+        self->timer     = 0x300;
+        self->state     = TitleSetup_WaitForSonic;
+        self->stateDraw = TitleSetup_DrawState_Flash;
     }
 }
 
@@ -200,17 +200,17 @@ void TitleSetup_WaitForSonic(void)
 {
     RSDK_THIS(TitleSetup);
     TitleSetup_CheckCheatCode();
-    if (entity->timer <= 0) {
-        entity->stateDraw = StateMachine_None;
+    if (self->timer <= 0) {
+        self->stateDraw = StateMachine_None;
 #if RETRO_USE_PLUS
         if (API.CheckDLC(DLC_PLUS))
-            entity->state = TitleSetup_SetupLogo_Plus;
+            self->state = TitleSetup_SetupLogo_Plus;
         else
 #endif
-            entity->state = TitleSetup_SetupLogo;
+            self->state = TitleSetup_SetupLogo;
     }
     else {
-        entity->timer -= 16;
+        self->timer -= 16;
     }
 }
 
@@ -218,10 +218,10 @@ void TitleSetup_SetupLogo(void)
 {
     RSDK_THIS(TitleSetup);
 #if RETRO_USE_PLUS
-    if (entity->timer < 120)
+    if (self->timer < 120)
         TitleSetup_CheckCheatCode();
 #endif
-    if (++entity->timer == 120) {
+    if (++self->timer == 120) {
         foreach_all(TitleLogo, titleLogo)
         {
             if (titleLogo->type == TITLELOGO_PRESSSTART) {
@@ -235,17 +235,17 @@ void TitleSetup_SetupLogo(void)
 #endif
             }
         }
-        entity->timer = 0;
-        entity->state = TitleSetup_WaitForEnter;
+        self->timer = 0;
+        self->state = TitleSetup_WaitForEnter;
     }
 }
 #if RETRO_USE_PLUS
 void TitleSetup_SetupLogo_Plus(void)
 {
     RSDK_THIS(TitleSetup);
-    if (entity->timer < 120)
+    if (self->timer < 120)
         TitleSetup_CheckCheatCode();
-    if (++entity->timer == 120) {
+    if (++self->timer == 120) {
         foreach_all(TitleLogo, titleLogo)
         {
             switch (titleLogo->type) {
@@ -270,8 +270,8 @@ void TitleSetup_SetupLogo_Plus(void)
         }
 
         CREATE_ENTITY(TitleEggman, NULL, 0, 0xC00000);
-        entity->timer = 0;
-        entity->state = TitleSetup_SetupLogo;
+        self->timer = 0;
+        self->state = TitleSetup_SetupLogo;
     }
 }
 #endif
@@ -283,14 +283,14 @@ void TitleSetup_WaitForEnter(void)
                      || ControllerInfo->keyY.press || ControllerInfo->keyZ.press || ControllerInfo->keyStart.press
                      || ControllerInfo->keySelect.press;
 #if RETRO_USE_PLUS
-    bool32 anyClick = (!TouchInfo->count && entity->touched) || UnknownInfo->field_28;
+    bool32 anyClick = (!TouchInfo->count && self->touched) || UnknownInfo->field_28;
 #else
-    bool32 anyClick = !TouchInfo->count && entity->touched;
+    bool32 anyClick = !TouchInfo->count && self->touched;
 #endif
-    entity->touched = TouchInfo->count > 0;
+    self->touched = TouchInfo->count > 0;
     if (anyClick || anyButton) {
         RSDK.PlaySfx(TitleSetup->sfxMenuAccept, 0, 255);
-        entity->timer = 0;
+        self->timer = 0;
         const char *nextScene = "Menu";
 #if RETRO_GAMEVER == VER_100
         if (ControllerInfo->keyA.down && (ControllerInfo->keyX.down || ControllerInfo->keyC.down))
@@ -305,31 +305,31 @@ void TitleSetup_WaitForEnter(void)
         API_ResetControllerAssignments();
         API_AssignControllerID(1, id);
         RSDK.StopChannel(Music->channelID);
-        entity->state     = TitleSetup_FadeToMenu;
-        entity->stateDraw = TitleSetup_DrawState_FadeBlack;
+        self->state     = TitleSetup_FadeToMenu;
+        self->stateDraw = TitleSetup_DrawState_FadeBlack;
     }
-    else if (++entity->timer == 800) {
-        entity->timer     = 0;
-        entity->state     = TitleSetup_FadeToVideo;
-        entity->stateDraw = TitleSetup_DrawState_FadeBlack;
+    else if (++self->timer == 800) {
+        self->timer     = 0;
+        self->state     = TitleSetup_FadeToVideo;
+        self->stateDraw = TitleSetup_DrawState_FadeBlack;
     }
 }
 
 void TitleSetup_FadeToMenu(void)
 {
     RSDK_THIS(TitleSetup);
-    if (entity->timer >= 1024) {
+    if (self->timer >= 1024) {
         RSDK.LoadScene();
     }
     else {
-        entity->timer += 8;
+        self->timer += 8;
     }
 }
 
 void TitleSetup_FadeToVideo(void)
 {
     RSDK_THIS(TitleSetup);
-    if (entity->timer >= 1024) {
+    if (self->timer >= 1024) {
         RSDK.LoadScene();
         RSDK.StopChannel(Music->channelID);
         if (TitleSetup->altMusic) {
@@ -344,7 +344,7 @@ void TitleSetup_FadeToVideo(void)
         }
     }
     else {
-        entity->timer += 8;
+        self->timer += 8;
     }
 }
 
@@ -352,25 +352,25 @@ void TitleSetup_DrawState_FadeBlack(void)
 {
     RSDK_THIS(TitleSetup);
 
-    RSDK.FillScreen(0x000000, entity->timer, entity->timer - 128, entity->timer - 256);
+    RSDK.FillScreen(0x000000, self->timer, self->timer - 128, self->timer - 256);
 }
 
 void TitleSetup_DrawState_DrawRing(void)
 {
     RSDK_THIS(TitleSetup);
 
-    entity->direction = FLIP_NONE;
-    RSDK.DrawSprite(&entity->animator, &entity->drawPos, false);
+    self->direction = FLIP_NONE;
+    RSDK.DrawSprite(&self->animator, &self->drawPos, false);
 
-    entity->direction = FLIP_X;
-    RSDK.DrawSprite(&entity->animator, &entity->drawPos, false);
+    self->direction = FLIP_X;
+    RSDK.DrawSprite(&self->animator, &self->drawPos, false);
 }
 
 void TitleSetup_DrawState_Flash(void)
 {
     RSDK_THIS(TitleSetup);
 
-    RSDK.FillScreen(0xF0F0F0, entity->timer, entity->timer - 128, entity->timer - 256);
+    RSDK.FillScreen(0xF0F0F0, self->timer, self->timer - 128, self->timer - 256);
 }
 
 #if RETRO_INCLUDE_EDITOR

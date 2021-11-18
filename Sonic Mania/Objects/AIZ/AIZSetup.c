@@ -214,19 +214,19 @@ void AIZSetup_BGSwitchCB_Sky(void)
 void AIZSetup_Unknown4(void)
 {
     RSDK_THIS(Player);
-    entity->active     = ACTIVE_NORMAL;
-    entity->visible    = false;
-    entity->position.x = 0;
-    entity->position.y = 0;
-    entity->stateInput = StateMachine_None;
+    self->active     = ACTIVE_NORMAL;
+    self->visible    = false;
+    self->position.x = 0;
+    self->position.y = 0;
+    self->stateInput = StateMachine_None;
 }
 
 void AIZSetup_Unknown5(void)
 {
     RSDK_THIS(Player);
-    entity->active      = ACTIVE_NORMAL;
-    entity->visible     = true;
-    entity->stateInput  = Player_ProcessP2Input_AI;
+    self->active      = ACTIVE_NORMAL;
+    self->visible     = true;
+    self->stateInput  = Player_ProcessP2Input_AI;
     Player->jumpInDelay = 240;
     Player_P2JumpBackIn();
 }
@@ -325,7 +325,7 @@ void AIZSetup_CutsceneST_Setup(void)
                        AIZSetup_Cutscene_LoadGHZ,
                        NULL };
     RSDK_THIS(AIZSetup);
-    CutsceneSeq_StartSequence((Entity *)entity, states);
+    CutsceneSeq_StartSequence((Entity *)self, states);
     EntityCutsceneSeq *seq = RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq);
     if (seq->objectID) {
         seq->skipType     = SKIPTYPE_CALLBACK;
@@ -661,7 +661,7 @@ void AIZSetup_CutsceneK_Setup(void)
                        AIZSetup_Cutscene_LoadGHZ,   NULL };
 
     RSDK_THIS(AIZSetup);
-    CutsceneSeq_StartSequence((Entity *)entity, states);
+    CutsceneSeq_StartSequence((Entity *)self, states);
     EntityCutsceneSeq *seq = RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq);
     if (seq->objectID) {
         seq->skipType     = SKIPTYPE_CALLBACK;

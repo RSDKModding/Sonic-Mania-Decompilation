@@ -5,24 +5,24 @@ ObjectHangConveyor *HangConveyor;
 void HangConveyor_Update(void)
 {
     RSDK_THIS(HangConveyor);
-    RSDK.ProcessAnimation(&entity->animator1);
-    RSDK.ProcessAnimation(&entity->animator2);
-    RSDK.ProcessAnimation(&entity->animator3);
+    RSDK.ProcessAnimation(&self->animator1);
+    RSDK.ProcessAnimation(&self->animator2);
+    RSDK.ProcessAnimation(&self->animator3);
 
-    if (RSDK.CheckOnScreen(entity, &entity->updateRange)) {
+    if (RSDK.CheckOnScreen(self, &self->updateRange)) {
         HangConveyor_Unknown2();
-        entity->active = ACTIVE_NORMAL;
+        self->active = ACTIVE_NORMAL;
     }
     else {
-        entity->field_A4[0].x = 0;
-        entity->field_A4[0].y = 0;
-        entity->field_A4[1].x = 0;
-        entity->field_A4[1].y = 0;
-        entity->field_A4[2].x = 0;
-        entity->field_A4[2].y = 0;
-        entity->field_A4[3].x = 0;
-        entity->field_A4[3].y = 0;
-        entity->active        = ACTIVE_BOUNDS;
+        self->field_A4[0].x = 0;
+        self->field_A4[0].y = 0;
+        self->field_A4[1].x = 0;
+        self->field_A4[1].y = 0;
+        self->field_A4[2].x = 0;
+        self->field_A4[2].y = 0;
+        self->field_A4[3].x = 0;
+        self->field_A4[3].y = 0;
+        self->active        = ACTIVE_BOUNDS;
     }
 }
 
@@ -35,19 +35,19 @@ void HangConveyor_Draw(void) { HangConveyor_DrawSprites(); }
 void HangConveyor_Create(void *data)
 {
     RSDK_THIS(HangConveyor);
-    entity->active        = ACTIVE_BOUNDS;
-    entity->drawOrder     = Zone->drawOrderLow;
-    entity->startPos.x    = entity->position.x;
-    entity->startPos.y    = entity->position.y;
-    entity->visible       = true;
-    entity->drawFX        = FX_FLIP;
-    entity->updateRange.x = 0x800000;
-    entity->updateRange.y = 0x800000;
+    self->active        = ACTIVE_BOUNDS;
+    self->drawOrder     = Zone->drawOrderLow;
+    self->startPos.x    = self->position.x;
+    self->startPos.y    = self->position.y;
+    self->visible       = true;
+    self->drawFX        = FX_FLIP;
+    self->updateRange.x = 0x800000;
+    self->updateRange.y = 0x800000;
     HangConveyor_Unknown1();
-    entity->updateRange.x += (entity->hitbox1.right - entity->hitbox1.left) << 16;
-    RSDK.SetSpriteAnimation(HangConveyor->aniFrames, 0, &entity->animator1, true, 0);
-    RSDK.SetSpriteAnimation(HangConveyor->aniFrames, 1, &entity->animator2, true, 0);
-    RSDK.SetSpriteAnimation(HangConveyor->aniFrames, 2, &entity->animator3, true, 0);
+    self->updateRange.x += (self->hitbox1.right - self->hitbox1.left) << 16;
+    RSDK.SetSpriteAnimation(HangConveyor->aniFrames, 0, &self->animator1, true, 0);
+    RSDK.SetSpriteAnimation(HangConveyor->aniFrames, 1, &self->animator2, true, 0);
+    RSDK.SetSpriteAnimation(HangConveyor->aniFrames, 2, &self->animator3, true, 0);
 }
 
 void HangConveyor_StageLoad(void) { HangConveyor->aniFrames = RSDK.LoadSpriteAnimation("HCZ/HangConveyor.bin", SCOPE_STAGE); }
@@ -57,96 +57,96 @@ void HangConveyor_DrawSprites(void)
     RSDK_THIS(HangConveyor);
     Vector2 drawPos;
 
-    drawPos.x = entity->position.x;
-    drawPos.y = entity->position.y;
-    drawPos.x += -0x80000 * (entity->length != 1 ? entity->length - 1 : 0);
-    int32 dirStore = entity->direction;
+    drawPos.x = self->position.x;
+    drawPos.y = self->position.y;
+    drawPos.x += -0x80000 * (self->length != 1 ? self->length - 1 : 0);
+    int32 dirStore = self->direction;
 
-    for (int32 i = 0; i < entity->length; ++i) {
-        entity->direction = dirStore != FLIP_NONE;
-        drawPos.y         = entity->position.y - 0x150000;
-        RSDK.DrawSprite(&entity->animator3, &drawPos, false);
+    for (int32 i = 0; i < self->length; ++i) {
+        self->direction = dirStore != FLIP_NONE;
+        drawPos.y         = self->position.y - 0x150000;
+        RSDK.DrawSprite(&self->animator3, &drawPos, false);
 
-        entity->direction = dirStore == FLIP_NONE;
-        drawPos.y         = entity->position.y + 0x150000;
-        RSDK.DrawSprite(&entity->animator3, &drawPos, false);
+        self->direction = dirStore == FLIP_NONE;
+        drawPos.y         = self->position.y + 0x150000;
+        RSDK.DrawSprite(&self->animator3, &drawPos, false);
 
         drawPos.x += 0x100000;
     }
 
-    entity->direction = dirStore != FLIP_NONE;
-    drawPos.x         = entity->position.x;
-    drawPos.y         = entity->position.y;
+    self->direction = dirStore != FLIP_NONE;
+    drawPos.x         = self->position.x;
+    drawPos.y         = self->position.y;
 
     if (dirStore) {
-        int32 len = entity->length + 3;
-        if (entity->length == 1)
+        int32 len = self->length + 3;
+        if (self->length == 1)
             len = 4;
         drawPos.x += len << 19;
     }
     else {
-        int32 len = entity->length + 3;
-        if (entity->length == 1)
+        int32 len = self->length + 3;
+        if (self->length == 1)
             len = 4;
         drawPos.x += -0x80000 * len;
     }
-    RSDK.DrawSprite(&entity->animator1, &drawPos, false);
+    RSDK.DrawSprite(&self->animator1, &drawPos, false);
 
-    entity->direction = dirStore == FLIP_NONE;
-    drawPos.x         = entity->position.x;
-    drawPos.y         = entity->position.y;
+    self->direction = dirStore == FLIP_NONE;
+    drawPos.x         = self->position.x;
+    drawPos.y         = self->position.y;
 
     if (dirStore) {
-        int32 len = entity->length + 3;
-        if (entity->length == 1)
+        int32 len = self->length + 3;
+        if (self->length == 1)
             len = 4;
         drawPos.x += -0x80000 * len;
     }
     else {
-        int32 len = entity->length + 3;
-        if (entity->length == 1)
+        int32 len = self->length + 3;
+        if (self->length == 1)
             len = 4;
         drawPos.x += len << 19;
     }
-    RSDK.DrawSprite(&entity->animator2, &drawPos, false);
+    RSDK.DrawSprite(&self->animator2, &drawPos, false);
 
-    entity->direction = dirStore;
+    self->direction = dirStore;
 }
 
 void HangConveyor_Unknown1(void)
 {
     RSDK_THIS(HangConveyor);
 
-    entity->hitbox3.left   = -8 * (entity->length != -6 ? entity->length + 6 : 0);
-    entity->hitbox3.top    = -24;
-    entity->hitbox3.right  = 8 * (entity->length != -6 ? entity->length + 6 : 0);
-    entity->hitbox3.bottom = 24;
+    self->hitbox3.left   = -8 * (self->length != -6 ? self->length + 6 : 0);
+    self->hitbox3.top    = -24;
+    self->hitbox3.right  = 8 * (self->length != -6 ? self->length + 6 : 0);
+    self->hitbox3.bottom = 24;
 
-    entity->hitbox1.left   = -8 * (entity->length != -2 ? entity->length + 2 : 0);
-    entity->hitbox1.top    = -26;
-    entity->hitbox1.right  = 8 * (entity->length != -2 ? entity->length + 2 : 0);
-    entity->hitbox1.bottom = -16;
+    self->hitbox1.left   = -8 * (self->length != -2 ? self->length + 2 : 0);
+    self->hitbox1.top    = -26;
+    self->hitbox1.right  = 8 * (self->length != -2 ? self->length + 2 : 0);
+    self->hitbox1.bottom = -16;
 
-    entity->field_64[0] = entity->position;
-    entity->field_64[0].y -= 0x150000;
-    entity->field_64[0].x += entity->hitbox1.left << 16;
+    self->field_64[0] = self->position;
+    self->field_64[0].y -= 0x150000;
+    self->field_64[0].x += self->hitbox1.left << 16;
 
-    entity->field_64[1] = entity->position;
-    entity->field_64[1].y -= 0x150000;
-    entity->field_64[1].x += entity->hitbox1.right << 16;
+    self->field_64[1] = self->position;
+    self->field_64[1].y -= 0x150000;
+    self->field_64[1].x += self->hitbox1.right << 16;
 
-    entity->hitbox2.left   = -4 - 8 * (entity->length != -2 ? entity->length + 2 : 0);
-    entity->hitbox2.top    = 16;
-    entity->hitbox2.right  = 8 * (entity->length != -2 ? entity->length + 2 : 0) + 4;
-    entity->hitbox2.bottom = 26;
+    self->hitbox2.left   = -4 - 8 * (self->length != -2 ? self->length + 2 : 0);
+    self->hitbox2.top    = 16;
+    self->hitbox2.right  = 8 * (self->length != -2 ? self->length + 2 : 0) + 4;
+    self->hitbox2.bottom = 26;
 
-    entity->field_64[2] = entity->position;
-    entity->field_64[2].x += entity->hitbox2.left << 16;
-    entity->field_64[2].y += 0x150000;
+    self->field_64[2] = self->position;
+    self->field_64[2].x += self->hitbox2.left << 16;
+    self->field_64[2].y += 0x150000;
 
-    entity->field_64[3] = entity->position;
-    entity->field_64[3].y += 0x150000;
-    entity->field_64[3].x += entity->hitbox2.right << 16;
+    self->field_64[3] = self->position;
+    self->field_64[3].y += 0x150000;
+    self->field_64[3].x += self->hitbox2.right << 16;
 }
 
 void HangConveyor_Unknown2(void)
@@ -161,40 +161,40 @@ void HangConveyor_Unknown2(void)
             if (player->playerAnimator.animationID != ANI_POLESWINGH && player->playerAnimator.animationID != ANI_SHIMMYMOVE)
                 posY -= 0x180000;
 
-            int32 prevX                    = entity->field_A4[playerID].x;
-            int32 prevY                    = entity->field_A4[playerID].y;
-            entity->field_A4[playerID].x = player->position.x;
-            entity->field_A4[playerID].y = posY;
+            int32 prevX                    = self->field_A4[playerID].x;
+            int32 prevY                    = self->field_A4[playerID].y;
+            self->field_A4[playerID].x = player->position.x;
+            self->field_A4[playerID].y = posY;
 
             bool32 collided1 = true;
             if (abs(player->position.x - prevX) < 0x800000 && abs(posY - prevY) < 0x800000 && (prevX || prevY)) {
-                bool32 cFlag = MathHelpers_Unknown12(player->position.x, posY, prevX, prevY, entity->field_64[0].x, entity->field_64[0].y,
-                                                     entity->field_64[1].x, entity->field_64[1].y);
-                if (entity->field_84[playerID] || !cFlag) {
+                bool32 cFlag = MathHelpers_Unknown12(player->position.x, posY, prevX, prevY, self->field_64[0].x, self->field_64[0].y,
+                                                     self->field_64[1].x, self->field_64[1].y);
+                if (self->field_84[playerID] || !cFlag) {
                     collided1 = false;
                 }
 
-                bool32 collided2 = !entity->field_94[playerID]
-                                   && MathHelpers_Unknown12(player->position.x, posY, prevX, prevY, entity->field_64[2].x, entity->field_64[2].y,
-                                                            entity->field_64[3].x, entity->field_64[3].y);
+                bool32 collided2 = !self->field_94[playerID]
+                                   && MathHelpers_Unknown12(player->position.x, posY, prevX, prevY, self->field_64[2].x, self->field_64[2].y,
+                                                            self->field_64[3].x, self->field_64[3].y);
 
-                if (entity->field_84[playerID] > 0)
-                    entity->field_84[playerID]--;
-                if (entity->field_94[playerID] > 0)
-                    entity->field_94[playerID]--;
+                if (self->field_84[playerID] > 0)
+                    self->field_84[playerID]--;
+                if (self->field_94[playerID] > 0)
+                    self->field_94[playerID]--;
 
-                if (!((1 << playerID) & entity->activePlayers1)) {
-                    if (!(entity->activePlayers4 & (1 << playerID))) {
+                if (!((1 << playerID) & self->activePlayers1)) {
+                    if (!(self->activePlayers4 & (1 << playerID))) {
                         if ((collided1 || collided2) && player->state != Player_State_None && player->playerAnimator.animationID != ANI_HURT) {
-                            entity->activePlayers1 |= (1 << playerID);
-                            entity->activePlayers4 |= (1 << playerID);
+                            self->activePlayers1 |= (1 << playerID);
+                            self->activePlayers4 |= (1 << playerID);
                             if (collided1) {
-                                entity->activePlayers2 |= 1 << playerID;
-                                player->position.y = entity->position.y - 0x150000;
+                                self->activePlayers2 |= 1 << playerID;
+                                player->position.y = self->position.y - 0x150000;
                             }
                             if (collided2) {
-                                entity->activePlayers3 |= 1 << playerID;
-                                player->position.y = entity->position.y + 0x150000;
+                                self->activePlayers3 |= 1 << playerID;
+                                player->position.y = self->position.y + 0x150000;
                             }
                             RSDK.PlaySfx(Player->sfxGrab, false, 255);
                             RSDK.SetSpriteAnimation(player->aniFrames, ANI_POLESWINGH, &player->playerAnimator, true, 0);
@@ -215,14 +215,14 @@ void HangConveyor_Unknown2(void)
                 }
 
                 collided1 =
-                    MathHelpers_PointInHitbox(entity->direction, entity->position.x, entity->position.y, &entity->hitbox1, player->position.x, posY);
+                    MathHelpers_PointInHitbox(self->direction, self->position.x, self->position.y, &self->hitbox1, player->position.x, posY);
                 collided2 =
-                    MathHelpers_PointInHitbox(entity->direction, entity->position.x, entity->position.y, &entity->hitbox2, player->position.x, posY);
+                    MathHelpers_PointInHitbox(self->direction, self->position.x, self->position.y, &self->hitbox2, player->position.x, posY);
 
                 bool32 passFlag = false;
-                if (((1 << playerID) & entity->activePlayers1)) {
-                    if (entity->field_C4[playerID] > 0) {
-                        RSDK.SetSpriteAnimation(player->aniFrames, ANI_POLESWINGH, &player->playerAnimator, true, entity->field_C4[playerID] >> 1);
+                if (((1 << playerID) & self->activePlayers1)) {
+                    if (self->field_C4[playerID] > 0) {
+                        RSDK.SetSpriteAnimation(player->aniFrames, ANI_POLESWINGH, &player->playerAnimator, true, self->field_C4[playerID] >> 1);
                         player->playerAnimator.animationSpeed = 0;
                     }
                     else if (player->left) {
@@ -240,9 +240,9 @@ void HangConveyor_Unknown2(void)
                         }
                     }
 
-                    if (((1 << playerID) & entity->activePlayers2)) {
-                        player->position.y = entity->position.y - 0x150000;
-                        if (entity->direction) {
+                    if (((1 << playerID) & self->activePlayers2)) {
+                        player->position.y = self->position.y - 0x150000;
+                        if (self->direction) {
                             if (player->right) {
                                 player->position.x += 0x20000;
                             }
@@ -264,9 +264,9 @@ void HangConveyor_Unknown2(void)
                         }
                     }
 
-                    if (((1 << playerID) & entity->activePlayers3)) {
-                        player->position.y = entity->position.y + 0x150000;
-                        if (entity->direction) {
+                    if (((1 << playerID) & self->activePlayers3)) {
+                        player->position.y = self->position.y + 0x150000;
+                        if (self->direction) {
                             if (player->left) {
                                 player->position.x -= 0x20000;
                             }
@@ -289,13 +289,13 @@ void HangConveyor_Unknown2(void)
                     }
 
                     bool32 flag = true;
-                    if (!((1 << playerID) & entity->activePlayers2) || collided1)
+                    if (!((1 << playerID) & self->activePlayers2) || collided1)
                         flag = false;
 
                     int32 anim = player->playerAnimator.animationID;
                     if (player->jumpPress || (anim != ANI_POLESWINGH && anim != ANI_SHIMMYMOVE) || player->velocity.x || player->velocity.y || flag
-                        || (((1 << playerID) & entity->activePlayers3) && !collided2)) {
-                        entity->activePlayers1 &= ~(1 << playerID);
+                        || (((1 << playerID) & self->activePlayers3) && !collided2)) {
+                        self->activePlayers1 &= ~(1 << playerID);
                         player->position.y += 0x180000;
                         if (!player->jumpPress || player->down) {
                             RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->playerAnimator, true, 0);
@@ -304,34 +304,34 @@ void HangConveyor_Unknown2(void)
                         else {
                             Player_StartJump(player);
                         }
-                        if (((1 << playerID) & entity->activePlayers2))
-                            entity->field_84[playerID] = 60;
-                        if (((1 << playerID) & entity->activePlayers3))
-                            entity->field_94[playerID] = 60;
+                        if (((1 << playerID) & self->activePlayers2))
+                            self->field_84[playerID] = 60;
+                        if (((1 << playerID) & self->activePlayers3))
+                            self->field_94[playerID] = 60;
                     }
-                    if (((1 << playerID) & entity->activePlayers1))
+                    if (((1 << playerID) & self->activePlayers1))
                         passFlag = true;
                 }
 
-                if (((1 << playerID) & entity->activePlayers4) && !passFlag) {
+                if (((1 << playerID) & self->activePlayers4) && !passFlag) {
                     bool32 flag = false;
-                    if (((1 << playerID) & entity->activePlayers2) && !Player_CheckCollisionTouch(player, entity, &entity->hitbox1)) {
-                        entity->activePlayers2 &= ~(1 << playerID);
+                    if (((1 << playerID) & self->activePlayers2) && !Player_CheckCollisionTouch(player, self, &self->hitbox1)) {
+                        self->activePlayers2 &= ~(1 << playerID);
                         flag = true;
                     }
 
-                    if (!((1 << playerID) & entity->activePlayers3) || Player_CheckCollisionTouch(player, entity, &entity->hitbox2)) {
+                    if (!((1 << playerID) & self->activePlayers3) || Player_CheckCollisionTouch(player, self, &self->hitbox2)) {
                         if (flag)
-                            entity->activePlayers4 &= ~(1 << playerID);
+                            self->activePlayers4 &= ~(1 << playerID);
                     }
                     else {
-                        entity->activePlayers3 &= ~(1 << playerID);
-                        entity->activePlayers4 &= ~(1 << playerID);
+                        self->activePlayers3 &= ~(1 << playerID);
+                        self->activePlayers4 &= ~(1 << playerID);
                     }
                 }
 
-                if (!((1 << playerID) & entity->activePlayers1))
-                    entity->field_C4[playerID] = 0;
+                if (!((1 << playerID) & self->activePlayers1))
+                    self->field_C4[playerID] = 0;
             }
         }
     }

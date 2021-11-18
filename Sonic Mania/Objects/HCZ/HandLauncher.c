@@ -6,17 +6,17 @@ void HandLauncher_Update(void)
 {
     RSDK_THIS(HandLauncher);
 
-    if (entity->animator2.animationID == 2 && entity->animator2.frameID == entity->animator2.frameCount - 1) {
-        RSDK.SetSpriteAnimation(HandLauncher->aniFrames, 3, &entity->animator2, true, 0);
+    if (self->animator2.animationID == 2 && self->animator2.frameID == self->animator2.frameCount - 1) {
+        RSDK.SetSpriteAnimation(HandLauncher->aniFrames, 3, &self->animator2, true, 0);
     }
-    else if (entity->animator2.animationID == 4 && entity->animator2.frameID == entity->animator2.frameCount - 1) {
-        RSDK.SetSpriteAnimation(HandLauncher->aniFrames, 1, &entity->animator2, true, 0);
+    else if (self->animator2.animationID == 4 && self->animator2.frameID == self->animator2.frameCount - 1) {
+        RSDK.SetSpriteAnimation(HandLauncher->aniFrames, 1, &self->animator2, true, 0);
     }
-    StateMachine_Run(entity->state);
-    if (entity->field_80 > 0)
-        entity->field_80--;
-    RSDK.ProcessAnimation(&entity->animator1);
-    RSDK.ProcessAnimation(&entity->animator2);
+    StateMachine_Run(self->state);
+    if (self->field_80 > 0)
+        self->field_80--;
+    RSDK.ProcessAnimation(&self->animator1);
+    RSDK.ProcessAnimation(&self->animator2);
 }
 
 void HandLauncher_LateUpdate(void) {}
@@ -30,13 +30,13 @@ void HandLauncher_Draw(void)
 {
     RSDK_THIS(HandLauncher);
     if (SceneInfo->currentDrawGroup == Zone->playerDrawHigh) {
-        if (entity->state == HandLauncher_Unknown8)
-            RSDK.DrawSprite(&entity->animator2, NULL, false);
+        if (self->state == HandLauncher_Unknown8)
+            RSDK.DrawSprite(&self->animator2, NULL, false);
     }
     else {
-        RSDK.DrawSprite(&entity->animator1, NULL, false);
-        if (entity->state != HandLauncher_Unknown8)
-            RSDK.DrawSprite(&entity->animator2, NULL, false);
+        RSDK.DrawSprite(&self->animator1, NULL, false);
+        if (self->state != HandLauncher_Unknown8)
+            RSDK.DrawSprite(&self->animator2, NULL, false);
     }
 }
 
@@ -44,16 +44,16 @@ void HandLauncher_Create(void *data)
 {
     RSDK_THIS(HandLauncher);
 
-    entity->active    = ACTIVE_BOUNDS;
-    entity->drawOrder = Zone->drawOrderLow;
-    entity->visible   = true;
-    entity->drawFX    = FX_FLIP;
-    if (!entity->speed)
-        entity->speed = 16;
-    entity->startPos      = entity->position;
-    entity->updateRange.x = 0x800000;
-    entity->updateRange.y = 0x800000;
-    entity->state         = HandLauncher_Unknown5;
+    self->active    = ACTIVE_BOUNDS;
+    self->drawOrder = Zone->drawOrderLow;
+    self->visible   = true;
+    self->drawFX    = FX_FLIP;
+    if (!self->speed)
+        self->speed = 16;
+    self->startPos      = self->position;
+    self->updateRange.x = 0x800000;
+    self->updateRange.y = 0x800000;
+    self->state         = HandLauncher_Unknown5;
 }
 
 void HandLauncher_StageLoad(void)
@@ -78,16 +78,16 @@ void HandLauncher_StageLoad(void)
 void HandLauncher_CheckPlayerCollisions(void)
 {
     RSDK_THIS(HandLauncher);
-    if (entity->field_80 <= 0) {
+    if (self->field_80 <= 0) {
         foreach_active(Player, player)
         {
             int32 playerID = RSDK.GetEntityID(player);
-            if ((entity->state == HandLauncher_Unknown8 || !player->sidekick) && !((1 << playerID) & entity->activePlayers)) {
+            if ((self->state == HandLauncher_Unknown8 || !player->sidekick) && !((1 << playerID) & self->activePlayers)) {
                 if (player->onGround) {
-                    if (Player_CheckCollisionTouch(player, entity, &HandLauncher->hitbox2)) {
-                        entity->activePlayers |= 1 << playerID;
+                    if (Player_CheckCollisionTouch(player, self, &HandLauncher->hitbox2)) {
+                        self->activePlayers |= 1 << playerID;
                         player->groundVel = 0;
-                        if (entity->state != HandLauncher_Unknown8) {
+                        if (self->state != HandLauncher_Unknown8) {
                             if (HandLauncher->dunkeyMode)
                                 RSDK.PlaySfx(HandLauncher->sfxDunkey, 0, 255);
                             else
@@ -110,34 +110,34 @@ void HandLauncher_CheckPlayerCollisions(void)
 bool32 HandLauncher_Unknown1(void)
 {
     RSDK_THIS(HandLauncher);
-    if (entity->activePlayers)
+    if (self->activePlayers)
         return true;
 
-    int32 storeX       = entity->position.x;
-    int32 storeY       = entity->position.y;
-    entity->position = entity->playerPos;
+    int32 storeX       = self->position.x;
+    int32 storeY       = self->position.y;
+    self->position = self->playerPos;
     bool32 flag      = false;
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionTouch(player, entity, &HandLauncher->hitbox1)) {
+        if (Player_CheckCollisionTouch(player, self, &HandLauncher->hitbox1)) {
             flag = true;
             foreach_break;
         }
     }
-    entity->position.x = storeX;
-    entity->position.y = storeY;
+    self->position.x = storeX;
+    self->position.y = storeY;
     return flag;
 }
 
 void HandLauncher_State_Release(void)
 {
     RSDK_THIS(HandLauncher);
-    int32 vel = entity->speed * (2 * (entity->direction == FLIP_NONE) - 1);
+    int32 vel = self->speed * (2 * (self->direction == FLIP_NONE) - 1);
     foreach_active(Player, player)
     {
         int32 pID = RSDK.GetEntityID(player);
-        if (((1 << pID) & entity->activePlayers)) {
-            entity->activePlayers &= ~(1 << pID);
+        if (((1 << pID) & self->activePlayers)) {
+            self->activePlayers &= ~(1 << pID);
             player->onGround  = true;
             player->groundVel = vel << 16;
             player->state     = Player_State_Ground;
@@ -150,14 +150,14 @@ void HandLauncher_Unknown3(void)
     RSDK_THIS(HandLauncher);
     foreach_active(Player, player)
     {
-        if (((1 << RSDK.GetEntityID(player)) & entity->activePlayers)) {
+        if (((1 << RSDK.GetEntityID(player)) & self->activePlayers)) {
             player->velocity.x = 0;
             player->velocity.y = 0;
-            player->direction  = entity->direction != FLIP_NONE;
-            player->position.x = entity->position.x;
-            player->position.y = entity->position.y;
+            player->direction  = self->direction != FLIP_NONE;
+            player->position.x = self->position.x;
+            player->position.y = self->position.y;
             player->position.y -= 0x140000;
-            if (entity->playerPos.y - 0x140000 < player->position.y)
+            if (self->playerPos.y - 0x140000 < player->position.y)
                 player->position.y -= 0x140000;
         }
     }
@@ -166,87 +166,87 @@ void HandLauncher_Unknown3(void)
 void HandLauncher_Unknown5(void)
 {
     RSDK_THIS(HandLauncher);
-    entity->field_74 = entity->startPos;
-    entity->field_74.y += 0x4E0000;
-    entity->playerPos = entity->field_74;
-    entity->playerPos.y -= 0x360000;
-    entity->position.x = entity->field_74.x;
-    entity->position.y = entity->field_74.y;
-    RSDK.SetSpriteAnimation(HandLauncher->aniFrames, 0, &entity->animator1, true, 0);
-    entity->animator1.animationSpeed = 0;
-    RSDK.SetSpriteAnimation(HandLauncher->aniFrames, 1, &entity->animator2, true, 0);
-    entity->state = HandLauncher_Unknown6;
+    self->field_74 = self->startPos;
+    self->field_74.y += 0x4E0000;
+    self->playerPos = self->field_74;
+    self->playerPos.y -= 0x360000;
+    self->position.x = self->field_74.x;
+    self->position.y = self->field_74.y;
+    RSDK.SetSpriteAnimation(HandLauncher->aniFrames, 0, &self->animator1, true, 0);
+    self->animator1.animationSpeed = 0;
+    RSDK.SetSpriteAnimation(HandLauncher->aniFrames, 1, &self->animator2, true, 0);
+    self->state = HandLauncher_Unknown6;
 }
 
 void HandLauncher_Unknown6(void)
 {
     RSDK_THIS(HandLauncher);
-    entity->position = entity->field_74;
-    entity->position.y -= ((entity->field_74.y - entity->playerPos.y) >> 3) * minVal(entity->field_7C, 8);
-    if (entity->field_7C > 0)
-        entity->field_7C--;
-    if (entity->field_7C < 0)
-        entity->field_7C = 0;
+    self->position = self->field_74;
+    self->position.y -= ((self->field_74.y - self->playerPos.y) >> 3) * minVal(self->field_7C, 8);
+    if (self->field_7C > 0)
+        self->field_7C--;
+    if (self->field_7C < 0)
+        self->field_7C = 0;
 
     if (HandLauncher_Unknown1())
-        entity->state = HandLauncher_Unknown7;
+        self->state = HandLauncher_Unknown7;
 }
 
 void HandLauncher_Unknown7(void)
 {
     RSDK_THIS(HandLauncher);
-    entity->position = entity->field_74;
-    entity->position.y -= ((entity->field_74.y - entity->playerPos.y) >> 3) * minVal(entity->field_7C, 8);
-    if (entity->field_7C < 8)
-        entity->field_7C++;
-    if (entity->field_7C > 8)
-        entity->field_7C = 8;
+    self->position = self->field_74;
+    self->position.y -= ((self->field_74.y - self->playerPos.y) >> 3) * minVal(self->field_7C, 8);
+    if (self->field_7C < 8)
+        self->field_7C++;
+    if (self->field_7C > 8)
+        self->field_7C = 8;
 
     HandLauncher_CheckPlayerCollisions();
-    if (entity->activePlayers) {
-        RSDK.SetSpriteAnimation(HandLauncher->aniFrames, 2, &entity->animator2, true, 0);
-        entity->field_7C                 = 0;
-        entity->animator1.animationSpeed = 1;
-        entity->state                    = HandLauncher_Unknown8;
+    if (self->activePlayers) {
+        RSDK.SetSpriteAnimation(HandLauncher->aniFrames, 2, &self->animator2, true, 0);
+        self->field_7C                 = 0;
+        self->animator1.animationSpeed = 1;
+        self->state                    = HandLauncher_Unknown8;
     }
 
     HandLauncher_Unknown3();
     if (!HandLauncher_Unknown1())
-        entity->state = HandLauncher_Unknown6;
+        self->state = HandLauncher_Unknown6;
 }
 
 void HandLauncher_Unknown8(void)
 {
     RSDK_THIS(HandLauncher);
 
-    if (entity->field_7C < 3) {
-        entity->position = entity->playerPos;
-        int32 dist         = (entity->playerPos.y - entity->startPos.y) / 3;
-        if (entity->field_7C <= 3) {
-            entity->position.y -= dist * entity->field_7C;
-            entity->field_7C++;
+    if (self->field_7C < 3) {
+        self->position = self->playerPos;
+        int32 dist         = (self->playerPos.y - self->startPos.y) / 3;
+        if (self->field_7C <= 3) {
+            self->position.y -= dist * self->field_7C;
+            self->field_7C++;
             HandLauncher_CheckPlayerCollisions();
             HandLauncher_Unknown3();
         }
         else {
-            entity->position.y -= dist * 3;
-            entity->field_7C++;
+            self->position.y -= dist * 3;
+            self->field_7C++;
             HandLauncher_CheckPlayerCollisions();
             HandLauncher_Unknown3();
         }
     }
     else {
-        if (entity->field_7C < 63) {
-            entity->position = entity->startPos;
-            entity->field_7C++;
+        if (self->field_7C < 63) {
+            self->position = self->startPos;
+            self->field_7C++;
             HandLauncher_CheckPlayerCollisions();
             HandLauncher_Unknown3();
         }
-        else if (entity->field_7C < 66) {
-            entity->position = entity->playerPos;
-            int32 dist          = (entity->playerPos.y - entity->startPos.y) / 3;
-            entity->position.y -= dist * minVal(66 - entity->field_7C, 3);
-            entity->field_7C++;
+        else if (self->field_7C < 66) {
+            self->position = self->playerPos;
+            int32 dist          = (self->playerPos.y - self->startPos.y) / 3;
+            self->position.y -= dist * minVal(66 - self->field_7C, 3);
+            self->field_7C++;
             HandLauncher_CheckPlayerCollisions();
             HandLauncher_Unknown3();
         }
@@ -255,12 +255,12 @@ void HandLauncher_Unknown8(void)
             if (!HandLauncher->dunkeyMode) {
                 RSDK.PlaySfx(Player->sfxRelease, 0, 255);
             }
-            RSDK.SetSpriteAnimation(HandLauncher->aniFrames, 4, &entity->animator2, true, 0);
-            entity->position                 = entity->playerPos;
-            entity->field_80                 = 30;
-            entity->field_7C                 = 0;
-            entity->animator1.animationSpeed = 0;
-            entity->state                    = HandLauncher_Unknown6;
+            RSDK.SetSpriteAnimation(HandLauncher->aniFrames, 4, &self->animator2, true, 0);
+            self->position                 = self->playerPos;
+            self->field_80                 = 30;
+            self->field_7C                 = 0;
+            self->animator1.animationSpeed = 0;
+            self->state                    = HandLauncher_Unknown6;
             HandLauncher_CheckPlayerCollisions();
             HandLauncher_Unknown3();
         }
@@ -271,11 +271,11 @@ void HandLauncher_Unknown8(void)
 void HandLauncher_EditorDraw(void)
 {
     RSDK_THIS(HandLauncher);
-    RSDK.SetSpriteAnimation(HandLauncher->aniFrames, 0, &entity->animator1, true, 0);
-    RSDK.SetSpriteAnimation(HandLauncher->aniFrames, 1, &entity->animator2, true, 0);
+    RSDK.SetSpriteAnimation(HandLauncher->aniFrames, 0, &self->animator1, true, 0);
+    RSDK.SetSpriteAnimation(HandLauncher->aniFrames, 1, &self->animator2, true, 0);
 
-    RSDK.DrawSprite(&entity->animator1, NULL, false);
-    RSDK.DrawSprite(&entity->animator2, NULL, false);
+    RSDK.DrawSprite(&self->animator1, NULL, false);
+    RSDK.DrawSprite(&self->animator2, NULL, false);
 }
 
 void HandLauncher_EditorLoad(void) { HandLauncher->aniFrames = RSDK.LoadSpriteAnimation("HCZ/HandLauncher.bin", SCOPE_STAGE); }

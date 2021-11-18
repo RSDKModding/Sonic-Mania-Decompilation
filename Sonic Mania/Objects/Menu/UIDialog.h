@@ -67,7 +67,7 @@ void UIDialog_SetupText(EntityUIDialog *dialog, TextInfo *text);
 
 void UIDialog_AddButton(uint8 a1, EntityUIDialog *dialog, void (*callback)(void), bool32 flag);
 void UIDialog_Setup(EntityUIDialog *dialog);
-void UIDialog_Unknown4(EntityUIDialog *entity, void (*callback)(void));
+void UIDialog_Unknown4(EntityUIDialog *self, void (*callback)(void));
 void UIDialog_Unknown6(void);
 void UIDialog_Unknown7(void);
 void UIDialog_Close(void);

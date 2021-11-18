@@ -5,13 +5,13 @@ ObjectPhantomRuby *PhantomRuby;
 void PhantomRuby_Update(void)
 {
     RSDK_THIS(PhantomRuby);
-    StateMachine_Run(entity->state);
-    if (entity->animator1.animationID == 1 && entity->animator1.frameID == entity->animator1.frameCount - 1)
-        RSDK.SetSpriteAnimation(PhantomRuby->aniFrames, 0, &entity->animator1, true, 0);
-    if (entity->animator2.animationID == 2 && entity->animator2.frameID == entity->animator2.frameCount - 1)
-        RSDK.SetSpriteAnimation(0xFFFF, 0xFFFF, &entity->animator2, true, 0);
-    RSDK.ProcessAnimation(&entity->animator1);
-    RSDK.ProcessAnimation(&entity->animator2);
+    StateMachine_Run(self->state);
+    if (self->animator1.animationID == 1 && self->animator1.frameID == self->animator1.frameCount - 1)
+        RSDK.SetSpriteAnimation(PhantomRuby->aniFrames, 0, &self->animator1, true, 0);
+    if (self->animator2.animationID == 2 && self->animator2.frameID == self->animator2.frameCount - 1)
+        RSDK.SetSpriteAnimation(0xFFFF, 0xFFFF, &self->animator2, true, 0);
+    RSDK.ProcessAnimation(&self->animator1);
+    RSDK.ProcessAnimation(&self->animator2);
 }
 
 void PhantomRuby_LateUpdate(void) {}
@@ -21,28 +21,28 @@ void PhantomRuby_StaticUpdate(void) {}
 void PhantomRuby_Draw(void)
 {
     RSDK_THIS(PhantomRuby);
-    RSDK.DrawSprite(&entity->animator1, NULL, false);
-    if (entity->animator2.animationID != -1) {
-        entity->inkEffect = INK_ADD;
-        entity->alpha     = 0xFF;
-        RSDK.DrawSprite(&entity->animator2, NULL, false);
-        entity->inkEffect = INK_NONE;
+    RSDK.DrawSprite(&self->animator1, NULL, false);
+    if (self->animator2.animationID != -1) {
+        self->inkEffect = INK_ADD;
+        self->alpha     = 0xFF;
+        RSDK.DrawSprite(&self->animator2, NULL, false);
+        self->inkEffect = INK_NONE;
     }
 }
 
 void PhantomRuby_Create(void *data)
 {
     RSDK_THIS(PhantomRuby);
-    entity->active        = ACTIVE_BOUNDS;
-    entity->drawOrder     = Zone->drawOrderHigh;
-    entity->startPos.x    = entity->position.x;
-    entity->startPos.y    = entity->position.y;
-    entity->visible       = true;
-    entity->drawFX        = FX_FLIP;
-    entity->updateRange.x = 0x800000;
-    entity->updateRange.y = 0x800000;
-    entity->state         = PhantomRuby_Unknown3;
-    RSDK.SetSpriteAnimation(PhantomRuby->aniFrames, 0, &entity->animator1, true, 0);
+    self->active        = ACTIVE_BOUNDS;
+    self->drawOrder     = Zone->drawOrderHigh;
+    self->startPos.x    = self->position.x;
+    self->startPos.y    = self->position.y;
+    self->visible       = true;
+    self->drawFX        = FX_FLIP;
+    self->updateRange.x = 0x800000;
+    self->updateRange.y = 0x800000;
+    self->state         = PhantomRuby_Unknown3;
+    RSDK.SetSpriteAnimation(PhantomRuby->aniFrames, 0, &self->animator1, true, 0);
 }
 
 void PhantomRuby_StageLoad(void)
@@ -88,100 +88,100 @@ void PhantomRuby_Unknown2(EntityPhantomRuby *ruby)
 void PhantomRuby_Unknown3(void)
 {
     RSDK_THIS(PhantomRuby);
-    if (entity->flag)
-        entity->flag = false;
+    if (self->flag)
+        self->flag = false;
 }
 
 void PhantomRuby_Unknown4(void)
 {
     RSDK_THIS(PhantomRuby);
 
-    if (entity->timer == 38) {
-        PhantomRuby_PlaySFX(entity->sfx);
-        entity->flag     = true;
-        entity->field_6C = 1;
-        entity->timer    = 0;
-        entity->state    = PhantomRuby_Unknown3;
+    if (self->timer == 38) {
+        PhantomRuby_PlaySFX(self->sfx);
+        self->flag     = true;
+        self->field_6C = 1;
+        self->timer    = 0;
+        self->state    = PhantomRuby_Unknown3;
     }
     else {
-        entity->timer++;
+        self->timer++;
     }
 }
 
 void PhantomRuby_Unknown5(void)
 {
     RSDK_THIS(PhantomRuby);
-    entity->angle += 2;
-    entity->position.y = (RSDK.Sin256(entity->angle) << 10) + entity->startPos.y;
+    self->angle += 2;
+    self->position.y = (RSDK.Sin256(self->angle) << 10) + self->startPos.y;
 }
 
 void PhantomRuby_Unknown6(void)
 {
     RSDK_THIS(PhantomRuby);
-    entity->position.x += entity->velocity.x;
-    entity->position.y += entity->velocity.y;
-    entity->velocity.y += 0x3800;
-    if (entity->position.y > (Zone->screenBoundsB1[0] + 64) << 16)
-        entity->state = StateMachine_None;
+    self->position.x += self->velocity.x;
+    self->position.y += self->velocity.y;
+    self->velocity.y += 0x3800;
+    if (self->position.y > (Zone->screenBoundsB1[0] + 64) << 16)
+        self->state = StateMachine_None;
 }
 
 void PhantomRuby_Unknown7(void)
 {
     RSDK_THIS(PhantomRuby);
-    entity->position.x += entity->velocity.x;
-    entity->position.y += entity->velocity.y;
-    entity->velocity.y += 0x3800;
-    entity->rotation = (entity->rotation + 5) & 0x1FF;
+    self->position.x += self->velocity.x;
+    self->position.y += self->velocity.y;
+    self->velocity.y += 0x3800;
+    self->rotation = (self->rotation + 5) & 0x1FF;
 }
 
 void PhantomRuby_Unknown8(void)
 {
     RSDK_THIS(PhantomRuby);
-    entity->position.x += entity->velocity.x;
-    entity->position.y += entity->velocity.y;
-    entity->velocity.y += 0x3800;
-    entity->rotation = (entity->rotation + 5) & 0x1FF;
-    if (RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x80000, true)) {
-        entity->velocity.x >>= 1;
-        if (-(entity->velocity.y >> 1) > -0x10000)
-            entity->velocity.y = 0;
+    self->position.x += self->velocity.x;
+    self->position.y += self->velocity.y;
+    self->velocity.y += 0x3800;
+    self->rotation = (self->rotation + 5) & 0x1FF;
+    if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x80000, true)) {
+        self->velocity.x >>= 1;
+        if (-(self->velocity.y >> 1) > -0x10000)
+            self->velocity.y = 0;
         else
-            entity->velocity.y = -(entity->velocity.y >> 1);
+            self->velocity.y = -(self->velocity.y >> 1);
     }
 }
 
 void PhantomRuby_Unknown9(void)
 {
     RSDK_THIS(PhantomRuby);
-    int32 rx    = (entity->startPos.x - entity->position.x) >> 16;
-    int32 ry    = (entity->startPos.y - entity->position.y) >> 16;
+    int32 rx    = (self->startPos.x - self->position.x) >> 16;
+    int32 ry    = (self->startPos.y - self->position.y) >> 16;
     int32 angle = RSDK.ATan2(rx, ry);
-    entity->velocity.x += RSDK.Cos256(angle) << 3;
-    entity->velocity.y += RSDK.Sin256(angle) << 3;
+    self->velocity.x += RSDK.Cos256(angle) << 3;
+    self->velocity.y += RSDK.Sin256(angle) << 3;
     int32 r = rx * rx + ry * ry;
     if (r >= 16) {
         if (r < 2304) {
-            entity->velocity.x = (entity->startPos.x - entity->position.x) >> 4;
-            entity->velocity.y = (entity->startPos.y - entity->position.y) >> 4;
+            self->velocity.x = (self->startPos.x - self->position.x) >> 4;
+            self->velocity.y = (self->startPos.y - self->position.y) >> 4;
         }
-        entity->position.x += entity->velocity.x;
-        entity->position.y += entity->velocity.y;
+        self->position.x += self->velocity.x;
+        self->position.y += self->velocity.y;
     }
     else {
-        entity->position.x = entity->startPos.x;
-        entity->position.y = entity->startPos.y;
-        entity->state      = PhantomRuby_Unknown5;
+        self->position.x = self->startPos.x;
+        self->position.y = self->startPos.y;
+        self->state      = PhantomRuby_Unknown5;
     }
 }
 
 void PhantomRuby_Unknown10(void)
 {
     RSDK_THIS(PhantomRuby);
-    entity->rotation += 6;
-    if (entity->rotation > 0x200) {
-        entity->rotation = 0;
-        entity->drawFX   = FX_NONE;
-        entity->state    = StateMachine_None;
+    self->rotation += 6;
+    if (self->rotation > 0x200) {
+        self->rotation = 0;
+        self->drawFX   = FX_NONE;
+        self->state    = StateMachine_None;
     }
 }
 

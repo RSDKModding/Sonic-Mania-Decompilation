@@ -5,7 +5,7 @@ ObjectChaosEmerald *ChaosEmerald;
 void ChaosEmerald_Update(void)
 {
     RSDK_THIS(ChaosEmerald);
-    StateMachine_Run(entity->state);
+    StateMachine_Run(self->state);
 }
 
 void ChaosEmerald_LateUpdate(void) {}
@@ -21,7 +21,7 @@ void ChaosEmerald_Draw(void)
         RSDK.SetPaletteEntry(0, i + 128, ChaosEmerald->emeraldColours[i]);
     }
 
-    RSDK.DrawSprite(&entity->animator, NULL, false);
+    RSDK.DrawSprite(&self->animator, NULL, false);
 
     for (int32 i = 0; i < 36; ++i) {
         RSDK.SetPaletteEntry(0, i + 0x80, ChaosEmerald->colourStorage[i]);
@@ -31,15 +31,15 @@ void ChaosEmerald_Draw(void)
 void ChaosEmerald_Create(void *data)
 {
     RSDK_THIS(ChaosEmerald);
-    entity->active        = ACTIVE_BOUNDS;
-    entity->drawOrder     = Zone->drawOrderHigh;
-    entity->originPos     = entity->position;
-    entity->visible       = true;
-    entity->drawFX        = FX_FLIP;
-    entity->updateRange.x = 0x800000;
-    entity->updateRange.y = 0x800000;
-    entity->state         = ChaosEmerald_State_Unknown1;
-    RSDK.SetSpriteAnimation(ChaosEmerald->aniFrames, 0, &entity->animator, true, entity->type);
+    self->active        = ACTIVE_BOUNDS;
+    self->drawOrder     = Zone->drawOrderHigh;
+    self->originPos     = self->position;
+    self->visible       = true;
+    self->drawFX        = FX_FLIP;
+    self->updateRange.x = 0x800000;
+    self->updateRange.y = 0x800000;
+    self->state         = ChaosEmerald_State_Unknown1;
+    RSDK.SetSpriteAnimation(ChaosEmerald->aniFrames, 0, &self->animator, true, self->type);
 }
 
 void ChaosEmerald_StageLoad(void) { ChaosEmerald->aniFrames = RSDK.LoadSpriteAnimation("Cutscene/Emeralds.bin", SCOPE_STAGE); }
@@ -51,17 +51,17 @@ void ChaosEmerald_State_Unknown1(void)
 void ChaosEmerald_State_Rotate(void)
 {
     RSDK_THIS(ChaosEmerald);
-    entity->angle += entity->groundVel;
-    entity->position.x = entity->radius * RSDK.Cos256(entity->angle >> 8) + entity->originPos.x;
-    entity->position.y = entity->radius * RSDK.Sin256(entity->angle >> 8) + entity->originPos.y;
+    self->angle += self->groundVel;
+    self->position.x = self->radius * RSDK.Cos256(self->angle >> 8) + self->originPos.x;
+    self->position.y = self->radius * RSDK.Sin256(self->angle >> 8) + self->originPos.y;
 }
 
 #if RETRO_INCLUDE_EDITOR
 void ChaosEmerald_EditorDraw(void)
 {
     RSDK_THIS(ChaosEmerald);
-    RSDK.SetSpriteAnimation(ChaosEmerald->aniFrames, 0, &entity->animator, true, entity->type);
-    RSDK.DrawSprite(&entity->animator, NULL, false);
+    RSDK.SetSpriteAnimation(ChaosEmerald->aniFrames, 0, &self->animator, true, self->type);
+    RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
 void ChaosEmerald_EditorLoad(void) { ChaosEmerald->aniFrames = RSDK.LoadSpriteAnimation("Cutscene/Emeralds.bin", SCOPE_STAGE); }

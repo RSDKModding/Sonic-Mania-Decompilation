@@ -6,8 +6,8 @@ void ChemicalBall_Update(void)
 {
     RSDK_THIS(ChemicalBall);
     if (globals->gameMode == MODE_TIMEATTACK && TimeAttackGate && TimeAttackGate->field_1C)
-        destroyEntity(entity);
-    StateMachine_Run(entity->state);
+        destroyEntity(self);
+    StateMachine_Run(self->state);
 }
 
 void ChemicalBall_LateUpdate(void) {}
@@ -17,36 +17,36 @@ void ChemicalBall_StaticUpdate(void) {}
 void ChemicalBall_Draw(void)
 {
     RSDK_THIS(ChemicalBall);
-    RSDK.DrawSprite(&entity->animator, &entity->startPos, false);
+    RSDK.DrawSprite(&self->animator, &self->startPos, false);
 }
 
 void ChemicalBall_Create(void *data)
 {
     RSDK_THIS(ChemicalBall);
 
-    entity->visible       = true;
-    entity->drawOrder     = Zone->drawOrderLow;
-    entity->startPos2.x   = entity->position.x;
-    entity->startPos2.y   = entity->position.y;
-    entity->active        = ACTIVE_BOUNDS;
-    entity->updateRange.x = 0x1000000;
-    entity->updateRange.y = 0x1000000;
-    if (entity->interval == 0)
-        entity->interval = -128;
-    entity->startPos.x = entity->position.x;
-    entity->startPos.y = entity->position.y;
-    if (entity->direction == FLIP_NONE)
-        entity->position.x += 0x320000;
+    self->visible       = true;
+    self->drawOrder     = Zone->drawOrderLow;
+    self->startPos2.x   = self->position.x;
+    self->startPos2.y   = self->position.y;
+    self->active        = ACTIVE_BOUNDS;
+    self->updateRange.x = 0x1000000;
+    self->updateRange.y = 0x1000000;
+    if (self->interval == 0)
+        self->interval = -128;
+    self->startPos.x = self->position.x;
+    self->startPos.y = self->position.y;
+    if (self->direction == FLIP_NONE)
+        self->position.x += 0x320000;
     else
-        entity->position.x -= 0x320000;
+        self->position.x -= 0x320000;
 
-    if (entity->type == 1)
-        entity->position.y -= 0x480000;
-    RSDK.SetSpriteAnimation(ChemicalBall->aniFrames, 0, &entity->animator, true, 0);
-    if (!entity->type)
-        entity->state = ChemicalBall_MoveType0;
+    if (self->type == 1)
+        self->position.y -= 0x480000;
+    RSDK.SetSpriteAnimation(ChemicalBall->aniFrames, 0, &self->animator, true, 0);
+    if (!self->type)
+        self->state = ChemicalBall_MoveType0;
     else
-        entity->state = ChemicalBall_MoveType1;
+        self->state = ChemicalBall_MoveType1;
 }
 
 void ChemicalBall_StageLoad(void)
@@ -64,8 +64,8 @@ void ChemicalBall_CheckHit(void)
     RSDK_THIS(ChemicalBall);
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionTouch(player, &entity->startPos, &ChemicalBall->hitbox)) {
-            Player_CheckHit(player, entity);
+        if (Player_CheckCollisionTouch(player, &self->startPos, &ChemicalBall->hitbox)) {
+            Player_CheckHit(player, self);
         }
     }
 }
@@ -74,35 +74,35 @@ void ChemicalBall_MoveType0(void)
 {
     RSDK_THIS(ChemicalBall);
 
-    int32 timer = (Zone->timer + entity->intervalOffset) % (2 * entity->interval);
-    if (timer < entity->interval == (entity->direction != FLIP_NONE)) {
-        if (!entity->direction)
-            timer -= entity->interval;
+    int32 timer = (Zone->timer + self->intervalOffset) % (2 * self->interval);
+    if (timer < self->interval == (self->direction != FLIP_NONE)) {
+        if (!self->direction)
+            timer -= self->interval;
         if (timer >= 96) {
-            entity->startPos.x = ChemicalBall->moveOffset1[0];
-            entity->startPos.y = ChemicalBall->moveOffset1[1];
+            self->startPos.x = ChemicalBall->moveOffset1[0];
+            self->startPos.y = ChemicalBall->moveOffset1[1];
         }
         else {
-            entity->startPos.x = ChemicalBall->moveOffset1[2 * (97 - timer)];
-            entity->startPos.y = ChemicalBall->moveOffset1[2 * (97 - timer) + 1];
+            self->startPos.x = ChemicalBall->moveOffset1[2 * (97 - timer)];
+            self->startPos.y = ChemicalBall->moveOffset1[2 * (97 - timer) + 1];
         }
     }
     else {
-        if (entity->direction == FLIP_X)
-            timer -= entity->interval;
+        if (self->direction == FLIP_X)
+            timer -= self->interval;
         if (timer >= 97) {
-            entity->startPos.x = ChemicalBall->moveOffset1[194];
-            entity->startPos.y = ChemicalBall->moveOffset1[195];
+            self->startPos.x = ChemicalBall->moveOffset1[194];
+            self->startPos.y = ChemicalBall->moveOffset1[195];
         }
         else {
-            entity->startPos.x = ChemicalBall->moveOffset1[2 * timer];
-            entity->startPos.y = ChemicalBall->moveOffset1[2 * timer + 1];
+            self->startPos.x = ChemicalBall->moveOffset1[2 * timer];
+            self->startPos.y = ChemicalBall->moveOffset1[2 * timer + 1];
         }
     }
 
-    entity->startPos.x += entity->position.x;
-    entity->startPos.y += entity->position.y;
-    if (!timer || timer == entity->interval)
+    self->startPos.x += self->position.x;
+    self->startPos.y += self->position.y;
+    if (!timer || timer == self->interval)
         RSDK.PlaySfx(ChemicalBall->sfxBloop, 0, 255);
     ChemicalBall_CheckHit();
 }
@@ -110,25 +110,25 @@ void ChemicalBall_MoveType0(void)
 void ChemicalBall_MoveType1(void)
 {
     RSDK_THIS(ChemicalBall);
-    int32 timer = (Zone->timer + entity->intervalOffset) % entity->interval;
+    int32 timer = (Zone->timer + self->intervalOffset) % self->interval;
     if (timer < 98) {
         if (timer >= 49) {
-            if (!entity->direction)
-                entity->startPos.x = -0x320000;
+            if (!self->direction)
+                self->startPos.x = -0x320000;
             else
-                entity->startPos.x = 0x2E0000;
-            entity->startPos.y = ChemicalBall->moveOffset2[97 - timer];
+                self->startPos.x = 0x2E0000;
+            self->startPos.y = ChemicalBall->moveOffset2[97 - timer];
         }
         else {
-            if (!entity->direction)
-                entity->startPos.x = 0x2E0000;
+            if (!self->direction)
+                self->startPos.x = 0x2E0000;
             else
-                entity->startPos.x = -0x320000;
-            entity->startPos.y = ChemicalBall->moveOffset2[timer];
+                self->startPos.x = -0x320000;
+            self->startPos.y = ChemicalBall->moveOffset2[timer];
         }
     }
-    entity->startPos.x += entity->position.x;
-    entity->startPos.y += entity->position.y;
+    self->startPos.x += self->position.x;
+    self->startPos.y += self->position.y;
     if (timer == 27 || timer == 48)
         RSDK.PlaySfx(ChemicalBall->sfxBloop, 0, 255);
     ChemicalBall_CheckHit();
@@ -139,19 +139,19 @@ void ChemicalBall_EditorDraw(void)
 {
     RSDK_THIS(ChemicalBall);
 
-    entity->startPos2.x   = entity->position.x;
-    entity->startPos2.y   = entity->position.y;
-    entity->startPos.x = entity->position.x;
-    entity->startPos.y = entity->position.y;
-    if (entity->direction == FLIP_NONE)
-        entity->startPos.x += 0x320000;
+    self->startPos2.x   = self->position.x;
+    self->startPos2.y   = self->position.y;
+    self->startPos.x = self->position.x;
+    self->startPos.y = self->position.y;
+    if (self->direction == FLIP_NONE)
+        self->startPos.x += 0x320000;
     else
-        entity->startPos.x -= 0x320000;
+        self->startPos.x -= 0x320000;
 
-    if (entity->type == 1)
-        entity->startPos.y -= 0x480000;
+    if (self->type == 1)
+        self->startPos.y -= 0x480000;
 
-    RSDK.SetSpriteAnimation(ChemicalBall->aniFrames, 0, &entity->animator, true, 0);
+    RSDK.SetSpriteAnimation(ChemicalBall->aniFrames, 0, &self->animator, true, 0);
 
     ChemicalBall_Draw();
 }

@@ -6,62 +6,62 @@ void TippingPlatform_Update(void)
 {
     RSDK_THIS(TippingPlatform);
 
-    if (entity->bossID) {
-        if (entity->animator.frameID) {
-            entity->stateCollide = Platform_CollisionState_None;
-            entity->collision    = PLATFORM_C_4;
+    if (self->bossID) {
+        if (self->animator.frameID) {
+            self->stateCollide = Platform_CollisionState_None;
+            self->collision    = PLATFORM_C_4;
         }
         else {
-            entity->stateCollide = Platform_CollisionState_TopSolid;
-            entity->collision    = PLATFORM_C_0;
+            self->stateCollide = Platform_CollisionState_TopSolid;
+            self->collision    = PLATFORM_C_0;
         }
-        if (!entity->stoodAngle && entity->bossID > 2 && entity->syringe->activated) {
-            entity->stoodAngle    = 1;
-            entity->collapseDelay = entity->intervalOffset + 1;
-            RSDK.SetSpriteAnimation(Platform->aniFrames, 1, &entity->animator, true, 0);
-            entity->state = TippingPlatform_Unknown5;
+        if (!self->stoodAngle && self->bossID > 2 && self->syringe->activated) {
+            self->stoodAngle    = 1;
+            self->collapseDelay = self->intervalOffset + 1;
+            RSDK.SetSpriteAnimation(Platform->aniFrames, 1, &self->animator, true, 0);
+            self->state = TippingPlatform_Unknown5;
         }
     }
     else {
-        if (entity->state == Platform_State_Normal) {
-            int32 timer = (Zone->timer + entity->intervalOffset) % entity->interval;
-            if (timer >= entity->duration) {
-                if (timer >= entity->duration + 22) {
-                    RSDK.SetSpriteAnimation(Platform->aniFrames, 2, &entity->animator, true, 6);
+        if (self->state == Platform_State_Normal) {
+            int32 timer = (Zone->timer + self->intervalOffset) % self->interval;
+            if (timer >= self->duration) {
+                if (timer >= self->duration + 22) {
+                    RSDK.SetSpriteAnimation(Platform->aniFrames, 2, &self->animator, true, 6);
                 }
                 else {
-                    entity->active = ACTIVE_NORMAL;
-                    RSDK.SetSpriteAnimation(Platform->aniFrames, 2, &entity->animator, true, (timer - entity->duration) >> 2);
-                    entity->state = TippingPlatform_Unknown4;
+                    self->active = ACTIVE_NORMAL;
+                    RSDK.SetSpriteAnimation(Platform->aniFrames, 2, &self->animator, true, (timer - self->duration) >> 2);
+                    self->state = TippingPlatform_Unknown4;
                 }
             }
             else {
-                entity->active        = ACTIVE_NORMAL;
-                entity->collapseDelay = entity->duration - timer;
-                if (entity->duration - timer < entity->duration - 24) {
-                    RSDK.SetSpriteAnimation(Platform->aniFrames, 1, &entity->animator, true, 6);
-                    entity->state = TippingPlatform_Unknown3;
+                self->active        = ACTIVE_NORMAL;
+                self->collapseDelay = self->duration - timer;
+                if (self->duration - timer < self->duration - 24) {
+                    RSDK.SetSpriteAnimation(Platform->aniFrames, 1, &self->animator, true, 6);
+                    self->state = TippingPlatform_Unknown3;
                 }
                 else {
-                    RSDK.SetSpriteAnimation(Platform->aniFrames, 1, &entity->animator, true, timer >> 2);
-                    entity->state                   = TippingPlatform_Unknown3;
-                    entity->animator.animationTimer = (entity->duration - entity->collapseDelay) & 3;
+                    RSDK.SetSpriteAnimation(Platform->aniFrames, 1, &self->animator, true, timer >> 2);
+                    self->state                   = TippingPlatform_Unknown3;
+                    self->animator.animationTimer = (self->duration - self->collapseDelay) & 3;
                 }
             }
         }
 
         bool32 flag = false;
-        if (entity->animator.animationID == 1)
-            flag = entity->animator.frameID == 0;
+        if (self->animator.animationID == 1)
+            flag = self->animator.frameID == 0;
         else
-            flag = entity->animator.frameID == 6;
+            flag = self->animator.frameID == 6;
         if (flag) {
-            entity->stateCollide = Platform_CollisionState_TopSolid;
-            entity->collision    = PLATFORM_C_0;
+            self->stateCollide = Platform_CollisionState_TopSolid;
+            self->collision    = PLATFORM_C_0;
         }
         else {
-            entity->stateCollide = Platform_CollisionState_None;
-            entity->collision    = PLATFORM_C_4;
+            self->stateCollide = Platform_CollisionState_None;
+            self->collision    = PLATFORM_C_4;
         }
     }
     Platform_Update();
@@ -74,48 +74,48 @@ void TippingPlatform_StaticUpdate(void) {}
 void TippingPlatform_Draw(void)
 {
     RSDK_THIS(TippingPlatform);
-    RSDK.DrawSprite(&entity->animator, &entity->drawPos, false);
+    RSDK.DrawSprite(&self->animator, &self->drawPos, false);
 }
 
 void TippingPlatform_Create(void *data)
 {
     RSDK_THIS(TippingPlatform);
-    if (!entity->interval)
-        entity->interval = -16;
-    if (!entity->duration)
-        entity->duration = 120;
-    entity->collision = PLATFORM_C_0;
+    if (!self->interval)
+        self->interval = -16;
+    if (!self->duration)
+        self->duration = 120;
+    self->collision = PLATFORM_C_0;
     Platform_Create(NULL);
 
-    if (entity->bossID) {
-        RSDK.SetSpriteAnimation(Platform->aniFrames, 1, &entity->animator, true, 0);
-        entity->animator.animationSpeed = 0;
+    if (self->bossID) {
+        RSDK.SetSpriteAnimation(Platform->aniFrames, 1, &self->animator, true, 0);
+        self->animator.animationSpeed = 0;
     }
     else {
-        RSDK.SetSpriteAnimation(Platform->aniFrames, 2, &entity->animator, true, 6);
+        RSDK.SetSpriteAnimation(Platform->aniFrames, 2, &self->animator, true, 6);
     }
 
-    entity->state = Platform_State_Normal;
+    self->state = Platform_State_Normal;
     if (!SceneInfo->inEditor) {
-        if (entity->bossID > 1) {
+        if (self->bossID > 1) {
             foreach_all(Syringe, syringe)
             {
-                if (syringe->tag == entity->bossID) {
-                    entity->syringe = syringe;
+                if (syringe->tag == self->bossID) {
+                    self->syringe = syringe;
                     if (syringe) {
-                        entity->updateRange.x = abs(entity->position.x - syringe->position.x) + 0x400000;
-                        entity->updateRange.y = abs(entity->position.y - syringe->position.y) + 0x400000;
+                        self->updateRange.x = abs(self->position.x - syringe->position.x) + 0x400000;
+                        self->updateRange.y = abs(self->position.y - syringe->position.y) + 0x400000;
                     }
-                    entity->stateCollide = Platform_CollisionState_AllSolid;
-                    entity->collision    = PLATFORM_C_1;
+                    self->stateCollide = Platform_CollisionState_AllSolid;
+                    self->collision    = PLATFORM_C_1;
                     foreach_break;
                 }
             }
         }
 
-        if (entity->bossID == 1) {
-            entity->direction = FLIP_X;
-            entity->drawFX    = FX_FLIP;
+        if (self->bossID == 1) {
+            self->direction = FLIP_X;
+            self->drawFX    = FX_FLIP;
         }
     }
 }
@@ -125,67 +125,67 @@ void TippingPlatform_StageLoad(void) {}
 void TippingPlatform_Unknown1(void)
 {
     RSDK_THIS(TippingPlatform);
-    if (entity->animator.frameID < 6 && ++entity->animator.animationTimer == 4) {
-        entity->animator.animationTimer = 0;
-        entity->animator.frameID++;
+    if (self->animator.frameID < 6 && ++self->animator.animationTimer == 4) {
+        self->animator.animationTimer = 0;
+        self->animator.frameID++;
     }
 
-    if (--entity->collapseDelay <= 0) {
-        entity->active = ACTIVE_BOUNDS;
-        if (entity->bossID < 3)
-            entity->state = TippingPlatform_Unknown2;
+    if (--self->collapseDelay <= 0) {
+        self->active = ACTIVE_BOUNDS;
+        if (self->bossID < 3)
+            self->state = TippingPlatform_Unknown2;
         else
-            entity->state = Platform_State_Normal;
+            self->state = Platform_State_Normal;
     }
 }
 
 void TippingPlatform_Unknown2(void)
 {
     RSDK_THIS(TippingPlatform);
-    if (entity->animator.frameID <= 0) {
-        entity->active = ACTIVE_BOUNDS;
-        entity->state  = Platform_State_Normal;
+    if (self->animator.frameID <= 0) {
+        self->active = ACTIVE_BOUNDS;
+        self->state  = Platform_State_Normal;
     }
-    else if (++entity->animator.animationTimer == 4) {
-        entity->animator.animationTimer = 0;
-        entity->animator.frameID--;
+    else if (++self->animator.animationTimer == 4) {
+        self->animator.animationTimer = 0;
+        self->animator.frameID--;
     }
 }
 
 void TippingPlatform_Unknown3(void)
 {
     RSDK_THIS(TippingPlatform);
-    if (--entity->collapseDelay <= 0) {
-        RSDK.SetSpriteAnimation(Platform->aniFrames, 2, &entity->animator, true, 0);
-        entity->state = TippingPlatform_Unknown2;
+    if (--self->collapseDelay <= 0) {
+        RSDK.SetSpriteAnimation(Platform->aniFrames, 2, &self->animator, true, 0);
+        self->state = TippingPlatform_Unknown2;
     }
 }
 
 void TippingPlatform_Unknown4(void)
 {
     RSDK_THIS(TippingPlatform);
-    if (entity->animator.frameID == 6) {
-        entity->active = ACTIVE_BOUNDS;
-        entity->state  = Platform_State_Normal;
+    if (self->animator.frameID == 6) {
+        self->active = ACTIVE_BOUNDS;
+        self->state  = Platform_State_Normal;
     }
 }
 
 void TippingPlatform_Unknown5(void)
 {
     RSDK_THIS(TippingPlatform);
-    if (--entity->collapseDelay <= 0)
-        entity->state = TippingPlatform_Unknown1;
+    if (--self->collapseDelay <= 0)
+        self->state = TippingPlatform_Unknown1;
 }
 
 void TippingPlatform_EditorDraw(void)
 {
     RSDK_THIS(TippingPlatform);
-    if (entity->bossID) {
-        RSDK.SetSpriteAnimation(Platform->aniFrames, 1, &entity->animator, true, 0);
-        entity->animator.animationSpeed = 0;
+    if (self->bossID) {
+        RSDK.SetSpriteAnimation(Platform->aniFrames, 1, &self->animator, true, 0);
+        self->animator.animationSpeed = 0;
     }
     else {
-        RSDK.SetSpriteAnimation(Platform->aniFrames, 2, &entity->animator, true, 6);
+        RSDK.SetSpriteAnimation(Platform->aniFrames, 2, &self->animator, true, 6);
     }
 
     TippingPlatform_Draw();

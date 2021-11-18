@@ -6,61 +6,61 @@ void SeeSaw_Update(void)
 {
     RSDK_THIS(SeeSaw);
 
-    if (entity->field_6C || entity->field_74) {
-        if (entity->field_6C == entity->field_74) {
-            entity->field_80 = 1;
+    if (self->field_6C || self->field_74) {
+        if (self->field_6C == self->field_74) {
+            self->field_80 = 1;
         }
         else {
-            if (entity->field_6C > entity->field_74)
-                entity->field_80 = 0;
+            if (self->field_6C > self->field_74)
+                self->field_80 = 0;
             else
-                entity->field_80 = 2;
+                self->field_80 = 2;
         }
     }
-    else if (entity->field_70 != (entity->field_74 || entity->field_6C)) {
-        entity->field_80 = 1;
+    else if (self->field_70 != (self->field_74 || self->field_6C)) {
+        self->field_80 = 1;
     }
 
-    if (entity->field_78 != entity->field_80) {
-        entity->field_78 = entity->field_78 <= entity->field_80 ? entity->field_78 + 1 : entity->field_78 - 1;
+    if (self->field_78 != self->field_80) {
+        self->field_78 = self->field_78 <= self->field_80 ? self->field_78 + 1 : self->field_78 - 1;
 
-        if (entity->state == SeeSaw_Unknown3) {
-            switch (entity->field_80) {
+        if (self->state == SeeSaw_Unknown3) {
+            switch (self->field_80) {
                 case 0:
-                    if (entity->field_84 < 0xA0000) {
-                        entity->velocity.x = -0xCC00;
-                        entity->velocity.y = -0xAF000;
+                    if (self->field_84 < 0xA0000) {
+                        self->velocity.x = -0xCC00;
+                        self->velocity.y = -0xAF000;
                     }
                     else {
-                        entity->velocity.x = -0xA000;
-                        entity->velocity.y = -0xE0000;
+                        self->velocity.x = -0xA000;
+                        self->velocity.y = -0xE0000;
                     }
                     break;
                 case 1:
-                    entity->velocity.x = -0x11400;
-                    entity->velocity.y = -0x81800;
+                    self->velocity.x = -0x11400;
+                    self->velocity.y = -0x81800;
                     break;
                 case 2:
-                    if (entity->field_84 < 0x9C000) {
-                        entity->velocity.x = -0xF400;
-                        entity->velocity.y = -0x96000;
+                    if (self->field_84 < 0x9C000) {
+                        self->velocity.x = -0xF400;
+                        self->velocity.y = -0x96000;
                     }
                     else {
-                        entity->velocity.x = -0x8000;
-                        entity->velocity.y = -0xA2000;
+                        self->velocity.x = -0x8000;
+                        self->velocity.y = -0xA2000;
                     }
                     break;
             }
 
-            if (entity->orbPos.x < entity->position.x)
-                entity->velocity.x = -entity->velocity.x;
-            entity->state  = SeeSaw_Unknown5;
-            entity->active = ACTIVE_NORMAL;
+            if (self->orbPos.x < self->position.x)
+                self->velocity.x = -self->velocity.x;
+            self->state  = SeeSaw_Unknown5;
+            self->active = ACTIVE_NORMAL;
         }
     }
 
-    if (entity->orbPos.x < entity->position.x) {
-        switch (entity->field_78) {
+    if (self->orbPos.x < self->position.x) {
+        switch (self->field_78) {
             case 0:
                 SeeSaw->value2.x = -0x280000;
                 SeeSaw->value2.y = -0x20000;
@@ -76,7 +76,7 @@ void SeeSaw_Update(void)
         }
     }
     else {
-        switch (entity->field_78) {
+        switch (self->field_78) {
             case 0:
                 SeeSaw->value2.x = 0x280000;
                 SeeSaw->value2.y = -0x290000;
@@ -92,49 +92,49 @@ void SeeSaw_Update(void)
         }
     }
 
-    StateMachine_Run(entity->state);
-    RSDK.ProcessAnimation(&entity->animator3);
-    entity->field_6C = 0;
-    entity->field_70 = 0;
-    entity->field_74 = 0;
-    entity->field_8C = 0;
+    StateMachine_Run(self->state);
+    RSDK.ProcessAnimation(&self->animator3);
+    self->field_6C = 0;
+    self->field_70 = 0;
+    self->field_74 = 0;
+    self->field_8C = 0;
 
     foreach_active(Player, player)
     {
-        SeeSaw_SetupHitbox(player->position.x, entity->field_7C);
+        SeeSaw_SetupHitbox(player->position.x, self->field_7C);
         if (SeeSaw->hitbox1.right) {
-            if (player->velocity.y > entity->field_84)
+            if (player->velocity.y > self->field_84)
                 SeeSaw->value3 = player->velocity.y + 0x7000;
             else
-                SeeSaw->value3 = entity->field_84;
+                SeeSaw->value3 = self->field_84;
 
-            if (Player_CheckCollisionPlatform(player, entity, &SeeSaw->hitbox1)) {
+            if (Player_CheckCollisionPlatform(player, self, &SeeSaw->hitbox1)) {
 #if RETRO_USE_PLUS
                 if (player->state == Player_State_MightyHammerDrop) {
-                    if (player->position.x >= entity->position.x ? entity->field_78 != 2 : entity->field_78 != 0)
+                    if (player->position.x >= self->position.x ? self->field_78 != 2 : self->field_78 != 0)
                         player->state = Player_State_Air;
                 }
 #endif
 
-                entity->field_8C = 1;
-                if (entity->field_78 != entity->field_7C) {
+                self->field_8C = 1;
+                if (self->field_78 != self->field_7C) {
                     int top = SeeSaw->hitbox1.top;
-                    SeeSaw_SetupHitbox(player->position.x, entity->field_78);
+                    SeeSaw_SetupHitbox(player->position.x, self->field_78);
                     player->position.y += (SeeSaw->hitbox1.top - top) << 16;
                 }
                 player->position.y += 0x20000;
 
-                if (entity->field_88) {
-                    SeeSaw->value3 = entity->velocity.y;
-                    if (abs(player->position.x - entity->position.x) >= 0x80000) {
-                        if (player->position.x >= entity->position.x ? entity->field_88 == 2 : entity->field_88 == 1)
+                if (self->field_88) {
+                    SeeSaw->value3 = self->velocity.y;
+                    if (abs(player->position.x - self->position.x) >= 0x80000) {
+                        if (player->position.x >= self->position.x ? self->field_88 == 2 : self->field_88 == 1)
                             SeeSaw->value3 = 0;
                     }
 
                     if (SeeSaw->value3) {
                         player->state    = Player_State_Air;
                         player->onGround = false;
-                        if (entity->state == SeeSaw_Unknown4 || entity->field_68)
+                        if (self->state == SeeSaw_Unknown4 || self->field_68)
                             RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->playerAnimator, true, 0);
                         else
                             RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGTWIRL, &player->playerAnimator, true, 0);
@@ -143,58 +143,58 @@ void SeeSaw_Update(void)
                     }
                 }
                 else {
-                    if (entity->state == SeeSaw_Unknown2) {
-                        entity->state = SeeSaw_Unknown3;
+                    if (self->state == SeeSaw_Unknown2) {
+                        self->state = SeeSaw_Unknown3;
                     }
-                    else if (entity->state == SeeSaw_Unknown5) {
-                        SeeSaw->value3 = entity->field_84;
+                    else if (self->state == SeeSaw_Unknown5) {
+                        SeeSaw->value3 = self->field_84;
                     }
 
-                    if (abs(player->position.x - entity->position.x) >= 0x80000) {
-                        if (player->position.x >= entity->position.x) {
-                            ++entity->field_74;
-                            if (entity->field_80 != 2)
-                                entity->field_84 = SeeSaw->value3;
+                    if (abs(player->position.x - self->position.x) >= 0x80000) {
+                        if (player->position.x >= self->position.x) {
+                            ++self->field_74;
+                            if (self->field_80 != 2)
+                                self->field_84 = SeeSaw->value3;
                         }
                         else {
-                            ++entity->field_6C;
-                            if (entity->field_80 != 0)
-                                entity->field_84 = SeeSaw->value3;
+                            ++self->field_6C;
+                            if (self->field_80 != 0)
+                                self->field_84 = SeeSaw->value3;
                         }
                     }
                     else {
-                        ++entity->field_70;
+                        ++self->field_70;
                     }
                 }
             }
         }
     }
 
-    entity->field_7C = entity->field_78;
-    entity->field_88 = 0;
+    self->field_7C = self->field_78;
+    self->field_88 = 0;
 
-    switch (entity->field_7C) {
-        case 0: entity->rotation = 480; break;
-        case 1: entity->rotation = 0; break;
-        case 2: entity->rotation = 32; break;
+    switch (self->field_7C) {
+        case 0: self->rotation = 480; break;
+        case 1: self->rotation = 0; break;
+        case 2: self->rotation = 32; break;
     }
 
-    if (entity->state != SeeSaw_Unknown4) {
-        int storeX       = entity->position.x;
-        int storeY       = entity->position.y;
-        entity->position = entity->orbPos;
+    if (self->state != SeeSaw_Unknown4) {
+        int storeX       = self->position.x;
+        int storeY       = self->position.y;
+        self->position = self->orbPos;
 
         foreach_active(Player, player)
         {
-            if (Player_CheckCollisionTouch(player, entity, &SeeSaw->hitbox2)) {
+            if (Player_CheckCollisionTouch(player, self, &SeeSaw->hitbox2)) {
 #if RETRO_USE_PLUS
-                if (!Player_CheckMightyUnspin(768, player, 2, &player->uncurlTimer))
+                if (!Player_CheckMightyUnspin(0x300, player, 2, &player->uncurlTimer))
 #endif
-                    Player_CheckHit(player, entity);
+                    Player_CheckHit(player, self);
             }
         }
-        entity->position.x = storeX;
-        entity->position.y = storeY;
+        self->position.x = storeX;
+        self->position.y = storeY;
     }
 }
 
@@ -205,31 +205,31 @@ void SeeSaw_StaticUpdate(void) {}
 void SeeSaw_Draw(void)
 {
     RSDK_THIS(SeeSaw);
-    RSDK.DrawSprite(&entity->animator3, &entity->orbPos, false);
-    RSDK.DrawSprite(&entity->animator2, NULL, false);
-    RSDK.DrawSprite(&entity->animator1, NULL, false);
+    RSDK.DrawSprite(&self->animator3, &self->orbPos, false);
+    RSDK.DrawSprite(&self->animator2, NULL, false);
+    RSDK.DrawSprite(&self->animator1, NULL, false);
 }
 
 void SeeSaw_Create(void *data)
 {
     RSDK_THIS(SeeSaw);
 
-    entity->drawFX = FX_FLIP;
+    self->drawFX = FX_FLIP;
     if (!SceneInfo->inEditor) {
-        RSDK.SetSpriteAnimation(SeeSaw->aniFrames, 0, &entity->animator1, true, 0);
-        RSDK.SetSpriteAnimation(SeeSaw->aniFrames, 1, &entity->animator2, true, 0);
-        RSDK.SetSpriteAnimation(SeeSaw->aniFrames, 2, &entity->animator3, true, 0);
-        entity->active        = ACTIVE_BOUNDS;
-        entity->updateRange.x = 0x800000;
-        entity->updateRange.y = 0x800000;
-        entity->drawFX        = FX_ROTATE | FX_FLIP;
-        entity->visible       = true;
-        entity->drawOrder     = Zone->drawOrderHigh;
-        if (entity->side == 1) {
-            entity->field_80 = 2;
-            entity->orbPos.x = entity->position.x;
+        RSDK.SetSpriteAnimation(SeeSaw->aniFrames, 0, &self->animator1, true, 0);
+        RSDK.SetSpriteAnimation(SeeSaw->aniFrames, 1, &self->animator2, true, 0);
+        RSDK.SetSpriteAnimation(SeeSaw->aniFrames, 2, &self->animator3, true, 0);
+        self->active        = ACTIVE_BOUNDS;
+        self->updateRange.x = 0x800000;
+        self->updateRange.y = 0x800000;
+        self->drawFX        = FX_ROTATE | FX_FLIP;
+        self->visible       = true;
+        self->drawOrder     = Zone->drawOrderHigh;
+        if (self->side == 1) {
+            self->field_80 = 2;
+            self->orbPos.x = self->position.x;
         }
-        entity->state = SeeSaw_Unknown2;
+        self->state = SeeSaw_Unknown2;
     }
 }
 
@@ -251,7 +251,7 @@ void SeeSaw_SetupHitbox(int playerX, bool32 flag)
         SeeSaw->hitbox1.right = 48;
     }
     else {
-        int distance = clampVal((((playerX - entity->position.x) >> 16) + 48) >> 1, 0, 47);
+        int distance = clampVal((((playerX - self->position.x) >> 16) + 48) >> 1, 0, 47);
 
         if (flag)
             SeeSaw->hitbox1.top = SeeSaw->value1[distance] + 12;
@@ -266,9 +266,9 @@ void SeeSaw_SetupHitbox(int playerX, bool32 flag)
 void SeeSaw_Unknown2(void)
 {
     RSDK_THIS(SeeSaw);
-    entity->orbPos.x = entity->position.x + SeeSaw->value2.x;
-    entity->orbPos.y = entity->position.y + SeeSaw->value2.y;
-    entity->field_84 = 0;
+    self->orbPos.x = self->position.x + SeeSaw->value2.x;
+    self->orbPos.y = self->position.y + SeeSaw->value2.y;
+    self->field_84 = 0;
 }
 
 void SeeSaw_Unknown3(void) {}
@@ -278,26 +278,26 @@ void SeeSaw_Unknown4(void) {}
 void SeeSaw_Unknown5(void)
 {
     RSDK_THIS(SeeSaw);
-    entity->orbPos.x += entity->velocity.x;
-    entity->orbPos.y += entity->velocity.y;
-    entity->velocity.y += 0x3800;
-    if (entity->velocity.y > 0) {
-        SeeSaw->value2.y += entity->position.y;
-        if (entity->orbPos.y >= SeeSaw->value2.y) {
-            entity->orbPos.y = SeeSaw->value2.y;
-            entity->state    = SeeSaw_Unknown2;
-            if (entity->field_68 && entity->velocity.x)
-                entity->field_68 = 0;
+    self->orbPos.x += self->velocity.x;
+    self->orbPos.y += self->velocity.y;
+    self->velocity.y += 0x3800;
+    if (self->velocity.y > 0) {
+        SeeSaw->value2.y += self->position.y;
+        if (self->orbPos.y >= SeeSaw->value2.y) {
+            self->orbPos.y = SeeSaw->value2.y;
+            self->state    = SeeSaw_Unknown2;
+            if (self->field_68 && self->velocity.x)
+                self->field_68 = 0;
 
-            if (entity->orbPos.x >= entity->position.x) {
-                entity->field_80 = 2;
-                entity->field_88 = 2;
+            if (self->orbPos.x >= self->position.x) {
+                self->field_80 = 2;
+                self->field_88 = 2;
             }
             else {
-                entity->field_80 = 0;
-                entity->field_88 = 1;
+                self->field_80 = 0;
+                self->field_88 = 1;
             }
-            entity->active = ACTIVE_BOUNDS;
+            self->active = ACTIVE_BOUNDS;
         }
     }
 }
@@ -306,11 +306,11 @@ void SeeSaw_Unknown5(void)
 void SeeSaw_EditorDraw(void)
 {
     RSDK_THIS(SeeSaw);
-    entity->orbPos.x = entity->position.x;
-    entity->orbPos.y = entity->position.y;
-    RSDK.SetSpriteAnimation(SeeSaw->aniFrames, 0, &entity->animator1, true, 0);
-    RSDK.SetSpriteAnimation(SeeSaw->aniFrames, 1, &entity->animator2, true, 0);
-    RSDK.SetSpriteAnimation(SeeSaw->aniFrames, 2, &entity->animator3, true, 0);
+    self->orbPos.x = self->position.x;
+    self->orbPos.y = self->position.y;
+    RSDK.SetSpriteAnimation(SeeSaw->aniFrames, 0, &self->animator1, true, 0);
+    RSDK.SetSpriteAnimation(SeeSaw->aniFrames, 1, &self->animator2, true, 0);
+    RSDK.SetSpriteAnimation(SeeSaw->aniFrames, 2, &self->animator3, true, 0);
 
     SeeSaw_Draw();
 }

@@ -320,7 +320,7 @@ void CompetitionMenu_Unknown9(int32 playerCount)
         else
             UIButton_SetChoiceSelectionWithCB(button, 4);
 
-        UIButton_Unknown1(button);
+        UIButton_ManageChoices(button);
     }
 }
 void CompetitionMenu_SetupSplitScreen(int32 mode)
@@ -442,9 +442,9 @@ void CompetitionMenu_VS_UnknownCB3(void)
 {
     RSDK_THIS(UIControl);
 
-    entity->childHasFocus = false;
-    for (int32 i = 0; i < entity->buttonCount; ++i) {
-        EntityUIVsCharSelector *button = (EntityUIVsCharSelector *)entity->buttons[i];
+    self->childHasFocus = false;
+    for (int32 i = 0; i < self->buttonCount; ++i) {
+        EntityUIVsCharSelector *button = (EntityUIVsCharSelector *)self->buttons[i];
 
         button->flag            = true;
         button->ready           = false;
@@ -454,8 +454,8 @@ void CompetitionMenu_VS_UnknownCB3(void)
             RSDK.AssignControllerID(button->playerID + 1, CONT_AUTOASSIGN);
     }
 
-    for (int32 i = 0; i < entity->promptCount; ++i) {
-        EntityUIButtonPrompt *prompt = entity->prompts[i];
+    for (int32 i = 0; i < self->promptCount; ++i) {
+        EntityUIButtonPrompt *prompt = self->prompts[i];
         if (prompt->buttonID == 4)
             prompt->visible = false;
     }

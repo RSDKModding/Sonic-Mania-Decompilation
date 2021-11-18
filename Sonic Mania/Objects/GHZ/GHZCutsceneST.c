@@ -8,17 +8,17 @@ void GHZCutsceneST_Update(void)
                         GHZCutsceneST_CutsceneState_LoadNextStage, NULL };
 
     RSDK_THIS(GHZCutsceneST);
-    if (!entity->activated) {
+    if (!self->activated) {
         foreach_active(Player, player)
         {
-            if (Player_CheckCollisionTouch(player, entity, &entity->hitbox) && !player->sidekick) {
-                CutsceneSeq_StartSequence((Entity *)entity, states);
+            if (Player_CheckCollisionTouch(player, self, &self->hitbox) && !player->sidekick) {
+                CutsceneSeq_StartSequence((Entity *)self, states);
                 if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->objectID) {
                     EntityCutsceneSeq *cutsceneSeq = RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq);
                     cutsceneSeq->skipType         = SKIPTYPE_CALLBACK;
                     cutsceneSeq->skipCallback      = GHZCutsceneST_SkipCB;
                 }
-                entity->activated = true;
+                self->activated = true;
             }
         }
     }
@@ -34,9 +34,9 @@ void GHZCutsceneST_Create(void *data)
 {
     RSDK_THIS(GHZCutsceneST);
     if (!SceneInfo->inEditor) {
-        INIT_ENTITY(entity);
-        CutsceneRules_SetupEntity(entity, &entity->size, &entity->hitbox);
-        entity->active = ACTIVE_BOUNDS;
+        INIT_ENTITY(self);
+        CutsceneRules_SetupEntity(self, &self->size, &self->hitbox);
+        self->active = ACTIVE_BOUNDS;
 
         GHZCutsceneST_SetupObjects();
 
@@ -256,7 +256,7 @@ bool32 GHZCutsceneST_CutsceneState_LoadNextStage(EntityCutsceneSeq *host)
     else
 #endif
         RSDK.SetScene("Mania Mode", "");
-    globals->parallaxOffset[0] = entity->field_68;
+    globals->parallaxOffset[0] = self->field_68;
     EntityPlayer *player       = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     player->onGround           = true;
     player->state              = Player_State_Ground;
@@ -279,7 +279,7 @@ void GHZCutsceneST_SkipCB(void)
 void GHZCutsceneST_EditorDraw(void)
 {
     RSDK_THIS(GHZCutsceneST);
-    CutsceneRules_DrawCutsceneBounds(entity, &entity->size);
+    CutsceneRules_DrawCutsceneBounds(self, &self->size);
 }
 
 void GHZCutsceneST_EditorLoad(void) {}

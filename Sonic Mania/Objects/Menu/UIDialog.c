@@ -5,11 +5,11 @@ ObjectUIDialog *UIDialog;
 void UIDialog_Update(void)
 {
     RSDK_THIS(UIDialog);
-    StateMachine_Run(entity->state);
+    StateMachine_Run(self->state);
     UIDialog_Unknown7();
 
-    if (entity->closeDelay > 0) {
-        if (!--entity->closeDelay)
+    if (self->closeDelay > 0) {
+        if (!--self->closeDelay)
             UIDialog_HandleAutoClose();
     }
 }
@@ -24,42 +24,42 @@ void UIDialog_Draw(void)
     UIDialog_Unknown6();
 
     Vector2 drawPos;
-    switch (entity->lineCount) {
+    switch (self->lineCount) {
         case 0:
         case 1:
-            drawPos.x = (entity->position.x + 0x100000) + 0x100000;
-            drawPos.y = entity->position.y - 0x200000;
+            drawPos.x = (self->position.x + 0x100000) + 0x100000;
+            drawPos.y = self->position.y - 0x200000;
             break;
         case 2:
-            drawPos.x = (entity->position.x + 0x100000) + 0x180000;
-            drawPos.y = entity->position.y - 0x280000;
+            drawPos.x = (self->position.x + 0x100000) + 0x180000;
+            drawPos.y = self->position.y - 0x280000;
             break;
         case 3:
-            drawPos.x = (entity->position.x + 0x100000) + 0x200000;
-            drawPos.y = entity->position.y - 0x300000;
+            drawPos.x = (self->position.x + 0x100000) + 0x200000;
+            drawPos.y = self->position.y - 0x300000;
             break;
         default: break;
     }
-    drawPos.x += entity->drawPos.x;
-    drawPos.y += entity->drawPos.y;
+    drawPos.x += self->drawPos.x;
+    drawPos.y += self->drawPos.y;
 
     int32 w     = 0;
-    int32 count = entity->lineCount + 1;
+    int32 count = self->lineCount + 1;
     if (count <= 0) {
-        count = entity->lineCount + 1;
+        count = self->lineCount + 1;
     }
     else {
         for (int32 i = 0; i < count; ++i) {
             int32 start = 0;
             if (i)
-                start = entity->lineLength[i - 1] + 1;
+                start = self->lineLength[i - 1] + 1;
 
             int32 len = 0;
-            if (i >= entity->lineCount)
-                len = entity->textInfo.textLength;
+            if (i >= self->lineCount)
+                len = self->textInfo.textLength;
             else
-                len = entity->lineLength[i];
-            int32 width = RSDK.GetStringWidth(UIWidgets->labelSpriteIndex, 0, &entity->textInfo, start, len, 0);
+                len = self->lineLength[i];
+            int32 width = RSDK.GetStringWidth(UIWidgets->labelSpriteIndex, 0, &self->textInfo, start, len, 0);
             if (width > w)
                 w = width;
         }
@@ -70,16 +70,16 @@ void UIDialog_Draw(void)
 
         int32 start = 0;
         if (i)
-            start = entity->lineLength[i - 1] + 1;
+            start = self->lineLength[i - 1] + 1;
 
         int32 len = 0;
-        if (i >= entity->lineCount)
-            len = entity->textInfo.textLength;
+        if (i >= self->lineCount)
+            len = self->textInfo.textLength;
         else
-            len = entity->lineLength[i];
-        RSDK.GetStringWidth(UIWidgets->labelSpriteIndex, 0, &entity->textInfo, start, len, 0);
+            len = self->lineLength[i];
+        RSDK.GetStringWidth(UIWidgets->labelSpriteIndex, 0, &self->textInfo, start, len, 0);
         drawPos.x += offset;
-        RSDK.DrawText(&entity->animator, &drawPos, &entity->textInfo, start, len, 0, 0, 0, NULL, false);
+        RSDK.DrawText(&self->animator, &drawPos, &self->textInfo, start, len, 0, 0, 0, NULL, false);
         drawPos.y += 0x120000;
         drawPos.x = drawPos.x - offset - 0x120000;
     }
@@ -88,12 +88,12 @@ void UIDialog_Draw(void)
 void UIDialog_Create(void *data)
 {
     RSDK_THIS(UIDialog);
-    entity->active    = ACTIVE_ALWAYS;
-    entity->drawOrder = 15;
-    entity->visible   = true;
+    self->active    = ACTIVE_ALWAYS;
+    self->drawOrder = 15;
+    self->visible   = true;
     if (data)
-        UIDialog_SetupText(entity, data);
-    entity->id = 0;
+        UIDialog_SetupText(self, data);
+    self->id = 0;
 }
 
 void UIDialog_StageLoad(void)
@@ -225,14 +225,14 @@ void UIDialog_Setup(EntityUIDialog *dialog)
     }
 }
 
-void UIDialog_Unknown4(EntityUIDialog *entity, void (*callback)(void))
+void UIDialog_Unknown4(EntityUIDialog *self, void (*callback)(void))
 {
-    if (entity) {
-        if (entity->state != UIDialog_Unknown13) {
-            entity->parent->selectionDisabled = true;
-            entity->timer                    = 0;
-            entity->state                       = UIDialog_Unknown13;
-            entity->curCallback                 = callback;
+    if (self) {
+        if (self->state != UIDialog_Unknown13) {
+            self->parent->selectionDisabled = true;
+            self->timer                    = 0;
+            self->state                       = UIDialog_Unknown13;
+            self->curCallback                 = callback;
         }
     }
 }
@@ -240,11 +240,11 @@ void UIDialog_Unknown4(EntityUIDialog *entity, void (*callback)(void))
 void UIDialog_Unknown6(void)
 {
     RSDK_THIS(UIDialog);
-    RSDK.DrawRect(((ScreenInfo->position.x + ScreenInfo->centerX) << 16) - (entity->field_70.x >> 1),
-                  ((ScreenInfo->position.y + ScreenInfo->centerY) << 16) - (entity->field_70.y >> 1), entity->field_70.x, entity->field_70.y,
-                  entity->field_B8 ? 0x282028 : 0x000000, 255, INK_NONE, false);
-    UIWidgets_Unknown7(0x8F, 0xC8, 0x8F, 0x30, 0xA0, 0xF0, entity->drawPos.x + ((ScreenInfo->position.x + ScreenInfo->centerX) << 16),
-                       entity->drawPos.y + ((ScreenInfo->position.y + ScreenInfo->centerY) << 16));
+    RSDK.DrawRect(((ScreenInfo->position.x + ScreenInfo->centerX) << 16) - (self->field_70.x >> 1),
+                  ((ScreenInfo->position.y + ScreenInfo->centerY) << 16) - (self->field_70.y >> 1), self->field_70.x, self->field_70.y,
+                  self->field_B8 ? 0x282028 : 0x000000, 255, INK_NONE, false);
+    UIWidgets_Unknown7(0x8F, 0xC8, 0x8F, 0x30, 0xA0, 0xF0, self->drawPos.x + ((ScreenInfo->position.x + ScreenInfo->centerX) << 16),
+                       self->drawPos.y + ((ScreenInfo->position.y + ScreenInfo->centerY) << 16));
 }
 
 void UIDialog_Unknown7(void)
@@ -252,14 +252,14 @@ void UIDialog_Unknown7(void)
     int32 offsets[] = { 0, 0, 0x80, 0x70 };
 
     RSDK_THIS(UIDialog);
-    int32 offset = offsets[entity->id] << 16;
-    int32 x      = entity->position.x - 0x240000 + entity->drawPos.x - ((offset * maxVal(entity->id - 1, 0)) >> 1);
-    int32 y      = entity->position.y + 0x2C0000 + entity->drawPos.y;
+    int32 offset = offsets[self->id] << 16;
+    int32 x      = self->position.x - 0x240000 + self->drawPos.x - ((offset * maxVal(self->id - 1, 0)) >> 1);
+    int32 y      = self->position.y + 0x2C0000 + self->drawPos.y;
 
     for (int32 i = 0; i < UIDialog_OptionCount; ++i) {
-        if (!entity->entPtrs[i])
+        if (!self->entPtrs[i])
             break;
-        EntityUIButton *button = entity->entPtrs[i];
+        EntityUIButton *button = self->entPtrs[i];
         button->posUnknown2.x  = x;
         button->position.x     = x;
         button->posUnknown2.y  = y;
@@ -271,7 +271,7 @@ void UIDialog_Unknown7(void)
 void UIDialog_Close(void)
 {
     RSDK_THIS(UIDialog);
-    EntityUIControl *control = entity->parent;
+    EntityUIControl *control = self->parent;
 
     if (control) {
         UIControl_Unknown6(control);
@@ -279,8 +279,8 @@ void UIDialog_Close(void)
     }
 
     for (int32 i = 0; i < UIDialog_OptionCount; ++i) {
-        if (entity->entPtrs[i])
-            destroyEntity(entity->entPtrs[i]);
+        if (self->entPtrs[i])
+            destroyEntity(self->entPtrs[i]);
     }
 
     EntityUIControl *storedControl = UIDialog->controlStore;
@@ -292,8 +292,8 @@ void UIDialog_Close(void)
     UIDialog->controlStore      = NULL;
     UIDialog->controlStateStore = StateMachine_None;
     UIDialog->activeDialog      = NULL;
-    StateMachine_Run(entity->curCallback);
-    destroyEntity(entity);
+    StateMachine_Run(self->curCallback);
+    destroyEntity(self);
 }
 
 bool32 UIDialog_HandleAutoClose(void)
@@ -345,45 +345,45 @@ void UIDialog_Unknown11(void)
 
     pos.x = 0;
     pos.y = 0;
-    if (entity->timer == 1) {
+    if (self->timer == 1) {
         RSDK.PlaySfx(UIWidgets->sfxWoosh, false, 255);
-        UIControl_Unknown12((Entity *)entity->parent);
+        UIControl_Unknown12((Entity *)self->parent);
     }
 
-    if (entity->timer >= 8) {
-        if (entity->timer >= 16) {
-            if (entity->timer >= 26) {
-                entity->parent->selectionDisabled = false;
-                entity->timer                    = 0;
-                entity->state                       = UIDialog_Unknown12;
+    if (self->timer >= 8) {
+        if (self->timer >= 16) {
+            if (self->timer >= 26) {
+                self->parent->selectionDisabled = false;
+                self->timer                    = 0;
+                self->state                       = UIDialog_Unknown12;
             }
             else {
-                entity->field_70.x = ScreenInfo->width << 16;
-                entity->field_70.y = 0x900000;
-                MathHelpers_Lerp3(&pos, maxVal(((entity->timer - 16) << 8) / 10, 0), -0x400000 - (ScreenInfo->width << 16), 0, 0, 0);
-                entity->drawPos.x = pos.x;
-                entity->drawPos.y = pos.y;
-                if (entity->timer - 16 == 1 && entity->playEventSfx)
+                self->field_70.x = ScreenInfo->width << 16;
+                self->field_70.y = 0x900000;
+                MathHelpers_Lerp3(&pos, maxVal(((self->timer - 16) << 8) / 10, 0), -0x400000 - (ScreenInfo->width << 16), 0, 0, 0);
+                self->drawPos.x = pos.x;
+                self->drawPos.y = pos.y;
+                if (self->timer - 16 == 1 && self->playEventSfx)
                     RSDK.PlaySfx(UIWidgets->sfxEvent, false, 255);
-                ++entity->timer;
+                ++self->timer;
             }
         }
         else {
-            entity->drawPos.x = -0x400000 - (ScreenInfo->width << 16);
-            entity->drawPos.y = 0;
-            MathHelpers_Lerp1(&pos, maxVal(((entity->timer - 8) << 8) / 8, 0), ScreenInfo->width << 16, 0x10000, ScreenInfo->width << 16,
+            self->drawPos.x = -0x400000 - (ScreenInfo->width << 16);
+            self->drawPos.y = 0;
+            MathHelpers_Lerp1(&pos, maxVal(((self->timer - 8) << 8) / 8, 0), ScreenInfo->width << 16, 0x10000, ScreenInfo->width << 16,
                                  0x900000);
-            entity->field_70 = pos;
-            entity->timer++;
+            self->field_70 = pos;
+            self->timer++;
         }
     }
     else {
-        entity->drawPos.x = -0x400000 - (ScreenInfo->width << 16);
-        entity->drawPos.y = 0;
-        MathHelpers_Lerp3(&pos, maxVal((entity->timer << 8) / 8, 0), 0, 0x10000, ScreenInfo->width << 16, 0x10000);
-        ++entity->timer;
-        entity->field_70.x = pos.x;
-        entity->field_70.y = pos.y;
+        self->drawPos.x = -0x400000 - (ScreenInfo->width << 16);
+        self->drawPos.y = 0;
+        MathHelpers_Lerp3(&pos, maxVal((self->timer << 8) / 8, 0), 0, 0x10000, ScreenInfo->width << 16, 0x10000);
+        ++self->timer;
+        self->field_70.x = pos.x;
+        self->field_70.y = pos.y;
     }
 }
 
@@ -391,10 +391,10 @@ void UIDialog_Unknown12(void)
 {
     RSDK_THIS(UIDialog);
 
-    entity->field_70.x = ScreenInfo->width << 16;
-    entity->field_70.y = 0x900000;
-    entity->drawPos.x  = 0;
-    entity->drawPos.y  = 0;
+    self->field_70.x = ScreenInfo->width << 16;
+    self->field_70.y = 0x900000;
+    self->drawPos.x  = 0;
+    self->drawPos.y  = 0;
 }
 
 void UIDialog_Unknown13(void)
@@ -402,26 +402,26 @@ void UIDialog_Unknown13(void)
     RSDK_THIS(UIDialog);
     Vector2 pos;
 
-    if (entity->timer >= 8) {
-        if (entity->timer >= 16) {
+    if (self->timer >= 8) {
+        if (self->timer >= 16) {
             UIDialog_Close();
         }
         else {
-            entity->drawPos.x = (ScreenInfo->width + 64) << 16;
-            entity->drawPos.y = 0;
-            MathHelpers_Lerp3(&pos, maxVal(((entity->timer - 8) << 8) / 8, 0), ScreenInfo->width << 16, 0x900000, ScreenInfo->width << 16, 0);
-            ++entity->timer;
-            entity->field_70.x = pos.x;
-            entity->field_70.y = pos.y;
+            self->drawPos.x = (ScreenInfo->width + 64) << 16;
+            self->drawPos.y = 0;
+            MathHelpers_Lerp3(&pos, maxVal(((self->timer - 8) << 8) / 8, 0), ScreenInfo->width << 16, 0x900000, ScreenInfo->width << 16, 0);
+            ++self->timer;
+            self->field_70.x = pos.x;
+            self->field_70.y = pos.y;
         }
     }
     else {
-        entity->field_70.x = ScreenInfo->width << 16;
-        entity->field_70.y = 0x900000;
-        MathHelpers_Lerp2(&pos, maxVal((entity->timer << 8) / 8, 0), 0, 0, (ScreenInfo->width + 64) << 16, 0);
-        ++entity->timer;
-        entity->drawPos.x = pos.x;
-        entity->drawPos.y = pos.y;
+        self->field_70.x = ScreenInfo->width << 16;
+        self->field_70.y = 0x900000;
+        MathHelpers_Lerp2(&pos, maxVal((self->timer << 8) / 8, 0), 0, 0, (ScreenInfo->width + 64) << 16, 0);
+        ++self->timer;
+        self->drawPos.x = pos.x;
+        self->drawPos.y = pos.y;
     }
 }
 

@@ -6,13 +6,13 @@ ObjectE3MenuSetup *E3MenuSetup = NULL;
 void E3MenuSetup_Update(void)
 {
     RSDK_THIS(E3MenuSetup);
-    StateMachine_Run(entity->state);
-    if (entity->timer >= entity->timeOut) {
-        StateMachine_Run(entity->timedState);
-        destroyEntity(entity);
+    StateMachine_Run(self->state);
+    if (self->timer >= self->timeOut) {
+        StateMachine_Run(self->timedState);
+        destroyEntity(self);
     }
     else {
-        entity->timer++;
+        self->timer++;
     }
 }
 
@@ -29,15 +29,15 @@ void E3MenuSetup_StaticUpdate(void)
 void E3MenuSetup_Draw(void)
 {
     RSDK_THIS(E3MenuSetup);
-    RSDK.FillScreen(entity->fadeColour, entity->fadeTimer, entity->fadeTimer - 128, entity->fadeTimer - 256);
+    RSDK.FillScreen(self->fadeColour, self->fadeTimer, self->fadeTimer - 128, self->fadeTimer - 256);
 }
 
 void E3MenuSetup_Create(void *data)
 {
     RSDK_THIS(E3MenuSetup);
-    entity->active    = ACTIVE_NORMAL;
-    entity->inkEffect = INK_BLEND;
-    entity->direction = 14;
+    self->active    = ACTIVE_NORMAL;
+    self->inkEffect = INK_BLEND;
+    self->direction = 14;
 }
 
 void E3MenuSetup_StageLoad(void) { RSDK.SetSettingsValue(SETTINGS_SHADERID, 1); }
@@ -159,7 +159,7 @@ void E3MenuSetup_Unknown7(void)
 void E3MenuSetup_Unknown8(void)
 {
     RSDK_THIS(E3MenuSetup);
-    entity->fadeTimer = clampVal(entity->timer << (entity->field_70 - 1), 0, 0x200);
+    self->fadeTimer = clampVal(self->timer << (self->field_70 - 1), 0, 0x200);
 }
 
 void E3MenuSetup_EditorDraw(void) {}

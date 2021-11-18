@@ -8,28 +8,28 @@ void FBZFan_Update(void)
 
     FBZFan->fanHitbox.top    = (RSDK.Sin256(2 * Zone->timer) >> 5) - 80;
     FBZFan->fanHitbox.bottom = FBZFan->fanHitbox.top + 96;
-    entity->hitbox.top       = -96;
-    entity->hitbox.bottom    = -8;
+    self->hitbox.top       = -96;
+    self->hitbox.bottom    = -8;
 
     foreach_active(Player, player)
     {
         int32 playerID = RSDK.GetEntityID(player);
         bool32 flag  = false;
-        Player_CheckCollisionBox(player, entity, &FBZFan->solidHitbox);
+        Player_CheckCollisionBox(player, self, &FBZFan->solidHitbox);
 
         if (player->state != Player_State_None && Player_CheckValidState(player) && player->playerAnimator.animationID != ANI_HURT
-            && RSDK.CheckObjectCollisionTouchBox(entity, &FBZFan->fanHitbox, player, &FBZFan->playerHitbox)) {
+            && RSDK.CheckObjectCollisionTouchBox(self, &FBZFan->fanHitbox, player, &FBZFan->playerHitbox)) {
             flag = true;
             RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->playerAnimator, false, 0);
             player->state    = Player_State_Air;
             player->onGround = false;
-            int32 vel          = (entity->position.y + (FBZFan->fanHitbox.top << 16) - player->position.y) >> 4;
+            int32 vel          = (self->position.y + (FBZFan->fanHitbox.top << 16) - player->position.y) >> 4;
             if (player->velocity.y <= vel) {
                 player->velocity.y = vel;
             }
             else {
-                player->velocity.y += ((entity->position.y + (FBZFan->fanHitbox.top << 16) - player->position.y) >> 6)
-                                      + ((entity->position.y + (FBZFan->fanHitbox.top << 16) - player->position.y) >> 5);
+                player->velocity.y += ((self->position.y + (FBZFan->fanHitbox.top << 16) - player->position.y) >> 6)
+                                      + ((self->position.y + (FBZFan->fanHitbox.top << 16) - player->position.y) >> 5);
                 if (player->velocity.y < vel) {
                     player->velocity.y = vel;
                 }
@@ -42,14 +42,14 @@ void FBZFan_Update(void)
             }
         }
 
-        if (RSDK.CheckObjectCollisionTouchBox(entity, &entity->hitbox, player, &FBZFan->playerHitbox)) {
-            if (!((1 << playerID) & entity->activePlayers) && flag) {
+        if (RSDK.CheckObjectCollisionTouchBox(self, &self->hitbox, player, &FBZFan->playerHitbox)) {
+            if (!((1 << playerID) & self->activePlayers) && flag) {
                 RSDK.PlaySfx(FBZFan->sfxFan, false, 255);
-                entity->activePlayers |= (1 << playerID);
+                self->activePlayers |= (1 << playerID);
             }
         }
         else {
-            entity->activePlayers &= ~(1 << playerID);
+            self->activePlayers &= ~(1 << playerID);
         }
     }
 }
@@ -74,13 +74,13 @@ void FBZFan_Create(void *data)
 {
     RSDK_THIS(FBZFan);
     if (!SceneInfo->inEditor) {
-        entity->active        = ACTIVE_BOUNDS;
-        entity->visible       = true;
-        entity->drawOrder     = Zone->drawOrderLow + 1;
-        entity->updateRange.x = 0x800000;
-        entity->updateRange.y = 0x800000;
-        entity->hitbox.left   = -64;
-        entity->hitbox.right  = 64;
+        self->active        = ACTIVE_BOUNDS;
+        self->visible       = true;
+        self->drawOrder     = Zone->drawOrderLow + 1;
+        self->updateRange.x = 0x800000;
+        self->updateRange.y = 0x800000;
+        self->hitbox.left   = -64;
+        self->hitbox.right  = 64;
     }
 }
 

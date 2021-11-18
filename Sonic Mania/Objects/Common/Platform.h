@@ -4,9 +4,9 @@
 #include "SonicMania.h"
 
 typedef enum {
-    PLATFORM_0,
-    PLATFORM_1,
-    PLATFORM_2,
+    PLATFORM_FIXED,
+    PLATFORM_COLLAPSING,
+    PLATFORM_MOVING,
     PLATFORM_3,
     PLATFORM_4,
     PLATFORM_5,

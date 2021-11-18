@@ -5,10 +5,10 @@ ObjectPuyoScore *PuyoScore;
 void PuyoScore_Update(void)
 {
     RSDK_THIS(PuyoScore);
-    if (entity->flag)
-        entity->visible = !(Zone->timer & 4);
+    if (self->flag)
+        self->visible = !(Zone->timer & 4);
     else
-        entity->visible = 1;
+        self->visible = 1;
 }
 
 void PuyoScore_LateUpdate(void) {}
@@ -18,17 +18,17 @@ void PuyoScore_StaticUpdate(void) {}
 void PuyoScore_Draw(void)
 {
     RSDK_THIS(PuyoScore);
-    PuyoScore_DrawScore(entity->score);
+    PuyoScore_DrawScore(self->score);
 }
 
 void PuyoScore_Create(void *data)
 {
     RSDK_THIS(PuyoScore);
-    entity->active        = ACTIVE_NORMAL;
-    entity->drawOrder     = 10;
-    entity->visible       = true;
-    entity->updateRange.x = 0x800000;
-    entity->updateRange.y = 0x800000;
+    self->active        = ACTIVE_NORMAL;
+    self->drawOrder     = 10;
+    self->visible       = true;
+    self->updateRange.x = 0x800000;
+    self->updateRange.y = 0x800000;
 }
 
 void PuyoScore_StageLoad(void) { PuyoScore->aniFrames = RSDK.LoadSpriteAnimation("Puyo/PuyoUI.bin", SCOPE_STAGE); }
@@ -39,16 +39,16 @@ void PuyoScore_DrawScore(int score)
     char buffer[8];
     Vector2 drawPos;
 
-    if (entity->counter)
+    if (self->counter)
         sprintf(buffer, "%d", score);
     else
         sprintf(buffer, "%06d", score);
-    drawPos = entity->position;
+    drawPos = self->position;
     for (int i = 0; i < 6; ++i) {
         if (!buffer[i])
             break;
-        RSDK.SetSpriteAnimation(PuyoScore->aniFrames, (entity->counter != false) + 2, &entity->animator, true, (buffer[i] - '0'));
-        RSDK.DrawSprite(&entity->animator, &drawPos, false);
+        RSDK.SetSpriteAnimation(PuyoScore->aniFrames, (self->counter != false) + 2, &self->animator, true, (buffer[i] - '0'));
+        RSDK.DrawSprite(&self->animator, &drawPos, false);
         drawPos.x += 0x80000;
     }
 }
@@ -57,10 +57,10 @@ void PuyoScore_DrawScore(int score)
 void PuyoScore_EditorDraw(void)
 {
     RSDK_THIS(PuyoScore);
-    if (entity->counter)
-        PuyoScore_DrawScore(entity->playerID);
+    if (self->counter)
+        PuyoScore_DrawScore(self->playerID);
     else
-        PuyoScore_DrawScore(entity->playerID ? 67890 : 12345);
+        PuyoScore_DrawScore(self->playerID ? 67890 : 12345);
 }
 
 void PuyoScore_EditorLoad(void) { PuyoScore->aniFrames = RSDK.LoadSpriteAnimation("Puyo/PuyoUI.bin", SCOPE_STAGE); }

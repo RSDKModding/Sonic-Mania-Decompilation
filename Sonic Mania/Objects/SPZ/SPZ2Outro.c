@@ -5,9 +5,9 @@ ObjectSPZ2Outro *SPZ2Outro;
 void SPZ2Outro_Update(void)
 {
     RSDK_THIS(SPZ2Outro);
-    if (!entity->activated) {
+    if (!self->activated) {
         SPZ2Outro_StartCutscene();
-        entity->activated = true;
+        self->activated = true;
     }
 }
 
@@ -21,9 +21,9 @@ void SPZ2Outro_Create(void *data)
 {
     RSDK_THIS(SPZ2Outro);
 
-    INIT_ENTITY(entity);
-    CutsceneRules_SetupEntity(entity, &entity->size, &entity->hitbox);
-    entity->active = ACTIVE_NEVER;
+    INIT_ENTITY(self);
+    CutsceneRules_SetupEntity(self, &self->size, &self->hitbox);
+    self->active = ACTIVE_NEVER;
 }
 
 void SPZ2Outro_StageLoad(void)
@@ -51,7 +51,7 @@ void SPZ2Outro_StartCutscene(void)
     void *states[] = { SPZ2Outro_CutsceneState_Unknown1, SPZ2Outro_CutsceneState_Unknown2, SPZ2Outro_CutsceneState_Unknown3,
                        SPZ2Outro_CutsceneState_Unknown4, NULL };
 
-    CutsceneSeq_StartSequence((Entity *)entity, states);
+    CutsceneSeq_StartSequence((Entity *)self, states);
     if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->objectID)
         RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->skipType = SKIPTYPE_RELOADSCN;
 
@@ -297,7 +297,7 @@ void SPZ2Outro_EditorDraw(void)
 {
     RSDK_THIS(SPZ2Outro);
     if (showGizmos())
-        CutsceneRules_DrawCutsceneBounds(entity, &entity->size);
+        CutsceneRules_DrawCutsceneBounds(self, &self->size);
 }
 
 void SPZ2Outro_EditorLoad(void) {}

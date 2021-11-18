@@ -5,30 +5,30 @@ ObjectHPZEmerald *HPZEmerald;
 void HPZEmerald_Update(void)
 {
     RSDK_THIS(HPZEmerald);
-    RSDK.ProcessAnimation(&entity->animator2);
-    if (entity->solid) {
-        if (entity->type) {
-            foreach_active(Player, player) { Player_CheckCollisionPlatform(player, entity, entity->hitbox); }
+    RSDK.ProcessAnimation(&self->animator2);
+    if (self->solid) {
+        if (self->type) {
+            foreach_active(Player, player) { Player_CheckCollisionPlatform(player, self, self->hitbox); }
         }
 
         foreach_active(HeavyKing, king)
         {
             if (king->animator1.animationID != 5 && !king->onGround
-                && RSDK.CheckObjectCollisionPlatform(entity, entity->hitbox, king, &HeavyKing->hitbox1, true)) {
+                && RSDK.CheckObjectCollisionPlatform(self, self->hitbox, king, &HeavyKing->hitbox1, true)) {
                 Camera_ShakeScreen(0, 0, 3);
                 RSDK.PlaySfx(HeavyKing->sfxImpact2, false, 255);
             }
         }
     }
 
-    if (!entity->onGround) {
-        entity->velocity.y += 0x3800;
-        entity->position.y += entity->velocity.y;
-        if (entity->position.y >= entity->startPos.y && entity->velocity.y > 0) {
-            entity->position.y = entity->startPos.y;
-            entity->velocity.y = -(entity->velocity.y >> 1);
-            if (!entity->velocity.y)
-                entity->onGround = true;
+    if (!self->onGround) {
+        self->velocity.y += 0x3800;
+        self->position.y += self->velocity.y;
+        if (self->position.y >= self->startPos.y && self->velocity.y > 0) {
+            self->position.y = self->startPos.y;
+            self->velocity.y = -(self->velocity.y >> 1);
+            if (!self->velocity.y)
+                self->onGround = true;
         }
     }
 }
@@ -41,14 +41,14 @@ void HPZEmerald_Draw(void)
 {
     RSDK_THIS(HPZEmerald);
 
-    entity->inkEffect = INK_NONE;
-    if (entity->solid) {
-        RSDK.DrawSprite(&entity->animator2, NULL, false);
+    self->inkEffect = INK_NONE;
+    if (self->solid) {
+        RSDK.DrawSprite(&self->animator2, NULL, false);
     }
     else {
-        RSDK.DrawSprite(&entity->animator2, NULL, false);
-        entity->inkEffect = INK_ADD;
-        RSDK.DrawSprite(&entity->animator, NULL, false);
+        RSDK.DrawSprite(&self->animator2, NULL, false);
+        self->inkEffect = INK_ADD;
+        RSDK.DrawSprite(&self->animator, NULL, false);
     }
 }
 
@@ -56,35 +56,35 @@ void HPZEmerald_Create(void *data)
 {
     RSDK_THIS(HPZEmerald);
     if (!SceneInfo->inEditor) {
-        entity->visible = true;
+        self->visible = true;
 
-        switch (entity->type) {
+        switch (self->type) {
             case HPZEMERALD_MASTER:
-            default: entity->drawOrder = 1; break;
+            default: self->drawOrder = 1; break;
             case HPZEMERALD_EMERALD_LOW:
-                entity->solid     = true;
-                entity->drawOrder = Zone->drawOrderLow;
+                self->solid     = true;
+                self->drawOrder = Zone->drawOrderLow;
                 break;
             case HPZEMERALD_EMERALD_HIGH:
-                entity->solid     = true;
-                entity->drawOrder = Zone->drawOrderHigh;
+                self->solid     = true;
+                self->drawOrder = Zone->drawOrderHigh;
                 break;
         }
 
-        entity->startPos.x    = entity->position.x;
-        entity->startPos.y    = entity->position.y;
-        entity->active        = ACTIVE_BOUNDS;
-        entity->updateRange.x = 0x800000;
-        entity->updateRange.y = 0x800000;
-        entity->onGround      = true;
-        if (entity->type) {
-            RSDK.SetSpriteAnimation(HPZEmerald->aniFrames, 1, &entity->animator2, true, 0);
+        self->startPos.x    = self->position.x;
+        self->startPos.y    = self->position.y;
+        self->active        = ACTIVE_BOUNDS;
+        self->updateRange.x = 0x800000;
+        self->updateRange.y = 0x800000;
+        self->onGround      = true;
+        if (self->type) {
+            RSDK.SetSpriteAnimation(HPZEmerald->aniFrames, 1, &self->animator2, true, 0);
         }
         else {
-            RSDK.SetSpriteAnimation(HPZEmerald->aniFrames, 0, &entity->animator2, true, 0);
-            RSDK.SetSpriteAnimation(HPZEmerald->aniFrames, 0, &entity->animator, true, 1);
+            RSDK.SetSpriteAnimation(HPZEmerald->aniFrames, 0, &self->animator2, true, 0);
+            RSDK.SetSpriteAnimation(HPZEmerald->aniFrames, 0, &self->animator, true, 1);
         }
-        entity->hitbox = RSDK.GetHitbox(&entity->animator2, 0);
+        self->hitbox = RSDK.GetHitbox(&self->animator2, 0);
     }
 }
 
@@ -95,20 +95,20 @@ void HPZEmerald_EditorDraw(void)
 {
     RSDK_THIS(HPZEmerald);
 
-    entity->solid = false;
-    switch (entity->type) {
+    self->solid = false;
+    switch (self->type) {
         case HPZEMERALD_MASTER:
         default:
-        case HPZEMERALD_EMERALD_LOW: entity->solid = true; break;
-        case HPZEMERALD_EMERALD_HIGH: entity->solid = true; break;
+        case HPZEMERALD_EMERALD_LOW: self->solid = true; break;
+        case HPZEMERALD_EMERALD_HIGH: self->solid = true; break;
     }
 
-    if (entity->type) {
-        RSDK.SetSpriteAnimation(HPZEmerald->aniFrames, 1, &entity->animator2, true, 0);
+    if (self->type) {
+        RSDK.SetSpriteAnimation(HPZEmerald->aniFrames, 1, &self->animator2, true, 0);
     }
     else {
-        RSDK.SetSpriteAnimation(HPZEmerald->aniFrames, 0, &entity->animator2, true, 0);
-        RSDK.SetSpriteAnimation(HPZEmerald->aniFrames, 0, &entity->animator, true, 1);
+        RSDK.SetSpriteAnimation(HPZEmerald->aniFrames, 0, &self->animator2, true, 0);
+        RSDK.SetSpriteAnimation(HPZEmerald->aniFrames, 0, &self->animator, true, 1);
     }
 
     HPZEmerald_Draw();

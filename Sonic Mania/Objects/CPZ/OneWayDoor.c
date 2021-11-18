@@ -5,8 +5,8 @@ ObjectOneWayDoor *OneWayDoor;
 void OneWayDoor_Update(void)
 {
     RSDK_THIS(OneWayDoor);
-    StateMachine_Run(entity->state);
-    RSDK.ProcessAnimation(&entity->animator);
+    StateMachine_Run(self->state);
+    RSDK.ProcessAnimation(&self->animator);
 }
 
 void OneWayDoor_LateUpdate(void) {}
@@ -16,29 +16,29 @@ void OneWayDoor_StaticUpdate(void) {}
 void OneWayDoor_Draw(void)
 {
     RSDK_THIS(OneWayDoor);
-    StateMachine_Run(entity->drawState);
+    StateMachine_Run(self->drawState);
 }
 
 void OneWayDoor_Create(void *data)
 {
     RSDK_THIS(OneWayDoor);
-    entity->active        = ACTIVE_BOUNDS;
-    entity->visible       = true;
-    entity->updateRange.x = 0x1000000;
-    entity->updateRange.y = 0x1000000;
-    entity->state         = OneWayDoor_State_MoveDown;
-    entity->drawOrder     = Zone->drawOrderHigh - 2;
-    RSDK.SetSpriteAnimation(OneWayDoor->animID, 0, &entity->animator, true, 0);
+    self->active        = ACTIVE_BOUNDS;
+    self->visible       = true;
+    self->updateRange.x = 0x1000000;
+    self->updateRange.y = 0x1000000;
+    self->state         = OneWayDoor_State_MoveDown;
+    self->drawOrder     = Zone->drawOrderHigh - 2;
+    RSDK.SetSpriteAnimation(OneWayDoor->animID, 0, &self->animator, true, 0);
     if (RSDK.CheckStageFolder("MMZ")) {
 #if RETRO_USE_PLUS
-        RSDK.SetSpriteAnimation(OneWayDoor->animID, entity->direction ? 4 : 2, &entity->animator, true, 0);
+        RSDK.SetSpriteAnimation(OneWayDoor->animID, self->direction ? 4 : 2, &self->animator, true, 0);
 #endif
-        entity->drawState = OneWayDoor_MMZDraw;
-        entity->groundVel = 0x60000;
+        self->drawState = OneWayDoor_MMZDraw;
+        self->groundVel = 0x60000;
     }
     else if (RSDK.CheckStageFolder("CPZ")) {
-        entity->drawState = OneWayDoor_CPZDraw;
-        entity->groundVel = 0x80000;
+        self->drawState = OneWayDoor_CPZDraw;
+        self->groundVel = 0x80000;
     }
 }
 
@@ -67,40 +67,40 @@ void OneWayDoor_StageLoad(void)
 void OneWayDoor_Interact(void)
 {
     RSDK_THIS(OneWayDoor);
-    entity->state = OneWayDoor_State_MoveDown;
+    self->state = OneWayDoor_State_MoveDown;
     bool32 isMMZ1 = false;
     if (RSDK.CheckStageFolder("MMZ") && Zone->actID == 1)
         isMMZ1 = true;
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     bool32 playerIsBehind = false;
-    if (entity->direction == FLIP_X)
-        playerIsBehind = player1->position.x >= entity->position.x;
-    else if (!entity->direction)
-        playerIsBehind = player1->position.x <= entity->position.x;
+    if (self->direction == FLIP_X)
+        playerIsBehind = player1->position.x >= self->position.x;
+    else if (!self->direction)
+        playerIsBehind = player1->position.x <= self->position.x;
 
     foreach_active(Player, currentPlayer)
     {
-        int32 yChange = entity->yChange;
-        if (entity->drawState != OneWayDoor_MMZDraw)
+        int32 yChange = self->yChange;
+        if (self->drawState != OneWayDoor_MMZDraw)
             yChange *= 2;
 
-        entity->position.y -= yChange;
-        Player_CheckCollisionBox(currentPlayer, entity, &OneWayDoor->hitbox1);
-        if (entity->drawState == OneWayDoor_MMZDraw)
-            entity->position.y += 2 * entity->yChange;
+        self->position.y -= yChange;
+        Player_CheckCollisionBox(currentPlayer, self, &OneWayDoor->hitbox1);
+        if (self->drawState == OneWayDoor_MMZDraw)
+            self->position.y += 2 * self->yChange;
 
-        Player_CheckCollisionBox(currentPlayer, entity, &OneWayDoor->hitbox2);
-        if (entity->drawState == OneWayDoor_MMZDraw)
-            entity->position.y -= entity->yChange;
+        Player_CheckCollisionBox(currentPlayer, self, &OneWayDoor->hitbox2);
+        if (self->drawState == OneWayDoor_MMZDraw)
+            self->position.y -= self->yChange;
         else
-            entity->position.y += 2 * entity->yChange;
+            self->position.y += 2 * self->yChange;
 
         if (currentPlayer->velocity.x < 0x60000)
             OneWayDoor->touchBox.left = -64;
         else
             OneWayDoor->touchBox.left = -88;
 
-        if (Player_CheckCollisionTouch(currentPlayer, entity, &OneWayDoor->touchBox)) {
+        if (Player_CheckCollisionTouch(currentPlayer, self, &OneWayDoor->touchBox)) {
 #if RETRO_USE_PLUS
             if (isMMZ1 && currentPlayer->sidekick && !playerIsBehind) {
                 Player->cantSwap = true;
@@ -108,7 +108,7 @@ void OneWayDoor_Interact(void)
             }
             else
 #endif
-                entity->state = OneWayDoor_State_MoveUp;
+                self->state = OneWayDoor_State_MoveUp;
             
         }
     }
@@ -117,16 +117,16 @@ void OneWayDoor_Interact(void)
 void OneWayDoor_State_MoveDown(void)
 {
     RSDK_THIS(OneWayDoor);
-    if (entity->yChange > 0)
-        entity->yChange -= entity->groundVel;
+    if (self->yChange > 0)
+        self->yChange -= self->groundVel;
     OneWayDoor_Interact();
 }
 
 void OneWayDoor_State_MoveUp(void)
 {
     RSDK_THIS(OneWayDoor);
-    if (entity->yChange < 0x200000)
-        entity->yChange += entity->groundVel;
+    if (self->yChange < 0x200000)
+        self->yChange += self->groundVel;
     OneWayDoor_Interact();
 }
 
@@ -134,27 +134,27 @@ void OneWayDoor_MMZDraw(void)
 {
     RSDK_THIS(OneWayDoor);
 
-    entity->position.y -= entity->yChange;
-    RSDK.DrawSprite(&entity->animator, NULL, false);
+    self->position.y -= self->yChange;
+    RSDK.DrawSprite(&self->animator, NULL, false);
 
-    entity->position.y += 2 * entity->yChange + 0x200000;
-    RSDK.DrawSprite(&entity->animator, NULL, false);
+    self->position.y += 2 * self->yChange + 0x200000;
+    RSDK.DrawSprite(&self->animator, NULL, false);
 
-    entity->position.y += -0x200000 - entity->yChange;
+    self->position.y += -0x200000 - self->yChange;
 }
 
 void OneWayDoor_CPZDraw(void)
 {
     RSDK_THIS(OneWayDoor);
 
-    entity->animator.frameID = 0;
-    entity->position.y -= 2 * entity->yChange;
-    RSDK.DrawSprite(&entity->animator, NULL, false);
+    self->animator.frameID = 0;
+    self->position.y -= 2 * self->yChange;
+    RSDK.DrawSprite(&self->animator, NULL, false);
 
-    entity->animator.frameID = 1;
-    RSDK.DrawSprite(&entity->animator, NULL, false);
+    self->animator.frameID = 1;
+    RSDK.DrawSprite(&self->animator, NULL, false);
 
-    entity->position.y += 2 * entity->yChange;
+    self->position.y += 2 * self->yChange;
 }
 
 #if RETRO_INCLUDE_EDITOR
@@ -163,11 +163,11 @@ void OneWayDoor_EditorDraw(void)
     RSDK_THIS(OneWayDoor);
 
     if (RSDK.CheckStageFolder("MMZ")) {
-        RSDK.SetSpriteAnimation(OneWayDoor->animID, entity->direction ? 4 : 2, &entity->animator, true, 0);
+        RSDK.SetSpriteAnimation(OneWayDoor->animID, self->direction ? 4 : 2, &self->animator, true, 0);
         OneWayDoor_MMZDraw();
     }
     else if (RSDK.CheckStageFolder("CPZ")) {
-        RSDK.SetSpriteAnimation(OneWayDoor->animID, 0, &entity->animator, true, 0);
+        RSDK.SetSpriteAnimation(OneWayDoor->animID, 0, &self->animator, true, 0);
         OneWayDoor_CPZDraw();
     }
 }

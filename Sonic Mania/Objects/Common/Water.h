@@ -126,7 +126,7 @@ void Water_State_Palette(void);
 void Water_State_Tint(void);
 void Water_State_Splash(void);
 void Water_Unknown4(void);
-void Water_HCZBubbleBurst(EntityWater *entity, bool32 jumpedOut);
+void Water_HCZBubbleBurst(EntityWater *self, bool32 jumpedOut);
 void Water_State_Bubble(void);
 void Water_Unknown6(void);
 void Water_State_HCZBubble(void);

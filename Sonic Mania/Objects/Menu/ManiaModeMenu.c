@@ -193,11 +193,11 @@ void ManiaModeMenu_ReturnToTitle(void)
 void ManiaModeMenu_Unknown13(void)
 {
     RSDK_THIS(MenuSetup);
-    entity->fadeTimer = entity->timer << ((entity->field_68 & 0xFF) - 1);
-    if (entity->fadeTimer >= 512)
-        entity->fadeTimer = 512;
-    else if (entity->fadeTimer < 0)
-        entity->fadeTimer = 0;
+    self->fadeTimer = self->timer << ((self->field_68 & 0xFF) - 1);
+    if (self->fadeTimer >= 512)
+        self->fadeTimer = 512;
+    else if (self->fadeTimer < 0)
+        self->fadeTimer = 0;
 }
 
 void ManiaModeMenu_Unknown3(void)

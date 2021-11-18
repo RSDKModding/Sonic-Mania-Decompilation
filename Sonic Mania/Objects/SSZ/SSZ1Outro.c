@@ -7,11 +7,11 @@ void SSZ1Outro_Update(void)
     void *states[] = { SSZ1Outro_CutsceneState_Unknown1, SSZ1Outro_CutsceneState_Unknown2, NULL };
 
     RSDK_THIS(SSZ1Outro);
-    if (!entity->activated) {
-        entity->activated = true;
+    if (!self->activated) {
+        self->activated = true;
         if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->objectID)
             RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->skipType = SKIPTYPE_RELOADSCN;
-        CutsceneSeq_StartSequence((Entity *)entity, states);
+        CutsceneSeq_StartSequence((Entity *)self, states);
     }
 }
 
@@ -25,9 +25,9 @@ void SSZ1Outro_Create(void *data)
 {
     RSDK_THIS(SSZ1Outro);
 
-    INIT_ENTITY(entity);
-    CutsceneRules_SetupEntity(entity, &entity->size, &entity->hitbox);
-    entity->active = ACTIVE_NEVER;
+    INIT_ENTITY(self);
+    CutsceneRules_SetupEntity(self, &self->size, &self->hitbox);
+    self->active = ACTIVE_NEVER;
 }
 
 void SSZ1Outro_StageLoad(void)
@@ -45,20 +45,20 @@ bool32 SSZ1Outro_CutsceneState_Unknown1(EntityCutsceneSeq *host)
     if (!host->timer) {
         foreach_all(FXFade, fxFade)
         {
-            if (MathHelpers_PointInHitbox(entity->direction, entity->position.x, entity->position.y, &entity->hitbox, fxFade->position.x,
+            if (MathHelpers_PointInHitbox(self->direction, self->position.x, self->position.y, &self->hitbox, fxFade->position.x,
                                      fxFade->position.y)) {
                 SSZ1Outro->fxFade = fxFade;
                 foreach_break;
             }
         }
 
-        Zone->screenBoundsR1[0]     = entity->hitbox.right + (entity->position.x >> 16);
+        Zone->screenBoundsR1[0]     = self->hitbox.right + (self->position.x >> 16);
         Zone->playerBoundActiveR[0] = false;
-        Zone->screenBoundsR1[1]     = entity->hitbox.right + (entity->position.x >> 16);
+        Zone->screenBoundsR1[1]     = self->hitbox.right + (self->position.x >> 16);
         Zone->playerBoundActiveR[1] = false;
-        Zone->screenBoundsR1[2]     = entity->hitbox.right + (entity->position.x >> 16);
+        Zone->screenBoundsR1[2]     = self->hitbox.right + (self->position.x >> 16);
         Zone->playerBoundActiveR[2] = false;
-        Zone->screenBoundsR1[3]     = entity->hitbox.right + (entity->position.x >> 16);
+        Zone->screenBoundsR1[3]     = self->hitbox.right + (self->position.x >> 16);
         Zone->playerBoundActiveR[3] = false;
 
         CutsceneSeq_LockAllPlayerControl();
@@ -109,7 +109,7 @@ bool32 SSZ1Outro_CutsceneState_Unknown1(EntityCutsceneSeq *host)
         player1->jumpHold  = true;
         host->field_6C[0]  = 1;
     }
-    return player1->position.x >= entity->position.x + (entity->hitbox.right << 16);
+    return player1->position.x >= self->position.x + (self->hitbox.right << 16);
 }
 bool32 SSZ1Outro_CutsceneState_Unknown2(EntityCutsceneSeq *host)
 {
@@ -144,7 +144,7 @@ void SSZ1Outro_Unknown4(void)
 void SSZ1Outro_EditorDraw(void)
 {
     RSDK_THIS(SSZ1Outro);
-    CutsceneRules_DrawCutsceneBounds(entity, &entity->size);
+    CutsceneRules_DrawCutsceneBounds(self, &self->size);
 }
 
 void SSZ1Outro_EditorLoad(void) {}

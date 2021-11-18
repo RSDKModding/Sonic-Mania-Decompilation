@@ -6,12 +6,12 @@ void LRZConvControl_Update(void)
 {
     RSDK_THIS(LRZConvControl);
 
-    switch (entity->triggerMode) {
+    switch (self->triggerMode) {
         case LRZCONVCTRL_TRIGGER_PLAYER: LRZConvControl_HandlePlayerTrigger(); break;
         case LRZCONVCTRL_TRIGGER_BUTTON: LRZConvControl_HandleButtonTrigger(); break;
     }
 
-    entity->visible = DebugMode->debugActive;
+    self->visible = DebugMode->debugActive;
 }
 
 void LRZConvControl_LateUpdate(void) {}
@@ -22,15 +22,15 @@ void LRZConvControl_Draw(void)
 {
     RSDK_THIS(LRZConvControl);
 
-    RSDK.SetSpriteAnimation(LRZConvControl->aniFrames, 0, &entity->animator, true, 0);
-    RSDK.DrawSprite(&entity->animator, NULL, false);
+    RSDK.SetSpriteAnimation(LRZConvControl->aniFrames, 0, &self->animator, true, 0);
+    RSDK.DrawSprite(&self->animator, NULL, false);
 
-    if (entity->triggerMode == LRZCONVCTRL_TRIGGER_PLAYER) {
-        entity->hitbox.left   = -entity->hitboxSize.x >> 17;
-        entity->hitbox.top    = -entity->hitboxSize.y >> 17;
-        entity->hitbox.right  = entity->hitboxSize.x >> 17;
-        entity->hitbox.bottom = entity->hitboxSize.y >> 17;
-        DrawHelpers_DrawHitboxOutline(0xFFFFFF, entity->direction, entity->position.x, entity->position.y, &entity->hitbox);
+    if (self->triggerMode == LRZCONVCTRL_TRIGGER_PLAYER) {
+        self->hitbox.left   = -self->hitboxSize.x >> 17;
+        self->hitbox.top    = -self->hitboxSize.y >> 17;
+        self->hitbox.right  = self->hitboxSize.x >> 17;
+        self->hitbox.bottom = self->hitboxSize.y >> 17;
+        DrawHelpers_DrawHitboxOutline(0xFFFFFF, self->direction, self->position.x, self->position.y, &self->hitbox);
     }
 }
 
@@ -38,23 +38,23 @@ void LRZConvControl_Create(void *data)
 {
     RSDK_THIS(LRZConvControl);
 
-    entity->active        = ACTIVE_BOUNDS;
-    entity->drawOrder     = Zone->drawOrderLow;
-    entity->visible       = true;
-    entity->drawFX        = FX_FLIP;
-    entity->updateRange.x = 0x800000;
-    entity->updateRange.y = 0x800000;
+    self->active        = ACTIVE_BOUNDS;
+    self->drawOrder     = Zone->drawOrderLow;
+    self->visible       = true;
+    self->drawFX        = FX_FLIP;
+    self->updateRange.x = 0x800000;
+    self->updateRange.y = 0x800000;
 
-    switch (entity->triggerMode) {
+    switch (self->triggerMode) {
         case LRZCONVCTRL_TRIGGER_PLAYER:
-            entity->hitbox.left   = -entity->hitboxSize.x >> 17;
-            entity->hitbox.top    = -entity->hitboxSize.y >> 17;
-            entity->hitbox.right  = entity->hitboxSize.x >> 17;
-            entity->hitbox.bottom = entity->hitboxSize.y >> 17;
-            entity->updateRange.x += entity->hitboxSize.x;
-            entity->updateRange.y += entity->hitboxSize.y;
+            self->hitbox.left   = -self->hitboxSize.x >> 17;
+            self->hitbox.top    = -self->hitboxSize.y >> 17;
+            self->hitbox.right  = self->hitboxSize.x >> 17;
+            self->hitbox.bottom = self->hitboxSize.y >> 17;
+            self->updateRange.x += self->hitboxSize.x;
+            self->updateRange.y += self->hitboxSize.y;
             break;
-        case LRZCONVCTRL_TRIGGER_BUTTON: entity->taggedButton = LRZ2Setup_HandleTagSetup(entity->buttonTag, (Entity *)entity); break;
+        case LRZCONVCTRL_TRIGGER_BUTTON: self->taggedButton = LRZ2Setup_HandleTagSetup(self->buttonTag, (Entity *)self); break;
     }
 }
 
@@ -68,26 +68,26 @@ void LRZConvControl_HandlePlayerTrigger(void)
     foreach_active(Player, player)
     {
         int playerID    = RSDK.GetEntityID(player);
-        bool32 collided = Player_CheckCollisionTouch(player, entity, &entity->hitbox);
+        bool32 collided = Player_CheckCollisionTouch(player, self, &self->hitbox);
 
-        if ((1 << playerID) & entity->activePlayers) {
+        if ((1 << playerID) & self->activePlayers) {
             if (!collided)
-                entity->activePlayers &= ~(1 << playerID);
+                self->activePlayers &= ~(1 << playerID);
         }
         else {
             if (collided) {
                 if (!player->sidekick)
                     flag = true;
-                entity->activePlayers |= (1 << playerID);
+                self->activePlayers |= (1 << playerID);
             }
         }
     }
 
     if (flag) {
-        switch (entity->behavior) {
-            case LRZCONVCTRL_BEHAVIOR_ONOFF_SET: LRZ2Setup->conveyorOff = entity->flipVal; break;
+        switch (self->behavior) {
+            case LRZCONVCTRL_BEHAVIOR_ONOFF_SET: LRZ2Setup->conveyorOff = self->flipVal; break;
             case LRZCONVCTRL_BEHAVIOR_ONOFF_SWAP: LRZ2Setup->conveyorOff = !LRZ2Setup->conveyorOff; break;
-            case LRZCONVCTRL_BEHAVIOR_CHANGEDIR_SET: LRZ2Setup->conveyorDir = entity->flipVal; break;
+            case LRZCONVCTRL_BEHAVIOR_CHANGEDIR_SET: LRZ2Setup->conveyorDir = self->flipVal; break;
             case LRZCONVCTRL_BEHAVIOR_CHANGEDIR_SWAP: LRZ2Setup->conveyorDir = !LRZ2Setup->conveyorDir; break;
             default: break;
         }
@@ -98,27 +98,27 @@ void LRZConvControl_HandleButtonTrigger(void)
 {
     RSDK_THIS(LRZConvControl);
 
-    if (entity->buttonTag) {
-        EntityButton *button = entity->taggedButton;
+    if (self->buttonTag) {
+        EntityButton *button = self->taggedButton;
         if (button) {
-            switch (entity->behavior) {
+            switch (self->behavior) {
                 case LRZCONVCTRL_BEHAVIOR_ONOFF_SET:
                     if (button->field_64)
-                        LRZ2Setup->conveyorOff = entity->flipVal;
+                        LRZ2Setup->conveyorOff = self->flipVal;
                     break;
                 case LRZCONVCTRL_BEHAVIOR_ONOFF_SWAP:
-                    if (entity->field_75 != button->field_68)
+                    if (self->field_75 != button->field_68)
                         LRZ2Setup->conveyorOff = !LRZ2Setup->conveyorOff;
-                    entity->field_75 = button->field_68;
+                    self->field_75 = button->field_68;
                     break;
                 case LRZCONVCTRL_BEHAVIOR_CHANGEDIR_SET:
                     if (button->field_64)
-                        LRZ2Setup->conveyorDir = entity->flipVal;
+                        LRZ2Setup->conveyorDir = self->flipVal;
                     break;
                 case LRZCONVCTRL_BEHAVIOR_CHANGEDIR_SWAP:
-                    if (button->field_68 != entity->field_75)
+                    if (button->field_68 != self->field_75)
                         LRZ2Setup->conveyorDir = !LRZ2Setup->conveyorDir;
-                    entity->field_75 = button->field_68;
+                    self->field_75 = button->field_68;
                     break;
                 default: break;
             }

@@ -7,13 +7,13 @@ void UIPopover_Update(void)
 {
     RSDK_THIS(UIPopover);
 
-    StateMachine_Run(entity->state);
+    StateMachine_Run(self->state);
 
     UIPopover_SetupButtonPositions();
 
-    if (entity->timer2 > 0) {
-        entity->timer2--;
-        if (!entity->timer2)
+    if (self->timer2 > 0) {
+        self->timer2--;
+        if (!self->timer2)
             UIPopover_BackPressCB();
     }
 }
@@ -27,10 +27,10 @@ void UIPopover_Draw(void) { UIPopover_DrawSprites(); }
 void UIPopover_Create(void *data)
 {
     RSDK_THIS(UIPopover);
-    entity->active      = ACTIVE_ALWAYS;
-    entity->drawOrder   = 14;
-    entity->visible     = true;
-    entity->buttonCount = 0;
+    self->active      = ACTIVE_ALWAYS;
+    self->drawOrder   = 14;
+    self->visible     = true;
+    self->buttonCount = 0;
 }
 
 void UIPopover_StageLoad(void)
@@ -158,16 +158,16 @@ void UIPopover_DrawSprites(void)
 {
     RSDK_THIS(UIPopover);
 
-    RSDK.DrawRect(entity->position.x + 0x30000 - (entity->size.x >> 1), entity->position.y + 0x30000 - (entity->size.y >> 1), entity->size.x,
-                  entity->size.y, 0, 255, INK_BLEND, false);
-    RSDK.DrawRect(entity->position.x - (entity->size.x >> 1), entity->position.y - (entity->size.y >> 1), entity->size.x, entity->size.y, 0x30A0F0,
+    RSDK.DrawRect(self->position.x + 0x30000 - (self->size.x >> 1), self->position.y + 0x30000 - (self->size.y >> 1), self->size.x,
+                  self->size.y, 0, 255, INK_BLEND, false);
+    RSDK.DrawRect(self->position.x - (self->size.x >> 1), self->position.y - (self->size.y >> 1), self->size.x, self->size.y, 0x30A0F0,
                   255, INK_NONE, false);
 
-    if (entity->field_C8 == 1) {
-        int32 x = entity->position.x + 0x30000;
-        int32 y = (entity->size.y >> 1) + entity->position.y + 0x30000;
+    if (self->field_C8 == 1) {
+        int32 x = self->position.x + 0x30000;
+        int32 y = (self->size.y >> 1) + self->position.y + 0x30000;
         UIWidgets_Unknown6(1, 0, 0, 0, 1, x, y);
-        UIWidgets_Unknown6(entity->field_C8, 48, 160, 240, 0, x - 0x30000, y - 0x30000);
+        UIWidgets_Unknown6(self->field_C8, 48, 160, 240, 0, x - 0x30000, y - 0x30000);
     }
 }
 
@@ -176,14 +176,14 @@ void UIPopover_SetupButtonPositions(void)
     RSDK_THIS(UIPopover);
     int32 offsets[] = { 0, 0, 24, 24, 24 };
 
-    int32 posX    = entity->position.x;
-    int32 offsetY = offsets[entity->buttonCount] << 16;
+    int32 posX    = self->position.x;
+    int32 offsetY = offsets[self->buttonCount] << 16;
 
-    int32 posY = entity->position.y - ((offsetY * maxVal(entity->buttonCount - 1, 0)) >> 1);
+    int32 posY = self->position.y - ((offsetY * maxVal(self->buttonCount - 1, 0)) >> 1);
     for (int32 b = 0; b < 4; ++b) {
-        if (!entity->buttons[b])
+        if (!self->buttons[b])
             break;
-        EntityUIButton *button = entity->buttons[b];
+        EntityUIButton *button = self->buttons[b];
         button->position.x     = posX;
         button->position.y     = posY;
         button->posUnknown2.x  = posX;
@@ -196,15 +196,15 @@ void UIPopover_Close(void)
 {
     RSDK_THIS(UIPopover);
 
-    EntityUIControl *parent = (EntityUIControl *)entity->parent;
+    EntityUIControl *parent = (EntityUIControl *)self->parent;
     if (parent) {
         UIControl_Unknown6(parent);
         destroyEntity(parent);
     }
 
     for (int32 i = 0; i < 3; ++i) {
-        if (entity->buttons[i])
-            destroyEntity(entity->buttons[i]);
+        if (self->buttons[i])
+            destroyEntity(self->buttons[i]);
     }
 
     EntityUIControl *control = UIPopover->storedControl;
@@ -215,9 +215,9 @@ void UIPopover_Close(void)
     }
     UIPopover->storedControl      = NULL;
     UIPopover->storedControlState = NULL;
-    StateMachine_Run(entity->unknownCallback);
+    StateMachine_Run(self->unknownCallback);
     UIPopover->activeEntity = NULL;
-    destroyEntity(entity);
+    destroyEntity(self);
 }
 
 bool32 UIPopover_BackPressCB(void)
@@ -261,16 +261,16 @@ void UIPopover_Unknown9(void)
 {
     RSDK_THIS(UIPopover);
 
-    if (entity->timer == 1) {
+    if (self->timer == 1) {
         RSDK.PlaySfx(UIWidgets->sfxWoosh, false, 255);
-        EntityUIControl *control = (EntityUIControl *)entity->parent;
+        EntityUIControl *control = (EntityUIControl *)self->parent;
         UIControl_Unknown12((Entity *)control);
         control->selectionDisabled = false;
-        entity->timer              = 0;
-        entity->state              = UIPopover_Unknown10;
+        self->timer              = 0;
+        self->state              = UIPopover_Unknown10;
     }
     else {
-        entity->timer++;
+        self->timer++;
     }
 }
 

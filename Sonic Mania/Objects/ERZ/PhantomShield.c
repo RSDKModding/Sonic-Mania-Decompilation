@@ -6,15 +6,15 @@ void PhantomShield_Update(void)
 {
     RSDK_THIS(PhantomShield);
 
-    if (entity->parent) {
-        entity->position.x = entity->parent->position.x;
-        entity->position.y = entity->parent->position.y;
+    if (self->parent) {
+        self->position.x = self->parent->position.x;
+        self->position.y = self->parent->position.y;
     }
 
-    if (entity->blendAmount > 0)
-        entity->blendAmount -= 0x20;
+    if (self->blendAmount > 0)
+        self->blendAmount -= 0x20;
 
-    StateMachine_Run(entity->state);
+    StateMachine_Run(self->state);
 }
 
 void PhantomShield_LateUpdate(void) {}
@@ -25,11 +25,11 @@ void PhantomShield_Draw(void)
 {
     RSDK_THIS(PhantomShield);
 
-    if (entity->blendAmount > 0)
-        RSDK.SetLimitedFade(0, 1, 3, entity->blendAmount, 136, 143);
-    entity->direction = RSDK.GetFrameID(&entity->animator) != 98 ? 0 : 2;
-    RSDK.DrawSprite(&entity->animator, 0, false);
-    if (entity->blendAmount > 0)
+    if (self->blendAmount > 0)
+        RSDK.SetLimitedFade(0, 1, 3, self->blendAmount, 136, 143);
+    self->direction = RSDK.GetFrameID(&self->animator) != 98 ? 0 : 2;
+    RSDK.DrawSprite(&self->animator, 0, false);
+    if (self->blendAmount > 0)
         RSDK.CopyPalette(1, 136, 0, 136, 8);
 }
 
@@ -38,19 +38,19 @@ void PhantomShield_Create(void *data)
     RSDK_THIS(PhantomShield);
 
     if (!SceneInfo->inEditor) {
-        entity->visible       = true;
-        entity->drawOrder     = Zone->drawOrderLow;
-        entity->parent        = (Entity *)data;
-        entity->active        = ACTIVE_NORMAL;
-        entity->drawFX        = FX_FLIP;
-        entity->inkEffect     = INK_ADD;
-        entity->alpha         = 0x100;
-        entity->scale.x       = 0x200;
-        entity->scale.y       = 0x200;
-        entity->updateRange.x = 0x800000;
-        entity->updateRange.y = 0x800000;
-        entity->state         = PhantomShield_Unknown1;
-        RSDK.SetSpriteAnimation(PhantomShield->aniFrames, 0, &entity->animator, true, 0);
+        self->visible       = true;
+        self->drawOrder     = Zone->drawOrderLow;
+        self->parent        = (Entity *)data;
+        self->active        = ACTIVE_NORMAL;
+        self->drawFX        = FX_FLIP;
+        self->inkEffect     = INK_ADD;
+        self->alpha         = 0x100;
+        self->scale.x       = 0x200;
+        self->scale.y       = 0x200;
+        self->updateRange.x = 0x800000;
+        self->updateRange.y = 0x800000;
+        self->state         = PhantomShield_Unknown1;
+        RSDK.SetSpriteAnimation(PhantomShield->aniFrames, 0, &self->animator, true, 0);
     }
 }
 
@@ -68,16 +68,16 @@ void PhantomShield_Unknown1(void)
 {
     RSDK_THIS(PhantomShield);
 
-    RSDK.ProcessAnimation(&entity->animator);
-    if (!entity->shieldActive) {
-        entity->shieldActive = true;
+    RSDK.ProcessAnimation(&self->animator);
+    if (!self->shieldActive) {
+        self->shieldActive = true;
         RSDK.PlaySfx(PhantomEgg->sfxShield, false, 255);
     }
 
-    if (entity->animator.frameID == entity->animator.frameCount - 1) {
-        RSDK.SetSpriteAnimation(PhantomShield->aniFrames, 1, &entity->animator, true, 0);
-        entity->shieldActive = false;
-        entity->state        = PhantomShield_Unknown2;
+    if (self->animator.frameID == self->animator.frameCount - 1) {
+        RSDK.SetSpriteAnimation(PhantomShield->aniFrames, 1, &self->animator, true, 0);
+        self->shieldActive = false;
+        self->state        = PhantomShield_Unknown2;
     }
 }
 
@@ -85,22 +85,22 @@ void PhantomShield_Unknown2(void)
 {
     RSDK_THIS(PhantomShield);
 
-    RSDK.ProcessAnimation(&entity->animator);
+    RSDK.ProcessAnimation(&self->animator);
 
     foreach_active(Player, player)
     {
-        if (entity->playerTimer[player->playerID])
-            entity->playerTimer[player->playerID]--;
+        if (self->playerTimer[player->playerID])
+            self->playerTimer[player->playerID]--;
 
-        if (Player_CheckCollisionTouch(player, entity, &PhantomShield->hitbox)) {
-            if (Player_CheckAttacking(player, entity)) {
-                entity->blendAmount = 256;
-                if (!entity->playerTimer[player->playerID]) {
+        if (Player_CheckCollisionTouch(player, self, &PhantomShield->hitbox)) {
+            if (Player_CheckAttacking(player, self)) {
+                self->blendAmount = 256;
+                if (!self->playerTimer[player->playerID]) {
                     RSDK.PlaySfx(PhantomEgg->sfxRepel, false, 255);
-                    entity->playerTimer[player->playerID] = 16;
+                    self->playerTimer[player->playerID] = 16;
                 }
 
-                int angle = RSDK.ATan2(player->position.x - entity->position.x, player->position.y - entity->position.y);
+                int angle = RSDK.ATan2(player->position.x - self->position.x, player->position.y - self->position.y);
                 int velX  = 0x500 * RSDK.Cos256(angle);
                 int velY  = 0x500 * RSDK.Sin256(angle);
 
@@ -128,7 +128,7 @@ void PhantomShield_Unknown2(void)
                 player->tileCollisions = true;
             }
             else {
-                Player_CheckHit(player, entity);
+                Player_CheckHit(player, self);
             }
         }
     }
@@ -138,9 +138,9 @@ void PhantomShield_Unknown3(void)
 {
     RSDK_THIS(PhantomShield);
 
-    RSDK.ProcessAnimation(&entity->animator);
-    if (entity->animator.frameID == entity->animator.frameCount - 1)
-        destroyEntity(entity);
+    RSDK.ProcessAnimation(&self->animator);
+    if (self->animator.frameID == self->animator.frameCount - 1)
+        destroyEntity(self);
 }
 
 #if RETRO_INCLUDE_EDITOR

@@ -6,7 +6,7 @@ void BSS_Message_Update(void)
 {
     RSDK_THIS(BSS_Message);
 
-    StateMachine_Run(entity->state);
+    StateMachine_Run(self->state);
 }
 
 void BSS_Message_LateUpdate(void) {}
@@ -18,43 +18,43 @@ void BSS_Message_Draw(void)
     RSDK_THIS(BSS_Message);
     Vector2 drawPos;
 
-    drawPos.x = (ScreenInfo->centerX - entity->timer2) << 16;
+    drawPos.x = (ScreenInfo->centerX - self->timer2) << 16;
     drawPos.y = 0x680000;
-    RSDK.DrawSprite(&entity->leftData, &drawPos, true);
+    RSDK.DrawSprite(&self->leftData, &drawPos, true);
 
-    drawPos.x = (ScreenInfo->centerX + entity->timer2) << 16;
-    RSDK.DrawSprite(&entity->rightData, &drawPos, true);
-    if (entity->flag)
-        RSDK.FillScreen(entity->colour, entity->timer, entity->timer - 128, entity->timer - 256);
+    drawPos.x = (ScreenInfo->centerX + self->timer2) << 16;
+    RSDK.DrawSprite(&self->rightData, &drawPos, true);
+    if (self->flag)
+        RSDK.FillScreen(self->colour, self->timer, self->timer - 128, self->timer - 256);
 }
 
 void BSS_Message_Create(void *data)
 {
     RSDK_THIS(BSS_Message);
     if (!SceneInfo->inEditor) {
-        entity->active    = ACTIVE_NORMAL;
-        entity->visible   = 1;
-        entity->drawOrder = 15;
+        self->active    = ACTIVE_NORMAL;
+        self->visible   = 1;
+        self->drawOrder = 15;
 
         switch (voidToInt(data)) {
             case 0:
-                entity->flag   = true;
-                entity->colour = 0xF0F0F0;
-                entity->timer  = 512;
-                entity->state  = BSS_Message_State_GetBS;
-                RSDK.SetSpriteAnimation(BSS_Message->aniFrames, 2, &entity->leftData, true, 0);
-                RSDK.SetSpriteAnimation(BSS_Message->aniFrames, 2, &entity->rightData, true, 1);
+                self->flag   = true;
+                self->colour = 0xF0F0F0;
+                self->timer  = 512;
+                self->state  = BSS_Message_State_GetBS;
+                RSDK.SetSpriteAnimation(BSS_Message->aniFrames, 2, &self->leftData, true, 0);
+                RSDK.SetSpriteAnimation(BSS_Message->aniFrames, 2, &self->rightData, true, 1);
                 break;
             case 1:
-                entity->timer2 = 320;
-                entity->state  = BSS_Message_State_Perfect;
-                RSDK.SetSpriteAnimation(BSS_Message->aniFrames, 3, &entity->leftData, true, 0);
-                RSDK.SetSpriteAnimation(BSS_Message->aniFrames, 3, &entity->rightData, true, 1);
+                self->timer2 = 320;
+                self->state  = BSS_Message_State_Perfect;
+                RSDK.SetSpriteAnimation(BSS_Message->aniFrames, 3, &self->leftData, true, 0);
+                RSDK.SetSpriteAnimation(BSS_Message->aniFrames, 3, &self->rightData, true, 1);
                 break;
             case 2:
-                entity->flag   = true;
-                entity->colour = 0;
-                entity->state  = BSS_Message_State_Unknown;
+                self->flag   = true;
+                self->colour = 0;
+                self->state  = BSS_Message_State_Unknown;
                 break;
         }
     }
@@ -69,18 +69,18 @@ void BSS_Message_StageLoad(void)
 void BSS_Message_State_GetBS(void)
 {
     RSDK_THIS(BSS_Message);
-    if (entity->timer == 512) {
+    if (self->timer == 512) {
         Music_SetMusicTrack("BlueSpheresSPD.ogg", TRACK_STAGE, 5309957);
         Music_PlayTrack(TRACK_STAGE);
     }
 
-    if (entity->timer <= 0) {
-        entity->timer = 0;
-        entity->flag  = 0;
-        entity->state = BSS_Message_State_GetBSWait;
+    if (self->timer <= 0) {
+        self->timer = 0;
+        self->flag  = 0;
+        self->state = BSS_Message_State_GetBSWait;
     }
     else {
-        entity->timer -= 16;
+        self->timer -= 16;
     }
 }
 
@@ -97,7 +97,7 @@ void BSS_Message_State_GetBSWait(void)
             setup->globeSpeedInc = 2;
             if (player->onGround)
                 RSDK.SetSpriteAnimation(player->aniFrames, 1, &player->playerAnimator, 0, 0);
-            entity->state = BSS_Message_State_Idle;
+            self->state = BSS_Message_State_Idle;
         }
         if (!setup->globeTimer && setup->state == BSS_Setup_State_HandleStage) {
             if (player->left)
@@ -107,56 +107,56 @@ void BSS_Message_State_GetBSWait(void)
         }
     }
 
-    if (++entity->timer >= 180) {
-        entity->timer        = 0;
+    if (++self->timer >= 180) {
+        self->timer        = 0;
         setup->maxSpeed      = 16;
         setup->globeSpeed    = 16;
         setup->globeSpeedInc = 2;
         if (player->onGround)
             RSDK.SetSpriteAnimation(player->aniFrames, 1, &player->playerAnimator, 0, 0);
-        entity->state = BSS_Message_State_Finish;
+        self->state = BSS_Message_State_Finish;
     }
 }
 
 void BSS_Message_State_Unknown(void)
 {
     RSDK_THIS(BSS_Message);
-    if (entity->timer >= 768) {
-        entity->state = BSS_Message_LoadPrevScene;
+    if (self->timer >= 768) {
+        self->state = BSS_Message_LoadPrevScene;
     }
     else {
-        entity->timer += 8;
+        self->timer += 8;
     }
 }
 
 void BSS_Message_State_Perfect(void)
 {
     RSDK_THIS(BSS_Message);
-    entity->timer2 -= 16;
-    if (entity->timer2 <= 0)
-        entity->state = BSS_Message_State_Idle;
+    self->timer2 -= 16;
+    if (self->timer2 <= 0)
+        self->state = BSS_Message_State_Idle;
 }
 
 void BSS_Message_State_Idle(void)
 {
     RSDK_THIS(BSS_Message);
-    if (++entity->timer >= 180) {
-        entity->timer = 0;
-        entity->state = BSS_Message_State_Finish;
+    if (++self->timer >= 180) {
+        self->timer = 0;
+        self->state = BSS_Message_State_Finish;
     }
 }
 
 void BSS_Message_State_Finish(void)
 {
     RSDK_THIS(BSS_Message);
-    entity->timer2 += 16;
-    if (entity->timer2 > 320)
-        destroyEntity(entity);
+    self->timer2 += 16;
+    if (self->timer2 > 320)
+        destroyEntity(self);
 }
 void BSS_Message_TrackProgress_CB(int32 success)
 {
     RSDK_THIS(BSS_Message);
-    entity->field_6C = 0;
+    self->field_6C = 0;
     UIWaitSpinner_Wait2();
 }
 
@@ -164,8 +164,8 @@ void BSS_Message_LoadPrevScene(void)
 {
     RSDK_THIS(BSS_Message);
 
-    if (entity->colour) {
-        entity->colour -= 0x80808;
+    if (self->colour) {
+        self->colour -= 0x80808;
     }
     else {
         EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
@@ -186,11 +186,11 @@ void BSS_Message_LoadPrevScene(void)
                     RSDK.SetScene("Mania Mode", "");
                 SceneInfo->listPos = saveRAM->storedStageID;
                 RSDK.LoadScene();
-                entity->state = StateMachine_None;
+                self->state = StateMachine_None;
             }
             else {
-                entity->state    = BSS_Message_LoadGameState;
-                entity->field_6C = 1;
+                self->state    = BSS_Message_LoadGameState;
+                self->field_6C = 1;
                 UIWaitSpinner_Wait();
                 GameProgress_TrackGameProgress(BSS_Message_TrackProgress_CB);
             }
@@ -201,7 +201,7 @@ void BSS_Message_LoadPrevScene(void)
 void BSS_Message_LoadGameState(void)
 {
     RSDK_THIS(BSS_Message);
-    if (!entity->field_6C) {
+    if (!self->field_6C) {
         globals->blueSpheresInit = true;
         GameProgress_ShuffleBSSID();
         EntitySaveGame *saveRAM = SaveGame->saveRAM;
@@ -213,7 +213,7 @@ void BSS_Message_LoadGameState(void)
             RSDK.SetScene("Mania Mode", "");
         SceneInfo->listPos = saveRAM->storedStageID;
         RSDK.LoadScene();
-        entity->state = StateMachine_None;
+        self->state = StateMachine_None;
     }
 }
 

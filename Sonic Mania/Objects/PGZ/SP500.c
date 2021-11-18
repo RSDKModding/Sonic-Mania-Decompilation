@@ -5,7 +5,7 @@ ObjectSP500 *SP500;
 void SP500_Update(void)
 {
     RSDK_THIS(SP500);
-    StateMachine_Run(entity->state);
+    StateMachine_Run(self->state);
 }
 
 void SP500_LateUpdate(void) {}
@@ -17,81 +17,81 @@ void SP500_Draw(void)
     RSDK_THIS(SP500);
 
     Vector2 drawPos;
-    drawPos.x                = entity->position.x - 0x180000;
-    drawPos.y                = entity->position.y;
-    entity->animator.frameID = 2;
-    RSDK.DrawSprite(&entity->animator, &drawPos, false);
+    drawPos.x                = self->position.x - 0x180000;
+    drawPos.y                = self->position.y;
+    self->animator.frameID = 2;
+    RSDK.DrawSprite(&self->animator, &drawPos, false);
 
-    entity->animator.frameID = 3;
+    self->animator.frameID = 3;
     int32 pos                = drawPos.x;
-    for (int32 l = 0; l < entity->len; ++l) {
-        RSDK.DrawSprite(&entity->animator, &drawPos, false);
+    for (int32 l = 0; l < self->len; ++l) {
+        RSDK.DrawSprite(&self->animator, &drawPos, false);
         pos = drawPos.x + 0x100000;
         drawPos.x += 0x100000;
     }
 
     drawPos.x = pos - 0x100000;
-    entity->direction ^= FLIP_X;
-    entity->animator.frameID = 2;
-    RSDK.DrawSprite(&entity->animator, &drawPos, false);
+    self->direction ^= FLIP_X;
+    self->animator.frameID = 2;
+    RSDK.DrawSprite(&self->animator, &drawPos, false);
 
-    entity->direction ^= FLIP_X;
-    drawPos.x                = entity->position.x + entity->offset;
-    entity->animator.frameID = 0;
-    RSDK.DrawSprite(&entity->animator, &drawPos, false);
+    self->direction ^= FLIP_X;
+    drawPos.x                = self->position.x + self->offset;
+    self->animator.frameID = 0;
+    RSDK.DrawSprite(&self->animator, &drawPos, false);
 
-    entity->animator.frameID = 1;
-    RSDK.DrawSprite(&entity->animator, &drawPos, false);
+    self->animator.frameID = 1;
+    RSDK.DrawSprite(&self->animator, &drawPos, false);
 
-    entity->inkEffect = INK_ADD;
-    if (entity->successFlag) {
-        entity->animator.frameID = 4;
-        RSDK.DrawSprite(&entity->animator, &drawPos, false);
+    self->inkEffect = INK_ADD;
+    if (self->successFlag) {
+        self->animator.frameID = 4;
+        RSDK.DrawSprite(&self->animator, &drawPos, false);
     }
 
-    if (entity->failFlag) {
-        entity->animator.frameID = 5;
-        RSDK.DrawSprite(&entity->animator, &drawPos, false);
+    if (self->failFlag) {
+        self->animator.frameID = 5;
+        RSDK.DrawSprite(&self->animator, &drawPos, false);
     }
-    entity->inkEffect = INK_NONE;
+    self->inkEffect = INK_NONE;
 }
 
 void SP500_Create(void *data)
 {
     RSDK_THIS(SP500);
-    entity->drawFX = FX_FLIP;
+    self->drawFX = FX_FLIP;
 
     if (!SceneInfo->inEditor) {
         if (data) {
-            entity->active  = ACTIVE_NORMAL;
-            entity->visible = false;
-            entity->state   = SP500_Unknown10;
+            self->active  = ACTIVE_NORMAL;
+            self->visible = false;
+            self->state   = SP500_Unknown10;
         }
         else {
-            entity->active  = ACTIVE_BOUNDS;
-            entity->visible = true;
-            entity->offL <<= 20;
-            entity->offR <<= 20;
-            entity->drawOrder     = Zone->drawOrderHigh;
-            entity->updateRange.x = (entity->len + 4) << 20;
-            entity->updateRange.y = 0x800000;
+            self->active  = ACTIVE_BOUNDS;
+            self->visible = true;
+            self->offL <<= 20;
+            self->offR <<= 20;
+            self->drawOrder     = Zone->drawOrderHigh;
+            self->updateRange.x = (self->len + 4) << 20;
+            self->updateRange.y = 0x800000;
 
-            if (entity->startDir == 0)
-                entity->offset = entity->offL;
+            if (self->startDir == 0)
+                self->offset = self->offL;
             else
-                entity->offset = entity->offR;
+                self->offset = self->offR;
 
-            if (entity->printDir == 0)
-                entity->field_8C = entity->height - 1;
-            entity->srcC.x = entity->srcC.x >> 16;
-            entity->srcC.y = entity->srcC.y >> 16;
-            entity->srcM.x = entity->srcM.x >> 16;
-            entity->srcM.y = entity->srcM.y >> 16;
-            entity->srcY.x = entity->srcY.x >> 16;
-            entity->srcY.y = entity->srcY.y >> 16;
-            entity->alpha  = 0xC0;
-            RSDK.SetSpriteAnimation(SP500->aniFrames, 0, &entity->animator, true, 0);
-            entity->state = SP500_Unknown2;
+            if (self->printDir == 0)
+                self->field_8C = self->height - 1;
+            self->srcC.x = self->srcC.x >> 16;
+            self->srcC.y = self->srcC.y >> 16;
+            self->srcM.x = self->srcM.x >> 16;
+            self->srcM.y = self->srcM.y >> 16;
+            self->srcY.x = self->srcY.x >> 16;
+            self->srcY.y = self->srcY.y >> 16;
+            self->alpha  = 0xC0;
+            RSDK.SetSpriteAnimation(SP500->aniFrames, 0, &self->animator, true, 0);
+            self->state = SP500_Unknown2;
         }
     }
 }
@@ -122,18 +122,18 @@ void SP500_StageLoad(void)
 void SP500_Unknown1(void)
 {
     RSDK_THIS(SP500);
-    entity->position.x += entity->offset;
-    int32 offsetX = (entity->position.x & 0xFFFF0000) - (entity->xOffset & 0xFFFF0000);
-    int32 offsetY = (entity->position.y & 0xFFFF0000) - (entity->yOffset & 0xFFFF0000);
+    self->position.x += self->offset;
+    int32 offsetX = (self->position.x & 0xFFFF0000) - (self->xOffset & 0xFFFF0000);
+    int32 offsetY = (self->position.y & 0xFFFF0000) - (self->yOffset & 0xFFFF0000);
 
     //???
-    Entity *offset = (Entity *)&entity->xOffset;
+    Entity *offset = (Entity *)&self->xOffset;
 
     foreach_active(Player, player)
     {
         int32 playerID = RSDK.GetEntityID(player);
-        if (entity->playerTimers[playerID]) {
-            entity->playerTimers[playerID]--;
+        if (self->playerTimers[playerID]) {
+            self->playerTimers[playerID]--;
         }
         else if (Player_CheckCollisionBox(player, offset, &SP500->hitbox1) == C_TOP
                  || Player_CheckCollisionBox(player, offset, &SP500->hitbox2) == C_TOP) {
@@ -141,9 +141,9 @@ void SP500_Unknown1(void)
             player->position.y += offsetY;
         }
         else if (Player_CheckCollisionBox(player, offset, &SP500->hitbox3) == C_TOP) {
-            if (entity->state == SP500_Unknown2 && !player->sidekick) {
-                if (!((1 << playerID) & entity->activePlayers)) {
-                    entity->activePlayers |= (1 << playerID);
+            if (self->state == SP500_Unknown2 && !player->sidekick) {
+                if (!((1 << playerID) & self->activePlayers)) {
+                    self->activePlayers |= (1 << playerID);
                     RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->playerAnimator, false, 0);
                     player->interaction     = false;
                     player->tileCollisions  = false;
@@ -157,20 +157,20 @@ void SP500_Unknown1(void)
             }
         }
         else {
-            entity->activePlayers &= ~(1 << playerID);
+            self->activePlayers &= ~(1 << playerID);
         }
     }
 
     for (int32 i = 0; i < Player->playerCount; ++i) {
-        if ((1 << i) & entity->activePlayers) {
+        if ((1 << i) & self->activePlayers) {
             EntityPlayer *player = RSDK_GET_ENTITY(i, Player);
-            player->position.x   = entity->position.x;
-            player->position.y   = entity->position.y;
+            player->position.x   = self->position.x;
+            player->position.y   = self->position.y;
         }
     }
-    offset->position.x = entity->position.x;
-    offset->position.y = entity->position.y;
-    entity->position.x -= entity->offset;
+    offset->position.x = self->position.x;
+    offset->position.y = self->position.y;
+    self->position.x -= self->offset;
 }
 
 void SP500_Unknown2(void)
@@ -178,19 +178,19 @@ void SP500_Unknown2(void)
     RSDK_THIS(SP500);
     SP500_Unknown1();
     if (Zone->timer & 0x20) {
-        entity->successFlag = true;
-        entity->failFlag    = true;
+        self->successFlag = true;
+        self->failFlag    = true;
     }
     else {
-        entity->successFlag = false;
-        entity->failFlag    = false;
+        self->successFlag = false;
+        self->failFlag    = false;
     }
 
-    if (entity->activePlayers) {
+    if (self->activePlayers) {
         RSDK.PlaySfx(SP500->sfxButton2, false, 255);
-        entity->successFlag = false;
-        entity->failFlag    = false;
-        entity->state       = SP500_Unknown4;
+        self->successFlag = false;
+        self->failFlag    = false;
+        self->state       = SP500_Unknown4;
     }
 }
 
@@ -201,29 +201,29 @@ void SP500_Unknown4(void)
     RSDK_THIS(SP500);
 
     SP500_Unknown1();
-    if (++entity->timer >= 60) {
-        entity->timer = 0;
+    if (++self->timer >= 60) {
+        self->timer = 0;
         if (Ink && Ink->playerColours[0]) {
-            entity->inkColour = Ink->playerColours[0] - 1;
+            self->inkColour = Ink->playerColours[0] - 1;
             RSDK.PlaySfx(SP500->sfxBeep4, false, 255);
-            entity->successFlag = true;
-            entity->active      = ACTIVE_NORMAL;
-            entity->state       = SP500_Unknown6;
-            EntitySP500 *child  = CREATE_ENTITY(SP500, intToVoid(1), entity->position.x, entity->position.y);
-            child->xOffset      = entity->position.x + ((entity->len - 3) << 19);
-            if (entity->printDir)
-                child->yOffset = entity->position.y + (entity->height << 19);
+            self->successFlag = true;
+            self->active      = ACTIVE_NORMAL;
+            self->state       = SP500_Unknown6;
+            EntitySP500 *child  = CREATE_ENTITY(SP500, intToVoid(1), self->position.x, self->position.y);
+            child->xOffset      = self->position.x + ((self->len - 3) << 19);
+            if (self->printDir)
+                child->yOffset = self->position.y + (self->height << 19);
             else
-                child->yOffset = entity->position.y - (entity->height << 19);
+                child->yOffset = self->position.y - (self->height << 19);
             EntityCamera *camera = RSDK_GET_ENTITY(SLOT_PLAYER1, Player)->camera;
             camera->targetPtr    = (Entity *)child;
             child->storedEntity  = (Entity *)RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
-            entity->storedEntity = (Entity *)child;
+            self->storedEntity = (Entity *)child;
         }
         else {
             RSDK.PlaySfx(SP500->sfxFail, false, 255);
-            entity->failFlag = true;
-            entity->state    = SP500_Unknown5;
+            self->failFlag = true;
+            self->state    = SP500_Unknown5;
         }
     }
 }
@@ -232,10 +232,10 @@ void SP500_Unknown5(void)
 {
     RSDK_THIS(SP500);
     SP500_Unknown1();
-    if (++entity->timer >= 30) {
-        entity->timer = 0;
+    if (++self->timer >= 30) {
+        self->timer = 0;
         for (int32 i = 0; i < Player->playerCount; ++i) {
-            if ((1 << i) & entity->activePlayers) {
+            if ((1 << i) & self->activePlayers) {
                 RSDK.PlaySfx(Player->sfxRelease, false, 255);
                 EntityPlayer *player     = RSDK_GET_ENTITY(i, Player);
                 player->visible          = true;
@@ -245,15 +245,15 @@ void SP500_Unknown5(void)
                 player->jumpAbilityTimer = 0;
                 player->onGround         = false;
                 player->state            = Player_State_Air;
-                if (entity->printDir == 0)
+                if (self->printDir == 0)
                     player->velocity.y = 0x60000;
                 else
                     player->velocity.y = -0x60000;
-                entity->activePlayers &= ~(1 << i);
-                entity->playerTimers[i] = 15;
+                self->activePlayers &= ~(1 << i);
+                self->playerTimers[i] = 15;
             }
         }
-        entity->state = SP500_Unknown2;
+        self->state = SP500_Unknown2;
     }
 }
 
@@ -261,9 +261,9 @@ void SP500_Unknown6(void)
 {
     RSDK_THIS(SP500);
     SP500_Unknown1();
-    if (++entity->timer >= 30) {
-        entity->timer = 0;
-        entity->state = SP500_Unknown7;
+    if (++self->timer >= 30) {
+        self->timer = 0;
+        self->state = SP500_Unknown7;
     }
 }
 
@@ -271,53 +271,53 @@ void SP500_Unknown7(void)
 {
     RSDK_THIS(SP500);
 
-    if (entity->field_A8 == entity->startDir) {
-        entity->offset += entity->velocity.x;
-        if (entity->offset >= entity->offR) {
-            entity->state       = SP500_Unknown8;
-            entity->successFlag = true;
+    if (self->field_A8 == self->startDir) {
+        self->offset += self->velocity.x;
+        if (self->offset >= self->offR) {
+            self->state       = SP500_Unknown8;
+            self->successFlag = true;
         }
     }
     else {
-        entity->offset -= entity->velocity.x;
-        if (entity->offset <= entity->offL) {
-            entity->state       = SP500_Unknown8;
-            entity->successFlag = true;
+        self->offset -= self->velocity.x;
+        if (self->offset <= self->offL) {
+            self->state       = SP500_Unknown8;
+            self->successFlag = true;
         }
     }
 
     uint16 tile = 0xFFFF;
 
-    switch (entity->inkColour) {
+    switch (self->inkColour) {
         default: break;
-        case 0: tile = RSDK.GetTileInfo(SP500->printLayerID, entity->srcC.x + (entity->offset >> 20), entity->srcC.y + entity->field_8C); break;
-        case 1: tile = RSDK.GetTileInfo(SP500->printLayerID, entity->srcM.x + (entity->offset >> 20), entity->srcM.y + entity->field_8C); break;
-        case 2: tile = RSDK.GetTileInfo(SP500->printLayerID, entity->srcY.x + (entity->offset >> 20), entity->srcY.y + entity->field_8C); break;
+        case 0: tile = RSDK.GetTileInfo(SP500->printLayerID, self->srcC.x + (self->offset >> 20), self->srcC.y + self->field_8C); break;
+        case 1: tile = RSDK.GetTileInfo(SP500->printLayerID, self->srcM.x + (self->offset >> 20), self->srcM.y + self->field_8C); break;
+        case 2: tile = RSDK.GetTileInfo(SP500->printLayerID, self->srcY.x + (self->offset >> 20), self->srcY.y + self->field_8C); break;
     }
 
     if (tile != 0xFFFF) {
-        entity->position.y += 0x100000;
-        entity->successFlag = (Zone->timer >> 1) & 1;
-        RSDK.SetTileInfo(Zone->fgLow, (entity->position.x + entity->offset) >> 20, entity->position.y >> 20, tile);
+        self->position.y += 0x100000;
+        self->successFlag = (Zone->timer >> 1) & 1;
+        RSDK.SetTileInfo(Zone->fgLow, (self->position.x + self->offset) >> 20, self->position.y >> 20, tile);
 
-        int32 posY = entity->position.y;
-        if (entity->position.y >= 0x1800000) {
-            if (entity->position.y > 0x8800000) {
+        int32 posY = self->position.y;
+        if (self->position.y >= 0x1800000) {
+            if (self->position.y > 0x8800000) {
                 posY -= 0xA000000;
-                RSDK.SetTileInfo(Zone->fgLow, (entity->position.x + entity->offset) >> 20, posY >> 20, tile);
+                RSDK.SetTileInfo(Zone->fgLow, (self->position.x + self->offset) >> 20, posY >> 20, tile);
             }
         }
         else {
             posY += 0xA000000;
-            RSDK.SetTileInfo(Zone->fgLow, (entity->position.x + entity->offset) >> 20, posY >> 20, tile);
+            RSDK.SetTileInfo(Zone->fgLow, (self->position.x + self->offset) >> 20, posY >> 20, tile);
         }
-        entity->position.y -= 0x100000;
-        entity->velocity.x = 0x80000;
+        self->position.y -= 0x100000;
+        self->velocity.x = 0x80000;
         SP500_Unknown1();
     }
     else {
-        entity->velocity.x  = 0x100000;
-        entity->successFlag = true;
+        self->velocity.x  = 0x100000;
+        self->successFlag = true;
         SP500_Unknown1();
     }
 }
@@ -326,28 +326,28 @@ void SP500_Unknown8(void)
 {
     RSDK_THIS(SP500);
 
-    if ((entity->printDir || entity->field_8C > 0) && (entity->printDir != 1 || entity->field_8C < entity->height - 1)) {
-        if (entity->printDir)
-            entity->position.y += 0x40000;
+    if ((self->printDir || self->field_8C > 0) && (self->printDir != 1 || self->field_8C < self->height - 1)) {
+        if (self->printDir)
+            self->position.y += 0x40000;
         else
-            entity->position.y -= 0x40000;
-        if (++entity->timer == 4) {
-            entity->timer = 0;
-            if (entity->printDir) {
-                ++entity->field_8C;
-                entity->field_A8 ^= 1;
-                entity->state = SP500_Unknown7;
+            self->position.y -= 0x40000;
+        if (++self->timer == 4) {
+            self->timer = 0;
+            if (self->printDir) {
+                ++self->field_8C;
+                self->field_A8 ^= 1;
+                self->state = SP500_Unknown7;
             }
             else {
-                --entity->field_8C;
-                entity->field_A8 ^= 1;
-                entity->state = SP500_Unknown7;
+                --self->field_8C;
+                self->field_A8 ^= 1;
+                self->state = SP500_Unknown7;
             }
         }
     }
     else {
         RSDK.PlaySfx(SP500->sfxBeep4, false, 255);
-        entity->state = SP500_Unknown9;
+        self->state = SP500_Unknown9;
     }
     SP500_Unknown1();
 }
@@ -356,8 +356,8 @@ void SP500_Unknown9(void)
 {
     RSDK_THIS(SP500);
 
-    entity->timer++;
-    switch (entity->timer) {
+    self->timer++;
+    switch (self->timer) {
         case 30: RSDK.PlaySfx(SP500->sfxBeep4, false, 255); break;
         case 60: {
             for (int32 i = 0; i < Player->playerCount; i += 2) {
@@ -372,17 +372,17 @@ void SP500_Unknown9(void)
             }
             EntityPlayer *player1      = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
             player1->camera->targetPtr = (Entity *)player1;
-            EntitySP500 *machine       = (EntitySP500 *)entity->storedEntity;
+            EntitySP500 *machine       = (EntitySP500 *)self->storedEntity;
             machine->xOffset           = player1->position.x;
             machine->yOffset           = player1->position.y;
             machine->state             = SP500_Unknown10;
             machine->storedEntity      = NULL;
-            entity->storedEntity       = NULL;
+            self->storedEntity       = NULL;
             break;
         }
         case 90:
             for (int32 i = SLOT_PLAYER1; i < Player->playerCount; ++i) {
-                if ((1 << i) & entity->activePlayers) {
+                if ((1 << i) & self->activePlayers) {
                     RSDK.PlaySfx(Player->sfxRelease, false, 255);
                     EntityPlayer *player     = RSDK_GET_ENTITY(i, Player);
                     player->visible          = true;
@@ -392,16 +392,16 @@ void SP500_Unknown9(void)
                     player->jumpAbilityTimer = 0;
                     player->onGround         = false;
                     player->state            = Player_State_Air;
-                    if (entity->printDir == 0)
+                    if (self->printDir == 0)
                         player->velocity.y = -0x100000;
                     else
                         player->velocity.y = 0x100000;
-                    entity->activePlayers &= ~(1 << i);
-                    entity->playerTimers[i] = 15;
+                    self->activePlayers &= ~(1 << i);
+                    self->playerTimers[i] = 15;
                 }
             }
-            entity->successFlag = false;
-            entity->state       = SP500_Unknown3;
+            self->successFlag = false;
+            self->state       = SP500_Unknown3;
             break;
     }
     SP500_Unknown1();
@@ -412,39 +412,39 @@ void SP500_Unknown10(void)
     RSDK_THIS(SP500);
 
     uint8 flags = 0;
-    if (entity->position.x == entity->xOffset) {
+    if (self->position.x == self->xOffset) {
         flags = 1;
     }
-    else if (entity->position.x >= entity->xOffset) {
-        entity->position.x -= 0x80000;
-        if (entity->position.x < entity->xOffset)
-            entity->position.x = entity->xOffset;
+    else if (self->position.x >= self->xOffset) {
+        self->position.x -= 0x80000;
+        if (self->position.x < self->xOffset)
+            self->position.x = self->xOffset;
     }
     else {
-        entity->position.x += 0x80000;
-        if (entity->position.x > entity->xOffset)
-            entity->position.x = entity->xOffset;
+        self->position.x += 0x80000;
+        if (self->position.x > self->xOffset)
+            self->position.x = self->xOffset;
     }
 
-    if (entity->position.y == entity->yOffset) {
+    if (self->position.y == self->yOffset) {
         ++flags;
     }
-    else if (entity->position.y >= entity->yOffset) {
-        entity->position.y -= 0x80000;
-        if (entity->position.y < entity->yOffset)
-            entity->position.y = entity->yOffset;
+    else if (self->position.y >= self->yOffset) {
+        self->position.y -= 0x80000;
+        if (self->position.y < self->yOffset)
+            self->position.y = self->yOffset;
     }
     else {
-        entity->position.y += 0x80000;
-        if (entity->position.y > entity->yOffset)
-            entity->position.y = entity->yOffset;
+        self->position.y += 0x80000;
+        if (self->position.y > self->yOffset)
+            self->position.y = self->yOffset;
     }
 
     if (flags == 2) {
-        if (entity->storedEntity)
-            entity->state = StateMachine_None;
+        if (self->storedEntity)
+            self->state = StateMachine_None;
         else
-            destroyEntity(entity);
+            destroyEntity(self);
     }
 }
 

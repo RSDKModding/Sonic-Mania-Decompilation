@@ -5,11 +5,11 @@ ObjectMSZCutsceneST *MSZCutsceneST;
 void MSZCutsceneST_Update(void)
 {
     RSDK_THIS(MSZCutsceneST);
-    if (!entity->activated) {
-        if (entity->nodePtr) {
-            MSZCutsceneST->nodePtr = entity->nodePtr;
+    if (!self->activated) {
+        if (self->nodePtr) {
+            MSZCutsceneST->nodePtr = self->nodePtr;
             MSZCutsceneST_SetupCutscene();
-            entity->activated = true;
+            self->activated = true;
         }
     }
 }
@@ -36,9 +36,9 @@ void MSZCutsceneST_Create(void *data)
 {
     RSDK_THIS(MSZCutsceneST);
 
-    INIT_ENTITY(entity);
-    CutsceneRules_DrawCutsceneBounds(entity, &entity->size);
-    entity->active = ACTIVE_NEVER;
+    INIT_ENTITY(self);
+    CutsceneRules_DrawCutsceneBounds(self, &self->size);
+    self->active = ACTIVE_NEVER;
 }
 
 void MSZCutsceneST_StageLoad(void)
@@ -55,15 +55,15 @@ void MSZCutsceneST_StageLoad(void)
     {
         if (hbh->characterID == HBH_MYSTIC)
             MSZCutsceneST->mystic = hbh;
-        if (hbh->characterID == HBH_ROUGESA) {
+        if (hbh->characterID == HBH_ROUGE_FANG) {
             MSZCutsceneST->rouges[0]         = hbh;
             MSZCutsceneST->rougePlatforms[0] = RSDK_GET_ENTITY(RSDK.GetEntityID(hbh) + 1, Armadiloid);
         }
-        if (hbh->characterID == HBH_ROUGESB) {
+        if (hbh->characterID == HBH_ROUGE_BEAN) {
             MSZCutsceneST->rouges[1]         = hbh;
             MSZCutsceneST->rougePlatforms[1] = RSDK_GET_ENTITY(RSDK.GetEntityID(hbh) + 1, Armadiloid);
         }
-        if (hbh->characterID == HBH_ROUGESC) {
+        if (hbh->characterID == HBH_ROUGE_BARK) {
             MSZCutsceneST->rouges[2]         = hbh;
             MSZCutsceneST->rougePlatforms[2] = RSDK_GET_ENTITY(RSDK.GetEntityID(hbh) + 1, Armadiloid);
         }
@@ -89,7 +89,7 @@ void MSZCutsceneST_SetupCutscene(void)
                        MSZCutsceneST_CutsceneState_Unknown5, MSZCutsceneST_CutsceneState_Unknown6,
                        MSZCutsceneST_CutsceneState_Unknown7, MSZCutsceneST_CutsceneState_Unknown8,
                        MSZCutsceneST_CutsceneState_Unknown9, NULL };
-    CutsceneSeq_StartSequence((Entity *)entity, states);
+    CutsceneSeq_StartSequence((Entity *)self, states);
 }
 
 bool32 MSZCutsceneST_CutsceneState_Unknown1(EntityCutsceneSeq *host)
@@ -595,7 +595,7 @@ bool32 MSZCutsceneST_CutsceneState_Unknown9(EntityCutsceneSeq *host)
 void MSZCutsceneST_EditorDraw(void)
 {
     RSDK_THIS(MSZCutsceneST);
-    CutsceneRules_DrawCutsceneBounds(entity, &entity->size);
+    CutsceneRules_DrawCutsceneBounds(self, &self->size);
 }
 
 void MSZCutsceneST_EditorLoad(void) {}

@@ -17,30 +17,30 @@ void DebugMode_Update(void)
     //if (Zone)
     //    Zone->stageFinishCallback = NULL;
     if (ControllerInfo[CONT_P1].keyUp.down || (AnalogStickInfoL[CONT_P1].vDelta > 0.3)) {
-        entity->position.y -= entity->velocity.y;
+        self->position.y -= self->velocity.y;
         flag = true;
     }
     else if (ControllerInfo[CONT_P1].keyDown.down || (AnalogStickInfoL[CONT_P1].vDelta < -0.3)) {
-        entity->position.y += entity->velocity.y;
+        self->position.y += self->velocity.y;
         flag = true;
     }
 
     if (ControllerInfo[CONT_P1].keyLeft.down || (AnalogStickInfoL[CONT_P1].hDelta < -0.3)) {
-        entity->position.x -= entity->velocity.y;
+        self->position.x -= self->velocity.y;
         flag = true;
     }
     else if (ControllerInfo[CONT_P1].keyRight.down || (AnalogStickInfoL[CONT_P1].hDelta > 0.3)) {
-        entity->position.x += entity->velocity.y;
+        self->position.x += self->velocity.y;
         flag = true;
     }
 
     if (!flag) {
-        entity->velocity.y = 0;
+        self->velocity.y = 0;
     }
     else {
-        entity->velocity.y += 0xC00;
-        if (entity->velocity.y > 0x100000)
-            entity->velocity.y = 0x100000;
+        self->velocity.y += 0xC00;
+        if (self->velocity.y > 0x100000)
+            self->velocity.y = 0x100000;
     }
 
 #if RETRO_GAMEVER != VER_100
@@ -113,8 +113,8 @@ void DebugMode_Draw(void)
 void DebugMode_Create(void *data)
 {
     RSDK_THIS(DebugMode);
-    entity->active  = ACTIVE_NORMAL;
-    entity->visible = true;
+    self->active  = ACTIVE_NORMAL;
+    self->visible = true;
 }
 
 void DebugMode_StageLoad(void)

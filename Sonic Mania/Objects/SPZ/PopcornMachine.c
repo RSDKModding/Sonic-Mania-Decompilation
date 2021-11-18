@@ -5,7 +5,7 @@ ObjectPopcornMachine *PopcornMachine;
 void PopcornMachine_Update(void)
 {
     RSDK_THIS(PopcornMachine);
-    StateMachine_Run(entity->state);
+    StateMachine_Run(self->state);
 }
 
 void PopcornMachine_LateUpdate(void) {}
@@ -17,85 +17,85 @@ void PopcornMachine_Draw(void)
     RSDK_THIS(PopcornMachine);
     Vector2 drawPos;
 
-    drawPos.x = entity->position.x;
-    drawPos.y = entity->position.y;
-    drawPos.x += entity->field_84;
-    drawPos.y                = drawPos.y - 0x200000 + entity->field_88;
-    entity->animator.frameID = 9;
-    RSDK.DrawSprite(&entity->animator, &drawPos, false);
+    drawPos.x = self->position.x;
+    drawPos.y = self->position.y;
+    drawPos.x += self->field_84;
+    drawPos.y                = drawPos.y - 0x200000 + self->field_88;
+    self->animator.frameID = 9;
+    RSDK.DrawSprite(&self->animator, &drawPos, false);
 
-    drawPos = entity->position;
-    drawPos.x += entity->field_7C;
-    drawPos.y                = drawPos.y - 0x200000 + entity->field_80;
-    entity->animator.frameID = 10;
-    RSDK.DrawSprite(&entity->animator, &drawPos, false);
+    drawPos = self->position;
+    drawPos.x += self->field_7C;
+    drawPos.y                = drawPos.y - 0x200000 + self->field_80;
+    self->animator.frameID = 10;
+    RSDK.DrawSprite(&self->animator, &drawPos, false);
 
-    entity->animator.frameID = 0;
-    RSDK.DrawSprite(&entity->animator, NULL, false);
+    self->animator.frameID = 0;
+    RSDK.DrawSprite(&self->animator, NULL, false);
 
-    entity->animator.frameID = 1;
-    RSDK.DrawSprite(&entity->animator, NULL, false);
+    self->animator.frameID = 1;
+    RSDK.DrawSprite(&self->animator, NULL, false);
 
-    switch (entity->type) {
+    switch (self->type) {
         case 0:
-            entity->animator.frameID = 2;
-            RSDK.DrawSprite(&entity->animator, NULL, false);
+            self->animator.frameID = 2;
+            RSDK.DrawSprite(&self->animator, NULL, false);
             break;
         case 1:
-            entity->animator.frameID = 3;
-            RSDK.DrawSprite(&entity->animator, NULL, false);
+            self->animator.frameID = 3;
+            RSDK.DrawSprite(&self->animator, NULL, false);
             break;
         case 2:
-            entity->animator.frameID = 2;
-            RSDK.DrawSprite(&entity->animator, NULL, false);
+            self->animator.frameID = 2;
+            RSDK.DrawSprite(&self->animator, NULL, false);
 
-            entity->animator.frameID = 3;
-            RSDK.DrawSprite(&entity->animator, NULL, false);
+            self->animator.frameID = 3;
+            RSDK.DrawSprite(&self->animator, NULL, false);
             break;
     }
 
-    drawPos = entity->position;
-    drawPos.y += -0xD00000 - 0xA00000 * entity->height;
+    drawPos = self->position;
+    drawPos.y += -0xD00000 - 0xA00000 * self->height;
     int storeY1              = drawPos.y;
-    int storeY2              = entity->position.y - 0x300000;
-    entity->animator.frameID = 4;
-    RSDK.DrawSprite(&entity->animator, &drawPos, false);
+    int storeY2              = self->position.y - 0x300000;
+    self->animator.frameID = 4;
+    RSDK.DrawSprite(&self->animator, &drawPos, false);
 
-    entity->animator.frameID = 5;
-    RSDK.DrawSprite(&entity->animator, &drawPos, false);
+    self->animator.frameID = 5;
+    RSDK.DrawSprite(&self->animator, &drawPos, false);
 
-    entity->animator.frameID = 6;
-    RSDK.DrawSprite(&entity->animator, &drawPos, false);
+    self->animator.frameID = 6;
+    RSDK.DrawSprite(&self->animator, &drawPos, false);
 
-    entity->animator.frameID = 7;
-    RSDK.DrawSprite(&entity->animator, &drawPos, false);
+    self->animator.frameID = 7;
+    RSDK.DrawSprite(&self->animator, &drawPos, false);
 
-    for (int y = 0; y < entity->height; ++y) {
+    for (int y = 0; y < self->height; ++y) {
         drawPos.y += 0xA00000;
-        entity->animator.frameID = 6;
-        RSDK.DrawSprite(&entity->animator, &drawPos, false);
-        entity->animator.frameID = 7;
-        RSDK.DrawSprite(&entity->animator, &drawPos, false);
+        self->animator.frameID = 6;
+        RSDK.DrawSprite(&self->animator, &drawPos, false);
+        self->animator.frameID = 7;
+        RSDK.DrawSprite(&self->animator, &drawPos, false);
     }
 
     RSDKScreenInfo *screen = &ScreenInfo[SceneInfo->currentScreenID];
 
-    entity->inkEffect        = INK_ADD;
-    entity->animator.frameID = 8;
+    self->inkEffect        = INK_ADD;
+    self->animator.frameID = 8;
     RSDK.SetClipBounds(SceneInfo->currentScreenID, 0, (storeY1 >> 16) - screen->position.y, screen->width,
                        (storeY2 >> 16) - screen->position.y + 1);
-    drawPos = entity->position;
+    drawPos = self->position;
     drawPos.x -= 0x600000;
-    drawPos.y = (entity->position.y + ((screen->centerY - 160 + screen->position.y) << 16)) >> 1;
-    RSDK.DrawSprite(&entity->animator, &drawPos, false);
+    drawPos.y = (self->position.y + ((screen->centerY - 160 + screen->position.y) << 16)) >> 1;
+    RSDK.DrawSprite(&self->animator, &drawPos, false);
 
     drawPos.x += 0xC00000;
-    drawPos.y         = (entity->position.y + ((screen->centerY - 384 + screen->position.y) << 16)) >> 1;
-    entity->direction = FLIP_XY;
-    RSDK.DrawSprite(&entity->animator, &drawPos, false);
+    drawPos.y         = (self->position.y + ((screen->centerY - 384 + screen->position.y) << 16)) >> 1;
+    self->direction = FLIP_XY;
+    RSDK.DrawSprite(&self->animator, &drawPos, false);
 
-    entity->direction = FLIP_NONE;
-    entity->inkEffect = INK_NONE;
+    self->direction = FLIP_NONE;
+    self->inkEffect = INK_NONE;
     RSDK.SetClipBounds(SceneInfo->currentScreenID, 0, 0, screen->width, screen->height);
 }
 
@@ -105,39 +105,39 @@ void PopcornMachine_Create(void *data)
 
     if (!SceneInfo->inEditor) {
         if (data) {
-            entity->active  = ACTIVE_NORMAL;
-            entity->visible = false;
-            entity->player  = (EntityPlayer *)data;
-            entity->state   = PopcornMachine_State2_Unknown1;
+            self->active  = ACTIVE_NORMAL;
+            self->visible = false;
+            self->player  = (EntityPlayer *)data;
+            self->state   = PopcornMachine_State2_Unknown1;
         }
         else {
-            entity->active        = ACTIVE_BOUNDS;
-            entity->updateRange.x = 0xB00000;
-            entity->visible       = true;
-            entity->updateRange.y = 0xA00000 * entity->height + 0x1000000;
-            entity->drawOrder     = Zone->drawOrderHigh;
-            entity->drawFX        = FX_FLIP;
-            entity->alpha         = 0xE0;
-            entity->field_80      = -0x100000;
-            entity->field_88      = -0x100000;
+            self->active        = ACTIVE_BOUNDS;
+            self->updateRange.x = 0xB00000;
+            self->visible       = true;
+            self->updateRange.y = 0xA00000 * self->height + 0x1000000;
+            self->drawOrder     = Zone->drawOrderHigh;
+            self->drawFX        = FX_FLIP;
+            self->alpha         = 0xE0;
+            self->field_80      = -0x100000;
+            self->field_88      = -0x100000;
 
-            int top                = -0x100 - 0xA0 * entity->height;
-            entity->hitbox1.top    = top;
-            entity->hitbox1.left   = -128;
-            entity->hitbox1.right  = -120;
-            entity->hitbox1.bottom = -32;
+            int top                = -0x100 - 0xA0 * self->height;
+            self->hitbox1.top    = top;
+            self->hitbox1.left   = -128;
+            self->hitbox1.right  = -120;
+            self->hitbox1.bottom = -32;
 
-            entity->hitbox2.left   = 120;
-            entity->hitbox2.top    = top;
-            entity->hitbox2.right  = 128;
-            entity->hitbox2.bottom = -32;
+            self->hitbox2.left   = 120;
+            self->hitbox2.top    = top;
+            self->hitbox2.right  = 128;
+            self->hitbox2.bottom = -32;
 
-            entity->hitbox3.left   = -128;
-            entity->hitbox3.top    = top;
-            entity->hitbox3.right  = 128;
-            entity->hitbox3.bottom = top + 16;
-            entity->state          = PopcornMachine_State_Unknown1;
-            RSDK.SetSpriteAnimation(PopcornMachine->aniFrames, 0, &entity->animator, true, 0);
+            self->hitbox3.left   = -128;
+            self->hitbox3.top    = top;
+            self->hitbox3.right  = 128;
+            self->hitbox3.bottom = top + 16;
+            self->state          = PopcornMachine_State_Unknown1;
+            RSDK.SetSpriteAnimation(PopcornMachine->aniFrames, 0, &self->animator, true, 0);
         }
     }
 }
@@ -166,16 +166,16 @@ void PopcornMachine_LinkPlayer(EntityPlayer *player)
     player->nextGroundState = StateMachine_None;
     player->state           = Player_State_None;
     player->onGround        = false;
-    if (player->position.x < entity->position.x)
+    if (player->position.x < self->position.x)
         player->velocity.x = 0xA0000;
     else
         player->velocity.x = -0xA0000;
     player->tileCollisions = false;
     RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->playerAnimator, false, 0);
 
-    EntityPopcornMachine *machine = CREATE_ENTITY(PopcornMachine, player, entity->position.x, entity->position.y);
+    EntityPopcornMachine *machine = CREATE_ENTITY(PopcornMachine, player, self->position.x, self->position.y);
     machine->isPermanent          = true;
-    machine->parent               = (Entity *)entity;
+    machine->parent               = (Entity *)self;
     if (!player->sidekick)
         machine->bounds[player->playerID] = Zone->screenBoundsB1[player->playerID];
 }
@@ -185,45 +185,45 @@ void PopcornMachine_CheckPlayerCollisions(void)
 
     foreach_active(Player, player)
     {
-        Player_CheckCollisionBox(player, entity, &entity->hitbox1);
-        Player_CheckCollisionBox(player, entity, &entity->hitbox2);
-        Player_CheckCollisionPlatform(player, entity, &entity->hitbox3);
+        Player_CheckCollisionBox(player, self, &self->hitbox1);
+        Player_CheckCollisionBox(player, self, &self->hitbox2);
+        Player_CheckCollisionPlatform(player, self, &self->hitbox3);
         if (player->state != Player_State_None) {
 
-            switch (entity->type) {
+            switch (self->type) {
                 case 0:
                     if (player->onGround) {
-                        if (Player_CheckCollisionTouch(player, entity, &PopcornMachine->hitbox1)) {
+                        if (Player_CheckCollisionTouch(player, self, &PopcornMachine->hitbox1)) {
                             PopcornMachine_LinkPlayer(player);
                         }
                     }
                     else {
-                        Player_CheckCollisionBox(player, entity, &PopcornMachine->hitbox1);
+                        Player_CheckCollisionBox(player, self, &PopcornMachine->hitbox1);
                     }
                     break;
                 case 1:
                     if (player->onGround) {
-                        if (Player_CheckCollisionTouch(player, entity, &PopcornMachine->hitbox1)) {
+                        if (Player_CheckCollisionTouch(player, self, &PopcornMachine->hitbox1)) {
                             PopcornMachine_LinkPlayer(player);
                         }
                     }
                     else {
-                        Player_CheckCollisionBox(player, entity, &PopcornMachine->hitbox2);
+                        Player_CheckCollisionBox(player, self, &PopcornMachine->hitbox2);
                     }
                     break;
                 case 2:
                     if (player->onGround) {
-                        if (Player_CheckCollisionTouch(player, entity, &PopcornMachine->hitbox1)) {
+                        if (Player_CheckCollisionTouch(player, self, &PopcornMachine->hitbox1)) {
                             PopcornMachine_LinkPlayer(player);
                         }
                         else {
-                            if (Player_CheckCollisionTouch(player, entity, &PopcornMachine->hitbox2))
+                            if (Player_CheckCollisionTouch(player, self, &PopcornMachine->hitbox2))
                                 PopcornMachine_LinkPlayer(player);
                         }
                     }
                     else {
-                        Player_CheckCollisionBox(player, entity, &PopcornMachine->hitbox1);
-                        Player_CheckCollisionBox(player, entity, &PopcornMachine->hitbox2);
+                        Player_CheckCollisionBox(player, self, &PopcornMachine->hitbox1);
+                        Player_CheckCollisionBox(player, self, &PopcornMachine->hitbox2);
                     }
                     break;
             }
@@ -238,14 +238,14 @@ void PopcornMachine_State_Unknown2(void)
     RSDK_THIS(PopcornMachine);
 
     PopcornMachine_CheckPlayerCollisions();
-    entity->field_80 -= 0x8000;
-    if (entity->field_80 <= -0x200000)
-        entity->field_80 = -0x200000;
-    entity->field_88 -= 0x18000;
-    if (entity->field_88 <= -0x400000) {
-        entity->field_88 = -0x400000;
-        entity->field_60 = 0;
-        entity->state    = PopcornMachine_State_Unknown3;
+    self->field_80 -= 0x8000;
+    if (self->field_80 <= -0x200000)
+        self->field_80 = -0x200000;
+    self->field_88 -= 0x18000;
+    if (self->field_88 <= -0x400000) {
+        self->field_88 = -0x400000;
+        self->field_60 = 0;
+        self->state    = PopcornMachine_State_Unknown3;
     }
 }
 
@@ -255,13 +255,13 @@ void PopcornMachine_State_Unknown4(void)
 
     PopcornMachine_CheckPlayerCollisions();
 
-    entity->field_80 += 0x8000;
-    if (entity->field_80 >= 0)
-        entity->field_80 = 0;
-    entity->field_88 += 0x18000;
-    if (entity->field_88 >= 0) {
-        entity->field_88 = 0;
-        entity->state    = PopcornMachine_State_Unknown1;
+    self->field_80 += 0x8000;
+    if (self->field_80 >= 0)
+        self->field_80 = 0;
+    self->field_88 += 0x18000;
+    if (self->field_88 >= 0) {
+        self->field_88 = 0;
+        self->state    = PopcornMachine_State_Unknown1;
     }
 }
 
@@ -270,112 +270,112 @@ void PopcornMachine_State_Unknown3(void)
     RSDK_THIS(PopcornMachine);
 
     PopcornMachine_CheckPlayerCollisions();
-    entity->field_7C = RSDK.Rand(-0x20000, 0x20000);
-    entity->field_80 = RSDK.Rand(-0x20000, 0x20000) - 0x1E0000;
-    entity->field_84 = RSDK.Rand(-0x20000, 0x20000);
-    entity->field_88 = entity->field_80 - 0x1E0000 + RSDK.Rand(-0x20000, 0x20000);
-    entity->field_60++;
-    if ((uint32)(entity->field_60 - 25) <= 0x86) {
-        if (!(entity->field_60 & 1)) {
-            EntityPopcornKernel *kernel = CREATE_ENTITY(PopcornKernel, NULL, entity->position.x, entity->position.y - 0x400000);
+    self->field_7C = RSDK.Rand(-0x20000, 0x20000);
+    self->field_80 = RSDK.Rand(-0x20000, 0x20000) - 0x1E0000;
+    self->field_84 = RSDK.Rand(-0x20000, 0x20000);
+    self->field_88 = self->field_80 - 0x1E0000 + RSDK.Rand(-0x20000, 0x20000);
+    self->field_60++;
+    if ((uint32)(self->field_60 - 25) <= 0x86) {
+        if (!(self->field_60 & 1)) {
+            EntityPopcornKernel *kernel = CREATE_ENTITY(PopcornKernel, NULL, self->position.x, self->position.y - 0x400000);
             kernel->velocity.x          = RSDK.Rand(-0x30000, 0x30000);
             kernel->velocity.y          = RSDK.Rand(-0xC0000, -0x60000);
             kernel->angleVel            = RSDK.Rand(-0x60000, 0x60000);
-            kernel->bounds.x            = entity->position.x;
-            kernel->bounds.y            = entity->position.y;
+            kernel->bounds.x            = self->position.x;
+            kernel->bounds.y            = self->position.y;
         }
-        if (!(entity->field_60 & 7))
+        if (!(self->field_60 & 7))
             RSDK.PlaySfx(PopcornMachine->sfxShoot, false, 255);
     }
 
-    if (entity->field_60 == 160) {
-        int i = entity->position.y - (0xA00000 * entity->height) - 0xD00000;
+    if (self->field_60 == 160) {
+        int i = self->position.y - (0xA00000 * self->height) - 0xD00000;
         foreach_active(PopcornKernel, kernel)
         {
             kernel->state      = PopcornKernel_Unknown2;
             kernel->velocity.x = 0;
             kernel->velocity.y = RSDK.Rand(-0xA0000, -0x60000);
-            kernel->field_68   = entity->position.y - (0xA00000 * entity->height) - 0xD00000;
+            kernel->field_68   = self->position.y - (0xA00000 * self->height) - 0xD00000;
         }
         RSDK.PlaySfx(PopcornMachine->sfxPopcornLaunch, false, 255);
-        entity->state = PopcornMachine_State_Unknown4;
+        self->state = PopcornMachine_State_Unknown4;
     }
 }
 
 void PopcornMachine_State2_Unknown1(void)
 {
     RSDK_THIS(PopcornMachine);
-    EntityPopcornMachine *parent = (EntityPopcornMachine *)entity->parent;
-    EntityPlayer *player         = entity->player;
+    EntityPopcornMachine *parent = (EntityPopcornMachine *)self->parent;
+    EntityPlayer *player         = self->player;
 
     if (Player_CheckValidState(player)) {
-        if (player->position.y < entity->position.y - 0x300000) {
-            player->position.y = entity->position.y - 0x300000;
+        if (player->position.y < self->position.y - 0x300000) {
+            player->position.y = self->position.y - 0x300000;
             player->velocity.y = 0;
-            entity->state      = PopcornMachine_State2_Unknown3;
+            self->state      = PopcornMachine_State2_Unknown3;
         }
 
         if (!Player_CheckValidState(player)) {
             if (!player->sidekick)
-                Zone->screenBoundsB1[player->playerID] = entity->bounds[player->playerID];
-            destroyEntity(entity);
+                Zone->screenBoundsB1[player->playerID] = self->bounds[player->playerID];
+            destroyEntity(self);
         }
     }
     else {
-        destroyEntity(entity);
+        destroyEntity(self);
     }
 
-    if (abs(entity->position.x - player->position.x) < 0x100000) {
-        player->position.x = entity->position.x;
+    if (abs(self->position.x - player->position.x) < 0x100000) {
+        player->position.x = self->position.x;
         player->groundVel  = 0;
         player->velocity.x = 0;
         player->velocity.y = -0x80000;
         if (!player->sidekick)
-            Zone->screenBoundsB1[player->playerID] = (entity->position.y >> 16) + 32;
+            Zone->screenBoundsB1[player->playerID] = (self->position.y >> 16) + 32;
 
         if (parent->state == PopcornMachine_State_Unknown1 || parent->state == PopcornMachine_State_Unknown4) {
             parent->state = PopcornMachine_State_Unknown2;
             RSDK.PlaySfx(PopcornMachine->sfxFanStart, false, 255);
         }
-        entity->state = PopcornMachine_State2_Unknown2;
+        self->state = PopcornMachine_State2_Unknown2;
     }
 
     if (!Player_CheckValidState(player)) {
         if (!player->sidekick)
-            Zone->screenBoundsB1[player->playerID] = entity->bounds[player->playerID];
-        destroyEntity(entity);
+            Zone->screenBoundsB1[player->playerID] = self->bounds[player->playerID];
+        destroyEntity(self);
     }
 }
 
 void PopcornMachine_State2_Unknown2(void)
 {
     RSDK_THIS(PopcornMachine);
-    EntityPopcornMachine *parent = (EntityPopcornMachine *)entity->parent;
-    EntityPlayer *player         = entity->player;
+    EntityPopcornMachine *parent = (EntityPopcornMachine *)self->parent;
+    EntityPlayer *player         = self->player;
 
     if (Player_CheckValidState(player)) {
-        if (player->position.y < entity->position.y - 0x300000) {
-            player->position.y = entity->position.y - 0x300000;
+        if (player->position.y < self->position.y - 0x300000) {
+            player->position.y = self->position.y - 0x300000;
             player->velocity.y = 0;
-            entity->state      = PopcornMachine_State2_Unknown3;
+            self->state      = PopcornMachine_State2_Unknown3;
         }
 
         if (!Player_CheckValidState(player)) {
             if (!player->sidekick)
-                Zone->screenBoundsB1[player->playerID] = entity->bounds[player->playerID];
-            destroyEntity(entity);
+                Zone->screenBoundsB1[player->playerID] = self->bounds[player->playerID];
+            destroyEntity(self);
         }
     }
     else {
-        destroyEntity(entity);
+        destroyEntity(self);
     }
 }
 
 void PopcornMachine_State2_Unknown3(void)
 {
     RSDK_THIS(PopcornMachine);
-    EntityPopcornMachine *parent = (EntityPopcornMachine *)entity->parent;
-    EntityPlayer *player         = entity->player;
+    EntityPopcornMachine *parent = (EntityPopcornMachine *)self->parent;
+    EntityPlayer *player         = self->player;
 
     if (Player_CheckValidState(player)) {
         if (parent->state == PopcornMachine_State_Unknown4) {
@@ -385,20 +385,20 @@ void PopcornMachine_State2_Unknown3(void)
             player->position.y += player->velocity.y;
             RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->playerAnimator, false, 0);
             if (!player->sidekick)
-                Zone->screenBoundsB1[player->playerID] = entity->bounds[player->playerID];
-            entity->state = PopcornMachine_State2_Unknown4;
+                Zone->screenBoundsB1[player->playerID] = self->bounds[player->playerID];
+            self->state = PopcornMachine_State2_Unknown4;
         }
     }
     else {
-        destroyEntity(entity);
+        destroyEntity(self);
     }
 }
 
 void PopcornMachine_State2_Unknown4(void)
 {
     RSDK_THIS(PopcornMachine);
-    EntityPopcornMachine *parent = (EntityPopcornMachine *)entity->parent;
-    EntityPlayer *player         = entity->player;
+    EntityPopcornMachine *parent = (EntityPopcornMachine *)self->parent;
+    EntityPlayer *player         = self->player;
 
     if (Player_CheckValidState(player)) {
         if (player->position.y < parent->position.y - 0xA00000 * parent->height + 0xD00000) {
@@ -407,7 +407,7 @@ void PopcornMachine_State2_Unknown4(void)
         }
     }
     else {
-        destroyEntity(entity);
+        destroyEntity(self);
     }
 }
 
@@ -415,16 +415,16 @@ void PopcornMachine_State2_Unknown4(void)
 void PopcornMachine_EditorDraw(void)
 {
     RSDK_THIS(PopcornMachine);
-    entity->active        = ACTIVE_BOUNDS;
-    entity->updateRange.x = 0xB00000;
-    entity->visible       = true;
-    entity->updateRange.y = 0xA00000 * entity->height + 0x1000000;
-    entity->drawOrder     = Zone->drawOrderHigh;
-    entity->drawFX        = FX_FLIP;
-    entity->alpha         = 0xE0;
-    entity->field_80      = -0x100000;
-    entity->field_88      = -0x100000;
-    RSDK.SetSpriteAnimation(PopcornMachine->aniFrames, 0, &entity->animator, true, 0);
+    self->active        = ACTIVE_BOUNDS;
+    self->updateRange.x = 0xB00000;
+    self->visible       = true;
+    self->updateRange.y = 0xA00000 * self->height + 0x1000000;
+    self->drawOrder     = Zone->drawOrderHigh;
+    self->drawFX        = FX_FLIP;
+    self->alpha         = 0xE0;
+    self->field_80      = -0x100000;
+    self->field_88      = -0x100000;
+    RSDK.SetSpriteAnimation(PopcornMachine->aniFrames, 0, &self->animator, true, 0);
 
     PopcornMachine_Draw();
 }

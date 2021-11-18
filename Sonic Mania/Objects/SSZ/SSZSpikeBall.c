@@ -5,19 +5,19 @@ ObjectSSZSpikeBall *SSZSpikeBall;
 void SSZSpikeBall_Update(void)
 {
     RSDK_THIS(SSZSpikeBall);
-    StateMachine_Run(entity->state);
+    StateMachine_Run(self->state);
 
     foreach_active(Player, player)
     {
-        int type = entity->type;
+        int type = self->type;
         if (type < 4)
-            Player_CheckCollisionBox(player, entity, &SSZSpikeBall->hitboxBase[type]);
+            Player_CheckCollisionBox(player, self, &SSZSpikeBall->hitboxBase[type]);
 
-        if (Player_CheckCollisionTouch(player, &entity->spikeBallPos, &SSZSpikeBall->hitboxBall)) {
+        if (Player_CheckCollisionTouch(player, &self->spikeBallPos, &SSZSpikeBall->hitboxBall)) {
 #if RETRO_USE_PLUS
             if (!Player_CheckMightyUnspin(0x400, player, 2, &player->uncurlTimer))
 #endif
-                Player_CheckHit(player, entity);
+                Player_CheckHit(player, self);
         }
     }
 }
@@ -29,56 +29,56 @@ void SSZSpikeBall_StaticUpdate(void) {}
 void SSZSpikeBall_Draw(void)
 {
     RSDK_THIS(SSZSpikeBall);
-    RSDK.DrawSprite(&entity->animator2, &entity->spikeBallPos, false);
-    RSDK.DrawSprite(&entity->animator1, NULL, false);
+    RSDK.DrawSprite(&self->animator2, &self->spikeBallPos, false);
+    RSDK.DrawSprite(&self->animator1, NULL, false);
 }
 
 void SSZSpikeBall_Create(void *data)
 {
     RSDK_THIS(SSZSpikeBall);
-    if (!entity->speed) {
-        entity->speed = 12;
-        entity->dist  = 64;
+    if (!self->speed) {
+        self->speed = 12;
+        self->dist  = 64;
     }
-    if (!entity->interval)
-        entity->interval = 120;
+    if (!self->interval)
+        self->interval = 120;
 
     if (!SceneInfo->inEditor) {
-        RSDK.SetSpriteAnimation(SSZSpikeBall->aniFrames, 0, &entity->animator1, true, 0);
-        RSDK.SetSpriteAnimation(SSZSpikeBall->aniFrames, 1, &entity->animator2, true, 0);
+        RSDK.SetSpriteAnimation(SSZSpikeBall->aniFrames, 0, &self->animator1, true, 0);
+        RSDK.SetSpriteAnimation(SSZSpikeBall->aniFrames, 1, &self->animator2, true, 0);
 
-        entity->active         = ACTIVE_BOUNDS;
-        entity->updateRange.x  = 0x600000;
-        entity->updateRange.y  = 0x600000;
-        entity->visible        = true;
-        entity->drawOrder      = Zone->drawOrderLow;
-        entity->speed <<= 15;
-        entity->dist           = (entity->dist << 16) / entity->speed;
-        entity->spikeBallPos.x = entity->position.x;
-        entity->spikeBallPos.y = entity->position.y;
+        self->active         = ACTIVE_BOUNDS;
+        self->updateRange.x  = 0x600000;
+        self->updateRange.y  = 0x600000;
+        self->visible        = true;
+        self->drawOrder      = Zone->drawOrderLow;
+        self->speed <<= 15;
+        self->dist           = (self->dist << 16) / self->speed;
+        self->spikeBallPos.x = self->position.x;
+        self->spikeBallPos.y = self->position.y;
 
-        switch (entity->type) {
+        switch (self->type) {
             case 0:
             case 2:
-                entity->spikeBallPos.x = -0x200000;
-                entity->spikeBallPos.y = -0x200000;
-                entity->direction      = FLIP_NONE;
+                self->spikeBallPos.x = -0x200000;
+                self->spikeBallPos.y = -0x200000;
+                self->direction      = FLIP_NONE;
                 break;
             case 1:
             case 3:
-                entity->spikeBallPos.x = -0x200000;
-                entity->spikeBallPos.y = -0x200000;
-                entity->direction      = FLIP_X;
+                self->spikeBallPos.x = -0x200000;
+                self->spikeBallPos.y = -0x200000;
+                self->direction      = FLIP_X;
                 break;
-            case 4: entity->velocity.y = -entity->speed; break;
-            case 5: entity->velocity.y = entity->speed; break;
-            case 6: entity->velocity.x = -entity->speed; break;
-            case 7: entity->velocity.x = entity->speed; break;
+            case 4: self->velocity.y = -self->speed; break;
+            case 5: self->velocity.y = self->speed; break;
+            case 6: self->velocity.x = -self->speed; break;
+            case 7: self->velocity.x = self->speed; break;
             default: break;
         }
 
-        entity->state             = SSZSpikeBall_State_Setup;
-        entity->animator1.frameID = minVal(entity->type, 4);
+        self->state             = SSZSpikeBall_State_Setup;
+        self->animator1.frameID = minVal(self->type, 4);
     }
 }
 
@@ -120,38 +120,38 @@ void SSZSpikeBall_StageLoad(void)
 void SSZSpikeBall_State_Setup(void)
 {
     RSDK_THIS(SSZSpikeBall);
-    if (!((Zone->timer + entity->intervalOffset) % entity->interval)) {
-        entity->spikeBallPos.x = entity->position.x;
-        entity->spikeBallPos.y = entity->position.y;
-        entity->active         = ACTIVE_NORMAL;
-        entity->timer          = 0;
-        switch (entity->type) {
+    if (!((Zone->timer + self->intervalOffset) % self->interval)) {
+        self->spikeBallPos.x = self->position.x;
+        self->spikeBallPos.y = self->position.y;
+        self->active         = ACTIVE_NORMAL;
+        self->timer          = 0;
+        switch (self->type) {
             case 0:
-                entity->state = SSZSpikeBall_Unknown3;
-                entity->spikeBallPos.y += 0x40000;
-                entity->velocity.y = -entity->speed;
+                self->state = SSZSpikeBall_Unknown3;
+                self->spikeBallPos.y += 0x40000;
+                self->velocity.y = -self->speed;
                 break;
             case 1:
-                entity->spikeBallPos.y -= 0x40000;
-                entity->state      = SSZSpikeBall_Unknown3;
-                entity->velocity.y = entity->speed;
+                self->spikeBallPos.y -= 0x40000;
+                self->state      = SSZSpikeBall_Unknown3;
+                self->velocity.y = self->speed;
                 break;
             case 2:
-                entity->state = SSZSpikeBall_Unknown2;
-                entity->spikeBallPos.x += 0x30000;
-                entity->velocity.x = -entity->speed;
+                self->state = SSZSpikeBall_Unknown2;
+                self->spikeBallPos.x += 0x30000;
+                self->velocity.x = -self->speed;
                 break;
             case 3:
-                entity->spikeBallPos.x -= 0x30000;
-                entity->state      = SSZSpikeBall_Unknown2;
-                entity->velocity.x = entity->speed;
+                self->spikeBallPos.x -= 0x30000;
+                self->state      = SSZSpikeBall_Unknown2;
+                self->velocity.x = self->speed;
                 break;
             case 4:
             case 5:
             case 6:
             case 7:
-                entity->timer = entity->dist;
-                entity->state = SSZSpikeBall_Unknown6;
+                self->timer = self->dist;
+                self->state = SSZSpikeBall_Unknown6;
                 break;
             default: break;
         }
@@ -162,53 +162,53 @@ void SSZSpikeBall_Unknown2(void)
 {
     RSDK_THIS(SSZSpikeBall);
 
-    if (++entity->timer >= 0x20) {
-        if (entity->timer == 48) {
+    if (++self->timer >= 0x20) {
+        if (self->timer == 48) {
             RSDK.PlaySfx(SSZSpikeBall->sfxPon, false, 255);
-            entity->state = SSZSpikeBall_Unknown4;
+            self->state = SSZSpikeBall_Unknown4;
         }
     }
-    else if (entity->direction)
-        entity->spikeBallPos.x += 0x8000;
+    else if (self->direction)
+        self->spikeBallPos.x += 0x8000;
     else
-        entity->spikeBallPos.x -= 0x8000;
+        self->spikeBallPos.x -= 0x8000;
 }
 
 void SSZSpikeBall_Unknown3(void)
 {
     RSDK_THIS(SSZSpikeBall);
 
-    if (++entity->timer >= 0x20) {
-        if (entity->timer == 48) {
+    if (++self->timer >= 0x20) {
+        if (self->timer == 48) {
             RSDK.PlaySfx(SSZSpikeBall->sfxPon, false, 255);
-            entity->state = SSZSpikeBall_Unknown5;
+            self->state = SSZSpikeBall_Unknown5;
         }
     }
-    else if (entity->direction)
-        entity->spikeBallPos.y += 0x8000;
+    else if (self->direction)
+        self->spikeBallPos.y += 0x8000;
     else
-        entity->spikeBallPos.y -= 0x8000;
+        self->spikeBallPos.y -= 0x8000;
 }
 
 void SSZSpikeBall_Unknown4(void)
 {
     RSDK_THIS(SSZSpikeBall);
 
-    entity->spikeBallPos.x += entity->velocity.x;
-    if (entity->direction) {
-        entity->velocity.x -= 0x3800;
-        if (entity->spikeBallPos.x < entity->position.x) {
-            entity->state          = SSZSpikeBall_State_Setup;
-            entity->active         = ACTIVE_BOUNDS;
-            entity->spikeBallPos.x = -0x200000;
+    self->spikeBallPos.x += self->velocity.x;
+    if (self->direction) {
+        self->velocity.x -= 0x3800;
+        if (self->spikeBallPos.x < self->position.x) {
+            self->state          = SSZSpikeBall_State_Setup;
+            self->active         = ACTIVE_BOUNDS;
+            self->spikeBallPos.x = -0x200000;
         }
     }
     else {
-        entity->velocity.x += 0x3800;
-        if (entity->spikeBallPos.x > entity->position.x) {
-            entity->state          = SSZSpikeBall_State_Setup;
-            entity->active         = ACTIVE_BOUNDS;
-            entity->spikeBallPos.x = -0x200000;
+        self->velocity.x += 0x3800;
+        if (self->spikeBallPos.x > self->position.x) {
+            self->state          = SSZSpikeBall_State_Setup;
+            self->active         = ACTIVE_BOUNDS;
+            self->spikeBallPos.x = -0x200000;
         }
     }
 }
@@ -217,21 +217,21 @@ void SSZSpikeBall_Unknown5(void)
 {
     RSDK_THIS(SSZSpikeBall);
 
-    entity->spikeBallPos.y += entity->velocity.y;
-    if (entity->direction) {
-        entity->velocity.y -= 0x3800;
-        if (entity->spikeBallPos.y < entity->position.y) {
-            entity->state          = SSZSpikeBall_State_Setup;
-            entity->active         = ACTIVE_BOUNDS;
-            entity->spikeBallPos.y = -0x200000;
+    self->spikeBallPos.y += self->velocity.y;
+    if (self->direction) {
+        self->velocity.y -= 0x3800;
+        if (self->spikeBallPos.y < self->position.y) {
+            self->state          = SSZSpikeBall_State_Setup;
+            self->active         = ACTIVE_BOUNDS;
+            self->spikeBallPos.y = -0x200000;
         }
     }
     else {
-        entity->velocity.y += 0x3800;
-        if (entity->spikeBallPos.y > entity->position.y) {
-            entity->state          = SSZSpikeBall_State_Setup;
-            entity->active         = ACTIVE_BOUNDS;
-            entity->spikeBallPos.y = -0x200000;
+        self->velocity.y += 0x3800;
+        if (self->spikeBallPos.y > self->position.y) {
+            self->state          = SSZSpikeBall_State_Setup;
+            self->active         = ACTIVE_BOUNDS;
+            self->spikeBallPos.y = -0x200000;
         }
     }
 }
@@ -240,11 +240,11 @@ void SSZSpikeBall_Unknown6(void)
 {
     RSDK_THIS(SSZSpikeBall);
 
-    entity->spikeBallPos.x += entity->velocity.x;
-    entity->spikeBallPos.y += entity->velocity.y;
-    if (!--entity->timer) {
-        entity->timer = (entity->interval >> 1) - entity->dist;
-        entity->state = SSZSpikeBall_Unknown7;
+    self->spikeBallPos.x += self->velocity.x;
+    self->spikeBallPos.y += self->velocity.y;
+    if (!--self->timer) {
+        self->timer = (self->interval >> 1) - self->dist;
+        self->state = SSZSpikeBall_Unknown7;
     }
 }
 
@@ -252,9 +252,9 @@ void SSZSpikeBall_Unknown7(void)
 {
     RSDK_THIS(SSZSpikeBall);
 
-    if (!--entity->timer) {
-        entity->timer = entity->dist;
-        entity->state = SSZSpikeBall_Unknown8;
+    if (!--self->timer) {
+        self->timer = self->dist;
+        self->state = SSZSpikeBall_Unknown8;
     }
 }
 
@@ -262,11 +262,11 @@ void SSZSpikeBall_Unknown8(void)
 {
     RSDK_THIS(SSZSpikeBall);
 
-    entity->spikeBallPos.x -= entity->velocity.x;
-    entity->spikeBallPos.y -= entity->velocity.y;
-    if (!--entity->timer) {
-        entity->active = ACTIVE_BOUNDS;
-        entity->state  = SSZSpikeBall_State_Setup;
+    self->spikeBallPos.x -= self->velocity.x;
+    self->spikeBallPos.y -= self->velocity.y;
+    if (!--self->timer) {
+        self->active = ACTIVE_BOUNDS;
+        self->state  = SSZSpikeBall_State_Setup;
     }
 }
 
@@ -274,29 +274,29 @@ void SSZSpikeBall_Unknown8(void)
 void SSZSpikeBall_EditorDraw(void)
 {
     RSDK_THIS(SSZSpikeBall);
-    RSDK.SetSpriteAnimation(SSZSpikeBall->aniFrames, 0, &entity->animator1, true, 0);
-    RSDK.SetSpriteAnimation(SSZSpikeBall->aniFrames, 1, &entity->animator2, true, 0);
+    RSDK.SetSpriteAnimation(SSZSpikeBall->aniFrames, 0, &self->animator1, true, 0);
+    RSDK.SetSpriteAnimation(SSZSpikeBall->aniFrames, 1, &self->animator2, true, 0);
 
-    entity->spikeBallPos.x = entity->position.x;
-    entity->spikeBallPos.y = entity->position.y;
+    self->spikeBallPos.x = self->position.x;
+    self->spikeBallPos.y = self->position.y;
 
-    switch (entity->type) {
+    switch (self->type) {
         case 0:
         case 2:
-            entity->spikeBallPos.x = -0x200000;
-            entity->spikeBallPos.y = -0x200000;
-            entity->direction      = FLIP_NONE;
+            self->spikeBallPos.x = -0x200000;
+            self->spikeBallPos.y = -0x200000;
+            self->direction      = FLIP_NONE;
             break;
         case 1:
         case 3:
-            entity->spikeBallPos.x = -0x200000;
-            entity->spikeBallPos.y = -0x200000;
-            entity->direction      = FLIP_X;
+            self->spikeBallPos.x = -0x200000;
+            self->spikeBallPos.y = -0x200000;
+            self->direction      = FLIP_X;
             break;
         default: break;
     }
 
-    entity->animator1.frameID = minVal(entity->type, 4);
+    self->animator1.frameID = minVal(self->type, 4);
 
     SSZSpikeBall_Draw();
 }

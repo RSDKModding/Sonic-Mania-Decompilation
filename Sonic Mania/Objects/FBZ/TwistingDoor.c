@@ -5,61 +5,61 @@ ObjectTwistingDoor *TwistingDoor;
 void TwistingDoor_Update(void)
 {
     RSDK_THIS(TwistingDoor);
-    --entity->animator.animationTimer;
+    --self->animator.animationTimer;
     Platform_Update();
 
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
-    if (entity->state == TwistingDoor_Unknown1) {
+    if (self->state == TwistingDoor_Unknown1) {
         if (Player_CheckValidState(player1)) {
-            if (entity->autoOpen) {
-                switch (entity->type) {
-                    case PLATFORM_0:
+            if (self->autoOpen) {
+                switch (self->type) {
+                    case PLATFORM_FIXED:
                     case PLATFORM_3: {
                         int32 x  = 0;
                         int32 x2 = 0;
-                        if (entity->autoOpen) {
+                        if (self->autoOpen) {
                             x2 = player1->position.x;
-                            x  = entity->position.x;
-                            if (player1->position.x >= entity->position.x)
+                            x  = self->position.x;
+                            if (player1->position.x >= self->position.x)
                                 return;
                         }
                         else {
                             x  = player1->position.x;
-                            x2 = entity->position.x;
-                            if (player1->position.x <= entity->position.x)
+                            x2 = self->position.x;
+                            if (player1->position.x <= self->position.x)
                                 return;
                         }
                         if (x - x2 < 0x400000) {
-                            if (abs(player1->position.y - entity->position.y) < 0x400000) {
-                                entity->state         = TwistingDoor_Unknown2;
-                                entity->active        = ACTIVE_NORMAL;
-                                entity->collapseDelay = entity->type < PLATFORM_2 ? 64 : 128;
+                            if (abs(player1->position.y - self->position.y) < 0x400000) {
+                                self->state         = TwistingDoor_Unknown2;
+                                self->active        = ACTIVE_NORMAL;
+                                self->collapseDelay = self->type < PLATFORM_MOVING ? 64 : 128;
                             }
                         }
                         break;
                     }
-                    case PLATFORM_1:
-                    case PLATFORM_2: {
+                    case PLATFORM_COLLAPSING:
+                    case PLATFORM_MOVING: {
                         int32 y  = 0;
                         int32 y2 = 0;
-                        if (entity->autoOpen) {
+                        if (self->autoOpen) {
                             y2 = player1->position.y;
-                            y  = entity->position.y;
+                            y  = self->position.y;
                             if (y2 >= y)
                                 return;
                         }
                         else {
                             y  = player1->position.y;
-                            y2 = entity->position.y;
+                            y2 = self->position.y;
                             if (y <= y2)
                                 return;
                         }
 
                         if (y - y2 < 0x400000) {
-                            if (abs(player1->position.x - entity->position.x) < 0x400000) {
-                                entity->state         = TwistingDoor_Unknown2;
-                                entity->active        = ACTIVE_NORMAL;
-                                entity->collapseDelay = entity->type < PLATFORM_2 ? 64 : 128;
+                            if (abs(player1->position.x - self->position.x) < 0x400000) {
+                                self->state         = TwistingDoor_Unknown2;
+                                self->active        = ACTIVE_NORMAL;
+                                self->collapseDelay = self->type < PLATFORM_MOVING ? 64 : 128;
                             }
                         }
                         break;
@@ -78,47 +78,47 @@ void TwistingDoor_StaticUpdate(void) {}
 void TwistingDoor_Draw(void)
 {
     RSDK_THIS(TwistingDoor);
-    RSDK.DrawSprite(&entity->animator, &entity->drawPos, false);
+    RSDK.DrawSprite(&self->animator, &self->drawPos, false);
 }
 
 void TwistingDoor_Create(void *data)
 {
     RSDK_THIS(TwistingDoor);
-    entity->collision = PLATFORM_C_1;
+    self->collision = PLATFORM_C_1;
     Platform_Create(NULL);
 
-    entity->drawFX = FX_FLIP;
-    RSDK.SetSpriteAnimation(TwistingDoor->aniFrames, entity->type, &entity->animator, true, 0);
+    self->drawFX = FX_FLIP;
+    RSDK.SetSpriteAnimation(TwistingDoor->aniFrames, self->type, &self->animator, true, 0);
 
-    if (entity->type == PLATFORM_0 || entity->type == PLATFORM_3) {
-        if (!entity->direction)
-            entity->groundVel = -0x10000;
+    if (self->type == PLATFORM_FIXED || self->type == PLATFORM_3) {
+        if (!self->direction)
+            self->groundVel = -0x10000;
         else
-            entity->groundVel = 0x10000;
-        entity->direction = 2 * entity->direction;
+            self->groundVel = 0x10000;
+        self->direction = 2 * self->direction;
     }
     else {
-        if (!entity->direction)
-            entity->groundVel = 0x10000;
+        if (!self->direction)
+            self->groundVel = 0x10000;
         else
-            entity->groundVel = -0x10000;
+            self->groundVel = -0x10000;
     }
 
-    EntityButton *button = RSDK_GET_ENTITY(RSDK.GetEntityID(entity) - 1, Button);
-    if (entity->buttonTag > 0) {
+    EntityButton *button = RSDK_GET_ENTITY(RSDK.GetEntityID(self) - 1, Button);
+    if (self->buttonTag > 0) {
         foreach_all(Button, buttonCheck)
         {
-            if (buttonCheck->tag == entity->buttonTag) {
+            if (buttonCheck->tag == self->buttonTag) {
                 button = buttonCheck;
                 foreach_break;
             }
         }
     }
 
-    entity->buttonPtr     = button;
-    entity->updateRange.x = abs(entity->position.x - button->position.x) + 0x400000;
-    entity->updateRange.y = abs(entity->position.y - button->position.y) + 0x400000;
-    entity->state         = TwistingDoor_Unknown1;
+    self->buttonPtr     = button;
+    self->updateRange.x = abs(self->position.x - button->position.x) + 0x400000;
+    self->updateRange.y = abs(self->position.y - button->position.y) + 0x400000;
+    self->state         = TwistingDoor_Unknown1;
 }
 
 void TwistingDoor_StageLoad(void)
@@ -131,37 +131,37 @@ void TwistingDoor_StageLoad(void)
 void TwistingDoor_Unknown1(void)
 {
     RSDK_THIS(TwistingDoor);
-    EntityButton *button = entity->buttonPtr;
+    EntityButton *button = self->buttonPtr;
     if (button->activated) {
         RSDK.PlaySfx(TwistingDoor->sfxOpen, false, 255);
-        entity->active        = ACTIVE_NORMAL;
-        entity->state         = TwistingDoor_Unknown2;
-        entity->collapseDelay = entity->type < PLATFORM_2 ? 64 : 128;
+        self->active        = ACTIVE_NORMAL;
+        self->state         = TwistingDoor_Unknown2;
+        self->collapseDelay = self->type < PLATFORM_MOVING ? 64 : 128;
     }
-    entity->velocity.y = 0;
-    entity->velocity.x = 0;
+    self->velocity.y = 0;
+    self->velocity.x = 0;
 }
 
 void TwistingDoor_Unknown2(void)
 {
     RSDK_THIS(TwistingDoor);
-    RSDK.ProcessAnimation(&entity->animator);
+    RSDK.ProcessAnimation(&self->animator);
 
-    if (entity->type == PLATFORM_1 || entity->type == PLATFORM_2) {
-        entity->drawPos.x += entity->groundVel;
-        entity->velocity.x = entity->groundVel;
+    if (self->type == PLATFORM_COLLAPSING || self->type == PLATFORM_MOVING) {
+        self->drawPos.x += self->groundVel;
+        self->velocity.x = self->groundVel;
     }
     else {
-        entity->drawPos.y += entity->groundVel;
-        entity->velocity.y = entity->groundVel;
+        self->drawPos.y += self->groundVel;
+        self->velocity.y = self->groundVel;
     }
 
-    if (--entity->collapseDelay <= 0) {
-        if (entity->close)
-            entity->collapseDelay = 180;
+    if (--self->collapseDelay <= 0) {
+        if (self->close)
+            self->collapseDelay = 180;
         else
-            entity->active = ACTIVE_NORMAL;
-        entity->state = TwistingDoor_Unknown3;
+            self->active = ACTIVE_NORMAL;
+        self->state = TwistingDoor_Unknown3;
     }
 }
 
@@ -169,32 +169,32 @@ void TwistingDoor_Unknown3(void)
 {
     RSDK_THIS(TwistingDoor);
 
-    entity->velocity.x = 0;
-    entity->velocity.y = 0;
-    if (entity->close && --entity->collapseDelay <= 0) {
-        entity->state         = TwistingDoor_Unknown4;
-        entity->collapseDelay = entity->type < 2 ? 64 : 128;
+    self->velocity.x = 0;
+    self->velocity.y = 0;
+    if (self->close && --self->collapseDelay <= 0) {
+        self->state         = TwistingDoor_Unknown4;
+        self->collapseDelay = self->type < 2 ? 64 : 128;
     }
 }
 
 void TwistingDoor_Unknown4(void)
 {
     RSDK_THIS(TwistingDoor);
-    if (--entity->animator.frameID < 0)
-        entity->animator.frameID = 7;
+    if (--self->animator.frameID < 0)
+        self->animator.frameID = 7;
 
-    if (entity->type == PLATFORM_1 || entity->type == PLATFORM_2) {
-        entity->drawPos.x -= entity->groundVel;
-        entity->velocity.x = entity->groundVel;
+    if (self->type == PLATFORM_COLLAPSING || self->type == PLATFORM_MOVING) {
+        self->drawPos.x -= self->groundVel;
+        self->velocity.x = self->groundVel;
     }
     else {
-        entity->drawPos.y -= entity->groundVel;
-        entity->velocity.y = entity->groundVel;
+        self->drawPos.y -= self->groundVel;
+        self->velocity.y = self->groundVel;
     }
 
-    if (--entity->collapseDelay <= 0) {
-        entity->active = ACTIVE_BOUNDS;
-        entity->state  = TwistingDoor_Unknown1;
+    if (--self->collapseDelay <= 0) {
+        self->active = ACTIVE_BOUNDS;
+        self->state  = TwistingDoor_Unknown1;
     }
 }
 

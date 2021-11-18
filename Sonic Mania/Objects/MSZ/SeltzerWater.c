@@ -5,13 +5,13 @@ ObjectSeltzerWater *SeltzerWater;
 void SeltzerWater_Update(void)
 {
     RSDK_THIS(SeltzerWater);
-    StateMachine_Run(entity->state);
+    StateMachine_Run(self->state);
 
-    if (entity->scale.x < 512) {
-        entity->scale.x += 16;
-        entity->scale.y = entity->scale.x;
-        if (entity->scale.x == 512)
-            entity->drawFX = FX_NONE;
+    if (self->scale.x < 512) {
+        self->scale.x += 16;
+        self->scale.y = self->scale.x;
+        if (self->scale.x == 512)
+            self->drawFX = FX_NONE;
     }
 }
 
@@ -22,23 +22,23 @@ void SeltzerWater_StaticUpdate(void) {}
 void SeltzerWater_Draw(void)
 {
     RSDK_THIS(SeltzerWater);
-    RSDK.DrawSprite(&entity->animator, NULL, false);
+    RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
 void SeltzerWater_Create(void *data)
 {
     RSDK_THIS(SeltzerWater);
     if (!SceneInfo->inEditor) {
-        RSDK.SetSpriteAnimation(SeltzerWater->aniFrames, 4, &entity->animator, true, RSDK.Rand(0, 8));
-        entity->active        = ACTIVE_NORMAL;
-        entity->updateRange.x = 0x100000;
-        entity->updateRange.y = 0x100000;
-        entity->visible       = 1;
-        entity->drawFX        = FX_SCALE;
-        entity->scale.x       = 0x80;
-        entity->scale.y       = 0x80;
-        entity->field_5C      = RSDK.Rand(0, 256);
-        entity->state         = SeltzerWater_Unknown1;
+        RSDK.SetSpriteAnimation(SeltzerWater->aniFrames, 4, &self->animator, true, RSDK.Rand(0, 8));
+        self->active        = ACTIVE_NORMAL;
+        self->updateRange.x = 0x100000;
+        self->updateRange.y = 0x100000;
+        self->visible       = 1;
+        self->drawFX        = FX_SCALE;
+        self->scale.x       = 0x80;
+        self->scale.y       = 0x80;
+        self->field_5C      = RSDK.Rand(0, 256);
+        self->state         = SeltzerWater_Unknown1;
     }
 }
 
@@ -47,50 +47,50 @@ void SeltzerWater_StageLoad(void) { SeltzerWater->aniFrames = RSDK.LoadSpriteAni
 void SeltzerWater_Unknown1(void)
 {
     RSDK_THIS(SeltzerWater);
-    EntityPlatformNode *node = RSDK_GET_ENTITY(entity->nodeSlot, PlatformNode);
-    RSDK.ProcessAnimation(&entity->animator);
+    EntityPlatformNode *node = RSDK_GET_ENTITY(self->nodeSlot, PlatformNode);
+    RSDK.ProcessAnimation(&self->animator);
     if (node->objectID == PlatformNode->objectID) {
-        int32 x = (entity->position.x - node->position.x) >> 16;
-        int32 y = (entity->position.y - node->position.y) >> 16;
+        int32 x = (self->position.x - node->position.x) >> 16;
+        int32 y = (self->position.y - node->position.y) >> 16;
 
-        entity->angle      = RSDK.ATan2(x, y);
-        entity->velocity.x = -(entity->field_64 * RSDK.Cos256(entity->angle));
-        entity->velocity.y = 16 * RSDK.Sin256(entity->field_5C) - entity->field_64 * RSDK.Sin256(entity->angle);
-        entity->position.x += entity->velocity.x;
-        entity->position.y += entity->velocity.y;
+        self->angle      = RSDK.ATan2(x, y);
+        self->velocity.x = -(self->field_64 * RSDK.Cos256(self->angle));
+        self->velocity.y = 16 * RSDK.Sin256(self->field_5C) - self->field_64 * RSDK.Sin256(self->angle);
+        self->position.x += self->velocity.x;
+        self->position.y += self->velocity.y;
         if (x * x + y * y < 80)
-            ++entity->nodeSlot;
-        entity->field_5C++;
+            ++self->nodeSlot;
+        self->field_5C++;
     }
     else {
-        entity->state           = SeltzerWater_Unknown2;
-        entity->gravityStrength = 0x3800;
+        self->state           = SeltzerWater_Unknown2;
+        self->gravityStrength = 0x3800;
     }
 }
 
 void SeltzerWater_Unknown2(void)
 {
     RSDK_THIS(SeltzerWater);
-    RSDK.ProcessAnimation(&entity->animator);
-    entity->position.x += entity->velocity.x;
-    entity->position.y += entity->velocity.y;
-    entity->velocity.y += entity->gravityStrength;
-    if (RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x60000, true)) {
-        RSDK.SetSpriteAnimation(SeltzerWater->aniFrames, 5, &entity->animator, true, 0);
-        entity->state = SeltzerWater_Unknown3;
+    RSDK.ProcessAnimation(&self->animator);
+    self->position.x += self->velocity.x;
+    self->position.y += self->velocity.y;
+    self->velocity.y += self->gravityStrength;
+    if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x60000, true)) {
+        RSDK.SetSpriteAnimation(SeltzerWater->aniFrames, 5, &self->animator, true, 0);
+        self->state = SeltzerWater_Unknown3;
     }
     else {
-        if (!RSDK.CheckOnScreen(entity, NULL))
-            destroyEntity(entity);
+        if (!RSDK.CheckOnScreen(self, NULL))
+            destroyEntity(self);
     }
 }
 
 void SeltzerWater_Unknown3(void)
 {
     RSDK_THIS(SeltzerWater);
-    RSDK.ProcessAnimation(&entity->animator);
-    if (entity->animator.frameID == entity->animator.frameCount - 1)
-        destroyEntity(entity);
+    RSDK.ProcessAnimation(&self->animator);
+    if (self->animator.frameID == self->animator.frameCount - 1)
+        destroyEntity(self);
 }
 
 #if RETRO_INCLUDE_EDITOR

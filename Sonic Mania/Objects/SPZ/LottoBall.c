@@ -5,9 +5,9 @@ ObjectLottoBall *LottoBall;
 void LottoBall_Update(void)
 {
     RSDK_THIS(LottoBall);
-    StateMachine_Run(entity->state);
-    entity->angle += entity->angleVel;
-    entity->rotation = (entity->angle >> 15) & 0x1FF;
+    StateMachine_Run(self->state);
+    self->angle += self->angleVel;
+    self->rotation = (self->angle >> 15) & 0x1FF;
 }
 
 void LottoBall_LateUpdate(void) {}
@@ -19,38 +19,38 @@ void LottoBall_Draw(void)
     RSDK_THIS(LottoBall);
     Vector2 drawPos;
 
-    if (entity->screenFlags[SceneInfo->currentScreenID] || (!entity->screenRelative && entity->state != LottoBall_Unknown4)) {
-        RSDK.DrawSprite(&entity->animator1, NULL, entity->screenRelative);
-        switch (entity->type) {
+    if (self->screenFlags[SceneInfo->currentScreenID] || (!self->screenRelative && self->state != LottoBall_Unknown4)) {
+        RSDK.DrawSprite(&self->animator1, NULL, self->screenRelative);
+        switch (self->type) {
             case LOTTOBALL_BLUE:
             case LOTTOBALL_YELLOW:
             case LOTTOBALL_MULTI:
-                RSDK.DrawSprite(&entity->animator2, NULL, entity->screenRelative);
-                RSDK.DrawSprite(&entity->animator3, NULL, entity->screenRelative);
+                RSDK.DrawSprite(&self->animator2, NULL, self->screenRelative);
+                RSDK.DrawSprite(&self->animator3, NULL, self->screenRelative);
                 break;
-            case LOTTOBALL_EGGMAN: RSDK.DrawSprite(&entity->animator2, NULL, entity->screenRelative); break;
+            case LOTTOBALL_EGGMAN: RSDK.DrawSprite(&self->animator2, NULL, self->screenRelative); break;
             case LOTTOBALL_BIG:
-                entity->drawFX = FX_SCALE | FX_ROTATE;
-                drawPos.x      = entity->position.x;
-                drawPos.y      = entity->position.y;
-                drawPos.y += RSDK.Sin256(entity->timer) << 10;
-                RSDK.DrawSprite(&entity->animator2, &drawPos, entity->screenRelative);
+                self->drawFX = FX_SCALE | FX_ROTATE;
+                drawPos.x      = self->position.x;
+                drawPos.y      = self->position.y;
+                drawPos.y += RSDK.Sin256(self->timer) << 10;
+                RSDK.DrawSprite(&self->animator2, &drawPos, self->screenRelative);
 
-                entity->drawFX = FX_SCALE;
+                self->drawFX = FX_SCALE;
                 break;
             case LOTTOBALL_TOTAL:
-                drawPos = entity->position;
+                drawPos = self->position;
                 drawPos.x -= 0x90000;
-                entity->animator3.frameID = entity->lottoNum / 100;
-                RSDK.DrawSprite(&entity->animator3, &drawPos, entity->screenRelative);
+                self->animator3.frameID = self->lottoNum / 100;
+                RSDK.DrawSprite(&self->animator3, &drawPos, self->screenRelative);
 
                 drawPos.x += 0x90000;
-                entity->animator3.frameID = (entity->lottoNum / 10) % 10;
-                RSDK.DrawSprite(&entity->animator3, &drawPos, entity->screenRelative);
+                self->animator3.frameID = (self->lottoNum / 10) % 10;
+                RSDK.DrawSprite(&self->animator3, &drawPos, self->screenRelative);
 
                 drawPos.x += 0x90000;
-                entity->animator3.frameID = entity->lottoNum % 10;
-                RSDK.DrawSprite(&entity->animator3, &drawPos, entity->screenRelative);
+                self->animator3.frameID = self->lottoNum % 10;
+                RSDK.DrawSprite(&self->animator3, &drawPos, self->screenRelative);
                 break;
             default: return;
         }
@@ -62,29 +62,29 @@ void LottoBall_Create(void *data)
     RSDK_THIS(LottoBall);
 
     if (!SceneInfo->inEditor) {
-        entity->drawFX = FX_ROTATE;
-        RSDK.SetSpriteAnimation(LottoBall->aniFrames, 0, &entity->animator1, true, entity->type);
-        switch (entity->type) {
+        self->drawFX = FX_ROTATE;
+        RSDK.SetSpriteAnimation(LottoBall->aniFrames, 0, &self->animator1, true, self->type);
+        switch (self->type) {
             case LOTTOBALL_BLUE:
             case LOTTOBALL_YELLOW:
-                RSDK.SetSpriteAnimation(LottoBall->aniFrames, 1, &entity->animator2, true, entity->lottoNum / 10);
-                RSDK.SetSpriteAnimation(LottoBall->aniFrames, 2, &entity->animator3, true, entity->lottoNum % 10);
+                RSDK.SetSpriteAnimation(LottoBall->aniFrames, 1, &self->animator2, true, self->lottoNum / 10);
+                RSDK.SetSpriteAnimation(LottoBall->aniFrames, 2, &self->animator3, true, self->lottoNum % 10);
                 break;
             case LOTTOBALL_MULTI:
-                entity->lottoNum %= 10;
-                RSDK.SetSpriteAnimation(LottoBall->aniFrames, 1, &entity->animator2, true, entity->lottoNum % 10);
-                RSDK.SetSpriteAnimation(LottoBall->aniFrames, 2, &entity->animator3, true, 10);
+                self->lottoNum %= 10;
+                RSDK.SetSpriteAnimation(LottoBall->aniFrames, 1, &self->animator2, true, self->lottoNum % 10);
+                RSDK.SetSpriteAnimation(LottoBall->aniFrames, 2, &self->animator3, true, 10);
                 break;
-            case LOTTOBALL_EGGMAN: RSDK.SetSpriteAnimation(LottoBall->aniFrames, 1, &entity->animator2, true, 11); break;
+            case LOTTOBALL_EGGMAN: RSDK.SetSpriteAnimation(LottoBall->aniFrames, 1, &self->animator2, true, 11); break;
             default: break;
         }
-        entity->active          = ACTIVE_BOUNDS;
-        entity->updateRange.x   = 0x400000;
-        entity->updateRange.y   = 0xE00000;
-        entity->gravityStrength = 0x3800;
-        entity->visible         = true;
-        entity->drawOrder       = Zone->drawOrderLow;
-        entity->startPos        = entity->position;
+        self->active          = ACTIVE_BOUNDS;
+        self->updateRange.x   = 0x400000;
+        self->updateRange.y   = 0xE00000;
+        self->gravityStrength = 0x3800;
+        self->visible         = true;
+        self->drawOrder       = Zone->drawOrderLow;
+        self->startPos        = self->position;
     }
 }
 
@@ -99,24 +99,24 @@ void LottoBall_Unknown1(void)
 {
     RSDK_THIS(LottoBall);
 
-    if (entity->parent) {
-        if (entity->timer) {
-            entity->timer--;
+    if (self->parent) {
+        if (self->timer) {
+            self->timer--;
         }
         else {
-            if (entity->position.y >= entity->parent->position.y - 0x200000) {
-                entity->state = LottoBall_Unknown2;
+            if (self->position.y >= self->parent->position.y - 0x200000) {
+                self->state = LottoBall_Unknown2;
             }
             else {
-                if (entity->position.x >= entity->parent->position.x)
-                    entity->velocity.x -= entity->gravityStrength;
+                if (self->position.x >= self->parent->position.x)
+                    self->velocity.x -= self->gravityStrength;
                 else
-                    entity->velocity.x += entity->gravityStrength;
+                    self->velocity.x += self->gravityStrength;
             }
-            entity->velocity.y += entity->gravityStrength;
-            entity->position.x += entity->velocity.x;
-            entity->position.y += entity->velocity.y;
-            entity->angleVel = entity->velocity.x;
+            self->velocity.y += self->gravityStrength;
+            self->position.x += self->velocity.x;
+            self->position.y += self->velocity.y;
+            self->angleVel = self->velocity.x;
         }
     }
 }
@@ -125,77 +125,77 @@ void LottoBall_Unknown2(void)
 {
     RSDK_THIS(LottoBall);
 
-    EntityLottoMachine *parent = (EntityLottoMachine *)entity->parent;
+    EntityLottoMachine *parent = (EntityLottoMachine *)self->parent;
     if (parent) {
-        entity->velocity.y += entity->gravityStrength;
-        entity->position.x += entity->velocity.x;
-        entity->position.y += entity->velocity.y;
+        self->velocity.y += self->gravityStrength;
+        self->position.x += self->velocity.x;
+        self->position.y += self->velocity.y;
 
-        if (entity->timer) {
-            entity->timer--;
+        if (self->timer) {
+            self->timer--;
         }
         else {
-            int vel = (abs(entity->velocity.x) + abs(parent->field_74) + abs(entity->velocity.y)) >> 1;
+            int vel = (abs(self->velocity.x) + abs(parent->field_74) + abs(self->velocity.y)) >> 1;
             if (vel >= 0x30000) {
                 if (vel > 0x60000)
                     vel = 0x60000;
             }
             else {
                 vel           = 0x30000;
-                entity->timer = RSDK.Rand(16, 32);
+                self->timer = RSDK.Rand(16, 32);
             }
             if (!(Zone->timer & 0xF))
                 RSDK.PlaySfx(LottoBall->sfxLottoBounce, false, 255);
 
             foreach_active(LottoBall, ball)
             {
-                if (ball != entity) {
-                    int rx = (entity->position.x - ball->position.x) >> 16;
-                    int ry = (entity->position.y - ball->position.y) >> 16;
+                if (ball != self) {
+                    int rx = (self->position.x - ball->position.x) >> 16;
+                    int ry = (self->position.y - ball->position.y) >> 16;
                     if (rx * rx + ry * ry < 0x100) {
                         int angle          = RSDK.ATan2(rx, ry);
-                        entity->velocity.x = (vel * RSDK.Cos256(angle)) >> 8;
-                        entity->velocity.y = (vel * RSDK.Sin256(angle)) >> 8;
+                        self->velocity.x = (vel * RSDK.Cos256(angle)) >> 8;
+                        self->velocity.y = (vel * RSDK.Sin256(angle)) >> 8;
                     }
                 }
             }
         }
 
-        int rx = (entity->position.x - parent->position.x) >> 16;
-        int ry = (entity->position.y - parent->position.y) >> 16;
+        int rx = (self->position.x - parent->position.x) >> 16;
+        int ry = (self->position.y - parent->position.y) >> 16;
         if (rx * rx + ry * ry > 0x1B90) {
-            int angle          = RSDK.ATan2(rx, (entity->position.y - parent->position.y) >> 16);
-            entity->position.x = 0x5400 * RSDK.Cos256(angle) + parent->position.x;
-            entity->position.y = 0x5400 * RSDK.Sin256(angle) + parent->position.y;
+            int angle          = RSDK.ATan2(rx, (self->position.y - parent->position.y) >> 16);
+            self->position.x = 0x5400 * RSDK.Cos256(angle) + parent->position.x;
+            self->position.y = 0x5400 * RSDK.Sin256(angle) + parent->position.y;
             switch (((angle + 32) & 0xFF) >> 6) {
                 case 0:
                 case 2:
-                    entity->timer      = 8;
-                    entity->velocity.x = -entity->velocity.x >> 1;
+                    self->timer      = 8;
+                    self->velocity.x = -self->velocity.x >> 1;
                     break;
                 case 1u:
-                    entity->velocity.y = -entity->velocity.y >> 1;
-                    entity->velocity.x -= parent->field_74;
+                    self->velocity.y = -self->velocity.y >> 1;
+                    self->velocity.x -= parent->field_74;
                     if (parent->state == LottoMachine_State_Unknown1) {
-                        entity->active = ACTIVE_NORMAL;
-                        entity->state  = LottoBall_CheckOnScreen;
+                        self->active = ACTIVE_NORMAL;
+                        self->state  = LottoBall_CheckOnScreen;
                     }
                     break;
                 case 3:
-                    entity->velocity.y = maxVal(-entity->velocity.y >> 1, 0x10000);
-                    entity->velocity.x += parent->field_74;
+                    self->velocity.y = maxVal(-self->velocity.y >> 1, 0x10000);
+                    self->velocity.x += parent->field_74;
                     break;
             }
         }
 
-        if (entity->velocity.x >= -0x40000) {
-            if (entity->velocity.x > 0x40000)
-                entity->velocity.x = 0x40000;
-            entity->angleVel = entity->velocity.x + entity->velocity.y;
+        if (self->velocity.x >= -0x40000) {
+            if (self->velocity.x > 0x40000)
+                self->velocity.x = 0x40000;
+            self->angleVel = self->velocity.x + self->velocity.y;
         }
         else {
-            entity->velocity.x = -0x40000;
-            entity->angleVel   = entity->velocity.x + entity->velocity.y;
+            self->velocity.x = -0x40000;
+            self->angleVel   = self->velocity.x + self->velocity.y;
         }
     }
 }
@@ -204,15 +204,15 @@ void LottoBall_CheckOnScreen(void)
 {
     RSDK_THIS(LottoBall);
 
-    entity->angleVel = 0;
-    if (!RSDK.CheckOnScreen(entity, NULL) && !RSDK.CheckPosOnScreen(&entity->startPos, &entity->updateRange)) {
-        entity->angle      = 0;
-        entity->velocity.x = 0;
-        entity->velocity.y = 0;
-        entity->position.x = entity->startPos.x;
-        entity->position.y = entity->startPos.y;
-        entity->active     = ACTIVE_BOUNDS;
-        entity->state      = StateMachine_None;
+    self->angleVel = 0;
+    if (!RSDK.CheckOnScreen(self, NULL) && !RSDK.CheckPosOnScreen(&self->startPos, &self->updateRange)) {
+        self->angle      = 0;
+        self->velocity.x = 0;
+        self->velocity.y = 0;
+        self->position.x = self->startPos.x;
+        self->position.y = self->startPos.y;
+        self->active     = ACTIVE_BOUNDS;
+        self->state      = StateMachine_None;
     }
 }
 
@@ -220,32 +220,32 @@ void LottoBall_Unknown4(void)
 {
     RSDK_THIS(LottoBall);
 
-    if (entity->parent) {
-        if (entity->timer == 8)
+    if (self->parent) {
+        if (self->timer == 8)
             RSDK.PlaySfx(LottoBall->sfxSpew, false, 255);
 
-        if (entity->timer > 16) {
-            entity->velocity.y += entity->gravityStrength;
-            entity->position.y += entity->velocity.y;
+        if (self->timer > 16) {
+            self->velocity.y += self->gravityStrength;
+            self->position.y += self->velocity.y;
         }
 
-        entity->timer++;
-        if (entity->timer > 48) {
-            entity->drawFX |= FX_SCALE;
-            entity->timer          = 0;
-            entity->screenRelative = true;
-            entity->scale.x        = 0x200;
-            entity->scale.y        = 0x200;
-            entity->drawOrder      = Zone->hudDrawOrder;
-            entity->active         = ACTIVE_NORMAL;
-            entity->state          = LottoBall_Unknown5;
-            RSDK.SetSpriteAnimation(LottoBall->aniFrames, entity->animator1.animationID + 3, &entity->animator1, true, entity->animator1.frameID);
-            RSDK.SetSpriteAnimation(LottoBall->aniFrames, (entity->animator2.animationID + 3), &entity->animator2, true, entity->animator2.frameID);
-            RSDK.SetSpriteAnimation(LottoBall->aniFrames, (entity->animator3.animationID + 3), &entity->animator3, true, entity->animator3.frameID);
-            entity->position.x = entity->field_70 - 0x1880000;
-            entity->velocity.x = 0x80000;
-            entity->position.y = ((ScreenInfo->height - 160) << 16);
-            entity->velocity.y = 0x40000;
+        self->timer++;
+        if (self->timer > 48) {
+            self->drawFX |= FX_SCALE;
+            self->timer          = 0;
+            self->screenRelative = true;
+            self->scale.x        = 0x200;
+            self->scale.y        = 0x200;
+            self->drawOrder      = Zone->hudDrawOrder;
+            self->active         = ACTIVE_NORMAL;
+            self->state          = LottoBall_Unknown5;
+            RSDK.SetSpriteAnimation(LottoBall->aniFrames, self->animator1.animationID + 3, &self->animator1, true, self->animator1.frameID);
+            RSDK.SetSpriteAnimation(LottoBall->aniFrames, (self->animator2.animationID + 3), &self->animator2, true, self->animator2.frameID);
+            RSDK.SetSpriteAnimation(LottoBall->aniFrames, (self->animator3.animationID + 3), &self->animator3, true, self->animator3.frameID);
+            self->position.x = self->field_70 - 0x1880000;
+            self->velocity.x = 0x80000;
+            self->position.y = ((ScreenInfo->height - 160) << 16);
+            self->velocity.y = 0x40000;
         }
     }
 }
@@ -254,18 +254,18 @@ void LottoBall_Unknown5(void)
 {
     RSDK_THIS(LottoBall);
 
-    if (entity->parent) {
-        entity->velocity.y += 0x4800;
-        entity->position.x += entity->velocity.x;
-        entity->position.y += entity->velocity.y;
-        if (entity->position.x > entity->field_70)
-            entity->position.x = entity->field_70;
-        if (entity->position.y > entity->field_74) {
-            entity->position.y = entity->field_74;
-            entity->velocity.y = -(entity->velocity.y >> 1);
-            if (entity->position.x >= entity->field_70) {
-                entity->position.x = entity->field_70;
-                entity->state      = StateMachine_None;
+    if (self->parent) {
+        self->velocity.y += 0x4800;
+        self->position.x += self->velocity.x;
+        self->position.y += self->velocity.y;
+        if (self->position.x > self->field_70)
+            self->position.x = self->field_70;
+        if (self->position.y > self->field_74) {
+            self->position.y = self->field_74;
+            self->velocity.y = -(self->velocity.y >> 1);
+            if (self->position.x >= self->field_70) {
+                self->position.x = self->field_70;
+                self->state      = StateMachine_None;
             }
         }
     }
@@ -275,30 +275,30 @@ void LottoBall_Unknown6(void)
 {
     RSDK_THIS(LottoBall);
 
-    ++entity->timer;
-    entity->position.x += ((ScreenInfo->centerX << 16) - entity->position.x) >> 3;
-    if (entity->timer > 24) {
-        entity->scale.x -= (entity->scale.x >> 3);
-        entity->scale.y -= (entity->scale.y >> 3);
-        if (entity->scale.x < 8) {
-            entity->position.x     = entity->startPos.x;
-            entity->position.y     = entity->startPos.y;
-            entity->scale.y        = 8;
-            entity->scale.x        = 8;
-            entity->angle          = 0;
-            entity->velocity.x     = 0;
-            entity->velocity.y     = 0;
-            entity->active         = ACTIVE_BOUNDS;
-            entity->screenRelative = false;
-            entity->drawOrder      = Zone->drawOrderLow;
-            entity->screenFlags[0] = false;
-            entity->screenFlags[1] = false;
-            entity->screenFlags[2] = false;
-            entity->screenFlags[3] = false;
-            entity->state          = LottoBall_Unknown7;
-            RSDK.SetSpriteAnimation(LottoBall->aniFrames, entity->animator1.animationID - 3, &entity->animator1, true, entity->animator1.frameID);
-            RSDK.SetSpriteAnimation(LottoBall->aniFrames, entity->animator2.animationID - 3, &entity->animator2, true, entity->animator2.frameID);
-            RSDK.SetSpriteAnimation(LottoBall->aniFrames, entity->animator3.animationID - 3, &entity->animator3, true, entity->animator3.frameID);
+    ++self->timer;
+    self->position.x += ((ScreenInfo->centerX << 16) - self->position.x) >> 3;
+    if (self->timer > 24) {
+        self->scale.x -= (self->scale.x >> 3);
+        self->scale.y -= (self->scale.y >> 3);
+        if (self->scale.x < 8) {
+            self->position.x     = self->startPos.x;
+            self->position.y     = self->startPos.y;
+            self->scale.y        = 8;
+            self->scale.x        = 8;
+            self->angle          = 0;
+            self->velocity.x     = 0;
+            self->velocity.y     = 0;
+            self->active         = ACTIVE_BOUNDS;
+            self->screenRelative = false;
+            self->drawOrder      = Zone->drawOrderLow;
+            self->screenFlags[0] = false;
+            self->screenFlags[1] = false;
+            self->screenFlags[2] = false;
+            self->screenFlags[3] = false;
+            self->state          = LottoBall_Unknown7;
+            RSDK.SetSpriteAnimation(LottoBall->aniFrames, self->animator1.animationID - 3, &self->animator1, true, self->animator1.frameID);
+            RSDK.SetSpriteAnimation(LottoBall->aniFrames, self->animator2.animationID - 3, &self->animator2, true, self->animator2.frameID);
+            RSDK.SetSpriteAnimation(LottoBall->aniFrames, self->animator3.animationID - 3, &self->animator3, true, self->animator3.frameID);
         }
     }
 }
@@ -307,35 +307,35 @@ void LottoBall_Unknown7(void)
 {
     RSDK_THIS(LottoBall);
 
-    entity->scale.x += entity->scale.x >> 3;
-    entity->scale.y += entity->scale.y >> 3;
-    if (entity->scale.x >= 0x200) {
-        entity->drawFX &= ~FX_SCALE;
-        entity->scale.y = 0x200;
-        entity->scale.x = 0x200;
-        entity->state   = StateMachine_None;
+    self->scale.x += self->scale.x >> 3;
+    self->scale.y += self->scale.y >> 3;
+    if (self->scale.x >= 0x200) {
+        self->drawFX &= ~FX_SCALE;
+        self->scale.y = 0x200;
+        self->scale.x = 0x200;
+        self->state   = StateMachine_None;
     }
 }
 
 void LottoBall_Unknown8(void)
 {
     RSDK_THIS(LottoBall);
-    entity->timer += 8;
+    self->timer += 8;
 
-    int scale = entity->scale.x + ((0x214 - entity->scale.x) >> 3);
+    int scale = self->scale.x + ((0x214 - self->scale.x) >> 3);
     if (scale > 0x200)
         scale = 0x200;
-    entity->scale.x = scale;
-    entity->scale.y = scale;
-    if (entity->timer > 512) {
-        entity->timer    = 0;
-        entity->type     = LOTTOBALL_TOTAL;
-        entity->state    = LottoBall_Unknown6;
-        entity->lottoNum = abs(entity->ringCount);
-        if (entity->ringCount < 0)
-            RSDK.SetSpriteAnimation(LottoBall->aniFrames, 8, &entity->animator3, true, 0);
+    self->scale.x = scale;
+    self->scale.y = scale;
+    if (self->timer > 512) {
+        self->timer    = 0;
+        self->type     = LOTTOBALL_TOTAL;
+        self->state    = LottoBall_Unknown6;
+        self->lottoNum = abs(self->ringCount);
+        if (self->ringCount < 0)
+            RSDK.SetSpriteAnimation(LottoBall->aniFrames, 8, &self->animator3, true, 0);
         else
-            RSDK.SetSpriteAnimation(LottoBall->aniFrames, 7, &entity->animator3, true, 0);
+            RSDK.SetSpriteAnimation(LottoBall->aniFrames, 7, &self->animator3, true, 0);
     }
 }
 
@@ -343,25 +343,25 @@ void LottoBall_Unknown8(void)
 void LottoBall_EditorDraw(void)
 {
     RSDK_THIS(LottoBall);
-    RSDK.SetSpriteAnimation(LottoBall->aniFrames, 0, &entity->animator1, true, entity->type);
-    switch (entity->type) {
+    RSDK.SetSpriteAnimation(LottoBall->aniFrames, 0, &self->animator1, true, self->type);
+    switch (self->type) {
         case LOTTOBALL_BLUE:
         case LOTTOBALL_YELLOW:
-            RSDK.SetSpriteAnimation(LottoBall->aniFrames, 1, &entity->animator2, true, entity->lottoNum / 10);
-            RSDK.SetSpriteAnimation(LottoBall->aniFrames, 2, &entity->animator3, true, entity->lottoNum % 10);
+            RSDK.SetSpriteAnimation(LottoBall->aniFrames, 1, &self->animator2, true, self->lottoNum / 10);
+            RSDK.SetSpriteAnimation(LottoBall->aniFrames, 2, &self->animator3, true, self->lottoNum % 10);
             break;
         case LOTTOBALL_MULTI:
-            entity->lottoNum %= 10;
-            RSDK.SetSpriteAnimation(LottoBall->aniFrames, 1, &entity->animator2, true, entity->lottoNum % 10);
-            RSDK.SetSpriteAnimation(LottoBall->aniFrames, 2, &entity->animator3, true, 10);
+            self->lottoNum %= 10;
+            RSDK.SetSpriteAnimation(LottoBall->aniFrames, 1, &self->animator2, true, self->lottoNum % 10);
+            RSDK.SetSpriteAnimation(LottoBall->aniFrames, 2, &self->animator3, true, 10);
             break;
-        case LOTTOBALL_EGGMAN: RSDK.SetSpriteAnimation(LottoBall->aniFrames, 1, &entity->animator2, true, 11); break;
+        case LOTTOBALL_EGGMAN: RSDK.SetSpriteAnimation(LottoBall->aniFrames, 1, &self->animator2, true, 11); break;
         default: break;
     }
-    entity->updateRange.x = 0x400000;
-    entity->updateRange.y = 0xE00000;
-    entity->visible       = true;
-    entity->drawOrder     = Zone->drawOrderLow;
+    self->updateRange.x = 0x400000;
+    self->updateRange.y = 0xE00000;
+    self->visible       = true;
+    self->drawOrder     = Zone->drawOrderLow;
 
     LottoBall_Draw();
 }

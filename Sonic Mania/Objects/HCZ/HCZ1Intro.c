@@ -7,13 +7,13 @@ void HCZ1Intro_Update(void)
     void *states[] = { HCZ1Intro_CutsceneState, NULL };
 
     RSDK_THIS(HCZ1Intro);
-    if (!entity->activated) {
+    if (!self->activated) {
         if (!isMainGameMode() || !globals->enableIntro || PlayerHelpers_CheckStageReload()) {
-            entity->active = ACTIVE_NEVER;
+            self->active = ACTIVE_NEVER;
         }
         else {
-            entity->activated = true;
-            CutsceneSeq_StartSequence((Entity *)entity, states);
+            self->activated = true;
+            CutsceneSeq_StartSequence((Entity *)self, states);
         }
     }
 }
@@ -28,9 +28,9 @@ void HCZ1Intro_Create(void *data)
 {
     RSDK_THIS(HCZ1Intro);
 
-    INIT_ENTITY(entity);
-    CutsceneRules_SetupEntity(entity, &entity->size, &entity->hitbox);
-    entity->active = ACTIVE_NORMAL;
+    INIT_ENTITY(self);
+    CutsceneRules_SetupEntity(self, &self->size, &self->hitbox);
+    self->active = ACTIVE_NORMAL;
 }
 
 void HCZ1Intro_StageLoad(void)
@@ -48,8 +48,8 @@ bool32 HCZ1Intro_CutsceneState(EntityCutsceneSeq *host)
     EntityCamera *camera  = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
 
     if (!host->timer) {
-        player1->position.x = entity->position.x;
-        camera->position.x  = entity->position.x;
+        player1->position.x = self->position.x;
+        camera->position.x  = self->position.x;
         camera->position.y  = 0;
         player1->position.x -= 0x200000;
         player1->camera     = NULL;
@@ -120,7 +120,7 @@ bool32 HCZ1Intro_CutsceneState(EntityCutsceneSeq *host)
 void HCZ1Intro_EditorDraw(void)
 {
     RSDK_THIS(HCZ1Intro);
-    CutsceneRules_DrawCutsceneBounds(entity, &entity->size);
+    CutsceneRules_DrawCutsceneBounds(self, &self->size);
 }
 
 void HCZ1Intro_EditorLoad(void) {}

@@ -5,7 +5,7 @@ ObjectBlastoid *Blastoid;
 void Blastoid_Update(void)
 {
     RSDK_THIS(Blastoid);
-    StateMachine_Run(entity->state);
+    StateMachine_Run(self->state);
 }
 
 void Blastoid_LateUpdate(void) {}
@@ -15,29 +15,29 @@ void Blastoid_StaticUpdate(void) {}
 void Blastoid_Draw(void)
 {
     RSDK_THIS(Blastoid);
-    RSDK.DrawSprite(&entity->animator, NULL, false);
+    RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
 void Blastoid_Create(void *data)
 {
     RSDK_THIS(Blastoid);
-    entity->visible   = true;
-    entity->drawOrder = Zone->drawOrderLow;
-    entity->drawFX |= FX_FLIP;
+    self->visible   = true;
+    self->drawOrder = Zone->drawOrderLow;
+    self->drawFX |= FX_FLIP;
     if (!SceneInfo->inEditor) {
         if (data) {
-            entity->active        = ACTIVE_NORMAL;
-            entity->updateRange.x = 0x200000;
-            entity->updateRange.y = 0x200000;
-            RSDK.SetSpriteAnimation(Blastoid->aniFrames, 1, &entity->animator, true, 0);
-            entity->state = Blastoid_State_Projectile;
+            self->active        = ACTIVE_NORMAL;
+            self->updateRange.x = 0x200000;
+            self->updateRange.y = 0x200000;
+            RSDK.SetSpriteAnimation(Blastoid->aniFrames, 1, &self->animator, true, 0);
+            self->state = Blastoid_State_Projectile;
         }
         else {
-            entity->active        = ACTIVE_BOUNDS;
-            entity->updateRange.x = 0x800000;
-            entity->updateRange.y = 0x800000;
-            RSDK.SetSpriteAnimation(Blastoid->aniFrames, 0, &entity->animator, true, 1);
-            entity->state = Blastoid_State_Setup;
+            self->active        = ACTIVE_BOUNDS;
+            self->updateRange.x = 0x800000;
+            self->updateRange.y = 0x800000;
+            RSDK.SetSpriteAnimation(Blastoid->aniFrames, 0, &self->animator, true, 1);
+            self->state = Blastoid_State_Setup;
         }
     }
 }
@@ -61,7 +61,7 @@ void Blastoid_StageLoad(void)
 void Blastoid_DebugSpawn(void)
 {
     RSDK_THIS(Blastoid);
-    CREATE_ENTITY(Blastoid, NULL, entity->position.x, entity->position.y);
+    CREATE_ENTITY(Blastoid, NULL, self->position.x, self->position.y);
 }
 
 void Blastoid_DebugDraw(void)
@@ -76,14 +76,14 @@ void Blastoid_CheckPlayerCollisions(void)
 
     foreach_active(Player, player)
     {
-        if (Player_CheckBadnikTouch(player, entity, &Blastoid->hitboxBody) && Player_CheckBadnikBreak(entity, player, false)) {
+        if (Player_CheckBadnikTouch(player, self, &Blastoid->hitboxBody) && Player_CheckBadnikBreak(self, player, false)) {
             EntityCollapsingPlatform *platform = RSDK_GET_ENTITY(SceneInfo->entitySlot - 1, CollapsingPlatform);
             if (platform->objectID == CollapsingPlatform->objectID) {
                 platform->active        = ACTIVE_NORMAL;
                 platform->collapseDelay = 30;
-                platform->playerPos.x   = entity->position.x;
+                platform->playerPos.x   = self->position.x;
             }
-            destroyEntity(entity);
+            destroyEntity(self);
         }
     }
 }
@@ -91,24 +91,24 @@ void Blastoid_CheckPlayerCollisions(void)
 void Blastoid_State_Setup(void)
 {
     RSDK_THIS(Blastoid);
-    entity->active     = ACTIVE_NORMAL;
+    self->active     = ACTIVE_NORMAL;
     EntityCollapsingPlatform *platform = RSDK_GET_ENTITY(SceneInfo->entitySlot - 1, CollapsingPlatform);
     if (platform->objectID == CollapsingPlatform->objectID)
         platform->active = ACTIVE_NEVER;
-    entity->state = Blastoid_State_Body;
+    self->state = Blastoid_State_Body;
 }
 
 void Blastoid_State_Body(void)
 {
     RSDK_THIS(Blastoid);
 
-    RSDK.ProcessAnimation(&entity->animator);
-    switch (++entity->timer) {
+    RSDK.ProcessAnimation(&self->animator);
+    switch (++self->timer) {
         case 1:
         case 16:
         case 31: {
-            EntityBlastoid *projectile = CREATE_ENTITY(Blastoid, intToVoid(true), entity->position.x, entity->position.y);
-            if ((entity->direction & 1)) {
+            EntityBlastoid *projectile = CREATE_ENTITY(Blastoid, intToVoid(true), self->position.x, self->position.y);
+            if ((self->direction & 1)) {
                 projectile->position.x += 0x100000;
                 projectile->velocity.x = 0x20000;
             }
@@ -116,7 +116,7 @@ void Blastoid_State_Body(void)
                 projectile->position.x -= 0x100000;
                 projectile->velocity.x = -0x20000;
             }
-            if ((entity->direction & 2) != 0) {
+            if ((self->direction & 2) != 0) {
                 projectile->position.y += 0x60000;
                 projectile->velocity.y = 0x10000;
             }
@@ -124,34 +124,34 @@ void Blastoid_State_Body(void)
                 projectile->position.y -= 0x60000;
                 projectile->velocity.y = -0x10000;
             }
-            RSDK.SetSpriteAnimation(Blastoid->aniFrames, 0, &entity->animator, true, 0);
+            RSDK.SetSpriteAnimation(Blastoid->aniFrames, 0, &self->animator, true, 0);
             RSDK.PlaySfx(Blastoid->sfxShot, false, 255);
             break;
         }
-        case 121: entity->timer = 0; break;
+        case 121: self->timer = 0; break;
         default: break;
     }
     Blastoid_CheckPlayerCollisions();
 
-    if (!RSDK.CheckOnScreen(entity, NULL)) {
-        entity->timer  = 0;
-        entity->active = ACTIVE_BOUNDS;
+    if (!RSDK.CheckOnScreen(self, NULL)) {
+        self->timer  = 0;
+        self->active = ACTIVE_BOUNDS;
     }
 }
 
 void Blastoid_State_Projectile(void)
 {
     RSDK_THIS(Blastoid);
-    if (RSDK.CheckOnScreen(SceneInfo->entity, NULL)) {
-        entity->position.x += entity->velocity.x;
-        entity->position.y += entity->velocity.y;
-        RSDK.ProcessAnimation(&entity->animator);
+    if (RSDK.CheckOnScreen(self, NULL)) {
+        self->position.x += self->velocity.x;
+        self->position.y += self->velocity.y;
+        RSDK.ProcessAnimation(&self->animator);
 
-        if (RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_FLOOR, 0, 0, Blastoid->hitboxProjectile.top << 13, 4)
-            || RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_LWALL, 0, Blastoid->hitboxProjectile.left << 13, 0, 4)
-            || RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_ROOF, 0, 0, Blastoid->hitboxProjectile.bottom << 13, 4)
-            || RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_RWALL, 0, Blastoid->hitboxProjectile.right << 13, 0, 4)) {
-            destroyEntity(entity);
+        if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, Blastoid->hitboxProjectile.top << 13, 4)
+            || RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_LWALL, 0, Blastoid->hitboxProjectile.left << 13, 0, 4)
+            || RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_ROOF, 0, 0, Blastoid->hitboxProjectile.bottom << 13, 4)
+            || RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_RWALL, 0, Blastoid->hitboxProjectile.right << 13, 0, 4)) {
+            destroyEntity(self);
             return;
         }
 
@@ -160,13 +160,13 @@ void Blastoid_State_Projectile(void)
             int32 shield = player->shield;
             if (Water_GetPlayerBubble(player))
                 player->shield = SHIELD_BUBBLE;
-            if (Player_CheckCollisionTouch(player, entity, &Blastoid->hitboxProjectile))
-                Player_CheckProjectileHit(player, entity);
+            if (Player_CheckCollisionTouch(player, self, &Blastoid->hitboxProjectile))
+                Player_CheckProjectileHit(player, self);
             player->shield = shield;
         }
     }
     else {
-        destroyEntity(entity);
+        destroyEntity(self);
     }
 }
 
@@ -174,7 +174,7 @@ void Blastoid_State_Projectile(void)
 void Blastoid_EditorDraw(void)
 {
     RSDK_THIS(Blastoid);
-    RSDK.SetSpriteAnimation(Blastoid->aniFrames, 0, &entity->animator, false, 0);
+    RSDK.SetSpriteAnimation(Blastoid->aniFrames, 0, &self->animator, false, 0);
     Blastoid_Draw();
 }
 

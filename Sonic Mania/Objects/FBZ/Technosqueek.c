@@ -5,7 +5,7 @@ ObjectTechnosqueek *Technosqueek;
 void Technosqueek_Update(void)
 {
     RSDK_THIS(Technosqueek);
-    StateMachine_Run(entity->state);
+    StateMachine_Run(self->state);
 }
 
 void Technosqueek_LateUpdate(void) {}
@@ -17,47 +17,47 @@ void Technosqueek_Draw(void)
     RSDK_THIS(Technosqueek);
     Vector2 drawPos;
 
-    drawPos.x = entity->position.x;
-    drawPos.y = entity->position.y;
-    if (entity->type) {
-        if (entity->direction & FLIP_Y)
-            drawPos.y = entity->position.y - entity->field_6C;
+    drawPos.x = self->position.x;
+    drawPos.y = self->position.y;
+    if (self->type) {
+        if (self->direction & FLIP_Y)
+            drawPos.y = self->position.y - self->field_6C;
         else
-            drawPos.y = entity->field_6C + entity->position.y;
+            drawPos.y = self->field_6C + self->position.y;
     }
     else {
-        if (entity->direction & FLIP_X)
-            drawPos.x = entity->position.x - entity->field_6C;
+        if (self->direction & FLIP_X)
+            drawPos.x = self->position.x - self->field_6C;
         else
-            drawPos.x = entity->field_6C + entity->position.x;
+            drawPos.x = self->field_6C + self->position.x;
     }
-    RSDK.DrawSprite(&entity->animator2, &drawPos, false);
-    RSDK.DrawSprite(&entity->animator1, NULL, false);
+    RSDK.DrawSprite(&self->animator2, &drawPos, false);
+    RSDK.DrawSprite(&self->animator1, NULL, false);
 }
 
 void Technosqueek_Create(void *data)
 {
     RSDK_THIS(Technosqueek);
-    entity->visible   = true;
-    entity->drawOrder = Zone->drawOrderLow;
-    entity->drawFX |= FX_FLIP;
+    self->visible   = true;
+    self->drawOrder = Zone->drawOrderLow;
+    self->drawFX |= FX_FLIP;
     if (!SceneInfo->inEditor) {
-        entity->startPos.x    = entity->position.x;
-        entity->startPos.y    = entity->position.y;
-        entity->startDir      = entity->direction;
-        entity->active        = ACTIVE_BOUNDS;
-        entity->updateRange.x = 0x800000;
-        entity->updateRange.y = 0x800000;
-        if (!entity->type) {
-            RSDK.SetSpriteAnimation(Technosqueek->aniFrames, 0, &entity->animator1, true, 0);
-            RSDK.SetSpriteAnimation(Technosqueek->aniFrames, 2, &entity->animator2, true, 0);
+        self->startPos.x    = self->position.x;
+        self->startPos.y    = self->position.y;
+        self->startDir      = self->direction;
+        self->active        = ACTIVE_BOUNDS;
+        self->updateRange.x = 0x800000;
+        self->updateRange.y = 0x800000;
+        if (!self->type) {
+            RSDK.SetSpriteAnimation(Technosqueek->aniFrames, 0, &self->animator1, true, 0);
+            RSDK.SetSpriteAnimation(Technosqueek->aniFrames, 2, &self->animator2, true, 0);
         }
         else {
-            RSDK.SetSpriteAnimation(Technosqueek->aniFrames, 3, &entity->animator1, true, 0);
-            RSDK.SetSpriteAnimation(Technosqueek->aniFrames, 5, &entity->animator2, true, 0);
+            RSDK.SetSpriteAnimation(Technosqueek->aniFrames, 3, &self->animator1, true, 0);
+            RSDK.SetSpriteAnimation(Technosqueek->aniFrames, 5, &self->animator2, true, 0);
         }
-        entity->state = Technosqueek_State_Unknown1;
-        entity->distance *= 2;
+        self->state = Technosqueek_State_Unknown1;
+        self->distance *= 2;
     }
 }
 
@@ -75,7 +75,7 @@ void Technosqueek_StageLoad(void)
 void Technosqueek_DebugSpawn(void)
 {
     RSDK_THIS(Technosqueek);
-    CREATE_ENTITY(Technosqueek, NULL, entity->position.x, entity->position.y);
+    CREATE_ENTITY(Technosqueek, NULL, self->position.x, self->position.y);
 }
 
 void Technosqueek_DebugDraw(void)
@@ -90,19 +90,19 @@ void Technosqueek_HandlePlayerInteractions(void)
 
     foreach_active(Player, player)
     {
-        if (Player_CheckBadnikTouch(player, entity, &Technosqueek->hitbox))
-            Player_CheckBadnikBreak(entity, player, true);
+        if (Player_CheckBadnikTouch(player, self, &Technosqueek->hitbox))
+            Player_CheckBadnikBreak(self, player, true);
     }
 }
 
 void Technosqueek_CheckOnScreen(void)
 {
     RSDK_THIS(Technosqueek);
-    if (!RSDK.CheckOnScreen(entity, NULL) && !RSDK.CheckPosOnScreen(&entity->startPos, &entity->updateRange)) {
-        entity->distance >>= 1;
-        entity->position.x = entity->startPos.x;
-        entity->position.y = entity->startPos.y;
-        entity->direction  = entity->startDir;
+    if (!RSDK.CheckOnScreen(self, NULL) && !RSDK.CheckPosOnScreen(&self->startPos, &self->updateRange)) {
+        self->distance >>= 1;
+        self->position.x = self->startPos.x;
+        self->position.y = self->startPos.y;
+        self->direction  = self->startDir;
         Technosqueek_Create(NULL);
     }
 }
@@ -111,31 +111,31 @@ void Technosqueek_State_Unknown1(void)
 {
     RSDK_THIS(Technosqueek);
 
-    entity->active = ACTIVE_NORMAL;
+    self->active = ACTIVE_NORMAL;
     bool32 flag    = false;
-    if (entity->type)
-        flag = !(entity->direction & FLIP_Y);
+    if (self->type)
+        flag = !(self->direction & FLIP_Y);
     else
-        flag = !(entity->direction & FLIP_X);
+        flag = !(self->direction & FLIP_X);
     if (flag) {
-        entity->field_64  = 0x2000;
-        entity->field_68  = entity->speed << 14;
-        entity->groundVel = -entity->field_68;
+        self->field_64  = 0x2000;
+        self->field_68  = self->speed << 14;
+        self->groundVel = -self->field_68;
     }
     else {
-        entity->groundVel = entity->speed << 14;
-        entity->field_64  = -0x2000;
-        entity->field_68  = -entity->groundVel;
+        self->groundVel = self->speed << 14;
+        self->field_64  = -0x2000;
+        self->field_68  = -self->groundVel;
     }
-    entity->field_60 = entity->distance >> 1;
-    entity->flag     = true;
-    entity->field_6C = 0;
-    if (entity->type) {
-        entity->state = Technosqueek_State_Unknown4;
+    self->field_60 = self->distance >> 1;
+    self->flag     = true;
+    self->field_6C = 0;
+    if (self->type) {
+        self->state = Technosqueek_State_Unknown4;
         Technosqueek_State_Unknown4();
     }
     else {
-        entity->state = Technosqueek_State_Unknown2;
+        self->state = Technosqueek_State_Unknown2;
         Technosqueek_State_Unknown2();
     }
 }
@@ -144,42 +144,42 @@ void Technosqueek_State_Unknown2(void)
 {
     RSDK_THIS(Technosqueek);
 
-    entity->position.x += entity->groundVel;
-    if (entity->field_60) {
-        entity->field_60--;
+    self->position.x += self->groundVel;
+    if (self->field_60) {
+        self->field_60--;
     }
     else {
-        entity->groundVel += entity->field_64;
-        if (entity->groundVel == entity->field_68) {
-            entity->field_60 = entity->distance;
-            entity->field_68 = -entity->field_68;
-            entity->field_64 = -entity->field_64;
-            entity->flag     = true;
+        self->groundVel += self->field_64;
+        if (self->groundVel == self->field_68) {
+            self->field_60 = self->distance;
+            self->field_68 = -self->field_68;
+            self->field_64 = -self->field_64;
+            self->flag     = true;
         }
     }
 
-    RSDK.ProcessAnimation(&entity->animator2);
-    RSDK.ProcessAnimation(&entity->animator1);
-    if (entity->flag) {
-        if (abs(entity->groundVel) <= 0x10000 && entity->animator1.animationID != 1)
-            RSDK.SetSpriteAnimation(Technosqueek->aniFrames, 1, &entity->animator1, true, 0);
-        if (entity->animator1.frameID == 1) {
-            entity->field_6C = -0x80000;
+    RSDK.ProcessAnimation(&self->animator2);
+    RSDK.ProcessAnimation(&self->animator1);
+    if (self->flag) {
+        if (abs(self->groundVel) <= 0x10000 && self->animator1.animationID != 1)
+            RSDK.SetSpriteAnimation(Technosqueek->aniFrames, 1, &self->animator1, true, 0);
+        if (self->animator1.frameID == 1) {
+            self->field_6C = -0x80000;
         }
-        else if (entity->animator1.frameID == 2) {
-            entity->field_6C = -0x120000;
+        else if (self->animator1.frameID == 2) {
+            self->field_6C = -0x120000;
         }
     }
     else {
-        if (entity->field_6C < 0) {
-            entity->field_6C += abs(entity->groundVel - abs(entity->field_64));
+        if (self->field_6C < 0) {
+            self->field_6C += abs(self->groundVel - abs(self->field_64));
         }
         else {
-            entity->field_6C = 0;
+            self->field_6C = 0;
         }
     }
-    if (!entity->groundVel)
-        entity->state = Technosqueek_State_Unknown3;
+    if (!self->groundVel)
+        self->state = Technosqueek_State_Unknown3;
     Technosqueek_HandlePlayerInteractions();
     Technosqueek_CheckOnScreen();
 }
@@ -187,13 +187,13 @@ void Technosqueek_State_Unknown2(void)
 void Technosqueek_State_Unknown3(void)
 {
     RSDK_THIS(Technosqueek);
-    RSDK.ProcessAnimation(&entity->animator2);
-    RSDK.ProcessAnimation(&entity->animator1);
-    if (entity->animator1.frameID == entity->animator1.frameCount - 1) {
-        entity->flag = false;
-        RSDK.SetSpriteAnimation(Technosqueek->aniFrames, 0, &entity->animator1, true, 0);
-        entity->state = Technosqueek_State_Unknown2;
-        entity->direction ^= 1u;
+    RSDK.ProcessAnimation(&self->animator2);
+    RSDK.ProcessAnimation(&self->animator1);
+    if (self->animator1.frameID == self->animator1.frameCount - 1) {
+        self->flag = false;
+        RSDK.SetSpriteAnimation(Technosqueek->aniFrames, 0, &self->animator1, true, 0);
+        self->state = Technosqueek_State_Unknown2;
+        self->direction ^= 1u;
     }
     Technosqueek_HandlePlayerInteractions();
     Technosqueek_CheckOnScreen();
@@ -203,42 +203,42 @@ void Technosqueek_State_Unknown4(void)
 {
     RSDK_THIS(Technosqueek);
 
-    entity->position.y += entity->groundVel;
-    if (entity->field_60) {
-        entity->field_60--;
+    self->position.y += self->groundVel;
+    if (self->field_60) {
+        self->field_60--;
     }
     else {
-        entity->groundVel += entity->field_64;
-        if (entity->groundVel == entity->field_68) {
-            entity->field_60 = entity->distance;
-            entity->field_68 = -entity->field_68;
-            entity->field_64 = -entity->field_64;
-            entity->flag     = true;
+        self->groundVel += self->field_64;
+        if (self->groundVel == self->field_68) {
+            self->field_60 = self->distance;
+            self->field_68 = -self->field_68;
+            self->field_64 = -self->field_64;
+            self->flag     = true;
         }
     }
 
-    RSDK.ProcessAnimation(&entity->animator2);
-    RSDK.ProcessAnimation(&entity->animator1);
-    if (entity->flag) {
-        if (abs(entity->groundVel) <= 0x10000 && entity->animator1.animationID != 4)
-            RSDK.SetSpriteAnimation(Technosqueek->aniFrames, 4, &entity->animator1, true, 0);
-        if (entity->animator1.frameID == 1) {
-            entity->field_6C = -0x80000;
+    RSDK.ProcessAnimation(&self->animator2);
+    RSDK.ProcessAnimation(&self->animator1);
+    if (self->flag) {
+        if (abs(self->groundVel) <= 0x10000 && self->animator1.animationID != 4)
+            RSDK.SetSpriteAnimation(Technosqueek->aniFrames, 4, &self->animator1, true, 0);
+        if (self->animator1.frameID == 1) {
+            self->field_6C = -0x80000;
         }
-        else if (entity->animator1.frameID == 2) {
-            entity->field_6C = -0x120000;
+        else if (self->animator1.frameID == 2) {
+            self->field_6C = -0x120000;
         }
     }
     else {
-        if (entity->field_6C < 0) {
-            entity->field_6C += abs(entity->groundVel - abs(entity->field_64));
+        if (self->field_6C < 0) {
+            self->field_6C += abs(self->groundVel - abs(self->field_64));
         }
         else {
-            entity->field_6C = 0;
+            self->field_6C = 0;
         }
     }
-    if (!entity->groundVel)
-        entity->state = Technosqueek_State_Unknown5;
+    if (!self->groundVel)
+        self->state = Technosqueek_State_Unknown5;
     Technosqueek_HandlePlayerInteractions();
     Technosqueek_CheckOnScreen();
 }
@@ -246,13 +246,13 @@ void Technosqueek_State_Unknown4(void)
 void Technosqueek_State_Unknown5(void)
 {
     RSDK_THIS(Technosqueek);
-    RSDK.ProcessAnimation(&entity->animator2);
-    RSDK.ProcessAnimation(&entity->animator1);
-    if (entity->animator1.frameID == entity->animator1.frameCount - 1) {
-        entity->flag = false;
-        RSDK.SetSpriteAnimation(Technosqueek->aniFrames, 3, &entity->animator1, true, 0);
-        entity->state = Technosqueek_State_Unknown4;
-        entity->direction ^= FLIP_Y;
+    RSDK.ProcessAnimation(&self->animator2);
+    RSDK.ProcessAnimation(&self->animator1);
+    if (self->animator1.frameID == self->animator1.frameCount - 1) {
+        self->flag = false;
+        RSDK.SetSpriteAnimation(Technosqueek->aniFrames, 3, &self->animator1, true, 0);
+        self->state = Technosqueek_State_Unknown4;
+        self->direction ^= FLIP_Y;
     }
     Technosqueek_HandlePlayerInteractions();
     Technosqueek_CheckOnScreen();
@@ -261,18 +261,18 @@ void Technosqueek_State_Unknown5(void)
 void Technosqueek_State_Unknown6(void)
 {
     RSDK_THIS(Technosqueek);
-    entity->position.x += entity->velocity.x;
-    entity->position.y += entity->velocity.y;
-    entity->velocity.y += 0x3800;
-    if (RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x80000, 8)) {
-        entity->startPos.x = entity->position.x;
-        entity->startPos.y = entity->position.y;
-        entity->startDir   = entity->direction;
-        entity->velocity.y = 0;
-        entity->speed      = 16;
-        entity->state      = Technosqueek_State_Unknown1;
+    self->position.x += self->velocity.x;
+    self->position.y += self->velocity.y;
+    self->velocity.y += 0x3800;
+    if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x80000, 8)) {
+        self->startPos.x = self->position.x;
+        self->startPos.y = self->position.y;
+        self->startDir   = self->direction;
+        self->velocity.y = 0;
+        self->speed      = 16;
+        self->state      = Technosqueek_State_Unknown1;
     }
-    RSDK.ProcessAnimation(&entity->animator2);
+    RSDK.ProcessAnimation(&self->animator2);
     Technosqueek_HandlePlayerInteractions();
 }
 

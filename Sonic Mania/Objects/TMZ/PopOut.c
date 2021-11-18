@@ -6,20 +6,20 @@ void PopOut_Update(void)
 {
     RSDK_THIS(PopOut);
 
-    int32 storeDir        = entity->direction;
-    int32 storeX          = entity->position.x;
-    int32 storeY          = entity->position.y;
+    int32 storeDir        = self->direction;
+    int32 storeX          = self->position.x;
+    int32 storeY          = self->position.y;
     EntitySpring *child = RSDK_GET_ENTITY(SceneInfo->entitySlot + 1, Spring);
     if (child->objectID != Spring->objectID && child->objectID != Spikes->objectID)
         child = NULL;
 
-    entity->direction = 0;
-    if (!entity->manualTrigger) {
-        entity->flag = false;
+    self->direction = 0;
+    if (!self->manualTrigger) {
+        self->flag = false;
         foreach_active(Player, player)
         {
-            if (Player_CheckCollisionTouch(player, entity, &entity->hitbox)) {
-                entity->flag = true;
+            if (Player_CheckCollisionTouch(player, self, &self->hitbox)) {
+                self->flag = true;
                 foreach_break;
             }
         }
@@ -27,21 +27,21 @@ void PopOut_Update(void)
     else if (PopOut->hasButton) {
         foreach_active(Button, button)
         {
-            if (button->tag == entity->tag && button->field_70 == 1)
-                entity->flag = true;
+            if (button->tag == self->tag && button->field_70 == 1)
+                self->flag = true;
         }
     }
 
-    if (entity->flag) {
-        if (entity->field_7C < entity->delay) {
-            entity->field_7C++;
+    if (self->flag) {
+        if (self->field_7C < self->delay) {
+            self->field_7C++;
         }
         else {
-            if (entity->field_78 < 8) {
-                entity->field_78++;
-                if (entity->childType <= 0) {
+            if (self->field_78 < 8) {
+                self->field_78++;
+                if (self->childType <= 0) {
                     if (child) {
-                        if (entity->field_78 == 8) {
+                        if (self->field_78 == 8) {
                             child->timer               = 0;
                             child->animator.animationSpeed = 0;
                             child->animator.frameID        = 0;
@@ -52,12 +52,12 @@ void PopOut_Update(void)
         }
     }
     else {
-        entity->field_7C = 0;
-        if (entity->field_78 > 0) {
-            entity->field_78--;
-            if (entity->childType <= 0) {
+        self->field_7C = 0;
+        if (self->field_78 > 0) {
+            self->field_78--;
+            if (self->childType <= 0) {
                 if (child) {
-                    if (entity->field_78 == 7) {
+                    if (self->field_78 == 7) {
                         child->timer               = 0;
                         child->animator.animationSpeed = 0;
                         child->animator.frameID        = 0;
@@ -68,7 +68,7 @@ void PopOut_Update(void)
     }
 
     if (child) {
-        if (entity->field_78 == 8) {
+        if (self->field_78 == 8) {
             child->active  = ACTIVE_BOUNDS;
             child->visible = true;
         }
@@ -78,13 +78,13 @@ void PopOut_Update(void)
         }
     }
 
-    entity->active     = (entity->field_78 <= 0) ? ACTIVE_BOUNDS : ACTIVE_NORMAL;
-    entity->position.x = -32 * entity->field_80 + entity->position.x + 4 * entity->field_78 * entity->field_80;
-    entity->position.y = -32 * entity->field_84 + entity->position.y + 4 * entity->field_78 * entity->field_84;
-    foreach_active(Player, playerLoop) { Player_CheckCollisionBox(playerLoop, entity, &entity->hitbox2); }
-    entity->direction  = storeDir;
-    entity->position.x = storeX;
-    entity->position.y = storeY;
+    self->active     = (self->field_78 <= 0) ? ACTIVE_BOUNDS : ACTIVE_NORMAL;
+    self->position.x = -32 * self->field_80 + self->position.x + 4 * self->field_78 * self->field_80;
+    self->position.y = -32 * self->field_84 + self->position.y + 4 * self->field_78 * self->field_84;
+    foreach_active(Player, playerLoop) { Player_CheckCollisionBox(playerLoop, self, &self->hitbox2); }
+    self->direction  = storeDir;
+    self->position.x = storeX;
+    self->position.y = storeY;
 }
 
 void PopOut_LateUpdate(void) {}
@@ -95,82 +95,82 @@ void PopOut_Draw(void)
 {
     RSDK_THIS(PopOut);
 
-    int32 dir            = entity->direction;
-    int32 storeX         = entity->position.x;
-    int32 storeY         = entity->position.y;
-    entity->position.x = -16 * entity->field_80 + entity->position.x + 2 * entity->field_78 * entity->field_80;
-    entity->position.y = -16 * entity->field_84 + entity->position.y + 2 * entity->field_78 * entity->field_84;
-    entity->rotation   = entity->orientation << 7;
+    int32 dir            = self->direction;
+    int32 storeX         = self->position.x;
+    int32 storeY         = self->position.y;
+    self->position.x = -16 * self->field_80 + self->position.x + 2 * self->field_78 * self->field_80;
+    self->position.y = -16 * self->field_84 + self->position.y + 2 * self->field_78 * self->field_84;
+    self->rotation   = self->orientation << 7;
 
-    if (!entity->field_78) {
+    if (!self->field_78) {
         int32 off = 128;
         if (!dir)
             off = -128;
-        entity->rotation += off;
+        self->rotation += off;
     }
-    else if (entity->field_78 < 8) {
+    else if (self->field_78 < 8) {
         int32 off = 16;
         if (!dir)
             off = -16;
-        entity->rotation += (7 - entity->field_78) * off;
+        self->rotation += (7 - self->field_78) * off;
     }
-    RSDK.DrawSprite(&entity->animator, NULL, false);
-    if (entity->field_78 < 8)
-        RSDK.DrawSprite(&entity->animator2, NULL, false);
-    entity->position.x = storeX;
-    entity->position.y = storeY;
-    entity->direction  = dir;
-    entity->rotation   = 0;
+    RSDK.DrawSprite(&self->animator, NULL, false);
+    if (self->field_78 < 8)
+        RSDK.DrawSprite(&self->animator2, NULL, false);
+    self->position.x = storeX;
+    self->position.y = storeY;
+    self->direction  = dir;
+    self->rotation   = 0;
 }
 
 void PopOut_Create(void *data)
 {
     RSDK_THIS(PopOut);
-    entity->drawFX = FX_ROTATE | FX_FLIP;
+    self->drawFX = FX_ROTATE | FX_FLIP;
     if (!SceneInfo->inEditor) {
-        entity->active        = ACTIVE_BOUNDS;
-        entity->drawOrder     = Zone->drawOrderLow;
-        entity->field_64.x    = entity->position.x;
-        entity->field_64.y    = entity->position.y;
-        entity->visible       = true;
-        entity->updateRange.x = 0x800000;
-        entity->updateRange.y = 0x800000;
-        RSDK.SetSpriteAnimation(PopOut->aniFrames, 0, &entity->animator, true, 0);
+        self->active        = ACTIVE_BOUNDS;
+        self->drawOrder     = Zone->drawOrderLow;
+        self->field_64.x    = self->position.x;
+        self->field_64.y    = self->position.y;
+        self->visible       = true;
+        self->updateRange.x = 0x800000;
+        self->updateRange.y = 0x800000;
+        RSDK.SetSpriteAnimation(PopOut->aniFrames, 0, &self->animator, true, 0);
         EntitySpring *child = RSDK_GET_ENTITY(SceneInfo->entitySlot + 1, Spring);
         if (child->objectID != Spring->objectID && child->objectID != Spikes->objectID)
             child = NULL;
         if (child->objectID == Spring->objectID) {
             if (child->type & 1)
-                entity->childType = 1;
+                self->childType = 1;
             else
-                entity->childType = 0;
-            RSDK.SetSpriteAnimation(PopOut->aniFrames, 1, &entity->animator2, true, entity->childType);
+                self->childType = 0;
+            RSDK.SetSpriteAnimation(PopOut->aniFrames, 1, &self->animator2, true, self->childType);
         }
         else {
-            entity->childType = 2;
-            RSDK.SetSpriteAnimation(PopOut->aniFrames, 2, &entity->animator2, true, 0);
+            self->childType = 2;
+            RSDK.SetSpriteAnimation(PopOut->aniFrames, 2, &self->animator2, true, 0);
         }
         PopOut_SetupHitboxes();
 
-        switch (entity->orientation + 4 * entity->direction) {
+        switch (self->orientation + 4 * self->direction) {
             case 0:
             case 4:
-                entity->field_80 = 0;
-                entity->field_84 = -0x10000;
+                self->field_80 = 0;
+                self->field_84 = -0x10000;
                 break;
             case 1:
             case 5:
-                entity->field_84 = 0;
-                entity->field_80 = 0x10000;
+                self->field_84 = 0;
+                self->field_80 = 0x10000;
                 break;
             case 2:
             case 6:
-                entity->field_80 = 0;
-                entity->field_84 = 0x10000;
+                self->field_80 = 0;
+                self->field_84 = 0x10000;
                 break;
             default:
-                entity->field_84 = 0;
-                entity->field_80 = -0x10000;
+                self->field_84 = 0;
+                self->field_80 = -0x10000;
                 break;
         }
     }
@@ -186,70 +186,70 @@ void PopOut_StageLoad(void)
 void PopOut_SetupHitboxes(void)
 {
     RSDK_THIS(PopOut);
-    entity->hitbox.left    = 0;
-    entity->hitbox.top     = 0;
-    entity->hitbox.right   = 0;
-    entity->hitbox.bottom  = 0;
-    entity->hitbox2.left   = 0;
-    entity->hitbox2.top    = 0;
-    entity->hitbox2.right  = 0;
-    entity->hitbox2.bottom = 0;
-    switch (entity->orientation + 4 * entity->direction) {
+    self->hitbox.left    = 0;
+    self->hitbox.top     = 0;
+    self->hitbox.right   = 0;
+    self->hitbox.bottom  = 0;
+    self->hitbox2.left   = 0;
+    self->hitbox2.top    = 0;
+    self->hitbox2.right  = 0;
+    self->hitbox2.bottom = 0;
+    switch (self->orientation + 4 * self->direction) {
         case 0:
-            entity->hitbox.right  = 80;
-            entity->hitbox.top    = -64;
-            entity->hitbox.bottom = 32;
-            entity->hitbox2.left  = -20;
-            entity->hitbox2.top   = -32;
+            self->hitbox.right  = 80;
+            self->hitbox.top    = -64;
+            self->hitbox.bottom = 32;
+            self->hitbox2.left  = -20;
+            self->hitbox2.top   = -32;
             break;
         case 1:
-            entity->hitbox.right  = 80;
-            entity->hitbox.bottom = 64;
-            entity->hitbox.left   = -32;
-            entity->hitbox2.top   = -32;
-            entity->hitbox2.right = 32;
+            self->hitbox.right  = 80;
+            self->hitbox.bottom = 64;
+            self->hitbox.left   = -32;
+            self->hitbox2.top   = -32;
+            self->hitbox2.right = 32;
             break;
         case 2:
-            entity->hitbox.left    = -80;
-            entity->hitbox.top     = -32;
-            entity->hitbox.bottom  = 64;
-            entity->hitbox2.right  = 32;
-            entity->hitbox2.bottom = 32;
+            self->hitbox.left    = -80;
+            self->hitbox.top     = -32;
+            self->hitbox.bottom  = 64;
+            self->hitbox2.right  = 32;
+            self->hitbox2.bottom = 32;
             break;
         case 3:
-            entity->hitbox.left    = -64;
-            entity->hitbox.top     = -80;
-            entity->hitbox.right   = 32;
-            entity->hitbox2.left   = -32;
-            entity->hitbox2.bottom = 32;
+            self->hitbox.left    = -64;
+            self->hitbox.top     = -80;
+            self->hitbox.right   = 32;
+            self->hitbox2.left   = -32;
+            self->hitbox2.bottom = 32;
             break;
         case 4:
-            entity->hitbox.left    = -80;
-            entity->hitbox.top     = -63;
-            entity->hitbox.bottom  = 32;
-            entity->hitbox2.top    = -32;
-            entity->hitbox2.bottom = 32;
+            self->hitbox.left    = -80;
+            self->hitbox.top     = -63;
+            self->hitbox.bottom  = 32;
+            self->hitbox2.top    = -32;
+            self->hitbox2.bottom = 32;
             break;
         case 5:
-            entity->hitbox.top     = -80;
-            entity->hitbox.right   = 64;
-            entity->hitbox.left    = -32;
-            entity->hitbox2.right  = 32;
-            entity->hitbox2.bottom = 32;
+            self->hitbox.top     = -80;
+            self->hitbox.right   = 64;
+            self->hitbox.left    = -32;
+            self->hitbox2.right  = 32;
+            self->hitbox2.bottom = 32;
             break;
         case 6:
-            entity->hitbox.right   = 80;
-            entity->hitbox.bottom  = 64;
-            entity->hitbox.top     = -32;
-            entity->hitbox2.left   = -32;
-            entity->hitbox2.bottom = 32;
+            self->hitbox.right   = 80;
+            self->hitbox.bottom  = 64;
+            self->hitbox.top     = -32;
+            self->hitbox2.left   = -32;
+            self->hitbox2.bottom = 32;
             break;
         default:
-            entity->hitbox.right  = 80;
-            entity->hitbox.bottom = 32;
-            entity->hitbox.left   = -64;
-            entity->hitbox2.left  = -20;
-            entity->hitbox2.top   = -32;
+            self->hitbox.right  = 80;
+            self->hitbox.bottom = 32;
+            self->hitbox.left   = -64;
+            self->hitbox2.left  = -20;
+            self->hitbox2.top   = -32;
             break;
     }
 }
@@ -258,23 +258,23 @@ void PopOut_SetupHitboxes(void)
 void PopOut_EditorDraw(void)
 {
     RSDK_THIS(PopOut);
-    entity->field_64.x    = entity->position.x;
-    entity->field_64.y    = entity->position.y;
-    RSDK.SetSpriteAnimation(PopOut->aniFrames, 0, &entity->animator, true, 0);
+    self->field_64.x    = self->position.x;
+    self->field_64.y    = self->position.y;
+    RSDK.SetSpriteAnimation(PopOut->aniFrames, 0, &self->animator, true, 0);
 
     EntitySpring *child = RSDK_GET_ENTITY(SceneInfo->entitySlot + 1, Spring);
     if (child->objectID != Spring->objectID && child->objectID != Spikes->objectID)
         child = NULL;
     if (child && child->objectID == Spring->objectID) {
         if (child->type & 1)
-            entity->childType = 1;
+            self->childType = 1;
         else
-            entity->childType = 0;
-        RSDK.SetSpriteAnimation(PopOut->aniFrames, 1, &entity->animator2, true, entity->childType);
+            self->childType = 0;
+        RSDK.SetSpriteAnimation(PopOut->aniFrames, 1, &self->animator2, true, self->childType);
     }
     else {
-        entity->childType = 2;
-        RSDK.SetSpriteAnimation(PopOut->aniFrames, 2, &entity->animator2, true, 0);
+        self->childType = 2;
+        RSDK.SetSpriteAnimation(PopOut->aniFrames, 2, &self->animator2, true, 0);
     }
     
     PopOut_Draw();

@@ -6,106 +6,106 @@ void HangPoint_Update(void)
 {
     RSDK_THIS(HangPoint);
 
-    if (entity->length > 0) {
+    if (self->length > 0) {
         bool32 flag = true;
-        if (entity->activePlayers == 2) {
+        if (self->activePlayers == 2) {
             EntityPlayer *player2 = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
             if (player2->sidekick)
                 flag = false;
         }
 
         for (int32 i = 0; i < 4; ++i) {
-            if (entity->field_5C[i])
+            if (self->field_5C[i])
                 flag = false;
         }
 
-        if (entity->field_7C > entity->length) {
-            if (entity->field_7C <= 0) {
-                entity->activePlayers &= 0xF;
+        if (self->field_7C > self->length) {
+            if (self->field_7C <= 0) {
+                self->activePlayers &= 0xF;
             }
             else {
-                entity->velocity.y -= 0x1800;
-                if (entity->velocity.y < -entity->field_80)
-                    entity->velocity.y = -entity->field_80;
+                self->velocity.y -= 0x1800;
+                if (self->velocity.y < -self->field_80)
+                    self->velocity.y = -self->field_80;
 
-                entity->activePlayers |= 16 * entity->activePlayers;
-                entity->field_7C += entity->velocity.y;
+                self->activePlayers |= 16 * self->activePlayers;
+                self->field_7C += self->velocity.y;
             }
         }
         else {
-            if (!entity->activePlayers || !flag) {
-                entity->active = ACTIVE_BOUNDS;
-                if (entity->direction == FLIP_NONE) {
-                    if (entity->field_7C > 0) {
-                        entity->velocity.y -= 0x1000;
-                        if (entity->velocity.y < -entity->field_80)
-                            entity->velocity.y = -entity->field_80;
+            if (!self->activePlayers || !flag) {
+                self->active = ACTIVE_BOUNDS;
+                if (self->direction == FLIP_NONE) {
+                    if (self->field_7C > 0) {
+                        self->velocity.y -= 0x1000;
+                        if (self->velocity.y < -self->field_80)
+                            self->velocity.y = -self->field_80;
 
-                        entity->field_7C += entity->velocity.y;
+                        self->field_7C += self->velocity.y;
                     }
                 }
-                else if (entity->field_7C < entity->length) {
-                    entity->velocity.y += 0x1000;
-                    if (entity->velocity.y > entity->field_80)
-                        entity->velocity.y = entity->field_80;
+                else if (self->field_7C < self->length) {
+                    self->velocity.y += 0x1000;
+                    if (self->velocity.y > self->field_80)
+                        self->velocity.y = self->field_80;
 
-                    entity->field_7C += entity->velocity.y;
-                    if (entity->field_7C > entity->length) {
-                        entity->field_7C   = entity->length;
-                        entity->velocity.y = 0;
+                    self->field_7C += self->velocity.y;
+                    if (self->field_7C > self->length) {
+                        self->field_7C   = self->length;
+                        self->velocity.y = 0;
                     }
                 }
             }
             else {
-                if (entity->direction) {
-                    if (entity->field_7C <= 0) {
-                        entity->activePlayers &= 0xF;
+                if (self->direction) {
+                    if (self->field_7C <= 0) {
+                        self->activePlayers &= 0xF;
                     }
                     else {
-                        entity->velocity.y -= 0x1800;
-                        if (entity->velocity.y < -entity->field_80)
-                            entity->velocity.y = -entity->field_80;
+                        self->velocity.y -= 0x1800;
+                        if (self->velocity.y < -self->field_80)
+                            self->velocity.y = -self->field_80;
 
-                        entity->activePlayers |= 16 * entity->activePlayers;
-                        entity->field_7C += entity->velocity.y;
+                        self->activePlayers |= 16 * self->activePlayers;
+                        self->field_7C += self->velocity.y;
                     }
                 }
-                else if (entity->field_7C >= entity->length) {
-                    entity->activePlayers &= 0xF;
+                else if (self->field_7C >= self->length) {
+                    self->activePlayers &= 0xF;
                 }
                 else {
-                    entity->velocity.y += 0x1800;
-                    if (entity->velocity.y > entity->field_80)
-                        entity->velocity.y = entity->field_80;
+                    self->velocity.y += 0x1800;
+                    if (self->velocity.y > self->field_80)
+                        self->velocity.y = self->field_80;
 
-                    entity->field_7C += entity->velocity.y;
-                    if (entity->field_7C > entity->length) {
-                        entity->field_7C   = entity->length;
-                        entity->velocity.y = 0;
+                    self->field_7C += self->velocity.y;
+                    if (self->field_7C > self->length) {
+                        self->field_7C   = self->length;
+                        self->velocity.y = 0;
                     }
-                    entity->activePlayers |= (entity->activePlayers << 4);
+                    self->activePlayers |= (self->activePlayers << 4);
                 }
             }
         }
 
-        if (entity->field_7C < 0) {
-            entity->field_7C   = 0;
-            entity->velocity.y = 0;
+        if (self->field_7C < 0) {
+            self->field_7C   = 0;
+            self->velocity.y = 0;
         }
     }
 
-    int32 storeX = entity->position.x;
-    int32 storeY = entity->position.y;
-    entity->position.y += entity->field_7C;
+    int32 storeX = self->position.x;
+    int32 storeY = self->position.y;
+    self->position.y += self->field_7C;
 
     foreach_active(Player, player)
     {
         int32 playerID = RSDK.GetEntityID(player);
 
-        if (entity->playerTimer[playerID] > 0)
-            entity->playerTimer[playerID]--;
-        if (!((1 << playerID) & entity->activePlayers)) {
-            if (player->state != Player_State_None && !entity->playerTimer[playerID]) {
+        if (self->playerTimer[playerID] > 0)
+            self->playerTimer[playerID]--;
+        if (!((1 << playerID) & self->activePlayers)) {
+            if (player->state != Player_State_None && !self->playerTimer[playerID]) {
                 Hitbox *playerHitbox = Player_GetHitbox(player);
 
                 Hitbox hitbox;
@@ -113,53 +113,53 @@ void HangPoint_Update(void)
                 hitbox.left   = playerHitbox->left;
                 hitbox.right  = playerHitbox->right;
                 hitbox.bottom = hitbox.top + 4;
-                if (RSDK.CheckObjectCollisionTouchBox(entity, &HangPoint->hitbox, player, &hitbox)) {
+                if (RSDK.CheckObjectCollisionTouchBox(self, &HangPoint->hitbox, player, &hitbox)) {
                     player->velocity.x = 0;
                     player->velocity.y = 0;
                     player->groundVel  = 0;
                     player->onGround   = false;
                     player->angle      = 0;
                     player->rotation   = 0;
-                    player->position.x = entity->position.x;
-                    player->position.y = entity->position.y;
+                    player->position.x = self->position.x;
+                    player->position.y = self->position.y;
                     player->position.y += ((HangPoint->hitbox.top - playerHitbox->top) << 16)
                                           + (((HangPoint->hitbox.bottom - HangPoint->hitbox.top) << 15) & 0xFFFF0000);
                     player->tileCollisions     = false;
-                    entity->field_5C[playerID] = 0;
+                    self->field_5C[playerID] = 0;
 
-                    if (!entity->activePlayers) {
-                        if (entity->direction == FLIP_X) {
-                            if (entity->field_7C <= entity->length)
-                                entity->velocity.y = 0x20000;
+                    if (!self->activePlayers) {
+                        if (self->direction == FLIP_X) {
+                            if (self->field_7C <= self->length)
+                                self->velocity.y = 0x20000;
                         }
                         else {
-                            entity->velocity.y = 0;
+                            self->velocity.y = 0;
                         }
                     }
-                    entity->activePlayers |= (1 << playerID);
+                    self->activePlayers |= (1 << playerID);
                     RSDK.SetSpriteAnimation(player->aniFrames, ANI_HANG, &player->playerAnimator, false, 0);
                     player->nextAirState    = StateMachine_None;
                     player->nextGroundState = StateMachine_None;
                     player->state           = Player_State_None;
                     player->abilityValues[0]   = RSDK.Rand(0, 2);
                     RSDK.PlaySfx(Player->sfxGrab, false, 255);
-                    entity->active = ACTIVE_NORMAL;
+                    self->active = ACTIVE_NORMAL;
                 }
             }
         }
         else {
             if (player->state == Player_State_Hit) {
                 player->tileCollisions = true;
-                entity->activePlayers &= ~(1 << playerID) & ~(1 << (playerID + 4));
-                entity->field_5C[playerID] = 0;
+                self->activePlayers &= ~(1 << playerID) & ~(1 << (playerID + 4));
+                self->field_5C[playerID] = 0;
                 if (player->left || player->right || player->down || player->state == Player_State_Hit)
-                    entity->playerTimer[playerID] = 64;
+                    self->playerTimer[playerID] = 64;
                 else
-                    entity->playerTimer[playerID] = 16;
+                    self->playerTimer[playerID] = 16;
             }
             else {
-                if (player->state != Player_State_None || entity->playerTimer[playerID]) {
-                    entity->activePlayers &= ~(1 << playerID);
+                if (player->state != Player_State_None || self->playerTimer[playerID]) {
+                    self->activePlayers &= ~(1 << playerID);
                     if (player->objectID == Player->objectID && Player_CheckValidState(player)) {
                         player->tileCollisions = true;
                     }
@@ -171,11 +171,11 @@ void HangPoint_Update(void)
                     player->groundVel    = 0;
                     player->angle        = 0;
                     player->rotation     = 0;
-                    player->position.x   = entity->position.x;
-                    player->position.y   = entity->position.y;
+                    player->position.x   = self->position.x;
+                    player->position.y   = self->position.y;
                     player->position.y += (((HangPoint->hitbox.bottom - HangPoint->hitbox.top) << 15) & 0xFFFF0000)
                                           + ((HangPoint->hitbox.top - playerHitbox->top) << 16);
-                    if (!entity->field_5C[playerID]) {
+                    if (!self->field_5C[playerID]) {
                         if (player->left)
                             player->direction = FLIP_X;
                         if (player->right)
@@ -189,30 +189,30 @@ void HangPoint_Update(void)
                             player->jumpAbilityTimer              = 1;
                             player->state                         = Player_State_Air;
                             player->tileCollisions                = true;
-                            entity->activePlayers &= ~(1 << playerID) & ~(1 << (playerID + 4));
+                            self->activePlayers &= ~(1 << playerID) & ~(1 << (playerID + 4));
                             if (player->left || player->right || player->down || player->state == Player_State_Hit) {
-                                entity->playerTimer[playerID] = 64;
-                                HangPoint_Unknown1(entity, player, playerID);
+                                self->playerTimer[playerID] = 64;
+                                HangPoint_Unknown1(self, player, playerID);
                             }
                             else {
-                                entity->playerTimer[playerID] = 16;
-                                HangPoint_Unknown1(entity, player, playerID);
+                                self->playerTimer[playerID] = 16;
+                                HangPoint_Unknown1(self, player, playerID);
                             }
                         }
-                        else if ((!((1 << (playerID + 4)) & entity->activePlayers)
-                                  && (entity->direction != FLIP_NONE || entity->field_7C >= entity->length)
-                                  && (entity->direction != FLIP_X || entity->field_7C <= 0))
+                        else if ((!((1 << (playerID + 4)) & self->activePlayers)
+                                  && (self->direction != FLIP_NONE || self->field_7C >= self->length)
+                                  && (self->direction != FLIP_X || self->field_7C <= 0))
                                  || player->sidekick) {
                             bool32 flag = false;
                             if (player->left) {
                                 foreach_active(HangPoint, point)
                                 {
-                                    if (entity != point) {
-                                        int32 distance = entity->position.x - point->position.x;
+                                    if (self != point) {
+                                        int32 distance = self->position.x - point->position.x;
                                         if (distance < 0x220000 && distance > 0) {
-                                            if (abs(entity->position.y - point->position.y - point->field_7C) < 0x40000) {
-                                                entity->activePlayers &= ~(1 << playerID);
-                                                entity->playerTimer[playerID] = 16;
+                                            if (abs(self->position.y - point->position.y - point->field_7C) < 0x40000) {
+                                                self->activePlayers &= ~(1 << playerID);
+                                                self->playerTimer[playerID] = 16;
                                                 point->activePlayers |= 1 << playerID;
                                                 point->field_5C[playerID]    = 0x200000;
                                                 point->playerTimer[playerID] = 0;
@@ -233,7 +233,7 @@ void HangPoint_Update(void)
                                                 player->position.x = point->position.x;
                                                 if (RSDK.GetEntityID(point) < SceneInfo->entitySlot)
                                                     HangPoint_Unknown1(point, player, playerID);
-                                                HangPoint_Unknown1(entity, player, playerID);
+                                                HangPoint_Unknown1(self, player, playerID);
                                                 flag = true;
                                                 foreach_break;
                                             }
@@ -244,12 +244,12 @@ void HangPoint_Update(void)
                             else if (player->right) {
                                 foreach_active(HangPoint, point)
                                 {
-                                    if (entity != point) {
-                                        int32 distance = point->position.x - entity->position.x;
+                                    if (self != point) {
+                                        int32 distance = point->position.x - self->position.x;
                                         if (distance < 0x220000 && distance > 0) {
-                                            if (abs(entity->position.y - point->position.y - point->field_7C) < 0x40000) {
-                                                entity->activePlayers &= ~(1 << playerID);
-                                                entity->playerTimer[playerID] = 16;
+                                            if (abs(self->position.y - point->position.y - point->field_7C) < 0x40000) {
+                                                self->activePlayers &= ~(1 << playerID);
+                                                self->playerTimer[playerID] = 16;
                                                 point->activePlayers |= 1 << playerID;
                                                 point->field_5C[playerID]    = -0x200000;
                                                 point->playerTimer[playerID] = 0;
@@ -272,7 +272,7 @@ void HangPoint_Update(void)
                                                 player->position.x = point->position.x;
                                                 if (RSDK.GetEntityID(point) < SceneInfo->entitySlot)
                                                     HangPoint_Unknown1(point, player, playerID);
-                                                HangPoint_Unknown1(entity, player, playerID);
+                                                HangPoint_Unknown1(self, player, playerID);
                                                 flag = true;
                                                 foreach_break;
                                             }
@@ -287,7 +287,7 @@ void HangPoint_Update(void)
                                 else
 #endif
                                     RSDK.SetSpriteAnimation(player->aniFrames, ANI_HANG, &player->playerAnimator, false, 0);
-                                HangPoint_Unknown1(entity, player, playerID);
+                                HangPoint_Unknown1(self, player, playerID);
                             }
                         }
                         else {
@@ -297,18 +297,18 @@ void HangPoint_Update(void)
                             else
 #endif
                                 RSDK.SetSpriteAnimation(player->aniFrames, ANI_HANG, &player->playerAnimator, false, 0);
-                            HangPoint_Unknown1(entity, player, playerID);
+                            HangPoint_Unknown1(self, player, playerID);
                         }
                     }
                     else {
-                        HangPoint_Unknown1(entity, player, playerID);
+                        HangPoint_Unknown1(self, player, playerID);
                     }
                 }
             }
         }
     }
-    entity->position.x = storeX;
-    entity->position.y = storeY;
+    self->position.x = storeX;
+    self->position.y = storeY;
 }
 
 void HangPoint_LateUpdate(void) {}
@@ -320,18 +320,18 @@ void HangPoint_Draw(void)
     RSDK_THIS(HangPoint);
     Vector2 drawPos;
 
-    drawPos.x = entity->position.x;
-    drawPos.y = entity->position.y;
-    drawPos.y += entity->field_7C;
+    drawPos.x = self->position.x;
+    drawPos.y = self->position.y;
+    drawPos.y += self->field_7C;
     RSDK.DrawSprite(&HangPoint->animator, &drawPos, false);
-    if (entity->length) {
+    if (self->length) {
         HangPoint->animator.frameID = 1;
-        int32 length                  = (entity->field_7C >> 16) & 0xFF00;
+        int32 length                  = (self->field_7C >> 16) & 0xFF00;
 
         SpriteFrame *frame = RSDK.GetFrame(HangPoint->aniFrames, 0, HangPoint->animator.frameID);
 
-        int32 extraLength = (entity->field_7C >> 16) & 0x00FF;
-        frame->pivotY   = -(entity->field_7C >> 16);
+        int32 extraLength = (self->field_7C >> 16) & 0x00FF;
+        frame->pivotY   = -(self->field_7C >> 16);
         frame->height   = extraLength;
         frame->sprY     = 257 - extraLength;
         RSDK.DrawSprite(&HangPoint->animator, &drawPos, false);
@@ -350,19 +350,19 @@ void HangPoint_Draw(void)
 void HangPoint_Create(void *data)
 {
     RSDK_THIS(HangPoint);
-    if (!entity->speed)
-        entity->speed = 2;
+    if (!self->speed)
+        self->speed = 2;
 
-    entity->active        = ACTIVE_BOUNDS;
-    entity->updateRange.x = 0x400000;
-    entity->visible       = true;
-    entity->updateRange.y = (entity->length + 64) << 16;
-    entity->drawOrder     = Zone->drawOrderLow;
+    self->active        = ACTIVE_BOUNDS;
+    self->updateRange.x = 0x400000;
+    self->visible       = true;
+    self->updateRange.y = (self->length + 64) << 16;
+    self->drawOrder     = Zone->drawOrderLow;
     if (!SceneInfo->inEditor) {
-        entity->length   = entity->length << 16;
-        entity->field_80 = entity->speed << 15;
-        if (entity->direction == FLIP_X)
-            entity->field_7C = entity->length;
+        self->length   = self->length << 16;
+        self->field_80 = self->speed << 15;
+        if (self->direction == FLIP_X)
+            self->field_7C = self->length;
     }
 }
 
@@ -378,28 +378,28 @@ void HangPoint_StageLoad(void)
     HangPoint->hitbox.right  = hitbox->right;
 }
 
-void HangPoint_Unknown1(EntityHangPoint *entity, void *p, int32 playerID)
+void HangPoint_Unknown1(EntityHangPoint *self, void *p, int32 playerID)
 {
     EntityPlayer *player = (EntityPlayer *)p;
-    if (entity->field_5C[playerID]) {
-        if (entity->field_5C[playerID] < 0) {
-            entity->field_5C[playerID] += 0x15556;
-            if (entity->field_5C[playerID] >= 0) {
-                entity->field_5C[playerID] = 0;
+    if (self->field_5C[playerID]) {
+        if (self->field_5C[playerID] < 0) {
+            self->field_5C[playerID] += 0x15556;
+            if (self->field_5C[playerID] >= 0) {
+                self->field_5C[playerID] = 0;
                 RSDK.PlaySfx(Player->sfxGrab, false, 255);
                 player->abilityValues[0] ^= 1;
             }
         }
         else {
-            entity->field_5C[playerID] -= 0x15556;
-            if (entity->field_5C[playerID] <= 0) {
-                entity->field_5C[playerID] = 0;
+            self->field_5C[playerID] -= 0x15556;
+            if (self->field_5C[playerID] <= 0) {
+                self->field_5C[playerID] = 0;
                 RSDK.PlaySfx(Player->sfxGrab, false, 255);
                 player->abilityValues[0] ^= 1;
             }
         }
 
-        player->position.x += entity->field_5C[playerID] & 0xFFFF0000;
+        player->position.x += self->field_5C[playerID] & 0xFFFF0000;
         if (player->jumpPress) {
             player->velocity.y = -0x40000;
             RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->playerAnimator, false, 0);
@@ -408,12 +408,12 @@ void HangPoint_Unknown1(EntityHangPoint *entity, void *p, int32 playerID)
             player->jumpAbilityTimer              = 1;
             player->state                         = Player_State_Air;
             player->tileCollisions                = true;
-            entity->activePlayers &= ~(1 << playerID) & ~(1 << (playerID + 4));
-            entity->field_5C[playerID] = 0;
+            self->activePlayers &= ~(1 << playerID) & ~(1 << (playerID + 4));
+            self->field_5C[playerID] = 0;
             if (player->left || player->right || player->down || player->state == Player_State_Hit)
-                entity->playerTimer[playerID] = 64;
+                self->playerTimer[playerID] = 64;
             else
-                entity->playerTimer[playerID] = 16;
+                self->playerTimer[playerID] = 16;
         }
     }
 }

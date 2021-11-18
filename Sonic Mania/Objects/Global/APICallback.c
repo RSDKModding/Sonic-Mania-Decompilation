@@ -6,7 +6,7 @@ ObjectAPICallback *APICallback;
 void APICallback_Update(void)
 {
     RSDK_THIS(APICallback);
-    StateMachine_Run(entity->state);
+    StateMachine_Run(self->state);
 }
 
 void APICallback_LateUpdate(void) {}
@@ -19,9 +19,9 @@ void APICallback_Create(void *data)
 {
     RSDK_THIS(APICallback);
 
-    entity->active  = ACTIVE_ALWAYS;
-    entity->visible = false;
-    entity->state   = (Type_StateMachine)data;
+    self->active  = ACTIVE_ALWAYS;
+    self->visible = false;
+    self->state   = (Type_StateMachine)data;
 }
 
 void APICallback_StageLoad(void)
@@ -140,11 +140,11 @@ void APICallback_SaveUserFile(const char *name, void *buffer, int32 size, void (
 void APICallback_SaveCB(void)
 {
     RSDK_THIS(APICallback);
-    int32 saveResult = RSDK.SaveUserFile(entity->fileName, entity->fileBuffer, entity->fileSize);
-    LogHelpers_Print("DUMMY DummySaveCB(%s, %x, %d) -> %d", entity->fileName, entity->fileBuffer, entity->fileSize, saveResult);
+    int32 saveResult = RSDK.SaveUserFile(self->fileName, self->fileBuffer, self->fileSize);
+    LogHelpers_Print("DUMMY DummySaveCB(%s, %x, %d) -> %d", self->fileName, self->fileBuffer, self->fileSize, saveResult);
 
-    if (entity->fileCallback)
-        entity->fileCallback(true);
+    if (self->fileCallback)
+        self->fileCallback(true);
 }
 
 void APICallback_SaveSettingsINI(void) {
@@ -231,7 +231,7 @@ void APICallback_NotifyAutoSave_CB(void)
     }
     else {
         APICallback->activeEntity = NULL;
-        destroyEntity(entity);
+        destroyEntity(self);
     }
 }
 
@@ -243,7 +243,7 @@ void APICallback_PromptSavePreference_CB(void)
             TextInfo info;
 
             int32 stringID = STR_SAVELOADFAIL;
-            switch (entity->status) {
+            switch (self->status) {
                 case STATUS_ERROR:
                     stringID = STR_NOXBOXPROFILE;
                     if (GameInfo->platform != PLATFORM_XB1)
@@ -263,7 +263,7 @@ void APICallback_PromptSavePreference_CB(void)
     }
     else {
         APICallback->activeEntity = NULL;
-        destroyEntity(entity);
+        destroyEntity(self);
     }
 }
 
@@ -311,11 +311,11 @@ void APICallback_LoadUserFile(const char *name, void *buffer, int32 size, void (
 int32 APICallback_LoadCB(void)
 {
     RSDK_THIS(APICallback);
-    int32 loadResult = RSDK.LoadUserFile(entity->fileName, entity->fileBuffer, entity->fileSize);
-    LogHelpers_Print("DUMMY DummyLoadCB(%s, %x, %d) -> %d", entity->fileName, entity->fileBuffer, entity->fileSize, loadResult);
+    int32 loadResult = RSDK.LoadUserFile(self->fileName, self->fileBuffer, self->fileSize);
+    LogHelpers_Print("DUMMY DummyLoadCB(%s, %x, %d) -> %d", self->fileName, self->fileBuffer, self->fileSize, loadResult);
 
-    if (entity->fileCallback)
-        entity->fileCallback(1);
+    if (self->fileCallback)
+        self->fileCallback(1);
     return 1;
 }
 
@@ -379,13 +379,13 @@ void APICallback_HandleCallback(void)
 {
     RSDK_THIS(APICallback);
 
-    if (entity->timer <= 0) {
-        LogHelpers_Print("Callback: %x", entity->callback);
-        StateMachine_Run(entity->callback);
-        destroyEntity(entity);
+    if (self->timer <= 0) {
+        LogHelpers_Print("Callback: %x", self->callback);
+        StateMachine_Run(self->callback);
+        destroyEntity(self);
     }
     else {
-        entity->timer--;
+        self->timer--;
     }
 }
 
@@ -401,7 +401,7 @@ int32 APICallback_GetUserAuthStatus(void)
     if (APICallback->saveStatus || APICallback->authStatus != STATUS_ERROR) {
         if (APICallback->authStatus == STATUS_FORBIDDEN && !APICallback->authForbiddenFlag) {
             EntityAPICallback *entity = CREATE_ENTITY(APICallback, APICallback_CheckUserAuth_CB, 0, 0);
-            entity->active            = ACTIVE_ALWAYS;
+            entity->active                     = ACTIVE_ALWAYS;
             APICallback->activeEntity = (Entity *)entity;
             APICallback->authForbiddenFlag     = true;
         }
@@ -528,7 +528,7 @@ void APICallback_ClearPrerollErrors(void)
 bool32 APICallback_CheckInputDisconnected(void)
 {
     RSDK_THIS(APICallback);
-    return APICallback_InputIDIsDisconnected(entity->field_7C) || PauseMenu->dword10;
+    return APICallback_InputIDIsDisconnected(self->field_7C) || PauseMenu->dword10;
 }
 
 bool32 APICallback_InputIDIsDisconnected(int32 id)
@@ -633,7 +633,7 @@ void APICallback_TryAuth_CB(void)
     }
     else {
         APICallback->activeEntity = NULL;
-        destroyEntity(entity);
+        destroyEntity(self);
     }
 }
 
@@ -726,7 +726,7 @@ void APICallback_CheckUserAuth_CB(void)
 {
     RSDK_THIS(APICallback);
     EntityUIDialog *dialog = UIDialog->activeDialog;
-    if (entity->timer) {
+    if (self->timer) {
         if (APICallback->signoutFlag) {
             if (!dialog) {
                 if (Zone) {
@@ -737,7 +737,7 @@ void APICallback_CheckUserAuth_CB(void)
                     MenuSetup_StartReturnToTitle();
                 }
                 APICallback->activeEntity = NULL;
-                destroyEntity(entity);
+                destroyEntity(self);
             }
         }
         else if (!dialog) {
@@ -765,7 +765,7 @@ void APICallback_CheckUserAuth_CB(void)
             }
             RSDK.SetGameMode(ENGINESTATE_FROZEN);
             RSDK.StopChannel(Music->channelID);
-            entity->timer = 1;
+            self->timer = 1;
         }
     }
 }
@@ -801,7 +801,7 @@ void APICallback_ManageNotifs(void)
         APICallback->activeEntity = NULL;
         UIWaitSpinner_Wait();
         GameProgress_TrackGameProgress(APICallback_Wait);
-        destroyEntity(entity);
+        destroyEntity(self);
     }
 }
 

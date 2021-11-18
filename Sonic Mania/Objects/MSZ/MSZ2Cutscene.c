@@ -5,9 +5,9 @@ ObjectMSZ2Cutscene *MSZ2Cutscene;
 void MSZ2Cutscene_Update(void)
 {
     RSDK_THIS(MSZ2Cutscene);
-    if (!entity->activated) {
+    if (!self->activated) {
         MSZ2Cutscene_SetupCutscene();
-        entity->activated = true;
+        self->activated = true;
     }
 }
 
@@ -21,9 +21,9 @@ void MSZ2Cutscene_Create(void *data)
 {
     RSDK_THIS(MSZ2Cutscene);
 
-    INIT_ENTITY(entity);
-    CutsceneRules_SetupEntity(entity, &entity->size, &entity->hitbox);
-    entity->active = ACTIVE_NEVER;
+    INIT_ENTITY(self);
+    CutsceneRules_SetupEntity(self, &self->size, &self->hitbox);
+    self->active = ACTIVE_NEVER;
 }
 
 void MSZ2Cutscene_StageLoad(void)
@@ -49,7 +49,7 @@ void MSZ2Cutscene_SetupCutscene(void)
     void *states[] = { MSZ2Cutscene_CutsceneState_Unknown1, MSZ2Cutscene_CutsceneState_Unknown2, MSZ2Cutscene_CutsceneState_Unknown3,
                        MSZ2Cutscene_CutsceneState_Unknown4, NULL };
 
-    CutsceneSeq_StartSequence((Entity *)entity, states);
+    CutsceneSeq_StartSequence((Entity *)self, states);
     if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->objectID)
         RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->skipType = SKIPTYPE_RELOADSCN;
 
@@ -62,7 +62,7 @@ void MSZ2Cutscene_GetPistolPtr(void)
 
     foreach_all(GiantPistol, pistol)
     {
-        if (MathHelpers_PointInHitbox(entity->direction, entity->position.x, entity->position.y, &entity->hitbox, pistol->position.x,
+        if (MathHelpers_PointInHitbox(self->direction, self->position.x, self->position.y, &self->hitbox, pistol->position.x,
                                       pistol->position.y)) {
             MSZ2Cutscene->pistol = pistol;
             foreach_break;
@@ -255,7 +255,7 @@ bool32 MSZ2Cutscene_CutsceneState_Unknown4(EntityCutsceneSeq *host)
 void MSZ2Cutscene_EditorDraw(void)
 {
     RSDK_THIS(MSZ2Cutscene);
-    CutsceneRules_DrawCutsceneBounds(entity, &entity->size);
+    CutsceneRules_DrawCutsceneBounds(self, &self->size);
 }
 
 void MSZ2Cutscene_EditorLoad(void) {}

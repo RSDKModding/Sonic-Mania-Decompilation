@@ -5,9 +5,9 @@ ObjectCPZ2Outro *CPZ2Outro;
 void CPZ2Outro_Update(void)
 {
     RSDK_THIS(CPZ2Outro);
-    if (!entity->activated) {
+    if (!self->activated) {
         CPZ2Outro_HandleCutsceneSeq();
-        entity->activated = true;
+        self->activated = true;
     }
 }
 
@@ -21,9 +21,9 @@ void CPZ2Outro_Create(void *data)
 {
     RSDK_THIS(CPZ2Outro);
 
-    INIT_ENTITY(entity);
-    CutsceneRules_SetupEntity(entity, &entity->size, &entity->hitbox);
-    entity->active        = ACTIVE_NEVER;
+    INIT_ENTITY(self);
+    CutsceneRules_SetupEntity(self, &self->size, &self->hitbox);
+    self->active        = ACTIVE_NEVER;
 }
 
 void CPZ2Outro_StageLoad(void)
@@ -45,7 +45,7 @@ void CPZ2Outro_HandleCutsceneSeq(void)
     RSDK_THIS(CPZ2Outro);
     EntityCutsceneSeq *seq = RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq);
 
-    CutsceneSeq_StartSequence((Entity *)entity, states);
+    CutsceneSeq_StartSequence((Entity *)self, states);
     if (seq->objectID)
         seq->skipType = SKIPTYPE_RELOADSCN;
 
@@ -100,7 +100,7 @@ bool32 CPZ2Outro_CutsceneSeq(void *h)
 void CPZ2Outro_EditorDraw(void)
 {
     RSDK_THIS(CPZ2Outro);
-    CutsceneRules_DrawCutsceneBounds(entity, &entity->size);
+    CutsceneRules_DrawCutsceneBounds(self, &self->size);
 }
 
 void CPZ2Outro_EditorLoad(void) {}

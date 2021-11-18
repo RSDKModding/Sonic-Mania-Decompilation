@@ -6,14 +6,14 @@ void UIControl_Update(void)
 {
     RSDK_THIS(UIControl);
 
-    if (entity->activeEntityID >= 0 && entity->activeEntityID != entity->field_D8)
-        entity->field_D8 = entity->activeEntityID;
-    if (!UIControl->field_C8 && entity->activeEntityID == -1)
-        entity->activeEntityID = entity->field_D8;
-    StateMachine_Run(entity->state);
-    if (entity->backoutTimer > 0)
-        entity->backoutTimer--;
-    StateMachine_Run(entity->unknownCallback4);
+    if (self->activeEntityID >= 0 && self->activeEntityID != self->field_D8)
+        self->field_D8 = self->activeEntityID;
+    if (!UIControl->field_C8 && self->activeEntityID == -1)
+        self->activeEntityID = self->field_D8;
+    StateMachine_Run(self->state);
+    if (self->backoutTimer > 0)
+        self->backoutTimer--;
+    StateMachine_Run(self->unknownCallback4);
 }
 
 void UIControl_LateUpdate(void) {}
@@ -35,8 +35,8 @@ void UIControl_StaticUpdate(void)
 void UIControl_Draw(void)
 {
     RSDK_THIS(UIControl);
-    ScreenInfo->position.x = (entity->position.x >> 0x10) - ScreenInfo->centerX;
-    ScreenInfo->position.y = (entity->position.y >> 0x10) - ScreenInfo->centerY;
+    ScreenInfo->position.x = (self->position.x >> 0x10) - ScreenInfo->centerX;
+    ScreenInfo->position.y = (self->position.y >> 0x10) - ScreenInfo->centerY;
 }
 
 void UIControl_Create(void *data)
@@ -45,45 +45,45 @@ void UIControl_Create(void *data)
     if (!SceneInfo->inEditor) {
         if (data) {
             Vector2 *size  = (Vector2 *)data;
-            entity->size.x = size->x;
-            entity->size.y = size->y;
+            self->size.x = size->x;
+            self->size.y = size->y;
         }
-        entity->updateRange.x = entity->size.x >> 1;
-        entity->updateRange.y = entity->size.y >> 1;
+        self->updateRange.x = self->size.x >> 1;
+        self->updateRange.y = self->size.y >> 1;
 #if RETRO_USE_PLUS
-        entity->promptCount = 0;
+        self->promptCount = 0;
 #endif
-        if (entity->rowCount <= 1)
-            entity->rowCount = 1;
+        if (self->rowCount <= 1)
+            self->rowCount = 1;
 
-        if (entity->columnCount <= 1)
-            entity->columnCount = 1;
+        if (self->columnCount <= 1)
+            self->columnCount = 1;
 
-        if (!entity->dwordC4)
-            entity->activeEntityID = entity->startingID;
+        if (!self->dwordC4)
+            self->activeEntityID = self->startingID;
         else
-            entity->activeEntityID = entity->storedEntityID;
+            self->activeEntityID = self->storedEntityID;
 
-        entity->position.x += entity->cameraOffset.x;
-        entity->position.y += entity->cameraOffset.y;
-        entity->startPos.x = entity->position.x;
-        entity->startPos.y = entity->position.y;
+        self->position.x += self->cameraOffset.x;
+        self->position.y += self->cameraOffset.y;
+        self->startPos.x = self->position.x;
+        self->startPos.y = self->position.y;
 #if RETRO_USE_PLUS
-        int32 entityID       = RSDK.GetEntityID(entity);
+        int32 entityID       = RSDK.GetEntityID(self);
         if (UIButtonPrompt) {
             if (entityID != SLOT_DIALOG_UICONTROL) {
                 foreach_all(UIButtonPrompt, prompt)
                 {
-                    if (entity->promptCount < 4) {
+                    if (self->promptCount < 4) {
                         Hitbox hitbox;
-                        hitbox.right  = entity->size.x >> 17;
-                        hitbox.left   = -(entity->size.x >> 17);
-                        hitbox.bottom = entity->size.y >> 17;
-                        hitbox.top    = -(entity->size.y >> 17);
-                        if (MathHelpers_PointInHitbox(FLIP_NONE, entity->startPos.x - entity->cameraOffset.x,
-                                                      entity->startPos.y - entity->cameraOffset.y, &hitbox, prompt->position.x, prompt->position.y)) {
-                            prompt->parent                            = (Entity *)entity;
-                            entity->prompts[entity->promptCount++] = prompt;
+                        hitbox.right  = self->size.x >> 17;
+                        hitbox.left   = -(self->size.x >> 17);
+                        hitbox.bottom = self->size.y >> 17;
+                        hitbox.top    = -(self->size.y >> 17);
+                        if (MathHelpers_PointInHitbox(FLIP_NONE, self->startPos.x - self->cameraOffset.x,
+                                                      self->startPos.y - self->cameraOffset.y, &hitbox, prompt->position.x, prompt->position.y)) {
+                            prompt->parent                     = (Entity *)self;
+                            self->prompts[self->promptCount++] = prompt;
                         }
                     }
                 }
@@ -96,17 +96,17 @@ void UIControl_Create(void *data)
         AnalogStickInfoL[3].deadzone = 0.75f;
         AnalogStickInfoL[4].deadzone = 0.75f;
         UIControl_Unknown7();
-        if (entity->noWidgets) {
-            entity->active  = ACTIVE_NORMAL;
-            entity->visible = true;
+        if (self->noWidgets) {
+            self->active  = ACTIVE_NORMAL;
+            self->visible = true;
         }
         else {
-            entity->dwordCC = 0;
-            if (entity->activeOnLoad) {
-                UIControl_Unknown4(entity);
+            self->dwordCC = 0;
+            if (self->activeOnLoad) {
+                UIControl_Unknown4(self);
             }
             else {
-                entity->active = ACTIVE_NEVER;
+                self->active = ACTIVE_NEVER;
             }
         }
     }
@@ -243,35 +243,35 @@ void UIControl_ProcessInputs(void)
         UIControl->inputLocked = true;
     }
 
-    if (!entity->selectionDisabled) {
+    if (!self->selectionDisabled) {
         bool32 flag = false;
         if (UIControl->keyBack) {
-            if (!entity->childHasFocus && !entity->dialogHasFocus
+            if (!self->childHasFocus && !self->dialogHasFocus
 #if RETRO_USE_PLUS
-                && !entity->popoverHasFocus 
+                && !self->popoverHasFocus 
 #endif
-                && entity->backoutTimer <= 0) {
-                if (entity->backPressCB) {
-                    flag = entity->backPressCB();
+                && self->backoutTimer <= 0) {
+                if (self->backPressCB) {
+                    flag = self->backPressCB();
                     if (!flag) {
                         UIControl->keyBack = false;
                     }
                     else {
-                        if (entity->buttons[entity->activeEntityID])
-                            entity->buttons[entity->activeEntityID]->flag = false;
+                        if (self->buttons[self->activeEntityID])
+                            self->buttons[self->activeEntityID]->flag = false;
                     }
                 }
                 else {
-                    if (entity->parentTag.textLength <= 0) {
+                    if (self->parentTag.textLength <= 0) {
                         UIControl->keyBack = false;
                     }
                     else {
-                        entity->selectionDisabled = true;
+                        self->selectionDisabled = true;
                         UITransition_StartTransition(UIControl_Unknown13, 0);
                         flag = false;
 
-                        if (entity->buttons[entity->activeEntityID])
-                            entity->buttons[entity->activeEntityID]->flag = false;
+                        if (self->buttons[self->activeEntityID])
+                            self->buttons[self->activeEntityID]->flag = false;
                     }
                 }
 
@@ -281,39 +281,39 @@ void UIControl_ProcessInputs(void)
 #if RETRO_USE_PLUS
             else {
                 LogHelpers_Print("Backout prevented");
-                LogHelpers_Print("childHasFocus = %d", entity->childHasFocus);
-                LogHelpers_Print("dialogHasFocus = %d", entity->dialogHasFocus);
-                LogHelpers_Print("popoverHasFocus = %d", entity->popoverHasFocus);
-                LogHelpers_Print("backoutTimer = %d", entity->backoutTimer);
+                LogHelpers_Print("childHasFocus = %d", self->childHasFocus);
+                LogHelpers_Print("dialogHasFocus = %d", self->dialogHasFocus);
+                LogHelpers_Print("popoverHasFocus = %d", self->popoverHasFocus);
+                LogHelpers_Print("backoutTimer = %d", self->backoutTimer);
             }
 #endif
         }
 
-        if (entity->processButtonInputCB)
-            entity->processButtonInputCB();
+        if (self->processButtonInputCB)
+            self->processButtonInputCB();
         else
             UIControl_ProcessButtonInput();
 
-        if (!entity->selectionDisabled) {
+        if (!self->selectionDisabled) {
             if (UIControl->keyY) {
-                if (!entity->childHasFocus
-                    && !entity->dialogHasFocus
+                if (!self->childHasFocus
+                    && !self->dialogHasFocus
 #if RETRO_USE_PLUS
-                    && !entity->popoverHasFocus
+                    && !self->popoverHasFocus
 #endif
-                    && entity->backoutTimer <= 0) {
-                    StateMachine_Run(entity->yPressCB);
+                    && self->backoutTimer <= 0) {
+                    StateMachine_Run(self->yPressCB);
                 }
                 UIControl->keyY = false;
             }
             if (UIControl->keyX) {
-                if (!entity->childHasFocus 
-                    && !entity->dialogHasFocus
+                if (!self->childHasFocus 
+                    && !self->dialogHasFocus
 #if RETRO_USE_PLUS
-                    && !entity->popoverHasFocus 
+                    && !self->popoverHasFocus 
 #endif
-                    && entity->backoutTimer <= 0) {
-                    StateMachine_Run(entity->xPressCB);
+                    && self->backoutTimer <= 0) {
+                    StateMachine_Run(self->xPressCB);
                 }
                 UIControl->keyX = false;
             }
@@ -354,10 +354,10 @@ void UIControl_Unknown2(EntityUIControl *control)
                 negCenterY = centerY;
             if (entity->position.x >= control->position.x + (x << 16) && entity->position.x <= control->position.x + (centerX << 16)) {
                 if (entity->position.y >= control->position.y + (y << 16) && entity->position.y <= control->position.y + (negCenterY << 16)) {
-                    int32 id                 = RSDK.GetEntityID(entity);
+                    int32 id          = RSDK.GetEntityID(entity);
                     SceneInfo->entity = (Entity *)entity;
                     if (UIButton && entity->objectID == UIButton->objectID) {
-                        UIButton_Unknown1(entity);
+                        UIButton_ManageChoices(entity);
                         UIButton_Update();
                     }
                     else if (UIChoice && entity->objectID == UIChoice->objectID) {
@@ -505,7 +505,7 @@ void UIControl_Unknown6(EntityUIControl *control)
     control->visible    = false;
     control->state      = StateMachine_None;
 #if RETRO_USE_PLUS
-    if (entity->promptCount) {
+    if (self->promptCount) {
         for (int32 i = 0; i < control->promptCount; ++i) {
             control->prompts[i]->active = ACTIVE_BOUNDS;
         }
@@ -516,20 +516,20 @@ void UIControl_Unknown6(EntityUIControl *control)
 void UIControl_Unknown7(void)
 {
     RSDK_THIS(UIControl);
-    int32 slotID = RSDK.GetEntityID(entity);
+    int32 slotID = RSDK.GetEntityID(self);
     Hitbox bounds;
 
     if (UIHeading && slotID != SLOT_DIALOG_UICONTROL) {
         foreach_all(UIHeading, heading)
         {
-            int32 x         = entity->startPos.x - entity->cameraOffset.x;
-            int32 y         = entity->startPos.y - entity->cameraOffset.y;
-            bounds.right  = entity->size.x >> 17;
-            bounds.left   = -(entity->size.x >> 17);
-            bounds.bottom = entity->size.y >> 17;
-            bounds.top    = -(entity->size.y >> 17);
+            int32 x         = self->startPos.x - self->cameraOffset.x;
+            int32 y         = self->startPos.y - self->cameraOffset.y;
+            bounds.right  = self->size.x >> 17;
+            bounds.left   = -(self->size.x >> 17);
+            bounds.bottom = self->size.y >> 17;
+            bounds.top    = -(self->size.y >> 17);
             if (MathHelpers_PointInHitbox(FLIP_NONE, x, y, &bounds, heading->position.x, heading->position.y))
-                entity->heading = (Entity *)heading;
+                self->heading = (Entity *)heading;
         }
     }
 
@@ -537,15 +537,15 @@ void UIControl_Unknown7(void)
     if (UIShifter && slotID != SLOT_DIALOG_UICONTROL) {
         foreach_all(UIShifter, shifter)
         {
-            int32 x         = entity->startPos.x - entity->cameraOffset.x;
-            int32 y         = entity->startPos.y - entity->cameraOffset.y;
-            bounds.right  = entity->size.x >> 17;
-            bounds.left   = -(entity->size.x >> 17);
-            bounds.bottom = (entity->size.y >> 17);
-            bounds.top    = -(entity->size.y >> 17);
+            int32 x         = self->startPos.x - self->cameraOffset.x;
+            int32 y         = self->startPos.y - self->cameraOffset.y;
+            bounds.right  = self->size.x >> 17;
+            bounds.left   = -(self->size.x >> 17);
+            bounds.bottom = (self->size.y >> 17);
+            bounds.top    = -(self->size.y >> 17);
             if (MathHelpers_PointInHitbox(FLIP_NONE, x, y, &bounds, shifter->position.x, shifter->position.y)) {
-                entity->shifter = (Entity *)shifter;
-                shifter->parent = entity;
+                self->shifter = (Entity *)shifter;
+                shifter->parent = self;
             }
         }
     }
@@ -553,15 +553,15 @@ void UIControl_Unknown7(void)
     if (UICarousel && slotID != SLOT_DIALOG_UICONTROL) {
         foreach_all(UICarousel, carousel)
         {
-            int32 x         = entity->startPos.x - entity->cameraOffset.x;
-            int32 y         = entity->startPos.y - entity->cameraOffset.y;
-            bounds.right  = entity->size.x >> 17;
-            bounds.left   = -(entity->size.x >> 17);
-            bounds.bottom = entity->size.y >> 17;
-            bounds.top    = -(entity->size.y >> 17);
+            int32 x         = self->startPos.x - self->cameraOffset.x;
+            int32 y         = self->startPos.y - self->cameraOffset.y;
+            bounds.right  = self->size.x >> 17;
+            bounds.left   = -(self->size.x >> 17);
+            bounds.bottom = self->size.y >> 17;
+            bounds.top    = -(self->size.y >> 17);
             if (MathHelpers_PointInHitbox(FLIP_NONE, x, y, &bounds, carousel->position.x, carousel->position.y)) {
-                entity->carousel = carousel;
-                carousel->parent = (Entity *)entity;
+                self->carousel = carousel;
+                carousel->parent = (Entity *)self;
             }
         }
     }
@@ -581,17 +581,17 @@ void UIControl_Unknown7(void)
                 && (!UISlider || id != UISlider->objectID) && (!UIKeyBinder || id != UIKeyBinder->objectID)) {
             }
             else {
-                int32 x         = entity->startPos.x - entity->cameraOffset.x;
-                int32 y         = entity->startPos.y - entity->cameraOffset.y;
-                bounds.left   = -(entity->size.x >> 17);
-                bounds.top    = -(entity->size.y >> 17);
-                bounds.right  = entity->size.x >> 17;
-                bounds.bottom = entity->size.y >> 17;
+                int32 x         = self->startPos.x - self->cameraOffset.x;
+                int32 y         = self->startPos.y - self->cameraOffset.y;
+                bounds.left   = -(self->size.x >> 17);
+                bounds.top    = -(self->size.y >> 17);
+                bounds.right  = self->size.x >> 17;
+                bounds.bottom = self->size.y >> 17;
                 if (MathHelpers_PointInHitbox(FLIP_NONE, x, y, &bounds, button->position.x, button->position.y)) {
-                    if (entity->buttonCount < 64) {
+                    if (self->buttonCount < 64) {
                         if (!button->parent)
-                            button->parent = (Entity *)entity;
-                        entity->buttons[entity->buttonCount++] = button;
+                            button->parent = (Entity *)self;
+                        self->buttons[self->buttonCount++] = button;
                     }
                 }
             }
@@ -713,26 +713,26 @@ void UIControl_Unknown15(EntityUIControl *entity, int32 x, int32 y)
 void UIControl_Unknown16(void)
 {
     RSDK_THIS(UIControl);
-    if (entity->position.x < entity->posUnknown.x) {
-        entity->position.x += entity->scrollSpeed.x;
-        if (entity->position.x > entity->posUnknown.x)
-            entity->position.x = entity->posUnknown.x;
+    if (self->position.x < self->posUnknown.x) {
+        self->position.x += self->scrollSpeed.x;
+        if (self->position.x > self->posUnknown.x)
+            self->position.x = self->posUnknown.x;
     }
-    if (entity->position.x > entity->posUnknown.x) {
-        entity->position.x -= entity->scrollSpeed.x;
-        if (entity->position.x < entity->posUnknown.x)
-            entity->position.x = entity->posUnknown.x;
+    if (self->position.x > self->posUnknown.x) {
+        self->position.x -= self->scrollSpeed.x;
+        if (self->position.x < self->posUnknown.x)
+            self->position.x = self->posUnknown.x;
     }
 
-    if (entity->position.y < entity->posUnknown.y) {
-        entity->position.y += entity->scrollSpeed.y;
-        if (entity->position.y > entity->posUnknown.y)
-            entity->position.y = entity->posUnknown.y;
+    if (self->position.y < self->posUnknown.y) {
+        self->position.y += self->scrollSpeed.y;
+        if (self->position.y > self->posUnknown.y)
+            self->position.y = self->posUnknown.y;
     }
-    if (entity->position.y > entity->posUnknown.y) {
-        entity->position.y -= entity->scrollSpeed.y;
-        if (entity->position.y < entity->posUnknown.y)
-            entity->position.y = entity->posUnknown.y;
+    if (self->position.y > self->posUnknown.y) {
+        self->position.y -= self->scrollSpeed.y;
+        if (self->position.y < self->posUnknown.y)
+            self->position.y = self->posUnknown.y;
     }
 }
 
@@ -746,15 +746,15 @@ void UIControl_ProcessButtonInput(void)
         UIControl->field_C8          = TouchInfo->count != 0;
         UIControl->field_4           = 1;
 
-        for (int32 i = 0; i < entity->buttonCount; ++i) {
-            if (entity->buttons[i]) {
-                EntityUIButton *button = entity->buttons[i];
+        for (int32 i = 0; i < self->buttonCount; ++i) {
+            if (self->buttons[i]) {
+                EntityUIButton *button = self->buttons[i];
 
                 Entity *storeEntity    = SceneInfo->entity;
                 SceneInfo->entity = (Entity *)button;
-                if (button->touchCB && !entity->dialogHasFocus
+                if (button->touchCB && !self->dialogHasFocus
 #if RETRO_USE_PLUS
-                    && !entity->popoverHasFocus
+                    && !self->popoverHasFocus
 #endif
                     ) {
                     if (!button->options8 || !button->options8()) {
@@ -775,14 +775,14 @@ void UIControl_ProcessButtonInput(void)
         if (TouchInfo->count) {
             if (flag) {
                 int32 id = -1;
-                for (int32 i = 0; i < entity->buttonCount; ++i) {
-                    if (activeButton == entity->buttons[i]) {
+                for (int32 i = 0; i < self->buttonCount; ++i) {
+                    if (activeButton == self->buttons[i]) {
                         id = i;
                         break;
                     }
                 }
 
-                entity->activeEntityID = id;
+                self->activeEntityID = id;
                 if (activeButton->flag) {
                     Entity *storeEntity    = SceneInfo->entity;
                     SceneInfo->entity = (Entity *)activeButton;
@@ -792,16 +792,16 @@ void UIControl_ProcessButtonInput(void)
                 }
             }
             else {
-                entity->activeEntityID = -1;
+                self->activeEntityID = -1;
             }
         }
 
         UIControl->field_4 = 0;
     }
 
-    if (entity->activeEntityID >= 0) {
-        if (entity->activeEntityID < entity->buttonCount) {
-            EntityUIButton *button = entity->buttons[entity->activeEntityID];
+    if (self->activeEntityID >= 0) {
+        if (self->activeEntityID < self->buttonCount) {
+            EntityUIButton *button = self->buttons[self->activeEntityID];
             if (button) {
                 Entity *storeEntity    = SceneInfo->entity;
                 SceneInfo->entity = (Entity *)button;
@@ -819,22 +819,22 @@ void UIControl_ProcessButtonInput(void)
 void UIControl_EditorDraw(void)
 {
     RSDK_THIS(UIControl);
-    entity->updateRange.x = entity->size.x >> 1;
-    entity->updateRange.y = entity->size.y >> 1;
+    self->updateRange.x = self->size.x >> 1;
+    self->updateRange.y = self->size.y >> 1;
 
     Vector2 drawPos;
 
-    drawPos.x = entity->position.x;
-    drawPos.y = entity->position.y;
-    drawPos.x -= entity->size.x >> 1;
-    drawPos.y -= entity->size.y >> 1;
-    RSDK.DrawLine(drawPos.x, drawPos.y, drawPos.x + entity->size.x, drawPos.y, 0xFFFF00, 0, INK_NONE, false);
-    RSDK.DrawLine(drawPos.x, entity->size.y + drawPos.y, drawPos.x + entity->size.x, entity->size.y + drawPos.y, 0xFFFF00, 0, INK_NONE, false);
-    RSDK.DrawLine(drawPos.x, drawPos.y, drawPos.x, drawPos.y + entity->size.y, 0xFFFF00, 0, INK_NONE, false);
-    RSDK.DrawLine(drawPos.x + entity->size.x, drawPos.y, drawPos.x + entity->size.x, drawPos.y + entity->size.y, 0xFFFF00, 0, INK_NONE, false);
+    drawPos.x = self->position.x;
+    drawPos.y = self->position.y;
+    drawPos.x -= self->size.x >> 1;
+    drawPos.y -= self->size.y >> 1;
+    RSDK.DrawLine(drawPos.x, drawPos.y, drawPos.x + self->size.x, drawPos.y, 0xFFFF00, 0, INK_NONE, false);
+    RSDK.DrawLine(drawPos.x, self->size.y + drawPos.y, drawPos.x + self->size.x, self->size.y + drawPos.y, 0xFFFF00, 0, INK_NONE, false);
+    RSDK.DrawLine(drawPos.x, drawPos.y, drawPos.x, drawPos.y + self->size.y, 0xFFFF00, 0, INK_NONE, false);
+    RSDK.DrawLine(drawPos.x + self->size.x, drawPos.y, drawPos.x + self->size.x, drawPos.y + self->size.y, 0xFFFF00, 0, INK_NONE, false);
 
-    RSDK.SetSpriteAnimation(UIControl->aniFrames, 0, &entity->animator, false, 7);
-    RSDK.DrawSprite(&entity->animator, NULL, false);
+    RSDK.SetSpriteAnimation(UIControl->aniFrames, 0, &self->animator, false, 7);
+    RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
 void UIControl_EditorLoad(void) { UIControl->aniFrames = RSDK.LoadSpriteAnimation("Editor/EditorIcons.bin", SCOPE_STAGE); }

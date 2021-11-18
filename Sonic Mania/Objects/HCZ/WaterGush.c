@@ -6,19 +6,19 @@ void WaterGush_Update(void)
 {
     RSDK_THIS(WaterGush);
     WaterGush_SetupHitboxes();
-    int32 flag          = entity->flag;
-    entity->direction = FLIP_NONE;
+    int32 flag          = self->flag;
+    self->direction = FLIP_NONE;
 
     foreach_active(Player, player)
     {
         int32 playerID = RSDK.GetEntityID(player);
-        if (!((1 << playerID) & entity->activePlayers)) {
-            if (Player_CheckCollisionTouch(player, entity, &entity->hitbox2)) {
-                entity->active = ACTIVE_NORMAL;
+        if (!((1 << playerID) & self->activePlayers)) {
+            if (Player_CheckCollisionTouch(player, self, &self->hitbox2)) {
+                self->active = ACTIVE_NORMAL;
                 if (!player->sidekick)
-                    entity->flag = true;
+                    self->flag = true;
                 RSDK.PlaySfx(WaterGush->sfxGush, false, 255);
-                entity->activePlayers |= 1 << playerID;
+                self->activePlayers |= 1 << playerID;
                 RSDK.SetSpriteAnimation(player->aniFrames, ANI_HURT, &player->playerAnimator, true, 6);
                 player->nextGroundState = StateMachine_None;
                 player->nextAirState    = StateMachine_None;
@@ -30,27 +30,27 @@ void WaterGush_Update(void)
             }
         }
 
-        if (((1 << playerID) & entity->activePlayers)) {
+        if (((1 << playerID) & self->activePlayers)) {
             int32 xMult = 0;
             int32 yMult = 0;
 
             int32 posY = 0;
-            switch (entity->orientation) {
+            switch (self->orientation) {
                 default: break;
                 case 0:
-                    flag  = entity->position.x;
-                    posY  = entity->position.y - entity->field_78 - 0x140000;
+                    flag  = self->position.x;
+                    posY  = self->position.y - self->field_78 - 0x140000;
                     yMult = -1;
                     break;
                 case 1:
                     xMult = 1;
-                    flag  = entity->field_78 + 0x140000 + entity->position.x;
-                    posY  = entity->position.y;
+                    flag  = self->field_78 + 0x140000 + self->position.x;
+                    posY  = self->position.y;
                     break;
                 case 2:
                     xMult = -1;
-                    flag  = entity->position.x - entity->field_78 - 0x140000;
-                    posY  = entity->position.y;
+                    flag  = self->position.x - self->field_78 - 0x140000;
+                    posY  = self->position.y;
                     break;
             }
 
@@ -58,57 +58,57 @@ void WaterGush_Update(void)
             player->position.y += (posY - player->position.y) >> 2;
             player->state = Player_State_None;
 
-            if ((!Player_CheckCollisionTouch(player, entity, &entity->hitbox1) && !Player_CheckCollisionTouch(player, entity, &entity->hitbox2))
-                || entity->field_84) {
-                entity->activePlayers &= ~(1 << playerID);
+            if ((!Player_CheckCollisionTouch(player, self, &self->hitbox1) && !Player_CheckCollisionTouch(player, self, &self->hitbox2))
+                || self->field_84) {
+                self->activePlayers &= ~(1 << playerID);
                 player->state          = Player_State_Air;
                 player->tileCollisions = true;
                 player->onGround       = false;
-                player->velocity.x     = xMult * (abs(entity->speed) << 15);
-                player->velocity.y     = yMult * (abs(entity->speed) << 15);
+                player->velocity.x     = xMult * (abs(self->speed) << 15);
+                player->velocity.y     = yMult * (abs(self->speed) << 15);
             }
         }
     }
 
-    if (entity->flag) {
+    if (self->flag) {
         if (!flag) {
             RSDK.PlaySfx(Water->sfxSplash, false, 255);
             WaterGush_Unknown3();
         }
 
-        if (entity->field_84) {
-            if (!entity->orientation) {
-                entity->field_7C += 0x3800;
-                if (entity->field_78 > 0)
-                    entity->field_78 -= entity->field_7C;
+        if (self->field_84) {
+            if (!self->orientation) {
+                self->field_7C += 0x3800;
+                if (self->field_78 > 0)
+                    self->field_78 -= self->field_7C;
 
-                entity->field_78 = maxVal(entity->field_78, 0);
-                if (!entity->field_78) {
-                    entity->flag     = false;
-                    entity->field_84 = 0;
-                    entity->field_7C = 0;
+                self->field_78 = maxVal(self->field_78, 0);
+                if (!self->field_78) {
+                    self->flag     = false;
+                    self->field_84 = 0;
+                    self->field_7C = 0;
                 }
             }
         }
         else {
-            if (entity->field_78 < entity->length << 22) {
-                entity->field_78 += (abs(entity->speed) << 15);
+            if (self->field_78 < self->length << 22) {
+                self->field_78 += (abs(self->speed) << 15);
             }
-            entity->field_78 = minVal(entity->length << 22, entity->field_78);
-            if (entity->field_78 == entity->length << 22)
-                entity->field_84 = 1;
+            self->field_78 = minVal(self->length << 22, self->field_78);
+            if (self->field_78 == self->length << 22)
+                self->field_84 = 1;
         }
     }
 
-    if (!RSDK.CheckOnScreen(entity, NULL)) {
-        entity->field_78 = 0;
-        entity->flag     = false;
-        entity->field_84 = 0;
-        entity->field_7C = 0;
-        entity->active   = ACTIVE_BOUNDS;
+    if (!RSDK.CheckOnScreen(self, NULL)) {
+        self->field_78 = 0;
+        self->flag     = false;
+        self->field_84 = 0;
+        self->field_7C = 0;
+        self->active   = ACTIVE_BOUNDS;
     }
-    RSDK.ProcessAnimation(&entity->animator1);
-    RSDK.ProcessAnimation(&entity->animator2);
+    RSDK.ProcessAnimation(&self->animator1);
+    RSDK.ProcessAnimation(&self->animator2);
 }
 
 void WaterGush_LateUpdate(void) {}
@@ -118,7 +118,7 @@ void WaterGush_StaticUpdate(void) {}
 void WaterGush_Draw(void)
 {
     RSDK_THIS(WaterGush);
-    if (entity->field_78 > 0)
+    if (self->field_78 > 0)
         WaterGush_DrawSprites();
 }
 
@@ -126,37 +126,37 @@ void WaterGush_Create(void *data)
 {
     RSDK_THIS(WaterGush);
 
-    entity->active        = ACTIVE_BOUNDS;
-    entity->drawOrder     = Zone->drawOrderLow;
-    entity->posUnknown1.x = entity->position.x;
-    entity->posUnknown1.y = entity->position.y;
-    entity->visible       = true;
-    entity->drawFX        = FX_FLIP;
-    entity->updateRange.x = 0x800000;
-    if (entity->orientation == 2 || entity->orientation == 1)
-        entity->updateRange.x = (entity->length + 2) << 22;
-    entity->updateRange.y = 0x800000;
-    if (!entity->orientation)
-        entity->updateRange.y = (entity->length + 2) << 22;
-    if (!entity->speed)
-        entity->speed = 16;
+    self->active        = ACTIVE_BOUNDS;
+    self->drawOrder     = Zone->drawOrderLow;
+    self->posUnknown1.x = self->position.x;
+    self->posUnknown1.y = self->position.y;
+    self->visible       = true;
+    self->drawFX        = FX_FLIP;
+    self->updateRange.x = 0x800000;
+    if (self->orientation == 2 || self->orientation == 1)
+        self->updateRange.x = (self->length + 2) << 22;
+    self->updateRange.y = 0x800000;
+    if (!self->orientation)
+        self->updateRange.y = (self->length + 2) << 22;
+    if (!self->speed)
+        self->speed = 16;
     WaterGush_SetupHitboxes();
 
-    if (entity->orientation) {
-        if (entity->orientation == 1) {
-            entity->direction = FLIP_NONE;
+    if (self->orientation) {
+        if (self->orientation == 1) {
+            self->direction = FLIP_NONE;
         }
         else {
-            if (entity->orientation == 2)
-                entity->direction = FLIP_X;
+            if (self->orientation == 2)
+                self->direction = FLIP_X;
         }
-        RSDK.SetSpriteAnimation(WaterGush->aniFrames, 1, &entity->animator1, true, 0);
-        RSDK.SetSpriteAnimation(WaterGush->aniFrames, 3, &entity->animator2, true, 0);
+        RSDK.SetSpriteAnimation(WaterGush->aniFrames, 1, &self->animator1, true, 0);
+        RSDK.SetSpriteAnimation(WaterGush->aniFrames, 3, &self->animator2, true, 0);
     }
     else {
-        entity->direction = FLIP_NONE;
-        RSDK.SetSpriteAnimation(WaterGush->aniFrames, 0, &entity->animator1, true, 0);
-        RSDK.SetSpriteAnimation(WaterGush->aniFrames, 2, &entity->animator2, true, 0);
+        self->direction = FLIP_NONE;
+        RSDK.SetSpriteAnimation(WaterGush->aniFrames, 0, &self->animator1, true, 0);
+        RSDK.SetSpriteAnimation(WaterGush->aniFrames, 2, &self->animator2, true, 0);
     }
 }
 
@@ -170,47 +170,47 @@ void WaterGush_SetupHitboxes(void)
 {
     RSDK_THIS(WaterGush);
 
-    switch (entity->orientation) {
+    switch (self->orientation) {
         default: break;
         case 0:
-            entity->hitbox1.left   = -32;
-            entity->hitbox1.top    = -20 - (entity->field_78 >> 16);
-            entity->hitbox1.right  = 32;
-            entity->hitbox1.bottom = 0;
+            self->hitbox1.left   = -32;
+            self->hitbox1.top    = -20 - (self->field_78 >> 16);
+            self->hitbox1.right  = 32;
+            self->hitbox1.bottom = 0;
 
-            entity->hitbox2.left   = -32;
-            entity->hitbox2.top    = 0;
-            entity->hitbox2.right  = 32;
-            entity->hitbox2.bottom = 16;
+            self->hitbox2.left   = -32;
+            self->hitbox2.top    = 0;
+            self->hitbox2.right  = 32;
+            self->hitbox2.bottom = 16;
             break;
         case 1:
-            entity->hitbox1.left   = 0;
-            entity->hitbox1.top    = -32;
-            entity->hitbox1.right  = (entity->field_78 >> 16) + 20;
-            entity->hitbox1.bottom = 32;
+            self->hitbox1.left   = 0;
+            self->hitbox1.top    = -32;
+            self->hitbox1.right  = (self->field_78 >> 16) + 20;
+            self->hitbox1.bottom = 32;
 
             if (Music->activeTrack == TRACK_EGGMAN1) {
-                entity->hitbox2.left   = -192;
-                entity->hitbox2.top    = -16;
-                entity->hitbox2.bottom = 16;
+                self->hitbox2.left   = -192;
+                self->hitbox2.top    = -16;
+                self->hitbox2.bottom = 16;
             }
             else {
-                entity->hitbox2.left   = -16;
-                entity->hitbox2.top    = -32;
-                entity->hitbox2.bottom = 32;
+                self->hitbox2.left   = -16;
+                self->hitbox2.top    = -32;
+                self->hitbox2.bottom = 32;
             }
-            entity->hitbox2.right = 0;
+            self->hitbox2.right = 0;
             break;
         case 2:
-            entity->hitbox1.left   = -20 - (entity->field_78 >> 16);
-            entity->hitbox1.top    = -32;
-            entity->hitbox1.right  = 0;
-            entity->hitbox1.bottom = 32;
+            self->hitbox1.left   = -20 - (self->field_78 >> 16);
+            self->hitbox1.top    = -32;
+            self->hitbox1.right  = 0;
+            self->hitbox1.bottom = 32;
 
-            entity->hitbox2.left   = 0;
-            entity->hitbox2.top    = -32;
-            entity->hitbox2.right  = 16;
-            entity->hitbox2.bottom = 32;
+            self->hitbox2.left   = 0;
+            self->hitbox2.top    = -32;
+            self->hitbox2.right  = 16;
+            self->hitbox2.bottom = 32;
             break;
     }
 }
@@ -220,47 +220,47 @@ void WaterGush_DrawSprites(void)
     RSDK_THIS(WaterGush);
     Vector2 drawPos, drawPos2;
 
-    uint8 storeDir = entity->direction;
-    drawPos2.x    = entity->position.x;
-    drawPos2.y    = entity->position.y;
+    uint8 storeDir = self->direction;
+    drawPos2.x    = self->position.x;
+    drawPos2.y    = self->position.y;
 
     int32 offsetX = 0;
     int32 offsetY = 0;
-    switch (entity->orientation) {
+    switch (self->orientation) {
         default: break;
         case 0:
-            entity->direction = FLIP_NONE;
-            drawPos2.y -= entity->field_78;
+            self->direction = FLIP_NONE;
+            drawPos2.y -= self->field_78;
             offsetX = 0;
             offsetY = 0x400000;
             break;
         case 1:
-            entity->direction = FLIP_NONE;
+            self->direction = FLIP_NONE;
             offsetX           = -0x400000;
             offsetY           = 0;
-            drawPos2.x += entity->field_78;
+            drawPos2.x += self->field_78;
             break;
         case 2:
-            entity->direction = FLIP_X;
+            self->direction = FLIP_X;
             offsetX           = 0x400000;
             offsetY           = 0;
-            drawPos2.x -= entity->field_78;
+            drawPos2.x -= self->field_78;
             break;
     }
 
     drawPos.x = drawPos2.x;
     drawPos.y = drawPos2.y;
-    if (entity->field_78 > 0) {
-        int32 count = ((entity->field_78 - 1) >> 22) + 1;
+    if (self->field_78 > 0) {
+        int32 count = ((self->field_78 - 1) >> 22) + 1;
         for (int32 i = 0; i < count; ++i) {
             drawPos.x += offsetX;
             drawPos.y += offsetY;
-            RSDK.DrawSprite(&entity->animator1, &drawPos, false);
+            RSDK.DrawSprite(&self->animator1, &drawPos, false);
         }
     }
-    RSDK.DrawSprite(&entity->animator2, &drawPos2, false);
+    RSDK.DrawSprite(&self->animator2, &drawPos2, false);
 
-    entity->direction = storeDir;
+    self->direction = storeDir;
 }
 
 void WaterGush_Unknown3(void)
@@ -291,82 +291,82 @@ void WaterGush_Unknown3(void)
     int32 spawnX4 = 0;
     int32 spawnY4 = 0;
 
-    switch (entity->orientation) {
+    switch (self->orientation) {
         default: break;
         case 0:
             velX1   = -0x30000;
-            velY1   = -0x4000 * abs(entity->speed);
+            velY1   = -0x4000 * abs(self->speed);
             dir1    = FLIP_X;
-            spawnY1 = entity->position.y;
-            spawnX1 = entity->position.x - 0x200000;
+            spawnY1 = self->position.y;
+            spawnX1 = self->position.x - 0x200000;
 
             velX2   = -0x28000;
-            velY2   = -0x8000 * abs(entity->speed);
+            velY2   = -0x8000 * abs(self->speed);
             dir2    = FLIP_X;
-            spawnX2 = entity->position.x - 0x100000;
-            spawnY2 = entity->position.y;
+            spawnX2 = self->position.x - 0x100000;
+            spawnY2 = self->position.y;
 
             velX3   = 0x28000;
-            velY3   = -0x8000 * abs(entity->speed);
+            velY3   = -0x8000 * abs(self->speed);
             dir4    = FLIP_NONE;
-            spawnX3 = entity->position.x + 0x100000;
+            spawnX3 = self->position.x + 0x100000;
             spawnY3 = spawnY1;
 
             velX4   = 0x30000;
-            velY4   = -0x4000 * abs(entity->speed);
+            velY4   = -0x4000 * abs(self->speed);
             dir3    = FLIP_NONE;
-            spawnX4 = entity->position.x + 0x200000;
-            spawnY4 = entity->position.y;
+            spawnX4 = self->position.x + 0x200000;
+            spawnY4 = self->position.y;
             break;
         case 1:
-            velX1   = abs(entity->speed) << 14;
+            velX1   = abs(self->speed) << 14;
             velY1   = -0x30000;
             dir1    = FLIP_NONE;
-            spawnX1 = entity->position.x;
-            spawnY1 = entity->position.y - 0x200000;
+            spawnX1 = self->position.x;
+            spawnY1 = self->position.y - 0x200000;
 
-            velX2   = abs(entity->speed) << 15;
+            velX2   = abs(self->speed) << 15;
             velY2   = -0x28000;
             dir2    = FLIP_NONE;
-            spawnX2 = entity->position.x;
-            spawnY2 = entity->position.y - 0x100000;
+            spawnX2 = self->position.x;
+            spawnY2 = self->position.y - 0x100000;
 
             velX3   = velX2;
             velY3   = 0x28000;
             dir3    = FLIP_NONE;
-            spawnX3 = entity->position.x;
-            spawnY3 = entity->position.y + 0x100000;
+            spawnX3 = self->position.x;
+            spawnY3 = self->position.y + 0x100000;
 
             velX4   = velX1;
             velY4   = 0x30000;
             dir4    = FLIP_NONE;
-            spawnX4 = entity->position.x;
-            spawnY4 = entity->position.y + 0x200000;
+            spawnX4 = self->position.x;
+            spawnY4 = self->position.y + 0x200000;
             break;
         case 2:
-            velX1   = -0x4000 * abs(entity->speed);
+            velX1   = -0x4000 * abs(self->speed);
             velY1   = -0x30000;
             dir1    = FLIP_X;
-            spawnX1 = entity->position.x;
-            spawnY1 = entity->position.y - 0x200000;
+            spawnX1 = self->position.x;
+            spawnY1 = self->position.y - 0x200000;
 
-            velX2   = -0x8000 * abs(entity->speed);
+            velX2   = -0x8000 * abs(self->speed);
             velY2   = -0x28000;
             dir2    = FLIP_X;
-            spawnX2 = entity->position.x;
-            spawnY2 = entity->position.y - 0x100000;
+            spawnX2 = self->position.x;
+            spawnY2 = self->position.y - 0x100000;
 
             velX3   = velX2;
             velY3   = 0x28000;
             dir3    = FLIP_X;
-            spawnY3 = entity->position.y + 0x100000;
-            spawnY4 = entity->position.y + 0x200000;
+            spawnY3 = self->position.y + 0x100000;
+            spawnY4 = self->position.y + 0x200000;
 
             velX4   = velX1;
             velY4   = 0x30000;
             dir4    = FLIP_X;
-            spawnX4 = entity->position.x;
-            spawnX3 = entity->position.x;
+            spawnX4 = self->position.x;
+            spawnX3 = self->position.x;
             break;
     }
 
@@ -434,31 +434,31 @@ void WaterGush_EditorDraw(void)
 {
     RSDK_THIS(WaterGush);
 
-    entity->updateRange.x = 0x800000;
-    if (entity->orientation == 2 || entity->orientation == 1)
-        entity->updateRange.x = (entity->length + 2) << 22;
-    entity->updateRange.y = 0x800000;
-    if (!entity->orientation)
-        entity->updateRange.y = (entity->length + 2) << 22;
+    self->updateRange.x = 0x800000;
+    if (self->orientation == 2 || self->orientation == 1)
+        self->updateRange.x = (self->length + 2) << 22;
+    self->updateRange.y = 0x800000;
+    if (!self->orientation)
+        self->updateRange.y = (self->length + 2) << 22;
 
-    if (entity->orientation) {
-        if (entity->orientation == 1) {
-            entity->direction = FLIP_NONE;
+    if (self->orientation) {
+        if (self->orientation == 1) {
+            self->direction = FLIP_NONE;
         }
         else {
-            if (entity->orientation == 2)
-                entity->direction = FLIP_X;
+            if (self->orientation == 2)
+                self->direction = FLIP_X;
         }
-        RSDK.SetSpriteAnimation(WaterGush->aniFrames, 1, &entity->animator1, true, 0);
-        RSDK.SetSpriteAnimation(WaterGush->aniFrames, 3, &entity->animator2, true, 0);
+        RSDK.SetSpriteAnimation(WaterGush->aniFrames, 1, &self->animator1, true, 0);
+        RSDK.SetSpriteAnimation(WaterGush->aniFrames, 3, &self->animator2, true, 0);
     }
     else {
-        entity->direction = FLIP_NONE;
-        RSDK.SetSpriteAnimation(WaterGush->aniFrames, 0, &entity->animator1, true, 0);
-        RSDK.SetSpriteAnimation(WaterGush->aniFrames, 2, &entity->animator2, true, 0);
+        self->direction = FLIP_NONE;
+        RSDK.SetSpriteAnimation(WaterGush->aniFrames, 0, &self->animator1, true, 0);
+        RSDK.SetSpriteAnimation(WaterGush->aniFrames, 2, &self->animator2, true, 0);
     }
 
-    entity->field_78 = entity->length << 22;
+    self->field_78 = self->length << 22;
 
     WaterGush_DrawSprites();
 }

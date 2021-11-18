@@ -9,14 +9,14 @@ void CPZ1Intro_Update(void)
     };
 
     RSDK_THIS(CPZ1Intro);
-    if (!entity->activated) {
+    if (!self->activated) {
         if (!isMainGameMode() || !globals->enableIntro || PlayerHelpers_CheckStageReload()) {
             destroyEntity(CPZ1Intro->fxRuby);
-            entity->active = ACTIVE_NEVER;
+            self->active = ACTIVE_NEVER;
         }
         else {
-            entity->activated = true;
-            CutsceneSeq_StartSequence((Entity *)entity, states);
+            self->activated = true;
+            CutsceneSeq_StartSequence((Entity *)self, states);
             EntityCutsceneSeq *seq = RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq);
             if (seq->objectID)
                 seq->skipType = SKIPTYPE_RELOADSCN;
@@ -34,9 +34,9 @@ void CPZ1Intro_Create(void *data)
 {
     RSDK_THIS(CPZ1Intro);
 
-    INIT_ENTITY(entity);
-    CutsceneRules_SetupEntity(entity, &entity->size, &entity->hitbox);
-    entity->active        = ACTIVE_NORMAL;
+    INIT_ENTITY(self);
+    CutsceneRules_SetupEntity(self, &self->size, &self->hitbox);
+    self->active        = ACTIVE_NORMAL;
 }
 
 void CPZ1Intro_StageLoad(void)
@@ -395,7 +395,7 @@ bool32 CPZ1Intro_Unknown15(void *h)
 void CPZ1Intro_EditorDraw(void)
 {
     RSDK_THIS(CPZ1Intro);
-    CutsceneRules_DrawCutsceneBounds(entity, &entity->size);
+    CutsceneRules_DrawCutsceneBounds(self, &self->size);
 }
 
 void CPZ1Intro_EditorLoad(void) {}

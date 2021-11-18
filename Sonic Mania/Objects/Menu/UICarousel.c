@@ -8,13 +8,13 @@ void UICarousel_Update(void) {}
 void UICarousel_LateUpdate(void)
 {
     RSDK_THIS(UICarousel);
-    if (entity->parent) {
+    if (self->parent) {
         UICarousel_Unknown1();
         UICarousel_Unknown2();
-        entity->offset.x -= entity->offset.x >> 2;
-        entity->offset.y -= entity->offset.y >> 2;
-        if (abs(entity->offset.y) <= 0x10000)
-            entity->offset.y = 0;
+        self->offset.x -= self->offset.x >> 2;
+        self->offset.y -= self->offset.y >> 2;
+        if (abs(self->offset.y) <= 0x10000)
+            self->offset.y = 0;
     }
 }
 
@@ -26,20 +26,20 @@ void UICarousel_Create(void *data)
 {
     RSDK_THIS(UICarousel);
     if (!SceneInfo->inEditor) {
-        entity->startPos.x    = entity->position.x;
-        entity->startPos.y    = entity->position.y;
-        entity->active        = ACTIVE_BOUNDS;
-        entity->field_70      = 0;
-        entity->field_74      = 0;
-        entity->field_78      = 0;
-        entity->field_7C      = 0;
-        entity->visible       = false;
-        entity->updateRange.x = 0x800000;
-        entity->updateRange.y = 0x800000;
-        entity->scrollOffset      = -1;
-        entity->field_98      = -1;
-        entity->minOffset      = 0;
-        entity->maxOffset      = 20;
+        self->startPos.x    = self->position.x;
+        self->startPos.y    = self->position.y;
+        self->active        = ACTIVE_BOUNDS;
+        self->field_70      = 0;
+        self->field_74      = 0;
+        self->field_78      = 0;
+        self->field_7C      = 0;
+        self->visible       = false;
+        self->updateRange.x = 0x800000;
+        self->updateRange.y = 0x800000;
+        self->scrollOffset      = -1;
+        self->field_98      = -1;
+        self->minOffset      = 0;
+        self->maxOffset      = 20;
     }
 }
 
@@ -48,8 +48,8 @@ void UICarousel_StageLoad(void) {}
 void UICarousel_Unknown1(void)
 {
     RSDK_THIS(UICarousel);
-    EntityUIControl *control = (EntityUIControl *)entity->parent;
-    int32 entityID             = entity->field_98;
+    EntityUIControl *control = (EntityUIControl *)self->parent;
+    int32 entityID             = self->field_98;
 
     if (control->activeEntityID != entityID) {
         int32 max      = control->buttonCount - 1;
@@ -72,43 +72,43 @@ void UICarousel_Unknown1(void)
             }
         }
 
-        int32 val = entity->scrollOffset;
+        int32 val = self->scrollOffset;
         if (flag) {
-            --entity->virtualIndex;
-            entity->scrollOffset = entity->virtualIndex - (control->buttonCount >> 1);
+            --self->virtualIndex;
+            self->scrollOffset = self->virtualIndex - (control->buttonCount >> 1);
         }
         else if (flag2) {
-            ++entity->virtualIndex;
-            entity->scrollOffset = entity->virtualIndex - (control->buttonCount >> 1);
+            ++self->virtualIndex;
+            self->scrollOffset = self->virtualIndex - (control->buttonCount >> 1);
         }
 
-        if (entity->maxOffset != -1) {
-            if (control->buttonCount + entity->scrollOffset > entity->maxOffset + 1)
-                entity->scrollOffset = entity->maxOffset - control->buttonCount + 1;
+        if (self->maxOffset != -1) {
+            if (control->buttonCount + self->scrollOffset > self->maxOffset + 1)
+                self->scrollOffset = self->maxOffset - control->buttonCount + 1;
 
-            if (entity->virtualIndex > entity->maxOffset - 1) {
-                entity->virtualIndex        = entity->maxOffset - 1;
+            if (self->virtualIndex > self->maxOffset - 1) {
+                self->virtualIndex        = self->maxOffset - 1;
                 control->activeEntityID = entityID;
             }
         }
 
-        if (entity->minOffset != -1) {
-            if (entity->scrollOffset < entity->minOffset - 1)
-                entity->scrollOffset = entity->minOffset - 1;
-            if (entity->virtualIndex < entity->minOffset) {
-                entity->virtualIndex        = entity->minOffset;
+        if (self->minOffset != -1) {
+            if (self->scrollOffset < self->minOffset - 1)
+                self->scrollOffset = self->minOffset - 1;
+            if (self->virtualIndex < self->minOffset) {
+                self->virtualIndex        = self->minOffset;
                 control->activeEntityID = entityID;
             }
         }
 
-        if (entity->scrollOffset >= val) {
-            if (entity->scrollOffset > val)
-                entity->offset.y += abs(entity->shift.y);
-            entity->field_98 = control->activeEntityID;
+        if (self->scrollOffset >= val) {
+            if (self->scrollOffset > val)
+                self->offset.y += abs(self->shift.y);
+            self->field_98 = control->activeEntityID;
         }
         else {
-            entity->offset.y -= abs(entity->shift.y);
-            entity->field_98 = control->activeEntityID;
+            self->offset.y -= abs(self->shift.y);
+            self->field_98 = control->activeEntityID;
         }
     }
 }
@@ -116,26 +116,26 @@ void UICarousel_Unknown1(void)
 void UICarousel_Unknown2(void)
 {
     RSDK_THIS(UICarousel);
-    EntityUIControl *control = (EntityUIControl *)entity->parent;
+    EntityUIControl *control = (EntityUIControl *)self->parent;
     Vector2 vecs[0x10];
     memset(vecs, 0, sizeof(vecs));
 
     for (int32 i = 0; i < control->buttonCount; ++i) {
-        vecs[i].x = entity->position.x;
-        vecs[i].y = entity->position.y - (entity->shift.y * i);
+        vecs[i].x = self->position.x;
+        vecs[i].y = self->position.y - (self->shift.y * i);
     }
 
     for (int32 i = 0; i < control->buttonCount; ++i) {
         EntityUIButton *entPtr = control->buttons[i];
 
-        int32 pos = (i - entity->scrollOffset) % control->buttonCount;
+        int32 pos = (i - self->scrollOffset) % control->buttonCount;
         if (pos < 0)
             pos += control->buttonCount;
 
         entPtr->position.x = vecs[pos].x;
         entPtr->position.y = vecs[pos].y;
-        entPtr->position.x += entity->offset.x;
-        entPtr->position.y += entity->offset.y;
+        entPtr->position.x += self->offset.x;
+        entPtr->position.y += self->offset.y;
         entPtr->drawOrder = pos - control->buttonCount + 12;
     }
 }

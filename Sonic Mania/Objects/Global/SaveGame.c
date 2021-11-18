@@ -103,7 +103,7 @@ void SaveGame_LoadSaveData(void)
             for (int32 e = 0x40; e < 0x840; ++e) {
                 if (globals->atlEntityData[(0x200 * 1) + e] == 1) {
                     Entity *entity   = RSDK.GetEntityByID(e);
-                    entity->objectID = 0;
+                    entity->objectID = TYPE_BLANK;
                     entity->active   = -1;
                 }
                 else if (globals->atlEntityData[(0x200 * 1) + e] == 2) {

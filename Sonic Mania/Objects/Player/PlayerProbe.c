@@ -8,38 +8,38 @@ void PlayerProbe_Update(void)
     foreach_active(Player, player)
     {
         int32 playerID = RSDK.GetEntityID(player);
-        int32 x        = (player->position.x - entity->position.x) >> 8;
-        int32 y        = (player->position.y - entity->position.y) >> 8;
-        int32 scanX    = (y * RSDK.Sin256(entity->negAngle)) + (x * RSDK.Cos256(entity->negAngle)) + entity->position.x;
-        int32 scanY    = (y * RSDK.Cos256(entity->negAngle)) - (x * RSDK.Sin256(entity->negAngle)) + entity->position.y;
-        int32 pos      = ((player->velocity.y >> 8) * RSDK.Sin256(entity->negAngle)) + (player->velocity.x >> 8) * RSDK.Cos256(entity->negAngle);
-        RSDK.Cos256(entity->negAngle);
-        RSDK.Sin256(entity->negAngle);
+        int32 x        = (player->position.x - self->position.x) >> 8;
+        int32 y        = (player->position.y - self->position.y) >> 8;
+        int32 scanX    = (y * RSDK.Sin256(self->negAngle)) + (x * RSDK.Cos256(self->negAngle)) + self->position.x;
+        int32 scanY    = (y * RSDK.Cos256(self->negAngle)) - (x * RSDK.Sin256(self->negAngle)) + self->position.y;
+        int32 pos      = ((player->velocity.y >> 8) * RSDK.Sin256(self->negAngle)) + (player->velocity.x >> 8) * RSDK.Cos256(self->negAngle);
+        RSDK.Cos256(self->negAngle);
+        RSDK.Sin256(self->negAngle);
 
-        int32 xDif = scanX - entity->position.x >= 0 ? scanX - entity->position.x : entity->position.x - scanX;
-        int32 yDif = scanY - entity->position.y >= 0 ? scanY - entity->position.y : entity->position.y - scanY;
+        int32 xDif = scanX - self->position.x >= 0 ? scanX - self->position.x : self->position.x - scanX;
+        int32 yDif = scanY - self->position.y >= 0 ? scanY - self->position.y : self->position.y - scanY;
 
-        if (xDif < 0x180000 && yDif < entity->size << 19) {
-            if (scanX + pos >= entity->position.x) {
-                if (!entity->direction) {
-                    if (!((1 << playerID) & entity->activePlayers))
+        if (xDif < 0x180000 && yDif < self->size << 19) {
+            if (scanX + pos >= self->position.x) {
+                if (!self->direction) {
+                    if (!((1 << playerID) & self->activePlayers))
                         PlayerProbe_Print(player);
-                    entity->activePlayers |= (1 << playerID);
+                    self->activePlayers |= (1 << playerID);
                 }
             }
             else {
-                if (entity->direction) {
-                    if (!((1 << playerID) & entity->activePlayers))
+                if (self->direction) {
+                    if (!((1 << playerID) & self->activePlayers))
                         PlayerProbe_Print(player);
-                    entity->activePlayers |= (1 << playerID);
+                    self->activePlayers |= (1 << playerID);
                 }
             }
         }
         else {
-            entity->activePlayers &= ~(1 << playerID);
+            self->activePlayers &= ~(1 << playerID);
         }
     }
-    entity->visible = DebugMode->debugActive;
+    self->visible = DebugMode->debugActive;
 }
 
 void PlayerProbe_LateUpdate(void) {}
@@ -51,18 +51,18 @@ void PlayerProbe_Draw(void) { PlayerProbe_DrawSprites(); }
 void PlayerProbe_Create(void *data)
 {
     RSDK_THIS(PlayerProbe);
-    RSDK.SetSpriteAnimation(PlaneSwitch->aniFrames, 0, &entity->animator, true, 0);
+    RSDK.SetSpriteAnimation(PlaneSwitch->aniFrames, 0, &self->animator, true, 0);
 
-    entity->drawFX |= FX_FLIP;
-    entity->active           = ACTIVE_BOUNDS;
-    entity->animator.frameID = 4;
+    self->drawFX |= FX_FLIP;
+    self->active           = ACTIVE_BOUNDS;
+    self->animator.frameID = 4;
 
-    entity->updateRange.x = abs(entity->size * RSDK.Sin256(entity->angle) << 11) + 0x200000;
-    entity->updateRange.y = abs(entity->size * RSDK.Cos256(entity->angle) << 11) + 0x200000;
-    entity->visible       = false;
-    entity->drawOrder     = Zone->drawOrderLow;
-    entity->activePlayers = 0;
-    entity->negAngle      = (uint8) - (entity->angle & 0xFF);
+    self->updateRange.x = abs(self->size * RSDK.Sin256(self->angle) << 11) + 0x200000;
+    self->updateRange.y = abs(self->size * RSDK.Cos256(self->angle) << 11) + 0x200000;
+    self->visible       = false;
+    self->drawOrder     = Zone->drawOrderLow;
+    self->activePlayers = 0;
+    self->negAngle      = (uint8) - (self->angle & 0xFF);
 }
 
 void PlayerProbe_StageLoad(void)
@@ -77,13 +77,13 @@ void PlayerProbe_Print(EntityPlayer *player)
         LogHelpers_Print("====================");
         LogHelpers_Print("= Begin Probe      =");
         LogHelpers_Print("====================");
-        if (entity->direction)
+        if (self->direction)
             LogHelpers_Print("self->direction = S/U");
         else
             LogHelpers_Print("self->direction = U/S");
-        LogHelpers_Print("self->angle = %i", entity->angle);
-        LogHelpers_Print("Cos256(self->angle) = %i", RSDK.Cos256(entity->angle));
-        LogHelpers_Print("Sin256(self->angle) = %i", RSDK.Sin256(entity->angle));
+        LogHelpers_Print("self->angle = %i", self->angle);
+        LogHelpers_Print("Cos256(self->angle) = %i", RSDK.Cos256(self->angle));
+        LogHelpers_Print("Sin256(self->angle) = %i", RSDK.Sin256(self->angle));
         LogHelpers_Print("====================");
         if (player->direction)
             LogHelpers_Print("self->direction = FACING_LEFT");
@@ -104,28 +104,28 @@ void PlayerProbe_DrawSprites(void)
     RSDK_THIS(PlayerProbe);
     Vector2 drawPos;
 
-    drawPos.x = entity->position.x;
-    drawPos.y = entity->position.y;
-    drawPos.y -= entity->size << 19;
-    Zone_Unknown3(&entity->position, &drawPos, entity->angle);
-    for (int32 i = 0; i < entity->size; ++i) {
-        RSDK.DrawSprite(&entity->animator, &drawPos, false);
-        drawPos.x += RSDK.Sin256(entity->angle) << 12;
-        drawPos.y += RSDK.Cos256(entity->angle) << 12;
+    drawPos.x = self->position.x;
+    drawPos.y = self->position.y;
+    drawPos.y -= self->size << 19;
+    Zone_Unknown3(&self->position, &drawPos, self->angle);
+    for (int32 i = 0; i < self->size; ++i) {
+        RSDK.DrawSprite(&self->animator, &drawPos, false);
+        drawPos.x += RSDK.Sin256(self->angle) << 12;
+        drawPos.y += RSDK.Cos256(self->angle) << 12;
     }
 
     if (SceneInfo->inEditor) {
-        int32 x2    = entity->position.x;
-        int32 y2    = entity->position.y;
-        int32 x1    = entity->position.x;
-        int32 y1    = entity->position.y;
-        uint8 angle = -(uint8)(entity->angle);
-        if (entity->direction)
-            angle = -0x80 - (uint8)(entity->angle);
+        int32 x2    = self->position.x;
+        int32 y2    = self->position.y;
+        int32 x1    = self->position.x;
+        int32 y1    = self->position.y;
+        uint8 angle = -(uint8)(self->angle);
+        if (self->direction)
+            angle = -0x80 - (uint8)(self->angle);
         x2 += 0x5000 * RSDK.Cos256(angle);
         y2 += 0x5000 * RSDK.Sin256(angle);
         uint32 clr = 0xFF00FF;
-        if (!entity->direction)
+        if (!self->direction)
             clr = 0xFFFF;
 
         PlayerProbe_DrawEditor(clr, x1, y1, x2, y2);
@@ -144,12 +144,12 @@ void PlayerProbe_DrawEditor(uint32 colour, int32 x1, int32 y1, int32 x2, int32 y
 void PlayerProbe_EditorDraw(void)
 {
     RSDK_THIS(PlayerProbe);
-    entity->updateRange.x = abs(entity->size * RSDK.Sin256(entity->angle) << 11) + 0x200000;
-    entity->updateRange.y = abs(entity->size * RSDK.Cos256(entity->angle) << 11) + 0x200000;
-    entity->visible       = false;
-    entity->drawOrder     = Zone->drawOrderLow;
-    entity->activePlayers = 0;
-    entity->negAngle      = (uint8) - (entity->angle & 0xFF);
+    self->updateRange.x = abs(self->size * RSDK.Sin256(self->angle) << 11) + 0x200000;
+    self->updateRange.y = abs(self->size * RSDK.Cos256(self->angle) << 11) + 0x200000;
+    self->visible       = false;
+    self->drawOrder     = Zone->drawOrderLow;
+    self->activePlayers = 0;
+    self->negAngle      = (uint8) - (self->angle & 0xFF);
 
     PlayerProbe_Draw();
 }

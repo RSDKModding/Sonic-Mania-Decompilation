@@ -6,7 +6,7 @@ ObjectHangGlider *HangGlider;
 void HangGlider_Update(void)
 {
     RSDK_THIS(HangGlider);
-    StateMachine_Run(entity->state);
+    StateMachine_Run(self->state);
 }
 
 void HangGlider_LateUpdate(void) {}
@@ -16,15 +16,15 @@ void HangGlider_StaticUpdate(void) {}
 void HangGlider_Draw(void)
 {
     RSDK_THIS(HangGlider);
-    if (SceneInfo->currentDrawGroup == entity->drawOrder) {
-        RSDK.DrawSprite(&entity->animator1, NULL, false);
-        RSDK.DrawSprite(&entity->animator2, NULL, false);
-        if (entity->playerPtr)
-            RSDK.DrawSprite(&entity->animator3, NULL, false);
+    if (SceneInfo->currentDrawGroup == self->drawOrder) {
+        RSDK.DrawSprite(&self->animator1, NULL, false);
+        RSDK.DrawSprite(&self->animator2, NULL, false);
+        if (self->playerPtr)
+            RSDK.DrawSprite(&self->animator3, NULL, false);
         RSDK.AddDrawListRef(Zone->drawOrderHigh, SceneInfo->entitySlot);
     }
     else {
-        RSDK.DrawSprite(&entity->animator4, NULL, false);
+        RSDK.DrawSprite(&self->animator4, NULL, false);
     }
 }
 
@@ -32,16 +32,16 @@ void HangGlider_Create(void *data)
 {
     RSDK_THIS(HangGlider);
     if (!SceneInfo->inEditor) {
-        entity->visible       = true;
-        entity->drawOrder     = Zone->drawOrderLow;
-        entity->active        = ACTIVE_BOUNDS;
-        entity->updateRange.x = 0x400000;
-        entity->updateRange.y = 0x400000;
-        entity->field_60      = 4096;
-        entity->state         = HangGlider_Unknown1;
-        RSDK.SetSpriteAnimation(HangGlider->aniFrames, 0, &entity->animator1, true, 0);
-        RSDK.SetSpriteAnimation(HangGlider->aniFrames, 1, &entity->animator2, true, 0);
-        RSDK.SetSpriteAnimation(HangGlider->aniFrames, 1, &entity->animator4, true, 1);
+        self->visible       = true;
+        self->drawOrder     = Zone->drawOrderLow;
+        self->active        = ACTIVE_BOUNDS;
+        self->updateRange.x = 0x400000;
+        self->updateRange.y = 0x400000;
+        self->field_60      = 4096;
+        self->state         = HangGlider_Unknown1;
+        RSDK.SetSpriteAnimation(HangGlider->aniFrames, 0, &self->animator1, true, 0);
+        RSDK.SetSpriteAnimation(HangGlider->aniFrames, 1, &self->animator2, true, 0);
+        RSDK.SetSpriteAnimation(HangGlider->aniFrames, 1, &self->animator4, true, 1);
     }
 }
 
@@ -63,18 +63,18 @@ void HangGlider_Unknown1(void)
     RSDK_THIS(HangGlider);
     foreach_active(Player, player)
     {
-        if (abs(player->position.x - entity->position.x) < 0x40000) {
-            if (abs(player->position.y - entity->position.y) < 0x140000) {
-                entity->playerPtr  = (Entity *)player;
+        if (abs(player->position.x - self->position.x) < 0x40000) {
+            if (abs(player->position.y - self->position.y) < 0x140000) {
+                self->playerPtr  = (Entity *)player;
                 player->active     = ACTIVE_NEVER;
                 player->visible    = 0;
-                entity->velocity.x = (192 * player->velocity.x) >> 8;
-                RSDK.SetSpriteAnimation(player->aniFrames, 12, &entity->animator3, true, 0);
-                entity->animator3.rotationFlag = 1;
-                entity->rotation               = 128;
-                entity->drawFX                 = FX_ROTATE;
+                self->velocity.x = (192 * player->velocity.x) >> 8;
+                RSDK.SetSpriteAnimation(player->aniFrames, 12, &self->animator3, true, 0);
+                self->animator3.rotationFlag = 1;
+                self->rotation               = 128;
+                self->drawFX                 = FX_ROTATE;
                 RSDK.PlaySfx(Player->sfxGrab, false, 255);
-                entity->state = HangGlider_Unknown2;
+                self->state = HangGlider_Unknown2;
             }
         }
     }
@@ -83,19 +83,19 @@ void HangGlider_Unknown2(void)
 {
     RSDK_THIS(HangGlider);
 
-    entity->velocity.y += entity->field_60;
-    if (entity->velocity.y > 0x10000)
-        entity->velocity.y = 0x10000;
-    entity->position.x += entity->velocity.x;
-    entity->position.y += entity->velocity.y;
+    self->velocity.y += self->field_60;
+    if (self->velocity.y > 0x10000)
+        self->velocity.y = 0x10000;
+    self->position.x += self->velocity.x;
+    self->position.y += self->velocity.y;
 
-    Entity *player = entity->playerPtr;
+    Entity *player = self->playerPtr;
     if (player) {
-        player->position.x = entity->position.x;
-        player->position.y = entity->position.y;
+        player->position.x = self->position.x;
+        player->position.y = self->position.y;
     }
-    RSDK.ProcessAnimation(&entity->animator1);
-    RSDK.ProcessAnimation(&entity->animator3);
+    RSDK.ProcessAnimation(&self->animator1);
+    RSDK.ProcessAnimation(&self->animator3);
 }
 
 #if RETRO_INCLUDE_EDITOR

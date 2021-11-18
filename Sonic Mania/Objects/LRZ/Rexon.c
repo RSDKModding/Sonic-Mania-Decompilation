@@ -6,22 +6,22 @@ void Rexon_Update(void)
 {
     RSDK_THIS(Rexon);
 
-    StateMachine_Run(entity->state);
+    StateMachine_Run(self->state);
 
-    entity->positions[Rexon_SegmentCount].x = entity->position.x;
-    entity->positions[Rexon_SegmentCount].y = entity->position.y;
-    if (entity->direction)
-        entity->positions[Rexon_SegmentCount].x += 0x1C0000;
+    self->positions[Rexon_SegmentCount].x = self->position.x;
+    self->positions[Rexon_SegmentCount].y = self->position.y;
+    if (self->direction)
+        self->positions[Rexon_SegmentCount].x += 0x1C0000;
     else
-        entity->positions[Rexon_SegmentCount].x -= 0x1C0000;
-    entity->positions[Rexon_SegmentCount].y += 0x110000;
+        self->positions[Rexon_SegmentCount].x -= 0x1C0000;
+    self->positions[Rexon_SegmentCount].y += 0x110000;
 
     for (int i = Rexon_SegmentCount - 1; i >= 0; --i) {
-        int y = entity->field_B4[i] >> 1;
-        if (entity->direction == FLIP_X)
+        int y = self->field_B4[i] >> 1;
+        if (self->direction == FLIP_X)
             y = (0x80 - y) & 0xFF;
-        entity->positions[i].x = entity->field_A0[i] * RSDK.Cos256(y) + entity->positions[i + 1].x;
-        entity->positions[i].y = entity->field_A0[i] * RSDK.Sin256(y) + entity->positions[i + 1].y;
+        self->positions[i].x = self->field_A0[i] * RSDK.Cos256(y) + self->positions[i + 1].x;
+        self->positions[i].y = self->field_A0[i] * RSDK.Sin256(y) + self->positions[i + 1].y;
     }
 }
 
@@ -33,10 +33,10 @@ void Rexon_Draw(void)
 {
     RSDK_THIS(Rexon);
 
-    RSDK.DrawSprite(&entity->animator1, NULL, false);
-    if (entity->state != Rexon_State_Destroyed && entity->state != Rexon_State_Explode) {
-        RSDK.DrawSprite(&entity->animator3, entity->positions, false);
-        for (int i = 1; i < Rexon_SegmentCount; ++i) RSDK.DrawSprite(&entity->animator2, &entity->positions[i], false);
+    RSDK.DrawSprite(&self->animator1, NULL, false);
+    if (self->state != Rexon_State_Destroyed && self->state != Rexon_State_Explode) {
+        RSDK.DrawSprite(&self->animator3, self->positions, false);
+        for (int i = 1; i < Rexon_SegmentCount; ++i) RSDK.DrawSprite(&self->animator2, &self->positions[i], false);
     }
 }
 
@@ -44,44 +44,44 @@ void Rexon_Create(void *data)
 {
     RSDK_THIS(Rexon);
 
-    entity->drawFX |= FX_FLIP;
-    entity->startPos.x    = entity->position.x;
-    entity->startPos.y    = entity->position.y;
-    entity->startDir      = entity->direction;
-    entity->visible       = true;
-    entity->active        = ACTIVE_BOUNDS;
-    entity->updateRange.x = 0x800000;
-    entity->updateRange.y = 0x800000;
-    entity->drawOrder     = Zone->drawOrderLow;
-    entity->type          = voidToInt(data);
+    self->drawFX |= FX_FLIP;
+    self->startPos.x    = self->position.x;
+    self->startPos.y    = self->position.y;
+    self->startDir      = self->direction;
+    self->visible       = true;
+    self->active        = ACTIVE_BOUNDS;
+    self->updateRange.x = 0x800000;
+    self->updateRange.y = 0x800000;
+    self->drawOrder     = Zone->drawOrderLow;
+    self->type          = voidToInt(data);
 
-    switch (entity->type) {
+    switch (self->type) {
         case 0:
-            entity->timer = 128;
-            if (!entity->noMove)
-                entity->velocity.x = -0x2000;
+            self->timer = 128;
+            if (!self->noMove)
+                self->velocity.x = -0x2000;
 
             for (int i = 0; i < Rexon_SegmentCount; ++i) {
-                entity->field_A0[i] = 0;
-                entity->field_B4[i] = 0x170;
-                entity->field_C8[i] = 0;
+                self->field_A0[i] = 0;
+                self->field_B4[i] = 0x170;
+                self->field_C8[i] = 0;
             }
 
-            entity->segmentID = 0;
-            RSDK.SetSpriteAnimation(Rexon->aniFrames, 3, &entity->animator1, true, 0);
-            RSDK.SetSpriteAnimation(Rexon->aniFrames, 1, &entity->animator3, true, 2);
-            RSDK.SetSpriteAnimation(Rexon->aniFrames, 2, &entity->animator2, true, 0);
-            entity->state = Rexon_State_Setup;
+            self->segmentID = 0;
+            RSDK.SetSpriteAnimation(Rexon->aniFrames, 3, &self->animator1, true, 0);
+            RSDK.SetSpriteAnimation(Rexon->aniFrames, 1, &self->animator3, true, 2);
+            RSDK.SetSpriteAnimation(Rexon->aniFrames, 2, &self->animator2, true, 0);
+            self->state = Rexon_State_Setup;
             break;
         case 1:
-            entity->active = ACTIVE_NORMAL;
-            RSDK.SetSpriteAnimation(Rexon->aniFrames, 2, &entity->animator1, true, 0);
-            entity->state = Rexon_State1_Unknown;
+            self->active = ACTIVE_NORMAL;
+            RSDK.SetSpriteAnimation(Rexon->aniFrames, 2, &self->animator1, true, 0);
+            self->state = Rexon_State1_Unknown;
             break;
         case 2:
-            entity->active = ACTIVE_NORMAL;
-            RSDK.SetSpriteAnimation(Rexon->aniFrames, 4, &entity->animator1, true, 0);
-            entity->state = Rexon_State2_Unknown;
+            self->active = ACTIVE_NORMAL;
+            RSDK.SetSpriteAnimation(Rexon->aniFrames, 4, &self->animator1, true, 0);
+            self->state = Rexon_State2_Unknown;
             break;
     }
 }
@@ -123,7 +123,7 @@ void Rexon_DebugSpawn(void)
 {
     RSDK_THIS(DebugMode);
 
-    CREATE_ENTITY(Rexon, NULL, entity->position.x, entity->position.y);
+    CREATE_ENTITY(Rexon, NULL, self->position.x, self->position.y);
 }
 
 void Rexon_DebugDraw(void)
@@ -136,10 +136,10 @@ void Rexon_CheckOnScreen(void)
 {
     RSDK_THIS(Rexon);
 
-    if (!RSDK.CheckOnScreen(entity, NULL) && !RSDK.CheckPosOnScreen(&entity->startPos, &entity->updateRange)) {
-        entity->position.x = entity->startPos.x;
-        entity->position.y = entity->startPos.y;
-        entity->direction  = entity->startDir;
+    if (!RSDK.CheckOnScreen(self, NULL) && !RSDK.CheckPosOnScreen(&self->startPos, &self->updateRange)) {
+        self->position.x = self->startPos.x;
+        self->position.y = self->startPos.y;
+        self->direction  = self->startDir;
         Rexon_Create(NULL);
     }
 }
@@ -148,30 +148,30 @@ void Rexon_CheckPlayerCollisions(void)
 {
     RSDK_THIS(Rexon);
 
-    if (entity->state != Rexon_State_Explode) {
-        int storeX = entity->position.x;
-        int storeY = entity->position.y;
+    if (self->state != Rexon_State_Explode) {
+        int storeX = self->position.x;
+        int storeY = self->position.y;
 
         foreach_active(Player, player)
         {
-            Player_CheckCollisionBox(player, entity, &Rexon->hitbox2);
-            if (entity->state != Rexon_State_Destroyed) {
-                entity->position.x = entity->positions[0].x;
-                entity->position.y = entity->positions[0].y;
-                if (Player_CheckBadnikTouch(player, entity, &Rexon->hitbox1)) {
-                    if (Player_CheckBadnikBreak(entity, player, false))
-                        Rexon_Destroy(entity, false);
+            Player_CheckCollisionBox(player, self, &Rexon->hitbox2);
+            if (self->state != Rexon_State_Destroyed) {
+                self->position.x = self->positions[0].x;
+                self->position.y = self->positions[0].y;
+                if (Player_CheckBadnikTouch(player, self, &Rexon->hitbox1)) {
+                    if (Player_CheckBadnikBreak(self, player, false))
+                        Rexon_Destroy(self, false);
                 }
                 else {
                     for (int i = 1; i < Rexon_SegmentCount; ++i) {
-                        entity->position.x = entity->positions[i].x;
-                        entity->position.y = entity->positions[i].y;
-                        if (Player_CheckCollisionTouch(player, entity, &Rexon->hitbox1))
-                            Player_CheckHit(player, entity);
+                        self->position.x = self->positions[i].x;
+                        self->position.y = self->positions[i].y;
+                        if (Player_CheckCollisionTouch(player, self, &Rexon->hitbox1))
+                            Player_CheckHit(player, self);
                     }
                 }
-                entity->position.x = storeX;
-                entity->position.y = storeY;
+                self->position.x = storeX;
+                self->position.y = storeY;
             }
         }
     }
@@ -215,8 +215,8 @@ void Rexon_State_Setup(void)
 {
     RSDK_THIS(Rexon);
 
-    entity->active = ACTIVE_NORMAL;
-    entity->state  = Rexon_State_Unknown1;
+    self->active = ACTIVE_NORMAL;
+    self->state  = Rexon_State_Unknown1;
     Rexon_State_Unknown1();
 }
 
@@ -224,23 +224,23 @@ void Rexon_State_Unknown1(void)
 {
     RSDK_THIS(Rexon);
 
-    if (entity->noMove) {
-        entity->direction = Player_GetNearestPlayer()->position.x >= entity->position.x;
+    if (self->noMove) {
+        self->direction = Player_GetNearestPlayer()->position.x >= self->position.x;
     }
     else {
-        entity->position.x += entity->velocity.x;
-        if (--entity->timer <= 0) {
-            entity->direction ^= FLIP_X;
-            entity->timer      = 128;
-            entity->velocity.x = -entity->velocity.x;
+        self->position.x += self->velocity.x;
+        if (--self->timer <= 0) {
+            self->direction ^= FLIP_X;
+            self->timer      = 128;
+            self->velocity.x = -self->velocity.x;
         }
     }
 
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionTouch(player, entity, &Rexon->hitbox3)) {
-            entity->state     = Rexon_State_Unknown2;
-            entity->direction = entity->direction = player->position.x >= entity->position.x;
+        if (Player_CheckCollisionTouch(player, self, &Rexon->hitbox3)) {
+            self->state     = Rexon_State_Unknown2;
+            self->direction = self->direction = player->position.x >= self->position.x;
             foreach_break;
         }
     }
@@ -253,18 +253,18 @@ void Rexon_State_Unknown2(void)
 {
     RSDK_THIS(Rexon);
 
-    entity->field_A0[entity->segmentID] += 640;
-    if (entity->field_A0[entity->segmentID] >= 0xF00) {
-        entity->field_A0[entity->segmentID] = 0xF00;
-        ++entity->segmentID;
+    self->field_A0[self->segmentID] += 640;
+    if (self->field_A0[self->segmentID] >= 0xF00) {
+        self->field_A0[self->segmentID] = 0xF00;
+        ++self->segmentID;
     }
 
-    for (int i = entity->segmentID - 1; i >= 0; --i) {
-        entity->field_B4[i] += 2;
+    for (int i = self->segmentID - 1; i >= 0; --i) {
+        self->field_B4[i] += 2;
     }
 
-    if (entity->segmentID == Rexon_SegmentCount)
-        entity->state = Rexon_State_Unknown3;
+    if (self->segmentID == Rexon_SegmentCount)
+        self->state = Rexon_State_Unknown3;
     Rexon_CheckPlayerCollisions();
     Rexon_CheckOnScreen();
 }
@@ -273,22 +273,22 @@ void Rexon_State_Unknown3(void)
 {
     RSDK_THIS(Rexon);
 
-    RSDK.ProcessAnimation(&entity->animator3);
+    RSDK.ProcessAnimation(&self->animator3);
 
     for (int i = 0; i < Rexon_SegmentCount; ++i) {
-        if (entity->field_C8[i]) {
-            if (--entity->field_B4[i] <= 352)
-                entity->field_C8[i] = false;
+        if (self->field_C8[i]) {
+            if (--self->field_B4[i] <= 352)
+                self->field_C8[i] = false;
         }
-        else if (++entity->field_B4[i] >= 416) {
-            entity->field_C8[i] = true;
+        else if (++self->field_B4[i] >= 416) {
+            self->field_C8[i] = true;
         }
     }
 
-    if (entity->field_B4[0] == 0x160) {
+    if (self->field_B4[0] == 0x160) {
         RSDK.PlaySfx(Rexon->sfxShot, false, 255);
-        EntityRexon *shot = CREATE_ENTITY(Rexon, intToVoid(2), entity->positions[0].x, entity->positions[0].y);
-        if (entity->direction) {
+        EntityRexon *shot = CREATE_ENTITY(Rexon, intToVoid(2), self->positions[0].x, self->positions[0].y);
+        if (self->direction) {
             shot->position.x += 0xE0000;
             shot->velocity.x = 0x10000;
         }
@@ -299,12 +299,12 @@ void Rexon_State_Unknown3(void)
         shot->position.y += 0x60000;
         shot->velocity.y = 0x8000;
     }
-    else if (entity->field_B4[0] == 0x170) {
-        if (entity->field_C8[0] == 1)
-            RSDK.SetSpriteAnimation(Rexon->aniFrames, 0, &entity->animator3, true, 0);
+    else if (self->field_B4[0] == 0x170) {
+        if (self->field_C8[0] == 1)
+            RSDK.SetSpriteAnimation(Rexon->aniFrames, 0, &self->animator3, true, 0);
     }
-    else if (entity->field_B4[0] == 0x180 && !entity->field_C8[0]) {
-        RSDK.SetSpriteAnimation(Rexon->aniFrames, 1, &entity->animator3, true, 0);
+    else if (self->field_B4[0] == 0x180 && !self->field_C8[0]) {
+        RSDK.SetSpriteAnimation(Rexon->aniFrames, 1, &self->animator3, true, 0);
     }
     Rexon_CheckPlayerCollisions();
     Rexon_CheckOnScreen();
@@ -320,55 +320,55 @@ void Rexon_State_Explode(void)
 {
     RSDK_THIS(Rexon);
 
-    entity->position.y += 0x4000;
-    entity->velocity.y = 0x4000;
+    self->position.y += 0x4000;
+    self->velocity.y = 0x4000;
 
     if (!(Zone->timer % 3)) {
         RSDK.PlaySfx(Rexon->sfxExplosion, false, 255);
         if (Zone->timer & 4) {
-            int x                      = entity->position.x + (RSDK.Rand(Rexon->hitbox2.left, Rexon->hitbox2.right) << 16);
-            int y                      = entity->position.y + (RSDK.Rand(Rexon->hitbox2.top, Rexon->hitbox2.bottom) << 16);
+            int x                      = self->position.x + (RSDK.Rand(Rexon->hitbox2.left, Rexon->hitbox2.right) << 16);
+            int y                      = self->position.y + (RSDK.Rand(Rexon->hitbox2.top, Rexon->hitbox2.bottom) << 16);
             EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y);
             explosion->drawOrder       = Zone->drawOrderHigh;
         }
     }
-    if (--entity->destroyDelay <= 0)
-        destroyEntity(entity);
+    if (--self->destroyDelay <= 0)
+        destroyEntity(self);
 }
 
 void Rexon_State1_Unknown(void)
 {
     RSDK_THIS(Rexon);
 
-    entity->position.x += entity->velocity.x;
-    entity->position.y += entity->velocity.y;
-    entity->velocity.y += 0x3800;
-    entity->visible ^= true;
+    self->position.x += self->velocity.x;
+    self->position.y += self->velocity.y;
+    self->velocity.y += 0x3800;
+    self->visible ^= true;
 
-    if (!RSDK.CheckOnScreen(entity, NULL))
-        destroyEntity(entity);
+    if (!RSDK.CheckOnScreen(self, NULL))
+        destroyEntity(self);
 }
 
 void Rexon_State2_Unknown(void)
 {
     RSDK_THIS(Rexon);
 
-    RSDK.ProcessAnimation(&entity->animator1);
-    entity->position.x += entity->velocity.x;
-    entity->position.y += entity->velocity.y;
+    RSDK.ProcessAnimation(&self->animator1);
+    self->position.x += self->velocity.x;
+    self->position.y += self->velocity.y;
 
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionTouch(player, entity, &Rexon->hitbox4)) {
-            Player_CheckProjectileHit(player, entity);
+        if (Player_CheckCollisionTouch(player, self, &Rexon->hitbox4)) {
+            Player_CheckProjectileHit(player, self);
         }
     }
 
-    if (RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_FLOOR, 0, 0, Rexon->hitbox4.bottom << 13, 4)
-        || RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_LWALL, 0, Rexon->hitbox4.left << 13, 0, 4)
-        || RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_ROOF, 0, 0, Rexon->hitbox4.top << 13, 4)
-        || RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_RWALL, 0, Rexon->hitbox4.right << 13, 0, 4) || !RSDK.CheckOnScreen(entity, NULL)) {
-        destroyEntity(entity);
+    if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, Rexon->hitbox4.bottom << 13, 4)
+        || RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_LWALL, 0, Rexon->hitbox4.left << 13, 0, 4)
+        || RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_ROOF, 0, 0, Rexon->hitbox4.top << 13, 4)
+        || RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_RWALL, 0, Rexon->hitbox4.right << 13, 0, 4) || !RSDK.CheckOnScreen(self, NULL)) {
+        destroyEntity(self);
     }
 }
 
@@ -378,29 +378,29 @@ void Rexon_EditorDraw(void)
     RSDK_THIS(Rexon);
 
     for (int i = 0; i < Rexon_SegmentCount; ++i) {
-        entity->field_A0[i] = 0xF00;
-        entity->field_B4[i] = 0x170;
+        self->field_A0[i] = 0xF00;
+        self->field_B4[i] = 0x170;
     }
 
-    entity->segmentID = 0;
-    RSDK.SetSpriteAnimation(Rexon->aniFrames, 3, &entity->animator1, true, 0);
-    RSDK.SetSpriteAnimation(Rexon->aniFrames, 1, &entity->animator3, true, 2);
-    RSDK.SetSpriteAnimation(Rexon->aniFrames, 2, &entity->animator2, true, 0);
+    self->segmentID = 0;
+    RSDK.SetSpriteAnimation(Rexon->aniFrames, 3, &self->animator1, true, 0);
+    RSDK.SetSpriteAnimation(Rexon->aniFrames, 1, &self->animator3, true, 2);
+    RSDK.SetSpriteAnimation(Rexon->aniFrames, 2, &self->animator2, true, 0);
 
-    entity->positions[Rexon_SegmentCount].x = entity->position.x;
-    entity->positions[Rexon_SegmentCount].y = entity->position.y;
-    if (entity->direction)
-        entity->positions[Rexon_SegmentCount].x += 0x1C0000;
+    self->positions[Rexon_SegmentCount].x = self->position.x;
+    self->positions[Rexon_SegmentCount].y = self->position.y;
+    if (self->direction)
+        self->positions[Rexon_SegmentCount].x += 0x1C0000;
     else
-        entity->positions[Rexon_SegmentCount].x -= 0x1C0000;
-    entity->positions[Rexon_SegmentCount].y += 0x110000;
+        self->positions[Rexon_SegmentCount].x -= 0x1C0000;
+    self->positions[Rexon_SegmentCount].y += 0x110000;
 
     for (int i = Rexon_SegmentCount - 1; i >= 0; --i) {
-        int y = entity->field_B4[i] >> 1;
-        if (entity->direction == FLIP_X)
+        int y = self->field_B4[i] >> 1;
+        if (self->direction == FLIP_X)
             y = (0x80 - y) & 0xFF;
-        entity->positions[i].x = entity->field_A0[i] * RSDK.Cos256(y) + entity->positions[i + 1].x;
-        entity->positions[i].y = entity->field_A0[i] * RSDK.Sin256(y) + entity->positions[i + 1].y;
+        self->positions[i].x = self->field_A0[i] * RSDK.Cos256(y) + self->positions[i + 1].x;
+        self->positions[i].y = self->field_A0[i] * RSDK.Sin256(y) + self->positions[i + 1].y;
     }
 
     Rexon_Draw();

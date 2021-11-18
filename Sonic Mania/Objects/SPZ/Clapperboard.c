@@ -6,10 +6,10 @@ void Clapperboard_Update(void)
 {
     RSDK_THIS(Clapperboard);
 
-    StateMachine_Run(entity->state);
-    entity->rotation = entity->angle >> 1;
-    entity->field_68 = 0;
-    StateMachine_Run(entity->stateCollide);
+    StateMachine_Run(self->state);
+    self->rotation = self->angle >> 1;
+    self->field_68 = 0;
+    StateMachine_Run(self->stateCollide);
 }
 
 void Clapperboard_LateUpdate(void) {}
@@ -21,79 +21,79 @@ void Clapperboard_Draw(void)
     RSDK_THIS(Clapperboard);
     Vector2 drawPos;
 
-    entity->drawFX = FX_ROTATE | FX_FLIP;
-    RSDK.DrawSprite(&entity->animator1, NULL, false);
+    self->drawFX = FX_ROTATE | FX_FLIP;
+    RSDK.DrawSprite(&self->animator1, NULL, false);
 
-    entity->drawFX = FX_FLIP;
-    RSDK.DrawSprite(&entity->animator2, NULL, false);
+    self->drawFX = FX_FLIP;
+    RSDK.DrawSprite(&self->animator2, NULL, false);
 
-    entity->drawFX = FX_NONE;
-    RSDK.DrawSprite(&entity->animator3, NULL, false);
+    self->drawFX = FX_NONE;
+    RSDK.DrawSprite(&self->animator3, NULL, false);
 
-    drawPos.x = entity->position.x;
-    drawPos.y = entity->position.y;
-    if (entity->direction == FLIP_X)
+    drawPos.x = self->position.x;
+    drawPos.y = self->position.y;
+    if (self->direction == FLIP_X)
         drawPos.x -= 0x670000;
     else
         drawPos.x += 0x10000;
-    entity->animator4.frameID = entity->takeID / 100;
-    RSDK.DrawSprite(&entity->animator4, &drawPos, false);
+    self->animator4.frameID = self->takeID / 100;
+    RSDK.DrawSprite(&self->animator4, &drawPos, false);
 
     drawPos.x += 0xD0000;
-    entity->animator4.frameID = (entity->takeID / 10) % 10;
-    RSDK.DrawSprite(&entity->animator4, &drawPos, false);
+    self->animator4.frameID = (self->takeID / 10) % 10;
+    RSDK.DrawSprite(&self->animator4, &drawPos, false);
 
     drawPos.x += 0xD0000;
-    entity->animator4.frameID = entity->takeID % 10;
-    RSDK.DrawSprite(&entity->animator4, &drawPos, false);
+    self->animator4.frameID = self->takeID % 10;
+    RSDK.DrawSprite(&self->animator4, &drawPos, false);
 
     drawPos.x += 0x120000;
-    entity->animator4.frameID = SceneInfo->minutes % 10;
-    RSDK.DrawSprite(&entity->animator4, &drawPos, false);
+    self->animator4.frameID = SceneInfo->minutes % 10;
+    RSDK.DrawSprite(&self->animator4, &drawPos, false);
 
     drawPos.x += 0x120000;
-    entity->animator4.frameID = SceneInfo->seconds / 10;
-    RSDK.DrawSprite(&entity->animator4, &drawPos, false);
+    self->animator4.frameID = SceneInfo->seconds / 10;
+    RSDK.DrawSprite(&self->animator4, &drawPos, false);
 
     drawPos.x += 0xD0000;
-    entity->animator4.frameID = SceneInfo->seconds % 10;
-    RSDK.DrawSprite(&entity->animator4, &drawPos, false);
+    self->animator4.frameID = SceneInfo->seconds % 10;
+    RSDK.DrawSprite(&self->animator4, &drawPos, false);
 
     drawPos.x += 0x110000;
-    entity->animator4.frameID = SceneInfo->milliseconds / 10;
-    RSDK.DrawSprite(&entity->animator4, &drawPos, false);
+    self->animator4.frameID = SceneInfo->milliseconds / 10;
+    RSDK.DrawSprite(&self->animator4, &drawPos, false);
 }
 
 void Clapperboard_Create(void *data)
 {
     RSDK_THIS(Clapperboard);
 
-    RSDK.SetSpriteAnimation(Clapperboard->aniFrames, 0, &entity->animator1, true, 0);
-    RSDK.SetSpriteAnimation(Clapperboard->aniFrames, 0, &entity->animator2, true, 1);
-    RSDK.SetSpriteAnimation(Clapperboard->aniFrames, 0, &entity->animator3, true, 2);
-    RSDK.SetSpriteAnimation(Clapperboard->aniFrames, 1, &entity->animator4, true, 0);
+    RSDK.SetSpriteAnimation(Clapperboard->aniFrames, 0, &self->animator1, true, 0);
+    RSDK.SetSpriteAnimation(Clapperboard->aniFrames, 0, &self->animator2, true, 1);
+    RSDK.SetSpriteAnimation(Clapperboard->aniFrames, 0, &self->animator3, true, 2);
+    RSDK.SetSpriteAnimation(Clapperboard->aniFrames, 1, &self->animator4, true, 0);
     if (!SceneInfo->inEditor) {
-        entity->active        = ACTIVE_BOUNDS;
-        entity->updateRange.x = 0x800000;
-        entity->updateRange.y = 0x800000;
-        if (entity->direction == FLIP_NONE) {
-            entity->dword74      = -0x40000;
-            entity->dword7C      = 0x6C0000;
-            entity->angle        = 960;
-            entity->stateCollide = Clapperboard_StateCollide_FlipX;
+        self->active        = ACTIVE_BOUNDS;
+        self->updateRange.x = 0x800000;
+        self->updateRange.y = 0x800000;
+        if (self->direction == FLIP_NONE) {
+            self->dword74      = -0x40000;
+            self->dword7C      = 0x6C0000;
+            self->angle        = 960;
+            self->stateCollide = Clapperboard_StateCollide_FlipX;
         }
         else {
-            ++entity->animator3.frameID;
-            entity->dword74      = -0x6C0000;
-            entity->dword7C      = 0x40000;
-            entity->angle        = 64;
-            entity->stateCollide = Clapperboard_StateCollide_NoFlip;
+            ++self->animator3.frameID;
+            self->dword74      = -0x6C0000;
+            self->dword7C      = 0x40000;
+            self->angle        = 64;
+            self->stateCollide = Clapperboard_StateCollide_NoFlip;
         }
-        entity->dword78   = -0x40000;
-        entity->dword80   = -0x40000;
-        entity->state     = Clapperboard_State_Unknown1;
-        entity->visible   = true;
-        entity->drawOrder = Zone->drawOrderLow;
+        self->dword78   = -0x40000;
+        self->dword80   = -0x40000;
+        self->state     = Clapperboard_State_Unknown1;
+        self->visible   = true;
+        self->drawOrder = Zone->drawOrderLow;
     }
 }
 
@@ -110,42 +110,42 @@ void Clapperboard_StateCollide_NoFlip(void)
 {
     RSDK_THIS(Clapperboard);
 
-    uint8 negAngle = -(-entity->angle >> 2);
+    uint8 negAngle = -(-self->angle >> 2);
 
-    int val1 = (entity->dword78 >> 8) * RSDK.Cos256(negAngle) - (entity->dword74 >> 8) * RSDK.Sin256(negAngle);
-    int val2 = (entity->dword80 >> 8) * RSDK.Cos256(negAngle) - (entity->dword7C >> 8) * RSDK.Sin256(negAngle);
+    int val1 = (self->dword78 >> 8) * RSDK.Cos256(negAngle) - (self->dword74 >> 8) * RSDK.Sin256(negAngle);
+    int val2 = (self->dword80 >> 8) * RSDK.Cos256(negAngle) - (self->dword7C >> 8) * RSDK.Sin256(negAngle);
 
-    entity->hitbox.left  = ((entity->dword78 >> 8) * RSDK.Sin256(negAngle) + (entity->dword74 >> 8) * RSDK.Cos256(negAngle)) >> 16;
-    entity->hitbox.right = ((entity->dword80 >> 8) * RSDK.Sin256(negAngle) + (entity->dword7C >> 8) * RSDK.Cos256(negAngle)) >> 16;
-    int sizeX            = entity->hitbox.right - entity->hitbox.left;
-    entity->direction ^= FLIP_X;
+    self->hitbox.left  = ((self->dword78 >> 8) * RSDK.Sin256(negAngle) + (self->dword74 >> 8) * RSDK.Cos256(negAngle)) >> 16;
+    self->hitbox.right = ((self->dword80 >> 8) * RSDK.Sin256(negAngle) + (self->dword7C >> 8) * RSDK.Cos256(negAngle)) >> 16;
+    int sizeX            = self->hitbox.right - self->hitbox.left;
+    self->direction ^= FLIP_X;
     bool32 clapFlag = false;
 
     foreach_active(Player, player)
     {
-        int dist = (player->position.x - entity->position.x) >> 16;
-        if (dist >= entity->hitbox.left) {
-            if (dist > entity->hitbox.right)
-                dist = entity->hitbox.right;
+        int dist = (player->position.x - self->position.x) >> 16;
+        if (dist >= self->hitbox.left) {
+            if (dist > self->hitbox.right)
+                dist = self->hitbox.right;
         }
         else {
-            dist = entity->hitbox.left;
+            dist = self->hitbox.left;
         }
 
-        int angVal            = entity->hitbox.right - dist;
-        int top               = (val2 >> 16) + ((val2 >> 16) - (val1 >> 16)) * angVal / sizeX - (entity->field_64 & 0xFFFF);
-        entity->hitbox.top    = top;
-        entity->hitbox.bottom = top + 24;
-        if (Player_CheckCollisionPlatform(player, entity, &entity->hitbox)) {
+        int angVal            = self->hitbox.right - dist;
+        int top               = (val2 >> 16) + ((val2 >> 16) - (val1 >> 16)) * angVal / sizeX - (self->field_64 & 0xFFFF);
+        self->hitbox.top    = top;
+        self->hitbox.bottom = top + 24;
+        if (Player_CheckCollisionPlatform(player, self, &self->hitbox)) {
 #if RETRO_USE_PLUS
             if (player->state == Player_State_MightyHammerDrop)
                 player->state = Player_State_Air;
 #endif
 
-            player->position.y += (entity->field_64 + 2) << 16;
+            player->position.y += (self->field_64 + 2) << 16;
             if (angVal > (sizeX >> 2)) {
-                entity->field_68 |= RSDK.GetEntityID(player) + 1;
-                if (entity->state == Clapperboard_State_Unknown3 || (abs(player->groundVel) > 0x80000 && angVal > sizeX - (sizeX >> 2))) {
+                self->field_68 |= RSDK.GetEntityID(player) + 1;
+                if (self->state == Clapperboard_State_Unknown3 || (abs(player->groundVel) > 0x80000 && angVal > sizeX - (sizeX >> 2))) {
                     player->onGround   = false;
                     player->state      = Player_State_Air;
                     player->velocity.y = -0x40000 - 0x60000 * angVal / sizeX;
@@ -162,58 +162,58 @@ void Clapperboard_StateCollide_NoFlip(void)
                     int val = 16;
                     if (abs(player->groundVel) < 0xA0000)
                         val = 16 * angVal / sizeX;
-                    if (val > entity->field_64)
-                        entity->field_64 = val;
+                    if (val > self->field_64)
+                        self->field_64 = val;
                 }
             }
         }
     }
 
-    entity->direction ^= FLIP_X;
+    self->direction ^= FLIP_X;
     if (clapFlag)
-        ++entity->takeID;
+        ++self->takeID;
 }
 
 void Clapperboard_StateCollide_FlipX(void)
 {
     RSDK_THIS(Clapperboard);
 
-    int negAngle = -(-entity->angle >> 2);
+    int negAngle = -(-self->angle >> 2);
 
-    int val1 = (entity->dword78 >> 8) * RSDK.Cos256(negAngle) - (entity->dword74 >> 8) * RSDK.Sin256(negAngle);
-    int val2 = (val1 >> 16) - ((((entity->dword80 >> 8) * RSDK.Cos256(negAngle)) - (entity->dword7C >> 8) * RSDK.Sin256(negAngle)) >> 16);
+    int val1 = (self->dword78 >> 8) * RSDK.Cos256(negAngle) - (self->dword74 >> 8) * RSDK.Sin256(negAngle);
+    int val2 = (val1 >> 16) - ((((self->dword80 >> 8) * RSDK.Cos256(negAngle)) - (self->dword7C >> 8) * RSDK.Sin256(negAngle)) >> 16);
 
-    entity->hitbox.left  = (((entity->dword78 >> 8) * RSDK.Sin256(negAngle)) + (entity->dword74 >> 8) * RSDK.Cos256(negAngle)) >> 16;
-    entity->hitbox.right = (((entity->dword80 >> 8) * RSDK.Sin256(negAngle)) + (entity->dword7C >> 8) * RSDK.Cos256(negAngle)) >> 16;
-    int Angle            = entity->hitbox.right - entity->hitbox.left;
+    self->hitbox.left  = (((self->dword78 >> 8) * RSDK.Sin256(negAngle)) + (self->dword74 >> 8) * RSDK.Cos256(negAngle)) >> 16;
+    self->hitbox.right = (((self->dword80 >> 8) * RSDK.Sin256(negAngle)) + (self->dword7C >> 8) * RSDK.Cos256(negAngle)) >> 16;
+    int Angle            = self->hitbox.right - self->hitbox.left;
     bool32 clapFlag      = false;
 
     foreach_active(Player, player)
     {
-        int dist = (player->position.x - entity->position.x) >> 16;
-        if (dist >= entity->hitbox.left) {
-            if (dist > entity->hitbox.right)
-                dist = entity->hitbox.right;
+        int dist = (player->position.x - self->position.x) >> 16;
+        if (dist >= self->hitbox.left) {
+            if (dist > self->hitbox.right)
+                dist = self->hitbox.right;
         }
         else {
-            dist = entity->hitbox.left;
+            dist = self->hitbox.left;
         }
 
-        int angVal            = dist - entity->hitbox.left;
-        int top               = (val1 >> 16) + val2 * angVal / Angle - (entity->field_64 & 0xFFFF);
-        entity->hitbox.top    = top;
-        entity->hitbox.bottom = top + 24;
+        int angVal            = dist - self->hitbox.left;
+        int top               = (val1 >> 16) + val2 * angVal / Angle - (self->field_64 & 0xFFFF);
+        self->hitbox.top    = top;
+        self->hitbox.bottom = top + 24;
 
-        if (Player_CheckCollisionPlatform(player, entity, &entity->hitbox)) {
+        if (Player_CheckCollisionPlatform(player, self, &self->hitbox)) {
 #if RETRO_USE_PLUS
             if (player->state == Player_State_MightyHammerDrop)
                 player->state = Player_State_Air;
 #endif
 
-            player->position.y += (entity->field_64 + 2) << 16;
+            player->position.y += (self->field_64 + 2) << 16;
             if (angVal > Angle >> 2) {
-                entity->field_68 |= RSDK.GetEntityID(player) + 1;
-                if (entity->state == Clapperboard_State_Unknown5 || abs(player->groundVel) > 0x80000 && angVal > Angle - (Angle >> 2)) {
+                self->field_68 |= RSDK.GetEntityID(player) + 1;
+                if (self->state == Clapperboard_State_Unknown5 || abs(player->groundVel) > 0x80000 && angVal > Angle - (Angle >> 2)) {
                     player->onGround   = false;
                     player->state      = Player_State_Air;
                     player->velocity.y = -0x40000 - 0x60000 * angVal / Angle;
@@ -231,26 +231,26 @@ void Clapperboard_StateCollide_FlipX(void)
                     int val = 16;
                     if (abs(player->groundVel) < 0xA0000)
                         val = 16 * angVal / Angle;
-                    if (val > entity->field_64)
-                        entity->field_64 = val;
+                    if (val > self->field_64)
+                        self->field_64 = val;
                 }
             }
         }
     }
 
     if (clapFlag)
-        ++entity->takeID;
+        ++self->takeID;
 }
 
 void Clapperboard_State_Unknown1(void)
 {
     RSDK_THIS(Clapperboard);
 
-    if (entity->field_68 > 0) {
-        if (entity->direction == FLIP_NONE)
-            entity->state = Clapperboard_State_Unknown4;
+    if (self->field_68 > 0) {
+        if (self->direction == FLIP_NONE)
+            self->state = Clapperboard_State_Unknown4;
         else
-            entity->state = Clapperboard_State_Unknown2;
+            self->state = Clapperboard_State_Unknown2;
     }
 }
 
@@ -258,10 +258,10 @@ void Clapperboard_State_Unknown2(void)
 {
     RSDK_THIS(Clapperboard);
 
-    entity->angle -= entity->field_64;
-    if (entity->angle <= 0) {
-        entity->angle = 0;
-        entity->state = Clapperboard_State_Unknown3;
+    self->angle -= self->field_64;
+    if (self->angle <= 0) {
+        self->angle = 0;
+        self->state = Clapperboard_State_Unknown3;
     }
 }
 
@@ -269,11 +269,11 @@ void Clapperboard_State_Unknown3(void)
 {
     RSDK_THIS(Clapperboard);
 
-    entity->angle += entity->field_64;
-    if (entity->angle >= 64) {
-        entity->angle    = 64;
-        entity->field_64 = 0;
-        entity->state    = Clapperboard_State_Unknown1;
+    self->angle += self->field_64;
+    if (self->angle >= 64) {
+        self->angle    = 64;
+        self->field_64 = 0;
+        self->state    = Clapperboard_State_Unknown1;
     }
 }
 
@@ -281,10 +281,10 @@ void Clapperboard_State_Unknown4(void)
 {
     RSDK_THIS(Clapperboard);
 
-    entity->angle += entity->field_64;
-    if (entity->angle >= 1024) {
-        entity->angle = 1024;
-        entity->state = Clapperboard_State_Unknown5;
+    self->angle += self->field_64;
+    if (self->angle >= 1024) {
+        self->angle = 1024;
+        self->state = Clapperboard_State_Unknown5;
     }
 }
 
@@ -292,11 +292,11 @@ void Clapperboard_State_Unknown5(void)
 {
     RSDK_THIS(Clapperboard);
 
-    entity->angle -= entity->field_64;
-    if (entity->angle <= 0x3C0) {
-        entity->angle    = 0x3C0;
-        entity->field_64 = 0;
-        entity->state    = Clapperboard_State_Unknown1;
+    self->angle -= self->field_64;
+    if (self->angle <= 0x3C0) {
+        self->angle    = 0x3C0;
+        self->field_64 = 0;
+        self->state    = Clapperboard_State_Unknown1;
     }
 }
 
@@ -304,10 +304,10 @@ void Clapperboard_State_Unknown5(void)
 void Clapperboard_EditorDraw(void)
 {
     RSDK_THIS(Clapperboard);
-    if (entity->direction == FLIP_NONE) 
-        entity->animator3.frameID = 2;
+    if (self->direction == FLIP_NONE) 
+        self->animator3.frameID = 2;
     else 
-        entity->animator3.frameID = 3;
+        self->animator3.frameID = 3;
 
     Clapperboard_Draw();
 }

@@ -6,9 +6,9 @@ void ScoreBonus_Update(void)
 {
     RSDK_THIS(ScoreBonus);
 
-    entity->position.y -= 0x20000;
-    if (!--entity->timer)
-        destroyEntity(entity);
+    self->position.y -= 0x20000;
+    if (!--self->timer)
+        destroyEntity(self);
 }
 
 void ScoreBonus_LateUpdate(void) {}
@@ -18,18 +18,18 @@ void ScoreBonus_StaticUpdate(void) {}
 void ScoreBonus_Draw(void)
 {
     RSDK_THIS(ScoreBonus);
-    RSDK.DrawSprite(&entity->animator, NULL, false);
+    RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
 void ScoreBonus_Create(void *data)
 {
     RSDK_THIS(ScoreBonus);
-    RSDK.SetSpriteAnimation(ScoreBonus->aniFrames, 0, &entity->animator, true, 0);
+    RSDK.SetSpriteAnimation(ScoreBonus->aniFrames, 0, &self->animator, true, 0);
     if (!SceneInfo->inEditor) {
-        entity->active    = ACTIVE_NORMAL;
-        entity->visible   = true;
-        entity->drawOrder = Zone->drawOrderLow;
-        entity->timer     = 24;
+        self->active    = ACTIVE_NORMAL;
+        self->visible   = true;
+        self->drawOrder = Zone->drawOrderLow;
+        self->timer     = 24;
     }
 }
 

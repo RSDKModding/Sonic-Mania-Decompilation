@@ -18,10 +18,10 @@ void FernParallax_Draw(void)
     int32 screenY = (screen->position.y + screen->centerY) << 16;
 
     Vector2 drawPos;
-    drawPos.x = entity->position.x + ((entity->position.x - screenX) << entity->parallaxFactor.x);
-    drawPos.y = entity->position.y + ((entity->position.y - screenY) << entity->parallaxFactor.y);
+    drawPos.x = self->position.x + ((self->position.x - screenX) << self->parallaxFactor.x);
+    drawPos.y = self->position.y + ((self->position.y - screenY) << self->parallaxFactor.y);
 
-    Hitbox *otherHitbox = RSDK.GetHitbox(&entity->animator, 0);
+    Hitbox *otherHitbox = RSDK.GetHitbox(&self->animator, 0);
 
     Hitbox thisHitbox;
     thisHitbox.left   = -screen->centerX;
@@ -42,16 +42,16 @@ void FernParallax_Draw(void)
         && bottom - drawPos.y > 0) {
         drawPos.y = bottom - ((bottom - drawPos.y) >> 3);
     }
-    RSDK.DrawSprite(&entity->animator, &drawPos, false);
+    RSDK.DrawSprite(&self->animator, &drawPos, false);
 }
 
 void FernParallax_Create(void *data)
 {
     RSDK_THIS(FernParallax);
-    entity->active    = ACTIVE_NORMAL;
-    entity->visible   = true;
-    entity->drawOrder = Zone->drawOrderHigh + 1;
-    RSDK.SetSpriteAnimation(FernParallax->aniFrames, entity->aniID, &entity->animator, true, 0);
+    self->active    = ACTIVE_NORMAL;
+    self->visible   = true;
+    self->drawOrder = Zone->drawOrderHigh + 1;
+    RSDK.SetSpriteAnimation(FernParallax->aniFrames, self->aniID, &self->animator, true, 0);
 }
 
 void FernParallax_StageLoad(void)
@@ -64,7 +64,7 @@ void FernParallax_StageLoad(void)
 void FernParallax_EditorDraw(void)
 {
     RSDK_THIS(FernParallax);
-    RSDK.DrawSprite(&entity->animator, NULL, false);
+    RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
 void FernParallax_EditorLoad(void) { FernParallax->aniFrames = RSDK.LoadSpriteAnimation("AIZ/Decoration.bin", SCOPE_STAGE); }

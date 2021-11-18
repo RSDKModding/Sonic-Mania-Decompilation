@@ -5,12 +5,12 @@ ObjectSPZ2Setup *SPZ2Setup;
 void SPZ2Setup_Update(void)
 {
     RSDK_THIS(SPZ2Setup);
-    entity->palTimer += 4;
-    entity->timer -= 16;
-    RSDK.SetLimitedFade(0, 4, 5, entity->palTimer, 128, 151);
-    RSDK.SetLimitedFade(0, 4, 5, entity->palTimer, 160, 175);
-    if (entity->palTimer == 256)
-        RSDK.ResetEntityPtr(entity, 0, 0);
+    self->palTimer += 4;
+    self->timer -= 16;
+    RSDK.SetLimitedFade(0, 4, 5, self->palTimer, 128, 151);
+    RSDK.SetLimitedFade(0, 4, 5, self->palTimer, 160, 175);
+    if (self->palTimer == 256)
+        RSDK.ResetEntityPtr(self, 0, 0);
 }
 
 void SPZ2Setup_LateUpdate(void) {}
@@ -68,17 +68,16 @@ void SPZ2Setup_StaticUpdate(void)
 void SPZ2Setup_Draw(void)
 {
     RSDK_THIS(SPZ2Setup);
-    RSDK.FillScreen(0xF0F0F0, entity->timer, entity->timer - 128, entity->timer - 256);
+    RSDK.FillScreen(0xF0F0F0, self->timer, self->timer - 128, self->timer - 256);
 }
 
 void SPZ2Setup_Create(void *data)
 {
     RSDK_THIS(SPZ2Setup);
-    entity            = (EntitySPZ2Setup *)SceneInfo->entity;
-    entity->active    = ACTIVE_NORMAL;
-    entity->visible   = true;
-    entity->timer     = 384;
-    entity->drawOrder = Zone->hudDrawOrder + 1;
+    self->active    = ACTIVE_NORMAL;
+    self->visible   = true;
+    self->timer     = 384;
+    self->drawOrder = Zone->hudDrawOrder + 1;
 }
 
 void SPZ2Setup_StageLoad(void)

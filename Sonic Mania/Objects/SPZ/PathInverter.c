@@ -5,7 +5,7 @@ ObjectPathInverter *PathInverter;
 void PathInverter_Update(void)
 {
     RSDK_THIS(PathInverter);
-    StateMachine_Run(entity->state);
+    StateMachine_Run(self->state);
 }
 
 void PathInverter_LateUpdate(void) {}
@@ -15,29 +15,29 @@ void PathInverter_StaticUpdate(void) {}
 void PathInverter_Draw(void)
 {
     RSDK_THIS(PathInverter);
-    RSDK.DrawSprite(&entity->animator, NULL, false);
+    RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
 void PathInverter_Create(void *data)
 {
     RSDK_THIS(PathInverter);
-    RSDK.SetSpriteAnimation(PathInverter->aniFrames, entity->type, &entity->animator, true, 0);
+    RSDK.SetSpriteAnimation(PathInverter->aniFrames, self->type, &self->animator, true, 0);
     if (!SceneInfo->inEditor) {
-        entity->active        = ACTIVE_BOUNDS;
-        Hitbox *hitbox        = RSDK.GetHitbox(&entity->animator, 0);
-        entity->size.x        = hitbox->right;
-        entity->size.y        = hitbox->bottom;
-        entity->size2.x       = 2 * entity->size.x;
-        entity->size2.y       = 2 * entity->size.y;
-        entity->updateRange.x = 0x800000;
-        entity->updateRange.y = 0x800000;
-        entity->visible       = true;
-        entity->drawOrder     = Zone->drawOrderLow;
+        self->active        = ACTIVE_BOUNDS;
+        Hitbox *hitbox        = RSDK.GetHitbox(&self->animator, 0);
+        self->size.x        = hitbox->right;
+        self->size.y        = hitbox->bottom;
+        self->size2.x       = 2 * self->size.x;
+        self->size2.y       = 2 * self->size.y;
+        self->updateRange.x = 0x800000;
+        self->updateRange.y = 0x800000;
+        self->visible       = true;
+        self->drawOrder     = Zone->drawOrderLow;
 
-        switch (entity->type) {
+        switch (self->type) {
             default: break;
-            case PATHINVERTER_H: entity->state = PathInverter_State_Horizontal; break;
-            case PATHINVERTER_V: entity->state = PathInverter_State_Vertical; break;
+            case PATHINVERTER_H: self->state = PathInverter_State_Horizontal; break;
+            case PATHINVERTER_V: self->state = PathInverter_State_Vertical; break;
         }
     }
 }
@@ -53,20 +53,20 @@ void PathInverter_HandlePathSwitch(void *p)
     RSDK_THIS(PathInverter);
 
     EntityPlayer *player = (EntityPlayer *)p;
-    if (!entity->playerPtrs[player->playerID]) {
+    if (!self->playerPtrs[player->playerID]) {
         Hitbox *playerHitbox = Player_GetHitbox(player);
-        if (player->position.y > entity->position.y == player->position.x > entity->position.x)
-            entity->playerFlipFlags[player->playerID] = (entity->size.y + playerHitbox->bottom) << 7;
+        if (player->position.y > self->position.y == player->position.x > self->position.x)
+            self->playerFlipFlags[player->playerID] = (self->size.y + playerHitbox->bottom) << 7;
         else
-            entity->playerFlipFlags[player->playerID] = -((entity->size.y << 7) + (playerHitbox->bottom << 7));
+            self->playerFlipFlags[player->playerID] = -((self->size.y << 7) + (playerHitbox->bottom << 7));
         if (player->collisionMode == CMODE_ROOF)
             player->direction ^= FLIP_X;
-        entity->playerPtrs[player->playerID] = (Entity*)player;
+        self->playerPtrs[player->playerID] = (Entity*)player;
         player->tileCollisions            = false;
 
         player->velocity.x                    = player->groundVel * RSDK.Cos256(player->angle) >> 8;
         player->velocity.y                    = player->groundVel * RSDK.Sin256(player->angle) >> 8;
-        entity->groundVelStore[player->playerID] = player->groundVel;
+        self->groundVelStore[player->playerID] = player->groundVel;
 
         if (player->state == Player_State_Roll) {
             if (player->velocity.x >= -0xC0000) {
@@ -89,12 +89,12 @@ void PathInverter_HandlePathSwitch(void *p)
         player->nextGroundState = StateMachine_None;
     }
 
-    int32 val    = entity->size.x + ((entity->position.x - player->position.x) >> 16);
-    int32 angle2 = 4 * (3 * val) / entity->size2.x;
-    int32 angle  = (val << 8) / entity->size2.x;
+    int32 val    = self->size.x + ((self->position.x - player->position.x) >> 16);
+    int32 angle2 = 4 * (3 * val) / self->size2.x;
+    int32 angle  = (val << 8) / self->size2.x;
     if (player->playerAnimator.animationID != ANI_JUMP || !player->groundedStore) {
         int32 frame = 12 - angle2;
-        if (player->collisionMode != CMODE_ROOF * (entity->playerFlipFlags[player->playerID] >= 0))
+        if (player->collisionMode != CMODE_ROOF * (self->playerFlipFlags[player->playerID] >= 0))
             frame = angle2;
         if (frame >= 0)
             frame %= 24;
@@ -107,7 +107,7 @@ void PathInverter_HandlePathSwitch(void *p)
         RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGCS, &player->playerAnimator, true, frame);
     }
     player->onGround   = true;
-    player->position.y = entity->playerFlipFlags[player->playerID] * RSDK.Cos512(angle) + entity->position.y;
+    player->position.y = self->playerFlipFlags[player->playerID] * RSDK.Cos512(angle) + self->position.y;
 }
 void PathInverter_State_Horizontal(void)
 {
@@ -115,12 +115,12 @@ void PathInverter_State_Horizontal(void)
     foreach_active(Player, player)
     {
         if (player->collisionMode == CMODE_FLOOR || player->collisionMode == CMODE_ROOF) {
-            if (abs(entity->position.x - player->position.x) >> 16 >= entity->size.x
-                || abs(entity->position.y - player->position.y) >> 16 >= entity->size.y + 32) {
+            if (abs(self->position.x - player->position.x) >> 16 >= self->size.x
+                || abs(self->position.y - player->position.y) >> 16 >= self->size.y + 32) {
                 int32 playerID = player->playerID;
-                if (entity->playerPtrs[playerID]) {
-                    entity->playerPtrs[playerID] = 0;
-                    player->groundVel       = entity->groundVelStore[player->playerID];
+                if (self->playerPtrs[playerID]) {
+                    self->playerPtrs[playerID] = 0;
+                    player->groundVel       = self->groundVelStore[player->playerID];
                     player->groundVel       = -player->groundVel;
                     player->velocity.x      = -player->velocity.x;
                     if (player->collisionMode == CMODE_ROOF) {
@@ -147,23 +147,23 @@ void PathInverter_State_Horizontal(void)
             }
             else {
                 if (!player->onGround) {
-                    if (entity->playerPtrs[player->playerID])
+                    if (self->playerPtrs[player->playerID])
                         PathInverter_HandlePathSwitch(player);
                 }
                 else {
                     if (abs(player->groundVel) < 0x40000) {
-                        if (entity->playerPtrs[player->playerID])
+                        if (self->playerPtrs[player->playerID])
                             PathInverter_HandlePathSwitch(player);
                     }
                     else if (player->velocity.x <= 0) {
-                        if (player->position.x <= entity->position.x + 0x80000)
-                            entity->playerPtrs[player->playerID] = 0;
+                        if (player->position.x <= self->position.x + 0x80000)
+                            self->playerPtrs[player->playerID] = 0;
                         else
                             PathInverter_HandlePathSwitch(player);
                     }
                     else {
-                        if (player->position.x >= entity->position.x - 0x80000)
-                            entity->playerPtrs[player->playerID] = 0;
+                        if (player->position.x >= self->position.x - 0x80000)
+                            self->playerPtrs[player->playerID] = 0;
                         else
                             PathInverter_HandlePathSwitch(player);
                     }
@@ -181,7 +181,7 @@ void PathInverter_State_Vertical(void)
 void PathInverter_EditorDraw(void)
 {
     RSDK_THIS(PathInverter);
-    RSDK.SetSpriteAnimation(PathInverter->aniFrames, entity->type, &entity->animator, true, 0);
+    RSDK.SetSpriteAnimation(PathInverter->aniFrames, self->type, &self->animator, true, 0);
 
     PathInverter_Draw();
 }

@@ -5,16 +5,16 @@ ObjectSeltzerBottle *SeltzerBottle;
 void SeltzerBottle_Update(void)
 {
     RSDK_THIS(SeltzerBottle);
-    RSDK.ProcessAnimation(&entity->animator3);
+    RSDK.ProcessAnimation(&self->animator3);
 
     foreach_active(Player, player)
     {
-        Player_CheckCollisionBox(player, entity, &SeltzerBottle->hitbox1);
-        if (Player_CheckCollisionPlatform(player, entity, &SeltzerBottle->hitbox2) && !entity->animator2.frameID) {
-            entity->animator2.frameID = 1;
-            entity->active       = ACTIVE_NORMAL;
-            entity->state             = SeltzerBottle_Unknown1;
-            RSDK.SetSpriteAnimation(SeltzerBottle->aniFrames, 6, &entity->animator4, false, 0);
+        Player_CheckCollisionBox(player, self, &SeltzerBottle->hitbox1);
+        if (Player_CheckCollisionPlatform(player, self, &SeltzerBottle->hitbox2) && !self->animator2.frameID) {
+            self->animator2.frameID = 1;
+            self->active       = ACTIVE_NORMAL;
+            self->state             = SeltzerBottle_Unknown1;
+            RSDK.SetSpriteAnimation(SeltzerBottle->aniFrames, 6, &self->animator4, false, 0);
             player->groundVel = clampVal(player->groundVel, -0xC0000, 0xC0000);
             for (int32 p = 0; p < Player->playerCount; ++p) {
                 RSDK_GET_ENTITY(p, Player)->collisionLayers |= SeltzerBottle->layerBitFlags;
@@ -22,7 +22,7 @@ void SeltzerBottle_Update(void)
             RSDK.PlaySfx(SeltzerBottle->sfxSpray, 0, 255);
         }
     }
-    StateMachine_Run(entity->state);
+    StateMachine_Run(self->state);
 }
 
 void SeltzerBottle_LateUpdate(void) {}
@@ -34,57 +34,57 @@ void SeltzerBottle_Draw(void)
     RSDK_THIS(SeltzerBottle);
     Vector2 drawPos;
 
-    RSDK.DrawRect(entity->position.x - 0x2E0000, entity->position.y - entity->field_64 + 0x2C0000, 0x5C0000, entity->field_64, 0x00F0F0, 64, INK_SUB,
+    RSDK.DrawRect(self->position.x - 0x2E0000, self->position.y - self->field_64 + 0x2C0000, 0x5C0000, self->field_64, 0x00F0F0, 64, INK_SUB,
                   false);
 
-    drawPos = entity->position;
-    drawPos.y += 0x2C0000 - entity->field_64;
-    entity->inkEffect = INK_ADD;
-    RSDK.DrawSprite(&entity->animator3, &drawPos, false);
+    drawPos = self->position;
+    drawPos.y += 0x2C0000 - self->field_64;
+    self->inkEffect = INK_ADD;
+    RSDK.DrawSprite(&self->animator3, &drawPos, false);
 
-    entity->animator1.frameID = 0;
-    entity->inkEffect         = INK_SUB;
-    RSDK.DrawSprite(&entity->animator1, NULL, false);
+    self->animator1.frameID = 0;
+    self->inkEffect         = INK_SUB;
+    RSDK.DrawSprite(&self->animator1, NULL, false);
 
-    entity->animator1.frameID = 1;
-    entity->inkEffect         = INK_ADD;
-    RSDK.DrawSprite(&entity->animator1, NULL, false);
+    self->animator1.frameID = 1;
+    self->inkEffect         = INK_ADD;
+    RSDK.DrawSprite(&self->animator1, NULL, false);
 
-    entity->animator1.frameID = 2;
-    entity->inkEffect         = INK_NONE;
-    RSDK.DrawSprite(&entity->animator1, NULL, false);
+    self->animator1.frameID = 2;
+    self->inkEffect         = INK_NONE;
+    RSDK.DrawSprite(&self->animator1, NULL, false);
 
-    entity->animator1.frameID = 3;
-    RSDK.DrawSprite(&entity->animator1, NULL, false);
+    self->animator1.frameID = 3;
+    RSDK.DrawSprite(&self->animator1, NULL, false);
 
-    entity->animator1.frameID = 4;
-    RSDK.DrawSprite(&entity->animator1, NULL, false);
+    self->animator1.frameID = 4;
+    RSDK.DrawSprite(&self->animator1, NULL, false);
 
-    entity->animator1.frameID = 5;
-    entity->drawFX            = FX_FLIP;
-    RSDK.DrawSprite(&entity->animator4, NULL, false);
+    self->animator1.frameID = 5;
+    self->drawFX            = FX_FLIP;
+    RSDK.DrawSprite(&self->animator4, NULL, false);
 
-    RSDK.DrawSprite(&entity->animator1, NULL, false);
+    RSDK.DrawSprite(&self->animator1, NULL, false);
 
-    entity->drawFX = FX_NONE;
-    RSDK.DrawSprite(&entity->animator2, NULL, false);
+    self->drawFX = FX_NONE;
+    RSDK.DrawSprite(&self->animator2, NULL, false);
 }
 
 void SeltzerBottle_Create(void *data)
 {
     RSDK_THIS(SeltzerBottle);
     if (!SceneInfo->inEditor) {
-        RSDK.SetSpriteAnimation(SeltzerBottle->aniFrames, 0, &entity->animator1, true, 0);
-        RSDK.SetSpriteAnimation(SeltzerBottle->aniFrames, 1, &entity->animator2, true, 0);
-        RSDK.SetSpriteAnimation(SeltzerBottle->aniFrames, 2, &entity->animator3, true, 0);
-        entity->active        = ACTIVE_BOUNDS;
-        entity->updateRange.x = 0x800000;
-        entity->updateRange.y = 0x800000;
-        entity->visible       = true;
-        entity->drawOrder     = Zone->drawOrderHigh;
-        entity->alpha         = 255;
-        entity->field_60      = entity->sprayTime;
-        entity->field_64      = 0x400000;
+        RSDK.SetSpriteAnimation(SeltzerBottle->aniFrames, 0, &self->animator1, true, 0);
+        RSDK.SetSpriteAnimation(SeltzerBottle->aniFrames, 1, &self->animator2, true, 0);
+        RSDK.SetSpriteAnimation(SeltzerBottle->aniFrames, 2, &self->animator3, true, 0);
+        self->active        = ACTIVE_BOUNDS;
+        self->updateRange.x = 0x800000;
+        self->updateRange.y = 0x800000;
+        self->visible       = true;
+        self->drawOrder     = Zone->drawOrderHigh;
+        self->alpha         = 255;
+        self->field_60      = self->sprayTime;
+        self->field_64      = 0x400000;
     }
 }
 
@@ -108,13 +108,13 @@ void SeltzerBottle_StageLoad(void)
 void SeltzerBottle_Unknown1(void)
 {
     RSDK_THIS(SeltzerBottle);
-    int32 timer = ((entity->field_60 << 14) / entity->sprayTime) << 8;
+    int32 timer = ((self->field_60 << 14) / self->sprayTime) << 8;
     if (timer < 0x40000)
         timer = 0x40000;
-    entity->field_64 = timer;
+    self->field_64 = timer;
 
-    EntitySeltzerWater *spray = CREATE_ENTITY(SeltzerWater, NULL, entity->position.x, entity->position.y - 0x4C0000);
-    if (entity->direction == FLIP_X)
+    EntitySeltzerWater *spray = CREATE_ENTITY(SeltzerWater, NULL, self->position.x, self->position.y - 0x4C0000);
+    if (self->direction == FLIP_X)
         spray->position.x += 0x300000;
     else
         spray->position.x -= 0x300000;
@@ -123,18 +123,18 @@ void SeltzerBottle_Unknown1(void)
     spray->drawOrder = Zone->playerDrawLow;
     spray->nodeSlot  = SceneInfo->entitySlot + 1;
 
-    int32 storeX = entity->position.x;
-    int32 storeY = entity->position.y;
+    int32 storeX = self->position.x;
+    int32 storeY = self->position.y;
 
     foreach_active(Player, player)
     {
         if (player->onGround) {
-            entity->position.x = player->position.x;
-            entity->position.y = player->position.y;
-            entity->position.x += RSDK.Sin256(player->angle) << 13;
-            entity->position.y += RSDK.Cos256(player->angle) << 13;
-            if (RSDK.ObjectTileCollision(entity, SeltzerBottle->layerBitFlags, player->collisionMode, 0, 0, 0, false)) {
-                if (entity->direction == FLIP_X) {
+            self->position.x = player->position.x;
+            self->position.y = player->position.y;
+            self->position.x += RSDK.Sin256(player->angle) << 13;
+            self->position.y += RSDK.Cos256(player->angle) << 13;
+            if (RSDK.ObjectTileCollision(self, SeltzerBottle->layerBitFlags, player->collisionMode, 0, 0, 0, false)) {
+                if (self->direction == FLIP_X) {
                     if (player->groundVel < 0x50000)
                         player->groundVel = 0x50000;
                 }
@@ -145,16 +145,16 @@ void SeltzerBottle_Unknown1(void)
         }
     }
 
-    entity->position.x = storeX;
-    entity->position.y = storeY;
-    RSDK.ProcessAnimation(&entity->animator4);
+    self->position.x = storeX;
+    self->position.y = storeY;
+    RSDK.ProcessAnimation(&self->animator4);
 
-    if (--entity->field_60 <= 0) {
+    if (--self->field_60 <= 0) {
         for (int32 p = 0; p < Player->playerCount; ++p) {
             RSDK_GET_ENTITY(p, Player)->collisionLayers &= ~SeltzerBottle->layerBitFlags;
         }
-        RSDK.SetSpriteAnimation(0xFFFF, 0, &entity->animator4, false, 0);
-        entity->state = SeltzerBottle_Unknown2;
+        RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator4, false, 0);
+        self->state = SeltzerBottle_Unknown2;
         foreach_active(SeltzerWater, water)
         {
             water->gravityStrength = RSDK.Rand(0x3800, 0x4000);
@@ -167,21 +167,21 @@ void SeltzerBottle_Unknown2(void)
 {
     RSDK_THIS(SeltzerBottle);
 
-    if (!RSDK.CheckOnScreen(entity, NULL)) {
-        entity->state             = StateMachine_None;
-        entity->field_60          = entity->sprayTime;
-        entity->field_64          = 0x400000;
-        entity->animator2.frameID = 0;
-        entity->active            = ACTIVE_BOUNDS;
+    if (!RSDK.CheckOnScreen(self, NULL)) {
+        self->state             = StateMachine_None;
+        self->field_60          = self->sprayTime;
+        self->field_64          = 0x400000;
+        self->animator2.frameID = 0;
+        self->active            = ACTIVE_BOUNDS;
     }
 }
 
 void SeltzerBottle_EditorDraw(void)
 {
     RSDK_THIS(SeltzerBottle);
-    RSDK.SetSpriteAnimation(SeltzerBottle->aniFrames, 0, &entity->animator1, true, 0);
-    RSDK.SetSpriteAnimation(SeltzerBottle->aniFrames, 1, &entity->animator2, true, 0);
-    RSDK.SetSpriteAnimation(SeltzerBottle->aniFrames, 2, &entity->animator3, true, 0);
+    RSDK.SetSpriteAnimation(SeltzerBottle->aniFrames, 0, &self->animator1, true, 0);
+    RSDK.SetSpriteAnimation(SeltzerBottle->aniFrames, 1, &self->animator2, true, 0);
+    RSDK.SetSpriteAnimation(SeltzerBottle->aniFrames, 2, &self->animator3, true, 0);
     
     SeltzerBottle_Draw();
 }

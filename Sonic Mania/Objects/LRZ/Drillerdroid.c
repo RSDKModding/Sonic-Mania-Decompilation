@@ -5,7 +5,7 @@ ObjectDrillerdroid *Drillerdroid;
 void Drillerdroid_Update(void)
 {
     RSDK_THIS(Drillerdroid);
-    StateMachine_Run(entity->state);
+    StateMachine_Run(self->state);
 }
 
 void Drillerdroid_LateUpdate(void) {}
@@ -28,7 +28,7 @@ void Drillerdroid_StaticUpdate(void)
 void Drillerdroid_Draw(void)
 {
     RSDK_THIS(Drillerdroid);
-    StateMachine_Run(entity->stateDraw);
+    StateMachine_Run(self->stateDraw);
 }
 
 void Drillerdroid_Create(void *data)
@@ -37,36 +37,36 @@ void Drillerdroid_Create(void *data)
 
     if (!SceneInfo->inEditor) {
         if (globals->gameMode < MODE_TIMEATTACK) {
-            entity->visible = true;
+            self->visible = true;
             if (data)
-                entity->type = voidToInt(data);
-            if (entity->type) {
-                if (entity->type == DRILLERDROID_TARGET || entity->type == DRILLERDROID_UNKNOWN) {
-                    entity->active        = ACTIVE_NORMAL;
-                    entity->drawFX        = FX_FLIP;
-                    entity->updateRange.x = 0x800000;
-                    entity->updateRange.y = 0x800000;
-                    RSDK.SetSpriteAnimation(Drillerdroid->aniFrames, 2, &entity->animator1, true, 0);
-                    RSDK.SetSpriteAnimation(Drillerdroid->aniFrames, 3, &entity->animator2, true, 0);
-                    entity->drawOrder = Zone->drawOrderHigh;
-                    entity->state     = Drillerdroid_State1_Unknown;
-                    entity->stateDraw = Drillerdroid_StateDraw1_Unknown;
+                self->type = voidToInt(data);
+            if (self->type) {
+                if (self->type == DRILLERDROID_TARGET || self->type == DRILLERDROID_UNKNOWN) {
+                    self->active        = ACTIVE_NORMAL;
+                    self->drawFX        = FX_FLIP;
+                    self->updateRange.x = 0x800000;
+                    self->updateRange.y = 0x800000;
+                    RSDK.SetSpriteAnimation(Drillerdroid->aniFrames, 2, &self->animator1, true, 0);
+                    RSDK.SetSpriteAnimation(Drillerdroid->aniFrames, 3, &self->animator2, true, 0);
+                    self->drawOrder = Zone->drawOrderHigh;
+                    self->state     = Drillerdroid_State1_Unknown;
+                    self->stateDraw = Drillerdroid_StateDraw1_Unknown;
                 }
             }
             else {
-                entity->active        = ACTIVE_BOUNDS;
-                entity->updateRange.x = 0x800000;
-                entity->updateRange.y = 0x800000;
-                RSDK.SetSpriteAnimation(Drillerdroid->aniFrames, 0, &entity->animator1, true, 0);
-                RSDK.SetSpriteAnimation(Drillerdroid->aniFrames, 5, &entity->animator2, true, 0);
-                entity->drawOrder  = Zone->drawOrderHigh;
-                Drillerdroid->boss = (Entity *)entity;
-                entity->state      = Drillerdroid_State_SetupArena;
-                entity->stateDraw  = Drillerdroid_StateDraw_Unknown1;
+                self->active        = ACTIVE_BOUNDS;
+                self->updateRange.x = 0x800000;
+                self->updateRange.y = 0x800000;
+                RSDK.SetSpriteAnimation(Drillerdroid->aniFrames, 0, &self->animator1, true, 0);
+                RSDK.SetSpriteAnimation(Drillerdroid->aniFrames, 5, &self->animator2, true, 0);
+                self->drawOrder  = Zone->drawOrderHigh;
+                Drillerdroid->boss = (Entity *)self;
+                self->state      = Drillerdroid_State_SetupArena;
+                self->stateDraw  = Drillerdroid_StateDraw_Unknown1;
             }
         }
         else {
-            destroyEntity(entity);
+            destroyEntity(self);
         }
     }
 }
@@ -140,15 +140,15 @@ void Drillerdroid_Hit(void)
 {
     RSDK_THIS(Drillerdroid);
 
-    if (--entity->health > 0) {
+    if (--self->health > 0) {
         RSDK.PlaySfx(Drillerdroid->sfxHit, false, 255);
-        entity->invincibilityTimer = 45;
+        self->invincibilityTimer = 45;
     }
     else {
         SceneInfo->timeEnabled = false;
         Player_GiveScore(RSDK_GET_ENTITY(SLOT_PLAYER1, Player), 1000);
-        entity->invincibilityTimer = 60;
-        entity->state              = Drillerdroid_State_Destroyed;
+        self->invincibilityTimer = 60;
+        self->state              = Drillerdroid_State_Destroyed;
     }
 }
 
@@ -156,25 +156,25 @@ void Drillerdroid_CheckPlayerCollisions(void)
 {
     RSDK_THIS(Drillerdroid);
 
-    if (entity->invincibilityTimer) {
-        entity->invincibilityTimer--;
+    if (self->invincibilityTimer) {
+        self->invincibilityTimer--;
     }
     else {
         foreach_active(Player, player)
         {
-            if (!entity->invincibilityTimer) {
+            if (!self->invincibilityTimer) {
                 int playerID = RSDK.GetEntityID(player);
                 if (Drillerdroid->playerTimers[playerID]) {
                     Drillerdroid->playerTimers[playerID]--;
                 }
-                else if (Player_CheckBadnikTouch(player, entity, &Drillerdroid->hitbox1)) {
-                    if (player->position.y < entity->position.y) {
-                        Player_CheckHit(player, entity);
+                else if (Player_CheckBadnikTouch(player, self, &Drillerdroid->hitbox1)) {
+                    if (player->position.y < self->position.y) {
+                        Player_CheckHit(player, self);
                     }
-                    else if (entity->alpha > 0x80 && player->shield != SHIELD_FIRE && !player->blinkTimer && !player->invincibleTimer) {
-                        Player_CheckHit(player, entity);
+                    else if (self->alpha > 0x80 && player->shield != SHIELD_FIRE && !player->blinkTimer && !player->invincibleTimer) {
+                        Player_CheckHit(player, self);
                     }
-                    if (Player_CheckBossHit(player, entity)) {
+                    if (Player_CheckBossHit(player, self)) {
                         if (Drillerdroid->armorHealth <= 1) {
                             Drillerdroid_Hit();
                         }
@@ -185,12 +185,12 @@ void Drillerdroid_CheckPlayerCollisions(void)
                     }
                 }
                 else {
-                    if (Player_CheckBadnikTouch(player, entity, &Drillerdroid->hitbox2)
-                        || Player_CheckBadnikTouch(player, entity, &Drillerdroid->hitbox3)) {
-                        if (entity->alpha > 0x80 && player->shield != SHIELD_FIRE && !player->blinkTimer && !player->invincibleTimer) {
-                            Player_CheckHit(player, entity);
+                    if (Player_CheckBadnikTouch(player, self, &Drillerdroid->hitbox2)
+                        || Player_CheckBadnikTouch(player, self, &Drillerdroid->hitbox3)) {
+                        if (self->alpha > 0x80 && player->shield != SHIELD_FIRE && !player->blinkTimer && !player->invincibleTimer) {
+                            Player_CheckHit(player, self);
                         }
-                        else if (Player_CheckBossHit(player, entity)) {
+                        else if (Player_CheckBossHit(player, self)) {
                             if (!Drillerdroid->armorHealth) {
                                 Drillerdroid_Hit();
                             }
@@ -200,9 +200,9 @@ void Drillerdroid_CheckPlayerCollisions(void)
                             }
                         }
                     }
-                    else if (Player_CheckCollisionTouch(player, entity, &Drillerdroid->hitbox4)
-                             || Player_CheckCollisionTouch(player, entity, &Drillerdroid->hitbox5)) {
-                        Player_CheckHit(player, entity);
+                    else if (Player_CheckCollisionTouch(player, self, &Drillerdroid->hitbox4)
+                             || Player_CheckCollisionTouch(player, self, &Drillerdroid->hitbox5)) {
+                        Player_CheckHit(player, self);
                     }
                 }
             }
@@ -217,8 +217,8 @@ void Drillerdroid_Explode(void)
     if (!(Zone->timer & 3)) {
         RSDK.PlaySfx(Drillerdroid->sfxExplosion, false, 255);
         if (!(Zone->timer & 3)) {
-            int x = entity->position.y + (RSDK.Rand(-19, 20) << 16);
-            int y = entity->position.x + (RSDK.Rand(-24, 25) << 16);
+            int x = self->position.y + (RSDK.Rand(-19, 20) << 16);
+            int y = self->position.x + (RSDK.Rand(-24, 25) << 16);
             CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y)->drawOrder = Zone->drawOrderHigh + 2;
         }
     }
@@ -228,7 +228,7 @@ void Drillerdroid_SpawnDebris(int offset)
 {
     RSDK_THIS(Drillerdroid);
 
-    EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Fall, offset + entity->position.x, entity->position.y + 0x400000);
+    EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Fall, offset + self->position.x, self->position.y + 0x400000);
     RSDK.SetSpriteAnimation(Drillerdroid->aniFrames, 1, &debris->animator, true, RSDK.Rand(0, 8));
     debris->velocity.x    = RSDK.Rand(0, 6) << 15;
     debris->velocity.y    = RSDK.Rand(-12, -8) << 15;
@@ -237,7 +237,7 @@ void Drillerdroid_SpawnDebris(int offset)
     debris->updateRange.x = 0x400000;
     debris->updateRange.y = 0x400000;
 
-    debris = CREATE_ENTITY(Debris, Debris_State_Fall, offset + entity->position.x, entity->position.y + 0x400000);
+    debris = CREATE_ENTITY(Debris, Debris_State_Fall, offset + self->position.x, self->position.y + 0x400000);
     RSDK.SetSpriteAnimation(Drillerdroid->aniFrames, 1, &debris->animator, true, RSDK.Rand(0, 8));
     debris->velocity.x    = RSDK.Rand(-6, 0) << 15;
     debris->velocity.y    = RSDK.Rand(-12, -8) << 15;
@@ -251,18 +251,18 @@ void Drillerdroid_State_SetupArena(void)
 {
     RSDK_THIS(Drillerdroid);
 
-    if (++entity->timer >= 2) {
-        entity->timer               = 0;
+    if (++self->timer >= 2) {
+        self->timer               = 0;
         Zone->playerBoundActiveR[0] = true;
         Zone->playerBoundActiveB[0] = true;
-        Zone->screenBoundsR1[0]     = (entity->position.x >> 16) + 324;
-        Zone->screenBoundsB1[0]     = (entity->position.y >> 16) + 96;
+        Zone->screenBoundsR1[0]     = (self->position.x >> 16) + 324;
+        Zone->screenBoundsB1[0]     = (self->position.y >> 16) + 96;
         Zone->screenBoundsT1[0]     = Zone->screenBoundsB1[0] - 240;
-        entity->startY            = entity->position.y;
-        entity->active              = ACTIVE_NORMAL;
-        entity->position.y          = (ScreenInfo->position.y - 192) << 16;
-        entity->visible             = true;
-        entity->state               = Drillerdroid_State_StartBoss;
+        self->startY            = self->position.y;
+        self->active              = ACTIVE_NORMAL;
+        self->position.y          = (ScreenInfo->position.y - 192) << 16;
+        self->visible             = true;
+        self->state               = Drillerdroid_State_StartBoss;
     }
 }
 
@@ -273,15 +273,15 @@ void Drillerdroid_State_StartBoss(void)
 
     Zone->playerBoundActiveL[0] = true;
     Zone->screenBoundsL1[0]     = ScreenInfo->position.x;
-    if (player1->position.x > entity->position.x) {
+    if (player1->position.x > self->position.x) {
         Zone->playerBoundActiveL[0] = true;
-        Zone->screenBoundsL1[0]     = (entity->position.x >> 16) - 328;
+        Zone->screenBoundsL1[0]     = (self->position.x >> 16) - 328;
         Music_TransitionTrack(TRACK_MINIBOSS, 0.0125);
-        entity->health                                                                                            = 6;
-        CREATE_ENTITY(Drillerdroid, intToVoid(DRILLERDROID_TARGET), entity->position.x, entity->startY)->target = (Entity *)player1;
-        entity->position.x                                                                                        = 0;
+        self->health                                                                                            = 6;
+        CREATE_ENTITY(Drillerdroid, intToVoid(DRILLERDROID_TARGET), self->position.x, self->startY)->target = (Entity *)player1;
+        self->position.x                                                                                        = 0;
         RSDK.PlaySfx(Drillerdroid->sfxTargeting, false, 255);
-        entity->state = Drillerdroid_State_Unknown17;
+        self->state = Drillerdroid_State_Unknown17;
     }
 }
 
@@ -289,16 +289,16 @@ void Drillerdroid_State_Unknown2(void)
 {
     RSDK_THIS(Drillerdroid);
 
-    entity->position.y += entity->velocity.y;
-    entity->velocity.y += 0x3800;
+    self->position.y += self->velocity.y;
+    self->velocity.y += 0x3800;
     Drillerdroid_CheckPlayerCollisions();
 
-    if (entity->position.y >= ((Zone->screenBoundsB1[0] - 112) << 16)) {
-        entity->position.y = ((Zone->screenBoundsB1[0] - 112) << 16);
+    if (self->position.y >= ((Zone->screenBoundsB1[0] - 112) << 16)) {
+        self->position.y = ((Zone->screenBoundsB1[0] - 112) << 16);
         RSDK.PlaySfx(Drillerdroid->sfxImpact, false, 255);
         Camera_ShakeScreen(0, 0, 4);
-        entity->velocity.y >>= 1;
-        entity->startY = entity->position.y + 0x100000;
+        self->velocity.y >>= 1;
+        self->startY = self->position.y + 0x100000;
 
         if (!Drillerdroid->field_6E) {
             for (int i = 0; i < 4; ++i) {
@@ -310,9 +310,9 @@ void Drillerdroid_State_Unknown2(void)
 
             Drillerdroid->field_6D = 2;
         }
-        entity->timer = 7;
-        entity->angle = 0;
-        entity->state = Drillerdroid_State_Unknown3;
+        self->timer = 7;
+        self->angle = 0;
+        self->state = Drillerdroid_State_Unknown3;
     }
 }
 
@@ -320,16 +320,16 @@ void Drillerdroid_State_Unknown3(void)
 {
     RSDK_THIS(Drillerdroid);
 
-    entity->position.y += entity->velocity.y;
-    Drillerdroid->field_34[0] = entity->startY - entity->position.y;
-    Drillerdroid->field_34[1] = entity->startY - entity->position.y;
+    self->position.y += self->velocity.y;
+    Drillerdroid->field_34[0] = self->startY - self->position.y;
+    Drillerdroid->field_34[1] = self->startY - self->position.y;
 
-    entity->velocity.y -= 0xE000;
+    self->velocity.y -= 0xE000;
 
     Drillerdroid_CheckPlayerCollisions();
-    if (entity->velocity.y < 0) {
-        if (entity->position.y < entity->startY)
-            entity->state = Drillerdroid_State_Unknown4;
+    if (self->velocity.y < 0) {
+        if (self->position.y < self->startY)
+            self->state = Drillerdroid_State_Unknown4;
     }
 }
 
@@ -337,19 +337,19 @@ void Drillerdroid_State_Unknown4(void)
 {
     RSDK_THIS(Drillerdroid);
 
-    entity->position.y += entity->velocity.y;
-    Drillerdroid->field_34[0] = entity->startY - entity->position.y;
-    Drillerdroid->field_34[1] = entity->startY - entity->position.y;
+    self->position.y += self->velocity.y;
+    Drillerdroid->field_34[0] = self->startY - self->position.y;
+    Drillerdroid->field_34[1] = self->startY - self->position.y;
 
-    entity->velocity.y += 0x14000;
+    self->velocity.y += 0x14000;
 
     Drillerdroid_CheckPlayerCollisions();
-    if (entity->velocity.y > 0) {
-        if (entity->position.y > entity->startY) {
-            entity->position.y        = entity->startY;
+    if (self->velocity.y > 0) {
+        if (self->position.y > self->startY) {
+            self->position.y        = self->startY;
             Drillerdroid->field_34[0] = 0;
             Drillerdroid->field_34[1] = 0;
-            entity->state             = Drillerdroid_State_Unknown5;
+            self->state             = Drillerdroid_State_Unknown5;
         }
     }
 }
@@ -359,21 +359,21 @@ void Drillerdroid_State_Unknown5(void)
     RSDK_THIS(Drillerdroid);
 
     Drillerdroid_CheckPlayerCollisions();
-    if (--entity->timer <= 0) {
+    if (--self->timer <= 0) {
         if (Drillerdroid->field_6D) {
-            entity->timer      = 240;
-            entity->velocity.y = 0x27000;
+            self->timer      = 240;
+            self->velocity.y = 0x27000;
             RSDK.PlaySfx(Drillerdroid->sfxJump, false, 255);
-            entity->state = Drillerdroid_State_Unknown6;
+            self->state = Drillerdroid_State_Unknown6;
         }
         else if (Drillerdroid->field_6E) {
-            entity->timer          = 180;
+            self->timer          = 180;
             Drillerdroid->field_70 = 2 * (3 * RSDK.Rand(-2, 3));
-            entity->state          = Drillerdroid_State_Unknown8;
+            self->state          = Drillerdroid_State_Unknown8;
         }
         else {
-            entity->timer = 60;
-            entity->state = Drillerdroid_State_Unknown10;
+            self->timer = 60;
+            self->state = Drillerdroid_State_Unknown10;
         }
     }
 }
@@ -382,19 +382,19 @@ void Drillerdroid_State_Unknown6(void)
 {
     RSDK_THIS(Drillerdroid);
 
-    entity->position.y += entity->velocity.y;
-    Drillerdroid->field_34[0] = entity->startY - entity->position.y;
-    Drillerdroid->field_34[1] = entity->startY - entity->position.y;
+    self->position.y += self->velocity.y;
+    Drillerdroid->field_34[0] = self->startY - self->position.y;
+    Drillerdroid->field_34[1] = self->startY - self->position.y;
 
-    entity->velocity.y -= 0x8000;
+    self->velocity.y -= 0x8000;
     Drillerdroid_CheckPlayerCollisions();
 
-    if (entity->velocity.y < 0) {
+    if (self->velocity.y < 0) {
         if (Drillerdroid->field_34[0] >= 0x40000) {
-            entity->timer             = entity->velocity.y;
+            self->timer             = self->velocity.y;
             Drillerdroid->field_34[0] = 0x40000;
             Drillerdroid->field_34[1] = 0x40000;
-            entity->state             = Drillerdroid_State_Unknown7;
+            self->state             = Drillerdroid_State_Unknown7;
         }
     }
 }
@@ -403,32 +403,32 @@ void Drillerdroid_State_Unknown7(void)
 {
     RSDK_THIS(Drillerdroid);
 
-    entity->position.y += entity->velocity.y;
-    entity->velocity.y += 0x3800;
+    self->position.y += self->velocity.y;
+    self->velocity.y += 0x3800;
     Drillerdroid_CheckPlayerCollisions();
 
-    if (entity->velocity.y > 0) {
-        if (entity->position.y >= (Zone->screenBoundsB1[0] - 96) << 16) {
-            entity->position.y = (Zone->screenBoundsB1[0] - 96) << 16;
+    if (self->velocity.y > 0) {
+        if (self->position.y >= (Zone->screenBoundsB1[0] - 96) << 16) {
+            self->position.y = (Zone->screenBoundsB1[0] - 96) << 16;
             RSDK.PlaySfx(Drillerdroid->sfxImpact, false, 255);
             Camera_ShakeScreen(0, 0, 4);
-            entity->velocity.y >>= 1;
-            entity->startY = entity->position.y;
-            entity->angle    = 0;
+            self->velocity.y >>= 1;
+            self->startY = self->position.y;
+            self->angle    = 0;
             if (--Drillerdroid->field_6D) {
                 RSDK.PlaySfx(Drillerdroid->sfxJump, false, 255);
-                entity->state = Drillerdroid_State_Unknown6;
+                self->state = Drillerdroid_State_Unknown6;
             }
             else {
                 RSDK.PlaySfx(Drillerdroid->sfxDrop, false, 255);
                 EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
 
-                EntityBuckwildBall *ball = CREATE_ENTITY(BuckwildBall, NULL, entity->position.x, ScreenInfo->position.y << 16);
+                EntityBuckwildBall *ball = CREATE_ENTITY(BuckwildBall, NULL, self->position.x, ScreenInfo->position.y << 16);
                 ball->startPos.x         = 0;
 
                 int value = 0;
                 if (Drillerdroid->field_61) {
-                    if (Drillerdroid->field_61 == 4 || player1->position.x < entity->position.x) {
+                    if (Drillerdroid->field_61 == 4 || player1->position.x < self->position.x) {
                         ball->position.x -= 0x800000;
                         ball->direction = FLIP_NONE;
                         value           = Drillerdroid->field_61 - 1;
@@ -452,7 +452,7 @@ void Drillerdroid_State_Unknown7(void)
                 ball->timerSfx  = 0;
                 RSDK.SetSpriteAnimation(BuckwildBall->aniFrames, 0, &ball->animator, true, 0);
                 ball->state   = BuckwildBall_State_Unknown3;
-                entity->state = Drillerdroid_State_Unknown3;
+                self->state = Drillerdroid_State_Unknown3;
             }
         }
     }
@@ -463,7 +463,7 @@ void Drillerdroid_State_Unknown8(void)
     RSDK_THIS(Drillerdroid);
 
     ++Drillerdroid->shouldPlayDrillSfx;
-    RSDK.ProcessAnimation(&entity->animator1);
+    RSDK.ProcessAnimation(&self->animator1);
 
     for (int i = 0; i < 2; ++i) {
         if (Drillerdroid->field_3C[i]) {
@@ -500,17 +500,17 @@ void Drillerdroid_State_Unknown8(void)
     }
 
     if (Drillerdroid->field_6E) {
-        if (entity->timer == 120) {
-            EntityLavaGeyser *geyser = CREATE_ENTITY(LavaGeyser, NULL, entity->position.x, entity->position.y + 0x580000);
+        if (self->timer == 120) {
+            EntityLavaGeyser *geyser = CREATE_ENTITY(LavaGeyser, NULL, self->position.x, self->position.y + 0x580000);
             geyser->duration         = 60;
             geyser->active           = ACTIVE_NORMAL;
             geyser->force            = 56 << 12;
             geyser->drawOrder        = Zone->drawOrderHigh - 1;
             geyser->state            = LavaGeyser_HandleSetup;
         }
-        else if (entity->timer < 60) {
-            if (entity->alpha < 512)
-                entity->alpha += 4;
+        else if (self->timer < 60) {
+            if (self->alpha < 512)
+                self->alpha += 4;
         }
     }
     else if (Drillerdroid->field_34[0] == 0x80000) {
@@ -547,10 +547,10 @@ void Drillerdroid_State_Unknown8(void)
         }
     }
 
-    entity->position.y ^= 0x10000;
+    self->position.y ^= 0x10000;
     Drillerdroid_CheckPlayerCollisions();
-    if (--entity->timer <= 0)
-        entity->state = Drillerdroid_State_Unknown9;
+    if (--self->timer <= 0)
+        self->state = Drillerdroid_State_Unknown9;
 }
 
 void Drillerdroid_State_Unknown9(void)
@@ -574,8 +574,8 @@ void Drillerdroid_State_Unknown9(void)
         Drillerdroid->field_34[1] = 0;
 
     if (!Drillerdroid->field_2C[0] && !Drillerdroid->field_2C[1] && !Drillerdroid->field_34[0] && !Drillerdroid->field_34[1]) {
-        entity->timer = 60;
-        entity->state = Drillerdroid_State_Unknown10;
+        self->timer = 60;
+        self->state = Drillerdroid_State_Unknown10;
     }
 }
 
@@ -583,7 +583,7 @@ void Drillerdroid_State_Unknown10(void)
 {
     RSDK_THIS(Drillerdroid);
 
-    if (--entity->timer <= 0) {
+    if (--self->timer <= 0) {
         if (Drillerdroid->field_6E == 1) {
             Drillerdroid->field_6E = 0;
             RSDK.PlaySfx(Drillerdroid->sfxSizzle, false, 255);
@@ -593,11 +593,11 @@ void Drillerdroid_State_Unknown10(void)
             switch (Drillerdroid->armorHealth) {
                 default: break;
                 case 0:
-                    entity->state = Drillerdroid_State_Unknown11;
+                    self->state = Drillerdroid_State_Unknown11;
                     Drillerdroid_Hit();
                     break;
                 case 1:
-                    debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, entity->position.x, entity->position.y);
+                    debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, self->position.x, self->position.y);
                     RSDK.SetSpriteAnimation(Drillerdroid->aniFrames, 5, &debris->animator, true, 6);
                     debris->velocity.x    = -0x10000;
                     debris->velocity.y    = -0x30000;
@@ -606,7 +606,7 @@ void Drillerdroid_State_Unknown10(void)
                     debris->updateRange.x = 0x400000;
                     debris->updateRange.y = 0x400000;
 
-                    debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, entity->position.x, entity->position.y);
+                    debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, self->position.x, self->position.y);
                     RSDK.SetSpriteAnimation(Drillerdroid->aniFrames, 5, &debris->animator, true, 6);
                     debris->direction     = FLIP_X;
                     debris->drawFX        = FX_FLIP;
@@ -617,8 +617,8 @@ void Drillerdroid_State_Unknown10(void)
                     debris->updateRange.x = 0x400000;
                     debris->updateRange.y = 0x400000;
 
-                    int spawnX = entity->position.x - 0x300000;
-                    debris     = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, spawnX, entity->position.y);
+                    int spawnX = self->position.x - 0x300000;
+                    debris     = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, spawnX, self->position.y);
                     RSDK.SetSpriteAnimation(Drillerdroid->aniFrames, 5, &debris->animator, true, 7);
                     debris->velocity.x    = -0x30000;
                     debris->velocity.y    = -0x40000;
@@ -628,7 +628,7 @@ void Drillerdroid_State_Unknown10(void)
                     debris->updateRange.y = 0x400000;
 
                     spawnX += 0xD0000;
-                    debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, spawnX, entity->position.y);
+                    debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, spawnX, self->position.y);
                     RSDK.SetSpriteAnimation(Drillerdroid->aniFrames, 5, &debris->animator, true, 7);
                     debris->velocity.x    = 0x20000;
                     debris->velocity.y    = -0x40000;
@@ -638,7 +638,7 @@ void Drillerdroid_State_Unknown10(void)
                     debris->updateRange.y = 0x400000;
 
                     spawnX += 0x530000;
-                    debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, spawnX, entity->position.y);
+                    debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, spawnX, self->position.y);
                     RSDK.SetSpriteAnimation(Drillerdroid->aniFrames, 5, &debris->animator, true, 7);
                     debris->velocity.x    = 0x30000;
                     debris->velocity.y    = -0x40000;
@@ -647,7 +647,7 @@ void Drillerdroid_State_Unknown10(void)
                     debris->updateRange.x = 0x400000;
                     debris->updateRange.y = 0x400000;
 
-                    debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, spawnX - 851968, entity->position.y);
+                    debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, spawnX - 851968, self->position.y);
                     RSDK.SetSpriteAnimation(Drillerdroid->aniFrames, 5, &debris->animator, true, 7);
                     debris->velocity.x    = -0x20000;
                     debris->velocity.y    = -0x40000;
@@ -657,7 +657,7 @@ void Drillerdroid_State_Unknown10(void)
                     debris->updateRange.y = 0x400000;
                     break;
                 case 2:
-                    debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, entity->position.x, entity->position.y);
+                    debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, self->position.x, self->position.y);
                     RSDK.SetSpriteAnimation(Drillerdroid->aniFrames, 5, &debris->animator, true, 4);
                     debris->velocity.x    = -0x10000;
                     debris->velocity.y    = -0x40000;
@@ -666,7 +666,7 @@ void Drillerdroid_State_Unknown10(void)
                     debris->updateRange.x = 0x300000;
                     debris->updateRange.y = 0x300000;
 
-                    debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, entity->position.x, entity->position.y);
+                    debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, self->position.x, self->position.y);
                     RSDK.SetSpriteAnimation(Drillerdroid->aniFrames, 5, &debris->animator, true, 5);
                     debris->velocity.x    = 0x10000;
                     debris->velocity.y    = -0x40000;
@@ -679,14 +679,14 @@ void Drillerdroid_State_Unknown10(void)
 
             if (Drillerdroid->armorHealth > 0) {
                 RSDK.PlaySfx(Drillerdroid->sfxHit, false, 255);
-                entity->invincibilityTimer = 45;
+                self->invincibilityTimer = 45;
                 --Drillerdroid->armorHealth;
             }
 
-            entity->state = Drillerdroid_State_Unknown11;
+            self->state = Drillerdroid_State_Unknown11;
         }
         else {
-            entity->state = Drillerdroid_State_Unknown19;
+            self->state = Drillerdroid_State_Unknown19;
         }
     }
 
@@ -699,11 +699,11 @@ void Drillerdroid_State_Unknown19(void)
 
     Drillerdroid->field_34[0] += 0x10000;
     Drillerdroid->field_34[0] += 0x10000;
-    entity->position.y -= 0x10000;
+    self->position.y -= 0x10000;
     Drillerdroid_CheckPlayerCollisions();
     if (Drillerdroid->field_34[0] == 0x100000) {
-        entity->timer = 15;
-        entity->state = Drillerdroid_State_Unknown14;
+        self->timer = 15;
+        self->state = Drillerdroid_State_Unknown14;
     }
 }
 
@@ -712,10 +712,10 @@ void Drillerdroid_State_Unknown14(void)
     RSDK_THIS(Drillerdroid);
 
     Drillerdroid_CheckPlayerCollisions();
-    if (--entity->timer <= 0) {
-        entity->velocity.y = 0x78000;
+    if (--self->timer <= 0) {
+        self->velocity.y = 0x78000;
         RSDK.PlaySfx(Drillerdroid->sfxJump, false, 255);
-        entity->state = Drillerdroid_State_Unknown15;
+        self->state = Drillerdroid_State_Unknown15;
     }
 }
 
@@ -723,17 +723,17 @@ void Drillerdroid_State_Unknown15(void)
 {
     RSDK_THIS(Drillerdroid);
 
-    entity->position.y += entity->velocity.y;
-    entity->velocity.y -= 0x1C000;
+    self->position.y += self->velocity.y;
+    self->velocity.y -= 0x1C000;
 
-    Drillerdroid->field_34[0] = entity->startY - entity->position.y;
-    Drillerdroid->field_34[1] = entity->startY - entity->position.y;
+    Drillerdroid->field_34[0] = self->startY - self->position.y;
+    Drillerdroid->field_34[1] = self->startY - self->position.y;
     Drillerdroid_CheckPlayerCollisions();
-    if (entity->velocity.y < 0) {
+    if (self->velocity.y < 0) {
         if (Drillerdroid->field_34[0] >= 0x100000) {
             Drillerdroid->field_34[0] = 0x100000;
             Drillerdroid->field_34[1] = 0x100000;
-            entity->state             = Drillerdroid_State_Unknown16;
+            self->state             = Drillerdroid_State_Unknown16;
         }
     }
 }
@@ -742,9 +742,9 @@ void Drillerdroid_State_Unknown16(void)
 {
     RSDK_THIS(Drillerdroid);
 
-    entity->position.y += entity->velocity.y;
-    entity->velocity.y += 0x3800;
-    if (entity->velocity.y >= 0) {
+    self->position.y += self->velocity.y;
+    self->velocity.y += 0x3800;
+    if (self->velocity.y >= 0) {
         Drillerdroid->field_2C[0] = 0;
         Drillerdroid->field_2C[1] = 0;
         Drillerdroid->field_34[0] = 0x100000;
@@ -757,12 +757,12 @@ void Drillerdroid_State_Unknown16(void)
         Drillerdroid->field_4C[1] = 0;
         Drillerdroid->field_54[0] = 0;
         Drillerdroid->field_54[1] = 0;
-        entity->position.x        = 0;
+        self->position.x        = 0;
 
         EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
         CREATE_ENTITY(Drillerdroid, intToVoid(DRILLERDROID_TARGET), player1->position.x, player1->position.y)->target = (Entity *)player1;
         RSDK.PlaySfx(Drillerdroid->sfxTargeting, false, 255);
-        entity->state = Drillerdroid_State_Unknown17;
+        self->state = Drillerdroid_State_Unknown17;
     }
 }
 
@@ -770,26 +770,26 @@ void Drillerdroid_State_Unknown17(void)
 {
     RSDK_THIS(Drillerdroid);
 
-    if (entity->position.x) {
-        entity->timer      = 240;
-        entity->velocity.y = -0x40000;
-        entity->state      = Drillerdroid_State_Unknown2;
-        entity->position.x = (RSDK_GET_ENTITY(SLOT_PLAYER1, Player)->position.x + 0x400000) & 0xFF800000;
+    if (self->position.x) {
+        self->timer      = 240;
+        self->velocity.y = -0x40000;
+        self->state      = Drillerdroid_State_Unknown2;
+        self->position.x = (RSDK_GET_ENTITY(SLOT_PLAYER1, Player)->position.x + 0x400000) & 0xFF800000;
 
-        bool32 flag = entity->position.x < Zone->screenBoundsL1[0] << 16 || entity->position.x > Zone->screenBoundsR1[0] << 16;
+        bool32 flag = self->position.x < Zone->screenBoundsL1[0] << 16 || self->position.x > Zone->screenBoundsR1[0] << 16;
         int id      = 0;
         if (!flag) {
-            Drillerdroid->field_61 = (((entity->position.x >> 16) - Zone->screenBoundsL1[0] + 64) >> 7) - 1;
+            Drillerdroid->field_61 = (((self->position.x >> 16) - Zone->screenBoundsL1[0] + 64) >> 7) - 1;
             id                     = Drillerdroid->field_5C[Drillerdroid->field_61];
             flag                   = id == 0xFF;
         }
 
         if (flag) {
-            entity->position.x = 0;
+            self->position.x = 0;
             RSDK.PlaySfx(Drillerdroid->sfxFail, false, 255);
             RSDK.StopSFX(Drillerdroid->sfxTargeting);
-            entity->timer = 60;
-            entity->state = Drillerdroid_State_Unknown18;
+            self->timer = 60;
+            self->state = Drillerdroid_State_Unknown18;
         }
         else if (id == 1) {
             EntityLRZRockPile *rocks                       = RSDK_GET_ENTITY(SceneInfo->entitySlot + 1 + Drillerdroid->field_61, LRZRockPile);
@@ -806,11 +806,11 @@ void Drillerdroid_State_Unknown18(void)
 {
     RSDK_THIS(Drillerdroid);
 
-    if (--entity->timer <= 0) {
+    if (--self->timer <= 0) {
         EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
         CREATE_ENTITY(Drillerdroid, intToVoid(DRILLERDROID_TARGET), player1->position.x, player1->position.y)->target = (Entity *)player1;
         RSDK.PlaySfx(Drillerdroid->sfxTargeting, false, 255);
-        entity->state = Drillerdroid_State_Unknown17;
+        self->state = Drillerdroid_State_Unknown17;
     }
 }
 
@@ -818,16 +818,16 @@ void Drillerdroid_State_Unknown11(void)
 {
     RSDK_THIS(Drillerdroid);
 
-    ++entity->rotation;
+    ++self->rotation;
     Drillerdroid->field_34[0] += 0x4000;
     Drillerdroid->field_34[1] += 0x4000;
     Drillerdroid->field_2C[0] += 0x4000;
     Drillerdroid->field_2C[1] += 0x4000;
-    entity->position.y -= 0x4000;
+    self->position.y -= 0x4000;
     Drillerdroid_CheckPlayerCollisions();
     if (Drillerdroid->field_34[0] == 0x100000) {
-        entity->timer = 90;
-        entity->state = Drillerdroid_State_Unknown12;
+        self->timer = 90;
+        self->state = Drillerdroid_State_Unknown12;
     }
 }
 
@@ -836,10 +836,10 @@ void Drillerdroid_State_Unknown12(void)
     RSDK_THIS(Drillerdroid);
 
     Drillerdroid_CheckPlayerCollisions();
-    entity->alpha -= 8;
-    if (entity->alpha <= 0) {
-        entity->alpha = 0;
-        entity->state = Drillerdroid_State_Unknown13;
+    self->alpha -= 8;
+    if (self->alpha <= 0) {
+        self->alpha = 0;
+        self->state = Drillerdroid_State_Unknown13;
     }
 }
 
@@ -847,14 +847,14 @@ void Drillerdroid_State_Unknown13(void)
 {
     RSDK_THIS(Drillerdroid);
 
-    entity->rotation -= 4;
+    self->rotation -= 4;
     Drillerdroid->field_2C[0] -= 0x10000;
     Drillerdroid->field_2C[1] -= 0x10000;
     Drillerdroid_CheckPlayerCollisions();
 
     if (!Drillerdroid->field_2C[0]) {
-        entity->timer = 30;
-        entity->state = Drillerdroid_State_Unknown14;
+        self->timer = 30;
+        self->state = Drillerdroid_State_Unknown14;
     }
 }
 
@@ -863,8 +863,8 @@ void Drillerdroid_State_Destroyed(void)
     RSDK_THIS(Drillerdroid);
 
     Drillerdroid_Explode();
-    if (!--entity->invincibilityTimer) {
-        EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, entity->position.x - 0x300000, entity->position.y);
+    if (!--self->invincibilityTimer) {
+        EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, self->position.x - 0x300000, self->position.y);
         RSDK.SetSpriteAnimation(Drillerdroid->aniFrames, 0, &debris->animator, true, 1);
         debris->velocity.x    = RSDK.Rand(-6, 6) << 15;
         debris->velocity.y    = RSDK.Rand(-10, -6) << 15;
@@ -873,7 +873,7 @@ void Drillerdroid_State_Destroyed(void)
         debris->updateRange.x = 0x400000;
         debris->updateRange.y = 0x400000;
 
-        debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, entity->position.x - 0x300000, entity->position.y);
+        debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, self->position.x - 0x300000, self->position.y);
         RSDK.SetSpriteAnimation(Drillerdroid->aniFrames, 0, &debris->animator, true, 2);
         debris->velocity.x    = RSDK.Rand(-6, 6) << 15;
         debris->velocity.y    = RSDK.Rand(0, 2) << 15;
@@ -882,7 +882,7 @@ void Drillerdroid_State_Destroyed(void)
         debris->updateRange.x = 0x400000;
         debris->updateRange.y = 0x400000;
 
-        debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, entity->position.x - 0x230000, entity->position.y);
+        debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, self->position.x - 0x230000, self->position.y);
         RSDK.SetSpriteAnimation(Drillerdroid->aniFrames, 0, &debris->animator, true, 1);
         debris->velocity.x    = RSDK.Rand(-6, 6) << 15;
         debris->velocity.y    = RSDK.Rand(-10, -6) << 15;
@@ -891,7 +891,7 @@ void Drillerdroid_State_Destroyed(void)
         debris->updateRange.x = 0x400000;
         debris->updateRange.y = 0x400000;
 
-        debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, entity->position.x - 0x230000, entity->position.y);
+        debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, self->position.x - 0x230000, self->position.y);
         RSDK.SetSpriteAnimation(Drillerdroid->aniFrames, 0, &debris->animator, true, 2);
         debris->velocity.x    = RSDK.Rand(-6, 6) << 15;
         debris->velocity.y    = RSDK.Rand(0, 2) << 15;
@@ -900,7 +900,7 @@ void Drillerdroid_State_Destroyed(void)
         debris->updateRange.x = 0x400000;
         debris->updateRange.y = 0x400000;
 
-        debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, entity->position.x + 0x300000, entity->position.y);
+        debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, self->position.x + 0x300000, self->position.y);
         RSDK.SetSpriteAnimation(Drillerdroid->aniFrames, 0, &debris->animator, true, 1);
         debris->velocity.x    = RSDK.Rand(-6, 6) << 15;
         debris->velocity.y    = RSDK.Rand(-10, -6) << 15;
@@ -909,7 +909,7 @@ void Drillerdroid_State_Destroyed(void)
         debris->updateRange.x = 0x400000;
         debris->updateRange.y = 0x400000;
 
-        debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, entity->position.x + 0x300000, entity->position.y);
+        debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, self->position.x + 0x300000, self->position.y);
         RSDK.SetSpriteAnimation(Drillerdroid->aniFrames, 0, &debris->animator, true, 2);
         debris->velocity.x    = RSDK.Rand(-6, 6) << 15;
         debris->velocity.y    = RSDK.Rand(0, 2) << 15;
@@ -918,7 +918,7 @@ void Drillerdroid_State_Destroyed(void)
         debris->updateRange.x = 0x400000;
         debris->updateRange.y = 0x400000;
 
-        debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, entity->position.x + 0x230000, entity->position.y);
+        debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, self->position.x + 0x230000, self->position.y);
         RSDK.SetSpriteAnimation(Drillerdroid->aniFrames, 0, &debris->animator, true, 1);
         debris->velocity.x    = RSDK.Rand(-6, 6) << 15;
         debris->velocity.y    = RSDK.Rand(-10, -6) << 15;
@@ -927,7 +927,7 @@ void Drillerdroid_State_Destroyed(void)
         debris->updateRange.x = 0x400000;
         debris->updateRange.y = 0x400000;
 
-        debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, entity->position.x + 0x230000, entity->position.y);
+        debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, self->position.x + 0x230000, self->position.y);
         RSDK.SetSpriteAnimation(Drillerdroid->aniFrames, 0, &debris->animator, true, 2);
         debris->velocity.x    = RSDK.Rand(-6, 6) << 15;
         debris->velocity.y    = RSDK.Rand(0, 2) << 15;
@@ -936,7 +936,7 @@ void Drillerdroid_State_Destroyed(void)
         debris->updateRange.x = 0x400000;
         debris->updateRange.y = 0x400000;
 
-        debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, entity->position.x, entity->position.y);
+        debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, self->position.x, self->position.y);
         RSDK.SetSpriteAnimation(Drillerdroid->aniFrames, 0, &debris->animator, true, 3);
         debris->velocity.x    = RSDK.Rand(-6, 6) << 15;
         debris->velocity.y    = RSDK.Rand(-10, -6) << 15;
@@ -945,7 +945,7 @@ void Drillerdroid_State_Destroyed(void)
         debris->updateRange.x = 0x400000;
         debris->updateRange.y = 0x400000;
 
-        debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, entity->position.x, entity->position.y);
+        debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, self->position.x, self->position.y);
         RSDK.SetSpriteAnimation(Drillerdroid->aniFrames, 0, &debris->animator, true, 5);
         debris->velocity.x    = RSDK.Rand(-6, 6) << 15;
         debris->velocity.y    = RSDK.Rand(-10, -6) << 15;
@@ -955,7 +955,7 @@ void Drillerdroid_State_Destroyed(void)
         debris->updateRange.y = 0x400000;
 
         if (Drillerdroid->armorHealth == 1) {
-            debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, entity->position.x, entity->position.y);
+            debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, self->position.x, self->position.y);
             RSDK.SetSpriteAnimation(Drillerdroid->aniFrames, 5, &debris->animator, true, 6);
             debris->velocity.x    = RSDK.Rand(-6, 6) << 15;
             debris->velocity.y    = RSDK.Rand(-10, -6) << 15;
@@ -964,7 +964,7 @@ void Drillerdroid_State_Destroyed(void)
             debris->updateRange.x = 0x400000;
             debris->updateRange.y = 0x400000;
 
-            debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, entity->position.x, entity->position.y);
+            debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, self->position.x, self->position.y);
             RSDK.SetSpriteAnimation(Drillerdroid->aniFrames, 5, &debris->animator, true, 6);
             debris->direction     = FLIP_X;
             debris->drawFX        = FX_FLIP;
@@ -975,8 +975,8 @@ void Drillerdroid_State_Destroyed(void)
             debris->updateRange.x = 0x400000;
             debris->updateRange.y = 0x400000;
 
-            int spawnX = entity->position.x - 0x300000;
-            debris     = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, spawnX, entity->position.y);
+            int spawnX = self->position.x - 0x300000;
+            debris     = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, spawnX, self->position.y);
             RSDK.SetSpriteAnimation(Drillerdroid->aniFrames, 5, &debris->animator, true, 7);
             debris->velocity.x    = RSDK.Rand(-6, 6) << 15;
             debris->velocity.y    = RSDK.Rand(-10, -6) << 15;
@@ -986,7 +986,7 @@ void Drillerdroid_State_Destroyed(void)
             debris->updateRange.y = 0x400000;
 
             spawnX += 0xD0000;
-            debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, spawnX, entity->position.y);
+            debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, spawnX, self->position.y);
             RSDK.SetSpriteAnimation(Drillerdroid->aniFrames, 5, &debris->animator, true, 7);
             debris->velocity.x    = RSDK.Rand(-6, 6) << 15;
             debris->velocity.y    = RSDK.Rand(-10, -6) << 15;
@@ -996,7 +996,7 @@ void Drillerdroid_State_Destroyed(void)
             debris->updateRange.y = 0x400000;
 
             spawnX += 0x530000;
-            debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, spawnX, entity->position.y);
+            debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, spawnX, self->position.y);
             RSDK.SetSpriteAnimation(Drillerdroid->aniFrames, 5, &debris->animator, true, 7);
             debris->velocity.x    = RSDK.Rand(-6, 6) << 15;
             debris->velocity.y    = RSDK.Rand(-10, -6) << 15;
@@ -1005,7 +1005,7 @@ void Drillerdroid_State_Destroyed(void)
             debris->updateRange.x = 0x400000;
             debris->updateRange.y = 0x400000;
 
-            debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, spawnX - 851968, entity->position.y);
+            debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, spawnX - 851968, self->position.y);
             RSDK.SetSpriteAnimation(Drillerdroid->aniFrames, 5, &debris->animator, true, 7);
             debris->velocity.x    = RSDK.Rand(-6, 6) << 15;
             debris->velocity.y    = RSDK.Rand(-10, -6) << 15;
@@ -1014,13 +1014,13 @@ void Drillerdroid_State_Destroyed(void)
             debris->updateRange.x = 0x400000;
             debris->updateRange.y = 0x400000;
         }
-        entity->velocity.x        = RSDK.Rand(-6, 6) << 15;
-        entity->velocity.y        = RSDK.Rand(-10, -6) << 15;
-        entity->animator1.frameID = 4;
-        entity->stateDraw         = Drillerdroid_StateDraw_Unknown2;
-        entity->state             = Drillerdroid_State_Finish;
+        self->velocity.x        = RSDK.Rand(-6, 6) << 15;
+        self->velocity.y        = RSDK.Rand(-10, -6) << 15;
+        self->animator1.frameID = 4;
+        self->stateDraw         = Drillerdroid_StateDraw_Unknown2;
+        self->state             = Drillerdroid_State_Finish;
 
-        foreach_active(SignPost, signPost) { signPost->position.x = entity->position.x; }
+        foreach_active(SignPost, signPost) { signPost->position.x = self->position.x; }
     }
 }
 
@@ -1028,16 +1028,16 @@ void Drillerdroid_State_Finish(void)
 {
     RSDK_THIS(Drillerdroid);
 
-    entity->position.x += entity->velocity.x;
-    entity->position.y += entity->velocity.y;
-    entity->velocity.y += 0x3800;
-    entity->visible ^= true;
+    self->position.x += self->velocity.x;
+    self->position.y += self->velocity.y;
+    self->velocity.y += 0x3800;
+    self->visible ^= true;
     Drillerdroid_Explode();
 
-    if (!RSDK.CheckOnScreen(entity, NULL)) {
+    if (!RSDK.CheckOnScreen(self, NULL)) {
         Music_TransitionTrack(TRACK_STAGE, 0.0125);
-        entity->timer = 0;
-        entity->state = Drillerdroid_State_DropSignPost;
+        self->timer = 0;
+        self->state = Drillerdroid_State_DropSignPost;
     }
 }
 
@@ -1045,7 +1045,7 @@ void Drillerdroid_State_DropSignPost(void)
 {
     RSDK_THIS(Drillerdroid);
 
-    if (++entity->timer == 60) {
+    if (++self->timer == 60) {
         foreach_all(SignPost, signPost)
         {
             signPost->active = ACTIVE_NORMAL;
@@ -1054,7 +1054,7 @@ void Drillerdroid_State_DropSignPost(void)
         }
 
         LRZ1Setup->fadeTimer = 1;
-        destroyEntity(entity);
+        destroyEntity(self);
     }
 }
 
@@ -1063,126 +1063,126 @@ void Drillerdroid_StateDraw_Unknown1(void)
     RSDK_THIS(Drillerdroid);
     Vector2 drawPos;
 
-    RSDK.SetLimitedFade(0, 1, 2, entity->alpha, 32, 41);
+    RSDK.SetLimitedFade(0, 1, 2, self->alpha, 32, 41);
 
-    if (entity->invincibilityTimer & 1) {
+    if (self->invincibilityTimer & 1) {
         RSDK.SetPaletteEntry(0, 32, 0xE0E0E0);
         RSDK.SetPaletteEntry(0, 128, 0xE0E0E0);
     }
-    entity->animator1.frameID = 1;
-    drawPos.x                 = entity->position.x - 0x300000;
-    drawPos.y                 = entity->position.y - Drillerdroid->field_2C[0];
-    RSDK.DrawSprite(&entity->animator1, &drawPos, false);
+    self->animator1.frameID = 1;
+    drawPos.x                 = self->position.x - 0x300000;
+    drawPos.y                 = self->position.y - Drillerdroid->field_2C[0];
+    RSDK.DrawSprite(&self->animator1, &drawPos, false);
 
-    entity->animator1.frameID = 2;
-    drawPos.y                 = entity->position.y + Drillerdroid->field_34[0];
-    RSDK.DrawSprite(&entity->animator1, &drawPos, false);
+    self->animator1.frameID = 2;
+    drawPos.y                 = self->position.y + Drillerdroid->field_34[0];
+    RSDK.DrawSprite(&self->animator1, &drawPos, false);
 
-    entity->animator1.frameID = 1;
+    self->animator1.frameID = 1;
     drawPos.x += 0xD0000;
-    drawPos.y = entity->position.y - Drillerdroid->field_2C[1];
-    RSDK.DrawSprite(&entity->animator1, &drawPos, false);
+    drawPos.y = self->position.y - Drillerdroid->field_2C[1];
+    RSDK.DrawSprite(&self->animator1, &drawPos, false);
 
-    entity->animator1.frameID = 2;
-    drawPos.y                 = entity->position.y + Drillerdroid->field_34[1];
-    RSDK.DrawSprite(&entity->animator1, &drawPos, false);
+    self->animator1.frameID = 2;
+    drawPos.y                 = self->position.y + Drillerdroid->field_34[1];
+    RSDK.DrawSprite(&self->animator1, &drawPos, false);
 
-    entity->animator1.frameID = 1;
+    self->animator1.frameID = 1;
     drawPos.x += 0x530000;
-    drawPos.y = entity->position.y - Drillerdroid->field_2C[0];
-    RSDK.DrawSprite(&entity->animator1, &drawPos, false);
+    drawPos.y = self->position.y - Drillerdroid->field_2C[0];
+    RSDK.DrawSprite(&self->animator1, &drawPos, false);
 
-    entity->animator1.frameID = 2;
-    drawPos.y                 = entity->position.y + Drillerdroid->field_34[0];
-    RSDK.DrawSprite(&entity->animator1, &drawPos, false);
+    self->animator1.frameID = 2;
+    drawPos.y                 = self->position.y + Drillerdroid->field_34[0];
+    RSDK.DrawSprite(&self->animator1, &drawPos, false);
 
-    entity->animator1.frameID = 1;
+    self->animator1.frameID = 1;
     drawPos.x -= 0xD0000;
-    drawPos.y = entity->position.y - Drillerdroid->field_2C[1];
-    RSDK.DrawSprite(&entity->animator1, &drawPos, false);
+    drawPos.y = self->position.y - Drillerdroid->field_2C[1];
+    RSDK.DrawSprite(&self->animator1, &drawPos, false);
 
-    entity->animator1.frameID = 2;
-    drawPos.y                 = entity->position.y + Drillerdroid->field_34[1];
-    RSDK.DrawSprite(&entity->animator1, &drawPos, false);
+    self->animator1.frameID = 2;
+    drawPos.y                 = self->position.y + Drillerdroid->field_34[1];
+    RSDK.DrawSprite(&self->animator1, &drawPos, false);
 
-    entity->animator1.frameID = 0;
-    RSDK.DrawSprite(&entity->animator1, NULL, false);
+    self->animator1.frameID = 0;
+    RSDK.DrawSprite(&self->animator1, NULL, false);
 
     switch (Drillerdroid->armorHealth) {
         case 1:
-            drawPos                   = entity->position;
-            entity->animator2.frameID = 6;
-            RSDK.DrawSprite(&entity->animator2, NULL, false);
+            drawPos                   = self->position;
+            self->animator2.frameID = 6;
+            RSDK.DrawSprite(&self->animator2, NULL, false);
 
-            entity->drawFX |= FX_FLIP;
-            entity->direction = FLIP_X;
-            RSDK.DrawSprite(&entity->animator2, NULL, false);
+            self->drawFX |= FX_FLIP;
+            self->direction = FLIP_X;
+            RSDK.DrawSprite(&self->animator2, NULL, false);
 
-            entity->direction         = FLIP_NONE;
-            entity->drawFX            = 0;
-            entity->animator2.frameID = 7;
+            self->direction         = FLIP_NONE;
+            self->drawFX            = 0;
+            self->animator2.frameID = 7;
             drawPos.x -= 0x300000;
             drawPos.y -= Drillerdroid->field_2C[0];
-            RSDK.DrawSprite(&entity->animator2, &drawPos, false);
+            RSDK.DrawSprite(&self->animator2, &drawPos, false);
 
             drawPos.x += 0xD0000;
-            drawPos.y = entity->position.y - Drillerdroid->field_2C[1];
-            RSDK.DrawSprite(&entity->animator2, &drawPos, false);
+            drawPos.y = self->position.y - Drillerdroid->field_2C[1];
+            RSDK.DrawSprite(&self->animator2, &drawPos, false);
 
             drawPos.x += 0x530000;
-            drawPos.y = entity->position.y - Drillerdroid->field_2C[0];
-            RSDK.DrawSprite(&entity->animator2, &drawPos, false);
+            drawPos.y = self->position.y - Drillerdroid->field_2C[0];
+            RSDK.DrawSprite(&self->animator2, &drawPos, false);
 
             drawPos.x -= 0xD0000;
-            drawPos.y = entity->position.y - Drillerdroid->field_2C[1];
+            drawPos.y = self->position.y - Drillerdroid->field_2C[1];
 
-            RSDK.DrawSprite(&entity->animator2, &drawPos, false);
+            RSDK.DrawSprite(&self->animator2, &drawPos, false);
             break;
         case 2:
-            drawPos.x                 = entity->position.x + 0x10000;
-            drawPos.y                 = entity->position.y - 0x140000;
-            entity->animator2.frameID = 4;
-            RSDK.DrawSprite(&entity->animator2, &drawPos, false);
+            drawPos.x                 = self->position.x + 0x10000;
+            drawPos.y                 = self->position.y - 0x140000;
+            self->animator2.frameID = 4;
+            RSDK.DrawSprite(&self->animator2, &drawPos, false);
 
-            entity->animator2.frameID = 5;
+            self->animator2.frameID = 5;
             //[Fallthrough]
         case 3:
             if (Drillerdroid->armorHealth == 3) {
-                drawPos.x                 = entity->position.x + 0x10000;
-                drawPos.y                 = entity->position.y - 0x140000;
-                entity->animator2.frameID = 0;
-                RSDK.DrawSprite(&entity->animator2, &drawPos, false);
+                drawPos.x                 = self->position.x + 0x10000;
+                drawPos.y                 = self->position.y - 0x140000;
+                self->animator2.frameID = 0;
+                RSDK.DrawSprite(&self->animator2, &drawPos, false);
 
-                entity->animator2.frameID = 1;
+                self->animator2.frameID = 1;
             }
-            RSDK.DrawSprite(&entity->animator2, &drawPos, false);
+            RSDK.DrawSprite(&self->animator2, &drawPos, false);
 
-            drawPos                   = entity->position;
-            entity->animator2.frameID = 2;
-            RSDK.DrawSprite(&entity->animator2, NULL, false);
+            drawPos                   = self->position;
+            self->animator2.frameID = 2;
+            RSDK.DrawSprite(&self->animator2, NULL, false);
 
-            entity->drawFX |= FX_FLIP;
-            entity->direction = FLIP_X;
-            RSDK.DrawSprite(&entity->animator2, NULL, false);
+            self->drawFX |= FX_FLIP;
+            self->direction = FLIP_X;
+            RSDK.DrawSprite(&self->animator2, NULL, false);
 
-            entity->direction         = FLIP_NONE;
-            entity->drawFX            = FX_NONE;
-            entity->animator2.frameID = 3;
+            self->direction         = FLIP_NONE;
+            self->drawFX            = FX_NONE;
+            self->animator2.frameID = 3;
             drawPos.x -= 0x300000;
             drawPos.y -= Drillerdroid->field_2C[0];
-            RSDK.DrawSprite(&entity->animator2, &drawPos, false);
+            RSDK.DrawSprite(&self->animator2, &drawPos, false);
 
             drawPos.x += 0xD0000;
-            drawPos.y = entity->position.y - Drillerdroid->field_2C[1];
-            RSDK.DrawSprite(&entity->animator2, &drawPos, false);
+            drawPos.y = self->position.y - Drillerdroid->field_2C[1];
+            RSDK.DrawSprite(&self->animator2, &drawPos, false);
 
             drawPos.x += 0x530000;
-            drawPos.y = entity->position.y - Drillerdroid->field_2C[0];
-            RSDK.DrawSprite(&entity->animator2, &drawPos, false);
+            drawPos.y = self->position.y - Drillerdroid->field_2C[0];
+            RSDK.DrawSprite(&self->animator2, &drawPos, false);
 
             drawPos.x -= 0xD0000;
-            drawPos.y = entity->position.y - Drillerdroid->field_2C[1];
-            RSDK.DrawSprite(&entity->animator2, &drawPos, false);
+            drawPos.y = self->position.y - Drillerdroid->field_2C[1];
+            RSDK.DrawSprite(&self->animator2, &drawPos, false);
             break;
     }
     RSDK.CopyPalette(1, 32, 0, 32, 10);
@@ -1193,42 +1193,42 @@ void Drillerdroid_StateDraw_Unknown1(void)
 void Drillerdroid_StateDraw_Unknown2(void)
 {
     RSDK_THIS(Drillerdroid);
-    RSDK.DrawSprite(&entity->animator1, NULL, false);
+    RSDK.DrawSprite(&self->animator1, NULL, false);
 }
 
 void Drillerdroid_State1_Unknown(void)
 {
     RSDK_THIS(Drillerdroid);
 
-    RSDK.ProcessAnimation(&entity->animator2);
-    RSDK.ProcessAnimation(&entity->animator3);
+    RSDK.ProcessAnimation(&self->animator2);
+    RSDK.ProcessAnimation(&self->animator3);
 
-    if (entity->target) {
-        entity->position.x = entity->target->position.x;
-        entity->position.y = entity->target->position.y;
+    if (self->target) {
+        self->position.x = self->target->position.x;
+        self->position.y = self->target->position.y;
     }
-    entity->alpha += 32;
-    entity->field_B0 -= 0x20000;
-    if (entity->field_B0 <= 0xC0000) {
-        entity->alpha    = 0;
-        entity->field_B0 = 0x2C0000;
+    self->alpha += 32;
+    self->field_B0 -= 0x20000;
+    if (self->field_B0 <= 0xC0000) {
+        self->alpha    = 0;
+        self->field_B0 = 0x2C0000;
     }
 
-    entity->field_B4 = entity->field_B0;
-    if (++entity->timer == 60)
-        RSDK.SetSpriteAnimation(Drillerdroid->aniFrames, 4, &entity->animator3, true, 0);
+    self->field_B4 = self->field_B0;
+    if (++self->timer == 60)
+        RSDK.SetSpriteAnimation(Drillerdroid->aniFrames, 4, &self->animator3, true, 0);
 
-    if (entity->timer == 96) {
-        entity->target                 = NULL;
-        Drillerdroid->boss->position.x = entity->position.x;
+    if (self->timer == 96) {
+        self->target                 = NULL;
+        Drillerdroid->boss->position.x = self->position.x;
 
-        if (entity->position.x < (Zone->screenBoundsL1[0] + 64) << 16 || entity->position.x > (Zone->screenBoundsR1[0] - 64) << 16)
+        if (self->position.x < (Zone->screenBoundsL1[0] + 64) << 16 || self->position.x > (Zone->screenBoundsR1[0] - 64) << 16)
             Drillerdroid->boss->position.x = (Zone->screenBoundsL1[0] + 64) << 16;
-        else if (entity->position.x > (Zone->screenBoundsR1[0] - 64) << 16)
+        else if (self->position.x > (Zone->screenBoundsR1[0] - 64) << 16)
             Drillerdroid->boss->position.x = (Zone->screenBoundsR1[0] - 64) << 16;
     }
-    if (entity->timer == 128)
-        destroyEntity(entity);
+    if (self->timer == 128)
+        destroyEntity(self);
 }
 
 void Drillerdroid_StateDraw1_Unknown(void)
@@ -1236,48 +1236,48 @@ void Drillerdroid_StateDraw1_Unknown(void)
     RSDK_THIS(Drillerdroid);
     Vector2 drawPos;
 
-    int x = ((entity->position.x + 0x400000) & 0xFF800000) - 0x400000;
+    int x = ((self->position.x + 0x400000) & 0xFF800000) - 0x400000;
     if (!(Zone->timer & 8)) {
-        RSDK.DrawLine(x + 0x10000, entity->position.y, x + 0x7F0000, entity->position.y, 0xE0E0E0, 192, INK_ADD, false);
-        RSDK.DrawLine(x, entity->position.y - 0x80000, x, entity->position.y + 0x80000, 0xE0E0E0, 160, INK_ADD, false);
-        RSDK.DrawLine(x + 0x800000, entity->position.y - 0x80000, x + 0x800000, entity->position.y + 0x80000, 0xE0E0E0, 160, INK_ADD, false);
+        RSDK.DrawLine(x + 0x10000, self->position.y, x + 0x7F0000, self->position.y, 0xE0E0E0, 192, INK_ADD, false);
+        RSDK.DrawLine(x, self->position.y - 0x80000, x, self->position.y + 0x80000, 0xE0E0E0, 160, INK_ADD, false);
+        RSDK.DrawLine(x + 0x800000, self->position.y - 0x80000, x + 0x800000, self->position.y + 0x80000, 0xE0E0E0, 160, INK_ADD, false);
     }
 
-    entity->animator1.frameID = 0;
-    entity->inkEffect         = INK_ALPHA;
-    entity->direction         = FLIP_NONE;
-    drawPos.x                 = entity->position.x;
-    drawPos.y                 = entity->position.y;
-    drawPos.x                 = entity->position.x - entity->field_B0;
-    drawPos.y -= entity->field_B4;
-    RSDK.DrawSprite(&entity->animator1, &drawPos, false);
+    self->animator1.frameID = 0;
+    self->inkEffect         = INK_ALPHA;
+    self->direction         = FLIP_NONE;
+    drawPos.x                 = self->position.x;
+    drawPos.y                 = self->position.y;
+    drawPos.x                 = self->position.x - self->field_B0;
+    drawPos.y -= self->field_B4;
+    RSDK.DrawSprite(&self->animator1, &drawPos, false);
 
-    entity->direction = FLIP_X;
-    drawPos.x         = entity->position.x;
-    drawPos.y         = entity->position.y;
-    drawPos.x         = entity->field_B0 + entity->position.x;
-    drawPos.y -= entity->field_B4;
-    RSDK.DrawSprite(&entity->animator1, &drawPos, false);
+    self->direction = FLIP_X;
+    drawPos.x         = self->position.x;
+    drawPos.y         = self->position.y;
+    drawPos.x         = self->field_B0 + self->position.x;
+    drawPos.y -= self->field_B4;
+    RSDK.DrawSprite(&self->animator1, &drawPos, false);
 
-    entity->animator1.frameID = 1;
-    entity->direction         = FLIP_NONE;
-    drawPos.x                 = entity->position.x;
-    drawPos.y                 = entity->position.y;
-    drawPos.x                 = entity->position.x - entity->field_B0;
-    drawPos.y += entity->field_B4;
-    RSDK.DrawSprite(&entity->animator1, &drawPos, false);
+    self->animator1.frameID = 1;
+    self->direction         = FLIP_NONE;
+    drawPos.x                 = self->position.x;
+    drawPos.y                 = self->position.y;
+    drawPos.x                 = self->position.x - self->field_B0;
+    drawPos.y += self->field_B4;
+    RSDK.DrawSprite(&self->animator1, &drawPos, false);
 
-    entity->direction = FLIP_X;
-    drawPos.x         = entity->position.x;
-    drawPos.y         = entity->position.y;
-    drawPos.x         = entity->field_B0 + entity->position.x;
-    drawPos.y += entity->field_B4;
-    RSDK.DrawSprite(&entity->animator1, &drawPos, false);
+    self->direction = FLIP_X;
+    drawPos.x         = self->position.x;
+    drawPos.y         = self->position.y;
+    drawPos.x         = self->field_B0 + self->position.x;
+    drawPos.y += self->field_B4;
+    RSDK.DrawSprite(&self->animator1, &drawPos, false);
 
-    entity->inkEffect = INK_NONE;
-    entity->direction = FLIP_NONE;
-    RSDK.DrawSprite(&entity->animator2, NULL, false);
-    RSDK.DrawSprite(&entity->animator3, NULL, false);
+    self->inkEffect = INK_NONE;
+    self->direction = FLIP_NONE;
+    RSDK.DrawSprite(&self->animator2, NULL, false);
+    RSDK.DrawSprite(&self->animator3, NULL, false);
 }
 
 #if RETRO_INCLUDE_EDITOR
@@ -1302,17 +1302,17 @@ void Drillerdroid_EditorDraw(void)
     Drillerdroid->field_5C[3] = 1;
     Drillerdroid->field_5C[4] = 1;
 
-    if (entity->type) {
-        if (entity->type == DRILLERDROID_TARGET || entity->type == DRILLERDROID_UNKNOWN) {
-            RSDK.SetSpriteAnimation(Drillerdroid->aniFrames, 2, &entity->animator1, true, 0);
-            RSDK.SetSpriteAnimation(Drillerdroid->aniFrames, 3, &entity->animator2, true, 0);
+    if (self->type) {
+        if (self->type == DRILLERDROID_TARGET || self->type == DRILLERDROID_UNKNOWN) {
+            RSDK.SetSpriteAnimation(Drillerdroid->aniFrames, 2, &self->animator1, true, 0);
+            RSDK.SetSpriteAnimation(Drillerdroid->aniFrames, 3, &self->animator2, true, 0);
             Drillerdroid_StateDraw1_Unknown();
         }
     }
     else {
-        entity->drawFX        = FX_NONE;
-        RSDK.SetSpriteAnimation(Drillerdroid->aniFrames, 0, &entity->animator1, true, 0);
-        RSDK.SetSpriteAnimation(Drillerdroid->aniFrames, 5, &entity->animator2, true, 0);
+        self->drawFX        = FX_NONE;
+        RSDK.SetSpriteAnimation(Drillerdroid->aniFrames, 0, &self->animator1, true, 0);
+        RSDK.SetSpriteAnimation(Drillerdroid->aniFrames, 5, &self->animator2, true, 0);
         Drillerdroid_StateDraw_Unknown1();
 
         DrawHelpers_DrawArenaBounds(0x00C0F0, 1 | 2 | 4 | 8, -328, -SCREEN_YSIZE, 324, 96);

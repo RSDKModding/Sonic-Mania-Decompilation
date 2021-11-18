@@ -7,50 +7,50 @@ void UITAZoneModule_Update(void)
     RSDK_THIS(UITAZoneModule);
     UITAZoneModule_Setup();
 
-    entity->active = ACTIVE_NORMAL;
-    if (entity->disabled != entity->wasDisabled) {
+    self->active = ACTIVE_NORMAL;
+    if (self->disabled != self->wasDisabled) {
         UITAZoneModule_SetupText();
-        entity->wasDisabled = entity->disabled;
+        self->wasDisabled = self->disabled;
     }
-    entity->drawPos = entity->position;
+    self->drawPos = self->position;
 
 #if !RETRO_USE_PLUS
-    if (entity->id != entity->field_138_2)
-        entity->field_138_2 = entity->id;
-    if (entity->value) {
-        entity->field_140++;
-        entity->position.y = entity->posUnknown2.y + (entity->id >> 2);
+    if (self->id != self->field_138_2)
+        self->field_138_2 = self->id;
+    if (self->value) {
+        self->field_140++;
+        self->position.y = self->posUnknown2.y + (self->id >> 2);
     }
 
-    if (entity->announceTimer) {
-        --entity->announceTimer;
-        if (entity->announceTimer == 121) {
+    if (self->announceTimer) {
+        --self->announceTimer;
+        if (self->announceTimer == 121) {
             RSDK.PlaySfx(UIWidgets->sfxEvent, false, 0xFF);
         }
-        if (entity->announceTimer == 30) {
-            if (entity->field_138 == 1) {
+        if (self->announceTimer == 30) {
+            if (self->field_138 == 1) {
                 RSDK.PlaySfx(Announcer->sfxNewRecordTop, false, 0xFF);
             }
-            else if (entity->field_138 <= 3) {
+            else if (self->field_138 <= 3) {
                 RSDK.PlaySfx(Announcer->sfxNewRecordMid, false, 0xFF);
             }
         }
     }
 
-    entity->drawPos.y = entity->position.y - (entity->field_138_2 >> 1);
+    self->drawPos.y = self->position.y - (self->field_138_2 >> 1);
 #endif
 
-    StateMachine_Run(entity->state);
+    StateMachine_Run(self->state);
 
-    entity->field_12C++;
-    if (entity->field_12C >= 192)
-        entity->field_12C -= 192;
+    self->field_12C++;
+    if (self->field_12C >= 192)
+        self->field_12C -= 192;
 
-    EntityUIControl *parent = (EntityUIControl *)entity->parent;
-    if (entity->state == UITAZoneModule_Unknown17
-        && (parent->buttons[parent->field_D8] != (EntityUIButton *)entity || parent->state != UIControl_ProcessInputs)) {
-        entity->flag  = false;
-        entity->state = UITAZoneModule_Unknown16;
+    EntityUIControl *parent = (EntityUIControl *)self->parent;
+    if (self->state == UITAZoneModule_Unknown17
+        && (parent->buttons[parent->field_D8] != (EntityUIButton *)self || parent->state != UIControl_ProcessInputs)) {
+        self->flag  = false;
+        self->state = UITAZoneModule_Unknown16;
     }
 }
 
@@ -83,11 +83,11 @@ void UITAZoneModule_Draw(void)
 #if !RETRO_USE_PLUS
     RSDK_THIS(UITAZoneModule);
     
-    if (entity->field_138_2 >= 1) {
-        RSDK.SetClipBounds(SceneInfo->currentScreenID, ((entity->drawPos.x - 0x990000) >> 16) - ScreenInfo->position.x,
-                           ((entity->drawPos.y + 0x240000) >> 16) - 16 - ScreenInfo->position.y,
-                           ((entity->drawPos.x - 0x990000) >> 16) + 306 - ScreenInfo->position.x,
-                           ((entity->drawPos.y + 0x240000 + entity->field_138_2) >> 16) - ScreenInfo->position.y);
+    if (self->field_138_2 >= 1) {
+        RSDK.SetClipBounds(SceneInfo->currentScreenID, ((self->drawPos.x - 0x990000) >> 16) - ScreenInfo->position.x,
+                           ((self->drawPos.y + 0x240000) >> 16) - 16 - ScreenInfo->position.y,
+                           ((self->drawPos.x - 0x990000) >> 16) + 306 - ScreenInfo->position.x,
+                           ((self->drawPos.y + 0x240000 + self->field_138_2) >> 16) - ScreenInfo->position.y);
         UITAZoneModule_Unknown7();
         RSDK.SetClipBounds(SceneInfo->currentScreenID, 0, 0, ScreenInfo->width, ScreenInfo->height);
     }
@@ -97,21 +97,21 @@ void UITAZoneModule_Draw(void)
 void UITAZoneModule_Create(void *data)
 {
     RSDK_THIS(UITAZoneModule);
-    entity->posUnknown2.x   = entity->position.x;
-    entity->posUnknown2.y   = entity->position.y;
-    entity->active          = ACTIVE_BOUNDS;
-    entity->drawOrder       = 2;
-    entity->visible         = true;
-    entity->drawFX          = FX_FLIP;
-    entity->updateRange.x   = 0x800000;
-    entity->updateRange.y   = 0x300000;
-    entity->processButtonCB = UIButton_Unknown6;
-    entity->state           = UITAZoneModule_Unknown15;
+    self->posUnknown2.x   = self->position.x;
+    self->posUnknown2.y   = self->position.y;
+    self->active          = ACTIVE_BOUNDS;
+    self->drawOrder       = 2;
+    self->visible         = true;
+    self->drawFX          = FX_FLIP;
+    self->updateRange.x   = 0x800000;
+    self->updateRange.y   = 0x300000;
+    self->processButtonCB = UIButton_Unknown6;
+    self->state           = UITAZoneModule_Unknown15;
     if (!SceneInfo->inEditor) {
-        RSDK.SetText(&entity->text3, "", false);
-        RSDK.SetText(&entity->text4, "", false);
-        RSDK.CopyString(&entity->text3, &entity->text1);
-        RSDK.CopyString(&entity->text4, &entity->text2);
+        RSDK.SetText(&self->text3, "", false);
+        RSDK.SetText(&self->text4, "", false);
+        RSDK.CopyString(&self->text3, &self->text1);
+        RSDK.CopyString(&self->text4, &self->text2);
     }
     UITAZoneModule_SetupText();
 }
@@ -128,45 +128,45 @@ void UITAZoneModule_StageLoad(void)
 void UITAZoneModule_Setup(void)
 {
     RSDK_THIS(UITAZoneModule);
-    entity->touchPosEnd.x = 0;
-    entity->touchPosEnd.y = 0;
-    entity->options7      = UITAZoneModule_Options7CB;
-    entity->options8      = UITAZoneModule_Options8CB;
-    if (entity->processButtonCB == UIButton_Unknown6) {
-        entity->touchPosStart.x = 0x1380000;
-        entity->touchPosStart.y = 0x4E0000;
-        entity->touchCB         = UIButton_ProcessTouch;
-        entity->options3        = UITAZoneModule_Options3CB;
-        entity->failCB          = UITAZoneModule_FailCB;
-        entity->options5        = UITAZoneModule_Options5CB;
-        entity->options6        = UITAZoneModule_Options6CB;
+    self->touchPosEnd.x = 0;
+    self->touchPosEnd.y = 0;
+    self->options7      = UITAZoneModule_Options7CB;
+    self->options8      = UITAZoneModule_Options8CB;
+    if (self->processButtonCB == UIButton_Unknown6) {
+        self->touchPosStart.x = 0x1380000;
+        self->touchPosStart.y = 0x4E0000;
+        self->touchCB         = UIButton_ProcessTouch;
+        self->options3        = UITAZoneModule_Options3CB;
+        self->failCB          = UITAZoneModule_FailCB;
+        self->options5        = UITAZoneModule_Options5CB;
+        self->options6        = UITAZoneModule_Options6CB;
     }
 #if !RETRO_USE_PLUS
-    else if (entity->processButtonCB == UITAZoneModule_Unknown24) {
-        entity->touchPos1[0].x       = 0x9C0000;
-        entity->touchPos1[0].y       = 0x2C0000;
-        entity->touchPos1[1].x       = 0x9C0000;
-        entity->touchPos1[1].y       = 0x2C0000;
-        entity->touchPos2[0].x       = -0x4E0000;
-        entity->touchPos2[1].x       = 0x4E0000;
-        entity->touchPosCallbacks[0] = UITAZoneModule_Unknown22;
-        entity->touchPosCallbacks[1] = UITAZoneModule_Unknown23;
-        entity->touchPosCount        = 2;
-        entity->options5             = StateMachine_None;
-        entity->options6             = StateMachine_None;
-        entity->touchCB              = UIButton_TouchCB_Alt;
-        entity->options3             = StateMachine_None;
-        entity->failCB               = StateMachine_None;
+    else if (self->processButtonCB == UITAZoneModule_Unknown24) {
+        self->touchPos1[0].x       = 0x9C0000;
+        self->touchPos1[0].y       = 0x2C0000;
+        self->touchPos1[1].x       = 0x9C0000;
+        self->touchPos1[1].y       = 0x2C0000;
+        self->touchPos2[0].x       = -0x4E0000;
+        self->touchPos2[1].x       = 0x4E0000;
+        self->touchPosCallbacks[0] = UITAZoneModule_Unknown22;
+        self->touchPosCallbacks[1] = UITAZoneModule_Unknown23;
+        self->touchPosCount        = 2;
+        self->options5             = StateMachine_None;
+        self->options6             = StateMachine_None;
+        self->touchCB              = UIButton_TouchCB_Alt;
+        self->options3             = StateMachine_None;
+        self->failCB               = StateMachine_None;
     }
 #endif
     else {
-        entity->touchPosStart.x = 0;
-        entity->touchPosStart.y = 0;
-        entity->touchPosCount   = 0;
-        entity->options3        = StateMachine_None;
-        entity->failCB          = StateMachine_None;
-        entity->options5        = StateMachine_None;
-        entity->options6        = StateMachine_None;
+        self->touchPosStart.x = 0;
+        self->touchPosStart.y = 0;
+        self->touchPosCount   = 0;
+        self->options3        = StateMachine_None;
+        self->failCB          = StateMachine_None;
+        self->options5        = StateMachine_None;
+        self->options6        = StateMachine_None;
     }
 }
 
@@ -174,26 +174,26 @@ void UITAZoneModule_SetupText(void)
 {
     RSDK_THIS(UITAZoneModule);
     if (!SceneInfo->inEditor) {
-        if (!entity->text1.text)
-            RSDK.SetText(&entity->text1, "", 0);
-        if (!entity->text2.text)
-            RSDK.SetText(&entity->text2, "", 0);
-        RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 3, &entity->animator5, false, 0);
-        RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 3, &entity->animator6, false, 0);
-        if (entity->disabled) {
-            RSDK.PrependText(&entity->text1, "???");
-            RSDK.PrependText(&entity->text2, "");
-            entity->text2.textLength = 0;
+        if (!self->text1.text)
+            RSDK.SetText(&self->text1, "", 0);
+        if (!self->text2.text)
+            RSDK.SetText(&self->text2, "", 0);
+        RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 3, &self->animator5, false, 0);
+        RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 3, &self->animator6, false, 0);
+        if (self->disabled) {
+            RSDK.PrependText(&self->text1, "???");
+            RSDK.PrependText(&self->text2, "");
+            self->text2.textLength = 0;
         }
         else {
-            RSDK.CopyString(&entity->text1, &entity->text3);
-            RSDK.CopyString(&entity->text2, &entity->text4);
+            RSDK.CopyString(&self->text1, &self->text3);
+            RSDK.CopyString(&self->text2, &self->text4);
         }
-        RSDK.SetSpriteString(UIWidgets->uiSpriteIndex, 3, &entity->text1);
-        RSDK.SetSpriteString(UIWidgets->uiSpriteIndex, 3, &entity->text2);
+        RSDK.SetSpriteString(UIWidgets->uiSpriteIndex, 3, &self->text1);
+        RSDK.SetSpriteString(UIWidgets->uiSpriteIndex, 3, &self->text2);
     }
-    RSDK.SetSpriteAnimation(UITAZoneModule->aniFrames, 10, &entity->animator2, false, 0);
-    RSDK.SetSpriteAnimation(UITAZoneModule->aniFrames, 11, &entity->animator1, true, entity->zoneID);
+    RSDK.SetSpriteAnimation(UITAZoneModule->aniFrames, 10, &self->animator2, false, 0);
+    RSDK.SetSpriteAnimation(UITAZoneModule->aniFrames, 11, &self->animator1, true, self->zoneID);
 }
 
 void UITAZoneModule_Unknown3(void)
@@ -202,34 +202,34 @@ void UITAZoneModule_Unknown3(void)
 
     uint32 colour = 0x5FA0B0;
 #if RETRO_USE_PLUS
-    if (entity->isEncore)
+    if (self->isEncore)
         colour = 0xF26C4F;
 #endif
 
-    int32 drawY = entity->drawPos.y + 0x230000;
-    UIWidgets_Unknown5(88, -71, 112, 224, entity->drawPos.x + 0x790000, drawY);
+    int32 drawY = self->drawPos.y + 0x230000;
+    UIWidgets_Unknown5(88, -71, 112, 224, self->drawPos.x + 0x790000, drawY);
 
-    RSDK.DrawRect(entity->drawPos.x + 0x790000, drawY - 0x480000, 0x200000, 0x480000, 0x5870E0, 255, INK_NONE, false);
-    RSDK.DrawRect(entity->drawPos.x - 0x990000, entity->drawPos.y - 0x1C0000, 0x1320000, 0x2C0000, 0, 255, INK_NONE, false);
+    RSDK.DrawRect(self->drawPos.x + 0x790000, drawY - 0x480000, 0x200000, 0x480000, 0x5870E0, 255, INK_NONE, false);
+    RSDK.DrawRect(self->drawPos.x - 0x990000, self->drawPos.y - 0x1C0000, 0x1320000, 0x2C0000, 0, 255, INK_NONE, false);
 
-    UIWidgets_Unknown5((colour >> 16) & 0xFF, -71, (colour >> 8) & 0xFF, colour & 0xFF, entity->drawPos.x + 0x990000, entity->drawPos.y + 0x230000);
+    UIWidgets_Unknown5((colour >> 16) & 0xFF, -71, (colour >> 8) & 0xFF, colour & 0xFF, self->drawPos.x + 0x990000, self->drawPos.y + 0x230000);
 
 #if RETRO_USE_PLUS
     if (!SceneInfo->inEditor)
-        UIWidgets_Unknown3(78, 312, entity->position.x + 0x30000, entity->position.y + 0x30000);
+        UIWidgets_Unknown3(78, 312, self->position.x + 0x30000, self->position.y + 0x30000);
 
-    if (entity->flag)
-        UIWidgets_Unknown4(78, 312, entity->position.x, entity->position.y);
+    if (self->flag)
+        UIWidgets_Unknown4(78, 312, self->position.x, self->position.y);
     else
-        UIWidgets_Unknown2(78, 312, entity->position.x, entity->position.y);
+        UIWidgets_Unknown2(78, 312, self->position.x, self->position.y);
 #else
     if (!SceneInfo->inEditor)
-        UIWidgets_Unknown3(78 + (entity->field_138_2 >> 16), 312, entity->position.x + 0x30000, entity->position.y + 0x30000);
+        UIWidgets_Unknown3(78 + (self->field_138_2 >> 16), 312, self->position.x + 0x30000, self->position.y + 0x30000);
 
-    if (entity->flag || entity->value)
-        UIWidgets_Unknown4(78 + (entity->field_138_2 >> 16), 312, entity->position.x, entity->position.y);
+    if (self->flag || self->value)
+        UIWidgets_Unknown4(78 + (self->field_138_2 >> 16), 312, self->position.x, self->position.y);
     else
-        UIWidgets_Unknown2(78 + (entity->field_138_2 >> 16), 312, entity->position.x, entity->position.y);
+        UIWidgets_Unknown2(78 + (self->field_138_2 >> 16), 312, self->position.x, self->position.y);
 #endif
 }
 
@@ -237,10 +237,10 @@ void UITAZoneModule_Unknown4(void)
 {
     RSDK_THIS(UITAZoneModule);
     Vector2 drawPos;
-    drawPos     = entity->drawPos;
+    drawPos     = self->drawPos;
     uint32 colour = 0xF0F0F0;
 #if RETRO_USE_PLUS
-    if (entity->isEncore)
+    if (self->isEncore)
         colour = 0xF26C4F;
 #endif
     drawPos.x -= 0x390000;
@@ -248,11 +248,11 @@ void UITAZoneModule_Unknown4(void)
     RSDK.DrawRect(drawPos.x, drawPos.y, 0x840000, 0xD0000, colour, 255, INK_NONE, false);
 
 #if RETRO_USE_PLUS
-    RSDK.SetSpriteAnimation(UITAZoneModule->aniFrames, 9, &entity->animator3, true, (entity->isEncore != 0) + 10);
+    RSDK.SetSpriteAnimation(UITAZoneModule->aniFrames, 9, &self->animator3, true, (self->isEncore != 0) + 10);
 #else
-    RSDK.SetSpriteAnimation(UITAZoneModule->aniFrames, 9, &entity->animator3, true, 10);
+    RSDK.SetSpriteAnimation(UITAZoneModule->aniFrames, 9, &self->animator3, true, 10);
 #endif
-    RSDK.DrawSprite(&entity->animator3, &drawPos, false);
+    RSDK.DrawSprite(&self->animator3, &drawPos, false);
 
 #if RETRO_USE_PLUS
     drawPos = UIWidgets_Unknown10(colour, 0xF0D808, drawPos.x + 0x840000, drawPos.y);
@@ -268,25 +268,25 @@ void UITAZoneModule_Unknown4(void)
     drawPos.y -= 0xC0000;
     RSDK.DrawRect(drawPos.x, drawPos.y, 0x680000, 0xD0000, 0xE82858, 0xFF, INK_NONE, false);
 
-    drawPos.x = entity->drawPos.x + 0x430000;
-    drawPos.y = (entity->drawPos.y + 0xD0000) + 0x100000;
-    RSDK.SetSpriteAnimation(UITAZoneModule->aniFrames, 9, &entity->animator3, true, 9);
-    RSDK.DrawSprite(&entity->animator3, &drawPos, false);
+    drawPos.x = self->drawPos.x + 0x430000;
+    drawPos.y = (self->drawPos.y + 0xD0000) + 0x100000;
+    RSDK.SetSpriteAnimation(UITAZoneModule->aniFrames, 9, &self->animator3, true, 9);
+    RSDK.DrawSprite(&self->animator3, &drawPos, false);
 
     drawPos.x += 0x100000;
     drawPos.y -= 0x20000;
-    if (SceneInfo->inEditor || !entity->characterID) {
+    if (SceneInfo->inEditor || !self->characterID) {
         UITAZoneModule_DrawTime(&drawPos, 0, 0, 0);
     }
     else {
-        uint16 *records1 = TimeAttackData_GetRecordedTime(entity->zoneID, 0, entity->characterID, 1);
-        uint16 *records2 = TimeAttackData_GetRecordedTime(entity->zoneID, 1, entity->characterID, 1);
+        uint16 *records1 = TimeAttackData_GetRecordedTime(self->zoneID, 0, self->characterID, 1);
+        uint16 *records2 = TimeAttackData_GetRecordedTime(self->zoneID, 1, self->characterID, 1);
 
         int32 time = records1[0] + records2[0];
 
         if (records1[0] && records2[0])
             UITAZoneModule_DrawTime(&drawPos, time / 6000, time % 6000 / 100, time % 100);
-        else if (entity->characterID != 3 && records1[0] && entity->zoneID == 7)
+        else if (self->characterID != 3 && records1[0] && self->zoneID == 7)
             UITAZoneModule_DrawTime(&drawPos, time / 6000, time % 6000 / 100, time % 100);
         else
             UITAZoneModule_DrawTime(&drawPos, 0, 0, 0);
@@ -299,35 +299,35 @@ void UITAZoneModule_Unknown5(void)
     RSDK_THIS(UITAZoneModule);
     Vector2 drawPos;
 
-    drawPos.x = entity->drawPos.x - 0x690000;
-    drawPos.y = entity->drawPos.y;
+    drawPos.x = self->drawPos.x - 0x690000;
+    drawPos.y = self->drawPos.y;
     UIWidgets_Unknown2(72, 96, drawPos.x, drawPos.y);
-    if (SceneInfo->inEditor || !entity->flag || entity->disabled) {
-        entity->direction = entity->field_138;
-        entity->drawFX    = FX_FLIP;
-        RSDK.DrawSprite(&entity->animator2, &drawPos, false);
+    if (SceneInfo->inEditor || !self->flag || self->disabled) {
+        self->direction = self->field_138;
+        self->drawFX    = FX_FLIP;
+        RSDK.DrawSprite(&self->animator2, &drawPos, false);
 
-        entity->direction = FLIP_NONE;
-        entity->drawFX    = FX_NONE;
+        self->direction = FLIP_NONE;
+        self->drawFX    = FX_NONE;
     }
     else {
-        SpriteFrame *frame = RSDK.GetFrame(UITAZoneModule->aniFrames, 11, entity->zoneID);
+        SpriteFrame *frame = RSDK.GetFrame(UITAZoneModule->aniFrames, 11, self->zoneID);
         frame->pivotX      = -45;
         frame->width       = 90;
-        frame->sprX        = entity->field_12C;
+        frame->sprX        = self->field_12C;
 
-        if (entity->field_12C <= 102) {
-            RSDK.DrawSprite(&entity->animator1, &drawPos, false);
+        if (self->field_12C <= 102) {
+            RSDK.DrawSprite(&self->animator1, &drawPos, false);
         }
         else {
-            int32 width    = entity->field_12C - 102;
+            int32 width    = self->field_12C - 102;
             frame->width = 90 - width;
-            RSDK.DrawSprite(&entity->animator1, &drawPos, false);
+            RSDK.DrawSprite(&self->animator1, &drawPos, false);
 
             frame->pivotX += frame->width;
             frame->sprX  = 0;
             frame->width = width;
-            RSDK.DrawSprite(&entity->animator1, &drawPos, false);
+            RSDK.DrawSprite(&self->animator1, &drawPos, false);
         }
     }
 }
@@ -337,26 +337,26 @@ void UITAZoneModule_Unknown6(void)
     RSDK_THIS(UITAZoneModule);
     Vector2 drawPos;
 
-    drawPos = entity->position;
+    drawPos = self->position;
     UITAZoneModule_Unknown4();
     UITAZoneModule_Unknown5();
 
-    drawPos.x = entity->drawPos.x;
-    drawPos.y = entity->drawPos.y;
-    if (entity->state != UITAZoneModule_Unknown18 || !(entity->timer & 2)) {
+    drawPos.x = self->drawPos.x;
+    drawPos.y = self->drawPos.y;
+    if (self->state != UITAZoneModule_Unknown18 || !(self->timer & 2)) {
         if (!SceneInfo->inEditor) {
-            drawPos.x = entity->drawPos.x - 0x370000;
-            if (entity->text2.textLength) {
-                drawPos.y = entity->drawPos.y - 0x160000;
-                RSDK.DrawText(&entity->animator5, &drawPos, &entity->text1, 0, entity->text1.textLength, ALIGN_LEFT, 0, 2, 0, false);
+            drawPos.x = self->drawPos.x - 0x370000;
+            if (self->text2.textLength) {
+                drawPos.y = self->drawPos.y - 0x160000;
+                RSDK.DrawText(&self->animator5, &drawPos, &self->text1, 0, self->text1.textLength, ALIGN_LEFT, 0, 2, 0, false);
 
                 drawPos.y += 0x1C0000;
                 drawPos.x += 0x200000;
-                RSDK.DrawText(&entity->animator6, &drawPos, &entity->text2, 0, entity->text2.textLength, ALIGN_LEFT, 0, 2, 0, false);
+                RSDK.DrawText(&self->animator6, &drawPos, &self->text2, 0, self->text2.textLength, ALIGN_LEFT, 0, 2, 0, false);
             }
             else {
-                drawPos.y = entity->drawPos.y - 0x60000;
-                RSDK.DrawText(&entity->animator5, &drawPos, &entity->text1, 0, entity->text1.textLength, ALIGN_LEFT, 0, 2, 0, false);
+                drawPos.y = self->drawPos.y - 0x60000;
+                RSDK.DrawText(&self->animator5, &drawPos, &self->text1, 0, self->text1.textLength, ALIGN_LEFT, 0, 2, 0, false);
             }
         }
     }
@@ -367,59 +367,59 @@ void UITAZoneModule_FailCB(void) { RSDK.PlaySfx(UIWidgets->sfxFail, false, 255);
 void UITAZoneModule_Options3CB(void)
 {
     RSDK_THIS(UITAZoneModule);
-    entity->timer = 0;
-    entity->state = UITAZoneModule_Unknown18;
+    self->timer = 0;
+    self->state = UITAZoneModule_Unknown18;
 #if !RETRO_USE_PLUS
-    EntityUIControl *parent = (EntityUIControl *)entity->parent;
+    EntityUIControl *parent = (EntityUIControl *)self->parent;
     parent->childHasFocus   = true;
     foreach_all(UITAZoneModule, module)
     {
-        if (module != entity)
+        if (module != self)
             module->state = UITAZoneModule_Unknown29;
     }
 #endif
     RSDK.PlaySfx(UIWidgets->sfxAccept, false, 255);
 #if RETRO_USE_PLUS
     if (TimeAttackMenu->encoreMode)
-        RSDK.CopyPalette(((entity->zoneID % 12) >> 3) + 4, (32 * (entity->zoneID % 12)), 0, 224, 32);
+        RSDK.CopyPalette(((self->zoneID % 12) >> 3) + 4, (32 * (self->zoneID % 12)), 0, 224, 32);
     else
 #endif
-        RSDK.CopyPalette(((entity->zoneID % 12) >> 3) + 1, (32 * (entity->zoneID % 12)), 0, 224, 32);
+        RSDK.CopyPalette(((self->zoneID % 12) >> 3) + 1, (32 * (self->zoneID % 12)), 0, 224, 32);
 }
 
 bool32 UITAZoneModule_Options7CB(void)
 {
     RSDK_THIS(UITAZoneModule);
-    return entity->state == UITAZoneModule_Unknown17;
+    return self->state == UITAZoneModule_Unknown17;
 }
 
 bool32 UITAZoneModule_Options8CB(void)
 {
     RSDK_THIS(UITAZoneModule);
-    return entity->state == UITAZoneModule_Unknown18;
+    return self->state == UITAZoneModule_Unknown18;
 }
 
 void UITAZoneModule_Options5CB(void)
 {
     RSDK_THIS(UITAZoneModule);
-    entity->flag  = true;
-    entity->state = UITAZoneModule_Unknown17;
+    self->flag  = true;
+    self->state = UITAZoneModule_Unknown17;
 #if !RETRO_USE_PLUS
-    entity->rank = 0;
+    self->rank = 0;
 #endif
 #if RETRO_USE_PLUS
     if (TimeAttackMenu->encoreMode)
-        RSDK.CopyPalette(((entity->zoneID % 12) >> 3) + 4, (32 * (entity->zoneID % 12)), 0, 224, 32);
+        RSDK.CopyPalette(((self->zoneID % 12) >> 3) + 4, (32 * (self->zoneID % 12)), 0, 224, 32);
     else
 #endif
-        RSDK.CopyPalette(((entity->zoneID % 12) >> 3) + 1, (32 * (entity->zoneID % 12)), 0, 224, 32);
+        RSDK.CopyPalette(((self->zoneID % 12) >> 3) + 1, (32 * (self->zoneID % 12)), 0, 224, 32);
 }
 
 void UITAZoneModule_Options6CB(void)
 {
     RSDK_THIS(UITAZoneModule);
-    entity->flag  = false;
-    entity->state = UITAZoneModule_Unknown16;
+    self->flag  = false;
+    self->state = UITAZoneModule_Unknown16;
 }
 
 void UITAZoneModule_TransitionCB(void) { UIControl_MatchMenuTag("Leaderboards"); }
@@ -430,7 +430,7 @@ void UITAZoneModule_Unknown15(void)
 {
     RSDK_THIS(UITAZoneModule);
 #if !RETRO_USE_PLUS
-    EntityUIControl *parent = (EntityUIControl *)entity->parent;
+    EntityUIControl *parent = (EntityUIControl *)self->parent;
     Hitbox hitbox;
     foreach_active(UIButtonPrompt, prompt)
     {
@@ -445,30 +445,30 @@ void UITAZoneModule_Unknown15(void)
     }
 #endif
 
-    entity->state = UITAZoneModule_Unknown16;
+    self->state = UITAZoneModule_Unknown16;
     UITAZoneModule_Unknown16();
 }
 
 void UITAZoneModule_Unknown16(void)
 {
     RSDK_THIS(UITAZoneModule);
-    entity->position.x = entity->posUnknown2.x;
-    RSDK.ProcessAnimation(&entity->animator2);
-    entity->touchCB   = UIButton_ProcessTouch;
-    entity->field_138 = entity->animator2.frameID & 3;
+    self->position.x = self->posUnknown2.x;
+    RSDK.ProcessAnimation(&self->animator2);
+    self->touchCB   = UIButton_ProcessTouch;
+    self->field_138 = self->animator2.frameID & 3;
 }
 
 void UITAZoneModule_Unknown17(void)
 {
     RSDK_THIS(UITAZoneModule);
-    RSDK.ProcessAnimation(&entity->animator2);
-    entity->field_138 = entity->animator2.frameID & 3;
+    RSDK.ProcessAnimation(&self->animator2);
+    self->field_138 = self->animator2.frameID & 3;
 #if RETRO_USE_PLUS
     if (UITAZoneModule->flag) {
         if (TimeAttackMenu->encoreMode)
-            RSDK.CopyPalette(((entity->zoneID % 12) >> 3) + 4, (32 * (entity->zoneID % 12)), 0, 224, 32);
+            RSDK.CopyPalette(((self->zoneID % 12) >> 3) + 4, (32 * (self->zoneID % 12)), 0, 224, 32);
         else
-            RSDK.CopyPalette(((entity->zoneID % 12) >> 3) + 1, (32 * (entity->zoneID % 12)), 0, 224, 32);
+            RSDK.CopyPalette(((self->zoneID % 12) >> 3) + 1, (32 * (self->zoneID % 12)), 0, 224, 32);
     }
 #endif
 }
@@ -477,27 +477,27 @@ void UITAZoneModule_Unknown18(void)
 {
     RSDK_THIS(UITAZoneModule);
 
-    entity->flag = true;
+    self->flag = true;
 #if !RETRO_USE_PLUS
-    entity->touchCB = StateMachine_None;
+    self->touchCB = StateMachine_None;
 #endif
-    if (entity->timer >= 30) {
+    if (self->timer >= 30) {
 #if !RETRO_USE_PLUS
-        entity->value        = 1;
-        entity->field_140    = 0;
-        entity->timer        = 0;
-        entity->rank         = 0;
-        entity->actID        = entity->zoneID == 7 && entity->characterID != 3;
+        self->value        = 1;
+        self->field_140    = 0;
+        self->timer        = 0;
+        self->rank         = 0;
+        self->actID        = self->zoneID == 7 && self->characterID != 3;
         UITAZoneModule->flag = true;
-        entity->state        = UITAZoneModule_Unknown27;
+        self->state        = UITAZoneModule_Unknown27;
 #else
-        entity->timer = 0;
-        StateMachine_Run(entity->options2);
-        entity->state = UITAZoneModule_Unknown17;
+        self->timer = 0;
+        StateMachine_Run(self->options2);
+        self->state = UITAZoneModule_Unknown17;
 #endif
     }
     else {
-        entity->timer++;
+        self->timer++;
     }
 }
 
@@ -525,8 +525,8 @@ void UITAZoneModule_DrawTime(Vector2 *drawPos, int32 minutes, int32 seconds, int
     for (int32 i = 0; i < 8; ++i) {
         if (!strBuf[i])
             break;
-        RSDK.SetSpriteAnimation(UITAZoneModule->aniFrames, 8, &entity->animator3, true, (uint8)(strBuf[i] - '0'));
-        RSDK.DrawSprite(&entity->animator3, drawPos, 0);
+        RSDK.SetSpriteAnimation(UITAZoneModule->aniFrames, 8, &self->animator3, true, (uint8)(strBuf[i] - '0'));
+        RSDK.DrawSprite(&self->animator3, drawPos, 0);
         drawPos->x += 0x80000;
     }
 }
@@ -534,43 +534,43 @@ void UITAZoneModule_DrawTime(Vector2 *drawPos, int32 minutes, int32 seconds, int
 void UITAZoneModule_Unknown8(void)
 {
     RSDK_THIS(UITAZoneModule);
-    Vector2 drawPos = entity->drawPos;
+    Vector2 drawPos = self->drawPos;
 
     uint32 colour1 = 0;
-    if (entity->actID)
+    if (self->actID)
         colour1 = 0xE82858;
 
     uint32 colour2 = 0;
-    if (entity->actID != 1)
+    if (self->actID != 1)
         colour2 = 0xE82858;
 
     RSDK.DrawRect(drawPos.x - 0x990000, drawPos.y + 0x240000, 0x860000, 0x150000, colour1, 255, INK_NONE, false);
 
     int32 offset = 0;
-    if (RSDK.Sin256(8 * minVal((uint8)entity->field_140, 16)) >= 0)
-        offset = RSDK.Sin256(8 * minVal((uint8)entity->field_140, 16));
+    if (RSDK.Sin256(8 * minVal((uint8)self->field_140, 16)) >= 0)
+        offset = RSDK.Sin256(8 * minVal((uint8)self->field_140, 16));
     else
-        offset = -RSDK.Sin256(8 * minVal((uint8)entity->field_140, 16));
+        offset = -RSDK.Sin256(8 * minVal((uint8)self->field_140, 16));
     offset >>= 6;
 
-    RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, 16, &entity->animator7, true, 0);
+    RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, 16, &self->animator7, true, 0);
     drawPos.x -= 0x630000;
     drawPos.y += 0x2E0000;
 
     bool32 flag = true;
-    if (!entity->actID) {
+    if (!self->actID) {
         drawPos.x -= (offset << 16);
         drawPos.y -= (offset << 16);
-        if (entity->state == UITAZoneModule_Unknown21 && (entity->timer & 2)) {
+        if (self->state == UITAZoneModule_Unknown21 && (self->timer & 2)) {
             drawPos.x += offset << 16;
             drawPos.y += offset << 16;
             flag = false;
         }
     }
     if (flag) {
-        if (entity->zoneID != 7 || entity->characterID == 3) {
-            RSDK.DrawSprite(&entity->animator7, &drawPos, false);
-            if (!entity->actID) {
+        if (self->zoneID != 7 || self->characterID == 3) {
+            RSDK.DrawSprite(&self->animator7, &drawPos, false);
+            if (!self->actID) {
                 drawPos.x += offset << 16;
                 drawPos.y += offset << 16;
             }
@@ -578,11 +578,11 @@ void UITAZoneModule_Unknown8(void)
     }
 
     Vector2 drawPos2, drawPos3;
-    drawPos2.x = entity->drawPos.x - 0x1A0000;
-    drawPos2.y = entity->drawPos.y + 0x2E0000;
+    drawPos2.x = self->drawPos.x - 0x1A0000;
+    drawPos2.y = self->drawPos.y + 0x2E0000;
 
-    drawPos.x = entity->drawPos.x - 0x130000;
-    drawPos.y = entity->drawPos.y + 0x240000;
+    drawPos.x = self->drawPos.x - 0x130000;
+    drawPos.y = self->drawPos.y + 0x240000;
     UIWidgets_Unknown5((colour1 >> 16) & 0xFF, 20, (colour1 >> 8) & 0xFF, colour1 & 0xFF, drawPos.x, drawPos.y);
 
     drawPos.x += 0x140000;
@@ -597,76 +597,76 @@ void UITAZoneModule_Unknown8(void)
     drawPos.x += 0x4B0000;
     drawPos.y += 0xA0000;
 
-    RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, 16, &entity->animator7, true, 1);
+    RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, 16, &self->animator7, true, 1);
     
     flag = true;
-    if (entity->actID == 1) {
+    if (self->actID == 1) {
         drawPos.x -= (offset << 16);
         drawPos.y -= (offset << 16);
-        if (entity->state == UITAZoneModule_Unknown21 && (entity->timer & 2)) {
+        if (self->state == UITAZoneModule_Unknown21 && (self->timer & 2)) {
             drawPos.x += offset << 16;
             drawPos.y += offset << 16;
             flag = false;
         }
     }
     if (flag) {
-        RSDK.DrawSprite(&entity->animator7, &drawPos, false);
-        if (entity->actID == 1) {
+        RSDK.DrawSprite(&self->animator7, &drawPos, false);
+        if (self->actID == 1) {
             drawPos.x += offset << 16;
             drawPos.y += offset << 16;
         }
     }
 
-    entity->drawFX    = FX_FLIP;
-    entity->direction = FLIP_X;
-    if (entity->actID == 1)
-        RSDK.SetSpriteAnimation(UITAZoneModule->aniFrames, 9, &entity->animator7, true, 3);
+    self->drawFX    = FX_FLIP;
+    self->direction = FLIP_X;
+    if (self->actID == 1)
+        RSDK.SetSpriteAnimation(UITAZoneModule->aniFrames, 9, &self->animator7, true, 3);
     else
-        RSDK.SetSpriteAnimation(UITAZoneModule->aniFrames, 9, &entity->animator7, true, 2);
-    if (!entity->actID) {
-        if (RSDK.Sin256(2 * (uint8)entity->field_140) >= 0)
-            drawPos2.x -= RSDK.Sin256(2 * (uint8)entity->field_140) << 10;
+        RSDK.SetSpriteAnimation(UITAZoneModule->aniFrames, 9, &self->animator7, true, 2);
+    if (!self->actID) {
+        if (RSDK.Sin256(2 * (uint8)self->field_140) >= 0)
+            drawPos2.x -= RSDK.Sin256(2 * (uint8)self->field_140) << 10;
         else
-            drawPos2.x -= -RSDK.Sin256(2 * (uint8)entity->field_140) << 10;
+            drawPos2.x -= -RSDK.Sin256(2 * (uint8)self->field_140) << 10;
     }
 
-    if (entity->zoneID != 7 || entity->characterID == 3)
-        RSDK.DrawSprite(&entity->animator7, &drawPos2, false);
+    if (self->zoneID != 7 || self->characterID == 3)
+        RSDK.DrawSprite(&self->animator7, &drawPos2, false);
 
-    entity->direction = FLIP_NONE;
-    entity->drawFX    = FX_NONE;
-    if (entity->actID == 1)
-        RSDK.SetSpriteAnimation(UITAZoneModule->aniFrames, 9, &entity->animator7, true, 2);
+    self->direction = FLIP_NONE;
+    self->drawFX    = FX_NONE;
+    if (self->actID == 1)
+        RSDK.SetSpriteAnimation(UITAZoneModule->aniFrames, 9, &self->animator7, true, 2);
     else
-        RSDK.SetSpriteAnimation(UITAZoneModule->aniFrames, 9, &entity->animator7, true, 3);
-    if (entity->actID == 1) {
-        if (RSDK.Sin256(2 * (uint8)entity->field_140) >= 0)
-            drawPos3.x -= RSDK.Sin256(2 * (uint8)entity->field_140) << 10;
+        RSDK.SetSpriteAnimation(UITAZoneModule->aniFrames, 9, &self->animator7, true, 3);
+    if (self->actID == 1) {
+        if (RSDK.Sin256(2 * (uint8)self->field_140) >= 0)
+            drawPos3.x -= RSDK.Sin256(2 * (uint8)self->field_140) << 10;
         else
-            drawPos3.x -= -RSDK.Sin256(2 * (uint8)entity->field_140) << 10;
+            drawPos3.x -= -RSDK.Sin256(2 * (uint8)self->field_140) << 10;
     }
 
-    RSDK.DrawSprite(&entity->animator7, &drawPos3, false);
+    RSDK.DrawSprite(&self->animator7, &drawPos3, false);
 }
 
 void UITAZoneModule_Unknown7(void)
 {
     RSDK_THIS(UITAZoneModule);
-    int32 drawX = entity->drawPos.x;
-    int32 drawY = entity->drawPos.y;
-    Vector2 drawPos2 = entity->drawPos;
+    int32 drawX = self->drawPos.x;
+    int32 drawY = self->drawPos.y;
+    Vector2 drawPos2 = self->drawPos;
 
-    uint16 *records = TimeAttackData_GetRecordedTime(entity->zoneID, entity->actID, entity->characterID, 1);
+    uint16 *records = TimeAttackData_GetRecordedTime(self->zoneID, self->actID, self->characterID, 1);
 
     RSDK.DrawRect(drawX - 0x990000, drawY + 0x240000, 0x1320000, 0x4D0000, 0x000000, 255, INK_NONE, false);
     UITAZoneModule_Unknown8();
-    UIWidgets_Unknown7(0x17, 0xE0, 0x17, 0xD9, 0xAD, 0x4, entity->position.x - 0x40000, drawY + 0x448000);
+    UIWidgets_Unknown7(0x17, 0xE0, 0x17, 0xD9, 0xAD, 0x4, self->position.x - 0x40000, drawY + 0x448000);
 
     drawPos2.x = drawX - 0x390000;
     drawPos2.y = drawY + 0x450000;
-    if (entity->rank != 1 || (UIControl->timer & 4)) {
-        RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, 16, &entity->animator7, true, 2);
-        RSDK.DrawSprite(&entity->animator7, &drawPos2, false);
+    if (self->rank != 1 || (UIControl->timer & 4)) {
+        RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, 16, &self->animator7, true, 2);
+        RSDK.DrawSprite(&self->animator7, &drawPos2, false);
 
         int32 time = 0;
         if (records)
@@ -679,12 +679,12 @@ void UITAZoneModule_Unknown7(void)
     }
     drawY += 0x140000;
 
-    UIWidgets_Unknown7(0x0F, 0xE0, 0x0F, 0x98, 0xC0, 0xC8, entity->position.x + 0x80000, drawY + 0x448000);
+    UIWidgets_Unknown7(0x0F, 0xE0, 0x0F, 0x98, 0xC0, 0xC8, self->position.x + 0x80000, drawY + 0x448000);
     drawPos2.x = drawX - 0x290000;
     drawPos2.y = drawY + 0x460000;
-    if (entity->rank != 2 || (UIControl->timer & 4)) {
-        RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, 16, &entity->animator7, true, 3);
-        RSDK.DrawSprite(&entity->animator7, &drawPos2, 0);
+    if (self->rank != 2 || (UIControl->timer & 4)) {
+        RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, 16, &self->animator7, true, 3);
+        RSDK.DrawSprite(&self->animator7, &drawPos2, 0);
 
         int32 time = 0;
         if (records)
@@ -696,12 +696,12 @@ void UITAZoneModule_Unknown7(void)
         UITAZoneModule_DrawTime(&pos, time / 6000, time % 6000 / 100, time % 100);
     }
 
-    UIWidgets_Unknown7(0xF, 0xE0, 0xF, 0xC0, 0x58, 0x01, entity->position.x + 0x140000, drawY + 0x548000);
+    UIWidgets_Unknown7(0xF, 0xE0, 0xF, 0xC0, 0x58, 0x01, self->position.x + 0x140000, drawY + 0x548000);
     drawPos2.x = drawX - 0x1A0000;
     drawPos2.y = drawY + 0x560000;
-    if (entity->rank != 3 || (UIControl->timer & 4)) {
-        RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, 16, &entity->animator7, true, 4);
-        RSDK.DrawSprite(&entity->animator7, &drawPos2, false);
+    if (self->rank != 3 || (UIControl->timer & 4)) {
+        RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, 16, &self->animator7, true, 4);
+        RSDK.DrawSprite(&self->animator7, &drawPos2, false);
 
         int32 time = 0;
         if (records)
@@ -721,36 +721,36 @@ void UITAZoneModule_Unknown21(void)
     RSDK_THIS(UITAZoneModule);
     EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
 
-    entity->flag = true;
-    if (entity->timer >= 30) {
+    self->flag = true;
+    if (self->timer >= 30) {
         TimeAttackData_ClearOptions();
-        param->zoneID = entity->zoneID;
-        param->actID  = entity->actID;
-        entity->timer = 0;
-        StateMachine_Run(entity->options2);
-        entity->state           = UITAZoneModule_Unknown19;
-        entity->processButtonCB = StateMachine_None;
+        param->zoneID = self->zoneID;
+        param->actID  = self->actID;
+        self->timer = 0;
+        StateMachine_Run(self->options2);
+        self->state           = UITAZoneModule_Unknown19;
+        self->processButtonCB = StateMachine_None;
     }
     else {
-        entity->timer++;
+        self->timer++;
     }
 }
 
 void UITAZoneModule_Unknown22(void)
 {
     RSDK_THIS(UITAZoneModule);
-    EntityUIControl *parent = (EntityUIControl *)entity->parent;
+    EntityUIControl *parent = (EntityUIControl *)self->parent;
 
-    if (entity->zoneID != 7 || entity->characterID == 3) {
-        entity->actID = 0;
+    if (self->zoneID != 7 || self->characterID == 3) {
+        self->actID = 0;
 
         int32 id = API_MostRecentActiveControllerID(0);
         API_ResetControllerAssignments();
         API_AssignControllerID(1, id);
 
         parent->state = StateMachine_None;
-        entity->timer = 0;
-        entity->state = UITAZoneModule_Unknown21;
+        self->timer = 0;
+        self->state = UITAZoneModule_Unknown21;
         RSDK.StopChannel(Music->channelID);
         RSDK.PlaySfx(UIWidgets->sfxAccept, false, 0xFF);
     }
@@ -759,15 +759,15 @@ void UITAZoneModule_Unknown22(void)
 void UITAZoneModule_Unknown23(void)
 {
     RSDK_THIS(UITAZoneModule);
-    EntityUIControl *parent = (EntityUIControl *)entity->parent;
+    EntityUIControl *parent = (EntityUIControl *)self->parent;
 
     int32 id = API_MostRecentActiveControllerID(0);
     API_ResetControllerAssignments();
     API_AssignControllerID(1, id);
 
     parent->state = StateMachine_None;
-    entity->timer = 0;
-    entity->state = UITAZoneModule_Unknown21;
+    self->timer = 0;
+    self->state = UITAZoneModule_Unknown21;
     RSDK.StopChannel(Music->channelID);
     RSDK.PlaySfx(UIWidgets->sfxAccept, false, 0xFF);
 }
@@ -775,19 +775,19 @@ void UITAZoneModule_Unknown23(void)
 void UITAZoneModule_Unknown24(void)
 {
     RSDK_THIS(UITAZoneModule);
-    EntityUIControl *parent = (EntityUIControl *)entity->parent;
+    EntityUIControl *parent = (EntityUIControl *)self->parent;
 
-    if (UIControl->keyLeft && entity->actID == 1 && (entity->zoneID != 7 || entity->characterID == 3)) {
-        entity->actID = 0;
-        entity->rank  = 0;
+    if (UIControl->keyLeft && self->actID == 1 && (self->zoneID != 7 || self->characterID == 3)) {
+        self->actID = 0;
+        self->rank  = 0;
         RSDK.PlaySfx(UIWidgets->sfxAccept, false, 0xFF);
-        entity->field_140 = 0;
+        self->field_140 = 0;
     }
-    if (UIControl->keyRight && !entity->actID && (entity->zoneID != 7 || entity->characterID == 3)) {
-        entity->actID     = 1;
-        entity->rank  = 0;
+    if (UIControl->keyRight && !self->actID && (self->zoneID != 7 || self->characterID == 3)) {
+        self->actID     = 1;
+        self->rank  = 0;
         RSDK.PlaySfx(UIWidgets->sfxAccept, false, 0xFF);
-        entity->field_140 = 0;
+        self->field_140 = 0;
     }
     else if (UIControl->keyConfirm) {
         int32 id = API_MostRecentActiveControllerID(0);
@@ -795,20 +795,20 @@ void UITAZoneModule_Unknown24(void)
         API_AssignControllerID(1, id);
 
         parent->state = StateMachine_None;
-        entity->timer = 0;
-        entity->state = UITAZoneModule_Unknown21;
+        self->timer = 0;
+        self->state = UITAZoneModule_Unknown21;
         RSDK.StopChannel(Music->channelID);
         RSDK.PlaySfx(UIWidgets->sfxAccept, false, 0xFF);
     }
     else {
         if (MenuSetup && UIControl->keyY) {
-            UITAZoneModule_Unknown25(entity->characterID, entity->zoneID, entity->actID, 0, UITAZoneModule_Unknown14);
+            UITAZoneModule_Unknown25(self->characterID, self->zoneID, self->actID, 0, UITAZoneModule_Unknown14);
             RSDK.PlaySfx(UIWidgets->sfxAccept, false, 0xFF);
         }
         if (UIControl->keyBack) {
-            entity->timer           = 0;
-            entity->state           = UITAZoneModule_Unknown28;
-            entity->processButtonCB = StateMachine_None;
+            self->timer           = 0;
+            self->state           = UITAZoneModule_Unknown28;
+            self->processButtonCB = StateMachine_None;
         }
     }
 }
@@ -882,12 +882,12 @@ void UITAZoneModule_Unknown26(EntityUIControl *control, uint8 characterID, uint3
 void UITAZoneModule_Unknown27(void)
 {
     RSDK_THIS(UITAZoneModule);
-    EntityUIControl *parent         = (EntityUIControl *)entity->parent;
+    EntityUIControl *parent         = (EntityUIControl *)self->parent;
     EntityUIHeading *heading        = (EntityUIHeading *)parent->heading;
     EntityUIButtonPrompt *promptPtr = (EntityUIButtonPrompt *)UITAZoneModule->entityPtr;
 
-    if (entity->timer > 15) {
-        entity->id = 0x4D0000;
+    if (self->timer > 15) {
+        self->id = 0x4D0000;
 
         foreach_all(UIButtonPrompt, prompt)
         {
@@ -912,18 +912,18 @@ void UITAZoneModule_Unknown27(void)
         }
 
         heading->position.y     = (ScreenInfo->position.y << 16) + 0x1C0000;
-        entity->timer           = 0;
-        entity->state           = UITAZoneModule_Unknown19;
-        entity->processButtonCB = UITAZoneModule_Unknown24;
-        entity->touchCB         = UIButton_TouchCB_Alt;
+        self->timer           = 0;
+        self->state           = UITAZoneModule_Unknown19;
+        self->processButtonCB = UITAZoneModule_Unknown24;
+        self->touchCB         = UIButton_TouchCB_Alt;
     }
     else {
         if (heading->startPos.y >> 16 < ScreenInfo->position.y) {
             int32 pos = (ScreenInfo->position.y << 16) - 0x1C0000;
-            if (entity->timer >= 1) {
+            if (self->timer >= 1) {
                 int32 pos = (ScreenInfo->position.y << 16) + 0x1C0000;
-                if (16 * entity->timer <= 255)
-                    pos += 0x3800 * (RSDK.Sin1024(16 * entity->timer) >> 2);
+                if (16 * self->timer <= 255)
+                    pos += 0x3800 * (RSDK.Sin1024(16 * self->timer) >> 2);
                 else
                     pos = (ScreenInfo->position.y << 16) + 0x1C0000;
             }
@@ -955,9 +955,9 @@ void UITAZoneModule_Unknown27(void)
                         offset2 = -0x300000;
 
                     int32 pos = (ScreenInfo->position.y << 16) + offset2;
-                    if (entity->timer >= 1) {
-                        if (16 * entity->timer <= 255)
-                            pos += (RSDK.Sin1024(16 * entity->timer) >> 2) * ((((ScreenInfo->position.y) << 16) + offset1 - pos) >> 8);
+                    if (self->timer >= 1) {
+                        if (16 * self->timer <= 255)
+                            pos += (RSDK.Sin1024(16 * self->timer) >> 2) * ((((ScreenInfo->position.y) << 16) + offset1 - pos) >> 8);
                         else
                             pos = (ScreenInfo->position.y) << 16 + offset1;
                     }
@@ -966,34 +966,34 @@ void UITAZoneModule_Unknown27(void)
             }
         }
 
-        if (entity->timer < 1) {
-            entity->id = 0;
+        if (self->timer < 1) {
+            self->id = 0;
         }
         else {
-            if ((16 * entity->timer) < 0x100) {
-                entity->id = 0x4D00 * (RSDK.Sin1024(16 * entity->timer) >> 2);
+            if ((16 * self->timer) < 0x100) {
+                self->id = 0x4D00 * (RSDK.Sin1024(16 * self->timer) >> 2);
             }
             else {
-                entity->id = 0x4D0000;
+                self->id = 0x4D0000;
             }
         }
-        entity->timer++;
+        self->timer++;
     }
 }
 
 void UITAZoneModule_Unknown28(void)
 {
     RSDK_THIS(UITAZoneModule);
-    EntityUIControl *parent         = (EntityUIControl *)entity->parent;
+    EntityUIControl *parent         = (EntityUIControl *)self->parent;
     EntityUIHeading *heading        = (EntityUIHeading *)parent->heading;
     EntityUIButtonPrompt *promptPtr = (EntityUIButtonPrompt *)UITAZoneModule->entityPtr;
 
-    entity->processButtonCB = StateMachine_None;
-    if (entity->timer > 15) {
-        if (entity->timer == 16) {
+    self->processButtonCB = StateMachine_None;
+    if (self->timer > 15) {
+        if (self->timer == 16) {
             foreach_all(UITAZoneModule, module)
             {
-                if (module != entity)
+                if (module != self)
                     module->state = UITAZoneModule_Unknown31;
             }
 
@@ -1017,27 +1017,27 @@ void UITAZoneModule_Unknown28(void)
 
             UITAZoneModule->flag = false;
             heading->position.y  = heading->startPos.y;
-            entity->position     = entity->posUnknown2;
-            entity->id           = 0;
-            entity->value        = 0;
-            entity->timer++;
+            self->position     = self->posUnknown2;
+            self->id           = 0;
+            self->value        = 0;
+            self->timer++;
         }
-        else if (entity->timer > 45) {
+        else if (self->timer > 45) {
             parent->childHasFocus   = false;
-            entity->timer           = 0;
-            entity->state           = UITAZoneModule_Unknown17;
-            entity->processButtonCB = UIButton_Unknown6;
+            self->timer           = 0;
+            self->state           = UITAZoneModule_Unknown17;
+            self->processButtonCB = UIButton_Unknown6;
         }
         else {
-            entity->timer++;
+            self->timer++;
         }
     }
     else {
         if (heading->startPos.y >> 16 < ScreenInfo->position.y) {
             int32 pos = (ScreenInfo->position.y << 16) + 0x1C0000;
-            if (entity->timer >= 1) {
-                if (16 * entity->timer <= 255)
-                    pos -= 0x3800 * (RSDK.Sin1024(16 * entity->timer) >> 2);
+            if (self->timer >= 1) {
+                if (16 * self->timer <= 255)
+                    pos -= 0x3800 * (RSDK.Sin1024(16 * self->timer) >> 2);
                 else
                     pos = (ScreenInfo->position.y << 16) - 0x1C0000;
             }
@@ -1065,10 +1065,10 @@ void UITAZoneModule_Unknown28(void)
                         offset2 = 0x300000;
                     else
                         offset2 = 0x180000;
-                    if (entity->timer >= 1) {
+                    if (self->timer >= 1) {
                         int32 pos = (ScreenInfo->position.y << 16) + offset2;
-                        if (16 * entity->timer <= 255)
-                            pos += (RSDK.Sin1024(16 * entity->timer) >> 2) * (((ScreenInfo->position.y) << 16 + offset1 - pos) >> 8);
+                        if (16 * self->timer <= 255)
+                            pos += (RSDK.Sin1024(16 * self->timer) >> 2) * (((ScreenInfo->position.y) << 16 + offset1 - pos) >> 8);
                         else
                             pos = (ScreenInfo->position.y) << 16 + offset1;
                         prompt->position.y = pos;
@@ -1080,55 +1080,55 @@ void UITAZoneModule_Unknown28(void)
             }
         }
 
-        if (entity->timer >= 1) {
-            if (16 * entity->timer < 0x100)
-                entity->id = 0x4D0000 - 0x4D00 * (RSDK.Sin1024(16 * entity->timer) >> 2);
+        if (self->timer >= 1) {
+            if (16 * self->timer < 0x100)
+                self->id = 0x4D0000 - 0x4D00 * (RSDK.Sin1024(16 * self->timer) >> 2);
             else
-                entity->id = 0;
+                self->id = 0;
         }
         else {
-            entity->id = 0x4D0000;
+            self->id = 0x4D0000;
         }
-        entity->timer++;
+        self->timer++;
     }
 }
 
 void UITAZoneModule_Unknown29(void)
 {
     RSDK_THIS(UITAZoneModule);
-    RSDK.ProcessAnimation(&entity->animator2);
-    entity->field_138  = entity->animator2.frameID & 3;
-    entity->velocity.x = 0x200000;
-    if ((entity->position.x - entity->posUnknown2.x) >> 16 < ScreenInfo->width) {
-        entity->position.x += 0x200000;
-        entity->position.y += entity->velocity.y;
+    RSDK.ProcessAnimation(&self->animator2);
+    self->field_138  = self->animator2.frameID & 3;
+    self->velocity.x = 0x200000;
+    if ((self->position.x - self->posUnknown2.x) >> 16 < ScreenInfo->width) {
+        self->position.x += 0x200000;
+        self->position.y += self->velocity.y;
     }
-    if ((entity->position.x - entity->posUnknown2.x) >> 16 >= ScreenInfo->width) {
-        entity->position.x = entity->posUnknown2.x + (ScreenInfo->width << 16);
-        entity->state      = UITAZoneModule_Unknown30;
+    if ((self->position.x - self->posUnknown2.x) >> 16 >= ScreenInfo->width) {
+        self->position.x = self->posUnknown2.x + (ScreenInfo->width << 16);
+        self->state      = UITAZoneModule_Unknown30;
     }
 }
 
 void UITAZoneModule_Unknown30(void)
 {
     RSDK_THIS(UITAZoneModule);
-    entity->position.x = entity->posUnknown2.x + (ScreenInfo->width << 16);
+    self->position.x = self->posUnknown2.x + (ScreenInfo->width << 16);
 }
 
 void UITAZoneModule_Unknown31(void)
 {
     RSDK_THIS(UITAZoneModule);
-    RSDK.ProcessAnimation(&entity->animator2);
-    entity->velocity.x = -0x200000;
-    entity->field_138  = entity->animator2.frameID & 3;
+    RSDK.ProcessAnimation(&self->animator2);
+    self->velocity.x = -0x200000;
+    self->field_138  = self->animator2.frameID & 3;
 
-    if (entity->position.x > entity->posUnknown2.x) {
-        entity->position.x -= 0x200000;
-        entity->position.y += entity->velocity.y;
+    if (self->position.x > self->posUnknown2.x) {
+        self->position.x -= 0x200000;
+        self->position.y += self->velocity.y;
     }
-    if (entity->position.x <= entity->posUnknown2.x) {
-        entity->position.x = entity->posUnknown2.x;
-        entity->state      = UITAZoneModule_Unknown16;
+    if (self->position.x <= self->posUnknown2.x) {
+        self->position.x = self->posUnknown2.x;
+        self->state      = UITAZoneModule_Unknown16;
     }
 }
 
@@ -1139,11 +1139,11 @@ void UITAZoneModule_EditorDraw(void)
 {
     RSDK_THIS(UITAZoneModule);
 
-    RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 3, &entity->animator5, false, 0);
-    RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 3, &entity->animator6, false, 0);
+    RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 3, &self->animator5, false, 0);
+    RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 3, &self->animator6, false, 0);
     UITAZoneModule_SetupText();
 
-    entity->inkEffect = entity->disabled ? INK_BLEND : INK_NONE;
+    self->inkEffect = self->disabled ? INK_BLEND : INK_NONE;
 
     UITAZoneModule_Draw();
 }

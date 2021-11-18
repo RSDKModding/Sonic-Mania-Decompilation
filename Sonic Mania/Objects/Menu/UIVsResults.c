@@ -5,17 +5,17 @@ ObjectUIVsResults *UIVsResults;
 void UIVsResults_Update(void)
 {
     RSDK_THIS(UIVsResults);
-    if (entity->textSpriteIndex != UIWidgets->textSpriteIndex) {
+    if (self->textSpriteIndex != UIWidgets->textSpriteIndex) {
         UIVsResults_SetupSprites();
-        entity->textSpriteIndex = UIWidgets->textSpriteIndex;
+        self->textSpriteIndex = UIWidgets->textSpriteIndex;
     }
 
-    if (entity->numRows != entity->numRowStore) {
+    if (self->numRows != self->numRowStore) {
         UIVsResults_SetupSprites();
-        entity->numRowStore = entity->numRows;
+        self->numRowStore = self->numRows;
     }
 
-    StateMachine_Run(entity->state);
+    StateMachine_Run(self->state);
 }
 
 void UIVsResults_LateUpdate(void) {}
@@ -25,7 +25,7 @@ void UIVsResults_StaticUpdate(void) {}
 void UIVsResults_Draw(void)
 {
     RSDK_THIS(UIVsResults);
-    RSDK.DrawRect(entity->position.x - 0x300000, entity->position.y - 0x208000, 0x600000, entity->field_1D0, 0xFFFFFF, 127, INK_BLEND, false);
+    RSDK.DrawRect(self->position.x - 0x300000, self->position.y - 0x208000, 0x600000, self->field_1D0, 0xFFFFFF, 127, INK_BLEND, false);
     UIVsResults_Unknown3();
     UIVsResults_Unknown2();
     UIVsResults_Unknown6();
@@ -35,22 +35,22 @@ void UIVsResults_Create(void *data)
 {
     RSDK_THIS(UIVsResults);
 
-    entity->active        = ACTIVE_BOUNDS;
-    entity->drawOrder     = 2;
-    entity->visible       = true;
-    entity->drawFX        = FX_FLIP;
-    entity->updateRange.x = 0x800000;
-    entity->updateRange.y = 0x300000;
-    entity->characterID   = entity->playerID;
-    entity->state         = UIVsResults_Unknown7;
+    self->active        = ACTIVE_BOUNDS;
+    self->drawOrder     = 2;
+    self->visible       = true;
+    self->drawFX        = FX_FLIP;
+    self->updateRange.x = 0x800000;
+    self->updateRange.y = 0x300000;
+    self->characterID   = self->playerID;
+    self->state         = UIVsResults_Unknown7;
     UIVsResults_SetupSprites();
-    entity->textSpriteIndex = UIWidgets->textSpriteIndex;
+    self->textSpriteIndex = UIWidgets->textSpriteIndex;
 
     if (!SceneInfo->inEditor) {
-        for (int32 i = 0; i < entity->numRows; ++i) {
+        for (int32 i = 0; i < self->numRows; ++i) {
             if (!SceneInfo->inEditor) {
-                RSDK.SetText(&entity->rowText[i], "00", 0);
-                RSDK.SetSpriteString(UIVsResults->aniFrames, 18, &entity->rowText[i]);
+                RSDK.SetText(&self->rowText[i], "00", 0);
+                RSDK.SetSpriteString(UIVsResults->aniFrames, 18, &self->rowText[i]);
             }
         }
     }
@@ -67,68 +67,68 @@ void UIVsResults_SetupSprites(void)
     RSDK_THIS(UIVsResults);
     EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
 
-    entity->characterID = entity->playerID;
+    self->characterID = self->playerID;
     if (!SceneInfo->inEditor) {
-        switch (session->characterFlags[entity->playerID]) {
-            case ID_SONIC: entity->characterID = 0; break;
-            case ID_TAILS: entity->characterID = 1; break;
-            case ID_KNUCKLES: entity->characterID = 2; break;
+        switch (session->characterFlags[self->playerID]) {
+            case ID_SONIC: self->characterID = 0; break;
+            case ID_TAILS: self->characterID = 1; break;
+            case ID_KNUCKLES: self->characterID = 2; break;
 #if RETRO_USE_PLUS
-            case ID_MIGHTY: entity->characterID = 3; break;
-            case ID_RAY: entity->characterID = 4; break;
+            case ID_MIGHTY: self->characterID = 3; break;
+            case ID_RAY: self->characterID = 4; break;
 #endif
             default: break;
         }
     }
-    RSDK.SetSpriteAnimation(UIVsResults->aniFrames, 14, &entity->animator3, true, 1);
+    RSDK.SetSpriteAnimation(UIVsResults->aniFrames, 14, &self->animator3, true, 1);
 
-    int32 frame = entity->characterID;
+    int32 frame = self->characterID;
     if (frame > 2)
         ++frame;
-    RSDK.SetSpriteAnimation(UIVsResults->aniFrames, 1, &entity->animator1, true, frame);
-    RSDK.SetSpriteAnimation(UIVsResults->aniFrames, 2, &entity->animator2, true, frame);
-    RSDK.SetSpriteAnimation(UIVsResults->aniFrames, 18, &entity->animator4, true, 0);
+    RSDK.SetSpriteAnimation(UIVsResults->aniFrames, 1, &self->animator1, true, frame);
+    RSDK.SetSpriteAnimation(UIVsResults->aniFrames, 2, &self->animator2, true, frame);
+    RSDK.SetSpriteAnimation(UIVsResults->aniFrames, 18, &self->animator4, true, 0);
 
-    uint8 *rowLabels = &entity->row0Label;
-    for (int32 r = 0; r < entity->numRows; ++r) {
-        RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, 13, &entity->rowAnimators[r], true, rowLabels[r]);
+    uint8 *rowLabels = &self->row0Label;
+    for (int32 r = 0; r < self->numRows; ++r) {
+        RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, 13, &self->rowAnimators[r], true, rowLabels[r]);
     }
-    RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, 12, &entity->textAnimator, true, entity->playerID + 8);
-    entity->field_1CC = 0x600000;
-    entity->field_1C0 = 0x10000;
-    entity->offset    = 0x8000;
-    entity->field_1D0 = (0x120000 * entity->numRows) + 0x3F0000;
+    RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, 12, &self->textAnimator, true, self->playerID + 8);
+    self->field_1CC = 0x600000;
+    self->field_1C0 = 0x10000;
+    self->offset    = 0x8000;
+    self->field_1D0 = (0x120000 * self->numRows) + 0x3F0000;
 }
 
 void UIVsResults_Unknown2(void)
 {
     RSDK_THIS(UIVsResults);
 
-    int32 y = (entity->field_1D0 >> 1) + entity->position.y - 0x1D8000;
+    int32 y = (self->field_1D0 >> 1) + self->position.y - 0x1D8000;
     if (!SceneInfo->inEditor)
-        UIWidgets_Unknown3(entity->field_1D0 >> 16, 96, entity->position.x + 0x30000, y);
+        UIWidgets_Unknown3(self->field_1D0 >> 16, 96, self->position.x + 0x30000, y);
 
-    if (!entity->field_1D4)
-        UIWidgets_Unknown2(entity->field_1D0 >> 16, 96, entity->position.x, y - 0x30000);
+    if (!self->field_1D4)
+        UIWidgets_Unknown2(self->field_1D0 >> 16, 96, self->position.x, y - 0x30000);
     else
-        UIWidgets_Unknown4(entity->field_1D0 >> 16, 96, entity->position.x, y - 0x30000);
+        UIWidgets_Unknown4(self->field_1D0 >> 16, 96, self->position.x, y - 0x30000);
 }
 
 void UIVsResults_Unknown3(void)
 {
     RSDK_THIS(UIVsResults);
-    UIWidgets_Unknown5(232, (entity->field_1C0 >> 11), 40, 88, entity->position.x - 0x2D0000, entity->position.y - 0x1D8000);
-    UIWidgets_Unknown5(96, (-64 * entity->field_1C0) >> 16, 160, 176, entity->position.x + 0x2D0000,
-                       entity->position.y - 0x218000 + entity->field_1D0);
-    UIWidgets_Unknown5(88, (-44 * entity->field_1C0) >> 16, 112, 224, entity->position.x + 0x2D0000,
-                       entity->position.y - 0x218000 + entity->field_1D0);
+    UIWidgets_Unknown5(232, (self->field_1C0 >> 11), 40, 88, self->position.x - 0x2D0000, self->position.y - 0x1D8000);
+    UIWidgets_Unknown5(96, (-64 * self->field_1C0) >> 16, 160, 176, self->position.x + 0x2D0000,
+                       self->position.y - 0x218000 + self->field_1D0);
+    UIWidgets_Unknown5(88, (-44 * self->field_1C0) >> 16, 112, 224, self->position.x + 0x2D0000,
+                       self->position.y - 0x218000 + self->field_1D0);
 }
 
 void UIVsResults_DrawRow(int32 row, int32 posX, int32 posY)
 {
     RSDK_THIS(UIVsResults);
     Vector2 drawPos;
-    bool32 *rowHighlight = &entity->row0Highlight;
+    bool32 *rowHighlight = &self->row0Highlight;
 
     drawPos.x = posX;
     drawPos.y = posY;
@@ -141,13 +141,13 @@ void UIVsResults_DrawRow(int32 row, int32 posX, int32 posY)
     }
     drawPos.y = posY + 0x80000;
     drawPos.x = posX + 0x10000;
-    RSDK.DrawSprite(&entity->rowAnimators[row], &drawPos, false);
+    RSDK.DrawSprite(&self->rowAnimators[row], &drawPos, false);
     if (!SceneInfo->inEditor) {
         drawPos.y = posY + 0x80000;
         drawPos.x = posX + 0x590000;
-        int32 width = RSDK.GetStringWidth(UIVsResults->aniFrames, 18, &entity->rowText[row], 0, entity->rowText[row].textLength, 0);
+        int32 width = RSDK.GetStringWidth(UIVsResults->aniFrames, 18, &self->rowText[row], 0, self->rowText[row].textLength, 0);
         drawPos.x -= width << 16;
-        RSDK.DrawText(&entity->animator4, &drawPos, &entity->rowText[row], 0, entity->rowText[row].textLength, ALIGN_LEFT, 0, 0, 0, false);
+        RSDK.DrawText(&self->animator4, &drawPos, &self->rowText[row], 0, self->rowText[row].textLength, ALIGN_LEFT, 0, 0, 0, false);
     }
 }
 
@@ -156,28 +156,28 @@ void UIVsResults_Unknown5(void)
     RSDK_THIS(UIVsResults);
     Vector2 drawPos;
 
-    int32 count = entity->trophyCount;
-    drawPos.x = entity->position.x - 0x2B0000;
-    drawPos.y = entity->position.y + 0x1C0000;
-    RSDK.SetSpriteAnimation(UIVsResults->aniFrames, 14, &entity->animator5, true, 15);
+    int32 count = self->trophyCount;
+    drawPos.x = self->position.x - 0x2B0000;
+    drawPos.y = self->position.y + 0x1C0000;
+    RSDK.SetSpriteAnimation(UIVsResults->aniFrames, 14, &self->animator5, true, 15);
     for (; count >= 10; drawPos.x += 0x150000) {
         count -= 10;
-        if (count > 0 || !entity->field_1D8 || (UIControl->timer & 0x10))
-            RSDK.DrawSprite(&entity->animator5, &drawPos, false);
+        if (count > 0 || !self->field_1D8 || (UIControl->timer & 0x10))
+            RSDK.DrawSprite(&self->animator5, &drawPos, false);
     }
 
-    RSDK.SetSpriteAnimation(UIVsResults->aniFrames, 14, &entity->animator5, true, 16);
+    RSDK.SetSpriteAnimation(UIVsResults->aniFrames, 14, &self->animator5, true, 16);
     for (; count >= 5; drawPos.x += 0x100000) {
         count -= 5;
-        if (count > 0 || !entity->field_1D8 || (UIControl->timer & 0x10))
-            RSDK.DrawSprite(&entity->animator5, &drawPos, false);
+        if (count > 0 || !self->field_1D8 || (UIControl->timer & 0x10))
+            RSDK.DrawSprite(&self->animator5, &drawPos, false);
     }
 
-    RSDK.SetSpriteAnimation(UIVsResults->aniFrames, 14, &entity->animator5, true, 17);
+    RSDK.SetSpriteAnimation(UIVsResults->aniFrames, 14, &self->animator5, true, 17);
     for (; count >= 1; drawPos.x += 0xE0000) {
         count--;
-        if (count > 0 || !entity->field_1D8 || (UIControl->timer & 0x10))
-            RSDK.DrawSprite(&entity->animator5, &drawPos, false);
+        if (count > 0 || !self->field_1D8 || (UIControl->timer & 0x10))
+            RSDK.DrawSprite(&self->animator5, &drawPos, false);
     }
 }
 
@@ -186,29 +186,29 @@ void UIVsResults_Unknown6(void)
     RSDK_THIS(UIVsResults);
     Vector2 drawPos;
 
-    drawPos.x = entity->position.x + 0x2D0000;
-    drawPos.y = entity->position.y - 0x1D8000;
-    RSDK.DrawSprite(&entity->animator3, &drawPos, false);
+    drawPos.x = self->position.x + 0x2D0000;
+    drawPos.y = self->position.y - 0x1D8000;
+    RSDK.DrawSprite(&self->animator3, &drawPos, false);
 
     drawPos.y += 0x80000;
     drawPos.x -= 0xA0000;
-    RSDK.DrawSprite(&entity->textAnimator, &drawPos, false);
+    RSDK.DrawSprite(&self->textAnimator, &drawPos, false);
 
-    drawPos = entity->position;
-    drawPos.x += 4 * entity->offset;
-    drawPos.y += 4 * entity->offset;
-    RSDK.DrawSprite(&entity->animator2, &drawPos, false);
+    drawPos = self->position;
+    drawPos.x += 4 * self->offset;
+    drawPos.y += 4 * self->offset;
+    RSDK.DrawSprite(&self->animator2, &drawPos, false);
 
-    drawPos.x -= 8 * entity->offset;
-    drawPos.y -= 8 * entity->offset;
-    RSDK.DrawSprite(&entity->animator1, &drawPos, false);
+    drawPos.x -= 8 * self->offset;
+    drawPos.y -= 8 * self->offset;
+    RSDK.DrawSprite(&self->animator1, &drawPos, false);
 
-    drawPos.x = entity->position.x - 0x2D0000;
-    drawPos.y = entity->position.y + 0x1D8000;
-    for (int32 r = 0; r < entity->numRows; ++r) {
+    drawPos.x = self->position.x - 0x2D0000;
+    drawPos.y = self->position.y + 0x1D8000;
+    for (int32 r = 0; r < self->numRows; ++r) {
         UIVsResults_DrawRow(r, drawPos.x, drawPos.y);
         drawPos.y += 0x100000;
-        if (r < entity->numRows - 1) {
+        if (r < self->numRows - 1) {
             drawPos.y += 0x20000;
         }
     }

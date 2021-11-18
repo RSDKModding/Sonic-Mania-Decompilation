@@ -9,7 +9,7 @@ void FlingRamp_Update(void)
     {
         if (player->onGround) {
             if (!(player->direction & FLIP_X) && player->velocity.x >= 0x40000) {
-                if (Player_CheckCollisionTouch(player, entity, &FlingRamp->hitbox)) {
+                if (Player_CheckCollisionTouch(player, self, &FlingRamp->hitbox)) {
                     player->velocity.x += 0x40000;
                     player->velocity.y = -0x70000;
                     player->onGround   = false;
@@ -17,7 +17,7 @@ void FlingRamp_Update(void)
                 }
             }
             else if ((player->direction & FLIP_X) && player->velocity.x <= -0x40000) {
-                if (Player_CheckCollisionTouch(player, entity, &FlingRamp->hitbox)) {
+                if (Player_CheckCollisionTouch(player, self, &FlingRamp->hitbox)) {
                     player->velocity.x -= 0x40000;
                     player->velocity.y = -0x70000;
                     player->onGround   = false;
@@ -38,8 +38,8 @@ void FlingRamp_Create(void *data)
 {
     RSDK_THIS(FlingRamp);
     if (!SceneInfo->inEditor) {
-        entity->active  = ACTIVE_BOUNDS;
-        entity->visible = false;
+        self->active  = ACTIVE_BOUNDS;
+        self->visible = false;
     }
 }
 

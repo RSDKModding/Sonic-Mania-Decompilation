@@ -5,7 +5,7 @@ ObjectMatryoshkaBom *MatryoshkaBom;
 void MatryoshkaBom_Update(void)
 {
     RSDK_THIS(MatryoshkaBom);
-    StateMachine_Run(entity->state);
+    StateMachine_Run(self->state);
 }
 
 void MatryoshkaBom_LateUpdate(void) {}
@@ -15,76 +15,76 @@ void MatryoshkaBom_StaticUpdate(void) {}
 void MatryoshkaBom_Draw(void)
 {
     RSDK_THIS(MatryoshkaBom);
-    if (entity->state == MatryoshkaBom_Unknown8) {
+    if (self->state == MatryoshkaBom_Unknown8) {
         Vector2 drawPos;
-        drawPos.x = entity->position.x;
-        drawPos.y = entity->field_84 + entity->position.y;
-        RSDK.DrawSprite(&entity->animator2, &drawPos, false);
+        drawPos.x = self->position.x;
+        drawPos.y = self->field_84 + self->position.y;
+        RSDK.DrawSprite(&self->animator2, &drawPos, false);
     }
-    RSDK.DrawSprite(&entity->animator1, NULL, false);
-    RSDK.DrawSprite(&entity->animator3, NULL, false);
+    RSDK.DrawSprite(&self->animator1, NULL, false);
+    RSDK.DrawSprite(&self->animator3, NULL, false);
 }
 
 void MatryoshkaBom_Create(void *data)
 {
     RSDK_THIS(MatryoshkaBom);
 
-    entity->visible = true;
-    if (entity->planeFilter > 0 && ((uint8)(entity->planeFilter - 1) & 2))
-        entity->drawOrder = Zone->drawOrderHigh + 2;
+    self->visible = true;
+    if (self->planeFilter > 0 && ((uint8)(self->planeFilter - 1) & 2))
+        self->drawOrder = Zone->drawOrderHigh + 2;
     else
-        entity->drawOrder = Zone->drawOrderLow + 2;
-    entity->updateRange.x = 0x800000;
-    entity->updateRange.y = 0x800000;
+        self->drawOrder = Zone->drawOrderLow + 2;
+    self->updateRange.x = 0x800000;
+    self->updateRange.y = 0x800000;
 
     int32 size = voidToInt(data);
     if (size < MATRYOSHKA_SIZE_SHRAPNEL) {
-        entity->active = ACTIVE_BOUNDS;
+        self->active = ACTIVE_BOUNDS;
         if (size)
-            entity->size = size;
-        entity->startDir = entity->direction;
-        entity->startPos = entity->position;
+            self->size = size;
+        self->startDir = self->direction;
+        self->startPos = self->position;
 
         if (!size)
-            entity->velocity.x = -0xC000;
+            self->velocity.x = -0xC000;
         else
-            entity->velocity.x = 0xC000;
-        entity->drawFX |= FX_FLIP;
-        entity->timer = 0x600;
+            self->velocity.x = 0xC000;
+        self->drawFX |= FX_FLIP;
+        self->timer = 0x600;
 
-        switch (entity->size) {
+        switch (self->size) {
             default: break;
             case MATRYOSHKA_SIZE_BIG:
-                RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 0, &entity->animator1, true, 0);
-                RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 13, &entity->animator2, true, 0);
-                RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 2, &entity->animator3, true, 0);
-                entity->offsetY    = 0x1B0000;
-                entity->offsetX    = 0x140000;
-                entity->canExplode = true;
+                RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 0, &self->animator1, true, 0);
+                RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 13, &self->animator2, true, 0);
+                RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 2, &self->animator3, true, 0);
+                self->offsetY    = 0x1B0000;
+                self->offsetX    = 0x140000;
+                self->canExplode = true;
                 break;
             case MATRYOSHKA_SIZE_MED:
-                RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 4, &entity->animator1, true, 0);
-                RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 14, &entity->animator2, true, 0);
-                RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 6, &entity->animator3, true, 0);
-                entity->offsetY    = 0x140000;
-                entity->offsetX    = 0xD0000;
-                entity->canExplode = true;
+                RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 4, &self->animator1, true, 0);
+                RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 14, &self->animator2, true, 0);
+                RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 6, &self->animator3, true, 0);
+                self->offsetY    = 0x140000;
+                self->offsetX    = 0xD0000;
+                self->canExplode = true;
                 break;
             case MATRYOSHKA_SIZE_SMALL:
-                RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 9, &entity->animator1, true, 0);
-                RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 15, &entity->animator2, true, 0);
-                RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 10, &entity->animator3, true, 0);
-                entity->canExplode = false;
-                entity->offsetY    = 0xE0000;
-                entity->offsetX    = 0x90000;
+                RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 9, &self->animator1, true, 0);
+                RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 15, &self->animator2, true, 0);
+                RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 10, &self->animator3, true, 0);
+                self->canExplode = false;
+                self->offsetY    = 0xE0000;
+                self->offsetX    = 0x90000;
                 break;
         }
-        entity->state = MatryoshkaBom_State_Setup;
+        self->state = MatryoshkaBom_State_Setup;
     }
     else {
-        entity->active = ACTIVE_NORMAL;
-        RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 16, &entity->animator1, true, 0);
-        entity->state = MatryoshkaBom_Unknown11;
+        self->active = ACTIVE_NORMAL;
+        RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 16, &self->animator1, true, 0);
+        self->state = MatryoshkaBom_Unknown11;
     }
 }
 
@@ -117,7 +117,7 @@ void MatryoshkaBom_StageLoad(void)
 void MatryoshkaBom_DebugSpawn(void)
 {
     RSDK_THIS(DebugMode);
-    CREATE_ENTITY(MatryoshkaBom, NULL, entity->position.x, entity->position.y);
+    CREATE_ENTITY(MatryoshkaBom, NULL, self->position.x, self->position.y);
 }
 
 void MatryoshkaBom_DebugDraw(void)
@@ -132,39 +132,38 @@ void MatryoshkaBom_CheckPlayerCollisions(void)
 
     foreach_active(Player, player)
     {
-        if (entity->planeFilter <= 0 || player->collisionPlane == ((uint8)(entity->planeFilter - 1) & 1)) {
-            if (entity->state != MatryoshkaBom_Unknown10) {
-                if (entity->canExplode) {
-                    if (entity->state != MatryoshkaBom_State_Exploding) {
-                        if (Player_CheckCollisionTouch(player, entity, &MatryoshkaBom->hitboxExplode)) {
+        if (self->planeFilter <= 0 || player->collisionPlane == ((uint8)(self->planeFilter - 1) & 1)) {
+            if (self->state != MatryoshkaBom_Unknown10) {
+                if (self->canExplode) {
+                    if (self->state != MatryoshkaBom_State_Exploding) {
+                        if (Player_CheckCollisionTouch(player, self, &MatryoshkaBom->hitboxExplode)) {
                             RSDK.PlaySfx(MatryoshkaBom->sfxButton, false, 255);
 
-                            switch (entity->size) {
+                            switch (self->size) {
                                 default: break;
-                                case MATRYOSHKA_SIZE_BIG: RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 1, &entity->animator1, true, 0); break;
-                                case MATRYOSHKA_SIZE_MED: RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 5, &entity->animator1, true, 0); break;
-                                case MATRYOSHKA_SIZE_SMALL: RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 9, &entity->animator1, true, 0); break;
+                                case MATRYOSHKA_SIZE_BIG: RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 1, &self->animator1, true, 0); break;
+                                case MATRYOSHKA_SIZE_MED: RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 5, &self->animator1, true, 0); break;
+                                case MATRYOSHKA_SIZE_SMALL: RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 9, &self->animator1, true, 0); break;
                             }
 
-                            entity->timer = 21;
-                            entity->state = MatryoshkaBom_State_Exploding;
+                            self->timer = 21;
+                            self->state = MatryoshkaBom_State_Exploding;
                         }
                     }
                 }
-                else if (entity->state != MatryoshkaBom_Unknown8) {
-                    if (Player_CheckCollisionTouch(player, entity, &MatryoshkaBom->hitboxExplode)) {
-                        entity->timer = 144;
-                        entity->state = MatryoshkaBom_Unknown8;
+                else if (self->state != MatryoshkaBom_Unknown8) {
+                    if (Player_CheckCollisionTouch(player, self, &MatryoshkaBom->hitboxExplode)) {
+                        self->timer = 144;
+                        self->state = MatryoshkaBom_Unknown8;
                     }
                 }
             }
 
-            if (Player_CheckCollisionTouch(player, entity, &MatryoshkaBom->hitboxHurt)
+            if (Player_CheckCollisionTouch(player, self, &MatryoshkaBom->hitboxHurt)) {
 #if RETRO_USE_PLUS
-                && !Player_CheckMightyUnspin(768, player, 2, &player->uncurlTimer)
+                if (!Player_CheckMightyUnspin(0x300, player, 2, &player->uncurlTimer))
 #endif
-            ) {
-                Player_CheckHit(player, entity);
+                Player_CheckHit(player, self);
             }
         }
     }
@@ -173,13 +172,13 @@ void MatryoshkaBom_CheckPlayerCollisions(void)
 void MatryoshkaBom_CheckOnScreen(void)
 {
     RSDK_THIS(MatryoshkaBom);
-    if (!RSDK.CheckOnScreen(SceneInfo->entity, NULL) && !RSDK.CheckPosOnScreen(&entity->startPos, &entity->updateRange)) {
-        if (entity->destroyOffscreen) {
-            destroyEntity(entity);
+    if (!RSDK.CheckOnScreen(self, NULL) && !RSDK.CheckPosOnScreen(&self->startPos, &self->updateRange)) {
+        if (self->destroyOffscreen) {
+            destroyEntity(self);
         }
         else {
-            entity->position  = entity->startPos;
-            entity->direction = entity->startDir;
+            self->position  = self->startPos;
+            self->direction = self->startDir;
             MatryoshkaBom_Create(NULL);
         }
     }
@@ -188,8 +187,8 @@ void MatryoshkaBom_CheckOnScreen(void)
 void MatryoshkaBom_State_Setup(void)
 {
     RSDK_THIS(MatryoshkaBom);
-    entity->active = ACTIVE_NORMAL;
-    entity->state  = MatryoshkaBom_Unknown5;
+    self->active = ACTIVE_NORMAL;
+    self->state  = MatryoshkaBom_Unknown5;
     MatryoshkaBom_Unknown5();
 }
 
@@ -197,39 +196,39 @@ void MatryoshkaBom_Unknown5(void)
 {
     RSDK_THIS(MatryoshkaBom);
 
-    entity->position.x += entity->velocity.x;
-    if (!--entity->timer) {
-        entity->timer = 60;
-        entity->state = MatryoshkaBom_Unknown6;
+    self->position.x += self->velocity.x;
+    if (!--self->timer) {
+        self->timer = 60;
+        self->state = MatryoshkaBom_Unknown6;
     }
     else {
         bool32 collided = false;
-        if (entity->velocity.x <= 0)
-            collided = RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_RWALL, 0, -entity->offsetX, 0, true);
+        if (self->velocity.x <= 0)
+            collided = RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_RWALL, 0, -self->offsetX, 0, true);
         else
-            collided = RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_LWALL, 0, entity->offsetX, 0, true);
+            collided = RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_LWALL, 0, self->offsetX, 0, true);
 
         if (!collided) {
-            if (entity->direction & FLIP_Y)
-                collided = RSDK.ObjectTileGrip(entity, Zone->fgLayers, CMODE_ROOF, 0, 0, -entity->offsetY, 8);
+            if (self->direction & FLIP_Y)
+                collided = RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_ROOF, 0, 0, -self->offsetY, 8);
             else
-                collided = RSDK.ObjectTileGrip(entity, Zone->fgLayers, CMODE_FLOOR, 0, 0, entity->offsetY, 8);
+                collided = RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, self->offsetY, 8);
         }
 
         if (!collided) {
-            entity->timer = 60;
-            entity->state = MatryoshkaBom_Unknown6;
-            switch (entity->size) {
+            self->timer = 60;
+            self->state = MatryoshkaBom_Unknown6;
+            switch (self->size) {
                 default: break;
-                case MATRYOSHKA_SIZE_BIG: RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 0, &entity->animator1, true, 0); break;
-                case MATRYOSHKA_SIZE_MED: RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 4, &entity->animator1, true, 0); break;
-                case MATRYOSHKA_SIZE_SMALL: RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 9, &entity->animator1, true, 0); break;
+                case MATRYOSHKA_SIZE_BIG: RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 0, &self->animator1, true, 0); break;
+                case MATRYOSHKA_SIZE_MED: RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 4, &self->animator1, true, 0); break;
+                case MATRYOSHKA_SIZE_SMALL: RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 9, &self->animator1, true, 0); break;
             }
         }
     }
 
-    RSDK.ProcessAnimation(&entity->animator1);
-    RSDK.ProcessAnimation(&entity->animator3);
+    RSDK.ProcessAnimation(&self->animator1);
+    RSDK.ProcessAnimation(&self->animator3);
     MatryoshkaBom_CheckPlayerCollisions();
     MatryoshkaBom_CheckOnScreen();
 }
@@ -238,17 +237,17 @@ void MatryoshkaBom_Unknown6(void)
 {
     RSDK_THIS(MatryoshkaBom);
 
-    if (!--entity->timer) {
-        switch (entity->size) {
+    if (!--self->timer) {
+        switch (self->size) {
             default: break;
-            case MATRYOSHKA_SIZE_BIG: RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 3, &entity->animator1, true, 0); break;
-            case MATRYOSHKA_SIZE_MED: RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 7, &entity->animator1, true, 0); break;
-            case MATRYOSHKA_SIZE_SMALL: RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 11, &entity->animator1, true, 0); break;
+            case MATRYOSHKA_SIZE_BIG: RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 3, &self->animator1, true, 0); break;
+            case MATRYOSHKA_SIZE_MED: RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 7, &self->animator1, true, 0); break;
+            case MATRYOSHKA_SIZE_SMALL: RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 11, &self->animator1, true, 0); break;
         }
-        RSDK.SetSpriteAnimation(0xFFFF, 0, &entity->animator3, true, 0);
-        entity->state = MatryoshkaBom_Unknown7;
+        RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator3, true, 0);
+        self->state = MatryoshkaBom_Unknown7;
     }
-    RSDK.ProcessAnimation(&entity->animator1);
+    RSDK.ProcessAnimation(&self->animator1);
     MatryoshkaBom_CheckPlayerCollisions();
     MatryoshkaBom_CheckOnScreen();
 }
@@ -257,25 +256,25 @@ void MatryoshkaBom_Unknown7(void)
 {
     RSDK_THIS(MatryoshkaBom);
 
-    RSDK.ProcessAnimation(&entity->animator1);
-    if (entity->animator1.frameID == entity->animator1.frameCount - 1) {
-        entity->direction ^= FLIP_X;
-        entity->velocity.x = -entity->velocity.x;
-        entity->timer      = 0x600;
-        entity->state      = MatryoshkaBom_Unknown5;
-        switch (entity->size) {
+    RSDK.ProcessAnimation(&self->animator1);
+    if (self->animator1.frameID == self->animator1.frameCount - 1) {
+        self->direction ^= FLIP_X;
+        self->velocity.x = -self->velocity.x;
+        self->timer      = 0x600;
+        self->state      = MatryoshkaBom_Unknown5;
+        switch (self->size) {
             default: break;
             case MATRYOSHKA_SIZE_BIG:
-                RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 0, &entity->animator1, true, 0);
-                RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 2, &entity->animator3, true, 0);
+                RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 0, &self->animator1, true, 0);
+                RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 2, &self->animator3, true, 0);
                 break;
             case MATRYOSHKA_SIZE_MED:
-                RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 4, &entity->animator1, true, 0);
-                RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 6, &entity->animator3, true, 0);
+                RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 4, &self->animator1, true, 0);
+                RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 6, &self->animator3, true, 0);
                 break;
             case MATRYOSHKA_SIZE_SMALL:
-                RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 9, &entity->animator1, true, 0);
-                RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 10, &entity->animator3, true, 0);
+                RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 9, &self->animator1, true, 0);
+                RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 10, &self->animator3, true, 0);
                 break;
         }
     }
@@ -287,49 +286,49 @@ void MatryoshkaBom_Unknown8(void)
 {
     RSDK_THIS(MatryoshkaBom);
 
-    if (entity->direction & FLIP_Y)
-        entity->field_84 -= 0x1000;
+    if (self->direction & FLIP_Y)
+        self->field_84 -= 0x1000;
     else
-        entity->field_84 += 0x1000;
+        self->field_84 += 0x1000;
 
-    if (--entity->timer > 0) {
-        RSDK.ProcessAnimation(&entity->animator1);
-        RSDK.ProcessAnimation(&entity->animator2);
+    if (--self->timer > 0) {
+        RSDK.ProcessAnimation(&self->animator1);
+        RSDK.ProcessAnimation(&self->animator2);
         MatryoshkaBom_CheckPlayerCollisions();
         MatryoshkaBom_CheckOnScreen();
     }
     else {
         RSDK.PlaySfx(MatryoshkaBom->sfxExplosion, false, 255);
 
-        EntityMatryoshkaBom *shrapnel = CREATE_ENTITY(MatryoshkaBom, intToVoid(3), entity->position.x, entity->position.y);
+        EntityMatryoshkaBom *shrapnel = CREATE_ENTITY(MatryoshkaBom, intToVoid(3), self->position.x, self->position.y);
         shrapnel->velocity.x          = -0x20000;
         shrapnel->velocity.y          = -0x30000;
-        shrapnel->planeFilter         = entity->planeFilter;
-        shrapnel->drawOrder           = entity->drawOrder;
+        shrapnel->planeFilter         = self->planeFilter;
+        shrapnel->drawOrder           = self->drawOrder;
 
-        shrapnel              = CREATE_ENTITY(MatryoshkaBom, intToVoid(3), entity->position.x, entity->position.y);
+        shrapnel              = CREATE_ENTITY(MatryoshkaBom, intToVoid(3), self->position.x, self->position.y);
         shrapnel->velocity.x  = -0x10000;
         shrapnel->velocity.y  = -0x20000;
-        shrapnel->planeFilter = entity->planeFilter;
-        shrapnel->drawOrder   = entity->drawOrder;
+        shrapnel->planeFilter = self->planeFilter;
+        shrapnel->drawOrder   = self->drawOrder;
 
-        shrapnel              = CREATE_ENTITY(MatryoshkaBom, intToVoid(3), entity->position.x, entity->position.y);
+        shrapnel              = CREATE_ENTITY(MatryoshkaBom, intToVoid(3), self->position.x, self->position.y);
         shrapnel->velocity.x  = 0x20000;
         shrapnel->velocity.y  = -0x30000;
-        shrapnel->planeFilter = entity->planeFilter;
-        shrapnel->drawOrder   = entity->drawOrder;
+        shrapnel->planeFilter = self->planeFilter;
+        shrapnel->drawOrder   = self->drawOrder;
 
-        shrapnel              = CREATE_ENTITY(MatryoshkaBom, intToVoid(3), entity->position.x, entity->position.y);
+        shrapnel              = CREATE_ENTITY(MatryoshkaBom, intToVoid(3), self->position.x, self->position.y);
         shrapnel->velocity.x  = 0x10000;
         shrapnel->velocity.y  = -0x20000;
-        shrapnel->planeFilter = entity->planeFilter;
-        shrapnel->drawOrder   = entity->drawOrder;
+        shrapnel->planeFilter = self->planeFilter;
+        shrapnel->drawOrder   = self->drawOrder;
 
-        EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid(1), entity->position.x, entity->position.y);
-        explosion->drawOrder       = entity->drawOrder + 1;
-        explosion->planeFilter     = entity->planeFilter;
+        EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid(1), self->position.x, self->position.y);
+        explosion->drawOrder       = self->drawOrder + 1;
+        explosion->planeFilter     = self->planeFilter;
 
-        destroyEntity(entity);
+        destroyEntity(self);
     }
 }
 
@@ -337,29 +336,29 @@ void MatryoshkaBom_State_Exploding(void)
 {
     RSDK_THIS(MatryoshkaBom);
 
-    RSDK.ProcessAnimation(&entity->animator1);
-    if (!--entity->timer) {
+    RSDK.ProcessAnimation(&self->animator1);
+    if (!--self->timer) {
         RSDK.PlaySfx(MatryoshkaBom->sfxPon, false, 255);
 
-        EntityMatryoshkaBom *child = CREATE_ENTITY(MatryoshkaBom, intToVoid(entity->size + 1), entity->position.x, entity->position.y);
+        EntityMatryoshkaBom *child = CREATE_ENTITY(MatryoshkaBom, intToVoid(self->size + 1), self->position.x, self->position.y);
 
-        if (entity->direction == FLIP_NONE)
+        if (self->direction == FLIP_NONE)
             child->velocity.x = -0x18000;
         else
             child->velocity.x = 0x18000;
         child->velocity.y = -0x40000;
 
-        child->planeFilter      = entity->planeFilter;
-        child->drawOrder        = entity->drawOrder - 1;
+        child->planeFilter      = self->planeFilter;
+        child->drawOrder        = self->drawOrder - 1;
         child->active           = ACTIVE_NORMAL;
-        child->direction        = entity->direction;
+        child->direction        = self->direction;
         child->destroyOffscreen = true;
         child->state            = MatryoshkaBom_Unknown10;
-        entity->canExplode      = false;
+        self->canExplode      = false;
     }
 
-    if (entity->animator1.frameID >= entity->animator1.frameDelay - 1)
-        entity->state = MatryoshkaBom_Unknown5;
+    if (self->animator1.frameID >= self->animator1.frameDelay - 1)
+        self->state = MatryoshkaBom_Unknown5;
     MatryoshkaBom_CheckPlayerCollisions();
     MatryoshkaBom_CheckOnScreen();
 }
@@ -368,35 +367,35 @@ void MatryoshkaBom_Unknown10(void)
 {
     RSDK_THIS(MatryoshkaBom);
 
-    entity->position.y += entity->velocity.y;
-    entity->position.x += entity->velocity.x;
-    entity->velocity.y += 0x3800;
-    if (entity->velocity.x) {
+    self->position.y += self->velocity.y;
+    self->position.x += self->velocity.x;
+    self->velocity.y += 0x3800;
+    if (self->velocity.x) {
         bool32 collided = false;
-        if (entity->velocity.x <= 0)
-            collided = RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_ROOF, 0, -entity->offsetX, 0, true);
+        if (self->velocity.x <= 0)
+            collided = RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_ROOF, 0, -self->offsetX, 0, true);
         else
-            collided = RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_LWALL, 0, entity->offsetX, 0, true);
+            collided = RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_LWALL, 0, self->offsetX, 0, true);
 
         if (collided)
-            entity->velocity.x = 0;
+            self->velocity.x = 0;
     }
 
     bool32 collided = false;
-    if (entity->direction & FLIP_Y)
-        collided = RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_ROOF, 0, 0, -entity->offsetY, true);
+    if (self->direction & FLIP_Y)
+        collided = RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_ROOF, 0, 0, -self->offsetY, true);
     else
-        collided = RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_FLOOR, 0, 0, entity->offsetY, true);
+        collided = RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, self->offsetY, true);
     if (collided) {
-        entity->timer = 0x600;
-        if (entity->direction == FLIP_NONE)
-            entity->velocity.x = -0xC000;
+        self->timer = 0x600;
+        if (self->direction == FLIP_NONE)
+            self->velocity.x = -0xC000;
         else
-            entity->velocity.x = 0xC000;
-        entity->state = MatryoshkaBom_Unknown5;
+            self->velocity.x = 0xC000;
+        self->state = MatryoshkaBom_Unknown5;
     }
 
-    RSDK.ProcessAnimation(&entity->animator1);
+    RSDK.ProcessAnimation(&self->animator1);
     MatryoshkaBom_CheckPlayerCollisions();
     MatryoshkaBom_CheckOnScreen();
 }
@@ -404,47 +403,47 @@ void MatryoshkaBom_Unknown10(void)
 void MatryoshkaBom_Unknown11(void)
 {
     RSDK_THIS(MatryoshkaBom);
-    entity->position.x += entity->velocity.x;
-    entity->position.y += entity->velocity.y;
-    entity->velocity.y += 0x1800;
-    if (RSDK.CheckOnScreen(entity, &entity->updateRange)) {
-        RSDK.ProcessAnimation(&entity->animator1);
+    self->position.x += self->velocity.x;
+    self->position.y += self->velocity.y;
+    self->velocity.y += 0x1800;
+    if (RSDK.CheckOnScreen(self, &self->updateRange)) {
+        RSDK.ProcessAnimation(&self->animator1);
 
         foreach_active(Player, player)
         {
-            if (entity->planeFilter <= 0 || player->collisionPlane == ((uint8)(entity->planeFilter - 1) & 1)) {
-                if (Player_CheckCollisionTouch(player, entity, &MatryoshkaBom->hitboxShrapnel)) {
-                    Player_CheckHit(player, entity);
+            if (self->planeFilter <= 0 || player->collisionPlane == ((uint8)(self->planeFilter - 1) & 1)) {
+                if (Player_CheckCollisionTouch(player, self, &MatryoshkaBom->hitboxShrapnel)) {
+                    Player_CheckHit(player, self);
                 }
             }
         }
     }
     else {
-        destroyEntity(entity);
+        destroyEntity(self);
     }
 }
 
 void MatryoshkaBom_EditorDraw(void)
 {
     RSDK_THIS(MatryoshkaBom);
-    entity->drawFX |= FX_FLIP;
+    self->drawFX |= FX_FLIP;
 
-    switch (entity->size) {
+    switch (self->size) {
         default: break;
         case MATRYOSHKA_SIZE_BIG:
-            RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 0, &entity->animator1, false, 0);
-            RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 13, &entity->animator2, false, 0);
-            RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 2, &entity->animator3, false, 0);
+            RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 0, &self->animator1, false, 0);
+            RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 13, &self->animator2, false, 0);
+            RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 2, &self->animator3, false, 0);
             break;
         case MATRYOSHKA_SIZE_MED:
-            RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 4, &entity->animator1, false, 0);
-            RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 14, &entity->animator2, false, 0);
-            RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 6, &entity->animator3, false, 0);
+            RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 4, &self->animator1, false, 0);
+            RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 14, &self->animator2, false, 0);
+            RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 6, &self->animator3, false, 0);
             break;
         case MATRYOSHKA_SIZE_SMALL:
-            RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 9, &entity->animator1, false, 0);
-            RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 15, &entity->animator2, false, 0);
-            RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 10, &entity->animator3, false, 0);
+            RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 9, &self->animator1, false, 0);
+            RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 15, &self->animator2, false, 0);
+            RSDK.SetSpriteAnimation(MatryoshkaBom->aniFrames, 10, &self->animator3, false, 0);
             break;
     }
 

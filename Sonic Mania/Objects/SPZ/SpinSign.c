@@ -7,23 +7,23 @@ void SpinSign_Update(void)
     RSDK_THIS(SpinSign);
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionTouch(player, entity, &SpinSign->hitboxes[entity->type])) {
+        if (Player_CheckCollisionTouch(player, self, &SpinSign->hitboxes[self->type])) {
             int32 vel = 0;
-            if (entity->type & 1)
+            if (self->type & 1)
                 vel = player->velocity.x;
             else
                 vel = player->velocity.y;
 
             int32 val = (vel >> 7) + (vel >> 6);
-            if (abs(val) > entity->timer && val >= 0xC00) {
-                entity->timer     = val & -0x80;
-                entity->active    = ACTIVE_NORMAL;
-                entity->state     = SpinSign_Unknown1;
-                entity->direction = vel < 0;
+            if (abs(val) > self->timer && val >= 0xC00) {
+                self->timer     = val & -0x80;
+                self->active    = ACTIVE_NORMAL;
+                self->state     = SpinSign_Unknown1;
+                self->direction = vel < 0;
             }
         }
     }
-    StateMachine_Run(entity->state);
+    StateMachine_Run(self->state);
 }
 
 void SpinSign_LateUpdate(void) {}
@@ -33,44 +33,44 @@ void SpinSign_StaticUpdate(void) {}
 void SpinSign_Draw(void)
 {
     RSDK_THIS(SpinSign);
-    StateMachine_Run(entity->stateDraw);
+    StateMachine_Run(self->stateDraw);
 }
 
 void SpinSign_Create(void *data)
 {
     RSDK_THIS(SpinSign);
     if (!SceneInfo->inEditor) {
-        RSDK.SetSpriteAnimation(SpinSign->aniFrames, 3, &entity->animator1, true, 0);
-        RSDK.SetSpriteAnimation(SpinSign->aniFrames, 4, &entity->animator3, true, 0);
-        entity->active        = ACTIVE_BOUNDS;
-        entity->updateRange.x = 0x800000;
-        entity->updateRange.y = 0x800000;
-        entity->drawFX        = FX_SCALE;
-        entity->visible       = true;
-        entity->drawOrder     = Zone->drawOrderLow;
-        entity->scale.x       = 0x200;
-        entity->scale.y       = 0x200;
-        entity->state         = SpinSign_Unknown1;
-        switch (entity->type) {
+        RSDK.SetSpriteAnimation(SpinSign->aniFrames, 3, &self->animator1, true, 0);
+        RSDK.SetSpriteAnimation(SpinSign->aniFrames, 4, &self->animator3, true, 0);
+        self->active        = ACTIVE_BOUNDS;
+        self->updateRange.x = 0x800000;
+        self->updateRange.y = 0x800000;
+        self->drawFX        = FX_SCALE;
+        self->visible       = true;
+        self->drawOrder     = Zone->drawOrderLow;
+        self->scale.x       = 0x200;
+        self->scale.y       = 0x200;
+        self->state         = SpinSign_Unknown1;
+        switch (self->type) {
             case 0:
-                entity->animator3.frameID = 1;
-                RSDK.SetSpriteAnimation(SpinSign->aniFrames, 0, &entity->animator2, true, 0);
-                entity->stateDraw = SpinSign_Unknown3;
+                self->animator3.frameID = 1;
+                RSDK.SetSpriteAnimation(SpinSign->aniFrames, 0, &self->animator2, true, 0);
+                self->stateDraw = SpinSign_Unknown3;
                 break;
             case 1:
-                entity->animator3.frameID = 0;
-                RSDK.SetSpriteAnimation(SpinSign->aniFrames, 0, &entity->animator2, true, 0);
-                entity->stateDraw = SpinSign_Unknown4;
+                self->animator3.frameID = 0;
+                RSDK.SetSpriteAnimation(SpinSign->aniFrames, 0, &self->animator2, true, 0);
+                self->stateDraw = SpinSign_Unknown4;
                 break;
             case 2:
-                entity->animator3.frameID = 1;
-                RSDK.SetSpriteAnimation(SpinSign->aniFrames, 5, &entity->animator2, true, 0);
-                entity->stateDraw = SpinSign_Unknown5;
+                self->animator3.frameID = 1;
+                RSDK.SetSpriteAnimation(SpinSign->aniFrames, 5, &self->animator2, true, 0);
+                self->stateDraw = SpinSign_Unknown5;
                 break;
             case 3:
-                entity->animator3.frameID = 2;
-                RSDK.SetSpriteAnimation(SpinSign->aniFrames, 5, &entity->animator2, true, 0);
-                entity->stateDraw = SpinSign_Unknown6;
+                self->animator3.frameID = 2;
+                RSDK.SetSpriteAnimation(SpinSign->aniFrames, 5, &self->animator2, true, 0);
+                self->stateDraw = SpinSign_Unknown6;
                 break;
             default: break;
         }
@@ -103,7 +103,7 @@ void SpinSign_StageLoad(void)
 void SpinSign_DebugSpawn(void)
 {
     RSDK_THIS(DebugMode);
-    CREATE_ENTITY(SpinSign, NULL, entity->position.x, entity->position.y);
+    CREATE_ENTITY(SpinSign, NULL, self->position.x, self->position.y);
 }
 void SpinSign_DebugDraw(void)
 {
@@ -121,44 +121,44 @@ void SpinSign_Unknown1(void)
 {
     RSDK_THIS(SpinSign);
 
-    if (entity->timer) {
-        if (entity->direction)
-            entity->angle -= entity->timer;
+    if (self->timer) {
+        if (self->direction)
+            self->angle -= self->timer;
         else
-            entity->angle += entity->timer;
+            self->angle += self->timer;
 
-        entity->timer -= 0x40;
-        if (entity->timer < 256) {
-            if (entity->direction) {
-                if (entity->angle < 0x4000)
-                    entity->direction ^= FLIP_X;
+        self->timer -= 0x40;
+        if (self->timer < 256) {
+            if (self->direction) {
+                if (self->angle < 0x4000)
+                    self->direction ^= FLIP_X;
             }
-            else if (entity->angle > 0xC000) {
-                entity->direction = FLIP_X;
+            else if (self->angle > 0xC000) {
+                self->direction = FLIP_X;
             }
-            entity->timer = 0;
-            entity->state = SpinSign_Unknown2;
+            self->timer = 0;
+            self->state = SpinSign_Unknown2;
         }
     }
-    entity->rotation = (entity->angle >> 8) & 0x1FF;
+    self->rotation = (self->angle >> 8) & 0x1FF;
 }
 void SpinSign_Unknown2(void)
 {
     RSDK_THIS(SpinSign);
 
-    int32 ang = entity->angle & 0xFFFF0000;
-    if (entity->direction)
-        entity->angle -= entity->timer;
+    int32 ang = self->angle & 0xFFFF0000;
+    if (self->direction)
+        self->angle -= self->timer;
     else
-        entity->angle += entity->timer;
+        self->angle += self->timer;
 
-    entity->timer -= 0x20;
-    if ((entity->angle & 0xFFFF0000) != ang) {
-        entity->active = ACTIVE_BOUNDS;
-        entity->timer  = 0;
-        entity->state  = SpinSign_Unknown1;
+    self->timer -= 0x20;
+    if ((self->angle & 0xFFFF0000) != ang) {
+        self->active = ACTIVE_BOUNDS;
+        self->timer  = 0;
+        self->state  = SpinSign_Unknown1;
     }
-    entity->rotation = (entity->angle >> 8) & 0x1FF;
+    self->rotation = (self->angle >> 8) & 0x1FF;
 }
 
 void SpinSign_Unknown3(void)
@@ -166,139 +166,139 @@ void SpinSign_Unknown3(void)
     RSDK_THIS(SpinSign);
     Vector2 drawPos;
 
-    entity->drawFX = FX_SCALE;
-    drawPos.x      = entity->position.x;
+    self->drawFX = FX_SCALE;
+    drawPos.x      = self->position.x;
 
     Animator *animator = NULL;
-    if (entity->rotation <= 128 || entity->rotation >= 384) {
-        animator = &entity->animator1;
+    if (self->rotation <= 128 || self->rotation >= 384) {
+        animator = &self->animator1;
     }
     else {
-        animator = &entity->animator2;
+        animator = &self->animator2;
     }
     animator->frameID = (Zone->timer >> 4) & 1;
 
-    entity->scale.y = abs(RSDK.Cos512(entity->rotation)) + 1;
-    int32 scale       = abs(RSDK.Sin512(entity->rotation)) + 1;
+    self->scale.y = abs(RSDK.Cos512(self->rotation)) + 1;
+    int32 scale       = abs(RSDK.Sin512(self->rotation)) + 1;
 
-    switch (entity->rotation >> 7) {
+    switch (self->rotation >> 7) {
         case 0:
         case 2:
-            drawPos.y = entity->position.y + (scale << 9);
+            drawPos.y = self->position.y + (scale << 9);
             RSDK.DrawSprite(animator, &drawPos, false);
-            drawPos.y += -0xF00 * entity->scale.y - (scale << 9);
+            drawPos.y += -0xF00 * self->scale.y - (scale << 9);
             break;
         case 1:
         case 3:
-            drawPos.y = entity->position.y - (scale << 9);
+            drawPos.y = self->position.y - (scale << 9);
             RSDK.DrawSprite(animator, &drawPos, false);
-            drawPos.y += ((scale - 64) << 9) + 0xF00 * entity->scale.y;
+            drawPos.y += ((scale - 64) << 9) + 0xF00 * self->scale.y;
             break;
         default: break;
     }
-    entity->scale.y           = scale;
-    entity->animator3.frameID = (animator->frameID + 2) ^ (entity->rotation < 256);
-    RSDK.DrawSprite(&entity->animator3, &drawPos, false);
+    self->scale.y           = scale;
+    self->animator3.frameID = (animator->frameID + 2) ^ (self->rotation < 256);
+    RSDK.DrawSprite(&self->animator3, &drawPos, false);
 }
 void SpinSign_Unknown4(void)
 {
     RSDK_THIS(SpinSign);
     Vector2 drawPos;
 
-    drawPos.y      = entity->position.y;
-    entity->drawFX = FX_SCALE;
+    drawPos.y      = self->position.y;
+    self->drawFX = FX_SCALE;
 
     Animator *animator = NULL;
-    if (entity->rotation <= 128 || entity->rotation >= 384)
-        animator = &entity->animator1;
+    if (self->rotation <= 128 || self->rotation >= 384)
+        animator = &self->animator1;
     else
-        animator = &entity->animator2;
+        animator = &self->animator2;
 
     animator->frameID = (Zone->timer >> 4) & 1;
 
-    entity->scale.x   = abs(RSDK.Cos512(entity->rotation)) + 1;
-    int32 scale = abs(RSDK.Sin512(entity->rotation)) + 1;
+    self->scale.x   = abs(RSDK.Cos512(self->rotation)) + 1;
+    int32 scale = abs(RSDK.Sin512(self->rotation)) + 1;
 
-    switch (entity->rotation >> 7) {
+    switch (self->rotation >> 7) {
         case 0:
         case 2:
-            drawPos.x = entity->position.x + (scale << 9);
+            drawPos.x = self->position.x + (scale << 9);
             RSDK.DrawSprite(animator, &drawPos, false);
-            drawPos.x += -0xF00 * entity->scale.x - (scale << 9);
+            drawPos.x += -0xF00 * self->scale.x - (scale << 9);
             break;
         case 1:
         case 3:
-            drawPos.x = entity->position.x - (scale << 9);
+            drawPos.x = self->position.x - (scale << 9);
             RSDK.DrawSprite(animator, &drawPos, false);
-            drawPos.x += ((scale - 64) << 9) + 0xF00 * entity->scale.x;
+            drawPos.x += ((scale - 64) << 9) + 0xF00 * self->scale.x;
             break;
         default: break;
     }
-    entity->scale.x           = scale;
-    entity->animator3.frameID = animator->frameID ^ (entity->rotation < 256);
-    RSDK.DrawSprite(&entity->animator3, &drawPos, false);
+    self->scale.x           = scale;
+    self->animator3.frameID = animator->frameID ^ (self->rotation < 256);
+    RSDK.DrawSprite(&self->animator3, &drawPos, false);
 }
 void SpinSign_Unknown5(void)
 {
     RSDK_THIS(SpinSign);
     Vector2 drawPos;
 
-    drawPos.x                 = entity->position.x;
-    entity->drawFX            = FX_SCALE;
-    entity->animator2.frameID = entity->rotation <= 128 || entity->rotation >= 384;
+    drawPos.x                 = self->position.x;
+    self->drawFX            = FX_SCALE;
+    self->animator2.frameID = self->rotation <= 128 || self->rotation >= 384;
 
-    entity->scale.y = abs(RSDK.Cos512(entity->rotation)) + 1;
-    int32 scale       = abs(RSDK.Sin512(entity->rotation)) + 1;
+    self->scale.y = abs(RSDK.Cos512(self->rotation)) + 1;
+    int32 scale       = abs(RSDK.Sin512(self->rotation)) + 1;
 
-    switch (entity->rotation >> 7) {
+    switch (self->rotation >> 7) {
         case 0:
         case 2:
-            drawPos.y = entity->position.y + (scale << 9);
-            RSDK.DrawSprite(&entity->animator2, &drawPos, false);
-            drawPos.y += -0x1400 * entity->scale.y - (scale << 9);
+            drawPos.y = self->position.y + (scale << 9);
+            RSDK.DrawSprite(&self->animator2, &drawPos, false);
+            drawPos.y += -0x1400 * self->scale.y - (scale << 9);
             break;
         case 1:
         case 3:
-            drawPos.y = entity->position.y - (scale << 9);
-            RSDK.DrawSprite(&entity->animator2, &drawPos, false);
-            drawPos.y += (scale + 2 * (5 * entity->scale.y - 32)) << 9;
+            drawPos.y = self->position.y - (scale << 9);
+            RSDK.DrawSprite(&self->animator2, &drawPos, false);
+            drawPos.y += (scale + 2 * (5 * self->scale.y - 32)) << 9;
             break;
         default: break;
     }
-    entity->scale.y           = scale;
-    entity->animator3.frameID = entity->animator2.frameID + 6;
-    RSDK.DrawSprite(&entity->animator3, &drawPos, false);
+    self->scale.y           = scale;
+    self->animator3.frameID = self->animator2.frameID + 6;
+    RSDK.DrawSprite(&self->animator3, &drawPos, false);
 }
 void SpinSign_Unknown6(void)
 {
     RSDK_THIS(SpinSign);
     Vector2 drawPos;
 
-    drawPos.y                 = entity->position.y;
-    entity->drawFX            = FX_SCALE;
-    entity->animator2.frameID = entity->rotation <= 128 || entity->rotation >= 384;
+    drawPos.y                 = self->position.y;
+    self->drawFX            = FX_SCALE;
+    self->animator2.frameID = self->rotation <= 128 || self->rotation >= 384;
 
-    entity->scale.x = abs(RSDK.Cos512(entity->rotation)) + 1;
-    int32 scale       = abs(RSDK.Sin512(entity->rotation)) + 1;
+    self->scale.x = abs(RSDK.Cos512(self->rotation)) + 1;
+    int32 scale       = abs(RSDK.Sin512(self->rotation)) + 1;
 
-    switch (entity->rotation >> 7) {
+    switch (self->rotation >> 7) {
         case 0:
         case 2:
-            drawPos.x = entity->position.x + (scale << 9);
-            RSDK.DrawSprite(&entity->animator2, &drawPos, false);
-            drawPos.x += -0xC00 * entity->scale.x - (scale << 9);
+            drawPos.x = self->position.x + (scale << 9);
+            RSDK.DrawSprite(&self->animator2, &drawPos, false);
+            drawPos.x += -0xC00 * self->scale.x - (scale << 9);
             break;
         case 1:
         case 3:
-            drawPos.x = entity->position.x - (scale << 9);
-            RSDK.DrawSprite(&entity->animator2, &drawPos, false);
-            drawPos.x += (scale + 2 * (3 * entity->scale.x - 32)) << 9;
+            drawPos.x = self->position.x - (scale << 9);
+            RSDK.DrawSprite(&self->animator2, &drawPos, false);
+            drawPos.x += (scale + 2 * (3 * self->scale.x - 32)) << 9;
             break;
         default: break;
     }
-    entity->scale.x           = scale;
-    entity->animator3.frameID = entity->animator2.frameID + 4;
-    RSDK.DrawSprite(&entity->animator3, &drawPos, false);
+    self->scale.x           = scale;
+    self->animator3.frameID = self->animator2.frameID + 4;
+    RSDK.DrawSprite(&self->animator3, &drawPos, false);
 }
 
 #if RETRO_INCLUDE_EDITOR
@@ -306,39 +306,39 @@ void SpinSign_EditorDraw(void)
 {
     RSDK_THIS(SpinSign);
 
-    RSDK.SetSpriteAnimation(SpinSign->aniFrames, 3, &entity->animator1, true, 0);
-    RSDK.SetSpriteAnimation(SpinSign->aniFrames, 4, &entity->animator3, true, 0);
-    entity->active        = ACTIVE_BOUNDS;
-    entity->updateRange.x = 0x800000;
-    entity->updateRange.y = 0x800000;
-    entity->scale.x       = 0x200;
-    entity->scale.y       = 0x200;
+    RSDK.SetSpriteAnimation(SpinSign->aniFrames, 3, &self->animator1, true, 0);
+    RSDK.SetSpriteAnimation(SpinSign->aniFrames, 4, &self->animator3, true, 0);
+    self->active        = ACTIVE_BOUNDS;
+    self->updateRange.x = 0x800000;
+    self->updateRange.y = 0x800000;
+    self->scale.x       = 0x200;
+    self->scale.y       = 0x200;
 
-    switch (entity->type) {
+    switch (self->type) {
         case 0:
-            entity->animator3.frameID = 1;
-            RSDK.SetSpriteAnimation(SpinSign->aniFrames, 0, &entity->animator2, true, 0);
-            entity->stateDraw = SpinSign_Unknown3;
+            self->animator3.frameID = 1;
+            RSDK.SetSpriteAnimation(SpinSign->aniFrames, 0, &self->animator2, true, 0);
+            self->stateDraw = SpinSign_Unknown3;
             break;
         case 1:
-            entity->animator3.frameID = 0;
-            RSDK.SetSpriteAnimation(SpinSign->aniFrames, 0, &entity->animator2, true, 0);
-            entity->stateDraw = SpinSign_Unknown4;
+            self->animator3.frameID = 0;
+            RSDK.SetSpriteAnimation(SpinSign->aniFrames, 0, &self->animator2, true, 0);
+            self->stateDraw = SpinSign_Unknown4;
             break;
         case 2:
-            entity->animator3.frameID = 1;
-            RSDK.SetSpriteAnimation(SpinSign->aniFrames, 5, &entity->animator2, true, 0);
-            entity->stateDraw = SpinSign_Unknown5;
+            self->animator3.frameID = 1;
+            RSDK.SetSpriteAnimation(SpinSign->aniFrames, 5, &self->animator2, true, 0);
+            self->stateDraw = SpinSign_Unknown5;
             break;
         case 3:
-            entity->animator3.frameID = 2;
-            RSDK.SetSpriteAnimation(SpinSign->aniFrames, 5, &entity->animator2, true, 0);
-            entity->stateDraw = SpinSign_Unknown6;
+            self->animator3.frameID = 2;
+            RSDK.SetSpriteAnimation(SpinSign->aniFrames, 5, &self->animator2, true, 0);
+            self->stateDraw = SpinSign_Unknown6;
             break;
         default: break;
     }
 
-    StateMachine_Run(entity->stateDraw);
+    StateMachine_Run(self->stateDraw);
 }
 
 void SpinSign_EditorLoad(void) { SpinSign->aniFrames = RSDK.LoadSpriteAnimation("SPZ1/SpinSign.bin", SCOPE_STAGE); }

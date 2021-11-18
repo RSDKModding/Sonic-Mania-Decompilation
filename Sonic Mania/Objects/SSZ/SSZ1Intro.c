@@ -7,14 +7,14 @@ void SSZ1Intro_Update(void)
     void *states[] = { SSZ1Intro_CutsceneState_Unknown1, SSZ1Intro_CutsceneState_Unknown2, SSZ1Intro_CutsceneState_Unknown3, NULL };
 
     RSDK_THIS(SSZ1Intro);
-    if (!entity->activated) {
+    if (!self->activated) {
         if (!isMainGameMode() || !globals->enableIntro || PlayerHelpers_CheckStageReload()) {
             destroyEntity(SSZ1Intro->fxRuby);
-            entity->active = ACTIVE_NEVER;
+            self->active = ACTIVE_NEVER;
         }
         else {
-            entity->activated = true;
-            CutsceneSeq_StartSequence((Entity *)entity, states);
+            self->activated = true;
+            CutsceneSeq_StartSequence((Entity *)self, states);
         }
     }
 }
@@ -29,9 +29,9 @@ void SSZ1Intro_Create(void *data)
 {
     RSDK_THIS(SSZ1Intro);
 
-    INIT_ENTITY(entity);
-    CutsceneRules_SetupEntity(entity, &entity->size, &entity->hitbox);
-    entity->active = ACTIVE_NORMAL;
+    INIT_ENTITY(self);
+    CutsceneRules_SetupEntity(self, &self->size, &self->hitbox);
+    self->active = ACTIVE_NORMAL;
 }
 
 void SSZ1Intro_StageLoad(void)
@@ -166,7 +166,7 @@ bool32 SSZ1Intro_CutsceneState_Unknown3(EntityCutsceneSeq *host)
 void SSZ1Intro_EditorDraw(void)
 {
     RSDK_THIS(SSZ1Intro);
-    CutsceneRules_DrawCutsceneBounds(entity, &entity->size);
+    CutsceneRules_DrawCutsceneBounds(self, &self->size);
 }
 
 void SSZ1Intro_EditorLoad(void) {}

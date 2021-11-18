@@ -12,13 +12,13 @@ void COverlay_Draw(void)
 {
     RSDK_THIS(COverlay);
     int32 tileX          = 0;
-    for (entity->position.x = (ScreenInfo->position.x & 0xFFFFFFF0) << 16; tileX < (ScreenInfo->width >> 4) + 2; ++tileX) {
+    for (self->position.x = (ScreenInfo->position.x & 0xFFFFFFF0) << 16; tileX < (ScreenInfo->width >> 4) + 2; ++tileX) {
         int32 tileY = 0;
-        for (entity->position.y = (ScreenInfo->position.y & 0xFFFFFFF0) << 16; tileY < (ScreenInfo->height >> 4) + 2; ++tileY) {
+        for (self->position.y = (ScreenInfo->position.y & 0xFFFFFFF0) << 16; tileY < (ScreenInfo->height >> 4) + 2; ++tileY) {
             COverlay_DrawTile();
-            entity->position.y += 16 << 0x10;
+            self->position.y += 16 << 0x10;
         }
-        entity->position.x += 16 << 0x10;
+        self->position.x += 16 << 0x10;
     }
 }
 
@@ -26,9 +26,9 @@ void COverlay_Create(void *data)
 {
     RSDK_THIS(COverlay);
     if (!SceneInfo->inEditor) {
-        entity->active    = ACTIVE_ALWAYS;
-        entity->visible   = true;
-        entity->drawOrder = Zone->drawOrderHigh;
+        self->active    = ACTIVE_ALWAYS;
+        self->visible   = true;
+        self->drawOrder = Zone->drawOrderHigh;
     }
 }
 
@@ -56,7 +56,7 @@ void COverlay_DebugSpawn(void)
         ++count;
     }
     if (!count)
-        CREATE_ENTITY(COverlay, NULL, entity->position.x, entity->position.y);
+        CREATE_ENTITY(COverlay, NULL, self->position.x, self->position.y);
 }
 
 void COverlay_DrawTile(void)
@@ -71,14 +71,14 @@ void COverlay_DrawTile(void)
         uint8 th   = -1;
         uint8 solid = 0;
         for (int32 y = 0; y < 0x10; ++y) {
-            if (RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_FLOOR, player->collisionPlane, x << 0x10, y << 0x10, false)) {
+            if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, player->collisionPlane, x << 0x10, y << 0x10, false)) {
                 solid |= 1;
                 th2 = y + 1;
                 if (ty == 0xFF)
                     ty = y;
             }
 
-            if (RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_ROOF, player->collisionPlane, x << 0x10, y << 0x10, false)) {
+            if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_ROOF, player->collisionPlane, x << 0x10, y << 0x10, false)) {
                 solid |= 2;
                 th = y + 1;
                 if (ty2 == 0xFF) 
@@ -95,15 +95,15 @@ void COverlay_DrawTile(void)
             switch (solid) {
                 default: break;
                 case 1:
-                    RSDK.DrawLine(entity->position.x + tx, entity->position.y + (ty << 16), entity->position.x + tx, entity->position.y + (th << 16),
+                    RSDK.DrawLine(self->position.x + tx, self->position.y + (ty << 16), self->position.x + tx, self->position.y + (th << 16),
                                   0xE0E000, 0xFF, INK_NONE, false);
                     break;
                 case 2:
-                    RSDK.DrawLine(entity->position.x + tx, entity->position.y + (ty << 16), entity->position.x + tx, entity->position.y + (th << 16),
+                    RSDK.DrawLine(self->position.x + tx, self->position.y + (ty << 16), self->position.x + tx, self->position.y + (th << 16),
                                   0xE00000, 0xFF, INK_NONE, false);
                     break;
                 case 3:
-                    RSDK.DrawLine(entity->position.x + tx, entity->position.y + (ty << 16), entity->position.x + tx, entity->position.y + (th << 16),
+                    RSDK.DrawLine(self->position.x + tx, self->position.y + (ty << 16), self->position.x + tx, self->position.y + (th << 16),
                                   0xE0E0E0, 0xFF, INK_NONE, false);
                     break;
             }

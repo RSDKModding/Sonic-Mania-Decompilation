@@ -5,7 +5,7 @@ ObjectUIPicture *UIPicture;
 void UIPicture_Update(void)
 {
     RSDK_THIS(UIPicture);
-    RSDK.ProcessAnimation(&entity->animator);
+    RSDK.ProcessAnimation(&self->animator);
 }
 
 void UIPicture_LateUpdate(void) {}
@@ -15,26 +15,26 @@ void UIPicture_StaticUpdate(void) {}
 void UIPicture_Draw(void)
 {
     RSDK_THIS(UIPicture);
-    if (entity->zonePalette)
-        RSDK.CopyPalette((entity->zonePalette >> 3) + 1, 32 * entity->zonePalette, 0, 224, 32);
-    RSDK.DrawSprite(&entity->animator, NULL, false);
+    if (self->zonePalette)
+        RSDK.CopyPalette((self->zonePalette >> 3) + 1, 32 * self->zonePalette, 0, 224, 32);
+    RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
 void UIPicture_Create(void *data)
 {
     RSDK_THIS(UIPicture);
-    RSDK.SetSpriteAnimation(UIPicture->aniFrames, entity->listID, &entity->animator, true, entity->frameID);
+    RSDK.SetSpriteAnimation(UIPicture->aniFrames, self->listID, &self->animator, true, self->frameID);
     if (!SceneInfo->inEditor) {
         if (RSDK.CheckStageFolder("Menu")) {
-            entity->active    = ACTIVE_BOUNDS;
-            entity->visible   = true;
-            entity->drawOrder = 2;
+            self->active    = ACTIVE_BOUNDS;
+            self->visible   = true;
+            self->drawOrder = 2;
         }
         else {
             if (RSDK.CheckStageFolder("Logos") || RSDK.CheckStageFolder("LSelect") || RSDK.CheckStageFolder("Summary"))
-                entity->active = ACTIVE_NORMAL;
-            entity->visible   = true;
-            entity->drawOrder = 2;
+                self->active = ACTIVE_NORMAL;
+            self->visible   = true;
+            self->drawOrder = 2;
         }
     }
 }
@@ -51,9 +51,9 @@ void UIPicture_StageLoad(void)
 void UIPicture_EditorDraw(void)
 {
     RSDK_THIS(UIPicture);
-    RSDK.SetSpriteAnimation(UIPicture->aniFrames, entity->listID, &entity->animator, true, entity->frameID);
+    RSDK.SetSpriteAnimation(UIPicture->aniFrames, self->listID, &self->animator, true, self->frameID);
 
-    RSDK.DrawSprite(&entity->animator, NULL, false);
+    RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
 void UIPicture_EditorLoad(void)

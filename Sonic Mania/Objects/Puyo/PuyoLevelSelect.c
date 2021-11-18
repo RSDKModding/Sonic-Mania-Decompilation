@@ -5,10 +5,10 @@ ObjectPuyoLevelSelect *PuyoLevelSelect;
 void PuyoLevelSelect_Update(void)
 {
     RSDK_THIS(PuyoLevelSelect);
-    if (entity->flag) {
-        entity->visible = !entity->ready;
+    if (self->flag) {
+        self->visible = !self->ready;
 
-        int32 controllerID  = entity->playerID + 1;
+        int32 controllerID  = self->playerID + 1;
 
 #if RETRO_USE_TOUCH_CONTROLS
         for (int32 t = 0; t < TouchInfo->count; ++t) {
@@ -40,16 +40,16 @@ void PuyoLevelSelect_Update(void)
                 }
             }
         }
-        if (!getBit(entity->touchFlags, 0)) {
+        if (!getBit(self->touchFlags, 0)) {
             ControllerInfo->keyUp.press |= ControllerInfo->keyUp.down;
             ControllerInfo[controllerID].keyUp.press |= ControllerInfo[controllerID].keyUp.down;
         }
-        if (!getBit(entity->touchFlags, 1)) {
+        if (!getBit(self->touchFlags, 1)) {
             ControllerInfo->keyDown.press |= ControllerInfo->keyDown.down;
             ControllerInfo[controllerID].keyDown.press |= ControllerInfo[controllerID].keyDown.down;
         }
-        setBit(entity->touchFlags, ControllerInfo[controllerID].keyUp.down, 0);
-        setBit(entity->touchFlags, ControllerInfo[controllerID].keyDown.down, 1);
+        setBit(self->touchFlags, ControllerInfo[controllerID].keyUp.down, 0);
+        setBit(self->touchFlags, ControllerInfo[controllerID].keyDown.down, 1);
 
         int32 halfX = ScreenInfo->centerX / 2;
         for (int32 t = 0; t < TouchInfo->count; ++t) {
@@ -70,33 +70,33 @@ void PuyoLevelSelect_Update(void)
             }
         }
 
-        if (!getBit(entity->touchFlags, 2)) {
+        if (!getBit(self->touchFlags, 2)) {
             ControllerInfo->keyA.press |= ControllerInfo->keyA.down;
             ControllerInfo[controllerID].keyA.press |= ControllerInfo[controllerID].keyA.down;
         }
-        if (!getBit(entity->touchFlags, 3)) {
+        if (!getBit(self->touchFlags, 3)) {
             ControllerInfo->keyB.press |= ControllerInfo->keyB.down;
             ControllerInfo[controllerID].keyB.press |= ControllerInfo[controllerID].keyB.down;
         }
-        setBit(entity->touchFlags, ControllerInfo[controllerID].keyA.down, 2);
-        setBit(entity->touchFlags, ControllerInfo[controllerID].keyB.down, 3);
+        setBit(self->touchFlags, ControllerInfo[controllerID].keyA.down, 2);
+        setBit(self->touchFlags, ControllerInfo[controllerID].keyB.down, 3);
 #endif
 
-        entity->up      = ControllerInfo[controllerID].keyUp.press || AnalogStickInfoL[controllerID].keyUp.press;
-        entity->down    = ControllerInfo[controllerID].keyDown.press || AnalogStickInfoL[controllerID].keyDown.press;
+        self->up      = ControllerInfo[controllerID].keyUp.press || AnalogStickInfoL[controllerID].keyUp.press;
+        self->down    = ControllerInfo[controllerID].keyDown.press || AnalogStickInfoL[controllerID].keyDown.press;
 
         if (API_GetConfirmButtonFlip()) {
-            entity->confirmPress = ControllerInfo[controllerID].keyB.press;
-            entity->backPress    = ControllerInfo[controllerID].keyA.press;
+            self->confirmPress = ControllerInfo[controllerID].keyB.press;
+            self->backPress    = ControllerInfo[controllerID].keyA.press;
         }
         else {
-            entity->confirmPress = ControllerInfo[controllerID].keyA.press;
-            entity->backPress    = ControllerInfo[controllerID].keyB.press;
+            self->confirmPress = ControllerInfo[controllerID].keyA.press;
+            self->backPress    = ControllerInfo[controllerID].keyB.press;
         }
         PuyoLevelSelect_HandleMenuMovement();
     }
     else {
-        entity->visible = false;
+        self->visible = false;
     }
 }
 
@@ -109,11 +109,11 @@ void PuyoLevelSelect_Draw(void) { PuyoLevelSelect_DrawSprites(); }
 void PuyoLevelSelect_Create(void *data)
 {
     RSDK_THIS(PuyoLevelSelect);
-    entity->active        = ACTIVE_NORMAL;
-    entity->drawOrder     = 10;
-    entity->visible       = true;
-    entity->updateRange.x = 0x800000;
-    entity->updateRange.y = 0x800000;
+    self->active        = ACTIVE_NORMAL;
+    self->drawOrder     = 10;
+    self->visible       = true;
+    self->updateRange.x = 0x800000;
+    self->updateRange.y = 0x800000;
 }
 
 void PuyoLevelSelect_StageLoad(void)
@@ -128,31 +128,31 @@ void PuyoLevelSelect_DrawSprites(void)
     RSDK_THIS(PuyoLevelSelect);
     Vector2 drawPos;
 
-    drawPos.x         = entity->position.x + 0x30000;
-    drawPos.y         = entity->position.y + 0x30000;
-    entity->inkEffect = INK_BLEND;
-    entity->alpha     = 0x7F;
-    RSDK.SetSpriteAnimation(PuyoLevelSelect->aniFrames, 0, &entity->animator1, true, 1);
-    RSDK.DrawSprite(&entity->animator1, &drawPos, false);
+    drawPos.x         = self->position.x + 0x30000;
+    drawPos.y         = self->position.y + 0x30000;
+    self->inkEffect = INK_BLEND;
+    self->alpha     = 0x7F;
+    RSDK.SetSpriteAnimation(PuyoLevelSelect->aniFrames, 0, &self->animator1, true, 1);
+    RSDK.DrawSprite(&self->animator1, &drawPos, false);
 
     drawPos.x -= 0x30000;
     drawPos.y -= 0x30000;
-    entity->inkEffect = INK_NONE;
-    RSDK.SetSpriteAnimation(PuyoLevelSelect->aniFrames, 0, &entity->animator1, true, 0);
-    RSDK.DrawSprite(&entity->animator1, &drawPos, false);
+    self->inkEffect = INK_NONE;
+    RSDK.SetSpriteAnimation(PuyoLevelSelect->aniFrames, 0, &self->animator1, true, 0);
+    RSDK.DrawSprite(&self->animator1, &drawPos, false);
 
-    drawPos.x = entity->position.x;
-    drawPos.y = entity->position.y - 0x500000;
-    RSDK.SetSpriteAnimation(PuyoLevelSelect->aniFrames, 1, &entity->animator2, true, 1);
-    RSDK.DrawSprite(&entity->animator2, &drawPos, false);
+    drawPos.x = self->position.x;
+    drawPos.y = self->position.y - 0x500000;
+    RSDK.SetSpriteAnimation(PuyoLevelSelect->aniFrames, 1, &self->animator2, true, 1);
+    RSDK.DrawSprite(&self->animator2, &drawPos, false);
 
-    drawPos.x = entity->position.x;
-    drawPos.y = entity->position.y - 0x310000;
+    drawPos.x = self->position.x;
+    drawPos.y = self->position.y - 0x310000;
 
     for (int i = 0; i < 5; ++i) {
-        if (i != entity->optionID || (!(Zone->timer & 4))) {
-            RSDK.SetSpriteAnimation(PuyoLevelSelect->aniFrames, (i != entity->optionID) + 4, &entity->animator2, true, i + 1);
-            RSDK.DrawSprite(&entity->animator2, &drawPos, false);
+        if (i != self->optionID || (!(Zone->timer & 4))) {
+            RSDK.SetSpriteAnimation(PuyoLevelSelect->aniFrames, (i != self->optionID) + 4, &self->animator2, true, i + 1);
+            RSDK.DrawSprite(&self->animator2, &drawPos, false);
         }
         drawPos.y += 0x180000;
     }
@@ -162,26 +162,26 @@ void PuyoLevelSelect_HandleMenuMovement(void)
 {
     RSDK_THIS(PuyoLevelSelect);
 
-    if (entity->ready) {
-        if (entity->backPress)
-            entity->ready = false;
+    if (self->ready) {
+        if (self->backPress)
+            self->ready = false;
     }
     else {
-        if (entity->up || entity->down) {
-            if (entity->up)
-                --entity->optionID;
-            if (entity->down)
-                ++entity->optionID;
+        if (self->up || self->down) {
+            if (self->up)
+                --self->optionID;
+            if (self->down)
+                ++self->optionID;
 
-            if (entity->optionID >= 5)
-                entity->optionID -= 5;
-            if (entity->optionID < 0)
-                entity->optionID += 5;
+            if (self->optionID >= 5)
+                self->optionID -= 5;
+            if (self->optionID < 0)
+                self->optionID += 5;
 
             RSDK.PlaySfx(PuyoLevelSelect->sfxMenuBleep, false, 255);
         }
-        else if (entity->confirmPress) {
-            entity->ready = true;
+        else if (self->confirmPress) {
+            self->ready = true;
             RSDK.PlaySfx(PuyoLevelSelect->sfxMenuAccept, false, 255);
         }
     }

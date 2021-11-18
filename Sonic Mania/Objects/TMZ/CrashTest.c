@@ -5,10 +5,10 @@ ObjectCrashTest *CrashTest;
 void CrashTest_Update(void)
 {
     RSDK_THIS(CrashTest);
-    StateMachine_Run(entity->state);
+    StateMachine_Run(self->state);
     CrashTest_Unknown6();
-    RSDK.ProcessAnimation(&entity->animator2);
-    RSDK.ProcessAnimation(&entity->animator1);
+    RSDK.ProcessAnimation(&self->animator2);
+    RSDK.ProcessAnimation(&self->animator1);
 }
 
 void CrashTest_LateUpdate(void) {}
@@ -25,24 +25,24 @@ void CrashTest_Draw(void)
     Vector2 drawPos2;
     Vector2 drawPos3;
 
-    drawPos2 = entity->startPos;
-    drawPos2.x += 0x300000 * (2 * (entity->direction != FLIP_NONE) - 1);
+    drawPos2 = self->startPos;
+    drawPos2.x += 0x300000 * (2 * (self->direction != FLIP_NONE) - 1);
 
-    drawPos = entity->startPos;
-    drawPos.x += entity->dword84 * (2 * (entity->direction != FLIP_NONE) - 1);
+    drawPos = self->startPos;
+    drawPos.x += self->dword84 * (2 * (self->direction != FLIP_NONE) - 1);
 
-    drawPos3.x = (2 * (entity->direction != FLIP_NONE) - 1) * (entity->length << 16) + entity->startPos.x
-                 + 0x340000 * (2 * (entity->direction != FLIP_NONE) - 1);
-    drawPos3.y = entity->startPos.y;
+    drawPos3.x = (2 * (self->direction != FLIP_NONE) - 1) * (self->length << 16) + self->startPos.x
+                 + 0x340000 * (2 * (self->direction != FLIP_NONE) - 1);
+    drawPos3.y = self->startPos.y;
     if (SceneInfo->currentDrawGroup == Zone->playerDrawLow + 1) {
-        if (entity->state != CrashTest_State_Unknown4)
-            RSDK.DrawSprite(&entity->animator1, &drawPos, false);
+        if (self->state != CrashTest_State_Unknown4)
+            RSDK.DrawSprite(&self->animator1, &drawPos, false);
     }
     else {
-        RSDK.DrawSprite(&entity->animator3, &drawPos2, false);
-        RSDK.DrawSprite(&entity->animator4, &drawPos3, false);
-        if (entity->state != CrashTest_State_Unknown4)
-            RSDK.DrawSprite(&entity->animator2, &drawPos, false);
+        RSDK.DrawSprite(&self->animator3, &drawPos2, false);
+        RSDK.DrawSprite(&self->animator4, &drawPos3, false);
+        if (self->state != CrashTest_State_Unknown4)
+            RSDK.DrawSprite(&self->animator2, &drawPos, false);
     }
 }
 
@@ -50,13 +50,13 @@ void CrashTest_Create(void *data)
 {
     RSDK_THIS(CrashTest);
 
-    entity->active        = ACTIVE_BOUNDS;
-    entity->drawOrder     = Zone->drawOrderLow;
-    entity->startPos      = entity->position;
-    entity->visible       = true;
-    entity->drawFX        = FX_FLIP;
-    entity->updateRange.x = (entity->length + 128) << 16;
-    entity->updateRange.y = 0x800000;
+    self->active        = ACTIVE_BOUNDS;
+    self->drawOrder     = Zone->drawOrderLow;
+    self->startPos      = self->position;
+    self->visible       = true;
+    self->drawFX        = FX_FLIP;
+    self->updateRange.x = (self->length + 128) << 16;
+    self->updateRange.y = 0x800000;
     CrashTest_SetupHitboxes();
 
     int32 positions[] = { -0x100000, -0x180000, 0x80000,  -0x1A0000, -0x100000, -0x180000, 0x00000,  -0x100000,
@@ -64,13 +64,13 @@ void CrashTest_Create(void *data)
 
     int32 pos = 0;
     for (int32 i = 0; i < 8; ++i) {
-        entity->field_8C[i].x = positions[pos + 0];
-        entity->field_8C[i].y = positions[pos + 1];
+        self->field_8C[i].x = positions[pos + 0];
+        self->field_8C[i].y = positions[pos + 1];
 
         pos += 2;
     }
 
-    entity->state = CrashTest_State_Setup;
+    self->state = CrashTest_State_Setup;
 }
 
 void CrashTest_StageLoad(void)
@@ -89,46 +89,46 @@ void CrashTest_SetupHitboxes(void)
 {
     RSDK_THIS(CrashTest);
 
-    entity->hitbox1.left             = -22;
-    entity->hitbox1.top              = -16;
-    entity->hitbox1.right            = 14;
-    entity->hitbox1.bottom           = 4;
+    self->hitbox1.left             = -22;
+    self->hitbox1.top              = -16;
+    self->hitbox1.right            = 14;
+    self->hitbox1.bottom           = 4;
 
-    entity->hitbox2.left             = -40;
-    entity->hitbox2.top              = -16;
-    entity->hitbox2.right            = -22;
-    entity->hitbox2.bottom           = 0;
+    self->hitbox2.left             = -40;
+    self->hitbox2.top              = -16;
+    self->hitbox2.right            = -22;
+    self->hitbox2.bottom           = 0;
 
-    entity->hitbox3.left             = -22;
-    entity->hitbox3.top              = -4;
-    entity->hitbox3.right            = 14;
-    entity->hitbox3.bottom           = 0;
+    self->hitbox3.left             = -22;
+    self->hitbox3.top              = -4;
+    self->hitbox3.right            = 14;
+    self->hitbox3.bottom           = 0;
 
-    entity->hitbox4.left             = 14;
-    entity->hitbox4.top              = -36;
-    entity->hitbox4.right            = 25;
-    entity->hitbox4.bottom           = 0;
+    self->hitbox4.left             = 14;
+    self->hitbox4.top              = -36;
+    self->hitbox4.right            = 25;
+    self->hitbox4.bottom           = 0;
 
-    entity->hitbox5.left             = -12;
-    entity->hitbox5.top              = -24;
-    entity->hitbox5.right            = 12;
-    entity->hitbox5.bottom           = 0;
+    self->hitbox5.left             = -12;
+    self->hitbox5.top              = -24;
+    self->hitbox5.right            = 12;
+    self->hitbox5.bottom           = 0;
 
-    entity->hitbox6.left             = 28;
-    entity->hitbox6.top              = -22;
-    entity->hitbox6.right            = 51;
-    entity->hitbox6.bottom           = -2;
+    self->hitbox6.left             = 28;
+    self->hitbox6.top              = -22;
+    self->hitbox6.right            = 51;
+    self->hitbox6.bottom           = -2;
 }
 
 void CrashTest_CheckOnScreen(void)
 {
     RSDK_THIS(CrashTest);
 
-    if (!RSDK.CheckOnScreen(entity, NULL) && !RSDK.CheckPosOnScreen(&entity->startPos, &entity->updateRange)) {
-        entity->position.x = entity->startPos.x;
-        entity->position.y = entity->startPos.y;
-        entity->active     = ACTIVE_BOUNDS;
-        entity->state      = CrashTest_State_Setup;
+    if (!RSDK.CheckOnScreen(self, NULL) && !RSDK.CheckPosOnScreen(&self->startPos, &self->updateRange)) {
+        self->position.x = self->startPos.x;
+        self->position.y = self->startPos.y;
+        self->active     = ACTIVE_BOUNDS;
+        self->state      = CrashTest_State_Setup;
     }
 }
 
@@ -139,8 +139,8 @@ void CrashTest_CheckPlayerCrash(void)
     foreach_active(Player, player)
     {
         int32 playerID = RSDK.GetEntityID(player);
-        if ((1 << playerID) & entity->activePlayers) {
-            entity->activePlayers &= ~(1 << playerID);
+        if ((1 << playerID) & self->activePlayers) {
+            self->activePlayers &= ~(1 << playerID);
             bool32 isSidekick = player->sidekick;
             player->sidekick  = true;
             Player_Hit(player);
@@ -152,59 +152,59 @@ void CrashTest_CheckPlayerCrash(void)
 void CrashTest_CheckPlayerCollisions(void)
 {
     RSDK_THIS(CrashTest);
-    int32 storeDir = entity->direction;
+    int32 storeDir = self->direction;
 
-    int32 storeX = entity->position.x;
-    int32 storeY = entity->position.y;
+    int32 storeX = self->position.x;
+    int32 storeY = self->position.y;
 
-    int32 storeX2 = (2 * (storeDir != FLIP_NONE) - 1) * (entity->length << 16) + entity->startPos.x + 0x340000 * (2 * (storeDir != FLIP_NONE) - 1);
-    int32 storeY2 = entity->startPos.y;
+    int32 storeX2 = (2 * (storeDir != FLIP_NONE) - 1) * (self->length << 16) + self->startPos.x + 0x340000 * (2 * (storeDir != FLIP_NONE) - 1);
+    int32 storeY2 = self->startPos.y;
 
-    int32 storeX3 = (2 * (storeDir != FLIP_NONE) - 1) + entity->startPos.x;
-    int32 storeY3 = entity->startPos.y;
+    int32 storeX3 = (2 * (storeDir != FLIP_NONE) - 1) + self->startPos.x;
+    int32 storeY3 = self->startPos.y;
 
     foreach_active(Player, player)
     {
         RSDK.GetEntityID(player);
-        if (entity->state != CrashTest_State_Unknown4) {
-            entity->position.y = storeY3;
-            entity->position.x = storeX3;
-            entity->direction  = storeDir;
-            Player_CheckCollisionBox(player, entity, &entity->hitbox2);
-            Player_CheckCollisionBox(player, entity, &entity->hitbox3);
-            Player_CheckCollisionBox(player, entity, &entity->hitbox4);
-            if (entity->field_88) {
-                if (Player_CheckCollisionTouch(player, entity, &entity->hitbox6)) {
-                    Player_CheckElementalHit(player, entity, SHIELD_FIRE);
+        if (self->state != CrashTest_State_Unknown4) {
+            self->position.y = storeY3;
+            self->position.x = storeX3;
+            self->direction  = storeDir;
+            Player_CheckCollisionBox(player, self, &self->hitbox2);
+            Player_CheckCollisionBox(player, self, &self->hitbox3);
+            Player_CheckCollisionBox(player, self, &self->hitbox4);
+            if (self->field_88) {
+                if (Player_CheckCollisionTouch(player, self, &self->hitbox6)) {
+                    Player_CheckElementalHit(player, self, SHIELD_FIRE);
                 }
             }
         }
-        entity->position.x = storeX2;
-        entity->position.y = storeY2;
-        entity->direction  = FLIP_NONE;
-        Player_CheckCollisionBox(player, entity, &entity->hitbox5);
+        self->position.x = storeX2;
+        self->position.y = storeY2;
+        self->direction  = FLIP_NONE;
+        Player_CheckCollisionBox(player, self, &self->hitbox5);
     }
-    entity->position.x = storeX;
-    entity->position.y = storeY;
-    entity->direction  = storeDir;
+    self->position.x = storeX;
+    self->position.y = storeY;
+    self->direction  = storeDir;
 }
 
 void CrashTest_CheckPlayerRide(void)
 {
     RSDK_THIS(CrashTest);
 
-    int32 storeX = entity->position.x;
-    int32 storeY = entity->position.y;
+    int32 storeX = self->position.x;
+    int32 storeY = self->position.y;
 
-    entity->position.x = entity->dword84 * (2 * (entity->direction != FLIP_NONE) - 1) + entity->startPos.x;
-    entity->position.y = entity->startPos.y;
+    self->position.x = self->dword84 * (2 * (self->direction != FLIP_NONE) - 1) + self->startPos.x;
+    self->position.y = self->startPos.y;
 
     foreach_active(Player, player)
     {
         int32 playerID = RSDK.GetEntityID(player);
-        if (!((1 << playerID) & entity->activePlayers) && !entity->playerTimers[playerID]) {
-            if (Player_CheckCollisionTouch(player, entity, &entity->hitbox1)) {
-                entity->activePlayers |= 1 << playerID;
+        if (!((1 << playerID) & self->activePlayers) && !self->playerTimers[playerID]) {
+            if (Player_CheckCollisionTouch(player, self, &self->hitbox1)) {
+                self->activePlayers |= 1 << playerID;
                 player->groundVel = 0;
                 RSDK.PlaySfx(Player->sfxGrab, false, 255);
                 RSDK.SetSpriteAnimation(player->aniFrames, ANI_HURT, &player->playerAnimator, false, 4);
@@ -213,43 +213,43 @@ void CrashTest_CheckPlayerRide(void)
                 player->state           = Player_State_None;
             }
         }
-        if (entity->playerTimers[playerID] > 0)
-            entity->playerTimers[playerID]--;
+        if (self->playerTimers[playerID] > 0)
+            self->playerTimers[playerID]--;
     }
 
-    entity->position.x = storeX;
-    entity->position.y = storeY;
+    self->position.x = storeX;
+    self->position.y = storeY;
 }
 
 void CrashTest_CheckPlayerJump(void)
 {
     RSDK_THIS(CrashTest);
 
-    int32 x = entity->startPos.x + (entity->dword84 * (2 * (entity->direction != FLIP_NONE) - 1));
-    int32 y = entity->startPos.y;
+    int32 x = self->startPos.x + (self->dword84 * (2 * (self->direction != FLIP_NONE) - 1));
+    int32 y = self->startPos.y;
 
     foreach_active(Player, player)
     {
         int32 playerID = RSDK.GetEntityID(player);
-        if ((1 << playerID) & entity->activePlayers) {
+        if ((1 << playerID) & self->activePlayers) {
             player->velocity.x = 0;
             player->velocity.y = 0;
-            if (entity->direction == FLIP_NONE)
-                player->velocity.x = -entity->velocity.x;
+            if (self->direction == FLIP_NONE)
+                player->velocity.x = -self->velocity.x;
             else
-                player->velocity.x = entity->velocity.x;
-            player->direction  = entity->direction == FLIP_NONE;
+                player->velocity.x = self->velocity.x;
+            player->direction  = self->direction == FLIP_NONE;
             player->position.x = x;
             player->position.y = y;
             player->position.y -= 0x100000;
             if (player->jumpPress) {
-                entity->activePlayers &= ~(1 << playerID);
+                self->activePlayers &= ~(1 << playerID);
                 Player_StartJump(player);
-                if (entity->direction == FLIP_NONE)
-                    player->velocity.x = -entity->velocity.x;
+                if (self->direction == FLIP_NONE)
+                    player->velocity.x = -self->velocity.x;
                 else
-                    player->velocity.x = entity->velocity.x;
-                entity->playerTimers[playerID] = 10;
+                    player->velocity.x = self->velocity.x;
+                self->playerTimers[playerID] = 10;
             }
         }
     }
@@ -259,38 +259,38 @@ void CrashTest_Unknown6(void)
 {
     RSDK_THIS(CrashTest);
 
-    if (entity->field_CC != entity->field_D0) {
-        if (!entity->field_CC)
-            RSDK.SetSpriteAnimation(CrashTest->aniFrames, 9, &entity->animator3, true, 0);
+    if (self->field_CC != self->field_D0) {
+        if (!self->field_CC)
+            RSDK.SetSpriteAnimation(CrashTest->aniFrames, 9, &self->animator3, true, 0);
         else
-            RSDK.SetSpriteAnimation(CrashTest->aniFrames, 7, &entity->animator3, true, 0);
+            RSDK.SetSpriteAnimation(CrashTest->aniFrames, 7, &self->animator3, true, 0);
     }
-    if (entity->animator3.animationSpeed == 1 && entity->animator3.frameID == entity->animator3.frameCount - 1) {
-        if (entity->field_CC)
-            RSDK.SetSpriteAnimation(CrashTest->aniFrames, 8, &entity->animator3, false, 0);
+    if (self->animator3.animationSpeed == 1 && self->animator3.frameID == self->animator3.frameCount - 1) {
+        if (self->field_CC)
+            RSDK.SetSpriteAnimation(CrashTest->aniFrames, 8, &self->animator3, false, 0);
         else
-            RSDK.SetSpriteAnimation(CrashTest->aniFrames, 6, &entity->animator3, false, 0);
+            RSDK.SetSpriteAnimation(CrashTest->aniFrames, 6, &self->animator3, false, 0);
     }
-    entity->field_D0 = entity->field_CC;
-    RSDK.ProcessAnimation(&entity->animator3);
+    self->field_D0 = self->field_CC;
+    RSDK.ProcessAnimation(&self->animator3);
 }
 
 void CrashTest_State_Setup(void)
 {
     RSDK_THIS(CrashTest);
 
-    RSDK.SetSpriteAnimation(CrashTest->aniFrames, 0, &entity->animator1, true, 0);
-    RSDK.SetSpriteAnimation(CrashTest->aniFrames, 2, &entity->animator2, true, 0);
-    RSDK.SetSpriteAnimation(CrashTest->aniFrames, 6, &entity->animator3, true, 0);
-    RSDK.SetSpriteAnimation(CrashTest->aniFrames, 4, &entity->animator4, true, 0);
-    entity->dword84       = 0;
-    entity->timer         = 0;
-    entity->activePlayers = 0;
-    entity->velocity.x    = 0;
-    entity->field_88      = false;
-    entity->field_CC      = false;
-    entity->field_D0      = 0;
-    entity->state         = CrashTest_State_Unknown1;
+    RSDK.SetSpriteAnimation(CrashTest->aniFrames, 0, &self->animator1, true, 0);
+    RSDK.SetSpriteAnimation(CrashTest->aniFrames, 2, &self->animator2, true, 0);
+    RSDK.SetSpriteAnimation(CrashTest->aniFrames, 6, &self->animator3, true, 0);
+    RSDK.SetSpriteAnimation(CrashTest->aniFrames, 4, &self->animator4, true, 0);
+    self->dword84       = 0;
+    self->timer         = 0;
+    self->activePlayers = 0;
+    self->velocity.x    = 0;
+    self->field_88      = false;
+    self->field_CC      = false;
+    self->field_D0      = 0;
+    self->state         = CrashTest_State_Unknown1;
 }
 
 void CrashTest_State_Unknown1(void)
@@ -301,10 +301,10 @@ void CrashTest_State_Unknown1(void)
     CrashTest_CheckPlayerRide();
     CrashTest_CheckPlayerJump();
 
-    if (entity->activePlayers & 1) {
-        entity->active = ACTIVE_NORMAL;
-        entity->timer  = 40;
-        entity->state  = CrashTest_State_Rev;
+    if (self->activePlayers & 1) {
+        self->active = ACTIVE_NORMAL;
+        self->timer  = 40;
+        self->state  = CrashTest_State_Rev;
         RSDK.PlaySfx(CrashTest->sfxTrafficLight, false, 255);
     }
 }
@@ -313,17 +313,17 @@ void CrashTest_State_Rev(void)
 {
     RSDK_THIS(CrashTest);
 
-    if (entity->timer <= 0) {
-        entity->field_88 = true;
-        RSDK.SetSpriteAnimation(CrashTest->aniFrames, 1, &entity->animator1, true, 0);
-        RSDK.SetSpriteAnimation(CrashTest->aniFrames, 3, &entity->animator2, true, 0);
-        entity->active   = ACTIVE_NORMAL;
-        entity->field_CC = true;
-        entity->state    = CrashTest_State_Move;
+    if (self->timer <= 0) {
+        self->field_88 = true;
+        RSDK.SetSpriteAnimation(CrashTest->aniFrames, 1, &self->animator1, true, 0);
+        RSDK.SetSpriteAnimation(CrashTest->aniFrames, 3, &self->animator2, true, 0);
+        self->active   = ACTIVE_NORMAL;
+        self->field_CC = true;
+        self->state    = CrashTest_State_Move;
         RSDK.PlaySfx(CrashTest->sfxCarRev, false, 255);
     }
     else {
-        entity->timer--;
+        self->timer--;
     }
 }
 
@@ -331,16 +331,16 @@ void CrashTest_State_Move(void)
 {
     RSDK_THIS(CrashTest);
 
-    if (entity->velocity.x < 0x100000) {
-        entity->velocity.x += 0x2000;
-        if (entity->velocity.x > 0x100000)
-            entity->velocity.x = 0x100000;
+    if (self->velocity.x < 0x100000) {
+        self->velocity.x += 0x2000;
+        if (self->velocity.x > 0x100000)
+            self->velocity.x = 0x100000;
     }
 
-    entity->dword84 += entity->velocity.x;
+    self->dword84 += self->velocity.x;
     bool32 flag = false;
-    if (entity->dword84 >= entity->length << 16) {
-        entity->dword84 = entity->length << 16;
+    if (self->dword84 >= self->length << 16) {
+        self->dword84 = self->length << 16;
         flag            = true;
     }
     CrashTest_CheckPlayerCollisions();
@@ -349,36 +349,36 @@ void CrashTest_State_Move(void)
     CrashTest_CheckOnScreen();
 
     if (flag) {
-        int32 x = entity->dword84 * (2 * (entity->direction != FLIP_NONE) - 1) + entity->startPos.x;
+        int32 x = self->dword84 * (2 * (self->direction != FLIP_NONE) - 1) + self->startPos.x;
 
         Camera_ShakeScreen(0, 5, 5);
         CrashTest_CheckPlayerCrash();
-        entity->timer = 0;
+        self->timer = 0;
         RSDK.PlaySfx(CrashTest->sfxCrash, false, 255);
-        int32 storeX     = entity->position.x;
-        int32 storeY     = entity->position.y;
-        entity->state    = CrashTest_State_Unknown4;
-        entity->field_CC = false;
+        int32 storeX     = self->position.x;
+        int32 storeY     = self->position.y;
+        self->state    = CrashTest_State_Unknown4;
+        self->field_CC = false;
 
         for (int i = 0; i < 8; ++i) {
-            EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Fall, x + entity->field_8C[i].x * (2 * (entity->direction == FLIP_NONE) - 1),
-                                                 entity->startPos.y + entity->field_8C[i].y);
+            EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Fall, x + self->field_8C[i].x * (2 * (self->direction == FLIP_NONE) - 1),
+                                                 self->startPos.y + self->field_8C[i].y);
             RSDK.SetSpriteAnimation(CrashTest->aniFrames, 5, &debris->animator, true, i);
             debris->drawFX |= FX_ROTATE;
 
-            if (entity->direction == FLIP_NONE)
+            if (self->direction == FLIP_NONE)
                 debris->rotSpeed = -8;
             else
                 debris->rotSpeed = 8;
             debris->drawOrder  = Zone->drawOrderHigh;
             debris->gravity    = 0x3800;
-            debris->direction  = entity->direction;
-            debris->velocity.x = (RSDK.Rand(-32, 32) << 12) + (entity->velocity.x >> 1) * (2 * (entity->direction != FLIP_NONE) - 1);
+            debris->direction  = self->direction;
+            debris->velocity.x = (RSDK.Rand(-32, 32) << 12) + (self->velocity.x >> 1) * (2 * (self->direction != FLIP_NONE) - 1);
             debris->velocity.y = -0x1000 * RSDK.Rand(32, 128);
         }
 
-        entity->position.x = storeX;
-        entity->position.y = storeY;
+        self->position.x = storeX;
+        self->position.y = storeY;
     }
 }
 
@@ -388,28 +388,28 @@ void CrashTest_State_Unknown4(void)
 
     CrashTest_CheckOnScreen();
     CrashTest_CheckPlayerCollisions();
-    if (entity->timer >= 30) {
+    if (self->timer >= 30) {
         Vector2 range;
         range.x = 0x200000;
         range.y = 0x200000;
 
-        if (!RSDK.CheckPosOnScreen(&entity->startPos, &range))
-            entity->state = CrashTest_State_Setup;
+        if (!RSDK.CheckPosOnScreen(&self->startPos, &range))
+            self->state = CrashTest_State_Setup;
     }
     else {
-        int32 startX = entity->dword84 * (2 * (entity->direction != FLIP_NONE) - 1) + entity->startPos.x;
+        int32 startX = self->dword84 * (2 * (self->direction != FLIP_NONE) - 1) + self->startPos.x;
 
         if (!(Zone->timer % 3)) {
             RSDK.PlaySfx(CrashTest->sfxExplosion, false, 255);
 
             if (Zone->timer & 4) {
                 int32 x                    = startX + (RSDK.Rand(-16, 16) << 16);
-                int32 y                    = entity->startPos.y + (RSDK.Rand(-22, 0) << 16);
+                int32 y                    = self->startPos.y + (RSDK.Rand(-22, 0) << 16);
                 EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + 2), x, y);
                 explosion->drawOrder       = Zone->drawOrderHigh;
             }
         }
-        ++entity->timer;
+        ++self->timer;
     }
 }
 
@@ -417,29 +417,29 @@ void CrashTest_State_Unknown4(void)
 void CrashTest_EditorDraw(void)
 {
     RSDK_THIS(CrashTest);
-    RSDK.SetSpriteAnimation(CrashTest->aniFrames, 0, &entity->animator1, false, 0);
-    RSDK.SetSpriteAnimation(CrashTest->aniFrames, 2, &entity->animator2, false, 0);
-    RSDK.SetSpriteAnimation(CrashTest->aniFrames, 6, &entity->animator3, false, 0);
-    RSDK.SetSpriteAnimation(CrashTest->aniFrames, 4, &entity->animator4, false, 0);
+    RSDK.SetSpriteAnimation(CrashTest->aniFrames, 0, &self->animator1, false, 0);
+    RSDK.SetSpriteAnimation(CrashTest->aniFrames, 2, &self->animator2, false, 0);
+    RSDK.SetSpriteAnimation(CrashTest->aniFrames, 6, &self->animator3, false, 0);
+    RSDK.SetSpriteAnimation(CrashTest->aniFrames, 4, &self->animator4, false, 0);
 
     Vector2 drawPos;
     Vector2 drawPos2;
     Vector2 drawPos3;
 
-    drawPos2 = entity->startPos;
-    drawPos2.x += 0x300000 * (2 * (entity->direction != FLIP_NONE) - 1);
+    drawPos2 = self->startPos;
+    drawPos2.x += 0x300000 * (2 * (self->direction != FLIP_NONE) - 1);
 
-    drawPos = entity->startPos;
-    drawPos.x += entity->dword84 * (2 * (entity->direction != FLIP_NONE) - 1);
+    drawPos = self->startPos;
+    drawPos.x += self->dword84 * (2 * (self->direction != FLIP_NONE) - 1);
 
-    drawPos3.x = (2 * (entity->direction != FLIP_NONE) - 1) * (entity->length << 16) + entity->startPos.x
-                 + 0x340000 * (2 * (entity->direction != FLIP_NONE) - 1);
-    drawPos3.y = entity->startPos.y;
+    drawPos3.x = (2 * (self->direction != FLIP_NONE) - 1) * (self->length << 16) + self->startPos.x
+                 + 0x340000 * (2 * (self->direction != FLIP_NONE) - 1);
+    drawPos3.y = self->startPos.y;
 
-    RSDK.DrawSprite(&entity->animator3, &drawPos2, false);
-    RSDK.DrawSprite(&entity->animator4, &drawPos3, false);
-    RSDK.DrawSprite(&entity->animator2, &drawPos, false);
-    RSDK.DrawSprite(&entity->animator1, &drawPos, false);
+    RSDK.DrawSprite(&self->animator3, &drawPos2, false);
+    RSDK.DrawSprite(&self->animator4, &drawPos3, false);
+    RSDK.DrawSprite(&self->animator2, &drawPos, false);
+    RSDK.DrawSprite(&self->animator1, &drawPos, false);
 }
 
 void CrashTest_EditorLoad(void) { CrashTest->aniFrames = RSDK.LoadSpriteAnimation("TMZ1/CrashTest.bin", SCOPE_STAGE); }

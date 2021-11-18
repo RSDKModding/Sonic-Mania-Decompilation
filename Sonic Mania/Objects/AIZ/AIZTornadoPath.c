@@ -5,7 +5,7 @@ ObjectAIZTornadoPath *AIZTornadoPath;
 void AIZTornadoPath_Update(void)
 {
     RSDK_THIS(AIZTornadoPath);
-    StateMachine_Run(entity->state);
+    StateMachine_Run(self->state);
 }
 
 void AIZTornadoPath_LateUpdate(void) {}
@@ -18,55 +18,55 @@ void AIZTornadoPath_Create(void *data)
 {
     RSDK_THIS(AIZTornadoPath);
     if (!SceneInfo->inEditor) {
-        switch (entity->type) {
+        switch (self->type) {
             case AIZTORNADOPATH_START:
                 if (!StarPost->postIDs[0]) {
-                    entity->active       = ACTIVE_NORMAL;
+                    self->active       = ACTIVE_NORMAL;
                     EntityCamera *camera = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
                     if (camera) {
                         camera->state          = StateMachine_None;
-                        camera->position.x     = entity->position.x;
-                        camera->position.y     = entity->position.y;
+                        camera->position.x     = self->position.x;
+                        camera->position.y     = self->position.y;
                         AIZTornadoPath->camera = (Entity *)camera;
                     }
 
                     foreach_all(Player, player) { player->camera = NULL; }
 
                     foreach_all(AIZTornado, tornado) { AIZTornadoPath->tornado = tornado; }
-                    ScreenInfo->position.y = (entity->position.y >> 0x10) - ScreenInfo->centerY;
-                    entity->speed            = entity->targetSpeed;
-                    entity->state            = AIZTornadoPath_State_SetTornadoSpeed;
+                    ScreenInfo->position.y = (self->position.y >> 0x10) - ScreenInfo->centerY;
+                    self->speed            = self->targetSpeed;
+                    self->state            = AIZTornadoPath_State_SetTornadoSpeed;
                 }
                 break;
-            case AIZTORNADOPATH_DUD: entity->active = ACTIVE_NEVER; break;
+            case AIZTORNADOPATH_DUD: self->active = ACTIVE_NEVER; break;
             case AIZTORNADOPATH_SETSPEED:
-                entity->active = ACTIVE_NEVER;
-                entity->timer  = 1;
-                entity->state  = AIZTornadoPath_State_SetTornadoSpeed;
+                self->active = ACTIVE_NEVER;
+                self->timer  = 1;
+                self->state  = AIZTornadoPath_State_SetTornadoSpeed;
                 break;
             case AIZTORNADOPATH_SETCAMERA:
-                entity->active = ACTIVE_NEVER;
-                entity->state  = AIZTornadoPath_State_SetPlayerCamera;
+                self->active = ACTIVE_NEVER;
+                self->state  = AIZTornadoPath_State_SetPlayerCamera;
                 break;
             case AIZTORNADOPATH_DISABLEINTERACTIONS:
-                entity->active = ACTIVE_NEVER;
-                entity->state  = AIZTornadoPath_State_DisablePlayerInteractions;
+                self->active = ACTIVE_NEVER;
+                self->state  = AIZTornadoPath_State_DisablePlayerInteractions;
                 break;
             case AIZTORNADOPATH_JUMPOFF:
-                entity->active = ACTIVE_NEVER;
-                entity->timer  = 1;
-                entity->state  = AIZTornadoPath_JumpOffTornado;
+                self->active = ACTIVE_NEVER;
+                self->timer  = 1;
+                self->state  = AIZTornadoPath_JumpOffTornado;
                 break;
             case AIZTORNADOPATH_6:
-                entity->state  = AIZTornadoPath_State_MoveRightJump;
-                entity->active = (StarPost->postIDs[0] > 0) ? ACTIVE_XBOUNDS : ACTIVE_NEVER;
-                entity->speed  = entity->targetSpeed;
+                self->state  = AIZTornadoPath_State_MoveRightJump;
+                self->active = (StarPost->postIDs[0] > 0) ? ACTIVE_XBOUNDS : ACTIVE_NEVER;
+                self->speed  = self->targetSpeed;
                 break;
             case AIZTORNADOPATH_SETSPEED_ALT:
-                entity->active = ACTIVE_NEVER;
-                entity->timer  = 1;
-                entity->speed  = entity->targetSpeed;
-                entity->state  = AIZTornadoPath_State_SetTornadoSpeed;
+                self->active = ACTIVE_NEVER;
+                self->timer  = 1;
+                self->speed  = self->targetSpeed;
+                self->state  = AIZTornadoPath_State_SetTornadoSpeed;
                 break;
             default: return;
         }
@@ -99,22 +99,22 @@ void AIZTornadoPath_HandleMoveSpeed(void)
     EntityAIZTornadoPath *node = (EntityAIZTornadoPath *)RSDK.GetEntityByID(SceneInfo->entitySlot + 1);
     int32 xDist                  = (x - node->position.x) >> 16;
     int32 yDist                  = (y - node->position.y) >> 16;
-    entity->angle              = RSDK.ATan2(xDist, yDist);
-    int32 newPosX                = x - entity->speed * RSDK.Cos256(entity->angle);
-    int32 newPosY                = y - entity->speed * RSDK.Sin256(entity->angle);
+    self->angle              = RSDK.ATan2(xDist, yDist);
+    int32 newPosX                = x - self->speed * RSDK.Cos256(self->angle);
+    int32 newPosY                = y - self->speed * RSDK.Sin256(self->angle);
     if (flag) {
         camera->position.x = newPosX;
         camera->position.y = newPosY;
     }
 
-    int32 spd = entity->speed >> 3;
+    int32 spd = self->speed >> 3;
     if (xDist * xDist + yDist * yDist < spd) {
-        entity->active = ACTIVE_NEVER;
+        self->active = ACTIVE_NEVER;
         node->active   = ACTIVE_NORMAL;
         if (node->easeToSpeed)
-            node->speed = entity->speed;
+            node->speed = self->speed;
         else
-            node->speed = entity->targetSpeed;
+            node->speed = self->targetSpeed;
     }
     AIZTornadoPath->moveVel.x = newPosX - x;
     AIZTornadoPath->moveVel.y = newPosY - y;
@@ -123,21 +123,21 @@ void AIZTornadoPath_HandleMoveSpeed(void)
 void AIZTornadoPath_State_SetTornadoSpeed(void)
 {
     RSDK_THIS(AIZTornadoPath);
-    if (entity->speed >= entity->targetSpeed) {
-        if (entity->speed > entity->targetSpeed) {
-            entity->speed -= 16;
-            if (entity->speed < entity->targetSpeed)
-                entity->speed = entity->targetSpeed;
+    if (self->speed >= self->targetSpeed) {
+        if (self->speed > self->targetSpeed) {
+            self->speed -= 16;
+            if (self->speed < self->targetSpeed)
+                self->speed = self->targetSpeed;
         }
     }
     else {
-        entity->speed += 16;
-        if (entity->speed > entity->targetSpeed)
-            entity->speed = entity->targetSpeed;
+        self->speed += 16;
+        if (self->speed > self->targetSpeed)
+            self->speed = self->targetSpeed;
     }
 
-    if (entity->timer > 0) {
-        entity->timer--;
+    if (self->timer > 0) {
+        self->timer--;
     }
     else {
         AIZTornadoPath_HandleMoveSpeed();
@@ -165,7 +165,7 @@ void AIZTornadoPath_State_DisablePlayerInteractions(void)
     foreach_active(Player, playerPtr) { playerPtr->drawOrder = Zone->playerDrawHigh; }
 
     AIZTornadoPath_HandleMoveSpeed();
-    entity->state = AIZTornadoPath_State_SetTornadoSpeed;
+    self->state = AIZTornadoPath_State_SetTornadoSpeed;
 }
 
 void AIZTornadoPath_JumpOffTornado(void)
@@ -197,14 +197,14 @@ void AIZTornadoPath_State_MoveRightJump(void)
 {
     RSDK_THIS(AIZTornadoPath);
     EntityPlayer *player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
-    if (player->position.x > entity->position.x) {
+    if (player->position.x > self->position.x) {
         player->stateInput = StateMachine_None;
         player->left       = false;
         player->right      = true;
         if (player->pushing > 0) {
             player->jumpPress         = true;
             player->jumpHold          = true;
-            entity->state             = AIZTornadoPath_State_FlyOff;
+            self->state             = AIZTornadoPath_State_FlyOff;
             AIZTornadoPath->moveVel.x = 0;
             AIZTornadoPath->moveVel.y = 0;
         }
@@ -215,8 +215,8 @@ void AIZTornadoPath_State_FlyOff(void)
 {
     RSDK_THIS(AIZTornadoPath);
     EntityPlayer *player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
-    ++entity->timer;
-    if (entity->timer == 60) {
+    ++self->timer;
+    if (self->timer == 60) {
         foreach_all(AIZTornado, tornado)
         {
             tornado->position.x = player->position.x - 0x1400000;
@@ -227,8 +227,8 @@ void AIZTornadoPath_State_FlyOff(void)
         }
     }
 
-    if (entity->timer == 90) {
-        entity->timer      = 0;
+    if (self->timer == 90) {
+        self->timer      = 0;
         player->stateInput = Player_ProcessP1Input;
         int32 xOffset        = 0;
         foreach_all(AIZTornadoPath, node)
@@ -259,8 +259,8 @@ void AIZTornadoPath_State_FlyOff(void)
 void AIZTornadoPath_EditorDraw(void)
 {
     RSDK_THIS(AIZTornadoPath);
-    RSDK.SetSpriteAnimation(AIZTornadoPath->aniFrames, 0, &entity->animator, true, 7);
-    RSDK.DrawSprite(&entity->animator, NULL, false);
+    RSDK.SetSpriteAnimation(AIZTornadoPath->aniFrames, 0, &self->animator, true, 7);
+    RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
 void AIZTornadoPath_EditorLoad(void)

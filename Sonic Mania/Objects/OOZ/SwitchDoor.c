@@ -7,26 +7,26 @@ void SwitchDoor_Update(void)
     RSDK_THIS(SwitchDoor);
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionTouch(player, entity, &SwitchDoor->hitbox)) {
-            if (entity->go) {
+        if (Player_CheckCollisionTouch(player, self, &SwitchDoor->hitbox)) {
+            if (self->go) {
                 FBZSetup_BGSwitchCB_ShowInside2();
-                if (entity->reversible)
-                    entity->go = false;
-                entity->field_60 = true;
+                if (self->reversible)
+                    self->go = false;
+                self->field_60 = true;
             }
             else {
                 FBZSetup_BGSwitchCB_ShowInside1();
-                if (entity->reversible) {
-                    entity->go = true;
+                if (self->reversible) {
+                    self->go = true;
                 }
-                entity->field_60 = true;
+                self->field_60 = true;
             }
         }
-        else if (entity->field_60)
-            entity->field_60 = false;
+        else if (self->field_60)
+            self->field_60 = false;
     }
 
-    entity->visible = DebugMode->debugActive;
+    self->visible = DebugMode->debugActive;
 }
 
 void SwitchDoor_LateUpdate(void) {}
@@ -38,14 +38,14 @@ void SwitchDoor_Draw(void) { SwitchDoor_DrawSprites(); }
 void SwitchDoor_Create(void *data)
 {
     RSDK_THIS(SwitchDoor);
-    RSDK.SetSpriteAnimation(SwitchDoor->aniFrames, 0, &entity->animator, true, 0);
+    RSDK.SetSpriteAnimation(SwitchDoor->aniFrames, 0, &self->animator, true, 0);
     if (!SceneInfo->inEditor) {
-        entity->active        = ACTIVE_BOUNDS;
-        entity->updateRange.x = 0x100000;
-        entity->updateRange.y = 0x140000;
-        entity->field_60      = 0;
-        entity->visible       = false;
-        entity->drawOrder     = Zone->drawOrderLow;
+        self->active        = ACTIVE_BOUNDS;
+        self->updateRange.x = 0x100000;
+        self->updateRange.y = 0x140000;
+        self->field_60      = 0;
+        self->visible       = false;
+        self->drawOrder     = Zone->drawOrderLow;
     }
 }
 
@@ -64,11 +64,11 @@ void SwitchDoor_DrawSprites(void)
     int32 id = 0;
     Vector2 drawPos;
     int32 yOffset              = 0;
-    entity->animator.frameID = entity->go ? 2 : 0;
+    self->animator.frameID = self->go ? 2 : 0;
     for (int32 i = 0; i < 8; ++i) {
-        drawPos.y = entity->position.y + yOffset;
-        drawPos.x = entity->position.x + (id << 20);
-        RSDK.DrawSprite(&entity->animator, &drawPos, false);
+        drawPos.y = self->position.y + yOffset;
+        drawPos.x = self->position.x + (id << 20);
+        RSDK.DrawSprite(&self->animator, &drawPos, false);
         if (++id == 2) {
             yOffset += 0x100000;
             id = 0;
@@ -80,8 +80,8 @@ void SwitchDoor_DrawSprites(void)
 void SwitchDoor_EditorDraw(void)
 {
     RSDK_THIS(SwitchDoor);
-    entity->updateRange.x = 0x100000;
-    entity->updateRange.y = 0x140000;
+    self->updateRange.x = 0x100000;
+    self->updateRange.y = 0x140000;
 
     SwitchDoor_DrawSprites();
 }

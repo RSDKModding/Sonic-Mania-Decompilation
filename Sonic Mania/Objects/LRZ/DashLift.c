@@ -11,27 +11,27 @@ void DashLift_StaticUpdate(void) {}
 void DashLift_Draw(void)
 {
     RSDK_THIS(DashLift);
-    RSDK.DrawSprite(&entity->animator, &entity->drawPos, false);
+    RSDK.DrawSprite(&self->animator, &self->drawPos, false);
 }
 
 void DashLift_Create(void *data)
 {
     RSDK_THIS(DashLift);
 
-    entity->collision = PLATFORM_C_1;
+    self->collision = PLATFORM_C_1;
     Platform_Create(NULL);
 
     if (!SceneInfo->inEditor) {
-        entity->drawOrder = Zone->playerDrawHigh;
-        RSDK.SetSpriteAnimation(Platform->aniFrames, 2, &entity->animator, true, 4);
+        self->drawOrder = Zone->playerDrawHigh;
+        RSDK.SetSpriteAnimation(Platform->aniFrames, 2, &self->animator, true, 4);
 
-        entity->drawPos.y += entity->startOff << 15;
-        entity->updateRange.y = entity->length << 15;
-        entity->amplitude.x   = entity->position.y - (entity->length << 15);
-        entity->amplitude.y   = entity->position.y + (entity->length << 15);
+        self->drawPos.y += self->startOff << 15;
+        self->updateRange.y = self->length << 15;
+        self->amplitude.x   = self->position.y - (self->length << 15);
+        self->amplitude.y   = self->position.y + (self->length << 15);
 
-        entity->updateRange.x = 0x800000;
-        entity->state         = DashLift_State_Setup;
+        self->updateRange.x = 0x800000;
+        self->state         = DashLift_State_Setup;
     }
 }
 
@@ -41,13 +41,13 @@ void DashLift_CheckOnScreen(void)
 {
     RSDK_THIS(DashLift);
 
-    if (!RSDK.CheckPosOnScreen(&entity->drawPos, &entity->updateRange) && !RSDK.CheckPosOnScreen(&entity->centerPos, &entity->updateRange)) {
-        entity->drawPos.x     = entity->centerPos.x;
-        entity->drawPos.y     = entity->centerPos.y;
-        entity->position.x    = entity->centerPos.x;
-        entity->position.y    = entity->centerPos.y;
-        entity->activePlayers = 0;
-        entity->active        = ACTIVE_BOUNDS;
+    if (!RSDK.CheckPosOnScreen(&self->drawPos, &self->updateRange) && !RSDK.CheckPosOnScreen(&self->centerPos, &self->updateRange)) {
+        self->drawPos.x     = self->centerPos.x;
+        self->drawPos.y     = self->centerPos.y;
+        self->position.x    = self->centerPos.x;
+        self->position.y    = self->centerPos.y;
+        self->activePlayers = 0;
+        self->active        = ACTIVE_BOUNDS;
         DashLift_Create(NULL);
     }
 }
@@ -55,8 +55,8 @@ void DashLift_CheckOnScreen(void)
 void DashLift_State_Setup(void)
 {
     RSDK_THIS(DashLift);
-    entity->active = ACTIVE_NORMAL;
-    entity->state  = DashLift_State_HandleDash;
+    self->active = ACTIVE_NORMAL;
+    self->state  = DashLift_State_HandleDash;
 }
 
 void DashLift_State_HandleDash(void)
@@ -68,18 +68,18 @@ void DashLift_State_HandleDash(void)
     {
         int playerID = RSDK.GetEntityID(player);
 
-        if (!((1 << playerID) & entity->stoodPlayers)) {
-            if (((1 << playerID) & entity->activePlayers)) {
-                player->position.x = entity->position.x;
-                entity->activePlayers &= ~(1 << playerID);
+        if (!((1 << playerID) & self->stoodPlayers)) {
+            if (((1 << playerID) & self->activePlayers)) {
+                player->position.x = self->position.x;
+                self->activePlayers &= ~(1 << playerID);
                 if (player->playerAnimator.animationID == ANI_JUMP)
                     player->velocity.x = 0;
             }
         }
         else {
             int anim = player->playerAnimator.animationID;
-            if (anim == ANI_SPINDASH || (anim == ANI_JUMP && ((1 << playerID) & entity->activePlayers))) {
-                entity->activePlayers |= (1 << playerID);
+            if (anim == ANI_SPINDASH || (anim == ANI_JUMP && ((1 << playerID) & self->activePlayers))) {
+                self->activePlayers |= (1 << playerID);
 
                 foreach_active(Dust, dust)
                 {
@@ -88,9 +88,9 @@ void DashLift_State_HandleDash(void)
                 }
 
                 player->velocity.x -= player->velocity.x >> 5;
-                player->position.x = entity->position.x;
+                player->position.x = self->position.x;
                 if (player->direction == FLIP_X) {
-                    if (player->sidekick && totalSpeed < 0 || entity->drawPos.y >= entity->amplitude.y)
+                    if (player->sidekick && totalSpeed < 0 || self->drawPos.y >= self->amplitude.y)
                         continue;
 
                     int speed = 0;
@@ -111,19 +111,19 @@ void DashLift_State_HandleDash(void)
                         player->velocity.x = 0;
                     }
 
-                    entity->drawPos.y += speed >> 2;
+                    self->drawPos.y += speed >> 2;
                     totalSpeed += speed >> 2;
-                    entity->animator.animationTimer += abs((speed >> 2) >> 16);
-                    if (entity->animator.animationTimer >= 4) {
-                        entity->animator.animationTimer = 0;
-                        if (++entity->animator.frameID > 4)
-                            entity->animator.frameID = 0;
+                    self->animator.animationTimer += abs((speed >> 2) >> 16);
+                    if (self->animator.animationTimer >= 4) {
+                        self->animator.animationTimer = 0;
+                        if (++self->animator.frameID > 4)
+                            self->animator.frameID = 0;
                     }
                     if (!(Zone->timer & 0xF))
                         RSDK.PlaySfx(DashLift->sfxPulley, false, 255);
                 }
                 else {
-                    if (player->sidekick && totalSpeed > 0 || entity->drawPos.y <= entity->amplitude.x)
+                    if (player->sidekick && totalSpeed > 0 || self->drawPos.y <= self->amplitude.x)
                         continue;
 
                     int speed = 0;
@@ -144,20 +144,20 @@ void DashLift_State_HandleDash(void)
                         player->velocity.x = 0;
                     }
 
-                    entity->drawPos.y += speed >> 2;
+                    self->drawPos.y += speed >> 2;
                     totalSpeed += speed >> 2;
-                    entity->animator.animationTimer -= abs((speed >> 2) >> 16);
-                    if (entity->animator.animationTimer <= 0) {
-                        entity->animator.animationTimer = 3;
-                        if (--entity->animator.frameID < 0)
-                            entity->animator.frameID = 4;
+                    self->animator.animationTimer -= abs((speed >> 2) >> 16);
+                    if (self->animator.animationTimer <= 0) {
+                        self->animator.animationTimer = 3;
+                        if (--self->animator.frameID < 0)
+                            self->animator.frameID = 4;
                     }
                     if (!(Zone->timer & 0xF))
                         RSDK.PlaySfx(DashLift->sfxPulley, false, 255);
                 }
             }
             else {
-                entity->activePlayers &= ~(1 << playerID);
+                self->activePlayers &= ~(1 << playerID);
             }
         }
     }
@@ -170,8 +170,8 @@ void DashLift_EditorDraw(void)
 {
     RSDK_THIS(DashLift);
 
-    entity->drawPos = entity->position;
-    RSDK.SetSpriteAnimation(Platform->aniFrames, 2, &entity->animator, true, 4);
+    self->drawPos = self->position;
+    RSDK.SetSpriteAnimation(Platform->aniFrames, 2, &self->animator, true, 4);
 
     DashLift_Draw();
 }

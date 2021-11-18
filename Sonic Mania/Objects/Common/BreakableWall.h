@@ -78,7 +78,7 @@ void BreakableWall_HandleSidesBreak(void);
 void BreakableWall_HandleBottomBreak_Chunks(void);
 void BreakableWall_HandleBottomBreak_All(void);
 void BreakableWall_HandleBlockBreak_V(void);
-void BreakableWall_HandleBlockBreak_H(EntityBreakableWall *entity, uint8 flip);
+void BreakableWall_HandleBlockBreak_H(EntityBreakableWall *self, uint8 flip);
 
 // Misc
 void BreakableWall_GiveScoreBonus(void *plr);

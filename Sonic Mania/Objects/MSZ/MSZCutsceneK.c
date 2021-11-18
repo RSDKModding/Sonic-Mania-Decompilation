@@ -5,9 +5,9 @@ ObjectMSZCutsceneK *MSZCutsceneK;
 void MSZCutsceneK_Update(void)
 {
     RSDK_THIS(MSZCutsceneK);
-    if (!entity->activated) {
+    if (!self->activated) {
         MSZCutsceneK_StartCutscene();
-        entity->activated = true;
+        self->activated = true;
     }
 }
 
@@ -21,9 +21,9 @@ void MSZCutsceneK_Create(void *data)
 {
     RSDK_THIS(MSZCutsceneK);
 
-    INIT_ENTITY(entity);
-    CutsceneRules_SetupEntity(entity, &entity->size, &entity->hitbox);
-    entity->active = ACTIVE_BOUNDS;
+    INIT_ENTITY(self);
+    CutsceneRules_SetupEntity(self, &self->size, &self->hitbox);
+    self->active = ACTIVE_BOUNDS;
 }
 
 void MSZCutsceneK_StageLoad(void)
@@ -60,7 +60,7 @@ void MSZCutsceneK_StartCutscene(void)
 
     void *states[] = { MSZCutsceneK_CutsceneState_Unknown1, MSZCutsceneK_CutsceneState_Unknown2, NULL };
 
-    CutsceneSeq_StartSequence((Entity *)entity, states);
+    CutsceneSeq_StartSequence((Entity *)self, states);
 
     EntityCutsceneSeq *sequence = RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq);
     if (sequence->objectID) {
@@ -188,7 +188,7 @@ bool32 MSZCutsceneK_CutsceneState_Unknown2(EntityCutsceneSeq *host)
 void MSZCutsceneK_EditorDraw(void)
 {
     RSDK_THIS(MSZCutsceneK);
-    CutsceneRules_DrawCutsceneBounds(entity, &entity->size);
+    CutsceneRules_DrawCutsceneBounds(self, &self->size);
 }
 
 void MSZCutsceneK_EditorLoad(void) {}

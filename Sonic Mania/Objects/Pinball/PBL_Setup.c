@@ -6,8 +6,8 @@ ObjectPBL_Setup *PBL_Setup;
 void PBL_Setup_Update(void)
 {
     RSDK_THIS(PBL_Setup);
-    StateMachine_Run(entity->state);
-    if (entity->state != PBL_Setup_SaveAndChangeScene && globals->gameMode < MODE_TIMEATTACK)
+    StateMachine_Run(self->state);
+    if (self->state != PBL_Setup_SaveAndChangeScene && globals->gameMode < MODE_TIMEATTACK)
         ++SaveGame->saveRAM->zoneTimes[28];
 }
 
@@ -15,7 +15,8 @@ void PBL_Setup_LateUpdate(void) {}
 
 void PBL_Setup_StaticUpdate(void)
 {
-    Entity *entity = SceneInfo->entity;
+    RSDK_THIS_GEN();
+
     ++PBL_Setup->timer;
     PBL_Setup->timer &= 0x7FFF;
 
@@ -38,25 +39,25 @@ void PBL_Setup_StaticUpdate(void)
         RSDK.ResetEntitySlot(SLOT_PAUSEMENU, PauseMenu->objectID, NULL);
         EntityPauseMenu *pauseMenu = RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu);
         pauseMenu->disableRestart  = true;
-        pauseMenu->triggerPlayer   = RSDK.GetEntityID(entity);
+        pauseMenu->triggerPlayer   = RSDK.GetEntityID(self);
     }
 }
 
 void PBL_Setup_Draw(void)
 {
     RSDK_THIS(PBL_Setup);
-    RSDK.FillScreen(entity->colour, entity->timer, entity->timer - 128, entity->timer - 256);
+    RSDK.FillScreen(self->colour, self->timer, self->timer - 128, self->timer - 256);
 }
 
 void PBL_Setup_Create(void *data)
 {
     RSDK_THIS(PBL_Setup);
-    entity->active    = ACTIVE_NORMAL;
-    entity->visible   = true;
-    entity->drawOrder = DRAWLAYER_COUNT - 1;
-    entity->colour    = 0xF0F0F0;
-    entity->timer     = 512;
-    entity->state     = PBL_Setup_Unknown9;
+    self->active    = ACTIVE_NORMAL;
+    self->visible   = true;
+    self->drawOrder = DRAWLAYER_COUNT - 1;
+    self->colour    = 0xF0F0F0;
+    self->timer     = 512;
+    self->state     = PBL_Setup_Unknown9;
 }
 
 void PBL_Setup_StageLoad(void)
@@ -224,14 +225,14 @@ void PBL_Setup_GiveLife(void)
 void PBL_Setup_Unknown9(void)
 {
     RSDK_THIS(PBL_Setup);
-    if (entity->timer <= 0) {
-        entity->timer               = 0;
-        entity->visible             = false;
-        entity->state               = PBL_Setup_Unknown10;
+    if (self->timer <= 0) {
+        self->timer               = 0;
+        self->visible             = false;
+        self->state               = PBL_Setup_Unknown10;
         SceneInfo->timeEnabled = true;
     }
     else {
-        entity->timer -= 16;
+        self->timer -= 16;
     }
 }
 
@@ -250,7 +251,7 @@ void PBL_Setup_Unknown10(void)
 void PBL_Setup_SaveAndChangeScene(void)
 {
     RSDK_THIS(PBL_Setup);
-    if (entity->timer >= 1024) {
+    if (self->timer >= 1024) {
         EntitySaveGame *saveRAM = SaveGame->saveRAM;
         if (saveRAM) {
             saveRAM->characterFlags = globals->characterFlags;
@@ -268,7 +269,7 @@ void PBL_Setup_SaveAndChangeScene(void)
         RSDK.LoadScene();
     }
     else {
-        entity->timer += 16;
+        self->timer += 16;
     }
 }
 

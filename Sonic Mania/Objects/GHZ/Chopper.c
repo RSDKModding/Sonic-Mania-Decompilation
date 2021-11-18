@@ -5,7 +5,7 @@ ObjectChopper *Chopper;
 void Chopper_Update(void)
 {
     RSDK_THIS(Chopper);
-    StateMachine_Run(entity->state);
+    StateMachine_Run(self->state);
 }
 
 void Chopper_LateUpdate(void) {}
@@ -15,22 +15,22 @@ void Chopper_StaticUpdate(void) {}
 void Chopper_Draw(void)
 {
     RSDK_THIS(Chopper);
-    RSDK.DrawSprite(&entity->animator, NULL, false);
+    RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
 void Chopper_Create(void *data)
 {
     RSDK_THIS(Chopper);
-    entity->visible       = true;
-    entity->drawOrder     = Zone->drawOrderLow;
-    entity->startPos.x    = entity->position.x;
-    entity->startPos.y    = entity->position.y;
-    entity->startDir      = entity->direction;
-    entity->active        = ACTIVE_BOUNDS;
-    entity->updateRange.x = 0x800000;
-    entity->updateRange.y = 0x1200000;
-    entity->drawFX        = FX_FLIP;
-    entity->state         = Chopper_Unknown3;
+    self->visible       = true;
+    self->drawOrder     = Zone->drawOrderLow;
+    self->startPos.x    = self->position.x;
+    self->startPos.y    = self->position.y;
+    self->startDir      = self->direction;
+    self->active        = ACTIVE_BOUNDS;
+    self->updateRange.x = 0x800000;
+    self->updateRange.y = 0x1200000;
+    self->drawFX        = FX_FLIP;
+    self->state         = Chopper_Unknown3;
 }
 
 void Chopper_StageLoad(void)
@@ -65,16 +65,16 @@ void Chopper_DebugDraw(void)
 void Chopper_DebugSpawn(void)
 {
     RSDK_THIS(Chopper);
-    RSDK.CreateEntity(Chopper->objectID, 0, entity->position.x, entity->position.y);
+    RSDK.CreateEntity(Chopper->objectID, 0, self->position.x, self->position.y);
 }
 
 void Chopper_CheckOnScreen(void)
 {
     RSDK_THIS(Chopper);
-    if (!RSDK.CheckOnScreen(entity, NULL) && !RSDK.CheckPosOnScreen(&entity->startPos, &entity->updateRange)) {
-        entity->position.x = entity->startPos.x;
-        entity->position.y = entity->startPos.y;
-        entity->direction  = entity->startDir;
+    if (!RSDK.CheckOnScreen(self, NULL) && !RSDK.CheckPosOnScreen(&self->startPos, &self->updateRange)) {
+        self->position.x = self->startPos.x;
+        self->position.y = self->startPos.y;
+        self->direction  = self->startDir;
         Chopper_Create(NULL);
     }
 }
@@ -83,22 +83,22 @@ void Chopper_Unknown3(void)
 {
     RSDK_THIS(Chopper);
 
-    entity->active     = ACTIVE_NORMAL;
-    entity->velocity.x = -0x10000;
-    if (entity->type == 0) {
-        RSDK.SetSpriteAnimation(Chopper->aniFrames, 0, &entity->animator, true, 0);
-        entity->state = Chopper_Unknown4;
+    self->active     = ACTIVE_NORMAL;
+    self->velocity.x = -0x10000;
+    if (self->type == 0) {
+        RSDK.SetSpriteAnimation(Chopper->aniFrames, 0, &self->animator, true, 0);
+        self->state = Chopper_Unknown4;
         Chopper_Unknown4();
     }
     else {
-        RSDK.SetSpriteAnimation(Chopper->aniFrames, 1, &entity->animator, true, 0);
-        entity->state = Chopper_Unknown5;
-        entity->timer = 512;
+        RSDK.SetSpriteAnimation(Chopper->aniFrames, 1, &self->animator, true, 0);
+        self->state = Chopper_Unknown5;
+        self->timer = 512;
 
-        if (!entity->direction)
-            entity->velocity.x = -0x4000;
+        if (!self->direction)
+            self->velocity.x = -0x4000;
         else
-            entity->velocity.x = 0x4000;
+            self->velocity.x = 0x4000;
         Chopper_Unknown5();
     }
 }
@@ -106,26 +106,26 @@ void Chopper_Unknown3(void)
 void Chopper_Unknown4(void)
 {
     RSDK_THIS(Chopper);
-    entity->position.y += entity->velocity.y;
-    entity->velocity.y += 0x1800;
-    if (entity->velocity.y >= -0x38000) {
-        if (entity->velocity.y <= 0x38000) {
-            entity->animator.animationSpeed = 2;
+    self->position.y += self->velocity.y;
+    self->velocity.y += 0x1800;
+    if (self->velocity.y >= -0x38000) {
+        if (self->velocity.y <= 0x38000) {
+            self->animator.animationSpeed = 2;
         }
         else {
-            entity->animator.frameID        = 0;
-            entity->animator.animationSpeed = 0;
+            self->animator.frameID        = 0;
+            self->animator.animationSpeed = 0;
         }
     }
     else {
-        entity->animator.animationSpeed = 1;
+        self->animator.animationSpeed = 1;
     }
 
-    if (entity->position.y > entity->startPos.y) {
-        entity->position.y = entity->startPos.y;
-        entity->velocity.y = -0x70000;
+    if (self->position.y > self->startPos.y) {
+        self->position.y = self->startPos.y;
+        self->velocity.y = -0x70000;
     }
-    RSDK.ProcessAnimation(&entity->animator);
+    RSDK.ProcessAnimation(&self->animator);
     Chopper_CheckPlayerCollisions();
     Chopper_CheckOnScreen();
 }
@@ -133,47 +133,47 @@ void Chopper_Unknown4(void)
 void Chopper_Unknown5(void)
 {
     RSDK_THIS(Chopper);
-    entity->position.x += entity->velocity.x;
+    self->position.x += self->velocity.x;
 
     bool32 flag = false;
-    if (entity->direction) {
-        flag = RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_LWALL, 0, 0x100000, 0, true);
-        flag |= RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_LWALL, 0, 0x100000, -0xF0000, true);
-        flag |= RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_LWALL, 0, 0x100000, 0xF0000, true);
+    if (self->direction) {
+        flag = RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_LWALL, 0, 0x100000, 0, true);
+        flag |= RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_LWALL, 0, 0x100000, -0xF0000, true);
+        flag |= RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_LWALL, 0, 0x100000, 0xF0000, true);
     }
     else {
-        flag = RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_RWALL, 0, -0x100000, 0, true);
-        flag |= RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_RWALL, 0, -0x100000, -0xF0000, true);
-        flag |= RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_RWALL, 0, -0x100000, 0xF0000, true);
+        flag = RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_RWALL, 0, -0x100000, 0, true);
+        flag |= RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_RWALL, 0, -0x100000, -0xF0000, true);
+        flag |= RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_RWALL, 0, -0x100000, 0xF0000, true);
     }
 
-    if (--entity->timer <= 0 || flag) {
-        entity->direction ^= FLIP_X;
-        entity->velocity.x = -entity->velocity.x;
-        entity->timer      = 512;
+    if (--self->timer <= 0 || flag) {
+        self->direction ^= FLIP_X;
+        self->velocity.x = -self->velocity.x;
+        self->timer      = 512;
     }
 
-    if (entity->charge) {
+    if (self->charge) {
         foreach_active(Player, player)
         {
-            if (Player_CheckCollisionTouch(player, entity, &Chopper->hitbox3)) {
-                entity->state = Chopper_Unknown6;
-                RSDK.SetSpriteAnimation(Chopper->aniFrames, 2, &entity->animator, false, 0);
-                entity->timer = 16;
-                if (!entity->direction)
-                    entity->velocity.x = -0x20000;
+            if (Player_CheckCollisionTouch(player, self, &Chopper->hitbox3)) {
+                self->state = Chopper_Unknown6;
+                RSDK.SetSpriteAnimation(Chopper->aniFrames, 2, &self->animator, false, 0);
+                self->timer = 16;
+                if (!self->direction)
+                    self->velocity.x = -0x20000;
                 else
-                    entity->velocity.x = 0x20000;
-                if (abs(player->position.y - entity->position.y) > 0x100000) {
-                    if (player->position.y < entity->position.y)
-                        entity->velocity.y = -0x8000;
+                    self->velocity.x = 0x20000;
+                if (abs(player->position.y - self->position.y) > 0x100000) {
+                    if (player->position.y < self->position.y)
+                        self->velocity.y = -0x8000;
                     else
-                        entity->velocity.y = 0x8000;
+                        self->velocity.y = 0x8000;
                 }
             }
         }
     }
-    RSDK.ProcessAnimation(&entity->animator);
+    RSDK.ProcessAnimation(&self->animator);
     Chopper_CheckPlayerCollisions2();
     Chopper_CheckOnScreen();
 }
@@ -182,11 +182,11 @@ void Chopper_Unknown6(void)
 {
     RSDK_THIS(Chopper);
 
-    if (!entity->timer)
-        entity->state = Chopper_Unknown7;
+    if (!self->timer)
+        self->state = Chopper_Unknown7;
     else
-        --entity->timer;
-    RSDK.ProcessAnimation(&entity->animator);
+        --self->timer;
+    RSDK.ProcessAnimation(&self->animator);
     Chopper_CheckPlayerCollisions2();
     Chopper_CheckOnScreen();
 }
@@ -194,58 +194,58 @@ void Chopper_Unknown6(void)
 void Chopper_Unknown7(void)
 {
     RSDK_THIS(Chopper);
-    entity->position.x += entity->velocity.x;
-    entity->position.y += entity->velocity.y;
+    self->position.x += self->velocity.x;
+    self->position.y += self->velocity.y;
 
     bool32 flag = false;
-    if (entity->direction) {
-        flag = RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_LWALL, 0, 0x100000, 0, true);
-        flag |= RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_LWALL, 0, 0x100000, -0xF0000, true);
-        flag |= RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_LWALL, 0, 0x100000, 0xF0000, true);
+    if (self->direction) {
+        flag = RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_LWALL, 0, 0x100000, 0, true);
+        flag |= RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_LWALL, 0, 0x100000, -0xF0000, true);
+        flag |= RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_LWALL, 0, 0x100000, 0xF0000, true);
     }
     else {
-        flag = RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_RWALL, 0, -0x100000, 0, true);
-        flag |= RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_RWALL, 0, -0x100000, -0xF0000, true);
-        flag |= RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_RWALL, 0, -0x100000, 0xF0000, true);
+        flag = RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_RWALL, 0, -0x100000, 0, true);
+        flag |= RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_RWALL, 0, -0x100000, -0xF0000, true);
+        flag |= RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_RWALL, 0, -0x100000, 0xF0000, true);
     }
 
     if (flag) {
-        RSDK.SetSpriteAnimation(Chopper->aniFrames, 1, &entity->animator, false, 0);
-        entity->timer      = 512;
-        entity->velocity.y = 0;
-        if (entity->direction == FLIP_X)
-            entity->velocity.x = -0x4000;
+        RSDK.SetSpriteAnimation(Chopper->aniFrames, 1, &self->animator, false, 0);
+        self->timer      = 512;
+        self->velocity.y = 0;
+        if (self->direction == FLIP_X)
+            self->velocity.x = -0x4000;
         else
-            entity->velocity.x = 0x4000;
-        entity->direction ^= FLIP_X;
-        entity->state = Chopper_Unknown5;
+            self->velocity.x = 0x4000;
+        self->direction ^= FLIP_X;
+        self->state = Chopper_Unknown5;
         flag          = false;
     }
-    else if (entity->velocity.y >= 0) {
-        if (entity->velocity.y > 0)
-            flag = RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x100000, true);
+    else if (self->velocity.y >= 0) {
+        if (self->velocity.y > 0)
+            flag = RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x100000, true);
     }
     else {
-        flag = RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_ROOF, 0, 0, -0x100000, true);
+        flag = RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_ROOF, 0, 0, -0x100000, true);
         foreach_active(Water, water)
         {
             if (water->type == 1)
-                flag |= !RSDK.CheckObjectCollisionTouchBox(water, &water->hitbox, entity, &Chopper->hitbox4);
+                flag |= !RSDK.CheckObjectCollisionTouchBox(water, &water->hitbox, self, &Chopper->hitbox4);
         }
     }
 
     if (flag) {
-        RSDK.SetSpriteAnimation(Chopper->aniFrames, 1, &entity->animator, false, 0);
-        entity->timer      = 512;
-        entity->velocity.y = 0;
-        if (entity->direction == FLIP_NONE)
-            entity->velocity.x = -0x4000;
+        RSDK.SetSpriteAnimation(Chopper->aniFrames, 1, &self->animator, false, 0);
+        self->timer      = 512;
+        self->velocity.y = 0;
+        if (self->direction == FLIP_NONE)
+            self->velocity.x = -0x4000;
         else
-            entity->velocity.x = 0x4000;
-        entity->state = Chopper_Unknown5;
+            self->velocity.x = 0x4000;
+        self->state = Chopper_Unknown5;
     }
 
-    RSDK.ProcessAnimation(&entity->animator);
+    RSDK.ProcessAnimation(&self->animator);
     Chopper_CheckPlayerCollisions2();
     Chopper_CheckOnScreen();
 }
@@ -256,8 +256,8 @@ void Chopper_CheckPlayerCollisions(void)
 
     foreach_active(Player, player)
     {
-        if (Player_CheckBadnikTouch(player, entity, &Chopper->hitbox))
-            Player_CheckBadnikBreak(entity, player, true);
+        if (Player_CheckBadnikTouch(player, self, &Chopper->hitbox))
+            Player_CheckBadnikBreak(self, player, true);
     }
 }
 
@@ -267,8 +267,8 @@ void Chopper_CheckPlayerCollisions2(void)
 
     foreach_active(Player, player)
     {
-        if (Player_CheckBadnikTouch(player, entity, &Chopper->hitbox2))
-            Player_CheckBadnikBreak(entity, player, true);
+        if (Player_CheckBadnikTouch(player, self, &Chopper->hitbox2))
+            Player_CheckBadnikBreak(self, player, true);
     }
 }
 
@@ -276,10 +276,10 @@ void Chopper_CheckPlayerCollisions2(void)
 void Chopper_EditorDraw(void)
 {
     RSDK_THIS(Chopper);
-    if (entity->type == 0)
-        RSDK.SetSpriteAnimation(Chopper->aniFrames, 0, &entity->animator, true, 0);
+    if (self->type == 0)
+        RSDK.SetSpriteAnimation(Chopper->aniFrames, 0, &self->animator, true, 0);
     else
-        RSDK.SetSpriteAnimation(Chopper->aniFrames, 1, &entity->animator, true, 0);
+        RSDK.SetSpriteAnimation(Chopper->aniFrames, 1, &self->animator, true, 0);
 
     Chopper_Draw();
 }

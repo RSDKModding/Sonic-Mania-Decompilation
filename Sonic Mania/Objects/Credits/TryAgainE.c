@@ -6,7 +6,7 @@ ObjectTryAgainE *TryAgainE;
 void TryAgainE_Update(void)
 {
     RSDK_THIS(TryAgainE);
-    StateMachine_Run(entity->state);
+    StateMachine_Run(self->state);
 }
 
 void TryAgainE_LateUpdate(void) {}
@@ -19,44 +19,44 @@ void TryAgainE_StaticUpdate(void)
 void TryAgainE_Draw(void)
 {
     RSDK_THIS(TryAgainE);
-    if (SceneInfo->currentDrawGroup == entity->drawOrder) {
+    if (SceneInfo->currentDrawGroup == self->drawOrder) {
         Vector2 drawPos;
 
         RSDK.SetActivePalette(3, 0, ScreenInfo->height);
-        entity->animator1.frameID = 0;
-        RSDK.DrawSprite(&entity->animator1, NULL, false);
-        entity->animator1.frameID = 1;
-        RSDK.DrawSprite(&entity->animator1, NULL, false);
+        self->animator1.frameID = 0;
+        RSDK.DrawSprite(&self->animator1, NULL, false);
+        self->animator1.frameID = 1;
+        RSDK.DrawSprite(&self->animator1, NULL, false);
         RSDK.SetActivePalette(0, 0, ScreenInfo->height);
 
-        drawPos.x = entity->position.x;
-        drawPos.y = entity->position.y + 0x2E0000;
+        drawPos.x = self->position.x;
+        drawPos.y = self->position.y + 0x2E0000;
         if (globals->playerID > 0xFF)
-            drawPos.x = entity->position.x - 0x140000;
-        if (entity->player1Animator.animationID == 2)
-            drawPos.y = entity->position.y + 0x2E0000 + 0x40000;
-        RSDK.DrawSprite(&entity->player1Animator, &drawPos, false);
+            drawPos.x = self->position.x - 0x140000;
+        if (self->player1Animator.animationID == 2)
+            drawPos.y = self->position.y + 0x2E0000 + 0x40000;
+        RSDK.DrawSprite(&self->player1Animator, &drawPos, false);
 
         int32 drawY = drawPos.y;
-        if (entity->player1Animator.animationID == 2) {
+        if (self->player1Animator.animationID == 2) {
             drawY = drawPos.y - 0x40000;
             drawPos.y -= 0x40000;
         }
 
         if (globals->playerID > 255) {
             drawPos.x += 0x280000;
-            entity->direction = FLIP_X;
-            if (entity->player2Animator.animationID == 2)
+            self->direction = FLIP_X;
+            if (self->player2Animator.animationID == 2)
                 drawPos.y = drawY + 0x40000;
-            RSDK.DrawSprite(&entity->player2Animator, &drawPos, false);
-            entity->direction = FLIP_NONE;
+            RSDK.DrawSprite(&self->player2Animator, &drawPos, false);
+            self->direction = FLIP_NONE;
         }
     }
     else {
-        entity->direction = FLIP_X;
-        RSDK.DrawSprite(&entity->animator2, NULL, false);
-        entity->direction = FLIP_NONE;
-        RSDK.DrawSprite(&entity->animator3, NULL, false);
+        self->direction = FLIP_X;
+        RSDK.DrawSprite(&self->animator2, NULL, false);
+        self->direction = FLIP_NONE;
+        RSDK.DrawSprite(&self->animator3, NULL, false);
     }
 }
 
@@ -64,16 +64,16 @@ void TryAgainE_Create(void *data)
 {
     RSDK_THIS(TryAgainE);
     if (!SceneInfo->inEditor) {
-        entity->visible       = true;
-        entity->drawOrder     = 1;
-        entity->active        = ACTIVE_BOUNDS;
-        entity->updateRange.x = 0x800000;
-        entity->updateRange.y = 0x800000;
-        entity->drawFX        = FX_FLIP;
-        entity->state         = TryAgainE_Unknown2;
-        RSDK.SetSpriteAnimation(TryAgainE->aniFrames, 0, &entity->animator1, true, 0);
-        RSDK.SetSpriteAnimation(TryAgainE->aniFrames, 1, &entity->animator2, true, 4);
-        RSDK.SetSpriteAnimation(TryAgainE->aniFrames, 2, &entity->animator3, true, 3);
+        self->visible       = true;
+        self->drawOrder     = 1;
+        self->active        = ACTIVE_BOUNDS;
+        self->updateRange.x = 0x800000;
+        self->updateRange.y = 0x800000;
+        self->drawFX        = FX_FLIP;
+        self->state         = TryAgainE_Unknown2;
+        RSDK.SetSpriteAnimation(TryAgainE->aniFrames, 0, &self->animator1, true, 0);
+        RSDK.SetSpriteAnimation(TryAgainE->aniFrames, 1, &self->animator2, true, 4);
+        RSDK.SetSpriteAnimation(TryAgainE->aniFrames, 2, &self->animator3, true, 3);
 
         int32 id        = -1;
         uint8 playerID = globals->playerID & 0xFF;
@@ -83,7 +83,7 @@ void TryAgainE_Create(void *data)
                 ++id;
             } while (playerID > 0);
         }
-        RSDK.SetSpriteAnimation(TryAgainE->playerAniFrames, 2 * id, &entity->player1Animator, true, 3);
+        RSDK.SetSpriteAnimation(TryAgainE->playerAniFrames, 2 * id, &self->player1Animator, true, 3);
 
         if (globals->playerID > 255) {
             id       = -1;
@@ -94,7 +94,7 @@ void TryAgainE_Create(void *data)
                     ++id;
                 } while (playerID > 0);
             }
-            RSDK.SetSpriteAnimation(TryAgainE->playerAniFrames, 2 * id, &entity->player2Animator, true, 3);
+            RSDK.SetSpriteAnimation(TryAgainE->playerAniFrames, 2 * id, &self->player2Animator, true, 3);
         }
     }
 }
@@ -129,30 +129,30 @@ void TryAgainE_Unknown2(void)
 {
     RSDK_THIS(TryAgainE);
 
-    RSDK.ProcessAnimation(&entity->animator2);
-    RSDK.ProcessAnimation(&entity->animator3);
-    RSDK.ProcessAnimation(&entity->player1Animator);
+    RSDK.ProcessAnimation(&self->animator2);
+    RSDK.ProcessAnimation(&self->animator3);
+    RSDK.ProcessAnimation(&self->player1Animator);
     if (globals->playerID > 255)
-        RSDK.ProcessAnimation(&entity->player2Animator);
+        RSDK.ProcessAnimation(&self->player2Animator);
 
-    if ((entity->timer & 0x7F) == 1) {
-        if ((entity->timer & 0x80) != 0 && entity->animator2.animationID == 2)
-            RSDK.SetSpriteAnimation(TryAgainE->aniFrames, 1, &entity->animator2, true, 0);
-        if ((int8)(entity->timer & 0xFF) >= 0 && entity->animator3.animationID == 2)
-            RSDK.SetSpriteAnimation(TryAgainE->aniFrames, 1, &entity->animator3, true, 0);
+    if ((self->timer & 0x7F) == 1) {
+        if ((self->timer & 0x80) != 0 && self->animator2.animationID == 2)
+            RSDK.SetSpriteAnimation(TryAgainE->aniFrames, 1, &self->animator2, true, 0);
+        if ((int8)(self->timer & 0xFF) >= 0 && self->animator3.animationID == 2)
+            RSDK.SetSpriteAnimation(TryAgainE->aniFrames, 1, &self->animator3, true, 0);
         TryAgainE_Unknown1();
     }
-    else if ((entity->timer & 0x7F) == 59) {
-        if ((entity->timer & 0x80) == 0 && entity->animator2.animationID == 1)
-            RSDK.SetSpriteAnimation(TryAgainE->aniFrames, 2, &entity->animator2, true, 0);
-        if ((int8)(entity->timer & 0xFF) < 0 && entity->animator3.animationID == 1)
-            RSDK.SetSpriteAnimation(TryAgainE->aniFrames, 2, &entity->animator3, true, 0);
+    else if ((self->timer & 0x7F) == 59) {
+        if ((self->timer & 0x80) == 0 && self->animator2.animationID == 1)
+            RSDK.SetSpriteAnimation(TryAgainE->aniFrames, 2, &self->animator2, true, 0);
+        if ((int8)(self->timer & 0xFF) < 0 && self->animator3.animationID == 1)
+            RSDK.SetSpriteAnimation(TryAgainE->aniFrames, 2, &self->animator3, true, 0);
     }
-    if (++entity->timer == 1) {
+    if (++self->timer == 1) {
         foreach_all(TAEmerald, emerald)
         {
-            emerald->startPos.x = entity->position.x;
-            emerald->startPos.y = entity->position.y;
+            emerald->startPos.x = self->position.x;
+            emerald->startPos.y = self->position.y;
             emerald->position.x = emerald->startPos.x;
             emerald->position.y = emerald->startPos.y;
             emerald->startPos.y += 0x100000;
@@ -165,21 +165,21 @@ void TryAgainE_Unknown2(void)
     }
 
     if (ControllerInfo->keyA.press || ControllerInfo->keyStart.press)
-        entity->timer = 600;
+        self->timer = 600;
 #if RETRO_USE_TOUCH_CONTROLS
     else if (TouchInfo->count)
-        entity->timer = 600;
+        self->timer = 600;
 #endif
 
-    if (entity->timer == 600) {
+    if (self->timer == 600) {
         PhantomRuby_PlaySFX(RUBYSFX_ATTACK4);
-        EntityFXFade *fxFade = CREATE_ENTITY(FXFade, intToVoid(0xFFFFFF), entity->position.x, entity->position.y);
+        EntityFXFade *fxFade = CREATE_ENTITY(FXFade, intToVoid(0xFFFFFF), self->position.x, self->position.y);
         fxFade->speedIn      = 24;
         fxFade->speedOut     = 24;
         fxFade->fadeOutBlack = true;
     }
 
-    if (entity->timer >= 740) {
+    if (self->timer >= 740) {
         if (API.CheckDLC(DLC_PLUS))
             RSDK.SetScene("Presentation", "Encore Summary");
         else

@@ -16,10 +16,10 @@ void Palette_Create(void *data)
     char text[32];
 
     RSDK_THIS(Palette);
-    if (!SceneInfo->inEditor && (!entity->loadOnce || Palette->count <= 1)) {
-        RSDK.GetCString(text, &entity->paletteFile);
-        RSDK.LoadPalette(entity->bankID, text, entity->rowFlags);
-        RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL);
+    if (!SceneInfo->inEditor && (!self->loadOnce || Palette->count <= 1)) {
+        RSDK.GetCString(text, &self->paletteFile);
+        RSDK.LoadPalette(self->bankID, text, self->rowFlags);
+        RSDK.ResetEntityPtr(self, TYPE_BLANK, NULL);
     }
 }
 
@@ -32,8 +32,8 @@ void Palette_StageLoad(void)
 void Palette_EditorDraw(void)
 {
     RSDK_THIS(Palette);
-    RSDK.SetSpriteAnimation(Palette->aniFrames, 0, &entity->animator, true, 9);
-    RSDK.DrawSprite(&entity->animator, NULL, false);
+    RSDK.SetSpriteAnimation(Palette->aniFrames, 0, &self->animator, true, 9);
+    RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
 void Palette_EditorLoad(void) { BGSwitch->aniFrames = RSDK.LoadSpriteAnimation("Editor/EditorIcons.bin", SCOPE_STAGE); }

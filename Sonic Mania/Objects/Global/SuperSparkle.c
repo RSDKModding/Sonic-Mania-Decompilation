@@ -5,18 +5,18 @@ ObjectSuperSparkle *SuperSparkle;
 void SuperSparkle_Update(void)
 {
     RSDK_THIS(SuperSparkle);
-    EntityPlayer *player = (EntityPlayer *)entity->player;
+    EntityPlayer *player = (EntityPlayer *)self->player;
     if (!player) {
-        destroyEntity(entity);
+        destroyEntity(self);
     }
     else {
         if (player->groundedStore) {
-            entity->activeFlag = abs(player->velocity.y) + abs(player->velocity.x) > 0x60000;
+            self->activeFlag = abs(player->velocity.y) + abs(player->velocity.x) > 0x60000;
         }
 
-        if (entity->activeFlag) {
-            if (++entity->timer == 12) {
-                entity->timer        = 0;
+        if (self->activeFlag) {
+            if (++self->timer == 12) {
+                self->timer        = 0;
                 EntityDebris *debris = (EntityDebris *)RSDK.CreateEntity(Debris->objectID, 0, player->position.x, player->position.y);
                 debris->state        = Debris_State_Move;
                 debris->timer        = 16;
@@ -28,7 +28,7 @@ void SuperSparkle_Update(void)
             }
         }
         else {
-            entity->timer = 0;
+            self->timer = 0;
         }
 
         if (player->characterID == ID_SONIC && !(Zone->timer & 7)) {
@@ -50,7 +50,7 @@ void SuperSparkle_Update(void)
             ring->animator.animationSpeed = RSDK.Rand(6, 8);
         }
         if (player->superState != SUPERSTATE_SUPER || !player->active)
-            destroyEntity(entity);
+            destroyEntity(self);
     }
 }
 
@@ -64,8 +64,8 @@ void SuperSparkle_Create(void *data)
 {
     RSDK_THIS(SuperSparkle);
     if (!SceneInfo->inEditor) {
-        entity->active = ACTIVE_NORMAL;
-        entity->player = (EntityPlayer *)data;
+        self->active = ACTIVE_NORMAL;
+        self->player = (EntityPlayer *)data;
     }
 }
 

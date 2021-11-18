@@ -5,34 +5,34 @@ ObjectUIChoice *UIChoice;
 void UIChoice_Update(void)
 {
     RSDK_THIS(UIChoice);
-    EntityUIButton *parent  = (EntityUIButton *)entity->parent;
-    bool32 disabled         = entity->disabled;
-    entity->touchPosStart.x = entity->size.x;
-    entity->touchPosStart.y = entity->size.y;
-    entity->touchPosEnd.y   = 0;
-    entity->touchPosStart.x = (entity->touchPosStart.x + 3 * entity->size.y) >> 1;
-    entity->touchPosStart.y = entity->size.y + 0x60000;
-    entity->touchPosEnd.x   = -(entity->touchPosStart.x >> 1);
+    EntityUIButton *parent  = (EntityUIButton *)self->parent;
+    bool32 disabled         = self->disabled;
+    self->touchPosStart.x = self->size.x;
+    self->touchPosStart.y = self->size.y;
+    self->touchPosEnd.y   = 0;
+    self->touchPosStart.x = (self->touchPosStart.x + 3 * self->size.y) >> 1;
+    self->touchPosStart.y = self->size.y + 0x60000;
+    self->touchPosEnd.x   = -(self->touchPosStart.x >> 1);
     if (parent && (disabled || parent->disabled))
         disabled = true;
 
-    if (entity->aniFrames != UIWidgets->textSpriteIndex || entity->isDisabled != disabled) {
+    if (self->aniFrames != UIWidgets->textSpriteIndex || self->isDisabled != disabled) {
         if (disabled)
-            RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, 7, &entity->animator1, true, 0);
+            RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, 7, &self->animator1, true, 0);
         else
-            RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, entity->listID, &entity->animator1, true, entity->frameID);
-        entity->aniFrames = UIWidgets->textSpriteIndex;
-        entity->isDisabled  = disabled;
+            RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, self->listID, &self->animator1, true, self->frameID);
+        self->aniFrames = UIWidgets->textSpriteIndex;
+        self->isDisabled  = disabled;
     }
 
-    StateMachine_Run(entity->state);
+    StateMachine_Run(self->state);
 
     if (parent) {
         if (parent->state == UIButton_Unknown16) {
-            entity->field_134.x = 0;
-            entity->field_134.y = 0;
-            entity->flag        = false;
-            entity->state       = UIChoice_Unknown6;
+            self->field_134.x = 0;
+            self->field_134.y = 0;
+            self->flag        = false;
+            self->state       = UIChoice_Unknown6;
         }
     }
 }
@@ -46,62 +46,62 @@ void UIChoice_Draw(void)
     RSDK_THIS(UIChoice);
     Vector2 drawPos;
 
-    int32 size  = entity->size.y + entity->size.x;
-    drawPos.x = entity->position.x;
-    drawPos.y = entity->position.y;
-    drawPos.x -= entity->field_134.y;
-    drawPos.y -= entity->field_134.y;
+    int32 size  = self->size.y + self->size.x;
+    drawPos.x = self->position.x;
+    drawPos.y = self->position.y;
+    drawPos.x -= self->field_134.y;
+    drawPos.y -= self->field_134.y;
     size >>= 16;
 #if RETRO_USE_PLUS
-    UIWidgets_Unknown7(entity->size.y >> 16, size, entity->sizeIY, (UIWidgets->buttonColour >> 16) & 0xFF, (UIWidgets->buttonColour >> 8) & 0xFF,
+    UIWidgets_Unknown7(self->size.y >> 16, size, self->sizeIY, (UIWidgets->buttonColour >> 16) & 0xFF, (UIWidgets->buttonColour >> 8) & 0xFF,
                        (UIWidgets->buttonColour) & 0xFF, drawPos.x, drawPos.y);
 #else
-    UIWidgets_Unknown7(entity->size.y >> 16, size, entity->sizeIY, 0xF0, 0xF0, 0xF0, drawPos.x, drawPos.y);
+    UIWidgets_Unknown7(self->size.y >> 16, size, self->sizeIY, 0xF0, 0xF0, 0xF0, drawPos.x, drawPos.y);
 #endif
 
-    drawPos.x = entity->position.x;
-    drawPos.y = entity->position.y;
-    drawPos.x += entity->field_134.y;
-    drawPos.y += entity->field_134.y;
-    UIWidgets_Unknown7(entity->size.y >> 16, size, entity->sizeIY, 0, 0, 0, drawPos.x, drawPos.y);
+    drawPos.x = self->position.x;
+    drawPos.y = self->position.y;
+    drawPos.x += self->field_134.y;
+    drawPos.y += self->field_134.y;
+    UIWidgets_Unknown7(self->size.y >> 16, size, self->sizeIY, 0, 0, 0, drawPos.x, drawPos.y);
 
-    EntityUIButton *parent = (EntityUIButton *)entity->parent;
-    if (entity->arrowWidth > 0 && entity->flag && !(entity->disabled || parent->disabled)) {
-        drawPos.x = entity->position.x;
-        drawPos.y = entity->position.y;
-        drawPos.y += entity->field_134.x;
-        drawPos.x -= entity->arrowWidth << 15;
-        drawPos.x += entity->field_134.y;
-        drawPos.y += entity->field_134.y;
-        RSDK.DrawSprite(&entity->animator3, &drawPos, false);
+    EntityUIButton *parent = (EntityUIButton *)self->parent;
+    if (self->arrowWidth > 0 && self->flag && !(self->disabled || parent->disabled)) {
+        drawPos.x = self->position.x;
+        drawPos.y = self->position.y;
+        drawPos.y += self->field_134.x;
+        drawPos.x -= self->arrowWidth << 15;
+        drawPos.x += self->field_134.y;
+        drawPos.y += self->field_134.y;
+        RSDK.DrawSprite(&self->animator3, &drawPos, false);
 
-        drawPos.x = entity->position.x;
-        drawPos.y = entity->position.y;
-        drawPos.y += entity->field_134.x;
-        drawPos.x += entity->arrowWidth << 15;
-        drawPos.x += entity->field_134.y;
-        drawPos.y += entity->field_134.y;
-        RSDK.DrawSprite(&entity->animator4, &drawPos, false);
+        drawPos.x = self->position.x;
+        drawPos.y = self->position.y;
+        drawPos.y += self->field_134.x;
+        drawPos.x += self->arrowWidth << 15;
+        drawPos.x += self->field_134.y;
+        drawPos.y += self->field_134.y;
+        RSDK.DrawSprite(&self->animator4, &drawPos, false);
     }
 
-    if (entity->textFlag) {
-        drawPos.x = entity->position.x;
-        drawPos.y = entity->position.y;
-        drawPos.y = entity->field_134.x + entity->position.y;
-        drawPos.x = entity->field_134.y + entity->position.x;
-        drawPos.y += entity->field_134.y;
-        if (entity->align) {
-            if (entity->align == 2)
-                drawPos.x += (entity->size.x >> 1) - 0x60000;
+    if (self->textFlag) {
+        drawPos.x = self->position.x;
+        drawPos.y = self->position.y;
+        drawPos.y = self->field_134.x + self->position.y;
+        drawPos.x = self->field_134.y + self->position.x;
+        drawPos.y += self->field_134.y;
+        if (self->align) {
+            if (self->align == 2)
+                drawPos.x += (self->size.x >> 1) - 0x60000;
         }
         else {
-            drawPos.x += -0x60000 - (entity->size.x >> 1);
+            drawPos.x += -0x60000 - (self->size.x >> 1);
         }
-        if (entity->auxIcon)
-            RSDK.DrawSprite(&entity->animator2, &drawPos, false);
+        if (self->auxIcon)
+            RSDK.DrawSprite(&self->animator2, &drawPos, false);
 
-        if (!entity->noText)
-            RSDK.DrawSprite(&entity->animator1, &drawPos, false);
+        if (!self->noText)
+            RSDK.DrawSprite(&self->animator1, &drawPos, false);
     }
 }
 
@@ -109,20 +109,20 @@ void UIChoice_Create(void *data)
 {
     RSDK_THIS(UIChoice);
     if (!SceneInfo->inEditor) {
-        entity->visible       = true;
-        entity->drawOrder     = 2;
-        entity->active        = ACTIVE_NEVER;
-        entity->updateRange.x = 0x800000;
-        entity->updateRange.y = 0x400000;
-        entity->sizeIY        = entity->size.y >> 16;
-        entity->size.y        = abs(entity->size.y);
-        entity->textFlag      = true;
-        entity->touchCB       = UIChoice_CheckTouch;
-        RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, entity->listID, &entity->animator1, true, entity->frameID);
-        entity->aniFrames = UIWidgets->textSpriteIndex;
-        RSDK.SetSpriteAnimation(UIChoice->aniFrames, entity->auxListID, &entity->animator2, true, entity->auxFrameID);
-        RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 2, &entity->animator3, true, 0);
-        RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 2, &entity->animator4, true, 1);
+        self->visible       = true;
+        self->drawOrder     = 2;
+        self->active        = ACTIVE_NEVER;
+        self->updateRange.x = 0x800000;
+        self->updateRange.y = 0x400000;
+        self->sizeIY        = self->size.y >> 16;
+        self->size.y        = abs(self->size.y);
+        self->textFlag      = true;
+        self->touchCB       = UIChoice_CheckTouch;
+        RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, self->listID, &self->animator1, true, self->frameID);
+        self->aniFrames = UIWidgets->textSpriteIndex;
+        RSDK.SetSpriteAnimation(UIChoice->aniFrames, self->auxListID, &self->animator2, true, self->auxFrameID);
+        RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 2, &self->animator3, true, 0);
+        RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 2, &self->animator4, true, 1);
     }
 }
 
@@ -157,7 +157,7 @@ void UIChoice_Unknown2(EntityUIButton *entity)
 void UIChoice_TouchedCB_Left(void)
 {
     RSDK_THIS(UIChoice);
-    EntityUIButton *parent = (EntityUIButton *)entity->parent;
+    EntityUIButton *parent = (EntityUIButton *)self->parent;
     int32 id                 = parent->selection;
     EntityUIButton *ent    = NULL;
 
@@ -185,7 +185,7 @@ void UIChoice_TouchedCB_Left(void)
 void UIChoice_TouchedCB_Right(void)
 {
     RSDK_THIS(UIChoice);
-    EntityUIButton *parent = (EntityUIButton *)entity->parent;
+    EntityUIButton *parent = (EntityUIButton *)self->parent;
     int32 id                 = parent->selection;
     EntityUIButton *ent    = NULL;
     do {
@@ -215,15 +215,15 @@ bool32 UIChoice_CheckTouch(void)
     callbacks[0]  = UIChoice_TouchedCB_Left;
     callbacks[1] = UIChoice_TouchedCB_Right;
 
-    touchStart[0].x = entity->touchPosStart.x;
-    touchStart[0].y = entity->touchPosStart.y;
-    touchStart[1].x = entity->touchPosStart.x;
-    touchStart[1].y = entity->touchPosStart.y;
+    touchStart[0].x = self->touchPosStart.x;
+    touchStart[0].y = self->touchPosStart.y;
+    touchStart[1].x = self->touchPosStart.x;
+    touchStart[1].y = self->touchPosStart.y;
 
-    touchEnd[0].x = entity->touchPosEnd.x;
-    touchEnd[0].y = entity->touchPosEnd.y;
-    touchEnd[1].x = -entity->touchPosEnd.x;
-    touchEnd[1].y = entity->touchPosEnd.y;
+    touchEnd[0].x = self->touchPosEnd.x;
+    touchEnd[0].y = self->touchPosEnd.y;
+    touchEnd[1].x = -self->touchPosEnd.x;
+    touchEnd[1].y = self->touchPosEnd.y;
 
     bool32 pressed = false;
     for (int32 i = 0; i < 2; ++i) {
@@ -234,20 +234,20 @@ bool32 UIChoice_CheckTouch(void)
                 int32 x = (ScreenInfo->position.x << 16) - ((TouchInfo->x[t] * ScreenInfo->width) * -65536.0f);
                 int32 y = (ScreenInfo->position.y << 16) - ((TouchInfo->y[t] * ScreenInfo->height) * -65536.0f);
 
-                int32 touchX = abs(touchEnd[i].x + entity->position.x - x);
-                int32 touchY = abs(touchEnd[i].y + entity->position.y - y);
+                int32 touchX = abs(touchEnd[i].x + self->position.x - x);
+                int32 touchY = abs(touchEnd[i].y + self->position.y - y);
                 if (touchX < sizeX && touchY < sizeY) {
-                    entity->touchID = i;
+                    self->touchID = i;
                     pressed         = true;
                 }
             }
         }
-        else if (entity->touchPressed && entity->touchID == i && !entity->disabled) {
+        else if (self->touchPressed && self->touchID == i && !self->disabled) {
             callbacks[i]();
         }
     }
 
-    entity->touchPressed = pressed;
+    self->touchPressed = pressed;
     return pressed;
 }
 
@@ -255,25 +255,25 @@ void UIChoice_Unknown6(void)
 {
     RSDK_THIS(UIChoice);
 
-    if (entity->field_134.x) {
-        int32 val = -(entity->field_134.x / abs(entity->field_134.x));
-        entity->field_134.x += val << 15;
-        if (val < 0 && entity->field_134.x < 0) {
-            entity->field_134.x = 0;
+    if (self->field_134.x) {
+        int32 val = -(self->field_134.x / abs(self->field_134.x));
+        self->field_134.x += val << 15;
+        if (val < 0 && self->field_134.x < 0) {
+            self->field_134.x = 0;
         }
-        else if (val > 0 && entity->field_134.x > 0) {
-            entity->field_134.x = 0;
+        else if (val > 0 && self->field_134.x > 0) {
+            self->field_134.x = 0;
         }
     }
 
-    if (entity->field_134.y) {
-        int32 val = -(entity->field_134.y / abs(entity->field_134.y));
-        entity->field_134.y += val << 16;
-        if (val < 0 && entity->field_134.y < 0) {
-            entity->field_134.y = 0;
+    if (self->field_134.y) {
+        int32 val = -(self->field_134.y / abs(self->field_134.y));
+        self->field_134.y += val << 16;
+        if (val < 0 && self->field_134.y < 0) {
+            self->field_134.y = 0;
         }
-        else if (val > 0 && entity->field_134.y > 0) {
-            entity->field_134.y = 0;
+        else if (val > 0 && self->field_134.y > 0) {
+            self->field_134.y = 0;
         }
     }
 }
@@ -281,18 +281,18 @@ void UIChoice_Unknown6(void)
 void UIChoice_Unknown7(void)
 {
     RSDK_THIS(UIChoice);
-    entity->field_13C += 0x4000;
-    entity->field_134.x += entity->field_13C;
-    if (entity->field_134.x >= 0 && entity->field_13C > 0) {
-        entity->field_134.x = 0;
-        entity->field_13C   = 0;
+    self->field_13C += 0x4000;
+    self->field_134.x += self->field_13C;
+    if (self->field_134.x >= 0 && self->field_13C > 0) {
+        self->field_134.x = 0;
+        self->field_13C   = 0;
     }
 
-    entity->field_140 += 0x4800;
-    entity->field_134.y += entity->field_140;
-    if (entity->field_134.y >= -0x20000 && entity->field_140 > 0) {
-        entity->field_134.y = -0x20000;
-        entity->field_140   = 0;
+    self->field_140 += 0x4800;
+    self->field_134.y += self->field_140;
+    if (self->field_134.y >= -0x20000 && self->field_140 > 0) {
+        self->field_134.y = -0x20000;
+        self->field_140   = 0;
     }
 }
 
@@ -300,17 +300,17 @@ void UIChoice_Unknown7(void)
 void UIChoice_EditorDraw(void)
 {
     RSDK_THIS(UIChoice);
-    entity->drawOrder     = 2;
-    entity->updateRange.x = 0x800000;
-    entity->updateRange.y = 0x400000;
-    entity->sizeIY        = entity->size.y >> 16;
-    entity->size.y        = abs(entity->size.y);
-    entity->textFlag      = true;
-    RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, entity->listID, &entity->animator1, true, entity->frameID);
-    entity->aniFrames = UIWidgets->textSpriteIndex;
-    RSDK.SetSpriteAnimation(UIChoice->aniFrames, entity->auxListID, &entity->animator2, true, entity->auxFrameID);
-    RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 2, &entity->animator3, true, 0);
-    RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 2, &entity->animator4, true, 1);
+    self->drawOrder     = 2;
+    self->updateRange.x = 0x800000;
+    self->updateRange.y = 0x400000;
+    self->sizeIY        = self->size.y >> 16;
+    self->size.y        = abs(self->size.y);
+    self->textFlag      = true;
+    RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, self->listID, &self->animator1, true, self->frameID);
+    self->aniFrames = UIWidgets->textSpriteIndex;
+    RSDK.SetSpriteAnimation(UIChoice->aniFrames, self->auxListID, &self->animator2, true, self->auxFrameID);
+    RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 2, &self->animator3, true, 0);
+    RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 2, &self->animator4, true, 1);
 
     UIChoice_Draw();
 }

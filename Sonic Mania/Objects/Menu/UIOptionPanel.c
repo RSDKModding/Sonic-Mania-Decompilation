@@ -5,10 +5,10 @@ ObjectUIOptionPanel *UIOptionPanel;
 void UIOptionPanel_Update(void)
 {
     RSDK_THIS(UIOptionPanel);
-    if (entity->textSpriteIndex != UIWidgets->textSpriteIndex) {
-        RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, entity->topListID, &entity->animator, true, entity->topFrameID);
-        RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, entity->botListID, &entity->animator2, true, entity->botFrameID);
-        entity->textSpriteIndex = UIWidgets->textSpriteIndex;
+    if (self->textSpriteIndex != UIWidgets->textSpriteIndex) {
+        RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, self->topListID, &self->animator, true, self->topFrameID);
+        RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, self->botListID, &self->animator2, true, self->botFrameID);
+        self->textSpriteIndex = UIWidgets->textSpriteIndex;
     }
 }
 
@@ -20,42 +20,42 @@ void UIOptionPanel_Draw(void)
 {
     RSDK_THIS(UIOptionPanel);
     UIOptionPanel_Unknown1();
-    RSDK.DrawSprite(&entity->animator, &entity->drawPosTop, false);
-    if (!entity->botHidden)
-        RSDK.DrawSprite(&entity->animator2, &entity->drawPosBottom, false);
+    RSDK.DrawSprite(&self->animator, &self->drawPosTop, false);
+    if (!self->botHidden)
+        RSDK.DrawSprite(&self->animator2, &self->drawPosBottom, false);
 }
 
 void UIOptionPanel_Create(void *data)
 {
     RSDK_THIS(UIOptionPanel);
-    entity->field_74      = entity->position.x;
-    entity->field_78      = entity->position.y;
-    entity->active        = ACTIVE_BOUNDS;
-    entity->drawOrder     = 2;
-    entity->visible       = true;
-    entity->drawFX        = FX_FLIP;
-    entity->updateRange.x = 0x800000;
-    entity->updateRange.y = 0x800000;
-    RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, entity->topListID, &entity->animator, true, entity->topFrameID);
-    RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, entity->botListID, &entity->animator2, true, entity->botFrameID);
-    entity->textSpriteIndex = UIWidgets->textSpriteIndex;
-    if (entity->panelSize < 136)
-        entity->panelSize = 136;
+    self->field_74      = self->position.x;
+    self->field_78      = self->position.y;
+    self->active        = ACTIVE_BOUNDS;
+    self->drawOrder     = 2;
+    self->visible       = true;
+    self->drawFX        = FX_FLIP;
+    self->updateRange.x = 0x800000;
+    self->updateRange.y = 0x800000;
+    RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, self->topListID, &self->animator, true, self->topFrameID);
+    RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, self->botListID, &self->animator2, true, self->botFrameID);
+    self->textSpriteIndex = UIWidgets->textSpriteIndex;
+    if (self->panelSize < 136)
+        self->panelSize = 136;
 
-    entity->field_7C.y   = entity->panelSize << 16;
-    entity->drawPosTop.x = entity->position.x;
-    entity->drawPosTop.x -= 0x920000;
-    entity->drawPosTop.y = entity->position.y;
-    entity->field_7C.x   = 0x1A80000;
-    entity->field_94     = -0x4300D4;
-    entity->field_98     = 0x4400D4;
-    entity->drawPosTop.y += -0x370000 - (((entity->panelSize << 15) - 0x438001) & 0xFFFF0000);
-    entity->drawPosBottom = entity->position;
-    if (!entity->botAlignRight)
-        entity->drawPosBottom.x -= 0xA0000;
+    self->field_7C.y   = self->panelSize << 16;
+    self->drawPosTop.x = self->position.x;
+    self->drawPosTop.x -= 0x920000;
+    self->drawPosTop.y = self->position.y;
+    self->field_7C.x   = 0x1A80000;
+    self->field_94     = -0x4300D4;
+    self->field_98     = 0x4400D4;
+    self->drawPosTop.y += -0x370000 - (((self->panelSize << 15) - 0x438001) & 0xFFFF0000);
+    self->drawPosBottom = self->position;
+    if (!self->botAlignRight)
+        self->drawPosBottom.x -= 0xA0000;
     else
-        entity->drawPosBottom.x += 0xA20000;
-    entity->drawPosBottom.y += 0x390000;
+        self->drawPosBottom.x += 0xA20000;
+    self->drawPosBottom.y += 0x390000;
 }
 
 void UIOptionPanel_StageLoad(void) {}
@@ -63,17 +63,17 @@ void UIOptionPanel_StageLoad(void) {}
 void UIOptionPanel_Unknown1(void)
 {
     RSDK_THIS(UIOptionPanel);
-    RSDK.DrawRect(entity->position.x - (entity->field_7C.x >> 1), entity->position.y - (entity->field_7C.y >> 1), entity->field_7C.x,
-                  entity->field_7C.y, 0x30A0F0, 255, INK_NONE, false);
+    RSDK.DrawRect(self->position.x - (self->field_7C.x >> 1), self->position.y - (self->field_7C.y >> 1), self->field_7C.x,
+                  self->field_7C.y, 0x30A0F0, 255, INK_NONE, false);
 
-    int32 x = entity->position.x - (entity->field_7C.x >> 1);
-    int32 y = entity->position.y - (entity->field_7C.y >> 1);
+    int32 x = self->position.x - (self->field_7C.x >> 1);
+    int32 y = self->position.y - (self->field_7C.y >> 1);
     RSDK.DrawRect(x, y, 0xE60000, 0x180000, 0, 255, INK_NONE, false);
     UIWidgets_Unknown5(0, 23, 0, 0, 0xE60000 + x, y);
 
-    if (!entity->botHidden) {
-        x = (entity->field_7C.x >> 1) + entity->position.x - 0xE60000;
-        y = (entity->field_7C.y >> 1) + entity->position.y - 0x180000;
+    if (!self->botHidden) {
+        x = (self->field_7C.x >> 1) + self->position.x - 0xE60000;
+        y = (self->field_7C.y >> 1) + self->position.y - 0x180000;
         RSDK.DrawRect(x, y, 0xE60000, 0x180000, 0, 255, INK_NONE, false);
         UIWidgets_Unknown5(0, -23, 0, 0, x, y + 0x170000);
     }

@@ -5,7 +5,7 @@ ObjectRollerMKII *RollerMKII;
 void RollerMKII_Update(void)
 {
     RSDK_THIS(RollerMKII);
-    StateMachine_Run(entity->state);
+    StateMachine_Run(self->state);
 }
 
 void RollerMKII_LateUpdate(void) {}
@@ -15,26 +15,26 @@ void RollerMKII_StaticUpdate(void) {}
 void RollerMKII_Draw(void)
 {
     RSDK_THIS(RollerMKII);
-    RSDK.DrawSprite(&entity->animator, NULL, false);
+    RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
 void RollerMKII_Create(void *data)
 {
     RSDK_THIS(RollerMKII);
-    entity->visible         = true;
-    entity->drawOrder       = Zone->drawOrderLow;
-    entity->startPos        = entity->position;
-    entity->startDir        = entity->direction;
-    entity->drawFX          = FX_FLIP;
-    entity->active          = ACTIVE_BOUNDS;
-    entity->updateRange.x   = 0x1000000;
-    entity->updateRange.y   = 0x1000000;
-    entity->onGround        = false;
-    entity->tileCollisions  = true;
-    entity->collisionLayers = Zone->fgLayers;
-    entity->collisionPlane  = 0;
-    RSDK.SetSpriteAnimation(RollerMKII->aniFrames, 0, &entity->animator, true, 5);
-    entity->state = RollerMKII_State_Setup;
+    self->visible         = true;
+    self->drawOrder       = Zone->drawOrderLow;
+    self->startPos        = self->position;
+    self->startDir        = self->direction;
+    self->drawFX          = FX_FLIP;
+    self->active          = ACTIVE_BOUNDS;
+    self->updateRange.x   = 0x1000000;
+    self->updateRange.y   = 0x1000000;
+    self->onGround        = false;
+    self->tileCollisions  = true;
+    self->collisionLayers = Zone->fgLayers;
+    self->collisionPlane  = 0;
+    RSDK.SetSpriteAnimation(RollerMKII->aniFrames, 0, &self->animator, true, 5);
+    self->state = RollerMKII_State_Setup;
 }
 
 void RollerMKII_StageLoad(void)
@@ -76,9 +76,9 @@ void RollerMKII_StageLoad(void)
 void RollerMKII_DebugSpawn(void)
 {
     RSDK_THIS(DebugMode);
-    EntityRollerMKII *rollerMKII = CREATE_ENTITY(RollerMKII, NULL, entity->position.x, entity->position.y);
-    rollerMKII->direction        = entity->direction;
-    rollerMKII->startDir         = entity->direction;
+    EntityRollerMKII *rollerMKII = CREATE_ENTITY(RollerMKII, NULL, self->position.x, self->position.y);
+    rollerMKII->direction        = self->direction;
+    rollerMKII->startDir         = self->direction;
 }
 
 void RollerMKII_DebugDraw(void)
@@ -90,10 +90,10 @@ void RollerMKII_DebugDraw(void)
 void RollerMKII_CheckOnScreen(void)
 {
     RSDK_THIS(RollerMKII);
-    if (!RSDK.CheckOnScreen(entity, NULL) && !RSDK.CheckPosOnScreen(&entity->startPos, &entity->updateRange)) {
-        entity->position.x = entity->startPos.x;
-        entity->position.y = entity->startPos.y;
-        entity->direction  = entity->startDir;
+    if (!RSDK.CheckOnScreen(self, NULL) && !RSDK.CheckPosOnScreen(&self->startPos, &self->updateRange)) {
+        self->position.x = self->startPos.x;
+        self->position.y = self->startPos.y;
+        self->direction  = self->startDir;
         RollerMKII_Create(NULL);
     }
 }
@@ -104,8 +104,8 @@ void RollerMKII_CheckPlayerCollisions(void)
 
     foreach_active(Player, player)
     {
-        if (Player_CheckBadnikTouch(player, entity, &RollerMKII->hitbox1))
-            Player_CheckBadnikBreak(entity, player, true);
+        if (Player_CheckBadnikTouch(player, self, &RollerMKII->hitbox1))
+            Player_CheckBadnikBreak(self, player, true);
     }
 }
 
@@ -115,20 +115,20 @@ void RollerMKII_CheckPlayerCollisions_Rolling(void)
 
     foreach_active(Player, player)
     {
-        if (Player_CheckBadnikTouch(player, entity, &RollerMKII->hitbox1)) {
+        if (Player_CheckBadnikTouch(player, self, &RollerMKII->hitbox1)) {
 
             int anim    = player->playerAnimator.animationID;
             bool32 flag = false;
 #if RETRO_USE_PLUS
             if (player->state == Player_State_MightyHammerDrop) {
-                Player_CheckBadnikBreak(entity, player, true);
+                Player_CheckBadnikBreak(self, player, true);
             }
             else {
                 flag = player->characterID == ID_MIGHTY && (anim == ANI_CROUCH || player->jumpAbilityTimer > 1);
 #endif
-                if (Player_CheckAttacking(player, entity) || flag) {
+                if (Player_CheckAttacking(player, self) || flag) {
                     RSDK.PlaySfx(RollerMKII->sfxBumper, false, 255);
-                    int angle = RSDK.ATan2(player->position.x - entity->position.x, player->position.y - entity->position.y);
+                    int angle = RSDK.ATan2(player->position.x - self->position.x, player->position.y - self->position.y);
                     int velX  = 0x380 * RSDK.Cos256(angle);
                     int velY  = 0x380 * RSDK.Sin256(angle);
 
@@ -158,17 +158,17 @@ void RollerMKII_CheckPlayerCollisions_Rolling(void)
                     }
 #endif
                     RSDK.PlaySfx(RollerMKII->sfxBumper, false, 255);
-                    RSDK.SetSpriteAnimation(RollerMKII->aniFrames, 2, &entity->animator, true, 0);
-                    entity->velocity.y = -0x40000;
-                    entity->velocity.x = -velX;
-                    entity->onGround   = false;
-                    entity->field_68   = 0;
-                    entity->timer      = 45;
-                    entity->state      = RollerMKII_State_Unknown6;
-                    entity->direction  = player->position.x < entity->position.x;
+                    RSDK.SetSpriteAnimation(RollerMKII->aniFrames, 2, &self->animator, true, 0);
+                    self->velocity.y = -0x40000;
+                    self->velocity.x = -velX;
+                    self->onGround   = false;
+                    self->field_68   = 0;
+                    self->timer      = 45;
+                    self->state      = RollerMKII_State_Unknown6;
+                    self->direction  = player->position.x < self->position.x;
                 }
                 else {
-                    Player_CheckHit(player, entity);
+                    Player_CheckHit(player, self);
                 }
 #if RETRO_USE_PLUS
             }
@@ -180,23 +180,23 @@ void RollerMKII_CheckPlayerCollisions_Rolling(void)
 int RollerMKII_HandleObjectCollisions(Entity *otherEntity, Hitbox *hitbox)
 {
     RSDK_THIS(RollerMKII);
-    int velX = entity->velocity.x;
-    int side = RSDK.CheckObjectCollisionBox(otherEntity, hitbox, entity, &RollerMKII->hitbox2, true);
+    int velX = self->velocity.x;
+    int side = RSDK.CheckObjectCollisionBox(otherEntity, hitbox, self, &RollerMKII->hitbox2, true);
 
     if ((side == C_LEFT && velX > 0) || (side == C_RIGHT && velX < 0)) {
-        if (entity->state != RollerMKII_State_Unknown6) {
+        if (self->state != RollerMKII_State_Unknown6) {
             RSDK.PlaySfx(RollerMKII->sfxBumper, false, 255);
-            RSDK.SetSpriteAnimation(RollerMKII->aniFrames, 0, &entity->animator, true, 0);
-            entity->velocity.y = -0x40000;
-            entity->onGround   = false;
-            entity->field_68   = 0;
-            entity->timer      = 30;
+            RSDK.SetSpriteAnimation(RollerMKII->aniFrames, 0, &self->animator, true, 0);
+            self->velocity.y = -0x40000;
+            self->onGround   = false;
+            self->field_68   = 0;
+            self->timer      = 30;
             if (velX < 0)
-                entity->velocity.x = 0x20000;
+                self->velocity.x = 0x20000;
             else
-                entity->velocity.x = -0x20000;
-            entity->state     = RollerMKII_State_Unknown6;
-            entity->direction = entity->position.x < Player_GetNearestPlayer()->position.x;
+                self->velocity.x = -0x20000;
+            self->state     = RollerMKII_State_Unknown6;
+            self->direction = self->position.x < Player_GetNearestPlayer()->position.x;
         }
     }
     return side;
@@ -213,13 +213,13 @@ bool32 RollerMKII_HandlePlatformCollisions(EntityPlatform *platform)
         if (platform->collision) {
             if (platform->collision != PLATFORM_C_1) {
                 if (platform->collision == PLATFORM_C_2
-                    && RSDK.CheckObjectCollisionTouchBox(platform, &platform->hitbox, entity, &RollerMKII->hitbox2)) {
-                    if (entity->collisionLayers & Zone->moveID) {
+                    && RSDK.CheckObjectCollisionTouchBox(platform, &platform->hitbox, self, &RollerMKII->hitbox2)) {
+                    if (self->collisionLayers & Zone->moveID) {
                         TileLayer *move  = RSDK.GetSceneLayer(Zone->moveLayer);
                         move->position.x = -(platform->drawPos.x + platform->tileOrigin.x) >> 16;
                         move->position.y = -(platform->drawPos.y + platform->tileOrigin.y) >> 16;
                     }
-                    if (entity->velocity.y >= 0x3800)
+                    if (self->velocity.y >= 0x3800)
                         flag = true;
                 }
             }
@@ -230,7 +230,7 @@ bool32 RollerMKII_HandlePlatformCollisions(EntityPlatform *platform)
         }
         else {
             Hitbox *hitbox = RSDK.GetHitbox(&platform->animator, 0);
-            RSDK.CheckObjectCollisionPlatform(platform, hitbox, entity, &RollerMKII->hitbox2, true);
+            RSDK.CheckObjectCollisionPlatform(platform, hitbox, self, &RollerMKII->hitbox2, true);
         }
         platform->position = platform->centerPos;
     }
@@ -243,31 +243,31 @@ void RollerMKII_HandleCollisions(void)
 
     foreach_all(PlaneSwitch, planeSwitch)
     {
-        int32 x     = (entity->position.x - planeSwitch->position.x) >> 8;
-        int32 y     = (entity->position.y - planeSwitch->position.y) >> 8;
+        int32 x     = (self->position.x - planeSwitch->position.x) >> 8;
+        int32 y     = (self->position.y - planeSwitch->position.y) >> 8;
         int32 scanX = (y * RSDK.Sin256(planeSwitch->negAngle)) + (x * RSDK.Cos256(planeSwitch->negAngle)) + planeSwitch->position.x;
         int32 scanY = (y * RSDK.Cos256(planeSwitch->negAngle)) - (x * RSDK.Sin256(planeSwitch->negAngle)) + planeSwitch->position.y;
-        int32 pos = ((entity->velocity.y >> 8) * RSDK.Sin256(planeSwitch->negAngle)) + (entity->velocity.x >> 8) * RSDK.Cos256(planeSwitch->negAngle);
+        int32 pos = ((self->velocity.y >> 8) * RSDK.Sin256(planeSwitch->negAngle)) + (self->velocity.x >> 8) * RSDK.Cos256(planeSwitch->negAngle);
         RSDK.Cos256(planeSwitch->negAngle);
         RSDK.Sin256(planeSwitch->negAngle);
-        if (!(planeSwitch->onPath && !entity->onGround)) {
+        if (!(planeSwitch->onPath && !self->onGround)) {
             int32 xDif = abs(scanX - planeSwitch->position.x);
             int32 yDif = abs(scanY - planeSwitch->position.y);
 
             if (xDif < 0x180000 && yDif < planeSwitch->size << 19) {
                 if (scanX + pos >= planeSwitch->position.x) {
-                    entity->collisionPlane = (planeSwitch->flags >> 3) & 1;
+                    self->collisionPlane = (planeSwitch->flags >> 3) & 1;
                     if (!(planeSwitch->flags & 4))
-                        entity->drawOrder = Zone->playerDrawLow;
+                        self->drawOrder = Zone->playerDrawLow;
                     else
-                        entity->drawOrder = Zone->playerDrawHigh;
+                        self->drawOrder = Zone->playerDrawHigh;
                 }
                 else {
-                    entity->collisionPlane = (planeSwitch->flags >> 1) & 1;
+                    self->collisionPlane = (planeSwitch->flags >> 1) & 1;
                     if (!(planeSwitch->flags & 1))
-                        entity->drawOrder = Zone->playerDrawLow;
+                        self->drawOrder = Zone->playerDrawLow;
                     else
-                        entity->drawOrder = Zone->playerDrawHigh;
+                        self->drawOrder = Zone->playerDrawHigh;
                 }
             }
         }
@@ -277,23 +277,23 @@ void RollerMKII_HandleCollisions(void)
     foreach_all(Spikes, spikes) { RollerMKII_HandleObjectCollisions((Entity *)spikes, &spikes->hitbox); }
     foreach_all(BreakableWall, wall) { RollerMKII_HandleObjectCollisions((Entity *)wall, &wall->hitbox); }
 
-    if (!entity->collisionMode && entity->state != RollerMKII_State_Unknown6) {
-        bool32 collided = entity->direction == FLIP_X
-                              ? RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_RWALL, entity->collisionPlane, -0xA0000, 0, false)
-                              : RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_LWALL, entity->collisionPlane, 0xA0000, 0, false);
+    if (!self->collisionMode && self->state != RollerMKII_State_Unknown6) {
+        bool32 collided = self->direction == FLIP_X
+                              ? RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_RWALL, self->collisionPlane, -0xA0000, 0, false)
+                              : RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_LWALL, self->collisionPlane, 0xA0000, 0, false);
         if (collided) {
             RSDK.PlaySfx(RollerMKII->sfxBumper, false, 255);
-            RSDK.SetSpriteAnimation(RollerMKII->aniFrames, 0, &entity->animator, true, 0);
-            entity->onGround   = false;
-            entity->velocity.y = -0x40000;
-            if (entity->direction == FLIP_X)
-                entity->velocity.x = 0x20000;
+            RSDK.SetSpriteAnimation(RollerMKII->aniFrames, 0, &self->animator, true, 0);
+            self->onGround   = false;
+            self->velocity.y = -0x40000;
+            if (self->direction == FLIP_X)
+                self->velocity.x = 0x20000;
             else
-                entity->velocity.x = -0x20000;
-            entity->field_68  = 0;
-            entity->timer     = 30;
-            entity->state     = RollerMKII_State_Unknown6;
-            entity->direction = entity->position.x < Player_GetNearestPlayer()->position.x;
+                self->velocity.x = -0x20000;
+            self->field_68  = 0;
+            self->timer     = 30;
+            self->state     = RollerMKII_State_Unknown6;
+            self->direction = self->position.x < Player_GetNearestPlayer()->position.x;
         }
     }
 }
@@ -301,56 +301,56 @@ void RollerMKII_HandleCollisions(void)
 void RollerMKII_State_Setup(void)
 {
     RSDK_THIS(RollerMKII);
-    entity->active     = ACTIVE_NORMAL;
-    entity->velocity.x = 0;
-    entity->velocity.y = 0;
-    entity->groundVel  = 0;
-    entity->field_68   = 0;
-    entity->state      = RollerMKII_State_Unknown1;
+    self->active     = ACTIVE_NORMAL;
+    self->velocity.x = 0;
+    self->velocity.y = 0;
+    self->groundVel  = 0;
+    self->field_68   = 0;
+    self->state      = RollerMKII_State_Unknown1;
     RollerMKII_State_Unknown1();
 }
 
 void RollerMKII_State_Unknown1(void)
 {
     RSDK_THIS(RollerMKII);
-    RSDK.ProcessAnimation(&entity->animator);
+    RSDK.ProcessAnimation(&self->animator);
 
     Vector2 range;
     range.x = 0x200000;
     range.y = 0x200000;
-    if (entity->timer) {
-        entity->timer--;
+    if (self->timer) {
+        self->timer--;
     }
-    else if (RSDK.CheckOnScreen(entity, &range)) {
+    else if (RSDK.CheckOnScreen(self, &range)) {
         bool32 collided = false;
-        if (entity->direction == FLIP_X)
-            collided = RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_RWALL, entity->collisionPlane, -1572864, 0, false);
+        if (self->direction == FLIP_X)
+            collided = RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_RWALL, self->collisionPlane, -1572864, 0, false);
         else
-            collided = RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_LWALL, entity->collisionPlane, 1572864, 0, false);
+            collided = RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_LWALL, self->collisionPlane, 1572864, 0, false);
         if (collided)
-            entity->direction ^= 1;
+            self->direction ^= 1;
 
         foreach_active(Player, player)
         {
-            if (entity->direction) {
-                if (player->position.x < entity->position.x) {
-                    if (entity->position.x - player->position.x < 0x800000) {
-                        entity->velocity.y = -0x40000;
-                        RSDK.SetSpriteAnimation(RollerMKII->aniFrames, 1, &entity->animator, true, 0);
-                        entity->playerPtr = player;
+            if (self->direction) {
+                if (player->position.x < self->position.x) {
+                    if (self->position.x - player->position.x < 0x800000) {
+                        self->velocity.y = -0x40000;
+                        RSDK.SetSpriteAnimation(RollerMKII->aniFrames, 1, &self->animator, true, 0);
+                        self->playerPtr = player;
                         RSDK.PlaySfx(RollerMKII->sfxJump, false, 255);
-                        entity->state = RollerMKII_State_Unknown2;
+                        self->state = RollerMKII_State_Unknown2;
                     }
                 }
             }
             else {
-                if (player->position.x > entity->position.x) {
-                    if (player->position.x - entity->position.x < 0x800000) {
-                        entity->velocity.y = -0x40000;
-                        RSDK.SetSpriteAnimation(RollerMKII->aniFrames, 1, &entity->animator, true, 0);
-                        entity->playerPtr = player;
+                if (player->position.x > self->position.x) {
+                    if (player->position.x - self->position.x < 0x800000) {
+                        self->velocity.y = -0x40000;
+                        RSDK.SetSpriteAnimation(RollerMKII->aniFrames, 1, &self->animator, true, 0);
+                        self->playerPtr = player;
                         RSDK.PlaySfx(RollerMKII->sfxJump, false, 255);
-                        entity->state = RollerMKII_State_Unknown2;
+                        self->state = RollerMKII_State_Unknown2;
                     }
                 }
             }
@@ -364,17 +364,17 @@ void RollerMKII_State_Unknown1(void)
 void RollerMKII_State_Unknown2(void)
 {
     RSDK_THIS(RollerMKII);
-    entity->position.x += entity->velocity.x;
-    entity->position.y += entity->velocity.y;
-    entity->velocity.y += 0x3800;
-    RSDK.ProcessAnimation(&entity->animator);
+    self->position.x += self->velocity.x;
+    self->position.y += self->velocity.y;
+    self->velocity.y += 0x3800;
+    RSDK.ProcessAnimation(&self->animator);
 
-    if (entity->velocity.y > 0) {
-        entity->timer = 15;
+    if (self->velocity.y > 0) {
+        self->timer = 15;
         RSDK.PlaySfx(RollerMKII->sfxDropDash, false, 255);
-        entity->state = RollerMKII_State_Unknown3;
+        self->state = RollerMKII_State_Unknown3;
     }
-    if (entity->animator.frameID <= 4)
+    if (self->animator.frameID <= 4)
         RollerMKII_CheckPlayerCollisions();
     else
         RollerMKII_CheckPlayerCollisions_Rolling();
@@ -384,9 +384,9 @@ void RollerMKII_State_Unknown2(void)
 void RollerMKII_State_Unknown3(void)
 {
     RSDK_THIS(RollerMKII);
-    RSDK.ProcessAnimation(&entity->animator);
-    if (!--entity->timer)
-        entity->state = RollerMKII_State_Unknown4;
+    RSDK.ProcessAnimation(&self->animator);
+    if (!--self->timer)
+        self->state = RollerMKII_State_Unknown4;
     RollerMKII_CheckPlayerCollisions_Rolling();
     RollerMKII_CheckOnScreen();
 }
@@ -394,68 +394,68 @@ void RollerMKII_State_Unknown3(void)
 void RollerMKII_State_Unknown4(void)
 {
     RSDK_THIS(RollerMKII);
-    if (!entity->field_68) {
-        if (entity->position.x <= entity->playerPtr->position.x) {
-            entity->direction = FLIP_NONE;
-            if (entity->velocity.x < 0x80000)
-                entity->velocity.x += 0x3800;
+    if (!self->field_68) {
+        if (self->position.x <= self->playerPtr->position.x) {
+            self->direction = FLIP_NONE;
+            if (self->velocity.x < 0x80000)
+                self->velocity.x += 0x3800;
         }
         else {
-            entity->direction = FLIP_X;
-            if (entity->velocity.x > -0x80000)
-                entity->velocity.x -= 0x3800;
+            self->direction = FLIP_X;
+            if (self->velocity.x > -0x80000)
+                self->velocity.x -= 0x3800;
         }
     }
 
-    RSDK.ProcessTileCollisions(entity, &RollerMKII->hitbox4, &RollerMKII->hitbox3);
-    entity->velocity.y += 0x3800;
+    RSDK.ProcessTileCollisions(self, &RollerMKII->hitbox4, &RollerMKII->hitbox3);
+    self->velocity.y += 0x3800;
     RollerMKII_HandleCollisions();
-    if (entity->onGround) {
-        if (abs(entity->angle) & 0x60) {
-            entity->state = RollerMKII_State_Unknown5;
+    if (self->onGround) {
+        if (abs(self->angle) & 0x60) {
+            self->state = RollerMKII_State_Unknown5;
         }
         else {
-            if (entity->velocity.x)
-                entity->groundVel = entity->velocity.x;
-            if (!entity->field_68) {
-                entity->field_68 = true;
-                if (entity->direction == FLIP_NONE) {
-                    entity->groundVel  = 0x80000;
-                    entity->velocity.x = 0x80000;
+            if (self->velocity.x)
+                self->groundVel = self->velocity.x;
+            if (!self->field_68) {
+                self->field_68 = true;
+                if (self->direction == FLIP_NONE) {
+                    self->groundVel  = 0x80000;
+                    self->velocity.x = 0x80000;
                 }
                 else {
-                    entity->groundVel  = -0x80000;
-                    entity->velocity.x = -0x80000;
+                    self->groundVel  = -0x80000;
+                    self->velocity.x = -0x80000;
                 }
-                entity->velocity.y = -0x20000;
-                entity->onGround   = false;
+                self->velocity.y = -0x20000;
+                self->onGround   = false;
                 RSDK.StopSFX(RollerMKII->sfxDropDash);
                 RSDK.PlaySfx(RollerMKII->sfxRelease, false, 255);
-                Hitbox *hitbox = RSDK.GetHitbox(&entity->animator, 0);
+                Hitbox *hitbox = RSDK.GetHitbox(&self->animator, 0);
 
-                EntityDust *dust = CREATE_ENTITY(Dust, entity, entity->position.x, entity->position.y + 0xE0000);
+                EntityDust *dust = CREATE_ENTITY(Dust, self, self->position.x, self->position.y + 0xE0000);
                 RSDK.SetSpriteAnimation(Dust->aniFrames, 2, &dust->animator, true, 0);
                 dust->state = Dust_State_DropDash;
                 dust->position.y += hitbox->bottom << 16;
-                dust->direction = entity->direction;
-                dust->drawOrder = entity->drawOrder;
-                if (entity->direction)
+                dust->direction = self->direction;
+                dust->drawOrder = self->drawOrder;
+                if (self->direction)
                     dust->position.x += 0x90000;
                 else
                     dust->position.x -= 0x90000;
             }
-            else if (entity->velocity.y <= 0x10000) {
-                entity->state = RollerMKII_State_Unknown5;
+            else if (self->velocity.y <= 0x10000) {
+                self->state = RollerMKII_State_Unknown5;
             }
             else {
-                entity->velocity.y = -0x20000;
-                entity->onGround   = false;
+                self->velocity.y = -0x20000;
+                self->onGround   = false;
             }
         }
-        entity->direction = entity->groundVel < 0;
+        self->direction = self->groundVel < 0;
     }
 
-    RSDK.ProcessAnimation(&entity->animator);
+    RSDK.ProcessAnimation(&self->animator);
     RollerMKII_CheckPlayerCollisions_Rolling();
     RollerMKII_CheckOnScreen();
 }
@@ -463,58 +463,58 @@ void RollerMKII_State_Unknown4(void)
 void RollerMKII_State_Unknown5(void)
 {
     RSDK_THIS(RollerMKII);
-    if (!entity->collisionMode) {
-        if (entity->position.x <= entity->playerPtr->position.x) {
-            entity->direction = FLIP_NONE;
-            if (entity->groundVel < 0x80000) {
-                entity->groundVel += 0x3800;
-                if (entity->groundVel > 0) {
-                    entity->groundVel += 0x1400;
-                    if (entity->groundVel >= -0x40000) {
-                        entity->timer = 0;
+    if (!self->collisionMode) {
+        if (self->position.x <= self->playerPtr->position.x) {
+            self->direction = FLIP_NONE;
+            if (self->groundVel < 0x80000) {
+                self->groundVel += 0x3800;
+                if (self->groundVel > 0) {
+                    self->groundVel += 0x1400;
+                    if (self->groundVel >= -0x40000) {
+                        self->timer = 0;
                     }
                     else {
                         RSDK.PlaySfx(RollerMKII->sfxSkidding, false, 255);
-                        entity->timer = (entity->timer + 1) & 3;
-                        if (!entity->timer)
-                            CREATE_ENTITY(Dust, NULL, entity->position.x, entity->position.y + 0xE0000)->state = Dust_State_DropDash;
+                        self->timer = (self->timer + 1) & 3;
+                        if (!self->timer)
+                            CREATE_ENTITY(Dust, NULL, self->position.x, self->position.y + 0xE0000)->state = Dust_State_DropDash;
                     }
                 }
             }
         }
         else {
-            entity->direction = FLIP_X;
-            if (entity->groundVel > -0x80000) {
-                entity->groundVel -= 0x3800;
-                if (entity->groundVel > 0) {
-                    entity->groundVel += 0x1400;
-                    if (entity->groundVel <= 0x40000) {
-                        entity->timer = 0;
+            self->direction = FLIP_X;
+            if (self->groundVel > -0x80000) {
+                self->groundVel -= 0x3800;
+                if (self->groundVel > 0) {
+                    self->groundVel += 0x1400;
+                    if (self->groundVel <= 0x40000) {
+                        self->timer = 0;
                     }
                     else {
                         RSDK.PlaySfx(RollerMKII->sfxSkidding, false, 255);
-                        entity->timer = (entity->timer + 1) & 3;
-                        if (!entity->timer)
-                            CREATE_ENTITY(Dust, NULL, entity->position.x, entity->position.y + 0xE0000)->state = Dust_State_DropDash;
+                        self->timer = (self->timer + 1) & 3;
+                        if (!self->timer)
+                            CREATE_ENTITY(Dust, NULL, self->position.x, self->position.y + 0xE0000)->state = Dust_State_DropDash;
                     }
                 }
             }
         }
     }
 
-    RSDK.ProcessTileCollisions(entity, &RollerMKII->hitbox4, &RollerMKII->hitbox3);
-    entity->groundVel = (RSDK.Sin256(entity->angle) << 13 >> 8) + entity->groundVel;
-    if (entity->collisionMode != CMODE_FLOOR) {
-        if (entity->angle >= 64 && entity->angle <= 192 && (entity->groundVel + 0x1FFFF) <= 0x3FFFE) {
-            entity->onGround      = false;
-            entity->angle         = 0;
-            entity->collisionMode = 0;
+    RSDK.ProcessTileCollisions(self, &RollerMKII->hitbox4, &RollerMKII->hitbox3);
+    self->groundVel = (RSDK.Sin256(self->angle) << 13 >> 8) + self->groundVel;
+    if (self->collisionMode != CMODE_FLOOR) {
+        if (self->angle >= 64 && self->angle <= 192 && (self->groundVel + 0x1FFFF) <= 0x3FFFE) {
+            self->onGround      = false;
+            self->angle         = 0;
+            self->collisionMode = 0;
         }
     }
     RollerMKII_HandleCollisions();
-    if (entity->onGround == false && entity->state != RollerMKII_State_Unknown6)
-        entity->state = RollerMKII_State_Unknown4;
-    RSDK.ProcessAnimation(&entity->animator);
+    if (self->onGround == false && self->state != RollerMKII_State_Unknown6)
+        self->state = RollerMKII_State_Unknown4;
+    RSDK.ProcessAnimation(&self->animator);
     RollerMKII_CheckPlayerCollisions_Rolling();
     RollerMKII_CheckOnScreen();
 }
@@ -522,17 +522,17 @@ void RollerMKII_State_Unknown5(void)
 void RollerMKII_State_Unknown6(void)
 {
     RSDK_THIS(RollerMKII);
-    RSDK.ProcessTileCollisions(entity, &RollerMKII->hitboxOuter, &RollerMKII->hitboxInner);
-    entity->velocity.y += 0x3800;
+    RSDK.ProcessTileCollisions(self, &RollerMKII->hitboxOuter, &RollerMKII->hitboxInner);
+    self->velocity.y += 0x3800;
     RollerMKII_HandleCollisions();
-    if (entity->onGround) {
-        entity->groundVel  = 0;
-        entity->velocity.x = 0;
-        entity->velocity.y = 0;
-        entity->state      = RollerMKII_State_Unknown1;
-        RSDK.SetSpriteAnimation(RollerMKII->aniFrames, 0, &entity->animator, true, 0);
+    if (self->onGround) {
+        self->groundVel  = 0;
+        self->velocity.x = 0;
+        self->velocity.y = 0;
+        self->state      = RollerMKII_State_Unknown1;
+        RSDK.SetSpriteAnimation(RollerMKII->aniFrames, 0, &self->animator, true, 0);
     }
-    RSDK.ProcessAnimation(&entity->animator);
+    RSDK.ProcessAnimation(&self->animator);
     RollerMKII_CheckOnScreen();
 }
 

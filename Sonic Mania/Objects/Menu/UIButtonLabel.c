@@ -6,9 +6,9 @@ void UIButtonLabel_Update(void)
 {
     RSDK_THIS(UIButtonLabel);
 
-    if (entity->textSprite != UIWidgets->textSpriteIndex) {
-        RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, entity->listID, &entity->animator2, true, entity->frameID);
-        entity->textSprite = UIWidgets->textSpriteIndex;
+    if (self->textSprite != UIWidgets->textSpriteIndex) {
+        RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, self->listID, &self->animator2, true, self->frameID);
+        self->textSprite = UIWidgets->textSpriteIndex;
     }
 }
 
@@ -21,24 +21,24 @@ void UIButtonLabel_Draw(void)
     RSDK_THIS(UIButtonLabel);
     Vector2 drawPos;
 
-    drawPos.x = entity->position.x;
-    drawPos.y = entity->position.y;
-    RSDK.DrawSprite(&entity->animator1, &drawPos, false);
-    RSDK.DrawSprite(&entity->animator2, &drawPos, false);
+    drawPos.x = self->position.x;
+    drawPos.y = self->position.y;
+    RSDK.DrawSprite(&self->animator1, &drawPos, false);
+    RSDK.DrawSprite(&self->animator2, &drawPos, false);
 }
 
 void UIButtonLabel_Create(void *data)
 {
     RSDK_THIS(UIButtonLabel);
-    entity->active        = ACTIVE_BOUNDS;
-    entity->drawOrder     = 2;
-    entity->visible       = true;
-    entity->drawFX        = FX_FLIP;
-    entity->updateRange.x = 0x800000;
-    entity->updateRange.y = 0x300000;
-    RSDK.SetSpriteAnimation(UIButtonLabel->aniFrames, 0, &entity->animator1, true, entity->type);
-    RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, entity->listID, &entity->animator2, true, entity->frameID);
-    entity->textSprite = UIWidgets->textSpriteIndex;
+    self->active        = ACTIVE_BOUNDS;
+    self->drawOrder     = 2;
+    self->visible       = true;
+    self->drawFX        = FX_FLIP;
+    self->updateRange.x = 0x800000;
+    self->updateRange.y = 0x300000;
+    RSDK.SetSpriteAnimation(UIButtonLabel->aniFrames, 0, &self->animator1, true, self->type);
+    RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, self->listID, &self->animator2, true, self->frameID);
+    self->textSprite = UIWidgets->textSpriteIndex;
 }
 
 void UIButtonLabel_StageLoad(void) { UIButtonLabel->aniFrames = RSDK.LoadSpriteAnimation("UI/ButtonLabel.bin", SCOPE_STAGE); }
@@ -48,13 +48,13 @@ void UIButtonLabel_EditorDraw(void)
 {
     RSDK_THIS(UIButtonLabel);
 
-    entity->drawOrder     = 2;
-    entity->drawFX        = FX_FLIP;
-    entity->updateRange.x = 0x800000;
-    entity->updateRange.y = 0x300000;
-    RSDK.SetSpriteAnimation(UIButtonLabel->aniFrames, 0, &entity->animator1, true, entity->type);
-    RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, entity->listID, &entity->animator2, true, entity->frameID);
-    entity->textSprite = UIWidgets->textSpriteIndex;
+    self->drawOrder     = 2;
+    self->drawFX        = FX_FLIP;
+    self->updateRange.x = 0x800000;
+    self->updateRange.y = 0x300000;
+    RSDK.SetSpriteAnimation(UIButtonLabel->aniFrames, 0, &self->animator1, true, self->type);
+    RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, self->listID, &self->animator2, true, self->frameID);
+    self->textSprite = UIWidgets->textSpriteIndex;
 
     UIButtonLabel_Draw();
 }

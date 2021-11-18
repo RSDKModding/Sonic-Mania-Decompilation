@@ -5,16 +5,16 @@ ObjectCutsceneHBH *CutsceneHBH;
 void CutsceneHBH_Update(void)
 {
     RSDK_THIS(CutsceneHBH);
-    if (entity->oscillate)
-        entity->position.y += RSDK.Sin256(4 * (entity->field_68 + entity->dword84)) << 7;
-    if (entity->timerFlag)
-        entity->field_68 = (entity->field_68 + 1) & 0x7FFF;
+    if (self->oscillate)
+        self->position.y += RSDK.Sin256(4 * (self->curAngle + self->angleOffset)) << 7;
+    if (self->timerFlag)
+        self->curAngle = (self->curAngle + 1) & 0x7FFF;
     else
-        entity->field_68 = Zone->timer;
+        self->curAngle = Zone->timer;
 
-    StateMachine_Run(entity->state);
-    RSDK.ProcessAnimation(&entity->animator);
-    RSDK.ProcessAnimation(&entity->animator2);
+    StateMachine_Run(self->state);
+    RSDK.ProcessAnimation(&self->animator);
+    RSDK.ProcessAnimation(&self->animator2);
 }
 
 void CutsceneHBH_LateUpdate(void) {}
@@ -24,33 +24,33 @@ void CutsceneHBH_StaticUpdate(void) {}
 void CutsceneHBH_Draw(void)
 {
     RSDK_THIS(CutsceneHBH);
-    if (entity->paletteFlag)
+    if (self->paletteFlag)
         CutsceneHBH_SetupPalettes();
-    RSDK.DrawSprite(&entity->animator2, NULL, false);
-    RSDK.DrawSprite(&entity->animator, NULL, false);
-    if (entity->paletteFlag)
+    RSDK.DrawSprite(&self->animator2, NULL, false);
+    RSDK.DrawSprite(&self->animator, NULL, false);
+    if (self->paletteFlag)
         CutsceneHBH_RestorePalette();
 }
 
 void CutsceneHBH_Create(void *data)
 {
     RSDK_THIS(CutsceneHBH);
-    entity->active        = ACTIVE_BOUNDS;
-    entity->drawOrder     = Zone->drawOrderHigh;
-    entity->visible       = !entity->hiddenAtStart;
-    entity->aniFrames   = 0;
-    entity->dword70       = entity->position.x;
-    entity->dword74       = entity->position.y;
-    entity->drawFX        = FX_FLIP;
-    entity->updateRange.x = 0x800000;
-    entity->updateRange.y = 0x800000;
-    entity->dword84       = RSDK.Rand(0, 256);
+    self->active        = ACTIVE_BOUNDS;
+    self->drawOrder     = Zone->drawOrderHigh;
+    self->visible       = !self->hiddenAtStart;
+    self->aniFrames   = 0;
+    self->startPos.x      = self->position.x;
+    self->startPos.y      = self->position.y;
+    self->drawFX        = FX_FLIP;
+    self->updateRange.x = 0x800000;
+    self->updateRange.y = 0x800000;
+    self->angleOffset       = RSDK.Rand(0, 256);
     CutsceneHBH_LoadSprites();
     CutsceneHBH_SetupColours();
     if (RSDK.CheckStageFolder("MSZ"))
-        entity->timerFlag = true;
+        self->timerFlag = true;
     else
-        entity->paletteFlag = true;
+        self->paletteFlag = true;
 }
 
 void CutsceneHBH_StageLoad(void) { CutsceneHBH_StorePalette(); }
@@ -58,9 +58,9 @@ void CutsceneHBH_StageLoad(void) { CutsceneHBH_StorePalette(); }
 void CutsceneHBH_SetupColours(void)
 {
     RSDK_THIS(CutsceneHBH);
-    switch (entity->characterID) {
+    switch (self->characterID) {
         case HBH_GUNNER: {
-            entity->colourSet = 0;
+            self->colourSet = 0;
             colour data[0x80] = { 0x200020, 0x400040, 0x500050, 0x700070, 0x880088, 0xB000B0, 0xC800C8, 0xF000F0, 0x300040, 0x480070, 0x5000A0,
                                   0x4828F0, 0x3850F0, 0x5898F0, 0x98C8F0, 0xD8E8F0, 0x080078, 0x1000C0, 0x0028F0, 0x0040F0, 0x00A8F0, 0x40F0F0,
                                   0xC8F0F0, 0xF0F0F0, 0x280068, 0x280098, 0x3010D0, 0x2830F0, 0x1880F0, 0x48B8F0, 0x98E0F0, 0xD0F0F0, 0xA80810,
@@ -73,11 +73,11 @@ void CutsceneHBH_SetupColours(void)
                                   0x5800C8, 0x8810C8, 0xC830C8, 0x98F068, 0xA8F070, 0x100848, 0x101048, 0x102050, 0x102858, 0x180838, 0x201038,
                                   0x282038, 0x302838, 0x0070E0, 0x00A0C0, 0x80D810, 0x28C010, 0xF04040, 0xF05050, 0x48A0E8, 0x60B0F0, 0x380028,
                                   0x580030, 0x780830, 0x981830, 0xB83030, 0x000000, 0x000000, 0xFFFFFF };
-            memcpy(entity->colours, data, sizeof(entity->colours));
+            memcpy(self->colours, data, sizeof(self->colours));
             break;
         }
         case HBH_SHINOBI: {
-            entity->colourSet = 1;
+            self->colourSet = 1;
             colour data[0x80] = { 0x000000, 0x083048, 0x005848, 0x107858, 0x309060, 0x50A868, 0x68B868, 0x80D068, 0xA8E088, 0xC8E8A0, 0x481878,
                                   0x6020B0, 0x9830C0, 0xC050E8, 0xF080F0, 0xF0A8F0, 0x506870, 0x607080, 0x887868, 0xA09078, 0xB8B090, 0xD0D0A8,
                                   0xE0E0C0, 0xF0F0D8, 0x602030, 0x781818, 0x983810, 0xB05010, 0xC07818, 0xD89840, 0xF0C078, 0xF0E0B8, 0x282060,
@@ -90,14 +90,14 @@ void CutsceneHBH_SetupColours(void)
                                   0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000,
                                   0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000,
                                   0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0xFFFFFF };
-            memcpy(entity->colours, data, sizeof(entity->colours));
+            memcpy(self->colours, data, sizeof(self->colours));
             break;
         }
         case HBH_MYSTIC:
-        case HBH_ROUGESA:
-        case HBH_ROUGESB:
-        case HBH_ROUGESC: {
-            entity->colourSet = 2;
+        case HBH_ROUGE_FANG:
+        case HBH_ROUGE_BEAN:
+        case HBH_ROUGE_BARK: {
+            self->colourSet = 2;
             colour data[0x80] = { 0x200000, 0x300010, 0x400030, 0x600038, 0x800030, 0x901038, 0xA81038, 0xB82020, 0xB83828, 0xC04020, 0xC85020,
                                   0xD06020, 0xD88020, 0xE0A028, 0xE0C030, 0xE8D038, 0x004000, 0x086000, 0x087800, 0x209000, 0x38A800, 0x60C000,
                                   0x80E008, 0xE0E0A0, 0x780080, 0xA00880, 0xC018A0, 0xE040C0, 0xE068D0, 0xE0A0E0, 0x000000, 0x000000, 0x201030,
@@ -110,13 +110,13 @@ void CutsceneHBH_SetupColours(void)
                                   0xFF00FF, 0xFF00FF, 0xFF00FF, 0xFF00FF, 0xFF00FF, 0xFF00FF, 0xFF00FF, 0xFF00FF, 0xFF00FF, 0xFF00FF, 0xFF00FF,
                                   0xFF00FF, 0xFF00FF, 0xFF00FF, 0xFF00FF, 0xFF00FF, 0xFF00FF, 0xFF00FF, 0xFF00FF, 0xFF00FF, 0xFF00FF, 0xFF00FF,
                                   0xFF00FF, 0xFF00FF, 0xFF00FF, 0xFF00FF, 0xFF00FF, 0xFF00FF, 0xFFFFFF };
-            memcpy(entity->colours, data, sizeof(entity->colours));
+            memcpy(self->colours, data, sizeof(self->colours));
             break;
         }
         case HBH_RIDER:
         case HBH_KING:
         case HBH_KINGTMZ2: {
-            entity->colourSet = 3;
+            self->colourSet = 3;
             colour data[0x80] = { 0x000000, 0x202020, 0x202040, 0x302070, 0x4020A0, 0x4030B0, 0x4040C0, 0x6060D1, 0x8080E0, 0x90A0E0, 0xA0C0E0,
                                   0xB0D0E0, 0xC0E0E0, 0x783810, 0xA06040, 0xC07020, 0x203060, 0x204080, 0x2050A0, 0x2060C0, 0x3080C0, 0x40A0C0,
                                   0x50C0D0, 0x60E0E0, 0x205060, 0x206040, 0x308060, 0x40A080, 0x60C0A0, 0x80E0C0, 0x404000, 0xE0E000, 0x302060,
@@ -129,12 +129,12 @@ void CutsceneHBH_SetupColours(void)
                                   0xE0E000, 0x202040, 0x302060, 0x402080, 0x503070, 0x604080, 0x8050A0, 0xA060C0, 0xB080D0, 0xC0A0E0, 0xD0C0E0,
                                   0xE0E0E0, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000,
                                   0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0xFFFFFF };
-            memcpy(entity->colours, data, sizeof(entity->colours));
+            memcpy(self->colours, data, sizeof(self->colours));
             break;
         }
         case HBH_KINGDAMAGED:
         case HBH_PILE: {
-            entity->colourSet  = 4;
+            self->colourSet  = 4;
             colour data[0x80] = { 0x883801, 0xB86801, 0xE09060, 0xF0B090, 0xA06040, 0xE08008, 0xE0A008, 0xE0C070, 0x085848, 0x107858, 0x309060,
                                   0x50A868, 0x68B868, 0x80D068, 0xA8E088, 0xC8E8A0, 0x400101, 0x900101, 0xE00101, 0xE04830, 0xF08840, 0xF0D860,
                                   0xF0E870, 0xF0F090, 0x302060, 0x402080, 0x4030A0, 0x7030D0, 0xA020E0, 0xC060E0, 0xE0A0E0, 0x013048, 0xA09078,
@@ -147,7 +147,7 @@ void CutsceneHBH_SetupColours(void)
                                   0x803018, 0xB05030, 0xD08850, 0xE8B858, 0xF0D898, 0x480808, 0x701001, 0xA82008, 0xD03808, 0xE86818, 0xF0A020,
                                   0xF0D068, 0xF0E0B8, 0x100828, 0x180840, 0x201050, 0x281068, 0x381880, 0x682098, 0x803098, 0xB038A8, 0xC858B8,
                                   0x500120, 0x800120, 0xB80110, 0xE01001, 0xB8A0E0, 0xC0B8E8, 0xFFFFFF };
-            memcpy(entity->colours, data, sizeof(entity->colours));
+            memcpy(self->colours, data, sizeof(self->colours));
             break;
         }
         default: break;
@@ -158,7 +158,7 @@ void CutsceneHBH_SetupPalettes(void)
 {
     RSDK_THIS(CutsceneHBH);
     for (int32 c = 0; c < 0x80; ++c) {
-        RSDK.SetPaletteEntry(0, c + 0x80, entity->colours[c]);
+        RSDK.SetPaletteEntry(0, c + 0x80, self->colours[c]);
     }
 }
 void CutsceneHBH_StorePalette(void)
@@ -177,72 +177,72 @@ void CutsceneHBH_RestorePalette(void)
 void CutsceneHBH_LoadSprites(void)
 {
     RSDK_THIS(CutsceneHBH);
-    switch (entity->characterID) {
+    switch (self->characterID) {
         case HBH_GUNNER:
-            if (!entity->aniFrames)
-                entity->aniFrames = RSDK.LoadSpriteAnimation("SPZ1/Boss.bin", SCOPE_STAGE);
-            RSDK.SetSpriteAnimation(entity->aniFrames, 5, &entity->animator, true, 0);
-            RSDK.SetSpriteAnimation(0xFFFF, 0, &entity->animator2, true, 0);
+            if (!self->aniFrames)
+                self->aniFrames = RSDK.LoadSpriteAnimation("SPZ1/Boss.bin", SCOPE_STAGE);
+            RSDK.SetSpriteAnimation(self->aniFrames, 5, &self->animator, true, 0);
+            RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator2, true, 0);
             break;
         case HBH_SHINOBI:
-            if (!entity->aniFrames)
-                entity->aniFrames = RSDK.LoadSpriteAnimation("PSZ2/Shinobi.bin", SCOPE_STAGE);
-            RSDK.SetSpriteAnimation(entity->aniFrames, 0, &entity->animator, true, 0);
-            RSDK.SetSpriteAnimation(entity->aniFrames, 5, &entity->animator2, true, 0);
+            if (!self->aniFrames)
+                self->aniFrames = RSDK.LoadSpriteAnimation("PSZ2/Shinobi.bin", SCOPE_STAGE);
+            RSDK.SetSpriteAnimation(self->aniFrames, 0, &self->animator, true, 0);
+            RSDK.SetSpriteAnimation(self->aniFrames, 5, &self->animator2, true, 0);
             break;
         case HBH_MYSTIC:
-            if (!entity->aniFrames)
-                entity->aniFrames = RSDK.LoadSpriteAnimation("MSZ/HeavyMystic.bin", SCOPE_STAGE);
-            RSDK.SetSpriteAnimation(entity->aniFrames, 0, &entity->animator, true, 0);
-            RSDK.SetSpriteAnimation(0xFFFF, 0, &entity->animator2, true, 0);
+            if (!self->aniFrames)
+                self->aniFrames = RSDK.LoadSpriteAnimation("MSZ/HeavyMystic.bin", SCOPE_STAGE);
+            RSDK.SetSpriteAnimation(self->aniFrames, 0, &self->animator, true, 0);
+            RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator2, true, 0);
             break;
         case HBH_RIDER:
-            if (!entity->aniFrames)
-                entity->aniFrames = RSDK.LoadSpriteAnimation("LRZ3/HeavyRider.bin", SCOPE_STAGE);
-            RSDK.SetSpriteAnimation(entity->aniFrames, 3, &entity->animator, true, 0);
-            RSDK.SetSpriteAnimation(0xFFFF, 0, &entity->animator2, true, 0);
+            if (!self->aniFrames)
+                self->aniFrames = RSDK.LoadSpriteAnimation("LRZ3/HeavyRider.bin", SCOPE_STAGE);
+            RSDK.SetSpriteAnimation(self->aniFrames, 3, &self->animator, true, 0);
+            RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator2, true, 0);
             break;
         case HBH_KING:
-            if (!entity->aniFrames)
-                entity->aniFrames = RSDK.LoadSpriteAnimation("LRZ3/HeavyKing.bin", SCOPE_STAGE);
-            RSDK.SetSpriteAnimation(entity->aniFrames, 7, &entity->animator, true, 0);
-            RSDK.SetSpriteAnimation(entity->aniFrames, 16, &entity->animator2, true, 0);
+            if (!self->aniFrames)
+                self->aniFrames = RSDK.LoadSpriteAnimation("LRZ3/HeavyKing.bin", SCOPE_STAGE);
+            RSDK.SetSpriteAnimation(self->aniFrames, 7, &self->animator, true, 0);
+            RSDK.SetSpriteAnimation(self->aniFrames, 16, &self->animator2, true, 0);
             break;
-        case HBH_ROUGESA:
-            if (!entity->aniFrames)
-                entity->aniFrames = RSDK.LoadSpriteAnimation("MSZ/Rogues.bin", SCOPE_STAGE);
-            RSDK.SetSpriteAnimation(entity->aniFrames, 0, &entity->animator, true, 0);
-            RSDK.SetSpriteAnimation(0xFFFF, 0, &entity->animator2, true, 0);
+        case HBH_ROUGE_FANG:
+            if (!self->aniFrames)
+                self->aniFrames = RSDK.LoadSpriteAnimation("MSZ/Rogues.bin", SCOPE_STAGE);
+            RSDK.SetSpriteAnimation(self->aniFrames, 0, &self->animator, true, 0);
+            RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator2, true, 0);
             break;
-        case HBH_ROUGESB:
-            if (!entity->aniFrames)
-                entity->aniFrames = RSDK.LoadSpriteAnimation("MSZ/Rogues.bin", SCOPE_STAGE);
-            RSDK.SetSpriteAnimation(entity->aniFrames, 5, &entity->animator, true, 0);
-            RSDK.SetSpriteAnimation(0xFFFF, 0, &entity->animator2, true, 0);
+        case HBH_ROUGE_BEAN:
+            if (!self->aniFrames)
+                self->aniFrames = RSDK.LoadSpriteAnimation("MSZ/Rogues.bin", SCOPE_STAGE);
+            RSDK.SetSpriteAnimation(self->aniFrames, 5, &self->animator, true, 0);
+            RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator2, true, 0);
             break;
-        case HBH_ROUGESC:
-            if (!entity->aniFrames)
-                entity->aniFrames = RSDK.LoadSpriteAnimation("MSZ/Rogues.bin", SCOPE_STAGE);
-            RSDK.SetSpriteAnimation(entity->aniFrames, 12, &entity->animator, true, 0);
-            RSDK.SetSpriteAnimation(0xFFFF, 0, &entity->animator2, true, 0);
+        case HBH_ROUGE_BARK:
+            if (!self->aniFrames)
+                self->aniFrames = RSDK.LoadSpriteAnimation("MSZ/Rogues.bin", SCOPE_STAGE);
+            RSDK.SetSpriteAnimation(self->aniFrames, 12, &self->animator, true, 0);
+            RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator2, true, 0);
             break;
         case HBH_KINGDAMAGED:
-            if (!entity->aniFrames)
-                entity->aniFrames = RSDK.LoadSpriteAnimation("Cutscene/DamagedKing.bin", SCOPE_STAGE);
-            RSDK.SetSpriteAnimation(entity->aniFrames, 0, &entity->animator, true, 0);
-            RSDK.SetSpriteAnimation(entity->aniFrames, 1, &entity->animator2, true, 0);
+            if (!self->aniFrames)
+                self->aniFrames = RSDK.LoadSpriteAnimation("Cutscene/DamagedKing.bin", SCOPE_STAGE);
+            RSDK.SetSpriteAnimation(self->aniFrames, 0, &self->animator, true, 0);
+            RSDK.SetSpriteAnimation(self->aniFrames, 1, &self->animator2, true, 0);
             break;
         case HBH_PILE:
-            if (!entity->aniFrames)
-                entity->aniFrames = RSDK.LoadSpriteAnimation("Cutscene/HBHPile.bin", SCOPE_STAGE);
-            RSDK.SetSpriteAnimation(entity->aniFrames, 0, &entity->animator, true, 0);
-            RSDK.SetSpriteAnimation(0xFFFF, 0, &entity->animator2, true, 0);
+            if (!self->aniFrames)
+                self->aniFrames = RSDK.LoadSpriteAnimation("Cutscene/HBHPile.bin", SCOPE_STAGE);
+            RSDK.SetSpriteAnimation(self->aniFrames, 0, &self->animator, true, 0);
+            RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator2, true, 0);
             break;
         case HBH_KINGTMZ2:
-            if (!entity->aniFrames)
-                entity->aniFrames = RSDK.LoadSpriteAnimation("Cutscene/KingTMZ2.bin", SCOPE_STAGE);
-            RSDK.SetSpriteAnimation(entity->aniFrames, 0, &entity->animator, true, 0);
-            RSDK.SetSpriteAnimation(0xFFFF, 0, &entity->animator2, true, 0);
+            if (!self->aniFrames)
+                self->aniFrames = RSDK.LoadSpriteAnimation("Cutscene/KingTMZ2.bin", SCOPE_STAGE);
+            RSDK.SetSpriteAnimation(self->aniFrames, 0, &self->animator, true, 0);
+            RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator2, true, 0);
             break;
         default: break;
     }
@@ -259,7 +259,7 @@ EntityCutsceneHBH *CutsceneHBH_GetEntity(char charID)
     return result;
 }
 
-void CutsceneHBH_Unknown7(void)
+void CutsceneHBH_ShinobiJumpSetup(void)
 {
     EntityCutsceneHBH *entity = CutsceneHBH_GetEntity(HBH_SHINOBI);
     if (entity) {
@@ -268,23 +268,23 @@ void CutsceneHBH_Unknown7(void)
         entity->velocity.y = -0x60000;
         entity->direction ^= FLIP_X;
         entity->drawOrder    = Zone->drawOrderHigh + 2;
-        entity->state        = CutsceneHBH_Unknown14;
-        EntityFXTrail *trail = (EntityFXTrail *)RSDK.CreateEntity(FXTrail->objectID, entity, entity->position.x, entity->position.y);
-        trail->dataPtr       = &entity->animator;
+        entity->state        = CutsceneHBH_State_ShinobiJump;
+        EntityFXTrail *trail = CREATE_ENTITY(FXTrail, entity, entity->position.x, entity->position.y);
+        trail->animatorPtr   = &entity->animator;
     }
 }
 
-void CutsceneHBH_Unknown8(void)
+void CutsceneHBH_ShinobiBounceSetup(void)
 {
     EntityCutsceneHBH *entity = CutsceneHBH_GetEntity(HBH_SHINOBI);
     if (entity) {
         RSDK.SetSpriteAnimation(entity->aniFrames, 1, &entity->animator, true, 0);
         RSDK.SetSpriteAnimation(0xFFFF, 0, &entity->animator2, true, 0);
-        entity->state = CutsceneHBH_Unknown13;
+        entity->state = CutsceneHBH_State_ShinobiBounce;
     }
 }
 
-void CutsceneHBH_Unknown9(void)
+void CutsceneHBH_RiderSetup(void)
 {
     EntityCutsceneHBH *entity = CutsceneHBH_GetEntity(HBH_RIDER);
     if (entity) {
@@ -294,11 +294,11 @@ void CutsceneHBH_Unknown9(void)
         entity->originPos.x   = entity->position.x;
         entity->originPos.y   = entity->position.y;
         entity->velocity.x = 0x30000;
-        entity->state      = CutsceneHBH_Unknown16;
+        entity->state      = CutsceneHBH_State_RiderMove;
     }
 }
 
-void CutsceneHBH_Unknown10(void)
+void CutsceneHBH_KingSetup(void)
 {
     EntityCutsceneHBH *entity = CutsceneHBH_GetEntity(HBH_KING);
     if (entity) {
@@ -307,7 +307,7 @@ void CutsceneHBH_Unknown10(void)
     }
 }
 
-void CutsceneHBH_Unknown11(void)
+void CutsceneHBH_KingTMZ2Setup(void)
 {
     EntityCutsceneHBH *entity = CutsceneHBH_GetEntity(HBH_KINGTMZ2);
     if (entity) {
@@ -315,169 +315,169 @@ void CutsceneHBH_Unknown11(void)
         entity->timer      = 0;
         entity->velocity.x = 0;
         entity->velocity.y = 0;
-        entity->state      = CutsceneHBH_Unknown20;
+        entity->state      = CutsceneHBH_State_KingTMZ2_Fall;
     }
 }
 
-void CutsceneHBH_Unknown12(void)
+void CutsceneHBH_State_GunnerExit(void)
 {
     RSDK_THIS(CutsceneHBH);
-    entity->velocity.y -= 0x2000;
-    entity->position.y += entity->velocity.y;
+    self->velocity.y -= 0x2000;
+    self->position.y += self->velocity.y;
 
-    if (!RSDK.CheckOnScreen(entity, NULL))
-        RSDK.ResetEntityPtr(entity, TYPE_BLANK, false);
+    if (!RSDK.CheckOnScreen(self, NULL))
+        destroyEntity(self);
 }
 
-void CutsceneHBH_Unknown13(void)
+void CutsceneHBH_State_ShinobiBounce(void)
 {
     RSDK_THIS(CutsceneHBH);
-    if (entity->timer <= 0) {
-        entity->velocity.y += 0x2000;
-        entity->position.y += entity->velocity.y;
-        if (RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x2E0000, true)) {
-            RSDK.SetSpriteAnimation(entity->aniFrames, 1, &entity->animator, true, 0);
-            entity->velocity.y = -0x20000;
-            entity->timer      = 3;
+    if (self->timer <= 0) {
+        self->velocity.y += 0x2000;
+        self->position.y += self->velocity.y;
+        if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x2E0000, true)) {
+            RSDK.SetSpriteAnimation(self->aniFrames, 1, &self->animator, true, 0);
+            self->velocity.y = -0x20000;
+            self->timer      = 3;
         }
     }
     else {
-        entity->timer--;
+        self->timer--;
     }
 
     foreach_active(PhantomRuby, phantomRuby)
     {
-        if (phantomRuby->velocity.y >= 0 && phantomRuby->position.y > entity->position.y - 0x200000) {
-            phantomRuby->velocity.y = -(5 * abs(entity->velocity.y) >> 1);
+        if (phantomRuby->velocity.y >= 0 && phantomRuby->position.y > self->position.y - 0x200000) {
+            phantomRuby->velocity.y = -(5 * abs(self->velocity.y) >> 1);
         }
     }
 }
 
-void CutsceneHBH_Unknown14(void)
+void CutsceneHBH_State_ShinobiJump(void)
 {
     RSDK_THIS(CutsceneHBH);
-    entity->velocity.y += 0x4000;
-    entity->position.x += entity->velocity.x;
-    entity->position.y += entity->velocity.y;
-    if (!RSDK.CheckOnScreen(entity, NULL))
-        destroyEntity(entity);
+    self->velocity.y += 0x4000;
+    self->position.x += self->velocity.x;
+    self->position.y += self->velocity.y;
+    if (!RSDK.CheckOnScreen(self, NULL))
+        destroyEntity(self);
 }
 
-void CutsceneHBH_Unknown15(void)
+void CutsceneHBH_State_MysticExit(void)
 {
     RSDK_THIS(CutsceneHBH);
-    entity->velocity.x += 0x4000;
-    entity->position.x += entity->velocity.x;
-    if (!RSDK.CheckOnScreen(entity, NULL))
-        destroyEntity(entity);
+    self->velocity.x += 0x4000;
+    self->position.x += self->velocity.x;
+    if (!RSDK.CheckOnScreen(self, NULL))
+        destroyEntity(self);
 }
 
-void CutsceneHBH_Unknown16(void)
+void CutsceneHBH_State_RiderMove(void)
 {
     RSDK_THIS(CutsceneHBH);
-    entity->position.x += entity->velocity.x;
-    if (!entity->timer) {
-        if (entity->velocity.x < 0x30000)
-            entity->velocity.x += 0x4000;
+    self->position.x += self->velocity.x;
+    if (!self->timer) {
+        if (self->velocity.x < 0x30000)
+            self->velocity.x += 0x4000;
 
-        if (entity->direction == FLIP_NONE) {
-            if (entity->position.x - entity->originPos.x > 0x300000) {
-                entity->timer = 1;
-                RSDK.SetSpriteAnimation(entity->aniFrames, 2, &entity->animator, true, 0);
+        if (self->direction == FLIP_NONE) {
+            if (self->position.x - self->originPos.x > 0x300000) {
+                self->timer = 1;
+                RSDK.SetSpriteAnimation(self->aniFrames, 2, &self->animator, true, 0);
             }
-            RSDK.ObjectTileGrip(entity, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x300000, 8);
+            RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x300000, 8);
         }
         else {
-            if (entity->animator.frameID == entity->animator.frameCount - 1) {
-                entity->direction = FLIP_NONE;
-                RSDK.SetSpriteAnimation(entity->aniFrames, 0, &entity->animator, true, 0);
+            if (self->animator.frameID == self->animator.frameCount - 1) {
+                self->direction = FLIP_NONE;
+                RSDK.SetSpriteAnimation(self->aniFrames, 0, &self->animator, true, 0);
             }
-            RSDK.ObjectTileGrip(entity, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x300000, 8);
+            RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x300000, 8);
         }
     }
     else {
-        if (entity->velocity.x > -0x30000)
-            entity->velocity.x -= 0x4000;
+        if (self->velocity.x > -0x30000)
+            self->velocity.x -= 0x4000;
 
-        if (entity->direction != FLIP_X) {
-            if (entity->animator.frameID == entity->animator.frameCount - 1) {
-                entity->direction = FLIP_X;
-                RSDK.SetSpriteAnimation(entity->aniFrames, 0, &entity->animator, true, 0);
+        if (self->direction != FLIP_X) {
+            if (self->animator.frameID == self->animator.frameCount - 1) {
+                self->direction = FLIP_X;
+                RSDK.SetSpriteAnimation(self->aniFrames, 0, &self->animator, true, 0);
             }
-            RSDK.ObjectTileGrip(entity, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x300000, 8);
+            RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x300000, 8);
         }
         else {
-            if (entity->position.x - entity->originPos.x < -0x300000) {
-                entity->timer = 0;
-                RSDK.SetSpriteAnimation(entity->aniFrames, 2, &entity->animator, true, 0);
+            if (self->position.x - self->originPos.x < -0x300000) {
+                self->timer = 0;
+                RSDK.SetSpriteAnimation(self->aniFrames, 2, &self->animator, true, 0);
             }
-            RSDK.ObjectTileGrip(entity, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x300000, 8);
+            RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x300000, 8);
         }
     }
 }
 
-void CutsceneHBH_Unknown17(void)
+void CutsceneHBH_State_RiderExit(void)
 {
     RSDK_THIS(CutsceneHBH);
 
-    entity->position.x += entity->velocity.x;
-    if (entity->velocity.x < 0x60000)
-        entity->velocity.x += 0x4000;
-    if (entity->direction == FLIP_X && entity->animator.frameID == entity->animator.frameCount - 1) {
-        entity->direction = FLIP_NONE;
-        RSDK.SetSpriteAnimation(entity->aniFrames, 0, &entity->animator, true, 0);
+    self->position.x += self->velocity.x;
+    if (self->velocity.x < 0x60000)
+        self->velocity.x += 0x4000;
+    if (self->direction == FLIP_X && self->animator.frameID == self->animator.frameCount - 1) {
+        self->direction = FLIP_NONE;
+        RSDK.SetSpriteAnimation(self->aniFrames, 0, &self->animator, true, 0);
     }
-    RSDK.ObjectTileGrip(entity, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x300000, 8);
-    if (!RSDK.CheckOnScreen(entity, NULL))
-        destroyEntity(entity);
+    RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x300000, 8);
+    if (!RSDK.CheckOnScreen(self, NULL))
+        destroyEntity(self);
 }
 
-void CutsceneHBH_Unknown18(void)
+void CutsceneHBH_State_KingExit(void)
 {
     RSDK_THIS(CutsceneHBH);
-    if (++entity->timer == 16) {
-        RSDK.SetSpriteAnimation(entity->aniFrames, 3, &entity->animator, true, 0);
+    if (++self->timer == 16) {
+        RSDK.SetSpriteAnimation(self->aniFrames, 3, &self->animator, true, 0);
     }
-    else if (entity->timer > 16 && entity->animator.frameID > 4) {
-        entity->velocity.x = 0x28000;
-        entity->velocity.y = -0x60000;
-        entity->state      = CutsceneHBH_Unknown19;
-        RSDK.SetSpriteAnimation(0xFFFF, 0, &entity->animator2, true, 0);
+    else if (self->timer > 16 && self->animator.frameID > 4) {
+        self->velocity.x = 0x28000;
+        self->velocity.y = -0x60000;
+        self->state      = CutsceneHBH_State_KingFall;
+        RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator2, true, 0);
     }
 }
 
-void CutsceneHBH_Unknown19(void)
+void CutsceneHBH_State_KingFall(void)
 {
     RSDK_THIS(CutsceneHBH);
-    entity->velocity.y += 0x3800;
-    entity->position.x += entity->velocity.x;
-    entity->position.y += entity->velocity.y;
-    if (!RSDK.CheckOnScreen(entity, NULL))
-        destroyEntity(entity);
+    self->velocity.y += 0x3800;
+    self->position.x += self->velocity.x;
+    self->position.y += self->velocity.y;
+    if (!RSDK.CheckOnScreen(self, NULL))
+        destroyEntity(self);
 }
 
-void CutsceneHBH_Unknown20(void)
+void CutsceneHBH_State_KingTMZ2_Fall(void)
 {
     RSDK_THIS(CutsceneHBH);
-    entity->velocity.y += 0x3800;
-    entity->position.x += entity->velocity.x;
-    entity->position.y += entity->velocity.y;
+    self->velocity.y += 0x3800;
+    self->position.x += self->velocity.x;
+    self->position.y += self->velocity.y;
 
-    if (RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_FLOOR, entity->collisionPlane, 0, 0x2C0000, true)) {
-        RSDK.SetSpriteAnimation(entity->aniFrames, 2, &entity->animator, true, 0);
-        entity->velocity.y = 0;
-        entity->state      = CutsceneHBH_Unknown21;
+    if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, self->collisionPlane, 0, 0x2C0000, true)) {
+        RSDK.SetSpriteAnimation(self->aniFrames, 2, &self->animator, true, 0);
+        self->velocity.y = 0;
+        self->state      = CutsceneHBH_State_KingTMZ2_Land;
         Camera_ShakeScreen(0, 0, 4);
     }
 }
 
-void CutsceneHBH_Unknown21(void)
+void CutsceneHBH_State_KingTMZ2_Land(void)
 {
     RSDK_THIS(CutsceneHBH);
 
-    if (entity->animator.frameID != entity->animator.frameCount - 1) {
-        RSDK.SetSpriteAnimation(entity->aniFrames, 0, &entity->animator, true, 0);
-        entity->state = StateMachine_None;
+    if (self->animator.frameID != self->animator.frameCount - 1) {
+        RSDK.SetSpriteAnimation(self->aniFrames, 0, &self->animator, true, 0);
+        self->state = StateMachine_None;
     }
 }
 
@@ -485,11 +485,28 @@ void CutsceneHBH_Unknown21(void)
 void CutsceneHBH_EditorDraw(void)
 {
     RSDK_THIS(CutsceneHBH);
-    RSDK.SetSpriteAnimation(CutsceneHBH->aniFrames, entity->characterID, &entity->animator, true, 0);
-    RSDK.DrawSprite(&entity->animator, NULL, false);
+    RSDK.SetSpriteAnimation(CutsceneHBH->aniFrames, self->characterID, &self->animator, true, 0);
+    RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
-void CutsceneHBH_EditorLoad(void) { CutsceneHBH->aniFrames = RSDK.LoadSpriteAnimation("Editor/CutsceneHBH.bin", SCOPE_STAGE); }
+void CutsceneHBH_EditorLoad(void)
+{
+    CutsceneHBH->aniFrames = RSDK.LoadSpriteAnimation("Editor/CutsceneHBH.bin", SCOPE_STAGE);
+
+    RSDK_ACTIVE_VAR(CutsceneHBH, characterID);
+    
+    RSDK_ENUM_VAR("Gunner", HBH_GUNNER);
+    RSDK_ENUM_VAR("Shinobi", HBH_SHINOBI);
+    RSDK_ENUM_VAR("Magician", HBH_MYSTIC);
+    RSDK_ENUM_VAR("Rider", HBH_RIDER);
+    RSDK_ENUM_VAR("King", HBH_KING);
+    RSDK_ENUM_VAR("Fang", HBH_ROUGE_FANG);
+    RSDK_ENUM_VAR("Bean", HBH_ROUGE_BEAN);
+    RSDK_ENUM_VAR("Bark", HBH_ROUGE_BARK);
+    RSDK_ENUM_VAR("King (Damaged)", HBH_KINGDAMAGED);
+    RSDK_ENUM_VAR("Pile", HBH_PILE);
+    RSDK_ENUM_VAR("King (TMZ2)", HBH_KINGTMZ2);
+}
 #endif
 
 void CutsceneHBH_Serialize(void)

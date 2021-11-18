@@ -5,9 +5,9 @@ ObjectLRZ3OutroK *LRZ3OutroK;
 void LRZ3OutroK_Update(void)
 {
     RSDK_THIS(LRZ3OutroK);
-    if (!entity->activated) {
+    if (!self->activated) {
         LRZ3OutroK_StartCutscene();
-        entity->activated = true;
+        self->activated = true;
     }
 }
 
@@ -21,9 +21,9 @@ void LRZ3OutroK_Create(void *data)
 {
     RSDK_THIS(LRZ3OutroK);
 
-    INIT_ENTITY(entity);
-    CutsceneRules_SetupEntity(entity, &entity->size, &entity->hitbox);
-    entity->active = ACTIVE_NEVER;
+    INIT_ENTITY(self);
+    CutsceneRules_SetupEntity(self, &self->size, &self->hitbox);
+    self->active = ACTIVE_NEVER;
 }
 
 void LRZ3OutroK_StageLoad(void)
@@ -56,7 +56,7 @@ void LRZ3OutroK_StartCutscene(void)
     void *states[] = { LRZ3OutroK_CutsceneState_Unknown1, LRZ3OutroK_CutsceneState_Unknown2, LRZ3OutroK_CutsceneState_Unknown3,
                        LRZ3OutroK_CutsceneState_Unknown4, NULL };
 
-    CutsceneSeq_StartSequence((Entity *)entity, states);
+    CutsceneSeq_StartSequence((Entity *)self, states);
 
     EntityCutsceneSeq *sequence = RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq);
     if (sequence->objectID)
@@ -79,8 +79,8 @@ bool32 LRZ3OutroK_CutsceneState_Unknown1(EntityCutsceneSeq *host)
         LRZ3OutroK->prison->notSolid = true;
         Zone->screenBoundsT1[0]       = 0;
         Zone->screenBoundsT1[1]       = 0;
-        Zone->screenBoundsR1[0]       = (entity->position.x + entity->size.x) >> 16;
-        Zone->screenBoundsR1[1]       = (entity->position.x + entity->size.x) >> 16;
+        Zone->screenBoundsR1[0]       = (self->position.x + self->size.x) >> 16;
+        Zone->screenBoundsR1[1]       = (self->position.x + self->size.x) >> 16;
         Zone->playerBoundActiveR[0]   = false;
         Zone->playerBoundActiveR[1]   = false;
         CutsceneSeq_LockAllPlayerControl();
@@ -136,8 +136,8 @@ bool32 LRZ3OutroK_CutsceneState_Unknown3(EntityCutsceneSeq *host)
                 RSDK.SetSpriteAnimation(player->aniFrames, ANI_FLYTIRED, &player->playerAnimator, true, 3);
             else
                 RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGDIAGONAL, &player->playerAnimator, false, 0);
-            entity->playerPos[player->playerID].x = player->position.x;
-            entity->playerPos[player->playerID].y = player->position.y;
+            self->playerPos[player->playerID].x = player->position.x;
+            self->playerPos[player->playerID].y = player->position.y;
         }
 
         RSDK.PlaySfx(LRZ3OutroK->sfxWarp, false, 255);
@@ -155,15 +155,15 @@ bool32 LRZ3OutroK_CutsceneState_Unknown3(EntityCutsceneSeq *host)
         foreach_active(Player, player)
         {
             if (angle <= 0) {
-                player->position.x = entity->playerPos[player->playerID].x;
-                player->position.y = entity->playerPos[player->playerID].y;
+                player->position.x = self->playerPos[player->playerID].x;
+                player->position.y = self->playerPos[player->playerID].y;
             }
             else {
                 if (angle < 256) {
-                    player->position.x = entity->playerPos[player->playerID].x;
-                    player->position.y = entity->playerPos[player->playerID].y;
-                    player->position.x += ((RSDK.Sin512(angle + 384) >> 2) + 128) * ((x - entity->playerPos[player->playerID].x) >> 8);
-                    player->position.y += ((RSDK.Sin512(angle + 384) >> 2) + 128) * ((y - entity->playerPos[player->playerID].y) >> 8);
+                    player->position.x = self->playerPos[player->playerID].x;
+                    player->position.y = self->playerPos[player->playerID].y;
+                    player->position.x += ((RSDK.Sin512(angle + 384) >> 2) + 128) * ((x - self->playerPos[player->playerID].x) >> 8);
+                    player->position.y += ((RSDK.Sin512(angle + 384) >> 2) + 128) * ((y - self->playerPos[player->playerID].y) >> 8);
                 }
                 else {
                     player->position.x = x;
@@ -214,7 +214,7 @@ bool32 LRZ3OutroK_CutsceneState_Unknown4(EntityCutsceneSeq *host)
 void LRZ3OutroK_EditorDraw(void)
 {
     RSDK_THIS(LRZ3OutroK);
-    CutsceneRules_DrawCutsceneBounds(entity, &entity->size);
+    CutsceneRules_DrawCutsceneBounds(self, &self->size);
 }
 
 void LRZ3OutroK_EditorLoad(void) {}

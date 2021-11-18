@@ -5,7 +5,7 @@ ObjectTubinaut *Tubinaut;
 void Tubinaut_Update(void)
 {
     RSDK_THIS(Tubinaut);
-    StateMachine_Run(entity->state);
+    StateMachine_Run(self->state);
 }
 
 void Tubinaut_LateUpdate(void) {}
@@ -16,56 +16,56 @@ void Tubinaut_Draw(void)
 {
     RSDK_THIS(Tubinaut);
 
-    if (entity->timer2 < 256 || entity->orbCount <= 1) {
+    if (self->timer2 < 256 || self->orbCount <= 1) {
         for (int i = 0; i < Tubinaut_OrbCount; ++i) {
-            if (entity->field_C4[i]) {
-                RSDK.DrawSprite(&entity->animators[i], &entity->orbPositions[i], false);
+            if (self->field_C4[i]) {
+                RSDK.DrawSprite(&self->animators[i], &self->orbPositions[i], false);
             }
         }
     }
     else {
-        RSDK.DrawSprite(&entity->animator2, NULL, false);
+        RSDK.DrawSprite(&self->animator2, NULL, false);
     }
 
-    entity->drawFX = FX_FLIP;
-    RSDK.DrawSprite(&entity->animator1, NULL, false);
-    entity->drawFX = FX_NONE;
+    self->drawFX = FX_FLIP;
+    RSDK.DrawSprite(&self->animator1, NULL, false);
+    self->drawFX = FX_NONE;
 }
 
 void Tubinaut_Create(void *data)
 {
     RSDK_THIS(Tubinaut);
 
-    entity->visible   = true;
-    entity->drawOrder = Zone->drawOrderLow;
+    self->visible   = true;
+    self->drawOrder = Zone->drawOrderLow;
     if (data) {
-        entity->active        = ACTIVE_NORMAL;
-        entity->updateRange.x = 0x400000;
-        entity->updateRange.y = 0x400000;
-        RSDK.SetSpriteAnimation(Tubinaut->aniFrames, voidToInt(data), &entity->animator1, true, 0);
-        entity->state = Tubinaut_State2_Unknown;
+        self->active        = ACTIVE_NORMAL;
+        self->updateRange.x = 0x400000;
+        self->updateRange.y = 0x400000;
+        RSDK.SetSpriteAnimation(Tubinaut->aniFrames, voidToInt(data), &self->animator1, true, 0);
+        self->state = Tubinaut_State2_Unknown;
     }
     else {
-        entity->startPos      = entity->position;
-        entity->active        = ACTIVE_BOUNDS;
-        entity->updateRange.x = 0x800000;
-        entity->updateRange.y = 0x800000;
-        RSDK.SetSpriteAnimation(Tubinaut->aniFrames, 1, entity->animators, true, 0);
-        RSDK.SetSpriteAnimation(Tubinaut->aniFrames, 2, &entity->animators[1], true, 0);
-        RSDK.SetSpriteAnimation(Tubinaut->aniFrames, 3, &entity->animators[2], true, 0);
-        entity->orbAngles[0] = 0;
-        entity->orbAngles[1] = 0x500;
-        entity->orbAngles[2] = 0xA00;
-        entity->field_C4[0]  = true;
-        entity->field_C4[1]  = true;
-        entity->field_C4[2]  = true;
-        entity->activeOrbs   = 1 | 2 | 4;
-        entity->orbCount     = 3;
-        entity->timer2       = 64;
-        RSDK.SetSpriteAnimation(Tubinaut->aniFrames, 0, &entity->animator1, true, 0);
-        RSDK.SetSpriteAnimation(Tubinaut->aniFrames, 7, &entity->animator2, true, 0);
-        entity->state    = Tubinaut_State_Setup;
-        entity->stateOrb = Tubinaut_StateOrb_Unknown1;
+        self->startPos      = self->position;
+        self->active        = ACTIVE_BOUNDS;
+        self->updateRange.x = 0x800000;
+        self->updateRange.y = 0x800000;
+        RSDK.SetSpriteAnimation(Tubinaut->aniFrames, 1, self->animators, true, 0);
+        RSDK.SetSpriteAnimation(Tubinaut->aniFrames, 2, &self->animators[1], true, 0);
+        RSDK.SetSpriteAnimation(Tubinaut->aniFrames, 3, &self->animators[2], true, 0);
+        self->orbAngles[0] = 0;
+        self->orbAngles[1] = 0x500;
+        self->orbAngles[2] = 0xA00;
+        self->field_C4[0]  = true;
+        self->field_C4[1]  = true;
+        self->field_C4[2]  = true;
+        self->activeOrbs   = 1 | 2 | 4;
+        self->orbCount     = 3;
+        self->timer2       = 64;
+        RSDK.SetSpriteAnimation(Tubinaut->aniFrames, 0, &self->animator1, true, 0);
+        RSDK.SetSpriteAnimation(Tubinaut->aniFrames, 7, &self->animator2, true, 0);
+        self->state    = Tubinaut_State_Setup;
+        self->stateOrb = Tubinaut_StateOrb_Unknown1;
     }
 }
 
@@ -96,7 +96,7 @@ void Tubinaut_DebugSpawn(void)
 {
     RSDK_THIS(DebugMode);
 
-    EntityTubinaut *tubinaut = CREATE_ENTITY(Tubinaut, NULL, entity->position.x, entity->position.y);
+    EntityTubinaut *tubinaut = CREATE_ENTITY(Tubinaut, NULL, self->position.x, self->position.y);
     tubinaut->distanceRemain = 256;
     tubinaut->distance       = 256;
 }
@@ -111,72 +111,72 @@ void Tubinaut_CheckPlayerCollisions(void)
 {
     RSDK_THIS(Tubinaut);
 
-    int storeX   = entity->position.x;
-    int storeY   = entity->position.y;
+    int storeX   = self->position.x;
+    int storeY   = self->position.y;
     int playerID = 0;
 
     foreach_active(Player, player)
     {
-        if (entity->playerTimers[playerID]) {
-            --entity->playerTimers[playerID];
+        if (self->playerTimers[playerID]) {
+            --self->playerTimers[playerID];
         }
-        else if (entity->stateOrb == Tubinaut_StateOrb_Unknown3 && entity->orbCount > 1) {
-            if (Player_CheckCollisionTouch(player, entity, &Tubinaut->hitbox3)
-                && (entity->orbCount == 2 || entity->orbCount == 3 && !Player_CheckHit(player, entity))) {
+        else if (self->stateOrb == Tubinaut_StateOrb_Unknown3 && self->orbCount > 1) {
+            if (Player_CheckCollisionTouch(player, self, &Tubinaut->hitbox3)
+                && (self->orbCount == 2 || self->orbCount == 3 && !Player_CheckHit(player, self))) {
                 Tubinaut_HandleRepel(player, playerID);
             }
         }
         else {
             bool32 flag = false;
             for (int i = 0; i < Tubinaut_OrbCount; ++i) {
-                if (entity->field_C4[i]) {
-                    entity->position.x = entity->orbPositions[i].x;
-                    entity->position.y = entity->orbPositions[i].y;
+                if (self->field_C4[i]) {
+                    self->position.x = self->orbPositions[i].x;
+                    self->position.y = self->orbPositions[i].y;
 
-                    if (Player_CheckCollisionTouch(player, entity, &Tubinaut->hitbox2)) {
+                    if (Player_CheckCollisionTouch(player, self, &Tubinaut->hitbox2)) {
                         Tubinaut_Unknown5(player, i);
 #if RETRO_USE_PLUS
                         if (player->state != Player_State_MightyHammerDrop) {
 #endif
                             flag                           = true;
-                            entity->playerTimers[playerID] = 15;
+                            self->playerTimers[playerID] = 15;
 #if RETRO_USE_PLUS
                         }
 #endif
 
-                        if (entity->orbCount) {
-                            if (entity->orbCount == 1) {
-                                entity->animator1.frameID = 2;
+                        if (self->orbCount) {
+                            if (self->orbCount == 1) {
+                                self->animator1.frameID = 2;
                             }
-                            else if (entity->orbCount == 2) {
-                                switch (entity->activeOrbs) {
-                                    case 3: RSDK.SetSpriteAnimation(Tubinaut->aniFrames, 4, &entity->animator2, true, 0); break;
-                                    case 5: RSDK.SetSpriteAnimation(Tubinaut->aniFrames, 6, &entity->animator2, true, 0); break;
-                                    case 6: RSDK.SetSpriteAnimation(Tubinaut->aniFrames, 5, &entity->animator2, true, 0); break;
+                            else if (self->orbCount == 2) {
+                                switch (self->activeOrbs) {
+                                    case 3: RSDK.SetSpriteAnimation(Tubinaut->aniFrames, 4, &self->animator2, true, 0); break;
+                                    case 5: RSDK.SetSpriteAnimation(Tubinaut->aniFrames, 6, &self->animator2, true, 0); break;
+                                    case 6: RSDK.SetSpriteAnimation(Tubinaut->aniFrames, 5, &self->animator2, true, 0); break;
                                 }
-                                entity->animator1.frameID = 0;
+                                self->animator1.frameID = 0;
                             }
                         }
                         else {
-                            entity->animator1.frameID = 3;
+                            self->animator1.frameID = 3;
                         }
                     }
                 }
             }
 
-            entity->position.x = storeX;
-            entity->position.y = storeY;
-            if (!flag && Player_CheckBadnikTouch(player, entity, &Tubinaut->hitbox1) && Player_CheckBadnikBreak(entity, player, false)) {
+            self->position.x = storeX;
+            self->position.y = storeY;
+            if (!flag && Player_CheckBadnikTouch(player, self, &Tubinaut->hitbox1) && Player_CheckBadnikBreak(self, player, false)) {
                 for (int i = 0; i < Tubinaut_OrbCount; ++i) {
-                    if (entity->field_C4[i]) {
-                        EntityTubinaut *orb = CREATE_ENTITY(Tubinaut, intToVoid(i + 1), entity->orbPositions[i].x, entity->orbPositions[i].y);
-                        orb->velocity.x     = 0x380 * RSDK.Cos256(entity->orbAngles[i] >> 4);
-                        orb->velocity.y     = 0x380 * RSDK.Sin256(entity->orbAngles[i] >> 4);
+                    if (self->field_C4[i]) {
+                        EntityTubinaut *orb = CREATE_ENTITY(Tubinaut, intToVoid(i + 1), self->orbPositions[i].x, self->orbPositions[i].y);
+                        orb->velocity.x     = 0x380 * RSDK.Cos256(self->orbAngles[i] >> 4);
+                        orb->velocity.y     = 0x380 * RSDK.Sin256(self->orbAngles[i] >> 4);
                     }
                 }
 
-                destroyEntity(entity);
-                entity->active = ACTIVE_NEVER2;
+                destroyEntity(self);
+                self->active = ACTIVE_NEVER2;
             }
         }
         ++playerID;
@@ -187,14 +187,14 @@ bool32 Tubinaut_CheckAttacking(EntityPlayer *player)
 {
     RSDK_THIS(Tubinaut);
 
-    bool32 flag = Player_CheckAttacking(player, entity);
+    bool32 flag = Player_CheckAttacking(player, self);
 
 #if RETRO_USE_PLUS
     if (!flag && player->characterID == ID_MIGHTY && player->playerAnimator.animationID == ANI_CROUCH) {
         if (!player->uncurlTimer) {
             RSDK.PlaySfx(Player->sfxPimPom, false, 255);
             player->uncurlTimer = 30;
-            if (entity->position.x > player->position.x)
+            if (self->position.x > player->position.x)
                 player->groundVel = -0x10000;
             else
                 player->groundVel = 0x10000;
@@ -204,7 +204,7 @@ bool32 Tubinaut_CheckAttacking(EntityPlayer *player)
 #endif
 
     if (!flag)
-        Player_CheckHit(player, entity);
+        Player_CheckHit(player, self);
 
     return flag;
 }
@@ -214,14 +214,14 @@ void Tubinaut_Unknown5(EntityPlayer *player, int orbID)
     RSDK_THIS(Tubinaut);
 
     if (Tubinaut_CheckAttacking(player)) {
-        EntityDust *dust = CREATE_ENTITY(Dust, entity, entity->position.x, entity->position.y);
+        EntityDust *dust = CREATE_ENTITY(Dust, self, self->position.x, self->position.y);
         dust->state      = Dust_State_DropDash;
         dust->drawOrder  = player->drawOrder;
         RSDK.PlaySfx(Tubinaut->sfxPowerdown, false, 255);
 #if RETRO_USE_PLUS
         if (player->characterID != ID_MIGHTY || player->playerAnimator.animationID != ANI_DROPDASH) {
 #endif
-            int angle = RSDK.ATan2(player->position.x - entity->position.x, player->position.y - entity->position.y);
+            int angle = RSDK.ATan2(player->position.x - self->position.x, player->position.y - self->position.y);
 
             int velX = 0, velY = 0;
 #if RETRO_USE_PLUS
@@ -249,23 +249,23 @@ void Tubinaut_Unknown5(EntityPlayer *player, int orbID)
         }
 #endif
 
-        entity->field_C4[orbID] = 0;
-        --entity->orbCount;
-        entity->activeOrbs &= ~(1 << orbID);
+        self->field_C4[orbID] = 0;
+        --self->orbCount;
+        self->activeOrbs &= ~(1 << orbID);
 
-        if (entity->orbCount == 2) {
+        if (self->orbCount == 2) {
             switch (orbID) {
                 case 0:
-                    entity->field_BC[1] = -24;
-                    entity->field_BC[2] = 24;
+                    self->field_BC[1] = -24;
+                    self->field_BC[2] = 24;
                     break;
                 case 1:
-                    entity->field_BC[2] = -24;
-                    entity->field_BC[0] = 24;
+                    self->field_BC[2] = -24;
+                    self->field_BC[0] = 24;
                     break;
                 case 2:
-                    entity->field_BC[0] = -24;
-                    entity->field_BC[1] = 24;
+                    self->field_BC[0] = -24;
+                    self->field_BC[1] = 24;
                     break;
             }
         }
@@ -278,10 +278,10 @@ void Tubinaut_HandleRepel(EntityPlayer *player, int playerID)
 
 #if RETRO_USE_PLUS
     if (player->characterID == ID_MIGHTY && player->playerAnimator.animationID == ANI_CROUCH) {
-        entity->playerTimers[playerID] = 15;
+        self->playerTimers[playerID] = 15;
         RSDK.PlaySfx(Tubinaut->sfxRepel, false, 255);
 
-        if (entity->position.x > player->position.x)
+        if (self->position.x > player->position.x)
             player->groundVel = -0x20000;
         else
             player->groundVel = 0x20000;
@@ -289,7 +289,7 @@ void Tubinaut_HandleRepel(EntityPlayer *player, int playerID)
     else {
 #endif
         if (Tubinaut_CheckAttacking(player)) {
-            int angle = RSDK.ATan2(player->position.x - entity->position.x, player->position.y - entity->position.y);
+            int angle = RSDK.ATan2(player->position.x - self->position.x, player->position.y - self->position.y);
             int velX  = 0x700 * RSDK.Cos256(angle);
             int velY  = 0x700 * RSDK.Sin256(angle);
             if (player->characterID != ID_KNUCKLES || player->playerAnimator.animationID != ANI_FLY) {
@@ -300,7 +300,7 @@ void Tubinaut_HandleRepel(EntityPlayer *player, int playerID)
             player->velocity.y             = velY;
             player->onGround               = false;
             player->tileCollisions         = true;
-            entity->playerTimers[playerID] = 15;
+            self->playerTimers[playerID] = 15;
             RSDK.PlaySfx(Tubinaut->sfxRepel, false, 255);
         }
 #if RETRO_USE_PLUS
@@ -312,39 +312,39 @@ void Tubinaut_HandleOrbs(void)
 {
     RSDK_THIS(Tubinaut);
 
-    entity->position.y = (RSDK.Sin256(entity->angle) << 10) + entity->startPos.y;
-    entity->angle      = (entity->angle + 4) & 0xFF;
+    self->position.y = (RSDK.Sin256(self->angle) << 10) + self->startPos.y;
+    self->angle      = (self->angle + 4) & 0xFF;
 
     for (int i = 0; i < Tubinaut_OrbCount; ++i) {
-        entity->orbPositions[i].x = 0x1400 * RSDK.Cos256(entity->orbAngles[i] >> 4) + entity->position.x;
-        entity->orbPositions[i].y = 0x1400 * RSDK.Sin256(entity->orbAngles[i] >> 4) + entity->position.y;
-        entity->orbAngles[i] -= entity->timer2;
+        self->orbPositions[i].x = 0x1400 * RSDK.Cos256(self->orbAngles[i] >> 4) + self->position.x;
+        self->orbPositions[i].y = 0x1400 * RSDK.Sin256(self->orbAngles[i] >> 4) + self->position.y;
+        self->orbAngles[i] -= self->timer2;
 
-        if (entity->field_BC[i]) {
-            if (entity->field_BC[i] <= 0) {
-                entity->field_BC[i]++;
-                entity->orbAngles[i] -= 16;
+        if (self->field_BC[i]) {
+            if (self->field_BC[i] <= 0) {
+                self->field_BC[i]++;
+                self->orbAngles[i] -= 16;
             }
             else {
-                entity->field_BC[i]--;
-                entity->orbAngles[i] += 16;
+                self->field_BC[i]--;
+                self->orbAngles[i] += 16;
             }
         }
-        entity->orbAngles[i] &= 0xFFF;
+        self->orbAngles[i] &= 0xFFF;
 
-        if (entity->stateOrb == Tubinaut_StateOrb_Unknown4 || entity->orbCount <= 1 || entity->timer2 < 192) {
-            entity->animators[i].frameID        = (2 * (7 - ((((entity->orbAngles[i] >> 4) + 112) >> 5) & 7)));
-            entity->animators[i].animationTimer = (entity->animators[i].animationTimer + 1) & 3;
-            entity->animators[i].frameID += (entity->animators[i].animationTimer >> 1);
+        if (self->stateOrb == Tubinaut_StateOrb_Unknown4 || self->orbCount <= 1 || self->timer2 < 192) {
+            self->animators[i].frameID        = (2 * (7 - ((((self->orbAngles[i] >> 4) + 112) >> 5) & 7)));
+            self->animators[i].animationTimer = (self->animators[i].animationTimer + 1) & 3;
+            self->animators[i].frameID += (self->animators[i].animationTimer >> 1);
         }
         else {
-            int val                             = ((entity->animators[i].animationTimer + 1) & 7) >> 1;
-            entity->animators[i].animationTimer = (entity->animators[i].animationTimer + 1) & 7;
+            int val                             = ((self->animators[i].animationTimer + 1) & 7) >> 1;
+            self->animators[i].animationTimer = (self->animators[i].animationTimer + 1) & 7;
             switch (val) {
                 case 0:
-                case 2: entity->animators[i].frameID = (val + 2 * (7 - ((((entity->orbAngles[i] >> 4) + 112) >> 5) & 7))); break;
-                case 1: entity->animators[i].frameID = 17; break;
-                case 3: entity->animators[i].frameID = 16; break;
+                case 2: self->animators[i].frameID = (val + 2 * (7 - ((((self->orbAngles[i] >> 4) + 112) >> 5) & 7))); break;
+                case 1: self->animators[i].frameID = 17; break;
+                case 3: self->animators[i].frameID = 16; break;
                 default: break;
             }
         }
@@ -355,15 +355,15 @@ void Tubinaut_CheckOnScreen(void)
 {
     RSDK_THIS(Tubinaut);
 
-    if (!RSDK.CheckOnScreen(entity, NULL) && !RSDK.CheckPosOnScreen(&entity->startPos, &entity->updateRange)) {
-        entity->position.x = entity->startPos.x;
-        entity->position.y = entity->startPos.y;
-        entity->visible    = 0;
-        entity->state      = Tubinaut_State_Setup;
-        entity->active     = ACTIVE_BOUNDS;
-        if (entity->orbCount > 1) {
-            entity->timer2   = 64;
-            entity->stateOrb = Tubinaut_StateOrb_Unknown1;
+    if (!RSDK.CheckOnScreen(self, NULL) && !RSDK.CheckPosOnScreen(&self->startPos, &self->updateRange)) {
+        self->position.x = self->startPos.x;
+        self->position.y = self->startPos.y;
+        self->visible    = 0;
+        self->state      = Tubinaut_State_Setup;
+        self->active     = ACTIVE_BOUNDS;
+        if (self->orbCount > 1) {
+            self->timer2   = 64;
+            self->stateOrb = Tubinaut_StateOrb_Unknown1;
         }
     }
 }
@@ -372,13 +372,13 @@ void Tubinaut_State_Setup(void)
 {
     RSDK_THIS(Tubinaut);
 
-    entity->timer          = 0;
-    entity->distanceRemain = entity->distance;
-    entity->direction      = FLIP_NONE;
-    entity->velocity.x     = -0x8000;
-    entity->visible        = true;
-    entity->active         = ACTIVE_NORMAL;
-    entity->state          = Tubinaut_State_Move;
+    self->timer          = 0;
+    self->distanceRemain = self->distance;
+    self->direction      = FLIP_NONE;
+    self->velocity.x     = -0x8000;
+    self->visible        = true;
+    self->active         = ACTIVE_NORMAL;
+    self->state          = Tubinaut_State_Move;
     Tubinaut_State_Move();
 }
 
@@ -386,12 +386,12 @@ void Tubinaut_State_Move(void)
 {
     RSDK_THIS(Tubinaut);
 
-    if (entity->distance) {
-        entity->position.x += entity->velocity.x;
-        if (!--entity->distanceRemain) {
-            entity->distanceRemain = entity->distance;
-            entity->direction ^= FLIP_X;
-            entity->velocity.x = -entity->velocity.x;
+    if (self->distance) {
+        self->position.x += self->velocity.x;
+        if (!--self->distanceRemain) {
+            self->distanceRemain = self->distance;
+            self->direction ^= FLIP_X;
+            self->velocity.x = -self->velocity.x;
         }
     }
     else {
@@ -399,7 +399,7 @@ void Tubinaut_State_Move(void)
         foreach_active(Player, player)
         {
             if (playerPtr) {
-                if (abs(player->position.x - entity->position.x) < abs(playerPtr->position.x - entity->position.x))
+                if (abs(player->position.x - self->position.x) < abs(playerPtr->position.x - self->position.x))
                     playerPtr = player;
             }
             else {
@@ -408,14 +408,14 @@ void Tubinaut_State_Move(void)
         }
 
         if (playerPtr)
-            entity->direction = playerPtr->position.x >= entity->position.x;
+            self->direction = playerPtr->position.x >= self->position.x;
     }
 
     Tubinaut_HandleOrbs();
-    if (!entity->orbCount)
-        RSDK.ProcessAnimation(&entity->animator1);
-    RSDK.ProcessAnimation(&entity->animator2);
-    entity->stateOrb();
+    if (!self->orbCount)
+        RSDK.ProcessAnimation(&self->animator1);
+    RSDK.ProcessAnimation(&self->animator2);
+    self->stateOrb();
     Tubinaut_CheckPlayerCollisions();
     Tubinaut_CheckOnScreen();
 }
@@ -424,11 +424,11 @@ void Tubinaut_StateOrb_Unknown1(void)
 {
     RSDK_THIS(Tubinaut);
 
-    if (++entity->timer > 120) {
-        entity->stateOrb = Tubinaut_StateOrb_Unknown2;
-        if (entity->orbCount > 2)
-            entity->animator1.frameID = 1;
-        entity->timer = 0;
+    if (++self->timer > 120) {
+        self->stateOrb = Tubinaut_StateOrb_Unknown2;
+        if (self->orbCount > 2)
+            self->animator1.frameID = 1;
+        self->timer = 0;
     }
 }
 
@@ -436,12 +436,12 @@ void Tubinaut_StateOrb_Unknown2(void)
 {
     RSDK_THIS(Tubinaut);
 
-    if (entity->timer2 >= 256) {
-        if (entity->orbCount > 1)
-            entity->stateOrb = Tubinaut_StateOrb_Unknown3;
+    if (self->timer2 >= 256) {
+        if (self->orbCount > 1)
+            self->stateOrb = Tubinaut_StateOrb_Unknown3;
     }
     else {
-        entity->timer2++;
+        self->timer2++;
     }
 }
 
@@ -449,16 +449,16 @@ void Tubinaut_StateOrb_Unknown3(void)
 {
     RSDK_THIS(Tubinaut);
 
-    if (++entity->timer > 120) {
-        entity->stateOrb = Tubinaut_StateOrb_Unknown4;
-        switch (entity->orbCount) {
-            case 0: entity->animator1.frameID = 3; break;
-            case 1: entity->animator1.frameID = 2; break;
+    if (++self->timer > 120) {
+        self->stateOrb = Tubinaut_StateOrb_Unknown4;
+        switch (self->orbCount) {
+            case 0: self->animator1.frameID = 3; break;
+            case 1: self->animator1.frameID = 2; break;
             case 2:
-            case 3: entity->animator1.frameID = 0; break;
+            case 3: self->animator1.frameID = 0; break;
             default: break;
         }
-        entity->timer = 0;
+        self->timer = 0;
     }
 }
 
@@ -466,12 +466,12 @@ void Tubinaut_StateOrb_Unknown4(void)
 {
     RSDK_THIS(Tubinaut);
 
-    if (entity->orbCount > 1) {
-        if (--entity->timer2 <= 64)
-            entity->stateOrb = Tubinaut_StateOrb_Unknown1;
+    if (self->orbCount > 1) {
+        if (--self->timer2 <= 64)
+            self->stateOrb = Tubinaut_StateOrb_Unknown1;
     }
     else {
-        entity->stateOrb = Tubinaut_StateOrb_Unknown2;
+        self->stateOrb = Tubinaut_StateOrb_Unknown2;
     }
 }
 
@@ -479,12 +479,12 @@ void Tubinaut_State2_Unknown(void)
 {
     RSDK_THIS(Tubinaut);
 
-    entity->position.x += entity->velocity.x;
-    entity->position.y += entity->velocity.y;
-    entity->velocity.y += 0x3800;
+    self->position.x += self->velocity.x;
+    self->position.y += self->velocity.y;
+    self->velocity.y += 0x3800;
 
-    if (!RSDK.CheckOnScreen(entity, NULL))
-        destroyEntity(entity);
+    if (!RSDK.CheckOnScreen(self, NULL))
+        destroyEntity(self);
 }
 
 #if RETRO_INCLUDE_EDITOR
@@ -492,46 +492,46 @@ void Tubinaut_EditorDraw(void)
 {
     RSDK_THIS(Tubinaut);
 
-    RSDK.SetSpriteAnimation(Tubinaut->aniFrames, 1, entity->animators, true, 0);
-    RSDK.SetSpriteAnimation(Tubinaut->aniFrames, 2, &entity->animators[1], true, 0);
-    RSDK.SetSpriteAnimation(Tubinaut->aniFrames, 3, &entity->animators[2], true, 0);
-    entity->orbAngles[0] = 0;
-    entity->orbAngles[1] = 0x500;
-    entity->orbAngles[2] = 0xA00;
-    entity->field_C4[0]  = true;
-    entity->field_C4[1]  = true;
-    entity->field_C4[2]  = true;
-    entity->activeOrbs   = 1 | 2 | 4;
-    entity->orbCount     = 3;
-    entity->timer2       = 64;
-    RSDK.SetSpriteAnimation(Tubinaut->aniFrames, 0, &entity->animator1, true, 0);
-    RSDK.SetSpriteAnimation(Tubinaut->aniFrames, 7, &entity->animator2, true, 0);
-    entity->state    = Tubinaut_State_Setup;
-    entity->stateOrb = Tubinaut_StateOrb_Unknown1;
+    RSDK.SetSpriteAnimation(Tubinaut->aniFrames, 1, self->animators, true, 0);
+    RSDK.SetSpriteAnimation(Tubinaut->aniFrames, 2, &self->animators[1], true, 0);
+    RSDK.SetSpriteAnimation(Tubinaut->aniFrames, 3, &self->animators[2], true, 0);
+    self->orbAngles[0] = 0;
+    self->orbAngles[1] = 0x500;
+    self->orbAngles[2] = 0xA00;
+    self->field_C4[0]  = true;
+    self->field_C4[1]  = true;
+    self->field_C4[2]  = true;
+    self->activeOrbs   = 1 | 2 | 4;
+    self->orbCount     = 3;
+    self->timer2       = 64;
+    RSDK.SetSpriteAnimation(Tubinaut->aniFrames, 0, &self->animator1, true, 0);
+    RSDK.SetSpriteAnimation(Tubinaut->aniFrames, 7, &self->animator2, true, 0);
+    self->state    = Tubinaut_State_Setup;
+    self->stateOrb = Tubinaut_StateOrb_Unknown1;
 
     for (int i = 0; i < Tubinaut_OrbCount; ++i) {
-        entity->orbPositions[i].x = 0x1400 * RSDK.Cos256(entity->orbAngles[i] >> 4) + entity->position.x;
-        entity->orbPositions[i].y = 0x1400 * RSDK.Sin256(entity->orbAngles[i] >> 4) + entity->position.y;
+        self->orbPositions[i].x = 0x1400 * RSDK.Cos256(self->orbAngles[i] >> 4) + self->position.x;
+        self->orbPositions[i].y = 0x1400 * RSDK.Sin256(self->orbAngles[i] >> 4) + self->position.y;
     }
 
     Tubinaut_Draw();
 
     if (showGizmos()) {
-        int x = entity->position.x;
+        int x = self->position.x;
 
-        entity->position.x += entity->distance * -0x8000;
+        self->position.x += self->distance * -0x8000;
 
         for (int i = 0; i < Tubinaut_OrbCount; ++i) {
-            entity->orbPositions[i].x = 0x1400 * RSDK.Cos256(entity->orbAngles[i] >> 4) + entity->position.x;
-            entity->orbPositions[i].y = 0x1400 * RSDK.Sin256(entity->orbAngles[i] >> 4) + entity->position.y;
+            self->orbPositions[i].x = 0x1400 * RSDK.Cos256(self->orbAngles[i] >> 4) + self->position.x;
+            self->orbPositions[i].y = 0x1400 * RSDK.Sin256(self->orbAngles[i] >> 4) + self->position.y;
         }
 
-        entity->inkEffect = INK_BLEND;
+        self->inkEffect = INK_BLEND;
         Tubinaut_Draw();
 
-        RSDK.DrawLine(x, entity->position.y, entity->position.x, entity->position.y, 0x00FF00, 0xFF, INK_NONE, false);
+        RSDK.DrawLine(x, self->position.y, self->position.x, self->position.y, 0x00FF00, 0xFF, INK_NONE, false);
 
-        entity->position.x = x;
+        self->position.x = x;
     }
 }
 

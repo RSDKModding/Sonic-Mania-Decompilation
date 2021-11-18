@@ -5,8 +5,8 @@ ObjectContinueSetup *ContinueSetup;
 void ContinueSetup_Update(void)
 {
     RSDK_THIS(ContinueSetup);
-    StateMachine_Run(entity->state);
-    entity->angle = (entity->angle - 2) & 0x3FF;
+    StateMachine_Run(self->state);
+    self->angle = (self->angle - 2) & 0x3FF;
 }
 
 void ContinueSetup_LateUpdate(void) {}
@@ -17,27 +17,27 @@ void ContinueSetup_Draw(void)
 {
     RSDK_THIS(ContinueSetup);
     RSDK.Prepare3DScene(ContinueSetup->sceneIndex);
-    RSDK.MatrixTranslateXYZ(&entity->matrix2, 0, -0xF0000, 0x500000, true);
-    RSDK.MatrixRotateX(&entity->matrix3, entity->rotationX);
-    RSDK.MatrixRotateZ(&entity->matrix4, entity->angle);
-    RSDK.MatrixTranslateXYZ(&entity->matrix1, -0x120000, 0, 0, true);
-    RSDK.MatrixMultiply(&entity->matrix5, &entity->matrix4, &entity->matrix3);
-    RSDK.MatrixMultiply(&entity->matrix5, &entity->matrix1, &entity->matrix5);
-    RSDK.MatrixMultiply(&entity->matrix5, &entity->matrix5, &entity->matrix2);
-    RSDK.AddModelTo3DScene(ContinueSetup->countIndex[entity->countTimer / 10 % 10], ContinueSetup->sceneIndex, S3D_FLATCLR_SHADED_BLENDED_SCREEN,
-                           &entity->matrix5, &entity->matrix5, entity->colour);
-    RSDK.MatrixTranslateXYZ(&entity->matrix1, 0x120000, 0, 0, true);
-    RSDK.MatrixMultiply(&entity->matrix5, &entity->matrix4, &entity->matrix3);
-    RSDK.MatrixMultiply(&entity->matrix5, &entity->matrix1, &entity->matrix5);
-    RSDK.MatrixMultiply(&entity->matrix5, &entity->matrix5, &entity->matrix2);
-    RSDK.AddModelTo3DScene(ContinueSetup->countIndex[entity->countTimer % 10], ContinueSetup->sceneIndex, S3D_FLATCLR_SHADED_BLENDED_SCREEN,
-                           &entity->matrix5, &entity->matrix5, entity->colour);
+    RSDK.MatrixTranslateXYZ(&self->matrix2, 0, -0xF0000, 0x500000, true);
+    RSDK.MatrixRotateX(&self->matrix3, self->rotationX);
+    RSDK.MatrixRotateZ(&self->matrix4, self->angle);
+    RSDK.MatrixTranslateXYZ(&self->matrix1, -0x120000, 0, 0, true);
+    RSDK.MatrixMultiply(&self->matrix5, &self->matrix4, &self->matrix3);
+    RSDK.MatrixMultiply(&self->matrix5, &self->matrix1, &self->matrix5);
+    RSDK.MatrixMultiply(&self->matrix5, &self->matrix5, &self->matrix2);
+    RSDK.AddModelTo3DScene(ContinueSetup->countIndex[self->countTimer / 10 % 10], ContinueSetup->sceneIndex, S3D_FLATCLR_SHADED_BLENDED_SCREEN,
+                           &self->matrix5, &self->matrix5, self->colour);
+    RSDK.MatrixTranslateXYZ(&self->matrix1, 0x120000, 0, 0, true);
+    RSDK.MatrixMultiply(&self->matrix5, &self->matrix4, &self->matrix3);
+    RSDK.MatrixMultiply(&self->matrix5, &self->matrix1, &self->matrix5);
+    RSDK.MatrixMultiply(&self->matrix5, &self->matrix5, &self->matrix2);
+    RSDK.AddModelTo3DScene(ContinueSetup->countIndex[self->countTimer % 10], ContinueSetup->sceneIndex, S3D_FLATCLR_SHADED_BLENDED_SCREEN,
+                           &self->matrix5, &self->matrix5, self->colour);
     RSDK.Draw3DScene(ContinueSetup->sceneIndex);
 
     Vector2 drawPos;
     drawPos.y = 0x600000;
     drawPos.x = ((ScreenInfo->centerX + 4) << 16) - (globals->continues << 19);
-    if (entity->dword74 == 1 && globals->continues > 0) {
+    if (self->dword74 == 1 && globals->continues > 0) {
         RSDK.DrawSprite(&ContinueSetup->animator, &drawPos, true);
     }
 
@@ -52,17 +52,17 @@ void ContinueSetup_Create(void *data)
 {
     RSDK_THIS(ContinueSetup);
     if (!SceneInfo->inEditor) {
-        entity->active        = ACTIVE_NORMAL;
-        entity->visible       = true;
-        entity->drawOrder     = 1;
-        entity->rotationX     = 240;
-        entity->angle         = 256;
-        entity->countTimer    = 10;
-        entity->colour        = 0xFF00FF;
-        entity->dword74       = 1;
-        entity->state         = ContinueSetup_Unknown1;
-        entity->updateRange.x = 0x4000000;
-        entity->updateRange.y = 0x4000000;
+        self->active        = ACTIVE_NORMAL;
+        self->visible       = true;
+        self->drawOrder     = 1;
+        self->rotationX     = 240;
+        self->angle         = 256;
+        self->countTimer    = 10;
+        self->colour        = 0xFF00FF;
+        self->dword74       = 1;
+        self->state         = ContinueSetup_Unknown1;
+        self->updateRange.x = 0x4000000;
+        self->updateRange.y = 0x4000000;
         switch (globals->playerID & 0xFF) {
             case ID_TAILS: RSDK.SetSpriteAnimation(ContinuePlayer->aniFrames, CONTPLR_ANI_ICON, &ContinueSetup->animator, true, 1); break;
             case ID_KNUCKLES: RSDK.SetSpriteAnimation(ContinuePlayer->aniFrames, CONTPLR_ANI_ICON, &ContinueSetup->animator, true, 2); break;
@@ -95,10 +95,10 @@ void ContinueSetup_StageLoad(void)
 void ContinueSetup_Unknown1(void)
 {
     RSDK_THIS(ContinueSetup);
-    if (++entity->timer >= 8) {
+    if (++self->timer >= 8) {
         if (!RSDK.GetEntityCount(FXFade->objectID, true)) {
-            entity->timer = 0;
-            entity->state = ContinueSetup_Unknown2;
+            self->timer = 0;
+            self->state = ContinueSetup_Unknown2;
         }
     }
 }
@@ -106,13 +106,13 @@ void ContinueSetup_Unknown1(void)
 void ContinueSetup_Unknown2(void)
 {
     RSDK_THIS(ContinueSetup);
-    if (++entity->timer2 == 60) {
-        entity->timer2 = 0;
-        if (entity->countTimer > 0) {
-            entity->countTimer--;
-            if (entity->alpha < 255)
-                entity->alpha += 24;
-            entity->colour = RSDK.GetPaletteEntry(2, entity->alpha);
+    if (++self->timer2 == 60) {
+        self->timer2 = 0;
+        if (self->countTimer > 0) {
+            self->countTimer--;
+            if (self->alpha < 255)
+                self->alpha += 24;
+            self->colour = RSDK.GetPaletteEntry(2, self->alpha);
         }
     }
     if (ControllerInfo->keyA.press || ControllerInfo->keyStart.press || TouchInfo->count) {
@@ -122,13 +122,13 @@ void ContinueSetup_Unknown2(void)
                 RSDK.SetSpriteAnimation(ContinuePlayer->aniFrames, (player->animator.animationID + 1), &player->animator, true, 0);
             player->state = ContinuePlayer_Unknown2;
         }
-        entity->state = ContinueSetup_Unknown3;
+        self->state = ContinueSetup_Unknown3;
         RSDK.PlaySfx(ContinueSetup->sfxAccept, 0, 255);
     }
-    if (!entity->countTimer && ++entity->timer == 60) {
-        entity->timer      = 0;
-        entity->state      = ContinueSetup_Unknown4;
-        EntityFXFade *fade = (EntityFXFade *)RSDK.CreateEntity(FXFade->objectID, NULL, entity->position.x, entity->position.y);
+    if (!self->countTimer && ++self->timer == 60) {
+        self->timer      = 0;
+        self->state      = ContinueSetup_Unknown4;
+        EntityFXFade *fade = (EntityFXFade *)RSDK.CreateEntity(FXFade->objectID, NULL, self->position.x, self->position.y);
         fade->speedIn      = 12;
         fade->wait         = 240;
     }
@@ -137,15 +137,15 @@ void ContinueSetup_Unknown2(void)
 void ContinueSetup_Unknown3(void)
 {
     RSDK_THIS(ContinueSetup);
-    if (++entity->timer == 90) {
+    if (++self->timer == 90) {
         Music_FadeOut(0.0125);
     }
-    if (entity->timer == 180) {
-        EntityFXFade *fade = (EntityFXFade *)RSDK.CreateEntity(FXFade->objectID, NULL, entity->position.x, entity->position.y);
+    if (self->timer == 180) {
+        EntityFXFade *fade = (EntityFXFade *)RSDK.CreateEntity(FXFade->objectID, NULL, self->position.x, self->position.y);
         fade->speedIn      = 12;
         fade->wait         = 240;
     }
-    if (entity->timer == 260) {
+    if (self->timer == 260) {
 #if RETRO_USE_PLUS
         if (globals->gameMode == MODE_ENCORE)
             RSDK.SetScene("Encore Mode", "");
@@ -157,11 +157,11 @@ void ContinueSetup_Unknown3(void)
         RSDK.LoadScene();
     }
 
-    if (entity->timer < 58) {
-        entity->dword74 = ((entity->timer >> 1) & 1);
+    if (self->timer < 58) {
+        self->dword74 = ((self->timer >> 1) & 1);
     }
-    if (entity->timer == 60) {
-        entity->dword74 = 1;
+    if (self->timer == 60) {
+        self->dword74 = 1;
         if (globals->continues > 0)
             globals->continues--;
     }
@@ -170,7 +170,7 @@ void ContinueSetup_Unknown3(void)
 void ContinueSetup_Unknown4(void)
 {
     RSDK_THIS(ContinueSetup);
-    if (++entity->timer == 80) {
+    if (++self->timer == 80) {
         RSDK.SetScene("Presentation", "Menu");
         RSDK.LoadScene();
     }

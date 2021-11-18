@@ -5,40 +5,40 @@ ObjectCutsceneSeq *CutsceneSeq;
 void CutsceneSeq_Update(void)
 {
     RSDK_THIS(CutsceneSeq);
-    CutsceneSeq_CheckSkip(entity->skipType, entity, entity->skipCallback);
+    CutsceneSeq_CheckSkip(self->skipType, self, self->skipCallback);
 }
 
 void CutsceneSeq_LateUpdate(void)
 {
     RSDK_THIS(CutsceneSeq);
-    entity->currentState      = (bool32(*)(Entity *))entity->cutsceneStates[entity->stateID];
-    if (entity->currentState) {
-        SceneInfo->entity         = entity->cutsceneCurEntity;
-        bool32 stateComplete           = entity->currentState((Entity*)entity);
-        SceneInfo->entity         = (Entity *)entity;
-        ++entity->timer;
+    self->currentState      = (bool32(*)(Entity *))self->cutsceneStates[self->stateID];
+    if (self->currentState) {
+        SceneInfo->entity         = self->cutsceneCurEntity;
+        bool32 stateComplete = self->currentState((Entity *)self);
+        SceneInfo->entity         = (Entity *)self;
+        ++self->timer;
         if (stateComplete) {
             LogHelpers_Print("State completed");
-            CutsceneSeq_NewState(entity->stateID + 1, entity);
+            CutsceneSeq_NewState(self->stateID + 1, self);
         }
 
-        if (!entity->cutsceneStates[entity->stateID]) {
+        if (!self->cutsceneStates[self->stateID]) {
             LogHelpers_Print("Sequence completed");
-            RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL);
+            RSDK.ResetEntityPtr(self, TYPE_BLANK, NULL);
         }
     }
 
     for (int32 i = 0; i < 8; ++i) {
-        Vector2 *point = &entity->points[i];
+        Vector2 *point = &self->points[i];
         if (point->x && point->y) {
             break;
         }
         else {
-            entity->visible = true;
+            self->visible = true;
         }
     }
-    if (entity->fillTimerA <= 0 && entity->fillTimerB <= 0) {
-        entity->visible = false;
+    if (self->fillTimerA <= 0 && self->fillTimerB <= 0) {
+        self->visible = false;
     }
 }
 
@@ -49,17 +49,17 @@ void CutsceneSeq_Draw(void)
     RSDK_THIS(CutsceneSeq);
 
     colour colours[8];
-    colours[0] = 0xFF00;
+    colours[0] = 0x00FF00;
     colours[1] = 0xFF0000;
-    colours[2] = 0xFF;
+    colours[2] = 0x0000FF;
     colours[3] = 0xFF00FF;
     colours[4] = 0xFFFF00;
-    colours[5] = 0xFFFF;
+    colours[5] = 0x00FFFF;
     colours[6] = 0x9933FF;
     colours[7] = 0xFF9900;
 
     for (int32 i = 0; i < 8; ++i) {
-        Vector2 *point = &entity->points[i];
+        Vector2 *point = &self->points[i];
         if (point->x || point->y) {
 #if RETRO_USE_PLUS
             RSDK.PrintVector2(0, "Draw poi ", point->x, point->y);
@@ -69,21 +69,21 @@ void CutsceneSeq_Draw(void)
         }
     }
 
-    if (entity->fillTimerA > 0)
-        RSDK.FillScreen(0xFFF0F0, entity->fillTimerA, entity->fillTimerA - 256, entity->fillTimerA - 256);
-    if (entity->fillTimerB > 0)
-        RSDK.FillScreen(0x000000, entity->fillTimerB, entity->fillTimerB - 128, entity->fillTimerB - 256);
+    if (self->fillTimerA > 0)
+        RSDK.FillScreen(0xFFF0F0, self->fillTimerA, self->fillTimerA - 256, self->fillTimerA - 256);
+    if (self->fillTimerB > 0)
+        RSDK.FillScreen(0x000000, self->fillTimerB, self->fillTimerB - 128, self->fillTimerB - 256);
 }
 
 void CutsceneSeq_Create(void *data)
 {
     RSDK_THIS(CutsceneSeq);
-    entity->active            = ACTIVE_NORMAL;
-    entity->visible           = false;
-    entity->fillTimerA        = 0;
-    entity->drawOrder         = Zone->hudDrawOrder + 1;
-    entity->fillTimerB        = 0;
-    CutsceneSeq_CheckSkip(entity->skipType, entity, entity->skipCallback);
+    self->active            = ACTIVE_NORMAL;
+    self->visible           = false;
+    self->fillTimerA        = 0;
+    self->drawOrder         = Zone->hudDrawOrder + 1;
+    self->fillTimerB        = 0;
+    CutsceneSeq_CheckSkip(self->skipType, self, self->skipCallback);
 }
 
 void CutsceneSeq_StageLoad(void) {}
@@ -120,7 +120,7 @@ void CutsceneSeq_LockPlayerControl(void *plr)
     Player->jumpHoldState  = 0;
 }
 
-void CutsceneSeq_CheckSkip(uint8 skipType, EntityCutsceneSeq *entity, void (*skipCallback)(void))
+void CutsceneSeq_CheckSkip(uint8 skipType, EntityCutsceneSeq *self, void (*skipCallback)(void))
 {
     bool32 skipPress = ControllerInfo->keyStart.press;
 #if RETRO_USE_TOUCH_CONTROLS
@@ -136,7 +136,7 @@ void CutsceneSeq_CheckSkip(uint8 skipType, EntityCutsceneSeq *entity, void (*ski
         else {
             if (skipCallback && skipType == SKIPTYPE_CALLBACK)
                 skipCallback();
-            load = entity && (entity->skipType == SKIPTYPE_CALLBACK || entity->skipType == SKIPTYPE_RELOADSCN);
+            load = self && (self->skipType == SKIPTYPE_CALLBACK || self->skipType == SKIPTYPE_RELOADSCN);
         }
 
         if (load) {

@@ -5,7 +5,7 @@ ObjectEggman *Eggman;
 void Eggman_Update(void)
 {
     RSDK_THIS(Eggman);
-    StateMachine_Run(entity->state);
+    StateMachine_Run(self->state);
 }
 
 void Eggman_LateUpdate(void) {}
@@ -15,11 +15,11 @@ void Eggman_StaticUpdate(void) {}
 void Eggman_Draw(void)
 {
     RSDK_THIS(Eggman);
-    if (entity->parent) {
-        entity->position.x = entity->parent->position.x + entity->offset.x;
-        entity->position.y = entity->parent->position.y + entity->offset.y;
+    if (self->parent) {
+        self->position.x = self->parent->position.x + self->offset.x;
+        self->position.y = self->parent->position.y + self->offset.y;
     }
-    RSDK.DrawSprite(&entity->animator, NULL, false);
+    RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
 void Eggman_Create(void *data)
@@ -27,21 +27,21 @@ void Eggman_Create(void *data)
     RSDK_THIS(Eggman);
     if (!SceneInfo->inEditor) {
         if (globals->gameMode < MODE_TIMEATTACK) {
-            RSDK.SetSpriteAnimation(Eggman->aniFrames, 0, &entity->animator, true, 0);
-            entity->active        = ACTIVE_NORMAL;
-            entity->visible       = true;
-            entity->drawFX        = FX_FLIP;
-            entity->drawOrder     = Zone->drawOrderLow;
-            entity->parent        = (Entity *)data;
-            entity->updateRange.x = 0x400000;
-            entity->updateRange.y = 0x800000;
-            entity->hitbox.left   = -10;
-            entity->hitbox.top    = -24;
-            entity->hitbox.right  = 10;
-            entity->hitbox.bottom = 27;
+            RSDK.SetSpriteAnimation(Eggman->aniFrames, 0, &self->animator, true, 0);
+            self->active        = ACTIVE_NORMAL;
+            self->visible       = true;
+            self->drawFX        = FX_FLIP;
+            self->drawOrder     = Zone->drawOrderLow;
+            self->parent        = (Entity *)data;
+            self->updateRange.x = 0x400000;
+            self->updateRange.y = 0x800000;
+            self->hitbox.left   = -10;
+            self->hitbox.top    = -24;
+            self->hitbox.right  = 10;
+            self->hitbox.bottom = 27;
         }
         else {
-            destroyEntity(entity);
+            destroyEntity(self);
         }
     }
 }
@@ -61,17 +61,17 @@ void Eggman_StageLoad(void)
 void Eggman_Unknown1(void)
 {
     RSDK_THIS(Eggman);
-    RSDK.ProcessAnimation(&entity->animator);
+    RSDK.ProcessAnimation(&self->animator);
 }
 
 void Eggman_Unknown2(void)
 {
     RSDK_THIS(Eggman);
 
-    RSDK.ProcessAnimation(&entity->animator);
-    if (entity->animator.frameID >= entity->animator.frameCount - 1) {
-        RSDK.SetSpriteAnimation(Eggman->aniFrames, entity->animID, &entity->animator, true, 0);
-        entity->state = Eggman_Unknown1;
+    RSDK.ProcessAnimation(&self->animator);
+    if (self->animator.frameID >= self->animator.frameCount - 1) {
+        RSDK.SetSpriteAnimation(Eggman->aniFrames, self->animID, &self->animator, true, 0);
+        self->state = Eggman_Unknown1;
     }
 }
 
@@ -79,73 +79,73 @@ void Eggman_Unknown3(void)
 {
     RSDK_THIS(Eggman);
 
-    if (entity->animator.frameID < entity->animator.frameCount - 1)
-        RSDK.ProcessAnimation(&entity->animator);
+    if (self->animator.frameID < self->animator.frameCount - 1)
+        RSDK.ProcessAnimation(&self->animator);
 }
 
 void Eggman_Unknown4(void)
 {
     RSDK_THIS(Eggman);
 
-    RSDK.ProcessAnimation(&entity->animator);
-    if (entity->onGround) {
-        RSDK.SetSpriteAnimation(Eggman->aniFrames, entity->animID, &entity->animator, true, 0);
-        entity->state = Eggman_Unknown1;
+    RSDK.ProcessAnimation(&self->animator);
+    if (self->onGround) {
+        RSDK.SetSpriteAnimation(Eggman->aniFrames, self->animID, &self->animator, true, 0);
+        self->state = Eggman_Unknown1;
     }
     else {
-        entity->velocity.y += 0x3800;
-        entity->position.x += entity->velocity.x;
-        entity->position.y += entity->velocity.y;
+        self->velocity.y += 0x3800;
+        self->position.x += self->velocity.x;
+        self->position.y += self->velocity.y;
     }
 }
 
 void Eggman_Unknown5(void)
 {
     RSDK_THIS(Eggman);
-    RSDK.ProcessAnimation(&entity->animator);
-    if (entity->timer <= 0) {
-        RSDK.SetSpriteAnimation(Eggman->aniFrames, entity->animID, &entity->animator, true, 0);
-        entity->velocity.x = 0;
-        entity->velocity.y = 0;
-        entity->state      = entity->stateStore;
+    RSDK.ProcessAnimation(&self->animator);
+    if (self->timer <= 0) {
+        RSDK.SetSpriteAnimation(Eggman->aniFrames, self->animID, &self->animator, true, 0);
+        self->velocity.x = 0;
+        self->velocity.y = 0;
+        self->state      = self->stateStore;
     }
     else {
-        entity->position.x += entity->velocity.x;
-        entity->velocity.y += 0x3800;
-        entity->position.y += entity->velocity.y;
-        entity->timer--;
+        self->position.x += self->velocity.x;
+        self->velocity.y += 0x3800;
+        self->position.y += self->velocity.y;
+        self->timer--;
     }
 }
 
 void Eggman_Unknown6(void)
 {
     RSDK_THIS(Eggman);
-    RSDK.ProcessAnimation(&entity->animator);
-    entity->velocity.y += 0x3800;
-    entity->position.y += entity->velocity.y;
-    if (RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_FLOOR, entity->collisionPlane, 0, 0x100000, true)) {
-        entity->onGround = true;
-        entity->state    = Eggman_Unknown1;
+    RSDK.ProcessAnimation(&self->animator);
+    self->velocity.y += 0x3800;
+    self->position.y += self->velocity.y;
+    if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, self->collisionPlane, 0, 0x100000, true)) {
+        self->onGround = true;
+        self->state    = Eggman_Unknown1;
     }
 }
 
 void Eggman_Unknown7(void)
 {
     RSDK_THIS(Eggman);
-    RSDK.ProcessAnimation(&entity->animator);
-    entity->position.x += entity->velocity.x;
-    entity->velocity.x += 0x200;
+    RSDK.ProcessAnimation(&self->animator);
+    self->position.x += self->velocity.x;
+    self->velocity.x += 0x200;
 
-    if (!RSDK.CheckOnScreen(entity, NULL)) {
-        entity->active = ACTIVE_NEVER;
-        entity->state  = Eggman_Unknown1;
+    if (!RSDK.CheckOnScreen(self, NULL)) {
+        self->active = ACTIVE_NEVER;
+        self->state  = Eggman_Unknown1;
     }
 }
 
 void Eggman_EditorDraw(void)
 {
     RSDK_THIS(Eggman);
-    RSDK.DrawSprite(&entity->animator, NULL, false);
+    RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
 void Eggman_EditorLoad(void) { Eggman_StageLoad(); }

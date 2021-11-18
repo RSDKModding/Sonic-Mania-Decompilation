@@ -5,7 +5,7 @@ ObjectFBZMissile *FBZMissile;
 void FBZMissile_Update(void)
 {
     RSDK_THIS(FBZMissile);
-    StateMachine_Run(entity->state);
+    StateMachine_Run(self->state);
 }
 
 void FBZMissile_LateUpdate(void) {}
@@ -15,49 +15,49 @@ void FBZMissile_StaticUpdate(void) {}
 void FBZMissile_Draw(void)
 {
     RSDK_THIS(FBZMissile);
-    StateMachine_Run(entity->stateDraw);
-    RSDK.DrawSprite(&entity->animator, NULL, false);
+    StateMachine_Run(self->stateDraw);
+    RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
 void FBZMissile_Create(void *data)
 {
     RSDK_THIS(FBZMissile);
-    if (entity->type != 2 && !entity->interval)
-        entity->interval = -16;
-    entity->drawFX = FX_FLIP;
+    if (self->type != 2 && !self->interval)
+        self->interval = -16;
+    self->drawFX = FX_FLIP;
     if (!SceneInfo->inEditor) {
-        entity->active        = ACTIVE_BOUNDS;
-        entity->visible       = true;
-        entity->drawOrder     = Zone->drawOrderLow;
-        entity->updateRange.x = 0x800000;
-        entity->updateRange.y = 0x800000;
+        self->active        = ACTIVE_BOUNDS;
+        self->visible       = true;
+        self->drawOrder     = Zone->drawOrderLow;
+        self->updateRange.x = 0x800000;
+        self->updateRange.y = 0x800000;
         if (data)
-            entity->type = voidToInt(data);
+            self->type = voidToInt(data);
 
-        switch (entity->type) {
+        switch (self->type) {
             case 0:
-                RSDK.SetSpriteAnimation(FBZMissile->aniFrames, 0, &entity->animator, true, 0);
-                entity->direction *= FLIP_Y;
-                entity->drawOrder = Zone->drawOrderHigh;
-                entity->state     = FBZMissile_Unknown1;
+                RSDK.SetSpriteAnimation(FBZMissile->aniFrames, 0, &self->animator, true, 0);
+                self->direction *= FLIP_Y;
+                self->drawOrder = Zone->drawOrderHigh;
+                self->state     = FBZMissile_Unknown1;
                 break;
             case 1:
-                RSDK.SetSpriteAnimation(FBZMissile->aniFrames, 1, &entity->animator, true, 0);
-                entity->state = FBZMissile_Unknown3;
+                RSDK.SetSpriteAnimation(FBZMissile->aniFrames, 1, &self->animator, true, 0);
+                self->state = FBZMissile_Unknown3;
                 break;
             case 2:
-                RSDK.SetSpriteAnimation(FBZMissile->aniFrames, 3, &entity->animator, true, 0);
-                entity->drawOrder = Zone->drawOrderHigh;
-                entity->timer     = entity->interval;
-                entity->state     = FBZMissile_Unknown8;
+                RSDK.SetSpriteAnimation(FBZMissile->aniFrames, 3, &self->animator, true, 0);
+                self->drawOrder = Zone->drawOrderHigh;
+                self->timer     = self->interval;
+                self->state     = FBZMissile_Unknown8;
                 break;
             case 3:
-                RSDK.SetSpriteAnimation(FBZMissile->aniFrames, 2, &entity->animator, true, 0);
-                entity->state = FBZMissile_Unknown5;
+                RSDK.SetSpriteAnimation(FBZMissile->aniFrames, 2, &self->animator, true, 0);
+                self->state = FBZMissile_Unknown5;
                 break;
             case 4:
-                RSDK.SetSpriteAnimation(FBZMissile->aniFrames, 1, &entity->animator, true, 0);
-                entity->state = FBZMissile_Unknown7;
+                RSDK.SetSpriteAnimation(FBZMissile->aniFrames, 1, &self->animator, true, 0);
+                self->state = FBZMissile_Unknown7;
                 break;
             default: break;
         }
@@ -88,13 +88,13 @@ void FBZMissile_Unknown1(void)
 {
     RSDK_THIS(FBZMissile);
 
-    if (!((Zone->timer + entity->intervalOffset) % entity->interval)) {
-        entity->timer = 42;
-        entity->state = FBZMissile_Unknown2;
+    if (!((Zone->timer + self->intervalOffset) % self->interval)) {
+        self->timer = 42;
+        self->state = FBZMissile_Unknown2;
     }
     if (!(Zone->timer & 1)) {
-        if (entity->animator.frameID > 0)
-            entity->animator.frameID--;
+        if (self->animator.frameID > 0)
+            self->animator.frameID--;
     }
 }
 
@@ -102,22 +102,22 @@ void FBZMissile_Unknown2(void)
 {
     RSDK_THIS(FBZMissile);
 
-    if (!(entity->timer & 1)) {
-        if (entity->animator.frameID < 3)
-            entity->animator.frameID++;
+    if (!(self->timer & 1)) {
+        if (self->animator.frameID < 3)
+            self->animator.frameID++;
     }
 
-    entity->timer--;
-    switch (entity->timer) {
-        case 1: entity->state = FBZMissile_Unknown1; break;
+    self->timer--;
+    switch (self->timer) {
+        case 1: self->state = FBZMissile_Unknown1; break;
         case 9:
         case 25:
         case 41: {
             RSDK.PlaySfx(FBZMissile->sfxPush, false, 255);
-            EntityFBZMissile *missile = CREATE_ENTITY(FBZMissile, intToVoid(3), entity->position.x, entity->position.y);
+            EntityFBZMissile *missile = CREATE_ENTITY(FBZMissile, intToVoid(3), self->position.x, self->position.y);
             missile->isPermanent      = true;
             missile->velocity.y       = -0x60000;
-            missile->drawOrder        = entity->drawOrder - 1;
+            missile->drawOrder        = self->drawOrder - 1;
             missile->velocity.x       = FBZMissile->velocities[FBZMissile->velocityID++];
             FBZMissile->velocityID &= 7;
             break;
@@ -130,35 +130,35 @@ void FBZMissile_Unknown3(void)
 {
     RSDK_THIS(FBZMissile);
 
-    if (!((Zone->timer + entity->intervalOffset) % entity->interval)) {
+    if (!((Zone->timer + self->intervalOffset) % self->interval)) {
         RSDK.PlaySfx(FBZMissile->sfxPush2, false, 255);
-        EntityFBZMissile *missile = CREATE_ENTITY(FBZMissile, intToVoid(4), entity->position.x, entity->position.y);
-        missile->drawOrder        = entity->drawOrder;
-        missile->direction        = entity->direction;
-        if (entity->direction) {
+        EntityFBZMissile *missile = CREATE_ENTITY(FBZMissile, intToVoid(4), self->position.x, self->position.y);
+        missile->drawOrder        = self->drawOrder;
+        missile->direction        = self->direction;
+        if (self->direction) {
             missile->velocity.x = 0x40000;
-            entity->position.x -= 500000;
+            self->position.x -= 500000;
         }
         else {
             missile->velocity.x = -0x40000;
-            entity->position.x += 500000;
+            self->position.x += 500000;
         }
-        entity->timer = 62;
-        entity->state = FBZMissile_Unknown4;
+        self->timer = 62;
+        self->state = FBZMissile_Unknown4;
     }
 }
 
 void FBZMissile_Unknown4(void)
 {
     RSDK_THIS(FBZMissile);
-    if (--entity->timer > 0) {
-        if (entity->direction)
-            entity->position.x += 0x2000;
+    if (--self->timer > 0) {
+        if (self->direction)
+            self->position.x += 0x2000;
         else
-            entity->position.x -= 0x2000;
+            self->position.x -= 0x2000;
     }
     else {
-        entity->state = FBZMissile_Unknown3;
+        self->state = FBZMissile_Unknown3;
     }
 }
 
@@ -166,113 +166,113 @@ void FBZMissile_Unknown5(void)
 {
     RSDK_THIS(FBZMissile);
 
-    entity->position.y += entity->velocity.y;
-    entity->velocity.y += 0x1800;
-    if (entity->velocity.y >= 0) {
-        entity->drawOrder = Zone->drawOrderLow;
-        entity->state     = FBZMissile_Unknown6;
+    self->position.y += self->velocity.y;
+    self->velocity.y += 0x1800;
+    if (self->velocity.y >= 0) {
+        self->drawOrder = Zone->drawOrderLow;
+        self->state     = FBZMissile_Unknown6;
     }
-    if (entity->velocity.y > -0x1D000)
-        entity->position.x += entity->velocity.x;
+    if (self->velocity.y > -0x1D000)
+        self->position.x += self->velocity.x;
 
-    if (!RSDK.CheckOnScreen(entity, NULL))
-        destroyEntity(entity);
+    if (!RSDK.CheckOnScreen(self, NULL))
+        destroyEntity(self);
 }
 
 void FBZMissile_Unknown6(void)
 {
     RSDK_THIS(FBZMissile);
 
-    entity->position.y += entity->velocity.y;
-    entity->velocity.y += 0x1000;
-    if (!entity->timer) {
-        if (entity->animator.frameID < 5)
-            entity->animator.frameID++;
+    self->position.y += self->velocity.y;
+    self->velocity.y += 0x1000;
+    if (!self->timer) {
+        if (self->animator.frameID < 5)
+            self->animator.frameID++;
     }
-    entity->timer = (entity->timer - 1) & 1;
-    if (entity->velocity.y < 0x1D000)
-        entity->position.x += entity->velocity.x;
+    self->timer = (self->timer - 1) & 1;
+    if (self->velocity.y < 0x1D000)
+        self->position.x += self->velocity.x;
 
-    if (RSDK.CheckOnScreen(entity, NULL)) {
+    if (RSDK.CheckOnScreen(self, NULL)) {
         foreach_active(Player, player)
         {
-            if (Player_CheckCollisionTouch(player, entity, &FBZMissile->hitbox1)) {
+            if (Player_CheckCollisionTouch(player, self, &FBZMissile->hitbox1)) {
 #if RETRO_USE_PLUS
                 if (!Player_CheckMightyUnspin(0x300, player, 2, &player->uncurlTimer))
 #endif
-                    Player_CheckHit(player, entity);
+                    Player_CheckHit(player, self);
 
-                CREATE_ENTITY(Explosion, intToVoid(3), entity->position.x, entity->position.y + 0x30000)->drawOrder = Zone->drawOrderHigh;
+                CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSSPUFF), self->position.x, self->position.y + 0x30000)->drawOrder = Zone->drawOrderHigh;
                 RSDK.PlaySfx(FBZMissile->sfxExplosion, false, 255);
-                destroyEntity(entity);
+                destroyEntity(self);
 
                 foreach_break;
             }
         }
 
-        if (!RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0xC0000, false)) {
+        if (!RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0xC0000, false)) {
             foreach_active(FBZMissile, missile)
             {
-                if (missile->type == 2 && RSDK.CheckObjectCollisionTouchBox(missile, &FBZMissile->hitbox3, entity, &FBZMissile->hitbox1)) {
+                if (missile->type == 2 && RSDK.CheckObjectCollisionTouchBox(missile, &FBZMissile->hitbox3, self, &FBZMissile->hitbox1)) {
                     if (--missile->timer <= 0) {
                         destroyEntity(missile);
                         RSDK.PlaySfx(Player->sfxRelease, false, 255);
                     }
-                    CREATE_ENTITY(Explosion, intToVoid(3), entity->position.x, entity->position.y + 0x30000)->drawOrder = Zone->drawOrderHigh;
+                    CREATE_ENTITY(Explosion, intToVoid(3), self->position.x, self->position.y + 0x30000)->drawOrder = Zone->drawOrderHigh;
                     RSDK.PlaySfx(FBZMissile->sfxExplosion, false, 255);
-                    destroyEntity(entity);
+                    destroyEntity(self);
                 }
             }
         }
         else {
-            CREATE_ENTITY(Explosion, intToVoid(3), entity->position.x, entity->position.y + 0x30000)->drawOrder = Zone->drawOrderHigh;
+            CREATE_ENTITY(Explosion, intToVoid(3), self->position.x, self->position.y + 0x30000)->drawOrder = Zone->drawOrderHigh;
             RSDK.PlaySfx(FBZMissile->sfxExplosion, false, 255);
-            destroyEntity(entity);
+            destroyEntity(self);
         }
     }
     else {
-        destroyEntity(entity);
+        destroyEntity(self);
     }
 }
 
 void FBZMissile_Unknown7(void)
 {
     RSDK_THIS(FBZMissile);
-    entity->position.x += entity->velocity.x;
-    if (RSDK.CheckOnScreen(entity, 0)) {
-        RSDK.ProcessAnimation(&entity->animator);
+    self->position.x += self->velocity.x;
+    if (RSDK.CheckOnScreen(self, 0)) {
+        RSDK.ProcessAnimation(&self->animator);
 
         foreach_active(Player, player)
         {
-            if (Player_CheckCollisionTouch(player, entity, &FBZMissile->hitbox2)) {
+            if (Player_CheckCollisionTouch(player, self, &FBZMissile->hitbox2)) {
 #if RETRO_USE_PLUS
-                if (!Player_CheckMightyUnspin(768, player, 2, &player->uncurlTimer))
+                if (!Player_CheckMightyUnspin(0x300, player, 2, &player->uncurlTimer))
 #endif
-                    Player_CheckHit(player, entity);
+                    Player_CheckHit(player, self);
             }
         }
     }
     else {
-        destroyEntity(entity);
+        destroyEntity(self);
     }
 }
 
 void FBZMissile_Unknown8(void)
 {
     RSDK_THIS(FBZMissile);
-    entity->position.x += entity->velocity.x;
-    RSDK.ProcessAnimation(&entity->animator);
+    self->position.x += self->velocity.x;
+    RSDK.ProcessAnimation(&self->animator);
 
 #if RETRO_USE_PLUS
     foreach_active(Player, player)
     {
         int32 velY = player->velocity.y;
-        if (Player_CheckCollisionBox(player, entity, &FBZMissile->hitbox3) && player->state == Player_State_MightyHammerDrop && !player->sidekick) {
+        if (Player_CheckCollisionBox(player, self, &FBZMissile->hitbox3) && player->state == Player_State_MightyHammerDrop && !player->sidekick) {
             RSDK.PlaySfx(FBZMissile->sfxExplosion, false, 255);
             RSDK.PlaySfx(Player->sfxRelease, false, 255);
             player->velocity.y = velY - 0x10000;
             player->onGround   = false;
-            destroyEntity(entity);
+            destroyEntity(self);
             foreach_break;
         }
     }

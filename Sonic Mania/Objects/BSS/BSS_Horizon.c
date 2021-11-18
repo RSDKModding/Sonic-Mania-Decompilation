@@ -2,55 +2,47 @@
 
 ObjectBSS_Horizon *BSS_Horizon;
 
-void BSS_Horizon_Update(void)
-{
+void BSS_Horizon_Update(void) {}
 
-}
+void BSS_Horizon_LateUpdate(void) {}
 
-void BSS_Horizon_LateUpdate(void)
-{
-
-}
-
-void BSS_Horizon_StaticUpdate(void)
-{
-
-}
+void BSS_Horizon_StaticUpdate(void) {}
 
 void BSS_Horizon_Draw(void)
 {
-    Vector2 drawPos; 
-    drawPos.y                   = 0;
-    EntityBSS_Horizon *entity   = (EntityBSS_Horizon *)SceneInfo->entity;
+    RSDK_THIS(BSS_Horizon);
+    Vector2 drawPos;
+    drawPos.x = ScreenInfo->centerX << 16;
+    drawPos.y = 0;
 
-    drawPos.x                   = ScreenInfo->centerX << 16;
-    entity->horizonData.frameID = 0;
-    entity->alpha          = BSS_Palette->alpha1;
-    entity->direction      = FLIP_NONE;
-    RSDK.DrawSprite(&entity->horizonData, &drawPos, true);
+    self->horizonAnimator.frameID = 0;
+    self->alpha                   = BSS_Palette->alpha1;
+    self->direction               = FLIP_NONE;
+    RSDK.DrawSprite(&self->horizonAnimator, &drawPos, true);
 
-    entity->direction = FLIP_X;
-    RSDK.DrawSprite(&entity->horizonData, &drawPos, true);
+    self->direction = FLIP_X;
+    RSDK.DrawSprite(&self->horizonAnimator, &drawPos, true);
 
-    entity->horizonData.frameID = 1;
-    entity->alpha          = BSS_Palette->alpha2;
-    entity->direction      = FLIP_NONE;
-    RSDK.DrawSprite(&entity->horizonData, &drawPos, true);
+    self->horizonAnimator.frameID = 1;
+    self->alpha                   = BSS_Palette->alpha2;
+    self->direction               = FLIP_NONE;
+    RSDK.DrawSprite(&self->horizonAnimator, &drawPos, true);
 
-    entity->direction = FLIP_X;
-    RSDK.DrawSprite(&entity->horizonData, &drawPos, true);
+    self->direction = FLIP_X;
+    RSDK.DrawSprite(&self->horizonAnimator, &drawPos, true);
 }
 
-void BSS_Horizon_Create(void* data)
+void BSS_Horizon_Create(void *data)
 {
-    EntityBSS_Horizon *entity = (EntityBSS_Horizon *)SceneInfo->entity;
+    RSDK_THIS(BSS_Horizon);
+
     if (!SceneInfo->inEditor) {
-        entity->active               = ACTIVE_NORMAL;
-        entity->inkEffect            = INK_ADD;
-        entity->visible              = true;
-        entity->drawOrder            = 2;
-        entity->drawFX               = FX_FLIP;
-        RSDK.SetSpriteAnimation(BSS_Horizon->aniFrames, 0, &entity->horizonData, true, 0);
+        self->active    = ACTIVE_NORMAL;
+        self->inkEffect = INK_ADD;
+        self->visible   = true;
+        self->drawOrder = 2;
+        self->drawFX    = FX_FLIP;
+        RSDK.SetSpriteAnimation(BSS_Horizon->aniFrames, 0, &self->horizonAnimator, true, 0);
     }
 }
 
@@ -60,18 +52,8 @@ void BSS_Horizon_StageLoad(void)
     RSDK.ResetEntitySlot(SLOT_BSS_HORIZON, BSS_Horizon->objectID, 0);
 }
 
-void BSS_Horizon_EditorDraw(void)
-{
+void BSS_Horizon_EditorDraw(void) {}
 
-}
+void BSS_Horizon_EditorLoad(void) {}
 
-void BSS_Horizon_EditorLoad(void)
-{
-
-}
-
-void BSS_Horizon_Serialize(void)
-{
-
-}
-
+void BSS_Horizon_Serialize(void) {}

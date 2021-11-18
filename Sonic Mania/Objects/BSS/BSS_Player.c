@@ -7,67 +7,67 @@ void BSS_Player_Update(void)
     RSDK_THIS(BSS_Player);
     EntityBSS_Setup *setup = RSDK_GET_ENTITY(SLOT_BSS_SETUP, BSS_Setup);
 
-    StateMachine_Run(entity->stateInput);
-    if (entity->onGround) {
-        if (entity->jumpPress) {
-            entity->velocity.y = -0x100000;
-            entity->onGround   = false;
-            RSDK.SetSpriteAnimation(entity->aniFrames, 2, &entity->playerAnimator, false, 0);
+    StateMachine_Run(self->stateInput);
+    if (self->onGround) {
+        if (self->jumpPress) {
+            self->velocity.y = -0x100000;
+            self->onGround   = false;
+            RSDK.SetSpriteAnimation(self->aniFrames, 2, &self->playerAnimator, false, 0);
             RSDK.PlaySfx(BSS_Player->sfxJump, 0, 255);
         }
     }
     else {
-        entity->gravityStrength += entity->velocity.y;
+        self->gravityStrength += self->velocity.y;
         int32 speed = setup->maxSpeed;
         if (!speed)
             speed = 16;
 
-        entity->velocity.y += (speed << 12);
-        if (entity->gravityStrength >= 0) {
-            entity->gravityStrength = 0;
-            entity->onGround        = true;
-            if (!entity->sideKick) {
-                if (entity->playerAnimator.animationID == 3)
+        self->velocity.y += (speed << 12);
+        if (self->gravityStrength >= 0) {
+            self->gravityStrength = 0;
+            self->onGround        = true;
+            if (!self->sideKick) {
+                if (self->playerAnimator.animationID == 3)
                     setup->globeSpeed >>= 1;
                 setup->globeSpeedInc = 2;
             }
 
             if (setup->maxSpeed)
-                RSDK.SetSpriteAnimation(entity->aniFrames, 1, &entity->playerAnimator, false, 0);
+                RSDK.SetSpriteAnimation(self->aniFrames, 1, &self->playerAnimator, false, 0);
             else
-                RSDK.SetSpriteAnimation(entity->aniFrames, 0, &entity->playerAnimator, false, 0);
+                RSDK.SetSpriteAnimation(self->aniFrames, 0, &self->playerAnimator, false, 0);
         }
     }
 
-    int32 grav           = (entity->gravityStrength >> 1) - (entity->gravityStrength >> 4);
-    entity->position.y = grav;
+    int32 grav           = (self->gravityStrength >> 1) - (self->gravityStrength >> 4);
+    self->position.y = grav;
     if (SceneInfo->entitySlot)
-        entity->position.y += 0xBA0000;
+        self->position.y += 0xBA0000;
     else
-        entity->position.y += 0xAA0000;
+        self->position.y += 0xAA0000;
 
-    if (entity->playerAnimator.animationID == 1) {
-        entity->playerAnimator.animationTimer += abs(setup->globeSpeed);
-        entity->playerAnimator.animationSpeed = abs(setup->globeSpeed);
+    if (self->playerAnimator.animationID == 1) {
+        self->playerAnimator.animationTimer += abs(setup->globeSpeed);
+        self->playerAnimator.animationSpeed = abs(setup->globeSpeed);
 
-        if (entity->playerAnimator.animationTimer > 0x1F) {
-            entity->playerAnimator.animationTimer &= 0x1F;
+        if (self->playerAnimator.animationTimer > 0x1F) {
+            self->playerAnimator.animationTimer &= 0x1F;
             if (setup->globeSpeed <= 0) {
-                if (--entity->playerAnimator.frameID < 0)
-                    entity->playerAnimator.frameID = 11;
+                if (--self->playerAnimator.frameID < 0)
+                    self->playerAnimator.frameID = 11;
             }
-            else if (++entity->playerAnimator.frameID > 11) {
-                entity->playerAnimator.frameID = 0;
+            else if (++self->playerAnimator.frameID > 11) {
+                self->playerAnimator.frameID = 0;
             }
         }
     }
-    else if (entity->playerAnimator.animationID >= 2) {
-        entity->playerAnimator.animationSpeed = maxVal(abs(setup->maxSpeed), 0x10);
-        RSDK.ProcessAnimation(&entity->playerAnimator);
+    else if (self->playerAnimator.animationID >= 2) {
+        self->playerAnimator.animationSpeed = maxVal(abs(setup->maxSpeed), 0x10);
+        RSDK.ProcessAnimation(&self->playerAnimator);
     }
 
-    entity->tailAnimator.animationSpeed = abs(setup->maxSpeed) + 40;
-    RSDK.ProcessAnimation(&entity->tailAnimator);
+    self->tailAnimator.animationSpeed = abs(setup->maxSpeed) + 40;
+    RSDK.ProcessAnimation(&self->tailAnimator);
 }
 
 void BSS_Player_LateUpdate(void) {}
@@ -78,17 +78,17 @@ void BSS_Player_Draw(void)
 {
     RSDK_THIS(BSS_Player);
     Vector2 drawPos;
-    drawPos.x = entity->position.x;
-    drawPos.y = entity->position.y;
+    drawPos.x = self->position.x;
+    drawPos.y = self->position.y;
     drawPos.x = ScreenInfo->centerX << 16;
-    RSDK.DrawSprite(&entity->playerAnimator, &drawPos, true);
+    RSDK.DrawSprite(&self->playerAnimator, &drawPos, true);
 
     uint8 charID = globals->playerID & 0xFF;
-    if (charID == ID_TAILS && entity->playerAnimator.animationID == 1)
-        RSDK.DrawSprite(&entity->tailAnimator, &drawPos, true);
+    if (charID == ID_TAILS && self->playerAnimator.animationID == 1)
+        RSDK.DrawSprite(&self->tailAnimator, &drawPos, true);
 #if RETRO_USE_PLUS
-    else if (charID == ID_RAY && entity->playerAnimator.animationID == 1)
-        RSDK.DrawSprite(&entity->tailAnimator, &drawPos, true);
+    else if (charID == ID_RAY && self->playerAnimator.animationID == 1)
+        RSDK.DrawSprite(&self->tailAnimator, &drawPos, true);
 #endif
 }
 
@@ -96,37 +96,37 @@ void BSS_Player_Create(void *data)
 {
     RSDK_THIS(BSS_Player);
     if (!SceneInfo->inEditor) {
-        entity->active        = ACTIVE_NORMAL;
-        entity->visible       = true;
-        entity->drawOrder     = 4;
-        entity->updateRange.x = 0x800000;
-        entity->updateRange.y = 0x800000;
+        self->active        = ACTIVE_NORMAL;
+        self->visible       = true;
+        self->drawOrder     = 4;
+        self->updateRange.x = 0x800000;
+        self->updateRange.y = 0x800000;
         switch (globals->playerID & 0xFF) {
             case ID_TAILS:
-                entity->aniFrames = BSS_Player->tailsSpriteIndex;
-                RSDK.SetSpriteAnimation(entity->aniFrames, 4, &entity->tailAnimator, true, 0);
+                self->aniFrames = BSS_Player->tailsSpriteIndex;
+                RSDK.SetSpriteAnimation(self->aniFrames, 4, &self->tailAnimator, true, 0);
                 break;
-            case ID_KNUCKLES: entity->aniFrames = BSS_Player->knuxSpriteIndex; break;
+            case ID_KNUCKLES: self->aniFrames = BSS_Player->knuxSpriteIndex; break;
 #if RETRO_USE_PLUS
-            case ID_MIGHTY: entity->aniFrames = BSS_Player->mightySpriteIndex; break;
+            case ID_MIGHTY: self->aniFrames = BSS_Player->mightySpriteIndex; break;
             case ID_RAY:
-                entity->aniFrames = BSS_Player->raySpriteIndex;
-                RSDK.SetSpriteAnimation(entity->aniFrames, 4, &entity->tailAnimator, true, 0);
+                self->aniFrames = BSS_Player->raySpriteIndex;
+                RSDK.SetSpriteAnimation(self->aniFrames, 4, &self->tailAnimator, true, 0);
                 break;
 #endif
-            default: entity->aniFrames = BSS_Player->sonicSpriteIndex; break;
+            default: self->aniFrames = BSS_Player->sonicSpriteIndex; break;
         }
 
         if (SceneInfo->entitySlot) {
-            entity->stateInput = BSS_Player_ProcessP2Input;
-            entity->sideKick   = true;
+            self->stateInput = BSS_Player_ProcessP2Input;
+            self->sideKick   = true;
         }
         else {
-            entity->stateInput   = BSS_Player_ProcessP1Input;
-            entity->controllerID = CONT_P1;
-            entity->sideKick     = false;
+            self->stateInput   = BSS_Player_ProcessP1Input;
+            self->controllerID = CONT_P1;
+            self->sideKick     = false;
         }
-        RSDK.SetSpriteAnimation(entity->aniFrames, 0, &entity->playerAnimator, true, 0);
+        RSDK.SetSpriteAnimation(self->aniFrames, 0, &self->playerAnimator, true, 0);
     }
 }
 
@@ -146,7 +146,7 @@ void BSS_Player_StageLoad(void)
 void BSS_Player_ProcessP1Input(void)
 {
     RSDK_THIS(BSS_Player);
-    if (entity->controllerID < PLAYER_MAX) {
+    if (self->controllerID < PLAYER_MAX) {
 #if RETRO_USE_TOUCH_CONTROLS
         for (int32 t = 0; t < TouchInfo->count; ++t) {
             int32 tx = (TouchInfo->x[t] * ScreenInfo->width);
@@ -162,19 +162,19 @@ void BSS_Player_ProcessP1Input(void)
                     switch (((RSDK.ATan2(tx, ty) + 32) & 0xFF) >> 6) {
                         case 0:
                             ControllerInfo->keyRight.down |= true;
-                            ControllerInfo[entity->controllerID].keyRight.down = true;
+                            ControllerInfo[self->controllerID].keyRight.down = true;
                             break;
                         case 1:
                             ControllerInfo->keyDown.down |= true;
-                            ControllerInfo[entity->controllerID].keyDown.down = true;
+                            ControllerInfo[self->controllerID].keyDown.down = true;
                             break;
                         case 2:
                             ControllerInfo->keyLeft.down |= true;
-                            ControllerInfo[entity->controllerID].keyLeft.down = true;
+                            ControllerInfo[self->controllerID].keyLeft.down = true;
                             break;
                         case 3:
                             ControllerInfo->keyUp.down |= true;
-                            ControllerInfo[entity->controllerID].keyUp.down = true;
+                            ControllerInfo[self->controllerID].keyUp.down = true;
                             break;
                     }
                     break;
@@ -189,17 +189,17 @@ void BSS_Player_ProcessP1Input(void)
             if (TouchInfo->down[t]) {
                 if (tx >= ScreenInfo->centerX && ty >= 96 && tx <= ScreenInfo->width && ty <= ScreenInfo->height) {
                     ControllerInfo->keyA.down |= true;
-                    ControllerInfo[entity->controllerID].keyA.down = true;
+                    ControllerInfo[self->controllerID].keyA.down = true;
                     break;
                 }
             }
         }
 
-        if (!entity->touchJump) {
+        if (!self->touchJump) {
             ControllerInfo->keyA.press |= ControllerInfo->keyA.down;
-            ControllerInfo[entity->controllerID].keyA.press |= ControllerInfo[entity->controllerID].keyA.down;
+            ControllerInfo[self->controllerID].keyA.press |= ControllerInfo[self->controllerID].keyA.down;
         }
-        entity->touchJump = ControllerInfo[entity->controllerID].keyA.down;
+        self->touchJump = ControllerInfo[self->controllerID].keyA.down;
 
         for (int32 t = 0; t < TouchInfo->count; ++t) {
             int32 tx = (TouchInfo->x[t] * ScreenInfo->width);
@@ -211,7 +211,7 @@ void BSS_Player_ProcessP1Input(void)
                         EntityPauseMenu *pauseMenu = RSDK.GetEntityByID(SLOT_PAUSEMENU);
                         if (!pauseMenu->objectID) {
                             RSDK.ResetEntitySlot(SLOT_PAUSEMENU, PauseMenu->objectID, NULL);
-                            pauseMenu->triggerPlayer  = RSDK.GetEntityID(entity);
+                            pauseMenu->triggerPlayer  = RSDK.GetEntityID(self);
                             pauseMenu->disableRestart = true;
                         }
                     }
@@ -221,26 +221,26 @@ void BSS_Player_ProcessP1Input(void)
         }
 #endif
 
-        RSDKControllerState *controller = &ControllerInfo[entity->controllerID];
-        entity->up                  = controller->keyUp.down;
-        entity->down                = controller->keyDown.down;
-        entity->left                = controller->keyLeft.down;
-        entity->right               = controller->keyRight.down;
+        RSDKControllerState *controller = &ControllerInfo[self->controllerID];
+        self->up                  = controller->keyUp.down;
+        self->down                = controller->keyDown.down;
+        self->left                = controller->keyLeft.down;
+        self->right               = controller->keyRight.down;
 
-        entity->up |= AnalogStickInfoL[entity->controllerID].keyUp.down;
-        entity->down |= AnalogStickInfoL[entity->controllerID].keyDown.down;
-        entity->left |= AnalogStickInfoL[entity->controllerID].keyLeft.down;
-        entity->right |= AnalogStickInfoL[entity->controllerID].keyRight.down;
-        entity->up |= AnalogStickInfoL[entity->controllerID].vDelta > 0.3;
-        entity->down |= AnalogStickInfoL[entity->controllerID].vDelta < -0.3;
-        entity->left |= AnalogStickInfoL[entity->controllerID].hDelta < -0.3;
-        entity->right |= AnalogStickInfoL[entity->controllerID].hDelta > 0.3;
+        self->up |= AnalogStickInfoL[self->controllerID].keyUp.down;
+        self->down |= AnalogStickInfoL[self->controllerID].keyDown.down;
+        self->left |= AnalogStickInfoL[self->controllerID].keyLeft.down;
+        self->right |= AnalogStickInfoL[self->controllerID].keyRight.down;
+        self->up |= AnalogStickInfoL[self->controllerID].vDelta > 0.3;
+        self->down |= AnalogStickInfoL[self->controllerID].vDelta < -0.3;
+        self->left |= AnalogStickInfoL[self->controllerID].hDelta < -0.3;
+        self->right |= AnalogStickInfoL[self->controllerID].hDelta > 0.3;
 
-        if (entity->left && entity->right) {
-            entity->left  = false;
-            entity->right = false;
+        if (self->left && self->right) {
+            self->left  = false;
+            self->right = false;
         }
-        entity->jumpPress = controller->keyA.press || controller->keyB.press || controller->keyC.press || controller->keyX.press;
+        self->jumpPress = controller->keyA.press || controller->keyB.press || controller->keyC.press || controller->keyX.press;
 
 #if RETRO_USE_PLUS
         if (controller->keyStart.press || UnknownInfo->field_10 == 1) {
@@ -252,7 +252,7 @@ void BSS_Player_ProcessP1Input(void)
                 EntityPauseMenu *pauseMenu = RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu);
                 if (!pauseMenu->objectID) {
                     RSDK.ResetEntitySlot(SLOT_PAUSEMENU, PauseMenu->objectID, NULL);
-                    pauseMenu->triggerPlayer  = RSDK.GetEntityID(entity);
+                    pauseMenu->triggerPlayer  = RSDK.GetEntityID(self);
                     pauseMenu->disableRestart = true;
                 }
             }
@@ -265,10 +265,10 @@ void BSS_Player_ProcessP2Input(void)
     RSDK_THIS(BSS_Player);
     //EntityBSS_Player *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, BSS_Player);
     BSS_Player->jumpPressState <<= 1;
-    BSS_Player->jumpPressState |= entity->jumpPress;
+    BSS_Player->jumpPressState |= self->jumpPress;
     BSS_Player->jumpPressState &= 0xFFFF;
 
-    entity->jumpPress = BSS_Player->jumpPressState >> 15;
+    self->jumpPress = BSS_Player->jumpPressState >> 15;
 }
 
 #if RETRO_INCLUDE_EDITOR

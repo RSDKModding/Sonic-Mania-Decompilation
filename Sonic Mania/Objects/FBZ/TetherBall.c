@@ -5,7 +5,7 @@ ObjectTetherBall *TetherBall;
 void TetherBall_Update(void)
 {
     RSDK_THIS(TetherBall);
-    StateMachine_Run(entity->state);
+    StateMachine_Run(self->state);
 }
 
 void TetherBall_LateUpdate(void) {}
@@ -18,57 +18,57 @@ void TetherBall_Draw(void)
     Vector2 drawPos;
 
     int32 i = 0x200;
-    for (; i < entity->size; i += 0x400) {
+    for (; i < self->size; i += 0x400) {
         TetherBall->animator.frameID = 2;
-        drawPos                      = entity->position;
-        drawPos.x += i * RSDK.Cos1024(entity->angle);
-        drawPos.y += i * RSDK.Sin1024(entity->angle);
+        drawPos                      = self->position;
+        drawPos.x += i * RSDK.Cos1024(self->angle);
+        drawPos.y += i * RSDK.Sin1024(self->angle);
         RSDK.DrawSprite(&TetherBall->animator, &drawPos, false);
     }
 
     TetherBall->animator.frameID = 3;
-    drawPos                      = entity->position;
-    drawPos.x += (i + 0x200) * RSDK.Cos1024(entity->angle);
-    drawPos.y += (i + 0x200) * RSDK.Sin1024(entity->angle);
+    drawPos                      = self->position;
+    drawPos.x += (i + 0x200) * RSDK.Cos1024(self->angle);
+    drawPos.y += (i + 0x200) * RSDK.Sin1024(self->angle);
     RSDK.DrawSprite(&TetherBall->animator, &drawPos, false);
 
-    entity->posUnknown           = drawPos;
-    TetherBall->animator.frameID = entity->type >> 1;
-    entity->drawFX               = FX_FLIP;
+    self->posUnknown           = drawPos;
+    TetherBall->animator.frameID = self->type >> 1;
+    self->drawFX               = FX_FLIP;
     RSDK.DrawSprite(&TetherBall->animator, NULL, false);
 
-    entity->drawFX = FX_NONE;
+    self->drawFX = FX_NONE;
 }
 
 void TetherBall_Create(void *data)
 {
     RSDK_THIS(TetherBall);
-    switch (entity->type) {
+    switch (self->type) {
         case 0:
-        case 2: entity->direction = FLIP_NONE; break;
-        case 1: entity->direction = FLIP_Y; break;
-        case 3: entity->direction = FLIP_X; break;
+        case 2: self->direction = FLIP_NONE; break;
+        case 1: self->direction = FLIP_Y; break;
+        case 3: self->direction = FLIP_X; break;
         default: break;
     }
 
     if (!SceneInfo->inEditor) {
-        entity->active            = ACTIVE_BOUNDS;
-        entity->size              = (entity->chainCount << 10) + 0x200;
-        entity->updateRange.x     = 0x1000000;
-        entity->updateRange.y     = 0x1000000;
-        entity->visible           = true;
-        entity->drawOrder         = Zone->drawOrderLow;
+        self->active            = ACTIVE_BOUNDS;
+        self->size              = (self->chainCount << 10) + 0x200;
+        self->updateRange.x     = 0x1000000;
+        self->updateRange.y     = 0x1000000;
+        self->visible           = true;
+        self->drawOrder         = Zone->drawOrderLow;
         TetherBall->hitbox.top    = -40;
         TetherBall->hitbox.left   = -40;
         TetherBall->hitbox.right  = 40;
         TetherBall->hitbox.bottom = 40;
-        entity->angle             = entity->angleStart;
-        if (entity->angleStart > entity->angleEnd) {
-            int start   = entity->angleStart;
-            entity->angleStart = entity->angleEnd;
-            entity->angleEnd   = start;
+        self->angle             = self->angleStart;
+        if (self->angleStart > self->angleEnd) {
+            int start   = self->angleStart;
+            self->angleStart = self->angleEnd;
+            self->angleEnd   = start;
         }
-        entity->state = TetherBall_Unknown1;
+        self->state = TetherBall_Unknown1;
     }
 }
 
@@ -82,60 +82,60 @@ void TetherBall_StageLoad(void)
 void TetherBall_Unknown1(void)
 {
     RSDK_THIS(TetherBall);
-    int32 storeX       = entity->position.x;
-    int32 storeY       = entity->position.y;
-    entity->position = entity->posUnknown;
-    entity->rotation = entity->angle << 16;
+    int32 storeX       = self->position.x;
+    int32 storeY       = self->position.y;
+    self->position = self->posUnknown;
+    self->rotation = self->angle << 16;
     foreach_active(Player, player)
     {
         if (!player->sidekick) {
-            if (Player_CheckCollisionTouch(player, entity, &TetherBall->hitbox)) {
-                switch ((entity->angle >> 8) & 3) {
+            if (Player_CheckCollisionTouch(player, self, &TetherBall->hitbox)) {
+                switch ((self->angle >> 8) & 3) {
                     case 0:
                         if (!player->onGround && player->groundedStore) {
                             if (player->rotation > 112 && player->rotation < 144) {
-                                entity->field_70        = 8 * player->velocity.y / entity->chainCount;
-                                entity->playerPtr       = player;
+                                self->field_70        = 8 * player->velocity.y / self->chainCount;
+                                self->playerPtr       = player;
                                 player->state           = Player_State_None;
                                 player->nextGroundState = StateMachine_None;
                                 player->nextAirState    = StateMachine_None;
-                                entity->state           = TetherBall_Unknown2;
+                                self->state           = TetherBall_Unknown2;
                             }
                         }
                         break;
                     case 1:
                         if (!player->onGround && player->groundedStore) {
                             if (player->rotation > 240 && player->rotation < 272) {
-                                entity->field_70        = 8 * -player->velocity.x / entity->chainCount;
-                                entity->playerPtr       = player;
+                                self->field_70        = 8 * -player->velocity.x / self->chainCount;
+                                self->playerPtr       = player;
                                 player->state           = Player_State_None;
                                 player->nextGroundState = StateMachine_None;
                                 player->nextAirState    = StateMachine_None;
-                                entity->state           = TetherBall_Unknown2;
+                                self->state           = TetherBall_Unknown2;
                             }
                         }
                         break;
                     case 2:
                         if (!player->onGround && player->groundedStore) {
                             if (player->rotation > 368 && player->rotation < 400) {
-                                entity->field_70        = 8 * -player->velocity.y / entity->chainCount;
-                                entity->playerPtr       = player;
+                                self->field_70        = 8 * -player->velocity.y / self->chainCount;
+                                self->playerPtr       = player;
                                 player->state           = Player_State_None;
                                 player->nextGroundState = StateMachine_None;
                                 player->nextAirState    = StateMachine_None;
-                                entity->state           = TetherBall_Unknown2;
+                                self->state           = TetherBall_Unknown2;
                             }
                         }
                         break;
                     case 3:
                         if (!player->onGround && player->groundedStore) {
                             if (player->rotation < 16 || player->rotation > 496) {
-                                entity->field_70        = 8 * player->velocity.x / entity->chainCount;
-                                entity->playerPtr       = player;
+                                self->field_70        = 8 * player->velocity.x / self->chainCount;
+                                self->playerPtr       = player;
                                 player->state           = Player_State_None;
                                 player->nextGroundState = StateMachine_None;
                                 player->nextAirState    = StateMachine_None;
-                                entity->state           = TetherBall_Unknown2;
+                                self->state           = TetherBall_Unknown2;
                             }
                         }
                         break;
@@ -143,53 +143,53 @@ void TetherBall_Unknown1(void)
             }
         }
     }
-    entity->position.x = storeX;
-    entity->position.y = storeY;
+    self->position.x = storeX;
+    self->position.y = storeY;
 }
 void TetherBall_Unknown2(void)
 {
     RSDK_THIS(TetherBall);
-    entity->rotation += entity->field_70;
-    entity->angle = entity->rotation >> 16;
-    if ((uint32)(entity->angle - 0x101) > 0x1FE)
-        entity->field_70 += 0x1800;
+    self->rotation += self->field_70;
+    self->angle = self->rotation >> 16;
+    if ((uint32)(self->angle - 0x101) > 0x1FE)
+        self->field_70 += 0x1800;
     else
-        entity->field_70 -= 0x1800;
+        self->field_70 -= 0x1800;
 
-    if (entity->field_70 >= 0) {
-        if (entity->angle >= entity->angleEnd) {
-            entity->angle    = entity->angleEnd;
-            entity->rotation = entity->angleEnd << 16;
-            entity->state    = TetherBall_Unknown3;
+    if (self->field_70 >= 0) {
+        if (self->angle >= self->angleEnd) {
+            self->angle    = self->angleEnd;
+            self->rotation = self->angleEnd << 16;
+            self->state    = TetherBall_Unknown3;
             RSDK.PlaySfx(TetherBall->sfxWhack, 0, 255);
         }
     }
     else {
-        if (entity->angle <= entity->angleStart) {
-            entity->angle    = entity->angleStart;
-            entity->rotation = entity->angleStart << 16;
-            entity->state    = TetherBall_Unknown3;
+        if (self->angle <= self->angleStart) {
+            self->angle    = self->angleStart;
+            self->rotation = self->angleStart << 16;
+            self->state    = TetherBall_Unknown3;
             RSDK.PlaySfx(TetherBall->sfxWhack, 0, 255);
         }
     }
 
-    EntityPlayer *player = entity->playerPtr;
+    EntityPlayer *player = self->playerPtr;
     if (player) {
         if (Player_CheckValidState(player)) {
             Hitbox *playerHitbox = Player_GetHitbox(player);
-            player->angle        = ((entity->angle >> 2) + 64);
+            player->angle        = ((self->angle >> 2) + 64);
             player->rotation     = 2 * player->angle;
-            player->position.x   = entity->position.x;
-            player->position.y   = entity->position.y;
-            player->position.x += (entity->size + ((playerHitbox->bottom + 24) << 6)) * RSDK.Cos1024(entity->angle);
-            player->position.y += (entity->size + ((playerHitbox->bottom + 24) << 6)) * RSDK.Sin1024(entity->angle);
+            player->position.x   = self->position.x;
+            player->position.y   = self->position.y;
+            player->position.x += (self->size + ((playerHitbox->bottom + 24) << 6)) * RSDK.Cos1024(self->angle);
+            player->position.y += (self->size + ((playerHitbox->bottom + 24) << 6)) * RSDK.Sin1024(self->angle);
             player->onGround        = true;
             player->nextGroundState = StateMachine_None;
             player->nextAirState    = StateMachine_None;
-            player->groundVel       = (entity->field_70 * entity->chainCount) >> 3;
-            if (entity->state == TetherBall_Unknown2) {
+            player->groundVel       = (self->field_70 * self->chainCount) >> 3;
+            if (self->state == TetherBall_Unknown2) {
                 if (player->jumpPress) {
-                    entity->playerPtr = NULL;
+                    self->playerPtr = NULL;
                     Player_StartJump(player);
                 }
             }
@@ -199,7 +199,7 @@ void TetherBall_Unknown2(void)
                     vel = -0x60000;
                 else
                     vel = 0x60000;
-                switch (entity->angle >> 8) {
+                switch (self->angle >> 8) {
                     case 0:
                         player->collisionMode = CMODE_RWALL;
                         player->position.y += vel;
@@ -217,8 +217,8 @@ void TetherBall_Unknown2(void)
                         player->position.x += vel;
                         break;
                 }
-                entity->playerPtr = NULL;
-                entity->timer     = 0;
+                self->playerPtr = NULL;
+                self->timer     = 0;
                 if (player->playerAnimator.animationID == ANI_JUMP)
                     player->state = Player_State_Roll;
                 else
@@ -226,16 +226,16 @@ void TetherBall_Unknown2(void)
             }
         }
         else {
-            entity->playerPtr = NULL;
+            self->playerPtr = NULL;
         }
     }
 }
 void TetherBall_Unknown3(void)
 {
     RSDK_THIS(TetherBall);
-    if (++entity->timer == 8) {
-        entity->timer = 0;
-        entity->state = TetherBall_Unknown1;
+    if (++self->timer == 8) {
+        self->timer = 0;
+        self->state = TetherBall_Unknown1;
     }
 }
 
@@ -244,17 +244,17 @@ void TetherBall_EditorDraw(void)
 {
     RSDK_THIS(TetherBall);
 
-    switch (entity->type) {
+    switch (self->type) {
         case TETHERBALL_0:
-        case TETHERBALL_2: entity->direction = FLIP_NONE; break;
-        case TETHERBALL_1: entity->direction = FLIP_Y; break;
-        case TETHERBALL_3: entity->direction = FLIP_X; break;
+        case TETHERBALL_2: self->direction = FLIP_NONE; break;
+        case TETHERBALL_1: self->direction = FLIP_Y; break;
+        case TETHERBALL_3: self->direction = FLIP_X; break;
         default: break;
     }
 
-    entity->size              = (entity->chainCount << 10) + 0x200;
-    entity->updateRange.x     = 0x1000000;
-    entity->updateRange.y     = 0x1000000;
+    self->size              = (self->chainCount << 10) + 0x200;
+    self->updateRange.x     = 0x1000000;
+    self->updateRange.y     = 0x1000000;
 
     TetherBall_Draw();
 }

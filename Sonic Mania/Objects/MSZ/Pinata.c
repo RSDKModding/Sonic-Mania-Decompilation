@@ -5,7 +5,7 @@ ObjectPinata *Pinata;
 void Pinata_Update(void)
 {
     RSDK_THIS(Pinata);
-    StateMachine_Run(entity->state);
+    StateMachine_Run(self->state);
 }
 
 void Pinata_LateUpdate(void) {}
@@ -15,23 +15,23 @@ void Pinata_StaticUpdate(void) {}
 void Pinata_Draw(void)
 {
     RSDK_THIS(Pinata);
-    RSDK.DrawSprite(&entity->animator, NULL, false);
+    RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
 void Pinata_Create(void *data)
 {
     RSDK_THIS(Pinata);
 
-    if (entity->priority)
-        entity->drawOrder = Zone->drawOrderLow;
+    if (self->priority)
+        self->drawOrder = Zone->drawOrderLow;
     else
-        entity->drawOrder = Zone->drawOrderHigh;
-    entity->visible       = true;
-    entity->active        = ACTIVE_BOUNDS;
-    entity->updateRange.x = 0x400000;
-    entity->updateRange.y = 0x400000;
-    entity->state         = Pinata_State_CheckPlayerCollisions;
-    RSDK.SetSpriteAnimation(Pinata->aniFrames, 3, &entity->animator, true, 0);
+        self->drawOrder = Zone->drawOrderHigh;
+    self->visible       = true;
+    self->active        = ACTIVE_BOUNDS;
+    self->updateRange.x = 0x400000;
+    self->updateRange.y = 0x400000;
+    self->state         = Pinata_State_CheckPlayerCollisions;
+    RSDK.SetSpriteAnimation(Pinata->aniFrames, 3, &self->animator, true, 0);
 }
 
 void Pinata_StageLoad(void)
@@ -54,17 +54,17 @@ void Pinata_DebugDraw(void)
 void Pinata_DebugSpawn(void)
 {
     RSDK_THIS(DebugMode);
-    CREATE_ENTITY(Pinata, NULL, entity->position.x, entity->position.y);
+    CREATE_ENTITY(Pinata, NULL, self->position.x, self->position.y);
 }
 
 void Pinata_State_CheckPlayerCollisions(void)
 {
     RSDK_THIS(Pinata);
-    RSDK.ProcessAnimation(&entity->animator);
+    RSDK.ProcessAnimation(&self->animator);
 
     foreach_active(Player, player)
     {
-        if (player->playerAnimator.animationID != ANI_HURT && Player_CheckBadnikTouch(player, entity, &Pinata->hitbox)) {
+        if (player->playerAnimator.animationID != ANI_HURT && Player_CheckBadnikTouch(player, self, &Pinata->hitbox)) {
             RSDK.PlaySfx(Pinata->sfxPinata, false, 255);
 
 #if RETRO_USE_PLUS
@@ -92,19 +92,19 @@ void Pinata_State_CheckPlayerCollisions(void)
 #if RETRO_USE_PLUS
             }
 #endif
-            CREATE_ENTITY(ScoreBonus, NULL, entity->position.x, entity->position.y)->animator.frameID = 16;
+            CREATE_ENTITY(ScoreBonus, NULL, self->position.x, self->position.y)->animator.frameID = 16;
             Player_GiveScore(player, 10);
-            CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSSPUFF), entity->position.x, entity->position.y - 0x100000)->drawOrder =
+            CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSSPUFF), self->position.x, self->position.y - 0x100000)->drawOrder =
                 Zone->drawOrderHigh;
 
             for (int i = 0; i < 6; ++i) {
-                int x                = entity->position.x + RSDK.Rand(-0x80000, 0x80000);
-                int y                = entity->position.y + RSDK.Rand(-0x80000, 0x80000);
+                int x                = self->position.x + RSDK.Rand(-0x80000, 0x80000);
+                int y                = self->position.y + RSDK.Rand(-0x80000, 0x80000);
                 EntityDebris *debris = CREATE_ENTITY(Debris, NULL, x, y);
                 debris->state        = Debris_State_Fall;
                 debris->gravity      = 0x4000;
                 debris->velocity.x   = RSDK.Rand(0, 0x20000);
-                if (debris->position.x < entity->position.x)
+                if (debris->position.x < self->position.x)
                     debris->velocity.x = -debris->velocity.x;
                 debris->velocity.y = RSDK.Rand(-0x40000, -0x10000);
                 debris->drawFX     = FX_FLIP;
@@ -113,9 +113,9 @@ void Pinata_State_CheckPlayerCollisions(void)
                 RSDK.SetSpriteAnimation(Pinata->aniFrames, 0, &debris->animator, true, RSDK.Rand(0, 4));
             }
 
-            entity->state   = Pinata_State_Destroyed;
-            entity->visible = false;
-            entity->active  = ACTIVE_NORMAL;
+            self->state   = Pinata_State_Destroyed;
+            self->visible = false;
+            self->active  = ACTIVE_NORMAL;
         }
     }
 }
@@ -128,10 +128,10 @@ void Pinata_State_Destroyed(void)
     range.x = 0x1000000;
     range.y = 0x1000000;
 
-    if (!RSDK.CheckOnScreen(entity, &range)) {
-        entity->state   = Pinata_State_CheckPlayerCollisions;
-        entity->visible = true;
-        entity->active  = ACTIVE_BOUNDS;
+    if (!RSDK.CheckOnScreen(self, &range)) {
+        self->state   = Pinata_State_CheckPlayerCollisions;
+        self->visible = true;
+        self->active  = ACTIVE_BOUNDS;
     }
 }
 

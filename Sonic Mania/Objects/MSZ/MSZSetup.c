@@ -5,7 +5,7 @@ ObjectMSZSetup *MSZSetup;
 void MSZSetup_Update(void)
 {
     RSDK_THIS(MSZSetup);
-    StateMachine_Run(entity->state);
+    StateMachine_Run(self->state);
 }
 
 void MSZSetup_LateUpdate(void) {}
@@ -65,9 +65,9 @@ void MSZSetup_Create(void *data)
 {
     RSDK_THIS(MSZSetup);
 
-    entity->active = ACTIVE_NORMAL;
+    self->active = ACTIVE_NORMAL;
     if (data)
-        entity->state = (Type_StateMachine)data;
+        self->state = (Type_StateMachine)data;
 
     if (SceneInfo->minutes || SceneInfo->seconds || SceneInfo->milliseconds) {
         if (SceneInfo->minutes == globals->tempMinutes && SceneInfo->seconds == globals->tempSeconds
@@ -90,7 +90,7 @@ void MSZSetup_Create(void *data)
 #if RETRO_USE_PLUS
         if (SceneInfo->filter & FILTER_ENCORE) {
             RSDK.LoadPalette(0, "EncoreMSZ2.act", 0xFF);
-            entity->state = MSZSetup_Unknown10;
+            self->state = MSZSetup_Unknown10;
         }
         else {
 #endif
@@ -98,7 +98,7 @@ void MSZSetup_Create(void *data)
                 MSZSetup->bg->deformationData[i] = MSZSetup->deformData[i & 0x1F];
             }
             RSDK.CopyPalette(4, 128, 0, 128, 128);
-            destroyEntity(entity);
+            destroyEntity(self);
 #if RETRO_USE_PLUS
         }
         RSDK.CopyPalette(0, 128, 1, 128, 128);
@@ -353,7 +353,7 @@ void MSZSetup_ManageFadeST(void)
 {
     RSDK_THIS(MSZSetup);
     if (ScreenInfo->position.x + ScreenInfo->centerX > 0x1980) {
-        entity->state = MSZSetup_SwitchPalettes;
+        self->state = MSZSetup_SwitchPalettes;
     }
 }
 
@@ -362,7 +362,7 @@ void MSZSetup_ManageFadeK(void)
     RSDK_THIS(MSZSetup);
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     if (player1->position.x < 0x21000000 && player1->position.y < 0x6400000)
-        entity->state = MSZSetup_SwitchPalettes;
+        self->state = MSZSetup_SwitchPalettes;
 }
 
 #if RETRO_USE_PLUS
@@ -375,7 +375,7 @@ void MSZSetup_ManageFadeE(void)
         if (decoration->animator.animationID == 2 || decoration->animator.animationID == 3)
             decoration->animator.animationSpeed = 0;
     }
-    entity->state = MSZSetup_Unknown9;
+    self->state = MSZSetup_Unknown9;
 }
 #endif
 
@@ -404,9 +404,9 @@ void MSZSetup_GetAchievement(void)
 void MSZSetup_SwitchPalettes(void)
 {
     RSDK_THIS(MSZSetup);
-    entity->timer += 4;
-    RSDK.SetLimitedFade(0, 3, 4, entity->timer, 128, 255);
-    if (entity->timer >= 256) {
+    self->timer += 4;
+    RSDK.SetLimitedFade(0, 3, 4, self->timer, 128, 255);
+    if (self->timer >= 256) {
 #if RETRO_USE_PLUS
         if (!(SceneInfo->filter & FILTER_ENCORE)) {
 #endif
@@ -423,10 +423,10 @@ void MSZSetup_SwitchPalettes(void)
         RSDK.CopyPalette(4, 128, 2, 128, 128);
         RSDK.RotatePalette(2, 204, 207, false);
         if ((SceneInfo->filter & FILTER_ENCORE))
-            entity->state = MSZSetup_Unknown10;
+            self->state = MSZSetup_Unknown10;
         else
 #endif
-            destroyEntity(entity);
+            destroyEntity(self);
     }
 }
 
@@ -454,7 +454,7 @@ void MSZSetup_Unknown9(void)
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     if (player1->position.x > 0x29800000) {
         if (player1->position.y > 0x4200000 && player1->position.y < 0x6800000)
-            entity->state = MSZSetup_SwitchPalettes;
+            self->state = MSZSetup_SwitchPalettes;
     }
 }
 
@@ -480,7 +480,7 @@ void MSZSetup_Unknown10(void)
         RSDK.CopyTileLayer(4, 655, 0, 5, 0, 0, 17, 70);
         RSDK.CopyTileLayer(3, 655, 0, 5, 0, 0, 17, 70);
         RSDK.CopyTileLayer(2, 655, 0, 5, 0, 0, 17, 70);
-        entity->state = MSZSetup_Unknown11;
+        self->state = MSZSetup_Unknown11;
     }
 }
 
@@ -490,7 +490,7 @@ void MSZSetup_Unknown11(void)
     RSDK.SetChannelAttributes(MSZSetup->chuggaChannel, ++MSZSetup->chuggaVolume * (1 / 256.0f), 0.0, 1.0);
     MSZSetup_Unknown4(8 * MSZSetup->chuggaVolume);
     if (MSZSetup->chuggaVolume >= 256)
-        entity->state = MSZSetup_Unknown12;
+        self->state = MSZSetup_Unknown12;
     RSDK.GetSceneLayer(3)->scrollInfo[1].scrollSpeed = 0x600 * MSZSetup->chuggaVolume;
 }
 
@@ -505,7 +505,7 @@ void MSZSetup_Unknown12(void)
 
     if (player1->position.x > 0x360C0000) {
         GiantPistol->flag = true;
-        entity->state     = MSZSetup_Unknown13;
+        self->state     = MSZSetup_Unknown13;
     }
 }
 
@@ -524,7 +524,7 @@ void MSZSetup_Unknown13(void)
             layer->scrollInfo[1].scrollSpeed = 0;
             layer->scrollInfo[1].scrollPos   = 0;
             MSZSetup->chuggaVolume           = 0;
-            entity->state                    = MSZSetup_Unknown14;
+            self->state                    = MSZSetup_Unknown14;
         }
     }
 }
@@ -533,7 +533,7 @@ void MSZSetup_Unknown14(void)
 {
     RSDK_THIS(MSZSetup);
     if (RSDK_GET_ENTITY(SLOT_ACTCLEAR, ActClear)->objectID == ActClear->objectID)
-        entity->state = MSZSetup_Unknown16;
+        self->state = MSZSetup_Unknown16;
 }
 
 void MSZSetup_Unknown16(void)
@@ -541,7 +541,7 @@ void MSZSetup_Unknown16(void)
     RSDK_THIS(MSZSetup);
 
     if (RSDK_GET_ENTITY(SLOT_ACTCLEAR, ActClear)->objectID != ActClear->objectID) {
-        entity->timer               = 0;
+        self->timer               = 0;
         Zone->screenBoundsR1[0]     = 17064;
         Zone->playerBoundActiveR[0] = false;
 
@@ -559,7 +559,7 @@ void MSZSetup_Unknown16(void)
             player->jumpHold  = false;
             player->state     = Player_State_Ground;
         }
-        entity->state = MSZSetup_Unknown17;
+        self->state = MSZSetup_Unknown17;
     }
 }
 
@@ -579,7 +579,7 @@ void MSZSetup_Unknown17(void)
     else {
         player1->right = false;
         player1->left  = true;
-        entity->state  = MSZSetup_Unknown18;
+        self->state  = MSZSetup_Unknown18;
     }
 }
 
@@ -591,8 +591,8 @@ void MSZSetup_Unknown18(void)
         player1->groundVel = 0;
         player1->left      = false;
         player1->direction = FLIP_NONE;
-        entity->timer      = 0;
-        entity->state      = MSZSetup_StoreMSZ1EScrollPos;
+        self->timer      = 0;
+        self->state      = MSZSetup_StoreMSZ1EScrollPos;
     }
 }
 
@@ -602,7 +602,7 @@ void MSZSetup_StoreMSZ1EScrollPos(void)
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     player1->direction    = FLIP_NONE;
 
-    if (++entity->timer >= 90) {
+    if (++self->timer >= 90) {
         int id = 0;
 
         TileLayer *bg1 = RSDK.GetSceneLayer(0);
@@ -624,7 +624,7 @@ void MSZSetup_StoreMSZ1EScrollPos(void)
         Zone_StoreEntities((ScreenInfo->centerX + 16640) << 16, 0x5A00000);
         globals->atlEnabled = true;
         RSDK.LoadScene();
-        destroyEntity(entity);
+        destroyEntity(self);
     }
 }
 #endif
@@ -654,22 +654,22 @@ void MSZSetup_StoreMSZ1STScrollPos(void)
 void MSZSetup_Player_State_Pilot(void)
 {
     RSDK_THIS(Player);
-    entity->position.x  = 0;
-    entity->position.y  = 0;
-    entity->active      = ACTIVE_NEVER;
-    entity->visible     = false;
-    entity->stateInput  = StateMachine_None;
-    entity->position.x  = ScreenInfo->position.x << 16;
-    entity->position.y  = ScreenInfo->position.y << 16;
+    self->position.x  = 0;
+    self->position.y  = 0;
+    self->active      = ACTIVE_NEVER;
+    self->visible     = false;
+    self->stateInput  = StateMachine_None;
+    self->position.x  = ScreenInfo->position.x << 16;
+    self->position.y  = ScreenInfo->position.y << 16;
     Player->jumpInDelay = 0;
 }
 
 void MSZSetup_Player_State_PostCrashJumpIn(void)
 {
     RSDK_THIS(Player);
-    entity->active      = ACTIVE_NORMAL;
-    entity->visible     = true;
-    entity->stateInput  = Player_ProcessP2Input_AI;
+    self->active      = ACTIVE_NORMAL;
+    self->visible     = true;
+    self->stateInput  = Player_ProcessP2Input_AI;
     Player->jumpInDelay = 240;
     Player_P2JumpBackIn();
 }

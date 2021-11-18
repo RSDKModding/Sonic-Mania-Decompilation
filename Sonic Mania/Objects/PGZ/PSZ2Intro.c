@@ -8,9 +8,9 @@ void PSZ2Intro_Update(void)
     void *states[] = { PSZ2Intro_CutsceneState_Unknown1, PSZ2Intro_CutsceneState_Unknown2, PSZ2Intro_CutsceneState_Unknown3,
                        PSZ2Intro_CutsceneState_Unknown4, NULL };
 
-    entity->activated = true;
-    CutsceneSeq_StartSequence((Entity *)entity, states);
-    entity->active = ACTIVE_NEVER;
+    self->activated = true;
+    CutsceneSeq_StartSequence((Entity *)self, states);
+    self->active = ACTIVE_NEVER;
 }
 
 void PSZ2Intro_LateUpdate(void) {}
@@ -22,9 +22,9 @@ void PSZ2Intro_Draw(void) {}
 void PSZ2Intro_Create(void *data)
 {
     RSDK_THIS(PSZ2Intro);
-    INIT_ENTITY(entity);
-    CutsceneRules_SetupEntity(entity, &entity->size, &entity->hitbox);
-    entity->active = ACTIVE_BOUNDS;
+    INIT_ENTITY(self);
+    CutsceneRules_SetupEntity(self, &self->size, &self->hitbox);
+    self->active = ACTIVE_BOUNDS;
 }
 
 void PSZ2Intro_StageLoad(void)
@@ -166,7 +166,7 @@ bool32 PSZ2Intro_CutsceneState_Unknown4(EntityCutsceneSeq *host)
 void PSZ2Intro_EditorDraw(void)
 {
     RSDK_THIS(PSZ2Outro);
-    CutsceneRules_DrawCutsceneBounds(entity, &entity->size);
+    CutsceneRules_DrawCutsceneBounds(self, &self->size);
 }
 
 void PSZ2Intro_EditorLoad(void) {}

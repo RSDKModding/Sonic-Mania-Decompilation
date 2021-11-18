@@ -6,8 +6,8 @@ ObjectAIZEncoreTutorial *AIZEncoreTutorial;
 void AIZEncoreTutorial_Update(void)
 {
     RSDK_THIS(AIZEncoreTutorial);
-    RSDK.ProcessAnimation(&entity->animator1);
-    StateMachine_Run(entity->state);
+    RSDK.ProcessAnimation(&self->animator1);
+    StateMachine_Run(self->state);
 }
 
 void AIZEncoreTutorial_LateUpdate(void) {}
@@ -19,45 +19,45 @@ void AIZEncoreTutorial_Draw(void)
     RSDK_THIS(AIZEncoreTutorial);
     Vector2 drawPos;
 
-    entity->inkEffect = INK_NONE;
-    RSDK.DrawSprite(&entity->animator1, NULL, false);
+    self->inkEffect = INK_NONE;
+    RSDK.DrawSprite(&self->animator1, NULL, false);
 
-    entity->inkEffect = INK_ALPHA;
-    drawPos.x         = (RSDK.Cos256(entity->angle) << 12) + entity->position.x;
-    drawPos.y         = ((RSDK.Sin256(entity->angle) + 512) << 11) + entity->position.y;
-    RSDK.DrawSprite(&entity->animator2, &drawPos, false);
+    self->inkEffect = INK_ALPHA;
+    drawPos.x         = (RSDK.Cos256(self->angle) << 12) + self->position.x;
+    drawPos.y         = ((RSDK.Sin256(self->angle) + 512) << 11) + self->position.y;
+    RSDK.DrawSprite(&self->animator2, &drawPos, false);
 
-    drawPos.x = (RSDK.Cos256(entity->angle + 128) << 12) + entity->position.x;
-    drawPos.y = ((RSDK.Sin256(entity->angle + 128) + 512) << 11) + entity->position.y;
-    RSDK.DrawSprite(&entity->animator3, &drawPos, false);
+    drawPos.x = (RSDK.Cos256(self->angle + 128) << 12) + self->position.x;
+    drawPos.y = ((RSDK.Sin256(self->angle + 128) + 512) << 11) + self->position.y;
+    RSDK.DrawSprite(&self->animator3, &drawPos, false);
 
-    drawPos.x = entity->position.x;
-    drawPos.y = entity->position.y - 0x100000;
-    RSDK.DrawSprite(&entity->animator4, &drawPos, false);
+    drawPos.x = self->position.x;
+    drawPos.y = self->position.y - 0x100000;
+    RSDK.DrawSprite(&self->animator4, &drawPos, false);
 
-    switch (entity->animator4.frameID) {
+    switch (self->animator4.frameID) {
         default: break;
         case 0:
         case 2: drawPos.y -= 0x30000; break;
     }
 
-    RSDK.DrawSprite(&entity->animator5, &drawPos, false);
+    RSDK.DrawSprite(&self->animator5, &drawPos, false);
 }
 
 void AIZEncoreTutorial_Create(void *data)
 {
     RSDK_THIS(AIZEncoreTutorial);
     if (!SceneInfo->inEditor) {
-        entity->visible       = true;
-        entity->drawOrder     = Zone->drawOrderHigh;
-        entity->active        = ACTIVE_BOUNDS;
-        entity->updateRange.x = 0x800000;
-        entity->updateRange.y = 0x800000;
-        entity->state         = AIZEncoreTutorial_State_ShowTutBubble;
-        RSDK.SetSpriteAnimation(AIZEncoreTutorial->cutsceneFrames, 7, &entity->animator1, true, 0);
-        RSDK.SetSpriteAnimation(AIZEncoreTutorial->cutsceneFrames, 4, &entity->animator2, true, 0);
-        RSDK.SetSpriteAnimation(AIZEncoreTutorial->cutsceneFrames, voidToInt(data), &entity->animator3, true, 0);
-        RSDK.SetSpriteAnimation(AIZEncoreTutorial->cutsceneFrames, 8, &entity->animator4, true, 0);
+        self->visible       = true;
+        self->drawOrder     = Zone->drawOrderHigh;
+        self->active        = ACTIVE_BOUNDS;
+        self->updateRange.x = 0x800000;
+        self->updateRange.y = 0x800000;
+        self->state         = AIZEncoreTutorial_State_ShowTutBubble;
+        RSDK.SetSpriteAnimation(AIZEncoreTutorial->cutsceneFrames, 7, &self->animator1, true, 0);
+        RSDK.SetSpriteAnimation(AIZEncoreTutorial->cutsceneFrames, 4, &self->animator2, true, 0);
+        RSDK.SetSpriteAnimation(AIZEncoreTutorial->cutsceneFrames, voidToInt(data), &self->animator3, true, 0);
+        RSDK.SetSpriteAnimation(AIZEncoreTutorial->cutsceneFrames, 8, &self->animator4, true, 0);
     }
 }
 
@@ -70,50 +70,50 @@ void AIZEncoreTutorial_StageLoad(void)
 void AIZEncoreTutorial_State_ShowTutBubble(void)
 {
     RSDK_THIS(AIZEncoreTutorial);
-    if (entity->animator1.frameID == 6) {
-        HUD_GetKeyFrame(&entity->animator5, KEY_Y);
-        entity->state = AIZEncoreTutorial_State_EnterTutorial;
+    if (self->animator1.frameID == 6) {
+        HUD_GetKeyFrame(&self->animator5, KEY_Y);
+        self->state = AIZEncoreTutorial_State_EnterTutorial;
     }
 }
 
 void AIZEncoreTutorial_State_EnterTutorial(void)
 {
     RSDK_THIS(AIZEncoreTutorial);
-    if (entity->alpha >= 0x100) {
-        entity->state = AIZEncoreTutorial_State_ShowSwapTutorial;
+    if (self->alpha >= 0x100) {
+        self->state = AIZEncoreTutorial_State_ShowSwapTutorial;
     }
     else {
-        entity->alpha += 8;
+        self->alpha += 8;
     }
 }
 
 void AIZEncoreTutorial_State_ShowSwapTutorial(void)
 {
     RSDK_THIS(AIZEncoreTutorial);
-    RSDK.ProcessAnimation(&entity->animator4);
-    HUD_GetKeyFrame(&entity->animator5, KEY_Y);
+    RSDK.ProcessAnimation(&self->animator4);
+    HUD_GetKeyFrame(&self->animator5, KEY_Y);
 
-    if (entity->timer >= 60) {
-        entity->angle += 4;
-        if (entity->angle == 128 || entity->angle == 256) {
-            entity->timer = 0;
-            if (++entity->swapCount == 3)
-                entity->state = AIZEncoreTutorial_State_ExitTutorial;
+    if (self->timer >= 60) {
+        self->angle += 4;
+        if (self->angle == 128 || self->angle == 256) {
+            self->timer = 0;
+            if (++self->swapCount == 3)
+                self->state = AIZEncoreTutorial_State_ExitTutorial;
         }
-        entity->angle &= 0xFF;
+        self->angle &= 0xFF;
     }
     else {
-        entity->timer++;
+        self->timer++;
     }
 }
 
 void AIZEncoreTutorial_State_ExitTutorial(void)
 {
     RSDK_THIS(AIZEncoreTutorial);
-    if (entity->alpha <= 0) {
+    if (self->alpha <= 0) {
         for (int32 i = 0; i < 8; ++i) {
             EntityDebris *debris =
-                CREATE_ENTITY(Debris, NULL, entity->position.x + RSDK.Rand(-0x180000, 0x180000), entity->position.y + RSDK.Rand(-0x100000, 0x100000));
+                CREATE_ENTITY(Debris, NULL, self->position.x + RSDK.Rand(-0x180000, 0x180000), self->position.y + RSDK.Rand(-0x100000, 0x100000));
             debris->state      = Debris_State_Move;
             debris->velocity.x = RSDK.Rand(-0x20000, 0x20000);
             debris->velocity.y = RSDK.Rand(-0x20000, 0x20000);
@@ -124,10 +124,10 @@ void AIZEncoreTutorial_State_ExitTutorial(void)
             debris->drawOrder  = Zone->drawOrderHigh;
             RSDK.SetSpriteAnimation(AIZEncoreTutorial->dustFrames, 0, &debris->animator, true, RSDK.Rand(0, 4));
         }
-        destroyEntity(entity);
+        destroyEntity(self);
     }
     else {
-        entity->alpha -= 8;
+        self->alpha -= 8;
     }
 }
 

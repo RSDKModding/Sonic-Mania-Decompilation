@@ -5,21 +5,21 @@ ObjectBurningLog *BurningLog;
 void BurningLog_Update(void)
 {
     RSDK_THIS(BurningLog);
-    RSDK.ProcessAnimation(&entity->animator);
-    if (RSDK.CheckOnScreen(entity, &entity->updateRange)) {
-        entity->position.y += entity->velocity.y;
-        entity->velocity.y += 0x3800;
+    RSDK.ProcessAnimation(&self->animator);
+    if (RSDK.CheckOnScreen(self, &self->updateRange)) {
+        self->position.y += self->velocity.y;
+        self->velocity.y += 0x3800;
         foreach_active(Player, player)
         {
-            if (entity->velocity.y < 0x380000)
-                Player_CheckCollisionPlatform(player, entity, &BurningLog->hitbox);
-            if (Player_CheckCollisionTouch(player, entity, &BurningLog->hitbox2)) {
-                Player_CheckElementalHit(player, entity, SHIELD_FIRE);
+            if (self->velocity.y < 0x380000)
+                Player_CheckCollisionPlatform(player, self, &BurningLog->hitbox);
+            if (Player_CheckCollisionTouch(player, self, &BurningLog->hitbox2)) {
+                Player_CheckElementalHit(player, self, SHIELD_FIRE);
             }
         }
     }
     else {
-        destroyEntity(entity);
+        destroyEntity(self);
     }
 }
 
@@ -30,20 +30,20 @@ void BurningLog_StaticUpdate(void) {}
 void BurningLog_Draw(void)
 {
     RSDK_THIS(BurningLog);
-    RSDK.DrawSprite(&entity->animator, NULL, false);
+    RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
 void BurningLog_Create(void *data)
 {
     RSDK_THIS(BurningLog);
-    entity->active        = ACTIVE_NORMAL;
-    entity->visible       = true;
-    entity->updateRange.x = 0x800000;
-    entity->updateRange.y = 0x10000000;
-    entity->drawOrder     = Zone->drawOrderLow;
+    self->active        = ACTIVE_NORMAL;
+    self->visible       = true;
+    self->updateRange.x = 0x800000;
+    self->updateRange.y = 0x10000000;
+    self->drawOrder     = Zone->drawOrderLow;
     if (data)
-        entity->timer = voidToInt(data);
-    RSDK.SetSpriteAnimation(BurningLog->aniFrames, 0, &entity->animator, true, 0);
+        self->timer = voidToInt(data);
+    RSDK.SetSpriteAnimation(BurningLog->aniFrames, 0, &self->animator, true, 0);
 }
 
 void BurningLog_StageLoad(void)

@@ -149,8 +149,8 @@ void PSZ1Setup_StaticUpdate(void)
 
                 if (RSDK.GetTileBehaviour(tile, player->collisionPlane)) {
                     if (abs(player->groundVel) >= 0x60000 || player->state == Player_State_DropDash) {
-                        EntityPetalPile *pile = (EntityPetalPile *)RSDK.CreateEntity(PetalPile->objectID, SceneInfo->entity, player->position.x,
-                                                                                     player->position.y + (playerHitbox->bottom << 16));
+                        RSDK_THIS_GEN();
+                        EntityPetalPile *pile = CREATE_ENTITY(PetalPile, self, player->position.x, player->position.y + (playerHitbox->bottom << 16));
                         pile->leafPattern     = 4;
                         pile->tileLayer       = lowFlag;
                         pile->pileSize.x      = 0x40000;
@@ -251,7 +251,7 @@ void PSZ1Setup_TriggerCB3(void)
         int32 count = 0;
         foreach_all(Crate, crate)
         {
-            if (MathHelpers_PointInHitbox(entity->direction, entity->position.x, entity->position.y, &entity->hitbox, crate->position.x,
+            if (MathHelpers_PointInHitbox(self->direction, self->position.x, self->position.y, &self->hitbox, crate->position.x,
                                      crate->position.y)) {
                 if (crate->frameID == 1)
                     ++count;

@@ -6,18 +6,18 @@ void WarpDoor_Update(void)
 {
     RSDK_THIS(WarpDoor);
 
-    if (entity->fadeTimer > 0)
-        entity->fadeTimer -= 16;
-    if (entity->destinationTag >= 1 && entity->destinationTag <= 256) {
-        EntityWarpDoor *tag = (EntityWarpDoor *)WarpDoor->tags[entity->destinationTag];
+    if (self->fadeTimer > 0)
+        self->fadeTimer -= 16;
+    if (self->destinationTag >= 1 && self->destinationTag <= 256) {
+        EntityWarpDoor *tag = (EntityWarpDoor *)WarpDoor->tags[self->destinationTag];
         if (tag) {
             bool32 flag = false;
             int32 boundID = -1;
             foreach_all(Player, player)
             {
-                if (Player_CheckCollisionTouch(player, entity, &entity->hitbox)) {
+                if (Player_CheckCollisionTouch(player, self, &self->hitbox)) {
                     flag = true;
-                    if (!entity->field_A4) {
+                    if (!self->field_A4) {
                         EntityCamera *camera = player->camera;
                         int32 camRelPosX       = 0;
                         int32 camRelPosY       = 0;
@@ -27,20 +27,20 @@ void WarpDoor_Update(void)
                             camRelPosX = camera->position.x - playerX;
                             camRelPosY = camera->position.y - playerY;
                         }
-                        int32 relPosX = playerX - entity->position.x;
-                        int32 relPosY = playerY - entity->position.y;
+                        int32 relPosX = playerX - self->position.x;
+                        int32 relPosY = playerY - self->position.y;
                         LogHelpers_Print("camRelPos = <%d, %d>", camRelPosX >> 16, camRelPosY >> 16);
                         LogHelpers_Print("relPos = <%d, %d>", relPosX >> 16, relPosY >> 16);
 
                         Vector2 posPtr;
                         posPtr.x = tag->position.x;
                         posPtr.y = tag->position.y;
-                        if (!entity->warpToCenter) {
+                        if (!self->warpToCenter) {
                             posPtr.x += relPosY;
                             posPtr.y += relPosY;
                         }
 
-                        if (entity->forcePlayerState) {
+                        if (self->forcePlayerState) {
                             player->nextAirState    = StateMachine_None;
                             player->nextGroundState = StateMachine_None;
                             player->onGround        = false;
@@ -81,7 +81,7 @@ void WarpDoor_Update(void)
 
                         if (!player->sidekick) {
                             if (RSDK.CheckStageFolder("TMZ2")) {
-                                if (entity->effect == 1) {
+                                if (self->effect == 1) {
                                     int32 sfx     = RSDK.Rand(0, 6);
                                     int32 channel = RSDK.PlaySfx(WarpDoor->sfxRubyAttackL[sfx], false, 0xFF);
                                     RSDK.SetChannelAttributes(channel, 1.0, -1.0, 1.0);
@@ -89,27 +89,27 @@ void WarpDoor_Update(void)
                                     RSDK.SetChannelAttributes(channel, 1.0, 1.0, 1.0);
                                     foreach_active(TMZBarrier, barrier)
                                     {
-                                        if (barrier->warpTag == entity->tag)
+                                        if (barrier->warpTag == self->tag)
                                            barrier->field_5C = 1;
                                     }
                                     tag->fadeTimer = 512;
-                                    if (entity->destinationTag == 99 || entity->destinationTag == 100)
+                                    if (self->destinationTag == 99 || self->destinationTag == 100)
                                        TMZ2_DrawDynTiles_Eggman();
                                     else
                                        TMZ2_DrawDynTiles_Ruby();
                                 }
                             }
                             else if (RSDK.CheckStageFolder("OOZ2")) {
-                                if (entity->effect == 1 || entity->effect == 2) {
-                                    OOZSetup->flags = entity->effect == 2 ? 1 : 0;
-                                    destroyEntity(entity);
+                                if (self->effect == 1 || self->effect == 2) {
+                                    OOZSetup->flags = self->effect == 2 ? 1 : 0;
+                                    destroyEntity(self);
                                     foreach_return;
                                 }
                             }
                             else if (RSDK.CheckStageFolder("FBZ")) {
                                 RSDK.PlaySfx(WarpDoor->sfxWarpDoor, 0, 255);
                                 flag = false;
-                                if (entity->go) {
+                                if (self->go) {
                                     tag->fadeTimer = 256;
                                     tag->field_B4  = 1;
                                 }
@@ -124,8 +124,8 @@ void WarpDoor_Update(void)
             }
             if (flag)
                 return;
-            if (entity->field_A4)
-                entity->field_A4 = false;
+            if (self->field_A4)
+                self->field_A4 = false;
         }
     }
 }
@@ -170,15 +170,15 @@ void WarpDoor_Draw(void)
     RSDK_THIS(WarpDoor);
     if (DebugMode->debugActive)
         WarpDoor_DrawDebug();
-    if (entity->fadeTimer > 0) {
+    if (self->fadeTimer > 0) {
         if (RSDK.CheckStageFolder("FBZ")) {
-            if (entity->field_B4)
-                RSDK.FillScreen(0x000000, entity->fadeTimer, entity->fadeTimer - 128, entity->fadeTimer - 256);
+            if (self->field_B4)
+                RSDK.FillScreen(0x000000, self->fadeTimer, self->fadeTimer - 128, self->fadeTimer - 256);
             else
-                RSDK.FillScreen(0x800080, entity->fadeTimer, entity->fadeTimer - 256, entity->fadeTimer);
+                RSDK.FillScreen(0x800080, self->fadeTimer, self->fadeTimer - 256, self->fadeTimer);
         }
         else {
-            RSDK.FillScreen(0xFFF0F0, entity->fadeTimer, entity->fadeTimer - 256, entity->fadeTimer - 256);
+            RSDK.FillScreen(0xFFF0F0, self->fadeTimer, self->fadeTimer - 256, self->fadeTimer - 256);
         }
     }
 }
@@ -186,17 +186,17 @@ void WarpDoor_Draw(void)
 void WarpDoor_Create(void *data)
 {
     RSDK_THIS(WarpDoor);
-    RSDK.SetSpriteAnimation(WarpDoor->aniFrames, 0, &entity->animator, true, 0);
+    RSDK.SetSpriteAnimation(WarpDoor->aniFrames, 0, &self->animator, true, 0);
     WarpDoor_SetupHitbox();
     if (!SceneInfo->inEditor) {
-        entity->active        = ACTIVE_ALWAYS;
-        entity->updateRange.x = 0x800000;
-        entity->updateRange.y = 0x800000;
-        entity->field_A4      = false;
-        entity->drawFX        = FX_NONE;
-        entity->inkEffect     = INK_NONE;
-        entity->visible       = true;
-        entity->drawOrder     = Zone->drawOrderHigh;
+        self->active        = ACTIVE_ALWAYS;
+        self->updateRange.x = 0x800000;
+        self->updateRange.y = 0x800000;
+        self->field_A4      = false;
+        self->drawFX        = FX_NONE;
+        self->inkEffect     = INK_NONE;
+        self->visible       = true;
+        self->drawOrder     = Zone->drawOrderHigh;
     }
 }
 
@@ -344,19 +344,19 @@ bool32 WarpDoor_SetupBoundaries(int16 boundsID, Vector2 *posPtr)
 void WarpDoor_DrawDebug(void)
 {
     RSDK_THIS(WarpDoor);
-    int32 x = (entity->hitbox.left << 16) + entity->position.x + 0x80000;
-    int32 y = (entity->hitbox.top << 16) + entity->position.y + 0x80000;
+    int32 x = (self->hitbox.left << 16) + self->position.x + 0x80000;
+    int32 y = (self->hitbox.top << 16) + self->position.y + 0x80000;
 
-    entity->animator.frameID = entity->go ? 2 : 0;
+    self->animator.frameID = self->go ? 2 : 0;
 
     int32 xOff = 0;
     int32 yOff = 0;
-    for (int32 i = 0; i < entity->width * entity->height; ++i) {
+    for (int32 i = 0; i < self->width * self->height; ++i) {
         Vector2 drawPos;
         drawPos.y = y + yOff;
         drawPos.x = x + (xOff << 20);
-        RSDK.DrawSprite(&entity->animator, &drawPos, false);
-        if (++xOff == entity->width) {
+        RSDK.DrawSprite(&self->animator, &drawPos, false);
+        if (++xOff == self->width) {
             yOff += 0x100000;
             xOff = 0;
         }
@@ -364,28 +364,28 @@ void WarpDoor_DrawDebug(void)
 
     if (SceneInfo->inEditor) {
         int32 colour = 0xFF0000;
-        if (!entity->go)
+        if (!self->go)
             colour = 0x0000FF;
 
-        if (entity->destinationTag >= 1 && entity->destinationTag <= 256) {
-            EntityWarpDoor *dest = (EntityWarpDoor *)WarpDoor->tags[entity->destinationTag];
+        if (self->destinationTag >= 1 && self->destinationTag <= 256) {
+            EntityWarpDoor *dest = (EntityWarpDoor *)WarpDoor->tags[self->destinationTag];
             if (dest) {
-                DrawHelpers_DrawHitboxOutline(colour, FLIP_NONE, entity->position.x, entity->position.y, &entity->hitbox);
-                DrawHelpers_DrawArrow(0x00FFFF, entity->position.x, dest->position.x, entity->position.y, dest->position.y);
+                DrawHelpers_DrawHitboxOutline(colour, FLIP_NONE, self->position.x, self->position.y, &self->hitbox);
+                DrawHelpers_DrawArrow(0x00FFFF, self->position.x, dest->position.x, self->position.y, dest->position.y);
             }
         }
 
-        if (entity->definesBounds) {
+        if (self->definesBounds) {
             Hitbox hitbox;
-            hitbox.left   = entity->xBoundaryPosL;
-            hitbox.top    = entity->yBoundaryPosT;
-            hitbox.right  = entity->xBoundaryPosR;
-            hitbox.bottom = entity->yBoundaryPosB;
+            hitbox.left   = self->xBoundaryPosL;
+            hitbox.top    = self->yBoundaryPosT;
+            hitbox.right  = self->xBoundaryPosR;
+            hitbox.bottom = self->yBoundaryPosB;
             DrawHelpers_DrawHitboxOutline(colour, 0, 0, 0, &hitbox);
-            RSDK.DrawLine(entity->xBoundaryPosL << 16, entity->yBoundaryPosT << 16, entity->position.x, entity->position.y, colour, 0xFF, INK_NONE, false);
-            RSDK.DrawLine(entity->xBoundaryPosR << 16, entity->yBoundaryPosT << 16, entity->position.x, entity->position.y, colour, 0xFF, INK_NONE, false);
-            RSDK.DrawLine(entity->xBoundaryPosR << 16, entity->yBoundaryPosB << 16, entity->position.x, entity->position.y, colour, 0xFF, INK_NONE, false);
-            RSDK.DrawLine(entity->xBoundaryPosL << 16, entity->yBoundaryPosB << 16, entity->position.x, entity->position.y, colour, 0xFF, INK_NONE, false);
+            RSDK.DrawLine(self->xBoundaryPosL << 16, self->yBoundaryPosT << 16, self->position.x, self->position.y, colour, 0xFF, INK_NONE, false);
+            RSDK.DrawLine(self->xBoundaryPosR << 16, self->yBoundaryPosT << 16, self->position.x, self->position.y, colour, 0xFF, INK_NONE, false);
+            RSDK.DrawLine(self->xBoundaryPosR << 16, self->yBoundaryPosB << 16, self->position.x, self->position.y, colour, 0xFF, INK_NONE, false);
+            RSDK.DrawLine(self->xBoundaryPosL << 16, self->yBoundaryPosB << 16, self->position.x, self->position.y, colour, 0xFF, INK_NONE, false);
         }
     }
 }
@@ -393,21 +393,21 @@ void WarpDoor_DrawDebug(void)
 void WarpDoor_SetupHitbox(void)
 {
     RSDK_THIS(WarpDoor);
-    if (!entity->width)
-        entity->width = 2;
-    if (!entity->height)
-        entity->height = 4;
-    entity->hitbox.left   = -((16 * entity->width) >> 1);
-    entity->hitbox.right  = (16 * entity->width) >> 1;
-    entity->hitbox.top    = -((16 * entity->height) >> 1);
-    entity->hitbox.bottom = (16 * entity->height) >> 1;
+    if (!self->width)
+        self->width = 2;
+    if (!self->height)
+        self->height = 4;
+    self->hitbox.left   = -((16 * self->width) >> 1);
+    self->hitbox.right  = (16 * self->width) >> 1;
+    self->hitbox.top    = -((16 * self->height) >> 1);
+    self->hitbox.bottom = (16 * self->height) >> 1;
 }
 
 #if RETRO_INCLUDE_EDITOR
 void WarpDoor_EditorDraw(void)
 {
     RSDK_THIS(WarpDoor);
-    entity->active = ACTIVE_ALWAYS;
+    self->active = ACTIVE_ALWAYS;
     WarpDoor_DrawDebug();
 }
 

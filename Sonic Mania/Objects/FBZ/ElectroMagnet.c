@@ -5,7 +5,7 @@ ObjectElectroMagnet *ElectroMagnet;
 void ElectroMagnet_Update(void)
 {
     RSDK_THIS(ElectroMagnet);
-    StateMachine_Run(entity->state);
+    StateMachine_Run(self->state);
 }
 
 void ElectroMagnet_LateUpdate(void) {}
@@ -28,35 +28,35 @@ void ElectroMagnet_StaticUpdate(void)
 void ElectroMagnet_Draw(void)
 {
     RSDK_THIS(ElectroMagnet);
-    if (entity->state == ElectroMagnet_Unknown2) {
-        entity->animator.frameID = Zone->timer & 3;
-        RSDK.DrawSprite(&entity->animator, NULL, false);
-        entity->animator.frameID = (Zone->timer & 1) + 4;
-        RSDK.DrawSprite(&entity->animator, NULL, false);
+    if (self->state == ElectroMagnet_Unknown2) {
+        self->animator.frameID = Zone->timer & 3;
+        RSDK.DrawSprite(&self->animator, NULL, false);
+        self->animator.frameID = (Zone->timer & 1) + 4;
+        RSDK.DrawSprite(&self->animator, NULL, false);
     }
 }
 
 void ElectroMagnet_Create(void *data)
 {
     RSDK_THIS(ElectroMagnet);
-    if (!entity->interval)
-        entity->interval = 600;
+    if (!self->interval)
+        self->interval = 600;
 
-    entity->active              = ACTIVE_BOUNDS;
-    entity->updateRange.x       = 0x800000;
-    entity->visible             = !entity->invisible;
-    entity->updateRange.y       = (entity->height + 64) << 16;
-    entity->drawOrder           = Zone->drawOrderHigh;
-    entity->hitbox.left         = -64;
-    entity->hitbox.top          = 0;
-    entity->hitbox.right        = 64;
-    entity->hitbox.bottom       = entity->height;
-    entity->playerHitbox.left   = -64;
-    entity->playerHitbox.top    = 0;
-    entity->playerHitbox.right  = 64;
-    entity->playerHitbox.bottom = entity->shieldRange;
-    RSDK.SetSpriteAnimation(ElectroMagnet->aniFrames, 0, &entity->animator, true, 0);
-    entity->state = ElectroMagnet_Unknown1;
+    self->active              = ACTIVE_BOUNDS;
+    self->updateRange.x       = 0x800000;
+    self->visible             = !self->invisible;
+    self->updateRange.y       = (self->height + 64) << 16;
+    self->drawOrder           = Zone->drawOrderHigh;
+    self->hitbox.left         = -64;
+    self->hitbox.top          = 0;
+    self->hitbox.right        = 64;
+    self->hitbox.bottom       = self->height;
+    self->playerHitbox.left   = -64;
+    self->playerHitbox.top    = 0;
+    self->playerHitbox.right  = 64;
+    self->playerHitbox.bottom = self->shieldRange;
+    RSDK.SetSpriteAnimation(ElectroMagnet->aniFrames, 0, &self->animator, true, 0);
+    self->state = ElectroMagnet_Unknown1;
 }
 
 void ElectroMagnet_StageLoad(void)
@@ -76,12 +76,12 @@ void ElectroMagnet_StageLoad(void)
 void ElectroMagnet_Unknown1(void)
 {
     RSDK_THIS(ElectroMagnet);
-    int32 time = (Zone->timer + entity->intervalOffset) % entity->interval;
+    int32 time = (Zone->timer + self->intervalOffset) % self->interval;
 
-    if (time <= entity->duration) {
-        entity->active = ACTIVE_NORMAL;
-        entity->timer = entity->duration - time;
-        entity->state = ElectroMagnet_Unknown2;
+    if (time <= self->duration) {
+        self->active = ACTIVE_NORMAL;
+        self->timer = self->duration - time;
+        self->state = ElectroMagnet_Unknown2;
     }
 }
 
@@ -89,25 +89,25 @@ void ElectroMagnet_Unknown2(void)
 {
     RSDK_THIS(ElectroMagnet);
 
-    if (entity->timer <= 0) {
-        if (entity->playerHitbox.top != entity->playerHitbox.bottom) {
+    if (self->timer <= 0) {
+        if (self->playerHitbox.top != self->playerHitbox.bottom) {
             foreach_active(Player, player)
             {
-                if (RSDK.CheckObjectCollisionTouchBox(player, &ElectroMagnet->hitbox, entity, &entity->playerHitbox) && player->invertGravity) {
+                if (RSDK.CheckObjectCollisionTouchBox(player, &ElectroMagnet->hitbox, self, &self->playerHitbox) && player->invertGravity) {
                     player->invertGravity = false;
                     player->onGround      = false;
                 }
             }
         }
-        entity->active = ACTIVE_BOUNDS;
-        entity->state  = ElectroMagnet_Unknown1;
+        self->active = ACTIVE_BOUNDS;
+        self->state  = ElectroMagnet_Unknown1;
     }
     else {
-        entity->timer--;
+        self->timer--;
 
         foreach_all(Blaster, blaster)
         {
-            if (RSDK.CheckObjectCollisionTouchBox(blaster, &ElectroMagnet->hitbox, entity, &entity->hitbox) && blaster->animator.animationID < 2
+            if (RSDK.CheckObjectCollisionTouchBox(blaster, &ElectroMagnet->hitbox, self, &self->hitbox) && blaster->animator.animationID < 2
                 && blaster->state != Blaster_State_Setup) {
                 blaster->state  = Blaster_State_MagnetAttract;
                 blaster->active = ACTIVE_NORMAL;
@@ -116,7 +116,7 @@ void ElectroMagnet_Unknown2(void)
 
         foreach_all(MagSpikeBall, spikeBall)
         {
-            if (RSDK.CheckObjectCollisionTouchBox(spikeBall, &ElectroMagnet->hitbox, entity, &entity->hitbox)) {
+            if (RSDK.CheckObjectCollisionTouchBox(spikeBall, &ElectroMagnet->hitbox, self, &self->hitbox)) {
                 spikeBall->direction = FLIP_X;
                 spikeBall->active    = ACTIVE_NORMAL;
             }
@@ -124,19 +124,19 @@ void ElectroMagnet_Unknown2(void)
 
         foreach_all(MagPlatform, platform)
         {
-            if (RSDK.CheckObjectCollisionTouchBox(platform, &ElectroMagnet->hitbox, entity, &entity->hitbox)) {
+            if (RSDK.CheckObjectCollisionTouchBox(platform, &ElectroMagnet->hitbox, self, &self->hitbox)) {
                 platform->state  = MagPlatform_Unknown3;
                 platform->active = ACTIVE_NORMAL;
             }
         }
 
-        if (RSDK.CheckOnScreen(entity, &ElectroMagnet->onScreenRange))
+        if (RSDK.CheckOnScreen(self, &ElectroMagnet->onScreenRange))
             ++ElectroMagnet->field_18;
 
-        if (entity->playerHitbox.top != entity->playerHitbox.bottom) {
+        if (self->playerHitbox.top != self->playerHitbox.bottom) {
             foreach_active(Player, player)
             {
-                if (RSDK.CheckObjectCollisionTouchBox(player, &ElectroMagnet->hitbox, entity, &entity->playerHitbox)) {
+                if (RSDK.CheckObjectCollisionTouchBox(player, &ElectroMagnet->hitbox, self, &self->playerHitbox)) {
                     if (player->characterID == ID_KNUCKLES
                         && (player->state == Player_State_KnuxWallClimb || player->state == Player_State_KnuxLedgePullUp)) {
                         player->invertGravity = false;

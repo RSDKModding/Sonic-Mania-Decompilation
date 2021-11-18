@@ -7,22 +7,22 @@ void FarPlane_Update(void) {}
 void FarPlane_LateUpdate(void)
 {
     RSDK_THIS(FarPlane);
-    if (entity->active == ACTIVE_ALWAYS) {
+    if (self->active == ACTIVE_ALWAYS) {
         FarPlane_SetupEntities();
     }
-    else if (entity->active == ACTIVE_BOUNDS) {
-        entity->active                                      = ACTIVE_NORMAL;
+    else if (self->active == ACTIVE_BOUNDS) {
+        self->active                                      = ACTIVE_NORMAL;
         RSDK.GetSceneLayer(FarPlane->layerID)->drawLayer[0] = 0;
-        FarPlane->field_18.x                                = entity->origin.x;
-        FarPlane->field_18.y                                = entity->origin.y;
-        FarPlane->field_20.x                                = entity->position.x;
-        FarPlane->field_20.y                                = entity->position.y;
+        FarPlane->field_18.x                                = self->origin.x;
+        FarPlane->field_18.y                                = self->origin.y;
+        FarPlane->field_20.x                                = self->position.x;
+        FarPlane->field_20.y                                = self->position.y;
         RSDK.SetDrawLayerProperties(1, false, FarPlane_DrawLayerCB_Low);
         RSDK.SetDrawLayerProperties(3, false, FarPlane_DrawLayerCB_High);
         FarPlane_SetEntityActivities(ACTIVE_NORMAL);
     }
-    else if (!RSDK.CheckOnScreen(entity, NULL)) {
-        entity->active                                      = ACTIVE_BOUNDS;
+    else if (!RSDK.CheckOnScreen(self, NULL)) {
+        self->active                                      = ACTIVE_BOUNDS;
         RSDK.GetSceneLayer(FarPlane->layerID)->drawLayer[0] = DRAWLAYER_COUNT;
         RSDK.SetDrawLayerProperties(1, false, NULL);
         RSDK.SetDrawLayerProperties(3, false, NULL);
@@ -41,10 +41,10 @@ void FarPlane_Draw(void)
     else {
         int32 x                = (ScreenInfo->position.x + ScreenInfo->centerX) << 16;
         int32 y                = (ScreenInfo->position.y + ScreenInfo->centerY) << 16;
-        FarPlane->field_8.x  = (x + entity->origin.x - entity->position.x) & 0xFFFE0000;
-        FarPlane->field_8.y  = (y + entity->origin.y - entity->position.y) & 0xFFFE0000;
-        FarPlane->field_10.x = entity->position.x - ((entity->position.x - x) >> 1) + 0x8000;
-        FarPlane->field_10.y = entity->position.y - ((entity->position.y - y) >> 1) + 0x8000;
+        FarPlane->field_8.x  = (x + self->origin.x - self->position.x) & 0xFFFE0000;
+        FarPlane->field_8.y  = (y + self->origin.y - self->position.y) & 0xFFFE0000;
+        FarPlane->field_10.x = self->position.x - ((self->position.x - x) >> 1) + 0x8000;
+        FarPlane->field_10.y = self->position.y - ((self->position.y - y) >> 1) + 0x8000;
         if (!SceneInfo->currentScreenID)
             RSDK.AddDrawListRef(1, SceneInfo->entitySlot);
     }
@@ -55,11 +55,11 @@ void FarPlane_Create(void *data)
     RSDK_THIS(FarPlane);
 
     if (!SceneInfo->inEditor) {
-        entity->updateRange.x = entity->size.x + (entity->size.x >> 1);
-        entity->updateRange.y = entity->size.y + (entity->size.y >> 1);
-        entity->active        = ACTIVE_ALWAYS;
-        entity->visible       = true;
-        entity->drawOrder     = 0;
+        self->updateRange.x = self->size.x + (self->size.x >> 1);
+        self->updateRange.y = self->size.y + (self->size.y >> 1);
+        self->active        = ACTIVE_ALWAYS;
+        self->visible       = true;
+        self->drawOrder     = 0;
     }
 }
 
@@ -105,26 +105,26 @@ void FarPlane_StageLoad(void)
 void FarPlane_SetupEntities(void)
 {
     RSDK_THIS(FarPlane);
-    entity->entityCount = 0;
+    self->entityCount = 0;
 
-    for (int32 i = 0; i < SCENEENTITY_COUNT && entity->entityCount < 0x100; ++i) {
+    for (int32 i = 0; i < SCENEENTITY_COUNT && self->entityCount < 0x100; ++i) {
         Entity *entPtr = RSDK.GetEntityByID(i);
-        if (abs(entity->origin.x - entPtr->position.x) < entity->size.x) {
-            if (abs(entity->origin.y - entPtr->position.y) < entity->size.y) {
-                entity->entityIDs[entity->entityCount++] = i;
+        if (abs(self->origin.x - entPtr->position.x) < self->size.x) {
+            if (abs(self->origin.y - entPtr->position.y) < self->size.y) {
+                self->entityIDs[self->entityCount++] = i;
                 entPtr->active                           = ACTIVE_NEVER;
                 entPtr->drawOrder                        = 1;
             }
         }
     }
-    entity->active = ACTIVE_BOUNDS;
+    self->active = ACTIVE_BOUNDS;
 }
 
 void FarPlane_SetEntityActivities(uint8 active)
 {
     RSDK_THIS(FarPlane);
-    for (int32 i = 0; i < entity->entityCount; ++i) {
-        RSDK_GET_ENTITY(entity->entityIDs[i], )->active = active;
+    for (int32 i = 0; i < self->entityCount; ++i) {
+        RSDK_GET_ENTITY(self->entityIDs[i], )->active = active;
     }
 }
 
@@ -289,29 +289,29 @@ void FarPlane_EditorDraw(void)
 {
     RSDK_THIS(FarPlane);
 
-    entity->updateRange.x = entity->size.x << 1;
-    entity->updateRange.y = entity->size.y << 1;
+    self->updateRange.x = self->size.x << 1;
+    self->updateRange.y = self->size.y << 1;
 
     Vector2 drawPos;
-    drawPos.x = entity->position.x;
-    drawPos.y = entity->position.y;
-    drawPos.x -= entity->size.x >> 1;
-    drawPos.y -= entity->size.y >> 1;
-    RSDK.DrawLine(drawPos.x, drawPos.y, drawPos.x + entity->size.x, drawPos.y, 0xFFFF00, 0, INK_NONE, false);
-    RSDK.DrawLine(drawPos.x, entity->size.y + drawPos.y, drawPos.x + entity->size.x, entity->size.y + drawPos.y, 0xFFFF00, 0, INK_NONE, false);
-    RSDK.DrawLine(drawPos.x, drawPos.y, drawPos.x, drawPos.y + entity->size.y, 0xFFFF00, 0, INK_NONE, false);
-    RSDK.DrawLine(drawPos.x + entity->size.x, drawPos.y, drawPos.x + entity->size.x, drawPos.y + entity->size.y, 0xFFFF00, 0, INK_NONE, false);
+    drawPos.x = self->position.x;
+    drawPos.y = self->position.y;
+    drawPos.x -= self->size.x >> 1;
+    drawPos.y -= self->size.y >> 1;
+    RSDK.DrawLine(drawPos.x, drawPos.y, drawPos.x + self->size.x, drawPos.y, 0xFFFF00, 0, INK_NONE, false);
+    RSDK.DrawLine(drawPos.x, self->size.y + drawPos.y, drawPos.x + self->size.x, self->size.y + drawPos.y, 0xFFFF00, 0, INK_NONE, false);
+    RSDK.DrawLine(drawPos.x, drawPos.y, drawPos.x, drawPos.y + self->size.y, 0xFFFF00, 0, INK_NONE, false);
+    RSDK.DrawLine(drawPos.x + self->size.x, drawPos.y, drawPos.x + self->size.x, drawPos.y + self->size.y, 0xFFFF00, 0, INK_NONE, false);
 
-    drawPos.x = entity->origin.x;
-    drawPos.y = entity->origin.y;
-    drawPos.x -= entity->size.x >> 1;
-    drawPos.y -= entity->size.y >> 1;
-    RSDK.DrawLine(drawPos.x, drawPos.y, drawPos.x + entity->size.x, drawPos.y, 0xFFFF00, 0, INK_NONE, false);
-    RSDK.DrawLine(drawPos.x, entity->size.y + drawPos.y, drawPos.x + entity->size.x, entity->size.y + drawPos.y, 0xFFFF00, 0, INK_NONE, false);
-    RSDK.DrawLine(drawPos.x, drawPos.y, drawPos.x, drawPos.y + entity->size.y, 0xFFFF00, 0, INK_NONE, false);
-    RSDK.DrawLine(drawPos.x + entity->size.x, drawPos.y, drawPos.x + entity->size.x, drawPos.y + entity->size.y, 0xFFFF00, 0, INK_NONE, false);
+    drawPos.x = self->origin.x;
+    drawPos.y = self->origin.y;
+    drawPos.x -= self->size.x >> 1;
+    drawPos.y -= self->size.y >> 1;
+    RSDK.DrawLine(drawPos.x, drawPos.y, drawPos.x + self->size.x, drawPos.y, 0xFFFF00, 0, INK_NONE, false);
+    RSDK.DrawLine(drawPos.x, self->size.y + drawPos.y, drawPos.x + self->size.x, self->size.y + drawPos.y, 0xFFFF00, 0, INK_NONE, false);
+    RSDK.DrawLine(drawPos.x, drawPos.y, drawPos.x, drawPos.y + self->size.y, 0xFFFF00, 0, INK_NONE, false);
+    RSDK.DrawLine(drawPos.x + self->size.x, drawPos.y, drawPos.x + self->size.x, drawPos.y + self->size.y, 0xFFFF00, 0, INK_NONE, false);
 
-    DrawHelpers_DrawArrow(0x00FF00, entity->position.x, entity->position.y, entity->origin.x, entity->origin.y);
+    DrawHelpers_DrawArrow(0x00FF00, self->position.x, self->position.y, self->origin.x, self->origin.y);
 }
 
 void FarPlane_EditorLoad(void) {}

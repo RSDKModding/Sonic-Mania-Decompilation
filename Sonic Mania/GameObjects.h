@@ -417,9 +417,9 @@ extern RSDKFunctionTable RSDK;
 #define RSDK_ADD_OBJECT_CONTAINER(object) RSDK.RegisterObjectContainer((void **)&object, #object, sizeof(Object##object))
 #endif
 
-#define RSDK_THIS(type)             Entity##type *entity = (Entity##type *)SceneInfo->entity
-#define RSDK_THIS_GEN()             Entity *entity = SceneInfo->entity
-#define RSDK_GET_ENTITY(slot, type) ((Entity##type *)RSDK.GetEntityByID(slot))
+#define RSDK_THIS(type)                Entity##type *self = (Entity##type *)SceneInfo->entity
+#define RSDK_THIS_GEN()                Entity *self = SceneInfo->entity
+#define RSDK_GET_ENTITY(slot, type)    ((Entity##type *)RSDK.GetEntityByID(slot))
 #define CREATE_ENTITY(obj, data, x, y) ((Entity##obj *)RSDK.CreateEntity(obj->objectID, data, x, y))
 
 #define INIT_TEXTINFO(info)                                                                                                                          \

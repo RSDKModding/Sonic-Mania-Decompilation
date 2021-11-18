@@ -11,9 +11,9 @@ void ERZOutro_Update(void)
                        ERZOutro_CutsceneState_EnterPortal,  ERZOutro_CutsceneState_FadeOut,
                        ERZOutro_CutsceneState_ShowEnding,   NULL };
 
-    if (!entity->activated) {
-        CutsceneSeq_StartSequence((Entity *)entity, states);
-        entity->activated = true;
+    if (!self->activated) {
+        CutsceneSeq_StartSequence((Entity *)self, states);
+        self->activated = true;
     }
 }
 
@@ -26,9 +26,9 @@ void ERZOutro_Draw(void) {}
 void ERZOutro_Create(void *data)
 {
     RSDK_THIS(ERZOutro);
-    INIT_ENTITY(entity);
-    CutsceneRules_SetupEntity(entity, &entity->size, &entity->hitbox);
-    entity->active = ACTIVE_NEVER;
+    INIT_ENTITY(self);
+    CutsceneRules_SetupEntity(self, &self->size, &self->hitbox);
+    self->active = ACTIVE_NEVER;
 }
 
 void ERZOutro_StageLoad(void)
@@ -447,7 +447,7 @@ void ERZOutro_SaveFileCB(int32 status) { ERZOutro->savedGame = true; }
 void ERZOutro_EditorDraw(void)
 {
     RSDK_THIS(ERZOutro);
-    CutsceneRules_DrawCutsceneBounds(entity, &entity->size);
+    CutsceneRules_DrawCutsceneBounds(self, &self->size);
 }
 
 void ERZOutro_EditorLoad(void) {}

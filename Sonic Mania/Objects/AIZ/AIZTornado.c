@@ -5,13 +5,13 @@ ObjectAIZTornado *AIZTornado;
 void AIZTornado_Update(void)
 {
     RSDK_THIS(AIZTornado);
-    entity->prevPos.x = entity->position.x;
-    entity->prevPos.y = entity->position.y;
-    StateMachine_Run(entity->state);
-    entity->animatorTornado.frameID = entity->turnAngle >> 4;
-    RSDK.ProcessAnimation(&entity->animatorPropeller);
-    RSDK.ProcessAnimation(&entity->animatorPilot);
-    RSDK.ProcessAnimation(&entity->animatorFlame);
+    self->prevPos.x = self->position.x;
+    self->prevPos.y = self->position.y;
+    StateMachine_Run(self->state);
+    self->animatorTornado.frameID = self->turnAngle >> 4;
+    RSDK.ProcessAnimation(&self->animatorPropeller);
+    RSDK.ProcessAnimation(&self->animatorPilot);
+    RSDK.ProcessAnimation(&self->animatorFlame);
 }
 
 void AIZTornado_LateUpdate(void) {}
@@ -21,15 +21,15 @@ void AIZTornado_StaticUpdate(void) {}
 void AIZTornado_Draw(void)
 {
     RSDK_THIS(AIZTornado);
-    RSDK.DrawSprite(&entity->animatorPilot, NULL, false);
-    RSDK.DrawSprite(&entity->animatorPropeller, NULL, false);
-    RSDK.DrawSprite(&entity->animatorTornado, NULL, false);
-    if (entity->showFlame) {
+    RSDK.DrawSprite(&self->animatorPilot, NULL, false);
+    RSDK.DrawSprite(&self->animatorPropeller, NULL, false);
+    RSDK.DrawSprite(&self->animatorTornado, NULL, false);
+    if (self->showFlame) {
         Vector2 drawPos;
-        drawPos.x = entity->position.x;
-        drawPos.y = entity->position.y;
-        drawPos.y += AIZTornado->flameOffsets[entity->animatorTornado.frameID];
-        RSDK.DrawSprite(&entity->animatorFlame, &drawPos, false);
+        drawPos.x = self->position.x;
+        drawPos.y = self->position.y;
+        drawPos.y += AIZTornado->flameOffsets[self->animatorTornado.frameID];
+        RSDK.DrawSprite(&self->animatorFlame, &drawPos, false);
     }
 }
 
@@ -37,30 +37,30 @@ void AIZTornado_Create(void *data)
 {
     RSDK_THIS(AIZTornado);
     if (!SceneInfo->inEditor) {
-        entity->visible       = true;
-        entity->updateRange.x = 0x1000000;
-        entity->updateRange.y = 0x1000000;
-        entity->drawFX        = FX_FLIP;
-        entity->drawOrder     = Zone->drawOrderLow;
-        entity->movePos.x     = entity->position.x;
-        entity->movePos.y     = entity->position.y;
-        entity->turnAngle     = 48;
-        entity->isStood       = true;
-        entity->offsetX       = 0x80000;
-        entity->showFlame     = true;
+        self->visible       = true;
+        self->updateRange.x = 0x1000000;
+        self->updateRange.y = 0x1000000;
+        self->drawFX        = FX_FLIP;
+        self->drawOrder     = Zone->drawOrderLow;
+        self->movePos.x     = self->position.x;
+        self->movePos.y     = self->position.y;
+        self->turnAngle     = 48;
+        self->isStood       = true;
+        self->offsetX       = 0x80000;
+        self->showFlame     = true;
         if (RSDK.CheckStageFolder("AIZ") || RSDK.CheckStageFolder("Credits"))
-            entity->active = ACTIVE_NORMAL;
+            self->active = ACTIVE_NORMAL;
         if (!StarPost->postIDs[0]) {
-            entity->active = ACTIVE_NORMAL;
-            entity->state  = AIZTornado_State_Move;
+            self->active = ACTIVE_NORMAL;
+            self->state  = AIZTornado_State_Move;
         }
-        RSDK.SetSpriteAnimation(AIZTornado->aniFrames, 0, &entity->animatorTornado, true, 0);
-        RSDK.SetSpriteAnimation(AIZTornado->aniFrames, 1, &entity->animatorPropeller, true, 0);
-        RSDK.SetSpriteAnimation(AIZTornado->aniFrames, 2, &entity->animatorFlame, true, 0);
+        RSDK.SetSpriteAnimation(AIZTornado->aniFrames, 0, &self->animatorTornado, true, 0);
+        RSDK.SetSpriteAnimation(AIZTornado->aniFrames, 1, &self->animatorPropeller, true, 0);
+        RSDK.SetSpriteAnimation(AIZTornado->aniFrames, 2, &self->animatorFlame, true, 0);
         if (globals->playerID & 1)
-            RSDK.SetSpriteAnimation(AIZTornado->aniFrames, 6, &entity->animatorPilot, true, 0);
+            RSDK.SetSpriteAnimation(AIZTornado->aniFrames, 6, &self->animatorPilot, true, 0);
         else
-            RSDK.SetSpriteAnimation(AIZTornado->aniFrames, 3, &entity->animatorPilot, true, 0);
+            RSDK.SetSpriteAnimation(AIZTornado->aniFrames, 3, &self->animatorPilot, true, 0);
     }
 }
 
@@ -73,70 +73,70 @@ void AIZTornado_StageLoad(void)
 void AIZTornado_HandleMovement(void)
 {
     RSDK_THIS(AIZTornado);
-    entity->movePos.x += AIZTornadoPath->moveVel.x;
-    entity->movePos.y += AIZTornadoPath->moveVel.y;
-    entity->newPos.x = entity->movePos.x;
-    entity->newPos.y = entity->movePos.y;
+    self->movePos.x += AIZTornadoPath->moveVel.x;
+    self->movePos.y += AIZTornadoPath->moveVel.y;
+    self->newPos.x = self->movePos.x;
+    self->newPos.y = self->movePos.y;
 
-    if (!entity->disableInteractions) {
-        int32 x = entity->movePos.x;
-        int32 y = entity->movePos.y;
+    if (!self->disableInteractions) {
+        int32 x = self->movePos.x;
+        int32 y = self->movePos.y;
         if (AIZTornadoPath->moveVel.y) {
-            entity->turnAngle = 0;
+            self->turnAngle = 0;
         }
         else {
-            y               = 0xA00 * RSDK.Sin256(2 * Zone->timer) + entity->movePos.y;
-            entity->turnAngle = (RSDK.Sin256(2 * Zone->timer) >> 3) + 32;
+            y               = 0xA00 * RSDK.Sin256(2 * Zone->timer) + self->movePos.y;
+            self->turnAngle = (RSDK.Sin256(2 * Zone->timer) >> 3) + 32;
         }
-        entity->newPos.x += (x - entity->movePos.x) >> 1;
-        entity->newPos.y += (y - entity->movePos.y) >> 1;
+        self->newPos.x += (x - self->movePos.x) >> 1;
+        self->newPos.y += (y - self->movePos.y) >> 1;
     }
-    entity->position.x = entity->newPos.x;
-    entity->position.y = entity->newPos.y;
+    self->position.x = self->newPos.x;
+    self->position.y = self->newPos.y;
 }
 
 void AIZTornado_HandlePlayerCollisions(void)
 {
     RSDK_THIS(AIZTornado);
     EntityPlayer *player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
-    Hitbox *hitbox       = RSDK.GetHitbox(&entity->animatorTornado, 0);
-    if (entity->turnAngle >= 32)
-        player->drawOrder = entity->drawOrder + 1;
+    Hitbox *hitbox       = RSDK.GetHitbox(&self->animatorTornado, 0);
+    if (self->turnAngle >= 32)
+        player->drawOrder = self->drawOrder + 1;
     else
-        player->drawOrder = entity->drawOrder;
-    int32 x = entity->position.x;
-    int32 y = entity->position.y;
-    entity->prevPos.x &= 0xFFFF0000;
-    entity->prevPos.y &= 0xFFFF0000;
-    entity->isStood        = false;
-    entity->moveVelocity.x = (x & 0xFFFF0000) - entity->prevPos.x;
-    entity->moveVelocity.y = (y & 0xFFFF0000) - entity->prevPos.y;
-    entity->position.x     = entity->prevPos.x;
-    entity->position.y     = entity->prevPos.y;
+        player->drawOrder = self->drawOrder;
+    int32 x = self->position.x;
+    int32 y = self->position.y;
+    self->prevPos.x &= 0xFFFF0000;
+    self->prevPos.y &= 0xFFFF0000;
+    self->isStood        = false;
+    self->moveVelocity.x = (x & 0xFFFF0000) - self->prevPos.x;
+    self->moveVelocity.y = (y & 0xFFFF0000) - self->prevPos.y;
+    self->position.x     = self->prevPos.x;
+    self->position.y     = self->prevPos.y;
 
-    if (Player_CheckCollisionPlatform(player, entity, hitbox)) {
+    if (Player_CheckCollisionPlatform(player, self, hitbox)) {
         RSDK.SetSpriteAnimation(player->aniFrames, ANI_RIDE, &player->playerAnimator, false, 0);
         player->state = Player_State_None;
-        player->position.x += entity->moveVelocity.x;
-        player->position.y += entity->moveVelocity.y;
+        player->position.x += self->moveVelocity.x;
+        player->position.y += self->moveVelocity.y;
         player->flailing = false;
-        entity->isStood  = true;
+        self->isStood  = true;
         if (player->velocity.y > 0x10000) {
-            entity->collideTimer = 0;
-            entity->gravityForce = 0x20000;
+            self->collideTimer = 0;
+            self->gravityForce = 0x20000;
         }
     }
-    entity->position.x = x;
-    entity->position.y = y;
+    self->position.x = x;
+    self->position.y = y;
 }
 
 void AIZTornado_State_Move(void)
 {
     RSDK_THIS(AIZTornado);
-    entity->prevPos.x = entity->position.x;
-    entity->prevPos.y = entity->position.y;
+    self->prevPos.x = self->position.x;
+    self->prevPos.y = self->position.y;
     AIZTornado_HandleMovement();
-    if (!entity->disableInteractions)
+    if (!self->disableInteractions)
         AIZTornado_HandlePlayerCollisions();
 }
 
@@ -144,14 +144,14 @@ void AIZTornado_State_Move(void)
 void AIZTornado_EditorDraw(void)
 {
     RSDK_THIS(AIZTornado);
-    RSDK.SetSpriteAnimation(AIZTornado->aniFrames, 0, &entity->animatorTornado, true, 0);
-    RSDK.SetSpriteAnimation(AIZTornado->aniFrames, 1, &entity->animatorPropeller, true, 0);
-    RSDK.SetSpriteAnimation(AIZTornado->aniFrames, 2, &entity->animatorFlame, true, 0);
-    RSDK.SetSpriteAnimation(AIZTornado->aniFrames, 3, &entity->animatorPilot, true, 0);
+    RSDK.SetSpriteAnimation(AIZTornado->aniFrames, 0, &self->animatorTornado, true, 0);
+    RSDK.SetSpriteAnimation(AIZTornado->aniFrames, 1, &self->animatorPropeller, true, 0);
+    RSDK.SetSpriteAnimation(AIZTornado->aniFrames, 2, &self->animatorFlame, true, 0);
+    RSDK.SetSpriteAnimation(AIZTornado->aniFrames, 3, &self->animatorPilot, true, 0);
 
-    RSDK.DrawSprite(&entity->animatorPilot, NULL, false);
-    RSDK.DrawSprite(&entity->animatorPropeller, NULL, false);
-    RSDK.DrawSprite(&entity->animatorTornado, NULL, false);
+    RSDK.DrawSprite(&self->animatorPilot, NULL, false);
+    RSDK.DrawSprite(&self->animatorPropeller, NULL, false);
+    RSDK.DrawSprite(&self->animatorTornado, NULL, false);
 }
 
 void AIZTornado_EditorLoad(void) { AIZTornado->aniFrames = RSDK.LoadSpriteAnimation("AIZ/AIZTornado.bin", SCOPE_STAGE); }

@@ -6,18 +6,18 @@ void TitleBG_Update(void)
 {
     RSDK_THIS(TitleBG);
 
-    if (entity->type == 4) {
-        ++entity->timer;
-        entity->position.y += 0x10000;
-        if (entity->timer == 32) {
-            entity->timer = 0;
-            entity->position.y -= 0x200000;
+    if (self->type == 4) {
+        ++self->timer;
+        self->position.y += 0x10000;
+        if (self->timer == 32) {
+            self->timer = 0;
+            self->position.y -= 0x200000;
         }
     }
     else {
-        entity->position.x -= 0x10000;
-        if (entity->position.x < -0x800000)
-            entity->position.x += 0x3000000;
+        self->position.x -= 0x10000;
+        if (self->position.x < -0x800000)
+            self->position.x += 0x3000000;
     }
 }
 
@@ -40,7 +40,7 @@ void TitleBG_Draw(void)
     RSDK_THIS(TitleBG);
 
     RSDK.SetClipBounds(0, 0, 0, ScreenInfo->width, ScreenInfo->height);
-    RSDK.DrawSprite(&entity->animator, NULL, false);
+    RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
 void TitleBG_Create(void *data)
@@ -48,22 +48,22 @@ void TitleBG_Create(void *data)
     RSDK_THIS(TitleBG);
 
     if (!SceneInfo->inEditor) {
-        RSDK.SetSpriteAnimation(TitleBG->aniFrames, entity->type, &entity->animator, true, 0);
-        entity->active    = ACTIVE_NORMAL;
-        entity->visible   = false;
-        entity->drawOrder = 1;
-        entity->alpha     = 0xFF;
-        entity->drawFX    = FX_FLIP;
-        switch (entity->type) {
-            case TITLEBG_MOUNTAIN2: entity->inkEffect = INK_BLEND; break;
+        RSDK.SetSpriteAnimation(TitleBG->aniFrames, self->type, &self->animator, true, 0);
+        self->active    = ACTIVE_NORMAL;
+        self->visible   = false;
+        self->drawOrder = 1;
+        self->alpha     = 0xFF;
+        self->drawFX    = FX_FLIP;
+        switch (self->type) {
+            case TITLEBG_MOUNTAIN2: self->inkEffect = INK_BLEND; break;
             case TITLEBG_REFLECTION:
             case TITLEBG_WATERSPARKLE:
-                entity->inkEffect = INK_ADD;
-                entity->alpha     = 0x80;
+                self->inkEffect = INK_ADD;
+                self->alpha     = 0x80;
                 break;
             case TITLEBG_WINGSHINE:
-                entity->drawOrder = 4;
-                entity->inkEffect = INK_MASKED;
+                self->drawOrder = 4;
+                self->inkEffect = INK_MASKED;
                 break;
             default: break;
         }
@@ -141,25 +141,25 @@ void TitleBG_ScanlineCallback_Island(ScanlineInfo *scanlines)
 void TitleBG_EditorDraw(void)
 {
     RSDK_THIS(TitleBG);
-    RSDK.SetSpriteAnimation(TitleBG->aniFrames, entity->type, &entity->animator, true, 0);
-    entity->alpha  = 0xFF;
-    entity->drawFX = FX_FLIP;
-    entity->inkEffect = INK_NONE;
-    switch (entity->type) {
-        case TITLEBG_MOUNTAIN2: entity->inkEffect = INK_BLEND; break;
+    RSDK.SetSpriteAnimation(TitleBG->aniFrames, self->type, &self->animator, true, 0);
+    self->alpha  = 0xFF;
+    self->drawFX = FX_FLIP;
+    self->inkEffect = INK_NONE;
+    switch (self->type) {
+        case TITLEBG_MOUNTAIN2: self->inkEffect = INK_BLEND; break;
         case TITLEBG_REFLECTION:
         case TITLEBG_WATERSPARKLE:
-            entity->inkEffect = INK_ADD;
-            entity->alpha     = 0x80;
+            self->inkEffect = INK_ADD;
+            self->alpha     = 0x80;
             break;
         case TITLEBG_WINGSHINE:
-            entity->drawOrder = 4;
-            entity->inkEffect = INK_MASKED;
+            self->drawOrder = 4;
+            self->inkEffect = INK_MASKED;
             break;
         default: break;
     }
 
-    RSDK.DrawSprite(&entity->animator, NULL, false);
+    RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
 void TitleBG_EditorLoad(void)

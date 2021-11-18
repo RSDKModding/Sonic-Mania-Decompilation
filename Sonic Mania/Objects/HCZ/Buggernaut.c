@@ -5,7 +5,7 @@ ObjectBuggernaut *Buggernaut;
 void Buggernaut_Update(void)
 {
     RSDK_THIS(Buggernaut);
-    StateMachine_Run(entity->state);
+    StateMachine_Run(self->state);
 }
 
 void Buggernaut_LateUpdate(void) {}
@@ -15,34 +15,34 @@ void Buggernaut_StaticUpdate(void) {}
 void Buggernaut_Draw(void)
 {
     RSDK_THIS(Buggernaut);
-    RSDK.DrawSprite(&entity->animator1, NULL, false);
+    RSDK.DrawSprite(&self->animator1, NULL, false);
 
-    entity->inkEffect = INK_ALPHA;
-    RSDK.DrawSprite(&entity->animator2, NULL, false);
+    self->inkEffect = INK_ALPHA;
+    RSDK.DrawSprite(&self->animator2, NULL, false);
 
-    entity->inkEffect = INK_NONE;
+    self->inkEffect = INK_NONE;
 }
 
 void Buggernaut_Create(void *data)
 {
     RSDK_THIS(Buggernaut);
 
-    entity->visible   = true;
-    entity->drawOrder = Zone->drawOrderLow + 1;
+    self->visible   = true;
+    self->drawOrder = Zone->drawOrderLow + 1;
     if (!SceneInfo->inEditor) {
-        entity->drawFX |= FX_FLIP;
-        entity->startPos.x    = entity->position.x;
-        entity->startPos.y    = entity->position.y;
-        entity->active        = ACTIVE_BOUNDS;
-        entity->updateRange.x = 0x800000;
-        entity->updateRange.y = 0x800000;
-        entity->direction     = FLIP_NONE;
-        entity->alpha         = 128;
-        entity->timer         = 16;
-        entity->timer2        = -1;
-        RSDK.SetSpriteAnimation(Buggernaut->aniFrames, 0, &entity->animator1, true, 0);
-        RSDK.SetSpriteAnimation(Buggernaut->aniFrames, 2, &entity->animator2, true, 0);
-        entity->state = Buggernaut_State_Setup;
+        self->drawFX |= FX_FLIP;
+        self->startPos.x    = self->position.x;
+        self->startPos.y    = self->position.y;
+        self->active        = ACTIVE_BOUNDS;
+        self->updateRange.x = 0x800000;
+        self->updateRange.y = 0x800000;
+        self->direction     = FLIP_NONE;
+        self->alpha         = 128;
+        self->timer         = 16;
+        self->timer2        = -1;
+        RSDK.SetSpriteAnimation(Buggernaut->aniFrames, 0, &self->animator1, true, 0);
+        RSDK.SetSpriteAnimation(Buggernaut->aniFrames, 2, &self->animator2, true, 0);
+        self->state = Buggernaut_State_Setup;
     }
 }
 
@@ -64,7 +64,7 @@ void Buggernaut_StageLoad(void)
 void Buggernaut_DebugSpawn(void)
 {
     RSDK_THIS(DebugMode);
-    CREATE_ENTITY(Buggernaut, NULL, entity->position.x, entity->position.y);
+    CREATE_ENTITY(Buggernaut, NULL, self->position.x, self->position.y);
 }
 
 void Buggernaut_DebugDraw(void)
@@ -79,8 +79,8 @@ void Buggernaut_CheckPlayerCollisions(void)
 
     foreach_active(Player, player)
     {
-        if (Player_CheckBadnikTouch(player, entity, &Buggernaut->hitboxBadnik))
-            Player_CheckBadnikBreak(entity, player, true);
+        if (Player_CheckBadnikTouch(player, self, &Buggernaut->hitboxBadnik))
+            Player_CheckBadnikBreak(self, player, true);
     }
 }
 
@@ -88,12 +88,12 @@ void Buggernaut_CheckOnScreen(void)
 {
     RSDK_THIS(Buggernaut);
 
-    if (!RSDK.CheckOnScreen(entity, NULL) && !RSDK.CheckPosOnScreen(&entity->startPos, &entity->updateRange)) {
-        if (entity->animator1.animationID) {
-            destroyEntity(entity);
+    if (!RSDK.CheckOnScreen(self, NULL) && !RSDK.CheckPosOnScreen(&self->startPos, &self->updateRange)) {
+        if (self->animator1.animationID) {
+            destroyEntity(self);
         }
         else {
-            entity->position = entity->startPos;
+            self->position = self->startPos;
             Buggernaut_Create(NULL);
         }
     }
@@ -104,17 +104,17 @@ bool32 Buggernaut_HandleTileCollisionsX(void)
     RSDK_THIS(Buggernaut);
 
     bool32 collided = false;
-    if (entity->velocity.x <= 0) {
-        collided = RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_FLOOR, 0, -0x90000, -0x80000, false);
-        collided |= RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_FLOOR, 0, -0x90000, 0x80000, false);
+    if (self->velocity.x <= 0) {
+        collided = RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, -0x90000, -0x80000, false);
+        collided |= RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, -0x90000, 0x80000, false);
     }
     else {
-        collided = RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_FLOOR, 0, 0x90000, -0x80000, false);
-        collided |= RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_FLOOR, 0, 0x90000, 0x80000, false);
+        collided = RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0x90000, -0x80000, false);
+        collided |= RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0x90000, 0x80000, false);
     }
 
     if (collided)
-        entity->velocity.x = -entity->velocity.x;
+        self->velocity.x = -self->velocity.x;
     return collided;
 }
 
@@ -123,17 +123,17 @@ bool32 Buggernaut_HandleTileCollisionsY(void)
     RSDK_THIS(Buggernaut);
 
     bool32 collided = false;
-    if (entity->velocity.y <= 0) {
-        collided = RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_FLOOR, 0, -0x80000, -0x90000, false);
-        collided |= RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_FLOOR, 0, 0x80000, 0x90000, false);
+    if (self->velocity.y <= 0) {
+        collided = RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, -0x80000, -0x90000, false);
+        collided |= RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0x80000, 0x90000, false);
     }
     else {
-        collided = RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_FLOOR, 0, -0x80000, 0x90000, false);
-        collided |= RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_FLOOR, 0, 0x80000, 0x90000, false);
+        collided = RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, -0x80000, 0x90000, false);
+        collided |= RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0x80000, 0x90000, false);
     }
 
     if (collided)
-        entity->velocity.y = -entity->velocity.y;
+        self->velocity.y = -self->velocity.y;
     return collided;
 }
 
@@ -141,46 +141,46 @@ void Buggernaut_State_Setup(void)
 {
     RSDK_THIS(Buggernaut);
 
-    entity->active     = ACTIVE_NORMAL;
-    int y              = entity->position.y;
-    int x              = entity->position.x;
-    entity->velocity.x = 0;
-    entity->velocity.y = 0;
+    self->active     = ACTIVE_NORMAL;
+    int y              = self->position.y;
+    int x              = self->position.x;
+    self->velocity.x = 0;
+    self->velocity.y = 0;
 
     EntityBuggernaut *child = CREATE_ENTITY(Buggernaut, intToVoid(true), x, y);
     RSDK.SetSpriteAnimation(Buggernaut->aniFrames, 1, &child->animator1, true, 0);
     RSDK.SetSpriteAnimation(Buggernaut->aniFrames, 3, &child->animator2, true, 0);
     child->active      = ACTIVE_NORMAL;
-    child->drawOrder   = entity->drawOrder - 1;
-    child->parent      = (Entity *)entity;
-    child->passThrough = entity->passThrough;
+    child->drawOrder   = self->drawOrder - 1;
+    child->parent      = (Entity *)self;
+    child->passThrough = self->passThrough;
     child->isPermanent = true;
     child->state       = Buggernaut_State2_Unknown;
-    entity->state      = Buggernaut_State_Unknown1;
+    self->state      = Buggernaut_State_Unknown1;
     Buggernaut_State_Unknown1();
 }
 
 void Buggernaut_State_Unknown1(void)
 {
     RSDK_THIS(Buggernaut);
-    entity->timer--;
-    if (--entity->timer <= 0) {
-        if (--entity->timer2) {
-            entity->velocity.y = -0x10000;
-            entity->timer      = 96;
-            entity->state      = Buggernaut_State_Unknown2;
+    self->timer--;
+    if (--self->timer <= 0) {
+        if (--self->timer2) {
+            self->velocity.y = -0x10000;
+            self->timer      = 96;
+            self->state      = Buggernaut_State_Unknown2;
         }
         else {
-            entity->velocity.x = RSDK.Rand(-2, 3) << 16;
-            entity->velocity.y = RSDK.Rand(-2, 3) << 16;
+            self->velocity.x = RSDK.Rand(-2, 3) << 16;
+            self->velocity.y = RSDK.Rand(-2, 3) << 16;
 
-            if (entity->velocity.y == 0 || entity->velocity.x == 0)
-                entity->velocity.x = -0x20000;
-            entity->velocity.y = -0x20000;
-            entity->state      = Buggernaut_State_Unknown3;
+            if (self->velocity.y == 0 || self->velocity.x == 0)
+                self->velocity.x = -0x20000;
+            self->velocity.y = -0x20000;
+            self->state      = Buggernaut_State_Unknown3;
         }
     }
-    RSDK.ProcessAnimation(&entity->animator2);
+    RSDK.ProcessAnimation(&self->animator2);
     Buggernaut_CheckPlayerCollisions();
     Buggernaut_CheckOnScreen();
 }
@@ -188,39 +188,39 @@ void Buggernaut_State_Unknown1(void)
 void Buggernaut_State_Unknown2(void)
 {
     RSDK_THIS(Buggernaut);
-    entity->position.x += entity->velocity.x;
-    entity->position.y += entity->velocity.y;
+    self->position.x += self->velocity.x;
+    self->position.y += self->velocity.y;
 
     EntityPlayer *player = Player_GetNearestPlayer();
     if (player) {
-        if (player->position.x >= entity->position.x) {
-            entity->velocity.x += 0x1000;
-            if (entity->velocity.x > 0x20000)
-                entity->velocity.x = 0x20000;
-            entity->direction = FLIP_X;
+        if (player->position.x >= self->position.x) {
+            self->velocity.x += 0x1000;
+            if (self->velocity.x > 0x20000)
+                self->velocity.x = 0x20000;
+            self->direction = FLIP_X;
         }
         else {
-            entity->velocity.x -= 0x1000;
-            if (entity->velocity.x < -0x20000)
-                entity->velocity.x = -0x20000;
-            entity->direction = FLIP_NONE;
+            self->velocity.x -= 0x1000;
+            if (self->velocity.x < -0x20000)
+                self->velocity.x = -0x20000;
+            self->direction = FLIP_NONE;
         }
-        if (player->position.y >= entity->position.y) {
-            entity->velocity.y += 0x1000;
-            if (entity->velocity.y > 0x20000)
-                entity->velocity.y = 0x20000;
+        if (player->position.y >= self->position.y) {
+            self->velocity.y += 0x1000;
+            if (self->velocity.y > 0x20000)
+                self->velocity.y = 0x20000;
         }
         else {
-            entity->velocity.y -= 0x1000;
-            if (entity->velocity.y < -0x20000)
-                entity->velocity.y = -0x20000;
+            self->velocity.y -= 0x1000;
+            if (self->velocity.y < -0x20000)
+                self->velocity.y = -0x20000;
         }
     }
 
-    if (entity->velocity.y > 0 && entity->position.y > Water->waterLevel - 0x80000)
-        entity->velocity.y = -entity->velocity.y;
-    if (!entity->passThrough) {
-        if (abs(entity->velocity.x) <= abs(entity->velocity.y)) {
+    if (self->velocity.y > 0 && self->position.y > Water->waterLevel - 0x80000)
+        self->velocity.y = -self->velocity.y;
+    if (!self->passThrough) {
+        if (abs(self->velocity.x) <= abs(self->velocity.y)) {
             if (!Buggernaut_HandleTileCollisionsY())
                 Buggernaut_HandleTileCollisionsX();
         }
@@ -229,14 +229,14 @@ void Buggernaut_State_Unknown2(void)
         }
     }
 
-    if (!--entity->timer) {
-        entity->timer      = RSDK.Rand(0, 32);
-        entity->state      = Buggernaut_State_Unknown1;
-        entity->velocity.x = 0;
-        entity->velocity.y = 0;
-        entity->direction  = FLIP_NONE;
+    if (!--self->timer) {
+        self->timer      = RSDK.Rand(0, 32);
+        self->state      = Buggernaut_State_Unknown1;
+        self->velocity.x = 0;
+        self->velocity.y = 0;
+        self->direction  = FLIP_NONE;
     }
-    RSDK.ProcessAnimation(&entity->animator2);
+    RSDK.ProcessAnimation(&self->animator2);
     Buggernaut_CheckPlayerCollisions();
     Buggernaut_CheckOnScreen();
 }
@@ -244,10 +244,10 @@ void Buggernaut_State_Unknown2(void)
 void Buggernaut_State_Unknown3(void)
 {
     RSDK_THIS(Buggernaut);
-    entity->position.x += entity->velocity.x;
-    entity->position.y += entity->velocity.y;
-    RSDK.ProcessAnimation(&entity->animator2);
-    if (!entity->animator1.animationID)
+    self->position.x += self->velocity.x;
+    self->position.y += self->velocity.y;
+    RSDK.ProcessAnimation(&self->animator2);
+    if (!self->animator1.animationID)
         Buggernaut_CheckPlayerCollisions();
     Buggernaut_CheckOnScreen();
 }
@@ -256,61 +256,61 @@ void Buggernaut_State2_Unknown(void)
 {
     RSDK_THIS(Buggernaut);
 
-    entity->position.x += entity->velocity.x;
-    entity->position.y += entity->velocity.y;
-    EntityBuggernaut *buggernaut = (EntityBuggernaut *)entity->parent;
+    self->position.x += self->velocity.x;
+    self->position.y += self->velocity.y;
+    EntityBuggernaut *buggernaut = (EntityBuggernaut *)self->parent;
     if (!buggernaut || buggernaut->objectID != Buggernaut->objectID) {
-        entity->parent = NULL;
+        self->parent = NULL;
         foreach_active(Buggernaut, buggernaut)
         {
             if (buggernaut->animator1.animationID == 0
-                && RSDK.CheckObjectCollisionTouchBox(buggernaut, &Buggernaut->hitboxBadnik, entity, &Buggernaut->hitbox2)) {
-                entity->parent = (Entity *)buggernaut;
+                && RSDK.CheckObjectCollisionTouchBox(buggernaut, &Buggernaut->hitboxBadnik, self, &Buggernaut->hitbox2)) {
+                self->parent = (Entity *)buggernaut;
                 foreach_break;
             }
         }
 
-        if (!entity->parent) {
-            entity->velocity.x = RSDK.Rand(-2, 3) << 16;
-            entity->velocity.y = RSDK.Rand(-2, 3) << 16;
+        if (!self->parent) {
+            self->velocity.x = RSDK.Rand(-2, 3) << 16;
+            self->velocity.y = RSDK.Rand(-2, 3) << 16;
 
-            if (!entity->velocity.y || !entity->velocity.x)
-                entity->velocity.x = -0x20000;
-            entity->velocity.y = -0x20000;
-            entity->state      = Buggernaut_State_Unknown3;
+            if (!self->velocity.y || !self->velocity.x)
+                self->velocity.x = -0x20000;
+            self->velocity.y = -0x20000;
+            self->state      = Buggernaut_State_Unknown3;
         }
     }
 
-    if (entity->parent) {
-        if (buggernaut->position.x >= entity->position.x) {
-            entity->velocity.x += 0x2000;
-            if (entity->velocity.x > 0x20000)
-                entity->velocity.x = 0x20000;
-            entity->direction = FLIP_X;
+    if (self->parent) {
+        if (buggernaut->position.x >= self->position.x) {
+            self->velocity.x += 0x2000;
+            if (self->velocity.x > 0x20000)
+                self->velocity.x = 0x20000;
+            self->direction = FLIP_X;
         }
         else {
-            entity->velocity.x -= 0x2000;
-            if (entity->velocity.x < -0x20000)
-                entity->velocity.x = -0x20000;
-            entity->direction = FLIP_NONE;
+            self->velocity.x -= 0x2000;
+            if (self->velocity.x < -0x20000)
+                self->velocity.x = -0x20000;
+            self->direction = FLIP_NONE;
         }
 
-        if (buggernaut->position.y >= entity->position.y) {
-            entity->velocity.y += 0x2000;
-            if (entity->velocity.y > 0x20000)
-                entity->velocity.y = 0x20000;
+        if (buggernaut->position.y >= self->position.y) {
+            self->velocity.y += 0x2000;
+            if (self->velocity.y > 0x20000)
+                self->velocity.y = 0x20000;
         }
         else {
-            entity->velocity.y -= 0x2000;
-            if (entity->velocity.y < -0x20000)
-                entity->velocity.y = -0x20000;
+            self->velocity.y -= 0x2000;
+            if (self->velocity.y < -0x20000)
+                self->velocity.y = -0x20000;
         }
 
-        if (entity->velocity.y > 0 && entity->position.y > Water->waterLevel - 0x80000)
-            entity->velocity.y = -entity->velocity.y;
+        if (self->velocity.y > 0 && self->position.y > Water->waterLevel - 0x80000)
+            self->velocity.y = -self->velocity.y;
 
-        if (!entity->passThrough) {
-            if (abs(entity->velocity.x) <= abs(entity->velocity.y)) {
+        if (!self->passThrough) {
+            if (abs(self->velocity.x) <= abs(self->velocity.y)) {
                 if (!Buggernaut_HandleTileCollisionsY())
                     Buggernaut_HandleTileCollisionsX();
             }
@@ -320,18 +320,18 @@ void Buggernaut_State2_Unknown(void)
         }
     }
 
-    RSDK.ProcessAnimation(&entity->animator2);
+    RSDK.ProcessAnimation(&self->animator2);
     if (buggernaut->state == Buggernaut_State_Setup)
-        destroyEntity(entity);
+        destroyEntity(self);
 }
 
 void Buggernaut_EditorDraw(void)
 {
     RSDK_THIS(Buggernaut);
-    entity->drawFX = FX_FLIP;
-    entity->alpha  = 0x80;
-    RSDK.SetSpriteAnimation(Buggernaut->aniFrames, 0, &entity->animator1, true, 0);
-    RSDK.SetSpriteAnimation(Buggernaut->aniFrames, 2, &entity->animator2, true, 0);
+    self->drawFX = FX_FLIP;
+    self->alpha  = 0x80;
+    RSDK.SetSpriteAnimation(Buggernaut->aniFrames, 0, &self->animator1, true, 0);
+    RSDK.SetSpriteAnimation(Buggernaut->aniFrames, 2, &self->animator2, true, 0);
 
     Buggernaut_Draw();
 }

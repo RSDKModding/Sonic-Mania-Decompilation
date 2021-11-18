@@ -5,7 +5,7 @@ ObjectMonarchBG *MonarchBG;
 void MonarchBG_Update(void)
 {
     RSDK_THIS(MonarchBG);
-    StateMachine_Run(entity->state);
+    StateMachine_Run(self->state);
 }
 
 void MonarchBG_LateUpdate(void) {}
@@ -17,31 +17,31 @@ void MonarchBG_Draw(void)
     RSDK_THIS(MonarchBG);
     Vector2 drawPos;
     
-    drawPos.x         = entity->position.x - ((entity->position.x - ((ScreenInfo->position.x + ScreenInfo->centerX) << 16)) >> 1);
-    drawPos.y         = entity->position.y - 208 * ((entity->position.y - ((ScreenInfo->position.y + ScreenInfo->centerY) << 16)) >> 8);
-    entity->direction = FLIP_NONE;
-    RSDK.DrawSprite(&entity->animatorTop, &drawPos, false);
-    RSDK.DrawSprite(&entity->animatorBottom, &drawPos, false);
-    entity->direction = FLIP_X;
-    RSDK.DrawSprite(&entity->animatorTop, &drawPos, false);
-    RSDK.DrawSprite(&entity->animatorBottom, &drawPos, false);
+    drawPos.x         = self->position.x - ((self->position.x - ((ScreenInfo->position.x + ScreenInfo->centerX) << 16)) >> 1);
+    drawPos.y         = self->position.y - 208 * ((self->position.y - ((ScreenInfo->position.y + ScreenInfo->centerY) << 16)) >> 8);
+    self->direction = FLIP_NONE;
+    RSDK.DrawSprite(&self->animatorTop, &drawPos, false);
+    RSDK.DrawSprite(&self->animatorBottom, &drawPos, false);
+    self->direction = FLIP_X;
+    RSDK.DrawSprite(&self->animatorTop, &drawPos, false);
+    RSDK.DrawSprite(&self->animatorBottom, &drawPos, false);
 }
 
 void MonarchBG_Create(void *data)
 {
     RSDK_THIS(MonarchBG);
     if (!SceneInfo->inEditor) {
-        entity->visible       = true;
-        entity->drawFX        = FX_FLIP;
-        entity->drawOrder     = 1;
-        entity->scale.x       = 0xE00;
-        entity->active        = ACTIVE_NORMAL;
-        entity->updateRange.x = 0x800000;
-        entity->updateRange.y = 0x800000;
-        entity->position.x    = 0x8000000;
-        entity->position.y    = 0xC000000;
-        RSDK.SetSpriteAnimation(MonarchBG->aniFrames, 0, &entity->animatorTop, true, 0);
-        RSDK.SetSpriteAnimation(MonarchBG->aniFrames, 1, &entity->animatorBottom, true, 0);
+        self->visible       = true;
+        self->drawFX        = FX_FLIP;
+        self->drawOrder     = 1;
+        self->scale.x       = 0xE00;
+        self->active        = ACTIVE_NORMAL;
+        self->updateRange.x = 0x800000;
+        self->updateRange.y = 0x800000;
+        self->position.x    = 0x8000000;
+        self->position.y    = 0xC000000;
+        RSDK.SetSpriteAnimation(MonarchBG->aniFrames, 0, &self->animatorTop, true, 0);
+        RSDK.SetSpriteAnimation(MonarchBG->aniFrames, 1, &self->animatorBottom, true, 0);
     }
 }
 
@@ -60,10 +60,10 @@ void MonarchBG_StageLoad(void)
 void MonarchBG_EditorDraw(void)
 {
     RSDK_THIS(MonarchBG);
-    entity->position.x    = 0x8000000;
-    entity->position.y    = 0xC000000;
-    RSDK.SetSpriteAnimation(MonarchBG->aniFrames, 0, &entity->animatorTop, true, 0);
-    RSDK.SetSpriteAnimation(MonarchBG->aniFrames, 1, &entity->animatorBottom, true, 0);
+    self->position.x    = 0x8000000;
+    self->position.y    = 0xC000000;
+    RSDK.SetSpriteAnimation(MonarchBG->aniFrames, 0, &self->animatorTop, true, 0);
+    RSDK.SetSpriteAnimation(MonarchBG->aniFrames, 1, &self->animatorBottom, true, 0);
 
     MonarchBG_Draw();
 }

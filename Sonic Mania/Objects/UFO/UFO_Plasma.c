@@ -35,9 +35,9 @@ void UFO_Plasma_Create(void *data)
 {
     RSDK_THIS(UFO_Plasma);
     if (!SceneInfo->inEditor) {
-        entity->active    = ACTIVE_NORMAL;
-        entity->visible   = true;
-        entity->drawOrder = 3;
+        self->active    = ACTIVE_NORMAL;
+        self->visible   = true;
+        self->drawOrder = 3;
     }
 }
 

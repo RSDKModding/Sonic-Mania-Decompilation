@@ -5,7 +5,7 @@ ObjectFlameSpring *FlameSpring;
 void FlameSpring_Update(void)
 {
     RSDK_THIS(FlameSpring);
-    StateMachine_Run(entity->state);
+    StateMachine_Run(self->state);
 }
 
 void FlameSpring_LateUpdate(void) {}
@@ -15,40 +15,40 @@ void FlameSpring_StaticUpdate(void) {}
 void FlameSpring_Draw(void)
 {
     RSDK_THIS(FlameSpring);
-    StateMachine_Run(entity->stateDraw);
+    StateMachine_Run(self->stateDraw);
 }
 
 void FlameSpring_Create(void *data)
 {
     RSDK_THIS(FlameSpring);
-    entity->drawFX = FX_FLIP;
+    self->drawFX = FX_FLIP;
     if (!SceneInfo->inEditor) {
-        entity->active        = ACTIVE_BOUNDS;
-        entity->updateRange.x = 0x800000;
-        entity->updateRange.y = 0x800000;
-        entity->visible       = true;
-        entity->drawOrder     = Zone->drawOrderLow + 1;
+        self->active        = ACTIVE_BOUNDS;
+        self->updateRange.x = 0x800000;
+        self->updateRange.y = 0x800000;
+        self->visible       = true;
+        self->drawOrder     = Zone->drawOrderLow + 1;
         if (data) {
-            RSDK.SetSpriteAnimation(FlameSpring->aniFrames, 2, &entity->animator1, true, 0);
-            entity->state     = FlameSpring_State_Unknown2;
-            entity->stateDraw = FlameSpring_StateDraw_Unknown2;
+            RSDK.SetSpriteAnimation(FlameSpring->aniFrames, 2, &self->animator1, true, 0);
+            self->state     = FlameSpring_State_Unknown2;
+            self->stateDraw = FlameSpring_StateDraw_Unknown2;
         }
         else {
-            if (!(entity->force & 1))
-                entity->velocity.y = -0xA0000;
+            if (!(self->force & 1))
+                self->velocity.y = -0xA0000;
             else
-                entity->velocity.y = -0x100000;
-            RSDK.SetSpriteAnimation(FlameSpring->aniFrames, 0, &entity->animator1, true, 0);
-            RSDK.SetSpriteAnimation(FlameSpring->aniFrames, 1, &entity->animator2, true, 0);
-            entity->field_6C.x = entity->position.x - 768 * RSDK.Sin1024(256);
-            entity->field_6C.y = entity->position.y - 0x40000;
-            entity->field_74.x = 768 * RSDK.Sin1024(256) + entity->position.x;
-            entity->field_74.y = entity->position.y - 0x40000;
-            if (entity->type > 2)
-                entity->animator1.frameID = 2;
-            entity->state     = FlameSpring_State_Unknown1;
-            entity->type      = entity->type % 3;
-            entity->stateDraw = FlameSpring_StateDraw_Unknown1;
+                self->velocity.y = -0x100000;
+            RSDK.SetSpriteAnimation(FlameSpring->aniFrames, 0, &self->animator1, true, 0);
+            RSDK.SetSpriteAnimation(FlameSpring->aniFrames, 1, &self->animator2, true, 0);
+            self->field_6C.x = self->position.x - 768 * RSDK.Sin1024(256);
+            self->field_6C.y = self->position.y - 0x40000;
+            self->field_74.x = 768 * RSDK.Sin1024(256) + self->position.x;
+            self->field_74.y = self->position.y - 0x40000;
+            if (self->type > 2)
+                self->animator1.frameID = 2;
+            self->state     = FlameSpring_State_Unknown1;
+            self->type      = self->type % 3;
+            self->stateDraw = FlameSpring_StateDraw_Unknown1;
         }
     }
 }
@@ -73,37 +73,37 @@ void FlameSpring_State_Unknown1(void)
 {
     RSDK_THIS(FlameSpring);
 
-    entity->flag = false;
+    self->flag = false;
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionBox(player, entity, &FlameSpring->hitbox1) == 1 && player->velocity.y >= 0) {
-            if (!entity->animator1.frameID) {
-                entity->timer             = 0;
-                entity->animator1.frameID = 1;
+        if (Player_CheckCollisionBox(player, self, &FlameSpring->hitbox1) == 1 && player->velocity.y >= 0) {
+            if (!self->animator1.frameID) {
+                self->timer             = 0;
+                self->animator1.frameID = 1;
             }
-            if (entity->animator1.frameID <= 1)
-                entity->flag = true;
+            if (self->animator1.frameID <= 1)
+                self->flag = true;
         }
     }
 
-    if (entity->animator1.frameID == 1) {
-        if (entity->flag) {
-            if (++entity->timer >= 60) {
+    if (self->animator1.frameID == 1) {
+        if (self->flag) {
+            if (++self->timer >= 60) {
                 foreach_active(Player, player)
                 {
-                    if (Player_CheckCollisionBox(player, entity, &FlameSpring->hitbox1) == 1) {
+                    if (Player_CheckCollisionBox(player, self, &FlameSpring->hitbox1) == 1) {
                         int32 anim = player->playerAnimator.animationID;
                         if (anim == ANI_WALK || (anim > ANI_AIRWALK && anim <= ANI_DASH))
                             player->storedAnim = player->playerAnimator.animationID;
                         else
                             player->storedAnim = ANI_WALK;
-                        if (entity->playerAni)
+                        if (self->playerAni)
                             RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGTWIRL, &player->playerAnimator, true, 0);
                         else
                             RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGDIAGONAL, &player->playerAnimator, true, 0);
                         player->state      = Player_State_Air;
                         player->onGround   = false;
-                        player->velocity.y = entity->velocity.y;
+                        player->velocity.y = self->velocity.y;
                         if (player->underwater)
                             player->velocity.y >>= 1;
                         RSDK.PlaySfx(FlameSpring->sfxSpring, false, 255);
@@ -112,7 +112,7 @@ void FlameSpring_State_Unknown1(void)
             }
         }
         else {
-            entity->animator1.frameID = 0;
+            self->animator1.frameID = 0;
         }
     }
     else {
@@ -120,25 +120,25 @@ void FlameSpring_State_Unknown1(void)
             RSDK.PlaySfx(FlameSpring->sfxFlame, false, 255);
         }
 
-        int32 timer = Zone->timer + entity->offset;
-        if (!entity->type) {
-            entity->field_6C.x = entity->position.x - 768 * RSDK.Sin1024(((4 * timer) & 0x1FF) + 256);
-            entity->field_74.x = 768 * RSDK.Sin1024(((4 * timer) & 0x1FF) + 256) + entity->position.x;
+        int32 timer = Zone->timer + self->offset;
+        if (!self->type) {
+            self->field_6C.x = self->position.x - 768 * RSDK.Sin1024(((4 * timer) & 0x1FF) + 256);
+            self->field_74.x = 768 * RSDK.Sin1024(((4 * timer) & 0x1FF) + 256) + self->position.x;
         }
 
         if (!(Zone->timer & 3)) {
-            switch (entity->type) {
+            switch (self->type) {
                 case 0: {
-                    EntityFlameSpring *spring = CREATE_ENTITY(FlameSpring, intToVoid(1), entity->field_6C.x, entity->field_6C.y);
+                    EntityFlameSpring *spring = CREATE_ENTITY(FlameSpring, intToVoid(1), self->field_6C.x, self->field_6C.y);
                     spring->drawOrder         = Zone->drawOrderLow;
                     spring->velocity.x        = -256 * RSDK.Sin1024(((4 * timer) & 0x1FF) + 256);
 
-                    spring             = CREATE_ENTITY(FlameSpring, intToVoid(1), entity->field_74.x, entity->field_74.y);
+                    spring             = CREATE_ENTITY(FlameSpring, intToVoid(1), self->field_74.x, self->field_74.y);
                     spring->velocity.x = (RSDK.Sin1024(((4 * timer) & 0x1FF) + 256) << 8);
                     break;
                 }
                 case 1: {
-                    EntityFlameSpring *spring = CREATE_ENTITY(FlameSpring, intToVoid(1), entity->field_74.x, entity->field_74.y);
+                    EntityFlameSpring *spring = CREATE_ENTITY(FlameSpring, intToVoid(1), self->field_74.x, self->field_74.y);
                     spring->drawOrder         = Zone->drawOrderLow;
                     if (192 * RSDK.Sin1024((timer & 0x1FF) + 256) >= 0)
                         spring->velocity.x = (0x44000 - 192 * RSDK.Sin1024((timer & 0x1FF) + 256));
@@ -147,7 +147,7 @@ void FlameSpring_State_Unknown1(void)
                     break;
                 }
                 case 2: {
-                    EntityFlameSpring *spring = CREATE_ENTITY(FlameSpring, intToVoid(1), entity->field_6C.x, entity->field_6C.y);
+                    EntityFlameSpring *spring = CREATE_ENTITY(FlameSpring, intToVoid(1), self->field_6C.x, self->field_6C.y);
                     spring->drawOrder         = Zone->drawOrderLow;
                     if (-192 * RSDK.Sin1024((timer & 0x1FF) + 256) >= 0)
                         spring->velocity.x = (-192 * RSDK.Sin1024((timer & 0x1FF) + 256) - 0x44000);
@@ -164,39 +164,39 @@ void FlameSpring_State_Unknown2(void)
 {
     RSDK_THIS(FlameSpring);
 
-    entity->position.x += entity->velocity.x;
+    self->position.x += self->velocity.x;
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionTouch(player, entity, &FlameSpring->hitbox2)) {
-            Player_CheckElementalHit(player, entity, SHIELD_FIRE);
+        if (Player_CheckCollisionTouch(player, self, &FlameSpring->hitbox2)) {
+            Player_CheckElementalHit(player, self, SHIELD_FIRE);
         }
     }
 
-    RSDK.ProcessAnimation(&entity->animator1);
-    if (entity->animator1.frameID == entity->animator1.frameCount - 1)
-        destroyEntity(entity);
+    RSDK.ProcessAnimation(&self->animator1);
+    if (self->animator1.frameID == self->animator1.frameCount - 1)
+        destroyEntity(self);
 }
 
 void FlameSpring_StateDraw_Unknown1(void)
 {
     RSDK_THIS(FlameSpring);
-    if (entity->animator1.frameID != 1 && entity->type != 1) {
-        entity->animator2.frameID = entity->field_6C.x > entity->position.x;
-        RSDK.DrawSprite(&entity->animator2, &entity->field_6C, false);
+    if (self->animator1.frameID != 1 && self->type != 1) {
+        self->animator2.frameID = self->field_6C.x > self->position.x;
+        RSDK.DrawSprite(&self->animator2, &self->field_6C, false);
     }
 
-    RSDK.DrawSprite(&entity->animator1, NULL, false);
+    RSDK.DrawSprite(&self->animator1, NULL, false);
 
-    if (entity->animator1.frameID != 1 && entity->type != 2) {
-        entity->animator2.frameID = entity->field_74.x > entity->position.x;
-        RSDK.DrawSprite(&entity->animator2, &entity->field_74, false);
+    if (self->animator1.frameID != 1 && self->type != 2) {
+        self->animator2.frameID = self->field_74.x > self->position.x;
+        RSDK.DrawSprite(&self->animator2, &self->field_74, false);
     }
 }
 
 void FlameSpring_StateDraw_Unknown2(void)
 {
     RSDK_THIS(FlameSpring);
-    RSDK.DrawSprite(&entity->animator1, NULL, false);
+    RSDK.DrawSprite(&self->animator1, NULL, false);
 }
 
 #if RETRO_INCLUDE_EDITOR

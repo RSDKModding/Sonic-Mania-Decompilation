@@ -7,8 +7,8 @@ void LRZ3Cutscene_Update(void)
     void *states[] = { LRZ3Cutscene_Unknown1, LRZ3Cutscene_Unknown2, NULL };
 
     RSDK_THIS(FBZMissile);
-    CutsceneSeq_StartSequence((Entity *)entity, states);
-    entity->active = ACTIVE_NEVER;
+    CutsceneSeq_StartSequence((Entity *)self, states);
+    self->active = ACTIVE_NEVER;
 }
 
 void LRZ3Cutscene_LateUpdate(void) {}
@@ -20,7 +20,7 @@ void LRZ3Cutscene_Draw(void) {}
 void LRZ3Cutscene_Create(void *data)
 {
     RSDK_THIS(FBZMissile);
-    entity->active = ACTIVE_NORMAL;
+    self->active = ACTIVE_NORMAL;
 }
 
 bool32 LRZ3Cutscene_Unknown1(EntityCutsceneSeq *host)

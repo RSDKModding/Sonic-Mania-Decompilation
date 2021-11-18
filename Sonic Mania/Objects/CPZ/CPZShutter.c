@@ -5,7 +5,7 @@ ObjectCPZShutter *CPZShutter;
 void CPZShutter_Update(void)
 {
     RSDK_THIS(CPZShutter);
-    StateMachine_Run(entity->state);
+    StateMachine_Run(self->state);
 }
 
 void CPZShutter_LateUpdate(void) {}
@@ -15,19 +15,19 @@ void CPZShutter_StaticUpdate(void) {}
 void CPZShutter_Draw(void)
 {
     RSDK_THIS(CPZShutter);
-    RSDK.DrawSprite(&entity->animator, NULL, false);
+    RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
 void CPZShutter_Create(void *data)
 {
     RSDK_THIS(CPZShutter);
     if (!SceneInfo->inEditor) {
-        entity->visible       = true;
-        entity->active        = ACTIVE_BOUNDS;
-        entity->drawOrder     = Zone->drawOrderHigh - 2;
-        entity->updateRange.x = 0x800000;
-        entity->updateRange.y = 0x800000;
-        RSDK.SetSpriteAnimation(CPZShutter->aniFrames, 0, &entity->animator, true, 0);
+        self->visible       = true;
+        self->active        = ACTIVE_BOUNDS;
+        self->drawOrder     = Zone->drawOrderHigh - 2;
+        self->updateRange.x = 0x800000;
+        self->updateRange.y = 0x800000;
+        RSDK.SetSpriteAnimation(CPZShutter->aniFrames, 0, &self->animator, true, 0);
     }
 }
 
@@ -36,21 +36,21 @@ void CPZShutter_StageLoad(void) { CPZShutter->aniFrames = RSDK.LoadSpriteAnimati
 void CPZShutter_State_Open(void)
 {
     RSDK_THIS(CPZShutter);
-    entity->position.y -= 0x20000;
-    if (++entity->timer == 24) {
-        entity->timer = 0;
-        entity->state = StateMachine_None;
+    self->position.y -= 0x20000;
+    if (++self->timer == 24) {
+        self->timer = 0;
+        self->state = StateMachine_None;
     }
 }
 
 void CPZShutter_State_Close(void)
 {
     RSDK_THIS(CPZShutter);
-    entity->position.y += 0x20000;
-    if (++entity->timer == 24) {
-        entity->timer  = 0;
-        entity->active = ACTIVE_BOUNDS;
-        entity->state  = StateMachine_None;
+    self->position.y += 0x20000;
+    if (++self->timer == 24) {
+        self->timer  = 0;
+        self->active = ACTIVE_BOUNDS;
+        self->state  = StateMachine_None;
     }
 }
 
@@ -58,7 +58,7 @@ void CPZShutter_State_Close(void)
 void CPZShutter_EditorDraw(void)
 {
     RSDK_THIS(CPZShutter);
-    RSDK.SetSpriteAnimation(CPZShutter->aniFrames, 0, &entity->animator, true, 0);
+    RSDK.SetSpriteAnimation(CPZShutter->aniFrames, 0, &self->animator, true, 0);
     CPZShutter_Draw();
 }
 

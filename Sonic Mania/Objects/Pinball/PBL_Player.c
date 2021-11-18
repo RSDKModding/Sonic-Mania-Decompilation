@@ -6,16 +6,16 @@ ObjectPBL_Player *PBL_Player;
 void PBL_Player_Update(void)
 {
     RSDK_THIS(PBL_Player);
-    StateMachine_Run(entity->stateInput);
-    StateMachine_Run(entity->state);
+    StateMachine_Run(self->stateInput);
+    StateMachine_Run(self->state);
 
-    entity->angleX   = ((uint16)entity->angleX - (uint16)((abs(entity->velocity.y) + abs(entity->velocity.x)) >> 12)) & 0x3FF;
-    entity->rotation = 4 * RSDK.ATan2(-entity->velocity.y, entity->velocity.x);
-    if (!(entity->angleX & 0x100))
-        entity->animator.animationID = PBL_Player->jumpModel;
+    self->angleX   = ((uint16)self->angleX - (uint16)((abs(self->velocity.y) + abs(self->velocity.x)) >> 12)) & 0x3FF;
+    self->rotation = 4 * RSDK.ATan2(-self->velocity.y, self->velocity.x);
+    if (!(self->angleX & 0x100))
+        self->animator.animationID = PBL_Player->jumpModel;
     else
-        entity->animator.animationID = PBL_Player->ballModel;
-    RSDK.ProcessAnimation(&entity->animator);
+        self->animator.animationID = PBL_Player->ballModel;
+    RSDK.ProcessAnimation(&self->animator);
 }
 
 void PBL_Player_LateUpdate(void)
@@ -24,8 +24,8 @@ void PBL_Player_LateUpdate(void)
     Matrix *mat = &PBL_Camera->matrix1;
 
     
-    entity->depth3D = mat->values[2][3] + mat->values[2][0] * (entity->position.x >> 0x10) + mat->values[2][2] * (entity->position.y >> 0x10)
-                    + mat->values[2][1] * (entity->height >> 0x10);
+    self->depth3D = mat->values[2][3] + mat->values[2][0] * (self->position.x >> 0x10) + mat->values[2][2] * (self->position.y >> 0x10)
+                    + mat->values[2][1] * (self->height >> 0x10);
 }
 
 void PBL_Player_StaticUpdate(void) {}
@@ -33,17 +33,17 @@ void PBL_Player_StaticUpdate(void) {}
 void PBL_Player_Draw(void)
 {
     RSDK_THIS(PBL_Player);
-    if (entity->depth3D >= 0x4000) {
+    if (self->depth3D >= 0x4000) {
         RSDK.Prepare3DScene(PBL_Player->sceneIndex);
-        RSDK.MatrixTranslateXYZ(&entity->matrix2, entity->position.x, entity->height + 0x100000, entity->position.y, true);
-        RSDK.MatrixRotateX(&entity->matrix1, entity->angleX);
-        RSDK.MatrixRotateY(&entity->matrix3, entity->rotation);
-        RSDK.MatrixMultiply(&entity->matrix4, &entity->matrix1, &entity->matrix3);
-        RSDK.MatrixMultiply(&entity->matrix3, &entity->matrix4, &entity->matrix2);
-        RSDK.MatrixMultiply(&entity->matrix3, &entity->matrix3, &PBL_Camera->matrix1);
-        RSDK.MatrixMultiply(&entity->matrix4, &entity->matrix4, &PBL_Camera->matrix2);
-        RSDK.AddModelTo3DScene(entity->animator.animationID, PBL_Player->sceneIndex, S3D_FLATCLR_SHADED_BLENDED_SCREEN, &entity->matrix3,
-                               &entity->matrix4, 0xFFFFFF);
+        RSDK.MatrixTranslateXYZ(&self->matrix2, self->position.x, self->height + 0x100000, self->position.y, true);
+        RSDK.MatrixRotateX(&self->matrix1, self->angleX);
+        RSDK.MatrixRotateY(&self->matrix3, self->rotation);
+        RSDK.MatrixMultiply(&self->matrix4, &self->matrix1, &self->matrix3);
+        RSDK.MatrixMultiply(&self->matrix3, &self->matrix4, &self->matrix2);
+        RSDK.MatrixMultiply(&self->matrix3, &self->matrix3, &PBL_Camera->matrix1);
+        RSDK.MatrixMultiply(&self->matrix4, &self->matrix4, &PBL_Camera->matrix2);
+        RSDK.AddModelTo3DScene(self->animator.animationID, PBL_Player->sceneIndex, S3D_FLATCLR_SHADED_BLENDED_SCREEN, &self->matrix3,
+                               &self->matrix4, 0xFFFFFF);
         RSDK.Draw3DScene(PBL_Player->sceneIndex);
     }
 }
@@ -52,20 +52,20 @@ void PBL_Player_Create(void *data)
 {
     RSDK_THIS(PBL_Player);
     if (!SceneInfo->inEditor) {
-        entity->active          = ACTIVE_NORMAL;
-        entity->visible         = true;
-        entity->updateRange.x   = 0x800000;
-        entity->updateRange.y   = 0x800000;
-        entity->drawOrder       = 4;
-        entity->stateInput      = PBL_Player_ProcessPlayerControl;
-        entity->state           = PBL_Player_State_Launcher;
-        entity->controllerID    = 1;
-        entity->onGround        = false;
-        entity->tileCollisions  = true;
-        entity->collisionLayers = 1 << PBL_Setup->tableHigh;
-        RSDK.SetModelAnimation(PBL_Player->jumpModel, &entity->animator, 128, 0, true, 0);
+        self->active          = ACTIVE_NORMAL;
+        self->visible         = true;
+        self->updateRange.x   = 0x800000;
+        self->updateRange.y   = 0x800000;
+        self->drawOrder       = 4;
+        self->stateInput      = PBL_Player_ProcessPlayerControl;
+        self->state           = PBL_Player_State_Launcher;
+        self->controllerID    = 1;
+        self->onGround        = false;
+        self->tileCollisions  = true;
+        self->collisionLayers = 1 << PBL_Setup->tableHigh;
+        RSDK.SetModelAnimation(PBL_Player->jumpModel, &self->animator, 128, 0, true, 0);
 
-        foreach_all(PBL_Camera, camera) { camera->targetPtr = (Entity *)entity; }
+        foreach_all(PBL_Camera, camera) { camera->targetPtr = (Entity *)self; }
     }
 }
 
@@ -134,7 +134,7 @@ void PBL_Player_StageLoad(void)
 void PBL_Player_ProcessPlayerControl(void)
 {
     RSDK_THIS(PBL_Player);
-    if (entity->controllerID < PLAYER_MAX) {
+    if (self->controllerID < PLAYER_MAX) {
 #if RETRO_USE_TOUCH_CONTROLS
         for (int32 t = 0; t < TouchInfo->count; ++t) {
             int32 tx = (TouchInfo->x[t] * ScreenInfo->width);
@@ -170,7 +170,7 @@ void PBL_Player_ProcessPlayerControl(void)
                         EntityPauseMenu *pauseMenu = RSDK.GetEntityByID(SLOT_PAUSEMENU);
                         if (!pauseMenu->objectID) {
                             RSDK.ResetEntitySlot(SLOT_PAUSEMENU, PauseMenu->objectID, NULL);
-                            pauseMenu->triggerPlayer  = RSDK.GetEntityID(entity);
+                            pauseMenu->triggerPlayer  = RSDK.GetEntityID(self);
                             pauseMenu->disableRestart = true;
                         }
                     }
@@ -180,38 +180,38 @@ void PBL_Player_ProcessPlayerControl(void)
         }
 #endif
 
-        RSDKControllerState *controller = &ControllerInfo[entity->controllerID];
-        entity->up                  = controller->keyUp.down;
-        entity->down                = controller->keyDown.down;
-        entity->left                = controller->keyLeft.down;
-        entity->right               = controller->keyRight.down;
+        RSDKControllerState *controller = &ControllerInfo[self->controllerID];
+        self->up                  = controller->keyUp.down;
+        self->down                = controller->keyDown.down;
+        self->left                = controller->keyLeft.down;
+        self->right               = controller->keyRight.down;
 
-        entity->up |= AnalogStickInfoL[entity->controllerID].keyUp.down;
-        entity->down |= AnalogStickInfoL[entity->controllerID].keyDown.down;
-        entity->left |= AnalogStickInfoL[entity->controllerID].keyLeft.down;
-        entity->right |= AnalogStickInfoL[entity->controllerID].keyRight.down;
-        entity->up |= AnalogStickInfoL[entity->controllerID].vDelta > 0.3;
-        entity->down |= AnalogStickInfoL[entity->controllerID].vDelta < -0.3;
-        entity->left |= AnalogStickInfoL[entity->controllerID].hDelta < -0.3;
-        entity->right |= AnalogStickInfoL[entity->controllerID].hDelta > 0.3;
+        self->up |= AnalogStickInfoL[self->controllerID].keyUp.down;
+        self->down |= AnalogStickInfoL[self->controllerID].keyDown.down;
+        self->left |= AnalogStickInfoL[self->controllerID].keyLeft.down;
+        self->right |= AnalogStickInfoL[self->controllerID].keyRight.down;
+        self->up |= AnalogStickInfoL[self->controllerID].vDelta > 0.3;
+        self->down |= AnalogStickInfoL[self->controllerID].vDelta < -0.3;
+        self->left |= AnalogStickInfoL[self->controllerID].hDelta < -0.3;
+        self->right |= AnalogStickInfoL[self->controllerID].hDelta > 0.3;
 
-        if (entity->left && entity->right) {
-            entity->left  = false;
-            entity->right = false;
+        if (self->left && self->right) {
+            self->left  = false;
+            self->right = false;
         }
-        entity->jumpPress = controller->keyA.press || controller->keyB.press || controller->keyC.press || controller->keyX.press;
+        self->jumpPress = controller->keyA.press || controller->keyB.press || controller->keyC.press || controller->keyX.press;
 
 #if RETRO_USE_PLUS
-        if (controller[entity->controllerID].keyStart.press || UnknownInfo->field_10 == 1) {
+        if (controller[self->controllerID].keyStart.press || UnknownInfo->field_10 == 1) {
 #else
-        if (controller[entity->controllerID].keyStart.press) {
+        if (controller[self->controllerID].keyStart.press) {
 #endif
 
             if (SceneInfo->state == ENGINESTATE_REGULAR) {
                 EntityPauseMenu *pauseMenu = RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu);
                 if (!pauseMenu->objectID) {
                     RSDK.ResetEntitySlot(SLOT_PAUSEMENU, PauseMenu->objectID, NULL);
-                    pauseMenu->triggerPlayer  = RSDK.GetEntityID(entity);
+                    pauseMenu->triggerPlayer  = RSDK.GetEntityID(self);
                     pauseMenu->disableRestart = true;
                 }
             }
@@ -222,16 +222,16 @@ void PBL_Player_ProcessPlayerControl(void)
 void PBL_Player_State_Launcher(void)
 {
     RSDK_THIS(PBL_Player);
-    if (!entity->onGround)
-        entity->velocity.y += 0x3800;
+    if (!self->onGround)
+        self->velocity.y += 0x3800;
 
-    RSDK.ProcessTileCollisions(entity, &PBL_Player->outerBox, &PBL_Player->innerBox);
-    if (++entity->timer == 60) {
-        entity->velocity.y     = -0xE0000;
-        entity->timer          = 0;
-        entity->collisionPlane = 1;
-        entity->onGround       = false;
-        entity->state          = PBL_Player_State_Air;
+    RSDK.ProcessTileCollisions(self, &PBL_Player->outerBox, &PBL_Player->innerBox);
+    if (++self->timer == 60) {
+        self->velocity.y     = -0xE0000;
+        self->timer          = 0;
+        self->collisionPlane = 1;
+        self->onGround       = false;
+        self->state          = PBL_Player_State_Air;
         RSDK.PlaySfx(PBL_Player->sfxPlunger, 0, 255);
     }
 }
@@ -239,50 +239,50 @@ void PBL_Player_State_Launcher(void)
 void PBL_Player_State_Ground(void)
 {
     RSDK_THIS(PBL_Player);
-    if (!entity->angle) {
-        if (abs(entity->groundVel) < 0x10000)
-            entity->groundVel = RSDK.Rand(-0x20000, 0x20000);
+    if (!self->angle) {
+        if (abs(self->groundVel) < 0x10000)
+            self->groundVel = RSDK.Rand(-0x20000, 0x20000);
     }
 
-    entity->groundVel += 0x2800 * RSDK.Sin256(entity->angle) >> 8;
-    if (entity->collisionMode) {
-        if (entity->angle >= 0x40 && entity->angle <= 0xC0 && abs(entity->groundVel) < 0x20000) {
-            entity->velocity.x    = (entity->groundVel * RSDK.Cos256(entity->angle)) >> 8;
-            entity->velocity.y    = (entity->groundVel * RSDK.Sin256(entity->angle)) >> 8;
-            entity->onGround      = false;
-            entity->angle         = 0;
-            entity->collisionMode = CMODE_FLOOR;
+    self->groundVel += 0x2800 * RSDK.Sin256(self->angle) >> 8;
+    if (self->collisionMode) {
+        if (self->angle >= 0x40 && self->angle <= 0xC0 && abs(self->groundVel) < 0x20000) {
+            self->velocity.x    = (self->groundVel * RSDK.Cos256(self->angle)) >> 8;
+            self->velocity.y    = (self->groundVel * RSDK.Sin256(self->angle)) >> 8;
+            self->onGround      = false;
+            self->angle         = 0;
+            self->collisionMode = CMODE_FLOOR;
         }
     }
-    if (!entity->onGround)
-        entity->state = PBL_Player_State_Air;
-    RSDK.ProcessTileCollisions(entity, &PBL_Player->outerBox, &PBL_Player->innerBox);
+    if (!self->onGround)
+        self->state = PBL_Player_State_Air;
+    RSDK.ProcessTileCollisions(self, &PBL_Player->outerBox, &PBL_Player->innerBox);
 }
 
 void PBL_Player_State_Air(void)
 {
     RSDK_THIS(PBL_Player);
-    entity->velocity.y += 0x2800;
-    if (abs(entity->velocity.x) > abs(entity->velocity.y)) {
-        if (RSDK.ObjectTileCollision(entity, entity->collisionLayers, CMODE_LWALL, entity->collisionPlane, entity->velocity.x + 0x100000, 0, false)) {
-            entity->velocity.x = -(entity->velocity.x >> 1);
+    self->velocity.y += 0x2800;
+    if (abs(self->velocity.x) > abs(self->velocity.y)) {
+        if (RSDK.ObjectTileCollision(self, self->collisionLayers, CMODE_LWALL, self->collisionPlane, self->velocity.x + 0x100000, 0, false)) {
+            self->velocity.x = -(self->velocity.x >> 1);
         }
-        if (RSDK.ObjectTileCollision(entity, entity->collisionLayers, CMODE_RWALL, entity->collisionPlane, entity->velocity.x - 0x100000, 0, false)) {
-            entity->velocity.x = -(entity->velocity.x >> 1);
+        if (RSDK.ObjectTileCollision(self, self->collisionLayers, CMODE_RWALL, self->collisionPlane, self->velocity.x - 0x100000, 0, false)) {
+            self->velocity.x = -(self->velocity.x >> 1);
         }
     }
 
-    RSDK.ProcessTileCollisions(entity, &PBL_Player->outerBox, &PBL_Player->innerBox);
-    if (entity->left) {
-        entity->velocity.x -= 0x800;
+    RSDK.ProcessTileCollisions(self, &PBL_Player->outerBox, &PBL_Player->innerBox);
+    if (self->left) {
+        self->velocity.x -= 0x800;
     }
-    else if (entity->right) {
-        entity->velocity.x += 0x800;
+    else if (self->right) {
+        self->velocity.x += 0x800;
     }
-    if (entity->onGround) {
-        if (!entity->collisionMode)
-            entity->collisionPlane = 0;
-        entity->state = PBL_Player_State_Ground;
+    if (self->onGround) {
+        if (!self->collisionMode)
+            self->collisionPlane = 0;
+        self->state = PBL_Player_State_Ground;
     }
 }
 

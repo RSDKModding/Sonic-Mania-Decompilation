@@ -19,7 +19,7 @@ typedef enum {
     TVVAN_UNUSED1,
     TVVAN_UNUSED2,
     TVVAN_EXITTV,
-    TVVAN_15,
+    TVVAN_TRANSPORT,
 }TVVanTypes;
 
 // Object Class

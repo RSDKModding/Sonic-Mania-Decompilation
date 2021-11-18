@@ -38,13 +38,13 @@ void ExtrasMenu_Unknown2(void)
     int32 unlock             = GameProgress_CheckUnlock(8);
     button->disabled       = !unlock;
     if (button->disabled)
-        UIButton_Unknown1(button);
+        UIButton_ManageChoices(button);
 
     button           = control->buttons[1];
     unlock           = GameProgress_CheckUnlock(6);
     button->disabled = !unlock;
     if (button->disabled)
-        UIButton_Unknown1(button);
+        UIButton_ManageChoices(button);
 
     button           = control->buttons[2];
     unlock           = GameProgress_CheckUnlock(7);
@@ -124,7 +124,7 @@ bool32 ExtrasMenu_CheckMedallionCheat(void)
 void ExtrasMenu_ProcessInputs(void)
 {
     RSDK_THIS(UIControl);
-    if (entity->activeEntityID == 2) {
+    if (self->activeEntityID == 2) {
         ExtrasMenu_ProcessMedallionCheat();
         if (ExtrasMenu_CheckMedallionCheat()) {
             if (!globals->medallionDebug) {

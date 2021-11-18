@@ -5,10 +5,10 @@ ObjectTubeSpring *TubeSpring;
 void TubeSpring_Update(void)
 {
     RSDK_THIS(TubeSpring);
-    if (entity->timer > 0)
-        entity->timer--;
-    StateMachine_Run(entity->state);
-    RSDK.ProcessAnimation(&entity->animator);
+    if (self->timer > 0)
+        self->timer--;
+    StateMachine_Run(self->state);
+    RSDK.ProcessAnimation(&self->animator);
 }
 
 void TubeSpring_LateUpdate(void) {}
@@ -18,19 +18,19 @@ void TubeSpring_StaticUpdate(void) {}
 void TubeSpring_Draw(void)
 {
     RSDK_THIS(TubeSpring);
-    RSDK.DrawSprite(&entity->animator, NULL, false);
+    RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
 void TubeSpring_Create(void *data)
 {
     RSDK_THIS(TubeSpring);
     Spring_Create(NULL);
-    RSDK.SetSpriteAnimation(TubeSpring->aniFrames, 0, &entity->animator, true, 0);
-    entity->drawOrder               = Zone->drawOrderHigh;
-    entity->velocity.y              = !entity->type ? -0x100000 : -0xA8000;
-    entity->type                    = 0xFF;
-    entity->animator.animationSpeed = 0;
-    entity->state                   = TubeSpring_Interact;
+    RSDK.SetSpriteAnimation(TubeSpring->aniFrames, 0, &self->animator, true, 0);
+    self->drawOrder               = Zone->drawOrderHigh;
+    self->velocity.y              = !self->type ? -0x100000 : -0xA8000;
+    self->type                    = 0xFF;
+    self->animator.animationSpeed = 0;
+    self->state                   = TubeSpring_Interact;
 }
 
 void TubeSpring_StageLoad(void)
@@ -51,9 +51,9 @@ void TubeSpring_Interact(void) { TubeSpring_Spring(true); }
 void TubeSpring_Springing(void)
 {
     RSDK_THIS(TubeSpring);
-    if (TubeSpring_Spring(false) && entity->animator.frameID == entity->animator.frameCount - 1) {
-        RSDK.SetSpriteAnimation(TubeSpring->aniFrames, 2, &entity->animator, true, 0);
-        entity->state = TubeSpring_Pullback;
+    if (TubeSpring_Spring(false) && self->animator.frameID == self->animator.frameCount - 1) {
+        RSDK.SetSpriteAnimation(TubeSpring->aniFrames, 2, &self->animator, true, 0);
+        self->state = TubeSpring_Pullback;
         TubeSpring_Pullback();
     }
 }
@@ -61,9 +61,9 @@ void TubeSpring_Pullback(void)
 {
     RSDK_THIS(TubeSpring);
     TubeSpring_Spring(false);
-    if (entity->animator.frameID == entity->animator.frameCount - 1) {
-        RSDK.SetSpriteAnimation(TubeSpring->aniFrames, 0, &entity->animator, true, 0);
-        entity->state = TubeSpring_Interact;
+    if (self->animator.frameID == self->animator.frameCount - 1) {
+        RSDK.SetSpriteAnimation(TubeSpring->aniFrames, 0, &self->animator, true, 0);
+        self->state = TubeSpring_Interact;
     }
 }
 
@@ -77,15 +77,15 @@ bool32 TubeSpring_Spring(bool32 interact)
         if (Player_CheckValidState(player)) {
             bool32 oldinter     = player->interaction;
             player->interaction = true;
-            if (!Player_CheckCollisionTouch(player, entity, &TubeSpring->hitbox)) {
+            if (!Player_CheckCollisionTouch(player, self, &TubeSpring->hitbox)) {
                 player->interaction = oldinter;
                 continue;
             }
 
             if (interact) {
-                RSDK.SetSpriteAnimation(TubeSpring->aniFrames, 1, &entity->animator, true, 0);
+                RSDK.SetSpriteAnimation(TubeSpring->aniFrames, 1, &self->animator, true, 0);
                 RSDK.PlaySfx(TubeSpring->sfxExit, 0, 255);
-                entity->state = TubeSpring_Springing;
+                self->state = TubeSpring_Springing;
             }
 
             sprung = true;
@@ -108,7 +108,7 @@ void TubeSpring_EditorDraw(void)
 {
     RSDK_THIS(TubeSpring);
     Spring_Create(NULL);
-    RSDK.SetSpriteAnimation(TubeSpring->aniFrames, 0, &entity->animator, true, 0);
+    RSDK.SetSpriteAnimation(TubeSpring->aniFrames, 0, &self->animator, true, 0);
 
     TubeSpring_Draw();
 }

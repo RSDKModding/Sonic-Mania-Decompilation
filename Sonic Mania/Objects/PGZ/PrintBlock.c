@@ -5,53 +5,53 @@ ObjectPrintBlock *PrintBlock;
 void PrintBlock_Update(void)
 {
     RSDK_THIS(PrintBlock);
-    if (entity->state == Platform_State_Normal) {
-        if (entity->interval != 0xFFFF) {
-            int32 timer = (Zone->timer + entity->intervalOffset) % entity->interval;
-            if (timer >= entity->duration) {
-                if (timer >= entity->duration + 12) {
-                    entity->animator.frameID        = 1;
-                    entity->animator.animationTimer = 0;
+    if (self->state == Platform_State_Normal) {
+        if (self->interval != 0xFFFF) {
+            int32 timer = (Zone->timer + self->intervalOffset) % self->interval;
+            if (timer >= self->duration) {
+                if (timer >= self->duration + 12) {
+                    self->animator.frameID        = 1;
+                    self->animator.animationTimer = 0;
                 }
                 else {
-                    entity->active                  = ACTIVE_NORMAL;
-                    entity->state                   = PrintBlock_Unknown2;
-                    entity->collapseDelay           = timer - entity->duration;
-                    entity->animator.frameID        = 4 - entity->collapseDelay / 3;
-                    entity->animator.animationTimer = entity->collapseDelay % 3;
+                    self->active                  = ACTIVE_NORMAL;
+                    self->state                   = PrintBlock_Unknown2;
+                    self->collapseDelay           = timer - self->duration;
+                    self->animator.frameID        = 4 - self->collapseDelay / 3;
+                    self->animator.animationTimer = self->collapseDelay % 3;
                 }
             }
             else {
-                entity->active        = ACTIVE_NORMAL;
-                entity->collapseDelay = timer;
-                if (entity->collapseDelay > 12) {
-                    entity->animator.frameID        = 4;
-                    entity->animator.animationTimer = 0;
+                self->active        = ACTIVE_NORMAL;
+                self->collapseDelay = timer;
+                if (self->collapseDelay > 12) {
+                    self->animator.frameID        = 4;
+                    self->animator.animationTimer = 0;
                 }
                 else {
-                    entity->animator.animationTimer = entity->collapseDelay % 3;
-                    entity->animator.frameID        = entity->collapseDelay / 3 + 1;
+                    self->animator.animationTimer = self->collapseDelay % 3;
+                    self->animator.frameID        = self->collapseDelay / 3 + 1;
                 }
 
                 Vector2 pos;
                 pos.x = 0x200000;
                 pos.y = 0x200000;
-                if (RSDK.CheckOnScreen(entity, &pos)) {
+                if (RSDK.CheckOnScreen(self, &pos)) {
                     int32 channel = RSDK.PlaySfx(PrintBlock->sfxLetter, 0, 255);
                     RSDK.SetChannelAttributes(channel, 1.0, 0.0, 1.0);
                 }
-                entity->state = PrintBlock_Unknown1;
+                self->state = PrintBlock_Unknown1;
             }
         }
     }
 
-    if (entity->animator.frameID <= 2) {
-        entity->stateCollide = Platform_CollisionState_None;
-        entity->collision    = 4;
+    if (self->animator.frameID <= 2) {
+        self->stateCollide = Platform_CollisionState_None;
+        self->collision    = 4;
     }
     else {
-        entity->stateCollide = Platform_CollisionState_AllSolid;
-        entity->collision    = 1;
+        self->stateCollide = Platform_CollisionState_AllSolid;
+        self->collision    = 1;
     }
     Platform_Update();
 }
@@ -63,22 +63,22 @@ void PrintBlock_StaticUpdate(void) {}
 void PrintBlock_Draw(void)
 {
     RSDK_THIS(PrintBlock);
-    RSDK.DrawSprite(&entity->animator, &entity->drawPos, false);
-    entity->inkEffect            = INK_SUB;
-    PrintBlock->animator.frameID = entity->animator.frameID;
-    RSDK.DrawSprite(&PrintBlock->animator, &entity->drawPos, false);
-    entity->inkEffect = INK_NONE;
+    RSDK.DrawSprite(&self->animator, &self->drawPos, false);
+    self->inkEffect            = INK_SUB;
+    PrintBlock->animator.frameID = self->animator.frameID;
+    RSDK.DrawSprite(&PrintBlock->animator, &self->drawPos, false);
+    self->inkEffect = INK_NONE;
 }
 
 void PrintBlock_Create(void *data)
 {
     RSDK_THIS(PrintBlock);
-    entity->collision = PLATFORM_C_1;
+    self->collision = PLATFORM_C_1;
     Platform_Create(NULL);
-    RSDK.SetSpriteAnimation(PrintBlock->aniFrames, entity->letter, &entity->animator, true, 0);
-    entity->alpha     = 128;
-    entity->drawOrder = Zone->drawOrderLow;
-    entity->state     = Platform_State_Normal;
+    RSDK.SetSpriteAnimation(PrintBlock->aniFrames, self->letter, &self->animator, true, 0);
+    self->alpha     = 128;
+    self->drawOrder = Zone->drawOrderLow;
+    self->state     = Platform_State_Normal;
 }
 
 void PrintBlock_StageLoad(void)
@@ -92,28 +92,28 @@ void PrintBlock_StageLoad(void)
 void PrintBlock_Unknown1(void)
 {
     RSDK_THIS(PrintBlock);
-    ++entity->collapseDelay;
-    if (++entity->animator.animationTimer == 3) {
-        entity->animator.animationTimer = 0;
-        if (entity->animator.frameID < 4)
-            entity->animator.frameID++;
+    ++self->collapseDelay;
+    if (++self->animator.animationTimer == 3) {
+        self->animator.animationTimer = 0;
+        if (self->animator.frameID < 4)
+            self->animator.frameID++;
     }
 
-    if (entity->collapseDelay == entity->duration)
-        entity->state = PrintBlock_Unknown2;
+    if (self->collapseDelay == self->duration)
+        self->state = PrintBlock_Unknown2;
 }
 
 void PrintBlock_Unknown2(void)
 {
     RSDK_THIS(PrintBlock);
-    if (++entity->animator.animationTimer == 3) {
-        entity->animator.animationTimer = 0;
-        if (entity->animator.frameID <= 1) {
-            entity->active = ACTIVE_BOUNDS;
-            entity->state  = Platform_State_Normal;
+    if (++self->animator.animationTimer == 3) {
+        self->animator.animationTimer = 0;
+        if (self->animator.frameID <= 1) {
+            self->active = ACTIVE_BOUNDS;
+            self->state  = Platform_State_Normal;
         }
         else {
-            entity->animator.frameID--;
+            self->animator.frameID--;
         }
     }
 }

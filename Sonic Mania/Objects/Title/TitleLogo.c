@@ -6,15 +6,15 @@ void TitleLogo_Update(void)
 {
     RSDK_THIS(TitleLogo);
 #if RETRO_USE_PLUS
-    StateMachine_Run(entity->state);
+    StateMachine_Run(self->state);
 #else
-    switch (entity->type) {
+    switch (self->type) {
         case TITLELOGO_RIBBON:
-            RSDK.ProcessAnimation(&entity->animator1);
-            if (entity->flag)
-                RSDK.ProcessAnimation(&entity->animator2);
+            RSDK.ProcessAnimation(&self->animator1);
+            if (self->flag)
+                RSDK.ProcessAnimation(&self->animator2);
             break;
-        case TITLELOGO_PRESSSTART: ++entity->timer; break;
+        case TITLELOGO_PRESSSTART: ++self->timer; break;
     }
 #endif
 }
@@ -26,41 +26,41 @@ void TitleLogo_StaticUpdate(void) {}
 void TitleLogo_Draw(void)
 {
     RSDK_THIS(TitleLogo);
-    switch (entity->type) {
+    switch (self->type) {
         case TITLELOGO_EMBLEM:
             RSDK.SetClipBounds(0, 0, 0, ScreenInfo->width, ScreenInfo->height);
-            entity->direction = FLIP_NONE;
-            RSDK.DrawSprite(&entity->animator1, NULL, false);
+            self->direction = FLIP_NONE;
+            RSDK.DrawSprite(&self->animator1, NULL, false);
 
-            entity->direction = FLIP_X;
-            RSDK.DrawSprite(&entity->animator1, NULL, false);
+            self->direction = FLIP_X;
+            RSDK.DrawSprite(&self->animator1, NULL, false);
             break;
         case TITLELOGO_RIBBON:
-            entity->direction = FLIP_X;
-            RSDK.DrawSprite(&entity->animator1, NULL, false);
+            self->direction = FLIP_X;
+            RSDK.DrawSprite(&self->animator1, NULL, false);
 
-            entity->direction = FLIP_NONE;
-            RSDK.DrawSprite(&entity->animator1, NULL, false);
+            self->direction = FLIP_NONE;
+            RSDK.DrawSprite(&self->animator1, NULL, false);
 
 #if RETRO_USE_PLUS
-            if (entity->flag)
-                RSDK.DrawSprite(&entity->animator3, NULL, false);
+            if (self->flag)
+                RSDK.DrawSprite(&self->animator3, NULL, false);
 #else
-            if (entity->flag)
-                RSDK.DrawSprite(&entity->animator2, NULL, false);
+            if (self->flag)
+                RSDK.DrawSprite(&self->animator2, NULL, false);
 #endif
             break;
         case TITLELOGO_PRESSSTART:
-            if (!(entity->timer & 0x10))
-                RSDK.DrawSprite(&entity->animator1, NULL, false);
+            if (!(self->timer & 0x10))
+                RSDK.DrawSprite(&self->animator1, NULL, false);
             break;
 #if RETRO_USE_PLUS
         case TITLELOGO_PLUS:
-            RSDK.DrawSprite(&entity->animator1, NULL, false);
-            RSDK.DrawSprite(&entity->animator2, NULL, false);
+            RSDK.DrawSprite(&self->animator1, NULL, false);
+            RSDK.DrawSprite(&self->animator2, NULL, false);
             break;
 #endif
-        default: RSDK.DrawSprite(&entity->animator1, NULL, false); break;
+        default: RSDK.DrawSprite(&self->animator1, NULL, false); break;
     }
 }
 
@@ -68,21 +68,21 @@ void TitleLogo_Create(void *data)
 {
     RSDK_THIS(TitleLogo);
 
-    entity->drawFX = FX_FLIP;
+    self->drawFX = FX_FLIP;
     if (!SceneInfo->inEditor) {
-        switch (entity->type) {
-            case TITLELOGO_EMBLEM: RSDK.SetSpriteAnimation(TitleLogo->aniFrames, 0, &entity->animator1, true, 0); break;
-            case TITLELOGO_RIBBON: RSDK.SetSpriteAnimation(TitleLogo->aniFrames, 1, &entity->animator1, true, 0);
+        switch (self->type) {
+            case TITLELOGO_EMBLEM: RSDK.SetSpriteAnimation(TitleLogo->aniFrames, 0, &self->animator1, true, 0); break;
+            case TITLELOGO_RIBBON: RSDK.SetSpriteAnimation(TitleLogo->aniFrames, 1, &self->animator1, true, 0);
 #if RETRO_USE_PLUS
-                RSDK.SetSpriteAnimation(TitleLogo->aniFrames, 3, &entity->animator3, true, 0);
-                entity->state = TitleLogo_State_Ribbon;
+                RSDK.SetSpriteAnimation(TitleLogo->aniFrames, 3, &self->animator3, true, 0);
+                self->state = TitleLogo_State_Ribbon;
 #else
-                RSDK.SetSpriteAnimation(TitleLogo->aniFrames, 3, &entity->animator2, true, 0);
+                RSDK.SetSpriteAnimation(TitleLogo->aniFrames, 3, &self->animator2, true, 0);
 #endif
                 break;
             case TITLELOGO_PRESSSTART:
 #if RETRO_USE_PLUS
-                entity->state = TitleLogo_State_PressStart;
+                self->state = TitleLogo_State_PressStart;
 #else
                 TitleLogo_SetupPressStart();
 #endif
@@ -90,19 +90,19 @@ void TitleLogo_Create(void *data)
 #if RETRO_USE_PLUS
             case TITLELOGO_PLUS:
                 if (API.CheckDLC(DLC_PLUS)) {
-                    RSDK.SetSpriteAnimation(TitleLogo->plusFrames, 0, &entity->animator1, true, 0);
-                    entity->storeY = entity->position.y;
+                    RSDK.SetSpriteAnimation(TitleLogo->plusFrames, 0, &self->animator1, true, 0);
+                    self->storeY = self->position.y;
                 }
                 else {
-                    destroyEntity(entity);
+                    destroyEntity(self);
                     return;
                 }
                 break;
 #endif
-            default: RSDK.SetSpriteAnimation(TitleLogo->aniFrames, entity->type + 2, &entity->animator1, true, 0); break;
+            default: RSDK.SetSpriteAnimation(TitleLogo->aniFrames, self->type + 2, &self->animator1, true, 0); break;
         }
 
-        switch (entity->type) {
+        switch (self->type) {
             case TITLELOGO_EMBLEM:
             case TITLELOGO_RIBBON:
             case TITLELOGO_GAMETITLE:
@@ -112,14 +112,14 @@ void TitleLogo_Create(void *data)
 #if RETRO_USE_PLUS
             case TITLELOGO_PLUS:
 #endif
-                entity->visible   = false;
-                entity->active    = ACTIVE_NEVER;
-                entity->drawOrder = 4;
+                self->visible   = false;
+                self->active    = ACTIVE_NEVER;
+                self->drawOrder = 4;
                 break;
             default:
-                entity->active    = ACTIVE_NORMAL;
-                entity->visible   = true;
-                entity->drawOrder = 4;
+                self->active    = ACTIVE_NORMAL;
+                self->visible   = true;
+                self->drawOrder = 4;
                 break;
         }
     }
@@ -140,30 +140,30 @@ void TitleLogo_SetupPressStart(void)
     RSDK_THIS(TitleLogo);
     switch (Localization->language) {
         case LANGUAGE_EN:
-        case LANGUAGE_JP: RSDK.SetSpriteAnimation(TitleLogo->aniFrames, 8, &entity->animator1, true, 0); break;
+        case LANGUAGE_JP: RSDK.SetSpriteAnimation(TitleLogo->aniFrames, 8, &self->animator1, true, 0); break;
         case LANGUAGE_FR:
             if (sku_platform == PLATFORM_SWITCH)
-                RSDK.SetSpriteAnimation(TitleLogo->aniFrames, 8, &entity->animator1, true, 2);
+                RSDK.SetSpriteAnimation(TitleLogo->aniFrames, 8, &self->animator1, true, 2);
             else
-                RSDK.SetSpriteAnimation(TitleLogo->aniFrames, 8, &entity->animator1, true, 1);
+                RSDK.SetSpriteAnimation(TitleLogo->aniFrames, 8, &self->animator1, true, 1);
             break;
         case LANGUAGE_IT:
             if (sku_platform == PLATFORM_XB1 || sku_platform == PLATFORM_SWITCH)
-                RSDK.SetSpriteAnimation(TitleLogo->aniFrames, 8, &entity->animator1, true, 4);
+                RSDK.SetSpriteAnimation(TitleLogo->aniFrames, 8, &self->animator1, true, 4);
             else
-                RSDK.SetSpriteAnimation(TitleLogo->aniFrames, 8, &entity->animator1, true, 3);
+                RSDK.SetSpriteAnimation(TitleLogo->aniFrames, 8, &self->animator1, true, 3);
             break;
         case LANGUAGE_GE:
             if (sku_platform == PLATFORM_SWITCH)
-                RSDK.SetSpriteAnimation(TitleLogo->aniFrames, 8, &entity->animator1, true, 6);
+                RSDK.SetSpriteAnimation(TitleLogo->aniFrames, 8, &self->animator1, true, 6);
             else
-                RSDK.SetSpriteAnimation(TitleLogo->aniFrames, 8, &entity->animator1, true, 5);
+                RSDK.SetSpriteAnimation(TitleLogo->aniFrames, 8, &self->animator1, true, 5);
             break;
-        case LANGUAGE_SP: RSDK.SetSpriteAnimation(TitleLogo->aniFrames, 8, &entity->animator1, true, 7); break;
+        case LANGUAGE_SP: RSDK.SetSpriteAnimation(TitleLogo->aniFrames, 8, &self->animator1, true, 7); break;
 #if RETRO_GAMEVER != VER_100
-        case LANGUAGE_KO: RSDK.SetSpriteAnimation(TitleLogo->aniFrames, 8, &entity->animator1, true, 8); break;
-        case LANGUAGE_SC: RSDK.SetSpriteAnimation(TitleLogo->aniFrames, 8, &entity->animator1, true, 9); break;
-        case LANGUAGE_TC: RSDK.SetSpriteAnimation(TitleLogo->aniFrames, 8, &entity->animator1, true, 10); break;
+        case LANGUAGE_KO: RSDK.SetSpriteAnimation(TitleLogo->aniFrames, 8, &self->animator1, true, 8); break;
+        case LANGUAGE_SC: RSDK.SetSpriteAnimation(TitleLogo->aniFrames, 8, &self->animator1, true, 9); break;
+        case LANGUAGE_TC: RSDK.SetSpriteAnimation(TitleLogo->aniFrames, 8, &self->animator1, true, 10); break;
 #endif
         default: break;
     }
@@ -174,40 +174,40 @@ void TitleLogo_State_Ribbon(void)
 {
     RSDK_THIS(TitleLogo);
 
-    RSDK.ProcessAnimation(&entity->animator1);
-    if (entity->flag)
-        RSDK.ProcessAnimation(&entity->animator3);
+    RSDK.ProcessAnimation(&self->animator1);
+    if (self->flag)
+        RSDK.ProcessAnimation(&self->animator3);
 }
 void TitleLogo_State_PressStart(void)
 {
     RSDK_THIS(TitleLogo);
-    ++entity->timer;
+    ++self->timer;
 }
 void TitleLogo_State_HandleSetup(void)
 {
     RSDK_THIS(TitleLogo);
-    entity->position.y += entity->velocity.y;
-    entity->velocity.y += 0x3800;
-    RSDK.ProcessAnimation(&entity->animator1);
-    if (entity->flag)
-        RSDK.ProcessAnimation(&entity->animator3);
+    self->position.y += self->velocity.y;
+    self->velocity.y += 0x3800;
+    RSDK.ProcessAnimation(&self->animator1);
+    if (self->flag)
+        RSDK.ProcessAnimation(&self->animator3);
 
-    if (entity->velocity.y > 0) {
-        if (entity->position.y >= entity->storeY) {
-            --entity->timer;
-            entity->position.y = entity->storeY;
-            entity->velocity.y = -(entity->velocity.y >> 1);
-            if (entity->timer <= 0) {
+    if (self->velocity.y > 0) {
+        if (self->position.y >= self->storeY) {
+            --self->timer;
+            self->position.y = self->storeY;
+            self->velocity.y = -(self->velocity.y >> 1);
+            if (self->timer <= 0) {
 
-                entity->timer = 0;
-                if (entity->type == TITLELOGO_PLUS) {
-                    entity->state = TitleLogo_State_PlusLogo;
+                self->timer = 0;
+                if (self->type == TITLELOGO_PLUS) {
+                    self->state = TitleLogo_State_PlusLogo;
                 }
                 else {
-                    if (entity->type == TITLELOGO_RIBBON)
-                        entity->state = TitleLogo_State_Ribbon;
+                    if (self->type == TITLELOGO_RIBBON)
+                        self->state = TitleLogo_State_Ribbon;
                     else
-                        entity->state = StateMachine_None;
+                        self->state = StateMachine_None;
                 }
             }
         }
@@ -217,22 +217,22 @@ void TitleLogo_State_HandleSetup(void)
 void TitleLogo_State_PlusLogo(void)
 {
     RSDK_THIS(TitleLogo);
-    if (entity->timer <= 0) {
-        entity->timer = RSDK.Rand(120, 240);
-        RSDK.SetSpriteAnimation(TitleLogo->plusFrames, 1, &entity->animator2, true, 0);
-        entity->state = TitleLogo_State_PlusShine;
+    if (self->timer <= 0) {
+        self->timer = RSDK.Rand(120, 240);
+        RSDK.SetSpriteAnimation(TitleLogo->plusFrames, 1, &self->animator2, true, 0);
+        self->state = TitleLogo_State_PlusShine;
     }
     else {
-        entity->timer--;
+        self->timer--;
     }
 }
 void TitleLogo_State_PlusShine(void)
 {
     RSDK_THIS(TitleLogo);
-    RSDK.ProcessAnimation(&entity->animator2);
-    if (entity->animator2.frameID == entity->animator2.frameCount - 1) {
-        RSDK.SetSpriteAnimation(0xFFFF, 0, &entity->animator2, true, 0);
-        entity->state = TitleLogo_State_PlusLogo;
+    RSDK.ProcessAnimation(&self->animator2);
+    if (self->animator2.frameID == self->animator2.frameCount - 1) {
+        RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator2, true, 0);
+        self->state = TitleLogo_State_PlusLogo;
     }
 }
 #endif
@@ -242,52 +242,52 @@ void TitleLogo_EditorDraw(void)
 {
     RSDK_THIS(TitleLogo);
 
-    entity->drawFX = FX_FLIP;
-    switch (entity->type) {
+    self->drawFX = FX_FLIP;
+    switch (self->type) {
         case TITLELOGO_EMBLEM:
-            RSDK.SetSpriteAnimation(TitleLogo->aniFrames, 0, &entity->animator1, true, 0);
+            RSDK.SetSpriteAnimation(TitleLogo->aniFrames, 0, &self->animator1, true, 0);
 
-            entity->direction = FLIP_NONE;
-            RSDK.DrawSprite(&entity->animator1, NULL, false);
+            self->direction = FLIP_NONE;
+            RSDK.DrawSprite(&self->animator1, NULL, false);
 
-            entity->direction = FLIP_X;
-            RSDK.DrawSprite(&entity->animator1, NULL, false);
+            self->direction = FLIP_X;
+            RSDK.DrawSprite(&self->animator1, NULL, false);
 
-            entity->direction = FLIP_NONE;
+            self->direction = FLIP_NONE;
             break;
-        case TITLELOGO_RIBBON: RSDK.SetSpriteAnimation(TitleLogo->aniFrames, 1, &entity->animator1, true, 0);
+        case TITLELOGO_RIBBON: RSDK.SetSpriteAnimation(TitleLogo->aniFrames, 1, &self->animator1, true, 0);
 #if RETRO_USE_PLUS
-            RSDK.SetSpriteAnimation(TitleLogo->aniFrames, 3, &entity->animator3, true, 0);
+            RSDK.SetSpriteAnimation(TitleLogo->aniFrames, 3, &self->animator3, true, 0);
 #else
-            RSDK.SetSpriteAnimation(TitleLogo->aniFrames, 3, &entity->animator2, true, 0);
+            RSDK.SetSpriteAnimation(TitleLogo->aniFrames, 3, &self->animator2, true, 0);
 #endif
 
-            entity->direction = FLIP_X;
-            RSDK.DrawSprite(&entity->animator1, NULL, false);
+            self->direction = FLIP_X;
+            RSDK.DrawSprite(&self->animator1, NULL, false);
 
-            entity->direction = FLIP_NONE;
-            RSDK.DrawSprite(&entity->animator1, NULL, false);
+            self->direction = FLIP_NONE;
+            RSDK.DrawSprite(&self->animator1, NULL, false);
 
 #if RETRO_USE_PLUS
-            RSDK.DrawSprite(&entity->animator3, NULL, false);
+            RSDK.DrawSprite(&self->animator3, NULL, false);
 #else
-            RSDK.DrawSprite(&entity->animator2, NULL, false);
+            RSDK.DrawSprite(&self->animator2, NULL, false);
 #endif
             break;
         case TITLELOGO_PRESSSTART:
-            RSDK.SetSpriteAnimation(TitleLogo->aniFrames, 8, &entity->animator1, true, 0);
-            RSDK.DrawSprite(&entity->animator1, NULL, false);
+            RSDK.SetSpriteAnimation(TitleLogo->aniFrames, 8, &self->animator1, true, 0);
+            RSDK.DrawSprite(&self->animator1, NULL, false);
             break;
 #if RETRO_USE_PLUS
         case TITLELOGO_PLUS:
-            RSDK.SetSpriteAnimation(TitleLogo->plusFrames, 0, &entity->animator1, true, 0);
+            RSDK.SetSpriteAnimation(TitleLogo->plusFrames, 0, &self->animator1, true, 0);
 
-            RSDK.DrawSprite(&entity->animator1, NULL, false);
+            RSDK.DrawSprite(&self->animator1, NULL, false);
             break;
 #endif
         default:
-            RSDK.SetSpriteAnimation(TitleLogo->aniFrames, entity->type + 2, &entity->animator1, true, 0);
-            RSDK.DrawSprite(&entity->animator1, NULL, false);
+            RSDK.SetSpriteAnimation(TitleLogo->aniFrames, self->type + 2, &self->animator1, true, 0);
+            RSDK.DrawSprite(&self->animator1, NULL, false);
             break;
     }
 }

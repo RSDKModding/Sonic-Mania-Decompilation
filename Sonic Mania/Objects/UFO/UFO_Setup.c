@@ -6,10 +6,10 @@ void UFO_Setup_Update(void)
 {
     RSDK_THIS(UFO_Setup);
 
-    StateMachine_Run(entity->state);
+    StateMachine_Run(self->state);
 
 #if RETRO_USE_PLUS
-    if (entity->state != UFO_Setup_Unknown12 && globals->gameMode < MODE_TIMEATTACK)
+    if (self->state != UFO_Setup_Unknown12 && globals->gameMode < MODE_TIMEATTACK)
         ++SaveGame->saveRAM->zoneTimes[29];
 #endif
 }
@@ -31,18 +31,18 @@ void UFO_Setup_StaticUpdate(void)
 void UFO_Setup_Draw(void)
 {
     RSDK_THIS(UFO_Setup);
-    RSDK.FillScreen(entity->fadeColour, entity->timer, entity->timer - 128, entity->timer - 256);
+    RSDK.FillScreen(self->fadeColour, self->timer, self->timer - 128, self->timer - 256);
 }
 
 void UFO_Setup_Create(void *data)
 {
     RSDK_THIS(UFO_Setup);
-    entity->active     = ACTIVE_NORMAL;
-    entity->visible    = true;
-    entity->drawOrder  = 15;
-    entity->fadeColour = 0xF0F0F0;
-    entity->timer      = 512;
-    entity->state      = UFO_Setup_Unknown11;
+    self->active     = ACTIVE_NORMAL;
+    self->visible    = true;
+    self->drawOrder  = 15;
+    self->fadeColour = 0xF0F0F0;
+    self->timer      = 512;
+    self->state      = UFO_Setup_Unknown11;
 }
 
 void UFO_Setup_StageLoad(void)
@@ -344,22 +344,22 @@ void UFO_Setup_Unknown10(void)
 void UFO_Setup_Unknown11(void)
 {
     RSDK_THIS(UFO_Setup);
-    if (entity->timer <= 0) {
-        entity->timer               = 0;
-        entity->visible             = false;
-        entity->state               = UFO_Setup_Unknown13;
+    if (self->timer <= 0) {
+        self->timer               = 0;
+        self->visible             = false;
+        self->state               = UFO_Setup_Unknown13;
         SceneInfo->timeEnabled = true;
-        RSDK.CreateEntity(UFO_Message->objectID, 0, entity->position.x, entity->position.y);
+        RSDK.CreateEntity(UFO_Message->objectID, 0, self->position.x, self->position.y);
     }
     else {
-        entity->timer -= 0x10;
+        self->timer -= 0x10;
     }
 }
 
 void UFO_Setup_Unknown12(void)
 {
     RSDK_THIS(UFO_Setup);
-    if (entity->timer >= 1024) {
+    if (self->timer >= 1024) {
         if (UFO_Setup->resetToTitle) {
             RSDK.SetScene("Presentation", "Title Screen");
             RSDK.LoadScene();
@@ -373,7 +373,7 @@ void UFO_Setup_Unknown12(void)
 
             for (int32 i = 0; i < 0x800; ++i) {
                 Entity *ent = RSDK.GetEntityByID(i);
-                if (ent->objectID != entity->objectID)
+                if (ent->objectID != self->objectID)
                     RSDK.ResetEntityPtr(ent, TYPE_BLANK, 0);
             }
 
@@ -385,20 +385,20 @@ void UFO_Setup_Unknown12(void)
                 UIBackground->activeColours = &UIBackground->bgColours[18];
             }
 #endif
-            entity->visible = false;
-            entity->state   = StateMachine_None;
+            self->visible = false;
+            self->state   = StateMachine_None;
         }
     }
     else {
-        entity->timer += 8;
+        self->timer += 8;
     }
 }
 
 void UFO_Setup_Unknown13(void)
 {
     RSDK_THIS(UFO_Setup);
-    if (++entity->timer == 60) {
-        entity->timer = 0;
+    if (++self->timer == 60) {
+        self->timer = 0;
 
         if (UFO_Setup->rings > 0 && SceneInfo->timeEnabled) {
             UFO_Setup->rings--;
@@ -406,8 +406,8 @@ void UFO_Setup_Unknown13(void)
 
         if (!UFO_Setup->rings && !UFO_Setup->timedOut) {
             UFO_Setup->timedOut = true;
-            RSDK.CreateEntity(UFO_Message->objectID, (void *)3, entity->position.x, entity->position.y);
-            entity->state = UFO_Setup_Unknown14;
+            RSDK.CreateEntity(UFO_Message->objectID, (void *)3, self->position.x, self->position.y);
+            self->state = UFO_Setup_Unknown14;
         }
     }
 }
@@ -415,7 +415,7 @@ void UFO_Setup_Unknown13(void)
 void UFO_Setup_Unknown14(void)
 {
     RSDK_THIS(UFO_Setup);
-    if (++entity->timer >= 90)
+    if (++self->timer >= 90)
         UFO_Setup_Finish_Fail();
 }
 

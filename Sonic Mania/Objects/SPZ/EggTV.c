@@ -5,8 +5,8 @@ ObjectEggTV *EggTV;
 void EggTV_Update(void)
 {
     RSDK_THIS(EggTV);
-    if (entity->lineAlpha < 96)
-        entity->lineAlpha += 4;
+    if (self->lineAlpha < 96)
+        self->lineAlpha += 4;
 }
 
 void EggTV_LateUpdate(void) {}
@@ -24,21 +24,21 @@ void EggTV_Create(void *data)
 {
     RSDK_THIS(EggTV);
     
-    entity->active = ACTIVE_BOUNDS;
-    if (entity->drawOverTV)
-        entity->drawOrder = Zone->drawOrderLow;
+    self->active = ACTIVE_BOUNDS;
+    if (self->drawOverTV)
+        self->drawOrder = Zone->drawOrderLow;
     else
-        entity->drawOrder = Zone->fgLayerLow + 1;
+        self->drawOrder = Zone->fgLayerLow + 1;
 
-    entity->visible       = true;
-    entity->drawFX        = FX_NONE;
-    entity->updateRange.x = 0x800000 + entity->size.x;
-    entity->updateRange.y = 0x800000 + entity->size.y;
+    self->visible       = true;
+    self->drawFX        = FX_NONE;
+    self->updateRange.x = 0x800000 + self->size.x;
+    self->updateRange.y = 0x800000 + self->size.y;
 
-    entity->hitbox.left   = -(entity->size.x >> 17);
-    entity->hitbox.top    = -(entity->size.y >> 17);
-    entity->hitbox.right  = entity->size.x >> 17;
-    entity->hitbox.bottom = entity->size.x >> 17;
+    self->hitbox.left   = -(self->size.x >> 17);
+    self->hitbox.top    = -(self->size.y >> 17);
+    self->hitbox.right  = self->size.x >> 17;
+    self->hitbox.bottom = self->size.x >> 17;
 }
 
 void EggTV_StageLoad(void)
@@ -51,11 +51,11 @@ void EggTV_DrawScanlines(void)
 {
     RSDK_THIS(EggTV);
 
-    int32 y = (((Zone->timer >> 1) & 1) << 16) - (entity->size.y >> 1) + entity->position.y;
-    if (entity->size.y >= 0 && (entity->size.y & 0xFFFF0000)) {
-        for (int32 i = 0; i < (entity->size.y >> 16); i += 2) {
-            RSDK.DrawLine(entity->position.x - (entity->size.x >> 1), y, entity->position.x + (entity->size.x >> 1), y, 0x404060,
-                          entity->lineAlpha, INK_BLEND, false);
+    int32 y = (((Zone->timer >> 1) & 1) << 16) - (self->size.y >> 1) + self->position.y;
+    if (self->size.y >= 0 && (self->size.y & 0xFFFF0000)) {
+        for (int32 i = 0; i < (self->size.y >> 16); i += 2) {
+            RSDK.DrawLine(self->position.x - (self->size.x >> 1), y, self->position.x + (self->size.x >> 1), y, 0x404060,
+                          self->lineAlpha, INK_BLEND, false);
             y += 0x20000;
         }
     }
@@ -63,13 +63,13 @@ void EggTV_DrawScanlines(void)
 void EggTV_DrawTV(void)
 {
     RSDK_THIS(EggTV);
-    entity->alpha     = 0xFF;
-    entity->drawFX    = FX_SCALE;
-    entity->inkEffect = INK_NONE;
-    entity->scale.x   = ((entity->size.x >> 16) << 9) / 0x60;
-    entity->scale.y   = ((entity->size.y >> 16) << 9) / 0x60;
+    self->alpha     = 0xFF;
+    self->drawFX    = FX_SCALE;
+    self->inkEffect = INK_NONE;
+    self->scale.x   = ((self->size.x >> 16) << 9) / 0x60;
+    self->scale.y   = ((self->size.y >> 16) << 9) / 0x60;
     RSDK.DrawSprite(&EggTV->animator, NULL, false);
-    entity->drawFX = FX_NONE;
+    self->drawFX = FX_NONE;
 }
 
 #if RETRO_INCLUDE_EDITOR
@@ -77,8 +77,8 @@ void EggTV_EditorDraw(void)
 {
     RSDK_THIS(EggTV);
 
-    entity->updateRange.x = 0x800000 + entity->size.x;
-    entity->updateRange.y = 0x800000 + entity->size.y;
+    self->updateRange.x = 0x800000 + self->size.x;
+    self->updateRange.y = 0x800000 + self->size.y;
 
     EggTV_DrawTV();
 }

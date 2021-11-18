@@ -17,8 +17,8 @@ void PlatformNode_StageLoad(void) {}
 void PlatformNode_EditorDraw(void)
 {
     RSDK_THIS(PlatformNode);
-    RSDK.SetSpriteAnimation(PlatformNode->aniFrames, 0, &entity->animator, false, 7);
-    RSDK.DrawSprite(&entity->animator, NULL, false);
+    RSDK.SetSpriteAnimation(PlatformNode->aniFrames, 0, &self->animator, false, 7);
+    RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
 void PlatformNode_EditorLoad(void)

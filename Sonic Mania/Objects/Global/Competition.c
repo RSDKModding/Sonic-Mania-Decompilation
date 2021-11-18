@@ -5,7 +5,7 @@ ObjectCompetition *Competition;
 void Competition_Update(void)
 {
     RSDK_THIS(Competition);
-    StateMachine_Run(entity->state);
+    StateMachine_Run(self->state);
 }
 
 void Competition_LateUpdate(void) {}
@@ -18,16 +18,16 @@ void Competition_Draw(void)
     #if RETRO_USE_PLUS
     if (RSDK_GET_ENTITY(SceneInfo->currentScreenID, Player)->objectID == Player->objectID) {
 #endif
-        if (!entity->playerFlags[SceneInfo->currentScreenID]) {
+        if (!self->playerFlags[SceneInfo->currentScreenID]) {
             Vector2 drawPos;
             drawPos.x                = (ScreenInfo[SceneInfo->currentScreenID].centerX - 4) << 16;
             drawPos.y                = 0x1A0000;
-            entity->animator.frameID = entity->timer / 10;
-            RSDK.DrawSprite(&entity->animator, &drawPos, true);
+            self->animator.frameID = self->timer / 10;
+            RSDK.DrawSprite(&self->animator, &drawPos, true);
 
             drawPos.x += 0x80000;
-            entity->animator.frameID = entity->timer % 10;
-            RSDK.DrawSprite(&entity->animator, &drawPos, true);
+            self->animator.frameID = self->timer % 10;
+            RSDK.DrawSprite(&self->animator, &drawPos, true);
         }
 #if RETRO_USE_PLUS
     }
@@ -38,23 +38,23 @@ void Competition_Create(void *data)
 {
     RSDK_THIS(Competition);
     if (!SceneInfo->inEditor) {
-        entity->isPermanent = true;
-        entity->active      = ACTIVE_NORMAL;
-        entity->visible     = 1;
-        entity->drawOrder   = Zone->hudDrawOrder - 1;
-        entity->seconds     = SceneInfo->seconds;
+        self->isPermanent = true;
+        self->active      = ACTIVE_NORMAL;
+        self->visible     = 1;
+        self->drawOrder   = Zone->hudDrawOrder - 1;
+        self->seconds     = SceneInfo->seconds;
         if (SceneInfo->minutes == 9) {
-            entity->timer = 0;
+            self->timer = 0;
             if (60 - SceneInfo->seconds > 0)
-                entity->timer = 60 - SceneInfo->seconds;
+                self->timer = 60 - SceneInfo->seconds;
             if (!SceneInfo->milliseconds)
                 SceneInfo->milliseconds = 1;
         }
         else {
-            entity->timer = 60;
+            self->timer = 60;
         }
-        entity->state = Competition_State_Manager;
-        RSDK.SetSpriteAnimation(Competition->aniFrames, 1, &entity->animator, true, 0);
+        self->state = Competition_State_Manager;
+        RSDK.SetSpriteAnimation(Competition->aniFrames, 1, &self->animator, true, 0);
     }
 }
 
@@ -69,7 +69,7 @@ void Competition_State_Manager(void)
     RSDK_THIS(Competition);
 
 #if RETRO_USE_PLUS
-    if (entity->timer <= 0) {
+    if (self->timer <= 0) {
         Zone->gotTimeOver           = true;
         SceneInfo->timeEnabled = false;
         for (int32 p = 0; p < Player->playerCount; ++p) {
@@ -78,20 +78,20 @@ void Competition_State_Manager(void)
                 player->visible = true;
             }
         }
-        entity->state = StateMachine_None;
+        self->state = StateMachine_None;
     }
     else {
-        if (entity->seconds != SceneInfo->seconds) {
-            entity->seconds = SceneInfo->seconds;
-            entity->timer--;
-            if (entity->timer == 12) {
+        if (self->seconds != SceneInfo->seconds) {
+            self->seconds = SceneInfo->seconds;
+            self->timer--;
+            if (self->timer == 12) {
                 Music_PlayMusicTrack(TRACK_DROWNING);
             }
-            else if (!entity->timer) {
+            else if (!self->timer) {
                 Zone->gotTimeOver           = true;
                 SceneInfo->timeEnabled = false;
                 for (int32 p = 0; p < Player->playerCount; ++p) {
-                    if (!entity->playerFlags[p]) {
+                    if (!self->playerFlags[p]) {
                         EntityPlayer *player = RSDK_GET_ENTITY(p, Player);
                         if (player->objectID == Player->objectID) {
                             player->hurtFlag = true;
@@ -102,16 +102,16 @@ void Competition_State_Manager(void)
         }
     }
 #else
-    if (entity->timer > 0) {
-        if (entity->timer != SceneInfo->seconds) {
-            entity->timer--;
-            entity->seconds = SceneInfo->seconds;
+    if (self->timer > 0) {
+        if (self->timer != SceneInfo->seconds) {
+            self->timer--;
+            self->seconds = SceneInfo->seconds;
 
             for (int32 p = 0; p < Player->playerCount; ++p) {
-                if (!entity->playerFlags[p]) {
+                if (!self->playerFlags[p]) {
                     EntityPlayer *player = RSDK_GET_ENTITY(p, Player);
                     player->hurtFlag     = 1;
-                    entity->state        = StateMachine_None;
+                    self->state        = StateMachine_None;
                 }
             }
         }

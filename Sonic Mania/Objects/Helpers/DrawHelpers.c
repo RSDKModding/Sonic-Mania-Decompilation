@@ -111,25 +111,25 @@ void DrawHelpers_DrawArenaBounds(uint32 colour, uint8 flags, int32 left, int32 t
 
     // left
     if (flags & 1) {
-        RSDK.DrawLine(entity->position.x + left, entity->position.y + top, entity->position.x + left, entity->position.y + bottom, colour, 0,
+        RSDK.DrawLine(self->position.x + left, self->position.y + top, self->position.x + left, self->position.y + bottom, colour, 0,
                       INK_NONE, false);
     }
 
     // top
     if (flags & 2) {
-        RSDK.DrawLine(entity->position.x + left, entity->position.y + top, entity->position.x + right, entity->position.y + top, colour, 0, INK_NONE,
+        RSDK.DrawLine(self->position.x + left, self->position.y + top, self->position.x + right, self->position.y + top, colour, 0, INK_NONE,
                       false);
     }
 
     // right
     if (flags & 4) {
-        RSDK.DrawLine(entity->position.x + right, entity->position.y + top, entity->position.x + right, entity->position.y + bottom, colour, 0,
+        RSDK.DrawLine(self->position.x + right, self->position.y + top, self->position.x + right, self->position.y + bottom, colour, 0,
                       INK_NONE, false);
     }
 
     // bottom
     if (flags & 8) {
-        RSDK.DrawLine(entity->position.x + left, entity->position.y + bottom, entity->position.x + right, entity->position.y + bottom, colour, 0,
+        RSDK.DrawLine(self->position.x + left, self->position.y + bottom, self->position.x + right, self->position.y + bottom, colour, 0,
                       INK_NONE, false);
     }
 }

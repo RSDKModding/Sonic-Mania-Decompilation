@@ -3,15 +3,15 @@
 
 #include "SonicMania.h"
 
-typedef enum  {
+typedef enum {
     HBH_GUNNER,
     HBH_SHINOBI,
     HBH_MYSTIC,
     HBH_RIDER,
     HBH_KING,
-    HBH_ROUGESA,
-    HBH_ROUGESB,
-    HBH_ROUGESC,
+    HBH_ROUGE_FANG,
+    HBH_ROUGE_BEAN,
+    HBH_ROUGE_BARK,
     HBH_KINGDAMAGED,
     HBH_PILE,
     HBH_KINGTMZ2,
@@ -31,22 +31,17 @@ typedef struct {
     uint8 characterID;
     int32 oscillate;
     int32 hiddenAtStart;
-    int32 field_68;
-    char field_6C;
-    char field_6D;
-    char field_6E;
-    char field_6F;
-    int32 dword70;
-    int32 dword74;
+    int32 curAngle;
+    int32 unused1;
+    Vector2 startPos;
     Vector2 originPos;
     int32 timer;
-    int32 dword84;
+    int32 angleOffset;
     int32 colourSet;
     colour colours[128];
     bool32 paletteFlag;
     bool32 timerFlag;
     uint16 aniFrames;
-    uint16 field_296;
     Animator animator;
     Animator animator2;
 } EntityCutsceneHBH;
@@ -75,20 +70,21 @@ void CutsceneHBH_RestorePalette(void);
 void CutsceneHBH_LoadSprites(void);
 EntityCutsceneHBH *CutsceneHBH_GetEntity(char charID);
 
-void CutsceneHBH_Unknown7(void);
-void CutsceneHBH_Unknown8(void);
-void CutsceneHBH_Unknown9(void);
-void CutsceneHBH_Unknown10(void);
-void CutsceneHBH_Unknown11(void);
-void CutsceneHBH_Unknown12(void);
-void CutsceneHBH_Unknown13(void);
-void CutsceneHBH_Unknown14(void);
-void CutsceneHBH_Unknown15(void);
-void CutsceneHBH_Unknown16(void);
-void CutsceneHBH_Unknown17(void);
-void CutsceneHBH_Unknown18(void);
-void CutsceneHBH_Unknown19(void);
-void CutsceneHBH_Unknown20(void);
-void CutsceneHBH_Unknown21(void);
+void CutsceneHBH_ShinobiJumpSetup(void);
+void CutsceneHBH_ShinobiBounceSetup(void);
+void CutsceneHBH_RiderSetup(void);
+void CutsceneHBH_KingSetup(void);
+void CutsceneHBH_KingTMZ2Setup(void);
+
+void CutsceneHBH_State_GunnerExit(void);
+void CutsceneHBH_State_ShinobiBounce(void);
+void CutsceneHBH_State_ShinobiJump(void);
+void CutsceneHBH_State_MysticExit(void);
+void CutsceneHBH_State_RiderMove(void);
+void CutsceneHBH_State_RiderExit(void);
+void CutsceneHBH_State_KingExit(void);
+void CutsceneHBH_State_KingFall(void);
+void CutsceneHBH_State_KingTMZ2_Fall(void);
+void CutsceneHBH_State_KingTMZ2_Land(void);
 
 #endif //!OBJ_CUTSCENEHBH_H

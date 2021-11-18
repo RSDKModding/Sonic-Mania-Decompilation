@@ -6,36 +6,36 @@ void PuyoAttack_Update(void)
 {
     RSDK_THIS(PuyoAttack);
 
-    if (entity->delay > 0) {
-        if (--entity->delay)
+    if (self->delay > 0) {
+        if (--self->delay)
             return;
-        entity->visible = true;
+        self->visible = true;
     }
 
-    RSDK.ProcessAnimation(&entity->animator);
-    int angle = RSDK.ATan2((entity->targetPos.x - entity->position.x) >> 16, (entity->targetPos.y - entity->position.y) >> 16);
+    RSDK.ProcessAnimation(&self->animator);
+    int angle = RSDK.ATan2((self->targetPos.x - self->position.x) >> 16, (self->targetPos.y - self->position.y) >> 16);
     int rot   = 2 * angle;
-    int val   = rot - entity->rotation;
+    int val   = rot - self->rotation;
 
-    if (abs(rot - entity->rotation) >= abs(val - 0x200)) {
+    if (abs(rot - self->rotation) >= abs(val - 0x200)) {
         if (abs(val - 0x200) < abs(val + 0x200))
-            entity->rotation += ((val - 512) >> 3);
+            self->rotation += ((val - 512) >> 3);
         else
-            entity->rotation += ((val + 512) >> 3);
+            self->rotation += ((val + 512) >> 3);
     }
-    else if (abs(rot - entity->rotation) >= abs(val + 0x200))
-        entity->rotation += ((val + 512) >> 3);
+    else if (abs(rot - self->rotation) >= abs(val + 0x200))
+        self->rotation += ((val + 512) >> 3);
     else
-        entity->rotation += (val >> 3);
+        self->rotation += (val >> 3);
 
-    entity->rotation &= 0x1FF;
-    entity->position.x += entity->radius * RSDK.Cos512(entity->rotation);
-    entity->position.y += entity->radius * RSDK.Sin512(entity->rotation);
-    if (entity->radius < 1024)
-        entity->radius += 8;
-    if (entity->position.y < entity->targetPos.y) {
-        PuyoMatch_StartPuyoAttack(entity->playerID, entity->score);
-        destroyEntity(entity);
+    self->rotation &= 0x1FF;
+    self->position.x += self->radius * RSDK.Cos512(self->rotation);
+    self->position.y += self->radius * RSDK.Sin512(self->rotation);
+    if (self->radius < 1024)
+        self->radius += 8;
+    if (self->position.y < self->targetPos.y) {
+        PuyoMatch_StartPuyoAttack(self->playerID, self->score);
+        destroyEntity(self);
     }
 }
 
@@ -46,23 +46,23 @@ void PuyoAttack_StaticUpdate(void) {}
 void PuyoAttack_Draw(void)
 {
     RSDK_THIS(PuyoAttack);
-    RSDK.DrawSprite(&entity->animator, NULL, false);
+    RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
 void PuyoAttack_Create(void *data)
 {
     RSDK_THIS(PuyoAttack);
     if (!SceneInfo->inEditor) {
-        entity->delay     = 16;
-        entity->radius    = 512;
-        entity->drawOrder = Zone->hudDrawOrder;
-        entity->playerID  = voidToInt(data);
-        if (!entity->playerID)
-            entity->rotation = 0x40;
+        self->delay     = 16;
+        self->radius    = 512;
+        self->drawOrder = Zone->hudDrawOrder;
+        self->playerID  = voidToInt(data);
+        if (!self->playerID)
+            self->rotation = 0x40;
         else
-            entity->rotation = 0x140;
-        entity->active = ACTIVE_NORMAL;
-        RSDK.SetSpriteAnimation(PuyoAttack->aniFrames, entity->playerID ^ 1, &entity->animator, true, 0);
+            self->rotation = 0x140;
+        self->active = ACTIVE_NORMAL;
+        RSDK.SetSpriteAnimation(PuyoAttack->aniFrames, self->playerID ^ 1, &self->animator, true, 0);
     }
 }
 
@@ -76,7 +76,7 @@ void PuyoAttack_StageLoad(void)
 void PuyoAttack_EditorDraw(void)
 {
     RSDK_THIS(PuyoAttack);
-    RSDK.SetSpriteAnimation(PuyoAttack->aniFrames, 0, &entity->animator, true, 3);
+    RSDK.SetSpriteAnimation(PuyoAttack->aniFrames, 0, &self->animator, true, 3);
 
     PuyoAttack_Draw();
 }

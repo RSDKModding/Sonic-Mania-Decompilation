@@ -9,7 +9,7 @@ void Zone_LateUpdate(void)
 {
     RSDK_THIS(Zone);
     if (SceneInfo->entitySlot != SLOT_ZONE) {
-        StateMachine_Run(entity->state);
+        StateMachine_Run(self->state);
     }
     else {
         foreach_active(Player, player)
@@ -89,7 +89,7 @@ void Zone_LateUpdate(void)
             }
         }
 
-        StateMachine_Run(entity->state);
+        StateMachine_Run(self->state);
 
         if (SceneInfo->minutes == 10
 #if RETRO_USE_PLUS
@@ -166,18 +166,18 @@ void Zone_StaticUpdate(void)
 void Zone_Draw(void)
 {
     RSDK_THIS(Zone);
-    if (entity->screenID >= PLAYER_MAX || entity->screenID == SceneInfo->currentScreenID) {
-        StateMachine_Run(entity->stateDraw);
+    if (self->screenID >= PLAYER_MAX || self->screenID == SceneInfo->currentScreenID) {
+        StateMachine_Run(self->stateDraw);
     }
 }
 
 void Zone_Create(void *data)
 {
     RSDK_THIS(Zone);
-    entity->active = ACTIVE_ALWAYS;
-    if (!entity->stateDraw) {
-        entity->visible   = false;
-        entity->drawOrder = -1;
+    self->active = ACTIVE_ALWAYS;
+    if (!self->stateDraw) {
+        self->visible   = false;
+        self->drawOrder = -1;
     }
 }
 
@@ -783,14 +783,14 @@ int32 Zone_GetManiaStageID(void)
 void Zone_StateDraw_Fadeout(void)
 {
     RSDK_THIS(Zone);
-    RSDK.FillScreen(entity->fadeColour, entity->timer, entity->timer - 0x80, entity->timer - 0x100);
+    RSDK.FillScreen(self->fadeColour, self->timer, self->timer - 0x80, self->timer - 0x100);
 }
 
 void Zone_State_Fadeout(void)
 {
     RSDK_THIS(Zone);
-    entity->timer += entity->fadeSpeed;
-    if (entity->timer > 1024) {
+    self->timer += self->fadeSpeed;
+    if (self->timer > 1024) {
 #if RETRO_USE_PLUS
         if (Zone->swapGameMode) {
             if (SceneInfo->filter == SCN_FILTER_MANIA) {
@@ -824,22 +824,22 @@ void Zone_State_FadeIn(void)
 {
     RSDK_THIS(Zone);
     SceneInfo->timeEnabled = true;
-    if (entity->timer <= 0) {
+    if (self->timer <= 0) {
         globals->suppressAutoMusic = false;
         globals->suppressTitlecard = false;
-        destroyEntity(entity);
+        destroyEntity(self);
     }
     else {
-        entity->timer -= entity->fadeSpeed;
+        self->timer -= self->fadeSpeed;
     }
 }
 
 void Zone_State_Fadeout_Unknown(void)
 {
     RSDK_THIS(Zone);
-    entity->timer += entity->fadeSpeed;
+    self->timer += self->fadeSpeed;
     EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
-    if (entity->timer > 1024) {
+    if (self->timer > 1024) {
         session->zoneFlags[session->levelIndex] = 1;
 #if RETRO_USE_PLUS
         session->matchID = session->prevMatchID + 1;
@@ -871,12 +871,12 @@ void Zone_Unknown16(void)
     globals->suppressTitlecard = false;
     TitleCard->suppressCB      = StateMachine_None;
     Player->rings              = 0;
-    destroyEntity(entity);
+    destroyEntity(self);
 }
 
 void Zone_Unknown17(void)
 {
-    EntityPlayer *entity       = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
+    EntityPlayer *player1       = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     StarPost->storedMinutes    = SceneInfo->minutes;
     StarPost->storedSeconds    = SceneInfo->seconds;
     StarPost->storedMS         = SceneInfo->milliseconds;
@@ -884,17 +884,17 @@ void Zone_Unknown17(void)
     globals->suppressTitlecard = true;
     TitleCard->suppressCB      = Zone_Unknown16;
     SaveGame_SavePlayerState();
-    Player->rings = entity->rings;
+    Player->rings = player1->rings;
     RSDK.LoadScene();
 }
 
 void Zone_State_Fadeout_Destroy(void)
 {
     RSDK_THIS(Zone);
-    if (entity->timer <= 0)
-        RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL);
+    if (self->timer <= 0)
+        destroyEntity(self);
     else
-        entity->timer -= entity->fadeSpeed;
+        self->timer -= self->fadeSpeed;
 }
 
 void Zone_Unknown19(void)
@@ -1197,8 +1197,8 @@ void Zone_Unknown20(void)
 {
     RSDK_THIS(Zone);
 
-    if (entity->timer > 512) {
-        entity->timer = entity->timer - entity->fadeSpeed;
+    if (self->timer > 512) {
+        self->timer = self->timer - self->fadeSpeed;
 #if RETRO_USE_PLUS
         Zone->flag    = true;
 #endif
@@ -1294,7 +1294,7 @@ void Zone_Unknown20(void)
 #endif
             Zone_Unknown19();
         }
-        entity->state = Zone_Unknown21;
+        self->state = Zone_Unknown21;
 #if RETRO_USE_PLUS
         Zone->flag    = true;
 #endif
@@ -1304,14 +1304,14 @@ void Zone_Unknown20(void)
 void Zone_Unknown21(void)
 {
     RSDK_THIS(Zone);
-    if (entity->timer <= 0) {
+    if (self->timer <= 0) {
 #if RETRO_USE_PLUS
         Zone->flag = false;
 #endif
-        destroyEntity(entity);
+        destroyEntity(self);
     }
     else {
-        entity->timer -= entity->fadeSpeed;
+        self->timer -= self->fadeSpeed;
 #if RETRO_USE_PLUS
         Zone->flag = true;
 #endif

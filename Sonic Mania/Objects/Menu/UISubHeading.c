@@ -6,14 +6,14 @@ void UISubHeading_Update(void)
 {
     RSDK_THIS(UISubHeading);
 
-    if (entity->textSpriteIndex != UIWidgets->textSpriteIndex || entity->storedListID != entity->listID || entity->storedFrameID != entity->frameID) {
-        RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, entity->listID, &entity->animator, true, entity->frameID);
-        entity->textSpriteIndex = UIWidgets->textSpriteIndex;
-        entity->storedListID    = entity->listID;
-        entity->storedFrameID   = entity->frameID;
+    if (self->textSpriteIndex != UIWidgets->textSpriteIndex || self->storedListID != self->listID || self->storedFrameID != self->frameID) {
+        RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, self->listID, &self->animator, true, self->frameID);
+        self->textSpriteIndex = UIWidgets->textSpriteIndex;
+        self->storedListID    = self->listID;
+        self->storedFrameID   = self->frameID;
     }
 
-    StateMachine_Run(entity->state);
+    StateMachine_Run(self->state);
 }
 
 void UISubHeading_LateUpdate(void) {}
@@ -25,37 +25,37 @@ void UISubHeading_Draw(void)
     RSDK_THIS(UISubHeading);
     Vector2 drawPos;
 
-    int32 size  = entity->size.y + entity->size.x;
-    drawPos.x = entity->position.x;
-    drawPos.y = entity->position.y;
-    UIWidgets_Unknown7(entity->size.y, size >> 16, entity->shiftedY, 0, 0, 0, entity->position.x, entity->position.y);
+    int32 size  = self->size.y + self->size.x;
+    drawPos.x = self->position.x;
+    drawPos.y = self->position.y;
+    UIWidgets_Unknown7(self->size.y, size >> 16, self->shiftedY, 0, 0, 0, self->position.x, self->position.y);
 
-    drawPos = entity->position;
-    if (!entity->align) {
-        drawPos.x += -0x60000 - (entity->size.x >> 1);
+    drawPos = self->position;
+    if (!self->align) {
+        drawPos.x += -0x60000 - (self->size.x >> 1);
     }
-    else if (entity->align == 2) {
+    else if (self->align == 2) {
         drawPos.x -= 0x60000;
-        drawPos.x += entity->size.x >> 1;
+        drawPos.x += self->size.x >> 1;
     }
-    drawPos.x += entity->offset;
-    RSDK.DrawSprite(&entity->animator, &drawPos, false);
+    drawPos.x += self->offset;
+    RSDK.DrawSprite(&self->animator, &drawPos, false);
 }
 
 void UISubHeading_Create(void *data)
 {
     RSDK_THIS(UISubHeading);
     if (!SceneInfo->inEditor) {
-        entity->offset <<= 16;
-        entity->visible       = true;
-        entity->drawOrder     = 2;
-        entity->active        = ACTIVE_BOUNDS;
-        entity->updateRange.x = 0x800000;
-        entity->updateRange.y = 0x400000;
-        entity->shiftedY      = entity->size.y >> 16;
-        entity->size.y        = abs(entity->size.y);
-        RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, entity->listID, &entity->animator, true, entity->frameID);
-        entity->textSpriteIndex = UIWidgets->textSpriteIndex;
+        self->offset <<= 16;
+        self->visible       = true;
+        self->drawOrder     = 2;
+        self->active        = ACTIVE_BOUNDS;
+        self->updateRange.x = 0x800000;
+        self->updateRange.y = 0x400000;
+        self->shiftedY      = self->size.y >> 16;
+        self->size.y        = abs(self->size.y);
+        RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, self->listID, &self->animator, true, self->frameID);
+        self->textSpriteIndex = UIWidgets->textSpriteIndex;
     }
 }
 
@@ -97,7 +97,7 @@ void UISubHeading_Unknown2(void)
     EntityUIButton *button   = control->buttons[1];
     button->disabled         = !GameProgress_CheckUnlock(5) && globals->superSecret;
     if (button->disabled)
-        UIButton_Unknown1(button);
+        UIButton_ManageChoices(button);
 
     button                  = control->buttons[2];
     EntityUIButton *option1 = UIButton_GetChoicePtr(button, 1);
@@ -105,7 +105,7 @@ void UISubHeading_Unknown2(void)
     int32 unlock              = GameProgress_CheckUnlock(2);
     button->disabled        = !unlock;
     if (button->disabled)
-        UIButton_Unknown1(button);
+        UIButton_ManageChoices(button);
     option1->disabled = !GameProgress_CheckUnlock(2);
     option2->disabled = !GameProgress_CheckUnlock(3);
 
@@ -113,7 +113,7 @@ void UISubHeading_Unknown2(void)
     unlock           = GameProgress_CheckUnlock(4);
     button->disabled = !unlock;
     if (button->disabled)
-        UIButton_Unknown1(button);
+        UIButton_ManageChoices(button);
 }
 
 void UISubHeading_Unknown3(void)
@@ -235,23 +235,23 @@ void UISubHeading_Unknown9(void)
 void UISubHeading_Unknown10(void)
 {
     RSDK_THIS(UIControl);
-    if (entity->active == ACTIVE_ALWAYS) {
+    if (self->active == ACTIVE_ALWAYS) {
         EntityUIButtonPrompt *prompt = (EntityUIButtonPrompt *)ManiaModeMenu->prompt1;
-        if (entity == (EntityUIControl *)ManiaModeMenu->encoreSaveSelect) {
+        if (self == (EntityUIControl *)ManiaModeMenu->encoreSaveSelect) {
             prompt = (EntityUIButtonPrompt *)ManiaModeMenu->prompt2;
         }
-        else if (entity->field_D8 != ManiaModeMenu->field_28) {
+        else if (self->field_D8 != ManiaModeMenu->field_28) {
             UISubHeading_Unknown9();
-            ManiaModeMenu->field_28 = entity->field_D8;
+            ManiaModeMenu->field_28 = self->field_D8;
         }
 
         bool32 flag  = false;
         bool32 flag2 = false;
-        for (int32 i = 0; i < entity->buttonCount; ++i) {
-            flag2 |= entity->buttons[i]->state == UISaveSlot_Unknown28;
-            if (entity->field_D8 >= 0) {
-                if (entity->buttons[i] == entity->buttons[entity->field_D8]) {
-                    EntityUISaveSlot *slot = (EntityUISaveSlot *)entity->buttons[entity->field_D8];
+        for (int32 i = 0; i < self->buttonCount; ++i) {
+            flag2 |= self->buttons[i]->state == UISaveSlot_Unknown28;
+            if (self->field_D8 >= 0) {
+                if (self->buttons[i] == self->buttons[self->field_D8]) {
+                    EntityUISaveSlot *slot = (EntityUISaveSlot *)self->buttons[self->field_D8];
                     if (!slot->isNewSave)
                         flag = true;
                 }
@@ -259,8 +259,8 @@ void UISubHeading_Unknown10(void)
         }
 
         if (!flag2) {
-            if ((entity == (EntityUIControl *)ManiaModeMenu->saveSelectMenu && entity->field_D8 == 8)
-                || (entity == (EntityUIControl *)ManiaModeMenu->encoreSaveSelect && !entity->field_D8)) {
+            if ((self == (EntityUIControl *)ManiaModeMenu->saveSelectMenu && self->field_D8 == 8)
+                || (self == (EntityUIControl *)ManiaModeMenu->encoreSaveSelect && !self->field_D8)) {
                 prompt->visible = false;
             }
             else {
@@ -289,34 +289,34 @@ void UISubHeading_StartNewSave(void)
 {
     EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
     RSDK_THIS(UISaveSlot);
-    EntityUIControl *control = (EntityUIControl *)entity->parent;
+    EntityUIControl *control = (EntityUIControl *)self->parent;
 
-    EntitySaveGame *saveRAM = (EntitySaveGame *)SaveGame_GetDataPtr(entity->slotID, entity->encoreMode);
+    EntitySaveGame *saveRAM = (EntitySaveGame *)SaveGame_GetDataPtr(self->slotID, self->encoreMode);
     TimeAttackData_ClearOptions();
     RSDK.GetCString(param->menuTag, &control->tag);
     param->selectionID = control->field_D8;
     param->field_168 = 0;
-    globals->gameMode = entity->encoreMode != false;
+    globals->gameMode = self->encoreMode != false;
 
     bool32 loadingSave = false;
-    if (entity->type) {
+    if (self->type) {
         memset(globals->noSaveSlot, 0, 0x400);
         globals->continues  = 0;
         globals->saveSlotID = NO_SAVE_SLOT;
     }
     else {
-        globals->saveSlotID = entity->slotID;
+        globals->saveSlotID = self->slotID;
         globals->medalMods  = 0;
-        if (entity->isNewSave) {
-            int32 *saveData = SaveGame_GetDataPtr(entity->slotID % 8, entity->encoreMode);
+        if (self->isNewSave) {
+            int32 *saveData = SaveGame_GetDataPtr(self->slotID % 8, self->encoreMode);
 
             memset(saveData, 0, 0x400);
             if (globals->gameMode != MODE_ENCORE)
                 saveRAM->saveState = 1;
-            saveRAM->characterID   = entity->frameID;
+            saveRAM->characterID   = self->frameID;
             saveRAM->zoneID        = 0;
             saveRAM->lives         = 3;
-            saveRAM->chaosEmeralds = entity->saveEmeralds;
+            saveRAM->chaosEmeralds = self->saveEmeralds;
             saveRAM->continues     = 0;
             UIWaitSpinner_Wait();
             loadingSave = true;
@@ -333,14 +333,14 @@ void UISubHeading_StartNewSave(void)
         }
     }
 
-    if (entity->encoreMode) {
+    if (self->encoreMode) {
         globals->medalMods = getMod(MEDAL_NOTIMEOVER);
         saveRAM->medalMods = globals->medalMods;
     }
     else {
         globals->medalMods = UISubHeading_GetMedalMods();
         saveRAM->medalMods = globals->medalMods;
-        switch (entity->frameID) {
+        switch (self->frameID) {
             case 0:
             case 1: globals->playerID = ID_SONIC; break;
             case 2: globals->playerID = ID_TAILS; break;
@@ -353,13 +353,13 @@ void UISubHeading_StartNewSave(void)
         if ((globals->medalMods & getMod(MEDAL_ANDKNUCKLES))) {
             globals->playerID |= ID_KNUCKLES_ASSIST;
         }
-        else if (!entity->frameID) {
+        else if (!self->frameID) {
             globals->playerID |= ID_TAILS_ASSIST;
         }
     }
 
-    if (entity->type == 1 || entity->isNewSave) {
-        if (entity->encoreMode) {
+    if (self->type == 1 || self->isNewSave) {
+        if (self->encoreMode) {
             globals->playerID          = ID_SONIC;
             globals->stock             = 0;
             globals->characterFlags    = 0;
@@ -367,23 +367,23 @@ void UISubHeading_StartNewSave(void)
             globals->suppressTitlecard = true;
             RSDK.SetScene("Cutscenes", "Angel Island Zone Encore");
         }
-        else if (((globals->medalMods & getMod(MEDAL_DEBUGMODE)) && (ControllerInfo->keyC.down || ControllerInfo->keyX.down)) && entity->type == 1) {
+        else if (((globals->medalMods & getMod(MEDAL_DEBUGMODE)) && (ControllerInfo->keyC.down || ControllerInfo->keyX.down)) && self->type == 1) {
             RSDK.SetScene("Presentation", "Level Select");
         }
         else {
             RSDK.SetScene("Cutscenes", "Angel Island Zone");
         }
     }
-    else if (entity->encoreMode) {
+    else if (self->encoreMode) {
         globals->playerID       = saveRAM->playerID;
         globals->stock          = saveRAM->stock;
         globals->characterFlags = saveRAM->characterFlags;
         RSDK.SetScene("Encore Mode", "");
-        SceneInfo->listPos += TimeAttackData_GetEncoreListPos(entity->saveZoneID, entity->frameID, 0);
+        SceneInfo->listPos += TimeAttackData_GetEncoreListPos(self->saveZoneID, self->frameID, 0);
     }
     else {
         RSDK.SetScene("Mania Mode", "");
-        SceneInfo->listPos += TimeAttackData_GetManiaListPos(entity->saveZoneID, entity->frameID, 0);
+        SceneInfo->listPos += TimeAttackData_GetManiaListPos(self->saveZoneID, self->frameID, 0);
     }
 
     if (!loadingSave) {
@@ -398,15 +398,15 @@ void UISubHeading_EditorDraw(void)
 {
     RSDK_THIS(UISubHeading);
 
-    if (entity->offset < 0x10000)
-        entity->offset <<= 16;
-    entity->drawOrder     = 2;
-    entity->updateRange.x = 0x800000;
-    entity->updateRange.y = 0x400000;
-    entity->shiftedY      = entity->size.y >> 16;
-    entity->size.y        = abs(entity->size.y);
-    RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, entity->listID, &entity->animator, true, entity->frameID);
-    entity->textSpriteIndex = UIWidgets->textSpriteIndex;
+    if (self->offset < 0x10000)
+        self->offset <<= 16;
+    self->drawOrder     = 2;
+    self->updateRange.x = 0x800000;
+    self->updateRange.y = 0x400000;
+    self->shiftedY      = self->size.y >> 16;
+    self->size.y        = abs(self->size.y);
+    RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, self->listID, &self->animator, true, self->frameID);
+    self->textSpriteIndex = UIWidgets->textSpriteIndex;
 
     UISubHeading_Draw();
 }

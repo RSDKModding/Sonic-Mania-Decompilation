@@ -11,182 +11,182 @@ void TwistingSlide_Update(void)
         int32 storeX   = player->position.x;
         int32 storeY   = player->position.y;
         if (player->state != Player_State_None)
-            entity->activePlayers &= ~(1 << playerID);
+            self->activePlayers &= ~(1 << playerID);
 
-        if (!Player_CheckCollisionTouch(player, entity, &entity->hitbox1) || (player->position.y < entity->field_74)
-            || player->position.y > entity->field_78) {
-            entity->activePlayers &= ~(1 << playerID);
+        if (!Player_CheckCollisionTouch(player, self, &self->hitbox1) || (player->position.y < self->field_74)
+            || player->position.y > self->field_78) {
+            self->activePlayers &= ~(1 << playerID);
         }
-        else if (entity->direction) {
-            switch (entity->type) {
+        else if (self->direction) {
+            switch (self->type) {
                 case 0:
                     if (player->state == Player_State_None) {
-                        if (!((1 << playerID) & entity->activePlayers)) {
-                            entity->field_64[playerID] = (player->position.y - entity->position.y + 0x4A0000) >> 16;
-                            entity->activePlayers |= 1 << playerID;
+                        if (!((1 << playerID) & self->activePlayers)) {
+                            self->field_64[playerID] = (player->position.y - self->position.y + 0x4A0000) >> 16;
+                            self->activePlayers |= 1 << playerID;
                         }
-                        int32 val = 221 * entity->field_64[playerID];
-                        if (221 * entity->field_64[playerID] >= 0x3FC0)
-                            val = 170 * entity->field_64[playerID];
-                        player->position.x = 0x2800 * RSDK.Cos256((val >> 8) + 192) + entity->position.x;
-                        player->position.y = entity->position.y + ((entity->field_64[playerID] - 74) << 16);
-                        if (player->groundVel > 0 && Player_CheckCollisionTouch(player, entity, &entity->hitbox2)) {
-                            entity->activePlayers &= ~(1 << playerID);
+                        int32 val = 221 * self->field_64[playerID];
+                        if (221 * self->field_64[playerID] >= 0x3FC0)
+                            val = 170 * self->field_64[playerID];
+                        player->position.x = 0x2800 * RSDK.Cos256((val >> 8) + 192) + self->position.x;
+                        player->position.y = self->position.y + ((self->field_64[playerID] - 74) << 16);
+                        if (player->groundVel > 0 && Player_CheckCollisionTouch(player, self, &self->hitbox2)) {
+                            self->activePlayers &= ~(1 << playerID);
                             player->state          = Player_State_Roll;
                             player->collisionMode  = CMODE_ROOF;
                             player->tileCollisions = true;
                             player->angle          = 144;
                         }
                     }
-                    else if (!((1 << playerID) & entity->activePlayers) && player->onGround && player->groundVel < 0) {
-                        if (Player_CheckCollisionTouch(player, entity, &entity->hitbox2)) {
+                    else if (!((1 << playerID) & self->activePlayers) && player->onGround && player->groundVel < 0) {
+                        if (Player_CheckCollisionTouch(player, self, &self->hitbox2)) {
                             player->tileCollisions = false;
                             player->state          = Player_State_None;
                             player->velocity.x     = 0;
                             player->velocity.y     = 0;
                             RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->playerAnimator, false, 0);
-                            entity->field_64[playerID] = (player->position.y - entity->position.y + 0x4A0000) >> 16;
-                            entity->activePlayers |= (1 << playerID);
+                            self->field_64[playerID] = (player->position.y - self->position.y + 0x4A0000) >> 16;
+                            self->activePlayers |= (1 << playerID);
                         }
                     }
                     break;
                 case 1:
                     if (player->state == Player_State_None) {
-                        if (!((1 << playerID) & entity->activePlayers)) {
-                            entity->field_64[playerID] = (0xC00000 + player->position.y - entity->position.y) >> 16;
-                            entity->activePlayers |= 1 << playerID;
+                        if (!((1 << playerID) & self->activePlayers)) {
+                            self->field_64[playerID] = (0xC00000 + player->position.y - self->position.y) >> 16;
+                            self->activePlayers |= 1 << playerID;
                         }
-                        player->position.x = 0x800000 + entity->position.x - 0xAA00 * entity->field_64[playerID];
-                        player->position.y = entity->position.y + ((entity->field_64[playerID] - 192) << 16);
+                        player->position.x = 0x800000 + self->position.x - 0xAA00 * self->field_64[playerID];
+                        player->position.y = self->position.y + ((self->field_64[playerID] - 192) << 16);
                     }
                     break;
                 case 2:
                     if (player->state == Player_State_None) {
-                        if (!((1 << playerID) & entity->activePlayers)) {
-                            entity->field_64[playerID] = (0xC00000 + player->position.y - entity->position.y) >> 16;
-                            entity->activePlayers |= 1 << playerID;
+                        if (!((1 << playerID) & self->activePlayers)) {
+                            self->field_64[playerID] = (0xC00000 + player->position.y - self->position.y) >> 16;
+                            self->activePlayers |= 1 << playerID;
                         }
-                        player->position.x = 0x2800 * RSDK.Cos256(((170 * entity->field_64[playerID]) >> 8) + 64) + entity->position.x;
-                        player->position.y = entity->position.y + ((entity->field_64[playerID] - 192) << 16);
+                        player->position.x = 0x2800 * RSDK.Cos256(((170 * self->field_64[playerID]) >> 8) + 64) + self->position.x;
+                        player->position.y = self->position.y + ((self->field_64[playerID] - 192) << 16);
                     }
                     break;
                 case 3:
                     if (player->state == Player_State_None) {
-                        if (!((1 << playerID) & entity->activePlayers)) {
-                            entity->field_64[playerID] = (player->position.y + (entity->endLen << 15) - entity->position.y) >> 16;
-                            entity->activePlayers |= 1 << playerID;
+                        if (!((1 << playerID) & self->activePlayers)) {
+                            self->field_64[playerID] = (player->position.y + (self->endLen << 15) - self->position.y) >> 16;
+                            self->activePlayers |= 1 << playerID;
                         }
-                        player->position.x = entity->position.x + ((entity->endLen / 3) << 16) - 0xAA00 * entity->field_64[playerID];
-                        player->position.y = entity->position.y + (entity->field_64[playerID] << 16) - (entity->endLen << 15);
-                        if (player->groundVel < 0 && Player_CheckCollisionTouch(player, entity, &entity->hitbox3)) {
-                            entity->activePlayers &= ~(1 << playerID);
+                        player->position.x = self->position.x + ((self->endLen / 3) << 16) - 0xAA00 * self->field_64[playerID];
+                        player->position.y = self->position.y + (self->field_64[playerID] << 16) - (self->endLen << 15);
+                        if (player->groundVel < 0 && Player_CheckCollisionTouch(player, self, &self->hitbox3)) {
+                            self->activePlayers &= ~(1 << playerID);
                             player->state          = Player_State_Roll;
                             player->collisionMode  = CMODE_RWALL;
                             player->tileCollisions = true;
                             player->angle          = 216;
                         }
                     }
-                    else if (!((1 << playerID) & entity->activePlayers) && player->onGround && player->groundVel > 0
-                             && Player_CheckCollisionTouch(player, entity, &entity->hitbox3)) {
+                    else if (!((1 << playerID) & self->activePlayers) && player->onGround && player->groundVel > 0
+                             && Player_CheckCollisionTouch(player, self, &self->hitbox3)) {
                         player->tileCollisions = false;
                         player->state          = Player_State_None;
                         player->velocity.x     = 0;
                         player->velocity.y     = 0;
                         RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->playerAnimator, false, 0);
-                        entity->field_64[playerID] = (player->position.y + (entity->endLen << 15) - entity->position.y) >> 16;
-                        entity->activePlayers |= (1 << playerID);
+                        self->field_64[playerID] = (player->position.y + (self->endLen << 15) - self->position.y) >> 16;
+                        self->activePlayers |= (1 << playerID);
                     }
                     break;
                 default: break;
             }
         }
         else {
-            switch (entity->type) {
+            switch (self->type) {
                 case 0:
                     if (player->state == Player_State_None) {
-                        if (!((1 << playerID) & entity->activePlayers)) {
-                            entity->field_64[playerID] = (player->position.y - entity->position.y + 4849664) >> 16;
-                            entity->activePlayers |= 1 << playerID;
+                        if (!((1 << playerID) & self->activePlayers)) {
+                            self->field_64[playerID] = (player->position.y - self->position.y + 4849664) >> 16;
+                            self->activePlayers |= 1 << playerID;
                         }
-                        int32 val = 221 * entity->field_64[playerID];
-                        if (221 * entity->field_64[playerID] >= 16320)
-                            val = 170 * entity->field_64[playerID];
-                        player->position.x = entity->position.x - 0x2800 * RSDK.Cos256((val >> 8) + 192);
-                        player->position.y = entity->position.y + ((entity->field_64[playerID] - 74) << 16);
-                        if (player->groundVel < 0 && Player_CheckCollisionTouch(player, entity, &entity->hitbox2)) {
-                            entity->activePlayers &= ~(1 << playerID);
+                        int32 val = 221 * self->field_64[playerID];
+                        if (221 * self->field_64[playerID] >= 16320)
+                            val = 170 * self->field_64[playerID];
+                        player->position.x = self->position.x - 0x2800 * RSDK.Cos256((val >> 8) + 192);
+                        player->position.y = self->position.y + ((self->field_64[playerID] - 74) << 16);
+                        if (player->groundVel < 0 && Player_CheckCollisionTouch(player, self, &self->hitbox2)) {
+                            self->activePlayers &= ~(1 << playerID);
                             player->state          = Player_State_Roll;
                             player->collisionMode  = CMODE_ROOF;
                             player->tileCollisions = true;
                             player->angle          = 112;
                         }
                     }
-                    else if (!((1 << playerID) & entity->activePlayers) && player->onGround && player->groundVel > 0) {
-                        if (Player_CheckCollisionTouch(player, entity, &entity->hitbox2)) {
+                    else if (!((1 << playerID) & self->activePlayers) && player->onGround && player->groundVel > 0) {
+                        if (Player_CheckCollisionTouch(player, self, &self->hitbox2)) {
                             player->tileCollisions = false;
                             player->state          = Player_State_None;
                             player->velocity.x     = 0;
                             player->velocity.y     = 0;
                             RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->playerAnimator, false, 0);
-                            entity->field_64[playerID] = (player->position.y - entity->position.y + 0x4A0000) >> 16;
-                            entity->activePlayers |= (1 << playerID);
+                            self->field_64[playerID] = (player->position.y - self->position.y + 0x4A0000) >> 16;
+                            self->activePlayers |= (1 << playerID);
                         }
                     }
                     break;
                 case 1:
                     if (player->state == Player_State_None) {
-                        if (((1 << playerID) & entity->activePlayers) == 0) {
-                            entity->field_64[playerID] = (0xC00000 + player->position.y - entity->position.y) >> 16;
-                            entity->activePlayers |= 1 << playerID;
+                        if (((1 << playerID) & self->activePlayers) == 0) {
+                            self->field_64[playerID] = (0xC00000 + player->position.y - self->position.y) >> 16;
+                            self->activePlayers |= 1 << playerID;
                         }
-                        player->position.x = 0xAA00 * entity->field_64[playerID] + entity->position.x - 0x800000;
-                        player->position.y = entity->position.y + ((entity->field_64[playerID] - 192) << 16);
+                        player->position.x = 0xAA00 * self->field_64[playerID] + self->position.x - 0x800000;
+                        player->position.y = self->position.y + ((self->field_64[playerID] - 192) << 16);
                     }
                     break;
                 case 2:
                     if (player->state == Player_State_None) {
-                        if (((1 << playerID) & entity->activePlayers) == 0) {
-                            entity->field_64[playerID] = (0xC00000 + player->position.y - entity->position.y) >> 16;
-                            entity->activePlayers |= 1 << playerID;
+                        if (((1 << playerID) & self->activePlayers) == 0) {
+                            self->field_64[playerID] = (0xC00000 + player->position.y - self->position.y) >> 16;
+                            self->activePlayers |= 1 << playerID;
                         }
-                        player->position.x = entity->position.x - 0x2800 * RSDK.Cos256(((170 * entity->field_64[playerID]) >> 8) + 64);
-                        player->position.y = entity->position.y + ((entity->field_64[playerID] - 192) << 16);
+                        player->position.x = self->position.x - 0x2800 * RSDK.Cos256(((170 * self->field_64[playerID]) >> 8) + 64);
+                        player->position.y = self->position.y + ((self->field_64[playerID] - 192) << 16);
                     }
                     break;
                 case 3:
                     if (player->state == Player_State_None) {
-                        if (!((1 << playerID) & entity->activePlayers)) {
-                            entity->field_64[playerID] = (player->position.y + (entity->endLen << 15) - entity->position.y) >> 16;
-                            entity->activePlayers |= 1 << playerID;
+                        if (!((1 << playerID) & self->activePlayers)) {
+                            self->field_64[playerID] = (player->position.y + (self->endLen << 15) - self->position.y) >> 16;
+                            self->activePlayers |= 1 << playerID;
                         }
-                        player->position.x = entity->position.x + 0xAA00 * entity->field_64[playerID] - ((entity->endLen / 3) << 16);
-                        player->position.y = entity->position.y + (entity->field_64[playerID] << 16) - (entity->endLen << 15);
-                        if (player->groundVel > 0 && Player_CheckCollisionTouch(player, entity, &entity->hitbox3)) {
-                            entity->activePlayers &= ~(1 << playerID);
+                        player->position.x = self->position.x + 0xAA00 * self->field_64[playerID] - ((self->endLen / 3) << 16);
+                        player->position.y = self->position.y + (self->field_64[playerID] << 16) - (self->endLen << 15);
+                        if (player->groundVel > 0 && Player_CheckCollisionTouch(player, self, &self->hitbox3)) {
+                            self->activePlayers &= ~(1 << playerID);
                             player->state          = Player_State_Roll;
                             player->collisionMode  = CMODE_RWALL;
                             player->tileCollisions = true;
                             player->angle          = 40;
                         }
                     }
-                    else if (!((1 << playerID) & entity->activePlayers) && player->onGround && player->groundVel < 0
-                             && Player_CheckCollisionTouch(player, entity, &entity->hitbox3)) {
+                    else if (!((1 << playerID) & self->activePlayers) && player->onGround && player->groundVel < 0
+                             && Player_CheckCollisionTouch(player, self, &self->hitbox3)) {
                         player->tileCollisions = false;
                         player->state          = Player_State_None;
                         player->velocity.x     = 0;
                         player->velocity.y     = 0;
                         RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->playerAnimator, false, 0);
-                        entity->field_64[playerID] = (player->position.y + (entity->endLen << 15) - entity->position.y) >> 16;
-                        entity->activePlayers |= (1 << playerID);
+                        self->field_64[playerID] = (player->position.y + (self->endLen << 15) - self->position.y) >> 16;
+                        self->activePlayers |= (1 << playerID);
                     }
                     break;
                 default: break;
             }
         }
 
-        if (((1 << playerID) & entity->activePlayers)) {
-            if (entity->direction) {
-                entity->field_64[playerID] += ((-player->groundVel >> 16) * RSDK.Sin256(40)) >> 8;
+        if (((1 << playerID) & self->activePlayers)) {
+            if (self->direction) {
+                self->field_64[playerID] += ((-player->groundVel >> 16) * RSDK.Sin256(40)) >> 8;
                 if (player->groundVel <= 0)
                     player->groundVel -= 20 * RSDK.Cos256(40);
                 else
@@ -195,7 +195,7 @@ void TwistingSlide_Update(void)
                     player->groundVel = -0x180000;
             }
             else {
-                entity->field_64[playerID] += ((player->groundVel >> 16) * RSDK.Sin256(40)) >> 8;
+                self->field_64[playerID] += ((player->groundVel >> 16) * RSDK.Sin256(40)) >> 8;
                 if (player->groundVel <= 0)
                     player->groundVel += 20 * RSDK.Cos256(40);
                 else
@@ -237,31 +237,31 @@ void TwistingSlide_Create(void *data)
 {
     RSDK_THIS(TwistingSlide);
     if (!SceneInfo->inEditor) {
-        entity->active = ACTIVE_BOUNDS;
-        switch (entity->type) {
+        self->active = ACTIVE_BOUNDS;
+        switch (self->type) {
             case 0:
-                entity->updateRange.y = 0x780000;
-                entity->updateRange.x = 0x800000;
-                entity->field_74      = entity->position.y - 0x4A0000;
-                entity->field_78      = 0x780000 + entity->position.y;
+                self->updateRange.y = 0x780000;
+                self->updateRange.x = 0x800000;
+                self->field_74      = self->position.y - 0x4A0000;
+                self->field_78      = 0x780000 + self->position.y;
                 break;
             case 1:
-                entity->updateRange.x = 0xC00000;
-                entity->updateRange.y = 0xC00000;
-                entity->field_74      = entity->position.y - 0xC00000;
-                entity->field_78      = entity->position.y + 0xC00000;
+                self->updateRange.x = 0xC00000;
+                self->updateRange.y = 0xC00000;
+                self->field_74      = self->position.y - 0xC00000;
+                self->field_78      = self->position.y + 0xC00000;
                 break;
             case 2:
-                entity->updateRange.y = 0xC00000;
-                entity->updateRange.x = 0x800000;
-                entity->field_74      = entity->position.y - 0xC00000;
-                entity->field_78      = entity->position.y + 0xC00000;
+                self->updateRange.y = 0xC00000;
+                self->updateRange.x = 0x800000;
+                self->field_74      = self->position.y - 0xC00000;
+                self->field_78      = self->position.y + 0xC00000;
                 break;
             case 3:
-                entity->field_78      = entity->position.y + (entity->endLen << 15);
-                entity->field_74      = entity->position.y - (entity->endLen << 15);
-                entity->updateRange.y = 0xC00000;
-                entity->updateRange.x = 0x800000;
+                self->field_78      = self->position.y + (self->endLen << 15);
+                self->field_74      = self->position.y - (self->endLen << 15);
+                self->updateRange.y = 0xC00000;
+                self->updateRange.x = 0x800000;
                 break;
             default: break;
         }
@@ -280,33 +280,33 @@ void TwistingSlide_StageLoad(void)
 void TwistingSlide_Unknown1(void)
 {
     RSDK_THIS(TwistingSlide);
-    switch (entity->type) {
+    switch (self->type) {
         case 0:
-            entity->hitbox1.left   = -56;
-            entity->hitbox1.top    = -120;
-            entity->hitbox1.right  = 52;
-            entity->hitbox1.bottom = 120;
-            entity->hitbox2.top    = -46;
-            entity->hitbox2.bottom = -38;
-            entity->hitbox2.left   = ((-40 * RSDK.Cos256(48)) >> 8) - 4;
-            entity->hitbox2.right  = ((-40 * RSDK.Cos256(48)) >> 8) + 4;
+            self->hitbox1.left   = -56;
+            self->hitbox1.top    = -120;
+            self->hitbox1.right  = 52;
+            self->hitbox1.bottom = 120;
+            self->hitbox2.top    = -46;
+            self->hitbox2.bottom = -38;
+            self->hitbox2.left   = ((-40 * RSDK.Cos256(48)) >> 8) - 4;
+            self->hitbox2.right  = ((-40 * RSDK.Cos256(48)) >> 8) + 4;
             break;
         case 1:
         case 2:
-            entity->hitbox1.left   = -132;
-            entity->hitbox1.top    = -196;
-            entity->hitbox1.right  = 132;
-            entity->hitbox1.bottom = 196;
+            self->hitbox1.left   = -132;
+            self->hitbox1.top    = -196;
+            self->hitbox1.right  = 132;
+            self->hitbox1.bottom = 196;
             break;
         case 3:
-            entity->hitbox1.left   = entity->endLen / -3;
-            entity->hitbox1.top    = -(entity->endLen >> 1);
-            entity->hitbox1.right  = entity->endLen / 3;
-            entity->hitbox1.bottom = entity->endLen >> 1;
-            entity->hitbox3.left   = entity->hitbox1.right - 4;
-            entity->hitbox3.top    = entity->hitbox1.bottom - 4;
-            entity->hitbox3.right  = entity->hitbox1.right + 4;
-            entity->hitbox3.bottom = entity->hitbox1.bottom + 4;
+            self->hitbox1.left   = self->endLen / -3;
+            self->hitbox1.top    = -(self->endLen >> 1);
+            self->hitbox1.right  = self->endLen / 3;
+            self->hitbox1.bottom = self->endLen >> 1;
+            self->hitbox3.left   = self->hitbox1.right - 4;
+            self->hitbox3.top    = self->hitbox1.bottom - 4;
+            self->hitbox3.right  = self->hitbox1.right + 4;
+            self->hitbox3.bottom = self->hitbox1.bottom + 4;
             break;
         default: break;
     }

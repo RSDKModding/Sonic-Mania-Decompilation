@@ -5,16 +5,16 @@ ObjectRingField *RingField;
 void RingField_Update(void)
 {
     RSDK_THIS(RingField);
-    if (entity->running) {
+    if (self->running) {
         bool32 flag = false;
         foreach_active(Player, player)
         {
-            if (Player_CheckCollisionTouch(player, entity, &entity->hitbox)) {
+            if (Player_CheckCollisionTouch(player, self, &self->hitbox)) {
                 flag = true;
             }
         }
         if (flag) {
-            if (entity->timer <= 0) {
+            if (self->timer <= 0) {
                 Vector2 pos;
                 RingField_GetPos(&pos);
                 EntityRing *ring          = CREATE_ENTITY(Ring, &pos, pos.x, pos.y);
@@ -33,10 +33,10 @@ void RingField_Update(void)
                 int32 angle = RSDK.ATan2(x - pos.x, (y << 15) + sy - pos.y);
                 ring->velocity.x = RSDK.Cos256(angle) << 9;
                 ring->velocity.y = RSDK.Sin256(angle) << 9;
-                entity->timer    = (entity->fluctuation * RSDK.Sin256(Zone->timer) >> 8) + entity->frequency;
+                self->timer    = (self->fluctuation * RSDK.Sin256(Zone->timer) >> 8) + self->frequency;
             }
             else {
-                entity->timer--;
+                self->timer--;
             }
         }
     }
@@ -67,27 +67,27 @@ void RingField_Create(void *data)
 {
     RSDK_THIS(RingField);
 
-    entity->active        = ACTIVE_NORMAL;
-    entity->drawOrder     = Zone->drawOrderLow;
-    entity->startPos.x    = entity->position.x;
-    entity->startPos.y    = entity->position.y;
-    entity->visible       = false;
-    entity->drawFX        = FX_FLIP;
-    entity->updateRange.x = 0x800000;
-    entity->updateRange.y = 0x800000;
-    if (!entity->size.x)
-        entity->size.x = 0x6400000;
-    if (!entity->size.y)
-        entity->size.y = 0x1E00000;
-    if (!entity->frequency)
-        entity->frequency = 60;
-    if (!entity->fluctuation)
-        entity->fluctuation = 20;
+    self->active        = ACTIVE_NORMAL;
+    self->drawOrder     = Zone->drawOrderLow;
+    self->startPos.x    = self->position.x;
+    self->startPos.y    = self->position.y;
+    self->visible       = false;
+    self->drawFX        = FX_FLIP;
+    self->updateRange.x = 0x800000;
+    self->updateRange.y = 0x800000;
+    if (!self->size.x)
+        self->size.x = 0x6400000;
+    if (!self->size.y)
+        self->size.y = 0x1E00000;
+    if (!self->frequency)
+        self->frequency = 60;
+    if (!self->fluctuation)
+        self->fluctuation = 20;
 
-    entity->hitbox.left   = -entity->size.x >> 17;
-    entity->hitbox.top    = -entity->size.y >> 17;
-    entity->hitbox.right  = entity->size.x >> 17;
-    entity->hitbox.bottom = entity->size.y >> 17;
+    self->hitbox.left   = -self->size.x >> 17;
+    self->hitbox.top    = -self->size.y >> 17;
+    self->hitbox.right  = self->size.x >> 17;
+    self->hitbox.bottom = self->size.y >> 17;
 }
 
 void RingField_StageLoad(void) { RingField->aniFrames = RSDK.LoadSpriteAnimation("Global/Ring.bin", SCOPE_STAGE); }
@@ -132,15 +132,15 @@ void RingField_EditorDraw(void)
     RSDK_THIS(RingField);
     Vector2 drawPos;
 
-    drawPos.x = entity->position.x;
-    drawPos.y = entity->position.y;
-    drawPos.x -= entity->size.x >> 1;
-    drawPos.y -= entity->size.y >> 1;
-    RSDK.DrawLine(drawPos.x - 0x10000, drawPos.y - 0x10000, drawPos.x + entity->size.x, drawPos.y - 0x10000, 0xFFFF00, 0, INK_NONE, false);
-    RSDK.DrawLine(drawPos.x - 0x10000, entity->size.y + drawPos.y, drawPos.x + entity->size.x, entity->size.y + drawPos.y, 0xFFFF00, 0, INK_NONE,
+    drawPos.x = self->position.x;
+    drawPos.y = self->position.y;
+    drawPos.x -= self->size.x >> 1;
+    drawPos.y -= self->size.y >> 1;
+    RSDK.DrawLine(drawPos.x - 0x10000, drawPos.y - 0x10000, drawPos.x + self->size.x, drawPos.y - 0x10000, 0xFFFF00, 0, INK_NONE, false);
+    RSDK.DrawLine(drawPos.x - 0x10000, self->size.y + drawPos.y, drawPos.x + self->size.x, self->size.y + drawPos.y, 0xFFFF00, 0, INK_NONE,
                   false);
-    RSDK.DrawLine(drawPos.x - 0x10000, drawPos.y - 0x10000, drawPos.x - 0x10000, drawPos.y + entity->size.y, 0xFFFF00, 0, INK_NONE, false);
-    RSDK.DrawLine(drawPos.x + entity->size.x, drawPos.y - 0x10000, drawPos.x + entity->size.x, drawPos.y + entity->size.y, 0xFFFF00, 0, INK_NONE,
+    RSDK.DrawLine(drawPos.x - 0x10000, drawPos.y - 0x10000, drawPos.x - 0x10000, drawPos.y + self->size.y, 0xFFFF00, 0, INK_NONE, false);
+    RSDK.DrawLine(drawPos.x + self->size.x, drawPos.y - 0x10000, drawPos.x + self->size.x, drawPos.y + self->size.y, 0xFFFF00, 0, INK_NONE,
                   false);
 }
 

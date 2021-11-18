@@ -13,40 +13,40 @@ void DirectorChair_Draw(void)
     RSDK_THIS(DirectorChair);
     Vector2 drawPos;
 
-    int sin = RSDK.Sin512(entity->rotation);
+    int sin = RSDK.Sin512(self->rotation);
 
-    drawPos                  = entity->centerPos;
-    entity->animator.frameID = 2;
-    RSDK.DrawSprite(&entity->animator, &entity->drawPos, false);
+    drawPos                  = self->centerPos;
+    self->animator.frameID = 2;
+    RSDK.DrawSprite(&self->animator, &self->drawPos, false);
 
-    entity->animator.frameID = 1;
-    RSDK.DrawSprite(&entity->animator, &entity->drawPos, false);
+    self->animator.frameID = 1;
+    RSDK.DrawSprite(&self->animator, &self->drawPos, false);
 
-    entity->animator.frameID = 0;
-    RSDK.DrawSprite(&entity->animator, &entity->drawPos, false);
-    RSDK.DrawSprite(&entity->animator, &entity->centerPos, false);
+    self->animator.frameID = 0;
+    RSDK.DrawSprite(&self->animator, &self->drawPos, false);
+    RSDK.DrawSprite(&self->animator, &self->centerPos, false);
 
-    drawPos.x += -0x10000 - (RSDK.Cos512(entity->rotation) << 11);
-    RSDK.DrawSprite(&entity->animator2, &drawPos, false);
+    drawPos.x += -0x10000 - (RSDK.Cos512(self->rotation) << 11);
+    RSDK.DrawSprite(&self->animator2, &drawPos, false);
 
-    entity->direction = FLIP_X;
-    entity->rotation  = 0x100 - entity->rotation;
+    self->direction = FLIP_X;
+    self->rotation  = 0x100 - self->rotation;
     drawPos.y += sin << 12;
-    RSDK.DrawSprite(&entity->animator2, &drawPos, false);
+    RSDK.DrawSprite(&self->animator2, &drawPos, false);
 
-    entity->direction = FLIP_NONE;
-    entity->rotation  = 0x100 - entity->rotation;
+    self->direction = FLIP_NONE;
+    self->rotation  = 0x100 - self->rotation;
 
-    for (int i = 0; i < entity->size; ++i) {
-        RSDK.DrawSprite(&entity->animator2, &drawPos, false);
+    for (int i = 0; i < self->size; ++i) {
+        RSDK.DrawSprite(&self->animator2, &drawPos, false);
 
-        entity->direction = FLIP_X;
-        entity->rotation  = 0x100 - entity->rotation;
+        self->direction = FLIP_X;
+        self->rotation  = 0x100 - self->rotation;
         drawPos.y += sin << 12;
-        RSDK.DrawSprite(&entity->animator2, &drawPos, false);
+        RSDK.DrawSprite(&self->animator2, &drawPos, false);
 
-        entity->direction = FLIP_NONE;
-        entity->rotation  = 0x100 - entity->rotation;
+        self->direction = FLIP_NONE;
+        self->rotation  = 0x100 - self->rotation;
     }
 }
 
@@ -54,28 +54,28 @@ void DirectorChair_Create(void *data)
 {
     RSDK_THIS(DirectorChair);
 
-    RSDK.SetSpriteAnimation(DirectorChair->aniFrames, 0, &entity->animator2, true, 0);
-    RSDK.SetSpriteAnimation(DirectorChair->aniFrames, 1, &entity->animator, true, 0);
+    RSDK.SetSpriteAnimation(DirectorChair->aniFrames, 0, &self->animator2, true, 0);
+    RSDK.SetSpriteAnimation(DirectorChair->aniFrames, 1, &self->animator, true, 0);
     if (!SceneInfo->inEditor) {
-        entity->centerPos     = entity->position;
-        entity->drawPos.x     = entity->position.x;
-        entity->active        = ACTIVE_BOUNDS;
-        entity->visible       = true;
-        entity->drawFX        = FX_ROTATE | FX_FLIP;
-        entity->drawPos.y     = entity->position.y;
-        entity->updateRange.x = 0x800000;
-        entity->updateRange.y = ((RSDK.Sin512(96) + 0x8000) << 8) + (RSDK.Sin512(96) << 12) * (entity->size + 1);
-        entity->drawOrder     = Zone->drawOrderLow;
-        entity->field_E8      = (entity->size >> 2) - 16;
-        if (!entity->type)
-            entity->rotation = entity->field_E8;
+        self->centerPos     = self->position;
+        self->drawPos.x     = self->position.x;
+        self->active        = ACTIVE_BOUNDS;
+        self->visible       = true;
+        self->drawFX        = FX_ROTATE | FX_FLIP;
+        self->drawPos.y     = self->position.y;
+        self->updateRange.x = 0x800000;
+        self->updateRange.y = ((RSDK.Sin512(96) + 0x8000) << 8) + (RSDK.Sin512(96) << 12) * (self->size + 1);
+        self->drawOrder     = Zone->drawOrderLow;
+        self->field_E8      = (self->size >> 2) - 16;
+        if (!self->type)
+            self->rotation = self->field_E8;
         else
-            entity->rotation = -96;
-        entity->angle        = entity->rotation << 8;
-        entity->state        = DirectorChair_Unknown2;
-        entity->stateCollide = DirectorChair_StateCollide_Chair;
-        entity->speed <<= 7;
-        entity->field_EC = maxVal(32 - 2 * entity->size, 1);
+            self->rotation = -96;
+        self->angle        = self->rotation << 8;
+        self->state        = DirectorChair_Unknown2;
+        self->stateCollide = DirectorChair_StateCollide_Chair;
+        self->speed <<= 7;
+        self->field_EC = maxVal(32 - 2 * self->size, 1);
     }
 }
 
@@ -107,49 +107,49 @@ void DirectorChair_StateCollide_Chair(void)
     RSDK_THIS(DirectorChair);
 
     int playerID         = 0;
-    entity->stoodPlayers = 0;
+    self->stoodPlayers = 0;
     foreach_active(Player, player)
     {
         bool32 prevOnGround = player->onGround;
-        if (Player_CheckCollisionPlatform(player, entity, &DirectorChair->hitbox1)) {
+        if (Player_CheckCollisionPlatform(player, self, &DirectorChair->hitbox1)) {
 #if RETRO_USE_PLUS
-            if (entity->state == DirectorChair_Unknown2 && player->state == Player_State_MightyHammerDrop)
+            if (self->state == DirectorChair_Unknown2 && player->state == Player_State_MightyHammerDrop)
                 player->state = Player_State_Air;
 #endif
-            entity->collapseDelay = 0;
+            self->collapseDelay = 0;
             if (!prevOnGround) {
-                entity->stoodPlayers |= 1 << playerID;
-                entity->stood = true;
-                player->position.x += entity->collisionOffset.x;
-                player->position.y += entity->collisionOffset.y;
+                self->stoodPlayers |= 1 << playerID;
+                self->stood = true;
+                player->position.x += self->collisionOffset.x;
+                player->position.y += self->collisionOffset.y;
                 player->position.y &= 0xFFFF0000;
             }
         }
-        if (Player_CheckCollisionBox(player, entity, &DirectorChair->hitbox2) == C_TOP) {
-            entity->collapseDelay = 0;
+        if (Player_CheckCollisionBox(player, self, &DirectorChair->hitbox2) == C_TOP) {
+            self->collapseDelay = 0;
             if (!prevOnGround) {
-                entity->stoodPlayers |= 1 << playerID;
-                player->position.x += entity->collisionOffset.x;
-                player->position.y += entity->collisionOffset.y;
+                self->stoodPlayers |= 1 << playerID;
+                player->position.x += self->collisionOffset.x;
+                player->position.y += self->collisionOffset.y;
                 player->position.y &= 0xFFFF0000;
             }
         }
-        if (Player_CheckCollisionBox(player, entity, &DirectorChair->hitbox3) == C_TOP) {
-            entity->collapseDelay = 0;
+        if (Player_CheckCollisionBox(player, self, &DirectorChair->hitbox3) == C_TOP) {
+            self->collapseDelay = 0;
             if (!prevOnGround) {
-                entity->stoodPlayers |= 1 << playerID;
-                player->position.x += entity->collisionOffset.x;
-                player->position.y += entity->collisionOffset.y;
+                self->stoodPlayers |= 1 << playerID;
+                player->position.x += self->collisionOffset.x;
+                player->position.y += self->collisionOffset.y;
                 player->position.y &= 0xFFFF0000;
             }
         }
 
         Hitbox hitbox;
         hitbox.top    = 0;
-        hitbox.bottom = (entity->centerPos.y - entity->drawPos.y) >> 16;
-        hitbox.right  = (RSDK.Cos512(entity->rotation) >> 5) + 8;
+        hitbox.bottom = (self->centerPos.y - self->drawPos.y) >> 16;
+        hitbox.right  = (RSDK.Cos512(self->rotation) >> 5) + 8;
         hitbox.left   = -hitbox.right;
-        Player_CheckCollisionBox(player, entity, &hitbox);
+        Player_CheckCollisionBox(player, self, &hitbox);
         ++playerID;
     }
 }
@@ -158,21 +158,21 @@ void DirectorChair_Unknown2(void)
 {
     RSDK_THIS(DirectorChair);
 
-    int sin           = RSDK.Sin512(entity->rotation);
-    entity->drawPos.x = entity->centerPos.x;
-    entity->drawPos.y = entity->centerPos.y + (sin << 8) + (sin << 12) * (entity->size + 1);
+    int sin           = RSDK.Sin512(self->rotation);
+    self->drawPos.x = self->centerPos.x;
+    self->drawPos.y = self->centerPos.y + (sin << 8) + (sin << 12) * (self->size + 1);
 
-    if (entity->stood) {
-        entity->active   = ACTIVE_NORMAL;
-        entity->field_E4 = 512;
-        if (!entity->type) {
+    if (self->stood) {
+        self->active   = ACTIVE_NORMAL;
+        self->field_E4 = 512;
+        if (!self->type) {
             RSDK.PlaySfx(DirectorChair->sfxUnravel, false, 255);
-            entity->state = DirectorChair_Unknown3;
+            self->state = DirectorChair_Unknown3;
         }
         else {
             ++DirectorChair->field_4;
             RSDK.PlaySfx(DirectorChair->sfxRetract, false, 255);
-            entity->state = DirectorChair_Unknown6;
+            self->state = DirectorChair_Unknown6;
         }
     }
 }
@@ -181,142 +181,142 @@ void DirectorChair_Unknown3(void)
 {
     RSDK_THIS(DirectorChair);
 
-    entity->angle += entity->field_E4;
-    entity->field_E4 -= entity->field_EC;
-    entity->rotation = entity->angle >> 8;
-    if (entity->rotation >= 0) {
-        entity->rotation = 0;
-        entity->angle    = 0;
-        entity->field_E4 = -entity->field_EC;
+    self->angle += self->field_E4;
+    self->field_E4 -= self->field_EC;
+    self->rotation = self->angle >> 8;
+    if (self->rotation >= 0) {
+        self->rotation = 0;
+        self->angle    = 0;
+        self->field_E4 = -self->field_EC;
         ++DirectorChair->field_3;
         RSDK.PlaySfx(DirectorChair->sfxExtend, false, 255);
-        entity->state = DirectorChair_Unknown4;
+        self->state = DirectorChair_Unknown4;
     }
 
-    int sin           = RSDK.Sin512(entity->rotation);
-    entity->drawPos.x = entity->centerPos.x;
-    entity->drawPos.y = entity->centerPos.y + (sin << 8) + (sin << 12) * (entity->size + 1);
+    int sin           = RSDK.Sin512(self->rotation);
+    self->drawPos.x = self->centerPos.x;
+    self->drawPos.y = self->centerPos.y + (sin << 8) + (sin << 12) * (self->size + 1);
 }
 
 void DirectorChair_Unknown4(void)
 {
     RSDK_THIS(DirectorChair);
 
-    entity->angle -= entity->field_E4;
-    if (entity->field_E4 != entity->speed) {
-        if (entity->field_E4 >= entity->speed) {
-            entity->speed -= 32;
-            if (entity->field_E4 < entity->speed)
-                entity->field_E4 = entity->speed;
+    self->angle -= self->field_E4;
+    if (self->field_E4 != self->speed) {
+        if (self->field_E4 >= self->speed) {
+            self->speed -= 32;
+            if (self->field_E4 < self->speed)
+                self->field_E4 = self->speed;
         }
         else {
-            entity->field_E4 += 0x20;
-            if (entity->field_E4 > entity->speed)
-                entity->field_E4 = entity->speed;
+            self->field_E4 += 0x20;
+            if (self->field_E4 > self->speed)
+                self->field_E4 = self->speed;
         }
     }
 
-    entity->rotation = entity->angle >> 8;
-    if (entity->rotation <= -96) {
-        entity->rotation = -96;
+    self->rotation = self->angle >> 8;
+    if (self->rotation <= -96) {
+        self->rotation = -96;
         if (!--DirectorChair->field_3)
             RSDK.StopSFX(DirectorChair->sfxExtend);
-        if (entity->type) {
-            entity->active = ACTIVE_BOUNDS;
-            entity->state  = DirectorChair_Unknown2;
+        if (self->type) {
+            self->active = ACTIVE_BOUNDS;
+            self->state  = DirectorChair_Unknown2;
         }
         else {
-            entity->state = DirectorChair_Unknown5;
+            self->state = DirectorChair_Unknown5;
         }
     }
 
-    int sin           = RSDK.Sin512(entity->rotation);
-    entity->drawPos.x = entity->centerPos.x;
-    entity->drawPos.y = entity->centerPos.y + (sin << 8) + (sin << 12) * (entity->size + 1);
+    int sin           = RSDK.Sin512(self->rotation);
+    self->drawPos.x = self->centerPos.x;
+    self->drawPos.y = self->centerPos.y + (sin << 8) + (sin << 12) * (self->size + 1);
 }
 
 void DirectorChair_Unknown5(void)
 {
     RSDK_THIS(DirectorChair);
 
-    if (++entity->collapseDelay >= 60) {
-        entity->collapseDelay = 0;
-        entity->field_E4      = 0;
-        if (!entity->type) {
+    if (++self->collapseDelay >= 60) {
+        self->collapseDelay = 0;
+        self->field_E4      = 0;
+        if (!self->type) {
             ++DirectorChair->field_4;
             RSDK.PlaySfx(DirectorChair->sfxRetract, false, 255);
-            entity->state = DirectorChair_Unknown6;
+            self->state = DirectorChair_Unknown6;
         }
         else {
             ++DirectorChair->field_3;
             RSDK.PlaySfx(DirectorChair->sfxExtend, false, 255);
-            entity->state = DirectorChair_Unknown4;
+            self->state = DirectorChair_Unknown4;
         }
     }
 
-    int sin           = RSDK.Sin512(entity->rotation);
-    entity->drawPos.x = entity->centerPos.x;
-    entity->drawPos.y = entity->centerPos.y + (sin << 8) + (sin << 12) * (entity->size + 1);
+    int sin           = RSDK.Sin512(self->rotation);
+    self->drawPos.x = self->centerPos.x;
+    self->drawPos.y = self->centerPos.y + (sin << 8) + (sin << 12) * (self->size + 1);
 }
 
 void DirectorChair_Unknown6(void)
 {
     RSDK_THIS(DirectorChair);
 
-    entity->angle += entity->field_E4;
+    self->angle += self->field_E4;
 
-    if (entity->field_E4 != entity->speed) {
-        if (entity->field_E4 >= entity->speed) {
-            entity->field_E4 -= 32;
-            if (entity->field_E4 < entity->speed)
-                entity->field_E4 = entity->speed;
+    if (self->field_E4 != self->speed) {
+        if (self->field_E4 >= self->speed) {
+            self->field_E4 -= 32;
+            if (self->field_E4 < self->speed)
+                self->field_E4 = self->speed;
         }
         else {
-            entity->field_E4 += 0x20;
-            if (entity->field_E4 > entity->speed)
-                entity->field_E4 = entity->speed;
+            self->field_E4 += 0x20;
+            if (self->field_E4 > self->speed)
+                self->field_E4 = self->speed;
         }
     }
 
-    entity->rotation = entity->angle >> 8;
-    if (entity->rotation >= entity->field_E8) {
+    self->rotation = self->angle >> 8;
+    if (self->rotation >= self->field_E8) {
         if (!--DirectorChair->field_4)
             RSDK.StopSFX(DirectorChair->sfxRetract);
-        entity->rotation = entity->field_E8;
-        if (!entity->type) {
-            entity->active = ACTIVE_BOUNDS;
-            entity->state  = DirectorChair_Unknown2;
+        self->rotation = self->field_E8;
+        if (!self->type) {
+            self->active = ACTIVE_BOUNDS;
+            self->state  = DirectorChair_Unknown2;
         }
         else {
-            entity->state = DirectorChair_Unknown5;
+            self->state = DirectorChair_Unknown5;
         }
     }
 
-    int sin           = RSDK.Sin512(entity->rotation);
-    entity->drawPos.x = entity->centerPos.x;
-    entity->drawPos.y = entity->centerPos.y + (sin << 8) + (sin << 12) * (entity->size + 1);
+    int sin           = RSDK.Sin512(self->rotation);
+    self->drawPos.x = self->centerPos.x;
+    self->drawPos.y = self->centerPos.y + (sin << 8) + (sin << 12) * (self->size + 1);
 }
 
 #if RETRO_INCLUDE_EDITOR
 void DirectorChair_EditorDraw(void)
 {
     RSDK_THIS(DirectorChair);
-    entity->centerPos     = entity->position;
-    entity->drawPos.x     = entity->position.x;
-    entity->active        = ACTIVE_BOUNDS;
-    entity->visible       = true;
-    entity->drawFX        = FX_ROTATE | FX_FLIP;
-    entity->drawPos.y     = entity->position.y;
-    entity->updateRange.x = 0x800000;
-    entity->updateRange.y = ((RSDK.Sin512(96) + 0x8000) << 8) + (RSDK.Sin512(96) << 12) * (entity->size + 1);
-    entity->drawOrder     = Zone->drawOrderLow;
-    entity->field_E8      = (entity->size >> 2) - 16;
-    if (!entity->type)
-        entity->rotation = entity->field_E8;
+    self->centerPos     = self->position;
+    self->drawPos.x     = self->position.x;
+    self->active        = ACTIVE_BOUNDS;
+    self->visible       = true;
+    self->drawFX        = FX_ROTATE | FX_FLIP;
+    self->drawPos.y     = self->position.y;
+    self->updateRange.x = 0x800000;
+    self->updateRange.y = ((RSDK.Sin512(96) + 0x8000) << 8) + (RSDK.Sin512(96) << 12) * (self->size + 1);
+    self->drawOrder     = Zone->drawOrderLow;
+    self->field_E8      = (self->size >> 2) - 16;
+    if (!self->type)
+        self->rotation = self->field_E8;
     else
-        entity->rotation = -96;
-    entity->angle = entity->rotation << 8;
-    entity->field_EC = maxVal(32 - 2 * entity->size, 1);
+        self->rotation = -96;
+    self->angle = self->rotation << 8;
+    self->field_EC = maxVal(32 - 2 * self->size, 1);
 
     DirectorChair_Draw();
 }

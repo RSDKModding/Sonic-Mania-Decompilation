@@ -5,7 +5,7 @@ ObjectTMZ1Setup *TMZ1Setup;
 void TMZ1Setup_Update(void)
 {
     RSDK_THIS(TMZ1Setup);
-    StateMachine_Run(entity->state);
+    StateMachine_Run(self->state);
 }
 
 void TMZ1Setup_LateUpdate(void) {}
@@ -70,12 +70,12 @@ void TMZ1Setup_Draw(void) {}
 void TMZ1Setup_Create(void *data)
 {
     RSDK_THIS(TMZ1Setup);
-    entity->active = ACTIVE_NORMAL;
+    self->active = ACTIVE_NORMAL;
 
     switch (TMZ1Setup->stageState) {
-        default: entity->state = TMZ1Setup_StateUnknown4; break;
-        case -1: entity->state = TMZ1Setup_StateUnknown3; break;
-        case 2: entity->state = TMZ1Setup_StateUnknown2; break;
+        default: self->state = TMZ1Setup_StateUnknown4; break;
+        case -1: self->state = TMZ1Setup_StateUnknown3; break;
+        case 2: self->state = TMZ1Setup_StateUnknown2; break;
     }
 }
 
@@ -158,30 +158,30 @@ void TMZ1Setup_StageFinishCB(void)
 void TMZ1Setup_StateUnknown2(void)
 {
     RSDK_THIS(TMZ1Setup);
-    if (entity->timer < 256) {
-        entity->timer += 8;
-        RSDK.SetLimitedFade(0, 4, 3, entity->timer, 128, 207);
+    if (self->timer < 256) {
+        self->timer += 8;
+        RSDK.SetLimitedFade(0, 4, 3, self->timer, 128, 207);
     }
     else {
-        destroyEntity(entity);
+        destroyEntity(self);
     }
 }
 
 void TMZ1Setup_StateUnknown3(void)
 {
     RSDK_THIS(TMZ1Setup);
-    if (++entity->timer >= 2) {
+    if (++self->timer >= 2) {
         if (ScreenInfo->position.y + ScreenInfo->centerY > 4192)
-            entity->state = TMZ1Setup_StateUnknown5;
+            self->state = TMZ1Setup_StateUnknown5;
         else
-            entity->state = TMZ1Setup_StateUnknown6;
+            self->state = TMZ1Setup_StateUnknown6;
     }
 }
 
 void TMZ1Setup_StateUnknown4(void)
 {
     RSDK_THIS(TMZ1Setup);
-    if (entity->timer >= 256) {
+    if (self->timer >= 256) {
         if (TMZ1Setup->stageState) {
             TMZ1Setup->stageState               = 0;
             RSDK.GetSceneLayer(0)->drawLayer[0] = 0;
@@ -196,15 +196,15 @@ void TMZ1Setup_StateUnknown4(void)
             RSDK.GetSceneLayer(2)->drawLayer[0] = 0;
             RSDK.GetSceneLayer(3)->drawLayer[0] = 0;
         }
-        entity->state = TMZ1Setup_StateUnknown7;
+        self->state = TMZ1Setup_StateUnknown7;
     }
     else {
-        entity->timer += 8;
+        self->timer += 8;
         if (TMZ1Setup->stageState)
-            RSDK.SetLimitedFade(0, 3, 4, entity->timer >> 1, 128, 207);
+            RSDK.SetLimitedFade(0, 3, 4, self->timer >> 1, 128, 207);
         else
-            RSDK.SetLimitedFade(0, 4, 3, entity->timer >> 1, 128, 207);
-        RSDK.SetLimitedFade(0, 4, 5, entity->timer, 208, 256);
+            RSDK.SetLimitedFade(0, 4, 3, self->timer >> 1, 128, 207);
+        RSDK.SetLimitedFade(0, 4, 5, self->timer, 208, 256);
     }
 }
 
@@ -217,7 +217,7 @@ void TMZ1Setup_StateUnknown5(void)
     RSDK.GetSceneLayer(2)->drawLayer[0] = 0;
     RSDK.GetSceneLayer(3)->drawLayer[0] = 0;
     RSDK.CopyPalette(3, 128, 0, 128, 80);
-    destroyEntity(entity);
+    destroyEntity(self);
 }
 
 void TMZ1Setup_StateUnknown6(void)
@@ -229,26 +229,26 @@ void TMZ1Setup_StateUnknown6(void)
     RSDK.GetSceneLayer(2)->drawLayer[0] = DRAWLAYER_COUNT;
     RSDK.GetSceneLayer(3)->drawLayer[0] = DRAWLAYER_COUNT;
     RSDK.CopyPalette(4, 128, 0, 128, 80);
-    destroyEntity(entity);
+    destroyEntity(self);
 }
 
 void TMZ1Setup_StateUnknown7(void)
 {
     RSDK_THIS(TMZ1Setup);
-    if (entity->timer <= 0) {
+    if (self->timer <= 0) {
         if (TMZ1Setup->stageState)
             RSDK.CopyPalette(4, 208, 0, 208, 48);
         else
             RSDK.CopyPalette(4, 128, 0, 128, 128);
-        destroyEntity(entity);
+        destroyEntity(self);
     }
     else {
-        entity->timer -= 8;
+        self->timer -= 8;
         if (TMZ1Setup->stageState)
-            RSDK.SetLimitedFade(0, 3, 4, entity->timer >> 1, 128, 207);
+            RSDK.SetLimitedFade(0, 3, 4, self->timer >> 1, 128, 207);
         else
-            RSDK.SetLimitedFade(0, 4, 3, entity->timer >> 1, 128, 207);
-        RSDK.SetLimitedFade(0, 4, 5, entity->timer, 208, 256);
+            RSDK.SetLimitedFade(0, 4, 3, self->timer >> 1, 128, 207);
+        RSDK.SetLimitedFade(0, 4, 5, self->timer, 208, 256);
     }
 }
 
