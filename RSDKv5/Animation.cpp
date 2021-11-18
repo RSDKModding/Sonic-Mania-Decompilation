@@ -74,7 +74,7 @@ uint16 LoadSpriteAnimation(const char *filename, Scopes scope)
             for (int f = 0; f < animation->frameCount; ++f) {
                 SpriteFrame *frame = &spr->frames[frameID++];
                 frame->sheetID     = sheetIDs[ReadInt8(&info)];
-                frame->delay       = ReadInt16(&info);
+                frame->duration       = ReadInt16(&info);
                 frame->id          = ReadInt16(&info);
                 frame->sprX        = ReadInt16(&info);
                 frame->sprY        = ReadInt16(&info);
@@ -139,20 +139,20 @@ void ProcessAnimation(Animator *animator)
         if (animator->framePtrs) {
             animator->animationTimer += animator->animationSpeed;
             if (animator->framePtrs == (SpriteFrame *)1) {
-                while (animator->animationTimer > animator->frameDelay) {
+                while (animator->animationTimer > animator->frameDuration) {
                     ++animator->frameID;
-                    animator->animationTimer = animator->animationTimer - animator->frameDelay;
+                    animator->animationTimer = animator->animationTimer - animator->frameDuration;
                     if (animator->frameID >= animator->frameCount)
                         animator->frameID = animator->loopIndex;
                 }
             }
             else {
-                while (animator->animationTimer > animator->frameDelay) {
+                while (animator->animationTimer > animator->frameDuration) {
                     ++animator->frameID;
-                    animator->animationTimer = animator->animationTimer - animator->frameDelay;
+                    animator->animationTimer = animator->animationTimer - animator->frameDuration;
                     if (animator->frameID >= animator->frameCount)
                         animator->frameID = animator->loopIndex;
-                    animator->frameDelay = animator->framePtrs[animator->frameID].delay;
+                    animator->frameDuration = animator->framePtrs[animator->frameID].duration;
                 }
             }
         }

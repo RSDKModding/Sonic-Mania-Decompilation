@@ -30,7 +30,7 @@ struct SpriteFrame {
     int16 height;
     int16 pivotX;
     int16 pivotY;
-    ushort delay;
+    ushort duration;
     uint16 id;
     uint8 sheetID;
     uint8 hitboxCnt;
@@ -52,7 +52,7 @@ struct Animator {
     int16 prevAnimationID;
     int16 animationSpeed;
     int16 animationTimer;
-    int16 frameDelay;
+    int16 frameDuration;
     int16 frameCount;
     uint8 loopIndex;
     uint8 rotationFlag;
@@ -130,7 +130,7 @@ inline void SetSpriteAnimation(uint16 spriteIndex, uint16 animationID, Animator 
     animator->animationTimer  = 0;
     animator->frameID         = frameID;
     animator->frameCount      = anim->frameCount;
-    animator->frameDelay      = animator->framePtrs[frameID].delay;
+    animator->frameDuration      = animator->framePtrs[frameID].duration;
     animator->animationSpeed  = anim->animationSpeed;
     animator->rotationFlag    = anim->rotationFlag;
     animator->loopIndex       = anim->loopIndex;

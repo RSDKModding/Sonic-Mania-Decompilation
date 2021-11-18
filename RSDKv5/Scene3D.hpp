@@ -156,7 +156,7 @@ inline void SetMeshAnimation(uint16 model, Animator *animator, int16 animSpeed, 
     animator->frameCount      = modelList[model].frameCount;
     animator->animationSpeed  = animSpeed;
     animator->prevAnimationID = animator->animationID;
-    animator->frameDelay      = 0x100;
+    animator->frameDuration      = 0x100;
     animator->loopIndex       = loopIndex;
     animator->animationID     = model;
 }
