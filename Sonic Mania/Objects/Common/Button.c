@@ -9,16 +9,16 @@ void Button_Update(void)
     self->field_64 = 0;
     self->activated    = false;
     switch (self->type) {
-        case 0:
+        case BUTTON_FLOOR:
             Button_TypeFloor();
             if (Button->hasEggman)
                 Button_CheckEggmanCollisions();
             if (Button->hasPhantomRider)
                 Button_CheckPRiderCollisions();
             break;
-        case 1: Button_TypeRoof(); break;
-        case 2: Button_TypeRWall(); break;
-        case 3: Button_TypeLWall(); break;
+        case BUTTON_ROOF: Button_TypeRoof(); break;
+        case BUTTON_RWALL: Button_TypeRWall(); break;
+        case BUTTON_LWALL: Button_TypeLWall(); break;
         default: break;
     }
 
@@ -497,28 +497,29 @@ void Button_TypeLWall(void)
     self->hitbox.left  = self->hitbox.left - 16;
 }
 
+#if RETRO_INCLUDE_EDITOR
 void Button_EditorDraw(void)
 {
     RSDK_THIS(Button);
     Vector2 drawPos;
 
     switch (self->type) {
-        case 0:
+        case BUTTON_FLOOR:
             self->direction = FLIP_NONE;
             RSDK.SetSpriteAnimation(Button->aniFrames, 0, &self->animator1, true, 0);
             RSDK.SetSpriteAnimation(Button->aniFrames, 0, &self->animator2, true, 1);
             break;
-        case 1:
+        case BUTTON_ROOF:
             self->direction = FLIP_Y;
             RSDK.SetSpriteAnimation(Button->aniFrames, 0, &self->animator1, true, 0);
             RSDK.SetSpriteAnimation(Button->aniFrames, 0, &self->animator2, true, 1);
             break;
-        case 2:
+        case BUTTON_RWALL:
             self->direction = FLIP_NONE;
             RSDK.SetSpriteAnimation(Button->aniFrames, 1, &self->animator1, true, 0);
             RSDK.SetSpriteAnimation(Button->aniFrames, 1, &self->animator2, true, 1);
             break;
-        case 3:
+        case BUTTON_LWALL:
             self->direction = FLIP_X;
             RSDK.SetSpriteAnimation(Button->aniFrames, 1, &self->animator1, true, 0);
             RSDK.SetSpriteAnimation(Button->aniFrames, 1, &self->animator2, true, 1);
@@ -528,7 +529,7 @@ void Button_EditorDraw(void)
 
     drawPos.x = self->position.x;
     drawPos.y = self->position.y;
-    if (self->type >= 2)
+    if (self->type >= BUTTON_RWALL)
         drawPos.x -= self->field_78;
     else
         drawPos.y += self->field_78;
@@ -586,7 +587,14 @@ void Button_EditorLoad(void)
         Button->field_28 = 13;
         Button->field_2C = 5;
     }
+
+    RSDK_ACTIVE_VAR(Button, type);
+    RSDK_ENUM_VAR("Floor", BUTTON_FLOOR);
+    RSDK_ENUM_VAR("Ceiling", BUTTON_ROOF);
+    RSDK_ENUM_VAR("Right Wall", BUTTON_RWALL);
+    RSDK_ENUM_VAR("Left Wall", BUTTON_LWALL);
 }
+#endif
 
 void Button_Serialize(void)
 {

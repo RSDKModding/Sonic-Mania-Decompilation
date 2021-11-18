@@ -177,11 +177,11 @@ void CollapsingPlatform_Create(void *data)
     }
     switch (self->type) {
         default:
-        case 0: self->state = CollapsingPlatform_State_Left; break;
-        case 1: self->state = CollapsingPlatform_State_Right; break;
-        case 2: self->state = CollapsingPlatform_State_Center; break;
-        case 3: self->state = CollapsingPlatform_State_LeftOrRight; break;
-        case 4: self->state = CollapsingPlatform_State_PlayerPos; break;
+        case COLLAPSEPLAT_LEFT: self->state = CollapsingPlatform_State_Left; break;
+        case COLLAPSEPLAT_RIGHT: self->state = CollapsingPlatform_State_Right; break;
+        case COLLAPSEPLAT_CENTER: self->state = CollapsingPlatform_State_Center; break;
+        case COLLAPSEPLAT_LR: self->state = CollapsingPlatform_State_LeftOrRight; break;
+        case COLLAPSEPLAT_PLAYER: self->state = CollapsingPlatform_State_PlayerPos; break;
     }
 }
 
@@ -327,6 +327,7 @@ void CollapsingPlatform_State_PlayerPos(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void CollapsingPlatform_EditorDraw(void)
 {
     RSDK_THIS(CollapsingPlatform);
@@ -363,7 +364,15 @@ void CollapsingPlatform_EditorLoad(void)
 {
     CollapsingPlatform->aniFrames = RSDK.LoadSpriteAnimation("Global/TicMark.bin", SCOPE_STAGE);
     RSDK.SetSpriteAnimation(CollapsingPlatform->aniFrames, 0, &CollapsingPlatform->animator, true, 0);
+
+    RSDK_ACTIVE_VAR(CollapsingPlatform, type);
+    RSDK_ENUM_VAR("Left", COLLAPSEPLAT_LEFT);
+    RSDK_ENUM_VAR("Right", COLLAPSEPLAT_RIGHT);
+    RSDK_ENUM_VAR("Center", COLLAPSEPLAT_CENTER);
+    RSDK_ENUM_VAR("Left or Right", COLLAPSEPLAT_LR);
+    RSDK_ENUM_VAR("Base on Player Position", COLLAPSEPLAT_PLAYER);
 }
+#endif
 
 void CollapsingPlatform_Serialize(void)
 {

@@ -3,6 +3,8 @@
 
 #include "SonicMania.h"
 
+typedef enum { BUTTON_FLOOR, BUTTON_ROOF, BUTTON_RWALL, BUTTON_LWALL } ButtonTypes;
+
 // Object Class
 typedef struct {
     RSDK_OBJECT
@@ -44,7 +46,7 @@ void Button_Update(void);
 void Button_LateUpdate(void);
 void Button_StaticUpdate(void);
 void Button_Draw(void);
-void Button_Create(void* data);
+void Button_Create(void *data);
 void Button_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void Button_EditorDraw(void);
@@ -61,4 +63,4 @@ void Button_TypeRoof(void);
 void Button_TypeRWall(void);
 void Button_TypeLWall(void);
 
-#endif //!OBJ_BUTTON_H
+#endif //! OBJ_BUTTON_H
