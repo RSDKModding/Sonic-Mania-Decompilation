@@ -34,9 +34,9 @@ typedef struct {
     int32 starAngle;
     int32 starOffset;
     Vector2 ballPos;
-    Animator poleData;
-    Animator ballData;
-    Animator starData;
+    Animator poleAnimator;
+    Animator ballAnimator;
+    Animator starAnimator;
     Hitbox starHitbox;
     uint8 activated;
 } EntityStarPost;

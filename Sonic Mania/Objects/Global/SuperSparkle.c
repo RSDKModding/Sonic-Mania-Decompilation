@@ -5,7 +5,8 @@ ObjectSuperSparkle *SuperSparkle;
 void SuperSparkle_Update(void)
 {
     RSDK_THIS(SuperSparkle);
-    EntityPlayer *player = (EntityPlayer *)self->player;
+    EntityPlayer *player = self->player;
+
     if (!player) {
         destroyEntity(self);
     }

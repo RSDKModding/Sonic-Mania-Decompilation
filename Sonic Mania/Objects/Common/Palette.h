@@ -4,6 +4,18 @@
 #include "SonicMania.h"
 
 #if RETRO_USE_PLUS
+
+typedef enum {
+    PALETTE_BANK_0,
+    PALETTE_BANK_1,
+    PALETTE_BANK_2,
+    PALETTE_BANK_3,
+    PALETTE_BANK_4,
+    PALETTE_BANK_5,
+    PALETTE_BANK_6,
+    PALETTE_BANK_7,
+}PaletteBankIDs;
+
 // Object Class
 typedef struct {
     RSDK_OBJECT

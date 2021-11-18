@@ -6,8 +6,7 @@ void Decoration_Update(void)
 {
     RSDK_THIS(Decoration);
     RSDK.ProcessAnimation(&self->animator);
-    self->rotation += self->rotSpeed;
-    self->rotation &= 0x1FF;
+    self->rotation = (self->rotation + self->rotSpeed) & 0x1FF;
 }
 
 void Decoration_LateUpdate(void) {}
@@ -17,12 +16,12 @@ void Decoration_StaticUpdate(void) {}
 void Decoration_Draw(void)
 {
     RSDK_THIS(Decoration);
-    if (self->tmzFlag) {
+    if (self->isTMZ) {
         RSDK.CopyPalette(0, 160, 1, 160, 16);
         RSDK.CopyPalette(2, 160, 0, 160, 16);
     }
     Decoration_DrawSprite();
-    if (self->tmzFlag)
+    if (self->isTMZ)
         RSDK.CopyPalette(1, 160, 0, 160, 16);
 }
 
@@ -37,8 +36,8 @@ void Decoration_Create(void *data)
         if (self->rotSpeed)
             self->drawFX |= FX_ROTATE;
         if (RSDK.CheckStageFolder("TMZ1") || RSDK.CheckStageFolder("TMZ2"))
-            self->tmzFlag = true;
-        if (self->tmzFlag) {
+            self->isTMZ = true;
+        if (self->isTMZ) {
             self->inkEffect |= INK_ADD;
             self->alpha = 0xE0;
         }
@@ -110,7 +109,6 @@ void Decoration_EditorDraw(void)
         self->drawFX |= FX_ROTATE;
     else
         self->drawFX &= ~FX_ROTATE;
-
 
     Decoration_DrawSprite();
 }
