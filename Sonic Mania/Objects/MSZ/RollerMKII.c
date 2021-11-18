@@ -435,7 +435,7 @@ void RollerMKII_State_Unknown4(void)
 
                 EntityDust *dust = CREATE_ENTITY(Dust, self, self->position.x, self->position.y + 0xE0000);
                 RSDK.SetSpriteAnimation(Dust->aniFrames, 2, &dust->animator, true, 0);
-                dust->state = Dust_State_DropDash;
+                dust->state = Dust_State_Move;
                 dust->position.y += hitbox->bottom << 16;
                 dust->direction = self->direction;
                 dust->drawOrder = self->drawOrder;
@@ -477,7 +477,7 @@ void RollerMKII_State_Unknown5(void)
                         RSDK.PlaySfx(RollerMKII->sfxSkidding, false, 255);
                         self->timer = (self->timer + 1) & 3;
                         if (!self->timer)
-                            CREATE_ENTITY(Dust, NULL, self->position.x, self->position.y + 0xE0000)->state = Dust_State_DropDash;
+                            CREATE_ENTITY(Dust, NULL, self->position.x, self->position.y + 0xE0000)->state = Dust_State_Move;
                     }
                 }
             }
@@ -495,7 +495,7 @@ void RollerMKII_State_Unknown5(void)
                         RSDK.PlaySfx(RollerMKII->sfxSkidding, false, 255);
                         self->timer = (self->timer + 1) & 3;
                         if (!self->timer)
-                            CREATE_ENTITY(Dust, NULL, self->position.x, self->position.y + 0xE0000)->state = Dust_State_DropDash;
+                            CREATE_ENTITY(Dust, NULL, self->position.x, self->position.y + 0xE0000)->state = Dust_State_Move;
                     }
                 }
             }

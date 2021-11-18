@@ -6,27 +6,27 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    int32 field_4;
-    int32 field_8;
-    int32 field_C;
-    int32 field_10;
-    int32 field_14;
-    int32 field_18;
-    int32 field_1C;
-    int32 field_20;
+    int32 unused1;
+    int32 unused2;
+    int32 unused3;
+    int32 unused4;
+    int32 unused5;
+    int32 unused6;
+    int32 unused7;
+    int32 unused8;
     uint16 aniFrames;
     Entity *activeEntity;
-    int32 field_2C;
+    int32 unused9;
 } ObjectCompetition;
 
 // Entity Class
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    bool32 playerFlags[4];
+    bool32 playerFlags[PLAYER_MAX];
     int32 timer;
     int32 seconds;
-    int32 field_74;
+    int32 unused1;
     Animator animator;
 } EntityCompetition;
 

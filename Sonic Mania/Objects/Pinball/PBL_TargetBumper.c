@@ -85,9 +85,9 @@ void PBL_TargetBumper_HandlePlayerInteractions(void)
         int32 angle    = self->angle >> 2;
         int32 negAngle = -angle;
 
-        Vector2 pos2;
-        pos2.x = 0;
-        pos2.y = 0;
+        Vector2 pivotPos;
+        pivotPos.x = 0;
+        pivotPos.y = 0;
         foreach_active(PBL_Player, player)
         {
             int32 distanceX = (player->position.x - self->position.x) >> 8;
@@ -115,10 +115,10 @@ void PBL_TargetBumper_HandlePlayerInteractions(void)
                 case 4:
                     player->onGround = false;
                     if (abs(velY) < 0x40000)
-                        velY *= 2;
+                        velY <<= 1;
                     player->velocity.y = -velY;
-                    Zone_Unknown3(&self->position, &player->position, negAngle);
-                    Zone_Unknown3(&pos2, &player->velocity, negAngle);
+                    Zone_RotateOnPivot(&player->position, &self->position, negAngle);
+                    Zone_RotateOnPivot(&player->velocity, &pivotPos, negAngle);
                     self->state      = PBL_TargetBumper_Unknown3;
                     self->velocity.y = -8;
                     PBL_Setup_GiveScore(1000);
@@ -140,8 +140,8 @@ void PBL_TargetBumper_HandlePlayerInteractions(void)
                             player->velocity.y -= 0x20000;
                         }
 
-                        Zone_Unknown3(&self->position, &player->position, negAngle);
-                        Zone_Unknown3(&pos2, &player->velocity, negAngle);
+                        Zone_RotateOnPivot(&player->position, &self->position, negAngle);
+                        Zone_RotateOnPivot(&player->velocity, &pivotPos, negAngle);
                         player->onGround = false;
                     }
                     break;
@@ -162,8 +162,8 @@ void PBL_TargetBumper_HandlePlayerInteractions(void)
                         }
                     }
 
-                    Zone_Unknown3(&self->position, &player->position, negAngle);
-                    Zone_Unknown3(&pos2, &player->velocity, negAngle);
+                    Zone_RotateOnPivot(&player->position, &self->position, negAngle);
+                    Zone_RotateOnPivot(&player->velocity, &pivotPos, negAngle);
                     player->onGround = false;
                     break;
                 default: break;

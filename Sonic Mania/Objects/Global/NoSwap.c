@@ -7,7 +7,6 @@ void NoSwap_Update(void)
 {
     RSDK_THIS(NoSwap);
     if (Player->playerCount) {
-        Vector2 *pos = &self->posPtr;
         int32 cnt      = 0;
         for (int32 p = 0; p < Player->playerCount; ++p) {
             EntityPlayer *player = RSDK_GET_ENTITY(p, Player);
@@ -21,8 +20,8 @@ void NoSwap_Update(void)
                 }
             }
             else {
-                pos->x = player->position.x;
-                pos->y = player->position.y;
+                self->playerPos.x = player->position.x;
+                self->playerPos.y = player->position.y;
             }
 
             if (Player_CheckCollisionTouch(player, self, &self->hitbox)) {
@@ -92,9 +91,12 @@ void NoSwap_EditorDraw(void)
     self->updateRange.y = TILE_SIZE * self->size.y;
 
     NoSwap_Draw();
+
+    RSDK.SetSpriteAnimation(NoSwap->aniFrames, 0, &self->animator1, true, 8);
+    RSDK.DrawSprite(&self->animator1, NULL, false);
 }
 
-void NoSwap_EditorLoad(void) {}
+void NoSwap_EditorLoad(void) { NoSwap->aniFrames = RSDK.LoadSpriteAnimation("Editor/EditorIcons.bin", SCOPE_STAGE); }
 #endif
 
 void NoSwap_Serialize(void)

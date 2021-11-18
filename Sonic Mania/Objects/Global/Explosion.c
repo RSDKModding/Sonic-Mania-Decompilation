@@ -41,9 +41,15 @@ void Explosion_StageLoad(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void Explosion_EditorDraw(void) {}
+void Explosion_EditorDraw(void)
+{
+    RSDK_THIS(Explosion);
+    RSDK.SetSpriteAnimation(Explosion->aniFrames, EXPLOSION_ENEMY, &self->animator, true, 2);
 
-void Explosion_EditorLoad(void) {}
+    Explosion_Draw();
+}
+
+void Explosion_EditorLoad(void) { Explosion->aniFrames = RSDK.LoadSpriteAnimation("Global/Explosions.bin", SCOPE_STAGE); }
 #endif
 
 void Explosion_Serialize(void) {}

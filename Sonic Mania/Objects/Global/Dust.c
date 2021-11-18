@@ -33,79 +33,19 @@ void Dust_Create(void *data)
 
 void Dust_StageLoad(void) { Dust->aniFrames = RSDK.LoadSpriteAnimation("Global/Dust.bin", SCOPE_STAGE); }
 
-void Dust_State_DropDash(void)
-{
-    RSDK_THIS(Dust);
-    self->position.x += self->velocity.x;
-    self->position.y += self->velocity.y;
-    RSDK.ProcessAnimation(&self->animator);
-    if (self->animator.frameID == self->animator.frameCount - 1)
-        RSDK.ResetEntityPtr(self, 0, 0);
-}
-void Dust_State_HammerDrop(void)
-{
-    RSDK_THIS(Dust);
-    self->position.x += self->velocity.x;
-    self->position.y += self->velocity.y;
-    RSDK.ObjectTileGrip(self, self->collisionLayers, self->collisionMode, self->collisionPlane, 0, 0, 8);
-    RSDK.ProcessAnimation(&self->animator);
-    if (self->animator.frameID == self->animator.frameCount - 1)
-        RSDK.ResetEntityPtr(self, 0, 0);
-}
-void Dust_State_GlideSlide(void)
-{
-    RSDK_THIS(Dust);
-    EntityPlayer *player = (EntityPlayer *)self->parent;
-    if (!player) {
-        RSDK.ResetEntityPtr(self, TYPE_BLANK, 0);
-    }
-    else {
-        self->visible = false;
-        if (self->timer == 0 && player->onGround) {
-            Hitbox *playerHitbox = Player_GetHitbox(player);
-            EntityDust *dust     = CREATE_ENTITY(Dust, self, player->position.x, player->position.y - 0x40000);
-            dust->state          = Dust_State_DropDash;
-            dust->position.y += playerHitbox->bottom << 16;
-            dust->drawOrder = player->drawOrder;
-        }
-        self->timer = ((uint8)self->timer + 1) & 7;
-        if (player->animator.animationID != ANI_FLYLIFTTIRED || !player->groundVel)
-            RSDK.ResetEntityPtr(self, 0, 0);
-    }
-}
-void Dust_State_Skid(void)
-{
-    RSDK_THIS(Dust);
-    EntityPlayer *player = (EntityPlayer *)self->parent;
-    if (!player) {
-        RSDK.ResetEntityPtr(self, TYPE_BLANK, 0);
-    }
-    else {
-        self->visible = false;
-        if (self->timer == 0 && player->onGround) {
-            Hitbox *playerHitbox = Player_GetHitbox(player);
-            EntityDust *dust     = CREATE_ENTITY(Dust, self, player->position.x, player->position.y);
-            dust->state          = Dust_State_DropDash;
-            dust->position.y += playerHitbox->bottom << 16;
-            dust->drawOrder = player->drawOrder;
-        }
-        self->timer = ((uint8)self->timer + 1) & 7;
-        if (player->animator.animationID != ANI_SKID)
-            RSDK.ResetEntityPtr(self, 0, 0);
-    }
-}
+
 void Dust_State_Spindash(void)
 {
     RSDK_THIS(Dust);
     EntityPlayer *player = (EntityPlayer *)self->parent;
     if (!player) {
-        RSDK.ResetEntityPtr(self, TYPE_BLANK, 0);
+        destroyEntity(self);
     }
     else {
         Hitbox *playerHitbox = Player_GetHitbox(player);
-        self->position.x   = player->position.x;
-        self->position.y   = player->position.y;
-        int32 bottom           = playerHitbox->bottom << 16;
+        self->position.x     = player->position.x;
+        self->position.y     = player->position.y;
+        int32 bottom         = playerHitbox->bottom << 16;
         if (player->invertGravity)
             self->position.y -= bottom;
         else
@@ -115,10 +55,71 @@ void Dust_State_Spindash(void)
         self->rotation  = player->rotation;
         RSDK.ProcessAnimation(&self->animator);
         if (player->state != Player_State_Spindash)
-            RSDK.ResetEntityPtr(self, 0, 0);
+            destroyEntity(self);
     }
 }
-void Dust_State_EggLoco(void)
+void Dust_State_Skid(void)
+{
+    RSDK_THIS(Dust);
+    EntityPlayer *player = (EntityPlayer *)self->parent;
+    if (!player) {
+        destroyEntity(self);
+    }
+    else {
+        self->visible = false;
+        if (!self->timer && player->onGround) {
+            Hitbox *playerHitbox = Player_GetHitbox(player);
+            EntityDust *dust     = CREATE_ENTITY(Dust, self, player->position.x, player->position.y);
+            dust->state          = Dust_State_Move;
+            dust->position.y += playerHitbox->bottom << 16;
+            dust->drawOrder = player->drawOrder;
+        }
+        self->timer = ((uint8)self->timer + 1) & 7;
+        if (player->animator.animationID != ANI_SKID)
+            destroyEntity(self);
+    }
+}
+void Dust_State_GlideSlide(void)
+{
+    RSDK_THIS(Dust);
+    EntityPlayer *player = (EntityPlayer *)self->parent;
+    if (!player) {
+        destroyEntity(self);
+    }
+    else {
+        self->visible = false;
+        if (!self->timer && player->onGround) {
+            Hitbox *playerHitbox = Player_GetHitbox(player);
+            EntityDust *dust     = CREATE_ENTITY(Dust, self, player->position.x, player->position.y - 0x40000);
+            dust->state          = Dust_State_Move;
+            dust->position.y += playerHitbox->bottom << 16;
+            dust->drawOrder = player->drawOrder;
+        }
+        self->timer = ((uint8)self->timer + 1) & 7;
+        if (player->animator.animationID != ANI_FLYLIFTTIRED || !player->groundVel)
+            destroyEntity(self);
+    }
+}
+void Dust_State_Move(void)
+{
+    RSDK_THIS(Dust);
+    self->position.x += self->velocity.x;
+    self->position.y += self->velocity.y;
+    RSDK.ProcessAnimation(&self->animator);
+    if (self->animator.frameID == self->animator.frameCount - 1)
+        destroyEntity(self);
+}
+void Dust_State_MoveCollide(void)
+{
+    RSDK_THIS(Dust);
+    self->position.x += self->velocity.x;
+    self->position.y += self->velocity.y;
+    RSDK.ObjectTileGrip(self, self->collisionLayers, self->collisionMode, self->collisionPlane, 0, 0, 8);
+    RSDK.ProcessAnimation(&self->animator);
+    if (self->animator.frameID == self->animator.frameCount - 1)
+        destroyEntity(self);
+}
+void Dust_State_MoveGravity(void)
 {
     RSDK_THIS(Dust);
     RSDK.ProcessAnimation(&self->animator);
@@ -126,7 +127,7 @@ void Dust_State_EggLoco(void)
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
     if (self->animator.frameID == self->animator.frameCount - 1)
-        RSDK.ResetEntityPtr(self, 0, 0);
+        destroyEntity(self);
 }
 
 #if RETRO_INCLUDE_EDITOR

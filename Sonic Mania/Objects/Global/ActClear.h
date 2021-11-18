@@ -25,7 +25,7 @@ typedef struct {
     StateMachine(saveReplay_CB);
     int32 hasSavedReplay;
     int32 disableTimeBonus;
-    bool32 dword34;
+    bool32 actClearActive;
 #endif
 } ObjectActClear;
 
@@ -40,16 +40,16 @@ typedef struct {
     int32 coolBonus;
     int32 totalScore;
     int32 time;
-    int32 dword78;
+    int32 newRecordTimer;
     bool32 achievedRank;
     bool32 isNewRecord;
-    int32 field_84;
-    Vector2 posUnknown;
-    Vector2 posUnknown3;
-    Vector2 posUnknown2;
-    Vector2 posUnknown4;
-    Vector2 posUnknown5;
-    Vector2 posUnknown6;
+    bool32 showCoolBonus;
+    Vector2 playerNamePos;
+    Vector2 gotThroughPos;
+    Vector2 timeBonusPos;
+    Vector2 ringBonusPos;
+    Vector2 coolBonusPos;
+    Vector2 totalScorePos;
     void *playerPtr;
     Animator hudElementsAnimator;
     Animator numbersAnimator;

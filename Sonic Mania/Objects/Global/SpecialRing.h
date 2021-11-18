@@ -21,15 +21,15 @@ typedef struct {
     int32 id;
     int32 planeFilter;
     int32 warpTimer;
-    int32 dword68;
+    int32 sparkleRadius;
     Animator warpAnimator;
     int32 angleZ;
     int32 angleY;
     bool32 enabled;
-    Matrix matrix4;
-    Matrix matrix;
-    Matrix matrix2;
-    Matrix matrix3;
+    Matrix matTempRot;
+    Matrix matTransform;
+    Matrix matWorld;
+    Matrix matNormal;
 } EntitySpecialRing;
 
 // Object Struct

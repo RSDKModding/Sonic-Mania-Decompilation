@@ -38,23 +38,23 @@ void Announcer_StageLoad(void)
         Announcer->sfxNewRecordTop = RSDK.GetSFX("VO/NewRecordTop.wav");
         Announcer->sfxNewRecordMid = RSDK.GetSFX("VO/NewRecordMid.wav");
 #endif
-        Announcer->sfxSonic        = RSDK.GetSFX("VO/Sonic.wav");
-        Announcer->sfxTails        = RSDK.GetSFX("VO/Tails.wav");
-        Announcer->sfxKnuckles     = RSDK.GetSFX("VO/Knuckles.wav");
+        Announcer->sfxSonic    = RSDK.GetSFX("VO/Sonic.wav");
+        Announcer->sfxTails    = RSDK.GetSFX("VO/Tails.wav");
+        Announcer->sfxKnuckles = RSDK.GetSFX("VO/Knuckles.wav");
 #if RETRO_USE_PLUS
-        Announcer->sfxMighty       = RSDK.GetSFX("VO/Mighty.wav");
-        Announcer->sfxRay          = RSDK.GetSFX("VO/Ray.wav");
+        Announcer->sfxMighty = RSDK.GetSFX("VO/Mighty.wav");
+        Announcer->sfxRay    = RSDK.GetSFX("VO/Ray.wav");
 #endif
-        Announcer->sfxTheWinnerIs  = RSDK.GetSFX("VO/TheWinnerIs.wav");
-        Announcer->sfxPlayer1      = RSDK.GetSFX("VO/Player1.wav");
-        Announcer->sfxPlayer2      = RSDK.GetSFX("VO/Player2.wav");
+        Announcer->sfxTheWinnerIs = RSDK.GetSFX("VO/TheWinnerIs.wav");
+        Announcer->sfxPlayer1     = RSDK.GetSFX("VO/Player1.wav");
+        Announcer->sfxPlayer2     = RSDK.GetSFX("VO/Player2.wav");
 #if RETRO_USE_PLUS
-        Announcer->sfxPlayer3      = RSDK.GetSFX("VO/Player3.wav");
-        Announcer->sfxPlayer4      = RSDK.GetSFX("VO/Player4.wav");
+        Announcer->sfxPlayer3 = RSDK.GetSFX("VO/Player3.wav");
+        Announcer->sfxPlayer4 = RSDK.GetSFX("VO/Player4.wav");
 #endif
-        Announcer->sfxSonicWins    = RSDK.GetSFX("VO/SonicWins.wav");
-        Announcer->sfxTailsWins    = RSDK.GetSFX("VO/TailsWins.wav");
-        Announcer->sfxKnuxWins     = RSDK.GetSFX("VO/KnuxWins.wav");
+        Announcer->sfxSonicWins = RSDK.GetSFX("VO/SonicWins.wav");
+        Announcer->sfxTailsWins = RSDK.GetSFX("VO/TailsWins.wav");
+        Announcer->sfxKnuxWins  = RSDK.GetSFX("VO/KnuxWins.wav");
 #if RETRO_USE_PLUS
         Announcer->sfxMightyWins   = RSDK.GetSFX("VO/MightyWins.wav");
         Announcer->sfxRayWins      = RSDK.GetSFX("VO/RayWins.wav");
@@ -66,11 +66,11 @@ void Announcer_StageLoad(void)
     }
     else if (globals->gameMode == MODE_COMPETITION) {
         Announcer->aniFrames = RSDK.LoadSpriteAnimation("Global/Announcer.bin", SCOPE_STAGE);
-        Announcer->sfxThree   = RSDK.GetSFX("VO/Three.wav");
-        Announcer->sfxTwo     = RSDK.GetSFX("VO/Two.wav");
-        Announcer->sfxOne     = RSDK.GetSFX("VO/One.wav");
-        Announcer->sfxGo      = RSDK.GetSFX("VO/Go.wav");
-        Announcer->sfxGoal    = RSDK.GetSFX("VO/Goal.wav");
+        Announcer->sfxThree  = RSDK.GetSFX("VO/Three.wav");
+        Announcer->sfxTwo    = RSDK.GetSFX("VO/Two.wav");
+        Announcer->sfxOne    = RSDK.GetSFX("VO/One.wav");
+        Announcer->sfxGo     = RSDK.GetSFX("VO/Go.wav");
+        Announcer->sfxGoal   = RSDK.GetSFX("VO/Goal.wav");
     }
     else if (globals->gameMode == MODE_TIMEATTACK) {
         Announcer->aniFrames = RSDK.LoadSpriteAnimation("Global/Announcer.bin", SCOPE_STAGE);
@@ -78,43 +78,43 @@ void Announcer_StageLoad(void)
         Announcer->sfxNewRecordTop = RSDK.GetSFX("VO/NewRecordTop.wav");
         Announcer->sfxNewRecordMid = RSDK.GetSFX("VO/NewRecordMid.wav");
 #endif
-        Announcer->sfxGoal         = RSDK.GetSFX("VO/Goal.wav");
+        Announcer->sfxGoal = RSDK.GetSFX("VO/Goal.wav");
     }
 }
 
 void Announcer_StartCountdown(void)
 {
     Announcer->finishedCountdown = false;
-    EntityAnnouncer *announcer = CREATE_ENTITY(Announcer, NULL, 0, 0);
-    announcer->state     = Announcer_State_CountDown;
-    announcer->stateDraw = Announcer_Unknown3;
-    announcer->playerID  = 3;
-    announcer->scale.x   = 0x200;
-    announcer->scale.y   = 0x200;
+    EntityAnnouncer *announcer   = CREATE_ENTITY(Announcer, NULL, 0, 0);
+    announcer->state             = Announcer_State_Countdown;
+    announcer->stateDraw         = Announcer_Draw_Countdown;
+    announcer->playerID          = 3;
+    announcer->scale.x           = 0x200;
+    announcer->scale.y           = 0x200;
 }
 void Announcer_AnnounceGoal(int32 screen)
 {
     EntityAnnouncer *announcer = CREATE_ENTITY(Announcer, NULL, 0, 0);
-    announcer->state           = Announcer_Unknown6;
-    announcer->stateDraw       = Announcer_Unknown4;
+    announcer->state           = Announcer_State_Finished;
+    announcer->stateDraw       = Announcer_Draw_Finished;
     announcer->screen          = screen;
     RSDK.SetSpriteAnimation(Announcer->aniFrames, 0, &announcer->animator, true, 0);
     RSDK.PlaySfx(Announcer->sfxGoal, false, 255);
 }
-void Announcer_Unknown3(void)
+void Announcer_Draw_Countdown(void)
 {
     Vector2 drawPos;
     RSDK_THIS(Announcer);
     drawPos.y = (ScreenInfo->centerY - 32) << 16;
     drawPos.x = ScreenInfo->centerX << 16;
-    drawPos.x += self->pos.x;
-    drawPos.y += self->pos.y;
+    drawPos.x += self->drawOffset.x;
+    drawPos.y += self->drawOffset.y;
     RSDK.DrawSprite(&self->animator, &drawPos, true);
 
     if (self->playerID > 0) {
         self->inkEffect = INK_NONE;
 
-        int32 frame                         = 0;
+        int32 frame                       = 0;
         EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
         switch (session->characterFlags[SceneInfo->currentScreenID]) {
             case ID_TAILS: frame = 1; break;
@@ -133,7 +133,7 @@ void Announcer_Unknown3(void)
         self->inkEffect = INK_ALPHA;
     }
 }
-void Announcer_Unknown4(void)
+void Announcer_Draw_Finished(void)
 {
     Vector2 drawPos;
     RSDK_THIS(Announcer);
@@ -141,12 +141,12 @@ void Announcer_Unknown4(void)
     if (SceneInfo->currentScreenID == self->screen) {
         drawPos.x = ScreenInfo->centerX << 16;
         drawPos.y = (ScreenInfo->centerY - 32) << 16;
-        drawPos.x += self->pos.x;
-        drawPos.y += self->pos.y;
+        drawPos.x += self->drawOffset.x;
+        drawPos.y += self->drawOffset.y;
         RSDK.DrawSprite(&self->animator, &drawPos, true);
     }
 }
-void Announcer_State_CountDown(void)
+void Announcer_State_Countdown(void)
 {
     RSDK_THIS(Announcer);
 
@@ -174,7 +174,7 @@ void Announcer_State_CountDown(void)
             self->playerID--;
             if (!self->playerID) {
                 Announcer->finishedCountdown = true;
-                SceneInfo->timeEnabled  = true;
+                SceneInfo->timeEnabled       = true;
             }
         }
         else {
@@ -196,14 +196,14 @@ void Announcer_State_CountDown(void)
                         break;
                 }
             }
-            self->pos.x = 0;
-            self->pos.y = 0;
-            self->alpha = 512 - (self->timer << 9) / 45;
+            self->drawOffset.x = 0;
+            self->drawOffset.y = 0;
+            self->alpha        = 512 - (self->timer << 9) / 45;
             self->timer++;
         }
     }
 }
-void Announcer_Unknown6(void)
+void Announcer_State_Finished(void)
 {
     RSDK_THIS(Announcer);
     self->scale.x = 0x200;
@@ -215,31 +215,31 @@ void Announcer_Unknown6(void)
             }
             else {
                 self->visible = true;
-                MathHelpers_Lerp1(&self->pos, ((self->timer - 76) << 8) / 16, 0, 0, ScreenInfo->width << 16, 0);
+                MathHelpers_Lerp1(&self->drawOffset, ((self->timer - 76) << 8) / 16, 0, 0, ScreenInfo->width << 16, 0);
                 ++self->timer;
             }
         }
         else {
             ++self->timer;
-            self->pos.x = 0;
-            self->pos.y = 0;
+            self->drawOffset.x = 0;
+            self->drawOffset.y = 0;
         }
     }
     else {
         self->visible = true;
-        int32 t           = 16 * self->timer;
-        int32 val         = -0x10000 * ScreenInfo->width;
+        int32 t       = 16 * self->timer;
+        int32 val     = -0x10000 * ScreenInfo->width;
         if (t > 0) {
             if (t < 256)
-                self->pos.x = val + t * (-val >> 8);
+                self->drawOffset.x = val + t * (-val >> 8);
             else
-                self->pos.x = 0;
-            self->pos.y = 0;
+                self->drawOffset.x = 0;
+            self->drawOffset.y = 0;
             ++self->timer;
         }
         else {
-            self->pos.x = val;
-            self->pos.y = 0;
+            self->drawOffset.x = val;
+            self->drawOffset.y = 0;
             ++self->timer;
         }
     }
@@ -249,11 +249,11 @@ void Announcer_State_AnnounceWinner(void)
     RSDK_THIS(Announcer);
     if (self->timer >= 150) {
         switch (self->playerID) {
-            case 0: RSDK.PlaySfx(Announcer->sfxPlayer1, 0, 255); break;
-            case 1: RSDK.PlaySfx(Announcer->sfxPlayer2, 0, 255); break;
+            case 0: RSDK.PlaySfx(Announcer->sfxPlayer1, false, 255); break;
+            case 1: RSDK.PlaySfx(Announcer->sfxPlayer2, false, 255); break;
 #if RETRO_USE_PLUS
-            case 2: RSDK.PlaySfx(Announcer->sfxPlayer3, 0, 255); break;
-            case 3: RSDK.PlaySfx(Announcer->sfxPlayer4, 0, 255); break;
+            case 2: RSDK.PlaySfx(Announcer->sfxPlayer3, false, 255); break;
+            case 3: RSDK.PlaySfx(Announcer->sfxPlayer4, false, 255); break;
 #endif
             default: break;
         }
@@ -261,7 +261,7 @@ void Announcer_State_AnnounceWinner(void)
     }
     else {
         if (self->timer == 30)
-            RSDK.PlaySfx(Announcer->sfxTheWinnerIs, 0, 255);
+            RSDK.PlaySfx(Announcer->sfxTheWinnerIs, false, 255);
         ++self->timer;
     }
 }
@@ -273,10 +273,10 @@ void Announcer_State_AnnounceDraw(void)
     }
     else {
         if (!self->playerID) {
-            RSDK.PlaySfx(Announcer->sfxItsADraw, 0, 255);
+            RSDK.PlaySfx(Announcer->sfxItsADraw, false, 255);
         }
         else if (self->playerID == 1) {
-            RSDK.PlaySfx(Announcer->sfxItsADraw_Set, 0, 255);
+            RSDK.PlaySfx(Announcer->sfxItsADraw_Set, false, 255);
         }
         destroyEntity(self);
     }
@@ -286,12 +286,12 @@ void Announcer_State_AnnounceWinPlayer(void)
     RSDK_THIS(Announcer);
     if (self->timer >= 30) {
         switch (self->playerID) {
-            case ID_SONIC: RSDK.PlaySfx(Announcer->sfxSonicWins, 0, 255); break;
-            case ID_TAILS: RSDK.PlaySfx(Announcer->sfxTailsWins, 0, 255); break;
-            case ID_KNUCKLES: RSDK.PlaySfx(Announcer->sfxKnuxWins, 0, 255); break;
+            case ID_SONIC: RSDK.PlaySfx(Announcer->sfxSonicWins, false, 255); break;
+            case ID_TAILS: RSDK.PlaySfx(Announcer->sfxTailsWins, false, 255); break;
+            case ID_KNUCKLES: RSDK.PlaySfx(Announcer->sfxKnuxWins, false, 255); break;
 #if RETRO_USE_PLUS
-            case ID_MIGHTY: RSDK.PlaySfx(Announcer->sfxMightyWins, 0, 255); break;
-            case ID_RAY: RSDK.PlaySfx(Announcer->sfxRayWins, 0, 255); break;
+            case ID_MIGHTY: RSDK.PlaySfx(Announcer->sfxMightyWins, false, 255); break;
+            case ID_RAY: RSDK.PlaySfx(Announcer->sfxRayWins, false, 255); break;
 #endif
             default: break;
         }

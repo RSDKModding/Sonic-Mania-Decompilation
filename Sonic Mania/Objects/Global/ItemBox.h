@@ -37,8 +37,10 @@ typedef struct {
     uint16 sfxDestroy;
     uint16 sfxTeleport;
     uint16 sfxHyperRing;
+#if RETRO_USE_PLUS
     uint16 sfxPowerDown;
     uint16 sfxRevovery;
+#endif
 } ObjectItemBox;
 
 // Entity Class
@@ -60,7 +62,9 @@ typedef struct {
     Animator animatorContents;
     Animator animatorOverlay;
     Animator animatorDebris;
+#if RETRO_USE_PLUS
     Entity *parent;
+#endif
 } EntityItemBox;
 
 // Object Struct

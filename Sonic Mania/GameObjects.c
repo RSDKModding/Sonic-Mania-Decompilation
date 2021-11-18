@@ -936,12 +936,12 @@ void LinkGameLogicDLL(EngineInfo *info)
         ADD_PUBLIC_FUNC(Camera_State_VLock);
         ADD_PUBLIC_FUNC(Camera_State_HandleLerp);
 
-        ADD_PUBLIC_FUNC(Dust_State_DropDash);
-        ADD_PUBLIC_FUNC(Dust_State_HammerDrop);
+        ADD_PUBLIC_FUNC(Dust_State_Move);
+        ADD_PUBLIC_FUNC(Dust_State_MoveCollide);
         ADD_PUBLIC_FUNC(Dust_State_GlideSlide);
         ADD_PUBLIC_FUNC(Dust_State_Skid);
         ADD_PUBLIC_FUNC(Dust_State_Spindash);
-        ADD_PUBLIC_FUNC(Dust_State_EggLoco);
+        ADD_PUBLIC_FUNC(Dust_State_MoveGravity);
 
         ADD_PUBLIC_FUNC(Debris_State_Fall);
         ADD_PUBLIC_FUNC(Debris_State_Move);

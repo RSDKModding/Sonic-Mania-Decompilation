@@ -173,7 +173,7 @@ void PBL_Flipper_HandlePlayerInteractions(void)
                     if (velY < 0) {
                         player->velocity.x = velStoreX;
                         player->velocity.y = velStoreY;
-                        Zone_Unknown3(&self->position, &player->position, negAngle);
+                        Zone_RotateOnPivot(&player->position, &self->position, negAngle);
                     }
                     else {
                         if (velY > 0)
@@ -188,8 +188,8 @@ void PBL_Flipper_HandlePlayerInteractions(void)
                             player->onGround = false;
                             player->angle    = 0;
                         }
-                        Zone_Unknown3(&pos2, &player->velocity, negAngle);
-                        Zone_Unknown3(&self->position, &player->position, negAngle);
+                        Zone_RotateOnPivot(&player->velocity, &pos2, negAngle);
+                        Zone_RotateOnPivot(&player->position, &self->position, negAngle);
                     }
                     break;
                 case 2:
@@ -208,8 +208,8 @@ void PBL_Flipper_HandlePlayerInteractions(void)
                             player->velocity.y -= 0x20000;
                         }
 
-                        Zone_Unknown3(&self->position, &player->position, negAngle);
-                        Zone_Unknown3(&pos2, &player->velocity, negAngle);
+                        Zone_RotateOnPivot(&player->position, &self->position, negAngle);
+                        Zone_RotateOnPivot(&player->velocity, &pos2, negAngle);
                     }
                     break;
                 case 3:
@@ -229,13 +229,13 @@ void PBL_Flipper_HandlePlayerInteractions(void)
                         }
                     }
 
-                    Zone_Unknown3(&self->position, &player->position, negAngle);
-                    Zone_Unknown3(&pos2, &player->velocity, negAngle);
+                    Zone_RotateOnPivot(&player->position, &self->position, negAngle);
+                    Zone_RotateOnPivot(&player->velocity, &pos2, negAngle);
                     break;
                 case 4:
                     player->velocity.y = -(velY >> 2);
-                    Zone_Unknown3(&self->position, &player->position, negAngle);
-                    Zone_Unknown3(&pos2, &player->velocity, negAngle);
+                    Zone_RotateOnPivot(&player->position, &self->position, negAngle);
+                    Zone_RotateOnPivot(&player->velocity, &pos2, negAngle);
                     break;
                 default: break;
             }

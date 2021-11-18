@@ -6,7 +6,7 @@
 #if RETRO_USE_PLUS
 
 typedef enum {
-    EROUTE_FRAME_UNKNOWN
+    EROUTE_FRAME_UNUSED
 }EncoreRouteFrameIDs;
 
 // Object Class

@@ -55,6 +55,7 @@ void ItemBox_Draw(void)
                 self->drawFX    = FX_FLIP;
                 self->inkEffect = INK_NONE;
                 RSDK.DrawSprite(&self->animatorBox, NULL, false);
+
                 RSDK.AddDrawListRef(Zone->playerDrawHigh, SceneInfo->entitySlot);
             }
         }
@@ -62,8 +63,10 @@ void ItemBox_Draw(void)
             self->inkEffect = INK_NONE;
             RSDK.DrawSprite(&self->animatorBox, NULL, false);
             RSDK.DrawSprite(&self->animatorContents, &self->contentsPos, false);
+
             self->inkEffect = INK_ADD;
             RSDK.DrawSprite(&self->animatorOverlay, NULL, false);
+
             self->inkEffect = INK_NONE;
             RSDK.DrawSprite(&self->animatorDebris, NULL, false);
         }
@@ -184,8 +187,10 @@ void ItemBox_StageLoad(void)
     ItemBox->sfxDestroy   = RSDK.GetSFX("Global/Destroy.wav");
     ItemBox->sfxTeleport  = RSDK.GetSFX("Global/Teleport.wav");
     ItemBox->sfxHyperRing = RSDK.GetSFX("Global/HyperRing.wav");
+#if RETRO_USE_PLUS
     ItemBox->sfxPowerDown = RSDK.GetSFX("Stage/PowerDown.wav");
     ItemBox->sfxRevovery  = RSDK.GetSFX("Global/Recovery.wav");
+#endif
 }
 
 void ItemBox_DebugDraw(void)
@@ -194,6 +199,7 @@ void ItemBox_DebugDraw(void)
     DebugMode->subtypeCount = ITEMBOX_COUNT;
     RSDK.SetSpriteAnimation(ItemBox->aniFrames, 0, &DebugMode->animator, true, 0);
     RSDK.DrawSprite(&DebugMode->animator, NULL, false);
+
     RSDK.SetSpriteAnimation(ItemBox->aniFrames, 2, &DebugMode->animator, true, DebugMode->itemSubType);
     Vector2 drawPos;
     drawPos.x = self->position.x;
@@ -202,7 +208,8 @@ void ItemBox_DebugDraw(void)
 }
 void ItemBox_DebugSpawn(void)
 {
-    RSDK_THIS(ItemBox);
+    RSDK_THIS(DebugMode);
+
     EntityItemBox *itemBox        = CREATE_ENTITY(ItemBox, 0, self->position.x, self->position.y);
     itemBox->type                 = DebugMode->itemSubType;
     itemBox->animatorContents.frameID = DebugMode->itemSubType;
@@ -870,7 +877,11 @@ bool32 ItemBox_HandleFallingCollision(void)
     self->moveOffset.x = -self->position.x;
     self->moveOffset.y = -self->position.y;
     if (self->velocity.y)
+#if RETRO_USE_PLUS
         self->parent = NULL;
+#else
+        self->groundVel = 0;
+#endif
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
     self->velocity.y += 0x3800;
@@ -939,7 +950,11 @@ bool32 ItemBox_HandlePlatformCollision(void *p)
             return false;
         }
 
-        self->parent        = (Entity *)platform;
+#if RETRO_USE_PLUS
+        self->parent = (Entity *)platform;
+#else
+        self->groundVel = RSDK.GetEntityID(platform);
+#endif
         self->scale.x       = (self->position.x - platform->drawPos.x) & 0xFFFF0000;
         self->scale.y       = (self->position.y - platform->drawPos.y) & 0xFFFF0000;
         self->updateRange.x = platform->updateRange.x;
@@ -961,8 +976,13 @@ void ItemBox_HandleObjectCollisions(void)
     bool32 flag = false;
     RSDK_THIS(ItemBox);
     if (Platform) {
+#if RETRO_USE_PLUS
         if (self->parent) {
             EntityPlatform *platform = (EntityPlatform *)self->parent;
+#else
+        if (self->groundVel) {
+            EntityPlatform *platform = RSDK_GET_ENTITY(self->groundVel, Platform);
+#endif
             if (platform->objectID == Platform->objectID) {
                 platform->stood      = true;
                 self->position.x   = self->scale.x + platform->drawPos.x;
@@ -984,6 +1004,7 @@ void ItemBox_HandleObjectCollisions(void)
         }
     }
 
+#if RETRO_USE_PLUS
     if (TilePlatform) {
         if (self->parent) {
             EntityTilePlatform *tilePlatform = (EntityTilePlatform *)self->parent;
@@ -1000,10 +1021,16 @@ void ItemBox_HandleObjectCollisions(void)
             }
         }
     }
+#endif
 
     if (Crate) {
+#if RETRO_USE_PLUS
         if (self->parent) {
             EntityCrate *crate = (EntityCrate *)self->parent;
+#else
+        if (self->groundVel) {
+            EntityCrate *crate = RSDK_GET_ENTITY(self->groundVel, Crate);
+#endif
             if (crate->objectID == Crate->objectID) {
                 crate->stood         = true;
                 self->position.x   = self->scale.x + crate->drawPos.x;
@@ -1015,7 +1042,11 @@ void ItemBox_HandleObjectCollisions(void)
                 self->velocity.y = 0;
             }
             else {
+#if RETRO_USE_PLUS
                 self->parent = NULL;
+#else
+                self->groundVel = 0;
+#endif
             }
         }
         else {
@@ -1027,7 +1058,11 @@ void ItemBox_HandleObjectCollisions(void)
         }
     }
     if (!flag)
+#if RETRO_USE_PLUS
         self->parent = NULL;
+#else
+        self->groundVel = 0;
+#endif
     if (Ice) {
         foreach_active(Ice, ice)
         {

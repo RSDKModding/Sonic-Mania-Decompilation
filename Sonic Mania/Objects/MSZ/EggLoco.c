@@ -198,7 +198,7 @@ void EggLoco_State_Unknown3(void)
     self->field_64 = (RSDK.GetFrameID(&self->animator2) - 97) << 16;
     if (self->field_64 >= 0x10000 && !(Zone->timer & 3)) {
         EntityDust *dust = CREATE_ENTITY(Dust, NULL, self->position.x - 0x240000, self->position.y - 0x4E0000);
-        dust->state      = Dust_State_EggLoco;
+        dust->state      = Dust_State_MoveGravity;
         dust->velocity.x = 0x20000;
         dust->velocity.y = -0x18000;
         dust->drawOrder  = Zone->drawOrderLow;

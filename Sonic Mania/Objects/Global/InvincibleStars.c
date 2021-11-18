@@ -5,6 +5,7 @@ ObjectInvincibleStars *InvincibleStars;
 void InvincibleStars_Update(void)
 {
     RSDK_THIS(InvincibleStars);
+
     EntityPlayer *player = (EntityPlayer *)self->parent;
     if (player) {
         self->starAngle[2] = (self->starAngle[2] + 1) % 12;
@@ -130,7 +131,7 @@ void InvincibleStars_Create(void *data)
         self->starAngle[0] = 180;
         self->starAngle[1] = 0;
         self->alpha        = 255;
-        RSDK.SetSpriteAnimation(InvincibleStars->aniFrames, 0, self->starsData, true, 0);
+        RSDK.SetSpriteAnimation(InvincibleStars->aniFrames, 0, &self->starsData[0], true, 0);
         RSDK.SetSpriteAnimation(InvincibleStars->aniFrames, 1, &self->starsData[1], true, 0);
         RSDK.SetSpriteAnimation(InvincibleStars->aniFrames, 2, &self->starsData[2], true, 0);
         RSDK.SetSpriteAnimation(InvincibleStars->aniFrames, 3, &self->starsData[3], true, 0);

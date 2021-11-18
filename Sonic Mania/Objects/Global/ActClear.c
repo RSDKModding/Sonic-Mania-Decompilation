@@ -22,23 +22,23 @@ void ActClear_Draw(void)
     int32 offset       = 0;
     RSDK_THIS(ActClear);
 
-    drawPos.x  = self->posUnknown3.x;
-    drawPos.y  = self->posUnknown3.y;
+    drawPos.x  = self->gotThroughPos.x;
+    drawPos.y  = self->gotThroughPos.y;
     verts[0].y = drawPos.y - 0x140000;
     verts[1].y = drawPos.y - 0x140000;
     verts[2].y = drawPos.y - 0x40000;
     verts[3].y = drawPos.y - 0x40000;
     if ((globals->playerID & 0xFF) == ID_KNUCKLES) {
         int32 center = (ScreenInfo->centerX << 16) + 0x100000;
-        drawPos.x    = center + 2 * self->posUnknown3.x;
+        drawPos.x    = center + 2 * self->gotThroughPos.x;
         verts[0].x   = drawPos.x - 0x910000;
         verts[1].x   = drawPos.x + 0x340000;
         verts[2].x   = drawPos.x + 0x440000;
         verts[3].x   = drawPos.x - 0x810000;
         RSDK.DrawQuad(verts, 4, 0, 0, 0, 255, INK_NONE);
 
-        drawPos.x  = self->posUnknown.x;
-        drawPos.y  = self->posUnknown.y;
+        drawPos.x  = self->playerNamePos.x;
+        drawPos.y  = self->playerNamePos.y;
         drawPos.x  = center + 2 * drawPos.x;
         verts[0].x = drawPos.x - 0x7C0000;
         verts[0].y = drawPos.y + 0x1C0000;
@@ -50,14 +50,15 @@ void ActClear_Draw(void)
         verts[3].y = drawPos.y + 0x2C0000;
         RSDK.DrawQuad(verts, 4, 0, 0, 0, 255, INK_NONE);
 
-        drawPos.x = self->posUnknown.x;
-        drawPos.y = self->posUnknown.y;
+        drawPos.x = self->playerNamePos.x;
+        drawPos.y = self->playerNamePos.y;
         drawPos.x += center;
         RSDK.DrawSprite(&self->playerNameAnimator, &drawPos, true);
         self->gotThroughAnimator.frameID = 2;
         RSDK.DrawSprite(&self->gotThroughAnimator, &drawPos, true);
-        drawPos.x = self->posUnknown3.x;
-        drawPos.y = self->posUnknown3.y;
+
+        drawPos.x = self->gotThroughPos.x;
+        drawPos.y = self->gotThroughPos.y;
         drawPos.x += center;
         self->gotThroughAnimator.frameID = 3;
         RSDK.DrawSprite(&self->gotThroughAnimator, &drawPos, true);
@@ -67,15 +68,15 @@ void ActClear_Draw(void)
     }
     else {
         int32 center = (ScreenInfo->centerX << 16) + 0x100000;
-        drawPos.x    = center + 2 * self->posUnknown3.x;
+        drawPos.x    = center + 2 * self->gotThroughPos.x;
         verts[0].x   = drawPos.x - 0x6D0000;
         verts[1].x   = drawPos.x + 0x340000;
         verts[2].x   = drawPos.x + 0x440000;
         verts[3].x   = drawPos.x - 0x5D0000;
         RSDK.DrawQuad(verts, 4, 0, 0, 0, 255, INK_NONE);
 
-        drawPos.x  = self->posUnknown.x;
-        drawPos.y  = self->posUnknown.y;
+        drawPos.x  = self->playerNamePos.x;
+        drawPos.y  = self->playerNamePos.y;
         drawPos.x  = center + 2 * drawPos.x;
         verts[0].x = drawPos.x - 0x580000;
         verts[0].y = drawPos.y + 0x1C0000;
@@ -87,8 +88,8 @@ void ActClear_Draw(void)
         verts[3].y = drawPos.y + 0x2C0000;
         RSDK.DrawQuad(verts, 4, 0, 0, 0, 255, INK_NONE);
 
-        drawPos.x = self->posUnknown.x;
-        drawPos.y = self->posUnknown.y;
+        drawPos.x = self->playerNamePos.x;
+        drawPos.y = self->playerNamePos.y;
         drawPos.x += center;
         RSDK.DrawSprite(&self->playerNameAnimator, &drawPos, true);
 
@@ -99,8 +100,8 @@ void ActClear_Draw(void)
 #endif
             self->gotThroughAnimator.frameID = 0;
         RSDK.DrawSprite(&self->gotThroughAnimator, &drawPos, true);
-        drawPos.x = self->posUnknown3.x;
-        drawPos.y = self->posUnknown3.y;
+        drawPos.x = self->gotThroughPos.x;
+        drawPos.y = self->gotThroughPos.y;
         drawPos.x += center;
         self->gotThroughAnimator.frameID = 1;
         RSDK.DrawSprite(&self->gotThroughAnimator, &drawPos, true);
@@ -109,8 +110,8 @@ void ActClear_Draw(void)
         offset = center + 0x60000;
     }
 
-    drawPos.x                 = offset + self->posUnknown2.x - 0x5C0000;
-    drawPos.y                 = self->posUnknown2.y;
+    drawPos.x                 = offset + self->timeBonusPos.x - 0x5C0000;
+    drawPos.y                 = self->timeBonusPos.y;
     self->hudElementsAnimator.frameID = 1;
     RSDK.DrawSprite(&self->hudElementsAnimator, &drawPos, true);
     drawPos.x += 0x320000;
@@ -144,8 +145,8 @@ void ActClear_Draw(void)
     }
 #endif
 
-    drawPos.x = offset + self->posUnknown4.x - 0x5C0000;
-    drawPos.y = self->posUnknown4.y;
+    drawPos.x = offset + self->ringBonusPos.x - 0x5C0000;
+    drawPos.y = self->ringBonusPos.y;
 #if RETRO_USE_PLUS
     if (globals->gameMode == MODE_TIMEATTACK)
         self->hudElementsAnimator.frameID = 17;
@@ -192,9 +193,9 @@ void ActClear_Draw(void)
     }
 #endif
 
-    if (self->field_84 == 1) {
-        drawPos.x = self->posUnknown5.x;
-        drawPos.y = self->posUnknown5.y;
+    if (self->showCoolBonus) {
+        drawPos.x = self->coolBonusPos.x;
+        drawPos.y = self->coolBonusPos.y;
         drawPos.x = offset + drawPos.x - 0x5C0000;
 #if RETRO_USE_PLUS
         if (globals->gameMode == MODE_TIMEATTACK)
@@ -239,12 +240,12 @@ void ActClear_Draw(void)
 #endif
     }
 
-    drawPos.x = self->posUnknown6.x;
-    drawPos.y = self->posUnknown6.y;
+    drawPos.x = self->totalScorePos.x;
+    drawPos.y = self->totalScorePos.y;
 
 #if RETRO_USE_PLUS
     if (globals->gameMode == MODE_TIMEATTACK) {
-        drawPos.x                 = offset + self->posUnknown6.x - 0x5C0000;
+        drawPos.x                 = offset + self->totalScorePos.x - 0x5C0000;
         self->hudElementsAnimator.frameID = 19;
         RSDK.DrawSprite(&self->hudElementsAnimator, &drawPos, true);
 
@@ -268,7 +269,7 @@ void ActClear_Draw(void)
     }
     else {
 #endif
-        drawPos.x                 = offset + self->posUnknown6.x - 0x440000;
+        drawPos.x                 = offset + self->totalScorePos.x - 0x440000;
         self->hudElementsAnimator.frameID = 9;
         RSDK.DrawSprite(&self->hudElementsAnimator, &drawPos, true);
 
@@ -289,14 +290,14 @@ void ActClear_Create(void *data)
     RSDK_THIS(ActClear);
     if (!SceneInfo->inEditor) {
 #if RETRO_USE_PLUS
-        ActClear->dword34 = 1;
+        ActClear->actClearActive = true;
 #endif
         self->active           = ACTIVE_NORMAL;
         self->visible          = true;
         self->drawOrder        = Zone->hudDrawOrder;
         self->state            = ActClear_Unknown6;
         self->stageFinishTimer = 0;
-        self->dword78          = 0;
+        self->newRecordTimer          = 0;
         EntityPlayer *player1    = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
         self->playerPtr        = player1;
 
@@ -364,19 +365,19 @@ void ActClear_Create(void *data)
             self->isNewRecord  = false;
         }
 #endif
-        self->field_84      = 1;
-        self->posUnknown.x  = 0xE00000;
-        self->posUnknown.y  = 0x580000;
-        self->posUnknown3.x = -0xE00000;
-        self->posUnknown3.y = 0x700000;
-        self->posUnknown2.x = 0x1E80000;
-        self->posUnknown2.y = 0x780000;
-        self->posUnknown4.x = 0x3080000;
-        self->posUnknown4.y = 0x880000;
-        self->posUnknown5.x = 0x4280000;
-        self->posUnknown5.y = 0x980000;
-        self->posUnknown6.x = -0x5480000;
-        self->posUnknown6.y = 0xC00000;
+        self->showCoolBonus      = true;
+        self->playerNamePos.x  = 0xE00000;
+        self->playerNamePos.y  = 0x580000;
+        self->gotThroughPos.x = -0xE00000;
+        self->gotThroughPos.y = 0x700000;
+        self->timeBonusPos.x = 0x1E80000;
+        self->timeBonusPos.y = 0x780000;
+        self->ringBonusPos.x = 0x3080000;
+        self->ringBonusPos.y = 0x880000;
+        self->coolBonusPos.x = 0x4280000;
+        self->coolBonusPos.y = 0x980000;
+        self->totalScorePos.x = -0x5480000;
+        self->totalScorePos.y = 0xC00000;
         RSDK.SetSpriteAnimation(ActClear->aniFrames, 0, &self->hudElementsAnimator, true, 0);
         RSDK.SetSpriteAnimation(ActClear->aniFrames, 1, &self->numbersAnimator, true, 0);
 #if RETRO_USE_PLUS
@@ -402,13 +403,13 @@ void ActClear_Create(void *data)
 
 void ActClear_StageLoad(void)
 {
-    ActClear->aniFrames    = RSDK.LoadSpriteAnimation("Global/HUD.bin", SCOPE_STAGE);
+    ActClear->aniFrames     = RSDK.LoadSpriteAnimation("Global/HUD.bin", SCOPE_STAGE);
     ActClear->sfxScoreAdd   = RSDK.GetSFX("Global/ScoreAdd.wav");
     ActClear->sfxScoreTotal = RSDK.GetSFX("Global/ScoreTotal.wav");
 #if RETRO_USE_PLUS
-    ActClear->dword34     = 0;
-    ActClear->sfxEvent   = RSDK.GetSFX("Special/Event.wav");
-    ActClear->forceNoSave = false;
+    ActClear->actClearActive = false;
+    ActClear->sfxEvent       = RSDK.GetSFX("Special/Event.wav");
+    ActClear->forceNoSave    = false;
 #endif
 }
 
@@ -532,11 +533,11 @@ void ActClear_Unknown6(void)
 {
     RSDK_THIS(ActClear);
 
-    if (self->posUnknown.x > 0)
-        self->posUnknown.x -= 0x100000;
+    if (self->playerNamePos.x > 0)
+        self->playerNamePos.x -= 0x100000;
 
-    if (self->posUnknown3.x < 0)
-        self->posUnknown3.x += 0x100000;
+    if (self->gotThroughPos.x < 0)
+        self->gotThroughPos.x += 0x100000;
     if (!self->timer && Zone->forcePlayerOnScreenFlag)
         ActClear_Unknown5();
 
@@ -551,8 +552,8 @@ void ActClear_Unknown7(void)
 {
     RSDK_THIS(ActClear);
 
-    self->posUnknown.y -= 0x8000;
-    self->posUnknown3.y -= 0x8000;
+    self->playerNamePos.y -= 0x8000;
+    self->gotThroughPos.y -= 0x8000;
     if (++self->timer == 48) {
         self->timer = 0;
         self->state = ActClear_State_TAFinish;
@@ -564,16 +565,16 @@ void ActClear_State_TAFinish(void)
 {
     RSDK_THIS(ActClear);
 
-    if (self->posUnknown2.x > 0)
-        self->posUnknown2.x -= 0x100000;
+    if (self->timeBonusPos.x > 0)
+        self->timeBonusPos.x -= 0x100000;
 
-    if (self->posUnknown4.x > 0)
-        self->posUnknown4.x -= 0x100000;
+    if (self->ringBonusPos.x > 0)
+        self->ringBonusPos.x -= 0x100000;
 
-    if (self->posUnknown5.x > 0)
-        self->posUnknown5.x -= 0x100000;
+    if (self->coolBonusPos.x > 0)
+        self->coolBonusPos.x -= 0x100000;
 
-    if (self->posUnknown6.x >= -0x80000) {
+    if (self->totalScorePos.x >= -0x80000) {
 #if RETRO_USE_PLUS
         if (globals->gameMode == MODE_TIMEATTACK) {
             if (ActClear->isTimeAttack) {
@@ -581,7 +582,7 @@ void ActClear_State_TAFinish(void)
             }
             HUD->showTAPrompt        = true;
             ActClear->hasSavedReplay = false;
-            self->dword78          = 240;
+            self->newRecordTimer          = 240;
             self->state            = ActClear_State_TAResults;
             RSDK.SetScene("Presentation", "Menu");
         }
@@ -593,7 +594,7 @@ void ActClear_State_TAFinish(void)
 #endif
     }
     else {
-        self->posUnknown6.x += 0x100000;
+        self->totalScorePos.x += 0x100000;
     }
     ActClear_CheckPlayerVictory();
 }
@@ -757,33 +758,33 @@ void ActClear_State_TAResults(void)
 {
     RSDK_THIS(ActClear);
 
-    if (self->dword78 > 0) {
+    if (self->newRecordTimer > 0) {
         if (TimeAttackData->dbRank <= 0 || ReplayRecorder->dword13C) {
-            --self->dword78;
+            --self->newRecordTimer;
         }
         else {
-            if (self->dword78 == 120) {
+            if (self->newRecordTimer == 120) {
                 if (TimeAttackData->dbRank == 1)
                     self->isNewRecord = true;
                 self->achievedRank = true;
                 RSDK.PlaySfx(ActClear->sfxEvent, 0, 255);
             }
 
-            if (self->dword78 != 30) {
-                --self->dword78;
+            if (self->newRecordTimer != 30) {
+                --self->newRecordTimer;
             }
             else {
                 if (TimeAttackData->dbRank == 1) {
-                    RSDK.PlaySfx(Announcer->sfxNewRecordTop, 0, 255);
-                    --self->dword78;
+                    RSDK.PlaySfx(Announcer->sfxNewRecordTop, false, 255);
+                    --self->newRecordTimer;
                 }
                 else {
                     if (TimeAttackData->dbRank > 3) {
-                        --self->dword78;
+                        --self->newRecordTimer;
                     }
                     else {
-                        RSDK.PlaySfx(Announcer->sfxNewRecordMid, 0, 255);
-                        --self->dword78;
+                        RSDK.PlaySfx(Announcer->sfxNewRecordMid, false, 255);
+                        --self->newRecordTimer;
                     }
                 }
             }
@@ -863,18 +864,18 @@ void ActClear_Unknown10(void)
 void ActClear_State_ActFinish(void)
 {
     RSDK_THIS(ActClear);
-    self->posUnknown.x += 0x200000;
-    self->posUnknown3.x -= 0x200000;
-    if (self->posUnknown.x > 0x400000)
-        self->posUnknown2.x += 0x200000;
-    if (self->posUnknown2.x > 0x400000)
-        self->posUnknown4.x += 0x200000;
-    if (self->posUnknown4.x > 0x400000)
-        self->posUnknown5.x += 0x200000;
-    if (self->posUnknown5.x > 0x400000)
-        self->posUnknown6.x -= 0x200000;
+    self->playerNamePos.x += 0x200000;
+    self->gotThroughPos.x -= 0x200000;
+    if (self->playerNamePos.x > 0x400000)
+        self->timeBonusPos.x += 0x200000;
+    if (self->timeBonusPos.x > 0x400000)
+        self->ringBonusPos.x += 0x200000;
+    if (self->ringBonusPos.x > 0x400000)
+        self->coolBonusPos.x += 0x200000;
+    if (self->coolBonusPos.x > 0x400000)
+        self->totalScorePos.x -= 0x200000;
 
-    if (self->posUnknown6.x < -0x2000000) {
+    if (self->totalScorePos.x < -0x2000000) {
         if (ActClear->actID <= 0) {
             if (Zone->stageFinishCallback) {
                 if (Zone->forcePlayerOnScreenFlag) {
