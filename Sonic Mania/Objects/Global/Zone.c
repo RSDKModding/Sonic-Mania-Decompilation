@@ -317,7 +317,7 @@ void Zone_StageLoad(void)
             }
         }
 
-        if (!TitleCard || TitleCard->suppressCB != Zone_Unknown16) {
+        if (!TitleCard || TitleCard->suppressCB != Zone_TitleCard_SupressCB) {
             globals->characterFlags = saveRAM->characterFlags;
             globals->stock          = saveRAM->stock;
             globals->playerID       = saveRAM->playerID;
@@ -603,13 +603,13 @@ void Zone_StartFadeIn(int32 fadeSpeed, int32 fadeColour)
     zone->drawOrder  = DRAWLAYER_COUNT - 1;
 }
 
-void Zone_Unknown2(void)
+void Zone_StartFadeOut_MusicFade(void)
 {
     EntityZone *zone = RSDK_GET_ENTITY(SLOT_ZONE, Zone);
+    zone->fadeColour = 0x000000;
+    zone->fadeSpeed  = 10;
     zone->screenID   = PLAYER_MAX;
     zone->timer      = 0;
-    zone->fadeSpeed  = 10;
-    zone->fadeColour = 0x000000;
     zone->state      = Zone_State_Fadeout;
     zone->stateDraw  = Zone_StateDraw_Fadeout;
     zone->visible    = true;
@@ -625,7 +625,7 @@ void Zone_Unknown3(Vector2 *posPtr, Vector2 *pos, int32 angle)
     pos->y  = (y * RSDK.Cos256(angle)) - x * RSDK.Sin256(angle) + posPtr->y;
 }
 
-void Zone_Unknown4(int32 screen)
+void Zone_ReloadScene(int32 screen)
 {
     EntityZone *entity = CREATE_ENTITY(Zone, NULL, 0, 0);
     entity->screenID   = screen;
@@ -641,7 +641,7 @@ void Zone_Unknown4(int32 screen)
     }
     else {
 #endif
-        entity->state     = Zone_Unknown17;
+        entity->state     = Zone_State_ReloadScene;
         entity->stateDraw = Zone_StateDraw_Fadeout;
         entity->visible   = true;
         entity->drawOrder = DRAWLAYER_COUNT - 1;
@@ -653,11 +653,11 @@ void Zone_Unknown4(int32 screen)
 void Zone_StartTeleportAction(void)
 {
     EntityZone *entity = CREATE_ENTITY(Zone, NULL, 0, 0);
-    entity->screenID   = PLAYER_MAX;
-    entity->timer      = 640;
-    entity->fadeSpeed  = 16;
     entity->fadeColour = 0xF0F0F0;
-    entity->state      = Zone_Unknown20;
+    entity->timer      = 640;
+    entity->screenID   = PLAYER_MAX;
+    entity->fadeSpeed  = 16;
+    entity->state      = Zone_State_SwapPlayers;
     entity->stateDraw  = Zone_StateDraw_Fadeout;
     entity->visible    = true;
     entity->drawOrder  = DRAWLAYER_COUNT - 1;
@@ -790,7 +790,7 @@ void Zone_State_Fadeout(void)
 {
     RSDK_THIS(Zone);
     self->timer += self->fadeSpeed;
-    if (self->timer > 1024) {
+    if (self->timer > 0x400) {
 #if RETRO_USE_PLUS
         if (Zone->swapGameMode) {
             if (SceneInfo->filter == SCN_FILTER_MANIA) {
@@ -839,7 +839,7 @@ void Zone_State_Fadeout_Unknown(void)
     RSDK_THIS(Zone);
     self->timer += self->fadeSpeed;
     EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
-    if (self->timer > 1024) {
+    if (self->timer > 0x400) {
         session->zoneFlags[session->levelIndex] = 1;
 #if RETRO_USE_PLUS
         session->matchID = session->prevMatchID + 1;
@@ -852,13 +852,13 @@ void Zone_State_Fadeout_Unknown(void)
     }
 }
 
-void Zone_Unknown16(void)
+void Zone_TitleCard_SupressCB(void)
 {
     RSDK_THIS(Zone);
     SceneInfo->timeEnabled = true;
     SaveGame_LoadPlayerState();
-    if (Music->activeTrack != Music->field_254)
-        Music_TransitionTrack(Music->field_254, 0.04);
+    if (Music->activeTrack != Music->restartTrackID)
+        Music_TransitionTrack(Music->restartTrackID, 0.04);
     EntityZone *zone           = CREATE_ENTITY(Zone, NULL, 0, 0);
     zone->screenID             = 0;
     zone->timer                = 640;
@@ -874,7 +874,7 @@ void Zone_Unknown16(void)
     destroyEntity(self);
 }
 
-void Zone_Unknown17(void)
+void Zone_State_ReloadScene(void)
 {
     EntityPlayer *player1       = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     StarPost->storedMinutes    = SceneInfo->minutes;
@@ -882,7 +882,7 @@ void Zone_Unknown17(void)
     StarPost->storedMS         = SceneInfo->milliseconds;
     globals->suppressAutoMusic = true;
     globals->suppressTitlecard = true;
-    TitleCard->suppressCB      = Zone_Unknown16;
+    TitleCard->suppressCB      = Zone_TitleCard_SupressCB;
     SaveGame_SavePlayerState();
     Player->rings = player1->rings;
     RSDK.LoadScene();
@@ -897,7 +897,7 @@ void Zone_State_Fadeout_Destroy(void)
         self->timer -= self->fadeSpeed;
 }
 
-void Zone_Unknown19(void)
+void Zone_HandlePlayerSwap(void)
 {
     int32 playerBoundActiveB[4];
     int32 playerBoundActiveT[4];
@@ -1193,7 +1193,7 @@ void Zone_Unknown19(void)
 #endif
 }
 
-void Zone_Unknown20(void)
+void Zone_State_SwapPlayers(void)
 {
     RSDK_THIS(Zone);
 
@@ -1292,16 +1292,16 @@ void Zone_Unknown20(void)
 
         if (Zone->playerFlags) {
 #endif
-            Zone_Unknown19();
+            Zone_HandlePlayerSwap();
         }
-        self->state = Zone_Unknown21;
+        self->state = Zone_State_HandleSwapFadeIn;
 #if RETRO_USE_PLUS
         Zone->flag    = true;
 #endif
     }
 }
 
-void Zone_Unknown21(void)
+void Zone_State_HandleSwapFadeIn(void)
 {
     RSDK_THIS(Zone);
     if (self->timer <= 0) {

@@ -204,7 +204,7 @@ void GigaMetal_StageLoad(void)
             if (music->playOnLoad)
                 music->trackID = TRACK_EGGMAN1;
         }
-        Music->field_254 = TRACK_EGGMAN1;
+        Music->restartTrackID = TRACK_EGGMAN1;
     }
 }
 

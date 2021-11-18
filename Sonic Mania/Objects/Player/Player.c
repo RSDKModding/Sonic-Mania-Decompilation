@@ -1926,7 +1926,7 @@ void Player_HandleDeath(EntityPlayer *player)
                             }
                         }
                         Music_FadeOut(0.025);
-                        Zone_Unknown2();
+                        Zone_StartFadeOut_MusicFade();
                         player->objectID = TYPE_BLANK;
                     }
                     else {
@@ -2059,7 +2059,7 @@ void Player_ResetState(EntityPlayer *player)
         player->camera->position.x = player->position.x;
         player->camera->position.y = player->position.y;
         player->camera->state      = Camera_State_Follow;
-        Zone_Unknown4(RSDK.GetEntityID(player));
+        Zone_ReloadScene(RSDK.GetEntityID(player));
     }
     player->underwater = 0;
 

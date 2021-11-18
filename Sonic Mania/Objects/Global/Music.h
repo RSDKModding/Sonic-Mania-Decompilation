@@ -47,7 +47,7 @@ typedef struct {
     int32 channelID;
     int32 activeTrack;
     int32 nextTrack;
-    int32 field_254;
+    int32 restartTrackID;
 #if !RETRO_USE_PLUS
     bool32 trackFlag;
     bool32 musicStackFlagA;

@@ -57,7 +57,7 @@ void SaveGame_LoadSaveData(void)
     }
 
     if (Player) {
-        if (!TitleCard || TitleCard->suppressCB != Zone_Unknown16) {
+        if (!TitleCard || TitleCard->suppressCB != Zone_TitleCard_SupressCB) {
             Player->savedLives    = saveRAM->lives;
             Player->savedScore    = saveRAM->score;
             Player->savedScore1UP = saveRAM->score1UP;
@@ -314,7 +314,7 @@ void SaveGame_SavePlayerState(void)
     globals->restartMilliseconds = SceneInfo->milliseconds;
     globals->restartSeconds      = SceneInfo->seconds;
     globals->restartMinutes      = SceneInfo->minutes;
-    if (saveRAM && TitleCard->suppressCB != Zone_Unknown16) {
+    if (saveRAM && TitleCard->suppressCB != Zone_TitleCard_SupressCB) {
         saveRAM->lives = player->lives;
         saveRAM->score = player->score;
         saveRAM->score1UP = player->score1UP;
