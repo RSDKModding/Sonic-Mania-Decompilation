@@ -121,7 +121,7 @@ bool32 GHZCutsceneST_CutsceneState_Unknown1(EntityCutsceneSeq *host)
         EntityPlayer *player = RSDK_GET_ENTITY(id++, Player);
         if (!player || player->objectID == TYPE_BLANK)
             break;
-        RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->playerAnimator, 0, 0);
+        RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->animator, 0, 0);
         player->position.x += (player->position.x - player->position.x) >> 3;
         player->position.y += (0xA00 * RSDK.Sin256(2 * (host->timer + angle - host->field_68)) + ruby->position.y - player->position.y) >> 3;
         player->state = Player_State_None;
@@ -144,7 +144,7 @@ bool32 GHZCutsceneST_CutsceneState_Unknown2(EntityCutsceneSeq *host)
             EntityPlayer *player = RSDK_GET_ENTITY(id++, Player);
             if (!player || player->objectID == TYPE_BLANK)
                 break;
-            RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->playerAnimator, false, 0);
+            RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->animator, false, 0);
             int32 x              = (player->position.x - player->position.x) >> 3;
             int32 y              = (0xA00 * RSDK.Sin256(2 * (angle + host->timer - host->field_68)) + ruby->position.y - player->position.y) >> 3;
             player->velocity.y = (y >> 8) * (y >> 8);
@@ -164,7 +164,7 @@ bool32 GHZCutsceneST_CutsceneState_Unknown2(EntityCutsceneSeq *host)
             EntityPlayer *player = RSDK_GET_ENTITY(id++, Player);
             if (!player || player->objectID == TYPE_BLANK)
                 break;
-            RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->playerAnimator, 0, 0);
+            RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->animator, 0, 0);
             player->position.x += (player->position.x - player->position.x) >> 3;
             player->position.y += (0xA00 * RSDK.Sin256(2 * (host->timer + angle - host->field_68)) + ruby->position.y - player->position.y) >> 3;
             player->state = Player_State_None;

@@ -22,13 +22,13 @@ void Flipper_Update(void)
             if (Player_CheckCollisionPlatform(player, self, &self->hitbox)) {
                 self->activePlayers |= (1 << playerID);
                 player->position.y += 0x80000;
-                RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->playerAnimator, false, 0);
+                RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
                 if (player->jumpPress) {
                     for (int i = SLOT_PLAYER1; i < Player->playerCount; ++i) {
                         if ((1 << i) & self->activePlayers) {
                             EntityPlayer *playerPtr                  = RSDK_GET_ENTITY(i, Player);
                             int vel                                  = (playerPtr->position.x - self->position.x) - 0x40000;
-                            playerPtr->playerAnimator.animationSpeed = 120;
+                            playerPtr->animator.animationSpeed = 120;
                             playerPtr->state                         = Player_State_Air;
                             playerPtr->jumpAbilityTimer              = 1;
                             playerPtr->onGround                      = false;
@@ -70,13 +70,13 @@ void Flipper_Update(void)
             if (Player_CheckCollisionPlatform(player, self, &self->hitbox)) {
                 self->activePlayers |= (1 << playerID);
                 player->position.y += 0x80000;
-                RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->playerAnimator, false, 0);
+                RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
                 if (player->jumpPress) {
                     for (int i = SLOT_PLAYER1; i < Player->playerCount; ++i) {
                         if ((1 << i) & self->activePlayers) {
                             EntityPlayer *playerPtr                  = RSDK_GET_ENTITY(i, Player);
                             int vel                                  = (self->position.x - player->position.x) - 0x40000;
-                            playerPtr->playerAnimator.animationSpeed = 120;
+                            playerPtr->animator.animationSpeed = 120;
                             playerPtr->state                         = Player_State_Air;
                             playerPtr->jumpAbilityTimer              = 1;
                             playerPtr->onGround                      = false;

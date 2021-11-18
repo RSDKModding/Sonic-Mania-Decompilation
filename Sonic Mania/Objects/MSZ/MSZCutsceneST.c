@@ -163,7 +163,7 @@ bool32 MSZCutsceneST_CutsceneState_Unknown3(EntityCutsceneSeq *host)
 
     if (!host->timer) {
         Music_PlayTrack(TRACK_HBHMISCHIEF);
-        RSDK.SetSpriteAnimation(player1->aniFrames, ANI_RIDE, &player1->playerAnimator, false, 0);
+        RSDK.SetSpriteAnimation(player1->aniFrames, ANI_RIDE, &player1->animator, false, 0);
         player1->direction = FLIP_NONE;
     }
 
@@ -455,7 +455,7 @@ bool32 MSZCutsceneST_CutsceneState_Unknown6(EntityCutsceneSeq *host)
         tornado->rotation  = 48;
         player1->state     = Player_State_None;
         player1->direction = FLIP_X;
-        RSDK.SetSpriteAnimation(player1->aniFrames, ANI_CLING, &player1->playerAnimator, true, 0);
+        RSDK.SetSpriteAnimation(player1->aniFrames, ANI_CLING, &player1->animator, true, 0);
         player1->rotation = tornado->rotation;
         tornado->active   = ACTIVE_NORMAL;
         nodePtr->state    = TornadoPath_State_SetTornadoSpeed;

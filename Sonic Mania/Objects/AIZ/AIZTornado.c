@@ -115,7 +115,7 @@ void AIZTornado_HandlePlayerCollisions(void)
     self->position.y     = self->prevPos.y;
 
     if (Player_CheckCollisionPlatform(player, self, hitbox)) {
-        RSDK.SetSpriteAnimation(player->aniFrames, ANI_RIDE, &player->playerAnimator, false, 0);
+        RSDK.SetSpriteAnimation(player->aniFrames, ANI_RIDE, &player->animator, false, 0);
         player->state = Player_State_None;
         player->position.x += self->moveVelocity.x;
         player->position.y += self->moveVelocity.y;

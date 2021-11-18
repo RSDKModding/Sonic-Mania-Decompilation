@@ -254,16 +254,16 @@ void BreakableWall_HandleTopBreak_All(void)
         int32 velY = player->velocity.y;
         if (Player_CheckCollisionBox(player, self, &self->hitbox) == 1) {
 #if RETRO_USE_PLUS
-            if (!self->onlyMighty || (player->characterID == ID_MIGHTY && player->playerAnimator.animationID == ANI_DROPDASH)) {
+            if (!self->onlyMighty || (player->characterID == ID_MIGHTY && player->animator.animationID == ANI_DROPDASH)) {
 #endif
                 if (!self->onlyKnux || player->characterID == ID_KNUCKLES) {
-                    bool32 flag = player->playerAnimator.animationID == ANI_JUMP;
+                    bool32 flag = player->animator.animationID == ANI_JUMP;
 
                     switch (player->characterID) {
                         default: break;
                         case ID_SONIC:
                             if (!flag)
-                                flag = player->playerAnimator.animationID == ANI_DROPDASH;
+                                flag = player->animator.animationID == ANI_DROPDASH;
                             break;
                         case ID_KNUCKLES: flag = true; break;
 #if RETRO_USE_PLUS
@@ -339,16 +339,16 @@ void BreakableWall_HandleTopBreak_Chunks(void)
         if (Player_CheckCollisionBox(player, self, &self->hitbox) == 1 && !player->sidekick
             && ((player->collisionPlane == 1 && self->type != 2) || self->type == 2)) {
 #if RETRO_USE_PLUS
-            if (!self->onlyMighty || (player->characterID == ID_MIGHTY && player->playerAnimator.animationID == ANI_DROPDASH)) {
+            if (!self->onlyMighty || (player->characterID == ID_MIGHTY && player->animator.animationID == ANI_DROPDASH)) {
 #endif
                 if (!self->onlyKnux || player->characterID == ID_KNUCKLES) {
-                    bool32 flag = player->playerAnimator.animationID == ANI_JUMP;
+                    bool32 flag = player->animator.animationID == ANI_JUMP;
 
                     switch (player->characterID) {
                         default: break;
                         case ID_SONIC:
                             if (!flag)
-                                flag = player->playerAnimator.animationID == ANI_DROPDASH;
+                                flag = player->animator.animationID == ANI_DROPDASH;
                             break;
                         case ID_KNUCKLES: flag = true; break;
 #if RETRO_USE_PLUS
@@ -394,10 +394,10 @@ void BreakableWall_HandleSidesBreak(void)
     foreach_active(Player, player)
     {
 #if RETRO_USE_PLUS
-        if (!self->onlyMighty || (player->characterID == ID_MIGHTY && player->playerAnimator.animationID == ANI_DROPDASH)) {
+        if (!self->onlyMighty || (player->characterID == ID_MIGHTY && player->animator.animationID == ANI_DROPDASH)) {
 #endif
             if (!self->onlyKnux || player->characterID == ID_KNUCKLES) {
-                bool32 flag = abs(player->groundVel) >= 0x48000 && player->onGround && player->playerAnimator.animationID == ANI_JUMP;
+                bool32 flag = abs(player->groundVel) >= 0x48000 && player->onGround && player->animator.animationID == ANI_JUMP;
 
                 if (player->shield == SHIELD_FIRE) {
                     EntityShield *shield = RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntityID(player), Shield);
@@ -407,7 +407,7 @@ void BreakableWall_HandleSidesBreak(void)
                 switch (player->characterID) {
                     default: break;
                     case ID_SONIC:
-                        flag |= player->playerAnimator.animationID == ANI_DROPDASH;
+                        flag |= player->animator.animationID == ANI_DROPDASH;
                         flag |= player->superState == SUPERSTATE_SUPER;
                         break;
                     case ID_KNUCKLES: flag = true; break;
@@ -421,15 +421,15 @@ void BreakableWall_HandleSidesBreak(void)
                     if (Player_CheckCollisionTouch(player, self, &self->hitbox)) {
                         BreakableWall_HandleBlockBreak_H(self, player->position.x > self->position.x);
                         if (player->characterID == ID_KNUCKLES) {
-                            if (player->playerAnimator.animationID == ANI_FLY) {
+                            if (player->animator.animationID == ANI_FLY) {
                                 player->abilitySpeed -= player->abilitySpeed >> 2;
                                 player->velocity.x -= player->velocity.x >> 2;
                                 if (abs(player->velocity.x) <= 0x30000) {
-                                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_FLYTIRED, &player->playerAnimator, 0, 0);
+                                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_FLYTIRED, &player->animator, 0, 0);
                                     player->state = Player_State_KnuxGlideDrop;
                                 }
                             }
-                            else if (player->playerAnimator.animationID == ANI_FLYLIFTTIRED) {
+                            else if (player->animator.animationID == ANI_FLYLIFTTIRED) {
                                 player->abilitySpeed -= player->abilitySpeed >> 2;
                                 player->velocity.x -= player->velocity.x >> 2;
                             }
@@ -455,7 +455,7 @@ void BreakableWall_HandleBottomBreak_Chunks(void)
         int32 yVel = player->velocity.y;
         if (Player_CheckCollisionBox(player, self, &self->hitbox) == 4) {
 #if RETRO_USE_PLUS
-            if (!self->onlyMighty || (player->characterID == ID_MIGHTY && player->playerAnimator.animationID == ANI_DROPDASH)) {
+            if (!self->onlyMighty || (player->characterID == ID_MIGHTY && player->animator.animationID == ANI_DROPDASH)) {
 #endif
                 if (!self->onlyKnux || player->characterID == ID_KNUCKLES) {
                     if (!player->sidekick) {
@@ -495,7 +495,7 @@ void BreakableWall_HandleBottomBreak_All(void)
         int32 velY = player->velocity.y;
         if (Player_CheckCollisionBox(player, self, &self->hitbox) == 4) {
 #if RETRO_USE_PLUS
-            if (!self->onlyMighty || (player->characterID == ID_MIGHTY && player->playerAnimator.animationID == ANI_DROPDASH)) {
+            if (!self->onlyMighty || (player->characterID == ID_MIGHTY && player->animator.animationID == ANI_DROPDASH)) {
 #endif
                 if (!self->onlyKnux || player->characterID == ID_KNUCKLES) {
                     player->onGround = false;

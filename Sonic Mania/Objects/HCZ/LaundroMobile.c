@@ -327,7 +327,7 @@ void LaundroMobile_HandleStageWrap(void)
                     player->nextGroundState = StateMachine_None;
                     player->nextAirState    = StateMachine_None;
                     player->state           = Current_Player_State_Type1;
-                    if (player->playerAnimator.animationID != ANI_CLING && player->playerAnimator.animationID != ANI_SHAFTSWING) {
+                    if (player->animator.animationID != ANI_CLING && player->animator.animationID != ANI_SHAFTSWING) {
                         if (player->position.x >= entity->position.x + 0xC00000) {
                             player->velocity.x = LaundroMobile->currentVelocity;
                             player->groundVel  = player->velocity.x;
@@ -336,7 +336,7 @@ void LaundroMobile_HandleStageWrap(void)
                             player->velocity.x = LaundroMobile->currentVelocity + ((entity->position.x - player->position.x + 0xC00000) >> 6);
                             player->groundVel  = player->velocity.x;
                         }
-                        RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->playerAnimator, false, 0);
+                        RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->animator, false, 0);
                     }
                     if (player->up)
                         player->velocity.y = -0x18000;
@@ -1078,7 +1078,7 @@ void LaundroMobile_State_Unknown17(void)
                         LaundroMobile->playerAngles[playerID] = 0;
                     }
                     LaundroMobile->playerRadius[playerID] >>= 8;
-                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->playerAnimator, false, 0);
+                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->animator, false, 0);
                     player->state = Player_State_None;
                 }
             }
@@ -1224,7 +1224,7 @@ void LaundroMobile_State_StartOutro(void)
             player1->state        = Player_State_Ground;
             player1->direction    = FLIP_NONE;
             player1->stateInput   = StateMachine_None;
-            RSDK.SetSpriteAnimation(player1->aniFrames, ANI_IDLE, &player1->playerAnimator, true, 0);
+            RSDK.SetSpriteAnimation(player1->aniFrames, ANI_IDLE, &player1->animator, true, 0);
 
             EntityPlayer *player2 = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
             if (player2->objectID == Player->objectID) {
@@ -1232,7 +1232,7 @@ void LaundroMobile_State_StartOutro(void)
                 player2->state      = Player_State_Ground;
                 player2->direction  = FLIP_NONE;
                 player2->stateInput = StateMachine_None;
-                RSDK.SetSpriteAnimation(player2->aniFrames, ANI_IDLE, &player2->playerAnimator, true, 0);
+                RSDK.SetSpriteAnimation(player2->aniFrames, ANI_IDLE, &player2->animator, true, 0);
             }
             self->state = LaundroMobile_State_OutroRumble;
         }

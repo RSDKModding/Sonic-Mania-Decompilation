@@ -58,9 +58,9 @@ bool32 HCZ1Intro_CutsceneState(EntityCutsceneSeq *host)
         player1->stateInput = StateMachine_None;
         CutsceneSeq_LockAllPlayerControl();
 #if RETRO_USE_PLUS
-        RSDK.SetSpriteAnimation(player1->aniFrames, ANI_FLUME, &player1->playerAnimator, false, 0);
+        RSDK.SetSpriteAnimation(player1->aniFrames, ANI_FLUME, &player1->animator, false, 0);
 #else
-        RSDK.SetSpriteAnimation(player1->aniFrames, ANI_HURT, &player1->playerAnimator, false, 0);
+        RSDK.SetSpriteAnimation(player1->aniFrames, ANI_HURT, &player1->animator, false, 0);
 #endif
         if (player2->objectID == Player->objectID) {
             player2->position.x = player1->position.x;
@@ -70,9 +70,9 @@ bool32 HCZ1Intro_CutsceneState(EntityCutsceneSeq *host)
             player2->stateInput = StateMachine_None;
             player2->position.x = player1->position.x - 0x200000;
 #if RETRO_USE_PLUS
-            RSDK.SetSpriteAnimation(player2->aniFrames, ANI_FLUME, &player2->playerAnimator, false, 0);
+            RSDK.SetSpriteAnimation(player2->aniFrames, ANI_FLUME, &player2->animator, false, 0);
 #else
-            RSDK.SetSpriteAnimation(player1->aniFrames, ANI_HURT, &player1->playerAnimator, false, 0);
+            RSDK.SetSpriteAnimation(player1->aniFrames, ANI_HURT, &player1->animator, false, 0);
 #endif
         }
     }

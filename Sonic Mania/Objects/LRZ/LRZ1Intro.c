@@ -114,7 +114,7 @@ void LRZ1Intro_State_Unknown1(void)
 
     Hitbox *playerHitbox = Player_GetHitbox(player1);
     player1->state       = Player_State_None;
-    RSDK.SetSpriteAnimation(player1->aniFrames, ANI_BALANCE2, &player1->playerAnimator, false, 0);
+    RSDK.SetSpriteAnimation(player1->aniFrames, ANI_BALANCE2, &player1->animator, false, 0);
     self->field_68[0].x = 0x600000;
     self->field_68[0].y = -0x10000 * playerHitbox->bottom;
 
@@ -126,7 +126,7 @@ void LRZ1Intro_State_Unknown1(void)
             self->field_68[p].x = 0x400000;
             self->field_68[p].y = -0x10000 * hitbox->bottom;
             playerPtr->state      = Player_State_None;
-            RSDK.SetSpriteAnimation(playerPtr->aniFrames, ANI_BALANCE2, &playerPtr->playerAnimator, false, 0);
+            RSDK.SetSpriteAnimation(playerPtr->aniFrames, ANI_BALANCE2, &playerPtr->animator, false, 0);
         }
     }
 

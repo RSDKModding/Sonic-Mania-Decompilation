@@ -125,8 +125,8 @@ void Cylinder_State_Unknown1(void)
                 else
                     player->velocity.y = 0;
                 if (!player->onGround && player->velocity.y >= 0 && player->state != Player_State_FlyCarried
-                    && player->playerAnimator.animationID != ANI_SKID) {
-                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGCS, &player->playerAnimator, true,
+                    && player->animator.animationID != ANI_SKID) {
+                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGCS, &player->animator, true,
                                             24 * self->playerAngles[player->playerID] / 1024);
                 }
                 player->onGround                         = false;
@@ -139,7 +139,7 @@ void Cylinder_State_Unknown1(void)
                 if (player->state == Player_State_LookUp || player->state == Player_State_Crouch)
                     player->state = Player_State_Ground;
 
-                if (player->state != Player_State_Ground || player->onGround || player->playerAnimator.animationID == ANI_SKID) {
+                if (player->state != Player_State_Ground || player->onGround || player->animator.animationID == ANI_SKID) {
                     if (player->state == Player_State_Roll) {
                         if (player->velocity.x)
                             player->direction = player->velocity.x > 0;
@@ -147,7 +147,7 @@ void Cylinder_State_Unknown1(void)
                     player->onGround = true;
                 }
                 else {
-                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGCS, &player->playerAnimator, true,
+                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGCS, &player->animator, true,
                                             24 * self->playerAngles[player->playerID] / 1024);
                     player->onGround = true;
                 }
@@ -181,9 +181,9 @@ void Cylinder_State_Unknown2(void)
                 self->playerAngles[player->playerID] = (self->playerAngles[player->playerID] + 16) & 0x3FF;
                 player->position.x                     = radius * RSDK.Cos1024(self->playerAngles[player->playerID]) + self->position.x;
                 player->rotation                       = 128;
-                RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGCS, &player->playerAnimator, true,
+                RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGCS, &player->animator, true,
                                         (24 * self->playerAngles[player->playerID] / 1024 + 12) % 24);
-                player->playerAnimator.rotationFlag = 1;
+                player->animator.rotationFlag = 1;
                 player->direction                   = player->velocity.y < 0;
             }
             else {
@@ -260,8 +260,8 @@ void Cylinder_State_Unknown3(void)
                         if (distance < right) {
                             player->rotation  = 256;
                             player->direction = FLIP_NONE;
-                            RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGCS, &player->playerAnimator, true, 17 - 6 * distance / right);
-                            player->playerAnimator.rotationFlag = 1;
+                            RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGCS, &player->animator, true, 17 - 6 * distance / right);
+                            player->animator.rotationFlag = 1;
                         }
                         player->onGround   = true;
                         player->velocity.y = 0;
@@ -278,8 +278,8 @@ void Cylinder_State_Unknown3(void)
                     if (distance < right) {
                         player->rotation  = 256;
                         player->direction = FLIP_X;
-                        RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGCS, &player->playerAnimator, true, 17 - 6 * distance / right);
-                        player->playerAnimator.rotationFlag = 1;
+                        RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGCS, &player->animator, true, 17 - 6 * distance / right);
+                        player->animator.rotationFlag = 1;
                         player->onGround                    = true;
                         player->velocity.y                  = 0;
                     }
@@ -312,8 +312,8 @@ void Cylinder_State_Unknown3(void)
                     player->tileCollisions                   = true;
                 }
                 else {
-                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGCS, &player->playerAnimator, true, frame % 24);
-                    player->playerAnimator.rotationFlag = 1;
+                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGCS, &player->animator, true, frame % 24);
+                    player->animator.rotationFlag = 1;
                     player->onGround                    = true;
                     player->velocity.y                  = 0;
 
@@ -385,8 +385,8 @@ void Cylinder_State_Unknown3(void)
                             if (distance < right) {
                                 player->rotation  = 256;
                                 player->direction = FLIP_X;
-                                RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGCS, &player->playerAnimator, true, 17 - 6 * distance / right);
-                                player->playerAnimator.rotationFlag = 1;
+                                RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGCS, &player->animator, true, 17 - 6 * distance / right);
+                                player->animator.rotationFlag = 1;
                             }
                         }
                         else {
@@ -395,8 +395,8 @@ void Cylinder_State_Unknown3(void)
                             if (distance < right) {
                                 player->rotation  = 256;
                                 player->direction = FLIP_NONE;
-                                RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGCS, &player->playerAnimator, true, 17 - 6 * distance / right);
-                                player->playerAnimator.rotationFlag = 1;
+                                RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGCS, &player->animator, true, 17 - 6 * distance / right);
+                                player->animator.rotationFlag = 1;
                             }
                         }
                     }
@@ -436,10 +436,10 @@ void Cylinder_State_Unknown4(void)
                     if (player->state == Cylinder_Player_State_Unknown2) {
                         int32 frame = (24 - (24 * angle) / 1024) % 24;
                         if (player->groundVel)
-                            RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGCS, &player->playerAnimator, true, frame);
+                            RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGCS, &player->animator, true, frame);
                         else
-                            RSDK.SetSpriteAnimation(player->aniFrames, ANI_STANDCS, &player->playerAnimator, true, frame);
-                        player->playerAnimator.rotationFlag = 1;
+                            RSDK.SetSpriteAnimation(player->aniFrames, ANI_STANDCS, &player->animator, true, frame);
+                        player->animator.rotationFlag = 1;
                         player->rotation                    = 256;
 
                         if (player->velocity.x)
@@ -477,9 +477,9 @@ void Cylinder_State_Unknown4(void)
             else {
                 if (player->state != Player_State_FlyIn && player->state != Player_State_JumpIn && player->state != Player_State_StartJumpIn) {
                     if (player->onGround || player->velocity.y < 0 || player->state == Player_State_FlyCarried
-                        || player->playerAnimator.animationID == ANI_SKID) {
+                        || player->animator.animationID == ANI_SKID) {
                         if (player->onGround) {
-                            if (player->playerAnimator.animationID != ANI_JUMP)
+                            if (player->animator.animationID != ANI_JUMP)
                                 player->direction ^= 1;
                             player->state = Player_State_Ground;
                         }
@@ -517,10 +517,10 @@ void Cylinder_State_Unknown4(void)
                     self->playerFrameIDs[player->playerID] = 1;
                     int32 frame = (ANI_STANDCS - 24 * ((self->playerAngles[player->playerID] + 8) & 0x3FF) / 1024) % ANI_STANDCS;
                     if (player->groundVel)
-                        RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGCS, &player->playerAnimator, true, frame);
+                        RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGCS, &player->animator, true, frame);
                     else
-                        RSDK.SetSpriteAnimation(player->aniFrames, ANI_STANDCS, &player->playerAnimator, true, frame);
-                    player->playerAnimator.rotationFlag = 1;
+                        RSDK.SetSpriteAnimation(player->aniFrames, ANI_STANDCS, &player->animator, true, frame);
+                    player->animator.rotationFlag = 1;
                     player->rotation                    = 256;
                     player->direction ^= 1;
                     player->nextAirState    = StateMachine_None;
@@ -597,9 +597,9 @@ void Cylinder_State_Unknown5(void)
                     else
                         player->drawOrder = Zone->playerDrawLow;
 
-                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGCS, &player->playerAnimator, true, frame);
+                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGCS, &player->animator, true, frame);
 
-                    player->playerAnimator.rotationFlag = 1;
+                    player->animator.rotationFlag = 1;
                     if (player->position.x < self->position.x)
                         player->abilityValue = 0;
                     else
@@ -611,7 +611,7 @@ void Cylinder_State_Unknown5(void)
                             player->velocity.x = -0x60000;
                         else
                             player->velocity.x = 0x60000;
-                        RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->playerAnimator, false, 0);
+                        RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
                         player->onGround = false;
                     }
                 }
@@ -637,20 +637,20 @@ void Cylinder_State_Unknown5(void)
                             player->groundVel = -player->velocity.y;
                     }
 
-                    if (player->playerAnimator.animationID == ANI_SPRINGCS) {
+                    if (player->animator.animationID == ANI_SPRINGCS) {
                         if (abs(player->groundVel) < 0xC0000) {
                             if (abs(player->groundVel) < 0x60000) {
                                 if (abs(player->groundVel) < 0x40000)
-                                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_WALK, &player->playerAnimator, false, 0);
+                                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_WALK, &player->animator, false, 0);
                                 else
-                                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_JOG, &player->playerAnimator, false, 0);
+                                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_JOG, &player->animator, false, 0);
                             }
                             else {
-                                RSDK.SetSpriteAnimation(player->aniFrames, ANI_RUN, &player->playerAnimator, false, 1);
+                                RSDK.SetSpriteAnimation(player->aniFrames, ANI_RUN, &player->animator, false, 1);
                             }
                         }
                         else {
-                            RSDK.SetSpriteAnimation(player->aniFrames, ANI_DASH, &player->playerAnimator, false, 1);
+                            RSDK.SetSpriteAnimation(player->aniFrames, ANI_DASH, &player->animator, false, 1);
                         }
                     }
                     player->onGround       = true;
@@ -726,7 +726,7 @@ void Cylinder_Player_State_Unknown2(void)
                 self->position.y -= self->cameraOffset;
             else
                 self->position.y += self->cameraOffset;
-            RSDK.SetSpriteAnimation(self->aniFrames, ANI_JUMP, &self->playerAnimator, false, 0);
+            RSDK.SetSpriteAnimation(self->aniFrames, ANI_JUMP, &self->animator, false, 0);
             self->direction ^= 1;
             self->state = Cylinder_Player_State_Unknown3;
             RSDK.PlaySfx(Player->sfxRoll, false, 255);
@@ -745,14 +745,14 @@ void Cylinder_Player_State_Unknown3(void)
         self->state = Cylinder_Player_State_Unknown2;
     }
     if (self->characterID == ID_TAILS) {
-        self->playerAnimator.animationSpeed = 120;
+        self->animator.animationSpeed = 120;
     }
     else {
-        self->playerAnimator.animationSpeed = ((abs(self->groundVel) * 0xF0) / 0x60000) + 0x30;
+        self->animator.animationSpeed = ((abs(self->groundVel) * 0xF0) / 0x60000) + 0x30;
     }
 
-    if (self->playerAnimator.animationSpeed > 0xF0)
-        self->playerAnimator.animationSpeed = 0xF0;
+    if (self->animator.animationSpeed > 0xF0)
+        self->animator.animationSpeed = 0xF0;
 
     if (self->camera)
         self->camera->offsetYFlag = false;

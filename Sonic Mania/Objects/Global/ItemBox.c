@@ -402,7 +402,7 @@ void ItemBox_CheckHit(void)
                 }
             }
             else {
-                int32 anim = player->playerAnimator.animationID;
+                int32 anim = player->animator.animationID;
                 bool32 flag =
                     anim == ANI_JUMP && (player->velocity.y >= 0 || player->onGround || self->direction || player->state == Ice_State_FrozenPlayer);
                 switch (player->characterID) {
@@ -515,7 +515,7 @@ void ItemBox_GivePowerup(void)
             case ITEMBOX_SWAP:
 #if RETRO_USE_PLUS
                 if (globals->gameMode == MODE_ENCORE) {
-                    if (!globals->stock || player->playerAnimator.animationID == ANI_TRANSFORM) {
+                    if (!globals->stock || player->animator.animationID == ANI_TRANSFORM) {
                         RSDK.PlaySfx(Player->sfxSwapFail, false, 255);
                         return;
                     }
@@ -548,7 +548,7 @@ void ItemBox_GivePowerup(void)
             case ITEMBOX_RANDOM: {
                 uint8 playerIDs[5]    = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
                 uint8 newPlayerIDs[5] = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
-                if (player->playerAnimator.animationID == ANI_TRANSFORM) {
+                if (player->animator.animationID == ANI_TRANSFORM) {
                     RSDK.PlaySfx(Player->sfxSwapFail, false, 255);
                 }
                 else {
@@ -779,7 +779,7 @@ void ItemBox_Break(EntityItemBox *itemBox, void *p)
     }
     RSDK.CreateEntity(TYPE_BLANK, 0, itemBox->position.x, itemBox->position.y);
 #if RETRO_USE_PLUS
-    if (player->characterID == ID_MIGHTY && player->playerAnimator.animationID == ANI_DROPDASH)
+    if (player->characterID == ID_MIGHTY && player->animator.animationID == ANI_DROPDASH)
         player->velocity.y -= 0x10000;
     else
 #endif

@@ -73,7 +73,7 @@ bool32 LRZ1Outro_CutsceneState2_Unknown1(EntityCutsceneSeq *host)
         player->onGround      = true;
         player->groundedStore = true;
         player->direction     = FLIP_X;
-        RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPINDASH, &player->playerAnimator, true, 0);
+        RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPINDASH, &player->animator, true, 0);
         player->state      = Player_State_Spindash;
         player->stateInput = 0;
         player->down       = true;
@@ -105,7 +105,7 @@ bool32 LRZ1Outro_CutsceneState1_Unknown2(EntityCutsceneSeq *host)
         player->jumpPress = false;
         player->jumpHold  = true;
         if (player->onGround == true) {
-            if (player->playerAnimator.animationID == ANI_PUSH)
+            if (player->animator.animationID == ANI_PUSH)
                 player->jumpPress = true;
             if (RSDK.ObjectTileCollision(player, player->collisionLayers, CMODE_FLOOR, 0, 0x100000, 0x160000, false) == false)
                 player->jumpPress = true;
@@ -127,7 +127,7 @@ bool32 LRZ1Outro_CutsceneState1_Unknown3(EntityCutsceneSeq *host)
     {
         player->jumpHold  = false;
         player->jumpPress = false;
-        if (player->playerAnimator.animationID == ANI_PUSH)
+        if (player->animator.animationID == ANI_PUSH)
             player->jumpPress = true;
         if (lift->position.x - player->position.x < 0x600000 && player->right && player->onGround) {
             player->jumpPress = true;
@@ -218,7 +218,7 @@ bool32 LRZ1Outro_CutsceneState2_Unknown2(EntityCutsceneSeq *host)
             player->groundVel  = 0x20000;
             player->velocity.y = -0x50000;
             player->state      = Player_State_Air;
-            RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->playerAnimator, true, 0);
+            RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, true, 0);
         }
         return true;
     }

@@ -326,9 +326,9 @@ void ChemicalPool_State_Green(void)
             if (player->state != Player_State_DropDash)
                 player->state = Player_State_Air;
 
-            int32 anim = player->playerAnimator.animationID;
+            int32 anim = player->animator.animationID;
             if (anim != ANI_JUMP && anim != ANI_JOG && anim != ANI_RUN && anim != ANI_DASH)
-                player->playerAnimator.animationID = ANI_WALK;
+                player->animator.animationID = ANI_WALK;
             player->onGround    = false;
             player->jumpAbility = 0;
             player->velocity.y  = -0x140000;
@@ -351,9 +351,9 @@ void ChemicalPool_State_Blue(void)
                 if (player->state != Player_State_DropDash)
                     player->state = Player_State_Air;
 
-                int32 anim = player->playerAnimator.animationID;
+                int32 anim = player->animator.animationID;
                 if (anim != ANI_JUMP && anim != ANI_JOG && anim != ANI_RUN && anim != ANI_DASH)
-                    player->playerAnimator.animationID = ANI_WALK;
+                    player->animator.animationID = ANI_WALK;
                 if ((-0x10000 - player->velocity.y) > -0x80000)
                     player->velocity.y = -0x10000 - player->velocity.y;
                 else

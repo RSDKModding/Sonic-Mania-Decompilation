@@ -83,7 +83,7 @@ void Shuriken_CheckPlayerCollisions(void)
     {
         if (Player_CheckCollisionTouch(player, self, &Shuriken->hitbox3)) {
 #if RETRO_USE_PLUS
-            int32 anim = player->playerAnimator.animationID;
+            int32 anim = player->animator.animationID;
             if (player->characterID == ID_MIGHTY && (anim == ANI_CROUCH || anim == ANI_JUMP || anim == ANI_SPINDASH || anim == ANI_DROPDASH)) {
                 if (!player->uncurlTimer) {
                     RSDK.PlaySfx(Player->sfxPimPom, false, 255);

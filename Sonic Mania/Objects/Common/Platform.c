@@ -1547,7 +1547,7 @@ void Platform_CollisionState_Tiles(void)
             player->collisionLayers |= Zone->moveID;
             player->moveOffset.x = self->tileOrigin.x - self->drawPos.x;
             player->moveOffset.y = self->tileOrigin.y - self->drawPos.y;
-            if (player->playerAnimator.animationID == ANI_PUSH && player->onGround) {
+            if (player->animator.animationID == ANI_PUSH && player->onGround) {
                 if (player->right)
                     self->pushPlayersL |= 1 << pid;
                 if (player->onGround && player->left)
@@ -1638,7 +1638,7 @@ void Platform_CollisionState_Sticky(void)
             player->velocity.x                    = 0;
             player->velocity.y                    = 0;
             player->groundVel                     = 0;
-            player->playerAnimator.animationSpeed = 0;
+            player->animator.animationSpeed = 0;
             switch (side) {
                 case C_TOP: player->angle = 0x00; break;
                 case C_LEFT:
@@ -1846,8 +1846,8 @@ void Platform_CollisionState_TurnTable(void)
                         player->velocity.y      = 0;
                         player->groundVel       = 0;
                         if (self->objectID == Platform->objectID)
-                            RSDK.SetSpriteAnimation(player->aniFrames, ANI_TURNTABLE, &player->playerAnimator, false, 0);
-                        player->playerAnimator.animationSpeed = 64;
+                            RSDK.SetSpriteAnimation(player->aniFrames, ANI_TURNTABLE, &player->animator, false, 0);
+                        player->animator.animationSpeed = 64;
                         player->direction                     = FLIP_NONE;
                         if (!player->sidekick && self->state == Platform_State_Collapsing && !self->collapseDelay) {
 #if RETRO_USE_PLUS
@@ -1941,7 +1941,7 @@ void Platform_CollisionState_Twister(void)
                 if ((1 << pid) & stoodPlayers) {
                     if (player->state == Player_State_None) {
                         player->state = Player_State_Air;
-                        RSDK.SetSpriteAnimation(player->aniFrames, ANI_AIRWALK, &player->playerAnimator, false, 0);
+                        RSDK.SetSpriteAnimation(player->aniFrames, ANI_AIRWALK, &player->animator, false, 0);
                     }
                 }
                 break;
@@ -1957,8 +1957,8 @@ void Platform_CollisionState_Twister(void)
                         player->velocity.y      = 0;
                         player->groundVel       = 0;
                         if (self->objectID == Platform->objectID)
-                            RSDK.SetSpriteAnimation(player->aniFrames, ANI_TWISTER, &player->playerAnimator, false, 0);
-                        player->playerAnimator.animationSpeed = 64;
+                            RSDK.SetSpriteAnimation(player->aniFrames, ANI_TWISTER, &player->animator, false, 0);
+                        player->animator.animationSpeed = 64;
                         player->direction                     = FLIP_X;
                         if (!player->sidekick) {
                             self->stood = true;

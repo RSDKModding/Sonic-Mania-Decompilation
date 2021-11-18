@@ -110,7 +110,7 @@ void CircleBumper_Unknown1(void)
     self->position.y = self->originPos.y;
     foreach_active(Player, player)
     {
-        if (player->playerAnimator.animationID != ANI_HURT && Player_CheckBadnikTouch(player, self, &CircleBumper->hitbox)) {
+        if (player->animator.animationID != ANI_HURT && Player_CheckBadnikTouch(player, self, &CircleBumper->hitbox)) {
             self->animator.frameID = 0;
             self->stateCollide     = CircleBumper_Unknown3;
             RSDK.PlaySfx(CircleBumper->sfxBumper, 0, 255);
@@ -123,21 +123,21 @@ void CircleBumper_Unknown1(void)
 
 #if RETRO_USE_PLUS
             if (player->state == Player_State_MightyHammerDrop) {
-                RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->playerAnimator, false, 0);
+                RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
             }
             else {
 #endif
-                int32 anim = player->playerAnimator.animationID;
+                int32 anim = player->animator.animationID;
                 if (anim != ANI_FLY && anim != ANI_FLYLIFTTIRED && player->state != Player_State_TailsFlight) {
                     if (player->state != Player_State_DropDash)
                         player->state = Player_State_Air;
                     if (anim != ANI_JUMP && anim != ANI_JOG && anim != ANI_RUN && anim != ANI_DASH)
-                        player->playerAnimator.animationID = ANI_WALK;
+                        player->animator.animationID = ANI_WALK;
                 }
 #if RETRO_USE_PLUS
             }
 #endif
-            if (player->playerAnimator.animationID != ANI_FLY) {
+            if (player->animator.animationID != ANI_FLY) {
                 player->velocity.x  = xVel;
                 player->groundVel   = xVel;
                 player->jumpAbility = 0;

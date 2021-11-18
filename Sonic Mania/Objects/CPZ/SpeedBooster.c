@@ -114,7 +114,7 @@ void SpeedBooster_Interact(void)
     {
         int32 playerID   = RSDK.GetEntityID(player);
         Hitbox *hitbox = &SpeedBooster->hitbox;
-        if (self->playerCooldown[playerID] || player->playerAnimator.animationID == ANI_HURT || !Player_CheckCollisionTouch(player, self, hitbox)
+        if (self->playerCooldown[playerID] || player->animator.animationID == ANI_HURT || !Player_CheckCollisionTouch(player, self, hitbox)
             || !player->onGround) {
             self->playerPos[playerID] = player->position.x;
         }

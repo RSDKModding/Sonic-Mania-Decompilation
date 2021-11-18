@@ -449,7 +449,7 @@ void OOZSetup_PlayerState_OilStrip(void)
     int32 skid = self->skidSpeed;
     int32 dec  = self->deceleration;
 
-    Animator *animator = &self->playerAnimator;
+    Animator *animator = &self->animator;
     self->position.y += 0x10000;
     self->skidSpeed    = self->skidSpeed >> 3;
     self->topSpeed     = (self->topSpeed >> 1) + (self->topSpeed >> 2);
@@ -467,9 +467,9 @@ void OOZSetup_PlayerState_OilStrip(void)
     if (animator->animationID == ANI_HURT && (self->groundedStore == true) & self->onGround) {
 #endif
         if (abs(self->groundVel) >= 0x20000) {
-            memcpy(&self->playerAnimator, animator, sizeof(Animator));
-            if (self->playerAnimator.animationTimer >= 3)
-                self->playerAnimator.animationTimer = 256;
+            memcpy(&self->animator, animator, sizeof(Animator));
+            if (self->animator.animationTimer >= 3)
+                self->animator.animationTimer = 256;
 
             if (self->angle == 64 || self->angle == 192) {
                 self->onGround = false;
@@ -509,9 +509,9 @@ void OOZSetup_PlayerState_OilSlide(void)
         self->controlLock = 30;
         self->direction   = (RSDK.Sin256(self->angle) << 13 >> 8) + self->groundVel < 0;
 #if RETRO_USE_PLUS
-        RSDK.SetSpriteAnimation(self->aniFrames, ANI_FLUME, &self->playerAnimator, false, 0);
+        RSDK.SetSpriteAnimation(self->aniFrames, ANI_FLUME, &self->animator, false, 0);
 #else
-        RSDK.SetSpriteAnimation(self->aniFrames, ANI_HURT, &self->playerAnimator, false, 2);
+        RSDK.SetSpriteAnimation(self->aniFrames, ANI_HURT, &self->animator, false, 2);
 #endif
     }
 
@@ -557,7 +557,7 @@ void OOZSetup_PlayerState_OilFall(void)
     }
     if (!self->left && !self->right)
         self->velocity.x -= self->velocity.x >> 4;
-    RSDK.SetSpriteAnimation(self->aniFrames, ANI_JUMP, &self->playerAnimator, false, 0);
+    RSDK.SetSpriteAnimation(self->aniFrames, ANI_JUMP, &self->animator, false, 0);
     Player_HandleGroundMovement();
 
     if (self->camera)

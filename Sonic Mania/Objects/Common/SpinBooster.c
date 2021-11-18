@@ -415,8 +415,8 @@ void SpinBooster_HandleForceRoll(EntityPlayer *player)
     else {
         if (self->playSound)
             RSDK.PlaySfx(Player->sfxRoll, 0, 0xFF);
-        if (player->playerAnimator.animationID != ANI_JUMP) {
-            RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->playerAnimator, false, 0);
+        if (player->animator.animationID != ANI_JUMP) {
+            RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
             if (!player->collisionMode && player->onGround)
                 player->position.y += player->cameraOffset;
             player->pushing = false;

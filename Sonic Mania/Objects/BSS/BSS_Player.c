@@ -12,7 +12,7 @@ void BSS_Player_Update(void)
         if (self->jumpPress) {
             self->velocity.y = -0x100000;
             self->onGround   = false;
-            RSDK.SetSpriteAnimation(self->aniFrames, 2, &self->playerAnimator, false, 0);
+            RSDK.SetSpriteAnimation(self->aniFrames, 2, &self->animator, false, 0);
             RSDK.PlaySfx(BSS_Player->sfxJump, 0, 255);
         }
     }
@@ -27,15 +27,15 @@ void BSS_Player_Update(void)
             self->gravityStrength = 0;
             self->onGround        = true;
             if (!self->sideKick) {
-                if (self->playerAnimator.animationID == 3)
+                if (self->animator.animationID == 3)
                     setup->globeSpeed >>= 1;
                 setup->globeSpeedInc = 2;
             }
 
             if (setup->maxSpeed)
-                RSDK.SetSpriteAnimation(self->aniFrames, 1, &self->playerAnimator, false, 0);
+                RSDK.SetSpriteAnimation(self->aniFrames, 1, &self->animator, false, 0);
             else
-                RSDK.SetSpriteAnimation(self->aniFrames, 0, &self->playerAnimator, false, 0);
+                RSDK.SetSpriteAnimation(self->aniFrames, 0, &self->animator, false, 0);
         }
     }
 
@@ -46,24 +46,24 @@ void BSS_Player_Update(void)
     else
         self->position.y += 0xAA0000;
 
-    if (self->playerAnimator.animationID == 1) {
-        self->playerAnimator.animationTimer += abs(setup->globeSpeed);
-        self->playerAnimator.animationSpeed = abs(setup->globeSpeed);
+    if (self->animator.animationID == 1) {
+        self->animator.animationTimer += abs(setup->globeSpeed);
+        self->animator.animationSpeed = abs(setup->globeSpeed);
 
-        if (self->playerAnimator.animationTimer > 0x1F) {
-            self->playerAnimator.animationTimer &= 0x1F;
+        if (self->animator.animationTimer > 0x1F) {
+            self->animator.animationTimer &= 0x1F;
             if (setup->globeSpeed <= 0) {
-                if (--self->playerAnimator.frameID < 0)
-                    self->playerAnimator.frameID = 11;
+                if (--self->animator.frameID < 0)
+                    self->animator.frameID = 11;
             }
-            else if (++self->playerAnimator.frameID > 11) {
-                self->playerAnimator.frameID = 0;
+            else if (++self->animator.frameID > 11) {
+                self->animator.frameID = 0;
             }
         }
     }
-    else if (self->playerAnimator.animationID >= 2) {
-        self->playerAnimator.animationSpeed = maxVal(abs(setup->maxSpeed), 0x10);
-        RSDK.ProcessAnimation(&self->playerAnimator);
+    else if (self->animator.animationID >= 2) {
+        self->animator.animationSpeed = maxVal(abs(setup->maxSpeed), 0x10);
+        RSDK.ProcessAnimation(&self->animator);
     }
 
     self->tailAnimator.animationSpeed = abs(setup->maxSpeed) + 40;
@@ -81,13 +81,13 @@ void BSS_Player_Draw(void)
     drawPos.x = self->position.x;
     drawPos.y = self->position.y;
     drawPos.x = ScreenInfo->centerX << 16;
-    RSDK.DrawSprite(&self->playerAnimator, &drawPos, true);
+    RSDK.DrawSprite(&self->animator, &drawPos, true);
 
     uint8 charID = globals->playerID & 0xFF;
-    if (charID == ID_TAILS && self->playerAnimator.animationID == 1)
+    if (charID == ID_TAILS && self->animator.animationID == 1)
         RSDK.DrawSprite(&self->tailAnimator, &drawPos, true);
 #if RETRO_USE_PLUS
-    else if (charID == ID_RAY && self->playerAnimator.animationID == 1)
+    else if (charID == ID_RAY && self->animator.animationID == 1)
         RSDK.DrawSprite(&self->tailAnimator, &drawPos, true);
 #endif
 }
@@ -126,7 +126,7 @@ void BSS_Player_Create(void *data)
             self->controllerID = CONT_P1;
             self->sideKick     = false;
         }
-        RSDK.SetSpriteAnimation(self->aniFrames, 0, &self->playerAnimator, true, 0);
+        RSDK.SetSpriteAnimation(self->aniFrames, 0, &self->animator, true, 0);
     }
 }
 

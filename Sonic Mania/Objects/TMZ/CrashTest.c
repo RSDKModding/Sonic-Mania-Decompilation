@@ -207,7 +207,7 @@ void CrashTest_CheckPlayerRide(void)
                 self->activePlayers |= 1 << playerID;
                 player->groundVel = 0;
                 RSDK.PlaySfx(Player->sfxGrab, false, 255);
-                RSDK.SetSpriteAnimation(player->aniFrames, ANI_HURT, &player->playerAnimator, false, 4);
+                RSDK.SetSpriteAnimation(player->aniFrames, ANI_HURT, &player->animator, false, 4);
                 player->nextGroundState = StateMachine_None;
                 player->nextAirState    = StateMachine_None;
                 player->state           = Player_State_None;

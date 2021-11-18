@@ -179,7 +179,7 @@ bool32 LRZ3Outro_CutsceneState_Unknown2(EntityCutsceneSeq *host)
 {
     if (host->timer > 60) {
         int frame = 23 - minVal((host->timer - 60) >> 2, 6);
-        foreach_active(Player, player) { RSDK.SetSpriteAnimation(player->aniFrames, ANI_TWISTER, &player->playerAnimator, true, frame); }
+        foreach_active(Player, player) { RSDK.SetSpriteAnimation(player->aniFrames, ANI_TWISTER, &player->animator, true, frame); }
     }
 
     if (host->timer > 120)

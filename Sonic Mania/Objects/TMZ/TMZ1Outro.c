@@ -116,7 +116,7 @@ bool32 TMZ1Outro_Cutscene1_State3(EntityCutsceneSeq *host)
 
             player->jumpPress = false;
             player->jumpHold  = true;
-            if (player->playerAnimator.animationID == ANI_PUSH)
+            if (player->animator.animationID == ANI_PUSH)
                 player->jumpPress = true;
             if (!player->onGround || player->velocity.x)
                 flag = false;

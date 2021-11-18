@@ -16,11 +16,11 @@ void Propeller_Update(void)
     {
         int32 playerID = RSDK.GetEntityID(player);
         bool32 flag    = 0;
-        int32 anim     = player->playerAnimator.animationID;
+        int32 anim     = player->animator.animationID;
         if (anim != ANI_SHAFTSWING && anim != ANI_HURT && self->fanEnabled
             && RSDK.CheckObjectCollisionTouchBox(self, &self->hitbox2, player, &self->playerHitbox)) {
             flag = true;
-            RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->playerAnimator, false, 0);
+            RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->animator, false, 0);
             player->state      = Player_State_Air;
             player->onGround   = false;
             player->velocity.y = 0;

@@ -58,7 +58,7 @@ void SpikeLog_State_Main(void)
             if (Player_CheckCollisionTouch(player, self, &SpikeLog->hitbox)) {
 #if RETRO_USE_PLUS
                 if (player->characterID == ID_MIGHTY) {
-                    int32 anim = player->playerAnimator.animationID;
+                    int32 anim = player->animator.animationID;
                     if (anim == ANI_JUMP || anim == ANI_SPINDASH || anim == ANI_DROPDASH) {
                         if (!player->invincibleTimer && player->blinkTimer <= 0) {
                             if (abs(player->velocity.x) < 0x10000 || !player->groundedStore) {
@@ -66,7 +66,7 @@ void SpikeLog_State_Main(void)
                                 player->onGround         = 0;
                                 player->jumpAbility      = 0;
                                 player->jumpAbilityTimer = 0;
-                                RSDK.SetSpriteAnimation(player->aniFrames, ANI_FLY, &player->playerAnimator, 0, 0);
+                                RSDK.SetSpriteAnimation(player->aniFrames, ANI_FLY, &player->animator, 0, 0);
                                 RSDK.PlaySfx(Player->sfxMightyUnspin, 0, 255);
                             }
                             if (!player->uncurlTimer) {
@@ -75,7 +75,7 @@ void SpikeLog_State_Main(void)
                             }
                         }
                     }
-                    else if (player->playerAnimator.animationID != ANI_FLY)
+                    else if (player->animator.animationID != ANI_FLY)
                         Player_CheckHit(player, self);
                 }
                 else {

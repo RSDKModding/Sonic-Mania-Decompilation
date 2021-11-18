@@ -70,7 +70,7 @@ void TVPole_State_CheckGrab(void)
             if (Player_CheckCollisionTouch(player, self, &self->hitbox) && player->velocity.y <= 0) {
                 self->activePlayers |= 1 << playerID;
                 RSDK.PlaySfx(Player->sfxGrab, false, 255);
-                RSDK.SetSpriteAnimation(player->aniFrames, ANI_CLING, &player->playerAnimator, true, 0);
+                RSDK.SetSpriteAnimation(player->aniFrames, ANI_CLING, &player->animator, true, 0);
                 player->direction ^= FLIP_X;
                 if (player->direction == FLIP_NONE)
                     player->rotation = 0x180;
@@ -103,7 +103,7 @@ void TVPole_State_CheckGrab(void)
                 self->playerTimers[playerID] = 60;
                 player->onGround               = false;
                 player->velocity.y             = -0x30000;
-                RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->playerAnimator, true, 0);
+                RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, true, 0);
                 player->state = Player_State_Air;
             }
         }
@@ -121,7 +121,7 @@ void TVPole_State_ForceRelease(void)
         if ((1 << playerID) & self->activePlayers) {
             player->onGround   = false;
             player->velocity.y = -0x30000;
-            RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->playerAnimator, true, 0);
+            RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, true, 0);
             player->state = Player_State_Air;
         }
     }

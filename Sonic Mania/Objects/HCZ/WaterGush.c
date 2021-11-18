@@ -19,7 +19,7 @@ void WaterGush_Update(void)
                     self->flag = true;
                 RSDK.PlaySfx(WaterGush->sfxGush, false, 255);
                 self->activePlayers |= 1 << playerID;
-                RSDK.SetSpriteAnimation(player->aniFrames, ANI_HURT, &player->playerAnimator, true, 6);
+                RSDK.SetSpriteAnimation(player->aniFrames, ANI_HURT, &player->animator, true, 6);
                 player->nextGroundState = StateMachine_None;
                 player->nextAirState    = StateMachine_None;
                 player->velocity.x      = 0;

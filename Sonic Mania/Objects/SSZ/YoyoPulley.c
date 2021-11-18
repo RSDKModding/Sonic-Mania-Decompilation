@@ -22,7 +22,7 @@ void YoyoPulley_Update(void)
 
         if (((1 << playerID) & self->activePlayers) || self->playerTimers[playerID]) {
             if (player->state == Player_State_None) {
-                RSDK.GetHitbox(&player->playerAnimator, 0);
+                RSDK.GetHitbox(&player->animator, 0);
                 player->velocity.x = 0;
                 player->velocity.y = 0;
                 player->groundVel  = 0;
@@ -40,8 +40,8 @@ void YoyoPulley_Update(void)
                     self->activePlayers &= ~(1 << playerID);
                     self->playerTimers[playerID] = 30;
                     player->tileCollisions         = true;
-                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->playerAnimator, false, 0);
-                    player->playerAnimator.animationSpeed = 48;
+                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
+                    player->animator.animationSpeed = 48;
                     player->onGround                      = false;
                     player->state                         = Player_State_Air;
                 }
@@ -52,7 +52,7 @@ void YoyoPulley_Update(void)
             }
         }
         else if (player->state != Player_State_None && player->down == false && player->velocity.y >= 0) {
-            Hitbox *playerHitbox = RSDK.GetHitbox(&player->playerAnimator, 0);
+            Hitbox *playerHitbox = RSDK.GetHitbox(&player->animator, 0);
 
             Hitbox hitbox;
             hitbox.top    = playerHitbox->top;
@@ -74,7 +74,7 @@ void YoyoPulley_Update(void)
                 player->position.x += 0xE0000 * (2 * (self->direction == FLIP_NONE) - 1);
                 player->position.y += 0xC0000;
                 player->tileCollisions = false;
-                RSDK.SetSpriteAnimation(player->aniFrames, ANI_PULLEYHOLD, &player->playerAnimator, true, 0);
+                RSDK.SetSpriteAnimation(player->aniFrames, ANI_PULLEYHOLD, &player->animator, true, 0);
                 player->state = Player_State_None;
                 RSDK.PlaySfx(Player->sfxGrab, false, 255);
             }

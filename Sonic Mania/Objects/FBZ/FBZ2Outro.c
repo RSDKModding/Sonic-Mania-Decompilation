@@ -65,7 +65,7 @@ bool32 FBZ2Outro_CutsceneState_Unknown2(EntityCutsceneSeq *host)
     foreach_active(Player, player)
     {
         player->jumpPress = false;
-        if (player->playerAnimator.animationID == ANI_PUSH) {
+        if (player->animator.animationID == ANI_PUSH) {
             player->jumpPress = true;
             player->jumpHold  = true;
         }

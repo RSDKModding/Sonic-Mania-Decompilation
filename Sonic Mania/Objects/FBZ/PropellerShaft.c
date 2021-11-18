@@ -32,7 +32,7 @@ void PropellerShaft_Update(void)
                     else
                         player->velocity.x = 0x100000;
                     player->velocity.y = -0x18000;
-                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->playerAnimator, false, 0);
+                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
                     player->drawOrder = Zone->playerDrawLow;
                     player->state     = Player_State_Air;
                 }
@@ -54,7 +54,7 @@ void PropellerShaft_Update(void)
                         player->position.y = self->position.y - (self->size << 16) + 0x90000;
                     if (player->position.y > ((self->size - 9) << 16) + self->position.y)
                         player->position.y = ((self->size - 9) << 16) + self->position.y;
-                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_SHAFTSWING, &player->playerAnimator, false, 0);
+                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_SHAFTSWING, &player->animator, false, 0);
                     player->rotation        = 0;
                     player->direction       = FLIP_NONE;
                     player->onGround        = false;
@@ -74,7 +74,7 @@ void PropellerShaft_LateUpdate(void)
     foreach_active(Player, player)
     {
         if (((1 << RSDK.GetEntityID(player)) & self->activePlayers)) {
-            if (player->playerAnimator.frameID > 5)
+            if (player->animator.frameID > 5)
                 player->drawOrder = Zone->playerDrawLow - 3;
             else
                 player->drawOrder = Zone->playerDrawLow;

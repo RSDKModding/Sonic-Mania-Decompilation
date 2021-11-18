@@ -332,13 +332,13 @@ void Ice_FreezePlayer(void *p)
         ice->isPermanent = true;
         player->velocity.x >>= 1;
         player->groundVel >>= 1;
-        player->playerAnimator.animationSpeed = 0;
+        player->animator.animationSpeed = 0;
         player->visible                       = false;
         player->nextAirState                  = StateMachine_None;
         player->nextGroundState               = StateMachine_None;
         player->state                         = Ice_State_FrozenPlayer;
         player->velocity.y                    = 0;
-        RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->playerAnimator, false, 0);
+        RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
         player->abilityPtrs[0] = self;
         player->abilityPtrs[1] = ice;
         if (!self->collisionMode) {
@@ -431,7 +431,7 @@ void Ice_State_FrozenPlayer(void)
             self->state      = Player_State_Air;
             self->velocity.y = -self->jumpStrength >> 1;
             self->onGround   = false;
-            RSDK.SetSpriteAnimation(self->aniFrames, ANI_JUMP, &self->playerAnimator, true, 0);
+            RSDK.SetSpriteAnimation(self->aniFrames, ANI_JUMP, &self->animator, true, 0);
             Ice_ShatterGenerator(24, 20, 64, 0, 0, 2);
             RSDK.PlaySfx(Ice->sfxWindowShatter, 0, 255);
             Ice->playerTimers[RSDK.GetEntityID(self)] = 30;
@@ -454,7 +454,7 @@ void Ice_State_FrozenPlayer(void)
                     self->state      = Player_State_Air;
                     self->velocity.y = -self->jumpStrength >> 1;
                     self->onGround   = false;
-                    RSDK.SetSpriteAnimation(self->aniFrames, ANI_JUMP, &self->playerAnimator, true, 0);
+                    RSDK.SetSpriteAnimation(self->aniFrames, ANI_JUMP, &self->animator, true, 0);
                     Ice_ShatterGenerator(24, 20, 64, 0, 0, 2);
                     RSDK.PlaySfx(Ice->sfxWindowShatter, 0, 255);
                     Ice->playerTimers[RSDK.GetEntityID(self)] = 30;
@@ -550,7 +550,7 @@ void Ice_Unknown8(Entity *p)
         player->outerbox = NULL;
         player->innerbox = NULL;
         player->state    = Player_State_Hit;
-        RSDK.SetSpriteAnimation(player->aniFrames, ANI_HURT, &player->playerAnimator, true, 0);
+        RSDK.SetSpriteAnimation(player->aniFrames, ANI_HURT, &player->animator, true, 0);
         player->velocity.y = -0x38000;
         player->onGround   = false;
         if (player->gravityStrength == 0x1000) {
@@ -835,7 +835,7 @@ void Ice_State_Pillar(void)
                         Player_CheckHit(player, self);
                     }
                     else {
-                        if ((player->playerAnimator.animationID == ANI_JUMP || player->state == Player_State_DropDash) && !player->sidekick) {
+                        if ((player->animator.animationID == ANI_JUMP || player->state == Player_State_DropDash) && !player->sidekick) {
                             Ice_Shatter(self, 0, 0);
                             player->velocity.y = -0x30000;
                             player->onGround   = false;
@@ -1105,7 +1105,7 @@ void Ice_State_PlayerBlock(void)
         if (player != (EntityPlayer *)self->playerPtr && player->stateInput != Player_ProcessP2Input_AI && player->state != Ice_State_FrozenPlayer
             && player->velocity.y > 0 && !player->onGround && player->position.y < self->position.y - 0x200000
             && Player_CheckBadnikTouch(player, self, &self->hitbox1)) {
-            if (player->playerAnimator.animationID == ANI_JUMP || player->playerAnimator.animationID == ANI_DROPDASH) {
+            if (player->animator.animationID == ANI_JUMP || player->animator.animationID == ANI_DROPDASH) {
                 Ice_Unknown8((Entity *)self->playerPtr);
                 player->velocity.y = -0x30000;
                 player->onGround   = false;

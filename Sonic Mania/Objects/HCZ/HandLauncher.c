@@ -95,7 +95,7 @@ void HandLauncher_CheckPlayerCollisions(void)
                         }
                         if (!HandLauncher->dunkeyMode)
                             RSDK.PlaySfx(Player->sfxGrab, 0, 255);
-                        RSDK.SetSpriteAnimation(player->aniFrames, ANI_RUN, &player->playerAnimator, false, 0);
+                        RSDK.SetSpriteAnimation(player->aniFrames, ANI_RUN, &player->animator, false, 0);
                         player->nextGroundState = StateMachine_None;
                         player->nextAirState    = StateMachine_None;
                         player->rotation        = 0;

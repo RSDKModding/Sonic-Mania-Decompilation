@@ -37,7 +37,7 @@ void BarStool_Update(void)
             flag = flag && player->state != Player_State_MightyHammerDrop;
 #endif
             if (flag) {
-                RSDK.SetSpriteAnimation(player->aniFrames, ANI_TURNTABLE, &player->playerAnimator, false, 0);
+                RSDK.SetSpriteAnimation(player->aniFrames, ANI_TURNTABLE, &player->animator, false, 0);
                 if (player->state != Player_State_None) {
                     if (velY >= 0)
                         self->spinSpeed += player->velocity.x;
@@ -57,10 +57,10 @@ void BarStool_Update(void)
 
                 int frame = (ang / 21) % 12;
                 if (self->spinSpeed <= 0)
-                    player->playerAnimator.frameID = 11 - frame;
+                    player->animator.frameID = 11 - frame;
                 else
-                    player->playerAnimator.frameID = frame;
-                player->playerAnimator.animationSpeed = 0;
+                    player->animator.frameID = frame;
+                player->animator.animationSpeed = 0;
                 player->position.x += self->position.x;
 
                 if (self->playerVal2[playerID] <= 0)
@@ -98,7 +98,7 @@ void BarStool_Update(void)
                         player->onGround   = false;
                         player->velocity.y = -0x20000;
                         player->state      = Player_State_Air;
-                        RSDK.SetSpriteAnimation(player->aniFrames, ANI_AIRWALK, &player->playerAnimator, false, 0);
+                        RSDK.SetSpriteAnimation(player->aniFrames, ANI_AIRWALK, &player->animator, false, 0);
                         RSDK.PlaySfx(BarStool->sfxHop, false, 0xFF);
                     }
                 }
@@ -115,7 +115,7 @@ void BarStool_Update(void)
                     player->onGround   = false;
                     player->velocity.y = -0x40000;
                     player->state      = Player_State_Air;
-                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->playerAnimator, false, 0);
+                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
                 }
 
                 self->activePlayers |= 1 << playerID;

@@ -449,7 +449,7 @@ void HeavyKing_State_HandleCutsceneSetup(void)
         player1->velocity.x = 0;
         player1->right      = false;
         player1->state      = Player_State_None;
-        RSDK.SetSpriteAnimation(player1->aniFrames, ANI_LOOKUP, &player1->playerAnimator, false, 0);
+        RSDK.SetSpriteAnimation(player1->aniFrames, ANI_LOOKUP, &player1->animator, false, 0);
 
         EntityPlayer *player2 = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
         if (player2->objectID == Player->objectID) {
@@ -475,8 +475,8 @@ void HeavyKing_State_CutsceneUnknown1(void)
 
     ++self->timer;
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
-    if (player1->playerAnimator.frameID == 5)
-        player1->playerAnimator.animationSpeed = 0;
+    if (player1->animator.frameID == 5)
+        player1->animator.animationSpeed = 0;
     if (self->timer == 30) {
         self->timer = 0;
         foreach_all(HPZEmerald, emerald)
@@ -506,7 +506,7 @@ void HeavyKing_State_CutsceneUnknown2(void)
 #if RETRO_USE_PLUS
         if (player1->characterID == ID_KNUCKLES)
 #endif
-            RSDK.SetSpriteAnimation(player1->aniFrames, ANI_IDLE, &player1->playerAnimator, false, 0);
+            RSDK.SetSpriteAnimation(player1->aniFrames, ANI_IDLE, &player1->animator, false, 0);
     }
     HeavyKing_HandleClawMovement();
 }
@@ -520,7 +520,7 @@ void HeavyKing_State_CutsceneUnknown3(void)
 #if RETRO_USE_PLUS
         if (player1->characterID == ID_KNUCKLES) {
 #endif
-            RSDK.SetSpriteAnimation(HeavyKing->cutsceneFrames, 0, &player1->playerAnimator, false, 0);
+            RSDK.SetSpriteAnimation(HeavyKing->cutsceneFrames, 0, &player1->animator, false, 0);
             CREATE_ENTITY(ThoughtBubble, NULL, player1->position.x - 0x300000, player1->position.y - 0x500000);
 #if RETRO_USE_PLUS
         }
@@ -547,7 +547,7 @@ void HeavyKing_State_CutsceneUnknown4(void)
 #if RETRO_USE_PLUS
         if (player1->characterID == ID_KNUCKLES)
 #endif
-            RSDK.SetSpriteAnimation(HeavyKing->cutsceneFrames, 1, &player1->playerAnimator, false, 0);
+            RSDK.SetSpriteAnimation(HeavyKing->cutsceneFrames, 1, &player1->animator, false, 0);
         self->state = HeavyKing_State_CutsceneUnknown5;
     }
 }
@@ -562,8 +562,8 @@ void HeavyKing_State_CutsceneUnknown5(void)
 #if RETRO_USE_PLUS
     if (player1->characterID == ID_KNUCKLES) {
 #endif
-        if (player1->playerAnimator.frameID == player1->playerAnimator.frameCount - 1) {
-            RSDK.SetSpriteAnimation(HeavyKing->cutsceneFrames, 2, &player1->playerAnimator, false, 0);
+        if (player1->animator.frameID == player1->animator.frameCount - 1) {
+            RSDK.SetSpriteAnimation(HeavyKing->cutsceneFrames, 2, &player1->animator, false, 0);
             self->state = HeavyKing_State_CutsceneUnknown6;
         }
 #if RETRO_USE_PLUS
@@ -589,11 +589,11 @@ void HeavyKing_State_CutsceneUnknown6(void)
 #if RETRO_USE_PLUS
             if (player1->characterID == ID_KNUCKLES)
 #endif
-                RSDK.SetSpriteAnimation(HeavyKing->cutsceneFrames, 4, &player1->playerAnimator, false, 0);
+                RSDK.SetSpriteAnimation(HeavyKing->cutsceneFrames, 4, &player1->animator, false, 0);
             break;
         case 90:
             RSDK.PlaySfx(Player->sfxJump, false, 255);
-            RSDK.SetSpriteAnimation(player1->aniFrames, ANI_JUMP, &player1->playerAnimator, false, 0);
+            RSDK.SetSpriteAnimation(player1->aniFrames, ANI_JUMP, &player1->animator, false, 0);
             player1->velocity.x  = 0x2C000;
             player1->velocity.y  = -0x50000;
             player1->jumpAbility = 0;
@@ -602,7 +602,7 @@ void HeavyKing_State_CutsceneUnknown6(void)
             break;
         case 124:
             RSDK.PlaySfx(Player->sfxJump, false, 255);
-            RSDK.SetSpriteAnimation(player1->aniFrames, ANI_JUMP, &player1->playerAnimator, false, 0);
+            RSDK.SetSpriteAnimation(player1->aniFrames, ANI_JUMP, &player1->animator, false, 0);
             player1->velocity.x  = -0x1C000;
             player1->velocity.y  = -0x66000;
             player1->jumpAbility = 0;
@@ -615,10 +615,10 @@ void HeavyKing_State_CutsceneUnknown6(void)
 #if RETRO_USE_PLUS
                 if (player1->characterID == ID_KNUCKLES)
 #endif
-                    RSDK.SetSpriteAnimation(HeavyKing->cutsceneFrames, 3, &player1->playerAnimator, false, 0);
+                    RSDK.SetSpriteAnimation(HeavyKing->cutsceneFrames, 3, &player1->animator, false, 0);
 #if RETRO_USE_PLUS
                 else
-                    RSDK.SetSpriteAnimation(player1->aniFrames, ANI_IDLE, &player1->playerAnimator, false, 0);
+                    RSDK.SetSpriteAnimation(player1->aniFrames, ANI_IDLE, &player1->animator, false, 0);
 #endif
                 player1->position.y -= player1->cameraOffset;
                 player1->state           = Player_State_None;

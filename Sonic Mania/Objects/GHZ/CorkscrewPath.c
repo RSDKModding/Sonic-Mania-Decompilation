@@ -10,7 +10,7 @@ void CorkscrewPath_Update(void)
         int32 playerID = RSDK.GetEntityID(player);
         if (abs(self->position.x - player->position.x) >> 16 > self->periodShifted) {
             self->activePlayers &= ~playerID;
-            if (player->playerAnimator.animationID != ANI_SPRINGCS)
+            if (player->animator.animationID != ANI_SPRINGCS)
                 player->direction &= ~FLIP_Y;
         }
         else {
@@ -26,14 +26,14 @@ void CorkscrewPath_Update(void)
                         player->position.y = arc + self->position.y;
                         player->velocity.y = 0;
                         player->onGround   = true;
-                        if (player->playerAnimator.animationID != ANI_JUMP) {
+                        if (player->animator.animationID != ANI_JUMP) {
                             if (player->groundVel < 0) {
                                 player->direction |= FLIP_Y;
-                                RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGCS, &player->playerAnimator, true, CorkscrewPath->frameTable[frame]);
+                                RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGCS, &player->animator, true, CorkscrewPath->frameTable[frame]);
                             }
                             else {
                                 player->direction &= ~FLIP_Y;
-                                RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGCS, &player->playerAnimator, true, frame);
+                                RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGCS, &player->animator, true, frame);
                             }
                         }
                     }
@@ -47,14 +47,14 @@ void CorkscrewPath_Update(void)
                 player->position.y = arc + self->position.y;
                 player->velocity.y = 0;
                 player->onGround   = true;
-                if (player->playerAnimator.animationID != ANI_JUMP) {
+                if (player->animator.animationID != ANI_JUMP) {
                     if (player->groundVel < 0) {
                         player->direction |= FLIP_Y;
-                        RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGCS, &player->playerAnimator, true, CorkscrewPath->frameTable[frame]);
+                        RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGCS, &player->animator, true, CorkscrewPath->frameTable[frame]);
                     }
                     else {
                         player->direction &= ~FLIP_Y;
-                        RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGCS, &player->playerAnimator, true, frame);
+                        RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGCS, &player->animator, true, frame);
                     }
                 }
             }

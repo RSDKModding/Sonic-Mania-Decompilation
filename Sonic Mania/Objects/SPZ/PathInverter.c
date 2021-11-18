@@ -92,7 +92,7 @@ void PathInverter_HandlePathSwitch(void *p)
     int32 val    = self->size.x + ((self->position.x - player->position.x) >> 16);
     int32 angle2 = 4 * (3 * val) / self->size2.x;
     int32 angle  = (val << 8) / self->size2.x;
-    if (player->playerAnimator.animationID != ANI_JUMP || !player->groundedStore) {
+    if (player->animator.animationID != ANI_JUMP || !player->groundedStore) {
         int32 frame = 12 - angle2;
         if (player->collisionMode != CMODE_ROOF * (self->playerFlipFlags[player->playerID] >= 0))
             frame = angle2;
@@ -104,7 +104,7 @@ void PathInverter_HandlePathSwitch(void *p)
             player->direction &= ~FLIP_Y;
         else
             player->direction |= FLIP_Y;
-        RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGCS, &player->playerAnimator, true, frame);
+        RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGCS, &player->animator, true, frame);
     }
     player->onGround   = true;
     player->position.y = self->playerFlipFlags[player->playerID] * RSDK.Cos512(angle) + self->position.y;
@@ -129,14 +129,14 @@ void PathInverter_State_Horizontal(void)
                     player->collisionMode = (player->collisionMode - 2) & 3;
                     player->angle = (player->angle + 0x80) & 0xFF;
                     player->controlLock = 30;
-                    if (player->playerAnimator.animationID == ANI_JUMP) {
+                    if (player->animator.animationID == ANI_JUMP) {
                         player->state = Player_State_Roll;
                     }
                     else {
                         player->direction &= FLIP_X;
                         player->direction ^= FLIP_X;
                         player->state = Player_State_Ground;
-                        RSDK.SetSpriteAnimation(player->aniFrames, ANI_JOG, &player->playerAnimator, false, 0);
+                        RSDK.SetSpriteAnimation(player->aniFrames, ANI_JOG, &player->animator, false, 0);
                         player->rotation = player->angle << 1;
                     }
                     player->tileCollisions = true;

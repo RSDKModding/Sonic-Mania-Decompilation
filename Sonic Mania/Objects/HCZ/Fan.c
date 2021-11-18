@@ -285,13 +285,13 @@ void Fan_HandlePlayerInteractions_Top(void)
     foreach_active(Player, player)
     {
         if (player->state != Player_State_None) {
-            int32 anim = player->playerAnimator.animationID;
+            int32 anim = player->animator.animationID;
             if (anim != ANI_HURT && anim != ANI_DIE && anim != ANI_DROWN
                 && RSDK.CheckObjectCollisionTouchBox(self, &Fan->hitbox1, player, &Fan->playerHitbox)) {
                 if (Water && player->position.y > Water->waterLevel)
-                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->playerAnimator, false, 1);
+                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->animator, false, 1);
                 else
-                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGCS, &player->playerAnimator, false, 1);
+                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGCS, &player->animator, false, 1);
 
                 player->state          = Player_State_Air;
                 player->tileCollisions = true;
@@ -343,7 +343,7 @@ void Fan_HandlePlayerInteractions_Bottom(void)
     foreach_active(Player, player)
     {
         if (player->state != Player_State_None) {
-            int32 anim = player->playerAnimator.animationID;
+            int32 anim = player->animator.animationID;
             if (anim != ANI_HURT && anim != ANI_DIE && anim != ANI_DROWN
                 && RSDK.CheckObjectCollisionTouchBox(self, &Fan->hitbox2, player, &Fan->playerHitbox)) {
                 int32 vel = player->velocity.y;
@@ -365,7 +365,7 @@ void Fan_HandlePlayerInteractions_Left(void)
     foreach_active(Player, player)
     {
         if (player->state != Player_State_None) {
-            int32 anim = player->playerAnimator.animationID;
+            int32 anim = player->animator.animationID;
             if (anim != ANI_HURT && anim != ANI_DIE && anim != ANI_DROWN && player->collisionMode != CMODE_LWALL
                 && RSDK.CheckObjectCollisionTouchBox(self, &Fan->hitbox3, player, &Fan->playerHitbox)) {
                 player->position.x += (self->position.x - player->position.x - 0xA00000) >> 4;
@@ -384,7 +384,7 @@ void Fan_HandlePlayerInteractions_Right(void)
     foreach_active(Player, player)
     {
         if (player->state != Player_State_None) {
-            int32 anim = player->playerAnimator.animationID;
+            int32 anim = player->animator.animationID;
             if (anim != ANI_HURT && anim != ANI_DIE && anim != ANI_DROWN) {
                 if (player->collisionMode != CMODE_LWALL && player->collisionMode != CMODE_RWALL
                     && RSDK.CheckObjectCollisionTouchBox(self, &Fan->hitbox3, player, &Fan->playerHitbox)) {

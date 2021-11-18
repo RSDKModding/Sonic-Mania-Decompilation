@@ -116,8 +116,8 @@ void Grabber_CheckPlayerCollisions(void)
                     player->nextGroundState = StateMachine_None;
                     player->onGround        = false;
                     player->direction       = self->direction;
-                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->playerAnimator, true, 0);
-                    player->playerAnimator.animationSpeed = 0;
+                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->animator, true, 0);
+                    player->animator.animationSpeed = 0;
                     player->direction                     = self->direction ^ 1;
                 }
             }
@@ -269,7 +269,7 @@ void Grabber_State_Unknown7(void)
         self->position.y -= 0x20000;
         EntityPlayer *player = (EntityPlayer *)self->grabbedPlayer;
         if (player) {
-            player->playerAnimator.animationSpeed = 0;
+            player->animator.animationSpeed = 0;
             player->position.x                    = self->position.x;
             player->position.y                    = self->position.y;
             player->position.y += 0x100000;
@@ -298,7 +298,7 @@ void Grabber_State_Struggle(void)
     RSDK_THIS(Grabber);
     EntityPlayer *player = (EntityPlayer *)self->grabbedPlayer;
     if (player) {
-        player->playerAnimator.animationSpeed = 0;
+        player->animator.animationSpeed = 0;
         if (self->struggleFlags) {
             player->velocity.x = 0;
             player->velocity.y = 0;

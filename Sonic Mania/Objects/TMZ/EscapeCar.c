@@ -117,8 +117,8 @@ void EscapeCar_StateMania_Unknown1(void)
                 player->position.x -= 0xC0000;
                 player->position.y -= 0x80000;
             }
-            RSDK.SetSpriteAnimation(player->aniFrames, ANI_RIDE, &player->playerAnimator, false, 0);
-            player->playerAnimator.animationSpeed = 0;
+            RSDK.SetSpriteAnimation(player->aniFrames, ANI_RIDE, &player->animator, false, 0);
+            player->animator.animationSpeed = 0;
         }
         else {
             allAboard = false;
@@ -149,7 +149,7 @@ void EscapeCar_StateMania_CheckPlayerCollisions(void)
         RSDK.SetSpriteAnimation(EscapeCar->aniFrames, 1, &self->animator3, true, 0);
 
     if (self->timer == 160) {
-        foreach_active(Player, player) { RSDK.SetSpriteAnimation(player->aniFrames, ANI_RIDE, &player->playerAnimator, true, 0); }
+        foreach_active(Player, player) { RSDK.SetSpriteAnimation(player->aniFrames, ANI_RIDE, &player->animator, true, 0); }
         self->timer      = 0;
         self->velocity.x = 0x10000;
         self->state      = EscapeCar_StateMania_Ride;

@@ -13,7 +13,7 @@ void Bungee_Update(void)
             self->hasAttatchedPlayer = false;
         }
         if (self->attatchedPlayer) {
-            RSDK.GetHitbox(&player->playerAnimator, 0);
+            RSDK.GetHitbox(&player->animator, 0);
             player->velocity.x = 0;
             player->velocity.y = 0;
             player->groundVel  = 0;
@@ -32,9 +32,9 @@ void Bungee_Update(void)
                 if (self->attatchedPlayer) {
                     player->tileCollisions = true;
                     player->velocity       = self->velocity;
-                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGTWIRL, &player->playerAnimator, true, 0);
+                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGTWIRL, &player->animator, true, 0);
                     player->rotation                      = 0;
-                    player->playerAnimator.animationSpeed = 48;
+                    player->animator.animationSpeed = 48;
                     player->onGround                      = false;
                     player->state                         = Player_State_Air;
                 }
@@ -83,7 +83,7 @@ void Bungee_Update(void)
                                 player->nextGroundState = 0;
                                 player->nextAirState    = 0;
                                 player->tileCollisions  = false;
-                                RSDK.SetSpriteAnimation(player->aniFrames, ANI_BUNGEE, &player->playerAnimator, true, 0);
+                                RSDK.SetSpriteAnimation(player->aniFrames, ANI_BUNGEE, &player->animator, true, 0);
                                 player->state = Player_State_None;
                                 RSDK.PlaySfx(Player->sfxGrab, false, 255);
                                 self->playerDeathBoundary[player->playerID] = Zone->deathBoundary[player->playerID];

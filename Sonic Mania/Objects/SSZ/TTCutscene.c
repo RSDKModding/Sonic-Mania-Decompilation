@@ -80,7 +80,7 @@ bool32 TTCutscene_CutsceneState_Setup(EntityCutsceneSeq *host)
         player1->state      = Player_State_None;
         player1->position.x = player1->position.x;
         player1->position.y = (ScreenInfo->position.y + 32 + ScreenInfo->height) << 16;
-        RSDK.SetSpriteAnimation(player1->aniFrames, ANI_SPRINGTWIRL, &player1->playerAnimator, false, 0);
+        RSDK.SetSpriteAnimation(player1->aniFrames, ANI_SPRINGTWIRL, &player1->animator, false, 0);
 
         if (player2->objectID == Player->objectID) {
             player1->position.x += 0x100000;
@@ -88,7 +88,7 @@ bool32 TTCutscene_CutsceneState_Setup(EntityCutsceneSeq *host)
             player2->position.x = player1->position.x - 0x200000;
             player2->position.y = player1->position.y;
             player2->state      = Player_State_None;
-            RSDK.SetSpriteAnimation(player2->aniFrames, ANI_SPRINGTWIRL, &player2->playerAnimator, false, 0);
+            RSDK.SetSpriteAnimation(player2->aniFrames, ANI_SPRINGTWIRL, &player2->animator, false, 0);
         }
     }
     return host->timer == 64;

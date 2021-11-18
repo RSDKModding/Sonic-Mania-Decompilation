@@ -43,7 +43,7 @@ void PSZ1Intro_HandleGliderJump(EntityHangGlider *glider)
         player->velocity.y = -0x20000;
         player->active     = ACTIVE_NORMAL;
         player->stateInput = StateMachine_None;
-        RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->playerAnimator, true, 0);
+        RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, true, 0);
         glider->playerPtr = NULL;
     }
 }

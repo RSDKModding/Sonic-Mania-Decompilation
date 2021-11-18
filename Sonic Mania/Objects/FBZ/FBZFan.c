@@ -17,10 +17,10 @@ void FBZFan_Update(void)
         bool32 flag  = false;
         Player_CheckCollisionBox(player, self, &FBZFan->solidHitbox);
 
-        if (player->state != Player_State_None && Player_CheckValidState(player) && player->playerAnimator.animationID != ANI_HURT
+        if (player->state != Player_State_None && Player_CheckValidState(player) && player->animator.animationID != ANI_HURT
             && RSDK.CheckObjectCollisionTouchBox(self, &FBZFan->fanHitbox, player, &FBZFan->playerHitbox)) {
             flag = true;
-            RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->playerAnimator, false, 0);
+            RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->animator, false, 0);
             player->state    = Player_State_Air;
             player->onGround = false;
             int32 vel          = (self->position.y + (FBZFan->fanHitbox.top << 16) - player->position.y) >> 4;

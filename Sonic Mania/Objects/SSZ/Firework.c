@@ -119,7 +119,7 @@ void Firework_CheckPlayerCollisions(void)
             if (player->state != Player_State_None && !self->playerTimers[playerID]
                 && Player_CheckCollisionTouch(player, self, &Firework->hitbox1)) {
                 player->tileCollisions = false;
-                RSDK.SetSpriteAnimation(player->aniFrames, ANI_PULLEYHOLD, &player->playerAnimator, false, 0);
+                RSDK.SetSpriteAnimation(player->aniFrames, ANI_PULLEYHOLD, &player->animator, false, 0);
                 player->state = Player_State_None;
                 self->activePlayers |= 1 << playerID;
                 RSDK.PlaySfx(Player->sfxGrab, false, 255);
@@ -200,7 +200,7 @@ void Firework_HandlePlayerRemoval(void *p, bool32 hurt)
             player->sidekick = isSidekick;
         }
         else {
-            RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->playerAnimator, false, 0);
+            RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
         }
         self->activePlayers &= ~(1 << playerID);
     }
@@ -222,7 +222,7 @@ void Firework_HandlePlayerJump(void)
                 player->velocity.x             = self->velocity.x;
                 player->velocity.y             = self->velocity.y;
                 self->playerTimers[playerID] = 30;
-                RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->playerAnimator, false, 0);
+                RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
                 self->activePlayers &= ~(1 << playerID);
             }
         }

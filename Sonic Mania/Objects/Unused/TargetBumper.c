@@ -79,7 +79,7 @@ void TargetBumper_Collide(void)
 
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionTouch(player, self, &hitbox) && player->playerAnimator.animationID != ANI_HURT) {
+        if (Player_CheckCollisionTouch(player, self, &hitbox) && player->animator.animationID != ANI_HURT) {
             self->curPos = self->startPos;
             self->state  = TargetBumper_Hit;
             self->active = ACTIVE_NORMAL;
@@ -150,13 +150,13 @@ void TargetBumper_Collide(void)
             if (player->state == Player_State_FlyCarried)
                 RSDK_GET_ENTITY(SLOT_PLAYER2, Player)->flyCarryTimer = 30;
 
-            int32 anim = player->playerAnimator.animationID;
+            int32 anim = player->animator.animationID;
             if (anim != ANI_FLY && anim != ANI_FLYLIFTTIRED && player->state != Player_State_TailsFlight) {
                 player->state = Player_State_Air;
                 if (anim != ANI_JUMP && anim != ANI_JOG && anim != ANI_RUN && anim != ANI_DASH)
-                    player->playerAnimator.animationID = ANI_WALK;
+                    player->animator.animationID = ANI_WALK;
             }
-            if (player->playerAnimator.animationID != ANI_FLY)
+            if (player->animator.animationID != ANI_FLY)
                 player->groundVel = player->velocity.x;
             player->onGround       = false;
             player->tileCollisions = true;

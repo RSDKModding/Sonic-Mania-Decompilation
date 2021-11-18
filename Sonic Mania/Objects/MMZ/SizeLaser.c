@@ -306,7 +306,7 @@ void SizeLaser_P2JumpInShrink(void)
                 break;
         }
         self->cameraOffset = 0x40000;
-        RSDK.SetSpriteAnimation(self->aniFrames, ANI_HURT, &self->playerAnimator, false, 0);
+        RSDK.SetSpriteAnimation(self->aniFrames, ANI_HURT, &self->animator, false, 0);
         self->isChibi = true;
         self->drawFX &= ~FX_SCALE;
         self->scale.x     = 0x200;
@@ -421,7 +421,7 @@ void SizeLaser_Unknown3(void)
                         player->scale.x        = 0x200;
                         player->scale.y        = 0x200;
                         player->tileCollisions = true;
-                        RSDK.SetSpriteAnimation(player->aniFrames, ANI_HURT, &player->playerAnimator, false, 0);
+                        RSDK.SetSpriteAnimation(player->aniFrames, ANI_HURT, &player->animator, false, 0);
                         player->abilityPtrs[0] = Player_State_Hit;
                         player->state          = SizeLaser_PlayerState_Grow;
                     }
@@ -466,7 +466,7 @@ void SizeLaser_Unknown3(void)
                             player->tailSpriteIndex = -1;
                             break;
                     }
-                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_HURT, &player->playerAnimator, false, 0);
+                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_HURT, &player->animator, false, 0);
                     RSDK.PlaySfx(SizeLaser->sfxGrow2, false, 255);
                     player->tileCollisions = true;
                     player->abilityPtrs[0] = Player_State_Hit;
@@ -486,7 +486,7 @@ void SizeLaser_Unknown3(void)
                 player->drawFX |= FX_SCALE;
                 player->scale.x = 0x200;
                 player->scale.y = 0x200;
-                RSDK.SetSpriteAnimation(player->aniFrames, ANI_HURT, &player->playerAnimator, false, 0);
+                RSDK.SetSpriteAnimation(player->aniFrames, ANI_HURT, &player->animator, false, 0);
                 RSDK.PlaySfx(SizeLaser->sfxShrink2, 0, 255);
                 player->tileCollisions = true;
                 player->abilityPtrs[0] = Player_State_Hit;

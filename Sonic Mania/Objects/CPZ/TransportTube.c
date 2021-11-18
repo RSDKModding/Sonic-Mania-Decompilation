@@ -132,7 +132,7 @@ void TransportTube_State_Type1(void)
                 else {
                     TransportTube_Unknown2(rx - (player->velocity.x >> 16), ry - (player->velocity.y >> 16));
                     player->velocity = self->velocity;
-                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->playerAnimator, false, 0);
+                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
                     player->drawOrder         = 1;
                     player->onGround          = false;
                     player->tileCollisions    = false;

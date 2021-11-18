@@ -14,7 +14,7 @@ void SDashWheel_Update(void)
 
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionTouch(player, self, &SDashWheel->hitbox) && player->playerAnimator.animationID == ANI_SPINDASH) {
+        if (Player_CheckCollisionTouch(player, self, &SDashWheel->hitbox) && player->animator.animationID == ANI_SPINDASH) {
             if (!self->field_74) {
                 self->field_68 ^= 1;
                 self->activated = true;
@@ -35,16 +35,16 @@ void SDashWheel_Update(void)
         hitbox.bottom = -4 - hitbox.top;
         if (Player_CheckCollisionBox(player, self, &hitbox) == C_TOP) {
             player->position.y += 0x40000;
-            if (player->playerAnimator.animationID == 15 || self->cooldown > 0) {
+            if (player->animator.animationID == 15 || self->cooldown > 0) {
                 RSDK.PlaySfx(SDashWheel->sfxBumper, false, 255);
-                if (player->playerAnimator.animationID == ANI_SPINDASH) {
+                if (player->animator.animationID == ANI_SPINDASH) {
                     self->cooldown = 60;
 
                     if (player->direction == FLIP_NONE)
                         self->rotateOffset = -32;
                     else
                         self->rotateOffset = 32;
-                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->playerAnimator, false, 0);
+                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
                 }
 
                 int32 angle = RSDK.ATan2(player->position.x - self->position.x, player->position.y - self->position.y);

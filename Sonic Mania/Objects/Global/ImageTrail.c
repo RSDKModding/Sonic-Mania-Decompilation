@@ -65,7 +65,7 @@ void ImageTrail_LateUpdate(void)
     self->currentPos.y     = player->position.y;
     self->currentRotation  = player->rotation;
     self->currentDirection = player->direction;
-    memcpy(&self->currentAnimData, &player->playerAnimator, sizeof(Animator));
+    memcpy(&self->currentAnimData, &player->animator, sizeof(Animator));
     if (player->isChibi || !(player->drawFX & FX_SCALE))
         self->currentScale = 0x200;
     else

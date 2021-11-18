@@ -91,9 +91,9 @@ void Turbine_CheckPlayerCollisions(void)
 
         if (self->playerTimers[playerID] > 0)
             self->playerTimers[playerID]--;
-        if (!((1 << playerID) & self->activePlayers) && !self->playerTimers[playerID] && player->playerAnimator.animationID != ANI_HURT
+        if (!((1 << playerID) & self->activePlayers) && !self->playerTimers[playerID] && player->animator.animationID != ANI_HURT
             && player->state != Player_State_None) {
-            if (player->playerAnimator.animationID != ANI_HURT && player->state != Player_State_None) {
+            if (player->animator.animationID != ANI_HURT && player->state != Player_State_None) {
                 if (Player_CheckCollisionTouch(player, self, &Turbine->hitbox1)) {
                     self->activePlayers |= 1 << playerID;
                     player->nextGroundState = StateMachine_None;
@@ -103,8 +103,8 @@ void Turbine_CheckPlayerCollisions(void)
                     player->groundVel       = 0;
                     player->onGround        = false;
                     player->state           = Player_State_None;
-                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_POLESWINGH, &player->playerAnimator, true, 0);
-                    player->playerAnimator.animationSpeed = 0;
+                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_POLESWINGH, &player->animator, true, 0);
+                    player->animator.animationSpeed = 0;
 
                     if (player->position.y >= self->position.y)
                         self->playerAngles[playerID] = 0x80;
@@ -129,20 +129,20 @@ void Turbine_CheckPlayerCollisions(void)
             else
                 player->drawOrder = Zone->playerDrawHigh;
 
-            player->playerAnimator.frameID = (((self->playerAngles[playerID] >> 1) / 21) + 9) % 12;
+            player->animator.frameID = (((self->playerAngles[playerID] >> 1) / 21) + 9) % 12;
 
             if (player->jumpPress) {
                 player->velocity.y = 0x600 * RSDK.Cos512(self->playerAngles[playerID]);
                 if (player->velocity.y < 0)
-                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGTWIRL, &player->playerAnimator, true, 0);
+                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGTWIRL, &player->animator, true, 0);
                 else
-                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_WALK, &player->playerAnimator, true, 0);
+                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_WALK, &player->animator, true, 0);
 
                 self->activePlayers &= ~(1 << playerID);
                 player->state                  = Player_State_Air;
                 self->playerTimers[playerID] = 30;
             }
-            else if (player->playerAnimator.animationID != ANI_POLESWINGH || player->state != Player_State_None) {
+            else if (player->animator.animationID != ANI_POLESWINGH || player->state != Player_State_None) {
                 self->activePlayers &= ~(1 << playerID);
                 player->state                  = Player_State_Air;
                 self->playerTimers[playerID] = 30;

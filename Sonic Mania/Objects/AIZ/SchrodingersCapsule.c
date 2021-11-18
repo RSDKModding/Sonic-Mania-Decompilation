@@ -224,7 +224,7 @@ void SchrodingersCapsule_Unknown4(void)
         buddy1->velocity.x      = 0x1C000;
         buddy1->velocity.y      = -0x40000;
         buddy1->direction       = FLIP_X;
-        RSDK.SetSpriteAnimation(buddy1->aniFrames, ANI_HURT, &buddy1->playerAnimator, true, 0);
+        RSDK.SetSpriteAnimation(buddy1->aniFrames, ANI_HURT, &buddy1->animator, true, 0);
 
         EntityPlayer *buddy2 = RSDK_GET_ENTITY(SLOT_PLAYER4, Player);
         buddy2->objectID     = Player->objectID;
@@ -245,7 +245,7 @@ void SchrodingersCapsule_Unknown4(void)
         buddy2->drawFX          = FX_ROTATE | FX_FLIP;
         buddy2->velocity.x      = -0x24000;
         buddy2->velocity.y      = -0x40000;
-        RSDK.SetSpriteAnimation(buddy2->aniFrames, ANI_HURT, &buddy2->playerAnimator, true, 0);
+        RSDK.SetSpriteAnimation(buddy2->aniFrames, ANI_HURT, &buddy2->animator, true, 0);
 
         Music_FadeOut(0.025);
         RSDK.PlaySfx(SchrodingersCapsule->sfxExplosion3, 0, 255);
@@ -253,7 +253,7 @@ void SchrodingersCapsule_Unknown4(void)
         EntityPlayer *player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
         player->position.x   = self->position.x;
         Player_ChangeCharacter(player, player->characterID);
-        RSDK.SetSpriteAnimation(player->aniFrames, ANI_HURT, &player->playerAnimator, true, 0);
+        RSDK.SetSpriteAnimation(player->aniFrames, ANI_HURT, &player->animator, true, 0);
         player->velocity.x = 0;
         player->velocity.y = 0;
         player->groundVel  = 0;
@@ -284,11 +284,11 @@ void SchrodingersCapsule_Unknown5(void)
 
         EntityPlayer *buddy1 = RSDK_GET_ENTITY(SLOT_PLAYER3, Player);
         buddy1->state        = Player_State_Victory;
-        RSDK.SetSpriteAnimation(buddy1->aniFrames, ANI_VICTORY, &buddy1->playerAnimator, true, 0);
+        RSDK.SetSpriteAnimation(buddy1->aniFrames, ANI_VICTORY, &buddy1->animator, true, 0);
 
         EntityPlayer *buddy2 = RSDK_GET_ENTITY(SLOT_PLAYER4, Player);
         buddy2->state        = Player_State_Victory;
-        RSDK.SetSpriteAnimation(buddy2->aniFrames, ANI_VICTORY, &buddy2->playerAnimator, true, 0);
+        RSDK.SetSpriteAnimation(buddy2->aniFrames, ANI_VICTORY, &buddy2->animator, true, 0);
 
         ActClear->actID       = 1;
         ActClear->forceNoSave = true;

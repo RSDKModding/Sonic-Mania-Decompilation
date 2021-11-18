@@ -135,7 +135,7 @@ bool32 MSZ2Cutscene_CutsceneState_Unknown2(EntityCutsceneSeq *host)
     EntityGiantPistol *pistol = MSZ2Cutscene->pistol;
 
     if (player2->objectID == Player->objectID) {
-        if (player2->state == Player_State_Air && player2->playerAnimator.animationID == ANI_JUMP)
+        if (player2->state == Player_State_Air && player2->animator.animationID == ANI_JUMP)
             player2->position.x += (player1->position.x - player2->position.x) >> 4;
         player2->position.y += (player1->position.y - player2->position.y) >> 4;
     }
@@ -212,9 +212,9 @@ bool32 MSZ2Cutscene_CutsceneState_Unknown4(EntityCutsceneSeq *host)
 
     if (!host->timer) {
         host->field_68 = 0x4000;
-        RSDK.SetSpriteAnimation(player1->aniFrames, ANI_JUMP, &player1->playerAnimator, false, 0);
+        RSDK.SetSpriteAnimation(player1->aniFrames, ANI_JUMP, &player1->animator, false, 0);
         player1->drawFX |= FX_SCALE;
-        player1->playerAnimator.animationSpeed = 60;
+        player1->animator.animationSpeed = 60;
         player1->scale.x                       = 64;
         player1->scale.y                       = 64;
         player1->state                         = Player_State_None;
@@ -231,8 +231,8 @@ bool32 MSZ2Cutscene_CutsceneState_Unknown4(EntityCutsceneSeq *host)
             player2->velocity.y = 0;
             player2->position.x -= 0x63000;
             player2->position.y -= 0x24000;
-            RSDK.SetSpriteAnimation(player2->aniFrames, ANI_JUMP, &player2->playerAnimator, false, 0);
-            player1->playerAnimator.animationSpeed = 60;
+            RSDK.SetSpriteAnimation(player2->aniFrames, ANI_JUMP, &player2->animator, false, 0);
+            player1->animator.animationSpeed = 60;
         }
     }
 

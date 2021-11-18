@@ -127,11 +127,11 @@ bool32 FBZ1Outro_CutsceneState_Unknown1(EntityCutsceneSeq *host)
     EntityCollapsingPlatform *platform = FBZ1Outro->collapsingPlatform;
     if (!host->timer) {
         player1->stateInput = StateMachine_None;
-        RSDK.SetSpriteAnimation(player1->aniFrames, ANI_BALANCE1, &player1->playerAnimator, false, 0);
+        RSDK.SetSpriteAnimation(player1->aniFrames, ANI_BALANCE1, &player1->animator, false, 0);
         player1->state = Player_State_None;
         CutsceneSeq_LockPlayerControl(player1);
         if (player2->objectID == Player->objectID) {
-            RSDK.SetSpriteAnimation(player2->aniFrames, ANI_BALANCE1, &player2->playerAnimator, false, 0);
+            RSDK.SetSpriteAnimation(player2->aniFrames, ANI_BALANCE1, &player2->animator, false, 0);
             player2->state = Player_State_None;
             CutsceneSeq_LockPlayerControl(player2);
         }
@@ -145,11 +145,11 @@ bool32 FBZ1Outro_CutsceneState_Unknown1(EntityCutsceneSeq *host)
 
     if (BigSqueeze->value4[3] - BigSqueeze->value4[2] <= 0xB00000) {
         BigSqueeze->isRumbling = false;
-        RSDK.SetSpriteAnimation(player1->aniFrames, ANI_HURT, &player1->playerAnimator, false, 0);
+        RSDK.SetSpriteAnimation(player1->aniFrames, ANI_HURT, &player1->animator, false, 0);
         player1->state    = Player_State_Air;
         player1->onGround = false;
         if (player2->objectID == Player->objectID) {
-            RSDK.SetSpriteAnimation(player2->aniFrames, ANI_HURT, &player2->playerAnimator, false, 0);
+            RSDK.SetSpriteAnimation(player2->aniFrames, ANI_HURT, &player2->animator, false, 0);
             player2->state    = Player_State_Air;
             player2->onGround = false;
         }
@@ -234,9 +234,9 @@ bool32 FBZ1Outro_CutsceneState_Unknown4(EntityCutsceneSeq *host)
         Zone->screenBoundsB1[0]     = 2660;
         Zone->playerBoundActiveL[0] = true;
     }
-    RSDK.SetSpriteAnimation(player1->aniFrames, ANI_IDLE, &player1->playerAnimator, false, 0);
+    RSDK.SetSpriteAnimation(player1->aniFrames, ANI_IDLE, &player1->animator, false, 0);
     if (player2->objectID == Player->objectID)
-        RSDK.SetSpriteAnimation(player2->aniFrames, ANI_IDLE, &player2->playerAnimator, false, 0);
+        RSDK.SetSpriteAnimation(player2->aniFrames, ANI_IDLE, &player2->animator, false, 0);
 
     if (camera->offset.x || ScreenInfo->position.x < Zone->screenBoundsL1[0] || host->timer < 30) {
         if (ScreenInfo->position.x < Zone->screenBoundsL1[0])

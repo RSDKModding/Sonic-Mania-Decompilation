@@ -55,7 +55,7 @@ bool32 SPZ1Intro_CutsceneState_Unknown1(EntityCutsceneSeq *host)
         player1->state          = Player_State_None;
         player1->stateInput     = StateMachine_None;
         CutsceneSeq_LockAllPlayerControl();
-        RSDK.SetSpriteAnimation(player1->aniFrames, ANI_JUMP, &player1->playerAnimator, false, 0);
+        RSDK.SetSpriteAnimation(player1->aniFrames, ANI_JUMP, &player1->animator, false, 0);
         if (player2->objectID == Player->objectID) {
             player2->position.x     = player1->position.x;
             player2->position.y     = player1->position.y;
@@ -64,7 +64,7 @@ bool32 SPZ1Intro_CutsceneState_Unknown1(EntityCutsceneSeq *host)
             player2->velocity.y     = -1;
             player2->state          = Player_State_None;
             player2->stateInput     = StateMachine_None;
-            RSDK.SetSpriteAnimation(player2->aniFrames, ANI_JUMP, &player2->playerAnimator, false, 0);
+            RSDK.SetSpriteAnimation(player2->aniFrames, ANI_JUMP, &player2->animator, false, 0);
         }
         EntityDebris *debris  = CREATE_ENTITY(Debris, NULL, curEnt->position.x, curEnt->position.y + 0x390000);
         debris->drawOrder     = Zone->playerDrawHigh;

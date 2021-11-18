@@ -129,7 +129,7 @@ void GasPlatform_Unknown2(void)
                     player->velocity.y = -0x100000;
                     player->state      = Player_State_Air;
                     player->onGround   = false;
-                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGTWIRL, &player->playerAnimator, true, 0);
+                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGTWIRL, &player->animator, true, 0);
                     RSDK.PlaySfx(GasPlatform->sfxSpring, false, 255);
                     self->collapseDelay = 240;
                     self->state         = GasPlatform_Unknown3;

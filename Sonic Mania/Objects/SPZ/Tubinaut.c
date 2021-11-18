@@ -190,7 +190,7 @@ bool32 Tubinaut_CheckAttacking(EntityPlayer *player)
     bool32 flag = Player_CheckAttacking(player, self);
 
 #if RETRO_USE_PLUS
-    if (!flag && player->characterID == ID_MIGHTY && player->playerAnimator.animationID == ANI_CROUCH) {
+    if (!flag && player->characterID == ID_MIGHTY && player->animator.animationID == ANI_CROUCH) {
         if (!player->uncurlTimer) {
             RSDK.PlaySfx(Player->sfxPimPom, false, 255);
             player->uncurlTimer = 30;
@@ -219,13 +219,13 @@ void Tubinaut_Unknown5(EntityPlayer *player, int orbID)
         dust->drawOrder  = player->drawOrder;
         RSDK.PlaySfx(Tubinaut->sfxPowerdown, false, 255);
 #if RETRO_USE_PLUS
-        if (player->characterID != ID_MIGHTY || player->playerAnimator.animationID != ANI_DROPDASH) {
+        if (player->characterID != ID_MIGHTY || player->animator.animationID != ANI_DROPDASH) {
 #endif
             int angle = RSDK.ATan2(player->position.x - self->position.x, player->position.y - self->position.y);
 
             int velX = 0, velY = 0;
 #if RETRO_USE_PLUS
-            if (player->characterID == ID_MIGHTY && player->playerAnimator.animationID == ANI_CROUCH) {
+            if (player->characterID == ID_MIGHTY && player->animator.animationID == ANI_CROUCH) {
                 velX = player->velocity.x;
                 velY = player->velocity.y - 0x10000;
             }
@@ -237,7 +237,7 @@ void Tubinaut_Unknown5(EntityPlayer *player, int orbID)
             }
 #endif
 
-            if (player->characterID != ID_KNUCKLES || player->playerAnimator.animationID != ANI_FLY) {
+            if (player->characterID != ID_KNUCKLES || player->animator.animationID != ANI_FLY) {
                 player->velocity.x  = velX;
                 player->groundVel   = velX;
                 player->jumpAbility = 0;
@@ -277,7 +277,7 @@ void Tubinaut_HandleRepel(EntityPlayer *player, int playerID)
     RSDK_THIS(Tubinaut);
 
 #if RETRO_USE_PLUS
-    if (player->characterID == ID_MIGHTY && player->playerAnimator.animationID == ANI_CROUCH) {
+    if (player->characterID == ID_MIGHTY && player->animator.animationID == ANI_CROUCH) {
         self->playerTimers[playerID] = 15;
         RSDK.PlaySfx(Tubinaut->sfxRepel, false, 255);
 
@@ -292,7 +292,7 @@ void Tubinaut_HandleRepel(EntityPlayer *player, int playerID)
             int angle = RSDK.ATan2(player->position.x - self->position.x, player->position.y - self->position.y);
             int velX  = 0x700 * RSDK.Cos256(angle);
             int velY  = 0x700 * RSDK.Sin256(angle);
-            if (player->characterID != ID_KNUCKLES || player->playerAnimator.animationID != ANI_FLY) {
+            if (player->characterID != ID_KNUCKLES || player->animator.animationID != ANI_FLY) {
                 player->velocity.x  = velX;
                 player->groundVel   = velX;
                 player->jumpAbility = 0;

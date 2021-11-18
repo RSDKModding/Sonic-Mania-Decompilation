@@ -395,7 +395,7 @@ bool32 AIZSetup_Cutscene1_Unknown3(Entity *h)
     }
     else {
         player1->state = Player_State_None;
-        RSDK.SetSpriteAnimation(player1->aniFrames, ANI_SKID, &player1->playerAnimator, false, 0);
+        RSDK.SetSpriteAnimation(player1->aniFrames, ANI_SKID, &player1->animator, false, 0);
         player1->groundVel  = host->field_64;
         player1->velocity.x = host->field_64;
         player1->right      = false;
@@ -421,7 +421,7 @@ bool32 AIZSetup_Cutscene1_Unknown4(Entity *h)
         if (player2->onGround) {
             player2->stateInput = StateMachine_None;
             player2->direction  = FLIP_NONE;
-            RSDK.SetSpriteAnimation(player2->aniFrames, 0, &player2->playerAnimator, true, 0);
+            RSDK.SetSpriteAnimation(player2->aniFrames, 0, &player2->animator, true, 0);
             player2->state = Player_State_None;
             return true;
         }
@@ -553,7 +553,7 @@ bool32 AIZSetup_Cutscene1_Unknown7(Entity *h)
             ((EntityDecoration *)AIZSetup->decorations[0])->rotSpeed = 0;
             ((EntityDecoration *)AIZSetup->decorations[1])->rotSpeed = 0;
             if ((globals->playerID & 0xFFFFFF00) == 512)
-                RSDK.SetSpriteAnimation(player2->aniFrames, ANI_SKID, &player2->playerAnimator, true, 0);
+                RSDK.SetSpriteAnimation(player2->aniFrames, ANI_SKID, &player2->animator, true, 0);
             RSDK.PlaySfx(AIZSetup->sfxBreak, false, 0);
             Music_TransitionTrack(TRACK_EGGMAN1, 0.05);
         }
@@ -621,7 +621,7 @@ bool32 AIZSetup_Cutscene1_Unknown9(Entity *h)
                     EntityPlayer *player = RSDK_GET_ENTITY(id++, Player);
                     if (!player || player->objectID == TYPE_BLANK)
                         break;
-                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->playerAnimator, false, 0);
+                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->animator, false, 0);
 
                     int32 valX = (player->position.x - player->position.x) >> 3;
                     int32 valY = (0xA00 * RSDK.Sin256(2 * (host->timer + angle - host->field_68)) + ruby->position.y - player->position.y) >> 3;
@@ -679,7 +679,7 @@ bool32 AIZSetup_Cutscene2_Unknown1(Entity *h)
         player1->stateInput = StateMachine_None;
         player1->direction  = FLIP_X;
         player1->drawFX     = FX_FLIP;
-        RSDK.SetSpriteAnimation(AIZSetup->knuxSpriteIndex, 1, &player1->playerAnimator, true, 0);
+        RSDK.SetSpriteAnimation(AIZSetup->knuxSpriteIndex, 1, &player1->animator, true, 0);
     }
     return host->timer == 180;
 }
@@ -692,7 +692,7 @@ bool32 AIZSetup_Cutscene2_Unknown2(Entity *h)
         case 0: RSDK.PlaySfx(AIZKingClaw->sfxClack, 0, 0); break;
         case 10:
             RSDK.PlaySfx(AIZKingClaw->sfxWalkerLegs, 0, 0);
-            RSDK.SetSpriteAnimation(AIZSetup->knuxSpriteIndex, 2, &player1->playerAnimator, true, 0);
+            RSDK.SetSpriteAnimation(AIZSetup->knuxSpriteIndex, 2, &player1->animator, true, 0);
             break;
         case 40: return true;
         default: break;
@@ -721,12 +721,12 @@ bool32 AIZSetup_Cutscene2_Unknown4(Entity *h)
     EntityCutsceneSeq *host = (EntityCutsceneSeq *)h;
 
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
-    if (player1->playerAnimator.animationID == 3 && player1->playerAnimator.frameID == player1->playerAnimator.frameCount - 1) {
-        RSDK.SetSpriteAnimation(AIZSetup->knuxSpriteIndex, 0, &player1->playerAnimator, true, 0);
+    if (player1->animator.animationID == 3 && player1->animator.frameID == player1->animator.frameCount - 1) {
+        RSDK.SetSpriteAnimation(AIZSetup->knuxSpriteIndex, 0, &player1->animator, true, 0);
     }
 
     if (!host->timer) {
-        RSDK.SetSpriteAnimation(AIZSetup->knuxSpriteIndex, 3, &player1->playerAnimator, true, 0);
+        RSDK.SetSpriteAnimation(AIZSetup->knuxSpriteIndex, 3, &player1->animator, true, 0);
         foreach_active(Animals, animal)
         {
             animal->active    = ACTIVE_NORMAL;
@@ -817,7 +817,7 @@ bool32 AIZSetup_Cutscene2_Unknown7(Entity *h)
         if (player1->velocity.x < 0)
             player1->velocity.x = 0;
         player1->state = Player_State_None;
-        RSDK.SetSpriteAnimation(AIZSetup->knuxSpriteIndex, 5, &player1->playerAnimator, false, 0);
+        RSDK.SetSpriteAnimation(AIZSetup->knuxSpriteIndex, 5, &player1->animator, false, 0);
         return true;
     }
     else {
@@ -826,7 +826,7 @@ bool32 AIZSetup_Cutscene2_Unknown7(Entity *h)
             player1->velocity.x -= 0x1000;
         if (player1->velocity.x < 0)
             player1->velocity.x = 0;
-        RSDK.SetSpriteAnimation(AIZSetup->knuxSpriteIndex, 4, &player1->playerAnimator, true, 0);
+        RSDK.SetSpriteAnimation(AIZSetup->knuxSpriteIndex, 4, &player1->animator, true, 0);
     }
     return false;
 }

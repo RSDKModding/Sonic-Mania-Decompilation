@@ -45,7 +45,7 @@ void PullChain_Update(void)
                             RSDK.PlaySfx(Player->sfxGrab, 0, 255);
                             if (!player->sidekick)
                                 RSDK.PlaySfx(PullChain->sfxPullChain, 0, 255);
-                            RSDK.SetSpriteAnimation(player->aniFrames, ANI_HANG, &player->playerAnimator, true, 6);
+                            RSDK.SetSpriteAnimation(player->aniFrames, ANI_HANG, &player->animator, true, 6);
                             player->nextGroundState = StateMachine_None;
                             player->nextAirState    = StateMachine_None;
                             player->velocity.x      = 0;
@@ -71,12 +71,12 @@ void PullChain_Update(void)
                     RSDK.PlaySfx(Ring->sfxRing, false, 0xFF);
                 }
 #endif
-                if (player->jumpPress || player->playerAnimator.animationID != ANI_HANG || player->velocity.x || player->velocity.y) {
+                if (player->jumpPress || player->animator.animationID != ANI_HANG || player->velocity.x || player->velocity.y) {
                     self->activePlayers1 &= ~(1 << plrID);
                     if (player->jumpPress) {
                         if (self->chainOffset < 0x100000 && !player->sidekick)
                             RSDK.StopSFX(PullChain->sfxPullChain);
-                        RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->playerAnimator, true, 0);
+                        RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, true, 0);
                         player->velocity.x = 0;
                         player->velocity.y = -0x20000;
                         player->state      = Player_State_Air;

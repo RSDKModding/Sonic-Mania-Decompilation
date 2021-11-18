@@ -92,7 +92,7 @@ void Dango_CheckPlayerCollisions(void)
     foreach_active(Player, player)
     {
         if (Player_CheckBadnikTouch(player, self, &Dango->hitbox1)) {
-            int anim    = player->playerAnimator.animationID;
+            int anim    = player->animator.animationID;
             bool32 flag = anim == ANI_JUMP || anim == ANI_SPINDASH || anim == ANI_DROPDASH;
 #if RETRO_USE_PLUS
             if (player->characterID == ID_MIGHTY)
@@ -104,7 +104,7 @@ void Dango_CheckPlayerCollisions(void)
 
             if (flag) {
                 if (anim != ANI_JUMP)
-                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->playerAnimator, false, 0);
+                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
                 RSDK.PlaySfx(Dango->sfxBumper, false, 255);
 
                 if (player->velocity.x <= 0) {

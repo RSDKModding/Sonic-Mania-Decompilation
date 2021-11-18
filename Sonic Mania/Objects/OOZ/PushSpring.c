@@ -96,12 +96,12 @@ void PushSpring_HandlePlayerCollisions_Top(void)
                 player->onGround      = false;
                 player->state         = Player_State_Air;
                 player->velocity.y    = -0xA0000;
-                int32 anim              = player->playerAnimator.animationID;
+                int32 anim              = player->animator.animationID;
                 if (anim == ANI_WALK || (anim > ANI_AIRWALK && anim <= ANI_DASH))
-                    player->storedAnim = player->playerAnimator.animationID;
+                    player->storedAnim = player->animator.animationID;
                 else
                     player->storedAnim = ANI_WALK;
-                RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGDIAGONAL, &player->playerAnimator, true, 0);
+                RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGDIAGONAL, &player->animator, true, 0);
                 RSDK.PlaySfx(PushSpring->sfxSpring, false, 255);
                 self->state = PushSpring_Unknown11;
             }

@@ -31,7 +31,7 @@ void DoorTrigger_Update(void)
         foreach_active(Player, player)
         {
 
-            int32 anim    = player->playerAnimator.animationID;
+            int32 anim    = player->animator.animationID;
             bool32 flag = anim == ANI_JUMP;
             switch (player->characterID) {
                 case ID_SONIC: flag |= anim == ANI_DROPDASH; break;
@@ -58,9 +58,9 @@ void DoorTrigger_Update(void)
             else {
                 if (Player_CheckCollisionTouch(player, self, &DoorTrigger->hitboxes[self->animator1.frameID])) {
                     self->animator2.frameID = 1;
-                    if (player->characterID == ID_KNUCKLES && player->playerAnimator.animationID == ANI_FLY) {
+                    if (player->characterID == ID_KNUCKLES && player->animator.animationID == ANI_FLY) {
                         player->velocity.x = -player->velocity.x >> 1;
-                        RSDK.SetSpriteAnimation(player->aniFrames, 49, &player->playerAnimator, false, 0);
+                        RSDK.SetSpriteAnimation(player->aniFrames, 49, &player->animator, false, 0);
                         player->state = Player_State_KnuxGlideDrop;
                     }
                     else {
@@ -82,7 +82,7 @@ void DoorTrigger_Update(void)
 
                         int32 angle = RSDK.ATan2(x, y);
 #if RETRO_USE_PLUS
-                        if (player->characterID == ID_MIGHTY && player->playerAnimator.animationID == ANI_DROPDASH) {
+                        if (player->characterID == ID_MIGHTY && player->animator.animationID == ANI_DROPDASH) {
                             player->velocity.y -= 0x10000;
                         }
                         else {

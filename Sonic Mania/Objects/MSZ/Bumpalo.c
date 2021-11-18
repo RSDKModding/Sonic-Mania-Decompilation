@@ -110,16 +110,16 @@ void Bumpalo_BumpPlayer(void *p)
     if (player->state == Player_State_FlyCarried)
         RSDK_GET_ENTITY(SLOT_PLAYER2, Player)->flyCarryTimer = 30;
 
-    int anim = player->playerAnimator.animationID;
+    int anim = player->animator.animationID;
     if (anim != ANI_FLY && anim != ANI_FLYLIFTTIRED) {
         if (player->state != Player_State_TailsFlight) {
             if (player->state != Player_State_DropDash)
                 player->state = Player_State_Air;
             if (anim != ANI_JUMP && anim != ANI_JOG && anim != ANI_RUN && anim != ANI_DASH)
-                player->playerAnimator.animationID = ANI_WALK;
+                player->animator.animationID = ANI_WALK;
         }
     }
-    if (player->playerAnimator.animationID != ANI_FLY) {
+    if (player->animator.animationID != ANI_FLY) {
         player->velocity.x  = velX;
         player->groundVel   = velX;
         player->jumpAbility = 0;

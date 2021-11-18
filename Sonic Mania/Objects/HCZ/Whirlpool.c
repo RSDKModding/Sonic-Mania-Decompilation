@@ -43,7 +43,7 @@ void Whirlpool_Update(void)
                             self->field_278[playerID] = 0;
                         else
                             self->field_278[playerID] = 512;
-                        RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->playerAnimator, true, 0);
+                        RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->animator, true, 0);
                     }
                 }
 
@@ -68,7 +68,7 @@ void Whirlpool_Update(void)
                         else
                             player->drawOrder = Zone->playerDrawLow;
 
-                        if (!Player_CheckCollisionTouch(player, self, &self->hitbox) || player->playerAnimator.animationID != ANI_FAN) {
+                        if (!Player_CheckCollisionTouch(player, self, &self->hitbox) || player->animator.animationID != ANI_FAN) {
                             self->activePlayers &= ~(1 << playerID);
                             player->state = Player_State_Air;
                         }

@@ -227,7 +227,7 @@ void BreakBar_State_Main(void)
                         self->activePlayersReleased |= (1 << playerID);
                     }
                     else {
-                        RSDK.SetSpriteAnimation(player->aniFrames, ANI_CLING, &player->playerAnimator, false, 0);
+                        RSDK.SetSpriteAnimation(player->aniFrames, ANI_CLING, &player->animator, false, 0);
                         player->onGround        = false;
                         player->nextGroundState = StateMachine_None;
                         player->nextAirState    = StateMachine_None;
@@ -247,7 +247,7 @@ void BreakBar_State_Main(void)
                 else if (!player->sidekick && !self->destroyFlag) {
                     BreakBar_HandlePlayerInteractions(player);
                 }
-                RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->playerAnimator, false, 0);
+                RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->animator, false, 0);
                 player->state = Player_State_None;
             }
         }

@@ -117,7 +117,7 @@ void RollerMKII_CheckPlayerCollisions_Rolling(void)
     {
         if (Player_CheckBadnikTouch(player, self, &RollerMKII->hitbox1)) {
 
-            int anim    = player->playerAnimator.animationID;
+            int anim    = player->animator.animationID;
             bool32 flag = false;
 #if RETRO_USE_PLUS
             if (player->state == Player_State_MightyHammerDrop) {
@@ -137,7 +137,7 @@ void RollerMKII_CheckPlayerCollisions_Rolling(void)
                             if (player->state != Player_State_DropDash)
                                 player->state = Player_State_Air;
                             if (anim != ANI_JUMP && anim != ANI_DASH)
-                                player->playerAnimator.animationID = ANI_WALK;
+                                player->animator.animationID = ANI_WALK;
                         }
                     }
 
@@ -147,8 +147,8 @@ void RollerMKII_CheckPlayerCollisions_Rolling(void)
                         player->velocity.x  = velX;
                         player->groundVel   = velX;
                         player->jumpAbility = 0;
-                        if (player->characterID == ID_KNUCKLES && player->playerAnimator.animationID == ANI_FLY) {
-                            RSDK.SetSpriteAnimation(player->aniFrames, ANI_FLYTIRED, &player->playerAnimator, false, 0);
+                        if (player->characterID == ID_KNUCKLES && player->animator.animationID == ANI_FLY) {
+                            RSDK.SetSpriteAnimation(player->aniFrames, ANI_FLYTIRED, &player->animator, false, 0);
                             player->state = Player_State_KnuxGlideDrop;
                         }
                         player->velocity.y     = velY;

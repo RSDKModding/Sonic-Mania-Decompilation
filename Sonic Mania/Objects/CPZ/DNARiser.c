@@ -153,7 +153,7 @@ void DNARiser_HandleInteractions(void)
                 RSDK.PlaySfx(DNARiser->sfxGrab, 0, 255);
                 self->field_A8 = 30;
                 self->timer2   = 30;
-                RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->playerAnimator, false, 0);
+                RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
                 player->groundVel        = 0;
                 player->drawOrder        = 1;
                 player->jumpAbilityTimer = 1;
@@ -291,7 +291,7 @@ void DNARiser_State_Unknown3(void)
                     flag = true;
                 }
                 else {
-                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->playerAnimator, false, 0);
+                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
                     player->groundVel        = 0;
                     player->drawOrder        = 1;
                     player->jumpAbilityTimer = 1;

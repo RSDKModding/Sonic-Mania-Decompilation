@@ -257,7 +257,7 @@ void Current_State_Type0(void)
                         flag = Water_GetPlayerBubble(player) != NULL;
 
                     if (player->state != Player_State_Hit && player->state != Player_State_StartJumpIn) {
-                        int anim = player->playerAnimator.animationID;
+                        int anim = player->animator.animationID;
                         if (anim != ANI_CLING && anim != ANI_SHAFTSWING) {
                             player->onGround        = false;
                             player->nextGroundState = StateMachine_None;
@@ -265,7 +265,7 @@ void Current_State_Type0(void)
                             player->velocity.x      = -0x8000 * self->strength;
                             player->groundVel       = player->velocity.x;
                             if (!flag) {
-                                RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->playerAnimator, false, 0);
+                                RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->animator, false, 0);
                                 player->tileCollisions  = true;
                                 player->nextAirState    = StateMachine_None;
                                 player->nextGroundState = StateMachine_None;
@@ -329,7 +329,7 @@ void Current_State_Type1(void)
                         flag = Water_GetPlayerBubble(player) != NULL;
 
                     if (player->state != Player_State_Hit && player->state != Player_State_StartJumpIn) {
-                        int anim = player->playerAnimator.animationID;
+                        int anim = player->animator.animationID;
                         if (anim != ANI_CLING && anim != ANI_SHAFTSWING) {
                             player->onGround        = false;
                             player->nextGroundState = StateMachine_None;
@@ -337,7 +337,7 @@ void Current_State_Type1(void)
                             player->velocity.x      = self->strength << 15;
                             player->groundVel       = player->velocity.x;
                             if (!flag) {
-                                RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->playerAnimator, false, 0);
+                                RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->animator, false, 0);
                                 player->tileCollisions  = true;
                                 player->nextAirState    = StateMachine_None;
                                 player->nextGroundState = StateMachine_None;
@@ -402,14 +402,14 @@ void Current_State_Type2(void)
                         flag = Water_GetPlayerBubble(player) != NULL;
 
                     if (player->state != Player_State_Hit && player->state != Player_State_StartJumpIn) {
-                        int anim = player->playerAnimator.animationID;
+                        int anim = player->animator.animationID;
                         if (anim != ANI_CLING && anim != ANI_SHAFTSWING) {
                             player->onGround        = false;
                             player->nextGroundState = StateMachine_None;
                             player->nextAirState    = StateMachine_None;
                             player->velocity.y      = -0x8000 * self->strength;
                             if (!flag) {
-                                RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->playerAnimator, false, 0);
+                                RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->animator, false, 0);
                                 player->tileCollisions  = true;
                                 player->nextAirState    = StateMachine_None;
                                 player->nextGroundState = StateMachine_None;
@@ -478,14 +478,14 @@ void Current_State_Type3(void)
                         flag = Water_GetPlayerBubble(player) != NULL;
 
                     if (player->state != Player_State_Hit && player->state != Player_State_StartJumpIn) {
-                        int anim = player->playerAnimator.animationID;
+                        int anim = player->animator.animationID;
                         if (anim != ANI_CLING && anim != ANI_SHAFTSWING) {
                             player->onGround        = false;
                             player->nextGroundState = StateMachine_None;
                             player->nextAirState    = StateMachine_None;
                             player->velocity.y      = self->strength << 15;
                             if (!flag) {
-                                RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->playerAnimator, false, 0);
+                                RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->animator, false, 0);
                                 player->tileCollisions  = true;
                                 player->nextAirState    = StateMachine_None;
                                 player->nextGroundState = StateMachine_None;
@@ -536,7 +536,7 @@ void Current_State_Type4(void)
         if ((self->planeFilter <= 0 || player->collisionPlane == ((uint8)(self->planeFilter - 1) & 1))
             && (!self->waterOnly || player->underwater)) {
             if (Player_CheckCollisionTouch(player, self, &self->hitbox)) {
-                int anim = player->playerAnimator.animationID;
+                int anim = player->animator.animationID;
                 if (anim != ANI_CLING && anim != ANI_SHAFTSWING)
                     player->position.x += -0x8000 * self->strength;
             }
@@ -563,7 +563,7 @@ void Current_State_Type5(void)
         if ((self->planeFilter <= 0 || player->collisionPlane == ((uint8)(self->planeFilter - 1) & 1))
             && (!self->waterOnly || player->underwater)) {
             if (Player_CheckCollisionTouch(player, self, &self->hitbox)) {
-                int anim = player->playerAnimator.animationID;
+                int anim = player->animator.animationID;
                 if (anim != ANI_CLING && anim != ANI_SHAFTSWING)
                     player->position.x += self->strength << 15;
             }
@@ -580,7 +580,7 @@ void Current_State_Type6(void)
         if ((self->planeFilter <= 0 || player->collisionPlane == ((uint8)(self->planeFilter - 1) & 1))
             && (!self->waterOnly || player->underwater)) {
             if (Player_CheckCollisionTouch(player, self, &self->hitbox)) {
-                int anim = player->playerAnimator.animationID;
+                int anim = player->animator.animationID;
                 if (anim != ANI_CLING && anim != ANI_SHAFTSWING && !player->onGround)
                     player->position.y += -0x8000 * self->strength;
             }
@@ -597,7 +597,7 @@ void Current_State_Type7(void)
         if ((self->planeFilter <= 0 || player->collisionPlane == ((uint8)(self->planeFilter - 1) & 1))
             && (!self->waterOnly || player->underwater)) {
             if (Player_CheckCollisionTouch(player, self, &self->hitbox)) {
-                int anim = player->playerAnimator.animationID;
+                int anim = player->animator.animationID;
                 if (anim != ANI_CLING && anim != ANI_SHAFTSWING && !player->onGround)
                     player->position.y += self->strength << 15;
             }

@@ -60,9 +60,9 @@ bool32 MSZ1KIntro_CutsceneState_Unknown1(EntityCutsceneSeq *host)
         CutsceneSeq_LockAllPlayerControl();
     }
 
-    RSDK.SetSpriteAnimation(MSZ1KIntro->playerFrames, 4, &player1->playerAnimator, false, 0);
+    RSDK.SetSpriteAnimation(MSZ1KIntro->playerFrames, 4, &player1->animator, false, 0);
     if (player1->onGround) {
-        RSDK.SetSpriteAnimation(MSZ1KIntro->playerFrames, 5, &player1->playerAnimator, true, 0);
+        RSDK.SetSpriteAnimation(MSZ1KIntro->playerFrames, 5, &player1->animator, true, 0);
         player1->state = Player_State_None;
         return true;
     }
@@ -76,21 +76,21 @@ bool32 MSZ1KIntro_CutsceneState_Unknown2(EntityCutsceneSeq *host)
     unused(camera);
 
     if (!host->timer) {
-        RSDK.SetSpriteAnimation(MSZ1KIntro->playerFrames, 5, &player1->playerAnimator, true, 0);
+        RSDK.SetSpriteAnimation(MSZ1KIntro->playerFrames, 5, &player1->animator, true, 0);
         player1->state          = Player_State_None;
         player1->tileCollisions = false;
     }
-    if (player1->playerAnimator.animationID == 5 && player1->playerAnimator.frameID == 1 && !host->field_6C[0]) {
+    if (player1->animator.animationID == 5 && player1->animator.frameID == 1 && !host->field_6C[0]) {
         RSDK.PlaySfx(MSZ1KIntro->sfxImpact, false, 255);
         Camera_ShakeScreen(0, 0, 4);
         host->field_6C[0] = 1;
     }
     if (host->timer == 60)
-        RSDK.SetSpriteAnimation(MSZ1KIntro->playerFrames, 7, &player1->playerAnimator, false, 0);
+        RSDK.SetSpriteAnimation(MSZ1KIntro->playerFrames, 7, &player1->animator, false, 0);
     if (host->timer == 180)
-        RSDK.SetSpriteAnimation(MSZ1KIntro->playerFrames, 3, &player1->playerAnimator, true, 0);
-    if (player1->playerAnimator.animationID == 3 && player1->playerAnimator.frameID == player1->playerAnimator.frameCount - 1) {
-        RSDK.SetSpriteAnimation(player1->aniFrames, 0, &player1->playerAnimator, true, 0);
+        RSDK.SetSpriteAnimation(MSZ1KIntro->playerFrames, 3, &player1->animator, true, 0);
+    if (player1->animator.animationID == 3 && player1->animator.frameID == player1->animator.frameCount - 1) {
+        RSDK.SetSpriteAnimation(player1->aniFrames, 0, &player1->animator, true, 0);
         return true;
     }
     return false;

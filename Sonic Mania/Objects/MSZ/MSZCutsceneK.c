@@ -87,7 +87,7 @@ void MSZCutsceneK_SetupP2(int posX, int posY)
     player2->sensorY         = 0x140000;
     player2->stateInput      = 0;
     player2->state           = Player_State_None;
-    RSDK.SetSpriteAnimation(Player->sonicSpriteIndex, ANI_RIDE, &player2->playerAnimator, true, 0);
+    RSDK.SetSpriteAnimation(Player->sonicSpriteIndex, ANI_RIDE, &player2->animator, true, 0);
 }
 
 bool32 MSZCutsceneK_CutsceneState_Unknown1(EntityCutsceneSeq *host)
@@ -106,7 +106,7 @@ bool32 MSZCutsceneK_CutsceneState_Unknown1(EntityCutsceneSeq *host)
         CutsceneSeq_LockAllPlayerControl();
         player1->velocity.x = 0;
         player1->velocity.y = 0;
-        RSDK.SetSpriteAnimation(MSZCutsceneK->playerFrames, 6, &player1->playerAnimator, true, 0);
+        RSDK.SetSpriteAnimation(MSZCutsceneK->playerFrames, 6, &player1->animator, true, 0);
         MSZCutsceneK_SetupP2(0xCC0000, 0x29E0000);
     }
     if (mystic->position.x > tornado->position.x - 0x100000) {
@@ -133,7 +133,7 @@ bool32 MSZCutsceneK_CutsceneState_Unknown2(EntityCutsceneSeq *host)
         if (!host->field_6C[0]) {
             host->field_6C[0] = true;
             RSDK.PlaySfx(MSZCutsceneK->sfxDrop, false, 255);
-            RSDK.SetSpriteAnimation(MSZCutsceneK->playerFrames, 4, &player1->playerAnimator, true, 0);
+            RSDK.SetSpriteAnimation(MSZCutsceneK->playerFrames, 4, &player1->animator, true, 0);
             player1->velocity.x = -0x10000;
             player1->velocity.y = -0x30000;
         }

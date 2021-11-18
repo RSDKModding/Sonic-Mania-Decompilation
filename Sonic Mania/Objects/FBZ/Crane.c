@@ -108,8 +108,8 @@ void Crane_HandlePlayerInteractions(void)
                     player->nextAirState    = 0;
                     player->onGround        = false;
                     player->direction       = self->direction;
-                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->playerAnimator, true, 0);
-                    player->playerAnimator.animationSpeed = 0;
+                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->animator, true, 0);
+                    player->animator.animationSpeed = 0;
                 }
             }
         }
@@ -207,7 +207,7 @@ void Crane_State_Unknown5(void)
         EntityPlayer *player = (EntityPlayer *)self->grabbedPlayer;
         if (player) {
             if (Player_CheckValidState(player)) {
-                player->playerAnimator.animationSpeed = 0;
+                player->animator.animationSpeed = 0;
                 player->position.x                    = self->position.x;
                 player->position.y                    = self->position.y;
                 if (self->direction) {
@@ -252,7 +252,7 @@ void Crane_State_Unknown6(void)
     EntityPlayer *player = (EntityPlayer *)self->grabbedPlayer;
     if (player) {
         if (Player_CheckValidState(player)) {
-            player->playerAnimator.animationSpeed = 0;
+            player->animator.animationSpeed = 0;
             player->position.x                    = self->position.x;
             player->position.y                    = self->position.y;
             if (self->direction) {
@@ -297,7 +297,7 @@ void Crane_State_Unknown7(void)
 
     if (player) {
         if (Player_CheckValidState(player)) {
-            player->playerAnimator.animationSpeed = 0;
+            player->animator.animationSpeed = 0;
             player->position.x                    = self->position.x;
             player->position.y                    = self->position.y;
             if (self->direction) {

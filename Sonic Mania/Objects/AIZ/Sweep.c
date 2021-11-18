@@ -130,7 +130,7 @@ void Sweep_HandleInteractions(void)
     {
         Hitbox hitbox;
         Hitbox *playerHitbox = Player_GetHitbox(player);
-        RSDK.GetHitbox(&player->playerAnimator, 0);
+        RSDK.GetHitbox(&player->animator, 0);
 
         EntityShield *shield = RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntityID(player), Shield);
         if (shield->objectID == Shield->objectID && shield->state == Shield_State_Insta) {

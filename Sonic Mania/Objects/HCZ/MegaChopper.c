@@ -269,7 +269,7 @@ void MegaChopper_State_Unknown3(void)
         self->state = MegaChopper_State_Unknown4;
     }
     else {
-        if (player->playerAnimator.animationID == ANI_JUMP) {
+        if (player->animator.animationID == ANI_JUMP) {
             self->playerPtr = NULL;
             if (player->stateInput == MegaChopper_PlayerInput_StateP1) {
                 player->stateInput = Player_ProcessP1Input;

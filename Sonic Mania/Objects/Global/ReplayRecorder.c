@@ -90,8 +90,8 @@ void ReplayRecorder_StaticUpdate(void)
             EntityPlayer *playerR1          = recorder1->player;
             if (playerR1) {
                 recorder1->storedState = playerR1->state;
-                recorder1->storedAnim  = playerR1->playerAnimator.animationID;
-                recorder1->storedFrame = playerR1->playerAnimator.frameID;
+                recorder1->storedAnim  = playerR1->animator.animationID;
+                recorder1->storedFrame = playerR1->animator.frameID;
             }
 
             EntityReplayRecorder *recorder2 = (EntityReplayRecorder *)ReplayRecorder->recorder_w;
@@ -666,7 +666,7 @@ void ReplayRecorder_DrawGhostDisplay(void)
                 }
                 self->rotation  = player->rotation;
                 self->direction = player->direction;
-                RSDK.DrawSprite(&player->playerAnimator, &drawPos, false);
+                RSDK.DrawSprite(&player->animator, &drawPos, false);
 
                 self->drawFX     = FX_NONE;
                 self->alpha      = 255;
@@ -685,8 +685,8 @@ void ReplayRecorder_Record(EntityReplayRecorder *recorder, EntityPlayer *player)
     recorder->storedState = player->state;
     recorder->state       = ReplayRecorder_None_Record;
     recorder->stateLate   = ReplayRecorder_RecordFrameData;
-    recorder->storedAnim  = player->playerAnimator.animationID;
-    recorder->storedFrame = player->playerAnimator.frameID;
+    recorder->storedAnim  = player->animator.animationID;
+    recorder->storedFrame = player->animator.frameID;
 }
 
 void ReplayRecorder_StartRecording(EntityPlayer *player)
@@ -862,8 +862,8 @@ void ReplayRecorder_ApplyFrameData(EntityReplayRecorder *recorder, uint8 *buffer
         player->direction  = buffer[3];
         player->rotation   = bufferPtr[5];
         ReplayRecorder_SetGimmickState(recorder, ((buffer[1] & 8) > 0));
-        RSDK.SetSpriteAnimation(player->aniFrames, buffer[24], &player->playerAnimator, true, buffer[25]);
-        player->playerAnimator.animationSpeed = 0;
+        RSDK.SetSpriteAnimation(player->aniFrames, buffer[24], &player->animator, true, buffer[25]);
+        player->animator.animationSpeed = 0;
     }
 }
 
@@ -887,12 +887,12 @@ void ReplayRecorder_Unknown19(EntityReplayRecorder *recorder, uint8 *buffer)
         ReplayRecorder_SetGimmickState(recorder, ((buffer[1] & 8) > 0));
 
         if (buffer[1] & 0x40) {
-            RSDK.SetSpriteAnimation(player->aniFrames, buffer[24], &player->playerAnimator, true, buffer[25]);
+            RSDK.SetSpriteAnimation(player->aniFrames, buffer[24], &player->animator, true, buffer[25]);
         }
         else if ((buffer[1] & 0x80)) {
-            RSDK.SetSpriteAnimation(player->aniFrames, player->playerAnimator.animationID, &player->playerAnimator, true, buffer[25]);
+            RSDK.SetSpriteAnimation(player->aniFrames, player->animator.animationID, &player->animator, true, buffer[25]);
         }
-        player->playerAnimator.animationSpeed = 0;
+        player->animator.animationSpeed = 0;
     }
 }
 
@@ -1006,7 +1006,7 @@ void ReplayRecorder_PlayerState(void)
     EntityReplayRecorder *recorder = (EntityReplayRecorder *)ReplayRecorder->recorder_w;
 
     if (recorder->playing) {
-        self->playerAnimator.animationSpeed = 0;
+        self->animator.animationSpeed = 0;
 
         int32 *buffer = NULL;
         if (RSDK.GetEntityID(recorder) == SLOT_REPLAYRECORDER_W)
@@ -1179,7 +1179,7 @@ void ReplayRecorder_RecordFrameData(void)
         self->stateStore    = player->state;
 
         EntityIce *entPtr  = player->abilityPtrs[1];
-        Animator *animator = &player->playerAnimator;
+        Animator *animator = &player->animator;
         if (isGimmickState && RSDK.CheckStageFolder("PSZ2") && player->state == Ice_State_FrozenPlayer && entPtr->objectID == Ice->objectID) {
             animator = &entPtr->animator2;
         }

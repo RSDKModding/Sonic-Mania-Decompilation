@@ -1277,7 +1277,7 @@ void HeavyMystic_State3_Unknown1(void)
     {
         if (Player_CheckCollisionTouch(player, self, &self->hitbox)) {
 #if RETRO_USE_PLUS
-            int anim = player->playerAnimator.animationID;
+            int anim = player->animator.animationID;
             if (player->characterID == ID_MIGHTY && (anim == ANI_CROUCH || anim == ANI_JUMP || anim == ANI_SPINDASH || anim == ANI_DROPDASH)) {
                 if (!player->uncurlTimer) {
                     RSDK.PlaySfx(Player->sfxPimPom, false, 255);

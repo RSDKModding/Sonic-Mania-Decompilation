@@ -219,7 +219,7 @@ void TetherBall_Unknown2(void)
                 }
                 self->playerPtr = NULL;
                 self->timer     = 0;
-                if (player->playerAnimator.animationID == ANI_JUMP)
+                if (player->animator.animationID == ANI_JUMP)
                     player->state = Player_State_Roll;
                 else
                     player->state = Player_State_Ground;

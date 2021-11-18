@@ -137,7 +137,7 @@ bool32 PSZ2Outro_CutsceneState_Unknown4(EntityCutsceneSeq *host)
         if (self->ruby->state == PhantomRuby_Unknown5) {
             if (player2->objectID == Player->objectID) {
                 player2->state = Player_State_None;
-                RSDK.SetSpriteAnimation(player2->aniFrames, ANI_SKID, &player2->playerAnimator, false, 0);
+                RSDK.SetSpriteAnimation(player2->aniFrames, ANI_SKID, &player2->animator, false, 0);
             }
             return true;
         }
@@ -208,7 +208,7 @@ bool32 PSZ2Outro_CutsceneState_Unknown6(EntityCutsceneSeq *host)
                     EntityPlayer *player = RSDK_GET_ENTITY(id++, Player);
                     if (!player || player->objectID == TYPE_BLANK)
                         break;
-                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->playerAnimator, false, 0);
+                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->animator, false, 0);
 
                     int32 valX = (player->position.x - player->position.x) >> 3;
                     int32 valY =

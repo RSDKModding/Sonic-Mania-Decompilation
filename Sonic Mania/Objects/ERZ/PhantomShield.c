@@ -107,17 +107,17 @@ void PhantomShield_Unknown2(void)
                 if (player->state == Player_State_FlyCarried)
                     RSDK_GET_ENTITY(SLOT_PLAYER2, Player)->flyCarryTimer = 30;
 
-                int anim = player->playerAnimator.animationID;
+                int anim = player->animator.animationID;
                 if (anim != ANI_FLY && anim != ANI_FLYLIFTTIRED) {
                     if (player->state != Player_State_TailsFlight) {
                         if (player->state != Player_State_DropDash)
                             player->state = Player_State_Air;
                         if (anim != ANI_JUMP && anim != ANI_JOG && anim != ANI_RUN && anim != ANI_DASH)
-                            player->playerAnimator.animationID = ANI_WALK;
+                            player->animator.animationID = ANI_WALK;
                     }
                 }
-                if (player->characterID == ID_KNUCKLES && player->playerAnimator.animationID == ANI_FLY) {
-                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_FLYTIRED, &player->playerAnimator, false, 0);
+                if (player->characterID == ID_KNUCKLES && player->animator.animationID == ANI_FLY) {
+                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_FLYTIRED, &player->animator, false, 0);
                     player->state = Player_State_KnuxGlideDrop;
                 }
                 player->velocity.x     = velX;

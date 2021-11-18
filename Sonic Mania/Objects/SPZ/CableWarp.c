@@ -77,20 +77,20 @@ void CableWarp_State0_Unknown(void)
     {
         int velY = player->velocity.y;
         if (Player_CheckCollisionBox(player, self, &CableWarp->hitbox1) == C_TOP) {
-            if (player->playerAnimator.animationID == ANI_JUMP || player->state == Player_State_DropDash
+            if (player->animator.animationID == ANI_JUMP || player->state == Player_State_DropDash
 #if RETRO_USE_PLUS
                 || player->state == Player_State_MightyHammerDrop
 #endif
             ) {
                 if (player->state == Player_State_DropDash) {
                     player->velocity.y = -0x10000;
-                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->playerAnimator, false, 0);
+                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
                     player->state = Player_State_Air;
                 }
 #if RETRO_USE_PLUS
                 else if (player->state == Player_State_MightyHammerDrop) {
                     player->velocity.y = velY;
-                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->playerAnimator, false, 0);
+                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
                     player->state = Player_State_Air;
                 }
 #endif
@@ -137,7 +137,7 @@ void CableWarp_State1_Unknown(void)
             player->onGround        = false;
             player->velocity.x      = 0;
             player->velocity.y      = 0;
-            RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->playerAnimator, false, 0);
+            RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
 
             EntityCableWarp *warp = CREATE_ENTITY(CableWarp, intToVoid(CABLEWARP_TRANSPORT), self->position.x, self->position.y);
             warp->isPermanent     = true;
@@ -172,8 +172,8 @@ void CableWarp_State3_Unknown1(void)
     if (player->state == Player_State_None) {
         int y = self->position.y - 0x200000;
         int x = self->position.x;
-        if (player->playerAnimator.animationSpeed < 0xF0)
-            player->playerAnimator.animationSpeed += 8;
+        if (player->animator.animationSpeed < 0xF0)
+            player->animator.animationSpeed += 8;
         player->velocity.x += ((self->position.x - player->position.x) >> 5) - (player->velocity.x >> 4);
         player->velocity.y += ((y - player->position.y) >> 5) - (player->velocity.y >> 4);
         if (++self->timer == 30) {

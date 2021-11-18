@@ -51,7 +51,7 @@ void IceSpring_Update(void)
                 }
                 if (collideCheck) {
                     self->playerBits |= 1 << i;
-                    memcpy(&IceSpring->animators[i], &player->playerAnimator, sizeof(Animator));
+                    memcpy(&IceSpring->animators[i], &player->animator, sizeof(Animator));
                 }
 
                 EntityShield *shield      = RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntityID(player), Shield);
@@ -90,7 +90,7 @@ void IceSpring_Update(void)
             if ((1 << i) & self->playerBits) {
                 EntityPlayer *player = RSDK_GET_ENTITY(i, Player);
                 if (IceSpring->animators[i].animationID == ANI_JUMP) {
-                    memcpy(&player->playerAnimator, &IceSpring->animators[i], sizeof(Animator));
+                    memcpy(&player->animator, &IceSpring->animators[i], sizeof(Animator));
                 }
                 player->jumpAbility    = 0;
                 if (player->sidekick && self->playerBits == 0b10) {

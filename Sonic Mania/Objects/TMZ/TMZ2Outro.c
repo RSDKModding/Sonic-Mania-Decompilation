@@ -368,7 +368,7 @@ bool32 TMZ2Outro_CutsceneState_Panic(EntityCutsceneSeq *host)
         {
             player->up    = false;
             player->state = Player_State_None;
-            RSDK.SetSpriteAnimation(player->aniFrames, ANI_BALANCE1 + player->playerID, &player->playerAnimator, false, 0);
+            RSDK.SetSpriteAnimation(player->aniFrames, ANI_BALANCE1 + player->playerID, &player->animator, false, 0);
         }
 
         RSDK.PlaySfx(TMZ2Outro->sfxRumble, false, 255);
@@ -466,7 +466,7 @@ bool32 TMZ2Outro_CutsceneState_OuttaHere(EntityCutsceneSeq *host)
                 player->onGround   = false;
                 player->velocity.x = 0x20000;
                 player->velocity.y = -0x40000;
-                RSDK.SetSpriteAnimation(player->aniFrames, ANI_HURT, &player->playerAnimator, false, 0);
+                RSDK.SetSpriteAnimation(player->aniFrames, ANI_HURT, &player->animator, false, 0);
             }
 
             Zone->screenBoundsR1[0]     = 0x2000;

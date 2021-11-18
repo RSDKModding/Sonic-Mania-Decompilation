@@ -688,7 +688,7 @@ void HeavyShinobi_State2_Unknown1(void)
                 }
 
 #if RETRO_USE_PLUS
-                int32 anim = player->playerAnimator.animationID;
+                int32 anim = player->animator.animationID;
                 if (player->characterID == ID_MIGHTY && (anim == ANI_CROUCH || anim == ANI_JUMP || anim == ANI_SPINDASH || anim == ANI_DROPDASH)) {
                     if (!player->uncurlTimer) {
                         RSDK.PlaySfx(Player->sfxPimPom, false, 255);
@@ -875,7 +875,7 @@ void HeavyShinobi_State3_Unknown1(void)
             if (Player_CheckCollisionTouch(player, self, &HeavyShinobi->hitbox7) && player->state != Ice_State_FrozenPlayer) {
 #if RETRO_USE_PLUS
                 //MightyShellHit?
-                int32 anim = player->playerAnimator.animationID;
+                int32 anim = player->animator.animationID;
                 if (player->characterID == ID_MIGHTY && (anim == ANI_CROUCH || anim == ANI_JUMP || anim == ANI_SPINDASH || anim == ANI_DROPDASH)) {
                     if (!player->uncurlTimer) {
                         RSDK.PlaySfx(Player->sfxPimPom, false, 255);

@@ -96,7 +96,7 @@ void BSS_Message_State_GetBSWait(void)
             setup->globeSpeed    = 16;
             setup->globeSpeedInc = 2;
             if (player->onGround)
-                RSDK.SetSpriteAnimation(player->aniFrames, 1, &player->playerAnimator, 0, 0);
+                RSDK.SetSpriteAnimation(player->aniFrames, 1, &player->animator, 0, 0);
             self->state = BSS_Message_State_Idle;
         }
         if (!setup->globeTimer && setup->state == BSS_Setup_State_HandleStage) {
@@ -113,7 +113,7 @@ void BSS_Message_State_GetBSWait(void)
         setup->globeSpeed    = 16;
         setup->globeSpeedInc = 2;
         if (player->onGround)
-            RSDK.SetSpriteAnimation(player->aniFrames, 1, &player->playerAnimator, 0, 0);
+            RSDK.SetSpriteAnimation(player->aniFrames, 1, &player->animator, 0, 0);
         self->state = BSS_Message_State_Finish;
     }
 }

@@ -431,13 +431,13 @@ void Spikes_CheckHit(EntityPlayer *player, int32 playerVelX, int32 playerVelY)
 
 #if RETRO_USE_PLUS
     if (player->characterID == ID_MIGHTY
-        && (player->playerAnimator.animationID == ANI_JUMP || player->playerAnimator.animationID == ANI_SPINDASH
-            || player->playerAnimator.animationID == ANI_DROPDASH)) {
+        && (player->animator.animationID == ANI_JUMP || player->animator.animationID == ANI_SPINDASH
+            || player->animator.animationID == ANI_DROPDASH)) {
 
         if (abs(playerVelX) < 0x20000) {
             switch (self->type) {
                 case 1:
-                    if (player->playerAnimator.animationID != ANI_DROPDASH || (Ice && !Press)) {
+                    if (player->animator.animationID != ANI_DROPDASH || (Ice && !Press)) {
                         player->velocity.y = -0x48000;
                         if (!(player->direction & FLIP_X))
                             player->velocity.x = 0x48000;
@@ -479,14 +479,14 @@ void Spikes_CheckHit(EntityPlayer *player, int32 playerVelX, int32 playerVelY)
             player->jumpAbility      = 0;
             player->jumpAbilityTimer = 0;
             if (player->state == Player_State_Hit) {
-                RSDK.SetSpriteAnimation(player->aniFrames, ANI_HURT, &player->playerAnimator, false, 0);
+                RSDK.SetSpriteAnimation(player->aniFrames, ANI_HURT, &player->animator, false, 0);
                 RSDK.PlaySfx(Spikes->sfxSpike, 0, 255);
             }
             else {
-                RSDK.SetSpriteAnimation(player->aniFrames, ANI_FLY, &player->playerAnimator, false, 0);
+                RSDK.SetSpriteAnimation(player->aniFrames, ANI_FLY, &player->animator, false, 0);
                 RSDK.PlaySfx(Player->sfxMightyUnspin, 0, 255);
             }
-            if (player->playerAnimator.animationID != ANI_FLY)
+            if (player->animator.animationID != ANI_FLY)
                 RSDK.PlaySfx(Player->sfxPimPom, 0, 255);
             if (player->underwater) {
                 player->velocity.x >>= 1;
@@ -494,7 +494,7 @@ void Spikes_CheckHit(EntityPlayer *player, int32 playerVelX, int32 playerVelY)
             }
         }
         else if (self->type == 1) {
-            if (player->playerAnimator.animationID == ANI_DROPDASH) {
+            if (player->animator.animationID == ANI_DROPDASH) {
                 player->velocity.y = -0x48000;
                 if (!(player->direction & FLIP_X))
                     player->velocity.x = 0x48000;
@@ -506,14 +506,14 @@ void Spikes_CheckHit(EntityPlayer *player, int32 playerVelX, int32 playerVelY)
                 player->jumpAbility      = 0;
                 player->jumpAbilityTimer = 0;
                 if (player->state == Player_State_Hit) {
-                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_HURT, &player->playerAnimator, false, 0);
+                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_HURT, &player->animator, false, 0);
                     RSDK.PlaySfx(Spikes->sfxSpike, 0, 255);
                 }
                 else {
-                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_FLY, &player->playerAnimator, false, 0);
+                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_FLY, &player->animator, false, 0);
                     RSDK.PlaySfx(Player->sfxMightyUnspin, 0, 255);
                 }
-                if (player->playerAnimator.animationID != ANI_FLY)
+                if (player->animator.animationID != ANI_FLY)
                     RSDK.PlaySfx(Player->sfxPimPom, 0, 255);
                 if (player->underwater) {
                     player->velocity.x >>= 1;

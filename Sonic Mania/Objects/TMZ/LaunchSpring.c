@@ -140,7 +140,7 @@ void LaunchSpring_CheckPlayerCollisions(void *nextState)
         if (!player->sidekick && !LaunchSpring_Unknown1(player)) {
             if (Player_CheckCollisionTouch(player, self, &LaunchSpring->hitbox)) {
                 RSDK.PlaySfx(LaunchSpring->sfxGrab, false, 255);
-                RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->playerAnimator, false, 0);
+                RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
                 player->position.x = self->position.x;
                 player->position.y = self->position.y;
                 player->position.x += RSDK.Cos512(self->rotation - 128) << 12;

@@ -108,7 +108,7 @@ bool32 OOZ1Outro_Unknown2(EntityCutsceneSeq *host)
             player->interaction    = false;
             player->velocity.y     = -0x20000;
             player->stateInput     = StateMachine_None;
-            RSDK.SetSpriteAnimation(player->aniFrames, ANI_HURT, &player->playerAnimator, false, 0);
+            RSDK.SetSpriteAnimation(player->aniFrames, ANI_HURT, &player->animator, false, 0);
         }
         Zone->screenBoundsL1[0] = self->boundsL;
         Zone->screenBoundsR1[0] = self->boundsR;
@@ -130,7 +130,7 @@ bool32 OOZ1Outro_Unknown3(EntityCutsceneSeq *host)
         if (player2->objectID == Player->objectID)
             player2->interaction = true;
     }
-    if (Smog->field_4 && player1->playerAnimator.animationID)
+    if (Smog->field_4 && player1->animator.animationID)
         return false;
     player1->direction  = FLIP_NONE;
     player1->stateInput = Player_ProcessP1Input;

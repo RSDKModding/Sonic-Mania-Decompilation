@@ -695,7 +695,7 @@ void GigaMetal_State_Destroyed(void)
             if (player->velocity.y >= 0) {
                 player->velocity.y = -0x40000;
                 player->onGround   = false;
-                RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->playerAnimator, false, 0);
+                RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
             }
         }
     }

@@ -45,8 +45,8 @@ void PullSwitch_Update(void)
                     player->onGround               = false;
                     player->groundedStore          = false;
                     player->jumpAbilityTimer       = 1;
-                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->playerAnimator, false, 0);
-                    player->playerAnimator.animationSpeed = 48;
+                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
+                    player->animator.animationSpeed = 48;
                     player->state                         = Player_State_Air;
                 }
             }
@@ -61,7 +61,7 @@ void PullSwitch_Update(void)
                 player->state           = Player_State_None;
                 player->nextGroundState = StateMachine_None;
                 player->nextAirState    = StateMachine_None;
-                RSDK.SetSpriteAnimation(player->aniFrames, ANI_HANG, &player->playerAnimator, false, 0);
+                RSDK.SetSpriteAnimation(player->aniFrames, ANI_HANG, &player->animator, false, 0);
                 player->velocity.x  = 0;
                 player->velocity.y  = 0;
                 player->groundVel   = 0;

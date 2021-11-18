@@ -52,7 +52,7 @@ void JunctionWheel_Update(void)
 
             if (Player_CheckCollisionTouch(player, self, &JunctionWheel->hitbox5)) {
                 player->state = Player_State_None;
-                RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->playerAnimator, false, 0);
+                RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
                 player->onGround  = false;
                 player->groundVel       = -0x1C00;
 
@@ -76,7 +76,7 @@ void JunctionWheel_Update(void)
                 Player_CheckCollisionBox(player, self, &JunctionWheel->hitbox2);
                 if (Player_CheckCollisionTouch(player, self, &JunctionWheel->hitbox6)) {
                     player->state = Player_State_None;
-                    RSDK.SetSpriteAnimation(player->aniFrames, 10, &player->playerAnimator, false, 0);
+                    RSDK.SetSpriteAnimation(player->aniFrames, 10, &player->animator, false, 0);
                     player->onGround  = false;
                     player->groundVel = -0x1800;
                 }

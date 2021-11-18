@@ -213,7 +213,7 @@ void Gachapandora_CheckPlayerCollisions(void)
 
     foreach_active(Player, player)
     {
-        if (player->playerAnimator.animationID != ANI_VICTORY) {
+        if (player->animator.animationID != ANI_VICTORY) {
             if (Player_CheckBadnikTouch(player, self, &self->hitbox)) {
                 int blink = player->blinkTimer;
                 if (self->type == GACHAPANDORA_AMY)
@@ -1413,8 +1413,8 @@ void Gachapandora_State2_Unknown8(void)
                             player->groundVel  = player->velocity.x;
                             player->velocity.y = -player->velocity.y;
                             player->state      = Player_State_Air;
-                            if (player->playerAnimator.animationID == ANI_SPINDASH)
-                                player->playerAnimator.animationID = ANI_WALK;
+                            if (player->animator.animationID == ANI_SPINDASH)
+                                player->animator.animationID = ANI_WALK;
                             self->state = Gachapandora_State2_Unknown9;
                             foreach_break;
                         }

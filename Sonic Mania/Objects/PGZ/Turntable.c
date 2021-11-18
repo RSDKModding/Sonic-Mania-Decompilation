@@ -57,7 +57,7 @@ void Turntable_Update(void)
                     self->field_98[pID] = 0;
                 }
                 self->field_88[pID] = dist;
-                RSDK.SetSpriteAnimation(player->aniFrames, 34, &player->playerAnimator, true, self->field_98[pID]);
+                RSDK.SetSpriteAnimation(player->aniFrames, 34, &player->animator, true, self->field_98[pID]);
                 Hitbox *hitbox     = Player_GetHitbox(player);
                 player->position.y = self->position.y - (hitbox->bottom << 16) - (self->size.y >> 1);
             }
@@ -80,11 +80,11 @@ void Turntable_Update(void)
                 player->drawOrder = Zone->playerDrawHigh;
             else
                 player->drawOrder = Zone->playerDrawLow;
-            player->playerAnimator.frameID = (self->field_98[pID] + frame) % -24;
+            player->animator.frameID = (self->field_98[pID] + frame) % -24;
             if (player->jumpPress) {
                 Player_StartJump(player);
             }
-            else if (player->playerAnimator.animationID == ANI_TWISTER && player->state == Player_State_None) {
+            else if (player->animator.animationID == ANI_TWISTER && player->state == Player_State_None) {
                 continue;
             }
             self->activePlayers &= ~(1 << pID);

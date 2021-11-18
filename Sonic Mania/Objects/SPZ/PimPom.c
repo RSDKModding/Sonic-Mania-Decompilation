@@ -203,7 +203,7 @@ void PimPom_State0_Unknown(void)
                 int power = RSDK.Rand(0x400, vel);
                 angle += RSDK.Rand(-6, 6);
 
-                if (player->playerAnimator.animationID != ANI_FLY) {
+                if (player->animator.animationID != ANI_FLY) {
                     player->velocity.x = power * RSDK.Cos256(angle);
                     player->groundVel  = power * RSDK.Cos256(angle);
                 }
@@ -212,7 +212,7 @@ void PimPom_State0_Unknown(void)
                 player->jumpAbility = 0;
 #if RETRO_USE_PLUS
                 if (player->characterID == ID_MIGHTY && player->state == Player_State_MightyHammerDrop) {
-                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->playerAnimator, false, 0);
+                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
                     player->state = Player_State_Air;
                 }
 #endif
@@ -293,7 +293,7 @@ void PimPom_State1_Unknown(void)
                 case C_TOP: player->velocity.y = clampVal(-(storedVelY + (storedVelY >> 4)), -0xE0000, -0x40000);
 #if RETRO_USE_PLUS
                     if (player->characterID == ID_MIGHTY && player->state == Player_State_MightyHammerDrop) {
-                        RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->playerAnimator, false, 0);
+                        RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
                         player->state = Player_State_Air;
                     }
 #endif
@@ -301,7 +301,7 @@ void PimPom_State1_Unknown(void)
                 case C_LEFT: player->velocity.x = clampVal(-storedVelX, -0x80000, -0x20000);
 #if RETRO_USE_PLUS
                     if (player->characterID == ID_MIGHTY && player->state == Player_State_MightyHammerDrop) {
-                        RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->playerAnimator, false, 0);
+                        RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
                         player->state = Player_State_Air;
                     }
 #endif
@@ -309,7 +309,7 @@ void PimPom_State1_Unknown(void)
                 case C_RIGHT: player->velocity.x = clampVal(-storedVelX, 0x20000, 0x80000);
 #if RETRO_USE_PLUS
                     if (player->characterID == ID_MIGHTY && player->state == Player_State_MightyHammerDrop) {
-                        RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->playerAnimator, false, 0);
+                        RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
                         player->state = Player_State_Air;
                     }
 #endif
@@ -317,7 +317,7 @@ void PimPom_State1_Unknown(void)
                 case C_BOTTOM: player->velocity.y = clampVal(-(storedVelY + (storedVelY >> 4)), 0x40000, 0xE0000);
 #if RETRO_USE_PLUS
                     if (player->characterID == ID_MIGHTY && player->state == Player_State_MightyHammerDrop) {
-                        RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->playerAnimator, false, 0);
+                        RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
                         player->state = Player_State_Air;
                     }
 #endif

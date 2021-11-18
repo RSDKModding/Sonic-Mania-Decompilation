@@ -28,7 +28,7 @@ typedef struct {
     bool32 left;
     bool32 right;
     bool32 jumpPress;
-    Animator playerAnimator;
+    Animator animator;
     Animator tailAnimator;
     uint16 aniFrames;
     uint16 field_AE;

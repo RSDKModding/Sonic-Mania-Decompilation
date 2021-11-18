@@ -120,7 +120,7 @@ void OOZ2Outro_Unknown3(void)
     foreach_active(Player, player)
     {
         player->jumpPress = false;
-        if (player->playerAnimator.animationID == ANI_PUSH) {
+        if (player->animator.animationID == ANI_PUSH) {
             player->jumpPress = true;
             player->jumpHold  = true;
         }
@@ -156,7 +156,7 @@ void OOZ2Outro_Unknown3(void)
             player->velocity.x = 0;
             player->right      = false;
             player->state      = Player_State_None;
-            RSDK.SetSpriteAnimation(player->aniFrames, ANI_BALANCE1, &player->playerAnimator, false, 0);
+            RSDK.SetSpriteAnimation(player->aniFrames, ANI_BALANCE1, &player->animator, false, 0);
             Zone->playerBoundActiveR[player->playerID] = 0;
             EntityCamera *camera                       = player->camera;
             if (camera)
@@ -183,7 +183,7 @@ void OOZ2Outro_Unknown4(void)
         self->timer      = 0;
         self->velocity.y = -0x30000;
         self->state      = OOZ2Outro_Unknown5;
-        foreach_active(Player, player) { RSDK.SetSpriteAnimation(player->aniFrames, ANI_BALANCE2, &player->playerAnimator, false, 0); }
+        foreach_active(Player, player) { RSDK.SetSpriteAnimation(player->aniFrames, ANI_BALANCE2, &player->animator, false, 0); }
     }
 }
 

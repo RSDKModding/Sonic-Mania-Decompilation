@@ -188,7 +188,7 @@ void DCEvent_StateInput_Unknown2(void)
     self->jumpPress = false;
     self->jumpHold  = false;
     if (self->onGround)
-        RSDK.SetSpriteAnimation(self->aniFrames, ANI_CROUCH, &self->playerAnimator, false, 1);
+        RSDK.SetSpriteAnimation(self->aniFrames, ANI_CROUCH, &self->animator, false, 1);
 }
 
 void DCEvent_State_Unknown2(void)

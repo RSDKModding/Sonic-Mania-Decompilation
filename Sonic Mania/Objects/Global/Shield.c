@@ -41,7 +41,7 @@ void Shield_Draw(void)
         }
         self->position.x   = player->position.x;
         self->position.y   = player->position.y;
-        Hitbox *playerHitbox = RSDK.GetHitbox(&player->playerAnimator, 0);
+        Hitbox *playerHitbox = RSDK.GetHitbox(&player->animator, 0);
         if (playerHitbox) {
             if (player->direction & FLIP_X)
                 self->position.x += (playerHitbox->left << 15) - (playerHitbox->right << 15) - (playerHitbox->left << 16);

@@ -491,7 +491,7 @@ void ActClear_CheckPlayerVictory(void)
             player->nextGroundState = 0;
             if (Zone->forcePlayerOnScreenFlag)
                 player->stateInput = StateMachine_None;
-            RSDK.SetSpriteAnimation(player->aniFrames, ANI_VICTORY, &player->playerAnimator, true, 0);
+            RSDK.SetSpriteAnimation(player->aniFrames, ANI_VICTORY, &player->animator, true, 0);
         }
     }
 }
@@ -956,7 +956,7 @@ void ActClear_ForcePlayerOnScreen(void)
         if (player2->state == Player_State_FlyIn || player2->state == Player_State_JumpIn) {
             if (player2->position.x < screenOffX) {
                 if (player2->onGround && !player2->groundVel) {
-                    RSDK.SetSpriteAnimation(player2->aniFrames, ANI_IDLE, &player2->playerAnimator, false, 0);
+                    RSDK.SetSpriteAnimation(player2->aniFrames, ANI_IDLE, &player2->animator, false, 0);
                     player2->direction = FLIP_NONE;
                     finishedP2         = true;
                 }
@@ -964,7 +964,7 @@ void ActClear_ForcePlayerOnScreen(void)
         }
         else if (player2->position.x >= screenOffX) {
             player2->stateInput = Player_ProcessP2Input_AI;
-            RSDK.SetSpriteAnimation(player2->aniFrames, ANI_RUN, &player2->playerAnimator, false, 0);
+            RSDK.SetSpriteAnimation(player2->aniFrames, ANI_RUN, &player2->animator, false, 0);
             player2->state     = Player_State_Ground;
             player2->groundVel = -0x40000;
             player2->left      = true;
@@ -972,7 +972,7 @@ void ActClear_ForcePlayerOnScreen(void)
 
             if (player2->position.x < screenOffX) {
                 if (player2->onGround && !player2->groundVel) {
-                    RSDK.SetSpriteAnimation(player2->aniFrames, ANI_IDLE, &player2->playerAnimator, false, 0);
+                    RSDK.SetSpriteAnimation(player2->aniFrames, ANI_IDLE, &player2->animator, false, 0);
                     player2->direction = FLIP_NONE;
                     finishedP2         = true;
                 }
@@ -980,7 +980,7 @@ void ActClear_ForcePlayerOnScreen(void)
         }
         else {
             if (player2->onGround && !player2->groundVel) {
-                RSDK.SetSpriteAnimation(player2->aniFrames, ANI_IDLE, &player2->playerAnimator, false, 0);
+                RSDK.SetSpriteAnimation(player2->aniFrames, ANI_IDLE, &player2->animator, false, 0);
                 player2->direction = FLIP_NONE;
                 finishedP2         = true;
             }
@@ -988,7 +988,7 @@ void ActClear_ForcePlayerOnScreen(void)
     }
 
     if (finishedP1) {
-        RSDK.SetSpriteAnimation(player1->aniFrames, ANI_IDLE, &player1->playerAnimator, false, 0);
+        RSDK.SetSpriteAnimation(player1->aniFrames, ANI_IDLE, &player1->animator, false, 0);
         player1->direction = FLIP_NONE;
     }
 

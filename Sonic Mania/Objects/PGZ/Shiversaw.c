@@ -175,7 +175,7 @@ bool32 Shiversaw_CheckSawHit(EntityPlayer *player, int32 sawID)
     RSDK_THIS(Shiversaw);
 #if RETRO_USE_PLUS
     if (player->characterID == ID_MIGHTY) {
-        int32 anim = player->playerAnimator.animationID;
+        int32 anim = player->animator.animationID;
         if (anim != ANI_JUMP && anim != ANI_SPINDASH && anim != ANI_DROPDASH)
             return Player_CheckHit(player, &self->sawPos[sawID]);
         if (anim != ANI_DROPDASH)
@@ -193,7 +193,7 @@ bool32 Shiversaw_CheckSawHit(EntityPlayer *player, int32 sawID)
         player->jumpAbility      = 0;
         player->jumpAbilityTimer = 0;
         if (player->state == Player_State_Hit) {
-            RSDK.SetSpriteAnimation(player->aniFrames, ANI_HURT, &player->playerAnimator, false, 0);
+            RSDK.SetSpriteAnimation(player->aniFrames, ANI_HURT, &player->animator, false, 0);
             RSDK.PlaySfx(Spikes->sfxSpike, false, 255);
         }
         int32 storeX         = self->position.x;

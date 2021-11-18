@@ -17,7 +17,7 @@ void CPZBoss_Draw(void)
 {
     RSDK_THIS(CPZBoss);
     RSDK.DrawSprite(&self->animator1, NULL, false);
-    RSDK.DrawSprite(&self->playerAnimator, &self->startPos, false);
+    RSDK.DrawSprite(&self->animator, &self->startPos, false);
     RSDK.DrawSprite(&self->animator2, &self->startPos, false);
 }
 
@@ -116,7 +116,7 @@ void CPZBoss_State_SetupPlayer(void)
 #endif
             default: CPZBoss->playerFrames = RSDK.LoadSpriteAnimation("CPZ/MBMSonic.bin", SCOPE_STAGE); break;
         }
-        RSDK.SetSpriteAnimation(CPZBoss->playerFrames, 1, &self->playerAnimator, true, 0);
+        RSDK.SetSpriteAnimation(CPZBoss->playerFrames, 1, &self->animator, true, 0);
         RSDK.SetSpriteAnimation(CPZBoss->playerFrames, 0, &self->animator2, true, 0);
         self->timer  = 0;
         self->active = ACTIVE_NORMAL;
@@ -161,7 +161,7 @@ void CPZBoss_State_Unknown2(void)
                     player->position.y = self->position.y;
                     player->velocity.x = 0;
                     player->velocity.y = 0;
-                    RSDK.SetSpriteAnimation(0xFFFF, 0, &self->playerAnimator, true, 0);
+                    RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator, true, 0);
                     RSDK.SetSpriteAnimation(CPZBoss->playerFrames, 1, &self->animator1, true, 1);
                     self->direction = FLIP_X;
                     self->state     = CPZBoss_State_Unknown3;
@@ -356,7 +356,7 @@ void CPZBoss_State_PlayerWin(void)
             self->timer  = 0;
             self->active = ACTIVE_NORMAL;
             self->state  = CPZBoss_State_Unknown10;
-            RSDK.SetSpriteAnimation(CPZBoss->playerFrames, 1, &self->playerAnimator, true, 0);
+            RSDK.SetSpriteAnimation(CPZBoss->playerFrames, 1, &self->animator, true, 0);
             RSDK.SetSpriteAnimation(CPZBoss->aniFrames, 6, &self->animator1, false, 0);
             Music_TransitionTrack(TRACK_STAGE, 0.0125);
 
@@ -374,7 +374,7 @@ void CPZBoss_State_PlayerWin(void)
                 if (!boss->type) {
                     boss->state = CPZBoss_State_Unknown11;
                     RSDK.SetSpriteAnimation(0xFFFF, 0, &boss->animator1, false, 0);
-                    RSDK.SetSpriteAnimation(CPZBoss->playerFrames, 1, &boss->playerAnimator, true, 0);
+                    RSDK.SetSpriteAnimation(CPZBoss->playerFrames, 1, &boss->animator, true, 0);
                     foreach_all(Player, player)
                     {
                         player->up         = false;
@@ -427,9 +427,9 @@ void CPZBoss_State_HandleBossMatchFinish(void)
                 player->onGround   = false;
                 player->velocity.y = -0x20000;
                 RSDK.AddDrawListRef(Zone->playerDrawLow, RSDK.GetEntityID(&player));
-                RSDK.SetSpriteAnimation(player->aniFrames, ANI_HURT, &player->playerAnimator, false, 0);
+                RSDK.SetSpriteAnimation(player->aniFrames, ANI_HURT, &player->animator, false, 0);
                 RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator1, false, 0);
-                RSDK.SetSpriteAnimation(CPZBoss->playerFrames, 1, &self->playerAnimator, true, 0);
+                RSDK.SetSpriteAnimation(CPZBoss->playerFrames, 1, &self->animator, true, 0);
             }
 
             foreach_active(CPZShutter, shutter)
@@ -480,7 +480,7 @@ void CPZBoss_State_Unknown11(void)
             player->position.y      = self->position.y;
             player->velocity.x      = 0;
             player->velocity.y      = -0x80000;
-            RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->playerAnimator, false, 0);
+            RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
             Zone->playerBoundActiveR[player->playerID] = true;
         }
 
@@ -527,14 +527,14 @@ void CPZBoss_EditorDraw(void)
 
     if (!self->type) {
         self->drawFX = FX_FLIP;
-        RSDK.SetSpriteAnimation(CPZBoss->playerFrames, 1, &self->playerAnimator, true, 0);
+        RSDK.SetSpriteAnimation(CPZBoss->playerFrames, 1, &self->animator, true, 0);
         RSDK.SetSpriteAnimation(CPZBoss->playerFrames, 0, &self->animator2, true, 0);
         RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator1, true, 0);
     }
     else {
         RSDK.SetSpriteAnimation(CPZBoss->aniFrames, 2, &self->animator1, true, 0);
         RSDK.SetSpriteAnimation(CPZBoss->aniFrames, 0, &self->animator2, true, 0);
-        RSDK.SetSpriteAnimation(0xFFFF, 0, &self->playerAnimator, true, 0);
+        RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator, true, 0);
     }
 
     CPZBoss_Draw();

@@ -405,7 +405,7 @@ void LRZRockPile_State_Type0(void)
                 || (!self->onlyMighty || player->characterID == ID_MIGHTY)
 #endif
             ) {
-                bool32 flag = abs(player->groundVel) >= 0x48000 && player->onGround && player->playerAnimator.animationID == ANI_JUMP;
+                bool32 flag = abs(player->groundVel) >= 0x48000 && player->onGround && player->animator.animationID == ANI_JUMP;
                 if (player->shield == SHIELD_FIRE) {
                     EntityShield *shield = RSDK_GET_ENTITY(Player->playerCount + RSDK.GetEntityID(player), Shield);
                     flag |= shield->animator.animationID == 2;

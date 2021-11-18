@@ -45,7 +45,7 @@ void WarpDoor_Update(void)
                             player->nextGroundState = StateMachine_None;
                             player->onGround        = false;
                             player->state           = Player_State_Hit;
-                            RSDK.SetSpriteAnimation(player->aniFrames, ANI_HURT, &player->playerAnimator, false, 0);
+                            RSDK.SetSpriteAnimation(player->aniFrames, ANI_HURT, &player->animator, false, 0);
                         }
 
                         if (camera) {

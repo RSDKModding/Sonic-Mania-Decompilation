@@ -10,7 +10,7 @@ void ForceUnstick_Update(void)
         if (Player_CheckCollisionTouch(player, self, &self->hitbox)) {
             player->collisionMode = CMODE_FLOOR;
             if (self->breakClimb && player->state == Player_State_KnuxWallClimb) {
-                RSDK.SetSpriteAnimation(player->aniFrames, ANI_FLYTIRED, &player->playerAnimator, false, 2);
+                RSDK.SetSpriteAnimation(player->aniFrames, ANI_FLYTIRED, &player->animator, false, 2);
                 player->state = Player_State_KnuxGlideDrop;
             }
         }

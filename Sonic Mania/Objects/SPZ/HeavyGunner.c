@@ -473,7 +473,7 @@ void HeavyGunner_State_Unknown3(void)
 
         if (player->state == Player_State_KnuxGlideLeft) {
             player->timer                  = 0;
-            player->playerAnimator.frameID = 6;
+            player->animator.frameID = 6;
             player->state                  = Player_State_KnuxGlideRight;
             player->abilitySpeed           = Zone->autoScrollSpeed - 0x18000;
         }
@@ -508,7 +508,7 @@ void HeavyGunner_State_Unknown2(void)
 
             if (player->state == Player_State_KnuxGlideLeft) {
                 player->timer                  = 0;
-                player->playerAnimator.frameID = 6;
+                player->animator.frameID = 6;
                 player->state                  = Player_State_KnuxGlideRight;
                 player->abilitySpeed           = Zone->autoScrollSpeed;
             }

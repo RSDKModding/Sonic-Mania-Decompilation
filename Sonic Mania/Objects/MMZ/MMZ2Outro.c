@@ -68,7 +68,7 @@ bool32 MMZ2Outro_CutsceneState_Unknown1(EntityCutsceneSeq *host)
             player->stateInput = StateMachine_None;
             if (player->onGround) {
                 player->state = Player_State_None;
-                RSDK.SetSpriteAnimation(player->aniFrames, ANI_BALANCE1, &player->playerAnimator, false, 0);
+                RSDK.SetSpriteAnimation(player->aniFrames, ANI_BALANCE1, &player->animator, false, 0);
             }
             else {
                 player->state      = Player_State_Air;
@@ -102,7 +102,7 @@ bool32 MMZ2Outro_CutsceneState_Unknown2(EntityCutsceneSeq *host)
             if (player->onGround && player->state != Player_State_None) {
                 player->state     = Player_State_None;
                 player->groundVel = 0;
-                RSDK.SetSpriteAnimation(player->aniFrames, ANI_BALANCE1, &player->playerAnimator, false, 0);
+                RSDK.SetSpriteAnimation(player->aniFrames, ANI_BALANCE1, &player->animator, false, 0);
             }
         }
     }
@@ -148,7 +148,7 @@ bool32 MMZ2Outro_CutsceneState_Unknown4(EntityCutsceneSeq *host)
     foreach_active(Player, player)
     {
         player->jumpPress = false;
-        if (player->playerAnimator.animationID == ANI_PUSH) {
+        if (player->animator.animationID == ANI_PUSH) {
             player->jumpPress = true;
             player->jumpHold  = true;
         }
@@ -206,7 +206,7 @@ bool32 MMZ2Outro_CutsceneState_Unknown6(EntityCutsceneSeq *host)
                 player->state      = Player_State_Air;
                 player->onGround   = false;
                 player->velocity.y = -0x30000;
-                RSDK.SetSpriteAnimation(player->aniFrames, ANI_HURT, &player->playerAnimator, false, 0);
+                RSDK.SetSpriteAnimation(player->aniFrames, ANI_HURT, &player->animator, false, 0);
             }
         }
     }

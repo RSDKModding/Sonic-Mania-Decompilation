@@ -20,15 +20,15 @@ void Springboard_Update(void)
                 if (self->animator.frameID == 3)
                     RSDK.SetSpriteAnimation(Springboard->aniFrames, 0, &self->animator, true, 0);
                 if (self->animator.frameID == 2) {
-                    int32 anim = playerPtr->playerAnimator.animationID;
+                    int32 anim = playerPtr->animator.animationID;
                     if (anim == ANI_WALK || (anim > ANI_AIRWALK && anim <= ANI_DASH))
-                        playerPtr->storedAnim = playerPtr->playerAnimator.animationID;
+                        playerPtr->storedAnim = playerPtr->animator.animationID;
                     else
                         playerPtr->storedAnim = ANI_WALK;
                     playerPtr->state          = Player_State_Air;
                     playerPtr->onGround       = false;
                     playerPtr->tileCollisions = true;
-                    RSDK.SetSpriteAnimation(playerPtr->aniFrames, ANI_SPRINGCS, &playerPtr->playerAnimator, true, 1);
+                    RSDK.SetSpriteAnimation(playerPtr->aniFrames, ANI_SPRINGCS, &playerPtr->animator, true, 1);
                     playerPtr->groundVel   = playerPtr->velocity.x;
                     int32 pos                = minVal(2 * val3 - 16, 39);
                     playerPtr->velocity.y  = Springboard->array2[pos] - playerPtr->gravityStrength - self->force;

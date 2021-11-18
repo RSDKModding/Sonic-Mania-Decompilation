@@ -176,7 +176,7 @@ void ERZGunner_CheckPlayerMissileCollisions(void)
     foreach_active(Player, player)
     {
         if (self->animator4.frameID > 0 && player->velocity.y >= 0 && Player_CheckBadnikTouch(player, self, &ERZGunner->hitbox2)
-            && player->playerAnimator.animationID != ANI_HURT) {
+            && player->animator.animationID != ANI_HURT) {
             RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator4, true, 0);
             player->velocity.y = -0x60000;
             ERZGunner_SpawnDust();
@@ -184,7 +184,7 @@ void ERZGunner_CheckPlayerMissileCollisions(void)
         }
         else {
             if (Player_CheckBadnikTouch(player, self, &ERZGunner->hitbox1)) {
-                int anim = player->playerAnimator.animationID;
+                int anim = player->animator.animationID;
                 if (anim == ANI_JUMP || anim == ANI_SPINDASH || anim == ANI_DROPDASH) {
                     EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), self->position.x, self->position.y);
                     explosion->interaction     = false;

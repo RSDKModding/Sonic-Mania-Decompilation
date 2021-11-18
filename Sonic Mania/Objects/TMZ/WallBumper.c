@@ -89,7 +89,7 @@ void WallBumper_HandleInteractions(void)
 
     foreach_active(Player, player)
     {
-        if (player->playerAnimator.animationID != ANI_HURT && Player_CheckBadnikTouch(player, self, &self->hitbox)) {
+        if (player->animator.animationID != ANI_HURT && Player_CheckBadnikTouch(player, self, &self->hitbox)) {
             if (self->type) {
                 if (self->direction) {
                     if (player->velocity.y < 0)
@@ -130,7 +130,7 @@ void WallBumper_HandleInteractions(void)
                     player->velocity.y = 0x80000;
             }
             RSDK.PlaySfx(WallBumper->sfxBouncer, false, 255);
-            RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGCS, &player->playerAnimator, false, 0);
+            RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGCS, &player->animator, false, 0);
 
             if (player->state == Player_State_FlyCarried) {
                 RSDK_GET_ENTITY(SLOT_PLAYER2, Player)->flyCarryTimer = 30;

@@ -111,7 +111,7 @@ void BallCannon_Unknown1(void)
                     else {
                         if (Player_CheckCollisionTouch(player, self, &BallCannon->hitbox1)) {
                             RSDK.PlaySfx(Player->sfxRoll, false, 255);
-                            RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->playerAnimator, false, 0);
+                            RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
                             player->position.x     = self->position.x;
                             player->position.y     = self->position.y;
                             player->velocity.x     = 0;
@@ -206,14 +206,14 @@ void BallCannon_StateCheckPlayerCollisions(void)
 
     foreach_active(Player, player)
     {
-        Animator *animator = &player->playerAnimator;
+        Animator *animator = &player->animator;
         int32 storeVelY      = player->velocity.y;
         int32 storeVelX      = player->velocity.x;
         int32 storeX         = player->position.x;
         int32 storeY         = player->position.y;
 
         if (Player_CheckCollisionBox(player, self, &BallCannon->hitbox2) == 1) {
-            if (player->playerAnimator.animationID == ANI_JUMP || player->state == Player_State_DropDash
+            if (player->animator.animationID == ANI_JUMP || player->state == Player_State_DropDash
 #if RETRO_USE_PLUS
                 || player->state == Player_State_MightyHammerDrop
 #endif
@@ -228,7 +228,7 @@ void BallCannon_StateCheckPlayerCollisions(void)
                     }
 
                     RSDK.PlaySfx(BallCannon->sfxLedgeBreak, false, 255);
-                    memcpy(&player->playerAnimator, animator, sizeof(Animator));
+                    memcpy(&player->animator, animator, sizeof(Animator));
                     player->velocity.x = storeVelX;
                     player->velocity.y = storeVelY;
                     player->position.x = storeX;
@@ -258,7 +258,7 @@ void BallCannon_Unknown7(void)
             }
             else {
                 if (Player_CheckCollisionTouch(player, self, &BallCannon->hitbox3)) {
-                    RSDK.SetSpriteAnimation(player->aniFrames, 10, &player->playerAnimator, false, 0);
+                    RSDK.SetSpriteAnimation(player->aniFrames, 10, &player->animator, false, 0);
                     RSDK.PlaySfx(BallCannon->sfxFire, false, 255);
                     player->state                  = Player_State_None;
                     player->nextGroundState        = 0;

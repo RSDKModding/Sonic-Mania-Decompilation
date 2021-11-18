@@ -366,7 +366,7 @@ void JuggleSaw_Saw_Handle(void)
         foreach_active(Player, player)
         {
             if (Player_CheckCollisionTouch(player, self, &JuggleSaw->sawHitbox)) {
-                int32 animID = player->playerAnimator.animationID;
+                int32 animID = player->animator.animationID;
 #if RETRO_USE_PLUS
                 // Could this be used?
                 // if (Player_CheckMightyShellHit())

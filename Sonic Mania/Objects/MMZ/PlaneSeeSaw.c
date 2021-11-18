@@ -161,8 +161,8 @@ void PlaneSeeSaw_State_Launch(void)
                 if (shield && shield->objectID) {
                     shield->drawFX |= FX_SCALE;
                 }
-                RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->playerAnimator, false, 0);
-                player->playerAnimator.animationSpeed = 0x80;
+                RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
+                player->animator.animationSpeed = 0x80;
             }
         }
     }

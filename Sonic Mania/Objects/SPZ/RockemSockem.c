@@ -81,7 +81,7 @@ void RockemSockem_Update(void)
                         else
                             spd = -0x700 * RSDK.Sin256(angle);
                         player->velocity.y = -spd;
-                        RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGCS, &player->playerAnimator, false, 0);
+                        RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGCS, &player->animator, false, 0);
                     }
                     else if ((((angle - 32) >> 6) & 3) != 3) {
                         int32 spd            = 0;
@@ -92,9 +92,9 @@ void RockemSockem_Update(void)
                             spd = -0x400 * RSDK.Sin256(angle);
                         player->velocity.y = -spd;
 
-                        int32 anim = player->playerAnimator.animationID;
+                        int32 anim = player->animator.animationID;
                         if (anim != ANI_JUMP && anim != ANI_JOG && anim != ANI_RUN && anim != ANI_DASH)
-                            player->playerAnimator.animationID = ANI_WALK;
+                            player->animator.animationID = ANI_WALK;
                     }
                 }
                 else {
@@ -105,7 +105,7 @@ void RockemSockem_Update(void)
                     else
                         spd = -0x500 * RSDK.Sin256(angle);
                     player->velocity.y = -spd;
-                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGCS, &player->playerAnimator, false, 0);
+                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGCS, &player->animator, false, 0);
                 }
 
                 if (self->ballAnimator.animationID != 3)

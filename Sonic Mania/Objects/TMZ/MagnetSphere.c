@@ -126,7 +126,7 @@ void MagnetSphere_CheckPlayerCollision(void)
                     player->velocity.x = 0;
                     player->velocity.y = 0;
                     player->groundVel  = 0;
-                    RSDK.SetSpriteAnimation(player->aniFrames, 10, &player->playerAnimator, 0, 0);
+                    RSDK.SetSpriteAnimation(player->aniFrames, 10, &player->animator, 0, 0);
                     player->onGround        = 0;
                     player->tileCollisions  = 0;
                     player->state           = Player_State_None;

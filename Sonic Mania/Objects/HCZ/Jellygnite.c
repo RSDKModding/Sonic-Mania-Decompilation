@@ -147,8 +147,8 @@ void Jellygnite_CheckPlayerCollisions(void)
                 player->nextGroundState = StateMachine_None;
                 player->onGround        = false;
                 player->direction       = self->direction;
-                RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->playerAnimator, true, 0);
-                player->playerAnimator.animationSpeed = 0;
+                RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->animator, true, 0);
+                player->animator.animationSpeed = 0;
                 player->direction                     = self->direction ^ 1;
             }
 

@@ -1225,7 +1225,7 @@ void MetalSonic_State_Unknown15(void)
             player->groundVel   = 0xE0000;
             player->controlLock = 60;
             player->direction   = FLIP_NONE;
-            RSDK.SetSpriteAnimation(player->aniFrames, ANI_RUN, &player->playerAnimator, false, 0);
+            RSDK.SetSpriteAnimation(player->aniFrames, ANI_RUN, &player->animator, false, 0);
             player->state = Player_State_Ground;
         }
 

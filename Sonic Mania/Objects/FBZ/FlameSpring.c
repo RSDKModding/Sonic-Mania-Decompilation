@@ -92,15 +92,15 @@ void FlameSpring_State_Unknown1(void)
                 foreach_active(Player, player)
                 {
                     if (Player_CheckCollisionBox(player, self, &FlameSpring->hitbox1) == 1) {
-                        int32 anim = player->playerAnimator.animationID;
+                        int32 anim = player->animator.animationID;
                         if (anim == ANI_WALK || (anim > ANI_AIRWALK && anim <= ANI_DASH))
-                            player->storedAnim = player->playerAnimator.animationID;
+                            player->storedAnim = player->animator.animationID;
                         else
                             player->storedAnim = ANI_WALK;
                         if (self->playerAni)
-                            RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGTWIRL, &player->playerAnimator, true, 0);
+                            RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGTWIRL, &player->animator, true, 0);
                         else
-                            RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGDIAGONAL, &player->playerAnimator, true, 0);
+                            RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGDIAGONAL, &player->animator, true, 0);
                         player->state      = Player_State_Air;
                         player->onGround   = false;
                         player->velocity.y = self->velocity.y;

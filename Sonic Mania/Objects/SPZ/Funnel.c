@@ -130,7 +130,7 @@ void Funnel_Update(void)
                         self->playerScoreTimer[p] = 0;
                         self->playerYVel[p] = 0;
                         self->activePlayers |= 1 << p;
-                        RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->playerAnimator, false, 0);
+                        RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
                         player->interaction     = false;
                         player->tileCollisions  = false;
                         player->state           = Player_State_None;
@@ -175,7 +175,7 @@ void Funnel_Update(void)
                             else {
                                 y = player->velocity.y;
                             }
-                            if (player->playerAnimator.animationID != ANI_FLY) {
+                            if (player->animator.animationID != ANI_FLY) {
                                 player->velocity.x = x;
                                 player->groundVel  = x;
                             }
@@ -224,7 +224,7 @@ void Funnel_Update(void)
                             else {
                                 y = player->velocity.y;
                             }
-                            if (player->playerAnimator.animationID != ANI_FLY) {
+                            if (player->animator.animationID != ANI_FLY) {
                                 player->velocity.x = x;
                                 player->groundVel  = x;
                             }

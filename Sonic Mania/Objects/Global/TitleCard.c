@@ -81,8 +81,8 @@ void TitleCard_Create(void *data)
             SceneInfo->timeEnabled  = true;
             EntityPlayer *player         = (EntityPlayer *)RSDK.GetEntityByID(SLOT_PLAYER1);
             RSDK.CopyEntity(player, (Entity *)Zone->entityData, false);
-            RSDK.SetSpriteAnimation(player->aniFrames, player->playerAnimator.animationID, &player->playerAnimator, false,
-                                    player->playerAnimator.frameID);
+            RSDK.SetSpriteAnimation(player->aniFrames, player->animator.animationID, &player->animator, false,
+                                    player->animator.frameID);
 
             if (player->camera)
                 RSDK.CopyEntity(player->camera, (Entity *)Zone->entityData[8], false);

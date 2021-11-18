@@ -356,7 +356,7 @@ void Canista_CheckPlayerCollisions2(void)
         foreach_active(Player, player)
         {
             if (Player_CheckCollisionTouch(player, self, &Canista->hitbox4)) {
-                int anim = player->playerAnimator.animationID;
+                int anim = player->animator.animationID;
 #if RETRO_USE_PLUS
                 //checkMightyShellHit
                 if (player->characterID == ID_MIGHTY && (anim == ANI_CROUCH || anim == ANI_JUMP || anim == ANI_SPINDASH || anim == ANI_DROPDASH)) {

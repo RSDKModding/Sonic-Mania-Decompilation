@@ -201,7 +201,7 @@ bool32 SSZ3Cutscene_OutroState_Unknown4(EntityCutsceneSeq *host)
         {
             if (player->sidekick) {
                 player->state = Player_State_None;
-                RSDK.SetSpriteAnimation(player->aniFrames, ANI_SKID, &player->playerAnimator, false, 0);
+                RSDK.SetSpriteAnimation(player->aniFrames, ANI_SKID, &player->animator, false, 0);
             }
             else {
                 player->left = true;
@@ -222,7 +222,7 @@ bool32 SSZ3Cutscene_OutroState_Unknown4(EntityCutsceneSeq *host)
                 player->velocity.y = 0;
                 player->groundVel  = 0;
                 player->state      = Player_State_None;
-                RSDK.SetSpriteAnimation(player->aniFrames, ANI_IDLE, &player->playerAnimator, false, 0);
+                RSDK.SetSpriteAnimation(player->aniFrames, ANI_IDLE, &player->animator, false, 0);
             }
         }
     }
@@ -230,7 +230,7 @@ bool32 SSZ3Cutscene_OutroState_Unknown4(EntityCutsceneSeq *host)
         PhantomRuby_PlaySFX(RUBYSFX_REDCUBE);
         foreach_active(Player, player)
         {
-            RSDK.SetSpriteAnimation(player->aniFrames, ANI_IDLE, &player->playerAnimator, false, 0);
+            RSDK.SetSpriteAnimation(player->aniFrames, ANI_IDLE, &player->animator, false, 0);
             player->direction  = FLIP_NONE;
             player->left       = false;
             player->velocity.x = 0;
@@ -302,7 +302,7 @@ bool32 SSZ3Cutscene_OutroState_Unknown5(EntityCutsceneSeq *host)
                     if (!player)
                         break;
 
-                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->playerAnimator, false, 0);
+                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->animator, false, 0);
                     player->position.x +=
                         ((0xA00 * RSDK.Cos256(2 * (angle + host->timer - host->field_68)) + player->position.x) - player->position.x) >> 3;
                     player->position.y +=

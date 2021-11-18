@@ -91,7 +91,7 @@ void GiantPistol_State_WaitForPlayer(void)
             player->nextGroundState = StateMachine_None;
             player->velocity.x      = 0;
             player->velocity.y      = 0;
-            RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->playerAnimator, false, 0);
+            RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
             self->activePlayers |= (1 << player->playerID);
             self->state = GiantPistol_State_Unknown2;
             if (self->direction == FLIP_NONE)
@@ -371,7 +371,7 @@ void GiantPistol_Player_State_Unknown2(void)
     self->state           = GiantPistol_Player_State_Unknown2;
     self->nextGroundState = GiantPistol_Player_State_Unknown2;
     if (self->groundVel <= 0) {
-        RSDK.SetSpriteAnimation(self->aniFrames, ANI_IDLE, &self->playerAnimator, true, 0);
+        RSDK.SetSpriteAnimation(self->aniFrames, ANI_IDLE, &self->animator, true, 0);
         self->left            = false;
         self->skidding        = 0;
         self->groundVel       = 0;

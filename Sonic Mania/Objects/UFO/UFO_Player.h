@@ -57,7 +57,7 @@ typedef struct {
     bool32 right;
     bool32 jumpPress;
     bool32 jumpHold;
-    Animator playerAnimator;
+    Animator animator;
 #if RETRO_USE_TOUCH_CONTROLS
     int32 touchJump;
 #endif

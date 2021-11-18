@@ -241,7 +241,7 @@ void PhantomHand_State_Unknown5(void)
             player->groundVel       = 0;
             if (!player->playerID)
                 self->field_78 = true;
-            RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->playerAnimator, false, 0);
+            RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
         }
     }
 
@@ -306,7 +306,7 @@ void PhantomHand_State_Unknown9(void)
             player->onGround                              = false;
             player->groundVel                             = 0;
             PhantomHand->grabbedPlayers[player->playerID] = false;
-            RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->playerAnimator, false, 0);
+            RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
         }
     }
     destroyEntity(self);

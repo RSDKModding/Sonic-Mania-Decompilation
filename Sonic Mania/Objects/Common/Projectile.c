@@ -57,7 +57,7 @@ void Projectile_CheckPlayerCollisions(void)
                 case 6: break;
                 case 4:
                 case 7: {
-                    int32 anim = player->playerAnimator.animationID;
+                    int32 anim = player->animator.animationID;
                     if (self->isProjectile
 #if RETRO_USE_PLUS
                         || (player->characterID == ID_MIGHTY

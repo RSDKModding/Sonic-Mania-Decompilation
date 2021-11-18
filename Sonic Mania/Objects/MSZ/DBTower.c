@@ -419,7 +419,7 @@ void DBTower_CheckPlayerCollisions2(void)
                 }
                 else if (
 #if RETRO_USE_PLUS
-                    player->characterID == ID_MIGHTY && player->playerAnimator.animationID == ANI_CROUCH ||
+                    player->characterID == ID_MIGHTY && player->animator.animationID == ANI_CROUCH ||
 #endif
                     Player_CheckBossHit(player, self)) {
                     RSDK.PlaySfx(DBTower->sfxBumper3, false, 255);

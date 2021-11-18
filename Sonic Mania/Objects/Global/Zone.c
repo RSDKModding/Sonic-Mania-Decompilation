@@ -972,11 +972,11 @@ void Zone_Unknown19(void)
             playerPtr->direction      = player->direction;
             playerPtr->tileCollisions = player->tileCollisions;
             playerPtr->interaction    = player->interaction;
-            RSDK.SetSpriteAnimation(playerPtr->aniFrames, player->playerAnimator.animationID, &playerPtr->playerAnimator, false, 0);
+            RSDK.SetSpriteAnimation(playerPtr->aniFrames, player->animator.animationID, &playerPtr->animator, false, 0);
         }
         else {
             playerPtr->state = Player_State_Air;
-            RSDK.SetSpriteAnimation(playerPtr->aniFrames, ANI_JUMP, &playerPtr->playerAnimator, false, 0);
+            RSDK.SetSpriteAnimation(playerPtr->aniFrames, ANI_JUMP, &playerPtr->animator, false, 0);
             playerPtr->tileCollisions = true;
             playerPtr->interaction    = true;
         }
@@ -1117,11 +1117,11 @@ void Zone_Unknown19(void)
             playerPtr->direction = player->direction;
             playerPtr->tileCollisions = player->tileCollisions;
             playerPtr->interaction = player->interaction;
-            RSDK.SetSpriteAnimation(playerPtr->aniFrames, player->playerAnimator.animationID, &playerPtr->playerAnimator, false, 0);
+            RSDK.SetSpriteAnimation(playerPtr->aniFrames, player->animator.animationID, &playerPtr->animator, false, 0);
         }
         else {
             playerPtr->state = Player_State_Air;
-            RSDK.SetSpriteAnimation(playerPtr->aniFrames, ANI_JUMP, &playerPtr->playerAnimator, false, 0);
+            RSDK.SetSpriteAnimation(playerPtr->aniFrames, ANI_JUMP, &playerPtr->animator, false, 0);
             playerPtr->tileCollisions = true;
             playerPtr->interaction = true;
         }

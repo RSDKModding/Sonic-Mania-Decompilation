@@ -330,7 +330,7 @@ void SpiderMobile_HandlePlatformMovement(void)
             uint16 tile = RSDK.GetTileInfo(Zone->fgLow, player->position.x >> 20, player->position.y >> 20);
             if (tile == 0xFFFF || (tile & 0x3FF) == 669 || (tile & 0x3FF) == 379) {
                 player->drawOrder = Zone->playerDrawLow;
-                RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->playerAnimator, false, 0);
+                RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->animator, false, 0);
                 player->state      = Player_State_Air;
                 player->velocity.y = -0x20000;
             }

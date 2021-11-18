@@ -314,7 +314,7 @@ typedef struct {
     StateMachine(nextAirState);
     StateMachine(nextGroundState);
     EntityCamera *camera;
-    Animator playerAnimator;
+    Animator animator;
     Animator tailAnimator;
     int32 maxWalkSpeed;
     int32 maxJogSpeed;

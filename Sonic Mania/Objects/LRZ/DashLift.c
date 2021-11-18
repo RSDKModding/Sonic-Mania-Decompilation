@@ -72,12 +72,12 @@ void DashLift_State_HandleDash(void)
             if (((1 << playerID) & self->activePlayers)) {
                 player->position.x = self->position.x;
                 self->activePlayers &= ~(1 << playerID);
-                if (player->playerAnimator.animationID == ANI_JUMP)
+                if (player->animator.animationID == ANI_JUMP)
                     player->velocity.x = 0;
             }
         }
         else {
-            int anim = player->playerAnimator.animationID;
+            int anim = player->animator.animationID;
             if (anim == ANI_SPINDASH || (anim == ANI_JUMP && ((1 << playerID) & self->activePlayers))) {
                 self->activePlayers |= (1 << playerID);
 

@@ -159,7 +159,7 @@ void ElectroMagnet_Unknown2(void)
                             }
                             else {
                                 player->state = Player_State_Air;
-                                RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->playerAnimator, false, 0);
+                                RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
                             }
                         }
                     }
