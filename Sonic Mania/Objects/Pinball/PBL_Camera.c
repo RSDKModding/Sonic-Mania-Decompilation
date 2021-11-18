@@ -49,8 +49,6 @@ void PBL_Camera_Unknown1(void)
     int32 angle = RSDK.Cos1024(-self->rotationY) << 12;
     if (angle < 0x3C0000)
         angle = 0x3C0000;
-    //if (!angle)
-    //    angle = 1;
 
     int32 ang  = self->angle - self->field_7C;
     int32 ang2 = ang - 0x400;

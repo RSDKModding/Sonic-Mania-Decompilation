@@ -321,8 +321,8 @@ void ZipLine_Unknown1(void)
         if ((1 << Zone->playerID) & zipline->activePlayers)
             Zone->playerFlags[Zone->playerID] = false;
 #else
-        // if (zipline->activePlayers)
-        //     Zone->playerFlags = false;
+        if (zipline->activePlayers)
+           Zone->playerFlags = false;
 #endif
     }
 }

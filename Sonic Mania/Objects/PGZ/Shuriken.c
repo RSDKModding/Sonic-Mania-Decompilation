@@ -83,15 +83,7 @@ void Shuriken_CheckPlayerCollisions(void)
     {
         if (Player_CheckCollisionTouch(player, self, &Shuriken->hitbox3)) {
 #if RETRO_USE_PLUS
-            int32 anim = player->animator.animationID;
-            if (player->characterID == ID_MIGHTY && (anim == ANI_CROUCH || anim == ANI_JUMP || anim == ANI_SPINDASH || anim == ANI_DROPDASH)) {
-                if (!player->uncurlTimer) {
-                    RSDK.PlaySfx(Player->sfxPimPom, false, 255);
-                    player->uncurlTimer = 30;
-                }
-                int32 angle           = RSDK.ATan2(player->position.x - self->position.x, player->position.y - self->position.y);
-                self->velocity.x  = -0x400 * RSDK.Cos256(angle);
-                self->velocity.y  = -0x600 * RSDK.Sin256(angle);
+            if (Player_CheckMightyShellHit(player, self, -0x400, -0x600)) {
                 self->interaction = false;
                 self->state       = Shuriken_Unknown14;
             }

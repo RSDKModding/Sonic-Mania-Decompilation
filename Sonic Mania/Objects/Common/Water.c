@@ -1352,6 +1352,14 @@ void Water_EditorLoad(void)
         Water->bigBubbleSprite = RSDK.LoadSpriteAnimation("HCZ/BigBubble.bin", SCOPE_STAGE);
         RSDK.SetSpriteAnimation(Water->wakeSprite, 0, &Water->wakeData, true, 0);
     }
+
+    RSDK_ACTIVE_VAR(Water, type);
+    RSDK_ENUM_VAR("Palette", WATER_PALETTE);
+    RSDK_ENUM_VAR("Rect", WATER_RECT);
+    RSDK_ENUM_VAR("Bubbler", WATER_BUBBLER);
+    RSDK_ENUM_VAR("Adjuster", WATER_ADJUST);
+    RSDK_ENUM_VAR("Bubbler 2", WATER_BUBBLER_2);
+    RSDK_ENUM_VAR("Ride Bubble Spawner", WATER_BUBBLE_SPAWNER);
 }
 
 void Water_Serialize(void)
@@ -1367,15 +1375,4 @@ void Water_Serialize(void)
     RSDK_EDITABLE_VAR(Water, VAR_UINT8, b);
     RSDK_EDITABLE_VAR(Water, VAR_UINT8, priority);
     RSDK_EDITABLE_VAR(Water, VAR_BOOL, destroyOnTrigger);
-
-    RSDK_ACTIVE_VAR(Water, type);
-    RSDK_ENUM_VAR("Palette", WATER_PALETTE);
-    RSDK_ENUM_VAR("Rect", WATER_RECT);
-    RSDK_ENUM_VAR("Bubbler", WATER_BUBBLER);
-    RSDK_ENUM_VAR("Adjuster", WATER_ADJUST);
-    RSDK_ENUM_VAR("Bubbler 2", WATER_BUBBLER_2);
-    RSDK_ENUM_VAR("Ride Bubble Spawner", WATER_BUBBLE_SPAWNER);
-    // RSDK_ENUM_VAR(WATER_SPLASH);
-    // RSDK_ENUM_VAR(WATER_BUBBLE);
-    // RSDK_ENUM_VAR(WATER_COUNTDOWNBUBBLE);
 }

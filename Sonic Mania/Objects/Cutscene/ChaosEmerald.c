@@ -38,13 +38,13 @@ void ChaosEmerald_Create(void *data)
     self->drawFX        = FX_FLIP;
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x800000;
-    self->state         = ChaosEmerald_State_Unknown1;
+    self->state         = ChaosEmerald_State_None;
     RSDK.SetSpriteAnimation(ChaosEmerald->aniFrames, 0, &self->animator, true, self->type);
 }
 
 void ChaosEmerald_StageLoad(void) { ChaosEmerald->aniFrames = RSDK.LoadSpriteAnimation("Cutscene/Emeralds.bin", SCOPE_STAGE); }
 
-void ChaosEmerald_State_Unknown1(void)
+void ChaosEmerald_State_None(void)
 {
     // hello
 }

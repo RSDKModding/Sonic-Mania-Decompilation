@@ -183,12 +183,12 @@ void UIControl_ProcessInputs(void)
             UIControl->leftPress[i]  = ControllerInfo[i + 1].keyLeft.press || AnalogStickInfoL[i + 1].keyLeft.press;
             UIControl->rightPress[i] = ControllerInfo[i + 1].keyRight.press || AnalogStickInfoL[i + 1].keyRight.press;
 
-            if (UIControl->upPress[i] && UIControl->downPress[i]) // up and down? neither!
+            if (UIControl->upPress[i] && UIControl->downPress[i]) 
             {
                 UIControl->upPress[i]   = false;
                 UIControl->downPress[i] = false;
             }
-            if (UIControl->leftPress[i] && UIControl->rightPress[i]) // left and right? neither!
+            if (UIControl->leftPress[i] && UIControl->rightPress[i]) 
             {
                 UIControl->leftPress[i]  = false;
                 UIControl->rightPress[i] = false;

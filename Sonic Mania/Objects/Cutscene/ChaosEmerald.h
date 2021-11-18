@@ -42,7 +42,7 @@ void ChaosEmerald_EditorLoad(void);
 void ChaosEmerald_Serialize(void);
 
 // Extra Entity Functions
-void ChaosEmerald_State_Unknown1(void);
+void ChaosEmerald_State_None(void);
 void ChaosEmerald_State_Rotate(void);
 
 

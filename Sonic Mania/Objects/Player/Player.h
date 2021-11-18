@@ -349,10 +349,10 @@ typedef struct {
     int32 skidding;
     int32 pushing;
     int32 underwater;      // 0 = not in water, 1 = in palette water, else water entityID
-    bool32 groundedStore;  // stored grounded state
-    bool32 invertGravity;  // FBZ magnet flip
-    bool32 isChibi;        // MMZ Chibi form flag
-    bool32 forceTransform; // force transform flag
+    bool32 groundedStore;  // prev onGround flag
+    bool32 invertGravity; 
+    bool32 isChibi;       
+    bool32 forceTransform;
     int32 superState;
     int32 superSecondTimer;
     int32 superBlendAmount;
@@ -486,7 +486,7 @@ bool32 Player_CheckProjectileHit(EntityPlayer *player, void *projectile);
 #if RETRO_USE_PLUS
 // similar to checkHit, but for objects that should bounce off mighty's shell, returns true if deflected, otherwise the player is hit and returns
 // false
-bool32 Player_CheckMightyShellHit(EntityPlayer *player, void *e);
+bool32 Player_CheckMightyShellHit(EntityPlayer *player, void *e, int velX, int velY);
 #endif
 // idk yet, needs more research
 bool32 Player_CheckHit2(EntityPlayer *player, void *entity, bool32 flag);

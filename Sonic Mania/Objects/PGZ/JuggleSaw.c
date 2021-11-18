@@ -368,17 +368,7 @@ void JuggleSaw_Saw_Handle(void)
             if (Player_CheckCollisionTouch(player, self, &JuggleSaw->sawHitbox)) {
                 int32 animID = player->animator.animationID;
 #if RETRO_USE_PLUS
-                // Could this be used?
-                // if (Player_CheckMightyShellHit())
-                if (player->characterID == ID_MIGHTY
-                    && (animID == ANI_CROUCH || animID == ANI_JUMP || animID == ANI_SPINDASH || animID == ANI_DROPDASH)) {
-                    if (!player->uncurlTimer) {
-                        RSDK.PlaySfx(Player->sfxPimPom, false, 0xFF);
-                        player->uncurlTimer = 30;
-                    }
-                    int32 targetAngle     = RSDK.ATan2(player->position.x - self->position.x, player->position.y - self->position.y);
-                    self->velocity.x  = -0x400 * RSDK.Cos256(targetAngle);
-                    self->velocity.y  = -0x600 * RSDK.Sin256(targetAngle);
+                if (Player_CheckMightyShellHit(player, self, -0x400, -0x600)) {
                     self->interaction = false;
                     self->state       = JuggleSaw_Saw_Knocked;
                 }

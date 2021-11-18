@@ -1277,23 +1277,11 @@ void HeavyMystic_State3_Unknown1(void)
     {
         if (Player_CheckCollisionTouch(player, self, &self->hitbox)) {
 #if RETRO_USE_PLUS
-            int anim = player->animator.animationID;
-            if (player->characterID == ID_MIGHTY && (anim == ANI_CROUCH || anim == ANI_JUMP || anim == ANI_SPINDASH || anim == ANI_DROPDASH)) {
-                if (!player->uncurlTimer) {
-                    RSDK.PlaySfx(Player->sfxPimPom, false, 255);
-                    player->uncurlTimer = 30;
-                }
-                int angle          = RSDK.ATan2(player->position.x - self->position.x, player->position.y - self->position.y);
-                self->velocity.x = -0x300 * RSDK.Cos256(angle);
-                self->velocity.y = -0x400 * RSDK.Sin256(angle);
-                self->state      = HeavyMystic_State3_Unknown2;
-            }
-            else {
+            if (Player_CheckMightyShellHit(player, self, -0x300, -0x400))
+                self->state = HeavyMystic_State3_Unknown2;
+            else 
 #endif
                 Player_CheckHit(player, self);
-#if RETRO_USE_PLUS
-            }
-#endif
             RSDK.PlaySfx(HeavyMystic->sfxExplosion, false, 255);
             CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSSPUFF), self->position.x, self->position.y)->drawOrder = Zone->drawOrderHigh + 2;
             destroyEntity(self);

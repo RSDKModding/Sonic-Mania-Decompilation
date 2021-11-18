@@ -67,12 +67,12 @@ enum UserdataTableIDs {
     APITable_Unknown31,
     APITable_GetUserDBSatus,
     APITable_Unknown33,
-    APITable_Unknown34,
+    APITable_SortUserDBRows,
     APITable_GetUserDBUnknownCount,
     APITable_GetUserDBUnknown,
-    APITable_Unknown37,
+    APITable_AddUserDBRow,
     APITable_SetUserDBValue,
-    APITable_Unknown39,
+    APITable_GetUserDBValue,
     APITable_GetEntryUUID,
     APITable_GetUserDBByID,
     APITable_GetUserDBCreationTime,
@@ -419,12 +419,12 @@ void setupFunctions()
     addToAPIFunctionTable(APITable_Unknown31, InitDBRowUnknown);
     addToAPIFunctionTable(APITable_GetUserDBSatus, GetUserDBStatus);
     addToAPIFunctionTable(APITable_Unknown33, UserDBUnknown33);
-    addToAPIFunctionTable(APITable_Unknown34, SortUserDBRows);
+    addToAPIFunctionTable(APITable_SortUserDBRows, SortUserDBRows);
     addToAPIFunctionTable(APITable_GetUserDBUnknownCount, GetUserDBRowUnknownCount);
     addToAPIFunctionTable(APITable_GetUserDBUnknown, GetUserDBRowUnknown);
-    addToAPIFunctionTable(APITable_Unknown37, AddUserDBRow);
+    addToAPIFunctionTable(APITable_AddUserDBRow, AddUserDBRow);
     addToAPIFunctionTable(APITable_SetUserDBValue, SetUserDBValue);
-    addToAPIFunctionTable(APITable_Unknown39, GetUserDBValue);
+    addToAPIFunctionTable(APITable_GetUserDBValue, GetUserDBValue);
     addToAPIFunctionTable(APITable_GetEntryUUID, GetDBRowUUID);
     addToAPIFunctionTable(APITable_GetUserDBByID, GetUserDBByID);
     addToAPIFunctionTable(APITable_GetUserDBCreationTime, GetUserDBCreationTime);

@@ -77,7 +77,7 @@ void Stalactite_State_Unknown2(void)
     {
         if (Player_CheckCollisionTouch(player, self, &Stalactite->hitbox1)) {
 #if RETRO_USE_PLUS
-            if (Player_CheckMightyShellHit(player, self))
+            if (Player_CheckMightyShellHit(player, self, -0x300, -0x400))
                 self->state = Stalactite_State_Unknown5;
             else
 #endif
@@ -113,7 +113,7 @@ void Stalactite_State_Unknown4(void)
     {
         if (Player_CheckCollisionTouch(player, self, &Stalactite->hitbox1)) {
 #if RETRO_USE_PLUS
-            if (Player_CheckMightyShellHit(player, self))
+            if (Player_CheckMightyShellHit(player, self, -0x300, -0x400))
                 self->state = Stalactite_State_Unknown5;
             else
 #endif
