@@ -50,6 +50,7 @@ void TilePlatform_Create(void *data)
 
 void TilePlatform_StageLoad(void) {}
 
+#if RETRO_INCLUDE_EDITOR
 void TilePlatform_EditorDraw(void)
 {
     RSDK_THIS(TilePlatform);
@@ -64,7 +65,27 @@ void TilePlatform_EditorDraw(void)
                   self->position.y + self->size.y, 0xFFFF00, 0xFF, INK_NONE, false);
 }
 
-void TilePlatform_EditorLoad(void) {}
+void TilePlatform_EditorLoad(void) {
+    RSDK_ACTIVE_VAR(TilePlatform, type);
+    RSDK_ENUM_VAR("Fixed", PLATFORM_FIXED);
+    RSDK_ENUM_VAR("Collapsing", PLATFORM_COLLAPSING);
+    RSDK_ENUM_VAR("Moving (Smooth)", PLATFORM_MOVING);
+    RSDK_ENUM_VAR("Circlular", PLATFORM_CIRCULAR);
+    RSDK_ENUM_VAR("Swinging", PLATFORM_SWINGING);
+    RSDK_ENUM_VAR("Controlled", PLATFORM_CONTROLLED);
+    RSDK_ENUM_VAR("Pushable", PLATFORM_PUSHABLE);
+    RSDK_ENUM_VAR("Moving (Static)", PLATFORM_MOVING_STATIC);
+    RSDK_ENUM_VAR("Wait for Player", PLATFORM_WAIT);
+    RSDK_ENUM_VAR("Wait for Player (Oscillate)", PLATFORM_WAIT_OSC);
+    RSDK_ENUM_VAR("Activate when Above", PLATFORM_ACTIVEABOVE);
+    RSDK_ENUM_VAR("Controlled (Activates PlatformControl)", PLATFORM_CONT_ACTIVATER);
+    RSDK_ENUM_VAR("Wait for Player, then Move with Arc", PLATFORM_WAIT_ARC);
+    RSDK_ENUM_VAR("Sticky", PLATFORM_STICKY);
+    RSDK_ENUM_VAR("Swinging (Clackers)", PLATFORM_SWING_CLACK);
+    RSDK_ENUM_VAR("Static", PLATFORM_STATIC);
+    RSDK_ENUM_VAR("Wait for Player, then Sink", PLATFORM_SINKER);
+}
+#endif
 
 void TilePlatform_Serialize(void)
 {

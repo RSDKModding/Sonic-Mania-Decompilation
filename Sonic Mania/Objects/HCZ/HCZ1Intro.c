@@ -36,7 +36,7 @@ void HCZ1Intro_Create(void *data)
 void HCZ1Intro_StageLoad(void)
 {
     if (isMainGameMode() && globals->enableIntro && !PlayerHelpers_CheckStageReload() && !Zone->actID) {
-        Water->field_D4 = 1;
+        Water->ignoreChild = 1;
     }
 }
 
@@ -83,7 +83,7 @@ bool32 HCZ1Intro_CutsceneState(EntityCutsceneSeq *host)
             camera->state       = Camera_State_Follow;
             player1->stateInput = Player_ProcessP1Input;
             player1->camera     = camera;
-            Water->field_D4     = 0;
+            Water->ignoreChild     = 0;
         }
     }
     else {

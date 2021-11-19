@@ -433,7 +433,7 @@ void LaundroMobile_HandleStageWrap(void)
                         if (water->type == WATER_BUBBLE) {
                             water->position.x -= offsetX;
                             water->position.y -= offsetY;
-                            water->field_68 = water->position.x;
+                            water->bubbleX = water->position.x;
                         }
                     }
                     else if (entPtr->objectID == ImageTrail->objectID) {
@@ -1190,7 +1190,7 @@ void LaundroMobile_State_Finish(void)
     LaundroMobile_Explode();
 
     if (--self->timer <= 0) {
-        Water->field_C8 = true;
+        Water->moveWaterLevel = true;
         Water->targetWaterLevel += 0x780000;
         Water->waterMoveSpeed = 0x10000;
         self->timer         = 0;
@@ -1552,7 +1552,7 @@ void LaundroMobile_State1_Unknown3(void)
             water->angle       = 2 * RSDK.Rand(0, 256);
             water->speed       = -0x1400;
             water->velocity.x  = (LaundroMobile->currentVelocity + (LaundroMobile->currentVelocity >> 2)) + (LaundroMobile->currentVelocity >> 1);
-            water->field_68    = water->position.x;
+            water->bubbleX    = water->position.x;
             water->childPtr    = 0;
             RSDK.SetSpriteAnimation(Water->aniFrames, 3, &water->animator, false, 5);
             water->tileCollisions = true;

@@ -169,7 +169,7 @@ void Armadiloid_State_PlatformShoot(void)
         projectile->hitbox.top       = -4;
         projectile->hitbox.right     = 4;
         projectile->hitbox.bottom    = 4;
-        projectile->type             = 7;
+        projectile->type             = PROJECTILE_BASIC2;
         RSDK.SetSpriteAnimation(Armadiloid->aniFrames, 5, &projectile->animator, true, 0);
     }
 

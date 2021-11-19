@@ -347,7 +347,7 @@ bool32 DiveEggman_Unknown10(void)
         EntityWater *water = CREATE_ENTITY(Water, intToVoid(WATER_BUBBLE), self->position.x, self->position.y);
         water->velocity.y  = -0x8800;
         water->angle       = 2 * RSDK.Rand(0, 256);
-        water->field_68    = water->position.x;
+        water->bubbleX    = water->position.x;
         water->childPtr    = 0;
         RSDK.SetSpriteAnimation(Water->aniFrames, 3, &water->animator, true, 0);
         destroyEntity(self);

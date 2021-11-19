@@ -34,7 +34,7 @@ void ParallaxSprite_Draw(void)
         drawPos.y += self->loopPoint.y;
     }
 
-    if (self->attribute == PSPRITE_ATTR_2) {
+    if (self->attribute == PSPRITE_ATTR_COLORS) {
         int32 y = (drawPos.y >> 16) - 32;
         int32 x = (drawPos.x >> 16) - 56;
         RSDK.DrawRect(x, y, 112, 64, self->colour1, 255, INK_NONE, true);
@@ -70,7 +70,7 @@ void ParallaxSprite_Create(void *data)
             self->visible = !self->hiddenAtStart;
             self->state   = ParallaxSprite_State_RotateAndScroll;
             break;
-        case PSPRITE_ATTR_2:
+        case PSPRITE_ATTR_COLORS:
 #if RETRO_USE_PLUS
             if (SceneInfo->filter & FILTER_ENCORE) {
                 self->colour1 = 0x189098;
@@ -222,6 +222,7 @@ void ParallaxSprite_State_FadeOut(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void ParallaxSprite_EditorDraw(void)
 {
     RSDK_THIS(ParallaxSprite);
@@ -231,7 +232,7 @@ void ParallaxSprite_EditorDraw(void)
     drawPos.x        = self->position.x;
     drawPos.y        = self->position.y;
 
-    if (self->attribute == PSPRITE_ATTR_2) {
+    if (self->attribute == PSPRITE_ATTR_COLORS) {
         int32 x = (drawPos.x >> 16) - 56;
         int32 y = (drawPos.y >> 16) - 32;
         RSDK.DrawRect(x << 16, y << 16, 112 << 16, 64 << 16, self->colour1, 255, 0, false);
@@ -267,7 +268,16 @@ void ParallaxSprite_EditorLoad(void)
         ParallaxSprite->aniFrames = RSDK.LoadSpriteAnimation("OOZ/OOZParallax.bin", SCOPE_STAGE);
     else if (RSDK.CheckStageFolder("LRZ2") || RSDK.CheckStageFolder("LRZ3"))
         ParallaxSprite->aniFrames = RSDK.LoadSpriteAnimation("LRZ2/LRZParallax.bin", SCOPE_STAGE);
+
+    RSDK_ACTIVE_VAR(ParallaxSprite, attribute);
+    RSDK_ENUM_VAR("Basic", PSPRITE_ATTR_NONE);
+    RSDK_ENUM_VAR("Unused (same as Basic)", PSPRITE_ATTR_1);
+    RSDK_ENUM_VAR("Colors (SPZ Billboard)", PSPRITE_ATTR_COLORS);
+    RSDK_ENUM_VAR("Spawner", PSPRITE_ATTR_SPAWNER);
+    RSDK_ENUM_VAR("Fade Out", PSPRITE_ATTR_FADEOUT);
+    RSDK_ENUM_VAR("Blend", PSPRITE_ATTR_BLENDHIGH);
 }
+#endif
 
 void ParallaxSprite_Serialize(void)
 {

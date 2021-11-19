@@ -58,36 +58,36 @@ void Fan_StaticUpdate(void)
                 offsetH = clampVal(offsetH, -0x20000, 0x20000);
                 offsetV = clampVal(offsetV, -0x20000, 0x20000);
 
-                if (water->field_B4 < offsetH) {
-                    int32 val = water->field_B4 + 0x800;
+                if (water->bubbleOffset.x < offsetH) {
+                    int32 val = water->bubbleOffset.x + 0x800;
                     if (val < offsetH)
-                        water->field_B8 = val;
+                        water->bubbleOffset.y = val;
                     else
-                        water->field_B8 = offsetH;
+                        water->bubbleOffset.y = offsetH;
                 }
 
-                if (water->field_B4 > offsetH) {
-                    int32 val = water->field_B4 - 0x800;
+                if (water->bubbleOffset.x > offsetH) {
+                    int32 val = water->bubbleOffset.x - 0x800;
                     if (val > offsetH)
-                        water->field_B8 = val;
+                        water->bubbleOffset.y = val;
                     else
-                        water->field_B8 = offsetH;
+                        water->bubbleOffset.y = offsetH;
                 }
 
-                if (water->field_B8 < offsetV) {
-                    int32 val = water->field_B8 + 0x800;
+                if (water->bubbleOffset.y < offsetV) {
+                    int32 val = water->bubbleOffset.y + 0x800;
                     if (val < offsetV)
-                        water->field_B8 = val;
+                        water->bubbleOffset.y = val;
                     else
-                        water->field_B8 = offsetV;
+                        water->bubbleOffset.y = offsetV;
                 }
 
-                if (water->field_B8 > offsetV) {
-                    int32 val = water->field_B8 - 0x800;
+                if (water->bubbleOffset.y > offsetV) {
+                    int32 val = water->bubbleOffset.y - 0x800;
                     if (val > offsetV)
-                        water->field_B8 = val;
+                        water->bubbleOffset.y = val;
                     else
-                        water->field_B8 = offsetV;
+                        water->bubbleOffset.y = offsetV;
                 }
             }
         }
@@ -327,7 +327,7 @@ void Fan_HandlePlayerInteractions_Top(void)
 #else
             water->position.x += RSDK.Rand(-6, 7) << 16;
 #endif
-            water->field_68   = water->position.x;
+            water->bubbleX   = water->position.x;
             water->velocity.y = -0x40000;
             water->childPtr   = NULL;
         }

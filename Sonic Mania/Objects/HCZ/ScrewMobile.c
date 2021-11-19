@@ -539,7 +539,7 @@ void ScrewMobile_State2_Unknown1(void)
 
                     water->velocity.y = -0x8800;
                     water->angle      = 2 * RSDK.Rand(0, 256);
-                    water->field_68   = water->position.x;
+                    water->bubbleX   = water->position.x;
                     water->childPtr   = 0;
                     RSDK.SetSpriteAnimation(Water->aniFrames, 3, &water->animator, true, 0);
                     destroyEntity(eggman);

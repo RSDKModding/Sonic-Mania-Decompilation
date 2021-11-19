@@ -61,7 +61,7 @@ void DCEvent_Create(void *data)
                 int y              = self->position.y;
                 RSDK.ResetEntityPtr(water, Water->objectID, intToVoid(WATER_BUBBLE));
                 water->position.x = x;
-                water->field_68   = x;
+                water->bubbleX   = x;
                 water->position.y = y;
                 water->childPtr   = 0;
                 water->speed      = -1;
@@ -330,7 +330,7 @@ void DCEvent_State2_Unknown1(void)
         water->velocity.y  = -0x8800;
         water->childPtr    = 0;
         water->angle       = 2 * RSDK.Rand(0, 256);
-        water->field_68    = water->position.x;
+        water->bubbleX    = water->position.x;
         RSDK.SetSpriteAnimation(Water->aniFrames, 3, &water->animator, true, 0);
 
         EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);

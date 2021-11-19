@@ -137,7 +137,7 @@ void Cactula_State_Unknown3(void)
                 projectile->hitbox.top       = -6;
                 projectile->hitbox.right     = 6;
                 projectile->hitbox.bottom    = 6;
-                projectile->type             = 7;
+                projectile->type             = PROJECTILE_BASIC2;
                 projectile->hurtDelay        = 16;
                 RSDK.SetSpriteAnimation(Cactula->aniFrames, 2, &projectile->animator, true, 0);
                 self->flag = true;

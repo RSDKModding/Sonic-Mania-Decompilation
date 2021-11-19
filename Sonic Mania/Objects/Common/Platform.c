@@ -97,7 +97,7 @@ void Platform_Draw(void)
     if (self->frameID >= 0) {
 
         if ((self->state == Platform_State_Circular && self->hasTension)
-            || (self->state == Platform_State_Swing || self->state == Platform_State_Swing_Clack || self->type == PLATFORM_SWING_MOVE)) {
+            || (self->state == Platform_State_Swing || self->state == Platform_State_Swing_Clack || self->type == PLATFORM_WAIT_ARC)) {
             int32 ang = 0;
             if (self->state == Platform_State_Circular && self->hasTension)
                 ang = self->speed * Zone->timer + 4 * self->angle;
@@ -227,7 +227,7 @@ void Platform_Create(void *data)
                 }
                 self->state = Platform_State_ActiveFromAbove;
                 break;
-            case PLATFORM_SWING_MOVE: self->timer = 88;
+            case PLATFORM_WAIT_ARC: self->timer = 88;
             case PLATFORM_SWINGING:
                 self->updateRange.x = (abs(self->amplitude.y) + 512) << 14;
                 self->updateRange.y = (abs(self->amplitude.y) + 512) << 14;
@@ -2379,10 +2379,10 @@ void Platform_EditorDraw(void)
                 }
 
                 break;
-            case PLATFORM_SWING_MOVE:
+            case PLATFORM_WAIT_ARC:
             case PLATFORM_SWINGING: {
                 self->timer = 0;
-                if (self->type == PLATFORM_SWING_MOVE)
+                if (self->type == PLATFORM_WAIT_ARC)
                     self->timer = 88;
 
                 self->updateRange.x = (abs(amplitude.y) + 0x200) << 14;
@@ -2578,15 +2578,15 @@ void Platform_EditorLoad(void)
     RSDK_ENUM_VAR("Controlled", PLATFORM_CONTROLLED);
     RSDK_ENUM_VAR("Pushable", PLATFORM_PUSHABLE);
     RSDK_ENUM_VAR("Moving (Static)", PLATFORM_MOVING_STATIC);
-    RSDK_ENUM_VAR("Move When Stood", PLATFORM_WAIT);
-    RSDK_ENUM_VAR("Move When Stood (Oscillate)", PLATFORM_WAIT_OSC);
-    RSDK_ENUM_VAR("Activated When Above", PLATFORM_ACTIVEABOVE);
+    RSDK_ENUM_VAR("Wait for Player", PLATFORM_WAIT);
+    RSDK_ENUM_VAR("Wait for Player (Oscillate)", PLATFORM_WAIT_OSC);
+    RSDK_ENUM_VAR("Activate when Above", PLATFORM_ACTIVEABOVE);
     RSDK_ENUM_VAR("Controlled (Activates PlatformControl)", PLATFORM_CONT_ACTIVATER);
-    RSDK_ENUM_VAR("Swinging (Move when stood)", PLATFORM_SWING_MOVE);
+    RSDK_ENUM_VAR("Wait for Player, then Move with Arc", PLATFORM_WAIT_ARC);
     RSDK_ENUM_VAR("Sticky", PLATFORM_STICKY);
     RSDK_ENUM_VAR("Swinging (Clackers)", PLATFORM_SWING_CLACK);
     RSDK_ENUM_VAR("Static", PLATFORM_STATIC);
-    RSDK_ENUM_VAR("Sink When Stood", PLATFORM_SINKER);
+    RSDK_ENUM_VAR("Wait for Player, then Sink", PLATFORM_SINKER);
 
     RSDK_ACTIVE_VAR(Platform, collision);
     RSDK_ENUM_VAR("Solid (Top)", PLATFORM_C_SOLID_TOP);

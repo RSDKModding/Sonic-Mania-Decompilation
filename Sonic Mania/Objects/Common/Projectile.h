@@ -3,9 +3,20 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    PROJECTILE_NOTHING0,
+    PROJECTILE_FIRE,
+    PROJECTILE_ELECTRIC,
+    PROJECTILE_NOTHING3,
+    PROJECTILE_BASIC,
+    PROJECTILE_NOTHING5,
+    PROJECTILE_NOTHING6,
+    PROJECTILE_BASIC2
+} ProjectileTypes;
+
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
 } ObjectProjectile;
 
 // Entity Class
@@ -30,7 +41,7 @@ void Projectile_Update(void);
 void Projectile_LateUpdate(void);
 void Projectile_StaticUpdate(void);
 void Projectile_Draw(void);
-void Projectile_Create(void* data);
+void Projectile_Create(void *data);
 void Projectile_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void Projectile_EditorDraw(void);
@@ -43,4 +54,4 @@ void Projectile_CheckPlayerCollisions(void);
 void Projectile_State_Move(void);
 void Projectile_State_MoveGravity(void);
 
-#endif //!OBJ_PROJECTILE_H
+#endif //! OBJ_PROJECTILE_H
