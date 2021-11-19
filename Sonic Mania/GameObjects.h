@@ -140,9 +140,9 @@ typedef struct {
     void (*SaveUserDB)(uint16 tableID, void (*callback)(int32 status));
     void (*ClearUserDB)(uint16 tableID);
     void (*ClearAllUserDBs)(void);
-    void (*SetupSortedUserDBRowIDs)(uint16 tableID);
+    void (*SetupUserDBRowSorting)(uint16 tableID);
     bool32 (*GetUserDBRowsChanged)(uint16 tableID);
-    void (*Unknown33)(uint16 tableID, int32 type, const char *name, void *value);
+    void (*AddRowSortFilter)(uint16 tableID, int32 type, const char *name, void *value);
     void (*SortDBRows)(uint16 tableID, int32 type, const char *name, bool32 flag);
     int32 (*GetSortedUserDBRowCount)(uint16 tableID);
     int32 (*GetSortedUserDBRowID)(uint16 tableID, uint16 row);

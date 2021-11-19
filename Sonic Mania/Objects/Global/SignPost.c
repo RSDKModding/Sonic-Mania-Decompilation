@@ -416,7 +416,7 @@ void SignPost_CheckTouch(void)
                 if (flag) {
                     if (!((1 << p) & self->activePlayers) && globals->gameMode == MODE_COMPETITION)
                         Announcer_AnnounceGoal(player->camera->screenID);
-                    RSDK.PlaySfx(SignPost->sfxSignPost, 0, 255);
+                    RSDK.PlaySfx(SignPost->sfxSignPost, false, 255);
                     self->active = ACTIVE_NORMAL;
                     if (player->superState == SUPERSTATE_SUPER)
                         player->superState = SUPERSTATE_FADEOUT;

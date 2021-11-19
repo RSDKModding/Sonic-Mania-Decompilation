@@ -56,7 +56,7 @@ void Options_LoadCallback(int32 success);
 void Options_LoadOptionsBin(void);
 void Options_SaveOptionsBin(void (*callback)(int32));
 void Options_SetLanguage(int32 language);
-void Options_Unknown1(EntityOptions *options);
+void Options_LoadValuesFromSettings(EntityOptions *options);
 void Options_LoadOptionsCallback(int32 statusCode);
 void Options_SaveOptionsCallback(int32 statusCode);
 

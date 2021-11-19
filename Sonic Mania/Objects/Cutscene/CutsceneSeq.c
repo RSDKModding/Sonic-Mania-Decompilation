@@ -24,7 +24,7 @@ void CutsceneSeq_LateUpdate(void)
 
         if (!self->cutsceneStates[self->stateID]) {
             LogHelpers_Print("Sequence completed");
-            RSDK.ResetEntityPtr(self, TYPE_BLANK, NULL);
+            destroyEntity(self);
         }
     }
 
@@ -62,8 +62,7 @@ void CutsceneSeq_Draw(void)
 #if RETRO_USE_PLUS
             RSDK.PrintVector2(0, "Draw poi ", point->x, point->y);
 #endif
-            RSDK.DrawLine(point->x - 0x100000, point->y - 0x100000, point->x + 0x100000, point->y + 0x100000, colours[i], 0x7F, INK_NONE, false);
-            RSDK.DrawLine(point->x + 0x100000, point->y - 0x100000, point->x - 0x100000, point->y + 0x100000, colours[i], 0x7F, INK_NONE, false);
+            DrawHelpers_DrawCross(point->x, point->y, 0x200000, 0x200000, colours[i]);
         }
     }
 

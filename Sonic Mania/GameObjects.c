@@ -907,7 +907,7 @@ void LinkGameLogicDLL(EngineInfo *info)
         ADD_PUBLIC_FUNC(MathHelpers_Unknown7);
         ADD_PUBLIC_FUNC(MathHelpers_PointInHitbox);
         ADD_PUBLIC_FUNC(MathHelpers_Unknown9);
-        ADD_PUBLIC_FUNC(MathHelpers_Unknown10);
+        ADD_PUBLIC_FUNC(MathHelpers_GetValueSign);
         ADD_PUBLIC_FUNC(MathHelpers_Unknown11);
         ADD_PUBLIC_FUNC(MathHelpers_Unknown12);
         ADD_PUBLIC_FUNC(MathHelpers_Unknown13);
@@ -919,7 +919,7 @@ void LinkGameLogicDLL(EngineInfo *info)
         ADD_PUBLIC_FUNC(Options_LoadOptionsBin);
         ADD_PUBLIC_FUNC(Options_SaveOptionsBin);
         ADD_PUBLIC_FUNC(Options_SetLanguage);
-        ADD_PUBLIC_FUNC(Options_Unknown1);
+        ADD_PUBLIC_FUNC(Options_LoadValuesFromSettings);
         ADD_PUBLIC_FUNC(Options_LoadOptionsCallback);
         ADD_PUBLIC_FUNC(Options_SaveOptionsCallback);
 

@@ -905,8 +905,8 @@ void OptionsMenu_Unknown44(void)
         control->selectionDisabled = true;
         UIWaitSpinner_Wait();
     }
-    API.SetupSortedUserDBRowIDs(globals->replayTableID);
-    API.SetupSortedUserDBRowIDs(globals->taTableID);
+    API.SetupUserDBRowSorting(globals->replayTableID);
+    API.SetupUserDBRowSorting(globals->taTableID);
     if (API.GetSortedUserDBRowCount(globals->replayTableID) <= 0) {
         ReplayRecorder_SaveReplayDB(OptionsMenu_Unknown45);
     }

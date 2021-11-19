@@ -64,12 +64,12 @@ enum UserdataTableIDs {
     APITable_SaveUserDB,
     APITable_ClearUserDB,
     APITable_ClearAllUserDBs,
-    APITable_Unknown31,
-    APITable_GetUserDBSatus,
-    APITable_Unknown33,
+    APITable_SetupUserDBRowSorting,
+    APITable_GetUserDBRowsChanged,
+    APITable_AddUserDBRowSortFilter,
     APITable_SortUserDBRows,
-    APITable_GetUserDBUnknownCount,
-    APITable_GetUserDBUnknown,
+    APITable_GetSortedUserDBRowCount,
+    APITable_GetSortedUserDBRowID,
     APITable_AddUserDBRow,
     APITable_SetUserDBValue,
     APITable_GetUserDBValue,
@@ -416,12 +416,12 @@ void setupFunctions()
     addToAPIFunctionTable(APITable_SaveUserDB, SaveUserDB);
     addToAPIFunctionTable(APITable_ClearUserDB, ClearUserDB);
     addToAPIFunctionTable(APITable_ClearAllUserDBs, ClearAllUserDBs);
-    addToAPIFunctionTable(APITable_Unknown31, InitDBRowUnknown);
-    addToAPIFunctionTable(APITable_GetUserDBSatus, GetUserDBStatus);
-    addToAPIFunctionTable(APITable_Unknown33, UserDBUnknown33);
+    addToAPIFunctionTable(APITable_SetupUserDBRowSorting, SetupUserDBRowSorting);
+    addToAPIFunctionTable(APITable_GetUserDBRowsChanged, GetUserDBRowsChanged);
+    addToAPIFunctionTable(APITable_AddUserDBRowSortFilter, AddUserDBRowSortFilter);
     addToAPIFunctionTable(APITable_SortUserDBRows, SortUserDBRows);
-    addToAPIFunctionTable(APITable_GetUserDBUnknownCount, GetUserDBRowUnknownCount);
-    addToAPIFunctionTable(APITable_GetUserDBUnknown, GetUserDBRowUnknown);
+    addToAPIFunctionTable(APITable_GetSortedUserDBRowCount, GetSortedUserDBRowCount);
+    addToAPIFunctionTable(APITable_GetSortedUserDBRowID, GetSortedUserDBRowID);
     addToAPIFunctionTable(APITable_AddUserDBRow, AddUserDBRow);
     addToAPIFunctionTable(APITable_SetUserDBValue, SetUserDBValue);
     addToAPIFunctionTable(APITable_GetUserDBValue, GetUserDBValue);

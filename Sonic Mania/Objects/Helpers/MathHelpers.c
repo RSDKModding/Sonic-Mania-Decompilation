@@ -42,8 +42,8 @@ void MathHelpers_Lerp2(Vector2 *pos, int32 percent, int32 startX, int32 startY, 
     }
     else {
         int32 val = (RSDK.Sin1024(percent + 0x300) >> 2) + 256;
-        pos->x  = startX + val * ((endX - startX) >> 8);
-        pos->y  = startY + val * ((endY - startY) >> 8);
+        pos->x    = startX + val * ((endX - startX) >> 8);
+        pos->y    = startY + val * ((endY - startY) >> 8);
     }
 }
 
@@ -75,18 +75,18 @@ void MathHelpers_Lerp4(Vector2 *pos, int32 percent, int32 startX, int32 startY, 
     }
     else {
         int32 val = (RSDK.Sin512(percent + 0x180) >> 2) + 0x80;
-        pos->x  = startX + val * ((endX - startX) >> 8);
-        pos->y  = startY + val * ((endY - startY) >> 8);
+        pos->x    = startX + val * ((endX - startX) >> 8);
+        pos->y    = startY + val * ((endY - startY) >> 8);
     }
 }
 
 Vector2 MathHelpers_Unknown5(int32 percent, int32 x1, int32 y1, int32 x2, int32 y2, int32 x3, int32 y3, int32 x4, int32 y4)
 {
-    int32 v9  = 0x10000 - percent;
-    int32 v10 = v9 * ((uint32)(v9 * v9) >> 16) >> 16;
-    int32 v11 = percent * ((uint32)(v9 * v9) >> 16) >> 16;
-    int32 v12 = percent * ((uint32)(percent * percent) >> 16) >> 16;
-    int32 v13 = (0x10000 - percent) * ((uint32)(percent * percent) >> 16) >> 16;
+    int32 invPercent = 0x10000 - percent;
+    int32 v10        = invPercent * ((uint32)(invPercent * invPercent) >> 16) >> 16;
+    int32 v11        = percent * ((uint32)(invPercent * invPercent) >> 16) >> 16;
+    int32 v12        = percent * ((uint32)(percent * percent) >> 16) >> 16;
+    int32 v13        = (0x10000 - percent) * ((uint32)(percent * percent) >> 16) >> 16;
 
     Vector2 result;
     result.x = v12 * (x4 >> 16) + v13 * (x3 >> 16) + v11 * (x2 >> 16) + v10 * (x1 >> 16) + 2 * v11 * (x2 >> 16) + 2 * v13 * (x3 >> 16);
@@ -94,18 +94,18 @@ Vector2 MathHelpers_Unknown5(int32 percent, int32 x1, int32 y1, int32 x2, int32 
     return result;
 }
 
-int32 MathHelpers_SquareRoot(uint32 a1)
+int32 MathHelpers_SquareRoot(uint32 num)
 {
     int32 val = 0x40000000;
     int32 id  = 0;
-    while (val > a1) {
+    while (val > num) {
         val >>= 2;
     }
 
     if (val) {
         do {
-            if (a1 >= val + id) {
-                a1 -= val + id;
+            if (num >= val + id) {
+                num -= val + id;
                 id += 2 * val;
             }
             val >>= 2;
@@ -113,25 +113,25 @@ int32 MathHelpers_SquareRoot(uint32 a1)
         } while (val);
     }
 
-    if (a1 <= id)
+    if (num <= id)
         return id;
     else
         return id + 1;
 }
 
-int32 MathHelpers_Unknown7(int32 a1, int32 a2, int32 a3, int32 a4, int32 a5, int32 a6, int32 a7, int32 a8)
+int32 MathHelpers_Unknown7(int32 x1, int32 y1, int32 x2, int32 y2, int32 x3, int32 y3, int32 x4, int32 y4)
 {
-    int32 prev1 = a1;
-    int32 prev2 = a2;
+    int32 startX1 = x1;
+    int32 startY1 = y1;
 
     int32 val = 0;
-    for (int32 i = 0xCCC; i <= 0x10000; i += 0xCCC) {
-        Vector2 res = MathHelpers_Unknown5(i, a1, a2, a3, a4, a5, a6, a7, a8);
-        int32 val1    = abs(res.x - prev1);
-        int32 val2    = abs(res.y - prev2);
-        val += MathHelpers_SquareRoot((val2 >> 16) * (val2 >> 16) + (val1 >> 16) * (val1 >> 16)) << 16;
-        prev1 = res.x;
-        prev2 = res.y;
+    for (int32 percent = 0xCCC; percent <= 0x10000; percent += 0xCCC) {
+        Vector2 res = MathHelpers_Unknown5(percent, x1, y1, x2, y2, x3, y3, x4, y4);
+        int32 x     = abs(res.x - startX1);
+        int32 y     = abs(res.y - startY1);
+        val += MathHelpers_SquareRoot((x >> 16) * (x >> 16) + (y >> 16) * (y >> 16)) << 16;
+        startX1 = res.x;
+        startY1 = res.y;
     }
     return val;
 }
@@ -141,8 +141,8 @@ bool32 MathHelpers_PointInHitbox(int32 direction, int32 x1, int32 y1, Hitbox *hi
     int32 left, top, right, bottom;
 
     if ((direction & FLIP_X)) {
-        left          = -hitbox->left;
-        right         = -hitbox->right;
+        left  = -hitbox->left;
+        right = -hitbox->right;
     }
     else {
         right = hitbox->right;
@@ -175,44 +175,22 @@ bool32 MathHelpers_PointInHitbox(int32 direction, int32 x1, int32 y1, Hitbox *hi
 
 bool32 MathHelpers_Unknown9(int32 px1, int32 py1, int32 px2, int32 py2, int32 tx1, int32 tx2, int32 ty1, int32 ty2)
 {
-    int32 v8 = px2;
-    int32 v9 = px2;
-    if (px1 < px2)
-        v9 = px1;
-    int32 v10 = py2;
-    int32 v11 = py2;
-    if (py1 < py2)
-        v11 = py1;
-    int32 v17 = v11;
-    int32 v12 = ty2;
-    if (px1 > px2)
-        v8 = px1;
-    int32 v18 = v8;
-    int32 v13 = ty1;
-    int32 v14 = ty2;
-    if (py1 > py2)
-        v10 = py1;
-    int32 v15 = ty1;
-    if (tx1 < ty1)
-        v15 = tx1;
-    if (tx2 < ty2)
-        v14 = tx2;
-    if (tx1 > ty1)
-        v13 = tx1;
-    if (tx2 > ty2)
-        v12 = tx2;
-    return v9 <= v13 && v18 >= v15 && v17 <= v12 && v10 >= v14;
+    int32 left   = px1 < px2 ? px1 : px2;
+    int32 top    = py1 < py2 ? py1 : py2;
+    int32 right  = px1 > px2 ? px1 : px2;
+    int32 bottom = py1 > py2 ? py1 : py2;
+
+    int32 v12 = tx2 > ty2 ? tx2 : ty2;
+    int32 v13 = tx1 > ty1 ? tx1 : ty1;
+    int32 v14 = tx2 < ty2 ? tx2 : ty2;
+    int32 v15 = tx1 < ty1 ? tx1 : ty1;
+
+    return left <= v13 && right >= v15 && top <= v12 && bottom >= v14;
 }
-int32 MathHelpers_Unknown10(int32 px1, int32 py1, int32 px2, int32 py2, int32 tx1, int32 tx2)
+int32 MathHelpers_GetValueSign(int32 px1, int32 py1, int32 px2, int32 py2, int32 tx1, int32 tx2)
 {
-    int32 result = ((tx2 - py1) >> 16) * ((px2 - px1) >> 16) - ((tx1 - px1) >> 16) * ((py2 - py1) >> 16);
-    if (((tx2 - py1) >> 16) * ((px2 - px1) >> 16) == ((tx1 - px1) >> 16) * ((py2 - py1) >> 16))
-        return 0;
-    if (result > 0)
-        return 1;
-    if (result < 0)
-        result = -1;
-    return result;
+    int32 value = ((tx2 - py1) >> 16) * ((px2 - px1) >> 16) - ((tx1 - px1) >> 16) * ((py2 - py1) >> 16);
+    return value > 0 ? 1 : value < 0 ? -1 : 0;
 }
 bool32 MathHelpers_Unknown11(int32 tx1, int32 tx2, int32 ty1, int32 ty2, int32 px2, int32 py2)
 {
@@ -269,8 +247,8 @@ int32 MathHelpers_Unknown12(int32 px1, int32 py1, int32 px2, int32 py2, int32 tx
     }
 
     if (tx1 != ty1 || tx2 != ty2) {
-        int32 valA = MathHelpers_Unknown10(px1, py1, px2, py2, tx1, tx2);
-        int32 valB = MathHelpers_Unknown10(px1, py1, px2, py2, ty1, ty2);
+        int32 valA = MathHelpers_GetValueSign(px1, py1, px2, py2, tx1, tx2);
+        int32 valB = MathHelpers_GetValueSign(px1, py1, px2, py2, ty1, ty2);
         if (valA) {
             if (valA == valB)
                 return 0;
@@ -284,10 +262,10 @@ int32 MathHelpers_Unknown12(int32 px1, int32 py1, int32 px2, int32 py2, int32 tx
                 return false;
         }
 
-        int32 res = MathHelpers_Unknown10(tx1, tx2, ty1, ty2, px1, py1);
+        int32 res = MathHelpers_GetValueSign(tx1, tx2, ty1, ty2, px1, py1);
         if (!res)
             return true;
-        if (res == MathHelpers_Unknown10(tx1, tx2, ty1, ty2, px2, py2))
+        if (res == MathHelpers_GetValueSign(tx1, tx2, ty1, ty2, px2, py2))
             return false;
         return true;
     }
@@ -300,7 +278,7 @@ int32 MathHelpers_Unknown12(int32 px1, int32 py1, int32 px2, int32 py2, int32 tx
 int32 MathHelpers_Unknown13(int32 a1, int32 a2)
 {
     uint32 val = ((abs(a1) >> 16) * (abs(a2) >> 16) << 16) + (abs(a1) >> 16) * (uint16)abs(a2) + (uint16)abs(a1) * (abs(a2) >> 16)
-               + ((uint16)abs(a1) * (uint16)abs(a2) >> 16);
+                 + ((uint16)abs(a1) * (uint16)abs(a2) >> 16);
     if ((a2 ^ ~a1) >= 0)
         return -(int32)val;
     else

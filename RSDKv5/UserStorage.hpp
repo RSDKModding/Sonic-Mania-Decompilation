@@ -52,10 +52,10 @@ struct UserDB {
     byte active;
     byte valid;
     UserDB *parent;
-    byte status;
-    List<int> unknown;
-    int rowUnknown[RETRO_USERDB_ROW_MAX];
-    int rowUnknownCount;
+    byte rowsChanged;
+    List<int> sortedRowList;
+    int sortedRowIDs[RETRO_USERDB_ROW_MAX];
+    int sortedRowCount;
     int columnCount;
     int columnTypes[RETRO_USERDB_COL_MAX];
     char columnNames[RETRO_USERDB_COL_MAX][0x10];
@@ -145,13 +145,13 @@ bool32 RemoveAllDBRows(ushort tableID);
 uint GetDBRowUUID(ushort tableID, int rowID);
 
 // UserDB Row Unknowns
-ushort InitDBRowUnknown(ushort tableID);
-void SetupRowUnknown(UserDB *userDB);
+ushort SetupUserDBRowSorting(ushort tableID);
+void SetupRowSortIDs(UserDB *userDB);
 void UserDBRefreshRowUnknown(UserDB *userDB);
-int UserDBUnknown33(ushort tableID, int type, const char *name, void *value);
+int AddUserDBRowSortFilter(ushort tableID, int type, const char *name, void *value);
 int SortUserDBRows(ushort tableID, int type, const char *name, bool32 active);
-int GetUserDBRowUnknownCount(ushort tableID);
-int GetUserDBRowUnknown(ushort tableID, ushort entryID);
+int GetSortedUserDBRowCount(ushort tableID);
+int GetSortedUserDBRowID(ushort tableID, ushort entryID);
 
 // UserDB Values
 void InitUserDBValues(UserDB *userDB, va_list list);
@@ -162,15 +162,16 @@ void StoreUserDBValue(UserDBValue *value, int type, void *data);
 void RetrieveUserDBValue(UserDBValue *value, int type, void *data);
 
 // UserDB Misc
-int GetUserDBStatus(ushort tableID);
+int GetUserDBRowsChanged(ushort tableID);
 void GetUserDBCreationTime(ushort tableID, int entryID, char *buf, size_t size, char *format);
 void UpdateUserDBParents(UserDB *userDB);
 size_t GetUserDBWriteSize(UserDB *userDB);
 bool32 LoadDBFromBuffer(UserDB *userDB, byte *buffer);
 void SaveDBToBuffer(UserDB *userDB, int totalSize, byte *buffer);
-void RemoveMatchingDBValues(UserDB *userDB, UserDBValue *a2, int column);
-void RemoveNonMatchingRows(UserDB *userDB, const char *name, void *value);
-void HandleUserDBSorting(UserDB *userDB, int size, const char *name, bool32 valueActive);
+void HandleNonMatchRowRemoval(UserDB *userDB, UserDBValue *a2, int column);
+void RemoveNonMatchingSortRows(UserDB *userDB, const char *name, void *value);
+bool32 CompareUserDBValues(UserDBRow *row1, UserDBRow *row2, int size, char *name, bool32 flag);
+void HandleUserDBSorting(UserDB *userDB, int size, char *name, bool32 flag);
 uint CreateRowUUID(UserDB *userDB);
 
 // User Storage CBs

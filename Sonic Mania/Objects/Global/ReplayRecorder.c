@@ -1368,8 +1368,8 @@ void ReplayRecorder_DeleteTimeAttackRow(int32 a1, void (*callback)(bool32), int3
     ReplayDB->deleteCallback = callback;
     API.RemoveDBRow(globals->replayTableID, a1);
     TimeAttackData->status = 0;
-    API.SetupSortedUserDBRowIDs(globals->taTableID);
-    API.Unknown33(globals->taTableID, 4, "replayID", &id);
+    API.SetupUserDBRowSorting(globals->taTableID);
+    API.AddRowSortFilter(globals->taTableID, 4, "replayID", &id);
     int32 count = API.GetSortedUserDBRowCount(globals->taTableID);
     for (int32 i = 0; i < count; ++i) {
         uint32 uuid = API.GetSortedUserDBRowID(globals->taTableID, i);
@@ -1415,7 +1415,7 @@ int32 ReplayRecorder_SetStatus(int32 status)
 {
     if (status == STATUS_OK) {
         globals->replayTableLoaded = STATUS_OK;
-        API.SetupSortedUserDBRowIDs(globals->replayTableID);
+        API.SetupUserDBRowSorting(globals->replayTableID);
         LogHelpers_Print("Load Succeeded! Replay count: %d", API.GetSortedUserDBRowCount(globals->replayTableID));
     }
     else {

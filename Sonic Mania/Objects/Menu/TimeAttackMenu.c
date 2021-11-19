@@ -617,7 +617,7 @@ void TimeAttackMenu_SortReplayChoiceCB(void)
     EntityUIControl *control         = (EntityUIControl *)TimeAttackMenu->replaysControl;
     EntityUIReplayCarousel *carousel = (EntityUIReplayCarousel *)TimeAttackMenu->replayCarousel;
 
-    API.SetupSortedUserDBRowIDs(globals->replayTableID);
+    API.SetupUserDBRowSorting(globals->replayTableID);
     if (control->buttons[0]->selection == 1)
         API.SortDBRows(globals->replayTableID, 4, "zoneSortVal", false);
     else

@@ -148,7 +148,7 @@ int32 TimeAttackData_LoadCB(int32 statusCode)
 {
     if (statusCode == STATUS_OK) {
         globals->taTableLoaded = STATUS_OK;
-        API.SetupSortedUserDBRowIDs(globals->taTableID);
+        API.SetupUserDBRowSorting(globals->taTableID);
         LogHelpers_Print("Load Succeeded! Replay count: %d", API.GetSortedUserDBRowCount(globals->taTableID));
     }
     else {
@@ -213,7 +213,6 @@ void TimeAttackData_MigrateLegacyTADB(void)
                     off += 12;
                 }
             }
-            //}
 
             TimeAttackData->dword1C = 0;
         }
@@ -313,7 +312,7 @@ void TimeAttackData_SaveTimeAttackDB_CB(int32 statusCode)
 
 int32 TimeAttackData_GetScore(uint8 zone, uint8 charID, uint8 act, int32 encore, int32 rank)
 {
-    if (rank >= 3 && rank)
+    if (rank > 3 && rank)
         return 0;
 
     uint8 rankID = rank - 1;
@@ -354,11 +353,14 @@ int32 TimeAttackData_GetReplayID(uint8 zone, uint8 charID, uint8 act, int32 enco
 void TimeAttackData_ConfigureTableView(uint8 zoneID, uint8 characterID, uint8 act, int32 encore)
 {
     LogHelpers_Print("ConfigureTableView(%d, %d, %d, %d)", characterID, zoneID, act, encore);
-    API.SetupSortedUserDBRowIDs(globals->taTableID);
-    API.Unknown33(globals->taTableID, 2, "zoneID", &zoneID);
-    API.Unknown33(globals->taTableID, 2, "act", &act);
-    API.Unknown33(globals->taTableID, 2, "characterID", &characterID);
-    API.Unknown33(globals->taTableID, 2, "encore", &encore);
+    // setup every sort row ID for every entry
+    API.SetupUserDBRowSorting(globals->taTableID);
+    //remove any sort row IDs that dont match the following values
+    API.AddRowSortFilter(globals->taTableID, 2, "zoneID", &zoneID);
+    API.AddRowSortFilter(globals->taTableID, 2, "act", &act);
+    API.AddRowSortFilter(globals->taTableID, 2, "characterID", &characterID);
+    API.AddRowSortFilter(globals->taTableID, 2, "encore", &encore);
+    //sort the remaining rows
     API.SortDBRows(globals->taTableID, 4, "score", false);
     TimeAttackData->status      = 1;
     TimeAttackData->zoneID      = zoneID;

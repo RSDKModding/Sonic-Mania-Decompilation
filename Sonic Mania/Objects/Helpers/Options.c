@@ -162,7 +162,7 @@ void Options_SetLanguage(int32 language)
     Options->state = 1;
 }
 
-void Options_Unknown1(EntityOptions *options)
+void Options_LoadValuesFromSettings(EntityOptions *options)
 {
     if (options->overrideLanguage) {
         Localization->language = options->language;
@@ -191,7 +191,7 @@ void Options_LoadOptionsCallback(int32 statusCode)
         globals->optionsLoaded = STATUS_OK;
         LogHelpers_Print("dataPtr.language = %d", options->language);
         LogHelpers_Print("dataPtr.overrideLanguage = %d", options->overrideLanguage);
-        Options_Unknown1((EntityOptions *)globals->optionsRAM);
+        Options_LoadValuesFromSettings((EntityOptions *)globals->optionsRAM);
         RSDK.SetSettingsValue(SETTINGS_SHADERID, options->screenShader);
         RSDK.SetSettingsValue(SETTINGS_STREAM_VOL, options->volMusic);
         RSDK.SetSettingsValue(SETTINGS_SFX_VOL, options->volSfx);
