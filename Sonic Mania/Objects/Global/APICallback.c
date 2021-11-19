@@ -528,7 +528,7 @@ void APICallback_ClearPrerollErrors(void)
 bool32 APICallback_CheckInputDisconnected(void)
 {
     RSDK_THIS(APICallback);
-    return APICallback_InputIDIsDisconnected(self->field_7C) || PauseMenu->dword10;
+    return APICallback_InputIDIsDisconnected(self->field_7C) || PauseMenu->forcedDisconnect;
 }
 
 bool32 APICallback_InputIDIsDisconnected(int32 id)

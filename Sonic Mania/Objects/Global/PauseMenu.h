@@ -10,7 +10,7 @@ typedef struct {
     uint16 sfxAccept;
     bool32 disableEvents;
     bool32 controllerDisconnect;
-    bool32 dword10;
+    bool32 forcedDisconnect;
     bool32 signoutDetected;
 #if RETRO_USE_PLUS
     bool32 plusChanged;
@@ -35,12 +35,12 @@ typedef struct {
     uint8 buttonIDs[3];
     void (*buttonActions[3])(void);
     Entity* buttonPtrs[3];
-    int32 field_A4;
+    int32 paused;
     int32 fillTimer;
     bool32 (*field_AC)(void);
     int32 field_B0;
     Animator animator;
-    void (*funcPtrUnknown)(void);
+    void (*fadeCB)(void);
     int32 field_D0;
     int32 field_D4;
 } EntityPauseMenu;
@@ -61,42 +61,60 @@ void PauseMenu_EditorLoad(void);
 #endif
 void PauseMenu_Serialize(void);
 
-// Extra Entity Functions
-uint8 PauseMenu_GetPlayerCount(void);
-void PauseMenu_SetupLookupTable(void);
-void PauseMenu_Unknown3(void);
-void PauseMenu_HandleButtonPositions(void);
-void PauseMenu_AddButton(uint8 id, void *action);
+// Helper Functions
 void PauseMenu_SetupMenu(void);
+void PauseMenu_SetupLookupTable(void);
+
+void PauseMenu_AddButton(uint8 id, void *action);
 void PauseMenu_ClearButtons(EntityPauseMenu *entity);
-void PauseMenu_Unknown8(void);
-void PauseMenu_Unknown9(void);
-void PauseMenu_FocusCamera(void);
-void PauseMenu_UpdateCameras(void);
-void PauseMenu_Resume_CB(void);
-void PauseMenu_Restart_CB(void);
-void PauseMenu_RestartDialog_YesCB(void);
-void PauseMenu_Exit_CB(void);
-void PauseMenu_ExitDialog_YesCB(void);
-void PauseMenu_Unknown16(void);
+void PauseMenu_HandleButtonPositions(void);
+
 void PauseMenu_PauseSound(void);
 void PauseMenu_ResumeSound(void);
 void PauseMenu_StopSound(void);
-void PauseMenu_SetupButtons(void);
-void PauseMenu_Unknown21(void);
-void PauseMenu_Unknown22(void);
-void PauseMenu_Unknown23(void);
-void PauseMenu_Unknown24(void);
-void PauseMenu_Unknown26(void);
-void PauseMenu_Unknown27(void);
-void PauseMenu_Unknown28(void);
-void PauseMenu_Unknown29(void);
-void PauseMenu_Unknown31(void);
-bool32 PauseMenu_Unknown32(void);
-void PauseMenu_Unknown33(void);
-void PauseMenu_Unknown34(void);
-void PauseMenu_Unknown35(void);
-void PauseMenu_Unknown36(void);
-void PauseMenu_Unknown37(void);
+
+void PauseMenu_FocusCamera(void);
+void PauseMenu_UpdateCameras(void);
+
+void PauseMenu_CheckAndReassignControllers(void);
+bool32 PauseMenu_IsDisconnected(void);
+
+uint8 PauseMenu_GetPlayerCount(void);
+
+// Callbacks
+void PauseMenu_ResumeButtonCB(void);
+void PauseMenu_RestartButtonCB(void);
+void PauseMenu_ExitButtonCB(void);
+
+void PauseMenu_RestartDialog_YesCB(void);
+void PauseMenu_ExitDialog_YesCB(void);
+void PauseMenu_RestartFadeCB(void);
+void PauseMenu_ExitFadeCB(void);
+
+void PauseMenu_ButtonActionWrapper(void);
+
+//States
+void PauseMenu_State_SetupButtons(void);
+
+void PauseMenu_State_StartPause(void);
+void PauseMenu_State_StartPauseCompetition(void);
+
+void PauseMenu_State_Paused(void);
+void PauseMenu_State_ForcedPause(void);
+void PauseMenu_State_ForcedPauseCompetition(void);
+
+void PauseMenu_State_Resume(void);
+void PauseMenu_State_ResumeCompetition(void);
+void PauseMenu_State_ForcedResumeCompetition(void);
+
+void PauseMenu_State_SetupTitleFade(void);
+void PauseMenu_State_FadeToTitle(void);
+void PauseMenu_State_FadeToCB(void);
+
+// Draw States
+void PauseMenu_DrawPauseHeader(void);
+void PauseMenu_Draw_Default(void);
+
+void PauseMenu_Draw_NoHeader(void);
 
 #endif //!OBJ_PAUSEMENU_H
