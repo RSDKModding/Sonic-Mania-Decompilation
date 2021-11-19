@@ -462,11 +462,11 @@ void UIControl_Unknown5(EntityUIControl *entity)
 {
     entity->active  = ACTIVE_ALWAYS;
     entity->visible = true;
-    if (!entity->dialogHasFocus
+    if (!entity->dialogHasFocus && !entity->childHasFocus
 #if RETRO_USE_PLUS
         && !entity->popoverHasFocus
 #endif
-        && !entity->childHasFocus) {
+        ) {
         if (entity->dwordC4) {
             entity->activeEntityID = entity->storedEntityID;
             entity->storedEntityID = 0;

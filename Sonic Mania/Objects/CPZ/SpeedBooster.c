@@ -38,7 +38,7 @@ void SpeedBooster_Create(void *data)
         self->active = ACTIVE_NORMAL;
         self->drawFX = INK_ALPHA;
         RSDK.SetSpriteAnimation(SpeedBooster->animID, 1, &self->animator, true, 0);
-        self->state = SpeedBooster_MovingState;
+        self->state = SpeedBooster_SSZ_Bullet;
     }
     else {
         self->active = ACTIVE_BOUNDS;
@@ -46,7 +46,7 @@ void SpeedBooster_Create(void *data)
             self->speed = RSDK.CheckStageFolder("CPZ") ? 10 : 16;
         self->groundVel = self->speed << 16;
         RSDK.SetSpriteAnimation(SpeedBooster->animID, 0, &self->animator, true, 0);
-        self->state = SpeedBooster_BasicState;
+        self->state = SpeedBooster_State_Main;
     }
 }
 
@@ -59,7 +59,7 @@ void SpeedBooster_StageLoad(void)
         SpeedBooster->hitbox.right  = 16;
         SpeedBooster->hitbox.bottom = 16;
         SpeedBooster->sfxID         = RSDK.GetSFX("Global/Spring.wav");
-        SpeedBooster->defaultState  = SpeedBooster_BasicState;
+        SpeedBooster->defaultState  = SpeedBooster_State_Main;
     }
     else if (RSDK.CheckStageFolder("SSZ1") || RSDK.CheckStageFolder("SSZ2")) {
         SpeedBooster->animID =
@@ -69,7 +69,7 @@ void SpeedBooster_StageLoad(void)
         SpeedBooster->hitbox.right  = 32;
         SpeedBooster->hitbox.bottom = 0;
         SpeedBooster->sfxID         = RSDK.GetSFX("Stage/SpeedBooster.wav");
-        SpeedBooster->defaultState  = SpeedBooster_SSZState;
+        SpeedBooster->defaultState  = SpeedBooster_State_SSZFire;
     }
     DEBUGMODE_ADD_OBJ(SpeedBooster);
 }
@@ -86,20 +86,7 @@ void SpeedBooster_DebugDraw(void)
     RSDK.DrawSprite(&DebugMode->animator, NULL, false);
 }
 
-void SpeedBooster_MovingState(void)
-{
-    RSDK_THIS(SpeedBooster);
-    self->position.x += self->velocity.x;
-    self->position.y += self->velocity.y;
-    self->rotation += 6;
-    self->velocity.y += 0x3800;
-    self->drawPos.x = self->position.x;
-    self->drawPos.y = self->position.y;
-    if (!RSDK.CheckOnScreen(self, &self->updateRange))
-        destroyEntity(self);
-}
-
-void SpeedBooster_BasicState(void)
+void SpeedBooster_State_Main(void)
 {
     RSDK_THIS(SpeedBooster);
     RSDK.ProcessAnimation(&self->animator);
@@ -146,7 +133,7 @@ void SpeedBooster_Interact(void)
     }
 }
 
-void SpeedBooster_SSZState(void)
+void SpeedBooster_State_SSZFire(void)
 {
     RSDK_THIS(SpeedBooster);
     self->velocity.x = 0x55550 * self->velocity.x;
@@ -163,33 +150,46 @@ void SpeedBooster_SSZState(void)
     self->drawPos.x -= self->velocity.x;
     if (self->cooldown-- == 1) {
         self->cooldown = 6;
-        self->state    = SpeedBooster_Wait2;
+        self->state    = SpeedBooster_State_SSZRetract;
     }
     SpeedBooster_Interact();
-    self->state = SpeedBooster_Wait1;
+    self->state = SpeedBooster_State_SSZRecoil;
     SpeedBooster_Interact();
 }
 
-void SpeedBooster_Wait1(void)
+void SpeedBooster_State_SSZRecoil(void)
 {
     RSDK_THIS(SpeedBooster);
     self->drawPos.x -= self->velocity.x;
     if (!--self->cooldown) {
         self->cooldown = 6;
-        self->state    = SpeedBooster_Wait2;
+        self->state    = SpeedBooster_State_SSZRetract;
     }
     SpeedBooster_Interact();
 }
 
-void SpeedBooster_Wait2(void)
+void SpeedBooster_State_SSZRetract(void)
 {
     RSDK_THIS(SpeedBooster);
     self->drawPos.x += self->velocity.x;
     if (!--self->cooldown) {
         self->active = ACTIVE_BOUNDS;
-        self->state  = SpeedBooster_BasicState;
+        self->state  = SpeedBooster_State_Main;
     }
     SpeedBooster_Interact();
+}
+
+void SpeedBooster_SSZ_Bullet(void)
+{
+    RSDK_THIS(SpeedBooster);
+    self->position.x += self->velocity.x;
+    self->position.y += self->velocity.y;
+    self->rotation += 6;
+    self->velocity.y += 0x3800;
+    self->drawPos.x = self->position.x;
+    self->drawPos.y = self->position.y;
+    if (!RSDK.CheckOnScreen(self, &self->updateRange))
+        destroyEntity(self);
 }
 
 #if RETRO_INCLUDE_EDITOR

@@ -229,8 +229,8 @@ void PauseMenu_HandleButtonPositions(void)
     RSDK_THIS(PauseMenu);
 
     Vector2 pos;
-    pos.x = ((ScreenInfo->centerX - 69) << 16) + self->position.x + self->field_70.x;
-    pos.y = (self->position.y + 0x380000) + self->field_70.y - 0x240000;
+    pos.x = ((ScreenInfo->centerX - 69) << 16) + self->position.x + self->yellowTrianglePos.x;
+    pos.y = (self->position.y + 0x380000) + self->yellowTrianglePos.y - 0x240000;
     if (self->buttonCount == 2) {
         pos.x -= 0x240000;
         pos.y += 0x240000;
@@ -504,7 +504,7 @@ void PauseMenu_State_SetupButtons(void)
     if (PauseMenu->controllerDisconnect || PauseMenu->signoutDetected) {
 #endif
         if (PauseMenu->controllerDisconnect)
-            self->field_AC = PauseMenu_IsDisconnected;
+            self->disconnectCheck = PauseMenu_IsDisconnected;
 
         if (globals->gameMode != MODE_COMPETITION || RSDK.CheckStageFolder("Puyo"))
             self->state = PauseMenu_State_ForcedPause;
@@ -544,10 +544,10 @@ void PauseMenu_State_StartPause(void)
     }
 
     if (self->timer >= 8) {
-        self->field_68.x = 0;
-        self->field_68.y = 0;
-        self->field_70.x = 0;
-        self->field_70.y = 0;
+        self->headerPos.x = 0;
+        self->headerPos.y = 0;
+        self->yellowTrianglePos.x = 0;
+        self->yellowTrianglePos.y = 0;
         self->timer      = 0;
         self->state      = PauseMenu_State_Paused;
     }
@@ -557,14 +557,14 @@ void PauseMenu_State_StartPause(void)
         int32 val = 32 * self->timer;
         MathHelpers_Lerp3(&pos, maxVal(0, val), -0xF00000, 0, 0, 0);
 
-        self->field_68.x = pos.x;
-        self->field_68.y = pos.y;
+        self->headerPos.x = pos.x;
+        self->headerPos.y = pos.y;
         MathHelpers_Lerp3(&pos, maxVal(0, val), 0xE80000, 0, 0, 0);
 
         ++self->timer;
-        self->field_70.x = pos.x;
-        self->field_70.y = pos.y;
-        self->field_64   = val;
+        self->yellowTrianglePos.x = pos.x;
+        self->yellowTrianglePos.y = pos.y;
+        self->lookupAlpha   = val;
     }
 }
 
@@ -573,10 +573,10 @@ void PauseMenu_State_StartPauseCompetition(void)
     RSDK_THIS(PauseMenu);
 
     if (self->timer >= 8) {
-        self->field_68.x = 0x000000;
-        self->field_68.y = 0x000000;
-        self->field_70.x = 0x000000;
-        self->field_70.y = 0x000000;
+        self->headerPos.x = 0x000000;
+        self->headerPos.y = 0x000000;
+        self->yellowTrianglePos.x = 0x000000;
+        self->yellowTrianglePos.y = 0x000000;
         if (self->timer >= 16) {
             self->paused = 0;
             self->timer  = 0;
@@ -594,10 +594,10 @@ void PauseMenu_State_StartPauseCompetition(void)
         }
     }
     else {
-        self->field_68.x = 0xFFF0000;
-        self->field_68.y = 0xFFF0000;
-        self->field_70.x = 0xFFF0000;
-        self->field_70.y = 0xFFF0000;
+        self->headerPos.x = 0xFFF0000;
+        self->headerPos.y = 0xFFF0000;
+        self->yellowTrianglePos.x = 0xFFF0000;
+        self->yellowTrianglePos.y = 0xFFF0000;
         self->paused     = 1;
         self->fillTimer  = self->timer << 6;
         self->timer      = self->timer + 1;
@@ -607,11 +607,11 @@ void PauseMenu_State_StartPauseCompetition(void)
 void PauseMenu_State_Paused(void)
 {
     RSDK_THIS(PauseMenu);
-    self->field_64   = 255;
-    self->field_68.x = 0;
-    self->field_68.y = 0;
-    self->field_70.x = 0;
-    self->field_70.y = 0;
+    self->lookupAlpha   = 255;
+    self->headerPos.x = 0;
+    self->headerPos.y = 0;
+    self->yellowTrianglePos.x = 0;
+    self->yellowTrianglePos.y = 0;
 
     EntityUIControl *manager = (EntityUIControl *)self->manager;
 #if RETRO_USE_PLUS
@@ -676,7 +676,7 @@ void PauseMenu_State_ForcedPause(void)
 
     ++self->timer;
     if (!UIDialog->activeDialog) {
-        if (self->field_B0) {
+        if (self->forcePaused) {
             if (globals->gameMode != MODE_COMPETITION || RSDK.CheckStageFolder("Puyo")) {
                 RSDK.SetGameMode(ENGINESTATE_REGULAR);
                 PauseMenu_ClearButtons(RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu));
@@ -689,8 +689,8 @@ void PauseMenu_State_ForcedPause(void)
         }
     }
 
-    if (!self->field_B0 && self->field_AC) {
-        if (self->field_AC()) {
+    if (!self->forcePaused && self->disconnectCheck) {
+        if (self->disconnectCheck()) {
             if (PauseMenu->controllerDisconnect)
                 PauseMenu->controllerDisconnect = false;
 
@@ -703,7 +703,7 @@ void PauseMenu_State_ForcedPause(void)
                     dialog->curCallback               = NULL;
                 }
             }
-            self->field_B0 = true;
+            self->forcePaused = true;
         }
     }
 }
@@ -747,10 +747,10 @@ void PauseMenu_State_Resume(void)
         API_AssignControllerID(CONT_P2, CONT_AUTOASSIGN);
 
     if (self->timer >= 8) {
-        self->field_68.y = 0;
-        self->field_68.x = -0xF00000;
-        self->field_70.y = 0;
-        self->field_70.x = 0xE80000;
+        self->headerPos.y = 0;
+        self->headerPos.x = -0xF00000;
+        self->yellowTrianglePos.y = 0;
+        self->yellowTrianglePos.x = 0xE80000;
         self->timer      = 0;
         RSDK.SetGameMode(ENGINESTATE_REGULAR);
         PauseMenu_ClearButtons(RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu));
@@ -762,13 +762,13 @@ void PauseMenu_State_Resume(void)
         int32 val = 32 * self->timer;
         MathHelpers_Lerp3(&pos, maxVal(0, val), 0, 0, -0xF00000, 0);
 
-        self->field_68.x = pos.x;
-        self->field_68.y = pos.y;
+        self->headerPos.x = pos.x;
+        self->headerPos.y = pos.y;
         MathHelpers_Lerp3(&pos, maxVal(0, val), 0, 0, 0xE80000, 0);
 
-        self->field_70.x = pos.x;
-        self->field_70.y = pos.y;
-        self->field_64   = ((0x100 - self->timer) << 8) / 8;
+        self->yellowTrianglePos.x = pos.x;
+        self->yellowTrianglePos.y = pos.y;
+        self->lookupAlpha   = ((0x100 - self->timer) << 8) / 8;
         ++self->timer;
     }
 }
@@ -802,10 +802,10 @@ void PauseMenu_State_ResumeCompetition(void)
         }
     }
     else {
-        self->field_68.x = 0;
-        self->field_68.y = 0;
-        self->field_70.x = 0;
-        self->field_70.y = 0;
+        self->headerPos.x = 0;
+        self->headerPos.y = 0;
+        self->yellowTrianglePos.x = 0;
+        self->yellowTrianglePos.y = 0;
         self->paused     = 1;
         self->fillTimer  = self->timer << 6;
         self->timer      = self->timer + 1;
@@ -891,14 +891,14 @@ void PauseMenu_DrawPauseQuads(void)
     RSDK_THIS(PauseMenu);
     Vector2 drawPos;
 
-    drawPos.x = self->position.x + 0x640000 + self->field_68.x + -0x10000 * ScreenInfo->centerX;
-    drawPos.y = self->position.y - 0x600000 + self->field_68.y;
+    drawPos.x = self->position.x + 0x640000 + self->headerPos.x + -0x10000 * ScreenInfo->centerX;
+    drawPos.y = self->position.y - 0x600000 + self->headerPos.y;
     UIWidgets_Unknown7(68, 200, 68, 232, 40, 88, drawPos.x, drawPos.y);
     drawPos.y += 0x60000;
     drawPos.x += 0xA0000;
     UIWidgets_Unknown7(24, 115, 24, 0, 0, 0, drawPos.x, drawPos.y);
     RSDK.DrawSprite(&self->animator, &drawPos, 0);
-    UIWidgets_DrawRightTriangle(self->field_70.x + (ScreenInfo->centerX << 16) + self->position.x, self->field_70.y + (ScreenInfo->centerY << 16) + self->position.y, -232, 240, 216, 8);
+    UIWidgets_DrawRightTriangle(self->yellowTrianglePos.x + (ScreenInfo->centerX << 16) + self->position.x, self->yellowTrianglePos.y + (ScreenInfo->centerY << 16) + self->position.y, -232, 240, 216, 8);
 }
 
 void PauseMenu_Draw_Default(void)
@@ -906,7 +906,7 @@ void PauseMenu_Draw_Default(void)
     RSDK_THIS(PauseMenu);
     if (self->state != PauseMenu_State_FadeToCB) {
         RSDK.SetLookupTable(PauseMenu->lookupTable);
-        RSDK.DrawRect(0, 0, ScreenInfo->width, ScreenInfo->height, 0, self->field_64, INK_LOOKUP, true);
+        RSDK.DrawRect(0, 0, ScreenInfo->width, ScreenInfo->height, 0, self->lookupAlpha, INK_LOOKUP, true);
         PauseMenu_DrawPauseQuads();
     }
 }
@@ -916,7 +916,7 @@ void PauseMenu_Draw_NoHeader(void)
     RSDK_THIS(PauseMenu);
     if (self->state != PauseMenu_State_FadeToCB) {
         RSDK.SetLookupTable(PauseMenu->lookupTable);
-        RSDK.DrawRect(0, 0, ScreenInfo->width, ScreenInfo->height, 0, self->field_64, INK_LOOKUP, true);
+        RSDK.DrawRect(0, 0, ScreenInfo->width, ScreenInfo->height, 0, self->lookupAlpha, INK_LOOKUP, true);
     }
 }
 

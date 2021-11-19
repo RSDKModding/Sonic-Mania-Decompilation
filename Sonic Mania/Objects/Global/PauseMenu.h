@@ -25,9 +25,9 @@ typedef struct {
     StateMachine(state);
     StateMachine(stateDraw);
     int32 timer;
-    int32 field_64;
-    Vector2 field_68;
-    Vector2 field_70;
+    int32 lookupAlpha;
+    Vector2 headerPos;
+    Vector2 yellowTrianglePos;
     Entity *manager;
     uint8 triggerPlayer;
     bool32 disableRestart;
@@ -37,12 +37,12 @@ typedef struct {
     Entity* buttonPtrs[3];
     int32 paused;
     int32 fillTimer;
-    bool32 (*field_AC)(void);
-    int32 field_B0;
+    bool32 (*disconnectCheck)(void);
+    int32 forcePaused;
     Animator animator;
     void (*fadeCB)(void);
-    int32 field_D0;
-    int32 field_D4;
+    int32 unused1;
+    int32 unused2; // these may possibly be leftover or editor things 
 } EntityPauseMenu;
 
 // Object Struct

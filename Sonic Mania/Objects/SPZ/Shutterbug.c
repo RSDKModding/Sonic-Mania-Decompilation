@@ -56,7 +56,7 @@ void Shutterbug_Create(void *data)
 
         RSDK.SetSpriteAnimation(Shutterbug->aniFrames, 0, &self->animator, true, 0);
         RSDK.SetSpriteAnimation(Shutterbug->aniFrames, 1, &self->overlayAnim, true, 0);
-        self->state = Shutterbug_CreateState;
+        self->state = Shutterbug_State_Create;
     }
 }
 
@@ -103,7 +103,7 @@ void Shutterbug_CheckOnScreen(void)
     }
 }
 
-void Shutterbug_CreateState(void)
+void Shutterbug_State_Create(void)
 {
     RSDK_THIS(Shutterbug);
 
@@ -113,11 +113,11 @@ void Shutterbug_CreateState(void)
     self->offset.x   = 0;
     self->focus      = 0;
     self->turnTimer  = 0;
-    self->state      = Shutterbug_FlyAround;
-    Shutterbug_FlyAround();
+    self->state      = Shutterbug_State_FlyAround;
+    Shutterbug_State_FlyAround();
 }
 
-void Shutterbug_FlyAround(void)
+void Shutterbug_State_FlyAround(void)
 {
     RSDK_THIS(Shutterbug);
     if (self->snapTimer == 20 && self->focus) {
@@ -134,7 +134,7 @@ void Shutterbug_FlyAround(void)
             else
                 self->velocity.x = -0x20000;
             self->velocity.y = -0x20000;
-            self->state      = Shutterbug_BasicMove;
+            self->state      = Shutterbug_State_BasicMove;
         }
         else {
             self->offset.x = 0;
@@ -142,7 +142,7 @@ void Shutterbug_FlyAround(void)
             if (self->focus)
                 self->velocity.y = -0x10000;
             self->snapTimer = 96;
-            self->state     = Shutterbug_ShakeFly;
+            self->state     = Shutterbug_State_ShakeFly;
         }
     }
     Shutterbug_HandleBodyAnim();
@@ -150,7 +150,7 @@ void Shutterbug_FlyAround(void)
     Shutterbug_CheckOnScreen();
 }
 
-void Shutterbug_ShakeFly()
+void Shutterbug_State_ShakeFly()
 {
     RSDK_THIS(Shutterbug);
     self->position.x += self->velocity.x;
@@ -192,7 +192,7 @@ void Shutterbug_ShakeFly()
             self->velocity.y = -0x20000;
     }
     if (!self->snapTimer--) {
-        self->state      = Shutterbug_FlyAround;
+        self->state      = Shutterbug_State_FlyAround;
         self->velocity.x = 0;
         self->velocity.y = 0;
         self->snapTimer  = RSDK.Rand(0, 32) + 20;
@@ -211,7 +211,7 @@ void Shutterbug_ShakeFly()
     Shutterbug_CheckOnScreen();
 }
 
-void Shutterbug_BasicMove(void)
+void Shutterbug_State_BasicMove(void)
 {
     RSDK_THIS(Shutterbug);
     self->position.x += self->velocity.x;
