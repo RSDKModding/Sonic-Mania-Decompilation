@@ -9,14 +9,15 @@ void CreditsSetup_LateUpdate(void) {}
 void CreditsSetup_StaticUpdate(void)
 {
     if (CreditsSetup->started) {
-        CreditsSetup->unknown += 0x1000;
+        CreditsSetup->scrollPos += 0x1000;
         EntityFXFade *fade = (EntityFXFade *)CreditsSetup->fxFade;
-        if (!CreditsSetup->skipFlag) {
+
+        if (!CreditsSetup->skipped) {
             if (!RSDK.ChannelActive(0))
                 Music_PlayTrack(++CreditsSetup->creditsTrack);
 
             if (ControllerInfo->keyStart.press || (CreditsSetup->creditsSize && CreditsSetup->creditsPos >= CreditsSetup->creditsSize)) {
-                CreditsSetup->skipFlag = true;
+                CreditsSetup->skipped = true;
 
                 fade->state    = FXFade_State_FadeIn;
                 fade->speedIn  = 8;
@@ -28,7 +29,7 @@ void CreditsSetup_StaticUpdate(void)
             }
 #if RETRO_USE_TOUCH_CONTROLS
             else if (TouchInfo->count) {
-                CreditsSetup->skipFlag = true;
+                CreditsSetup->skipped = true;
 
                 fade->state    = FXFade_State_FadeIn;
                 fade->speedIn  = 8;
@@ -117,7 +118,7 @@ void CreditsSetup_LoadCreditsStrings(void)
             offset += 0x200000;
         }
         else {
-            int32 type = info.text[1] - '0';
+            int32 type      = info.text[1] - '0';
             bool32 hasShape = info.text[2] == 'U';
 
             info.textLength -= 3;

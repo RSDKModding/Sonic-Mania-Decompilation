@@ -327,7 +327,7 @@ bool32 TMZ2Outro_CutsceneState_StartRubyRampage(EntityCutsceneSeq *host)
 
         for (int i = 0; i < 7; ++i) RSDK.SetPaletteEntry(2, i - 96, TMZ2Outro->colours[i]);
         if (SaveGame->saveRAM->chaosEmeralds == 0x7F)
-            CREATE_ENTITY(RubyPortal, RubyPortal_Unknown8, (ScreenInfo->position.x + 64) << 16,
+            CREATE_ENTITY(RubyPortal, RubyPortal_State_EncoreEnd, (ScreenInfo->position.x + 64) << 16,
                           (ScreenInfo->position.y + ScreenInfo->centerY) << 16);
         return true;
     }

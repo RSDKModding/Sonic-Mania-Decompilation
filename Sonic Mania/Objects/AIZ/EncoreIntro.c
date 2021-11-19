@@ -226,7 +226,7 @@ bool32 EncoreIntro_CutsceneState_Unknown1(EntityCutsceneSeq *host)
         if (host->timer < 360) {
             RSDK.SetSpriteAnimation(player1->aniFrames, ANI_FAN, &player1->animator, false, 0);
             player1->position.x += (player1->position.x - player1->position.x) >> 3;
-            player1->position.y += (0xA00 * RSDK.Sin256(2 * (host->timer - host->field_68)) + ruby->position.y - player1->position.y) >> 3;
+            player1->position.y += (0xA00 * RSDK.Sin256(2 * (host->timer - host->storedValue2)) + ruby->position.y - player1->position.y) >> 3;
             player1->state = Player_State_None;
         }
         else {
@@ -247,11 +247,11 @@ bool32 EncoreIntro_CutsceneState_Unknown2(EntityCutsceneSeq *host)
         player->alpha += 2;
         if (player->alpha >= 0x100) {
             player->inkEffect = INK_NONE;
-            RSDK.Sin256(2 * (host->timer - host->field_68));
+            RSDK.Sin256(2 * (host->timer - host->storedValue2));
             RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->animator, false, 0);
             player->state     = Player_State_Air;
             player->up        = true;
-            host->field_6C[0] = 1;
+            host->values[0] = 1;
             return true;
         }
     }
@@ -911,30 +911,30 @@ bool32 EncoreIntro_CutsceneState_Unknown19(EntityCutsceneSeq *host)
             buddy->drawOrder = Zone->playerDrawHigh + 1;
     }
 
-    if (!host->field_6C[0]) {
+    if (!host->values[0]) {
         if (fxRuby->flag) {
-            if (host->field_68) {
-                if (host->timer == host->field_68 + 30) {
+            if (host->storedValue2) {
+                if (host->timer == host->storedValue2 + 30) {
                     fxRuby->field_74 = 64;
                     fxRuby->state    = FXRuby_Unknown6;
                     PhantomRuby_PlaySFX(4);
                     Camera_ShakeScreen(0, 4, 4);
                 }
-                else if (host->timer == host->field_68 + 210) {
+                else if (host->timer == host->storedValue2 + 210) {
                     fxRuby->field_74 = 32;
                     fxRuby->state    = FXRuby_Unknown6;
                     PhantomRuby_PlaySFX(RUBYSFX_ATTACK1);
                     Camera_ShakeScreen(0, 4, 4);
                     Music_FadeOut(0.025);
-                    host->field_68    = host->timer;
-                    host->field_6C[0] = 1;
+                    host->storedValue2    = host->timer;
+                    host->values[0] = 1;
                 }
             }
             else {
-                host->field_68 = host->timer;
+                host->storedValue2 = host->timer;
             }
 
-            if (host->timer >= host->field_68 + 32) {
+            if (host->timer >= host->storedValue2 + 32) {
                 EntityPlayer *players[2];
                 players[0] = player;
                 players[1] = buddy;
@@ -947,7 +947,7 @@ bool32 EncoreIntro_CutsceneState_Unknown19(EntityCutsceneSeq *host)
 
                     playerPtr->position.x += (playerPtr->position.x - playerPtr->position.x) >> 3;
                     playerPtr->position.y +=
-                        (0xA00 * RSDK.Sin256(2 * (host->timer + angle - host->field_68)) + ruby->position.y - playerPtr->position.y) >> 3;
+                        (0xA00 * RSDK.Sin256(2 * (host->timer + angle - host->storedValue2)) + ruby->position.y - playerPtr->position.y) >> 3;
                     playerPtr->tileCollisions = false;
                     playerPtr->velocity.x     = 0;
                     playerPtr->velocity.y     = 0;
@@ -960,7 +960,7 @@ bool32 EncoreIntro_CutsceneState_Unknown19(EntityCutsceneSeq *host)
     else {
         if (fxRuby->fadeWhite >= 512) {
             if (fxRuby->fadeBlack >= 512) {
-                if (host->timer < host->field_68 + 150) {
+                if (host->timer < host->storedValue2 + 150) {
                     HeavyMystic_Unknown2();
                 }
                 else {
@@ -1029,7 +1029,7 @@ bool32 EncoreIntro_CutsceneState_Unknown22(EntityCutsceneSeq *host)
         player->state          = Player_State_Air;
         player->up             = true;
         player->camera         = NULL;
-        host->field_6C[0]      = true;
+        host->values[0]      = true;
         player->stateInput     = Player_ProcessP1Input;
         player->tileCollisions = true;
         player->onGround       = true;

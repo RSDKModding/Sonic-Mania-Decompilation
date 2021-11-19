@@ -345,30 +345,30 @@ bool32 GHZ2Outro_CutsceneState2_Unknown6(EntityCutsceneSeq *host)
             player2->drawOrder = Zone->playerDrawHigh + 1;
     }
 
-    if (!host->field_6C[0]) {
+    if (!host->values[0]) {
         if (fxRuby->flag) {
-            if (host->field_68) {
-                if (host->timer == host->field_68 + 48) {
+            if (host->storedValue2) {
+                if (host->timer == host->storedValue2 + 48) {
                     fxRuby->field_74 = 64;
                     fxRuby->state     = FXRuby_Unknown6;
                     PhantomRuby_PlaySFX(RUBYSFX_ATTACK4);
                     Camera_ShakeScreen(0, 4, 4);
                 }
-                else if (host->timer == host->field_68 + 180) {
+                else if (host->timer == host->storedValue2 + 180) {
                     fxRuby->field_74 = 32;
                     fxRuby->state     = FXRuby_Unknown6;
                     PhantomRuby_PlaySFX(RUBYSFX_ATTACK1);
                     Camera_ShakeScreen(0, 4, 4);
                     Music_FadeOut(0.025);
-                    host->field_68    = host->timer;
-                    host->field_6C[0] = true;
+                    host->storedValue2    = host->timer;
+                    host->values[0] = true;
                 }
             }
             else {
-                host->field_68 = host->timer;
+                host->storedValue2 = host->timer;
             }
 
-            if (host->timer >= host->field_68 + 52) {
+            if (host->timer >= host->storedValue2 + 52) {
                 int32 id = 0;
                 for (int32 angle = 0; angle < 0x80; angle += 0x10) {
                     EntityPlayer *player = RSDK_GET_ENTITY(id++, Player);
@@ -379,8 +379,8 @@ bool32 GHZ2Outro_CutsceneState2_Unknown6(EntityCutsceneSeq *host)
                     int32 valX = (ruby->position.x - 0x400000) - player->position.x;
                     int32 valY = (ruby->position.y - (0xA00000 + 944)) - player->position.y;
 
-                    player->position.x += ((RSDK.Cos256(2 * (angle + host->timer - host->field_68)) << 12) + valX) >> 5;
-                    player->position.y += ((RSDK.Sin256(2 * (angle + host->timer - host->field_68)) << 12) + valY) >> 5;
+                    player->position.x += ((RSDK.Cos256(2 * (angle + host->timer - host->storedValue2)) << 12) + valX) >> 5;
+                    player->position.y += ((RSDK.Sin256(2 * (angle + host->timer - host->storedValue2)) << 12) + valY) >> 5;
                     player->state          = Player_State_None;
                     player->tileCollisions = false;
                     player->onGround       = false;
@@ -391,7 +391,7 @@ bool32 GHZ2Outro_CutsceneState2_Unknown6(EntityCutsceneSeq *host)
     else {
         if (fxRuby->fadeWhite >= 512) {
             if (fxRuby->fadeBlack >= 512) {
-                if (host->timer == host->field_68 + 150)
+                if (host->timer == host->storedValue2 + 150)
                     return true;
             }
             else {

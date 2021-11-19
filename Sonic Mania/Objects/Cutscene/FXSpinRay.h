@@ -19,10 +19,10 @@ typedef struct {
     int32 b;
     int32 field_70;
     Entity *parent;
-    Vector2 field_78;
-    Vector2 field_80[4];
+    Vector2 offsetPos;
+    Vector2 vertexPos[4];
     Vector2 vertices[20];
-    Vector2 field_140;
+    Vector2 vertexOffset;
 } EntityFXSpinRay;
 
 // Object Struct

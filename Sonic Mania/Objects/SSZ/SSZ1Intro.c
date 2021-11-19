@@ -51,7 +51,7 @@ void SSZ1Intro_Unknown1(EntityPlayer *player1, EntityCutsceneSeq *host, EntityPl
             break;
         RSDK.SetSpriteAnimation(playerPtr->aniFrames, ANI_FAN, &playerPtr->animator, false, 0);
         playerPtr->position.x += (playerPtr->position.x - playerPtr->position.x) >> 3;
-        playerPtr->position.y += (offset + 0xA00 * RSDK.Sin256(2 * (angle + host->timer - host->field_68)) - playerPtr->position.y) >> 3;
+        playerPtr->position.y += (offset + 0xA00 * RSDK.Sin256(2 * (angle + host->timer - host->storedValue2)) - playerPtr->position.y) >> 3;
         playerPtr->state = Player_State_None;
     }
 }
@@ -90,9 +90,9 @@ bool32 SSZ1Intro_CutsceneState_Unknown1(EntityCutsceneSeq *host)
         SSZ1Intro_Unknown1(player1, host, player2, cutEntity->position.y - 0x200000);
     }
     else {
-        if (!host->field_6C[0]) {
+        if (!host->values[0]) {
             PhantomRuby_PlaySFX(RUBYSFX_ATTACK4);
-            host->field_6C[0] = true;
+            host->values[0] = true;
             fxRuby->state     = FXRuby_Unknown4;
         }
 

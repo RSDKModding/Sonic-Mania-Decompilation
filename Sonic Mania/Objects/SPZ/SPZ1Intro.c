@@ -79,17 +79,17 @@ bool32 SPZ1Intro_CutsceneState_Unknown1(EntityCutsceneSeq *host)
     }
 
     if (RSDK.GetEntityCount(TitleCard->objectID, 0) || RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu)->objectID) {
-        if (!host->field_6C[0]) {
+        if (!host->values[0]) {
             SceneInfo->timeEnabled  = false;
             SceneInfo->milliseconds = 0;
             camera->state                = StateMachine_None;
             return false;
         }
     }
-    else if (!host->field_6C[0]) {
-        host->field_6C[0] = 1;
-        host->field_68    = host->timer;
-        if (!host->field_6C[0]) {
+    else if (!host->values[0]) {
+        host->values[0] = 1;
+        host->storedValue2    = host->timer;
+        if (!host->values[0]) {
             SceneInfo->timeEnabled  = false;
             SceneInfo->milliseconds = 0;
             camera->state                = StateMachine_None;

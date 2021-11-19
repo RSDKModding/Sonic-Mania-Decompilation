@@ -39,14 +39,20 @@ void RubyPortal_EditorLoad(void);
 void RubyPortal_Serialize(void);
 
 // Extra Entity Functions
-void RubyPortal_Unknown1(void);
-void RubyPortal_Unknown2(void);
-void RubyPortal_Unknown3(void);
-void RubyPortal_Unknown4(void);
-void RubyPortal_Unknown5(void);
-void RubyPortal_Unknown6(void);
-void RubyPortal_Unknown7(void);
-void RubyPortal_Unknown8(void);
-void RubyPortal_Unknown9(void);
+#if RETRO_USE_PLUS
+void RubyPortal_HandleTileDestruction(void);
+#endif
+void RubyPortal_State_AwaitOpenTMZ2(void);
+void RubyPortal_State_Opening(void);
+void RubyPortal_State_Opened(void);
+#if RETRO_USE_PLUS
+void RubyPortal_State_SaveGameState(void);
+#endif
+void RubyPortal_State_Open_WarpDoor(void);
+void RubyPortal_State_Open_Cutscene(void);
+#if RETRO_USE_PLUS
+void RubyPortal_State_EncoreEnd(void);
+void RubyPortal_State_EncoreRampage(void);
+#endif
 
 #endif //!OBJ_RUBYPORTAL_H

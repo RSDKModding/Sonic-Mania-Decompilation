@@ -123,7 +123,7 @@ bool32 GHZCutsceneST_CutsceneState_Unknown1(EntityCutsceneSeq *host)
             break;
         RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->animator, 0, 0);
         player->position.x += (player->position.x - player->position.x) >> 3;
-        player->position.y += (0xA00 * RSDK.Sin256(2 * (host->timer + angle - host->field_68)) + ruby->position.y - player->position.y) >> 3;
+        player->position.y += (0xA00 * RSDK.Sin256(2 * (host->timer + angle - host->storedValue2)) + ruby->position.y - player->position.y) >> 3;
         player->state = Player_State_None;
     }
     return false;
@@ -146,7 +146,7 @@ bool32 GHZCutsceneST_CutsceneState_Unknown2(EntityCutsceneSeq *host)
                 break;
             RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->animator, false, 0);
             int32 x              = (player->position.x - player->position.x) >> 3;
-            int32 y              = (0xA00 * RSDK.Sin256(2 * (angle + host->timer - host->field_68)) + ruby->position.y - player->position.y) >> 3;
+            int32 y              = (0xA00 * RSDK.Sin256(2 * (angle + host->timer - host->storedValue2)) + ruby->position.y - player->position.y) >> 3;
             player->velocity.y = (y >> 8) * (y >> 8);
             player->velocity.x = (x >> 8) * (x >> 8);
             player->state      = Player_State_Air;
@@ -154,7 +154,7 @@ bool32 GHZCutsceneST_CutsceneState_Unknown2(EntityCutsceneSeq *host)
             player->camera     = NULL;
             ++curPlayer;
         }
-        host->field_6C[0] = 1;
+        host->values[0] = 1;
         Camera_SetupLerp(0, 0, camera->position.x, camera->position.y, 0);
         return true;
     }
@@ -166,7 +166,7 @@ bool32 GHZCutsceneST_CutsceneState_Unknown2(EntityCutsceneSeq *host)
                 break;
             RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->animator, 0, 0);
             player->position.x += (player->position.x - player->position.x) >> 3;
-            player->position.y += (0xA00 * RSDK.Sin256(2 * (host->timer + angle - host->field_68)) + ruby->position.y - player->position.y) >> 3;
+            player->position.y += (0xA00 * RSDK.Sin256(2 * (host->timer + angle - host->storedValue2)) + ruby->position.y - player->position.y) >> 3;
             player->state = Player_State_None;
             ++curPlayer;
         }

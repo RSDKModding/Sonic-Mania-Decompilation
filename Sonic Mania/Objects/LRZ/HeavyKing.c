@@ -347,14 +347,14 @@ void HeavyKing_CreateSpinRay(void)
     EntityFXSpinRay *ray = NULL;
     if (self->direction) {
         ray             = CREATE_ENTITY(FXSpinRay, NULL, self->position.x - 0x240000, self->position.y - 0x300000);
-        ray->field_78.x = -0x240000;
+        ray->offsetPos.x = -0x240000;
     }
     else {
         ray             = CREATE_ENTITY(FXSpinRay, NULL, self->position.x + 0x240000, self->position.y - 0x300000);
-        ray->field_78.x = 0x240000;
+        ray->offsetPos.x = 0x240000;
     }
     ray->parent     = (Entity *)self;
-    ray->field_78.y = -0x300000;
+    ray->offsetPos.y = -0x300000;
 }
 
 void HeavyKing_CreateExpandRing(void)

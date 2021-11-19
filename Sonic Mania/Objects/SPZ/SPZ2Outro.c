@@ -200,7 +200,7 @@ bool32 SPZ2Outro_CutsceneState_Unknown3(EntityCutsceneSeq *host)
         player1->nextGroundState = StateMachine_None;
         player1->position.x      = weatherTV->position.x - 0x700000;
         player1->position.y      = weatherTV->position.y + 0x140000;
-        host->field_68           = player1->position.y;
+        host->storedValue2           = player1->position.y;
         player1->onGround        = false;
         player1->right           = false;
         player1->velocity.x      = 0x10000;

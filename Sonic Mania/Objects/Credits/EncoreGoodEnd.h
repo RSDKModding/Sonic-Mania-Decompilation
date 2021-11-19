@@ -7,26 +7,17 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    int32 field_4;
-    uint16 field_8;
+    int32 unused1;
+    uint16 unused2;
     uint16 sfxSnap;
-    int32 field_C;
+    int32 unused3;
     EntityDecoration *decorations[16];
 } ObjectEncoreGoodEnd;
 
 // Entity Class
 typedef struct {
-    RSDK_ENTITY
-    Vector2 size;
-    bool32 activated;
-    int32 field_64;
-    int32 field_68;
-    int32 field_6C;
-    int32 field_70;
-    int32 field_74;
-    int32 field_78;
-    Hitbox hitbox;
-    int32 field_84;
+    MANIA_CUTSCENE_BASE
+    int32 unused1;
 } EntityEncoreGoodEnd;
 
 // Object Struct

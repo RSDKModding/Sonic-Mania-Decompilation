@@ -73,7 +73,7 @@ void CPZ1Intro_Unknown3(Entity *player1, Entity *cutSeq, Entity *player2, int32 
             break;
 
         int32 valX = (player->position.x - player->position.x) >> 3;
-        int32 valY = (val + 0xA00 * RSDK.Sin256(2 * (angle + seq->timer - seq->field_68)) - player->position.y) >> 3;
+        int32 valY = (val + 0xA00 * RSDK.Sin256(2 * (angle + seq->timer - seq->storedValue2)) - player->position.y) >> 3;
         RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->animator, false, 0);
         player->position.x += valX;
         player->position.y += valY;
@@ -178,9 +178,9 @@ bool32 CPZ1Intro_Unknown5(void *h)
             CPZ1Intro_Unknown3((Entity *)player1, (Entity *)host, (Entity *)player2, ent->position.y - 0x200000);
         }
         else {
-            if (!host->field_6C[0]) {
+            if (!host->values[0]) {
                 PhantomRuby_PlaySFX(RUBYSFX_ATTACK4);
-                host->field_6C[0] = 1;
+                host->values[0] = 1;
                 fxRuby->state     = FXRuby_Unknown4;
             }
 

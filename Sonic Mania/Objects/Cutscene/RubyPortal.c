@@ -51,14 +51,14 @@ void RubyPortal_Create(void *data)
                 door->hitbox.right  = 0;
                 door->hitbox.bottom = 0x7FFF;
             }
-            self->state = RubyPortal_Unknown2;
+            self->state = RubyPortal_State_AwaitOpenTMZ2;
             if (StarPost->postIDs[0])
                 TMZ2_DrawDynTiles_Ruby();
             else
                 TMZ2_DrawDynTiles_Eggman();
         }
         else {
-            self->state = RubyPortal_Unknown3;
+            self->state = RubyPortal_State_Opening;
         }
 #else
         self->state = StateMachine_None;
@@ -71,7 +71,7 @@ void RubyPortal_Create(void *data)
                 door->hitbox.right  = 0;
                 door->hitbox.bottom = 0x7FFF;
             }
-            self->state = RubyPortal_Unknown2;
+            self->state = RubyPortal_State_AwaitOpenTMZ2;
             if (StarPost->postIDs[0])
                 TMZ2_DrawDynTiles_Ruby();
             else
@@ -104,7 +104,8 @@ void RubyPortal_StageLoad(void)
 #endif
 }
 
-void RubyPortal_Unknown1(void)
+#if RETRO_USE_PLUS
+void RubyPortal_HandleTileDestruction(void)
 {
     RSDK_THIS(RubyPortal);
     if (!(Zone->timer & 1)) {
@@ -158,8 +159,9 @@ void RubyPortal_Unknown1(void)
         }
     }
 }
+#endif
 
-void RubyPortal_Unknown2(void)
+void RubyPortal_State_AwaitOpenTMZ2(void)
 {
     RSDK_THIS(RubyPortal);
 #if RETRO_USE_PLUS
@@ -167,10 +169,10 @@ void RubyPortal_Unknown2(void)
 #else
     if (TMZBarrier->flags == 0xF)
 #endif
-        self->state = RubyPortal_Unknown3;
+        self->state = RubyPortal_State_Opening;
 }
 
-void RubyPortal_Unknown3(void)
+void RubyPortal_State_Opening(void)
 {
     RSDK_THIS(RubyPortal);
 
@@ -178,29 +180,29 @@ void RubyPortal_Unknown3(void)
         self->visible = true;
 #if RETRO_USE_PLUS
         if (globals->gameMode == MODE_MANIA) {
-            self->state = RubyPortal_Unknown4;
+            self->state = RubyPortal_State_Opened;
         }
         else if (!isMainGameMode()) {
-            self->state = RubyPortal_Unknown6;
+            self->state = RubyPortal_State_Open_WarpDoor;
         }
         else {
             if (WarpDoor) {
-                self->state = RubyPortal_Unknown4;
+                self->state = RubyPortal_State_Opened;
             }
             else if (self->timer >= 240) {
-                self->state = RubyPortal_Unknown7;
+                self->state = RubyPortal_State_Open_Cutscene;
             }
         }
 #else
         if (!isMainGameMode())
-            self->state = RubyPortal_Unknown6;
+            self->state = RubyPortal_State_Open_WarpDoor;
         else
-            self->state = RubyPortal_Unknown4;
+            self->state = RubyPortal_State_Opened;
 #endif
     }
 }
 
-void RubyPortal_Unknown4(void)
+void RubyPortal_State_Opened(void)
 {
     RSDK_THIS(RubyPortal);
 
@@ -237,7 +239,7 @@ void RubyPortal_Unknown4(void)
                 Zone_StartFadeOut(16, 0xF0F0F0);
 
 #if RETRO_USE_PLUS
-                self->state = RubyPortal_Unknown5;
+                self->state = RubyPortal_State_SaveGameState;
 #endif
 
                 int32 sfx     = RSDK.Rand(0, RUBYSFX_ATTACK6);
@@ -255,19 +257,21 @@ void RubyPortal_Unknown4(void)
     }
 }
 
-void RubyPortal_Unknown5(void)
+#if RETRO_USE_PLUS
+void RubyPortal_State_SaveGameState(void)
 {
     EntityPlayer *player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     if (player->superState == SUPERSTATE_SUPER || player->state == Player_State_Transform)
         globals->restartPowerups |= 0x80;
     globals->restartMusicID = Music->activeTrack;
 }
+#endif
 
-void RubyPortal_Unknown6(void)
+void RubyPortal_State_Open_WarpDoor(void)
 {
     RSDK_THIS(RubyPortal);
 
-    if (self->alpha >= 256) {
+    if (self->alpha >= 0x100) {
         EntityWarpDoor *warpDoor = RSDK_GET_ENTITY(SceneInfo->entitySlot - 1, WarpDoor);
         if (warpDoor->objectID == WarpDoor->objectID)
             warpDoor->hitbox = self->hitbox;
@@ -280,11 +284,11 @@ void RubyPortal_Unknown6(void)
     }
 }
 
-void RubyPortal_Unknown7(void)
+void RubyPortal_State_Open_Cutscene(void)
 {
     RSDK_THIS(RubyPortal);
 
-    if (self->alpha >= 256) {
+    if (self->alpha >= 0x100) {
         self->state = StateMachine_None;
     }
     else {
@@ -294,7 +298,7 @@ void RubyPortal_Unknown7(void)
     }
 }
 
-void RubyPortal_Unknown8(void)
+void RubyPortal_State_EncoreEnd(void)
 {
     RSDK_THIS(RubyPortal);
     if (!self->timer)
@@ -303,7 +307,7 @@ void RubyPortal_Unknown8(void)
     if (self->alpha >= 0x100) {
         if (self->timer == 240) {
             self->timer      = 0;
-            self->state      = RubyPortal_Unknown9;
+            self->state      = RubyPortal_State_EncoreRampage;
             EntityFXFade *fade = CREATE_ENTITY(FXFade, intToVoid(0xF0F0F0), self->position.x, self->position.y);
             fade->speedIn      = 512;
             fade->wait         = 16;
@@ -318,10 +322,11 @@ void RubyPortal_Unknown8(void)
     }
 }
 
-void RubyPortal_Unknown9(void)
+#if RETRO_USE_PLUS
+void RubyPortal_State_EncoreRampage(void)
 {
     RSDK_THIS(RubyPortal);
-    RubyPortal_Unknown1();
+    RubyPortal_HandleTileDestruction();
     self->position.x += self->velocity.x;
 
     foreach_active(BreakableWall, wall)
@@ -369,6 +374,7 @@ void RubyPortal_Unknown9(void)
 
     foreach_active(PhantomRuby, ruby) { ruby->position.x += self->velocity.x; }
 }
+#endif
 
 #if RETRO_INCLUDE_EDITOR
 void RubyPortal_EditorDraw(void)

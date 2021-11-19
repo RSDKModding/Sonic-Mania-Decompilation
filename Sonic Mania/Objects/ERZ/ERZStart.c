@@ -111,7 +111,7 @@ void ERZStart_HandlePlayerHover(EntityCutsceneSeq *seq, void *p, int posY)
     player->position.x = 0x300000;
     RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->animator, false, 0);
     player->position.x += (player->position.x - player->position.x) >> 3;
-    player->position.y += (posY + 0xA00 * RSDK.Sin256(2 * (seq->timer - seq->field_68 + 64)) - player->position.y) >> 3;
+    player->position.y += (posY + 0xA00 * RSDK.Sin256(2 * (seq->timer - seq->storedValue2 + 64)) - player->position.y) >> 3;
     player->state = Player_State_None;
 
     for (int e = 0; e < 7; ++e) {
@@ -238,10 +238,10 @@ bool32 ERZStart_CutsceneState_Unknown4(EntityCutsceneSeq *host)
         Zone->playerBoundActiveL[0] = false;
         Zone->playerBoundActiveR[0] = false;
         Zone->playerBoundActiveT[0] = false;
-        host->field_68              = camera->position.x;
+        host->storedValue2              = camera->position.x;
     }
 
-    int pos = host->field_68;
+    int pos = host->storedValue2;
     if (king->position.x - 0x400000 > pos)
         pos = king->position.x - 0x400000;
     camera->position.x = pos;
@@ -263,8 +263,8 @@ bool32 ERZStart_CutsceneState_Unknown5(EntityCutsceneSeq *host)
     EntityPhantomKing *king = (EntityPhantomKing *)ERZStart->king;
 
     if (!host->timer) {
-        host->field_68 = ruby->position.x;
-        host->field_64 = ruby->position.y;
+        host->storedValue2 = ruby->position.x;
+        host->storedValue1 = ruby->position.y;
     }
 
     if (host->timer > 0) {
@@ -280,7 +280,7 @@ bool32 ERZStart_CutsceneState_Unknown5(EntityCutsceneSeq *host)
         if (host->timer << 16 < 0x3C0000)
             percent = (host->timer << 16) / 60;
 
-        Vector2 pos = MathHelpers_Unknown5(percent, host->field_68, host->field_64, host->field_68, host->field_64 - 0x400000, king->rubyPos.x,
+        Vector2 pos = MathHelpers_Unknown5(percent, host->storedValue2, host->storedValue1, host->storedValue2, host->storedValue1 - 0x400000, king->rubyPos.x,
                                            king->rubyPos.y - 0x400000, king->rubyPos.x, king->rubyPos.y);
 
         ruby->position.x += (pos.x - ruby->position.x) >> 2;
@@ -325,8 +325,8 @@ bool32 ERZStart_CutsceneState_Unknown7(EntityCutsceneSeq *host)
     EntityPhantomKing *kingArm2 = RSDK_GET_ENTITY(kingSlot + 1, PhantomKing);
 
     if (!host->timer) {
-        host->field_68                    = camera->position.x;
-        host->field_64                    = camera->position.y;
+        host->storedValue2                    = camera->position.x;
+        host->storedValue1                    = camera->position.y;
         king->posUnknown.y                = king->position.y;
         king->posUnknown.x                = king->position.x;
         king->state                       = PhantomKing_State_Unknown7;
@@ -378,7 +378,7 @@ bool32 ERZStart_CutsceneState_Unknown7(EntityCutsceneSeq *host)
     eggmanArm2->animator10.animationSpeed = 0;
     eggmanArm2->animator9.frameID         = 0;
 
-    camera->position.x = maxVal(eggman->field_70.x + 0x200000, host->field_68);
+    camera->position.x = maxVal(eggman->field_70.x + 0x200000, host->storedValue2);
 
     kingArm1->state = PhantomKing_StateArm1_Unknown3;
     kingArm2->state = PhantomKing_StateArm1_Unknown3;
@@ -511,13 +511,13 @@ bool32 ERZStart_CutsceneState_Unknown10(EntityCutsceneSeq *host)
     ERZStart_HandlePlayerHover(host, player1, ruby->startPos.y);
     if (host->timer == 30)
         Camera_SetupLerp(0, 0, ScreenInfo->centerX << 16, camera->position.y, 2);
-    if (!host->field_6C[0]) {
+    if (!host->values[0]) {
         if (camera->position.x == ScreenInfo->centerX << 16) {
-            host->field_6C[0] = 1;
-            host->field_68    = host->timer;
+            host->values[0] = 1;
+            host->storedValue2    = host->timer;
         }
     }
-    else if (host->timer - host->field_68 == 60) {
+    else if (host->timer - host->storedValue2 == 60) {
         Music_TransitionTrack(TRACK_ERZBOSS, 0.0215);
         return true;
     }

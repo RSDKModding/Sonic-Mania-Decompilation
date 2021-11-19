@@ -130,8 +130,8 @@ bool32 MSZCutsceneK_CutsceneState_Unknown2(EntityCutsceneSeq *host)
         RSDK.StopChannel(Music->channelID);
         RSDK.PlaySfx(MSZCutsceneK->sfxImpact, false, 255);
         tornado->velocity.y = -0x10000;
-        if (!host->field_6C[0]) {
-            host->field_6C[0] = true;
+        if (!host->values[0]) {
+            host->values[0] = true;
             RSDK.PlaySfx(MSZCutsceneK->sfxDrop, false, 255);
             RSDK.SetSpriteAnimation(MSZCutsceneK->playerFrames, 4, &player1->animator, true, 0);
             player1->velocity.x = -0x10000;
@@ -148,8 +148,8 @@ bool32 MSZCutsceneK_CutsceneState_Unknown2(EntityCutsceneSeq *host)
         tornado->velocity.y += 0x3800;
     }
 
-    if (host->field_6C[0]) {
-        if (!host->field_6C[2])
+    if (host->values[0]) {
+        if (!host->values[2])
             player1->velocity.y += 0x3800;
     }
     else {
@@ -157,8 +157,8 @@ bool32 MSZCutsceneK_CutsceneState_Unknown2(EntityCutsceneSeq *host)
         player1->position.y = tornado->position.y + MSZCutsceneK->pos1.y;
     }
 
-    if (host->field_6C[1]) {
-        if (host->timer - host->field_68 == 15) {
+    if (host->values[1]) {
+        if (host->timer - host->storedValue2 == 15) {
             globals->suppressTitlecard = true;
             globals->suppressAutoMusic = true;
             globals->enableIntro       = 1;
@@ -166,15 +166,15 @@ bool32 MSZCutsceneK_CutsceneState_Unknown2(EntityCutsceneSeq *host)
             SceneInfo->listPos += TimeAttackData_GetManiaListPos(7, 3, 0);
             Zone_StartFadeOut(10, 0x000000);
         }
-        else if (host->timer - host->field_68 == 60) {
+        else if (host->timer - host->storedValue2 == 60) {
             player1->velocity.y = 0;
-            host->field_6C[2]   = true;
+            host->values[2]   = true;
         }
     }
     else if (player1->position.y > tornado->position.y) {
         TornadoPath->cameraPtr = NULL;
-        host->field_6C[1]      = 1;
-        host->field_68         = host->timer;
+        host->values[1]      = 1;
+        host->storedValue2         = host->timer;
         MSZCutsceneK->pos3     = camera->position;
         MSZCutsceneK->pos3.y += 0x1E00000;
         Camera_SetupLerp(0, 0, MSZCutsceneK->pos3.x, MSZCutsceneK->pos3.y, 3);

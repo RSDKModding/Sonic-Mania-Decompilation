@@ -98,12 +98,12 @@ bool32 HCZ1Intro_CutsceneState(EntityCutsceneSeq *host)
     }
 
     if (RSDK.GetEntityCount(TitleCard->objectID, false) || RSDK_GET_ENTITY(SLOT_ACTCLEAR, TitleCard)->objectID) {
-        if (!host->field_6C[0])
+        if (!host->values[0])
             return false;
     }
-    else if (!host->field_6C[0]) {
-        host->field_6C[0] = 1;
-        host->field_68    = host->timer;
+    else if (!host->values[0]) {
+        host->values[0] = 1;
+        host->storedValue2    = host->timer;
     }
 
     if (host->timer >= 8) {

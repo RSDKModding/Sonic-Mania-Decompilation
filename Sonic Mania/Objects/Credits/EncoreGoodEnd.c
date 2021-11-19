@@ -52,7 +52,7 @@ void EncoreGoodEnd_Create(void *data)
         self->updateRange.x       = 0x800000 + self->size.x;
         self->updateRange.y       = 0x800000 + self->size.y;
         SceneInfo->timeEnabled = false;
-        EncoreGoodEnd->field_4      = 0;
+        EncoreGoodEnd->unused1      = 0;
         Player->playerCount         = 4;
 
         self->hitbox.left   = -self->size.x >> 17;

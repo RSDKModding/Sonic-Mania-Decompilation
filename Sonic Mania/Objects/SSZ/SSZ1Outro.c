@@ -99,7 +99,7 @@ bool32 SSZ1Outro_CutsceneState_Unknown1(EntityCutsceneSeq *host)
         player2->nextGroundState = StateMachine_None;
     }
 
-    if (host->field_6C[0]) {
+    if (host->values[0]) {
         player1->jumpPress = false;
         if (player1->onGround)
             player1->jumpHold = false;
@@ -107,7 +107,7 @@ bool32 SSZ1Outro_CutsceneState_Unknown1(EntityCutsceneSeq *host)
     else if (player1->position.x >= SSZ1Outro->teleporter->position.x - 0xC80000) {
         player1->jumpPress = true;
         player1->jumpHold  = true;
-        host->field_6C[0]  = 1;
+        host->values[0]  = 1;
     }
     return player1->position.x >= self->position.x + (self->hitbox.right << 16);
 }

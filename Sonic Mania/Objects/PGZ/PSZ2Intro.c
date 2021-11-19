@@ -57,8 +57,8 @@ bool32 PSZ2Intro_CutsceneState_Unknown1(EntityCutsceneSeq *host)
         if (player2->objectID == Player->objectID)
             player2->pushing = false;
     }
-    if (host->field_6C[0]) {
-        if (host->timer - host->field_68 == 30) {
+    if (host->values[0]) {
+        if (host->timer - host->storedValue2 == 30) {
             ActClear->actID = 1;
             post->state     = SignPost_State_Fall;
             post->active    = ACTIVE_NORMAL;
@@ -67,8 +67,8 @@ bool32 PSZ2Intro_CutsceneState_Unknown1(EntityCutsceneSeq *host)
         }
     }
     else if (!fxFade->timer) {
-        host->field_6C[0] = 1;
-        host->field_68    = host->timer;
+        host->values[0] = 1;
+        host->storedValue2    = host->timer;
         foreach_all(SignPost, post)
         {
             PSZ2Intro->signPost = (Entity *)post;

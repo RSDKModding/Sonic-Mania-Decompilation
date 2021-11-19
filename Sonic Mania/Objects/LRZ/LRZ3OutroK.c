@@ -96,9 +96,9 @@ bool32 LRZ3OutroK_CutsceneState_Unknown1(EntityCutsceneSeq *host)
     }
     if (player1->jumpPress)
         player1->jumpPress = false;
-    if (player1->onGround && player1->position.x >= teleporter->position.x - 0x500000 && !host->field_6C[0]) {
+    if (player1->onGround && player1->position.x >= teleporter->position.x - 0x500000 && !host->values[0]) {
         player1->jumpPress = true;
-        host->field_6C[0]  = true;
+        host->values[0]  = true;
         return true;
     }
     return false;

@@ -21,9 +21,9 @@ typedef struct {
     bool32 (*currentState)(Entity *host);
     uint8 stateID;
     int32 timer;
-    int32 field_64;
-    int32 field_68;
-    int32 field_6C[8];
+    int32 storedValue1;
+    int32 storedValue2;
+    int32 values[8];
     Entity *cutsceneCurEntity;
     Entity *hostEntity;
     void *cutsceneStates[0x40];
@@ -51,11 +51,11 @@ void CutsceneSeq_EditorLoad(void);
 void CutsceneSeq_Serialize(void);
 
 // Extra Entity Functions
+void CutsceneSeq_NewState(int32 nextState, EntityCutsceneSeq *seq);
+void CutsceneSeq_CheckSkip(uint8 skipType, EntityCutsceneSeq *seq, void (*skipCallback)(void));
 Entity *CutsceneSeq_GetEntity(int32 type);
-void CutsceneSeq_LockAllPlayerControl(void);
 void CutsceneSeq_LockPlayerControl(void *plr);
-void CutsceneSeq_CheckSkip(uint8 skipType, EntityCutsceneSeq *self, void (*skipCallback)(void));
-void CutsceneSeq_NewState(int32 nextState, EntityCutsceneSeq *CutsceneSeq);
+void CutsceneSeq_LockAllPlayerControl(void);
 void CutsceneSeq_StartSequence(Entity *host, void **states);
 
 #endif //!OBJ_CUTSCENESEQ_H

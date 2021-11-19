@@ -173,8 +173,8 @@ bool32 FBZ1Outro_CutsceneState_Unknown1(EntityCutsceneSeq *host)
     else {
         BigSqueeze->isRumbling = true;
         FBZ1Outro_Unknown2();
-        if (host->field_6C[0])
-            host->field_6C[0] = 1;
+        if (host->values[0])
+            host->values[0] = 1;
         boss1->timer2 = 0;
         boss1->state  = BigSqueeze_State3_Unknown2;
         boss2->timer2 = 0;

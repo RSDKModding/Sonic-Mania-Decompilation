@@ -167,7 +167,7 @@ bool32 MSZCutsceneST_CutsceneState_Unknown3(EntityCutsceneSeq *host)
         player1->direction = FLIP_NONE;
     }
 
-    if (!host->field_6C[0]) {
+    if (!host->values[0]) {
         int x = (tornado->position.x & 0xFFFF0000) + 0x200000;
         if (player1->position.x != x)
             player1->position.x += (x - player1->position.x) >> 1;
@@ -175,8 +175,8 @@ bool32 MSZCutsceneST_CutsceneState_Unknown3(EntityCutsceneSeq *host)
         if (abs(player1->position.x - x) < 0x10000) {
             player1->position.x   = x;
             MSZCutsceneST->value4 = tornado->position;
-            host->field_68        = host->timer;
-            host->field_6C[0]     = 1;
+            host->storedValue2        = host->timer;
+            host->values[0]     = 1;
         }
     }
     tornado->drawOrder = Zone->playerDrawLow;
@@ -190,7 +190,7 @@ bool32 MSZCutsceneST_CutsceneState_Unknown3(EntityCutsceneSeq *host)
     range.x = ScreenInfo->width << 16;
     range.y = ScreenInfo->height << 16;
     if (!RSDK.CheckOnScreen(mystic, &range)) {
-        host->field_6C[2] = 1;
+        host->values[2] = 1;
         destroyEntity(mystic);
         return true;
     }
@@ -206,14 +206,14 @@ bool32 MSZCutsceneST_CutsceneState_Unknown4(EntityCutsceneSeq *host)
     EntityTornadoPath *nodePtr = (EntityTornadoPath *)MSZCutsceneST->nodePtr;
     int x                      = nodePtr->position.x - 0x600000;
     int y                      = nodePtr->position.y + 0x300000;
-    if (host->timer - host->field_68 == 120 && !host->field_6C[1]) {
+    if (host->timer - host->storedValue2 == 120 && !host->values[1]) {
         tornado->position.x = x;
         tornado->position.y = y;
-        host->field_6C[0]   = 1;
+        host->values[0]   = 1;
         return true;
     }
     else {
-        MathHelpers_Lerp4(&tornado->position, 255 * (host->timer - host->field_68) / 120, MSZCutsceneST->value4.x, MSZCutsceneST->value4.y, x, y);
+        MathHelpers_Lerp4(&tornado->position, 255 * (host->timer - host->storedValue2) / 120, MSZCutsceneST->value4.x, MSZCutsceneST->value4.y, x, y);
         tornado->position.x &= 0xFFFF0000;
         tornado->position.y &= 0xFFFF0000;
 
@@ -272,10 +272,10 @@ bool32 MSZCutsceneST_CutsceneState_ShowRougeA(EntityCutsceneSeq *host)
     if (host->timer == 180) {
         armadiloid->position.x = x;
         armadiloid->position.y = y;
-        host->field_6C[0]      = 1;
+        host->values[0]      = 1;
     }
 
-    if (host->field_6C[0] && !host->field_6C[1]) {
+    if (host->values[0] && !host->values[1]) {
         if (!rouge->animator.animationID)
             RSDK.SetSpriteAnimation(rouge->aniFrames, 1, &rouge->animator, true, 0);
         if (rouge->animator.animationID == 1 && rouge->animator.frameID == rouge->animator.frameCount - 1 && rouge->animator.animationTimer == 12) {
@@ -305,7 +305,7 @@ bool32 MSZCutsceneST_CutsceneState_ShowRougeA(EntityCutsceneSeq *host)
         if (rouge->animator.animationID == 2) {
             RSDK.SetSpriteAnimation(rouge->aniFrames, 1, &rouge->animator, true, 2);
             rouge->animator.loopIndex = 3;
-            host->field_6C[1]         = 1;
+            host->values[1]         = 1;
         }
     }
 
@@ -338,10 +338,10 @@ bool32 MSZCutsceneST_CutsceneState_ShowRougeB(EntityCutsceneSeq *host)
     if (host->timer == 180) {
         armadiloid->position.x = x;
         armadiloid->position.y = y;
-        host->field_6C[0]      = 1;
+        host->values[0]      = 1;
     }
 
-    if (host->field_6C[0] && !host->field_6C[1]) {
+    if (host->values[0] && !host->values[1]) {
         if (rouge->animator.animationID == 5) {
             RSDK.SetSpriteAnimation(rouge->aniFrames, 7, &rouge->animator, true, 0);
         }
@@ -360,7 +360,7 @@ bool32 MSZCutsceneST_CutsceneState_ShowRougeB(EntityCutsceneSeq *host)
             }
             if (rouge->animator.animationID == 7 && rouge->animator.frameID == 5 && rouge->animator.animationTimer == 2) {
                 RSDK.SetSpriteAnimation(rouge->aniFrames, 5, &rouge->animator, true, 0);
-                host->field_6C[1] = 1;
+                host->values[1] = 1;
             }
         }
     }
@@ -397,10 +397,10 @@ bool32 MSZCutsceneST_CutsceneState_ShowRougeC(EntityCutsceneSeq *host)
     if (host->timer == 180) {
         armadiloid->position.x = x;
         armadiloid->position.y = y;
-        host->field_6C[0]      = 1;
+        host->values[0]      = 1;
     }
 
-    if (host->field_6C[0] && !host->field_6C[1]) {
+    if (host->values[0] && !host->values[1]) {
         if (rouge->animator.animationID == 12)
             RSDK.SetSpriteAnimation(rouge->aniFrames, 14, &rouge->animator, true, 0);
         if (rouge->animator.animationID == 14) {
@@ -413,7 +413,7 @@ bool32 MSZCutsceneST_CutsceneState_ShowRougeC(EntityCutsceneSeq *host)
             }
             if (rouge->animator.animationID == 14 && rouge->animator.frameID == 7 && rouge->animator.animationTimer == 2) {
                 RSDK.SetSpriteAnimation(rouge->aniFrames, 12, &rouge->animator, true, 0);
-                host->field_6C[1] = 1;
+                host->values[1] = 1;
             }
         }
     }
@@ -476,7 +476,7 @@ bool32 MSZCutsceneST_CutsceneState_Unknown6(EntityCutsceneSeq *host)
 
         MSZSetup_Unknown4(2048);
     }
-    if (!host->field_6C[2]) {
+    if (!host->values[2]) {
         player1->position.x = tornado->position.x - 0x280000;
         if (player1->characterID == ID_TAILS)
             player1->position.y = tornado->position.y - 0x340000;
@@ -484,10 +484,10 @@ bool32 MSZCutsceneST_CutsceneState_Unknown6(EntityCutsceneSeq *host)
             player1->position.y = tornado->position.y - 0x380000;
     }
 
-    if (!host->field_6C[0]) {
+    if (!host->values[0]) {
         host->fillTimerA = clampVal(512 - ((host->timer - 45) << 9) / 60, 0, 512);
         if (!host->fillTimerA)
-            host->field_6C[0] = 1;
+            host->values[0] = 1;
     }
 
     if (host->timer == 150) {
@@ -500,7 +500,7 @@ bool32 MSZCutsceneST_CutsceneState_Unknown6(EntityCutsceneSeq *host)
         Player_StartJump(player1);
         player1->direction  = FLIP_NONE;
         player1->velocity.x = 0xE0000;
-        host->field_6C[2]   = 1;
+        host->values[2]   = 1;
         if (player2->objectID == Player->objectID) {
             player2->state  = MSZSetup_Player_State_PostCrashJumpIn;
             player2->active = ACTIVE_NORMAL;
@@ -509,18 +509,18 @@ bool32 MSZCutsceneST_CutsceneState_Unknown6(EntityCutsceneSeq *host)
     if (TornadoPath->moveVel.y > 0 && !(Zone->timer % 5))
         Camera_ShakeScreen(0, 2, 2);
 
-    if (TornadoPath->moveVel.y < 0 && !host->field_6C[3]) {
+    if (TornadoPath->moveVel.y < 0 && !host->values[3]) {
         MSZCutsceneST->isMayday = false;
         Camera_ShakeScreen(0, 0, 5);
         MSZSetup_Unknown4(512);
-        host->field_6C[3] = 1;
+        host->values[3] = 1;
         tornado->onGround = true;
-        host->field_68    = host->timer;
+        host->storedValue2    = host->timer;
         Music_FadeOut(0.02);
         RSDK.PlaySfx(MSZCutsceneST->sfxLedgeBreak, false, 255);
     }
 
-    if (tornado->onGround && !((host->timer - host->field_68) % 16)) {
+    if (tornado->onGround && !((host->timer - host->storedValue2) % 16)) {
         EntityDebris *debris = CREATE_ENTITY(Debris, NULL, tornado->position.x, tornado->position.y);
         debris->position.x += 0x2C0000;
         debris->position.y += 0xC0000;

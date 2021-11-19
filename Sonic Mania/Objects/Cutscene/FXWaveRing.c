@@ -7,22 +7,22 @@ void FXWaveRing_Update(void)
 {
     RSDK_THIS(FXWaveRing);
     if (!(Zone->timer & 3)) {
-        if (self->field_70 > 0)
-            self->field_78 += RSDK.Rand(0, 2 * self->field_70);
-        self->field_8C     = RSDK.Rand(8, 24);
-        self->angleOffset  = 1;
-        self->angle2Offset = RSDK.Rand(8, 32);
-        self->field_6C     = RSDK.Rand(50, 199);
+        if (self->shrinkSpeed > 0)
+            self->radiusOffset += RSDK.Rand(0, 2 * self->shrinkSpeed);
+        self->radius    = RSDK.Rand(8, 24);
+        self->angleVel  = 1;
+        self->angleVel2 = RSDK.Rand(8, 32);
+        self->angleInc  = RSDK.Rand(50, 199);
     }
-    self->angle  = ((self->angle & 0xFF) + (self->angleOffset & 0xFF)) & 0xFf;
-    self->angle2 = ((self->angle2 & 0xFF) + (self->angle2Offset & 0xFF)) & 0xFf;
+    self->angle  = ((self->angle & 0xFF) + (self->angleVel & 0xFF)) & 0xFf;
+    self->angle2 = ((self->angle2 & 0xFF) + (self->angleVel2 & 0xFF)) & 0xFf;
 
     StateMachine_Run(self->state);
 
     Entity *parent = self->parent;
     if (parent) {
-        self->position.x = parent->position.x + self->field_80.x;
-        self->position.y = parent->position.y + self->field_80.y;
+        self->position.x = parent->position.x + self->offsetPos.x;
+        self->position.y = parent->position.y + self->offsetPos.y;
     }
 }
 
@@ -34,9 +34,9 @@ void FXWaveRing_Draw(void)
 {
     RSDK_THIS(FXWaveRing);
 
-    int32 angInc  = 256 / self->field_88;
+    int32 angInc  = 256 / self->pointCount;
     uint32 colour = (self->r << 16) | (self->g << 8) | self->b;
-    int32 sin     = self->field_8C * RSDK.Sin256(self->angle2) + (self->field_78 << 8);
+    int32 sin     = self->radius * RSDK.Sin256(self->angle2) + (self->radiusOffset << 8);
 
     int32 x = sin * RSDK.Sin256(self->angle) + self->position.x;
     int32 y = sin * RSDK.Cos256(self->angle) + self->position.y;
@@ -45,10 +45,10 @@ void FXWaveRing_Draw(void)
     int32 angle2 = self->angle2;
     int32 prevX  = x;
     int32 prevY  = y;
-    for (int32 i = 0; i < self->field_88 - 1; ++i) {
+    for (int32 i = 0; i < self->pointCount - 1; ++i) {
         angle += angInc;
-        angle2 += self->field_6C;
-        sin   = self->field_8C * RSDK.Sin256(angle2) + (self->field_78 << 8);
+        angle2 += self->angleInc;
+        sin   = self->radius * RSDK.Sin256(angle2) + (self->radiusOffset << 8);
         prevX = x;
         prevY = y;
         x     = sin * RSDK.Sin256(angle) + self->position.x;
@@ -59,9 +59,9 @@ void FXWaveRing_Draw(void)
         prevY = y;
     }
 
-    sin = self->field_8C * RSDK.Sin256(self->angle2) + (self->field_78 << 8);
-    RSDK.DrawLine(x, y, sin * RSDK.Sin256(self->angle) + self->position.x, sin * RSDK.Cos256(self->angle) + self->position.y, colour,
-                  self->alpha, self->inkEffect, false);
+    sin = self->radius * RSDK.Sin256(self->angle2) + (self->radiusOffset << 8);
+    RSDK.DrawLine(x, y, sin * RSDK.Sin256(self->angle) + self->position.x, sin * RSDK.Cos256(self->angle) + self->position.y, colour, self->alpha,
+                  self->inkEffect, false);
 }
 
 void FXWaveRing_Create(void *data)
@@ -71,12 +71,12 @@ void FXWaveRing_Create(void *data)
         self->visible      = true;
         self->active       = ACTIVE_NORMAL;
         self->drawOrder    = Zone->drawOrderHigh;
-        self->field_78     = 48;
-        self->field_8C     = 8;
-        self->angleOffset  = 2;
-        self->angle2Offset = 32;
-        self->field_6C     = 150;
-        self->field_88     = 16;
+        self->radiusOffset = 48;
+        self->radius       = 8;
+        self->angleVel     = 2;
+        self->angleVel2    = 32;
+        self->angleInc     = 150;
+        self->pointCount   = 16;
         self->inkEffect    = INK_ADD;
         self->parent       = (Entity *)data;
         self->state        = FXWaveRing_State_FadeIn;
@@ -92,12 +92,12 @@ void FXWaveRing_State_FadeIn(void)
     RSDK_THIS(FXWaveRing);
 
     if (self->alpha >= 192) {
-        self->field_78 -= self->field_70;
+        self->radiusOffset -= self->shrinkSpeed;
         self->state = FXWaveRing_State_Wait;
     }
     else {
         self->alpha += 8;
-        self->field_78 -= self->field_70;
+        self->radiusOffset -= self->shrinkSpeed;
     }
 }
 void FXWaveRing_State_Wait(void)
@@ -109,17 +109,17 @@ void FXWaveRing_State_Wait(void)
         if (!self->timer)
             self->state = FXWaveRing_State_FadeOut;
     }
-    self->field_78 -= self->field_70;
+    self->radiusOffset -= self->shrinkSpeed;
 }
 void FXWaveRing_State_FadeOut(void)
 {
     RSDK_THIS(FXWaveRing);
 
-    self->field_78 -= self->field_70;
+    self->radiusOffset -= self->shrinkSpeed;
     if (self->alpha <= 0)
         destroyEntity(self);
     else
-        self->alpha -= 16;
+        self->alpha -= 0x10;
 }
 
 #if RETRO_INCLUDE_EDITOR

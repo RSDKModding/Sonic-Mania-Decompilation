@@ -190,12 +190,12 @@ bool32 MSZ2Cutscene_CutsceneState_Unknown3(EntityCutsceneSeq *host)
     }
 
     if (host->timer == 30) {
-        host->field_64 = camera->position.x + 0x1000000;
-        host->field_68 = camera->position.y - 0x4000000;
-        Camera_SetupLerp(0, 0, host->field_64, host->field_68, 2);
+        host->storedValue1 = camera->position.x + 0x1000000;
+        host->storedValue2 = camera->position.y - 0x4000000;
+        Camera_SetupLerp(0, 0, host->storedValue1, host->storedValue2, 2);
     }
 
-    if (host->timer > 30 && camera->position.x == host->field_64 && camera->position.y == host->field_68) {
+    if (host->timer > 30 && camera->position.x == host->storedValue1 && camera->position.y == host->storedValue2) {
         EntityShield *shield = RSDK_GET_ENTITY(player1->playerID + Player->playerCount, Shield);
         if (shield->objectID == Shield->objectID) {
             player1->shield = SHIELD_NONE;
@@ -211,7 +211,7 @@ bool32 MSZ2Cutscene_CutsceneState_Unknown4(EntityCutsceneSeq *host)
     RSDK_GET_PLAYER(player1, player2, camera);
 
     if (!host->timer) {
-        host->field_68 = 0x4000;
+        host->storedValue2 = 0x4000;
         RSDK.SetSpriteAnimation(player1->aniFrames, ANI_JUMP, &player1->animator, false, 0);
         player1->drawFX |= FX_SCALE;
         player1->animator.animationSpeed = 60;
@@ -238,13 +238,13 @@ bool32 MSZ2Cutscene_CutsceneState_Unknown4(EntityCutsceneSeq *host)
 
     if (host->timer > 0) {
         player1->velocity.x = 0xB000;
-        player1->velocity.y = host->field_68;
+        player1->velocity.y = host->storedValue2;
         if (player2->objectID == Player->objectID) {
             player2->state      = Player_State_None;
             player2->velocity.x = 0xB000;
             player2->velocity.y = player1->velocity.y;
         }
-        host->field_68 += 144;
+        host->storedValue2 += 144;
     }
     if (host->timer == 120)
         Zone_StartFadeOut(10, 0x000000);

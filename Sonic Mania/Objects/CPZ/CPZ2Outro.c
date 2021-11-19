@@ -85,9 +85,9 @@ bool32 CPZ2Outro_CutsceneSeq(void *h)
     if (player1->jumpPress)
         player1->jumpPress = false;
 
-    if (player1->onGround && player1->position.x >= host->cutsceneCurEntity->position.x && !host->field_6C[0]) {
+    if (player1->onGround && player1->position.x >= host->cutsceneCurEntity->position.x && !host->values[0]) {
         player1->jumpPress = true;
-        host->field_6C[0]  = 1;
+        host->values[0]  = 1;
     }
 
     if (player1->position.x > size.x << 16) {

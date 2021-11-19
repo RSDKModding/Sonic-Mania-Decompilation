@@ -10,10 +10,10 @@ void FXSpinRay_Update(void)
     int32 angle     = self->angle;
     for (int32 i = 0; i < 20; i += 4) {
         for (int32 v = 0; v < 4; ++v) {
-            int32 x                   = (self->field_80[v].x - self->field_140.x) >> 8;
-            int32 y                   = (self->field_80[v].y - self->field_140.y) >> 8;
-            self->vertices[i + v].x = (y * RSDK.Sin256(angle)) + (x * RSDK.Cos256(angle)) + self->field_140.x;
-            self->vertices[i + v].y = (y * RSDK.Cos256(angle)) - (x * RSDK.Sin256(angle)) + self->field_140.y;
+            int32 x                   = (self->vertexPos[v].x - self->vertexOffset.x) >> 8;
+            int32 y                   = (self->vertexPos[v].y - self->vertexOffset.y) >> 8;
+            self->vertices[i + v].x = (y * RSDK.Sin256(angle)) + (x * RSDK.Cos256(angle)) + self->vertexOffset.x;
+            self->vertices[i + v].y = (y * RSDK.Cos256(angle)) - (x * RSDK.Sin256(angle)) + self->vertexOffset.y;
         }
         angle += 51;
     }
@@ -22,8 +22,8 @@ void FXSpinRay_Update(void)
 
     Entity *parent = self->parent;
     if (parent) {
-        self->position.x = parent->position.x + self->field_78.x;
-        self->position.y = parent->position.y + self->field_78.y;
+        self->position.x = parent->position.x + self->offsetPos.x;
+        self->position.y = parent->position.y + self->offsetPos.y;
     }
 }
 
@@ -59,14 +59,14 @@ void FXSpinRay_Create(void *data)
         self->active        = ACTIVE_NORMAL;
         self->drawOrder     = Zone->drawOrderHigh;
         self->field_70      = 0x600000;
-        self->field_80[0].x = -0xC0000;
-        self->field_80[1].x = self->field_70 >> 3;
-        self->field_80[0].y = -self->field_70;
-        self->field_80[1].y = -self->field_70;
-        self->field_80[2].x = self->field_70 >> 6;
-        self->field_80[3].x = -self->field_70 >> 6;
-        self->field_80[2].y = -self->field_70 >> 4;
-        self->field_80[3].y = -self->field_70 >> 4;
+        self->vertexPos[0].x = -0xC0000;
+        self->vertexPos[1].x = self->field_70 >> 3;
+        self->vertexPos[0].y = -self->field_70;
+        self->vertexPos[1].y = -self->field_70;
+        self->vertexPos[2].x = self->field_70 >> 6;
+        self->vertexPos[3].x = -self->field_70 >> 6;
+        self->vertexPos[2].y = -self->field_70 >> 4;
+        self->vertexPos[3].y = -self->field_70 >> 4;
         self->offset        = 8;
         self->state         = FXSpinRay_State_FadeIn;
         self->r             = 0xF0;

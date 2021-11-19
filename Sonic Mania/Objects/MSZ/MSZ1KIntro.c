@@ -80,10 +80,10 @@ bool32 MSZ1KIntro_CutsceneState_Unknown2(EntityCutsceneSeq *host)
         player1->state          = Player_State_None;
         player1->tileCollisions = false;
     }
-    if (player1->animator.animationID == 5 && player1->animator.frameID == 1 && !host->field_6C[0]) {
+    if (player1->animator.animationID == 5 && player1->animator.frameID == 1 && !host->values[0]) {
         RSDK.PlaySfx(MSZ1KIntro->sfxImpact, false, 255);
         Camera_ShakeScreen(0, 0, 4);
-        host->field_6C[0] = 1;
+        host->values[0] = 1;
     }
     if (host->timer == 60)
         RSDK.SetSpriteAnimation(MSZ1KIntro->playerFrames, 7, &player1->animator, false, 0);

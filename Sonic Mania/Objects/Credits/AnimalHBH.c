@@ -5,12 +5,14 @@ ObjectAnimalHBH *AnimalHBH;
 void AnimalHBH_Update(void)
 {
     RSDK_THIS(AnimalHBH);
+
     self->position.x -= 0x10000;
     int32 pos = self->position.x - (ScreenInfo->position.x << 16) - (ScreenInfo->centerX << 16);
     if (pos < 0)
         pos = ((ScreenInfo->position.x + ScreenInfo->centerX) << 16) - self->position.x;
     if (pos < 0x800000)
         AnimalHBH->palCnt = 0x20 * self->type;
+
     if (!self->type) {
         ++self->timer;
         if ((ControllerInfo->keyA.press || ControllerInfo->keyStart.press))
@@ -46,10 +48,10 @@ void AnimalHBH_Draw(void)
     drawPos.y = self->position.y;
 
     RSDK.SetActivePalette(1, 0, ScreenInfo->height);
-    RSDK.DrawSprite(&self->silhouetteData, &drawPos, 0);
+    RSDK.DrawSprite(&self->silhouetteAnimator, &drawPos, false);
 
     RSDK.SetActivePalette(4, 0, ScreenInfo->height);
-    RSDK.DrawSprite(&self->animalHBHData, NULL, 0);
+    RSDK.DrawSprite(&self->animalHBHAnimator, NULL, false);
 
     RSDK.SetActivePalette(1, 0, ScreenInfo->height);
 }
@@ -63,23 +65,29 @@ void AnimalHBH_Create(void *data)
         self->active        = ACTIVE_NORMAL;
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
-        RSDK.SetSpriteAnimation(AnimalHBH->animalHBHSprite, self->type, &self->animalHBHData, true, 0);
-        RSDK.SetSpriteAnimation(AnimalHBH->silhouetteSprite, self->type, &self->silhouetteData, true, 0);
+        RSDK.SetSpriteAnimation(AnimalHBH->aniFrames, self->type, &self->animalHBHAnimator, true, 0);
+        RSDK.SetSpriteAnimation(AnimalHBH->silhouetteFrames, self->type, &self->silhouetteAnimator, true, 0);
     }
 }
 
 void AnimalHBH_StageLoad(void)
 {
-    AnimalHBH->animalHBHSprite  = RSDK.LoadSpriteAnimation("Credits/AnimalHBH.bin", SCOPE_STAGE);
-    AnimalHBH->silhouetteSprite = RSDK.LoadSpriteAnimation("Credits/Silhouettes.bin", SCOPE_STAGE);
+    AnimalHBH->aniFrames  = RSDK.LoadSpriteAnimation("Credits/AnimalHBH.bin", SCOPE_STAGE);
+    AnimalHBH->silhouetteFrames = RSDK.LoadSpriteAnimation("Credits/Silhouettes.bin", SCOPE_STAGE);
     AnimalHBH->palID            = 0;
     AnimalHBH->palCnt           = 0;
 }
 
 #if RETRO_INCLUDE_EDITOR
-void AnimalHBH_EditorDraw(void) {}
+void AnimalHBH_EditorDraw(void)
+{
+    RSDK_THIS(AnimalHBH);
+    RSDK.SetSpriteAnimation(AnimalHBH->aniFrames, self->type, &self->animalHBHAnimator, true, 0);
 
-void AnimalHBH_EditorLoad(void) {}
+    RSDK.DrawSprite(&self->animalHBHAnimator, NULL, false);
+}
+
+void AnimalHBH_EditorLoad(void) { AnimalHBH->aniFrames = RSDK.LoadSpriteAnimation("Credits/AnimalHBH.bin", SCOPE_STAGE); }
 #endif
 
 void AnimalHBH_Serialize(void) { RSDK_EDITABLE_VAR(AnimalHBH, VAR_UINT8, type); }
