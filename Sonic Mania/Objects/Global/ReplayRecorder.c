@@ -102,7 +102,7 @@ void ReplayRecorder_StaticUpdate(void)
             if ((ControllerInfo->keyStart.press || UnknownInfo->field_10) && SceneInfo->state == ENGINESTATE_REGULAR) {
                 EntityPauseMenu *pauseMenu = RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu);
                 bool32 flag                = true;
-                if (ActClear && ActClear->dword34)
+                if (ActClear && ActClear->actClearActive)
                     flag = false;
                 if (!RSDK.GetEntityCount(TitleCard->objectID, 0) && !pauseMenu->objectID && flag) {
                     RSDK.ResetEntitySlot(SLOT_PAUSEMENU, PauseMenu->objectID, NULL);
@@ -716,7 +716,7 @@ void ReplayRecorder_Play(EntityPlayer *player)
         recorder->active = ACTIVE_NORMAL;
         if (player) {
             recorder->player   = player;
-            recorder->field_60 = player->state;
+            recorder->playerState = player->state;
         }
         recorder->playing = false;
         if (player->playerID) {
@@ -1123,7 +1123,7 @@ void ReplayRecorder_StateLate_Replay(void)
     }
     if (self->playing) {
         if (player->state != ReplayRecorder_PlayerState)
-            self->field_60 = player->state;
+            self->playerState = player->state;
     }
 
     int32 *frameBuffer = NULL;
@@ -1178,10 +1178,10 @@ void ReplayRecorder_RecordFrameData(void)
         bool32 isGimmickState = ReplayRecorder_CheckPlayerGimmickState(self);
         self->stateStore    = player->state;
 
-        EntityIce *entPtr  = player->abilityPtrs[1];
+        EntityIce *ice  = player->abilityPtrs[1];
         Animator *animator = &player->animator;
-        if (isGimmickState && RSDK.CheckStageFolder("PSZ2") && player->state == Ice_State_FrozenPlayer && entPtr->objectID == Ice->objectID) {
-            animator = &entPtr->animator2;
+        if (isGimmickState && RSDK.CheckStageFolder("PSZ2") && player->state == Ice_State_FrozenPlayer && ice->objectID == Ice->objectID) {
+            animator = &ice->animator2;
         }
         void *storedState = self->storedState;
         self->animID    = animator->animationID;

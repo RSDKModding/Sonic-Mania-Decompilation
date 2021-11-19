@@ -194,6 +194,7 @@ void Player_LateUpdate(void)
                 self->state      = Player_State_Die;
                 if (!(self->drawFX & FX_SCALE) || self->scale.x == 0x200)
                     self->drawOrder = Zone->playerDrawHigh;
+
                 if (self->sidekick || globals->gameMode == MODE_COMPETITION) {
                     if (self->camera) {
                         self->scrollDelay   = 2;
@@ -4232,7 +4233,7 @@ void Player_State_DropDash(void)
         }
         EntityDust *dust = CREATE_ENTITY(Dust, self, self->position.x, self->position.y);
         RSDK.SetSpriteAnimation(Dust->aniFrames, 2, &dust->animator, true, 0);
-        dust->state = Dust_State_DropDash;
+        dust->state = Dust_State_Move;
         dust->position.y += RSDK.GetHitbox(&self->animator, 0)->bottom << 16;
         dust->direction = self->direction;
         dust->drawOrder = self->drawOrder;
@@ -5040,7 +5041,7 @@ void Player_SpawnMightyHammerdropDust(int32 speed, Hitbox *hitbox)
 {
     RSDK_THIS(Player);
     EntityDust *dust = CREATE_ENTITY(Dust, self, self->position.x, self->position.y);
-    dust->state      = Dust_State_HammerDrop;
+    dust->state      = Dust_State_MoveCollide;
     dust->position.y += hitbox->bottom << 16;
     dust->drawOrder       = self->drawOrder;
     dust->collisionPlane  = self->collisionPlane;
@@ -6164,7 +6165,7 @@ void Player_ProcessP1Input(void)
                             EntityPauseMenu *pauseMenu = RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu);
                             bool32 flag                = true;
 #if RETRO_USE_PLUS
-                            if (ActClear && ActClear->dword34)
+                            if (ActClear && ActClear->actClearActive)
                                 flag = false;
 #endif
                             if (!RSDK.GetEntityCount(TitleCard->objectID, 0) && !pauseMenu->objectID && flag) {
@@ -6292,7 +6293,7 @@ void Player_ProcessP1Input(void)
                     EntityPauseMenu *pauseMenu = RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu);
                     bool32 flag                = true;
 #if RETRO_USE_PLUS
-                    if (ActClear && ActClear->dword34)
+                    if (ActClear && ActClear->actClearActive)
                         flag = false;
 #endif
                     if (!RSDK.GetEntityCount(TitleCard->objectID, 0) && !pauseMenu->objectID && flag) {

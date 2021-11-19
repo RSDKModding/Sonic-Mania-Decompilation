@@ -215,7 +215,7 @@ void GiantPistol_State_Aiming(void)
     self->position = self->startPos;
     self->rotation = (-RSDK.Sin512(self->angle) >> 3) & 0x1FF;
     int angle        = 256 - (self->rotation >> 1);
-    Zone_Unknown3(&self->field_74, &self->position, angle);
+    Zone_RotateOnPivot(&self->position, &self->field_74, angle);
 
     self->position.x -= RSDK.Sin512(self->rotation) << 10;
     self->position.y -= RSDK.Sin512(self->rotation) << 10;

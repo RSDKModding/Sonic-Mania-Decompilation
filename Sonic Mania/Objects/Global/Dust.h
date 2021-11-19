@@ -35,11 +35,11 @@ void Dust_EditorLoad(void);
 void Dust_Serialize(void);
 
 // Extra Entity Functions
-void Dust_State_DropDash(void);
-void Dust_State_HammerDrop(void);
-void Dust_State_GlideSlide(void);
-void Dust_State_Skid(void);
 void Dust_State_Spindash(void);
-void Dust_State_EggLoco(void);
+void Dust_State_Skid(void);
+void Dust_State_GlideSlide(void);
+void Dust_State_Move(void);
+void Dust_State_MoveCollide(void);
+void Dust_State_MoveGravity(void);
 
 #endif //!OBJ_DUST_H

@@ -408,13 +408,13 @@ void DERobot_Unknown10(void)
     pos.x = self->position.x;
     pos.y = self->position.y;
     self->position.x += (self->field_CC + 35) << 16;
-    Zone_Unknown3(&pos, &self->position, -(self->angle >> 3));
+    Zone_RotateOnPivot(&self->position, &pos, -(self->angle >> 3));
 
     foreach_active(Player, player)
     {
         if (Player_CheckCollisionTouch(player, self, &DERobot->hitbox2)) {
 #if RETRO_USE_PLUS
-            if (!Player_CheckMightyUnspin(1024, player, false, &player->uncurlTimer))
+            if (!Player_CheckMightyUnspin(0x400, player, false, &player->uncurlTimer))
 #endif
             Player_CheckHit(player, self);
         }
@@ -435,7 +435,7 @@ bool32 DERobot_Unknown11(void)
     pos.x = self->position.x;
     pos.y = self->position.y;
     self->position.x += (self->field_CC + 48) << 16;
-    Zone_Unknown3(&pos, &self->position, -(self->angle >> 3));
+    Zone_RotateOnPivot(&self->position, &pos, -(self->angle >> 3));
 
     foreach_active(PhantomRuby, ruby)
     {

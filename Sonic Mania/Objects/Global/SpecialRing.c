@@ -17,15 +17,15 @@ void SpecialRing_Draw(void)
     RSDK_THIS(SpecialRing);
     if (self->state == SpecialRing_State_Warp) {
         self->direction = self->warpAnimator.frameID > 8;
-        RSDK.DrawSprite(&self->warpAnimator, 0, 0);
+        RSDK.DrawSprite(&self->warpAnimator, NULL, false);
     }
     else {
         RSDK.Prepare3DScene(SpecialRing->sceneIndex);
         if (self->enabled)
-            RSDK.AddModelTo3DScene(SpecialRing->modelIndex, SpecialRing->sceneIndex, S3D_FLATCLR_SHADED_BLENDED, &self->matrix2, &self->matrix3,
-                                0xF0F000);
+            RSDK.AddModelTo3DScene(SpecialRing->modelIndex, SpecialRing->sceneIndex, S3D_FLATCLR_SHADED_BLENDED, &self->matWorld, &self->matNormal,
+                                   0xF0F000);
         else
-            RSDK.AddModelTo3DScene(SpecialRing->modelIndex, SpecialRing->sceneIndex, S3D_FLATCLR_SHADED_WIREFRAME, &self->matrix2, &self->matrix3, 0x609090);
+            RSDK.AddModelTo3DScene(SpecialRing->modelIndex, SpecialRing->sceneIndex, S3D_FLATCLR_SHADED_WIREFRAME, &self->matWorld, &self->matNormal, 0x609090);
         RSDK.Draw3DScene(SpecialRing->sceneIndex);
     }
 }
@@ -65,6 +65,7 @@ void SpecialRing_StageLoad(void)
     RSDK.SetDiffuseIntensity(SpecialRing->sceneIndex, 8, 8, 8);
     // sets specular (highlight) intensity (16-0, 16 = none, 0 = all)
     RSDK.SetSpecularIntensity(SpecialRing->sceneIndex, 14, 14, 14);
+
     SpecialRing->sfxSpecialRing = RSDK.GetSFX("Global/SpecialRing.wav");
     SpecialRing->sfxSpecialWarp = RSDK.GetSFX("Global/SpecialWarp.wav");
 
@@ -146,7 +147,7 @@ void SpecialRing_State_Warp(void)
     RSDK.ProcessAnimation(&self->warpAnimator);
     if (!(Zone->timer & 3)) {
         for (int32 i = 0; i < 3; ++i) {
-            EntityRing *ring = CREATE_ENTITY(Ring, NULL, (RSDK.Rand(-0x200000, 0x20000) + self->dword68) + self->position.x,
+            EntityRing *ring = CREATE_ENTITY(Ring, NULL, (RSDK.Rand(-0x200000, 0x20000) + self->sparkleRadius) + self->position.x,
                                              self->position.y + RSDK.Rand(-0x200000, 0x200000));
             ring->state     = Ring_State_Sparkle;
             ring->stateDraw = Ring_Draw_Sparkle;
@@ -163,7 +164,7 @@ void SpecialRing_State_Warp(void)
             ring->animator.animationSpeed = RSDK.Rand(6, 8);
             ring->timer                   = 2 * i;
         }
-        self->dword68 -= 0x80000;
+        self->sparkleRadius -= 0x80000;
     }
 
     if (SaveGame->saveRAM->chaosEmeralds == 0x7F || !self->id) {
@@ -195,19 +196,19 @@ void SpecialRing_State_Normal(void)
     else
         self->scale.x += ((0x168 - self->scale.x) >> 5);
 
-    RSDK.MatrixScaleXYZ(&self->matrix, self->scale.x, self->scale.x, self->scale.x);
-    RSDK.MatrixTranslateXYZ(&self->matrix, self->position.x, self->position.y, 0, false);
-    RSDK.MatrixRotateXYZ(&self->matrix2, 0, self->angleY, self->angleZ);
-    RSDK.MatrixMultiply(&self->matrix2, &self->matrix2, &self->matrix);
-    RSDK.MatrixRotateX(&self->matrix4, 0x1E0);
-    RSDK.MatrixRotateXYZ(&self->matrix3, 0, self->angleY, self->angleZ);
-    RSDK.MatrixMultiply(&self->matrix3, &self->matrix3, &self->matrix4);
+    RSDK.MatrixScaleXYZ(&self->matTransform, self->scale.x, self->scale.x, self->scale.x);
+    RSDK.MatrixTranslateXYZ(&self->matTransform, self->position.x, self->position.y, 0, false);
+    RSDK.MatrixRotateXYZ(&self->matWorld, 0, self->angleY, self->angleZ);
+    RSDK.MatrixMultiply(&self->matWorld, &self->matWorld, &self->matTransform);
+    RSDK.MatrixRotateX(&self->matTempRot, 0x1E0);
+    RSDK.MatrixRotateXYZ(&self->matNormal, 0, self->angleY, self->angleZ);
+    RSDK.MatrixMultiply(&self->matNormal, &self->matNormal, &self->matTempRot);
 
     if (self->enabled && self->scale.x > 0x100) {
         foreach_active(Player, player) {
             if ((self->planeFilter <= 0 || player->collisionPlane == (((uint8)self->planeFilter - 1) & 1)) && !player->sidekick) {
                 if (Player_CheckCollisionTouch(player, self, &SpecialRing->hitbox) && SceneInfo->timeEnabled) {
-                    self->dword68 = 0x100000;
+                    self->sparkleRadius = 0x100000;
                     self->state   = SpecialRing_State_Warp;
                     EntitySaveGame *saveRAM = SaveGame->saveRAM;
 #if RETRO_GAMEVER != VER_100
@@ -230,7 +231,7 @@ void SpecialRing_State_Normal(void)
                             globals->specialRingID = self->id;
                         saveRAM->collectedSpecialRings |= 1 << (16 * Zone->actID - 1 + self->id);
                     }
-                    RSDK.PlaySfx(SpecialRing->sfxSpecialRing, 0, 254);
+                    RSDK.PlaySfx(SpecialRing->sfxSpecialRing, false, 0xFE);
                 }
             }
         }

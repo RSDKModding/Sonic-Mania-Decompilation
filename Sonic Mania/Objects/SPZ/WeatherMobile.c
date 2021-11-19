@@ -544,7 +544,7 @@ void WeatherMobile_State1_Unknown2(void)
             int x            = parent->position.x + RSDK.Rand(-0x140000, 0x140000);
             int y            = parent->position.y + RSDK.Rand(-0x180000, -0x140000);
             EntityDust *dust = CREATE_ENTITY(Dust, self, x, y);
-            dust->state      = Dust_State_DropDash;
+            dust->state      = Dust_State_Move;
             dust->drawOrder  = parent->drawOrder;
         }
         if (++self->timer == 120) {

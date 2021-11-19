@@ -60,7 +60,7 @@ typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateLate);
-    StateMachine(field_60);
+    StateMachine(playerState);
     StateMachine(storedState);
     StateMachine(stateStore);
     uint16 animID;
@@ -74,14 +74,11 @@ typedef struct {
     int32 field_88;
     uint8 storedInputs;
     uint8 storedDirection;
-    uint8 field_8E;
-    uint8 field_8F;
     Vector2 storedPos;
     Vector2 storedVel;
     int32 storedRotation;
     int32 storedSpeed;
     uint8 storedAnim;
-    uint8 field_A9;
     uint16 storedFrame;
     int32 alphaStore;
 } EntityReplayRecorder;

@@ -48,7 +48,7 @@ typedef struct {
     int32 timer;
     int32 playerID;
     int32 screen;
-    Vector2 pos;
+    Vector2 drawOffset;
     Animator animator;
     Animator animator2;
 } EntityAnnouncer;
@@ -72,10 +72,10 @@ void Announcer_Serialize(void);
 // Extra Entity Functions
 void Announcer_StartCountdown(void);
 void Announcer_AnnounceGoal(int32 screen);
-void Announcer_Unknown3(void);
-void Announcer_Unknown4(void);
-void Announcer_State_CountDown(void);
-void Announcer_Unknown6(void);
+void Announcer_Draw_Countdown(void);
+void Announcer_Draw_Finished(void);
+void Announcer_State_Countdown(void);
+void Announcer_State_Finished(void);
 void Announcer_State_AnnounceWinner(void);
 void Announcer_State_AnnounceDraw(void);
 void Announcer_State_AnnounceWinPlayer(void);

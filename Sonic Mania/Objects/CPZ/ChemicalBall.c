@@ -5,7 +5,7 @@ ObjectChemicalBall *ChemicalBall;
 void ChemicalBall_Update(void)
 {
     RSDK_THIS(ChemicalBall);
-    if (globals->gameMode == MODE_TIMEATTACK && TimeAttackGate && TimeAttackGate->field_1C)
+    if (globals->gameMode == MODE_TIMEATTACK && TimeAttackGate && TimeAttackGate->isFinished)
         destroyEntity(self);
     StateMachine_Run(self->state);
 }

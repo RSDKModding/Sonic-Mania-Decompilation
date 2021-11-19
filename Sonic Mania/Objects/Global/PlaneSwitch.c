@@ -44,7 +44,7 @@ void PlaneSwitch_DrawSprites(void)
     drawPos.y = self->position.y;
     drawPos.x -= 0x80000;
     drawPos.y -= self->size << 19;
-    Zone_Unknown3(&self->position, &drawPos, self->angle);
+    Zone_RotateOnPivot(&drawPos, &self->position, self->angle);
 
     self->animator.frameID = self->flags & 3;
     for (int32 i = 0; i < self->size; ++i) {

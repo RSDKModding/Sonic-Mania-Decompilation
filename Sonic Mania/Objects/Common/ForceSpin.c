@@ -98,7 +98,7 @@ void ForceSpin_DrawSprites(void)
     drawPos.x = self->position.x;
     drawPos.y = self->position.y;
     drawPos.y -= self->size << 19;
-    Zone_Unknown3(&self->position, &drawPos, self->angle);
+    Zone_RotateOnPivot(&drawPos, &self->position, self->angle);
 
     for (int32 i = 0; i < self->size; ++i) {
         RSDK.DrawSprite(&self->animator, &drawPos, 0);

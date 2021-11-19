@@ -215,7 +215,7 @@ void Tubinaut_Unknown5(EntityPlayer *player, int orbID)
 
     if (Tubinaut_CheckAttacking(player)) {
         EntityDust *dust = CREATE_ENTITY(Dust, self, self->position.x, self->position.y);
-        dust->state      = Dust_State_DropDash;
+        dust->state      = Dust_State_Move;
         dust->drawOrder  = player->drawOrder;
         RSDK.PlaySfx(Tubinaut->sfxPowerdown, false, 255);
 #if RETRO_USE_PLUS

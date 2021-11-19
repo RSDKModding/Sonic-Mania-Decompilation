@@ -91,7 +91,7 @@ void PhantomMissile_Unknown2(void)
         int x            = RSDK.Sin512(self->rotation) << 11;
         int y            = RSDK.Cos512(self->rotation) << 11;
         EntityDust *dust = CREATE_ENTITY(Dust, NULL, self->position.x - x, self->position.y + y);
-        dust->state      = Dust_State_DropDash;
+        dust->state      = Dust_State_Move;
         dust->drawOrder  = Zone->drawOrderHigh;
         dust->inkEffect  = INK_BLEND;
     }

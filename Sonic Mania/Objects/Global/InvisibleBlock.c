@@ -98,8 +98,7 @@ void InvisibleBlock_EditorDraw(void)
 void InvisibleBlock_EditorLoad(void)
 {
     InvisibleBlock->aniFrames = RSDK.LoadSpriteAnimation("Global/ItemBox.bin", SCOPE_STAGE);
-    RSDK.SetSpriteAnimation(InvisibleBlock->aniFrames, 2, &InvisibleBlock->animator, true, 0);
-    InvisibleBlock->animator.frameID = 10;
+    RSDK.SetSpriteAnimation(InvisibleBlock->aniFrames, 2, &InvisibleBlock->animator, true, 10);
 
     RSDK_ACTIVE_VAR(InvisibleBlock, planeFilter);
     RSDK_ENUM_VAR("No Filter", PLANEFILTER_NONE);

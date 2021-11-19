@@ -617,12 +617,12 @@ void Zone_StartFadeOut_MusicFade(void)
     Music_FadeOut(0.025);
 }
 
-void Zone_Unknown3(Vector2 *posPtr, Vector2 *pos, int32 angle)
+void Zone_RotateOnPivot(Vector2 *position, Vector2 *pivotPos, int32 angle)
 {
-    int32 x = (pos->x - posPtr->x) >> 8;
-    int32 y = (pos->y - posPtr->y) >> 8;
-    pos->x  = (y * RSDK.Sin256(angle)) + x * RSDK.Cos256(angle) + posPtr->x;
-    pos->y  = (y * RSDK.Cos256(angle)) - x * RSDK.Sin256(angle) + posPtr->y;
+    int32 x = (position->x - pivotPos->x) >> 8;
+    int32 y = (position->y - pivotPos->y) >> 8;
+    position->x  = (y * RSDK.Sin256(angle)) + x * RSDK.Cos256(angle) + pivotPos->x;
+    position->y  = (y * RSDK.Cos256(angle)) - x * RSDK.Sin256(angle) + pivotPos->y;
 }
 
 void Zone_ReloadScene(int32 screen)

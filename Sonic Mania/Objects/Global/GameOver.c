@@ -46,23 +46,23 @@ void GameOver_Create(void *data)
         else
             RSDK.SetSpriteAnimation(GameOver->aniFrames, 6, &self->animator, true, 0);
 
-        self->unknownPos1[0].x = -0x480000;
-        self->unknownPos1[1].x = -0x370000;
-        self->unknownPos1[2].x = -0x260000;
-        self->unknownPos1[3].x = -0x150000;
-        self->unknownPos1[4].x = 0xC0000;
-        self->unknownPos1[5].x = 0x1D0000;
-        self->unknownPos1[6].x = 0x2E0000;
-        self->unknownPos1[7].x = 0x3F0000;
+        self->finalOffsets[0].x = -0x480000;
+        self->finalOffsets[1].x = -0x370000;
+        self->finalOffsets[2].x = -0x260000;
+        self->finalOffsets[3].x = -0x150000;
+        self->finalOffsets[4].x = 0xC0000;
+        self->finalOffsets[5].x = 0x1D0000;
+        self->finalOffsets[6].x = 0x2E0000;
+        self->finalOffsets[7].x = 0x3F0000;
 
         int32 posY = -0x200000;
         for (int32 i = 0; i < GameOver_LetterCount; ++i) {
-            self->letterPosMove[i].x = -(self->unknownPos1[i].x >> 4);
+            self->letterPosMove[i].x = -(self->finalOffsets[i].x >> 4);
             self->letterPosMove[i].y = 0x2000;
 
-            self->unknownPos1[i].y = (ScreenInfo->centerY - 4) << 16;
+            self->finalOffsets[i].y = (ScreenInfo->centerY - 4) << 16;
 
-            self->letterPositions[i].x = 8 * ((ScreenInfo->centerX << 13) + self->unknownPos1[i].x);
+            self->letterPositions[i].x = 8 * ((ScreenInfo->centerX << 13) + self->finalOffsets[i].x);
             self->letterPositions[i].y = posY;
 
             posY -= 0x100000;
@@ -110,12 +110,12 @@ void GameOver_State_EnterLetters(void)
     self->verts[3].y = self->barPos.y + 0x80000;
 
     for (int32 i = 0; i < GameOver_LetterCount; ++i) {
-        self->letterPositions[i].x = (ScreenInfo->centerX << 16) + self->scale.x * (self->unknownPos1[i].x >> 9);
+        self->letterPositions[i].x = (ScreenInfo->centerX << 16) + self->scale.x * (self->finalOffsets[i].x >> 9);
         if (self->letterBounceCount[i] < 3) {
             self->letterPosMove[i].y += 0x4000;
             self->letterPositions[i].y += self->letterPosMove[i].y;
-            if (self->letterPosMove[i].y > 0 && self->letterPositions[i].y > self->unknownPos1[i].y) {
-                self->letterPositions[i].y = self->unknownPos1[i].y;
+            if (self->letterPosMove[i].y > 0 && self->letterPositions[i].y > self->finalOffsets[i].y) {
+                self->letterPositions[i].y = self->finalOffsets[i].y;
                 self->letterPosMove[i].y   = -(self->letterPosMove[i].y / 3);
                 ++self->letterBounceCount[i];
             }

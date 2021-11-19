@@ -351,8 +351,8 @@ void TitleCard_Unknown6(void)
 {
     RSDK_THIS(TitleCard);
 #if RETRO_USE_PLUS
-    if (ActClear && ActClear->dword34)
-        ActClear->dword34 = false;
+    if (ActClear && ActClear->actClearActive)
+        ActClear->actClearActive = false;
 #endif
 
     Zone_ApplyWorldBounds();

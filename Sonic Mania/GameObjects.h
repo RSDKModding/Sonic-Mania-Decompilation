@@ -282,9 +282,10 @@ typedef struct {
     void (*SetDiffuseColour)(uint16 index, int32 x, int32 y, int32 z);
     void (*SetDiffuseIntensity)(uint16 index, int32 x, int32 y, int32 z);
     void (*SetSpecularIntensity)(uint16 index, int32 x, int32 y, int32 z);
-    void (*AddModelTo3DScene)(uint16 modelIndex, uint16 sceneIndex, uint8 type, Matrix *mat1, Matrix *mat2, colour colour);
+    void (*AddModelTo3DScene)(uint16 modelIndex, uint16 sceneIndex, uint8 type, Matrix *matWorld, Matrix *matNormal, colour colour);
     void (*SetModelAnimation)(uint16 modelAnim, Animator *animator, int16 animSpeed, uint8 loopIndex, bool32 forceApply, uint16 frameID);
-    void (*AddMeshFrameTo3DScene)(uint16 modelID, uint16 sceneID, Animator *animator, uint8 drawMode, Matrix *mat1, Matrix *mat, colour colour);
+    void (*AddMeshFrameTo3DScene)(uint16 modelID, uint16 sceneID, Animator *animator, uint8 drawMode, Matrix *matWorld, Matrix *matNormal,
+                                  colour colour);
     void (*Draw3DScene)(uint16 index);
     uint16 (*LoadSpriteAnimation)(const char *path, Scopes scope);
     uint16 (*CreateSpriteAnimation)(const char *filename, uint32 frameCount, uint32 animCount, Scopes scope);

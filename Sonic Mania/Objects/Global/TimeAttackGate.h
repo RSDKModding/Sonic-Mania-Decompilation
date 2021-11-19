@@ -11,13 +11,13 @@ typedef struct {
     Entity *activeEntity;
     EntityPlayer *playerPtr;
     bool32 started;
-    int32 field_1C;
-    int32 field_20;
+    int32 isFinished;
+    int32 unused1;
     bool32 suppressedTitlecard;
     bool32 debugEnabled;
     uint16 sfxSignpost;
     uint16 sfxTeleport;
-    int32 dword30;
+    int32 teleportChannel;
     StateMachine(startCB);
     StateMachine(endCB);
 } ObjectTimeAttackGate;
@@ -34,8 +34,8 @@ typedef struct {
     Vector2 boundsOffset;
     int32 topBoundary;
     int32 timer;
-    bool32 field_84;
-    int32 field_88;
+    bool32 hasFinished;
+    int32 baseRotation;
     int32 spinSpeed;
     int32 spinTimer;
     int32 radius;
@@ -74,9 +74,9 @@ void TimeAttackGate_CheckTouch(void);
 
 void TimeAttackGate_State_Main(void);
 void TimeAttackGate_State_Restarter(void);
-void TimeAttackGate_Unknown4(void);
+void TimeAttackGate_State_Fadeout(void);
 
-void TimeAttackGate_StateDraw_Main(void);
-void TimeAttackGate_StateDraw_Restarter(void);
+void TimeAttackGate_Draw_Main(void);
+void TimeAttackGate_Draw_Restarter(void);
 
 #endif //!OBJ_TIMEATTACKGATE_H

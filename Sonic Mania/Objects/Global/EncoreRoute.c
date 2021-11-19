@@ -102,6 +102,9 @@ void EncoreRoute_EditorLoad(void)
 {
     EncoreRoute->aniFrames = RSDK.LoadSpriteAnimation("Global/TicMark.bin", SCOPE_STAGE);
     RSDK.SetSpriteAnimation(EncoreRoute->aniFrames, 0, &EncoreRoute->animator, true, 0);
+
+    RSDK_ACTIVE_VAR(EncoreRoute, frameID);
+    RSDK_ENUM_VAR("(Unused)", EROUTE_FRAME_UNUSED);
 }
 #endif
 

@@ -355,7 +355,7 @@ void PaperRoller_Unknown5(void)
                     Vector2 pos;
                     pos.x = self->position.x + angDistX;
                     pos.y = self->position.y - 0x180000;
-                    Zone_Unknown3(&self->position, &pos, negAngle);
+                    Zone_RotateOnPivot(&pos, &self->position, negAngle);
 
                     Vector2 pos2;
                     pos2.x           = 0;
@@ -363,7 +363,7 @@ void PaperRoller_Unknown5(void)
                     player->position = pos;
 
                     Vector2 vel = player->velocity;
-                    Zone_Unknown3(&pos2, &vel, self->angle);
+                    Zone_RotateOnPivot(&vel, &pos2, self->angle);
                     int32 angle = RSDK.ATan2(vel.x, -vel.y);
 
                     int32 force = 6;
@@ -374,7 +374,7 @@ void PaperRoller_Unknown5(void)
                     vel.y = force * (RSDK.Sin256(angle) << 8);
                     if (abs(vel.x) < 0x10000)
                         vel.x += ((2 * (self->direction == FLIP_NONE) - 1) << 16);
-                    Zone_Unknown3(&pos2, &vel, negAngle);
+                    Zone_RotateOnPivot(&vel, &pos2, negAngle);
                     player->velocity = vel;
 
                     player->state = Player_State_Air;
@@ -410,7 +410,7 @@ void PaperRoller_Unknown5(void)
                     Vector2 pos;
                     pos.x = self->position.x + angDistX;
                     pos.y = self->position.y + 0x180000;
-                    Zone_Unknown3(&self->position, &pos, negAngle);
+                    Zone_RotateOnPivot(&pos, &self->position, negAngle);
 
                     Vector2 pos2;
                     pos2.x           = 0;
@@ -418,7 +418,7 @@ void PaperRoller_Unknown5(void)
                     player->position = pos;
 
                     Vector2 vel = player->velocity;
-                    Zone_Unknown3(&pos2, &vel, self->angle);
+                    Zone_RotateOnPivot(&vel, &pos2, self->angle);
 
                     int32 angle = RSDK.ATan2(vel.x, -vel.y);
                     int32 force = 6;
@@ -429,7 +429,7 @@ void PaperRoller_Unknown5(void)
                     vel.y = force * (RSDK.Sin256(angle) << 8);
                     if ((self->direction == FLIP_NONE && vel.x > -0x10000) || (self->direction == FLIP_X && vel.x < 0x10000))
                         vel.x += ((2 * (self->direction != FLIP_NONE) - 1) << 18);
-                    Zone_Unknown3(&pos2, &vel, negAngle);
+                    Zone_RotateOnPivot(&vel, &pos2, negAngle);
                     player->velocity = vel;
 
                     player->state = Player_State_Air;
