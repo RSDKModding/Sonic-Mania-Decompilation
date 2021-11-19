@@ -20,20 +20,19 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    StateMachine(stateOrb);
-    Animator animator1;
-    Animator animator2;
+    StateMachine(orbState);
+    Animator bodyAnimator;
+    Animator fieldAnimator;
     Vector2 startPos;
     Vector2 orbPositions[Tubinaut_OrbCount];
     int32 orbAngles[Tubinaut_OrbCount];
-    int16 field_BC[Tubinaut_OrbCount];
-    int32 field_C4[Tubinaut_OrbCount];
-    Animator animators[Tubinaut_OrbCount];
+    int16 reAdjustTimers[Tubinaut_OrbCount];
+    int32 ballsVisible[Tubinaut_OrbCount]; // hehe
+    Animator ballAnimators[Tubinaut_OrbCount];
     uint16 playerTimers[PLAYER_MAX];
-    int32 timer2;
+    int32 attackTimer;
     uint16 activeOrbs;
     uint8 orbCount;
-    uint16 field_122;
     int32 timer;
     uint16 distanceRemain;
     uint16 distance;
@@ -47,7 +46,7 @@ void Tubinaut_Update(void);
 void Tubinaut_LateUpdate(void);
 void Tubinaut_StaticUpdate(void);
 void Tubinaut_Draw(void);
-void Tubinaut_Create(void* data);
+void Tubinaut_Create(void *data);
 void Tubinaut_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void Tubinaut_EditorDraw(void);
@@ -61,7 +60,8 @@ void Tubinaut_DebugDraw(void);
 
 void Tubinaut_CheckPlayerCollisions(void);
 bool32 Tubinaut_CheckAttacking(EntityPlayer *player);
-void Tubinaut_Unknown5(EntityPlayer *player, int orbID);
+void Tubinaut_OrbHit(EntityPlayer *player, int orbID);
+
 void Tubinaut_HandleRepel(EntityPlayer *player, int playerID);
 void Tubinaut_HandleOrbs(void);
 void Tubinaut_CheckOnScreen(void);
@@ -69,11 +69,11 @@ void Tubinaut_CheckOnScreen(void);
 void Tubinaut_State_Setup(void);
 void Tubinaut_State_Move(void);
 
-void Tubinaut_StateOrb_Unknown1(void);
-void Tubinaut_StateOrb_Unknown2(void);
-void Tubinaut_StateOrb_Unknown3(void);
-void Tubinaut_StateOrb_Unknown4(void);
+void Tubinaut_Orb_Relax(void);
+void Tubinaut_Orb_PrepareAttack(void);
+void Tubinaut_Orb_Attack(void);
+void Tubinaut_Orb_Cooldown(void);
 
-void Tubinaut_State2_Unknown(void);
+void Tubinaut_Orb_BodyDeath(void);
 
-#endif //!OBJ_TUBINAUT_H
+#endif //! OBJ_TUBINAUT_H

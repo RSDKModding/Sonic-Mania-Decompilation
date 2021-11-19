@@ -894,7 +894,7 @@ void TVVan_State15_Unknown5(void)
 
     foreach_active(ShopWindow, window) {
         if (RSDK.CheckObjectCollisionTouchBox(self, &TVVan->hitbox5, window, &window->hitbox)) {
-            window->stateDraw = ShopWindow_StateDraw_Shattered;
+            window->stateDraw = ShopWindow_Draw_Shattered;
             window->state     = ShopWindow_State_Shattered;
         }
     }

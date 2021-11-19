@@ -43,7 +43,7 @@ void ShopWindow_Create(void *data)
             self->scale.x       = 0x200;
             self->scale.y       = 0x200;
             self->state         = ShopWindow_State_Shard;
-            self->stateDraw     = ShopWindow_StateDraw_Shard;
+            self->stateDraw     = ShopWindow_Draw_Shard;
         }
         else {
             self->active        = ACTIVE_BOUNDS;
@@ -69,7 +69,7 @@ void ShopWindow_Create(void *data)
                 self->windowHitbox.bottom = self->size.y >> 1;
                 self->state               = ShopWindow_State_Silhouette;
             }
-            self->stateDraw      = ShopWindow_StateDraw_Normal;
+            self->stateDraw      = ShopWindow_Draw_Normal;
             self->hitbox2.top    = -8 - self->size.y;
             self->hitbox2.right  = self->size.x + 8;
             self->hitbox2.bottom = self->size.y + 8;
@@ -151,14 +151,14 @@ void ShopWindow_State_Silhouette(void)
         {
             if (abs(player->velocity.x) >= 0xA0000) {
                 if (Player_CheckCollisionTouch(player, self, &self->hitbox)) {
-                    self->stateDraw = ShopWindow_StateDraw_Shattered;
+                    self->stateDraw = ShopWindow_Draw_Shattered;
                     self->state     = ShopWindow_State_Shattered;
                 }
             }
 
             if (abs(player->velocity.y) >= 0xA0000) {
                 if (Player_CheckCollisionTouch(player, self, &self->windowHitbox)) {
-                    self->stateDraw = ShopWindow_StateDraw_Shattered;
+                    self->stateDraw = ShopWindow_Draw_Shattered;
                     self->state     = ShopWindow_State_Shattered;
                 }
             }
@@ -166,7 +166,7 @@ void ShopWindow_State_Silhouette(void)
     }
 }
 
-void ShopWindow_StateDraw_Normal(void)
+void ShopWindow_Draw_Normal(void)
 {
     RSDK_THIS(ShopWindow);
     Vector2 drawPos;
@@ -208,13 +208,13 @@ void ShopWindow_StateDraw_Normal(void)
     }
 }
 
-void ShopWindow_StateDraw_Shard(void)
+void ShopWindow_Draw_Shard(void)
 {
     RSDK_THIS(ShopWindow);
     RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
-void ShopWindow_StateDraw_Shattered(void)
+void ShopWindow_Draw_Shattered(void)
 {
     RSDK_THIS(ShopWindow);
     RSDKScreenInfo *screen = &ScreenInfo[SceneInfo->currentScreenID];

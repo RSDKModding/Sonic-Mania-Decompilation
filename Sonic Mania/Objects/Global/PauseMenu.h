@@ -115,6 +115,6 @@ void PauseMenu_State_FadeToCB(void);
 void PauseMenu_DrawPauseQuads(void);
 void PauseMenu_Draw_Default(void);
 
-void PauseMenu_Draw_NoHeader(void);
+void PauseMenu_Draw_JustLookup(void);
 
 #endif //!OBJ_PAUSEMENU_H
