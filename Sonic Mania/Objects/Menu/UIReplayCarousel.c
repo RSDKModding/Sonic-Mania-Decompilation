@@ -317,7 +317,7 @@ void UIReplayCarousel_Unknown7(int32 a1, int16 a2, int32 a3, int32 a4)
     if (!SceneInfo->inEditor)
         RSDK.DrawRect(a3 - 0x990000, a4 - 0x2A8000, 0x1320000, 0x550000, 0xFFFFFF, 127, INK_BLEND, false);
 
-    UIWidgets_Unknown5(88, -76, 112, 224, a3 + 0x790000, a4 + 0x298000);
+    UIWidgets_DrawRightTriangle(a3 + 0x790000, a4 + 0x298000, -76, 88, 112, 224);
     RSDK.DrawRect(a3 + 0x790000, (a4 + 0x298000) - 0x550000, 0x200000, 0x550000, 0x5870E0, 255, INK_NONE, false);
     RSDK.DrawRect(a3 - 10027008, a4 - 2785280, 20054016, 0x2C0000, 0, 255, INK_NONE, false);
 
@@ -329,7 +329,7 @@ void UIReplayCarousel_Unknown7(int32 a1, int16 a2, int32 a3, int32 a4)
     colour = 0x5FA0B0;
     if (a1)
         colour = 0xF26C4F;
-    UIWidgets_Unknown5((colour >> 16) & 0xFF, -76, (colour >> 8) & 0xFF, colour & 0xFF, a3 + 0x990000, a4 + 0x298000);
+    UIWidgets_DrawRightTriangle(a3 + 0x990000, a4 + 0x298000, -76, (colour >> 16) & 0xFF, (colour >> 8) & 0xFF, colour & 0xFF);
 
     if (!SceneInfo->inEditor)
         UIWidgets_Unknown3(91, 312, a3 + 0x30000, a4 + 0x30000);
@@ -358,11 +358,10 @@ void UIReplayCarousel_Unknown8(uint8 a1, uint8 a2, int32 a3, int32 a4, int32 arg
         drawOffsets[i].y = drawPos.y + 0xC0000;
         drawPos.x += (widths[i] << 16);
         if (i < 3) {
-            UIWidgets_Unknown5((colours[i] >> 16) & 0xFF, 13, (colours[i] >> 8) & 0xFF, colours[i] & 0xFF, drawPos.x, drawPos.y);
+            UIWidgets_DrawRightTriangle(drawPos.x, drawPos.y, 13, (colours[i] >> 16) & 0xFF, (colours[i] >> 8) & 0xFF, colours[i] & 0xFF);
 
             drawPos.x += 0xE0000;
-            UIWidgets_Unknown5((colours[i + 1] >> 16) & 0xFF, -13, (colours[i + 1] >> 8) & 0xFF, colours[i + 1] & 0xFF, drawPos.x,
-                               drawPos.y + 0xC0000);
+            UIWidgets_DrawRightTriangle(drawPos.x, drawPos.y + 0xC0000, -13, (colours[i + 1] >> 16) & 0xFF, (colours[i + 1] >> 8) & 0xFF, colours[i + 1] & 0xFF);
         }
     }
 

@@ -886,22 +886,19 @@ void PauseMenu_State_FadeToCB(void)
 }
 
 
-void PauseMenu_DrawPauseHeader(void)
+void PauseMenu_DrawPauseQuads(void)
 {
     RSDK_THIS(PauseMenu);
     Vector2 drawPos;
 
-    drawPos.x = self->position.x;
-    drawPos.y = self->position.y - 0x600000;
-    drawPos.x += 0x640000 + self->field_68.x + -0x10000 * ScreenInfo->centerX;
-    drawPos.y += self->field_68.y;
+    drawPos.x = self->position.x + 0x640000 + self->field_68.x + -0x10000 * ScreenInfo->centerX;
+    drawPos.y = self->position.y - 0x600000 + self->field_68.y;
     UIWidgets_Unknown7(68, 200, 68, 232, 40, 88, drawPos.x, drawPos.y);
     drawPos.y += 0x60000;
     drawPos.x += 0xA0000;
     UIWidgets_Unknown7(24, 115, 24, 0, 0, 0, drawPos.x, drawPos.y);
     RSDK.DrawSprite(&self->animator, &drawPos, 0);
-    UIWidgets_Unknown5(240, -232, 216, 8, self->field_70.x + (ScreenInfo->centerX << 16) + self->position.x,
-                       self->field_70.y + (ScreenInfo->centerY << 16) + self->position.y);
+    UIWidgets_DrawRightTriangle(self->field_70.x + (ScreenInfo->centerX << 16) + self->position.x, self->field_70.y + (ScreenInfo->centerY << 16) + self->position.y, -232, 240, 216, 8);
 }
 
 void PauseMenu_Draw_Default(void)
@@ -910,7 +907,7 @@ void PauseMenu_Draw_Default(void)
     if (self->state != PauseMenu_State_FadeToCB) {
         RSDK.SetLookupTable(PauseMenu->lookupTable);
         RSDK.DrawRect(0, 0, ScreenInfo->width, ScreenInfo->height, 0, self->field_64, INK_LOOKUP, true);
-        PauseMenu_DrawPauseHeader();
+        PauseMenu_DrawPauseQuads();
     }
 }
 

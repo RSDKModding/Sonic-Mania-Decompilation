@@ -61,7 +61,7 @@ void UIWidgets_ApplyLanguage(void);
 void UIWidgets_Unknown2(int32 a1, int32 a2, int32 a3, int32 a4);
 void UIWidgets_Unknown3(int32 a1, int32 a2, int32 a3, int32 a4);
 void UIWidgets_Unknown4(int32 a1, int32 a2, int32 a3, int32 a4);
-void UIWidgets_Unknown5(int32 red, int32 a2, int32 green, int32 blue, int32 x, int32 y);
+void UIWidgets_DrawRightTriangle(int32 x, int32 y, int32 a2, int32 red, int32 green, int32 blue);
 void UIWidgets_Unknown6(char a1, int32 red, int32 green, int32 blue, InkEffects ink, int32 x, int32 y);
 void UIWidgets_Unknown7(int32 a1, int32 a2, int32 a3, int32 red, int32 green, int32 blue, int32 a7, int32 a8);
 void UIWidgets_Unknown8(int32 a1, int32 x, int32 y);

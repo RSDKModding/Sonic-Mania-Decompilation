@@ -69,13 +69,13 @@ void UIOptionPanel_Unknown1(void)
     int32 x = self->position.x - (self->field_7C.x >> 1);
     int32 y = self->position.y - (self->field_7C.y >> 1);
     RSDK.DrawRect(x, y, 0xE60000, 0x180000, 0, 255, INK_NONE, false);
-    UIWidgets_Unknown5(0, 23, 0, 0, 0xE60000 + x, y);
+    UIWidgets_DrawRightTriangle(0xE60000 + x, y, 23, 0, 0, 0);
 
     if (!self->botHidden) {
         x = (self->field_7C.x >> 1) + self->position.x - 0xE60000;
         y = (self->field_7C.y >> 1) + self->position.y - 0x180000;
         RSDK.DrawRect(x, y, 0xE60000, 0x180000, 0, 255, INK_NONE, false);
-        UIWidgets_Unknown5(0, -23, 0, 0, x, y + 0x170000);
+        UIWidgets_DrawRightTriangle(x, y + 0x170000, -23, 0, 0, 0);
     }
 }
 

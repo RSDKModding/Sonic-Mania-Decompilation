@@ -96,12 +96,12 @@ void UISaveSlot_Draw(void)
 
         drawPos.x = self->position.x - 0x2D0000;
         drawPos.y = self->position.y - 0x100000;
-        UIWidgets_Unknown5(232, (self->field_140 >> 11), 40, 88, drawPos.x, drawPos.y);
+        UIWidgets_DrawRightTriangle(drawPos.x, drawPos.y, (self->field_140 >> 11), 232, 40, 88);
 
         drawPos.x = self->position.x + 0x2D0000;
         drawPos.y = 0x4F0000 + self->position.y;
-        UIWidgets_Unknown5(96, (-64 * self->field_140) >> 16, 160, 176, drawPos.x, drawPos.y);
-        UIWidgets_Unknown5(88, (-44 * self->field_140) >> 16, 112, 224, drawPos.x, drawPos.y);
+        UIWidgets_DrawRightTriangle(drawPos.x, drawPos.y, (-64 * self->field_140) >> 16, 96, 160, 176);
+        UIWidgets_DrawRightTriangle(drawPos.x, drawPos.y, (-44 * self->field_140) >> 16, 88, 112, 224);
 
         drawPos.x = self->position.x + 0x30000;
         drawPos.y = self->position.y + 0x30000;

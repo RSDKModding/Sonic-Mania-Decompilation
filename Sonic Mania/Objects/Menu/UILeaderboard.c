@@ -195,31 +195,31 @@ void UILeaderboard_DrawPrimitives(void)
     RSDK.DrawRect(drawPos.x, drawPos.y, 0x580000, 0x100000, 0xF0F0F0, 255, INK_NONE, false);
 
     drawPos.x += 0x580000;
-    UIWidgets_Unknown5(240, 15, 240, 240, drawPos.x, drawPos.y);
+    UIWidgets_DrawRightTriangle(drawPos.x, drawPos.y, 15, 240, 240, 240);
 
     drawPos.x += 0xF0000;
     drawPos.y += 0xF0000;
-    UIWidgets_Unknown5(232, -15, 40, 88, drawPos.x, drawPos.y);
+    UIWidgets_DrawRightTriangle(drawPos.x, drawPos.y, -15, 232, 40, 88);
 
     drawPos.y -= 0xF0000;
     RSDK.DrawRect(drawPos.x, drawPos.y, 0x3A0000, 0x100000, 0xE82858, 255, INK_NONE, false);
 
     drawPos.x += 0x3A0000;
-    UIWidgets_Unknown5(232, 15, 40, 88, drawPos.x, drawPos.y);
+    UIWidgets_DrawRightTriangle(drawPos.x, drawPos.y, 15, 232, 40, 88);
 
     drawPos.x += 0xF0000;
     drawPos.y += 0xF0000;
-    UIWidgets_Unknown5(96, -15, 160, 176, drawPos.x, drawPos.y);
+    UIWidgets_DrawRightTriangle(drawPos.x, drawPos.y, -15, 96, 160, 176);
 
     drawPos.y -= 0xF0000;
     RSDK.DrawRect(drawPos.x, drawPos.y, 0x3A0000, 0x100000, 0x60A0B0, 255, INK_NONE, false);
 
     drawPos.x += 0x3A0000;
-    UIWidgets_Unknown5(96, 15, 160, 176, drawPos.x, drawPos.y);
+    UIWidgets_DrawRightTriangle(drawPos.x, drawPos.y, 15, 96, 160, 176);
 
     drawPos.x += 0x270000;
     drawPos.y += 0xF0000;
-    UIWidgets_Unknown5(88, -39, 112, 224, drawPos.x, drawPos.y);
+    UIWidgets_DrawRightTriangle(drawPos.x, drawPos.y, -39, 88, 112, 224);
 
     RSDK.DrawRect(drawPos.x, drawPos.y - 0x270000, 0x3F0000, 0x280000, 0x5870E0, 255, INK_NONE, false);
 
@@ -228,21 +228,21 @@ void UILeaderboard_DrawPrimitives(void)
     RSDK.DrawRect(drawPos.x, drawPos.y, 0x680000, 0x200000, 0x60A0AB, 255, INK_NONE, false);
 
     drawPos.x += 0x680000;
-    UIWidgets_Unknown5(96, 31, 160, 176, drawPos.x, drawPos.y);
+    UIWidgets_DrawRightTriangle(drawPos.x, drawPos.y, 31, 96, 160, 176);
 
     drawPos.x += 0x1F0000;
     drawPos.y += 0x1F0000;
-    UIWidgets_Unknown5(88, -31, 112, 224, drawPos.x, drawPos.y);
+    UIWidgets_DrawRightTriangle(drawPos.x, drawPos.y, -31, 88, 112, 224);
 
     drawPos.y -= 0x1F0000;
     RSDK.DrawRect(drawPos.x, drawPos.y, 0x790000, 0x200000, 0x5870E0, 255, INK_NONE, false);
 
     drawPos.x += 0x790000;
-    UIWidgets_Unknown5(88, 31, 112, 224, drawPos.x, drawPos.y);
+    UIWidgets_DrawRightTriangle(drawPos.x, drawPos.y, 31, 88, 112, 224);
 
     drawPos.x += 0x1F0000;
     drawPos.y += 0x1F0000;
-    UIWidgets_Unknown5(232, -31, 40, 88, drawPos.x, drawPos.y);
+    UIWidgets_DrawRightTriangle(drawPos.x, drawPos.y, -31, 232, 40, 88);
 
     RSDK.DrawRect(drawPos.x, drawPos.y - 0x1F0000, 0x790000, 0x200000, 0xE82858, 255, INK_NONE, false);
 

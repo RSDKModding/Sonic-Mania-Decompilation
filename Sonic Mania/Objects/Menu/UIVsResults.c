@@ -117,11 +117,9 @@ void UIVsResults_Unknown2(void)
 void UIVsResults_Unknown3(void)
 {
     RSDK_THIS(UIVsResults);
-    UIWidgets_Unknown5(232, (self->field_1C0 >> 11), 40, 88, self->position.x - 0x2D0000, self->position.y - 0x1D8000);
-    UIWidgets_Unknown5(96, (-64 * self->field_1C0) >> 16, 160, 176, self->position.x + 0x2D0000,
-                       self->position.y - 0x218000 + self->field_1D0);
-    UIWidgets_Unknown5(88, (-44 * self->field_1C0) >> 16, 112, 224, self->position.x + 0x2D0000,
-                       self->position.y - 0x218000 + self->field_1D0);
+    UIWidgets_DrawRightTriangle(self->position.x - 0x2D0000, self->position.y - 0x1D8000, (self->field_1C0 >> 11), 232, 40, 88);
+    UIWidgets_DrawRightTriangle(self->position.x + 0x2D0000, self->position.y - 0x218000 + self->field_1D0, (-64 * self->field_1C0) >> 16, 96, 160, 176);
+    UIWidgets_DrawRightTriangle(self->position.x + 0x2D0000, self->position.y - 0x218000 + self->field_1D0, (-44 * self->field_1C0) >> 16, 88, 112, 224);
 }
 
 void UIVsResults_DrawRow(int32 row, int32 posX, int32 posY)
@@ -136,7 +134,7 @@ void UIVsResults_DrawRow(int32 row, int32 posX, int32 posY)
     if (rowHighlight[row]) {
         drawPos.y += 0xF0000;
         drawPos.x += 0x240000;
-        UIWidgets_Unknown5(232, -15, 40, 88, drawPos.x, drawPos.y);
+        UIWidgets_DrawRightTriangle(drawPos.x, drawPos.y, -15, 232, 40, 88);
         RSDK.DrawRect(drawPos.x, drawPos.y - 0xF0000, 0x360000, 0x100000, 0xE82858, 255, INK_NONE, false);
     }
     drawPos.y = posY + 0x80000;
