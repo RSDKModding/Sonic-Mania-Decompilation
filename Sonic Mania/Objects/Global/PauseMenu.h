@@ -112,7 +112,7 @@ void PauseMenu_State_FadeToTitle(void);
 void PauseMenu_State_FadeToCB(void);
 
 // Draw States
-void PauseMenu_DrawPauseHeader(void);
+void PauseMenu_DrawPauseQuads(void);
 void PauseMenu_Draw_Default(void);
 
 void PauseMenu_Draw_NoHeader(void);

@@ -163,9 +163,9 @@ void UIVsZoneButton_Unknown3(void)
 void UIVsZoneButton_Unknown4(void)
 {
     RSDK_THIS(UIVsZoneButton);
-    UIWidgets_Unknown5(232, (23 * self->field_12C) >> 16, 40, 88, self->position.x - 0x250000, self->position.y - 0x190000);
-    UIWidgets_Unknown5(96, (-29 * self->field_12C) >> 16, 160, 176, self->position.x + 0x250000, self->position.y + 0x180000);
-    UIWidgets_Unknown5(88, (-17 * self->field_12C) >> 16, 112, 224, self->position.x + 0x250000, self->position.y + 0x180000);
+    UIWidgets_DrawRightTriangle(self->position.x - 0x250000, self->position.y - 0x190000, (23 * self->field_12C) >> 16, 232, 40, 88);
+    UIWidgets_DrawRightTriangle(self->position.x + 0x250000, self->position.y + 0x180000, (-29 * self->field_12C) >> 16, 96, 160, 176);
+    UIWidgets_DrawRightTriangle(self->position.x + 0x250000, self->position.y + 0x180000, (-17 * self->field_12C) >> 16, 88, 112, 224);
 }
 
 void UIVsZoneButton_Unknown5(void)

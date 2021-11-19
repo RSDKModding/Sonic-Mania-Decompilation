@@ -104,7 +104,7 @@ void UIWidgets_Unknown4(int32 height, int32 width, int32 x, int32 y)
     RSDK.DrawRect(x - w, h + y - 0x30000, width << 16, 0x30000, colour, 255, INK_NONE, false);
     RSDK.DrawRect(w - 0x30000 + x, y - h, 0x30000, height << 16, colour, 255, INK_NONE, false);
 }
-void UIWidgets_Unknown5(int32 red, int32 a2, int32 green, int32 blue, int32 x, int32 y)
+void UIWidgets_DrawRightTriangle(int32 x, int32 y, int32 a2, int32 red, int32 green, int32 blue)
 {
     Vector2 verts[3];
 
@@ -263,8 +263,8 @@ void UIWidgets_Unknown9(int32 a1, int32 x, int32 y)
 }
 Vector2 UIWidgets_Unknown10(colour colour1, colour colour2, int32 drawX, int32 drawY)
 {
-    UIWidgets_Unknown5((colour1 >> 16) & 0xFF,  13, (colour1 >> 8) & 0xFF, colour1 & 0xFF, drawX, drawY);
-    UIWidgets_Unknown5((colour2 >> 16) & 0xFF, -13, (colour2 >> 8) & 0xFF, colour2 & 0xFF, drawX + 0xE0000, drawY + 0xC0000);
+    UIWidgets_DrawRightTriangle(drawX, drawY, 13, (colour1 >> 16) & 0xFF, (colour1 >> 8) & 0xFF, colour1 & 0xFF);
+    UIWidgets_DrawRightTriangle(drawX + 0xE0000, drawY + 0xC0000, -13, (colour2 >> 16) & 0xFF, (colour2 >> 8) & 0xFF, colour2 & 0xFF);
 
     Vector2 result;
     result.x = drawX + 0xE0000;

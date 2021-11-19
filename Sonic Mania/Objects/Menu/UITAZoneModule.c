@@ -207,12 +207,12 @@ void UITAZoneModule_Unknown3(void)
 #endif
 
     int32 drawY = self->drawPos.y + 0x230000;
-    UIWidgets_Unknown5(88, -71, 112, 224, self->drawPos.x + 0x790000, drawY);
+    UIWidgets_DrawRightTriangle(self->drawPos.x + 0x790000, drawY, -71, 88, 112, 224);
 
     RSDK.DrawRect(self->drawPos.x + 0x790000, drawY - 0x480000, 0x200000, 0x480000, 0x5870E0, 255, INK_NONE, false);
     RSDK.DrawRect(self->drawPos.x - 0x990000, self->drawPos.y - 0x1C0000, 0x1320000, 0x2C0000, 0, 255, INK_NONE, false);
 
-    UIWidgets_Unknown5((colour >> 16) & 0xFF, -71, (colour >> 8) & 0xFF, colour & 0xFF, self->drawPos.x + 0x990000, self->drawPos.y + 0x230000);
+    UIWidgets_DrawRightTriangle(self->drawPos.x + 0x990000, self->drawPos.y + 0x230000, -71, (colour >> 16) & 0xFF, (colour >> 8) & 0xFF, colour & 0xFF);
 
 #if RETRO_USE_PLUS
     if (!SceneInfo->inEditor)
@@ -259,11 +259,11 @@ void UITAZoneModule_Unknown4(void)
     RSDK.DrawRect(drawPos.x, drawPos.y, 0x400000, 0xD0000, 0xF0D808, 255, INK_NONE, false);
 #else
     drawPos.x += 0x5C0000;
-    UIWidgets_Unknown5(0xF0, 12, 0xF0, 0xF0, drawPos.x, drawPos.y);
+    UIWidgets_DrawRightTriangle(drawPos.x, drawPos.y, 12, 0xF0, 0xF0, 0xF0);
 
     drawPos.x += 0xE0000;
     drawPos.y += 0xC0000;
-    UIWidgets_Unknown5(0xE8, -12, 0x28, 0x58, drawPos.x, drawPos.y);
+    UIWidgets_DrawRightTriangle(drawPos.x, drawPos.y, -12, 0xE8, 0x28, 0x58);
 
     drawPos.y -= 0xC0000;
     RSDK.DrawRect(drawPos.x, drawPos.y, 0x680000, 0xD0000, 0xE82858, 0xFF, INK_NONE, false);
@@ -583,11 +583,11 @@ void UITAZoneModule_Unknown8(void)
 
     drawPos.x = self->drawPos.x - 0x130000;
     drawPos.y = self->drawPos.y + 0x240000;
-    UIWidgets_Unknown5((colour1 >> 16) & 0xFF, 20, (colour1 >> 8) & 0xFF, colour1 & 0xFF, drawPos.x, drawPos.y);
+    UIWidgets_DrawRightTriangle(drawPos.x, drawPos.y, 20, (colour1 >> 16) & 0xFF, (colour1 >> 8) & 0xFF, colour1 & 0xFF);
 
     drawPos.x += 0x140000;
     drawPos.y += 0x140000;
-    UIWidgets_Unknown5((colour2 >> 16) & 0xFF, -20, (colour2 >> 8) & 0xFF, colour2 & 0xFF, drawPos.x, drawPos.y);
+    UIWidgets_DrawRightTriangle(drawPos.x, drawPos.y, -20, (colour2 >> 16) & 0xFF, (colour2 >> 8) & 0xFF, colour2 & 0xFF);
 
     drawPos3.x = drawPos.x + 0x40000;
     drawPos3.y = drawPos.y - 0xA0000;
