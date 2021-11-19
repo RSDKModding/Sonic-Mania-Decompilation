@@ -33,8 +33,8 @@ void UFO_Sphere_Draw(void)
             self->direction = self->animator.frameID > 8;
             self->drawPos.x = (ScreenInfo->centerX + (self->worldPos.x << 8) / self->depth3D) << 16;
             self->drawPos.y = (ScreenInfo->centerY - (self->worldPos.y << 8) / self->depth3D) << 16;
-            self->scale.x   = self->dword9C / self->depth3D;
-            self->scale.y   = self->dword9C / self->depth3D;
+            self->scale.x   = self->scaleFactor / self->depth3D;
+            self->scale.y   = self->scaleFactor / self->depth3D;
         }
     }
     RSDK.DrawSprite(&self->animator, &self->drawPos, true);
@@ -50,27 +50,27 @@ void UFO_Sphere_Create(void *data)
         self->active        = ACTIVE_RBOUNDS;
         self->updateRange.x = 0x400;
         self->updateRange.y = 0x400;
-        self->dword9C       = 0x1000000;
+        self->scaleFactor   = 0x1000000;
         if (!self->height)
             self->height = UFO_Sphere->defaultHeights[self->type];
         self->height <<= 0x10;
 
         switch (self->behavior) {
             default:
-            case 0: //static
-                self->state = UFO_Sphere_CheckPlayerCollision; 
+            case UFO_SPHERE_B_NONE: // static
+                self->state = UFO_Sphere_State_Fixed;
                 break;
-            case 1:
+            case UFO_SPHERE_B_BOUNCE:
                 self->velocity.y = 0x20000;
                 self->state      = UFO_Sphere_State_Bouncing;
                 break;
-            case 2:
+            case UFO_SPHERE_B_MOVE:
                 self->amplitude.x >>= 8;
                 self->amplitude.y >>= 8;
-                self->dword84 = self->position.x;
-                self->dword88 = self->position.y;
-                self->dword80 = self->height;
-                self->state   = UFO_Sphere_State_Moving;
+                self->startPos.x  = self->position.x;
+                self->startPos.y  = self->position.y;
+                self->startHeight = self->height;
+                self->state       = UFO_Sphere_State_Moving;
 
                 Matrix matrix;
                 RSDK.MatrixRotateX(&matrix, self->matAngle.x);
@@ -84,17 +84,17 @@ void UFO_Sphere_Create(void *data)
 
 void UFO_Sphere_StageLoad(void)
 {
-    UFO_Sphere->aniFrames    = RSDK.LoadSpriteAnimation("SpecialUFO/Spheres.bin", SCOPE_STAGE);
+    UFO_Sphere->aniFrames     = RSDK.LoadSpriteAnimation("SpecialUFO/Spheres.bin", SCOPE_STAGE);
     UFO_Sphere->sfxMachSpeed  = RSDK.GetSFX("Special/MachSpeed.wav");
     UFO_Sphere->sfxLedgeBreak = RSDK.GetSFX("Stage/LedgeBreak.wav");
 }
 
-void UFO_Sphere_CheckPlayerCollision(void)
+void UFO_Sphere_State_Fixed(void)
 {
     RSDK_THIS(UFO_Sphere);
 
     switch (self->type) {
-        case 0: {
+        case UFO_SPHERE_BLUE: {
             foreach_active(UFO_Player, player)
             {
                 int32 ry     = (self->height - player->height - 0xA0000) >> 16;
@@ -103,7 +103,7 @@ void UFO_Sphere_CheckPlayerCollision(void)
                 int32 pr     = UFO_Player->maxSpeed >> 9;
                 if (((self->position.x - player->position.x) >> 16) * ((self->position.x - player->position.x) >> 16) + radius < pr) {
                     self->drawOrder = 12;
-                    self->state     = UFO_Sphere_Unknown3;
+                    self->state     = UFO_Sphere_State_Collected;
                     UFO_Setup_PlaySphereSFX();
                 }
             }
@@ -113,45 +113,47 @@ void UFO_Sphere_CheckPlayerCollision(void)
             }
             break;
         }
-        case 1: 
-            //unused (red)
+        case UFO_SPHERE_RED:
+            // unused
             break;
-        case 2: {
+        case UFO_SPHERE_MINE: {
             foreach_active(UFO_Player, player)
             {
-                if (player->state != UFO_Player_Unknown8 && player->state != UFO_Player_HandleTilt && player->state != UFO_Player_Unknown10
-                    && player->state != UFO_Player_Unknown11) {
+                if (player->state != UFO_Player_State_Trip && player->state != UFO_Player_State_Springboard && player->state != UFO_Player_State_UFOCaught_Charge
+                    && player->state != UFO_Player_State_UFOCaught_Released) {
                     int32 ry = (self->height - player->height - 0xA0000) >> 16;
-                    int32 rx = (self->position.y - player->position.y) >> 16;
-                    if (((self->position.x - player->position.x) >> 16) * ((self->position.x - player->position.x) >> 16) + rx * rx + ry * ry
-                        < 384) {
+                    int32 rz     = (self->position.y - player->position.y) >> 16;
+                    int32 rx = (self->position.x - player->position.x) >> 16;
+
+                    if (rx * rx + rz * rz + ry * ry < 384) {
                         RSDK.SetModelAnimation(UFO_Player->tumbleModel, &player->animator, 80, 0, false, 0);
-                        player->state = UFO_Player_Unknown8;
+                        player->state = UFO_Player_State_Trip;
                         if (UFO_Setup->rings > 0)
-                            RSDK.PlaySfx(UFO_Player->sfxLoseRings, 0, 255);
+                            RSDK.PlaySfx(UFO_Player->sfxLoseRings, false, 255);
                         UFO_Ring_LoseRings(player);
                         RSDK.SetSpriteAnimation(UFO_Sphere->aniFrames, 4, &self->animator, true, 0);
-                        self->dword9C = 0x1800000;
-                        self->state   = UFO_Sphere_Unknown5;
-                        RSDK.PlaySfx(UFO_Sphere->sfxLedgeBreak, 0, 255);
+                        self->scaleFactor = 0x1800000;
+                        self->state       = UFO_Sphere_State_AnimateAndDestroy;
+                        RSDK.PlaySfx(UFO_Sphere->sfxLedgeBreak, false, 255);
                     }
                 }
             }
             break;
         }
-        case 3: {
+        case UFO_SPHERE_SPIKES: {
             foreach_active(UFO_Player, player)
             {
-                if (player->state != UFO_Player_Unknown8 && player->state != UFO_Player_HandleTilt && player->state != UFO_Player_Unknown10
-                    && player->state != UFO_Player_Unknown11) {
+                if (player->state != UFO_Player_State_Trip && player->state != UFO_Player_State_Springboard && player->state != UFO_Player_State_UFOCaught_Charge
+                    && player->state != UFO_Player_State_UFOCaught_Released) {
                     int32 ry = (self->height - player->height - 0xA0000) >> 16;
-                    int32 rx = (self->position.y - player->position.y) >> 16;
-                    if (((self->position.x - player->position.x) >> 16) * ((self->position.x - player->position.x) >> 16) + rx * rx + ry * ry
-                        < 384) {
+                    int32 rz = (self->position.y - player->position.y) >> 16;
+                    int32 rx = (self->position.x - player->position.x) >> 16;
+
+                    if (rx * rx + rz * rz + ry * ry < 384) {
                         RSDK.SetModelAnimation(UFO_Player->tumbleModel, &player->animator, 80, 0, false, 0);
-                        player->state = UFO_Player_Unknown8;
+                        player->state = UFO_Player_State_Trip;
                         if (UFO_Setup->rings > 0)
-                            RSDK.PlaySfx(UFO_Player->sfxLoseRings, 0, 255);
+                            RSDK.PlaySfx(UFO_Player->sfxLoseRings, false, 255);
                         UFO_Ring_LoseRings(player);
                     }
                 }
@@ -170,7 +172,7 @@ void UFO_Sphere_State_Bouncing(void)
         self->velocity.y = 0x20000;
         self->height     = 0xC0000;
     }
-    UFO_Sphere_CheckPlayerCollision();
+    UFO_Sphere_State_Fixed();
 }
 
 void UFO_Sphere_State_Moving(void)
@@ -178,7 +180,7 @@ void UFO_Sphere_State_Moving(void)
     RSDK_THIS(UFO_Sphere);
     Matrix *mat = &self->matrix;
 
-    int32 amp            = self->amplitude.y * RSDK.Sin256(self->angle + (UFO_Setup->timer << self->speed));
+    int32 amp        = self->amplitude.y * RSDK.Sin256(self->angle + (UFO_Setup->timer << self->speed));
     self->position.x = self->amplitude.x * RSDK.Cos256(self->angle + (UFO_Setup->timer << self->speed));
     self->position.y = self->amplitude.y * amp;
     self->height     = 0;
@@ -186,15 +188,16 @@ void UFO_Sphere_State_Moving(void)
 
     self->position.x = mat->values[0][3] + amp * mat->values[0][2] + mat->values[0][0] * (self->position.x >> 8);
     self->height     = mat->values[1][3] + amp * mat->values[1][2] + mat->values[1][0] * (self->position.x >> 8);
-    self->position.y = mat->values[2][3] + amp * mat->values[2][2] + mat->values[2][0] * (self->position.x >> 8) + mat->values[2][1] * (self->height >> 8);
+    self->position.y =
+        mat->values[2][3] + amp * mat->values[2][2] + mat->values[2][0] * (self->position.x >> 8) + mat->values[2][1] * (self->height >> 8);
 
-    self->position.x += self->dword84;
-    self->position.y += self->dword88;
-    self->height += self->dword80;
-    UFO_Sphere_CheckPlayerCollision();
+    self->position.x += self->startPos.x;
+    self->position.y += self->startPos.y;
+    self->height += self->startHeight;
+    UFO_Sphere_State_Fixed();
 }
 
-void UFO_Sphere_Unknown3(void)
+void UFO_Sphere_State_Collected(void)
 {
     RSDK_THIS(UFO_Sphere);
 
@@ -207,11 +210,11 @@ void UFO_Sphere_Unknown3(void)
         UFO_HUD_CheckLevelUp();
         self->timer   = UFO_Setup->timer;
         self->visible = false;
-        self->state   = UFO_Sphere_Unknown4;
+        self->state   = UFO_Sphere_State_HandleRespawn;
     }
 }
 
-void UFO_Sphere_Unknown4(void)
+void UFO_Sphere_State_HandleRespawn(void)
 {
     RSDK_THIS(UFO_Sphere);
 
@@ -221,15 +224,14 @@ void UFO_Sphere_Unknown4(void)
 
         switch (self->behavior) {
             default:
-            case 0:
-            case 3: self->state = UFO_Sphere_CheckPlayerCollision; break;
-            case 1: self->state = UFO_Sphere_State_Bouncing; break;
-            case 2: self->state = UFO_Sphere_State_Moving; break;
+            case UFO_SPHERE_B_NONE: self->state = UFO_Sphere_State_Fixed; break;
+            case UFO_SPHERE_B_BOUNCE: self->state = UFO_Sphere_State_Bouncing; break;
+            case UFO_SPHERE_B_MOVE: self->state = UFO_Sphere_State_Moving; break;
         }
     }
 }
 
-void UFO_Sphere_Unknown5(void)
+void UFO_Sphere_State_AnimateAndDestroy(void)
 {
     RSDK_THIS(UFO_Sphere);
 
@@ -237,15 +239,66 @@ void UFO_Sphere_Unknown5(void)
         destroyEntity(self);
 }
 
+#if RETRO_INCLUDE_EDITOR
 void UFO_Sphere_EditorDraw(void)
 {
     RSDK_THIS(UFO_Sphere);
-    RSDK.SetSpriteAnimation(UFO_Sphere->aniFrames, self->type, &self->animator, true, 0);
+    RSDK.SetSpriteAnimation(UFO_Sphere->aniFrames, 5, &self->animator, true, self->type);
 
-    RSDK.DrawSprite(&self->animator, &self->drawPos, true);
+    RSDK.DrawSprite(&self->animator, NULL, false);
+
+    if (showGizmos() && self->behavior == UFO_SPHERE_B_MOVE) {
+        Vector2 amplitude;
+
+        amplitude.x = self->amplitude.x >> 8;
+        amplitude.y = self->amplitude.y >> 8;
+        self->startPos.x  = self->position.x;
+        self->startPos.y  = self->position.y;
+
+        self->inkEffect = INK_BLEND;
+
+        Vector2 start, end;
+
+        // start pos
+        self->position.x = amplitude.x * RSDK.Cos256(self->angle) + self->startPos.x;
+        self->position.y = amplitude.y * RSDK.Sin256(self->angle) + self->startPos.y;
+        RSDK.DrawSprite(&self->animator, NULL, false);
+
+        // right max
+        self->position.x = amplitude.x * RSDK.Cos256(0x00) + self->startPos.x;
+        self->position.y = amplitude.y * RSDK.Sin256(0x00) + self->startPos.y;
+        start            = self->position;
+        RSDK.DrawSprite(&self->animator, NULL, false);
+
+        // left max
+        self->position.x = amplitude.x * RSDK.Cos256(0x80) + self->startPos.x;
+        self->position.y = amplitude.y * RSDK.Sin256(0x80) + self->startPos.y;
+        end            = self->position;
+        RSDK.DrawSprite(&self->animator, NULL, false);
+
+        DrawHelpers_DrawArrow(0x00FF00, start.x, start.y, end.x, end.y);
+        DrawHelpers_DrawArrow(0x00FF00, end.x, end.y, start.x, start.y);
+
+        self->inkEffect = INK_NONE;
+    }
 }
 
-void UFO_Sphere_EditorLoad(void) { UFO_Sphere->aniFrames = RSDK.LoadSpriteAnimation("SpecialUFO/Spheres.bin", SCOPE_STAGE); }
+void UFO_Sphere_EditorLoad(void)
+{
+    UFO_Sphere->aniFrames = RSDK.LoadSpriteAnimation("SpecialUFO/Spheres.bin", SCOPE_STAGE);
+
+    RSDK_ACTIVE_VAR(UFO_Sphere, type);
+    RSDK_ENUM_VAR("Blue", UFO_SPHERE_BLUE);
+    RSDK_ENUM_VAR("Red (Unused)", UFO_SPHERE_RED);
+    RSDK_ENUM_VAR("Mine", UFO_SPHERE_MINE);
+    RSDK_ENUM_VAR("Spikes", UFO_SPHERE_SPIKES);
+
+    RSDK_ACTIVE_VAR(UFO_Sphere, behavior);
+    RSDK_ENUM_VAR("None", UFO_SPHERE_B_NONE);
+    RSDK_ENUM_VAR("Bouncing", UFO_SPHERE_B_BOUNCE);
+    RSDK_ENUM_VAR("Moving", UFO_SPHERE_B_MOVE);
+}
+#endif
 
 void UFO_Sphere_Serialize(void)
 {

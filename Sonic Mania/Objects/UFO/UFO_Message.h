@@ -3,6 +3,13 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    UFO_MESSAGE_CATCHUFO,
+    UFO_MESSAGE_ESCAPETIME,
+    UFO_MESSAGE_COURSEOUT,
+    UFO_MESSAGE_TIMEOVER,
+} UFO_MessageTypes;
+
 // Object Class
 typedef struct {
     RSDK_OBJECT
@@ -13,12 +20,12 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    int32 timer2;
+    int32 delay;
     int32 timer;
-    Animator animator1;
-    Animator animator2;
-    int32 field_94;
-    int32 field_98;
+    Animator leftAnimator;
+    Animator rightAnimator;
+    int32 unused1;
+    int32 unused2;
 } EntityUFO_Message;
 
 // Object Struct
@@ -38,8 +45,8 @@ void UFO_Message_EditorLoad(void);
 void UFO_Message_Serialize(void);
 
 // Extra Entity Functions
-void UFO_Message_Unknown1(void);
-void UFO_Message_Unknown2(void);
-void UFO_Message_Unknown3(void);
+void UFO_Message_State_Appear(void);
+void UFO_Message_State_Wait(void);
+void UFO_Message_State_Exit(void);
 
 #endif //!OBJ_UFO_MESSAGE_H

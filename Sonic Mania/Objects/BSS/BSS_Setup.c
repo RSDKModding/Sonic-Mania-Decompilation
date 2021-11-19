@@ -727,7 +727,7 @@ void BSS_Setup_HandleCollectableMovement(void)
 
     while (slot < RESERVE_ENTITY_COUNT + 0x80) {
         Entity *entity = RSDK.GetEntityByID(slot++);
-        self->objectID = TYPE_BLANK;
+        entity->objectID = TYPE_BLANK;
     }
 }
 

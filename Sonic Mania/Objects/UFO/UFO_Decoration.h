@@ -3,18 +3,23 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    UFO_DECOR_TREE,
+    UFO_DECOR_FLOWER1,
+    UFO_DECOR_FLOWER2,
+    UFO_DECOR_FLOWER3,
+    UFO_DECOR_PILLAR1,
+    UFO_DECOR_PILLAR2,
+    UFO_DECOR_BIRD,
+    UFO_DECOR_FISH,
+}UFO_DecorationTypes;
+
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    int32 field_4;
-    int32 field_8;
-    int32 field_C;
-    int32 field_10;
-    int32 field_14;
-    int32 field_18;
+    Animator unusedAnimator1;
     int32 drawType;
-    uint8 field_20;
-    uint8 field_21;
+    uint16 aniFrames; // unused
     uint16 modelIndices[8];
     uint16 sceneIndex;
 } ObjectUFO_Decoration;
@@ -22,29 +27,14 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    int32 field_58;
+    int32 unused1;
     int32 type;
     int32 size;
     int32 height;
-    int32 field_68;
-    int32 field_6C;
-    int32 field_70;
-    int32 field_74;
-    int32 field_78;
-    int32 field_7C;
-    int32 field_80;
-    int32 field_84;
-    int32 field_88;
-    int32 field_8C;
-    int32 field_90;
-    int32 field_94;
-    int32 field_98;
-    int32 field_9C;
-    int32 field_A0;
-    int32 field_A4;
-    Matrix matrix1;
-    Matrix matrix2;
-    Matrix matrix3;
+    Matrix unusedMatrix1;
+    Matrix matTransform;
+    Matrix matWorld;
+    Matrix matNormal;
     Animator animator;
 } EntityUFO_Decoration;
 

@@ -14,11 +14,11 @@ typedef struct {
     RSDK_ENTITY
     bool32 showRingCount;
     int32 timer;
-    uint8 palID;
-    Animator animator1;
-    Animator animator2;
-    Animator animator3;
-    Animator animator4;
+    uint8 machPaletteBank;
+    Animator hudAnimator;
+    Animator numbersAnimator;
+    Animator machAnimator;
+    Animator stripeAnimator;
 } EntityUFO_HUD;
 
 // Object Struct

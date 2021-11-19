@@ -19,10 +19,10 @@ void UFO_Message_Draw(void)
 
     drawPos.x = (ScreenInfo->centerX - self->timer) << 16;
     drawPos.y = 0x580000;
-    RSDK.DrawSprite(&self->animator1, &drawPos, true);
+    RSDK.DrawSprite(&self->leftAnimator, &drawPos, true);
 
     drawPos.x = (self->timer + ScreenInfo->centerX) << 16;
-    RSDK.DrawSprite(&self->animator2, &drawPos, true);
+    RSDK.DrawSprite(&self->rightAnimator, &drawPos, true);
 }
 
 void UFO_Message_Create(void *data)
@@ -32,39 +32,39 @@ void UFO_Message_Create(void *data)
         self->active    = ACTIVE_NORMAL;
         self->visible   = true;
         self->drawOrder = 12;
-        self->state     = UFO_Message_Unknown1;
+        self->state     = UFO_Message_State_Appear;
 
         int32 type = voidToInt(data);
-        RSDK.SetSpriteAnimation(UFO_Message->aniFrames, 4, &self->animator1, true, 2 * type);
-        RSDK.SetSpriteAnimation(UFO_Message->aniFrames, 4, &self->animator2, true, 2 * type + 1);
+        RSDK.SetSpriteAnimation(UFO_Message->aniFrames, 4, &self->leftAnimator, true, 2 * type);
+        RSDK.SetSpriteAnimation(UFO_Message->aniFrames, 4, &self->rightAnimator, true, 2 * type + 1);
         self->timer = 320;
 
         foreach_active(UFO_Message, message)
         {
             if (message != self)
-                message->state = UFO_Message_Unknown3;
+                message->state = UFO_Message_State_Exit;
         }
     }
 }
 
 void UFO_Message_StageLoad(void) { UFO_Message->aniFrames = RSDK.LoadSpriteAnimation("SpecialUFO/HUD.bin", SCOPE_STAGE); }
 
-void UFO_Message_Unknown1(void)
+void UFO_Message_State_Appear(void)
 {
     RSDK_THIS(UFO_Message);
     self->timer -= 16;
     if (self->timer <= 0)
-        self->state = UFO_Message_Unknown2;
+        self->state = UFO_Message_State_Wait;
 }
-void UFO_Message_Unknown2(void)
+void UFO_Message_State_Wait(void)
 {
     RSDK_THIS(UFO_Message);
-    if (++self->timer2 >= 180) {
-        self->timer2 = 0;
-        self->state  = UFO_Message_Unknown3;
+    if (++self->delay >= 180) {
+        self->delay = 0;
+        self->state  = UFO_Message_State_Exit;
     }
 }
-void UFO_Message_Unknown3(void)
+void UFO_Message_State_Exit(void)
 {
     RSDK_THIS(UFO_Message);
     self->timer += 16;

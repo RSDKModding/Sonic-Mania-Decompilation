@@ -32,27 +32,27 @@ void UFO_Player_Draw(void)
         RSDK.Prepare3DScene(UFO_Player->sceneIndex);
         int32 anim = self->animator.animationID;
         if (anim == 2 || anim == 3) {
-            RSDK.MatrixTranslateXYZ(&self->matrix2, self->position.x, self->height + 0x100000, self->position.y, true);
-            RSDK.MatrixRotateX(&self->matrix1, self->field_74);
-            RSDK.MatrixRotateY(&self->matrix3, self->angle + (self->angleZ >> 5));
-            RSDK.MatrixMultiply(&self->matrix4, &self->matrix1, &self->matrix3);
-            RSDK.MatrixMultiply(&self->matrix3, &self->matrix4, &self->matrix2);
-            RSDK.MatrixMultiply(&self->matrix3, &self->matrix3, &UFO_Camera->matWorld);
-            RSDK.MatrixMultiply(&self->matrix4, &self->matrix4, &UFO_Camera->matView);
-            RSDK.AddModelTo3DScene(self->animator.animationID, UFO_Player->sceneIndex, S3D_FLATCLR_SHADED_BLENDED_SCREEN, &self->matrix3,
-                                   &self->matrix4, 0xFFFFFF);
+            RSDK.MatrixTranslateXYZ(&self->matTransform, self->position.x, self->height + 0x100000, self->position.y, true);
+            RSDK.MatrixRotateX(&self->matRotate, self->angleX);
+            RSDK.MatrixRotateY(&self->matWorld, self->angle + (self->angleZ >> 5));
+            RSDK.MatrixMultiply(&self->matNormal, &self->matRotate, &self->matWorld);
+            RSDK.MatrixMultiply(&self->matWorld, &self->matNormal, &self->matTransform);
+            RSDK.MatrixMultiply(&self->matWorld, &self->matWorld, &UFO_Camera->matWorld);
+            RSDK.MatrixMultiply(&self->matNormal, &self->matNormal, &UFO_Camera->matView);
+            RSDK.AddModelTo3DScene(self->animator.animationID, UFO_Player->sceneIndex, S3D_FLATCLR_SHADED_BLENDED_SCREEN, &self->matWorld,
+                                   &self->matNormal, 0xFFFFFF);
         }
         else {
-            RSDK.MatrixTranslateXYZ(&self->matrix2, self->position.x, self->height, self->position.y, true);
-            RSDK.MatrixRotateZ(&self->matrix1, self->angleZ >> 5);
-            RSDK.MatrixRotateY(&self->matrix3, self->angle + (self->angleZ >> (6 - (uint8)(UFO_Setup->machLevel))));
-            RSDK.MatrixMultiply(&self->matrix4, &self->matrix1, &self->matrix3);
-            RSDK.MatrixMultiply(&self->matrix3, &self->matrix4, &self->matrix2);
-            RSDK.MatrixMultiply(&self->matrix3, &self->matrix3, &UFO_Camera->matWorld);
-            RSDK.MatrixRotateXYZ(&self->matrix4, 0, self->angle, 0);
-            RSDK.MatrixMultiply(&self->matrix4, &self->matrix4, &UFO_Camera->matView);
+            RSDK.MatrixTranslateXYZ(&self->matTransform, self->position.x, self->height, self->position.y, true);
+            RSDK.MatrixRotateZ(&self->matRotate, self->angleZ >> 5);
+            RSDK.MatrixRotateY(&self->matWorld, self->angle + (self->angleZ >> (6 - (uint8)(UFO_Setup->machLevel))));
+            RSDK.MatrixMultiply(&self->matNormal, &self->matRotate, &self->matWorld);
+            RSDK.MatrixMultiply(&self->matWorld, &self->matNormal, &self->matTransform);
+            RSDK.MatrixMultiply(&self->matWorld, &self->matWorld, &UFO_Camera->matWorld);
+            RSDK.MatrixRotateXYZ(&self->matNormal, 0, self->angle, 0);
+            RSDK.MatrixMultiply(&self->matNormal, &self->matNormal, &UFO_Camera->matView);
             RSDK.AddMeshFrameTo3DScene(self->animator.animationID, UFO_Player->sceneIndex, &self->animator, S3D_FLATCLR_SHADED_BLENDED_SCREEN,
-                                       &self->matrix3, &self->matrix4, 0xFFFFFF);
+                                       &self->matWorld, &self->matNormal, 0xFFFFFF);
         }
         RSDK.Draw3DScene(UFO_Player->sceneIndex);
     }
@@ -80,12 +80,12 @@ void UFO_Player_Create(void *data)
         UFO_Setup->machQuotas[0] = self->machQuota1;
         UFO_Setup->machQuotas[1] = self->machQuota2;
         UFO_Setup->machQuotas[2] = self->machQuota3;
-        self->angle            = 0x200;
-        self->onGround         = true;
+        self->angle              = 0x200;
+        self->onGround           = true;
         UFO_Player_ChangeMachState();
         self->stateInput   = UFO_Player_ProcessPlayerControl;
         self->controllerID = CONT_ANY;
-        self->state        = UFO_Player_StateRun;
+        self->state        = UFO_Player_State_Run;
         RSDK.SetModelAnimation(UFO_Player->jogModel, &self->animator, 128, 0, true, 0);
     }
 }
@@ -230,7 +230,7 @@ void UFO_Player_ProcessPlayerControl(void)
                         EntityPauseMenu *pauseMenu = RSDK.GetEntityByID(SLOT_PAUSEMENU);
                         if (!pauseMenu->objectID) {
                             RSDK.ResetEntitySlot(SLOT_PAUSEMENU, PauseMenu->objectID, NULL);
-                            pauseMenu->triggerPlayer = RSDK.GetEntityID(self);
+                            pauseMenu->triggerPlayer  = RSDK.GetEntityID(self);
                             pauseMenu->disableRestart = true;
                         }
                     }
@@ -241,10 +241,10 @@ void UFO_Player_ProcessPlayerControl(void)
 #endif
 
         RSDKControllerState *controller = &ControllerInfo[self->controllerID];
-        self->up                  = controller->keyUp.down;
-        self->down                = controller->keyDown.down;
-        self->left                = controller->keyLeft.down;
-        self->right               = controller->keyRight.down;
+        self->up                        = controller->keyUp.down;
+        self->down                      = controller->keyDown.down;
+        self->left                      = controller->keyLeft.down;
+        self->right                     = controller->keyRight.down;
 
         self->up |= AnalogStickInfoL[self->controllerID].keyUp.down;
         self->down |= AnalogStickInfoL[self->controllerID].keyDown.down;
@@ -287,18 +287,18 @@ void UFO_Player_ChangeMachState(void)
         default: break;
         case 0:
             UFO_Player->maxSpeed = 0x70000;
-            self->field_84     = 16;
-            self->field_8C     = 128;
+            self->velDivisor     = 16;
+            self->angleVel       = 128;
             break;
         case 1:
             UFO_Player->maxSpeed = 0xA0000;
-            self->field_84     = 18;
-            self->field_8C     = 144;
+            self->velDivisor     = 18;
+            self->angleVel       = 144;
             break;
         case 2:
             UFO_Player->maxSpeed = 0xE0000;
-            self->field_84     = 20;
-            self->field_8C     = 160;
+            self->velDivisor     = 20;
+            self->angleVel       = 160;
             break;
     }
 }
@@ -326,7 +326,7 @@ void UFO_Player_HandleBumperTiles(void)
 
     if (flags) {
         if (!self->bumperTimer)
-            RSDK.PlaySfx(UFO_Player->sfxBumper, 0, 255);
+            RSDK.PlaySfx(UFO_Player->sfxBumper, false, 255);
         self->bumperTimer = 16;
         switch (flags) {
             case 1:
@@ -367,19 +367,19 @@ void UFO_Player_HandleSpeedUp(void)
 
     uint16 tile = RSDK.GetTileInfo(UFO_Setup->playFieldLayer, self->position.x >> 20, self->position.y >> 20);
     if (tile == 0xFFFF) {
-        if (++self->field_70 >= 2) {
+        if (++self->courseOutTimer >= 2) {
             self->interaction   = 0;
             self->timer         = 0;
-            self->state         = UFO_Player_Unknown9;
-            self->camera->state = UFO_Camera_Unknown3;
+            self->state         = UFO_Player_State_CourseOut;
+            self->camera->state = UFO_Camera_State_CourseOut;
 
             if (!UFO_Setup->timedOut)
-                RSDK.PlaySfx(UFO_Player->sfxDrop, 0, 255);
+                RSDK.PlaySfx(UFO_Player->sfxDrop, false, 255);
             return;
         }
     }
     else {
-        self->field_70 = 0;
+        self->courseOutTimer = 0;
     }
 
     if (self->bumperTimer <= 0) {
@@ -407,17 +407,17 @@ void UFO_Player_HandleSpeedUp(void)
     }
 }
 
-void UFO_Player_StateRun(void)
+void UFO_Player_State_Run(void)
 {
     RSDK_THIS(UFO_Player);
     int32 val = UFO_Player->maxSpeed - 0x87000;
     if (self->right) {
         if (self->angleZ < (val >> 11) + 1280)
-            self->angleZ += (val >> 14) + self->field_8C;
+            self->angleZ += (val >> 14) + self->angleVel;
     }
     else if (self->left) {
         if (self->angleZ > -1280 - (val >> 11))
-            self->angleZ -= self->field_8C - (val >> 14);
+            self->angleZ -= self->angleVel - (val >> 14);
     }
     else {
         self->angleZ -= self->angleZ >> 2;
@@ -430,10 +430,10 @@ void UFO_Player_StateRun(void)
     self->angle &= 0x3FF;
 
     if (abs(self->angleZ) <= 1280 || UFO_Setup->machLevel <= 1) {
-        self->field_90 = 0;
+        self->skidTimer = 0;
     }
     else {
-        if (self->field_90 >= 16) {
+        if (self->skidTimer >= 16) {
             if (!(UFO_Setup->timer & 3)) {
                 CREATE_ENTITY(UFO_Dust, NULL, self->position.x, self->position.y);
             }
@@ -441,7 +441,7 @@ void UFO_Player_StateRun(void)
                 RSDK.PlaySfx(UFO_Player->sfxSkid, false, 255);
         }
         else {
-            self->field_90++;
+            self->skidTimer++;
         }
     }
 
@@ -453,13 +453,13 @@ void UFO_Player_StateRun(void)
         UFO_Player_HandleSpeedUp();
         int32 x = (self->groundVel >> 10) * RSDK.Sin1024(self->angle);
         int32 y = (self->groundVel >> 10) * RSDK.Cos1024(self->angle);
-        self->velocity.x += (x - self->velocity.x) / self->field_84;
-        self->velocity.y += (-y - self->velocity.y) / self->field_84;
+        self->velocity.x += (x - self->velocity.x) / self->velDivisor;
+        self->velocity.y += (-y - self->velocity.y) / self->velDivisor;
     }
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
 
-    if (!self->jumpPress || self->state == UFO_Player_Unknown9) {
+    if (!self->jumpPress || self->state == UFO_Player_State_CourseOut) {
         if (self->groundVel <= 0xC0000) {
             RSDK.SetModelAnimation(UFO_Player->jogModel, &self->animator, 128, 0, 0, 0);
             self->animator.animationSpeed = (self->groundVel >> 12) + 48;
@@ -472,14 +472,14 @@ void UFO_Player_StateRun(void)
     else {
         self->gravityStrength = 0x50000;
         self->onGround        = 0;
-        self->state           = UFO_Player_StateJump;
+        self->state           = UFO_Player_State_Jump;
         RSDK.SetModelAnimation(UFO_Player->jumpModel, &self->animator, 128, 0, true, 0);
         RSDK.PlaySfx(UFO_Player->sfxJump, 0, 255);
         UFO_Player_HandleBumperTiles();
     }
 }
 
-void UFO_Player_StateJump(void)
+void UFO_Player_State_Jump(void)
 {
     RSDK_THIS(UFO_Player);
     int32 val = UFO_Player->maxSpeed - 0x60000;
@@ -488,12 +488,12 @@ void UFO_Player_StateJump(void)
     if (self->right) {
         speed = (val >> 20) + 12;
         if (self->angleZ < (val >> 10) + 1280)
-            self->angleZ += (self->field_8C >> 1) + (val >> 14);
+            self->angleZ += (self->angleVel >> 1) + (val >> 14);
     }
     else if (self->left) {
         speed = -12 - (val >> 20);
         if (self->angleZ > -1280 - (val >> 10))
-            self->angleZ -= (self->field_8C >> 1) - (val >> 14);
+            self->angleZ -= (self->angleVel >> 1) - (val >> 14);
     }
     else {
         speed = 0;
@@ -516,23 +516,23 @@ void UFO_Player_StateJump(void)
     self->gravityStrength += -0x3800 - (val >> 7);
 
     self->height += self->gravityStrength;
-    self->field_74 = (self->field_74 - (UFO_Player->maxSpeed >> 13)) & 0x3FF;
-    if (self->field_74 & 0x100)
+    self->angleX = (self->angleX - (UFO_Player->maxSpeed >> 13)) & 0x3FF;
+    if (self->angleX & 0x100)
         self->animator.animationID = UFO_Player->ballModel;
     else
         self->animator.animationID = UFO_Player->jumpModel;
 
     if (self->height < 0 && self->gravityStrength <= 0) {
-        self->field_70 = 4;
-        self->height   = 0;
-        self->onGround = true;
-        self->state    = UFO_Player_StateRun;
-        self->angleZ   = self->angleZ - (self->angleZ >> 1);
+        self->courseOutTimer = 4;
+        self->height         = 0;
+        self->onGround       = true;
+        self->state          = UFO_Player_State_Run;
+        self->angleZ         = self->angleZ - (self->angleZ >> 1);
     }
     UFO_Player_HandleBumperTiles();
 }
 
-void UFO_Player_HandleTilt(void)
+void UFO_Player_State_Springboard(void)
 {
     RSDK_THIS(UFO_Player);
 
@@ -553,23 +553,23 @@ void UFO_Player_HandleTilt(void)
     self->position.y += self->velocity.y;
     self->height += self->gravityStrength;
 
-    self->field_74 = (self->field_74 - (UFO_Player->maxSpeed >> 13)) & 0x3FF;
-    if (self->field_74 & 0x100)
+    self->angleX = (self->angleX - (UFO_Player->maxSpeed >> 13)) & 0x3FF;
+    if (self->angleX & 0x100)
         self->animator.animationID = UFO_Player->ballModel;
     else
         self->animator.animationID = UFO_Player->jumpModel;
 
     if (self->height < 0) {
-        self->field_70 = 4;
-        self->height   = 0;
-        self->onGround = true;
-        self->state    = UFO_Player_StateRun;
-        self->angleZ   = self->angleZ - (self->angleZ >> 1);
+        self->courseOutTimer = 4;
+        self->height         = 0;
+        self->onGround       = true;
+        self->state          = UFO_Player_State_Run;
+        self->angleZ         = self->angleZ - (self->angleZ >> 1);
     }
     UFO_Player_HandleBumperTiles();
 }
 
-void UFO_Player_Unknown8(void)
+void UFO_Player_State_Trip(void)
 {
     RSDK_THIS(UFO_Player);
     int32 xVel = self->velocity.x;
@@ -592,13 +592,13 @@ void UFO_Player_Unknown8(void)
     if (++self->timer > 32) {
         self->timer = 0;
         if (self->onGround)
-            self->state = UFO_Player_StateRun;
+            self->state = UFO_Player_State_Run;
         else
-            self->state = UFO_Player_StateJump;
+            self->state = UFO_Player_State_Jump;
     }
 }
 
-void UFO_Player_Unknown9(void)
+void UFO_Player_State_CourseOut(void)
 {
     RSDK_THIS(UFO_Player);
     int32 x = self->velocity.x;
@@ -611,7 +611,7 @@ void UFO_Player_Unknown9(void)
     self->velocity.y = y - (y >> 5);
     if (self->height < 0)
         self->drawOrder = 2;
-    if (RSDK_GET_ENTITY(SLOT_UFO_SETUP, UFO_Setup)->state == UFO_Setup_Unknown13) {
+    if (RSDK_GET_ENTITY(SLOT_UFO_SETUP, UFO_Setup)->state == UFO_Setup_State_HandleRingDrain) {
         ++self->timer;
         if (self->timer == 120) {
             UFO_Setup_Finish_Fail();
@@ -619,13 +619,13 @@ void UFO_Player_Unknown9(void)
         else if (self->timer == 16) {
             if (!UFO_Setup->timedOut) {
                 UFO_Setup->timedOut = true;
-                CREATE_ENTITY(UFO_Message, intToVoid(2), self->position.x, self->position.y);
+                CREATE_ENTITY(UFO_Message, intToVoid(UFO_MESSAGE_COURSEOUT), self->position.x, self->position.y);
             }
         }
     }
 }
 
-void UFO_Player_Unknown10(void)
+void UFO_Player_State_UFOCaught_Charge(void)
 {
     RSDK_THIS(UFO_Player);
     int32 xVel = self->velocity.x;
@@ -636,23 +636,24 @@ void UFO_Player_Unknown10(void)
     self->position.y += zVel - (zVel >> 4);
     self->velocity.y = zVel - (zVel >> 4);
 
-    self->field_74 = (self->field_74 - (UFO_Player->maxSpeed >> 13)) & 0x3FF;
+    self->angleX = (self->angleX - (UFO_Player->maxSpeed >> 13)) & 0x3FF;
     if (self->timer == 2) {
         RSDK.SetModelAnimation(UFO_Player->jumpModel, &self->animator, 128, 0, true, 0);
-        RSDK.PlaySfx(UFO_Player->sfxCharge, 0, 255);
+        RSDK.PlaySfx(UFO_Player->sfxCharge, false, 255);
     }
+
     if (self->timer >= 30) {
         self->timer           = 0;
-        self->camera->state   = UFO_Camera_Unknown4;
+        self->camera->state   = UFO_Camera_State_UFOCaught;
         self->velocity.x      = (self->circuitPtr->position.x - self->position.x) >> 4;
         self->velocity.y      = (self->circuitPtr->position.y - self->position.y) >> 4;
-        self->state           = UFO_Player_Unknown11;
+        self->state           = UFO_Player_State_UFOCaught_Released;
         self->gravityStrength = (self->circuitPtr->height - self->height + 0x200000) >> 4;
-        RSDK.PlaySfx(UFO_Player->sfxRelease, 0, 255);
+        RSDK.PlaySfx(UFO_Player->sfxRelease, false, 255);
     }
 }
 
-void UFO_Player_Unknown11(void)
+void UFO_Player_State_UFOCaught_Released(void)
 {
     RSDK_THIS(UFO_Player);
     self->position.x += self->velocity.x;
@@ -661,14 +662,21 @@ void UFO_Player_Unknown11(void)
     self->height += self->gravityStrength;
     ++self->timer;
 
-    self->field_74 = (self->field_74 - (UFO_Player->maxSpeed >> 13)) & 0x3FF;
+    self->angleX = (self->angleX - (UFO_Player->maxSpeed >> 13)) & 0x3FF;
     if (self->timer == 16)
         UFO_Setup_Finish_Win();
 }
 
-void UFO_Player_EditorDraw(void) {}
+#if RETRO_INCLUDE_EDITOR
+void UFO_Player_EditorDraw(void)
+{
+    RSDK_THIS(UFO_Player);
+    RSDK.SetSpriteAnimation(UFO_Player->aniFrames, 0, &self->animator, true, 7);
+    RSDK.DrawSprite(&self->animator, NULL, false);
+}
 
-void UFO_Player_EditorLoad(void) { }
+void UFO_Player_EditorLoad(void) { UFO_Player->aniFrames = RSDK.LoadSpriteAnimation("Editor/PlayerIcons.bin", SCOPE_STAGE); }
+#endif
 
 void UFO_Player_Serialize(void)
 {

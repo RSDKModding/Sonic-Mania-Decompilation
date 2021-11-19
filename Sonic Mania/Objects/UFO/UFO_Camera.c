@@ -8,7 +8,7 @@ void UFO_Camera_LateUpdate(void)
 {
     RSDK_THIS(UFO_Camera);
     StateMachine_Run(self->state);
-    UFO_Camera_Unknown1();
+    UFO_Camera_HandleCamPos();
 }
 
 void UFO_Camera_StaticUpdate(void) {}
@@ -18,15 +18,15 @@ void UFO_Camera_Draw(void) {}
 void UFO_Camera_Create(void *data)
 {
     RSDK_THIS(UFO_Camera);
-    self->active   = ACTIVE_NORMAL;
-    self->state    = UFO_Camera_Unknown2;
-    self->height   = 0x300000;
-    self->field_64 = 0x2800;
+    self->active = ACTIVE_NORMAL;
+    self->state  = UFO_Camera_State_Normal;
+    self->height = 0x300000;
+    self->radius = 0x2800;
 
     foreach_all(UFO_Player, player)
     {
         player->camera = self;
-        self->target = (Entity *)player;
+        self->target   = (Entity *)player;
     }
 }
 
@@ -36,7 +36,7 @@ void UFO_Camera_StageLoad(void)
     UFO_Camera->isSS7 = RSDK.CheckStageFolder("UFO7");
 }
 
-void UFO_Camera_Unknown1(void)
+void UFO_Camera_HandleCamPos(void)
 {
     RSDK_THIS(UFO_Camera);
     int32 val = RSDK.Cos1024(-self->angleX) << 12;
@@ -46,7 +46,7 @@ void UFO_Camera_Unknown1(void)
     if (!val)
         val = 1;
     int32 div  = !val ? 1 : val;
-    int32 val2 = self->angle - self->dword6C;
+    int32 val2 = self->angle - self->prevAngle;
     int32 val3 = val2 - 0x400;
     if (self->angle <= 0x200)
         val3 = val2 + 0x400;
@@ -56,14 +56,14 @@ void UFO_Camera_Unknown1(void)
     else
         ScreenInfo->position.x -= 2 * val2;
 
-    int32 offset               = ((RSDK.Sin1024(-self->angleX) << 12) << 8) / div;
+    int32 offset           = ((RSDK.Sin1024(-self->angleX) << 12) << 8) / div;
     ScreenInfo->position.y = offset - ScreenInfo->centerY + 512;
-    self->dword6C          = self->angle;
+    self->prevAngle        = self->angle;
 
     self->clipY = clampVal(ScreenInfo->centerY - offset + 8, -0x40, ScreenInfo->height);
 }
 
-void UFO_Camera_Unknown2(void)
+void UFO_Camera_State_Normal(void)
 {
     RSDK_THIS(UFO_Camera);
     EntityUFO_Player *target = (EntityUFO_Player *)self->target;
@@ -102,9 +102,9 @@ void UFO_Camera_Unknown2(void)
         }
 
         self->angle &= 0x3FF;
-        if (target->state == UFO_Player_HandleTilt) {
+        if (target->state == UFO_Player_State_Springboard) {
             self->angleX = -(target->height >> 18);
-            int32 val         = self->field_64 * RSDK.Cos1024(self->angleX) >> 10;
+            int32 val    = self->radius * RSDK.Cos1024(self->angleX) >> 10;
 
             self->position.x = target->position.x - val * RSDK.Sin1024(self->angle);
             self->position.y = target->position.y - val * RSDK.Cos1024(self->angle);
@@ -112,9 +112,9 @@ void UFO_Camera_Unknown2(void)
             self->height = (target->height >> 1) - (RSDK.Sin1024(self->angleX) << 14) + 0x400000;
         }
         else {
-            self->angleX    = 0;
-            self->position.x = target->position.x - self->field_64 * RSDK.Sin1024(self->angle);
-            self->position.y = target->position.y - self->field_64 * RSDK.Cos1024(self->angle);
+            self->angleX     = 0;
+            self->position.x = target->position.x - self->radius * RSDK.Sin1024(self->angle);
+            self->position.y = target->position.y - self->radius * RSDK.Cos1024(self->angle);
             self->height     = (target->height >> 2) + 0x400000;
         }
     }
@@ -131,7 +131,7 @@ void UFO_Camera_Unknown2(void)
     RSDK.MatrixMultiply(&UFO_Camera->matWorld, &UFO_Camera->matWorld, &self->matWorld);
 }
 
-void UFO_Camera_Unknown3(void)
+void UFO_Camera_State_CourseOut(void)
 {
     RSDK_THIS(UFO_Camera);
     self->height += 0x20000;
@@ -148,7 +148,7 @@ void UFO_Camera_Unknown3(void)
     RSDK.MatrixMultiply(&UFO_Camera->matWorld, &UFO_Camera->matWorld, &self->matWorld);
 }
 
-void UFO_Camera_Unknown4(void)
+void UFO_Camera_State_UFOCaught(void)
 {
     RSDK_THIS(UFO_Camera);
     self->height += 0x80000;

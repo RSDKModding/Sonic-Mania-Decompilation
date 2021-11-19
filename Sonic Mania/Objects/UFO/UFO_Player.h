@@ -7,7 +7,7 @@
 typedef struct {
     RSDK_OBJECT
     int32 maxSpeed;
-    int32 field_8;
+    uint16 aniFrames; //unused
     uint16 sfxJump;
     uint16 sfxCharge;
     uint16 sfxRelease;
@@ -34,21 +34,21 @@ typedef struct {
     int32 machQuota3;
     int32 startingRings;
     int32 timer;
-    int32 field_70;
-    int32 field_74;
+    int32 courseOutTimer;
+    int32 angleX;
     int32 height;
     int32 gravityStrength;
     int32 angleZ;
-    int32 field_84;
+    int32 velDivisor;
     int32 bumperTimer;
-    int32 field_8C;
-    int32 field_90;
+    int32 angleVel;
+    int32 skidTimer;
     EntityUFO_Camera *camera;
     EntityUFO_Circuit *circuitPtr;
-    Matrix matrix1;
-    Matrix matrix2;
-    Matrix matrix3;
-    Matrix matrix4;
+    Matrix matRotate;
+    Matrix matTransform;
+    Matrix matWorld;
+    Matrix matNormal;
     StateMachine(stateInput);
     int32 controllerID;
     bool32 up;
@@ -84,12 +84,12 @@ void UFO_Player_ProcessPlayerControl(void);
 void UFO_Player_ChangeMachState(void);
 void UFO_Player_HandleBumperTiles(void);
 void UFO_Player_HandleSpeedUp(void);
-void UFO_Player_StateRun(void);
-void UFO_Player_StateJump(void);
-void UFO_Player_HandleTilt(void);
-void UFO_Player_Unknown8(void);
-void UFO_Player_Unknown9(void);
-void UFO_Player_Unknown10(void);
-void UFO_Player_Unknown11(void);
+void UFO_Player_State_Run(void);
+void UFO_Player_State_Jump(void);
+void UFO_Player_State_Springboard(void);
+void UFO_Player_State_Trip(void);
+void UFO_Player_State_CourseOut(void);
+void UFO_Player_State_UFOCaught_Charge(void);
+void UFO_Player_State_UFOCaught_Released(void);
 
 #endif //!OBJ_UFO_PLAYER_H

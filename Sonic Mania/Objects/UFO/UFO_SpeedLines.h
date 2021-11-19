@@ -6,9 +6,9 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    int32 field_4;
-    int32 field_8;
-    int32 field_C;
+    int32 unused1;
+    int32 unused2;
+    int32 unused3;
 } ObjectUFO_SpeedLines;
 
 // Entity Class
@@ -18,8 +18,8 @@ typedef struct {
     int32 lineY[32];
     int32 lineZ[32];
     int32 lineAlpha[32];
-    int32 field_258;
-    int32 field_25C;
+    int32 unused1;
+    int32 unused2;
 } EntityUFO_SpeedLines;
 
 // Object Struct

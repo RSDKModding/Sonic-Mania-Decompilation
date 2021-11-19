@@ -23,16 +23,16 @@ void UFO_Springboard_Update(void)
                     if (player->height < val3) {
                         if (val3 - player->height <= 0xC0000) {
                             player->gravityStrength = 0xC0000;
-                            player->onGround        = 0;
-                            player->state           = UFO_Player_HandleTilt;
+                            player->onGround        = false;
+                            player->state           = UFO_Player_State_Springboard;
                             RSDK.SetModelAnimation(UFO_Player->jumpModel, &player->animator, 128, 0, true, 0);
-                            RSDK.PlaySfx(UFO_Player->sfxSpring, 0, 255);
+                            RSDK.PlaySfx(UFO_Player->sfxSpring, false, 255);
                         }
                         else {
                             player->bumperTimer = 16;
                             player->velocity.x  = -player->velocity.x;
                             player->velocity.y  = -player->velocity.y;
-                            RSDK.PlaySfx(UFO_Player->sfxBumper, 0, 255);
+                            RSDK.PlaySfx(UFO_Player->sfxBumper, false, 255);
                         }
                     }
                 }

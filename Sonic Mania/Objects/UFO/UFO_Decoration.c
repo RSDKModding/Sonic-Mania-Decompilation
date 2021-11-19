@@ -14,7 +14,7 @@ void UFO_Decoration_Update(void)
         self->active  = ACTIVE_BOUNDS;
     }
 
-    if (self->type > 5)
+    if (self->type > UFO_DECOR_PILLAR2)
         RSDK.ProcessAnimation(&self->animator);
 }
 
@@ -32,7 +32,7 @@ void UFO_Decoration_LateUpdate(void)
         int32 val = (int32)((mat->values[0][3] << 8) + (mat->values[0][2] * (z >> 8) & 0xFFFFFF00) + (mat->values[0][0] * (x >> 8) & 0xFFFFFF00)
                    + (mat->values[0][1] * (self->height >> 8) & 0xFFFFFF00))
                   / self->depth3D;
-        self->visible = abs(val) < 256;
+        self->visible = abs(val) < 0x100;
     }
 }
 
@@ -43,22 +43,22 @@ void UFO_Decoration_Draw(void)
     RSDK_THIS(UFO_Decoration);
     if (self->depth3D >= 0x4000) {
         RSDK.Prepare3DScene(UFO_Decoration->sceneIndex);
-        RSDK.MatrixScaleXYZ(&self->matrix1, self->scale.x, self->size, self->scale.x);
-        RSDK.MatrixTranslateXYZ(&self->matrix1, self->position.x, self->height, self->position.y, 0);
-        RSDK.MatrixRotateY(&self->matrix3, self->angle);
-        RSDK.MatrixMultiply(&self->matrix2, &self->matrix3, &self->matrix1);
-        RSDK.MatrixMultiply(&self->matrix2, &self->matrix2, &UFO_Camera->matWorld);
+        RSDK.MatrixScaleXYZ(&self->matTransform, self->scale.x, self->size, self->scale.x);
+        RSDK.MatrixTranslateXYZ(&self->matTransform, self->position.x, self->height, self->position.y, 0);
+        RSDK.MatrixRotateY(&self->matNormal, self->angle);
+        RSDK.MatrixMultiply(&self->matWorld, &self->matNormal, &self->matTransform);
+        RSDK.MatrixMultiply(&self->matWorld, &self->matWorld, &UFO_Camera->matWorld);
         if (UFO_Camera->isSS7)
-            RSDK.MatrixMultiply(&self->matrix3, &self->matrix3, &UFO_Camera->matTemp);
+            RSDK.MatrixMultiply(&self->matNormal, &self->matNormal, &UFO_Camera->matTemp);
         else
-            RSDK.MatrixMultiply(&self->matrix3, &self->matrix3, &UFO_Camera->matView);
+            RSDK.MatrixMultiply(&self->matNormal, &self->matNormal, &UFO_Camera->matView);
 
-        if (self->type <= 5)
-            RSDK.AddModelTo3DScene(UFO_Decoration->modelIndices[self->type], UFO_Decoration->sceneIndex, UFO_Decoration->drawType, &self->matrix2,
-                                   &self->matrix3, 0xFFFFFF);
+        if (self->type <= UFO_DECOR_PILLAR2)
+            RSDK.AddModelTo3DScene(UFO_Decoration->modelIndices[self->type], UFO_Decoration->sceneIndex, UFO_Decoration->drawType, &self->matWorld,
+                                   &self->matNormal, 0xFFFFFF);
         else
             RSDK.AddMeshFrameTo3DScene(UFO_Decoration->modelIndices[self->type], UFO_Decoration->sceneIndex, &self->animator,
-                                       UFO_Decoration->drawType, &self->matrix2, &self->matrix3, 0xFFFFFF);
+                                       UFO_Decoration->drawType, &self->matWorld, &self->matNormal, 0xFFFFFF);
         RSDK.Draw3DScene(UFO_Decoration->sceneIndex);
     }
 }
@@ -74,7 +74,7 @@ void UFO_Decoration_Create(void *data)
         self->active        = ACTIVE_BOUNDS;
         self->updateRange.x = 0x4000000;
         self->updateRange.y = 0x4000000;
-        if (self->type == 6)
+        if (self->type == UFO_DECOR_BIRD)
             self->height = 0x600000;
         RSDK.SetModelAnimation(UFO_Decoration->modelIndices[self->type], &self->animator, 96, 0, true, 0);
     }
@@ -82,14 +82,14 @@ void UFO_Decoration_Create(void *data)
 
 void UFO_Decoration_StageLoad(void)
 {
-    UFO_Decoration->modelIndices[0] = RSDK.LoadMesh("Decoration/Tree.bin", SCOPE_STAGE);
-    UFO_Decoration->modelIndices[1] = RSDK.LoadMesh("Decoration/Flower1.bin", SCOPE_STAGE);
-    UFO_Decoration->modelIndices[2] = RSDK.LoadMesh("Decoration/Flower2.bin", SCOPE_STAGE);
-    UFO_Decoration->modelIndices[3] = RSDK.LoadMesh("Decoration/Flower3.bin", SCOPE_STAGE);
-    UFO_Decoration->modelIndices[4] = RSDK.LoadMesh("Decoration/Pillar1.bin", SCOPE_STAGE);
-    UFO_Decoration->modelIndices[5] = RSDK.LoadMesh("Decoration/Pillar2.bin", SCOPE_STAGE);
-    UFO_Decoration->modelIndices[6] = RSDK.LoadMesh("Decoration/Bird.bin", SCOPE_STAGE);
-    UFO_Decoration->modelIndices[7] = RSDK.LoadMesh("Decoration/Fish.bin", SCOPE_STAGE);
+    UFO_Decoration->modelIndices[UFO_DECOR_TREE] = RSDK.LoadMesh("Decoration/Tree.bin", SCOPE_STAGE);
+    UFO_Decoration->modelIndices[UFO_DECOR_FLOWER1] = RSDK.LoadMesh("Decoration/Flower1.bin", SCOPE_STAGE);
+    UFO_Decoration->modelIndices[UFO_DECOR_FLOWER2] = RSDK.LoadMesh("Decoration/Flower2.bin", SCOPE_STAGE);
+    UFO_Decoration->modelIndices[UFO_DECOR_FLOWER3] = RSDK.LoadMesh("Decoration/Flower3.bin", SCOPE_STAGE);
+    UFO_Decoration->modelIndices[UFO_DECOR_PILLAR1] = RSDK.LoadMesh("Decoration/Pillar1.bin", SCOPE_STAGE);
+    UFO_Decoration->modelIndices[UFO_DECOR_PILLAR2] = RSDK.LoadMesh("Decoration/Pillar2.bin", SCOPE_STAGE);
+    UFO_Decoration->modelIndices[UFO_DECOR_BIRD] = RSDK.LoadMesh("Decoration/Bird.bin", SCOPE_STAGE);
+    UFO_Decoration->modelIndices[UFO_DECOR_FISH] = RSDK.LoadMesh("Decoration/Fish.bin", SCOPE_STAGE);
     UFO_Decoration->sceneIndex      = RSDK.Create3DScene("View:Special", 4096, SCOPE_STAGE);
     UFO_Decoration->drawType        = S3D_FLATCLR_SHADED_BLENDED_SCREEN;
 }
@@ -97,7 +97,19 @@ void UFO_Decoration_StageLoad(void)
 #if RETRO_INCLUDE_EDITOR
 void UFO_Decoration_EditorDraw(void) {}
 
-void UFO_Decoration_EditorLoad(void) {}
+void UFO_Decoration_EditorLoad(void)
+{
+
+    RSDK_ACTIVE_VAR(UFO_Decoration, type);
+    RSDK_ENUM_VAR("Tree", UFO_DECOR_TREE);
+    RSDK_ENUM_VAR("Flower 1", UFO_DECOR_FLOWER1);
+    RSDK_ENUM_VAR("Flower 2", UFO_DECOR_FLOWER2);
+    RSDK_ENUM_VAR("Flower 3", UFO_DECOR_FLOWER3);
+    RSDK_ENUM_VAR("Pillar 1", UFO_DECOR_PILLAR1);
+    RSDK_ENUM_VAR("Pillar 2", UFO_DECOR_PILLAR2);
+    RSDK_ENUM_VAR("Bird", UFO_DECOR_BIRD);
+    RSDK_ENUM_VAR("Fish", UFO_DECOR_FISH);
+}
 #endif
 
 void UFO_Decoration_Serialize(void)

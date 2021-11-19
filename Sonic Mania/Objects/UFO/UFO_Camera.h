@@ -16,11 +16,11 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    int32 field_5C;
+    int32 unused1;
     int32 height;
-    int32 field_64;
+    int32 radius;
     int32 angleX;
-    int32 dword6C;
+    int32 prevAngle;
     int32 clipY;
     Entity *target;
     Matrix matWorld;
@@ -44,9 +44,9 @@ void UFO_Camera_EditorLoad(void);
 void UFO_Camera_Serialize(void);
 
 // Extra Entity Functions
-void UFO_Camera_Unknown1(void);
-void UFO_Camera_Unknown2(void);
-void UFO_Camera_Unknown3(void);
-void UFO_Camera_Unknown4(void);
+void UFO_Camera_HandleCamPos(void);
+void UFO_Camera_State_Normal(void);
+void UFO_Camera_State_CourseOut(void);
+void UFO_Camera_State_UFOCaught(void);
 
 #endif //!OBJ_UFO_CAMERA_H

@@ -464,7 +464,7 @@ extern RSDKFunctionTable RSDK;
 #endif
 
 #if RETRO_INCLUDE_EDITOR
-#define showGizmos() SceneInfo->listPos == SceneInfo->entitySlot || SceneInfo->effectGizmo
+#define showGizmos() (SceneInfo->listPos == SceneInfo->entitySlot || SceneInfo->effectGizmo)
 #endif
 
 DLLExport void LinkGameLogicDLL(EngineInfo *info);

@@ -154,7 +154,7 @@ void DialogRunner_CheckUserAuth_CB(int32 a1, int32 a2)
                     foreach_all(UFO_Setup, setup)
                     {
                         setup->fadeColour = 0;
-                        setup->state      = UFO_Setup_Unknown12;
+                        setup->state      = UFO_Setup_State_FinishFadeout;
                         setup->active     = ACTIVE_ALWAYS;
                         setup->visible    = true;
                     }

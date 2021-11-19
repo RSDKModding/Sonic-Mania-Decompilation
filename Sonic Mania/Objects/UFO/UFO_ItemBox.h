@@ -3,14 +3,23 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    UFO_ITEMBOX_RING,
+    UFO_ITEMBOX_SPHERE,
+    UFO_ITEMBOX_LVLUP,
+#if RETRO_USE_PLUS
+    UFO_ITEMBOX_BUMPER,
+#endif
+}UFO_ItemBoxTypes;
+
 // Object Class
 typedef struct {
     RSDK_OBJECT
     int32 breakCount;
-    int32 field_8;
-    int32 field_C;
-    uint16 itemBoxSprite;
-    uint16 itemBoxModel;
+    int32 unused1;
+    int32 unused2;
+    uint16 aniFrames;
+    uint16 meshFrames;
     uint16 sceneIndex;
     uint16 sfxDestroy;
     uint16 sfxRockemSockem;
@@ -28,33 +37,13 @@ typedef struct {
     int32 worldX;
     int32 worldY;
     Vector2 drawPos;
-    int32 field_7C;
-    int32 field_80;
-    int32 field_84;
-    int32 field_88;
-    int32 field_8C;
-    int32 field_90;
-    int32 field_94;
-    int32 field_98;
-    int32 field_9C;
-    int32 field_A0;
-    int32 field_A4;
-    int32 field_A8;
-    int32 field_AC;
-    int32 field_B0;
-    int32 field_B4;
-    int32 field_B8;
-    Matrix matrix1;
-    Matrix matrix2;
-    Matrix matrix3;
+    Matrix unusedMatrix1;
+    Matrix matTransform;
+    Matrix matWorld;
+    Matrix matNormal;
     int32 sfxTimer;
-    Animator itemData;
-    int32 field_198;
-    int32 field_19C;
-    int32 field_1A0;
-    int32 field_1A4;
-    int32 field_1A8;
-    int32 field_1AC;
+    Animator itemAnimator;
+    Animator unusedAnimator1;
 } EntityUFO_ItemBox;
 
 // Object Struct
@@ -74,7 +63,7 @@ void UFO_ItemBox_EditorLoad(void);
 void UFO_ItemBox_Serialize(void);
 
 // Extra Entity Functions
-void UFO_ItemBox_Unknown1(void);
-void UFO_ItemBox_Unknown2(void);
+void UFO_ItemBox_State_HasContents(void);
+void UFO_ItemBox_State_ShowContents(void);
 
 #endif //!OBJ_UFO_ITEMBOX_H

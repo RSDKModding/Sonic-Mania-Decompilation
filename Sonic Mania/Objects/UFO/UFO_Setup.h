@@ -6,7 +6,7 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    StateMachine(state);
+    StateMachine(deformCB);
     int32 timedOut;
     bool32 encoreStage;
     int32 machLevel;
@@ -60,12 +60,12 @@ void UFO_Setup_ScanlineCallback_3DRoof(ScanlineInfo *scanlines);
 void UFO_Setup_PlaySphereSFX(void);
 void UFO_Setup_Finish_Win(void);
 void UFO_Setup_Finish_Fail(void);
-void UFO_Setup_Unknown8(void);
-void UFO_Setup_Unknown9(void);
-void UFO_Setup_Unknown10(void);
-void UFO_Setup_Unknown11(void);
-void UFO_Setup_Unknown12(void);
-void UFO_Setup_Unknown13(void);
-void UFO_Setup_Unknown14(void);
+void UFO_Setup_DeformCB_UFO3(void);
+void UFO_Setup_DeformCB_UFO4(void);
+void UFO_Setup_DeformCB_UFO5(void);
+void UFO_Setup_State_ShowStartMessage(void);
+void UFO_Setup_State_FinishFadeout(void);
+void UFO_Setup_State_HandleRingDrain(void);
+void UFO_Setup_State_TimedOver(void);
 
 #endif //!OBJ_UFO_SETUP_H
