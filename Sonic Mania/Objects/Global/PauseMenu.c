@@ -93,7 +93,7 @@ void PauseMenu_Draw(void)
 {
     RSDK_THIS(PauseMenu);
     if (self->paused)
-        RSDK.FillScreen(0, self->fillTimer, self->fillTimer - 128, self->fillTimer - 256);
+        RSDK.FillScreen(0, self->fadeTimer, self->fadeTimer - 128, self->fadeTimer - 256);
     if (RSDK.GetSettingsValue(SETTINGS_SCREENCOUNT) <= 1) {
         StateMachine_Run(self->stateDraw);
     }
@@ -510,7 +510,7 @@ void PauseMenu_State_SetupButtons(void)
             self->state = PauseMenu_State_ForcedPause;
         else
             self->state = PauseMenu_State_ForcedPauseCompetition;
-        self->stateDraw = PauseMenu_Draw_NoHeader;
+        self->stateDraw = PauseMenu_Draw_JustLookup;
     }
     else {
         RSDK.PlaySfx(PauseMenu->sfxAccept, 0, 255);
@@ -578,19 +578,19 @@ void PauseMenu_State_StartPauseCompetition(void)
         self->yellowTrianglePos.x = 0x000000;
         self->yellowTrianglePos.y = 0x000000;
         if (self->timer >= 16) {
-            self->paused = 0;
+            self->paused = false;
             self->timer  = 0;
             self->state  = PauseMenu_State_Paused;
         }
         else {
             int32 t      = self->timer - 8;
-            self->paused = 1;
+            self->paused = true;
             if (self->timer == 8) {
                 RSDK.SetSettingsValue(SETTINGS_SCREENCOUNT, 1);
                 PauseMenu_FocusCamera();
             }
             ++self->timer;
-            self->fillTimer = (8 - t) << 6;
+            self->fadeTimer = (8 - t) << 6;
         }
     }
     else {
@@ -598,8 +598,8 @@ void PauseMenu_State_StartPauseCompetition(void)
         self->headerPos.y = 0xFFF0000;
         self->yellowTrianglePos.x = 0xFFF0000;
         self->yellowTrianglePos.y = 0xFFF0000;
-        self->paused     = 1;
-        self->fillTimer  = self->timer << 6;
+        self->paused     = true;
+        self->fadeTimer  = self->timer << 6;
         self->timer      = self->timer + 1;
     }
 }
@@ -717,25 +717,25 @@ void PauseMenu_State_ForcedPauseCompetition(void)
 
     if (self->timer >= 8) {
         if (self->timer >= 16) {
-            self->paused    = 0;
-            self->fillTimer = 0;
+            self->paused    = false;
+            self->fadeTimer = 0;
             self->timer     = 0;
             self->state     = PauseMenu_State_ForcedPause;
         }
         else {
             int32 t      = self->timer - 8;
-            self->paused = 1;
+            self->paused = true;
             if (self->timer == 8) {
                 RSDK.SetSettingsValue(SETTINGS_SCREENCOUNT, 1);
                 PauseMenu_FocusCamera();
             }
             ++self->timer;
-            self->fillTimer = (8 - t) << 6;
+            self->fadeTimer = (8 - t) << 6;
         }
     }
     else {
-        self->paused    = 1;
-        self->fillTimer = self->timer << 6;
+        self->paused    = true;
+        self->fadeTimer = self->timer << 6;
         self->timer++;
     }
 }
@@ -784,7 +784,7 @@ void PauseMenu_State_ResumeCompetition(void)
 
     if (self->timer >= 8) {
         if (self->timer >= 16) {
-            self->paused = 0;
+            self->paused = false;
             self->timer  = 0;
             RSDK.SetGameMode(ENGINESTATE_REGULAR);
             PauseMenu_ClearButtons(RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu));
@@ -798,7 +798,7 @@ void PauseMenu_State_ResumeCompetition(void)
                 PauseMenu_UpdateCameras();
             }
             ++self->timer;
-            self->fillTimer = (8 - t) << 6;
+            self->fadeTimer = (8 - t) << 6;
         }
     }
     else {
@@ -806,8 +806,8 @@ void PauseMenu_State_ResumeCompetition(void)
         self->headerPos.y = 0;
         self->yellowTrianglePos.x = 0;
         self->yellowTrianglePos.y = 0;
-        self->paused     = 1;
-        self->fillTimer  = self->timer << 6;
+        self->paused     = true;
+        self->fadeTimer  = self->timer << 6;
         self->timer      = self->timer + 1;
     }
 }
@@ -818,7 +818,7 @@ void PauseMenu_State_ForcedResumeCompetition(void)
 
     if (self->timer >= 8) {
         if (self->timer >= 16) {
-            self->paused = 0;
+            self->paused = false;
             self->timer  = 0;
             RSDK.SetGameMode(ENGINESTATE_REGULAR);
             PauseMenu_ClearButtons(RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu));
@@ -826,19 +826,19 @@ void PauseMenu_State_ForcedResumeCompetition(void)
         }
         else {
             int32 t      = self->timer - 8;
-            self->paused = 1;
+            self->paused = true;
             if (self->timer == 8) {
                 EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
                 RSDK.SetSettingsValue(SETTINGS_SCREENCOUNT, session->playerCount);
                 PauseMenu_UpdateCameras();
             }
             ++self->timer;
-            self->fillTimer = (8 - t) << 6;
+            self->fadeTimer = (8 - t) << 6;
         }
     }
     else {
-        self->paused    = 1;
-        self->fillTimer = self->timer << 6;
+        self->paused    = true;
+        self->fadeTimer = self->timer << 6;
         self->timer++;
     }
 }
@@ -847,7 +847,7 @@ void PauseMenu_State_SetupTitleFade(void)
 {
     EntityPauseMenu *pauseMenu = RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu);
     pauseMenu->timer           = 0;
-    pauseMenu->fillTimer       = 0;
+    pauseMenu->fadeTimer       = 0;
     pauseMenu->state           = PauseMenu_State_FadeToTitle;
 }
 
@@ -856,18 +856,18 @@ void PauseMenu_State_FadeToTitle(void)
     RSDK_THIS(PauseMenu);
     if (!UIDialog->activeDialog) {
         if (!self->timer) {
-            self->paused = 1;
+            self->paused = true;
             Music_FadeOut(0.2);
         }
 
         if (self->timer >= 60) {
-            self->fillTimer = 512;
+            self->fadeTimer = 512;
             SaveGame_ClearRestartData();
             RSDK.SetScene("Presentation", "Title Screen");
             RSDK.LoadScene();
         }
         else {
-            self->fillTimer = (self->timer << 9) / 60;
+            self->fadeTimer = (self->timer << 9) / 60;
             self->timer++;
         }
     }
@@ -876,10 +876,10 @@ void PauseMenu_State_FadeToTitle(void)
 void PauseMenu_State_FadeToCB(void)
 {
     RSDK_THIS(PauseMenu);
-    self->fillTimer += 12;
-    self->paused = 1;
+    self->fadeTimer += 12;
+    self->paused = true;
 
-    if (self->fillTimer >= 1024) {
+    if (self->fadeTimer >= 1024) {
         if (self->fadeCB)
             self->fadeCB();
     }
@@ -911,7 +911,7 @@ void PauseMenu_Draw_Default(void)
     }
 }
 
-void PauseMenu_Draw_NoHeader(void)
+void PauseMenu_Draw_JustLookup(void)
 {
     RSDK_THIS(PauseMenu);
     if (self->state != PauseMenu_State_FadeToCB) {

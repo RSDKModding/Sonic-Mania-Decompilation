@@ -36,7 +36,7 @@ typedef struct {
     void (*buttonActions[3])(void);
     Entity* buttonPtrs[3];
     int32 paused;
-    int32 fillTimer;
+    int32 fadeTimer;
     bool32 (*disconnectCheck)(void);
     int32 forcePaused;
     Animator animator;
