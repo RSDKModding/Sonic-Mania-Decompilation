@@ -146,8 +146,8 @@ bool32 OOZ1Outro_Unknown4(EntityCutsceneSeq *host)
         foreach_all(TitleCard, titlecard)
         {
             titlecard->active    = ACTIVE_NORMAL;
-            titlecard->state     = TitleCard_Unknown6;
-            titlecard->stateDraw = TitleCard_StateDraw_Default;
+            titlecard->state     = TitleCard_State_Initial;
+            titlecard->stateDraw = TitleCard_Draw_Default;
             foreach_break;
         }
 

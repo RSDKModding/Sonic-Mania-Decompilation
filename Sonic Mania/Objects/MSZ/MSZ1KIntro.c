@@ -109,8 +109,8 @@ bool32 MSZ1KIntro_CutsceneState_Unknown3(EntityCutsceneSeq *host)
         foreach_all(TitleCard, titleCard)
         {
             titleCard->active    = ACTIVE_NORMAL;
-            titleCard->state     = TitleCard_Unknown6;
-            titleCard->stateDraw = TitleCard_StateDraw_Default;
+            titleCard->state     = TitleCard_State_Initial;
+            titleCard->stateDraw = TitleCard_Draw_Default;
             foreach_break;
         }
         Music_PlayTrack(TRACK_STAGE);

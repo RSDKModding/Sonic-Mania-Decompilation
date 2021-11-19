@@ -155,8 +155,8 @@ bool32 TMZ1Outro_Cutscene2_State1(EntityCutsceneSeq *host)
         foreach_all(TitleCard, tCard)
         {
             tCard->active              = ACTIVE_NORMAL;
-            tCard->state               = TitleCard_Unknown6;
-            tCard->stateDraw           = TitleCard_StateDraw_Default;
+            tCard->state               = TitleCard_State_Initial;
+            tCard->stateDraw           = TitleCard_Draw_Default;
             globals->suppressAutoMusic = false;
             Music_PlayTrack(TRACK_STAGE);
             foreach_break;
