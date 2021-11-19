@@ -21,7 +21,7 @@ typedef struct {
     bool32 playSound;
     bool32 allowTubeInput;
     uint8 activePlayers;
-    int32 field_78;
+    int32 unused;
     Animator animator;
 } EntitySpinBooster;
 

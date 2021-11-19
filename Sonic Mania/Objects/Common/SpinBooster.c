@@ -284,7 +284,7 @@ void SpinBooster_ApplyRollVelocity(EntityPlayer *player)
             player->groundVel = power;
     }
     else {
-        int32 x = ( 0x80 * RSDK.Cos256(self->angle)) * self->boostPower;
+        int32 x = (0x80 * RSDK.Cos256(self->angle)) * self->boostPower;
         int32 y = (-0x80 * RSDK.Sin256(self->angle)) * self->boostPower;
         if (self->boostPower >= 0) {
             player->velocity.x += x;
@@ -339,10 +339,10 @@ void SpinBooster_DrawSprites(void)
 
     if (SceneInfo->inEditor) {
         uint8 negAngle = -self->angle;
-        int32 power     = self->boostPower;
+        int32 power    = self->boostPower;
         int32 x        = self->position.x;
         int32 y        = self->position.y;
-        int32 clr       = ((power >> 31) & 0xFE0001) + 0xFFFF;
+        int32 clr      = ((power >> 31) & 0xFE0001) + 0xFFFF;
         if (!power)
             power = 1;
         SpinBooster_DrawArrow(clr, x, y, power * (RSDK.Cos256(negAngle) << 11) + self->position.x,
@@ -361,8 +361,7 @@ void SpinBooster_DrawSprites(void)
                     case 3: angle = -0x40; break;
                     case 4: angle = 0x80; break;
                 }
-                SpinBooster_DrawArrow(0xFF00, x, y, (RSDK.Cos256(angle) << 14) + self->position.x,
-                                     (RSDK.Sin256(angle) << 14) + self->position.y);
+                SpinBooster_DrawArrow(0xFF00, x, y, (RSDK.Cos256(angle) << 14) + self->position.x, (RSDK.Sin256(angle) << 14) + self->position.y);
                 break;
             }
             case 5:
@@ -371,33 +370,33 @@ void SpinBooster_DrawSprites(void)
                 else
                     clr = 0xFFFF00;
                 SpinBooster_DrawArrow(clr, x, y, (RSDK.Cos256((uint8)(negAngle + 64)) << 14) + self->position.x,
-                                     (RSDK.Sin256((uint8)(negAngle + 64)) << 14) + self->position.y);
+                                      (RSDK.Sin256((uint8)(negAngle + 64)) << 14) + self->position.y);
                 SpinBooster_DrawArrow(clr, x, y, (RSDK.Cos256((uint8)(negAngle - 64)) << 14) + self->position.x,
-                                     (RSDK.Sin256((uint8)(negAngle - 64)) << 14) + self->position.y);
+                                      (RSDK.Sin256((uint8)(negAngle - 64)) << 14) + self->position.y);
                 break;
             case 6:
                 clr = 0xFFFF00;
                 SpinBooster_DrawArrow(clr, x, y, (RSDK.Cos256((uint8)(negAngle + 64)) << 14) + self->position.x,
-                                     (RSDK.Sin256((uint8)(negAngle + 64)) << 14) + self->position.y);
+                                      (RSDK.Sin256((uint8)(negAngle + 64)) << 14) + self->position.y);
                 SpinBooster_DrawArrow(0xFF00, x, y, (RSDK.Cos256(negAngle) << 14) + self->position.x,
-                                     (RSDK.Sin256(negAngle) << 14) + self->position.y);
+                                      (RSDK.Sin256(negAngle) << 14) + self->position.y);
                 break;
             case 0:
             case 7:
                 clr = 0xFFFF00;
                 SpinBooster_DrawArrow(clr, x, y, (RSDK.Cos256((uint8)(negAngle - 64)) << 14) + self->position.x,
-                                     (RSDK.Sin256((uint8)(negAngle - 64)) << 14) + self->position.y);
+                                      (RSDK.Sin256((uint8)(negAngle - 64)) << 14) + self->position.y);
                 SpinBooster_DrawArrow(0xFF00, x, y, (RSDK.Cos256(negAngle) << 14) + self->position.x,
-                                     (RSDK.Sin256(negAngle) << 14) + self->position.y);
+                                      (RSDK.Sin256(negAngle) << 14) + self->position.y);
                 break;
             case 8:
                 clr = 0xFFFF00;
                 SpinBooster_DrawArrow(clr, x, y, (RSDK.Cos256((uint8)(negAngle + 64)) << 14) + self->position.x,
-                                     (RSDK.Sin256((uint8)(negAngle + 64)) << 14) + self->position.y);
+                                      (RSDK.Sin256((uint8)(negAngle + 64)) << 14) + self->position.y);
                 SpinBooster_DrawArrow(clr, x, y, (RSDK.Cos256((uint8)(negAngle - 64)) << 14) + self->position.x,
-                                     (RSDK.Sin256((uint8)(negAngle - 64)) << 14) + self->position.y);
+                                      (RSDK.Sin256((uint8)(negAngle - 64)) << 14) + self->position.y);
                 SpinBooster_DrawArrow(0xFF00, x, y, (RSDK.Cos256(negAngle) << 14) + self->position.x,
-                                     (RSDK.Sin256(negAngle) << 14) + self->position.y);
+                                      (RSDK.Sin256(negAngle) << 14) + self->position.y);
                 break;
         }
     }
@@ -441,9 +440,19 @@ void SpinBooster_HandleForceRoll(EntityPlayer *player)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void SpinBooster_EditorDraw(void) { SpinBooster_DrawSprites(); }
 
-void SpinBooster_EditorLoad(void) { SpinBooster->aniFrames = RSDK.LoadSpriteAnimation("Global/PlaneSwitch.bin", SCOPE_STAGE); }
+void SpinBooster_EditorLoad(void)
+{
+    SpinBooster->aniFrames = RSDK.LoadSpriteAnimation("Global/PlaneSwitch.bin", SCOPE_STAGE);
+    RSDK_ACTIVE_VAR(SpinBooster, direction);
+    RSDK_ENUM_VAR("No Flip", FLIP_NONE);
+    RSDK_ENUM_VAR("Flip X", FLIP_X);
+    RSDK_ENUM_VAR("Flip Y", FLIP_Y);
+    RSDK_ENUM_VAR("Flip X & Y", FLIP_XY);
+}
+#endif
 
 void SpinBooster_Serialize(void)
 {
