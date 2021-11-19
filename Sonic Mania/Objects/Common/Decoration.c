@@ -113,7 +113,13 @@ void Decoration_EditorDraw(void)
     Decoration_DrawSprite();
 }
 
-void Decoration_EditorLoad(void) { Decoration_StageLoad(); }
+void Decoration_EditorLoad(void) { Decoration_StageLoad(); 
+    RSDK_ACTIVE_VAR(Decoration, direction);
+    RSDK_ENUM_VAR("No Flip", FLIP_NONE);
+    RSDK_ENUM_VAR("Flip X", FLIP_X);
+    RSDK_ENUM_VAR("Flip Y", FLIP_Y);
+    RSDK_ENUM_VAR("Flip X & Y", FLIP_XY);
+}
 #endif
 
 void Decoration_Serialize(void)

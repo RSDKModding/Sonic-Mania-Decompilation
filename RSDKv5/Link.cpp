@@ -142,8 +142,8 @@ enum FunctionTableIDs {
     FunctionTable_ASin256,
     FunctionTable_ACos256,
     FunctionTable_Rand,
-    FunctionTable_Random,
-    FunctionTable_SetRandKey,
+    FunctionTable_RandSeeded,
+    FunctionTable_SetRandSeed,
     FunctionTable_ATan2,
     FunctionTable_SetIdentityMatrix,
     FunctionTable_MatrixMultiply,
@@ -523,8 +523,8 @@ void setupFunctions()
     addToRSDKFunctionTable(FunctionTable_ASin256, aSin256);
     addToRSDKFunctionTable(FunctionTable_ACos256, aCos256);
     addToRSDKFunctionTable(FunctionTable_Rand, GetRandomValue);
-    addToRSDKFunctionTable(FunctionTable_Random, GetSeededRandomValue);
-    addToRSDKFunctionTable(FunctionTable_SetRandKey, SetRandKey);
+    addToRSDKFunctionTable(FunctionTable_RandSeeded, GetSeededRandomValue);
+    addToRSDKFunctionTable(FunctionTable_SetRandSeed, SetRandSeed);
     addToRSDKFunctionTable(FunctionTable_ATan2, ArcTanLookup);
     addToRSDKFunctionTable(FunctionTable_SetIdentityMatrix, setIdentityMatrix);
     addToRSDKFunctionTable(FunctionTable_MatrixMultiply, matrixMultiply);

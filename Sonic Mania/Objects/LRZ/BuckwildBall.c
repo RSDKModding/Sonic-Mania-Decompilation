@@ -150,7 +150,7 @@ void BuckwildBall_HandleRollCrush(void)
     {
         if (RSDK.CheckObjectCollisionTouchBox(self, &BuckwildBall->hitbox, iwamodoki, &crushHitbox)) {
 #if RETRO_USE_PLUS
-            CREATE_ENTITY(Animals, intToVoid(Animals->animalTypes[RSDK.Random(0, 32, &Zone->randKey) >> 4] + 1), iwamodoki->position.x,
+            CREATE_ENTITY(Animals, intToVoid(Animals->animalTypes[RSDK.RandSeeded(0, 32, &Zone->randSeed) >> 4] + 1), iwamodoki->position.x,
                           iwamodoki->position.y);
 #else
             CREATE_ENTITY(Animals, intToVoid(Animals->animalTypes[RSDK.Rand(0, 32) >> 4] + 1), iwamodoki->position.x, iwamodoki->position.y);
@@ -165,7 +165,7 @@ void BuckwildBall_HandleRollCrush(void)
     {
         if (RSDK.CheckObjectCollisionTouchBox(self, &BuckwildBall->hitbox, fireworm, &crushHitbox)) {
 #if RETRO_USE_PLUS
-            CREATE_ENTITY(Animals, intToVoid(Animals->animalTypes[RSDK.Random(0, 32, &Zone->randKey) >> 4] + 1), fireworm->position.x,
+            CREATE_ENTITY(Animals, intToVoid(Animals->animalTypes[RSDK.RandSeeded(0, 32, &Zone->randSeed) >> 4] + 1), fireworm->position.x,
                           fireworm->position.y);
 #else
             CREATE_ENTITY(Animals, intToVoid(Animals->animalTypes[RSDK.Rand(0, 32) >> 4] + 1), fireworm->position.x,
@@ -182,7 +182,7 @@ void BuckwildBall_HandleRollCrush(void)
         if (RSDK.CheckObjectCollisionTouchBox(self, &BuckwildBall->hitbox, toxomister, &crushHitbox)) {
             if (toxomister->state == Toxomister_State_Unknown1) {
 #if RETRO_USE_PLUS
-                CREATE_ENTITY(Animals, intToVoid(Animals->animalTypes[RSDK.Random(0, 32, &Zone->randKey) >> 4] + 1), toxomister->position.x,
+                CREATE_ENTITY(Animals, intToVoid(Animals->animalTypes[RSDK.RandSeeded(0, 32, &Zone->randSeed) >> 4] + 1), toxomister->position.x,
                               toxomister->position.y);
 #else
                 CREATE_ENTITY(Animals, intToVoid(Animals->animalTypes[RSDK.Rand(0, 32) >> 4] + 1), toxomister->position.x, toxomister->position.y);

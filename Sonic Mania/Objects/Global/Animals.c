@@ -40,7 +40,7 @@ void Animals_Create(void *data)
 
     if (!self->type &&
 #if RETRO_USE_PLUS
-        RSDK.Random(0, 256, &Zone->randKey) == 21
+        RSDK.RandSeeded(0, 256, &Zone->randSeed) == 21
 #else
         RSDK.Rand(0, 256) == 21
 #endif
@@ -126,7 +126,7 @@ void Animals_CheckPlayerPos(void)
         }
         case ANIMAL_BEHAVE_BOUNCEAROUND_BOUNDS:
 #if RETRO_USE_PLUS
-            self->direction = RSDK.Random(0, 2, &Zone->randKey); 
+            self->direction = RSDK.RandSeeded(0, 2, &Zone->randSeed); 
 #else
             self->direction = RSDK.Rand(0, 2);
 #endif

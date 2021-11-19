@@ -221,7 +221,7 @@ void DNARiser_State_Unknown3(void)
                     if (!self->field_B6) {
                         do
 #if RETRO_USE_PLUS
-                            sfxID = RSDK.Random(0, 5, &Zone->randKey);
+                            sfxID = RSDK.RandSeeded(0, 5, &Zone->randSeed);
 #else
                             sfxID = RSDK.Rand(0, 5);
 #endif
@@ -230,7 +230,7 @@ void DNARiser_State_Unknown3(void)
                     RSDK.PlaySfx(DNARiser->sfxTiny[sfxID], 0, 255);
                     self->field_B6 = sfxID;
 #if RETRO_USE_PLUS
-                    self->timer2   = RSDK.Random(2, 8, &Zone->randKey);
+                    self->timer2   = RSDK.RandSeeded(2, 8, &Zone->randSeed);
 #else
                     self->timer2 = RSDK.Rand(2, 8);
 #endif

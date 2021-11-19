@@ -160,7 +160,7 @@ void ReplayRecorder_StageLoad(void)
         if (Zone) {
             if (!SceneInfo->inEditor)
                 ReplayRecorder_SetupActions();
-            RSDK.SetRandKey(1624633040);
+            RSDK.SetRandSeed(1624633040);
 
             RSDK.ResetEntitySlot(SLOT_REPLAYRECORDER_W, ReplayRecorder->objectID, NULL);
             EntityReplayRecorder *recorder_r = RSDK_GET_ENTITY(SLOT_REPLAYRECORDER_W, ReplayRecorder);

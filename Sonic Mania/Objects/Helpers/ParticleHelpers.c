@@ -33,8 +33,8 @@ void ParticleHelpers_Unknown1(int32 x, int32 y)
 void ParticleHelpers_Unknown2(void *debrisState, void (*callback)(EntityDebris *), int32 speed, int32 xOffset, int32 yOffset, int32 maxX, int32 maxY)
 {
 #if RETRO_USE_PLUS
-    int32 x = RSDK.Random(-(maxX >> 1), maxX >> 1, &Zone->randKey) + xOffset;
-    int32 y = RSDK.Random(-(maxY >> 1), maxY >> 1, &Zone->randKey) + yOffset;
+    int32 x = RSDK.RandSeeded(-(maxX >> 1), maxX >> 1, &Zone->randSeed) + xOffset;
+    int32 y = RSDK.RandSeeded(-(maxY >> 1), maxY >> 1, &Zone->randSeed) + yOffset;
 #else
     int32 x = RSDK.Rand(-(maxX >> 1), maxX >> 1) + xOffset;
     int32 y = RSDK.Rand(-(maxY >> 1), maxY >> 1) + yOffset;

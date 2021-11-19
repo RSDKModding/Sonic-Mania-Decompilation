@@ -323,7 +323,7 @@ void Fan_HandlePlayerInteractions_Top(void)
             EntityWater *water = CREATE_ENTITY(Water, intToVoid(7), self->position.x, self->position.y - 0x100000);
             water->isPermanent = false;
 #if RETRO_USE_PLUS
-            water->position.x += RSDK.Random(-6, 7, &Zone->randKey) << 16;
+            water->position.x += RSDK.RandSeeded(-6, 7, &Zone->randSeed) << 16;
 #else
             water->position.x += RSDK.Rand(-6, 7) << 16;
 #endif

@@ -205,7 +205,7 @@ void PetalPile_State_Unknown3(void)
         }
         else {
 #if RETRO_USE_PLUS
-            petal->direction = RSDK.Random(0, 1, &Zone->randKey);
+            petal->direction = RSDK.RandSeeded(0, 1, &Zone->randSeed);
 #else
             petal->direction = RSDK.Rand(0, 1);
 #endif
@@ -318,7 +318,7 @@ void PetalPile_State_Unknown6(void)
     self->position.y += self->velocity.y;
     if (++self->timer > 2) {
 #if RETRO_USE_PLUS
-        if (RSDK.Random(0, 10, &Zone->randKey) > 6)
+        if (RSDK.RandSeeded(0, 10, &Zone->randSeed) > 6)
 #else
         if (RSDK.Rand(0, 10) > 6)
 #endif
@@ -327,7 +327,7 @@ void PetalPile_State_Unknown6(void)
     }
     if (self->velocity.y >= 0 && !self->velocity.x) {
 #if RETRO_USE_PLUS
-        self->field_9C = RSDK.Random(0, 255, &Zone->randKey);
+        self->field_9C = RSDK.RandSeeded(0, 255, &Zone->randSeed);
 #else
         self->field_9C = RSDK.Rand(0, 255);
 #endif
@@ -363,7 +363,7 @@ void PetalPile_State_Unknown7(void)
     self->position.y += self->velocity.y;
     if (self->timer > 3) {
 #if RETRO_USE_PLUS
-        if (RSDK.Random(0, 10, &Zone->randKey) > 6)
+        if (RSDK.RandSeeded(0, 10, &Zone->randSeed) > 6)
 #else
         if (RSDK.Rand(0, 10) > 6)
 #endif

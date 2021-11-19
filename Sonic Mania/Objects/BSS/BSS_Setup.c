@@ -102,10 +102,10 @@ void BSS_Setup_StageLoad(void)
         int32 max = (playField->width >> 4) * ((playField->height - 32) >> 4);
         int32 key = (int32)time(0);
 
-        BSS_Setup->flags[0] = RSDK.Random(0, max, &key);
-        BSS_Setup->flags[1] = RSDK.Random(0, max, &key);
-        BSS_Setup->flags[2] = RSDK.Random(0, max, &key);
-        BSS_Setup->flags[3] = RSDK.Random(0, max, &key);
+        BSS_Setup->flags[0] = RSDK.RandSeeded(0, max, &key);
+        BSS_Setup->flags[1] = RSDK.RandSeeded(0, max, &key);
+        BSS_Setup->flags[2] = RSDK.RandSeeded(0, max, &key);
+        BSS_Setup->flags[3] = RSDK.RandSeeded(0, max, &key);
 
         BSS_Palette->startColourID = 16 * (BSS_Setup->flags[1] & 0x0F);
 

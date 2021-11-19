@@ -218,8 +218,8 @@ typedef struct {
     int32 (*ASin256)(int32 angle);
     int32 (*ACos256)(int32 angle);
     int32 (*Rand)(int32 min, int32 max);
-    int32 (*Random)(int32 min, int32 max, int32 *randKey);
-    void (*SetRandKey)(int32 key);
+    int32 (*RandSeeded)(int32 min, int32 max, int32 *randSeed);
+    void (*SetRandSeed)(int32 key);
     uint8 (*ATan2)(int32 x, int32 y);
     void (*SetIdentityMatrix)(Matrix *matrix);
     void (*MatrixMultiply)(Matrix *dest, Matrix *matrixA, Matrix *matrixB);

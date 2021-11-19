@@ -185,7 +185,7 @@ void Rexon_Destroy(EntityRexon *rexon, bool32 crushed)
         rexon->position.x = rexon->positions[0].x;
         rexon->position.y = rexon->positions[0].y;
 #if RETRO_USE_PLUS
-        CREATE_ENTITY(Animals, intToVoid(Animals->animalTypes[RSDK.Random(0, 32, &Zone->randKey) >> 4] + 1), rexon->position.x, rexon->position.y);
+        CREATE_ENTITY(Animals, intToVoid(Animals->animalTypes[RSDK.RandSeeded(0, 32, &Zone->randSeed) >> 4] + 1), rexon->position.x, rexon->position.y);
 #else
         CREATE_ENTITY(Animals, intToVoid(Animals->animalTypes[RSDK.Rand(0, 32) >> 4] + 1), rexon->position.x, rexon->position.y);
 #endif

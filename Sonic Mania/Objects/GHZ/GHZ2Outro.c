@@ -148,7 +148,7 @@ bool32 GHZ2Outro_CutsceneState2_Unknown1(EntityCutsceneSeq *host)
         EntityEggman *eggman = (EntityEggman *)self->eggman;
         RSDK.SetSpriteAnimation(Eggman->aniFrames, 9, &eggman->animator, true, 0);
         eggman->direction = FLIP_NONE;
-        eggman->state     = Eggman_Unknown1;
+        eggman->state     = Eggman_State_ProcessAnimation;
 
         foreach_all(PhantomRuby, ruby)
         {
@@ -228,8 +228,8 @@ bool32 GHZ2Outro_CutsceneState2_Unknown3(EntityCutsceneSeq *host)
         eggman->timer      = 30;
         eggman->velocity.x = 0;
         eggman->velocity.y = -0x30000;
-        eggman->stateStore = Eggman_Unknown3;
-        eggman->state      = Eggman_Unknown5;
+        eggman->stateStore = Eggman_State_ProcessUntilEnd;
+        eggman->state      = Eggman_State_FallUntilTimerReset;
         eggman->animID     = 3;
     }
     if (host->timer == 160) {
@@ -242,7 +242,7 @@ bool32 GHZ2Outro_CutsceneState2_Unknown3(EntityCutsceneSeq *host)
         RSDK.PlaySfx(DERobot->sfxButton2, false, 255);
     }
     if (host->timer == 240) {
-        eggman->state  = Eggman_Unknown2;
+        eggman->state  = Eggman_State_ProcessThenSet;
         eggman->animID = 2;
         Music_SetMusicTrack("RubyPresence.ogg", TRACK_RUBYPRESENCE, 198457);
         Music_TransitionTrack(TRACK_EGGMAN1, 0.025);

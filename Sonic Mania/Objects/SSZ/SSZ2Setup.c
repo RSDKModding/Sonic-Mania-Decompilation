@@ -151,7 +151,7 @@ void SSZ2Setup_GenericTriggerCallback1(void)
     {
         if (!hotaru->type) {
 #if RETRO_USE_PLUS
-            CREATE_ENTITY(Animals, intToVoid(Animals->animalTypes[RSDK.Random(0, 32, &Zone->randKey) >> 4] + 1), hotaru->position.x,
+            CREATE_ENTITY(Animals, intToVoid(Animals->animalTypes[RSDK.RandSeeded(0, 32, &Zone->randSeed) >> 4] + 1), hotaru->position.x,
                           hotaru->position.y);
 #else
             CREATE_ENTITY(Animals, intToVoid(Animals->animalTypes[RSDK.Rand(0, 32) >> 4] + 1), hotaru->position.x, hotaru->position.y);

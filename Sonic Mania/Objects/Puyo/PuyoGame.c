@@ -229,7 +229,7 @@ void PuyoGame_Unknown9(void)
             PuyoGame_Unknown4();
             foreach_all(PuyoIndicator, indicator) { indicator->state = PuyoIndicator_ShowReady; }
             int32 key      = (int32)time(NULL);
-            int32 matchKey = RSDK.Random(0, 512, &key);
+            int32 matchKey = RSDK.RandSeeded(0, 512, &key);
 
             foreach_all(PuyoMatch, match)
             {

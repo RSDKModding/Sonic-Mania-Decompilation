@@ -68,8 +68,8 @@ void PuyoMatch_StartPuyoAttack(int playerID, int a2)
 
 void PuyoMatch_SetupNextBeans(EntityPuyoMatch *match)
 {
-    int left  = 6 * RSDK.Random(0, 5, &match->matchKey);
-    int right = 6 * RSDK.Random(0, 5, &match->matchKey);
+    int left  = 6 * RSDK.RandSeeded(0, 5, &match->matchKey);
+    int right = 6 * RSDK.RandSeeded(0, 5, &match->matchKey);
     RSDK.SetSpriteAnimation(PuyoBean->aniFrames, left, &match->animator1, true, 0);
     RSDK.SetSpriteAnimation(PuyoBean->aniFrames, right, &match->animator2, true, 0);
 }

@@ -227,7 +227,7 @@ void FBZSetup_GenericTriggerCB_ShowExterior(void)
     {
         if (!parallaxSprite->visible) {
             parallaxSprite->visible = true;
-            parallaxSprite->state   = ParallaxSprite_Unknown4;
+            parallaxSprite->state   = ParallaxSprite_State_FadeIntoHalf;
         }
     }
 }
@@ -238,7 +238,7 @@ void FBZSetup_GenericTriggerCB_ShowInterior(void)
     RSDK.GetSceneLayer(id)->drawLayer[GenericTrigger->playerID]     = 6;
     RSDK.GetSceneLayer(id + 1)->drawLayer[GenericTrigger->playerID] = DRAWLAYER_COUNT;
 
-    foreach_active(ParallaxSprite, parallaxSprite) { parallaxSprite->state = ParallaxSprite_Unknown5; }
+    foreach_active(ParallaxSprite, parallaxSprite) { parallaxSprite->state = ParallaxSprite_State_FadeOut; }
 }
 
 void FBZSetup_StageFinishCB_Act1(void) { FBZSetup->outroPtr->active = ACTIVE_NORMAL; }

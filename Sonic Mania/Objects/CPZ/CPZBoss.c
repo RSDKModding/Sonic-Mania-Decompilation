@@ -197,7 +197,7 @@ void CPZBoss_State_SetupMatch(void)
     if (!CPZBoss_Unknown1() && ++self->timer == 60) {
         foreach_active(CPZShutter, shutter) { shutter->state = CPZShutter_State_Open; }
         int32 key  = (int32)time(NULL);
-        int32 rand = RSDK.Random(0, 512, &key);
+        int32 rand = RSDK.RandSeeded(0, 512, &key);
 
         int32 id = 0;
         foreach_active(PuyoMatch, match)

@@ -340,7 +340,7 @@ bool32 TMZ2Outro_CutsceneState_Panic(EntityCutsceneSeq *host)
         {
             RSDK.SetSpriteAnimation(Eggman->aniFrames, 9, &eggman->animator, true, 0);
             eggman->direction  = FLIP_NONE;
-            eggman->state      = Eggman_Unknown7;
+            eggman->state      = Eggman_State_WalkOffScreen;
             eggman->velocity.x = 0x10000;
             RSDK.ObjectTileGrip(eggman, Zone->fgLayers, CMODE_FLOOR, eggman->collisionPlane, 0, 0x1C0000, 14);
         }
@@ -506,7 +506,7 @@ bool32 TMZ2Outro_CutsceneState_OuttaHere(EntityCutsceneSeq *host)
         {
             RSDK.SetSpriteAnimation(Eggman->aniFrames, 9, &eggman->animator, true, 0);
             eggman->direction  = FLIP_NONE;
-            eggman->state      = Eggman_Unknown7;
+            eggman->state      = Eggman_State_WalkOffScreen;
             eggman->velocity.x = 0x10000;
             RSDK.ObjectTileGrip(eggman, Zone->fgLayers, CMODE_FLOOR, eggman->collisionPlane, 0, 0x1C0000, 14);
         }

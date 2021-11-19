@@ -1065,7 +1065,7 @@ void PhantomEgg_State_Unknown19(void)
         EntityEggman *eggman = CREATE_ENTITY(Eggman, NULL, self->position.x, self->position.y + 0x100000);
         RSDK.SetSpriteAnimation(Eggman->aniFrames, 7, &eggman->animator, true, 0);
         eggman->onGround = false;
-        eggman->state    = Eggman_Unknown6;
+        eggman->state    = Eggman_State_FallAndCollide;
     }
 
     foreach_active(Eggman, eggman)

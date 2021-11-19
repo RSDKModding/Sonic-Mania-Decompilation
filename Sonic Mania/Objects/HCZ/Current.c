@@ -39,7 +39,7 @@ void Current_Create(void *data)
                 self->scale.x = 0x400;
                 self->scale.y = 0x100;
 #if RETRO_USE_PLUS
-                RSDK.SetSpriteAnimation(Current->aniFrames, 1, &self->animator, true, RSDK.Random(0, 4, &Zone->randKey));
+                RSDK.SetSpriteAnimation(Current->aniFrames, 1, &self->animator, true, RSDK.RandSeeded(0, 4, &Zone->randSeed));
 #else
                 RSDK.SetSpriteAnimation(Current->aniFrames, 1, &self->animator, true, RSDK.Rand(0, 4));
 #endif
@@ -171,7 +171,7 @@ Vector2 Current_Unknown2(uint8 a1)
         result.y = finalY;
     else
 #if RETRO_USE_PLUS
-        result.y = (RSDK.Random(0, max, &Zone->randKey) << 20) + finalY;
+        result.y = (RSDK.RandSeeded(0, max, &Zone->randSeed) << 20) + finalY;
 #else
         result.y = (RSDK.Rand(0, max) << 20) + finalY;
 #endif

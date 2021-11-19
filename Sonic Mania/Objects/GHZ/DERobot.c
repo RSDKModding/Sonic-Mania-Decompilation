@@ -848,7 +848,7 @@ void DERobot_Unknown32(void)
 
             EntityEggman *eggman = (EntityEggman *)self->parts[2];
             RSDK.ResetEntityPtr(eggman, Eggman->objectID, self);
-            eggman->state    = Eggman_Unknown1;
+            eggman->state    = Eggman_State_ProcessAnimation;
             eggman->animID   = 0;
             eggman->offset.x = -0x40000;
             eggman->offset.y = -0x200000;
@@ -915,7 +915,7 @@ void DERobot_Unknown34(void)
         self->state        = DERobot_Unknown35;
         EntityEggman *eggman = (EntityEggman *)self->parts[2];
         RSDK.SetSpriteAnimation(Eggman->aniFrames, 2, &eggman->animator, true, 0);
-        eggman->state = Eggman_Unknown2;
+        eggman->state = Eggman_State_ProcessThenSet;
         Camera_ShakeScreen(0, 0, 8);
         RSDK.PlaySfx(DERobot->sfxLedgeBreak, 0, 255);
     }
@@ -945,7 +945,7 @@ void DERobot_Unknown35(void)
         self->field_D8     = 0x10000;
         self->field_DC     = -0x1000;
         RSDK.SetSpriteAnimation(Eggman->aniFrames, 3, &eggman->animator, true, 0);
-        eggman->state                              = Eggman_Unknown2;
+        eggman->state                              = Eggman_State_ProcessThenSet;
         ((EntityDERobot *)self->parts[0])->state = DERobot_Unknown27;
         self->state                              = DERobot_Unknown36;
     }

@@ -308,7 +308,7 @@ void BigSqueeze_State1_SetupEggman(void)
             eggmanPtr->onGround   = false;
             eggmanPtr->velocity.x = -0x10000;
             eggmanPtr->velocity.y = -0x40000;
-            eggmanPtr->state      = Eggman_Unknown4;
+            eggmanPtr->state      = Eggman_State_ProcessAirThenSet;
             eggmanPtr->animID     = 2;
         }
     }
@@ -322,7 +322,7 @@ void BigSqueeze_State1_SetupEggman(void)
             {
                 self->eggman = (Entity *)eggman;
                 RSDK.SetSpriteAnimation(Eggman->aniFrames, 2, &eggman->animator, true, 0);
-                eggman->state  = Eggman_Unknown2;
+                eggman->state  = Eggman_State_ProcessThenSet;
                 eggman->animID = 0;
             }
         }
@@ -333,7 +333,7 @@ void BigSqueeze_State1_SetupBossArena(void)
 {
     RSDK_THIS(BigSqueeze);
     EntityEggman *eggman = (EntityEggman *)self->eggman;
-    if (eggman->state == Eggman_Unknown1) {
+    if (eggman->state == Eggman_State_ProcessAnimation) {
         foreach_all(CollapsingPlatform, platform) { platform->active = ACTIVE_BOUNDS; }
 
         Zone->screenBoundsR1[0] = (self->position.x >> 16) + 212;
@@ -341,7 +341,7 @@ void BigSqueeze_State1_SetupBossArena(void)
         Zone->screenBoundsT1[0] = Zone->screenBoundsB1[0] - ScreenInfo->height;
 
         BigSqueeze->value7 = (Zone->screenBoundsB1[0] - 16) << 16;
-        eggman->state      = Eggman_Unknown2;
+        eggman->state      = Eggman_State_ProcessThenSet;
         eggman->animID     = 0;
         self->state      = BigSqueeze_State1_SetupBoss;
     }

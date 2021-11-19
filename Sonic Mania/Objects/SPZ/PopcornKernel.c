@@ -93,7 +93,7 @@ void PopcornKernel_Unknown2(void)
     if (self->position.y < self->field_68) {
         self->state = PopcornKernel_Unknown3;
         //???
-        // Dunno why this is here but removing it would change the internal randKey
+        // Dunno why this is here but removing it would change the internal randSeed
         RSDK.Rand(-0x80000, 0x80000);
     }
 }

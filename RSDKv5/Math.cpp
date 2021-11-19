@@ -25,12 +25,12 @@ int32 aCosVal256[0x100];
 
 uint8 atanVal256[0x100 * 0x100];
 
-uint32 randKey = 0;
+uint32 randSeed = 0;
 
 void CalculateTrigAngles()
 {
     srand(time(NULL));
-    randKey = rand();
+    randSeed = rand();
 
     for (int i = 0; i < 0x400; ++i) {
         sinVal1024[i]  = (int32)(sin((i / 512.0) * M_PI) * 1024.0);

@@ -58,24 +58,24 @@ void Eggman_StageLoad(void)
         Eggman->aniFrames = RSDK.LoadSpriteAnimation("Eggman/EggmanAll.bin", SCOPE_STAGE);
 }
 
-void Eggman_Unknown1(void)
+void Eggman_State_ProcessAnimation(void)
 {
     RSDK_THIS(Eggman);
     RSDK.ProcessAnimation(&self->animator);
 }
 
-void Eggman_Unknown2(void)
+void Eggman_State_ProcessThenSet(void)
 {
     RSDK_THIS(Eggman);
 
     RSDK.ProcessAnimation(&self->animator);
     if (self->animator.frameID >= self->animator.frameCount - 1) {
         RSDK.SetSpriteAnimation(Eggman->aniFrames, self->animID, &self->animator, true, 0);
-        self->state = Eggman_Unknown1;
+        self->state = Eggman_State_ProcessAnimation;
     }
 }
 
-void Eggman_Unknown3(void)
+void Eggman_State_ProcessUntilEnd(void)
 {
     RSDK_THIS(Eggman);
 
@@ -83,14 +83,14 @@ void Eggman_Unknown3(void)
         RSDK.ProcessAnimation(&self->animator);
 }
 
-void Eggman_Unknown4(void)
+void Eggman_State_ProcessAirThenSet(void)
 {
     RSDK_THIS(Eggman);
 
     RSDK.ProcessAnimation(&self->animator);
     if (self->onGround) {
         RSDK.SetSpriteAnimation(Eggman->aniFrames, self->animID, &self->animator, true, 0);
-        self->state = Eggman_Unknown1;
+        self->state = Eggman_State_ProcessAnimation;
     }
     else {
         self->velocity.y += 0x3800;
@@ -99,7 +99,7 @@ void Eggman_Unknown4(void)
     }
 }
 
-void Eggman_Unknown5(void)
+void Eggman_State_FallUntilTimerReset(void)
 {
     RSDK_THIS(Eggman);
     RSDK.ProcessAnimation(&self->animator);
@@ -117,7 +117,7 @@ void Eggman_Unknown5(void)
     }
 }
 
-void Eggman_Unknown6(void)
+void Eggman_State_FallAndCollide(void)
 {
     RSDK_THIS(Eggman);
     RSDK.ProcessAnimation(&self->animator);
@@ -125,11 +125,11 @@ void Eggman_Unknown6(void)
     self->position.y += self->velocity.y;
     if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, self->collisionPlane, 0, 0x100000, true)) {
         self->onGround = true;
-        self->state    = Eggman_Unknown1;
+        self->state    = Eggman_State_ProcessAnimation;
     }
 }
 
-void Eggman_Unknown7(void)
+void Eggman_State_WalkOffScreen(void)
 {
     RSDK_THIS(Eggman);
     RSDK.ProcessAnimation(&self->animator);
@@ -138,10 +138,11 @@ void Eggman_Unknown7(void)
 
     if (!RSDK.CheckOnScreen(self, NULL)) {
         self->active = ACTIVE_NEVER;
-        self->state  = Eggman_Unknown1;
+        self->state  = Eggman_State_ProcessAnimation;
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void Eggman_EditorDraw(void)
 {
     RSDK_THIS(Eggman);
@@ -149,5 +150,6 @@ void Eggman_EditorDraw(void)
 }
 
 void Eggman_EditorLoad(void) { Eggman_StageLoad(); }
+#endif
 
 void Eggman_Serialize(void) {}

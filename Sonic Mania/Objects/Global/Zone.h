@@ -72,7 +72,7 @@ typedef struct {
     int32 screenPosY[PLAYER_MAX];
     bool32 swapGameMode;
     int32 flag;
-    int32 randKey;
+    int32 randSeed;
 #endif
 } ObjectZone;
 

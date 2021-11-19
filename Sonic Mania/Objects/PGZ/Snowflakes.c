@@ -12,7 +12,7 @@ void Snowflakes_Update(void)
                     int32 screenY            = ScreenInfo->position.y;
                     int32 scrX    = ScreenInfo->position.x % ScreenInfo->width;
 #if RETRO_USE_PLUS
-                    int32 posX               = (scrX + RSDK.Random(0, ScreenInfo->width, &Zone->randKey)) % ScreenInfo->width;
+                    int32 posX               = (scrX + RSDK.RandSeeded(0, ScreenInfo->width, &Zone->randSeed)) % ScreenInfo->width;
 #else
                     int32 posX             = (scrX + RSDK.Rand(0, ScreenInfo->width)) % ScreenInfo->width;
 #endif
@@ -20,20 +20,20 @@ void Snowflakes_Update(void)
                     self->positions[i].x = posX << 16;
                     self->frameIDs[i]    = 0;
 #if RETRO_USE_PLUS
-                    self->flipFlags[i] = RSDK.Random(0, 10, &Zone->randKey) > 7;
+                    self->flipFlags[i] = RSDK.RandSeeded(0, 10, &Zone->randSeed) > 7;
 #else
                     self->flipFlags[i] = RSDK.Rand(0, 10) > 7;
 #endif
                     if (self->flipFlags[i]) {
 #if RETRO_USE_PLUS
-                        self->animIDs[i] = 2 * (RSDK.Random(0, 10, &Zone->randKey) > 7) + 2;
+                        self->animIDs[i] = 2 * (RSDK.RandSeeded(0, 10, &Zone->randSeed) > 7) + 2;
 #else
                         self->animIDs[i] = 2 * (RSDK.Rand(0, 10) > 7) + 2;
 #endif
                     }
                     else {
 #if RETRO_USE_PLUS
-                        int32 val = RSDK.Random(0, 10, &Zone->randKey);
+                        int32 val = RSDK.RandSeeded(0, 10, &Zone->randSeed);
 #else
                         int32 val = RSDK.Rand(0, 10);
 #endif
@@ -45,7 +45,7 @@ void Snowflakes_Update(void)
                         }
                     }
 #if RETRO_USE_PLUS
-                    self->angles[i] = RSDK.Random(0, 256, &Zone->randKey);
+                    self->angles[i] = RSDK.RandSeeded(0, 256, &Zone->randSeed);
 #else
                     self->angles[i] = RSDK.Rand(0, 256);
 #endif

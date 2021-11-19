@@ -28,9 +28,9 @@ void ChemBubble_Create(void *data)
         self->startPos.x = self->position.x;
         self->startPos.y = self->position.y;
 #if RETRO_USE_PLUS
-        self->velocity.y = RSDK.Random(-0x20000, 0, &Zone->randKey);
-        self->shiftY     = RSDK.Random(12, 16, &Zone->randKey);
-        self->shiftY2    = RSDK.Random(9, 10, &Zone->randKey);
+        self->velocity.y = RSDK.RandSeeded(-0x20000, 0, &Zone->randSeed);
+        self->shiftY     = RSDK.RandSeeded(12, 16, &Zone->randSeed);
+        self->shiftY2    = RSDK.RandSeeded(9, 10, &Zone->randSeed);
 #else
         self->velocity.y = RSDK.Rand(-0x20000, 0);
         self->shiftY     = RSDK.Rand(12, 16);

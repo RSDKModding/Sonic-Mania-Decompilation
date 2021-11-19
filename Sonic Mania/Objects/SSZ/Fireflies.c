@@ -54,8 +54,8 @@ void Fireflies_State_Unknown1(void)
             int x              = ((screen->width & 0xFFFFFFFE) + 2 * screen->position.x) << 15;
             int y              = ((screen->height & 0xFFFFFFFE) + 2 * screen->position.y) << 15;
 #if RETRO_USE_PLUS
-            int w = RSDK.Random(-screen->width, screen->width, &Zone->randKey);
-            int h = RSDK.Random(-screen->height, screen->height, &Zone->randKey);
+            int w = RSDK.RandSeeded(-screen->width, screen->width, &Zone->randSeed);
+            int h = RSDK.RandSeeded(-screen->height, screen->height, &Zone->randSeed);
 #else
             int w               = RSDK.Rand(-screen->width, screen->width);
             int h               = RSDK.Rand(-screen->height, screen->height);
@@ -63,7 +63,7 @@ void Fireflies_State_Unknown1(void)
             pos1.y = y + (h << 16);
             pos1.x = x + (w << 16);
 #if RETRO_USE_PLUS
-            int type = RSDK.Random(0, 10, &Zone->randKey) > 7;
+            int type = RSDK.RandSeeded(0, 10, &Zone->randSeed) > 7;
 #else
             int type            = RSDK.Rand(0, 10) > 7;
 #endif
@@ -76,7 +76,7 @@ void Fireflies_State_Unknown1(void)
                 fireflies->drawOrder = 1;
 
 #if RETRO_USE_PLUS
-            fireflies->field_84 = RSDK.Random(45, 75, &Zone->randKey);
+            fireflies->field_84 = RSDK.RandSeeded(45, 75, &Zone->randSeed);
 #else
             fireflies->field_84 = RSDK.Rand(45, 75);
 #endif
@@ -86,8 +86,8 @@ void Fireflies_State_Unknown1(void)
             fireflies->pos1          = pos1;
 
 #if RETRO_USE_PLUS
-            int amplitude = RSDK.Random(32, 128, &Zone->randKey);
-            int angle     = RSDK.Random(0, 511, &Zone->randKey);
+            int amplitude = RSDK.RandSeeded(32, 128, &Zone->randSeed);
+            int angle     = RSDK.RandSeeded(0, 511, &Zone->randSeed);
 #else
             int amplitude       = RSDK.Rand(32, 128);
             int angle           = RSDK.Rand(0, 511);
@@ -96,8 +96,8 @@ void Fireflies_State_Unknown1(void)
             int y4 = amplitude * (RSDK.Sin512(angle) << 7) + pos1.y;
 
 #if RETRO_USE_PLUS
-            amplitude = RSDK.Random(32, 64, &Zone->randKey);
-            angle     = RSDK.Random(0, 511, &Zone->randKey);
+            amplitude = RSDK.RandSeeded(32, 64, &Zone->randSeed);
+            angle     = RSDK.RandSeeded(0, 511, &Zone->randSeed);
 #else
             amplitude           = RSDK.Rand(32, 64);
             angle               = RSDK.Rand(0, 511);
@@ -107,8 +107,8 @@ void Fireflies_State_Unknown1(void)
             fireflies->pos2 = pos2;
 
 #if RETRO_USE_PLUS
-            amplitude = RSDK.Random(32, 64, &Zone->randKey);
-            angle     = RSDK.Random(0, 511, &Zone->randKey);
+            amplitude = RSDK.RandSeeded(32, 64, &Zone->randSeed);
+            angle     = RSDK.RandSeeded(0, 511, &Zone->randSeed);
 #else
             amplitude           = RSDK.Rand(32, 64);
             angle               = RSDK.Rand(0, 511);

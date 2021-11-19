@@ -47,9 +47,9 @@ void ParallaxSprite_Draw(void)
             x += 16;
         }
     }
-    else if (self->attribute == PSPRITE_ATTR_6) {
+    else if (self->attribute == PSPRITE_ATTR_SHIFT) {
         RSDK.GetFrame(ParallaxSprite->aniFrames, self->aniID, 0)->sprX =
-            self->sprX + ((self->field_B4 + (Zone->timer << self->field_B0)) & 0x7F);
+            self->sprX + ((self->xSpeed + (Zone->timer << self->timerSpeed)) & 0x7F);
     }
     RSDK.DrawSprite(&self->animator, &drawPos, true);
 }
@@ -68,7 +68,7 @@ void ParallaxSprite_Create(void *data)
             self->parallaxFactor.y >>= 8;
             self->drawFX  = FX_ROTATE;
             self->visible = !self->hiddenAtStart;
-            self->state   = ParallaxSprite_Unknown1;
+            self->state   = ParallaxSprite_State_RotateAndScroll;
             break;
         case PSPRITE_ATTR_2:
 #if RETRO_USE_PLUS
@@ -87,7 +87,7 @@ void ParallaxSprite_Create(void *data)
             self->parallaxFactor.y >>= 8;
             self->drawFX  = FX_ROTATE;
             self->visible = !self->hiddenAtStart;
-            self->state   = ParallaxSprite_Unknown1;
+            self->state   = ParallaxSprite_State_RotateAndScroll;
             break;
         case PSPRITE_ATTR_SPAWNER:
             self->parallaxFactor.x >>= 8;
@@ -98,26 +98,26 @@ void ParallaxSprite_Create(void *data)
             self->inkEffect = INK_ALPHA;
             self->visible   = true;
             self->alpha     = 0x100;
-            self->state     = ParallaxSprite_State_FadeOut;
+            self->state     = ParallaxSprite_State_FadeOutAndDie;
             break;
-        case PSPRITE_ATTR_5:
+        case PSPRITE_ATTR_BLENDHIGH:
             self->parallaxFactor.x >>= 8;
             self->parallaxFactor.y >>= 8;
             self->visible   = true;
             self->inkEffect = INK_BLEND;
             self->drawOrder = Zone->drawOrderHigh + 1;
-            self->state     = ParallaxSprite_Unknown1;
+            self->state     = ParallaxSprite_State_RotateAndScroll;
             break;
-        case PSPRITE_ATTR_6:
+        case PSPRITE_ATTR_SHIFT:
             self->parallaxFactor.x >>= 8;
             self->parallaxFactor.y >>= 8;
             self->sprX      = RSDK.GetFrame(ParallaxSprite->aniFrames, self->aniID, 1)->sprX;
 #if RETRO_USE_PLUS
-            self->field_B0  = RSDK.Random(0, 2, &Zone->randKey);
-            self->field_B4  = RSDK.Random(0, 128, &Zone->randKey);
+            self->timerSpeed  = RSDK.RandSeeded(0, 2, &Zone->randSeed);
+            self->xSpeed  = RSDK.RandSeeded(0, 128, &Zone->randSeed);
 #else
-            self->field_B0 = RSDK.Rand(0, 2);
-            self->field_B4 = RSDK.Rand(0, 128);
+            self->timerSpeed = RSDK.Rand(0, 2);
+            self->xSpeed = RSDK.Rand(0, 128);
 #endif
             self->inkEffect = INK_MASKED;
             self->visible   = true;
@@ -152,7 +152,7 @@ void ParallaxSprite_StageLoad(void)
     }
 }
 
-void ParallaxSprite_Unknown1(void)
+void ParallaxSprite_State_RotateAndScroll(void)
 {
     RSDK_THIS(ParallaxSprite);
     RSDK.ProcessAnimation(&self->animator);
@@ -171,16 +171,17 @@ void ParallaxSprite_State_Spawner(void)
         pSprite->loopPoint.x      = self->loopPoint.x;
         pSprite->loopPoint.y      = self->loopPoint.y;
         pSprite->scrollSpeed.y    = RSDK.Rand(0x8000, 0x20000);
-        pSprite->unknownPosB.x    = RSDK.Rand(-0x100, 0x100);
+        pSprite->acceleration.x    = RSDK.Rand(-0x100, 0x100);
     }
 }
 
-void ParallaxSprite_State_FadeOut(void)
+void ParallaxSprite_State_FadeOutAndDie(void)
 {
+    // :D - rmg
     RSDK_THIS(ParallaxSprite);
     RSDK.ProcessAnimation(&self->animator);
-    self->scrollSpeed.x += self->unknownPosB.x;
-    self->scrollSpeed.y += self->unknownPosB.y;
+    self->scrollSpeed.x += self->acceleration.x;
+    self->scrollSpeed.y += self->acceleration.y;
     self->scrollPos.x += self->scrollSpeed.x;
     self->scrollPos.y += self->scrollSpeed.y;
     self->alpha -= 2;
@@ -188,7 +189,7 @@ void ParallaxSprite_State_FadeOut(void)
         destroyEntity(self);
 }
 
-void ParallaxSprite_Unknown4(void)
+void ParallaxSprite_State_FadeIntoHalf(void)
 {
     RSDK_THIS(ParallaxSprite);
     RSDK.ProcessAnimation(&self->animator);
@@ -197,7 +198,7 @@ void ParallaxSprite_Unknown4(void)
     if (self->alpha >= 128) {
         self->inkEffect = INK_BLEND;
         self->visible   = true;
-        self->state     = ParallaxSprite_Unknown1;
+        self->state     = ParallaxSprite_State_RotateAndScroll;
     }
     else {
         self->inkEffect = INK_ALPHA;
@@ -205,7 +206,7 @@ void ParallaxSprite_Unknown4(void)
     }
 }
 
-void ParallaxSprite_Unknown5(void)
+void ParallaxSprite_State_FadeOut(void)
 {
     RSDK_THIS(ParallaxSprite);
     RSDK.ProcessAnimation(&self->animator);
@@ -213,7 +214,7 @@ void ParallaxSprite_Unknown5(void)
     self->scrollPos.y += self->scrollSpeed.y;
     if (self->alpha <= 0) {
         self->visible = false;
-        self->state   = ParallaxSprite_Unknown1;
+        self->state   = ParallaxSprite_State_RotateAndScroll;
     }
     else {
         self->inkEffect = INK_ALPHA;
@@ -243,9 +244,9 @@ void ParallaxSprite_EditorDraw(void)
             x += 16;
         }
     }
-    else if (self->attribute == PSPRITE_ATTR_6) {
+    else if (self->attribute == PSPRITE_ATTR_SHIFT) {
         RSDK.GetFrame(ParallaxSprite->aniFrames, self->aniID, 0)->sprX =
-            self->sprX + ((self->field_B4 + (Zone->timer << self->field_B0)) & 0x7F);
+            self->sprX + ((self->xSpeed + (Zone->timer << self->timerSpeed)) & 0x7F);
     }
     RSDK.DrawSprite(&self->animator, &drawPos, false);
 }
