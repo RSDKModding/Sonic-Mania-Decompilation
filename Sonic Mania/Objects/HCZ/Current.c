@@ -6,7 +6,7 @@ void Current_Update(void)
 {
     RSDK_THIS(Current);
     EntityButton *button = self->taggedButton;
-    if (!button || button->field_70) {
+    if (!button || button->activated) {
         self->activated = true;
         StateMachine_Run(self->state);
     }

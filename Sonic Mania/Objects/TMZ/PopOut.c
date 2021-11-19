@@ -27,7 +27,7 @@ void PopOut_Update(void)
     else if (PopOut->hasButton) {
         foreach_active(Button, button)
         {
-            if (button->tag == self->tag && button->field_70 == 1)
+            if (button->tag == self->tag && button->activated == 1)
                 self->flag = true;
         }
     }

@@ -132,7 +132,7 @@ void TwistingDoor_Unknown1(void)
 {
     RSDK_THIS(TwistingDoor);
     EntityButton *button = self->buttonPtr;
-    if (button->activated) {
+    if (button->currentlyActive) {
         RSDK.PlaySfx(TwistingDoor->sfxOpen, false, 255);
         self->active        = ACTIVE_NORMAL;
         self->state         = TwistingDoor_Unknown2;

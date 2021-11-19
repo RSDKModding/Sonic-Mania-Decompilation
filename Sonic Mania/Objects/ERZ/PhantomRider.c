@@ -252,7 +252,7 @@ void PhantomRider_State_Unknown4(void)
             foreach_active(Button, button)
             {
                 if (button->tag == popOut->tag)
-                    button->field_70 = false;
+                    button->activated = false;
             }
             self->invincibilityTimer = 48;
             RSDK.PlaySfx(PhantomEgg->sfxHit, false, 255);
@@ -280,7 +280,7 @@ void PhantomRider_State_Unknown5(void)
         foreach_active(Button, button)
         {
             button->active   = ACTIVE_BOUNDS;
-            button->field_70 = false;
+            button->activated = false;
         }
 
         self->state = PhantomRider_State_Unknown1;

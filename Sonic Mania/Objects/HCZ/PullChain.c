@@ -6,8 +6,8 @@ void PullChain_Update(void)
 {
     RSDK_THIS(PullChain);
     if (!self->decorMode) {
-        if (self->activated)
-            self->activated = false;
+        if (self->currentlyActive)
+            self->currentlyActive = false;
         foreach_active(Player, player)
         {
             int32 plrID = RSDK.GetEntityID(player);
@@ -21,12 +21,12 @@ void PullChain_Update(void)
                         self->chainOffset = 0x100000;
 
                     if (self->chainOffset == 0x100000) {
-                        if (!self->field_64) {
+                        if (!self->down) {
+                            self->currentlyActive = true;
                             self->activated = true;
-                            self->field_70 = true;
-                            self->field_68 = !self->field_68;
+                            self->toggled = !self->toggled;
                         }
-                        self->field_64 = true;
+                        self->down = true;
                     }
                 }
                 self->position.y = self->basePos.y + self->chainOffset;
@@ -96,7 +96,7 @@ void PullChain_Update(void)
         }
 
         if (!self->activePlayers1) {
-            self->field_64 = 0;
+            self->down = 0;
             if (self->chainOffset > 0)
                 self->chainOffset -= 0x8000;
             if (self->chainOffset < 0)

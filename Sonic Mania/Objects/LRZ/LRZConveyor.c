@@ -81,15 +81,15 @@ void LRZConveyor_HandleBehaviour(void)
         if (self->taggedButton) {
             switch (self->buttonBehavior) {
                 case 0:
-                    if (self->taggedButton->field_70)
+                    if (self->taggedButton->activated)
                         self->off = self->isOff == 0;
                     break;
-                case 1: self->off = self->taggedButton->field_68 ^ self->isOff; break;
+                case 1: self->off = self->taggedButton->toggled ^ self->isOff; break;
                 case 2:
-                    if (self->taggedButton->field_70)
+                    if (self->taggedButton->activated)
                         self->direction = self->startDir == FLIP_NONE;
                     break;
-                case 3: self->direction = self->startDir ^ (self->taggedButton->field_68); break;
+                case 3: self->direction = self->startDir ^ (self->taggedButton->toggled); break;
                 default: break;
             }
         }

@@ -13,12 +13,11 @@ typedef struct {
     bool32 hasPhantomRider;
     Hitbox hitboxV;
     Hitbox hitboxH;
-    int32 field_20;
-    int32 field_24;
-    int32 field_28;
-    int32 field_2C;
+    int32 activatePos;
+    int32 buttonOffset;
+    int32 hitboxOffset;
+    int32 unused1; // set in stageload, but never used. no way to tell what it is
     uint16 sfxButton;
-    uint16 field_32;
 } ObjectButton;
 
 // Entity Class
@@ -27,15 +26,15 @@ typedef struct {
     int32 type;
     bool32 walkOnto;
     uint8 tag;
-    int32 field_64;
-    int32 field_68;
-    bool32 activated;
-    int32 field_70;
-    int32 field_74;
-    int32 field_78;
+    bool32 down;            // 64
+    bool32 toggled;         // 68
+    bool32 currentlyActive; // 6B
+    bool32 activated;       // 70
+    bool32 wasActivated;    // 74
+    int32 pressPos;         // 78
     Hitbox hitbox;
-    Animator animator1;
-    Animator animator2;
+    Animator buttonAnimator;
+    Animator baseAnimator;
 } EntityButton;
 
 // Object Struct

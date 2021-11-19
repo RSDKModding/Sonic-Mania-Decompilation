@@ -6,7 +6,7 @@ void ButtonDoor_Update(void)
 {
     RSDK_THIS(ButtonDoor);
     EntityButton *button = self->taggedButton;
-    if (button && button->field_70) {
+    if (button && button->activated) {
         if (!self->movePos)
             RSDK.PlaySfx(ButtonDoor->sfxOpen, false, 255);
 

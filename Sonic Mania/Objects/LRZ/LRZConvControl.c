@@ -103,22 +103,22 @@ void LRZConvControl_HandleButtonTrigger(void)
         if (button) {
             switch (self->behavior) {
                 case LRZCONVCTRL_BEHAVIOR_ONOFF_SET:
-                    if (button->field_64)
+                    if (button->down)
                         LRZ2Setup->conveyorOff = self->flipVal;
                     break;
                 case LRZCONVCTRL_BEHAVIOR_ONOFF_SWAP:
-                    if (self->field_75 != button->field_68)
+                    if (self->field_75 != button->toggled)
                         LRZ2Setup->conveyorOff = !LRZ2Setup->conveyorOff;
-                    self->field_75 = button->field_68;
+                    self->field_75 = button->toggled;
                     break;
                 case LRZCONVCTRL_BEHAVIOR_CHANGEDIR_SET:
-                    if (button->field_64)
+                    if (button->down)
                         LRZ2Setup->conveyorDir = self->flipVal;
                     break;
                 case LRZCONVCTRL_BEHAVIOR_CHANGEDIR_SWAP:
-                    if (button->field_68 != self->field_75)
+                    if (button->toggled != self->field_75)
                         LRZ2Setup->conveyorDir = !LRZ2Setup->conveyorDir;
-                    self->field_75 = button->field_68;
+                    self->field_75 = button->toggled;
                     break;
                 default: break;
             }

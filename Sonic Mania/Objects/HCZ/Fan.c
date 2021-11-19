@@ -431,7 +431,7 @@ void Fan_Unknown8(void)
 {
     RSDK_THIS(Fan);
     EntityButton *button = self->buttonPtr;
-    if ((!button || button->field_70) && self->state == Fan_ProcessAnimationSpeed_Slow) {
+    if ((!button || button->activated) && self->state == Fan_ProcessAnimationSpeed_Slow) {
         self->active = ACTIVE_NORMAL;
         Fan_Unknown11();
     }
@@ -441,7 +441,7 @@ void Fan_Unknown9(void)
 {
     RSDK_THIS(Fan);
     EntityButton *button = self->buttonPtr;
-    if ((!button || button->field_70) && self->state != Fan_ProcessAnimationSpeed_Slow) {
+    if ((!button || button->activated) && self->state != Fan_ProcessAnimationSpeed_Slow) {
         self->active = ACTIVE_BOUNDS;
         self->state  = Fan_ProcessAnimationSpeed_Slow;
     }

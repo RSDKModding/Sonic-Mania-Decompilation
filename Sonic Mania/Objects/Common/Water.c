@@ -992,7 +992,7 @@ void Water_HCZBubbleSpawner(void)
             hitbox.right  = 32;
             hitbox.bottom = 32;
 
-            if (self->taggedObject->activated) {
+            if (self->taggedObject->currentlyActive) {
                 foreach_active(Player, player)
                 {
                     if (Player_CheckCollisionTouch(player, self, &hitbox)) {
@@ -1148,7 +1148,7 @@ void Water_State_Adjustable(void)
 
     if (self->taggedObject) {
         EntityButton *button = (EntityButton *)self->taggedObject;
-        if (button->activated) {
+        if (button->currentlyActive) {
             Water->moveWaterLevel = true;
             flag                  = true;
         }

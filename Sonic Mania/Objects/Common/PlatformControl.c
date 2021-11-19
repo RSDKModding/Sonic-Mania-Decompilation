@@ -78,7 +78,7 @@ void PlatformControl_Update(void)
     }
     else {
         EntityButton *button = (EntityButton *)self->taggedButton;
-        if (button && button->activated)
+        if (button && button->currentlyActive)
             self->setActive = true;
         if (self->setActive) {
             for (int32 c = 0; c < self->childCount; ++c) {

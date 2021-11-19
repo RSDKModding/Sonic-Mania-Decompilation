@@ -87,13 +87,13 @@ void TurretSwitch_Break(EntityTurretSwitch *self, EntityPlayer *player)
     player->velocity.y = -(player->velocity.y + 2 * player->gravityStrength);
     CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ITEMBOX), self->position.x, self->position.y)->drawOrder = Zone->drawOrderHigh;
     RSDK.PlaySfx(ItemBox->sfxDestroy, false, 255);
-    self->visible   = 0;
-    self->state     = 0;
-    self->activated = true;
-    self->field_74  = true;
-    self->field_64  = true;
-    self->field_68  = true;
-    self->field_70  = true;
+    self->visible         = 0;
+    self->state           = 0;
+    self->currentlyActive = true;
+    self->wasActivated    = true;
+    self->down            = true;
+    self->toggled         = true;
+    self->activated       = true;
 }
 
 void TurretSwitch_State_Setup(void)
