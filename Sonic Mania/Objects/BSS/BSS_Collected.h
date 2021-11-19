@@ -3,6 +3,15 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    BSS_COLLECTED_RING,
+    BSS_COLLECTED_BLUE,
+    BSS_COLLECTED_BLUE_STOOD,
+    BSS_COLLECTED_GREEN,
+    BSS_COLLECTED_GREEN_STOOD,
+    BSS_COLLECTED_PINK,
+}BSS_CollectedTypes;
+
 // Object Class
 typedef struct {
 	RSDK_OBJECT

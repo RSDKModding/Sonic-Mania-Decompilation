@@ -16,7 +16,7 @@ void BSS_Horizon_Draw(void)
     drawPos.y = 0;
 
     self->horizonAnimator.frameID = 0;
-    self->alpha                   = BSS_Palette->alpha1;
+    self->alpha                   = BSS_Palette->skyAlpha;
     self->direction               = FLIP_NONE;
     RSDK.DrawSprite(&self->horizonAnimator, &drawPos, true);
 
@@ -24,7 +24,7 @@ void BSS_Horizon_Draw(void)
     RSDK.DrawSprite(&self->horizonAnimator, &drawPos, true);
 
     self->horizonAnimator.frameID = 1;
-    self->alpha                   = BSS_Palette->alpha2;
+    self->alpha                   = BSS_Palette->globeAlpha;
     self->direction               = FLIP_NONE;
     RSDK.DrawSprite(&self->horizonAnimator, &drawPos, true);
 
@@ -52,8 +52,10 @@ void BSS_Horizon_StageLoad(void)
     RSDK.ResetEntitySlot(SLOT_BSS_HORIZON, BSS_Horizon->objectID, 0);
 }
 
+#if RETRO_INCLUDE_EDITOR
 void BSS_Horizon_EditorDraw(void) {}
 
 void BSS_Horizon_EditorLoad(void) {}
+#endif
 
 void BSS_Horizon_Serialize(void) {}

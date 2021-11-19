@@ -37,13 +37,13 @@ void ParallaxSprite_Draw(void)
     if (self->attribute == PSPRITE_ATTR_2) {
         int32 y = (drawPos.y >> 16) - 32;
         int32 x = (drawPos.x >> 16) - 56;
-        RSDK.DrawRect(x, y, 112, 64, self->colour1, 255, 0, true);
+        RSDK.DrawRect(x, y, 112, 64, self->colour1, 255, INK_NONE, true);
 
         for (int32 i = 0; i < 0xE0; i += 0x20) {
             int32 val = (RSDK.Sin256(i + Zone->timer) >> 3) + 48;
             if (val > 64)
                 val = 64;
-            RSDK.DrawRect(x, y - val + 64, 16, val, self->colour2, 255, 0, true);
+            RSDK.DrawRect(x, y - val + 64, 16, val, self->colour2, 255, INK_NONE, true);
             x += 16;
         }
     }

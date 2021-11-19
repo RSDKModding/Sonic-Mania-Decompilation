@@ -80,7 +80,7 @@ void ContinuePlayer_StageLoad(void)
     ContinuePlayer->sfxRelease    = RSDK.GetSFX("Global/Release.wav");
 }
 
-void ContinuePlayer_Unknown1(void)
+void ContinuePlayer_HandleDashAnim(void)
 {
     RSDK_THIS(ContinuePlayer);
 
@@ -109,35 +109,35 @@ void ContinuePlayer_Unknown1(void)
     }
 }
 
-void ContinuePlayer_Unknown2(void)
+void ContinuePlayer_State_Idle(void)
 {
     RSDK_THIS(ContinuePlayer);
 
     if (self->timer <= 0) {
-        ContinuePlayer_Unknown1();
-        self->state = ContinuePlayer_Unknown3;
-        RSDK.PlaySfx(ContinuePlayer->sfxRoll, 0, 255);
+        ContinuePlayer_HandleDashAnim();
+        self->state = ContinuePlayer_State_ChargeDash;
+        RSDK.PlaySfx(ContinuePlayer->sfxRoll, false, 255);
     }
     else {
         self->timer--;
     }
 }
 
-void ContinuePlayer_Unknown3(void)
+void ContinuePlayer_State_ChargeDash(void)
 {
     RSDK_THIS(ContinuePlayer);
 
     if (self->groundVel >= 0xC0000) {
-        RSDK.PlaySfx(ContinuePlayer->sfxRelease, 0, 255);
-        self->state = ContinuePlayer_Unknown4;
+        RSDK.PlaySfx(ContinuePlayer->sfxRelease, false, 255);
+        self->state = ContinuePlayer_State_DashRelease;
     }
     else {
         self->groundVel += 0x4000;
     }
-    ContinuePlayer_Unknown1();
+    ContinuePlayer_HandleDashAnim();
 }
 
-void ContinuePlayer_Unknown4(void)
+void ContinuePlayer_State_DashRelease(void)
 {
     RSDK_THIS(ContinuePlayer);
     self->position.x += self->groundVel;

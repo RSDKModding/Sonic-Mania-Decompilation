@@ -30,7 +30,7 @@ void Batbrain_Create(void *data)
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x800000;
     RSDK.SetSpriteAnimation(Batbrain->aniFrames, 0, &self->animator, true, 0);
-    self->state = Batbrain_Unknown2;
+    self->state = Batbrain_State_Setup;
 }
 
 void Batbrain_StageLoad(void)
@@ -54,7 +54,7 @@ void Batbrain_DebugDraw(void)
 
 void Batbrain_DebugSpawn(void)
 {
-    RSDK_THIS(Batbrain);
+    RSDK_THIS(DebugMode);
 
     CREATE_ENTITY(Batbrain, NULL, self->position.x, self->position.y);
 }
@@ -79,7 +79,7 @@ void Batbrain_CheckOnScreen(void)
     }
 }
 
-void Batbrain_Unknown2(void)
+void Batbrain_State_Setup(void)
 {
     RSDK_THIS(Batbrain);
     self->active     = ACTIVE_NORMAL;
@@ -161,7 +161,7 @@ void Batbrain_Unknown5(void)
         self->state = Batbrain_Unknown6;
 
     if (!(Zone->timer & 0xF))
-        RSDK.PlaySfx(Batbrain->sfxFlap, 0, 255);
+        RSDK.PlaySfx(Batbrain->sfxFlap, false, 255);
 
     RSDK.ProcessAnimation(&self->animator);
     Batbrain_CheckHit();
@@ -182,7 +182,7 @@ void Batbrain_Unknown6(void)
     }
 
     if (!(Zone->timer & 0xF))
-        RSDK.PlaySfx(Batbrain->sfxFlap, 0, 255);
+        RSDK.PlaySfx(Batbrain->sfxFlap, false, 255);
 
     RSDK.ProcessAnimation(&self->animator);
     Batbrain_CheckHit();

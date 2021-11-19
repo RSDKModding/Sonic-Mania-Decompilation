@@ -200,7 +200,6 @@ typedef struct {
     uint16 sfxFlying;
     bool32 playingFlySFX;
     uint16 sfxTired;
-    uint16 field_A36;
     bool32 playingTiredSFX;
     uint16 sfxLand;
     uint16 sfxSlide;
@@ -290,14 +289,12 @@ typedef struct {
     uint16 sfxDropdash;
     uint16 sfxLoseRings;
     uint16 sfxHurt;
-    uint16 field_66E;
+    uint16 unused1; //this matches up perfectly with the position of "sfxPimPom" in plus, and it cant be padding so :eye:
     uint16 sfxSkidding;
     uint16 sfxGrab;
     uint16 sfxFlying;
-    uint16 field_676;
     bool32 playingFlySFX;
     uint16 sfxTired;
-    uint16 field_67E;
     bool32 playingTiredSFX;
     uint16 sfxLand;
     uint16 sfxSlide;
@@ -319,7 +316,7 @@ typedef struct {
     int32 maxWalkSpeed;
     int32 maxJogSpeed;
     int32 maxRunSpeed;
-    int32 field_A4;
+    int32 unused; //the only used variable in the player struct, I cant find a ref to it anywhere so
     int32 tailRotation;
     int32 tailDirection;
     uint16 aniFrames;
@@ -335,7 +332,7 @@ typedef struct {
     int32 lives;
     int32 score;
     int32 score1UP;
-    int32 hyperRing;
+    bool32 hyperRing;
     int32 timer;
     int32 outtaHereTimer;
     int32 abilityTimer;
@@ -567,8 +564,8 @@ void Player_UpdateRaySwoopSFX(int32 sfxID);
 void Player_ProcessP1Input(void);
 void Player_ProcessP2InputLag(void);
 void Player_ProcessP2Input_AI(void);
-void Player_ProcessP2Input_None(void);
-void Player_ProcessP2Input_Unknown(void);
+void Player_ProcessP2Input_JumpIn(void);
+void Player_ProcessP2Input_JumpDelay(void);
 void Player_ProcessP2Input_Player(void);
 
 #endif //! OBJ_PLAYER_H

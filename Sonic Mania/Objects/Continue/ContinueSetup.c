@@ -16,28 +16,32 @@ void ContinueSetup_StaticUpdate(void) {}
 void ContinueSetup_Draw(void)
 {
     RSDK_THIS(ContinueSetup);
+
     RSDK.Prepare3DScene(ContinueSetup->sceneIndex);
-    RSDK.MatrixTranslateXYZ(&self->matrix2, 0, -0xF0000, 0x500000, true);
-    RSDK.MatrixRotateX(&self->matrix3, self->rotationX);
-    RSDK.MatrixRotateZ(&self->matrix4, self->angle);
-    RSDK.MatrixTranslateXYZ(&self->matrix1, -0x120000, 0, 0, true);
-    RSDK.MatrixMultiply(&self->matrix5, &self->matrix4, &self->matrix3);
-    RSDK.MatrixMultiply(&self->matrix5, &self->matrix1, &self->matrix5);
-    RSDK.MatrixMultiply(&self->matrix5, &self->matrix5, &self->matrix2);
+    RSDK.MatrixTranslateXYZ(&self->matTranslateFinal, 0, -0xF0000, 0x500000, true);
+    RSDK.MatrixRotateX(&self->matRotateX, self->rotationX);
+    RSDK.MatrixRotateZ(&self->matRotateY, self->angle);
+
+    RSDK.MatrixTranslateXYZ(&self->matTranslate, -0x120000, 0, 0, true);
+    RSDK.MatrixMultiply(&self->matFinal, &self->matRotateY, &self->matRotateX);
+    RSDK.MatrixMultiply(&self->matFinal, &self->matTranslate, &self->matFinal);
+    RSDK.MatrixMultiply(&self->matFinal, &self->matFinal, &self->matTranslateFinal);
     RSDK.AddModelTo3DScene(ContinueSetup->countIndex[self->countTimer / 10 % 10], ContinueSetup->sceneIndex, S3D_FLATCLR_SHADED_BLENDED_SCREEN,
-                           &self->matrix5, &self->matrix5, self->colour);
-    RSDK.MatrixTranslateXYZ(&self->matrix1, 0x120000, 0, 0, true);
-    RSDK.MatrixMultiply(&self->matrix5, &self->matrix4, &self->matrix3);
-    RSDK.MatrixMultiply(&self->matrix5, &self->matrix1, &self->matrix5);
-    RSDK.MatrixMultiply(&self->matrix5, &self->matrix5, &self->matrix2);
+                           &self->matFinal, &self->matFinal, self->numberColour);
+
+    RSDK.MatrixTranslateXYZ(&self->matTranslate, 0x120000, 0, 0, true);
+    RSDK.MatrixMultiply(&self->matFinal, &self->matRotateY, &self->matRotateX);
+    RSDK.MatrixMultiply(&self->matFinal, &self->matTranslate, &self->matFinal);
+    RSDK.MatrixMultiply(&self->matFinal, &self->matFinal, &self->matTranslateFinal);
     RSDK.AddModelTo3DScene(ContinueSetup->countIndex[self->countTimer % 10], ContinueSetup->sceneIndex, S3D_FLATCLR_SHADED_BLENDED_SCREEN,
-                           &self->matrix5, &self->matrix5, self->colour);
+                           &self->matFinal, &self->matFinal, self->numberColour);
+
     RSDK.Draw3DScene(ContinueSetup->sceneIndex);
 
     Vector2 drawPos;
     drawPos.y = 0x600000;
     drawPos.x = ((ScreenInfo->centerX + 4) << 16) - (globals->continues << 19);
-    if (self->dword74 == 1 && globals->continues > 0) {
+    if (self->showContinues && globals->continues > 0) {
         RSDK.DrawSprite(&ContinueSetup->animator, &drawPos, true);
     }
 
@@ -58,9 +62,9 @@ void ContinueSetup_Create(void *data)
         self->rotationX     = 240;
         self->angle         = 256;
         self->countTimer    = 10;
-        self->colour        = 0xFF00FF;
-        self->dword74       = 1;
-        self->state         = ContinueSetup_Unknown1;
+        self->numberColour        = 0xFF00FF;
+        self->showContinues       = 1;
+        self->state         = ContinueSetup_State_FadeIn;
         self->updateRange.x = 0x4000000;
         self->updateRange.y = 0x4000000;
         switch (globals->playerID & 0xFF) {
@@ -92,27 +96,27 @@ void ContinueSetup_StageLoad(void)
     ContinueSetup->sfxAccept = RSDK.GetSFX("Global/MenuAccept.wav");
 }
 
-void ContinueSetup_Unknown1(void)
+void ContinueSetup_State_FadeIn(void)
 {
     RSDK_THIS(ContinueSetup);
     if (++self->timer >= 8) {
         if (!RSDK.GetEntityCount(FXFade->objectID, true)) {
             self->timer = 0;
-            self->state = ContinueSetup_Unknown2;
+            self->state = ContinueSetup_State_HandleCountdown;
         }
     }
 }
 
-void ContinueSetup_Unknown2(void)
+void ContinueSetup_State_HandleCountdown(void)
 {
     RSDK_THIS(ContinueSetup);
-    if (++self->timer2 == 60) {
-        self->timer2 = 0;
+    if (++self->secondTimer == 60) {
+        self->secondTimer = 0;
         if (self->countTimer > 0) {
             self->countTimer--;
             if (self->alpha < 255)
                 self->alpha += 24;
-            self->colour = RSDK.GetPaletteEntry(2, self->alpha);
+            self->numberColour = RSDK.GetPaletteEntry(2, self->alpha);
         }
     }
     if (ControllerInfo->keyA.press || ControllerInfo->keyStart.press || TouchInfo->count) {
@@ -120,21 +124,21 @@ void ContinueSetup_Unknown2(void)
         {
             if (!player->isPlayer2)
                 RSDK.SetSpriteAnimation(ContinuePlayer->aniFrames, (player->animator.animationID + 1), &player->animator, true, 0);
-            player->state = ContinuePlayer_Unknown2;
+            player->state = ContinuePlayer_State_Idle;
         }
-        self->state = ContinueSetup_Unknown3;
-        RSDK.PlaySfx(ContinueSetup->sfxAccept, 0, 255);
+        self->state = ContinueSetup_State_ContinueGame;
+        RSDK.PlaySfx(ContinueSetup->sfxAccept, false, 255);
     }
     if (!self->countTimer && ++self->timer == 60) {
         self->timer      = 0;
-        self->state      = ContinueSetup_Unknown4;
+        self->state      = ContinueSetup_State_ReturnToMenu;
         EntityFXFade *fade = CREATE_ENTITY(FXFade, NULL, self->position.x, self->position.y);
         fade->speedIn      = 12;
         fade->wait         = 240;
     }
 }
 
-void ContinueSetup_Unknown3(void)
+void ContinueSetup_State_ContinueGame(void)
 {
     RSDK_THIS(ContinueSetup);
     if (++self->timer == 90) {
@@ -158,16 +162,16 @@ void ContinueSetup_Unknown3(void)
     }
 
     if (self->timer < 58) {
-        self->dword74 = ((self->timer >> 1) & 1);
+        self->showContinues = ((self->timer >> 1) & 1);
     }
     if (self->timer == 60) {
-        self->dword74 = 1;
+        self->showContinues = true;
         if (globals->continues > 0)
             globals->continues--;
     }
 }
 
-void ContinueSetup_Unknown4(void)
+void ContinueSetup_State_ReturnToMenu(void)
 {
     RSDK_THIS(ContinueSetup);
     if (++self->timer == 80) {

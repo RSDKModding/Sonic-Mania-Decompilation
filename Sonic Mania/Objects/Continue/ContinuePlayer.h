@@ -37,8 +37,8 @@ typedef struct {
     StateMachine(state);
     bool32 isPlayer2;
     int32 timer;
-    int32 field_64;
-    int32 field_68;
+    int32 unused1;
+    int32 unused2;
     Animator animator;
     uint16 aniFrames;
 } EntityContinuePlayer;
@@ -60,9 +60,9 @@ void ContinuePlayer_EditorLoad(void);
 void ContinuePlayer_Serialize(void);
 
 // Extra Entity Functions
-void ContinuePlayer_Unknown1(void);
-void ContinuePlayer_Unknown2(void);
-void ContinuePlayer_Unknown3(void);
-void ContinuePlayer_Unknown4(void);
+void ContinuePlayer_HandleDashAnim(void);
+void ContinuePlayer_State_Idle(void);
+void ContinuePlayer_State_ChargeDash(void);
+void ContinuePlayer_State_DashRelease(void);
 
 #endif //!OBJ_CONTINUEPLAYER_H

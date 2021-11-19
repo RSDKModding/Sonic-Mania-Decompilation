@@ -19,8 +19,8 @@ void BSS_Palette_Create(void *data)
 
 void BSS_Palette_StageLoad(void)
 {
-    BSS_Palette->alpha1 = 0x100;
-    BSS_Palette->alpha2 = 0x80;
+    BSS_Palette->skyAlpha   = 0x100;
+    BSS_Palette->globeAlpha = 0x80;
 
     foreach_all(BSS_Palette, entity)
     {
@@ -34,8 +34,8 @@ void BSS_Palette_StageLoad(void)
             RSDK.SetPaletteEntry(1, 3, entity->bgColor2);
             RSDK.SetPaletteEntry(1, 4, entity->bgColor3);
         }
-        BSS_Palette->alpha1        = entity->skyAlpha;
-        BSS_Palette->alpha2        = entity->globeAlpha;
+        BSS_Palette->skyAlpha      = entity->skyAlpha;
+        BSS_Palette->globeAlpha    = entity->globeAlpha;
         BSS_Palette->startColourID = 0;
     }
 }

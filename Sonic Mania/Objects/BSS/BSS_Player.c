@@ -13,7 +13,7 @@ void BSS_Player_Update(void)
             self->velocity.y = -0x100000;
             self->onGround   = false;
             RSDK.SetSpriteAnimation(self->aniFrames, 2, &self->animator, false, 0);
-            RSDK.PlaySfx(BSS_Player->sfxJump, 0, 255);
+            RSDK.PlaySfx(BSS_Player->sfxJump, false, 255);
         }
     }
     else {
@@ -26,7 +26,7 @@ void BSS_Player_Update(void)
         if (self->gravityStrength >= 0) {
             self->gravityStrength = 0;
             self->onGround        = true;
-            if (!self->sideKick) {
+            if (!self->sidekick) {
                 if (self->animator.animationID == 3)
                     setup->globeSpeed >>= 1;
                 setup->globeSpeedInc = 2;
@@ -119,12 +119,12 @@ void BSS_Player_Create(void *data)
 
         if (SceneInfo->entitySlot) {
             self->stateInput = BSS_Player_ProcessP2Input;
-            self->sideKick   = true;
+            self->sidekick   = true;
         }
         else {
             self->stateInput   = BSS_Player_ProcessP1Input;
             self->controllerID = CONT_P1;
-            self->sideKick     = false;
+            self->sidekick     = false;
         }
         RSDK.SetSpriteAnimation(self->aniFrames, 0, &self->animator, true, 0);
     }

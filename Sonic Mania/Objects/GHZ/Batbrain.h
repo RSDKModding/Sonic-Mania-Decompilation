@@ -44,7 +44,7 @@ void Batbrain_DebugSpawn(void);
 void Batbrain_CheckHit(void);
 void Batbrain_CheckOnScreen(void);
 //States
-void Batbrain_Unknown2(void);
+void Batbrain_State_Setup(void);
 void Batbrain_Unknown3(void);
 void Batbrain_Unknown4(void);
 void Batbrain_Unknown5(void);

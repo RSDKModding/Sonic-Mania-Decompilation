@@ -21,7 +21,7 @@ void BSS_Setup_Update(void)
 
 #if RETRO_USE_PLUS
     EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
-    if (!param->field_59 && !self->pauseFlag && globals->gameMode < MODE_TIMEATTACK)
+    if (!param->field_59 && !self->stopMovement && globals->gameMode < MODE_TIMEATTACK)
         ++SaveGame->saveRAM->zoneTimes[28];
 #endif
 }
@@ -33,16 +33,16 @@ void BSS_Setup_StaticUpdate(void) {}
 void BSS_Setup_Draw(void)
 {
     RSDK_THIS(BSS_Setup);
-    TileLayer *globe  = RSDK.GetSceneLayer(BSS_Setup->globeLayer);
-    self->inkEffect = INK_NONE;
+    TileLayer *globe = RSDK.GetSceneLayer(BSS_Setup->globeLayer);
+    self->inkEffect  = INK_NONE;
     if (globe->drawLayer[0] == DRAWLAYER_COUNT)
-        RSDK.DrawSprite(&self->globeSpinData, NULL, false);
+        RSDK.DrawSprite(&self->globeSpinAnimator, NULL, false);
 
     Vector2 drawPos;
     self->inkEffect = INK_BLEND;
-    drawPos.x         = self->position.x;
-    drawPos.y         = 0x9E0000;
-    RSDK.DrawSprite(&self->shadowData, &drawPos, false);
+    drawPos.x       = self->position.x;
+    drawPos.y       = 0x9E0000;
+    RSDK.DrawSprite(&self->shadowAnimator, &drawPos, false);
 }
 
 void BSS_Setup_Create(void *data)
@@ -57,9 +57,9 @@ void BSS_Setup_Create(void *data)
         self->updateRange.x   = 0x800000;
         self->updateRange.y   = 0x800000;
         self->speedupInterval = 1800;
-        self->pauseFlag       = false;
-        RSDK.SetSpriteAnimation(BSS_Setup->globeMappings, 0, &self->globeSpinData, true, 0);
-        RSDK.SetSpriteAnimation(BSS_Setup->globeMappings, 1, &self->shadowData, true, 0);
+        self->stopMovement    = false;
+        RSDK.SetSpriteAnimation(BSS_Setup->globeMappings, 0, &self->globeSpinAnimator, true, 0);
+        RSDK.SetSpriteAnimation(BSS_Setup->globeMappings, 1, &self->shadowAnimator, true, 0);
         BSS_Setup_GetStartupInfo();
         self->state = BSS_Setup_State_HandleStage;
     }
@@ -87,7 +87,7 @@ void BSS_Setup_StageLoad(void)
             for (int32 x = 0; x < BSS_PLAYFIELD_W; ++x) {
                 uint16 tile = RSDK.GetTileInfo(BSS_Setup->playFieldLayer, x, y);
 
-                int32 playFieldPos                   = (x * BSS_PLAYFIELD_H) + y;
+                int32 playFieldPos                 = (x * BSS_PLAYFIELD_H) + y;
                 BSS_Setup->playField[playFieldPos] = tile & 0x3FF;
                 if (BSS_Setup->playField[playFieldPos] > 0x18) {
                     BSS_Setup->playField[playFieldPos] = BSS_NONE;
@@ -117,7 +117,7 @@ void BSS_Setup_StageLoad(void)
 
                 uint16 tile = RSDK.GetTileInfo(BSS_Setup->playFieldLayer, tx, ty);
 
-                int32 playFieldPos                   = (x * BSS_PLAYFIELD_H) + y;
+                int32 playFieldPos                 = (x * BSS_PLAYFIELD_H) + y;
                 BSS_Setup->playField[playFieldPos] = tile & 0x3FF;
                 if (BSS_Setup->playField[playFieldPos] > 0x18) {
                     BSS_Setup->playField[playFieldPos] = BSS_NONE;
@@ -137,7 +137,7 @@ void BSS_Setup_StageLoad(void)
 
                 uint16 tile = RSDK.GetTileInfo(BSS_Setup->playFieldLayer, tx, ty);
 
-                int32 playFieldPos                   = (x * BSS_PLAYFIELD_H) + y;
+                int32 playFieldPos                 = (x * BSS_PLAYFIELD_H) + y;
                 BSS_Setup->playField[playFieldPos] = tile & 0x3FF;
                 if (BSS_Setup->playField[playFieldPos] > 0x18) {
                     BSS_Setup->playField[playFieldPos] = BSS_NONE;
@@ -157,7 +157,7 @@ void BSS_Setup_StageLoad(void)
 
                 uint16 tile = RSDK.GetTileInfo(BSS_Setup->playFieldLayer, tx, ty);
 
-                int32 playFieldPos                   = (x * BSS_PLAYFIELD_H) + y;
+                int32 playFieldPos                 = (x * BSS_PLAYFIELD_H) + y;
                 BSS_Setup->playField[playFieldPos] = tile & 0x3FF;
                 if (BSS_Setup->playField[playFieldPos] > 0x18) {
                     BSS_Setup->playField[playFieldPos] = BSS_NONE;
@@ -177,7 +177,7 @@ void BSS_Setup_StageLoad(void)
 
                 uint16 tile = RSDK.GetTileInfo(BSS_Setup->playFieldLayer, tx, ty);
 
-                int32 playFieldPos                   = (x * BSS_PLAYFIELD_H) + y;
+                int32 playFieldPos                 = (x * BSS_PLAYFIELD_H) + y;
                 BSS_Setup->playField[playFieldPos] = tile & 0x3FF;
                 if (BSS_Setup->playField[playFieldPos] > 0x18) {
                     BSS_Setup->playField[playFieldPos] = BSS_NONE;
@@ -220,7 +220,7 @@ int32 BSS_Setup_GetStageID(void)
 {
     int32 pos = SceneInfo->listPos;
     RSDK.SetScene("Blue Spheres", "");
-    int32 id                  = (pos - SceneInfo->listPos) % 32;
+    int32 id           = (pos - SceneInfo->listPos) % 32;
     SceneInfo->listPos = pos;
     return id;
 }
@@ -255,7 +255,7 @@ void BSS_Setup_SetupFrustum(void)
             frustumID = BSS_Setup->frustum1Layer;
         TileLayer *frustum = RSDK.GetSceneLayer(frustumID);
 
-        count     = offset;
+        count       = offset;
         int32 lastX = 0;
         int32 lastY = 0;
 
@@ -278,7 +278,7 @@ void BSS_Setup_SetupFrustum(void)
         BSS_Setup->frustumCount[f]  = count - offset;
         BSS_Setup->frustumOffset[f] = offset;
         Vector2 *offsetTable        = &BSS_Setup->offsetTable[BSS_Setup->frustumOffset[f]];
-        int32 *offsetRadiusTable      = &BSS_Setup->offsetRadiusTable[BSS_Setup->frustumOffset[f]];
+        int32 *offsetRadiusTable    = &BSS_Setup->offsetRadiusTable[BSS_Setup->frustumOffset[f]];
 
         for (int32 i = 0; i < BSS_Setup->frustumCount[f]; ++i) {
             offsetTable[i].x -= lastX;
@@ -318,18 +318,18 @@ void BSS_Setup_CollectRing(void)
     if (BSS_Setup->ringCount > 0) {
         BSS_Setup->ringCount--;
         if (!BSS_Setup->ringCount) {
-            CREATE_ENTITY(BSS_Message, intToVoid(1), self->position.x, self->position.y);
+            CREATE_ENTITY(BSS_Message, intToVoid(BSS_MESSAGE_PERFECT), self->position.x, self->position.y);
             RSDK.PlaySfx(BSS_Setup->sfxEvent, false, 255);
         }
     }
 
     if (BSS_Setup->ringPan) {
-        int32 channel = RSDK.PlaySfx(BSS_Setup->sfxRing, 0, 255);
+        int32 channel = RSDK.PlaySfx(BSS_Setup->sfxRing, false, 255);
         RSDK.SetChannelAttributes(channel, 1.0, -1.0, 1.0);
         BSS_Setup->ringPan = 0;
     }
     else {
-        int32 channel = RSDK.PlaySfx(BSS_Setup->sfxRing, 0, 255);
+        int32 channel = RSDK.PlaySfx(BSS_Setup->sfxRing, false, 255);
         RSDK.SetChannelAttributes(channel, 1.0, 1.0, 1.0);
         BSS_Setup->ringPan = 1;
     }
@@ -349,27 +349,27 @@ void BSS_Setup_GetStartupInfo(void)
                 case BSS_SPHERE_GREEN: ++BSS_Setup->sphereCount; break;
                 case BSS_SPHERE_PINK: ++BSS_Setup->pinkSphereCount; break;
                 case BSS_SPAWN_UP:
-                    self->angle                      = 0x00;
-                    self->playerPos.x                = x;
-                    self->playerPos.y                = y;
+                    self->angle                        = 0x00;
+                    self->playerPos.x                  = x;
+                    self->playerPos.y                  = y;
                     BSS_Setup->playField[playFieldPos] = BSS_NONE;
                     break;
                 case BSS_SPAWN_RIGHT:
-                    self->angle                      = 0xC0;
-                    self->playerPos.x                = x;
-                    self->playerPos.y                = y;
+                    self->angle                        = 0xC0;
+                    self->playerPos.x                  = x;
+                    self->playerPos.y                  = y;
                     BSS_Setup->playField[playFieldPos] = BSS_NONE;
                     break;
                 case BSS_SPAWN_DOWN:
-                    self->angle                      = 0x80;
-                    self->playerPos.x                = x;
-                    self->playerPos.y                = y;
+                    self->angle                        = 0x80;
+                    self->playerPos.x                  = x;
+                    self->playerPos.y                  = y;
                     BSS_Setup->playField[playFieldPos] = BSS_NONE;
                     break;
                 case BSS_SPAWN_LEFT:
-                    self->angle                      = 0x40;
-                    self->playerPos.x                = x;
-                    self->playerPos.y                = y;
+                    self->angle                        = 0x40;
+                    self->playerPos.x                  = x;
+                    self->playerPos.y                  = y;
                     BSS_Setup->playField[playFieldPos] = BSS_NONE;
                     break;
                 default: break;
@@ -401,9 +401,9 @@ void BSS_Setup_Finished(void)
     self->playerPos.y &= 0x1F;
 
     self->paletteLine = (self->globeTimer >> 4) & 0xF;
-    TileLayer *bg       = RSDK.GetSceneLayer(BSS_Setup->bgLayer);
+    TileLayer *bg     = RSDK.GetSceneLayer(BSS_Setup->bgLayer);
     bg->scrollPos += self->globeSpeed << 14;
-    self->pauseFlag = true;
+    self->stopMovement = true;
     BSS_Setup_HandleCollectableMovement();
     BSS_Setup_LaunchSpheres();
 
@@ -415,7 +415,7 @@ void BSS_Setup_Finished(void)
         EntityBSS_Player *player = RSDK_GET_ENTITY(SLOT_PLAYER1, BSS_Player);
         player->stateInput       = false;
         player->jumpPress        = false;
-        self->state            = BSS_Setup_State_FinishWalk;
+        self->state              = BSS_Setup_State_FinishWalk;
     }
 }
 
@@ -436,28 +436,28 @@ void BSS_Setup_HandleSteppedObjects(void)
                 BSS_Setup_ProcessChain();
                 --BSS_Setup->sphereCount;
                 if (!self->ringLoopFlag) {
-                    CREATE_ENTITY(BSS_Collected, intToVoid(1), self->playerPos.x, self->playerPos.y);
+                    CREATE_ENTITY(BSS_Collected, intToVoid(BSS_COLLECTED_BLUE), self->playerPos.x, self->playerPos.y);
                     BSS_Setup->playField[fieldPos] = BSS_BLUE_STOOD;
                 }
 
                 if (BSS_Setup->sphereCount <= 0) {
                     BSS_Setup->sphereCount = 0;
-                    self->state          = BSS_Setup_Finished;
-                    RSDK.PlaySfx(BSS_Setup->sfxSSJettison, 0, 255);
+                    self->state            = BSS_Setup_Finished;
+                    RSDK.PlaySfx(BSS_Setup->sfxSSJettison, false, 255);
                     Music_FadeOut(0.0125);
                 }
                 else {
-                    RSDK.PlaySfx(BSS_Setup->sfxBlueSphere, 0, 255);
+                    RSDK.PlaySfx(BSS_Setup->sfxBlueSphere, false, 255);
                 }
             }
             break;
         case BSS_SPHERE_RED:
             if (self->state != BSS_Setup_State_Exit && self->globeTimer < 32) {
-                self->state      = BSS_Setup_State_Exit;
-                self->pauseFlag  = true;
-                self->spinTimer  = 0;
-                self->globeTimer = 0;
-                RSDK.PlaySfx(BSS_Setup->sfxSSExit, 0, 255);
+                self->state        = BSS_Setup_State_Exit;
+                self->stopMovement = true;
+                self->spinTimer    = 0;
+                self->globeTimer   = 0;
+                RSDK.PlaySfx(BSS_Setup->sfxSSExit, false, 255);
                 Music_FadeOut(0.0125);
             }
             break;
@@ -465,19 +465,19 @@ void BSS_Setup_HandleSteppedObjects(void)
             if (!self->bumperFlag && self->globeTimer < 112) {
                 if (self->globeTimer > 16) {
                     if (self->globeSpeed < 0) {
-                        self->bumperFlag  = true;
-                        self->globeSpeed  = -self->globeSpeed;
-                        self->unknownFlag = false;
-                        RSDK.PlaySfx(BSS_Setup->sfxBumper, 0, 255);
+                        self->bumperFlag      = true;
+                        self->globeSpeed      = -self->globeSpeed;
+                        self->playerWasBumped = false;
+                        RSDK.PlaySfx(BSS_Setup->sfxBumper, false, 255);
                     }
                 }
                 else if (!self->spinState) {
                     if (self->globeSpeed < 0) {
-                        self->globeTimer  = 16;
-                        self->bumperFlag  = true;
-                        self->globeSpeed  = -self->globeSpeed;
-                        self->unknownFlag = false;
-                        RSDK.PlaySfx(BSS_Setup->sfxBumper, 0, 255);
+                        self->globeTimer      = 16;
+                        self->bumperFlag      = true;
+                        self->globeSpeed      = -self->globeSpeed;
+                        self->playerWasBumped = false;
+                        RSDK.PlaySfx(BSS_Setup->sfxBumper, false, 255);
                     }
                 }
             }
@@ -487,19 +487,19 @@ void BSS_Setup_HandleSteppedObjects(void)
                 EntityBSS_Player *player = RSDK_GET_ENTITY(SLOT_PLAYER1, BSS_Player);
                 player->velocity.y       = -0x180000;
                 player->onGround         = 0;
-                RSDK.SetSpriteAnimation(player->aniFrames, 3, &player->animator, 0, 0);
-                BSS_Player->field_6 = 4;
+                RSDK.SetSpriteAnimation(player->aniFrames, 3, &player->animator, false, 0);
+                BSS_Player->unused1 = 4;
                 self->globeSpeed *= 2;
                 self->spinState     = 0;
                 self->globeSpeedInc = 4;
-                RSDK.PlaySfx(BSS_Setup->sfxSpring, 0, 255);
+                RSDK.PlaySfx(BSS_Setup->sfxSpring, false, 255);
             }
             break;
         case BSS_SPHERE_GREEN:
             if (self->globeTimer > 128) {
-                CREATE_ENTITY(BSS_Collected, intToVoid(3), self->playerPos.x, self->playerPos.y);
+                CREATE_ENTITY(BSS_Collected, intToVoid(BSS_COLLECTED_GREEN), self->playerPos.x, self->playerPos.y);
                 BSS_Setup->playField[fieldPos] = BSS_SPHERE_GREEN_STOOD;
-                RSDK.PlaySfx(BSS_Setup->sfxBlueSphere, 0, 255);
+                RSDK.PlaySfx(BSS_Setup->sfxBlueSphere, false, 255);
             }
             break;
         case BSS_SPHERE_PINK:
@@ -507,7 +507,7 @@ void BSS_Setup_HandleSteppedObjects(void)
                 self->state      = BSS_Setup_State_PinkSphereWarp;
                 self->spinTimer  = 0;
                 self->globeTimer = 0;
-                RSDK.PlaySfx(BSS_Setup->sfxTeleport, 0, 255);
+                RSDK.PlaySfx(BSS_Setup->sfxTeleport, false, 255);
                 EntityFXFade *fade = CREATE_ENTITY(FXFade, intToVoid(0xF0F0F0), self->position.x, self->position.y);
                 fade->speedIn      = 32;
                 fade->speedOut     = 32;
@@ -516,7 +516,7 @@ void BSS_Setup_HandleSteppedObjects(void)
             break;
         case BSS_RING:
             if (self->globeTimer < 128) {
-                CREATE_ENTITY(BSS_Collected, 0, self->playerPos.x, self->playerPos.y);
+                CREATE_ENTITY(BSS_Collected, intToVoid(BSS_COLLECTED_RING), self->playerPos.x, self->playerPos.y);
                 BSS_Setup->playField[fieldPos] = BSS_RING_SPARKLE;
                 BSS_Setup_CollectRing();
             }
@@ -526,7 +526,7 @@ void BSS_Setup_HandleSteppedObjects(void)
 
     int32 posX      = (self->playerPos.x + (RSDK.Sin256(self->angle) >> 8)) & 0x1F;
     int32 posY      = (self->playerPos.y - (RSDK.Cos256(self->angle) >> 8)) & 0x1F;
-    fieldPos      = posY + (BSS_PLAYFIELD_H * posX);
+    fieldPos        = posY + (BSS_PLAYFIELD_H * posX);
     int32 fieldData = BSS_Setup->playField[fieldPos];
     switch (fieldData) {
         case BSS_SPHERE_BLUE:
@@ -536,18 +536,18 @@ void BSS_Setup_HandleSteppedObjects(void)
                 BSS_Setup_ProcessChain();
                 --BSS_Setup->sphereCount;
                 if (!self->ringLoopFlag) {
-                    CREATE_ENTITY(BSS_Collected, intToVoid(1), posX, posY);
+                    CREATE_ENTITY(BSS_Collected, intToVoid(BSS_COLLECTED_BLUE), posX, posY);
                     BSS_Setup->playField[fieldPos] = BSS_BLUE_STOOD;
                 }
                 if (BSS_Setup->sphereCount <= 0) {
                     BSS_Setup->sphereCount = 0;
-                    RSDK.PlaySfx(BSS_Setup->sfxMedal, 0, 255);
+                    RSDK.PlaySfx(BSS_Setup->sfxMedal, false, 255);
                     self->state = BSS_Setup_Finished;
-                    RSDK.PlaySfx(BSS_Setup->sfxSSJettison, 0, 255);
+                    RSDK.PlaySfx(BSS_Setup->sfxSSJettison, false, 255);
                     Music_FadeOut(0.0125);
                 }
                 else {
-                    RSDK.PlaySfx(BSS_Setup->sfxBlueSphere, 0, 255);
+                    RSDK.PlaySfx(BSS_Setup->sfxBlueSphere, false, 255);
                 }
             }
             break;
@@ -561,7 +561,7 @@ void BSS_Setup_HandleSteppedObjects(void)
                 self->playerPos.x &= 0x1F;
                 self->playerPos.y -= RSDK.Cos256(self->angle) >> 8;
                 self->playerPos.y &= 0x1F;
-                RSDK.PlaySfx(BSS_Setup->sfxSSExit, 0, 255);
+                RSDK.PlaySfx(BSS_Setup->sfxSSExit, false, 255);
                 Music_FadeOut(0.0125);
             }
             break;
@@ -570,20 +570,20 @@ void BSS_Setup_HandleSteppedObjects(void)
                 if (self->globeTimer >= 240) {
                     if (!self->spinState) {
                         if (self->globeSpeed > 0) {
-                            self->globeTimer  = 240;
-                            self->bumperFlag  = true;
-                            self->globeSpeed  = -self->globeSpeed;
-                            self->unknownFlag = true;
-                            RSDK.PlaySfx(BSS_Setup->sfxBumper, 0, 255);
+                            self->globeTimer      = 240;
+                            self->bumperFlag      = true;
+                            self->globeSpeed      = -self->globeSpeed;
+                            self->playerWasBumped = true;
+                            RSDK.PlaySfx(BSS_Setup->sfxBumper, false, 255);
                         }
                     }
                 }
                 else {
                     if (self->globeSpeed > 0) {
-                        self->bumperFlag  = true;
-                        self->globeSpeed  = -self->globeSpeed;
-                        self->unknownFlag = true;
-                        RSDK.PlaySfx(BSS_Setup->sfxBumper, 0, 255);
+                        self->bumperFlag      = true;
+                        self->globeSpeed      = -self->globeSpeed;
+                        self->playerWasBumped = true;
+                        RSDK.PlaySfx(BSS_Setup->sfxBumper, false, 255);
                     }
                 }
             }
@@ -594,23 +594,23 @@ void BSS_Setup_HandleSteppedObjects(void)
                 player->velocity.y       = -0x180000;
                 player->onGround         = 0;
                 RSDK.SetSpriteAnimation(player->aniFrames, 3, &player->animator, 0, 0);
-                BSS_Player->field_6 = 4;
+                BSS_Player->unused1 = 4;
                 self->globeSpeed *= 2;
                 self->spinState     = 0;
                 self->globeSpeedInc = 4;
-                RSDK.PlaySfx(BSS_Setup->sfxSpring, 0, 255);
+                RSDK.PlaySfx(BSS_Setup->sfxSpring, false, 255);
             }
             break;
         case BSS_SPHERE_GREEN:
             if (self->globeTimer > 128) {
-                CREATE_ENTITY(BSS_Collected, intToVoid(3), posX, posY);
+                CREATE_ENTITY(BSS_Collected, intToVoid(BSS_COLLECTED_GREEN), posX, posY);
                 BSS_Setup->playField[fieldPos] = BSS_SPHERE_GREEN_STOOD;
-                RSDK.PlaySfx(BSS_Setup->sfxBlueSphere, 0, 255);
+                RSDK.PlaySfx(BSS_Setup->sfxBlueSphere, false, 255);
             }
             break;
         case BSS_RING:
             if (self->globeTimer > 128) {
-                CREATE_ENTITY(BSS_Collected, 0, posX, posY);
+                CREATE_ENTITY(BSS_Collected, intToVoid(BSS_COLLECTED_RING), posX, posY);
                 BSS_Setup->playField[fieldPos] = BSS_RING_SPARKLE;
                 BSS_Setup_CollectRing();
             }
@@ -648,7 +648,7 @@ void BSS_Setup_HandleSteppedObjects(void)
                 self->playerPos.y -= RSDK.Cos256(self->angle) >> 8;
                 self->playerPos.y &= 0x1F;
                 globals->specialCleared = true;
-                RSDK.PlaySfx(BSS_Setup->sfxSSExit, 0, 255);
+                RSDK.PlaySfx(BSS_Setup->sfxSSExit, false, 255);
             }
             break;
         default: break;
@@ -659,9 +659,9 @@ void BSS_Setup_HandleCollectableMovement(void)
 {
     RSDK_THIS(BSS_Setup);
     self->offsetDir = self->angle >> 6;
-    int32 off           = BSS_Setup->frustumOffset[(self->angle & 0x3F) != 0];
-    int32 id            = BSS_Setup->frustumCount[(self->angle & 0x3F) != 0];
-    Vector2 *offset   = &BSS_Setup->offsetTable[off];
+    int32 off       = BSS_Setup->frustumOffset[(self->angle & 0x3F) != 0];
+    int32 id        = BSS_Setup->frustumCount[(self->angle & 0x3F) != 0];
+    Vector2 *offset = &BSS_Setup->offsetTable[off];
 
     int32 slot = RESERVE_ENTITY_COUNT;
     while (id > 0) {
@@ -685,13 +685,13 @@ void BSS_Setup_HandleCollectableMovement(void)
             default: break;
         }
 
-        uint16 tile = BSS_Setup->playField[((self->offset.y + self->playerPos.y) & 0x1F)
-                                           + (BSS_PLAYFIELD_H * ((self->offset.x + self->playerPos.x) & 0x1F))];
+        uint16 tile =
+            BSS_Setup->playField[((self->offset.y + self->playerPos.y) & 0x1F) + (BSS_PLAYFIELD_H * ((self->offset.x + self->playerPos.x) & 0x1F))];
         if (tile) {
             EntityBSS_Collectable *collectable = (EntityBSS_Collectable *)RSDK.GetEntityByID(slot);
-            int32 x = (self->offset.x * RSDK.Cos256(self->angle) + self->offset.y * RSDK.Sin256(self->angle)) >> 4;
-            int32 y = (self->offset.y * RSDK.Cos256(self->angle) - self->offset.x * RSDK.Sin256(self->angle)) >> 4;
-            y     = -(y + self->paletteLine - 16);
+            int32 x                            = (self->offset.x * RSDK.Cos256(self->angle) + self->offset.y * RSDK.Sin256(self->angle)) >> 4;
+            int32 y                            = (self->offset.y * RSDK.Cos256(self->angle) - self->offset.x * RSDK.Sin256(self->angle)) >> 4;
+            y                                  = -(y + self->paletteLine - 16);
             if (y < 0) {
                 collectable->objectID = TYPE_BLANK;
             }
@@ -699,8 +699,8 @@ void BSS_Setup_HandleCollectableMovement(void)
                 collectable->objectID = BSS_Collectable->objectID;
                 collectable->type     = tile & 0x3FF;
                 if (y < 112) {
-                    self->xMultiplier  = BSS_Setup->xMultiplierTable[y];
-                    self->divisor      = BSS_Setup->divisorTable[y];
+                    self->xMultiplier    = BSS_Setup->xMultiplierTable[y];
+                    self->divisor        = BSS_Setup->divisorTable[y];
                     collectable->frameID = BSS_Setup->frameTable[y];
                     collectable->frameID -= abs(x) >> 5;
                     if (collectable->frameID < 0)
@@ -726,7 +726,7 @@ void BSS_Setup_HandleCollectableMovement(void)
     }
 
     while (slot < RESERVE_ENTITY_COUNT + 0x80) {
-        Entity *entity   = RSDK.GetEntityByID(slot++);
+        Entity *entity = RSDK.GetEntityByID(slot++);
         self->objectID = TYPE_BLANK;
     }
 }
@@ -737,7 +737,7 @@ void BSS_Setup_State_FinishWalk(void)
     RSDK.GetSceneLayer(BSS_Setup->globeLayer)->drawLayer[0] = 1;
     self->globeTimer += self->globeSpeed;
     if (++self->spinTimer == 120)
-        RSDK.PlaySfx(BSS_Setup->sfxMedalCaught, 0, 255);
+        RSDK.PlaySfx(BSS_Setup->sfxMedalCaught, false, 255);
     BSS_Setup_HandleSteppedObjects();
 
     if (self->globeSpeed <= 0 && self->globeTimer < 0) {
@@ -755,7 +755,7 @@ void BSS_Setup_State_FinishWalk(void)
     self->playerPos.x &= 0x1F;
     self->playerPos.y &= 0x1F;
     self->paletteLine = (self->globeTimer >> 4) & 0xF;
-    TileLayer *bg       = RSDK.GetSceneLayer(BSS_Setup->bgLayer);
+    TileLayer *bg     = RSDK.GetSceneLayer(BSS_Setup->bgLayer);
     bg->scrollPos += self->globeSpeed << 14;
     BSS_Setup_HandleCollectableMovement();
 }
@@ -770,8 +770,8 @@ void BSS_Setup_State_PinkSphereWarp(void)
         RSDK.SetSpriteAnimation(player1->aniFrames, 0, &player1->animator, true, 0);
         RSDK.SetSpriteAnimation(player2->aniFrames, 0, &player2->animator, true, 0);
 
-        int32 count   = BSS_Setup->pinkSphereCount;
-        int32 val     = RSDK.Rand(0, count - 1);
+        int32 count = BSS_Setup->pinkSphereCount;
+        int32 val   = RSDK.Rand(0, count - 1);
         bool32 flag = false;
         for (; (count && val >= 0) && !flag; --count) {
             for (int32 y = 0; y < BSS_PLAYFIELD_H; ++y) {
@@ -833,10 +833,10 @@ void BSS_Setup_State_PinkSphereWarp(void)
         }
 
         self->angle = val << 6;
-        CREATE_ENTITY(BSS_Collected, intToVoid(5), self->playerPos.x, self->playerPos.y);
+        CREATE_ENTITY(BSS_Collected, intToVoid(BSS_COLLECTED_PINK), self->playerPos.x, self->playerPos.y);
         BSS_Setup->playField[self->playerPos.y + (BSS_PLAYFIELD_H * self->playerPos.x)] = BSS_SPHERE_PINK_STOOD;
-        self->timer                                                                       = 100;
-        self->state                                                                       = BSS_Setup_State_Unknown23;
+        self->timer                                                                     = 100;
+        self->state                                                                     = BSS_Setup_State_Unknown23;
     }
     BSS_Setup_HandleCollectableMovement();
 }
@@ -846,9 +846,9 @@ void BSS_Setup_State_Exit(void)
     RSDK_THIS(BSS_Setup);
 
     PauseMenu->disableEvents = true;
-    self->maxSpeed         = 0;
+    self->maxSpeed           = 0;
     if (self->spinTimer <= 0) {
-        CREATE_ENTITY(BSS_Message, intToVoid(2), self->position.x, self->position.y);
+        CREATE_ENTITY(BSS_Message, intToVoid(BSS_MESSAGE_2_FINISHED), self->position.x, self->position.y);
         foreach_active(BSS_Player, player) { player->stateInput = StateMachine_None; }
     }
     else {
@@ -860,10 +860,10 @@ void BSS_Setup_State_Exit(void)
 
     TileLayer *globe = RSDK.GetSceneLayer(BSS_Setup->globeLayer);
     if (self->spinTimer & 0xF) {
-        globe->drawLayer[0]           = DRAWLAYER_COUNT;
+        globe->drawLayer[0]             = DRAWLAYER_COUNT;
         int32 timer                     = self->spinTimer & 0xF;
-        self->globeSpinData.frameID = BSS_Setup->globeFrameTable[timer - 1];
-        self->direction             = BSS_Setup->globeDirTableL[timer - 1];
+        self->globeSpinAnimator.frameID = BSS_Setup->globeFrameTable[timer - 1];
+        self->direction                 = BSS_Setup->globeDirTableL[timer - 1];
     }
     else {
         if (self->spinTimer > 0) {
@@ -886,9 +886,9 @@ void BSS_Setup_State_HandleStage(void)
     }
     RSDK.GetSceneLayer(BSS_Setup->globeLayer)->drawLayer[0] = 1;
 
-    if (self->unknownFlag) {
+    if (self->playerWasBumped) {
         if (!self->bumperFlag && player1->up)
-            self->unknownFlag = false;
+            self->playerWasBumped = false;
     }
     else {
         if (self->globeSpeed < self->maxSpeed)
@@ -985,7 +985,7 @@ void BSS_Setup_State_SpinLeft(void)
     self->angle &= 0xFF;
     TileLayer *globe = RSDK.GetSceneLayer(BSS_Setup->globeLayer);
     if (self->spinTimer == 15) {
-        self->spinTimer   = 0;
+        self->spinTimer     = 0;
         globe->drawLayer[0] = 1;
         self->palettePage ^= 1;
         if (!self->timer)
@@ -997,8 +997,8 @@ void BSS_Setup_State_SpinLeft(void)
     else {
         globe->drawLayer[0] = DRAWLAYER_COUNT;
 
-        self->globeSpinData.frameID = BSS_Setup->globeFrameTable[self->spinTimer];
-        self->direction             = BSS_Setup->globeDirTableL[self->spinTimer];
+        self->globeSpinAnimator.frameID = BSS_Setup->globeFrameTable[self->spinTimer];
+        self->direction                 = BSS_Setup->globeDirTableL[self->spinTimer];
         self->spinTimer++;
         if (self->timer > 1)
             self->timer--;
@@ -1021,7 +1021,7 @@ void BSS_Setup_State_SpinRight(void)
     self->angle &= 0xFF;
     TileLayer *globe = RSDK.GetSceneLayer(BSS_Setup->globeLayer);
     if (self->spinTimer == 15) {
-        self->spinTimer   = 0;
+        self->spinTimer     = 0;
         globe->drawLayer[0] = 1;
         if (!self->timer)
             self->state = BSS_Setup_State_HandleStage;
@@ -1034,8 +1034,8 @@ void BSS_Setup_State_SpinRight(void)
 
         if (!self->spinTimer)
             self->palettePage ^= 1;
-        self->globeSpinData.frameID = BSS_Setup->globeFrameTable[self->spinTimer];
-        self->direction             = BSS_Setup->globeDirTableR[self->spinTimer];
+        self->globeSpinAnimator.frameID = BSS_Setup->globeFrameTable[self->spinTimer];
+        self->direction                 = BSS_Setup->globeDirTableR[self->spinTimer];
         self->spinTimer++;
         if (self->timer > 1)
             self->timer--;
@@ -1077,7 +1077,7 @@ void BSS_Setup_State_Unknown23(void)
     BSS_Setup_HandleCollectableMovement();
 }
 
-bool32 BSS_Setup_Unknown(int32 x, int32 y)
+bool32 BSS_Setup_CheckSphereValid(int32 x, int32 y)
 {
     int32 x1 = BSS_PLAYFIELD_H * (((uint8)x - 1) & 0x1F);
     int32 y1 = ((uint8)y - 1) & 0x1F;
@@ -1104,16 +1104,16 @@ bool32 BSS_Setup_Unknown(int32 x, int32 y)
 void BSS_Setup_LaunchSpheres(void)
 {
     RSDK_THIS(BSS_Setup);
-    int32 x              = self->spinTimer + 0x100;
-    int32 y              = self->spinTimer << 17;
+    int32 x                = self->spinTimer + 0x100;
+    int32 y                = self->spinTimer << 17;
     RSDKScreenInfo *screen = ScreenInfo;
 
-    int32 i                              = RESERVE_ENTITY_COUNT;
+    int32 i                            = RESERVE_ENTITY_COUNT;
     EntityBSS_Collectable *collectable = NULL;
 
     collectable = RSDK_GET_ENTITY(i++, BSS_Collectable);
     while (collectable->objectID != TYPE_BLANK) {
-        int32 ix                  = (collectable->position.x >> 16);
+        int32 ix                = (collectable->position.x >> 16);
         collectable->position.x = ((x * (ix - screen->centerX) >> 8) + screen->centerX) << 16;
         collectable->position.y -= y;
         collectable = RSDK_GET_ENTITY(i++, BSS_Collectable);
@@ -1142,7 +1142,7 @@ void BSS_Setup_StageFinishClear(void)
     RSDK_GET_ENTITY(RESERVE_ENTITY_COUNT + 1, BSS_Collectable)->drawOrder = 3;
 }
 
-bool32 BSS_Setup_Unknown2(uint8 x, uint8 y)
+bool32 BSS_Setup_ScanSphereChain_Up(uint8 x, uint8 y)
 {
     RSDK_THIS(BSS_Setup);
     if (self->ringLoopFlag)
@@ -1159,7 +1159,7 @@ bool32 BSS_Setup_Unknown2(uint8 x, uint8 y)
 
         if ((BSS_Setup->playField2[px + y1] & 0x7F) == BSS_SPHERE_BLUE)
             break;
-        if (!BSS_Setup_Unknown(x, y1))
+        if (!BSS_Setup_CheckSphereValid(x, y1))
             break;
 
         BSS_Setup->playField2[y1 + px] = BSS_SPHERE_BLUE;
@@ -1173,10 +1173,10 @@ bool32 BSS_Setup_Unknown2(uint8 x, uint8 y)
         int32 fieldPos  = y1 + (BSS_PLAYFIELD_H * (((uint8)x + 1) & 0x1F));
         int32 fieldPos2 = y1 + (BSS_PLAYFIELD_H * (((uint8)x - 1) & 0x1F));
         if ((BSS_Setup->playField[fieldPos] & 0x7F) == BSS_SPHERE_RED) {
-            flag |= BSS_Setup_Unknown5(x, y1);
+            flag |= BSS_Setup_ScanSphereChain_Right(x, y1);
         }
         if ((BSS_Setup->playField[fieldPos2] & 0x7F) == BSS_SPHERE_RED) {
-            flag |= BSS_Setup_Unknown4(x, y1);
+            flag |= BSS_Setup_ScanSphereChain_Left(x, y1);
         }
 
         if (!flag)
@@ -1194,7 +1194,7 @@ bool32 BSS_Setup_Unknown2(uint8 x, uint8 y)
 
     return false;
 }
-bool32 BSS_Setup_Unknown3(uint8 x, uint8 y)
+bool32 BSS_Setup_ScanSphereChain_Down(uint8 x, uint8 y)
 {
     RSDK_THIS(BSS_Setup);
     if (self->ringLoopFlag)
@@ -1211,7 +1211,7 @@ bool32 BSS_Setup_Unknown3(uint8 x, uint8 y)
 
         if (BSS_Setup->playField2[px + y1] == BSS_SPHERE_BLUE)
             break;
-        if (!BSS_Setup_Unknown(x, y1)) {
+        if (!BSS_Setup_CheckSphereValid(x, y1)) {
             break;
         }
 
@@ -1227,10 +1227,10 @@ bool32 BSS_Setup_Unknown3(uint8 x, uint8 y)
         int32 fieldPos  = y1 + (BSS_PLAYFIELD_H * (((uint8)x - 1) & 0x1F));
         int32 fieldPos2 = y1 + (BSS_PLAYFIELD_H * (((uint8)x + 1) & 0x1F));
         if ((BSS_Setup->playField[fieldPos] & 0x7F) == BSS_SPHERE_RED) {
-            flag |= BSS_Setup_Unknown4(x, y1);
+            flag |= BSS_Setup_ScanSphereChain_Left(x, y1);
         }
         if ((BSS_Setup->playField[fieldPos2] & 0x7F) == BSS_SPHERE_RED) {
-            flag |= BSS_Setup_Unknown5(x, y1);
+            flag |= BSS_Setup_ScanSphereChain_Right(x, y1);
         }
 
         if (!flag)
@@ -1247,7 +1247,7 @@ bool32 BSS_Setup_Unknown3(uint8 x, uint8 y)
     }
     return false;
 }
-bool32 BSS_Setup_Unknown4(uint8 x, uint8 y)
+bool32 BSS_Setup_ScanSphereChain_Left(uint8 x, uint8 y)
 {
     RSDK_THIS(BSS_Setup);
     if (self->ringLoopFlag)
@@ -1257,14 +1257,14 @@ bool32 BSS_Setup_Unknown4(uint8 x, uint8 y)
 
     int32 x1 = x;
     while (true) {
-        x1     = ((uint8)x1 - 1) & 0x1F;
+        x1       = ((uint8)x1 - 1) & 0x1F;
         int32 px = (BSS_PLAYFIELD_H * x1);
         if ((BSS_Setup->playField[px + y] & 0x7F) != BSS_SPHERE_RED)
             break;
 
         if ((BSS_Setup->playField2[px + y] & 0x7F) == BSS_SPHERE_BLUE)
             break;
-        if (!BSS_Setup_Unknown(x1, y))
+        if (!BSS_Setup_CheckSphereValid(x1, y))
             break;
 
         BSS_Setup->playField2[y + px] = BSS_SPHERE_BLUE;
@@ -1278,10 +1278,10 @@ bool32 BSS_Setup_Unknown4(uint8 x, uint8 y)
         int32 fieldPos  = (BSS_PLAYFIELD_H * x1) + (((uint8)y - 1) & 0x1F);
         int32 fieldPos2 = (BSS_PLAYFIELD_H * x1) + (((uint8)y + 1) & 0x1F);
         if ((BSS_Setup->playField[fieldPos] & 0x7F) == BSS_SPHERE_RED) {
-            flag |= BSS_Setup_Unknown2(x1, y);
+            flag |= BSS_Setup_ScanSphereChain_Up(x1, y);
         }
         if ((BSS_Setup->playField[fieldPos2] & 0x7F) == BSS_SPHERE_RED) {
-            flag |= BSS_Setup_Unknown3(x1, y);
+            flag |= BSS_Setup_ScanSphereChain_Down(x1, y);
         }
 
         if (!flag)
@@ -1294,13 +1294,13 @@ bool32 BSS_Setup_Unknown4(uint8 x, uint8 y)
 
     for (int32 i = id; i > 0; --i) {
         x1                            = ((uint8)x1 + 1) & 0x1F;
-        int32 px                        = (BSS_PLAYFIELD_H * x1);
+        int32 px                      = (BSS_PLAYFIELD_H * x1);
         BSS_Setup->playField3[px + y] = BSS_NONE;
     }
 
     return false;
 }
-bool32 BSS_Setup_Unknown5(uint8 x, uint8 y)
+bool32 BSS_Setup_ScanSphereChain_Right(uint8 x, uint8 y)
 {
     RSDK_THIS(BSS_Setup);
     if (self->ringLoopFlag)
@@ -1310,14 +1310,14 @@ bool32 BSS_Setup_Unknown5(uint8 x, uint8 y)
 
     int32 x1 = x;
     while (true) {
-        x1     = ((uint8)x1 + 1) & 0x1F;
+        x1       = ((uint8)x1 + 1) & 0x1F;
         int32 px = (BSS_PLAYFIELD_H * x1);
         if ((BSS_Setup->playField[px + y] & 0x7F) != BSS_SPHERE_RED)
             break;
 
         if ((BSS_Setup->playField2[px + y] & 0x7F) == BSS_SPHERE_BLUE)
             break;
-        if (!BSS_Setup_Unknown(x1, y))
+        if (!BSS_Setup_CheckSphereValid(x1, y))
             break;
 
         BSS_Setup->playField2[y + px] = BSS_SPHERE_BLUE;
@@ -1331,10 +1331,10 @@ bool32 BSS_Setup_Unknown5(uint8 x, uint8 y)
         int32 fieldPos  = (BSS_PLAYFIELD_H * x1) + (((uint8)y + 1) & 0x1F);
         int32 fieldPos2 = (BSS_PLAYFIELD_H * x1) + (((uint8)y - 1) & 0x1F);
         if ((BSS_Setup->playField[fieldPos] & 0x7F) == BSS_SPHERE_RED) {
-            flag |= BSS_Setup_Unknown3(x1, y);
+            flag |= BSS_Setup_ScanSphereChain_Down(x1, y);
         }
         if ((BSS_Setup->playField[fieldPos2] & 0x7F) == BSS_SPHERE_RED) {
-            flag |= BSS_Setup_Unknown2(x1, y);
+            flag |= BSS_Setup_ScanSphereChain_Up(x1, y);
         }
 
         if (!flag)
@@ -1347,13 +1347,13 @@ bool32 BSS_Setup_Unknown5(uint8 x, uint8 y)
 
     for (int32 i = id; i > 0; --i) {
         x1                            = ((uint8)x1 - 1) & 0x1F;
-        int32 px                        = (BSS_PLAYFIELD_H * x1);
+        int32 px                      = (BSS_PLAYFIELD_H * x1);
         BSS_Setup->playField3[px + y] = BSS_NONE;
     }
 
     return false;
 }
-bool32 BSS_Setup_Unknown6(uint8 x, uint8 y)
+bool32 BSS_Setup_GetChainedSphereCount(uint8 x, uint8 y)
 {
     int32 px = BSS_PLAYFIELD_H * x;
 
@@ -1426,10 +1426,10 @@ void BSS_Setup_ProcessChain(void)
     BSS_Setup->playField3[self->lastSpherePos.y + (BSS_PLAYFIELD_H * self->lastSpherePos.x)] = BSS_SPHERE_BLUE;
 
     self->ringLoopFlag = false;
-    BSS_Setup_Unknown2(self->lastSpherePos.x, self->lastSpherePos.y);
-    BSS_Setup_Unknown3(self->lastSpherePos.x, self->lastSpherePos.y);
-    BSS_Setup_Unknown4(self->lastSpherePos.x, self->lastSpherePos.y);
-    BSS_Setup_Unknown5(self->lastSpherePos.x, self->lastSpherePos.y);
+    BSS_Setup_ScanSphereChain_Up(self->lastSpherePos.x, self->lastSpherePos.y);
+    BSS_Setup_ScanSphereChain_Down(self->lastSpherePos.x, self->lastSpherePos.y);
+    BSS_Setup_ScanSphereChain_Left(self->lastSpherePos.x, self->lastSpherePos.y);
+    BSS_Setup_ScanSphereChain_Right(self->lastSpherePos.x, self->lastSpherePos.y);
 
     BSS_Setup->playField[self->lastSpherePos.y + (BSS_PLAYFIELD_H * self->lastSpherePos.x)] = BSS_SPHERE_BLUE;
     if (self->ringLoopFlag) {
@@ -1438,7 +1438,7 @@ void BSS_Setup_ProcessChain(void)
         for (int32 y = 0; y < BSS_PLAYFIELD_H; ++y) {
             for (int32 x = 0; x < BSS_PLAYFIELD_W; ++x) {
                 if ((BSS_Setup->playField[(x * BSS_PLAYFIELD_H) + y] & 0x7F) == BSS_SPHERE_BLUE) {
-                    spheresCollected += BSS_Setup_Unknown6(x, y);
+                    spheresCollected += BSS_Setup_GetChainedSphereCount(x, y);
                 }
             }
         }
@@ -1482,7 +1482,7 @@ void BSS_Setup_ProcessChain(void)
             }
 
             BSS_Setup->sphereCount -= spheresCollected;
-            RSDK.PlaySfx(BSS_Setup->sfxLoseRings, 0, 0xFF);
+            RSDK.PlaySfx(BSS_Setup->sfxLoseRings, false, 0xFF);
         }
     }
 }

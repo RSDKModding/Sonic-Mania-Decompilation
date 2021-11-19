@@ -15,7 +15,7 @@ void BSS_HUD_Draw(void)
 
     drawPos.y             = 0xD0000;
     drawPos.x             = (ScreenInfo->centerX - 141) << 16;
-    RSDK.DrawSprite(&self->animator1, &drawPos, true);
+    RSDK.DrawSprite(&self->sphereAnimator, &drawPos, true);
 
     drawPos.x += 0x250000;
     drawPos.y = 0x110000;
@@ -23,7 +23,7 @@ void BSS_HUD_Draw(void)
 
     drawPos.x = (ScreenInfo->centerX + 64) << 16;
     drawPos.y = 0xD0000;
-    RSDK.DrawSprite(&self->animator2, &drawPos, true);
+    RSDK.DrawSprite(&self->ringAnimator, &drawPos, true);
 
     drawPos.x += 0x380000;
     drawPos.y = 0x110000;
@@ -59,8 +59,8 @@ void BSS_HUD_Create(void *data)
         self->drawOrder     = DRAWLAYER_COUNT - 1;
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
-        RSDK.SetSpriteAnimation(BSS_HUD->aniFrames, 0, &self->animator1, true, 0);
-        RSDK.SetSpriteAnimation(BSS_HUD->aniFrames, 0, &self->animator2, true, 1);
+        RSDK.SetSpriteAnimation(BSS_HUD->aniFrames, 0, &self->sphereAnimator, true, 0);
+        RSDK.SetSpriteAnimation(BSS_HUD->aniFrames, 0, &self->ringAnimator, true, 1);
         RSDK.SetSpriteAnimation(BSS_HUD->aniFrames, 1, &self->numbersAnimator, true, 0);
     }
 }

@@ -15,7 +15,7 @@ typedef struct {
     int32 rings;
     int32 ringPan;
     int32 ringCount;
-    int32 field_1C;
+    int32 ringID; // goes pretty much unused it seems
     uint16 bgLayer;
     uint16 globeLayer;
     uint16 frustum1Layer;
@@ -51,7 +51,7 @@ typedef struct {
     int32 offsetRadiusTable[0x100];
     int32 frustumCount[2];
     int32 frustumOffset[2];
-    int32 field_1434;
+    int32 unused1;
     uint16 playField[BSS_PLAYFIELD_W * BSS_PLAYFIELD_H];
     uint16 playField2[BSS_PLAYFIELD_W * BSS_PLAYFIELD_H];
     uint16 playField3[BSS_PLAYFIELD_W * BSS_PLAYFIELD_H];
@@ -79,27 +79,27 @@ typedef struct {
     int32 timer;
     int32 spinState;
     int32 palettePage;
-    int32 field_74;
+    int32 unused1;
     int32 xMultiplier;
     int32 divisor;
     int32 maxSpeed;
     int32 globeSpeed;
-    bool32 unknownFlag;
+    bool32 playerWasBumped;
     int32 globeSpeedInc;
     bool32 bumperFlag;
     int32 globeTimer;
     int32 paletteLine;
     int32 offsetDir;
-    int32 field_A0;
+    int32 unused2;
     Vector2 offset;
     Vector2 playerPos;
     Vector2 lastSpherePos;
-    int32 field_BC;
+    int32 unused3;
     bool32 ringLoopFlag;
     int32 paletteID;
-    int32 pauseFlag;
-    Animator globeSpinData;
-    Animator shadowData;
+    int32 stopMovement;
+    Animator globeSpinAnimator;
+    Animator shadowAnimator;
 } EntityBSS_Setup;
 
 // Object Struct
@@ -134,14 +134,14 @@ void BSS_Setup_State_HandleStage(void);
 void BSS_Setup_State_SpinLeft(void);
 void BSS_Setup_State_SpinRight(void);
 void BSS_Setup_State_Unknown23(void);
-bool32 BSS_Setup_Unknown(int32 x, int32 y);
+bool32 BSS_Setup_CheckSphereValid(int32 x, int32 y);
 void BSS_Setup_LaunchSpheres(void);
 void BSS_Setup_StageFinishClear(void);
-bool32 BSS_Setup_Unknown2(uint8 x, uint8 y);
-bool32 BSS_Setup_Unknown3(uint8 x, uint8 y);
-bool32 BSS_Setup_Unknown4(uint8 x, uint8 y);
-bool32 BSS_Setup_Unknown5(uint8 x, uint8 y);
-bool32 BSS_Setup_Unknown6(uint8 x, uint8 y);
+bool32 BSS_Setup_ScanSphereChain_Up(uint8 x, uint8 y);
+bool32 BSS_Setup_ScanSphereChain_Down(uint8 x, uint8 y);
+bool32 BSS_Setup_ScanSphereChain_Left(uint8 x, uint8 y);
+bool32 BSS_Setup_ScanSphereChain_Right(uint8 x, uint8 y);
+bool32 BSS_Setup_GetChainedSphereCount(uint8 x, uint8 y);
 void BSS_Setup_ProcessChain(void);
 
 #endif //! OBJ_BSS_SETUP_H

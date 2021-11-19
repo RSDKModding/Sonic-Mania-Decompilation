@@ -3155,7 +3155,7 @@ void Player_Hit(EntityPlayer *player)
                 Ring_LoseHyperRings(player, player->rings, player->collisionPlane);
             else
                 Ring_LoseRings(player, player->rings, player->collisionPlane);
-            player->hyperRing     = 0;
+            player->hyperRing     = false;
             player->rings         = 0;
             player->ringExtraLife = 100;
             RSDK.PlaySfx(Player->sfxLoseRings, false, 0xFF);
@@ -6434,7 +6434,7 @@ void Player_ProcessP2Input_AI(void)
                     Player->P2JumpActionDelay = 0;
                     if (self->controlLock > 0) {
                         if (abs(self->groundVel) < 0x8000)
-                            self->stateInput = Player_ProcessP2Input_None;
+                            self->stateInput = Player_ProcessP2Input_JumpIn;
                     }
                     jumpFlag = 2;
                 }
@@ -6459,7 +6459,7 @@ void Player_ProcessP2Input_AI(void)
 
             if (self->controlLock > 0) {
                 if (abs(self->groundVel) < 0x8000)
-                    self->stateInput = Player_ProcessP2Input_None;
+                    self->stateInput = Player_ProcessP2Input_JumpIn;
             }
         }
     }
@@ -6467,7 +6467,7 @@ void Player_ProcessP2Input_AI(void)
         self->stateInput = Player_ProcessP2Input_Player;
     Player_P2JumpBackIn();
 }
-void Player_ProcessP2Input_None(void)
+void Player_ProcessP2Input_JumpIn(void)
 {
     RSDK_THIS(Player);
     self->up        = false;
@@ -6478,7 +6478,7 @@ void Player_ProcessP2Input_None(void)
     self->jumpHold  = false;
     if (!self->controlLock && self->onGround && self->groundVel < 0x4000) {
         self->groundVel           = 0;
-        self->stateInput          = Player_ProcessP2Input_Unknown;
+        self->stateInput          = Player_ProcessP2Input_JumpDelay;
         Player->P2JumpActionDelay = 1;
         if (self->animator.animationID != ANI_SPINDASH) {
             self->down      = true;
@@ -6489,7 +6489,7 @@ void Player_ProcessP2Input_None(void)
         self->stateInput = Player_ProcessP2Input_Player;
     Player_P2JumpBackIn();
 }
-void Player_ProcessP2Input_Unknown(void)
+void Player_ProcessP2Input_JumpDelay(void)
 {
     RSDK_THIS(Player);
     if (Player->P2JumpActionDelay >= 64) {

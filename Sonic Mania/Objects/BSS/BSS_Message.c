@@ -20,11 +20,12 @@ void BSS_Message_Draw(void)
 
     drawPos.x = (ScreenInfo->centerX - self->timer2) << 16;
     drawPos.y = 0x680000;
-    RSDK.DrawSprite(&self->leftData, &drawPos, true);
+    RSDK.DrawSprite(&self->leftAnimator, &drawPos, true);
 
     drawPos.x = (ScreenInfo->centerX + self->timer2) << 16;
-    RSDK.DrawSprite(&self->rightData, &drawPos, true);
-    if (self->flag)
+    RSDK.DrawSprite(&self->rightAnimator, &drawPos, true);
+
+    if (self->shouldFade)
         RSDK.FillScreen(self->colour, self->timer, self->timer - 128, self->timer - 256);
 }
 
@@ -33,28 +34,28 @@ void BSS_Message_Create(void *data)
     RSDK_THIS(BSS_Message);
     if (!SceneInfo->inEditor) {
         self->active    = ACTIVE_NORMAL;
-        self->visible   = 1;
+        self->visible   = true;
         self->drawOrder = 15;
 
         switch (voidToInt(data)) {
-            case 0:
-                self->flag   = true;
+            case BSS_MESSAGE_GETBS:
+                self->shouldFade   = true;
                 self->colour = 0xF0F0F0;
                 self->timer  = 512;
                 self->state  = BSS_Message_State_GetBS;
-                RSDK.SetSpriteAnimation(BSS_Message->aniFrames, 2, &self->leftData, true, 0);
-                RSDK.SetSpriteAnimation(BSS_Message->aniFrames, 2, &self->rightData, true, 1);
+                RSDK.SetSpriteAnimation(BSS_Message->aniFrames, 2, &self->leftAnimator, true, 0);
+                RSDK.SetSpriteAnimation(BSS_Message->aniFrames, 2, &self->rightAnimator, true, 1);
                 break;
-            case 1:
+            case BSS_MESSAGE_PERFECT:
                 self->timer2 = 320;
                 self->state  = BSS_Message_State_Perfect;
-                RSDK.SetSpriteAnimation(BSS_Message->aniFrames, 3, &self->leftData, true, 0);
-                RSDK.SetSpriteAnimation(BSS_Message->aniFrames, 3, &self->rightData, true, 1);
+                RSDK.SetSpriteAnimation(BSS_Message->aniFrames, 3, &self->leftAnimator, true, 0);
+                RSDK.SetSpriteAnimation(BSS_Message->aniFrames, 3, &self->rightAnimator, true, 1);
                 break;
-            case 2:
-                self->flag   = true;
+            case BSS_MESSAGE_2_FINISHED:
+                self->shouldFade   = true;
                 self->colour = 0;
-                self->state  = BSS_Message_State_Unknown;
+                self->state  = BSS_Message_State_Finished;
                 break;
         }
     }
@@ -63,7 +64,7 @@ void BSS_Message_Create(void *data)
 void BSS_Message_StageLoad(void)
 {
     BSS_Message->aniFrames = RSDK.LoadSpriteAnimation("SpecialBS/HUD.bin", SCOPE_STAGE);
-    RSDK.ResetEntitySlot(SLOT_BSS_MESSAGE, BSS_Message->objectID, 0);
+    RSDK.ResetEntitySlot(SLOT_BSS_MESSAGE, BSS_Message->objectID, intToVoid(BSS_MESSAGE_GETBS));
 }
 
 void BSS_Message_State_GetBS(void)
@@ -76,7 +77,7 @@ void BSS_Message_State_GetBS(void)
 
     if (self->timer <= 0) {
         self->timer = 0;
-        self->flag  = 0;
+        self->shouldFade  = false;
         self->state = BSS_Message_State_GetBSWait;
     }
     else {
@@ -118,7 +119,7 @@ void BSS_Message_State_GetBSWait(void)
     }
 }
 
-void BSS_Message_State_Unknown(void)
+void BSS_Message_State_Finished(void)
 {
     RSDK_THIS(BSS_Message);
     if (self->timer >= 768) {
