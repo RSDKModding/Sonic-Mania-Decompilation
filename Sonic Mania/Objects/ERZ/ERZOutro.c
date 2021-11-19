@@ -341,7 +341,7 @@ bool32 ERZOutro_CutsceneState_EnterPortal(EntityCutsceneSeq *host)
         player1->scale.y = 0x200;
     }
     if (host->timer == 60)
-        PhantomRuby_Unknown2(ruby);
+        PhantomRuby_SetupFlash(ruby);
 
     if (host->timer < 108) {
         ERZOutro_HandleRubyHover();

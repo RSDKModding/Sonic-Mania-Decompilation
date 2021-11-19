@@ -1,10 +1,12 @@
 #include "SonicMania.h"
 
+//This Object is COMPLETELY unused, knux uses GHZCutsceneST anyways, so it's no surprise that its not finished either
+
 ObjectGHZCutsceneK *GHZCutsceneK;
 
 void GHZCutsceneK_Update(void)
 {
-    void *states[2] = { GHZCutsceneK_Unknown, NULL };
+    void *states[2] = { GHZCutsceneK_Cutscene_None, NULL };
 
     RSDK_THIS(GHZCutsceneK);
     if (!self->activated) {
@@ -35,7 +37,7 @@ void GHZCutsceneK_Create(void *data)
 
 void GHZCutsceneK_StageLoad(void) {}
 
-bool32 GHZCutsceneK_Unknown(void)
+bool32 GHZCutsceneK_Cutscene_None(void)
 {
     RSDK_GET_PLAYER(player1, player2, camera);
     unused(player1);

@@ -6,7 +6,7 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    int32 field_4;
+    int32 unused1;
     Entity *fxRuby;
     Entity *claw;
     Entity *platform;
@@ -47,10 +47,12 @@ void GHZCutsceneST_Serialize(void);
 
 // Extra Entity Functions
 void GHZCutsceneST_SetupObjects(void);
-bool32 GHZCutsceneST_CutsceneState_Unknown1(EntityCutsceneSeq *host);
-bool32 GHZCutsceneST_CutsceneState_Unknown2(EntityCutsceneSeq *host);
-bool32 GHZCutsceneST_CutsceneState_Unknown3(EntityCutsceneSeq *host);
-bool32 GHZCutsceneST_CutsceneState_LoadNextStage(EntityCutsceneSeq *host);
 void GHZCutsceneST_SkipCB(void);
+
+bool32 GHZCutsceneST_Cutscene_FadeIn(EntityCutsceneSeq *host);
+bool32 GHZCutsceneST_Cutscene_FinishRubyWarp(EntityCutsceneSeq *host);
+bool32 GHZCutsceneST_Cutscene_ExitHBH(EntityCutsceneSeq *host);
+bool32 GHZCutsceneST_Cutscene_SetupGHZ1(EntityCutsceneSeq *host);
+
 
 #endif //!OBJ_GHZCUTSCENEST_H

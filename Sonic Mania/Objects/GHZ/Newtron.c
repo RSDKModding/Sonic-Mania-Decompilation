@@ -15,9 +15,9 @@ void Newtron_StaticUpdate(void) {}
 void Newtron_Draw(void)
 {
     RSDK_THIS(Newtron);
-    RSDK.DrawSprite(&self->animator1, NULL, false);
-    if (self->state == Newtron_Unknown8)
-        RSDK.DrawSprite(&self->animator2, NULL, false);
+    RSDK.DrawSprite(&self->animator, NULL, false);
+    if (self->state == Newtron_State_Fly)
+        RSDK.DrawSprite(&self->flameAnimator, NULL, false);
 }
 
 void Newtron_Create(void *data)
@@ -28,8 +28,8 @@ void Newtron_Create(void *data)
         self->startPos.x = self->position.x;
         self->startPos.y = self->position.y;
         self->visible    = true;
-        if (data == intToVoid(1)) {
-            self->type          = 1;
+        if (data == intToVoid(NEWTRON_FLY)) {
+            self->type          = NEWTRON_FLY;
             self->active        = ACTIVE_BOUNDS;
             self->updateRange.x = 0x800000;
             self->updateRange.y = 0x800000;
@@ -37,7 +37,7 @@ void Newtron_Create(void *data)
         else if (data) {
             self->inkEffect = INK_ADD;
             self->alpha     = 0xC0;
-            RSDK.SetSpriteAnimation(Newtron->aniFrames, 6, &self->animator1, true, 0);
+            RSDK.SetSpriteAnimation(Newtron->aniFrames, 6, &self->animator, true, 0);
             self->state         = Newtron_State_Projectile;
             self->active        = ACTIVE_NORMAL;
             self->updateRange.x = 0x200000;
@@ -50,16 +50,16 @@ void Newtron_Create(void *data)
         self->active        = ACTIVE_BOUNDS;
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
-        if (self->type == 1) {
-            RSDK.SetSpriteAnimation(Newtron->aniFrames, 2, &self->animator1, true, 0);
+        if (self->type == NEWTRON_FLY) {
+            RSDK.SetSpriteAnimation(Newtron->aniFrames, 2, &self->animator, true, 0);
             self->drawOrder = Zone->drawOrderLow;
         }
         else {
-            RSDK.SetSpriteAnimation(Newtron->aniFrames, 0, &self->animator1, true, 0);
+            RSDK.SetSpriteAnimation(Newtron->aniFrames, 0, &self->animator, true, 0);
             self->drawOrder = Zone->drawOrderHigh;
         }
-        RSDK.SetSpriteAnimation(Newtron->aniFrames, 5, &self->animator2, true, 0);
-        self->state = Newtron_Unknown4;
+        RSDK.SetSpriteAnimation(Newtron->aniFrames, 5, &self->flameAnimator, true, 0);
+        self->state = Newtron_State_Setup;
     }
 }
 
@@ -67,22 +67,29 @@ void Newtron_StageLoad(void)
 {
     if (RSDK.CheckStageFolder("GHZ"))
         Newtron->aniFrames = RSDK.LoadSpriteAnimation("GHZ/Newtron.bin", SCOPE_STAGE);
-    Newtron->hitbox1.left   = -12;
-    Newtron->hitbox1.top    = -14;
-    Newtron->hitbox1.right  = 12;
-    Newtron->hitbox1.bottom = 14;
-    Newtron->hitbox2.left   = -16;
-    Newtron->hitbox2.top    = -8;
-    Newtron->hitbox2.right  = 16;
-    Newtron->hitbox2.bottom = 8;
-    Newtron->hitbox3.left   = -6;
-    Newtron->hitbox3.top    = -6;
-    Newtron->hitbox3.right  = 6;
-    Newtron->hitbox3.bottom = 6;
-    Newtron->hitbox4.left   = -128;
-    Newtron->hitbox4.top    = -64;
-    Newtron->hitbox4.right  = 128;
-    Newtron->hitbox4.bottom = 64;
+
+    Newtron->hitboxShoot.left   = -12;
+    Newtron->hitboxShoot.top    = -14;
+    Newtron->hitboxShoot.right  = 12;
+    Newtron->hitboxShoot.bottom = 14;
+
+    // hitbox for the flying variant
+    // goes unused in this object because..... ???
+    // at least checkerball uses it
+    Newtron->hitboxFly.left   = -16;
+    Newtron->hitboxFly.top    = -8;
+    Newtron->hitboxFly.right  = 16;
+    Newtron->hitboxFly.bottom = 8;
+
+    Newtron->hitboxProjectile.left   = -6;
+    Newtron->hitboxProjectile.top    = -6;
+    Newtron->hitboxProjectile.right  = 6;
+    Newtron->hitboxProjectile.bottom = 6;
+
+    Newtron->hitboxRange.left   = -128;
+    Newtron->hitboxRange.top    = -64;
+    Newtron->hitboxRange.right  = 128;
+    Newtron->hitboxRange.bottom = 64;
 
     DEBUGMODE_ADD_OBJ(Newtron);
 }
@@ -96,6 +103,7 @@ void Newtron_DebugDraw(void)
 void Newtron_DebugSpawn(void)
 {
     RSDK_THIS(DebugMode);
+
     CREATE_ENTITY(Newtron, NULL, self->position.x, self->position.y);
 }
 
@@ -104,7 +112,7 @@ void Newtron_CheckHit(void)
     RSDK_THIS(Newtron);
     foreach_active(Player, player)
     {
-        if (Player_CheckBadnikTouch(player, self, &Newtron->hitbox1))
+        if (Player_CheckBadnikTouch(player, self, &Newtron->hitboxShoot))
             Player_CheckBadnikBreak(self, player, true);
     }
 }
@@ -122,7 +130,7 @@ void Newtron_CheckOnScreen(void)
     }
 }
 
-void Newtron_Unknown3(void)
+void Newtron_GetTargetDir(void)
 {
     RSDK_THIS(Newtron);
 
@@ -143,58 +151,53 @@ void Newtron_Unknown3(void)
     }
 }
 
-void Newtron_Unknown4(void)
+void Newtron_State_Setup(void)
 {
     RSDK_THIS(Newtron);
     self->active = ACTIVE_NORMAL;
-    self->state  = Newtron_Unknown5;
-    Newtron_Unknown5();
+    self->state  = Newtron_State_CheckPlayerInRange;
+    Newtron_State_CheckPlayerInRange();
 }
 
-void Newtron_Unknown5(void)
+void Newtron_State_CheckPlayerInRange(void)
 {
     RSDK_THIS(Newtron);
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionTouch(player, self, &Newtron->hitbox4)) {
-            self->state = Newtron_Unknown6;
+        if (Player_CheckCollisionTouch(player, self, &Newtron->hitboxRange)) {
+            self->state = Newtron_State_Appear;
         }
     }
     Newtron_CheckOnScreen();
 }
 
-void Newtron_Unknown6(void)
+void Newtron_State_Appear(void)
 {
     RSDK_THIS(Newtron);
     if (self->alpha >= 0xF8) {
         self->alpha = 0xFF;
-        if (self->type == 1) {
-            self->state = Newtron_Unknown7;
-            RSDK.SetSpriteAnimation(Newtron->aniFrames, 3, &self->animator1, true, 0);
-            RSDK.ProcessAnimation(&self->animator1);
-            Newtron_CheckOnScreen();
-            return;
+        if (self->type == NEWTRON_FLY) {
+            self->state = Newtron_State_StartFly;
+            RSDK.SetSpriteAnimation(Newtron->aniFrames, 3, &self->animator, true, 0);
         }
-        self->state = Newtron_Unknown9;
+        else
+            self->state = Newtron_State_Shoot;
     }
     else {
         self->alpha += 4;
-        if (self->type == 1) {
-            Newtron_Unknown3();
-            RSDK.ProcessAnimation(&self->animator1);
-            Newtron_CheckOnScreen();
-            return;
+        if (self->type == NEWTRON_FLY) {
+            Newtron_GetTargetDir();
         }
     }
-    RSDK.ProcessAnimation(&self->animator1);
+    RSDK.ProcessAnimation(&self->animator);
     Newtron_CheckOnScreen();
 }
 
-void Newtron_Unknown7(void)
+void Newtron_State_StartFly(void)
 {
     RSDK_THIS(Newtron);
-    Newtron_Unknown3();
-    if (self->animator1.frameID >= 2) {
+    Newtron_GetTargetDir();
+    if (self->animator.frameID >= 2) {
         self->position.y += self->velocity.y;
         self->velocity.y += 0x3800;
         if (RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x80000, 8)) {
@@ -203,53 +206,54 @@ void Newtron_Unknown7(void)
                 self->velocity.x = 0x20000;
             else
                 self->velocity.x = -0x20000;
-            RSDK.SetSpriteAnimation(Newtron->aniFrames, 4, &self->animator1, true, 0);
-            self->state = Newtron_Unknown8;
+            RSDK.SetSpriteAnimation(Newtron->aniFrames, 4, &self->animator, true, 0);
+            self->state = Newtron_State_Fly;
         }
     }
-    RSDK.ProcessAnimation(&self->animator1);
+    RSDK.ProcessAnimation(&self->animator);
     Newtron_CheckHit();
     Newtron_CheckOnScreen();
 }
 
-void Newtron_Unknown8(void)
+void Newtron_State_Fly(void)
 {
     RSDK_THIS(Newtron);
     self->position.x += self->velocity.x;
     RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x80000, 8);
-    RSDK.ProcessAnimation(&self->animator1);
-    RSDK.ProcessAnimation(&self->animator2);
+    RSDK.ProcessAnimation(&self->animator);
+    RSDK.ProcessAnimation(&self->flameAnimator);
     Newtron_CheckHit();
     Newtron_CheckOnScreen();
 }
 
-void Newtron_Unknown9(void)
+void Newtron_State_Shoot(void)
 {
     RSDK_THIS(Newtron);
     switch (++self->timer) {
         case 30:
-            RSDK.SetSpriteAnimation(Newtron->aniFrames, 1, &self->animator1, true, 0);
+            RSDK.SetSpriteAnimation(Newtron->aniFrames, 1, &self->animator, true, 0);
             if (self->direction)
-                CREATE_ENTITY(Newtron, intToVoid(2), self->position.x - 0x140000, self->position.y - 0x80000)->velocity.x = -0x20000;
+                CREATE_ENTITY(Newtron, intToVoid(NEWTRON_PROJECTILE), self->position.x - 0x140000, self->position.y - 0x80000)->velocity.x = -0x20000;
             else
-                CREATE_ENTITY(Newtron, intToVoid(2), self->position.x + 0x140000, self->position.y - 0x80000)->velocity.x = 0x20000;
+                CREATE_ENTITY(Newtron, intToVoid(NEWTRON_PROJECTILE), self->position.x + 0x140000, self->position.y - 0x80000)->velocity.x = 0x20000;
             break;
-        case 45: RSDK.SetSpriteAnimation(Newtron->aniFrames, 0, &self->animator1, true, 0); break;
-        case 90: self->state = Newtron_Unknown10; break;
+        case 45: RSDK.SetSpriteAnimation(Newtron->aniFrames, 0, &self->animator, true, 0); break;
+        case 90: self->state = Newtron_State_FadeAway; break;
     }
-    RSDK.ProcessAnimation(&self->animator1);
+    RSDK.ProcessAnimation(&self->animator);
     Newtron_CheckHit();
     Newtron_CheckOnScreen();
 }
 
-void Newtron_Unknown10(void)
+void Newtron_State_FadeAway(void)
 {
     RSDK_THIS(Newtron);
-    RSDK.ProcessAnimation(&self->animator1);
+    RSDK.ProcessAnimation(&self->animator);
     Newtron_CheckOnScreen();
     if (self->alpha <= 0)
-        RSDK.ResetEntityPtr(self, TYPE_BLANK, NULL);
-    self->alpha -= 4;
+        destroyEntity(self);
+    else
+        self->alpha -= 4;
 }
 
 void Newtron_State_Projectile(void)
@@ -257,13 +261,13 @@ void Newtron_State_Projectile(void)
     RSDK_THIS(Newtron);
     self->position.x += self->velocity.x;
     if (!RSDK.CheckOnScreen(self, NULL)) {
-        RSDK.ResetEntityPtr(self, TYPE_BLANK, NULL);
+        destroyEntity(self);
     }
     else {
-        RSDK.ProcessAnimation(&self->animator1);
+        RSDK.ProcessAnimation(&self->animator);
         foreach_active(Player, player)
         {
-            if (Player_CheckCollisionTouch(player, self, &Newtron->hitbox3)) {
+            if (Player_CheckCollisionTouch(player, self, &Newtron->hitboxProjectile)) {
                 Player_CheckProjectileHit(player, self);
             }
         }
@@ -275,16 +279,27 @@ void Newtron_EditorDraw(void)
 {
     RSDK_THIS(Newtron);
     self->drawFX = FX_FLIP;
-    if (self->type == 1)
-        RSDK.SetSpriteAnimation(Newtron->aniFrames, 2, &self->animator1, true, 0);
+    if (self->type == NEWTRON_FLY)
+        RSDK.SetSpriteAnimation(Newtron->aniFrames, 2, &self->animator, true, 0);
     else 
-        RSDK.SetSpriteAnimation(Newtron->aniFrames, 0, &self->animator1, true, 0);
-    RSDK.SetSpriteAnimation(Newtron->aniFrames, 5, &self->animator2, true, 0);
+        RSDK.SetSpriteAnimation(Newtron->aniFrames, 0, &self->animator, true, 0);
+    RSDK.SetSpriteAnimation(Newtron->aniFrames, 5, &self->flameAnimator, true, 0);
     
     Newtron_Draw();
 }
 
-void Newtron_EditorLoad(void) { Newtron->aniFrames = RSDK.LoadSpriteAnimation("GHZ/Newtron.bin", SCOPE_STAGE); }
+void Newtron_EditorLoad(void)
+{
+    Newtron->aniFrames = RSDK.LoadSpriteAnimation("GHZ/Newtron.bin", SCOPE_STAGE);
+
+    RSDK_ACTIVE_VAR(Newtron, type);
+    RSDK_ENUM_VAR("Shoot", NEWTRON_SHOOT);
+    RSDK_ENUM_VAR("Fly", NEWTRON_FLY);
+
+    RSDK_ACTIVE_VAR(Newtron, direction);
+    RSDK_ENUM_VAR("No Flip", FLIP_NONE);
+    RSDK_ENUM_VAR("Flip X", FLIP_X);
+}
 #endif
 
 void Newtron_Serialize(void)

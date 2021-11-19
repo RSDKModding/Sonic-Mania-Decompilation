@@ -199,7 +199,7 @@ bool32 Animals_CheckGroundCollision(void)
                     ang     = (bridge->endPos - self->position.x) << 7;
                 }
 
-                int32 hitY = (bridge->field_6C * RSDK.Sin512(ang / divisor) >> 9) - 0x80000;
+                int32 hitY = (bridge->depression * RSDK.Sin512(ang / divisor) >> 9) - 0x80000;
                 if (self->velocity.y < 0x8000) {
                     bridgeHitbox.bottom = (hitY >> 16);
                     bridgeHitbox.top    = (hitY >> 16) - 8;

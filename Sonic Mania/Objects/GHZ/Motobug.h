@@ -41,8 +41,10 @@ void Motobug_Serialize(void);
 // Extra Entity Functions
 void Motobug_DebugDraw(void);
 void Motobug_DebugSpawn(void);
+
 void Motobug_CheckOnScreen(void);
 void Motobug_CheckPlayerCollisions(void);
+
 //States
 void Motobug_State_Fall(void);
 void Motobug_State_HandleMove(void);

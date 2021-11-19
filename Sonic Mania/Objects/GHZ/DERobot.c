@@ -445,7 +445,7 @@ bool32 DERobot_Unknown11(void)
                 ruby->position.x = self->position.x;
                 ruby->position.y = self->position.y;
                 ruby->drawOrder  = Zone->drawOrderLow;
-                ruby->state      = PhantomRuby_Unknown10;
+                ruby->state      = PhantomRuby_State_RotateToOrigin;
             }
         }
     }

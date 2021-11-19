@@ -134,7 +134,7 @@ bool32 PSZ2Outro_CutsceneState_Unknown4(EntityCutsceneSeq *host)
     }
 
     if (self->ruby) {
-        if (self->ruby->state == PhantomRuby_Unknown5) {
+        if (self->ruby->state == PhantomRuby_State_Oscillate) {
             if (player2->objectID == Player->objectID) {
                 player2->state = Player_State_None;
                 RSDK.SetSpriteAnimation(player2->aniFrames, ANI_SKID, &player2->animator, false, 0);
@@ -151,7 +151,7 @@ bool32 PSZ2Outro_CutsceneState_Unknown5(EntityCutsceneSeq *host)
     EntityPSZEggman *eggman = (EntityPSZEggman *)self->eggman;
 
     if (!host->timer)
-        PhantomRuby_Unknown2(self->ruby);
+        PhantomRuby_SetupFlash(self->ruby);
     if (eggman->ruby) {
         PhantomRuby_PlaySFX(RUBYSFX_REDCUBE);
         return true;

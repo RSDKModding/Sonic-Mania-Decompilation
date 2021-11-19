@@ -14,17 +14,17 @@ typedef struct {
     RSDK_ENTITY
     uint8 length;
     bool32 burnable;
-    uint8 field_60;
+    uint8 burnOffset;
     uint8 activePlayerCount;
     uint8 timer;
     int32 stoodPos;
-    int32 field_68;
-    int32 field_6C;
+    int32 bridgeDepth;
+    int32 depression;
     Entity *playerPtr;
     int32 startPos;
     int32 endPos;
     Animator animator;
-    int32 dword94;
+    int32 unused1;
 } EntityBridge;
 
 // Object Struct

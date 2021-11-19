@@ -1286,7 +1286,7 @@ void MetalSonic_State_ObtainRuby(void)
         if (rx * rx + ry * ry < 0x100) {
             ruby->startPos.x = ruby->position.x;
             ruby->startPos.y = ruby->position.y;
-            ruby->state      = PhantomRuby_Unknown5;
+            ruby->state      = PhantomRuby_State_Oscillate;
             self->state    = MetalSonic_State_Transform;
             RSDK.PlaySfx(MetalSonic->sfxMSTransform, false, 255);
         }

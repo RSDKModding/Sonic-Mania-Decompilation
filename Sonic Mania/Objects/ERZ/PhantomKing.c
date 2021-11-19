@@ -107,7 +107,7 @@ void PhantomKing_Hit(void)
         ruby->position.y = self->rubyPos.y;
         ruby->velocity.x = -0x20000;
         ruby->velocity.y = -0x40000;
-        ruby->state      = PhantomRuby_Unknown6;
+        ruby->state      = PhantomRuby_State_FallOffScreen;
     }
 
     self->drawRuby = false;

@@ -181,7 +181,7 @@ void KleptoMobile_Hit(void)
             ruby->position.y = self->circlePos.y;
             ruby->velocity.x = -0x20000;
             ruby->velocity.y = -0x40000;
-            ruby->state      = PhantomRuby_Unknown6;
+            ruby->state      = PhantomRuby_State_FallOffScreen;
 
             EntityKleptoMobile *arm1 = RSDK_GET_ENTITY(SceneInfo->entitySlot - 1, KleptoMobile);
             arm1->timer              = 0;

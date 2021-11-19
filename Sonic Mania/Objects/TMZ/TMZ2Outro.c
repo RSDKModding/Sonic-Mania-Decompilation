@@ -296,7 +296,7 @@ bool32 TMZ2Outro_CutsceneState_StartRubyRampage(EntityCutsceneSeq *host)
             ruby->isPermanent = true;
             ruby->drawOrder   = Zone->drawOrderHigh;
             ruby->active      = ACTIVE_NORMAL;
-            ruby->state       = PhantomRuby_Unknown9;
+            ruby->state       = PhantomRuby_State_MoveToPos;
         }
     }
 
@@ -416,7 +416,7 @@ bool32 TMZ2Outro_CutsceneState_OuttaHere_BadEnd(EntityCutsceneSeq *host)
             foreach_active(PhantomRuby, ruby)
             {
                 ruby->startPos.y -= 0x100000;
-                ruby->state = PhantomRuby_Unknown9;
+                ruby->state = PhantomRuby_State_MoveToPos;
             }
         }
     }
@@ -439,7 +439,7 @@ bool32 TMZ2Outro_CutsceneState_OuttaHere_BadEnd(EntityCutsceneSeq *host)
             foreach_active(PhantomRuby, ruby)
             {
                 ruby->startPos.y += 0x180000;
-                ruby->state = PhantomRuby_Unknown9;
+                ruby->state = PhantomRuby_State_MoveToPos;
             }
         }
     }

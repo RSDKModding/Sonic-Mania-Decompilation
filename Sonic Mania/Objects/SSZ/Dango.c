@@ -368,7 +368,7 @@ void Dango_StateTaunt_Unknown2(void)
         if (abs(self->position.x - ruby->position.x) < 0x120000) {
             RSDK.PlaySfx(Dango->sfxBumper, false, 255);
             self->state    = Dango_StateTaunt_Unknown3;
-            ruby->state      = PhantomRuby_Unknown6;
+            ruby->state      = PhantomRuby_State_FallOffScreen;
             ruby->velocity.x = self->groundVel;
             ruby->velocity.y = -0x80000;
             RSDK.SetSpriteAnimation(Dango->aniFrames, 4, &self->animator, true, 0);

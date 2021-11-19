@@ -4,8 +4,8 @@ ObjectGHZCutsceneST *GHZCutsceneST;
 
 void GHZCutsceneST_Update(void)
 {
-    void *states[5] = { GHZCutsceneST_CutsceneState_Unknown1, GHZCutsceneST_CutsceneState_Unknown2, GHZCutsceneST_CutsceneState_Unknown3,
-                        GHZCutsceneST_CutsceneState_LoadNextStage, NULL };
+    void *states[5] = { GHZCutsceneST_Cutscene_FadeIn, GHZCutsceneST_Cutscene_FinishRubyWarp, GHZCutsceneST_Cutscene_ExitHBH,
+                        GHZCutsceneST_Cutscene_SetupGHZ1, NULL };
 
     RSDK_THIS(GHZCutsceneST);
     if (!self->activated) {
@@ -83,7 +83,18 @@ void GHZCutsceneST_SetupObjects(void)
     foreach_all(CutsceneHBH, cutsceneHBH) { GHZCutsceneST->cutsceneHBH[cutsceneHBH->characterID] = (Entity *)cutsceneHBH; }
 }
 
-bool32 GHZCutsceneST_CutsceneState_Unknown1(EntityCutsceneSeq *host)
+void GHZCutsceneST_SkipCB(void)
+{
+#if RETRO_USE_PLUS
+    if (globals->gameMode == MODE_ENCORE)
+        RSDK.SetScene("Encore Mode", "Green Hill Zone+ 1");
+    else
+#endif
+        RSDK.SetScene("Mania Mode", "Green Hill Zone 1");
+}
+
+
+bool32 GHZCutsceneST_Cutscene_FadeIn(EntityCutsceneSeq *host)
 {
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     EntityPlayer *player2 = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
@@ -128,7 +139,7 @@ bool32 GHZCutsceneST_CutsceneState_Unknown1(EntityCutsceneSeq *host)
     }
     return false;
 }
-bool32 GHZCutsceneST_CutsceneState_Unknown2(EntityCutsceneSeq *host)
+bool32 GHZCutsceneST_Cutscene_FinishRubyWarp(EntityCutsceneSeq *host)
 {
     EntityPlayer *player1   = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     EntityCamera *camera    = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
@@ -174,7 +185,7 @@ bool32 GHZCutsceneST_CutsceneState_Unknown2(EntityCutsceneSeq *host)
     }
     return false;
 }
-bool32 GHZCutsceneST_CutsceneState_Unknown3(EntityCutsceneSeq *host)
+bool32 GHZCutsceneST_Cutscene_ExitHBH(EntityCutsceneSeq *host)
 {
     RSDK_GET_PLAYER(player1, player2, camera);
     unused(player2);
@@ -247,7 +258,7 @@ bool32 GHZCutsceneST_CutsceneState_Unknown3(EntityCutsceneSeq *host)
     return false;
 }
 
-bool32 GHZCutsceneST_CutsceneState_LoadNextStage(EntityCutsceneSeq *host)
+bool32 GHZCutsceneST_Cutscene_SetupGHZ1(EntityCutsceneSeq *host)
 {
     RSDK_THIS(GHZCutsceneST);
 #if RETRO_USE_PLUS
@@ -263,16 +274,6 @@ bool32 GHZCutsceneST_CutsceneState_LoadNextStage(EntityCutsceneSeq *host)
     Zone_StoreEntities((ScreenInfo->position.x + ScreenInfo->centerX) << 16, (ScreenInfo->height + ScreenInfo->position.y) << 16);
     RSDK.LoadScene();
     return true;
-}
-
-void GHZCutsceneST_SkipCB(void)
-{
-#if RETRO_USE_PLUS
-    if (globals->gameMode == MODE_ENCORE)
-        RSDK.SetScene("Encore Mode", "Green Hill Zone+ 1");
-    else
-#endif
-        RSDK.SetScene("Mania Mode", "Green Hill Zone 1");
 }
 
 #if RETRO_INCLUDE_EDITOR

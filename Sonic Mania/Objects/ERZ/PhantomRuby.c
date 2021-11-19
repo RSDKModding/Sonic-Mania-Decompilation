@@ -41,7 +41,7 @@ void PhantomRuby_Create(void *data)
     self->drawFX        = FX_FLIP;
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x800000;
-    self->state         = PhantomRuby_Unknown3;
+    self->state         = PhantomRuby_State_FinishedFlash;
     RSDK.SetSpriteAnimation(PhantomRuby->aniFrames, 0, &self->animator1, true, 0);
 }
 
@@ -75,47 +75,46 @@ void PhantomRuby_PlaySFX(uint8 sfxID)
     }
 }
 
-void PhantomRuby_Unknown2(EntityPhantomRuby *ruby)
+void PhantomRuby_SetupFlash(EntityPhantomRuby *ruby)
 {
-    ruby->flag     = false;
-    ruby->field_6C = 0;
-    ruby->timer    = 0;
+    ruby->flashFinished = false;
+    ruby->hasFlashed    = false;
+    ruby->timer         = 0;
     RSDK.SetSpriteAnimation(PhantomRuby->aniFrames, 1, &ruby->animator1, true, 0);
     RSDK.SetSpriteAnimation(PhantomRuby->aniFrames, 2, &ruby->animator2, true, 0);
-    ruby->state = PhantomRuby_Unknown4;
+    ruby->state = PhantomRuby_State_PlaySfx;
 }
 
-void PhantomRuby_Unknown3(void)
+void PhantomRuby_State_FinishedFlash(void)
 {
     RSDK_THIS(PhantomRuby);
-    if (self->flag)
-        self->flag = false;
+    if (self->flashFinished)
+        self->flashFinished = false;
 }
 
-void PhantomRuby_Unknown4(void)
+void PhantomRuby_State_PlaySfx(void)
 {
     RSDK_THIS(PhantomRuby);
 
     if (self->timer == 38) {
         PhantomRuby_PlaySFX(self->sfx);
-        self->flag     = true;
-        self->field_6C = 1;
-        self->timer    = 0;
-        self->state    = PhantomRuby_Unknown3;
+        self->flashFinished = true;
+        self->hasFlashed    = true;
+        self->timer         = 0;
+        self->state         = PhantomRuby_State_FinishedFlash;
     }
     else {
         self->timer++;
     }
 }
 
-void PhantomRuby_Unknown5(void)
+void PhantomRuby_State_Oscillate(void)
 {
     RSDK_THIS(PhantomRuby);
-    self->angle += 2;
-    self->position.y = (RSDK.Sin256(self->angle) << 10) + self->startPos.y;
+    self->position.y = BadnikHelpers_Oscillate(self->startPos.y, 2, 10);
 }
 
-void PhantomRuby_Unknown6(void)
+void PhantomRuby_State_FallOffScreen(void)
 {
     RSDK_THIS(PhantomRuby);
     self->position.x += self->velocity.x;
@@ -125,7 +124,7 @@ void PhantomRuby_Unknown6(void)
         self->state = StateMachine_None;
 }
 
-void PhantomRuby_Unknown7(void)
+void PhantomRuby_State_MoveRotateGravity(void)
 {
     RSDK_THIS(PhantomRuby);
     self->position.x += self->velocity.x;
@@ -134,13 +133,11 @@ void PhantomRuby_Unknown7(void)
     self->rotation = (self->rotation + 5) & 0x1FF;
 }
 
-void PhantomRuby_Unknown8(void)
+void PhantomRuby_State_MoveRotateGravity_CheckGround(void)
 {
     RSDK_THIS(PhantomRuby);
-    self->position.x += self->velocity.x;
-    self->position.y += self->velocity.y;
-    self->velocity.y += 0x3800;
-    self->rotation = (self->rotation + 5) & 0x1FF;
+    PhantomRuby_State_MoveRotateGravity();
+
     if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x80000, true)) {
         self->velocity.x >>= 1;
         if (-(self->velocity.y >> 1) > -0x10000)
@@ -150,7 +147,8 @@ void PhantomRuby_Unknown8(void)
     }
 }
 
-void PhantomRuby_Unknown9(void)
+#if RETRO_USE_PLUS
+void PhantomRuby_State_MoveToPos(void)
 {
     RSDK_THIS(PhantomRuby);
     int32 rx    = (self->startPos.x - self->position.x) >> 16;
@@ -170,11 +168,12 @@ void PhantomRuby_Unknown9(void)
     else {
         self->position.x = self->startPos.x;
         self->position.y = self->startPos.y;
-        self->state      = PhantomRuby_Unknown5;
+        self->state      = PhantomRuby_State_Oscillate;
     }
 }
+#endif
 
-void PhantomRuby_Unknown10(void)
+void PhantomRuby_State_RotateToOrigin(void)
 {
     RSDK_THIS(PhantomRuby);
     self->rotation += 6;
@@ -185,8 +184,10 @@ void PhantomRuby_Unknown10(void)
     }
 }
 
+#if RETRO_INCLUDE_EDITOR
 void PhantomRuby_EditorDraw(void) { PhantomRuby_Draw(); }
 
 void PhantomRuby_EditorLoad(void) { PhantomRuby->aniFrames = RSDK.LoadSpriteAnimation("Global/PhantomRuby.bin", SCOPE_STAGE); }
+#endif
 
 void PhantomRuby_Serialize(void) { RSDK_EDITABLE_VAR(PhantomRuby, VAR_UINT8, sfx); }

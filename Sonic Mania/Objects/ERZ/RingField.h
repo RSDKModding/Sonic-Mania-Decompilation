@@ -12,12 +12,12 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    int32 field_58;
+    StateMachine(state); // unused
     Vector2 size;
     int32 frequency;
     int32 fluctuation;
     bool32 running;
-    int32 field_70;
+    int32 unused1;
     Vector2 startPos;
     int32 timer;
     Hitbox hitbox;

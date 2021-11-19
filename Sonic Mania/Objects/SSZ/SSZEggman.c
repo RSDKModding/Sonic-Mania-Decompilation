@@ -85,7 +85,7 @@ void SSZEggman_Unknown2(void)
             RSDK.SetSpriteAnimation(SSZEggman->aniFrames, 3, &self->animator1, true, 0);
             self->state = SSZEggman_Unknown3;
             if (self->ruby) {
-                self->ruby->state      = PhantomRuby_Unknown6;
+                self->ruby->state      = PhantomRuby_State_FallOffScreen;
                 self->ruby->velocity.x = -0x40000;
                 self->ruby->velocity.y = -0x40000;
             }

@@ -26,7 +26,8 @@ void SpikeLog_Create(void *data)
     self->visible       = true;
     self->updateRange.x = 0x400000;
     self->updateRange.y = 0x400000;
-    self->frame *= 4;
+    if (!SceneInfo->inEditor)
+        self->frame *= 4;
     self->drawOrder = Zone->drawOrderLow;
     RSDK.SetSpriteAnimation(SpikeLog->aniFrames, 0, &self->animator, true, 0);
     self->state = SpikeLog_State_Main;
@@ -36,10 +37,12 @@ void SpikeLog_StageLoad(void)
 {
     if (RSDK.CheckStageFolder("GHZ"))
         SpikeLog->aniFrames = RSDK.LoadSpriteAnimation("GHZ/SpikeLog.bin", SCOPE_STAGE);
+
     SpikeLog->hitbox.left       = -8;
     SpikeLog->hitbox.top        = -16;
     SpikeLog->hitbox.right      = 8;
     SpikeLog->hitbox.bottom     = 0;
+
     SpikeLog->burnHitbox.left   = -9;
     SpikeLog->burnHitbox.top    = -16;
     SpikeLog->burnHitbox.right  = 9;
@@ -124,7 +127,7 @@ void SpikeLog_State_Burn(void)
 void SpikeLog_EditorDraw(void)
 {
     RSDK_THIS(SpikeLog);
-    self->animator.frameID = self->frame;
+    self->animator.frameID = self->frame * 4;
     RSDK.DrawSprite(&self->animator, NULL, false);
 }
 

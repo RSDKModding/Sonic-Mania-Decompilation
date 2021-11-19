@@ -9,17 +9,17 @@ typedef struct {
     Hitbox hitbox;
     Hitbox innerBox;
     Hitbox outerBox;
-    uint8 array1[24];
-    int8 array2[24];
+    uint8 heightArray[24];
+    int8 unusedArray[24];
     uint16 aniFrames;
 } ObjectCheckerBall;
 
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    bool32 flag;
-    int32 field_5C;
-    int32 field_60;
+    bool32 playerControlled;
+    int32 angleVel;
+    int32 ballAngle;
     Vector2 roundedPos;
     Vector2 collisionOffset;
     uint8 activePlayers;
@@ -50,6 +50,6 @@ void CheckerBall_Unknown1(void);
 void CheckerBall_Unknown2(void);
 void CheckerBall_Unknown3(void);
 void CheckerBall_BadnikBreak(void *b, Hitbox *hitbox);
-void CheckerBall_Unknown5(void);
+void CheckerBall_HandleObjectCollisions(void);
 
 #endif //!OBJ_CHECKERBALL_H

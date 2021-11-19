@@ -1038,10 +1038,10 @@ void PhantomEgg_State_Unknown18(void)
         RSDK.PlaySfx(PhantomEgg->sfxRocketJet, false, 255);
 
         EntityPhantomRuby *ruby = CREATE_ENTITY(PhantomRuby, NULL, self->position.x, self->position.y + 0x100000);
-        ruby->state             = PhantomRuby_Unknown8;
+        ruby->state             = PhantomRuby_State_MoveRotateGravity_CheckGround;
         ruby->velocity.x        = -0x10000;
         ruby->velocity.y        = -0x20000;
-        self->state           = PhantomEgg_State_Unknown19;
+        self->state             = PhantomEgg_State_Unknown19;
     }
 }
 

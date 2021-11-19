@@ -12,8 +12,8 @@ void BurningLog_Update(void)
         foreach_active(Player, player)
         {
             if (self->velocity.y < 0x380000)
-                Player_CheckCollisionPlatform(player, self, &BurningLog->hitbox);
-            if (Player_CheckCollisionTouch(player, self, &BurningLog->hitbox2)) {
+                Player_CheckCollisionPlatform(player, self, &BurningLog->hitboxPlatform);
+            if (Player_CheckCollisionTouch(player, self, &BurningLog->hitboxFlame)) {
                 Player_CheckElementalHit(player, self, SHIELD_FIRE);
             }
         }
@@ -50,14 +50,16 @@ void BurningLog_StageLoad(void)
 {
     if (RSDK.CheckStageFolder("GHZ"))
         BurningLog->aniFrames = RSDK.LoadSpriteAnimation("GHZ/Fireball.bin", SCOPE_STAGE);
-    BurningLog->hitbox.left    = -8;
-    BurningLog->hitbox.top     = -8;
-    BurningLog->hitbox.right   = 8;
-    BurningLog->hitbox.bottom  = 8;
-    BurningLog->hitbox2.left   = -8;
-    BurningLog->hitbox2.top    = -16;
-    BurningLog->hitbox2.right  = 8;
-    BurningLog->hitbox2.bottom = 8;
+
+    BurningLog->hitboxPlatform.left    = -8;
+    BurningLog->hitboxPlatform.top     = -8;
+    BurningLog->hitboxPlatform.right   = 8;
+    BurningLog->hitboxPlatform.bottom  = 8;
+
+    BurningLog->hitboxFlame.left   = -8;
+    BurningLog->hitboxFlame.top    = -16;
+    BurningLog->hitboxFlame.right  = 8;
+    BurningLog->hitboxFlame.bottom = 8;
 }
 
 #if RETRO_INCLUDE_EDITOR

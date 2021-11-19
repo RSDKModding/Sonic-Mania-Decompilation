@@ -7,8 +7,8 @@
 typedef struct {
     RSDK_OBJECT
     int32 aniFrames;
-    Hitbox hitbox;
-    Hitbox hitbox2;
+    Hitbox hitboxPlatform;
+    Hitbox hitboxFlame;
 } ObjectBurningLog;
 
 // Entity Class

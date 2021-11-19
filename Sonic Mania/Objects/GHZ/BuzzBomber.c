@@ -17,14 +17,16 @@ void BuzzBomber_Draw(void)
     RSDK_THIS(BuzzBomber);
 
     if (self->inkEffect == INK_ADD) {
-        RSDK.DrawSprite(&self->animator1, NULL, false);
+        RSDK.DrawSprite(&self->animator, NULL, false);
     }
     else {
-        RSDK.DrawSprite(&self->animator1, NULL, false);
+        RSDK.DrawSprite(&self->animator, NULL, false);
+
         self->inkEffect = INK_ALPHA;
-        RSDK.DrawSprite(&self->animator2, NULL, false);
+        RSDK.DrawSprite(&self->wingAnimator, NULL, false);
+
         self->inkEffect = INK_NONE;
-        RSDK.DrawSprite(&self->animator3, NULL, false);
+        RSDK.DrawSprite(&self->thrustAnimator, NULL, false);
     }
 }
 
@@ -38,9 +40,9 @@ void BuzzBomber_Create(void *data)
     self->startPos.y = self->position.y;
     self->startDir   = self->direction;
     self->timer      = 128;
-    self->field_64   = 0;
-    self->projectile = 0;
-    if (self->shotRange == 0)
+    self->detectedPlayer   = false;
+    self->projectile = NULL;
+    if (!self->shotRange)
         self->shotRange = 96;
 
     self->rangeHitbox.right  = self->shotRange;
@@ -54,19 +56,19 @@ void BuzzBomber_Create(void *data)
         self->active        = ACTIVE_NORMAL;
         self->updateRange.x = 0x200000;
         self->updateRange.y = 0x200000;
-        RSDK.SetSpriteAnimation(BuzzBomber->aniFrames, 4, &self->animator1, true, 0);
-        RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator2, true, 0);
-        RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator3, true, 0);
-        self->state = BuzzBomber_Unknown6;
+        RSDK.SetSpriteAnimation(BuzzBomber->aniFrames, 4, &self->animator, true, 0);
+        RSDK.SetSpriteAnimation(0xFFFF, 0, &self->wingAnimator, true, 0);
+        RSDK.SetSpriteAnimation(0xFFFF, 0, &self->thrustAnimator, true, 0);
+        self->state = BuzzBomber_State_ProjectileCharge;
     }
     else {
         self->active        = ACTIVE_BOUNDS;
         self->updateRange.x = 0x800000;
         self->updateRange.y = 0x800000;
-        RSDK.SetSpriteAnimation(BuzzBomber->aniFrames, 0, &self->animator1, true, 0);
-        RSDK.SetSpriteAnimation(BuzzBomber->aniFrames, 2, &self->animator2, true, 0);
-        RSDK.SetSpriteAnimation(BuzzBomber->aniFrames, 3, &self->animator3, true, 0);
-        self->state = BuzzBomber_Unknown2;
+        RSDK.SetSpriteAnimation(BuzzBomber->aniFrames, 0, &self->animator, true, 0);
+        RSDK.SetSpriteAnimation(BuzzBomber->aniFrames, 2, &self->wingAnimator, true, 0);
+        RSDK.SetSpriteAnimation(BuzzBomber->aniFrames, 3, &self->thrustAnimator, true, 0);
+        self->state = BuzzBomber_State_Setup;
         self->alpha = 0xC0;
     }
 }
@@ -78,14 +80,14 @@ void BuzzBomber_StageLoad(void)
     else if (RSDK.CheckStageFolder("Blueprint"))
         BuzzBomber->aniFrames = RSDK.LoadSpriteAnimation("Blueprint/BuzzBomber.bin", SCOPE_STAGE);
 
-    BuzzBomber->hitbox1.left   = -24;
-    BuzzBomber->hitbox1.top    = -12;
-    BuzzBomber->hitbox1.right  = 24;
-    BuzzBomber->hitbox1.bottom = 12;
-    BuzzBomber->hitbox2.left   = -6;
-    BuzzBomber->hitbox2.top    = -6;
-    BuzzBomber->hitbox2.right  = 6;
-    BuzzBomber->hitbox2.bottom = 6;
+    BuzzBomber->hitboxBadnik.left   = -24;
+    BuzzBomber->hitboxBadnik.top    = -12;
+    BuzzBomber->hitboxBadnik.right  = 24;
+    BuzzBomber->hitboxBadnik.bottom = 12;
+    BuzzBomber->hitboxProjectile.left   = -6;
+    BuzzBomber->hitboxProjectile.top    = -6;
+    BuzzBomber->hitboxProjectile.right  = 6;
+    BuzzBomber->hitboxProjectile.bottom = 6;
 
     DEBUGMODE_ADD_OBJ(BuzzBomber);
 }
@@ -116,30 +118,30 @@ void BuzzBomber_CheckOnScreen(void)
     }
 }
 
-void BuzzBomber_Unknown1(void)
+void BuzzBomber_CheckPlayerCollisions(void)
 {
     RSDK_THIS(BuzzBomber);
 
     foreach_active(Player, player)
     {
-        if (Player_CheckBadnikTouch(player, self, &BuzzBomber->hitbox1)) {
+        if (Player_CheckBadnikTouch(player, self, &BuzzBomber->hitboxBadnik)) {
             if (Player_CheckBadnikBreak(self, player, true)) {
                 if (self->projectile)
-                    RSDK.ResetEntityPtr(self->projectile, TYPE_BLANK, 0);
+                    destroyEntity(self->projectile);
             }
         }
-        else if (self->state == BuzzBomber_Unknown3 && !self->field_64) {
+        else if (self->state == BuzzBomber_State_BuzzAround && !self->detectedPlayer) {
             if (Player_CheckCollisionTouch(player, self, &self->rangeHitbox)) {
-                self->field_64 = 1;
+                self->detectedPlayer = true;
                 self->timer    = 90;
-                RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator3, true, 0);
-                self->state = BuzzBomber_Unknown5;
+                RSDK.SetSpriteAnimation(0xFFFF, 0, &self->thrustAnimator, true, 0);
+                self->state = BuzzBomber_State_DetectedPlayer;
             }
         }
     }
 }
 
-void BuzzBomber_Unknown2(void)
+void BuzzBomber_State_Setup(void)
 {
     RSDK_THIS(BuzzBomber);
 
@@ -148,11 +150,11 @@ void BuzzBomber_Unknown2(void)
         self->velocity.x = -0x40000;
     else
         self->velocity.x = 0x40000;
-    self->state = BuzzBomber_Unknown3;
-    BuzzBomber_Unknown3();
+    self->state = BuzzBomber_State_BuzzAround;
+    BuzzBomber_State_BuzzAround();
 }
 
-void BuzzBomber_Unknown3(void)
+void BuzzBomber_State_BuzzAround(void)
 {
     RSDK_THIS(BuzzBomber);
 
@@ -162,45 +164,45 @@ void BuzzBomber_Unknown3(void)
         self->direction ^= FLIP_X;
         self->timer      = 60;
         self->velocity.x = -self->velocity.x;
-        self->field_64   = 0;
-        RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator3, true, 0);
-        self->state = BuzzBomber_Unknown4;
+        self->detectedPlayer   = false;
+        RSDK.SetSpriteAnimation(0xFFFF, 0, &self->thrustAnimator, true, 0);
+        self->state = BuzzBomber_State_IdleDelay;
     }
 
-    RSDK.ProcessAnimation(&self->animator1);
-    RSDK.ProcessAnimation(&self->animator2);
-    RSDK.ProcessAnimation(&self->animator3);
-    BuzzBomber_Unknown1();
+    RSDK.ProcessAnimation(&self->animator);
+    RSDK.ProcessAnimation(&self->wingAnimator);
+    RSDK.ProcessAnimation(&self->thrustAnimator);
+    BuzzBomber_CheckPlayerCollisions();
     BuzzBomber_CheckOnScreen();
 }
 
-void BuzzBomber_Unknown4(void)
+void BuzzBomber_State_IdleDelay(void)
 {
     RSDK_THIS(BuzzBomber);
 
     if (!--self->timer) {
         self->timer = 128;
-        RSDK.SetSpriteAnimation(BuzzBomber->aniFrames, 3, &self->animator3, true, 0);
-        self->state = BuzzBomber_Unknown3;
+        RSDK.SetSpriteAnimation(BuzzBomber->aniFrames, 3, &self->thrustAnimator, true, 0);
+        self->state = BuzzBomber_State_BuzzAround;
     }
-    RSDK.ProcessAnimation(&self->animator1);
-    RSDK.ProcessAnimation(&self->animator2);
-    BuzzBomber_Unknown1();
+    RSDK.ProcessAnimation(&self->animator);
+    RSDK.ProcessAnimation(&self->wingAnimator);
+    BuzzBomber_CheckPlayerCollisions();
     BuzzBomber_CheckOnScreen();
 }
 
-void BuzzBomber_Unknown5(void)
+void BuzzBomber_State_DetectedPlayer(void)
 {
     RSDK_THIS(BuzzBomber);
 
-    RSDK.ProcessAnimation(&self->animator1);
-    RSDK.ProcessAnimation(&self->animator2);
-    BuzzBomber_Unknown1();
+    RSDK.ProcessAnimation(&self->animator);
+    RSDK.ProcessAnimation(&self->wingAnimator);
+    BuzzBomber_CheckPlayerCollisions();
     BuzzBomber_CheckOnScreen();
 
     self->timer--;
     if (self->timer == 82) {
-        RSDK.SetSpriteAnimation(BuzzBomber->aniFrames, 1, &self->animator1, true, 0);
+        RSDK.SetSpriteAnimation(BuzzBomber->aniFrames, 1, &self->animator, true, 0);
     }
     else if (self->timer == 45) {
         EntityBuzzBomber *projectile = CREATE_ENTITY(BuzzBomber, intToVoid(true), self->position.x, self->position.y);
@@ -221,36 +223,36 @@ void BuzzBomber_Unknown5(void)
         self->projectile     = (Entity *)projectile;
     }
     else if (!self->timer) {
-        RSDK.SetSpriteAnimation(BuzzBomber->aniFrames, 0, &self->animator1, true, 0);
+        RSDK.SetSpriteAnimation(BuzzBomber->aniFrames, 0, &self->animator, true, 0);
         self->timer = 128;
-        RSDK.SetSpriteAnimation(BuzzBomber->aniFrames, 3, &self->animator3, true, 0);
-        self->state = BuzzBomber_Unknown3;
+        RSDK.SetSpriteAnimation(BuzzBomber->aniFrames, 3, &self->thrustAnimator, true, 0);
+        self->state = BuzzBomber_State_BuzzAround;
     }
 }
 
-void BuzzBomber_Unknown6(void)
+void BuzzBomber_State_ProjectileCharge(void)
 {
     RSDK_THIS(BuzzBomber);
-    RSDK.ProcessAnimation(&self->animator1);
+    RSDK.ProcessAnimation(&self->animator);
 
-    if (self->animator1.frameID == 6) {
-        self->state          = BuzzBomber_Unknown7;
+    if (self->animator.frameID == 6) {
+        self->state          = BuzzBomber_State_ProjectileShot;
         EntityBuzzBomber *shot = (EntityBuzzBomber *)self->projectile;
         shot->projectile       = NULL;
     }
 }
 
-void BuzzBomber_Unknown7(void)
+void BuzzBomber_State_ProjectileShot(void)
 {
     RSDK_THIS(BuzzBomber);
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
     if (RSDK.CheckOnScreen(self, NULL)) {
-        RSDK.ProcessAnimation(&self->animator1);
+        RSDK.ProcessAnimation(&self->animator);
 
         foreach_active(Player, player)
         {
-            if (Player_CheckCollisionTouch(player, self, &BuzzBomber->hitbox2))
+            if (Player_CheckCollisionTouch(player, self, &BuzzBomber->hitboxProjectile))
                 Player_CheckProjectileHit(player, self);
         }
     }
@@ -268,6 +270,10 @@ void BuzzBomber_EditorLoad(void)
         BuzzBomber->aniFrames = RSDK.LoadSpriteAnimation("GHZ/BuzzBomber.bin", SCOPE_STAGE);
     else if (RSDK.CheckStageFolder("Blueprint"))
         BuzzBomber->aniFrames = RSDK.LoadSpriteAnimation("Blueprint/BuzzBomber.bin", SCOPE_STAGE);
+
+    RSDK_ACTIVE_VAR(BuzzBomber, direction);
+    RSDK_ENUM_VAR("No Flip", FLIP_NONE);
+    RSDK_ENUM_VAR("Flip X", FLIP_X);
 }
 #endif
 

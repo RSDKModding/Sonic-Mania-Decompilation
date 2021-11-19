@@ -181,7 +181,7 @@ void Motobug_State_Smoke(void)
     RSDK_THIS(Motobug);
     RSDK.ProcessAnimation(&self->animator);
     if (self->animator.frameID == self->animator.frameCount - 1)
-        RSDK.ResetEntityPtr(self, 0, 0);
+        destroyEntity(self);
 }
 void Motobug_State_Turn(void)
 {

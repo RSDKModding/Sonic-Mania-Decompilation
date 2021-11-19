@@ -883,8 +883,8 @@ bool32 EncoreIntro_CutsceneState_Unknown18(EntityCutsceneSeq *host)
 {
     EntityPhantomRuby *ruby = (EntityPhantomRuby *)EncoreIntro->phantomRuby;
     if (!host->timer)
-        PhantomRuby_Unknown2(ruby);
-    if (ruby->flag)
+        PhantomRuby_SetupFlash(ruby);
+    if (ruby->flashFinished)
         return true;
     HeavyMystic_Unknown2();
     return false;

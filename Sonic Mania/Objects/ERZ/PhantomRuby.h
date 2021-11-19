@@ -27,11 +27,11 @@ typedef struct {
     StateMachine(state);
     Vector2 startPos;
     int32 timer;
-    int32 flag;
-    int32 field_6C;
+    bool32 flashFinished;
+    bool32 hasFlashed;
     int32 sfx;
-    int32 field_74;
-    int32 field_78;
+    int32 unused1;
+    int32 unused2;
     Animator animator1;
     Animator animator2;
 } EntityPhantomRuby;
@@ -54,14 +54,16 @@ void PhantomRuby_Serialize(void);
 
 // Extra Entity Functions
 void PhantomRuby_PlaySFX(uint8 sfxID);
-void PhantomRuby_Unknown2(EntityPhantomRuby *ruby);
-void PhantomRuby_Unknown3(void);
-void PhantomRuby_Unknown4(void);
-void PhantomRuby_Unknown5(void);
-void PhantomRuby_Unknown6(void);
-void PhantomRuby_Unknown7(void);
-void PhantomRuby_Unknown8(void);
-void PhantomRuby_Unknown9(void);
-void PhantomRuby_Unknown10(void);
+void PhantomRuby_SetupFlash(EntityPhantomRuby *ruby);
+void PhantomRuby_State_FinishedFlash(void);
+void PhantomRuby_State_PlaySfx(void);
+void PhantomRuby_State_Oscillate(void);
+void PhantomRuby_State_FallOffScreen(void);
+void PhantomRuby_State_MoveRotateGravity(void);
+void PhantomRuby_State_MoveRotateGravity_CheckGround(void);
+#if RETRO_USE_PLUS
+void PhantomRuby_State_MoveToPos(void);
+#endif
+void PhantomRuby_State_RotateToOrigin(void);
 
 #endif //!OBJ_PHANTOMRUBY_H

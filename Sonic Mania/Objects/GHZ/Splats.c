@@ -33,37 +33,37 @@ void Splats_Create(void *data)
     if (self->bounceCount < 1)
         self->bounceCount = 1;
 
-    if (Splats->state == Splats_Unknown3) {
+    if (Splats->state == Splats_State_BounceAround) {
         self->drawFX |= FX_FLIP;
         self->drawOrder = Zone->drawOrderLow;
         RSDK.SetSpriteAnimation(Splats->aniFrames, 0, &self->animator1, true, 0);
-        self->state = Splats_Unknown2;
+        self->state = Splats_State_Setup;
     }
     else {
         switch (voidToInt(data)) {
-            case 0:
+            case SPLATS_SPAWNER:
                 self->drawOrder = Zone->drawOrderHigh;
                 self->delay     = 0;
                 RSDK.SetSpriteAnimation(Splats->aniFrames, 1, &self->animator1, true, 0);
-                self->state = Splats_Unknown2;
+                self->state = Splats_State_Setup;
                 break;
-            case 1:
+            case SPLATS_INKSPLATS:
                 self->drawFX |= FX_FLIP;
                 self->drawOrder = Zone->drawOrderLow;
                 self->active    = ACTIVE_NORMAL;
                 RSDK.SetSpriteAnimation(Splats->aniFrames, 0, &self->animator1, true, 0);
                 self->animator1.loopIndex  = 1;
-                self->state                = Splats_Unknown6;
+                self->state                = Splats_State_JumpOutOfJar;
                 self->animator1.frameCount = 2;
                 break;
-            case 2:
+            case SPLATS_SPLAT:
                 self->drawFX |= FX_FLIP;
                 self->inkEffect |= INK_ALPHA;
                 self->alpha     = 256;
                 self->drawOrder = Zone->drawOrderHigh;
                 self->active    = ACTIVE_NORMAL;
                 RSDK.SetSpriteAnimation(Splats->aniFrames, 3, &self->animator1, true, 0);
-                self->state = Splats_Unknown10;
+                self->state = Splats_State_InkSplat;
                 break;
         }
     }
@@ -73,20 +73,23 @@ void Splats_StageLoad(void)
 {
     if (RSDK.CheckStageFolder("GHZ")) {
         Splats->aniFrames = RSDK.LoadSpriteAnimation("GHZ/Splats.bin", SCOPE_STAGE);
-        Splats->state     = Splats_Unknown3;
+        Splats->state     = Splats_State_BounceAround;
     }
     else if (RSDK.CheckStageFolder("PSZ1")) {
         Splats->aniFrames = RSDK.LoadSpriteAnimation("PSZ1/Splats.bin", SCOPE_STAGE);
-        Splats->state     = Splats_Unknown5;
+        Splats->state     = Splats_State_InkJarSpawner;
     }
+
     Splats->hitbox1.left   = -10;
     Splats->hitbox1.top    = -20;
     Splats->hitbox1.right  = 6;
     Splats->hitbox1.bottom = 20;
+
     Splats->hitbox2.left   = -18;
     Splats->hitbox2.top    = -26;
     Splats->hitbox2.right  = 18;
     Splats->hitbox2.bottom = 17;
+
     Splats->hitbox3.left   = -18;
     Splats->hitbox3.top    = -146;
     Splats->hitbox3.right  = 18;
@@ -99,7 +102,7 @@ void Splats_StageLoad(void)
 
 void Splats_DebugDraw(void)
 {
-    if (Splats->state == Splats_Unknown3)
+    if (Splats->state == Splats_State_BounceAround)
         RSDK.SetSpriteAnimation(Splats->aniFrames, 0, &DebugMode->animator, true, 0);
     else
         RSDK.SetSpriteAnimation(Splats->aniFrames, 1, &DebugMode->animator, true, 0);
@@ -119,7 +122,7 @@ void Splats_CheckPlayerCollisions(void)
     foreach_active(Player, player)
     {
         if (Player_CheckBadnikTouch(player, self, &Splats->hitbox1)) {
-            if (Splats->state == Splats_Unknown3) {
+            if (Splats->state == Splats_State_BounceAround) {
                 Player_CheckBadnikBreak(self, player, true);
             }
             else {
@@ -129,7 +132,7 @@ void Splats_CheckPlayerCollisions(void)
                         if (parent->objectID == Splats->objectID)
                             --parent->activeCount;
                     }
-                    RSDK.ResetEntityPtr(self, TYPE_BLANK, NULL);
+                    destroyEntity(self);
                     foreach_break;
                 }
             }
@@ -149,7 +152,7 @@ void Splats_CheckOnScreen(void)
     }
 }
 
-void Splats_Unknown2(void)
+void Splats_State_Setup(void)
 {
     RSDK_THIS(Splats);
     self->active     = ACTIVE_NORMAL;
@@ -158,7 +161,7 @@ void Splats_Unknown2(void)
     StateMachine_Run(self->state);
 }
 
-void Splats_Unknown3(void)
+void Splats_State_BounceAround(void)
 {
     RSDK_THIS(Splats);
     self->position.x += self->velocity.x;
@@ -181,17 +184,17 @@ void Splats_Unknown3(void)
     Splats_CheckOnScreen();
 }
 
-void Splats_Unknown4(void)
+void Splats_State_SetupInkJar(void)
 {
     RSDK_THIS(Splats);
     self->field_68 = 0;
     self->delay    = 0;
     self->active   = ACTIVE_NORMAL;
-    self->state    = Splats_Unknown5;
-    Splats_Unknown5();
+    self->state    = Splats_State_InkJarSpawner;
+    Splats_State_InkJarSpawner();
 }
 
-void Splats_Unknown5(void)
+void Splats_State_InkJarSpawner(void)
 {
     RSDK_THIS(Splats);
     if (!self->field_68) {
@@ -217,7 +220,7 @@ void Splats_Unknown5(void)
             RSDK.SetSpriteAnimation(Splats->aniFrames, 2, &self->animator2, true, 0);
             self->delay = self->minDelay;
             RSDK.PlaySfx(Splats->sfxSplatsSpawn, false, 255);
-            EntitySplats *child = CREATE_ENTITY(Splats, intToVoid(1), self->position.x, self->position.y - 0x60000);
+            EntitySplats *child = CREATE_ENTITY(Splats, intToVoid(SPLATS_INKSPLATS), self->position.x, self->position.y - 0x60000);
             child->parent       = (Entity *)self;
             child->bounceCount  = self->bounceCount;
             child->direction    = self->direction;
@@ -231,12 +234,12 @@ void Splats_Unknown5(void)
     }
 
     if (!RSDK.CheckOnScreen(self, NULL)) {
-        self->state  = Splats_Unknown4;
+        self->state  = Splats_State_SetupInkJar;
         self->active = ACTIVE_NORMAL;
     }
 }
 
-void Splats_Unknown6(void)
+void Splats_State_JumpOutOfJar(void)
 {
     RSDK_THIS(Splats);
     RSDK.ProcessAnimation(&self->animator1);
@@ -251,16 +254,16 @@ void Splats_Unknown6(void)
         self->animator1.frameCount = 5;
         if (RSDK.ObjectTileCollision(self, Zone->fgLayers, 0, 0, 0, 0x120000, true)) {
             RSDK.PlaySfx(Splats->sfxSplatsLand, false, 255);
-            EntitySplats *splats = CREATE_ENTITY(Splats, intToVoid(2), self->position.x, self->position.y);
+            EntitySplats *splats = CREATE_ENTITY(Splats, intToVoid(SPLATS_SPLAT), self->position.x, self->position.y);
             splats->direction    = self->direction;
             self->delay        = 4;
-            self->state        = Splats_Unknown8;
+            self->state        = Splats_State_HandleLanding;
         }
     }
     Splats_CheckPlayerCollisions();
 }
 
-void Splats_Unknown7(void)
+void Splats_State_HandleBouncing(void)
 {
     RSDK_THIS(Splats);
 
@@ -276,16 +279,16 @@ void Splats_Unknown7(void)
             if (self->bounceCount) {
                 if (++self->activeCount < self->bounceCount) {
                     self->delay = 4;
-                    self->state = Splats_Unknown8;
+                    self->state = Splats_State_HandleLanding;
                 }
                 else {
                     RSDK.SetSpriteAnimation(Splats->aniFrames, 4, &self->animator1, true, 0);
-                    self->state       = Splats_Unknown9;
+                    self->state       = Splats_State_NoMoreJumps;
                     self->activeCount = 0;
                 }
             }
 
-            EntitySplats *splats = CREATE_ENTITY(Splats, intToVoid(2), self->position.x, self->position.y);
+            EntitySplats *splats = CREATE_ENTITY(Splats, intToVoid(SPLATS_SPLAT), self->position.x, self->position.y);
             splats->direction    = self->direction;
         }
     }
@@ -303,7 +306,7 @@ void Splats_Unknown7(void)
     }
 }
 
-void Splats_Unknown8(void)
+void Splats_State_HandleLanding(void)
 {
     RSDK_THIS(Splats);
     if (--self->delay <= 0) {
@@ -312,7 +315,7 @@ void Splats_Unknown8(void)
         self->animator1.frameCount = 2;
         self->position.y -= 0x80000;
         self->velocity.y = -0x40000;
-        self->state      = Splats_Unknown7;
+        self->state      = Splats_State_HandleBouncing;
     }
 
     if (RSDK.CheckOnScreen(self, NULL)) {
@@ -328,7 +331,7 @@ void Splats_Unknown8(void)
     }
 }
 
-void Splats_Unknown9(void)
+void Splats_State_NoMoreJumps(void)
 {
     RSDK_THIS(Splats);
 
@@ -341,7 +344,7 @@ void Splats_Unknown9(void)
         self->direction ^= FLIP_X;
         self->velocity.y = -0x40000;
         self->velocity.x = -self->velocity.x;
-        self->state      = Splats_Unknown7;
+        self->state      = Splats_State_HandleBouncing;
     }
 
     if (RSDK.CheckOnScreen(self, NULL)) {
@@ -357,7 +360,7 @@ void Splats_Unknown9(void)
     }
 }
 
-void Splats_Unknown10(void)
+void Splats_State_InkSplat(void)
 {
     RSDK_THIS(Splats);
     RSDK.ProcessAnimation(&self->animator1);
@@ -377,14 +380,14 @@ void Splats_EditorDraw(void) { Splats_Draw(); }
 
 void Splats_EditorLoad(void)
 {
-    if (RSDK.CheckStageFolder("GHZ")) {
+    if (RSDK.CheckStageFolder("GHZ")) 
         Splats->aniFrames = RSDK.LoadSpriteAnimation("GHZ/Splats.bin", SCOPE_STAGE);
-        Splats->state     = Splats_Unknown3;
-    }
-    else if (RSDK.CheckStageFolder("PSZ1")) {
+    else if (RSDK.CheckStageFolder("PSZ1")) 
         Splats->aniFrames = RSDK.LoadSpriteAnimation("PSZ1/Splats.bin", SCOPE_STAGE);
-        Splats->state     = Splats_Unknown5;
-    }
+
+    RSDK_ACTIVE_VAR(Splats, direction);
+    RSDK_ENUM_VAR("No Flip", FLIP_NONE);
+    RSDK_ENUM_VAR("Flip X", FLIP_X);
 }
 #endif
 

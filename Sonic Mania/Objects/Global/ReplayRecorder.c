@@ -649,11 +649,11 @@ void ReplayRecorder_DrawGhostDisplay(void)
                 int32 angle = RSDK.ATan2(player->position.x - drawPos.x, player->position.y - drawPos.y);
                 int32 x     = ((val + 18) * RSDK.Cos256(angle) << 8) + drawPos.x;
                 int32 y     = ((val + 18) * RSDK.Sin256(angle) << 8) + drawPos.y;
-                DrawHelpers_DrawDebug4(0xC0E0E0, 2, self->alphaStore >> 1, x, y, (RSDK.Cos256(angle) << 10) + x, (RSDK.Sin256(angle) << 10) + y);
-                RSDK.DrawCircle(drawPos.x, drawPos.y, val + 16, 0xC0E0E0, self->alphaStore >> 1, INK_ALPHA, 0);
+                DrawHelpers_DrawIsocelesTriangle(x, y, (RSDK.Cos256(angle) << 10) + x, (RSDK.Sin256(angle) << 10) + y, 4, 0xC0E0E0, INK_ALPHA,
+                                       self->alphaStore >> 1);
 
                 self->alpha     = self->alphaStore;
-                self->inkEffect = INK_ADD;
+                self->inkEffect = INK_ALPHA;
                 self->drawFX    = FX_FLIP | FX_ROTATE | FX_SCALE;
                 self->scale.x   = 0x100;
                 self->scale.y   = 0x100;

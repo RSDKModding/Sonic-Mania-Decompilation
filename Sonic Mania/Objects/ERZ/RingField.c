@@ -6,14 +6,15 @@ void RingField_Update(void)
 {
     RSDK_THIS(RingField);
     if (self->running) {
-        bool32 flag = false;
+        bool32 inRange = false;
         foreach_active(Player, player)
         {
             if (Player_CheckCollisionTouch(player, self, &self->hitbox)) {
-                flag = true;
+                inRange = true;
             }
         }
-        if (flag) {
+
+        if (inRange) {
             if (self->timer <= 0) {
                 Vector2 pos;
                 RingField_GetPos(&pos);
@@ -130,18 +131,9 @@ void RingField_GetPos(Vector2 *pos)
 void RingField_EditorDraw(void)
 {
     RSDK_THIS(RingField);
-    Vector2 drawPos;
 
-    drawPos.x = self->position.x;
-    drawPos.y = self->position.y;
-    drawPos.x -= self->size.x >> 1;
-    drawPos.y -= self->size.y >> 1;
-    RSDK.DrawLine(drawPos.x - 0x10000, drawPos.y - 0x10000, drawPos.x + self->size.x, drawPos.y - 0x10000, 0xFFFF00, 0, INK_NONE, false);
-    RSDK.DrawLine(drawPos.x - 0x10000, self->size.y + drawPos.y, drawPos.x + self->size.x, self->size.y + drawPos.y, 0xFFFF00, 0, INK_NONE,
-                  false);
-    RSDK.DrawLine(drawPos.x - 0x10000, drawPos.y - 0x10000, drawPos.x - 0x10000, drawPos.y + self->size.y, 0xFFFF00, 0, INK_NONE, false);
-    RSDK.DrawLine(drawPos.x + self->size.x, drawPos.y - 0x10000, drawPos.x + self->size.x, drawPos.y + self->size.y, 0xFFFF00, 0, INK_NONE,
-                  false);
+    if (showGizmos())
+        DrawHelpers_DrawRectOutline(0xFFFF00, self->position.x, self->position.y, self->size.x, self->size.y);
 }
 
 void RingField_EditorLoad(void) {}

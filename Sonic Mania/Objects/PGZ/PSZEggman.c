@@ -68,7 +68,7 @@ void PSZEggman_Unknown1(void)
     if (self->timer == 6) {
         self->ruby->startPos.x = self->ruby->position.x;
         self->ruby->startPos.y = self->ruby->position.y;
-        self->ruby->state      = PhantomRuby_Unknown5;
+        self->ruby->state      = PhantomRuby_State_Oscillate;
         self->state            = StateMachine_None;
     }
 }

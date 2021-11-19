@@ -148,7 +148,7 @@ bool32 SSZ3Cutscene_OutroState_Unknown1(EntityCutsceneSeq *host)
 
     foreach_all(PhantomRuby, ruby)
     {
-        ruby->state      = PhantomRuby_Unknown5;
+        ruby->state      = PhantomRuby_State_Oscillate;
         ruby->startPos.x = (pos2 << 20) + 0x1D00000;
         ruby->startPos.y = 0x1A00000;
         ruby->position   = ruby->startPos;
@@ -182,7 +182,7 @@ bool32 SSZ3Cutscene_OutroState_Unknown3(EntityCutsceneSeq *host)
 
     EntityPhantomRuby *ruby = self->ruby;
     if (ruby) {
-        if (ruby->state == PhantomRuby_Unknown5)
+        if (ruby->state == PhantomRuby_State_Oscillate)
             return true;
     }
     return false;
@@ -194,7 +194,7 @@ bool32 SSZ3Cutscene_OutroState_Unknown4(EntityCutsceneSeq *host)
     EntityPhantomRuby *ruby = self->ruby;
     SSZ3Cutscene_HandleRubyFX();
     if (!host->timer)
-        PhantomRuby_Unknown2(ruby);
+        PhantomRuby_SetupFlash(ruby);
 
     if (host->timer == 8) {
         foreach_active(Player, player)
@@ -226,7 +226,7 @@ bool32 SSZ3Cutscene_OutroState_Unknown4(EntityCutsceneSeq *host)
             }
         }
     }
-    if (ruby->flag) {
+    if (ruby->flashFinished) {
         PhantomRuby_PlaySFX(RUBYSFX_REDCUBE);
         foreach_active(Player, player)
         {

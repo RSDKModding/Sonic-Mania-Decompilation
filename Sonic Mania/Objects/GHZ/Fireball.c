@@ -28,24 +28,20 @@ void Fireball_Create(void *data)
     self->updateRange.y = 0x800000;
     self->drawOrder     = Zone->drawOrderLow;
     RSDK.SetSpriteAnimation(Fireball->aniFrames, 0, &self->animator, true, 0);
-    self->interval *= 15;
+    if (!SceneInfo->inEditor)
+        self->interval *= 15;
     if (data) {
         self->state     = (Type_StateMachine)data;
         self->active    = ACTIVE_NORMAL;
         self->stateDraw = Fireball_StateDraw_Normal;
     }
     else {
+        self->groundVel <<= 7;
         switch (self->type) {
-            default: self->groundVel <<= 7;
-            case 0: self->state = Fireball_State_Unknown1; break;
-            case 1:
-                self->groundVel <<= 7;
-                self->state = Fireball_State_Unknown2;
-                break;
-            case 2:
-                self->groundVel <<= 7;
-                self->state = Fireball_State_Unknown3;
-                break;
+            default: break;
+            case FIREBALL_UPDOWN: self->state = Fireball_State_UpDown_Spawner; break;
+            case FIREBALL_MOVE: self->state = Fireball_State_Move_Spawner; break;
+            case FIREBALL_MOVEGRAVITY: self->state = Fireball_State_MoveGravity_Spawner; break;
         }
     }
 }
@@ -72,56 +68,56 @@ void Fireball_HandlePlayerInteractions(void)
     }
 }
 
-void Fireball_State_Unknown1(void)
+void Fireball_State_UpDown_Spawner(void)
 {
     RSDK_THIS(Fireball);
     if (!((Zone->timer + self->intervalOffset) % self->interval)) {
-        EntityFireball *fireball = CREATE_ENTITY(Fireball, Fireball_State_Unknown4, self->position.x, self->position.y);
+        EntityFireball *fireball = CREATE_ENTITY(Fireball, Fireball_State_UpDown, self->position.x, self->position.y);
         fireball->angle          = self->rotation;
         fireball->rotation       = self->rotation;
         fireball->groundVel      = -self->groundVel;
-        fireball->velocity.x     = fireball->groundVel * RSDK.Sin512(256 - fireball->angle);
-        fireball->velocity.y     = fireball->groundVel * RSDK.Cos512(256 - fireball->angle);
+        fireball->velocity.x     = fireball->groundVel * RSDK.Sin512(0x100 - fireball->angle);
+        fireball->velocity.y     = fireball->groundVel * RSDK.Cos512(0x100 - fireball->angle);
         RSDK.PlaySfx(Fireball->sfxFireball, false, 255);
     }
 }
 
-void Fireball_State_Unknown2(void)
+void Fireball_State_Move_Spawner(void)
 {
     RSDK_THIS(Fireball);
     if (!((Zone->timer + self->intervalOffset) % self->interval)) {
-        EntityFireball *fireball = CREATE_ENTITY(Fireball, Fireball_State_Unknown5, self->position.x, self->position.y);
+        EntityFireball *fireball = CREATE_ENTITY(Fireball, Fireball_State_Move, self->position.x, self->position.y);
         fireball->angle          = self->rotation;
         fireball->rotation       = self->rotation;
         fireball->groundVel      = -self->groundVel;
-        fireball->velocity.x     = fireball->groundVel * RSDK.Sin512(256 - fireball->angle);
-        fireball->velocity.y     = fireball->groundVel * RSDK.Cos512(256 - fireball->angle);
+        fireball->velocity.x     = fireball->groundVel * RSDK.Sin512(0x100 - fireball->angle);
+        fireball->velocity.y     = fireball->groundVel * RSDK.Cos512(0x100 - fireball->angle);
         RSDK.PlaySfx(Fireball->sfxFireball, false, 255);
     }
 }
 
-void Fireball_State_Unknown3(void)
+void Fireball_State_MoveGravity_Spawner(void)
 {
     RSDK_THIS(Fireball);
     if (!((Zone->timer + self->intervalOffset) % self->interval)) {
-        EntityFireball *fireball = CREATE_ENTITY(Fireball, Fireball_State_Unknown6, self->position.x, self->position.y);
+        EntityFireball *fireball = CREATE_ENTITY(Fireball, Fireball_State_MoveGravity, self->position.x, self->position.y);
         fireball->angle          = self->rotation;
         fireball->rotation       = self->rotation;
         fireball->groundVel      = -self->groundVel;
-        fireball->velocity.x     = fireball->groundVel * RSDK.Sin512(256 - fireball->angle);
-        fireball->velocity.y     = fireball->groundVel * RSDK.Cos512(256 - fireball->angle);
+        fireball->velocity.x     = fireball->groundVel * RSDK.Sin512(0x100 - fireball->angle);
+        fireball->velocity.y     = fireball->groundVel * RSDK.Cos512(0x100 - fireball->angle);
         RSDK.PlaySfx(Fireball->sfxFireball, false, 255);
     }
 }
 
-void Fireball_State_Unknown4(void)
+void Fireball_State_UpDown(void)
 {
     RSDK_THIS(Fireball);
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
     self->groundVel += 24;
-    self->velocity.x = self->groundVel * RSDK.Sin512(256 - self->angle);
-    self->velocity.y = self->groundVel * RSDK.Cos512(256 - self->angle);
+    self->velocity.x = self->groundVel * RSDK.Sin512(0x100 - self->angle);
+    self->velocity.y = self->groundVel * RSDK.Cos512(0x100 - self->angle);
     if (self->groundVel > 0)
         self->rotation = self->angle + 256;
 
@@ -131,7 +127,7 @@ void Fireball_State_Unknown4(void)
     Fireball_HandlePlayerInteractions();
 }
 
-void Fireball_State_Unknown5(void)
+void Fireball_State_Move(void)
 {
     RSDK_THIS(Fireball);
     self->position.x += self->velocity.x;
@@ -139,7 +135,7 @@ void Fireball_State_Unknown5(void)
 
     if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, RSDK.Sin512(512 - self->rotation) << 10,
                                  RSDK.Cos512(512 - self->rotation) << 10, true)) {
-        self->state = Fireball_State_Unknown7;
+        self->state = Fireball_State_Dissipate;
         RSDK.SetSpriteAnimation(Fireball->aniFrames, 1, &self->animator, true, 0);
     }
     else {
@@ -153,17 +149,17 @@ void Fireball_State_Unknown5(void)
     }
 }
 
-void Fireball_State_Unknown6(void)
+void Fireball_State_MoveGravity(void)
 {
     RSDK_THIS(Fireball);
-    self->rotation = 2 * RSDK.ATan2((self->velocity.x >> 16), (self->velocity.y >> 16)) + 384;
+    self->rotation = 2 * RSDK.ATan2((self->velocity.x >> 16), (self->velocity.y >> 16)) + 0x180;
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
     self->velocity.y += 0x3800;
 
     if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, RSDK.Sin512(512 - self->rotation) << 10,
                                  RSDK.Cos512(512 - self->rotation) << 10, true)) {
-        self->state = Fireball_State_Unknown7;
+        self->state = Fireball_State_Dissipate;
         RSDK.SetSpriteAnimation(Fireball->aniFrames, 1, &self->animator, true, 0);
     }
     else {
@@ -177,7 +173,7 @@ void Fireball_State_Unknown6(void)
     }
 }
 
-void Fireball_State_Unknown7(void)
+void Fireball_State_Dissipate(void)
 {
     RSDK_THIS(Fireball);
     RSDK.ProcessAnimation(&self->animator);
@@ -200,7 +196,15 @@ void Fireball_EditorDraw(void)
     self->stateDraw = Fireball_StateDraw_Normal;
 }
 
-void Fireball_EditorLoad(void) { Fireball->aniFrames = RSDK.LoadSpriteAnimation("GHZ/Fireball.bin", SCOPE_STAGE); }
+void Fireball_EditorLoad(void)
+{
+    Fireball->aniFrames = RSDK.LoadSpriteAnimation("GHZ/Fireball.bin", SCOPE_STAGE);
+
+    RSDK_ACTIVE_VAR(Fireball, type);
+    RSDK_ENUM_VAR("Up Then Down", FIREBALL_UPDOWN);
+    RSDK_ENUM_VAR("Move", FIREBALL_MOVE);
+    RSDK_ENUM_VAR("Move (With Applied Gravity)", FIREBALL_MOVEGRAVITY);
+}
 #endif
 
 void Fireball_Serialize(void)

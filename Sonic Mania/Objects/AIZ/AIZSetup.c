@@ -567,8 +567,8 @@ bool32 AIZSetup_Cutscene1_Unknown8(Entity *h)
 
     EntityPhantomRuby *ruby = (EntityPhantomRuby *)AIZSetup->phantomRuby;
     if (!host->timer)
-        PhantomRuby_Unknown2(ruby);
-    return ruby->flag;
+        PhantomRuby_SetupFlash(ruby);
+    return ruby->flashFinished;
 }
 bool32 AIZSetup_Cutscene1_Unknown9(Entity *h)
 {
@@ -776,7 +776,7 @@ bool32 AIZSetup_Cutscene2_Unknown6(Entity *h)
         claw->position.y         = -0x300000;
         claw->position.x         = 0x2F9C0000;
         ruby->sfx                = 0;
-        PhantomRuby_Unknown2(ruby);
+        PhantomRuby_SetupFlash(ruby);
         player1->drawOrder = Zone->playerDrawHigh + 2;
         RSDK.PlaySfx(AIZSetup->sfxHeliWoosh, false, 0);
     }
