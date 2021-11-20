@@ -50,12 +50,12 @@ void UIModeButton_Draw(void)
     drawPos = self->position;
     drawPos.x -= self->field_11C;
     drawPos.y -= self->field_11C;
-    UIWidgets_DrawRhombus(24, 128, 24, 240, 240, 240, drawPos.x, drawPos.y);
+    UIWidgets_DrawParallelogram(24, 128, 24, 240, 240, 240, drawPos.x, drawPos.y);
 
     drawPos = self->position;
     drawPos.x += self->field_11C;
     drawPos.y += self->field_11C;
-    UIWidgets_DrawRhombus(24, 128, 24, 0, 0, 0, drawPos.x, drawPos.y);
+    UIWidgets_DrawParallelogram(24, 128, 24, 0, 0, 0, drawPos.x, drawPos.y);
 
     if (self->field_130) {
         drawPos = self->position;

@@ -92,7 +92,7 @@ void UITransition_DrawShapes(void)
     positions[2].y    = screenCenterY + self->drawPos[2].y;
 
     for (int32 i = 0; i < 3; ++i) {
-        UIWidgets_DrawRhombus(240, 0, 240, (colours[i] >> 16) & 0xFF, (colours[i] >> 8) & 0xFF, colours[i] & 0xFF, positions[i].x, positions[i].y);
+        UIWidgets_DrawParallelogram(240, 0, 240, (colours[i] >> 16) & 0xFF, (colours[i] >> 8) & 0xFF, colours[i] & 0xFF, positions[i].x, positions[i].y);
     }
 }
 

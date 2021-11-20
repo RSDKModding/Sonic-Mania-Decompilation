@@ -223,10 +223,10 @@ void UIVsZoneButton_Unknown6(void)
     drawPos.x = self->position.x;
     drawPos.y = self->position.y + 0x280000;
 
-    UIWidgets_DrawRhombus(self->field_11C >> 16, size, self->field_120, 0xF0, 0xF0, 0xF0, drawPos.x, drawPos.y);
+    UIWidgets_DrawParallelogram(self->field_11C >> 16, size, self->field_120, 0xF0, 0xF0, 0xF0, drawPos.x, drawPos.y);
     drawPos.x += self->field_13C;
     drawPos.y += self->field_13C;
-    UIWidgets_DrawRhombus(self->field_11C >> 16, size, self->field_120, 0, 0, 0, drawPos.x, drawPos.y);
+    UIWidgets_DrawParallelogram(self->field_11C >> 16, size, self->field_120, 0, 0, 0, drawPos.x, drawPos.y);
 
     if (!SceneInfo->inEditor) {
         int32 width = RSDK.GetStringWidth(UIWidgets->labelSpriteIndex, 0, &self->nameText, 0, self->nameText.textLength, 0);

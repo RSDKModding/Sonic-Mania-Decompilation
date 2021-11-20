@@ -664,7 +664,7 @@ void UITAZoneModule_Unknown7(void)
 
     RSDK.DrawRect(drawX - 0x990000, drawY + 0x240000, 0x1320000, 0x4D0000, 0x000000, 255, INK_NONE, false);
     UITAZoneModule_Unknown8();
-    UIWidgets_DrawRhombus(0x17, 0xE0, 0x17, 0xD9, 0xAD, 0x4, self->position.x - 0x40000, drawY + 0x448000);
+    UIWidgets_DrawParallelogram(0x17, 0xE0, 0x17, 0xD9, 0xAD, 0x4, self->position.x - 0x40000, drawY + 0x448000);
 
     drawPos2.x = drawX - 0x390000;
     drawPos2.y = drawY + 0x450000;
@@ -683,7 +683,7 @@ void UITAZoneModule_Unknown7(void)
     }
     drawY += 0x140000;
 
-    UIWidgets_DrawRhombus(0x0F, 0xE0, 0x0F, 0x98, 0xC0, 0xC8, self->position.x + 0x80000, drawY + 0x448000);
+    UIWidgets_DrawParallelogram(0x0F, 0xE0, 0x0F, 0x98, 0xC0, 0xC8, self->position.x + 0x80000, drawY + 0x448000);
     drawPos2.x = drawX - 0x290000;
     drawPos2.y = drawY + 0x460000;
     if (self->rank != 2 || (UIControl->timer & 4)) {
@@ -700,7 +700,7 @@ void UITAZoneModule_Unknown7(void)
         pos   = UITAZoneModule_DrawTime(pos.x, pos.y, time / 6000, time % 6000 / 100, time % 100);
     }
 
-    UIWidgets_DrawRhombus(0xF, 0xE0, 0xF, 0xC0, 0x58, 0x01, self->position.x + 0x140000, drawY + 0x548000);
+    UIWidgets_DrawParallelogram(0xF, 0xE0, 0xF, 0xC0, 0x58, 0x01, self->position.x + 0x140000, drawY + 0x548000);
     drawPos2.x = drawX - 0x1A0000;
     drawPos2.y = drawY + 0x560000;
     if (self->rank != 3 || (UIControl->timer & 4)) {

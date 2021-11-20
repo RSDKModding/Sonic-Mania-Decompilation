@@ -180,7 +180,7 @@ void UIWidgets_DrawEquilateralTriangle(int32 x, int32 y, int32 size, uint8 flag,
         }
     }
 }
-void UIWidgets_DrawRhombus(int32 width, int32 height, int32 size, int32 red, int32 green, int32 blue, int32 x, int32 y)
+void UIWidgets_DrawParallelogram(int32 width, int32 height, int32 size, int32 red, int32 green, int32 blue, int32 x, int32 y)
 {
     Vector2 verts[4];
 

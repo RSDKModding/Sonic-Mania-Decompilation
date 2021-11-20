@@ -324,7 +324,7 @@ void UIReplayCarousel_Unknown7(int32 a1, int16 a2, int32 a3, int32 a4)
     uint32 colour = 0xF0F0F0;
     if (a1)
         colour = 0xF26C4F;
-    UIWidgets_DrawRhombus(16, 128, 16, (colour >> 16) & 0xFF, (colour >> 8) & 0xFF, colour & 0xFF, a3 - 0xA0000, a4 + 0xE0000);
+    UIWidgets_DrawParallelogram(16, 128, 16, (colour >> 16) & 0xFF, (colour >> 8) & 0xFF, colour & 0xFF, a3 - 0xA0000, a4 + 0xE0000);
 
     colour = 0x5FA0B0;
     if (a1)
@@ -486,7 +486,7 @@ void UIReplayCarousel_StateDraw_Unknown1(void)
     Vector2 drawPos;
     drawPos.x = parent->position.x;
     drawPos.y = parent->position.y + 0x100000;
-    UIWidgets_DrawRhombus(16, 96, 16, 0, 0, 0, drawPos.x, drawPos.y);
+    UIWidgets_DrawParallelogram(16, 96, 16, 0, 0, 0, drawPos.x, drawPos.y);
 
     drawPos.x -= RSDK.GetStringWidth(UIWidgets->labelSpriteIndex, 0, &self->loadingText, 0, self->loadingText.textLength, 0) << 15;
     RSDK.DrawText(&self->animator9, &drawPos, &self->loadingText, 0, self->loadingText.textLength, ALIGN_LEFT, 0, 2, 0, false);
@@ -500,7 +500,7 @@ void UIReplayCarousel_StateDraw_Unknown2(void)
     Vector2 drawPos;
     drawPos.x = parent->position.x;
     drawPos.y = parent->position.y + 0x100000;
-    UIWidgets_DrawRhombus(16, 96, 16, 0, 0, 0, drawPos.x, drawPos.y);
+    UIWidgets_DrawParallelogram(16, 96, 16, 0, 0, 0, drawPos.x, drawPos.y);
 
     drawPos.x -= RSDK.GetStringWidth(UIWidgets->labelSpriteIndex, 0, &self->noReplaysText, 0, self->noReplaysText.textLength, 0) << 15;
     RSDK.DrawText(&self->animator9, &drawPos, &self->noReplaysText, 0, self->noReplaysText.textLength, ALIGN_LEFT, 0, 2, 0, false);
@@ -621,7 +621,7 @@ void UIReplayCarousel_EditorDraw(void)
     Vector2 drawPos;
     drawPos.x = self->position.x;
     drawPos.y = self->position.y + 0x100000;
-    UIWidgets_DrawRhombus(16, 96, 16, 0, 0, 0, drawPos.x, drawPos.y);
+    UIWidgets_DrawParallelogram(16, 96, 16, 0, 0, 0, drawPos.x, drawPos.y);
 }
 
 void UIReplayCarousel_EditorLoad(void) { UIReplayCarousel->aniFrames = RSDK.LoadSpriteAnimation("UI/SaveSelect.bin", SCOPE_STAGE); }

@@ -243,7 +243,7 @@ void UIDialog_Unknown6(void)
     RSDK.DrawRect(((ScreenInfo->position.x + ScreenInfo->centerX) << 16) - (self->field_70.x >> 1),
                   ((ScreenInfo->position.y + ScreenInfo->centerY) << 16) - (self->field_70.y >> 1), self->field_70.x, self->field_70.y,
                   self->field_B8 ? 0x282028 : 0x000000, 255, INK_NONE, false);
-    UIWidgets_DrawRhombus(0x8F, 0xC8, 0x8F, 0x30, 0xA0, 0xF0, self->drawPos.x + ((ScreenInfo->position.x + ScreenInfo->centerX) << 16),
+    UIWidgets_DrawParallelogram(0x8F, 0xC8, 0x8F, 0x30, 0xA0, 0xF0, self->drawPos.x + ((ScreenInfo->position.x + ScreenInfo->centerX) << 16),
                        self->drawPos.y + ((ScreenInfo->position.y + ScreenInfo->centerY) << 16));
 }
 

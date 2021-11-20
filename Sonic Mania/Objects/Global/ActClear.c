@@ -499,7 +499,7 @@ void ActClear_CheckPlayerVictory(void)
 void ActClear_SaveGameCallback(int32 success)
 {
     UIWaitSpinner_Wait2();
-    ActClear->finishedSavingGame = 0;
+    ActClear->finishedSavingGame = false;
 }
 
 void ActClear_Unknown5(void)

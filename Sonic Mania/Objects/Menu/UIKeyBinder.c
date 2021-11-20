@@ -230,13 +230,13 @@ void UIKeyBinder_DrawSprites(void)
     drawPos.y = self->position.y;
     drawPos.x -= self->field_120;
     drawPos.y -= self->field_120;
-    UIWidgets_DrawRhombus(self->field_114 >> 16, self->field_110 >> 16, self->field_118, 0xF0, 0xF0, 0xF0, drawPos.x, drawPos.y);
+    UIWidgets_DrawParallelogram(self->field_114 >> 16, self->field_110 >> 16, self->field_118, 0xF0, 0xF0, 0xF0, drawPos.x, drawPos.y);
 
     drawPos.x += self->field_120;
     drawPos.y += self->field_120;
     drawPos.x += self->field_120;
     drawPos.y += self->field_120;
-    UIWidgets_DrawRhombus(self->field_114 >> 16, self->field_110 >> 16, self->field_118, 0, 0, 0, drawPos.x, drawPos.y);
+    UIWidgets_DrawParallelogram(self->field_114 >> 16, self->field_110 >> 16, self->field_118, 0, 0, 0, drawPos.x, drawPos.y);
 
     drawPos.x = self->position.x;
     drawPos.y = self->position.y;
