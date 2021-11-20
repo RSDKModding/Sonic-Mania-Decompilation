@@ -18,7 +18,6 @@ typedef struct {
     int32 hitboxOffset;
     int32 unused1; // set in stageload, but never used. no way to tell what it is
     uint16 sfxButton;
-    uint16 unused2; // i removed this earlier, but it cannot be padding because of how mania passes the size of the object and entity, so it stays
 } ObjectButton;
 
 // Entity Class

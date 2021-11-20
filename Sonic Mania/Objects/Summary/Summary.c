@@ -59,7 +59,7 @@ void Summary_State_Draw(void)
 void Summary_State_SetupText(void)
 {
     RSDK_THIS(Summary);
-    self->unknownPtr   = NULL;
+    self->unusedPtr    = NULL;
     self->gameModeText = NULL;
     self->saveText     = NULL;
 
@@ -101,9 +101,9 @@ void Summary_State_SetupText(void)
         }
     }
 
-    picture               = self->pictureA;
+    picture                   = self->pictureA;
     picture->animator.frameID = self->player1ID;
-    picture               = self->pictureB;
+    picture                   = self->pictureB;
     picture->animator.frameID = self->player2ID;
 
     Summary_LoadTimes();
@@ -175,10 +175,10 @@ void Summary_SetStageTime(char *buffer, int32 time)
         sprintf(buffer, "--'--\"--");
     }
     else {
-        int32 tm = 100 * time;
+        int32 tm   = 100 * time;
         int32 mins = 0;
         int32 secs = 0;
-        uint8 ms  = 0;
+        uint8 ms   = 0;
 
         if (tm >= 6000) {
             do {
@@ -196,7 +196,7 @@ void Summary_SetStageTime(char *buffer, int32 time)
         ms = tm / 60;
 
         if (mins >= 60)
-            sprintf(buffer, "%d:%02d'%02d\"%02d", (mins - 60) / 60 + 1, mins - 60 * ((mins - 60) / 0x3Cu + 1), secs, ms);
+            sprintf(buffer, "%d:%02d'%02d\"%02d", (mins - 60) / 60 + 1, mins - 60 * ((mins - 60) / 60 + 1), secs, ms);
         else
             sprintf(buffer, "%02d'%02d\"%02d", mins, secs, ms);
     }
