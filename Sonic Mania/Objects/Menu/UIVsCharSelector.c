@@ -103,11 +103,11 @@ void UIVsCharSelector_Unknown2(void)
 {
     RSDK_THIS(UIVsCharSelector);
     if (!SceneInfo->inEditor)
-        UIWidgets_Unknown3(96, 96, self->position.x + 0x30000, self->position.y + 0x30000);
+        UIWidgets_DrawRectOutline_Blended(96, 96, self->position.x + 0x30000, self->position.y + 0x30000);
     if (self->flag)
-        UIWidgets_Unknown4(96, 96, self->position.x, self->position.y);
+        UIWidgets_DrawRectOutline_Flash(96, 96, self->position.x, self->position.y);
     else
-        UIWidgets_Unknown2(96, 96, self->position.x, self->position.y);
+        UIWidgets_DrawRectOutline_Black(96, 96, self->position.x, self->position.y);
 }
 
 void UIVsCharSelector_Unknown3(void)
@@ -168,9 +168,9 @@ void UIVsCharSelector_Unknown4(void)
         drawPos.x = self->position.x;
         drawPos.y = self->position.y + 0x200000;
         if (RSDK.Sin256(2 * UIControl->timer) < 0)
-            UIWidgets_Unknown9((-RSDK.Sin256(2 * UIControl->timer) + 0x880) << 11, drawPos.x, drawPos.y);
+            UIWidgets_DrawLeftRightArrows(drawPos.x, drawPos.y, (-RSDK.Sin256(2 * UIControl->timer) + 0x880) << 11);
         else
-            UIWidgets_Unknown9((RSDK.Sin256(2 * UIControl->timer) + 0x880) << 11, drawPos.x, drawPos.y);
+            UIWidgets_DrawLeftRightArrows(drawPos.x, drawPos.y, (RSDK.Sin256(2 * UIControl->timer) + 0x880) << 11);
     }
 }
 

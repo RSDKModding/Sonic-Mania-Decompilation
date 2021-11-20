@@ -45,16 +45,16 @@ void UIVsRoundPicker_Draw(void)
     drawPos.x -= self->field_128;
     drawPos.y -= self->field_128;
 #if RETRO_USE_PLUS
-    UIWidgets_Unknown7(self->size.y >> 16, size, self->dword120, (UIWidgets->buttonColour >> 16) & 0xFF, (UIWidgets->buttonColour >> 8) & 0xFF,
+    UIWidgets_DrawRhombus(self->size.y >> 16, size, self->dword120, (UIWidgets->buttonColour >> 16) & 0xFF, (UIWidgets->buttonColour >> 8) & 0xFF,
                        (UIWidgets->buttonColour) & 0xFF, drawPos.x, drawPos.y);
 #else
-    UIWidgets_Unknown7(self->size.y >> 16, size, self->dword120, 0xF0, 0xF0, 0xF0, drawPos.x, drawPos.y);
+    UIWidgets_DrawRhombus(self->size.y >> 16, size, self->dword120, 0xF0, 0xF0, 0xF0, drawPos.x, drawPos.y);
 #endif
 
     drawPos = self->position;
     drawPos.x += self->field_128;
     drawPos.y += self->field_128;
-    UIWidgets_Unknown7((self->size.y >> 16), size, self->dword120, 0, 0, 0, drawPos.x, drawPos.y);
+    UIWidgets_DrawRhombus((self->size.y >> 16), size, self->dword120, 0, 0, 0, drawPos.x, drawPos.y);
 
     if (self->arrowWidth > 0 && self->flag) {
         if (self->val >= 2) {

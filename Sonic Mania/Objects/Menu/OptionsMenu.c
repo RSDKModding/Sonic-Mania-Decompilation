@@ -651,7 +651,7 @@ void OptionsMenu_Unknown31(void)
     RSDK_THIS(UIButton);
     EntityOptions *options  = (EntityOptions *)globals->optionsRAM;
     options->screenShader = self->selection;
-    options->field_60 = true;
+    options->overrideShader       = true;
     RSDK.SetSettingsValue(SETTINGS_SHADERID, self->selection);
     RSDK.SetSettingsValue(SETTINGS_CHANGED, false);
     Options->state = 1;
@@ -742,21 +742,21 @@ void OptionsMenu_UISlider_ChangedCB(void)
             Options->state = 1;
             break;
         case 0xFC:
-            options->screenShader = self->sliderPos;
-            options->field_60   = true;
+            options->screenShader   = self->sliderPos;
+            options->overrideShader = true;
             RSDK.SetSettingsValue(SETTINGS_SHADERID, options->screenShader);
             RSDK.SetSettingsValue(SETTINGS_CHANGED, 0);
             Options->state = 1;
             break;
         case 0:
-            options->volMusic = self->sliderPos;
-            options->field_68   = 1;
+            options->volMusic         = self->sliderPos;
+            options->overrideMusicVol = 1;
             RSDK.SetSettingsValue(SETTINGS_STREAM_VOL, options->volMusic);
             Options->state = 1;
             break;
         case 1:
-            options->volSfx   = self->sliderPos;
-            options->field_70   = true;
+            options->volSfx         = self->sliderPos;
+            options->overrideSfxVol = true;
             RSDK.SetSettingsValue(SETTINGS_SFX_VOL, options->volSfx);
             Options->state = 1;
             break;

@@ -154,7 +154,7 @@ void TimePost_HandleTimeSparkles(void)
                 range.y = 0;
                 if (RSDK.CheckOnScreen(player, &range)) {
                     flag = false;
-                    ParticleHelpers_Unknown2(Debris_State_Move, TimePost_ParticleCB_TimeSparkles, 0, player->position.x,
+                    ParticleHelpers_SetupParticleFX(Debris_State_Move, TimePost_ParticleCB_TimeSparkles, 0, player->position.x,
                                              player->position.y, 0x200000, 0x200000);
                 }
             }

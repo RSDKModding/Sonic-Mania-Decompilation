@@ -56,12 +56,11 @@ void FXRuby_Create(void *data)
         else
             self->drawOrder = DRAWLAYER_COUNT - 1;
         self->radiusSpeed = 4;
-        if (data) {
-            self->state = (void (*)(void))data;
-        }
-        else if (!self->waitForTrigger) {
-            self->state = FXRuby_Unknown3;
-        }
+
+        if (data) 
+            self->state = (Type_StateMachine)data;
+        else if (!self->waitForTrigger) 
+            self->state = FXRuby_State_ExpandRing;
     }
 }
 
@@ -87,17 +86,12 @@ void FXRuby_SetupLayerDeformation(void)
     }
 }
 
-void FXRuby_Unknown2(void)
+void FXRuby_HandleLayerDeform(void)
 {
     RSDK_THIS(FXRuby);
 
-    int32 timer = 0;
-    if (Zone)
-        timer = Zone->timer;
-    else
-        timer = UIWidgets->arrayIndex;
+    int32 timer = Zone ? Zone->timer : UIWidgets->timer;
 
-    
     int32 *dataPtr = NULL;
     for (int32 l = 0; l < LAYER_COUNT; ++l) {
         TileLayer *layer = RSDK.GetSceneLayer(l);
@@ -115,7 +109,7 @@ void FXRuby_Unknown2(void)
                 int32 cnt = 8 * timer;
                 for (int32 s = 0; s < 0x200; ++s) {
                     int32 angle             = RSDK.Sin256(4 * s);
-                    deformData[s]         = ((self->field_70 * FXRuby->deformData[cnt-- & 0x1FF]) >> 7) + ((self->field_70 * angle) >> 7);
+                    deformData[s]         = ((self->timer * FXRuby->deformData[cnt-- & 0x1FF]) >> 7) + ((self->timer * angle) >> 7);
                     deformData[s + 0x200] = deformData[s];
                 }
                 dataPtr = deformData;
@@ -124,54 +118,52 @@ void FXRuby_Unknown2(void)
     }
 }
 
-void FXRuby_Unknown3(void)
+void FXRuby_State_ExpandRing(void)
 {
     RSDK_THIS(FXRuby);
     self->outerRadius += self->radiusSpeed;
     if (self->outerRadius > ScreenInfo->width) {
-        self->flag  = true;
-        self->state = FXRuby_Unknown5;
+        self->fullyExpanded  = true;
+        self->state = FXRuby_State_None;
     }
 }
-void FXRuby_Unknown4(void)
+void FXRuby_State_ShrinkRing(void)
 {
     RSDK_THIS(FXRuby);
     self->outerRadius -= self->radiusSpeed;
     if (self->outerRadius <= 0) {
-        self->flag  = false;
-        self->state = FXRuby_Unknown5;
+        self->fullyExpanded = false;
+        self->state = FXRuby_State_None;
     }
 }
 
-void FXRuby_Unknown5(void)
+void FXRuby_State_None(void)
 {
     // what
 }
-void FXRuby_Unknown6(void)
+void FXRuby_State_IncreaseStageDeform(void)
 {
     RSDK_THIS(FXRuby);
-    FXRuby_Unknown2();
-    if (self->field_70 >= self->field_74)
-        self->state = FXRuby_Unknown7;
-    else
-        self->field_70++;
+    FXRuby_HandleLayerDeform();
+    if (++self->timer >= self->delay)
+        self->state = FXRuby_State_DecreaseStageDeform;
 }
-void FXRuby_Unknown7(void)
+void FXRuby_State_DecreaseStageDeform(void)
 {
     RSDK_THIS(FXRuby);
-    FXRuby_Unknown2();
-    if (self->field_70 > 0)
-        self->field_70--;
+    FXRuby_HandleLayerDeform();
+    if (self->timer > 0)
+        self->timer--;
 }
-void FXRuby_Unknown9(void)
+void FXRuby_State_ShrinkAndDestroy(void)
 {
     RSDK_THIS(FXRuby);
     self->radiusSpeed -= 0x3800;
-    self->dword64 += self->radiusSpeed;
+    self->radius += self->radiusSpeed;
     self->innerRadius = 0;
-    self->outerRadius = self->dword64 >> 16;
-    if (self->dword64 <= 0)
-        RSDK.ResetEntityPtr(self, TYPE_BLANK, NULL);
+    self->outerRadius = self->radius >> 16;
+    if (self->radius <= 0)
+        destroyEntity(self);
 }
 
 #if RETRO_INCLUDE_EDITOR

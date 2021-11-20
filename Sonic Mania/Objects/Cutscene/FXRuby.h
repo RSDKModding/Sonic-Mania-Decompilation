@@ -16,20 +16,20 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    int32 dword5C;
+    int32 unused1;
     int32 radiusSpeed;
-    int32 dword64;
+    int32 radius;
     int32 innerRadius;
     int32 outerRadius;
-    int32 field_70;
-    int32 field_74;
+    int32 timer;
+    int32 delay;
     int32 fadeWhite;
     int32 fadeBlack;
     bool32 waitForTrigger;
-    int32 field_84;
-    int32 field_88;
-    int32 field_8C;
-    bool32 flag;
+    int32 unused2;
+    int32 unused3;
+    int32 unused4;
+    bool32 fullyExpanded;
 } EntityFXRuby;
 
 // Object Struct
@@ -50,13 +50,13 @@ void FXRuby_Serialize(void);
 
 // Extra Entity Functions
 void FXRuby_SetupLayerDeformation(void);
-void FXRuby_Unknown2(void);
+void FXRuby_HandleLayerDeform(void);
 
-void FXRuby_Unknown3(void);
-void FXRuby_Unknown4(void);
-void FXRuby_Unknown5(void);
-void FXRuby_Unknown6(void);
-void FXRuby_Unknown7(void);
-void FXRuby_Unknown9(void);
+void FXRuby_State_ExpandRing(void);
+void FXRuby_State_ShrinkRing(void);
+void FXRuby_State_None(void);
+void FXRuby_State_IncreaseStageDeform(void);
+void FXRuby_State_DecreaseStageDeform(void);
+void FXRuby_State_ShrinkAndDestroy(void);
 
 #endif //!OBJ_FXRUBY_H

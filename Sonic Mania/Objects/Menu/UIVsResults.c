@@ -106,12 +106,12 @@ void UIVsResults_Unknown2(void)
 
     int32 y = (self->field_1D0 >> 1) + self->position.y - 0x1D8000;
     if (!SceneInfo->inEditor)
-        UIWidgets_Unknown3(self->field_1D0 >> 16, 96, self->position.x + 0x30000, y);
+        UIWidgets_DrawRectOutline_Blended(self->field_1D0 >> 16, 96, self->position.x + 0x30000, y);
 
     if (!self->field_1D4)
-        UIWidgets_Unknown2(self->field_1D0 >> 16, 96, self->position.x, y - 0x30000);
+        UIWidgets_DrawRectOutline_Black(self->field_1D0 >> 16, 96, self->position.x, y - 0x30000);
     else
-        UIWidgets_Unknown4(self->field_1D0 >> 16, 96, self->position.x, y - 0x30000);
+        UIWidgets_DrawRectOutline_Flash(self->field_1D0 >> 16, 96, self->position.x, y - 0x30000);
 }
 
 void UIVsResults_Unknown3(void)

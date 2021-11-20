@@ -84,8 +84,8 @@ void UITABanner_Unknown2(int32 drawX, int32 drawY, bool32 isEncore)
     UIWidgets_DrawRightTriangle(drawX + 0x990000, drawY + 0x1D8000, -58, (colour >> 16) & 0xFF, (colour >> 8) & 0xFF, colour & 0xFF);
 
     if (!SceneInfo->inEditor)
-        UIWidgets_Unknown3(67, 312, drawX + 0x30000, drawY + 0x30000);
-    UIWidgets_Unknown2(67, 312, drawX, drawY);
+        UIWidgets_DrawRectOutline_Blended(67, 312, drawX + 0x30000, drawY + 0x30000);
+    UIWidgets_DrawRectOutline_Black(67, 312, drawX, drawY);
 }
 
 void UITABanner_Unknown3(uint8 actID, uint8 characterID, bool32 isEncore, int32 drawX, int32 drawY)
@@ -183,7 +183,7 @@ void UITABanner_Unknown4(int32 drawX, int32 drawY, int32 zoneID)
         self->direction = FLIP_NONE;
         self->drawFX    = FX_NONE;
     }
-    UIWidgets_Unknown2(61, 96, drawPos.x, drawPos.y);
+    UIWidgets_DrawRectOutline_Black(61, 96, drawPos.x, drawPos.y);
 }
 
 void UITABanner_Unknown5(uint8 actID, uint8 zoneID, uint8 characterID, bool32 isEncore, int32 drawX, int32 drawY)

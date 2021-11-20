@@ -181,7 +181,7 @@ bool32 CPZ1Intro_Unknown5(void *h)
             if (!host->values[0]) {
                 PhantomRuby_PlaySFX(RUBYSFX_ATTACK4);
                 host->values[0] = 1;
-                fxRuby->state     = FXRuby_Unknown4;
+                fxRuby->state     = FXRuby_State_ShrinkRing;
             }
 
             if (fxRuby->outerRadius) {
@@ -268,7 +268,7 @@ bool32 CPZ1Intro_Unknown8(void *h)
     int32 playerY = player1->position.y + ((playerHitbox->top + 2) << 16);
     if (debris->position.y >= playerY) {
         RSDK.PlaySfx(CPZ1Intro->sfxDNABurst, 0, 255);
-        ParticleHelpers_Unknown1(debris->position.x, playerY);
+        ParticleHelpers_SetupFallingParticles(debris->position.x, playerY);
         destroyEntity(debris);
         if ((globals->playerID & 0xFFFFFF00) == ID_TAILS_ASSIST)
             RSDK.SetSpriteAnimation(player2->aniFrames, ANI_SKID, &player2->animator, true, 0);

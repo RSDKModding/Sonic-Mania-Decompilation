@@ -166,8 +166,8 @@ void UIPopover_DrawSprites(void)
     if (self->field_C8 == 1) {
         int32 x = self->position.x + 0x30000;
         int32 y = (self->size.y >> 1) + self->position.y + 0x30000;
-        UIWidgets_Unknown6(1, 0, 0, 0, 1, x, y);
-        UIWidgets_Unknown6(self->field_C8, 48, 160, 240, 0, x - 0x30000, y - 0x30000);
+        UIWidgets_DrawEquilateralTriangle(x, y, 8, true, 0x00, 0x00, 0x00, INK_BLEND);
+        UIWidgets_DrawEquilateralTriangle(x - 0x30000, y - 0x30000, 8, self->field_C8, 0x30, 0xA0, 0xE0, INK_NONE);
     }
 }
 

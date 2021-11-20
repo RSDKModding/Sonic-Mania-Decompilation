@@ -86,7 +86,7 @@ void UISlider_Unknown1(void)
     int32 size  = self->field_110 + self->field_10C;
     drawPos.x = self->position.x;
     drawPos.y = self->position.y;
-    UIWidgets_Unknown7((self->field_110 >> 16), size >> 16, self->field_114, 0, 0, 0, self->position.x, self->position.y);
+    UIWidgets_DrawRhombus((self->field_110 >> 16), size >> 16, self->field_114, 0, 0, 0, self->position.x, self->position.y);
 
     if (self->textFlag) {
         drawPos = self->position;
@@ -104,23 +104,23 @@ void UISlider_Unknown2(void)
     int32 drawX = 0x7A0000 + self->position.x;
     int32 sliderPos        = (((34048 * self->sliderPos) >> 2) & 0xFFFFFF00) - 0xB0000;
     int32 drawX2            = drawX - ((0x7A0000 - sliderPos) >> 1);
-    UIWidgets_Unknown7(12, 122, 12, 240, 240, 240, drawX - self->field_11C, self->position.y - self->field_11C);
-    UIWidgets_Unknown7(12, 122, 12, 0, 0, 0, self->field_11C + drawX, self->field_11C + self->position.y);
-    UIWidgets_Unknown7(12, sliderPos >> 16, 12, 232, 40, 88, self->field_11C + drawX2, self->field_11C + self->position.y);
+    UIWidgets_DrawRhombus(12, 122, 12, 240, 240, 240, drawX - self->field_11C, self->position.y - self->field_11C);
+    UIWidgets_DrawRhombus(12, 122, 12, 0, 0, 0, self->field_11C + drawX, self->field_11C + self->position.y);
+    UIWidgets_DrawRhombus(12, sliderPos >> 16, 12, 232, 40, 88, self->field_11C + drawX2, self->field_11C + self->position.y);
 
     drawPos.x = drawX2 + (sliderPos >> 1) + self->field_11C + 0x60000;
     drawPos.y = self->field_11C + self->position.y;
     if (self->flag) {
         drawPos.x += 0x30000;
         drawPos.y += 0x30000;
-        UIWidgets_Unknown3(24, 14, drawPos.x, drawPos.y);
+        UIWidgets_DrawRectOutline_Blended(24, 14, drawPos.x, drawPos.y);
         drawPos.x -= 0x30000;
         drawPos.y -= 0x30000;
     }
 
     RSDK.DrawRect(drawPos.x - 0x70000, drawPos.y - 0xC0000, 0xE0000, 0x180000, 0xF0F0F0, 255, INK_NONE, false);
     if (self->flag)
-        UIWidgets_Unknown4(24, 14, drawPos.x, drawPos.y);
+        UIWidgets_DrawRectOutline_Flash(24, 14, drawPos.x, drawPos.y);
 }
 
 void UISlider_ButtonPressCB(void)

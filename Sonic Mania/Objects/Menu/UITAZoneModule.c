@@ -216,20 +216,20 @@ void UITAZoneModule_Unknown3(void)
 
 #if RETRO_USE_PLUS
     if (!SceneInfo->inEditor)
-        UIWidgets_Unknown3(78, 312, self->position.x + 0x30000, self->position.y + 0x30000);
+        UIWidgets_DrawRectOutline_Blended(78, 312, self->position.x + 0x30000, self->position.y + 0x30000);
 
     if (self->flag)
-        UIWidgets_Unknown4(78, 312, self->position.x, self->position.y);
+        UIWidgets_DrawRectOutline_Flash(78, 312, self->position.x, self->position.y);
     else
-        UIWidgets_Unknown2(78, 312, self->position.x, self->position.y);
+        UIWidgets_DrawRectOutline_Black(78, 312, self->position.x, self->position.y);
 #else
     if (!SceneInfo->inEditor)
-        UIWidgets_Unknown3(78 + (self->field_138_2 >> 16), 312, self->position.x + 0x30000, self->position.y + 0x30000);
+        UIWidgets_DrawRectOutline_Blended(78 + (self->field_138_2 >> 16), 312, self->position.x + 0x30000, self->position.y + 0x30000);
 
     if (self->flag || self->value)
-        UIWidgets_Unknown4(78 + (self->field_138_2 >> 16), 312, self->position.x, self->position.y);
+        UIWidgets_DrawRectOutline_Flash(78 + (self->field_138_2 >> 16), 312, self->position.x, self->position.y);
     else
-        UIWidgets_Unknown2(78 + (self->field_138_2 >> 16), 312, self->position.x, self->position.y);
+        UIWidgets_DrawRectOutline_Black(78 + (self->field_138_2 >> 16), 312, self->position.x, self->position.y);
 #endif
 }
 
@@ -255,7 +255,7 @@ void UITAZoneModule_Unknown4(void)
     RSDK.DrawSprite(&self->animator3, &drawPos, false);
 
 #if RETRO_USE_PLUS
-    drawPos = UIWidgets_Unknown10(colour, 0xF0D808, drawPos.x + 0x840000, drawPos.y);
+    drawPos = UIWidgets_DrawTriJoinRect(drawPos.x + 0x840000, drawPos.y, colour, 0xF0D808);
     RSDK.DrawRect(drawPos.x, drawPos.y, 0x400000, 0xD0000, 0xF0D808, 255, INK_NONE, false);
 #else
     drawPos.x += 0x5C0000;
@@ -276,7 +276,7 @@ void UITAZoneModule_Unknown4(void)
     drawPos.x += 0x100000;
     drawPos.y -= 0x20000;
     if (SceneInfo->inEditor || !self->characterID) {
-        UITAZoneModule_DrawTime(&drawPos, 0, 0, 0);
+        UITAZoneModule_DrawTime(drawPos.x, drawPos.y, 0, 0, 0);
     }
     else {
         uint16 *records1 = TimeAttackData_GetRecordedTime(self->zoneID, 0, self->characterID, 1);
@@ -285,11 +285,11 @@ void UITAZoneModule_Unknown4(void)
         int32 time = records1[0] + records2[0];
 
         if (records1[0] && records2[0])
-            UITAZoneModule_DrawTime(&drawPos, time / 6000, time % 6000 / 100, time % 100);
+            UITAZoneModule_DrawTime(drawPos.x, drawPos.y, time / 6000, time % 6000 / 100, time % 100);
         else if (self->characterID != 3 && records1[0] && self->zoneID == 7)
-            UITAZoneModule_DrawTime(&drawPos, time / 6000, time % 6000 / 100, time % 100);
+            UITAZoneModule_DrawTime(drawPos.x, drawPos.y, time / 6000, time % 6000 / 100, time % 100);
         else
-            UITAZoneModule_DrawTime(&drawPos, 0, 0, 0);
+            UITAZoneModule_DrawTime(drawPos.x, drawPos.y, 0, 0, 0);
     }
 #endif
 }
@@ -301,7 +301,7 @@ void UITAZoneModule_Unknown5(void)
 
     drawPos.x = self->drawPos.x - 0x690000;
     drawPos.y = self->drawPos.y;
-    UIWidgets_Unknown2(72, 96, drawPos.x, drawPos.y);
+    UIWidgets_DrawRectOutline_Black(72, 96, drawPos.x, drawPos.y);
     if (SceneInfo->inEditor || !self->flag || self->disabled) {
         self->direction = self->field_138;
         self->drawFX    = FX_FLIP;
@@ -502,7 +502,7 @@ void UITAZoneModule_Unknown18(void)
 }
 
 #if !RETRO_USE_PLUS
-void UITAZoneModule_DrawTime(Vector2 *drawPos, int32 minutes, int32 seconds, int32 milliseconds)
+Vector2 UITAZoneModule_DrawTime(int32 x, int32 y, int32 minutes, int32 seconds, int32 milliseconds)
 {
     RSDK_THIS(UITAZoneModule);
     char strBuf[16];
@@ -522,13 +522,17 @@ void UITAZoneModule_DrawTime(Vector2 *drawPos, int32 minutes, int32 seconds, int
         sprintf(strBuf, "%02d:%02d;%02d", minutes, seconds, milliseconds);
     }
 
+    Vector2 drawPos;
+    drawPos.x = x;
+    drawPos.y = y;
     for (int32 i = 0; i < 8; ++i) {
         if (!strBuf[i])
             break;
         RSDK.SetSpriteAnimation(UITAZoneModule->aniFrames, 8, &self->animator3, true, (uint8)(strBuf[i] - '0'));
-        RSDK.DrawSprite(&self->animator3, drawPos, 0);
-        drawPos->x += 0x80000;
+        RSDK.DrawSprite(&self->animator3, &drawPos, false);
+        drawPos.x += 0x80000;
     }
+    return drawPos;
 }
 
 void UITAZoneModule_Unknown8(void)
@@ -660,7 +664,7 @@ void UITAZoneModule_Unknown7(void)
 
     RSDK.DrawRect(drawX - 0x990000, drawY + 0x240000, 0x1320000, 0x4D0000, 0x000000, 255, INK_NONE, false);
     UITAZoneModule_Unknown8();
-    UIWidgets_Unknown7(0x17, 0xE0, 0x17, 0xD9, 0xAD, 0x4, self->position.x - 0x40000, drawY + 0x448000);
+    UIWidgets_DrawRhombus(0x17, 0xE0, 0x17, 0xD9, 0xAD, 0x4, self->position.x - 0x40000, drawY + 0x448000);
 
     drawPos2.x = drawX - 0x390000;
     drawPos2.y = drawY + 0x450000;
@@ -675,11 +679,11 @@ void UITAZoneModule_Unknown7(void)
         Vector2 pos;
         pos.x = drawX - 0x10000;
         pos.y = drawY + 0x420000;
-        UITAZoneModule_DrawTime(&pos, time / 6000, time % 6000 / 100, time % 100);
+        pos   = UITAZoneModule_DrawTime(pos.x, pos.y, time / 6000, time % 6000 / 100, time % 100);
     }
     drawY += 0x140000;
 
-    UIWidgets_Unknown7(0x0F, 0xE0, 0x0F, 0x98, 0xC0, 0xC8, self->position.x + 0x80000, drawY + 0x448000);
+    UIWidgets_DrawRhombus(0x0F, 0xE0, 0x0F, 0x98, 0xC0, 0xC8, self->position.x + 0x80000, drawY + 0x448000);
     drawPos2.x = drawX - 0x290000;
     drawPos2.y = drawY + 0x460000;
     if (self->rank != 2 || (UIControl->timer & 4)) {
@@ -693,10 +697,10 @@ void UITAZoneModule_Unknown7(void)
         Vector2 pos;
         pos.x = drawX + 0x140000;
         pos.y = drawY + 0x420000;
-        UITAZoneModule_DrawTime(&pos, time / 6000, time % 6000 / 100, time % 100);
+        pos   = UITAZoneModule_DrawTime(pos.x, pos.y, time / 6000, time % 6000 / 100, time % 100);
     }
 
-    UIWidgets_Unknown7(0xF, 0xE0, 0xF, 0xC0, 0x58, 0x01, self->position.x + 0x140000, drawY + 0x548000);
+    UIWidgets_DrawRhombus(0xF, 0xE0, 0xF, 0xC0, 0x58, 0x01, self->position.x + 0x140000, drawY + 0x548000);
     drawPos2.x = drawX - 0x1A0000;
     drawPos2.y = drawY + 0x560000;
     if (self->rank != 3 || (UIControl->timer & 4)) {
@@ -710,7 +714,7 @@ void UITAZoneModule_Unknown7(void)
         Vector2 pos;
         pos.x = drawX + 0x230000;
         pos.y = drawY + 0x520000;
-        UITAZoneModule_DrawTime(&pos, time / 6000, time % 6000 / 100, time % 100);
+        pos   = UITAZoneModule_DrawTime(pos.x, pos.y, time / 6000, time % 6000 / 100, time % 100);
     }
 }
 

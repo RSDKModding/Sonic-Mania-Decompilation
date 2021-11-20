@@ -63,7 +63,7 @@ void UIUsernamePopup_DrawSprites(void)
     drawPos.x = self->posUnknown.x + self->dword6C + (ScreenInfo->position.x << 16) + (self->field_68 >> 1);
     drawPos.y =
         self->posUnknown.y + (ScreenInfo->centerY << 16) - (self->dword6C >> 1) + ((ScreenInfo->centerY + ScreenInfo->position.y) << 16);
-    UIWidgets_Unknown7(self->dword6C >> 16, self->field_68 >> 16, self->dword6C >> 16, 16, 124, 16, drawPos.x, drawPos.y);
+    UIWidgets_DrawRhombus(self->dword6C >> 16, self->field_68 >> 16, self->dword6C >> 16, 16, 124, 16, drawPos.x, drawPos.y);
 
     int32 width = RSDK.GetStringWidth(UIWidgets->labelSpriteIndex, 0, &self->username, 0, self->username.textLength, 0);
     drawPos.y -= 0x10000;

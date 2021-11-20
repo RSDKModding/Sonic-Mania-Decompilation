@@ -223,7 +223,7 @@ bool32 ERZOutro_CutsceneState_AttackRecoil(EntityCutsceneSeq *host)
             player1->shield     = SHIELD_NONE;
             RSDK.SetSpriteAnimation(player1->aniFrames, ANI_HURT, &player1->animator, true, 0);
             host->values[0] = 1;
-            fxRuby->state     = FXRuby_Unknown3;
+            fxRuby->state     = FXRuby_State_ExpandRing;
             fxRuby->drawOrder = Zone->drawOrderLow - 1;
             player1->camera   = 0;
             camera->targetPtr = 0;

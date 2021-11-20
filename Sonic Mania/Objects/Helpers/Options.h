@@ -21,11 +21,11 @@ typedef struct {
     uint8 language;
     int32 overrideLanguage;
     int32 screenShader;
-    int32 field_60;
+    bool32 overrideShader;
     int32 volMusic;
-    int32 field_68;
+    bool32 overrideMusicVol;
     int32 volSfx;
-    int32 field_70;
+    bool32 overrideSfxVol;
     int32 vSync;
     uint8 windowSize;
     int32 windowBorder;

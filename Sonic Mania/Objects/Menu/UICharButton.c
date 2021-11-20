@@ -94,12 +94,12 @@ void UICharButton_Unknown1(void)
 {
     RSDK_THIS(UICharButton);
     if (!SceneInfo->inEditor)
-        UIWidgets_Unknown3(96, 96, self->position.x + 0x30000, self->position.y + 0x30000);
+        UIWidgets_DrawRectOutline_Blended(96, 96, self->position.x + 0x30000, self->position.y + 0x30000);
 
     if (self->flag)
-        UIWidgets_Unknown4(96, 96, self->position.x, self->position.y);
+        UIWidgets_DrawRectOutline_Flash(96, 96, self->position.x, self->position.y);
     else
-        UIWidgets_Unknown2(96, 96, self->position.x, self->position.y);
+        UIWidgets_DrawRectOutline_Black(96, 96, self->position.x, self->position.y);
 }
 
 void UICharButton_Unknown2(void)

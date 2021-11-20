@@ -171,13 +171,13 @@ void Options_LoadValuesFromSettings(EntityOptions *options)
         options->language = sku_language;
     }
 
-    if (!options->field_60) {
+    if (!options->overrideShader) {
         options->screenShader = RSDK.GetSettingsValue(SETTINGS_SHADERID) % 4;
     }
-    if (!options->field_68) {
+    if (!options->overrideMusicVol) {
         options->volMusic = RSDK.GetSettingsValue(SETTINGS_STREAM_VOL);
     }
-    if (!options->field_70) {
+    if (!options->overrideSfxVol) {
         options->volSfx = RSDK.GetSettingsValue(SETTINGS_SFX_VOL);
     }
 }

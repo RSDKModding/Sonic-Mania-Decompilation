@@ -385,7 +385,7 @@ void TimeAttackData_AddLeaderboardEntry(uint8 zone, char playerID, uint8 act, in
 
     const char *leaderboardName = "";
     if (zone < 12 && act < 2 && playerID <= 5) {
-        int32 id = 10 * (zone - 1) + (5 * act) + playerID;
+        int32 id = 10 * zone + 5 * act + (playerID - 1);
         if (mode)
             id += 120;
         leaderboardName = LeaderboardNames[id];

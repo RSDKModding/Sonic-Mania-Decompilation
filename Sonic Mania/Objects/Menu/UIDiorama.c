@@ -41,7 +41,7 @@ void UIDiorama_LateUpdate(void) {}
 
 void UIDiorama_StaticUpdate(void)
 {
-    if (!(UIWidgets->arrayIndex & 3))
+    if (!(UIWidgets->timer & 3))
         RSDK.RotatePalette(0, 60, 63, true);
 
     foreach_all(UIDiorama, diorama) { RSDK.AddDrawListRef(diorama->drawOrder + 1, RSDK.GetEntityID(diorama)); }
@@ -380,10 +380,10 @@ void UIDiorama_State_Competition(void)
         self->field_E4 += 48;
         self->field_E8 += 64;
 
-        self->field_FC.y  = (RSDK.Sin512(UIWidgets->arrayIndex) + 512) << 10;
+        self->field_FC.y  = (RSDK.Sin512(UIWidgets->timer) + 512) << 10;
         self->field_104.x = self->position.x + 0x2B0000;
         self->field_104.y = self->position.y + 0x320000;
-        self->field_104.y += RSDK.Sin1024(5 * (UIWidgets->arrayIndex + 128)) << 11;
+        self->field_104.y += RSDK.Sin1024(5 * (UIWidgets->timer + 128)) << 11;
         self->field_104.y &= 0xFFFF0000;
         self->field_10C.x = self->position.x + 0x8B0000;
         self->field_10C.y = self->position.y - 0xE0000;

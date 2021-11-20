@@ -220,7 +220,7 @@ void UIRankButton_Unknown4(void)
         if (self->showsName)
             drawPos.x += 0x3C0000;
 
-        UIWidgets_Unknown11(self->score / 6000, self->score % 6000 / 100, self->score % 100, drawPos.x, drawPos.y);
+        UIWidgets_DrawTime(drawPos.x, drawPos.y, self->score / 6000, self->score % 6000 / 100, self->score % 100);
 
         if (!SceneInfo->inEditor) {
             if (API.CheckDLC(DLC_PLUS)) {
@@ -248,9 +248,9 @@ void UIRankButton_Unknown5(int32 colour, int32 a2, int32 a3, int32 a4, int32 a5)
     RSDK_THIS(UIRankButton);
 
     if (self->field_14C)
-        UIWidgets_Unknown7(a5 >> 16, a4 >> 16, a5 >> 16, (UIWidgets->buttonColour >> 16) & 0xFF, (UIWidgets->buttonColour >> 8) & 0xFF, UIWidgets->buttonColour & 0xFF,
+        UIWidgets_DrawRhombus(a5 >> 16, a4 >> 16, a5 >> 16, (UIWidgets->buttonColour >> 16) & 0xFF, (UIWidgets->buttonColour >> 8) & 0xFF, UIWidgets->buttonColour & 0xFF,
                            a2 - self->field_14C, a3 - self->field_14C);
-    UIWidgets_Unknown7(a5 >> 16, a4 >> 16, a5 >> 16, (colour >> 16) & 0xFF, (colour >> 8) & 0xFF, colour & 0xFF, self->field_14C + a2,
+    UIWidgets_DrawRhombus(a5 >> 16, a4 >> 16, a5 >> 16, (colour >> 16) & 0xFF, (colour >> 8) & 0xFF, colour & 0xFF, self->field_14C + a2,
                        self->field_14C + a3);
 }
 

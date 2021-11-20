@@ -324,7 +324,7 @@ void ERZKing_State_Unknown4(void)
             self->scale.y                                                                             = 0x200;
             self->storeDrawFX                                                                         = FX_SCALE;
             self->state                                                                               = ERZKing_State_ChangeHBH;
-            CREATE_ENTITY(FXRuby, FXRuby_Unknown9, self->position.x, self->position.y)->radiusSpeed = 0x80000;
+            CREATE_ENTITY(FXRuby, FXRuby_State_ShrinkAndDestroy, self->position.x, self->position.y)->radiusSpeed = 0x80000;
         }
     }
     ERZKing_HandleFrames();

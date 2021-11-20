@@ -14,7 +14,7 @@ void ParticleHelpers_Create(void *data) {}
 
 void ParticleHelpers_StageLoad(void) {}
 
-void ParticleHelpers_Unknown1(int32 x, int32 y)
+void ParticleHelpers_SetupFallingParticles(int32 x, int32 y)
 {
     int32 pos = x - 0x80000;
     for (int32 i = 0; i < 5; ++i) {
@@ -30,7 +30,7 @@ void ParticleHelpers_Unknown1(int32 x, int32 y)
     }
 }
 
-void ParticleHelpers_Unknown2(void *debrisState, void (*callback)(EntityDebris *), int32 speed, int32 xOffset, int32 yOffset, int32 maxX, int32 maxY)
+void ParticleHelpers_SetupParticleFX(void *debrisState, void (*callback)(EntityDebris *), int32 speed, int32 xOffset, int32 yOffset, int32 maxX, int32 maxY)
 {
 #if RETRO_USE_PLUS
     int32 x = RSDK.RandSeeded(-(maxX >> 1), maxX >> 1, &Zone->randSeed) + xOffset;

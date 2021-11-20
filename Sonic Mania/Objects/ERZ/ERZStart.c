@@ -81,11 +81,11 @@ void ERZStart_SetupObjects(void)
     foreach_all(FXRuby, fxRuby)
     {
         ERZStart->fxRuby    = (Entity *)fxRuby;
-        fxRuby->state       = 0;
+        fxRuby->state       = StateMachine_None;
         fxRuby->fadeBlack   = 0x200;
         fxRuby->fadeWhite   = 0x200;
         fxRuby->outerRadius = ScreenInfo->width;
-        fxRuby->field_70    = 64;
+        fxRuby->timer    = 64;
         foreach_break;
     }
 
@@ -194,7 +194,7 @@ bool32 ERZStart_CutsceneState_Unknown2(EntityCutsceneSeq *host)
     ERZStart_HandlePlayerHover(host, player1, ruby->startPos.y);
 
     if (!host->timer)
-        fxRuby->state = FXRuby_Unknown4;
+        fxRuby->state = FXRuby_State_ShrinkRing;
 
     EntityPhantomKing *king = (EntityPhantomKing *)ERZStart->king;
     if (fxRuby->outerRadius <= 0) {

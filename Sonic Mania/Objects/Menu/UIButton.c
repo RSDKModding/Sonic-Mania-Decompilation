@@ -49,14 +49,14 @@ void UIButton_Draw(void)
     drawPos.y = self->position.y - self->field_140;
     size >>= 16;
 #if RETRO_USE_PLUS
-    UIWidgets_Unknown7(self->size.y >> 16, size, self->dword138, (UIWidgets->buttonColour >> 16) & 0xFF, (UIWidgets->buttonColour >> 8) & 0xFF,
+    UIWidgets_DrawRhombus(self->size.y >> 16, size, self->dword138, (UIWidgets->buttonColour >> 16) & 0xFF, (UIWidgets->buttonColour >> 8) & 0xFF,
                        (UIWidgets->buttonColour) & 0xFF, drawPos.x, drawPos.y);
 #else
-    UIWidgets_Unknown7(self->size.y >> 16, size, self->dword138, 0xF0, 0xF0, 0xF0, drawPos.x, drawPos.y);
+    UIWidgets_DrawRhombus(self->size.y >> 16, size, self->dword138, 0xF0, 0xF0, 0xF0, drawPos.x, drawPos.y);
 #endif
     drawPos.x = self->position.x + self->field_140;
     drawPos.y = self->position.y + self->field_140;
-    UIWidgets_Unknown7(self->size.y >> 16, size, self->dword138, 0, 0, 0, drawPos.x, drawPos.y);
+    UIWidgets_DrawRhombus(self->size.y >> 16, size, self->dword138, 0, 0, 0, drawPos.x, drawPos.y);
     if (self->dword14C) {
         drawPos.x = self->position.x;
         drawPos.y = self->position.y;

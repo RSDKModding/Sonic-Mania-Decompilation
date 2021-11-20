@@ -183,9 +183,9 @@ void UILeaderboard_DrawPrimitives(void)
     Vector2 drawPos;
 
     if (!SceneInfo->inEditor)
-        UIWidgets_Unknown3(158, 414, self->position.x + 0x30000, self->position.y + 0x30000);
+        UIWidgets_DrawRectOutline_Blended(158, 414, self->position.x + 0x30000, self->position.y + 0x30000);
 
-    UIWidgets_Unknown2(158, 414, self->position.x, self->position.y);
+    UIWidgets_DrawRectOutline_Black(158, 414, self->position.x, self->position.y);
 
     drawPos.x = self->position.x - 0x840000;
     drawPos.y = self->position.y - 0x4C0000;
@@ -307,7 +307,7 @@ void UILeaderboard_Unknown3(void)
 
     drawPos.x = self->position.x - 0xA80000;
     drawPos.y = self->position.y - 0x380000;
-    UIWidgets_Unknown2(40, 72, drawPos.x, drawPos.y);
+    UIWidgets_DrawRectOutline_Black(40, 72, drawPos.x, drawPos.y);
 
     if (SceneInfo->inEditor) {
         self->direction = self->editorFlip;
@@ -375,7 +375,7 @@ void UILeaderboard_DrawRank(int32 id)
         case 2: colour = 0x98C0C8; break;
         case 3: colour = 0xC05802; break;
     }
-    UIWidgets_Unknown7(15, 169, 15, (colour >> 16) & 0xFF, (colour >> 8) & 0xFF, colour & 0xFF, drawPos.x, drawPos.y);
+    UIWidgets_DrawRhombus(15, 169, 15, (colour >> 16) & 0xFF, (colour >> 8) & 0xFF, colour & 0xFF, drawPos.x, drawPos.y);
 
     drawPos.x -= 0x7A0000;
     if (!self->isUser[id] || !(UIControl->timer & 4)) {

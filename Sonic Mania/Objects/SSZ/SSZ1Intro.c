@@ -93,7 +93,7 @@ bool32 SSZ1Intro_CutsceneState_Unknown1(EntityCutsceneSeq *host)
         if (!host->values[0]) {
             PhantomRuby_PlaySFX(RUBYSFX_ATTACK4);
             host->values[0] = true;
-            fxRuby->state     = FXRuby_Unknown4;
+            fxRuby->state     = FXRuby_State_ShrinkRing;
         }
 
         if (fxRuby->outerRadius) {

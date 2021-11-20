@@ -153,11 +153,11 @@ void UIVsZoneButton_Unknown3(void)
 {
     RSDK_THIS(UIVsZoneButton);
     if (!SceneInfo->inEditor)
-        UIWidgets_Unknown3(56, 80, self->position.x + 0x30000, self->position.y + 0x30000);
+        UIWidgets_DrawRectOutline_Blended(56, 80, self->position.x + 0x30000, self->position.y + 0x30000);
     if (self->flag)
-        UIWidgets_Unknown4(56, 80, self->position.x, self->position.y);
+        UIWidgets_DrawRectOutline_Flash(56, 80, self->position.x, self->position.y);
     else
-        UIWidgets_Unknown2(56, 80, self->position.x, self->position.y);
+        UIWidgets_DrawRectOutline_Black(56, 80, self->position.x, self->position.y);
 }
 
 void UIVsZoneButton_Unknown4(void)
@@ -223,10 +223,10 @@ void UIVsZoneButton_Unknown6(void)
     drawPos.x = self->position.x;
     drawPos.y = self->position.y + 0x280000;
 
-    UIWidgets_Unknown7(self->field_11C >> 16, size, self->field_120, 0xF0, 0xF0, 0xF0, drawPos.x, drawPos.y);
+    UIWidgets_DrawRhombus(self->field_11C >> 16, size, self->field_120, 0xF0, 0xF0, 0xF0, drawPos.x, drawPos.y);
     drawPos.x += self->field_13C;
     drawPos.y += self->field_13C;
-    UIWidgets_Unknown7(self->field_11C >> 16, size, self->field_120, 0, 0, 0, drawPos.x, drawPos.y);
+    UIWidgets_DrawRhombus(self->field_11C >> 16, size, self->field_120, 0, 0, 0, drawPos.x, drawPos.y);
 
     if (!SceneInfo->inEditor) {
         int32 width = RSDK.GetStringWidth(UIWidgets->labelSpriteIndex, 0, &self->nameText, 0, self->nameText.textLength, 0);

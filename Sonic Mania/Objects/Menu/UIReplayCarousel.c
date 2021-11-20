@@ -324,7 +324,7 @@ void UIReplayCarousel_Unknown7(int32 a1, int16 a2, int32 a3, int32 a4)
     uint32 colour = 0xF0F0F0;
     if (a1)
         colour = 0xF26C4F;
-    UIWidgets_Unknown7(16, 128, 16, (colour >> 16) & 0xFF, (colour >> 8) & 0xFF, colour & 0xFF, a3 - 0xA0000, a4 + 0xE0000);
+    UIWidgets_DrawRhombus(16, 128, 16, (colour >> 16) & 0xFF, (colour >> 8) & 0xFF, colour & 0xFF, a3 - 0xA0000, a4 + 0xE0000);
 
     colour = 0x5FA0B0;
     if (a1)
@@ -332,15 +332,15 @@ void UIReplayCarousel_Unknown7(int32 a1, int16 a2, int32 a3, int32 a4)
     UIWidgets_DrawRightTriangle(a3 + 0x990000, a4 + 0x298000, -76, (colour >> 16) & 0xFF, (colour >> 8) & 0xFF, colour & 0xFF);
 
     if (!SceneInfo->inEditor)
-        UIWidgets_Unknown3(91, 312, a3 + 0x30000, a4 + 0x30000);
+        UIWidgets_DrawRectOutline_Blended(91, 312, a3 + 0x30000, a4 + 0x30000);
 
     if (self->field_164 == a2)
-        UIWidgets_Unknown4(91, 312, a3, a4);
+        UIWidgets_DrawRectOutline_Flash(91, 312, a3, a4);
     else
-        UIWidgets_Unknown2(91, 312, a3, a4);
+        UIWidgets_DrawRectOutline_Black(91, 312, a3, a4);
 }
 
-void UIReplayCarousel_Unknown8(uint8 a1, uint8 a2, int32 a3, int32 a4, int32 arg10, int32 a6, int32 a7)
+void UIReplayCarousel_Unknown8(uint8 a1, uint8 a2, int32 a3, int32 time, int32 arg10, int32 a6, int32 a7)
 {
     RSDK_THIS(UIReplayCarousel);
     Vector2 drawPos;
@@ -377,7 +377,7 @@ void UIReplayCarousel_Unknown8(uint8 a1, uint8 a2, int32 a3, int32 a4, int32 arg
 
     drawPos.x = drawOffsets[1].x + 0x40000;
     drawPos.y = drawOffsets[1].y - 0x80000;
-    UIWidgets_Unknown11(a4 / 6000, a4 % 6000 / 100, a4 % 100, drawPos.x, drawPos.y);
+    UIWidgets_DrawTime(drawPos.x, drawPos.y, time / 6000, time % 6000 / 100, time % 100);
 
     RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, 16, &self->animator3, true, a1 + 5);
     drawPos.x = drawOffsets[2].x + 0x1A0000;
@@ -397,7 +397,7 @@ void UIReplayCarousel_Unknown9(uint8 a1, int16 a2, int32 a4, int32 a5)
 
     drawPos.x = a4 - 0x690000;
     drawPos.y = a5 - 0x70000;
-    UIWidgets_Unknown2(72, 96, a4 - 0x690000, a5 - 0x70000);
+    UIWidgets_DrawRectOutline_Black(72, 96, a4 - 0x690000, a5 - 0x70000);
 
     if (SceneInfo->inEditor || self->field_164 != a2 || self->disabled) {
         self->direction = self->field_158;
@@ -486,7 +486,7 @@ void UIReplayCarousel_StateDraw_Unknown1(void)
     Vector2 drawPos;
     drawPos.x = parent->position.x;
     drawPos.y = parent->position.y + 0x100000;
-    UIWidgets_Unknown7(16, 96, 16, 0, 0, 0, drawPos.x, drawPos.y);
+    UIWidgets_DrawRhombus(16, 96, 16, 0, 0, 0, drawPos.x, drawPos.y);
 
     drawPos.x -= RSDK.GetStringWidth(UIWidgets->labelSpriteIndex, 0, &self->loadingText, 0, self->loadingText.textLength, 0) << 15;
     RSDK.DrawText(&self->animator9, &drawPos, &self->loadingText, 0, self->loadingText.textLength, ALIGN_LEFT, 0, 2, 0, false);
@@ -500,7 +500,7 @@ void UIReplayCarousel_StateDraw_Unknown2(void)
     Vector2 drawPos;
     drawPos.x = parent->position.x;
     drawPos.y = parent->position.y + 0x100000;
-    UIWidgets_Unknown7(16, 96, 16, 0, 0, 0, drawPos.x, drawPos.y);
+    UIWidgets_DrawRhombus(16, 96, 16, 0, 0, 0, drawPos.x, drawPos.y);
 
     drawPos.x -= RSDK.GetStringWidth(UIWidgets->labelSpriteIndex, 0, &self->noReplaysText, 0, self->noReplaysText.textLength, 0) << 15;
     RSDK.DrawText(&self->animator9, &drawPos, &self->noReplaysText, 0, self->noReplaysText.textLength, ALIGN_LEFT, 0, 2, 0, false);
@@ -621,7 +621,7 @@ void UIReplayCarousel_EditorDraw(void)
     Vector2 drawPos;
     drawPos.x = self->position.x;
     drawPos.y = self->position.y + 0x100000;
-    UIWidgets_Unknown7(16, 96, 16, 0, 0, 0, drawPos.x, drawPos.y);
+    UIWidgets_DrawRhombus(16, 96, 16, 0, 0, 0, drawPos.x, drawPos.y);
 }
 
 void UIReplayCarousel_EditorLoad(void) { UIReplayCarousel->aniFrames = RSDK.LoadSpriteAnimation("UI/SaveSelect.bin", SCOPE_STAGE); }

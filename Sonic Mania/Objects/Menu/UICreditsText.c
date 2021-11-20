@@ -22,7 +22,7 @@ void UICreditsText_Draw(void)
     int32 width = RSDK.GetStringWidth(UICreditsText->aniFrames, self->listID, &self->text, 0, self->text.textLength, 0);
     drawPos.y += 0x40000;
     if (self->hasShape)
-        UIWidgets_Unknown7(self->scaleTimer >> 4, (self->scaleTimer * (width + 16)) >> 8, 16, 0, 0, 0, drawPos.x, drawPos.y);
+        UIWidgets_DrawRhombus(self->scaleTimer >> 4, (self->scaleTimer * (width + 16)) >> 8, 16, 0, 0, 0, drawPos.x, drawPos.y);
 
     drawPos.x -= width << 15;
     drawPos.y = self->position.y;

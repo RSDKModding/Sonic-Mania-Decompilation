@@ -113,7 +113,7 @@ void EncoreIntro_SetupEntities(void)
     foreach_all(FXRuby, fxRuby)
     {
         EncoreIntro->fxRuby = (Entity *)fxRuby;
-        fxRuby->state       = FXRuby_Unknown4;
+        fxRuby->state       = FXRuby_State_ShrinkRing;
         fxRuby->outerRadius = 0;
         foreach_break;
     }
@@ -211,8 +211,8 @@ bool32 EncoreIntro_CutsceneState_Unknown1(EntityCutsceneSeq *host)
             Zone->screenBoundsT2[0] = Zone->screenBoundsB1[0] - SCREEN_YSIZE;
         }
         else if (host->timer == 240) {
-            fxRuby->field_74 = 32;
-            fxRuby->state    = FXRuby_Unknown6;
+            fxRuby->delay = 32;
+            fxRuby->state    = FXRuby_State_IncreaseStageDeform;
             PhantomRuby_PlaySFX(RUBYSFX_ATTACK4);
             Camera_ShakeScreen(0, 4, 4);
             Music_TransitionTrack(TRACK_EGGMAN1, 0.01);
@@ -912,17 +912,17 @@ bool32 EncoreIntro_CutsceneState_Unknown19(EntityCutsceneSeq *host)
     }
 
     if (!host->values[0]) {
-        if (fxRuby->flag) {
+        if (fxRuby->fullyExpanded) {
             if (host->storedValue2) {
                 if (host->timer == host->storedValue2 + 30) {
-                    fxRuby->field_74 = 64;
-                    fxRuby->state    = FXRuby_Unknown6;
+                    fxRuby->delay = 64;
+                    fxRuby->state    = FXRuby_State_IncreaseStageDeform;
                     PhantomRuby_PlaySFX(4);
                     Camera_ShakeScreen(0, 4, 4);
                 }
                 else if (host->timer == host->storedValue2 + 210) {
-                    fxRuby->field_74 = 32;
-                    fxRuby->state    = FXRuby_Unknown6;
+                    fxRuby->delay = 32;
+                    fxRuby->state    = FXRuby_State_IncreaseStageDeform;
                     PhantomRuby_PlaySFX(RUBYSFX_ATTACK1);
                     Camera_ShakeScreen(0, 4, 4);
                     Music_FadeOut(0.025);

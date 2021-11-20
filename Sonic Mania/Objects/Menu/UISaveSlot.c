@@ -105,13 +105,13 @@ void UISaveSlot_Draw(void)
 
         drawPos.x = self->position.x + 0x30000;
         drawPos.y = self->position.y + 0x30000;
-        UIWidgets_Unknown3(164, 96, drawPos.x, drawPos.y);
+        UIWidgets_DrawRectOutline_Blended(164, 96, drawPos.x, drawPos.y);
         RSDK.DrawRect(drawPos.x - 0x2D0000, drawPos.y - 0x130000, 0x5A0000, 0x30000, 0, 255, INK_BLEND, false);
 
         if (self->flag)
-            UIWidgets_Unknown4(164, 96, self->position.x, self->position.y);
+            UIWidgets_DrawRectOutline_Flash(164, 96, self->position.x, self->position.y);
         else
-            UIWidgets_Unknown2(164, 96, self->position.x, self->position.y);
+            UIWidgets_DrawRectOutline_Black(164, 96, self->position.x, self->position.y);
 
         self->animator1.frameID = 0;
         drawPos.x                 = self->position.x;
@@ -196,7 +196,7 @@ void UISaveSlot_Draw(void)
 
         drawPos.x = self->position.x + 0x30000;
         drawPos.y = self->position.y + 0x30000;
-        UIWidgets_Unknown3(68, 96, drawPos.x, drawPos.y);
+        UIWidgets_DrawRectOutline_Blended(68, 96, drawPos.x, drawPos.y);
 
         self->animator1.frameID = 1;
         RSDK.DrawSprite(&self->animator1, 0, false);
@@ -208,7 +208,7 @@ void UISaveSlot_Draw(void)
 
     if (self->flag || self->type == 0) {
         if (self->type)
-            UIWidgets_Unknown4(68, 96, self->position.x, self->position.y);
+            UIWidgets_DrawRectOutline_Flash(68, 96, self->position.x, self->position.y);
 
         if (self->flag && !(self->field_13C & 8)) {
             drawPos.x = self->position.x;
@@ -218,21 +218,21 @@ void UISaveSlot_Draw(void)
 #endif
                 if (self->type == 1) {
                     drawPos.y -= 0x60000;
-                    UIWidgets_Unknown8(40, drawPos.x, drawPos.y);
+                    UIWidgets_DrawUpDownArrows(drawPos.x, drawPos.y, 40);
                 }
                 else if (self->isNewSave) {
                     drawPos.y += 0x200000;
-                    UIWidgets_Unknown8(64, drawPos.x, drawPos.y);
+                    UIWidgets_DrawUpDownArrows(drawPos.x, drawPos.y, 64);
                 }
                 else if (self->listID == 1) {
                     drawPos.y -= 0x300000;
-                    UIWidgets_Unknown8(40, drawPos.x, drawPos.y);
+                    UIWidgets_DrawUpDownArrows(drawPos.x, drawPos.y, 40);
                 }
 #if RETRO_USE_PLUS
             }
             else if (self->listID == 1) {
                 drawPos.y -= 0x300000;
-                UIWidgets_Unknown8(40, drawPos.x, drawPos.y);
+                UIWidgets_DrawUpDownArrows(drawPos.x, drawPos.y, 40);
             }
 #endif
         }

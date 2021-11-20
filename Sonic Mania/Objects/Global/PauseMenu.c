@@ -374,45 +374,35 @@ void PauseMenu_ResumeButtonCB(void)
 void PauseMenu_RestartButtonCB(void)
 {
     RSDK.GetEntityByID(SLOT_PAUSEMENU);
-    TextInfo textBuffer;
+    TextInfo msg;
 
 #if RETRO_USE_PLUS
     int32 strID = STR_AREYOUSURE;
-    if (!ReplayRecorder || !ReplayRecorder->dword134)
+    if (!ReplayRecorder || !ReplayRecorder->isReplaying)
         strID = STR_RESTARTWARNING;
-    Localization_GetString(&textBuffer, strID);
+    Localization_GetString(&msg, strID);
 #else
-    Localization_GetString(&textBuffer, STR_RESTARTWARNING);
+    Localization_GetString(&msg, STR_RESTARTWARNING);
 #endif
 
-    EntityUIDialog *dialog = UIDialog_CreateActiveDialog(&textBuffer);
-    if (dialog) {
-        UIDialog_AddButton(DIALOG_NO, dialog, NULL, 1);
-        UIDialog_AddButton(DIALOG_YES, dialog, PauseMenu_RestartDialog_YesCB, 0);
-        UIDialog_Setup(dialog);
-    }
+    UIDialog_CreateDialogYesNo(&msg, PauseMenu_RestartDialog_YesCB, NULL, false, true);
 }
 
 void PauseMenu_ExitButtonCB(void)
 {
     RSDK.GetEntityByID(SLOT_PAUSEMENU);
-    TextInfo textBuffer;
+    TextInfo msg;
 
 #if RETRO_USE_PLUS
     int32 strID = STR_AREYOUSURE;
-    if (!ReplayRecorder || !ReplayRecorder->dword134)
+    if (!ReplayRecorder || !ReplayRecorder->isReplaying)
         strID = STR_QUITWARNINGLOSEPROGRESS;
-    Localization_GetString(&textBuffer, strID);
+    Localization_GetString(&msg, strID);
 #else
-    Localization_GetString(&textBuffer, STR_QUITWARNINGLOSEPROGRESS);
+    Localization_GetString(&msg, STR_QUITWARNINGLOSEPROGRESS);
 #endif
 
-    EntityUIDialog *dialog = UIDialog_CreateActiveDialog(&textBuffer);
-    if (dialog) {
-        UIDialog_AddButton(DIALOG_NO, dialog, NULL, 1);
-        UIDialog_AddButton(DIALOG_YES, dialog, PauseMenu_ExitDialog_YesCB, 0);
-        UIDialog_Setup(dialog);
-    }
+    UIDialog_CreateDialogYesNo(&msg, PauseMenu_ExitDialog_YesCB, NULL, false, true);
 }
 
 void PauseMenu_RestartDialog_YesCB(void)
@@ -893,10 +883,10 @@ void PauseMenu_DrawPauseQuads(void)
 
     drawPos.x = self->position.x + 0x640000 + self->headerPos.x + -0x10000 * ScreenInfo->centerX;
     drawPos.y = self->position.y - 0x600000 + self->headerPos.y;
-    UIWidgets_Unknown7(68, 200, 68, 232, 40, 88, drawPos.x, drawPos.y);
+    UIWidgets_DrawRhombus(68, 200, 68, 232, 40, 88, drawPos.x, drawPos.y);
     drawPos.y += 0x60000;
     drawPos.x += 0xA0000;
-    UIWidgets_Unknown7(24, 115, 24, 0, 0, 0, drawPos.x, drawPos.y);
+    UIWidgets_DrawRhombus(24, 115, 24, 0, 0, 0, drawPos.x, drawPos.y);
     RSDK.DrawSprite(&self->animator, &drawPos, 0);
     UIWidgets_DrawRightTriangle(self->yellowTrianglePos.x + (ScreenInfo->centerX << 16) + self->position.x, self->yellowTrianglePos.y + (ScreenInfo->centerY << 16) + self->position.y, -232, 240, 216, 8);
 }

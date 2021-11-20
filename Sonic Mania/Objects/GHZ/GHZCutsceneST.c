@@ -72,11 +72,11 @@ void GHZCutsceneST_SetupObjects(void)
     foreach_all(FXRuby, fxRuby)
     {
         GHZCutsceneST->fxRuby  = (Entity *)fxRuby;
-        fxRuby->state          = 0;
-        fxRuby->fadeBlack      = 512;
-        fxRuby->fadeWhite      = 512;
+        fxRuby->state          = StateMachine_None;
+        fxRuby->fadeBlack      = 0x200;
+        fxRuby->fadeWhite      = 0x200;
         fxRuby->outerRadius    = ScreenInfo->width;
-        fxRuby->field_70      = 64;
+        fxRuby->timer      = 64;
         foreach_break;
     }
 
@@ -146,7 +146,7 @@ bool32 GHZCutsceneST_Cutscene_FinishRubyWarp(EntityCutsceneSeq *host)
     EntityPhantomRuby *ruby = (EntityPhantomRuby *)GHZCutsceneST->phantomRuby;
     EntityFXRuby *fxRuby    = (EntityFXRuby *)GHZCutsceneST->fxRuby;
     if (!host->timer)
-        fxRuby->state = FXRuby_Unknown4;
+        fxRuby->state = FXRuby_State_ShrinkRing;
 
     EntityPlayer **curPlayer = &player1;
     if (fxRuby->outerRadius <= 0) {

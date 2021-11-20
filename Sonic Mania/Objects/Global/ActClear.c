@@ -759,7 +759,7 @@ void ActClear_State_TAResults(void)
     RSDK_THIS(ActClear);
 
     if (self->newRecordTimer > 0) {
-        if (TimeAttackData->dbRank <= 0 || ReplayRecorder->dword13C) {
+        if (TimeAttackData->dbRank <= 0 || ReplayRecorder->hasSetupGhostVS) {
             --self->newRecordTimer;
         }
         else {
@@ -767,7 +767,7 @@ void ActClear_State_TAResults(void)
                 if (TimeAttackData->dbRank == 1)
                     self->isNewRecord = true;
                 self->achievedRank = true;
-                RSDK.PlaySfx(ActClear->sfxEvent, 0, 255);
+                RSDK.PlaySfx(ActClear->sfxEvent, false, 255);
             }
 
             if (self->newRecordTimer != 30) {

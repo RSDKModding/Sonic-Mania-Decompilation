@@ -270,17 +270,17 @@ bool32 SSZ3Cutscene_OutroState_Unknown5(EntityCutsceneSeq *host)
     }
 
     if (!host->values[0]) {
-        if (fxRuby->flag) {
+        if (fxRuby->fullyExpanded) {
             if (host->storedValue2) {
                 if (host->timer == host->storedValue2 + 48) {
-                    fxRuby->field_74 = 64;
-                    fxRuby->state    = FXRuby_Unknown6;
+                    fxRuby->delay = 64;
+                    fxRuby->state    = FXRuby_State_IncreaseStageDeform;
                     PhantomRuby_PlaySFX(RUBYSFX_ATTACK4);
                     Camera_ShakeScreen(0, 4, 4);
                 }
                 else if (host->timer == host->storedValue2 + 180) {
-                    fxRuby->field_74 = 32;
-                    fxRuby->state    = FXRuby_Unknown6;
+                    fxRuby->delay = 32;
+                    fxRuby->state    = FXRuby_State_IncreaseStageDeform;
                     PhantomRuby_PlaySFX(RUBYSFX_ATTACK1);
                     Camera_ShakeScreen(0, 4, 4);
                     Music_FadeOut(0.025);
