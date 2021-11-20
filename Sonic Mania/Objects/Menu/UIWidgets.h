@@ -11,7 +11,7 @@ typedef struct {
     int32 timer;
     int32 field_48[12];
 #else
-    int32 arrayIndex;
+    int32 timer;
     int32 buttonColours[16];
 #endif
     Animator animator1;

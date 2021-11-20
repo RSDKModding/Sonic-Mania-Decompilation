@@ -271,7 +271,7 @@ void ParallaxSprite_EditorLoad(void)
 
     RSDK_ACTIVE_VAR(ParallaxSprite, attribute);
     RSDK_ENUM_VAR("Basic", PSPRITE_ATTR_NONE);
-    RSDK_ENUM_VAR("Unused (same as Basic)", PSPRITE_ATTR_1);
+    RSDK_ENUM_VAR("Unused (same as Basic)", PSPRITE_ATTR_UNUSED);
     RSDK_ENUM_VAR("Colors (SPZ Billboard)", PSPRITE_ATTR_COLORS);
     RSDK_ENUM_VAR("Spawner", PSPRITE_ATTR_SPAWNER);
     RSDK_ENUM_VAR("Fade Out", PSPRITE_ATTR_FADEOUT);

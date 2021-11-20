@@ -3,6 +3,13 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    BOUNDSMARKER_BOTTOM,
+    BOUNDSMARKER_BOTTOM_OFFSET,
+    BOUNDSMARKER_TOP_OFFSET,
+    BOUNDSMARKER_TOP,
+}BoundsMarkerTypes;
+
 // Object Class
 typedef struct {
     RSDK_OBJECT
@@ -35,7 +42,7 @@ void BoundsMarker_EditorLoad(void);
 void BoundsMarker_Serialize(void);
 
 // Extra Entity Functions
-void BoundsMarker_CheckBounds(void *player, EntityBoundsMarker *self, bool32 setPos);
+void BoundsMarker_CheckBounds(void *player, EntityBoundsMarker *entity, bool32 setPos);
 void BoundsMarker_CheckAllBounds(void *player, bool32 setPos);
 
 #endif //!OBJ_BOUNDSMARKER_H

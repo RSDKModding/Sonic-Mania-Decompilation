@@ -41,7 +41,11 @@ void Platform_Update(void)
             if (child->objectID == ItemBox->objectID) {
                 if (!child->scale.y) {
                     EntityItemBox *itemBox = (EntityItemBox *)child;
-                    itemBox->parent        = (Entity *)self;
+#if RETRO_USE_PLUS
+                    itemBox->parent = (Entity *)self;
+#else
+                    itemBox->groundVel = RSDK.GetEntityID(self);
+#endif
                     itemBox->scale.x       = itemBox->position.x - self->centerPos.x;
                     itemBox->scale.y       = itemBox->position.y - self->centerPos.y;
                     itemBox->position.x    = itemBox->scale.x + self->drawPos.x;

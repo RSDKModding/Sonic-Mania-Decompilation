@@ -473,7 +473,7 @@ void Water_State_Palette(void)
                             else {
                                 CREATE_ENTITY(Water, intToVoid(WATER_SPLASH), player->position.x, Water->waterLevel);
                             }
-                            RSDK.PlaySfx(Water->sfxSplash, 0, 255);
+                            RSDK.PlaySfx(Water->sfxSplash, false, 255);
                         }
                         player->velocity.y >>= 2;
                     }

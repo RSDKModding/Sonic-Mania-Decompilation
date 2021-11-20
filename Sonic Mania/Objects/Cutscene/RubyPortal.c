@@ -298,6 +298,7 @@ void RubyPortal_State_Open_Cutscene(void)
     }
 }
 
+#if RETRO_USE_PLUS
 void RubyPortal_State_EncoreEnd(void)
 {
     RSDK_THIS(RubyPortal);
@@ -322,7 +323,6 @@ void RubyPortal_State_EncoreEnd(void)
     }
 }
 
-#if RETRO_USE_PLUS
 void RubyPortal_State_EncoreRampage(void)
 {
     RSDK_THIS(RubyPortal);
