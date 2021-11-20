@@ -7,7 +7,7 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    uint16 spriteIndex;
+    uint16 aniFrames;
 } ObjectSummaryEmerald;
 
 // Entity Class

@@ -6,7 +6,7 @@ void LRZ1Outro_Update(void)
 {
     RSDK_THIS(LRZ1Outro);
     LRZ1Outro_StartCutscene();
-    entity->active = ACTIVE_NEVER;
+    self->active = ACTIVE_NEVER;
 }
 
 void LRZ1Outro_LateUpdate(void) {}
@@ -18,7 +18,7 @@ void LRZ1Outro_Draw(void) {}
 void LRZ1Outro_Create(void *data)
 {
     RSDK_THIS(LRZ1Outro);
-    entity->active = ACTIVE_NORMAL;
+    self->active = ACTIVE_NORMAL;
 }
 
 void LRZ1Outro_StageLoad(void) {}
@@ -29,12 +29,12 @@ void LRZ1Outro_StartCutscene(void)
 
     if (Zone->actID) {
         void *states[] = { LRZ1Outro_CutsceneState2_Unknown1, LRZ1Outro_CutsceneState2_Unknown2, LRZ1Outro_CutsceneState2_Unknown3, NULL };
-        CutsceneSeq_StartSequence((Entity *)entity, states);
+        CutsceneSeq_StartSequence((Entity *)self, states);
     }
     else {
         void *states[] = { LRZ1Outro_CutsceneState1_Unknown1, LRZ1Outro_CutsceneState1_Unknown2, LRZ1Outro_CutsceneState1_Unknown3,
                            LRZ1Outro_CutsceneState1_Unknown4, NULL };
-        CutsceneSeq_StartSequence((Entity *)entity, states);
+        CutsceneSeq_StartSequence((Entity *)self, states);
     }
 
     if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->objectID)
@@ -73,7 +73,7 @@ bool32 LRZ1Outro_CutsceneState2_Unknown1(EntityCutsceneSeq *host)
         player->onGround      = true;
         player->groundedStore = true;
         player->direction     = FLIP_X;
-        RSDK.SetSpriteAnimation(player->spriteIndex, ANI_SPINDASH, &player->playerAnimator, true, 0);
+        RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPINDASH, &player->animator, true, 0);
         player->state      = Player_State_Spindash;
         player->stateInput = 0;
         player->down       = true;
@@ -86,9 +86,9 @@ bool32 LRZ1Outro_CutsceneState2_Unknown1(EntityCutsceneSeq *host)
         }
     }
 
-    foreach_all(DashLift, lift) { entity->lift = lift; }
+    foreach_all(DashLift, lift) { self->lift = lift; }
 
-    entity->timer = 256;
+    self->timer = 256;
     RSDK.SetLimitedFade(0, 1, 5, 256, 128, 256);
     LRZ2Setup->palTimer2 = 0;
     return true;
@@ -105,15 +105,15 @@ bool32 LRZ1Outro_CutsceneState1_Unknown2(EntityCutsceneSeq *host)
         player->jumpPress = false;
         player->jumpHold  = true;
         if (player->onGround == true) {
-            if (player->playerAnimator.animationID == ANI_PUSH)
+            if (player->animator.animationID == ANI_PUSH)
                 player->jumpPress = true;
             if (RSDK.ObjectTileCollision(player, player->collisionLayers, CMODE_FLOOR, 0, 0x100000, 0x160000, false) == false)
                 player->jumpPress = true;
         }
     }
 
-    entity->lift = NULL;
-    foreach_active(DashLift, lift) { entity->lift = lift; }
+    self->lift = NULL;
+    foreach_active(DashLift, lift) { self->lift = lift; }
 
     return RSDK.GetEntityCount(DashLift->objectID, true) > 0;
 }
@@ -121,13 +121,13 @@ bool32 LRZ1Outro_CutsceneState1_Unknown2(EntityCutsceneSeq *host)
 bool32 LRZ1Outro_CutsceneState1_Unknown3(EntityCutsceneSeq *host)
 {
     RSDK_THIS(LRZ1Outro);
-    EntityDashLift *lift = entity->lift;
+    EntityDashLift *lift = self->lift;
 
     foreach_active(Player, player)
     {
         player->jumpHold  = false;
         player->jumpPress = false;
-        if (player->playerAnimator.animationID == ANI_PUSH)
+        if (player->animator.animationID == ANI_PUSH)
             player->jumpPress = true;
         if (lift->position.x - player->position.x < 0x600000 && player->right && player->onGround) {
             player->jumpPress = true;
@@ -138,14 +138,14 @@ bool32 LRZ1Outro_CutsceneState1_Unknown3(EntityCutsceneSeq *host)
             player->groundVel  = 0;
             player->right      = false;
             player->direction  = FLIP_X;
-            if (!entity->timer && !player->sidekick)
-                entity->timer = 1;
+            if (!self->timer && !player->sidekick)
+                self->timer = 1;
         }
     }
 
-    if (entity->timer > 0)
-        entity->timer++;
-    if (entity->timer >= 60) {
+    if (self->timer > 0)
+        self->timer++;
+    if (self->timer >= 60) {
         foreach_active(Player, player)
         {
             player->jumpHold  = false;
@@ -161,7 +161,7 @@ bool32 LRZ1Outro_CutsceneState1_Unknown3(EntityCutsceneSeq *host)
 bool32 LRZ1Outro_CutsceneState1_Unknown4(EntityCutsceneSeq *host)
 {
     RSDK_THIS(LRZ1Outro);
-    EntityDashLift *lift = entity->lift;
+    EntityDashLift *lift = self->lift;
 
     foreach_active(Player, player)
     {
@@ -176,9 +176,9 @@ bool32 LRZ1Outro_CutsceneState1_Unknown4(EntityCutsceneSeq *host)
     }
 
     if (host->timer > 120) {
-        entity->timer += 2;
-        RSDK.SetLimitedFade(0, 1, 5, entity->timer, 128, 256);
-        if (entity->timer > 256) {
+        self->timer += 2;
+        RSDK.SetLimitedFade(0, 1, 5, self->timer, 128, 256);
+        if (self->timer > 256) {
             globals->suppressTitlecard = true;
             globals->suppressAutoMusic = true;
             Zone_StoreEntities(lift->position.x, lift->position.y);
@@ -192,7 +192,7 @@ bool32 LRZ1Outro_CutsceneState1_Unknown4(EntityCutsceneSeq *host)
 bool32 LRZ1Outro_CutsceneState2_Unknown2(EntityCutsceneSeq *host)
 {
     RSDK_THIS(LRZ1Outro);
-    EntityDashLift *lift = entity->lift;
+    EntityDashLift *lift = self->lift;
 
     foreach_active(Player, player)
     {
@@ -202,9 +202,9 @@ bool32 LRZ1Outro_CutsceneState2_Unknown2(EntityCutsceneSeq *host)
     }
 
     if (lift->drawPos.y < lift->amplitude.y) {
-        if (entity->timer > 0)
-            entity->timer -= 2;
-        RSDK.SetLimitedFade(0, 1, 5, entity->timer, 128, 256);
+        if (self->timer > 0)
+            self->timer -= 2;
+        RSDK.SetLimitedFade(0, 1, 5, self->timer, 128, 256);
         LRZ2Setup->palTimer2 = 0;
     }
     else {
@@ -218,7 +218,7 @@ bool32 LRZ1Outro_CutsceneState2_Unknown2(EntityCutsceneSeq *host)
             player->groundVel  = 0x20000;
             player->velocity.y = -0x50000;
             player->state      = Player_State_Air;
-            RSDK.SetSpriteAnimation(player->spriteIndex, ANI_JUMP, &player->playerAnimator, true, 0);
+            RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, true, 0);
         }
         return true;
     }
@@ -252,8 +252,8 @@ bool32 LRZ1Outro_CutsceneState2_Unknown3(EntityCutsceneSeq *host)
         foreach_all(TitleCard, titleCard)
         {
             titleCard->active    = ACTIVE_NORMAL;
-            titleCard->state     = TitleCard_Unknown6;
-            titleCard->stateDraw = TitleCard_StateDraw_Default;
+            titleCard->state     = TitleCard_State_Initial;
+            titleCard->stateDraw = TitleCard_Draw_Default;
             foreach_break;
         }
 

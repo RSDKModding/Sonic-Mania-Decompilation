@@ -6,57 +6,57 @@ void UIVsCharSelector_Update(void)
 {
     RSDK_THIS(UIVsCharSelector);
 
-    entity->prevFlag = entity->flag;
-    if (entity->textSpriteIndex != UIWidgets->textSpriteIndex || entity->prevFrameID != entity->frameID) {
+    self->prevFlag = self->flag;
+    if (self->textSpriteIndex != UIWidgets->textSpriteIndex || self->prevFrameID != self->frameID) {
         UIVsCharSelector_SetupText();
-        entity->textSpriteIndex = UIWidgets->textSpriteIndex;
-        entity->prevFrameID     = entity->frameID;
+        self->textSpriteIndex = UIWidgets->textSpriteIndex;
+        self->prevFrameID     = self->frameID;
     }
 
-    StateMachine_Run(entity->state);
+    StateMachine_Run(self->state);
 
-    if (entity->flag) {
-        entity->field_110 -= 0x600;
-        entity->field_114 += entity->field_110;
-        if (entity->field_114 <= 0x10000 && entity->field_110 < 0) {
-            entity->field_114 = 0x10000;
-            entity->field_110 = 0;
+    if (self->flag) {
+        self->field_110 -= 0x600;
+        self->field_114 += self->field_110;
+        if (self->field_114 <= 0x10000 && self->field_110 < 0) {
+            self->field_114 = 0x10000;
+            self->field_110 = 0;
         }
 
-        entity->field_118 -= 0x1800;
-        entity->field_11C += entity->field_118;
-        if (entity->field_11C <= 0x8000 && entity->field_118 < 0) {
-            entity->field_11C = 0x8000;
-            entity->field_118 = 0;
-        }
-    }
-    else if (entity->state != UIVsCharSelector_Unknown11) {
-        if (entity->field_114 > 0) {
-            entity->field_114 -= 0x2000;
-            if (entity->field_114 < 0)
-                entity->field_114 = 0;
-        }
-
-        if (entity->field_11C > 0) {
-            entity->field_11C -= 0x2000;
-            if (entity->field_11C < 0)
-                entity->field_11C = 0;
+        self->field_118 -= 0x1800;
+        self->field_11C += self->field_118;
+        if (self->field_11C <= 0x8000 && self->field_118 < 0) {
+            self->field_11C = 0x8000;
+            self->field_118 = 0;
         }
     }
+    else if (self->state != UIVsCharSelector_Unknown11) {
+        if (self->field_114 > 0) {
+            self->field_114 -= 0x2000;
+            if (self->field_114 < 0)
+                self->field_114 = 0;
+        }
 
-    entity->field_114 = minVal(entity->field_114, 0x13600);
-    entity->field_11C = minVal(entity->field_11C, 0x11800);
+        if (self->field_11C > 0) {
+            self->field_11C -= 0x2000;
+            if (self->field_11C < 0)
+                self->field_11C = 0;
+        }
+    }
 
-    EntityUIControl *parent = (EntityUIControl *)entity->parent;
+    self->field_114 = minVal(self->field_114, 0x13600);
+    self->field_11C = minVal(self->field_11C, 0x11800);
+
+    EntityUIControl *parent = (EntityUIControl *)self->parent;
     if ((
 #if RETRO_USE_PLUS
-            entity->state == UIVsCharSelector_Unknown10 ||
+            self->state == UIVsCharSelector_Unknown10 ||
 #endif
-            entity->state == UIVsCharSelector_Unknown11)
+            self->state == UIVsCharSelector_Unknown11)
         && (parent->state != UIControl_ProcessInputs || parent->active != ACTIVE_ALWAYS || parent->selectionDisabled)) {
-        entity->flag      = false;
-        entity->ready = false;
-        entity->state     = UIVsCharSelector_Unknown8;
+        self->flag      = false;
+        self->ready = false;
+        self->state     = UIVsCharSelector_Unknown8;
     }
 }
 
@@ -67,7 +67,7 @@ void UIVsCharSelector_StaticUpdate(void) {}
 void UIVsCharSelector_Draw(void)
 {
     RSDK_THIS(UIVsCharSelector);
-    RSDK.DrawRect(entity->position.x - 0x2D0000, entity->position.y - 0x2D0000, 0x600000, 0x600000, 0xFFFFFF, 127, INK_BLEND, false);
+    RSDK.DrawRect(self->position.x - 0x2D0000, self->position.y - 0x2D0000, 0x600000, 0x600000, 0xFFFFFF, 127, INK_BLEND, false);
     UIVsCharSelector_Unknown3();
     UIVsCharSelector_Unknown2();
     UIVsCharSelector_Unknown4();
@@ -76,17 +76,17 @@ void UIVsCharSelector_Draw(void)
 void UIVsCharSelector_Create(void *data)
 {
     RSDK_THIS(UIVsCharSelector);
-    entity->frameID         = entity->playerID;
-    entity->active          = ACTIVE_BOUNDS;
-    entity->drawOrder       = 2;
-    entity->visible         = true;
-    entity->drawFX          = FX_FLIP;
-    entity->updateRange.x   = 0x800000;
-    entity->updateRange.y   = 0x300000;
-    entity->processButtonCB = UIVsCharSelector_ProcessButtonCB;
-    entity->state           = UIVsCharSelector_Unknown8;
+    self->frameID         = self->playerID;
+    self->active          = ACTIVE_BOUNDS;
+    self->drawOrder       = 2;
+    self->visible         = true;
+    self->drawFX          = FX_FLIP;
+    self->updateRange.x   = 0x800000;
+    self->updateRange.y   = 0x300000;
+    self->processButtonCB = UIVsCharSelector_ProcessButtonCB;
+    self->state           = UIVsCharSelector_Unknown8;
     UIVsCharSelector_SetupText();
-    entity->textSpriteIndex = UIWidgets->textSpriteIndex;
+    self->textSpriteIndex = UIWidgets->textSpriteIndex;
 }
 
 void UIVsCharSelector_StageLoad(void) { UIVsCharSelector->aniFrames = RSDK.LoadSpriteAnimation("UI/SaveSelect.bin", SCOPE_STAGE); }
@@ -94,28 +94,28 @@ void UIVsCharSelector_StageLoad(void) { UIVsCharSelector->aniFrames = RSDK.LoadS
 void UIVsCharSelector_SetupText(void)
 {
     RSDK_THIS(UIVsCharSelector);
-    RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, 12, &entity->animator5, true, entity->playerID + 8);
-    RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, 12, &entity->animator6, true, 7);
-    RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, 8, &entity->animator3, true, entity->frameID);
+    RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, 12, &self->animator5, true, self->playerID + 8);
+    RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, 12, &self->animator6, true, 7);
+    RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, 8, &self->animator3, true, self->frameID);
 }
 
 void UIVsCharSelector_Unknown2(void)
 {
     RSDK_THIS(UIVsCharSelector);
-    if (!RSDK_sceneInfo->inEditor)
-        UIWidgets_Unknown3(96, 96, RSDK_sceneInfo->entity->position.x + 0x30000, RSDK_sceneInfo->entity->position.y + 0x30000);
-    if (entity->flag)
-        UIWidgets_Unknown4(96, 96, entity->position.x, entity->position.y);
+    if (!SceneInfo->inEditor)
+        UIWidgets_DrawRectOutline_Blended(96, 96, self->position.x + 0x30000, self->position.y + 0x30000);
+    if (self->flag)
+        UIWidgets_DrawRectOutline_Flash(96, 96, self->position.x, self->position.y);
     else
-        UIWidgets_Unknown2(96, 96, entity->position.x, entity->position.y);
+        UIWidgets_DrawRectOutline_Black(96, 96, self->position.x, self->position.y);
 }
 
 void UIVsCharSelector_Unknown3(void)
 {
     RSDK_THIS(UIVsCharSelector);
-    UIWidgets_Unknown5(232, (entity->field_114 >> 11), 40, 88, entity->position.x - 0x2D0000, entity->position.y - 0x2D0000);
-    UIWidgets_Unknown5(96, (-64 * entity->field_114) >> 16, 160, 176, entity->position.x + 0x2D0000, entity->position.y + 0x2C0000);
-    UIWidgets_Unknown5(88, (-44 * entity->field_114) >> 16, 112, 224, entity->position.x + 0x2D0000, entity->position.y + 0x2C0000);
+    UIWidgets_DrawRightTriangle(self->position.x - 0x2D0000, self->position.y - 0x2D0000, (self->field_114 >> 11), 232, 40, 88);
+    UIWidgets_DrawRightTriangle(self->position.x + 0x2D0000, self->position.y + 0x2C0000, (-64 * self->field_114) >> 16, 96, 160, 176);
+    UIWidgets_DrawRightTriangle(self->position.x + 0x2D0000, self->position.y + 0x2C0000, (-44 * self->field_114) >> 16, 88, 112, 224);
 }
 
 void UIVsCharSelector_Unknown4(void)
@@ -123,77 +123,77 @@ void UIVsCharSelector_Unknown4(void)
     RSDK_THIS(UIVsCharSelector);
     Vector2 drawPos;
 
-    drawPos.x = entity->position.x - 0x2D0000;
-    drawPos.y = entity->position.y + 0x180000;
+    drawPos.x = self->position.x - 0x2D0000;
+    drawPos.y = self->position.y + 0x180000;
     RSDK.DrawRect(drawPos.x, drawPos.y, 0x5A0000, 0x100000, 0, 255, INK_NONE, false);
-    RSDK.SetSpriteAnimation(UIVsCharSelector->aniFrames, 14, &entity->animator4, true, 1);
+    RSDK.SetSpriteAnimation(UIVsCharSelector->aniFrames, 14, &self->animator4, true, 1);
 
-    drawPos.x = entity->position.x + 0x2D0000;
-    drawPos.y = entity->position.y - 0x2D0000;
-    RSDK.DrawSprite(&entity->animator4, &drawPos, false);
+    drawPos.x = self->position.x + 0x2D0000;
+    drawPos.y = self->position.y - 0x2D0000;
+    RSDK.DrawSprite(&self->animator4, &drawPos, false);
 
     drawPos.y += 0x80000;
     drawPos.x -= 0xA0000;
-    RSDK.DrawSprite(&entity->animator5, &drawPos, false);
+    RSDK.DrawSprite(&self->animator5, &drawPos, false);
 
-    if (entity->state == UIVsCharSelector_Unknown9) {
-        RSDK.SetSpriteAnimation(UIVsCharSelector->aniFrames, 14, &entity->animator1, true, 7);
-        drawPos.x = entity->position.x;
-        drawPos.y = entity->position.y - 0x80000;
-        RSDK.DrawSprite(&entity->animator1, &drawPos, false);
-        RSDK.DrawSprite(&entity->animator6, &drawPos, false);
+    if (self->state == UIVsCharSelector_Unknown9) {
+        RSDK.SetSpriteAnimation(UIVsCharSelector->aniFrames, 14, &self->animator1, true, 7);
+        drawPos.x = self->position.x;
+        drawPos.y = self->position.y - 0x80000;
+        RSDK.DrawSprite(&self->animator1, &drawPos, false);
+        RSDK.DrawSprite(&self->animator6, &drawPos, false);
     }
-    else if (entity->state != UIVsCharSelector_Unknown11 || !(entity->timer & 2)) {
-        int32 frameID = entity->frameID;
-        if (entity->frameID > 2)
+    else if (self->state != UIVsCharSelector_Unknown11 || !(self->timer & 2)) {
+        int32 frameID = self->frameID;
+        if (self->frameID > 2)
             frameID++;
-        RSDK.SetSpriteAnimation(UIVsCharSelector->aniFrames, 1, &entity->animator1, true, frameID);
-        RSDK.SetSpriteAnimation(UIVsCharSelector->aniFrames, 2, &entity->animator2, true, frameID);
-        drawPos.x = entity->position.x;
-        drawPos.y = entity->position.y - 0x80000;
-        drawPos.x += 4 * entity->field_11C;
-        drawPos.y += 4 * entity->field_11C;
-        RSDK.DrawSprite(&entity->animator2, &drawPos, false);
+        RSDK.SetSpriteAnimation(UIVsCharSelector->aniFrames, 1, &self->animator1, true, frameID);
+        RSDK.SetSpriteAnimation(UIVsCharSelector->aniFrames, 2, &self->animator2, true, frameID);
+        drawPos.x = self->position.x;
+        drawPos.y = self->position.y - 0x80000;
+        drawPos.x += 4 * self->field_11C;
+        drawPos.y += 4 * self->field_11C;
+        RSDK.DrawSprite(&self->animator2, &drawPos, false);
 
-        drawPos.x -= 8 * entity->field_11C;
-        drawPos.y -= 8 * entity->field_11C;
-        RSDK.DrawSprite(&entity->animator1, &drawPos, false);
+        drawPos.x -= 8 * self->field_11C;
+        drawPos.y -= 8 * self->field_11C;
+        RSDK.DrawSprite(&self->animator1, &drawPos, false);
 
-        drawPos.x = entity->position.x;
-        drawPos.y = entity->position.y + 0x200000;
-        RSDK.DrawSprite(&entity->animator3, &drawPos, false);
+        drawPos.x = self->position.x;
+        drawPos.y = self->position.y + 0x200000;
+        RSDK.DrawSprite(&self->animator3, &drawPos, false);
     }
 
-    if (!entity->ready && entity->state != UIVsCharSelector_Unknown9) {
-        drawPos.x = entity->position.x;
-        drawPos.y = entity->position.y + 0x200000;
+    if (!self->ready && self->state != UIVsCharSelector_Unknown9) {
+        drawPos.x = self->position.x;
+        drawPos.y = self->position.y + 0x200000;
         if (RSDK.Sin256(2 * UIControl->timer) < 0)
-            UIWidgets_Unknown9((-RSDK.Sin256(2 * UIControl->timer) + 0x880) << 11, drawPos.x, drawPos.y);
+            UIWidgets_DrawLeftRightArrows(drawPos.x, drawPos.y, (-RSDK.Sin256(2 * UIControl->timer) + 0x880) << 11);
         else
-            UIWidgets_Unknown9((RSDK.Sin256(2 * UIControl->timer) + 0x880) << 11, drawPos.x, drawPos.y);
+            UIWidgets_DrawLeftRightArrows(drawPos.x, drawPos.y, (RSDK.Sin256(2 * UIControl->timer) + 0x880) << 11);
     }
 }
 
 void UIVsCharSelector_ProcessButtonCB(void)
 {
     RSDK_THIS(UIVsCharSelector);
-    EntityUIControl *parent = (EntityUIControl *)entity->parent;
+    EntityUIControl *parent = (EntityUIControl *)self->parent;
 
     if (parent->active == ACTIVE_ALWAYS) {
-        int32 storedFrame = entity->frameID;
+        int32 storedFrame = self->frameID;
         int32 inc         = 1;
-        if (UIControl->leftPress[entity->playerID]) {
-            --entity->frameID;
+        if (UIControl->leftPress[self->playerID]) {
+            --self->frameID;
             inc               = -1;
-            entity->field_11C = 0;
-            entity->field_118 = 0x8000;
-            RSDK.PlaySfx(UIWidgets->sfx_Bleep, false, 255);
+            self->field_11C = 0;
+            self->field_118 = 0x8000;
+            RSDK.PlaySfx(UIWidgets->sfxBleep, false, 255);
         }
-        else if (UIControl->rightPress[entity->playerID]) {
-            ++entity->frameID;
-            entity->field_11C = 0;
-            entity->field_118 = 0x8000;
-            RSDK.PlaySfx(UIWidgets->sfx_Bleep, false, 255);
+        else if (UIControl->rightPress[self->playerID]) {
+            ++self->frameID;
+            self->field_11C = 0;
+            self->field_118 = 0x8000;
+            RSDK.PlaySfx(UIWidgets->sfxBleep, false, 255);
         }
 
 #if RETRO_USE_PLUS
@@ -201,12 +201,12 @@ void UIVsCharSelector_ProcessButtonCB(void)
 #else
         int32 max = 3;
 #endif
-        while (entity->frameID < 0) {
-            entity->frameID += max;
+        while (self->frameID < 0) {
+            self->frameID += max;
         }
 
-        while (entity->frameID >= max) {
-            entity->frameID -= max;
+        while (self->frameID >= max) {
+            self->frameID -= max;
         }
 
 #if RETRO_GAMEVER != VER_100
@@ -217,38 +217,38 @@ void UIVsCharSelector_ProcessButtonCB(void)
                 activePlayers |= (1 << button->frameID);
         }
 
-        int32 frame = entity->frameID;
+        int32 frame = self->frameID;
         while ((1 << frame) & activePlayers) {
             frame += inc;
             if (frame < 0)
                 frame += max;
             if (frame >= max)
                 frame -= max;
-            entity->frameID = frame;
+            self->frameID = frame;
         }
 
-        if (entity->frameID != frame) {
-            entity->field_11C = 0;
-            entity->field_118 = 0x8000;
+        if (self->frameID != frame) {
+            self->field_11C = 0;
+            self->field_118 = 0x8000;
         }
 #endif
 
-        if (storedFrame != entity->frameID)
+        if (storedFrame != self->frameID)
             UIVsCharSelector_SetupText();
 
         bool32 pressed = false;
         if (API_GetConfirmButtonFlip())
-            pressed = RSDK_controller[entity->playerID + 1].keyB.press;
+            pressed = ControllerInfo[self->playerID + 1].keyB.press;
         else
-            pressed = RSDK_controller[entity->playerID + 1].keyA.press;
+            pressed = ControllerInfo[self->playerID + 1].keyA.press;
         if (pressed) {
-            entity->timer           = 0;
-            entity->state           = UIVsCharSelector_Unknown11;
-            entity->processButtonCB = StateMachine_None;
-            entity->ready           = true;
-            RSDK.PlaySfx(UIWidgets->sfx_Accept, false, 255);
+            self->timer           = 0;
+            self->state           = UIVsCharSelector_Unknown11;
+            self->processButtonCB = StateMachine_None;
+            self->ready           = true;
+            RSDK.PlaySfx(UIWidgets->sfxAccept, false, 255);
         }
-        else if (!entity->flag && !entity->ready) {
+        else if (!self->flag && !self->ready) {
             if (parent->active == ACTIVE_ALWAYS)
                 UIVsCharSelector_Unknown7();
         }
@@ -258,21 +258,21 @@ void UIVsCharSelector_ProcessButtonCB(void)
 void UIVsCharSelector_ProcessButtonCB_Alt(void)
 {
     RSDK_THIS(UIVsCharSelector);
-    EntityUIControl *parent = (EntityUIControl *)entity->parent;
+    EntityUIControl *parent = (EntityUIControl *)self->parent;
 
     if (parent->active == ACTIVE_ALWAYS) {
-        parent->posUnknown.x = entity->position.x;
+        parent->posUnknown.x = self->position.x;
 
         bool32 pressed = false;
         if (API_GetConfirmButtonFlip())
-            pressed = RSDK_controller[entity->playerID + 1].keyB.press;
+            pressed = ControllerInfo[self->playerID + 1].keyB.press;
         else
-            pressed = RSDK_controller[entity->playerID + 1].keyA.press;
+            pressed = ControllerInfo[self->playerID + 1].keyA.press;
         if (pressed) {
-            entity->timer = 0;
+            self->timer = 0;
             UIVsCharSelector_Unknown7();
-            entity->processButtonCB = UIVsCharSelector_ProcessButtonCB;
-            entity->ready           = false;
+            self->processButtonCB = UIVsCharSelector_ProcessButtonCB;
+            self->ready           = false;
         }
     }
 }
@@ -282,15 +282,15 @@ void UIVsCharSelector_Unknown7(void)
     RSDK_THIS(UIVsCharSelector);
 
 #if RETRO_USE_PLUS
-    entity->state = UIVsCharSelector_Unknown10;
+    self->state = UIVsCharSelector_Unknown10;
 #else
-    entity->state = UIVsCharSelector_Unknown8;
+    self->state = UIVsCharSelector_Unknown8;
 #endif
-    if (!entity->flag) {
-        entity->field_110 = 0x4000;
-        entity->field_11C = 0;
-        entity->field_118 = 0x8000;
-        entity->flag      = true;
+    if (!self->flag) {
+        self->field_110 = 0x4000;
+        self->field_11C = 0;
+        self->field_118 = 0x8000;
+        self->flag      = true;
     }
 }
 
@@ -298,13 +298,13 @@ void UIVsCharSelector_Unknown8(void)
 {
     RSDK_THIS(UIVsCharSelector);
 
-    int32 id = API_ControllerIDForInputID(entity->playerID + 1);
+    int32 id = API_ControllerIDForInputID(self->playerID + 1);
 #if RETRO_USE_PLUS
     if (!id || id == CONT_AUTOASSIGN) {
 #else
     if (id + 1 <= 1) {
 #endif
-        entity->state = UIVsCharSelector_Unknown9;
+        self->state = UIVsCharSelector_Unknown9;
         UIVsCharSelector_Unknown9();
     }
 }
@@ -312,33 +312,33 @@ void UIVsCharSelector_Unknown8(void)
 void UIVsCharSelector_Unknown9(void)
 {
     RSDK_THIS(UIVsCharSelector);
-    EntityUIControl *parent = (EntityUIControl *)entity->parent;
+    EntityUIControl *parent = (EntityUIControl *)self->parent;
 
-    entity->processButtonCB = StateMachine_None;
-    entity->flag            = false;
+    self->processButtonCB = StateMachine_None;
+    self->flag            = false;
 
-    int32 id = API_ControllerIDForInputID(entity->playerID + 1);
+    int32 id = API_ControllerIDForInputID(self->playerID + 1);
 #if RETRO_USE_PLUS
-    entity->ready = false;
+    self->ready = false;
     int32 assigned = RSDK.GetAssignedControllerID(id);
     if (parent->active == ACTIVE_ALWAYS) {
         if (!id) {
-            API_AssignControllerID(entity->playerID + 1, CONT_AUTOASSIGN);
+            API_AssignControllerID(self->playerID + 1, CONT_AUTOASSIGN);
         }
         else if (!assigned && id != CONT_AUTOASSIGN) {
-            API_AssignControllerID(entity->playerID + 1, CONT_AUTOASSIGN);
+            API_AssignControllerID(self->playerID + 1, CONT_AUTOASSIGN);
         }
         else if (id != CONT_AUTOASSIGN) {
-            entity->field_11C = 0;
-            entity->field_118 = 0x8000;
-            entity->timer     = 4;
-            entity->state     = UIVsCharSelector_Unknown10;
+            self->field_11C = 0;
+            self->field_118 = 0x8000;
+            self->timer     = 4;
+            self->state     = UIVsCharSelector_Unknown10;
         }
     }
 #else
     if (id >= 2) {
-        entity->state = UIVsCharSelector_Unknown8;
-        entity->processButtonCB = UIVsCharSelector_ProcessButtonCB;
+        self->state = UIVsCharSelector_Unknown8;
+        self->processButtonCB = UIVsCharSelector_ProcessButtonCB;
     }
 #endif
 }
@@ -347,22 +347,22 @@ void UIVsCharSelector_Unknown9(void)
 void UIVsCharSelector_Unknown10(void)
 {
     RSDK_THIS(UIVsCharSelector);
-    EntityUIControl *parent = (EntityUIControl *)entity->parent;
+    EntityUIControl *parent = (EntityUIControl *)self->parent;
 
-    entity->flag = true;
-    int32 id       = API_ControllerIDForInputID(entity->playerID + 1);
+    self->flag = true;
+    int32 id       = API_ControllerIDForInputID(self->playerID + 1);
     int32 assigned = RSDK.GetAssignedControllerID(id);
 
     if (parent->active == ACTIVE_ALWAYS) {
         if (id && id != CONT_AUTOASSIGN && assigned) {
-            if (entity->timer > 0) {
-                if (entity->timer == 1)
-                    entity->processButtonCB = UIVsCharSelector_ProcessButtonCB;
-                entity->timer--;
+            if (self->timer > 0) {
+                if (self->timer == 1)
+                    self->processButtonCB = UIVsCharSelector_ProcessButtonCB;
+                self->timer--;
             }
         }
         else {
-            entity->state = UIVsCharSelector_Unknown9;
+            self->state = UIVsCharSelector_Unknown9;
         }
     }
 }
@@ -372,29 +372,29 @@ void UIVsCharSelector_Unknown11(void)
 {
     RSDK_THIS(UIVsCharSelector);
 
-    if (entity->timer >= 30) {
-        if (entity->parent->active == ACTIVE_ALWAYS) {
-            entity->flag            = false;
-            entity->timer           = 0;
-            entity->state           = UIVsCharSelector_Unknown8;
-            entity->processButtonCB = UIVsCharSelector_ProcessButtonCB_Alt;
-            StateMachine_Run(entity->options2);
+    if (self->timer >= 30) {
+        if (self->parent->active == ACTIVE_ALWAYS) {
+            self->flag            = false;
+            self->timer           = 0;
+            self->state           = UIVsCharSelector_Unknown8;
+            self->processButtonCB = UIVsCharSelector_ProcessButtonCB_Alt;
+            StateMachine_Run(self->options2);
         }
     }
     else {
-        if (entity->timer == 2) {
-            switch (entity->frameID) {
-                case 0: RSDK.PlaySfx(Announcer->sfx_Sonic, false, 255); break;
-                case 1: RSDK.PlaySfx(Announcer->sfx_Tails, false, 255); break;
-                case 2: RSDK.PlaySfx(Announcer->sfx_Knuckles, false, 255); break;
+        if (self->timer == 2) {
+            switch (self->frameID) {
+                case 0: RSDK.PlaySfx(Announcer->sfxSonic, false, 255); break;
+                case 1: RSDK.PlaySfx(Announcer->sfxTails, false, 255); break;
+                case 2: RSDK.PlaySfx(Announcer->sfxKnuckles, false, 255); break;
 #if RETRO_USE_PLUS
-                case 3: RSDK.PlaySfx(Announcer->sfx_Mighty, false, 255); break;
-                case 4: RSDK.PlaySfx(Announcer->sfx_Ray, false, 255); break;
+                case 3: RSDK.PlaySfx(Announcer->sfxMighty, false, 255); break;
+                case 4: RSDK.PlaySfx(Announcer->sfxRay, false, 255); break;
 #endif
                 default: break;
             }
         }
-        ++entity->timer;
+        ++self->timer;
     }
 }
 

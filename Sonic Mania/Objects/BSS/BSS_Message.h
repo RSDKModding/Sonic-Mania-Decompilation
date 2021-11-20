@@ -3,10 +3,16 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    BSS_MESSAGE_GETBS,
+    BSS_MESSAGE_PERFECT,
+    BSS_MESSAGE_2_FINISHED,
+}BSS_MessageTypes;
+
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    uint16 spriteIndex;
+    uint16 aniFrames;
 } ObjectBSS_Message;
 
 // Entity Class
@@ -15,11 +21,11 @@ typedef struct {
     StateMachine(state);
     int32 timer;
     int32 timer2;
-    bool32 flag;
+    bool32 shouldFade;
     int32 colour;
     int32 field_6C;
-    Animator leftData;
-    Animator rightData;
+    Animator leftAnimator;
+    Animator rightAnimator;
 } EntityBSS_Message;
 
 // Object Struct
@@ -41,7 +47,7 @@ void BSS_Message_Serialize(void);
 // Extra Entity Functions
 void BSS_Message_State_GetBS(void);
 void BSS_Message_State_GetBSWait(void);
-void BSS_Message_State_Unknown(void);
+void BSS_Message_State_Finished(void);
 void BSS_Message_State_Perfect(void);
 void BSS_Message_State_Idle(void);
 void BSS_Message_State_Finish(void);

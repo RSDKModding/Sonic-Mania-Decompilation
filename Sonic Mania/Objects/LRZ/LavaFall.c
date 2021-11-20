@@ -5,7 +5,7 @@ ObjectLavaFall *LavaFall;
 void LavaFall_Update(void)
 {
     RSDK_THIS(LavaFall);
-    StateMachine_Run(entity->state);
+    StateMachine_Run(self->state);
 }
 
 void LavaFall_LateUpdate(void) {}
@@ -28,25 +28,25 @@ void LavaFall_StaticUpdate(void)
 void LavaFall_Draw(void)
 {
     RSDK_THIS(LavaFall);
-    RSDK.DrawSprite(&entity->animator, NULL, false);
+    RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
 void LavaFall_Create(void *data)
 {
     RSDK_THIS(LavaFall);
 
-    entity->active        = ACTIVE_BOUNDS;
-    entity->visible       = true;
-    entity->drawOrder     = Zone->drawOrderLow;
-    entity->updateRange.x = 0x800000;
-    entity->updateRange.y = 0x1000000;
+    self->active        = ACTIVE_BOUNDS;
+    self->visible       = true;
+    self->drawOrder     = Zone->drawOrderLow;
+    self->updateRange.x = 0x800000;
+    self->updateRange.y = 0x1000000;
     if (data) {
-        entity->active = ACTIVE_NORMAL;
-        RSDK.SetSpriteAnimation(LavaFall->aniFrames, 0, &entity->animator, true, 0);
-        entity->state = LavaFall_State_Lava;
+        self->active = ACTIVE_NORMAL;
+        RSDK.SetSpriteAnimation(LavaFall->aniFrames, 0, &self->animator, true, 0);
+        self->state = LavaFall_State_Lava;
     }
     else {
-        entity->state = LavaFall_State_Idle;
+        self->state = LavaFall_State_Idle;
     }
 }
 
@@ -68,10 +68,10 @@ void LavaFall_State_Idle(void)
 {
     RSDK_THIS(LavaFall);
 
-    if (!((Zone->timer + entity->intervalOffset) % entity->interval)) {
-        entity->timer  = entity->duration;
-        entity->active = ACTIVE_NORMAL;
-        entity->state  = LavaFall_State_LavaFall;
+    if (!((Zone->timer + self->intervalOffset) % self->interval)) {
+        self->timer  = self->duration;
+        self->active = ACTIVE_NORMAL;
+        self->state  = LavaFall_State_LavaFall;
     }
 }
 
@@ -79,20 +79,20 @@ void LavaFall_State_LavaFall(void)
 {
     RSDK_THIS(LavaFall);
 
-    if (--entity->timer <= 0) {
-        if (entity->interval) {
-            entity->active = ACTIVE_BOUNDS;
-            entity->state  = LavaFall_State_Idle;
+    if (--self->timer <= 0) {
+        if (self->interval) {
+            self->active = ACTIVE_BOUNDS;
+            self->state  = LavaFall_State_Idle;
         }
         else {
-            destroyEntity(entity);
+            destroyEntity(self);
         }
     }
 
     ++LavaFall->shouldPlayLavaSfx;
-    if (++entity->animator.animationTimer == 8) {
-        entity->animator.animationTimer = 0;
-        CREATE_ENTITY(LavaFall, intToVoid(1), entity->position.x, entity->position.y);
+    if (++self->animator.animationTimer == 8) {
+        self->animator.animationTimer = 0;
+        CREATE_ENTITY(LavaFall, intToVoid(1), self->position.x, self->position.y);
     }
 }
 
@@ -100,27 +100,27 @@ void LavaFall_State_Lava(void)
 {
     RSDK_THIS(LavaFall);
 
-    entity->position.y += 0x70000;
+    self->position.y += 0x70000;
 
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionTouch(player, entity, &LavaFall->hitbox)) {
-            Player_CheckElementalHit(player, entity, SHIELD_FIRE);
+        if (Player_CheckCollisionTouch(player, self, &LavaFall->hitbox)) {
+            Player_CheckElementalHit(player, self, SHIELD_FIRE);
         }
     }
 
-    if (entity->activeScreens)
+    if (self->activeScreens)
         ++LavaFall->shouldPlayLavaSfx;
 
-    if (!RSDK.CheckOnScreen(entity, &entity->updateRange))
-        destroyEntity(entity);
+    if (!RSDK.CheckOnScreen(self, &self->updateRange))
+        destroyEntity(self);
 }
 
 #if RETRO_INCLUDE_EDITOR
 void LavaFall_EditorDraw(void)
 {
     RSDK_THIS(LavaFall);
-    RSDK.SetSpriteAnimation(LavaFall->aniFrames, 0, &entity->animator, true, 0);
+    RSDK.SetSpriteAnimation(LavaFall->aniFrames, 0, &self->animator, true, 0);
 
     LavaFall_Draw();
 }

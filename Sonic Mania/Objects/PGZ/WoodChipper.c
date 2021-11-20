@@ -5,7 +5,7 @@ ObjectWoodChipper *WoodChipper;
 void WoodChipper_Update(void)
 {
     RSDK_THIS(WoodChipper);
-    StateMachine_Run(entity->state);
+    StateMachine_Run(self->state);
 }
 
 void WoodChipper_LateUpdate(void) {}
@@ -51,90 +51,90 @@ void WoodChipper_StaticUpdate(void)
 void WoodChipper_Draw(void)
 {
     RSDK_THIS(WoodChipper);
-    if (entity->state == WoodChipper_State_Debris) {
-        RSDK.DrawSprite(&entity->animator1, NULL, false);
+    if (self->state == WoodChipper_State_Debris) {
+        RSDK.DrawSprite(&self->animator1, NULL, false);
     }
     else {
-        Vector2 drawPos = entity->position;
+        Vector2 drawPos = self->position;
 
-        if (entity->field_80 < 0) {
-            entity->animator1.frameID = 3;
-            drawPos.y += entity->field_80 + (RSDK.Sin256(entity->angle) << 10);
-            RSDK.DrawSprite(&entity->animator1, &drawPos, false);
+        if (self->field_80 < 0) {
+            self->animator1.frameID = 3;
+            drawPos.y += self->field_80 + (RSDK.Sin256(self->angle) << 10);
+            RSDK.DrawSprite(&self->animator1, &drawPos, false);
 
-            int32 pos = entity->field_80 >> 16;
+            int32 pos = self->field_80 >> 16;
             if (pos <= -16) {
-                entity->animator1.frameID = 4;
+                self->animator1.frameID = 4;
                 int32 dist                  = -16 - pos;
                 if (dist >= -79) {
                     int32 size = dist / 80 + 2;
                     for (int32 i = 0; i < size; ++i) {
-                        RSDK.DrawSprite(&entity->animator1, &drawPos, false);
+                        RSDK.DrawSprite(&self->animator1, &drawPos, false);
                         drawPos.y += 0x500000;
                     }
                 }
             }
         }
 
-        drawPos.x                 = entity->position.x - 0x140000;
-        drawPos.y                 = entity->position.y - 0x280000;
-        entity->drawFX            = FX_ROTATE;
-        entity->animator2.frameID = 0;
-        RSDK.DrawSprite(&entity->animator2, &drawPos, false);
+        drawPos.x                 = self->position.x - 0x140000;
+        drawPos.y                 = self->position.y - 0x280000;
+        self->drawFX            = FX_ROTATE;
+        self->animator2.frameID = 0;
+        RSDK.DrawSprite(&self->animator2, &drawPos, false);
 
         drawPos.x += 0x280000;
-        entity->animator2.frameID = 1;
-        entity->rotation          = 512 - entity->rotation;
-        RSDK.DrawSprite(&entity->animator2, &drawPos, false);
+        self->animator2.frameID = 1;
+        self->rotation          = 512 - self->rotation;
+        RSDK.DrawSprite(&self->animator2, &drawPos, false);
 
-        entity->rotation          = 512 - entity->rotation;
-        entity->drawFX            = 0;
-        entity->animator1.frameID = 0;
-        drawPos.x                 = entity->position.x + entity->field_68[0].x;
-        drawPos.y                 = entity->position.y + entity->field_68[0].y;
-        RSDK.DrawSprite(&entity->animator1, &drawPos, false);
+        self->rotation          = 512 - self->rotation;
+        self->drawFX            = 0;
+        self->animator1.frameID = 0;
+        drawPos.x                 = self->position.x + self->field_68[0].x;
+        drawPos.y                 = self->position.y + self->field_68[0].y;
+        RSDK.DrawSprite(&self->animator1, &drawPos, false);
 
-        entity->drawFX            = FX_FLIP;
-        entity->animator1.frameID = 2;
-        drawPos.x                 = entity->position.x + entity->field_68[1].x;
-        drawPos.y                 = entity->position.y + entity->field_68[1].y;
-        RSDK.DrawSprite(&entity->animator1, &drawPos, false);
+        self->drawFX            = FX_FLIP;
+        self->animator1.frameID = 2;
+        drawPos.x                 = self->position.x + self->field_68[1].x;
+        drawPos.y                 = self->position.y + self->field_68[1].y;
+        RSDK.DrawSprite(&self->animator1, &drawPos, false);
 
-        entity->animator1.frameID = 6;
-        RSDK.DrawSprite(&entity->animator1, &drawPos, false);
+        self->animator1.frameID = 6;
+        RSDK.DrawSprite(&self->animator1, &drawPos, false);
 
-        entity->animator1.frameID = 1;
-        drawPos.x                 = entity->position.x + entity->field_68[2].x;
-        drawPos.y                 = entity->position.y + entity->field_68[2].y;
-        RSDK.DrawSprite(&entity->animator1, &drawPos, false);
-        entity->drawFX = FX_NONE;
+        self->animator1.frameID = 1;
+        drawPos.x                 = self->position.x + self->field_68[2].x;
+        drawPos.y                 = self->position.y + self->field_68[2].y;
+        RSDK.DrawSprite(&self->animator1, &drawPos, false);
+        self->drawFX = FX_NONE;
     }
 }
 
 void WoodChipper_Create(void *data)
 {
     RSDK_THIS(WoodChipper);
-    entity->active    = ACTIVE_BOUNDS;
-    entity->visible   = 1;
-    entity->drawOrder = Zone->drawOrderLow;
-    if (!RSDK_sceneInfo->inEditor) {
+    self->active    = ACTIVE_BOUNDS;
+    self->visible   = 1;
+    self->drawOrder = Zone->drawOrderLow;
+    if (!SceneInfo->inEditor) {
         if (data) {
-            --entity->drawOrder;
-            entity->active        = ACTIVE_NORMAL;
-            entity->updateRange.x = 0x400000;
-            entity->updateRange.y = 0x400000;
-            entity->drawFX        = FX_FLIP;
-            RSDK.SetSpriteAnimation(WoodChipper->aniFrames, 1, &entity->animator1, true, 0);
-            entity->state = WoodChipper_State_Debris;
+            --self->drawOrder;
+            self->active        = ACTIVE_NORMAL;
+            self->updateRange.x = 0x400000;
+            self->updateRange.y = 0x400000;
+            self->drawFX        = FX_FLIP;
+            RSDK.SetSpriteAnimation(WoodChipper->aniFrames, 1, &self->animator1, true, 0);
+            self->state = WoodChipper_State_Debris;
         }
         else {
-            entity->speed <<= 12;
-            entity->updateRange.x = 0x1000000;
-            entity->updateRange.y = (entity->size + 256) << 16;
-            entity->field_80      = -0x10000 * entity->size;
-            RSDK.SetSpriteAnimation(WoodChipper->aniFrames, 0, &entity->animator1, true, 0);
-            RSDK.SetSpriteAnimation(WoodChipper->aniFrames, 3, &entity->animator2, true, 0);
-            entity->state = WoodChipper_State_Chipper;
+            self->speed <<= 12;
+            self->updateRange.x = 0x1000000;
+            self->updateRange.y = (self->size + 256) << 16;
+            self->field_80      = -0x10000 * self->size;
+            RSDK.SetSpriteAnimation(WoodChipper->aniFrames, 0, &self->animator1, true, 0);
+            RSDK.SetSpriteAnimation(WoodChipper->aniFrames, 3, &self->animator2, true, 0);
+            self->state = WoodChipper_State_Chipper;
         }
     }
 }
@@ -162,36 +162,35 @@ void WoodChipper_StageLoad(void)
 void WoodChipper_HandlePlayerCollisions(void)
 {
     RSDK_THIS(WoodChipper);
-    int32 prevPlayers             = entity->activePlayers;
-    entity->activePlayers       = 0;
-    WoodChipper->hitboxWood.top = (((RSDK.Sin256(entity->angle) << 10) + entity->field_80) >> 16) - 48;
+    int32 prevPlayers             = self->activePlayers;
+    self->activePlayers       = 0;
+    WoodChipper->hitboxWood.top = (((RSDK.Sin256(self->angle) << 10) + self->field_80) >> 16) - 48;
     EntityPlayer *player2       = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionTouch(player, entity, &WoodChipper->hitboxRazor)
-            && (!entity->field_80 || (prevPlayers && (prevPlayers != 2 || !player2->sidekick)))
+        if (Player_CheckCollisionTouch(player, self, &WoodChipper->hitboxRazor)
+            && (!self->field_80 || (prevPlayers && (prevPlayers != 2 || !player2->sidekick)))) {
 #if RETRO_USE_PLUS
-            && !Player_CheckMightyUnspin(1024, player, false, &player->uncurlTimer)
+            if (!Player_CheckMightyUnspin(0x400, player, false, &player->uncurlTimer))
 #endif
-        ) {
-            Player_CheckHit(player, entity);
+            Player_CheckHit(player, self);
         }
 
         if (WoodChipper->hitboxWood.top > -48) {
-            entity->field_80 = 0;
-            Player_CheckCollisionBox(player, entity, &WoodChipper->hitboxStump);
+            self->field_80 = 0;
+            Player_CheckCollisionBox(player, self, &WoodChipper->hitboxStump);
         }
-        else if (Player_CheckCollisionBox(player, entity, &WoodChipper->hitboxWood) == 1) {
-            entity->activePlayers |= 1 << player->playerID;
+        else if (Player_CheckCollisionBox(player, self, &WoodChipper->hitboxWood) == 1) {
+            self->activePlayers |= 1 << player->playerID;
 #if RETRO_USE_PLUS
             if (player->state == Player_State_MightyHammerDrop) {
-                entity->timer = 1;
+                self->timer = 1;
                 player->state = Player_State_Air;
             }
 #endif
         } 
         else {
-            Player_CheckCollisionBox(player, entity, &WoodChipper->hitboxStump);
+            Player_CheckCollisionBox(player, self, &WoodChipper->hitboxStump);
         }
     }
 }
@@ -202,55 +201,55 @@ void WoodChipper_State_Chipper(void)
     WoodChipper_HandlePlayerCollisions();
     EntityPlayer *player2 = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
 
-    if (!entity->activePlayers || (entity->activePlayers == 2 && player2->sidekick)) {
-        if (entity->field_80) {
-            if (entity->timer < 30)
-                entity->timer++;
+    if (!self->activePlayers || (self->activePlayers == 2 && player2->sidekick)) {
+        if (self->field_80) {
+            if (self->timer < 30)
+                self->timer++;
 
-            if (entity->angle > 0) {
-                entity->angle -= 4;
+            if (self->angle > 0) {
+                self->angle -= 4;
             }
-            entity->field_68[0].x = 0;
-            entity->field_68[0].y = 0;
-            entity->field_68[1].x = 0;
-            entity->field_68[1].y = 0;
-            entity->field_68[2].x = 0;
-            entity->field_68[2].y = 0;
+            self->field_68[0].x = 0;
+            self->field_68[0].y = 0;
+            self->field_68[1].x = 0;
+            self->field_68[1].y = 0;
+            self->field_68[2].x = 0;
+            self->field_68[2].y = 0;
         }
         else {
-            entity->field_68[0].x = 2 * RSDK.Rand(-1, 2);
-            entity->field_68[0].y = 2 * RSDK.Rand(-1, 2);
-            entity->field_68[1].x = 2 * RSDK.Rand(-1, 2);
-            entity->field_68[1].y = 2 * RSDK.Rand(-1, 2);
-            entity->field_68[2].x = 2 * RSDK.Rand(-1, 2);
-            entity->field_68[2].y = 2 * RSDK.Rand(-1, 2);
-            entity->rotation      = (entity->rotation + 8) & 0x1FF;
+            self->field_68[0].x = 2 * RSDK.Rand(-1, 2);
+            self->field_68[0].y = 2 * RSDK.Rand(-1, 2);
+            self->field_68[1].x = 2 * RSDK.Rand(-1, 2);
+            self->field_68[1].y = 2 * RSDK.Rand(-1, 2);
+            self->field_68[2].x = 2 * RSDK.Rand(-1, 2);
+            self->field_68[2].y = 2 * RSDK.Rand(-1, 2);
+            self->rotation      = (self->rotation + 8) & 0x1FF;
         }
     }
     else {
-        if (entity->timer <= 0) {
-            if (entity->field_80 < 0) {
-                int32 val = ((RSDK.Sin256(entity->angle) << 10) + entity->field_80) & 0xFFFF0000;
+        if (self->timer <= 0) {
+            if (self->field_80 < 0) {
+                int32 val = ((RSDK.Sin256(self->angle) << 10) + self->field_80) & 0xFFFF0000;
 
-                entity->field_80 += entity->speed;
-                if (entity->field_80 > 0)
-                    entity->field_80 = 0;
+                self->field_80 += self->speed;
+                if (self->field_80 > 0)
+                    self->field_80 = 0;
 
-                if (entity->angle < 64)
-                    entity->angle += 4;
+                if (self->angle < 64)
+                    self->angle += 4;
 
-                int32 move = val - (((RSDK.Sin256(entity->angle) << 10) + entity->field_80) & 0xFFFF0000);
+                int32 move = val - (((RSDK.Sin256(self->angle) << 10) + self->field_80) & 0xFFFF0000);
 
                 foreach_active(Player, player)
                 {
-                    if ((1 << player->playerID) & entity->activePlayers)
+                    if ((1 << player->playerID) & self->activePlayers)
                         player->position.y -= move;
                 }
 
-                for (int32 i = entity->speed >> 12; i > 0; --i) {
+                for (int32 i = self->speed >> 12; i > 0; --i) {
                     EntityWoodChipper *debris =
-                        CREATE_ENTITY(WoodChipper, intToVoid(1), entity->position.x, ((RSDK.Rand(0, 17) - 40) << 16) + entity->position.y);
-                    if (entity->direction) {
+                        CREATE_ENTITY(WoodChipper, intToVoid(1), self->position.x, ((RSDK.Rand(0, 17) - 40) << 16) + self->position.y);
+                    if (self->direction) {
                         debris->position.x += -0x530000 - (RSDK.Rand(-3, 4) << 16);
                         debris->velocity.x = -RSDK.Rand(4, 17) << 15;
                     }
@@ -262,33 +261,33 @@ void WoodChipper_State_Chipper(void)
                     debris->direction                = RSDK.Rand(0, 4);
                 }
             }
-            entity->field_68[0].x = 2 * RSDK.Rand(-1, 2);
-            entity->field_68[0].y = 2 * RSDK.Rand(-1, 2);
-            entity->field_68[1].x = 2 * RSDK.Rand(-1, 2);
-            entity->field_68[1].y = 2 * RSDK.Rand(-1, 2);
-            entity->field_68[2].x = 2 * RSDK.Rand(-1, 2);
-            entity->field_68[2].y = 2 * RSDK.Rand(-1, 2);
-            entity->rotation      = (entity->rotation + 8) & 0x1FF;
+            self->field_68[0].x = 2 * RSDK.Rand(-1, 2);
+            self->field_68[0].y = 2 * RSDK.Rand(-1, 2);
+            self->field_68[1].x = 2 * RSDK.Rand(-1, 2);
+            self->field_68[1].y = 2 * RSDK.Rand(-1, 2);
+            self->field_68[2].x = 2 * RSDK.Rand(-1, 2);
+            self->field_68[2].y = 2 * RSDK.Rand(-1, 2);
+            self->rotation      = (self->rotation + 8) & 0x1FF;
         }
         else {
-            entity->timer--;
-            entity->field_68[0].x = 0;
-            entity->field_68[0].y = 0;
-            entity->field_68[1].x = 0;
-            entity->field_68[1].y = 0;
-            entity->field_68[2].x = 0;
-            entity->field_68[2].y = 0;
+            self->timer--;
+            self->field_68[0].x = 0;
+            self->field_68[0].y = 0;
+            self->field_68[1].x = 0;
+            self->field_68[1].y = 0;
+            self->field_68[2].x = 0;
+            self->field_68[2].y = 0;
 
-            int32 val = ((RSDK.Sin256(entity->angle) << 10) + (entity->field_80 & 0xFC00)) & 0xFFFF0000;
+            int32 val = ((RSDK.Sin256(self->angle) << 10) + (self->field_80 & 0xFC00)) & 0xFFFF0000;
 
-            if (entity->angle < 64)
-                entity->angle += 4;
+            if (self->angle < 64)
+                self->angle += 4;
 
-            int32 move = val - (((RSDK.Sin256(entity->angle) << 10) + (entity->field_80 & 0xFC00)) & 0xFFFF0000);
+            int32 move = val - (((RSDK.Sin256(self->angle) << 10) + (self->field_80 & 0xFC00)) & 0xFFFF0000);
 
             foreach_active(Player, player)
             {
-                if ((1 << player->playerID) & entity->activePlayers)
+                if ((1 << player->playerID) & self->activePlayers)
                     player->position.y -= move;
             }
         }
@@ -298,13 +297,13 @@ void WoodChipper_State_Chipper(void)
 void WoodChipper_State_Debris(void)
 {
     RSDK_THIS(WoodChipper);
-    RSDK.ProcessAnimation(&entity->animator1);
-    entity->position.x += entity->velocity.x;
-    entity->position.y += entity->velocity.y;
-    entity->velocity.y += 0x3800;
+    RSDK.ProcessAnimation(&self->animator1);
+    self->position.x += self->velocity.x;
+    self->position.y += self->velocity.y;
+    self->velocity.y += 0x3800;
 
-    if (!RSDK.CheckOnScreen(entity, &entity->updateRange))
-        destroyEntity(entity);
+    if (!RSDK.CheckOnScreen(self, &self->updateRange))
+        destroyEntity(self);
 }
 
 #if RETRO_INCLUDE_EDITOR

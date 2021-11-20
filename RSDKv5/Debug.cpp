@@ -1123,10 +1123,103 @@ void DevMenu_InputOptions()
 }
 void DevMenu_MappingsOptions()
 {
-
 #if !RETRO_USE_ORIGINAL_CODE
     DevMenu_HandleTouchControls();
 #endif
+
+    int dy = currentScreen->center.y;
+    DrawRectangle(currentScreen->center.x - 128, dy - 84, 256, 48, 128, 255, INK_NONE, true);
+    dy -= 68;
+    DrawDevText(currentScreen->center.x, "SET KEY BINDING", dy, ALIGN_CENTER, 0xF0F0F0);
+    dy += 44;
+    DrawRectangle(currentScreen->center.x - 128, dy - 8, 256, 72, 128, 255, INK_NONE, true);
+
+    int controllerID     = devMenu.option + 1;
+    switch (devMenu.scroll) {
+        case 0:
+            DrawDevText(currentScreen->center.x, "Press Key For UP", dy, ALIGN_CENTER, 0xF0F080);
+            if (controller[controllerID].keyUp.keyMap != -1) {
+                controller[controllerID].keyDown.keyMap = -1;
+                ++devMenu.scroll;
+            }
+            break;
+        case 1:
+            DrawDevText(currentScreen->center.x, "Press Key For DOWN", dy, ALIGN_CENTER, 0xF0F080);
+            if (controller[controllerID].keyDown.keyMap != -1) {
+                controller[controllerID].keyLeft.keyMap = -1;
+                ++devMenu.scroll;
+            }
+            break;
+        case 2:
+            DrawDevText(currentScreen->center.x, "Press Key For LEFT", dy, ALIGN_CENTER, 0xF0F080);
+            if (controller[controllerID].keyLeft.keyMap != -1) {
+                controller[controllerID].keyRight.keyMap = -1;
+                ++devMenu.scroll;
+            }
+            break;
+        case 3:
+            DrawDevText(currentScreen->center.x, "Press Key For RIGHT", dy, ALIGN_CENTER, 0xF0F080);
+            if (controller[controllerID].keyRight.keyMap != -1) {
+                controller[controllerID].keyA.keyMap = -1;
+                ++devMenu.scroll;
+            }
+            break;
+        case 4:
+            DrawDevText(currentScreen->center.x, "Press Key For BUTTON A", dy, ALIGN_CENTER, 0xF0F080);
+            if (controller[controllerID].keyA.keyMap != -1) {
+                controller[controllerID].keyB.keyMap = -1;
+                ++devMenu.scroll;
+            }
+            break;
+        case 5:
+            DrawDevText(currentScreen->center.x, "Press Key For BUTTON B", dy, ALIGN_CENTER, 0xF0F080);
+            if (controller[controllerID].keyB.keyMap != -1) {
+                controller[controllerID].keyC.keyMap = -1;
+                ++devMenu.scroll;
+            }
+            break;
+        case 6:
+            DrawDevText(currentScreen->center.x, "Press Key For BUTTON C", dy, ALIGN_CENTER, 0xF0F080);
+            if (controller[controllerID].keyC.keyMap != -1) {
+                controller[controllerID].keyX.keyMap = -1;
+                ++devMenu.scroll;
+            }
+            break;
+        case 7:
+            DrawDevText(currentScreen->center.x, "Press Key For BUTTON X", dy, ALIGN_CENTER, 0xF0F080);
+            if (controller[controllerID].keyX.keyMap != -1) {
+                controller[controllerID].keyY.keyMap = -1;
+                ++devMenu.scroll;
+            }
+            break;
+        case 8:
+            DrawDevText(currentScreen->center.x, "Press Key For BUTTON Y", dy, ALIGN_CENTER, 0xF0F080);
+            if (controller[controllerID].keyY.keyMap != -1) {
+                controller[controllerID].keyZ.keyMap = -1;
+                ++devMenu.scroll;
+            }
+            break;
+        case 9:
+            DrawDevText(currentScreen->center.x, "Press Key For BUTTON Z", dy, ALIGN_CENTER, 0xF0F080);
+            if (controller[controllerID].keyZ.keyMap != -1) {
+                controller[controllerID].keyStart.keyMap = -1;
+                ++devMenu.scroll;
+            }
+            break;
+        case 10:
+            DrawDevText(currentScreen->center.x, "Press Key For START", dy, ALIGN_CENTER, 0xF0F080);
+            if (controller[controllerID].keyStart.keyMap != -1) {
+                controller[controllerID].keySelect.keyMap = -1;
+                ++devMenu.scroll;
+            }
+            break;
+        case 11:
+            DrawDevText(currentScreen->center.x, "Press Key For SELECT", dy, ALIGN_CENTER, 0xF0F080);
+            if (controller[controllerID].keySelect.keyMap != -1)
+                devMenu.state = DevMenu_InputOptions;
+            break;
+        default: break;
+    }
 
 #if !RETRO_USE_ORIGINAL_CODE
     if (controller[CONT_P1].keyB.press) {

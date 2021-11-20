@@ -6,85 +6,85 @@ void SwingRope_Update(void)
 {
     RSDK_THIS(SwingRope);
 
-    int32 sine              = 11 * RSDK.Sin512(entity->angleOffset + 3 * Zone->timer);
-    entity->rotatedAngle  = sine;
-    entity->rotatedOffset = sine >> 3;
-    entity->rotatePos.x   = entity->position.x;
-    entity->rotatePos.y   = entity->position.y;
+    int32 sine              = 11 * RSDK.Sin512(self->angleOffset + 3 * Zone->timer);
+    self->rotatedAngle  = sine;
+    self->rotatedOffset = sine >> 3;
+    self->rotatePos.x   = self->position.x;
+    self->rotatePos.y   = self->position.y;
 
-    for (int32 s = 0; s < entity->ropeSize; ++s) {
-        entity->angle = (sine >> 6) & 0x1FF;
-        entity->rotatePos.x -= RSDK.Sin512(entity->angle) << 11;
-        entity->rotatePos.y += RSDK.Cos512(entity->angle) << 11;
-        sine += entity->rotatedOffset;
+    for (int32 s = 0; s < self->ropeSize; ++s) {
+        self->angle = (sine >> 6) & 0x1FF;
+        self->rotatePos.x -= RSDK.Sin512(self->angle) << 11;
+        self->rotatePos.y += RSDK.Cos512(self->angle) << 11;
+        sine += self->rotatedOffset;
     }
 
-    int32 rotateX   = entity->rotatePos.x;
-    int32 rotateY   = entity->rotatePos.y;
-    entity->angle = (sine >> 6) & 0x1FF;
-    rotateY += 0x700 * RSDK.Cos512(entity->angle);
-    entity->rotatePos.x -= RSDK.Sin512(entity->angle) << 11;
-    entity->rotatePos.y += RSDK.Cos512(entity->angle) << 11;
+    int32 rotateX   = self->rotatePos.x;
+    int32 rotateY   = self->rotatePos.y;
+    self->angle = (sine >> 6) & 0x1FF;
+    rotateY += 0x700 * RSDK.Cos512(self->angle);
+    self->rotatePos.x -= RSDK.Sin512(self->angle) << 11;
+    self->rotatePos.y += RSDK.Cos512(self->angle) << 11;
 
-    int32 storeX         = entity->position.x;
-    int32 storeY         = entity->position.y;
-    entity->position.x = entity->rotatePos.x;
-    entity->position.y = entity->rotatePos.y;
-    entity->velocity.x = entity->rotatePos.x - entity->ropePos.x;
-    entity->velocity.y = entity->rotatePos.y - entity->ropePos.y;
-    if (entity->ropeGrabDelay > 0)
-        entity->ropeGrabDelay--;
+    int32 storeX         = self->position.x;
+    int32 storeY         = self->position.y;
+    self->position.x = self->rotatePos.x;
+    self->position.y = self->rotatePos.y;
+    self->velocity.x = self->rotatePos.x - self->ropePos.x;
+    self->velocity.y = self->rotatePos.y - self->ropePos.y;
+    if (self->ropeGrabDelay > 0)
+        self->ropeGrabDelay--;
 
     foreach_active(Player, player)
     {
         if (player->state == Player_State_None) {
-            if (Player_CheckCollisionTouch(player, entity, &SwingRope->hitbox2)) {
+            if (Player_CheckCollisionTouch(player, self, &SwingRope->hitbox2)) {
                 if (player->jumpPress) {
                     player->jumpAbilityTimer = 1;
                     player->state            = Player_State_Air;
-                    player->drawOrder        = entity->playerLayers[player->playerID];
-                    RSDK.SetSpriteAnimation(player->spriteIndex, ANI_JUMP, &player->playerAnimator, false, 0);
-                    player->velocity.x = entity->velocity.x >> 1;
+                    player->drawOrder        = self->playerLayers[player->playerID];
+                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
+                    player->velocity.x = self->velocity.x >> 1;
                     if (player->left) {
                         player->velocity.x = -0x20000;
                     }
                     else if (player->right) {
                         player->velocity.x = 0x20000;
                     }
-                    player->velocity.y    = (entity->velocity.y >> 1) - 0x38000;
+                    player->velocity.y    = (self->velocity.y >> 1) - 0x38000;
                     player->onGround      = false;
                     player->jumpAbility   = 0;
-                    entity->ropeGrabDelay = 30;
+                    self->ropeGrabDelay = 30;
                 }
                 else {
-                    player->position.x = rotateX + (-0x800 * RSDK.Sin512(entity->angle));
+                    player->position.x = rotateX + (-0x800 * RSDK.Sin512(self->angle));
                     player->position.y = rotateY - ((Player_GetHitbox(player)->top + 2) << 16);
                 }
             }
         }
-        else if (!entity->ropeGrabDelay && !player->onGround) {
+        else if (!self->ropeGrabDelay && !player->onGround) {
             Hitbox *playerHitbox = Player_GetHitbox(player);
             Hitbox otherHitbox;
             otherHitbox.left   = playerHitbox->left;
             otherHitbox.right  = playerHitbox->right;
             otherHitbox.top    = 0;
             otherHitbox.bottom = 0;
-            if (RSDK.CheckObjectCollisionTouchBox(entity, &SwingRope->hitbox1, player, &otherHitbox)) {
-                entity->playerLayers[player->playerID] = player->drawOrder;
+            if (RSDK.CheckObjectCollisionTouchBox(self, &SwingRope->hitbox1, player, &otherHitbox)) {
+                self->playerLayers[player->playerID] = player->drawOrder;
                 player->drawOrder                      = Zone->drawOrderLow;
                 player->state                          = Player_State_None;
-                RSDK.SetSpriteAnimation(player->spriteIndex, ANI_HANG, &player->playerAnimator, 0, 0);
+                RSDK.SetSpriteAnimation(player->aniFrames, ANI_HANG, &player->animator, 0, 0);
                 player->velocity.x = 0;
                 player->velocity.y = 0;
                 player->groundVel  = 0;
-                player->position.x = -0x800 * RSDK.Sin512(entity->angle) + rotateX;
+                player->position.x = -0x800 * RSDK.Sin512(self->angle) + rotateX;
                 player->position.y = rotateY - ((playerHitbox->top + 2) << 16);
-                RSDK.PlaySfx(Player->sfx_Grab, false, 255);
+                RSDK.PlaySfx(Player->sfxGrab, false, 255);
             }
         }
     }
-    entity->position.x = storeX;
-    entity->position.y = storeY;
+    self->position.x = storeX;
+    self->position.y = storeY;
 }
 
 void SwingRope_LateUpdate(void) {}
@@ -95,55 +95,55 @@ void SwingRope_Draw(void)
 {
     RSDK_THIS(SwingRope);
 
-    entity->ropeData.frameID = (entity->rotatedAngle >> 10) & 0x1F;
-    entity->rotation         = (entity->rotatedAngle >> 6) & 0xF;
-    entity->drawFX           = FX_ROTATE;
-    RSDK.DrawSprite(&entity->ropeData, NULL, false);
+    self->ropeData.frameID = (self->rotatedAngle >> 10) & 0x1F;
+    self->rotation         = (self->rotatedAngle >> 6) & 0xF;
+    self->drawFX           = FX_ROTATE;
+    RSDK.DrawSprite(&self->ropeData, NULL, false);
 
-    entity->ropePos.x = entity->position.x;
-    entity->ropePos.y = entity->position.y;
+    self->ropePos.x = self->position.x;
+    self->ropePos.y = self->position.y;
 
-    int32 angle    = entity->rotatedAngle >> 6;
-    int32 rotAngle = entity->rotatedAngle;
-    for (int32 s = 0; s < entity->ropeSize; ++s) {
-        entity->angle = angle & 0x1FF;
-        entity->ropePos.x -= RSDK.Sin512(entity->angle) << 11;
-        entity->ropePos.y += RSDK.Cos512(entity->angle) << 11;
-        rotAngle += entity->rotatedOffset;
+    int32 angle    = self->rotatedAngle >> 6;
+    int32 rotAngle = self->rotatedAngle;
+    for (int32 s = 0; s < self->ropeSize; ++s) {
+        self->angle = angle & 0x1FF;
+        self->ropePos.x -= RSDK.Sin512(self->angle) << 11;
+        self->ropePos.y += RSDK.Cos512(self->angle) << 11;
+        rotAngle += self->rotatedOffset;
         angle                    = rotAngle >> 6;
-        entity->ropeData.frameID = (rotAngle >> 10) & 0x1F;
-        entity->rotation         = (rotAngle >> 6) & 0xF;
-        RSDK.DrawSprite(&entity->ropeData, &entity->ropePos, false);
+        self->ropeData.frameID = (rotAngle >> 10) & 0x1F;
+        self->rotation         = (rotAngle >> 6) & 0xF;
+        RSDK.DrawSprite(&self->ropeData, &self->ropePos, false);
     }
 
-    entity->drawFX = FX_NONE;
-    entity->ropePos.x -= RSDK.Sin512(entity->angle) << 11;
-    entity->ropePos.y += RSDK.Cos512(entity->angle) << 11;
-    RSDK.DrawSprite(&entity->handleData, &entity->ropePos, false);
-    RSDK.DrawSprite(&entity->pivotData, NULL, false);
+    self->drawFX = FX_NONE;
+    self->ropePos.x -= RSDK.Sin512(self->angle) << 11;
+    self->ropePos.y += RSDK.Cos512(self->angle) << 11;
+    RSDK.DrawSprite(&self->handleData, &self->ropePos, false);
+    RSDK.DrawSprite(&self->pivotData, NULL, false);
 }
 
 void SwingRope_Create(void *data)
 {
     RSDK_THIS(SwingRope);
-    if (!RSDK_sceneInfo->inEditor) {
-        entity->visible       = true;
-        entity->drawOrder     = Zone->drawOrderLow;
-        entity->active        = ACTIVE_BOUNDS;
-        entity->updateRange.x = 0x800000;
-        entity->updateRange.y = 0x800000;
-        RSDK.SetSpriteAnimation(SwingRope->spriteIndex, 0, &entity->ropeData, true, 0);
-        RSDK.SetSpriteAnimation(SwingRope->spriteIndex, 1, &entity->handleData, true, 0);
-        RSDK.SetSpriteAnimation(SwingRope->spriteIndex, 2, &entity->pivotData, true, 0);
+    if (!SceneInfo->inEditor) {
+        self->visible       = true;
+        self->drawOrder     = Zone->drawOrderLow;
+        self->active        = ACTIVE_BOUNDS;
+        self->updateRange.x = 0x800000;
+        self->updateRange.y = 0x800000;
+        RSDK.SetSpriteAnimation(SwingRope->aniFrames, 0, &self->ropeData, true, 0);
+        RSDK.SetSpriteAnimation(SwingRope->aniFrames, 1, &self->handleData, true, 0);
+        RSDK.SetSpriteAnimation(SwingRope->aniFrames, 2, &self->pivotData, true, 0);
     }
 }
 
 void SwingRope_StageLoad(void)
 {
     if (RSDK.CheckStageFolder("MSZ"))
-        SwingRope->spriteIndex = RSDK.LoadSpriteAnimation("MSZ/SwingRope.bin", SCOPE_STAGE);
+        SwingRope->aniFrames = RSDK.LoadSpriteAnimation("MSZ/SwingRope.bin", SCOPE_STAGE);
     else if (RSDK.CheckStageFolder("AIZ"))
-        SwingRope->spriteIndex = RSDK.LoadSpriteAnimation("AIZ/SwingRope.bin", SCOPE_STAGE);
+        SwingRope->aniFrames = RSDK.LoadSpriteAnimation("AIZ/SwingRope.bin", SCOPE_STAGE);
 
     SwingRope->hitbox1.left   = -10;
     SwingRope->hitbox1.top    = -8;
@@ -159,25 +159,25 @@ void SwingRope_StageLoad(void)
 
 void SwingRope_DebugDraw(void)
 {
-    RSDK.SetSpriteAnimation(SwingRope->spriteIndex, 2, &DebugMode->animator, true, 0);
+    RSDK.SetSpriteAnimation(SwingRope->aniFrames, 2, &DebugMode->animator, true, 0);
     RSDK.DrawSprite(&DebugMode->animator, 0, 0);
 }
 void SwingRope_DebugSpawn(void)
 {
     RSDK_THIS(SwingRope);
-    EntitySwingRope *rope = CREATE_ENTITY(SwingRope, NULL, entity->position.x, entity->position.y);
+    EntitySwingRope *rope = CREATE_ENTITY(SwingRope, NULL, self->position.x, self->position.y);
     rope->ropeSize        = 6;
 }
 
 void SwingRope_EditorDraw(void)
 {
     RSDK_THIS(SwingRope);
-    RSDK.SetSpriteAnimation(SwingRope->spriteIndex, 0, &entity->ropeData, true, 0);
-    RSDK.SetSpriteAnimation(SwingRope->spriteIndex, 1, &entity->handleData, true, 0);
-    RSDK.SetSpriteAnimation(SwingRope->spriteIndex, 2, &entity->pivotData, true, 0);
+    RSDK.SetSpriteAnimation(SwingRope->aniFrames, 0, &self->ropeData, true, 0);
+    RSDK.SetSpriteAnimation(SwingRope->aniFrames, 1, &self->handleData, true, 0);
+    RSDK.SetSpriteAnimation(SwingRope->aniFrames, 2, &self->pivotData, true, 0);
 
-    entity->rotatedAngle  = 11 * RSDK.Sin512(entity->angleOffset);
-    entity->rotatedOffset = entity->rotatedAngle >> 3;
+    self->rotatedAngle  = 11 * RSDK.Sin512(self->angleOffset);
+    self->rotatedOffset = self->rotatedAngle >> 3;
 
     SwingRope_Draw();
 }
@@ -185,9 +185,9 @@ void SwingRope_EditorDraw(void)
 void SwingRope_EditorLoad(void)
 {
     if (RSDK.CheckStageFolder("MSZ"))
-        SwingRope->spriteIndex = RSDK.LoadSpriteAnimation("MSZ/SwingRope.bin", SCOPE_STAGE);
+        SwingRope->aniFrames = RSDK.LoadSpriteAnimation("MSZ/SwingRope.bin", SCOPE_STAGE);
     else if (RSDK.CheckStageFolder("AIZ"))
-        SwingRope->spriteIndex = RSDK.LoadSpriteAnimation("AIZ/SwingRope.bin", SCOPE_STAGE);
+        SwingRope->aniFrames = RSDK.LoadSpriteAnimation("AIZ/SwingRope.bin", SCOPE_STAGE);
 }
 
 void SwingRope_Serialize(void)

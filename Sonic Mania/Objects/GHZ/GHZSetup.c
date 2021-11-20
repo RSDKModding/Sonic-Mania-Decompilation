@@ -81,7 +81,7 @@ void GHZSetup_StageLoad(void)
     }
 
 #if RETRO_USE_PLUS
-    if (RSDK_sceneInfo->filter & FILTER_ENCORE || (RSDK.CheckStageFolder("GHZCutscene") && globals->gameMode == MODE_ENCORE)) {
+    if (SceneInfo->filter & FILTER_ENCORE || (RSDK.CheckStageFolder("GHZCutscene") && globals->gameMode == MODE_ENCORE)) {
         RSDK.LoadPalette(0, "EncoreGHZ.act", 0xFF);
         RSDK.CopyPalette(0, 128, 1, 128, 80);
         RSDK.CopyPalette(0, 128, 2, 128, 80);
@@ -130,7 +130,7 @@ void GHZSetup_SetupActTransition(void)
 }
 void GHZSetup_HandleActTransition(void)
 {
-    Zone->screenBoundsL1[0] = 0x100 - RSDK_screens->centerX;
+    Zone->screenBoundsL1[0] = 0x100 - ScreenInfo->centerX;
     Zone->screenBoundsB1[0] = 1412;
     Zone_ReloadStoredEntities(0x5840000, 0x1000000, true);
 

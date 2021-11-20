@@ -5,10 +5,10 @@ ObjectFan *Fan;
 void Fan_Update(void)
 {
     RSDK_THIS(Fan);
-    StateMachine_Run(entity->state3);
-    StateMachine_Run(entity->state2);
-    RSDK.ProcessAnimation(&entity->animator);
-    StateMachine_Run(entity->state);
+    StateMachine_Run(self->state3);
+    StateMachine_Run(self->state2);
+    RSDK.ProcessAnimation(&self->animator);
+    StateMachine_Run(self->state);
 }
 
 void Fan_LateUpdate(void) {}
@@ -58,36 +58,36 @@ void Fan_StaticUpdate(void)
                 offsetH = clampVal(offsetH, -0x20000, 0x20000);
                 offsetV = clampVal(offsetV, -0x20000, 0x20000);
 
-                if (water->field_B4 < offsetH) {
-                    int32 val = water->field_B4 + 0x800;
+                if (water->bubbleOffset.x < offsetH) {
+                    int32 val = water->bubbleOffset.x + 0x800;
                     if (val < offsetH)
-                        water->field_B8 = val;
+                        water->bubbleOffset.y = val;
                     else
-                        water->field_B8 = offsetH;
+                        water->bubbleOffset.y = offsetH;
                 }
 
-                if (water->field_B4 > offsetH) {
-                    int32 val = water->field_B4 - 0x800;
+                if (water->bubbleOffset.x > offsetH) {
+                    int32 val = water->bubbleOffset.x - 0x800;
                     if (val > offsetH)
-                        water->field_B8 = val;
+                        water->bubbleOffset.y = val;
                     else
-                        water->field_B8 = offsetH;
+                        water->bubbleOffset.y = offsetH;
                 }
 
-                if (water->field_B8 < offsetV) {
-                    int32 val = water->field_B8 + 0x800;
+                if (water->bubbleOffset.y < offsetV) {
+                    int32 val = water->bubbleOffset.y + 0x800;
                     if (val < offsetV)
-                        water->field_B8 = val;
+                        water->bubbleOffset.y = val;
                     else
-                        water->field_B8 = offsetV;
+                        water->bubbleOffset.y = offsetV;
                 }
 
-                if (water->field_B8 > offsetV) {
-                    int32 val = water->field_B8 - 0x800;
+                if (water->bubbleOffset.y > offsetV) {
+                    int32 val = water->bubbleOffset.y - 0x800;
                     if (val > offsetV)
-                        water->field_B8 = val;
+                        water->bubbleOffset.y = val;
                     else
-                        water->field_B8 = offsetV;
+                        water->bubbleOffset.y = offsetV;
                 }
             }
         }
@@ -155,44 +155,44 @@ void Fan_StaticUpdate(void)
 void Fan_Draw(void)
 {
     RSDK_THIS(Fan);
-    RSDK.DrawSprite(&entity->animator, NULL, false);
+    RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
 void Fan_Create(void *data)
 {
     RSDK_THIS(Fan);
 
-    entity->drawFX = FX_FLIP;
-    if (!RSDK_sceneInfo->inEditor) {
-        entity->active        = ACTIVE_BOUNDS;
-        entity->visible       = true;
-        entity->drawOrder     = Zone->drawOrderLow + 1;
-        entity->updateRange.x = 0x800000;
-        entity->updateRange.y = 0x800000;
-        if (!entity->type)
-            entity->direction *= FLIP_Y;
-        if (!entity->size)
-            entity->size = 5;
-        entity->size *= 16;
-        RSDK.SetSpriteAnimation(Fan->aniFrames, entity->type, &entity->animator, true, 0);
-        entity->state                   = Fan_ProcessAnimationSpeed_Slow;
-        entity->animator.animationSpeed = 0;
-        switch (entity->activation) {
+    self->drawFX = FX_FLIP;
+    if (!SceneInfo->inEditor) {
+        self->active        = ACTIVE_BOUNDS;
+        self->visible       = true;
+        self->drawOrder     = Zone->drawOrderLow + 1;
+        self->updateRange.x = 0x800000;
+        self->updateRange.y = 0x800000;
+        if (!self->type)
+            self->direction *= FLIP_Y;
+        if (!self->size)
+            self->size = 5;
+        self->size *= 16;
+        RSDK.SetSpriteAnimation(Fan->aniFrames, self->type, &self->animator, true, 0);
+        self->state                   = Fan_ProcessAnimationSpeed_Slow;
+        self->animator.animationSpeed = 0;
+        switch (self->activation) {
             case 0:
                 Fan_Unknown11();
-                entity->animator.animationSpeed = 128;
+                self->animator.animationSpeed = 128;
                 break;
-            case 1: entity->state3 = Fan_HandleDurationTimer; break;
-            case 2: entity->state3 = Fan_Unknown10; break;
+            case 1: self->state3 = Fan_HandleDurationTimer; break;
+            case 2: self->state3 = Fan_Unknown10; break;
             case 3:
                 Fan_SetupTagLinks();
-                entity->state3 = Fan_Unknown8;
+                self->state3 = Fan_Unknown8;
                 break;
             default: break;
         }
-        if (entity->deactivation == 1) {
+        if (self->deactivation == 1) {
             Fan_SetupTagLinks();
-            entity->state2 = Fan_Unknown9;
+            self->state2 = Fan_Unknown9;
         }
     }
 }
@@ -240,13 +240,13 @@ void Fan_StageLoad(void)
 void Fan_SetupTagLinks(void)
 {
     RSDK_THIS(Fan);
-    EntityButton *buttonPtr = RSDK.GetEntityByID(RSDK.GetEntityID(entity) - 1);
-    if (entity->buttonTag > 0) {
+    EntityButton *buttonPtr = RSDK.GetEntityByID(RSDK.GetEntityID(self) - 1);
+    if (self->buttonTag > 0) {
         bool32 flag = false;
         if (Button) {
             foreach_all(Button, button)
             {
-                if (button->tag == entity->buttonTag) {
+                if (button->tag == self->buttonTag) {
                     buttonPtr = button;
                 }
             }
@@ -255,7 +255,7 @@ void Fan_SetupTagLinks(void)
         if (PullChain && !flag) {
             foreach_all(PullChain, chain)
             {
-                if (chain->tag == entity->buttonTag) {
+                if (chain->tag == self->buttonTag) {
                     buttonPtr = (EntityButton *)chain;
                 }
             }
@@ -263,41 +263,41 @@ void Fan_SetupTagLinks(void)
     }
 
     if ((Button && buttonPtr->objectID == Button->objectID) || (PullChain && buttonPtr->objectID == PullChain->objectID)) {
-        if (entity->updateRange.y < 0x800000 + abs(entity->position.y - buttonPtr->position.y))
-            entity->updateRange.y = 0x800000 + abs(entity->position.y - buttonPtr->position.y);
-        if (entity->updateRange.y < 0x800000 + abs(entity->position.y - buttonPtr->position.y))
-            entity->updateRange.y = 0x800000 + abs(entity->position.y - buttonPtr->position.y);
+        if (self->updateRange.y < 0x800000 + abs(self->position.y - buttonPtr->position.y))
+            self->updateRange.y = 0x800000 + abs(self->position.y - buttonPtr->position.y);
+        if (self->updateRange.y < 0x800000 + abs(self->position.y - buttonPtr->position.y))
+            self->updateRange.y = 0x800000 + abs(self->position.y - buttonPtr->position.y);
 
-        entity->buttonPtr = buttonPtr;
+        self->buttonPtr = buttonPtr;
     }
     else {
-        entity->buttonPtr = NULL;
+        self->buttonPtr = NULL;
     }
 }
 
 void Fan_HandlePlayerInteractions_Top(void)
 {
     RSDK_THIS(Fan);
-    Fan->hitbox1.top    = (RSDK.Sin256(2 * Zone->timer) >> 5) - entity->size;
+    Fan->hitbox1.top    = (RSDK.Sin256(2 * Zone->timer) >> 5) - self->size;
     Fan->hitbox1.bottom = 48;
 
     int32 id = 1;
     foreach_active(Player, player)
     {
         if (player->state != Player_State_None) {
-            int32 anim = player->playerAnimator.animationID;
+            int32 anim = player->animator.animationID;
             if (anim != ANI_HURT && anim != ANI_DIE && anim != ANI_DROWN
-                && RSDK.CheckObjectCollisionTouchBox(entity, &Fan->hitbox1, player, &Fan->playerHitbox)) {
+                && RSDK.CheckObjectCollisionTouchBox(self, &Fan->hitbox1, player, &Fan->playerHitbox)) {
                 if (Water && player->position.y > Water->waterLevel)
-                    RSDK.SetSpriteAnimation(player->spriteIndex, ANI_FAN, &player->playerAnimator, false, 1);
+                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->animator, false, 1);
                 else
-                    RSDK.SetSpriteAnimation(player->spriteIndex, ANI_SPRINGCS, &player->playerAnimator, false, 1);
+                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGCS, &player->animator, false, 1);
 
                 player->state          = Player_State_Air;
                 player->tileCollisions = true;
                 player->onGround       = false;
 
-                int32 vel = maxVal((entity->position.y + (Fan->hitbox1.top << 16) - player->position.y) >> 4, Fan->field_C);
+                int32 vel = maxVal((self->position.y + (Fan->hitbox1.top << 16) - player->position.y) >> 4, Fan->field_C);
                 if (player->velocity.y <= vel) {
                     player->velocity.y = vel;
                 }
@@ -319,15 +319,15 @@ void Fan_HandlePlayerInteractions_Top(void)
     }
 
     if (Water) {
-        if (entity->position.y > Water->waterLevel && !(Zone->timer & 3)) {
-            EntityWater *water = CREATE_ENTITY(Water, intToVoid(7), entity->position.x, entity->position.y - 0x100000);
+        if (self->position.y > Water->waterLevel && !(Zone->timer & 3)) {
+            EntityWater *water = CREATE_ENTITY(Water, intToVoid(7), self->position.x, self->position.y - 0x100000);
             water->isPermanent = false;
 #if RETRO_USE_PLUS
-            water->position.x += RSDK.Random(-6, 7, &Zone->randKey) << 16;
+            water->position.x += RSDK.RandSeeded(-6, 7, &Zone->randSeed) << 16;
 #else
             water->position.x += RSDK.Rand(-6, 7) << 16;
 #endif
-            water->field_68   = water->position.x;
+            water->bubbleX   = water->position.x;
             water->velocity.y = -0x40000;
             water->childPtr   = NULL;
         }
@@ -338,18 +338,18 @@ void Fan_HandlePlayerInteractions_Top(void)
 void Fan_HandlePlayerInteractions_Bottom(void)
 {
     RSDK_THIS(Fan);
-    Fan->hitbox2.bottom = entity->size - (RSDK.Sin256(2 * Zone->timer) >> 5);
+    Fan->hitbox2.bottom = self->size - (RSDK.Sin256(2 * Zone->timer) >> 5);
 
     foreach_active(Player, player)
     {
         if (player->state != Player_State_None) {
-            int32 anim = player->playerAnimator.animationID;
+            int32 anim = player->animator.animationID;
             if (anim != ANI_HURT && anim != ANI_DIE && anim != ANI_DROWN
-                && RSDK.CheckObjectCollisionTouchBox(entity, &Fan->hitbox2, player, &Fan->playerHitbox)) {
+                && RSDK.CheckObjectCollisionTouchBox(self, &Fan->hitbox2, player, &Fan->playerHitbox)) {
                 int32 vel = player->velocity.y;
-                int32 max = (entity->position.y - player->position.y + 0xA00000) >> 4;
+                int32 max = (self->position.y - player->position.y + 0xA00000) >> 4;
                 if (vel < max)
-                    player->velocity.y = vel + ((entity->position.y - player->position.y + 0xA00000) >> 9);
+                    player->velocity.y = vel + ((self->position.y - player->position.y + 0xA00000) >> 9);
             }
         }
     }
@@ -360,15 +360,15 @@ void Fan_HandlePlayerInteractions_Bottom(void)
 void Fan_HandlePlayerInteractions_Left(void)
 {
     RSDK_THIS(Fan);
-    Fan->hitbox3.left = (RSDK.Sin256(2 * Zone->timer) >> 5) - entity->size;
+    Fan->hitbox3.left = (RSDK.Sin256(2 * Zone->timer) >> 5) - self->size;
 
     foreach_active(Player, player)
     {
         if (player->state != Player_State_None) {
-            int32 anim = player->playerAnimator.animationID;
+            int32 anim = player->animator.animationID;
             if (anim != ANI_HURT && anim != ANI_DIE && anim != ANI_DROWN && player->collisionMode != CMODE_LWALL
-                && RSDK.CheckObjectCollisionTouchBox(entity, &Fan->hitbox3, player, &Fan->playerHitbox)) {
-                player->position.x += (entity->position.x - player->position.x - 0xA00000) >> 4;
+                && RSDK.CheckObjectCollisionTouchBox(self, &Fan->hitbox3, player, &Fan->playerHitbox)) {
+                player->position.x += (self->position.x - player->position.x - 0xA00000) >> 4;
             }
         }
     }
@@ -379,16 +379,16 @@ void Fan_HandlePlayerInteractions_Left(void)
 void Fan_HandlePlayerInteractions_Right(void)
 {
     RSDK_THIS(Fan);
-    Fan->hitbox3.left = (RSDK.Sin256(2 * Zone->timer) >> 5) - entity->size;
+    Fan->hitbox3.left = (RSDK.Sin256(2 * Zone->timer) >> 5) - self->size;
 
     foreach_active(Player, player)
     {
         if (player->state != Player_State_None) {
-            int32 anim = player->playerAnimator.animationID;
+            int32 anim = player->animator.animationID;
             if (anim != ANI_HURT && anim != ANI_DIE && anim != ANI_DROWN) {
                 if (player->collisionMode != CMODE_LWALL && player->collisionMode != CMODE_RWALL
-                    && RSDK.CheckObjectCollisionTouchBox(entity, &Fan->hitbox3, player, &Fan->playerHitbox)) {
-                    player->position.x += (entity->position.x - player->position.x + 0xA00000) >> 4;
+                    && RSDK.CheckObjectCollisionTouchBox(self, &Fan->hitbox3, player, &Fan->playerHitbox)) {
+                    player->position.x += (self->position.x - player->position.x + 0xA00000) >> 4;
                 }
             }
         }
@@ -400,28 +400,28 @@ void Fan_HandlePlayerInteractions_Right(void)
 void Fan_ProcessAnimationSpeed_Fast(void)
 {
     RSDK_THIS(Fan);
-    if (entity->animator.animationSpeed < 0x80)
-        entity->animator.animationSpeed += 4;
+    if (self->animator.animationSpeed < 0x80)
+        self->animator.animationSpeed += 4;
 }
 
 void Fan_ProcessAnimationSpeed_Slow(void)
 {
     RSDK_THIS(Fan);
-    if (entity->animator.animationSpeed)
-        entity->animator.animationSpeed -= 2;
+    if (self->animator.animationSpeed)
+        self->animator.animationSpeed -= 2;
 }
 
 void Fan_HandleDurationTimer(void)
 {
     RSDK_THIS(Fan);
-    if (entity->durationStore) {
-        entity->durationStore--;
-        if (!entity->durationStore)
-            entity->state = Fan_ProcessAnimationSpeed_Slow;
+    if (self->durationStore) {
+        self->durationStore--;
+        if (!self->durationStore)
+            self->state = Fan_ProcessAnimationSpeed_Slow;
     }
     else {
-        if (!((Zone->timer + entity->intervalOffset) % entity->interval) && entity->state == Fan_ProcessAnimationSpeed_Slow) {
-            entity->active = ACTIVE_NORMAL;
+        if (!((Zone->timer + self->intervalOffset) % self->interval) && self->state == Fan_ProcessAnimationSpeed_Slow) {
+            self->active = ACTIVE_NORMAL;
             Fan_Unknown11();
         }
     }
@@ -430,9 +430,9 @@ void Fan_HandleDurationTimer(void)
 void Fan_Unknown8(void)
 {
     RSDK_THIS(Fan);
-    EntityButton *button = entity->buttonPtr;
-    if ((!button || button->field_70) && entity->state == Fan_ProcessAnimationSpeed_Slow) {
-        entity->active = ACTIVE_NORMAL;
+    EntityButton *button = self->buttonPtr;
+    if ((!button || button->activated) && self->state == Fan_ProcessAnimationSpeed_Slow) {
+        self->active = ACTIVE_NORMAL;
         Fan_Unknown11();
     }
 }
@@ -440,17 +440,17 @@ void Fan_Unknown8(void)
 void Fan_Unknown9(void)
 {
     RSDK_THIS(Fan);
-    EntityButton *button = entity->buttonPtr;
-    if ((!button || button->field_70) && entity->state != Fan_ProcessAnimationSpeed_Slow) {
-        entity->active = ACTIVE_BOUNDS;
-        entity->state  = Fan_ProcessAnimationSpeed_Slow;
+    EntityButton *button = self->buttonPtr;
+    if ((!button || button->activated) && self->state != Fan_ProcessAnimationSpeed_Slow) {
+        self->active = ACTIVE_BOUNDS;
+        self->state  = Fan_ProcessAnimationSpeed_Slow;
     }
 }
 
 void Fan_Unknown10(void)
 {
     RSDK_THIS(Fan);
-    int32 slot                 = RSDK_sceneInfo->entitySlot - 1;
+    int32 slot                 = SceneInfo->entitySlot - 1;
     EntityPlatform *platform = RSDK_GET_ENTITY(slot, Platform);
     while (platform->objectID == Fan->objectID) {
         --slot;
@@ -459,9 +459,9 @@ void Fan_Unknown10(void)
 
     if (platform->objectID == Platform->objectID) {
         if (platform->amplitude.y == platform->amplitude.x) {
-            entity->state = Fan_ProcessAnimationSpeed_Slow;
+            self->state = Fan_ProcessAnimationSpeed_Slow;
         }
-        else if (entity->state == Fan_ProcessAnimationSpeed_Slow) {
+        else if (self->state == Fan_ProcessAnimationSpeed_Slow) {
             Fan_Unknown11();
         }
     }
@@ -470,19 +470,19 @@ void Fan_Unknown10(void)
 void Fan_Unknown11(void)
 {
     RSDK_THIS(Fan);
-    if (entity->type) {
-        if (entity->direction == FLIP_NONE)
-            entity->state = Fan_HandlePlayerInteractions_Left;
+    if (self->type) {
+        if (self->direction == FLIP_NONE)
+            self->state = Fan_HandlePlayerInteractions_Left;
         else
-            entity->state = Fan_HandlePlayerInteractions_Right;
-        entity->durationStore = entity->duration;
+            self->state = Fan_HandlePlayerInteractions_Right;
+        self->durationStore = self->duration;
     }
     else {
-        if (entity->direction == FLIP_NONE)
-            entity->state = Fan_HandlePlayerInteractions_Top;
+        if (self->direction == FLIP_NONE)
+            self->state = Fan_HandlePlayerInteractions_Top;
         else
-            entity->state = Fan_HandlePlayerInteractions_Bottom;
-        entity->durationStore = entity->duration;
+            self->state = Fan_HandlePlayerInteractions_Bottom;
+        self->durationStore = self->duration;
     }
 }
 
@@ -490,15 +490,15 @@ void Fan_Unknown11(void)
 void Fan_EditorDraw(void)
 {
     RSDK_THIS(Fan);
-    RSDK.SetSpriteAnimation(Fan->aniFrames, entity->type, &entity->animator, true, 0);
+    RSDK.SetSpriteAnimation(Fan->aniFrames, self->type, &self->animator, true, 0);
 
-    int dir = entity->direction;
-    if (!entity->type)
-        entity->direction *= FLIP_Y;
+    int dir = self->direction;
+    if (!self->type)
+        self->direction *= FLIP_Y;
 
     Fan_Draw();
 
-    entity->direction = dir;
+    self->direction = dir;
 }
 
 void Fan_EditorLoad(void)

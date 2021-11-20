@@ -6,63 +6,63 @@ void UIVsZoneButton_Update(void)
 {
     RSDK_THIS(UIVsZoneButton);
 
-    entity->touchPosStart.x = 0x500000;
-    entity->touchPosStart.y = 0x380000;
-    entity->touchPosEnd.x   = 0;
-    entity->touchPosEnd.y   = 0;
+    self->touchPosStart.x = 0x500000;
+    self->touchPosStart.y = 0x380000;
+    self->touchPosEnd.x   = 0;
+    self->touchPosEnd.y   = 0;
 
-    entity->disabled = entity->obfuscate || entity->xOut;
-    if (entity->obfuscate != entity->prevObfuscate) {
+    self->disabled = self->obfuscate || self->xOut;
+    if (self->obfuscate != self->prevObfuscate) {
         UIVsZoneButton_SetNameText();
-        entity->prevObfuscate = entity->obfuscate;
+        self->prevObfuscate = self->obfuscate;
     }
 
-    StateMachine_Run(entity->state);
+    StateMachine_Run(self->state);
 
-    if (entity->flag) {
-        entity->field_124 -= 0x600;
-        entity->field_12C += entity->field_124;
-        if (entity->field_12C <= 0x10000 && entity->field_124 < 0) {
-            entity->field_12C = 0x10000;
-            entity->field_124 = 0;
+    if (self->flag) {
+        self->field_124 -= 0x600;
+        self->field_12C += self->field_124;
+        if (self->field_12C <= 0x10000 && self->field_124 < 0) {
+            self->field_12C = 0x10000;
+            self->field_124 = 0;
         }
 
-        entity->field_130 -= 0x1800;
-        entity->field_134 += entity->field_130;
-        if (entity->field_134 <= 0x8000 && entity->field_130 < 0) {
-            entity->field_134 = 0x8000;
-            entity->field_130 = 0;
+        self->field_130 -= 0x1800;
+        self->field_134 += self->field_130;
+        if (self->field_134 <= 0x8000 && self->field_130 < 0) {
+            self->field_134 = 0x8000;
+            self->field_130 = 0;
         }
     }
-    else if (entity->state != UIVsZoneButton_Unknown15) {
-        if (entity->field_12C > 0)
-            entity->field_12C = entity->field_12C >> 1;
-        if (entity->field_134 > 0)
-            entity->field_134 = entity->field_134 >> 1;
+    else if (self->state != UIVsZoneButton_Unknown15) {
+        if (self->field_12C > 0)
+            self->field_12C = self->field_12C >> 1;
+        if (self->field_134 > 0)
+            self->field_134 = self->field_134 >> 1;
     }
-    if (entity->zoneID == 12 || entity->xOut)
-        RSDK.ProcessAnimation(&entity->zoneAnimator);
+    if (self->zoneID == 12 || self->xOut)
+        RSDK.ProcessAnimation(&self->zoneAnimator);
 
-    EntityUIControl *parent = (EntityUIControl *)entity->parent;
-    if (entity->state == UIVsZoneButton_Unknown14) {
+    EntityUIControl *parent = (EntityUIControl *)self->parent;
+    if (self->state == UIVsZoneButton_Unknown14) {
         if (parent->state != UIControl_ProcessInputs) {
-            entity->flag  = false;
-            entity->flag  = false;
-            entity->state = UIVsZoneButton_Unknown13;
+            self->flag  = false;
+            self->flag  = false;
+            self->state = UIVsZoneButton_Unknown13;
         }
         else {
             int32 id = -1;
             for (int32 i = 0; i < parent->buttonCount; ++i) {
-                if (entity == (EntityUIVsZoneButton *)parent->buttons[i]) {
+                if (self == (EntityUIVsZoneButton *)parent->buttons[i]) {
                     id = i;
                     break;
                 }
             }
 
             if (parent->activeEntityID != id) {
-                entity->flag  = false;
-                entity->flag  = false;
-                entity->state = UIVsZoneButton_Unknown13;
+                self->flag  = false;
+                self->flag  = false;
+                self->state = UIVsZoneButton_Unknown13;
             }
         }
     }
@@ -76,32 +76,32 @@ void UIVsZoneButton_Draw(void)
 {
     RSDK_THIS(UIVsZoneButton);
     UIVsZoneButton_SetupAnimators();
-    RSDK.DrawRect(entity->position.x - 0x250000, entity->position.y - 0x190000, 0x500000, 0x380000, 0xFFFFFF, 127, INK_BLEND, false);
+    RSDK.DrawRect(self->position.x - 0x250000, self->position.y - 0x190000, 0x500000, 0x380000, 0xFFFFFF, 127, INK_BLEND, false);
     UIVsZoneButton_Unknown4();
     UIVsZoneButton_Unknown3();
     UIVsZoneButton_Unknown6();
-    if (entity->state != UIVsZoneButton_Unknown15 || !(entity->timer & 2))
+    if (self->state != UIVsZoneButton_Unknown15 || !(self->timer & 2))
         UIVsZoneButton_Unknown5();
 }
 
 void UIVsZoneButton_Create(void *data)
 {
     RSDK_THIS(UIVsZoneButton);
-    entity->active          = ACTIVE_BOUNDS;
-    entity->drawOrder       = 2;
-    entity->visible         = 1;
-    entity->drawFX          = FX_FLIP;
-    entity->updateRange.x   = 0x800000;
-    entity->updateRange.y   = 0x300000;
-    entity->processButtonCB = UIButton_Unknown6;
-    entity->touchCB         = UIButton_ProcessTouch;
-    entity->options3        = UIVsZoneButton_Options3CB;
-    entity->failCB          = UIVsZoneButton_FailCB;
-    entity->options5        = UIVsZoneButton_Options5CB;
-    entity->options6        = UIVsZoneButton_Options6CB;
-    entity->options7        = UIVsZoneButton_Options7CB;
-    entity->options8        = UIVsZoneButton_Options8CB;
-    entity->state           = UIVsZoneButton_Unknown13;
+    self->active          = ACTIVE_BOUNDS;
+    self->drawOrder       = 2;
+    self->visible         = 1;
+    self->drawFX          = FX_FLIP;
+    self->updateRange.x   = 0x800000;
+    self->updateRange.y   = 0x300000;
+    self->processButtonCB = UIButton_Unknown6;
+    self->touchCB         = UIButton_ProcessTouch;
+    self->options3        = UIVsZoneButton_Options3CB;
+    self->failCB          = UIVsZoneButton_FailCB;
+    self->options5        = UIVsZoneButton_Options5CB;
+    self->options6        = UIVsZoneButton_Options6CB;
+    self->options7        = UIVsZoneButton_Options7CB;
+    self->options8        = UIVsZoneButton_Options8CB;
+    self->state           = UIVsZoneButton_Unknown13;
     UIVsZoneButton_SetupAnimators();
     UIVsZoneButton_SetNameText();
 }
@@ -116,101 +116,101 @@ void UIVsZoneButton_StageLoad(void)
 void UIVsZoneButton_SetupAnimators(void)
 {
     RSDK_THIS(UIVsZoneButton);
-    if (RSDK_sceneInfo->inEditor || entity->zoneID == 12 || entity->xOut)
-        RSDK.SetSpriteAnimation(UIVsZoneButton->aniFrames, 16, &entity->zoneAnimator, false, 0);
+    if (SceneInfo->inEditor || self->zoneID == 12 || self->xOut)
+        RSDK.SetSpriteAnimation(UIVsZoneButton->aniFrames, 16, &self->zoneAnimator, false, 0);
     else
-        RSDK.SetSpriteAnimation(UIVsZoneButton->aniFrames, 17, &entity->zoneAnimator, false, entity->zoneID);
-    RSDK.SetSpriteAnimation(UIVsZoneButton->aniFrames, 14, &entity->animator1, false, 5);
-    RSDK.SetSpriteAnimation(UIVsZoneButton->aniFrames, 14, &entity->animator2, false, 6);
+        RSDK.SetSpriteAnimation(UIVsZoneButton->aniFrames, 17, &self->zoneAnimator, false, self->zoneID);
+    RSDK.SetSpriteAnimation(UIVsZoneButton->aniFrames, 14, &self->animator1, false, 5);
+    RSDK.SetSpriteAnimation(UIVsZoneButton->aniFrames, 14, &self->animator2, false, 6);
 
-    entity->field_118 = 0x300000;
-    entity->field_11C = 0xD0000;
-    entity->field_120 = 13;
+    self->field_118 = 0x300000;
+    self->field_11C = 0xD0000;
+    self->field_120 = 13;
 }
 
 void UIVsZoneButton_SetNameText(void)
 {
     RSDK_THIS(UIVsZoneButton);
-    if (!RSDK_sceneInfo->inEditor) {
-        RSDK.SetSpriteAnimation(UIWidgets->labelSpriteIndex, 0, &entity->textAnimator, true, 0);
-        if (entity->obfuscate) {
-            RSDK.PrependText(&entity->nameText, "???");
-            entity->nameText.textLength = 3;
+    if (!SceneInfo->inEditor) {
+        RSDK.SetSpriteAnimation(UIWidgets->labelSpriteIndex, 0, &self->textAnimator, true, 0);
+        if (self->obfuscate) {
+            RSDK.PrependText(&self->nameText, "???");
+            self->nameText.textLength = 3;
         }
         else {
-            Localization_SetZoneNameShort(&entity->nameText, entity->zoneID);
-            if (entity->zoneID < 12) {
+            Localization_SetZoneNameShort(&self->nameText, self->zoneID);
+            if (self->zoneID < 12) {
                 char buffer[0x10];
-                sprintf(buffer, " %d", entity->act + 1);
-                RSDK.AppendText(&entity->nameText, buffer);
+                sprintf(buffer, " %d", self->act + 1);
+                RSDK.AppendText(&self->nameText, buffer);
             }
         }
-        RSDK.SetSpriteString(UIWidgets->labelSpriteIndex, 0, &entity->nameText);
+        RSDK.SetSpriteString(UIWidgets->labelSpriteIndex, 0, &self->nameText);
     }
 }
 
 void UIVsZoneButton_Unknown3(void)
 {
     RSDK_THIS(UIVsZoneButton);
-    if (!RSDK_sceneInfo->inEditor)
-        UIWidgets_Unknown3(56, 80, entity->position.x + 0x30000, entity->position.y + 0x30000);
-    if (entity->flag)
-        UIWidgets_Unknown4(56, 80, entity->position.x, entity->position.y);
+    if (!SceneInfo->inEditor)
+        UIWidgets_DrawRectOutline_Blended(56, 80, self->position.x + 0x30000, self->position.y + 0x30000);
+    if (self->flag)
+        UIWidgets_DrawRectOutline_Flash(56, 80, self->position.x, self->position.y);
     else
-        UIWidgets_Unknown2(56, 80, entity->position.x, entity->position.y);
+        UIWidgets_DrawRectOutline_Black(56, 80, self->position.x, self->position.y);
 }
 
 void UIVsZoneButton_Unknown4(void)
 {
     RSDK_THIS(UIVsZoneButton);
-    UIWidgets_Unknown5(232, (23 * entity->field_12C) >> 16, 40, 88, entity->position.x - 0x250000, entity->position.y - 0x190000);
-    UIWidgets_Unknown5(96, (-29 * entity->field_12C) >> 16, 160, 176, entity->position.x + 0x250000, entity->position.y + 0x180000);
-    UIWidgets_Unknown5(88, (-17 * entity->field_12C) >> 16, 112, 224, entity->position.x + 0x250000, entity->position.y + 0x180000);
+    UIWidgets_DrawRightTriangle(self->position.x - 0x250000, self->position.y - 0x190000, (23 * self->field_12C) >> 16, 232, 40, 88);
+    UIWidgets_DrawRightTriangle(self->position.x + 0x250000, self->position.y + 0x180000, (-29 * self->field_12C) >> 16, 96, 160, 176);
+    UIWidgets_DrawRightTriangle(self->position.x + 0x250000, self->position.y + 0x180000, (-17 * self->field_12C) >> 16, 88, 112, 224);
 }
 
 void UIVsZoneButton_Unknown5(void)
 {
     RSDK_THIS(UIVsZoneButton);
-    EntityUIControl *parent = (EntityUIControl *)entity->parent;
+    EntityUIControl *parent = (EntityUIControl *)self->parent;
     Vector2 drawPos;
 
-    drawPos.x = entity->position.x;
-    drawPos.y = entity->position.y;
+    drawPos.x = self->position.x;
+    drawPos.y = self->position.y;
 
     if (parent && (parent->active == ACTIVE_ALWAYS || parent->dialogHasFocus) && RSDK.CheckOnScreen(parent, &parent->updateRange)
-        && !RSDK_sceneInfo->inEditor && entity->zoneID != 12 && !entity->xOut) {
-        RSDK.CopyPalette(((entity->zoneID >> 3) + 1), (32 * entity->zoneID), 0, 224, 32);
+        && !SceneInfo->inEditor && self->zoneID != 12 && !self->xOut) {
+        RSDK.CopyPalette(((self->zoneID >> 3) + 1), (32 * self->zoneID), 0, 224, 32);
     }
     RSDK.DrawRect(drawPos.x - 0x180000, drawPos.y - 0x140000, 0x300000, 0x280000, 0, 255, INK_BLEND, false);
 
-    drawPos.x += entity->field_13C;
-    drawPos.y += entity->field_13C;
+    drawPos.x += self->field_13C;
+    drawPos.y += self->field_13C;
     RSDK.DrawRect(drawPos.x - 0x180000, drawPos.y - 0x140000, 0x300000, 0x280000, 0xFFFFFF, 255, INK_NONE, false);
-    if (entity->xOut) {
-        int32 dir           = entity->direction;
-        entity->direction = entity->zoneDirection;
-        RSDK.DrawSprite(&entity->zoneAnimator, &drawPos, false);
+    if (self->xOut) {
+        int32 dir           = self->direction;
+        self->direction = self->zoneDirection;
+        RSDK.DrawSprite(&self->zoneAnimator, &drawPos, false);
 
-        entity->direction = dir;
+        self->direction = dir;
         drawPos.x += 0x10000;
         drawPos.y += 0x10000;
-        entity->inkEffect = INK_BLEND;
-        RSDK.DrawSprite(&entity->animator2, &drawPos, false);
+        self->inkEffect = INK_BLEND;
+        RSDK.DrawSprite(&self->animator2, &drawPos, false);
 
-        entity->inkEffect = INK_NONE;
+        self->inkEffect = INK_NONE;
         drawPos.x -= 0x10000;
         drawPos.y -= 0x10000;
-        RSDK.DrawSprite(&entity->animator1, &drawPos, false);
+        RSDK.DrawSprite(&self->animator1, &drawPos, false);
     }
-    else if (entity->zoneID == 12) {
-        int32 dir           = entity->direction;
-        entity->direction = entity->zoneDirection;
-        RSDK.DrawSprite(&entity->zoneAnimator, &drawPos, false);
+    else if (self->zoneID == 12) {
+        int32 dir           = self->direction;
+        self->direction = self->zoneDirection;
+        RSDK.DrawSprite(&self->zoneAnimator, &drawPos, false);
 
-        entity->direction = dir;
+        self->direction = dir;
     }
     else {
-        RSDK.DrawSprite(&entity->zoneAnimator, &drawPos, false);
+        RSDK.DrawSprite(&self->zoneAnimator, &drawPos, false);
     }
 }
 
@@ -219,48 +219,48 @@ void UIVsZoneButton_Unknown6(void)
     RSDK_THIS(UIVsZoneButton);
     Vector2 drawPos;
 
-    int32 size  = (entity->field_11C + entity->field_118) >> 16;
-    drawPos.x = entity->position.x;
-    drawPos.y = entity->position.y + 0x280000;
+    int32 size  = (self->field_11C + self->field_118) >> 16;
+    drawPos.x = self->position.x;
+    drawPos.y = self->position.y + 0x280000;
 
-    UIWidgets_Unknown7(entity->field_11C >> 16, size, entity->field_120, 0xF0, 0xF0, 0xF0, drawPos.x, drawPos.y);
-    drawPos.x += entity->field_13C;
-    drawPos.y += entity->field_13C;
-    UIWidgets_Unknown7(entity->field_11C >> 16, size, entity->field_120, 0, 0, 0, drawPos.x, drawPos.y);
+    UIWidgets_DrawRhombus(self->field_11C >> 16, size, self->field_120, 0xF0, 0xF0, 0xF0, drawPos.x, drawPos.y);
+    drawPos.x += self->field_13C;
+    drawPos.y += self->field_13C;
+    UIWidgets_DrawRhombus(self->field_11C >> 16, size, self->field_120, 0, 0, 0, drawPos.x, drawPos.y);
 
-    if (!RSDK_sceneInfo->inEditor) {
-        int32 width = RSDK.GetStringWidth(UIWidgets->labelSpriteIndex, 0, &entity->nameText, 0, entity->nameText.textLength, 0);
+    if (!SceneInfo->inEditor) {
+        int32 width = RSDK.GetStringWidth(UIWidgets->labelSpriteIndex, 0, &self->nameText, 0, self->nameText.textLength, 0);
         drawPos.y -= 0x10000;
         drawPos.x -= width << 15;
-        RSDK.DrawText(&entity->textAnimator, &drawPos, &entity->nameText, 0, entity->nameText.textLength, ALIGN_LEFT, 0, 0, 0, false);
+        RSDK.DrawText(&self->textAnimator, &drawPos, &self->nameText, 0, self->nameText.textLength, ALIGN_LEFT, 0, 0, 0, false);
     }
 }
 
 bool32 UIVsZoneButton_Options7CB(void)
 {
     RSDK_THIS(UIVsZoneButton);
-    return entity->state == UIVsZoneButton_Unknown14;
+    return self->state == UIVsZoneButton_Unknown14;
 }
 
 bool32 UIVsZoneButton_Options8CB(void)
 {
     RSDK_THIS(UIVsZoneButton);
-    return entity->state == UIVsZoneButton_Unknown15;
+    return self->state == UIVsZoneButton_Unknown15;
 }
 
 void UIVsZoneButton_Options3CB(void)
 {
     RSDK_THIS(UIVsZoneButton);
-    EntityUIControl *parent = (EntityUIControl *)entity->parent;
+    EntityUIControl *parent = (EntityUIControl *)self->parent;
     EntityMenuParam *param  = (EntityMenuParam *)globals->menuParam;
 
     parent->state = StateMachine_None;
-    RSDK.PlaySfx(UIWidgets->sfx_Accept, false, 255);
+    RSDK.PlaySfx(UIWidgets->sfxAccept, false, 255);
     RSDK.StopChannel(Music->channelID);
     TimeAttackData_ClearOptions();
-    param->vsZoneID = entity->zoneID;
-    param->vsActID  = entity->act;
-    entity->state   = UIVsZoneButton_Unknown15;
+    param->vsZoneID = self->zoneID;
+    param->vsActID  = self->act;
+    self->state   = UIVsZoneButton_Unknown15;
 }
 
 void UIVsZoneButton_FailCB(void) { RSDK.PlaySfx(UIVsZoneButton->sfxFail, false, 255); }
@@ -269,73 +269,73 @@ void UIVsZoneButton_Options5CB(void)
 {
     RSDK_THIS(UIVsZoneButton);
 
-    entity->state = UIVsZoneButton_Unknown14;
-    if (!entity->flag) {
-        entity->field_13C = 0;
-        entity->field_138 = -0x20000;
-        entity->field_124 = 0x4000;
-        entity->field_130 = 0x8000;
-        entity->flag      = true;
+    self->state = UIVsZoneButton_Unknown14;
+    if (!self->flag) {
+        self->field_13C = 0;
+        self->field_138 = -0x20000;
+        self->field_124 = 0x4000;
+        self->field_130 = 0x8000;
+        self->flag      = true;
     }
 }
 
 void UIVsZoneButton_Options6CB(void)
 {
     RSDK_THIS(UIVsZoneButton);
-    entity->flag  = false;
-    entity->state = UIVsZoneButton_Unknown13;
+    self->flag  = false;
+    self->state = UIVsZoneButton_Unknown13;
 }
 
 void UIVsZoneButton_Unknown13(void)
 {
     RSDK_THIS(UIVsZoneButton);
-    if (entity->zoneID == 12 || entity->xOut)
-        entity->zoneDirection = entity->zoneAnimator.frameID & 3;
+    if (self->zoneID == 12 || self->xOut)
+        self->zoneDirection = self->zoneAnimator.frameID & 3;
 
-    if (entity->field_13C) {
-        int32 dist = -(entity->field_13C / abs(entity->field_13C));
-        entity->field_13C += dist << 16;
+    if (self->field_13C) {
+        int32 dist = -(self->field_13C / abs(self->field_13C));
+        self->field_13C += dist << 16;
         if (dist < 0) {
-            if (entity->field_13C < 0) {
-                entity->field_13C = 0;
+            if (self->field_13C < 0) {
+                self->field_13C = 0;
             }
-            else if (dist > 0 && entity->field_13C > 0)
-                entity->field_13C = 0;
+            else if (dist > 0 && self->field_13C > 0)
+                self->field_13C = 0;
         }
-        else if (dist > 0 && entity->field_13C > 0)
-            entity->field_13C = 0;
+        else if (dist > 0 && self->field_13C > 0)
+            self->field_13C = 0;
     }
 }
 
 void UIVsZoneButton_Unknown14(void)
 {
     RSDK_THIS(UIVsZoneButton);
-    if (entity->zoneID == 12 || entity->xOut)
-        entity->zoneDirection = entity->zoneAnimator.frameID & 3;
+    if (self->zoneID == 12 || self->xOut)
+        self->zoneDirection = self->zoneAnimator.frameID & 3;
 
-    entity->field_138 += 0x4800;
-    entity->field_13C += entity->field_138;
-    if (entity->field_13C >= -0x20000 && entity->field_138 > 0) {
-        entity->field_13C = -0x20000;
-        entity->field_138 = 0;
+    self->field_138 += 0x4800;
+    self->field_13C += self->field_138;
+    if (self->field_13C >= -0x20000 && self->field_138 > 0) {
+        self->field_13C = -0x20000;
+        self->field_138 = 0;
     }
 }
 
 void UIVsZoneButton_Unknown15(void)
 {
     RSDK_THIS(UIVsZoneButton);
-    if (entity->zoneID == 12 || entity->xOut)
-        entity->zoneDirection = entity->zoneAnimator.frameID & 3;
+    if (self->zoneID == 12 || self->xOut)
+        self->zoneDirection = self->zoneAnimator.frameID & 3;
 
-    if (entity->timer >= 30) {
-        entity->flag            = false;
-        entity->timer           = 0;
-        entity->state           = UIVsZoneButton_Unknown13;
-        entity->processButtonCB = UIButton_Unknown6;
-        StateMachine_Run(entity->options2);
+    if (self->timer >= 30) {
+        self->flag            = false;
+        self->timer           = 0;
+        self->state           = UIVsZoneButton_Unknown13;
+        self->processButtonCB = UIButton_Unknown6;
+        StateMachine_Run(self->options2);
     }
     else {
-        entity->timer++;
+        self->timer++;
     }
 }
 

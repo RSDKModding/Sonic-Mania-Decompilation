@@ -18,7 +18,7 @@ typedef struct {
     int32 type;
     int32 timer;
     int32 startX;
-    int32 field_68;
+    int32 unused;
     int32 r;
     int32 g;
     int32 b;

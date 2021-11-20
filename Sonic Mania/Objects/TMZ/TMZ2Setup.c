@@ -43,7 +43,7 @@ void TMZ2Setup_StageLoad(void)
 
     if (!TMZ2Setup->paletteInit) {
 #if RETRO_USE_PLUS
-        if ((RSDK_sceneInfo->filter & FILTER_ENCORE))
+        if ((SceneInfo->filter & FILTER_ENCORE))
             RSDK.LoadPalette(0, "EncoreTMZ2.act", 0xFF);
 #endif
         for (int32 i = 0; i < 256; ++i) RSDK.SetPaletteEntry(5, i, 0);
@@ -64,8 +64,8 @@ void TMZ2Setup_StageLoad(void)
     }
 }
 
-void TMZ2Setup_DrawLayerCB_A(void) { RSDK.SetActivePalette(4, 0, RSDK_screens->height); }
-void TMZ2Setup_DrawLayerCB_B(void) { RSDK.SetActivePalette(0, 0, RSDK_screens->height); }
+void TMZ2Setup_DrawLayerCB_A(void) { RSDK.SetActivePalette(4, 0, ScreenInfo->height); }
+void TMZ2Setup_DrawLayerCB_B(void) { RSDK.SetActivePalette(0, 0, ScreenInfo->height); }
 
 void TMZ2_DrawDynTiles_Eggman(void)
 {

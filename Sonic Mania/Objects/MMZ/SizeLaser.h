@@ -10,7 +10,7 @@ typedef struct {
     Hitbox playerOuterBox[4];
     Hitbox playerInnerBox[4];
     Vector2 playerPositions[4];
-    uint16 spriteIndex;
+    uint16 aniFrames;
     uint16 sonicIndex;
     uint16 tailsIndex;
     uint16 tailSpriteIndex;

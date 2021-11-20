@@ -5,7 +5,7 @@ ObjectPress *Press;
 void Press_Update(void)
 {
     RSDK_THIS(Press);
-    StateMachine_Run(entity->state);
+    StateMachine_Run(self->state);
 }
 
 void Press_LateUpdate(void) {}
@@ -38,69 +38,69 @@ void Press_StaticUpdate(void)
 void Press_Draw(void)
 {
     RSDK_THIS(Press);
-    if (entity->rotation <= 0x100)
+    if (self->rotation <= 0x100)
         Press_DrawHandle();
     // threads
-    Vector2 drawPos  = entity->drawPos;
-    SpriteFrame *spr = RSDK.GetFrame(Press->animID, 1u, entity->threadAnimator.frameID);
+    Vector2 drawPos  = self->drawPos;
+    SpriteFrame *spr = RSDK.GetFrame(Press->animID, 1u, self->threadAnimator.frameID);
     spr->height      = 56;
-    spr->sprY        = (entity->threadSprY >> 8) + 182;
-    for (int32 i = 0; i < entity->threads; ++i) {
-        RSDK.DrawSprite(&entity->threadAnimator, &drawPos, false);
+    spr->sprY        = (self->threadSprY >> 8) + 182;
+    for (int32 i = 0; i < self->threads; ++i) {
+        RSDK.DrawSprite(&self->threadAnimator, &drawPos, false);
         drawPos.y += 0x380000;
     }
-    spr->height = entity->height;
-    RSDK.DrawSprite(&entity->threadAnimator, &drawPos, false);
+    spr->height = self->height;
+    RSDK.DrawSprite(&self->threadAnimator, &drawPos, false);
 
     // crusher platforms
-    drawPos = entity->position;
-    drawPos.y += entity->offTop;
-    entity->crusherAnimator.frameID = 3;
-    RSDK.DrawSprite(&entity->crusherAnimator, &drawPos, false);
-    entity->crusherAnimator.frameID = 4;
-    RSDK.DrawSprite(&entity->crusherAnimator, &drawPos, false);
-    drawPos.y -= entity->offTop;
-    drawPos.y += entity->offBottom;
-    entity->crusherAnimator.frameID = 3;
-    RSDK.DrawSprite(&entity->crusherAnimator, &drawPos, false);
-    entity->crusherAnimator.frameID = 5;
-    RSDK.DrawSprite(&entity->crusherAnimator, &drawPos, false);
+    drawPos = self->position;
+    drawPos.y += self->offTop;
+    self->crusherAnimator.frameID = 3;
+    RSDK.DrawSprite(&self->crusherAnimator, &drawPos, false);
+    self->crusherAnimator.frameID = 4;
+    RSDK.DrawSprite(&self->crusherAnimator, &drawPos, false);
+    drawPos.y -= self->offTop;
+    drawPos.y += self->offBottom;
+    self->crusherAnimator.frameID = 3;
+    RSDK.DrawSprite(&self->crusherAnimator, &drawPos, false);
+    self->crusherAnimator.frameID = 5;
+    RSDK.DrawSprite(&self->crusherAnimator, &drawPos, false);
 
     // bumper
-    drawPos.y = entity->drawPos.y - 0x80000;
-    RSDK.DrawSprite(&entity->bumperAnimator, &drawPos, false);
-    drawPos.y += (entity->size + 16) << 16;
-    RSDK.DrawSprite(&entity->bumperAnimator, &drawPos, false);
-    if (entity->rotation > 0x100)
+    drawPos.y = self->drawPos.y - 0x80000;
+    RSDK.DrawSprite(&self->bumperAnimator, &drawPos, false);
+    drawPos.y += (self->size + 16) << 16;
+    RSDK.DrawSprite(&self->bumperAnimator, &drawPos, false);
+    if (self->rotation > 0x100)
         Press_DrawHandle();
 }
 
 void Press_Create(void *data)
 {
     RSDK_THIS(Press);
-    entity->active    = ACTIVE_BOUNDS;
-    entity->visible   = true;
-    entity->drawOrder = Zone->drawOrderLow;
-    if (RSDK_sceneInfo->inEditor != true) {
-        entity->size *= 8;
-        int32 size = entity->size;
-        entity->speed <<= 15;
-        entity->updateRange.x = 0x1000000;
+    self->active    = ACTIVE_BOUNDS;
+    self->visible   = true;
+    self->drawOrder = Zone->drawOrderLow;
+    if (SceneInfo->inEditor != true) {
+        self->size *= 8;
+        int32 size = self->size;
+        self->speed <<= 15;
+        self->updateRange.x = 0x1000000;
         // i don't think i can make this any more readable :(
-        entity->threads = ((size / 7) + ((size - (size / 7)) / 2)) / 32;
+        self->threads = ((size / 7) + ((size - (size / 7)) / 2)) / 32;
         size <<= 15;
-        entity->scale.y       = 0x200;
-        entity->height        = size - 0x38 * entity->threads;
-        entity->updateRange.y = 0x380000 * entity->threads + 0x1000000;
-        entity->drawPos.x     = entity->position.x;
-        entity->drawPos.y     = entity->position.y;
-        entity->drawPos.y -= size;
-        entity->offTop    = (entity->offTop << 16) - size;
-        entity->offBottom = (entity->offBottom << 16) - size + 0xFFFF;
-        RSDK.SetSpriteAnimation(Press->animID, 0, &entity->crusherAnimator, true, 0);
-        RSDK.SetSpriteAnimation(Press->animID, 1, &entity->threadAnimator, true, 0);
-        RSDK.SetSpriteAnimation(Press->animID, 2, &entity->bumperAnimator, true, 0);
-        entity->state = Press_Crush;
+        self->scale.y       = 0x200;
+        self->height        = size - 0x38 * self->threads;
+        self->updateRange.y = 0x380000 * self->threads + 0x1000000;
+        self->drawPos.x     = self->position.x;
+        self->drawPos.y     = self->position.y;
+        self->drawPos.y -= size;
+        self->offTop    = (self->offTop << 16) - size;
+        self->offBottom = (self->offBottom << 16) - size + 0xFFFF;
+        RSDK.SetSpriteAnimation(Press->animID, 0, &self->crusherAnimator, true, 0);
+        RSDK.SetSpriteAnimation(Press->animID, 1, &self->threadAnimator, true, 0);
+        RSDK.SetSpriteAnimation(Press->animID, 2, &self->bumperAnimator, true, 0);
+        self->state = Press_Crush;
     }
 }
 
@@ -126,14 +126,14 @@ bool32 Press_SuperCheckCB(bool32 isHUD) { return Press->canSuper; }
 void Press_DrawHandle(void)
 {
     RSDK_THIS(Press);
-    Vector2 drawPos = entity->drawPos;
-    int32 rot         = entity->rotation;
+    Vector2 drawPos = self->drawPos;
+    int32 rot         = self->rotation;
     int32 rotCos      = RSDK.Cos512(rot);
     if (rotCos >= 0)
         rotCos = RSDK.Cos512(rot);
     else
         rotCos = -RSDK.Cos512(rot);
-    entity->scale.x = rotCos + 1;
+    self->scale.x = rotCos + 1;
     int32 rotSin      = RSDK.Sin512(rot);
     if (rotSin >= 0)
         rotSin = RSDK.Sin512(rot);
@@ -141,64 +141,64 @@ void Press_DrawHandle(void)
         rotSin = -RSDK.Sin512(rot);
     ++rotSin;
     drawPos.y -= 0x80000;
-    drawPos.x += 0x2500 * RSDK.Cos512(entity->rotation);
-    entity->crusherAnimator.frameID = 0;
-    RSDK.DrawSprite(&entity->crusherAnimator, &drawPos, false);
-    rot = entity->rotation;
-    entity->drawFX |= FX_SCALE;
-    drawPos.x = 0x1B80 * RSDK.Cos512(rot) + entity->drawPos.x;
-    switch (entity->rotation >> 7) {
+    drawPos.x += 0x2500 * RSDK.Cos512(self->rotation);
+    self->crusherAnimator.frameID = 0;
+    RSDK.DrawSprite(&self->crusherAnimator, &drawPos, false);
+    rot = self->rotation;
+    self->drawFX |= FX_SCALE;
+    drawPos.x = 0x1B80 * RSDK.Cos512(rot) + self->drawPos.x;
+    switch (self->rotation >> 7) {
         case 0:
         case 2:
             drawPos.x += (rotSin << 9);
-            entity->crusherAnimator.frameID = 2;
-            RSDK.DrawSprite(&entity->crusherAnimator, &drawPos, false);
-            drawPos.x += -0xC00 * entity->scale.x - (rotSin << 9);
+            self->crusherAnimator.frameID = 2;
+            RSDK.DrawSprite(&self->crusherAnimator, &drawPos, false);
+            drawPos.x += -0xC00 * self->scale.x - (rotSin << 9);
             break;
         case 1:
         case 3:
             drawPos.x -= (rotSin << 9);
-            entity->crusherAnimator.frameID = 2;
-            RSDK.DrawSprite(&entity->crusherAnimator, &drawPos, false);
-            drawPos.x += (rotSin + 2 * (3 * entity->scale.x - 32)) << 9;
+            self->crusherAnimator.frameID = 2;
+            RSDK.DrawSprite(&self->crusherAnimator, &drawPos, false);
+            drawPos.x += (rotSin + 2 * (3 * self->scale.x - 32)) << 9;
             break;
         default: break;
     }
-    entity->scale.x                 = rotSin;
-    entity->crusherAnimator.frameID = 1;
-    RSDK.DrawSprite(&entity->crusherAnimator, &drawPos, false);
-    entity->drawFX &= ~FX_SCALE;
+    self->scale.x                 = rotSin;
+    self->crusherAnimator.frameID = 1;
+    RSDK.DrawSprite(&self->crusherAnimator, &drawPos, false);
+    self->drawFX &= ~FX_SCALE;
 }
 
 void Press_Move(void)
 {
     RSDK_THIS(Press);
-    entity->onRoof  = 0;
-    entity->onFloor = 0;
+    self->onRoof  = 0;
+    self->onFloor = 0;
     int32 playerBit   = 0;
     foreach_active(Player, player)
     {
-        entity->position.y += entity->offBottom;
-        if (Player_CheckCollisionBox(player, entity, &Press->hitbox) == 1) // collision top
+        self->position.y += self->offBottom;
+        if (Player_CheckCollisionBox(player, self, &Press->hitbox) == 1) // collision top
         {
-            if (entity->state == Press_Crush && !player->sidekick) {
-                if (abs(entity->position.x - player->position.x) <= 0x600000) {
+            if (self->state == Press_Crush && !player->sidekick) {
+                if (abs(self->position.x - player->position.x) <= 0x600000) {
                     RSDK.PlaySfx(Press->pressSFX, 0, 255);
-                    entity->state  = Press_HandleMovement;
-                    entity->active = ACTIVE_NORMAL;
+                    self->state  = Press_HandleMovement;
+                    self->active = ACTIVE_NORMAL;
                 }
             }
-            entity->onFloor |= 1 << playerBit;
+            self->onFloor |= 1 << playerBit;
         }
-        entity->position.y += entity->offTop - entity->offBottom;
-        int32 collide = Player_CheckCollisionBox(player, entity, &Press->hitbox);
+        self->position.y += self->offTop - self->offBottom;
+        int32 collide = Player_CheckCollisionBox(player, self, &Press->hitbox);
         if (collide == 4) { // collision bottom (crush detection)
             player->collisionFlagV |= 2;
         }
         else if (collide == 1) // if top
-            entity->onRoof |= 1 << playerBit;
+            self->onRoof |= 1 << playerBit;
         ++playerBit;
-        entity->position.y -= entity->offTop;
+        self->position.y -= self->offTop;
     }
 }
 
@@ -215,47 +215,47 @@ void Press_FinalCrush(void)
 void Press_HandleMovement(void)
 {
     RSDK_THIS(Press);
-    RSDK.ProcessAnimation(&entity->threadAnimator);
-    RSDK.ProcessAnimation(&entity->bumperAnimator);
+    RSDK.ProcessAnimation(&self->threadAnimator);
+    RSDK.ProcessAnimation(&self->bumperAnimator);
     Press_Move();
-    uint32 speed        = entity->speed;
-    int32 oldBottom    = entity->offBottom;
+    uint32 speed        = self->speed;
+    int32 oldBottom    = self->offBottom;
     int32 newBottom    = oldBottom - speed;
-    entity->offBottom = oldBottom - speed;
-    uint32 rot          = entity->rotation;
-    entity->threadSprY += (speed >> 11);
-    entity->threadSprY &= 0x7FF;
-    int32 oldTop       = entity->offTop;
-    int32 newTop       = speed + entity->offTop + entity->topOffset;
-    entity->rotation  = (rot - (speed >> 15)) & 0x1FF;
-    entity->offTop    = newTop;
-    entity->topOffset = 0;
+    self->offBottom = oldBottom - speed;
+    uint32 rot          = self->rotation;
+    self->threadSprY += (speed >> 11);
+    self->threadSprY &= 0x7FF;
+    int32 oldTop       = self->offTop;
+    int32 newTop       = speed + self->offTop + self->topOffset;
+    self->rotation  = (rot - (speed >> 15)) & 0x1FF;
+    self->offTop    = newTop;
+    self->topOffset = 0;
     if (newTop + 0x100000 >= newBottom - 0x100000) {
         int32 diff = newTop - newBottom + 0x200000;
         if (diff > 0) {
             diff >>= 1;
-            entity->offTop    = newTop - diff;
-            entity->offBottom = newBottom + diff;
+            self->offTop    = newTop - diff;
+            self->offBottom = newBottom + diff;
         }
         RSDK.PlaySfx(Press->impactSFX, 0, 255);
-        entity->active = ACTIVE_BOUNDS;
+        self->active = ACTIVE_BOUNDS;
         Camera_ShakeScreen(0, 0, 5);
-        entity->state = Press_FinalCrush;
+        self->state = Press_FinalCrush;
     }
     uint32 waitTime = 0;
     bool32 top = false, bottom = false;
-    int32 floorOffset   = (oldBottom & 0xFFFF0000) - (entity->offBottom & 0xFFFF0000);
-    int32 actualPos    = entity->position.y;
-    entity->topOffset = entity->offTop;
+    int32 floorOffset   = (oldBottom & 0xFFFF0000) - (self->offBottom & 0xFFFF0000);
+    int32 actualPos    = self->position.y;
+    self->topOffset = self->offTop;
     foreach_active(Crate, crate)
     {
-        entity->position.y += entity->offBottom;
-        if (RSDK.CheckObjectCollisionBox(entity, &Press->hitbox, crate, &crate->hitbox, false) == 1) {
+        self->position.y += self->offBottom;
+        if (RSDK.CheckObjectCollisionBox(self, &Press->hitbox, crate, &crate->hitbox, false) == 1) {
             bottom = true;
             Crate_MoveY(crate, -floorOffset);
         }
-        entity->position.y += entity->offTop - entity->offBottom;
-        if (RSDK.CheckObjectCollisionBox(crate, &crate->hitbox, entity, &Press->hitbox, false) == 1) {
+        self->position.y += self->offTop - self->offBottom;
+        if (RSDK.CheckObjectCollisionBox(crate, &crate->hitbox, self, &Press->hitbox, false) == 1) {
             top       = true;
             int32 frame = crate->frameID;
             if (!frame) // white (segregation)
@@ -267,24 +267,24 @@ void Press_HandleMovement(void)
             if (frame == 3) // dark blue only (she got the momma jeans
                 waitTime += 60;
         }
-        entity->offTop = entity->position.y - actualPos;
-        entity->position.y = actualPos;
+        self->offTop = self->position.y - actualPos;
+        self->position.y = actualPos;
     }
-    entity->topOffset -= entity->offTop;
+    self->topOffset -= self->offTop;
     if (bottom && top) {
         RSDK.PlaySfx(Press->impactSFX, 0, 255);
         Camera_ShakeScreen(0, 0, 3);
-        entity->state      = Press_HandleCrates;
-        entity->timerStart = waitTime;
-        entity->timer      = waitTime;
+        self->state      = Press_HandleCrates;
+        self->timerStart = waitTime;
+        self->timer      = waitTime;
     }
     int32 playerBit  = 1;
-    int32 roofOffset = (oldTop & 0xFFFF0000) - (entity->offTop & 0xFFFF0000);
+    int32 roofOffset = (oldTop & 0xFFFF0000) - (self->offTop & 0xFFFF0000);
     foreach_active(Player, player)
     {
-        if (playerBit & entity->onFloor)
+        if (playerBit & self->onFloor)
             player->position.y -= floorOffset;
-        if (playerBit & entity->onRoof)
+        if (playerBit & self->onRoof)
             player->position.y -= roofOffset;
         playerBit <<= 1;
     }
@@ -294,23 +294,23 @@ void Press_HandleCrates(void)
 {
     RSDK_THIS(Press);
     Press_Move();
-    if (entity->timer <= 0) {
+    if (self->timer <= 0) {
         foreach_active(Crate, crate)
         {
-            entity->position.y += entity->offTop + 0x80000;
-            if (RSDK.CheckObjectCollisionTouchBox(entity, &Press->hitbox, crate, &crate->hitbox))
+            self->position.y += self->offTop + 0x80000;
+            if (RSDK.CheckObjectCollisionTouchBox(self, &Press->hitbox, crate, &crate->hitbox))
                 Crate_Break(crate);
-            entity->position.y += -0x80000 - entity->offTop;
+            self->position.y += -0x80000 - self->offTop;
         }
-        entity->state = Press_HandleMovement;
+        self->state = Press_HandleMovement;
     }
     else {
-        int32 percentDone = ((entity->timerStart - entity->timer) << 16) / entity->timerStart;
+        int32 percentDone = ((self->timerStart - self->timer) << 16) / self->timerStart;
         int32 crateOff = 0;
         foreach_active(Crate, crate)
         {
-            entity->position.y += entity->offTop + 0x80000;
-            if (RSDK.CheckObjectCollisionTouchBox(entity, &Press->hitbox, crate, &crate->hitbox)
+            self->position.y += self->offTop + 0x80000;
+            if (RSDK.CheckObjectCollisionTouchBox(self, &Press->hitbox, crate, &crate->hitbox)
                 && percentDone > 0x8000) {
                 int32 percent = percentDone >> 9;
                 int32 percent2 = percent * percent;
@@ -318,13 +318,13 @@ void Press_HandleCrates(void)
                 // i couldn't
                 // https://varyex.dev/rmgfile/171715b2.png
                 // -rmg
-                int32 angle = crateOff + ((percent * entity->timerStart * (percent2 >> 8)) >> 8);
+                int32 angle = crateOff + ((percent * self->timerStart * (percent2 >> 8)) >> 8);
                 crateOff += 0x100;
                 crate->drawPos.x = (RSDK.Sin512(angle & 0x1FF) << 7) + crate->centerPos.x;
             }
-            entity->position.y += -0x80000 - entity->offTop;
+            self->position.y += -0x80000 - self->offTop;
         }
-        --entity->timer;
+        --self->timer;
     }
 }
 

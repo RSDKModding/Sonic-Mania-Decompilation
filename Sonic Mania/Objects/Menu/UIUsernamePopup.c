@@ -5,7 +5,7 @@ ObjectUIUsernamePopup *UIUsernamePopup;
 void UIUsernamePopup_Update(void)
 {
     RSDK_THIS(UIUsernamePopup);
-    StateMachine_Run(entity->state);
+    StateMachine_Run(self->state);
 }
 
 void UIUsernamePopup_LateUpdate(void) {}
@@ -15,20 +15,20 @@ void UIUsernamePopup_StaticUpdate(void) {}
 void UIUsernamePopup_Draw(void)
 {
     RSDK_THIS(UIUsernamePopup);
-    if (entity->drawFlag)
+    if (self->drawFlag)
         UIUsernamePopup_DrawSprites();
 }
 
 void UIUsernamePopup_Create(void *data)
 {
     RSDK_THIS(UIUsernamePopup);
-    entity->active       = ACTIVE_ALWAYS;
-    entity->drawOrder    = 13;
-    entity->posUnknown.x = 0;
-    entity->posUnknown.y = 0;
-    entity->dword6C      = 0x180000;
-    entity->visible      = true;
-    entity->state        = UIUsernamePopup_State_Setup;
+    self->active       = ACTIVE_ALWAYS;
+    self->drawOrder    = 13;
+    self->posUnknown.x = 0;
+    self->posUnknown.y = 0;
+    self->dword6C      = 0x180000;
+    self->visible      = true;
+    self->state        = UIUsernamePopup_State_Setup;
 }
 
 void UIUsernamePopup_StageLoad(void)
@@ -46,7 +46,7 @@ void UIUsernamePopup_ShowPopup(void)
 #endif
             RSDK.SetSpriteAnimation(UIWidgets->labelSpriteIndex, 0, &entity->animator, true, 0);
             RSDK.SetSpriteString(UIWidgets->labelSpriteIndex, 0, &entity->username);
-            int32 width        = RSDK.GetStringWidth(UIWidgets->labelSpriteIndex, 0, &entity->username, 0, entity->username.textLength, 0);
+            int32 width      = RSDK.GetStringWidth(UIWidgets->labelSpriteIndex, 0, &entity->username, 0, entity->username.textLength, 0);
             entity->state    = UIUsernamePopup_Unknown4;
             entity->timer    = 0;
             entity->field_68 = (width + 16) << 16;
@@ -60,88 +60,88 @@ void UIUsernamePopup_DrawSprites(void)
     RSDK_THIS(UIUsernamePopup);
     Vector2 drawPos;
 
-    drawPos.x = entity->posUnknown.x + entity->dword6C + (RSDK_screens->position.x << 16) + (entity->field_68 >> 1);
+    drawPos.x = self->posUnknown.x + self->dword6C + (ScreenInfo->position.x << 16) + (self->field_68 >> 1);
     drawPos.y =
-        entity->posUnknown.y + (RSDK_screens->centerY << 16) - (entity->dword6C >> 1) + ((RSDK_screens->centerY + RSDK_screens->position.y) << 16);
-    UIWidgets_Unknown7(entity->dword6C >> 16, entity->field_68 >> 16, entity->dword6C >> 16, 16, 124, 16, drawPos.x, drawPos.y);
+        self->posUnknown.y + (ScreenInfo->centerY << 16) - (self->dword6C >> 1) + ((ScreenInfo->centerY + ScreenInfo->position.y) << 16);
+    UIWidgets_DrawRhombus(self->dword6C >> 16, self->field_68 >> 16, self->dword6C >> 16, 16, 124, 16, drawPos.x, drawPos.y);
 
-    int32 width = RSDK.GetStringWidth(UIWidgets->labelSpriteIndex, 0, &entity->username, 0, entity->username.textLength, 0);
+    int32 width = RSDK.GetStringWidth(UIWidgets->labelSpriteIndex, 0, &self->username, 0, self->username.textLength, 0);
     drawPos.y -= 0x10000;
     drawPos.x -= width << 15;
-    RSDK.DrawText(&entity->animator, &drawPos, &entity->username, 0, entity->username.textLength, ALIGN_LEFT, 0, 0, 0, false);
+    RSDK.DrawText(&self->animator, &drawPos, &self->username, 0, self->username.textLength, ALIGN_LEFT, 0, 0, 0, false);
 }
 
 void UIUsernamePopup_State_Setup(void)
 {
     RSDK_THIS(UIUsernamePopup);
-    entity->drawFlag = false;
-    entity->timer    = 0;
+    self->drawFlag = false;
+    self->timer    = 0;
 }
 
 void UIUsernamePopup_Unknown4(void)
 {
     RSDK_THIS(UIUsernamePopup);
 
-    if (entity->timer >= entity->timeOut) {
-        if (entity->timer >= entity->timeOut + 8) {
-            entity->posUnknown.x = 0;
-            entity->posUnknown.y = 0;
-            entity->timer        = 0;
-            entity->state        = UIUsernamePopup_Unknown5;
+    if (self->timer >= self->timeOut) {
+        if (self->timer >= self->timeOut + 8) {
+            self->posUnknown.x = 0;
+            self->posUnknown.y = 0;
+            self->timer        = 0;
+            self->state        = UIUsernamePopup_Unknown5;
         }
         else {
-            entity->drawFlag = true;
-            MathHelpers_Lerp1(&entity->posUnknown, 32 * clampVal(entity->timer - entity->timeOut, 0, 8), -entity->dword6C, entity->dword6C, 0, 0);
-            ++entity->timer;
+            self->drawFlag = true;
+            MathHelpers_Lerp1(&self->posUnknown, 32 * clampVal(self->timer - self->timeOut, 0, 8), -self->dword6C, self->dword6C, 0, 0);
+            ++self->timer;
         }
     }
     else {
-        entity->drawFlag = false;
-        entity->timer++;
+        self->drawFlag = false;
+        self->timer++;
     }
 }
 
 void UIUsernamePopup_Unknown5(void)
 {
     RSDK_THIS(UIUsernamePopup);
-    if (entity->timer >= 180) {
-        entity->timer = 0;
-        entity->state = UIUsernamePopup_Unknown6;
+    if (self->timer >= 180) {
+        self->timer = 0;
+        self->state = UIUsernamePopup_Unknown6;
     }
     else {
-        entity->timer++;
+        self->timer++;
     }
 }
 
 void UIUsernamePopup_Unknown6(void)
 {
     RSDK_THIS(UIUsernamePopup);
-    if (entity->timer >= 8) {
-        entity->posUnknown.y = entity->dword6C;
-        entity->timer        = 0;
-        entity->drawFlag     = false;
-        entity->posUnknown.x = -entity->dword6C;
-        entity->state        = UIUsernamePopup_State_Setup;
+    if (self->timer >= 8) {
+        self->posUnknown.y = self->dword6C;
+        self->timer        = 0;
+        self->drawFlag     = false;
+        self->posUnknown.x = -self->dword6C;
+        self->state        = UIUsernamePopup_State_Setup;
     }
     else {
-        entity->drawFlag = true;
+        self->drawFlag = true;
 
-        int32 val = 32 * maxVal(entity->timer, 0);
+        int32 val = 32 * maxVal(self->timer, 0);
         if (val > 0) {
             if (val < 256) {
-                entity->posUnknown.x = val * (-entity->dword6C >> 8);
-                entity->posUnknown.y = val * (entity->dword6C >> 8);
+                self->posUnknown.x = val * (-self->dword6C >> 8);
+                self->posUnknown.y = val * (self->dword6C >> 8);
             }
             else {
-                entity->posUnknown.x = -entity->dword6C;
-                entity->posUnknown.y = entity->dword6C;
+                self->posUnknown.x = -self->dword6C;
+                self->posUnknown.y = self->dword6C;
             }
         }
         else {
-            entity->posUnknown.x = 0;
-            entity->posUnknown.y = 0;
+            self->posUnknown.x = 0;
+            self->posUnknown.y = 0;
         }
-        ++entity->timer;
+        ++self->timer;
     }
 }
 

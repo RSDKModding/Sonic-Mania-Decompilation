@@ -6,13 +6,13 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    uint16 spriteIndex;
+    uint16 aniFrames;
 } ObjectBSS_Horizon;
 
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    Animator horizonData;
+    Animator horizonAnimator;
 } EntityBSS_Horizon;
 
 // Object Struct

@@ -147,7 +147,7 @@ void OOZSetup_StaticUpdate(void)
         }
     }
 
-    if (OOZSetup->flags && RSDK_sceneInfo->timeEnabled) {
+    if (OOZSetup->flags && SceneInfo->timeEnabled) {
         if (OOZSetup->fadeTimer < 0x10000)
             OOZSetup->fadeTimer++;
     }
@@ -185,7 +185,7 @@ void OOZSetup_Draw(void)
 {
     RSDK_THIS(OOZSetup);
 #if RETRO_USE_PLUS
-    if (RSDK_sceneInfo->currentDrawGroup != entity->drawOrder) {
+    if (SceneInfo->currentDrawGroup != self->drawOrder) {
         foreach_active(Player, player)
         {
             if ((1 << RSDK.GetEntityID(player)) & OOZSetup->activePlayers)
@@ -193,7 +193,7 @@ void OOZSetup_Draw(void)
         }
     }
 #endif
-    if (entity->type)
+    if (self->type)
         RSDK.FillScreen(0xC0C0E8, OOZSetup->fadeTimer >> 5, OOZSetup->fadeTimer >> 5, OOZSetup->fadeTimer >> 4);
     else
         OOZSetup_Unknown4();
@@ -203,13 +203,13 @@ void OOZSetup_Create(void *data)
 {
     RSDK_THIS(OOZSetup);
 
-    entity->active  = ACTIVE_ALWAYS;
-    entity->visible = true;
-    entity->drawFX  = FX_ROTATE;
-    if (!entity->type)
-        entity->drawOrder = Zone->drawOrderLow;
+    self->active  = ACTIVE_ALWAYS;
+    self->visible = true;
+    self->drawFX  = FX_ROTATE;
+    if (!self->type)
+        self->drawOrder = Zone->drawOrderLow;
     else
-        entity->drawOrder = 14;
+        self->drawOrder = 14;
 }
 
 void OOZSetup_StageLoad(void)
@@ -257,7 +257,7 @@ void OOZSetup_StageLoad(void)
         if (isMainGameMode() && PlayerHelpers_CheckAct2())
             Zone->stageFinishCallback = OOZ2Outro_StageFinishCB_Act2;
 
-        if (RSDK_sceneInfo->filter & FILTER_ENCORE) {
+        if (SceneInfo->filter & FILTER_ENCORE) {
             RSDK.LoadPalette(0, "EncoreOOZ2.act", 255);
             RSDK.LoadPalette(2, "EncoreOOZSmog.act", 255);
             RSDK.CopyPalette(0, 128, 1, 128, 128);
@@ -271,7 +271,7 @@ void OOZSetup_StageLoad(void)
 #endif
     }
 #if RETRO_USE_PLUS
-    else if (RSDK_sceneInfo->filter & FILTER_ENCORE) {
+    else if (SceneInfo->filter & FILTER_ENCORE) {
         RSDK.LoadPalette(0, "EncoreOOZ1.act", 255);
         RSDK.CopyPalette(0, 128, 1, 128, 80);
         RSDK.CopyPalette(0, 128, 3, 128, 80);
@@ -327,7 +327,7 @@ void OOZSetup_Unknown4(void)
     RSDK_THIS(OOZSetup);
     for (int32 i = 0; i < OOZSetup->flameCount; ++i) {
         if (OOZSetup->flameTimerPtrs[i]) {
-            entity->rotation                = 2 * (OOZSetup->flamePositions[i].x & 0xFF);
+            self->rotation                = 2 * (OOZSetup->flamePositions[i].x & 0xFF);
             OOZSetup->flameAnimator.frameID = OOZSetup->flamePositions[i].y & 0xFF;
             RSDK.DrawSprite(&OOZSetup->flameAnimator, &OOZSetup->flamePositions[i], false);
         }
@@ -365,8 +365,8 @@ void OOZSetup_Unknown5(void)
 
             foreach_active(Player, player)
             {
-                if (Player_CheckCollisionTouch(player, entity, &Sol->hitbox1)) {
-                    Player_CheckElementalHit(player, entity, SHIELD_FIRE);
+                if (Player_CheckCollisionTouch(player, self, &Sol->hitbox1)) {
+                    Player_CheckElementalHit(player, self, SHIELD_FIRE);
                 }
             }
         }
@@ -396,7 +396,7 @@ bool32 OOZSetup_Unknown6(int32 posY, int32 posX, int32 angle)
                 OOZSetup->flameCount = i + 1;
             }
             OOZSetup->flameTimers[pos]                                                                          = 0xF0;
-            CREATE_ENTITY(Explosion, intToVoid(2), entity->position.x, entity->position.y - 0x60000)->drawOrder = entity->drawOrder;
+            CREATE_ENTITY(Explosion, intToVoid(2), self->position.x, self->position.y - 0x60000)->drawOrder = self->drawOrder;
             return true;
         }
     }
@@ -418,111 +418,111 @@ void OOZSetup_GenericTriggerCB(void)
 void OOZSetup_PlayerState_OilPool(void)
 {
     RSDK_THIS(Player);
-    int32 top              = entity->topSpeed;
-    int32 acc              = entity->acceleration;
-    entity->topSpeed     = (entity->topSpeed >> 1) + (entity->topSpeed >> 3);
-    entity->acceleration = (entity->acceleration >> 1) + (entity->acceleration >> 3);
+    int32 top              = self->topSpeed;
+    int32 acc              = self->acceleration;
+    self->topSpeed     = (self->topSpeed >> 1) + (self->topSpeed >> 3);
+    self->acceleration = (self->acceleration >> 1) + (self->acceleration >> 3);
 
-    if (entity->groundVel <= 0) {
-        if (entity->groundVel < -entity->topSpeed) {
-            entity->groundVel += 0x3800;
+    if (self->groundVel <= 0) {
+        if (self->groundVel < -self->topSpeed) {
+            self->groundVel += 0x3800;
         }
     }
-    else if (entity->groundVel > entity->topSpeed) {
-        entity->groundVel -= 0x3800;
+    else if (self->groundVel > self->topSpeed) {
+        self->groundVel -= 0x3800;
     }
 
-    entity->position.y += 0x10000;
-    entity->up       = false;
-    entity->down     = false;
-    entity->onGround = true;
+    self->position.y += 0x10000;
+    self->up       = false;
+    self->down     = false;
+    self->onGround = true;
     Player_State_Ground();
-    entity->topSpeed     = top;
-    entity->acceleration = acc;
+    self->topSpeed     = top;
+    self->acceleration = acc;
 }
 
 void OOZSetup_PlayerState_OilStrip(void)
 {
     RSDK_THIS(Player);
-    int32 acc  = entity->acceleration;
-    int32 top  = entity->topSpeed;
-    int32 skid = entity->skidSpeed;
-    int32 dec  = entity->deceleration;
+    int32 acc  = self->acceleration;
+    int32 top  = self->topSpeed;
+    int32 skid = self->skidSpeed;
+    int32 dec  = self->deceleration;
 
-    Animator *animator = &entity->playerAnimator;
-    entity->position.y += 0x10000;
-    entity->skidSpeed    = entity->skidSpeed >> 3;
-    entity->topSpeed     = (entity->topSpeed >> 1) + (entity->topSpeed >> 2);
-    entity->acceleration = 0x400;
-    entity->deceleration = entity->deceleration >> 3;
-    entity->up           = false;
-    entity->down         = false;
-    entity->skidding     = 0;
-    entity->onGround     = true;
+    Animator *animator = &self->animator;
+    self->position.y += 0x10000;
+    self->skidSpeed    = self->skidSpeed >> 3;
+    self->topSpeed     = (self->topSpeed >> 1) + (self->topSpeed >> 2);
+    self->acceleration = 0x400;
+    self->deceleration = self->deceleration >> 3;
+    self->up           = false;
+    self->down         = false;
+    self->skidding     = 0;
+    self->onGround     = true;
     Player_State_Ground();
 
 #if RETRO_USE_PLUS
-    if ((animator->animationID == ANI_HURT || animator->animationID == ANI_FLUME) && (entity->groundedStore == true) & entity->onGround) {
+    if ((animator->animationID == ANI_HURT || animator->animationID == ANI_FLUME) && (self->groundedStore == true) & self->onGround) {
 #else
-    if (animator->animationID == ANI_HURT && (entity->groundedStore == true) & entity->onGround) {
+    if (animator->animationID == ANI_HURT && (self->groundedStore == true) & self->onGround) {
 #endif
-        if (abs(entity->groundVel) >= 0x20000) {
-            memcpy(&entity->playerAnimator, animator, sizeof(Animator));
-            if (entity->playerAnimator.animationTimer >= 3)
-                entity->playerAnimator.animationTimer = 256;
+        if (abs(self->groundVel) >= 0x20000) {
+            memcpy(&self->animator, animator, sizeof(Animator));
+            if (self->animator.animationTimer >= 3)
+                self->animator.animationTimer = 256;
 
-            if (entity->angle == 64 || entity->angle == 192) {
-                entity->onGround = false;
-                entity->state    = Player_State_Air;
+            if (self->angle == 64 || self->angle == 192) {
+                self->onGround = false;
+                self->state    = Player_State_Air;
             }
         }
     }
-    entity->acceleration = acc;
-    entity->topSpeed     = top;
-    entity->skidSpeed    = skid;
-    entity->deceleration = dec;
+    self->acceleration = acc;
+    self->topSpeed     = top;
+    self->skidSpeed    = skid;
+    self->deceleration = dec;
 }
 
 void OOZSetup_PlayerState_OilSlide(void)
 {
     RSDK_THIS(Player);
-    if (!entity->onGround) {
-        entity->state = Player_State_Air;
+    if (!self->onGround) {
+        self->state = Player_State_Air;
         Player_HandleAirMovement();
     }
     else {
-        if (entity->camera)
-            entity->camera->offsetYFlag = false;
-        entity->jumpAbilityTimer = 0;
-        if (entity->angle) {
-            if (entity->angle <= 128) {
-                if (entity->groundVel < 0x80000) {
-                    entity->groundVel += 0x4000;
+        if (self->camera)
+            self->camera->offsetYFlag = false;
+        self->jumpAbilityTimer = 0;
+        if (self->angle) {
+            if (self->angle <= 128) {
+                if (self->groundVel < 0x80000) {
+                    self->groundVel += 0x4000;
                 }
             }
-            else if (entity->groundVel > -0x80000) {
-                entity->groundVel -= 0x4000;
+            else if (self->groundVel > -0x80000) {
+                self->groundVel -= 0x4000;
             }
         }
 
-        entity->groundVel += RSDK.Sin256(entity->angle) << 13 >> 8;
-        entity->controlLock = 30;
-        entity->direction   = (RSDK.Sin256(entity->angle) << 13 >> 8) + entity->groundVel < 0;
+        self->groundVel += RSDK.Sin256(self->angle) << 13 >> 8;
+        self->controlLock = 30;
+        self->direction   = (RSDK.Sin256(self->angle) << 13 >> 8) + self->groundVel < 0;
 #if RETRO_USE_PLUS
-        RSDK.SetSpriteAnimation(entity->spriteIndex, ANI_FLUME, &entity->playerAnimator, false, 0);
+        RSDK.SetSpriteAnimation(self->aniFrames, ANI_FLUME, &self->animator, false, 0);
 #else
-        RSDK.SetSpriteAnimation(entity->spriteIndex, ANI_HURT, &entity->playerAnimator, false, 2);
+        RSDK.SetSpriteAnimation(self->aniFrames, ANI_HURT, &self->animator, false, 2);
 #endif
     }
 
-    if (entity->jumpPress) {
-        Player_StartJump(entity);
-        if (entity->angle <= 128) {
-            if (entity->velocity.x < 0)
-                entity->velocity.x += ((entity->jumpStrength + (entity->jumpStrength >> 1)) * RSDK.Sin256(entity->angle)) >> 8;
+    if (self->jumpPress) {
+        Player_StartJump(self);
+        if (self->angle <= 128) {
+            if (self->velocity.x < 0)
+                self->velocity.x += ((self->jumpStrength + (self->jumpStrength >> 1)) * RSDK.Sin256(self->angle)) >> 8;
         }
-        else if (entity->velocity.x > 0) {
-            entity->velocity.x += ((entity->jumpStrength + (entity->jumpStrength >> 1)) * RSDK.Sin256(entity->angle)) >> 8;
+        else if (self->velocity.x > 0) {
+            self->velocity.x += ((self->jumpStrength + (self->jumpStrength >> 1)) * RSDK.Sin256(self->angle)) >> 8;
         }
     }
 }
@@ -530,47 +530,47 @@ void OOZSetup_PlayerState_OilSlide(void)
 void OOZSetup_PlayerState_OilFall(void)
 {
     RSDK_THIS(Player);
-    int32 top              = entity->topSpeed;
-    int32 acc              = entity->acceleration;
-    entity->topSpeed     = (entity->topSpeed >> 2) + (entity->topSpeed >> 3);
-    entity->acceleration = (entity->acceleration >> 2) + (entity->acceleration >> 3);
+    int32 top              = self->topSpeed;
+    int32 acc              = self->acceleration;
+    self->topSpeed     = (self->topSpeed >> 2) + (self->topSpeed >> 3);
+    self->acceleration = (self->acceleration >> 2) + (self->acceleration >> 3);
 
-    if (entity->groundVel <= 0) {
-        if (entity->groundVel < -entity->topSpeed)
-            entity->groundVel += 0x3800;
+    if (self->groundVel <= 0) {
+        if (self->groundVel < -self->topSpeed)
+            self->groundVel += 0x3800;
     }
     else {
-        if (entity->groundVel > entity->topSpeed)
-            entity->groundVel -= 0x3800;
+        if (self->groundVel > self->topSpeed)
+            self->groundVel -= 0x3800;
     }
 
-    entity->up            = false;
-    entity->down          = false;
-    entity->groundedStore = false;
-    entity->onGround      = false;
-    entity->velocity.y    = 0x10000;
-    if (abs(entity->velocity.x) > 0x20000) {
-        if (entity->velocity.x <= 0)
-            entity->velocity.x += 0xC000;
+    self->up            = false;
+    self->down          = false;
+    self->groundedStore = false;
+    self->onGround      = false;
+    self->velocity.y    = 0x10000;
+    if (abs(self->velocity.x) > 0x20000) {
+        if (self->velocity.x <= 0)
+            self->velocity.x += 0xC000;
         else
-            entity->velocity.x -= 0xC000;
+            self->velocity.x -= 0xC000;
     }
-    if (!entity->left && !entity->right)
-        entity->velocity.x -= entity->velocity.x >> 4;
-    RSDK.SetSpriteAnimation(entity->spriteIndex, ANI_JUMP, &entity->playerAnimator, false, 0);
+    if (!self->left && !self->right)
+        self->velocity.x -= self->velocity.x >> 4;
+    RSDK.SetSpriteAnimation(self->aniFrames, ANI_JUMP, &self->animator, false, 0);
     Player_HandleGroundMovement();
 
-    if (entity->camera)
-        entity->camera->offsetYFlag = false;
-    entity->jumpAbilityTimer = 0;
-    entity->nextAirState     = Player_State_Air;
-    if (entity->jumpPress) {
-        Player_StartJump(entity);
-        entity->jumpAbilityTimer = 0;
-        entity->timer            = 0;
+    if (self->camera)
+        self->camera->offsetYFlag = false;
+    self->jumpAbilityTimer = 0;
+    self->nextAirState     = Player_State_Air;
+    if (self->jumpPress) {
+        Player_StartJump(self);
+        self->jumpAbilityTimer = 0;
+        self->timer            = 0;
     }
-    entity->topSpeed     = top;
-    entity->acceleration = acc;
+    self->topSpeed     = top;
+    self->acceleration = acc;
 }
 
 #if RETRO_INCLUDE_EDITOR

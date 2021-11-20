@@ -9,26 +9,26 @@ void OOZ2Outro_Update(void)
 
     Entity *boss = MegaOctus->bossPtr;
     if (globals->gameMode < MODE_TIMEATTACK && boss && !boss->objectID) {
-        entity->scrollOffset.x = entity->moveOffset.x & 0xFFFF0000;
-        entity->scrollOffset.y = entity->moveOffset.y & 0xFFFF0000;
+        self->scrollOffset.x = self->moveOffset.x & 0xFFFF0000;
+        self->scrollOffset.y = self->moveOffset.y & 0xFFFF0000;
 
-        StateMachine_Run(entity->state);
+        StateMachine_Run(self->state);
 
         foreach_active(Player, player)
         {
-            TileLayer *layer = entity->moveLayer;
+            TileLayer *layer = self->moveLayer;
             if (!player->sidekick) {
-                layer->scrollPos               = -entity->scrollOffset.y;
-                layer->scrollInfo[0].scrollPos = -entity->scrollOffset.x;
+                layer->scrollPos               = -self->scrollOffset.y;
+                layer->scrollInfo[0].scrollPos = -self->scrollOffset.x;
             }
             player->collisionLayers |= Zone->moveID;
-            player->moveOffset.x = -(int32)(entity->moveOffset.x & 0xFFFF0000);
-            player->moveOffset.y = -(int32)(entity->moveOffset.y & 0xFFFF0000);
+            player->moveOffset.x = -(int32)(self->moveOffset.x & 0xFFFF0000);
+            player->moveOffset.y = -(int32)(self->moveOffset.y & 0xFFFF0000);
         }
 
-        if (entity->prisonPtr) {
-            entity->prisonPtr->position.x = entity->scrollOffset.x + entity->prisonPos.x;
-            entity->prisonPtr->position.y = entity->scrollOffset.y + entity->prisonPos.y;
+        if (self->prisonPtr) {
+            self->prisonPtr->position.x = self->scrollOffset.x + self->prisonPos.x;
+            self->prisonPtr->position.y = self->scrollOffset.y + self->prisonPos.y;
         }
     }
 }
@@ -42,26 +42,26 @@ void OOZ2Outro_Draw(void) {}
 void OOZ2Outro_Create(void *data)
 {
     RSDK_THIS(OOZ2Outro);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         if (globals->gameMode < MODE_TIMEATTACK) {
-            entity->active  = ACTIVE_BOUNDS;
-            entity->visible = false;
-            if (!entity->size.x)
-                entity->size.x = 0x1A80000;
-            if (!entity->size.y)
-                entity->size.y = 0xF00000;
-            entity->moveLayer   = RSDK.GetSceneLayer(Zone->moveLayer);
-            entity->updateRange = entity->size;
+            self->active  = ACTIVE_BOUNDS;
+            self->visible = false;
+            if (!self->size.x)
+                self->size.x = 0x1A80000;
+            if (!self->size.y)
+                self->size.y = 0xF00000;
+            self->moveLayer   = RSDK.GetSceneLayer(Zone->moveLayer);
+            self->updateRange = self->size;
             foreach_all(EggPrison, prison)
             {
-                entity->prisonPtr = prison;
-                entity->prisonPos = prison->position;
+                self->prisonPtr = prison;
+                self->prisonPos = prison->position;
             }
 
-            entity->state = OOZ2Outro_Unknown2;
+            self->state = OOZ2Outro_Unknown2;
         }
         else {
-            destroyEntity(entity);
+            destroyEntity(self);
         }
     }
 }
@@ -95,12 +95,12 @@ void OOZ2Outro_StageFinishCB_Act2(void)
 void OOZ2Outro_Unknown2(void)
 {
     RSDK_THIS(OOZ2Outro);
-    entity->moveOffset.y = RSDK.Sin256(Zone->timer) << 10;
+    self->moveOffset.y = RSDK.Sin256(Zone->timer) << 10;
 }
 
 void OOZ2Outro_CheckSkip(void)
 {
-    if (RSDK_controller->keyStart.press && !(RSDK_sceneInfo->state & 1)) {
+    if (ControllerInfo->keyStart.press && !(SceneInfo->state & 1)) {
         globals->suppressTitlecard = false;
         globals->suppressAutoMusic = false;
         globals->enableIntro       = false;
@@ -114,22 +114,22 @@ void OOZ2Outro_Unknown3(void)
 {
     RSDK_THIS(OOZ2Outro);
     OOZ2Outro_CheckSkip();
-    entity->moveOffset.y = RSDK.Sin256(Zone->timer) << 10;
+    self->moveOffset.y = RSDK.Sin256(Zone->timer) << 10;
 
     bool32 flag = false;
     foreach_active(Player, player)
     {
         player->jumpPress = false;
-        if (player->playerAnimator.animationID == ANI_PUSH) {
+        if (player->animator.animationID == ANI_PUSH) {
             player->jumpPress = true;
             player->jumpHold  = true;
         }
         else if (player->velocity.y > -0x20000) {
             player->jumpHold = false;
         }
-        if (player->position.x > entity->position.x - 0x100000 && player->velocity.x > 0x20000)
+        if (player->position.x > self->position.x - 0x100000 && player->velocity.x > 0x20000)
             player->right = false;
-        if (player->position.x < entity->position.x + 0x400000) {
+        if (player->position.x < self->position.x + 0x400000) {
             if (player->right == false) {
                 if (player->groundVel < 0x20000)
                     player->groundVel = 0x20000;
@@ -146,17 +146,17 @@ void OOZ2Outro_Unknown3(void)
     }
 
     if (!flag)
-        ++entity->timer;
-    if (entity->timer > 60) {
-        entity->timer = 0;
-        entity->state = OOZ2Outro_Unknown4;
+        ++self->timer;
+    if (self->timer > 60) {
+        self->timer = 0;
+        self->state = OOZ2Outro_Unknown4;
         foreach_active(Player, player)
         {
             player->groundVel  = 0;
             player->velocity.x = 0;
             player->right      = false;
             player->state      = Player_State_None;
-            RSDK.SetSpriteAnimation(player->spriteIndex, ANI_BALANCE1, &player->playerAnimator, false, 0);
+            RSDK.SetSpriteAnimation(player->aniFrames, ANI_BALANCE1, &player->animator, false, 0);
             Zone->playerBoundActiveR[player->playerID] = 0;
             EntityCamera *camera                       = player->camera;
             if (camera)
@@ -169,21 +169,21 @@ void OOZ2Outro_Unknown4(void)
 {
     RSDK_THIS(OOZ2Outro);
     OOZ2Outro_CheckSkip();
-    entity->moveOffset.y -= 0x6000;
+    self->moveOffset.y -= 0x6000;
 
     if (!(Zone->timer & 0xF)) {
         Camera_ShakeScreen(0, 0, 4);
         RSDK.PlaySfx(OOZ2Outro->sfxGlug, false, 255);
     }
 
-    if (++entity->timer == 140)
+    if (++self->timer == 140)
         RSDK.PlaySfx(OOZ2Outro->sfxSubLaunch, false, 255);
 
-    if (entity->timer > 180) {
-        entity->timer      = 0;
-        entity->velocity.y = -0x30000;
-        entity->state      = OOZ2Outro_Unknown5;
-        foreach_active(Player, player) { RSDK.SetSpriteAnimation(player->spriteIndex, ANI_BALANCE2, &player->playerAnimator, false, 0); }
+    if (self->timer > 180) {
+        self->timer      = 0;
+        self->velocity.y = -0x30000;
+        self->state      = OOZ2Outro_Unknown5;
+        foreach_active(Player, player) { RSDK.SetSpriteAnimation(player->aniFrames, ANI_BALANCE2, &player->animator, false, 0); }
     }
 }
 
@@ -191,16 +191,16 @@ void OOZ2Outro_Unknown5(void)
 {
     RSDK_THIS(OOZ2Outro);
 
-    if (entity->velocity.y < -0x8000)
-        entity->velocity.y += 0x3800;
-    entity->velocity.x += 0x1800;
-    entity->moveOffset.x += entity->velocity.x;
-    entity->moveOffset.y += entity->velocity.y;
-    foreach_active(Player, player) { player->position.x += entity->velocity.x; }
+    if (self->velocity.y < -0x8000)
+        self->velocity.y += 0x3800;
+    self->velocity.x += 0x1800;
+    self->moveOffset.x += self->velocity.x;
+    self->moveOffset.y += self->velocity.y;
+    foreach_active(Player, player) { player->position.x += self->velocity.x; }
 
-    if (++entity->timer > 140) {
-        entity->timer = 0;
-        entity->state = 0;
+    if (++self->timer > 140) {
+        self->timer = 0;
+        self->state = 0;
         Zone_StartFadeOut(10, 0x000000);
         foreach_active(Player, player) { player->active = ACTIVE_NEVER; }
     }
@@ -211,14 +211,14 @@ void OOZ2Outro_EditorDraw(void)
     RSDK_THIS(OOZ2Outro);
     Vector2 drawPos;
 
-    drawPos.x = entity->position.x;
-    drawPos.y = entity->position.y;
-    drawPos.x -= entity->size.x >> 1;
-    drawPos.y -= entity->size.y >> 1;
-    RSDK.DrawLine(drawPos.x, drawPos.y, drawPos.x + entity->size.x, drawPos.y, 0xFFFF00, 0, INK_NONE, false);
-    RSDK.DrawLine(drawPos.x, entity->size.y + drawPos.y, drawPos.x + entity->size.x, entity->size.y + drawPos.y, 0xFFFF00, 0, INK_NONE, false);
-    RSDK.DrawLine(drawPos.x, drawPos.y, drawPos.x, drawPos.y + entity->size.y, 0xFFFF00, 0, INK_NONE, false);
-    RSDK.DrawLine(drawPos.x + entity->size.x, drawPos.y, drawPos.x + entity->size.x, drawPos.y + entity->size.y, 0xFFFF00, 0, INK_NONE, false);
+    drawPos.x = self->position.x;
+    drawPos.y = self->position.y;
+    drawPos.x -= self->size.x >> 1;
+    drawPos.y -= self->size.y >> 1;
+    RSDK.DrawLine(drawPos.x, drawPos.y, drawPos.x + self->size.x, drawPos.y, 0xFFFF00, 0, INK_NONE, false);
+    RSDK.DrawLine(drawPos.x, self->size.y + drawPos.y, drawPos.x + self->size.x, self->size.y + drawPos.y, 0xFFFF00, 0, INK_NONE, false);
+    RSDK.DrawLine(drawPos.x, drawPos.y, drawPos.x, drawPos.y + self->size.y, 0xFFFF00, 0, INK_NONE, false);
+    RSDK.DrawLine(drawPos.x + self->size.x, drawPos.y, drawPos.x + self->size.x, drawPos.y + self->size.y, 0xFFFF00, 0, INK_NONE, false);
 }
 
 void OOZ2Outro_EditorLoad(void) {}

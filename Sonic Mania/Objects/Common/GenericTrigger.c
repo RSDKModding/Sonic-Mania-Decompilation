@@ -7,10 +7,10 @@ void GenericTrigger_Update(void)
     RSDK_THIS(GenericTrigger);
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionTouch(player, entity, &entity->hitbox) && !player->sidekick) {
+        if (Player_CheckCollisionTouch(player, self, &self->hitbox) && !player->sidekick) {
             GenericTrigger->playerID = player->playerID;
-            if (GenericTrigger->callbacks[entity->triggerID])
-                GenericTrigger->callbacks[entity->triggerID]();
+            if (GenericTrigger->callbacks[self->triggerID])
+                GenericTrigger->callbacks[self->triggerID]();
         }
     }
 }
@@ -24,15 +24,15 @@ void GenericTrigger_Draw(void) {}
 void GenericTrigger_Create(void *data)
 {
     RSDK_THIS(GenericTrigger);
-    if (!RSDK_sceneInfo->inEditor) {
-        entity->triggerID &= 0xF;
-        entity->updateRange.x = entity->size.x;
-        entity->updateRange.y = entity->size.y;
-        entity->active        = ACTIVE_BOUNDS;
-        entity->hitbox.left   = -(entity->size.x >> 0x10);
-        entity->hitbox.right  = (entity->size.x >> 0x10);
-        entity->hitbox.top    = -(entity->size.y >> 0x10);
-        entity->hitbox.bottom = (entity->size.y >> 0x10);
+    if (!SceneInfo->inEditor) {
+        self->triggerID &= 0xF;
+        self->updateRange.x = self->size.x;
+        self->updateRange.y = self->size.y;
+        self->active        = ACTIVE_BOUNDS;
+        self->hitbox.left   = -(self->size.x >> 0x10);
+        self->hitbox.right  = (self->size.x >> 0x10);
+        self->hitbox.top    = -(self->size.y >> 0x10);
+        self->hitbox.bottom = (self->size.y >> 0x10);
     }
 }
 
@@ -41,13 +41,14 @@ void GenericTrigger_StageLoad(void) {}
 void GenericTrigger_EditorDraw(void)
 {
     RSDK_THIS(GenericTrigger);
-    entity->updateRange.x = entity->size.x;
-    entity->updateRange.y = entity->size.y;
+    self->updateRange.x = self->size.x;
+    self->updateRange.y = self->size.y;
 
-    RSDK.SetSpriteAnimation(GenericTrigger->aniFrames, 0, &entity->animator, true, 7);
-    RSDK.DrawSprite(&entity->animator, NULL, false);
+    RSDK.SetSpriteAnimation(GenericTrigger->aniFrames, 0, &self->animator, true, 7);
+    RSDK.DrawSprite(&self->animator, NULL, false);
 
-    DrawHelpers_DrawRectOutline(0xFFFF00, entity->position.x, entity->position.y, entity->size.x, entity->size.y);
+    if (showGizmos())
+        DrawHelpers_DrawRectOutline(0xFFFF00, self->position.x, self->position.y, self->size.x, self->size.y);
 }
 
 void GenericTrigger_EditorLoad(void) { GenericTrigger->aniFrames = RSDK.LoadSpriteAnimation("Editor/EditorIcons.bin", SCOPE_STAGE); }

@@ -6,9 +6,9 @@ void LRZConveyor_Update(void)
 {
     RSDK_THIS(LRZConveyor);
 
-    if (entity->globalControl) {
-        entity->off       = LRZ2Setup->conveyorOff;
-        entity->direction = entity->startDir ^ LRZ2Setup->conveyorDir;
+    if (self->globalControl) {
+        self->off       = LRZ2Setup->conveyorOff;
+        self->direction = self->startDir ^ LRZ2Setup->conveyorDir;
     }
     else {
         LRZConveyor_HandleBehaviour();
@@ -16,9 +16,9 @@ void LRZConveyor_Update(void)
 
     LRZConveyor_HandlePlayerInteractions();
 
-    if (!entity->off) {
-        RSDK.ProcessAnimation(&entity->animator1);
-        RSDK.ProcessAnimation(&entity->animator2);
+    if (!self->off) {
+        RSDK.ProcessAnimation(&self->animator1);
+        RSDK.ProcessAnimation(&self->animator2);
     }
 }
 
@@ -36,31 +36,31 @@ void LRZConveyor_Create(void *data)
 {
     RSDK_THIS(LRZConveyor);
 
-    entity->active        = ACTIVE_BOUNDS;
-    entity->drawOrder     = Zone->drawOrderLow;
-    entity->startPos.x    = entity->position.x;
-    entity->startPos.y    = entity->position.y;
-    entity->updateRange.x = (entity->length + 128) << 16;
-    entity->updateRange.y = (entity->length * (entity->slope << 8)) + 0x800000;
-    entity->visible       = true;
-    entity->drawFX        = FX_FLIP;
-    entity->isOff         = entity->off;
-    entity->startDir      = entity->direction;
-    if (RSDK_sceneInfo->inEditor) {
-        if (!entity->speed)
-            entity->speed = 8;
+    self->active        = ACTIVE_BOUNDS;
+    self->drawOrder     = Zone->drawOrderLow;
+    self->startPos.x    = self->position.x;
+    self->startPos.y    = self->position.y;
+    self->updateRange.x = (self->length + 128) << 16;
+    self->updateRange.y = (self->length * (self->slope << 8)) + 0x800000;
+    self->visible       = true;
+    self->drawFX        = FX_FLIP;
+    self->isOff         = self->off;
+    self->startDir      = self->direction;
+    if (SceneInfo->inEditor) {
+        if (!self->speed)
+            self->speed = 8;
     }
     else {
-        entity->speed        = abs(entity->speed);
-        entity->taggedButton = LRZ2Setup_HandleTagSetup(entity->buttonTag, (Entity *)entity);
+        self->speed        = abs(self->speed);
+        self->taggedButton = LRZ2Setup_HandleTagSetup(self->buttonTag, (Entity *)self);
     }
 
-    entity->hitbox.left   = -8;
-    entity->hitbox.top    = -8;
-    entity->hitbox.right  = 8;
-    entity->hitbox.bottom = 8;
-    RSDK.SetSpriteAnimation(LRZConveyor->aniFrames, 0, &entity->animator1, true, 0);
-    RSDK.SetSpriteAnimation(LRZConveyor->aniFrames, 1, &entity->animator2, true, 0);
+    self->hitbox.left   = -8;
+    self->hitbox.top    = -8;
+    self->hitbox.right  = 8;
+    self->hitbox.bottom = 8;
+    RSDK.SetSpriteAnimation(LRZConveyor->aniFrames, 0, &self->animator1, true, 0);
+    RSDK.SetSpriteAnimation(LRZConveyor->aniFrames, 1, &self->animator2, true, 0);
 }
 
 void LRZConveyor_StageLoad(void)
@@ -77,19 +77,19 @@ void LRZConveyor_HandleBehaviour(void)
 {
     RSDK_THIS(LRZConveyor);
 
-    if (entity->buttonTag) {
-        if (entity->taggedButton) {
-            switch (entity->buttonBehavior) {
+    if (self->buttonTag) {
+        if (self->taggedButton) {
+            switch (self->buttonBehavior) {
                 case 0:
-                    if (entity->taggedButton->field_70)
-                        entity->off = entity->isOff == 0;
+                    if (self->taggedButton->activated)
+                        self->off = self->isOff == 0;
                     break;
-                case 1: entity->off = entity->taggedButton->field_68 ^ entity->isOff; break;
+                case 1: self->off = self->taggedButton->toggled ^ self->isOff; break;
                 case 2:
-                    if (entity->taggedButton->field_70)
-                        entity->direction = entity->startDir == FLIP_NONE;
+                    if (self->taggedButton->activated)
+                        self->direction = self->startDir == FLIP_NONE;
                     break;
-                case 3: entity->direction = entity->startDir ^ (entity->taggedButton->field_68); break;
+                case 3: self->direction = self->startDir ^ (self->taggedButton->toggled); break;
                 default: break;
             }
         }
@@ -100,19 +100,19 @@ void LRZConveyor_HandlePlayerInteractions(void)
 {
     RSDK_THIS(LRZConveyor);
 
-    int moveX = (entity->speed << 14) * (2 * (entity->direction == FLIP_X) - 1);
+    int moveX = (self->speed << 14) * (2 * (self->direction == FLIP_X) - 1);
 
     foreach_active(Player, player)
     {
-        int side = LRZConveyor_HandlePlayerCollisions(entity, player, NULL);
-        if (side == C_TOP && !entity->off) {
+        int side = LRZConveyor_HandlePlayerCollisions(self, player, NULL);
+        if (side == C_TOP && !self->off) {
             if (player->onGround)
                 player->position.y += 0x10000;
             else
                 player->velocity.x = moveX;
             player->position.x += moveX;
         }
-        else if ((side == C_LEFT || side == C_RIGHT) && !entity->off && !player->onGround) {
+        else if ((side == C_LEFT || side == C_RIGHT) && !self->off && !player->onGround) {
             player->velocity.x = moveX;
         }
     }
@@ -185,46 +185,46 @@ void LRZConveyor_Unknown4(void)
     RSDK_THIS(LRZConveyor);
     Vector2 drawPos;
 
-    drawPos.x = entity->position.x;
-    drawPos.y = entity->position.y;
-    drawPos.x -= entity->length << 15;
-    drawPos.y -= (entity->slope << 8) * (entity->length >> 1);
-    RSDK.DrawSprite(&entity->animator1, &drawPos, false);
+    drawPos.x = self->position.x;
+    drawPos.y = self->position.y;
+    drawPos.x -= self->length << 15;
+    drawPos.y -= (self->slope << 8) * (self->length >> 1);
+    RSDK.DrawSprite(&self->animator1, &drawPos, false);
 
-    int len = entity->length << 16;
+    int len = self->length << 16;
     if (len > 0x300000) {
         int size = (len - 0x300001) / 0x300000 + 1;
         if ((len - 0x300001) / 0x300000 != -1) {
             int incX = len / size;
             for (int i = 0; i < size; ++i) {
                 drawPos.x += incX;
-                drawPos.y += (incX >> 8) * entity->slope;
-                RSDK.DrawSprite(&entity->animator2, &drawPos, false);
+                drawPos.y += (incX >> 8) * self->slope;
+                RSDK.DrawSprite(&self->animator2, &drawPos, false);
             }
         }
     }
 
-    drawPos = entity->position;
-    drawPos.x += entity->length << 15;
-    drawPos.y += (entity->slope << 8) * (entity->length >> 1);
-    RSDK.DrawSprite(&entity->animator1, &drawPos, false);
+    drawPos = self->position;
+    drawPos.x += self->length << 15;
+    drawPos.y += (self->slope << 8) * (self->length >> 1);
+    RSDK.DrawSprite(&self->animator1, &drawPos, false);
 }
 
 void LRZConveyor_Unknown5(colour *colour, int a2, int a3, int a4, int a5, int a6, int startX, int startY)
 {
     RSDK_THIS(LRZConveyor);
 
-    int len = (entity->length >> 1) + ((entity->length & 1) != 0);
+    int len = (self->length >> 1) + ((self->length & 1) != 0);
 
     int moveX = a3;
     int moveY = a4;
     for (int i = 0; i < len; ++i) {
         int id = 0;
-        if (entity->direction == FLIP_X)
+        if (self->direction == FLIP_X)
             id = len - a2 % len - 1;
         else
             id = a2 % len;
-        if (!entity->off)
+        if (!self->off)
             id += Zone->timer >> 1;
 
         int x1 = startX + moveX;
@@ -251,13 +251,13 @@ void LRZConveyor_Unknown6(void)
 
     colour clr = 0x51DEFF;
 
-    int slopeLen = (entity->length >> 1) * (entity->slope << 8);
-    int endX     = (entity->length << 15) + entity->position.x;
-    int startX   = entity->position.x - (entity->length << 15);
-    int y1       = (entity->length >> 1) + ((entity->length & 1) != 0);
-    int y2       = slopeLen + entity->position.y + 0xF0000;
-    int y3       = slopeLen + entity->position.y - 0x100000;
-    int y4       = entity->position.y - slopeLen;
+    int slopeLen = (self->length >> 1) * (self->slope << 8);
+    int endX     = (self->length << 15) + self->position.x;
+    int startX   = self->position.x - (self->length << 15);
+    int y1       = (self->length >> 1) + ((self->length & 1) != 0);
+    int y2       = slopeLen + self->position.y + 0xF0000;
+    int y3       = slopeLen + self->position.y - 0x100000;
+    int y4       = self->position.y - slopeLen;
 
     LRZConveyor_Unknown5(NULL, 0, startX, y4 - 0x100000, endX, y3, 0, 0);
     LRZConveyor_Unknown5(NULL, y1, endX, y2, startX, y4 + 0xF0000, 0, 0);
@@ -272,15 +272,15 @@ void LRZConveyor_EditorDraw(void)
 {
     RSDK_THIS(LRZConveyor);
 
-    entity->startPos.x    = entity->position.x;
-    entity->startPos.y    = entity->position.y;
-    entity->updateRange.x = (entity->length + 128) << 16;
-    entity->updateRange.y = (entity->length * (entity->slope << 8)) + 0x800000;
-    entity->startDir      = entity->direction;
+    self->startPos.x    = self->position.x;
+    self->startPos.y    = self->position.y;
+    self->updateRange.x = (self->length + 128) << 16;
+    self->updateRange.y = (self->length * (self->slope << 8)) + 0x800000;
+    self->startDir      = self->direction;
 
-    int speed     = entity->speed;
-    entity->speed = abs(entity->speed);
-    entity->speed = speed;
+    int speed     = self->speed;
+    self->speed = abs(self->speed);
+    self->speed = speed;
 
     LRZConveyor_Draw();
 }

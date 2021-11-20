@@ -7,14 +7,14 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    int32 field_4;
-    int32 field_8;
-    int32 field_C;
-    int32 field_10;
-    int32 field_14;
+    int32 authForbiddenFlag;
+    bool32 signoutFlag;
+    int32 unused1;
+    int32 unused2;
+    bool32 isAutoSaving;
     void *entityPtr;
-    int32 field_1C;
-    int32 field_20;
+    int32 unused3;
+    int32 unused4;
 } ObjectDialogRunner;
 
 // Entity Class
@@ -22,7 +22,7 @@ typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
-    void (*callback)(void);
+    StateMachine(callback);
     int32 field_64;
     int32 field_68;
     int32 field_6C;
@@ -32,7 +32,7 @@ typedef struct {
     int32 field_7C;
     int32 field_80;
     int32 status;
-    int32 field_88;
+    bool32 useGenericText;
 } EntityDialogRunner;
 
 // Object Struct
@@ -66,7 +66,7 @@ bool32 DialogRunner_CheckUnreadNotifs(void);
 bool32 DialogRunner_NotifyAutosave(void);
 void DialogRunner_GetUserAuthStatus(void);
 void DialogRunner_PromptSavePreference(int32 id);
-void DialogRunner_Unknown14(void);
+void DialogRunner_SignedOutCB(void);
 #endif
 
 #endif //! OBJ_DIALOGRUNNER_H

@@ -397,7 +397,7 @@ void OptionsMenu_Unknown7(void)
         Localization_GetString(&info, STR_VIDEOCHANGESAPPLIED);
         EntityUIDialog *dialog = UIDialog_CreateActiveDialog(&info);
         if (dialog) {
-            dialog->timer = 900;
+            dialog->closeDelay = 900;
             UIDialog_AddButton(DIALOG_NO, dialog, OptionsMenu_Unknown11, true);
             UIDialog_AddButton(DIALOG_YES, dialog, OptionsMenu_Unknown13, true);
             UIDialog_Setup(dialog);
@@ -413,7 +413,7 @@ void OptionsMenu_Unknown8(void)
     Localization_GetString(&info, STR_VIDEOCHANGESAPPLIED);
     EntityUIDialog *dialog = UIDialog_CreateActiveDialog(&info);
     if (dialog) {
-        dialog->timer = 900;
+        dialog->closeDelay = 900;
         UIDialog_AddButton(DIALOG_NO, dialog, OptionsMenu_Unknown12, true);
         UIDialog_AddButton(DIALOG_YES, dialog, OptionsMenu_Unknown14, true);
         UIDialog_Setup(dialog);
@@ -535,30 +535,30 @@ void OptionsMenu_Unknown21(void)
 
 void OptionsMenu_Unknown22(void)
 {
-    RSDK_controller[1].keyUp.keyMap     = 38;
-    RSDK_controller[1].keyDown.keyMap   = 40;
-    RSDK_controller[1].keyLeft.keyMap   = 37;
-    RSDK_controller[1].keyRight.keyMap  = 39;
-    RSDK_controller[1].keyA.keyMap      = 65;
-    RSDK_controller[1].keyB.keyMap      = 83;
-    RSDK_controller[1].keyC.keyMap      = 0;
-    RSDK_controller[1].keyX.keyMap      = 81;
-    RSDK_controller[1].keyY.keyMap      = 87;
-    RSDK_controller[1].keyZ.keyMap      = 0;
-    RSDK_controller[1].keyStart.keyMap  = 13;
-    RSDK_controller[1].keySelect.keyMap = 9;
-    RSDK_controller[2].keyUp.keyMap     = 104;
-    RSDK_controller[2].keyDown.keyMap   = 101;
-    RSDK_controller[2].keyLeft.keyMap   = 100;
-    RSDK_controller[2].keyRight.keyMap  = 102;
-    RSDK_controller[2].keyA.keyMap      = 74;
-    RSDK_controller[2].keyB.keyMap      = 75;
-    RSDK_controller[2].keyC.keyMap      = 0;
-    RSDK_controller[2].keyX.keyMap      = 85;
-    RSDK_controller[2].keyY.keyMap      = 73;
-    RSDK_controller[2].keyZ.keyMap      = 0;
-    RSDK_controller[2].keyStart.keyMap  = 219;
-    RSDK_controller[2].keySelect.keyMap = 221;
+    ControllerInfo[1].keyUp.keyMap     = 38;
+    ControllerInfo[1].keyDown.keyMap   = 40;
+    ControllerInfo[1].keyLeft.keyMap   = 37;
+    ControllerInfo[1].keyRight.keyMap  = 39;
+    ControllerInfo[1].keyA.keyMap      = 65;
+    ControllerInfo[1].keyB.keyMap      = 83;
+    ControllerInfo[1].keyC.keyMap      = 0;
+    ControllerInfo[1].keyX.keyMap      = 81;
+    ControllerInfo[1].keyY.keyMap      = 87;
+    ControllerInfo[1].keyZ.keyMap      = 0;
+    ControllerInfo[1].keyStart.keyMap  = 13;
+    ControllerInfo[1].keySelect.keyMap = 9;
+    ControllerInfo[2].keyUp.keyMap     = 104;
+    ControllerInfo[2].keyDown.keyMap   = 101;
+    ControllerInfo[2].keyLeft.keyMap   = 100;
+    ControllerInfo[2].keyRight.keyMap  = 102;
+    ControllerInfo[2].keyA.keyMap      = 74;
+    ControllerInfo[2].keyB.keyMap      = 75;
+    ControllerInfo[2].keyC.keyMap      = 0;
+    ControllerInfo[2].keyX.keyMap      = 85;
+    ControllerInfo[2].keyY.keyMap      = 73;
+    ControllerInfo[2].keyZ.keyMap      = 0;
+    ControllerInfo[2].keyStart.keyMap  = 219;
+    ControllerInfo[2].keySelect.keyMap = 221;
     RSDK.SetSettingsValue(SETTINGS_CHANGED, true);
 }
 
@@ -593,7 +593,7 @@ void OptionsMenu_Unknown24(void)
     EntityUIControl *control = (EntityUIControl *)OptionsMenu->controlsControl_Windows;
 
     for (int32 i = 0; i < control->buttonCount; ++i) {
-        if (entity == control->buttons[i]) {
+        if (self == control->buttons[i]) {
             OptionsMenu_Unknown23(i);
             UIControl_MatchMenuTag("Controls KB");
         }
@@ -638,7 +638,7 @@ void OptionsMenu_Unknown29(int32 status)
 void OptionsMenu_Unknown30(void)
 {
     RSDK_THIS(UIButton);
-    EntityUIControl *control = (EntityUIControl *)entity->parent;
+    EntityUIControl *control = (EntityUIControl *)self->parent;
     Options_SetLanguage(control->activeEntityID);
     Localization->language     = control->activeEntityID;
     control->selectionDisabled = true;
@@ -650,9 +650,9 @@ void OptionsMenu_Unknown31(void)
 {
     RSDK_THIS(UIButton);
     EntityOptions *options  = (EntityOptions *)globals->optionsRAM;
-    options->screenShader = entity->selection;
-    options->field_60 = true;
-    RSDK.SetSettingsValue(SETTINGS_SHADERID, entity->selection);
+    options->screenShader = self->selection;
+    options->overrideShader       = true;
+    RSDK.SetSettingsValue(SETTINGS_SHADERID, self->selection);
     RSDK.SetSettingsValue(SETTINGS_CHANGED, false);
     Options->state = 1;
 }
@@ -662,11 +662,11 @@ void OptionsMenu_Unknown32(void)
     RSDK_THIS(UIButton);
 
     EntityOptions *options = (EntityOptions *)globals->optionsRAM;
-    if (entity->selection != 4) {
-        RSDK.SetSettingsValue(SETTINGS_WINDOW_WIDTH, 424 * (entity->selection + 1));
-        RSDK.SetSettingsValue(SETTINGS_WINDOW_HEIGHT, SCREEN_YSIZE * (entity->selection + 1));
+    if (self->selection != 4) {
+        RSDK.SetSettingsValue(SETTINGS_WINDOW_WIDTH, 424 * (self->selection + 1));
+        RSDK.SetSettingsValue(SETTINGS_WINDOW_HEIGHT, SCREEN_YSIZE * (self->selection + 1));
 
-        options->windowSize = entity->selection;
+        options->windowSize = self->selection;
         Options->state   = 1;
     }
 }
@@ -676,8 +676,8 @@ void OptionsMenu_Unknown33(void)
     RSDK_THIS(UIButton);
     EntityOptions *options  = (EntityOptions *)globals->optionsRAM;
 
-    options->windowBorder = entity->selection;
-    RSDK.SetSettingsValue(SETTINGS_BORDERED, entity->selection);
+    options->windowBorder = self->selection;
+    RSDK.SetSettingsValue(SETTINGS_BORDERED, self->selection);
     Options->state = 1;
 }
 
@@ -686,8 +686,8 @@ void OptionsMenu_Unknown34(void)
     RSDK_THIS(UIButton);
     EntityOptions *options = (EntityOptions *)globals->optionsRAM;
 
-    options->windowed = entity->selection ^ 1;
-    RSDK.SetSettingsValue(SETTINGS_WINDOWED, entity->selection ^ 1);
+    options->windowed = self->selection ^ 1;
+    RSDK.SetSettingsValue(SETTINGS_WINDOWED, self->selection ^ 1);
     Options->state = 1;
 }
 
@@ -696,8 +696,8 @@ void OptionsMenu_Unknown35(void)
     RSDK_THIS(UIButton);
     EntityOptions *options = (EntityOptions *)globals->optionsRAM;
 
-    options->vSync = entity->selection;
-    RSDK.SetSettingsValue(SETTINGS_VSYNC, entity->selection);
+    options->vSync = self->selection;
+    RSDK.SetSettingsValue(SETTINGS_VSYNC, self->selection);
     Options->state = 1;
 }
 
@@ -706,8 +706,8 @@ void OptionsMenu_Unknown36(void)
     RSDK_THIS(UIButton);
     EntityOptions *options = (EntityOptions *)globals->optionsRAM;
 
-    options->tripleBuffering = entity->selection;
-    RSDK.SetSettingsValue(SETTINGS_TRIPLEBUFFERED, entity->selection);
+    options->tripleBuffering = self->selection;
+    RSDK.SetSettingsValue(SETTINGS_TRIPLEBUFFERED, self->selection);
     Options->state = 1;
 }
 
@@ -719,44 +719,44 @@ void OptionsMenu_UISlider_ChangedCB(void)
     // what the hell is up with this???????
     // it'd only ever be 0 or 1 why are F1,F2,F4,F5 & FC options?????
     // this is a CB for the slider why are the boolean values here???
-    bool32 value = entity->frameID != 1;
+    bool32 value = self->frameID != 1;
     switch (value) {
         case 0xF1:
-            options->windowed = entity->sliderPos;
+            options->windowed = self->sliderPos;
             RSDK.SetSettingsValue(SETTINGS_WINDOWED, options->windowed);
             Options->state = 1;
             break;
         case 0xF2:
-            options->windowBorder = entity->sliderPos;
+            options->windowBorder = self->sliderPos;
             RSDK.SetSettingsValue(SETTINGS_BORDERED, options->windowBorder);
             Options->state = 1;
             break;
         case 0xF4:
-            options->vSync = entity->sliderPos;
+            options->vSync = self->sliderPos;
             RSDK.SetSettingsValue(SETTINGS_VSYNC, options->vSync);
             Options->state = 1;
             break;
         case 0xF5:
-            options->tripleBuffering = entity->sliderPos;
+            options->tripleBuffering = self->sliderPos;
             RSDK.SetSettingsValue(SETTINGS_TRIPLEBUFFERED, options->tripleBuffering);
             Options->state = 1;
             break;
         case 0xFC:
-            options->screenShader = entity->sliderPos;
-            options->field_60   = true;
+            options->screenShader   = self->sliderPos;
+            options->overrideShader = true;
             RSDK.SetSettingsValue(SETTINGS_SHADERID, options->screenShader);
             RSDK.SetSettingsValue(SETTINGS_CHANGED, 0);
             Options->state = 1;
             break;
         case 0:
-            options->volMusic = entity->sliderPos;
-            options->field_68   = 1;
+            options->volMusic         = self->sliderPos;
+            options->overrideMusicVol = 1;
             RSDK.SetSettingsValue(SETTINGS_STREAM_VOL, options->volMusic);
             Options->state = 1;
             break;
         case 1:
-            options->volSfx   = entity->sliderPos;
-            options->field_70   = true;
+            options->volSfx         = self->sliderPos;
+            options->overrideSfxVol = true;
             RSDK.SetSettingsValue(SETTINGS_SFX_VOL, options->volSfx);
             Options->state = 1;
             break;
@@ -766,7 +766,7 @@ void OptionsMenu_UISlider_ChangedCB(void)
 
 void OptionsMenu_ShowManual(void)
 {
-    RSDK.PlaySfx(UIWidgets->sfx_Accept, false, 255);
+    RSDK.PlaySfx(UIWidgets->sfxAccept, false, 255);
     API.LaunchManual();
 }
 
@@ -805,7 +805,7 @@ void OptionsMenu_EraseAllSaveData(void)
     memset(globals->noSaveSlot, 0, 0x400);
     globals->continues = 0;
     if (!checkNoSave && SaveGame->saveRAM && globals->saveLoaded == STATUS_OK) {
-        SaveGame->saveEntityPtr = RSDK_sceneInfo->entity;
+        SaveGame->saveEntityPtr = SceneInfo->entity;
         SaveGame->saveCallback  = OptionsMenu_EraseSaveDataCB;
         API_SaveUserFile("SaveData.bin", globals->saveRAM, 0x10000, SaveGame_SaveFile_CB, false);
     }
@@ -830,7 +830,7 @@ void OptionsMenu_EraseAllData(void)
     GameProgress_ClearProgress();
     API.RemoveAllDBRows(globals->taTableID);
     if (!checkNoSave && SaveGame->saveRAM && globals->saveLoaded == STATUS_OK) {
-        SaveGame->saveEntityPtr = RSDK_sceneInfo->entity;
+        SaveGame->saveEntityPtr = SceneInfo->entity;
         SaveGame->saveCallback  = OptionsMenu_EraseSaveDataCB;
         API_SaveUserFile("SaveData.bin", globals->saveRAM, 0x10000, SaveGame_SaveFile_CB, false);
     }
@@ -905,8 +905,8 @@ void OptionsMenu_Unknown44(void)
         control->selectionDisabled = true;
         UIWaitSpinner_Wait();
     }
-    API.SetupSortedUserDBRowIDs(globals->replayTableID);
-    API.SetupSortedUserDBRowIDs(globals->taTableID);
+    API.SetupUserDBRowSorting(globals->replayTableID);
+    API.SetupUserDBRowSorting(globals->taTableID);
     if (API.GetSortedUserDBRowCount(globals->replayTableID) <= 0) {
         ReplayRecorder_SaveReplayDB(OptionsMenu_Unknown45);
     }

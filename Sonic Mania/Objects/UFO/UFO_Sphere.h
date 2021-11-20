@@ -3,14 +3,27 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    UFO_SPHERE_BLUE,
+    UFO_SPHERE_RED,
+    UFO_SPHERE_MINE,
+    UFO_SPHERE_SPIKES,
+} UFO_SphereTypes;
+
+typedef enum {
+    UFO_SPHERE_B_NONE,
+    UFO_SPHERE_B_BOUNCE,
+    UFO_SPHERE_B_MOVE,
+} UFO_SphereBehaviours;
+
 // Object Class
 typedef struct {
     RSDK_OBJECT
     int32 field_4;
     TABLE(int32 defaultHeights[4], { 12, 12, 16, 16 });
-    uint16 spriteIndex;
-    uint16 sfx_MachSpeed;
-    uint16 sfx_LedgeBreak;
+    uint16 aniFrames;
+    uint16 sfxMachSpeed;
+    uint16 sfxLedgeBreak;
 } ObjectUFO_Sphere;
 
 // Entity Class
@@ -24,12 +37,11 @@ typedef struct {
     Vector2 matAngle;
     Vector2 amplitude;
     int32 timer;
-    int32 dword80;
-    int32 dword84;
-    int32 dword88;
+    int32 startHeight;
+    Vector2 startPos;
     Vector2 worldPos;
     Vector2 drawPos;
-    int32 dword9C;
+    int32 scaleFactor;
     Matrix matrix;
     Matrix matrix2;
     Animator animator;
@@ -52,11 +64,11 @@ void UFO_Sphere_EditorLoad(void);
 void UFO_Sphere_Serialize(void);
 
 // Extra Entity Functions
-void UFO_Sphere_CheckPlayerCollision(void);
+void UFO_Sphere_State_Fixed(void);
 void UFO_Sphere_State_Bouncing(void);
 void UFO_Sphere_State_Moving(void);
-void UFO_Sphere_Unknown3(void);
-void UFO_Sphere_Unknown4(void);
-void UFO_Sphere_Unknown5(void);
+void UFO_Sphere_State_Collected(void);
+void UFO_Sphere_State_HandleRespawn(void);
+void UFO_Sphere_State_AnimateAndDestroy(void);
 
 #endif //!OBJ_UFO_SPHERE_H

@@ -140,9 +140,9 @@ typedef struct {
     void (*SaveUserDB)(uint16 tableID, void (*callback)(int32 status));
     void (*ClearUserDB)(uint16 tableID);
     void (*ClearAllUserDBs)(void);
-    void (*SetupSortedUserDBRowIDs)(uint16 tableID);
+    void (*SetupUserDBRowSorting)(uint16 tableID);
     bool32 (*GetUserDBRowsChanged)(uint16 tableID);
-    void (*Unknown33)(uint16 tableID, int32 type, const char *name, void *value);
+    void (*AddRowSortFilter)(uint16 tableID, int32 type, const char *name, void *value);
     void (*SortDBRows)(uint16 tableID, int32 type, const char *name, bool32 flag);
     int32 (*GetSortedUserDBRowCount)(uint16 tableID);
     int32 (*GetSortedUserDBRowID)(uint16 tableID, uint16 row);
@@ -218,8 +218,8 @@ typedef struct {
     int32 (*ASin256)(int32 angle);
     int32 (*ACos256)(int32 angle);
     int32 (*Rand)(int32 min, int32 max);
-    int32 (*Random)(int32 min, int32 max, int32 *randKey);
-    void (*SetRandKey)(int32 key);
+    int32 (*RandSeeded)(int32 min, int32 max, int32 *randSeed);
+    void (*SetRandSeed)(int32 key);
     uint8 (*ATan2)(int32 x, int32 y);
     void (*SetIdentityMatrix)(Matrix *matrix);
     void (*MatrixMultiply)(Matrix *dest, Matrix *matrixA, Matrix *matrixB);
@@ -282,16 +282,17 @@ typedef struct {
     void (*SetDiffuseColour)(uint16 index, int32 x, int32 y, int32 z);
     void (*SetDiffuseIntensity)(uint16 index, int32 x, int32 y, int32 z);
     void (*SetSpecularIntensity)(uint16 index, int32 x, int32 y, int32 z);
-    void (*AddModelTo3DScene)(uint16 modelIndex, uint16 sceneIndex, uint8 type, Matrix *mat1, Matrix *mat2, colour colour);
+    void (*AddModelTo3DScene)(uint16 modelIndex, uint16 sceneIndex, uint8 type, Matrix *matWorld, Matrix *matNormal, colour colour);
     void (*SetModelAnimation)(uint16 modelAnim, Animator *animator, int16 animSpeed, uint8 loopIndex, bool32 forceApply, uint16 frameID);
-    void (*AddMeshFrameTo3DScene)(uint16 modelID, uint16 sceneID, Animator *animator, uint8 drawMode, Matrix *mat1, Matrix *mat, colour colour);
+    void (*AddMeshFrameTo3DScene)(uint16 modelID, uint16 sceneID, Animator *animator, uint8 drawMode, Matrix *matWorld, Matrix *matNormal,
+                                  colour colour);
     void (*Draw3DScene)(uint16 index);
     uint16 (*LoadSpriteAnimation)(const char *path, Scopes scope);
     uint16 (*CreateSpriteAnimation)(const char *filename, uint32 frameCount, uint32 animCount, Scopes scope);
-    void (*SetSpriteAnimation)(uint16 spriteIndex, uint16 animationID, Animator *animator, bool32 forceApply, int16 frameID);
-    void (*EditSpriteAnimation)(uint16 spriteIndex, uint16 animID, const char *name, int32 frameOffset, uint16 frameCount, int16 animSpeed,
+    void (*SetSpriteAnimation)(uint16 aniFrames, uint16 animationID, Animator *animator, bool32 forceApply, int16 frameID);
+    void (*EditSpriteAnimation)(uint16 aniFrames, uint16 animID, const char *name, int32 frameOffset, uint16 frameCount, int16 animSpeed,
                                 uint8 loopIndex, uint8 rotationFlag);
-    void (*SetSpriteString)(uint16 spriteIndex, uint16 animID, TextInfo *info);
+    void (*SetSpriteString)(uint16 aniFrames, uint16 animID, TextInfo *info);
     void *(*GetSpriteAnimation)(uint16 sprIndex, const char *name);
     SpriteFrame *(*GetFrame)(uint16 sprIndex, uint16 anim, int32 frame);
     Hitbox *(*GetHitbox)(Animator *animator, uint8 hitboxID);
@@ -320,7 +321,7 @@ typedef struct {
     uint8 (*GetTileBehaviour)(uint16 tileID, uint8 cPlane);
     void (*SetTileBehaviour)(uint16 tileID, uint8 cPlane, uint8 value);
     int32 (*GetSFX)(const char *path);
-    int32 (*PlaySfx)(uint16 sfx, int32 loop, int32 pan);
+    int32 (*PlaySfx)(uint16 sfx, int32 loop, int32 unknown);
     void (*StopSFX)(uint16 sfx);
     int32 (*PlayStream)(const char *filename, uint32 slot, uint32 startPos, uint32 loopPoint, bool32 loadASync);
     int32 (*SetChannelAttributes)(uint8 slot, float volume, float pan, float speed);
@@ -417,9 +418,9 @@ extern RSDKFunctionTable RSDK;
 #define RSDK_ADD_OBJECT_CONTAINER(object) RSDK.RegisterObjectContainer((void **)&object, #object, sizeof(Object##object))
 #endif
 
-#define RSDK_THIS(type)             Entity##type *entity = (Entity##type *)RSDK_sceneInfo->entity
-#define RSDK_THIS_GEN()             Entity *entity = RSDK_sceneInfo->entity
-#define RSDK_GET_ENTITY(slot, type) ((Entity##type *)RSDK.GetEntityByID(slot))
+#define RSDK_THIS(type)                Entity##type *self = (Entity##type *)SceneInfo->entity
+#define RSDK_THIS_GEN()                Entity *self = SceneInfo->entity
+#define RSDK_GET_ENTITY(slot, type)    ((Entity##type *)RSDK.GetEntityByID(slot))
 #define CREATE_ENTITY(obj, data, x, y) ((Entity##obj *)RSDK.CreateEntity(obj->objectID, data, x, y))
 
 #define INIT_TEXTINFO(info)                                                                                                                          \
@@ -463,12 +464,12 @@ extern RSDKFunctionTable RSDK;
 #endif
 
 #if RETRO_INCLUDE_EDITOR
-#define showGizmos() RSDK_sceneInfo->listPos == RSDK_sceneInfo->entitySlot || RSDK_sceneInfo->effectGizmo
+#define showGizmos() (SceneInfo->listPos == SceneInfo->entitySlot || SceneInfo->effectGizmo)
 #endif
 
-DLLExport void LinkGameLogicDLL(GameInfo *gameInfo);
+DLLExport void LinkGameLogicDLL(EngineInfo *info);
 #if RETRO_USE_MOD_LOADER
-DLLExport bool32 LinkModLogic(GameInfo *info, const char *id);
+DLLExport bool32 LinkModLogic(EngineInfo *info, const char *id);
 #endif
 
 #endif //! GAMEOBJECTS_H

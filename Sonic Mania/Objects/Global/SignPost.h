@@ -18,14 +18,14 @@ typedef enum {
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    uint16 spriteIndex;
+    uint16 aniFrames;
     Hitbox hitbox;
     Hitbox itemBoxHitbox;
-    uint16 sfx_SignPost;
-    uint16 sfx_SignPost2P;
-    uint16 sfx_Twinkle;
-    uint16 sfx_BubbleBounce;
-    uint16 sfx_Slide;
+    uint16 sfxSignPost;
+    uint16 sfxSignPost2P;
+    uint16 sfxTwinkle;
+    uint16 sfxBubbleBounce;
+    uint16 sfxSlide;
     uint8 maxPlayerCount;
 } ObjectSignPost;
 

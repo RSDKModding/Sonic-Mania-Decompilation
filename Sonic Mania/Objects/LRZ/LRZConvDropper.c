@@ -5,56 +5,56 @@ ObjectLRZConvDropper *LRZConvDropper;
 void LRZConvDropper_Update(void)
 {
     RSDK_THIS(LRZConvDropper);
-    entity->visible = DebugMode->debugActive == 1;
+    self->visible = DebugMode->debugActive == 1;
 
-    switch (entity->triggerMode) {
+    switch (self->triggerMode) {
         case LRZCONVDROP_TRIGGER_BUTTON:
-            if (!((Zone->timer + entity->intervalOffset) % entity->interval))
-                LRZConvDropper_HandleButtonDrop(entity);
+            if (!((Zone->timer + self->intervalOffset) % self->interval))
+                LRZConvDropper_HandleButtonDrop(self);
             break;
         case LRZCONVDROP_TRIGGER_PLAYER: {
             bool32 dropFlag  = false;
             bool32 enterFlag = false;
 
-            entity->position.x += entity->detectOffset.x;
-            entity->position.y += entity->detectOffset.y;
+            self->position.x += self->detectOffset.x;
+            self->position.y += self->detectOffset.y;
             foreach_active(Player, player)
             {
                 int playerID = RSDK.GetEntityID(player);
 
                 bool32 flag = false;
-                if (Player_CheckCollisionTouch(player, entity, &entity->hitbox)) {
+                if (Player_CheckCollisionTouch(player, self, &self->hitbox)) {
                     flag = true;
                 }
 
-                if (!((1 << playerID) & entity->activePlayers) && flag) {
+                if (!((1 << playerID) & self->activePlayers) && flag) {
                     if (!player->sidekick)
                         enterFlag = true;
-                    entity->activePlayers |= (1 << playerID);
+                    self->activePlayers |= (1 << playerID);
                 }
 
-                if ((1 << playerID) & entity->activePlayers) {
+                if ((1 << playerID) & self->activePlayers) {
                     if (!player->sidekick)
                         dropFlag = true;
                     if (!flag)
-                        entity->activePlayers &= ~(1 << playerID);
+                        self->activePlayers &= ~(1 << playerID);
                 }
             }
-            entity->position.x -= entity->detectOffset.x;
-            entity->position.y -= entity->detectOffset.y;
+            self->position.x -= self->detectOffset.x;
+            self->position.y -= self->detectOffset.y;
 
             if (enterFlag) {
-                if (!entity->timerStore || Zone->timer - entity->timerStore > entity->interval)
-                    entity->timerStore = Zone->timer;
+                if (!self->timerStore || Zone->timer - self->timerStore > self->interval)
+                    self->timerStore = Zone->timer;
             }
 
             int32 timer = 0;
             if (dropFlag)
-                timer = Zone->timer - entity->timerStore;
+                timer = Zone->timer - self->timerStore;
 
             if (dropFlag) {
-                if (!((timer + entity->intervalOffset) % entity->interval))
-                    LRZConvDropper_HandleButtonDrop(entity);
+                if (!((timer + self->intervalOffset) % self->interval))
+                    LRZConvDropper_HandleButtonDrop(self);
             }
             break;
         }
@@ -69,12 +69,12 @@ void LRZConvDropper_Draw(void)
 {
     RSDK_THIS(LRZConvDropper);
 
-    RSDK.DrawSprite(&entity->animator, NULL, false);
-    if (entity->triggerMode == LRZCONVDROP_TRIGGER_PLAYER) {
-        int x = entity->detectOffset.x + entity->position.x;
-        int y = entity->detectOffset.y + entity->position.y;
-        RSDK.DrawLine(entity->position.x, entity->position.y, x, y, 0xFFFFFF, 0x7F, INK_NONE, false);
-        DrawHelpers_DrawHitboxOutline(0xFFFFFF, 0, x, y, &entity->hitbox);
+    RSDK.DrawSprite(&self->animator, NULL, false);
+    if (self->triggerMode == LRZCONVDROP_TRIGGER_PLAYER) {
+        int x = self->detectOffset.x + self->position.x;
+        int y = self->detectOffset.y + self->position.y;
+        RSDK.DrawLine(self->position.x, self->position.y, x, y, 0xFFFFFF, 0x7F, INK_NONE, false);
+        DrawHelpers_DrawHitboxOutline(0xFFFFFF, 0, x, y, &self->hitbox);
     }
 }
 
@@ -82,23 +82,23 @@ void LRZConvDropper_Create(void *data)
 {
     RSDK_THIS(LRZConvDropper);
 
-    entity->active        = ACTIVE_BOUNDS;
-    entity->drawOrder     = Zone->drawOrderLow;
-    entity->visible       = true;
-    entity->drawFX        = FX_FLIP;
-    entity->updateRange.x = 0x800000;
-    entity->updateRange.y = 0x800000;
-    if (entity->triggerMode == LRZCONVDROP_TRIGGER_PLAYER) {
-        entity->updateRange.x = (entity->detectSize.x >> 1) + 0x1000000;
-        entity->updateRange.y = (entity->detectSize.y >> 1) + 0x1000000;
+    self->active        = ACTIVE_BOUNDS;
+    self->drawOrder     = Zone->drawOrderLow;
+    self->visible       = true;
+    self->drawFX        = FX_FLIP;
+    self->updateRange.x = 0x800000;
+    self->updateRange.y = 0x800000;
+    if (self->triggerMode == LRZCONVDROP_TRIGGER_PLAYER) {
+        self->updateRange.x = (self->detectSize.x >> 1) + 0x1000000;
+        self->updateRange.y = (self->detectSize.y >> 1) + 0x1000000;
     }
 
-    entity->hitbox.left   = -(entity->detectSize.x >> 17);
-    entity->hitbox.top    = -(entity->detectSize.y >> 17);
-    entity->hitbox.right  = entity->detectSize.x >> 17;
-    entity->hitbox.bottom = entity->detectSize.y >> 17;
+    self->hitbox.left   = -(self->detectSize.x >> 17);
+    self->hitbox.top    = -(self->detectSize.y >> 17);
+    self->hitbox.right  = self->detectSize.x >> 17;
+    self->hitbox.bottom = self->detectSize.y >> 17;
     LRZConvDropper_SetupDropperChildren();
-    RSDK.SetSpriteAnimation(LRZConvDropper->aniFrames, 0, &entity->animator, true, 0);
+    RSDK.SetSpriteAnimation(LRZConvDropper->aniFrames, 0, &self->animator, true, 0);
 }
 
 void LRZConvDropper_StageLoad(void) { LRZConvDropper->aniFrames = RSDK.LoadSpriteAnimation("LRZ2/LRZConvDropper.bin", SCOPE_STAGE); }
@@ -107,8 +107,8 @@ void LRZConvDropper_SetupDropperChildren(void)
 {
     RSDK_THIS(LRZConvDropper);
 
-    int slot = RSDK.GetEntityID(entity) - entity->seqCount;
-    for (int i = 0; i < entity->seqCount; ++i) {
+    int slot = RSDK.GetEntityID(self) - self->seqCount;
+    for (int i = 0; i < self->seqCount; ++i) {
         EntityLRZConvItem *child = RSDK_GET_ENTITY(slot--, LRZConvItem);
         child->active            = ACTIVE_NEVER;
         child->visible           = false;

@@ -6,11 +6,11 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    uint16 spriteIndex;
-    uint16 sfx_ScoreAdd;
-    uint16 sfx_ScoreTotal;
+    uint16 aniFrames;
+    uint16 sfxScoreAdd;
+    uint16 sfxScoreTotal;
 #if RETRO_USE_PLUS
-    uint16 sfx_Event;
+    uint16 sfxEvent;
 #endif
     bool32 isTimeAttack;
     int32 finishedSavingGame;
@@ -25,7 +25,7 @@ typedef struct {
     StateMachine(saveReplay_CB);
     int32 hasSavedReplay;
     int32 disableTimeBonus;
-    bool32 dword34;
+    bool32 actClearActive;
 #endif
 } ObjectActClear;
 
@@ -40,16 +40,16 @@ typedef struct {
     int32 coolBonus;
     int32 totalScore;
     int32 time;
-    int32 dword78;
-    int32 field_7C;
-    int32 field_80;
-    int32 field_84;
-    Vector2 posUnknown;
-    Vector2 posUnknown3;
-    Vector2 posUnknown2;
-    Vector2 posUnknown4;
-    Vector2 posUnknown5;
-    Vector2 posUnknown6;
+    int32 newRecordTimer;
+    bool32 achievedRank;
+    bool32 isNewRecord;
+    bool32 showCoolBonus;
+    Vector2 playerNamePos;
+    Vector2 gotThroughPos;
+    Vector2 timeBonusPos;
+    Vector2 ringBonusPos;
+    Vector2 coolBonusPos;
+    Vector2 totalScorePos;
     void *playerPtr;
     Animator hudElementsAnimator;
     Animator numbersAnimator;
@@ -79,7 +79,7 @@ void ActClear_Serialize(void);
 
 // Extra Entity Functions
 #if RETRO_USE_PLUS
-void ActClear_DrawTime(int32 mins, Vector2 *pos, int32 secs, int32 millisecs);
+void ActClear_DrawTime(Vector2 *pos, int32 mins, int32 secs, int32 millisecs);
 #endif
 void ActClear_DrawNumbers(Vector2 *pos, int32 value, int32 maxVals);
 void ActClear_CheckPlayerVictory(void);

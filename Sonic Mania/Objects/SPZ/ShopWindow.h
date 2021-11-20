@@ -6,7 +6,7 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    uint16 spriteIndex;
+    uint16 aniFrames;
     uint16 sfxShatter;
 } ObjectShopWindow;
 
@@ -47,7 +47,7 @@ void ShopWindow_State_Shard(void);
 void ShopWindow_State_Shattered(void);
 void ShopWindow_State_Silhouette(void);
 void ShopWindow_Draw_Normal(void);
-void ShopWindow_State_Draw_Shard(void);
-void ShopWindow_State_Draw_Shattered(void);
+void ShopWindow_Draw_Shard(void);
+void ShopWindow_Draw_Shattered(void);
 
 #endif //!OBJ_SHOPWINDOW_H

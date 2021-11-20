@@ -98,7 +98,7 @@ void LRZ1Setup_StageLoad(void)
         Zone->stageFinishCallback = LRZ1Setup_StageFinishCB;
 
 #if RETRO_USE_PLUS
-    if (RSDK_sceneInfo->filter & FILTER_ENCORE) {
+    if (SceneInfo->filter & FILTER_ENCORE) {
         RSDK.LoadPalette(0, "EncoreLRZ1.act", 255);
 
         for (int32 i = 0; i < 0x400; ++i) LRZ1Setup->fgLow->deformationData[i] = LRZ1Setup->deformFG[i & 0x1F];
@@ -125,7 +125,7 @@ void LRZ1Setup_StageFinishCB(void) { CREATE_ENTITY(LRZ1Outro, NULL, 0, 0); }
 
 void LRZ1Setup_DrawLayerCB(void)
 {
-    int32 scroll                = maxVal(0x800000 - 8 * RSDK_screens->position.y * RSDK_screens->position.y, 0);
+    int32 scroll                = maxVal(0x800000 - 8 * ScreenInfo->position.y * ScreenInfo->position.y, 0);
     LRZ1Setup->bg1->scrollPos = scroll;
     LRZ1Setup->bg2->scrollPos = scroll;
 }

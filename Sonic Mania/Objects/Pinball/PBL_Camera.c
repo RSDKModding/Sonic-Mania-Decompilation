@@ -8,10 +8,10 @@ void PBL_Camera_Update(void) {}
 void PBL_Camera_LateUpdate(void)
 {
     RSDK_THIS(PBL_Camera);
-    StateMachine_Run(entity->state);
+    StateMachine_Run(self->state);
     PBL_Camera_Unknown1();
-    entity->targetPos = entity->position;
-    entity->targetPos.y -= (0x100 << 16);
+    self->targetPos = self->position;
+    self->targetPos.y -= (0x100 << 16);
 }
 
 void PBL_Camera_StaticUpdate(void) {}
@@ -21,17 +21,17 @@ void PBL_Camera_Draw(void) {}
 void PBL_Camera_Create(void *data)
 {
     RSDK_THIS(PBL_Camera);
-    entity->active     = ACTIVE_NORMAL;
-    entity->state      = PBL_Camera_Unknown2;
-    entity->position.x = 0x400 << 16;
-    entity->angle      = 0x200;
-    entity->worldY     = 0x100 << 16;
-    entity->rotationY  = -0x60;
-    entity->position.y = entity->dword68 + (0x700 << 16);
-    entity->dword6C    = 0x100 << 16;
-    entity->dword70    = 0x700 << 16;
-    entity->dword74    = 0x100 << 16;
-    entity->dword78    = 0x700 << 16;
+    self->active     = ACTIVE_NORMAL;
+    self->state      = PBL_Camera_Unknown2;
+    self->position.x = 0x400 << 16;
+    self->angle      = 0x200;
+    self->worldY     = 0x100 << 16;
+    self->rotationY  = -0x60;
+    self->position.y = self->dword68 + (0x700 << 16);
+    self->dword6C    = 0x100 << 16;
+    self->dword70    = 0x700 << 16;
+    self->dword74    = 0x100 << 16;
+    self->dword78    = 0x700 << 16;
 }
 
 void PBL_Camera_StageLoad(void)
@@ -46,61 +46,59 @@ void PBL_Camera_StageLoad(void)
 void PBL_Camera_Unknown1(void)
 {
     RSDK_THIS(PBL_Camera);
-    int32 angle = RSDK.Cos1024(-entity->rotationY) << 12;
+    int32 angle = RSDK.Cos1024(-self->rotationY) << 12;
     if (angle < 0x3C0000)
         angle = 0x3C0000;
-    //if (!angle)
-    //    angle = 1;
 
-    int32 ang  = entity->angle - entity->field_7C;
+    int32 ang  = self->angle - self->field_7C;
     int32 ang2 = ang - 0x400;
-    if (entity->angle <= 512)
+    if (self->angle <= 512)
         ang2 = ang + 0x400;
 
     if (abs(ang) >= abs(ang2))
-        RSDK_screens->position.x -= 2 * ang2;
+        ScreenInfo->position.x -= 2 * ang2;
     else
-        RSDK_screens->position.x -= 2 * ang;
+        ScreenInfo->position.x -= 2 * ang;
 
-    int32 height               = ((RSDK.Sin1024(-entity->rotationY) << 12) << 8) / angle;
-    RSDK_screens->position.y = height - RSDK_screens->centerY + 512;
-    entity->field_7C         = entity->angle;
-    entity->field_80         = clampVal(RSDK_screens->centerY - height + 8, -64, RSDK_screens->height);
+    int32 height               = ((RSDK.Sin1024(-self->rotationY) << 12) << 8) / angle;
+    ScreenInfo->position.y = height - ScreenInfo->centerY + 512;
+    self->field_7C         = self->angle;
+    self->field_80         = clampVal(ScreenInfo->centerY - height + 8, -64, ScreenInfo->height);
 }
 
 void PBL_Camera_Unknown2(void)
 {
     RSDK_THIS(PBL_Camera);
-    Entity *target = entity->targetPtr;
+    Entity *target = self->targetPtr;
     if (target) {
-        if (target->position.y < entity->position.y - 0x1500000) {
-            entity->position.y += maxVal(target->position.y - entity->position.y + 0x1500000, -0x100000);
+        if (target->position.y < self->position.y - 0x1500000) {
+            self->position.y += maxVal(target->position.y - self->position.y + 0x1500000, -0x100000);
         }
-        else if (target->position.y > entity->position.y - 0xF00000) {
-            entity->position.y += minVal(target->position.y - entity->position.y + 0xF00000, 0x100000);
-        }
-
-        if (entity->position.y < entity->dword6C + 0x2000000)
-            entity->position.y = entity->dword6C + 0x2000000;
-        if (entity->dword6C != entity->dword74) {
-            entity->dword6C += clampVal(entity->dword74 - entity->dword6C, -0x100000, 0x100000);
+        else if (target->position.y > self->position.y - 0xF00000) {
+            self->position.y += minVal(target->position.y - self->position.y + 0xF00000, 0x100000);
         }
 
-        if (entity->position.y > entity->dword70 + 0x900000)
-            entity->position.y = entity->dword70 + 0x900000;
+        if (self->position.y < self->dword6C + 0x2000000)
+            self->position.y = self->dword6C + 0x2000000;
+        if (self->dword6C != self->dword74) {
+            self->dword6C += clampVal(self->dword74 - self->dword6C, -0x100000, 0x100000);
+        }
 
-        if (entity->dword70 != entity->dword78) {
-            entity->dword70 += clampVal(entity->dword78 - entity->dword70, -0x100000, 0x100000);
+        if (self->position.y > self->dword70 + 0x900000)
+            self->position.y = self->dword70 + 0x900000;
+
+        if (self->dword70 != self->dword78) {
+            self->dword70 += clampVal(self->dword78 - self->dword70, -0x100000, 0x100000);
         }
     }
-    RSDK.MatrixTranslateXYZ(&entity->matrix, -entity->position.x, -entity->worldY, -entity->position.y, true);
-    RSDK.MatrixRotateXYZ(&PBL_Camera->matrix2, entity->rotationY, entity->angle, 0);
-    RSDK.MatrixMultiply(&PBL_Camera->matrix1, &entity->matrix, &PBL_Camera->matrix2);
-    RSDK.MatrixScaleXYZ(&entity->matrix, -0x100, 0x100, 0x100);
-    RSDK.MatrixMultiply(&PBL_Camera->matrix2, &PBL_Camera->matrix2, &entity->matrix);
-    RSDK.MatrixRotateXYZ(&PBL_Camera->matrix3, entity->rotationY + 8 * PBL_Setup->timer, entity->angle, 0);
-    RSDK.MatrixMultiply(&PBL_Camera->matrix3, &PBL_Camera->matrix3, &entity->matrix);
-    RSDK.MatrixMultiply(&PBL_Camera->matrix1, &PBL_Camera->matrix1, &entity->matrix);
+    RSDK.MatrixTranslateXYZ(&self->matrix, -self->position.x, -self->worldY, -self->position.y, true);
+    RSDK.MatrixRotateXYZ(&PBL_Camera->matrix2, self->rotationY, self->angle, 0);
+    RSDK.MatrixMultiply(&PBL_Camera->matrix1, &self->matrix, &PBL_Camera->matrix2);
+    RSDK.MatrixScaleXYZ(&self->matrix, -0x100, 0x100, 0x100);
+    RSDK.MatrixMultiply(&PBL_Camera->matrix2, &PBL_Camera->matrix2, &self->matrix);
+    RSDK.MatrixRotateXYZ(&PBL_Camera->matrix3, self->rotationY + 8 * PBL_Setup->timer, self->angle, 0);
+    RSDK.MatrixMultiply(&PBL_Camera->matrix3, &PBL_Camera->matrix3, &self->matrix);
+    RSDK.MatrixMultiply(&PBL_Camera->matrix1, &PBL_Camera->matrix1, &self->matrix);
 }
 
 #if RETRO_INCLUDE_EDITOR

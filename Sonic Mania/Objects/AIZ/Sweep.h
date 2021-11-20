@@ -6,9 +6,9 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    Hitbox hitbox1;
-    Hitbox hitbox2;
-    Hitbox hitbox3;
+    Hitbox hitboxBadnik;
+    Hitbox hitboxRange;
+    Hitbox hitboxProjectile;
     uint16 aniFrames;
     uint16 sfxPon;
 } ObjectSweep;
@@ -50,12 +50,12 @@ void Sweep_CheckOnScreen(void);
 void Sweep_HandleInteractions(void);
 void Sweep_CheckShoot(void);
 
-void Sweep_Unknown5(void);
-void Sweep_Unknown6(void);
-void Sweep_Unknown7(void);
-void Sweep_Unknown8(void);
-void Sweep_Unknown9(void);
-void Sweep_Unknown10(void);
-void Sweep_Unknown11(void);
+void Sweep_State_Setup(void);
+void Sweep_State_Idle(void);
+void Sweep_State_Dash(void);
+void Sweep_State_Stop(void);
+void Sweep_State_FiredShot(void);
+void Sweep_State_Turn(void);
+void Sweep_State_Projectile(void);
 
 #endif //!OBJ_SWEEP_H

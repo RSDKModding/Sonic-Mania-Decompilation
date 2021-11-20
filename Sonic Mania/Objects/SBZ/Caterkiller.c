@@ -5,7 +5,7 @@ ObjectCaterkiller *Caterkiller = NULL;
 void Caterkiller_Update(void)
 {
     RSDK_THIS(Caterkiller);
-    StateMachine_Run(entity->state);
+    StateMachine_Run(self->state);
 }
 
 void Caterkiller_LateUpdate(void) {}
@@ -15,50 +15,50 @@ void Caterkiller_StaticUpdate(void) {}
 void Caterkiller_Draw(void)
 {
     RSDK_THIS(Caterkiller);
-    StateMachine_Run(entity->stateDraw);
+    StateMachine_Run(self->stateDraw);
 }
 
 void Caterkiller_Create(void *data)
 {
     RSDK_THIS(Caterkiller);
-    entity->visible = true;
-    if (entity->planeFilter > 0 && ((entity->planeFilter - 1) & 2))
-        entity->drawOrder = Zone->drawOrderHigh;
+    self->visible = true;
+    if (self->planeFilter > 0 && ((self->planeFilter - 1) & 2))
+        self->drawOrder = Zone->drawOrderHigh;
     else
-        entity->drawOrder = Zone->drawOrderLow;
-    entity->drawFX |= FX_FLIP;
-    entity->active        = ACTIVE_BOUNDS;
-    entity->updateRange.x = 0x800000;
-    entity->updateRange.y = 0x800000;
+        self->drawOrder = Zone->drawOrderLow;
+    self->drawFX |= FX_FLIP;
+    self->active        = ACTIVE_BOUNDS;
+    self->updateRange.x = 0x800000;
+    self->updateRange.y = 0x800000;
     if (data) {
-        entity->state = (void (*)(void))data;
-        if (entity->state == Caterkiller_State_Split_Head)
-            RSDK.SetSpriteAnimation(Caterkiller->aniFrames, 0, &entity->animator, true, 0);
+        self->state = (void (*)(void))data;
+        if (self->state == Caterkiller_State_Split_Head)
+            RSDK.SetSpriteAnimation(Caterkiller->aniFrames, 0, &self->animator, true, 0);
         else
-            RSDK.SetSpriteAnimation(Caterkiller->aniFrames, 1, &entity->animator, true, 0);
-        entity->stateDraw = Caterkiller_StateDraw_Split;
+            RSDK.SetSpriteAnimation(Caterkiller->aniFrames, 1, &self->animator, true, 0);
+        self->stateDraw = Caterkiller_StateDraw_Split;
     }
     else {
-        entity->startPos = entity->position;
-        entity->startDir = entity->direction;
+        self->startPos = self->position;
+        self->startDir = self->direction;
 
-        entity->headOffset = 0;
+        self->headOffset = 0;
         int32 offset         = 0xC0000;
-        if (entity->startDir)
+        if (self->startDir)
             offset = -0xC0000;
-        int32 posX = entity->position.x;
+        int32 posX = self->position.x;
         for (int32 i = 0; i < Caterkiller_BodyCount; ++i) {
             posX += offset;
-            entity->bodyPosition[i].x = posX;
-            entity->bodyPosition[i].y = entity->position.y;
-            entity->bodyDirection[i]  = entity->direction;
+            self->bodyPosition[i].x = posX;
+            self->bodyPosition[i].y = self->position.y;
+            self->bodyDirection[i]  = self->direction;
         }
 
-        entity->timer = 0;
-        RSDK.SetSpriteAnimation(Caterkiller->aniFrames, 0, &entity->animator, true, 0);
-        RSDK.SetSpriteAnimation(Caterkiller->aniFrames, 1, &entity->animator2, true, 0);
-        entity->state     = Caterkiller_Unknown5;
-        entity->stateDraw = Caterkiller_StateDraw_Body;
+        self->timer = 0;
+        RSDK.SetSpriteAnimation(Caterkiller->aniFrames, 0, &self->animator, true, 0);
+        RSDK.SetSpriteAnimation(Caterkiller->aniFrames, 1, &self->animator2, true, 0);
+        self->state     = Caterkiller_Unknown5;
+        self->stateDraw = Caterkiller_StateDraw_Body;
     }
 }
 
@@ -82,15 +82,15 @@ void Caterkiller_DebugDraw(void)
 void Caterkiller_DebugSpawn(void)
 {
     RSDK_THIS(DebugMode);
-    CREATE_ENTITY(Caterkiller, 0, entity->position.x, entity->position.y);
+    CREATE_ENTITY(Caterkiller, 0, self->position.x, self->position.y);
 }
 
 void Caterkiller_CheckOnScreen(void)
 {
     RSDK_THIS(Caterkiller);
-    if (!RSDK.CheckOnScreen(RSDK_sceneInfo->entity, NULL) && !RSDK.CheckPosOnScreen(&entity->startPos, &entity->updateRange)) {
-        entity->position  = entity->startPos;
-        entity->direction = entity->startDir;
+    if (!RSDK.CheckOnScreen(self, NULL) && !RSDK.CheckPosOnScreen(&self->startPos, &self->updateRange)) {
+        self->position  = self->startPos;
+        self->direction = self->startDir;
         Caterkiller_Create(NULL);
     }
 }
@@ -101,33 +101,33 @@ void Caterkiller_CheckTileCollisions(void)
     int32 storeX = 0;
     int32 storeY = 0;
 
-    if (entity->state == Caterkiller_Unknown7) {
-        storeX = entity->position.x;
-        storeY = entity->position.y;
+    if (self->state == Caterkiller_Unknown7) {
+        storeX = self->position.x;
+        storeY = self->position.y;
     }
     else {
-        if (!RSDK.ObjectTileGrip(entity, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x80000, 8))
-            entity->direction ^= 1;
-        storeX = entity->position.x;
-        storeY = entity->position.y;
-        if (Caterkiller_CheckTileAngle(entity->position.x, entity->position.y, entity->direction))
-            entity->direction ^= 1;
+        if (!RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x80000, 8))
+            self->direction ^= 1;
+        storeX = self->position.x;
+        storeY = self->position.y;
+        if (Caterkiller_CheckTileAngle(self->position.x, self->position.y, self->direction))
+            self->direction ^= 1;
     }
 
     for (int32 i = 0; i < Caterkiller_BodyCount; ++i) {
-        if (entity->state != Caterkiller_Unknown9 || i != (Caterkiller_BodyCount - 1)) {
-            entity->position.x = entity->bodyPosition[i].x;
-            entity->position.y = entity->bodyPosition[i].y;
-            if (!RSDK.ObjectTileGrip(entity, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x80000, 8))
-                entity->bodyDirection[i] = entity->direction;
-            entity->bodyPosition[i].y = entity->position.y;
-            if (Caterkiller_CheckTileAngle(entity->bodyPosition[i].x, entity->bodyPosition[i].y, entity->bodyDirection[i]))
-                entity->bodyDirection[i] = entity->direction;
+        if (self->state != Caterkiller_Unknown9 || i != (Caterkiller_BodyCount - 1)) {
+            self->position.x = self->bodyPosition[i].x;
+            self->position.y = self->bodyPosition[i].y;
+            if (!RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x80000, 8))
+                self->bodyDirection[i] = self->direction;
+            self->bodyPosition[i].y = self->position.y;
+            if (Caterkiller_CheckTileAngle(self->bodyPosition[i].x, self->bodyPosition[i].y, self->bodyDirection[i]))
+                self->bodyDirection[i] = self->direction;
         }
     }
 
-    entity->position.x = storeX;
-    entity->position.y = storeY;
+    self->position.x = storeX;
+    self->position.y = storeY;
 }
 
 void Caterkiller_StateDraw_Body(void)
@@ -135,56 +135,56 @@ void Caterkiller_StateDraw_Body(void)
     RSDK_THIS(Caterkiller);
     Vector2 drawPos;
 
-    int32 storeDir = entity->direction;
+    int32 storeDir = self->direction;
     for (int32 i = Caterkiller_BodyCount - 1; i >= 0; --i) {
-        drawPos.x = entity->bodyPosition[i].x;
-        drawPos.y = entity->bodyPosition[i].y;
-        drawPos.y -= entity->bodyOffset[i] << 15;
-        entity->direction = entity->bodyDirection[i];
-        RSDK.DrawSprite(&entity->animator2, &drawPos, false);
+        drawPos.x = self->bodyPosition[i].x;
+        drawPos.y = self->bodyPosition[i].y;
+        drawPos.y -= self->bodyOffset[i] << 15;
+        self->direction = self->bodyDirection[i];
+        RSDK.DrawSprite(&self->animator2, &drawPos, false);
     }
 
-    drawPos = entity->position;
-    drawPos.y -= entity->headOffset << 15;
-    entity->direction = storeDir;
-    RSDK.DrawSprite(&entity->animator, &drawPos, false);
+    drawPos = self->position;
+    drawPos.y -= self->headOffset << 15;
+    self->direction = storeDir;
+    RSDK.DrawSprite(&self->animator, &drawPos, false);
 }
 
 void Caterkiller_StateDraw_Split(void)
 {
     RSDK_THIS(Caterkiller);
-    RSDK.DrawSprite(&entity->animator, NULL, false);
+    RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
 void Caterkiller_HandlePlayerInteractions(void)
 {
     RSDK_THIS(Caterkiller);
-    int32 storeX = entity->position.x;
-    int32 storeY = entity->position.y;
+    int32 storeX = self->position.x;
+    int32 storeY = self->position.y;
 
     foreach_active(Player, player)
     {
-        if (entity->planeFilter <= 0 || player->collisionPlane == ((entity->planeFilter - 1) & 1)) {
-            if (Player_CheckBadnikTouch(player, entity, &Caterkiller->hitbox)) {
-                Player_CheckBadnikBreak(entity, player, true);
+        if (self->planeFilter <= 0 || player->collisionPlane == ((self->planeFilter - 1) & 1)) {
+            if (Player_CheckBadnikTouch(player, self, &Caterkiller->hitbox)) {
+                Player_CheckBadnikBreak(self, player, true);
             }
             else {
                 for (int32 i = 0; i < Caterkiller_BodyCount; ++i) {
-                    entity->position.x = entity->bodyPosition[i].x;
-                    entity->position.y = entity->bodyPosition[i].y;
+                    self->position.x = self->bodyPosition[i].x;
+                    self->position.y = self->bodyPosition[i].y;
 
-                    if (Player_CheckCollisionTouch(player, entity, &Caterkiller->hitbox)) {
-                        Player_CheckHit(player, entity);
+                    if (Player_CheckCollisionTouch(player, self, &Caterkiller->hitbox)) {
+                        Player_CheckHit(player, self);
 
                         for (int32 d = 0; d < Caterkiller_BodyCount + 1; ++d) {
                             int32 spawnX       = storeX;
                             int32 spawnY       = storeY;
-                            int32 spawnDir     = entity->direction;
+                            int32 spawnDir     = self->direction;
                             void *spawnState = Caterkiller_State_Split_Head;
                             if (d) {
-                                spawnX     = entity->bodyPosition[d - 1].x;
-                                spawnY     = entity->bodyPosition[d - 1].y;
-                                spawnDir   = entity->bodyDirection[d - 1];
+                                spawnX     = self->bodyPosition[d - 1].x;
+                                spawnY     = self->bodyPosition[d - 1].y;
+                                spawnDir   = self->bodyDirection[d - 1];
                                 spawnState = Caterkiller_State_Split_Body;
                             }
 
@@ -200,19 +200,19 @@ void Caterkiller_HandlePlayerInteractions(void)
 
                             debris->velocity.y       = -0x40000;
                             if (!d)
-                                debris->animator.frameID = entity->animator.frameID;
-                            debris->planeFilter      = entity->planeFilter;
-                            debris->drawOrder        = entity->drawOrder;
+                                debris->animator.frameID = self->animator.frameID;
+                            debris->planeFilter      = self->planeFilter;
+                            debris->drawOrder        = self->drawOrder;
                         }
 
-                        destroyEntity(entity);
-                        entity->active = ACTIVE_NEVER2;
+                        destroyEntity(self);
+                        self->active = ACTIVE_NEVER2;
                         break;
                     }
                 }
             }
-            entity->position.x = storeX;
-            entity->position.y = storeY;
+            self->position.x = storeX;
+            self->position.y = storeY;
         }
     }
 }
@@ -239,8 +239,8 @@ bool32 Caterkiller_CheckTileAngle(int32 x, int32 y, int32 dir)
 void Caterkiller_Unknown5(void)
 {
     RSDK_THIS(Caterkiller);
-    entity->active = ACTIVE_NORMAL;
-    entity->state  = Caterkiller_Unknown6;
+    self->active = ACTIVE_NORMAL;
+    self->state  = Caterkiller_Unknown6;
 
     Caterkiller_Unknown6();
 }
@@ -248,15 +248,15 @@ void Caterkiller_Unknown5(void)
 void Caterkiller_Unknown6(void)
 {
     RSDK_THIS(Caterkiller);
-    if (entity->timer) {
-        entity->timer--;
+    if (self->timer) {
+        self->timer--;
         Caterkiller_HandlePlayerInteractions();
         Caterkiller_CheckOnScreen();
     }
     else {
-        entity->timer            = 15;
-        entity->animator.frameID = 1;
-        entity->state            = Caterkiller_Unknown7;
+        self->timer            = 15;
+        self->animator.frameID = 1;
+        self->state            = Caterkiller_Unknown7;
         Caterkiller_Unknown7();
     }
 }
@@ -264,20 +264,20 @@ void Caterkiller_Unknown6(void)
 void Caterkiller_Unknown7(void)
 {
     RSDK_THIS(Caterkiller);
-    if (entity->timer) {
-        entity->timer--;
+    if (self->timer) {
+        self->timer--;
         for (int32 b = 0; b < Caterkiller_BodyCount; ++b) {
-            if (entity->bodyDirection[b])
-                entity->bodyPosition[b].x += 0x4000 * (b + 1);
+            if (self->bodyDirection[b])
+                self->bodyPosition[b].x += 0x4000 * (b + 1);
             else
-                entity->bodyPosition[b].x -= 0x4000 * (b + 1);
+                self->bodyPosition[b].x -= 0x4000 * (b + 1);
         }
-        ++entity->headOffset;
-        ++entity->bodyOffset[Caterkiller_BodyCount / 2];
+        ++self->headOffset;
+        ++self->bodyOffset[Caterkiller_BodyCount / 2];
     }
     else {
-        entity->timer = 7;
-        entity->state = Caterkiller_Unknown8;
+        self->timer = 7;
+        self->state = Caterkiller_Unknown8;
     }
     Caterkiller_CheckTileCollisions();
     Caterkiller_HandlePlayerInteractions();
@@ -287,15 +287,15 @@ void Caterkiller_Unknown7(void)
 void Caterkiller_Unknown8(void)
 {
     RSDK_THIS(Caterkiller);
-    if (entity->timer) {
-        entity->timer--;
+    if (self->timer) {
+        self->timer--;
         Caterkiller_HandlePlayerInteractions();
         Caterkiller_CheckOnScreen();
     }
     else {
-        entity->timer            = 15;
-        entity->animator.frameID = 0;
-        entity->state            = Caterkiller_Unknown9;
+        self->timer            = 15;
+        self->animator.frameID = 0;
+        self->state            = Caterkiller_Unknown9;
         Caterkiller_Unknown9();
     }
 }
@@ -303,29 +303,29 @@ void Caterkiller_Unknown8(void)
 void Caterkiller_Unknown9(void)
 {
     RSDK_THIS(Caterkiller);
-    if (entity->timer) {
-        entity->timer--;
+    if (self->timer) {
+        self->timer--;
 
         int32 mult = 1;
         for (int32 b = Caterkiller_BodyCount - 2; b >= 0; --b) {
-            if (entity->bodyDirection[b])
-                entity->bodyPosition[b].x += 0x4000 * mult;
+            if (self->bodyDirection[b])
+                self->bodyPosition[b].x += 0x4000 * mult;
             else
-                entity->bodyPosition[b].x -= 0x4000 * mult;
+                self->bodyPosition[b].x -= 0x4000 * mult;
             ++mult;
         }
 
-        if (entity->direction)
-            entity->position.x += 0x4000 * mult;
+        if (self->direction)
+            self->position.x += 0x4000 * mult;
         else
-            entity->position.x -= 0x4000 * mult;
+            self->position.x -= 0x4000 * mult;
 
-        --entity->headOffset;
-        --entity->bodyOffset[Caterkiller_BodyCount / 2];
+        --self->headOffset;
+        --self->bodyOffset[Caterkiller_BodyCount / 2];
     }
     else {
-        entity->timer = 7;
-        entity->state = Caterkiller_Unknown6;
+        self->timer = 7;
+        self->state = Caterkiller_Unknown6;
     }
     Caterkiller_CheckTileCollisions();
     Caterkiller_HandlePlayerInteractions();
@@ -335,49 +335,48 @@ void Caterkiller_Unknown9(void)
 void Caterkiller_State_Split_Head(void)
 {
     RSDK_THIS(Caterkiller);
-    entity->position.x += entity->velocity.x;
-    entity->position.y += entity->velocity.y;
-    entity->velocity.y += 0x3800;
-    if (RSDK.CheckOnScreen(entity, &entity->updateRange)) {
-        if (entity->velocity.y > 0 && RSDK.ObjectTileGrip(entity, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x80000, 4)) {
-            entity->velocity.y = -0x40000;
+    self->position.x += self->velocity.x;
+    self->position.y += self->velocity.y;
+    self->velocity.y += 0x3800;
+    if (RSDK.CheckOnScreen(self, &self->updateRange)) {
+        if (self->velocity.y > 0 && RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x80000, 4)) {
+            self->velocity.y = -0x40000;
         }
 
         foreach_active(Player, player)
         {
-            if ((entity->planeFilter <= 0 || player->collisionPlane == ((entity->planeFilter - 1) & 1))
-                && Player_CheckBadnikTouch(player, entity, &Caterkiller->hitbox)) {
-                Player_CheckBadnikBreak(entity, player, true);
+            if ((self->planeFilter <= 0 || player->collisionPlane == ((self->planeFilter - 1) & 1))
+                && Player_CheckBadnikTouch(player, self, &Caterkiller->hitbox)) {
+                Player_CheckBadnikBreak(self, player, true);
             }
         }
     }
     else {
-        destroyEntity(entity);
+        destroyEntity(self);
     }
 }
 
 void Caterkiller_State_Split_Body(void)
 {
     RSDK_THIS(Caterkiller);
-    entity->position.x += entity->velocity.x;
-    entity->position.y += entity->velocity.y;
-    entity->velocity.y += 0x3800;
-    if (RSDK.CheckOnScreen(entity, &entity->updateRange)) {
-        if (entity->velocity.y > 0 && RSDK.ObjectTileGrip(entity, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x80000, 4)) {
-            entity->velocity.y = -0x40000;
+    self->position.x += self->velocity.x;
+    self->position.y += self->velocity.y;
+    self->velocity.y += 0x3800;
+    if (RSDK.CheckOnScreen(self, &self->updateRange)) {
+        if (self->velocity.y > 0 && RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x80000, 4)) {
+            self->velocity.y = -0x40000;
         }
 
         foreach_active(Player, player)
         {
-            if (entity->planeFilter <= 0 || player->collisionPlane == ((entity->planeFilter - 1) & 1)) {
-                if (Player_CheckCollisionTouch(player, entity, &Caterkiller->hitbox)) {
-                    Player_CheckHit(player, entity);
-                }
+            if (self->planeFilter <= 0 || player->collisionPlane == ((self->planeFilter - 1) & 1)) {
+                if (Player_CheckCollisionTouch(player, self, &Caterkiller->hitbox)) 
+                    Player_CheckHit(player, self);
             }
         }
     }
     else {
-        destroyEntity(entity);
+        destroyEntity(self);
     }
 }
 
@@ -386,22 +385,22 @@ void Caterkiller_EditorDraw(void)
 {
     RSDK_THIS(Caterkiller);
     
-    entity->startPos = entity->position;
+    self->startPos = self->position;
 
-    entity->headOffset = 0;
+    self->headOffset = 0;
     int32 offset       = 0xC0000;
-    if (entity->startDir)
+    if (self->startDir)
         offset = -0xC0000;
-    int32 posX = entity->position.x;
+    int32 posX = self->position.x;
     for (int32 i = 0; i < Caterkiller_BodyCount; ++i) {
         posX += offset;
-        entity->bodyPosition[i].x = posX;
-        entity->bodyPosition[i].y = entity->position.y;
-        entity->bodyDirection[i]  = entity->direction;
+        self->bodyPosition[i].x = posX;
+        self->bodyPosition[i].y = self->position.y;
+        self->bodyDirection[i]  = self->direction;
     }
 
-    RSDK.SetSpriteAnimation(Caterkiller->aniFrames, 0, &entity->animator, true, 0);
-    RSDK.SetSpriteAnimation(Caterkiller->aniFrames, 1, &entity->animator2, true, 0);
+    RSDK.SetSpriteAnimation(Caterkiller->aniFrames, 0, &self->animator, true, 0);
+    RSDK.SetSpriteAnimation(Caterkiller->aniFrames, 1, &self->animator2, true, 0);
 
     Caterkiller_StateDraw_Body();
 }

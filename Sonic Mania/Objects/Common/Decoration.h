@@ -6,7 +6,7 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    uint16 spriteIndex;
+    uint16 aniFrames;
 } ObjectDecoration;
 
 // Entity Class
@@ -17,7 +17,7 @@ typedef struct {
     int32 rotSpeed;
     Vector2 repeatTimes;
     Vector2 repeatSpacing;
-    bool32 tmzFlag;
+    bool32 isTMZ;
 } EntityDecoration;
 
 // Object Struct

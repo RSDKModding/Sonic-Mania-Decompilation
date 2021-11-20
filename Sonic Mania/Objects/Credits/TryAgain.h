@@ -14,16 +14,16 @@ typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
-    int32 field_60;
-    int32 field_64;
-    Vector2 unknownPos1;
-    int32 field_70;
-    int32 field_74;
-    Vector2 unknownPos2;
-    Vector2 emeraldVelocity;
-    Animator animator1;
-    Animator animator2;
-    Animator animator3;
+    int32 unused1;
+    int32 unused2;
+    Vector2 eggmanPos;
+    int32 unused3;
+    int32 eggmanVelocityY;
+    Vector2 rubyPos;
+    Vector2 rubyVelocity;
+    Animator debrisAnimator;
+    Animator eggmanAnimator;
+    Animator rubyAnimator;
 } EntityTryAgain;
 
 // Object Struct

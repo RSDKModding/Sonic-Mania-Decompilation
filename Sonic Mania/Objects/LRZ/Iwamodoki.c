@@ -6,21 +6,21 @@ void Iwamodoki_Update(void)
 {
     RSDK_THIS(Iwamodoki);
 
-    if (LRZConvItem && entity->lrzConvPhys) {
-        entity->preMovePos.x = entity->position.x;
-        entity->preMovePos.y = entity->position.y;
-        entity->moveOffset   = LRZConvItem_Unknown2(entity);
+    if (LRZConvItem && self->lrzConvPhys) {
+        self->preMovePos.x = self->position.x;
+        self->preMovePos.y = self->position.y;
+        self->moveOffset   = LRZConvItem_Unknown2(self);
     }
     else {
-        entity->preMovePos.x = entity->position.x;
-        entity->preMovePos.y = entity->position.y;
-        entity->moveOffset.x = 0;
-        entity->moveOffset.y = 0;
+        self->preMovePos.x = self->position.x;
+        self->preMovePos.y = self->position.y;
+        self->moveOffset.x = 0;
+        self->moveOffset.y = 0;
     }
-    entity->postMovePos.x = entity->position.x;
-    entity->postMovePos.y = entity->position.y;
+    self->postMovePos.x = self->position.x;
+    self->postMovePos.y = self->position.y;
 
-    StateMachine_Run(entity->state);
+    StateMachine_Run(self->state);
 }
 
 void Iwamodoki_LateUpdate(void) {}
@@ -31,31 +31,31 @@ void Iwamodoki_Draw(void)
 {
     RSDK_THIS(Iwamodoki);
 
-    RSDK.DrawSprite(&entity->animator, NULL, false);
+    RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
 void Iwamodoki_Create(void *data)
 {
     RSDK_THIS(Iwamodoki);
 
-    entity->drawFX |= FX_FLIP;
-    entity->startPos.x    = entity->position.x;
-    entity->startPos.y    = entity->position.y;
-    entity->startDir      = entity->direction;
-    entity->visible       = true;
-    entity->active        = ACTIVE_BOUNDS;
-    entity->updateRange.x = 0x800000;
-    entity->updateRange.y = 0x800000;
-    entity->drawOrder     = Zone->drawOrderLow;
+    self->drawFX |= FX_FLIP;
+    self->startPos.x    = self->position.x;
+    self->startPos.y    = self->position.y;
+    self->startDir      = self->direction;
+    self->visible       = true;
+    self->active        = ACTIVE_BOUNDS;
+    self->updateRange.x = 0x800000;
+    self->updateRange.y = 0x800000;
+    self->drawOrder     = Zone->drawOrderLow;
 
     if (data) {
-        entity->active = ACTIVE_NORMAL;
-        RSDK.SetSpriteAnimation(Iwamodoki->aniFrames, voidToInt(data) + 2, &entity->animator, true, 0);
-        entity->state = Iwamodoki_State_Debris;
+        self->active = ACTIVE_NORMAL;
+        RSDK.SetSpriteAnimation(Iwamodoki->aniFrames, voidToInt(data) + 2, &self->animator, true, 0);
+        self->state = Iwamodoki_State_Debris;
     }
     else {
-        RSDK.SetSpriteAnimation(Iwamodoki->aniFrames, 0, &entity->animator, true, 0);
-        entity->state = Iwamodoki_State_Setup;
+        RSDK.SetSpriteAnimation(Iwamodoki->aniFrames, 0, &self->animator, true, 0);
+        self->state = Iwamodoki_State_Setup;
     }
 }
 
@@ -88,7 +88,7 @@ void Iwamodoki_DebugSpawn(void)
 {
     RSDK_THIS(DebugMode);
 
-    CREATE_ENTITY(Iwamodoki, NULL, entity->position.x, entity->position.y);
+    CREATE_ENTITY(Iwamodoki, NULL, self->position.x, self->position.y);
 }
 
 void Iwamodoki_DebugDraw(void)
@@ -101,28 +101,28 @@ void Iwamodoki_HandlePlayerCollisions(void)
 {
     RSDK_THIS(Iwamodoki);
 
-    entity->position.x = entity->preMovePos.x;
-    entity->position.y = entity->preMovePos.y;
+    self->position.x = self->preMovePos.x;
+    self->position.y = self->preMovePos.y;
 
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionBox(player, entity, &Iwamodoki->hitbox1) == C_TOP) {
-            player->position.x += entity->moveOffset.x;
-            player->position.y += entity->moveOffset.y;
+        if (Player_CheckCollisionBox(player, self, &Iwamodoki->hitbox1) == C_TOP) {
+            player->position.x += self->moveOffset.x;
+            player->position.y += self->moveOffset.y;
         }
     }
 
-    entity->position.x = entity->postMovePos.x;
-    entity->position.y = entity->postMovePos.y;
+    self->position.x = self->postMovePos.x;
+    self->position.y = self->postMovePos.y;
 }
 
 void Iwamodoki_CheckOnScreen(void)
 {
     RSDK_THIS(Iwamodoki);
-    if (!RSDK.CheckOnScreen(entity, NULL) && !RSDK.CheckPosOnScreen(&entity->startPos, &entity->updateRange)) {
-        entity->position.x = entity->startPos.x;
-        entity->position.y = entity->startPos.y;
-        entity->direction  = entity->startDir;
+    if (!RSDK.CheckOnScreen(self, NULL) && !RSDK.CheckPosOnScreen(&self->startPos, &self->updateRange)) {
+        self->position.x = self->startPos.x;
+        self->position.y = self->startPos.y;
+        self->direction  = self->startDir;
         Iwamodoki_Create(NULL);
     }
 }
@@ -131,9 +131,9 @@ void Iwamodoki_State_Setup(void)
 {
     RSDK_THIS(Iwamodoki);
 
-    entity->active     = ACTIVE_NORMAL;
-    entity->velocity.x = -0x10000;
-    entity->state      = Iwamodoki_State_Unknown1;
+    self->active     = ACTIVE_NORMAL;
+    self->velocity.x = -0x10000;
+    self->state      = Iwamodoki_State_Unknown1;
     Iwamodoki_State_Unknown1();
 }
 
@@ -143,8 +143,8 @@ void Iwamodoki_State_Unknown1(void)
 
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionTouch(player, entity, &Iwamodoki->hitbox2)) {
-            entity->state = Iwamodoki_State_Unknown2;
+        if (Player_CheckCollisionTouch(player, self, &Iwamodoki->hitbox2)) {
+            self->state = Iwamodoki_State_Unknown2;
         }
     }
 
@@ -156,12 +156,12 @@ void Iwamodoki_State_Unknown2(void)
 {
     RSDK_THIS(Iwamodoki);
 
-    RSDK.ProcessAnimation(&entity->animator);
-    if (entity->animator.frameID == 6) {
-        RSDK.SetSpriteAnimation(Iwamodoki->aniFrames, 1, &entity->animator, true, 0);
-        entity->timer2 = 15;
-        entity->timer1 = 15;
-        entity->state  = Iwamodoki_State_Unknown3;
+    RSDK.ProcessAnimation(&self->animator);
+    if (self->animator.frameID == 6) {
+        RSDK.SetSpriteAnimation(Iwamodoki->aniFrames, 1, &self->animator, true, 0);
+        self->timer2 = 15;
+        self->timer1 = 15;
+        self->state  = Iwamodoki_State_Unknown3;
     }
     Iwamodoki_HandlePlayerCollisions();
     Iwamodoki_CheckOnScreen();
@@ -171,17 +171,17 @@ void Iwamodoki_State_Unknown3(void)
 {
     RSDK_THIS(Iwamodoki);
 
-    RSDK.ProcessAnimation(&entity->animator);
+    RSDK.ProcessAnimation(&self->animator);
 
-    if (!--entity->timer1) {
-        if (!--entity->timer2) {
-            entity->timer1 = 32;
-            RSDK.SetSpriteAnimation(Iwamodoki->aniFrames, 2, &entity->animator, true, 0);
-            entity->state = Iwamodoki_State_Unknown4;
+    if (!--self->timer1) {
+        if (!--self->timer2) {
+            self->timer1 = 32;
+            RSDK.SetSpriteAnimation(Iwamodoki->aniFrames, 2, &self->animator, true, 0);
+            self->state = Iwamodoki_State_Unknown4;
         }
         else {
-            RSDK.SetSpriteAnimation(Iwamodoki->aniFrames, 1, &entity->animator, true, 0);
-            entity->timer1 = entity->timer2;
+            RSDK.SetSpriteAnimation(Iwamodoki->aniFrames, 1, &self->animator, true, 0);
+            self->timer1 = self->timer2;
         }
     }
     Iwamodoki_HandlePlayerCollisions();
@@ -192,29 +192,29 @@ void Iwamodoki_State_Unknown4(void)
 {
     RSDK_THIS(Iwamodoki);
 
-    RSDK.ProcessAnimation(&entity->animator);
-    if (!--entity->timer1) {
-        CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), entity->position.x, entity->position.y)->drawOrder = Zone->drawOrderHigh;
-        if (entity->activeScreens == 1)
+    RSDK.ProcessAnimation(&self->animator);
+    if (!--self->timer1) {
+        CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), self->position.x, self->position.y)->drawOrder = Zone->drawOrderHigh;
+        if (self->activeScreens == 1)
             RSDK.PlaySfx(Explosion->sfxDestroy, false, 255);
 
-        EntityIwamodoki *debris = CREATE_ENTITY(Iwamodoki, intToVoid(1), entity->position.x, entity->position.y);
+        EntityIwamodoki *debris = CREATE_ENTITY(Iwamodoki, intToVoid(1), self->position.x, self->position.y);
         debris->velocity.x      = -0x20000;
         debris->velocity.y      = -0x40000;
 
-        debris             = CREATE_ENTITY(Iwamodoki, intToVoid(1), entity->position.x, entity->position.y);
+        debris             = CREATE_ENTITY(Iwamodoki, intToVoid(1), self->position.x, self->position.y);
         debris->velocity.x = 0x20000;
         debris->velocity.y = -0x40000;
 
-        debris             = CREATE_ENTITY(Iwamodoki, intToVoid(2), entity->position.x, entity->position.y);
+        debris             = CREATE_ENTITY(Iwamodoki, intToVoid(2), self->position.x, self->position.y);
         debris->velocity.x = -0x40000;
         debris->velocity.y = -0x20000;
 
-        debris             = CREATE_ENTITY(Iwamodoki, intToVoid(2), entity->position.x, entity->position.y);
+        debris             = CREATE_ENTITY(Iwamodoki, intToVoid(2), self->position.x, self->position.y);
         debris->velocity.x = 0x40000;
         debris->velocity.y = -0x20000;
 
-        destroyEntity(entity);
+        destroyEntity(self);
     }
     else {
         Iwamodoki_HandlePlayerCollisions();
@@ -226,20 +226,20 @@ void Iwamodoki_State_Debris(void)
 {
     RSDK_THIS(Iwamodoki);
 
-    RSDK.ProcessAnimation(&entity->animator);
-    entity->position.x += entity->velocity.x;
-    entity->position.y += entity->velocity.y;
-    entity->velocity.y += 0x3800;
+    RSDK.ProcessAnimation(&self->animator);
+    self->position.x += self->velocity.x;
+    self->position.y += self->velocity.y;
+    self->velocity.y += 0x3800;
 
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionTouch(player, entity, &Iwamodoki->hitbox3)) {
-            Player_CheckProjectileHit(player, entity);
+        if (Player_CheckCollisionTouch(player, self, &Iwamodoki->hitbox3)) {
+            Player_CheckProjectileHit(player, self);
         }
     }
 
-    if (!RSDK.CheckOnScreen(entity, NULL))
-        destroyEntity(entity);
+    if (!RSDK.CheckOnScreen(self, NULL))
+        destroyEntity(self);
 }
 
 #if RETRO_INCLUDE_EDITOR

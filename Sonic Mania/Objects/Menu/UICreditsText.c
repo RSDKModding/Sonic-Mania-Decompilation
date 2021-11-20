@@ -5,7 +5,7 @@ ObjectUICreditsText *UICreditsText;
 void UICreditsText_Update(void)
 {
     RSDK_THIS(UICreditsText);
-    StateMachine_Run(entity->state);
+    StateMachine_Run(self->state);
 }
 
 void UICreditsText_LateUpdate(void) {}
@@ -17,41 +17,41 @@ void UICreditsText_Draw(void)
     RSDK_THIS(UICreditsText);
     Vector2 drawPos;
 
-    drawPos.x = entity->position.x;
-    drawPos.y = entity->position.y;
-    int32 width = RSDK.GetStringWidth(UICreditsText->aniFrames, entity->listID, &entity->text, 0, entity->text.textLength, 0);
+    drawPos.x = self->position.x;
+    drawPos.y = self->position.y;
+    int32 width = RSDK.GetStringWidth(UICreditsText->aniFrames, self->listID, &self->text, 0, self->text.textLength, 0);
     drawPos.y += 0x40000;
-    if (entity->hasShape)
-        UIWidgets_Unknown7(entity->scaleTimer >> 4, (entity->scaleTimer * (width + 16)) >> 8, 16, 0, 0, 0, drawPos.x, drawPos.y);
+    if (self->hasShape)
+        UIWidgets_DrawRhombus(self->scaleTimer >> 4, (self->scaleTimer * (width + 16)) >> 8, 16, 0, 0, 0, drawPos.x, drawPos.y);
 
     drawPos.x -= width << 15;
-    drawPos.y = entity->position.y;
-    if (entity->animator.animationID >= 7) {
-        RSDK.DrawSprite(&entity->animator, 0, false);
+    drawPos.y = self->position.y;
+    if (self->animator.animationID >= 7) {
+        RSDK.DrawSprite(&self->animator, 0, false);
     }
     else {
-        RSDK.SetClipBounds(RSDK_sceneInfo->currentScreenID, 0, 0, RSDK_screens->width,
-                           (entity->position.y >> 16) + entity->clipY2 - RSDK_screens[RSDK_sceneInfo->currentScreenID].position.y);
-        RSDK.DrawText(&entity->animator, &drawPos, &entity->text, 0, 0, ALIGN_LEFT, 0, 0, entity->charPositions, false);
-        RSDK.SetClipBounds(RSDK_sceneInfo->currentScreenID, 0, 0, RSDK_screens->width, RSDK_screens->height);
+        RSDK.SetClipBounds(SceneInfo->currentScreenID, 0, 0, ScreenInfo->width,
+                           (self->position.y >> 16) + self->clipY2 - ScreenInfo[SceneInfo->currentScreenID].position.y);
+        RSDK.DrawText(&self->animator, &drawPos, &self->text, 0, 0, ALIGN_LEFT, 0, 0, self->charPositions, false);
+        RSDK.SetClipBounds(SceneInfo->currentScreenID, 0, 0, ScreenInfo->width, ScreenInfo->height);
     }
 }
 
 void UICreditsText_Create(void *data)
 {
     RSDK_THIS(UICreditsText);
-    RSDK.SetSpriteAnimation(UICreditsText->aniFrames, entity->listID, &entity->animator, true, 0);
-    if (!RSDK_sceneInfo->inEditor) {
-        entity->active        = ACTIVE_BOUNDS;
-        entity->updateRange.x = 0x800000;
-        entity->updateRange.y = 0x800000;
-        entity->drawOrder     = 2;
-        entity->state         = UICreditsText_State_Setup;
-        if (!entity->text.text)
-            RSDK.SetText(&entity->text, "UNTITLED", 0);
-        bool32 isHeading = entity->isHeading;
-        UICreditsText_SetText(entity->animator.animationID, entity, &entity->text);
-        entity->isHeading = isHeading;
+    RSDK.SetSpriteAnimation(UICreditsText->aniFrames, self->listID, &self->animator, true, 0);
+    if (!SceneInfo->inEditor) {
+        self->active        = ACTIVE_BOUNDS;
+        self->updateRange.x = 0x800000;
+        self->updateRange.y = 0x800000;
+        self->drawOrder     = 2;
+        self->state         = UICreditsText_State_Setup;
+        if (!self->text.text)
+            RSDK.SetText(&self->text, "UNTITLED", 0);
+        bool32 isHeading = self->isHeading;
+        UICreditsText_SetText(self->animator.animationID, self, &self->text);
+        self->isHeading = isHeading;
     }
 }
 
@@ -73,30 +73,30 @@ void UICreditsText_SetText(int32 animID, EntityUICreditsText *label, TextInfo *t
 void UICreditsText_State_Setup(void)
 {
     RSDK_THIS(UICreditsText);
-    if ((entity->position.y >> 16) - RSDK_screens->position.y - RSDK_screens->centerY < RSDK_screens->centerY - 16) {
-        entity->active  = ACTIVE_NORMAL;
-        entity->visible = true;
-        if (entity->animator.animationID == 7) {
-            entity->animator.frameID = entity->text.text[1];
-            entity->scaleSpeed       = 64;
-            entity->drawFX           = FX_SCALE;
-            entity->state            = UICreditsText_State_ScaleIn;
+    if ((self->position.y >> 16) - ScreenInfo->position.y - ScreenInfo->centerY < ScreenInfo->centerY - 16) {
+        self->active  = ACTIVE_NORMAL;
+        self->visible = true;
+        if (self->animator.animationID == 7) {
+            self->animator.frameID = self->text.text[1];
+            self->scaleSpeed       = 64;
+            self->drawFX           = FX_SCALE;
+            self->state            = UICreditsText_State_ScaleIn;
         }
-        else if (entity->isHeading) {
+        else if (self->isHeading) {
             int32 yOffset = 0x280000;
-            for (int32 c = 0; c < entity->text.textLength; ++c) {
-                entity->charPositions[c].y = yOffset;
-                entity->charOffsets[c]     = -0x80000;
+            for (int32 c = 0; c < self->text.textLength; ++c) {
+                self->charPositions[c].y = yOffset;
+                self->charOffsets[c]     = -0x80000;
                 yOffset += 0x100000;
             }
 
-            entity->scaleTimer = 0;
-            entity->scaleSpeed = 32;
-            entity->state      = UICreditsText_State_MoveChars;
+            self->scaleTimer = 0;
+            self->scaleSpeed = 32;
+            self->state      = UICreditsText_State_MoveChars;
         }
         else {
-            entity->inkEffect = INK_ALPHA;
-            entity->state     = UICreditsText_State_FadeIn;
+            self->inkEffect = INK_ALPHA;
+            self->state     = UICreditsText_State_FadeIn;
         }
     }
 }
@@ -104,91 +104,91 @@ void UICreditsText_State_Setup(void)
 void UICreditsText_State_SetupCharPos(void)
 {
     RSDK_THIS(UICreditsText);
-    entity->visible = true;
+    self->visible = true;
 
     int32 yOffset = 0x280000;
-    for (int32 c = 0; c < entity->text.textLength; ++c) {
-        entity->charPositions[c].y = yOffset;
-        entity->charOffsets[c]     = -0x80000;
+    for (int32 c = 0; c < self->text.textLength; ++c) {
+        self->charPositions[c].y = yOffset;
+        self->charOffsets[c]     = -0x80000;
         yOffset += 0x100000;
     }
 
-    entity->scaleTimer = 0;
-    entity->scaleSpeed = 32;
-    entity->state      = UICreditsText_State_MoveChars;
+    self->scaleTimer = 0;
+    self->scaleSpeed = 32;
+    self->state      = UICreditsText_State_MoveChars;
 }
 
 void UICreditsText_State_MoveChars(void)
 {
     RSDK_THIS(UICreditsText);
 
-    for (int32 c = 0; c < entity->text.textLength; ++c) {
-        if (entity->charPositions[c].y < 0)
-            entity->charOffsets[c] += 0x28000;
-        entity->charPositions[c].y += entity->charOffsets[c];
-        if (entity->charPositions[c].y > 0 && entity->charOffsets[c] > 0)
-            entity->charPositions[c].y = 0;
+    for (int32 c = 0; c < self->text.textLength; ++c) {
+        if (self->charPositions[c].y < 0)
+            self->charOffsets[c] += 0x28000;
+        self->charPositions[c].y += self->charOffsets[c];
+        if (self->charPositions[c].y > 0 && self->charOffsets[c] > 0)
+            self->charPositions[c].y = 0;
     }
 
-    if (entity->scaleTimer > 0)
-        entity->scaleSpeed -= 2;
+    if (self->scaleTimer > 0)
+        self->scaleSpeed -= 2;
 
-    entity->scaleTimer += entity->scaleSpeed;
-    if (entity->scaleTimer < 256 && entity->scaleSpeed < 0)
-        entity->scaleTimer = 256;
+    self->scaleTimer += self->scaleSpeed;
+    if (self->scaleTimer < 256 && self->scaleSpeed < 0)
+        self->scaleTimer = 256;
 
-    if (++entity->timer == 120) {
-        entity->timer = 0;
-        entity->state = UICreditsText_SetupIdleDelay;
+    if (++self->timer == 120) {
+        self->timer = 0;
+        self->state = UICreditsText_SetupIdleDelay;
     }
 }
 
 void UICreditsText_State_ScaleIn(void)
 {
     RSDK_THIS(UICreditsText);
-    if (entity->scale.y > 0)
-        entity->scaleSpeed -= 4;
+    if (self->scale.y > 0)
+        self->scaleSpeed -= 4;
 
-    entity->scale.y += entity->scaleSpeed;
-    if (entity->scale.y < 512 && entity->scaleSpeed < 0)
-        entity->scale.y = 512;
-    entity->scale.x = entity->scale.y;
+    self->scale.y += self->scaleSpeed;
+    if (self->scale.y < 512 && self->scaleSpeed < 0)
+        self->scale.y = 512;
+    self->scale.x = self->scale.y;
 
-    if (++entity->timer == 120) {
-        entity->timer  = 0;
-        entity->drawFX = FX_NONE;
-        entity->state  = UICreditsText_SetupIdleDelay;
+    if (++self->timer == 120) {
+        self->timer  = 0;
+        self->drawFX = FX_NONE;
+        self->state  = UICreditsText_SetupIdleDelay;
     }
 }
 
 void UICreditsText_State_FadeIn(void)
 {
     RSDK_THIS(UICreditsText);
-    if (entity->alpha >= 0x100) {
-        entity->state = UICreditsText_SetupIdleDelay;
+    if (self->alpha >= 0x100) {
+        self->state = UICreditsText_SetupIdleDelay;
     }
     else {
-        entity->alpha += 8;
+        self->alpha += 8;
     }
 }
 
 void UICreditsText_SetupIdleDelay(void)
 {
     RSDK_THIS(UICreditsText);
-    if ((entity->position.y >> 16) - RSDK_screens->position.y < 32) {
-        if (entity->animator.animationID == 7) {
-            entity->drawFX = FX_SCALE;
-            entity->state  = UICreditsText_State_ScaleOut;
+    if ((self->position.y >> 16) - ScreenInfo->position.y < 32) {
+        if (self->animator.animationID == 7) {
+            self->drawFX = FX_SCALE;
+            self->state  = UICreditsText_State_ScaleOut;
         }
-        else if (entity->isHeading) {
-            for (int32 c = 0; c < entity->text.textLength; ++c) {
-                entity->charTimers[c]  = 2 * (entity->text.textLength - c - 1);
-                entity->charOffsets[c] = -0x80000;
+        else if (self->isHeading) {
+            for (int32 c = 0; c < self->text.textLength; ++c) {
+                self->charTimers[c]  = 2 * (self->text.textLength - c - 1);
+                self->charOffsets[c] = -0x80000;
             }
-            entity->state = UICreditsText_State_Idle;
+            self->state = UICreditsText_State_Idle;
         }
         else {
-            entity->state = UICreditsText_State_FadeOut;
+            self->state = UICreditsText_State_FadeOut;
         }
     }
 }
@@ -197,46 +197,46 @@ void UICreditsText_State_Idle(void)
 {
     RSDK_THIS(UICreditsText);
 
-    for (int32 c = 0; c < entity->text.textLength; ++c) {
-        if (entity->charTimers[c] <= 0) {
-            entity->charOffsets[c] += 0x28000;
-            entity->charPositions[c].y += entity->charOffsets[c];
+    for (int32 c = 0; c < self->text.textLength; ++c) {
+        if (self->charTimers[c] <= 0) {
+            self->charOffsets[c] += 0x28000;
+            self->charPositions[c].y += self->charOffsets[c];
         }
         else {
-            --entity->charTimers[c];
+            --self->charTimers[c];
         }
     }
 
-    if (entity->timer > 12) {
-        if (entity->scaleTimer > 0)
-            entity->scaleTimer -= 16;
+    if (self->timer > 12) {
+        if (self->scaleTimer > 0)
+            self->scaleTimer -= 16;
     }
 
-    entity->timer++;
-    if (entity->timer == 60)
-        destroyEntity(entity);
+    self->timer++;
+    if (self->timer == 60)
+        destroyEntity(self);
 }
 
 void UICreditsText_State_ScaleOut(void)
 {
     RSDK_THIS(UICreditsText);
 
-    if (entity->scale.y > 0)
-        entity->scale.y -= 32;
-    entity->scale.x = entity->scale.y;
+    if (self->scale.y > 0)
+        self->scale.y -= 32;
+    self->scale.x = self->scale.y;
 
-    if (++entity->timer == 60)
-        destroyEntity(entity);
+    if (++self->timer == 60)
+        destroyEntity(self);
 }
 
 void UICreditsText_State_FadeOut(void)
 {
     RSDK_THIS(UICreditsText);
-    if (entity->alpha <= 0) {
-        entity->state = UICreditsText_SetupIdleDelay;
+    if (self->alpha <= 0) {
+        self->state = UICreditsText_SetupIdleDelay;
     }
     else {
-        entity->alpha -= 8;
+        self->alpha -= 8;
     }
 }
 
@@ -244,7 +244,7 @@ void UICreditsText_State_FadeOut(void)
 void UICreditsText_EditorDraw(void)
 {
     RSDK_THIS(UICreditsText);
-    RSDK.SetSpriteAnimation(UICreditsText->aniFrames, entity->listID, &entity->animator, true, 0);
+    RSDK.SetSpriteAnimation(UICreditsText->aniFrames, self->listID, &self->animator, true, 0);
     UICreditsText_Draw();
 }
 

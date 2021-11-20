@@ -5,9 +5,9 @@ ObjectSPZ2Outro *SPZ2Outro;
 void SPZ2Outro_Update(void)
 {
     RSDK_THIS(SPZ2Outro);
-    if (!entity->activated) {
+    if (!self->activated) {
         SPZ2Outro_StartCutscene();
-        entity->activated = true;
+        self->activated = true;
     }
 }
 
@@ -21,9 +21,9 @@ void SPZ2Outro_Create(void *data)
 {
     RSDK_THIS(SPZ2Outro);
 
-    INIT_ENTITY(entity);
-    CutsceneRules_SetupEntity(entity, &entity->size, &entity->hitbox);
-    entity->active = ACTIVE_NEVER;
+    INIT_ENTITY(self);
+    CutsceneRules_SetupEntity(self, &self->size, &self->hitbox);
+    self->active = ACTIVE_NEVER;
 }
 
 void SPZ2Outro_StageLoad(void)
@@ -51,7 +51,7 @@ void SPZ2Outro_StartCutscene(void)
     void *states[] = { SPZ2Outro_CutsceneState_Unknown1, SPZ2Outro_CutsceneState_Unknown2, SPZ2Outro_CutsceneState_Unknown3,
                        SPZ2Outro_CutsceneState_Unknown4, NULL };
 
-    CutsceneSeq_StartSequence((Entity *)entity, states);
+    CutsceneSeq_StartSequence((Entity *)self, states);
     if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->objectID)
         RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->skipType = SKIPTYPE_RELOADSCN;
 
@@ -72,7 +72,7 @@ bool32 SPZ2Outro_CutsceneState_Unknown1(EntityCutsceneSeq *host)
         }
 
         EntityEggPrison *prison     = SPZ2Outro->prison;
-        prison->activated           = true;
+        prison->notSolid            = true;
         prison->drawOrder           = Zone->playerDrawHigh;
         tvFlyingBattery->position.y = 0x81E0000;
         tvFlyingBattery->active     = ACTIVE_NORMAL;
@@ -115,12 +115,12 @@ bool32 SPZ2Outro_CutsceneState_Unknown1(EntityCutsceneSeq *host)
     }
 
     if (host->timer == 15) {
-        RSDK.SetSpriteAnimation(player1->spriteIndex, ANI_LOOKUP, &player1->playerAnimator, true, 0);
+        RSDK.SetSpriteAnimation(player1->aniFrames, ANI_LOOKUP, &player1->animator, true, 0);
         player1->state     = Player_State_LookUp;
         player1->up        = true;
         player1->direction = player1->position.x > weatherTV->position.x;
         if (player2->objectID == Player->objectID) {
-            RSDK.SetSpriteAnimation(player2->spriteIndex, ANI_LOOKUP, &player2->playerAnimator, true, 0);
+            RSDK.SetSpriteAnimation(player2->aniFrames, ANI_LOOKUP, &player2->animator, true, 0);
             player2->state     = Player_State_LookUp;
             player2->up        = true;
             player2->direction = player2->position.x > weatherTV->position.x;
@@ -147,13 +147,13 @@ bool32 SPZ2Outro_CutsceneState_Unknown2(EntityCutsceneSeq *host)
     unused(camera);
 
     if (!host->timer) {
-        RSDK.SetSpriteAnimation(player1->spriteIndex, 0, &player1->playerAnimator, true, 0);
+        RSDK.SetSpriteAnimation(player1->aniFrames, 0, &player1->animator, true, 0);
         player1->state = Player_State_Ground;
         player1->up    = false;
         player1->right = true;
         if (player2) {
             if (player2->objectID == Player->objectID && !SPZ2Outro->flag) {
-                RSDK.SetSpriteAnimation(player2->spriteIndex, ANI_IDLE, &player2->playerAnimator, true, 0);
+                RSDK.SetSpriteAnimation(player2->aniFrames, ANI_IDLE, &player2->animator, true, 0);
                 player2->state      = Player_State_Ground;
                 player2->up         = false;
                 player2->stateInput = Player_ProcessP2Input_AI;
@@ -161,7 +161,7 @@ bool32 SPZ2Outro_CutsceneState_Unknown2(EntityCutsceneSeq *host)
         }
     }
 
-    int posX = ((RSDK_screens->width + RSDK_screens->position.x) << 16) + 0x100000;
+    int posX = ((ScreenInfo->width + ScreenInfo->position.x) << 16) + 0x100000;
     if (player1->position.x > posX) {
         player1->right = false;
         if (player2->objectID != Player->objectID || SPZ2Outro->flag || player2->position.x > posX) {
@@ -179,8 +179,8 @@ bool32 SPZ2Outro_CutsceneState_Unknown2(EntityCutsceneSeq *host)
 void SPZ2Outro_DrawLayerCB(void)
 {
     EntityWeatherTV *weatherTV = (EntityWeatherTV *)SPZ2Outro->weatherTV;
-    int x                      = (weatherTV->position.x >> 16) - RSDK_screens->position.x;
-    int y                      = (weatherTV->position.y >> 16) - RSDK_screens->position.y;
+    int x                      = (weatherTV->position.x >> 16) - ScreenInfo->position.x;
+    int y                      = (weatherTV->position.y >> 16) - ScreenInfo->position.y;
     RSDK.SetClipBounds(0, x - 96, y - 64, x + 96, y + 64);
 }
 
@@ -193,14 +193,14 @@ bool32 SPZ2Outro_CutsceneState_Unknown3(EntityCutsceneSeq *host)
 
     if (!host->timer) {
         RSDK.SetDrawLayerProperties(Zone->playerDrawLow, false, SPZ2Outro_DrawLayerCB);
-        RSDK.SetSpriteAnimation(player1->spriteIndex, ANI_RUN, &player1->playerAnimator, true, 0);
+        RSDK.SetSpriteAnimation(player1->aniFrames, ANI_RUN, &player1->animator, true, 0);
         player1->drawOrder       = Zone->playerDrawLow;
         player1->state           = Player_State_None;
         player1->nextAirState    = StateMachine_None;
         player1->nextGroundState = StateMachine_None;
         player1->position.x      = weatherTV->position.x - 0x700000;
         player1->position.y      = weatherTV->position.y + 0x140000;
-        host->field_68           = player1->position.y;
+        host->storedValue2           = player1->position.y;
         player1->onGround        = false;
         player1->right           = false;
         player1->velocity.x      = 0x10000;
@@ -210,11 +210,11 @@ bool32 SPZ2Outro_CutsceneState_Unknown3(EntityCutsceneSeq *host)
         player1->drawFX          = FX_SCALE | FX_FLIP;
         if (player2) {
             if (player2->objectID == Player->objectID && !SPZ2Outro->flag) {
-                RSDK.SetSpriteAnimation(player2->spriteIndex, ANI_RUN, &player2->playerAnimator, true, 0);
+                RSDK.SetSpriteAnimation(player2->aniFrames, ANI_RUN, &player2->animator, true, 0);
                 player2->drawOrder       = Zone->playerDrawLow;
                 player2->state           = Player_State_None;
-                player2->nextAirState    = 0;
-                player2->nextGroundState = 0;
+                player2->nextAirState    = StateMachine_None;
+                player2->nextGroundState = StateMachine_None;
                 player2->position.x      = player1->position.x - 0x100000;
                 player2->position.y      = player1->position.y;
                 player2->onGround        = false;
@@ -230,30 +230,29 @@ bool32 SPZ2Outro_CutsceneState_Unknown3(EntityCutsceneSeq *host)
     }
 
     EntityPlayer *players[2] = { player1, player2 };
-    bool32 playerFlags[2]    = { true, true };
 
     bool32 flag = true;
     for (int i = 0; i < 2; ++i) {
         if (i == 1 && (player2->objectID != Player->objectID || SPZ2Outro->flag)) {
-            flag = playerFlags[0];
+            //do nothing, if P1 set the flag, then that'll count 
         }
         else {
             EntityPlayer *playerPtr = players[i];
-            if (playerPtr->position.x >= weatherTV->position.x && !playerPtr->velocity.y && playerPtr->playerAnimator.animationID == ANI_RUN) {
-                RSDK.SetSpriteAnimation(playerPtr->spriteIndex, ANI_JUMP, &playerPtr->playerAnimator, true, 0);
-                RSDK.PlaySfx(Player->sfx_Jump, false, 255);
+            if (playerPtr->position.x >= weatherTV->position.x && !playerPtr->velocity.y && playerPtr->animator.animationID == ANI_RUN) {
+                RSDK.SetSpriteAnimation(playerPtr->aniFrames, ANI_JUMP, &playerPtr->animator, true, 0);
+                RSDK.PlaySfx(Player->sfxJump, false, 255);
                 playerPtr->velocity.y = -0x20000;
             }
-            if (playerPtr->position.y <= tvFlyingBattery->position.y - 0x80000 && playerPtr->playerAnimator.animationID == ANI_JUMP) {
-                RSDK.PlaySfx(Player->sfx_Grab, false, 255);
-                RSDK.SetSpriteAnimation(playerPtr->spriteIndex, ANI_CLING, &playerPtr->playerAnimator, true, 0);
+            if (playerPtr->position.y <= tvFlyingBattery->position.y - 0x80000 && playerPtr->animator.animationID == ANI_JUMP) {
+                RSDK.PlaySfx(Player->sfxGrab, false, 255);
+                RSDK.SetSpriteAnimation(playerPtr->aniFrames, ANI_CLING, &playerPtr->animator, true, 0);
                 playerPtr->velocity.y = 0;
                 playerPtr->direction  = FLIP_X;
             }
 
-            if (playerPtr->playerAnimator.animationID == ANI_CLING)
+            if (playerPtr->animator.animationID == ANI_CLING)
                 playerPtr->position.y = tvFlyingBattery->position.y - 0x80000;
-            if (flag && playerPtr->playerAnimator.animationID == ANI_CLING) {
+            if (flag && playerPtr->animator.animationID == ANI_CLING) {
                 flag = true;
             }
             else {
@@ -285,9 +284,9 @@ bool32 SPZ2Outro_CutsceneState_Unknown4(EntityCutsceneSeq *host)
         volume = 0;
 
     RSDK.SetChannelAttributes(TVFlyingBattery->flyoverChannel, (volume + 90) / 90.0, 0.0, 1.0);
-    if (player1->playerAnimator.animationID == ANI_CLING)
+    if (player1->animator.animationID == ANI_CLING)
         player1->position.y = tvFlyingBattery->position.y - 0x80000;
-    if (player2->objectID == Player->objectID && !SPZ2Outro->flag && player2->playerAnimator.animationID == ANI_CLING)
+    if (player2->objectID == Player->objectID && !SPZ2Outro->flag && player2->animator.animationID == ANI_CLING)
         player2->position.y = tvFlyingBattery->position.y - 0x80000;
 
     return false;
@@ -297,7 +296,8 @@ bool32 SPZ2Outro_CutsceneState_Unknown4(EntityCutsceneSeq *host)
 void SPZ2Outro_EditorDraw(void)
 {
     RSDK_THIS(SPZ2Outro);
-    CutsceneRules_DrawCutsceneBounds(entity, &entity->size);
+    if (showGizmos())
+        CutsceneRules_DrawCutsceneBounds(self, &self->size);
 }
 
 void SPZ2Outro_EditorLoad(void) {}

@@ -5,7 +5,7 @@ ObjectTransportTube *TransportTube;
 void TransportTube_Update(void)
 {
     RSDK_THIS(TransportTube);
-    StateMachine_Run(entity->state);
+    StateMachine_Run(self->state);
 }
 
 void TransportTube_LateUpdate(void) {}
@@ -18,20 +18,20 @@ void TransportTube_Create(void *data)
 {
     RSDK_THIS(TransportTube);
 
-    entity->drawFX = FX_FLIP;
-    if (!RSDK_sceneInfo->inEditor) {
-        entity->active        = ACTIVE_BOUNDS;
-        entity->updateRange.x = 0xC00000;
-        entity->updateRange.y = 0xC00000;
-        TransportTube_SetupDirections(entity);
-        switch (entity->type) {
-            case 0: entity->state = TransportTube_State_Type0; break;
-            case 1: entity->state = TransportTube_State_Type1; break;
+    self->drawFX = FX_FLIP;
+    if (!SceneInfo->inEditor) {
+        self->active        = ACTIVE_BOUNDS;
+        self->updateRange.x = 0xC00000;
+        self->updateRange.y = 0xC00000;
+        TransportTube_SetupDirections(self);
+        switch (self->type) {
+            case 0: self->state = TransportTube_State_Type0; break;
+            case 1: self->state = TransportTube_State_Type1; break;
             case 2:
-            case 3: entity->state = TransportTube_State_Type23; break;
-            case 4: entity->state = TransportTube_State_Type4; break;
-            case 5: entity->state = TransportTube_State_Type5; break;
-            case 6: entity->state = TransportTube_State_Type6; break;
+            case 3: self->state = TransportTube_State_Type23; break;
+            case 4: self->state = TransportTube_State_Type4; break;
+            case 5: self->state = TransportTube_State_Type5; break;
+            case 6: self->state = TransportTube_State_Type6; break;
             default: break;
         }
     }
@@ -60,9 +60,9 @@ void TransportTube_Unknown2(int32 velX, int32 velY)
 
     int32 id = 0;
     int32 velStore = 0xFFFF;
-    for (int32 v = 0; v < entity->directionCount; ++v) {
-        int32 x = abs(velX - entity->dirVelocity[v].x);
-        int32 y = abs(velY - entity->dirVelocity[v].y);
+    for (int32 v = 0; v < self->directionCount; ++v) {
+        int32 x = abs(velX - self->dirVelocity[v].x);
+        int32 y = abs(velY - self->dirVelocity[v].y);
 
         if (x + y < velStore) {
             id       = v;
@@ -71,14 +71,14 @@ void TransportTube_Unknown2(int32 velX, int32 velY)
     }   
     
     int32 pos = 0;
-    for (int32 v = 0; v < entity->directionCount; ++v) {
+    for (int32 v = 0; v < self->directionCount; ++v) {
         if (v != id)
-            entity->directionIDs[pos++] = v;
+            self->directionIDs[pos++] = v;
     }
 
-    int32 dir            = entity->directionIDs[RSDK.Rand(0, entity->directionCount - 1)];
-    entity->velocity.x = entity->dirVelocity[dir].x << 16;
-    entity->velocity.y = entity->dirVelocity[dir].y << 16;
+    int32 dir            = self->directionIDs[RSDK.Rand(0, self->directionCount - 1)];
+    self->velocity.x = self->dirVelocity[dir].x << 16;
+    self->velocity.y = self->dirVelocity[dir].y << 16;
 }
 
 void TransportTube_State_Type0(void)
@@ -87,18 +87,18 @@ void TransportTube_State_Type0(void)
 
     for (int32 i = 0; i < Player->playerCount; ++i) {
         EntityPlayer *player = RSDK_GET_ENTITY(i, Player);
-        int32 rx               = (player->position.x - entity->position.x) >> 16;
-        int32 ry               = (player->position.y - entity->position.y) >> 16;
-        if (entity->playerTimers[i]) {
+        int32 rx               = (player->position.x - self->position.x) >> 16;
+        int32 ry               = (player->position.y - self->position.y) >> 16;
+        if (self->playerTimers[i]) {
             if (rx * rx + ry * ry >= 192)
-                entity->playerTimers[i]--;
+                self->playerTimers[i]--;
         }
         else if (player->state == Player_State_TransportTube && !TransportTube->field_4[i] && rx * rx + ry * ry < 192) {
             TransportTube_Unknown2(rx - (player->velocity.x >> 16), ry - (player->velocity.y >> 16));
-            player->position.x  = entity->position.x;
-            player->position.y  = entity->position.y;
-            player->velocity    = entity->velocity;
-            entity->playerTimers[i] = 2;
+            player->position.x  = self->position.x;
+            player->position.y  = self->position.y;
+            player->velocity    = self->velocity;
+            self->playerTimers[i] = 2;
         }
     }
 }
@@ -111,15 +111,15 @@ void TransportTube_State_Type1(void)
         EntityPlayer *player = RSDK_GET_ENTITY(i, Player);
 
         if (Player_CheckValidState(player)) {
-            int32 rx = (player->position.x - entity->position.x) >> 16;
-            int32 ry = (player->position.y - entity->position.y) >> 16;
-            if (entity->playerTimers[i]) {
+            int32 rx = (player->position.x - self->position.x) >> 16;
+            int32 ry = (player->position.y - self->position.y) >> 16;
+            if (self->playerTimers[i]) {
                 if (rx * rx + ry * ry >= 192)
-                    entity->playerTimers[i]--;
+                    self->playerTimers[i]--;
             }
             else if (rx * rx + ry * ry < 192) {
-                player->position.x = entity->position.x;
-                player->position.y = entity->position.y;
+                player->position.x = self->position.x;
+                player->position.y = self->position.y;
                 if (player->state == Player_State_TransportTube) {
                     player->drawOrder      = Zone->playerDrawLow;
                     player->tileCollisions = true;
@@ -127,12 +127,12 @@ void TransportTube_State_Type1(void)
                     player->state          = Player_State_Air;
                     if (player->velocity.x)
                         player->direction = player->velocity.x <= 0;
-                    entity->playerTimers[i] = 2;
+                    self->playerTimers[i] = 2;
                 }
                 else {
                     TransportTube_Unknown2(rx - (player->velocity.x >> 16), ry - (player->velocity.y >> 16));
-                    player->velocity = entity->velocity;
-                    RSDK.SetSpriteAnimation(player->spriteIndex, ANI_JUMP, &player->playerAnimator, false, 0);
+                    player->velocity = self->velocity;
+                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
                     player->drawOrder         = 1;
                     player->onGround          = false;
                     player->tileCollisions    = false;
@@ -142,7 +142,7 @@ void TransportTube_State_Type1(void)
                     player->nextGroundState   = StateMachine_None;
                     TransportTube->field_4[i] = 0;
                     RSDK.PlaySfx(TransportTube->sfxTravel, 0, 255);
-                    entity->playerTimers[i] = 2;
+                    self->playerTimers[i] = 2;
                 }
             }
         }
@@ -155,30 +155,30 @@ void TransportTube_State_Type23(void)
 
     for (int32 i = 0; i < Player->playerCount; ++i) {
         EntityPlayer *player = RSDK_GET_ENTITY(i, Player);
-        int32 rx               = (player->position.x - entity->position.x) >> 16;
-        int32 ry               = (player->position.y - entity->position.y) >> 16;
+        int32 rx               = (player->position.x - self->position.x) >> 16;
+        int32 ry               = (player->position.y - self->position.y) >> 16;
 
-        if (entity->playerTimers[i]) {
+        if (self->playerTimers[i]) {
             if (rx * rx + ry * ry >= 192)
-                --entity->playerTimers[i];
+                --self->playerTimers[i];
         }
         else if (player->state == Player_State_TransportTube && rx * rx + ry * ry < 192) {
-            if (entity->players[i]) {
+            if (self->players[i]) {
                 TransportTube->field_4[i] = 0;
-                entity->players[i]     = NULL;
-                entity->playerTimers[i]       = 2;
+                self->players[i]     = NULL;
+                self->playerTimers[i]       = 2;
             }
             else {
-                if (entity->type == 2)
+                if (self->type == 2)
                     TransportTube->field_4[i] = 1;
                 else
                     TransportTube->field_4[i] = -1;
-                EntityTransportTube *entPtr = RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot + TransportTube->field_4[i], TransportTube);
+                EntityTransportTube *entPtr = RSDK_GET_ENTITY(SceneInfo->entitySlot + TransportTube->field_4[i], TransportTube);
                 int32 angle          = RSDK.ATan2((entPtr->position.x - player->position.x) >> 16, (entPtr->position.y - player->position.y) >> 16);
                 player->velocity.x = 0xC00 * RSDK.Cos256(angle);
                 player->velocity.y = 0xC00 * RSDK.Sin256(angle);
                 entPtr->players[i]          = player;
-                entity->playerTimers[i] = 2;
+                self->playerTimers[i] = 2;
             }
         }
     }
@@ -189,24 +189,24 @@ void TransportTube_State_Type4(void)
     RSDK_THIS(TransportTube);
 
     for (int32 i = 0; i < Player->playerCount; ++i) {
-        EntityPlayer *player = entity->players[i];
+        EntityPlayer *player = self->players[i];
         if (player) {
             if (player->state == Player_State_TransportTube) {
-                int32 rx = (player->position.x - entity->position.x) >> 16;
-                int32 ry = (player->position.y - entity->position.y) >> 16;
+                int32 rx = (player->position.x - self->position.x) >> 16;
+                int32 ry = (player->position.y - self->position.y) >> 16;
                 if (rx * rx + ry * ry < 192) {
-                    EntityTransportTube *tube = RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot + TransportTube->field_4[i], TransportTube);
-                    player->position.x        = entity->position.x;
-                    player->position.y        = entity->position.y;
+                    EntityTransportTube *tube = RSDK_GET_ENTITY(SceneInfo->entitySlot + TransportTube->field_4[i], TransportTube);
+                    player->position.x        = self->position.x;
+                    player->position.y        = self->position.y;
                     int32 angle             = RSDK.ATan2((tube->position.x - player->position.x) >> 16, (tube->position.y - player->position.y) >> 16);
                     player->velocity.x    = 0xC00 * RSDK.Cos256(angle);
                     player->velocity.y    = 0xC00 * RSDK.Sin256(angle);
-                    entity->players[i] = NULL;
+                    self->players[i] = NULL;
                     tube->players[i]   = player;
                 }
             }
             else {
-                entity->players[i] = NULL;
+                self->players[i] = NULL;
             }
         }
     }
@@ -218,20 +218,20 @@ void TransportTube_State_Type5(void)
 
     for (int32 i = 0; i < Player->playerCount; ++i) {
         EntityPlayer *player = RSDK_GET_ENTITY(i, Player);
-        int32 rx               = (player->position.x - entity->position.x) >> 16;
-        int32 ry               = (player->position.y - entity->position.y) >> 16;
+        int32 rx               = (player->position.x - self->position.x) >> 16;
+        int32 ry               = (player->position.y - self->position.y) >> 16;
 
-        if (entity->playerTimers[i]) {
+        if (self->playerTimers[i]) {
             if (rx * rx + ry * ry >= 192)
-                --entity->playerTimers[i];
+                --self->playerTimers[i];
         }
         else if (player->state == Player_State_TransportTube && rx * rx + ry * ry < 192) {
-            player->position.x = entity->position.x;
-            player->position.y = entity->position.y;
+            player->position.x = self->position.x;
+            player->position.y = self->position.y;
             player->velocity.x = 0;
             player->velocity.y = 0;
 
-            uint8 flags = entity->dirMask & ((player->up << 0) | (player->down << 1) | (player->left << 2) | (player->right << 3));
+            uint8 flags = self->dirMask & ((player->up << 0) | (player->down << 1) | (player->left << 2) | (player->right << 3));
             if (flags & 1) {
                 player->velocity.y = -0x100000;
             }
@@ -246,7 +246,7 @@ void TransportTube_State_Type5(void)
             }
 
             if (player->velocity.x || player->velocity.y) {
-                entity->playerTimers[i] = 2;
+                self->playerTimers[i] = 2;
                 RSDK.PlaySfx(TransportTube->sfxTravel, 0, 255);
             }
         }
@@ -261,21 +261,21 @@ void TransportTube_State_Type6(void)
         EntityPlayer *player = RSDK_GET_ENTITY(i, Player);
 
         if (Player_CheckValidState(player)) {
-            int32 rx = (player->position.x - entity->position.x) >> 16;
-            int32 ry = (player->position.y - entity->position.y) >> 16;
+            int32 rx = (player->position.x - self->position.x) >> 16;
+            int32 ry = (player->position.y - self->position.y) >> 16;
 
-            if (entity->playerTimers[i]) {
+            if (self->playerTimers[i]) {
                 if (rx * rx + ry * ry >= 192)
-                    entity->playerTimers[i]--;
+                    self->playerTimers[i]--;
             }
             else if (rx * rx + ry * ry < 192) {
-                player->position.x     = entity->position.x;
-                player->position.y     = entity->position.y;
+                player->position.x     = self->position.x;
+                player->position.y     = self->position.y;
                 player->drawOrder      = Zone->playerDrawLow;
                 player->tileCollisions = true;
                 player->interaction    = true;
                 player->state          = Player_State_Air;
-                entity->playerTimers[i]    = 2;
+                self->playerTimers[i]    = 2;
             }
         }
     }
@@ -285,13 +285,13 @@ void TransportTube_State_Type6(void)
 void TransportTube_EditorDraw(void)
 {
     RSDK_THIS(TransportTube);
-    entity->updateRange.x = 0xC00000;
-    entity->updateRange.y = 0xC00000;
-    TransportTube_SetupDirections(entity);
+    self->updateRange.x = 0xC00000;
+    self->updateRange.y = 0xC00000;
+    TransportTube_SetupDirections(self);
 
-    for (int32 v = 0; v < entity->directionCount; ++v) {
-        DrawHelpers_DrawArrow(0xFF0000, entity->position.x, entity->position.y, entity->position.x + (entity->dirVelocity[v].x << 18),
-                              entity->position.y + (entity->dirVelocity[v].y << 18));
+    for (int32 v = 0; v < self->directionCount; ++v) {
+        DrawHelpers_DrawArrow(0xFF0000, self->position.x, self->position.y, self->position.x + (self->dirVelocity[v].x << 18),
+                              self->position.y + (self->dirVelocity[v].y << 18));
     }
 }
 

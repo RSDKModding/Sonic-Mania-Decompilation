@@ -5,7 +5,7 @@ ObjectTryAgain *TryAgain;
 void TryAgain_Update(void)
 {
     RSDK_THIS(TryAgain);
-    StateMachine_Run(entity->state);
+    StateMachine_Run(self->state);
 }
 
 void TryAgain_LateUpdate(void) {}
@@ -15,34 +15,37 @@ void TryAgain_StaticUpdate(void) {}
 void TryAgain_Draw(void)
 {
     RSDK_THIS(TryAgain);
-    RSDK.SetActivePalette(0, 0, RSDK_screens->height);
-    RSDK.SetClipBounds(0, 0, 0, RSDK_screens->width, (entity->position.y >> 16));
-    RSDK.DrawSprite(&entity->animator2, &entity->unknownPos1, false);
-    RSDK.DrawSprite(&entity->animator3, &entity->unknownPos2, false);
-    RSDK.SetClipBounds(0, 0, 0, RSDK_screens->width, RSDK_screens->height);
-    RSDK.DrawSprite(&entity->animator1, NULL, false);
-    RSDK.SetActivePalette(1, 0, RSDK_screens->height);
+    RSDK.SetActivePalette(0, 0, ScreenInfo->height);
+    RSDK.SetClipBounds(0, 0, 0, ScreenInfo->width, (self->position.y >> 16));
+
+    RSDK.DrawSprite(&self->eggmanAnimator, &self->eggmanPos, false);
+    RSDK.DrawSprite(&self->rubyAnimator, &self->rubyPos, false);
+
+    RSDK.SetClipBounds(0, 0, 0, ScreenInfo->width, ScreenInfo->height);
+    RSDK.DrawSprite(&self->debrisAnimator, NULL, false);
+
+    RSDK.SetActivePalette(1, 0, ScreenInfo->height);
 }
 
 void TryAgain_Create(void *data)
 {
     RSDK_THIS(TryAgain);
-    if (!RSDK_sceneInfo->inEditor) {
-        entity->unknownPos1.x = entity->position.x;
-        entity->unknownPos1.y = entity->position.y;
-        entity->unknownPos1.y += 0x100000;
-        entity->unknownPos2.x = entity->unknownPos1.x;
-        entity->unknownPos2.x -= 0x340000;
-        entity->unknownPos2.y = entity->unknownPos1.y;
-        entity->visible       = true;
-        entity->drawOrder     = 1;
-        entity->active        = ACTIVE_BOUNDS;
-        entity->updateRange.x = 0x800000;
-        entity->updateRange.y = 0x800000;
-        entity->state         = TryAgain_Unknown1;
-        RSDK.SetSpriteAnimation(TryAgain->aniFrames, 0, &entity->animator1, true, 0);
-        RSDK.SetSpriteAnimation(TryAgain->aniFrames, 2, &entity->animator2, true, 0);
-        RSDK.SetSpriteAnimation(TryAgain->aniFrames, 4, &entity->animator3, true, 0);
+    if (!SceneInfo->inEditor) {
+        self->eggmanPos.x = self->position.x;
+        self->eggmanPos.y = self->position.y;
+        self->eggmanPos.y += 0x100000;
+        self->rubyPos.x = self->eggmanPos.x;
+        self->rubyPos.x -= 0x340000;
+        self->rubyPos.y     = self->eggmanPos.y;
+        self->visible       = true;
+        self->drawOrder     = 1;
+        self->active        = ACTIVE_BOUNDS;
+        self->updateRange.x = 0x800000;
+        self->updateRange.y = 0x800000;
+        self->state         = TryAgain_Unknown1;
+        RSDK.SetSpriteAnimation(TryAgain->aniFrames, 0, &self->debrisAnimator, true, 0);
+        RSDK.SetSpriteAnimation(TryAgain->aniFrames, 2, &self->eggmanAnimator, true, 0);
+        RSDK.SetSpriteAnimation(TryAgain->aniFrames, 4, &self->rubyAnimator, true, 0);
     }
 }
 
@@ -55,97 +58,98 @@ void TryAgain_StageLoad(void)
 void TryAgain_Unknown1(void)
 {
     RSDK_THIS(TryAgain);
-    if (++entity->timer == 60) {
-        entity->timer    = 0;
-        entity->field_74 = -0x5C000;
+    if (++self->timer == 60) {
+        self->timer           = 0;
+        self->eggmanVelocityY = -0x5C000;
 #if RETRO_USE_PLUS
         Music_PlayTrack(TRACK_STAGE);
 #endif
-        entity->state = TryAgain_Unknown2;
+        self->state = TryAgain_Unknown2;
     }
 }
 
 void TryAgain_Unknown2(void)
 {
     RSDK_THIS(TryAgain);
-    entity->field_74 += 0x3800;
-    int32 val = entity->position.y - 0x340000;
-    entity->unknownPos1.y += entity->field_74;
-    if (entity->unknownPos1.y <= val || entity->field_74 <= 0) {
-        entity->unknownPos2.y = entity->unknownPos1.y;
+
+    self->eggmanVelocityY += 0x3800;
+    int32 val = self->position.y - 0x340000;
+    self->eggmanPos.y += self->eggmanVelocityY;
+    if (self->eggmanPos.y <= val || self->eggmanVelocityY <= 0) {
+        self->rubyPos.y = self->eggmanPos.y;
     }
     else {
-        entity->unknownPos1.y = val;
-        entity->field_74      = 0;
-        entity->state         = TryAgain_Unknown3;
-        entity->unknownPos2.y = val;
+        self->eggmanPos.y     = val;
+        self->eggmanVelocityY = 0;
+        self->state           = TryAgain_Unknown3;
+        self->rubyPos.y       = val;
     }
 }
 
 void TryAgain_Unknown3(void)
 {
     RSDK_THIS(TryAgain);
-    if (entity->timer > (RETRO_USE_PLUS ? 15 : 30))
-        RSDK.ProcessAnimation(&entity->animator2);
-    if (++entity->timer == 120) {
-        entity->timer = 0;
-        RSDK.SetSpriteAnimation(TryAgain->aniFrames, 3, &entity->animator2, true, 2);
-        entity->state = TryAgain_Unknown4;
+    if (self->timer > (RETRO_USE_PLUS ? 15 : 30))
+        RSDK.ProcessAnimation(&self->eggmanAnimator);
+    if (++self->timer == 120) {
+        self->timer = 0;
+        RSDK.SetSpriteAnimation(TryAgain->aniFrames, 3, &self->eggmanAnimator, true, 2);
+        self->state = TryAgain_Unknown4;
     }
 }
 
 void TryAgain_Unknown4(void)
 {
     RSDK_THIS(TryAgain);
-    RSDK.ProcessAnimation(&entity->animator2);
-    if (entity->animator2.frameID == 2) {
-        if (entity->animator2.animationTimer == 1) {
-            entity->emeraldVelocity.x = 0x22000;
-            entity->emeraldVelocity.y = -0x58000;
+    RSDK.ProcessAnimation(&self->eggmanAnimator);
+    if (self->eggmanAnimator.frameID == 2) {
+        if (self->eggmanAnimator.animationTimer == 1) {
+            self->rubyVelocity.x = 0x22000;
+            self->rubyVelocity.y = -0x58000;
         }
     }
-    else if (entity->animator2.frameID == 7 && entity->animator2.animationTimer == 1) {
-        entity->emeraldVelocity.x = -0x22000;
-        entity->emeraldVelocity.y = -0x58000;
+    else if (self->eggmanAnimator.frameID == 7 && self->eggmanAnimator.animationTimer == 1) {
+        self->rubyVelocity.x = -0x22000;
+        self->rubyVelocity.y = -0x58000;
     }
 
-    entity->unknownPos2.x += entity->emeraldVelocity.x;
-    entity->emeraldVelocity.y += 0x3800;
-    entity->unknownPos2.y += entity->emeraldVelocity.y;
+    self->rubyPos.x += self->rubyVelocity.x;
+    self->rubyVelocity.y += 0x3800;
+    self->rubyPos.y += self->rubyVelocity.y;
 
-    if (entity->unknownPos2.y <= entity->unknownPos1.y + 0x80000) {
-        if (entity->unknownPos2.y < entity->position.y)
-            RSDK.ProcessAnimation(&entity->animator3);
+    if (self->rubyPos.y <= self->eggmanPos.y + 0x80000) {
+        if (self->rubyPos.y < self->position.y)
+            RSDK.ProcessAnimation(&self->rubyAnimator);
     }
     else {
-        entity->unknownPos2.y     = entity->unknownPos1.y + 0x80000;
-        entity->emeraldVelocity.x = 0;
-        entity->emeraldVelocity.y = 0;
-        RSDK.SetSpriteAnimation(TryAgain->aniFrames, 4, &entity->animator3, true, 0);
+        self->rubyPos.y      = self->eggmanPos.y + 0x80000;
+        self->rubyVelocity.x = 0;
+        self->rubyVelocity.y = 0;
+        RSDK.SetSpriteAnimation(TryAgain->aniFrames, 4, &self->rubyAnimator, true, 0);
     }
 
-    ++entity->timer;
-    if (RSDK_controller->keyA.press || RSDK_controller->keyStart.press)
-        entity->timer = 600;
+    ++self->timer;
+    if (ControllerInfo->keyA.press || ControllerInfo->keyStart.press)
+        self->timer = 600;
 #if RETRO_USE_TOUCH_CONTROLS
-    else if (RSDK_touchMouse->count)
-        entity->timer = 600;
+    else if (TouchInfo->count)
+        self->timer = 600;
 #endif
 
-    if (entity->timer == 600) {
+    if (self->timer == 600) {
 #if RETRO_USE_PLUS
         PhantomRuby_PlaySFX(RUBYSFX_ATTACK4);
-        EntityFXFade *fxFade = CREATE_ENTITY(FXFade, intToVoid(0xFFFFFF), entity->position.x, entity->position.y);
+        EntityFXFade *fxFade = CREATE_ENTITY(FXFade, intToVoid(0xFFFFFF), self->position.x, self->position.y);
         fxFade->speedIn      = 24;
         fxFade->speedOut     = 24;
         fxFade->fadeOutBlack = true;
 #else
-        EntityFXFade *fxFade = CREATE_ENTITY(FXFade, intToVoid(0x000000), entity->position.x, entity->position.y);
-        fxFade->speedIn = 12;
-        fxFade->wait    = 240;
+        EntityFXFade *fxFade = CREATE_ENTITY(FXFade, intToVoid(0x000000), self->position.x, self->position.y);
+        fxFade->speedIn      = 12;
+        fxFade->wait         = 240;
 #endif
     }
-    if (entity->timer >= (RETRO_USE_PLUS ? 740 : 680)) {
+    if (self->timer >= (RETRO_USE_PLUS ? 740 : 680)) {
 #if RETRO_USE_PLUS
         if (API.CheckDLC(DLC_PLUS))
             RSDK.SetScene("Presentation", "Game Summary");

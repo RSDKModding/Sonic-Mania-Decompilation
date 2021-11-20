@@ -12,12 +12,12 @@ void UFO_Plasma_Draw(void)
 {
     ScanlineInfo *scanlinePtr = UFO_Plasma->scanlines;
 
-    int32 y       = (UFO_Setup->timer + 2 * RSDK_screens->position.y) << 14;
-    uint8 defPos = ((RSDK_screens->position.y >> 1) + 2 * UFO_Setup->timer);
+    int32 y       = (UFO_Setup->timer + 2 * ScreenInfo->position.y) << 14;
+    uint8 defPos = ((ScreenInfo->position.y >> 1) + 2 * UFO_Setup->timer);
 
-    for (int32 i = 0; i < RSDK_screens->height; ++i) {
+    for (int32 i = 0; i < ScreenInfo->height; ++i) {
         ScanlineInfo *scanline  = (ScanlineInfo *)&UFO_Plasma->scanlineData[defPos++ * sizeof(ScanlineInfo)];
-        scanlinePtr->position.x = scanline->position.x + (RSDK_screens->position.x << 16);
+        scanlinePtr->position.x = scanline->position.x + (ScreenInfo->position.x << 16);
         scanlinePtr->position.y = y;
         scanlinePtr->deform.x   = scanline->deform.x;
         scanlinePtr->deform.y   = 0;
@@ -26,24 +26,24 @@ void UFO_Plasma_Draw(void)
         y += data->deform.y;
         ++scanlinePtr;
     }
-    RSDK.DrawDeformedSprite(UFO_Plasma->spriteIndex, INK_MASKED, 0x100);
-    RSDK.SetClipBounds(0, 0, 0, RSDK_screens->width, RSDK_screens->height);
-    RSDK.SetActivePalette(0, 0, RSDK_screens->height);
+    RSDK.DrawDeformedSprite(UFO_Plasma->aniFrames, INK_MASKED, 0x100);
+    RSDK.SetClipBounds(0, 0, 0, ScreenInfo->width, ScreenInfo->height);
+    RSDK.SetActivePalette(0, 0, ScreenInfo->height);
 }
 
 void UFO_Plasma_Create(void *data)
 {
     RSDK_THIS(UFO_Plasma);
-    if (!RSDK_sceneInfo->inEditor) {
-        entity->active    = ACTIVE_NORMAL;
-        entity->visible   = true;
-        entity->drawOrder = 3;
+    if (!SceneInfo->inEditor) {
+        self->active    = ACTIVE_NORMAL;
+        self->visible   = true;
+        self->drawOrder = 3;
     }
 }
 
 void UFO_Plasma_StageLoad(void)
 {
-    UFO_Plasma->spriteIndex = RSDK.LoadSpriteSheet("SpecialUFO/Plasma.gif", SCOPE_STAGE);
+    UFO_Plasma->aniFrames = RSDK.LoadSpriteSheet("SpecialUFO/Plasma.gif", SCOPE_STAGE);
     UFO_Plasma->scanlines   = RSDK.GetScanlines();
 
     int32 angle   = 0;
@@ -51,7 +51,7 @@ void UFO_Plasma_StageLoad(void)
     for (int32 i = 0; i < 0x100; ++i) {
         scanline[i].deform.x   = (RSDK.Sin256(angle >> 1) + 0x400) << 6;
         scanline[i].deform.y   = (RSDK.Sin256(angle >> 1) + 0x800) << 5;
-        scanline[i].position.x = (RSDK.Sin256(angle) << 10) - scanline->deform.x * RSDK_screens->centerX;
+        scanline[i].position.x = (RSDK.Sin256(angle) << 10) - scanline->deform.x * ScreenInfo->centerX;
         scanline[i].position.y = 0;
         angle += 2;
     }

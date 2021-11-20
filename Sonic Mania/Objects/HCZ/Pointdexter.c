@@ -5,7 +5,7 @@ ObjectPointdexter *Pointdexter;
 void Pointdexter_Update(void)
 {
     RSDK_THIS(Pointdexter);
-    StateMachine_Run(entity->state);
+    StateMachine_Run(self->state);
 }
 
 void Pointdexter_LateUpdate(void) {}
@@ -15,23 +15,23 @@ void Pointdexter_StaticUpdate(void) {}
 void Pointdexter_Draw(void)
 {
     RSDK_THIS(Pointdexter);
-    RSDK.DrawSprite(&entity->animator, NULL, false);
+    RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
 void Pointdexter_Create(void *data)
 {
     RSDK_THIS(Pointdexter);
-    entity->visible   = true;
-    entity->drawOrder = Zone->drawOrderLow;
-    entity->drawFX |= FX_FLIP;
-    entity->startPos.x    = entity->position.x;
-    entity->startPos.y    = entity->position.y;
-    entity->startDir      = entity->direction;
-    entity->active        = ACTIVE_BOUNDS;
-    entity->updateRange.x = 0x800000;
-    entity->updateRange.y = 0x800000;
-    RSDK.SetSpriteAnimation(Pointdexter->aniFrames, 0, &entity->animator, true, 0);
-    entity->state = Pointdexter_State_Setup;
+    self->visible   = true;
+    self->drawOrder = Zone->drawOrderLow;
+    self->drawFX |= FX_FLIP;
+    self->startPos.x    = self->position.x;
+    self->startPos.y    = self->position.y;
+    self->startDir      = self->direction;
+    self->active        = ACTIVE_BOUNDS;
+    self->updateRange.x = 0x800000;
+    self->updateRange.y = 0x800000;
+    RSDK.SetSpriteAnimation(Pointdexter->aniFrames, 0, &self->animator, true, 0);
+    self->state = Pointdexter_State_Setup;
 }
 
 void Pointdexter_StageLoad(void)
@@ -48,7 +48,7 @@ void Pointdexter_StageLoad(void)
 void Pointdexter_DebugSpawn(void)
 {
     RSDK_THIS(DebugMode);
-    CREATE_ENTITY(Pointdexter, NULL, entity->position.x, entity->position.y);
+    CREATE_ENTITY(Pointdexter, NULL, self->position.x, self->position.y);
 }
 
 void Pointdexter_DebugDraw(void)
@@ -61,10 +61,10 @@ void Pointdexter_CheckOnScreen(void)
 {
     RSDK_THIS(Pointdexter);
 
-    if (!RSDK.CheckOnScreen(entity, NULL) && !RSDK.CheckPosOnScreen(&entity->startPos, &entity->updateRange)) {
-        entity->position.x = entity->startPos.x;
-        entity->position.y = entity->startPos.y;
-        entity->direction  = entity->startDir;
+    if (!RSDK.CheckOnScreen(self, NULL) && !RSDK.CheckPosOnScreen(&self->startPos, &self->updateRange)) {
+        self->position.x = self->startPos.x;
+        self->position.y = self->startPos.y;
+        self->direction  = self->startDir;
         Pointdexter_Create(NULL);
     }
 }
@@ -75,18 +75,20 @@ void Pointdexter_CheckPlayerCollisions(void)
 
     foreach_active(Player, player)
     {
-        if (Player_CheckBadnikTouch(player, entity, &Pointdexter->hitbox)) {
-            if (entity->animator.frameID != 2 || player->invincibleTimer || player->blinkTimer
+        if (Player_CheckBadnikTouch(player, self, &Pointdexter->hitbox)) {
+            if (self->animator.frameID != 2 || player->invincibleTimer || player->blinkTimer
 #if RETRO_USE_PLUS
                 || player->state == Player_State_MightyHammerDrop
 #endif
             ) {
-                Player_CheckBadnikBreak(entity, player, true);
+                Player_CheckBadnikBreak(self, player, true);
             }
 #if RETRO_USE_PLUS
-            else if (!Player_CheckMightyUnspin(0x200, player, 2, &player->uncurlTimer)) 
+            else if (!Player_CheckMightyUnspin(0x200, player, 2, &player->uncurlTimer))
+#else
+            else
 #endif
-                Player_CheckHit(player, entity);
+                Player_CheckHit(player, self);
         }
     }
 }
@@ -94,18 +96,18 @@ void Pointdexter_CheckPlayerCollisions(void)
 void Pointdexter_State_Setup(void)
 {
     RSDK_THIS(Pointdexter);
-    if (entity->position.y >= Water->waterLevel) {
-        entity->active = ACTIVE_NORMAL;
-        if (entity->direction == FLIP_NONE)
-            entity->velocity.x = -0x4000;
+    if (self->position.y >= Water->waterLevel) {
+        self->active = ACTIVE_NORMAL;
+        if (self->direction == FLIP_NONE)
+            self->velocity.x = -0x4000;
         else
-            entity->velocity.x = 0x4000;
-        entity->timer = 0;
-        entity->state = Pointdexter_State_Swimming;
+            self->velocity.x = 0x4000;
+        self->timer = 0;
+        self->state = Pointdexter_State_Swimming;
         Pointdexter_State_Swimming();
     }
     else {
-        destroyEntity(entity);
+        destroyEntity(self);
     }
 }
 
@@ -113,15 +115,15 @@ void Pointdexter_State_Swimming(void)
 {
     RSDK_THIS(Pointdexter);
 
-    entity->position.x += entity->velocity.x;
-    if (!--entity->timer) {
-        entity->direction ^= FLIP_X;
-        entity->velocity.x = -entity->velocity.x;
-        entity->timer      = 0;
+    self->position.x += self->velocity.x;
+    if (!--self->timer) {
+        self->direction ^= FLIP_X;
+        self->velocity.x = -self->velocity.x;
+        self->timer      = 0;
     }
-    entity->position.y += 32 * RSDK.Sin256(entity->angle);
-    entity->angle = (entity->angle + 2) & 0xFF;
-    RSDK.ProcessAnimation(&entity->animator);
+    self->position.y += 32 * RSDK.Sin256(self->angle);
+    self->angle = (self->angle + 2) & 0xFF;
+    RSDK.ProcessAnimation(&self->animator);
     Pointdexter_CheckPlayerCollisions();
     Pointdexter_CheckOnScreen();
 }

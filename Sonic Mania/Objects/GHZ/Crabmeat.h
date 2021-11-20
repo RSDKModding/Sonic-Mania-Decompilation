@@ -6,9 +6,9 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    Hitbox hitbox;
+    Hitbox hitboxBadnik;
     Hitbox projectileHitbox;
-    uint16 spriteIndex;
+    uint16 aniFrames;
 } ObjectCrabmeat;
 
 // Entity Class
@@ -16,7 +16,7 @@ typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
-    uint8 dword60;
+    uint8 shootState;
     Vector2 startPos;
     int32 startDir;
     Animator animator;
@@ -42,12 +42,12 @@ void Crabmeat_Serialize(void);
 void Crabmeat_DebugDraw(void);
 void Crabmeat_DebugSpawn(void);
 
-void Crabmeat_State_Main(void);
-void Crabmeat_State_Projectile(void);
-void Crabmeat_State_Shoot(void);
-void Crabmeat_Unknown1(void);
-
 void Crabmeat_CheckOnScreen(void);
 void Crabmeat_CheckPlayerCollisions(void);
+
+void Crabmeat_State_Setup(void);
+void Crabmeat_State_Main(void);
+void Crabmeat_State_Shoot(void);
+void Crabmeat_State_Projectile(void);
 
 #endif //!OBJ_CRABMEAT_H

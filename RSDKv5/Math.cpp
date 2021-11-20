@@ -25,12 +25,12 @@ int32 aCosVal256[0x100];
 
 uint8 atanVal256[0x100 * 0x100];
 
-uint32 randKey = 0;
+uint32 randSeed = 0;
 
 void CalculateTrigAngles()
 {
     srand(time(NULL));
-    randKey = rand();
+    randSeed = rand();
 
     for (int i = 0; i < 0x400; ++i) {
         sinVal1024[i]  = (int32)(sin((i / 512.0) * M_PI) * 1024.0);
@@ -78,7 +78,7 @@ void CalculateTrigAngles()
     for (int y = 0; y < 0x100; ++y) {
         uint8 *arcTan = (uint8 *)&atanVal256[y];
         for (int x = 0; x < 0x100; ++x) {
-            *arcTan = (uint8)(atan2(y, x) * 40.743664);
+            *arcTan = (int)(float)((float)atan2((float)y, x) * 40.743664);
             arcTan += 0x100;
         }
     }

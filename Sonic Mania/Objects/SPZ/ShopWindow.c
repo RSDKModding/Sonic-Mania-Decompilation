@@ -5,14 +5,14 @@ ObjectShopWindow *ShopWindow;
 void ShopWindow_Update(void)
 {
     RSDK_THIS(ShopWindow);
-    StateMachine_Run(entity->state);
+    StateMachine_Run(self->state);
 
-    if (entity->silhouette) {
+    if (self->silhouette) {
         foreach_active(Player, player)
         {
             EntityShield *shield = RSDK_GET_ENTITY((Player->playerCount + RSDK.GetEntityID(player)), Shield);
             if (shield->objectID == Shield->objectID && shield->type == SHIELD_BLUE) {
-                if (Player_CheckCollisionTouch(player, entity, &entity->hitbox2))
+                if (Player_CheckCollisionTouch(player, self, &self->hitbox2))
                     shield->flag = Zone->timer & 1;
             }
         }
@@ -26,59 +26,59 @@ void ShopWindow_StaticUpdate(void) {}
 void ShopWindow_Draw(void)
 {
     RSDK_THIS(ShopWindow);
-    StateMachine_Run(entity->stateDraw);
+    StateMachine_Run(self->stateDraw);
 }
 
 void ShopWindow_Create(void *data)
 {
     RSDK_THIS(ShopWindow);
-    if (!RSDK_sceneInfo->inEditor) {
-        entity->visible = true;
+    if (!SceneInfo->inEditor) {
+        self->visible = true;
         if (data) {
-            entity->active        = ACTIVE_NORMAL;
-            entity->drawOrder     = Zone->drawOrderLow;
-            entity->updateRange.x = 0x400000;
-            entity->updateRange.y = 0x400000;
-            entity->drawFX        = FX_FLIP;
-            entity->scale.x       = 0x200;
-            entity->scale.y       = 0x200;
-            entity->state         = ShopWindow_State_Shard;
-            entity->stateDraw     = ShopWindow_State_Draw_Shard;
+            self->active        = ACTIVE_NORMAL;
+            self->drawOrder     = Zone->drawOrderLow;
+            self->updateRange.x = 0x400000;
+            self->updateRange.y = 0x400000;
+            self->drawFX        = FX_FLIP;
+            self->scale.x       = 0x200;
+            self->scale.y       = 0x200;
+            self->state         = ShopWindow_State_Shard;
+            self->stateDraw     = ShopWindow_Draw_Shard;
         }
         else {
-            entity->active        = ACTIVE_BOUNDS;
-            entity->updateRange.x = entity->size.x;
-            entity->updateRange.y = entity->size.y;
-            if (!entity->silhouette)
-                entity->drawOrder = Zone->drawOrderLow;
+            self->active        = ACTIVE_BOUNDS;
+            self->updateRange.x = self->size.x;
+            self->updateRange.y = self->size.y;
+            if (!self->silhouette)
+                self->drawOrder = Zone->drawOrderLow;
             else
-                entity->drawOrder = Zone->drawOrderHigh;
+                self->drawOrder = Zone->drawOrderHigh;
 
-            entity->inkEffect = INK_ADD;
-            entity->alpha     = 0x80;
-            entity->size.x >>= 0x10;
-            entity->size.y >>= 0x10;
-            if (entity->shatter) {
-                entity->hitbox.top          = -entity->size.y;
-                entity->hitbox.bottom       = entity->size.y;
-                entity->hitbox.left         = -(entity->size.x >> 1);
-                entity->hitbox.right        = entity->size.x >> 1;
-                entity->windowHitbox.top    = -(entity->size.y >> 1);
-                entity->windowHitbox.right  = entity->size.x;
-                entity->windowHitbox.left   = -entity->size.x;
-                entity->windowHitbox.bottom = entity->size.y >> 1;
-                entity->state               = ShopWindow_State_Silhouette;
+            self->inkEffect = INK_ADD;
+            self->alpha     = 0x80;
+            self->size.x >>= 0x10;
+            self->size.y >>= 0x10;
+            if (self->shatter) {
+                self->hitbox.top          = -self->size.y;
+                self->hitbox.bottom       = self->size.y;
+                self->hitbox.left         = -(self->size.x >> 1);
+                self->hitbox.right        = self->size.x >> 1;
+                self->windowHitbox.top    = -(self->size.y >> 1);
+                self->windowHitbox.right  = self->size.x;
+                self->windowHitbox.left   = -self->size.x;
+                self->windowHitbox.bottom = self->size.y >> 1;
+                self->state               = ShopWindow_State_Silhouette;
             }
-            entity->stateDraw      = ShopWindow_Draw_Normal;
-            entity->hitbox2.top    = -8 - entity->size.y;
-            entity->hitbox2.right  = entity->size.x + 8;
-            entity->hitbox2.bottom = entity->size.y + 8;
-            entity->hitbox2.left   = -8 - entity->size.x;
-            RSDK.SetSpriteAnimation(ShopWindow->spriteIndex, 0, &entity->animator, false, 0);
+            self->stateDraw      = ShopWindow_Draw_Normal;
+            self->hitbox2.top    = -8 - self->size.y;
+            self->hitbox2.right  = self->size.x + 8;
+            self->hitbox2.bottom = self->size.y + 8;
+            self->hitbox2.left   = -8 - self->size.x;
+            RSDK.SetSpriteAnimation(ShopWindow->aniFrames, 0, &self->animator, false, 0);
         }
         
         foreach_all(CircleBumper, bumper) {
-            if (RSDK.CheckObjectCollisionTouchBox(bumper, &CircleBumper->hitbox, entity, &entity->hitbox2))
+            if (RSDK.CheckObjectCollisionTouchBox(bumper, &CircleBumper->hitbox, self, &self->hitbox2))
                 bumper->drawOrder = Zone->drawOrderLow;
         }
     }
@@ -86,7 +86,7 @@ void ShopWindow_Create(void *data)
 
 void ShopWindow_StageLoad(void)
 {
-    ShopWindow->spriteIndex = RSDK.LoadSpriteAnimation("SPZ1/ShopWindow.bin", SCOPE_STAGE);
+    ShopWindow->aniFrames = RSDK.LoadSpriteAnimation("SPZ1/ShopWindow.bin", SCOPE_STAGE);
     RSDK.SetPaletteMask(RSDK.GetPaletteEntry(0, 253));
     ShopWindow->sfxShatter = RSDK.GetSFX("Stage/WindowShatter.wav");
 }
@@ -94,38 +94,38 @@ void ShopWindow_StageLoad(void)
 void ShopWindow_State_Shard(void)
 {
     RSDK_THIS(ShopWindow);
-    entity->position.x += entity->velocity.x;
-    entity->position.y += entity->velocity.y;
-    entity->velocity.y += 0x3800;
+    self->position.x += self->velocity.x;
+    self->position.y += self->velocity.y;
+    self->velocity.y += 0x3800;
 
-    entity->field_90.x += entity->field_88.x;
-    entity->field_90.y += entity->field_88.y;
-    entity->scale.x = RSDK.Cos512(entity->field_90.x);
-    entity->scale.y = RSDK.Cos512(entity->field_90.y);
+    self->field_90.x += self->field_88.x;
+    self->field_90.y += self->field_88.y;
+    self->scale.x = RSDK.Cos512(self->field_90.x);
+    self->scale.y = RSDK.Cos512(self->field_90.y);
 
-    RSDK.ProcessAnimation(&entity->animator);
-    if (!RSDK.CheckOnScreen(entity, &entity->updateRange))
-        destroyEntity(entity);
+    RSDK.ProcessAnimation(&self->animator);
+    if (!RSDK.CheckOnScreen(self, &self->updateRange))
+        destroyEntity(self);
 }
 
 void ShopWindow_State_Shattered(void)
 {
     RSDK_THIS(ShopWindow);
-    if (++entity->animator.animationTimer == 2) {
-        int32 cntY = (entity->size.y >> 3) + 1;
-        int32 cntX = (entity->size.x >> 3) + 1;
+    if (++self->animator.animationTimer == 2) {
+        int32 cntY = (self->size.y >> 3) + 1;
+        int32 cntX = (self->size.x >> 3) + 1;
 
-        int32 posY = entity->position.y - (entity->size.y << 16) + 0x80000;
+        int32 posY = self->position.y - (self->size.y << 16) + 0x80000;
         for (int32 y = 0; y < cntY; ++y) {
-            int32 posX = entity->position.x - (entity->size.x << 16) + 0x80000;
+            int32 posX = self->position.x - (self->size.x << 16) + 0x80000;
             for (int32 x = 0; x < cntX; ++x) {
-                EntityShopWindow *shard = (EntityShopWindow *)RSDK.CreateEntity(ShopWindow->objectID, (void *)1, posX + ((RSDK.Rand(0, 8) - 4) << 16),
-                                                                                posY + ((RSDK.Rand(0, 8) - 4) << 16));
+                EntityShopWindow *shard =
+                    CREATE_ENTITY(ShopWindow, intToVoid(1), posX + ((RSDK.Rand(0, 8) - 4) << 16), posY + ((RSDK.Rand(0, 8) - 4) << 16));
                 if (RSDK.Rand(0, 3) == 1) {
-                    RSDK.SetSpriteAnimation(ShopWindow->spriteIndex, 3, &shard->animator, 0, RSDK.Rand(0, 18));
+                    RSDK.SetSpriteAnimation(ShopWindow->aniFrames, 3, &shard->animator, 0, RSDK.Rand(0, 18));
                 }
                 else {
-                    RSDK.SetSpriteAnimation(ShopWindow->spriteIndex, 2, &shard->animator, 0, RSDK.Rand(0, 21));
+                    RSDK.SetSpriteAnimation(ShopWindow->aniFrames, 2, &shard->animator, 0, RSDK.Rand(0, 21));
                 }
                 shard->field_88.x = RSDK.Rand(1, 16);
                 shard->field_88.y = RSDK.Rand(1, 16);
@@ -138,28 +138,28 @@ void ShopWindow_State_Shattered(void)
             posY += 0x100000;
         }
         RSDK.PlaySfx(ShopWindow->sfxShatter, false, 0xFF);
-        destroyEntity(entity);
+        destroyEntity(self);
     }
 }
 
 void ShopWindow_State_Silhouette(void)
 {
     RSDK_THIS(ShopWindow);
-    if (entity->shatter) {
+    if (self->shatter) {
 
         foreach_active(Player, player)
         {
             if (abs(player->velocity.x) >= 0xA0000) {
-                if (Player_CheckCollisionTouch(player, entity, &entity->hitbox)) {
-                    entity->stateDraw = ShopWindow_State_Draw_Shattered;
-                    entity->state     = ShopWindow_State_Shattered;
+                if (Player_CheckCollisionTouch(player, self, &self->hitbox)) {
+                    self->stateDraw = ShopWindow_Draw_Shattered;
+                    self->state     = ShopWindow_State_Shattered;
                 }
             }
 
             if (abs(player->velocity.y) >= 0xA0000) {
-                if (Player_CheckCollisionTouch(player, entity, &entity->windowHitbox)) {
-                    entity->stateDraw = ShopWindow_State_Draw_Shattered;
-                    entity->state     = ShopWindow_State_Shattered;
+                if (Player_CheckCollisionTouch(player, self, &self->windowHitbox)) {
+                    self->stateDraw = ShopWindow_Draw_Shattered;
+                    self->state     = ShopWindow_State_Shattered;
                 }
             }
         }
@@ -170,118 +170,118 @@ void ShopWindow_Draw_Normal(void)
 {
     RSDK_THIS(ShopWindow);
     Vector2 drawPos;
-    ScreenInfo *screen = &RSDK_screens[RSDK_sceneInfo->currentScreenID];
+    RSDKScreenInfo *screen = &ScreenInfo[SceneInfo->currentScreenID];
 
-    int32 x = (entity->position.x >> 0x10) - screen->position.x - entity->size.x;
-    int32 y = (entity->position.y >> 0x10) - screen->position.y - entity->size.y;
-    RSDK.SetClipBounds(RSDK_sceneInfo->currentScreenID, x, y, x + 2 * entity->size.x, y + 2 * entity->size.y + 1);
+    int32 x = (self->position.x >> 0x10) - screen->position.x - self->size.x;
+    int32 y = (self->position.y >> 0x10) - screen->position.y - self->size.y;
+    RSDK.SetClipBounds(SceneInfo->currentScreenID, x, y, x + 2 * self->size.x, y + 2 * self->size.y + 1);
 
     drawPos.x = (x - (uint8)(x + (screen->position.x >> 1))) << 16;
     drawPos.y = (y - (uint8)(y + (screen->position.y >> 1))) << 16;
-    if (entity->silhouette)
-        RSDK.DrawRect(x, y, 2 * entity->size.x, 2 * entity->size.y, 0x100068, 255, INK_UNMASKED, true);
+    if (self->silhouette)
+        RSDK.DrawRect(x, y, 2 * self->size.x, 2 * self->size.y, 0x100068, 255, INK_UNMASKED, true);
 
-    entity->animator.frameID = 0;
-    RSDK.DrawSprite(&entity->animator, &drawPos, true);
+    self->animator.frameID = 0;
+    RSDK.DrawSprite(&self->animator, &drawPos, true);
 
-    entity->animator.frameID = 1;
-    RSDK.DrawSprite(&entity->animator, &drawPos, true);
+    self->animator.frameID = 1;
+    RSDK.DrawSprite(&self->animator, &drawPos, true);
 
-    entity->animator.frameID = 2;
-    RSDK.DrawSprite(&entity->animator, &drawPos, true);
+    self->animator.frameID = 2;
+    RSDK.DrawSprite(&self->animator, &drawPos, true);
 
-    entity->animator.frameID = 3;
-    RSDK.DrawSprite(&entity->animator, &drawPos, true);
+    self->animator.frameID = 3;
+    RSDK.DrawSprite(&self->animator, &drawPos, true);
 
-    if (!entity->shatter) {
-        RSDK.SetClipBounds(RSDK_sceneInfo->currentScreenID, 0, 0, screen->width, screen->height);
+    if (!self->shatter) {
+        RSDK.SetClipBounds(SceneInfo->currentScreenID, 0, 0, screen->width, screen->height);
     }
     else {
-        drawPos.x            = entity->position.x - (entity->size.x << 16) + 0x180000;
-        drawPos.y            = entity->position.y + ((entity->size.y - 24) << 16);
-        entity->inkEffect    = INK_NONE;
-        entity->animator.frameID = 4;
-        RSDK.DrawSprite(&entity->animator, &drawPos, false);
+        drawPos.x            = self->position.x - (self->size.x << 16) + 0x180000;
+        drawPos.y            = self->position.y + ((self->size.y - 24) << 16);
+        self->inkEffect    = INK_NONE;
+        self->animator.frameID = 4;
+        RSDK.DrawSprite(&self->animator, &drawPos, false);
 
-        entity->inkEffect = INK_ADD;
-        RSDK.SetClipBounds(RSDK_sceneInfo->currentScreenID, 0, 0, screen->width, screen->height);
+        self->inkEffect = INK_ADD;
+        RSDK.SetClipBounds(SceneInfo->currentScreenID, 0, 0, screen->width, screen->height);
     }
 }
 
-void ShopWindow_State_Draw_Shard(void)
+void ShopWindow_Draw_Shard(void)
 {
     RSDK_THIS(ShopWindow);
-    RSDK.DrawSprite(&entity->animator, NULL, false);
+    RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
-void ShopWindow_State_Draw_Shattered(void)
+void ShopWindow_Draw_Shattered(void)
 {
     RSDK_THIS(ShopWindow);
-    ScreenInfo *screen = &RSDK_screens[RSDK_sceneInfo->currentScreenID];
-    RSDK.DrawRect((entity->position.x >> 0x10) - screen->position.x - entity->size.x,
-                  (entity->position.y >> 0x10) - screen->position.y - entity->size.y, 2 * entity->size.x, 2 * entity->size.y, 0xF0F0F0, 255, 0, true);
+    RSDKScreenInfo *screen = &ScreenInfo[SceneInfo->currentScreenID];
+    RSDK.DrawRect((self->position.x >> 0x10) - screen->position.x - self->size.x,
+                  (self->position.y >> 0x10) - screen->position.y - self->size.y, 2 * self->size.x, 2 * self->size.y, 0xF0F0F0, 255, 0, true);
 }
 
 #if RETRO_INCLUDE_EDITOR
 void ShopWindow_EditorDraw(void)
 {
     RSDK_THIS(ShopWindow);
-    entity->active        = ACTIVE_BOUNDS;
-    entity->updateRange.x = entity->size.x;
-    entity->updateRange.y = entity->size.y;
-    if (!entity->silhouette)
-        entity->drawOrder = Zone->drawOrderLow;
+    self->active        = ACTIVE_BOUNDS;
+    self->updateRange.x = self->size.x;
+    self->updateRange.y = self->size.y;
+    if (!self->silhouette)
+        self->drawOrder = Zone->drawOrderLow;
     else
-        entity->drawOrder = Zone->drawOrderHigh;
+        self->drawOrder = Zone->drawOrderHigh;
 
-    entity->inkEffect = INK_ADD;
-    entity->alpha     = 0x80;
-    RSDK.SetSpriteAnimation(ShopWindow->spriteIndex, 0, &entity->animator, false, 0);
+    self->inkEffect = INK_ADD;
+    self->alpha     = 0x80;
+    RSDK.SetSpriteAnimation(ShopWindow->aniFrames, 0, &self->animator, false, 0);
 
     Vector2 size;
-    size.x = entity->size.x >> 16;
-    size.y = entity->size.y >> 16;
+    size.x = self->size.x >> 16;
+    size.y = self->size.y >> 16;
 
     Vector2 drawPos;
-    ScreenInfo *screen = &RSDK_screens[RSDK_sceneInfo->currentScreenID];
+    RSDKScreenInfo *screen = &ScreenInfo[SceneInfo->currentScreenID];
 
-    int32 x = (entity->position.x >> 0x10) - screen->position.x - size.x;
-    int32 y = (entity->position.y >> 0x10) - screen->position.y - size.y;
-    RSDK.SetClipBounds(RSDK_sceneInfo->currentScreenID, x, y, x + 2 * size.x, y + 2 * size.y + 1);
+    int32 x = (self->position.x >> 0x10) - screen->position.x - size.x;
+    int32 y = (self->position.y >> 0x10) - screen->position.y - size.y;
+    RSDK.SetClipBounds(SceneInfo->currentScreenID, x, y, x + 2 * size.x, y + 2 * size.y + 1);
 
     drawPos.x = (x + screen->position.x) << 16;
     drawPos.y = (y + screen->position.y) << 16;
 
-    entity->animator.frameID = 0;
-    RSDK.DrawSprite(&entity->animator, &drawPos, false);
+    self->animator.frameID = 0;
+    RSDK.DrawSprite(&self->animator, &drawPos, false);
 
-    entity->animator.frameID = 1;
-    RSDK.DrawSprite(&entity->animator, &drawPos, false);
+    self->animator.frameID = 1;
+    RSDK.DrawSprite(&self->animator, &drawPos, false);
 
-    entity->animator.frameID = 2;
-    RSDK.DrawSprite(&entity->animator, &drawPos, false);
+    self->animator.frameID = 2;
+    RSDK.DrawSprite(&self->animator, &drawPos, false);
 
-    entity->animator.frameID = 3;
-    RSDK.DrawSprite(&entity->animator, &drawPos, false);
+    self->animator.frameID = 3;
+    RSDK.DrawSprite(&self->animator, &drawPos, false);
 
-    if (!entity->shatter) {
-        RSDK.SetClipBounds(RSDK_sceneInfo->currentScreenID, 0, 0, screen->width, screen->height);
+    if (!self->shatter) {
+        RSDK.SetClipBounds(SceneInfo->currentScreenID, 0, 0, screen->width, screen->height);
     }
     else {
-        drawPos.x                = entity->position.x - (size.x << 16) + 0x180000;
-        drawPos.y                = entity->position.y + ((size.y - 24) << 16);
-        entity->inkEffect        = INK_NONE;
-        entity->animator.frameID = 4;
-        RSDK.DrawSprite(&entity->animator, &drawPos, false);
+        drawPos.x                = self->position.x - (size.x << 16) + 0x180000;
+        drawPos.y                = self->position.y + ((size.y - 24) << 16);
+        self->inkEffect        = INK_NONE;
+        self->animator.frameID = 4;
+        RSDK.DrawSprite(&self->animator, &drawPos, false);
 
-        entity->inkEffect = INK_ADD;
-        RSDK.SetClipBounds(RSDK_sceneInfo->currentScreenID, 0, 0, screen->width, screen->height);
+        self->inkEffect = INK_ADD;
+        RSDK.SetClipBounds(SceneInfo->currentScreenID, 0, 0, screen->width, screen->height);
     }
 
-    DrawHelpers_DrawRectOutline(0xFFFF00, entity->position.x, entity->position.y, entity->size.x * 2, entity->size.y * 2);
+    DrawHelpers_DrawRectOutline(0xFFFF00, self->position.x, self->position.y, self->size.x * 2, self->size.y * 2);
 }
 
-void ShopWindow_EditorLoad(void) { ShopWindow->spriteIndex = RSDK.LoadSpriteAnimation("SPZ1/ShopWindow.bin", SCOPE_STAGE); }
+void ShopWindow_EditorLoad(void) { ShopWindow->aniFrames = RSDK.LoadSpriteAnimation("SPZ1/ShopWindow.bin", SCOPE_STAGE); }
 #endif
 
 void ShopWindow_Serialize(void)

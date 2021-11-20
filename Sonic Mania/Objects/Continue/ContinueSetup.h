@@ -17,17 +17,17 @@ typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
-    int32 timer2;
+    int32 secondTimer;
     int32 countTimer;
     int32 rotationX;
-    int32 field_6C;
-    int32 colour;
-    int32 dword74;
-    Matrix matrix1;
-    Matrix matrix2;
-    Matrix matrix3;
-    Matrix matrix4;
-    Matrix matrix5;
+    int32 unused1;
+    int32 numberColour;
+    bool32 showContinues;
+    Matrix matTranslate;
+    Matrix matTranslateFinal;
+    Matrix matRotateX;
+    Matrix matRotateY;
+    Matrix matFinal;
 } EntityContinueSetup;
 
 // Object Struct
@@ -47,9 +47,9 @@ void ContinueSetup_EditorLoad(void);
 void ContinueSetup_Serialize(void);
 
 // Extra Entity Functions
-void ContinueSetup_Unknown1(void);
-void ContinueSetup_Unknown2(void);
-void ContinueSetup_Unknown3(void);
-void ContinueSetup_Unknown4(void);
+void ContinueSetup_State_FadeIn(void);
+void ContinueSetup_State_HandleCountdown(void);
+void ContinueSetup_State_ContinueGame(void);
+void ContinueSetup_State_ReturnToMenu(void);
 
 #endif //!OBJ_CONTINUESETUP_H

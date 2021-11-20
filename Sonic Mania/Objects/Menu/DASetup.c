@@ -163,7 +163,7 @@ void DASetup_State_ManageControl(void)
         DASetup->trackID -= DASetup->trackCount;
 
     if (prevTrack != DASetup->trackID) {
-        RSDK.PlaySfx(UIWidgets->sfx_Bleep, false, 255);
+        RSDK.PlaySfx(UIWidgets->sfxBleep, false, 255);
         DASetup_DisplayTrack(DASetup->trackID);
     }
 

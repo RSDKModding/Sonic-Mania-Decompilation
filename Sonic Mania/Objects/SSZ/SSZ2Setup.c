@@ -18,7 +18,7 @@ void SSZ2Setup_StaticUpdate(void)
 
             if (RSDK.GetTileBehaviour(tile, player->collisionPlane) && (abs(player->groundVel) > 0x80000 && player->onGround)) {
                 EntityDebris *debris =
-                    CREATE_ENTITY(Debris, Debris_State_LightningSpark, player->position.x, player->position.y + (hitbox->bottom << 16));
+                    CREATE_ENTITY(Debris, Debris_State_Move, player->position.x, player->position.y + (hitbox->bottom << 16));
                 RSDK.SetSpriteAnimation(SparkRail->aniFrames, 0, &debris->animator, true, 0);
                 debris->drawFX     = FX_FLIP;
                 debris->direction  = player->velocity.x < 0;
@@ -61,7 +61,7 @@ void SSZ2Setup_StageLoad(void)
 #endif
     }
 #if RETRO_USE_PLUS
-    if ((RSDK_sceneInfo->filter & FILTER_ENCORE))
+    if ((SceneInfo->filter & FILTER_ENCORE))
         RSDK.LoadPalette(0, "EncoreSSZ2.act", 0xFF);
 #endif
     GenericTrigger->callbacks[0] = SSZ2Setup_GenericTriggerCallback1;
@@ -75,17 +75,17 @@ void SSZ2Setup_StageFinishCallback(void) { CREATE_ENTITY(SSZ3Cutscene, intToVoid
 
 void SSZ2Setup_TowerDrawLayerCallback(void)
 {
-    RSDK.SetActivePalette(0, 0, RSDK_screens->height);
-    RSDK.SetClipBounds(0, 0, 0, RSDK_screens->width, RSDK_screens->height);
+    RSDK.SetActivePalette(0, 0, ScreenInfo->height);
+    RSDK.SetClipBounds(0, 0, 0, ScreenInfo->width, ScreenInfo->height);
 }
 
 void SSZ2Setup_TowerScanlineCallback(ScanlineInfo *scanlines)
 {
-    RSDK.SetClipBounds(0, RSDK_screens->centerX - 144, 0, RSDK_screens->centerX + 144, RSDK_screens->height);
+    RSDK.SetClipBounds(0, ScreenInfo->centerX - 144, 0, ScreenInfo->centerX + 144, ScreenInfo->height);
     RSDK.ProcessParallax(SSZ2Setup->towerLayer);
-    RSDK.SetActivePalette(3, 0, RSDK_screens->height);
+    RSDK.SetActivePalette(3, 0, ScreenInfo->height);
 
-    ScanlineInfo *scanlinePtr = &scanlines[RSDK_screens->centerX - 64];
+    ScanlineInfo *scanlinePtr = &scanlines[ScreenInfo->centerX - 64];
     int32 x1                    = scanlinePtr->position.x;
     int32 offset                = 0x10000;
     for (int32 i = 2; i - 2 < 80;) {
@@ -114,7 +114,7 @@ void SSZ2Setup_TowerScanlineCallback(ScanlineInfo *scanlines)
         i += 5;
     }
 
-    scanlinePtr = &scanlines[RSDK_screens->centerX + 64];
+    scanlinePtr = &scanlines[ScreenInfo->centerX + 64];
     x1          = scanlinePtr->position.x;
     offset      = 0x10000;
 
@@ -147,27 +147,27 @@ void SSZ2Setup_TowerScanlineCallback(ScanlineInfo *scanlines)
 
 void SSZ2Setup_GenericTriggerCallback1(void)
 {
-    foreach_active(HotaruMKII, boss)
+    foreach_active(HotaruMKII, hotaru)
     {
-        /*if (!boss->field_A4) {
-            RSDK.CreateEntity(Animals->objectID, (Animals->animalTypes[RSDK.Random(0, 32, &Zone->randKey) >> 4] + 1), boss->position.x,
-                              boss->position.y);
-            RSDK.CreateEntity(Explosion->objectID, intToVoid(1), boss->position.x, boss->position.y)->drawOrder = Zone->drawOrderHigh;
-            RSDK.PlaySfx(Explosion->sfx_Destroy, 0, 255);
-            destroyEntity(boss);
-        }*/
+        if (!hotaru->type) {
+#if RETRO_USE_PLUS
+            CREATE_ENTITY(Animals, intToVoid(Animals->animalTypes[RSDK.RandSeeded(0, 32, &Zone->randSeed) >> 4] + 1), hotaru->position.x,
+                          hotaru->position.y);
+#else
+            CREATE_ENTITY(Animals, intToVoid(Animals->animalTypes[RSDK.Rand(0, 32) >> 4] + 1), hotaru->position.x, hotaru->position.y);
+#endif
+            CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), hotaru->position.x, hotaru->position.y)->drawOrder = Zone->drawOrderHigh;
+            RSDK.PlaySfx(Explosion->sfxDestroy, false, 255);
+            destroyEntity(hotaru);
+        }
     }
 }
 
 void SSZ2Setup_GenericTriggerCallback2(void)
 {
     if (!SSZ2Setup->hasAchievement) {
-        if (!RSDK_sceneInfo->minutes) {
-#if RETRO_USE_PLUS
-            API.UnlockAchievement("ACH_SSZ");
-#else
-            APICallback_UnlockAchievement("ACH_SSZ");
-#endif
+        if (!SceneInfo->minutes) {
+            API_UnlockAchievement("ACH_SSZ");
             SSZ2Setup->hasAchievement = true;
         }
     }
@@ -175,18 +175,19 @@ void SSZ2Setup_GenericTriggerCallback2(void)
 
 void SSZ2Setup_GenericTriggerCallback3(void)
 {
-    Entity *entity = RSDK_sceneInfo->entity;
+    RSDK_THIS(GenericTrigger);
+
     if (isMainGameMode()) {
         EntityPlayer *player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
         if (player->stateInput) {
             player->stateInput      = 0;
             player->left            = false;
             player->right           = true;
-            Zone->screenBoundsR1[0] = RSDK_screens->centerX + (entity->position.x >> 16);
-            Zone->screenBoundsR1[1] = RSDK_screens->centerX + (entity->position.x >> 16);
+            Zone->screenBoundsR1[0] = ScreenInfo->centerX + (self->position.x >> 16);
+            Zone->screenBoundsR1[1] = ScreenInfo->centerX + (self->position.x >> 16);
 #if RETRO_USE_PLUS
-            Zone->screenBoundsR1[2] = RSDK_screens->centerX + (entity->position.x >> 16);
-            Zone->screenBoundsR1[3] = RSDK_screens->centerX + (entity->position.x >> 16);
+            Zone->screenBoundsR1[2] = ScreenInfo->centerX + (self->position.x >> 16);
+            Zone->screenBoundsR1[3] = ScreenInfo->centerX + (self->position.x >> 16);
 #endif
 
             for (int32 i = 0; i < Player->playerCount; ++i) {
@@ -196,7 +197,7 @@ void SSZ2Setup_GenericTriggerCallback3(void)
             SaveGame_SavePlayerState();
             globals->suppressAutoMusic = true;
             globals->suppressTitlecard = true;
-            ++RSDK_sceneInfo->listPos;
+            ++SceneInfo->listPos;
             if (!RSDK.CheckValidScene())
                 RSDK.SetScene("Presentation", "Title Screen");
             Zone_StartFadeOut(10, 0x000000);

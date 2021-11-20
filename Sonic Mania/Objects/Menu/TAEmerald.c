@@ -5,7 +5,7 @@ ObjectTAEmerald *TAEmerald;
 void TAEmerald_Update(void)
 {
     RSDK_THIS(TAEmerald);
-    StateMachine_Run(entity->state);
+    StateMachine_Run(self->state);
 }
 
 void TAEmerald_LateUpdate(void) {}
@@ -15,27 +15,27 @@ void TAEmerald_StaticUpdate(void) {}
 void TAEmerald_Draw(void)
 {
     RSDK_THIS(TAEmerald);
-    RSDK.SetActivePalette(3, 0, RSDK_screens->height);
-    RSDK.DrawSprite(&entity->animator, NULL, false);
+    RSDK.SetActivePalette(3, 0, ScreenInfo->height);
+    RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
 void TAEmerald_Create(void *data)
 {
     RSDK_THIS(TAEmerald);
-    if (!RSDK_sceneInfo->inEditor) {
-        entity->startPos.x    = entity->position.x;
-        entity->startPos.y    = entity->position.y;
-        entity->angle         = 16 * entity->color;
-        entity->visible       = true;
-        entity->drawOrder     = 1;
-        entity->active        = ACTIVE_NORMAL;
-        entity->updateRange.x = 0x800000;
-        entity->updateRange.y = 0x800000;
-        entity->state         = TAEmerald_Unknown1;
-        RSDK.SetSpriteAnimation(TAEmerald->aniFrames, 7, &entity->animator, true, entity->color);
+    if (!SceneInfo->inEditor) {
+        self->startPos.x    = self->position.x;
+        self->startPos.y    = self->position.y;
+        self->angle         = 16 * self->color;
+        self->visible       = true;
+        self->drawOrder     = 1;
+        self->active        = ACTIVE_NORMAL;
+        self->updateRange.x = 0x800000;
+        self->updateRange.y = 0x800000;
+        self->state         = TAEmerald_Unknown1;
+        RSDK.SetSpriteAnimation(TAEmerald->aniFrames, 7, &self->animator, true, self->color);
         if (SaveGame->saveRAM) {
-            if (((1 << entity->color) & SaveGame->saveRAM->chaosEmeralds) > 0)
-                entity->visible = false;
+            if (((1 << self->color) & SaveGame->saveRAM->chaosEmeralds) > 0)
+                self->visible = false;
         }
     }
 }
@@ -45,36 +45,36 @@ void TAEmerald_StageLoad(void) { TAEmerald->aniFrames = RSDK.LoadSpriteAnimation
 void TAEmerald_Unknown1(void)
 {
     RSDK_THIS(TAEmerald);
-    entity->position.y = (RSDK.Sin256(RSDK_sceneInfo->entity->angle) << 11) + entity->startPos.y;
-    entity->angle      = (entity->angle + 4);
+    self->position.y = (RSDK.Sin256(self->angle) << 11) + self->startPos.y;
+    self->angle      = (self->angle + 4);
 }
 
 void TAEmerald_Unknown2(void)
 {
     RSDK_THIS(TAEmerald);
 
-    if (entity->timer > 0) {
-        entity->timer--;
+    if (self->timer > 0) {
+        self->timer--;
     }
     else {
-        if (entity->direction) {
-            entity->angle += 2;
-            if (entity->angle >= 0) {
-                entity->direction = FLIP_NONE;
-                entity->state     = StateMachine_None;
+        if (self->direction) {
+            self->angle += 2;
+            if (self->angle >= 0) {
+                self->direction = FLIP_NONE;
+                self->state     = StateMachine_None;
             }
         }
         else {
-            entity->angle -= 2;
-            if (entity->angle <= -128) {
-                entity->direction = FLIP_X;
-                entity->state     = StateMachine_None;
+            self->angle -= 2;
+            if (self->angle <= -128) {
+                self->direction = FLIP_X;
+                self->state     = StateMachine_None;
             }
         }
 
-        entity->rotation   = 4 * entity->angle;
-        entity->position.x = 0x4800 * RSDK.Cos256(entity->angle) + entity->startPos.x;
-        entity->position.y = 0x4800 * RSDK.Sin256(entity->angle) + entity->startPos.y;
+        self->rotation   = 4 * self->angle;
+        self->position.x = 0x4800 * RSDK.Cos256(self->angle) + self->startPos.x;
+        self->position.y = 0x4800 * RSDK.Sin256(self->angle) + self->startPos.y;
     }
 }
 

@@ -77,11 +77,12 @@ include $(CLEAR_VARS)
 LOCAL_MODULE := RSDK
 SDL_PATH := ../SDL
 
-LOCAL_CFLAGS   := -fexceptions
+LOCAL_CFLAGS   := -fexceptions -frtti
 
 LOCAL_C_INCLUDES := \
     $(LOCAL_PATH)/$(SDL_PATH)/include \
     $(LOCAL_PATH)/dependencies/all \
+    $(LOCAL_PATH)/dependencies/all/tinyxml2 \
     $(LOCAL_PATH)/$(VORBIS_DIR)/include \
     $(LOCAL_PATH)/$(OGG_DIR)/include \
     $(LOCAL_PATH)/$(THEORA_DIR)/include \
@@ -90,6 +91,7 @@ LOCAL_C_INCLUDES := \
 
 WILDCARD_SETUP := \
   $(wildcard $(LOCAL_PATH)/dependencies/all/iniparser/*.cpp) \
+  $(LOCAL_PATH)/dependencies/all/tinyxml2/tinyxml2.cpp \
   $(wildcard $(LOCAL_PATH)/dependencies/all/theoraplay/*.c) \
   $(wildcard $(LOCAL_PATH)/RSDKv5/*.cpp)
 

@@ -2,7 +2,7 @@
 
 ObjectPendulum *Pendulum = NULL;
 
-//idk what this object is/was, there is literally 0 code for it in the game
+// idk what this object is/was, there is literally 0 code for it in the game
 
 void Pendulum_Update(void) {}
 

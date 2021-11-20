@@ -6,8 +6,8 @@ void LEDPanel_Update(void)
 {
     RSDK_THIS(LEDPanel);
 
-    for (entity->row = 0; entity->row < LEDPanel_RowCount; ++entity->row) {
-        StateMachine_Run(entity->stateRow[entity->row]);
+    for (self->row = 0; self->row < LEDPanel_RowCount; ++self->row) {
+        StateMachine_Run(self->stateRow[self->row]);
     }
 }
 
@@ -19,25 +19,25 @@ void LEDPanel_Draw(void)
 {
     RSDK_THIS(LEDPanel);
 
-    RSDK.DrawRect(entity->position.x - (entity->size.x >> 1) + 0x80000, entity->position.y - (entity->size.y >> 1), entity->size.x - 0x100000,
-                  entity->size.y, LEDPanel->storedColour, 512, INK_NONE, false);
+    RSDK.DrawRect(self->position.x - (self->size.x >> 1) + 0x80000, self->position.y - (self->size.y >> 1), self->size.x - 0x100000,
+                  self->size.y, LEDPanel->storedColour, 512, INK_NONE, false);
 
-    ScreenInfo *screen = &RSDK_screens[RSDK_sceneInfo->currentScreenID];
+    RSDKScreenInfo *screen = &ScreenInfo[SceneInfo->currentScreenID];
 
     int clipX1 = screen->clipBound_X1;
     int clipX2 = screen->clipBound_X2;
     int clipY1 = screen->clipBound_Y1;
     int clipY2 = screen->clipBound_Y2;
 
-    int clipBound_X1 = entity->left - screen->position.x + (entity->position.x >> 16) + 8;
-    int clipBound_X2 = entity->right - screen->position.x + (entity->position.x >> 16) - 8;
-    int clipBound_Y1 = (entity->position.y >> 16) + entity->top - screen->position.y;
-    int clipBound_Y2 = (entity->position.y >> 16) + entity->bottom - screen->position.y;
+    int clipBound_X1 = self->left - screen->position.x + (self->position.x >> 16) + 8;
+    int clipBound_X2 = self->right - screen->position.x + (self->position.x >> 16) - 8;
+    int clipBound_Y1 = (self->position.y >> 16) + self->top - screen->position.y;
+    int clipBound_Y2 = (self->position.y >> 16) + self->bottom - screen->position.y;
 
-    RSDK.SetClipBounds(RSDK_sceneInfo->currentScreenID, clipBound_X1, clipBound_Y1, clipBound_X2, clipBound_Y2);
+    RSDK.SetClipBounds(SceneInfo->currentScreenID, clipBound_X1, clipBound_Y1, clipBound_X2, clipBound_Y2);
 
     for (int r = 0; r < LEDPanel_RowCount; ++r) {
-        RSDK.DrawText(&entity->animatorText, &entity->textPos[r], &entity->activeText[r], 0, entity->activeText[r].textLength, ALIGN_RIGHT, 0, 0,
+        RSDK.DrawText(&self->animatorText, &self->textPos[r], &self->activeText[r], 0, self->activeText[r].textLength, ALIGN_RIGHT, 0, 0,
                       NULL, false);
     }
 
@@ -45,66 +45,66 @@ void LEDPanel_Draw(void)
     screen->clipBound_X2 = clipX2;
     screen->clipBound_Y1 = clipY1;
     screen->clipBound_Y2 = clipY2;
-    RSDK.SetClipBounds(RSDK_sceneInfo->currentScreenID, clipX1, clipY1, clipX2, clipY2);
+    RSDK.SetClipBounds(SceneInfo->currentScreenID, clipX1, clipY1, clipX2, clipY2);
 }
 
 void LEDPanel_Create(void *data)
 {
     RSDK_THIS(LEDPanel);
 
-    entity->active      = ACTIVE_BOUNDS;
-    entity->visible     = true;
-    entity->drawOrder   = Zone->drawOrderLow;
-    entity->updateRange = entity->size;
-    RSDK.SetSpriteAnimation(LEDPanel->aniFrames, 0, &entity->animatorText, true, 0);
-    if (!RSDK_sceneInfo->inEditor) {
+    self->active      = ACTIVE_BOUNDS;
+    self->visible     = true;
+    self->drawOrder   = Zone->drawOrderLow;
+    self->updateRange = self->size;
+    RSDK.SetSpriteAnimation(LEDPanel->aniFrames, 0, &self->animatorText, true, 0);
+    if (!SceneInfo->inEditor) {
         for (int i = 0; i < LEDPanel_TextCount; ++i) {
-            RSDK.SetSpriteString(LEDPanel->aniFrames, 0, &entity->text[i]);
-            entity->textPtrs[i] = &entity->text[i];
+            RSDK.SetSpriteString(LEDPanel->aniFrames, 0, &self->text[i]);
+            self->textPtrs[i] = &self->text[i];
         }
 
-        entity->left   = -(entity->size.x >> 17);
-        entity->right  = entity->size.x >> 17;
-        entity->top    = -(entity->size.y >> 17);
-        entity->bottom = entity->size.y >> 17;
+        self->left   = -(self->size.x >> 17);
+        self->right  = self->size.x >> 17;
+        self->top    = -(self->size.y >> 17);
+        self->bottom = self->size.y >> 17;
 
-        entity->curXBoundaryL = (entity->size.x >> 1);
-        entity->newXBoundaryL = (entity->size.x >> 1);
-        entity->curYBoundaryT = -(entity->size.y >> 1);
-        entity->newYBoundaryT = -(entity->size.y >> 1);
-        entity->curXBoundaryR = -(entity->size.x >> 1);
-        entity->newXBoundaryR = -(entity->size.x >> 1);
-        entity->curYBoundaryB = -(entity->size.y >> 1);
-        entity->newYBoundaryB = -(entity->size.y >> 1);
+        self->curXBoundaryL = (self->size.x >> 1);
+        self->newXBoundaryL = (self->size.x >> 1);
+        self->curYBoundaryT = -(self->size.y >> 1);
+        self->newYBoundaryT = -(self->size.y >> 1);
+        self->curXBoundaryR = -(self->size.x >> 1);
+        self->newXBoundaryR = -(self->size.x >> 1);
+        self->curYBoundaryB = -(self->size.y >> 1);
+        self->newYBoundaryB = -(self->size.y >> 1);
 
-        entity->boundsMoveSpeed.x = 0x10000;
-        entity->boundsMoveSpeed.y = 0x10000;
+        self->boundsMoveSpeed.x = 0x10000;
+        self->boundsMoveSpeed.y = 0x10000;
 
         int offset = 0;
         for (int r = 0; r < LEDPanel_RowCount; ++r) {
-            LEDPanel_SetupActiveText(r, entity->textPtrs[r]);
+            LEDPanel_SetupActiveText(r, self->textPtrs[r]);
 
-            entity->seqPtrs[r]       = &entity->seq[r];
-            entity->textMoveVel[r].x = 0x10000;
-            entity->textMoveVel[r].y = 0x10000;
+            self->seqPtrs[r]       = &self->seq[r];
+            self->textMoveVel[r].x = 0x10000;
+            self->textMoveVel[r].y = 0x10000;
 
-            entity->textPos[r].x = entity->position.x;
-            entity->textPos[r].y = entity->position.y;
-            entity->textPos[r].x += (entity->activeText[r].textLength << 20) - (entity->size.x >> 1) + 0x80000;
-            entity->textPos[r].y += (0x100000 + offset) - (entity->size.y >> 1);
+            self->textPos[r].x = self->position.x;
+            self->textPos[r].y = self->position.y;
+            self->textPos[r].x += (self->activeText[r].textLength << 20) - (self->size.x >> 1) + 0x80000;
+            self->textPos[r].y += (0x100000 + offset) - (self->size.y >> 1);
 
-            entity->textMovePos[r].x = 0;
-            entity->textMovePos[r].y = offset;
+            self->textMovePos[r].x = 0;
+            self->textMovePos[r].y = offset;
 
-            entity->textTargetPos[r].x = 0;
-            entity->textTargetPos[r].y = offset;
+            self->textTargetPos[r].x = 0;
+            self->textTargetPos[r].y = offset;
 
-            entity->stateRow[r] = StateMachine_None;
+            self->stateRow[r] = StateMachine_None;
 
             offset += 0x200000;
         }
 
-        for (entity->row = 0; entity->row < LEDPanel_RowCount; ++entity->row) {
+        for (self->row = 0; self->row < LEDPanel_RowCount; ++self->row) {
             LEDPanel_HandleCharacters();
         }
     }
@@ -122,20 +122,20 @@ void LEDPanel_SetupActiveText(int row, TextInfo *src)
 {
     RSDK_THIS(LEDPanel);
 
-    RSDK.CopyString(&entity->activeText[row], src);
+    RSDK.CopyString(&self->activeText[row], src);
 
-    entity->activeTextSize[row] = entity->activeText[row].textLength;
-    for (int i = 0; i < entity->activeText[row].textLength; ++i) {
-        if (entity->activeText[row].text[i] != 27) {
-            entity->activeTextSize[row] = i;
+    self->activeTextSize[row] = self->activeText[row].textLength;
+    for (int i = 0; i < self->activeText[row].textLength; ++i) {
+        if (self->activeText[row].text[i] != 27) {
+            self->activeTextSize[row] = i;
             break;
         }
     }
 
-    entity->activeTextLen[row] = 0;
-    for (int i = entity->activeText[row].textLength - 1; i >= 0; --i) {
-        if (entity->activeText[row].text[i] != 27) {
-            entity->activeTextLen[row] = i;
+    self->activeTextLen[row] = 0;
+    for (int i = self->activeText[row].textLength - 1; i >= 0; --i) {
+        if (self->activeText[row].text[i] != 27) {
+            self->activeTextLen[row] = i;
             break;
         }
     }
@@ -145,296 +145,296 @@ void LEDPanel_SetupTextPos(int row, int x, int y)
 {
     RSDK_THIS(LEDPanel);
 
-    entity->textPos[row].x = entity->position.x;
-    entity->textPos[row].y = entity->position.y;
-    entity->textPos[row].x += (entity->activeText[row].textLength << 20) - (entity->size.x >> 1) + x + 0x80000;
-    entity->textPos[row].y += y - (entity->size.y >> 1) + 0x100000;
+    self->textPos[row].x = self->position.x;
+    self->textPos[row].y = self->position.y;
+    self->textPos[row].x += (self->activeText[row].textLength << 20) - (self->size.x >> 1) + x + 0x80000;
+    self->textPos[row].y += y - (self->size.y >> 1) + 0x100000;
 }
 
 void LEDPanel_HandleCharacters(void)
 {
     RSDK_THIS(LEDPanel);
 
-    entity->rowFlag[entity->row] = false;
+    self->rowFlag[self->row] = false;
     bool32 flag                  = false;
 
     while (!flag) {
         int charID = -1;
-        if (entity->rowSeqPos[entity->row] < entity->seqPtrs[entity->row]->textLength)
-            charID = entity->seqPtrs[entity->row]->text[entity->rowSeqPos[entity->row]++];
+        if (self->rowSeqPos[self->row] < self->seqPtrs[self->row]->textLength)
+            charID = self->seqPtrs[self->row]->text[self->rowSeqPos[self->row]++];
 
         switch (charID) {
             case 'A':
-                charID = entity->seqPtrs[entity->row]->text[entity->rowSeqPos[entity->row]++] - '0';
+                charID = self->seqPtrs[self->row]->text[self->rowSeqPos[self->row]++] - '0';
                 switch (charID) {
                     case 0:
-                        entity->textMovePos[entity->row].x   = -0x100000 * entity->activeText[entity->row].textLength;
-                        entity->textTargetPos[entity->row].x = entity->textMovePos[entity->row].x;
+                        self->textMovePos[self->row].x   = -0x100000 * self->activeText[self->row].textLength;
+                        self->textTargetPos[self->row].x = self->textMovePos[self->row].x;
                         break;
                     case 1:
-                        entity->textMovePos[entity->row].x   = 0;
-                        entity->textTargetPos[entity->row].x = 0;
+                        self->textMovePos[self->row].x   = 0;
+                        self->textTargetPos[self->row].x = 0;
                         break;
                     case 2:
-                        entity->textMovePos[entity->row].x   = (entity->size.x >> 1) - (entity->activeText[entity->row].textLength << 19) - 0x80000;
-                        entity->textTargetPos[entity->row].x = entity->textMovePos[entity->row].x;
+                        self->textMovePos[self->row].x   = (self->size.x >> 1) - (self->activeText[self->row].textLength << 19) - 0x80000;
+                        self->textTargetPos[self->row].x = self->textMovePos[self->row].x;
                         break;
                     case 3:
-                        entity->textMovePos[entity->row].x   = entity->size.x - (entity->activeText[entity->row].textLength << 20) - 0x100000;
-                        entity->textTargetPos[entity->row].x = entity->textMovePos[entity->row].x;
+                        self->textMovePos[self->row].x   = self->size.x - (self->activeText[self->row].textLength << 20) - 0x100000;
+                        self->textTargetPos[self->row].x = self->textMovePos[self->row].x;
                         break;
                     case 4:
-                        entity->textMovePos[entity->row].x   = entity->size.x;
-                        entity->textTargetPos[entity->row].x = entity->textMovePos[entity->row].x;
+                        self->textMovePos[self->row].x   = self->size.x;
+                        self->textTargetPos[self->row].x = self->textMovePos[self->row].x;
                         break;
                     default: break;
                 }
-                LEDPanel_SetupTextPos(entity->row, entity->textMovePos[entity->row].x, entity->textMovePos[entity->row].y);
+                LEDPanel_SetupTextPos(self->row, self->textMovePos[self->row].x, self->textMovePos[self->row].y);
                 break;
             case 'B':
-                charID = entity->seqPtrs[entity->row]->text[entity->rowSeqPos[entity->row]++] - '0';
+                charID = self->seqPtrs[self->row]->text[self->rowSeqPos[self->row]++] - '0';
                 switch (charID) {
                     case 0:
-                        entity->textMovePos[entity->row].y   = -0x200000;
-                        entity->textTargetPos[entity->row].y = -0x200000;
+                        self->textMovePos[self->row].y   = -0x200000;
+                        self->textTargetPos[self->row].y = -0x200000;
                         break;
                     case 1:
-                        entity->textMovePos[entity->row].y   = 0;
-                        entity->textTargetPos[entity->row].y = 0;
+                        self->textMovePos[self->row].y   = 0;
+                        self->textTargetPos[self->row].y = 0;
                         break;
                     case 2:
-                        entity->textMovePos[entity->row].y   = (entity->size.y >> 1) - 0x100000;
-                        entity->textTargetPos[entity->row].y = entity->textMovePos[entity->row].y;
+                        self->textMovePos[self->row].y   = (self->size.y >> 1) - 0x100000;
+                        self->textTargetPos[self->row].y = self->textMovePos[self->row].y;
                         break;
                     case 3:
-                        entity->textMovePos[entity->row].y   = entity->size.y - 0x200000;
-                        entity->textTargetPos[entity->row].y = entity->textMovePos[entity->row].y;
+                        self->textMovePos[self->row].y   = self->size.y - 0x200000;
+                        self->textTargetPos[self->row].y = self->textMovePos[self->row].y;
                         break;
                     case 4:
-                        entity->textMovePos[entity->row].y   = entity->size.y;
-                        entity->textTargetPos[entity->row].y = entity->textMovePos[entity->row].y;
+                        self->textMovePos[self->row].y   = self->size.y;
+                        self->textTargetPos[self->row].y = self->textMovePos[self->row].y;
                         break;
                     default: break;
                 }
 
-                LEDPanel_SetupTextPos(entity->row, entity->textMovePos[entity->row].x, entity->textMovePos[entity->row].y);
+                LEDPanel_SetupTextPos(self->row, self->textMovePos[self->row].x, self->textMovePos[self->row].y);
                 break;
             case 'C':
-                charID = entity->seqPtrs[entity->row]->text[entity->rowSeqPos[entity->row]++] - '0';
+                charID = self->seqPtrs[self->row]->text[self->rowSeqPos[self->row]++] - '0';
                 switch (charID) {
-                    case 0: entity->textTargetPos[entity->row].x = -0x100000 * entity->activeText[entity->row].textLength; break;
-                    case 1: entity->textTargetPos[entity->row].x = 0; break;
+                    case 0: self->textTargetPos[self->row].x = -0x100000 * self->activeText[self->row].textLength; break;
+                    case 1: self->textTargetPos[self->row].x = 0; break;
                     case 2:
-                        entity->textTargetPos[entity->row].x = (entity->size.x >> 1) - (entity->activeText[entity->row].textLength << 19) - 0x80000;
+                        self->textTargetPos[self->row].x = (self->size.x >> 1) - (self->activeText[self->row].textLength << 19) - 0x80000;
                         break;
                     case 3:
-                        entity->textTargetPos[entity->row].x = entity->size.x - (entity->activeText[entity->row].textLength << 20) - 0x100000;
+                        self->textTargetPos[self->row].x = self->size.x - (self->activeText[self->row].textLength << 20) - 0x100000;
                         break;
-                    case 4: entity->textTargetPos[entity->row].x = entity->size.x; break;
+                    case 4: self->textTargetPos[self->row].x = self->size.x; break;
                     default: break;
                 }
                 break;
             case 'D':
-                charID = entity->seqPtrs[entity->row]->text[entity->rowSeqPos[entity->row]++] - '0';
+                charID = self->seqPtrs[self->row]->text[self->rowSeqPos[self->row]++] - '0';
                 switch (charID) {
-                    case 0: entity->textTargetPos[entity->row].y = -0x200000; break;
-                    case 1: entity->textTargetPos[entity->row].y = 0; break;
-                    case 2: entity->textTargetPos[entity->row].y = (entity->size.y >> 1) - 0x100000; break;
-                    case 3: entity->textTargetPos[entity->row].y = entity->size.y - 0x200000; break;
-                    case 4: entity->textTargetPos[entity->row].y = entity->size.y; break;
+                    case 0: self->textTargetPos[self->row].y = -0x200000; break;
+                    case 1: self->textTargetPos[self->row].y = 0; break;
+                    case 2: self->textTargetPos[self->row].y = (self->size.y >> 1) - 0x100000; break;
+                    case 3: self->textTargetPos[self->row].y = self->size.y - 0x200000; break;
+                    case 4: self->textTargetPos[self->row].y = self->size.y; break;
                     default: break;
                 }
                 break;
             case 'E':
-                entity->stateRow[entity->row] = LEDPanel_StateText_Move;
+                self->stateRow[self->row] = LEDPanel_StateText_Move;
                 LEDPanel_StateText_Move();
                 flag = true;
                 break;
             case 'F':
-                charID = entity->seqPtrs[entity->row]->text[entity->rowSeqPos[entity->row]++] - '0';
+                charID = self->seqPtrs[self->row]->text[self->rowSeqPos[self->row]++] - '0';
 
                 if (charID == 0) {
-                    ++entity->activeTextLen[entity->row];
-                    LEDPanel->text.text[0] = entity->seqPtrs[entity->row]->text[entity->rowSeqPos[entity->row]++];
+                    ++self->activeTextLen[self->row];
+                    LEDPanel->text.text[0] = self->seqPtrs[self->row]->text[self->rowSeqPos[self->row]++];
                     RSDK.SetSpriteString(LEDPanel->aniFrames, 0, &LEDPanel->text);
-                    entity->activeText[entity->row].text[entity->activeTextLen[entity->row]] = LEDPanel->text.text[0];
+                    self->activeText[self->row].text[self->activeTextLen[self->row]] = LEDPanel->text.text[0];
                 }
                 else if (charID == 1) {
-                    --entity->activeTextSize[entity->row];
-                    LEDPanel->text.text[0] = entity->seqPtrs[entity->row]->text[entity->rowSeqPos[entity->row]++];
+                    --self->activeTextSize[self->row];
+                    LEDPanel->text.text[0] = self->seqPtrs[self->row]->text[self->rowSeqPos[self->row]++];
                     RSDK.SetSpriteString(LEDPanel->aniFrames, 0, &LEDPanel->text);
-                    entity->activeText[entity->row].text[entity->activeTextSize[entity->row]] = LEDPanel->text.text[0];
+                    self->activeText[self->row].text[self->activeTextSize[self->row]] = LEDPanel->text.text[0];
                 }
 
                 break;
             case 'G':
-                charID = entity->seqPtrs[entity->row]->text[entity->rowSeqPos[entity->row]++] - '0';
+                charID = self->seqPtrs[self->row]->text[self->rowSeqPos[self->row]++] - '0';
 
                 if (charID == 0) {
-                    entity->activeText[entity->row].text[entity->activeTextLen[entity->row]--] = 27;
+                    self->activeText[self->row].text[self->activeTextLen[self->row]--] = 27;
                 }
                 else if (charID == 1) {
-                    entity->activeText[entity->row].text[entity->activeTextSize[entity->row]++] = 27;
+                    self->activeText[self->row].text[self->activeTextSize[self->row]++] = 27;
                 }
                 break;
             case 'H':
-                entity->stateRow[entity->row] = LEDPanel_StateText_WaitForSignal;
+                self->stateRow[self->row] = LEDPanel_StateText_WaitForSignal;
                 LEDPanel_StateText_WaitForSignal();
                 flag = true;
                 break;
             case 'I':
-                entity->rowFlag[entity->row]  = true;
-                entity->stateRow[entity->row] = LEDPanel_HandleCharacters;
+                self->rowFlag[self->row]  = true;
+                self->stateRow[self->row] = LEDPanel_HandleCharacters;
                 flag                          = true;
                 break;
             case 'J': 
-                charID = entity->seqPtrs[entity->row]->text[entity->rowSeqPos[entity->row]++] - '0';
-                LEDPanel_SetupActiveText(entity->row, entity->textPtrs[charID]);
+                charID = self->seqPtrs[self->row]->text[self->rowSeqPos[self->row]++] - '0';
+                LEDPanel_SetupActiveText(self->row, self->textPtrs[charID]);
                 break;
             case 'K':
-                entity->rowDelay[entity->row] = 15;
-                entity->stateRow[entity->row] = LEDPanel_StateText_Delay;
+                self->rowDelay[self->row] = 15;
+                self->stateRow[self->row] = LEDPanel_StateText_Delay;
                 flag                          = true;
                 break;
-            case 'L': entity->textMoveVel[entity->row].x = (entity->seqPtrs[entity->row]->text[entity->rowSeqPos[entity->row]++] - '/') << 15; break;
-            case 'M': entity->textMoveVel[entity->row].y = (entity->seqPtrs[entity->row]->text[entity->rowSeqPos[entity->row]++] - '/') << 15; break;
-            case 'N': entity->boundsMoveSpeed.x = (entity->seqPtrs[entity->row]->text[entity->rowSeqPos[entity->row]++] - '/') << 15; break;
-            case 'O': entity->boundsMoveSpeed.y = (entity->seqPtrs[entity->row]->text[entity->rowSeqPos[entity->row]++] - '/') << 15; break;
+            case 'L': self->textMoveVel[self->row].x = (self->seqPtrs[self->row]->text[self->rowSeqPos[self->row]++] - '/') << 15; break;
+            case 'M': self->textMoveVel[self->row].y = (self->seqPtrs[self->row]->text[self->rowSeqPos[self->row]++] - '/') << 15; break;
+            case 'N': self->boundsMoveSpeed.x = (self->seqPtrs[self->row]->text[self->rowSeqPos[self->row]++] - '/') << 15; break;
+            case 'O': self->boundsMoveSpeed.y = (self->seqPtrs[self->row]->text[self->rowSeqPos[self->row]++] - '/') << 15; break;
             case 'P':
-                charID = entity->seqPtrs[entity->row]->text[entity->rowSeqPos[entity->row]++] - '0';
+                charID = self->seqPtrs[self->row]->text[self->rowSeqPos[self->row]++] - '0';
 
                 switch (charID) {
                     default: break;
                     case 1:
-                        entity->newXBoundaryL = -(entity->size.x >> 1);
-                        entity->curXBoundaryL = -(entity->size.x >> 1);
-                        entity->left          = entity->curXBoundaryL >> 16;
+                        self->newXBoundaryL = -(self->size.x >> 1);
+                        self->curXBoundaryL = -(self->size.x >> 1);
+                        self->left          = self->curXBoundaryL >> 16;
                         break;
                     case 2:
-                        entity->curXBoundaryL = 0;
-                        entity->newXBoundaryL = 0;
-                        entity->left          = 0;
+                        self->curXBoundaryL = 0;
+                        self->newXBoundaryL = 0;
+                        self->left          = 0;
                         break;
                     case 3:
-                        entity->newXBoundaryL = entity->size.x >> 1;
-                        entity->curXBoundaryL = entity->size.x >> 1;
-                        entity->left          = entity->curXBoundaryL >> 16;
+                        self->newXBoundaryL = self->size.x >> 1;
+                        self->curXBoundaryL = self->size.x >> 1;
+                        self->left          = self->curXBoundaryL >> 16;
                         break;
                 }
                 break;
             case 'Q':
-                charID = entity->seqPtrs[entity->row]->text[entity->rowSeqPos[entity->row]++] - '0';
+                charID = self->seqPtrs[self->row]->text[self->rowSeqPos[self->row]++] - '0';
 
                 switch (charID) {
                     default: break;
                     case 1:
-                        entity->newYBoundaryT = -(entity->size.y >> 1);
-                        entity->curYBoundaryT = -(entity->size.y >> 1);
-                        entity->top           = entity->curYBoundaryT >> 16;
+                        self->newYBoundaryT = -(self->size.y >> 1);
+                        self->curYBoundaryT = -(self->size.y >> 1);
+                        self->top           = self->curYBoundaryT >> 16;
                         break;
                     case 2:
-                        entity->curYBoundaryT = 0;
-                        entity->newYBoundaryT = 0;
-                        entity->top           = 0;
+                        self->curYBoundaryT = 0;
+                        self->newYBoundaryT = 0;
+                        self->top           = 0;
                         break;
                     case 3:
-                        entity->newYBoundaryT = entity->size.y >> 1;
-                        entity->curYBoundaryT = entity->size.y >> 1;
-                        entity->top           = entity->curYBoundaryT >> 16;
+                        self->newYBoundaryT = self->size.y >> 1;
+                        self->curYBoundaryT = self->size.y >> 1;
+                        self->top           = self->curYBoundaryT >> 16;
                         break;
                 }
                 break;
             case 'R':
-                charID = entity->seqPtrs[entity->row]->text[entity->rowSeqPos[entity->row]++] - '0';
+                charID = self->seqPtrs[self->row]->text[self->rowSeqPos[self->row]++] - '0';
 
                 switch (charID) {
                     default: break;
                     case 1:
-                        entity->newXBoundaryR = -(entity->size.x >> 1);
-                        entity->curXBoundaryR = -(entity->size.x >> 1);
-                        entity->right         = entity->curXBoundaryR >> 16;
+                        self->newXBoundaryR = -(self->size.x >> 1);
+                        self->curXBoundaryR = -(self->size.x >> 1);
+                        self->right         = self->curXBoundaryR >> 16;
                         break;
                     case 2:
-                        entity->curXBoundaryR = 0;
-                        entity->newXBoundaryR = 0;
-                        entity->right         = 0;
+                        self->curXBoundaryR = 0;
+                        self->newXBoundaryR = 0;
+                        self->right         = 0;
                         break;
                     case 3:
-                        entity->newXBoundaryR = entity->size.x >> 1;
-                        entity->curXBoundaryR = entity->size.x >> 1;
-                        entity->right         = entity->curXBoundaryR >> 16;
+                        self->newXBoundaryR = self->size.x >> 1;
+                        self->curXBoundaryR = self->size.x >> 1;
+                        self->right         = self->curXBoundaryR >> 16;
                         break;
                 }
                 break;
             case 'S':
-                charID = entity->seqPtrs[entity->row]->text[entity->rowSeqPos[entity->row]++] - '0';
+                charID = self->seqPtrs[self->row]->text[self->rowSeqPos[self->row]++] - '0';
 
                 switch (charID) {
                     default: break;
                     case 1:
-                        entity->newYBoundaryB = -(entity->size.y >> 1);
-                        entity->curYBoundaryB = -(entity->size.y >> 1);
-                        entity->bottom        = entity->curYBoundaryB >> 16;
+                        self->newYBoundaryB = -(self->size.y >> 1);
+                        self->curYBoundaryB = -(self->size.y >> 1);
+                        self->bottom        = self->curYBoundaryB >> 16;
                         break;
                     case 2:
-                        entity->curYBoundaryB = 0;
-                        entity->newYBoundaryB = 0;
-                        entity->bottom        = 0;
+                        self->curYBoundaryB = 0;
+                        self->newYBoundaryB = 0;
+                        self->bottom        = 0;
                         break;
                     case 3:
-                        entity->newYBoundaryB = entity->size.y >> 1;
-                        entity->curYBoundaryB = entity->size.y >> 1;
-                        entity->bottom        = entity->curYBoundaryB >> 16;
+                        self->newYBoundaryB = self->size.y >> 1;
+                        self->curYBoundaryB = self->size.y >> 1;
+                        self->bottom        = self->curYBoundaryB >> 16;
                         break;
                 }
                 break;
             case 'T':
-                charID = entity->seqPtrs[entity->row]->text[entity->rowSeqPos[entity->row]++] - '0';
+                charID = self->seqPtrs[self->row]->text[self->rowSeqPos[self->row]++] - '0';
 
                 switch (charID) {
                     default: break;
-                    case 1: entity->newXBoundaryL = -(entity->size.x >> 1); break;
-                    case 2: entity->newXBoundaryL = 0; break;
-                    case 3: entity->newXBoundaryL = entity->size.x >> 1; break;
+                    case 1: self->newXBoundaryL = -(self->size.x >> 1); break;
+                    case 2: self->newXBoundaryL = 0; break;
+                    case 3: self->newXBoundaryL = self->size.x >> 1; break;
                 }
                 break;
             case 'U':
-                charID = entity->seqPtrs[entity->row]->text[entity->rowSeqPos[entity->row]++] - '0';
+                charID = self->seqPtrs[self->row]->text[self->rowSeqPos[self->row]++] - '0';
 
                 switch (charID) {
                     default: break;
-                    case 1: entity->newYBoundaryT = -(entity->size.y >> 1); break;
-                    case 2: entity->newYBoundaryT = 0; break;
-                    case 3: entity->newYBoundaryT = entity->size.y >> 1; break;
+                    case 1: self->newYBoundaryT = -(self->size.y >> 1); break;
+                    case 2: self->newYBoundaryT = 0; break;
+                    case 3: self->newYBoundaryT = self->size.y >> 1; break;
                 }
                 break;
             case 'V':
-                charID = entity->seqPtrs[entity->row]->text[entity->rowSeqPos[entity->row]++] - '0';
+                charID = self->seqPtrs[self->row]->text[self->rowSeqPos[self->row]++] - '0';
 
                 switch (charID) {
                     default: break;
-                    case 1: entity->newXBoundaryR = -(entity->size.x >> 1); break;
-                    case 2: entity->newXBoundaryR = 0; break;
-                    case 3: entity->newXBoundaryR = entity->size.x >> 1; break;
+                    case 1: self->newXBoundaryR = -(self->size.x >> 1); break;
+                    case 2: self->newXBoundaryR = 0; break;
+                    case 3: self->newXBoundaryR = self->size.x >> 1; break;
                 }
                 break;
             case 'W':
-                charID = entity->seqPtrs[entity->row]->text[entity->rowSeqPos[entity->row]++] - '0';
+                charID = self->seqPtrs[self->row]->text[self->rowSeqPos[self->row]++] - '0';
 
                 switch (charID) {
                     default: break;
-                    case 1: entity->newYBoundaryB = -(entity->size.y >> 1); break;
-                    case 2: entity->newYBoundaryB = 0; break;
-                    case 3: entity->newYBoundaryB = entity->size.y >> 1; break;
+                    case 1: self->newYBoundaryB = -(self->size.y >> 1); break;
+                    case 2: self->newYBoundaryB = 0; break;
+                    case 3: self->newYBoundaryB = self->size.y >> 1; break;
                 }
                 break;
             case 'X':
-                entity->stateRow[entity->row] = LEDPanel_StateText_ChangeClipBounds;
+                self->stateRow[self->row] = LEDPanel_StateText_ChangeClipBounds;
                 LEDPanel_StateText_ChangeClipBounds();
                 flag = true;
                 break;
             default:
-                entity->rowSeqPos[entity->row] = 0;
+                self->rowSeqPos[self->row] = 0;
                 break;
         }
     }
@@ -444,44 +444,44 @@ void LEDPanel_StateText_Move(void)
 {
     RSDK_THIS(LEDPanel);
 
-    if (entity->textMovePos[entity->row].x != entity->textTargetPos[entity->row].x) {
-        if (entity->textMovePos[entity->row].x >= entity->textTargetPos[entity->row].x) {
-            entity->textMovePos[entity->row].x -= entity->textMoveVel[entity->row].x;
+    if (self->textMovePos[self->row].x != self->textTargetPos[self->row].x) {
+        if (self->textMovePos[self->row].x >= self->textTargetPos[self->row].x) {
+            self->textMovePos[self->row].x -= self->textMoveVel[self->row].x;
 
-            if (entity->textMovePos[entity->row].x < entity->textTargetPos[entity->row].x)
-                entity->textMovePos[entity->row].x = entity->textTargetPos[entity->row].x;
+            if (self->textMovePos[self->row].x < self->textTargetPos[self->row].x)
+                self->textMovePos[self->row].x = self->textTargetPos[self->row].x;
         }
         else {
-            entity->textMovePos[entity->row].x += entity->textMoveVel[entity->row].x;
+            self->textMovePos[self->row].x += self->textMoveVel[self->row].x;
 
-            if (entity->textMovePos[entity->row].x > entity->textTargetPos[entity->row].x)
-                entity->textMovePos[entity->row].x = entity->textTargetPos[entity->row].x;
+            if (self->textMovePos[self->row].x > self->textTargetPos[self->row].x)
+                self->textMovePos[self->row].x = self->textTargetPos[self->row].x;
         }
     }
 
-    if (entity->textMovePos[entity->row].y != entity->textTargetPos[entity->row].y) {
-        if (entity->textMovePos[entity->row].y >= entity->textTargetPos[entity->row].y) {
-            entity->textMovePos[entity->row].y -= entity->textMoveVel[entity->row].y;
+    if (self->textMovePos[self->row].y != self->textTargetPos[self->row].y) {
+        if (self->textMovePos[self->row].y >= self->textTargetPos[self->row].y) {
+            self->textMovePos[self->row].y -= self->textMoveVel[self->row].y;
 
-            if (entity->textMovePos[entity->row].y < entity->textTargetPos[entity->row].y)
-                entity->textMovePos[entity->row].y = entity->textTargetPos[entity->row].y;
+            if (self->textMovePos[self->row].y < self->textTargetPos[self->row].y)
+                self->textMovePos[self->row].y = self->textTargetPos[self->row].y;
         }
         else {
-            entity->textMovePos[entity->row].y += entity->textMoveVel[entity->row].y;
+            self->textMovePos[self->row].y += self->textMoveVel[self->row].y;
 
-            if (entity->textMovePos[entity->row].y > entity->textTargetPos[entity->row].y)
-                entity->textMovePos[entity->row].y = entity->textTargetPos[entity->row].y;
+            if (self->textMovePos[self->row].y > self->textTargetPos[self->row].y)
+                self->textMovePos[self->row].y = self->textTargetPos[self->row].y;
         }
     }
 
-    entity->textPos[entity->row].x = entity->position.x;
-    entity->textPos[entity->row].y = entity->position.y;
-    entity->textPos[entity->row].x +=
-        (entity->activeText[entity->row].textLength << 20) - (entity->size.x >> 1) + entity->textMovePos[entity->row].x + 0x80000;
-    entity->textPos[entity->row].y += entity->textMovePos[entity->row].y - (entity->size.y >> 1) + 0x100000;
+    self->textPos[self->row].x = self->position.x;
+    self->textPos[self->row].y = self->position.y;
+    self->textPos[self->row].x +=
+        (self->activeText[self->row].textLength << 20) - (self->size.x >> 1) + self->textMovePos[self->row].x + 0x80000;
+    self->textPos[self->row].y += self->textMovePos[self->row].y - (self->size.y >> 1) + 0x100000;
 
-    if (entity->textMovePos[entity->row].x == entity->textTargetPos[entity->row].x) {
-        if (entity->textMovePos[entity->row].y == entity->textTargetPos[entity->row].y)
+    if (self->textMovePos[self->row].x == self->textTargetPos[self->row].x) {
+        if (self->textMovePos[self->row].y == self->textTargetPos[self->row].y)
             LEDPanel_HandleCharacters();
     }
 }
@@ -490,7 +490,7 @@ void LEDPanel_StateText_Delay(void)
 {
     RSDK_THIS(LEDPanel);
 
-    if (--entity->rowDelay[entity->row] <= 0)
+    if (--self->rowDelay[self->row] <= 0)
         LEDPanel_HandleCharacters();
 }
 
@@ -500,70 +500,70 @@ void LEDPanel_StateText_ChangeClipBounds(void)
 
     int count = 0;
 
-    if (entity->curXBoundaryL == entity->newXBoundaryL) {
+    if (self->curXBoundaryL == self->newXBoundaryL) {
         count = 1;
     }
-    else if (entity->curXBoundaryL >= entity->newXBoundaryL) {
-        entity->curXBoundaryL -= entity->boundsMoveSpeed.x;
-        if (entity->curXBoundaryL < entity->newXBoundaryL)
-            entity->curXBoundaryL = entity->newXBoundaryL;
+    else if (self->curXBoundaryL >= self->newXBoundaryL) {
+        self->curXBoundaryL -= self->boundsMoveSpeed.x;
+        if (self->curXBoundaryL < self->newXBoundaryL)
+            self->curXBoundaryL = self->newXBoundaryL;
     }
     else {
-        entity->curXBoundaryL += entity->boundsMoveSpeed.x;
-        if (entity->curXBoundaryL > entity->newXBoundaryL)
-            entity->curXBoundaryL = entity->newXBoundaryL;
+        self->curXBoundaryL += self->boundsMoveSpeed.x;
+        if (self->curXBoundaryL > self->newXBoundaryL)
+            self->curXBoundaryL = self->newXBoundaryL;
     }
 
-    if (entity->curXBoundaryR == entity->newXBoundaryR) {
+    if (self->curXBoundaryR == self->newXBoundaryR) {
         ++count;
     }
     else {
-        if (entity->curXBoundaryR < entity->newXBoundaryR) {
-            entity->curXBoundaryR += entity->boundsMoveSpeed.x;
-            if (entity->curXBoundaryR > entity->newXBoundaryR)
-                entity->curXBoundaryR = entity->newXBoundaryR;
+        if (self->curXBoundaryR < self->newXBoundaryR) {
+            self->curXBoundaryR += self->boundsMoveSpeed.x;
+            if (self->curXBoundaryR > self->newXBoundaryR)
+                self->curXBoundaryR = self->newXBoundaryR;
         }
         else {
-            entity->curXBoundaryR -= entity->boundsMoveSpeed.x;
-            if (entity->curXBoundaryR < entity->newXBoundaryR)
-                entity->curXBoundaryR = entity->newXBoundaryR;
+            self->curXBoundaryR -= self->boundsMoveSpeed.x;
+            if (self->curXBoundaryR < self->newXBoundaryR)
+                self->curXBoundaryR = self->newXBoundaryR;
         }
     }
 
-    if (entity->curYBoundaryT == entity->newYBoundaryT) {
+    if (self->curYBoundaryT == self->newYBoundaryT) {
         ++count;
     }
-    else if (entity->curYBoundaryT >= entity->newYBoundaryT) {
-        entity->curYBoundaryT -= entity->boundsMoveSpeed.y;
-        if (entity->curYBoundaryT < entity->newYBoundaryT)
-            entity->curYBoundaryT = entity->newYBoundaryT;
+    else if (self->curYBoundaryT >= self->newYBoundaryT) {
+        self->curYBoundaryT -= self->boundsMoveSpeed.y;
+        if (self->curYBoundaryT < self->newYBoundaryT)
+            self->curYBoundaryT = self->newYBoundaryT;
     }
     else {
-        entity->curYBoundaryT += entity->boundsMoveSpeed.y;
-        if (entity->curYBoundaryT > entity->newYBoundaryT)
-            entity->curYBoundaryT = entity->newYBoundaryT;
+        self->curYBoundaryT += self->boundsMoveSpeed.y;
+        if (self->curYBoundaryT > self->newYBoundaryT)
+            self->curYBoundaryT = self->newYBoundaryT;
     }
 
-    if (entity->curYBoundaryB == entity->newYBoundaryB) {
+    if (self->curYBoundaryB == self->newYBoundaryB) {
         ++count;
     }
     else {
-        if (entity->curYBoundaryB < entity->newYBoundaryB) {
-            entity->curYBoundaryB += entity->boundsMoveSpeed.y;
-            if (entity->curYBoundaryB > entity->newYBoundaryB)
-                entity->curYBoundaryB = entity->newYBoundaryB;
+        if (self->curYBoundaryB < self->newYBoundaryB) {
+            self->curYBoundaryB += self->boundsMoveSpeed.y;
+            if (self->curYBoundaryB > self->newYBoundaryB)
+                self->curYBoundaryB = self->newYBoundaryB;
         }
         else {
-            entity->curYBoundaryB -= entity->boundsMoveSpeed.y;
-            if (entity->curYBoundaryB < entity->newYBoundaryB)
-                entity->curYBoundaryB = entity->newYBoundaryB;
+            self->curYBoundaryB -= self->boundsMoveSpeed.y;
+            if (self->curYBoundaryB < self->newYBoundaryB)
+                self->curYBoundaryB = self->newYBoundaryB;
         }
     }
 
-    entity->left   = entity->curXBoundaryL >> 16;
-    entity->top    = entity->curYBoundaryT >> 16;
-    entity->right  = entity->curXBoundaryR >> 16;
-    entity->bottom = entity->curYBoundaryB >> 16;
+    self->left   = self->curXBoundaryL >> 16;
+    self->top    = self->curYBoundaryT >> 16;
+    self->right  = self->curXBoundaryR >> 16;
+    self->bottom = self->curYBoundaryB >> 16;
 
     if (count == 4)
         LEDPanel_HandleCharacters();
@@ -573,10 +573,10 @@ void LEDPanel_StateText_WaitForSignal(void)
 {
     RSDK_THIS(LEDPanel);
 
-    int row = entity->row ^ 1;
-    if (entity->rowFlag[row]) {
-        entity->rowFlag[row]          = false;
-        entity->stateRow[entity->row] = StateMachine_None;
+    int row = self->row ^ 1;
+    if (self->rowFlag[row]) {
+        self->rowFlag[row]          = false;
+        self->stateRow[self->row] = StateMachine_None;
         LEDPanel_HandleCharacters();
     }
 }
@@ -585,16 +585,16 @@ void LEDPanel_StateText_WaitForSignal(void)
 void LEDPanel_EditorDraw(void)
 {
     RSDK_THIS(LEDPanel);
-    Vector2 drawPos = entity->position;
+    Vector2 drawPos = self->position;
 
     const char *text = "LEDPANEL";
 
     drawPos.x -= 4 * 0x100000;
 
     for (int i = 0; i < 8; ++i) {
-        entity->animatorText.frameID = text[i] - 'A';
+        self->animatorText.frameID = text[i] - 'A';
 
-        RSDK.DrawSprite(&entity->animatorText, &drawPos, false);
+        RSDK.DrawSprite(&self->animatorText, &drawPos, false);
 
         drawPos.x += 0x100000;
     }

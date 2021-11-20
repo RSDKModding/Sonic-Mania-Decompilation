@@ -6,10 +6,10 @@ void ChemicalPool_Update(void)
 {
     RSDK_THIS(ChemicalPool);
 
-    if (entity->timer > 0)
-        entity->timer--;
-    entity->offsetY = entity->position.y - entity->updateRange.y;
-    StateMachine_Run(entity->state);
+    if (self->timer > 0)
+        self->timer--;
+    self->offsetY = self->position.y - self->updateRange.y;
+    StateMachine_Run(self->state);
 }
 
 void ChemicalPool_LateUpdate(void) {}
@@ -19,17 +19,17 @@ void ChemicalPool_StaticUpdate(void) {}
 void ChemicalPool_Draw(void)
 {
     RSDK_THIS(ChemicalPool);
-    ScreenInfo *screen = &RSDK_screens[RSDK_sceneInfo->currentScreenID];
+    RSDKScreenInfo *screen = &ScreenInfo[SceneInfo->currentScreenID];
     Vector2 drawPos;
     Vector2 verts[4];
 
-    int32 screenX = entity->position.x - (screen->position.x << 16);
+    int32 screenX = self->position.x - (screen->position.x << 16);
 
     int32 screenY = screen->position.y << 16;
-    int32 vy      = entity->position.y + entity->updateRange.y - screenY;
+    int32 vy      = self->position.y + self->updateRange.y - screenY;
 
-    Vector2 *vertPtr = entity->field_A0;
-    for (int32 i = 0; i < entity->tileSizeX; ++i) {
+    Vector2 *vertPtr = self->field_A0;
+    for (int32 i = 0; i < self->tileSizeX; ++i) {
         verts[0].x = vertPtr[0].x + screenX;
         verts[0].y = vertPtr[0].y - screenY;
         verts[1].x = vertPtr[2].x + screenX;
@@ -40,10 +40,10 @@ void ChemicalPool_Draw(void)
         verts[3].y = vertPtr[1].y - screenY;
 
         colour *colours = NULL;
-        if (entity->timer >= 1)
+        if (self->timer >= 1)
             colours = ChemicalPool->colours;
         else
-            colours = entity->colours;
+            colours = self->colours;
         RSDK.DrawBlendedQuad(verts, colours, 4, 0xC0, INK_NONE);
 
         verts[0].x = verts[3].x;
@@ -52,73 +52,73 @@ void ChemicalPool_Draw(void)
         verts[1].y = verts[2].y;
         verts[2].y = vy;
         verts[3].y = vy;
-        if (entity->timer >= 1)
+        if (self->timer >= 1)
             RSDK.DrawQuad(verts, 4, 0xE0, 0xE0, 0xE0, 0xC0, INK_ALPHA);
         else
-            RSDK.DrawQuad(verts, 4, entity->r, entity->g, entity->b, 0xC0, INK_ALPHA);
+            RSDK.DrawQuad(verts, 4, self->r, self->g, self->b, 0xC0, INK_ALPHA);
 
         vertPtr += 2;
     }
 
-    if (entity->type > 0) // da reflection
+    if (self->type > 0) // da reflection
     {
-        int32 x = ((entity->position.x - entity->updateRange.x) >> 16) - screen->position.x;
-        int32 y = ((entity->position.y - entity->updateRange.y) >> 16) - screen->position.y;
-        RSDK.SetClipBounds(RSDK_sceneInfo->currentScreenID, x, y, x + (entity->size.x >> 16), y + (entity->size.y >> 16));
+        int32 x = ((self->position.x - self->updateRange.x) >> 16) - screen->position.x;
+        int32 y = ((self->position.y - self->updateRange.y) >> 16) - screen->position.y;
+        RSDK.SetClipBounds(SceneInfo->currentScreenID, x, y, x + (self->size.x >> 16), y + (self->size.y >> 16));
 
-        drawPos.x = entity->position.x - ((entity->position.x - (screen->position.x << 16) - (RSDK_screens->centerX << 16)) >> 1);
+        drawPos.x = self->position.x - ((self->position.x - (screen->position.x << 16) - (ScreenInfo->centerX << 16)) >> 1);
 
-        int32 offset = 0x800000 - entity->size.y;
+        int32 offset = 0x800000 - self->size.y;
         offset     = minVal(offset, 0x400000);
         offset     = maxVal(offset, 0);
 
         drawPos.y =
-            offset + entity->position.y + entity->field_78 - ((entity->position.y - (screen->centerY << 16) - (screen->position.y << 16)) >> 4);
-        RSDK.DrawSprite(&entity->animator, &drawPos, false);
-        RSDK.SetClipBounds(RSDK_sceneInfo->currentScreenID, 0, 0, screen->width, screen->height);
+            offset + self->position.y + self->field_78 - ((self->position.y - (screen->centerY << 16) - (screen->position.y << 16)) >> 4);
+        RSDK.DrawSprite(&self->animator, &drawPos, false);
+        RSDK.SetClipBounds(SceneInfo->currentScreenID, 0, 0, screen->width, screen->height);
     }
 }
 
 void ChemicalPool_Create(void *data)
 {
     RSDK_THIS(ChemicalPool);
-    if (!RSDK_sceneInfo->inEditor) {
-        entity->inkEffect     = INK_ADD;
-        entity->visible       = true;
-        entity->alpha         = 0xFF;
-        entity->active        = ACTIVE_BOUNDS;
-        entity->drawOrder     = Zone->drawOrderHigh - 2;
-        entity->updateRange.x = entity->size.x >> 1;
-        entity->updateRange.y = entity->size.y >> 1;
-        entity->tileSizeX     = entity->size.x >> 20;
+    if (!SceneInfo->inEditor) {
+        self->inkEffect     = INK_ADD;
+        self->visible       = true;
+        self->alpha         = 0xFF;
+        self->active        = ACTIVE_BOUNDS;
+        self->drawOrder     = Zone->drawOrderHigh - 2;
+        self->updateRange.x = self->size.x >> 1;
+        self->updateRange.y = self->size.y >> 1;
+        self->tileSizeX     = self->size.x >> 20;
 
-        Vector2 *vertPtr = entity->field_A0;
+        Vector2 *vertPtr = self->field_A0;
         for (int32 i = 0; i < 0x2100000; i += 0x100000) {
-            int32 x        = i - (entity->size.x >> 1);
+            int32 x        = i - (self->size.x >> 1);
             vertPtr[0].x = x;
             vertPtr[1].x = x;
 
-            int32 y        = entity->position.y - (entity->size.y >> 1);
+            int32 y        = self->position.y - (self->size.y >> 1);
             vertPtr[0].y = y;
             vertPtr[1].y = y + 0x80000;
 
             vertPtr += 2;
         }
 
-        entity->dword88       = (entity->position.x - (entity->size.x >> 1)) >> 20;
-        entity->dword8C       = (entity->position.x + (entity->size.x >> 1)) >> 20;
-        entity->dword90       = 0x80;
-        entity->dword94       = 0x99;
-        entity->r             = 0x00;
-        entity->g             = 0x08;
-        entity->b             = 0xC0;
-        entity->timer         = 0;
-        entity->hitbox.left   = -(entity->size.x >> 17);
-        entity->hitbox.top    = (entity->type == 0 ? 6 : 0) - (entity->size.y >> 17);
-        entity->hitbox.right  = -entity->hitbox.left;
-        entity->hitbox.bottom = -entity->hitbox.bottom;
+        self->dword88       = (self->position.x - (self->size.x >> 1)) >> 20;
+        self->dword8C       = (self->position.x + (self->size.x >> 1)) >> 20;
+        self->dword90       = 0x80;
+        self->dword94       = 0x99;
+        self->r             = 0x00;
+        self->g             = 0x08;
+        self->b             = 0xC0;
+        self->timer         = 0;
+        self->hitbox.left   = -(self->size.x >> 17);
+        self->hitbox.top    = (self->type == 0 ? 6 : 0) - (self->size.y >> 17);
+        self->hitbox.right  = -self->hitbox.left;
+        self->hitbox.bottom = -self->hitbox.bottom;
         ChemicalPool_SetupColours();
-        RSDK.SetSpriteAnimation(ChemicalPool->aniFrames, 0, &entity->animator, true, 0);
+        RSDK.SetSpriteAnimation(ChemicalPool->aniFrames, 0, &self->animator, true, 0);
     }
 }
 
@@ -151,38 +151,38 @@ void ChemicalPool_ProcessDeformations(void)
 {
     RSDK_THIS(ChemicalPool);
 
-    for (int32 i = entity->dword88; i < entity->dword8C; ++i) {
+    for (int32 i = self->dword88; i < self->dword8C; ++i) {
         int32 val = ChemicalPool->table1[i];
         ChemicalPool->table3[i] += (-val >> 5) - (ChemicalPool->table3[i] >> 3);
         ChemicalPool->table2[i] = ChemicalPool->table3[i] + ChemicalPool->table1[i];
     }
 
-    int32 v = entity->dword88 + 1;
-    for (int32 i = entity->dword88; i < entity->dword8C; ++i) {
+    int32 v = self->dword88 + 1;
+    for (int32 i = self->dword88; i < self->dword8C; ++i) {
         int32 id2 = v - 2;
-        if (id2 - 2 < entity->dword88)
-            id2 = entity->dword88;
-        if (v >= entity->dword8C)
-            v = entity->dword8C;
+        if (id2 - 2 < self->dword88)
+            id2 = self->dword88;
+        if (v >= self->dword8C)
+            v = self->dword8C;
 
         ChemicalPool->table1[i] =
-            (entity->dword90 * ChemicalPool->table2[i] >> 8) + (entity->dword94 * (ChemicalPool->table2[id2] + ChemicalPool->table2[v]) >> 9);
+            (self->dword90 * ChemicalPool->table2[i] >> 8) + (self->dword94 * (ChemicalPool->table2[id2] + ChemicalPool->table2[v]) >> 9);
         ++v;
     }
 
-    entity->field_78 = 0;
-    int32 id           = entity->dword88;
-    Vector2 *vertPtr = entity->field_A0;
-    for (int32 i = 0; i <= entity->tileSizeX; ++i) {
-        if (ChemicalPool->table1[id] > entity->field_78)
-            entity->field_78 = ChemicalPool->table1[id];
-        vertPtr[0].y = ChemicalPool->table1[id] + entity->offsetY;
+    self->field_78 = 0;
+    int32 id           = self->dword88;
+    Vector2 *vertPtr = self->field_A0;
+    for (int32 i = 0; i <= self->tileSizeX; ++i) {
+        if (ChemicalPool->table1[id] > self->field_78)
+            self->field_78 = ChemicalPool->table1[id];
+        vertPtr[0].y = ChemicalPool->table1[id] + self->offsetY;
 
         int32 val = 2 * ChemicalPool->table1[id] + 0x80000;
         if (val < ChemicalPool->table1[id])
             val = ChemicalPool->table1[id] + 0x10000;
         ++id;
-        vertPtr[1].y = val + entity->offsetY;
+        vertPtr[1].y = val + self->offsetY;
         vertPtr += 2;
     }
 }
@@ -214,15 +214,15 @@ void ChemicalPool_SpawnDebris(int32 x, int32 y)
     for (int32 i = 0; i < 6; ++i) {
 #if RETRO_USE_PLUS
         EntityDebris *debris =
-            CREATE_ENTITY(Debris, NULL, x + RSDK.Random(-0x80000, 0x80000, &Zone->randKey), y + RSDK.Random(0x40000, 0x140000, &Zone->randKey));
+            CREATE_ENTITY(Debris, NULL, x + RSDK.RandSeeded(-0x80000, 0x80000, &Zone->randSeed), y + RSDK.RandSeeded(0x40000, 0x140000, &Zone->randSeed));
         debris->state        = Debris_State_Fall;
         debris->gravity      = 0x3800;
-        debris->velocity.x   = RSDK.Random(0, 0x20000, &Zone->randKey);
+        debris->velocity.x   = RSDK.RandSeeded(0, 0x20000, &Zone->randSeed);
         if (debris->position.x < x)
             debris->velocity.x = -debris->velocity.x;
-        debris->velocity.y = RSDK.Random(-0x40000, -0x10000, &Zone->randKey);
+        debris->velocity.y = RSDK.RandSeeded(-0x40000, -0x10000, &Zone->randSeed);
         debris->drawOrder  = Zone->drawOrderHigh;
-        RSDK.SetSpriteAnimation(Reagent->aniFrames, entity->type + 1, &debris->animator, true, RSDK.Random(0, 2, &Zone->randKey));
+        RSDK.SetSpriteAnimation(Reagent->aniFrames, self->type + 1, &debris->animator, true, RSDK.RandSeeded(0, 2, &Zone->randSeed));
 #else
         EntityDebris *debris = CREATE_ENTITY(Debris, NULL, x + RSDK.Rand(-0x80000, 0x80000), y + RSDK.Rand(0x40000, 0x140000));
         debris->state      = Debris_State_Fall;
@@ -232,7 +232,7 @@ void ChemicalPool_SpawnDebris(int32 x, int32 y)
             debris->velocity.x = -debris->velocity.x;
         debris->velocity.y = RSDK.Rand(-0x40000, -0x10000);
         debris->drawOrder  = Zone->drawOrderHigh;
-        RSDK.SetSpriteAnimation(Reagent->aniFrames, entity->type + 1, &debris->animator, true, RSDK.Rand(0, 2));
+        RSDK.SetSpriteAnimation(Reagent->aniFrames, self->type + 1, &debris->animator, true, RSDK.Rand(0, 2));
 #endif
     }
 }
@@ -241,40 +241,40 @@ void ChemicalPool_SetupColours(void)
 {
     RSDK_THIS(ChemicalPool);
 
-    switch (entity->type) {
+    switch (self->type) {
         case 0:
         default:
-            entity->colours[0] = 0x0060E0;
-            entity->colours[1] = 0x0060E0;
-            entity->colours[2] = 0x0008C0;
-            entity->colours[3] = 0x0008C0;
-            entity->g          = 8;
-            entity->b          = 0xC0;
-            entity->r          = 0;
-            entity->state      = ChemicalPool_State_HarmfulBlue;
-            entity->timer      = 3;
+            self->colours[0] = 0x0060E0;
+            self->colours[1] = 0x0060E0;
+            self->colours[2] = 0x0008C0;
+            self->colours[3] = 0x0008C0;
+            self->g          = 8;
+            self->b          = 0xC0;
+            self->r          = 0;
+            self->state      = ChemicalPool_State_HarmfulBlue;
+            self->timer      = 3;
             break;
         case 1:
-            entity->colours[0] = 0x20E020;
-            entity->colours[1] = 0x20E020;
-            entity->colours[2] = 0x189000;
-            entity->colours[3] = 0x189000;
-            entity->r          = 0x18;
-            entity->g          = 0x90;
-            entity->b          = 0;
-            entity->state      = ChemicalPool_State_Green;
-            entity->timer      = 3;
+            self->colours[0] = 0x20E020;
+            self->colours[1] = 0x20E020;
+            self->colours[2] = 0x189000;
+            self->colours[3] = 0x189000;
+            self->r          = 0x18;
+            self->g          = 0x90;
+            self->b          = 0;
+            self->state      = ChemicalPool_State_Green;
+            self->timer      = 3;
             break;
         case 2:
-            entity->colours[0] = 0x00B8F0;
-            entity->colours[1] = 0x00B8F0;
-            entity->colours[2] = 0x0080B0;
-            entity->colours[3] = 0x0080B0;
-            entity->g          = 0x80;
-            entity->b          = 0xB0;
-            entity->r          = 0;
-            entity->state      = ChemicalPool_State_Blue;
-            entity->timer      = 3;
+            self->colours[0] = 0x00B8F0;
+            self->colours[1] = 0x00B8F0;
+            self->colours[2] = 0x0080B0;
+            self->colours[3] = 0x0080B0;
+            self->g          = 0x80;
+            self->b          = 0xB0;
+            self->r          = 0;
+            self->state      = ChemicalPool_State_Blue;
+            self->timer      = 3;
             break;
     }
 }
@@ -283,16 +283,16 @@ void ChemicalPool_State_HarmfulBlue(void)
 {
     RSDK_THIS(ChemicalPool);
     ChemicalPool_ProcessDeformations();
-    int32 topStore = entity->hitbox.top;
+    int32 topStore = self->hitbox.top;
 
     foreach_active(Player, player)
     {
-        if (player->velocity.y >= 0 && Player_CheckCollisionBox(player, entity, &entity->hitbox)) {
+        if (player->velocity.y >= 0 && Player_CheckCollisionBox(player, self, &self->hitbox)) {
             ChemicalPool_SetDeform(player->position.x, (player->velocity.y >> 4) + 0x1000);
             if (player->shield != SHIELD_BUBBLE) {
                 if (player->state != Player_State_Hit && player->state != Player_State_Die && player->state != Player_State_Drown
                     && !player->invincibleTimer && player->blinkTimer <= 0) {
-                    if (player->position.x > entity->position.x)
+                    if (player->position.x > self->position.x)
                         player->velocity.x = 0x20000;
                     else
                         player->velocity.x = -0x20000;
@@ -304,12 +304,11 @@ void ChemicalPool_State_HarmfulBlue(void)
         }
     }
 
-    entity->hitbox.top = topStore;
+    self->hitbox.top = topStore;
     if (!(Zone->timer & 3)) {
-        EntityChemBubble *bubble = (EntityChemBubble *)RSDK.CreateEntity(
-            ChemBubble->objectID, NULL, entity->position.x + RSDK.Rand(-entity->updateRange.x, entity->updateRange.x),
-            entity->position.y + entity->updateRange.y);
-        bubble->parent = (Entity *)entity;
+        EntityChemBubble *bubble = CREATE_ENTITY(ChemBubble, NULL, self->position.x + RSDK.Rand(-self->updateRange.x, self->updateRange.x),
+                                                 self->position.y + self->updateRange.y);
+        bubble->parent = (Entity *)self;
     }
 }
 
@@ -320,15 +319,15 @@ void ChemicalPool_State_Green(void)
 
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionTouch(player, entity, &entity->hitbox)) {
+        if (Player_CheckCollisionTouch(player, self, &self->hitbox)) {
             ChemicalPool_SetDeform(player->position.x, player->velocity.y >> 1);
             ChemicalPool_SpawnDebris(player->position.x, player->position.y);
             if (player->state != Player_State_DropDash)
                 player->state = Player_State_Air;
 
-            int32 anim = player->playerAnimator.animationID;
+            int32 anim = player->animator.animationID;
             if (anim != ANI_JUMP && anim != ANI_JOG && anim != ANI_RUN && anim != ANI_DASH)
-                player->playerAnimator.animationID = ANI_WALK;
+                player->animator.animationID = ANI_WALK;
             player->onGround    = false;
             player->jumpAbility = 0;
             player->velocity.y  = -0x140000;
@@ -345,15 +344,15 @@ void ChemicalPool_State_Blue(void)
     foreach_active(Player, player)
     {
         if (player->velocity.y >= 0) {
-            if (Player_CheckCollisionTouch(player, entity, &entity->hitbox)) {
+            if (Player_CheckCollisionTouch(player, self, &self->hitbox)) {
                 ChemicalPool_SetDeform(player->position.x, player->velocity.y >> 1);
                 ChemicalPool_SpawnDebris(player->position.x, player->position.y);
                 if (player->state != Player_State_DropDash)
                     player->state = Player_State_Air;
 
-                int32 anim = player->playerAnimator.animationID;
+                int32 anim = player->animator.animationID;
                 if (anim != ANI_JUMP && anim != ANI_JOG && anim != ANI_RUN && anim != ANI_DASH)
-                    player->playerAnimator.animationID = ANI_WALK;
+                    player->animator.animationID = ANI_WALK;
                 if ((-0x10000 - player->velocity.y) > -0x80000)
                     player->velocity.y = -0x10000 - player->velocity.y;
                 else
@@ -370,18 +369,18 @@ void ChemicalPool_State_Change(void)
 {
     RSDK_THIS(ChemicalPool);
     ChemicalPool_ProcessDeformations();
-    if (++entity->timer2 == 16) {
+    if (++self->timer2 == 16) {
         foreach_active(ChemBubble, bubble)
         {
-            if (abs(bubble->position.x - entity->position.x) <= entity->updateRange.x) {
-                if (abs(bubble->position.y - entity->position.y) <= entity->updateRange.y) {
+            if (abs(bubble->position.x - self->position.x) <= self->updateRange.x) {
+                if (abs(bubble->position.y - self->position.y) <= self->updateRange.y) {
                     RSDK.ResetEntityPtr(bubble, TYPE_BLANK, NULL);
                 }
             }
         }
-        entity->timer2 = 0;
+        self->timer2 = 0;
         ChemicalPool_SetupColours();
-        entity->active = ACTIVE_BOUNDS;
+        self->active = ACTIVE_BOUNDS;
     }
 }
 
@@ -391,16 +390,16 @@ void ChemicalPool_EditorDraw(void)
     RSDK_THIS(ChemicalPool);
     Vector2 drawPos;
 
-    drawPos.x = entity->position.x;
-    drawPos.y = entity->position.y;
-    drawPos.x -= entity->size.x >> 1;
-    drawPos.y -= entity->size.y >> 1;
-    RSDK.DrawLine(drawPos.x, drawPos.y, drawPos.x + entity->size.x, drawPos.y, 0xFFFF00, 0, INK_NONE, false);
-    RSDK.DrawLine(drawPos.x, entity->size.y + drawPos.y, drawPos.x + entity->size.x, entity->size.y + drawPos.y, 0xFFFF00, 0, INK_NONE, false);
-    RSDK.DrawLine(drawPos.x, drawPos.y, drawPos.x, drawPos.y + entity->size.y, 0xFFFF00, 0, INK_NONE, false);
-    RSDK.DrawLine(drawPos.x + entity->size.x, drawPos.y, drawPos.x + entity->size.x, drawPos.y + entity->size.y, 0xFFFF00, 0, INK_NONE, false);
+    drawPos.x = self->position.x;
+    drawPos.y = self->position.y;
+    drawPos.x -= self->size.x >> 1;
+    drawPos.y -= self->size.y >> 1;
+    RSDK.DrawLine(drawPos.x, drawPos.y, drawPos.x + self->size.x, drawPos.y, 0xFFFF00, 0, INK_NONE, false);
+    RSDK.DrawLine(drawPos.x, self->size.y + drawPos.y, drawPos.x + self->size.x, self->size.y + drawPos.y, 0xFFFF00, 0, INK_NONE, false);
+    RSDK.DrawLine(drawPos.x, drawPos.y, drawPos.x, drawPos.y + self->size.y, 0xFFFF00, 0, INK_NONE, false);
+    RSDK.DrawLine(drawPos.x + self->size.x, drawPos.y, drawPos.x + self->size.x, drawPos.y + self->size.y, 0xFFFF00, 0, INK_NONE, false);
 
-    RSDK.DrawRect(drawPos.x, drawPos.y, entity->size.x, entity->size.y, (entity->r << 16) | (entity->g << 8) | (entity->b << 0), 0xC0, INK_ALPHA,
+    RSDK.DrawRect(drawPos.x, drawPos.y, self->size.x, self->size.y, (self->r << 16) | (self->g << 8) | (self->b << 0), 0xC0, INK_ALPHA,
                   true);
 }
 

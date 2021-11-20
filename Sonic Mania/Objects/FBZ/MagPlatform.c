@@ -11,27 +11,27 @@ void MagPlatform_StaticUpdate(void) {}
 void MagPlatform_Draw(void)
 {
     RSDK_THIS(MagPlatform);
-    RSDK.DrawSprite(&entity->animator, &entity->drawPos, false);
+    RSDK.DrawSprite(&self->animator, &self->drawPos, false);
 
-    entity->animator.frameID                            = 1;
-    RSDK.GetFrame(Platform->spriteIndex, 3, 1)->height = (entity->centerPos.y - entity->drawPos.y) >> 16;
-    RSDK.DrawSprite(&entity->animator, &entity->drawPos, false);
+    self->animator.frameID                            = 1;
+    RSDK.GetFrame(Platform->aniFrames, 3, 1)->height = (self->centerPos.y - self->drawPos.y) >> 16;
+    RSDK.DrawSprite(&self->animator, &self->drawPos, false);
 
-    entity->animator.frameID = 2;
-    RSDK.DrawSprite(&entity->animator, &entity->centerPos, false);
+    self->animator.frameID = 2;
+    RSDK.DrawSprite(&self->animator, &self->centerPos, false);
 
-    entity->animator.frameID = 0;
+    self->animator.frameID = 0;
 }
 
 void MagPlatform_Create(void *data)
 {
     RSDK_THIS(MagPlatform);
     Platform_Create(NULL);
-    RSDK.SetSpriteAnimation(Platform->spriteIndex, 3, &entity->animator, true, 0);
-    if (!RSDK_sceneInfo->inEditor) {
-        entity->length <<= 16;
-        entity->stateCollide = MagPlatform_Unknown1;
-        entity->state        = MagPlatform_Unknown2;
+    RSDK.SetSpriteAnimation(Platform->aniFrames, 3, &self->animator, true, 0);
+    if (!SceneInfo->inEditor) {
+        self->length <<= 16;
+        self->stateCollide = MagPlatform_Unknown1;
+        self->state        = MagPlatform_Unknown2;
     }
 }
 
@@ -40,57 +40,51 @@ void MagPlatform_StageLoad(void) { MagPlatform->sfxChain = RSDK.GetSFX("Stage/Ch
 void MagPlatform_Unknown1(void)
 {
     RSDK_THIS(MagPlatform);
-    Hitbox *hitbox       = RSDK.GetHitbox(&entity->animator, 1);
-    entity->stoodPlayers = 0;
-    entity->pushPlayersL = 0;
-    entity->pushPlayersR = 0;
+    Hitbox *hitbox       = RSDK.GetHitbox(&self->animator, 1);
+    self->stoodPlayers = 0;
+    self->pushPlayersL = 0;
+    self->pushPlayersR = 0;
 
     int32 playerID = 0;
     foreach_active(Player, player)
     {
         bool32 groundStore = player->onGround;
-        switch (Player_CheckCollisionBox(player, entity, hitbox)) {
-            case 1:
+        switch (Player_CheckCollisionBox(player, self, hitbox)) {
+            case C_TOP:
                 if (!groundStore) {
-                    entity->stood = true;
-                    if (entity->state == Platform_State_Collapsing && !entity->collapseDelay)
-                        entity->collapseDelay = 30;
-                    entity->stoodPlayers |= 1 << playerID;
-                    player->position.x += entity->collisionOffset.x;
-                    player->position.y += entity->collisionOffset.y;
+                    self->stood = true;
+                    if (self->state == Platform_State_Collapse && !self->timer)
+                        self->timer = 30;
+                    self->stoodPlayers |= 1 << playerID;
+                    player->position.x += self->collisionOffset.x;
+                    player->position.y += self->collisionOffset.y;
                     player->position.y &= 0xFFFF0000;
                 }
                 break;
-            case 2:
+            case C_LEFT:
                 if (player->onGround && player->right)
-                    entity->pushPlayersL |= 1 << playerID;
+                    self->pushPlayersL |= 1 << playerID;
                 break;
-            case 3:
+            case C_RIGHT:
                 if (player->onGround && player->left)
-                    entity->pushPlayersR |= 1 << playerID;
+                    self->pushPlayersR |= 1 << playerID;
                 break;
-            case 4:
+            case C_BOTTOM:
                 if (!player->onGround) {
 #if RETRO_USE_PLUS
-                    if (!Player_CheckMightyUnspin(1024, player, true, &player->uncurlTimer)) {
-                        Player_CheckHit(player, entity);
-                    }
-#else
-                    Player_CheckHit(player, entity);
+                    if (!Player_CheckMightyUnspin(0x400, player, true, &player->uncurlTimer)) 
 #endif
+                        Player_CheckHit(player, self);
                 }
                 else if (player->collisionMode) {
-                    if (entity->velocity.y > 0) {
-                        Player_CheckHit(player, entity);
+                    if (self->velocity.y > 0) {
+                        Player_CheckHit(player, self);
                     }
                     else {
 #if RETRO_USE_PLUS
-                        if (!Player_CheckMightyUnspin(1024, player, true, &player->uncurlTimer)) {
-                            Player_CheckHit(player, entity);
-                        }
-#else
-                        Player_CheckHit(player, entity);
+                        if (!Player_CheckMightyUnspin(0x300, player, true, &player->uncurlTimer)) 
 #endif
+                            Player_CheckHit(player, self);
                     }
                 }
                 else {
@@ -109,37 +103,37 @@ void MagPlatform_Unknown3(void)
 {
     RSDK_THIS(MagPlatform);
 
-    entity->drawPos.y += entity->velocity.y;
-    int32 posY           = entity->position.y;
-    entity->position.y = entity->drawPos.y;
-    entity->velocity.y -= 0x3800;
-    if (RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_ROOF, 0, 0, -0x40000, true))
-        entity->velocity.y = 0;
+    self->drawPos.y += self->velocity.y;
+    int32 posY           = self->position.y;
+    self->position.y = self->drawPos.y;
+    self->velocity.y -= 0x3800;
+    if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_ROOF, 0, 0, -0x40000, true))
+        self->velocity.y = 0;
 
-    if (entity->drawPos.y <= entity->centerPos.y - entity->length) {
-        entity->drawPos.y = entity->centerPos.y - entity->length;
-        if (entity->velocity.y < -0x20000)
+    if (self->drawPos.y <= self->centerPos.y - self->length) {
+        self->drawPos.y = self->centerPos.y - self->length;
+        if (self->velocity.y < -0x20000)
             RSDK.PlaySfx(MagPlatform->sfxChain, false, 255);
-        entity->velocity.y = 0;
+        self->velocity.y = 0;
     }
-    entity->position.y = posY;
-    entity->state      = MagPlatform_Unknown4;
+    self->position.y = posY;
+    self->state      = MagPlatform_Unknown4;
 }
 
 void MagPlatform_Unknown4(void)
 {
     RSDK_THIS(MagPlatform);
 
-    entity->drawPos.y += entity->velocity.y;
-    entity->velocity.y += 0x3800;
-    if (entity->velocity.y <= 0 && RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_ROOF, 0, 0, -0x40000, true))
-        entity->velocity.y = 0;
+    self->drawPos.y += self->velocity.y;
+    self->velocity.y += 0x3800;
+    if (self->velocity.y <= 0 && RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_ROOF, 0, 0, -0x40000, true))
+        self->velocity.y = 0;
 
-    if (entity->drawPos.y >= entity->centerPos.y) {
-        entity->velocity.y = 0;
-        entity->drawPos.y  = entity->centerPos.y;
-        entity->active     = ACTIVE_BOUNDS;
-        entity->state      = MagPlatform_Unknown2;
+    if (self->drawPos.y >= self->centerPos.y) {
+        self->velocity.y = 0;
+        self->drawPos.y  = self->centerPos.y;
+        self->active     = ACTIVE_BOUNDS;
+        self->state      = MagPlatform_Unknown2;
     }
 }
 

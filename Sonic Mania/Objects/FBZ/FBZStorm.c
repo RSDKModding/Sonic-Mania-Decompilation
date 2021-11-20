@@ -5,26 +5,26 @@ ObjectFBZStorm *FBZStorm;
 void FBZStorm_Update(void)
 {
     RSDK_THIS(FBZStorm);
-    StateMachine_Run(entity->state);
+    StateMachine_Run(self->state);
 
-    entity->velocity.x = -0x40000;
+    self->velocity.x = -0x40000;
     foreach_active(Current, current)
     {
         int strength = -0x10000 * current->strength;
-        if (strength < entity->velocity.x)
-            entity->velocity.x = strength;
+        if (strength < self->velocity.x)
+            self->velocity.x = strength;
     }
 
     for (int32 p = 0; p < Player->playerCount; ++p) {
         if (!RSDK_GET_ENTITY(p, Player)->sidekick) {
-            entity->screenPosX[p] = RSDK_screens[p].position.x;
-            int32 x                 = ((entity->screenPosX[p] << 14) - (RSDK_screens[p].position.x << 14)) + entity->velocity.x;
-            entity->stormAngle[p] = RSDK.ATan2(entity->velocity.y, -x) << 1;
+            self->screenPosX[p] = ScreenInfo[p].position.x;
+            int32 x                 = ((self->screenPosX[p] << 14) - (ScreenInfo[p].position.x << 14)) + self->velocity.x;
+            self->stormAngle[p] = RSDK.ATan2(self->velocity.y, -x) << 1;
             Vector2 *pos          = &FBZStorm->positions[0x40 * p];
 
             for (int32 i = 0; i < 0x40; ++i) {
                 pos->x += x;
-                pos->y += entity->velocity.y;
+                pos->y += self->velocity.y;
 
                 if (pos->x < -0x1000000)
                     pos->x += 0x2000000;
@@ -40,17 +40,17 @@ void FBZStorm_Update(void)
     }
 
     if (RSDK.GetSceneLayer(3)->drawLayer[0] < DRAWLAYER_COUNT) {
-        entity->flag = true;
-        if (entity->blendAmount < 0x100)
-            entity->blendAmount += 8;
+        self->flag = true;
+        if (self->blendAmount < 0x100)
+            self->blendAmount += 8;
     }
     else {
-        entity->flag = false;
-        if (entity->blendAmount > 0)
-            entity->blendAmount -= 8;
+        self->flag = false;
+        if (self->blendAmount > 0)
+            self->blendAmount -= 8;
     }
 
-    RSDK.SetLimitedFade(0, FBZStorm->srcPal, 2, entity->blendAmount, 0x80, 0x100);
+    RSDK.SetLimitedFade(0, FBZStorm->srcPal, 2, self->blendAmount, 0x80, 0x100);
 }
 
 void FBZStorm_LateUpdate(void) {}
@@ -75,18 +75,18 @@ void FBZStorm_StaticUpdate(void)
 void FBZStorm_Draw(void)
 {
     RSDK_THIS(FBZStorm);
-    ScreenInfo *screen = &RSDK_screens[RSDK_sceneInfo->currentScreenID];
+    RSDKScreenInfo *screen = &ScreenInfo[SceneInfo->currentScreenID];
 
     int32 centerX      = screen->centerX << 16;
     int32 centerY      = screen->centerY << 16;
-    entity->rotation = entity->stormAngle[RSDK_sceneInfo->currentScreenID];
+    self->rotation = self->stormAngle[SceneInfo->currentScreenID];
 
-    Vector2 *pos = &FBZStorm->positions[0x40 * RSDK_sceneInfo->currentScreenID];
+    Vector2 *pos = &FBZStorm->positions[0x40 * SceneInfo->currentScreenID];
     for (int32 i = 0; i < 0x40; ++i) {
         Vector2 drawPos;
         drawPos.x = centerX + pos->x;
         drawPos.y = centerY + pos->y;
-        RSDK.DrawSprite(&entity->animator, &drawPos, true);
+        RSDK.DrawSprite(&self->animator, &drawPos, true);
         ++pos;
     }
 }
@@ -94,14 +94,14 @@ void FBZStorm_Draw(void)
 void FBZStorm_Create(void *data)
 {
     RSDK_THIS(FBZStorm);
-    if (!RSDK_sceneInfo->inEditor) {
-        entity->active     = ACTIVE_NORMAL;
-        entity->drawOrder  = Zone->drawOrderHigh;
-        entity->drawFX     = FX_ROTATE;
-        entity->inkEffect  = INK_ALPHA;
-        entity->velocity.x = -0x40000;
-        entity->velocity.y = 0xC0000;
-        entity->state      = FBZStorm_Unknown1;
+    if (!SceneInfo->inEditor) {
+        self->active     = ACTIVE_NORMAL;
+        self->drawOrder  = Zone->drawOrderHigh;
+        self->drawFX     = FX_ROTATE;
+        self->inkEffect  = INK_ALPHA;
+        self->velocity.x = -0x40000;
+        self->velocity.y = 0xC0000;
+        self->state      = FBZStorm_Unknown1;
 
         for (int32 p = 0; p < Player->playerCount; ++p) {
             for (int32 i = 0; i < 0x40; ++i) {
@@ -110,7 +110,7 @@ void FBZStorm_Create(void *data)
             }
         }
 
-        RSDK.SetSpriteAnimation(FBZStorm->aniFrames, 0, &entity->animator, true, 0);
+        RSDK.SetSpriteAnimation(FBZStorm->aniFrames, 0, &self->animator, true, 0);
     }
 }
 
@@ -125,9 +125,9 @@ void FBZStorm_StageLoad(void)
 void FBZStorm_Unknown1(void)
 {
     RSDK_THIS(FBZStorm);
-    if (entity->flag) {
+    if (self->flag) {
         if (RSDK.GetEntityCount(Current->objectID, true) > 0)
-            entity->state = FBZStorm_Unknown2;
+            self->state = FBZStorm_Unknown2;
     }
 }
 
@@ -135,14 +135,14 @@ void FBZStorm_Unknown2(void)
 {
     RSDK_THIS(FBZStorm);
 
-    entity->visible = true;
-    if (entity->alpha >= 128) {
+    self->visible = true;
+    if (self->alpha >= 128) {
         FBZStorm->srcPal = 4;
-        entity->inkEffect   = INK_BLEND;
-        entity->state  = FBZStorm_Unknown4;
+        self->inkEffect   = INK_BLEND;
+        self->state  = FBZStorm_Unknown4;
     }
     else {
-        entity->alpha += 4;
+        self->alpha += 4;
     }
 
     bool32 flag = false;
@@ -168,29 +168,29 @@ void FBZStorm_Unknown3(void)
 {
     RSDK_THIS(FBZStorm);
 
-    if (entity->alpha <= 0) {
-        entity->visible = false;
+    if (self->alpha <= 0) {
+        self->visible = false;
         if (FBZStorm->playingRainSFX) {
             RSDK.StopSFX(FBZStorm->sfxRain);
         }
-        entity->state = FBZStorm_Unknown1;
+        self->state = FBZStorm_Unknown1;
     }
     else {
-        entity->alpha -= 4;
+        self->alpha -= 4;
     }
 }
 
 void FBZStorm_Unknown4(void)
 {
     RSDK_THIS(FBZStorm);
-    if (entity->timer <= 0) {
-        entity->state = FBZStorm_Unknown5;
+    if (self->timer <= 0) {
+        self->state = FBZStorm_Unknown5;
     }
     else {
-        entity->timer--;
-        if (!entity->flag) {
-            entity->inkEffect = INK_ALPHA;
-            entity->state          = FBZStorm_Unknown3;
+        self->timer--;
+        if (!self->flag) {
+            self->inkEffect = INK_ALPHA;
+            self->state          = FBZStorm_Unknown3;
         }
     }
 }
@@ -198,12 +198,12 @@ void FBZStorm_Unknown4(void)
 void FBZStorm_Unknown5(void)
 {
     RSDK_THIS(FBZStorm);
-    RSDK.SetLimitedFade(0, 2, 3, FBZStorm->array1[entity->timer], 0x80, 0x100);
-    if (!entity->timer)
+    RSDK.SetLimitedFade(0, 2, 3, FBZStorm->array1[self->timer], 0x80, 0x100);
+    if (!self->timer)
         RSDK.PlaySfx(FBZStorm->sfxThunder, 0, 255);
-    if (++entity->timer == 20) {
-        entity->timer = RSDK.Rand(180, 320);
-        entity->state = FBZStorm_Unknown4;
+    if (++self->timer == 20) {
+        self->timer = RSDK.Rand(180, 320);
+        self->state = FBZStorm_Unknown4;
     }
 }
 

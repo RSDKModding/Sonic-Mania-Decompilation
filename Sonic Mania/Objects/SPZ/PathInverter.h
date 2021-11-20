@@ -3,6 +3,11 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    PATHINVERTER_H,
+    PATHINVERTER_V,
+} PathInverterTypes;
+
 // Object Class
 typedef struct {
     RSDK_OBJECT
@@ -39,7 +44,7 @@ void PathInverter_EditorLoad(void);
 void PathInverter_Serialize(void);
 
 // Extra Entity Functions
-void PathInverter_Unknown1(Entity *player);
+void PathInverter_HandlePathSwitch(void *p);
 void PathInverter_State_Horizontal(void);
 void PathInverter_State_Vertical(void);
 

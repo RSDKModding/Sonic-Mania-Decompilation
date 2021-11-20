@@ -44,10 +44,10 @@ void Batbrain_DebugSpawn(void);
 void Batbrain_CheckHit(void);
 void Batbrain_CheckOnScreen(void);
 //States
-void Batbrain_Unknown2(void);
-void Batbrain_Unknown3(void);
-void Batbrain_Unknown4(void);
-void Batbrain_Unknown5(void);
-void Batbrain_Unknown6(void);
+void Batbrain_State_Setup(void);
+void Batbrain_State_CheckPlayerInRange(void);
+void Batbrain_State_DropToPlayer(void);
+void Batbrain_State_Fly(void);
+void Batbrain_State_FlyToCeiling(void);
 
 #endif //!OBJ_BATBRAIN_H

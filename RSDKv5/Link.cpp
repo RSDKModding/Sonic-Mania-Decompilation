@@ -64,15 +64,15 @@ enum UserdataTableIDs {
     APITable_SaveUserDB,
     APITable_ClearUserDB,
     APITable_ClearAllUserDBs,
-    APITable_Unknown31,
-    APITable_GetUserDBSatus,
-    APITable_Unknown33,
-    APITable_Unknown34,
-    APITable_GetUserDBUnknownCount,
-    APITable_GetUserDBUnknown,
-    APITable_Unknown37,
+    APITable_SetupUserDBRowSorting,
+    APITable_GetUserDBRowsChanged,
+    APITable_AddUserDBRowSortFilter,
+    APITable_SortUserDBRows,
+    APITable_GetSortedUserDBRowCount,
+    APITable_GetSortedUserDBRowID,
+    APITable_AddUserDBRow,
     APITable_SetUserDBValue,
-    APITable_Unknown39,
+    APITable_GetUserDBValue,
     APITable_GetEntryUUID,
     APITable_GetUserDBByID,
     APITable_GetUserDBCreationTime,
@@ -142,8 +142,8 @@ enum FunctionTableIDs {
     FunctionTable_ASin256,
     FunctionTable_ACos256,
     FunctionTable_Rand,
-    FunctionTable_Random,
-    FunctionTable_SetRandKey,
+    FunctionTable_RandSeeded,
+    FunctionTable_SetRandSeed,
     FunctionTable_ATan2,
     FunctionTable_SetIdentityMatrix,
     FunctionTable_MatrixMultiply,
@@ -416,15 +416,15 @@ void setupFunctions()
     addToAPIFunctionTable(APITable_SaveUserDB, SaveUserDB);
     addToAPIFunctionTable(APITable_ClearUserDB, ClearUserDB);
     addToAPIFunctionTable(APITable_ClearAllUserDBs, ClearAllUserDBs);
-    addToAPIFunctionTable(APITable_Unknown31, InitDBRowUnknown);
-    addToAPIFunctionTable(APITable_GetUserDBSatus, GetUserDBStatus);
-    addToAPIFunctionTable(APITable_Unknown33, UserDBUnknown33);
-    addToAPIFunctionTable(APITable_Unknown34, SortUserDBRows);
-    addToAPIFunctionTable(APITable_GetUserDBUnknownCount, GetUserDBRowUnknownCount);
-    addToAPIFunctionTable(APITable_GetUserDBUnknown, GetUserDBRowUnknown);
-    addToAPIFunctionTable(APITable_Unknown37, AddUserDBRow);
+    addToAPIFunctionTable(APITable_SetupUserDBRowSorting, SetupUserDBRowSorting);
+    addToAPIFunctionTable(APITable_GetUserDBRowsChanged, GetUserDBRowsChanged);
+    addToAPIFunctionTable(APITable_AddUserDBRowSortFilter, AddUserDBRowSortFilter);
+    addToAPIFunctionTable(APITable_SortUserDBRows, SortUserDBRows);
+    addToAPIFunctionTable(APITable_GetSortedUserDBRowCount, GetSortedUserDBRowCount);
+    addToAPIFunctionTable(APITable_GetSortedUserDBRowID, GetSortedUserDBRowID);
+    addToAPIFunctionTable(APITable_AddUserDBRow, AddUserDBRow);
     addToAPIFunctionTable(APITable_SetUserDBValue, SetUserDBValue);
-    addToAPIFunctionTable(APITable_Unknown39, GetUserDBValue);
+    addToAPIFunctionTable(APITable_GetUserDBValue, GetUserDBValue);
     addToAPIFunctionTable(APITable_GetEntryUUID, GetDBRowUUID);
     addToAPIFunctionTable(APITable_GetUserDBByID, GetUserDBByID);
     addToAPIFunctionTable(APITable_GetUserDBCreationTime, GetUserDBCreationTime);
@@ -523,8 +523,8 @@ void setupFunctions()
     addToRSDKFunctionTable(FunctionTable_ASin256, aSin256);
     addToRSDKFunctionTable(FunctionTable_ACos256, aCos256);
     addToRSDKFunctionTable(FunctionTable_Rand, GetRandomValue);
-    addToRSDKFunctionTable(FunctionTable_Random, GetSeededRandomValue);
-    addToRSDKFunctionTable(FunctionTable_SetRandKey, SetRandKey);
+    addToRSDKFunctionTable(FunctionTable_RandSeeded, GetSeededRandomValue);
+    addToRSDKFunctionTable(FunctionTable_SetRandSeed, SetRandSeed);
     addToRSDKFunctionTable(FunctionTable_ATan2, ArcTanLookup);
     addToRSDKFunctionTable(FunctionTable_SetIdentityMatrix, setIdentityMatrix);
     addToRSDKFunctionTable(FunctionTable_MatrixMultiply, matrixMultiply);

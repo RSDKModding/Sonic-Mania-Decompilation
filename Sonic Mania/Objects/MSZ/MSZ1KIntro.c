@@ -5,15 +5,15 @@ ObjectMSZ1KIntro *MSZ1KIntro;
 void MSZ1KIntro_Update(void)
 {
     RSDK_THIS(MSZ1KIntro);
-    if (!entity->activated) {
+    if (!self->activated) {
         if (isMainGameMode() || !globals->enableIntro || PlayerHelpers_CheckStageReload()) {
-            entity->active = ACTIVE_NEVER;
+            self->active = ACTIVE_NEVER;
         }
         else {
             void *states[] = { MSZ1KIntro_CutsceneState_Unknown1, MSZ1KIntro_CutsceneState_Unknown2, MSZ1KIntro_CutsceneState_Unknown3, NULL };
 
-            entity->activated = true;
-            CutsceneSeq_StartSequence((Entity *)entity, states);
+            self->activated = true;
+            CutsceneSeq_StartSequence((Entity *)self, states);
             if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->objectID)
                 RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->skipType = SKIPTYPE_RELOADSCN;
         }
@@ -30,11 +30,11 @@ void MSZ1KIntro_Create(void *data)
 {
     RSDK_THIS(MSZ1KIntro);
 
-    INIT_ENTITY(entity);
-    CutsceneRules_SetupEntity(entity, &entity->size, &entity->hitbox);
-    entity->active = ACTIVE_NORMAL;
+    INIT_ENTITY(self);
+    CutsceneRules_SetupEntity(self, &self->size, &self->hitbox);
+    self->active = ACTIVE_NORMAL;
     if (!globals->suppressTitlecard)
-        destroyEntity(entity);
+        destroyEntity(self);
 }
 
 void MSZ1KIntro_StageLoad(void)
@@ -60,9 +60,9 @@ bool32 MSZ1KIntro_CutsceneState_Unknown1(EntityCutsceneSeq *host)
         CutsceneSeq_LockAllPlayerControl();
     }
 
-    RSDK.SetSpriteAnimation(MSZ1KIntro->playerFrames, 4, &player1->playerAnimator, false, 0);
+    RSDK.SetSpriteAnimation(MSZ1KIntro->playerFrames, 4, &player1->animator, false, 0);
     if (player1->onGround) {
-        RSDK.SetSpriteAnimation(MSZ1KIntro->playerFrames, 5, &player1->playerAnimator, true, 0);
+        RSDK.SetSpriteAnimation(MSZ1KIntro->playerFrames, 5, &player1->animator, true, 0);
         player1->state = Player_State_None;
         return true;
     }
@@ -76,21 +76,21 @@ bool32 MSZ1KIntro_CutsceneState_Unknown2(EntityCutsceneSeq *host)
     unused(camera);
 
     if (!host->timer) {
-        RSDK.SetSpriteAnimation(MSZ1KIntro->playerFrames, 5, &player1->playerAnimator, true, 0);
+        RSDK.SetSpriteAnimation(MSZ1KIntro->playerFrames, 5, &player1->animator, true, 0);
         player1->state          = Player_State_None;
         player1->tileCollisions = false;
     }
-    if (player1->playerAnimator.animationID == 5 && player1->playerAnimator.frameID == 1 && !host->field_6C[0]) {
+    if (player1->animator.animationID == 5 && player1->animator.frameID == 1 && !host->values[0]) {
         RSDK.PlaySfx(MSZ1KIntro->sfxImpact, false, 255);
         Camera_ShakeScreen(0, 0, 4);
-        host->field_6C[0] = 1;
+        host->values[0] = 1;
     }
     if (host->timer == 60)
-        RSDK.SetSpriteAnimation(MSZ1KIntro->playerFrames, 7, &player1->playerAnimator, false, 0);
+        RSDK.SetSpriteAnimation(MSZ1KIntro->playerFrames, 7, &player1->animator, false, 0);
     if (host->timer == 180)
-        RSDK.SetSpriteAnimation(MSZ1KIntro->playerFrames, 3, &player1->playerAnimator, true, 0);
-    if (player1->playerAnimator.animationID == 3 && player1->playerAnimator.frameID == player1->playerAnimator.frameCount - 1) {
-        RSDK.SetSpriteAnimation(player1->spriteIndex, 0, &player1->playerAnimator, true, 0);
+        RSDK.SetSpriteAnimation(MSZ1KIntro->playerFrames, 3, &player1->animator, true, 0);
+    if (player1->animator.animationID == 3 && player1->animator.frameID == player1->animator.frameCount - 1) {
+        RSDK.SetSpriteAnimation(player1->aniFrames, 0, &player1->animator, true, 0);
         return true;
     }
     return false;
@@ -109,8 +109,8 @@ bool32 MSZ1KIntro_CutsceneState_Unknown3(EntityCutsceneSeq *host)
         foreach_all(TitleCard, titleCard)
         {
             titleCard->active    = ACTIVE_NORMAL;
-            titleCard->state     = TitleCard_Unknown6;
-            titleCard->stateDraw = TitleCard_StateDraw_Default;
+            titleCard->state     = TitleCard_State_Initial;
+            titleCard->stateDraw = TitleCard_Draw_Default;
             foreach_break;
         }
         Music_PlayTrack(TRACK_STAGE);
@@ -123,7 +123,7 @@ bool32 MSZ1KIntro_CutsceneState_Unknown3(EntityCutsceneSeq *host)
 void MSZ1KIntro_EditorDraw(void)
 {
     RSDK_THIS(MSZ1KIntro);
-    CutsceneRules_DrawCutsceneBounds(entity, &entity->size);
+    CutsceneRules_DrawCutsceneBounds(self, &self->size);
 }
 
 void MSZ1KIntro_EditorLoad(void) {}

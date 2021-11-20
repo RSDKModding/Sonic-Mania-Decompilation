@@ -5,17 +5,17 @@ ObjectMenuSetup *MenuSetup;
 void MenuSetup_Update(void)
 {
     RSDK_THIS(MenuSetup);
-    StateMachine_Run(entity->state);
+    StateMachine_Run(self->state);
 
 #if !RETRO_USE_PLUS
-    if (entity->state != MenuSetup_Leaderboard_Unknown) {
+    if (self->state != MenuSetup_Leaderboard_Unknown) {
 #endif
-        if (entity->timer >= entity->timeOut) {
-            StateMachine_Run(entity->timedState);
-            destroyEntity(entity);
+        if (self->timer >= self->timeOut) {
+            StateMachine_Run(self->timedState);
+            destroyEntity(self);
         }
         else {
-            entity->timer++;
+            self->timer++;
         }
 #if !RETRO_USE_PLUS
     }
@@ -106,15 +106,15 @@ void MenuSetup_StaticUpdate(void)
 void MenuSetup_Draw(void)
 {
     RSDK_THIS(MenuSetup);
-    RSDK.FillScreen(entity->fadeColour, entity->fadeTimer, entity->fadeTimer - 128, entity->fadeTimer - 256);
+    RSDK.FillScreen(self->fadeColour, self->fadeTimer, self->fadeTimer - 128, self->fadeTimer - 256);
 }
 
 void MenuSetup_Create(void *data)
 {
     RSDK_THIS(MenuSetup);
-    entity->active    = ACTIVE_ALWAYS;
-    entity->visible   = true;
-    entity->drawOrder = 14;
+    self->active    = ACTIVE_ALWAYS;
+    self->visible   = true;
+    self->drawOrder = 14;
 }
 
 void MenuSetup_StageLoad(void)
@@ -137,7 +137,7 @@ void MenuSetup_StageLoad(void)
     Music->activeTrack   = -1;
 #endif
 
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         switch (sku_platform) {
             case PLATFORM_PC: LogHelpers_Print("PC SKU"); break;
             case PLATFORM_PS4: LogHelpers_Print("PS4 SKU"); break;
@@ -478,7 +478,7 @@ void MenuSetup_Unknown3(void)
         switch (button->listID) {
             case 17:
                 if (!button->frameID) {
-                    if (RSDK_info->platform == PLATFORM_PC || RSDK_info->platform == PLATFORM_DEV) {
+                    if (GameInfo->platform == PLATFORM_PC || GameInfo->platform == PLATFORM_DEV) {
                         button->options2 = MenuSetup_ExitGame_Confirm;
                     }
                     else {
@@ -642,8 +642,8 @@ void MenuSetup_Unknown3(void)
     comp->unknownCallback3     = MenuSetup_VS_Unknown51;
     if (comp->active == ACTIVE_ALWAYS) {
         RSDK_THIS(UIControl);
-        entity->childHasFocus = false;
-        // LODWORD(RSDK_sceneInfo->entity->data[13]) = 0;
+        self->childHasFocus = false;
+        // LODWORD(RSDK_sceneInfo->self->data[13]) = 0;
 
         foreach_all(UIVsCharSelector, selector)
         {
@@ -672,7 +672,7 @@ void MenuSetup_Unknown3(void)
     extras->processButtonInputCB = MenuSetup_Extras_ProcessButtonCB;
 
     options->unknownCallback3 = MenuSetup_Options_Unknown25;
-    if (RSDK_info->platform == PLATFORM_DEV || RSDK_info->platform == PLATFORM_SWITCH)
+    if (GameInfo->platform == PLATFORM_DEV || GameInfo->platform == PLATFORM_SWITCH)
         options->yPressCB = MenuSetup_Options_LaunchManual;
     else
         MenuSetup->optionsPrompt->visible = false;
@@ -717,33 +717,33 @@ void MenuSetup_Unknown52(void)
     EntityUIButton *secretsButton1 = secrets->buttons[0];
     secretsButton1->disabled       = !GameProgress_CheckUnlock(5);
     if (secretsButton1->disabled)
-        UIButton_Unknown1(secretsButton1);
+        UIButton_ManageChoices(secretsButton1);
 
     EntityUIButton *secretsButton2 = secrets->buttons[1];
     EntityUIButton *option1        = UIButton_GetChoicePtr(secretsButton2, 1);
     EntityUIButton *option2        = UIButton_GetChoicePtr(secretsButton2, 2);
     secretsButton2->disabled       = !GameProgress_CheckUnlock(2);
     if (secretsButton2->disabled)
-        UIButton_Unknown1(secretsButton2);
+        UIButton_ManageChoices(secretsButton2);
     option1->disabled = !GameProgress_CheckUnlock(2);
     option2->disabled = !GameProgress_CheckUnlock(3);
 
     EntityUIButton *secretsButton3 = secrets->buttons[2];
     secretsButton3->disabled       = !GameProgress_CheckUnlock(4);
     if (secretsButton3->disabled)
-        UIButton_Unknown1(secretsButton3);
+        UIButton_ManageChoices(secretsButton3);
 
     EntityUIControl *extras = (EntityUIControl *)MenuSetup->extras;
 
     EntityUIButton *extrasButton1 = extras->buttons[0];
     extrasButton1->disabled       = !GameProgress_CheckUnlock(8);
     if (extrasButton1->disabled)
-        UIButton_Unknown1(extrasButton1);
+        UIButton_ManageChoices(extrasButton1);
 
     EntityUIButton *extrasButton2 = extras->buttons[1];
     extrasButton2->disabled       = !GameProgress_CheckUnlock(6);
     if (extrasButton2->disabled)
-        UIButton_Unknown1(extrasButton2);
+        UIButton_ManageChoices(extrasButton2);
 
     EntityUIButton *extrasButton3 = extras->buttons[2];
     extrasButton3->disabled       = !GameProgress_CheckUnlock(7) && !globals->medallionDebug;
@@ -919,7 +919,7 @@ void MenuSetup_SetBGColours(void)
 void MenuSetup_ChangeMenu(void)
 {
     RSDK_THIS(UIModeButton);
-    switch (entity->buttonID) {
+    switch (self->buttonID) {
         case 0:
             if (globals->noSave) {
                 UIControl_MatchMenuTag("No Save Mode");
@@ -981,11 +981,11 @@ void MenuSetup_ExitGame_CB(void)
 void MenuSetup_Unknown13(void)
 {
     RSDK_THIS(MenuSetup);
-    entity->fadeTimer = entity->timer << ((entity->field_68 & 0xFF) - 1);
-    if (entity->fadeTimer >= 512)
-        entity->fadeTimer = 512;
-    else if (entity->fadeTimer < 0)
-        entity->fadeTimer = 0;
+    self->fadeTimer = self->timer << ((self->field_68 & 0xFF) - 1);
+    if (self->fadeTimer >= 512)
+        self->fadeTimer = 512;
+    else if (self->fadeTimer < 0)
+        self->fadeTimer = 0;
 }
 
 // Save Select
@@ -1029,9 +1029,9 @@ void MenuSetup_StartNewSave(void)
 {
     EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
     RSDK_THIS(UISaveSlot);
-    EntityUIControl *control = (EntityUIControl *)entity->parent;
+    EntityUIControl *control = (EntityUIControl *)self->parent;
 
-    EntitySaveGame *saveRAM = (EntitySaveGame *)SaveGame_GetDataPtr(entity->slotID);
+    EntitySaveGame *saveRAM = (EntitySaveGame *)SaveGame_GetDataPtr(self->slotID);
     TimeAttackData_ClearOptions();
     RSDK.GetCString(param->menuTag, &control->tag);
     param->selectionID = control->field_D8;
@@ -1039,7 +1039,7 @@ void MenuSetup_StartNewSave(void)
     globals->gameMode  = MODE_MANIA;
 
     bool32 loadingSave = false;
-    if (entity->type) {
+    if (self->type) {
         memset(globals->noSaveSlot, 0, 0x400);
         globals->tempFlags  = false;
         globals->saveSlotID = NO_SAVE_SLOT;
@@ -1047,17 +1047,17 @@ void MenuSetup_StartNewSave(void)
         globals->medalMods  = MenuSetup_GetMedalMods();
     }
     else {
-        globals->saveSlotID = entity->slotID;
+        globals->saveSlotID = self->slotID;
         globals->medalMods  = 0;
-        if (entity->isNewSave) {
-            int32 *saveData = SaveGame_GetDataPtr(entity->slotID % 8);
+        if (self->isNewSave) {
+            int32 *saveData = SaveGame_GetDataPtr(self->slotID % 8);
 
             memset(saveData, 0, 0x400);
             saveRAM->saveState     = 1;
-            saveRAM->characterID   = entity->frameID;
+            saveRAM->characterID   = self->frameID;
             saveRAM->zoneID        = 0;
             saveRAM->lives         = 3;
-            saveRAM->chaosEmeralds = entity->saveEmeralds;
+            saveRAM->chaosEmeralds = self->saveEmeralds;
             saveRAM->continues     = 0;
             UIWaitSpinner_Wait();
             loadingSave = true;
@@ -1074,7 +1074,7 @@ void MenuSetup_StartNewSave(void)
         }
     }
 
-    switch (entity->frameID) {
+    switch (self->frameID) {
         case 0:
         case 1: globals->playerID = ID_SONIC; break;
         case 2: globals->playerID = ID_TAILS; break;
@@ -1085,12 +1085,12 @@ void MenuSetup_StartNewSave(void)
     if ((globals->medalMods & getMod(MEDAL_ANDKNUCKLES))) {
         globals->playerID |= ID_KNUCKLES_ASSIST;
     }
-    else if (!entity->frameID) {
+    else if (!self->frameID) {
         globals->playerID |= ID_TAILS_ASSIST;
     }
 
-    if (entity->type == 1 || entity->isNewSave) {
-        if (((globals->medalMods & getMod(MEDAL_DEBUGMODE)) && (RSDK_controller->keyC.down || RSDK_controller->keyX.down)) && entity->type == 1) {
+    if (self->type == 1 || self->isNewSave) {
+        if (((globals->medalMods & getMod(MEDAL_DEBUGMODE)) && (ControllerInfo->keyC.down || ControllerInfo->keyX.down)) && self->type == 1) {
             RSDK.SetScene("Presentation", "Level Select");
         }
         else {
@@ -1099,7 +1099,7 @@ void MenuSetup_StartNewSave(void)
     }
     else {
         RSDK.SetScene("Mania Mode", "");
-        RSDK_sceneInfo->listPos += TimeAttackData_GetManiaListPos(entity->saveZoneID, entity->frameID, 0);
+        SceneInfo->listPos += TimeAttackData_GetManiaListPos(self->saveZoneID, self->frameID, 0);
     }
 
     if (!loadingSave) {
@@ -1135,7 +1135,7 @@ void MenuSetup_SaveSel_YPressCB(void)
 {
     EntityUIControl *control = (EntityUIControl *)MenuSetup->saveSelect;
     if (control->active == ACTIVE_ALWAYS && control->activeEntityID == 8) {
-        RSDK.PlaySfx(UIWidgets->sfx_Accept, false, 255);
+        RSDK.PlaySfx(UIWidgets->sfxAccept, false, 255);
         UIControl->inputLocked = true;
 
         UITransition_StartTransition(MenuSetup_OpenSecretsMenu, 0);
@@ -1204,7 +1204,7 @@ void MenuSetup_TA_StartAttempt(void)
     globals->medalMods  = 0;
 
     RSDK.SetScene("Mania Mode", "");
-    RSDK_sceneInfo->listPos += TimeAttackData_GetManiaListPos(param->zoneID, param->characterID, param->actID);
+    SceneInfo->listPos += TimeAttackData_GetManiaListPos(param->zoneID, param->characterID, param->actID);
 
     switch (param->characterID) {
         case 1: globals->playerID = ID_SONIC; break;
@@ -1285,9 +1285,9 @@ void MenuSetup_Leaderboard_Unknown(void)
             prompt->promptID = 15;
         prompt->field_78   = -1;
         prompt->visible    = leaderboard->taRecord != 0;
-        entity->timedState = StateMachine_None;
+        self->timedState = StateMachine_None;
         MenuSetup->dialog  = NULL;
-        destroyEntity(entity);
+        destroyEntity(self);
     }
     else if (status == STATUS_OK) {
         if (leaderboard->entryIsUser)
@@ -1298,10 +1298,10 @@ void MenuSetup_Leaderboard_Unknown(void)
         prompt->visible  = leaderboard->taRecord != 0;
 
         UILeaderboard_InitLeaderboard(leaderboard);
-        UIDialog_Unknown4(dialog, entity->timedState);
-        entity->timedState = StateMachine_None;
+        UIDialog_Unknown4(dialog, self->timedState);
+        self->timedState = StateMachine_None;
         MenuSetup->dialog  = NULL;
-        destroyEntity(entity);
+        destroyEntity(self);
     }
 }
 
@@ -1318,10 +1318,10 @@ void MenuSetup_VS_Unknown50(void)
         for (int32 i = 0; i < control->buttonCount; ++i) {
             EntityUIVsCharSelector *button = (EntityUIVsCharSelector *)control->buttons[i];
 
-            Entity *entStore       = RSDK_sceneInfo->entity;
-            RSDK_sceneInfo->entity = (Entity *)button;
+            Entity *entStore       = SceneInfo->entity;
+            SceneInfo->entity = (Entity *)button;
             StateMachine_Run(button->processButtonCB);
-            RSDK_sceneInfo->entity = entStore;
+            SceneInfo->entity = entStore;
 
             if (flag) {
                 if (button->ready)
@@ -1342,9 +1342,9 @@ void MenuSetup_VS_Unknown51(void)
 {
     RSDK_THIS(UIControl);
 
-    entity->childHasFocus = false;
-    for (int32 i = 0; i < entity->buttonCount; ++i) {
-        EntityUIVsCharSelector *button = (EntityUIVsCharSelector *)entity->buttons[i];
+    self->childHasFocus = false;
+    for (int32 i = 0; i < self->buttonCount; ++i) {
+        EntityUIVsCharSelector *button = (EntityUIVsCharSelector *)self->buttons[i];
 
         button->flag            = true;
         button->ready           = false;
@@ -1363,7 +1363,7 @@ void MenuSetup_VS_StartMatch(void)
     session->actID      = param->vsActID;
 
     RSDK.SetScene("Mania Mode", "");
-    RSDK_sceneInfo->listPos += TimeAttackData_GetManiaListPos(param->vsZoneID, 0, param->vsActID);
+    SceneInfo->listPos += TimeAttackData_GetManiaListPos(param->vsZoneID, 0, param->vsActID);
     SaveGame_ResetPlayerState();
     memset(globals->noSaveSlot, 0, 0x400);
 
@@ -1443,7 +1443,7 @@ void MenuSetup_VS_Unknown53(void)
         else
             UITransition_StartTransition(MenuSetup_VS_OpenCompZones, 0);
 
-        RSDK.PlaySfx(UIWidgets->sfx_Accept, false, 255);
+        RSDK.PlaySfx(UIWidgets->sfxAccept, false, 255);
         UIControl->inputLocked = true;
     }
 }
@@ -1510,31 +1510,31 @@ void MenuSetup_VS_Unknown54(void)
         memset(buffer, 0, sizeof(buffer));
 
         sprintf(buffer, "%d", session->rings[p]);
-        if (!RSDK_sceneInfo->inEditor) {
+        if (!SceneInfo->inEditor) {
             RSDK.SetText(&results->rowText[0], buffer, 0);
             RSDK.SetSpriteString(UIVsResults->aniFrames, 18, &results->rowText[0]);
         }
 
         printf(buffer, "%d", session->totalRings[p]);
-        if (!RSDK_sceneInfo->inEditor) {
+        if (!SceneInfo->inEditor) {
             RSDK.SetText(&results->rowText[1], buffer, 0);
             RSDK.SetSpriteString(UIVsResults->aniFrames, 18, &results->rowText[1]);
         }
 
         sprintf(buffer, "%d", session->score[p]);
-        if (!RSDK_sceneInfo->inEditor) {
+        if (!SceneInfo->inEditor) {
             RSDK.SetText(&results->rowText[2], buffer, 0);
             RSDK.SetSpriteString(UIVsResults->aniFrames, 18, &results->rowText[2]);
         }
 
         sprintf(buffer, "%d", session->items[p]);
-        if (!RSDK_sceneInfo->inEditor) {
+        if (!SceneInfo->inEditor) {
             RSDK.SetText(&results->rowText[3], buffer, 0);
             RSDK.SetSpriteString(UIVsResults->aniFrames, 18, &results->rowText[3]);
         }
 
         sprintf(buffer, "%d'%02d\"%02d", session->time[p].minutes, session->time[p].seconds, session->time[p].milliseconds);
-        if (!RSDK_sceneInfo->inEditor) {
+        if (!SceneInfo->inEditor) {
             RSDK.SetText(&results->rowText[4], buffer, 0);
             RSDK.SetSpriteString(UIVsResults->aniFrames, 18, &results->rowText[4]);
         }
@@ -1596,7 +1596,7 @@ void MenuSetup_VS_Unknown55(void)
             CompetitionSession_ResetOptions();
             UITransition_StartTransition(MenuSetup_VS_OpenCompetition, 0);
         }
-        RSDK.PlaySfx(UIWidgets->sfx_Accept, false, 255);
+        RSDK.PlaySfx(UIWidgets->sfxAccept, false, 255);
         UIControl->inputLocked = true;
     }
 }
@@ -1663,7 +1663,7 @@ void MenuSetup_VS_Unknown56(void)
         for (int32 r = 0; r < results->numRows; ++r) {
             char buffer[0x40];
             sprintf(buffer, "%d", session->winnerFlags[r]);
-            if (!RSDK_sceneInfo->inEditor) {
+            if (!SceneInfo->inEditor) {
                 RSDK.SetText(&results->rowText[r], buffer, 0);
                 RSDK.SetSpriteString(UIVsResults->aniFrames, 18, &results->rowText[r]);
             }
@@ -1813,34 +1813,34 @@ void MenuSetup_Options_OpenControlsMenu(void)
 
 void MenuSetup_Options_Unknown22_P1(void)
 {
-    RSDK_controller[1].keyUp.keyMap     = 38;
-    RSDK_controller[1].keyDown.keyMap   = 40;
-    RSDK_controller[1].keyLeft.keyMap   = 37;
-    RSDK_controller[1].keyRight.keyMap  = 39;
-    RSDK_controller[1].keyA.keyMap      = 65;
-    RSDK_controller[1].keyB.keyMap      = 83;
-    RSDK_controller[1].keyC.keyMap      = 0;
-    RSDK_controller[1].keyX.keyMap      = 81;
-    RSDK_controller[1].keyY.keyMap      = 87;
-    RSDK_controller[1].keyZ.keyMap      = 0;
-    RSDK_controller[1].keyStart.keyMap  = 13;
-    RSDK_controller[1].keySelect.keyMap = 9;
+    ControllerInfo[1].keyUp.keyMap     = 38;
+    ControllerInfo[1].keyDown.keyMap   = 40;
+    ControllerInfo[1].keyLeft.keyMap   = 37;
+    ControllerInfo[1].keyRight.keyMap  = 39;
+    ControllerInfo[1].keyA.keyMap      = 65;
+    ControllerInfo[1].keyB.keyMap      = 83;
+    ControllerInfo[1].keyC.keyMap      = 0;
+    ControllerInfo[1].keyX.keyMap      = 81;
+    ControllerInfo[1].keyY.keyMap      = 87;
+    ControllerInfo[1].keyZ.keyMap      = 0;
+    ControllerInfo[1].keyStart.keyMap  = 13;
+    ControllerInfo[1].keySelect.keyMap = 9;
 }
 
 void MenuSetup_Options_Unknown22_P2(void)
 {
-    RSDK_controller[2].keyUp.keyMap     = 104;
-    RSDK_controller[2].keyDown.keyMap   = 101;
-    RSDK_controller[2].keyLeft.keyMap   = 100;
-    RSDK_controller[2].keyRight.keyMap  = 102;
-    RSDK_controller[2].keyA.keyMap      = 74;
-    RSDK_controller[2].keyB.keyMap      = 75;
-    RSDK_controller[2].keyC.keyMap      = 0;
-    RSDK_controller[2].keyX.keyMap      = 85;
-    RSDK_controller[2].keyY.keyMap      = 73;
-    RSDK_controller[2].keyZ.keyMap      = 0;
-    RSDK_controller[2].keyStart.keyMap  = 219;
-    RSDK_controller[2].keySelect.keyMap = 221;
+    ControllerInfo[2].keyUp.keyMap     = 104;
+    ControllerInfo[2].keyDown.keyMap   = 101;
+    ControllerInfo[2].keyLeft.keyMap   = 100;
+    ControllerInfo[2].keyRight.keyMap  = 102;
+    ControllerInfo[2].keyA.keyMap      = 74;
+    ControllerInfo[2].keyB.keyMap      = 75;
+    ControllerInfo[2].keyC.keyMap      = 0;
+    ControllerInfo[2].keyX.keyMap      = 85;
+    ControllerInfo[2].keyY.keyMap      = 73;
+    ControllerInfo[2].keyZ.keyMap      = 0;
+    ControllerInfo[2].keyStart.keyMap  = 219;
+    ControllerInfo[2].keySelect.keyMap = 221;
 }
 
 void MenuSetup_Options_Unknown51(int32 id)
@@ -1920,7 +1920,7 @@ void MenuSetup_Options_OpenKBControlsMenu(void)
     EntityUIControl *control = (EntityUIControl *)MenuSetup->controls_win;
 
     for (int32 i = 0; i < control->buttonCount; ++i) {
-        if (entity == control->buttons[i]) {
+        if (self == control->buttons[i]) {
             MenuSetup_Options_Unknown51(i);
             UIControl_MatchMenuTag("Controls KB");
             break;
@@ -1940,7 +1940,7 @@ void MenuSetup_Options_Unknown27(int32 status) { UIWaitSpinner_Wait2(); }
 
 void MenuSetup_Options_LaunchManual(void)
 {
-    RSDK.PlaySfx(UIWidgets->sfx_Accept, false, 0xFF);
+    RSDK.PlaySfx(UIWidgets->sfxAccept, false, 0xFF);
     APICallback_LaunchManual();
 }
 
@@ -1972,9 +1972,9 @@ void MenuSetup_Options_ShaderIDChanged_CB(void)
 {
     RSDK_THIS(UIButton);
     EntityOptions *options = (EntityOptions *)globals->optionsRAM;
-    options->screenShader  = entity->selection;
+    options->screenShader  = self->selection;
     options->field_60      = true;
-    RSDK.SetSettingsValue(SETTINGS_SHADERID, entity->selection);
+    RSDK.SetSettingsValue(SETTINGS_SHADERID, self->selection);
     Options->state = 1;
 }
 
@@ -1983,11 +1983,11 @@ void MenuSetup_Options_WinSizeChanged_CB(void)
     RSDK_THIS(UIButton);
 
     EntityOptions *options = (EntityOptions *)globals->optionsRAM;
-    if (entity->selection != 4) {
-        RSDK.SetSettingsValue(SETTINGS_WINDOW_WIDTH, 424 * (entity->selection + 1));
-        RSDK.SetSettingsValue(SETTINGS_WINDOW_HEIGHT, SCREEN_YSIZE * (entity->selection + 1));
+    if (self->selection != 4) {
+        RSDK.SetSettingsValue(SETTINGS_WINDOW_WIDTH, 424 * (self->selection + 1));
+        RSDK.SetSettingsValue(SETTINGS_WINDOW_HEIGHT, SCREEN_YSIZE * (self->selection + 1));
 
-        options->windowSize = entity->selection;
+        options->windowSize = self->selection;
         Options->state      = 1;
     }
 }
@@ -1997,8 +1997,8 @@ void MenuSetup_Options_BorderedChanged_CB(void)
     RSDK_THIS(UIButton);
     EntityOptions *options = (EntityOptions *)globals->optionsRAM;
 
-    options->windowBorder = entity->selection;
-    RSDK.SetSettingsValue(SETTINGS_BORDERED, entity->selection);
+    options->windowBorder = self->selection;
+    RSDK.SetSettingsValue(SETTINGS_BORDERED, self->selection);
     RSDK.UpdateWindow();
     Options->state = 1;
 }
@@ -2008,7 +2008,7 @@ void MenuSetup_Options_FullscreenChanged_CB(void)
     RSDK_THIS(UIButton);
     EntityOptions *options = (EntityOptions *)globals->optionsRAM;
 
-    options->windowed = entity->selection ^ 1;
+    options->windowed = self->selection ^ 1;
     RSDK.SetSettingsValue(SETTINGS_WINDOWED, options->windowed);
     RSDK.UpdateWindow();
     Options->state = 1;
@@ -2019,8 +2019,8 @@ void MenuSetup_Options_VSyncChanged_CB(void)
     RSDK_THIS(UIButton);
     EntityOptions *options = (EntityOptions *)globals->optionsRAM;
 
-    options->vSync = entity->selection;
-    RSDK.SetSettingsValue(SETTINGS_VSYNC, entity->selection);
+    options->vSync = self->selection;
+    RSDK.SetSettingsValue(SETTINGS_VSYNC, self->selection);
     Options->state = 1;
 }
 
@@ -2029,8 +2029,8 @@ void MenuSetup_Options_TripleBufferedChanged_CB(void)
     RSDK_THIS(UIButton);
     EntityOptions *options = (EntityOptions *)globals->optionsRAM;
 
-    options->tripleBuffering = entity->selection;
-    RSDK.SetSettingsValue(SETTINGS_TRIPLEBUFFERED, entity->selection);
+    options->tripleBuffering = self->selection;
+    RSDK.SetSettingsValue(SETTINGS_TRIPLEBUFFERED, self->selection);
     Options->state = 1;
 }
 
@@ -2042,43 +2042,43 @@ void MenuSetup_Options_SliderChanged_CB(void)
     // what the hell is up with this???????
     // it'd only ever be 0 or 1 why are F1,F2,F4,F5 & FC options?????
     // this is a CB for the slider why are the boolean values here???
-    bool32 value = entity->frameID != 1;
+    bool32 value = self->frameID != 1;
     switch (value) {
         case 0xF1:
-            options->windowed = entity->sliderPos;
+            options->windowed = self->sliderPos;
             RSDK.SetSettingsValue(SETTINGS_WINDOWED, options->windowed);
             Options->state = 1;
             break;
         case 0xF2:
-            options->windowBorder = entity->sliderPos;
+            options->windowBorder = self->sliderPos;
             RSDK.SetSettingsValue(SETTINGS_BORDERED, options->windowBorder);
             Options->state = 1;
             break;
         case 0xF4:
-            options->vSync = entity->sliderPos;
+            options->vSync = self->sliderPos;
             RSDK.SetSettingsValue(SETTINGS_VSYNC, options->vSync);
             Options->state = 1;
             break;
         case 0xF5:
-            options->tripleBuffering = entity->sliderPos;
+            options->tripleBuffering = self->sliderPos;
             RSDK.SetSettingsValue(SETTINGS_TRIPLEBUFFERED, options->tripleBuffering);
             Options->state = 1;
             break;
         case 0xFC:
-            options->screenShader = entity->sliderPos;
+            options->screenShader = self->sliderPos;
             options->field_60     = true;
             RSDK.SetSettingsValue(SETTINGS_SHADERID, options->screenShader);
             RSDK.UpdateWindow();
             Options->state = 1;
             break;
         case 0:
-            options->volMusic = entity->sliderPos;
+            options->volMusic = self->sliderPos;
             options->field_68 = 1;
             RSDK.SetSettingsValue(SETTINGS_STREAM_VOL, options->volMusic);
             Options->state = 1;
             break;
         case 1:
-            options->volSfx   = entity->sliderPos;
+            options->volSfx   = self->sliderPos;
             options->field_70 = true;
             RSDK.SetSettingsValue(SETTINGS_SFX_VOL, options->volSfx);
             Options->state = 1;

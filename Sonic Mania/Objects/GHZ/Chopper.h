@@ -3,14 +3,16 @@
 
 #include "SonicMania.h"
 
+typedef enum { CHOPPER_JUMP, CHOPPER_SWIM } ChopperTypes;
+
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    Hitbox hitbox;
-    Hitbox hitbox2;
-    Hitbox hitbox3;
-    Hitbox hitbox4;
-    uint16 spriteIndex;
+    Hitbox hitboxJump;
+    Hitbox hitboxSwim;
+    Hitbox hitboxRange;
+    Hitbox hitboxWater;
+    uint16 aniFrames;
 } ObjectChopper;
 
 // Entity Class
@@ -46,12 +48,14 @@ void Chopper_DebugDraw(void);
 void Chopper_DebugSpawn(void);
 
 void Chopper_CheckOnScreen(void);
-void Chopper_Unknown3(void);
-void Chopper_Unknown4(void);
-void Chopper_Unknown5(void);
-void Chopper_Unknown6(void);
-void Chopper_Unknown7(void);
-void Chopper_CheckPlayerCollisions(void);
-void Chopper_CheckPlayerCollisions2(void);
+void Chopper_CheckPlayerCollisions_Jump(void);
+void Chopper_CheckPlayerCollisions_Swim(void);
+
+//States
+void Chopper_State_Setup(void);
+void Chopper_State_Jump(void);
+void Chopper_State_Swim(void);
+void Chopper_State_ChargeDelay(void);
+void Chopper_State_Charge(void);
 
 #endif //!OBJ_CHOPPER_H

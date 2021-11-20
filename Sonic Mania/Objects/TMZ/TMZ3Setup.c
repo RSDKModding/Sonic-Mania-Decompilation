@@ -43,8 +43,8 @@ void TMZ3Setup_StageLoad(void)
     RSDK.SetDrawLayerProperties(1, false, TMZ3Setup_DrawLayerCB_B);
 }
 
-void TMZ3Setup_DrawLayerCB_A(void) { RSDK.SetActivePalette(1, 0, RSDK_screens->height); }
-void TMZ3Setup_DrawLayerCB_B(void) { RSDK.SetActivePalette(0, 0, RSDK_screens->height); }
+void TMZ3Setup_DrawLayerCB_A(void) { RSDK.SetActivePalette(1, 0, ScreenInfo->height); }
+void TMZ3Setup_DrawLayerCB_B(void) { RSDK.SetActivePalette(0, 0, ScreenInfo->height); }
 
 void TMZ3Setup_EditorDraw(void) {}
 

@@ -3,13 +3,21 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    COLLAPSEPLAT_LEFT,
+    COLLAPSEPLAT_RIGHT,
+    COLLAPSEPLAT_CENTER,
+    COLLAPSEPLAT_LR,
+    COLLAPSEPLAT_PLAYER,
+} CollapsingPlatformTypes;
+
 // Object Class
 typedef struct {
     RSDK_OBJECT
     uint8 shift;
     Animator animator;
-    uint16 spriteIndex;
-    uint16 sfx_Crumble;
+    uint16 aniFrames;
+    uint16 sfxCrumble;
 } ObjectCollapsingPlatform;
 
 // Entity Class
@@ -23,7 +31,7 @@ typedef struct {
     int32 delay;
     bool32 eventOnly;
     bool32 mightyOnly;
-    int32 field_78;
+    int32 unused1;
     int32 collapseDelay;
     uint16 storedTiles[256];
     Hitbox hitbox;

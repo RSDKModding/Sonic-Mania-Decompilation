@@ -10,9 +10,9 @@ typedef struct {
     RSDK_OBJECT
     Hitbox hitbox;
     Hitbox coconutHitbox;
-    Animator bodyAnimator;
+    Animator armAnimator;
     Animator tailAnimator;
-    Animator animator;
+    Animator coconutAnimator;
     uint16 aniFrames;
 #if RETRO_USE_PLUS
     uint16 sfxDrop;
@@ -26,20 +26,20 @@ typedef struct {
     int32 timer;
     int32 activeParts;
     int32 currentAngle;
-    void (*bodyStates[MonkeyDude_MaxBodyParts])(void);
+    StateMachine(bodyStates[MonkeyDude_MaxBodyParts]);
     int32 bodyAngles[MonkeyDude_MaxBodyParts];
     int32 bodyFlags[MonkeyDude_MaxBodyParts];
     int32 bodyTimers[MonkeyDude_MaxBodyParts];
     uint8 bodyPartID;
     Vector2 startPos;
     uint8 startDir;
-    int32 drawY;
+    int32 armY;
     int32 moveCount;
     int32 nummoves;
     int32 throwCount;
     int32 angleSpeed;
-    Animator animator;
-    Animator handData;
+    Animator bodyAnimator;
+    Animator handAnimator;
     int32 coconutFrame;
 } EntityMonkeyDude;
 
@@ -66,11 +66,11 @@ void MonkeyDude_DebugSpawn(void);
 void MonkeyDude_State_Setup(void);
 void MonkeyDude_HandleBodyPart(void);
 void MonkeyDude_HandleStates(void);
-void MonkeyDude_State2(void);
-void MonkeyDude_State3(void);
-void MonkeyDude_State4(void);
-void MonkeyDude_State_BodyUnknown(void);
-void MonkeyDude_State_BodyUnknown2(void);
+void MonkeyDude_State_Laugh(void);
+void MonkeyDude_State_MoveArm(void);
+void MonkeyDude_State_Body(void);
+void MonkeyDude_StateBody_ArmRaise(void);
+void MonkeyDude_StateBody_Throw(void);
 #if RETRO_USE_PLUS
 void MonkeyDude_State_Coconut(void);
 #endif

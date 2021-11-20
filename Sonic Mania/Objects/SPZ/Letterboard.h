@@ -16,7 +16,7 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    bool32 controller;
+    bool32 ControllerInfo;
     uint8 letterID;
     int32 spinSpeed;
     int32 timer;

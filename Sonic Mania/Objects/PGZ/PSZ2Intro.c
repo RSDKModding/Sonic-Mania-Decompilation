@@ -8,9 +8,9 @@ void PSZ2Intro_Update(void)
     void *states[] = { PSZ2Intro_CutsceneState_Unknown1, PSZ2Intro_CutsceneState_Unknown2, PSZ2Intro_CutsceneState_Unknown3,
                        PSZ2Intro_CutsceneState_Unknown4, NULL };
 
-    entity->activated = true;
-    CutsceneSeq_StartSequence((Entity *)entity, states);
-    entity->active = ACTIVE_NEVER;
+    self->activated = true;
+    CutsceneSeq_StartSequence((Entity *)self, states);
+    self->active = ACTIVE_NEVER;
 }
 
 void PSZ2Intro_LateUpdate(void) {}
@@ -22,9 +22,9 @@ void PSZ2Intro_Draw(void) {}
 void PSZ2Intro_Create(void *data)
 {
     RSDK_THIS(PSZ2Intro);
-    INIT_ENTITY(entity);
-    CutsceneRules_SetupEntity(entity, &entity->size, &entity->hitbox);
-    entity->active = ACTIVE_BOUNDS;
+    INIT_ENTITY(self);
+    CutsceneRules_SetupEntity(self, &self->size, &self->hitbox);
+    self->active = ACTIVE_BOUNDS;
 }
 
 void PSZ2Intro_StageLoad(void)
@@ -57,18 +57,18 @@ bool32 PSZ2Intro_CutsceneState_Unknown1(EntityCutsceneSeq *host)
         if (player2->objectID == Player->objectID)
             player2->pushing = false;
     }
-    if (host->field_6C[0]) {
-        if (host->timer - host->field_68 == 30) {
+    if (host->values[0]) {
+        if (host->timer - host->storedValue2 == 30) {
             ActClear->actID = 1;
             post->state     = SignPost_State_Fall;
             post->active    = ACTIVE_NORMAL;
-            RSDK.PlaySfx(SignPost->sfx_Twinkle, false, 255);
+            RSDK.PlaySfx(SignPost->sfxTwinkle, false, 255);
             return true;
         }
     }
     else if (!fxFade->timer) {
-        host->field_6C[0] = 1;
-        host->field_68    = host->timer;
+        host->values[0] = 1;
+        host->storedValue2    = host->timer;
         foreach_all(SignPost, post)
         {
             PSZ2Intro->signPost = (Entity *)post;
@@ -98,7 +98,7 @@ bool32 PSZ2Intro_CutsceneState_Unknown3(EntityCutsceneSeq *host)
         RSDK.GetLayerSize(Zone->fgLow, &size, true);
         Zone->screenBoundsR1[0] = size.x;
         Zone->screenBoundsR1[1] = size.x;
-        RSDK.SetSpriteAnimation(player1->spriteIndex, ANI_IDLE, &player1->playerAnimator, true, 0);
+        RSDK.SetSpriteAnimation(player1->aniFrames, ANI_IDLE, &player1->animator, true, 0);
         player1->state      = Player_State_Ground;
         player1->up         = false;
         player1->stateInput = StateMachine_None;
@@ -108,7 +108,7 @@ bool32 PSZ2Intro_CutsceneState_Unknown3(EntityCutsceneSeq *host)
         player1->left      = false;
         player1->down      = false;
         if (player2->objectID == Player->objectID) {
-            RSDK.SetSpriteAnimation(player2->spriteIndex, ANI_IDLE, &player1->playerAnimator, true, 0);
+            RSDK.SetSpriteAnimation(player2->aniFrames, ANI_IDLE, &player1->animator, true, 0);
             player2->state      = Player_State_Ground;
             player2->up         = false;
             player2->stateInput = Player_ProcessP2Input_AI;
@@ -138,7 +138,7 @@ bool32 PSZ2Intro_CutsceneState_Unknown4(EntityCutsceneSeq *host)
     RSDK_GET_PLAYER(player1, player2, camera);
     unused(camera);
 
-    if (RSDK_screens->position.x < Zone->screenBoundsL1[0]) {
+    if (ScreenInfo->position.x < Zone->screenBoundsL1[0]) {
         if (player1->groundVel < 0x20000)
             player1->groundVel = 0x20000;
         if (player2->objectID == Player->objectID) {
@@ -152,8 +152,8 @@ bool32 PSZ2Intro_CutsceneState_Unknown4(EntityCutsceneSeq *host)
         foreach_all(TitleCard, titleCard)
         {
             titleCard->active    = ACTIVE_NORMAL;
-            titleCard->state     = TitleCard_Unknown6;
-            titleCard->stateDraw = TitleCard_StateDraw_Default;
+            titleCard->state     = TitleCard_State_Initial;
+            titleCard->stateDraw = TitleCard_Draw_Default;
             foreach_break;
         }
         Music_PlayTrack(TRACK_STAGE);
@@ -166,7 +166,7 @@ bool32 PSZ2Intro_CutsceneState_Unknown4(EntityCutsceneSeq *host)
 void PSZ2Intro_EditorDraw(void)
 {
     RSDK_THIS(PSZ2Outro);
-    CutsceneRules_DrawCutsceneBounds(entity, &entity->size);
+    CutsceneRules_DrawCutsceneBounds(self, &self->size);
 }
 
 void PSZ2Intro_EditorLoad(void) {}

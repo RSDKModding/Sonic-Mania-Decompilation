@@ -4,21 +4,21 @@ ObjectGHZCutsceneST *GHZCutsceneST;
 
 void GHZCutsceneST_Update(void)
 {
-    void *states[5] = { GHZCutsceneST_CutsceneState_Unknown1, GHZCutsceneST_CutsceneState_Unknown2, GHZCutsceneST_CutsceneState_Unknown3,
-                        GHZCutsceneST_CutsceneState_LoadNextStage, NULL };
+    void *states[5] = { GHZCutsceneST_Cutscene_FadeIn, GHZCutsceneST_Cutscene_FinishRubyWarp, GHZCutsceneST_Cutscene_ExitHBH,
+                        GHZCutsceneST_Cutscene_SetupGHZ1, NULL };
 
     RSDK_THIS(GHZCutsceneST);
-    if (!entity->activated) {
+    if (!self->activated) {
         foreach_active(Player, player)
         {
-            if (Player_CheckCollisionTouch(player, entity, &entity->hitbox) && !player->sidekick) {
-                CutsceneSeq_StartSequence((Entity *)entity, states);
+            if (Player_CheckCollisionTouch(player, self, &self->hitbox) && !player->sidekick) {
+                CutsceneSeq_StartSequence((Entity *)self, states);
                 if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->objectID) {
                     EntityCutsceneSeq *cutsceneSeq = RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq);
                     cutsceneSeq->skipType         = SKIPTYPE_CALLBACK;
                     cutsceneSeq->skipCallback      = GHZCutsceneST_SkipCB;
                 }
-                entity->activated = true;
+                self->activated = true;
             }
         }
     }
@@ -33,14 +33,14 @@ void GHZCutsceneST_Draw(void) {}
 void GHZCutsceneST_Create(void *data)
 {
     RSDK_THIS(GHZCutsceneST);
-    if (!RSDK_sceneInfo->inEditor) {
-        INIT_ENTITY(entity);
-        CutsceneRules_SetupEntity(entity, &entity->size, &entity->hitbox);
-        entity->active = ACTIVE_BOUNDS;
+    if (!SceneInfo->inEditor) {
+        INIT_ENTITY(self);
+        CutsceneRules_SetupEntity(self, &self->size, &self->hitbox);
+        self->active = ACTIVE_BOUNDS;
 
         GHZCutsceneST_SetupObjects();
 
-        RSDK_sceneInfo->timeEnabled = false;
+        SceneInfo->timeEnabled = false;
     }
 }
 
@@ -72,18 +72,29 @@ void GHZCutsceneST_SetupObjects(void)
     foreach_all(FXRuby, fxRuby)
     {
         GHZCutsceneST->fxRuby  = (Entity *)fxRuby;
-        fxRuby->state          = 0;
-        fxRuby->fadeBlack      = 512;
-        fxRuby->fadeWhite      = 512;
-        fxRuby->outerRadius    = RSDK_screens->width;
-        fxRuby->field_70      = 64;
+        fxRuby->state          = StateMachine_None;
+        fxRuby->fadeBlack      = 0x200;
+        fxRuby->fadeWhite      = 0x200;
+        fxRuby->outerRadius    = ScreenInfo->width;
+        fxRuby->timer      = 64;
         foreach_break;
     }
 
     foreach_all(CutsceneHBH, cutsceneHBH) { GHZCutsceneST->cutsceneHBH[cutsceneHBH->characterID] = (Entity *)cutsceneHBH; }
 }
 
-bool32 GHZCutsceneST_CutsceneState_Unknown1(EntityCutsceneSeq *host)
+void GHZCutsceneST_SkipCB(void)
+{
+#if RETRO_USE_PLUS
+    if (globals->gameMode == MODE_ENCORE)
+        RSDK.SetScene("Encore Mode", "Green Hill Zone+ 1");
+    else
+#endif
+        RSDK.SetScene("Mania Mode", "Green Hill Zone 1");
+}
+
+
+bool32 GHZCutsceneST_Cutscene_FadeIn(EntityCutsceneSeq *host)
 {
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     EntityPlayer *player2 = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
@@ -121,21 +132,21 @@ bool32 GHZCutsceneST_CutsceneState_Unknown1(EntityCutsceneSeq *host)
         EntityPlayer *player = RSDK_GET_ENTITY(id++, Player);
         if (!player || player->objectID == TYPE_BLANK)
             break;
-        RSDK.SetSpriteAnimation(player->spriteIndex, ANI_FAN, &player->playerAnimator, 0, 0);
+        RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->animator, 0, 0);
         player->position.x += (player->position.x - player->position.x) >> 3;
-        player->position.y += (0xA00 * RSDK.Sin256(2 * (host->timer + angle - host->field_68)) + ruby->position.y - player->position.y) >> 3;
+        player->position.y += (0xA00 * RSDK.Sin256(2 * (host->timer + angle - host->storedValue2)) + ruby->position.y - player->position.y) >> 3;
         player->state = Player_State_None;
     }
     return false;
 }
-bool32 GHZCutsceneST_CutsceneState_Unknown2(EntityCutsceneSeq *host)
+bool32 GHZCutsceneST_Cutscene_FinishRubyWarp(EntityCutsceneSeq *host)
 {
     EntityPlayer *player1   = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     EntityCamera *camera    = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
     EntityPhantomRuby *ruby = (EntityPhantomRuby *)GHZCutsceneST->phantomRuby;
     EntityFXRuby *fxRuby    = (EntityFXRuby *)GHZCutsceneST->fxRuby;
     if (!host->timer)
-        fxRuby->state = FXRuby_Unknown4;
+        fxRuby->state = FXRuby_State_ShrinkRing;
 
     EntityPlayer **curPlayer = &player1;
     if (fxRuby->outerRadius <= 0) {
@@ -144,9 +155,9 @@ bool32 GHZCutsceneST_CutsceneState_Unknown2(EntityCutsceneSeq *host)
             EntityPlayer *player = RSDK_GET_ENTITY(id++, Player);
             if (!player || player->objectID == TYPE_BLANK)
                 break;
-            RSDK.SetSpriteAnimation(player->spriteIndex, ANI_FAN, &player->playerAnimator, false, 0);
+            RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->animator, false, 0);
             int32 x              = (player->position.x - player->position.x) >> 3;
-            int32 y              = (0xA00 * RSDK.Sin256(2 * (angle + host->timer - host->field_68)) + ruby->position.y - player->position.y) >> 3;
+            int32 y              = (0xA00 * RSDK.Sin256(2 * (angle + host->timer - host->storedValue2)) + ruby->position.y - player->position.y) >> 3;
             player->velocity.y = (y >> 8) * (y >> 8);
             player->velocity.x = (x >> 8) * (x >> 8);
             player->state      = Player_State_Air;
@@ -154,7 +165,7 @@ bool32 GHZCutsceneST_CutsceneState_Unknown2(EntityCutsceneSeq *host)
             player->camera     = NULL;
             ++curPlayer;
         }
-        host->field_6C[0] = 1;
+        host->values[0] = 1;
         Camera_SetupLerp(0, 0, camera->position.x, camera->position.y, 0);
         return true;
     }
@@ -164,9 +175,9 @@ bool32 GHZCutsceneST_CutsceneState_Unknown2(EntityCutsceneSeq *host)
             EntityPlayer *player = RSDK_GET_ENTITY(id++, Player);
             if (!player || player->objectID == TYPE_BLANK)
                 break;
-            RSDK.SetSpriteAnimation(player->spriteIndex, ANI_FAN, &player->playerAnimator, 0, 0);
+            RSDK.SetSpriteAnimation(player->aniFrames, ANI_FAN, &player->animator, 0, 0);
             player->position.x += (player->position.x - player->position.x) >> 3;
-            player->position.y += (0xA00 * RSDK.Sin256(2 * (host->timer + angle - host->field_68)) + ruby->position.y - player->position.y) >> 3;
+            player->position.y += (0xA00 * RSDK.Sin256(2 * (host->timer + angle - host->storedValue2)) + ruby->position.y - player->position.y) >> 3;
             player->state = Player_State_None;
             ++curPlayer;
         }
@@ -174,7 +185,7 @@ bool32 GHZCutsceneST_CutsceneState_Unknown2(EntityCutsceneSeq *host)
     }
     return false;
 }
-bool32 GHZCutsceneST_CutsceneState_Unknown3(EntityCutsceneSeq *host)
+bool32 GHZCutsceneST_Cutscene_ExitHBH(EntityCutsceneSeq *host)
 {
     RSDK_GET_PLAYER(player1, player2, camera);
     unused(player2);
@@ -211,7 +222,7 @@ bool32 GHZCutsceneST_CutsceneState_Unknown3(EntityCutsceneSeq *host)
                         break;
                     case HBH_SHINOBI:
                         if (host->timer == 60) {
-                            RSDK.SetSpriteAnimation(hbh->spriteIndex, 3, &hbh->animator, true, 0);
+                            RSDK.SetSpriteAnimation(hbh->aniFrames, 3, &hbh->animator, true, 0);
                             RSDK.SetSpriteAnimation(0xFFFF, 0, &hbh->animator2, true, 0);
                         }
                         hbh->position.x -= 0x4000;
@@ -247,7 +258,7 @@ bool32 GHZCutsceneST_CutsceneState_Unknown3(EntityCutsceneSeq *host)
     return false;
 }
 
-bool32 GHZCutsceneST_CutsceneState_LoadNextStage(EntityCutsceneSeq *host)
+bool32 GHZCutsceneST_Cutscene_SetupGHZ1(EntityCutsceneSeq *host)
 {
     RSDK_THIS(GHZCutsceneST);
 #if RETRO_USE_PLUS
@@ -256,30 +267,20 @@ bool32 GHZCutsceneST_CutsceneState_LoadNextStage(EntityCutsceneSeq *host)
     else
 #endif
         RSDK.SetScene("Mania Mode", "");
-    globals->parallaxOffset[0] = entity->field_68;
+    globals->parallaxOffset[0] = self->field_68;
     EntityPlayer *player       = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     player->onGround           = true;
     player->state              = Player_State_Ground;
-    Zone_StoreEntities((RSDK_screens->position.x + RSDK_screens->centerX) << 16, (RSDK_screens->height + RSDK_screens->position.y) << 16);
+    Zone_StoreEntities((ScreenInfo->position.x + ScreenInfo->centerX) << 16, (ScreenInfo->height + ScreenInfo->position.y) << 16);
     RSDK.LoadScene();
     return true;
-}
-
-void GHZCutsceneST_SkipCB(void)
-{
-#if RETRO_USE_PLUS
-    if (globals->gameMode == MODE_ENCORE)
-        RSDK.SetScene("Encore Mode", "Green Hill Zone+ 1");
-    else
-#endif
-        RSDK.SetScene("Mania Mode", "Green Hill Zone 1");
 }
 
 #if RETRO_INCLUDE_EDITOR
 void GHZCutsceneST_EditorDraw(void)
 {
     RSDK_THIS(GHZCutsceneST);
-    CutsceneRules_DrawCutsceneBounds(entity, &entity->size);
+    CutsceneRules_DrawCutsceneBounds(self, &self->size);
 }
 
 void GHZCutsceneST_EditorLoad(void) {}

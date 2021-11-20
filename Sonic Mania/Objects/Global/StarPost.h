@@ -15,9 +15,9 @@ typedef struct {
     uint8 storedSeconds;
     uint8 storedMS;
     uint8 activePlayers;
-    uint16 spriteIndex;
-    uint16 sfx_StarPost;
-    uint16 sfx_Warp;
+    uint16 aniFrames;
+    uint16 sfxStarPost;
+    uint16 sfxWarp;
 } ObjectStarPost;
 
 // Entity Class
@@ -34,9 +34,9 @@ typedef struct {
     int32 starAngle;
     int32 starOffset;
     Vector2 ballPos;
-    Animator poleData;
-    Animator ballData;
-    Animator starData;
+    Animator poleAnimator;
+    Animator ballAnimator;
+    Animator starAnimator;
     Hitbox starHitbox;
     uint8 activated;
 } EntityStarPost;

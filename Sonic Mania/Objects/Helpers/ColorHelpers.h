@@ -30,6 +30,6 @@ void ColorHelpers_EditorLoad(void);
 void ColorHelpers_Serialize(void);
 
 // Extra Entity Functions
-
+uint16 ColorHelpers_PackRGB(uint8 r, uint8 g, uint8 b);
 
 #endif //!OBJ_COLORHELPERS_H

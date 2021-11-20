@@ -7,18 +7,18 @@ void LightBarrier_Update(void) {}
 void LightBarrier_LateUpdate(void)
 {
     RSDK_THIS(LightBarrier);
-    if (entity->enabled) {
-        if (entity->alphaTimer < 160)
-            entity->alphaTimer += 4;
+    if (self->enabled) {
+        if (self->alphaTimer < 160)
+            self->alphaTimer += 4;
 
         foreach_active(Player, player)
         {
-            if (entity->position.x > (RSDK_screens->position.x + RSDK_screens->centerX) << 16 || player->velocity.x < 0) {
-                Player_CheckCollisionBox(player, entity, &entity->hitbox);
+            if (self->position.x > (ScreenInfo->position.x + ScreenInfo->centerX) << 16 || player->velocity.x < 0) {
+                Player_CheckCollisionBox(player, self, &self->hitbox);
             }
         }
-        entity->timer = (entity->timer + 2) & 0x3F;
-        entity->alpha = (RSDK.Sin256(2 * Zone->timer) >> 3) + entity->alphaTimer;
+        self->timer = (self->timer + 2) & 0x3F;
+        self->alpha = (RSDK.Sin256(2 * Zone->timer) >> 3) + self->alphaTimer;
     }
 }
 
@@ -27,30 +27,30 @@ void LightBarrier_StaticUpdate(void) {}
 void LightBarrier_Draw(void)
 {
     RSDK_THIS(LightBarrier);
-    Vector2 drawPos   = entity->position;
-    entity->inkEffect = INK_NONE;
-    entity->direction = FLIP_NONE;
+    Vector2 drawPos   = self->position;
+    self->inkEffect = INK_NONE;
+    self->direction = FLIP_NONE;
 
-    drawPos.y += entity->size << 15;
-    RSDK.DrawSprite(&entity->animator1, &drawPos, false);
+    drawPos.y += self->size << 15;
+    RSDK.DrawSprite(&self->animator1, &drawPos, false);
 
-    drawPos.y -= entity->size << 16;
-    entity->direction = FLIP_Y;
-    RSDK.DrawSprite(&entity->animator1, &drawPos, false);
+    drawPos.y -= self->size << 16;
+    self->direction = FLIP_Y;
+    RSDK.DrawSprite(&self->animator1, &drawPos, false);
 
-    entity->direction = FLIP_NONE;
-    if (entity->enabled) {
-        entity->inkEffect  = INK_ADD;
-        int32 timer          = entity->timer;
+    self->direction = FLIP_NONE;
+    if (self->enabled) {
+        self->inkEffect  = INK_ADD;
+        int32 timer          = self->timer;
         SpriteFrame *frame = RSDK.GetFrame(LightBarrier->aniFrames, 0, 1);
         drawPos.y += 0x80000;
-        for (int32 i = 8; i < entity->size - 8;) {
+        for (int32 i = 8; i < self->size - 8;) {
             int32 height = 64 - timer;
-            if (64 - timer + i > (entity->size - 8))
-                height = (entity->size - 8) - i;
-            frame->sprY   = timer + (entity->sprY & 0xFFFF);
+            if (64 - timer + i > (self->size - 8))
+                height = (self->size - 8) - i;
+            frame->sprY   = timer + (self->sprY & 0xFFFF);
             frame->height = height;
-            RSDK.DrawSprite(&entity->animator2, &drawPos, false);
+            RSDK.DrawSprite(&self->animator2, &drawPos, false);
 
             i += height;
             drawPos.y += height << 16;
@@ -63,23 +63,23 @@ void LightBarrier_Create(void *data)
 {
     RSDK_THIS(LightBarrier);
 
-    entity->drawFX = FX_FLIP;
-    if (!RSDK_sceneInfo->inEditor) {
-        entity->active        = ACTIVE_BOUNDS;
-        entity->visible       = true;
-        entity->drawOrder     = Zone->drawOrderHigh;
-        entity->updateRange.y = entity->size << 15;
-        entity->updateRange.x = 0x800000;
-        RSDK.SetSpriteAnimation(LightBarrier->aniFrames, 0, &entity->animator1, true, 0);
-        RSDK.SetSpriteAnimation(LightBarrier->aniFrames, 0, &entity->animator2, true, 1);
+    self->drawFX = FX_FLIP;
+    if (!SceneInfo->inEditor) {
+        self->active        = ACTIVE_BOUNDS;
+        self->visible       = true;
+        self->drawOrder     = Zone->drawOrderHigh;
+        self->updateRange.y = self->size << 15;
+        self->updateRange.x = 0x800000;
+        RSDK.SetSpriteAnimation(LightBarrier->aniFrames, 0, &self->animator1, true, 0);
+        RSDK.SetSpriteAnimation(LightBarrier->aniFrames, 0, &self->animator2, true, 1);
         SpriteFrame *frame    = RSDK.GetFrame(LightBarrier->aniFrames, 0, 1);
-        entity->sprY          = frame->sprY;
-        entity->hitbox.left   = -8;
-        entity->hitbox.top    = -(entity->size >> 1);
-        entity->hitbox.right  = 8;
-        entity->hitbox.bottom = entity->size >> 1;
-        if (entity->enabled)
-            entity->alphaTimer = 160;
+        self->sprY          = frame->sprY;
+        self->hitbox.left   = -8;
+        self->hitbox.top    = -(self->size >> 1);
+        self->hitbox.right  = 8;
+        self->hitbox.bottom = self->size >> 1;
+        if (self->enabled)
+            self->alphaTimer = 160;
     }
 }
 

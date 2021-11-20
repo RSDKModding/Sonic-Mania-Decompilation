@@ -6,12 +6,12 @@ void SpiralPlatform_Update(void)
 {
     RSDK_THIS(SpiralPlatform);
 
-    entity->collision = PLATFORM_C_2;
+    self->collision = PLATFORM_C_USE_TILES;
     Platform_Update();
 
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionBox(player, entity, &SpiralPlatform->hitbox) == 4) {
+        if (Player_CheckCollisionBox(player, self, &SpiralPlatform->hitbox) == C_BOTTOM) {
             if (player->onGround && !player->collisionMode)
                 player->hurtFlag = 1;
         }
@@ -25,29 +25,29 @@ void SpiralPlatform_StaticUpdate(void) {}
 void SpiralPlatform_Draw(void)
 {
     RSDK_THIS(SpiralPlatform);
-    RSDK.DrawTile(entity->tiles, entity->tileSize.x >> 20, entity->tileSize.y >> 20, &entity->drawPos, 0, false);
+    RSDK.DrawTile(self->tiles, self->tileSize.x >> 20, self->tileSize.y >> 20, &self->drawPos, NULL, false);
 }
 
 void SpiralPlatform_Create(void *data)
 {
     RSDK_THIS(SpiralPlatform);
-    entity->targetPos.x = 0x400000;
-    entity->targetPos.y = 0x280000;
-    entity->tileSize.x  = 0x600000;
-    entity->tileSize.y  = 0x300000;
+    self->targetPos.x = 0x400000;
+    self->targetPos.y = 0x280000;
+    self->tileSize.x  = 0x600000;
+    self->tileSize.y  = 0x300000;
     TilePlatform_Create(NULL);
 
-    if (!RSDK_sceneInfo->inEditor) {
-        entity->offRange.y <<= 10;
-        entity->drawPos.y += entity->offRange.x;
-        entity->hitbox.left += 17;
-        entity->hitbox.right -= 17;
-        entity->speed <<= 16;
-        entity->offRange.x <<= 10;
-        entity->fallY         = entity->offRange.x;
-        entity->active        = ACTIVE_XBOUNDS;
-        entity->updateRange.y = 0x800000 + entity->offRange.y;
-        entity->state         = SpiralPlatform_Unknown1;
+    if (!SceneInfo->inEditor) {
+        self->offRange.y <<= 10;
+        self->drawPos.y += self->offRange.x;
+        self->hitbox.left += 17;
+        self->hitbox.right -= 17;
+        self->speed <<= 16;
+        self->offRange.x <<= 10;
+        self->fallY         = self->offRange.x;
+        self->active        = ACTIVE_XBOUNDS;
+        self->updateRange.y = 0x800000 + self->offRange.y;
+        self->state         = SpiralPlatform_Unknown1;
     }
 }
 
@@ -63,12 +63,12 @@ void SpiralPlatform_Unknown1(void)
 {
     RSDK_THIS(SpiralPlatform);
 
-    entity->fallY += entity->speed;
-    entity->drawPos.y += entity->speed;
-    entity->velocity.y = entity->speed;
-    if ((entity->speed <= 0 && entity->fallY <= entity->offRange.y) || (entity->speed > 0 && entity->fallY >= entity->offRange.y)) {
-        entity->fallY     = 0;
-        entity->drawPos.y = entity->centerPos.y;
+    self->fallY += self->speed;
+    self->drawPos.y += self->speed;
+    self->velocity.y = self->speed;
+    if ((self->speed <= 0 && self->fallY <= self->offRange.y) || (self->speed > 0 && self->fallY >= self->offRange.y)) {
+        self->fallY     = 0;
+        self->drawPos.y = self->centerPos.y;
     }
 }
 

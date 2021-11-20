@@ -5,12 +5,27 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    Hitbox hitbox;
+    int32 field_C[5];
+    int32 field_20[5];
+    uint16 aniFrames;
+    bool32 greenScreenActive;
 } ObjectGreenScreen;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    StateMachine(state);
+    Vector2 paraOffset;
+    int32 paraYFactor;
+    bool32 paraPreview;
+    bool32 field_6C;
+    int32 field_70;
+    int32 field_74;
+    Vector2 startPos;
+    int32 field_80;
+    Animator animator;
 } EntityGreenScreen;
 
 // Object Struct
@@ -30,6 +45,8 @@ void GreenScreen_EditorLoad(void);
 void GreenScreen_Serialize(void);
 
 // Extra Entity Functions
-
+void GreenScreen_Unknown1(int fieldC, uint8 id, int a3, int a4);
+void GreenScreen_Unknown2(void);
+void GreenScreen_DrawSprites(void);
 
 #endif //!OBJ_GREENSCREEN_H

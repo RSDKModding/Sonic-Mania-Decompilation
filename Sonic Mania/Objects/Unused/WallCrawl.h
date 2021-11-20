@@ -6,10 +6,10 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    Hitbox hitboxBadnik;
-    Hitbox hitbox2;
-    Hitbox hitbox3;
-    Hitbox hitboxProjectile;
+    Hitbox hitbox;
+    Hitbox checkbox;
+    Hitbox attackbox;
+    Hitbox projectileHurtbox;
     uint16 aniFrames;
 } ObjectWallCrawl;
 

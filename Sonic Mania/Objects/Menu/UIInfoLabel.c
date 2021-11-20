@@ -13,16 +13,16 @@ void UIInfoLabel_Draw(void) { UIInfoLabel_DrawSprites(); }
 void UIInfoLabel_Create(void *data)
 {
     RSDK_THIS(UIInfoLabel);
-    entity->active        = ACTIVE_BOUNDS;
-    entity->drawOrder     = 2;
-    entity->visible       = true;
-    entity->drawFX        = FX_FLIP;
-    entity->updateRange.x = 0x800000;
-    entity->updateRange.y = 0x300000;
-    entity->width         = entity->size.y >> 0x10;
-    if (!RSDK_sceneInfo->inEditor) {
-        RSDK.SetSpriteAnimation(UIWidgets->labelSpriteIndex, 0, &entity->animator2, true, 0);
-        RSDK.SetSpriteString(UIWidgets->labelSpriteIndex, 0, &entity->text);
+    self->active        = ACTIVE_BOUNDS;
+    self->drawOrder     = 2;
+    self->visible       = true;
+    self->drawFX        = FX_FLIP;
+    self->updateRange.x = 0x800000;
+    self->updateRange.y = 0x300000;
+    self->width         = self->size.y >> 0x10;
+    if (!SceneInfo->inEditor) {
+        RSDK.SetSpriteAnimation(UIWidgets->labelSpriteIndex, 0, &self->animator2, true, 0);
+        RSDK.SetSpriteString(UIWidgets->labelSpriteIndex, 0, &self->text);
     }
 }
 
@@ -30,21 +30,21 @@ void UIInfoLabel_StageLoad(void) {}
 
 void UIInfoLabel_SetText(EntityUIInfoLabel *label, char *text)
 {
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         RSDK.SetText(&label->text, text, 0);
-        if (!RSDK_sceneInfo->inEditor) {
+        if (!SceneInfo->inEditor) {
             RSDK.SetSpriteAnimation(UIWidgets->labelSpriteIndex, 0, &label->animator2, true, 0);
             RSDK.SetSpriteString(UIWidgets->labelSpriteIndex, 0, &label->text);
         }
     }
 }
-void UIInfoLabel_SetString(EntityUIInfoLabel *entity, TextInfo *text)
+void UIInfoLabel_SetString(EntityUIInfoLabel *self, TextInfo *text)
 {
-    if (!RSDK_sceneInfo->inEditor) {
-        RSDK.CopyString(&entity->text, text);
-        if (!RSDK_sceneInfo->inEditor) {
-            RSDK.SetSpriteAnimation(UIWidgets->labelSpriteIndex, 0, &entity->animator2, true, 0);
-            RSDK.SetSpriteString(UIWidgets->labelSpriteIndex, 0, &entity->text);
+    if (!SceneInfo->inEditor) {
+        RSDK.CopyString(&self->text, text);
+        if (!SceneInfo->inEditor) {
+            RSDK.SetSpriteAnimation(UIWidgets->labelSpriteIndex, 0, &self->animator2, true, 0);
+            RSDK.SetSpriteString(UIWidgets->labelSpriteIndex, 0, &self->text);
         }
     }
 }
@@ -54,21 +54,21 @@ void UIInfoLabel_DrawSprites(void)
     RSDK_THIS(UIInfoLabel);
     Vector2 drawPos;
 
-    int32 size = (entity->size.y + entity->size.x) >> 16;
-    UIWidgets_Unknown7(entity->size.y >> 0x10, size, entity->width, 240, 240, 240, entity->position.x, entity->position.y);
-    drawPos.x = entity->position.x;
-    drawPos.y = entity->position.y;
-    UIWidgets_Unknown7(entity->size.y >> 0x10, size, entity->width, 0, 0, 0, entity->position.x, entity->position.y);
+    int32 size = (self->size.y + self->size.x) >> 16;
+    UIWidgets_DrawRhombus(self->size.y >> 0x10, size, self->width, 240, 240, 240, self->position.x, self->position.y);
+    drawPos.x = self->position.x;
+    drawPos.y = self->position.y;
+    UIWidgets_DrawRhombus(self->size.y >> 0x10, size, self->width, 0, 0, 0, self->position.x, self->position.y);
 
-    if (RSDK_sceneInfo->inEditor) {
-        RSDK.SetSpriteAnimation(UIInfoLabel->spriteIndex, 12, &entity->animator2, true, 2);
+    if (SceneInfo->inEditor) {
+        RSDK.SetSpriteAnimation(UIInfoLabel->aniFrames, 12, &self->animator2, true, 2);
         drawPos.y -= 0x40000;
-        RSDK.DrawSprite(&entity->animator2, &drawPos, false);
+        RSDK.DrawSprite(&self->animator2, &drawPos, false);
     }
     else {
         drawPos.y -= 0x10000;
-        drawPos.x -= RSDK.GetStringWidth(UIWidgets->labelSpriteIndex, 0, &entity->text, 0, entity->text.textLength, 0) << 15;
-        RSDK.DrawText(&entity->animator2, &drawPos, &entity->text, 0, entity->text.textLength, 0, 0, 0, 0, 0);
+        drawPos.x -= RSDK.GetStringWidth(UIWidgets->labelSpriteIndex, 0, &self->text, 0, self->text.textLength, 0) << 15;
+        RSDK.DrawText(&self->animator2, &drawPos, &self->text, 0, self->text.textLength, 0, 0, 0, 0, 0);
     }
 }
 
@@ -76,7 +76,7 @@ void UIInfoLabel_DrawSprites(void)
 void UIInfoLabel_EditorDraw(void)
 {
     RSDK_THIS(UIInfoLabel);
-    RSDK.SetSpriteAnimation(UIWidgets->labelSpriteIndex, 0, &entity->animator2, true, 0);
+    RSDK.SetSpriteAnimation(UIWidgets->labelSpriteIndex, 0, &self->animator2, true, 0);
 
     UIInfoLabel_DrawSprites();
 }

@@ -6,19 +6,19 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    int32 field_4;
-    int32 field_8;
-    uint16 spriteIndex;
-    uint16 sfx_Ring;
+    int32 unused1;
+    int32 unused2;
+    uint16 aniFrames;
+    uint16 sfxRing;
 } ObjectUFO_Ring;
 
 // Entity Class
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    int32 field_5C;
+    int32 unused1;
     int32 height;
-    int32 field_64;
+    int32 bounceVelocity;
     int32 worldX;
     int32 worldY;
     Animator animator;
@@ -44,8 +44,8 @@ void UFO_Ring_Serialize(void);
 void UFO_Ring_PlayRingSFX(void);
 void UFO_Ring_LoseRings(EntityUFO_Player *player);
 //States
-void UFO_Ring_Unknown2(void);
-void UFO_Ring_Unknown3(void);
-void UFO_Ring_Unknown4(void);
+void UFO_Ring_State_NormalRing(void);
+void UFO_Ring_State_Sparkle(void);
+void UFO_Ring_State_LoseRing(void);
 
 #endif //!OBJ_UFO_RING_H

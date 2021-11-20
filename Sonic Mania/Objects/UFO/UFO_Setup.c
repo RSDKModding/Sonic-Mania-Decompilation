@@ -6,10 +6,10 @@ void UFO_Setup_Update(void)
 {
     RSDK_THIS(UFO_Setup);
 
-    StateMachine_Run(entity->state);
+    StateMachine_Run(self->state);
 
 #if RETRO_USE_PLUS
-    if (entity->state != UFO_Setup_Unknown12 && globals->gameMode < MODE_TIMEATTACK)
+    if (self->state != UFO_Setup_State_FinishFadeout && globals->gameMode < MODE_TIMEATTACK)
         ++SaveGame->saveRAM->zoneTimes[29];
 #endif
 }
@@ -24,25 +24,24 @@ void UFO_Setup_StaticUpdate(void)
         ++UFO_Setup->ringFrame;
         UFO_Setup->ringFrame &= 0xF;
     }
-    if (UFO_Setup->state)
-        UFO_Setup->state();
+    StateMachine_Run(UFO_Setup->deformCB);
 }
 
 void UFO_Setup_Draw(void)
 {
     RSDK_THIS(UFO_Setup);
-    RSDK.FillScreen(entity->fadeColour, entity->timer, entity->timer - 128, entity->timer - 256);
+    RSDK.FillScreen(self->fadeColour, self->timer, self->timer - 128, self->timer - 256);
 }
 
 void UFO_Setup_Create(void *data)
 {
     RSDK_THIS(UFO_Setup);
-    entity->active     = ACTIVE_NORMAL;
-    entity->visible    = true;
-    entity->drawOrder  = 15;
-    entity->fadeColour = 0xF0F0F0;
-    entity->timer      = 512;
-    entity->state      = UFO_Setup_Unknown11;
+    self->active     = ACTIVE_NORMAL;
+    self->visible    = true;
+    self->drawOrder  = 15;
+    self->fadeColour = 0xF0F0F0;
+    self->timer      = 512;
+    self->state      = UFO_Setup_State_ShowStartMessage;
 }
 
 void UFO_Setup_StageLoad(void)
@@ -59,10 +58,10 @@ void UFO_Setup_StageLoad(void)
     RSDK.SetDrawLayerProperties(1, false, UFO_Setup_DrawLayerCallback);
     RSDK.SetDrawLayerProperties(3, false, UFO_Setup_DrawLayerCallback);
     RSDK.SetDrawLayerProperties(4, true, NULL);
-    UFO_Setup->sfx_BlueSphere = RSDK.GetSFX("Special/BlueSphere2.wav");
-    UFO_Setup->sfx_SSExit     = RSDK.GetSFX("Special/SSExit.wav");
-    UFO_Setup->sfx_Emerald    = RSDK.GetSFX("Special/Emerald.wav");
-    UFO_Setup->sfx_Event      = RSDK.GetSFX("Special/Event.wav");
+    UFO_Setup->sfxBlueSphere = RSDK.GetSFX("Special/BlueSphere2.wav");
+    UFO_Setup->sfxSSExit     = RSDK.GetSFX("Special/SSExit.wav");
+    UFO_Setup->sfxEmerald    = RSDK.GetSFX("Special/Emerald.wav");
+    UFO_Setup->sfxEvent      = RSDK.GetSFX("Special/Event.wav");
     RSDK.CopyPalette(0, 0, 7, 0, 128);
     RSDK.CopyPalette(1, 96, 0, 96, 32);
     RSDK.SetLimitedFade(1, 0, 7, 36, 160, 255);
@@ -91,15 +90,15 @@ void UFO_Setup_StageLoad(void)
     }
 
     if (RSDK.CheckStageFolder("UFO3")) {
-        UFO_Setup->state = UFO_Setup_Unknown8;
+        UFO_Setup->deformCB = UFO_Setup_DeformCB_UFO3;
 
         int32 *deformData = RSDK.GetSceneLayer(0)->deformationData;
         for (int32 i = 0; i < 0x200; i += 0x10) {
             int32 val = RSDK.Rand(0, 4);
 
             int32 deformPos = i;
-            deformPos     = minVal(0x200, deformPos);
-            deformPos     = maxVal(0x00, deformPos);
+            deformPos       = minVal(0x200, deformPos);
+            deformPos       = maxVal(0x00, deformPos);
 
             int32 angle = 0;
             for (int32 d = 0; d < 0x10; ++d) {
@@ -114,8 +113,8 @@ void UFO_Setup_StageLoad(void)
             int32 val = RSDK.Rand(0, 4);
 
             int32 deformPos = i;
-            deformPos     = minVal(0x200, deformPos);
-            deformPos     = maxVal(0x00, deformPos);
+            deformPos       = minVal(0x200, deformPos);
+            deformPos       = maxVal(0x00, deformPos);
 
             int32 angle = 0;
             for (int32 d = 0; d < 0x10; ++d) {
@@ -128,10 +127,10 @@ void UFO_Setup_StageLoad(void)
     else {
         int32 *deformData = NULL;
         if (RSDK.CheckStageFolder("UFO4")) {
-            UFO_Setup->state = UFO_Setup_Unknown9;
-            TileLayer *bg    = RSDK.GetSceneLayer(0);
-            deformData       = bg->deformationData;
-            int32 angle        = 0;
+            UFO_Setup->deformCB = UFO_Setup_DeformCB_UFO4;
+            TileLayer *bg       = RSDK.GetSceneLayer(0);
+            deformData          = bg->deformationData;
+            int32 angle         = 0;
             for (int32 i = 0; i < 0x200; ++i) {
                 bg->deformationData[i] = 8 * RSDK.Sin1024(angle) >> 10;
                 angle += 8;
@@ -139,10 +138,10 @@ void UFO_Setup_StageLoad(void)
         }
         else {
             if (RSDK.CheckStageFolder("UFO5")) {
-                UFO_Setup->state = UFO_Setup_Unknown10;
-                TileLayer *bg    = RSDK.GetSceneLayer(0);
-                deformData       = bg->deformationData;
-                int32 angle        = 0;
+                UFO_Setup->deformCB = UFO_Setup_DeformCB_UFO5;
+                TileLayer *bg       = RSDK.GetSceneLayer(0);
+                deformData          = bg->deformationData;
+                int32 angle         = 0;
                 for (int32 i = 0; i < 0x200; ++i) {
                     bg->deformationData[i] = 8 * RSDK.Sin1024(angle) >> 10;
                     angle += 16;
@@ -154,26 +153,26 @@ void UFO_Setup_StageLoad(void)
             memcpy(&deformData[0x200], deformData, (0x200 * sizeof(int32)));
     }
 
-    int32 listPos = RSDK_sceneInfo->listPos;
+    int32 listPos = SceneInfo->listPos;
     RSDK.SetScene("Special Stage", "");
-    UFO_Setup->specialStageID = listPos - RSDK_sceneInfo->listPos;
+    UFO_Setup->specialStageID = listPos - SceneInfo->listPos;
     if (UFO_Setup->specialStageID >= 7) {
         UFO_Setup->specialStageID = UFO_Setup->specialStageID % 7;
         UFO_Setup->encoreStage    = true;
     }
-    RSDK_sceneInfo->listPos = listPos;
+    SceneInfo->listPos = listPos;
 }
 
 void UFO_Setup_DrawLayerCallback(void)
 {
-    RSDK.SetClipBounds(0, 0, 0, RSDK_screens->width, RSDK_screens->height);
-    RSDK.SetActivePalette(0, 0, RSDK_screens->height);
+    RSDK.SetClipBounds(0, 0, 0, ScreenInfo->width, ScreenInfo->height);
+    RSDK.SetActivePalette(0, 0, ScreenInfo->height);
 }
 
 void UFO_Setup_ScanlineCallback_Playfield(ScanlineInfo *scanlines)
 {
     EntityUFO_Camera *camera = RSDK_GET_ENTITY(SLOT_UFO_CAMERA, UFO_Camera);
-    RSDK.SetClipBounds(0, 0, camera->clipY, RSDK_screens->width, RSDK_screens->height);
+    RSDK.SetClipBounds(0, 0, camera->clipY, ScreenInfo->width, ScreenInfo->height);
     int32 sin  = RSDK.Sin1024(camera->angle) >> 2;
     int32 cos  = RSDK.Cos1024(camera->angle) >> 2;
     int32 sin2 = RSDK.Sin1024(-camera->angleX) >> 2;
@@ -185,15 +184,15 @@ void UFO_Setup_ScanlineCallback_Playfield(ScanlineInfo *scanlines)
         int32 div = sin2 + (cosVal >> 8);
         if (!div)
             div = 1;
-        int32 h               = camera->height / div;
+        int32 h             = camera->height / div;
         scanlines->deform.x = (-cos * h) >> 8;
         scanlines->deform.y = (sin * h) >> 8;
 
-        int32 val             = ((cos2 * h) >> 8) - (sin2 * ((i * h) >> 8) >> 8);
+        int32 val = ((cos2 * h) >> 8) - (sin2 * ((i * h) >> 8) >> 8);
         RSDK.SetActivePalette(clampVal(abs(val) >> 15, 0, 7), i + SCREEN_YCENTER, i + SCREEN_YCENTER + 1);
 
-        int32 px = sin * val - RSDK_screens->centerX * scanlines->deform.x;
-        int32 py = cos * val - RSDK_screens->centerX * scanlines->deform.y;
+        int32 px = sin * val - ScreenInfo->centerX * scanlines->deform.x;
+        int32 py = cos * val - ScreenInfo->centerX * scanlines->deform.y;
 
         scanlines->position.x = px + camera->position.x;
         scanlines->position.y = py + camera->position.y;
@@ -206,7 +205,7 @@ void UFO_Setup_ScanlineCallback_Playfield(ScanlineInfo *scanlines)
 void UFO_Setup_ScanlineCallback_3DFloor(ScanlineInfo *scanlines)
 {
     EntityUFO_Camera *camera = RSDK_GET_ENTITY(SLOT_UFO_CAMERA, UFO_Camera);
-    RSDK.SetClipBounds(0, 0, camera->clipY + 24, RSDK_screens->width, RSDK_screens->height);
+    RSDK.SetClipBounds(0, 0, camera->clipY + 24, ScreenInfo->width, ScreenInfo->height);
     int32 sin  = RSDK.Sin1024(camera->angle) >> 2;
     int32 cos  = RSDK.Cos1024(camera->angle) >> 2;
     int32 sin2 = RSDK.Sin1024(-camera->angleX) >> 2;
@@ -218,14 +217,14 @@ void UFO_Setup_ScanlineCallback_3DFloor(ScanlineInfo *scanlines)
         int32 div = sin2 + (cosVal >> 8);
         if (!div)
             div = 1;
-        int32 h               = (camera->height + 0x1000000) / div;
+        int32 h             = (camera->height + 0x1000000) / div;
         scanlines->deform.x = -(cos * h) >> 8;
         scanlines->deform.y = (sin * h) >> 8;
-        int32 val             = ((cos2 * h) >> 8) - (sin2 * ((i * h) >> 8) >> 8);
+        int32 val           = ((cos2 * h) >> 8) - (sin2 * ((i * h) >> 8) >> 8);
         RSDK.SetActivePalette(clampVal((abs(val) >> 15) - 8, 0, 7), i + SCREEN_YCENTER, i + SCREEN_YCENTER + 1);
 
-        int32 px = sin * val - RSDK_screens->centerX * scanlines->deform.x;
-        int32 py = cos * val - RSDK_screens->centerX * scanlines->deform.y;
+        int32 px = sin * val - ScreenInfo->centerX * scanlines->deform.x;
+        int32 py = cos * val - ScreenInfo->centerX * scanlines->deform.y;
 
         scanlines->position.x = px + camera->position.x;
         scanlines->position.y = py + camera->position.y;
@@ -237,7 +236,7 @@ void UFO_Setup_ScanlineCallback_3DFloor(ScanlineInfo *scanlines)
 void UFO_Setup_ScanlineCallback_3DRoof(ScanlineInfo *scanlines)
 {
     EntityUFO_Camera *camera = RSDK_GET_ENTITY(SLOT_UFO_CAMERA, UFO_Camera);
-    RSDK.SetClipBounds(0, 0, 0, RSDK_screens->width, camera->clipY - 48);
+    RSDK.SetClipBounds(0, 0, 0, ScreenInfo->width, camera->clipY - 48);
     int32 sin  = RSDK.Sin1024(camera->angle) >> 2;
     int32 cos  = RSDK.Cos1024(camera->angle) >> 2;
     int32 sin2 = RSDK.Sin1024(-camera->angleX) >> 2;
@@ -250,14 +249,14 @@ void UFO_Setup_ScanlineCallback_3DRoof(ScanlineInfo *scanlines)
         int32 div = sin2 + (cosVal >> 8);
         if (!div)
             div = 1;
-        int32 h               = height / div;
+        int32 h             = height / div;
         scanlines->deform.x = -(cos * h) >> 8;
         scanlines->deform.y = (sin * h) >> 8;
-        int32 val             = ((cos2 * h) >> 8) - (sin2 * ((i * h) >> 8) >> 8);
+        int32 val           = ((cos2 * h) >> 8) - (sin2 * ((i * h) >> 8) >> 8);
         RSDK.SetActivePalette(clampVal(abs(val) >> 14, 0, 7), i + SCREEN_YCENTER, i + SCREEN_YCENTER + 1);
 
-        int32 px = sin * val - RSDK_screens->centerX * scanlines->deform.x;
-        int32 py = cos * val - RSDK_screens->centerX * scanlines->deform.y;
+        int32 px = sin * val - ScreenInfo->centerX * scanlines->deform.x;
+        int32 py = cos * val - ScreenInfo->centerX * scanlines->deform.y;
 
         scanlines->position.x = px + (camera->position.x >> 3);
         scanlines->position.y = py + (camera->position.y >> 3);
@@ -270,12 +269,12 @@ void UFO_Setup_ScanlineCallback_3DRoof(ScanlineInfo *scanlines)
 void UFO_Setup_PlaySphereSFX(void)
 {
     if (UFO_Setup->spherePan) {
-        int32 channel = RSDK.PlaySfx(UFO_Setup->sfx_BlueSphere, 0, 255);
+        int32 channel = RSDK.PlaySfx(UFO_Setup->sfxBlueSphere, 0, 255);
         RSDK.SetChannelAttributes(channel, 1.0, -1.0, 1.0);
         UFO_Setup->spherePan = 0;
     }
     else {
-        int32 channel = RSDK.PlaySfx(UFO_Setup->sfx_BlueSphere, 0, 255);
+        int32 channel = RSDK.PlaySfx(UFO_Setup->sfxBlueSphere, 0, 255);
         RSDK.SetChannelAttributes(channel, 1.0, 1.0, 1.0);
         UFO_Setup->spherePan = 1;
     }
@@ -296,9 +295,9 @@ void UFO_Setup_Finish_Win(void)
     }
 
     saveRAM->nextSpecialStage = (saveRAM->nextSpecialStage + 1) % 7;
-    setup->visible = true;
-    setup->state   = UFO_Setup_Unknown12;
-    RSDK.PlaySfx(UFO_Setup->sfx_SSExit, 0, 255);
+    setup->visible            = true;
+    setup->state              = UFO_Setup_State_FinishFadeout;
+    RSDK.PlaySfx(UFO_Setup->sfxSSExit, 0, 255);
     Music_FadeOut(0.025);
     PauseMenu->disableEvents = true;
 }
@@ -313,13 +312,13 @@ void UFO_Setup_Finish_Fail(void)
     }
 
     setup->visible = true;
-    setup->state   = UFO_Setup_Unknown12;
-    RSDK.PlaySfx(UFO_Setup->sfx_SSExit, 0, 255);
+    setup->state   = UFO_Setup_State_FinishFadeout;
+    RSDK.PlaySfx(UFO_Setup->sfxSSExit, 0, 255);
     Music_FadeOut(0.025);
     PauseMenu->disableEvents = true;
 }
 
-void UFO_Setup_Unknown8(void)
+void UFO_Setup_DeformCB_UFO3(void)
 {
     if (!(UFO_Setup->timer & 1)) {
         ++RSDK.GetSceneLayer(0)->deformationOffset;
@@ -327,39 +326,39 @@ void UFO_Setup_Unknown8(void)
     }
 }
 
-void UFO_Setup_Unknown9(void)
+void UFO_Setup_DeformCB_UFO4(void)
 {
     if (!(UFO_Setup->timer & 1)) {
         ++RSDK.GetSceneLayer(0)->deformationOffset;
     }
 }
 
-void UFO_Setup_Unknown10(void)
+void UFO_Setup_DeformCB_UFO5(void)
 {
     if (!(UFO_Setup->timer & 1)) {
         ++RSDK.GetSceneLayer(0)->deformationOffset;
     }
 }
 
-void UFO_Setup_Unknown11(void)
+void UFO_Setup_State_ShowStartMessage(void)
 {
     RSDK_THIS(UFO_Setup);
-    if (entity->timer <= 0) {
-        entity->timer               = 0;
-        entity->visible             = false;
-        entity->state               = UFO_Setup_Unknown13;
-        RSDK_sceneInfo->timeEnabled = true;
-        RSDK.CreateEntity(UFO_Message->objectID, 0, entity->position.x, entity->position.y);
+    if (self->timer <= 0) {
+        self->timer            = 0;
+        self->visible          = false;
+        self->state            = UFO_Setup_State_HandleRingDrain;
+        SceneInfo->timeEnabled = true;
+        CREATE_ENTITY(UFO_Message, intToVoid(UFO_MESSAGE_CATCHUFO), self->position.x, self->position.y);
     }
     else {
-        entity->timer -= 0x10;
+        self->timer -= 0x10;
     }
 }
 
-void UFO_Setup_Unknown12(void)
+void UFO_Setup_State_FinishFadeout(void)
 {
     RSDK_THIS(UFO_Setup);
-    if (entity->timer >= 1024) {
+    if (self->timer >= 1024) {
         if (UFO_Setup->resetToTitle) {
             RSDK.SetScene("Presentation", "Title Screen");
             RSDK.LoadScene();
@@ -373,49 +372,48 @@ void UFO_Setup_Unknown12(void)
 
             for (int32 i = 0; i < 0x800; ++i) {
                 Entity *ent = RSDK.GetEntityByID(i);
-                if (ent->objectID != entity->objectID)
-                    RSDK.ResetEntityPtr(ent, TYPE_BLANK, 0);
+                if (ent->objectID != self->objectID)
+                    destroyEntity(ent);
             }
 
-            RSDK.ResetEntitySlot(0, UIBackground->objectID, 0);
-            RSDK.ResetEntitySlot(1, SpecialClear->objectID, 0);
+            RSDK.ResetEntitySlot(0, UIBackground->objectID, NULL);
+            RSDK.ResetEntitySlot(1, SpecialClear->objectID, NULL);
             RSDK.AddDrawListRef(14, 1);
 #if RETRO_USE_PLUS
-            if (globals->gameMode == MODE_ENCORE) {
+            if (globals->gameMode == MODE_ENCORE)
                 UIBackground->activeColours = &UIBackground->bgColours[18];
-            }
 #endif
-            entity->visible = false;
-            entity->state   = StateMachine_None;
+            self->visible = false;
+            self->state   = StateMachine_None;
         }
     }
     else {
-        entity->timer += 8;
+        self->timer += 8;
     }
 }
 
-void UFO_Setup_Unknown13(void)
+void UFO_Setup_State_HandleRingDrain(void)
 {
     RSDK_THIS(UFO_Setup);
-    if (++entity->timer == 60) {
-        entity->timer = 0;
+    if (++self->timer == 60) {
+        self->timer = 0;
 
-        if (UFO_Setup->rings > 0 && RSDK_sceneInfo->timeEnabled) {
+        if (UFO_Setup->rings > 0 && SceneInfo->timeEnabled) {
             UFO_Setup->rings--;
         }
 
         if (!UFO_Setup->rings && !UFO_Setup->timedOut) {
             UFO_Setup->timedOut = true;
-            RSDK.CreateEntity(UFO_Message->objectID, (void *)3, entity->position.x, entity->position.y);
-            entity->state = UFO_Setup_Unknown14;
+            CREATE_ENTITY(UFO_Message, intToVoid(UFO_MESSAGE_TIMEOVER), self->position.x, self->position.y);
+            self->state = UFO_Setup_State_TimedOver;
         }
     }
 }
 
-void UFO_Setup_Unknown14(void)
+void UFO_Setup_State_TimedOver(void)
 {
     RSDK_THIS(UFO_Setup);
-    if (++entity->timer >= 90)
+    if (++self->timer >= 90)
         UFO_Setup_Finish_Fail();
 }
 

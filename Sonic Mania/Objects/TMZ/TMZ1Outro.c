@@ -8,16 +8,16 @@ void TMZ1Outro_Update(void)
 
     if (Zone->actID) {
         void *states[] = { TMZ1Outro_Cutscene2_State1, NULL };
-        CutsceneSeq_StartSequence((Entity *)entity, states);
-        RSDK.SetLimitedFade(0, 5, 4, entity->alpha, 128, 256);
+        CutsceneSeq_StartSequence((Entity *)self, states);
+        RSDK.SetLimitedFade(0, 5, 4, self->alpha, 128, 256);
     }
     else {
         void *states[] = { TMZ1Outro_Cutscene1_State1, TMZ1Outro_Cutscene1_State2, TMZ1Outro_Cutscene1_State3, TMZ1Outro_Cutscene1_State4, NULL };
-        CutsceneSeq_StartSequence((Entity *)entity, states);
+        CutsceneSeq_StartSequence((Entity *)self, states);
     }
     if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->objectID)
         RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->skipType = SKIPTYPE_RELOADSCN;
-    entity->active = ACTIVE_NEVER;
+    self->active = ACTIVE_NEVER;
 }
 
 void TMZ1Outro_LateUpdate(void) {}
@@ -29,9 +29,9 @@ void TMZ1Outro_Draw(void) {}
 void TMZ1Outro_Create(void *data)
 {
     RSDK_THIS(TMZ1Outro);
-    if (!RSDK_sceneInfo->inEditor) {
-        entity->active  = ACTIVE_NORMAL;
-        entity->visible = false;
+    if (!SceneInfo->inEditor) {
+        self->active  = ACTIVE_NORMAL;
+        self->visible = false;
     }
 }
 
@@ -96,12 +96,12 @@ bool32 TMZ1Outro_Cutscene1_State3(EntityCutsceneSeq *host)
         bool32 flag = true;
         foreach_active(Player, player)
         {
-            if (abs(entity->position.x - player->position.x) >= 0x100000) {
-                if (player->position.x > entity->position.x) {
+            if (abs(self->position.x - player->position.x) >= 0x100000) {
+                if (player->position.x > self->position.x) {
                     player->left = true;
                     flag         = false;
                 }
-                if (player->position.x < entity->position.x) {
+                if (player->position.x < self->position.x) {
                     player->right = true;
                     flag          = false;
                 }
@@ -116,7 +116,7 @@ bool32 TMZ1Outro_Cutscene1_State3(EntityCutsceneSeq *host)
 
             player->jumpPress = false;
             player->jumpHold  = true;
-            if (player->playerAnimator.animationID == ANI_PUSH)
+            if (player->animator.animationID == ANI_PUSH)
                 player->jumpPress = true;
             if (!player->onGround || player->velocity.x)
                 flag = false;
@@ -129,16 +129,16 @@ bool32 TMZ1Outro_Cutscene1_State3(EntityCutsceneSeq *host)
 bool32 TMZ1Outro_Cutscene1_State4(EntityCutsceneSeq *host)
 {
     RSDK_THIS(TMZ1Outro);
-    entity->alpha += 4;
-    RSDK.SetLimitedFade(0, 3, 5, entity->alpha, 128, 256);
+    self->alpha += 4;
+    RSDK.SetLimitedFade(0, 3, 5, self->alpha, 128, 256);
 
     EntityCamera *camera = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
     if (camera->offset.x > 0)
         camera->offset.x -= 0x10000;
-    if (entity->alpha == 320) {
+    if (self->alpha == 320) {
         globals->suppressTitlecard = true;
         globals->suppressAutoMusic = true;
-        Zone_StoreEntities((RSDK_screens->position.x + RSDK_screens->centerX) << 16, (RSDK_screens->height + RSDK_screens->position.y) << 16);
+        Zone_StoreEntities((ScreenInfo->position.x + ScreenInfo->centerX) << 16, (ScreenInfo->height + ScreenInfo->position.y) << 16);
         RSDK.LoadScene();
         return true;
     }
@@ -149,14 +149,14 @@ bool32 TMZ1Outro_Cutscene2_State1(EntityCutsceneSeq *host)
 {
     RSDK_THIS(TMZ1Outro);
 
-    entity->alpha += 4;
-    RSDK.SetLimitedFade(0, 5, 4, entity->alpha, 128, 256);
-    if (entity->alpha >= 0x100) {
+    self->alpha += 4;
+    RSDK.SetLimitedFade(0, 5, 4, self->alpha, 128, 256);
+    if (self->alpha >= 0x100) {
         foreach_all(TitleCard, tCard)
         {
             tCard->active              = ACTIVE_NORMAL;
-            tCard->state               = TitleCard_Unknown6;
-            tCard->stateDraw           = TitleCard_StateDraw_Default;
+            tCard->state               = TitleCard_State_Initial;
+            tCard->stateDraw           = TitleCard_Draw_Default;
             globals->suppressAutoMusic = false;
             Music_PlayTrack(TRACK_STAGE);
             foreach_break;
@@ -169,7 +169,7 @@ bool32 TMZ1Outro_Cutscene2_State1(EntityCutsceneSeq *host)
 void TMZ1Outro_EditorDraw(void)
 {
     RSDK_THIS(TMZ1Outro);
-    CutsceneRules_DrawCutsceneBounds(entity, &entity->size);
+    CutsceneRules_DrawCutsceneBounds(self, &self->size);
 }
 
 void TMZ1Outro_EditorLoad(void) {}

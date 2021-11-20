@@ -6,11 +6,11 @@
 typedef enum {
     PSPRITE_ATTR_NONE,
     PSPRITE_ATTR_1,
-    PSPRITE_ATTR_2,
+    PSPRITE_ATTR_COLORS,
     PSPRITE_ATTR_SPAWNER,
     PSPRITE_ATTR_FADEOUT,
-    PSPRITE_ATTR_5,
-    PSPRITE_ATTR_6,
+    PSPRITE_ATTR_BLENDHIGH,
+    PSPRITE_ATTR_SHIFT,
 } ParallaxSpriteAttributes;
 
 // Object Class
@@ -32,11 +32,11 @@ typedef struct {
     bool32 hiddenAtStart;
     colour colour1;
     colour colour2;
-    Vector2 unknownPosB;
+    Vector2 acceleration;
     Vector2 scrollPos;
     int32 sprX;
-    int32 field_B0;
-    int32 field_B4;
+    int32 timerSpeed;
+    int32 xSpeed;
 } EntityParallaxSprite;
 
 // Object Struct
@@ -56,10 +56,10 @@ void ParallaxSprite_EditorLoad(void);
 void ParallaxSprite_Serialize(void);
 
 // Extra Entity Functions
-void ParallaxSprite_Unknown1(void);
+void ParallaxSprite_State_RotateAndScroll(void);
 void ParallaxSprite_State_Spawner(void);
+void ParallaxSprite_State_FadeOutAndDie(void);
+void ParallaxSprite_State_FadeIntoHalf(void);
 void ParallaxSprite_State_FadeOut(void);
-void ParallaxSprite_Unknown4(void);
-void ParallaxSprite_Unknown5(void);
 
 #endif //!OBJ_PARALLAXSPRITE_H

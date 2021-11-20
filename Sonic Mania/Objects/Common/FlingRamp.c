@@ -9,19 +9,19 @@ void FlingRamp_Update(void)
     {
         if (player->onGround) {
             if (!(player->direction & FLIP_X) && player->velocity.x >= 0x40000) {
-                if (Player_CheckCollisionTouch(player, entity, &FlingRamp->hitbox)) {
+                if (Player_CheckCollisionTouch(player, self, &FlingRamp->hitbox)) {
                     player->velocity.x += 0x40000;
                     player->velocity.y = -0x70000;
                     player->onGround   = false;
-                    RSDK.SetSpriteAnimation(player->spriteIndex, ANI_SPRINGCS, &player->playerAnimator, true, 0);
+                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGCS, &player->animator, true, 0);
                 }
             }
             else if ((player->direction & FLIP_X) && player->velocity.x <= -0x40000) {
-                if (Player_CheckCollisionTouch(player, entity, &FlingRamp->hitbox)) {
+                if (Player_CheckCollisionTouch(player, self, &FlingRamp->hitbox)) {
                     player->velocity.x -= 0x40000;
                     player->velocity.y = -0x70000;
                     player->onGround   = false;
-                    RSDK.SetSpriteAnimation(player->spriteIndex, ANI_SPRINGCS, &player->playerAnimator, true, 0);
+                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGCS, &player->animator, true, 0);
                 }
             }
         }
@@ -37,9 +37,9 @@ void FlingRamp_Draw(void) {}
 void FlingRamp_Create(void *data)
 {
     RSDK_THIS(FlingRamp);
-    if (!RSDK_sceneInfo->inEditor) {
-        entity->active  = ACTIVE_BOUNDS;
-        entity->visible = false;
+    if (!SceneInfo->inEditor) {
+        self->active  = ACTIVE_BOUNDS;
+        self->visible = false;
     }
 }
 

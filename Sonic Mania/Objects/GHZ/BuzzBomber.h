@@ -6,9 +6,9 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    Hitbox hitbox1;
-    Hitbox hitbox2;
-    uint16 spriteIndex;
+    Hitbox hitboxBadnik;
+    Hitbox hitboxProjectile;
+    uint16 aniFrames;
 } ObjectBuzzBomber;
 
 // Entity Class
@@ -17,13 +17,13 @@ typedef struct {
     StateMachine(state);
     uint8 shotRange;
     int32 timer;
-    uint8 field_64;
+    uint8 detectedPlayer;
     Vector2 startPos;
     uint8 startDir;
     Entity *projectile;
-    Animator animator1;
-    Animator animator2;
-    Animator animator3;
+    Animator animator;
+    Animator wingAnimator;
+    Animator thrustAnimator;
     Hitbox rangeHitbox;
 } EntityBuzzBomber;
 
@@ -48,12 +48,16 @@ void BuzzBomber_DebugDraw(void);
 void BuzzBomber_DebugSpawn(void);
 
 void BuzzBomber_CheckOnScreen(void);
-void BuzzBomber_Unknown1(void);
-void BuzzBomber_Unknown2(void);
-void BuzzBomber_Unknown3(void);
-void BuzzBomber_Unknown4(void);
-void BuzzBomber_Unknown5(void);
-void BuzzBomber_Unknown6(void);
-void BuzzBomber_Unknown7(void);
+void BuzzBomber_CheckPlayerCollisions(void);
+
+//States
+void BuzzBomber_State_Setup(void);
+void BuzzBomber_State_BuzzAround(void);
+void BuzzBomber_State_IdleDelay(void);
+void BuzzBomber_State_DetectedPlayer(void);
+
+//Projectile States
+void BuzzBomber_State_ProjectileCharge(void);
+void BuzzBomber_State_ProjectileShot(void);
 
 #endif //!OBJ_BUZZBOMBER_H

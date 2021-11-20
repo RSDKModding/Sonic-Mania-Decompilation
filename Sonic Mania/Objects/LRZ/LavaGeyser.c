@@ -5,7 +5,7 @@ ObjectLavaGeyser *LavaGeyser;
 void LavaGeyser_Update(void)
 {
     RSDK_THIS(LavaGeyser);
-    StateMachine_Run(entity->state);
+    StateMachine_Run(self->state);
 }
 
 void LavaGeyser_LateUpdate(void) {}
@@ -17,40 +17,40 @@ void LavaGeyser_Draw(void)
     RSDK_THIS(LavaGeyser);
     Vector2 drawPos;
 
-    drawPos.x = entity->position.x;
-    drawPos.y = entity->position.y;
-    RSDK.DrawSprite(&entity->animator1, NULL, false);
-    if (entity->height > 0) {
-        SpriteFrame *frame = RSDK.GetFrame(LavaGeyser->aniFrames, 0, entity->animator2.frameID);
+    drawPos.x = self->position.x;
+    drawPos.y = self->position.y;
+    RSDK.DrawSprite(&self->animator1, NULL, false);
+    if (self->height > 0) {
+        SpriteFrame *frame = RSDK.GetFrame(LavaGeyser->aniFrames, 0, self->animator2.frameID);
         frame->height      = 48;
-        drawPos.y -= entity->height;
+        drawPos.y -= self->height;
 
-        for (int i = (entity->height >> 16) / 48; i > 0; --i) {
-            RSDK.DrawSprite(&entity->animator2, &drawPos, false);
+        for (int i = (self->height >> 16) / 48; i > 0; --i) {
+            RSDK.DrawSprite(&self->animator2, &drawPos, false);
             drawPos.y += 0x300000;
         }
 
-        if ((entity->height >> 16) % 48) {
-            frame->height = (entity->height >> 16) % 48;
-            RSDK.DrawSprite(&entity->animator2, &drawPos, false);
+        if ((self->height >> 16) % 48) {
+            frame->height = (self->height >> 16) % 48;
+            RSDK.DrawSprite(&self->animator2, &drawPos, false);
         }
 
-        drawPos.y = entity->position.y - entity->height;
-        RSDK.DrawSprite(&entity->animator3, &drawPos, false);
+        drawPos.y = self->position.y - self->height;
+        RSDK.DrawSprite(&self->animator3, &drawPos, false);
     }
 }
 
 void LavaGeyser_Create(void *data)
 {
     RSDK_THIS(LavaGeyser);
-    if (!RSDK_sceneInfo->inEditor) {
-        entity->active        = ACTIVE_BOUNDS;
-        entity->visible       = true;
-        entity->updateRange.x = 0x800000;
-        entity->updateRange.y = 0x800000;
-        entity->drawOrder     = Zone->drawOrderHigh;
-        entity->force <<= 12;
-        entity->state = LavaGeyser_State_Unknown1;
+    if (!SceneInfo->inEditor) {
+        self->active        = ACTIVE_BOUNDS;
+        self->visible       = true;
+        self->updateRange.x = 0x800000;
+        self->updateRange.y = 0x800000;
+        self->drawOrder     = Zone->drawOrderHigh;
+        self->force <<= 12;
+        self->state = LavaGeyser_State_Unknown1;
     }
 }
 
@@ -73,14 +73,14 @@ void LavaGeyser_CheckPlayerCollisions(void)
 
     Hitbox hitbox;
     hitbox.left   = -24;
-    hitbox.top    = -(entity->height >> 16);
+    hitbox.top    = -(self->height >> 16);
     hitbox.right  = 24;
     hitbox.bottom = 0;
 
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionTouch(player, entity, &hitbox)) {
-            Player_CheckElementalHit(player, entity, SHIELD_FIRE);
+        if (Player_CheckCollisionTouch(player, self, &hitbox)) {
+            Player_CheckElementalHit(player, self, SHIELD_FIRE);
         }
     }
 }
@@ -88,20 +88,20 @@ void LavaGeyser_CheckPlayerCollisions(void)
 void LavaGeyser_HandleSetup(void)
 {
     RSDK_THIS(LavaGeyser);
-    entity->velocity.y = entity->force;
-    entity->visible    = true;
-    entity->active     = ACTIVE_NORMAL;
-    RSDK.SetSpriteAnimation(LavaGeyser->aniFrames, 1, &entity->animator1, true, 0);
-    RSDK.SetSpriteAnimation(LavaGeyser->aniFrames, 0, &entity->animator2, true, 0);
-    RSDK.SetSpriteAnimation(LavaGeyser->aniFrames, 1, &entity->animator3, true, 16);
-    entity->state = LavaGeyser_State_Unknown2;
+    self->velocity.y = self->force;
+    self->visible    = true;
+    self->active     = ACTIVE_NORMAL;
+    RSDK.SetSpriteAnimation(LavaGeyser->aniFrames, 1, &self->animator1, true, 0);
+    RSDK.SetSpriteAnimation(LavaGeyser->aniFrames, 0, &self->animator2, true, 0);
+    RSDK.SetSpriteAnimation(LavaGeyser->aniFrames, 1, &self->animator3, true, 16);
+    self->state = LavaGeyser_State_Unknown2;
 }
 
 void LavaGeyser_HandleIntervals(void)
 {
     RSDK_THIS(LavaGeyser);
 
-    if (!((Zone->timer + entity->intervalOffset) % entity->interval))
+    if (!((Zone->timer + self->intervalOffset) % self->interval))
         LavaGeyser_HandleSetup();
 }
 
@@ -111,11 +111,11 @@ void LavaGeyser_State_Unknown2(void)
 {
     RSDK_THIS(LavaGeyser);
 
-    RSDK.ProcessAnimation(&entity->animator1);
-    if (entity->animator1.frameID == 16) {
-        --entity->animator1.animationTimer;
+    RSDK.ProcessAnimation(&self->animator1);
+    if (self->animator1.frameID == 16) {
+        --self->animator1.animationTimer;
         RSDK.PlaySfx(LavaGeyser->sfxLavaGeyser, false, 255);
-        entity->state = LavaGeyser_State_Unknown3;
+        self->state = LavaGeyser_State_Unknown3;
         LavaGeyser_State_Unknown3();
     }
 }
@@ -124,23 +124,23 @@ void LavaGeyser_State_Unknown3(void)
 {
     RSDK_THIS(LavaGeyser);
 
-    RSDK.ProcessAnimation(&entity->animator1);
-    RSDK.ProcessAnimation(&entity->animator2);
-    RSDK.ProcessAnimation(&entity->animator3);
+    RSDK.ProcessAnimation(&self->animator1);
+    RSDK.ProcessAnimation(&self->animator2);
+    RSDK.ProcessAnimation(&self->animator3);
 
-    entity->height += entity->velocity.y;
-    entity->velocity.y -= 0x1800;
+    self->height += self->velocity.y;
+    self->velocity.y -= 0x1800;
     LavaGeyser_CheckPlayerCollisions();
 
-    if (entity->velocity.y < 0) {
-        if (entity->duration) {
-            entity->field_A8 = entity->height;
-            entity->angle    = 0;
-            entity->timer    = entity->duration;
-            entity->state    = LavaGeyser_State_Unknown4;
+    if (self->velocity.y < 0) {
+        if (self->duration) {
+            self->field_A8 = self->height;
+            self->angle    = 0;
+            self->timer    = self->duration;
+            self->state    = LavaGeyser_State_Unknown4;
         }
         else {
-            entity->state = LavaGeyser_State_Unknown5;
+            self->state = LavaGeyser_State_Unknown5;
         }
     }
 }
@@ -149,32 +149,32 @@ void LavaGeyser_State_Unknown4(void)
 {
     RSDK_THIS(LavaGeyser);
 
-    RSDK.ProcessAnimation(&entity->animator1);
-    RSDK.ProcessAnimation(&entity->animator2);
-    RSDK.ProcessAnimation(&entity->animator3);
-    entity->angle += 2;
-    entity->height = 0x600 * RSDK.Cos256(entity->angle) + entity->field_A8;
+    RSDK.ProcessAnimation(&self->animator1);
+    RSDK.ProcessAnimation(&self->animator2);
+    RSDK.ProcessAnimation(&self->animator3);
+    self->angle += 2;
+    self->height = 0x600 * RSDK.Cos256(self->angle) + self->field_A8;
     LavaGeyser_CheckPlayerCollisions();
-    if (!--entity->timer)
-        entity->state = LavaGeyser_State_Unknown5;
+    if (!--self->timer)
+        self->state = LavaGeyser_State_Unknown5;
 }
 
 void LavaGeyser_State_Unknown5(void)
 {
     RSDK_THIS(LavaGeyser);
 
-    RSDK.ProcessAnimation(&entity->animator1);
-    RSDK.ProcessAnimation(&entity->animator2);
-    RSDK.ProcessAnimation(&entity->animator3);
-    entity->height += entity->velocity.y;
-    entity->velocity.y -= 0x1800;
+    RSDK.ProcessAnimation(&self->animator1);
+    RSDK.ProcessAnimation(&self->animator2);
+    RSDK.ProcessAnimation(&self->animator3);
+    self->height += self->velocity.y;
+    self->velocity.y -= 0x1800;
 
     LavaGeyser_CheckPlayerCollisions();
-    if (entity->height < 0) {
-        entity->height     = 0;
-        entity->velocity.y = 0;
-        RSDK.SetSpriteAnimation(LavaGeyser->aniFrames, 2, &entity->animator1, true, 0);
-        entity->state = LavaGeyser_State_Unknown6;
+    if (self->height < 0) {
+        self->height     = 0;
+        self->velocity.y = 0;
+        RSDK.SetSpriteAnimation(LavaGeyser->aniFrames, 2, &self->animator1, true, 0);
+        self->state = LavaGeyser_State_Unknown6;
     }
 }
 
@@ -182,18 +182,18 @@ void LavaGeyser_State_Unknown6(void)
 {
     RSDK_THIS(LavaGeyser);
 
-    RSDK.ProcessAnimation(&entity->animator1);
-    if (entity->animator1.frameID == entity->animator1.frameCount - 1) {
-        if (entity->interval) {
-            entity->visible = false;
-            if (!entity->type)
-                entity->state = LavaGeyser_HandleIntervals;
+    RSDK.ProcessAnimation(&self->animator1);
+    if (self->animator1.frameID == self->animator1.frameCount - 1) {
+        if (self->interval) {
+            self->visible = false;
+            if (!self->type)
+                self->state = LavaGeyser_HandleIntervals;
             else
-                entity->state = LavaGeyser_State_Unknown1;
-            entity->active = ACTIVE_BOUNDS;
+                self->state = LavaGeyser_State_Unknown1;
+            self->active = ACTIVE_BOUNDS;
         }
         else {
-            destroyEntity(entity);
+            destroyEntity(self);
         }
     }
 }
@@ -202,16 +202,16 @@ void LavaGeyser_State_Unknown6(void)
 void LavaGeyser_EditorDraw(void)
 {
     RSDK_THIS(LavaGeyser);
-    RSDK.SetSpriteAnimation(LavaGeyser->aniFrames, 1, &entity->animator1, true, 0);
-    RSDK.SetSpriteAnimation(LavaGeyser->aniFrames, 0, &entity->animator2, true, 0);
-    RSDK.SetSpriteAnimation(LavaGeyser->aniFrames, 1, &entity->animator3, true, 16);
+    RSDK.SetSpriteAnimation(LavaGeyser->aniFrames, 1, &self->animator1, true, 0);
+    RSDK.SetSpriteAnimation(LavaGeyser->aniFrames, 0, &self->animator2, true, 0);
+    RSDK.SetSpriteAnimation(LavaGeyser->aniFrames, 1, &self->animator3, true, 16);
 
-    entity->velocity.y = entity->force << 12;
-    entity->height     = 0;
+    self->velocity.y = self->force << 12;
+    self->height     = 0;
 
-    while (entity->velocity.y > 0) {
-        entity->height += entity->velocity.y;
-        entity->velocity.y -= 0x1800;
+    while (self->velocity.y > 0) {
+        self->height += self->velocity.y;
+        self->velocity.y -= 0x1800;
     }
 
     LavaGeyser_Draw();

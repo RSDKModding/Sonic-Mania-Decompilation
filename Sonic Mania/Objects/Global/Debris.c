@@ -6,26 +6,26 @@ void Debris_Update(void)
 {
     RSDK_THIS(Debris);
 
-    if (entity->delay <= 0) {
-        RSDK.ProcessAnimation(&entity->animator);
-        StateMachine_Run(entity->state);
+    if (self->delay <= 0) {
+        RSDK.ProcessAnimation(&self->animator);
+        StateMachine_Run(self->state);
 
-        if (entity->drawFX & FX_ROTATE)
-            entity->rotation = (entity->rotation + entity->rotSpeed) & 0x1FF;
+        if (self->drawFX & FX_ROTATE)
+            self->rotation = (self->rotation + self->rotSpeed) & 0x1FF;
 
-        if (entity->drawFX & FX_SCALE) {
-            if (entity->scaleInc.x > 0 || entity->scaleInc.y > 0) {
-                entity->scale.x += entity->scaleInc.x;
-                entity->scale.y += entity->scaleInc.y;
-                if (entity->scale.x < 0)
-                    entity->scale.x = 0;
-                if (entity->scale.y < 0)
-                    entity->scale.y = 0;
+        if (self->drawFX & FX_SCALE) {
+            if (self->scaleInc.x > 0 || self->scaleInc.y > 0) {
+                self->scale.x += self->scaleInc.x;
+                self->scale.y += self->scaleInc.y;
+                if (self->scale.x < 0)
+                    self->scale.x = 0;
+                if (self->scale.y < 0)
+                    self->scale.y = 0;
             }
         }
     }
     else
-        entity->delay--;
+        self->delay--;
 }
 
 void Debris_LateUpdate(void) {}
@@ -35,69 +35,26 @@ void Debris_StaticUpdate(void) {}
 void Debris_Draw(void)
 {
     RSDK_THIS(Debris);
-    RSDK.DrawSprite(&entity->animator, NULL, false);
+
+    RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
 void Debris_Create(void *data)
 {
     RSDK_THIS(Debris);
 
-    entity->active  = ACTIVE_NORMAL;
-    entity->visible = true;
-    entity->state   = (Type_StateMachine)data;
+    self->active  = ACTIVE_NORMAL;
+    self->visible = true;
+    self->state   = (Type_StateMachine)data;
 }
 
 void Debris_StageLoad(void) {}
 
-void Debris_State_Fall(void)
+void Debris_FallFlickerAnimSetup(int32 aniFrames, int32 *entries, int32 animationID)
 {
     RSDK_THIS(Debris);
-
-    entity->position.x += RSDK_sceneInfo->entity->velocity.x;
-    entity->position.y += entity->velocity.y;
-    entity->velocity.y += entity->gravity;
-
-    if (entity->timer <= 0) {
-        if (!RSDK.CheckOnScreen(entity, NULL))
-            destroyEntity(entity);
-    }
-    else {
-        entity->timer--;
-        if (!entity->timer)
-            destroyEntity(entity);
-    }
-}
-
-void Debris_State_LightningSpark(void)
-{
-    RSDK_THIS(Debris);
-
-    entity->position.x += entity->velocity.x;
-    entity->position.y += entity->velocity.y;
-
-    if (entity->timer <= 0) {
-        if (!RSDK.CheckOnScreen(entity, NULL))
-            destroyEntity(entity);
-    }
-    else {
-        entity->timer--;
-        if (!entity->timer)
-            destroyEntity(entity);
-    }
-}
-
-void Debris_State_FallAndFlicker(void)
-{
-    Debris_State_Fall(); // is this cheating
-
-    RSDK_sceneInfo->entity->visible = Zone->timer & 1;
-}
-
-void Debris_FallFlickerAnimSetup(int32 spriteIndex, int32 *entryPtr, int32 animationID)
-{
-    RSDK_THIS(Debris);
-    if (entryPtr) {
-        int32 cnt = *entryPtr;
+    if (entries) {
+        int32 cnt = *entries;
         // format:
         // cnt
         //[for cnt entries]
@@ -105,10 +62,10 @@ void Debris_FallFlickerAnimSetup(int32 spriteIndex, int32 *entryPtr, int32 anima
         // dir
         // xvel
         // yvel
-        entity->drawFX = FX_FLIP;
-        for (int32 *entry = entryPtr + 1; cnt > 0; entry += 4, --cnt) {
-            EntityDebris *debris = CREATE_ENTITY(Debris, (void *)Debris_State_FallAndFlicker, entity->position.x, entity->position.y);
-            RSDK.SetSpriteAnimation(spriteIndex, animationID, &debris->animator, true, entry[0]);
+        self->drawFX = FX_FLIP;
+        for (int32 *entry = entries + 1; cnt > 0; entry += 4, --cnt) {
+            EntityDebris *debris = CREATE_ENTITY(Debris, (void *)Debris_State_FallAndFlicker, self->position.x, self->position.y);
+            RSDK.SetSpriteAnimation(aniFrames, animationID, &debris->animator, true, entry[0]);
             debris->direction     = entry[1];
             debris->velocity.x    = entry[2];
             debris->velocity.y    = entry[3];
@@ -120,11 +77,11 @@ void Debris_FallFlickerAnimSetup(int32 spriteIndex, int32 *entryPtr, int32 anima
     }
 }
 
-void Debris_FallFlickerSetup(int32 spriteIndex, int32 *entryPtr)
+void Debris_FallFlickerSetup(int32 aniFrames, int32 *entries)
 {
     RSDK_THIS(Debris);
-    if (entryPtr) {
-        int32 cnt = *entryPtr;
+    if (entries) {
+        int32 cnt = *entries;
         // format:
         // cnt
         //[for cnt entries]
@@ -134,11 +91,11 @@ void Debris_FallFlickerSetup(int32 spriteIndex, int32 *entryPtr)
         // yvel
         // xoffset
         // yoffset
-        entity->drawFX = FX_FLIP;
-        for (int32 *entry = entryPtr + 1; cnt > 0; entry += 6, --cnt) {
+        self->drawFX = FX_FLIP;
+        for (int32 *entry = entries + 1; cnt > 0; entry += 6, --cnt) {
             EntityDebris *debris =
-                CREATE_ENTITY(Debris, (void *)Debris_State_FallAndFlicker, entity->position.x + entry[4], entity->position.y + entry[5]);
-            RSDK.SetSpriteAnimation(spriteIndex, 0, &debris->animator, true, entry[0]);
+                CREATE_ENTITY(Debris, (void *)Debris_State_FallAndFlicker, self->position.x + entry[4], self->position.y + entry[5]);
+            RSDK.SetSpriteAnimation(aniFrames, 0, &debris->animator, true, entry[0]);
             debris->direction     = entry[1];
             debris->velocity.x    = entry[2];
             debris->velocity.y    = entry[3];
@@ -148,6 +105,52 @@ void Debris_FallFlickerSetup(int32 spriteIndex, int32 *entryPtr)
             debris->updateRange.y = 0x800000;
         }
     }
+}
+
+void Debris_State_Move(void)
+{
+    RSDK_THIS(Debris);
+
+    self->position.x += self->velocity.x;
+    self->position.y += self->velocity.y;
+
+    if (self->timer <= 0) {
+        if (!RSDK.CheckOnScreen(self, NULL))
+            destroyEntity(self);
+    }
+    else {
+        self->timer--;
+        if (!self->timer)
+            destroyEntity(self);
+    }
+}
+
+void Debris_State_Fall(void)
+{
+    RSDK_THIS(Debris);
+
+    self->position.x += self->velocity.x;
+    self->position.y += self->velocity.y;
+    self->velocity.y += self->gravity;
+
+    if (self->timer <= 0) {
+        if (!RSDK.CheckOnScreen(self, NULL))
+            destroyEntity(self);
+    }
+    else {
+        self->timer--;
+        if (!self->timer)
+            destroyEntity(self);
+    }
+}
+
+void Debris_State_FallAndFlicker(void)
+{
+    RSDK_THIS(Debris);
+
+    Debris_State_Fall(); // is this cheating
+
+    self->visible = Zone->timer & 1;
 }
 
 #if RETRO_INCLUDE_EDITOR

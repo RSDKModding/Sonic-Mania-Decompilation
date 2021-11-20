@@ -65,14 +65,14 @@ typedef struct {
     uint8 playerDrawLow;
     uint8 playerDrawHigh;
     uint8 hudDrawOrder;
-    uint16 sfx_fail;
+    uint16 sfxfail;
 #if RETRO_USE_PLUS
     uint8 entityData[16][ENTITY_SIZE];
     int32 screenPosX[PLAYER_MAX];
     int32 screenPosY[PLAYER_MAX];
     bool32 swapGameMode;
     int32 flag;
-    int32 randKey;
+    int32 randSeed;
 #endif
 } ObjectZone;
 
@@ -109,9 +109,9 @@ void Zone_StoreEntities(int32 xOffset, int32 yOffset);
 void Zone_ReloadStoredEntities(int32 xOffset, int32 yOffset, bool32 flag);
 void Zone_StartFadeOut(int32 fadeSpeed, int32 fadeColour);
 void Zone_StartFadeIn(int32 fadeSpeed, int32 fadeColour);
-void Zone_Unknown2(void);
-void Zone_Unknown3(Vector2 *posPtr, Vector2 *pos, int32 angle);
-void Zone_Unknown4(int32 screen);
+void Zone_StartFadeOut_MusicFade(void);
+void Zone_RotateOnPivot(Vector2 *position, Vector2 *pivotPos, int32 angle);
+void Zone_ReloadScene(int32 screen);
 void Zone_StartTeleportAction(void);
 void Zone_ApplyWorldBounds(void);
 bool32 Zone_IsAct2(void);
@@ -121,11 +121,11 @@ void Zone_StateDraw_Fadeout(void);
 void Zone_State_Fadeout(void);
 void Zone_State_FadeIn(void);
 void Zone_State_Fadeout_Unknown(void);
-void Zone_Unknown16(void);
-void Zone_Unknown17(void);
+void Zone_TitleCard_SupressCB(void);
+void Zone_State_ReloadScene(void);
 void Zone_State_Fadeout_Destroy(void);
-void Zone_Unknown19(void);
-void Zone_Unknown20(void);
-void Zone_Unknown21(void);
+void Zone_HandlePlayerSwap(void);
+void Zone_State_SwapPlayers(void);
+void Zone_State_HandleSwapFadeIn(void);
 
 #endif //! OBJ_ZONE_H

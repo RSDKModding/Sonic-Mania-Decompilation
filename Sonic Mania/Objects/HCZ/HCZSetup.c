@@ -94,7 +94,7 @@ void HCZSetup_StaticUpdate(void)
                             ++HCZSetup->activePlayerCount;
                         }
                     }
-                    else if (player->playerAnimator.animationID == ANI_FLUME) {
+                    else if (player->animator.animationID == ANI_FLUME) {
                         ++HCZSetup->activePlayerCount;
                     }
                 }
@@ -210,7 +210,7 @@ void HCZSetup_StageLoad(void)
     }
 
 #if RETRO_USE_PLUS
-    if (RSDK_sceneInfo->filter & FILTER_ENCORE) {
+    if (SceneInfo->filter & FILTER_ENCORE) {
         RSDK.LoadPalette(0, "EncoreHCZ.act", 255);
         RSDK.LoadPalette(1, "EncoreHCZw.act", 255);
     }
@@ -224,7 +224,7 @@ void HCZSetup_ScanlineCallback(ScanlineInfo *scanlines)
 {
     RSDK.ProcessParallax(HCZSetup->bg);
 
-    ScreenInfo *screen = &RSDK_screens[RSDK_sceneInfo->currentScreenID];
+    RSDKScreenInfo *screen = &ScreenInfo[SceneInfo->currentScreenID];
     int32 scrH           = screen->height;
     int32 scrX           = screen->position.x;
     int32 scrY           = screen->position.y;
@@ -263,7 +263,7 @@ void HCZSetup_ScanlineCallback(ScanlineInfo *scanlines)
 
 void HCZSetup_HandleActTransition(void)
 {
-    Zone_StoreEntities((Zone->screenBoundsL1[0] + RSDK_screens->centerX) << 16, Zone->screenBoundsB1[0] << 16);
+    Zone_StoreEntities((Zone->screenBoundsL1[0] + ScreenInfo->centerX) << 16, Zone->screenBoundsB1[0] << 16);
     RSDK.LoadScene();
 }
 

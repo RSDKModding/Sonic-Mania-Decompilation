@@ -6,16 +6,16 @@ void DNARiser_Update(void)
 {
     RSDK_THIS(DNARiser);
 
-    if (entity->field_A8)
-        entity->field_A8--;
-    if (entity->timer2 > 0)
-        entity->timer2--;
-    StateMachine_Run(entity->state);
-    if (entity->popped) {
-        if (entity->animator.frameID == entity->animator.loopIndex)
-            entity->popped = false;
+    if (self->field_A8)
+        self->field_A8--;
+    if (self->timer2 > 0)
+        self->timer2--;
+    StateMachine_Run(self->state);
+    if (self->popped) {
+        if (self->animator.frameID == self->animator.loopIndex)
+            self->popped = false;
         else
-            RSDK.ProcessAnimation(&entity->animator);
+            RSDK.ProcessAnimation(&self->animator);
     }
 }
 
@@ -29,26 +29,26 @@ void DNARiser_StaticUpdate(void)
 void DNARiser_Draw(void)
 {
     RSDK_THIS(DNARiser);
-    StateMachine_Run(entity->stateDraw);
+    StateMachine_Run(self->stateDraw);
 }
 
 void DNARiser_Create(void *data)
 {
     RSDK_THIS(DNARiser);
-    entity->visible   = true;
-    entity->active    = ACTIVE_BOUNDS;
-    entity->drawOrder = Zone->drawOrderLow + 1;
-    entity->field_CC  = 0x2E0000;
-    if (RSDK_sceneInfo->inEditor) {
-        entity->speed.x = 0;
-        if (!entity->speed.y)
-            entity->speed.y = 0x60000;
-        if (!entity->height)
-            entity->height = 128;
+    self->visible   = true;
+    self->active    = ACTIVE_BOUNDS;
+    self->drawOrder = Zone->drawOrderLow + 1;
+    self->field_CC  = 0x2E0000;
+    if (SceneInfo->inEditor) {
+        self->speed.x = 0;
+        if (!self->speed.y)
+            self->speed.y = 0x60000;
+        if (!self->height)
+            self->height = 128;
     }
-    entity->updateRange.x = 0x800000;
-    entity->updateRange.y = 0x800000;
-    entity->state         = DNARiser_State_Setup;
+    self->updateRange.x = 0x800000;
+    self->updateRange.y = 0x800000;
+    self->state         = DNARiser_State_Setup;
 }
 
 void DNARiser_StageLoad(void)
@@ -74,24 +74,24 @@ void DNARiser_State_BubbleBurst(void)
 {
     RSDK_THIS(DNARiser);
     RSDK.PlaySfx(DNARiser->sfxBurst, 0, 255);
-    entity->popPos = entity->position;
-    entity->popped = true;
-    RSDK.SetSpriteAnimation(DNARiser->aniFrames, 5, &entity->animator, true, 0);
+    self->popPos = self->position;
+    self->popped = true;
+    RSDK.SetSpriteAnimation(DNARiser->aniFrames, 5, &self->animator, true, 0);
 }
 
 void DNARiser_State_Burst_Helix(void)
 {
     RSDK_THIS(DNARiser);
     RSDK.PlaySfx(DNARiser->sfxBurst, 0, 255);
-    entity->popPos = entity->position;
-    entity->popped = true;
-    RSDK.SetSpriteAnimation(DNARiser->aniFrames, 5, &entity->animator, true, 0);
-    entity->vector_D8  = entity->speed;
-    entity->field_60   = 1;
-    entity->velocity.x = 0;
-    entity->velocity.y = 0;
-    entity->state      = DNARiser_State_Unknown4;
-    entity->timer      = 0;
+    self->popPos = self->position;
+    self->popped = true;
+    RSDK.SetSpriteAnimation(DNARiser->aniFrames, 5, &self->animator, true, 0);
+    self->vector_D8  = self->speed;
+    self->field_60   = 1;
+    self->velocity.x = 0;
+    self->velocity.y = 0;
+    self->state      = DNARiser_State_Unknown4;
+    self->timer      = 0;
 }
 
 Vector2 DNARiser_CalculateScale(Vector2 *vec)
@@ -106,7 +106,7 @@ Vector2 DNARiser_CalculateScale(Vector2 *vec)
         y = vec->y;
     }
 
-    int32 val     = (30 - entity->field_A8);
+    int32 val     = (30 - self->field_A8);
     int32 sine    = RSDK.Sin1024(((val * (0x40000000 / ((10983 * val + 286520) >> 7))) >> 11) & 0x3FF);
     resultVec.x = (((val - 30) * (sine << 6) / 100 + 0x10000) * x) >> 16;
     resultVec.y = (((30 - val) * (sine << 6) / 100 + 0x10000) * y) >> 16;
@@ -116,27 +116,27 @@ Vector2 DNARiser_CalculateScale(Vector2 *vec)
 void DNARiser_State_Setup(void)
 {
     RSDK_THIS(DNARiser);
-    entity->vector_D0     = entity->position;
-    entity->active        = ACTIVE_BOUNDS;
-    entity->speed.x       = 0;
-    entity->velocity.x    = 0;
-    entity->speed.y       = -abs(entity->speed.y);
-    entity->timer         = 0;
-    entity->curHeight     = 0;
-    entity->field_AC      = 0;
-    entity->field_E4      = 0;
-    entity->child         = 0;
-    entity->field_E0      = 0;
-    entity->activePlayers = 0;
-    entity->field_60      = 0;
-    entity->field_B6      = 0;
-    entity->timer2        = 0;
-    entity->field_B0      = 0;
-    entity->velocity.y    = 0;
-    entity->stateDraw     = DNARiser_StateDraw_Main;
-    entity->state         = DNARiser_HandleInteractions;
-    entity->field_70      = 512;
-    RSDK.SetSpriteAnimation(DNARiser->aniFrames, 0, &entity->animator2, true, 0);
+    self->vector_D0     = self->position;
+    self->active        = ACTIVE_BOUNDS;
+    self->speed.x       = 0;
+    self->velocity.x    = 0;
+    self->speed.y       = -abs(self->speed.y);
+    self->timer         = 0;
+    self->curHeight     = 0;
+    self->field_AC      = 0;
+    self->field_E4      = 0;
+    self->child         = 0;
+    self->field_E0      = 0;
+    self->activePlayers = 0;
+    self->field_60      = 0;
+    self->field_B6      = 0;
+    self->timer2        = 0;
+    self->field_B0      = 0;
+    self->velocity.y    = 0;
+    self->stateDraw     = DNARiser_StateDraw_Main;
+    self->state         = DNARiser_HandleInteractions;
+    self->field_70      = 512;
+    RSDK.SetSpriteAnimation(DNARiser->aniFrames, 0, &self->animator2, true, 0);
     DNARiser_HandleInteractions();
 }
 
@@ -148,12 +148,12 @@ void DNARiser_HandleInteractions(void)
     {
         int32 playerID = RSDK.GetEntityID(player);
 
-        if (!((1 << playerID) & entity->activePlayers)) {
-            if (Player_CheckCollisionTouch(player, entity, &DNARiser->hitbox)) {
+        if (!((1 << playerID) & self->activePlayers)) {
+            if (Player_CheckCollisionTouch(player, self, &DNARiser->hitbox)) {
                 RSDK.PlaySfx(DNARiser->sfxGrab, 0, 255);
-                entity->field_A8 = 30;
-                entity->timer2   = 30;
-                RSDK.SetSpriteAnimation(player->spriteIndex, ANI_JUMP, &player->playerAnimator, false, 0);
+                self->field_A8 = 30;
+                self->timer2   = 30;
+                RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
                 player->groundVel        = 0;
                 player->drawOrder        = 1;
                 player->jumpAbilityTimer = 1;
@@ -162,24 +162,24 @@ void DNARiser_HandleInteractions(void)
                 player->state            = Player_State_None;
                 player->nextAirState     = 0;
                 player->nextGroundState  = 0;
-                entity->activePlayers |= 1 << playerID;
+                self->activePlayers |= 1 << playerID;
             }
         }
 
-        if (((1 << playerID) & entity->activePlayers)) {
+        if (((1 << playerID) & self->activePlayers)) {
             if (player->state == Player_State_None) {
-                player->position.x = entity->position.x;
-                player->position.y = entity->position.y;
+                player->position.x = self->position.x;
+                player->position.y = self->position.y;
                 player->velocity.x = 0;
                 player->velocity.y = 0;
                 if (!player->sidekick) {
-                    entity->curHeight = 0;
-                    entity->active    = 2;
-                    entity->state     = DNARiser_State_Unknown3;
+                    self->curHeight = 0;
+                    self->active    = 2;
+                    self->state     = DNARiser_State_Unknown3;
                 }
             }
             else {
-                entity->activePlayers &= ~(1 << playerID);
+                self->activePlayers &= ~(1 << playerID);
             }
         }
     }
@@ -188,93 +188,93 @@ void DNARiser_HandleInteractions(void)
 void DNARiser_State_Unknown3(void)
 {
     RSDK_THIS(DNARiser);
-    if (entity->curHeight >= entity->height << 16) {
+    if (self->curHeight >= self->height << 16) {
         DNARiser_State_Burst_Helix();
     }
     else {
-        if (entity->velocity.y >= abs(entity->speed.y)) {
-            entity->velocity.y = abs(entity->speed.y);
+        if (self->velocity.y >= abs(self->speed.y)) {
+            self->velocity.y = abs(self->speed.y);
         }
         else {
-            entity->velocity.y += 0x1200;
+            self->velocity.y += 0x1200;
         }
 
-        entity->curHeight += entity->velocity.y;
-        if (entity->height << 16 < entity->curHeight)
-            entity->curHeight = entity->height << 16;
+        self->curHeight += self->velocity.y;
+        if (self->height << 16 < self->curHeight)
+            self->curHeight = self->height << 16;
 
-        int32 angle = (((0x57262 * (entity->curHeight >> 16)) >> 16) + 250) & 0x3FF;
-        if (angle >= 0x200u && !entity->field_B0) {
-            entity->field_B0 = 1;
+        int32 angle = (((0x57262 * (self->curHeight >> 16)) >> 16) + 250) & 0x3FF;
+        if (angle >= 0x200u && !self->field_B0) {
+            self->field_B0 = 1;
             RSDK.PlaySfx(DNARiser->sfxScan, 0, 255);
         }
-        else if (angle <= 0x1FF && entity->field_B0) {
-            entity->field_B0 = 0;
+        else if (angle <= 0x1FF && self->field_B0) {
+            self->field_B0 = 0;
             RSDK.PlaySfx(DNARiser->sfxScan, 0, 255);
         }
 
-        entity->position.y = entity->vector_D0.y - entity->curHeight;
-        for (; entity->field_E0 <= (entity->curHeight >> 18) + 1; ++entity->field_E0) {
-            if (!(entity->field_E0 & 1) || !(entity->field_E0 % 5)) {
-                if (!entity->timer2) {
+        self->position.y = self->vector_D0.y - self->curHeight;
+        for (; self->field_E0 <= (self->curHeight >> 18) + 1; ++self->field_E0) {
+            if (!(self->field_E0 & 1) || !(self->field_E0 % 5)) {
+                if (!self->timer2) {
                     int32 sfxID = 0;
-                    if (!entity->field_B6) {
+                    if (!self->field_B6) {
                         do
 #if RETRO_USE_PLUS
-                            sfxID = RSDK.Random(0, 5, &Zone->randKey);
+                            sfxID = RSDK.RandSeeded(0, 5, &Zone->randSeed);
 #else
                             sfxID = RSDK.Rand(0, 5);
 #endif
-                        while (sfxID == entity->field_B6);
+                        while (sfxID == self->field_B6);
                     }
                     RSDK.PlaySfx(DNARiser->sfxTiny[sfxID], 0, 255);
-                    entity->field_B6 = sfxID;
+                    self->field_B6 = sfxID;
 #if RETRO_USE_PLUS
-                    entity->timer2   = RSDK.Random(2, 8, &Zone->randKey);
+                    self->timer2   = RSDK.RandSeeded(2, 8, &Zone->randSeed);
 #else
-                    entity->timer2 = RSDK.Rand(2, 8);
+                    self->timer2 = RSDK.Rand(2, 8);
 #endif
                 }
-                EntityDNARiser *child = CREATE_ENTITY(DNARiser, entity, entity->vector_D0.x, entity->vector_D0.y - (entity->field_E0 << 18));
+                EntityDNARiser *child = CREATE_ENTITY(DNARiser, self, self->vector_D0.x, self->vector_D0.y - (self->field_E0 << 18));
                 child->state          = DNARiser_State_SetupChild;
                 child->active         = ACTIVE_NORMAL;
-                child->field_A4       = entity->field_E0;
-                child->parent         = (Entity *)entity;
-                child->angle          = (((0x57262 * (4 * entity->field_E0)) >> 16) + 100) & 0x3FF;
+                child->field_A4       = self->field_E0;
+                child->parent         = (Entity *)self;
+                child->angle          = (((0x57262 * (4 * self->field_E0)) >> 16) + 100) & 0x3FF;
                 child->field_CC       = 0x2E0000;
-                child->drawOrder      = entity->drawOrder - 1;
-                if (!entity->field_E4)
-                    entity->field_E4 = (Entity *)child;
+                child->drawOrder      = self->drawOrder - 1;
+                if (!self->field_E4)
+                    self->field_E4 = (Entity *)child;
 
-                if (entity->child) {
-                    child->field_F0                             = entity->child;
-                    ((EntityDNARiser *)entity->child)->field_EC = (Entity *)child;
+                if (self->child) {
+                    child->field_F0                             = self->child;
+                    ((EntityDNARiser *)self->child)->field_EC = (Entity *)child;
                 }
-                entity->child = (Entity *)child;
+                self->child = (Entity *)child;
             }
         }
     }
 
     bool32 flag      = false;
-    entity->field_70 = (0x10000 - 85 * ((entity->curHeight / entity->height) >> 8)) >> 7;
+    self->field_70 = (0x10000 - 85 * ((self->curHeight / self->height) >> 8)) >> 7;
 
     foreach_active(Player, player)
     {
         int32 playerID = RSDK.GetEntityID(player);
-        if (!((1 << playerID) & entity->activePlayers)) {
-            if (Player_CheckCollisionTouch(player, entity, &DNARiser->hitbox)) {
+        if (!((1 << playerID) & self->activePlayers)) {
+            if (Player_CheckCollisionTouch(player, self, &DNARiser->hitbox)) {
                 RSDK.PlaySfx(DNARiser->sfxGrab, 0, 255);
-                entity->timer2   = 30;
-                entity->field_A8 = 30;
-                entity->activePlayers |= (1 << playerID);
+                self->timer2   = 30;
+                self->field_A8 = 30;
+                self->activePlayers |= (1 << playerID);
             }
         }
 
-        if (((1 << playerID) & entity->activePlayers)) {
+        if (((1 << playerID) & self->activePlayers)) {
             bool32 skipFlag = false;
             if (!Player_CheckValidState(player)) {
-                entity->activePlayers &= ~(1 << playerID);
-                if (entity->activePlayers)
+                self->activePlayers &= ~(1 << playerID);
+                if (self->activePlayers)
                     skipFlag = true;
                 else
                     DNARiser_State_Burst_Helix();
@@ -287,11 +287,11 @@ void DNARiser_State_Unknown3(void)
                     DNARiser_State_Burst_Helix();
                 }
 
-                if (entity->state == DNARiser_State_Unknown4) {
+                if (self->state == DNARiser_State_Unknown4) {
                     flag = true;
                 }
                 else {
-                    RSDK.SetSpriteAnimation(player->spriteIndex, ANI_JUMP, &player->playerAnimator, false, 0);
+                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
                     player->groundVel        = 0;
                     player->drawOrder        = 1;
                     player->jumpAbilityTimer = 1;
@@ -301,9 +301,9 @@ void DNARiser_State_Unknown3(void)
                     player->nextAirState     = StateMachine_None;
                     player->nextGroundState  = StateMachine_None;
                     player->velocity.x       = 0;
-                    player->velocity.y       = -entity->velocity.y;
-                    player->position.x       = entity->position.x;
-                    player->position.y       = entity->position.y;
+                    player->velocity.y       = -self->velocity.y;
+                    player->position.x       = self->position.x;
+                    player->position.y       = self->position.y;
                 }
             }
         }
@@ -313,13 +313,13 @@ void DNARiser_State_Unknown3(void)
         foreach_active(Player, player)
         {
             int32 playerID = RSDK.GetEntityID(player);
-            if (((1 << playerID) & entity->activePlayers)) {
+            if (((1 << playerID) & self->activePlayers)) {
                 player->drawOrder      = Zone->playerDrawLow;
                 player->tileCollisions = true;
                 player->state          = Player_State_Air;
-                player->velocity.x     = entity->speed.x;
-                player->velocity.y     = entity->speed.y;
-                entity->activePlayers &= ~(1 << playerID);
+                player->velocity.x     = self->speed.x;
+                player->velocity.y     = self->speed.y;
+                self->activePlayers &= ~(1 << playerID);
             }
         }
     }
@@ -329,57 +329,57 @@ void DNARiser_State_Unknown4(void)
 {
     RSDK_THIS(DNARiser);
 
-    if (entity->timer <= 0) {
-        if (!entity->timer) {
-            if (!entity->field_AC) {
-                EntityDNARiser *child = (EntityDNARiser *)entity->child;
+    if (self->timer <= 0) {
+        if (!self->timer) {
+            if (!self->field_AC) {
+                EntityDNARiser *child = (EntityDNARiser *)self->child;
                 if (child) {
-                    entity->field_AC   = 1;
+                    self->field_AC   = 1;
                     child->timer       = 0;
                     child->velocity.x  = 0;
                     child->state       = DNARiser_State_Unknown8;
-                    child->velocity.y  = entity->vector_D8.y >> 1;
-                    child->vector_D8.y = entity->vector_D8.y >> 1;
+                    child->velocity.y  = self->vector_D8.y >> 1;
+                    child->vector_D8.y = self->vector_D8.y >> 1;
                 }
             }
-            if (entity->position.y < entity->vector_D0.y) {
-                entity->velocity.y += 0x38000;
-                entity->position.y += entity->velocity.y;
+            if (self->position.y < self->vector_D0.y) {
+                self->velocity.y += 0x38000;
+                self->position.y += self->velocity.y;
             }
 
-            int32 posY = entity->vector_D0.y;
-            if (entity->position.y < entity->vector_D0.y)
-                posY = entity->position.y;
+            int32 posY = self->vector_D0.y;
+            if (self->position.y < self->vector_D0.y)
+                posY = self->position.y;
 
-            entity->position.y = posY;
-            entity->curHeight  = entity->vector_D0.y - posY;
-            if (posY == entity->vector_D0.y) {
-                entity->state = DNARiser_State_Unknown5;
-                entity->timer = 60;
+            self->position.y = posY;
+            self->curHeight  = self->vector_D0.y - posY;
+            if (posY == self->vector_D0.y) {
+                self->state = DNARiser_State_Unknown5;
+                self->timer = 60;
             }
         }
     }
     else {
-        entity->timer--;
+        self->timer--;
     }
 }
 
 void DNARiser_State_Unknown5(void)
 {
     RSDK_THIS(DNARiser);
-    if (!entity->field_E4) {
-        if (entity->timer <= 0) {
-            if (RSDK.CheckOnScreen(entity, &entity->updateRange)) {
+    if (!self->field_E4) {
+        if (self->timer <= 0) {
+            if (RSDK.CheckOnScreen(self, &self->updateRange)) {
                 DNARiser_State_BubbleBurst();
                 DNARiser_State_Setup();
-                entity->field_A8 = 30;
+                self->field_A8 = 30;
             }
             else {
-                entity->state = DNARiser_State_Setup;
+                self->state = DNARiser_State_Setup;
             }
         }
         else {
-            entity->timer--;
+            self->timer--;
         }
     }
 }
@@ -387,9 +387,9 @@ void DNARiser_State_Unknown5(void)
 void DNARiser_State_SetupChild(void)
 {
     RSDK_THIS(DNARiser);
-    entity->active    = ACTIVE_NORMAL;
-    entity->stateDraw = DNARiser_StateDraw_Helix;
-    entity->state     = DNARiser_State_None;
+    self->active    = ACTIVE_NORMAL;
+    self->stateDraw = DNARiser_StateDraw_Helix;
+    self->state     = DNARiser_State_None;
 }
 
 void DNARiser_State_None(void) {}
@@ -397,16 +397,16 @@ void DNARiser_State_None(void) {}
 void DNARiser_State_Unknown8(void)
 {
     RSDK_THIS(DNARiser);
-    EntityDNARiser *parent = (EntityDNARiser *)entity->parent;
+    EntityDNARiser *parent = (EntityDNARiser *)self->parent;
 
-    if (entity->timer <= 0) {
-        if (entity->field_AC) {
-            if (!RSDK.CheckOnScreen(entity, &entity->updateRange))
-                destroyEntity(entity);
+    if (self->timer <= 0) {
+        if (self->field_AC) {
+            if (!RSDK.CheckOnScreen(self, &self->updateRange))
+                destroyEntity(self);
         }
         else {
-            EntityDNARiser *child = (EntityDNARiser *)entity->field_F0;
-            entity->field_AC      = 1;
+            EntityDNARiser *child = (EntityDNARiser *)self->field_F0;
+            self->field_AC      = 1;
             if (child) {
                 while (true) {
                     if (RSDK.CheckOnScreen(child, &child->updateRange)) {
@@ -414,8 +414,8 @@ void DNARiser_State_Unknown8(void)
                         child->timer       = 1;
                         child->state       = DNARiser_State_Unknown8;
                         child->velocity.x  = 0;
-                        child->velocity.y  = (entity->vector_D8.y >> 1) + (entity->vector_D8.y >> 2);
-                        child->vector_D8.y = (entity->vector_D8.y >> 1) + (entity->vector_D8.y >> 2);
+                        child->velocity.y  = (self->vector_D8.y >> 1) + (self->vector_D8.y >> 2);
+                        child->vector_D8.y = (self->vector_D8.y >> 1) + (self->vector_D8.y >> 2);
                         break;
                     }
                     else {
@@ -434,18 +434,18 @@ void DNARiser_State_Unknown8(void)
                 parent->field_E4 = NULL;
             }
 
-            if (entity->field_AC) {
-                if (!RSDK.CheckOnScreen(entity, &entity->updateRange))
-                    destroyEntity(entity);
+            if (self->field_AC) {
+                if (!RSDK.CheckOnScreen(self, &self->updateRange))
+                    destroyEntity(self);
             }
         }
     }
     else {
-        entity->timer--;
+        self->timer--;
     }
-    entity->velocity.y += 0x3800;
-    entity->position.y += entity->velocity.y;
-    entity->field_CC += 0x20000;
+    self->velocity.y += 0x3800;
+    self->position.y += self->velocity.y;
+    self->field_CC += 0x20000;
 }
 
 void DNARiser_StateDraw_Main(void)
@@ -453,65 +453,65 @@ void DNARiser_StateDraw_Main(void)
     RSDK_THIS(DNARiser);
 
     bool32 flag = false;
-    int32 angle   = ((0x57262 * (entity->curHeight >> 16)) >> 16) + 100;
+    int32 angle   = ((0x57262 * (self->curHeight >> 16)) >> 16) + 100;
 
     Animator animator;
     memset(&animator, 0, sizeof(animator));
     if ((uint32)(angle & 0x3FF) - 256 <= 0x200)
         flag = true;
 
-    int32 sineOff       = (RSDK.Sin1024(angle & 0x3FF) << 6) * (entity->field_CC >> 16);
-    entity->alpha     = 0x100;
-    entity->inkEffect = INK_NONE;
+    int32 sineOff       = (RSDK.Sin1024(angle & 0x3FF) << 6) * (self->field_CC >> 16);
+    self->alpha     = 0x100;
+    self->inkEffect = INK_NONE;
 
     Vector2 drawPos;
-    drawPos = entity->position;
+    drawPos = self->position;
 
-    entity->scale.x = 0x200;
-    entity->scale.y = 0x200;
-    entity->drawFX  = FX_NONE;
-    if (RSDK_sceneInfo->currentDrawGroup == Zone->drawOrderHigh) {
+    self->scale.x = 0x200;
+    self->scale.y = 0x200;
+    self->drawFX  = FX_NONE;
+    if (SceneInfo->currentDrawGroup == Zone->drawOrderHigh) {
         if (flag) {
-            drawPos.x = sineOff + entity->position.x;
-            drawPos.y = entity->position.y;
+            drawPos.x = sineOff + self->position.x;
+            drawPos.y = self->position.y;
             RSDK.SetSpriteAnimation(DNARiser->aniFrames, 4, &animator, true, 0);
         }
         else {
-            drawPos.x = entity->position.x - sineOff;
-            drawPos.y = entity->position.y;
+            drawPos.x = self->position.x - sineOff;
+            drawPos.y = self->position.y;
             RSDK.SetSpriteAnimation(DNARiser->aniFrames, 2, &animator, true, 0);
         }
 
         RSDK.DrawSprite(&animator, &drawPos, false);
-        if (!entity->field_60) {
-            drawPos           = entity->position;
-            entity->drawFX    = FX_SCALE;
-            entity->inkEffect = INK_BLEND;
-            entity->alpha     = 128;
+        if (!self->field_60) {
+            drawPos           = self->position;
+            self->drawFX    = FX_SCALE;
+            self->inkEffect = INK_BLEND;
+            self->alpha     = 128;
             Vector2 vec;
-            vec.x         = entity->field_70;
-            vec.y         = entity->field_70;
-            entity->scale = DNARiser_CalculateScale(&vec);
-            RSDK.DrawSprite(&entity->animator2, &drawPos, false);
+            vec.x         = self->field_70;
+            vec.y         = self->field_70;
+            self->scale = DNARiser_CalculateScale(&vec);
+            RSDK.DrawSprite(&self->animator2, &drawPos, false);
         }
-        if (entity->popped) {
-            drawPos           = entity->popPos;
-            entity->scale.x   = 0x200;
-            entity->scale.y   = 0x200;
-            entity->drawFX    = FX_NONE;
-            entity->inkEffect = INK_NONE;
-            RSDK.DrawSprite(&entity->animator, &drawPos, false);
+        if (self->popped) {
+            drawPos           = self->popPos;
+            self->scale.x   = 0x200;
+            self->scale.y   = 0x200;
+            self->drawFX    = FX_NONE;
+            self->inkEffect = INK_NONE;
+            RSDK.DrawSprite(&self->animator, &drawPos, false);
         }
     }
     else {
         if (flag) {
-            drawPos.y = entity->position.y;
-            drawPos.x = entity->position.x - sineOff;
+            drawPos.y = self->position.y;
+            drawPos.x = self->position.x - sineOff;
             RSDK.SetSpriteAnimation(DNARiser->aniFrames, 2, &animator, true, 0);
         }
         else {
-            drawPos.x = sineOff + entity->position.x;
-            drawPos.y = entity->position.y;
+            drawPos.x = sineOff + self->position.x;
+            drawPos.y = self->position.y;
             RSDK.SetSpriteAnimation(DNARiser->aniFrames, 4, &animator, true, 0);
         }
         RSDK.DrawSprite(&animator, &drawPos, false);
@@ -523,45 +523,45 @@ void DNARiser_StateDraw_Helix(void)
     RSDK_THIS(DNARiser);
 
     bool32 flag            = false;
-    EntityDNARiser *parent = (EntityDNARiser *)entity->parent;
+    EntityDNARiser *parent = (EntityDNARiser *)self->parent;
 
     Animator animator;
     memset(&animator, 0, sizeof(animator));
-    if ((entity->angle - 256) <= 0x200)
+    if ((self->angle - 256) <= 0x200)
         flag = true;
 
-    int32 sineOff       = (RSDK.Sin1024(entity->angle) << 6) * (entity->field_CC >> 16);
-    entity->alpha     = 0x100;
-    entity->inkEffect = INK_NONE;
+    int32 sineOff       = (RSDK.Sin1024(self->angle) << 6) * (self->field_CC >> 16);
+    self->alpha     = 0x100;
+    self->inkEffect = INK_NONE;
 
     Vector2 drawPos;
-    drawPos = entity->position;
+    drawPos = self->position;
 
-    entity->scale.x = 0x200;
-    entity->scale.y = 0x200;
-    entity->drawFX  = FX_NONE;
-    entity->drawFX  = INK_NONE;
-    if (RSDK_sceneInfo->currentDrawGroup != Zone->drawOrderHigh && !(entity->field_A4 & 1)) {
+    self->scale.x = 0x200;
+    self->scale.y = 0x200;
+    self->drawFX  = FX_NONE;
+    self->drawFX  = INK_NONE;
+    if (SceneInfo->currentDrawGroup != Zone->drawOrderHigh && !(self->field_A4 & 1)) {
         if (flag) {
-            drawPos.x = entity->position.x - sineOff;
-            drawPos.y = entity->position.y;
+            drawPos.x = self->position.x - sineOff;
+            drawPos.y = self->position.y;
             RSDK.SetSpriteAnimation(DNARiser->aniFrames, 2, &animator, true, 0);
         }
         else {
-            drawPos.x = sineOff + entity->position.x;
-            drawPos.y = entity->position.y;
+            drawPos.x = sineOff + self->position.x;
+            drawPos.y = self->position.y;
             RSDK.SetSpriteAnimation(DNARiser->aniFrames, 4, &animator, true, 0);
         }
         RSDK.DrawSprite(&animator, &drawPos, false);
     }
 
-    if (!(entity->field_A4 % 5)) {
-        int32 distance = (parent->field_E0 - entity->field_A4 >= 8) ? 4 : ((parent->field_E0 - entity->field_A4) / 2);
-        int32 sine     = (RSDK.Sin1024(entity->angle) << 6) * ((entity->field_CC >> 16) - 12);
-        drawPos.y    = entity->position.y;
-        drawPos.x    = sine + entity->position.x;
+    if (!(self->field_A4 % 5)) {
+        int32 distance = (parent->field_E0 - self->field_A4 >= 8) ? 4 : ((parent->field_E0 - self->field_A4) / 2);
+        int32 sine     = (RSDK.Sin1024(self->angle) << 6) * ((self->field_CC >> 16) - 12);
+        drawPos.y    = self->position.y;
+        drawPos.x    = sine + self->position.x;
         if (flag)
-            drawPos.x = entity->position.x - sine;
+            drawPos.x = self->position.x - sine;
         int32 startX = drawPos.x;
         sine       = 2 * sine / 7;
 
@@ -577,7 +577,7 @@ void DNARiser_StateDraw_Helix(void)
 
         for (int32 i = 0; i < 8; ++i) {
             bool32 flagA = (flag && i <= 3) || (!flag && i >= 4);
-            bool32 flagB = RSDK_sceneInfo->currentDrawGroup == Zone->drawOrderHigh ? ((flag && !flagA) || (!flag && flagA))
+            bool32 flagB = SceneInfo->currentDrawGroup == Zone->drawOrderHigh ? ((flag && !flagA) || (!flag && flagA))
                                                                                    : ((flag && flagA) || (!flag && !flagA));
 
             if (flagArray[i] && flagB) {
@@ -591,15 +591,15 @@ void DNARiser_StateDraw_Helix(void)
         }
     }
 
-    if (RSDK_sceneInfo->currentDrawGroup == Zone->drawOrderHigh && !(entity->field_A4 & 1)) {
+    if (SceneInfo->currentDrawGroup == Zone->drawOrderHigh && !(self->field_A4 & 1)) {
         if (flag) {
-            drawPos.x = sineOff + entity->position.x;
-            drawPos.y = entity->position.y;
+            drawPos.x = sineOff + self->position.x;
+            drawPos.y = self->position.y;
             RSDK.SetSpriteAnimation(DNARiser->aniFrames, 4, &animator, true, 0);
         }
         else {
-            drawPos.x = entity->position.x - sineOff;
-            drawPos.y = entity->position.y;
+            drawPos.x = self->position.x - sineOff;
+            drawPos.y = self->position.y;
             RSDK.SetSpriteAnimation(DNARiser->aniFrames, 2, &animator, true, 0);
         }
         RSDK.DrawSprite(&animator, &drawPos, false);
@@ -610,25 +610,25 @@ void DNARiser_EditorDraw(void)
 {
     RSDK_THIS(DNARiser);
 
-    entity->vector_D0     = entity->position;
-    entity->active        = ACTIVE_BOUNDS;
-    entity->speed.x       = 0;
-    entity->velocity.x    = 0;
-    entity->speed.y       = -abs(entity->speed.y);
-    entity->timer         = 0;
-    entity->curHeight     = 0;
-    entity->field_AC      = 0;
-    entity->field_E4      = 0;
-    entity->child         = 0;
-    entity->field_E0      = 0;
-    entity->activePlayers = 0;
-    entity->field_60      = 0;
-    entity->field_B6      = 0;
-    entity->timer2        = 0;
-    entity->field_B0      = 0;
-    entity->velocity.y    = 0;
-    entity->field_70      = 0x200;
-    RSDK.SetSpriteAnimation(DNARiser->aniFrames, 0, &entity->animator2, true, 0);
+    self->vector_D0     = self->position;
+    self->active        = ACTIVE_BOUNDS;
+    self->speed.x       = 0;
+    self->velocity.x    = 0;
+    self->speed.y       = -abs(self->speed.y);
+    self->timer         = 0;
+    self->curHeight     = 0;
+    self->field_AC      = 0;
+    self->field_E4      = 0;
+    self->child         = 0;
+    self->field_E0      = 0;
+    self->activePlayers = 0;
+    self->field_60      = 0;
+    self->field_B6      = 0;
+    self->timer2        = 0;
+    self->field_B0      = 0;
+    self->velocity.y    = 0;
+    self->field_70      = 0x200;
+    RSDK.SetSpriteAnimation(DNARiser->aniFrames, 0, &self->animator2, true, 0);
 
     DNARiser_StateDraw_Main();
 }

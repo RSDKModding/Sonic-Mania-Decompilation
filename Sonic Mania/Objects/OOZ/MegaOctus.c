@@ -5,7 +5,7 @@ ObjectMegaOctus *MegaOctus;
 void MegaOctus_Update(void)
 {
     RSDK_THIS(MegaOctus);
-    StateMachine_Run(entity->state);
+    StateMachine_Run(self->state);
 }
 
 void MegaOctus_LateUpdate(void) {}
@@ -22,166 +22,166 @@ void MegaOctus_StaticUpdate(void)
 void MegaOctus_Draw(void)
 {
     RSDK_THIS(MegaOctus);
-    StateMachine_Run(entity->stateDraw);
+    StateMachine_Run(self->stateDraw);
 }
 
 void MegaOctus_Create(void *data)
 {
     RSDK_THIS(MegaOctus);
 
-    entity->drawFX = FX_FLIP;
-    if (!RSDK_sceneInfo->inEditor) {
+    self->drawFX = FX_FLIP;
+    if (!SceneInfo->inEditor) {
         if (globals->gameMode < MODE_TIMEATTACK) {
-            entity->active = ACTIVE_BOUNDS;
+            self->active = ACTIVE_BOUNDS;
             if (data)
-                entity->type = voidToInt(data);
-            switch (entity->type) {
+                self->type = voidToInt(data);
+            switch (self->type) {
                 case MEGAOCTUS_BODY:
-                    entity->visible   = false;
-                    entity->drawOrder = Zone->drawOrderLow;
-                    RSDK.SetSpriteAnimation(MegaOctus->aniFrames, 0, &entity->animator1, true, 0);
+                    self->visible   = false;
+                    self->drawOrder = Zone->drawOrderLow;
+                    RSDK.SetSpriteAnimation(MegaOctus->aniFrames, 0, &self->animator1, true, 0);
                     RSDK.SetSpriteAnimation(MegaOctus->eggmanFrames, 1, &MegaOctus->animator3, true, 0);
                     RSDK.SetSpriteAnimation(MegaOctus->aniFrames, 1, &MegaOctus->animator1, true, 5);
                     RSDK.SetSpriteAnimation(MegaOctus->aniFrames, 2, &MegaOctus->animator2, true, 5);
                     RSDK.SetSpriteAnimation(MegaOctus->hatchFrames, 0, &MegaOctus->animator4, true, 0);
                     RSDK.SetSpriteAnimation(MegaOctus->hatchFrames, 1, &MegaOctus->animator5, true, 0);
-                    entity->hitbox.left   = -33;
-                    entity->hitbox.top    = -37;
-                    entity->hitbox.right  = 33;
-                    entity->hitbox.bottom = 6;
-                    entity->origin.x      = entity->position.x + 0x800000;
-                    entity->origin.y      = entity->position.y;
-                    entity->updateRange.x = 0x800000;
-                    entity->updateRange.y = 0x800000;
-                    MegaOctus->bossPtr    = (Entity *)entity;
+                    self->hitbox.left   = -33;
+                    self->hitbox.top    = -37;
+                    self->hitbox.right  = 33;
+                    self->hitbox.bottom = 6;
+                    self->origin.x      = self->position.x + 0x800000;
+                    self->origin.y      = self->position.y;
+                    self->updateRange.x = 0x800000;
+                    self->updateRange.y = 0x800000;
+                    MegaOctus->bossPtr  = (Entity *)self;
                     MegaOctus->field_8C   = 0;
-                    entity->state         = MegaOctus_State_SetupBounds;
-                    entity->stateDraw     = MegaOctus_StateDraw_Body;
+                    self->state         = MegaOctus_State_SetupBounds;
+                    self->stateDraw     = MegaOctus_StateDraw_Body;
                     break;
                 case MEGAOCTUS_UNUSED1: break;
                 case MEGAOCTUS_HARPOON:
-                    entity->active        = ACTIVE_NORMAL;
-                    entity->visible       = true;
-                    entity->drawOrder     = Zone->drawOrderLow;
-                    entity->hitbox.left   = -8;
-                    entity->hitbox.top    = -8;
-                    entity->hitbox.right  = 8;
-                    entity->hitbox.bottom = 8;
-                    entity->origin.x      = entity->position.x;
-                    entity->origin.y      = entity->position.y;
-                    entity->updateRange.x = 0x800000;
-                    entity->updateRange.y = 0x800000;
-                    entity->angle         = 0;
-                    entity->rotation      = 0;
-                    RSDK.SetSpriteAnimation(MegaOctus->aniFrames, 3, &entity->animator1, true, 1);
+                    self->active        = ACTIVE_NORMAL;
+                    self->visible       = true;
+                    self->drawOrder     = Zone->drawOrderLow;
+                    self->hitbox.left   = -8;
+                    self->hitbox.top    = -8;
+                    self->hitbox.right  = 8;
+                    self->hitbox.bottom = 8;
+                    self->origin.x      = self->position.x;
+                    self->origin.y      = self->position.y;
+                    self->updateRange.x = 0x800000;
+                    self->updateRange.y = 0x800000;
+                    self->angle         = 0;
+                    self->rotation      = 0;
+                    RSDK.SetSpriteAnimation(MegaOctus->aniFrames, 3, &self->animator1, true, 1);
                     break;
                 case MEGAOCTUS_GUN:
-                    entity->active        = ACTIVE_NORMAL;
-                    entity->visible       = true;
-                    entity->updateRange.x = 0x800000;
-                    entity->updateRange.y = 0x800000;
-                    entity->drawOrder     = Zone->drawOrderLow + 1;
-                    entity->hitbox.left   = -8;
-                    entity->hitbox.top    = -8;
-                    entity->hitbox.right  = 8;
-                    entity->hitbox.bottom = 8;
-                    entity->field_6C      = entity->position.y - 0x700000;
-                    entity->origin.x      = entity->position.x;
-                    entity->origin.y      = entity->position.y;
-                    entity->field_70      = 256;
-                    entity->shotCount     = 3;
-                    RSDK.SetSpriteAnimation(MegaOctus->aniFrames, 3, &entity->animator1, true, 1);
-                    RSDK.SetSpriteAnimation(MegaOctus->aniFrames, 4, &entity->animator2, true, 3);
-                    entity->velocity.y = -0x10000;
-                    entity->state      = MegaOctus_StateGun_Unknown1;
-                    entity->stateDraw  = MegaOctus_StateDraw_Gun;
+                    self->active        = ACTIVE_NORMAL;
+                    self->visible       = true;
+                    self->updateRange.x = 0x800000;
+                    self->updateRange.y = 0x800000;
+                    self->drawOrder     = Zone->drawOrderLow + 1;
+                    self->hitbox.left   = -8;
+                    self->hitbox.top    = -8;
+                    self->hitbox.right  = 8;
+                    self->hitbox.bottom = 8;
+                    self->field_6C      = self->position.y - 0x700000;
+                    self->origin.x      = self->position.x;
+                    self->origin.y      = self->position.y;
+                    self->field_70      = 256;
+                    self->shotCount     = 3;
+                    RSDK.SetSpriteAnimation(MegaOctus->aniFrames, 3, &self->animator1, true, 1);
+                    RSDK.SetSpriteAnimation(MegaOctus->aniFrames, 4, &self->animator2, true, 3);
+                    self->velocity.y = -0x10000;
+                    self->state      = MegaOctus_StateGun_Unknown1;
+                    self->stateDraw  = MegaOctus_StateDraw_Gun;
                     break;
                 case MEGAOCTUS_ORB:
-                    entity->active        = ACTIVE_NORMAL;
-                    entity->visible       = true;
-                    entity->updateRange.x = 0x800000;
-                    entity->updateRange.y = 0x800000;
-                    entity->drawOrder     = Zone->drawOrderLow + 1;
-                    entity->hitbox.left   = -16;
-                    entity->hitbox.top    = -16;
-                    entity->hitbox.right  = 16;
-                    entity->hitbox.bottom = 16;
-                    entity->field_6C      = entity->position.y - 0x1000000;
-                    entity->origin.x      = entity->position.x;
-                    entity->origin.y      = entity->position.y;
-                    RSDK.SetSpriteAnimation(MegaOctus->aniFrames, 3, &entity->animator1, true, 1);
-                    RSDK.SetSpriteAnimation(MegaOctus->aniFrames, 5, &entity->animator2, true, 0);
-                    entity->velocity.y = -0x18000;
-                    entity->state      = MegaOctus_StateOrb_Wait;
-                    entity->stateDraw  = MegaOctus_StateDraw_Orb;
+                    self->active        = ACTIVE_NORMAL;
+                    self->visible       = true;
+                    self->updateRange.x = 0x800000;
+                    self->updateRange.y = 0x800000;
+                    self->drawOrder     = Zone->drawOrderLow + 1;
+                    self->hitbox.left   = -16;
+                    self->hitbox.top    = -16;
+                    self->hitbox.right  = 16;
+                    self->hitbox.bottom = 16;
+                    self->field_6C      = self->position.y - 0x1000000;
+                    self->origin.x      = self->position.x;
+                    self->origin.y      = self->position.y;
+                    RSDK.SetSpriteAnimation(MegaOctus->aniFrames, 3, &self->animator1, true, 1);
+                    RSDK.SetSpriteAnimation(MegaOctus->aniFrames, 5, &self->animator2, true, 0);
+                    self->velocity.y = -0x18000;
+                    self->state      = MegaOctus_StateOrb_Wait;
+                    self->stateDraw  = MegaOctus_StateDraw_Orb;
                     break;
                 case MEGAOCTUS_ARM:
-                    entity->active        = ACTIVE_NORMAL;
-                    entity->visible       = true;
-                    entity->updateRange.x = 0x800000;
-                    entity->drawOrder     = Zone->drawOrderLow + 1;
-                    entity->hitbox.left   = -8;
-                    entity->hitbox.top    = -8;
-                    entity->hitbox.right  = 8;
-                    entity->hitbox.bottom = 8;
-                    entity->origin.x      = entity->position.x;
-                    entity->origin.y      = entity->position.y;
-                    entity->updateRange.y = 0x800000;
-                    entity->angle         = 0;
-                    entity->rotation      = 0;
-                    RSDK.SetSpriteAnimation(MegaOctus->aniFrames, 3, &entity->animator1, true, 1);
-                    entity->state     = MegaOctus_StateArm_Unknown1;
-                    entity->stateDraw = MegaOctus_StateDraw_Arm_Unknown1;
+                    self->active        = ACTIVE_NORMAL;
+                    self->visible       = true;
+                    self->updateRange.x = 0x800000;
+                    self->drawOrder     = Zone->drawOrderLow + 1;
+                    self->hitbox.left   = -8;
+                    self->hitbox.top    = -8;
+                    self->hitbox.right  = 8;
+                    self->hitbox.bottom = 8;
+                    self->origin.x      = self->position.x;
+                    self->origin.y      = self->position.y;
+                    self->updateRange.y = 0x800000;
+                    self->angle         = 0;
+                    self->rotation      = 0;
+                    RSDK.SetSpriteAnimation(MegaOctus->aniFrames, 3, &self->animator1, true, 1);
+                    self->state     = MegaOctus_StateArm_Unknown1;
+                    self->stateDraw = MegaOctus_StateDraw_Arm_Unknown1;
                     break;
                 case MEGAOCTUS_LASER:
-                    entity->active        = ACTIVE_NORMAL;
-                    entity->visible       = true;
-                    entity->drawOrder     = Zone->drawOrderLow;
-                    entity->hitbox.left   = -16;
-                    entity->hitbox.top    = -1;
-                    entity->hitbox.right  = 16;
-                    entity->hitbox.bottom = 1;
-                    entity->updateRange.x = 0x800000;
-                    entity->updateRange.y = 0x800000;
-                    RSDK.SetSpriteAnimation(MegaOctus->aniFrames, 7, &entity->animator1, true, 0);
-                    entity->state     = MegaOctus_State_Laser;
-                    entity->stateDraw = MegaOctus_StateDraw_Laser;
+                    self->active        = ACTIVE_NORMAL;
+                    self->visible       = true;
+                    self->drawOrder     = Zone->drawOrderLow;
+                    self->hitbox.left   = -16;
+                    self->hitbox.top    = -1;
+                    self->hitbox.right  = 16;
+                    self->hitbox.bottom = 1;
+                    self->updateRange.x = 0x800000;
+                    self->updateRange.y = 0x800000;
+                    RSDK.SetSpriteAnimation(MegaOctus->aniFrames, 7, &self->animator1, true, 0);
+                    self->state     = MegaOctus_State_Laser;
+                    self->stateDraw = MegaOctus_StateDraw_Laser;
                     break;
                 case MEGAOCTUS_ORBSHOT:
-                    entity->active        = ACTIVE_NORMAL;
-                    entity->visible       = true;
-                    entity->drawOrder     = Zone->drawOrderLow;
-                    entity->hitbox.left   = -3;
-                    entity->hitbox.top    = -3;
-                    entity->hitbox.right  = 3;
-                    entity->hitbox.bottom = 3;
-                    entity->updateRange.x = 0x400000;
-                    entity->updateRange.y = 0x400000;
-                    RSDK.SetSpriteAnimation(MegaOctus->aniFrames, 6, &entity->animator1, true, 0);
-                    entity->state     = MegaOctus_State_Shot;
-                    entity->stateDraw = MegaOctus_StateDraw_OrbShot;
+                    self->active        = ACTIVE_NORMAL;
+                    self->visible       = true;
+                    self->drawOrder     = Zone->drawOrderLow;
+                    self->hitbox.left   = -3;
+                    self->hitbox.top    = -3;
+                    self->hitbox.right  = 3;
+                    self->hitbox.bottom = 3;
+                    self->updateRange.x = 0x400000;
+                    self->updateRange.y = 0x400000;
+                    RSDK.SetSpriteAnimation(MegaOctus->aniFrames, 6, &self->animator1, true, 0);
+                    self->state     = MegaOctus_State_Shot;
+                    self->stateDraw = MegaOctus_StateDraw_OrbShot;
                     break;
                 case MEGAOCTUS_UNUSED8: break;
                 case MEGAOCTUS_LASERFIRE:
-                    entity->active        = ACTIVE_NORMAL;
-                    entity->visible       = true;
-                    entity->drawOrder     = Zone->drawOrderLow;
-                    entity->hitbox.left   = -8;
-                    entity->hitbox.top    = -4;
-                    entity->hitbox.right  = 8;
-                    entity->hitbox.bottom = 0;
-                    entity->updateRange.x = 0x800000;
-                    entity->updateRange.y = 0x800000;
-                    RSDK.SetSpriteAnimation(MegaOctus->aniFrames, 8, &entity->animator1, true, 0);
-                    entity->state     = MegaOctus_State_LaserFire;
-                    entity->stateDraw = MegaOctus_StateDraw_Laser;
+                    self->active        = ACTIVE_NORMAL;
+                    self->visible       = true;
+                    self->drawOrder     = Zone->drawOrderLow;
+                    self->hitbox.left   = -8;
+                    self->hitbox.top    = -4;
+                    self->hitbox.right  = 8;
+                    self->hitbox.bottom = 0;
+                    self->updateRange.x = 0x800000;
+                    self->updateRange.y = 0x800000;
+                    RSDK.SetSpriteAnimation(MegaOctus->aniFrames, 8, &self->animator1, true, 0);
+                    self->state     = MegaOctus_State_LaserFire;
+                    self->stateDraw = MegaOctus_StateDraw_Laser;
                     break;
                 default: return;
             }
         }
         else {
             MegaOctus->bossPtr = NULL;
-            destroyEntity(entity);
+            destroyEntity(self);
         }
     }
 }
@@ -215,8 +215,8 @@ void MegaOctus_CheckPlayerCollisions_Body(void)
 {
     RSDK_THIS(MegaOctus);
 
-    if (entity->invincibilityTimer)
-        entity->invincibilityTimer--;
+    if (self->invincibilityTimer)
+        self->invincibilityTimer--;
 
     foreach_active(Player, player)
     {
@@ -225,32 +225,32 @@ void MegaOctus_CheckPlayerCollisions_Body(void)
         if (shield->objectID == Shield->objectID && shield->state == Shield_State_Insta)
             playerRadius = 0x160000;
 
-        if (RSDK.CheckObjectCollisionTouchCircle(entity, 0x300000, player, playerRadius)) {
-            int32 angle = RSDK.ATan2(player->position.x - entity->position.x, player->position.y - entity->position.y);
+        if (RSDK.CheckObjectCollisionTouchCircle(self, 0x300000, player, playerRadius)) {
+            int32 angle = RSDK.ATan2(player->position.x - self->position.x, player->position.y - self->position.y);
 
             player->velocity.x += 80 * RSDK.Cos256(angle);
-            if (entity->invincibilityTimer || !Player_CheckBossHit(player, entity)) {
+            if (self->invincibilityTimer || !Player_CheckBossHit(player, self)) {
                 if (80 * RSDK.Sin256(angle) >= 0)
                     player->velocity.y -= 80 * RSDK.Sin256(angle);
                 else
                     player->velocity.y -= -80 * RSDK.Sin256(angle);
             }
             else {
-                if (entity->health)
-                    entity->health--;
-                if (entity->health) {
+                if (self->health)
+                    self->health--;
+                if (self->health) {
                     RSDK.PlaySfx(MegaOctus->sfxBossHit, false, 255);
-                    entity->invincibilityTimer = 30;
-                    MegaOctus->spawnHarpoon    = 1;
+                    self->invincibilityTimer = 30;
+                    MegaOctus->spawnHarpoon    = true;
                 }
                 else {
-                    RSDK_sceneInfo->timeEnabled = false;
-                    Player_GiveScore(RSDK.GetEntityByID(SLOT_PLAYER1), 1000);
+                    SceneInfo->timeEnabled = false;
+                    Player_GiveScore(RSDK_GET_ENTITY(SLOT_PLAYER1, Player), 1000);
                     RSDK.PlaySfx(MegaOctus->sfxExplosion, false, 255);
-                    entity->invincibilityTimer = 120;
+                    self->invincibilityTimer = 120;
                     RSDK.SetSpriteAnimation(MegaOctus->eggmanFrames, 5, &MegaOctus->animator3, true, 0);
                     MegaOctus->field_D4 = true;
-                    entity->state       = MegaOctus_State_Destroyed;
+                    self->state       = MegaOctus_State_Destroyed;
                 }
             }
         }
@@ -265,7 +265,7 @@ void MegaOctus_HandleEggmanAnim(void)
         case 0:
         case 1:
             if (MegaOctus->animator3.frameID >= MegaOctus->animator3.frameCount - 1) {
-                if (entity->invincibilityTimer) {
+                if (self->invincibilityTimer) {
                     RSDK.SetSpriteAnimation(MegaOctus->eggmanFrames, 3, &MegaOctus->animator3, true, 0);
                 }
                 else {
@@ -283,7 +283,7 @@ void MegaOctus_HandleEggmanAnim(void)
             break;
         case 2:
         case 4:
-            if (entity->invincibilityTimer) {
+            if (self->invincibilityTimer) {
                 RSDK.SetSpriteAnimation(MegaOctus->eggmanFrames, 3, &MegaOctus->animator3, true, 0);
             }
             else {
@@ -296,7 +296,7 @@ void MegaOctus_HandleEggmanAnim(void)
 
                 if (MegaOctus->animator3.frameID >= MegaOctus->animator3.frameCount - 1) {
                     if (!laugh) {
-                        uint8 anim = entity->state == MegaOctus_State_Unknown4 ? 2 : 0;
+                        uint8 anim = self->state == MegaOctus_State_Unknown4 ? 2 : 0;
                         RSDK.SetSpriteAnimation(MegaOctus->eggmanFrames, anim, &MegaOctus->animator3, true, 0);
                     }
                     else {
@@ -306,9 +306,9 @@ void MegaOctus_HandleEggmanAnim(void)
             }
             break;
         case 3:
-            if (!entity->invincibilityTimer) {
+            if (!self->invincibilityTimer) {
                 if (MegaOctus->animator3.frameID >= MegaOctus->animator3.frameCount - 1) {
-                    uint8 anim = entity->state == MegaOctus_State_Unknown4 ? 2 : 0;
+                    uint8 anim = self->state == MegaOctus_State_Unknown4 ? 2 : 0;
                     RSDK.SetSpriteAnimation(MegaOctus->eggmanFrames, anim, &MegaOctus->animator3, true, 0);
                 }
             }
@@ -327,7 +327,7 @@ void MegaOctus_Explode(void)
             int32 x = RSDK.Rand(-48, 48) << 16;
             int32 y = RSDK.Rand(-48, 48) << 16;
             EntityExplosion *explosion =
-                CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + 2), entity->position.x + x, entity->position.y + y);
+                CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + 2), self->position.x + x, self->position.y + y);
             explosion->drawOrder = Zone->drawOrderHigh + 2;
         }
     }
@@ -338,45 +338,45 @@ void MegaOctus_HandleDirectionChange(void)
     RSDK_THIS(MegaOctus);
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
 
-    if (abs(player1->position.x - entity->position.x) < 0x200000) {
-        if (entity->orbID > 10) {
-            entity->orbID--;
+    if (abs(player1->position.x - self->position.x) < 0x200000) {
+        if (self->orbID > 10) {
+            self->orbID--;
         }
-        else if (entity->orbID < 10)
-            entity->orbID++;
+        else if (self->orbID < 10)
+            self->orbID++;
     }
     else {
-        if (player1->position.x < entity->position.x) {
-            if (entity->orbID)
-                entity->orbID--;
+        if (player1->position.x < self->position.x) {
+            if (self->orbID)
+                self->orbID--;
         }
-        else if (entity->orbID < 20)
-            entity->orbID++;
+        else if (self->orbID < 20)
+            self->orbID++;
     }
 
-    entity->direction            = entity->orbID < 10;
-    MegaOctus->animator1.frameID = entity->orbID >> 1;
-    MegaOctus->animator2.frameID = entity->orbID >> 1;
+    self->direction            = self->orbID < 10;
+    MegaOctus->animator1.frameID = self->orbID >> 1;
+    MegaOctus->animator2.frameID = self->orbID >> 1;
     MegaOctus->field_8C          = MegaOctus->field_90[MegaOctus->animator1.frameID];
 }
 
 void MegaOctus_State_SetupBounds(void)
 {
     RSDK_THIS(MegaOctus);
-    if (++entity->timer >= 2) {
-        entity->timer               = 0;
+    if (++self->timer >= 2) {
+        self->timer               = 0;
         Zone->playerBoundActiveR[0] = true;
-        Zone->screenBoundsR1[0]     = (entity->position.x >> 16) + 448;
+        Zone->screenBoundsR1[0]     = (self->position.x >> 16) + 448;
         Zone->playerBoundActiveB[0] = false;
-        Zone->screenBoundsB1[0]     = (entity->position.y >> 16) + 96;
+        Zone->screenBoundsB1[0]     = (self->position.y >> 16) + 96;
         Zone->deathBoundary[0]      = Zone->screenBoundsB1[0] << 16;
 #if RETRO_USE_PLUS
         Zone->screenBoundsT1[0] = Zone->screenBoundsB1[0] - 384;
 #endif
-        entity->position.y += 0xC00000;
-        entity->active  = ACTIVE_NORMAL;
-        entity->visible = true;
-        entity->state   = MegaOctus_State_SetupArena;
+        self->position.y += 0xC00000;
+        self->active  = ACTIVE_NORMAL;
+        self->visible = true;
+        self->state   = MegaOctus_State_SetupArena;
     }
 }
 
@@ -384,26 +384,26 @@ void MegaOctus_State_SetupArena(void)
 {
     RSDK_THIS(MegaOctus);
     Zone->playerBoundActiveL[0] = true;
-    Zone->screenBoundsL1[0]     = RSDK_screens->position.x;
+    Zone->screenBoundsL1[0]     = ScreenInfo->position.x;
 
-    if (RSDK_GET_ENTITY(SLOT_PLAYER1, Player)->position.x > entity->origin.x) {
+    if (RSDK_GET_ENTITY(SLOT_PLAYER1, Player)->position.x > self->origin.x) {
         RSDK.GetSceneLayer(Zone->fgLow)->drawLayer[0] = 2;
         Zone->playerBoundActiveL[0]                   = true;
-        Zone->screenBoundsL1[0]                       = (entity->position.x >> 16) - 192;
+        Zone->screenBoundsL1[0]                       = (self->position.x >> 16) - 192;
         Music_TransitionTrack(TRACK_EGGMAN1, 0.0075);
         OOZSetup->flags      = false;
-        entity->velocity.y   = -0x40000;
-        entity->health       = 8;
-        entity->timer        = 60;
-        EntityMegaOctus *arm = CREATE_ENTITY(MegaOctus, intToVoid(MEGAOCTUS_ARM), entity->position.x + 0x800000, entity->origin.y + 0x400000);
-        arm->direction       = entity->direction;
+        self->velocity.y   = -0x40000;
+        self->health       = 8;
+        self->timer        = 60;
+        EntityMegaOctus *arm = CREATE_ENTITY(MegaOctus, intToVoid(MEGAOCTUS_ARM), self->position.x + 0x800000, self->origin.y + 0x400000);
+        arm->direction       = self->direction;
         arm->angle           = 128;
 
-        arm            = CREATE_ENTITY(MegaOctus, intToVoid(MEGAOCTUS_ARM), entity->position.x - 0x800000, entity->origin.y + 0x400000);
-        arm->direction = entity->direction;
+        arm            = CREATE_ENTITY(MegaOctus, intToVoid(MEGAOCTUS_ARM), self->position.x - 0x800000, self->origin.y + 0x400000);
+        arm->direction = self->direction;
         arm->angle     = 128;
 
-        entity->state = MegaOctus_State_Unknown1;
+        self->state = MegaOctus_State_Unknown1;
     }
 }
 
@@ -413,11 +413,11 @@ void MegaOctus_State_Unknown2(void)
 {
     RSDK_THIS(MegaOctus);
 
-    entity->position.y += entity->velocity.y;
-    entity->velocity.y += RETRO_USE_PLUS ? 0x3800 : 0x6000;
-    if (entity->velocity.y >= 0x10000) {
-        entity->state      = MegaOctus_State_Unknown3;
-        entity->velocity.y = 0;
+    self->position.y += self->velocity.y;
+    self->velocity.y += RETRO_USE_PLUS ? 0x3800 : 0x6000;
+    if (self->velocity.y >= 0x10000) {
+        self->state      = MegaOctus_State_Unknown3;
+        self->velocity.y = 0;
     }
     MegaOctus_CheckPlayerCollisions_Body();
 }
@@ -432,12 +432,12 @@ void MegaOctus_State_Unknown3(void)
     MegaOctus_HandleDirectionChange();
     MegaOctus_CheckPlayerCollisions_Body();
 
-    if (--entity->timer <= 0) {
-        entity->timer = 60;
+    if (--self->timer <= 0) {
+        self->timer = 60;
         RSDK.SetSpriteAnimation(MegaOctus->hatchFrames, 2, &MegaOctus->animator5, true, 0);
         if (MegaOctus->animator3.animationID < 2)
             RSDK.SetSpriteAnimation(MegaOctus->eggmanFrames, 2, &MegaOctus->animator3, true, 0);
-        entity->state = MegaOctus_State_Unknown4;
+        self->state = MegaOctus_State_Unknown4;
     }
 }
 
@@ -453,24 +453,24 @@ void MegaOctus_State_Unknown4(void)
     MegaOctus_HandleDirectionChange();
     MegaOctus_CheckPlayerCollisions_Body();
 
-    if (--entity->timer <= 0)
-        entity->state = MegaOctus_State_Unknown5;
+    if (--self->timer <= 0)
+        self->state = MegaOctus_State_Unknown5;
 }
 
 void MegaOctus_State_Unknown5(void)
 {
     RSDK_THIS(MegaOctus);
 
-    entity->position.y += entity->velocity.y;
-    entity->velocity.y += RETRO_USE_PLUS ? 0x3800 : 0x6000;
+    self->position.y += self->velocity.y;
+    self->velocity.y += RETRO_USE_PLUS ? 0x3800 : 0x6000;
 
-    if (entity->position.y >= entity->origin.y + 0xC00000) {
-        entity->position.y = entity->origin.y + 0xC00000;
-        entity->state      = MegaOctus_State_SpawnWeapons;
+    if (self->position.y >= self->origin.y + 0xC00000) {
+        self->position.y = self->origin.y + 0xC00000;
+        self->state      = MegaOctus_State_SpawnWeapons;
         if (MegaOctus->spawnHarpoon)
-            entity->timer = 480;
+            self->timer = 480;
         else
-            entity->timer = 240;
+            self->timer = 240;
     }
     MegaOctus_CheckPlayerCollisions_Body();
 }
@@ -479,18 +479,18 @@ void MegaOctus_State_SpawnWeapons(void)
 {
     RSDK_THIS(MegaOctus);
 
-    if (RSDK_GET_ENTITY(SLOT_PLAYER1, Player)->position.x <= entity->origin.x)
-        entity->position.x = entity->origin.x - 0x800000;
+    if (RSDK_GET_ENTITY(SLOT_PLAYER1, Player)->position.x <= self->origin.x)
+        self->position.x = self->origin.x - 0x800000;
     else
-        entity->position.x = entity->origin.x + 0x800000;
+        self->position.x = self->origin.x + 0x800000;
 
-    --entity->timer;
-    if (entity->timer == 240) {
+    --self->timer;
+    if (self->timer == 240) {
         MegaOctus->spawnHarpoon  = false;
-        EntityMegaOctus *harpoon = CREATE_ENTITY(MegaOctus, intToVoid(MEGAOCTUS_HARPOON), entity->position.x, entity->origin.y + 0x300000);
-        harpoon->direction       = entity->direction;
+        EntityMegaOctus *harpoon = CREATE_ENTITY(MegaOctus, intToVoid(MEGAOCTUS_HARPOON), self->position.x, self->origin.y + 0x300000);
+        harpoon->direction       = self->direction;
         RSDK.PlaySfx(MegaOctus->sfxHarpoon, false, 255);
-        if (RSDK_GET_ENTITY(SLOT_PLAYER1, Player)->position.x <= entity->position.x) {
+        if (RSDK_GET_ENTITY(SLOT_PLAYER1, Player)->position.x <= self->position.x) {
             harpoon->origin.x -= 0x800000;
             harpoon->state     = MegaOctus_State_HarpoonLeft;
             harpoon->stateDraw = MegaOctus_StateDraw_HarpoonLeft;
@@ -501,10 +501,10 @@ void MegaOctus_State_SpawnWeapons(void)
             harpoon->stateDraw = MegaOctus_StateDraw_HarpoonRight;
         }
     }
-    else if (entity->timer <= 0) {
-        entity->timer                                                                                                  = 480;
-        CREATE_ENTITY(MegaOctus, intToVoid(MEGAOCTUS_GUN), entity->position.x, entity->origin.y + 0x400000)->direction = entity->direction;
-        entity->state                                                                                                  = MegaOctus_State_SpawnOrbs;
+    else if (self->timer <= 0) {
+        self->timer                                                                                                  = 480;
+        CREATE_ENTITY(MegaOctus, intToVoid(MEGAOCTUS_GUN), self->position.x, self->origin.y + 0x400000)->direction = self->direction;
+        self->state                                                                                                  = MegaOctus_State_SpawnOrbs;
     }
     MegaOctus_CheckPlayerCollisions_Body();
 }
@@ -514,45 +514,45 @@ void MegaOctus_State_SpawnOrbs(void)
     RSDK_THIS(MegaOctus);
     MegaOctus_HandleDirectionChange();
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
-    if (player1->position.x <= entity->origin.x)
-        entity->position.x = entity->origin.x - 0x800000;
+    if (player1->position.x <= self->origin.x)
+        self->position.x = self->origin.x - 0x800000;
     else
-        entity->position.x = entity->origin.x + 0x800000;
+        self->position.x = self->origin.x + 0x800000;
 
     MegaOctus_CheckPlayerCollisions_Body();
 
-    if (--entity->timer <= 0) {
-        EntityMegaOctus *arm = CREATE_ENTITY(MegaOctus, intToVoid(MEGAOCTUS_ARM), entity->position.x + 0x800000, entity->origin.y + 0x400000);
-        arm->direction       = entity->direction;
+    if (--self->timer <= 0) {
+        EntityMegaOctus *arm = CREATE_ENTITY(MegaOctus, intToVoid(MEGAOCTUS_ARM), self->position.x + 0x800000, self->origin.y + 0x400000);
+        arm->direction       = self->direction;
         arm->angle           = 128;
 
-        arm            = CREATE_ENTITY(MegaOctus, intToVoid(MEGAOCTUS_ARM), entity->position.x - 0x800000, entity->origin.y + 0x400000);
-        arm->direction = entity->direction;
+        arm            = CREATE_ENTITY(MegaOctus, intToVoid(MEGAOCTUS_ARM), self->position.x - 0x800000, self->origin.y + 0x400000);
+        arm->direction = self->direction;
         arm->angle     = 128;
 
         if (MegaOctus->orbHealth[0] > 0) {
-            EntityMegaOctus *orb = CREATE_ENTITY(MegaOctus, intToVoid(MEGAOCTUS_ORB), entity->position.x + 0x380000, entity->origin.y + 0x780000);
-            orb->direction       = entity->direction;
+            EntityMegaOctus *orb = CREATE_ENTITY(MegaOctus, intToVoid(MEGAOCTUS_ORB), self->position.x + 0x380000, self->origin.y + 0x780000);
+            orb->direction       = self->direction;
             orb->health          = MegaOctus->orbHealth[0];
             orb->orbID           = 0;
-            if (entity->position.x > entity->origin.x)
+            if (self->position.x > self->origin.x)
                 orb->velocity.x = 0;
             else
                 orb->velocity.x = 136;
         }
         if (MegaOctus->orbHealth[1] > 0) {
-            EntityMegaOctus *orb = CREATE_ENTITY(MegaOctus, intToVoid(MEGAOCTUS_ORB), entity->position.x - 0x380000, entity->origin.y + 0x780000);
-            orb->direction       = entity->direction;
+            EntityMegaOctus *orb = CREATE_ENTITY(MegaOctus, intToVoid(MEGAOCTUS_ORB), self->position.x - 0x380000, self->origin.y + 0x780000);
+            orb->direction       = self->direction;
             orb->health          = MegaOctus->orbHealth[1];
             orb->orbID           = 1;
             orb->angle           = 256;
-            if (entity->position.x > entity->origin.x)
+            if (self->position.x > self->origin.x)
                 orb->velocity.x = -136;
             else
                 orb->velocity.x = 0;
         }
-        entity->timer = 120;
-        entity->state = MegaOctus_State_Unknown1;
+        self->timer = 120;
+        self->state = MegaOctus_State_Unknown1;
     }
 }
 
@@ -569,12 +569,12 @@ void MegaOctus_State_Destroyed(void)
     }
 
     MegaOctus_Explode();
-    if (--entity->invincibilityTimer <= 0) {
+    if (--self->invincibilityTimer <= 0) {
         if (!MegaOctus->field_84)
             RSDK.SetSpriteAnimation(MegaOctus->hatchFrames, 2, &MegaOctus->animator5, true, 0);
         Music_TransitionTrack(TRACK_STAGE, 0.0125);
-        entity->timer = 0;
-        entity->state = MegaOctus_State_Finish;
+        self->timer = 0;
+        self->state = MegaOctus_State_Finish;
     }
 }
 
@@ -585,16 +585,16 @@ void MegaOctus_State_Finish(void)
     RSDK.ProcessAnimation(&MegaOctus->animator3);
     MegaOctus->field_84 += 0x4800;
     MegaOctus->field_80 += MegaOctus->field_84;
-    entity->position.y += 0x10000;
+    self->position.y += 0x10000;
 
     if (!(Zone->timer & 7)) {
-        int32 x                      = entity->position.x + (RSDK.Rand(-48, 48) << 16);
-        int32 y                      = entity->position.y + (RSDK.Rand(-48, 48) << 16);
+        int32 x                      = self->position.x + (RSDK.Rand(-48, 48) << 16);
+        int32 y                      = self->position.y + (RSDK.Rand(-48, 48) << 16);
         EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid(3), x, y);
-        explosion->drawOrder       = entity->drawOrder;
+        explosion->drawOrder       = self->drawOrder;
     }
 
-    if (++entity->timer > 120) {
+    if (++self->timer > 120) {
         bool32 flag = true;
         foreach_active(MegaOctus, boss)
         {
@@ -606,7 +606,7 @@ void MegaOctus_State_Finish(void)
 
         if (flag) {
             Zone->screenBoundsR1[0] += 424;
-            destroyEntity(entity);
+            destroyEntity(self);
         }
     }
 }
@@ -615,14 +615,14 @@ void MegaOctus_StateDraw_Body(void)
 {
     RSDK_THIS(MegaOctus);
     Vector2 drawPos;
-    drawPos.x = entity->position.x;
-    drawPos.y = entity->position.y;
+    drawPos.x = self->position.x;
+    drawPos.y = self->position.y;
 
     int32 val = abs(MegaOctus->field_8C) / 96;
-    if (entity->invincibilityTimer & 1) {
+    if (self->invincibilityTimer & 1) {
         RSDK.SetPaletteEntry(0, 128, 0xE0E0E0);
     }
-    drawPos.x = entity->position.x;
+    drawPos.x = self->position.x;
     drawPos.y -= 0x320000;
     RSDK.DrawSprite(&MegaOctus->animator5, &drawPos, false);
 
@@ -631,64 +631,63 @@ void MegaOctus_StateDraw_Body(void)
     pos.y = drawPos.y + MegaOctus->field_80;
     RSDK.DrawSprite(&MegaOctus->animator3, &pos, false);
 
-    entity->animator1.frameID = 0;
-    RSDK.DrawSprite(&entity->animator1, 0, false);
+    self->animator1.frameID = 0;
+    RSDK.DrawSprite(&self->animator1, 0, false);
     RSDK.DrawSprite(&MegaOctus->animator4, &drawPos, false);
 
     if (MegaOctus->field_8C < 0) {
-        entity->drawFX |= FX_SCALE;
-        entity->scale.y = 0x200;
-        entity->scale.x = 0x200 - (val << 9 >> 15);
+        self->drawFX |= FX_SCALE;
+        self->scale.y = 0x200;
+        self->scale.x = 0x200 - (val << 9 >> 15);
     }
-    drawPos = entity->position;
+    drawPos = self->position;
     drawPos.x += val - 0x10000 + MegaOctus->field_8C + 16 * (val - 0x10000);
-    entity->animator1.frameID = 1;
-    RSDK.DrawSprite(&entity->animator1, &drawPos, false);
+    self->animator1.frameID = 1;
+    RSDK.DrawSprite(&self->animator1, &drawPos, false);
 
     drawPos.x += val * (MegaOctus->field_8C >> 18);
-    entity->animator1.frameID = 2;
-    RSDK.DrawSprite(&entity->animator1, &drawPos, false);
+    self->animator1.frameID = 2;
+    RSDK.DrawSprite(&self->animator1, &drawPos, false);
 
     drawPos.x -= val * (MegaOctus->field_8C >> 18);
-    entity->drawFX &= ~FX_SCALE;
+    self->drawFX &= ~FX_SCALE;
     if (MegaOctus->field_8C > 0) {
-        entity->drawFX |= FX_SCALE;
-        entity->scale.y = 0x200;
-        entity->scale.x = 0x200 - (val << 9 >> 15);
+        self->drawFX |= FX_SCALE;
+        self->scale.y = 0x200;
+        self->scale.x = 0x200 - (val << 9 >> 15);
     }
 
     drawPos.x += 34 * (0x10000 - val);
-    entity->animator1.frameID = 1;
-    RSDK.DrawSprite(&entity->animator1, &drawPos, false);
+    self->animator1.frameID = 1;
+    RSDK.DrawSprite(&self->animator1, &drawPos, false);
 
     drawPos.x += val * (MegaOctus->field_8C >> 18);
-    entity->animator1.frameID = 2;
-    RSDK.DrawSprite(&entity->animator1, &drawPos, false);
+    self->animator1.frameID = 2;
+    RSDK.DrawSprite(&self->animator1, &drawPos, false);
 
     drawPos.x -= val * (MegaOctus->field_8C >> 18);
-    entity->drawFX = FX_FLIP;
+    self->drawFX = FX_FLIP;
     RSDK.DrawSprite(&MegaOctus->animator2, NULL, false);
     RSDK.DrawSprite(&MegaOctus->animator1, NULL, false);
 
-    entity->animator1.frameID = 6;
-    RSDK.DrawSprite(&entity->animator1, NULL, false);
+    self->animator1.frameID = 6;
+    RSDK.DrawSprite(&self->animator1, NULL, false);
     RSDK.SetPaletteEntry(0, 128, 0x0000);
 }
 
 void MegaOctus_CheckPlayerCollisions_Unknown(void)
 {
     RSDK_THIS(MegaOctus);
-    entity->position.x = 0x3400 * RSDK.Sin512(entity->angle) + entity->origin.x;
-    entity->position.y = 0x3400 * RSDK.Cos512(entity->angle) + entity->origin.y;
+    self->position.x = 0x3400 * RSDK.Sin512(self->angle) + self->origin.x;
+    self->position.y = 0x3400 * RSDK.Cos512(self->angle) + self->origin.y;
 
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionTouch(player, entity, &entity->hitbox)
+        if (Player_CheckCollisionTouch(player, self, &self->hitbox)) {
 #if RETRO_USE_PLUS
-            && !Player_CheckMightyUnspin(768, player, 2, &player->uncurlTimer)
+            if (!Player_CheckMightyUnspin(0x300, player, 2, &player->uncurlTimer))
 #endif
-        ) {
-            Player_CheckHit(player, entity);
+                Player_CheckHit(player, self);
         }
     }
 }
@@ -697,66 +696,66 @@ void MegaOctus_State_HarpoonLeft(void)
 {
     RSDK_THIS(MegaOctus);
 
-    entity->angle = (entity->angle + 3) & 0x1FF;
-    entity->shotCount += 12;
+    self->angle = (self->angle + 3) & 0x1FF;
+    self->shotCount += 12;
     MegaOctus_CheckPlayerCollisions_Unknown();
 
-    if (entity->angle == 1)
-        destroyEntity(entity);
+    if (self->angle == 1)
+        destroyEntity(self);
 }
 
 void MegaOctus_State_HarpoonRight(void)
 {
     RSDK_THIS(MegaOctus);
 
-    entity->angle = (entity->angle - 3) & 0x1FF;
-    entity->shotCount -= 12;
+    self->angle = (self->angle - 3) & 0x1FF;
+    self->shotCount -= 12;
     MegaOctus_CheckPlayerCollisions_Unknown();
 
-    if (entity->angle == 2)
-        destroyEntity(entity);
+    if (self->angle == 2)
+        destroyEntity(self);
 }
 
 void MegaOctus_StateDraw_HarpoonLeft(void)
 {
     RSDK_THIS(MegaOctus);
 
-    entity->animator1.frameID = 1;
-    int32 angle                 = (entity->angle - 108) & 0x1FF;
+    self->animator1.frameID = 1;
+    int32 angle                 = (self->angle - 108) & 0x1FF;
     for (int32 i = 0; i < 9; ++i) {
-        entity->position.x = 0x3400 * RSDK.Sin512(angle) + entity->origin.x;
-        entity->position.y = 0x3400 * RSDK.Cos512(angle) + entity->origin.y;
-        RSDK.DrawSprite(&entity->animator1, NULL, false);
+        self->position.x = 0x3400 * RSDK.Sin512(angle) + self->origin.x;
+        self->position.y = 0x3400 * RSDK.Cos512(angle) + self->origin.y;
+        RSDK.DrawSprite(&self->animator1, NULL, false);
         angle = (angle + 12) & 0x1FF;
     }
 
-    entity->drawFX |= FX_ROTATE;
-    entity->direction         = FLIP_NONE;
-    entity->rotation          = (-256 - entity->angle) & 0x1FF;
-    entity->animator1.frameID = 0;
-    RSDK.DrawSprite(&entity->animator1, NULL, false);
-    entity->drawFX &= ~FX_ROTATE;
+    self->drawFX |= FX_ROTATE;
+    self->direction         = FLIP_NONE;
+    self->rotation          = (-256 - self->angle) & 0x1FF;
+    self->animator1.frameID = 0;
+    RSDK.DrawSprite(&self->animator1, NULL, false);
+    self->drawFX &= ~FX_ROTATE;
 }
 
 void MegaOctus_StateDraw_HarpoonRight(void)
 {
     RSDK_THIS(MegaOctus);
 
-    entity->animator1.frameID = 1;
-    int32 angle                 = (entity->angle + 108) & 0x1FF;
+    self->animator1.frameID = 1;
+    int32 angle                 = (self->angle + 108) & 0x1FF;
     for (int32 i = 0; i < 9; ++i) {
-        entity->position.x = 0x3400 * RSDK.Sin512(angle) + entity->origin.x;
-        entity->position.y = 0x3400 * RSDK.Cos512(angle) + entity->origin.y;
-        RSDK.DrawSprite(&entity->animator1, NULL, false);
+        self->position.x = 0x3400 * RSDK.Sin512(angle) + self->origin.x;
+        self->position.y = 0x3400 * RSDK.Cos512(angle) + self->origin.y;
+        RSDK.DrawSprite(&self->animator1, NULL, false);
         angle = (angle - 12) & 0x1FF;
     }
 
-    entity->drawFX |= FX_ROTATE;
-    entity->direction         = FLIP_X;
-    entity->rotation          = (-256 - entity->angle) & 0x1FF;
-    entity->animator1.frameID = 0;
-    RSDK.DrawSprite(&entity->animator1, NULL, false);
-    entity->drawFX &= ~FX_ROTATE;
+    self->drawFX |= FX_ROTATE;
+    self->direction         = FLIP_X;
+    self->rotation          = (-256 - self->angle) & 0x1FF;
+    self->animator1.frameID = 0;
+    RSDK.DrawSprite(&self->animator1, NULL, false);
+    self->drawFX &= ~FX_ROTATE;
 }
 
 void MegaOctus_CheckPlayerCollisions_Gun(void)
@@ -764,17 +763,16 @@ void MegaOctus_CheckPlayerCollisions_Gun(void)
     RSDK_THIS(MegaOctus);
 
     Vector2 pos;
-    pos.x = (RSDK.Cos512(entity->angle) << 10) + entity->position.x;
-    pos.y = (RSDK.Sin512(entity->angle) << 8) + entity->position.y;
+    pos.x = (RSDK.Cos512(self->angle) << 10) + self->position.x;
+    pos.y = (RSDK.Sin512(self->angle) << 8) + self->position.y;
 
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionTouch(player, &pos, &entity->hitbox)
+        if (Player_CheckCollisionTouch(player, &pos, &self->hitbox)) {
 #if RETRO_USE_PLUS
-            && !Player_CheckMightyUnspin(768, player, 2, &player->uncurlTimer)
+            if (!Player_CheckMightyUnspin(0x300, player, 2, &player->uncurlTimer))
 #endif
-        ) {
-            Player_CheckHit(player, entity);
+            Player_CheckHit(player, self);
         }
     }
 }
@@ -782,15 +780,15 @@ void MegaOctus_CheckPlayerCollisions_Gun(void)
 void MegaOctus_StateGun_Unknown1(void)
 {
     RSDK_THIS(MegaOctus);
-    entity->position.y += entity->velocity.y;
-    entity->angle = (entity->angle + 6) & 0x1FF;
-    RSDK.ProcessAnimation(&entity->animator2);
-    entity->direction = RSDK_GET_ENTITY(SLOT_PLAYER1, Player)->position.x >= entity->position.x;
-    if (entity->position.y <= entity->field_6C) {
-        entity->shotCount = RETRO_USE_PLUS ? 2 : 3;
-        entity->timer     = 128;
-        entity->field_70  = 256;
-        entity->state     = MegaOctus_StateGun_Unknown2;
+    self->position.y += self->velocity.y;
+    self->angle = (self->angle + 6) & 0x1FF;
+    RSDK.ProcessAnimation(&self->animator2);
+    self->direction = RSDK_GET_ENTITY(SLOT_PLAYER1, Player)->position.x >= self->position.x;
+    if (self->position.y <= self->field_6C) {
+        self->shotCount = RETRO_USE_PLUS ? 2 : 3;
+        self->timer     = 128;
+        self->field_70  = 256;
+        self->state     = MegaOctus_StateGun_Unknown2;
     }
     MegaOctus_CheckPlayerCollisions_Gun();
 }
@@ -798,25 +796,25 @@ void MegaOctus_StateGun_Unknown1(void)
 void MegaOctus_StateGun_Unknown2(void)
 {
     RSDK_THIS(MegaOctus);
-    entity->angle = (entity->angle + 6) & 0x1FF;
-    RSDK.ProcessAnimation(&entity->animator2);
-    entity->direction = RSDK_GET_ENTITY(SLOT_PLAYER1, Player)->position.x >= entity->position.x;
-    if (--entity->timer <= 0) {
-        if (entity->shotCount <= 0) {
-            entity->velocity.y = 0x10000;
-            entity->state      = MegaOctus_StateGun_Unknown4;
+    self->angle = (self->angle + 6) & 0x1FF;
+    RSDK.ProcessAnimation(&self->animator2);
+    self->direction = RSDK_GET_ENTITY(SLOT_PLAYER1, Player)->position.x >= self->position.x;
+    if (--self->timer <= 0) {
+        if (self->shotCount <= 0) {
+            self->velocity.y = 0x10000;
+            self->state      = MegaOctus_StateGun_Unknown4;
         }
         else {
             int32 id = 0;
-            while (id == entity->field_70) id = RSDK.Rand(0, 4);
+            while (id == self->field_70) id = RSDK.Rand(0, 4);
 
-            entity->field_70 = id;
-            entity->field_6C = MegaOctus->field_BC[id] + entity->origin.y;
-            entity->state    = MegaOctus_StateGun_FireLaser;
-            if (entity->field_6C < entity->position.y)
-                entity->velocity.y = -0x8000;
+            self->field_70 = id;
+            self->field_6C = MegaOctus->field_BC[id] + self->origin.y;
+            self->state    = MegaOctus_StateGun_FireLaser;
+            if (self->field_6C < self->position.y)
+                self->velocity.y = -0x8000;
             else
-                entity->velocity.y = 0x8000;
+                self->velocity.y = 0x8000;
         }
     }
     MegaOctus_CheckPlayerCollisions_Gun();
@@ -825,33 +823,33 @@ void MegaOctus_StateGun_Unknown2(void)
 void MegaOctus_StateGun_FireLaser(void)
 {
     RSDK_THIS(MegaOctus);
-    entity->position.y += entity->velocity.y;
-    entity->angle = (entity->angle + 6) & 0x1FF;
-    RSDK.ProcessAnimation(&entity->animator2);
-    entity->direction = RSDK_GET_ENTITY(SLOT_PLAYER1, Player)->position.x >= entity->position.x;
+    self->position.y += self->velocity.y;
+    self->angle = (self->angle + 6) & 0x1FF;
+    RSDK.ProcessAnimation(&self->animator2);
+    self->direction = RSDK_GET_ENTITY(SLOT_PLAYER1, Player)->position.x >= self->position.x;
 
-    if ((entity->velocity.y >= 0 && entity->position.y < entity->field_6C) || (entity->velocity.y < 0 && entity->position.y > entity->field_6C)) {
+    if ((self->velocity.y >= 0 && self->position.y < self->field_6C) || (self->velocity.y < 0 && self->position.y > self->field_6C)) {
         // TODO: cleanup
     }
     else {
-        entity->position.y = entity->field_6C;
-        RSDK.SetSpriteAnimation(MegaOctus->aniFrames, 4, &entity->animator2, true, 0);
+        self->position.y = self->field_6C;
+        RSDK.SetSpriteAnimation(MegaOctus->aniFrames, 4, &self->animator2, true, 0);
         RSDK.PlaySfx(MegaOctus->sfxLaser, false, 255);
 
-        --entity->shotCount;
-        entity->timer          = 40;
-        int32 x                  = (RSDK.Cos512(entity->angle) << 10) + entity->position.x;
-        int32 y                  = (RSDK.Sin512(entity->angle) << 9) + entity->position.y;
+        --self->shotCount;
+        self->timer          = 40;
+        int32 x                  = (RSDK.Cos512(self->angle) << 10) + self->position.x;
+        int32 y                  = (RSDK.Sin512(self->angle) << 9) + self->position.y;
         EntityMegaOctus *child = CREATE_ENTITY(MegaOctus, intToVoid(MEGAOCTUS_LASER), x, y);
-        child->direction       = entity->direction;
-        if (entity->direction)
+        child->direction       = self->direction;
+        if (self->direction)
             child->velocity.x = 0x40000;
         else
             child->velocity.x = -0x40000;
         child->position.x += child->velocity.x;
-        child->parent = (Entity *)entity;
+        child->parent = (Entity *)self;
         child->timer  = 11;
-        entity->state = MegaOctus_StateGun_Unknown2;
+        self->state = MegaOctus_StateGun_Unknown2;
     }
     MegaOctus_CheckPlayerCollisions_Gun();
 }
@@ -859,34 +857,34 @@ void MegaOctus_StateGun_FireLaser(void)
 void MegaOctus_StateGun_Unknown4(void)
 {
     RSDK_THIS(MegaOctus);
-    entity->angle = (entity->angle + 6) & 0x1FF;
-    RSDK.ProcessAnimation(&entity->animator2);
-    entity->direction = RSDK_GET_ENTITY(SLOT_PLAYER1, Player)->position.x >= entity->position.x;
-    entity->position.y += entity->velocity.y;
+    self->angle = (self->angle + 6) & 0x1FF;
+    RSDK.ProcessAnimation(&self->animator2);
+    self->direction = RSDK_GET_ENTITY(SLOT_PLAYER1, Player)->position.x >= self->position.x;
+    self->position.y += self->velocity.y;
     MegaOctus_CheckPlayerCollisions_Gun();
 
-    if (entity->position.y > entity->origin.y)
-        destroyEntity(entity);
+    if (self->position.y > self->origin.y)
+        destroyEntity(self);
 }
 void MegaOctus_StateDraw_Gun(void)
 {
     RSDK_THIS(MegaOctus);
     Vector2 drawPos;
 
-    int32 angle = entity->angle;
-    int32 y     = entity->position.y + 0x780000;
+    int32 angle = self->angle;
+    int32 y     = self->position.y + 0x780000;
 
     for (int32 i = 0; i < 8; ++i) {
-        drawPos.x = (RSDK.Cos512(angle) << 10) + entity->position.x;
+        drawPos.x = (RSDK.Cos512(angle) << 10) + self->position.x;
         drawPos.y = (RSDK.Sin512(angle) << 8) + y;
-        RSDK.DrawSprite(&entity->animator1, &drawPos, false);
+        RSDK.DrawSprite(&self->animator1, &drawPos, false);
         angle = (angle + 64) & 0x1FF;
         y -= 0xF0000;
     }
 
-    drawPos.x = (RSDK.Cos512(angle) << 10) + entity->position.x;
+    drawPos.x = (RSDK.Cos512(angle) << 10) + self->position.x;
     drawPos.y = (RSDK.Sin512(angle) << 8) + y;
-    RSDK.DrawSprite(&entity->animator2, &drawPos, false);
+    RSDK.DrawSprite(&self->animator2, &drawPos, false);
 }
 
 void MegaOctus_CheckPlayerCollisions_Orb(void)
@@ -894,26 +892,26 @@ void MegaOctus_CheckPlayerCollisions_Orb(void)
     RSDK_THIS(MegaOctus);
 
     Vector2 pos;
-    pos.x = (RSDK.Cos512(entity->angle) << 10) + entity->position.x;
-    pos.y = (RSDK.Sin512(entity->angle) << 8) + entity->position.y;
+    pos.x = (RSDK.Cos512(self->angle) << 10) + self->position.x;
+    pos.y = (RSDK.Sin512(self->angle) << 8) + self->position.y;
 
-    if (entity->invincibilityTimer) {
-        entity->invincibilityTimer--;
+    if (self->invincibilityTimer) {
+        self->invincibilityTimer--;
     }
     else {
         foreach_active(Player, player)
         {
-            if (Player_CheckBadnikTouch(player, &pos, &entity->hitbox) && Player_CheckBossHit(player, entity)) {
-                --entity->health;
-                --MegaOctus->orbHealth[entity->orbID];
-                if (entity->health) {
+            if (Player_CheckBadnikTouch(player, &pos, &self->hitbox) && Player_CheckBossHit(player, self)) {
+                --self->health;
+                --MegaOctus->orbHealth[self->orbID];
+                if (self->health) {
                     RSDK.PlaySfx(MegaOctus->sfxBossHit, false, 255);
-                    entity->invincibilityTimer = 30;
+                    self->invincibilityTimer = 30;
                 }
                 else {
                     RSDK.PlaySfx(MegaOctus->sfxExplosion, false, 255);
-                    entity->invincibilityTimer = 60;
-                    entity->state              = MegaOctus_StateOrb_Destroyed;
+                    self->invincibilityTimer = 60;
+                    self->state              = MegaOctus_StateOrb_Destroyed;
                 }
             }
         }
@@ -923,17 +921,17 @@ void MegaOctus_CheckPlayerCollisions_Orb(void)
 void MegaOctus_StateOrb_Wait(void)
 {
     RSDK_THIS(MegaOctus);
-    entity->position.y += entity->velocity.y;
+    self->position.y += self->velocity.y;
 
-    entity->angle = (entity->angle + 6) & 0x1FF;
-    RSDK.ProcessAnimation(&entity->animator2);
+    self->angle = (self->angle + 6) & 0x1FF;
+    RSDK.ProcessAnimation(&self->animator2);
     if (MegaOctus->field_D4) {
-        entity->invincibilityTimer = 60;
-        entity->state              = MegaOctus_StateOrb_Destroyed;
+        self->invincibilityTimer = 60;
+        self->state              = MegaOctus_StateOrb_Destroyed;
     }
-    if (entity->position.y <= entity->field_6C) {
-        entity->timer = 60;
-        entity->state = MegaOctus_StateOrb_FireShot;
+    if (self->position.y <= self->field_6C) {
+        self->timer = 60;
+        self->state = MegaOctus_StateOrb_FireShot;
     }
     MegaOctus_CheckPlayerCollisions_Orb();
 }
@@ -941,29 +939,29 @@ void MegaOctus_StateOrb_Wait(void)
 void MegaOctus_StateOrb_FireShot(void)
 {
     RSDK_THIS(MegaOctus);
-    entity->angle = (entity->angle + 6) & 0x1FF;
-    RSDK.ProcessAnimation(&entity->animator2);
+    self->angle = (self->angle + 6) & 0x1FF;
+    RSDK.ProcessAnimation(&self->animator2);
 
     if (MegaOctus->field_D4) {
-        entity->invincibilityTimer = 60;
-        entity->state              = MegaOctus_StateOrb_Destroyed;
+        self->invincibilityTimer = 60;
+        self->state              = MegaOctus_StateOrb_Destroyed;
     }
 #if RETRO_USE_PLUS
-    if (entity->shotCount > 0)
-        entity->position.x += entity->velocity.x * RSDK.Sin1024(++entity->field_68);
+    if (self->shotCount > 0)
+        self->position.x += self->velocity.x * RSDK.Sin1024(++self->field_68);
 #endif
-    if (--entity->timer <= 0) {
-        ++entity->shotCount;
+    if (--self->timer <= 0) {
+        ++self->shotCount;
 
-        int32 x = (RSDK.Cos512(entity->angle) << 10) + entity->position.x;
-        int32 y = (RSDK.Sin512(entity->angle) << 9) + entity->position.y;
+        int32 x = (RSDK.Cos512(self->angle) << 10) + self->position.x;
+        int32 y = (RSDK.Sin512(self->angle) << 9) + self->position.y;
 
         int32 angle = 0;
 #if RETRO_USE_PLUS
         if (MegaOctus->bossPtr->position.x <= x)
-            angle = -3 * entity->shotCount;
+            angle = -3 * self->shotCount;
         else
-            angle = 3 * entity->shotCount;
+            angle = 3 * self->shotCount;
         angle *= 4;
 
         EntityMegaOctus *shot = CREATE_ENTITY(MegaOctus, intToVoid(MEGAOCTUS_ORBSHOT), x, y);
@@ -979,12 +977,12 @@ void MegaOctus_StateOrb_FireShot(void)
 #endif
 
         RSDK.PlaySfx(MegaOctus->sfxBullet, false, 255);
-        if (entity->shotCount >= 4) {
-            entity->velocity.y = 0x10000;
-            entity->state      = MegaOctus_StateOrb_Idle;
+        if (self->shotCount >= 4) {
+            self->velocity.y = 0x10000;
+            self->state      = MegaOctus_StateOrb_Idle;
         }
         else {
-            entity->timer = 60;
+            self->timer = 60;
         }
     }
     MegaOctus_CheckPlayerCollisions_Orb();
@@ -994,17 +992,17 @@ void MegaOctus_StateOrb_Idle(void)
 {
     RSDK_THIS(MegaOctus);
 
-    entity->angle = (RSDK_sceneInfo->entity->angle + 6) & 0x1FF;
-    RSDK.ProcessAnimation(&entity->animator2);
+    self->angle = (self->angle + 6) & 0x1FF;
+    RSDK.ProcessAnimation(&self->animator2);
     if (MegaOctus->field_D4) {
-        entity->invincibilityTimer = 60;
-        entity->state              = MegaOctus_StateOrb_Destroyed;
+        self->invincibilityTimer = 60;
+        self->state              = MegaOctus_StateOrb_Destroyed;
     }
-    entity->position.y += entity->velocity.y;
+    self->position.y += self->velocity.y;
     MegaOctus_CheckPlayerCollisions_Orb();
 
-    if (entity->position.y > entity->origin.y)
-        destroyEntity(entity);
+    if (self->position.y > self->origin.y)
+        destroyEntity(self);
 }
 
 void MegaOctus_StateOrb_Destroyed(void)
@@ -1015,21 +1013,21 @@ void MegaOctus_StateOrb_Destroyed(void)
         RSDK.PlaySfx(MegaOctus->sfxExplosion, false, 255);
 
         if (Zone->timer & 4) {
-            int32 x                      = entity->position.x + (RSDK.Cos512(entity->angle) << 10) + (RSDK.Rand(-16, 16) << 16);
-            int32 y                      = entity->position.y + (RSDK.Sin512(entity->angle) << 9) + (RSDK.Rand(-16, 16) << 16);
+            int32 x                      = self->position.x + (RSDK.Cos512(self->angle) << 10) + (RSDK.Rand(-16, 16) << 16);
+            int32 y                      = self->position.y + (RSDK.Sin512(self->angle) << 9) + (RSDK.Rand(-16, 16) << 16);
             EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + 2), x, y);
             explosion->drawOrder       = Zone->drawOrderHigh + 2;
         }
     }
 
-    if (--entity->invincibilityTimer <= 0) {
-        int32 angle = entity->angle;
-        int32 y     = entity->position.y + 0xF80000;
+    if (--self->invincibilityTimer <= 0) {
+        int32 angle = self->angle;
+        int32 y     = self->position.y + 0xF80000;
 
         EntityDebris *debris = NULL;
         for (int32 i = 0; i < 16; ++i) {
             debris =
-                CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, entity->position.x + (RSDK.Cos512(angle) << 10), y + (RSDK.Sin512(angle) << 8));
+                CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, self->position.x + (RSDK.Cos512(angle) << 10), y + (RSDK.Sin512(angle) << 8));
             RSDK.SetSpriteAnimation(MegaOctus->aniFrames, 3, &debris->animator, true, 1);
             debris->velocity.x    = RSDK.Rand(-6, 6) << 15;
             debris->velocity.y    = RSDK.Rand(-10, -6) << 15;
@@ -1041,7 +1039,7 @@ void MegaOctus_StateOrb_Destroyed(void)
             y -= 0xF0000;
         }
 
-        debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, entity->position.x + (RSDK.Cos512(angle) << 10), y + (RSDK.Sin512(angle) << 8));
+        debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, self->position.x + (RSDK.Cos512(angle) << 10), y + (RSDK.Sin512(angle) << 8));
         RSDK.SetSpriteAnimation(MegaOctus->aniFrames, 9, &debris->animator, true, 0);
         debris->velocity.x    = -0x20000;
         debris->velocity.y    = -0x40000;
@@ -1050,7 +1048,7 @@ void MegaOctus_StateOrb_Destroyed(void)
         debris->updateRange.x = 0x400000;
         debris->updateRange.y = 0x400000;
 
-        debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, entity->position.x + (RSDK.Cos512(angle) << 10), y + (RSDK.Sin512(angle) << 8));
+        debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, self->position.x + (RSDK.Cos512(angle) << 10), y + (RSDK.Sin512(angle) << 8));
         RSDK.SetSpriteAnimation(MegaOctus->aniFrames, 9, &debris->animator, true, 1);
         debris->velocity.x    = 0x20000;
         debris->velocity.y    = -0x40000;
@@ -1059,7 +1057,7 @@ void MegaOctus_StateOrb_Destroyed(void)
         debris->updateRange.x = 0x400000;
         debris->updateRange.y = 0x400000;
 
-        debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, entity->position.x + (RSDK.Cos512(angle) << 10), y + (RSDK.Sin512(angle) << 8));
+        debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, self->position.x + (RSDK.Cos512(angle) << 10), y + (RSDK.Sin512(angle) << 8));
         RSDK.SetSpriteAnimation(MegaOctus->aniFrames, 9, &debris->animator, true, 2);
         debris->velocity.x    = -0x10000;
         debris->velocity.y    = -0x20000;
@@ -1068,7 +1066,7 @@ void MegaOctus_StateOrb_Destroyed(void)
         debris->updateRange.x = 0x400000;
         debris->updateRange.y = 0x400000;
 
-        debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, entity->position.x + (RSDK.Cos512(angle) << 10), y + (RSDK.Sin512(angle) << 8));
+        debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, self->position.x + (RSDK.Cos512(angle) << 10), y + (RSDK.Sin512(angle) << 8));
         RSDK.SetSpriteAnimation(MegaOctus->aniFrames, 9, &debris->animator, true, 3);
         debris->velocity.x    = 0x10000;
         debris->velocity.y    = -0x20000;
@@ -1077,7 +1075,7 @@ void MegaOctus_StateOrb_Destroyed(void)
         debris->updateRange.x = 0x400000;
         debris->updateRange.y = 0x400000;
 
-        destroyEntity(entity);
+        destroyEntity(self);
     }
 }
 
@@ -1086,23 +1084,23 @@ void MegaOctus_StateDraw_Orb(void)
     RSDK_THIS(MegaOctus);
     Vector2 drawPos;
 
-    int32 angle = entity->angle;
-    int32 y     = entity->position.y + 0xF80000;
+    int32 angle = self->angle;
+    int32 y     = self->position.y + 0xF80000;
 
-    if (entity->invincibilityTimer & 1)
+    if (self->invincibilityTimer & 1)
         RSDK.SetPaletteEntry(0, 128u, 0xE0E0E0);
 
     for (int32 i = 0; i < 16; ++i) {
-        drawPos.x = (RSDK.Cos512(angle) << 10) + entity->position.x;
+        drawPos.x = (RSDK.Cos512(angle) << 10) + self->position.x;
         drawPos.y = (RSDK.Sin512(angle) << 8) + y;
-        RSDK.DrawSprite(&entity->animator1, &drawPos, false);
+        RSDK.DrawSprite(&self->animator1, &drawPos, false);
         angle = (angle + 64) & 0x1FF;
         y -= 0xF0000;
     }
 
-    drawPos.x = (RSDK.Cos512(angle) << 10) + entity->position.x;
+    drawPos.x = (RSDK.Cos512(angle) << 10) + self->position.x;
     drawPos.y = (RSDK.Sin512(angle) << 8) + y;
-    RSDK.DrawSprite(&entity->animator2, &drawPos, false);
+    RSDK.DrawSprite(&self->animator2, &drawPos, false);
 
     RSDK.SetPaletteEntry(0, 128, 0x000000);
 }
@@ -1110,21 +1108,21 @@ void MegaOctus_StateDraw_Orb(void)
 void MegaOctus_StateArm_Unknown1(void)
 {
     RSDK_THIS(MegaOctus);
-    entity->angle += 4;
-    entity->position.y -= 0xC000;
-    entity->shotCount += 0xC000;
-    entity->position.x = 0x1400 * RSDK.Cos256(entity->angle) + entity->origin.x;
-    if (entity->shotCount >= 0x4B0000) {
-        if (!entity->field_6C) {
-            entity->field_6C     = 1;
-            EntityMegaOctus *arm = CREATE_ENTITY(MegaOctus, intToVoid(MEGAOCTUS_ARM), entity->position.x, entity->position.y + 0x40000);
-            arm->direction       = entity->direction;
+    self->angle += 4;
+    self->position.y -= 0xC000;
+    self->shotCount += 0xC000;
+    self->position.x = 0x1400 * RSDK.Cos256(self->angle) + self->origin.x;
+    if (self->shotCount >= 0x4B0000) {
+        if (!self->field_6C) {
+            self->field_6C     = 1;
+            EntityMegaOctus *arm = CREATE_ENTITY(MegaOctus, intToVoid(MEGAOCTUS_ARM), self->position.x, self->position.y + 0x40000);
+            arm->direction       = self->direction;
             arm->state           = MegaOctus_StateArm_Unknown5;
             arm->stateDraw       = MegaOctus_StateDraw_Arm_Unknown2;
         }
-        if (entity->shotCount >= 0x71A000) {
-            entity->timer = 30;
-            entity->state = MegaOctus_StateArm_Unknown2;
+        if (self->shotCount >= 0x71A000) {
+            self->timer = 30;
+            self->state = MegaOctus_StateArm_Unknown2;
         }
     }
 }
@@ -1132,18 +1130,18 @@ void MegaOctus_StateArm_Unknown1(void)
 void MegaOctus_StateArm_Unknown5(void)
 {
     RSDK_THIS(MegaOctus);
-    entity->angle -= 4;
-    entity->position.x += 0xC000;
-    entity->shotCount += 0xC000;
+    self->angle -= 4;
+    self->position.x += 0xC000;
+    self->shotCount += 0xC000;
 
-    entity->position.y = (RSDK.Sin256(entity->angle) << 12) + entity->origin.y;
-    if (entity->shotCount >= 0x270000) {
+    self->position.y = (RSDK.Sin256(self->angle) << 12) + self->origin.y;
+    if (self->shotCount >= 0x270000) {
         foreach_active(TilePlatform, platform)
         {
-            if (RSDK.CheckObjectCollisionTouchBox(entity, &entity->hitbox, platform, &platform->hitbox)) {
-                entity->parent = (Entity *)platform;
+            if (RSDK.CheckObjectCollisionTouchBox(self, &self->hitbox, platform, &platform->hitbox)) {
+                self->parent = (Entity *)platform;
 #if RETRO_USE_PLUS
-                entity->tilePlatY = platform->position.y;
+                self->tilePlatY = platform->position.y;
 #endif
                 RSDK.CopyTileLayer(Zone->fgLow, (platform->position.x >> 20) - 4, (platform->position.y >> 20) - 2, Zone->moveLayer, 10, 1, 8, 5);
             }
@@ -1153,21 +1151,21 @@ void MegaOctus_StateArm_Unknown5(void)
 
         EntityCollapsingPlatform *collapsingPlatform = RSDK_GET_ENTITY(slot, CollapsingPlatform);
         collapsingPlatform->collapseDelay            = 24;
-        collapsingPlatform->playerPos.x              = entity->position.x;
+        collapsingPlatform->playerPos.x              = self->position.x;
 
         collapsingPlatform                = RSDK_GET_ENTITY(slot + 1, CollapsingPlatform);
         collapsingPlatform->collapseDelay = 24;
-        collapsingPlatform->playerPos.x   = entity->position.x;
+        collapsingPlatform->playerPos.x   = self->position.x;
 
-        entity->timer = 30;
-        entity->state = MegaOctus_StateArm_Unknown2;
+        self->timer = 30;
+        self->state = MegaOctus_StateArm_Unknown2;
     }
 }
 
 void MegaOctus_StateArm_Unknown2(void)
 {
     RSDK_THIS(MegaOctus);
-    if (--entity->timer <= 0) {
+    if (--self->timer <= 0) {
 #if !RETRO_USE_PLUS
         foreach_active(Player, player)
         {
@@ -1179,22 +1177,22 @@ void MegaOctus_StateArm_Unknown2(void)
         }
 #endif
 
-        entity->state = MegaOctus_StateArm_Unknown3;
+        self->state = MegaOctus_StateArm_Unknown3;
     }
 }
 
 void MegaOctus_StateArm_Unknown3(void)
 {
     RSDK_THIS(MegaOctus);
-    EntityTilePlatform *parent = (EntityTilePlatform *)entity->parent;
+    EntityTilePlatform *parent = (EntityTilePlatform *)self->parent;
 
-    entity->origin.y += 0x60000;
-    entity->position.y += 0x60000;
+    self->origin.y += 0x60000;
+    self->position.y += 0x60000;
     if (parent) {
 #if RETRO_USE_PLUS
         parent->state      = MegaOctus_TilePlatformState_Unknown;
         parent->velocity.y = 0x60000;
-        if (parent->drawPos.y - entity->tilePlatY > 0x480000)
+        if (parent->drawPos.y - self->tilePlatY > 0x480000)
             parent->stateCollide = Platform_CollisionState_None;
 #else
         parent->drawPos.y += 0x60000;
@@ -1202,7 +1200,7 @@ void MegaOctus_StateArm_Unknown3(void)
 #endif
     }
 
-    if (++entity->timer >= 32) {
+    if (++self->timer >= 32) {
         EntityMegaOctus *boss = (EntityMegaOctus *)MegaOctus->bossPtr;
         boss->velocity.y      = RETRO_USE_PLUS ? -0x8F400 : -0xB8000;
         boss->state           = MegaOctus_State_Unknown2;
@@ -1213,17 +1211,17 @@ void MegaOctus_StateArm_Unknown3(void)
         RSDK.SetSpriteAnimation(MegaOctus->hatchFrames, 1, &MegaOctus->animator5, true, 0);
         RSDK.PlaySfx(MegaOctus->sfxSurface, false, 255);
 
-        EntityMegaOctus *parent = (EntityMegaOctus *)entity->parent;
+        EntityMegaOctus *parent = (EntityMegaOctus *)self->parent;
         if (parent) {
-            entity->timer = 384;
-            entity->state = MegaOctus_StateArm_Unknown4;
+            self->timer = 384;
+            self->state = MegaOctus_StateArm_Unknown4;
 #if RETRO_USE_PLUS
             parent->state      = StateMachine_None;
-            parent->position.y = entity->tilePlatY + (entity->timer << 15);
+            parent->position.y = self->tilePlatY + (self->timer << 15);
 #endif
         }
         else {
-            destroyEntity(entity);
+            destroyEntity(self);
         }
     }
 }
@@ -1231,38 +1229,38 @@ void MegaOctus_StateArm_Unknown3(void)
 void MegaOctus_StateArm_Unknown4(void)
 {
     RSDK_THIS(MegaOctus);
-    EntityTilePlatform *parent = (EntityTilePlatform *)entity->parent;
+    EntityTilePlatform *parent = (EntityTilePlatform *)self->parent;
 
 #if RETRO_USE_PLUS
     if (parent) {
         parent->state         = MegaOctus_TilePlatformState_Unknown;
-        parent->collapseDelay = 4;
+        parent->timer      = 4;
         parent->velocity.y    = -0x8000;
 
-        if (parent->drawPos.y > entity->tilePlatY)
-            --entity->timer;
+        if (parent->drawPos.y > self->tilePlatY)
+            --self->timer;
         else
-            entity->timer = 0;
+            self->timer = 0;
 
-        if (parent->drawPos.y - entity->tilePlatY < 0x480000)
+        if (parent->drawPos.y - self->tilePlatY < 0x480000)
             parent->stateCollide = Platform_CollisionState_Tiles;
     }
 #else
     parent->drawPos.y -= 0x8000;
     parent->centerPos.y -= 0x8000;
-    --entity->timer;
+    --self->timer;
 #endif
 
-    if (entity->timer <= 0) {
+    if (self->timer <= 0) {
 #if RETRO_USE_PLUS
         if (parent) {
             parent->state      = StateMachine_None;
-            parent->drawPos.y  = entity->tilePlatY;
+            parent->drawPos.y  = self->tilePlatY;
             parent->velocity.y = 0;
         }
 #endif
         RSDK.CopyTileLayer(Zone->fgLow, (parent->position.x >> 20) - 4, (parent->position.y >> 20) - 2, Zone->moveLayer, 1, 1, 8, 5);
-        destroyEntity(entity);
+        destroyEntity(self);
     }
 }
 
@@ -1272,21 +1270,21 @@ void MegaOctus_StateDraw_Arm_Unknown1(void)
     int32 pos = 0xA0000;
 
     Vector2 drawPos;
-    drawPos.x = entity->position.x;
-    drawPos.y = entity->position.y;
+    drawPos.x = self->position.x;
+    drawPos.y = self->position.y;
 
-    uint8 angle = entity->angle;
-    for (int32 i = entity->shotCount; i > 0; i -= 0x6000) {
+    uint8 angle = self->angle;
+    for (int32 i = self->shotCount; i > 0; i -= 0x6000) {
         pos += 0x6000;
         if (pos >= 0x60000) {
             if (i < 0x400000) {
-                if ((RSDK_sceneInfo->currentDrawGroup == Zone->drawOrderLow + 1 && angle < 0x80)
-                    || (RSDK_sceneInfo->currentDrawGroup == Zone->drawOrderLow && angle >= 0x80))
-                    RSDK.DrawSprite(&entity->animator1, &drawPos, false);
+                if ((SceneInfo->currentDrawGroup == Zone->drawOrderLow + 1 && angle < 0x80)
+                    || (SceneInfo->currentDrawGroup == Zone->drawOrderLow && angle >= 0x80))
+                    RSDK.DrawSprite(&self->animator1, &drawPos, false);
             }
             angle -= 32;
             drawPos.y += 0x60000;
-            drawPos.x = 0x1400 * RSDK.Cos256(angle) + entity->origin.x;
+            drawPos.x = 0x1400 * RSDK.Cos256(angle) + self->origin.x;
             pos -= 0x60000;
         }
     }
@@ -1298,22 +1296,22 @@ void MegaOctus_StateDraw_Arm_Unknown2(void)
     int32 pos = 0xA0000;
 
     Vector2 drawPos;
-    drawPos.x = entity->position.x;
-    drawPos.y = entity->position.y;
-    int32 angle = entity->angle;
+    drawPos.x = self->position.x;
+    drawPos.y = self->position.y;
+    int32 angle = self->angle;
 
     uint8 angle2 = angle - 64;
-    int32 count   = (entity->shotCount - 1) / 0x6000 + 1;
+    int32 count   = (self->shotCount - 1) / 0x6000 + 1;
     for (int32 i = 0; i < count; ++i) {
         pos += 0x6000;
         if (pos >= 0x60000) {
-            if ((RSDK_sceneInfo->currentDrawGroup == Zone->drawOrderLow + 1 && angle2 < 0x80)
-                || (RSDK_sceneInfo->currentDrawGroup == Zone->drawOrderLow && angle2 >= 0x80))
-                RSDK.DrawSprite(&entity->animator1, &drawPos, false);
+            if ((SceneInfo->currentDrawGroup == Zone->drawOrderLow + 1 && angle2 < 0x80)
+                || (SceneInfo->currentDrawGroup == Zone->drawOrderLow && angle2 >= 0x80))
+                RSDK.DrawSprite(&self->animator1, &drawPos, false);
             angle2 += 32;
             drawPos.x -= 0x60000;
             angle += 32;
-            drawPos.y = (RSDK.Sin256(angle) << 12) + entity->origin.y;
+            drawPos.y = (RSDK.Sin256(angle) << 12) + self->origin.y;
             pos -= 0x60000;
         }
     }
@@ -1322,70 +1320,70 @@ void MegaOctus_StateDraw_Arm_Unknown2(void)
 void MegaOctus_State_Laser(void)
 {
     RSDK_THIS(MegaOctus);
-    RSDK.ProcessAnimation(&entity->animator1);
-    entity->position.x += entity->velocity.x;
+    RSDK.ProcessAnimation(&self->animator1);
+    self->position.x += self->velocity.x;
 
-    if (entity->timer > 0) {
-        entity->timer--;
-        entity->position.y = (RSDK.Sin512(entity->parent->angle) << 9) + entity->parent->position.y;
+    if (self->timer > 0) {
+        self->timer--;
+        self->position.y = (RSDK.Sin512(self->parent->angle) << 9) + self->parent->position.y;
     }
 
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionTouch(player, entity, &entity->hitbox))
-            Player_CheckHit(player, entity);
+        if (Player_CheckCollisionTouch(player, self, &self->hitbox))
+            Player_CheckHit(player, self);
     }
 
-    if (entity->activeScreens == 1) {
-        if (RSDK.ObjectTileGrip(entity, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0, 8)) {
-            if (entity->shotCount != entity->position.x >> 20) {
-                entity->shotCount = entity->position.x >> 20;
+    if (self->activeScreens == 1) {
+        if (RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0, 8)) {
+            if (self->shotCount != self->position.x >> 20) {
+                self->shotCount = self->position.x >> 20;
                 RSDK.PlaySfx(MegaOctus->sfxLaserSplash, false, 255);
-                CREATE_ENTITY(MegaOctus, intToVoid(MEGAOCTUS_LASERFIRE), (entity->position.x & 0xFFF00000) + 0x80000, entity->position.y);
+                CREATE_ENTITY(MegaOctus, intToVoid(MEGAOCTUS_LASERFIRE), (self->position.x & 0xFFF00000) + 0x80000, self->position.y);
             }
         }
     }
 
-    if (!RSDK.CheckOnScreen(entity, &entity->updateRange))
-        destroyEntity(entity);
+    if (!RSDK.CheckOnScreen(self, &self->updateRange))
+        destroyEntity(self);
 }
 
 void MegaOctus_State_LaserFire(void)
 {
     RSDK_THIS(MegaOctus);
-    RSDK.ProcessAnimation(&entity->animator1);
+    RSDK.ProcessAnimation(&self->animator1);
 
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionTouch(player, entity, &entity->hitbox))
-            Player_CheckHit(player, entity);
+        if (Player_CheckCollisionTouch(player, self, &self->hitbox))
+            Player_CheckHit(player, self);
     }
 
-    if (entity->animator1.frameID == entity->animator1.frameCount - 1)
-        destroyEntity(entity);
+    if (self->animator1.frameID == self->animator1.frameCount - 1)
+        destroyEntity(self);
 }
 
 void MegaOctus_StateDraw_Laser(void)
 {
     RSDK_THIS(MegaOctus);
-    RSDK.DrawSprite(&entity->animator1, NULL, false);
+    RSDK.DrawSprite(&self->animator1, NULL, false);
 }
 
 void MegaOctus_State_Shot(void)
 {
     RSDK_THIS(MegaOctus);
-    if (MegaOctus->field_D4 || !RSDK.CheckOnScreen(entity, &entity->updateRange)) {
-        destroyEntity(entity);
+    if (MegaOctus->field_D4 || !RSDK.CheckOnScreen(self, &self->updateRange)) {
+        destroyEntity(self);
     }
     else {
-        RSDK.ProcessAnimation(&entity->animator1);
-        entity->position.x += entity->velocity.x;
-        entity->position.y += entity->velocity.y;
+        RSDK.ProcessAnimation(&self->animator1);
+        self->position.x += self->velocity.x;
+        self->position.y += self->velocity.y;
 
         foreach_active(Player, player)
         {
-            if (Player_CheckCollisionTouch(player, entity, &entity->hitbox))
-                Player_CheckProjectileHit(player, entity);
+            if (Player_CheckCollisionTouch(player, self, &self->hitbox))
+                Player_CheckProjectileHit(player, self);
         }
     }
 }
@@ -1393,18 +1391,18 @@ void MegaOctus_State_Shot(void)
 void MegaOctus_StateDraw_OrbShot(void)
 {
     RSDK_THIS(MegaOctus);
-    RSDK.DrawSprite(&entity->animator1, NULL, false);
+    RSDK.DrawSprite(&self->animator1, NULL, false);
 }
 
 #if RETRO_USE_PLUS
 void MegaOctus_TilePlatformState_Unknown(void)
 {
-    EntityTilePlatform *entity = RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot, TilePlatform);
+    EntityTilePlatform *self = RSDK_GET_ENTITY(SceneInfo->entitySlot, TilePlatform);
 
-    if (entity->velocity.y <= 0x10000) {
+    if (self->velocity.y <= 0x10000) {
         foreach_active(Player, player)
         {
-            if ((1 << player->playerID) & entity->stoodPlayers) {
+            if ((1 << player->playerID) & self->stoodPlayers) {
                 if (player->state != OOZSetup_PlayerState_OilPool) {
                     player->state = Player_State_Ground;
                     OOZSetup->activePlayers &= ~(1 << player->playerID);
@@ -1415,16 +1413,16 @@ void MegaOctus_TilePlatformState_Unknown(void)
     else {
         foreach_active(Player, player)
         {
-            if ((1 << player->playerID) & entity->stoodPlayers) {
+            if ((1 << player->playerID) & self->stoodPlayers) {
                 if (player->state != OOZSetup_PlayerState_OilPool)
-                    player->velocity.y = entity->velocity.y >> 1;
+                    player->velocity.y = self->velocity.y >> 1;
                 player->onGround = false;
-                entity->stoodPlayers &= ~(1 << player->playerID);
+                self->stoodPlayers &= ~(1 << player->playerID);
             }
         }
     }
 
-    entity->drawPos.y += entity->velocity.y;
+    self->drawPos.y += self->velocity.y;
 }
 #endif
 
@@ -1433,7 +1431,7 @@ void MegaOctus_EditorDraw(void)
 {
     RSDK_THIS(MegaOctus);
 
-    RSDK.SetSpriteAnimation(MegaOctus->aniFrames, 0, &entity->animator1, false, 0);
+    RSDK.SetSpriteAnimation(MegaOctus->aniFrames, 0, &self->animator1, false, 0);
     RSDK.SetSpriteAnimation(MegaOctus->eggmanFrames, 1, &MegaOctus->animator3, false, 0);
     RSDK.SetSpriteAnimation(MegaOctus->aniFrames, 1, &MegaOctus->animator1, false, 5);
     RSDK.SetSpriteAnimation(MegaOctus->aniFrames, 2, &MegaOctus->animator2, false, 5);

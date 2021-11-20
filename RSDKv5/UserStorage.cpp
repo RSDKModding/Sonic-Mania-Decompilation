@@ -318,13 +318,13 @@ void InitUserStorageDB(UserDBStorage *storage)
 
     for (int i = 0; i < RETRO_USERDB_MAX; ++i) {
         memset(&storage->userDB[i], 0, sizeof(UserDB));
-        storage->userDB[i].unknown.Clear();
+        storage->userDB[i].sortedRowList.Clear();
     }
 }
 void ReleaseUserStorageDB(UserDBStorage *storage)
 {
     for (int i = 0; i < RETRO_USERDB_MAX; ++i) {
-        storage->userDB[i].unknown.Clear(true);
+        storage->userDB[i].sortedRowList.Clear(true);
     }
 }
 
@@ -416,7 +416,7 @@ void ClearUserDB(ushort tableID)
 
     UserDB *userDB = &userDBStorage->userDB[tableID];
     if (userDB->loaded) {
-        userDB->unknown.Clear();
+        userDB->sortedRowList.Clear();
         userDB->loaded      = false;
         userDB->active      = false;
         userDB->valid       = false;
@@ -427,7 +427,7 @@ void ClearUserDB(ushort tableID)
         memset(userDB->columnNames, 0, sizeof(userDB->columnNames));
         memset(userDB->columnUUIDs, 0, sizeof(userDB->columnUUIDs));
         memset(userDB->rows, 0, sizeof(userDB->rows));
-        userDB->status = true;
+        userDB->rowsChanged = true;
     }
 }
 void ClearAllUserDBs()
@@ -536,7 +536,7 @@ int AddUserDBRow(ushort tableID)
     ++userDB->rowCount;
     userDB->valid = true;
     UpdateUserDBParents(userDB);
-    userDB->status = true;
+    userDB->rowsChanged = true;
     return userDB->rowCount - 1;
 }
 uint RemoveDBRow(ushort tableID, uint rowID)
@@ -558,7 +558,7 @@ uint RemoveDBRow(ushort tableID, uint rowID)
         --userDB->rowCount;
         userDB->valid = true;
         UpdateUserDBParents(userDB);
-        userDB->status = true;
+        userDB->rowsChanged = true;
     }
     return true;
 }
@@ -586,39 +586,39 @@ uint GetDBRowUUID(ushort tableID, int rowID)
 }
 
 //UserDB Row Unknowns
-ushort InitDBRowUnknown(ushort tableID)
+ushort SetupUserDBRowSorting(ushort tableID)
 {
     if (tableID == 0xFFFF)
         return 0;
     UserDBRefreshRowUnknown(userDBStorage->userDB[tableID].parent);
 
-    return userDBStorage->userDB[tableID].rowUnknownCount;
+    return userDBStorage->userDB[tableID].sortedRowCount;
 }
-void SetupRowUnknown(UserDB *userDB)
+void SetupRowSortIDs(UserDB *userDB)
 {
-    userDB->rowUnknownCount = 0;
-    memset(userDB->rowUnknown, 0, sizeof(userDB->rowUnknown));
+    userDB->sortedRowCount = 0;
+    memset(userDB->sortedRowIDs, 0, sizeof(userDB->sortedRowIDs));
 
-    for (int i = 0; i < userDB->unknown.Count(); ++i) {
-        userDB->rowUnknown[i] = *userDB->unknown.At(i);
-        ++userDB->rowUnknownCount;
+    for (int i = 0; i < userDB->sortedRowList.Count(); ++i) {
+        userDB->sortedRowIDs[i] = *userDB->sortedRowList.At(i);
+        ++userDB->sortedRowCount;
     }
 }
 void UserDBRefreshRowUnknown(UserDB *userDB)
 {
-    userDB->unknown.Clear();
+    userDB->sortedRowList.Clear();
 
     for (int i = 0; i < userDB->rowCount; ++i) {
-        int *row = userDB->unknown.Append();
+        int *row = userDB->sortedRowList.Append();
         if (row)
             *row = i;
     }
 
-    userDB->status = false;
+    userDB->rowsChanged = false;
 
-    SetupRowUnknown(userDB);
+    SetupRowSortIDs(userDB);
 }
-int UserDBUnknown33(ushort tableID, int type, const char *name, void *value)
+int AddUserDBRowSortFilter(ushort tableID, int type, const char *name, void *value)
 {
     if (tableID == 0xFFFF)
         return 0;
@@ -626,8 +626,8 @@ int UserDBUnknown33(ushort tableID, int type, const char *name, void *value)
     if (!userDB->active)
         return 0;
 
-    RemoveNonMatchingRows(userDB->parent, name, value);
-    return userDB->rowUnknownCount;
+    RemoveNonMatchingSortRows(userDB->parent, name, value);
+    return userDB->sortedRowCount;
 }
 int SortUserDBRows(ushort tableID, int type, const char *name, bool32 active)
 {
@@ -637,10 +637,10 @@ int SortUserDBRows(ushort tableID, int type, const char *name, bool32 active)
     if (!userDB->active)
         return 0;
 
-    HandleUserDBSorting(userDB->parent, type, name, active);
-    return userDB->rowUnknownCount;
+    HandleUserDBSorting(userDB->parent, type, (char*)name, active);
+    return userDB->sortedRowCount;
 }
-int GetUserDBRowUnknownCount(ushort tableID)
+int GetSortedUserDBRowCount(ushort tableID)
 {
     if (tableID == 0xFFFF)
         return 0;
@@ -649,17 +649,17 @@ int GetUserDBRowUnknownCount(ushort tableID)
     if (!userDB->active)
         return 0;
 
-    return userDB->rowUnknownCount;
+    return userDB->sortedRowCount;
 }
-int GetUserDBRowUnknown(ushort tableID, ushort entryID)
+int GetSortedUserDBRowID(ushort tableID, ushort entryID)
 {
     if (tableID == 0xFFFF)
         return -1;
     UserDB *userDB = &userDBStorage->userDB[tableID];
-    if (!userDB->active || userDB->status || entryID >= userDB->rowUnknownCount)
+    if (!userDB->active || userDB->rowsChanged || entryID >= userDB->sortedRowCount)
         return -1;
 
-    return userDB->rowUnknown[entryID];
+    return userDB->sortedRowIDs[entryID];
 }
 
 //UserDB Values
@@ -799,7 +799,7 @@ void RetrieveUserDBValue(UserDBValue *value, int type, void *data)
 }
 
 //UserDB Misc
-int GetUserDBStatus(ushort tableID) { return userDBStorage->userDB[tableID].status; }
+int GetUserDBRowsChanged(ushort tableID) { return userDBStorage->userDB[tableID].rowsChanged; }
 void GetUserDBCreationTime(ushort tableID, int entryID, char *buf, size_t size, char *format)
 {
     if (tableID != 0xFFFF && entryID != 0xFFFF) {
@@ -952,53 +952,181 @@ void SaveDBToBuffer(UserDB *userDB, int totalSize, byte *buffer)
     if (size < totalSize)
         memset(buffer, 0, totalSize - size);
 }
-void RemoveMatchingDBValues(UserDB *userDB, UserDBValue *a2, int column)
+void HandleNonMatchRowRemoval(UserDB *userDB, UserDBValue *value, int column)
 {
-    for (int i = 0; i < userDB->unknown.Count(); ++i) {
-        if (!CheckDBValueMatch(a2, userDB->rowUnknown[i], column)) {
-            userDB->unknown.Remove(i);
+    for (int i = userDB->sortedRowList.Count() - 1; i >= 0; --i) {
+        if (!CheckDBValueMatch(value, userDB->sortedRowIDs[i], column)) {
+            userDB->sortedRowList.Remove(i);
         }
     }
 }
-void RemoveNonMatchingRows(UserDB *userDB, const char *name, void *value)
+void RemoveNonMatchingSortRows(UserDB *userDB, const char *name, void *value)
 {
     int id = GetDBColumnID(userDB, name);
 
     if (id >= 0) {
-        if (userDB->rowUnknownCount) {
+        if (userDB->sortedRowCount) {
             UserDBValue dbValue;
             // this is very hacky
             dbValue.parent = (UserDBRow *)userDB;
             StoreUserDBValue(&dbValue, userDB->columnTypes[id], value);
-            RemoveMatchingDBValues(userDB, &dbValue, id);
-            SetupRowUnknown(userDB);
+            HandleNonMatchRowRemoval(userDB, &dbValue, id);
+            SetupRowSortIDs(userDB);
         }
     }
 }
-void HandleUserDBSorting(UserDB *userDB, int size, const char *name, bool32 valueActive)
+
+bool32 CompareUserDBValues(UserDBRow *row1, UserDBRow *row2, int size, char *name, bool32 flag)
 {
-    if (!userDB->columnCount && userDB->rowUnknownCount) {
+    uint8 data1[0x10];
+    uint8 data2[0x10];
+    memset(data1, 0, sizeof(data1));
+    memset(data2, 0, sizeof(data2));
+
+    GetUserDBColumn(row1, size, name, &data1);
+    GetUserDBColumn(row2, size, name, &data2);
+    switch (size) {
+        case 1:
+        case 2: {
+            uint8 value1 = 0, value2 = 0;
+            memcpy(&value1, data1, sizeof(uint8));
+            memcpy(&value2, data2, sizeof(uint8));
+
+            if (!flag)
+                return value1 > value2;
+            else
+                return value1 < value2;
+            break;
+        }
+        case 6: {
+            int8 value1 = 0, value2 = 0;
+            memcpy(&value1, data1, sizeof(int8));
+            memcpy(&value2, data2, sizeof(int8));
+
+            if (!flag)
+                return value1 > value2;
+            else
+                return value1 < value2;
+            break;
+        }
+        case 3: {
+            uint16 value1 = 0, value2 = 0;
+            memcpy(&value1, data1, sizeof(uint16));
+            memcpy(&value2, data2, sizeof(uint16));
+
+            if (!flag)
+                return value1 > value2;
+            else
+                return value1 < value2;
+            break;
+        }
+        case 7: {
+            int16 value1 = 0, value2 = 0;
+            memcpy(&value1, data1, sizeof(int16));
+            memcpy(&value2, data2, sizeof(int16));
+
+            if (!flag)
+                return value1 > value2;
+            else
+                return value1 < value2;
+            break;
+        }
+        case 4:
+        case 15: {
+            uint32 value1 = 0, value2 = 0;
+            memcpy(&value1, data1, sizeof(uint32));
+            memcpy(&value2, data2, sizeof(uint32));
+
+            if (!flag)
+                return value1 > value2;
+            else
+                return value1 < value2;
+            break;
+        }
+        case 8: {
+            int32 value1 = 0, value2 = 0;
+            memcpy(&value1, data1, sizeof(int32));
+            memcpy(&value2, data2, sizeof(int32));
+
+            if (!flag)
+                return value1 > value2;
+            else
+                return value1 < value2;
+            break;
+        }
+        case 10: {
+            float value1 = 0, value2 = 0;
+            memcpy(&value1, data1, sizeof(float));
+            memcpy(&value2, data2, sizeof(float));
+
+            if (!flag)
+                return value1 > value2;
+            else
+                return value1 < value2;
+            break;
+        }
+        case 16: {
+            char *string1 = (char *)data1;
+            char *string2 = (char *)data2;
+
+            int result = strcmp(string1, string2);
+            if (flag)
+                return result > 0 ? true : false;
+            else
+                return result < 0 ? true : false;
+            break;
+        }
+        default: break;
+    }
+    return false;
+}
+
+void HandleUserDBSorting(UserDB *userDB, int size, char *name, bool32 flag)
+{
+    if (!userDB->rowsChanged && userDB->sortedRowCount) {
+        //sort by value
         if (size || name) {
-            int id = GetDBColumnID(userDB, name);
-            if (id >= 0) {
-                // v7                 = userDB->name;
-                // v10                = userDB->parent;
-                // var10.parent       = id;
-                // var10.field_0      = userDB;
-                // var10.type         = *&v7[4 * id + 4132];
-                // LOBYTE(var10.size) = valueActive;
-                // sub_72D510(&userDB->loaded, &v11, **&userDB->loaded, *&userDB->loaded, &var10, v10);
-                SetupRowUnknown(userDB);
+            int col = GetDBColumnID(userDB, name);
+            if (col >= 0) {
+                for (int i = 0; i < userDB->sortedRowList.Count(); i++) {
+                    for (int j = i + 1; j < userDB->sortedRowList.Count(); j++) {
+                        int *id1 = userDB->sortedRowList.At(i);
+                        int *id2 = userDB->sortedRowList.At(j);
+
+                        if (CompareUserDBValues(&userDB->rows[*id1], &userDB->rows[*id2], size, name, flag)) {
+                            int temp = *id1;
+                            *id1     = *id2;
+                            *id2     = temp;
+                        }
+                    }
+                }  
+
+                SetupRowSortIDs(userDB);
             }
         }
-        else {
-            // v9            = userDB->parent;
-            // LOBYTE(v12)   = valueActive;
-            // var10.parent  = v12;
-            // v8            = *&userDB->loaded;
-            // var10.field_0 = userDB;
-            // sub_72D3C0(&userDB->loaded, &v11, *v8, v8, &var10, v9);
-            SetupRowUnknown(userDB);
+        else { //sort by date
+            for (int i = 0; i < userDB->sortedRowList.Count(); i++) {
+                for (int j = i + 1; j < userDB->sortedRowList.Count(); j++) {
+                    int *id1 = userDB->sortedRowList.At(i);
+                    int *id2 = userDB->sortedRowList.At(j);
+
+                    double d = difftime(mktime(&userDB->rows[*id1].createTime), mktime(&userDB->rows[*id2].createTime));
+
+                    bool32 swap = false;
+                    if (flag)
+                        swap = (d < 0) - (d > 0);
+                    else
+                        swap = (d > 0) - (d < 0);
+
+                    if (swap) {
+                        int temp = *id1;
+                        *id1     = *id2;
+                        *id2     = temp;
+                    }
+                }
+            }  
+
+            SetupRowSortIDs(userDB);
         }
     }
 }

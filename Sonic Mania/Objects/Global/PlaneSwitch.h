@@ -17,7 +17,7 @@ typedef enum {
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    uint16 spriteIndex;
+    uint16 aniFrames;
 } ObjectPlaneSwitch;
 
 // Entity Class
@@ -47,8 +47,8 @@ void PlaneSwitch_EditorLoad(void);
 void PlaneSwitch_Serialize(void);
 
 // Extra Entity Functions
-void PlaneSwitch_CheckCollisions(EntityPlaneSwitch *entity, void *o, int32 flags, int32 size, bool32 switchDrawOrder, uint8 low, uint8 high);
-void PlaneSwitch_DrawSprites(EntityPlaneSwitch *entity);
+void PlaneSwitch_CheckCollisions(EntityPlaneSwitch *self, void *o, int32 flags, int32 size, bool32 switchDrawOrder, uint8 low, uint8 high);
+void PlaneSwitch_DrawSprites(void);
 
 
 #endif //!OBJ_PLANESWITCH_H

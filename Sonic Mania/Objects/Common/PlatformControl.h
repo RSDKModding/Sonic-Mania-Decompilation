@@ -16,9 +16,9 @@ typedef struct {
     int32 speed;
     bool32 setActive;
     uint8 type;
-    int32 field_6C;
+    bool32 isActive;
     int32 buttonTag;
-    Entity *controller;
+    Entity *taggedButton;
 } EntityPlatformControl;
 
 // Object Struct

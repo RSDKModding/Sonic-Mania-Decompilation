@@ -12,31 +12,31 @@ void SpikeCrusher_Draw(void)
 {
     RSDK_THIS(SpikeCrusher);
 
-    RSDK.DrawSprite(&entity->animator2, &entity->drawPos, false);
-    RSDK.DrawSprite(&entity->animator, &entity->drawPos, false);
+    RSDK.DrawSprite(&self->animator2, &self->drawPos, false);
+    RSDK.DrawSprite(&self->animator, &self->drawPos, false);
 }
 
 void SpikeCrusher_Create(void *data)
 {
     RSDK_THIS(SpikeCrusher);
 
-    entity->collision = PLATFORM_C_6;
+    self->collision = PLATFORM_C_HAZARD_BOTTOM;
     Platform_Create(NULL);
-    if (!RSDK_sceneInfo->inEditor) {
-        entity->drawOrder = Zone->drawOrderHigh;
-        RSDK.SetSpriteAnimation(Platform->spriteIndex, 3, &entity->animator, true, 4);
-        RSDK.SetSpriteAnimation(Platform->spriteIndex, 3, &entity->animator2, true, 5);
+    if (!SceneInfo->inEditor) {
+        self->drawOrder = Zone->drawOrderHigh;
+        RSDK.SetSpriteAnimation(Platform->aniFrames, 3, &self->animator, true, 4);
+        RSDK.SetSpriteAnimation(Platform->aniFrames, 3, &self->animator2, true, 5);
 
-        while (!RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x7FFF0000, true)) {
-            entity->position.y += 0x10000;
+        while (!RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x7FFF0000, true)) {
+            self->position.y += 0x10000;
         }
 
-        entity->updateRange.x = 0x800000;
-        entity->updateRange.y = entity->position.y - entity->centerPos.y + 0x200000;
-        if (entity->startDir == 1)
-            entity->drawPos.y = entity->position.y;
-        entity->position.y = entity->centerPos.y;
-        entity->state      = SpikeCrusher_State_Unknown1;
+        self->updateRange.x = 0x800000;
+        self->updateRange.y = self->position.y - self->centerPos.y + 0x200000;
+        if (self->startDir == 1)
+            self->drawPos.y = self->position.y;
+        self->position.y = self->centerPos.y;
+        self->state      = SpikeCrusher_State_Unknown1;
     }
 }
 
@@ -50,14 +50,14 @@ void SpikeCrusher_CheckOnScreen(void)
 {
     RSDK_THIS(SpikeCrusher);
 
-    if (!RSDK.CheckPosOnScreen(&entity->drawPos, &entity->updateRange) && !RSDK.CheckPosOnScreen(&entity->centerPos, &entity->updateRange)) {
-        entity->drawPos.x     = entity->centerPos.x;
-        entity->drawPos.y     = entity->centerPos.y;
-        entity->position.x    = entity->centerPos.x;
-        entity->position.y    = entity->centerPos.y;
-        entity->velocity.y    = 0;
-        entity->collapseDelay = 0;
-        entity->active        = ACTIVE_BOUNDS;
+    if (!RSDK.CheckPosOnScreen(&self->drawPos, &self->updateRange) && !RSDK.CheckPosOnScreen(&self->centerPos, &self->updateRange)) {
+        self->drawPos.x     = self->centerPos.x;
+        self->drawPos.y     = self->centerPos.y;
+        self->position.x    = self->centerPos.x;
+        self->position.y    = self->centerPos.y;
+        self->velocity.y    = 0;
+        self->timer = 0;
+        self->active        = ACTIVE_BOUNDS;
         SpikeCrusher_Create(NULL);
     }
 }
@@ -66,40 +66,40 @@ void SpikeCrusher_State_Unknown1(void)
 {
     RSDK_THIS(SpikeCrusher);
 
-    entity->active = ACTIVE_NORMAL;
-    if (entity->startDir == 0)
-        entity->state = SpikeCrusher_State_Unknown2;
+    self->active = ACTIVE_NORMAL;
+    if (self->startDir == 0)
+        self->state = SpikeCrusher_State_Unknown2;
     else
-        entity->state = SpikeCrusher_State_Unknown6;
+        self->state = SpikeCrusher_State_Unknown6;
 }
 
 void SpikeCrusher_State_Unknown2(void)
 {
     RSDK_THIS(SpikeCrusher);
 
-    entity->drawPos.y += entity->velocity.y;
+    self->drawPos.y += self->velocity.y;
 
-    int storeX = entity->position.x;
-    int storeY = entity->position.y;
-    entity->velocity.y += 0x3800;
-    if (entity->collapseDelay < 8 && (entity->collapseDelay & 1))
-        entity->animator.frameID = entity->collapseDelay >> 1;
+    int storeX = self->position.x;
+    int storeY = self->position.y;
+    self->velocity.y += 0x3800;
+    if (self->timer < 8 && (self->timer & 1))
+        self->animator.frameID = self->timer >> 1;
     else
-        entity->animator.frameID = 4;
-    entity->collapseDelay++;
-    entity->position.x = entity->drawPos.x;
-    entity->position.y = entity->drawPos.y;
-    if (RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x200000, true)) {
-        if (entity->activeScreens)
+        self->animator.frameID = 4;
+    self->timer++;
+    self->position.x = self->drawPos.x;
+    self->position.y = self->drawPos.y;
+    if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x200000, true)) {
+        if (self->activeScreens)
             RSDK.PlaySfx(SpikeCrusher->sfxImpact, false, 255);
-        entity->collapseDelay = 0;
-        entity->velocity.y    = 0;
-        entity->state         = SpikeCrusher_State_Unknown3;
+        self->timer         = 0;
+        self->velocity.y    = 0;
+        self->state         = SpikeCrusher_State_Unknown3;
     }
-    entity->drawPos.x  = entity->position.x;
-    entity->drawPos.y  = entity->position.y;
-    entity->position.x = storeX;
-    entity->position.y = storeY;
+    self->drawPos.x  = self->position.x;
+    self->drawPos.y  = self->position.y;
+    self->position.x = storeX;
+    self->position.y = storeY;
     SpikeCrusher_CheckOnScreen();
 }
 
@@ -107,13 +107,13 @@ void SpikeCrusher_State_Unknown3(void)
 {
     RSDK_THIS(SpikeCrusher);
 
-    entity->collapseDelay += 2;
-    entity->drawPos.y += 0x20000;
-    entity->animator2.frameID = entity->collapseDelay + 5;
-    if (entity->collapseDelay >= 6) {
-        entity->collapseDelay = 15;
-        entity->drawPos.y     = entity->drawPos.y + 0x8000;
-        entity->state         = SpikeCrusher_State_Unknown4;
+    self->timer += 2;
+    self->drawPos.y += 0x20000;
+    self->animator2.frameID = self->timer + 5;
+    if (self->timer >= 6) {
+        self->timer = 15;
+        self->drawPos.y     = self->drawPos.y + 0x8000;
+        self->state         = SpikeCrusher_State_Unknown4;
     }
     SpikeCrusher_CheckOnScreen();
 }
@@ -122,15 +122,15 @@ void SpikeCrusher_State_Unknown4(void)
 {
     RSDK_THIS(SpikeCrusher);
 
-    --entity->collapseDelay;
-    entity->drawPos.y -= 0x8000;
+    --self->timer;
+    self->drawPos.y -= 0x8000;
 
-    int frame = (entity->collapseDelay >> 1) + 4;
+    int frame = (self->timer >> 1) + 4;
     if (frame < 5)
         frame = 5;
-    entity->animator2.frameID = frame;
-    if (entity->collapseDelay <= 0)
-        entity->state = SpikeCrusher_State_Unknown5;
+    self->animator2.frameID = frame;
+    if (self->timer <= 0)
+        self->state = SpikeCrusher_State_Unknown5;
     SpikeCrusher_CheckOnScreen();
 }
 
@@ -138,15 +138,15 @@ void SpikeCrusher_State_Unknown5(void)
 {
     RSDK_THIS(SpikeCrusher);
 
-    if (entity->collapseDelay & 1)
-        entity->animator.frameID = 3 - (entity->collapseDelay >> 1);
+    if (self->timer & 1)
+        self->animator.frameID = 3 - (self->timer >> 1);
     else
-        entity->animator.frameID = 4;
-    entity->collapseDelay++;
+        self->animator.frameID = 4;
+    self->timer++;
 
-    if (entity->collapseDelay >= 8) {
-        entity->collapseDelay = 0;
-        entity->state         = SpikeCrusher_State_Unknown6;
+    if (self->timer >= 8) {
+        self->timer = 0;
+        self->state         = SpikeCrusher_State_Unknown6;
     }
     SpikeCrusher_CheckOnScreen();
 }
@@ -155,17 +155,17 @@ void SpikeCrusher_State_Unknown6(void)
 {
     RSDK_THIS(SpikeCrusher);
 
-    entity->drawPos.y -= 0x10000;
-    entity->animator.frameID = 4 * (!(entity->collapseDelay & 1));
-    if (entity->activeScreens && !(entity->collapseDelay & 0x1F))
+    self->drawPos.y -= 0x10000;
+    self->animator.frameID = 4 * (!(self->timer & 1));
+    if (self->activeScreens && !(self->timer & 0x1F))
         RSDK.PlaySfx(SpikeCrusher->sfxHuff, false, 255);
-    ++entity->collapseDelay;
-    if (entity->drawPos.y <= entity->centerPos.y) {
-        entity->collapseDelay = 0;
-        entity->drawPos.y     = entity->centerPos.y;
-        entity->state         = SpikeCrusher_State_Unknown2;
+    ++self->timer;
+    if (self->drawPos.y <= self->centerPos.y) {
+        self->timer = 0;
+        self->drawPos.y     = self->centerPos.y;
+        self->state         = SpikeCrusher_State_Unknown2;
     }
-    entity->velocity.y = -0x10000;
+    self->velocity.y = -0x10000;
     SpikeCrusher_CheckOnScreen();
 }
 
@@ -173,9 +173,9 @@ void SpikeCrusher_State_Unknown6(void)
 void SpikeCrusher_EditorDraw(void)
 {
     RSDK_THIS(SpikeCrusher);
-    entity->drawPos = entity->position;
-    RSDK.SetSpriteAnimation(Platform->spriteIndex, 3, &entity->animator, true, 4);
-    RSDK.SetSpriteAnimation(Platform->spriteIndex, 3, &entity->animator2, true, 5);
+    self->drawPos = self->position;
+    RSDK.SetSpriteAnimation(Platform->aniFrames, 3, &self->animator, true, 4);
+    RSDK.SetSpriteAnimation(Platform->aniFrames, 3, &self->animator2, true, 5);
 
     SpikeCrusher_Draw();
 }

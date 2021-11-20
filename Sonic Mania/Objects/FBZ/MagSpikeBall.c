@@ -6,44 +6,44 @@ void MagSpikeBall_Update(void)
 {
     RSDK_THIS(MagSpikeBall);
 
-    entity->position.y += entity->velocity.y;
-    if (entity->direction) {
-        entity->velocity.y -= 0x3800;
-        if (RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_ROOF, 0, 0, -0xC0000, true))
-            entity->velocity.y = 0;
-        entity->direction = FLIP_NONE;
+    self->position.y += self->velocity.y;
+    if (self->direction) {
+        self->velocity.y -= 0x3800;
+        if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_ROOF, 0, 0, -0xC0000, true))
+            self->velocity.y = 0;
+        self->direction = FLIP_NONE;
     }
     else {
-        entity->velocity.y += 0x3800;
-        if (entity->velocity.y <= 0 && RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_ROOF, 0, 0, -0xC0000, true))
-            entity->velocity.y = 0;
-        bool32 flag = RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0xC0000, true);
+        self->velocity.y += 0x3800;
+        if (self->velocity.y <= 0 && RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_ROOF, 0, 0, -0xC0000, true))
+            self->velocity.y = 0;
+        bool32 flag = RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0xC0000, true);
 
         foreach_all(MagPlatform, platform)
         {
             platform->position.x = platform->drawPos.x - platform->collisionOffset.x;
             platform->position.y = platform->drawPos.y - platform->collisionOffset.y;
             Hitbox *hitbox       = RSDK.GetHitbox(&platform->animator, 0);
-            flag |= RSDK.CheckObjectCollisionPlatform(platform, hitbox, entity, &MagSpikeBall->hitbox, true);
+            flag |= RSDK.CheckObjectCollisionPlatform(platform, hitbox, self, &MagSpikeBall->hitbox, true);
             platform->position.x = platform->centerPos.x;
             platform->position.y = platform->centerPos.y;
         }
 
         if (flag) {
-            entity->velocity.y = 0;
-            entity->active     = ACTIVE_BOUNDS;
+            self->velocity.y = 0;
+            self->active     = ACTIVE_BOUNDS;
         }
     }
 
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionTouch(player, entity, &MagSpikeBall->hitbox)
+        if (Player_CheckCollisionTouch(player, self, &MagSpikeBall->hitbox)
             && (player->onGround
 #if RETRO_USE_PLUS
-                && (entity->velocity.y > 0 || !Player_CheckMightyUnspin(1024, player, true, &player->uncurlTimer))
+                && (self->velocity.y > 0 || !Player_CheckMightyUnspin(0x400, player, true, &player->uncurlTimer))
 #endif
                     )) {
-            Player_CheckHit(player, entity);
+            Player_CheckHit(player, self);
         }
     }
 }
@@ -55,18 +55,18 @@ void MagSpikeBall_StaticUpdate(void) {}
 void MagSpikeBall_Draw(void)
 {
     RSDK_THIS(MagSpikeBall);
-    RSDK.DrawSprite(&entity->animator, NULL, false);
+    RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
 void MagSpikeBall_Create(void *data)
 {
     RSDK_THIS(MagSpikeBall);
-    entity->active        = ACTIVE_BOUNDS;
-    entity->visible       = true;
-    entity->updateRange.x = 0x400000;
-    entity->updateRange.y = 0x400000;
-    entity->drawOrder     = Zone->drawOrderLow;
-    RSDK.SetSpriteAnimation(MagSpikeBall->aniFrames, 0, &entity->animator, true, 0);
+    self->active        = ACTIVE_BOUNDS;
+    self->visible       = true;
+    self->updateRange.x = 0x400000;
+    self->updateRange.y = 0x400000;
+    self->drawOrder     = Zone->drawOrderLow;
+    RSDK.SetSpriteAnimation(MagSpikeBall->aniFrames, 0, &self->animator, true, 0);
 }
 
 void MagSpikeBall_StageLoad(void)

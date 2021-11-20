@@ -102,15 +102,15 @@ inline int32 aCos256(int32 angle)
 // Get Arc Tan value
 uint8 ArcTanLookup(int32 x, int32 y);
 
-extern uint32 randKey;
+extern uint32 randSeed;
 
-inline void SetRandKey(int32 key) { randKey = key; }
+inline void SetRandSeed(int32 key) { randSeed = key; }
 inline int32 GetRandomValue(int32 min, int32 max)
 {
-    int32 val = 1103515245 * randKey + 12345;
+    int32 val = 1103515245 * randSeed + 12345;
     int32 val2 = 1103515245 * val + 12345;
-    randKey      = 1103515245 * val2 + 12345;
-    int32 result = (randKey >> 16) & 0x7FF ^ (((val2 >> 16) & 0x7FF ^ (val >> 6) & 0x1FFC00) << 10);
+    randSeed      = 1103515245 * val2 + 12345;
+    int32 result = (randSeed >> 16) & 0x7FF ^ (((val2 >> 16) & 0x7FF ^ (val >> 6) & 0x1FFC00) << 10);
     int32 size   = abs(max - min);
 
     if (min > max)
@@ -120,15 +120,15 @@ inline int32 GetRandomValue(int32 min, int32 max)
     else 
         return max;
 }
-inline int32 GetSeededRandomValue(int32 min, int32 max, int32 *randKey)
+inline int32 GetSeededRandomValue(int32 min, int32 max, int32 *randSeed)
 {
-    if (!randKey)
+    if (!randSeed)
         return 0;
 
-    int32 val    = 1103515245 * *randKey + 12345;
+    int32 val    = 1103515245 * *randSeed + 12345;
     int32 val2   = 1103515245 * val + 12345;
-    *randKey     = 1103515245 * val2 + 12345;
-    int32 result = (*randKey >> 16) & 0x7FF ^ (((val2 >> 16) & 0x7FF ^ (val >> 6) & 0x1FFC00) << 10);
+    *randSeed     = 1103515245 * val2 + 12345;
+    int32 result = (*randSeed >> 16) & 0x7FF ^ (((val2 >> 16) & 0x7FF ^ (val >> 6) & 0x1FFC00) << 10);
     int32 size   = abs(max - min);
 
     if (min > max)

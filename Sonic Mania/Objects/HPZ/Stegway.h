@@ -3,6 +3,9 @@
 
 #include "SonicMania.h"
 
+// remind me to do it 
+typedef enum {STEGWAY_ANIM_NONE} StegwayAnimTypes;
+
 // Object Class
 typedef struct {
     RSDK_OBJECT
@@ -20,12 +23,12 @@ typedef struct {
     Vector2 startPos;
     uint8 startDir;
     int32 timer;
-    int32 field_6C;
+    int32 unused1;
     Animator animator1;
     Animator animator2;
     Animator animator3;
     bool32 dustFlag;
-    int32 field_BC;
+    int32 unused2;
     bool32 flag;
 } EntityStegway;
 

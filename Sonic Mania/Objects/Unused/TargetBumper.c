@@ -5,7 +5,7 @@ ObjectTargetBumper *TargetBumper = NULL;
 void TargetBumper_Update(void)
 {
     RSDK_THIS(TargetBumper);
-    StateMachine_Run(entity->state);
+    StateMachine_Run(self->state);
 }
 
 void TargetBumper_LateUpdate(void) {}
@@ -15,22 +15,22 @@ void TargetBumper_StaticUpdate(void) {}
 void TargetBumper_Draw(void)
 {
     RSDK_THIS(TargetBumper);
-    RSDK.DrawSprite(&entity->animator, NULL, false);
+    RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
 void TargetBumper_Create(void *data)
 {
     RSDK_THIS(TargetBumper);
-    entity->visible = true;
-    entity->drawFX |= FX_FLIP;
-    entity->drawOrder     = Zone->drawOrderLow;
-    entity->startPos      = entity->position;
-    entity->active        = ACTIVE_BOUNDS;
-    entity->updateRange.x = 0x400000;
-    entity->updateRange.y = 0x400000;
-    RSDK.SetSpriteAnimation(TargetBumper->aniFrames, entity->type, &entity->animator, true, 0);
-    entity->animator.frameID = entity->hitCount;
-    entity->state            = TargetBumper_Unknown4;
+    self->visible = true;
+    self->drawFX |= FX_FLIP;
+    self->drawOrder     = Zone->drawOrderLow;
+    self->startPos      = self->position;
+    self->active        = ACTIVE_BOUNDS;
+    self->updateRange.x = 0x400000;
+    self->updateRange.y = 0x400000;
+    RSDK.SetSpriteAnimation(TargetBumper->aniFrames, self->type, &self->animator, true, 0);
+    self->animator.frameID = self->hitCount;
+    self->state            = TargetBumper_State_Collide;
 }
 
 void TargetBumper_StageLoad(void)
@@ -42,7 +42,7 @@ void TargetBumper_StageLoad(void)
 void TargetBumper_DebugSpawn(void)
 {
     RSDK_THIS(TargetBumper);
-    CREATE_ENTITY(TargetBumper, NULL, entity->position.x, entity->position.y);
+    CREATE_ENTITY(TargetBumper, NULL, self->position.x, self->position.y);
 }
 
 void TargetBumper_DebugDraw(void)
@@ -51,86 +51,83 @@ void TargetBumper_DebugDraw(void)
     RSDK.DrawSprite(&DebugMode->animator, 0, false);
 }
 
-void TargetBumper_Unknown3(void)
+void TargetBumper_Collide(void)
 {
     RSDK_THIS(TargetBumper);
 
     Hitbox hitbox;
-    switch (entity->type) {
-        case 0:
-            hitbox.left          = -14;
-            hitbox.top           = -4;
-            hitbox.right         = 14;
-            hitbox.bottom        = 4;
+    switch (self->type) {
+        case TARGETBUMP_HORIZONTAL:
+            hitbox.left   = -14;
+            hitbox.top    = -4;
+            hitbox.right  = 14;
+            hitbox.bottom = 4;
             break;
-        case 1:
-            hitbox.left          = -4;
-            hitbox.top           = -14;
-            hitbox.right         = 4;
-            hitbox.bottom        = 14;
+        case TARGETBUMP_VERTICAL:
+            hitbox.left   = -4;
+            hitbox.top    = -14;
+            hitbox.right  = 4;
+            hitbox.bottom = 14;
             break;
-        case 2:
+        case TARGETBUMP_CIRCLE:
             hitbox.left   = -8;
             hitbox.top    = -8;
             hitbox.right  = 8;
-            hitbox.bottom  = 8;
+            hitbox.bottom = 8;
             break;
     }
 
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionTouch(player, entity, &hitbox) && player->playerAnimator.animationID != ANI_HURT) {
-            entity->curPos = entity->startPos;
-            entity->state  = TargetBumper_Unknown5;
-            entity->active = ACTIVE_NORMAL;
+        if (Player_CheckCollisionTouch(player, self, &hitbox) && player->animator.animationID != ANI_HURT) {
+            self->curPos = self->startPos;
+            self->state  = TargetBumper_Hit;
+            self->active = ACTIVE_NORMAL;
 
-            switch (entity->type) {
-                case 0:
-                    if (player->position.y <= entity->position.y) {
+            switch (self->type) {
+                case TARGETBUMP_HORIZONTAL:
+                    if (player->position.y <= self->position.y) {
                         player->velocity.y = -0x70000;
-                        entity->curPos.y += 0x20000;
+                        self->curPos.y += 0x20000;
                     }
                     else {
                         player->velocity.y = 0x70000;
-                        entity->curPos.y -= 0x20000;
+                        self->curPos.y -= 0x20000;
                     }
                     break;
-                case 1:
-                    if (player->position.x <= entity->position.x) {
+                case TARGETBUMP_VERTICAL:
+                    if (player->position.x <= self->position.x) {
                         player->velocity.x = -0x70000;
-                        entity->curPos.x += 0x20000;
+                        self->curPos.x += 0x20000;
                     }
                     else {
                         player->velocity.x = 0x70000;
-                        entity->curPos.x -= 0x20000;
+                        self->curPos.x -= 0x20000;
                     }
                     break;
-                case 2: {
+                case TARGETBUMP_CIRCLE: {
                     int32 angle = 96;
-                    if (entity->direction)
+                    if (self->direction)
                         angle = 32;
 
-                    int32 ang  = 0;
                     int32 ang2 = 0;
-                    if (RSDK.ATan2(player->velocity.x, player->velocity.y) - angle >= 0) {
-                        ang  = RSDK.ATan2(player->velocity.x, player->velocity.y) - angle;
+                    uint8 atan = RSDK.ATan2(player->velocity.x, player->velocity.y);
+                    int32 ang  = atan - angle;
+                    if (atan - angle >= 0)
                         ang2 = ang;
-                    }
-                    else {
-                        ang  = RSDK.ATan2(player->velocity.x, player->velocity.y) - angle;
+                    else
                         ang2 = -ang;
-                    }
 
                     if (ang2 < 0x40) {
                         if (ang2 < 0x38) {
                             angle -= ang;
                             angle &= 0xFF;
                         }
-                        if ((entity->direction & 1))
-                            entity->curPos.x += 0x20000;
+                        if ((self->direction & 1))
+                            self->curPos.x += 0x20000;
                         else
-                            entity->curPos.x -= 0x20000;
-                        entity->curPos.y += 0x20000;
+                            self->curPos.x -= 0x20000;
+                        self->curPos.y += 0x20000;
                     }
                     else {
                         angle += 0x80;
@@ -138,11 +135,11 @@ void TargetBumper_Unknown3(void)
                             angle -= ang;
                             angle &= 0xFF;
                         }
-                        if ((entity->direction & 1))
-                            entity->curPos.x -= 0x20000;
+                        if ((self->direction & 1))
+                            self->curPos.x -= 0x20000;
                         else
-                            entity->curPos.x += 0x20000;
-                        entity->curPos.y -= 0x20000;
+                            self->curPos.x += 0x20000;
+                        self->curPos.y -= 0x20000;
                     }
                     player->velocity.x = -0x700 * RSDK.Cos256(angle);
                     player->velocity.y = -0x700 * RSDK.Sin256(angle);
@@ -153,62 +150,89 @@ void TargetBumper_Unknown3(void)
             if (player->state == Player_State_FlyCarried)
                 RSDK_GET_ENTITY(SLOT_PLAYER2, Player)->flyCarryTimer = 30;
 
-            int32 anim = player->playerAnimator.animationID;
+            int32 anim = player->animator.animationID;
             if (anim != ANI_FLY && anim != ANI_FLYLIFTTIRED && player->state != Player_State_TailsFlight) {
                 player->state = Player_State_Air;
                 if (anim != ANI_JUMP && anim != ANI_JOG && anim != ANI_RUN && anim != ANI_DASH)
-                    player->playerAnimator.animationID = ANI_WALK;
+                    player->animator.animationID = ANI_WALK;
             }
-            if (player->playerAnimator.animationID != ANI_FLY)
+            if (player->animator.animationID != ANI_FLY)
                 player->groundVel = player->velocity.x;
             player->onGround       = false;
             player->tileCollisions = true;
-            if (entity->hitCount < 3) {
-                entity->field_74        = 0;
-                EntityScoreBonus *bonus = CREATE_ENTITY(ScoreBonus, NULL, entity->position.x, entity->position.y);
+            if (self->hitCount < 3) {
+                self->hitTimer        = 0;
+                EntityScoreBonus *bonus = CREATE_ENTITY(ScoreBonus, NULL, self->position.x, self->position.y);
                 bonus->animator.frameID = 16;
                 Player_GiveScore(player, 10);
-                if (++entity->hitCount < 3)
-                    entity->animator.frameID = entity->hitCount;
+                if (++self->hitCount < 3)
+                    self->animator.frameID = self->hitCount;
             }
         }
     }
 }
 
-void TargetBumper_Unknown4(void) { TargetBumper_Unknown3(); }
+void TargetBumper_State_Collide(void)
+{
+    // eminem ?
+    TargetBumper_Collide();
+}
 
-void TargetBumper_Unknown5(void)
+void TargetBumper_Hit(void)
 {
     RSDK_THIS(TargetBumper);
-    TargetBumper_Unknown3();
+    TargetBumper_Collide();
 
-    if ((entity->field_74 & 4)) {
-        entity->position.x = entity->startPos.x;
-        entity->position.y = entity->startPos.y;
+    if ((self->hitTimer & 4)) {
+        self->position.x = self->startPos.x;
+        self->position.y = self->startPos.y;
     }
     else {
-        entity->position.x = entity->curPos.x;
-        entity->position.y = entity->curPos.y;
+        self->position.x = self->curPos.x;
+        self->position.y = self->curPos.y;
     }
 
-    entity->field_74++;
-    if (entity->field_74 == 12) {
-        if (entity->hitCount < 3) {
-            entity->position.x = entity->startPos.x;
-            entity->position.y = entity->startPos.y;
-            entity->field_74   = 0;
-            entity->state      = TargetBumper_Unknown4;
+    self->hitTimer++;
+    if (self->hitTimer == 12) {
+        if (self->hitCount < 3) {
+            self->position.x = self->startPos.x;
+            self->position.y = self->startPos.y;
+            self->hitTimer   = 0;
+            self->state      = TargetBumper_State_Collide;
         }
         else {
-            destroyEntity(entity);
+            destroyEntity(self);
         }
     }
 }
 
 #if RETRO_INCLUDE_EDITOR
-void TargetBumper_EditorDraw(void) {}
+void TargetBumper_EditorDraw(void)
+{
+    RSDK_THIS(TargetBumper);
+    RSDK.SetSpriteAnimation(TargetBumper->aniFrames, self->type, &self->animator, true, 0);
+    self->animator.frameID = self->hitCount;
+    RSDK.DrawSprite(&self->animator, NULL, false);
+}
 
-void TargetBumper_EditorLoad(void) {}
+void TargetBumper_EditorLoad(void)
+{
+    TargetBumper->aniFrames = RSDK.LoadSpriteAnimation("Blueprint/TargetBumper.bin", SCOPE_STAGE);
+
+    RSDK_ACTIVE_VAR(TargetBumper, type);
+    RSDK_ENUM_VAR("Horizontal", TARGETBUMP_HORIZONTAL);
+    RSDK_ENUM_VAR("Vertical", TARGETBUMP_VERTICAL);
+    RSDK_ENUM_VAR("Circular", TARGETBUMP_CIRCLE);
+
+    RSDK_ACTIVE_VAR(TargetBumper, hitCount);
+    RSDK_ENUM_VAR("Three Hits", TARGETBUMP_THREE_HIT);
+    RSDK_ENUM_VAR("Two Hits", TARGETBUMP_TWO_HIT);
+    RSDK_ENUM_VAR("One Hit", TARGETBUMP_ONE_HIT);
+
+    RSDK_ACTIVE_VAR(TargetBumper, direction);
+    RSDK_ENUM_VAR("No Flip", FLIP_NONE);
+    RSDK_ENUM_VAR("Flip X", FLIP_X);
+}
 #endif
 
 void TargetBumper_Serialize(void)

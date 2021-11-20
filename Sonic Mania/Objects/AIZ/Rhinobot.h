@@ -16,16 +16,16 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    StateMachine(timedState);
-    int32 field_60;
+    StateMachine(stateDelay);
+    int32 unused1;
     int32 timer;
-    int32 field_68;
-    int32 field_6C;
-    bool32 flag;
-    int32 field_74;
-    int32 field_78;
+    int32 skidDir;
+    int32 moveDir;
+    bool32 playedHuff;
+    int32 acceleration;
+    int32 topSpeed;
     Vector2 startPos;
-    char startDir;
+    uint8 startDir;
     Animator animatorBot;
     Animator animatorDust;
 } EntityRhinobot;
@@ -54,15 +54,15 @@ void Rhinobot_CheckOnScreen(void);
 void Rhinobot_DebugDraw(void);
 void Rhinobot_DebugSpawn(void);
 
-void Rhinobot_State4(void);
-void Rhinobot_StateSkidding(void);
-void Rhinobot_StateFinishSkid(void);
-void Rhinobot_State1(void);
+void Rhinobot_StateDelay_StartMove(void);
+void Rhinobot_StateDelay_Skidding(void);
+void Rhinobot_StateDelay_SkidFinish(void);
 
-void Rhinobot_State2(void);
-void Rhinobot_HandleUpdate2(void);
-void Rhinobot_HandleUpdate3(void);
-void Rhinobot_HandleUpdate4(void);
+void Rhinobot_State_Setup(void);
+void Rhinobot_State_HandleGroundMovement(void);
+void Rhinobot_State_Skidding(void);
+void Rhinobot_State_Idle(void);
+void Rhinobot_State_Fall(void);
 
 #endif
 

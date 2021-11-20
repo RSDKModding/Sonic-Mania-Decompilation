@@ -8,7 +8,7 @@
 typedef struct {
     RSDK_OBJECT
     uint16 aniFrames;
-    uint16 playerAniFrames;
+    uint16 playerFrames;
 } ObjectTryAgainE;
 
 // Entity Class
@@ -16,11 +16,11 @@ typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
-    int32 field_60;
-    int32 field_64;
-    Animator animator1;
-    Animator animator2;
-    Animator animator3;
+    int32 unused1;
+    int32 unused2;
+    Animator mainAnimator;
+    Animator handUpAnimator;
+    Animator handDownAnimator;
     Animator player1Animator;
     Animator player2Animator;
 } EntityTryAgainE;

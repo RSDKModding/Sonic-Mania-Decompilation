@@ -33,12 +33,14 @@ typedef struct {
     Hitbox hitbox;
     Hitbox hiddenHitbox;
     int32 brokenFrame;
-    uint16 spriteIndex;
-    uint16 sfx_Destroy;
-    uint16 sfx_Teleport;
-    uint16 sfx_HyperRing;
-    uint16 sfx_PowerDown;
-    uint16 sfx_Revovery;
+    uint16 aniFrames;
+    uint16 sfxDestroy;
+    uint16 sfxTeleport;
+    uint16 sfxHyperRing;
+#if RETRO_USE_PLUS
+    uint16 sfxPowerDown;
+    uint16 sfxRevovery;
+#endif
 } ObjectItemBox;
 
 // Entity Class
@@ -60,7 +62,9 @@ typedef struct {
     Animator animatorContents;
     Animator animatorOverlay;
     Animator animatorDebris;
+#if RETRO_USE_PLUS
     Entity *parent;
+#endif
 } EntityItemBox;
 
 // Object Struct

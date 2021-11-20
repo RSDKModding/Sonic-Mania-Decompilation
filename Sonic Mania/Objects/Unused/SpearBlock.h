@@ -8,7 +8,7 @@ typedef struct {
     RSDK_OBJECT
     Hitbox blockHitbox;
     Hitbox spearHitboxes[4];
-    uint16 spriteIndex;
+    uint16 aniFrames;
     Animator animator;
 } ObjectSpearBlock;
 

@@ -35,7 +35,7 @@ void ERZSetup_StageLoad(void)
 
 void ERZSetup_ScanlineCallback(ScanlineInfo *scanlines)
 {
-    ScreenInfo *screen = &RSDK_screens[RSDK_sceneInfo->currentScreenID];
+    RSDKScreenInfo *screen = &ScreenInfo[SceneInfo->currentScreenID];
     RSDK.SetClipBounds(0, 0, 0, screen->width, 136);
     int32 a           = 0x1000000;
     int32 posX        = screen->position.x << 14;

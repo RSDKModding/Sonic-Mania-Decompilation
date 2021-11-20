@@ -6,15 +6,15 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    uint16 spriteIndex;
-    uint16 sfx_BlueShield;
-    uint16 sfx_BubbleShield;
-    uint16 sfx_FireShield;
-    uint16 sfx_LightningShield;
-    uint16 sfx_InstaShield;
-    uint16 sfx_BubbleBounce;
-    uint16 sfx_FireDash;
-    uint16 sfx_LightningJump;
+    uint16 aniFrames;
+    uint16 sfxBlueShield;
+    uint16 sfxBubbleShield;
+    uint16 sfxFireShield;
+    uint16 sfxLightningShield;
+    uint16 sfxInstaShield;
+    uint16 sfxBubbleBounce;
+    uint16 sfxFireDash;
+    uint16 sfxLightningJump;
 } ObjectShield;
 
 // Entity Class

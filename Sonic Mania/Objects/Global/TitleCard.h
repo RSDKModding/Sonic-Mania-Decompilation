@@ -6,7 +6,7 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    uint16 spriteIndex;
+    uint16 aniFrames;
     StateMachine(finishedCB);
     StateMachine(suppressCB);
 } ObjectTitleCard;
@@ -16,13 +16,10 @@ typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     StateMachine(stateDraw);
-    int32 field_60;
+    int32 actionTimer;
     int32 timer;
     Vector2 decorationPos;
-    int32 dword70;
-    int32 dword74;
-    int32 dword78;
-    int32 dword7C;
+    int32 barPos[4];
     Vector2 points0[4];
     Vector2 points1[4];
     Vector2 points2[4];
@@ -36,16 +33,16 @@ typedef struct {
     TextInfo zoneName;
     int32 zoneCharPos[4];
     int32 zoneCharSpeed[4];
-    int32 dword1E8;
+    int32 zoneStopPos;
     Vector2 charPos[20];
     int32 charSpeeds[20];
     int32 word2Offset;
-    int32 field_2E0;
-    int32 field_2E4;
-    int32 field_2E8;
-    int32 dword2EC;
+    int32 topWordOffset;
+    int32 bottomWordOffset;
+    int32 currentWordPos;
+    int32 wordStopPos;
     uint8 actID;
-    int32 dword2F4;
+    int32 actNumScale;
     Vector2 drawPos2;
     bool32 enableIntro;
     Animator decorationData;
@@ -74,21 +71,21 @@ void TitleCard_Serialize(void);
 // Extra Entity Functions
 void TitleCard_SetColours(void);
 void TitleCard_SetPoints(void);
-void TitleCard_Unknown2(void);
-void TitleCard_Unknown3(void);
-void TitleCard_Unknown4(void);
-void TitleCard_Unknown5(void);
-void TitleCard_Unknown6(void);
+void TitleCard_SetWordPositions(void);
+void TitleCard_CheckPointBoundaries(void);
+void TitleCard_HandleZoneCharacters(void);
+void TitleCard_SetCamera(void);
 
 // States
-void TitleCard_Unknown7(void);
-void TitleCard_Unknown8(void);
-void TitleCard_Unknown9(void);
-void TitleCard_Unknown10(void);
-void TitleCard_Unknown11(void);
+void TitleCard_State_Initial(void);
+void TitleCard_State_OpeningBG(void);
+void TitleCard_State_ShowTitle(void);
+void TitleCard_State_Idle(void);
+void TitleCard_State_SlideAway(void);
+void TitleCard_State_Supressed(void);
 // Draw States
-void TitleCard_StateDraw_Default(void);
-void TitleCard_Unknown13(void);
-void TitleCard_Unknown14(void);
+void TitleCard_Draw_Default(void);
+void TitleCard_Draw_SolidBG(void);
+void TitleCard_Draw_SlideAway(void);
 
 #endif //! OBJ_TITLECARD_H

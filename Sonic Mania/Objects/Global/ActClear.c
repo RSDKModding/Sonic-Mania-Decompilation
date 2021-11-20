@@ -7,7 +7,7 @@ void ActClear_Update(void) {}
 void ActClear_LateUpdate(void)
 {
     RSDK_THIS(ActClear);
-    StateMachine_Run(entity->state);
+    StateMachine_Run(self->state);
 }
 
 void ActClear_StaticUpdate(void) {}
@@ -22,22 +22,23 @@ void ActClear_Draw(void)
     int32 offset       = 0;
     RSDK_THIS(ActClear);
 
-    drawPos.x  = entity->posUnknown3.x;
-    drawPos.y  = entity->posUnknown3.y;
+    drawPos.x  = self->gotThroughPos.x;
+    drawPos.y  = self->gotThroughPos.y;
     verts[0].y = drawPos.y - 0x140000;
     verts[1].y = drawPos.y - 0x140000;
     verts[2].y = drawPos.y - 0x40000;
     verts[3].y = drawPos.y - 0x40000;
     if ((globals->playerID & 0xFF) == ID_KNUCKLES) {
-        int32 center = (RSDK_screens->centerX << 16) + 0x100000;
-        drawPos.x    = center + 2 * entity->posUnknown3.x;
+        int32 center = (ScreenInfo->centerX << 16) + 0x100000;
+        drawPos.x    = center + 2 * self->gotThroughPos.x;
         verts[0].x   = drawPos.x - 0x910000;
         verts[1].x   = drawPos.x + 0x340000;
         verts[2].x   = drawPos.x + 0x440000;
         verts[3].x   = drawPos.x - 0x810000;
         RSDK.DrawQuad(verts, 4, 0, 0, 0, 255, INK_NONE);
-        drawPos.x  = entity->posUnknown.x;
-        drawPos.y  = entity->posUnknown.y;
+
+        drawPos.x  = self->playerNamePos.x;
+        drawPos.y  = self->playerNamePos.y;
         drawPos.x  = center + 2 * drawPos.x;
         verts[0].x = drawPos.x - 0x7C0000;
         verts[0].y = drawPos.y + 0x1C0000;
@@ -48,31 +49,34 @@ void ActClear_Draw(void)
         verts[2].y = drawPos.y + 0x2C0000;
         verts[3].y = drawPos.y + 0x2C0000;
         RSDK.DrawQuad(verts, 4, 0, 0, 0, 255, INK_NONE);
-        drawPos.x = entity->posUnknown.x;
-        drawPos.y = entity->posUnknown.y;
+
+        drawPos.x = self->playerNamePos.x;
+        drawPos.y = self->playerNamePos.y;
         drawPos.x += center;
-        RSDK.DrawSprite(&entity->playerNameAnimator, &drawPos, true);
-        entity->gotThroughAnimator.frameID = 2;
-        RSDK.DrawSprite(&entity->gotThroughAnimator, &drawPos, true);
-        drawPos.x = entity->posUnknown3.x;
-        drawPos.y = entity->posUnknown3.y;
+        RSDK.DrawSprite(&self->playerNameAnimator, &drawPos, true);
+        self->gotThroughAnimator.frameID = 2;
+        RSDK.DrawSprite(&self->gotThroughAnimator, &drawPos, true);
+
+        drawPos.x = self->gotThroughPos.x;
+        drawPos.y = self->gotThroughPos.y;
         drawPos.x += center;
-        entity->gotThroughAnimator.frameID = 3;
-        RSDK.DrawSprite(&entity->gotThroughAnimator, &drawPos, true);
-        RSDK.DrawSprite(&entity->actNumAnimator, &drawPos, true);
+        self->gotThroughAnimator.frameID = 3;
+        RSDK.DrawSprite(&self->gotThroughAnimator, &drawPos, true);
+        RSDK.DrawSprite(&self->actNumAnimator, &drawPos, true);
 
         offset = center - 0xA0000;
     }
     else {
-        int32 center = (RSDK_screens->centerX << 16) + 0x100000;
-        drawPos.x    = center + 2 * entity->posUnknown3.x;
+        int32 center = (ScreenInfo->centerX << 16) + 0x100000;
+        drawPos.x    = center + 2 * self->gotThroughPos.x;
         verts[0].x   = drawPos.x - 0x6D0000;
         verts[1].x   = drawPos.x + 0x340000;
         verts[2].x   = drawPos.x + 0x440000;
         verts[3].x   = drawPos.x - 0x5D0000;
         RSDK.DrawQuad(verts, 4, 0, 0, 0, 255, INK_NONE);
-        drawPos.x  = entity->posUnknown.x;
-        drawPos.y  = entity->posUnknown.y;
+
+        drawPos.x  = self->playerNamePos.x;
+        drawPos.y  = self->playerNamePos.y;
         drawPos.x  = center + 2 * drawPos.x;
         verts[0].x = drawPos.x - 0x580000;
         verts[0].y = drawPos.y + 0x1C0000;
@@ -83,43 +87,45 @@ void ActClear_Draw(void)
         verts[2].y = drawPos.y + 0x2C0000;
         verts[3].y = drawPos.y + 0x2C0000;
         RSDK.DrawQuad(verts, 4, 0, 0, 0, 255, INK_NONE);
-        drawPos.x = entity->posUnknown.x;
-        drawPos.y = entity->posUnknown.y;
+
+        drawPos.x = self->playerNamePos.x;
+        drawPos.y = self->playerNamePos.y;
         drawPos.x += center;
-        RSDK.DrawSprite(&entity->playerNameAnimator, &drawPos, true);
+        RSDK.DrawSprite(&self->playerNameAnimator, &drawPos, true);
+
 #if RETRO_USE_PLUS
         if ((globals->playerID & 0xFF) == ID_MIGHTY)
-            entity->gotThroughAnimator.frameID = 2;
+            self->gotThroughAnimator.frameID = 2;
         else
 #endif
-            entity->gotThroughAnimator.frameID = 0;
-        RSDK.DrawSprite(&entity->gotThroughAnimator, &drawPos, true);
-        drawPos.x = entity->posUnknown3.x;
-        drawPos.y = entity->posUnknown3.y;
+            self->gotThroughAnimator.frameID = 0;
+        RSDK.DrawSprite(&self->gotThroughAnimator, &drawPos, true);
+        drawPos.x = self->gotThroughPos.x;
+        drawPos.y = self->gotThroughPos.y;
         drawPos.x += center;
-        entity->gotThroughAnimator.frameID = 1;
-        RSDK.DrawSprite(&entity->gotThroughAnimator, &drawPos, true);
-        RSDK.DrawSprite(&entity->actNumAnimator, &drawPos, true);
+        self->gotThroughAnimator.frameID = 1;
+        RSDK.DrawSprite(&self->gotThroughAnimator, &drawPos, true);
+        RSDK.DrawSprite(&self->actNumAnimator, &drawPos, true);
 
         offset = center + 0x60000;
     }
 
-    drawPos.x                 = offset + entity->posUnknown2.x - 0x5C0000;
-    drawPos.y                 = entity->posUnknown2.y;
-    entity->hudElementsAnimator.frameID = 1;
-    RSDK.DrawSprite(&entity->hudElementsAnimator, &drawPos, true);
+    drawPos.x                 = offset + self->timeBonusPos.x - 0x5C0000;
+    drawPos.y                 = self->timeBonusPos.y;
+    self->hudElementsAnimator.frameID = 1;
+    RSDK.DrawSprite(&self->hudElementsAnimator, &drawPos, true);
     drawPos.x += 0x320000;
 #if RETRO_USE_PLUS
     if (globals->gameMode != MODE_TIMEATTACK) {
 #endif
-        entity->hudElementsAnimator.frameID = 8;
-        RSDK.DrawSprite(&entity->hudElementsAnimator, &drawPos, true);
+        self->hudElementsAnimator.frameID = 8;
+        RSDK.DrawSprite(&self->hudElementsAnimator, &drawPos, true);
 #if RETRO_USE_PLUS
     }
 #endif
-    entity->hudElementsAnimator.frameID = 10;
+    self->hudElementsAnimator.frameID = 10;
     drawPos.x += 0x340000;
-    RSDK.DrawSprite(&entity->hudElementsAnimator, &drawPos, true);
+    RSDK.DrawSprite(&self->hudElementsAnimator, &drawPos, true);
 
     int32 dx = 0x430000 + drawPos.x;
     int32 dy = drawPos.y + 0xE0000;
@@ -130,133 +136,132 @@ void ActClear_Draw(void)
     if (globals->gameMode == MODE_TIMEATTACK) {
         drawPos.x = dx - 0x620000;
         drawPos.y = dy - 0xE0000;
-        ActClear_DrawTime(RSDK_sceneInfo->minutes, &drawPos, RSDK_sceneInfo->seconds, RSDK_sceneInfo->milliseconds);
+        ActClear_DrawTime(&drawPos, SceneInfo->minutes, SceneInfo->seconds, SceneInfo->milliseconds);
     }
     else {
 #endif
-        ActClear_DrawNumbers(&drawPos, entity->scoreBonus, 0);
+        ActClear_DrawNumbers(&drawPos, self->scoreBonus, 0);
 #if RETRO_USE_PLUS
     }
 #endif
 
-    drawPos.x = offset + entity->posUnknown4.x - 0x5C0000;
-    drawPos.y = entity->posUnknown4.y;
+    drawPos.x = offset + self->ringBonusPos.x - 0x5C0000;
+    drawPos.y = self->ringBonusPos.y;
 #if RETRO_USE_PLUS
     if (globals->gameMode == MODE_TIMEATTACK)
-        entity->hudElementsAnimator.frameID = 17;
+        self->hudElementsAnimator.frameID = 17;
     else
 #endif
-        entity->hudElementsAnimator.frameID = 5;
-    RSDK.DrawSprite(&entity->hudElementsAnimator, &drawPos, true);
+        self->hudElementsAnimator.frameID = 5;
+    RSDK.DrawSprite(&self->hudElementsAnimator, &drawPos, true);
 
     dx = drawPos.x + 0x320000;
     drawPos.x += 0x320000;
 #if RETRO_USE_PLUS
     if (globals->gameMode == MODE_TIMEATTACK) {
         drawPos.x                 = dx - 0xA0000;
-        entity->hudElementsAnimator.frameID = 1;
-        RSDK.DrawSprite(&entity->hudElementsAnimator, &drawPos, true);
+        self->hudElementsAnimator.frameID = 1;
+        RSDK.DrawSprite(&self->hudElementsAnimator, &drawPos, true);
         drawPos.x += 0xA0000;
     }
     else {
 #endif
-        entity->hudElementsAnimator.frameID = 8;
-        RSDK.DrawSprite(&entity->hudElementsAnimator, &drawPos, true);
+        self->hudElementsAnimator.frameID = 8;
+        RSDK.DrawSprite(&self->hudElementsAnimator, &drawPos, true);
 #if RETRO_USE_PLUS
     }
 #endif
 
-    entity->hudElementsAnimator.frameID = 10;
+    self->hudElementsAnimator.frameID = 10;
     drawPos.x += 0x340000;
-    RSDK.DrawSprite(&entity->hudElementsAnimator, &drawPos, true);
+    RSDK.DrawSprite(&self->hudElementsAnimator, &drawPos, true);
 
     drawPos.x += 0x430000;
     drawPos.y += 0xE0000;
 #if RETRO_USE_PLUS
     if (globals->gameMode == MODE_TIMEATTACK) {
-        TimeAttackData_GetTimeFromValue(entity->time, &minsPtr, &secsPtr, &millisecsPtr);
+        TimeAttackData_GetTimeFromValue(self->time, &minsPtr, &secsPtr, &millisecsPtr);
         drawPos.x -= 0x620000;
         drawPos.y -= 0xE0000;
-        if (!entity->field_80 || (entity->field_80 == 1 && (Zone->timer & 8)))
-            ActClear_DrawTime(minsPtr, &drawPos, secsPtr, millisecsPtr);
+        if (!self->isNewRecord || (self->isNewRecord && (Zone->timer & 8)))
+            ActClear_DrawTime(&drawPos, minsPtr, secsPtr, millisecsPtr);
     }
     else {
 #endif
-        ActClear_DrawNumbers(&drawPos, entity->ringBonus, 0);
+        ActClear_DrawNumbers(&drawPos, self->ringBonus, 0);
 #if RETRO_USE_PLUS
     }
 #endif
 
-    if (entity->field_84 == 1) {
-        drawPos.x = entity->posUnknown5.x;
-        drawPos.y = entity->posUnknown5.y;
+    if (self->showCoolBonus) {
+        drawPos.x = self->coolBonusPos.x;
+        drawPos.y = self->coolBonusPos.y;
         drawPos.x = offset + drawPos.x - 0x5C0000;
 #if RETRO_USE_PLUS
         if (globals->gameMode == MODE_TIMEATTACK)
-            entity->hudElementsAnimator.frameID = 18;
+            self->hudElementsAnimator.frameID = 18;
         else
 #endif
-            entity->hudElementsAnimator.frameID = 15;
-        RSDK.DrawSprite(&entity->hudElementsAnimator, &drawPos, true);
+            self->hudElementsAnimator.frameID = 15;
+        RSDK.DrawSprite(&self->hudElementsAnimator, &drawPos, true);
 
         drawPos.x += 0x320000;
 #if RETRO_USE_PLUS
         if (globals->gameMode != MODE_TIMEATTACK) {
 #endif
-            entity->hudElementsAnimator.frameID = 8;
-            RSDK.DrawSprite(&entity->hudElementsAnimator, &drawPos, true);
+            self->hudElementsAnimator.frameID = 8;
+            RSDK.DrawSprite(&self->hudElementsAnimator, &drawPos, true);
 #if RETRO_USE_PLUS
         }
 #endif
 
-        entity->hudElementsAnimator.frameID = 10;
+        self->hudElementsAnimator.frameID = 10;
         drawPos.x += 0x340000;
-        RSDK.DrawSprite(&entity->hudElementsAnimator, &drawPos, true);
+        RSDK.DrawSprite(&self->hudElementsAnimator, &drawPos, true);
 
         drawPos.x += 0x430000;
         drawPos.y += 0xE0000;
 #if RETRO_USE_PLUS
         if (globals->gameMode != MODE_TIMEATTACK) {
 #endif
-            ActClear_DrawNumbers(&drawPos, entity->coolBonus, 0);
+            ActClear_DrawNumbers(&drawPos, self->coolBonus, 0);
 #if RETRO_USE_PLUS
         }
         else {
             if (!TimeAttackData->dbRank) {
-                entity                    = (EntityActClear *)RSDK_sceneInfo->entity;
-                entity->numbersAnimator.frameID = 16;
-                RSDK.DrawSprite(&entity->numbersAnimator, &drawPos, true);
+                self->numbersAnimator.frameID = 16;
+                RSDK.DrawSprite(&self->numbersAnimator, &drawPos, true);
 
                 drawPos.x -= 0x90000;
             }
-            else if (!entity->field_7C || (entity->field_7C == 1 && (Zone->timer & 8)))
+            else if (!self->achievedRank || (self->achievedRank && (Zone->timer & 8)))
                 ActClear_DrawNumbers(&drawPos, TimeAttackData->dbRank, 0);
         }
 #endif
     }
 
-    drawPos.x = entity->posUnknown6.x;
-    drawPos.y = entity->posUnknown6.y;
+    drawPos.x = self->totalScorePos.x;
+    drawPos.y = self->totalScorePos.y;
 
 #if RETRO_USE_PLUS
     if (globals->gameMode == MODE_TIMEATTACK) {
-        drawPos.x                 = offset + entity->posUnknown6.x - 0x5C0000;
-        entity->hudElementsAnimator.frameID = 19;
-        RSDK.DrawSprite(&entity->hudElementsAnimator, &drawPos, true);
+        drawPos.x                 = offset + self->totalScorePos.x - 0x5C0000;
+        self->hudElementsAnimator.frameID = 19;
+        RSDK.DrawSprite(&self->hudElementsAnimator, &drawPos, true);
 
         drawPos.x += 0x320000;
-        entity->hudElementsAnimator.frameID = 18;
-        RSDK.DrawSprite(&entity->hudElementsAnimator, &drawPos, true);
+        self->hudElementsAnimator.frameID = 18;
+        RSDK.DrawSprite(&self->hudElementsAnimator, &drawPos, true);
 
-        entity->hudElementsAnimator.frameID = 10;
+        self->hudElementsAnimator.frameID = 10;
         drawPos.x += 0x340000;
-        RSDK.DrawSprite(&entity->hudElementsAnimator, &drawPos, true);
+        RSDK.DrawSprite(&self->hudElementsAnimator, &drawPos, true);
 
         drawPos.x += 0x430000;
         drawPos.y += 0xE0000;
         if (!TimeAttackData->rank) {
-            entity->numbersAnimator.frameID = 16;
-            RSDK.DrawSprite(&entity->numbersAnimator, &drawPos, true);
+            self->numbersAnimator.frameID = 16;
+            RSDK.DrawSprite(&self->numbersAnimator, &drawPos, true);
         }
         else {
             ActClear_DrawNumbers(&drawPos, TimeAttackData->rank, 0);
@@ -264,17 +269,17 @@ void ActClear_Draw(void)
     }
     else {
 #endif
-        drawPos.x                 = offset + entity->posUnknown6.x - 0x440000;
-        entity->hudElementsAnimator.frameID = 9;
-        RSDK.DrawSprite(&entity->hudElementsAnimator, &drawPos, true);
+        drawPos.x                 = offset + self->totalScorePos.x - 0x440000;
+        self->hudElementsAnimator.frameID = 9;
+        RSDK.DrawSprite(&self->hudElementsAnimator, &drawPos, true);
 
-        entity->hudElementsAnimator.frameID = 10;
+        self->hudElementsAnimator.frameID = 10;
         drawPos.x += 0x340000;
-        RSDK.DrawSprite(&entity->hudElementsAnimator, &drawPos, true);
+        RSDK.DrawSprite(&self->hudElementsAnimator, &drawPos, true);
 
         drawPos.x += 0x430000;
         drawPos.y += 0xE0000;
-        ActClear_DrawNumbers(&drawPos, entity->totalScore, 0);
+        ActClear_DrawNumbers(&drawPos, self->totalScore, 0);
 #if RETRO_USE_PLUS
     }
 #endif
@@ -283,22 +288,22 @@ void ActClear_Draw(void)
 void ActClear_Create(void *data)
 {
     RSDK_THIS(ActClear);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
 #if RETRO_USE_PLUS
-        ActClear->dword34 = 1;
+        ActClear->actClearActive = true;
 #endif
-        entity->active           = ACTIVE_NORMAL;
-        entity->visible          = true;
-        entity->drawOrder        = Zone->hudDrawOrder;
-        entity->state            = ActClear_Unknown6;
-        entity->stageFinishTimer = 0;
-        entity->dword78          = 0;
+        self->active           = ACTIVE_NORMAL;
+        self->visible          = true;
+        self->drawOrder        = Zone->hudDrawOrder;
+        self->state            = ActClear_Unknown6;
+        self->stageFinishTimer = 0;
+        self->newRecordTimer          = 0;
         EntityPlayer *player1    = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
-        entity->playerPtr        = player1;
+        self->playerPtr        = player1;
 
         if (Zone_GetZoneID() >= 0) {
             StatInfo stat;
-            uint16 time = RSDK_sceneInfo->milliseconds + 100 * (RSDK_sceneInfo->seconds + 60 * RSDK_sceneInfo->minutes);
+            uint16 time = SceneInfo->milliseconds + 100 * (SceneInfo->seconds + 60 * SceneInfo->minutes);
             switch (globals->playerID & 0xFF) {
                 case ID_SONIC: TimeAttackData_TrackActClear(Zone->actID, Zone_GetZoneID(), &stat, 1, time, player1->rings, player1->score); break;
                 case ID_TAILS: TimeAttackData_TrackActClear(Zone->actID, Zone_GetZoneID(), &stat, 2, time, player1->rings, player1->score); break;
@@ -323,24 +328,24 @@ void ActClear_Create(void *data)
 #if RETRO_USE_PLUS
         if (!ActClear->disableTimeBonus) {
 #endif
-            switch (RSDK_sceneInfo->minutes) {
+            switch (SceneInfo->minutes) {
                 case 0:
-                    if (RSDK_sceneInfo->seconds >= 30)
-                        entity->scoreBonus = RSDK_sceneInfo->seconds < 45 ? 10000 : 5000;
+                    if (SceneInfo->seconds >= 30)
+                        self->scoreBonus = SceneInfo->seconds < 45 ? 10000 : 5000;
                     else
-                        entity->scoreBonus = 50000;
+                        self->scoreBonus = 50000;
                     break;
-                case 1: entity->scoreBonus = RSDK_sceneInfo->seconds < 30 ? 4000 : 3000; break;
-                case 2: entity->scoreBonus = 2000; break;
-                case 3: entity->scoreBonus = 1000; break;
-                case 4: entity->scoreBonus = 500; break;
-                case 5: entity->scoreBonus = 100; break;
+                case 1: self->scoreBonus = SceneInfo->seconds < 30 ? 4000 : 3000; break;
+                case 2: self->scoreBonus = 2000; break;
+                case 3: self->scoreBonus = 1000; break;
+                case 4: self->scoreBonus = 500; break;
+                case 5: self->scoreBonus = 100; break;
                 case 9:
-                    if (!RSDK_sceneInfo->debugMode && globals->gameMode < MODE_TIMEATTACK && RSDK_sceneInfo->seconds == 59) {
+                    if (!SceneInfo->debugMode && globals->gameMode < MODE_TIMEATTACK && SceneInfo->seconds == 59) {
 #if RETRO_USE_PLUS
                         if (globals->gameMode != MODE_ENCORE && !(globals->medalMods & getMod(MEDAL_NOTIMEOVER)))
 #endif
-                            entity->scoreBonus = 100000;
+                            self->scoreBonus = 100000;
                     }
                     break;
                 default: break;
@@ -349,67 +354,67 @@ void ActClear_Create(void *data)
         }
 #endif
 
-        entity->ringBonus      = 100 * player1->rings;
-        entity->coolBonus      = globals->coolBonus[0];
+        self->ringBonus      = 100 * player1->rings;
+        self->coolBonus      = globals->coolBonus[0];
         globals->initCoolBonus = false;
 #if RETRO_USE_PLUS
         if (globals->gameMode == MODE_TIMEATTACK) {
             EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
-            entity->time = TimeAttackData_GetScore(param->zoneID, param->characterID, param->actID, RSDK_sceneInfo->filter == SCN_FILTER_ENCORE, 1);
-            entity->field_7C = 0;
-            entity->field_80 = 0;
+            self->time = TimeAttackData_GetScore(param->zoneID, param->characterID, param->actID, SceneInfo->filter == SCN_FILTER_ENCORE, 1);
+            self->achievedRank = false;
+            self->isNewRecord  = false;
         }
 #endif
-        entity->field_84      = 1;
-        entity->posUnknown.x  = 0xE00000;
-        entity->posUnknown.y  = 0x580000;
-        entity->posUnknown3.x = -0xE00000;
-        entity->posUnknown3.y = 0x700000;
-        entity->posUnknown2.x = 0x1E80000;
-        entity->posUnknown2.y = 0x780000;
-        entity->posUnknown4.x = 0x3080000;
-        entity->posUnknown4.y = 0x880000;
-        entity->posUnknown5.x = 0x4280000;
-        entity->posUnknown5.y = 0x980000;
-        entity->posUnknown6.x = -0x5480000;
-        entity->posUnknown6.y = 0xC00000;
-        RSDK.SetSpriteAnimation(ActClear->spriteIndex, 0, &entity->hudElementsAnimator, true, 0);
-        RSDK.SetSpriteAnimation(ActClear->spriteIndex, 1, &entity->numbersAnimator, true, 0);
+        self->showCoolBonus      = true;
+        self->playerNamePos.x  = 0xE00000;
+        self->playerNamePos.y  = 0x580000;
+        self->gotThroughPos.x = -0xE00000;
+        self->gotThroughPos.y = 0x700000;
+        self->timeBonusPos.x = 0x1E80000;
+        self->timeBonusPos.y = 0x780000;
+        self->ringBonusPos.x = 0x3080000;
+        self->ringBonusPos.y = 0x880000;
+        self->coolBonusPos.x = 0x4280000;
+        self->coolBonusPos.y = 0x980000;
+        self->totalScorePos.x = -0x5480000;
+        self->totalScorePos.y = 0xC00000;
+        RSDK.SetSpriteAnimation(ActClear->aniFrames, 0, &self->hudElementsAnimator, true, 0);
+        RSDK.SetSpriteAnimation(ActClear->aniFrames, 1, &self->numbersAnimator, true, 0);
 #if RETRO_USE_PLUS
-        RSDK.SetSpriteAnimation(ActClear->spriteIndex, 0, &entity->timeElementsAnimator, true, 12);
+        RSDK.SetSpriteAnimation(ActClear->aniFrames, 0, &self->timeElementsAnimator, true, 12);
 #endif
         switch (globals->playerID & 0xFF) {
-            case ID_TAILS: RSDK.SetSpriteAnimation(ActClear->spriteIndex, 3, &entity->playerNameAnimator, true, 1); break;
-            case ID_KNUCKLES: RSDK.SetSpriteAnimation(ActClear->spriteIndex, 3, &entity->playerNameAnimator, true, 2); break;
+            case ID_TAILS: RSDK.SetSpriteAnimation(ActClear->aniFrames, 3, &self->playerNameAnimator, true, 1); break;
+            case ID_KNUCKLES: RSDK.SetSpriteAnimation(ActClear->aniFrames, 3, &self->playerNameAnimator, true, 2); break;
 #if RETRO_USE_PLUS
-            case ID_MIGHTY: RSDK.SetSpriteAnimation(ActClear->spriteIndex, 3, &entity->playerNameAnimator, true, 3); break;
-            case ID_RAY: RSDK.SetSpriteAnimation(ActClear->spriteIndex, 3, &entity->playerNameAnimator, true, 4); break;
+            case ID_MIGHTY: RSDK.SetSpriteAnimation(ActClear->aniFrames, 3, &self->playerNameAnimator, true, 3); break;
+            case ID_RAY: RSDK.SetSpriteAnimation(ActClear->aniFrames, 3, &self->playerNameAnimator, true, 4); break;
 #endif
-            default: RSDK.SetSpriteAnimation(ActClear->spriteIndex, 3, &entity->playerNameAnimator, true, 0); break;
+            default: RSDK.SetSpriteAnimation(ActClear->aniFrames, 3, &self->playerNameAnimator, true, 0); break;
         }
-        RSDK.SetSpriteAnimation(ActClear->spriteIndex, 4, &entity->gotThroughAnimator, true, 0);
+        RSDK.SetSpriteAnimation(ActClear->aniFrames, 4, &self->gotThroughAnimator, true, 0);
 
         if (ActClear->actID <= 0)
-            RSDK.SetSpriteAnimation(ActClear->spriteIndex, 5, &entity->actNumAnimator, true, Zone->actID);
+            RSDK.SetSpriteAnimation(ActClear->aniFrames, 5, &self->actNumAnimator, true, Zone->actID);
         else
-            RSDK.SetSpriteAnimation(ActClear->spriteIndex, 5, &entity->actNumAnimator, true, ActClear->actID - 1);
+            RSDK.SetSpriteAnimation(ActClear->aniFrames, 5, &self->actNumAnimator, true, ActClear->actID - 1);
     }
 }
 
 void ActClear_StageLoad(void)
 {
-    ActClear->spriteIndex    = RSDK.LoadSpriteAnimation("Global/HUD.bin", SCOPE_STAGE);
-    ActClear->sfx_ScoreAdd   = RSDK.GetSFX("Global/ScoreAdd.wav");
-    ActClear->sfx_ScoreTotal = RSDK.GetSFX("Global/ScoreTotal.wav");
+    ActClear->aniFrames     = RSDK.LoadSpriteAnimation("Global/HUD.bin", SCOPE_STAGE);
+    ActClear->sfxScoreAdd   = RSDK.GetSFX("Global/ScoreAdd.wav");
+    ActClear->sfxScoreTotal = RSDK.GetSFX("Global/ScoreTotal.wav");
 #if RETRO_USE_PLUS
-    ActClear->dword34     = 0;
-    ActClear->sfx_Event   = RSDK.GetSFX("Special/Event.wav");
-    ActClear->forceNoSave = false;
+    ActClear->actClearActive = false;
+    ActClear->sfxEvent       = RSDK.GetSFX("Special/Event.wav");
+    ActClear->forceNoSave    = false;
 #endif
 }
 
 #if RETRO_USE_PLUS
-void ActClear_DrawTime(int32 mins, Vector2 *pos, int32 secs, int32 millisecs)
+void ActClear_DrawTime(Vector2 *pos, int32 mins, int32 secs, int32 millisecs)
 {
     Vector2 drawPos;
     RSDK_THIS(ActClear);
@@ -421,7 +426,7 @@ void ActClear_DrawTime(int32 mins, Vector2 *pos, int32 secs, int32 millisecs)
 
     drawPos.x = pos->x + 0x320000;
     drawPos.y = pos->y - 0x20000;
-    RSDK.DrawSprite(&entity->timeElementsAnimator, &drawPos, true);
+    RSDK.DrawSprite(&self->timeElementsAnimator, &drawPos, true);
 
     drawPos.x = 0x610000 + pos->x + 2;
     drawPos.y = pos->y + 0xE0000;
@@ -460,8 +465,8 @@ void ActClear_DrawNumbers(Vector2 *pos, int32 value, int32 maxVals)
         if (maxVals > 0) {
             int32 digit = 1;
             do {
-                entity->numbersAnimator.frameID = value / mult % 10;
-                RSDK.DrawSprite(&entity->numbersAnimator, pos, true);
+                self->numbersAnimator.frameID = value / mult % 10;
+                RSDK.DrawSprite(&self->numbersAnimator, pos, true);
                 pos->x -= 0x90000;
                 mult = 10 * digit;
                 digit *= 10;
@@ -470,8 +475,8 @@ void ActClear_DrawNumbers(Vector2 *pos, int32 value, int32 maxVals)
     }
     else if (maxVals > 0) {
         do {
-            entity->numbersAnimator.frameID = 16;
-            RSDK.DrawSprite(&entity->numbersAnimator, pos, true);
+            self->numbersAnimator.frameID = 16;
+            RSDK.DrawSprite(&self->numbersAnimator, pos, true);
             pos->x -= 0x90000;
         } while (--maxVals);
     }
@@ -487,7 +492,7 @@ void ActClear_CheckPlayerVictory(void)
             player->nextGroundState = 0;
             if (Zone->forcePlayerOnScreenFlag)
                 player->stateInput = StateMachine_None;
-            RSDK.SetSpriteAnimation(player->spriteIndex, ANI_VICTORY, &player->playerAnimator, true, 0);
+            RSDK.SetSpriteAnimation(player->aniFrames, ANI_VICTORY, &player->animator, true, 0);
         }
     }
 }
@@ -504,16 +509,16 @@ void ActClear_Unknown5(void)
     if (player2) {
         if (player2->sidekick) {
             if (player2->state != Player_State_FlyIn && player2->state != Player_State_JumpIn) {
-                if (player2->position.x <= (RSDK_screens->width + RSDK_screens->position.x) << 16
+                if (player2->position.x <= (ScreenInfo->width + ScreenInfo->position.x) << 16
                     || abs(player2->position.y - player1->position.y) > 0x100000) {
                     Player->jumpInDelay    = 240;
-                    Entity *entStore       = RSDK_sceneInfo->entity;
-                    RSDK_sceneInfo->entity = (Entity *)player2;
+                    Entity *entStore       = SceneInfo->entity;
+                    SceneInfo->entity = (Entity *)player2;
                     Player_P2JumpBackIn();
-                    RSDK_sceneInfo->entity = entStore;
+                    SceneInfo->entity = entStore;
                     if (player2->state == Player_State_FlyIn || player2->state == Player_State_JumpIn || player2->state == Player_State_StartJumpIn) {
                         player2->active     = ACTIVE_NORMAL;
-                        player2->position.y = ((RSDK_screens->position.y - 16) << 16);
+                        player2->position.y = ((ScreenInfo->position.y - 16) << 16);
                     }
                 }
                 else {
@@ -528,17 +533,17 @@ void ActClear_Unknown6(void)
 {
     RSDK_THIS(ActClear);
 
-    if (entity->posUnknown.x > 0)
-        entity->posUnknown.x -= 0x100000;
+    if (self->playerNamePos.x > 0)
+        self->playerNamePos.x -= 0x100000;
 
-    if (entity->posUnknown3.x < 0)
-        entity->posUnknown3.x += 0x100000;
-    if (!entity->timer && Zone->forcePlayerOnScreenFlag)
+    if (self->gotThroughPos.x < 0)
+        self->gotThroughPos.x += 0x100000;
+    if (!self->timer && Zone->forcePlayerOnScreenFlag)
         ActClear_Unknown5();
 
-    if (++entity->timer == 48) {
-        entity->timer = 0;
-        entity->state = ActClear_Unknown7;
+    if (++self->timer == 48) {
+        self->timer = 0;
+        self->state = ActClear_Unknown7;
     }
     ActClear_CheckPlayerVictory();
 }
@@ -547,11 +552,11 @@ void ActClear_Unknown7(void)
 {
     RSDK_THIS(ActClear);
 
-    entity->posUnknown.y -= 0x8000;
-    entity->posUnknown3.y -= 0x8000;
-    if (++entity->timer == 48) {
-        entity->timer = 0;
-        entity->state = ActClear_State_TAFinish;
+    self->playerNamePos.y -= 0x8000;
+    self->gotThroughPos.y -= 0x8000;
+    if (++self->timer == 48) {
+        self->timer = 0;
+        self->state = ActClear_State_TAFinish;
     }
     ActClear_CheckPlayerVictory();
 }
@@ -560,16 +565,16 @@ void ActClear_State_TAFinish(void)
 {
     RSDK_THIS(ActClear);
 
-    if (entity->posUnknown2.x > 0)
-        entity->posUnknown2.x -= 0x100000;
+    if (self->timeBonusPos.x > 0)
+        self->timeBonusPos.x -= 0x100000;
 
-    if (entity->posUnknown4.x > 0)
-        entity->posUnknown4.x -= 0x100000;
+    if (self->ringBonusPos.x > 0)
+        self->ringBonusPos.x -= 0x100000;
 
-    if (entity->posUnknown5.x > 0)
-        entity->posUnknown5.x -= 0x100000;
+    if (self->coolBonusPos.x > 0)
+        self->coolBonusPos.x -= 0x100000;
 
-    if (entity->posUnknown6.x >= -0x80000) {
+    if (self->totalScorePos.x >= -0x80000) {
 #if RETRO_USE_PLUS
         if (globals->gameMode == MODE_TIMEATTACK) {
             if (ActClear->isTimeAttack) {
@@ -577,19 +582,19 @@ void ActClear_State_TAFinish(void)
             }
             HUD->showTAPrompt        = true;
             ActClear->hasSavedReplay = false;
-            entity->dword78          = 240;
-            entity->state            = ActClear_State_TAResults;
+            self->newRecordTimer          = 240;
+            self->state            = ActClear_State_TAResults;
             RSDK.SetScene("Presentation", "Menu");
         }
         else {
-            entity->state = ActClear_Unknown8;
+            self->state = ActClear_Unknown8;
         }
 #else
-        entity->state = ActClear_Unknown8;
+        self->state = ActClear_Unknown8;
 #endif
     }
     else {
-        entity->posUnknown6.x += 0x100000;
+        self->totalScorePos.x += 0x100000;
     }
     ActClear_CheckPlayerVictory();
 }
@@ -597,9 +602,9 @@ void ActClear_State_TAFinish(void)
 void ActClear_Unknown8(void)
 {
     RSDK_THIS(ActClear);
-    if (++entity->timer == 120) {
-        entity->timer = 0;
-        entity->state = ActClear_TallyScore;
+    if (++self->timer == 120) {
+        self->timer = 0;
+        self->state = ActClear_TallyScore;
     }
     ActClear_CheckPlayerVictory();
 }
@@ -607,46 +612,46 @@ void ActClear_Unknown8(void)
 void ActClear_TallyScore(void)
 {
     RSDK_THIS(ActClear);
-    EntityPlayer *player = (EntityPlayer *)entity->playerPtr;
+    EntityPlayer *player = (EntityPlayer *)self->playerPtr;
 
-    if (entity->scoreBonus > 0) {
-        entity->totalScore += 100;
-        entity->scoreBonus -= 100;
+    if (self->scoreBonus > 0) {
+        self->totalScore += 100;
+        self->scoreBonus -= 100;
         Player_GiveScore(player, 100);
     }
 
-    if (entity->ringBonus > 0) {
-        entity->totalScore += 100;
-        entity->ringBonus -= 100;
+    if (self->ringBonus > 0) {
+        self->totalScore += 100;
+        self->ringBonus -= 100;
         Player_GiveScore(player, 100);
     }
 
-    if (entity->coolBonus > 0) {
-        entity->totalScore += 100;
-        entity->coolBonus -= 100;
+    if (self->coolBonus > 0) {
+        self->totalScore += 100;
+        self->coolBonus -= 100;
         Player_GiveScore(player, 100);
     }
 
 #if RETRO_USE_TOUCH_CONTROLS
-    if (RSDK_controller[player->controllerID].keyA.press || RSDK_controller[player->controllerID].keyStart.press || RSDK_touchMouse->count) {
+    if (ControllerInfo[player->controllerID].keyA.press || ControllerInfo[player->controllerID].keyStart.press || TouchInfo->count) {
 #else
-    if (RSDK_controller[player->controllerID].keyA.press || RSDK_controller[player->controllerID].keyStart.press) {
+    if (ControllerInfo[player->controllerID].keyA.press || ControllerInfo[player->controllerID].keyStart.press) {
 #endif
-        Player_GiveScore(player, entity->scoreBonus + entity->ringBonus + entity->coolBonus);
-        entity->totalScore += entity->scoreBonus + entity->ringBonus + entity->coolBonus;
-        entity->scoreBonus = 0;
-        entity->ringBonus  = 0;
-        entity->coolBonus  = 0;
+        Player_GiveScore(player, self->scoreBonus + self->ringBonus + self->coolBonus);
+        self->totalScore += self->scoreBonus + self->ringBonus + self->coolBonus;
+        self->scoreBonus = 0;
+        self->ringBonus  = 0;
+        self->coolBonus  = 0;
     }
 
-    if (entity->scoreBonus + entity->ringBonus + entity->coolBonus <= 0) {
-        entity->timer = 0;
-        entity->state = ActClear_LoadNextScene;
-        RSDK.PlaySfx(ActClear->sfx_ScoreTotal, 0, 255);
+    if (self->scoreBonus + self->ringBonus + self->coolBonus <= 0) {
+        self->timer = 0;
+        self->state = ActClear_LoadNextScene;
+        RSDK.PlaySfx(ActClear->sfxScoreTotal, 0, 255);
     }
-    else if (++entity->timer == 2) {
-        entity->timer = 0;
-        RSDK.PlaySfx(ActClear->sfx_ScoreAdd, 0, 255);
+    else if (++self->timer == 2) {
+        self->timer = 0;
+        RSDK.PlaySfx(ActClear->sfxScoreAdd, 0, 255);
     }
     Music->nextTrack = -1;
     ActClear_CheckPlayerVictory();
@@ -655,8 +660,8 @@ void ActClear_TallyScore(void)
 void ActClear_LoadNextScene(void)
 {
     RSDK_THIS(ActClear);
-    if (++entity->timer == 120) {
-        entity->timer          = 0;
+    if (++self->timer == 120) {
+        self->timer          = 0;
         globals->specialRingID = 0;
         if (ActClear->actID <= 0) {
             if (globals->gameMode == MODE_COMPETITION) {
@@ -670,7 +675,7 @@ void ActClear_LoadNextScene(void)
                 uint8 zoneID                 = param->zoneID;
                 uint8 actID                  = param->actID;
 
-                int32 time = 6000 * RSDK_sceneInfo->minutes + 100 * RSDK_sceneInfo->seconds + RSDK_sceneInfo->milliseconds;
+                int32 time = 6000 * SceneInfo->minutes + 100 * SceneInfo->seconds + SceneInfo->milliseconds;
 
                 uint16 *record = TimeAttackData_GetRecordedTime(zoneID, actID, playerID, 1);
                 int32 rank     = 0;
@@ -711,7 +716,7 @@ void ActClear_LoadNextScene(void)
                     ActClear->finishedSavingGame = true;
                     SaveGame_SaveFile(ActClear_SaveGameCallback);
                 }
-                ++RSDK_sceneInfo->listPos;
+                ++SceneInfo->listPos;
                 if (!RSDK.CheckValidScene())
                     RSDK.SetScene("Presentation", "Title Screen");
             }
@@ -734,14 +739,14 @@ void ActClear_LoadNextScene(void)
             UIWaitSpinner_Wait();
 
         if (ActClear->finishedSavingGame) {
-            entity->state = ActClear_Unknown10;
+            self->state = ActClear_Unknown10;
         }
         else {
             if (ActClear->actID > 0 || Zone->stageFinishCallback) {
-                entity->state = ActClear_State_ActFinish;
+                self->state = ActClear_State_ActFinish;
             }
             else {
-                entity->state = StateMachine_None;
+                self->state = StateMachine_None;
                 Zone_StartFadeOut(10, 0x000000);
             }
         }
@@ -753,33 +758,33 @@ void ActClear_State_TAResults(void)
 {
     RSDK_THIS(ActClear);
 
-    if (entity->dword78 > 0) {
-        if (TimeAttackData->dbRank <= 0 || ReplayRecorder->dword13C) {
-            --entity->dword78;
+    if (self->newRecordTimer > 0) {
+        if (TimeAttackData->dbRank <= 0 || ReplayRecorder->hasSetupGhostVS) {
+            --self->newRecordTimer;
         }
         else {
-            if (entity->dword78 == 120) {
+            if (self->newRecordTimer == 120) {
                 if (TimeAttackData->dbRank == 1)
-                    entity->field_80 = 1;
-                entity->field_7C = 1;
-                RSDK.PlaySfx(ActClear->sfx_Event, 0, 255);
+                    self->isNewRecord = true;
+                self->achievedRank = true;
+                RSDK.PlaySfx(ActClear->sfxEvent, false, 255);
             }
 
-            if (entity->dword78 != 30) {
-                --entity->dword78;
+            if (self->newRecordTimer != 30) {
+                --self->newRecordTimer;
             }
             else {
                 if (TimeAttackData->dbRank == 1) {
-                    RSDK.PlaySfx(Announcer->sfx_NewRecordTop, 0, 255);
-                    --entity->dword78;
+                    RSDK.PlaySfx(Announcer->sfxNewRecordTop, false, 255);
+                    --self->newRecordTimer;
                 }
                 else {
                     if (TimeAttackData->dbRank > 3) {
-                        --entity->dword78;
+                        --self->newRecordTimer;
                     }
                     else {
-                        RSDK.PlaySfx(Announcer->sfx_NewRecordMid, 0, 255);
-                        --entity->dword78;
+                        RSDK.PlaySfx(Announcer->sfxNewRecordMid, false, 255);
+                        --self->newRecordTimer;
                     }
                 }
             }
@@ -788,22 +793,22 @@ void ActClear_State_TAResults(void)
 
     if (!ActClear->finishedSavingGame && !ActClear->disableResultsInput) {
 #if RETRO_USE_TOUCH_CONTROLS
-        for (int32 t = 0; t < RSDK_touchMouse->count; ++t) {
-            int32 tx = (RSDK_touchMouse->x[t] * RSDK_screens->width);
-            int32 ty = (RSDK_touchMouse->y[t] * RSDK_screens->height);
+        for (int32 t = 0; t < TouchInfo->count; ++t) {
+            int32 tx = (TouchInfo->x[t] * ScreenInfo->width);
+            int32 ty = (TouchInfo->y[t] * ScreenInfo->height);
 
-            if (RSDK_touchMouse->down[t]) {
-                if (tx >= RSDK_screens->width - 0x80 && ty >= 0 && tx <= RSDK_screens->width && ty <= 0x40) {
-                    RSDK_controller->keyY.press |= 1;
+            if (TouchInfo->down[t]) {
+                if (tx >= ScreenInfo->width - 0x80 && ty >= 0 && tx <= ScreenInfo->width && ty <= 0x40) {
+                    ControllerInfo->keyY.press |= 1;
                     break;
                 }
             }
         }
 
-        RSDK_controller->keyStart.press |= RSDK_touchMouse->count && !RSDK_controller->keyY.press;
+        ControllerInfo->keyStart.press |= TouchInfo->count && !ControllerInfo->keyY.press;
 #endif
 
-        if (RSDK_controller->keyY.press) {
+        if (ControllerInfo->keyY.press) {
             if (!ActClear->hasSavedReplay) {
                 if (HUD->replaySaveEnabled) {
                     if (!UIDialog->activeDialog) {
@@ -818,15 +823,15 @@ void ActClear_State_TAResults(void)
             }
         }
 
-        if (RSDK_controller->keyStart.press) {
-            RSDK.PlaySfx(UIWidgets->sfx_Accept, false, 255);
+        if (ControllerInfo->keyStart.press) {
+            RSDK.PlaySfx(UIWidgets->sfxAccept, false, 255);
 
             RSDK_THIS(ActClear);
             if (ActClear->actID > 0 || Zone->stageFinishCallback) {
-                entity->state = ActClear_State_ActFinish;
+                self->state = ActClear_State_ActFinish;
             }
             else {
-                entity->state = StateMachine_None;
+                self->state = StateMachine_None;
                 Zone_StartFadeOut(10, 0x000000);
             }
         }
@@ -839,10 +844,10 @@ void ActClear_Unknown10(void)
     if (ActClear->finishedSavingGame) {
         RSDK_THIS(ActClear);
         if (ActClear->actID > 0 || Zone->stageFinishCallback) {
-            entity->state = ActClear_State_ActFinish;
+            self->state = ActClear_State_ActFinish;
         }
         else {
-            entity->state    = StateMachine_None;
+            self->state    = StateMachine_None;
             EntityZone *zone = RSDK_GET_ENTITY(SLOT_ZONE, Zone);
             zone->screenID   = 4;
             zone->timer      = 0;
@@ -859,23 +864,23 @@ void ActClear_Unknown10(void)
 void ActClear_State_ActFinish(void)
 {
     RSDK_THIS(ActClear);
-    entity->posUnknown.x += 0x200000;
-    entity->posUnknown3.x -= 0x200000;
-    if (entity->posUnknown.x > 0x400000)
-        entity->posUnknown2.x += 0x200000;
-    if (entity->posUnknown2.x > 0x400000)
-        entity->posUnknown4.x += 0x200000;
-    if (entity->posUnknown4.x > 0x400000)
-        entity->posUnknown5.x += 0x200000;
-    if (entity->posUnknown5.x > 0x400000)
-        entity->posUnknown6.x -= 0x200000;
+    self->playerNamePos.x += 0x200000;
+    self->gotThroughPos.x -= 0x200000;
+    if (self->playerNamePos.x > 0x400000)
+        self->timeBonusPos.x += 0x200000;
+    if (self->timeBonusPos.x > 0x400000)
+        self->ringBonusPos.x += 0x200000;
+    if (self->ringBonusPos.x > 0x400000)
+        self->coolBonusPos.x += 0x200000;
+    if (self->coolBonusPos.x > 0x400000)
+        self->totalScorePos.x -= 0x200000;
 
-    if (entity->posUnknown6.x < -0x2000000) {
+    if (self->totalScorePos.x < -0x2000000) {
         if (ActClear->actID <= 0) {
             if (Zone->stageFinishCallback) {
                 if (Zone->forcePlayerOnScreenFlag) {
-                    entity->timer = 0;
-                    entity->state = ActClear_ForcePlayerOnScreen;
+                    self->timer = 0;
+                    self->state = ActClear_ForcePlayerOnScreen;
                 }
                 else {
                     foreach_active(Animals, animal)
@@ -891,17 +896,17 @@ void ActClear_State_ActFinish(void)
         else {
             ActClear->finished           = true;
             ActClear->actID              = 0;
-            RSDK_sceneInfo->milliseconds = 0;
-            RSDK_sceneInfo->seconds      = 0;
-            RSDK_sceneInfo->minutes      = 0;
+            SceneInfo->milliseconds = 0;
+            SceneInfo->seconds      = 0;
+            SceneInfo->minutes      = 0;
             foreach_active(Player, player)
             {
                 player->ringExtraLife = 100;
                 player->rings         = 0;
             }
         }
-        if (entity->state != ActClear_ForcePlayerOnScreen)
-            destroyEntity(entity);
+        if (self->state != ActClear_ForcePlayerOnScreen)
+            destroyEntity(self);
     }
 }
 
@@ -912,7 +917,7 @@ void ActClear_ForcePlayerOnScreen(void)
     EntityPlayer *player2 = RSDK_GET_ENTITY(SLOT_PLAYER2, Player);
     bool32 finishedP2     = false;
     bool32 finishedP1     = false;
-    int32 screenOffX      = RSDK_screens->width - 16 + RSDK_screens->position.x;
+    int32 screenOffX      = ScreenInfo->width - 16 + ScreenInfo->position.x;
     screenOffX <<= 16;
     player1->up        = false;
     player1->down      = false;
@@ -927,7 +932,7 @@ void ActClear_ForcePlayerOnScreen(void)
         player1->right      = false;
     }
     else {
-        if ((!player1->onGround || player1->groundVel) && player1->position.x < screenOffX - (RSDK_screens->centerX << 15)) {
+        if ((!player1->onGround || player1->groundVel) && player1->position.x < screenOffX - (ScreenInfo->centerX << 15)) {
             player1->right = true;
             if (!player1->skidding) {
                 if (!player1->left)
@@ -952,7 +957,7 @@ void ActClear_ForcePlayerOnScreen(void)
         if (player2->state == Player_State_FlyIn || player2->state == Player_State_JumpIn) {
             if (player2->position.x < screenOffX) {
                 if (player2->onGround && !player2->groundVel) {
-                    RSDK.SetSpriteAnimation(player2->spriteIndex, ANI_IDLE, &player2->playerAnimator, false, 0);
+                    RSDK.SetSpriteAnimation(player2->aniFrames, ANI_IDLE, &player2->animator, false, 0);
                     player2->direction = FLIP_NONE;
                     finishedP2         = true;
                 }
@@ -960,7 +965,7 @@ void ActClear_ForcePlayerOnScreen(void)
         }
         else if (player2->position.x >= screenOffX) {
             player2->stateInput = Player_ProcessP2Input_AI;
-            RSDK.SetSpriteAnimation(player2->spriteIndex, ANI_RUN, &player2->playerAnimator, false, 0);
+            RSDK.SetSpriteAnimation(player2->aniFrames, ANI_RUN, &player2->animator, false, 0);
             player2->state     = Player_State_Ground;
             player2->groundVel = -0x40000;
             player2->left      = true;
@@ -968,7 +973,7 @@ void ActClear_ForcePlayerOnScreen(void)
 
             if (player2->position.x < screenOffX) {
                 if (player2->onGround && !player2->groundVel) {
-                    RSDK.SetSpriteAnimation(player2->spriteIndex, ANI_IDLE, &player2->playerAnimator, false, 0);
+                    RSDK.SetSpriteAnimation(player2->aniFrames, ANI_IDLE, &player2->animator, false, 0);
                     player2->direction = FLIP_NONE;
                     finishedP2         = true;
                 }
@@ -976,7 +981,7 @@ void ActClear_ForcePlayerOnScreen(void)
         }
         else {
             if (player2->onGround && !player2->groundVel) {
-                RSDK.SetSpriteAnimation(player2->spriteIndex, ANI_IDLE, &player2->playerAnimator, false, 0);
+                RSDK.SetSpriteAnimation(player2->aniFrames, ANI_IDLE, &player2->animator, false, 0);
                 player2->direction = FLIP_NONE;
                 finishedP2         = true;
             }
@@ -984,20 +989,20 @@ void ActClear_ForcePlayerOnScreen(void)
     }
 
     if (finishedP1) {
-        RSDK.SetSpriteAnimation(player1->spriteIndex, ANI_IDLE, &player1->playerAnimator, false, 0);
+        RSDK.SetSpriteAnimation(player1->aniFrames, ANI_IDLE, &player1->animator, false, 0);
         player1->direction = FLIP_NONE;
     }
 
-    ++entity->stageFinishTimer;
-    if ((finishedP1 && finishedP2) || entity->stageFinishTimer >= 900) {
-        if (entity->timer >= 10) {
+    ++self->stageFinishTimer;
+    if ((finishedP1 && finishedP2) || self->stageFinishTimer >= 900) {
+        if (self->timer >= 10) {
             Player->jumpInDelay = 0;
             StateMachine_Run(Zone->stageFinishCallback);
             Zone->stageFinishCallback = StateMachine_None;
-            destroyEntity(entity);
+            destroyEntity(self);
         }
         else {
-            entity->timer++;
+            self->timer++;
         }
     }
 }

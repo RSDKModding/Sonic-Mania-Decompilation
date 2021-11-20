@@ -5,7 +5,7 @@ ObjectOctus *Octus;
 void Octus_Update(void)
 {
     RSDK_THIS(Octus);
-    StateMachine_Run(entity->state);
+    StateMachine_Run(self->state);
 }
 
 void Octus_LateUpdate(void) {}
@@ -15,37 +15,37 @@ void Octus_StaticUpdate(void) {}
 void Octus_Draw(void)
 {
     RSDK_THIS(Octus);
-    RSDK.DrawSprite(&entity->animator, NULL, false);
+    RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
 void Octus_Create(void *data)
 {
     RSDK_THIS(Octus);
-    entity->visible   = true;
-    entity->drawOrder = Zone->drawOrderLow;
-    entity->drawFX |= FX_FLIP;
-    entity->startPos = entity->position;
-    entity->startDir = entity->direction;
-    entity->timer    = 128;
-    entity->field_60 = 0;
-    entity->field_70 = 0;
+    self->visible   = true;
+    self->drawOrder = Zone->drawOrderLow;
+    self->drawFX |= FX_FLIP;
+    self->startPos = self->position;
+    self->startDir = self->direction;
+    self->timer    = 128;
+    self->field_60 = 0;
+    self->field_70 = 0;
 
     if (data) {
-        entity->inkEffect     = INK_ADD;
-        entity->alpha         = 192;
-        entity->active        = ACTIVE_NORMAL;
-        entity->updateRange.x = 0x200000;
-        entity->updateRange.y = 0x200000;
-        RSDK.SetSpriteAnimation(Octus->aniFrames, 3, &entity->animator, true, 0);
-        entity->state = Octus_State_Shot;
+        self->inkEffect     = INK_ADD;
+        self->alpha         = 192;
+        self->active        = ACTIVE_NORMAL;
+        self->updateRange.x = 0x200000;
+        self->updateRange.y = 0x200000;
+        RSDK.SetSpriteAnimation(Octus->aniFrames, 3, &self->animator, true, 0);
+        self->state = Octus_State_Shot;
     }
     else {
-        entity->active        = ACTIVE_BOUNDS;
-        entity->updateRange.x = 0x800000;
-        entity->updateRange.y = 0x800000;
-        RSDK.SetSpriteAnimation(Octus->aniFrames, 0, &entity->animator, true, 0);
-        entity->state = Octus_State_Setup;
-        entity->alpha = 0xC0;
+        self->active        = ACTIVE_BOUNDS;
+        self->updateRange.x = 0x800000;
+        self->updateRange.y = 0x800000;
+        RSDK.SetSpriteAnimation(Octus->aniFrames, 0, &self->animator, true, 0);
+        self->state = Octus_State_Setup;
+        self->alpha = 0xC0;
     }
 }
 
@@ -72,9 +72,9 @@ void Octus_StageLoad(void)
 void Octus_DebugSpawn(void)
 {
     RSDK_THIS(Octus);
-    EntityOctus *octus = CREATE_ENTITY(Octus, NULL, entity->position.x, entity->position.y);
-    octus->direction   = entity->direction;
-    octus->startDir    = entity->direction;
+    EntityOctus *octus = CREATE_ENTITY(Octus, NULL, self->position.x, self->position.y);
+    octus->direction   = self->direction;
+    octus->startDir    = self->direction;
 }
 
 void Octus_DebugDraw(void)
@@ -88,18 +88,18 @@ void Octus_CheckPlayerCollisions(void)
     RSDK_THIS(Octus);
     foreach_active(Player, player)
     {
-        if (Player_CheckBadnikTouch(player, entity, &Octus->hitbox1))
-            Player_CheckBadnikBreak(entity, player, true);
+        if (Player_CheckBadnikTouch(player, self, &Octus->hitbox1))
+            Player_CheckBadnikBreak(self, player, true);
     }
 }
 
 void Octus_CheckOnScreen(void)
 {
     RSDK_THIS(Octus);
-    if (!RSDK.CheckOnScreen(RSDK_sceneInfo->entity, NULL) && !RSDK.CheckPosOnScreen(&entity->startPos, &entity->updateRange)) {
-        entity->position.x = entity->startPos.x;
-        entity->position.y = entity->startPos.y;
-        entity->direction  = entity->startDir;
+    if (!RSDK.CheckOnScreen(self, NULL) && !RSDK.CheckPosOnScreen(&self->startPos, &self->updateRange)) {
+        self->position.x = self->startPos.x;
+        self->position.y = self->startPos.y;
+        self->direction  = self->startDir;
         Octus_Create(NULL);
     }
 }
@@ -107,22 +107,22 @@ void Octus_CheckOnScreen(void)
 void Octus_State_Setup(void)
 {
     RSDK_THIS(Octus);
-    entity->active = ACTIVE_NORMAL;
-    entity->state  = Octus_Unknown5;
+    self->active = ACTIVE_NORMAL;
+    self->state  = Octus_Unknown5;
     Octus_Unknown5();
 }
 
 void Octus_Unknown5(void)
 {
     RSDK_THIS(Octus);
-    RSDK.ProcessAnimation(&entity->animator);
+    RSDK.ProcessAnimation(&self->animator);
 
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionTouch(player, entity, &Octus->hitbox3)) {
-            entity->timer = 32;
-            RSDK.SetSpriteAnimation(Octus->aniFrames, 1, &entity->animator, true, 0);
-            entity->state = Octus_Unknown6;
+        if (Player_CheckCollisionTouch(player, self, &Octus->hitbox3)) {
+            self->timer = 32;
+            RSDK.SetSpriteAnimation(Octus->aniFrames, 1, &self->animator, true, 0);
+            self->state = Octus_Unknown6;
             foreach_break;
         }
     }
@@ -134,10 +134,10 @@ void Octus_Unknown5(void)
 void Octus_Unknown6(void)
 {
     RSDK_THIS(Octus);
-    RSDK.ProcessAnimation(&entity->animator);
-    if (--entity->timer <= 0) {
-        entity->velocity.y = -0x20000;
-        entity->state      = Octus_Unknown7;
+    RSDK.ProcessAnimation(&self->animator);
+    if (--self->timer <= 0) {
+        self->velocity.y = -0x20000;
+        self->state      = Octus_Unknown7;
     }
     Octus_CheckPlayerCollisions();
     Octus_CheckOnScreen();
@@ -146,14 +146,14 @@ void Octus_Unknown6(void)
 void Octus_Unknown7(void)
 {
     RSDK_THIS(Octus);
-    RSDK.ProcessAnimation(&entity->animator);
+    RSDK.ProcessAnimation(&self->animator);
 
-    entity->position.y += entity->velocity.y;
-    entity->velocity.y += 0x1000;
-    if (entity->velocity.y >= 0) {
-        entity->timer = 60;
-        RSDK.SetSpriteAnimation(Octus->aniFrames, 2, &entity->animator, true, 0);
-        entity->state = Octus_Unknown8;
+    self->position.y += self->velocity.y;
+    self->velocity.y += 0x1000;
+    if (self->velocity.y >= 0) {
+        self->timer = 60;
+        RSDK.SetSpriteAnimation(Octus->aniFrames, 2, &self->animator, true, 0);
+        self->state = Octus_Unknown8;
     }
     Octus_CheckPlayerCollisions();
     Octus_CheckOnScreen();
@@ -162,12 +162,12 @@ void Octus_Unknown7(void)
 void Octus_Unknown8(void)
 {
     RSDK_THIS(Octus);
-    RSDK.ProcessAnimation(&entity->animator);
+    RSDK.ProcessAnimation(&self->animator);
 
-    entity->timer--;
-    if (entity->timer == 51) {
-        EntityOctus *shot = CREATE_ENTITY(Octus, intToVoid(true), entity->position.x, entity->position.y);
-        if (entity->direction) {
+    self->timer--;
+    if (self->timer == 51) {
+        EntityOctus *shot = CREATE_ENTITY(Octus, intToVoid(true), self->position.x, self->position.y);
+        if (self->direction) {
             shot->position.x += 0xE0000;
             shot->velocity.x = 0x20000;
         }
@@ -177,8 +177,8 @@ void Octus_Unknown8(void)
         }
         RSDK.PlaySfx(Octus->sfxShot, false, 255);
     }
-    else if (entity->timer <= 0) {
-        entity->state = Octus_Unknown9;
+    else if (self->timer <= 0) {
+        self->state = Octus_Unknown9;
     }
     Octus_CheckPlayerCollisions();
     Octus_CheckOnScreen();
@@ -187,14 +187,14 @@ void Octus_Unknown8(void)
 void Octus_Unknown9(void)
 {
     RSDK_THIS(Octus);
-    RSDK.ProcessAnimation(&entity->animator);
+    RSDK.ProcessAnimation(&self->animator);
 
-    entity->position.y += entity->velocity.y;
-    entity->velocity.y += 0x1000;
-    if (RSDK.ObjectTileGrip(entity, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0xD0000, 1)) {
-        entity->velocity.y = 0;
-        RSDK.SetSpriteAnimation(Octus->aniFrames, 0, &entity->animator, true, 0);
-        entity->state = Octus_Unknown5;
+    self->position.y += self->velocity.y;
+    self->velocity.y += 0x1000;
+    if (RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0xD0000, 1)) {
+        self->velocity.y = 0;
+        RSDK.SetSpriteAnimation(Octus->aniFrames, 0, &self->animator, true, 0);
+        self->state = Octus_Unknown5;
     }
     Octus_CheckPlayerCollisions();
     Octus_CheckOnScreen();
@@ -203,19 +203,18 @@ void Octus_Unknown9(void)
 void Octus_State_Shot(void)
 {
     RSDK_THIS(Octus);
-    entity->position.x += entity->velocity.x;
-    entity->position.y += entity->velocity.y;
-    if (RSDK.CheckOnScreen(entity, NULL)) {
-        RSDK.ProcessAnimation(&entity->animator);
+    self->position.x += self->velocity.x;
+    self->position.y += self->velocity.y;
+    if (RSDK.CheckOnScreen(self, NULL)) {
+        RSDK.ProcessAnimation(&self->animator);
         foreach_active(Player, player)
         {
-            if (Player_CheckCollisionTouch(player, entity, &Octus->hitbox2)) {
-                Player_CheckProjectileHit(player, entity);
-            }
+            if (Player_CheckCollisionTouch(player, self, &Octus->hitbox2)) 
+                Player_CheckProjectileHit(player, self);
         }
     }
     else {
-        destroyEntity(entity);
+        destroyEntity(self);
     }
 }
 

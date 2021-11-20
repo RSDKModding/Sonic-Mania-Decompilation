@@ -14,21 +14,6 @@ void PlayerHelpers_Create(void *data) {}
 
 void PlayerHelpers_StageLoad(void) {}
 
-bool32 PlayerHelpers_CheckPlayerPos(int32 x1, int32 y1, int32 x2, int32 y2)
-{
-    int32 px = 0;
-    int32 py = 0;
-    if (!Player)
-        return px >= x1 && px <= x2 && py >= y1 && py <= y2;
-    foreach_all(Player, player)
-    {
-        if ((globals->playerID & player->characterID) > 0) {
-            px = player->position.x;
-            py = player->position.y;
-        }
-    }
-    return px >= x1 && px <= x2 && py >= y1 && py <= y2;
-}
 bool32 PlayerHelpers_CheckAct1(void)
 {
     if ((RSDK.CheckStageFolder("GHZ") && !Zone->actID) || (RSDK.CheckStageFolder("CPZ") && !Zone->actID) || RSDK.CheckStageFolder("SPZ1")
@@ -84,6 +69,21 @@ bool32 PlayerHelpers_CheckStageReload(void)
         }
     }
     return false;
+}
+bool32 PlayerHelpers_CheckPlayerPos(int32 x1, int32 y1, int32 x2, int32 y2)
+{
+    int32 px = 0;
+    int32 py = 0;
+    if (Player) {
+        foreach_all(Player, player)
+        {
+            if ((globals->playerID & player->characterID) > 0) {
+                px = player->position.x;
+                py = player->position.y;
+            }
+        }
+    }
+    return px >= x1 && px <= x2 && py >= y1 && py <= y2;
 }
 
 #if RETRO_INCLUDE_EDITOR

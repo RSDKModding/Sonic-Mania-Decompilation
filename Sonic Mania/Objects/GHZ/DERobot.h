@@ -3,6 +3,20 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    DEROBOT_BODY,
+    DEROBOT_HEAD,
+    DEROBOT_ARM,
+    DEROBOT_LEG,
+    DEROBOT_SPIKES,
+    DEROBOT_ARM_THREAD,
+    DEROBOT_TARGET_EDGE,
+    DEROBOT_TARGET_CENTER,
+    DEROBOT_TARGET_LOCK,
+    DEROBOT_BOMB,
+    DEROBOT_BODY_CUTSCENE,
+}DERobotAniLists;
+
 // Object Class
 typedef struct {
     RSDK_OBJECT

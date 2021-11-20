@@ -5,7 +5,7 @@ ObjectKanabun *Kanabun;
 void Kanabun_Update(void)
 {
     RSDK_THIS(Kanabun);
-    StateMachine_Run(entity->state);
+    StateMachine_Run(self->state);
 }
 
 void Kanabun_LateUpdate(void) {}
@@ -15,33 +15,33 @@ void Kanabun_StaticUpdate(void) {}
 void Kanabun_Draw(void)
 {
     RSDK_THIS(Kanabun);
-    RSDK.DrawSprite(&entity->animator, NULL, false);
+    RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
 void Kanabun_Create(void *data)
 {
     RSDK_THIS(Kanabun);
 
-    if (!entity->angleVel)
-        entity->angleVel = 1;
-    if (!entity->hVel) {
-        entity->hDist    = 1;
-        entity->bobDist  = 2;
-        entity->hVel     = 0x4000;
-        entity->angleVel = 2;
+    if (!self->angleVel)
+        self->angleVel = 1;
+    if (!self->hVel) {
+        self->hDist    = 1;
+        self->bobDist  = 2;
+        self->hVel     = 0x4000;
+        self->angleVel = 2;
     }
 
-    entity->drawFX = FX_FLIP | FX_ROTATE | FX_SCALE;
-    if (!RSDK_sceneInfo->inEditor) {
-        entity->visible       = true;
-        entity->drawOrder     = Zone->drawOrderLow;
-        entity->startPos      = entity->position;
-        entity->startDir      = entity->direction;
-        entity->active        = ACTIVE_BOUNDS;
-        entity->updateRange.x = 0x800000;
-        entity->updateRange.y = 0x800000;
-        RSDK.SetSpriteAnimation(Kanabun->aniFrames, 0, &entity->animator, true, 0);
-        entity->state = Kanabun_State_Setup;
+    self->drawFX = FX_FLIP | FX_ROTATE | FX_SCALE;
+    if (!SceneInfo->inEditor) {
+        self->visible       = true;
+        self->drawOrder     = Zone->drawOrderLow;
+        self->startPos      = self->position;
+        self->startDir      = self->direction;
+        self->active        = ACTIVE_BOUNDS;
+        self->updateRange.x = 0x800000;
+        self->updateRange.y = 0x800000;
+        RSDK.SetSpriteAnimation(Kanabun->aniFrames, 0, &self->animator, true, 0);
+        self->state = Kanabun_State_Setup;
     }
 }
 
@@ -62,7 +62,7 @@ void Kanabun_StageLoad(void)
 void Kanabun_DebugSpawn(void)
 {
     RSDK_THIS(DebugMode);
-    CREATE_ENTITY(Kanabun, NULL, entity->position.x, entity->position.y);
+    CREATE_ENTITY(Kanabun, NULL, self->position.x, self->position.y);
 }
 
 void Kanabun_DebugDraw(void)
@@ -77,18 +77,18 @@ void Kanabun_CheckPlayerCollisions(void)
 
     foreach_active(Player, player)
     {
-        if (Player_CheckBadnikTouch(player, entity, &Kanabun->hitbox))
-            Player_CheckBadnikBreak(entity, player, true);
+        if (Player_CheckBadnikTouch(player, self, &Kanabun->hitbox))
+            Player_CheckBadnikBreak(self, player, true);
     }
 }
 
 void Kanabun_CheckOnScreen(void)
 {
     RSDK_THIS(Kanabun);
-    if (!RSDK.CheckOnScreen(entity, NULL) && !RSDK.CheckPosOnScreen(&entity->startPos, &entity->updateRange)) {
-        entity->position.x = entity->startPos.x;
-        entity->position.y = entity->startPos.y;
-        entity->direction  = entity->startDir;
+    if (!RSDK.CheckOnScreen(self, NULL) && !RSDK.CheckPosOnScreen(&self->startPos, &self->updateRange)) {
+        self->position.x = self->startPos.x;
+        self->position.y = self->startPos.y;
+        self->direction  = self->startDir;
         Kanabun_Create(NULL);
     }
 }
@@ -97,28 +97,28 @@ void Kanabun_HandleMovement(void)
 {
     RSDK_THIS(Kanabun);
 
-    entity->position.x += entity->velocity.x;
-    entity->position.y = ((entity->bobDist * RSDK.Sin512(entity->angle)) << 8) + entity->startPos.y;
-    entity->angle += entity->angleVel;
+    self->position.x += self->velocity.x;
+    self->position.y = ((self->bobDist * RSDK.Sin512(self->angle)) << 8) + self->startPos.y;
+    self->angle += self->angleVel;
 
-    entity->scale.x = (abs(RSDK.Sin512(((entity->angle >> 1) + 0x80) & 0x1FF)) >> 1) + 0x100;
-    entity->scale.y = entity->scale.x;
-    if (((uint32)(entity->angle - 0x80) & 0x1FF) >= 0x100)
-        entity->drawOrder = Zone->drawOrderHigh;
+    self->scale.x = (abs(RSDK.Sin512(((self->angle >> 1) + 0x80) & 0x1FF)) >> 1) + 0x100;
+    self->scale.y = self->scale.x;
+    if (((uint32)(self->angle - 0x80) & 0x1FF) >= 0x100)
+        self->drawOrder = Zone->drawOrderHigh;
     else
-        entity->drawOrder = Zone->drawOrderLow;
+        self->drawOrder = Zone->drawOrderLow;
 }
 
 void Kanabun_State_Setup(void)
 {
     RSDK_THIS(Kanabun);
 
-    entity->velocity.x = entity->hVel;
-    if (entity->direction == FLIP_NONE)
-        entity->velocity.x = -entity->velocity.x;
-    entity->active = ACTIVE_NORMAL;
+    self->velocity.x = self->hVel;
+    if (self->direction == FLIP_NONE)
+        self->velocity.x = -self->velocity.x;
+    self->active = ACTIVE_NORMAL;
 
-    entity->state = Kanabun_State_Unknown1;
+    self->state = Kanabun_State_Unknown1;
     Kanabun_State_Unknown1();
 }
 
@@ -127,22 +127,22 @@ void Kanabun_State_Unknown1(void)
     RSDK_THIS(Kanabun);
 
     Kanabun_HandleMovement();
-    if (entity->position.y >= entity->startPos.y) {
-        if (entity->groundVel == 1)
-            entity->groundVel = 0;
+    if (self->position.y >= self->startPos.y) {
+        if (self->groundVel == 1)
+            self->groundVel = 0;
     }
-    else if (!entity->groundVel) {
-        entity->groundVel = 1;
+    else if (!self->groundVel) {
+        self->groundVel = 1;
     }
 
-    int vel = entity->hVel * entity->hDist * (0x100 / entity->angleVel);
-    if ((entity->direction == FLIP_NONE && entity->position.x <= (entity->startPos.x - vel))
-        || (entity->direction == FLIP_X && entity->position.x >= (vel + entity->startPos.x))) {
-        RSDK.SetSpriteAnimation(Kanabun->aniFrames, 1, &entity->animator, true, 0);
-        entity->state = Kanabun_State_Unknown2;
+    int vel = self->hVel * self->hDist * (0x100 / self->angleVel);
+    if ((self->direction == FLIP_NONE && self->position.x <= (self->startPos.x - vel))
+        || (self->direction == FLIP_X && self->position.x >= (vel + self->startPos.x))) {
+        RSDK.SetSpriteAnimation(Kanabun->aniFrames, 1, &self->animator, true, 0);
+        self->state = Kanabun_State_Unknown2;
     }
-    RSDK.ProcessAnimation(&entity->animator);
-    if (entity->drawOrder == Zone->drawOrderHigh)
+    RSDK.ProcessAnimation(&self->animator);
+    if (self->drawOrder == Zone->drawOrderHigh)
         Kanabun_CheckPlayerCollisions();
     Kanabun_CheckOnScreen();
 }
@@ -151,17 +151,17 @@ void Kanabun_State_Unknown2(void)
 {
     RSDK_THIS(Kanabun);
     Kanabun_HandleMovement();
-    RSDK.ProcessAnimation(&entity->animator);
+    RSDK.ProcessAnimation(&self->animator);
 
-    if (entity->animator.frameID == entity->animator.frameCount - 1) {
-        RSDK.SetSpriteAnimation(Kanabun->aniFrames, 0, &entity->animator, true, 0);
-        entity->velocity.x = -entity->velocity.x;
-        entity->groundVel  = 0;
-        entity->direction ^= FLIP_X;
-        entity->state = Kanabun_State_Unknown1;
+    if (self->animator.frameID == self->animator.frameCount - 1) {
+        RSDK.SetSpriteAnimation(Kanabun->aniFrames, 0, &self->animator, true, 0);
+        self->velocity.x = -self->velocity.x;
+        self->groundVel  = 0;
+        self->direction ^= FLIP_X;
+        self->state = Kanabun_State_Unknown1;
     }
     else {
-        if (entity->drawOrder == Zone->drawOrderHigh)
+        if (self->drawOrder == Zone->drawOrderHigh)
             Kanabun_CheckPlayerCollisions();
         Kanabun_CheckOnScreen();
     }
@@ -171,9 +171,9 @@ void Kanabun_State_Unknown2(void)
 void Kanabun_EditorDraw(void)
 {
     RSDK_THIS(Kanabun);
-    RSDK.SetSpriteAnimation(Kanabun->aniFrames, 0, &entity->animator, false, 0);
-    entity->scale.x = 0x200;
-    entity->scale.y = 0x200;
+    RSDK.SetSpriteAnimation(Kanabun->aniFrames, 0, &self->animator, false, 0);
+    self->scale.x = 0x200;
+    self->scale.y = 0x200;
 
     Kanabun_Draw();
 }

@@ -5,11 +5,11 @@ ObjectMetalSonic *MetalSonic;
 void MetalSonic_Update(void)
 {
     RSDK_THIS(MetalSonic);
-    if (entity->field_94)
-        entity->field_94--;
-    RSDK.ProcessAnimation(&entity->animator);
-    RSDK.ProcessAnimation(&entity->animator2);
-    StateMachine_Run(entity->state);
+    if (self->field_94)
+        self->field_94--;
+    RSDK.ProcessAnimation(&self->animator);
+    RSDK.ProcessAnimation(&self->animator2);
+    StateMachine_Run(self->state);
     if (MetalSonic->field_8 > 0)
         MetalSonic->field_8--;
 #if RETRO_USE_PLUS
@@ -26,48 +26,48 @@ void MetalSonic_Draw(void)
     RSDK_THIS(MetalSonic);
     Vector2 drawPos;
 
-    drawPos.x = entity->position.x;
-    drawPos.y = entity->position.y;
-    if (entity->position.x < 0x8000000)
+    drawPos.x = self->position.x;
+    drawPos.y = self->position.y;
+    if (self->position.x < 0x8000000)
         drawPos.x += 0xE000000;
     else
         drawPos.x -= 0xE000000;
 
-    if (entity->field_94 & 1) {
+    if (self->field_94 & 1) {
         RSDK.CopyPalette(2, 240, 0, 240, 8);
-        RSDK.DrawSprite(&entity->animator2, &drawPos, false);
-        RSDK.DrawSprite(&entity->animator, &drawPos, false);
-        RSDK.DrawSprite(&entity->animator2, NULL, false);
-        RSDK.DrawSprite(&entity->animator, NULL, false);
+        RSDK.DrawSprite(&self->animator2, &drawPos, false);
+        RSDK.DrawSprite(&self->animator, &drawPos, false);
+        RSDK.DrawSprite(&self->animator2, NULL, false);
+        RSDK.DrawSprite(&self->animator, NULL, false);
         RSDK.CopyPalette(1, 240, 0, 240, 8);
     }
     else {
-        RSDK.DrawSprite(&entity->animator2, &drawPos, false);
-        RSDK.DrawSprite(&entity->animator, &drawPos, false);
-        RSDK.DrawSprite(&entity->animator2, NULL, false);
-        RSDK.DrawSprite(&entity->animator, NULL, false);
+        RSDK.DrawSprite(&self->animator2, &drawPos, false);
+        RSDK.DrawSprite(&self->animator, &drawPos, false);
+        RSDK.DrawSprite(&self->animator2, NULL, false);
+        RSDK.DrawSprite(&self->animator, NULL, false);
     }
 }
 
 void MetalSonic_Create(void *data)
 {
     RSDK_THIS(MetalSonic);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         if (globals->gameMode == MODE_TIMEATTACK) {
-            destroyEntity(entity);
+            destroyEntity(self);
         }
         else {
             Zone->autoScrollSpeed   = 0;
-            entity->active          = ACTIVE_BOUNDS;
-            entity->drawFX          = FX_FLIP | FX_ROTATE;
-            entity->visible         = false;
-            entity->updateRange.x   = 0x800000;
-            entity->updateRange.y   = 0x800000;
-            entity->tileCollisions  = true;
-            entity->collisionLayers = Zone->fgLayers;
-            RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 0, &entity->animator, true, 0);
-            entity->drawOrder = Zone->drawOrderLow;
-            entity->state     = MetalSonic_State_SetupArena;
+            self->active          = ACTIVE_BOUNDS;
+            self->drawFX          = FX_FLIP | FX_ROTATE;
+            self->visible         = false;
+            self->updateRange.x   = 0x800000;
+            self->updateRange.y   = 0x800000;
+            self->tileCollisions  = true;
+            self->collisionLayers = Zone->fgLayers;
+            RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 0, &self->animator, true, 0);
+            self->drawOrder = Zone->drawOrderLow;
+            self->state     = MetalSonic_State_SetupArena;
         }
     }
 }
@@ -110,10 +110,10 @@ void MetalSonic_HandleStageWrap(void)
     EntityCamera *camera = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
 
 #if !RETRO_USE_PLUS
-    EntityMetalSonic *marker = RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot + 1, MetalSonic);
-    EntityPlatform *wall   = RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot + 2, Platform);
+    EntityMetalSonic *marker = RSDK_GET_ENTITY(SceneInfo->entitySlot + 1, MetalSonic);
+    EntityPlatform *wall   = RSDK_GET_ENTITY(SceneInfo->entitySlot + 2, Platform);
     if (player->position.y < marker->position.y && !player->collisionPlane) {
-        Zone->screenBoundsT1[0] = (marker->position.y >> 16) + 16 - RSDK_screens->height;
+        Zone->screenBoundsT1[0] = (marker->position.y >> 16) + 16 - ScreenInfo->height;
         Zone->screenBoundsB1[0] = (marker->position.y >> 16) + 16;
         Zone->deathBoundary[0]  = (marker->position.y >> 16) + 16;
         marker->position.y      = -0x200000;
@@ -125,43 +125,43 @@ void MetalSonic_HandleStageWrap(void)
             Zone->playerBoundActiveR[i] = true;
         }
 
-        entity->timer       = 59;
-        entity->targetPos.x = 0x9100000;
-        entity->targetPos.y = 0x23400000;
+        self->timer       = 59;
+        self->targetPos.x = 0x9100000;
+        self->targetPos.y = 0x23400000;
 
         int anim = 0;
-        if (entity->position.x >= 0x9100000) {
-            if (entity->direction != FLIP_X) {
-                entity->direction = FLIP_X;
+        if (self->position.x >= 0x9100000) {
+            if (self->direction != FLIP_X) {
+                self->direction = FLIP_X;
                 anim              = 4;
             }
             else {
                 anim = 3;
             }
         }
-        else if (entity->direction) {
-            entity->direction = FLIP_NONE;
+        else if (self->direction) {
+            self->direction = FLIP_NONE;
             anim              = 4;
         }
         else {
             anim = 3;
         }
 
-        RSDK.SetSpriteAnimation(MetalSonic->aniFrames, anim, &entity->animator, true, 0);
-        RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 11, &entity->animator2, false, 0);
-        entity->state = MetalSonic_State_Unknown16;
+        RSDK.SetSpriteAnimation(MetalSonic->aniFrames, anim, &self->animator, true, 0);
+        RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 11, &self->animator2, false, 0);
+        self->state = MetalSonic_State_Unknown16;
     }
 #endif
 
     if (camera->position.x < 0xF000000) {
         if (camera->position.x <= 0x1000000) {
             player->position.x += 0xE000000;
-            entity->position.x += 0xE000000;
+            self->position.x += 0xE000000;
             camera->position.x += 0xE000000;
             camera->center.x += 0xE00;
             MetalSonic_ProcessBGParallax(-0xE0000);
 #if RETRO_USE_PLUS
-            if (entity->objectID == GigaMetal->objectID) {
+            if (self->objectID == GigaMetal->objectID) {
                 camera->boundsL += 0xE00;
                 camera->boundsR += 0xE00;
                 Zone->screenBoundsL1[0] += 0xE00;
@@ -205,12 +205,12 @@ void MetalSonic_HandleStageWrap(void)
     }
     else {
         player->position.x -= 0xE000000;
-        entity->position.x -= 0xE000000;
+        self->position.x -= 0xE000000;
         camera->position.x -= 0xE000000;
         camera->center.x -= 0xE00;
         MetalSonic_ProcessBGParallax(0xE0000);
 #if RETRO_USE_PLUS
-        if (entity->objectID == GigaMetal->objectID) {
+        if (self->objectID == GigaMetal->objectID) {
             camera->boundsL -= 0xE00;
             camera->boundsR -= 0xE00;
             Zone->screenBoundsL1[0] -= 0xE00;
@@ -272,8 +272,8 @@ void MetalSonic_HandleVelocity(void)
 {
     RSDK_THIS(MetalSonic);
 
-    int angle = RSDK.ATan2((entity->targetPos.x - entity->position.x) >> 16, (entity->targetPos.y - entity->position.y) >> 16);
-    int ang   = 2 * angle - entity->angle;
+    int angle = RSDK.ATan2((self->targetPos.x - self->position.x) >> 16, (self->targetPos.y - self->position.y) >> 16);
+    int ang   = 2 * angle - self->angle;
 
     if (abs(ang) >= abs(ang - 0x200)) {
         if (abs(ang - 0x200) < abs(ang + 0x200))
@@ -287,10 +287,10 @@ void MetalSonic_HandleVelocity(void)
         else
             angle = ang + 0x200;
     }
-    entity->angle = (angle / 18 + entity->angle) & 0x1FF;
+    self->angle = (angle / 18 + self->angle) & 0x1FF;
 
-    entity->velocity.x = RSDK.Cos512(entity->angle) << 9;
-    entity->velocity.y = RSDK.Sin512(entity->angle) << 9;
+    self->velocity.x = RSDK.Cos512(self->angle) << 9;
+    self->velocity.y = RSDK.Sin512(self->angle) << 9;
 }
 
 void MetalSonic_HandleAnimDir(void)
@@ -298,19 +298,19 @@ void MetalSonic_HandleAnimDir(void)
     RSDK_THIS(MetalSonic);
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
 
-    if (entity->animator.animationID == 4) {
-        if (entity->animator.frameID == entity->animator.frameCount - 1)
-            RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 3, &entity->animator, true, 0);
+    if (self->animator.animationID == 4) {
+        if (self->animator.frameID == self->animator.frameCount - 1)
+            RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 3, &self->animator, true, 0);
     }
-    else if (entity->position.x <= player1->position.x) {
-        if (entity->direction == FLIP_X) {
-            entity->direction = FLIP_NONE;
-            RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 4, &entity->animator, true, 0);
+    else if (self->position.x <= player1->position.x) {
+        if (self->direction == FLIP_X) {
+            self->direction = FLIP_NONE;
+            RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 4, &self->animator, true, 0);
         }
     }
-    else if (entity->direction == FLIP_NONE) {
-        entity->direction = FLIP_X;
-        RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 4, &entity->animator, true, 0);
+    else if (self->direction == FLIP_NONE) {
+        self->direction = FLIP_X;
+        RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 4, &self->animator, true, 0);
     }
 }
 
@@ -321,16 +321,16 @@ void MetalSonic_CheckPlayerCollisions(void)
 
     foreach_active(Player, player)
     {
-        if (!entity->field_94) {
-            Hitbox *hitbox = entity->animator.animationID == 5 ? &MetalSonic->hitbox2 : &MetalSonic->hitbox1;
-            if (Player_CheckBadnikTouch(player, entity, hitbox) && Player_CheckBossHit(player, entity)) {
+        if (!self->field_94) {
+            Hitbox *hitbox = self->animator.animationID == 5 ? &MetalSonic->hitbox2 : &MetalSonic->hitbox1;
+            if (Player_CheckBadnikTouch(player, self, hitbox) && Player_CheckBossHit(player, self)) {
                 if (player->velocity.x < 0)
                     player->velocity.x >>= 2;
 
                 player->velocity.x >>= 1;
                 player->velocity.y >>= 1;
-                player->velocity.x += entity->velocity.x;
-                player->velocity.y += entity->velocity.y;
+                player->velocity.x += self->velocity.x;
+                player->velocity.y += self->velocity.y;
                 player->groundVel = player->velocity.x;
                 MetalSonic_Hit();
             }
@@ -342,18 +342,18 @@ void MetalSonic_Hit(void)
 {
     RSDK_THIS(MetalSonic);
 
-    if (!--entity->health) {
-        entity->timer               = 180;
-        RSDK_sceneInfo->timeEnabled = false;
-        entity->velocity.y          = -0x1800;
+    if (!--self->health) {
+        self->timer               = 180;
+        SceneInfo->timeEnabled = false;
+        self->velocity.y          = -0x1800;
         Player_GiveScore(RSDK_GET_ENTITY(SLOT_PLAYER1, Player), 1000);
-        RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 10, &entity->animator, false, 0);
-        RSDK.SetSpriteAnimation(0xFFFF, 13, &entity->animator2, false, 0);
-        entity->drawFX |= FX_ROTATE;
-        entity->state = MetalSonic_State_Explode;
+        RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 10, &self->animator, false, 0);
+        RSDK.SetSpriteAnimation(0xFFFF, 13, &self->animator2, false, 0);
+        self->drawFX |= FX_ROTATE;
+        self->state = MetalSonic_State_Explode;
     }
     else {
-        entity->field_94 = 48;
+        self->field_94 = 48;
         RSDK.PlaySfx(MetalSonic->sfxHit, false, 0xFF);
     }
 }
@@ -364,8 +364,8 @@ void MetalSonic_Explode(void)
     if (!(Zone->timer & 7)) {
         RSDK.PlaySfx(MetalSonic->sfxExplosion2, false, 0xFF);
         if (!(Zone->timer & 0xF)) {
-            int x = entity->position.x + (RSDK.Rand(-19, 20) << 16);
-            int y = entity->position.y + (RSDK.Rand(-24, 25) << 16);
+            int x = self->position.x + (RSDK.Rand(-19, 20) << 16);
+            int y = self->position.y + (RSDK.Rand(-24, 25) << 16);
 
             EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y);
             explosion->drawOrder       = Zone->drawOrderHigh + 2;
@@ -378,15 +378,15 @@ void MetalSonic_State_SetupArena(void)
 {
     RSDK_THIS(MetalSonic);
 
-    if (++entity->timer >= 8) {
-        entity->timer               = 0;
+    if (++self->timer >= 8) {
+        self->timer               = 0;
         Zone->playerBoundActiveL[0] = true;
         Zone->playerBoundActiveR[0] = true;
-        Zone->screenBoundsL1[0]     = (entity->position.x >> 16) - RSDK_screens->centerX;
-        Zone->screenBoundsR1[0]     = (entity->position.x >> 16) + RSDK_screens->centerX;
-        Zone->screenBoundsT1[0]     = (entity->position.y >> 16) - RSDK_screens->height + 52;
-        Zone->screenBoundsB1[0]     = (entity->position.y >> 16) + 52;
-        entity->state               = MetalSonic_State_WaitForPlayer;
+        Zone->screenBoundsL1[0]     = (self->position.x >> 16) - ScreenInfo->centerX;
+        Zone->screenBoundsR1[0]     = (self->position.x >> 16) + ScreenInfo->centerX;
+        Zone->screenBoundsT1[0]     = (self->position.y >> 16) - ScreenInfo->height + 52;
+        Zone->screenBoundsB1[0]     = (self->position.y >> 16) + 52;
+        self->state               = MetalSonic_State_WaitForPlayer;
     }
 }
 
@@ -395,9 +395,9 @@ void MetalSonic_State_WaitForPlayer(void)
     RSDK_THIS(MetalSonic);
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
 
-    if (player1->position.x > entity->position.x) {
+    if (player1->position.x > self->position.x) {
         Music_FadeOut(0.0125);
-        entity->state = MetalSonic_State_WaitForHologram;
+        self->state = MetalSonic_State_WaitForHologram;
     }
 }
 
@@ -411,16 +411,16 @@ void MetalSonic_State_WaitForHologram(void)
             Music_ClearMusicStack();
             Music_PlayTrack(TRACK_EGGMAN1);
             RSDK.PlaySfx(MetalSonic->sfxMSFireball, false, 255);
-            entity->position.y += 0x600000;
-            entity->velocity.y = -0x80000;
-            entity->visible    = true;
-            RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 9, &entity->animator, false, 6);
-            RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 13, &entity->animator2, false, 0);
-            entity->direction               = FLIP_X;
-            entity->animator.animationSpeed = 0;
-            entity->active                  = ACTIVE_NORMAL;
-            entity->state                   = MetalSonic_State_Appear;
-            Camera_ShakeScreen(6, 0, 6);
+            self->position.y += 0x600000;
+            self->velocity.y = -0x80000;
+            self->visible    = true;
+            RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 9, &self->animator, false, 6);
+            RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 13, &self->animator2, false, 0);
+            self->direction               = FLIP_X;
+            self->animator.animationSpeed = 0;
+            self->active                  = ACTIVE_NORMAL;
+            self->state                   = MetalSonic_State_Appear;
+            Camera_ShakeScreen(0, 6, 6);
             foreach_break;
         }
     }
@@ -430,15 +430,15 @@ void MetalSonic_State_Appear(void)
 {
     RSDK_THIS(MetalSonic);
 
-    entity->velocity.y += 0x2000;
-    entity->position.y += entity->velocity.y;
+    self->velocity.y += 0x2000;
+    self->position.y += self->velocity.y;
 
-    if (entity->velocity.y >= 0) {
-        RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 4, &entity->animator, false, 3);
-        RSDK.SetSpriteAnimation(0xFFFF, 0, &entity->animator2, false, 0);
-        entity->velocity.x = 0x18000;
-        entity->onGround   = false;
-        entity->state      = MetalSonic_State_Land;
+    if (self->velocity.y >= 0) {
+        RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 4, &self->animator, false, 3);
+        RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator2, false, 0);
+        self->velocity.x = 0x18000;
+        self->onGround   = false;
+        self->state      = MetalSonic_State_Land;
     }
 }
 
@@ -446,16 +446,16 @@ void MetalSonic_State_Land(void)
 {
     RSDK_THIS(MetalSonic);
 
-    entity->velocity.y += 0x2000;
-    entity->outerBox = RSDK.GetHitbox(&entity->animator, 0);
-    entity->innerBox = RSDK.GetHitbox(&entity->animator, 1);
+    self->velocity.y += 0x2000;
+    self->outerBox = RSDK.GetHitbox(&self->animator, 0);
+    self->innerBox = RSDK.GetHitbox(&self->animator, 1);
 
-    RSDK.ProcessTileCollisions(entity, entity->outerBox, entity->innerBox);
-    if (entity->onGround) {
-        RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 1, &entity->animator, false, 0);
-        entity->state                   = MetalSonic_State_Taunt;
-        entity->animator.animationSpeed = 0;
-        entity->direction               = FLIP_NONE;
+    RSDK.ProcessTileCollisions(self, self->outerBox, self->innerBox);
+    if (self->onGround) {
+        RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 1, &self->animator, false, 0);
+        self->state                   = MetalSonic_State_Taunt;
+        self->animator.animationSpeed = 0;
+        self->direction               = FLIP_NONE;
     }
 }
 
@@ -463,10 +463,10 @@ void MetalSonic_State_Taunt(void)
 {
     RSDK_THIS(MetalSonic);
 
-    if (++entity->timer == 60) {
-        entity->timer                   = 0;
-        entity->animator.animationSpeed = 1;
-        entity->state                   = MetalSonic_State_GetReady;
+    if (++self->timer == 60) {
+        self->timer                   = 0;
+        self->animator.animationSpeed = 1;
+        self->state                   = MetalSonic_State_GetReady;
     }
 }
 
@@ -474,9 +474,9 @@ void MetalSonic_State_GetReady(void)
 {
     RSDK_THIS(MetalSonic);
 
-    if (entity->animator.frameID == entity->animator.frameCount - 1) {
-        RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 2, &entity->animator, false, 0);
-        entity->state = MetalSonic_State_SetupBounds;
+    if (self->animator.frameID == self->animator.frameCount - 1) {
+        RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 2, &self->animator, false, 0);
+        self->state = MetalSonic_State_SetupBounds;
     }
 }
 
@@ -484,10 +484,10 @@ void MetalSonic_State_SetupBounds(void)
 {
     RSDK_THIS(MetalSonic);
 
-    if (++entity->timer == 60) {
-        entity->timer = 0;
-        RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 11, &entity->animator2, false, 0);
-        entity->state = MetalSonic_State_Start;
+    if (++self->timer == 60) {
+        self->timer = 0;
+        RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 11, &self->animator2, false, 0);
+        self->state = MetalSonic_State_Start;
 
         Vector2 size;
         RSDK.GetLayerSize(Zone->fgLow, &size, true);
@@ -500,14 +500,14 @@ void MetalSonic_State_Start(void)
 {
     RSDK_THIS(MetalSonic);
 
-    if (++entity->timer == 90) {
-        entity->timer           = 0;
+    if (++self->timer == 90) {
+        self->timer           = 0;
         Zone->screenBoundsL1[0] = 0;
-        RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 8, &entity->animator, false, 0);
-        entity->velocity.x = 0x18000;
-        entity->velocity.y = -0x60000;
+        RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 8, &self->animator, false, 0);
+        self->velocity.x = 0x18000;
+        self->velocity.y = -0x60000;
         RSDK.PlaySfx(MetalSonic->sfxJump2, false, 255);
-        entity->state = MetalSonic_State_Unknown1;
+        self->state = MetalSonic_State_Unknown1;
     }
 }
 
@@ -516,21 +516,21 @@ void MetalSonic_State_Unknown1(void)
     RSDK_THIS(MetalSonic);
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
 
-    entity->position.x += entity->velocity.x;
-    entity->position.y += entity->velocity.y;
-    entity->velocity.y += 0x3800;
+    self->position.x += self->velocity.x;
+    self->position.y += self->velocity.y;
+    self->velocity.y += 0x3800;
 
-    if (entity->velocity.y >= 0) {
-        RSDK.SetSpriteAnimation(0xFFFF, 0, &entity->animator2, false, 0);
-        RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 11, &entity->animator2, false, 0);
-        RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 4, &entity->animator, false, 6);
-        entity->animator.animationSpeed = 0;
-        entity->targetPos.x             = player1->position.x;
-        entity->targetPos.y             = player1->position.y;
-        entity->velocity.x              = 0;
-        entity->velocity.y              = 0;
-        entity->timer2                  = 240;
-        entity->state                   = MetalSonic_State_Unknown2;
+    if (self->velocity.y >= 0) {
+        RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator2, false, 0);
+        RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 11, &self->animator2, false, 0);
+        RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 4, &self->animator, false, 6);
+        self->animator.animationSpeed = 0;
+        self->targetPos.x             = player1->position.x;
+        self->targetPos.y             = player1->position.y;
+        self->velocity.x              = 0;
+        self->velocity.y              = 0;
+        self->timer2                  = 240;
+        self->state                   = MetalSonic_State_Unknown2;
     }
 }
 
@@ -539,176 +539,176 @@ void MetalSonic_State_Unknown2(void)
     RSDK_THIS(MetalSonic);
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
 
-    if (--entity->timer <= 0) {
-        entity->timer = 60;
+    if (--self->timer <= 0) {
+        self->timer = 60;
         int angle     = RSDK.Rand(0, 256);
         int power     = RSDK.Rand(64, 97) << 8;
 
-        entity->targetPos.x = (power + (power >> 2)) * RSDK.Cos256(angle);
-        entity->targetPos.y = power * RSDK.Sin256(angle);
+        self->targetPos.x = (power + (power >> 2)) * RSDK.Cos256(angle);
+        self->targetPos.y = power * RSDK.Sin256(angle);
     }
 
-    entity->targetPos.x += player1->position.x;
-    entity->targetPos.y += player1->position.y;
+    self->targetPos.x += player1->position.x;
+    self->targetPos.y += player1->position.y;
     MetalSonic_HandleVelocity();
     MetalSonic_HandleAnimDir();
 
-    if (!entity->activeScreens) {
-        if (entity->velocity.x <= 0) {
-            if (player1->velocity.x < entity->field_80)
-                entity->field_80 = player1->velocity.x;
+    if (!self->activeScreens) {
+        if (self->velocity.x <= 0) {
+            if (player1->velocity.x < self->field_80)
+                self->field_80 = player1->velocity.x;
 
-            int dist = (entity->targetPos.x - entity->position.x) >> 5;
-            if (dist < entity->field_80)
-                entity->field_80 = dist;
+            int dist = (self->targetPos.x - self->position.x) >> 5;
+            if (dist < self->field_80)
+                self->field_80 = dist;
 
-            if (entity->position.x < player1->position.x + 244) {
+            if (self->position.x < player1->position.x + 244) {
                 if (player1->velocity.x < 0) {
-                    if (entity->field_80 < 2 * player1->velocity.x) {
-                        entity->field_78 = 2 * player1->velocity.x;
-                        entity->field_80 = 2 * player1->velocity.x;
+                    if (self->field_80 < 2 * player1->velocity.x) {
+                        self->field_78 = 2 * player1->velocity.x;
+                        self->field_80 = 2 * player1->velocity.x;
                     }
                 }
             }
         }
         else {
-            if (player1->velocity.x > entity->field_80)
-                entity->field_80 = player1->velocity.x;
+            if (player1->velocity.x > self->field_80)
+                self->field_80 = player1->velocity.x;
 
-            int dist = (entity->targetPos.x - entity->position.x) >> 5;
-            if (dist > entity->field_80)
-                entity->field_80 = dist;
+            int dist = (self->targetPos.x - self->position.x) >> 5;
+            if (dist > self->field_80)
+                self->field_80 = dist;
 
-            if (entity->position.x > player1->position.x - 244) {
+            if (self->position.x > player1->position.x - 244) {
                 if (player1->velocity.x > 0) {
-                    if (entity->field_80 > 2 * player1->velocity.x) {
-                        entity->field_78 = 2 * player1->velocity.x;
-                        entity->field_80 = 2 * player1->velocity.x;
+                    if (self->field_80 > 2 * player1->velocity.x) {
+                        self->field_78 = 2 * player1->velocity.x;
+                        self->field_80 = 2 * player1->velocity.x;
                     }
                 }
             }
         }
 
-        if (entity->velocity.y <= 0) {
-            if (player1->velocity.y < entity->field_84)
-                entity->field_84 = player1->velocity.y;
+        if (self->velocity.y <= 0) {
+            if (player1->velocity.y < self->field_84)
+                self->field_84 = player1->velocity.y;
 
-            int dist = (entity->targetPos.y - entity->position.y) >> 5;
-            if (dist < entity->field_84)
-                entity->field_84 = dist;
+            int dist = (self->targetPos.y - self->position.y) >> 5;
+            if (dist < self->field_84)
+                self->field_84 = dist;
 
-            if (entity->position.y < player1->position.y + 152) {
+            if (self->position.y < player1->position.y + 152) {
                 if (player1->velocity.y < 0) {
-                    if (entity->field_84 < 2 * player1->velocity.y) {
-                        entity->field_7C = 2 * player1->velocity.y;
-                        entity->field_84 = 2 * player1->velocity.y;
+                    if (self->field_84 < 2 * player1->velocity.y) {
+                        self->field_7C = 2 * player1->velocity.y;
+                        self->field_84 = 2 * player1->velocity.y;
                     }
                 }
             }
         }
         else {
-            if (player1->velocity.y > entity->field_84)
-                entity->field_84 = player1->velocity.y;
+            if (player1->velocity.y > self->field_84)
+                self->field_84 = player1->velocity.y;
 
-            int dist = (entity->targetPos.y - entity->position.y) >> 5;
-            if (dist > entity->field_84)
-                entity->field_84 = dist;
+            int dist = (self->targetPos.y - self->position.y) >> 5;
+            if (dist > self->field_84)
+                self->field_84 = dist;
 
-            if (entity->position.y > player1->position.y - 152) {
+            if (self->position.y > player1->position.y - 152) {
                 if (player1->velocity.y > 0) {
-                    if (entity->field_84 > 2 * player1->velocity.y) {
-                        entity->field_7C = 2 * player1->velocity.y;
-                        entity->field_84 = 2 * player1->velocity.y;
+                    if (self->field_84 > 2 * player1->velocity.y) {
+                        self->field_7C = 2 * player1->velocity.y;
+                        self->field_84 = 2 * player1->velocity.y;
                     }
                 }
             }
         }
 
-        entity->timer2--;
-        if (entity->timer2 < 4)
-            entity->timer2 = 4;
+        self->timer2--;
+        if (self->timer2 < 4)
+            self->timer2 = 4;
     }
     else {
-        entity->field_80 = player1->velocity.x;
-        entity->field_84 = player1->velocity.y;
-        entity->timer2--;
+        self->field_80 = player1->velocity.x;
+        self->field_84 = player1->velocity.y;
+        self->timer2--;
     }
 
-    if (entity->timer2 <= 0) {
-        entity->attackType = RSDK.Rand(0, 6);
+    if (self->timer2 <= 0) {
+        self->attackType = RSDK.Rand(0, 6);
 
-        while ((1 << entity->attackType) & MetalSonic->field_C) {
-            entity->attackType = RSDK.Rand(0, 6);
+        while ((1 << self->attackType) & MetalSonic->field_C) {
+            self->attackType = RSDK.Rand(0, 6);
         }
 
-        MetalSonic->field_C |= 1 << entity->attackType;
+        MetalSonic->field_C |= 1 << self->attackType;
         if (MetalSonic->field_C == 0x3F)
             MetalSonic->field_C = 0;
 
-        entity->attackType >>= 1;
+        self->attackType >>= 1;
 
-        switch (entity->attackType) {
+        switch (self->attackType) {
             case 0:
                 if (RSDK.Rand(0, 2) != 0)
-                    entity->targetPos.x = (RSDK_screens->width + 72) << 16;
+                    self->targetPos.x = (ScreenInfo->width + 72) << 16;
                 else
-                    entity->targetPos.x = -0x480000;
-                entity->targetPos.y = RSDK_screens->centerY << 16;
-                entity->state       = MetalSonic_State_Unknown3;
+                    self->targetPos.x = -0x480000;
+                self->targetPos.y = ScreenInfo->centerY << 16;
+                self->state       = MetalSonic_State_Unknown3;
                 break;
             case 1:
                 if (player1->velocity.x >= 0) {
-                    entity->targetPos.y = 0x200000;
-                    entity->targetPos.x = (RSDK_screens->width - 32) << 16;
+                    self->targetPos.y = 0x200000;
+                    self->targetPos.x = (ScreenInfo->width - 32) << 16;
                 }
                 else {
-                    entity->targetPos.x = 0x200000;
-                    entity->targetPos.y = 0x200000;
+                    self->targetPos.x = 0x200000;
+                    self->targetPos.y = 0x200000;
                 }
-                entity->state = MetalSonic_State_Unknown3;
+                self->state = MetalSonic_State_Unknown3;
                 break;
             case 2: {
                 int angle           = (RSDK.Rand(0, 2) + 3) << 6;
-                entity->targetPos.x = 0xA000 * RSDK.Cos256(angle) + player1->position.x - (RSDK_screens->position.x << 16);
-                entity->targetPos.y = player1->position.y + 0x7000 * RSDK.Sin256(angle) - (RSDK_screens->position.y << 16);
-                entity->state       = MetalSonic_State_Unknown3;
+                self->targetPos.x = 0xA000 * RSDK.Cos256(angle) + player1->position.x - (ScreenInfo->position.x << 16);
+                self->targetPos.y = player1->position.y + 0x7000 * RSDK.Sin256(angle) - (ScreenInfo->position.y << 16);
+                self->state       = MetalSonic_State_Unknown3;
                 break;
             }
         }
     }
     else {
-        entity->targetPos.x -= player1->position.x;
-        entity->targetPos.y -= player1->position.y;
+        self->targetPos.x -= player1->position.x;
+        self->targetPos.y -= player1->position.y;
 
-        if (entity->field_78 != entity->field_80) {
-            if (entity->field_78 <= entity->field_80) {
-                entity->field_78 += (0xC00 << (entity->field_78 < 0));
-                if (entity->field_78 > entity->field_80)
-                    entity->field_78 = entity->field_80;
+        if (self->field_78 != self->field_80) {
+            if (self->field_78 <= self->field_80) {
+                self->field_78 += (0xC00 << (self->field_78 < 0));
+                if (self->field_78 > self->field_80)
+                    self->field_78 = self->field_80;
             }
             else {
-                entity->field_78 -= (0xC00 << (entity->field_78 > 0));
-                if (entity->field_78 < entity->field_80)
-                    entity->field_78 = entity->field_80;
+                self->field_78 -= (0xC00 << (self->field_78 > 0));
+                if (self->field_78 < self->field_80)
+                    self->field_78 = self->field_80;
             }
         }
 
-        if (entity->field_7C != entity->field_84) {
-            if (entity->field_7C <= entity->field_84) {
-                entity->field_7C += (0xC00 << (entity->field_7C < 0));
-                if (entity->field_7C > entity->field_84)
-                    entity->field_7C = entity->field_84;
+        if (self->field_7C != self->field_84) {
+            if (self->field_7C <= self->field_84) {
+                self->field_7C += (0xC00 << (self->field_7C < 0));
+                if (self->field_7C > self->field_84)
+                    self->field_7C = self->field_84;
             }
             else {
-                entity->field_7C -= (0xC00 << (entity->field_7C > 0));
+                self->field_7C -= (0xC00 << (self->field_7C > 0));
 
-                if (entity->field_7C < entity->field_84)
-                    entity->field_7C = entity->field_84;
+                if (self->field_7C < self->field_84)
+                    self->field_7C = self->field_84;
             }
         }
 
-        entity->position.x += entity->field_78 + (entity->velocity.x >> 1) + (entity->velocity.x >> 3);
-        entity->position.y += entity->field_7C + (entity->velocity.y >> 1) + (entity->velocity.y >> 3);
+        self->position.x += self->field_78 + (self->velocity.x >> 1) + (self->velocity.x >> 3);
+        self->position.y += self->field_7C + (self->velocity.y >> 1) + (self->velocity.y >> 3);
     }
 
     MetalSonic_HandleStageWrap();
@@ -719,27 +719,27 @@ void MetalSonic_State_Unknown3(void)
     RSDK_THIS(MetalSonic);
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
 
-    entity->targetPos.x += RSDK_screens->position.x << 16;
-    entity->targetPos.y += RSDK_screens->position.y << 16;
+    self->targetPos.x += ScreenInfo->position.x << 16;
+    self->targetPos.y += ScreenInfo->position.y << 16;
     MetalSonic_HandleVelocity();
 
-    entity->position.x += entity->velocity.x;
-    entity->position.y += entity->velocity.y;
-    entity->position.x += player1->velocity.x;
-    entity->position.y += player1->velocity.y;
+    self->position.x += self->velocity.x;
+    self->position.y += self->velocity.y;
+    self->position.x += player1->velocity.x;
+    self->position.y += player1->velocity.y;
     MetalSonic_HandleAnimDir();
 
-    int rx              = entity->position.x - entity->targetPos.x;
-    int ry              = entity->position.y - entity->targetPos.y;
-    entity->targetPos.x = entity->targetPos.x - (RSDK_screens->position.x << 16);
-    entity->targetPos.y = entity->targetPos.y - (RSDK_screens->position.y << 16);
+    int rx              = self->position.x - self->targetPos.x;
+    int ry              = self->position.y - self->targetPos.y;
+    self->targetPos.x = self->targetPos.x - (ScreenInfo->position.x << 16);
+    self->targetPos.y = self->targetPos.y - (ScreenInfo->position.y << 16);
     if ((rx >> 16) * (rx >> 16) + (ry >> 16) * (ry >> 16) < 0x1000) {
-        entity->timer2 = 0;
-        entity->position.x &= 0xFFFF0000;
-        entity->position.y &= 0xFFFF0000;
-        entity->targetPos.x &= 0xFFFF0000;
-        entity->targetPos.y &= 0xFFFF0000;
-        entity->state = MetalSonic_State_StartAttack;
+        self->timer2 = 0;
+        self->position.x &= 0xFFFF0000;
+        self->position.y &= 0xFFFF0000;
+        self->targetPos.x &= 0xFFFF0000;
+        self->targetPos.y &= 0xFFFF0000;
+        self->state = MetalSonic_State_StartAttack;
     }
     MetalSonic_HandleStageWrap();
 }
@@ -749,72 +749,72 @@ void MetalSonic_State_StartAttack(void)
     RSDK_THIS(MetalSonic);
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
 
-    entity->targetPos.x += RSDK_screens->position.x << 16;
-    entity->targetPos.y += RSDK_screens->position.y << 16;
+    self->targetPos.x += ScreenInfo->position.x << 16;
+    self->targetPos.y += ScreenInfo->position.y << 16;
 
-    entity->velocity.x = (entity->targetPos.x - entity->position.x) >> 4;
-    entity->velocity.y = (entity->targetPos.y - entity->position.y) >> 4;
+    self->velocity.x = (self->targetPos.x - self->position.x) >> 4;
+    self->velocity.y = (self->targetPos.y - self->position.y) >> 4;
 
-    if (entity->position.x >= entity->targetPos.x)
-        entity->velocity.x -= 0x10000;
+    if (self->position.x >= self->targetPos.x)
+        self->velocity.x -= 0x10000;
     else
-        entity->velocity.x += 0x10000;
+        self->velocity.x += 0x10000;
 
-    if (entity->position.y >= entity->targetPos.y)
-        entity->velocity.y += 0x10000;
+    if (self->position.y >= self->targetPos.y)
+        self->velocity.y += 0x10000;
     else
-        entity->velocity.y += 0x10000;
+        self->velocity.y += 0x10000;
 
-    entity->position.x += entity->velocity.x;
-    entity->position.y += entity->velocity.y;
-    entity->position.x += player1->velocity.x;
-    entity->position.y += player1->velocity.y;
+    self->position.x += self->velocity.x;
+    self->position.y += self->velocity.y;
+    self->position.x += player1->velocity.x;
+    self->position.y += player1->velocity.y;
 
     uint8 flags = 0;
-    if (entity->velocity.x > 0 && entity->position.x > entity->targetPos.x) {
+    if (self->velocity.x > 0 && self->position.x > self->targetPos.x) {
         flags              = 1;
-        entity->position.x = entity->targetPos.x;
+        self->position.x = self->targetPos.x;
     }
-    else if (entity->velocity.x < 0 && entity->position.x < entity->targetPos.x) {
+    else if (self->velocity.x < 0 && self->position.x < self->targetPos.x) {
         flags              = 1;
-        entity->position.x = entity->targetPos.x;
+        self->position.x = self->targetPos.x;
     }
 
-    if (entity->velocity.y > 0 && entity->position.y > entity->targetPos.y) {
+    if (self->velocity.y > 0 && self->position.y > self->targetPos.y) {
         ++flags;
-        entity->position.y = entity->targetPos.y;
+        self->position.y = self->targetPos.y;
     }
-    else if (entity->velocity.y < 0 && entity->position.y < entity->targetPos.y) {
+    else if (self->velocity.y < 0 && self->position.y < self->targetPos.y) {
         ++flags;
-        entity->position.y = entity->targetPos.y;
+        self->position.y = self->targetPos.y;
     }
 
-    entity->targetPos.x = entity->targetPos.x - (RSDK_screens->position.x << 16);
-    entity->targetPos.y = entity->targetPos.y - (RSDK_screens->position.y << 16);
+    self->targetPos.x = self->targetPos.x - (ScreenInfo->position.x << 16);
+    self->targetPos.y = self->targetPos.y - (ScreenInfo->position.y << 16);
     MetalSonic_HandleAnimDir();
 
     if (flags == 2) {
-        if (entity->attackType) {
-            if (entity->attackType == 1) {
-                entity->timer2 = 60;
-                RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 7, &entity->animator, true, 0);
+        if (self->attackType) {
+            if (self->attackType == 1) {
+                self->timer2 = 60;
+                RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 7, &self->animator, true, 0);
                 RSDK.PlaySfx(MetalSonic->sfxMSElecPulse, false, 255);
-                entity->state = MetalSonic_State_Unknown7;
+                self->state = MetalSonic_State_Unknown7;
             }
-            if (entity->attackType == 2) {
-                entity->timer2      = 60;
-                entity->targetPos.x = entity->position.x - player1->position.x;
-                entity->targetPos.y = entity->position.y - player1->position.y;
-                RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 8, &entity->animator, true, 0);
+            if (self->attackType == 2) {
+                self->timer2      = 60;
+                self->targetPos.x = self->position.x - player1->position.x;
+                self->targetPos.y = self->position.y - player1->position.y;
+                RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 8, &self->animator, true, 0);
                 RSDK.PlaySfx(MetalSonic->sfxMSBall, false, 255);
-                entity->state = MetalSonic_State_Unknown5;
+                self->state = MetalSonic_State_Unknown5;
             }
         }
         else {
-            entity->timer2 = 60;
-            RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 6, &entity->animator, true, 0);
+            self->timer2 = 60;
+            RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 6, &self->animator, true, 0);
             RSDK.PlaySfx(MetalSonic->sfxMSChargeFire, false, 255);
-            entity->state = MetalSonic_State_Unknown9;
+            self->state = MetalSonic_State_Unknown9;
         }
     }
     MetalSonic_HandleStageWrap();
@@ -825,32 +825,32 @@ void MetalSonic_State_Unknown5(void)
     RSDK_THIS(MetalSonic);
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
 
-    entity->position.x = player1->position.x + entity->targetPos.x;
-    entity->position.y = player1->position.y + entity->targetPos.y;
+    self->position.x = player1->position.x + self->targetPos.x;
+    self->position.y = player1->position.y + self->targetPos.y;
 
-    int angle          = RSDK.ATan2(player1->position.x - entity->position.x, player1->position.y - entity->position.y);
-    entity->field_9C.x = (RSDK.Cos256(angle + 192) << 12) + entity->position.x;
-    entity->field_9C.y = (RSDK.Sin256(angle + 192) << 12) + entity->position.y;
-    entity->field_A4.x = (RSDK.Cos256(angle + 64) << 12) + entity->position.x;
-    entity->field_A4.y = (RSDK.Sin256(angle + 64) << 12) + entity->position.y;
-    entity->field_AC.x = (RSDK.Cos256(angle) << 14) + entity->position.x;
-    entity->field_AC.y = (RSDK.Sin256(angle) << 14) + entity->position.y;
+    int angle          = RSDK.ATan2(player1->position.x - self->position.x, player1->position.y - self->position.y);
+    self->field_9C.x = (RSDK.Cos256(angle + 192) << 12) + self->position.x;
+    self->field_9C.y = (RSDK.Sin256(angle + 192) << 12) + self->position.y;
+    self->field_A4.x = (RSDK.Cos256(angle + 64) << 12) + self->position.x;
+    self->field_A4.y = (RSDK.Sin256(angle + 64) << 12) + self->position.y;
+    self->field_AC.x = (RSDK.Cos256(angle) << 14) + self->position.x;
+    self->field_AC.y = (RSDK.Sin256(angle) << 14) + self->position.y;
 
-    if (--entity->timer2 <= 0) {
-        entity->field_9C.x = -1;
-        entity->targetPos  = player1->position;
-        entity->velocity.x = 0xA00 * RSDK.Cos256(angle);
-        entity->velocity.y = 0xA00 * RSDK.Sin256(angle);
-        RSDK.PlaySfx(Player->sfx_PeelRelease, false, 255);
-        entity->timer2 = 15;
-        entity->state  = MetalSonic_State_Unknown6;
+    if (--self->timer2 <= 0) {
+        self->field_9C.x = -1;
+        self->targetPos  = player1->position;
+        self->velocity.x = 0xA00 * RSDK.Cos256(angle);
+        self->velocity.y = 0xA00 * RSDK.Sin256(angle);
+        RSDK.PlaySfx(Player->sfxPeelRelease, false, 255);
+        self->timer2 = 15;
+        self->state  = MetalSonic_State_Unknown6;
     }
 
     MetalSonic_HandleStageWrap();
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionTouch(player, entity, &MetalSonic->hitbox1)) {
-            Player_CheckHit(player, entity);
+        if (Player_CheckCollisionTouch(player, self, &MetalSonic->hitbox1)) {
+            Player_CheckHit(player, self);
         }
     }
 }
@@ -860,23 +860,23 @@ void MetalSonic_State_Unknown6(void)
     RSDK_THIS(MetalSonic);
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
 
-    entity->position.x += entity->velocity.x;
-    entity->position.y += entity->velocity.y;
-    if (!entity->activeScreens && --entity->timer2 <= 0) {
-        entity->targetPos  = player1->position;
-        entity->velocity.x = 0;
-        entity->velocity.y = 0;
-        entity->timer      = 0;
-        entity->timer2     = 150;
-        RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 3, &entity->animator, true, 0);
-        entity->state = MetalSonic_State_Unknown2;
+    self->position.x += self->velocity.x;
+    self->position.y += self->velocity.y;
+    if (!self->activeScreens && --self->timer2 <= 0) {
+        self->targetPos  = player1->position;
+        self->velocity.x = 0;
+        self->velocity.y = 0;
+        self->timer      = 0;
+        self->timer2     = 150;
+        RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 3, &self->animator, true, 0);
+        self->state = MetalSonic_State_Unknown2;
     }
 
     MetalSonic_HandleStageWrap();
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionTouch(player, entity, &MetalSonic->hitbox1)) {
-            Player_CheckHit(player, entity);
+        if (Player_CheckCollisionTouch(player, self, &MetalSonic->hitbox1)) {
+            Player_CheckHit(player, self);
         }
     }
 }
@@ -886,28 +886,28 @@ void MetalSonic_State_Unknown7(void)
     RSDK_THIS(MetalSonic);
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
 
-    entity->position.x = entity->targetPos.x + (RSDK_screens->position.x << 16);
-    entity->position.y = entity->targetPos.y + (RSDK_screens->position.y << 16);
+    self->position.x = self->targetPos.x + (ScreenInfo->position.x << 16);
+    self->position.y = self->targetPos.y + (ScreenInfo->position.y << 16);
 
-    if (--entity->timer2 <= 0) {
-        entity->targetPos.x = player1->position.x;
-        entity->targetPos.y = player1->position.y;
-        RSDK.ATan2(entity->targetPos.x - entity->position.x, entity->targetPos.y - entity->position.y);
+    if (--self->timer2 <= 0) {
+        self->targetPos.x = player1->position.x;
+        self->targetPos.y = player1->position.y;
+        RSDK.ATan2(self->targetPos.x - self->position.x, self->targetPos.y - self->position.y);
 
-        entity->velocity.y = 0x88000;
-        if (entity->position.x < player1->position.x)
-            entity->velocity.x = 0x40000;
+        self->velocity.y = 0x88000;
+        if (self->position.x < player1->position.x)
+            self->velocity.x = 0x40000;
         else
-            entity->velocity.x = -0x40000;
-        entity->timer2 = 15;
-        entity->state  = MetalSonic_State_Unknown8;
+            self->velocity.x = -0x40000;
+        self->timer2 = 15;
+        self->state  = MetalSonic_State_Unknown8;
     }
 
     MetalSonic_HandleStageWrap();
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionTouch(player, entity, &MetalSonic->hitbox1)) {
-            Player_CheckHit(player, entity);
+        if (Player_CheckCollisionTouch(player, self, &MetalSonic->hitbox1)) {
+            Player_CheckHit(player, self);
         }
     }
 }
@@ -917,24 +917,24 @@ void MetalSonic_State_Unknown8(void)
     RSDK_THIS(MetalSonic);
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
 
-    entity->position.x += entity->velocity.x;
-    entity->position.y += entity->velocity.y;
-    entity->velocity.y -= 0x3800;
-    if (entity->position.y < player1->position.y && !entity->activeScreens && --entity->timer2 <= 0) {
-        entity->targetPos  = player1->position;
-        entity->velocity.x = 0;
-        entity->velocity.y = 0;
-        entity->timer      = 0;
-        entity->timer2     = 150;
-        RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 3, &entity->animator, true, 0);
-        entity->state = MetalSonic_State_Unknown2;
+    self->position.x += self->velocity.x;
+    self->position.y += self->velocity.y;
+    self->velocity.y -= 0x3800;
+    if (self->position.y < player1->position.y && !self->activeScreens && --self->timer2 <= 0) {
+        self->targetPos  = player1->position;
+        self->velocity.x = 0;
+        self->velocity.y = 0;
+        self->timer      = 0;
+        self->timer2     = 150;
+        RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 3, &self->animator, true, 0);
+        self->state = MetalSonic_State_Unknown2;
     }
 
     MetalSonic_HandleStageWrap();
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionTouch(player, entity, &MetalSonic->hitbox1)) {
-            Player_CheckHit(player, entity);
+        if (Player_CheckCollisionTouch(player, self, &MetalSonic->hitbox1)) {
+            Player_CheckHit(player, self);
         }
     }
 }
@@ -944,31 +944,31 @@ void MetalSonic_State_Unknown9(void)
     RSDK_THIS(MetalSonic);
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
 
-    entity->position.x = entity->targetPos.x + (RSDK_screens->position.x << 16);
-    entity->position.y = entity->targetPos.y + (RSDK_screens->position.y << 16);
+    self->position.x = self->targetPos.x + (ScreenInfo->position.x << 16);
+    self->position.y = self->targetPos.y + (ScreenInfo->position.y << 16);
 
-    int angle          = RSDK.ATan2(player1->position.x - entity->position.x, player1->position.y - entity->position.y);
-    entity->field_9C.x = (RSDK.Cos256(angle + 192) << 12) + entity->position.x;
-    entity->field_9C.y = (RSDK.Sin256(angle + 192) << 12) + entity->position.y;
-    entity->field_A4.x = (RSDK.Cos256(angle + 64) << 12) + entity->position.x;
-    entity->field_A4.y = (RSDK.Sin256(angle + 64) << 12) + entity->position.y;
-    entity->field_AC.x = (RSDK.Cos256(angle) << 15) + entity->position.x;
-    entity->field_AC.y = (RSDK.Sin256(angle) << 15) + entity->position.y;
-    if (--entity->timer2 <= 0) {
-        entity->field_9C.x = -1;
-        entity->targetPos  = player1->position;
-        entity->velocity.x = 0xC00 * RSDK.Cos256(angle);
-        entity->velocity.y = 0xC00 * RSDK.Sin256(angle);
+    int angle          = RSDK.ATan2(player1->position.x - self->position.x, player1->position.y - self->position.y);
+    self->field_9C.x = (RSDK.Cos256(angle + 192) << 12) + self->position.x;
+    self->field_9C.y = (RSDK.Sin256(angle + 192) << 12) + self->position.y;
+    self->field_A4.x = (RSDK.Cos256(angle + 64) << 12) + self->position.x;
+    self->field_A4.y = (RSDK.Sin256(angle + 64) << 12) + self->position.y;
+    self->field_AC.x = (RSDK.Cos256(angle) << 15) + self->position.x;
+    self->field_AC.y = (RSDK.Sin256(angle) << 15) + self->position.y;
+    if (--self->timer2 <= 0) {
+        self->field_9C.x = -1;
+        self->targetPos  = player1->position;
+        self->velocity.x = 0xC00 * RSDK.Cos256(angle);
+        self->velocity.y = 0xC00 * RSDK.Sin256(angle);
         RSDK.PlaySfx(MetalSonic->sfxMSFireball, false, 255);
-        entity->timer2 = 15;
-        entity->state  = MetalSonic_State_Unknown10;
+        self->timer2 = 15;
+        self->state  = MetalSonic_State_Unknown10;
     }
 
     MetalSonic_HandleStageWrap();
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionTouch(player, entity, &MetalSonic->hitbox1)) {
-            Player_CheckHit(player, entity);
+        if (Player_CheckCollisionTouch(player, self, &MetalSonic->hitbox1)) {
+            Player_CheckHit(player, self);
         }
     }
 }
@@ -978,38 +978,38 @@ void MetalSonic_State_Unknown10(void)
     RSDK_THIS(MetalSonic);
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
 
-    entity->position.x += entity->velocity.x;
-    entity->position.y += entity->velocity.y;
+    self->position.x += self->velocity.x;
+    self->position.y += self->velocity.y;
 
     bool32 flag = true;
-    if (entity->velocity.x <= 0) {
-        if (entity->velocity.x >= 0 || entity->position.x >= player1->position.x) {
+    if (self->velocity.x <= 0) {
+        if (self->velocity.x >= 0 || self->position.x >= player1->position.x) {
             flag = false;
         }
     }
-    else if (entity->position.x <= player1->position.x) {
-        if (entity->velocity.x >= 0 || entity->position.x >= player1->position.x) {
+    else if (self->position.x <= player1->position.x) {
+        if (self->velocity.x >= 0 || self->position.x >= player1->position.x) {
             flag = false;
         }
     }
 
     if (flag) {
-        if (!entity->activeScreens && --entity->timer2 <= 0) {
-            entity->targetPos  = player1->position;
-            entity->velocity.x = 0;
-            entity->velocity.y = 0;
-            entity->timer      = 0;
-            entity->timer2     = 150;
-            RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 3, &entity->animator, true, 0);
-            entity->state = MetalSonic_State_Unknown2;
+        if (!self->activeScreens && --self->timer2 <= 0) {
+            self->targetPos  = player1->position;
+            self->velocity.x = 0;
+            self->velocity.y = 0;
+            self->timer      = 0;
+            self->timer2     = 150;
+            RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 3, &self->animator, true, 0);
+            self->state = MetalSonic_State_Unknown2;
         }
     }
 
     MetalSonic_HandleStageWrap();
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionTouch(player, entity, &MetalSonic->hitbox1)) {
-            Player_CheckHit(player, entity);
+        if (Player_CheckCollisionTouch(player, self, &MetalSonic->hitbox1)) {
+            Player_CheckHit(player, self);
         }
     }
 }
@@ -1018,27 +1018,27 @@ void MetalSonic_State_EnterPanel(void)
 {
     RSDK_THIS(MetalSonic);
 
-    int velX = entity->velocity.x;
+    int velX = self->velocity.x;
     MetalSonic_HandleVelocity();
 
-    if (entity->velocity.x < 0x20000 && velX >= 0x20000) {
-        entity->direction = FLIP_X;
-        RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 4, &entity->animator, true, 0);
+    if (self->velocity.x < 0x20000 && velX >= 0x20000) {
+        self->direction = FLIP_X;
+        RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 4, &self->animator, true, 0);
     }
-    else if (entity->velocity.x > -0x20000 && velX <= -0x20000) {
-        entity->direction = FLIP_NONE;
-        RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 4, &entity->animator, true, 0);
+    else if (self->velocity.x > -0x20000 && velX <= -0x20000) {
+        self->direction = FLIP_NONE;
+        RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 4, &self->animator, true, 0);
     }
 
-    ++entity->timer;
-    entity->position.x += entity->velocity.x;
-    entity->position.y += entity->velocity.y;
-    int rx = entity->position.x - entity->targetPos.x;
-    int ry = entity->position.y - entity->targetPos.y;
-    if ((rx >> 16) * (rx >> 16) + (ry >> 16) * (ry >> 16) < 4096 && entity->timer > 96) {
-        entity->timer = 0;
-        RSDK.SetSpriteAnimation(0xFFFF, 0, &entity->animator2, false, 0);
-        entity->state = MetalSonic_State_StartPanelSeq;
+    ++self->timer;
+    self->position.x += self->velocity.x;
+    self->position.y += self->velocity.y;
+    int rx = self->position.x - self->targetPos.x;
+    int ry = self->position.y - self->targetPos.y;
+    if ((rx >> 16) * (rx >> 16) + (ry >> 16) * (ry >> 16) < 4096 && self->timer > 96) {
+        self->timer = 0;
+        RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator2, false, 0);
+        self->state = MetalSonic_State_StartPanelSeq;
     }
 }
 
@@ -1046,15 +1046,15 @@ void MetalSonic_State_StartPanelSeq(void)
 {
     RSDK_THIS(MetalSonic);
 
-    ++entity->timer;
-    entity->position.x += (entity->targetPos.x - entity->position.x) >> 4;
-    entity->position.y += (entity->targetPos.y - entity->position.y) >> 4;
-    if (entity->timer == 32)
-        RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 9, &entity->animator, true, 0);
-    if (entity->timer == 59)
+    ++self->timer;
+    self->position.x += (self->targetPos.x - self->position.x) >> 4;
+    self->position.y += (self->targetPos.y - self->position.y) >> 4;
+    if (self->timer == 32)
+        RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 9, &self->animator, true, 0);
+    if (self->timer == 59)
         RSDK.PlaySfx(MetalSonic->sfxSpecialRing, false, 255);
 
-    if (entity->timer == 64) {
+    if (self->timer == 64) {
         int id = 0;
 #if RETRO_USE_PLUS
         for (int i = 48; i < 82; i += 2) {
@@ -1085,12 +1085,12 @@ void MetalSonic_State_StartPanelSeq(void)
         }
 #endif
 
-        EntityMSPanel *panel = (EntityMSPanel *)entity->panel;
-        entity->position     = entity->targetPos;
-        entity->timer        = 16;
-        entity->timer2       = RETRO_USE_PLUS ? 240 : 180;
-        entity->health       = RETRO_USE_PLUS ? 6 : 4;
-        entity->state        = MetalSonic_State_ShowFactory;
+        EntityMSPanel *panel = (EntityMSPanel *)self->panel;
+        self->position     = self->targetPos;
+        self->timer        = 16;
+        self->timer2       = RETRO_USE_PLUS ? 240 : 180;
+        self->health       = RETRO_USE_PLUS ? 6 : 4;
+        self->state        = MetalSonic_State_ShowFactory;
         panel->state         = MSPanel_Unknown2;
     }
 }
@@ -1102,27 +1102,27 @@ void MetalSonic_HandlePanelAttack(void)
 #if RETRO_USE_PLUS
     if (!RSDK.GetEntityCount(MSBomb->objectID, true))
 #endif
-        --entity->timer2;
-    if (entity->timer2 == 60) {
+        --self->timer2;
+    if (self->timer2 == 60) {
         RSDK.PlaySfx(MetalSonic->sfxMSElecPulse, false, 255);
-        entity->field_94 = 60;
+        self->field_94 = 60;
 
 #if RETRO_USE_PLUS
-        EntityFXWaveRing *ring = CREATE_ENTITY(FXWaveRing, entity, entity->position.x, entity->position.y);
-        ring->field_78         = 24;
+        EntityFXWaveRing *ring = CREATE_ENTITY(FXWaveRing, self, self->position.x, self->position.y);
+        ring->radiusOffset     = 24;
         ring->timer            = 24;
         ring->r                = 0x00;
         ring->g                = 0x80;
         ring->b                = 0xF0;
-        ring->field_70         = 1;
+        ring->shrinkSpeed      = 1;
 #endif
     }
-    if (entity->timer2 <= 0) {
+    if (self->timer2 <= 0) {
         EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
 
-        entity->timer2   = 45 * entity->health + (RETRO_USE_PLUS ? 195 : 135);
-        int angle        = RSDK.ATan2(player1->position.x - entity->position.x, player1->position.y - entity->position.y);
-        EntityMSOrb *orb = CREATE_ENTITY(MSOrb, NULL, entity->position.x, entity->position.y);
+        self->timer2   = 45 * self->health + (RETRO_USE_PLUS ? 195 : 135);
+        int angle        = RSDK.ATan2(player1->position.x - self->position.x, player1->position.y - self->position.y);
+        EntityMSOrb *orb = CREATE_ENTITY(MSOrb, NULL, self->position.x, self->position.y);
         orb->velocity.x  = 0x280 * RSDK.Cos256(angle);
         orb->velocity.y  = 0x280 * RSDK.Sin256(angle);
         RSDK.PlaySfx(MetalSonic->sfxMSShoot, false, 255);
@@ -1133,17 +1133,17 @@ void MetalSonic_State_ShowFactory(void)
 {
     RSDK_THIS(MetalSonic);
 
-    ++entity->timer;
+    ++self->timer;
     MetalSonic_HandlePanelAttack();
-    if (entity->timer == 60) {
+    if (self->timer == 60) {
         foreach_active(MSFactory, factory)
         {
             factory->visible = true;
             factory->state   = MSFactory_Unknown3;
         }
 
-        entity->timer = 0;
-        entity->state = MetalSonic_State_Unknown13;
+        self->timer = 0;
+        self->state = MetalSonic_State_Unknown13;
     }
 }
 
@@ -1151,32 +1151,32 @@ void MetalSonic_State_Unknown13(void)
 {
     RSDK_THIS(MetalSonic);
 
-    ++entity->timer;
+    ++self->timer;
     MetalSonic_HandlePanelAttack();
 
 #if RETRO_USE_PLUS
-    if (!RSDK.GetEntityCount(SilverSonic->objectID, true) && !RSDK.GetEntityCount(MSBomb->objectID, true) && entity->timer > 60) {
+    if (!RSDK.GetEntityCount(SilverSonic->objectID, true) && !RSDK.GetEntityCount(MSBomb->objectID, true) && self->timer > 60) {
 #else
-    if (!RSDK.GetEntityCount(SilverSonic->objectID, true) && entity->timer > 60) {
+    if (!RSDK.GetEntityCount(SilverSonic->objectID, true) && self->timer > 60) {
 #endif
-        entity->timer = 0;
-        entity->state = MetalSonic_State_ShowFactory;
+        self->timer = 0;
+        self->state = MetalSonic_State_ShowFactory;
     }
 }
 
 void MetalSonic_State_PanelExplosion(void)
 {
     RSDK_THIS(MetalSonic);
-    EntityMSPanel *panel = (EntityMSPanel *)entity->panel;
+    EntityMSPanel *panel = (EntityMSPanel *)self->panel;
 
-    entity->position.y += 0x8000;
+    self->position.y += 0x8000;
     panel->position.y += 0x8000;
-    if (!entity->timer)
+    if (!self->timer)
         panel->state = MSPanel_Unknown3;
-    if (++entity->timer == 104) {
-        entity->timer = 0;
+    if (++self->timer == 104) {
+        self->timer = 0;
         panel->state  = MSPanel_Unknown4;
-        entity->state = MetalSonic_State_Unknown14;
+        self->state = MetalSonic_State_Unknown14;
     }
 }
 
@@ -1184,12 +1184,12 @@ void MetalSonic_State_Unknown14(void)
 {
     RSDK_THIS(MetalSonic);
 
-    if (++entity->timer == 60) {
-        entity->timer = 0;
-        RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 4, &entity->animator, false, 3);
-        entity->velocity.x = 0x18000;
-        entity->onGround   = false;
-        entity->state      = MetalSonic_State_Unknown15;
+    if (++self->timer == 60) {
+        self->timer = 0;
+        RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 4, &self->animator, false, 3);
+        self->velocity.x = 0x18000;
+        self->onGround   = false;
+        self->state      = MetalSonic_State_Unknown15;
     }
 }
 
@@ -1197,27 +1197,27 @@ void MetalSonic_State_Unknown15(void)
 {
     RSDK_THIS(MetalSonic);
 
-    entity->velocity.y += 0x2000;
-    entity->outerBox = RSDK.GetHitbox(&entity->animator, 0);
-    entity->innerBox = RSDK.GetHitbox(&entity->animator, 1);
-    RSDK.ProcessTileCollisions(entity, entity->outerBox, entity->innerBox);
+    self->velocity.y += 0x2000;
+    self->outerBox = RSDK.GetHitbox(&self->animator, 0);
+    self->innerBox = RSDK.GetHitbox(&self->animator, 1);
+    RSDK.ProcessTileCollisions(self, self->outerBox, self->innerBox);
 
-    if (entity->onGround) {
-        RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 2, &entity->animator, false, 0);
-        entity->direction = FLIP_NONE;
-        entity->groundVel = 0;
+    if (self->onGround) {
+        RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 2, &self->animator, false, 0);
+        self->direction = FLIP_NONE;
+        self->groundVel = 0;
     }
 
-    if (++entity->timer == 120) {
-        EntityFXFade *fxFade = CREATE_ENTITY(FXFade, intToVoid(0xF0F0F0), entity->position.x, entity->position.y);
+    if (++self->timer == 120) {
+        EntityFXFade *fxFade = CREATE_ENTITY(FXFade, intToVoid(0xF0F0F0), self->position.x, self->position.y);
         fxFade->speedIn      = 256;
         fxFade->wait         = 32;
         fxFade->speedOut     = 8;
-        EntityMSPanel *panel = (EntityMSPanel *)entity->panel;
+        EntityMSPanel *panel = (EntityMSPanel *)self->panel;
         panel->state         = StateMachine_None;
-        entity->timer        = 0;
-        entity->timer2       = 240;
-        entity->state        = MetalSonic_State_Unknown2;
+        self->timer        = 0;
+        self->timer2       = 240;
+        self->state        = MetalSonic_State_Unknown2;
         foreach_active(Player, player)
         {
             RSDK.PlaySfx(SpeedBooster->sfxID, false, 255);
@@ -1225,7 +1225,7 @@ void MetalSonic_State_Unknown15(void)
             player->groundVel   = 0xE0000;
             player->controlLock = 60;
             player->direction   = FLIP_NONE;
-            RSDK.SetSpriteAnimation(player->spriteIndex, ANI_RUN, &player->playerAnimator, false, 0);
+            RSDK.SetSpriteAnimation(player->aniFrames, ANI_RUN, &player->animator, false, 0);
             player->state = Player_State_Ground;
         }
 
@@ -1245,28 +1245,28 @@ void MetalSonic_State_WaitForRuby(void)
 {
     RSDK_THIS(MetalSonic);
 
-    int velX = entity->velocity.x;
+    int velX = self->velocity.x;
     MetalSonic_HandleVelocity();
 
-    if (entity->velocity.x < 0x20000 && velX >= 0x20000) {
-        entity->direction = FLIP_X;
-        RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 4, &entity->animator, true, 0);
+    if (self->velocity.x < 0x20000 && velX >= 0x20000) {
+        self->direction = FLIP_X;
+        RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 4, &self->animator, true, 0);
     }
-    else if (entity->velocity.x > -0x20000 && velX <= -0x20000) {
-        entity->direction = FLIP_NONE;
-        RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 4, &entity->animator, true, 0);
+    else if (self->velocity.x > -0x20000 && velX <= -0x20000) {
+        self->direction = FLIP_NONE;
+        RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 4, &self->animator, true, 0);
     }
 
-    ++entity->timer;
-    entity->position.x += entity->velocity.x;
-    entity->position.y += entity->velocity.y;
-    int rx = entity->position.x - entity->targetPos.x;
-    int ry = entity->position.y - entity->targetPos.y;
+    ++self->timer;
+    self->position.x += self->velocity.x;
+    self->position.y += self->velocity.y;
+    int rx = self->position.x - self->targetPos.x;
+    int ry = self->position.y - self->targetPos.y;
 
-    if ((rx >> 16) * (rx >> 16) + (ry >> 16) * (ry >> 16) < 4096 && entity->timer > 96) {
-        entity->timer     = 0;
-        entity->direction = FLIP_NONE;
-        entity->state     = MetalSonic_State_ObtainRuby;
+    if ((rx >> 16) * (rx >> 16) + (ry >> 16) * (ry >> 16) < 4096 && self->timer > 96) {
+        self->timer     = 0;
+        self->direction = FLIP_NONE;
+        self->state     = MetalSonic_State_ObtainRuby;
     }
 }
 
@@ -1274,20 +1274,20 @@ void MetalSonic_State_ObtainRuby(void)
 {
     RSDK_THIS(MetalSonic);
 
-    entity->targetPos.y += RSDK.Sin256(4 * Zone->timer) << 8;
+    self->targetPos.y += RSDK.Sin256(4 * Zone->timer) << 8;
 
-    entity->position.x += (entity->targetPos.x - entity->position.x) >> 4;
-    entity->position.y += (entity->targetPos.y - entity->position.y) >> 4;
+    self->position.x += (self->targetPos.x - self->position.x) >> 4;
+    self->position.y += (self->targetPos.y - self->position.y) >> 4;
 
     foreach_active(PhantomRuby, ruby)
     {
-        int rx = (entity->position.x - ruby->position.x) >> 16;
-        int ry = (entity->position.y - ruby->position.y) >> 16;
+        int rx = (self->position.x - ruby->position.x) >> 16;
+        int ry = (self->position.y - ruby->position.y) >> 16;
         if (rx * rx + ry * ry < 0x100) {
             ruby->startPos.x = ruby->position.x;
             ruby->startPos.y = ruby->position.y;
-            ruby->state      = PhantomRuby_Unknown5;
-            entity->state    = MetalSonic_State_Transform;
+            ruby->state      = PhantomRuby_State_Oscillate;
+            self->state    = MetalSonic_State_Transform;
             RSDK.PlaySfx(MetalSonic->sfxMSTransform, false, 255);
         }
     }
@@ -1297,42 +1297,42 @@ void MetalSonic_State_Transform(void)
 {
     RSDK_THIS(MetalSonic);
 
-    entity->position.y -= 0x2000;
+    self->position.y -= 0x2000;
     foreach_active(PhantomRuby, ruby) { ruby->startPos.y -= 0x2000; }
 
-    if (++entity->timer == 30) {
-        RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 0xFFFF, &entity->animator2, true, 0);
-        RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 7, &entity->animator, true, 0);
+    if (++self->timer == 30) {
+        RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 0xFFFF, &self->animator2, true, 0);
+        RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 7, &self->animator, true, 0);
     }
 
-    int timer = entity->timer >> 1;
+    int timer = self->timer >> 1;
     if (timer > 96)
         timer = 96;
 
-    if ((entity->timer & 0x1F) == 30) {
-        EntityFXWaveRing *ring = CREATE_ENTITY(FXWaveRing, entity, entity->position.x, entity->position.y);
-        ring->field_78         = timer;
+    if ((self->timer & 0x1F) == 30) {
+        EntityFXWaveRing *ring = CREATE_ENTITY(FXWaveRing, self, self->position.x, self->position.y);
+        ring->radiusOffset     = timer;
         ring->timer            = 24;
         ring->r                = 0x00;
         ring->g                = 0xF0;
         ring->b                = 0xF0;
-        ring->field_70         = 2;
+        ring->shrinkSpeed      = 2;
     }
 
-    if (timer >= 32 && (entity->timer & 0xF) == 14) {
-        EntityFXWaveRing *ring = CREATE_ENTITY(FXWaveRing, entity, entity->position.x, entity->position.y);
-        ring->field_78         = timer + 64;
+    if (timer >= 32 && (self->timer & 0xF) == 14) {
+        EntityFXWaveRing *ring = CREATE_ENTITY(FXWaveRing, self, self->position.x, self->position.y);
+        ring->radiusOffset     = timer + 64;
         ring->timer            = 24;
         ring->r                = 0xF0;
         ring->g                = 0xF0;
         ring->b                = 0x60;
-        ring->field_70         = 4;
+        ring->shrinkSpeed      = 4;
     }
 
-    if (entity->timer == 240) {
-        entity->timer        = 0;
-        entity->active       = ACTIVE_NEVER;
-        EntityFXFade *fxFade = CREATE_ENTITY(FXFade, intToVoid(0xF0F0F0), entity->position.x, entity->position.y);
+    if (self->timer == 240) {
+        self->timer        = 0;
+        self->active       = ACTIVE_NEVER;
+        EntityFXFade *fxFade = CREATE_ENTITY(FXFade, intToVoid(0xF0F0F0), self->position.x, self->position.y);
         fxFade->speedIn      = 256;
         fxFade->wait         = 32;
         fxFade->speedOut     = 8;
@@ -1344,17 +1344,17 @@ void MetalSonic_State_Defeated(void)
 {
     RSDK_THIS(MetalSonic);
 
-    entity->position.x += entity->velocity.x;
-    entity->position.y += entity->velocity.y;
-    entity->velocity.y += 0x3800;
-    entity->visible ^= true;
-    if (!RSDK.CheckOnScreen(entity, NULL)) {
+    self->position.x += self->velocity.x;
+    self->position.y += self->velocity.y;
+    self->velocity.y += 0x3800;
+    self->visible ^= true;
+    if (!RSDK.CheckOnScreen(self, NULL)) {
         Music_TransitionTrack(TRACK_STAGE, 0.0125);
-        EntityEggPrison *prison = CREATE_ENTITY(EggPrison, intToVoid(EGGPRISON_FLYING), (RSDK_screens->position.x + RSDK_screens->centerX) << 16,
-                                                (RSDK_screens->position.y - 48) << 16);
+        EntityEggPrison *prison = CREATE_ENTITY(EggPrison, intToVoid(EGGPRISON_FLYING), (ScreenInfo->position.x + ScreenInfo->centerX) << 16,
+                                                (ScreenInfo->position.y - 48) << 16);
         prison->velocity.x      = 0x10000;
         prison->active          = ACTIVE_NORMAL;
-        destroyEntity(entity);
+        destroyEntity(self);
     }
 }
 #else
@@ -1363,26 +1363,26 @@ void MetalSonic_State_Unknown16(void)
     RSDK_THIS(MetalSonic);
 
     MetalSonic_HandleVelocity();
-    entity->position.x += entity->velocity.x;
-    entity->position.y += entity->velocity.y;
+    self->position.x += self->velocity.x;
+    self->position.y += self->velocity.y;
     MetalSonic_HandleStageWrap();
-    entity->timer++;
+    self->timer++;
 
     EntityPlatform *wall = NULL;
-    switch (entity->timer) {
-        case 60: wall = RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot + 2, Platform); break;
-        case 90: wall = RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot + 3, Platform); break;
-        case 120: wall = RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot + 4, Platform); break;
-        case 150: wall = RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot + 5, Platform); break;
-        case 180: wall = RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot + 6, Platform); break;
-        case 210: wall = RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot + 7, Platform); break;
-        case 240: wall = RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot + 8, Platform); break;
-        case 270: wall = RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot + 9, Platform); break;
+    switch (self->timer) {
+        case 60: wall = RSDK_GET_ENTITY(SceneInfo->entitySlot + 2, Platform); break;
+        case 90: wall = RSDK_GET_ENTITY(SceneInfo->entitySlot + 3, Platform); break;
+        case 120: wall = RSDK_GET_ENTITY(SceneInfo->entitySlot + 4, Platform); break;
+        case 150: wall = RSDK_GET_ENTITY(SceneInfo->entitySlot + 5, Platform); break;
+        case 180: wall = RSDK_GET_ENTITY(SceneInfo->entitySlot + 6, Platform); break;
+        case 210: wall = RSDK_GET_ENTITY(SceneInfo->entitySlot + 7, Platform); break;
+        case 240: wall = RSDK_GET_ENTITY(SceneInfo->entitySlot + 8, Platform); break;
+        case 270: wall = RSDK_GET_ENTITY(SceneInfo->entitySlot + 9, Platform); break;
         case 300: {
-            EntityPlatform *startWall = RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot + 2, Platform);
-            entity->targetPos.x = startWall->position.x + 0x800000;
-            entity->targetPos.y = (Zone->screenBoundsB1[0] << 16) - 0x340000;
-            entity->state = MetalSonic_State_Unknown17;
+            EntityPlatform *startWall = RSDK_GET_ENTITY(SceneInfo->entitySlot + 2, Platform);
+            self->targetPos.x = startWall->position.x + 0x800000;
+            self->targetPos.y = (Zone->screenBoundsB1[0] << 16) - 0x340000;
+            self->state = MetalSonic_State_Unknown17;
             break;
         }
     }
@@ -1397,19 +1397,19 @@ void MetalSonic_State_Unknown17(void)
     RSDK_THIS(MetalSonic);
 
     MetalSonic_HandleVelocity();
-    entity->position.x += entity->velocity.x;
-    entity->position.y += entity->velocity.y;
+    self->position.x += self->velocity.x;
+    self->position.y += self->velocity.y;
     MetalSonic_HandleAnimDir();
 
-    int rx = entity->position.x - entity->targetPos.x;
-    int ry = entity->position.y - entity->targetPos.y;
+    int rx = self->position.x - self->targetPos.x;
+    int ry = self->position.y - self->targetPos.y;
     if ((rx >> 16) * (rx >> 16) + (ry >> 16) * (ry >> 16) < 0x1000) {
-        entity->timer2 = 0;
-        entity->position.x &= 0xFFFF0000;
-        entity->position.y &= 0xFFFF0000;
-        entity->targetPos.x &= 0xFFFF0000;
-        entity->targetPos.y &= 0xFFFF0000;
-        entity->state = MetalSonic_State_Unknown18;
+        self->timer2 = 0;
+        self->position.x &= 0xFFFF0000;
+        self->position.y &= 0xFFFF0000;
+        self->targetPos.x &= 0xFFFF0000;
+        self->targetPos.y &= 0xFFFF0000;
+        self->state = MetalSonic_State_Unknown18;
     }
     MetalSonic_HandleStageWrap();
 }
@@ -1417,53 +1417,53 @@ void MetalSonic_State_Unknown18(void)
 {
     RSDK_THIS(MetalSonic);
 
-    entity->velocity.x = (entity->targetPos.x - RSDK_sceneInfo->entity->position.x) >> 4;
-    entity->velocity.y = (entity->targetPos.y - RSDK_sceneInfo->entity->position.y) >> 4;
+    self->velocity.x = (self->targetPos.x - self->position.x) >> 4;
+    self->velocity.y = (self->targetPos.y - self->position.y) >> 4;
 
-    if (entity->position.x >= entity->targetPos.x)
-        entity->velocity.x -= 0x10000;
+    if (self->position.x >= self->targetPos.x)
+        self->velocity.x -= 0x10000;
     else
-        entity->velocity.x += 0x10000;
+        self->velocity.x += 0x10000;
 
-    if (entity->position.y >= entity->targetPos.y)
-        entity->velocity.y -= 0x10000;
+    if (self->position.y >= self->targetPos.y)
+        self->velocity.y -= 0x10000;
     else
-        entity->velocity.y += 0x10000;
+        self->velocity.y += 0x10000;
 
-    entity->position.x += entity->velocity.x;
-    entity->position.y += entity->velocity.y;
+    self->position.x += self->velocity.x;
+    self->position.y += self->velocity.y;
 
     uint8 flags = 0;
-    if (entity->velocity.x > 0) {
-        if (entity->position.x > entity->targetPos.x) {
+    if (self->velocity.x > 0) {
+        if (self->position.x > self->targetPos.x) {
             flags = 1;
-            entity->position.x = entity->targetPos.x;
+            self->position.x = self->targetPos.x;
         }
     }
-    else if (entity->position.x < entity->targetPos.x) {
+    else if (self->position.x < self->targetPos.x) {
         flags = 1;
-        entity->position.x = entity->targetPos.x;
+        self->position.x = self->targetPos.x;
     }
 
-    if (entity->velocity.y > 0) {
-        if (entity->position.y > entity->targetPos.y) {
+    if (self->velocity.y > 0) {
+        if (self->position.y > self->targetPos.y) {
             ++flags;
-            entity->position.y = entity->targetPos.y;
+            self->position.y = self->targetPos.y;
         }
     }
-    else if (entity->position.y < entity->targetPos.y) {
+    else if (self->position.y < self->targetPos.y) {
         ++flags;
-        entity->position.y = entity->targetPos.y;
+        self->position.y = self->targetPos.y;
     }
 
     MetalSonic_HandleAnimDir();
     if (flags == 2) {
-        entity->velocity.x = 0;
-        entity->velocity.y = 0;
-        RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 1, &entity->animator, false, 0);
-        RSDK.SetSpriteAnimation(0xFFFF, 0, &entity->animator2, false, 0);
-        entity->direction = 0;
-        entity->state = MetalSonic_State_Unknown19;
+        self->velocity.x = 0;
+        self->velocity.y = 0;
+        RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 1, &self->animator, false, 0);
+        RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator2, false, 0);
+        self->direction = 0;
+        self->state = MetalSonic_State_Unknown19;
     }
     MetalSonic_HandleStageWrap();
 }
@@ -1471,10 +1471,10 @@ void MetalSonic_State_Unknown19(void)
 {
     RSDK_THIS(MetalSonic);
 
-    if (entity->animator.frameID == entity->animator.frameCount - 1) {
-        entity->timer = 0;
-        RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 2, &entity->animator, false, 0);
-        entity->state = MetalSonic_State_Unknown20;
+    if (self->animator.frameID == self->animator.frameCount - 1) {
+        self->timer = 0;
+        RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 2, &self->animator, false, 0);
+        self->state = MetalSonic_State_Unknown20;
     }
     MetalSonic_HandleStageWrap();
 }
@@ -1482,11 +1482,11 @@ void MetalSonic_State_Unknown20(void)
 {
     RSDK_THIS(MetalSonic);
 
-    entity->timer++;
-    if (entity->timer == 60) {
-        entity->timer = 0;
-        RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 11, &entity->animator2, false, 0);
-        entity->state = MetalSonic_State_Unknown21;
+    self->timer++;
+    if (self->timer == 60) {
+        self->timer = 0;
+        RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 11, &self->animator2, false, 0);
+        self->state = MetalSonic_State_Unknown21;
 
         Vector2 size;
         RSDK.GetLayerSize(Zone->fgLow, &size, true);
@@ -1497,9 +1497,9 @@ void MetalSonic_State_Unknown21(void)
 {
     RSDK_THIS(MetalSonic);
 
-    entity->timer++;
-    if (entity->timer == 90) {
-        int slot = RSDK_sceneInfo->entitySlot;
+    self->timer++;
+    if (self->timer == 90) {
+        int slot = SceneInfo->entitySlot;
         RSDK_GET_ENTITY(slot + 2, Platform)->state = MetalSonic_StateWall_Move;
         RSDK_GET_ENTITY(slot + 3, Platform)->state = MetalSonic_StateWall_Move;
         RSDK_GET_ENTITY(slot + 4, Platform)->state = MetalSonic_StateWall_Move;
@@ -1508,16 +1508,16 @@ void MetalSonic_State_Unknown21(void)
         RSDK_GET_ENTITY(slot + 7, Platform)->state = MetalSonic_StateWall_Move;
         RSDK_GET_ENTITY(slot + 8, Platform)->state = MetalSonic_StateWall_Move;
         RSDK_GET_ENTITY(slot + 9, Platform)->state = MetalSonic_StateWall_Move;
-        entity->timer = 0;
-        RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 3, &entity->animator, false, 0);
-        entity->state = MetalSonic_State_Unknown22;
+        self->timer = 0;
+        RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 3, &self->animator, false, 0);
+        self->state = MetalSonic_State_Unknown22;
     }
     MetalSonic_HandleStageWrap();
 }
 void MetalSonic_State_Unknown22(void)
 {
     RSDK_THIS(MetalSonic);
-    EntityPlatform *wall = RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot + 2, Platform);
+    EntityPlatform *wall = RSDK_GET_ENTITY(SceneInfo->entitySlot + 2, Platform);
 
     if (wall->velocity.x >= 0x1C000) {
         Vector2 size;
@@ -1531,81 +1531,81 @@ void MetalSonic_State_Unknown22(void)
         }
 
         if (wall->velocity.x >= 0x54000) {
-            entity->health = 8;
-            entity->timer2 = 120;
-            entity->state = MetalSonic_State_Unknown23;
+            self->health = 8;
+            self->timer2 = 120;
+            self->state = MetalSonic_State_Unknown23;
         }
     }
 
-    entity->velocity.x = wall->velocity.x;
-    entity->position.x += entity->velocity.x;
-    entity->position.y += entity->velocity.y;
+    self->velocity.x = wall->velocity.x;
+    self->position.x += self->velocity.x;
+    self->position.y += self->velocity.y;
     MetalSonic_HandleStageWrap();
 }
 void MetalSonic_State_Unknown23(void)
 {
     RSDK_THIS(MetalSonic);
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
-    EntityPlatform *wall = RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot + 2, Platform);
+    EntityPlatform *wall = RSDK_GET_ENTITY(SceneInfo->entitySlot + 2, Platform);
 
-    if (player1->position.x <= entity->position.x) {
-        if (entity->velocity.x >= player1->velocity.x - 0x60000) {
-            entity->velocity.x -= 0xC00;
+    if (player1->position.x <= self->position.x) {
+        if (self->velocity.x >= player1->velocity.x - 0x60000) {
+            self->velocity.x -= 0xC00;
         }
         else
-            entity->velocity.x += 0xC00;
+            self->velocity.x += 0xC00;
     }
-    else if (entity->velocity.x < 0x60000)
-        entity->velocity.x += 0xC00;
+    else if (self->velocity.x < 0x60000)
+        self->velocity.x += 0xC00;
 
-    entity->position.x += entity->velocity.x;
-    entity->position.y += entity->velocity.y;
+    self->position.x += self->velocity.x;
+    self->position.y += self->velocity.y;
 
-    if (RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x140000, true))
-        entity->velocity.y = 0;
-    if (entity->direction == FLIP_X) {
-        entity->direction = FLIP_NONE;
-        RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 4, &entity->animator, true, 0);
+    if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x140000, true))
+        self->velocity.y = 0;
+    if (self->direction == FLIP_X) {
+        self->direction = FLIP_NONE;
+        RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 4, &self->animator, true, 0);
     }
     MetalSonic_HandleStageWrap();
 
-    if (entity->position.x < wall->position.x + 0x800000)
-        entity->position.x = wall->position.x + 0x800000;
+    if (self->position.x < wall->position.x + 0x800000)
+        self->position.x = wall->position.x + 0x800000;
 
-    if (--entity->timer2 <= 0 && !player1->blinkTimer) {
-        if (entity->velocity.x < 0x60000)
-            entity->velocity.x = 0x60000;
-        entity->timer2 = 120;
-        entity->attackType = RSDK.Rand(0, 6);
+    if (--self->timer2 <= 0 && !player1->blinkTimer) {
+        if (self->velocity.x < 0x60000)
+            self->velocity.x = 0x60000;
+        self->timer2 = 120;
+        self->attackType = RSDK.Rand(0, 6);
 
-        while ((1 << entity->attackType) & MetalSonic->field_C) {
-            entity->attackType = RSDK.Rand(0, 6);
+        while ((1 << self->attackType) & MetalSonic->field_C) {
+            self->attackType = RSDK.Rand(0, 6);
         }
-        MetalSonic->field_C |= 1 << entity->attackType;
+        MetalSonic->field_C |= 1 << self->attackType;
         if (MetalSonic->field_C == 0x3F)
             MetalSonic->field_C = 0;
 
-        entity->attackType >>= 1;
-        switch (entity->attackType) {
+        self->attackType >>= 1;
+        switch (self->attackType) {
             case 2:
-                entity->timer2 = 60;
-                entity->targetPos.x = (RSDK.Rand(-3, 7) << 14) + 0x78000;
-                entity->targetPos.y = -0x80000;
-                RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 8, &entity->animator, true, 0);
+                self->timer2 = 60;
+                self->targetPos.x = (RSDK.Rand(-3, 7) << 14) + 0x78000;
+                self->targetPos.y = -0x80000;
+                RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 8, &self->animator, true, 0);
                 RSDK.PlaySfx(MetalSonic->sfxMSBall, false, 0xFF);
-                entity->state = MetalSonic_State_Unknown24;
+                self->state = MetalSonic_State_Unknown24;
                 break;
             case 1:
-                RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 7, &entity->animator, true, 0);
+                RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 7, &self->animator, true, 0);
                 RSDK.PlaySfx(MetalSonic->sfxMSElecPulse, false, 0xFF);
-                entity->state = MetalSonic_State_Unknown27;
+                self->state = MetalSonic_State_Unknown27;
                 break;
             case 0:
                 RSDK.PlaySfx(MetalSonic->sfxMSFireball, false, 0xFF);
-                RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 6, &entity->animator, false, 0);
-                RSDK.SetSpriteAnimation(0xFFFF, 0, &entity->animator2, false, 0);
-                entity->timer2 = 60;
-                entity->state = MetalSonic_State_Unknown30;
+                RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 6, &self->animator, false, 0);
+                RSDK.SetSpriteAnimation(0xFFFF, 0, &self->animator2, false, 0);
+                self->timer2 = 60;
+                self->state = MetalSonic_State_Unknown30;
                 break;
         }
     }
@@ -1614,37 +1614,37 @@ void MetalSonic_State_Unknown23(void)
 void MetalSonic_State_Unknown27(void)
 {
     RSDK_THIS(MetalSonic);
-    EntityPlatform *wall = RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot + 2, Platform);
+    EntityPlatform *wall = RSDK_GET_ENTITY(SceneInfo->entitySlot + 2, Platform);
 
-    if (entity->velocity.x < 0xB0000)
-        entity->velocity.x += 0xC00;
+    if (self->velocity.x < 0xB0000)
+        self->velocity.x += 0xC00;
 
-    entity->position.x += entity->velocity.x;
-    entity->position.y += entity->velocity.y;
+    self->position.x += self->velocity.x;
+    self->position.y += self->velocity.y;
 
-    if (entity->position.y <= (RSDK_screens->centerY + RSDK_screens->position.y) << 16) {
-        if (entity->velocity.y < 0x10000)
-            entity->velocity.y += 0x1000;
+    if (self->position.y <= (ScreenInfo->centerY + ScreenInfo->position.y) << 16) {
+        if (self->velocity.y < 0x10000)
+            self->velocity.y += 0x1000;
     }
     else {
-        if (entity->velocity.y >= -0x10000)
-            entity->velocity.y -= 0x1000;
+        if (self->velocity.y >= -0x10000)
+            self->velocity.y -= 0x1000;
     }
 
     MetalSonic_HandleStageWrap();
 
-    if (entity->position.x < wall->position.x + 0x410000)
-        entity->position.x = wall->position.x + 0x410000;
+    if (self->position.x < wall->position.x + 0x410000)
+        self->position.x = wall->position.x + 0x410000;
 
-    if (entity->position.x > ((RSDK_screens->width + RSDK_screens->position.x) << 16) + 0x400000) {
-        entity->direction = FLIP_X;
-        entity->state = MetalSonic_State_Unknown28;
+    if (self->position.x > ((ScreenInfo->width + ScreenInfo->position.x) << 16) + 0x400000) {
+        self->direction = FLIP_X;
+        self->state = MetalSonic_State_Unknown28;
     }
 
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionTouch(player, entity, &MetalSonic->hitbox1)) {
-            Player_CheckHit(player, entity);
+        if (Player_CheckCollisionTouch(player, self, &MetalSonic->hitbox1)) {
+            Player_CheckHit(player, self);
         }
     }
 }
@@ -1652,37 +1652,37 @@ void MetalSonic_State_Unknown28(void)
 {
     RSDK_THIS(MetalSonic);
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
-    EntityPlatform *wall = RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot + 2, Platform);
+    EntityPlatform *wall = RSDK_GET_ENTITY(SceneInfo->entitySlot + 2, Platform);
 
-    entity->velocity.x = player1->velocity.x - 0x10000;
-    entity->position.x += entity->velocity.x;
-    entity->position.y += entity->velocity.y;
+    self->velocity.x = player1->velocity.x - 0x10000;
+    self->position.x += self->velocity.x;
+    self->position.y += self->velocity.y;
 
-    if (entity->position.y <= (RSDK_screens->centerY + RSDK_screens->position.y) << 16) {
-        if (entity->velocity.y < 0x10000)
-            entity->velocity.y += 0x1000;
+    if (self->position.y <= (ScreenInfo->centerY + ScreenInfo->position.y) << 16) {
+        if (self->velocity.y < 0x10000)
+            self->velocity.y += 0x1000;
     }
     else {
-        if (entity->velocity.y >= -0x10000)
-            entity->velocity.y -= 0x1000;
+        if (self->velocity.y >= -0x10000)
+            self->velocity.y -= 0x1000;
     }
 
     MetalSonic_HandleStageWrap();
 
-    if (entity->position.x < wall->position.x + 0x410000) {
-        entity->position.x = wall->position.x + 0x410000;
+    if (self->position.x < wall->position.x + 0x410000) {
+        self->position.x = wall->position.x + 0x410000;
     }
 
-    if (entity->position.x < ((RSDK_screens->position.x + RSDK_screens->width) << 16) - 0x180000) {
-        entity->timer2 = 120;
-        entity->position.x = ((RSDK_screens->position.x + RSDK_screens->width) << 16) - 0x180000;
-        entity->state = MetalSonic_State_Unknown29;
+    if (self->position.x < ((ScreenInfo->position.x + ScreenInfo->width) << 16) - 0x180000) {
+        self->timer2 = 120;
+        self->position.x = ((ScreenInfo->position.x + ScreenInfo->width) << 16) - 0x180000;
+        self->state = MetalSonic_State_Unknown29;
     }
 
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionTouch(player, entity, &MetalSonic->hitbox1)) {
-            Player_CheckHit(player, entity);
+        if (Player_CheckCollisionTouch(player, self, &MetalSonic->hitbox1)) {
+            Player_CheckHit(player, self);
         }
     }
 }
@@ -1690,37 +1690,37 @@ void MetalSonic_State_Unknown29(void)
 {
     RSDK_THIS(MetalSonic);
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
-    EntityPlatform *wall = RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot + 2, Platform);
+    EntityPlatform *wall = RSDK_GET_ENTITY(SceneInfo->entitySlot + 2, Platform);
 
-    entity->velocity.x = player1->velocity.x;
-    entity->position.x = ((RSDK_screens->position.x + RSDK_screens->width) << 16) - 0x180000;
-    entity->position.y += entity->velocity.y;
+    self->velocity.x = player1->velocity.x;
+    self->position.x = ((ScreenInfo->position.x + ScreenInfo->width) << 16) - 0x180000;
+    self->position.y += self->velocity.y;
 
-    if (entity->position.y <= (RSDK_screens->centerY + RSDK_screens->position.y) << 16) {
-        if (entity->velocity.y < 0x10000)
-            entity->velocity.y += 0x1000;
+    if (self->position.y <= (ScreenInfo->centerY + ScreenInfo->position.y) << 16) {
+        if (self->velocity.y < 0x10000)
+            self->velocity.y += 0x1000;
     }
     else {
-        if (entity->velocity.y >= -0x10000)
-            entity->velocity.y -= 0x1000;
+        if (self->velocity.y >= -0x10000)
+            self->velocity.y -= 0x1000;
     }
 
     MetalSonic_HandleStageWrap();
 
-    if (entity->position.x < wall->position.x + 0x410000)
-        entity->position.x = wall->position.x + 0x410000;
+    if (self->position.x < wall->position.x + 0x410000)
+        self->position.x = wall->position.x + 0x410000;
 
-    switch (--entity->timer2) {
+    switch (--self->timer2) {
         case 0:
-            entity->timer2 = 120;
-            entity->velocity.y = 0x10000;
-            RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 3, &entity->animator, false, 0);
-            entity->state = MetalSonic_State_Unknown26;
+            self->timer2 = 120;
+            self->velocity.y = 0x10000;
+            RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 3, &self->animator, false, 0);
+            self->state = MetalSonic_State_Unknown26;
             break;
         case 30:
         case 60:
         case 90: {
-            EntityMSOrb *orb = CREATE_ENTITY(MSOrb, NULL, entity->position.x, entity->position.y);
+            EntityMSOrb *orb = CREATE_ENTITY(MSOrb, NULL, self->position.x, self->position.y);
             orb->velocity.x = player1->velocity.x - 0x40000;
             orb->velocity.y = (RSDK.Rand(-1, 2) + 2) << 16;
             RSDK.PlaySfx(MetalSonic->sfxMSShoot, false, 0xFF);
@@ -1731,78 +1731,78 @@ void MetalSonic_State_Unknown29(void)
 
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionTouch(player, entity, &MetalSonic->hitbox1)) {
-            Player_CheckHit(player, entity);
+        if (Player_CheckCollisionTouch(player, self, &MetalSonic->hitbox1)) {
+            Player_CheckHit(player, self);
         }
     }
 }
 void MetalSonic_State_Unknown24(void)
 {
     RSDK_THIS(MetalSonic);
-    int angle = RSDK.ATan2(entity->targetPos.x, entity->targetPos.y);
-    EntityPlatform *wall = RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot + 2, Platform);
+    int angle = RSDK.ATan2(self->targetPos.x, self->targetPos.y);
+    EntityPlatform *wall = RSDK_GET_ENTITY(SceneInfo->entitySlot + 2, Platform);
 
-    entity->field_9C.x = entity->position.x + (RSDK.Cos256(angle + 192) << 12);
-    entity->field_9C.y = entity->position.y + (RSDK.Sin256(angle - 64) << 12);
+    self->field_9C.x = self->position.x + (RSDK.Cos256(angle + 192) << 12);
+    self->field_9C.y = self->position.y + (RSDK.Sin256(angle - 64) << 12);
 
-    entity->field_A4.x = entity->position.x + (RSDK.Cos256(angle + 64) << 12);
-    entity->field_A4.y = entity->position.y + (RSDK.Sin256(angle + 64) << 12);
+    self->field_A4.x = self->position.x + (RSDK.Cos256(angle + 64) << 12);
+    self->field_A4.y = self->position.y + (RSDK.Sin256(angle + 64) << 12);
 
-    entity->field_AC.x = entity->position.x + (RSDK.Cos256(angle) << 14);
-    entity->field_AC.y = entity->position.y + (RSDK.Sin256(angle) << 14);
+    self->field_AC.x = self->position.x + (RSDK.Cos256(angle) << 14);
+    self->field_AC.y = self->position.y + (RSDK.Sin256(angle) << 14);
 
-    entity->position.x += entity->velocity.x;
-    entity->position.y += entity->velocity.y;
+    self->position.x += self->velocity.x;
+    self->position.y += self->velocity.y;
     MetalSonic_HandleStageWrap();
 
-    if (entity->position.x < wall->position.x + 0x410000)
-        entity->position.x = wall->position.x + 0x410000;
+    if (self->position.x < wall->position.x + 0x410000)
+        self->position.x = wall->position.x + 0x410000;
 
-    entity->timer2--;
-    if (entity->timer2 <= 0) {
-        entity->field_9C.x = -1;
-        entity->timer2 = 8;
-        entity->velocity = entity->targetPos;
-        RSDK.PlaySfx(Player->sfx_PeelRelease, false, 0xFF);
-        entity->state = MetalSonic_State_Unknown25;
+    self->timer2--;
+    if (self->timer2 <= 0) {
+        self->field_9C.x = -1;
+        self->timer2 = 8;
+        self->velocity = self->targetPos;
+        RSDK.PlaySfx(Player->sfxPeelRelease, false, 0xFF);
+        self->state = MetalSonic_State_Unknown25;
     }
 
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionTouch(player, entity, &MetalSonic->hitbox1)) {
-            Player_CheckHit(player, entity);
+        if (Player_CheckCollisionTouch(player, self, &MetalSonic->hitbox1)) {
+            Player_CheckHit(player, self);
         }
     }
 }
 void MetalSonic_State_Unknown25(void)
 {
     RSDK_THIS(MetalSonic);
-    EntityPlatform *wall = RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot + 2, Platform);
+    EntityPlatform *wall = RSDK_GET_ENTITY(SceneInfo->entitySlot + 2, Platform);
 
-    entity->position.x += entity->velocity.x;
-    entity->position.y += entity->velocity.y;
-    entity->velocity.y += 0x3800;
+    self->position.x += self->velocity.x;
+    self->position.y += self->velocity.y;
+    self->velocity.y += 0x3800;
 
-    if (entity->position.y >= 0x1F00000) {
-        if (entity->position.x > ((RSDK_screens->width + RSDK_screens->position.x) << 16) + 0x400000 || !--entity->timer2) {
-            entity->timer2 = 120;
-            RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 3, &entity->animator, false, 2);
-            entity->state = MetalSonic_State_Unknown26;
+    if (self->position.y >= 0x1F00000) {
+        if (self->position.x > ((ScreenInfo->width + ScreenInfo->position.x) << 16) + 0x400000 || !--self->timer2) {
+            self->timer2 = 120;
+            RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 3, &self->animator, false, 2);
+            self->state = MetalSonic_State_Unknown26;
         }
         else {
-            entity->velocity.y = -0x80000;
+            self->velocity.y = -0x80000;
             RSDK.PlaySfx(MetalSonic->sfxRockemSockem, false, 0xFF);
         }
     }
     MetalSonic_HandleStageWrap();
 
-    if (entity->position.x < wall->position.x + 0x410000)
-        entity->position.x = wall->position.x + 0x410000;
+    if (self->position.x < wall->position.x + 0x410000)
+        self->position.x = wall->position.x + 0x410000;
 
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionTouch(player, entity, &MetalSonic->hitbox1)) {
-            Player_CheckHit(player, entity);
+        if (Player_CheckCollisionTouch(player, self, &MetalSonic->hitbox1)) {
+            Player_CheckHit(player, self);
         }
     }
 }
@@ -1810,31 +1810,31 @@ void MetalSonic_State_Unknown30(void)
 {
     RSDK_THIS(MetalSonic);
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
-    EntityPlatform *wall = RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot + 2, Platform);
+    EntityPlatform *wall = RSDK_GET_ENTITY(SceneInfo->entitySlot + 2, Platform);
 
-    if (entity->velocity.x < 0xD0000)
-        entity->velocity.x += 0x1000;
+    if (self->velocity.x < 0xD0000)
+        self->velocity.x += 0x1000;
 
-    entity->position.x += entity->velocity.x;
-    entity->position.y += entity->velocity.y;
+    self->position.x += self->velocity.x;
+    self->position.y += self->velocity.y;
     MetalSonic_HandleStageWrap();
 
-    if (entity->position.x < wall->position.x + 0x410000)
-        entity->position.x = wall->position.x + 0x410000;
+    if (self->position.x < wall->position.x + 0x410000)
+        self->position.x = wall->position.x + 0x410000;
 
-    if (entity->timer2) {
-        entity->timer2--;
+    if (self->timer2) {
+        self->timer2--;
     }
-    else if (entity->position.x > player1->position.x + 0x400000) {
-        entity->timer2 = 120;
-        RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 5, &entity->animator, false, 2);
-        entity->state = MetalSonic_State_Unknown26;
+    else if (self->position.x > player1->position.x + 0x400000) {
+        self->timer2 = 120;
+        RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 5, &self->animator, false, 2);
+        self->state = MetalSonic_State_Unknown26;
     }
 
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionTouch(player, entity, &MetalSonic->hitbox1)) {
-            Player_CheckHit(player, entity);
+        if (Player_CheckCollisionTouch(player, self, &MetalSonic->hitbox1)) {
+            Player_CheckHit(player, self);
         }
     }
 }
@@ -1843,51 +1843,51 @@ void MetalSonic_State_Unknown26(void)
     RSDK_THIS(MetalSonic);
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
 
-    if (entity->velocity.x > 0x20000)
-        entity->velocity.x -= 0x1800;
+    if (self->velocity.x > 0x20000)
+        self->velocity.x -= 0x1800;
 
-    entity->position.x += entity->velocity.x;
-    entity->position.y += entity->velocity.y;
+    self->position.x += self->velocity.x;
+    self->position.y += self->velocity.y;
 
-    if (entity->position.y >= 0x1EC0000) {
-        entity->position.y = 0x1EC0000;
-        entity->velocity.y = 0;
+    if (self->position.y >= 0x1EC0000) {
+        self->position.y = 0x1EC0000;
+        self->velocity.y = 0;
     }
-    if (entity->position.x < player1->position.x && entity->direction == FLIP_X) {
-        entity->direction = FLIP_NONE;
-        RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 4, &entity->animator, true, 0);
+    if (self->position.x < player1->position.x && self->direction == FLIP_X) {
+        self->direction = FLIP_NONE;
+        RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 4, &self->animator, true, 0);
     }
     MetalSonic_HandleStageWrap();
 
-    EntityPlatform *wall = RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot + 2, Platform);
-    if (entity->position.x < wall->position.x + 0x900000) {
-        entity->position.x = wall->position.x + 0x900000;
-        entity->timer2 = 120;
-        RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 11, &entity->animator2, false, 0);
-        RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 3, &entity->animator, false, 0);
-        entity->state = MetalSonic_State_Unknown23;
+    EntityPlatform *wall = RSDK_GET_ENTITY(SceneInfo->entitySlot + 2, Platform);
+    if (self->position.x < wall->position.x + 0x900000) {
+        self->position.x = wall->position.x + 0x900000;
+        self->timer2 = 120;
+        RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 11, &self->animator2, false, 0);
+        RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 3, &self->animator, false, 0);
+        self->state = MetalSonic_State_Unknown23;
     }
     MetalSonic_CheckPlayerCollisions();
 }
 void MetalSonic_State_Explode(void)
 {
     RSDK_THIS(MetalSonic);
-    EntityPlatform *wall1 = RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot + 2, Platform);
+    EntityPlatform *wall1 = RSDK_GET_ENTITY(SceneInfo->entitySlot + 2, Platform);
 
-    entity->position.x += entity->velocity.x;
-    entity->position.y += entity->velocity.y;
-    entity->velocity.x -= 0x1000;
-    entity->rotation += 6;
+    self->position.x += self->velocity.x;
+    self->position.y += self->velocity.y;
+    self->velocity.x -= 0x1000;
+    self->rotation += 6;
     MetalSonic_Explode();
     MetalSonic_HandleStageWrap();
 
-    if (entity->position.x < wall1->position.x + 0x20000) {
+    if (self->position.x < wall1->position.x + 0x20000) {
         RSDK.PlaySfx(MetalSonic->sfxExplosion3, false, 0xFF);
 
         for (int i = 2; i < 10; ++i) {
-            EntityPlatform *wall = RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot + i, Platform);
+            EntityPlatform *wall = RSDK_GET_ENTITY(SceneInfo->entitySlot + i, Platform);
             EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, wall->position.x, wall->position.y);
-            RSDK.SetSpriteAnimation(Platform->spriteIndex, 0, &debris->animator, true, 1);
+            RSDK.SetSpriteAnimation(Platform->aniFrames, 0, &debris->animator, true, 1);
             debris->velocity.x = RSDK.Rand(6, 11) << 16;
             debris->velocity.y = RSDK.Rand(-0x20000, -0x10000);
             debris->gravity = 0x4800;
@@ -1898,27 +1898,27 @@ void MetalSonic_State_Explode(void)
         }
 
         Zone->autoScrollSpeed = 0;
-        entity->velocity.x = 0x50000;
-        entity->velocity.y = -0x30000;
-        entity->rotation = 0;
-        entity->drawFX &= ~FX_ROTATE;
-        entity->state = MetalSonic_State_Defeated;
+        self->velocity.x = 0x50000;
+        self->velocity.y = -0x30000;
+        self->rotation = 0;
+        self->drawFX &= ~FX_ROTATE;
+        self->state = MetalSonic_State_Defeated;
     }
 }
 void MetalSonic_State_Defeated(void)
 {
     RSDK_THIS(MetalSonic);
 
-    entity->position.x += entity->velocity.x;
-    entity->position.y += entity->velocity.y;
-    entity->velocity.y += 0x3800;
-    entity->visible ^= true;
+    self->position.x += self->velocity.x;
+    self->position.y += self->velocity.y;
+    self->velocity.y += 0x3800;
+    self->visible ^= true;
     MetalSonic_HandleStageWrap();
 
-    if (!RSDK.CheckOnScreen(entity, &entity->updateRange)) {
-        entity->visible = true;
-        entity->timer = 90;
-        entity->state = MetalSonic_State_Finish;
+    if (!RSDK.CheckOnScreen(self, &self->updateRange)) {
+        self->visible = true;
+        self->timer = 90;
+        self->state = MetalSonic_State_Finish;
     }
 }
 void MetalSonic_State_Finish(void)
@@ -1926,19 +1926,19 @@ void MetalSonic_State_Finish(void)
     RSDK_THIS(MetalSonic);
     MetalSonic_HandleStageWrap();
 
-    if (!--entity->timer) {
+    if (!--self->timer) {
         Music_TransitionTrack(TRACK_STAGE, 0.0125);
 
-        Zone->screenBoundsL1[0] = RSDK_screens->position.x;
-        Zone->screenBoundsR1[0] = RSDK_screens->width + RSDK_screens->position.x;
-        Zone->screenBoundsR2[0] = (RSDK_screens->width + RSDK_screens->position.x) << 16;
-        Zone->screenBoundsL2[0] = RSDK_screens->position.x << 16;
+        Zone->screenBoundsL1[0] = ScreenInfo->position.x;
+        Zone->screenBoundsR1[0] = ScreenInfo->width + ScreenInfo->position.x;
+        Zone->screenBoundsR2[0] = (ScreenInfo->width + ScreenInfo->position.x) << 16;
+        Zone->screenBoundsL2[0] = ScreenInfo->position.x << 16;
 
-        EntityEggPrison *prison = CREATE_ENTITY(EggPrison, intToVoid(EGGPRISON_FLYING), (RSDK_screens->position.x + RSDK_screens->centerX) << 16,
-                                                (RSDK_screens->position.y - 48) << 16);
+        EntityEggPrison *prison = CREATE_ENTITY(EggPrison, intToVoid(EGGPRISON_FLYING), (ScreenInfo->position.x + ScreenInfo->centerX) << 16,
+                                                (ScreenInfo->position.y - 48) << 16);
         prison->velocity.x = 0x10000;
         prison->active = ACTIVE_NORMAL;
-        entity->state = MetalSonic_State_None;
+        self->state = MetalSonic_State_None;
     }
 }
 void MetalSonic_State_None(void) {}
@@ -1947,16 +1947,16 @@ void MetalSonic_StateWall_Fall(void)
 {
     RSDK_THIS(Platform);
 
-    entity->drawPos.y += entity->velocity.y;
-    entity->centerPos.y = entity->drawPos.y;
-    entity->position.y = entity->drawPos.y;
-    entity->velocity.y += 0x3800;
+    self->drawPos.y += self->velocity.y;
+    self->centerPos.y = self->drawPos.y;
+    self->position.y = self->drawPos.y;
+    self->velocity.y += 0x3800;
 
-    if (RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_FLOOR, 0, 0, (entity->speed << 21) + 0x100000, true)) {
-        entity->velocity.y = 0;
-        entity->drawPos.y = entity->position.y;
-        entity->centerPos.y = entity->position.y;
-        entity->state = Platform_State_Normal;
+    if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, (self->speed << 21) + 0x100000, true)) {
+        self->velocity.y = 0;
+        self->drawPos.y = self->position.y;
+        self->centerPos.y = self->position.y;
+        self->state = Platform_State_Fixed;
         Camera_ShakeScreen(0, 0, 4);
         RSDK.PlaySfx(MetalSonic->sfxHit, false, 0xFF);
     }
@@ -1974,45 +1974,45 @@ void MetalSonic_StateWall_Move(void)
     }
 
     if (flag || player1->blinkTimer) {
-        entity->type = 120;
-        entity->type--;
-        if (entity->velocity.x > 0x40000)
-            entity->velocity.x -= 0x1000;
+        self->type = 120;
+        self->type--;
+        if (self->velocity.x > 0x40000)
+            self->velocity.x -= 0x1000;
     }
     else {
-        if (entity->type <= 0) {
-            if (entity->velocity.x < 0x54000) {
-                entity->velocity.x += 0x400;
+        if (self->type <= 0) {
+            if (self->velocity.x < 0x54000) {
+                self->velocity.x += 0x400;
             }
             else {
-                entity->type--;
-                if (entity->velocity.x > 0x40000)
-                    entity->velocity.x -= 0x1000;
+                self->type--;
+                if (self->velocity.x > 0x40000)
+                    self->velocity.x -= 0x1000;
             }
         }
         else {
-            entity->type--;
-            if (entity->velocity.x > 0x40000)
-                entity->velocity.x -= 0x1000;
+            self->type--;
+            if (self->velocity.x > 0x40000)
+                self->velocity.x -= 0x1000;
         }
     }
 
-    Zone->autoScrollSpeed = entity->velocity.x;
-    entity->drawPos.x += entity->velocity.x;
-    entity->centerPos.x = entity->drawPos.x;
-    entity->position.x = entity->drawPos.x;
+    Zone->autoScrollSpeed = self->velocity.x;
+    self->drawPos.x += self->velocity.x;
+    self->centerPos.x = self->drawPos.x;
+    self->position.x = self->drawPos.x;
 
     int x = player1->position.x - 0x2000000;
-    if (x < entity->position.x - 0x2000000 || x > entity->position.x) {
-        entity->drawPos.x = x;
-        entity->centerPos.x = x;
-        entity->position.x = x;
+    if (x < self->position.x - 0x2000000 || x > self->position.x) {
+        self->drawPos.x = x;
+        self->centerPos.x = x;
+        self->position.x = x;
     }
-    if (entity->speed == 1) {
-        EntityPlatform *belowPlat = RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot - 1, Platform);
-        belowPlat->drawPos.x = entity->position.x;
-        belowPlat->centerPos.x = entity->position.x;
-        belowPlat->position.x = entity->position.x;
+    if (self->speed == 1) {
+        EntityPlatform *belowPlat = RSDK_GET_ENTITY(SceneInfo->entitySlot - 1, Platform);
+        belowPlat->drawPos.x = self->position.x;
+        belowPlat->centerPos.x = self->position.x;
+        belowPlat->position.x = self->position.x;
     }
 }
 #endif
@@ -2023,23 +2023,23 @@ void MetalSonic_EditorDraw(void)
     RSDK_THIS(MetalSonic);
     Vector2 drawPos;
 
-    entity->drawFX         = FX_FLIP | FX_ROTATE;
-    entity->updateRange.x  = 0x800000;
-    entity->updateRange.y  = 0x800000;
-    entity->tileCollisions = true;
-    RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 0, &entity->animator, false, 0);
+    self->drawFX         = FX_FLIP | FX_ROTATE;
+    self->updateRange.x  = 0x800000;
+    self->updateRange.y  = 0x800000;
+    self->tileCollisions = true;
+    RSDK.SetSpriteAnimation(MetalSonic->aniFrames, 0, &self->animator, false, 0);
 
-    drawPos.x = entity->position.x;
-    drawPos.y = entity->position.y;
-    if (entity->position.x < 0x8000000)
+    drawPos.x = self->position.x;
+    drawPos.y = self->position.y;
+    if (self->position.x < 0x8000000)
         drawPos.x += 0xE000000;
     else
         drawPos.x -= 0xE000000;
 
-    RSDK.DrawSprite(&entity->animator2, &drawPos, false);
-    RSDK.DrawSprite(&entity->animator, &drawPos, false);
-    RSDK.DrawSprite(&entity->animator2, NULL, false);
-    RSDK.DrawSprite(&entity->animator, NULL, false);
+    RSDK.DrawSprite(&self->animator2, &drawPos, false);
+    RSDK.DrawSprite(&self->animator, &drawPos, false);
+    RSDK.DrawSprite(&self->animator2, NULL, false);
+    RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
 void MetalSonic_EditorLoad(void) { MetalSonic->aniFrames = RSDK.LoadSpriteAnimation("SSZ2/MetalSonic.bin", SCOPE_STAGE); }

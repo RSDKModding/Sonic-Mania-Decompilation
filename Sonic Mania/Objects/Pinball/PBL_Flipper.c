@@ -7,39 +7,39 @@ void PBL_Flipper_Update(void)
 {
     RSDK_THIS(PBL_Flipper);
 
-    if (entity->direction) {
-        entity->buttonPress =
-            RSDK_triggerL[1].key1.press || RSDK_controller[1].keyA.press || RSDK_controller[1].keyC.press || RSDK_controller[1].keyX.press;
-        entity->buttonDown =
-            RSDK_triggerL[1].key1.down || RSDK_controller[1].keyA.down || RSDK_controller[1].keyC.down || RSDK_controller[1].keyX.down;
+    if (self->direction) {
+        self->buttonPress =
+            TriggerInfoL[1].key1.press || ControllerInfo[1].keyA.press || ControllerInfo[1].keyC.press || ControllerInfo[1].keyX.press;
+        self->buttonDown =
+            TriggerInfoL[1].key1.down || ControllerInfo[1].keyA.down || ControllerInfo[1].keyC.down || ControllerInfo[1].keyX.down;
     }
     else {
-        entity->buttonPress =
-            RSDK_triggerR[1].key1.press || RSDK_controller[1].keyA.press || RSDK_controller[1].keyB.press || RSDK_controller[1].keyC.press;
-        entity->buttonDown =
-            RSDK_triggerR[1].key1.down || RSDK_controller[1].keyA.down || RSDK_controller[1].keyB.down || RSDK_controller[1].keyC.down;
+        self->buttonPress =
+            TriggerInfoR[1].key1.press || ControllerInfo[1].keyA.press || ControllerInfo[1].keyB.press || ControllerInfo[1].keyC.press;
+        self->buttonDown =
+            TriggerInfoR[1].key1.down || ControllerInfo[1].keyA.down || ControllerInfo[1].keyB.down || ControllerInfo[1].keyC.down;
     }
 
-    StateMachine_Run(entity->state);
+    StateMachine_Run(self->state);
 
-    if (entity->retractable) {
+    if (self->retractable) {
         foreach_active(PBL_Player, player)
         {
-            if (player->position.y >= entity->position.y - 0x100000 || entity->minCraneID > PBL_Setup->sectorID) {
-                if (player->position.y > entity->position.y + 0x100000)
-                    entity->field_170 = false;
+            if (player->position.y >= self->position.y - 0x100000 || self->minCraneID > PBL_Setup->sectorID) {
+                if (player->position.y > self->position.y + 0x100000)
+                    self->field_170 = false;
             }
             else {
-                entity->field_170 = true;
+                self->field_170 = true;
             }
         }
 
-        if (entity->field_170) {
-            if (entity->scale.y < 0x100)
-                entity->scale.y += 0x10;
+        if (self->field_170) {
+            if (self->scale.y < 0x100)
+                self->scale.y += 0x10;
         }
-        else if (entity->scale.y > 0) {
-            entity->scale.y -= 0x10;
+        else if (self->scale.y > 0) {
+            self->scale.y -= 0x10;
         }
     }
 }
@@ -47,17 +47,17 @@ void PBL_Flipper_Update(void)
 void PBL_Flipper_LateUpdate(void)
 {
     RSDK_THIS(PBL_Flipper);
-    int32 z       = entity->position.y;
-    int32 y       = entity->height;
-    int32 x       = entity->position.x;
+    int32 z       = self->position.y;
+    int32 y       = self->height;
+    int32 x       = self->position.x;
     Matrix *mat = &PBL_Camera->matrix1;
 
-    entity->depth3D = mat->values[2][1] * (y >> 16) + mat->values[2][2] * (z >> 16) + mat->values[2][0] * (x >> 16) + mat->values[2][3];
-    if (entity->depth3D >= 0x4000) {
+    self->depth3D = mat->values[2][1] * (y >> 16) + mat->values[2][2] * (z >> 16) + mat->values[2][0] * (x >> 16) + mat->values[2][3];
+    if (self->depth3D >= 0x4000) {
         int32 depth       = ((mat->values[0][3] << 8) + ((mat->values[0][2] * (z >> 8)) & 0xFFFFFF00) + ((mat->values[0][0] * (x >> 8)) & 0xFFFFFF00)
-                     + ((mat->values[0][1] * (entity->height >> 8)) & 0xFFFFFF00));
-        depth /= entity->depth3D;
-        entity->visible = abs(depth) < 256;
+                     + ((mat->values[0][1] * (self->height >> 8)) & 0xFFFFFF00));
+        depth /= self->depth3D;
+        self->visible = abs(depth) < 256;
     }
 }
 
@@ -66,18 +66,18 @@ void PBL_Flipper_StaticUpdate(void) {}
 void PBL_Flipper_Draw(void)
 {
     RSDK_THIS(PBL_Flipper);
-    if (entity->depth3D >= 0x4000 && entity->minCraneID <= PBL_Setup->sectorID) {
+    if (self->depth3D >= 0x4000 && self->minCraneID <= PBL_Setup->sectorID) {
         RSDK.Prepare3DScene(PBL_Flipper->sceneIndex);
-        RSDK.MatrixScaleXYZ(&entity->matrix1, entity->scale.x, entity->scale.y, 0x100);
-        RSDK.MatrixTranslateXYZ(&entity->matrix1, entity->position.x, entity->height, entity->position.y, false);
-        RSDK.MatrixRotateY(&entity->matrix3, entity->angle >> 8);
-        RSDK.MatrixMultiply(&entity->matrix2, &entity->matrix3, &entity->matrix1);
-        RSDK.MatrixMultiply(&entity->matrix2, &entity->matrix2, &PBL_Camera->matrix1);
+        RSDK.MatrixScaleXYZ(&self->matrix1, self->scale.x, self->scale.y, 0x100);
+        RSDK.MatrixTranslateXYZ(&self->matrix1, self->position.x, self->height, self->position.y, false);
+        RSDK.MatrixRotateY(&self->matrix3, self->angle >> 8);
+        RSDK.MatrixMultiply(&self->matrix2, &self->matrix3, &self->matrix1);
+        RSDK.MatrixMultiply(&self->matrix2, &self->matrix2, &PBL_Camera->matrix1);
         if (PBL_Camera->flag)
-            RSDK.MatrixMultiply(&entity->matrix3, &entity->matrix3, &PBL_Camera->matrix3);
+            RSDK.MatrixMultiply(&self->matrix3, &self->matrix3, &PBL_Camera->matrix3);
         else
-            RSDK.MatrixMultiply(&entity->matrix3, &entity->matrix3, &PBL_Camera->matrix2);
-        RSDK.AddModelTo3DScene(PBL_Flipper->aniFrames, PBL_Flipper->sceneIndex, PBL_Flipper->drawType, &entity->matrix2, &entity->matrix3, 0xFFFFFF);
+            RSDK.MatrixMultiply(&self->matrix3, &self->matrix3, &PBL_Camera->matrix2);
+        RSDK.AddModelTo3DScene(PBL_Flipper->aniFrames, PBL_Flipper->sceneIndex, PBL_Flipper->drawType, &self->matrix2, &self->matrix3, 0xFFFFFF);
         RSDK.Draw3DScene(PBL_Flipper->sceneIndex);
     }
 }
@@ -85,21 +85,21 @@ void PBL_Flipper_Draw(void)
 void PBL_Flipper_Create(void *data)
 {
     RSDK_THIS(PBL_Flipper);
-    if (!RSDK_sceneInfo->inEditor) {
-        entity->visible = true;
-        if (entity->direction == FLIP_NONE)
-            entity->scale.x = 0x100;
+    if (!SceneInfo->inEditor) {
+        self->visible = true;
+        if (self->direction == FLIP_NONE)
+            self->scale.x = 0x100;
         else
-            entity->scale.x = -0x100;
-        entity->drawOrder     = 4;
-        entity->active        = ACTIVE_BOUNDS;
-        entity->updateRange.x = 0x400000;
-        entity->updateRange.y = 0x400000;
-        entity->angle         = -0x4000;
-        entity->scale.y       = 0x100;
-        entity->field_170     = true;
-        entity->state         = PBL_Flipper_Unknown2;
-        RSDK.SetModelAnimation(PBL_Flipper->aniFrames, &entity->animator, 96, 0, true, 0);
+            self->scale.x = -0x100;
+        self->drawOrder     = 4;
+        self->active        = ACTIVE_BOUNDS;
+        self->updateRange.x = 0x400000;
+        self->updateRange.y = 0x400000;
+        self->angle         = -0x4000;
+        self->scale.y       = 0x100;
+        self->field_170     = true;
+        self->state         = PBL_Flipper_Unknown2;
+        RSDK.SetModelAnimation(PBL_Flipper->aniFrames, &self->animator, 96, 0, true, 0);
     }
 }
 
@@ -123,10 +123,10 @@ void PBL_Flipper_StageLoad(void)
 void PBL_Flipper_HandlePlayerInteractions(void)
 {
     RSDK_THIS(PBL_TargetBumper);
-    if (entity->scale.y >= 128) {
-        int32 angle    = entity->angle >> 10;
+    if (self->scale.y >= 128) {
+        int32 angle    = self->angle >> 10;
         int32 negAngle = 0;
-        if (entity->direction == FLIP_X) {
+        if (self->direction == FLIP_X) {
             negAngle = angle;
             angle    = -angle;
         }
@@ -140,15 +140,15 @@ void PBL_Flipper_HandlePlayerInteractions(void)
         pos2.y = 0;
         foreach_active(PBL_Player, player)
         {
-            int32 distanceX = (player->position.x - entity->position.x) >> 8;
-            int32 distanceY = (player->position.y - entity->position.y) >> 8;
+            int32 distanceX = (player->position.x - self->position.x) >> 8;
+            int32 distanceY = (player->position.y - self->position.y) >> 8;
             int32 posX                   = player->position.x;
             int32 posY                   = player->position.y;
             int32 velStoreX              = player->velocity.x;
             int32 velStoreY              = player->velocity.y;
 
-            player->position.x         = distanceY * RSDK.Sin256(angle) + distanceX * RSDK.Cos256(angle) + entity->position.x;
-            player->position.y         = distanceY * RSDK.Cos256(angle) - distanceX * RSDK.Sin256(angle) + entity->position.y;
+            player->position.x         = distanceY * RSDK.Sin256(angle) + distanceX * RSDK.Cos256(angle) + self->position.x;
+            player->position.y         = distanceY * RSDK.Cos256(angle) - distanceX * RSDK.Sin256(angle) + self->position.y;
             player->velocity.x         = (player->velocity.y >> 8) * RSDK.Sin256(angle) + (player->velocity.x >> 8) * RSDK.Cos256(angle);
             player->velocity.y         = (player->velocity.y >> 8) * RSDK.Cos256(angle) - (player->velocity.x >> 8) * RSDK.Sin256(angle);
 
@@ -156,13 +156,13 @@ void PBL_Flipper_HandlePlayerInteractions(void)
             int32 velY = player->velocity.y;
 
             int32 distance = 0;
-            if (entity->direction == FLIP_NONE)
-                distance = entity->position.x - player->position.x;
+            if (self->direction == FLIP_NONE)
+                distance = self->position.x - player->position.x;
             else
-                distance = player->position.x - entity->position.x;
+                distance = player->position.x - self->position.x;
             int32 force = clampVal((distance + 0x80000) >> 13, 16, 256);
 
-            switch (RSDK.CheckObjectCollisionBox(entity, &PBL_Flipper->hitbox, player, &PBL_Player->outerBox, true)) {
+            switch (RSDK.CheckObjectCollisionBox(self, &PBL_Flipper->hitbox, player, &PBL_Player->outerBox, true)) {
                 case 0:
                     player->position.x = posX;
                     player->position.y = posY;
@@ -173,7 +173,7 @@ void PBL_Flipper_HandlePlayerInteractions(void)
                     if (velY < 0) {
                         player->velocity.x = velStoreX;
                         player->velocity.y = velStoreY;
-                        Zone_Unknown3(&entity->position, &player->position, negAngle);
+                        Zone_RotateOnPivot(&player->position, &self->position, negAngle);
                     }
                     else {
                         if (velY > 0)
@@ -183,13 +183,13 @@ void PBL_Flipper_HandlePlayerInteractions(void)
                         player->onGround = false;
                         if (velY > 0x40000)
                             player->velocity.x >>= 2;
-                        if (entity->state == PBL_Flipper_Unknown3 && entity->velocity.y == 0x2000) {
+                        if (self->state == PBL_Flipper_Unknown3 && self->velocity.y == 0x2000) {
                             player->velocity.y -= (0xE0000 * force) >> 8;
                             player->onGround = false;
                             player->angle    = 0;
                         }
-                        Zone_Unknown3(&pos2, &player->velocity, negAngle);
-                        Zone_Unknown3(&entity->position, &player->position, negAngle);
+                        Zone_RotateOnPivot(&player->velocity, &pos2, negAngle);
+                        Zone_RotateOnPivot(&player->position, &self->position, negAngle);
                     }
                     break;
                 case 2:
@@ -208,8 +208,8 @@ void PBL_Flipper_HandlePlayerInteractions(void)
                             player->velocity.y -= 0x20000;
                         }
 
-                        Zone_Unknown3(&entity->position, &player->position, negAngle);
-                        Zone_Unknown3(&pos2, &player->velocity, negAngle);
+                        Zone_RotateOnPivot(&player->position, &self->position, negAngle);
+                        Zone_RotateOnPivot(&player->velocity, &pos2, negAngle);
                     }
                     break;
                 case 3:
@@ -229,13 +229,13 @@ void PBL_Flipper_HandlePlayerInteractions(void)
                         }
                     }
 
-                    Zone_Unknown3(&entity->position, &player->position, negAngle);
-                    Zone_Unknown3(&pos2, &player->velocity, negAngle);
+                    Zone_RotateOnPivot(&player->position, &self->position, negAngle);
+                    Zone_RotateOnPivot(&player->velocity, &pos2, negAngle);
                     break;
                 case 4:
                     player->velocity.y = -(velY >> 2);
-                    Zone_Unknown3(&entity->position, &player->position, negAngle);
-                    Zone_Unknown3(&pos2, &player->velocity, negAngle);
+                    Zone_RotateOnPivot(&player->position, &self->position, negAngle);
+                    Zone_RotateOnPivot(&player->velocity, &pos2, negAngle);
                     break;
                 default: break;
             }
@@ -246,9 +246,9 @@ void PBL_Flipper_HandlePlayerInteractions(void)
 void PBL_Flipper_Unknown2(void)
 {
     RSDK_THIS(PBL_Flipper);
-    if (entity->buttonDown) {
-        entity->velocity.y = 0x2000;
-        entity->state      = PBL_Flipper_Unknown3;
+    if (self->buttonDown) {
+        self->velocity.y = 0x2000;
+        self->state      = PBL_Flipper_Unknown3;
         RSDK.PlaySfx(PBL_Flipper->sfxFlipper, false, 255);
     }
     PBL_Flipper_HandlePlayerInteractions();
@@ -258,17 +258,17 @@ void PBL_Flipper_Unknown3(void)
 {
     RSDK_THIS(PBL_Flipper);
 
-    entity->angle += entity->velocity.y;
-    if (entity->angle < 0x4000 || entity->velocity.y < 0) {
-        if (entity->velocity.y < 0x2000)
-            entity->velocity.y += 0x400;
+    self->angle += self->velocity.y;
+    if (self->angle < 0x4000 || self->velocity.y < 0) {
+        if (self->velocity.y < 0x2000)
+            self->velocity.y += 0x400;
     }
     else {
-        entity->angle      = 0x4000;
-        entity->velocity.y = -(entity->velocity.y >> 2);
-        if (!entity->buttonDown) {
-            entity->velocity.y = -0x2000;
-            entity->state      = PBL_Flipper_Unknown4;
+        self->angle      = 0x4000;
+        self->velocity.y = -(self->velocity.y >> 2);
+        if (!self->buttonDown) {
+            self->velocity.y = -0x2000;
+            self->state      = PBL_Flipper_Unknown4;
         }
     }
     PBL_Flipper_HandlePlayerInteractions();
@@ -277,17 +277,17 @@ void PBL_Flipper_Unknown3(void)
 void PBL_Flipper_Unknown4(void)
 {
     RSDK_THIS(PBL_Flipper);
-    entity->angle += entity->velocity.y;
-    if (entity->angle > -0x4000 || entity->velocity.y > 0) {
-        if (entity->velocity.y > -0x2000)
-            entity->velocity.y -= 0x400;
+    self->angle += self->velocity.y;
+    if (self->angle > -0x4000 || self->velocity.y > 0) {
+        if (self->velocity.y > -0x2000)
+            self->velocity.y -= 0x400;
     }
     else {
-        entity->angle      = -0x4000;
-        entity->velocity.y = -(entity->velocity.y >> 2);
-        if (entity->velocity.y < 0x800) {
-            entity->velocity.y = 0;
-            entity->state      = PBL_Flipper_Unknown2;
+        self->angle      = -0x4000;
+        self->velocity.y = -(self->velocity.y >> 2);
+        if (self->velocity.y < 0x800) {
+            self->velocity.y = 0;
+            self->state      = PBL_Flipper_Unknown2;
         }
     }
     PBL_Flipper_HandlePlayerInteractions();

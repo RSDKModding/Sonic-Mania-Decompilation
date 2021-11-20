@@ -5,12 +5,20 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    uint16 aniFrames;
 } ObjectPopcornKernel;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    StateMachine(state);
+    int32 field_5C;
+    int32 angleVel;
+    int32 field_64;
+    int32 field_68;
+    Vector2 bounds;
+    Animator animator;
 } EntityPopcornKernel;
 
 // Object Struct
@@ -30,6 +38,8 @@ void PopcornKernel_EditorLoad(void);
 void PopcornKernel_Serialize(void);
 
 // Extra Entity Functions
-
+void PopcornKernel_Unknown1(void);
+void PopcornKernel_Unknown2(void);
+void PopcornKernel_Unknown3(void);
 
 #endif //!OBJ_POPCORNKERNEL_H

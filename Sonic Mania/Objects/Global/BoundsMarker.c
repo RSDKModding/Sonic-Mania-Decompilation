@@ -8,7 +8,7 @@ void BoundsMarker_Update(void)
 
     for (int32 p = 0; p < Player->playerCount; ++p) {
         EntityPlayer *player = RSDK_GET_ENTITY(p, Player);
-        BoundsMarker_CheckBounds(player, entity, false);
+        BoundsMarker_CheckBounds(player, self, false);
     }
 }
 
@@ -22,21 +22,21 @@ void BoundsMarker_Create(void *data)
 {
     RSDK_THIS(BoundsMarker);
 
-    if (!RSDK_sceneInfo->inEditor) {
-        if (entity->vsDisable && globals->gameMode == MODE_COMPETITION) {
-            destroyEntity(entity);
+    if (!SceneInfo->inEditor) {
+        if (self->vsDisable && globals->gameMode == MODE_COMPETITION) {
+            destroyEntity(self);
         }
         else {
-            entity->active = ACTIVE_XBOUNDS;
-            if (entity->width)
-                entity->width = entity->width << 15;
+            self->active = ACTIVE_XBOUNDS;
+            if (self->width)
+                self->width = self->width << 15;
             else
-                entity->width = 0x180000;
-            entity->updateRange.x += entity->width << 15;
+                self->width = 0x180000;
+            self->updateRange.x += self->width << 15;
 
             for (int32 p = 0; p < Player->playerCount; ++p) {
                 EntityPlayer *player = RSDK_GET_ENTITY(p, Player);
-                BoundsMarker_CheckBounds(player, entity, true);
+                BoundsMarker_CheckBounds(player, self, true);
             }
         }
     }
@@ -44,33 +44,33 @@ void BoundsMarker_Create(void *data)
 
 void BoundsMarker_StageLoad(void) {}
 
-void BoundsMarker_CheckBounds(void *p, EntityBoundsMarker *entity, bool32 setPos)
+void BoundsMarker_CheckBounds(void *p, EntityBoundsMarker *self, bool32 setPos)
 {
     EntityPlayer *player = (EntityPlayer *)p;
     uint16 playerID      = RSDK.GetEntityID(player);
     if (Player_CheckValidState(player) || player->objectID == DebugMode->objectID) {
-        if (abs(entity->position.x - player->position.x) < entity->width) {
-            switch (entity->type) {
+        if (abs(self->position.x - player->position.x) < self->width) {
+            switch (self->type) {
                 case 0: // bottom
-                    Zone->screenBoundsB2[playerID] = entity->position.y;
+                    Zone->screenBoundsB2[playerID] = self->position.y;
                     Zone->screenBoundsB1[playerID] = Zone->screenBoundsB2[playerID] >> 0x10;
-                    Zone->deathBoundary[playerID]  = entity->position.y;
+                    Zone->deathBoundary[playerID]  = self->position.y;
                     break;
                 case 1: // bottom (offset)
-                    if (player->position.y < entity->position.y - (entity->offset << 16)) {
-                        Zone->screenBoundsB2[playerID] = entity->position.y;
+                    if (player->position.y < self->position.y - (self->offset << 16)) {
+                        Zone->screenBoundsB2[playerID] = self->position.y;
                         Zone->screenBoundsB1[playerID] = Zone->screenBoundsB2[playerID] >> 0x10;
-                        Zone->deathBoundary[playerID]  = entity->position.y;
+                        Zone->deathBoundary[playerID]  = self->position.y;
                     }
                     break;
                 case 2: // top (offset)
-                    if (player->position.y > entity->position.y + (entity->offset << 16)) {
-                        Zone->screenBoundsT2[playerID] = entity->position.y;
+                    if (player->position.y > self->position.y + (self->offset << 16)) {
+                        Zone->screenBoundsT2[playerID] = self->position.y;
                         Zone->screenBoundsT1[playerID] = Zone->screenBoundsT2[playerID] >> 0x10;
                     }
                     break;
                 case 3: // top
-                    Zone->screenBoundsT2[playerID] = entity->position.y;
+                    Zone->screenBoundsT2[playerID] = self->position.y;
                     Zone->screenBoundsT1[playerID] = Zone->screenBoundsT2[playerID] >> 0x10;
                     break;
                 default: break;
@@ -101,28 +101,28 @@ void BoundsMarker_EditorDraw(void)
 {
     RSDK_THIS(BoundsMarker);
     Animator animator;
-    RSDK.SetSpriteAnimation(BoundsMarker->spriteIndex, 0, &animator, true, 2);
+    RSDK.SetSpriteAnimation(BoundsMarker->aniFrames, 0, &animator, true, 2);
     RSDK.DrawSprite(&animator, NULL, false);
 
     Vector2 drawPos;
 
-    int w = entity->width << 16;
-    if (!entity->width)
+    int w = self->width << 16;
+    if (!self->width)
         w = 24 << 16;
 
     //Bounds
-    RSDK.DrawLine(entity->position.x - w, entity->position.y, entity->position.x + w, entity->position.y, 0xFFFF00, 0xFF, INK_NONE, false);
-    if (entity->type == 1) {
-        RSDK.DrawLine(entity->position.x + w, entity->position.y - (entity->offset << 16), entity->position.x + w,
-                      entity->position.y - (entity->offset << 16), 0xFFFF00, 0x80, INK_BLEND, false);
+    RSDK.DrawLine(self->position.x - w, self->position.y, self->position.x + w, self->position.y, 0xFFFF00, 0xFF, INK_NONE, false);
+    if (self->type == 1) {
+        RSDK.DrawLine(self->position.x + w, self->position.y - (self->offset << 16), self->position.x + w,
+                      self->position.y - (self->offset << 16), 0xFFFF00, 0x80, INK_BLEND, false);
     }
-    else if (entity->type == 2) {
-        RSDK.DrawLine(entity->position.x + w, entity->position.y + (entity->offset << 16), entity->position.x + w,
-                      entity->position.y + (entity->offset << 16), 0xFFFF00, 0x80, INK_BLEND, false);
+    else if (self->type == 2) {
+        RSDK.DrawLine(self->position.x + w, self->position.y + (self->offset << 16), self->position.x + w,
+                      self->position.y + (self->offset << 16), 0xFFFF00, 0x80, INK_BLEND, false);
     }
 }
 
-void BoundsMarker_EditorLoad(void) { BoundsMarker->spriteIndex = RSDK.LoadSpriteAnimation("Editor/EditorIcons.bin", SCOPE_STAGE); }
+void BoundsMarker_EditorLoad(void) { BoundsMarker->aniFrames = RSDK.LoadSpriteAnimation("Editor/EditorIcons.bin", SCOPE_STAGE); }
 #endif
 
 void BoundsMarker_Serialize(void)

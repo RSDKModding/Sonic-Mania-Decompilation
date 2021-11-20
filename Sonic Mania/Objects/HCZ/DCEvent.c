@@ -5,7 +5,7 @@ ObjectDCEvent *DCEvent;
 void DCEvent_Update(void)
 {
     RSDK_THIS(DCEvent);
-    StateMachine_Run(entity->state);
+    StateMachine_Run(self->state);
 }
 
 void DCEvent_LateUpdate(void) {}
@@ -15,57 +15,57 @@ void DCEvent_StaticUpdate(void) {}
 void DCEvent_Draw(void)
 {
     RSDK_THIS(DCEvent);
-    RSDK.DrawSprite(&entity->animator, NULL, false);
+    RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
 void DCEvent_Create(void *data)
 {
     RSDK_THIS(DCEvent);
 
-    entity->drawFX = FX_FLIP;
-    if (!RSDK_sceneInfo->inEditor) {
-        entity->visible = true;
+    self->drawFX = FX_FLIP;
+    if (!SceneInfo->inEditor) {
+        self->visible = true;
 
         int type = 2;
-        if (entity->type != 2)
+        if (self->type != 2)
             type = voidToInt(data);
 
         switch (type) {
             case 0:
-                entity->visible       = false;
-                entity->drawOrder     = Zone->playerDrawLow + 2;
-                entity->updateRange.x = 0x800000;
-                entity->updateRange.y = 0x800000;
-                entity->field_64      = entity->position.y;
-                entity->timer2        = 2;
-                RSDK.SetSpriteAnimation(DCEvent->aniFrames, 0, &entity->animator, true, 0);
-                if (entity->type) {
-                    entity->active = ACTIVE_BOUNDS;
-                    entity->state  = DCEvent_State1_Unknown1;
+                self->visible       = false;
+                self->drawOrder     = Zone->playerDrawLow + 2;
+                self->updateRange.x = 0x800000;
+                self->updateRange.y = 0x800000;
+                self->field_64      = self->position.y;
+                self->timer2        = 2;
+                RSDK.SetSpriteAnimation(DCEvent->aniFrames, 0, &self->animator, true, 0);
+                if (self->type) {
+                    self->active = ACTIVE_BOUNDS;
+                    self->state  = DCEvent_State1_Unknown1;
                 }
                 else {
-                    entity->active = ACTIVE_XBOUNDS;
-                    entity->state  = DCEvent_State_Unknown1;
+                    self->active = ACTIVE_XBOUNDS;
+                    self->state  = DCEvent_State_Unknown1;
                 }
                 break;
             case 1:
-                entity->active    = ACTIVE_NORMAL;
-                entity->drawOrder = Zone->playerDrawLow + 1;
-                entity->timer     = 480;
-                RSDK.SetSpriteAnimation(DCEvent->aniFrames, 5, &entity->animator, true, 0);
-                entity->state = DCEvent_State2_Unknown1;
+                self->active    = ACTIVE_NORMAL;
+                self->drawOrder = Zone->playerDrawLow + 1;
+                self->timer     = 480;
+                RSDK.SetSpriteAnimation(DCEvent->aniFrames, 5, &self->animator, true, 0);
+                self->state = DCEvent_State2_Unknown1;
                 break;
             case 2: {
-                EntityWater *water = (EntityWater *)entity;
-                int x              = entity->position.x;
-                int y              = entity->position.y;
+                EntityWater *water = (EntityWater *)self;
+                int x              = self->position.x;
+                int y              = self->position.y;
                 RSDK.ResetEntityPtr(water, Water->objectID, intToVoid(WATER_BUBBLE));
                 water->position.x = x;
-                water->field_68   = x;
+                water->bubbleX   = x;
                 water->position.y = y;
                 water->childPtr   = 0;
                 water->speed      = -1;
-                RSDK.SetSpriteAnimation(Water->spriteIndex, 3, &water->animator, true, 0);
+                RSDK.SetSpriteAnimation(Water->aniFrames, 3, &water->animator, true, 0);
                 break;
             }
         }
@@ -110,8 +110,8 @@ void DCEvent_State_Collapse(void)
         player->moveOffset.y = move->scrollPos;
     }
 
-    int slot = RSDK_sceneInfo->entitySlot + 1;
-    for (int i = 0; i < entity->numChildren; ++i) {
+    int slot = SceneInfo->entitySlot + 1;
+    for (int i = 0; i < self->numChildren; ++i) {
         Entity *child = RSDK_GET_ENTITY(slot + i, );
         child->position.y += 0x8000;
     }
@@ -122,10 +122,10 @@ void DCEvent_State_Collapse(void)
     if (!(Zone->timer & 7))
         RSDK.PlaySfx(DCEvent->sfxRumble, false, 255);
 
-    ++entity->timer;
-    if (entity->timer >= 0x880 || DCEvent->finished) {
+    ++self->timer;
+    if (self->timer >= 0x880 || DCEvent->finished) {
         RSDK.PlaySfx(DCEvent->sfxImpact4, false, 255);
-        destroyEntity(entity);
+        destroyEntity(self);
     }
 }
 
@@ -133,13 +133,13 @@ void DCEvent_State_Unknown1(void)
 {
     RSDK_THIS(DCEvent);
 
-    RSDK.ProcessAnimation(&entity->animator);
+    RSDK.ProcessAnimation(&self->animator);
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
 
-    if (player1->position.x > entity->position.x - 0x100000)
+    if (player1->position.x > self->position.x - 0x100000)
         player1->stateInput = DCEvent_StateInput_Unknown1;
 
-    if (player1->position.x > entity->position.x) {
+    if (player1->position.x > self->position.x) {
         player1->velocity.x      = 0;
         player1->velocity.y      = 0;
         player1->groundVel       = 0;
@@ -147,18 +147,18 @@ void DCEvent_State_Unknown1(void)
         player1->nextGroundState = StateMachine_None;
         player1->stateInput      = DCEvent_StateInput_Unknown2;
         Music_TransitionTrack(TRACK_MINIBOSS, 0.0125);
-        RSDK.SetSpriteAnimation(DCEvent->aniFrames, 1, &entity->animator, true, 0);
+        RSDK.SetSpriteAnimation(DCEvent->aniFrames, 1, &self->animator, true, 0);
 
         TileLayer *moveLayer    = RSDK.GetSceneLayer(Zone->moveLayer);
         moveLayer->drawLayer[0] = 6;
 
-        entity->position.x -= 0x1000000;
-        entity->timer      = 172;
-        entity->direction  = FLIP_X;
-        entity->velocity.x = 0x10000;
-        entity->active     = ACTIVE_NORMAL;
-        entity->visible    = true;
-        entity->state      = DCEvent_State_Unknown2;
+        self->position.x -= 0x1000000;
+        self->timer      = 172;
+        self->direction  = FLIP_X;
+        self->velocity.x = 0x10000;
+        self->active     = ACTIVE_NORMAL;
+        self->visible    = true;
+        self->state      = DCEvent_State_Unknown2;
     }
 }
 
@@ -167,12 +167,12 @@ void DCEvent_StateInput_Unknown1(void)
     RSDK_THIS(Player);
 
     Player_ProcessP1Input();
-    entity->up        = false;
-    entity->down      = false;
-    entity->left      = false;
-    entity->right     = true;
-    entity->jumpPress = false;
-    entity->jumpHold  = false;
+    self->up        = false;
+    self->down      = false;
+    self->left      = false;
+    self->right     = true;
+    self->jumpPress = false;
+    self->jumpHold  = false;
 }
 
 void DCEvent_StateInput_Unknown2(void)
@@ -180,15 +180,15 @@ void DCEvent_StateInput_Unknown2(void)
     RSDK_THIS(Player);
 
     Player_ProcessP1Input();
-    entity->airTimer  = 0;
-    entity->up        = false;
-    entity->down      = true;
-    entity->left      = false;
-    entity->right     = false;
-    entity->jumpPress = false;
-    entity->jumpHold  = false;
-    if (entity->onGround)
-        RSDK.SetSpriteAnimation(entity->spriteIndex, ANI_CROUCH, &entity->playerAnimator, false, 1);
+    self->airTimer  = 0;
+    self->up        = false;
+    self->down      = true;
+    self->left      = false;
+    self->right     = false;
+    self->jumpPress = false;
+    self->jumpHold  = false;
+    if (self->onGround)
+        RSDK.SetSpriteAnimation(self->aniFrames, ANI_CROUCH, &self->animator, false, 1);
 }
 
 void DCEvent_State_Unknown2(void)
@@ -197,42 +197,42 @@ void DCEvent_State_Unknown2(void)
 
     EntityCamera *camera = RSDK_GET_ENTITY(SLOT_PLAYER1, Player)->camera;
     if (camera->lookPos.y >= 96)
-        entity->state = DCEvent_State_Unknown3;
+        self->state = DCEvent_State_Unknown3;
 }
 
 void DCEvent_State_Unknown3(void)
 {
     RSDK_THIS(DCEvent);
 
-    RSDK.ProcessAnimation(&entity->animator);
-    entity->position.x += entity->velocity.x;
+    RSDK.ProcessAnimation(&self->animator);
+    self->position.x += self->velocity.x;
 
-    if (entity->velocity.y > 0) {
-        entity->position.y += entity->velocity.y;
-        entity->velocity.y -= 0x400;
+    if (self->velocity.y > 0) {
+        self->position.y += self->velocity.y;
+        self->velocity.y -= 0x400;
     }
-    if (RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_LWALL, 0, 0x200000, 0, true)
-        || RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_RWALL, 0, -0x200000, 0, true)) {
-        entity->direction ^= FLIP_X;
-        entity->velocity.x = -entity->velocity.x;
+    if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_LWALL, 0, 0x200000, 0, true)
+        || RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_RWALL, 0, -0x200000, 0, true)) {
+        self->direction ^= FLIP_X;
+        self->velocity.x = -self->velocity.x;
     }
 
-    if (--entity->timer <= 0) {
-        switch (entity->timer2) {
+    if (--self->timer <= 0) {
+        switch (self->timer2) {
             case 0:
                 DCEvent->finished = true;
-                entity->state     = DCEvent_State_Unknown5;
+                self->state     = DCEvent_State_Unknown5;
                 break;
             case 1:
-                entity->timer2--;
-                RSDK.SetSpriteAnimation(DCEvent->aniFrames, 4, &entity->animator, false, 0);
-                entity->state = DCEvent_State_Unknown4;
+                self->timer2--;
+                RSDK.SetSpriteAnimation(DCEvent->aniFrames, 4, &self->animator, false, 0);
+                self->state = DCEvent_State_Unknown4;
                 break;
             case 2:
-                entity->direction = FLIP_NONE;
-                entity->timer2--;
-                RSDK.SetSpriteAnimation(DCEvent->aniFrames, 4, &entity->animator, false, 0);
-                entity->state = DCEvent_State_Unknown4;
+                self->direction = FLIP_NONE;
+                self->timer2--;
+                RSDK.SetSpriteAnimation(DCEvent->aniFrames, 4, &self->animator, false, 0);
+                self->state = DCEvent_State_Unknown4;
                 break;
         }
     }
@@ -242,20 +242,20 @@ void DCEvent_State_Unknown4(void)
 {
     RSDK_THIS(DCEvent);
 
-    RSDK.ProcessAnimation(&entity->animator);
-    if (entity->animator.frameID >= entity->animator.frameCount - 1) {
-        EntityDCEvent *child = CREATE_ENTITY(DCEvent, intToVoid(1), entity->position.x, entity->position.y + 0x20000);
-        if (entity->direction)
+    RSDK.ProcessAnimation(&self->animator);
+    if (self->animator.frameID >= self->animator.frameCount - 1) {
+        EntityDCEvent *child = CREATE_ENTITY(DCEvent, intToVoid(1), self->position.x, self->position.y + 0x20000);
+        if (self->direction)
             child->position.x += 0x1A0000;
         else
             child->position.x -= 0x1A0000;
 
-        RSDK.SetSpriteAnimation(DCEvent->aniFrames, 1, &entity->animator, false, 0);
+        RSDK.SetSpriteAnimation(DCEvent->aniFrames, 1, &self->animator, false, 0);
 
-        if (entity->timer2 == 1)
-            entity->direction = FLIP_X;
-        entity->timer = 160;
-        entity->state = DCEvent_State_Unknown3;
+        if (self->timer2 == 1)
+            self->direction = FLIP_X;
+        self->timer = 160;
+        self->state = DCEvent_State_Unknown3;
     }
 }
 
@@ -270,7 +270,7 @@ void DCEvent_State_Unknown5(void)
         Water->targetWaterLevel = 0x8DC0000;
         Water->waterMoveSpeed   = 0x8000;
         Music_TransitionTrack(TRACK_MINIBOSS, 0.0125);
-        entity->state = DCEvent_State_Collapse;
+        self->state = DCEvent_State_Collapse;
     }
 }
 
@@ -279,16 +279,16 @@ void DCEvent_State1_Unknown1(void)
     RSDK_THIS(DCEvent);
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
 
-    RSDK.ProcessAnimation(&entity->animator);
+    RSDK.ProcessAnimation(&self->animator);
 
-    if (player1->position.y < entity->position.y) {
-        RSDK.SetSpriteAnimation(DCEvent->aniFrames, 1, &entity->animator, true, 0);
-        entity->timer      = 900;
-        entity->direction  = FLIP_X;
-        entity->velocity.y = -0x8000;
-        entity->active     = ACTIVE_NORMAL;
-        entity->visible    = true;
-        entity->state      = DCEvent_State1_Unknown2;
+    if (player1->position.y < self->position.y) {
+        RSDK.SetSpriteAnimation(DCEvent->aniFrames, 1, &self->animator, true, 0);
+        self->timer      = 900;
+        self->direction  = FLIP_X;
+        self->velocity.y = -0x8000;
+        self->active     = ACTIVE_NORMAL;
+        self->visible    = true;
+        self->state      = DCEvent_State1_Unknown2;
     }
 }
 
@@ -296,57 +296,57 @@ void DCEvent_State1_Unknown2(void)
 {
     RSDK_THIS(DCEvent);
 
-    RSDK.ProcessAnimation(&entity->animator);
+    RSDK.ProcessAnimation(&self->animator);
 
-    entity->position.y += entity->velocity.y;
-    if (--entity->timer <= 0)
-        destroyEntity(entity);
+    self->position.y += self->velocity.y;
+    if (--self->timer <= 0)
+        destroyEntity(self);
 }
 
 void DCEvent_State2_Unknown1(void)
 {
     RSDK_THIS(DCEvent);
 
-    if (entity->velocity.x) {
-        if (entity->velocity.x <= 0)
-            entity->velocity.x += 0x2000;
+    if (self->velocity.x) {
+        if (self->velocity.x <= 0)
+            self->velocity.x += 0x2000;
         else
-            entity->velocity.x -= 0x2000;
+            self->velocity.x -= 0x2000;
     }
 
-    if (entity->velocity.y > 0) {
-        entity->position.y += entity->velocity.y;
-        entity->velocity.y -= 0x400;
+    if (self->velocity.y > 0) {
+        self->position.y += self->velocity.y;
+        self->velocity.y -= 0x400;
     }
 
-    RSDK.ProcessAnimation(&entity->animator);
+    RSDK.ProcessAnimation(&self->animator);
     if (DCEvent->finished) {
-        CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSS), entity->position.x, entity->position.y)->drawOrder = Zone->drawOrderHigh;
+        CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSS), self->position.x, self->position.y)->drawOrder = Zone->drawOrderHigh;
         RSDK.PlaySfx(DCEvent->sfxImpact6, false, 255);
         RSDK.PlaySfx(DCEvent->sfxExplosion, false, 255);
-        Camera_ShakeScreen(4, 0, 0);
+        Camera_ShakeScreen(0, 4, 0);
 
-        EntityWater *water = CREATE_ENTITY(Water, intToVoid(WATER_BUBBLE), entity->position.x, entity->position.y);
+        EntityWater *water = CREATE_ENTITY(Water, intToVoid(WATER_BUBBLE), self->position.x, self->position.y);
         water->velocity.y  = -0x8800;
         water->childPtr    = 0;
         water->angle       = 2 * RSDK.Rand(0, 256);
-        water->field_68    = water->position.x;
-        RSDK.SetSpriteAnimation(Water->spriteIndex, 3, &water->animator, true, 0);
+        water->bubbleX    = water->position.x;
+        RSDK.SetSpriteAnimation(Water->aniFrames, 3, &water->animator, true, 0);
 
         EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
-        if (entity->position.x >= player1->position.x)
-            entity->position.x += 0x260000;
+        if (self->position.x >= player1->position.x)
+            self->position.x += 0x260000;
         else
-            entity->position.x -= 0x260000;
+            self->position.x -= 0x260000;
 
         for (int i = 0; i < 8; ++i) {
-            EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Fall, entity->position.x, entity->position.y);
+            EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Fall, self->position.x, self->position.y);
             RSDK.SetSpriteAnimation(WaterGush->aniFrames, 4, &debris->animator, true, 0);
             debris->position.x += RSDK.Rand(-8, 8) << 16;
             debris->position.y += RSDK.Rand(-8, 8) << 16;
             debris->velocity.x = RSDK.Rand(-8, 8) << 16;
             debris->velocity.y = RSDK.Rand(-8, 8) << 16;
-            if (entity->position.x >= player1->position.x)
+            if (self->position.x >= player1->position.x)
                 debris->velocity.x = RSDK.Rand(-8, 0) << 15;
             else
                 debris->velocity.x = RSDK.Rand(1, 9) << 15;
@@ -358,7 +358,7 @@ void DCEvent_State2_Unknown1(void)
             RSDK.CopyTileLayer(Zone->moveLayer, 1038, 146, Zone->moveLayer, 1068, 8, 20, 6);
         }
 
-        entity->state = DCEvent_State2_Unknown2;
+        self->state = DCEvent_State2_Unknown2;
     }
 }
 
@@ -367,13 +367,13 @@ void DCEvent_State2_Unknown2(void)
     RSDK_THIS(DCEvent);
 
     if (!(Zone->timer & 3)) {
-        entity->position.y -= 0x100000;
-        CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSS), (RSDK.Rand(-16, 17) << 17) + entity->position.x, entity->position.y)->drawOrder =
+        self->position.y -= 0x100000;
+        CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_BOSS), (RSDK.Rand(-16, 17) << 17) + self->position.x, self->position.y)->drawOrder =
             Zone->drawOrderHigh;
         RSDK.PlaySfx(DCEvent->sfxExplosion, false, 255);
-        if (++entity->timer2 == 16) {
+        if (++self->timer2 == 16) {
             DCEvent->finished = false;
-            destroyEntity(entity);
+            destroyEntity(self);
         }
     }
 }
@@ -383,18 +383,18 @@ void DCEvent_EditorDraw(void)
 {
     RSDK_THIS(DCEvent);
 
-    switch (entity->type) {
+    switch (self->type) {
         case 0:
-            entity->drawOrder = Zone->playerDrawLow + 2;
-            RSDK.SetSpriteAnimation(DCEvent->aniFrames, 0, &entity->animator, true, 0);
+            self->drawOrder = Zone->playerDrawLow + 2;
+            RSDK.SetSpriteAnimation(DCEvent->aniFrames, 0, &self->animator, true, 0);
             break;
         case 1:
-            entity->drawOrder = Zone->playerDrawLow + 1;
-            RSDK.SetSpriteAnimation(DCEvent->aniFrames, 5, &entity->animator, true, 0);
+            self->drawOrder = Zone->playerDrawLow + 1;
+            RSDK.SetSpriteAnimation(DCEvent->aniFrames, 5, &self->animator, true, 0);
             break;
         case 2:
             if (Water)
-                RSDK.SetSpriteAnimation(Water->spriteIndex, 3, &entity->animator, true, 0);
+                RSDK.SetSpriteAnimation(Water->aniFrames, 3, &self->animator, true, 0);
             break;
     }
 

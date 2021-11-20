@@ -16,10 +16,10 @@ void Palette_Create(void *data)
     char text[32];
 
     RSDK_THIS(Palette);
-    if (!RSDK_sceneInfo->inEditor && (!entity->loadOnce || Palette->count <= 1)) {
-        RSDK.GetCString(text, &entity->paletteFile);
-        RSDK.LoadPalette(entity->bankID, text, entity->rowFlags);
-        RSDK.ResetEntityPtr(entity, TYPE_BLANK, NULL);
+    if (!SceneInfo->inEditor && (!self->loadOnce || Palette->count <= 1)) {
+        RSDK.GetCString(text, &self->paletteFile);
+        RSDK.LoadPalette(self->bankID, text, self->rowFlags);
+        destroyEntity(self);
     }
 }
 
@@ -32,11 +32,24 @@ void Palette_StageLoad(void)
 void Palette_EditorDraw(void)
 {
     RSDK_THIS(Palette);
-    RSDK.SetSpriteAnimation(Palette->aniFrames, 0, &entity->animator, true, 9);
-    RSDK.DrawSprite(&entity->animator, NULL, false);
+    RSDK.SetSpriteAnimation(Palette->aniFrames, 0, &self->animator, true, 9);
+    RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
-void Palette_EditorLoad(void) { BGSwitch->aniFrames = RSDK.LoadSpriteAnimation("Editor/EditorIcons.bin", SCOPE_STAGE); }
+void Palette_EditorLoad(void)
+{
+    Palette->aniFrames = RSDK.LoadSpriteAnimation("Editor/EditorIcons.bin", SCOPE_STAGE);
+
+    RSDK_ACTIVE_VAR(Palette, bankID);
+    RSDK_ENUM_VAR("Bank 0", PALETTE_BANK_0);
+    RSDK_ENUM_VAR("Bank 1", PALETTE_BANK_1);
+    RSDK_ENUM_VAR("Bank 2", PALETTE_BANK_2);
+    RSDK_ENUM_VAR("Bank 3", PALETTE_BANK_3);
+    RSDK_ENUM_VAR("Bank 4", PALETTE_BANK_4);
+    RSDK_ENUM_VAR("Bank 5", PALETTE_BANK_5);
+    RSDK_ENUM_VAR("Bank 6", PALETTE_BANK_6);
+    RSDK_ENUM_VAR("Bank 7", PALETTE_BANK_7);
+}
 
 void Palette_Serialize(void)
 {

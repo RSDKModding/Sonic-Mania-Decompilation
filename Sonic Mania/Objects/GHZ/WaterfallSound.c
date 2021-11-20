@@ -13,29 +13,29 @@ void WaterfallSound_Draw(void)
 {
     RSDK_THIS(WaterfallSound);
 
-    RSDK.DrawLine(entity->position.x - TILE_SIZE * entity->size.x, entity->position.y - TILE_SIZE * entity->size.y,
-                  entity->position.x + TILE_SIZE * entity->size.x, entity->position.y - TILE_SIZE * entity->size.y, 0xFFFF00, 0xFF, INK_NONE, false);
-    RSDK.DrawLine(entity->position.x - TILE_SIZE * entity->size.x, entity->position.y + TILE_SIZE * entity->size.y,
-                  entity->position.x + TILE_SIZE * entity->size.x, entity->position.y + TILE_SIZE * entity->size.y, 0xFFFF00, 0xFF, INK_NONE, false);
-    RSDK.DrawLine(entity->position.x - TILE_SIZE * entity->size.x, entity->position.y - TILE_SIZE * entity->size.y,
-                  entity->position.x - TILE_SIZE * entity->size.x, entity->position.y + TILE_SIZE * entity->size.y, 0xFFFF00, 0xFF, INK_NONE, false);
-    RSDK.DrawLine(entity->position.x + TILE_SIZE * entity->size.x, entity->position.y - TILE_SIZE * entity->size.y,
-                  entity->position.x + TILE_SIZE * entity->size.x, entity->position.y + TILE_SIZE * entity->size.y, 0xFFFF00, 0xFF, INK_NONE, false);
-    if (entity->flag)
-        DrawHelpers_DrawDebug5(0xFF00FF, entity->posUnk.x, entity->posUnk.y);
+    RSDK.DrawLine(self->position.x - TILE_SIZE * self->size.x, self->position.y - TILE_SIZE * self->size.y,
+                  self->position.x + TILE_SIZE * self->size.x, self->position.y - TILE_SIZE * self->size.y, 0xFFFF00, 0xFF, INK_NONE, false);
+    RSDK.DrawLine(self->position.x - TILE_SIZE * self->size.x, self->position.y + TILE_SIZE * self->size.y,
+                  self->position.x + TILE_SIZE * self->size.x, self->position.y + TILE_SIZE * self->size.y, 0xFFFF00, 0xFF, INK_NONE, false);
+    RSDK.DrawLine(self->position.x - TILE_SIZE * self->size.x, self->position.y - TILE_SIZE * self->size.y,
+                  self->position.x - TILE_SIZE * self->size.x, self->position.y + TILE_SIZE * self->size.y, 0xFFFF00, 0xFF, INK_NONE, false);
+    RSDK.DrawLine(self->position.x + TILE_SIZE * self->size.x, self->position.y - TILE_SIZE * self->size.y,
+                  self->position.x + TILE_SIZE * self->size.x, self->position.y + TILE_SIZE * self->size.y, 0xFFFF00, 0xFF, INK_NONE, false);
+    if (self->flag)
+        DrawHelpers_DrawCross(self->posUnk.x, self->posUnk.y, 0x200000, 0x200000, 0xFF00FF);
 }
 
 void WaterfallSound_Create(void *data)
 {
     RSDK_THIS(WaterfallSound);
-    if (!RSDK_sceneInfo->inEditor) {
-        entity->updateRange.x = TILE_SIZE * entity->size.x;
-        entity->updateRange.y = TILE_SIZE * entity->size.y;
-        entity->visible       = true;
-        entity->active        = ACTIVE_NEVER;
-        entity->posUnk.x      = 0;
-        entity->posUnk.y      = 0;
-        entity->drawOrder     = Zone->drawOrderHigh;
+    if (!SceneInfo->inEditor) {
+        self->updateRange.x = TILE_SIZE * self->size.x;
+        self->updateRange.y = TILE_SIZE * self->size.y;
+        self->visible       = true;
+        self->active        = ACTIVE_NEVER;
+        self->posUnk.x      = 0;
+        self->posUnk.y      = 0;
+        self->drawOrder     = Zone->drawOrderHigh;
     }
 }
 
@@ -47,8 +47,8 @@ void WaterfallSound_StageLoad(void)
 
 bool32 WaterfallSound_CheckCB(void)
 {
-    int32 worldCenterX = (RSDK_screens->position.x + RSDK_screens->centerX) << 16;
-    int32 worldCenterY = (RSDK_screens->position.y + RSDK_screens->centerY) << 16;
+    int32 worldCenterX = (ScreenInfo->position.x + ScreenInfo->centerX) << 16;
+    int32 worldCenterY = (ScreenInfo->position.y + ScreenInfo->centerY) << 16;
 
     WaterfallSound->activeCount = 0;
     int32 count                   = 0;
@@ -110,10 +110,10 @@ bool32 WaterfallSound_CheckCB(void)
 }
 void WaterfallSound_UpdateCB(int32 sfxID)
 {
-    int32 worldCenterX = (RSDK_screens->position.x + RSDK_screens->centerX) << 16;
-    int32 worldCenterY = (RSDK_screens->position.y + RSDK_screens->centerY) << 16;
-    int32 worldLeft    = worldCenterX - (RSDK_screens->centerX << 16);
-    int32 worldRight   = worldCenterX + (RSDK_screens->centerX << 16);
+    int32 worldCenterX = (ScreenInfo->position.x + ScreenInfo->centerX) << 16;
+    int32 worldCenterY = (ScreenInfo->position.y + ScreenInfo->centerY) << 16;
+    int32 worldLeft    = worldCenterX - (ScreenInfo->centerX << 16);
+    int32 worldRight   = worldCenterX + (ScreenInfo->centerX << 16);
 
     float pan        = 0.0f;
     float volDivisor = 0.0f;
@@ -131,7 +131,7 @@ void WaterfallSound_UpdateCB(int32 sfxID)
             if (sound->posUnk.x > worldLeft) {
                 distance = 1.0;
                 if (sound->posUnk.x < worldRight) {
-                    distance = (((sound->posUnk.x - worldCenterX) >> 16) / (float)RSDK_screens->centerX);
+                    distance = (((sound->posUnk.x - worldCenterX) >> 16) / (float)ScreenInfo->centerX);
                 }
             }
             volDivisor += volume;
@@ -153,41 +153,41 @@ void WaterfallSound_UpdateCB(int32 sfxID)
 void WaterfallSound_EditorDraw(void)
 {
     RSDK_THIS(WaterfallSound);
-    entity->updateRange.x = TILE_SIZE * entity->size.x;
-    entity->updateRange.y = TILE_SIZE * entity->size.y;
+    self->updateRange.x = TILE_SIZE * self->size.x;
+    self->updateRange.y = TILE_SIZE * self->size.y;
 
-    RSDK.DrawLine(entity->position.x - TILE_SIZE * entity->size.x, entity->position.y - TILE_SIZE * entity->size.y,
-                  entity->position.x + TILE_SIZE * entity->size.x, entity->position.y - TILE_SIZE * entity->size.y, 0xFFFF00, 0xFF, INK_NONE, false);
-    RSDK.DrawLine(entity->position.x - TILE_SIZE * entity->size.x, entity->position.y + TILE_SIZE * entity->size.y,
-                  entity->position.x + TILE_SIZE * entity->size.x, entity->position.y + TILE_SIZE * entity->size.y, 0xFFFF00, 0xFF, INK_NONE, false);
-    RSDK.DrawLine(entity->position.x - TILE_SIZE * entity->size.x, entity->position.y - TILE_SIZE * entity->size.y,
-                  entity->position.x - TILE_SIZE * entity->size.x, entity->position.y + TILE_SIZE * entity->size.y, 0xFFFF00, 0xFF, INK_NONE, false);
-    RSDK.DrawLine(entity->position.x + TILE_SIZE * entity->size.x, entity->position.y - TILE_SIZE * entity->size.y,
-                  entity->position.x + TILE_SIZE * entity->size.x, entity->position.y + TILE_SIZE * entity->size.y, 0xFFFF00, 0xFF, INK_NONE, false);
+    RSDK.DrawLine(self->position.x - TILE_SIZE * self->size.x, self->position.y - TILE_SIZE * self->size.y,
+                  self->position.x + TILE_SIZE * self->size.x, self->position.y - TILE_SIZE * self->size.y, 0xFFFF00, 0xFF, INK_NONE, false);
+    RSDK.DrawLine(self->position.x - TILE_SIZE * self->size.x, self->position.y + TILE_SIZE * self->size.y,
+                  self->position.x + TILE_SIZE * self->size.x, self->position.y + TILE_SIZE * self->size.y, 0xFFFF00, 0xFF, INK_NONE, false);
+    RSDK.DrawLine(self->position.x - TILE_SIZE * self->size.x, self->position.y - TILE_SIZE * self->size.y,
+                  self->position.x - TILE_SIZE * self->size.x, self->position.y + TILE_SIZE * self->size.y, 0xFFFF00, 0xFF, INK_NONE, false);
+    RSDK.DrawLine(self->position.x + TILE_SIZE * self->size.x, self->position.y - TILE_SIZE * self->size.y,
+                  self->position.x + TILE_SIZE * self->size.x, self->position.y + TILE_SIZE * self->size.y, 0xFFFF00, 0xFF, INK_NONE, false);
 
-    entity->drawFX = FX_FLIP;
-    RSDK.SetSpriteAnimation(WaterfallSound->aniFrames, 0, &entity->animator, true, 0);
+    self->drawFX = FX_FLIP;
+    RSDK.SetSpriteAnimation(WaterfallSound->aniFrames, 0, &self->animator, true, 0);
 
     Vector2 drawPos;
-    drawPos.x = entity->position.x;
-    drawPos.y = entity->position.y;
-    drawPos.x -= (TILE_SIZE * entity->size.x);
-    drawPos.y -= (TILE_SIZE * entity->size.y);
+    drawPos.x = self->position.x;
+    drawPos.y = self->position.y;
+    drawPos.x -= (TILE_SIZE * self->size.x);
+    drawPos.y -= (TILE_SIZE * self->size.y);
 
-    entity->direction = FLIP_NONE;
-    RSDK.DrawSprite(&entity->animator, &drawPos, false);
+    self->direction = FLIP_NONE;
+    RSDK.DrawSprite(&self->animator, &drawPos, false);
 
-    drawPos.x += (TILE_SIZE * entity->size.x) << 1;
-    entity->direction = FLIP_X;
-    RSDK.DrawSprite(&entity->animator, &drawPos, false);
+    drawPos.x += (TILE_SIZE * self->size.x) << 1;
+    self->direction = FLIP_X;
+    RSDK.DrawSprite(&self->animator, &drawPos, false);
 
-    drawPos.y += (TILE_SIZE * entity->size.y) << 1;
-    entity->direction = FLIP_XY;
-    RSDK.DrawSprite(&entity->animator, &drawPos, false);
+    drawPos.y += (TILE_SIZE * self->size.y) << 1;
+    self->direction = FLIP_XY;
+    RSDK.DrawSprite(&self->animator, &drawPos, false);
 
-    drawPos.x -= (TILE_SIZE * entity->size.x) << 1;
-    entity->direction = FLIP_Y;
-    RSDK.DrawSprite(&entity->animator, &drawPos, false);
+    drawPos.x -= (TILE_SIZE * self->size.x) << 1;
+    self->direction = FLIP_Y;
+    RSDK.DrawSprite(&self->animator, &drawPos, false);
 }
 
 void WaterfallSound_EditorLoad(void) { WaterfallSound->aniFrames = RSDK.LoadSpriteAnimation("Global/TicMark.bin", SCOPE_STAGE); }

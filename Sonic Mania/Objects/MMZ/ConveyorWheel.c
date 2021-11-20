@@ -8,10 +8,10 @@ void ConveyorWheel_Update(void)
 
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionTouch(player, entity, &ConveyorWheel->hitbox)) {
+        if (Player_CheckCollisionTouch(player, self, &ConveyorWheel->hitbox)) {
             if (player->state == Player_State_KnuxGlideDrop || player->state == Player_State_GlideSlide)
                 player->state = Player_State_Ground;
-            if (entity->direction) {
+            if (self->direction) {
                 if (player->groundVel > -0x40000)
                     player->groundVel = -0x40000;
                 if (player->groundVel < -0xF0000)
@@ -26,7 +26,7 @@ void ConveyorWheel_Update(void)
         }
     }
 
-    entity->angle = (entity->angle + 4) & 0x1FF;
+    self->angle = (self->angle + 4) & 0x1FF;
 }
 
 void ConveyorWheel_LateUpdate(void) {}
@@ -38,13 +38,13 @@ void ConveyorWheel_Draw(void) {}
 void ConveyorWheel_Create(void *data)
 {
     RSDK_THIS(ConveyorWheel);
-    entity->drawFX |= FX_FLIP;
-    entity->active        = ACTIVE_BOUNDS;
-    entity->visible       = true;
-    entity->updateRange.x = 0x400000;
-    entity->updateRange.y = 0x400000;
-    entity->drawOrder     = Zone->drawOrderHigh;
-    RSDK.SetSpriteAnimation(ConveyorWheel->aniFrames, 0, &entity->animator, true, 0);
+    self->drawFX |= FX_FLIP;
+    self->active        = ACTIVE_BOUNDS;
+    self->visible       = true;
+    self->updateRange.x = 0x400000;
+    self->updateRange.y = 0x400000;
+    self->drawOrder     = Zone->drawOrderHigh;
+    RSDK.SetSpriteAnimation(ConveyorWheel->aniFrames, 0, &self->animator, true, 0);
 }
 
 void ConveyorWheel_StageLoad(void)
@@ -60,7 +60,7 @@ void ConveyorWheel_StageLoad(void)
 void ConveyorWheel_EditorDraw(void)
 {
     RSDK_THIS(ConveyorWheel);
-    RSDK.DrawSprite(&entity->animator, NULL, false);
+    RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
 void ConveyorWheel_EditorLoad(void) { ConveyorWheel->aniFrames = RSDK.LoadSpriteAnimation("MMZ/ConveyorWheel.bin", SCOPE_STAGE); }

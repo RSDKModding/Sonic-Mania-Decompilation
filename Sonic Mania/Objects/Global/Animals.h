@@ -16,7 +16,13 @@ typedef enum {
     ANIMAL_TOCKY,
     ANIMAL_WOCKY,
     ANIMAL_MICKY,
-} ANIMAL_TYPES;
+} AnimalTypes;
+
+typedef enum {
+    ANIMAL_BEHAVE_BOUNCEAROUND,
+    ANIMAL_BEHAVE_FOLLOW,
+    ANIMAL_BEHAVE_BOUNCEAROUND_BOUNDS,
+} AnimalBehaviours;
 
 // Object Class
 typedef struct {
@@ -25,7 +31,7 @@ typedef struct {
     TABLE(int32 gravityStrength[12], { 0x1800, 0x3800, 0x3800, 0x3800, 0x3800, 0x3800, 0x3800, 0x3800, 0x1800, 0x3800, 0x3800, 0x3800 });
     TABLE(int32 yVelocity[12], { -0x40000, -0x38000, -0x40000, -0x30000, -0x30000, -0x30000, -0x18000, -0x30000, -0x30000, -0x20000, -0x30000, -0x38000 });
     TABLE(int32 xVelocity[12], { -0x30000, -0x28000, -0x20000, -0x18000, -0x1C000, -0x20000, -0x14000, -0x20000, -0x28000, -0x14000, -0x2C000, -0x20000 });
-    uint16 spriteIndex;
+    uint16 aniFrames;
     int32 animalTypes[2];
     bool32 hasPlatform;
     bool32 hasBridge;
@@ -36,8 +42,8 @@ typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 delay;
-    int32 type;
-    int32 behaviour;
+    AnimalTypes type;
+    AnimalBehaviours behaviour;
     Animator animator;
     Hitbox hitbox;
 } EntityAnimals;

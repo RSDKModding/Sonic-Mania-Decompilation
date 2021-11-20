@@ -3,20 +3,22 @@
 
 #include "SonicMania.h"
 
+typedef enum { BUTTON_FLOOR, BUTTON_ROOF, BUTTON_RWALL, BUTTON_LWALL } ButtonTypes;
+
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    uint16 spriteIndex;
+    uint16 aniFrames;
     bool32 hasEggman;
     bool32 hasPhantomRider;
     Hitbox hitboxV;
     Hitbox hitboxH;
-    int32 field_20;
-    int32 field_24;
-    int32 field_28;
-    int32 field_2C;
+    int32 activatePos;
+    int32 buttonOffset;
+    int32 hitboxOffset;
+    int32 unused1; // set in stageload, but never used. no way to tell what it is
     uint16 sfxButton;
-    uint16 field_32;
+    uint16 unused2; // i removed this earlier, but it cannot be padding because of how mania passes the size of the object and entity, so it stays
 } ObjectButton;
 
 // Entity Class
@@ -25,15 +27,15 @@ typedef struct {
     int32 type;
     bool32 walkOnto;
     uint8 tag;
-    int32 field_64;
-    int32 field_68;
-    bool32 activated;
-    int32 field_70;
-    int32 field_74;
-    int32 field_78;
+    bool32 down;            // 64
+    bool32 toggled;         // 68
+    bool32 currentlyActive; // 6B
+    bool32 activated;       // 70
+    bool32 wasActivated;    // 74
+    int32 pressPos;         // 78
     Hitbox hitbox;
-    Animator animator1;
-    Animator animator2;
+    Animator buttonAnimator;
+    Animator baseAnimator;
 } EntityButton;
 
 // Object Struct
@@ -44,7 +46,7 @@ void Button_Update(void);
 void Button_LateUpdate(void);
 void Button_StaticUpdate(void);
 void Button_Draw(void);
-void Button_Create(void* data);
+void Button_Create(void *data);
 void Button_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void Button_EditorDraw(void);
@@ -61,4 +63,4 @@ void Button_TypeRoof(void);
 void Button_TypeRWall(void);
 void Button_TypeLWall(void);
 
-#endif //!OBJ_BUTTON_H
+#endif //! OBJ_BUTTON_H

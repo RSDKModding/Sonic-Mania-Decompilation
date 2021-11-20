@@ -6,12 +6,12 @@ void EggJankenPart_Update(void)
 {
     RSDK_THIS(EggJankenPart);
 
-    entity->position.x += entity->velocity.x;
-    entity->position.y += entity->velocity.y;
-    entity->velocity.y += 0x3800;
-    entity->rotation += entity->angle;
-    if (!RSDK.CheckOnScreen(entity, NULL))
-        destroyEntity(entity);
+    self->position.x += self->velocity.x;
+    self->position.y += self->velocity.y;
+    self->velocity.y += 0x3800;
+    self->rotation += self->angle;
+    if (!RSDK.CheckOnScreen(self, NULL))
+        destroyEntity(self);
 }
 
 void EggJankenPart_LateUpdate(void) {}
@@ -23,21 +23,21 @@ void EggJankenPart_Draw(void)
     RSDK_THIS(EggJankenPart);
 
     if (Zone->timer & 1)
-        RSDK.DrawSprite(&entity->animator, NULL, false);
+        RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
 void EggJankenPart_Create(void *data)
 {
     RSDK_THIS(EggJankenPart);
 
-    RSDK.SetSpriteAnimation(EggJankenPart->aniFrames, 6, &entity->animator, true, 0);
-    entity->active        = ACTIVE_BOUNDS;
-    entity->updateRange.x = 0x800000;
-    entity->updateRange.y = 0x800000;
-    entity->visible       = true;
-    entity->drawOrder     = Zone->drawOrderLow + 1;
-    entity->drawFX |= FX_ROTATE | FX_FLIP;
-    entity->animator.frameID = voidToInt(data);
+    RSDK.SetSpriteAnimation(EggJankenPart->aniFrames, 6, &self->animator, true, 0);
+    self->active        = ACTIVE_BOUNDS;
+    self->updateRange.x = 0x800000;
+    self->updateRange.y = 0x800000;
+    self->visible       = true;
+    self->drawOrder     = Zone->drawOrderLow + 1;
+    self->drawFX |= FX_ROTATE | FX_FLIP;
+    self->animator.frameID = voidToInt(data);
 }
 
 void EggJankenPart_StageLoad(void) { EggJankenPart->aniFrames = RSDK.LoadSpriteAnimation("SPZ2/EggJanken.bin", SCOPE_STAGE); }
@@ -46,7 +46,7 @@ void EggJankenPart_StageLoad(void) { EggJankenPart->aniFrames = RSDK.LoadSpriteA
 void EggJankenPart_EditorDraw(void)
 {
     RSDK_THIS(EggJankenPart);
-    RSDK.DrawSprite(&entity->animator, NULL, false);
+    RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
 void EggJankenPart_EditorLoad(void) { EggJankenPart->aniFrames = RSDK.LoadSpriteAnimation("SPZ2/EggJanken.bin", SCOPE_STAGE); }

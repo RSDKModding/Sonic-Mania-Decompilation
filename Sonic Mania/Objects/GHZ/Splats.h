@@ -3,6 +3,15 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    //GHZ
+    SPLATS_BOUNCEAROUND = 0,
+    //PGZ
+    SPLATS_SPAWNER = 0,
+    SPLATS_INKSPLATS,
+    SPLATS_SPLAT,
+}SplatsTypes;
+
 // Object Class
 typedef struct {
     RSDK_OBJECT
@@ -57,14 +66,14 @@ void Splats_DebugSpawn(void);
 void Splats_CheckPlayerCollisions(void);
 void Splats_CheckOnScreen(void);
 
-void Splats_Unknown2(void);
-void Splats_Unknown3(void);
-void Splats_Unknown4(void);
-void Splats_Unknown5(void);
-void Splats_Unknown6(void);
-void Splats_Unknown7(void);
-void Splats_Unknown8(void);
-void Splats_Unknown9(void);
-void Splats_Unknown10(void);
+void Splats_State_Setup(void);
+void Splats_State_BounceAround(void);
+void Splats_State_SetupInkJar(void);
+void Splats_State_InkJarSpawner(void);
+void Splats_State_JumpOutOfJar(void);
+void Splats_State_HandleBouncing(void);
+void Splats_State_HandleLanding(void);
+void Splats_State_NoMoreJumps(void);
+void Splats_State_InkSplat(void);
 
 #endif //!OBJ_SPLATS_H

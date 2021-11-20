@@ -5,11 +5,11 @@ ObjectExplosion *Explosion;
 void Explosion_Update(void)
 {
     RSDK_THIS(Explosion);
-    RSDK.ProcessAnimation(&entity->animator);
-    entity->position.x += entity->velocity.x;
-    entity->position.y += entity->velocity.y;
-    if (entity->animator.frameID == entity->animator.frameCount - 1)
-        destroyEntity(entity);
+    RSDK.ProcessAnimation(&self->animator);
+    self->position.x += self->velocity.x;
+    self->position.y += self->velocity.y;
+    if (self->animator.frameID == self->animator.frameCount - 1)
+        destroyEntity(self);
 }
 
 void Explosion_LateUpdate(void) {}
@@ -19,19 +19,19 @@ void Explosion_StaticUpdate(void) {}
 void Explosion_Draw(void)
 {
     RSDK_THIS(Explosion);
-    RSDK.DrawSprite(&entity->animator, NULL, false);
+    RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
 void Explosion_Create(void *data)
 {
     RSDK_THIS(Explosion);
-    entity->active  = ACTIVE_NORMAL;
-    entity->visible = true;
-    if (entity->planeFilter > 0 && ((uint8)entity->planeFilter - 1) & 2)
-        entity->drawOrder = Zone->drawOrderHigh;
+    self->active  = ACTIVE_NORMAL;
+    self->visible = true;
+    if (self->planeFilter > 0 && ((uint8)self->planeFilter - 1) & 2)
+        self->drawOrder = Zone->drawOrderHigh;
     else
-        entity->drawOrder = Zone->drawOrderLow;
-    RSDK.SetSpriteAnimation(Explosion->aniFrames, voidToInt(data), &entity->animator, true, 0);
+        self->drawOrder = Zone->drawOrderLow;
+    RSDK.SetSpriteAnimation(Explosion->aniFrames, voidToInt(data), &self->animator, true, 0);
 }
 
 void Explosion_StageLoad(void)
@@ -41,9 +41,15 @@ void Explosion_StageLoad(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void Explosion_EditorDraw(void) {}
+void Explosion_EditorDraw(void)
+{
+    RSDK_THIS(Explosion);
+    RSDK.SetSpriteAnimation(Explosion->aniFrames, EXPLOSION_ENEMY, &self->animator, true, 2);
 
-void Explosion_EditorLoad(void) {}
+    Explosion_Draw();
+}
+
+void Explosion_EditorLoad(void) { Explosion->aniFrames = RSDK.LoadSpriteAnimation("Global/Explosions.bin", SCOPE_STAGE); }
 #endif
 
 void Explosion_Serialize(void) {}

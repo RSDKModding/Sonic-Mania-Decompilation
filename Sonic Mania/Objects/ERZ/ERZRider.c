@@ -5,7 +5,7 @@ ObjectERZRider *ERZRider;
 void ERZRider_Update(void)
 {
     RSDK_THIS(ERZRider);
-    StateMachine_Run(entity->state);
+    StateMachine_Run(self->state);
 }
 
 void ERZRider_LateUpdate(void) {}
@@ -15,33 +15,33 @@ void ERZRider_StaticUpdate(void) {}
 void ERZRider_Draw(void)
 {
     RSDK_THIS(ERZRider);
-    if (entity->stateDraw) {
-        StateMachine_Run(entity->stateDraw);
+    if (self->stateDraw) {
+        StateMachine_Run(self->stateDraw);
     }
     else {
-        RSDK.DrawSprite(&entity->animator1, NULL, false);
+        RSDK.DrawSprite(&self->animator1, NULL, false);
     }
 }
 
 void ERZRider_Create(void *data)
 {
     RSDK_THIS(ERZRider);
-    if (!RSDK_sceneInfo->inEditor) {
-        entity->visible       = true;
-        entity->drawOrder     = Zone->drawOrderLow;
-        entity->active        = ACTIVE_NORMAL;
-        entity->updateRange.x = 0x800000;
-        entity->updateRange.y = 0x800000;
-        entity->isJimmy       = voidToInt(data);
+    if (!SceneInfo->inEditor) {
+        self->visible       = true;
+        self->drawOrder     = Zone->drawOrderLow;
+        self->active        = ACTIVE_NORMAL;
+        self->updateRange.x = 0x800000;
+        self->updateRange.y = 0x800000;
+        self->isJimmy       = voidToInt(data);
         if (!voidToInt(data)) {
-            entity->drawFX = FX_FLIP;
-            RSDK.SetSpriteAnimation(ERZRider->aniFrames, 0, &entity->animator1, true, 0);
-            RSDK.SetSpriteAnimation(ERZRider->aniFrames, 4, &entity->animator2, true, 0);
-            RSDK.SetSpriteAnimation(ERZRider->aniFrames, 5, &entity->animator3, true, 0);
-            RSDK.SetSpriteAnimation(ERZRider->aniFrames, 6, &entity->animator4, true, 0);
-            entity->startPos  = entity->position;
-            entity->stateDraw = ERZRider_StateDraw_Unknown1;
-            entity->state     = StateMachine_None;
+            self->drawFX = FX_FLIP;
+            RSDK.SetSpriteAnimation(ERZRider->aniFrames, 0, &self->animator1, true, 0);
+            RSDK.SetSpriteAnimation(ERZRider->aniFrames, 4, &self->animator2, true, 0);
+            RSDK.SetSpriteAnimation(ERZRider->aniFrames, 5, &self->animator3, true, 0);
+            RSDK.SetSpriteAnimation(ERZRider->aniFrames, 6, &self->animator4, true, 0);
+            self->startPos  = self->position;
+            self->stateDraw = ERZRider_StateDraw_Unknown1;
+            self->state     = StateMachine_None;
         }
     }
 }
@@ -57,11 +57,11 @@ void ERZRider_StateDraw_Unknown1(void)
 void ERZRider_EditorDraw(void)
 {
     RSDK_THIS(ERZRider);
-    entity->drawFX = FX_FLIP;
-    RSDK.SetSpriteAnimation(ERZRider->aniFrames, 0, &entity->animator1, false, 0);
-    RSDK.SetSpriteAnimation(ERZRider->aniFrames, 4, &entity->animator2, false, 0);
-    RSDK.SetSpriteAnimation(ERZRider->aniFrames, 5, &entity->animator3, false, 0);
-    RSDK.SetSpriteAnimation(ERZRider->aniFrames, 6, &entity->animator4, false, 0);
+    self->drawFX = FX_FLIP;
+    RSDK.SetSpriteAnimation(ERZRider->aniFrames, 0, &self->animator1, false, 0);
+    RSDK.SetSpriteAnimation(ERZRider->aniFrames, 4, &self->animator2, false, 0);
+    RSDK.SetSpriteAnimation(ERZRider->aniFrames, 5, &self->animator3, false, 0);
+    RSDK.SetSpriteAnimation(ERZRider->aniFrames, 6, &self->animator4, false, 0);
 
     // ???
 }

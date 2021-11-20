@@ -9,7 +9,7 @@
 typedef struct {
     RSDK_OBJECT
     int32 activeScreens;
-    uint16 spriteIndex;
+    uint16 aniFrames;
 } ObjectGameOver;
 
 // Entity Class
@@ -21,7 +21,7 @@ typedef struct {
     Vector2 barPos;
     Vector2 verts[4];
     Vector2 letterPositions[GameOver_LetterCount];
-    Vector2 unknownPos1[GameOver_LetterCount];
+    Vector2 finalOffsets[GameOver_LetterCount];
     Vector2 letterPosMove[GameOver_LetterCount];
     int32 letterBounceCount[GameOver_LetterCount];
     int32 letterRotations[GameOver_LetterCount];

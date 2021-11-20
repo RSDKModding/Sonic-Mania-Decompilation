@@ -7,15 +7,15 @@ void ForceUnstick_Update(void)
     RSDK_THIS(ForceUnstick);
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionTouch(player, entity, &entity->hitbox)) {
+        if (Player_CheckCollisionTouch(player, self, &self->hitbox)) {
             player->collisionMode = CMODE_FLOOR;
-            if (entity->breakClimb && player->state == Player_State_KnuxWallClimb) {
-                RSDK.SetSpriteAnimation(player->spriteIndex, ANI_FLYTIRED, &player->playerAnimator, false, 2);
+            if (self->breakClimb && player->state == Player_State_KnuxWallClimb) {
+                RSDK.SetSpriteAnimation(player->aniFrames, ANI_FLYTIRED, &player->animator, false, 2);
                 player->state = Player_State_KnuxGlideDrop;
             }
         }
     }
-    entity->visible = DebugMode->debugActive;
+    self->visible = DebugMode->debugActive;
 }
 
 void ForceUnstick_LateUpdate(void) {}
@@ -27,16 +27,16 @@ void ForceUnstick_Draw(void) { ForceUnstick_DrawSprites(); }
 void ForceUnstick_Create(void *data)
 {
     RSDK_THIS(ForceUnstick);
-    if (!RSDK_sceneInfo->inEditor) {
-        entity->updateRange.x = entity->width << 19;
-        entity->updateRange.y = entity->height << 19;
-        entity->hitbox.right  = 8 * entity->width + 8;
-        entity->hitbox.left   = -entity->hitbox.right;
-        entity->hitbox.bottom = 8 * entity->height + 8;
-        entity->hitbox.top    = -entity->hitbox.bottom;
-        entity->visible       = false;
-        entity->active        = ACTIVE_BOUNDS;
-        entity->drawOrder     = Zone->drawOrderHigh;
+    if (!SceneInfo->inEditor) {
+        self->updateRange.x = self->width << 19;
+        self->updateRange.y = self->height << 19;
+        self->hitbox.right  = 8 * self->width + 8;
+        self->hitbox.left   = -self->hitbox.right;
+        self->hitbox.bottom = 8 * self->height + 8;
+        self->hitbox.top    = -self->hitbox.bottom;
+        self->visible       = false;
+        self->active        = ACTIVE_BOUNDS;
+        self->drawOrder     = Zone->drawOrderHigh;
     }
 }
 
@@ -50,21 +50,21 @@ void ForceUnstick_DrawSprites(void)
 {
     Vector2 drawPos;
     RSDK_THIS(ForceUnstick);
-    drawPos.x = entity->position.x;
-    drawPos.y = entity->position.y - (entity->height << 19);
-    drawPos.x = entity->position.x - (entity->width << 19);
+    drawPos.x = self->position.x;
+    drawPos.y = self->position.y - (self->height << 19);
+    drawPos.x = self->position.x - (self->width << 19);
 
-    if (!entity->breakClimb)
+    if (!self->breakClimb)
         ForceUnstick->animator.frameID = 6;
     else
         ForceUnstick->animator.frameID = 9;
 
-    for (int32 y = 0; y < entity->height + 1; ++y) {
-        for (int32 x = 0; x < entity->width + 1; ++x) {
+    for (int32 y = 0; y < self->height + 1; ++y) {
+        for (int32 x = 0; x < self->width + 1; ++x) {
             RSDK.DrawSprite(&ForceUnstick->animator, &drawPos, false);
             drawPos.x += 0x100000;
         }
-        drawPos.x += -0x100000 - (entity->width << 20);
+        drawPos.x += -0x100000 - (self->width << 20);
         drawPos.y += 0x100000;
     }
 }

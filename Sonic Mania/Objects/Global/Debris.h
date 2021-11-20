@@ -37,11 +37,11 @@ void Debris_EditorLoad(void);
 void Debris_Serialize(void);
 
 // Extra Entity Functions
-void Debris_State_Fall(void);
-void Debris_State_LightningSpark(void);
-void Debris_State_FallAndFlicker(void);
+void Debris_FallFlickerAnimSetup(int32 aniFrames, int32 *entries, int32 animationID);
+void Debris_FallFlickerSetup(int32 aniFrames, int32 *entries);
 
-void Debris_FallFlickerAnimSetup(int32 spriteIndex, int32 *a2, int32 animationID);
-void Debris_FallFlickerSetup(int32 spriteIndex, int32 *a2);
+void Debris_State_Move(void);
+void Debris_State_Fall(void);
+void Debris_State_FallAndFlicker(void);
 
 #endif //!OBJ_DEBRIS_H

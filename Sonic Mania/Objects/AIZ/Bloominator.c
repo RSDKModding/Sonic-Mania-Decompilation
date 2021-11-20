@@ -6,7 +6,7 @@ ObjectBloominator *Bloominator;
 void Bloominator_Update(void)
 {
     RSDK_THIS(Bloominator);
-    StateMachine_Run(entity->state);
+    StateMachine_Run(self->state);
 }
 
 void Bloominator_LateUpdate(void) {}
@@ -16,34 +16,34 @@ void Bloominator_StaticUpdate(void) {}
 void Bloominator_Draw(void)
 {
     RSDK_THIS(Bloominator);
-    RSDK.DrawSprite(&entity->animator, NULL, false);
+    RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
 void Bloominator_Create(void *data)
 {
     RSDK_THIS(Bloominator);
-    entity->visible = true;
-    entity->drawFX |= FX_FLIP;
-    entity->drawOrder     = Zone->drawOrderLow;
-    entity->active        = ACTIVE_BOUNDS;
-    entity->updateRange.x = 0x800000;
-    entity->updateRange.y = 0x800000;
+    self->visible = true;
+    self->drawFX |= FX_FLIP;
+    self->drawOrder     = Zone->drawOrderLow;
+    self->active        = ACTIVE_BOUNDS;
+    self->updateRange.x = 0x800000;
+    self->updateRange.y = 0x800000;
 
     if (data) {
-        --entity->drawOrder;
-        RSDK.SetSpriteAnimation(Bloominator->spriteIndex, 2, &entity->animator, true, 0);
-        entity->state = Bloominator_State_Spikeball;
+        --self->drawOrder;
+        RSDK.SetSpriteAnimation(Bloominator->aniFrames, 2, &self->animator, true, 0);
+        self->state = Bloominator_State_Spikeball;
     }
     else {
-        RSDK.SetSpriteAnimation(Bloominator->spriteIndex, 0, &entity->animator, true, 0);
-        entity->state = Bloominator_State_Setup;
+        RSDK.SetSpriteAnimation(Bloominator->aniFrames, 0, &self->animator, true, 0);
+        self->state = Bloominator_State_Setup;
     }
 }
 
 void Bloominator_StageLoad(void)
 {
     if (RSDK.CheckStageFolder("AIZ"))
-        Bloominator->spriteIndex = RSDK.LoadSpriteAnimation("AIZ/Bloominator.bin", SCOPE_STAGE);
+        Bloominator->aniFrames = RSDK.LoadSpriteAnimation("AIZ/Bloominator.bin", SCOPE_STAGE);
     Bloominator->hitbox.left             = -12;
     Bloominator->hitbox.top              = -20;
     Bloominator->hitbox.right            = 12;
@@ -59,14 +59,15 @@ void Bloominator_StageLoad(void)
 
 void Bloominator_DebugDraw(void)
 {
-    RSDK.SetSpriteAnimation(Bloominator->spriteIndex, 0, &DebugMode->animator, true, 0);
+    RSDK.SetSpriteAnimation(Bloominator->aniFrames, 0, &DebugMode->animator, true, 0);
     RSDK.DrawSprite(&DebugMode->animator, NULL, false);
 }
 
 void Bloominator_DebugSpawn(void)
 {
     RSDK_THIS(Bloominator);
-    RSDK.CreateEntity(Bloominator->objectID, 0, entity->position.x, entity->position.y);
+
+    CREATE_ENTITY(Bloominator, NULL, self->position.x, self->position.y);
 }
 
 void Bloominator_CheckHit(void)
@@ -74,24 +75,24 @@ void Bloominator_CheckHit(void)
     RSDK_THIS(Bloominator);
     foreach_active(Player, player)
     {
-        if (Player_CheckBadnikTouch(player, entity, &Bloominator->hitbox))
-            Player_CheckBadnikBreak(entity, player, true);
+        if (Player_CheckBadnikTouch(player, self, &Bloominator->hitbox))
+            Player_CheckBadnikBreak(self, player, true);
     }
 }
 
 void Bloominator_Idle(void)
 {
     RSDK_THIS(Bloominator);
-    if (entity->activeScreens) {
-        if (++entity->timer >= 60) {
-            entity->timer = 0;
-            RSDK.SetSpriteAnimation(Bloominator->spriteIndex, 1, &entity->animator, true, 0);
-            entity->state = Bloominator_State_Firing;
+    if (self->activeScreens) {
+        if (++self->timer >= 60) {
+            self->timer = 0;
+            RSDK.SetSpriteAnimation(Bloominator->aniFrames, 1, &self->animator, true, 0);
+            self->state = Bloominator_State_Firing;
         }
     }
-    RSDK.ProcessAnimation(&entity->animator);
+    RSDK.ProcessAnimation(&self->animator);
     Bloominator_CheckHit();
-    if (!RSDK.CheckOnScreen(entity, NULL))
+    if (!RSDK.CheckOnScreen(self, NULL))
         Bloominator_Create(NULL);
 }
 
@@ -100,67 +101,65 @@ void Bloominator_State_Firing(void)
     RSDK_THIS(Bloominator);
     EntityBloominator *spikeBall = NULL;
 
-    switch (++entity->timer) {
+    switch (++self->timer) {
         case 15:
-            spikeBall =
-                (EntityBloominator *)RSDK.CreateEntity(Bloominator->objectID, (void *)1, entity->position.x - 0x10000, entity->position.y - 0x160000);
+            spikeBall             = CREATE_ENTITY(Bloominator, intToVoid(true), self->position.x - 0x10000, self->position.y - 0x160000);
             spikeBall->velocity.x = -0x10000;
             spikeBall->velocity.y = -0x50000;
-            RSDK.PlaySfx(Bloominator->sfxShot, 0, 255);
+            RSDK.PlaySfx(Bloominator->sfxShot, false, 255);
             break;
         case 45:
-            spikeBall =
-                (EntityBloominator *)RSDK.CreateEntity(Bloominator->objectID, (void *)1, entity->position.x - 0x10000, entity->position.y - 0x160000);
+            spikeBall             = CREATE_ENTITY(Bloominator, intToVoid(true), self->position.x - 0x10000, self->position.y - 0x160000);
             spikeBall->velocity.x = 0x10000;
             spikeBall->velocity.y = -0x50000;
-            RSDK.PlaySfx(Bloominator->sfxShot, 0, 255);
+            RSDK.PlaySfx(Bloominator->sfxShot, false, 255);
             break;
         case 50:
-            entity->timer = -60;
-            RSDK.SetSpriteAnimation(Bloominator->spriteIndex, 0, &entity->animator, true, 0);
-            entity->state = Bloominator_Idle;
+            self->timer = -60;
+            RSDK.SetSpriteAnimation(Bloominator->aniFrames, 0, &self->animator, true, 0);
+            self->state = Bloominator_Idle;
             break;
     }
-    RSDK.ProcessAnimation(&entity->animator);
+    RSDK.ProcessAnimation(&self->animator);
     Bloominator_CheckHit();
-    if (!RSDK.CheckOnScreen(entity, NULL))
+    if (!RSDK.CheckOnScreen(self, NULL))
         Bloominator_Create(NULL);
 }
 
 void Bloominator_State_Setup(void)
 {
     RSDK_THIS(Bloominator);
-    entity->active = ACTIVE_NORMAL;
-    entity->timer  = 0;
-    entity->state  = Bloominator_Idle;
+    self->active = ACTIVE_NORMAL;
+    self->timer  = 0;
+    self->state  = Bloominator_Idle;
     Bloominator_Idle();
 }
 
 void Bloominator_State_Spikeball(void)
 {
     RSDK_THIS(Bloominator);
-    if (RSDK.CheckOnScreen(entity, NULL)) {
-        entity->position.x += entity->velocity.x;
-        entity->position.y += entity->velocity.y;
-        entity->velocity.y += 0x3800;
-        RSDK.ProcessAnimation(&entity->animator);
+    if (RSDK.CheckOnScreen(self, NULL)) {
+        self->position.x += self->velocity.x;
+        self->position.y += self->velocity.y;
+        self->velocity.y += 0x3800;
+        RSDK.ProcessAnimation(&self->animator);
 
         foreach_active(Player, player)
         {
-            if (Player_CheckCollisionTouch(player, entity, &Bloominator->projectileHitbox)) {
-                Player_CheckProjectileHit(player, entity);
+            if (Player_CheckCollisionTouch(player, self, &Bloominator->projectileHitbox)) {
+                Player_CheckProjectileHit(player, self);
             }
         }
     }
     else {
-        destroyEntity(entity);
+        destroyEntity(self);
     }
 }
 
 #if RETRO_INCLUDE_EDITOR
 void Bloominator_EditorDraw(void) { Bloominator_Draw(); }
 
-void Bloominator_EditorLoad(void) { Bloominator->spriteIndex = RSDK.LoadSpriteAnimation("AIZ/Bloominator.bin", SCOPE_STAGE); }
+void Bloominator_EditorLoad(void) { Bloominator->aniFrames = RSDK.LoadSpriteAnimation("AIZ/Bloominator.bin", SCOPE_STAGE); }
 #endif
 
 void Bloominator_Serialize(void) {}

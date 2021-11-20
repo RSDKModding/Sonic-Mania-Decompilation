@@ -5,16 +5,16 @@ ObjectFBZSinkTrash *FBZSinkTrash;
 void FBZSinkTrash_Update(void)
 {
     RSDK_THIS(FBZSinkTrash);
-    if (entity->type != 2) {
-        if (entity->type) {
-            foreach_active(Player, player) { Player_CheckCollisionPlatform(player, entity, &entity->hitbox1); }
+    if (self->type != 2) {
+        if (self->type) {
+            foreach_active(Player, player) { Player_CheckCollisionPlatform(player, self, &self->hitbox1); }
 
             foreach_active(SignPost, signPost)
             {
-                if (signPost->state == SignPost_State_Fall && signPost->position.y + 0x180000 > entity->position.y - (entity->size.y >> 1)) {
-                    RSDK.PlaySfx(SignPost->sfx_Slide, 0, 255);
+                if (signPost->state == SignPost_State_Fall && signPost->position.y + 0x180000 > self->position.y - (self->size.y >> 1)) {
+                    RSDK.PlaySfx(SignPost->sfxSlide, 0, 255);
                     signPost->spinCount  = 4;
-                    signPost->position.y = entity->position.y - (entity->size.y >> 1) - 0x180000;
+                    signPost->position.y = self->position.y - (self->size.y >> 1) - 0x180000;
                     signPost->velocity.y = 0;
                     Music_FadeOut(0.025);
                     signPost->state = SignPost_State_Land;
@@ -24,8 +24,8 @@ void FBZSinkTrash_Update(void)
         else {
             foreach_active(Player, player)
             {
-                if (!Player_CheckCollisionTouch(player, entity, &entity->hitbox1)) {
-                    if (Player_CheckCollisionTouch(player, entity, &entity->hitbox2)) {
+                if (!Player_CheckCollisionTouch(player, self, &self->hitbox1)) {
+                    if (Player_CheckCollisionTouch(player, self, &self->hitbox2)) {
 #if RETRO_USE_PLUS
                         if (player->state == Player_State_MightyHammerDrop) {
                             player->velocity.y = player->velocity.y - (player->velocity.y >> 5) - (player->velocity.y >> 4);
@@ -39,10 +39,9 @@ void FBZSinkTrash_Update(void)
                             }
                         }
 #endif
-                        if ((Zone->timer & 7) == 0) {
-                            EntityDebris *debris = (EntityDebris *)RSDK.CreateEntity(Debris->objectID, Debris_State_Fall,
-                                                                                     player->position.x + RSDK.Rand(-0x40000, 0x40000),
-                                                                                     player->position.y + RSDK.Rand(-0x100000, 0));
+                        if (!(Zone->timer & 7)) {
+                            EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Fall, player->position.x + RSDK.Rand(-0x40000, 0x40000),
+                                                                  player->position.y + RSDK.Rand(-0x100000, 0));
                             RSDK.SetSpriteAnimation(FBZSinkTrash->aniFrames, 0, &debris->animator, false, RSDK.Rand(0, 20));
                             debris->velocity.x    = RSDK.Rand(-0x20000, 0x20000);
                             debris->velocity.y    = player->velocity.y;
@@ -59,10 +58,9 @@ void FBZSinkTrash_Update(void)
                         player->velocity.y = player->velocity.y - (player->velocity.y >> 5) - (player->velocity.y >> 4);
                         if (player->velocity.y >= 0x30000) {
                             int32 speed = abs(player->velocity.y + player->velocity.x);
-                            if (speed > 0x10000 && (Zone->timer & 7) == 0) {
-                                EntityDebris *debris = (EntityDebris *)RSDK.CreateEntity(Debris->objectID, Debris_State_Fall,
-                                                                                         player->position.x + RSDK.Rand(-0x40000, 0x40000),
-                                                                                         player->position.y + 0x40000 + RSDK.Rand(-0x40000, 0x40000));
+                            if (speed > 0x10000 && !(Zone->timer & 7)) {
+                                EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Fall, player->position.x + RSDK.Rand(-0x40000, 0x40000),
+                                                                     player->position.y + 0x40000 + RSDK.Rand(-0x40000, 0x40000));
                                 RSDK.SetSpriteAnimation(FBZSinkTrash->aniFrames, RSDK.Rand(0, 2) + 9, &debris->animator, false, 0);
                                 debris->velocity.x    = RSDK.Rand(-0x20000, 0x20000);
                                 debris->velocity.y    = -0x20000;
@@ -80,10 +78,9 @@ void FBZSinkTrash_Update(void)
                             player->angle         = 0;
                             player->position.y += 0x10000;
                             int32 speed = abs(player->velocity.y + player->velocity.x);
-                            if (speed > 0x10000 && (Zone->timer & 7) == 0) {
-                                EntityDebris *debris = (EntityDebris *)RSDK.CreateEntity(Debris->objectID, Debris_State_Fall,
-                                                                                         player->position.x + RSDK.Rand(-0x40000, 0x40000),
-                                                                                         player->position.y + 0x40000 + RSDK.Rand(-0x40000, 0x40000));
+                            if (speed > 0x10000 && !(Zone->timer & 7)) {
+                                EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Fall, player->position.x + RSDK.Rand(-0x40000, 0x40000),
+                                                                     player->position.y + 0x40000 + RSDK.Rand(-0x40000, 0x40000));
                                 RSDK.SetSpriteAnimation(FBZSinkTrash->aniFrames, RSDK.Rand(0, 2) + 9, &debris->animator, false, 0);
                                 debris->velocity.x    = RSDK.Rand(-0x20000, 0x20000);
                                 debris->velocity.y    = -0x20000;
@@ -102,10 +99,9 @@ void FBZSinkTrash_Update(void)
                         player->angle         = 0;
                         player->position.y += 0x10000;
                         int32 speed = abs(player->velocity.y + player->velocity.x);
-                        if (speed > 0x10000 && (Zone->timer & 7) == 0) {
-                            EntityDebris *debris = (EntityDebris *)RSDK.CreateEntity(Debris->objectID, Debris_State_Fall,
-                                                                                     player->position.x + RSDK.Rand(-0x40000, 0x40000),
-                                                                                     player->position.y + 0x40000 + RSDK.Rand(-0x40000, 0x40000));
+                        if (speed > 0x10000 && !(Zone->timer & 7)) {
+                            EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Fall, player->position.x + RSDK.Rand(-0x40000, 0x40000),
+                                                                 player->position.y + 0x40000 + RSDK.Rand(-0x40000, 0x40000));
                             RSDK.SetSpriteAnimation(FBZSinkTrash->aniFrames, RSDK.Rand(0, 2) + 9, &debris->animator, false, 0);
                             debris->velocity.x    = RSDK.Rand(-0x20000, 0x20000);
                             debris->velocity.y    = -0x20000;
@@ -132,94 +128,94 @@ void FBZSinkTrash_Draw(void)
     RSDK_THIS(FBZSinkTrash);
     Vector2 drawPos;
 
-    entity->direction  = FLIP_NONE;
-    int32 drawX          = entity->position.x - (entity->size.x >> 1);
+    self->direction  = FLIP_NONE;
+    int32 drawX          = self->position.x - (self->size.x >> 1);
     SpriteFrame *frame = RSDK.GetFrame(FBZSinkTrash->aniFrames, 11, 0);
-    drawPos.x          = entity->position.x - (entity->size.x >> 1);
-    drawPos.y          = entity->position.y - (entity->size.y >> 1);
+    drawPos.x          = self->position.x - (self->size.x >> 1);
+    drawPos.y          = self->position.y - (self->size.y >> 1);
     frame->width       = 64;
-    for (int32 i = 0; i < entity->size.x; i += 0x400000) {
-        if (entity->size.x - i < 0x400000)
-            frame->width = (entity->size.x - i) >> 16;
-        RSDK.DrawSprite(&entity->animator2, &drawPos, false);
+    for (int32 i = 0; i < self->size.x; i += 0x400000) {
+        if (self->size.x - i < 0x400000)
+            frame->width = (self->size.x - i) >> 16;
+        RSDK.DrawSprite(&self->animator2, &drawPos, false);
         drawPos.x += 0x400000;
     }
 
     frame         = RSDK.GetFrame(FBZSinkTrash->aniFrames, 11, 1);
     frame->height = 64;
-    for (int32 i = 0; i < entity->size.y; i += 0x400000) {
+    for (int32 i = 0; i < self->size.y; i += 0x400000) {
         drawPos.x    = drawX;
         frame->width = 64;
-        if (entity->size.y - i < 0x400000)
-            frame->height = (entity->size.y - i) >> 16;
+        if (self->size.y - i < 0x400000)
+            frame->height = (self->size.y - i) >> 16;
 
-        for (int32 x = 0; x < entity->size.x; x += 0x400000) {
-            if (entity->size.x - x < 0x400000)
-                frame->width = (entity->size.x - x) >> 16;
-            RSDK.DrawSprite(&entity->animator3, &drawPos, false);
+        for (int32 x = 0; x < self->size.x; x += 0x400000) {
+            if (self->size.x - x < 0x400000)
+                frame->width = (self->size.x - x) >> 16;
+            RSDK.DrawSprite(&self->animator3, &drawPos, false);
             drawPos.x += 0x400000;
         }
         drawPos.y += 0x400000;
     }
 
     frame             = RSDK.GetFrame(FBZSinkTrash->aniFrames, 11, 0);
-    entity->direction = FLIP_Y;
+    self->direction = FLIP_Y;
     drawPos.x         = drawX;
     frame->width      = 64;
-    for (int32 i = 0; i < entity->size.x; i += 0x400000) {
-        if (entity->size.x - i < 0x400000)
-            frame->width = (entity->size.x - i) >> 16;
-        RSDK.DrawSprite(&entity->animator2, &drawPos, false);
+    for (int32 i = 0; i < self->size.x; i += 0x400000) {
+        if (self->size.x - i < 0x400000)
+            frame->width = (self->size.x - i) >> 16;
+        RSDK.DrawSprite(&self->animator2, &drawPos, false);
         drawPos.x += 0x400000;
     }
 
-    if (entity->type < 1) {
+    if (self->type < 1) {
         for (int32 i = 0; i < 64; ++i) {
-            drawPos = entity->positions[i];
-            drawPos.x += entity->position.x;
-            drawPos.y += entity->position.y;
-            entity->animator1.frameID = entity->frameIDs[i];
-            entity->direction         = entity->directions[i];
-            RSDK.DrawSprite(&entity->animator1, &drawPos, false);
+            drawPos = self->positions[i];
+            drawPos.x += self->position.x;
+            drawPos.y += self->position.y;
+            self->animator1.frameID = self->frameIDs[i];
+            self->direction         = self->directions[i];
+            RSDK.DrawSprite(&self->animator1, &drawPos, false);
         }
 
-        entity->direction = FLIP_NONE;
+        self->direction = FLIP_NONE;
     }
 }
 
 void FBZSinkTrash_Create(void *data)
 {
     RSDK_THIS(FBZSinkTrash);
-    if (!RSDK_sceneInfo->inEditor) {
-        entity->updateRange.x = entity->size.x >> 1;
-        entity->updateRange.y = (entity->size.y >> 1) + 0x400000;
-        entity->active        = ACTIVE_BOUNDS;
-        entity->visible       = true;
-        entity->drawFX        = FX_FLIP;
-        if (entity->type == 0)
-            entity->drawOrder = Zone->drawOrderHigh - 2;
+    if (!SceneInfo->inEditor) {
+        self->updateRange.x = self->size.x >> 1;
+        self->updateRange.y = (self->size.y >> 1) + 0x400000;
+        self->active        = ACTIVE_BOUNDS;
+        self->visible       = true;
+        self->drawFX        = FX_FLIP;
+        if (self->type == 0)
+            self->drawOrder = Zone->drawOrderHigh - 2;
         else
-            entity->drawOrder = Zone->drawOrderLow;
+            self->drawOrder = Zone->drawOrderLow;
 
-        entity->hitbox1.left   = -(entity->size.x >> 17);
-        entity->hitbox1.top    = -(entity->size.y >> 17);
-        entity->hitbox1.right  = entity->size.x >> 17;
-        entity->hitbox1.bottom = 24 - (entity->size.y >> 17);
+        self->hitbox1.left   = -(self->size.x >> 17);
+        self->hitbox1.top    = -(self->size.y >> 17);
+        self->hitbox1.right  = self->size.x >> 17;
+        self->hitbox1.bottom = 24 - (self->size.y >> 17);
 
-        entity->hitbox2.left   = -(entity->size.x >> 17);
-        entity->hitbox2.top    = (entity->size.y >> 17) - 16;
-        entity->hitbox2.right  = entity->size.x >> 17;
-        entity->hitbox2.bottom = entity->size.y >> 17;
+        self->hitbox2.left   = -(self->size.x >> 17);
+        self->hitbox2.top    = (self->size.y >> 17) - 16;
+        self->hitbox2.right  = self->size.x >> 17;
+        self->hitbox2.bottom = self->size.y >> 17;
 
-        RSDK.SetSpriteAnimation(FBZSinkTrash->aniFrames, 0, &entity->animator1, true, 0);
-        RSDK.SetSpriteAnimation(FBZSinkTrash->aniFrames, 11, &entity->animator2, true, 0);
-        RSDK.SetSpriteAnimation(FBZSinkTrash->aniFrames, 11, &entity->animator3, true, 1);
+        RSDK.SetSpriteAnimation(FBZSinkTrash->aniFrames, 0, &self->animator1, true, 0);
+        RSDK.SetSpriteAnimation(FBZSinkTrash->aniFrames, 11, &self->animator2, true, 0);
+        RSDK.SetSpriteAnimation(FBZSinkTrash->aniFrames, 11, &self->animator3, true, 1);
 
         for (int32 i = 0; i < 64; ++i) {
-            entity->positions[i].x = RSDK.Rand(-(entity->size.x >> 1), entity->size.x >> 1);
-            entity->positions[i].y = RSDK.Rand(-(entity->size.y >> 1), entity->size.y >> 1);
-            entity->frameIDs[i]    = RSDK.Rand(0, 22);
-            entity->directions[i]  = RSDK.Rand(0, 4);
+            self->positions[i].x = RSDK.Rand(-(self->size.x >> 1), self->size.x >> 1);
+            self->positions[i].y = RSDK.Rand(-(self->size.y >> 1), self->size.y >> 1);
+            self->frameIDs[i]    = RSDK.Rand(0, 22);
+            self->directions[i]  = RSDK.Rand(0, 4);
         }
     }
 }

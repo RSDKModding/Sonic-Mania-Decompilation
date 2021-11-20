@@ -47,7 +47,7 @@ typedef struct {
           { 4, 4, 5, 5, 6, 6, 7, 7, 8, 10, 12, 14, 16, 18, 20, 22, 24, 25, 26, 27, 28, 29, 30, 31, 32, 32, 32, 32, 32, 32, 32, 32 });
     int32 screenYValues[32];
     int32 medalScreenYVals[32];
-    uint16 spriteIndex;
+    uint16 aniFrames;
     uint16 ringSpriteIndex;
 } ObjectBSS_Collectable;
 

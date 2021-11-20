@@ -4,53 +4,53 @@
 #include "SonicMania.h"
 
 typedef enum {
-    PLATFORM_0,
-    PLATFORM_1,
-    PLATFORM_2,
-    PLATFORM_3,
-    PLATFORM_4,
-    PLATFORM_5,
-    PLATFORM_6,
-    PLATFORM_7,
-    PLATFORM_8,
-    PLATFORM_9,
-    PLATFORM_10,
-    PLATFORM_11,
-    PLATFORM_12,
-    PLATFORM_13,
-    PLATFORM_14,
-    PLATFORM_15,
-    PLATFORM_16,
+    PLATFORM_FIXED,
+    PLATFORM_COLLAPSING,
+    PLATFORM_MOVING,
+    PLATFORM_CIRCULAR,
+    PLATFORM_SWINGING,
+    PLATFORM_CONTROLLED,
+    PLATFORM_PUSHABLE,
+    PLATFORM_MOVING_STATIC,
+    PLATFORM_WAIT,
+    PLATFORM_WAIT_OSC,
+    PLATFORM_ACTIVEABOVE,
+    PLATFORM_CONT_ACTIVATER,
+    PLATFORM_WAIT_ARC,
+    PLATFORM_STICKY,
+    PLATFORM_SWING_CLACK,
+    PLATFORM_STATIC,
+    PLATFORM_SINKER,
 } PlatformTypes;
 
 typedef enum {
-    PLATFORM_C_0,
-    PLATFORM_C_1,
-    PLATFORM_C_2,
-    PLATFORM_C_3,
-    PLATFORM_C_4,
-    PLATFORM_C_5,
-    PLATFORM_C_6,
-    PLATFORM_C_7,
-    PLATFORM_C_8,
-    PLATFORM_C_9,
-    PLATFORM_C_10,
-    PLATFORM_C_11,
-    PLATFORM_C_12,
-    PLATFORM_C_13,
-    PLATFORM_C_14,
-    PLATFORM_C_15,
+    PLATFORM_C_SOLID_TOP,
+    PLATFORM_C_SOLID_ALL,
+    PLATFORM_C_USE_TILES,
+    PLATFORM_C_HAZARD_ALL,
+    PLATFORM_C_SOLID_NONE,
+    PLATFORM_C_HAZARD_SIDES,
+    PLATFORM_C_HAZARD_BOTTOM,
+    PLATFORM_C_HAZARD_TOP,
+    PLATFORM_C_TWISTER,
+    PLATFORM_C_STICKY_ALL,
+    PLATFORM_C_STICKY_TOP,
+    PLATFORM_C_STICKY_LEFT,
+    PLATFORM_C_STICKY_RIGHT,
+    PLATFORM_C_STICKY_BOTTOM,
+    PLATFORM_C_TURNTABLE,
+    PLATFORM_C_SOLID_ALL_NOCRUSH,
 } PlatformCollisionTypes;
 
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    uint16 spriteIndex;
-    Vector2 stoodPos[4];
-    uint16 sfx_Clacker;
-    uint16 sfx_Clang;
-    uint16 sfx_Push;
-    uint16 sfx_Clack;
+    uint16 aniFrames;
+    Vector2 stoodPos[PLAYER_MAX];
+    uint16 sfxClacker;
+    uint16 sfxClang;
+    uint16 sfxPush;
+    uint16 sfxClack;
     bool32 playingPushSFX;
     bool32 useClack;
 } ObjectPlatform;
@@ -77,57 +77,56 @@ void Platform_EditorLoad(void);
 void Platform_Serialize(void);
 
 // Extra Entity Functions
-//States
-void Platform_State_Nothing(void);
-void Platform_State_Normal(void);
-void Platform_State_Moving(void);
-void Platform_State_Swing(void);
-void Platform_State_Wait(void);
-void Platform_State_WaitBobbing(void);
-void Platform_State_StartPush(void);
-void Platform_State_StartFalling(void);
-void Platform_State_PlayerActivated(void);
-void Platform_State_PlayerMove(void);
-void Platform_State_Pushable(void);
-void Platform_State_OffScreenReset(void);
-void Platform_State_MovingSpike(void);
-void Platform_State_Falling(void);
-void Platform_State_Collapsing(void);
-void Platform_State_Circular(void);
-void Platform_State_12(void);
-void Platform_State_13(void);
-void Platform_State_14(void);
-void Platform_State_15(void);
-void Platform_State_16(void);
 
-//Collision States
-void Platform_CollisionState_AllSolid(void);
-void Platform_CollisionState_AllHazard(void);
-void Platform_CollisionState_BottomHazard(void);
-void Platform_CollisionState_LRHazard(void);
-void Platform_CollisionState_Tiles(void);
-void Platform_CollisionState_Sticky(void);
-void Platform_CollisionState_TopHazard(void);
+// Collision States
 void Platform_CollisionState_TopSolid(void);
-void Platform_CollisionState_TurnTable(void);
-void Platform_CollisionState_Twister(void);
-void Platform_CollisionState_None(void);
+void Platform_CollisionState_AllSolid(void);
 void Platform_CollisionState_AllSolid_NoCrush(void);
+void Platform_CollisionState_LRHazard(void);
+void Platform_CollisionState_BottomHazard(void);
+void Platform_CollisionState_TopHazard(void);
+void Platform_CollisionState_Twister(void);
+void Platform_CollisionState_TurnTable(void);
+void Platform_CollisionState_Sticky(void);
+void Platform_CollisionState_Tiles(void);
+void Platform_CollisionState_AllHazard(void);
+void Platform_CollisionState_None(void);
 
-//Unknown
-void Platform_Unknown1(void);
-void Platform_Unknown2(void);
-void Platform_Unknown3(void);
-void Platform_Unknown4(void);
-void Platform_Unknown5(void);
-void Platform_Unknown6(void);
-void Platform_Unknown7(void);
-void Platform_Unknown8(void);
-void Platform_Unknown9(void);
-void Platform_Unknown10(void);
-void Platform_Unknown11(void);
-void Platform_Unknown12(void);
-void Platform_Unknown13(void);
-void Platform_Unknown14(void);
+//States
+void Platform_State_Fixed(void);
+void Platform_State_Collapse(void);
+void Platform_State_Collapse_StartFall(void);
+void Platform_State_Collapse_Falling(void);
+void Platform_State_Collapse_CheckReset(void);
+void Platform_State_Moving(void);
+void Platform_State_Circular(void);
+void Platform_State_Swing(void);
+void Platform_State_Swing_Clack(void);
+void Platform_State_StartPush(void);
+void Platform_State_Pushable(void);
+void Platform_State_Pushable_FallingL(void);
+void Platform_State_Pushable_FallingR(void);
+void Platform_State_Pushable_Falling(void);
+void Platform_State_Controlled(void);
+void Platform_State_WaitForControl(void);
+void Platform_State_Moving_Static(void);
+void Platform_State_Wait(void);
+void Platform_State_WaitOscillating(void);
+void Platform_State_PlayerMove_Starting(void);
+void Platform_State_PlayerMove_Moving(void);
+void Platform_State_PlayerMove_Rotate(void);
+void Platform_State_PlayerMove_HandleRestart(void);
+void Platform_State_ActiveFromAbove(void);
+void Platform_State_ActivateControlOnStood(void);
+void Platform_State_Static(void);
+void Platform_State_SwingMove_CheckStood(void);
+void Platform_State_SwingMove_MoveToDest(void);
+void Platform_State_SwingMove_WaitNotStood(void);
+void Platform_State_SwingMove_MoveToStart(void);
+void Platform_State_Sticky_CheckRide(void);
+void Platform_State_Sticky_MoveToDest(void);
+void Platform_State_Sticky_WaitNotStood(void);
+void Platform_State_Sticky_MoveToStart(void);
+void Platform_State_Sinker(void);
 
 #endif //!OBJ_PLATFORM_H

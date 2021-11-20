@@ -6,37 +6,37 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    uint16 spriteIndex;
-    uint16 sfx_Three;
-    uint16 sfx_Two;
-    uint16 sfx_One;
-    uint16 sfx_Go;
-    uint16 sfx_Goal;
-    uint16 sfx_SonicWins;
-    uint16 sfx_TailsWins;
-    uint16 sfx_KnuxWins;
+    uint16 aniFrames;
+    uint16 sfxThree;
+    uint16 sfxTwo;
+    uint16 sfxOne;
+    uint16 sfxGo;
+    uint16 sfxGoal;
+    uint16 sfxSonicWins;
+    uint16 sfxTailsWins;
+    uint16 sfxKnuxWins;
 #if RETRO_USE_PLUS
-    uint16 sfx_MightyWins;
-    uint16 sfx_RayWins;
+    uint16 sfxMightyWins;
+    uint16 sfxRayWins;
 #endif
-    uint16 sfx_NewRecordTop;
-    uint16 sfx_NewRecordMid;
-    uint16 sfx_Sonic;
-    uint16 sfx_Tails;
-    uint16 sfx_Knuckles;
+    uint16 sfxNewRecordTop;
+    uint16 sfxNewRecordMid;
+    uint16 sfxSonic;
+    uint16 sfxTails;
+    uint16 sfxKnuckles;
 #if RETRO_USE_PLUS
-    uint16 sfx_Mighty;
-    uint16 sfx_Ray;
+    uint16 sfxMighty;
+    uint16 sfxRay;
 #endif
-    uint16 sfx_TheWinnerIs;
-    uint16 sfx_Player1;
-    uint16 sfx_Player2;
+    uint16 sfxTheWinnerIs;
+    uint16 sfxPlayer1;
+    uint16 sfxPlayer2;
 #if RETRO_USE_PLUS
-    uint16 sfx_Player3;
-    uint16 sfx_Player4;
+    uint16 sfxPlayer3;
+    uint16 sfxPlayer4;
 #endif
-    uint16 sfx_ItsADraw;
-    uint16 sfx_ItsADraw_Set;
+    uint16 sfxItsADraw;
+    uint16 sfxItsADraw_Set;
     bool32 finishedCountdown;
 } ObjectAnnouncer;
 
@@ -48,7 +48,7 @@ typedef struct {
     int32 timer;
     int32 playerID;
     int32 screen;
-    Vector2 pos;
+    Vector2 drawOffset;
     Animator animator;
     Animator animator2;
 } EntityAnnouncer;
@@ -72,10 +72,10 @@ void Announcer_Serialize(void);
 // Extra Entity Functions
 void Announcer_StartCountdown(void);
 void Announcer_AnnounceGoal(int32 screen);
-void Announcer_Unknown3(void);
-void Announcer_Unknown4(void);
-void Announcer_Unknown5(void);
-void Announcer_Unknown6(void);
+void Announcer_Draw_Countdown(void);
+void Announcer_Draw_Finished(void);
+void Announcer_State_Countdown(void);
+void Announcer_State_Finished(void);
 void Announcer_State_AnnounceWinner(void);
 void Announcer_State_AnnounceDraw(void);
 void Announcer_State_AnnounceWinPlayer(void);

@@ -797,7 +797,7 @@ int32 LoadXMLStages(int32 mode, int32 gcListCount, int32 gcStageCount)
                             if (nameAttr)
                                 lstName = getXMLAttributeValueString(nameAttr);
 
-                            sprintf(list->name, lstName);
+                            sprintf(list->name, "%s", lstName);
                             GEN_HASH(list->name, list->hash);
 
                             list->sceneOffsetStart = gcStageCount;
@@ -832,10 +832,10 @@ int32 LoadXMLStages(int32 mode, int32 gcListCount, int32 gcStageCount)
 
                                     SceneListEntry *scene = &sceneInfo.listData[gcStageCount];
 
-                                    sprintf(scene->name, stgName);
+                                    sprintf(scene->name, "%s", stgName);
                                     GEN_HASH(scene->name, scene->hash);
-                                    sprintf(scene->folder, stgFolder);
-                                    sprintf(scene->sceneID, stgID);
+                                    sprintf(scene->folder, "%s", stgFolder);
+                                    sprintf(scene->sceneID, "%s", stgID);
 
 #if RETRO_REV02
                                     scene->filter = stgFilter;

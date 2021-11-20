@@ -5,28 +5,28 @@ ObjectUIVsRoundPicker *UIVsRoundPicker;
 void UIVsRoundPicker_Update(void)
 {
     RSDK_THIS(UIVsRoundPicker);
-    entity->touchPosStart.x = entity->size.x;
-    entity->touchPosStart.y = entity->size.y;
-    entity->touchPosEnd.y   = 0;
-    entity->touchPosStart.x = (entity->touchPosStart.x + 3 * entity->size.y) >> 1;
-    entity->touchPosStart.y = entity->size.y + 0x60000;
-    entity->touchPosEnd.x   = -(entity->touchPosStart.x >> 1);
+    self->touchPosStart.x = self->size.x;
+    self->touchPosStart.y = self->size.y;
+    self->touchPosEnd.y   = 0;
+    self->touchPosStart.x = (self->touchPosStart.x + 3 * self->size.y) >> 1;
+    self->touchPosStart.y = self->size.y + 0x60000;
+    self->touchPosEnd.x   = -(self->touchPosStart.x >> 1);
 
-    if (entity->textSpriteIndex != UIWidgets->textSpriteIndex) {
-        RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, 12, &entity->animator1, true, 4);
-        entity->textSpriteIndex = UIWidgets->textSpriteIndex;
+    if (self->textSpriteIndex != UIWidgets->textSpriteIndex) {
+        RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, 12, &self->animator1, true, 4);
+        self->textSpriteIndex = UIWidgets->textSpriteIndex;
     }
-    if (entity->val != entity->prevVal) {
+    if (self->val != self->prevVal) {
         UIVsRoundPicker_SetText();
-        entity->prevVal = entity->val;
+        self->prevVal = self->val;
     }
 
-    StateMachine_Run(entity->state);
+    StateMachine_Run(self->state);
 
-    EntityUIControl *control = (EntityUIControl *)entity->parent;
+    EntityUIControl *control = (EntityUIControl *)self->parent;
     if (control) {
         if (control->state == UIButton_Unknown16)
-            UIVsRoundPicker_Unknown4(entity);
+            UIVsRoundPicker_Unknown4(self);
     }
 }
 
@@ -39,64 +39,64 @@ void UIVsRoundPicker_Draw(void)
     RSDK_THIS(UIVsRoundPicker);
     Vector2 drawPos;
 
-    int32 size  = (entity->size.y + entity->size.x) >> 16;
-    drawPos.x = entity->position.x;
-    drawPos.y = entity->position.y;
-    drawPos.x -= entity->field_128;
-    drawPos.y -= entity->field_128;
+    int32 size  = (self->size.y + self->size.x) >> 16;
+    drawPos.x = self->position.x;
+    drawPos.y = self->position.y;
+    drawPos.x -= self->field_128;
+    drawPos.y -= self->field_128;
 #if RETRO_USE_PLUS
-    UIWidgets_Unknown7(entity->size.y >> 16, size, entity->dword120, (UIWidgets->buttonColour >> 16) & 0xFF, (UIWidgets->buttonColour >> 8) & 0xFF,
+    UIWidgets_DrawRhombus(self->size.y >> 16, size, self->dword120, (UIWidgets->buttonColour >> 16) & 0xFF, (UIWidgets->buttonColour >> 8) & 0xFF,
                        (UIWidgets->buttonColour) & 0xFF, drawPos.x, drawPos.y);
 #else
-    UIWidgets_Unknown7(entity->size.y >> 16, size, entity->dword120, 0xF0, 0xF0, 0xF0, drawPos.x, drawPos.y);
+    UIWidgets_DrawRhombus(self->size.y >> 16, size, self->dword120, 0xF0, 0xF0, 0xF0, drawPos.x, drawPos.y);
 #endif
 
-    drawPos = entity->position;
-    drawPos.x += entity->field_128;
-    drawPos.y += entity->field_128;
-    UIWidgets_Unknown7((entity->size.y >> 16), size, entity->dword120, 0, 0, 0, drawPos.x, drawPos.y);
+    drawPos = self->position;
+    drawPos.x += self->field_128;
+    drawPos.y += self->field_128;
+    UIWidgets_DrawRhombus((self->size.y >> 16), size, self->dword120, 0, 0, 0, drawPos.x, drawPos.y);
 
-    if (entity->arrowWidth > 0 && entity->flag) {
-        if (entity->val >= 2) {
-            drawPos = entity->position;
-            drawPos.y += entity->field_124;
-            drawPos.x -= entity->arrowWidth << 15;
-            RSDK.DrawSprite(&entity->animator3, &drawPos, false);
+    if (self->arrowWidth > 0 && self->flag) {
+        if (self->val >= 2) {
+            drawPos = self->position;
+            drawPos.y += self->field_124;
+            drawPos.x -= self->arrowWidth << 15;
+            RSDK.DrawSprite(&self->animator3, &drawPos, false);
         }
-        if (entity->val < entity->maxVal) {
-            drawPos = entity->position;
-            drawPos.y += entity->field_124;
-            drawPos.x += entity->arrowWidth << 15;
-            RSDK.DrawSprite(&entity->animator4, &drawPos, false);
+        if (self->val < self->maxVal) {
+            drawPos = self->position;
+            drawPos.y += self->field_124;
+            drawPos.x += self->arrowWidth << 15;
+            RSDK.DrawSprite(&self->animator4, &drawPos, false);
         }
     }
-    if (entity->textFlag)
+    if (self->textFlag)
         UIVsRoundPicker_Unknown2();
 }
 
 void UIVsRoundPicker_Create(void *data)
 {
     RSDK_THIS(UIVsRoundPicker);
-    if (!entity->val)
-        entity->val = 3;
-    if (!entity->maxVal)
-        entity->maxVal = 12;
-    if (!RSDK_sceneInfo->inEditor) {
-        entity->visible         = true;
-        entity->drawOrder       = 2;
-        entity->active          = ACTIVE_BOUNDS;
-        entity->updateRange.x   = 0x800000;
-        entity->updateRange.y   = 0x400000;
-        entity->dword120        = entity->size.y >> 16;
-        entity->size.y          = abs(entity->size.y);
-        entity->textFlag        = true;
-        entity->processButtonCB = UIVsRoundPicker_ProcessButtonCB;
-        entity->touchCB         = UIVsRoundPicker_ProcessTouchCB;
-        RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, 12, &entity->animator1, true, 4);
-        entity->textSpriteIndex = UIWidgets->textSpriteIndex;
-        RSDK.SetSpriteAnimation(UIVsRoundPicker->aniFrames, 15, &entity->animator2, true, 0);
-        RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 2, &entity->animator3, true, 0);
-        RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 2, &entity->animator4, true, 1);
+    if (!self->val)
+        self->val = 3;
+    if (!self->maxVal)
+        self->maxVal = 12;
+    if (!SceneInfo->inEditor) {
+        self->visible         = true;
+        self->drawOrder       = 2;
+        self->active          = ACTIVE_BOUNDS;
+        self->updateRange.x   = 0x800000;
+        self->updateRange.y   = 0x400000;
+        self->dword120        = self->size.y >> 16;
+        self->size.y          = abs(self->size.y);
+        self->textFlag        = true;
+        self->processButtonCB = UIVsRoundPicker_ProcessButtonCB;
+        self->touchCB         = UIVsRoundPicker_ProcessTouchCB;
+        RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, 12, &self->animator1, true, 4);
+        self->textSpriteIndex = UIWidgets->textSpriteIndex;
+        RSDK.SetSpriteAnimation(UIVsRoundPicker->aniFrames, 15, &self->animator2, true, 0);
+        RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 2, &self->animator3, true, 0);
+        RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 2, &self->animator4, true, 1);
         UIVsRoundPicker_SetText();
     }
 }
@@ -108,40 +108,40 @@ void UIVsRoundPicker_Unknown2(void)
     RSDK_THIS(UIVsRoundPicker);
     Vector2 drawPos;
 
-    drawPos.x = entity->position.x;
-    drawPos.y = entity->position.y + entity->field_124 - 0x40000;
-    switch (entity->align) {
-        case 0: drawPos.x = -0x60000 - (entity->size.x >> 1) + entity->position.x; break;
-        case 2: drawPos.x = entity->position.x + (entity->size.x >> 1) - 0x60000; break;
+    drawPos.x = self->position.x;
+    drawPos.y = self->position.y + self->field_124 - 0x40000;
+    switch (self->align) {
+        case 0: drawPos.x = -0x60000 - (self->size.x >> 1) + self->position.x; break;
+        case 2: drawPos.x = self->position.x + (self->size.x >> 1) - 0x60000; break;
     }
 
-    int32 width = RSDK.GetStringWidth(UIVsRoundPicker->aniFrames, 15, &entity->text, 0, entity->text.textLength, 0) << 16;
+    int32 width = RSDK.GetStringWidth(UIVsRoundPicker->aniFrames, 15, &self->text, 0, self->text.textLength, 0) << 16;
     drawPos.x -= (width + 0x300000) >> 1;
-    RSDK.DrawText(&entity->animator2, &drawPos, &entity->text, 0, entity->text.textLength, ALIGN_LEFT, 0, 0, 0, false);
+    RSDK.DrawText(&self->animator2, &drawPos, &self->text, 0, self->text.textLength, ALIGN_LEFT, 0, 0, 0, false);
 
     drawPos.x += width + 0x40000;
-    RSDK.DrawSprite(&entity->animator1, &drawPos, false);
+    RSDK.DrawSprite(&self->animator1, &drawPos, false);
 }
 
 void UIVsRoundPicker_SetText(void)
 {
     RSDK_THIS(UIVsRoundPicker);
     char buffer[0x10];
-    sprintf(buffer, "%2d", entity->val);
-    RSDK.PrependText(&entity->text, buffer);
-    RSDK.SetSpriteString(UIVsRoundPicker->aniFrames, 15, &entity->text);
+    sprintf(buffer, "%2d", self->val);
+    RSDK.PrependText(&self->text, buffer);
+    RSDK.SetSpriteString(UIVsRoundPicker->aniFrames, 15, &self->text);
 }
 
 void UIVsRoundPicker_Apply(void)
 {
     RSDK_THIS(UIVsRoundPicker);
 
-    RSDK.PlaySfx(UIWidgets->sfx_Bleep, false, 255);
+    RSDK.PlaySfx(UIWidgets->sfxBleep, false, 255);
 
-    entity->field_12C = -0x20000;
-    entity->field_130 = -0x20000;
-    entity->field_124 = 0;
-    entity->field_128 = -0x20000;
+    self->field_12C = -0x20000;
+    self->field_130 = -0x20000;
+    self->field_124 = 0;
+    self->field_128 = -0x20000;
     UIVsRoundPicker_SetText();
 }
 
@@ -149,13 +149,13 @@ void UIVsRoundPicker_ProcessButtonCB(void)
 {
     RSDK_THIS(UIVsRoundPicker);
 
-    int32 sel = entity->val;
-    if (UIControl->keyLeft && entity->val > 1)
-        entity->val--;
-    if (UIControl->keyRight && entity->val < entity->maxVal)
-        ++entity->val;
+    int32 sel = self->val;
+    if (UIControl->keyLeft && self->val > 1)
+        self->val--;
+    if (UIControl->keyRight && self->val < self->maxVal)
+        ++self->val;
 
-    if (sel != entity->val)
+    if (sel != self->val)
         UIVsRoundPicker_Apply();
 }
 
@@ -170,48 +170,48 @@ bool32 UIVsRoundPicker_ProcessTouchCB(void)
     callbacks[0] = UIVsRoundPicker_TouchedCB_Left;
     callbacks[1] = UIVsRoundPicker_TouchedCB_Right;
 
-    touchStart[0].x = entity->touchPosStart.x;
-    touchStart[0].y = entity->touchPosStart.y;
-    touchStart[1].x = entity->touchPosStart.x;
-    touchStart[1].y = entity->touchPosStart.y;
+    touchStart[0].x = self->touchPosStart.x;
+    touchStart[0].y = self->touchPosStart.y;
+    touchStart[1].x = self->touchPosStart.x;
+    touchStart[1].y = self->touchPosStart.y;
 
-    touchEnd[0].x = entity->touchPosEnd.x;
-    touchEnd[0].y = entity->touchPosEnd.y;
-    touchEnd[1].x = -entity->touchPosEnd.x;
-    touchEnd[1].y = entity->touchPosEnd.y;
+    touchEnd[0].x = self->touchPosEnd.x;
+    touchEnd[0].y = self->touchPosEnd.y;
+    touchEnd[1].x = -self->touchPosEnd.x;
+    touchEnd[1].y = self->touchPosEnd.y;
 
     bool32 pressed = false;
     for (int32 i = 0; i < 2; ++i) {
-        if (RSDK_touchMouse->count) {
+        if (TouchInfo->count) {
             int32 sizeX = touchStart[i].x >> 1;
             int32 sizeY = touchStart[i].y >> 1;
-            for (int32 t = 0; t < RSDK_touchMouse->count; ++t) {
-                int32 x = (RSDK_screens->position.x << 16) - ((RSDK_touchMouse->x[t] * RSDK_screens->width) * -65536.0f);
-                int32 y = (RSDK_screens->position.y << 16) - ((RSDK_touchMouse->y[t] * RSDK_screens->height) * -65536.0f);
+            for (int32 t = 0; t < TouchInfo->count; ++t) {
+                int32 x = (ScreenInfo->position.x << 16) - ((TouchInfo->x[t] * ScreenInfo->width) * -65536.0f);
+                int32 y = (ScreenInfo->position.y << 16) - ((TouchInfo->y[t] * ScreenInfo->height) * -65536.0f);
 
-                int32 touchX = abs(touchEnd[i].x + entity->position.x - x);
-                int32 touchY = abs(touchEnd[i].y + entity->position.y - y);
+                int32 touchX = abs(touchEnd[i].x + self->position.x - x);
+                int32 touchY = abs(touchEnd[i].y + self->position.y - y);
                 if (touchX < sizeX && touchY < sizeY) {
-                    entity->touchID = i;
+                    self->touchID = i;
                     pressed         = true;
                 }
             }
         }
-        else if (entity->touchPressed && entity->touchID == i && !entity->disabled) {
+        else if (self->touchPressed && self->touchID == i && !self->disabled) {
             callbacks[i]();
         }
     }
 
-    entity->touchPressed = pressed;
-    return entity->touchPressed;
+    self->touchPressed = pressed;
+    return self->touchPressed;
 }
 
 void UIVsRoundPicker_TouchedCB_Left(void)
 {
     RSDK_THIS(UIVsRoundPicker);
 
-    if (entity->val > 1) {
-        entity->val--;
+    if (self->val > 1) {
+        self->val--;
         UIVsRoundPicker_Apply();
     }
 }
@@ -220,8 +220,8 @@ void UIVsRoundPicker_TouchedCB_Right(void)
 {
     RSDK_THIS(UIVsRoundPicker);
 
-    if (entity->val < entity->maxVal) {
-        entity->val++;
+    if (self->val < self->maxVal) {
+        self->val++;
         UIVsRoundPicker_Apply();
     }
 }
@@ -242,33 +242,33 @@ void UIVsRoundPicker_Unknown8(void)
 {
     RSDK_THIS(UIVsRoundPicker);
 
-    entity->textFlag = true;
-    if (entity->field_124) {
-        int32 dist = -(entity->field_124 / abs(entity->field_124));
-        entity->field_124 += dist << 15;
+    self->textFlag = true;
+    if (self->field_124) {
+        int32 dist = -(self->field_124 / abs(self->field_124));
+        self->field_124 += dist << 15;
         if (dist < 0) {
-            if (entity->field_124 < 0) {
-                entity->field_124 = 0;
+            if (self->field_124 < 0) {
+                self->field_124 = 0;
             }
-            else if (dist > 0 && entity->field_124 > 0)
-                entity->field_124 = 0;
+            else if (dist > 0 && self->field_124 > 0)
+                self->field_124 = 0;
         }
-        else if (dist > 0 && entity->field_124 > 0)
-            entity->field_124 = 0;
+        else if (dist > 0 && self->field_124 > 0)
+            self->field_124 = 0;
     }
 
-    if (entity->field_128) {
-        int32 dist = -(entity->field_128 / abs(entity->field_128));
-        entity->field_128 += dist << 16;
+    if (self->field_128) {
+        int32 dist = -(self->field_128 / abs(self->field_128));
+        self->field_128 += dist << 16;
         if (dist < 0) {
-            if (entity->field_128 < 0) {
-                entity->field_128 = 0;
+            if (self->field_128 < 0) {
+                self->field_128 = 0;
             }
-            else if (dist > 0 && entity->field_128 > 0)
-                entity->field_128 = 0;
+            else if (dist > 0 && self->field_128 > 0)
+                self->field_128 = 0;
         }
-        else if (dist > 0 && entity->field_128 > 0)
-            entity->field_128 = 0;
+        else if (dist > 0 && self->field_128 > 0)
+            self->field_128 = 0;
     }
 }
 
@@ -276,19 +276,19 @@ void UIVsRoundPicker_Unknown9(void)
 {
     RSDK_THIS(UIVsRoundPicker);
 
-    entity->field_12C += 0x4000;
-    entity->field_124 += entity->field_12C;
-    entity->textFlag = true;
-    if (entity->field_124 >= 0 && entity->field_12C > 0) {
-        entity->field_124 = 0;
-        entity->field_12C = 0;
+    self->field_12C += 0x4000;
+    self->field_124 += self->field_12C;
+    self->textFlag = true;
+    if (self->field_124 >= 0 && self->field_12C > 0) {
+        self->field_124 = 0;
+        self->field_12C = 0;
     }
 
-    entity->field_130 += 0x4800;
-    entity->field_128 += entity->field_130;
-    if (entity->field_128 >= -0x20000 && entity->field_130 > 0) {
-        entity->field_128 = -0x20000;
-        entity->field_130 = 0;
+    self->field_130 += 0x4800;
+    self->field_128 += self->field_130;
+    if (self->field_128 >= -0x20000 && self->field_130 > 0) {
+        self->field_128 = -0x20000;
+        self->field_130 = 0;
     }
 }
 
@@ -296,19 +296,19 @@ void UIVsRoundPicker_Unknown9(void)
 void UIVsRoundPicker_EditorDraw(void)
 {
     RSDK_THIS(UIVsRoundPicker);
-    entity->visible         = true;
-    entity->drawOrder       = 2;
-    entity->active          = ACTIVE_BOUNDS;
-    entity->updateRange.x   = 0x800000;
-    entity->updateRange.y   = 0x400000;
-    entity->dword120        = entity->size.y >> 16;
-    entity->size.y          = abs(entity->size.y);
-    entity->flag            = true;
-    RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, 12, &entity->animator1, true, 4);
-    entity->textSpriteIndex = UIWidgets->textSpriteIndex;
-    RSDK.SetSpriteAnimation(UIVsRoundPicker->aniFrames, 15, &entity->animator2, true, 0);
-    RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 2, &entity->animator3, true, 0);
-    RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 2, &entity->animator4, true, 1);
+    self->visible         = true;
+    self->drawOrder       = 2;
+    self->active          = ACTIVE_BOUNDS;
+    self->updateRange.x   = 0x800000;
+    self->updateRange.y   = 0x400000;
+    self->dword120        = self->size.y >> 16;
+    self->size.y          = abs(self->size.y);
+    self->flag            = true;
+    RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, 12, &self->animator1, true, 4);
+    self->textSpriteIndex = UIWidgets->textSpriteIndex;
+    RSDK.SetSpriteAnimation(UIVsRoundPicker->aniFrames, 15, &self->animator2, true, 0);
+    RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 2, &self->animator3, true, 0);
+    RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 2, &self->animator4, true, 1);
 
     UIVsRoundPicker_Draw();
 }

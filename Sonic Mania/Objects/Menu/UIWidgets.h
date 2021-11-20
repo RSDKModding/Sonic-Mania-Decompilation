@@ -8,7 +8,7 @@ typedef struct {
     RSDK_OBJECT
 #if RETRO_USE_PLUS
     int32 buttonColours[16];
-    int32 arrayIndex;
+    int32 timer;
     int32 field_48[12];
 #else
     int32 arrayIndex;
@@ -22,12 +22,12 @@ typedef struct {
 #endif
     uint16 textSpriteIndex;
     uint16 labelSpriteIndex;
-    uint16 sfx_Bleep;
-    uint16 sfx_Accept;
-    uint16 sfx_Warp;
-    uint16 sfx_Event;
-    uint16 sfx_Woosh;
-    uint16 sfx_Fail;
+    uint16 sfxBleep;
+    uint16 sfxAccept;
+    uint16 sfxWarp;
+    uint16 sfxEvent;
+    uint16 sfxWoosh;
+    uint16 sfxFail;
 #if RETRO_USE_PLUS
     colour buttonColour;
 #endif
@@ -58,17 +58,17 @@ void UIWidgets_Serialize(void);
 // Extra Entity Functions
 void UIWidgets_ApplyLanguage(void);
 
-void UIWidgets_Unknown2(int32 a1, int32 a2, int32 a3, int32 a4);
-void UIWidgets_Unknown3(int32 a1, int32 a2, int32 a3, int32 a4);
-void UIWidgets_Unknown4(int32 a1, int32 a2, int32 a3, int32 a4);
-void UIWidgets_Unknown5(int32 red, int32 a2, int32 green, int32 blue, int32 x, int32 y);
-void UIWidgets_Unknown6(char a1, int32 red, int32 green, int32 blue, InkEffects ink, int32 x, int32 y);
-void UIWidgets_Unknown7(int32 a1, int32 a2, int32 a3, int32 red, int32 green, int32 blue, int32 a7, int32 a8);
-void UIWidgets_Unknown8(int32 a1, int32 x, int32 y);
-void UIWidgets_Unknown9(int32 a1, int32 x, int32 y);
-Vector2 UIWidgets_Unknown10(colour colour1, colour colour2, int32 drawX, int32 drawY);
+void UIWidgets_DrawRectOutline_Black(int32 height, int32 width, int32 x, int32 y);   // -> x, y, w, h
+void UIWidgets_DrawRectOutline_Blended(int32 height, int32 width, int32 x, int32 y); // -> x, y, w, h
+void UIWidgets_DrawRectOutline_Flash(int32 height, int32 width, int32 x, int32 y); // -> x, y, w, h
+void UIWidgets_DrawRightTriangle(int32 x, int32 y, int32 size, int32 red, int32 green, int32 blue);
+void UIWidgets_DrawEquilateralTriangle(int32 x, int32 y, int32 size, uint8 flag, int32 red, int32 green, int32 blue, InkEffects ink);
+void UIWidgets_DrawRhombus(int32 width, int32 height, int32 size, int32 red, int32 green, int32 blue, int32 x, int32 y); // -> x, y, w, size, r, g, b
+void UIWidgets_DrawUpDownArrows(int32 x, int32 y, int32 arrowDist);
+void UIWidgets_DrawLeftRightArrows(int32 x, int32 y, int32 arrowDist);
+Vector2 UIWidgets_DrawTriJoinRect(int32 x, int32 y, colour leftColour, colour rightColour);
 #if RETRO_USE_PLUS
-void UIWidgets_Unknown11(int32 minutes, int32 seconds, int32 milliseconds, int32 x, int32 y);
+void UIWidgets_DrawTime(int32 x, int32 y, int32 minutes, int32 seconds, int32 milliseconds);
 #endif
 
 #endif //!OBJ_UIWIDGETS_H

@@ -3,19 +3,27 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    TITLEBG_MOUNTAIN1,
+    TITLEBG_MOUNTAIN2,
+    TITLEBG_REFLECTION,
+    TITLEBG_WATERSPARKLE,
+    TITLEBG_WINGSHINE,
+}TitleBGTypes;
+
 // Object Class
 typedef struct {
     RSDK_OBJECT
     int32 palTimer;
     int32 timer;
     int32 angle;
-    uint16 spriteIndex;
+    uint16 aniFrames;
 } ObjectTitleBG;
 
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    int32 type;
+    TitleBGTypes type;
     int32 timer;
     Animator animator;
 } EntityTitleBG;
@@ -38,7 +46,7 @@ void TitleBG_Serialize(void);
 
 // Extra Entity Functions
 void TitleBG_SetupFX(void);
-void TitleBG_ScanlineCallbackA(ScanlineInfo *scanlines);
-void TitleBG_ScanlineCallbackB(ScanlineInfo *scanlines);
+void TitleBG_ScanlineCallback_Clouds(ScanlineInfo *scanlines);
+void TitleBG_ScanlineCallback_Island(ScanlineInfo *scanlines);
 
 #endif //!OBJ_TITLEBG_H

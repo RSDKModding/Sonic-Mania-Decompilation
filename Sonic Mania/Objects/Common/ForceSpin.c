@@ -7,20 +7,20 @@ void ForceSpin_Update(void)
     RSDK_THIS(ForceSpin);
     foreach_active(Player, player)
     {
-        int32 x     = (player->position.x - entity->position.x) >> 8;
-        int32 y     = (player->position.y - entity->position.y) >> 8;
-        int32 scanX = (y * RSDK.Sin256(entity->negAngle)) + (x * RSDK.Cos256(entity->negAngle)) + entity->position.x;
-        int32 scanY = (y * RSDK.Cos256(entity->negAngle)) - (x * RSDK.Sin256(entity->negAngle)) + entity->position.y;
-        int32 pos   = ((player->velocity.y >> 8) * RSDK.Sin256(entity->negAngle)) + (player->velocity.x >> 8) * RSDK.Cos256(entity->negAngle);
-        RSDK.Cos256(entity->negAngle);
-        RSDK.Sin256(entity->negAngle);
+        int32 x     = (player->position.x - self->position.x) >> 8;
+        int32 y     = (player->position.y - self->position.y) >> 8;
+        int32 scanX = (y * RSDK.Sin256(self->negAngle)) + (x * RSDK.Cos256(self->negAngle)) + self->position.x;
+        int32 scanY = (y * RSDK.Cos256(self->negAngle)) - (x * RSDK.Sin256(self->negAngle)) + self->position.y;
+        int32 pos   = ((player->velocity.y >> 8) * RSDK.Sin256(self->negAngle)) + (player->velocity.x >> 8) * RSDK.Cos256(self->negAngle);
+        RSDK.Cos256(self->negAngle);
+        RSDK.Sin256(self->negAngle);
 
-        int32 xDif = abs(scanX - entity->position.x);
-        int32 yDif = abs(scanY - entity->position.y);
+        int32 xDif = abs(scanX - self->position.x);
+        int32 yDif = abs(scanY - self->position.y);
 
-        if (xDif < 0x180000 && yDif < entity->size << 19) {
-            if (scanX + pos >= entity->position.x) {
-                if (entity->direction) {
+        if (xDif < 0x180000 && yDif < self->size << 19) {
+            if (scanX + pos >= self->position.x) {
+                if (self->direction) {
                     if (player->state == Player_State_ForceRoll_Ground || player->state == Player_State_ForceRoll_Air) {
                         if (player->onGround)
                             player->state = Player_State_Roll;
@@ -35,7 +35,7 @@ void ForceSpin_Update(void)
                 }
             }
             else {
-                if (!entity->direction) {
+                if (!self->direction) {
                     if (player->state == Player_State_ForceRoll_Ground || player->state == Player_State_ForceRoll_Air) {
                         if (player->onGround)
                             player->state = Player_State_Roll;
@@ -51,7 +51,7 @@ void ForceSpin_Update(void)
             }
         }
     }
-    entity->visible = DebugMode->debugActive;
+    self->visible = DebugMode->debugActive;
 }
 
 void ForceSpin_LateUpdate(void) {}
@@ -63,28 +63,28 @@ void ForceSpin_Draw(void) { ForceSpin_DrawSprites(); }
 void ForceSpin_Create(void *data)
 {
     RSDK_THIS(ForceSpin);
-    RSDK.SetSpriteAnimation(ForceSpin->aniFrames, 0, &entity->animator, true, 0);
-    entity->drawFX |= FX_FLIP;
-    entity->animator.frameID = 4;
-    if (!RSDK_sceneInfo->inEditor) {
-        entity->active = ACTIVE_BOUNDS;
+    RSDK.SetSpriteAnimation(ForceSpin->aniFrames, 0, &self->animator, true, 0);
+    self->drawFX |= FX_FLIP;
+    self->animator.frameID = 4;
+    if (!SceneInfo->inEditor) {
+        self->active = ACTIVE_BOUNDS;
 
         int32 x = 0;
-        if (entity->size * RSDK.Sin256(entity->angle) << 11 >= 0)
-            x = entity->size * RSDK.Sin256(entity->angle) << 11;
+        if (self->size * RSDK.Sin256(self->angle) << 11 >= 0)
+            x = self->size * RSDK.Sin256(self->angle) << 11;
         else
-            x = -0x800 * entity->size * RSDK.Sin256(entity->angle);
-        entity->updateRange.x = x + 0x200000;
+            x = -0x800 * self->size * RSDK.Sin256(self->angle);
+        self->updateRange.x = x + 0x200000;
 
         int32 y = 0;
-        if (entity->size * RSDK.Cos256(entity->angle) << 11 >= 0)
-            y = entity->size * RSDK.Cos256(entity->angle) << 11;
+        if (self->size * RSDK.Cos256(self->angle) << 11 >= 0)
+            y = self->size * RSDK.Cos256(self->angle) << 11;
         else
-            y = -0x800 * entity->size * RSDK.Cos256(entity->angle);
-        entity->visible       = false;
-        entity->updateRange.y = y + 0x200000;
-        entity->drawOrder     = Zone->drawOrderLow;
-        entity->negAngle      = (uint8) - (uint8)entity->angle;
+            y = -0x800 * self->size * RSDK.Cos256(self->angle);
+        self->visible       = false;
+        self->updateRange.y = y + 0x200000;
+        self->drawOrder     = Zone->drawOrderLow;
+        self->negAngle      = (uint8) - (uint8)self->angle;
     }
 }
 
@@ -95,15 +95,15 @@ void ForceSpin_DrawSprites(void)
     Vector2 drawPos;
 
     RSDK_THIS(ForceSpin);
-    drawPos.x = RSDK_sceneInfo->entity->position.x;
-    drawPos.y = entity->position.y;
-    drawPos.y -= entity->size << 19;
-    Zone_Unknown3(&entity->position, &drawPos, entity->angle);
+    drawPos.x = self->position.x;
+    drawPos.y = self->position.y;
+    drawPos.y -= self->size << 19;
+    Zone_RotateOnPivot(&drawPos, &self->position, self->angle);
 
-    for (int32 i = 0; i < entity->size; ++i) {
-        RSDK.DrawSprite(&entity->animator, &drawPos, 0);
-        drawPos.x += RSDK.Sin256(entity->angle) << 12;
-        drawPos.y += RSDK.Cos256(entity->angle) << 12;
+    for (int32 i = 0; i < self->size; ++i) {
+        RSDK.DrawSprite(&self->animator, &drawPos, 0);
+        drawPos.x += RSDK.Sin256(self->angle) << 12;
+        drawPos.y += RSDK.Cos256(self->angle) << 12;
     }
 }
 void ForceSpin_SetPlayerState(void *plr)
@@ -111,9 +111,9 @@ void ForceSpin_SetPlayerState(void *plr)
     RSDK_THIS(ForceSpin);
     EntityPlayer *player = (EntityPlayer *)plr;
     if (player->state != Player_State_ForceRoll_Ground && player->state != Player_State_ForceRoll_Air) {
-        if (player->playerAnimator.animationID != ANI_JUMP) {
-            RSDK.PlaySfx(Player->sfx_Roll, 0, 255);
-            RSDK.SetSpriteAnimation(player->spriteIndex, ANI_JUMP, &player->playerAnimator, 0, 0);
+        if (player->animator.animationID != ANI_JUMP) {
+            RSDK.PlaySfx(Player->sfxRoll, 0, 255);
+            RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, 0, 0);
             if (!player->collisionMode && player->onGround)
                 player->position.y += player->cameraOffset;
             player->pushing = 0;
@@ -127,7 +127,7 @@ void ForceSpin_SetPlayerState(void *plr)
 
         player->nextGroundState = StateMachine_None;
         if (abs(player->groundVel) < 0x10000) {
-            if (entity->direction & FLIP_X)
+            if (self->direction & FLIP_X)
                 player->groundVel = -0x40000;
             else
                 player->groundVel = 0x40000;

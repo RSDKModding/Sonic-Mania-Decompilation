@@ -57,7 +57,7 @@ void SaveGame_LoadSaveData(void)
     }
 
     if (Player) {
-        if (!TitleCard || TitleCard->suppressCB != Zone_Unknown16) {
+        if (!TitleCard || TitleCard->suppressCB != Zone_TitleCard_SupressCB) {
             Player->savedLives    = saveRAM->lives;
             Player->savedScore    = saveRAM->score;
             Player->savedScore1UP = saveRAM->score1UP;
@@ -69,13 +69,13 @@ void SaveGame_LoadSaveData(void)
         }
     }
 
-    if (Zone && RSDK_sceneInfo->activeCategory < 3) {
+    if (Zone && SceneInfo->activeCategory < 3) {
         Zone->prevListPos = Zone->listPos;
-        Zone->listPos     = RSDK_sceneInfo->listPos;
+        Zone->listPos     = SceneInfo->listPos;
     }
 
     if (globals->recallEntities) {
-        if (RSDK_sceneInfo->activeCategory < 3) {
+        if (SceneInfo->activeCategory < 3) {
             for (int32 p = 0; p < 4; ++p) {
                 StarPost->playerPositions[p].x = globals->restartPos[(p * 2) + 0];
                 StarPost->playerPositions[p].y = globals->restartPos[(p * 2) + 1];
@@ -87,9 +87,9 @@ void SaveGame_LoadSaveData(void)
             StarPost->storedSeconds = globals->restartSeconds;
             StarPost->storedMinutes = globals->restartMinutes;
 
-            RSDK_sceneInfo->milliseconds = globals->tempMilliseconds;
-            RSDK_sceneInfo->seconds      = globals->tempSeconds;
-            RSDK_sceneInfo->minutes      = globals->tempMinutes;
+            SceneInfo->milliseconds = globals->tempMilliseconds;
+            SceneInfo->seconds      = globals->tempSeconds;
+            SceneInfo->minutes      = globals->tempMinutes;
 
             Player->savedScore       = globals->restartScore;
             Player->rings            = globals->restartRings;
@@ -103,12 +103,12 @@ void SaveGame_LoadSaveData(void)
             for (int32 e = 0x40; e < 0x840; ++e) {
                 if (globals->atlEntityData[(0x200 * 1) + e] == 1) {
                     Entity *entity   = RSDK.GetEntityByID(e);
-                    entity->objectID = 0;
+                    entity->objectID = TYPE_BLANK;
                     entity->active   = -1;
                 }
                 else if (globals->atlEntityData[(0x200 * 1) + e] == 2) {
                     EntityItemBox *itemBox = (EntityItemBox *)RSDK.GetEntityByID(e);
-                    RSDK.SetSpriteAnimation(ItemBox->spriteIndex, 1, &itemBox->animatorBox, true, 0);
+                    RSDK.SetSpriteAnimation(ItemBox->aniFrames, 1, &itemBox->animatorBox, true, 0);
                     RSDK.SetSpriteAnimation(0xFFFF, 0, &itemBox->animatorOverlay, true, 0);
                     RSDK.SetSpriteAnimation(0xFFFF, 0, &itemBox->animatorDebris, true, 0);
                     RSDK.SetSpriteAnimation(0xFFFF, 0, &itemBox->animatorContents, true, 0);
@@ -152,7 +152,7 @@ void SaveGame_LoadFile(void)
         return;
     }
     globals->saveLoaded     = STATUS_CONTINUE;
-    SaveGame->loadEntityPtr = RSDK_sceneInfo->entity;
+    SaveGame->loadEntityPtr = SceneInfo->entity;
     SaveGame->loadCallback  = SaveGame_SaveLoadedCB;
     API_LoadUserFile("SaveData.bin", globals->saveRAM, 0x10000, SaveGame_LoadFile_CB);
 }
@@ -163,7 +163,7 @@ void SaveGame_SaveFile(void (*callback)(int32 status))
             callback(false);
     }
     else {
-        SaveGame->saveEntityPtr = RSDK_sceneInfo->entity;
+        SaveGame->saveEntityPtr = SceneInfo->entity;
         SaveGame->saveCallback  = callback;
 #if RETRO_USE_PLUS
         API_SaveUserFile("SaveData.bin", globals->saveRAM, 0x10000, SaveGame_SaveFile_CB, false);
@@ -180,11 +180,11 @@ void SaveGame_SaveLoadedCB(int32 status)
         foreach_all(UISaveSlot, entity)
         {
             if (!entity->type) {
-                Entity* store                     = RSDK_sceneInfo->entity;
-                RSDK_sceneInfo->entity = (Entity *)entity;
+                Entity* store                     = SceneInfo->entity;
+                SceneInfo->entity = (Entity *)entity;
                 UISaveSlot_LoadSaveInfo();
                 UISaveSlot_Unknown8();
-                RSDK_sceneInfo->entity = store;
+                SceneInfo->entity = store;
             }
         }
         GameProgress_ShuffleBSSID();
@@ -195,7 +195,7 @@ void SaveGame_SaveLoadedCB(int32 status)
     if ((globals->taTableID == -1 || globals->taTableLoaded != STATUS_OK) && globals->taTableLoaded != STATUS_CONTINUE) {
         LogHelpers_Print("Loading Time Attack DB");
         globals->taTableLoaded        = STATUS_CONTINUE;
-        TimeAttackData->loadEntityPtr = RSDK_sceneInfo->entity;
+        TimeAttackData->loadEntityPtr = SceneInfo->entity;
         TimeAttackData->loadCallback  = NULL;
         globals->taTableID            = API.LoadUserDB("TimeAttackDB.bin", TimeAttackData_LoadCB);
         if (globals->taTableID == -1) {
@@ -222,9 +222,9 @@ void SaveGame_SaveGameState(void)
     globals->restartMilliseconds = StarPost->storedMS;
     globals->restartSeconds      = StarPost->storedSeconds;
     globals->restartMinutes      = StarPost->storedMinutes;
-    globals->tempMinutes         = RSDK_sceneInfo->milliseconds;
-    globals->tempSeconds         = RSDK_sceneInfo->seconds;
-    globals->tempMinutes         = RSDK_sceneInfo->minutes;
+    globals->tempMinutes         = SceneInfo->milliseconds;
+    globals->tempSeconds         = SceneInfo->seconds;
+    globals->tempMinutes         = SceneInfo->minutes;
 
     saveRAM->lives           = player1->lives;
     globals->restartLives[0] = player1->lives;
@@ -311,10 +311,10 @@ void SaveGame_SavePlayerState(void)
     globals->restartSlot[2]      = 0;
     globals->restartSlot[3]      = 0;
     EntityPlayer *player         = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
-    globals->restartMilliseconds = RSDK_sceneInfo->milliseconds;
-    globals->restartSeconds      = RSDK_sceneInfo->seconds;
-    globals->restartMinutes      = RSDK_sceneInfo->minutes;
-    if (saveRAM && TitleCard->suppressCB != Zone_Unknown16) {
+    globals->restartMilliseconds = SceneInfo->milliseconds;
+    globals->restartSeconds      = SceneInfo->seconds;
+    globals->restartMinutes      = SceneInfo->minutes;
+    if (saveRAM && TitleCard->suppressCB != Zone_TitleCard_SupressCB) {
         saveRAM->lives = player->lives;
         saveRAM->score = player->score;
         saveRAM->score1UP = player->score1UP;
@@ -331,9 +331,9 @@ void SaveGame_SavePlayerState(void)
 }
 void SaveGame_LoadPlayerState(void)
 {
-    RSDK_sceneInfo->milliseconds = globals->restartMilliseconds;
-    RSDK_sceneInfo->seconds      = globals->restartSeconds;
-    RSDK_sceneInfo->minutes      = globals->restartMinutes;
+    SceneInfo->milliseconds = globals->restartMilliseconds;
+    SceneInfo->seconds      = globals->restartSeconds;
+    SceneInfo->minutes      = globals->restartMinutes;
     Player->rings                = globals->restartRings;
     Player->ringExtraLife        = globals->restart1UP;
     Player->powerups             = globals->restartPowerups;
@@ -368,11 +368,11 @@ void SaveGame_LoadFile_CB(int32 status)
     }
 
     if (SaveGame->loadCallback) {
-        Entity *store = RSDK_sceneInfo->entity;
+        Entity *store = SceneInfo->entity;
         if (SaveGame->loadEntityPtr)
-            RSDK_sceneInfo->entity = (Entity *)SaveGame->loadEntityPtr;
+            SceneInfo->entity = (Entity *)SaveGame->loadEntityPtr;
         SaveGame->loadCallback(state);
-        RSDK_sceneInfo->entity  = store;
+        SceneInfo->entity  = store;
         SaveGame->loadCallback  = NULL;
         SaveGame->loadEntityPtr = NULL;
     }
@@ -380,11 +380,11 @@ void SaveGame_LoadFile_CB(int32 status)
 void SaveGame_SaveFile_CB(int32 status)
 {
     if (SaveGame->saveCallback) {
-        Entity *store = RSDK_sceneInfo->entity;
+        Entity *store = SceneInfo->entity;
         if (SaveGame->saveEntityPtr)
-            RSDK_sceneInfo->entity = SaveGame->saveEntityPtr;
+            SceneInfo->entity = SaveGame->saveEntityPtr;
         SaveGame->saveCallback(status == 200);
-        RSDK_sceneInfo->entity  = store;
+        SceneInfo->entity  = store;
         SaveGame->saveCallback  = NULL;
         SaveGame->saveEntityPtr = NULL;
     }

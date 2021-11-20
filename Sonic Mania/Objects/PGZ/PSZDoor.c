@@ -10,97 +10,97 @@ void PSZDoor_Update(void)
     int32 offsetY = 0;
 
     int32 speed = 0;
-    switch (entity->open ^ entity->orientation) {
+    switch (self->open ^ self->orientation) {
         case 0:
             offsetY = -0x10000;
-            speed   = -entity->speed;
+            speed   = -self->speed;
             break;
         case 1:
-            speed   = entity->speed;
+            speed   = self->speed;
             offsetY = 0x10000;
             break;
         case 2:
-            speed   = entity->speed;
+            speed   = self->speed;
             offsetX = -0x10000;
             break;
         case 3:
             offsetX = 0x10000;
-            speed   = -entity->speed;
+            speed   = -self->speed;
             break;
         default: break;
     }
 
-    int32 startX = entity->startPos.x;
-    int32 startY = entity->startPos.y;
+    int32 startX = self->startPos.x;
+    int32 startY = self->startPos.y;
 
-    Vector2 *pos = &entity->startPos;
-    if (entity->field_70) {
+    Vector2 *pos = &self->startPos;
+    if (self->field_70) {
         if (PSZDoor_Unknown1() > 0) {
-            entity->startPos.x += entity->speed * (offsetX >> 3);
-            entity->startPos.y += entity->speed * (offsetY >> 3);
-            entity->rotation += speed;
+            self->startPos.x += self->speed * (offsetX >> 3);
+            self->startPos.y += self->speed * (offsetY >> 3);
+            self->rotation += speed;
         }
 
         if (PSZDoor_Unknown1() < 0) {
-            entity->startPos.x = entity->field_8C.x;
-            entity->startPos.y = entity->field_8C.y;
+            self->startPos.x = self->field_8C.x;
+            self->startPos.y = self->field_8C.y;
         }
-        if (entity->startPos.x == entity->field_8C.x && entity->startPos.y == entity->field_8C.y) {
-            entity->field_70 = 0;
-            entity->open     = entity->open ^ 1;
+        if (self->startPos.x == self->field_8C.x && self->startPos.y == self->field_8C.y) {
+            self->field_70 = 0;
+            self->open     = self->open ^ 1;
         }
     }
 
-    int32 posX = entity->startPos.x - startX;
-    int32 posY = entity->startPos.y - startY;
+    int32 posX = self->startPos.x - startX;
+    int32 posY = self->startPos.y - startY;
 
     bool32 flag = false;
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionBox(player, pos, &PSZDoor->hitboxes[entity->animator1.frameID]) == 1) {
-            if (entity->orientation >= 2)
+        if (Player_CheckCollisionBox(player, pos, &PSZDoor->hitboxes[self->animator1.frameID]) == 1) {
+            if (self->orientation >= 2)
                 player->position.x += posX;
             else
                 player->position.y += posY;
         }
 
-        if (entity->automatic) {
-            if (entity->orientation >= 2) {
-                if (player->position.y < entity->position.y) {
-                    if (abs(player->position.x - entity->position.x) < 0x200000)
+        if (self->automatic) {
+            if (self->orientation >= 2) {
+                if (player->position.y < self->position.y) {
+                    if (abs(player->position.x - self->position.x) < 0x200000)
                         flag = true;
                 }
             }
             else {
-                if (player->position.x < entity->position.x) {
-                    if (abs(player->position.y - entity->position.y) < 0x200000)
+                if (player->position.x < self->position.x) {
+                    if (abs(player->position.y - self->position.y) < 0x200000)
                         flag = true;
                 }
             }
         }
-        else if (entity->automatic == 2) {
-            if (entity->orientation >= 2) {
-                if (player->position.y > entity->position.y) {
-                    if (abs(player->position.x - entity->position.x) < 0x200000)
+        else if (self->automatic == 2) {
+            if (self->orientation >= 2) {
+                if (player->position.y > self->position.y) {
+                    if (abs(player->position.x - self->position.x) < 0x200000)
                         flag = true;
                 }
             }
-            else if (player->position.x > entity->position.x) {
-                if (abs(player->position.y - entity->position.y) < 0x200000)
+            else if (player->position.x > self->position.x) {
+                if (abs(player->position.y - self->position.y) < 0x200000)
                     flag = true;
             }
         }
     }
 
-    EntityDoorTrigger *trigger = entity->trigger;
+    EntityDoorTrigger *trigger = self->trigger;
     if (trigger && ((trigger->objectID == DoorTrigger->objectID && trigger->animator2.frameID == 1) || flag)) {
-        if (entity->activeScreens)
+        if (self->activeScreens)
             RSDK.PlaySfx(PSZDoor->sfxOpen, false, 255);
-        entity->field_84   = entity->startPos;
-        entity->trigger    = 0;
-        entity->field_70   = true;
-        entity->field_8C.x = entity->startPos.x + 112 * offsetX;
-        entity->field_8C.y = entity->startPos.y + 112 * offsetY;
+        self->field_84   = self->startPos;
+        self->trigger    = 0;
+        self->field_70   = true;
+        self->field_8C.x = self->startPos.x + 112 * offsetX;
+        self->field_8C.y = self->startPos.y + 112 * offsetY;
     }
 }
 
@@ -113,84 +113,84 @@ void PSZDoor_Draw(void)
     RSDK_THIS(PSZDoor);
     Vector2 drawPos;
 
-    RSDK.DrawSprite(&entity->animator1, &entity->startPos, false);
+    RSDK.DrawSprite(&self->animator1, &self->startPos, false);
 
-    entity->animator1.frameID = 2;
-    drawPos.x                 = entity->position.x + entity->offset.x;
-    drawPos.y                 = entity->position.y + entity->offset.y;
-    RSDK.DrawSprite(&entity->animator2, &drawPos, false);
-    RSDK.DrawSprite(&entity->animator1, &drawPos, false);
+    self->animator1.frameID = 2;
+    drawPos.x                 = self->position.x + self->offset.x;
+    drawPos.y                 = self->position.y + self->offset.y;
+    RSDK.DrawSprite(&self->animator2, &drawPos, false);
+    RSDK.DrawSprite(&self->animator1, &drawPos, false);
 
-    if (entity->orientation < 2)
-        drawPos.x -= 2 * entity->offset.x;
+    if (self->orientation < 2)
+        drawPos.x -= 2 * self->offset.x;
     else
-        drawPos.y -= 2 * entity->offset.y;
+        drawPos.y -= 2 * self->offset.y;
 
-    int32 rotation     = entity->rotation;
-    entity->rotation = 256 - rotation;
-    RSDK.DrawSprite(&entity->animator2, &drawPos, false);
-    RSDK.DrawSprite(&entity->animator1, &drawPos, false);
+    int32 rotation     = self->rotation;
+    self->rotation = 256 - rotation;
+    RSDK.DrawSprite(&self->animator2, &drawPos, false);
+    RSDK.DrawSprite(&self->animator1, &drawPos, false);
 
-    entity->rotation          = rotation;
-    entity->animator1.frameID = entity->orientation >= 2;
+    self->rotation          = rotation;
+    self->animator1.frameID = self->orientation >= 2;
 }
 
 void PSZDoor_Create(void *data)
 {
     RSDK_THIS(PSZDoor);
-    if (!entity->speed)
-        entity->speed = 8;
-    if (!RSDK_sceneInfo->inEditor) {
-        entity->active        = ACTIVE_BOUNDS;
-        entity->visible       = true;
-        entity->drawOrder     = Zone->drawOrderLow;
-        entity->updateRange.y = 0x800000;
-        entity->updateRange.x = 0x800000;
-        RSDK.SetSpriteAnimation(PSZDoor->aniFrames, 0, &entity->animator1, true, 0);
-        RSDK.SetSpriteAnimation(PSZDoor->aniFrames, 1, &entity->animator2, true, 0);
+    if (!self->speed)
+        self->speed = 8;
+    if (!SceneInfo->inEditor) {
+        self->active        = ACTIVE_BOUNDS;
+        self->visible       = true;
+        self->drawOrder     = Zone->drawOrderLow;
+        self->updateRange.y = 0x800000;
+        self->updateRange.x = 0x800000;
+        RSDK.SetSpriteAnimation(PSZDoor->aniFrames, 0, &self->animator1, true, 0);
+        RSDK.SetSpriteAnimation(PSZDoor->aniFrames, 1, &self->animator2, true, 0);
 
-        entity->startPos  = entity->position;
-        entity->drawFX    = FX_ROTATE;
-        entity->direction = entity->orientation & 1;
-        if (entity->orientation < 2)
-            entity->direction = 2 * (entity->orientation & 1);
+        self->startPos  = self->position;
+        self->drawFX    = FX_ROTATE;
+        self->direction = self->orientation & 1;
+        if (self->orientation < 2)
+            self->direction = 2 * (self->orientation & 1);
         else
-            entity->animator1.frameID = 1;
+            self->animator1.frameID = 1;
 
-        switch (entity->orientation) {
+        switch (self->orientation) {
             case 0:
-                entity->offset.y = -0x380000;
-                entity->offset.x = -0x130000;
-                if (entity->open)
-                    entity->startPos.y -= 0x700000;
+                self->offset.y = -0x380000;
+                self->offset.x = -0x130000;
+                if (self->open)
+                    self->startPos.y -= 0x700000;
                 break;
             case 1:
-                entity->offset.y = 0x380000;
-                entity->offset.x = -0x130000;
-                if (entity->open)
-                    entity->startPos.y += 0x700000;
+                self->offset.y = 0x380000;
+                self->offset.x = -0x130000;
+                if (self->open)
+                    self->startPos.y += 0x700000;
                 break;
             case 2:
-                entity->offset.x = -0x380000;
-                entity->offset.y = -0x130000;
-                if (entity->open)
-                    entity->startPos.x -= 0x700000;
+                self->offset.x = -0x380000;
+                self->offset.y = -0x130000;
+                if (self->open)
+                    self->startPos.x -= 0x700000;
                 break;
             case 3:
-                entity->offset.x = 0x380000;
-                entity->offset.y = -0x130000;
-                if (entity->open)
-                    entity->startPos.x += 0x700000;
+                self->offset.x = 0x380000;
+                self->offset.y = -0x130000;
+                if (self->open)
+                    self->startPos.x += 0x700000;
                 break;
             default: break;
         }
 
         foreach_all(DoorTrigger, trigger)
         {
-            if (trigger->id == entity->id) {
-                entity->updateRange.x += abs(entity->position.x - trigger->position.x);
-                entity->updateRange.y += abs(entity->position.y - trigger->position.y);
-                entity->trigger = trigger;
+            if (trigger->id == self->id) {
+                self->updateRange.x += abs(self->position.x - trigger->position.x);
+                self->updateRange.y += abs(self->position.y - trigger->position.y);
+                self->trigger = trigger;
             }
         }
     }
@@ -214,12 +214,12 @@ void PSZDoor_StageLoad(void)
 int32 PSZDoor_Unknown1(void)
 {
     RSDK_THIS(PSZDoor);
-    if (entity->field_70) {
-        switch (entity->open ^ entity->orientation) {
-            case 0: return entity->startPos.y - entity->field_8C.y; break;
-            case 1: return entity->field_8C.y - entity->startPos.y; break;
-            case 2: return entity->startPos.x - entity->field_8C.x; break;
-            case 3: return entity->field_8C.x - entity->startPos.x; break;
+    if (self->field_70) {
+        switch (self->open ^ self->orientation) {
+            case 0: return self->startPos.y - self->field_8C.y; break;
+            case 1: return self->field_8C.y - self->startPos.y; break;
+            case 2: return self->startPos.x - self->field_8C.x; break;
+            case 3: return self->field_8C.x - self->startPos.x; break;
             default: break;
         }
     }

@@ -3,6 +3,12 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    FIREBALL_UPDOWN,
+    FIREBALL_MOVE,
+    FIREBALL_MOVEGRAVITY,
+}FireballTypes;
+
 // Object Class
 typedef struct {
     RSDK_OBJECT
@@ -20,8 +26,8 @@ typedef struct {
     uint8 type;
     uint8 interval;
     uint8 intervalOffset;
-    int32 field_7C;
-    int32 field_80;
+    int32 unused1;
+    int32 unused2;
 } EntityFireball;
 
 // Object Entity
@@ -43,13 +49,13 @@ void Fireball_Serialize(void);
 // Extra Entity Functions
 void Fireball_HandlePlayerInteractions(void);
 
-void Fireball_State_Unknown1(void);
-void Fireball_State_Unknown2(void);
-void Fireball_State_Unknown3(void);
-void Fireball_State_Unknown4(void);
-void Fireball_State_Unknown5(void);
-void Fireball_State_Unknown6(void);
-void Fireball_State_Unknown7(void);
+void Fireball_State_UpDown_Spawner(void);
+void Fireball_State_Move_Spawner(void);
+void Fireball_State_MoveGravity_Spawner(void);
+void Fireball_State_UpDown(void);
+void Fireball_State_Move(void);
+void Fireball_State_MoveGravity(void);
+void Fireball_State_Dissipate(void);
 
 void Fireball_StateDraw_Normal(void);
 

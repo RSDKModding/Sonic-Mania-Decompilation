@@ -5,7 +5,7 @@ ObjectBubbler *Bubbler = NULL;
 void Bubbler_Update(void)
 {
     RSDK_THIS(Bubbler);
-    StateMachine_Run(entity->state);
+    StateMachine_Run(self->state);
 }
 
 void Bubbler_LateUpdate(void) {}
@@ -15,37 +15,37 @@ void Bubbler_StaticUpdate(void) {}
 void Bubbler_Draw(void)
 {
     RSDK_THIS(Bubbler);
-    RSDK.DrawSprite(&entity->animator1, NULL, false);
-    if (entity->startPos.x)
-        RSDK.DrawSprite(&entity->animator2, NULL, false);
+    RSDK.DrawSprite(&self->animator1, NULL, false);
+    if (self->startPos.x)
+        RSDK.DrawSprite(&self->animator2, NULL, false);
 }
 
 void Bubbler_Create(void *data)
 {
     RSDK_THIS(Bubbler);
-    entity->visible   = true;
-    entity->drawOrder = Zone->drawOrderLow;
-    entity->drawFX |= FX_FLIP;
-    entity->active        = ACTIVE_BOUNDS;
-    entity->updateRange.x = 0x800000;
-    entity->updateRange.y = 0x800000;
+    self->visible   = true;
+    self->drawOrder = Zone->drawOrderLow;
+    self->drawFX |= FX_FLIP;
+    self->active        = ACTIVE_BOUNDS;
+    self->updateRange.x = 0x800000;
+    self->updateRange.y = 0x800000;
     if (data) {
-        RSDK.SetSpriteAnimation(Bubbler->aniFrames, 3, &entity->animator1, true, 0);
-        entity->state = Bubbler_State_Projectile_Unknown1;
+        RSDK.SetSpriteAnimation(Bubbler->aniFrames, 3, &self->animator1, true, 0);
+        self->state = Bubbler_State_Projectile_Unknown1;
     }
     else {
-        entity->startPos   = entity->position;
-        entity->startDir   = entity->direction;
-        entity->velocity.y = 0;
-        if (!entity->direction)
-            entity->velocity.x = -0x4000;
+        self->startPos   = self->position;
+        self->startDir   = self->direction;
+        self->velocity.y = 0;
+        if (!self->direction)
+            self->velocity.x = -0x4000;
         else
-            entity->velocity.x = 0x4000;
-        entity->timer  = 0;
-        entity->timer2 = 32;
-        RSDK.SetSpriteAnimation(Bubbler->aniFrames, 0, &entity->animator1, true, 0);
-        RSDK.SetSpriteAnimation(Bubbler->aniFrames, 1, &entity->animator2, true, 0);
-        entity->state = Bubbler_State_Setup;
+            self->velocity.x = 0x4000;
+        self->timer  = 0;
+        self->timer2 = 32;
+        RSDK.SetSpriteAnimation(Bubbler->aniFrames, 0, &self->animator1, true, 0);
+        RSDK.SetSpriteAnimation(Bubbler->aniFrames, 1, &self->animator2, true, 0);
+        self->state = Bubbler_State_Setup;
     }
 }
 
@@ -71,7 +71,7 @@ void Bubbler_StageLoad(void)
 void Bubbler_DebugSpawn(void)
 {
     RSDK_THIS(Bubbler);
-    CREATE_ENTITY(Bubbler, NULL, entity->position.x, entity->position.y);
+    CREATE_ENTITY(Bubbler, NULL, self->position.x, self->position.y);
 }
 
 void Bubbler_DebugDraw(void)
@@ -85,8 +85,8 @@ void Bubbler_HandleInteractions(void)
     RSDK_THIS(Bubbler);
     foreach_active(Player, player)
     {
-        if (Player_CheckBadnikTouch(player, entity, &Bubbler->hitbox1))
-            Player_CheckBadnikBreak(entity, player, true);
+        if (Player_CheckBadnikTouch(player, self, &Bubbler->hitbox1))
+            Player_CheckBadnikBreak(self, player, true);
     }
 }
 
@@ -96,13 +96,13 @@ void Bubbler_HandleProjectileInteractions(void)
     int32 distance = 0x7FFFFFFF;
     foreach_active(Player, player)
     {
-        if (abs(player->position.x - entity->position.x) < distance) {
-            distance          = abs(player->position.x - entity->position.x);
-            entity->direction = player->position.x >= entity->position.x;
+        if (abs(player->position.x - self->position.x) < distance) {
+            distance          = abs(player->position.x - self->position.x);
+            self->direction = player->position.x >= self->position.x;
         }
 
-        if (Player_CheckCollisionTouch(player, entity, &Bubbler->hitbox3)) {
-            Player_CheckHit(player, entity);
+        if (Player_CheckCollisionTouch(player, self, &Bubbler->hitbox3)) {
+            Player_CheckHit(player, self);
         }
     }
 }
@@ -110,9 +110,9 @@ void Bubbler_HandleProjectileInteractions(void)
 void Bubbler_CheckOnScreen(void)
 {
     RSDK_THIS(Bubbler);
-    if (!RSDK.CheckOnScreen(entity, NULL) && !RSDK.CheckPosOnScreen(&entity->startPos, &entity->updateRange)) {
-        entity->position  = entity->startPos;
-        entity->direction = entity->startDir;
+    if (!RSDK.CheckOnScreen(self, NULL) && !RSDK.CheckPosOnScreen(&self->startPos, &self->updateRange)) {
+        self->position  = self->startPos;
+        self->direction = self->startDir;
         Bubbler_Create(NULL);
     }
 }
@@ -120,33 +120,33 @@ void Bubbler_CheckOnScreen(void)
 void Bubbler_State_Setup(void)
 {
     RSDK_THIS(Bubbler);
-    entity->active     = ACTIVE_NORMAL;
-    entity->velocity.x = -0x10000;
-    entity->state      = Bubbler_State_Unknown1;
+    self->active     = ACTIVE_NORMAL;
+    self->velocity.x = -0x10000;
+    self->state      = Bubbler_State_Unknown1;
     Bubbler_State_Unknown1();
 }
 
 void Bubbler_State_Unknown1(void)
 {
     RSDK_THIS(Bubbler);
-    entity->position.x += entity->velocity.x;
-    RSDK.ProcessAnimation(&entity->animator2);
+    self->position.x += self->velocity.x;
+    RSDK.ProcessAnimation(&self->animator2);
 
-    if (!--entity->timer) {
-        entity->direction ^= 1;
-        entity->velocity.x = -entity->velocity.x;
-        entity->timer      = 512;
+    if (!--self->timer) {
+        self->direction ^= 1;
+        self->velocity.x = -self->velocity.x;
+        self->timer      = 512;
     }
 
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionTouch(player, entity, &Bubbler->hitbox2)) {
-            entity->timer = 16;
-            entity->state = Bubbler_State_Unknown2;
-            if (entity->direction == FLIP_NONE)
-                entity->velocity.x = -0x28000;
+        if (Player_CheckCollisionTouch(player, self, &Bubbler->hitbox2)) {
+            self->timer = 16;
+            self->state = Bubbler_State_Unknown2;
+            if (self->direction == FLIP_NONE)
+                self->velocity.x = -0x28000;
             else
-                entity->velocity.x = 0x28000;
+                self->velocity.x = 0x28000;
         }
     }
 
@@ -158,10 +158,10 @@ void Bubbler_State_Unknown2(void)
 {
     RSDK_THIS(Bubbler);
 
-    RSDK.ProcessAnimation(&entity->animator2);
-    if (--entity->timer & 0x8000) {
-        RSDK.SetSpriteAnimation(Bubbler->aniFrames, 2, &entity->animator2, true, 0);
-        entity->state = Bubbler_State_Unknown3;
+    RSDK.ProcessAnimation(&self->animator2);
+    if (--self->timer & 0x8000) {
+        RSDK.SetSpriteAnimation(Bubbler->aniFrames, 2, &self->animator2, true, 0);
+        self->state = Bubbler_State_Unknown3;
     }
     Bubbler_HandleInteractions();
     Bubbler_CheckOnScreen();
@@ -170,15 +170,15 @@ void Bubbler_State_Unknown2(void)
 void Bubbler_State_Unknown3(void)
 {
     RSDK_THIS(Bubbler);
-    RSDK.ProcessAnimation(&entity->animator2);
-    entity->position.x += entity->velocity.x;
-    entity->position.y += entity->velocity.y;
-    if (++entity->timer2 >= 30) {
-        entity->timer2 = 0;
-        int32 spawnX     = entity->position.x + 0x60000;
-        if (entity->direction)
-            spawnX = entity->position.x - 0x60000;
-        CREATE_ENTITY(Bubbler, intToVoid(true), spawnX, entity->position.y + 0xA0000)->active = ACTIVE_NORMAL;
+    RSDK.ProcessAnimation(&self->animator2);
+    self->position.x += self->velocity.x;
+    self->position.y += self->velocity.y;
+    if (++self->timer2 >= 30) {
+        self->timer2 = 0;
+        int32 spawnX     = self->position.x + 0x60000;
+        if (self->direction)
+            spawnX = self->position.x - 0x60000;
+        CREATE_ENTITY(Bubbler, intToVoid(true), spawnX, self->position.y + 0xA0000)->active = ACTIVE_NORMAL;
     }
     Bubbler_HandleInteractions();
     Bubbler_CheckOnScreen();
@@ -187,25 +187,25 @@ void Bubbler_State_Unknown3(void)
 void Bubbler_State_Projectile_Unknown1(void)
 {
     RSDK_THIS(Bubbler);
-    RSDK.ProcessAnimation(&entity->animator1);
-    entity->position.y += 0x10000;
+    RSDK.ProcessAnimation(&self->animator1);
+    self->position.y += 0x10000;
     Bubbler_HandleProjectileInteractions();
-    if (RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0, false)) {
-        RSDK.SetSpriteAnimation(Bubbler->aniFrames, 4, &entity->animator1, true, 0);
-        entity->state = Bubbler_State_Projectile_Unknown2;
+    if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0, false)) {
+        RSDK.SetSpriteAnimation(Bubbler->aniFrames, 4, &self->animator1, true, 0);
+        self->state = Bubbler_State_Projectile_Unknown2;
     }
 
-    if (!RSDK.CheckOnScreen(entity, &entity->updateRange))
-        destroyEntity(entity);
+    if (!RSDK.CheckOnScreen(self, &self->updateRange))
+        destroyEntity(self);
 }
 
 void Bubbler_State_Projectile_Unknown2(void)
 {
     RSDK_THIS(Bubbler);
-    RSDK.ProcessAnimation(&entity->animator1);
-    if (entity->animator1.frameID >= 7)
-        destroyEntity(entity);
-    else if (entity->animator1.frameID < 6)
+    RSDK.ProcessAnimation(&self->animator1);
+    if (self->animator1.frameID >= 7)
+        destroyEntity(self);
+    else if (self->animator1.frameID < 6)
         Bubbler_HandleProjectileInteractions();
 }
 
@@ -213,9 +213,9 @@ void Bubbler_State_Projectile_Unknown2(void)
 void Bubbler_EditorDraw(void)
 {
     RSDK_THIS(Bubbler);
-    entity->startPos   = entity->position;
-    RSDK.SetSpriteAnimation(Bubbler->aniFrames, 0, &entity->animator1, true, 0);
-    RSDK.SetSpriteAnimation(Bubbler->aniFrames, 1, &entity->animator2, true, 0);
+    self->startPos   = self->position;
+    RSDK.SetSpriteAnimation(Bubbler->aniFrames, 0, &self->animator1, true, 0);
+    RSDK.SetSpriteAnimation(Bubbler->aniFrames, 1, &self->animator2, true, 0);
 
     Bubbler_Draw();
 }

@@ -6,13 +6,8 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    int32 field_4;
-    int32 field_8;
-    int32 field_C;
-    int32 field_10;
-    int32 field_14;
-    int32 field_18;
-    uint16 field_1C;
+    Animator animator;
+    uint16 aniFrames;
     Hitbox hitbox;
 } ObjectSpiralPlatform;
 
@@ -32,7 +27,7 @@ typedef struct {
     Vector2 drawPos;
     Vector2 collisionOffset;
     int32 stood;
-    int32 collapseDelay;
+    int32 timer;
     int32 stoodAngle;
     uint8 stoodPlayers;
     uint8 pushPlayersL;

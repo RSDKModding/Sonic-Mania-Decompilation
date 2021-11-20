@@ -5,7 +5,7 @@ ObjectBatbrain *Batbrain;
 void Batbrain_Update(void)
 {
     RSDK_THIS(Batbrain);
-    StateMachine_Run(entity->state);
+    StateMachine_Run(self->state);
 }
 
 void Batbrain_LateUpdate(void) {}
@@ -15,22 +15,22 @@ void Batbrain_StaticUpdate(void) {}
 void Batbrain_Draw(void)
 {
     RSDK_THIS(Batbrain);
-    RSDK.DrawSprite(&entity->animator, NULL, false);
+    RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
 void Batbrain_Create(void *data)
 {
     RSDK_THIS(Batbrain);
-    entity->visible = true;
-    entity->drawFX |= FX_FLIP;
-    entity->drawOrder     = Zone->drawOrderLow;
-    entity->startPos.x    = entity->position.x;
-    entity->startPos.y    = entity->position.y;
-    entity->active        = ACTIVE_BOUNDS;
-    entity->updateRange.x = 0x800000;
-    entity->updateRange.y = 0x800000;
-    RSDK.SetSpriteAnimation(Batbrain->aniFrames, 0, &entity->animator, true, 0);
-    entity->state = Batbrain_Unknown2;
+    self->visible = true;
+    self->drawFX |= FX_FLIP;
+    self->drawOrder     = Zone->drawOrderLow;
+    self->startPos.x    = self->position.x;
+    self->startPos.y    = self->position.y;
+    self->active        = ACTIVE_BOUNDS;
+    self->updateRange.x = 0x800000;
+    self->updateRange.y = 0x800000;
+    RSDK.SetSpriteAnimation(Batbrain->aniFrames, 0, &self->animator, true, 0);
+    self->state = Batbrain_State_Setup;
 }
 
 void Batbrain_StageLoad(void)
@@ -49,42 +49,47 @@ void Batbrain_StageLoad(void)
 void Batbrain_DebugDraw(void)
 {
     RSDK.SetSpriteAnimation(Batbrain->aniFrames, 0, &DebugMode->animator, true, 0);
-    RSDK.DrawSprite(&DebugMode->animator, 0, 0);
+    RSDK.DrawSprite(&DebugMode->animator, NULL, false);
 }
 
-void Batbrain_DebugSpawn(void) { RSDK.CreateEntity(Batbrain->objectID, 0, RSDK_sceneInfo->entity->position.x, RSDK_sceneInfo->entity->position.y); }
+void Batbrain_DebugSpawn(void)
+{
+    RSDK_THIS(DebugMode);
+
+    CREATE_ENTITY(Batbrain, NULL, self->position.x, self->position.y);
+}
 
 void Batbrain_CheckHit(void)
 {
     RSDK_THIS(Batbrain);
     foreach_active(Player, player)
     {
-        if (Player_CheckBadnikTouch(player, entity, &Batbrain->hitbox))
-            Player_CheckBadnikBreak(entity, player, true);
+        if (Player_CheckBadnikTouch(player, self, &Batbrain->hitbox))
+            Player_CheckBadnikBreak(self, player, true);
     }
 }
 
 void Batbrain_CheckOnScreen(void)
 {
     RSDK_THIS(Batbrain);
-    if (!RSDK.CheckOnScreen(entity, NULL) && !RSDK.CheckPosOnScreen(&entity->startPos, &entity->updateRange)) {
-        entity->position.x = entity->startPos.x;
-        entity->position.y = entity->startPos.y;
+    if (!RSDK.CheckOnScreen(self, NULL) && !RSDK.CheckPosOnScreen(&self->startPos, &self->updateRange)) {
+        self->position.x = self->startPos.x;
+        self->position.y = self->startPos.y;
         Batbrain_Create(NULL);
     }
 }
 
-void Batbrain_Unknown2(void)
+void Batbrain_State_Setup(void)
 {
     RSDK_THIS(Batbrain);
-    entity->active     = ACTIVE_NORMAL;
-    entity->velocity.x = 0;
-    entity->velocity.y = 0;
-    entity->state      = Batbrain_Unknown3;
-    Batbrain_Unknown3();
+    self->active     = ACTIVE_NORMAL;
+    self->velocity.x = 0;
+    self->velocity.y = 0;
+    self->state      = Batbrain_State_CheckPlayerInRange;
+    Batbrain_State_CheckPlayerInRange();
 }
 
-void Batbrain_Unknown3(void)
+void Batbrain_State_CheckPlayerInRange(void)
 {
     RSDK_THIS(Batbrain);
     int32 targetPos           = 0x7FFFFFFF;
@@ -93,7 +98,7 @@ void Batbrain_Unknown3(void)
 
     foreach_active(Player, player)
     {
-        int32 distance = abs(player->position.x - entity->position.x);
+        int32 distance = abs(player->position.x - self->position.x);
         if (distance >= targetPos) {
             player1 = player;
         }
@@ -102,84 +107,84 @@ void Batbrain_Unknown3(void)
             targetPos = distance;
         }
         if (distance < 0x800000) {
-            if (player->position.y >= entity->position.y && (!playerPtr || player->position.y < playerPtr->position.y))
+            if (player->position.y >= self->position.y && (!playerPtr || player->position.y < playerPtr->position.y))
                 playerPtr = player;
         }
     }
 
     if (playerPtr) {
         player       = playerPtr;
-        int32 distance = playerPtr->position.y - entity->position.y;
+        int32 distance = playerPtr->position.y - self->position.y;
         if (distance >= 0 && distance <= 0x800000 && !RSDK.Rand(0, 8)) {
-            entity->state   = Batbrain_Unknown4;
-            entity->targetY = player->position.y;
-            entity->target  = (Entity*)player;
-            RSDK.SetSpriteAnimation(Batbrain->aniFrames, 1, &entity->animator, true, 0);
+            self->state   = Batbrain_State_DropToPlayer;
+            self->targetY = player->position.y;
+            self->target  = (Entity*)player;
+            RSDK.SetSpriteAnimation(Batbrain->aniFrames, 1, &self->animator, true, 0);
         }
     }
     else {
         player = player1;
     }
-    entity->direction = player->position.x >= entity->position.x;
+    self->direction = player->position.x >= self->position.x;
     Batbrain_CheckHit();
     Batbrain_CheckOnScreen();
 }
 
-void Batbrain_Unknown4(void)
+void Batbrain_State_DropToPlayer(void)
 {
     RSDK_THIS(Batbrain);
-    entity->position.y += entity->velocity.y;
-    entity->velocity.y += 0x1800;
-    entity->direction = entity->target->position.x >= entity->position.x;
+    self->position.y += self->velocity.y;
+    self->velocity.y += 0x1800;
+    self->direction = self->target->position.x >= self->position.x;
 
-    if (entity->targetY - entity->position.y < 0x100000) {
-        entity->velocity.y = 0;
-        if (entity->direction == FLIP_NONE)
-            entity->velocity.x = -0x10000;
+    if (self->targetY - self->position.y < 0x100000) {
+        self->velocity.y = 0;
+        if (self->direction == FLIP_NONE)
+            self->velocity.x = -0x10000;
         else
-            entity->velocity.x = 0x10000;
-        RSDK.SetSpriteAnimation(Batbrain->aniFrames, 2, &entity->animator, true, 0);
-        entity->state = Batbrain_Unknown5;
+            self->velocity.x = 0x10000;
+        RSDK.SetSpriteAnimation(Batbrain->aniFrames, 2, &self->animator, true, 0);
+        self->state = Batbrain_State_Fly;
     }
-    RSDK.ProcessAnimation(&entity->animator);
+    RSDK.ProcessAnimation(&self->animator);
     Batbrain_CheckHit();
     Batbrain_CheckOnScreen();
 }
 
-void Batbrain_Unknown5(void)
+void Batbrain_State_Fly(void)
 {
     RSDK_THIS(Batbrain);
-    Entity *target = entity->target;
-    entity->position.x += entity->velocity.x;
+    Entity *target = self->target;
+    self->position.x += self->velocity.x;
 
-    if (abs(target->position.x - entity->position.x) >= 0x800000 && !RSDK.Rand(0, 8))
-        entity->state = Batbrain_Unknown6;
+    if (abs(target->position.x - self->position.x) >= 0x800000 && !RSDK.Rand(0, 8))
+        self->state = Batbrain_State_FlyToCeiling;
 
     if (!(Zone->timer & 0xF))
-        RSDK.PlaySfx(Batbrain->sfxFlap, 0, 255);
+        RSDK.PlaySfx(Batbrain->sfxFlap, false, 255);
 
-    RSDK.ProcessAnimation(&entity->animator);
+    RSDK.ProcessAnimation(&self->animator);
     Batbrain_CheckHit();
     Batbrain_CheckOnScreen();
 }
 
-void Batbrain_Unknown6(void)
+void Batbrain_State_FlyToCeiling(void)
 {
     RSDK_THIS(Batbrain);
-    entity->position.x += entity->velocity.x;
-    entity->position.y += entity->velocity.y;
-    entity->velocity.y -= 0x1800;
-    if (RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_RWALL, 0, 0, -0xC0000, true)) {
-        entity->velocity.x = 0;
-        entity->velocity.y = 0;
-        entity->state      = Batbrain_Unknown3;
-        RSDK.SetSpriteAnimation(Batbrain->aniFrames, 0, &entity->animator, true, 0);
+    self->position.x += self->velocity.x;
+    self->position.y += self->velocity.y;
+    self->velocity.y -= 0x1800;
+    if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_RWALL, 0, 0, -0xC0000, true)) {
+        self->velocity.x = 0;
+        self->velocity.y = 0;
+        self->state      = Batbrain_State_CheckPlayerInRange;
+        RSDK.SetSpriteAnimation(Batbrain->aniFrames, 0, &self->animator, true, 0);
     }
 
     if (!(Zone->timer & 0xF))
-        RSDK.PlaySfx(Batbrain->sfxFlap, 0, 255);
+        RSDK.PlaySfx(Batbrain->sfxFlap, false, 255);
 
-    RSDK.ProcessAnimation(&entity->animator);
+    RSDK.ProcessAnimation(&self->animator);
     Batbrain_CheckHit();
     Batbrain_CheckOnScreen();
 }

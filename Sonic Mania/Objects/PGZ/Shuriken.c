@@ -5,10 +5,10 @@ ObjectShuriken *Shuriken;
 void Shuriken_Update(void)
 {
     RSDK_THIS(Shuriken);
-    if (entity->state) {
-        StateMachine_Run(entity->state);
-        if (entity->animator.animationID == 1 || entity->animator.animationID == 2 || entity->animator.animationID == 4)
-            RSDK.ProcessAnimation(&entity->animator);
+    if (self->state) {
+        StateMachine_Run(self->state);
+        if (self->animator.animationID == 1 || self->animator.animationID == 2 || self->animator.animationID == 4)
+            RSDK.ProcessAnimation(&self->animator);
     }
 }
 
@@ -38,18 +38,18 @@ void Shuriken_StaticUpdate(void)
 void Shuriken_Draw(void)
 {
     RSDK_THIS(Shuriken);
-    RSDK.DrawSprite(&entity->animator, NULL, false);
+    RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
 void Shuriken_Create(void *data)
 {
     RSDK_THIS(Shuriken);
-    entity->active        = ACTIVE_BOUNDS;
-    entity->visible       = true;
-    entity->drawFX        = FX_FLIP;
-    entity->updateRange.x = 0x800000;
-    entity->updateRange.y = 0x800000;
-    entity->state         = Shuriken_State_Setup;
+    self->active        = ACTIVE_BOUNDS;
+    self->visible       = true;
+    self->drawFX        = FX_FLIP;
+    self->updateRange.x = 0x800000;
+    self->updateRange.y = 0x800000;
+    self->state         = Shuriken_State_Setup;
 }
 
 void Shuriken_StageLoad(void)
@@ -81,23 +81,15 @@ void Shuriken_CheckPlayerCollisions(void)
 
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionTouch(player, entity, &Shuriken->hitbox3)) {
+        if (Player_CheckCollisionTouch(player, self, &Shuriken->hitbox3)) {
 #if RETRO_USE_PLUS
-            int32 anim = player->playerAnimator.animationID;
-            if (player->characterID == ID_MIGHTY && (anim == ANI_CROUCH || anim == ANI_JUMP || anim == ANI_SPINDASH || anim == ANI_DROPDASH)) {
-                if (!player->uncurlTimer) {
-                    RSDK.PlaySfx(Player->sfx_PimPom, false, 255);
-                    player->uncurlTimer = 30;
-                }
-                int32 angle           = RSDK.ATan2(player->position.x - entity->position.x, player->position.y - entity->position.y);
-                entity->velocity.x  = -0x400 * RSDK.Cos256(angle);
-                entity->velocity.y  = -0x600 * RSDK.Sin256(angle);
-                entity->interaction = false;
-                entity->state       = Shuriken_Unknown14;
+            if (Player_CheckMightyShellHit(player, self, -0x400, -0x600)) {
+                self->interaction = false;
+                self->state       = Shuriken_Unknown14;
             }
             else {
 #endif
-                Player_CheckHit(player, entity);
+                Player_CheckHit(player, self);
 #if RETRO_USE_PLUS
             }
 #endif
@@ -108,14 +100,14 @@ void Shuriken_CheckPlayerCollisions(void)
 void Shuriken_HandleSolidCollisions(void)
 {
     RSDK_THIS(Shuriken);
-    entity->activePlayers = 0;
+    self->activePlayers = 0;
 
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionPlatform(player, entity, &Shuriken->hitbox4)) {
-            if (!player->onGround && !player->sidekick && !entity->dropTimer)
-                entity->dropTimer = 1;
-            entity->activePlayers |= 1 << RSDK.GetEntityID(player);
+        if (Player_CheckCollisionPlatform(player, self, &Shuriken->hitbox4)) {
+            if (!player->onGround && !player->sidekick && !self->dropTimer)
+                self->dropTimer = 1;
+            self->activePlayers |= 1 << RSDK.GetEntityID(player);
             player->position.y &= 0xFFFF0000;
         }
     }
@@ -124,37 +116,37 @@ void Shuriken_HandleSolidCollisions(void)
 void Shuriken_State_Setup(void)
 {
     RSDK_THIS(Shuriken);
-    entity->timer  = 0;
-    entity->active = ACTIVE_BOUNDS;
-    RSDK.SetSpriteAnimation(Shuriken->aniFrames, 0, &entity->animator, true, 0);
-    entity->drawOrder = Zone->drawOrderHigh;
-    entity->state     = Shuriken_Unknown4;
+    self->timer  = 0;
+    self->active = ACTIVE_BOUNDS;
+    RSDK.SetSpriteAnimation(Shuriken->aniFrames, 0, &self->animator, true, 0);
+    self->drawOrder = Zone->drawOrderHigh;
+    self->state     = Shuriken_Unknown4;
     Shuriken_Unknown4();
 }
 
 void Shuriken_Unknown4(void)
 {
     RSDK_THIS(Shuriken);
-    if (entity->timerMode) {
+    if (self->timerMode) {
         int32 timer = 0;
-        if (entity->timerGroup)
-            timer = Shuriken->timerGroups[(entity->timerGroup - 1)];
+        if (self->timerGroup)
+            timer = Shuriken->timerGroups[(self->timerGroup - 1)];
         else
             timer = Zone->timer;
 
-        if (!((timer + entity->intervalOffset) % entity->interval)) {
-            RSDK.SetSpriteAnimation(Shuriken->aniFrames, 2, &entity->animator, false, 0);
-            entity->state = Shuriken_Unknown7;
-            entity->timer = 0;
+        if (!((timer + self->intervalOffset) % self->interval)) {
+            RSDK.SetSpriteAnimation(Shuriken->aniFrames, 2, &self->animator, false, 0);
+            self->state = Shuriken_Unknown7;
+            self->timer = 0;
         }
     }
     else {
         foreach_active(Player, player)
         {
-            if (!player->sidekick && Player_CheckCollisionTouch(player, entity, &Shuriken->hitbox2)) {
-                entity->active = ACTIVE_NORMAL;
-                RSDK.SetSpriteAnimation(Shuriken->aniFrames, 1, &entity->animator, false, 0);
-                entity->state = Shuriken_Unknown5;
+            if (!player->sidekick && Player_CheckCollisionTouch(player, self, &Shuriken->hitbox2)) {
+                self->active = ACTIVE_NORMAL;
+                RSDK.SetSpriteAnimation(Shuriken->aniFrames, 1, &self->animator, false, 0);
+                self->state = Shuriken_Unknown5;
             }
         }
     }
@@ -167,27 +159,27 @@ void Shuriken_Unknown5(void)
     bool32 flag = false;
     foreach_active(Player, player)
     {
-        if (!player->sidekick && Player_CheckCollisionTouch(player, entity, &Shuriken->hitbox2)) {
+        if (!player->sidekick && Player_CheckCollisionTouch(player, self, &Shuriken->hitbox2)) {
             flag = true;
             foreach_break;
         }
     }
 
     if (!flag) {
-        entity->timer = entity->delay;
-        entity->state = Shuriken_Unknown6;
+        self->timer = self->delay;
+        self->state = Shuriken_Unknown6;
     }
 }
 
 void Shuriken_Unknown6(void)
 {
     RSDK_THIS(Shuriken);
-    if (entity->timer) {
-        entity->timer--;
+    if (self->timer) {
+        self->timer--;
     }
     else {
-        RSDK.SetSpriteAnimation(Shuriken->aniFrames, 2, &entity->animator, false, 0);
-        entity->state = Shuriken_Unknown7;
+        RSDK.SetSpriteAnimation(Shuriken->aniFrames, 2, &self->animator, false, 0);
+        self->state = Shuriken_Unknown7;
         Shuriken_Unknown7();
     }
 }
@@ -195,21 +187,21 @@ void Shuriken_Unknown6(void)
 void Shuriken_Unknown7(void)
 {
     RSDK_THIS(Shuriken);
-    if (entity->timer >= 15) {
+    if (self->timer >= 15) {
         RSDK.PlaySfx(Shuriken->sfxArrowLaunch, false, 255);
-        RSDK.SetSpriteAnimation(Shuriken->aniFrames, 3, &entity->animator, false, 0);
-        entity->state            = Shuriken_Unknown8;
-        EntityShuriken *shuriken = CREATE_ENTITY(Shuriken, entity, entity->position.x, entity->position.y);
+        RSDK.SetSpriteAnimation(Shuriken->aniFrames, 3, &self->animator, false, 0);
+        self->state            = Shuriken_Unknown8;
+        EntityShuriken *shuriken = CREATE_ENTITY(Shuriken, self, self->position.x, self->position.y);
         shuriken->state          = Shuriken_Unknown10;
-        shuriken->direction      = entity->direction;
+        shuriken->direction      = self->direction;
         shuriken->active         = ACTIVE_NORMAL;
-        if (entity->direction == FLIP_NONE)
+        if (self->direction == FLIP_NONE)
             shuriken->velocity.x = 0x40000;
         else
             shuriken->velocity.x = -0x40000;
     }
     else {
-        entity->timer++;
+        self->timer++;
     }
 }
 
@@ -221,7 +213,7 @@ void Shuriken_Unknown8(void)
     foreach_active(Shuriken, shuriken)
     {
         if (shuriken->state == Shuriken_Unknown11) {
-            if (RSDK.CheckObjectCollisionTouchBox(entity, &Shuriken->hitbox1, shuriken, &Shuriken->hitbox3)) {
+            if (RSDK.CheckObjectCollisionTouchBox(self, &Shuriken->hitbox1, shuriken, &Shuriken->hitbox3)) {
                 flag = true;
                 foreach_break;
             }
@@ -229,109 +221,109 @@ void Shuriken_Unknown8(void)
     }
 
     if (!flag) {
-        RSDK.SetSpriteAnimation(Shuriken->aniFrames, 4, &entity->animator, false, 0);
-        entity->state = Shuriken_Unknown9;
-        entity->timer = 0;
+        RSDK.SetSpriteAnimation(Shuriken->aniFrames, 4, &self->animator, false, 0);
+        self->state = Shuriken_Unknown9;
+        self->timer = 0;
     }
 }
 
 void Shuriken_Unknown9(void)
 {
     RSDK_THIS(Shuriken);
-    if (entity->timer >= 10)
-        entity->state = Shuriken_State_Setup;
+    if (self->timer >= 10)
+        self->state = Shuriken_State_Setup;
     else
-        entity->timer++;
+        self->timer++;
 }
 
 void Shuriken_Unknown10(void)
 {
     RSDK_THIS(Shuriken);
-    entity->timer     = 0;
-    entity->dropTimer = 0;
-    entity->active    = ACTIVE_NORMAL;
-    entity->drawOrder = Zone->drawOrderHigh - 1;
-    RSDK.SetSpriteAnimation(Shuriken->aniFrames, 5, &entity->animator, true, 0);
-    entity->state = Shuriken_Unknown11;
+    self->timer     = 0;
+    self->dropTimer = 0;
+    self->active    = ACTIVE_NORMAL;
+    self->drawOrder = Zone->drawOrderHigh - 1;
+    RSDK.SetSpriteAnimation(Shuriken->aniFrames, 5, &self->animator, true, 0);
+    self->state = Shuriken_Unknown11;
     Shuriken_Unknown11();
 }
 
 void Shuriken_Unknown11(void)
 {
     RSDK_THIS(Shuriken);
-    RSDK.ProcessAnimation(&entity->animator);
-    if (!RSDK.CheckOnScreen(entity, &entity->updateRange))
-        destroyEntity(entity);
+    RSDK.ProcessAnimation(&self->animator);
+    if (!RSDK.CheckOnScreen(self, &self->updateRange))
+        destroyEntity(self);
     Shuriken_CheckPlayerCollisions();
-    entity->position.x += entity->velocity.x;
+    self->position.x += self->velocity.x;
 
     bool32 flag = false;
-    if (entity->direction)
-        flag = RSDK.ObjectTileGrip(entity, Zone->fgLayers, CMODE_RWALL, 0, -0xE0000, 0, 2);
+    if (self->direction)
+        flag = RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_RWALL, 0, -0xE0000, 0, 2);
     else
-        flag = RSDK.ObjectTileGrip(entity, Zone->fgLayers, CMODE_LWALL, 0, 0xE0000, 0, 2);
+        flag = RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_LWALL, 0, 0xE0000, 0, 2);
     if (flag) {
         foreach_active(Shuriken, shuriken)
         {
-            if (shuriken != entity) {
-                if (RSDK.CheckObjectCollisionTouchBox(entity, &Shuriken->hitbox3, shuriken, &Shuriken->hitbox3)) {
+            if (shuriken != self) {
+                if (RSDK.CheckObjectCollisionTouchBox(self, &Shuriken->hitbox3, shuriken, &Shuriken->hitbox3)) {
                     shuriken->velocity.y = 0;
                     shuriken->state      = Shuriken_Unknown13;
                 }
             }
         }
-        entity->velocity.x = 0;
+        self->velocity.x = 0;
         RSDK.PlaySfx(Shuriken->sfxArrowHit, false, 255);
-        entity->state = Shuriken_Unknown12;
+        self->state = Shuriken_Unknown12;
     }
 }
 
 void Shuriken_Unknown12(void)
 {
     RSDK_THIS(Shuriken);
-    if (entity->timer < 300)
-        entity->timer++;
+    if (self->timer < 300)
+        self->timer++;
 
-    if (entity->dropTimer > 0 && entity->dropTimer < 60)
-        entity->dropTimer++;
+    if (self->dropTimer > 0 && self->dropTimer < 60)
+        self->dropTimer++;
     Shuriken_HandleSolidCollisions();
 
     bool32 flag = false;
-    if (entity->direction)
-        flag = RSDK.ObjectTileGrip(entity, Zone->fgLayers, CMODE_RWALL, 0, -0xE0000, 0, 2);
+    if (self->direction)
+        flag = RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_RWALL, 0, -0xE0000, 0, 2);
     else
-        flag = RSDK.ObjectTileGrip(entity, Zone->fgLayers, CMODE_LWALL, 0, 0xE0000, 0, 2);
-    if (!flag || entity->timer >= 300 || entity->dropTimer >= 60) {
-        entity->updateRange.x = 0x4000000;
-        entity->updateRange.y = 0x4000000;
-        entity->velocity.y    = 0;
-        entity->state         = Shuriken_Unknown13;
+        flag = RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_LWALL, 0, 0xE0000, 0, 2);
+    if (!flag || self->timer >= 300 || self->dropTimer >= 60) {
+        self->updateRange.x = 0x4000000;
+        self->updateRange.y = 0x4000000;
+        self->velocity.y    = 0;
+        self->state         = Shuriken_Unknown13;
     }
 }
 
 void Shuriken_Unknown13(void)
 {
     RSDK_THIS(Shuriken);
-    if (entity->velocity.y >= 0x40000)
-        entity->velocity.y = 0x40000;
+    if (self->velocity.y >= 0x40000)
+        self->velocity.y = 0x40000;
     else
-        entity->velocity.y += 0x4000;
-    entity->position.y += entity->velocity.y;
+        self->velocity.y += 0x4000;
+    self->position.y += self->velocity.y;
 
-    if (!RSDK.CheckOnScreen(entity, &entity->updateRange))
-        destroyEntity(entity);
+    if (!RSDK.CheckOnScreen(self, &self->updateRange))
+        destroyEntity(self);
 }
 
 void Shuriken_Unknown14(void)
 {
     RSDK_THIS(Shuriken);
-    entity->position.x += entity->velocity.x;
-    entity->position.y += entity->velocity.y;
-    entity->visible ^= 1;
-    entity->velocity.y += 0x3800;
+    self->position.x += self->velocity.x;
+    self->position.y += self->velocity.y;
+    self->visible ^= 1;
+    self->velocity.y += 0x3800;
 
-    if (!RSDK.CheckOnScreen(entity, &entity->updateRange))
-        destroyEntity(entity);
+    if (!RSDK.CheckOnScreen(self, &self->updateRange))
+        destroyEntity(self);
 }
 
 #if RETRO_INCLUDE_EDITOR

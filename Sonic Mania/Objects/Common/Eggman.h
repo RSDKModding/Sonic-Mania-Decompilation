@@ -6,7 +6,7 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    uint16 spriteIndex;
+    uint16 aniFrames;
 } ObjectEggman;
 
 // Entity Class
@@ -39,12 +39,12 @@ void Eggman_EditorLoad(void);
 void Eggman_Serialize(void);
 
 // Extra Entity Functions
-void Eggman_Unknown1(void);
-void Eggman_Unknown2(void);
-void Eggman_Unknown3(void);
-void Eggman_Unknown4(void);
-void Eggman_Unknown5(void);
-void Eggman_Unknown6(void);
-void Eggman_Unknown7(void);
+void Eggman_State_ProcessAnimation(void);
+void Eggman_State_ProcessThenSet(void);
+void Eggman_State_ProcessUntilEnd(void);
+void Eggman_State_ProcessAirThenSet(void);
+void Eggman_State_FallUntilTimerReset(void);
+void Eggman_State_FallAndCollide(void);
+void Eggman_State_WalkOffScreen(void);
 
 #endif //!OBJ_EGGMAN_H

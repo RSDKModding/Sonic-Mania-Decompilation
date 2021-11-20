@@ -21,11 +21,11 @@ typedef struct {
     uint8 language;
     int32 overrideLanguage;
     int32 screenShader;
-    int32 field_60;
+    bool32 overrideShader;
     int32 volMusic;
-    int32 field_68;
+    bool32 overrideMusicVol;
     int32 volSfx;
-    int32 field_70;
+    bool32 overrideSfxVol;
     int32 vSync;
     uint8 windowSize;
     int32 windowBorder;
@@ -56,7 +56,7 @@ void Options_LoadCallback(int32 success);
 void Options_LoadOptionsBin(void);
 void Options_SaveOptionsBin(void (*callback)(int32));
 void Options_SetLanguage(int32 language);
-void Options_Unknown1(EntityOptions *options);
+void Options_LoadValuesFromSettings(EntityOptions *options);
 void Options_LoadOptionsCallback(int32 statusCode);
 void Options_SaveOptionsCallback(int32 statusCode);
 

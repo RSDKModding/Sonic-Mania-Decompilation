@@ -49,7 +49,7 @@ void SSZ1Setup_StageLoad(void)
     }
 
 #if RETRO_USE_PLUS
-    if ((RSDK_sceneInfo->filter & FILTER_ENCORE)) {
+    if ((SceneInfo->filter & FILTER_ENCORE)) {
         RSDK.LoadPalette(0, "EncoreSSZ1.act", 0xFF);
         RSDK.CopyPalette(0, 128, 1, 128, 128);
     }

@@ -4,6 +4,13 @@
 #include "SonicMania.h"
 
 #if RETRO_USE_PLUS
+
+typedef enum {
+    AIZROCKPILE_SMALL,
+    AIZROCKPILE_MED,
+    AIZROCKPILE_BIG,
+}AIZRockPileTypes;
+
 // Object Class
 typedef struct {
     RSDK_OBJECT
@@ -25,8 +32,8 @@ typedef struct {
                                          -0x18000, -0x24000, -0x10000, -0x20000, -0x10000 });
     TABLE(int32 rockSpeedsR_large[16], { 0x2C000, -0x28000, 0x30000, -0x30000, 0x28000, -0x20000, 0x2C000, -0x28000, 0x24000, -0x18000, 0x28000,
                                          -0x18000, 0x20000, -0x10000, 0x24000, -0x10000 });
-    uint16 spriteIndex;
-    uint16 sfx_Break;
+    uint16 aniFrames;
+    uint16 sfxBreak;
 } ObjectAIZRockPile;
 
 // Entity Class

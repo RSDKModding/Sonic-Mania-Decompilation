@@ -6,15 +6,15 @@ void Rattlekiller_Update(void)
 {
     RSDK_THIS(Rattlekiller);
 
-    if (entity->timer) {
-        entity->timer--;
-        if (entity->bodyStates[0] == 4) {
+    if (self->timer) {
+        self->timer--;
+        if (self->bodyStates[0] == 4) {
             foreach_active(Player, player)
             {
-                if (abs(entity->bodyPositions[0].x - player->position.x) < 0x600000) {
-                    if (abs(entity->bodyPositions[0].y - player->position.y) < 0x600000) {
-                        entity->playerPos.x = player->position.x;
-                        entity->playerPos.y = player->position.y;
+                if (abs(self->bodyPositions[0].x - player->position.x) < 0x600000) {
+                    if (abs(self->bodyPositions[0].y - player->position.y) < 0x600000) {
+                        self->playerPos.x = player->position.x;
+                        self->playerPos.y = player->position.y;
                         foreach_break;
                     }
                 }
@@ -24,28 +24,28 @@ void Rattlekiller_Update(void)
     else {
         foreach_active(Player, player)
         {
-            if (entity->bodyPositions[0].x <= entity->startPos.x) {
-                if (player->position.x >= entity->startPos.x || player->position.x - entity->startPos.x <= -0x600000)
+            if (self->bodyPositions[0].x <= self->startPos.x) {
+                if (player->position.x >= self->startPos.x || player->position.x - self->startPos.x <= -0x600000)
                     continue;
             }
-            else if (player->position.x <= entity->startPos.x || player->position.x - entity->startPos.x >= 0x600000) {
+            else if (player->position.x <= self->startPos.x || player->position.x - self->startPos.x >= 0x600000) {
                 continue;
             }
 
-            if (abs(entity->bodyPositions[0].y - player->position.y) < 0x600000) {
+            if (abs(self->bodyPositions[0].y - player->position.y) < 0x600000) {
                 int delay = 30;
                 for (int i = 0; i < Rattlekiller_SegmentCount; ++i) {
-                    entity->bodyDelays[i] = 30;
-                    entity->field_DC[i].x = entity->bodyPositions[i].x;
-                    entity->field_DC[i].y = entity->bodyPositions[0].y;
-                    entity->bodyStates[i]   = 4;
+                    self->bodyDelays[i] = 30;
+                    self->field_DC[i].x = self->bodyPositions[i].x;
+                    self->field_DC[i].y = self->bodyPositions[0].y;
+                    self->bodyStates[i]   = 4;
 
                     delay += 2;
                 }
 
-                entity->playerPos.x = player->position.x;
-                entity->playerPos.y = player->position.y;
-                entity->timer       = 480;
+                self->playerPos.x = player->position.x;
+                self->playerPos.y = player->position.y;
+                self->timer       = 480;
                 foreach_break;
             }
         }
@@ -54,120 +54,120 @@ void Rattlekiller_Update(void)
     foreach_active(Player, player)
     {
         for (int i = 0; i < Rattlekiller_SegmentCount; ++i) {
-            switch (entity->bodyStates[i]) {
+            switch (self->bodyStates[i]) {
                 case 0:
-                    if (--entity->bodyDelays[i] <= 0)
-                        entity->bodyStates[i] = (entity->field_12C[i].y < 0) + 2;
+                    if (--self->bodyDelays[i] <= 0)
+                        self->bodyStates[i] = (self->field_12C[i].y < 0) + 2;
                     break;
                 case 1:
-                    entity->bodyAngles[i] = (entity->bodyAngles[i] + 2) & 0xFF;
-                    entity->bodyPositions[i].y += entity->field_12C[i].y;
-                    entity->bodyPositions[i].x = entity->startPos.x - 0x1800 * RSDK.Sin256(entity->bodyAngles[i]);
-                    entity->field_1A4[i]       = RSDK.Cos256(entity->bodyAngles[i]);
-                    if (entity->timer < 320) {
-                        if (--entity->bodyDelays[i] <= 0)
-                            entity->bodyStates[i] = (entity->field_12C[i].y < 0) + 2;
+                    self->bodyAngles[i] = (self->bodyAngles[i] + 2) & 0xFF;
+                    self->bodyPositions[i].y += self->field_12C[i].y;
+                    self->bodyPositions[i].x = self->startPos.x - 0x1800 * RSDK.Sin256(self->bodyAngles[i]);
+                    self->field_1A4[i]       = RSDK.Cos256(self->bodyAngles[i]);
+                    if (self->timer < 320) {
+                        if (--self->bodyDelays[i] <= 0)
+                            self->bodyStates[i] = (self->field_12C[i].y < 0) + 2;
                     }
                     break;
                 case 2:
-                    entity->bodyAngles[i] = (entity->bodyAngles[i] + 2) & 0xFF;
-                    entity->field_12C[i].y += 0x400;
-                    if (entity->field_12C[i].y > 0x8000)
-                        entity->field_12C[i].y = 0x8000;
+                    self->bodyAngles[i] = (self->bodyAngles[i] + 2) & 0xFF;
+                    self->field_12C[i].y += 0x400;
+                    if (self->field_12C[i].y > 0x8000)
+                        self->field_12C[i].y = 0x8000;
 
-                    entity->bodyPositions[i].y += entity->field_12C[i].y;
-                    entity->bodyPositions[i].x = entity->startPos.x - 0x1800 * RSDK.Sin256(entity->bodyAngles[i]);
-                    entity->field_1A4[i]       = RSDK.Cos256(entity->bodyAngles[i]);
-                    if (entity->bodyPositions[i].y >= entity->startPos2.y)
-                        entity->bodyStates[i] = 3;
+                    self->bodyPositions[i].y += self->field_12C[i].y;
+                    self->bodyPositions[i].x = self->startPos.x - 0x1800 * RSDK.Sin256(self->bodyAngles[i]);
+                    self->field_1A4[i]       = RSDK.Cos256(self->bodyAngles[i]);
+                    if (self->bodyPositions[i].y >= self->startPos2.y)
+                        self->bodyStates[i] = 3;
                     break;
                 case 3:
-                    entity->bodyAngles[i] = (entity->bodyAngles[i] + 2) & 0xFF;
-                    entity->field_12C[i].y -= 0x400;
-                    if (entity->field_12C[i].y < -0x8000)
-                        entity->field_12C[i].y = -0x8000;
+                    self->bodyAngles[i] = (self->bodyAngles[i] + 2) & 0xFF;
+                    self->field_12C[i].y -= 0x400;
+                    if (self->field_12C[i].y < -0x8000)
+                        self->field_12C[i].y = -0x8000;
 
-                    entity->bodyPositions[i].y += entity->field_12C[i].y;
-                    entity->bodyPositions[i].x = entity->startPos.x - 0x1800 * RSDK.Sin256(entity->bodyAngles[i]);
-                    entity->field_1A4[i]       = RSDK.Cos256(entity->bodyAngles[i]);
-                    if (entity->bodyPositions[i].y <= entity->startPos.y)
-                        entity->bodyStates[i] = 2;
+                    self->bodyPositions[i].y += self->field_12C[i].y;
+                    self->bodyPositions[i].x = self->startPos.x - 0x1800 * RSDK.Sin256(self->bodyAngles[i]);
+                    self->field_1A4[i]       = RSDK.Cos256(self->bodyAngles[i]);
+                    if (self->bodyPositions[i].y <= self->startPos.y)
+                        self->bodyStates[i] = 2;
                     break;
                 case 4:
-                    if (--entity->bodyDelays[i] > 0) {
-                        if (entity->bodyDelays[i] < 15 && i > 4) {
-                            entity->bodyAngles[i]          = (entity->bodyAngles[i] + 4) & 0xFF;
-                            entity->bodyPositions[i].x = entity->startPos.x - 0x1800 * RSDK.Sin256(entity->bodyAngles[i]);
-                            entity->field_1A4[i]       = RSDK.Cos256(entity->bodyAngles[i]);
+                    if (--self->bodyDelays[i] > 0) {
+                        if (self->bodyDelays[i] < 15 && i > 4) {
+                            self->bodyAngles[i]          = (self->bodyAngles[i] + 4) & 0xFF;
+                            self->bodyPositions[i].x = self->startPos.x - 0x1800 * RSDK.Sin256(self->bodyAngles[i]);
+                            self->field_1A4[i]       = RSDK.Cos256(self->bodyAngles[i]);
                         }
                     }
                     else if (i) {
-                        entity->bodyStates[i] = 5;
+                        self->bodyStates[i] = 5;
                     }
                     else {
-                        entity->bodyStates[0] = 6;
-                        RSDK.SetSpriteAnimation(Rattlekiller->aniFrames, (entity->bodyPositions[0].x > entity->startPos.x) + 2, entity->animators,
+                        self->bodyStates[0] = 6;
+                        RSDK.SetSpriteAnimation(Rattlekiller->aniFrames, (self->bodyPositions[0].x > self->startPos.x) + 2, self->animators,
                                                 true, 0);
                         RSDK.PlaySfx(Rattlekiller->sfxRocketJet, false, 255);
                     }
                     break;
                 case 5:
-                    if (entity->bodyStates[0] < 6) {
-                        entity->bodyPositions[i].y += (entity->bodyPositions[0].y - entity->bodyPositions[i].y) >> 3;
-                        if (entity->bodyStates[i - 1] == 1) {
-                            if (abs(entity->bodyPositions[0].y - entity->bodyPositions[i].y) < 0x20000) {
-                                entity->bodyPositions[i].y = entity->bodyPositions[0].y;
-                                entity->field_12C[i].x     = 0;
-                                entity->field_12C[i].y     = 0;
-                                entity->bodyStates[i]      = 1;
-                                entity->bodyDelays[i]      = 8 * i + entity->bodyDelays[0];
-                                entity->bodyAngles[i]      = entity->bodyAngles[i - 1] - 16;
+                    if (self->bodyStates[0] < 6) {
+                        self->bodyPositions[i].y += (self->bodyPositions[0].y - self->bodyPositions[i].y) >> 3;
+                        if (self->bodyStates[i - 1] == 1) {
+                            if (abs(self->bodyPositions[0].y - self->bodyPositions[i].y) < 0x20000) {
+                                self->bodyPositions[i].y = self->bodyPositions[0].y;
+                                self->field_12C[i].x     = 0;
+                                self->field_12C[i].y     = 0;
+                                self->bodyStates[i]      = 1;
+                                self->bodyDelays[i]      = 8 * i + self->bodyDelays[0];
+                                self->bodyAngles[i]      = self->bodyAngles[i - 1] - 16;
                             }
                         }
                     }
                     else if (i < Rattlekiller_SegmentCount - 1) {
-                        entity->bodyPositions[i].x = (entity->bodyPositions[i - 1].x >> 1) + (entity->bodyPositions[i + 1].x >> 1);
-                        entity->bodyPositions[i].y = (entity->bodyPositions[i - 1].y >> 1) + (entity->bodyPositions[i + 1].y >> 1);
+                        self->bodyPositions[i].x = (self->bodyPositions[i - 1].x >> 1) + (self->bodyPositions[i + 1].x >> 1);
+                        self->bodyPositions[i].y = (self->bodyPositions[i - 1].y >> 1) + (self->bodyPositions[i + 1].y >> 1);
                     }
                     break;
                 case 6: {
-                    int rx = (entity->playerPos.x - entity->bodyPositions[i].x) >> 16;
-                    int ry = (entity->playerPos.y - entity->bodyPositions[i].y) >> 16;
+                    int rx = (self->playerPos.x - self->bodyPositions[i].x) >> 16;
+                    int ry = (self->playerPos.y - self->bodyPositions[i].y) >> 16;
                     if (rx * rx + ry * ry >= 64) {
                         int angle              = RSDK.ATan2(rx, ry);
-                        entity->field_12C[i].x = RSDK.Cos256(angle) << 10;
-                        entity->bodyPositions[i].x += entity->field_12C[i].x;
-                        entity->bodyPositions[i].y += RSDK.Sin256(angle) << 10;
-                        entity->field_12C[i].y = RSDK.Sin256(angle) << 10;
-                        RSDK.ProcessAnimation(entity->animators);
+                        self->field_12C[i].x = RSDK.Cos256(angle) << 10;
+                        self->bodyPositions[i].x += self->field_12C[i].x;
+                        self->bodyPositions[i].y += RSDK.Sin256(angle) << 10;
+                        self->field_12C[i].y = RSDK.Sin256(angle) << 10;
+                        RSDK.ProcessAnimation(self->animators);
                     }
                     else {
-                        entity->bodyStates[i] = 7;
-                        RSDK.ProcessAnimation(entity->animators);
+                        self->bodyStates[i] = 7;
+                        RSDK.ProcessAnimation(self->animators);
                     }
                     break;
                 }
                 case 7: {
-                    int rx = (entity->field_DC[i].x - entity->bodyPositions[i].x) >> 16;
-                    int ry = (entity->field_DC[Rattlekiller_SegmentCount - 1].y - entity->bodyPositions[i].y) >> 16;
+                    int rx = (self->field_DC[i].x - self->bodyPositions[i].x) >> 16;
+                    int ry = (self->field_DC[Rattlekiller_SegmentCount - 1].y - self->bodyPositions[i].y) >> 16;
                     if (rx * rx + ry * ry >= 64) {
                         int angle              = RSDK.ATan2(rx, ry);
-                        entity->field_12C[i].x = RSDK.Cos256(angle) << 10;
-                        entity->bodyPositions[i].x += entity->field_12C[i].x;
-                        entity->bodyPositions[i].y += RSDK.Sin256(angle) << 10;
-                        entity->field_12C[i].y = RSDK.Sin256(angle) << 10;
-                        RSDK.ProcessAnimation(entity->animators);
+                        self->field_12C[i].x = RSDK.Cos256(angle) << 10;
+                        self->bodyPositions[i].x += self->field_12C[i].x;
+                        self->bodyPositions[i].y += RSDK.Sin256(angle) << 10;
+                        self->field_12C[i].y = RSDK.Sin256(angle) << 10;
+                        RSDK.ProcessAnimation(self->animators);
                     }
                     else {
-                        entity->bodyStates[i] = 1;
+                        self->bodyStates[i] = 1;
                         if (i > 0)
-                            entity->bodyAngles[i] = entity->bodyAngles[i - 1] - 16;
-                        entity->bodyPositions[i].x = entity->field_DC[i].x;
-                        entity->bodyPositions[i].y = entity->field_DC[Rattlekiller_SegmentCount - 1].y;
-                        entity->bodyDelays[i]      = 8 * i;
-                        entity->field_12C[i].x     = 0;
-                        entity->field_12C[i].y     = 0;
-                        RSDK.SetSpriteAnimation(Rattlekiller->aniFrames, 0, entity->animators, true, 0);
+                            self->bodyAngles[i] = self->bodyAngles[i - 1] - 16;
+                        self->bodyPositions[i].x = self->field_DC[i].x;
+                        self->bodyPositions[i].y = self->field_DC[Rattlekiller_SegmentCount - 1].y;
+                        self->bodyDelays[i]      = 8 * i;
+                        self->field_12C[i].x     = 0;
+                        self->field_12C[i].y     = 0;
+                        RSDK.SetSpriteAnimation(Rattlekiller->aniFrames, 0, self->animators, true, 0);
                     }
                     break;
                 }
@@ -175,13 +175,13 @@ void Rattlekiller_Update(void)
             }
         }
 
-        entity->position.x = entity->bodyPositions[0].x;
-        entity->position.y = entity->bodyPositions[0].y;
-        if (Player_CheckBadnikTouch(player, entity, &Rattlekiller->hitbox) && Player_CheckBadnikBreak(entity, player, false)) {
+        self->position.x = self->bodyPositions[0].x;
+        self->position.y = self->bodyPositions[0].y;
+        if (Player_CheckBadnikTouch(player, self, &Rattlekiller->hitbox) && Player_CheckBadnikBreak(self, player, false)) {
             for (int i = 1; i < Rattlekiller_SegmentCount; ++i) {
-                EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, entity->bodyPositions[i].x, entity->bodyPositions[i].y);
-                RSDK.SetSpriteAnimation(Rattlekiller->aniFrames, entity->bodyAnimators[i]->animationID, &debris->animator, true,
-                                        entity->bodyAnimators[i]->frameID);
+                EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_FallAndFlicker, self->bodyPositions[i].x, self->bodyPositions[i].y);
+                RSDK.SetSpriteAnimation(Rattlekiller->aniFrames, self->bodyAnimators[i]->animationID, &debris->animator, true,
+                                        self->bodyAnimators[i]->frameID);
                 debris->velocity.x    = RSDK.Rand(-0x20000, 0x20000);
                 debris->velocity.y    = RSDK.Rand(-0x20000, -0x10000);
                 debris->gravity       = 0x4800;
@@ -190,28 +190,28 @@ void Rattlekiller_Update(void)
                 debris->updateRange.y = 0x400000;
             }
 
-            destroyEntity(entity);
-            entity->active = ACTIVE_NEVER2;
+            destroyEntity(self);
+            self->active = ACTIVE_NEVER2;
             foreach_break;
         }
         else {
             for (int i = 1; i < Rattlekiller_SegmentCount; ++i) {
-                if (entity->field_1A4[i] > 0) {
-                    entity->position.x = entity->bodyPositions[i].x;
-                    entity->position.y = entity->bodyPositions[i].y;
-                    if (Player_CheckCollisionTouch(player, entity, &Rattlekiller->hitbox)) {
+                if (self->field_1A4[i] > 0) {
+                    self->position.x = self->bodyPositions[i].x;
+                    self->position.y = self->bodyPositions[i].y;
+                    if (Player_CheckCollisionTouch(player, self, &Rattlekiller->hitbox)) {
 #if RETRO_USE_PLUS
-                        if (!Player_CheckMightyUnspin(512, player, 2, &player->uncurlTimer))
+                        if (!Player_CheckMightyUnspin(0x200, player, 2, &player->uncurlTimer))
 #endif
-                            Player_CheckHit(player, entity);
+                            Player_CheckHit(player, self);
                     }
                 }
             }
         }
     }
 
-    entity->position.x = entity->bodyPositions[0].x;
-    entity->position.y = entity->bodyPositions[0].y;
+    self->position.x = self->bodyPositions[0].x;
+    self->position.y = self->bodyPositions[0].y;
     Rattlekiller_HandleSorting();
 }
 
@@ -226,25 +226,25 @@ void Rattlekiller_Draw(void)
 {
     RSDK_THIS(Rattlekiller);
 
-    if (RSDK_sceneInfo->currentDrawGroup == entity->drawOrder) {
+    if (SceneInfo->currentDrawGroup == self->drawOrder) {
         for (int i = 0; i < Rattlekiller_SegmentCount; ++i) {
-            int id = entity->bodyIDs[i];
-            if (entity->field_1A4[id] > 0) {
-                Animator *animator = entity->bodyAnimators[id];
+            int id = self->bodyIDs[i];
+            if (self->field_1A4[id] > 0) {
+                Animator *animator = self->bodyAnimators[id];
                 if (animator->animationID < 2)
-                    animator->frameID = entity->bodyAngles[id] >> 4;
-                RSDK.DrawSprite(animator, &entity->bodyPositions[id], false);
+                    animator->frameID = self->bodyAngles[id] >> 4;
+                RSDK.DrawSprite(animator, &self->bodyPositions[id], false);
             }
         }
     }
     else {
         for (int i = 0; i < Rattlekiller_SegmentCount; ++i) {
-            int id = entity->bodyIDs[i];
-            if (entity->field_1A4[id] <= 0) {
-                Animator *animator = entity->bodyAnimators[id];
+            int id = self->bodyIDs[i];
+            if (self->field_1A4[id] <= 0) {
+                Animator *animator = self->bodyAnimators[id];
                 if (animator->animationID < 2)
-                    animator->frameID = entity->bodyAngles[id] >> 4;
-                RSDK.DrawSprite(animator, &entity->bodyPositions[id], false);
+                    animator->frameID = self->bodyAngles[id] >> 4;
+                RSDK.DrawSprite(animator, &self->bodyPositions[id], false);
             }
         }
     }
@@ -253,36 +253,36 @@ void Rattlekiller_Draw(void)
 void Rattlekiller_Create(void *data)
 {
     RSDK_THIS(Rattlekiller);
-    if (!RSDK_sceneInfo->inEditor) {
-        entity->visible       = true;
-        entity->drawOrder     = Zone->drawOrderLow;
-        entity->startPos      = entity->position;
-        entity->startPos2     = entity->position;
-        entity->active        = ACTIVE_BOUNDS;
-        entity->updateRange.x = 0x800000;
-        entity->updateRange.y = 0x800000;
+    if (!SceneInfo->inEditor) {
+        self->visible       = true;
+        self->drawOrder     = Zone->drawOrderLow;
+        self->startPos      = self->position;
+        self->startPos2     = self->position;
+        self->active        = ACTIVE_BOUNDS;
+        self->updateRange.x = 0x800000;
+        self->updateRange.y = 0x800000;
         if (data)
-            entity->length = voidToInt(data);
-        else if (!entity->length)
-            entity->length = 128;
+            self->length = voidToInt(data);
+        else if (!self->length)
+            self->length = 128;
 
-        entity->startPos.y -= entity->length << 15;
-        entity->startPos2.y += entity->length << 15;
+        self->startPos.y -= self->length << 15;
+        self->startPos2.y += self->length << 15;
 
         int delay = 0;
         for (int i = 0; i < Rattlekiller_SegmentCount; ++i) {
-            entity->bodyIDs[i]       = i;
-            entity->bodyAnimators[i] = &entity->animators[1];
-            entity->bodyDelays[i]    = delay;
-            entity->bodyPositions[i] = entity->startPos;
+            self->bodyIDs[i]       = i;
+            self->bodyAnimators[i] = &self->animators[1];
+            self->bodyDelays[i]    = delay;
+            self->bodyPositions[i] = self->startPos;
 
             delay += 8;
         }
 
-        entity->bodyAnimators[0] = &entity->animators[0];
-        RSDK.SetSpriteAnimation(Rattlekiller->aniFrames, 0, &entity->animators[0], true, 0);
-        RSDK.SetSpriteAnimation(Rattlekiller->aniFrames, 1, &entity->animators[1], true, 0);
-        RSDK.SetSpriteAnimation(Rattlekiller->aniFrames, 4, &entity->animators[2], true, 0);
+        self->bodyAnimators[0] = &self->animators[0];
+        RSDK.SetSpriteAnimation(Rattlekiller->aniFrames, 0, &self->animators[0], true, 0);
+        RSDK.SetSpriteAnimation(Rattlekiller->aniFrames, 1, &self->animators[1], true, 0);
+        RSDK.SetSpriteAnimation(Rattlekiller->aniFrames, 4, &self->animators[2], true, 0);
     }
 }
 
@@ -300,7 +300,7 @@ void Rattlekiller_StageLoad(void)
 void Rattlekiller_DebugSpawn(void)
 {
     RSDK_THIS(DebugMode);
-    EntityRattlekiller *rattlekiller = CREATE_ENTITY(Rattlekiller, intToVoid(0x80), entity->position.x, entity->position.y);
+    EntityRattlekiller *rattlekiller = CREATE_ENTITY(Rattlekiller, intToVoid(0x80), self->position.x, self->position.y);
     rattlekiller->direction          = FLIP_NONE;
 }
 
@@ -316,11 +316,11 @@ void Rattlekiller_HandleSorting(void)
 
     for (int i = 0; i < Rattlekiller_SegmentCount; ++i) {
         for (int i2 = Rattlekiller_SegmentCount - 1; i2 > i; --i2) {
-            int idA = entity->bodyIDs[i2 - 1];
-            int idB = entity->bodyIDs[i2];
-            if (entity->field_1A4[idA] > entity->field_1A4[idB]) {
-                entity->bodyIDs[i2 - 1] = idB;
-                entity->bodyIDs[i2]     = idA;
+            int idA = self->bodyIDs[i2 - 1];
+            int idB = self->bodyIDs[i2];
+            if (self->field_1A4[idA] > self->field_1A4[idB]) {
+                self->bodyIDs[i2 - 1] = idB;
+                self->bodyIDs[i2]     = idA;
             }
         }
     }
@@ -330,22 +330,22 @@ void Rattlekiller_HandleSorting(void)
 void Rattlekiller_EditorDraw(void)
 {
     RSDK_THIS(Rattlekiller);
-    RSDK.SetSpriteAnimation(Rattlekiller->aniFrames, 0, &entity->animators[0], false, 0);
-    RSDK.SetSpriteAnimation(Rattlekiller->aniFrames, 1, &entity->animators[1], false, 0);
-    RSDK.SetSpriteAnimation(Rattlekiller->aniFrames, 4, &entity->animators[2], false, 0);
+    RSDK.SetSpriteAnimation(Rattlekiller->aniFrames, 0, &self->animators[0], false, 0);
+    RSDK.SetSpriteAnimation(Rattlekiller->aniFrames, 1, &self->animators[1], false, 0);
+    RSDK.SetSpriteAnimation(Rattlekiller->aniFrames, 4, &self->animators[2], false, 0);
 
-    entity->startPos      = entity->position;
-    entity->startPos2     = entity->position;
+    self->startPos      = self->position;
+    self->startPos2     = self->position;
 
-    entity->startPos.y -= entity->length << 15;
-    entity->startPos2.y += entity->length << 15;
+    self->startPos.y -= self->length << 15;
+    self->startPos2.y += self->length << 15;
 
     int delay = 0;
     for (int i = 0; i < Rattlekiller_SegmentCount; ++i) {
-        entity->bodyIDs[i]       = i;
-        entity->bodyAnimators[i] = &entity->animators[1];
-        entity->bodyDelays[i]    = delay;
-        entity->bodyPositions[i] = entity->startPos;
+        self->bodyIDs[i]       = i;
+        self->bodyAnimators[i] = &self->animators[1];
+        self->bodyDelays[i]    = delay;
+        self->bodyPositions[i] = self->startPos;
 
         delay += 8;
     }

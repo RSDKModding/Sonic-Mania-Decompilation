@@ -170,7 +170,7 @@ typedef struct {
     int32 platform;
     int32 language;
     int32 region;
-} SKUInfo;
+} RSDKSKUInfo;
 
 typedef struct {
     int32 field_0;
@@ -185,7 +185,7 @@ typedef struct {
     int32 field_24;
     int32 field_28;
     int32 field_2C;
-} UnknownInfo;
+} RSDKUnknownInfo;
 #endif
 
 typedef struct {
@@ -197,7 +197,7 @@ typedef struct {
     uint8 language;
     uint8 region;
 #endif
-} EngineInfo;
+} RSDKGameInfo;
 
 typedef struct {
     Entity *entity;
@@ -224,7 +224,7 @@ typedef struct {
     uint8 milliseconds;
     uint8 seconds;
     uint8 minutes;
-} SceneInfo;
+} RSDKSceneInfo;
 
 typedef struct {
     bool32 down;
@@ -245,7 +245,7 @@ typedef struct {
     InputState keyZ;
     InputState keyStart;
     InputState keySelect;
-} ControllerState;
+} RSDKControllerState;
 
 typedef struct {
     InputState keyUp;
@@ -256,7 +256,7 @@ typedef struct {
     float deadzone;
     float hDelta;
     float vDelta;
-} AnalogState;
+} RSDKAnalogState;
 
 #if RETRO_USE_PLUS
 typedef struct {
@@ -264,7 +264,7 @@ typedef struct {
     InputState key2;
     float unknown1;
     float unknown2;
-} TriggerState;
+} RSDKTriggerState;
 #endif
 
 typedef struct {
@@ -272,7 +272,7 @@ typedef struct {
     float y[0x10];
     bool32 down[0x10];
     uint8 count;
-} TouchMouseData;
+} RSDKTouchInfo;
 
 typedef struct {
     // uint16 *frameBuffer;
@@ -288,32 +288,32 @@ typedef struct {
     int32 clipBound_X2;
     int32 clipBound_Y2;
     int32 waterDrawPos;
-} ScreenInfo;
+} RSDKScreenInfo;
 
 typedef struct {
     void *functionPtrs;
 #if RETRO_USE_PLUS
     void *APIPtrs;
-    SKUInfo *currentSKU;
+    RSDKSKUInfo *skuInfo;
 #endif
-    EngineInfo *engineInfo;
-    SceneInfo *sceneInfo;
-    ControllerState *controller;
-    AnalogState *stickL;
+    RSDKGameInfo *gameInfo;
+    RSDKSceneInfo *sceneInfo;
+    RSDKControllerState *controllerInfo;
+    RSDKAnalogState *stickInfoL;
 #if RETRO_USE_PLUS
-    AnalogState *stickR;
-    TriggerState *triggerL;
-    TriggerState *triggerR;
+    RSDKAnalogState *stickInfoR;
+    RSDKTriggerState *triggerInfoL;
+    RSDKTriggerState *triggerInfoR;
 #endif
-    TouchMouseData *touchMouse;
+    RSDKTouchInfo *touchInfo;
 #if RETRO_USE_PLUS
-    UnknownInfo *unknown;
+    RSDKUnknownInfo *unknownInfo;
 #endif
-    ScreenInfo *screenInfo;
+    RSDKScreenInfo *screenInfo;
 #if RETRO_USE_MOD_LOADER
     void *modPtrs;
 #endif
-} GameInfo;
+} EngineInfo;
 
 typedef struct {
     int32 values[4][4];

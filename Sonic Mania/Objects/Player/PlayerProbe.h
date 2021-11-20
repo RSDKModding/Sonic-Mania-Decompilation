@@ -6,7 +6,7 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    uint16 spriteIndex;
+    uint16 aniFrames;
 } ObjectPlayerProbe;
 
 // Entity Class
@@ -36,6 +36,7 @@ void PlayerProbe_Serialize(void);
 
 // Extra Entity Functions
 void PlayerProbe_Print(EntityPlayer *player);
-void PlayerProbe_DrawEditor(uint32 colour, int32 x1, int32 y1, int32 x2, int32 y2);
+void PlayerProbe_DrawSprites(void);
+void PlayerProbe_DrawArrow(uint32 colour, int32 x1, int32 y1, int32 x2, int32 y2);
 
 #endif //!OBJ_PLAYERPROBE_H

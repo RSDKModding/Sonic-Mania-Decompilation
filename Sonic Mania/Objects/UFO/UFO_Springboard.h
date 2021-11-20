@@ -6,40 +6,19 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    int32 field_4;
-    int32 field_8;
-    int32 field_C;
-    int32 field_10;
-    int32 field_14;
-    int32 field_18;
-    uint16 field_1C;
+    Animator unusedAnimator1;
+    uint16 aniFrames; //unused
     uint16 modelIndex;
     uint16 sceneIndex;
-    uint16 field_22;
 } ObjectUFO_Springboard;
 
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    int32 field_58;
+    int32 unused1;
     int32 height;
     uint8 rampCount;
-    int32 field_64;
-    int32 field_68;
-    int32 field_6C;
-    int32 field_70;
-    int32 field_74;
-    int32 field_78;
-    int32 field_7C;
-    int32 field_80;
-    int32 field_84;
-    int32 field_88;
-    int32 field_8C;
-    int32 field_90;
-    int32 field_94;
-    int32 field_98;
-    int32 field_9C;
-    int32 field_A0;
+    Matrix unusedMatrix1;
     Matrix matrix1;
     Matrix matrix2;
     Matrix matrix3;

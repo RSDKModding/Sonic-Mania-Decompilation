@@ -6,10 +6,10 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    uint16 spriteIndex;
+    uint16 aniFrames;
     Hitbox hitbox;
-    uint16 sfx_SpecialRing;
-    uint16 sfx_SpecialWarp;
+    uint16 sfxSpecialRing;
+    uint16 sfxSpecialWarp;
     uint16 modelIndex;
     uint16 sceneIndex;
 } ObjectSpecialRing;
@@ -21,15 +21,15 @@ typedef struct {
     int32 id;
     int32 planeFilter;
     int32 warpTimer;
-    int32 dword68;
+    int32 sparkleRadius;
     Animator warpAnimator;
     int32 angleZ;
     int32 angleY;
     bool32 enabled;
-    Matrix matrix4;
-    Matrix matrix;
-    Matrix matrix2;
-    Matrix matrix3;
+    Matrix matTempRot;
+    Matrix matTransform;
+    Matrix matWorld;
+    Matrix matNormal;
 } EntitySpecialRing;
 
 // Object Struct

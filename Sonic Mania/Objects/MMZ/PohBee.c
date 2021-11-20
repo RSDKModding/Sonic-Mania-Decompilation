@@ -5,14 +5,14 @@ ObjectPohBee *PohBee;
 void PohBee_Update(void)
 {
     RSDK_THIS(PohBee);
-    RSDK.ProcessAnimation(&entity->animator1);
-    RSDK.ProcessAnimation(&entity->animator2);
+    RSDK.ProcessAnimation(&self->animator1);
+    RSDK.ProcessAnimation(&self->animator2);
 
-    StateMachine_Run(entity->state);
+    StateMachine_Run(self->state);
 
     PohBee_SetupHitboxes();
     PohBee_CheckPlayerCollisions();
-    if (entity->drawOrder != 1 && entity->state != PohBee_State_Setup)
+    if (self->drawOrder != 1 && self->state != PohBee_State_Setup)
         PohBee_CheckOnScreen();
 }
 
@@ -26,19 +26,19 @@ void PohBee_Create(void *data)
 {
     RSDK_THIS(PohBee);
 
-    entity->visible = true;
-    if (entity->planeFilter > 0 && ((uint8)(entity->planeFilter - 1) & 2))
-        entity->drawOrder = Zone->drawOrderHigh;
+    self->visible = true;
+    if (self->planeFilter > 0 && ((uint8)(self->planeFilter - 1) & 2))
+        self->drawOrder = Zone->drawOrderHigh;
     else
-        entity->drawOrder = Zone->drawOrderLow;
+        self->drawOrder = Zone->drawOrderLow;
 
-    entity->startPos      = entity->position;
-    entity->startDir      = entity->direction;
-    entity->drawFX        = FX_FLIP;
-    entity->active        = ACTIVE_BOUNDS;
-    entity->updateRange.x = 0x800000;
-    entity->updateRange.y = 0x800000;
-    entity->state         = PohBee_State_Setup;
+    self->startPos      = self->position;
+    self->startDir      = self->direction;
+    self->drawFX        = FX_FLIP;
+    self->active        = ACTIVE_BOUNDS;
+    self->updateRange.x = 0x800000;
+    self->updateRange.y = 0x800000;
+    self->state         = PohBee_State_Setup;
 }
 
 void PohBee_StageLoad(void)
@@ -55,9 +55,9 @@ void PohBee_StageLoad(void)
 void PohBee_DebugSpawn(void)
 {
     RSDK_THIS(PohBee);
-    EntityPohBee *pohBee = CREATE_ENTITY(PohBee, NULL, entity->position.x, entity->position.y);
-    pohBee->direction    = entity->direction;
-    pohBee->startDir     = entity->direction;
+    EntityPohBee *pohBee = CREATE_ENTITY(PohBee, NULL, self->position.x, self->position.y);
+    pohBee->direction    = self->direction;
+    pohBee->startDir     = self->direction;
 }
 
 void PohBee_DebugDraw(void)
@@ -72,9 +72,9 @@ void PohBee_DebugDraw(void)
 void PohBee_CheckOnScreen(void)
 {
     RSDK_THIS(PohBee);
-    if (!RSDK.CheckOnScreen(entity, NULL) && !RSDK.CheckPosOnScreen(&entity->startPos, &entity->updateRange)) {
-        entity->direction = entity->startDir;
-        entity->position  = entity->startPos;
+    if (!RSDK.CheckOnScreen(self, NULL) && !RSDK.CheckPosOnScreen(&self->startPos, &self->updateRange)) {
+        self->direction = self->startDir;
+        self->position  = self->startPos;
         PohBee_Create(NULL);
     }
 }
@@ -85,32 +85,32 @@ void PohBee_CheckPlayerCollisions(void)
 
     foreach_active(Player, player)
     {
-        if (entity->planeFilter <= 0 || player->collisionPlane == ((uint8)(entity->planeFilter - 1) & 1)) {
-            if (Player_CheckBadnikTouch(player, entity, &PohBee->hitbox)) {
-                if (entity->drawOrder == 1) {
-                    if (Player_CheckBadnikBreak(entity, player, false)) {
-                        CREATE_ENTITY(Explosion, intToVoid(1), entity->position.x, entity->position.y)->drawOrder = 1;
-                        destroyEntity(entity);
+        if (self->planeFilter <= 0 || player->collisionPlane == ((uint8)(self->planeFilter - 1) & 1)) {
+            if (Player_CheckBadnikTouch(player, self, &PohBee->hitbox)) {
+                if (self->drawOrder == 1) {
+                    if (Player_CheckBadnikBreak(self, player, false)) {
+                        CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), self->position.x, self->position.y)->drawOrder = 1;
+                        destroyEntity(self);
                     }
                 }
                 else {
-                    Player_CheckBadnikBreak(entity, player, true);
+                    Player_CheckBadnikBreak(self, player, true);
                 }
             }
 
-            for (int32 i = 0; i < entity->spikeCount + 1; ++i) {
-                if (Player_CheckCollisionTouch(player, entity, &entity->hitboxes[i])) {
+            for (int32 i = 0; i < self->spikeCount + 1; ++i) {
+                if (Player_CheckCollisionTouch(player, self, &self->hitboxes[i])) {
 #if RETRO_USE_PLUS
-                    int32 storeX       = entity->position.x;
-                    int32 storeY       = entity->position.y;
-                    entity->position = PohBee_GetSpikePos(i, (entity->drawOrder != 1) + 6);
-                    if (!Player_CheckMightyUnspin(768, player, 2, &player->uncurlTimer)) {
+                    int32 storeX       = self->position.x;
+                    int32 storeY       = self->position.y;
+                    self->position = PohBee_GetSpikePos(i, (self->drawOrder != 1) + 6);
+                    if (!Player_CheckMightyUnspin(0x300, player, 2, &player->uncurlTimer)) {
 #endif
-                        Player_CheckHit(player, entity);
+                        Player_CheckHit(player, self);
 #if RETRO_USE_PLUS
                     }
-                    entity->position.x = storeX;
-                    entity->position.y = storeY;
+                    self->position.x = storeX;
+                    self->position.y = storeY;
 #endif
                 }
             }
@@ -124,46 +124,46 @@ void PohBee_DrawSprites(void)
     Vector2 drawPos;
     Vector2 drawPos2;
 
-    entity->drawFX = FX_FLIP;
+    self->drawFX = FX_FLIP;
 
     int32 offsetY   = 16;
     int32 shift = 7;
-    if (entity->drawOrder == 1) {
+    if (self->drawOrder == 1) {
         offsetY   = 15;
         shift = 6;
-        entity->drawFX |= FX_SCALE;
+        self->drawFX |= FX_SCALE;
     }
 
-    if (entity->animator1.animationID != 1)
-        RSDK.DrawSprite(&entity->animator2, NULL, false);
-    RSDK.DrawSprite(&entity->animator1, NULL, false);
+    if (self->animator1.animationID != 1)
+        RSDK.DrawSprite(&self->animator2, NULL, false);
+    RSDK.DrawSprite(&self->animator1, NULL, false);
 
-    drawPos2.x = entity->position.x;
-    drawPos2.y = entity->position.y + (16 << offsetY);
-    entity->drawFX |= FX_ROTATE;
+    drawPos2.x = self->position.x;
+    drawPos2.y = self->position.y + (16 << offsetY);
+    self->drawFX |= FX_ROTATE;
 
     int32 id = 4;
     for (int32 i = 0; i < 10; ++i) {
         drawPos = drawPos2;
-        drawPos.x += (id * RSDK.Cos512(entity->field_70)) << shift;
-        drawPos.y += (id * RSDK.Sin512(entity->field_70)) << shift;
-        RSDK.DrawSprite(&entity->animator3, &drawPos, false);
+        drawPos.x += (id * RSDK.Cos512(self->field_70)) << shift;
+        drawPos.y += (id * RSDK.Sin512(self->field_70)) << shift;
+        RSDK.DrawSprite(&self->animator3, &drawPos, false);
         id += 8;
     }
 
     drawPos = PohBee_GetSpikePos(0, shift);
-    RSDK.DrawSprite(&entity->animator4, &drawPos, false);
-    if (entity->spikeCount == 1) {
+    RSDK.DrawSprite(&self->animator4, &drawPos, false);
+    if (self->spikeCount == 1) {
         id = 4;
         for (int32 i = 0; i < 4; ++i) {
             drawPos = drawPos2;
-            drawPos.x += (id * RSDK.Cos512(entity->field_74)) << shift;
-            drawPos.y += (id * RSDK.Sin512(entity->field_74)) << shift;
-            RSDK.DrawSprite(&entity->animator3, &drawPos, false);
+            drawPos.x += (id * RSDK.Cos512(self->field_74)) << shift;
+            drawPos.y += (id * RSDK.Sin512(self->field_74)) << shift;
+            RSDK.DrawSprite(&self->animator3, &drawPos, false);
             id += 8;
         }
         drawPos = PohBee_GetSpikePos(1, shift);
-        RSDK.DrawSprite(&entity->animator4, &drawPos, false);
+        RSDK.DrawSprite(&self->animator4, &drawPos, false);
     }
 }
 
@@ -171,10 +171,10 @@ Vector2 PohBee_GetSpikePos(uint8 spikeID, uint8 shift)
 {
     RSDK_THIS(PohBee);
 
-    Vector2 pos = entity->position;
+    Vector2 pos = self->position;
 
-    int32 y = entity->position.y;
-    if (entity->drawOrder == 1)
+    int32 y = self->position.y;
+    if (self->drawOrder == 1)
         y += 0x100000;
     else
         y += 0x80000;
@@ -182,12 +182,12 @@ Vector2 PohBee_GetSpikePos(uint8 spikeID, uint8 shift)
 
     switch (spikeID) {
         case 0:
-            pos.x += ((84 * RSDK.Cos512(entity->field_70)) << shift);
-            pos.y = y + ((84 * RSDK.Sin512(entity->field_70)) << shift);
+            pos.x += ((84 * RSDK.Cos512(self->field_70)) << shift);
+            pos.y = y + ((84 * RSDK.Sin512(self->field_70)) << shift);
             break;
         case 1:
-            pos.x += ((36 * RSDK.Cos512(entity->field_74)) << shift);
-            pos.y = y + ((4 * (9 * RSDK.Sin512(entity->field_74))) << shift);
+            pos.x += ((36 * RSDK.Cos512(self->field_74)) << shift);
+            pos.y = y + ((4 * (9 * RSDK.Sin512(self->field_74))) << shift);
             break;
     }
 
@@ -200,19 +200,19 @@ void PohBee_SetupHitboxes(void)
 
     for (int32 i = 0; i < 2; ++i) {
         Vector2 pos = PohBee_GetSpikePos(i, 7);
-        int32 x       = (pos.x - entity->position.x) >> 16;
-        int32 y       = (pos.y - entity->position.y) >> 16;
+        int32 x       = (pos.x - self->position.x) >> 16;
+        int32 y       = (pos.y - self->position.y) >> 16;
 
         Hitbox hitbox;
         hitbox.left   = x - 12;
         hitbox.right  = x + 12;
         hitbox.bottom = y + 12;
-        if (entity->direction == FLIP_X) {
+        if (self->direction == FLIP_X) {
             hitbox.left  = 12 - x;
             hitbox.right = -hitbox.right;
         }
         hitbox.top          = y - 12;
-        entity->hitboxes[i] = hitbox;
+        self->hitboxes[i] = hitbox;
     }
 }
 
@@ -220,17 +220,17 @@ void PohBee_State_Setup(void)
 {
     RSDK_THIS(PohBee);
 
-    if (entity->drawOrder != 1)
-        entity->active = ACTIVE_NORMAL;
-    entity->position  = entity->startPos;
-    entity->direction = entity->startDir;
-    entity->field_70  = 128;
-    entity->field_74  = 172;
-    RSDK.SetSpriteAnimation(PohBee->aniFrames, 0, &entity->animator1, true, 0);
-    RSDK.SetSpriteAnimation(PohBee->aniFrames, 2, &entity->animator2, true, 0);
-    RSDK.SetSpriteAnimation(PohBee->aniFrames, 3, &entity->animator3, true, 0);
-    RSDK.SetSpriteAnimation(PohBee->aniFrames, 4, &entity->animator4, true, 0);
-    entity->state = PohBee_State_Move;
+    if (self->drawOrder != 1)
+        self->active = ACTIVE_NORMAL;
+    self->position  = self->startPos;
+    self->direction = self->startDir;
+    self->field_70  = 128;
+    self->field_74  = 172;
+    RSDK.SetSpriteAnimation(PohBee->aniFrames, 0, &self->animator1, true, 0);
+    RSDK.SetSpriteAnimation(PohBee->aniFrames, 2, &self->animator2, true, 0);
+    RSDK.SetSpriteAnimation(PohBee->aniFrames, 3, &self->animator3, true, 0);
+    RSDK.SetSpriteAnimation(PohBee->aniFrames, 4, &self->animator4, true, 0);
+    self->state = PohBee_State_Move;
     PohBee_State_Move();
 }
 
@@ -238,52 +238,52 @@ void PohBee_State_Move(void)
 {
     RSDK_THIS(PohBee);
 
-    int32 distX = abs(entity->position.x - entity->startPos.x);
+    int32 distX = abs(self->position.x - self->startPos.x);
 
-    int32 move = (2 * (entity->direction != FLIP_NONE) - 1) << 15;
-    if (entity->animator1.animationID == 1) {
-        switch (entity->animator1.frameID) {
+    int32 move = (2 * (self->direction != FLIP_NONE) - 1) << 15;
+    if (self->animator1.animationID == 1) {
+        switch (self->animator1.frameID) {
             case 1: move >>= 1; break;
             case 2: move = 0; break;
-            case 3: move = (-0x8000 * (2 * (entity->direction != FLIP_NONE) - 1)) >> 1; break;
-            case 4: move = -0x8000 * (2 * (entity->direction != FLIP_NONE) - 1); break;
+            case 3: move = (-0x8000 * (2 * (self->direction != FLIP_NONE) - 1)) >> 1; break;
+            case 4: move = -0x8000 * (2 * (self->direction != FLIP_NONE) - 1); break;
             default: break;
         }
     }
-    entity->position.x += move;
+    self->position.x += move;
 
-    if (distX < entity->amplitude.x) {
-        entity->field_7C = 0;
+    if (distX < self->amplitude.x) {
+        self->field_7C = 0;
     }
-    else if (!entity->animator1.animationID && !entity->field_7C) {
-        RSDK.SetSpriteAnimation(PohBee->aniFrames, 1, &entity->animator1, true, 0);
-        entity->field_7C = 1;
+    else if (!self->animator1.animationID && !self->field_7C) {
+        RSDK.SetSpriteAnimation(PohBee->aniFrames, 1, &self->animator1, true, 0);
+        self->field_7C = 1;
     }
-    if (entity->animator1.animationID == 1 && entity->animator1.frameID == entity->animator1.frameCount - 1) {
-        RSDK.SetSpriteAnimation(PohBee->aniFrames, 0, &entity->animator1, true, 0);
-        entity->direction = entity->direction == FLIP_NONE;
+    if (self->animator1.animationID == 1 && self->animator1.frameID == self->animator1.frameCount - 1) {
+        RSDK.SetSpriteAnimation(PohBee->aniFrames, 0, &self->animator1, true, 0);
+        self->direction = self->direction == FLIP_NONE;
     }
 
-    entity->angle      = (entity->angle + 8) & 0x1FF;
-    entity->position.y = entity->startPos.y + (RSDK.Sin512(entity->angle) << 7) * (entity->amplitude.y >> 16);
+    self->angle      = (self->angle + 8) & 0x1FF;
+    self->position.y = self->startPos.y + (RSDK.Sin512(self->angle) << 7) * (self->amplitude.y >> 16);
 
-    entity->field_68 = (entity->field_68 + 9) & 0x7FF;
-    entity->field_70 = (112 * ((RSDK.Sin512(entity->field_68 >> 2) >> 2) + 136)) >> 7;
+    self->field_68 = (self->field_68 + 9) & 0x7FF;
+    self->field_70 = (112 * ((RSDK.Sin512(self->field_68 >> 2) >> 2) + 136)) >> 7;
 
-    entity->field_6C = (entity->field_6C + 10) & 0x7FF;
-    entity->field_74 = (112 * ((RSDK.Sin512(entity->field_6C >> 2) >> 2) + 144)) >> 7;
+    self->field_6C = (self->field_6C + 10) & 0x7FF;
+    self->field_74 = (112 * ((RSDK.Sin512(self->field_6C >> 2) >> 2) + 144)) >> 7;
 }
 
 void PohBee_EditorDraw(void)
 {
     RSDK_THIS(PohBee);
 
-    entity->field_70  = 128;
-    entity->field_74  = 172;
-    RSDK.SetSpriteAnimation(PohBee->aniFrames, 0, &entity->animator1, true, 0);
-    RSDK.SetSpriteAnimation(PohBee->aniFrames, 2, &entity->animator2, true, 0);
-    RSDK.SetSpriteAnimation(PohBee->aniFrames, 3, &entity->animator3, true, 0);
-    RSDK.SetSpriteAnimation(PohBee->aniFrames, 4, &entity->animator4, true, 0);
+    self->field_70  = 128;
+    self->field_74  = 172;
+    RSDK.SetSpriteAnimation(PohBee->aniFrames, 0, &self->animator1, true, 0);
+    RSDK.SetSpriteAnimation(PohBee->aniFrames, 2, &self->animator2, true, 0);
+    RSDK.SetSpriteAnimation(PohBee->aniFrames, 3, &self->animator3, true, 0);
+    RSDK.SetSpriteAnimation(PohBee->aniFrames, 4, &self->animator4, true, 0);
 
     PohBee_DrawSprites();
 }

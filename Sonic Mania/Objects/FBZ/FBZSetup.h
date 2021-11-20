@@ -3,6 +3,14 @@
 
 #include "SonicMania.h"
 
+typedef enum { GENERICTRIGGER_FBZ_EXTERIOR, GENERICTRIGGER_FBZ_INTERIOR } GenericTriggerTypesFBZ;
+
+typedef enum {
+    FBZ_BG_INSIDE1,
+    FBZ_BG_INSIDE2,
+    FBZ_BG_INSIDE1_DUP,
+} BGSwitchIDsFBZ;
+
 // Object Class
 typedef struct {
     RSDK_OBJECT
@@ -11,9 +19,9 @@ typedef struct {
     int32 frameC;
     int32 frameD;
     int32 frameB;
-    int32 array1[0x400];
-    int32 array2[0x400];
-    int32 array3[0x400];
+    int32 deformX[0x400];
+    int32 positionYMove[0x400];
+    int32 positionY[0x400];
     uint16 aniTiles;
     uint16 bgOutsideLayer;
     EntityFBZ1Outro *outroPtr;
@@ -43,15 +51,15 @@ void FBZSetup_Serialize(void);
 // Extra Entity Functions
 void FBZSetup_ActTransitionLoad(void);
 
-void FBZSetup_Unknown5(ScanlineInfo *scanlines, int32 a1, int32 a3, int32 a4, int32 a5, int32 a6);
+void FBZSetup_HandleScanlines(ScanlineInfo *scanlines, int32 a1, int32 a3, int32 a4, int32 a5, int32 a6);
 void FBZSetup_ScanlineCallback(ScanlineInfo *scanlines);
 
-void FBZSetup_BGSwitchCB_A(void);
-void FBZSetup_BGSwitchCB_B(void);
-void FBZSetup_BGSwitchCB_C(void);
+void FBZSetup_BGSwitchCB_ShowInside1(void);
+void FBZSetup_BGSwitchCB_ShowInside2(void);
+void FBZSetup_BGSwitchCB_ShowInside1_Dup(void);
 
-void FBZSetup_GenericTriggerCB_A(void);
-void FBZSetup_GenericTriggerCB_B(void);
+void FBZSetup_GenericTriggerCB_ShowExterior(void);
+void FBZSetup_GenericTriggerCB_ShowInterior(void);
 
 void FBZSetup_StageFinishCB_Act1(void);
 #if RETRO_USE_PLUS

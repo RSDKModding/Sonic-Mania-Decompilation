@@ -4,8 +4,8 @@
 #include "SonicMania.h"
 
 typedef enum {
-    CABLEWARP_CAP,
     CABLEWARP_ENTRY,
+    CABLEWARP_EXIT,
     CABLEWARP_NODE,
     CABLEWARP_TRANSPORT,
 }CableWarpTypes;

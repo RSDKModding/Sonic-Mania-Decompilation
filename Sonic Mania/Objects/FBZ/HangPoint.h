@@ -40,6 +40,6 @@ void HangPoint_EditorLoad(void);
 void HangPoint_Serialize(void);
 
 // Extra Entity Functions
-void HangPoint_Unknown1(EntityHangPoint *entity, void *p, int32 playerID);
+void HangPoint_Unknown1(EntityHangPoint *self, void *p, int32 playerID);
 
 #endif //!OBJ_HANGPOINT_H

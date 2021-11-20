@@ -5,16 +5,16 @@ ObjectValve *Valve;
 void Valve_Update(void)
 {
     RSDK_THIS(Valve);
-    RSDK.ProcessAnimation(&entity->animator1);
-    RSDK.ProcessAnimation(&entity->animator2);
+    RSDK.ProcessAnimation(&self->animator1);
+    RSDK.ProcessAnimation(&self->animator2);
 
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionTouch(player, entity, &Valve->hitbox))
+        if (Player_CheckCollisionTouch(player, self, &Valve->hitbox))
             OOZSetup->fadeTimer = 0;
     }
 
-    if (entity->animator2.animationID == 2 && entity->animator2.frameID == 5 && entity->animator2.animationTimer == 1)
+    if (self->animator2.animationID == 2 && self->animator2.frameID == 5 && self->animator2.animationTimer == 1)
         RSDK.PlaySfx(Valve->sfxClick, 0, 255);
 }
 
@@ -25,22 +25,22 @@ void Valve_StaticUpdate(void) {}
 void Valve_Draw(void)
 {
     RSDK_THIS(Valve);
-    RSDK.DrawSprite(&entity->animator2, NULL, false);
-    RSDK.DrawSprite(&entity->animator1, NULL, false);
+    RSDK.DrawSprite(&self->animator2, NULL, false);
+    RSDK.DrawSprite(&self->animator1, NULL, false);
 }
 
 void Valve_Create(void *data)
 {
     RSDK_THIS(Valve);
-    entity->drawFX = FX_FLIP;
-    if (!RSDK_sceneInfo->inEditor) {
-        entity->active        = ACTIVE_BOUNDS;
-        entity->visible       = true;
-        entity->drawOrder     = Zone->drawOrderLow - 1;
-        entity->updateRange.x = 0x800000;
-        entity->updateRange.y = 0x800000;
-        RSDK.SetSpriteAnimation(Valve->aniFrames, 1, &entity->animator1, true, 3);
-        RSDK.SetSpriteAnimation(Valve->aniFrames, 3, &entity->animator2, true, 3);
+    self->drawFX = FX_FLIP;
+    if (!SceneInfo->inEditor) {
+        self->active        = ACTIVE_BOUNDS;
+        self->visible       = true;
+        self->drawOrder     = Zone->drawOrderLow - 1;
+        self->updateRange.x = 0x800000;
+        self->updateRange.y = 0x800000;
+        RSDK.SetSpriteAnimation(Valve->aniFrames, 1, &self->animator1, true, 3);
+        RSDK.SetSpriteAnimation(Valve->aniFrames, 3, &self->animator2, true, 3);
     }
 }
 
@@ -59,8 +59,8 @@ void Valve_StageLoad(void)
 void Valve_EditorDraw(void)
 {
     RSDK_THIS(Valve);
-    RSDK.SetSpriteAnimation(Valve->aniFrames, 1, &entity->animator1, false, 3);
-    RSDK.SetSpriteAnimation(Valve->aniFrames, 3, &entity->animator2, false, 3);
+    RSDK.SetSpriteAnimation(Valve->aniFrames, 1, &self->animator1, false, 3);
+    RSDK.SetSpriteAnimation(Valve->aniFrames, 3, &self->animator2, false, 3);
 
     Valve_Draw();
 }

@@ -487,7 +487,7 @@ uint16 Create3DScene(const char *name, uint16 vertexLimit, Scopes scope)
 
     return id;
 }
-void AddModelToScene(uint16 modelID, uint16 sceneID, uint8 drawMode, Matrix *matWorld, Matrix *matView, colour colour)
+void AddModelToScene(uint16 modelID, uint16 sceneID, uint8 drawMode, Matrix *matWorld, Matrix *matNormals, colour colour)
 {
     if (modelID < MODEL_MAX && sceneID < SCENE3D_MAX) {
         if (matWorld) {
@@ -524,7 +524,7 @@ void AddModelToScene(uint16 modelID, uint16 sceneID, uint8 drawMode, Matrix *mat
                         }
                         break;
                     case MODEL_USENORMALS:
-                        if (matView) {
+                        if (matNormals) {
                             for (; i < mdl->indexCount;) {
                                 faceVertCounts[f++] = mdl->faceVertCount;
                                 for (int c = 0; c < mdl->faceVertCount; ++c) {
@@ -536,12 +536,12 @@ void AddModelToScene(uint16 modelID, uint16 sceneID, uint8 drawMode, Matrix *mat
                                                 + (matWorld->values[1][0] * modelVert->x >> 8) + (modelVert->z * matWorld->values[1][2] >> 8);
                                     vertex->z = matWorld->values[2][3] + (modelVert->x * matWorld->values[2][0] >> 8)
                                                 + (matWorld->values[2][2] * modelVert->z >> 8) + (matWorld->values[2][1] * modelVert->y >> 8);
-                                    vertex->nx = (modelVert->nz * matView->values[0][2] >> 8) + (modelVert->nx * matView->values[0][0] >> 8)
-                                                 + (matView->values[0][1] * modelVert->ny >> 8);
-                                    vertex->ny = (modelVert->ny * matView->values[1][1] >> 8) + (modelVert->nz * matView->values[1][2] >> 8)
-                                                 + (modelVert->nx * matView->values[1][0] >> 8);
-                                    vertex->nz = ((modelVert->ny * matView->values[2][1]) >> 8)
-                                                 + ((matView->values[2][0] * modelVert->nx >> 8) + (modelVert->nz * matView->values[2][2] >> 8));
+                                    vertex->nx = (modelVert->nz * matNormals->values[0][2] >> 8) + (modelVert->nx * matNormals->values[0][0] >> 8)
+                                                 + (matNormals->values[0][1] * modelVert->ny >> 8);
+                                    vertex->ny = (modelVert->ny * matNormals->values[1][1] >> 8) + (modelVert->nz * matNormals->values[1][2] >> 8)
+                                                 + (modelVert->nx * matNormals->values[1][0] >> 8);
+                                    vertex->nz = ((modelVert->ny * matNormals->values[2][1]) >> 8)
+                                                 + ((matNormals->values[2][0] * modelVert->nx >> 8) + (modelVert->nz * matNormals->values[2][2] >> 8));
                                     vertex->colour = colour;
                                 }
                             }
@@ -564,7 +564,7 @@ void AddModelToScene(uint16 modelID, uint16 sceneID, uint8 drawMode, Matrix *mat
                         }
                         break;
                     case MODEL_USENORMALS | MODEL_USECOLOURS:
-                        if (matView) {
+                        if (matNormals) {
                             for (; i < mdl->indexCount;) {
                                 faceVertCounts[f++] = mdl->faceVertCount;
                                 for (int c = 0; c < mdl->faceVertCount; ++c) {
@@ -577,12 +577,12 @@ void AddModelToScene(uint16 modelID, uint16 sceneID, uint8 drawMode, Matrix *mat
                                                 + (modelVert->y * matWorld->values[1][1] >> 8) + (matWorld->values[1][0] * modelVert->x >> 8);
                                     vertex->z = matWorld->values[2][3] + (modelVert->x * matWorld->values[2][0] >> 8)
                                                 + (modelVert->y * matWorld->values[2][1] >> 8) + (matWorld->values[2][2] * modelVert->z >> 8);
-                                    vertex->nx = (matView->values[0][0] * modelVert->nx >> 8) + (modelVert->ny * matView->values[0][1] >> 8)
-                                                 + (matView->values[0][2] * modelVert->nz >> 8);
-                                    vertex->ny = (matView->values[1][0] * modelVert->nx >> 8) + (modelVert->ny * matView->values[1][1] >> 8)
-                                                 + (matView->values[1][2] * modelVert->nz >> 8);
-                                    vertex->nz = ((matView->values[2][2] * modelVert->nz) >> 8)
-                                                 + ((modelVert->ny * matView->values[2][1] >> 8) + (matView->values[2][0] * modelVert->nx >> 8));
+                                    vertex->nx = (matNormals->values[0][0] * modelVert->nx >> 8) + (modelVert->ny * matNormals->values[0][1] >> 8)
+                                                 + (matNormals->values[0][2] * modelVert->nz >> 8);
+                                    vertex->ny = (matNormals->values[1][0] * modelVert->nx >> 8) + (modelVert->ny * matNormals->values[1][1] >> 8)
+                                                 + (matNormals->values[1][2] * modelVert->nz >> 8);
+                                    vertex->nz = ((matNormals->values[2][2] * modelVert->nz) >> 8)
+                                                 + ((modelVert->ny * matNormals->values[2][1] >> 8) + (matNormals->values[2][0] * modelVert->nx >> 8));
                                     vertex->colour = modelColour->colour;
                                 }
                             }
@@ -610,7 +610,7 @@ void AddModelToScene(uint16 modelID, uint16 sceneID, uint8 drawMode, Matrix *mat
         }
     }
 }
-void AddMeshFrameToScene(uint16 modelID, uint16 sceneID, Animator *animator, uint8 drawMode, Matrix *matWorld, Matrix *matView, colour colour)
+void AddMeshFrameToScene(uint16 modelID, uint16 sceneID, Animator *animator, uint8 drawMode, Matrix *matWorld, Matrix *matNormals, colour colour)
 {
     if (modelID < MODEL_MAX && sceneID < SCENE3D_MAX) {
         if (matWorld && animator) {
@@ -659,7 +659,7 @@ void AddMeshFrameToScene(uint16 modelID, uint16 sceneID, Animator *animator, uin
                         }
                         break;
                     case MODEL_USENORMALS:
-                        if (matView) {
+                        if (matNormals) {
                             for (; i < mdl->indexCount;) {
                                 faceVertCounts[f++] = mdl->faceVertCount;
                                 for (int c = 0; c < mdl->faceVertCount; ++c) {
@@ -681,11 +681,11 @@ void AddMeshFrameToScene(uint16 modelID, uint16 sceneID, Animator *animator, uin
                                     vertex->z = matWorld->values[2][3] + (x * matWorld->values[2][0] >> 8) + (matWorld->values[2][2] * z >> 8)
                                                 + (matWorld->values[2][1] * y >> 8);
                                     vertex->nx =
-                                        (nz * matView->values[0][2] >> 8) + (nx * matView->values[0][0] >> 8) + (matView->values[0][1] * ny >> 8);
+                                        (nz * matNormals->values[0][2] >> 8) + (nx * matNormals->values[0][0] >> 8) + (matNormals->values[0][1] * ny >> 8);
                                     vertex->ny =
-                                        (ny * matView->values[1][1] >> 8) + (nz * matView->values[1][2] >> 8) + (nx * matView->values[1][0] >> 8);
+                                        (ny * matNormals->values[1][1] >> 8) + (nz * matNormals->values[1][2] >> 8) + (nx * matNormals->values[1][0] >> 8);
                                     vertex->nz =
-                                        ((ny * matView->values[2][1]) >> 8) + ((matView->values[2][0] * nx >> 8) + (nz * matView->values[2][2] >> 8));
+                                        ((ny * matNormals->values[2][1]) >> 8) + ((matNormals->values[2][0] * nx >> 8) + (nz * matNormals->values[2][2] >> 8));
                                     vertex->colour = colour;
                                 }
                             }
@@ -713,7 +713,7 @@ void AddMeshFrameToScene(uint16 modelID, uint16 sceneID, Animator *animator, uin
                         }
                         break;
                     case MODEL_USENORMALS | MODEL_USECOLOURS:
-                        if (matView) {
+                        if (matNormals) {
                             for (; i < mdl->indexCount;) {
                                 faceVertCounts[f++] = mdl->faceVertCount;
                                 for (int c = 0; c < mdl->faceVertCount; ++c) {
@@ -735,11 +735,11 @@ void AddMeshFrameToScene(uint16 modelID, uint16 sceneID, Animator *animator, uin
                                     vertex->z = matWorld->values[2][3] + (x * matWorld->values[2][0] >> 8) + (y * matWorld->values[2][1] >> 8)
                                                 + (matWorld->values[2][2] * z >> 8);
                                     vertex->nx =
-                                        (matView->values[0][0] * nx >> 8) + (ny * matView->values[0][1] >> 8) + (matView->values[0][2] * nz >> 8);
+                                        (matNormals->values[0][0] * nx >> 8) + (ny * matNormals->values[0][1] >> 8) + (matNormals->values[0][2] * nz >> 8);
                                     vertex->ny =
-                                        (matView->values[1][0] * nx >> 8) + (ny * matView->values[1][1] >> 8) + (matView->values[1][2] * nz >> 8);
+                                        (matNormals->values[1][0] * nx >> 8) + (ny * matNormals->values[1][1] >> 8) + (matNormals->values[1][2] * nz >> 8);
                                     vertex->nz =
-                                        ((matView->values[2][2] * nz) >> 8) + ((ny * matView->values[2][1] >> 8) + (matView->values[2][0] * nx >> 8));
+                                        ((matNormals->values[2][2] * nz) >> 8) + ((ny * matNormals->values[2][1] >> 8) + (matNormals->values[2][0] * nx >> 8));
                                     vertex->colour = modelColour->colour;
                                 }
                             }

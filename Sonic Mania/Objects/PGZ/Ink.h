@@ -7,7 +7,7 @@
 typedef struct {
     RSDK_OBJECT
     uint8 playerColours[4];
-    uint16 spriteIndex;
+    uint16 aniFrames;
     Hitbox hitbox;
     Hitbox hitbox2;
     Hitbox hitbox3;

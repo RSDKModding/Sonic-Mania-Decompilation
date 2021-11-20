@@ -45,7 +45,7 @@ void initUserData()
     platform             = PLATFORM_PS4;
 #elif RETRO_PLATFORM == RETRO_XB1
     platform = PLATFORM_XB1;
-#elif RETRO_PLATFORM == RETRO_SWITCH　|| RETRO_PLATFORM == RETRO_ANDROID
+#elif RETRO_PLATFORM == RETRO_SWITCH || RETRO_PLATFORM == RETRO_ANDROID
     platform = PLATFORM_SWITCH;
 #endif
 

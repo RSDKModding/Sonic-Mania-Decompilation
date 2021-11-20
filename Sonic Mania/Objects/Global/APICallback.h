@@ -4,9 +4,9 @@
 #include "SonicMania.h"
 
 #if RETRO_USE_PLUS
-#define sku_platform RSDK_sku->platform
-#define sku_language RSDK_sku->language
-#define sku_region   RSDK_sku->region
+#define sku_platform SKU->platform
+#define sku_language SKU->language
+#define sku_region   SKU->region
 
 #define API_GetConfirmButtonFlip         API.GetConfirmButtonFlip
 #define API_UnlockAchievement            API.UnlockAchievement
@@ -23,9 +23,9 @@
 #define API_GetUsername                  API.GetUsername
 #define API_ReadLeaderboardEntry         API.ReadLeaderboardEntry
 #else
-#define sku_platform RSDK_info->platform
-#define sku_language RSDK_info->language
-#define sku_region   RSDK_info->region
+#define sku_platform GameInfo->platform
+#define sku_language GameInfo->language
+#define sku_region   GameInfo->region
 
 #define API_GetConfirmButtonFlip         APICallback_GetConfirmButtonFlip
 #define API_UnlockAchievement            APICallback_UnlockAchievement
@@ -81,11 +81,11 @@ typedef struct {
     int32 (*GetControllerType)(int32 id, int32);
     int32(*ShowSteamControllerOverlay)(int32);
     int32 saveStatus;
-    bool32 authFlag;
+    bool32 authForbiddenFlag;
     bool32 signoutFlag;
     int32 prevLeaderboardEntry;
-    int32 playerFlipFlags;
-    int32 notifyAutoSaveFlag;
+    int32 unknown2;
+    int32 isAutoSaving;
     int32 unknown;
     int32 leaderboardsStatus;
     int32 leaderboardEntryCount;

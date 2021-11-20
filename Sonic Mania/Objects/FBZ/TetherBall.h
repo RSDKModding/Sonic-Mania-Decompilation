@@ -3,6 +3,8 @@
 
 #include "SonicMania.h"
 
+typedef enum { TETHERBALL_0, TETHERBALL_1, TETHERBALL_2, TETHERBALL_3 } TetherBallTypes;
+
 // Object Class
 typedef struct {
     RSDK_OBJECT

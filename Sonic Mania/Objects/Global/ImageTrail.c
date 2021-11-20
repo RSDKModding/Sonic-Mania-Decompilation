@@ -7,33 +7,33 @@ void ImageTrail_Update(void) {}
 void ImageTrail_LateUpdate(void)
 {
     RSDK_THIS(ImageTrail);
-    EntityPlayer *player = (EntityPlayer *)entity->player;
+    EntityPlayer *player = (EntityPlayer *)self->player;
 
     // Check for fadeouts/destroy flags
     if (player->superState == SUPERSTATE_SUPER) {
-        entity->baseAlpha = 0x100;
+        self->baseAlpha = 0x100;
     }
     else {
 #if RETRO_USE_PLUS
         if (player->state == Player_State_MightyHammerDrop) {
-            entity->fadeoutTimer = 0x10;
+            self->fadeoutTimer = 0x10;
         }
         else {
 #endif
-            if (entity->fadeoutTimer <= 0) {
+            if (self->fadeoutTimer <= 0) {
                 if (player->speedShoesTimer < 32) {
-                    entity->baseAlpha = player->speedShoesTimer;
-                    entity->baseAlpha *= 8;
-                    if (entity->baseAlpha == 0)
-                        destroyEntity(entity);
+                    self->baseAlpha = player->speedShoesTimer;
+                    self->baseAlpha *= 8;
+                    if (self->baseAlpha == 0)
+                        destroyEntity(self);
                 }
             }
             else {
-                entity->fadeoutTimer--;
-                entity->baseAlpha = 0x10;
-                entity->baseAlpha *= entity->fadeoutTimer;
-                if (entity->baseAlpha == 0)
-                    destroyEntity(entity);
+                self->fadeoutTimer--;
+                self->baseAlpha = 0x10;
+                self->baseAlpha *= self->fadeoutTimer;
+                if (self->baseAlpha == 0)
+                    destroyEntity(self);
             }
 #if RETRO_USE_PLUS
         }
@@ -42,41 +42,41 @@ void ImageTrail_LateUpdate(void)
 
     // Update recordings
     for (int32 i = ImageTrail_TrackCount - 1; i > 0; --i) {
-        entity->statePos[i].x     = entity->statePos[i - 1].x;
-        entity->statePos[i].y     = entity->statePos[i - 1].y;
-        entity->stateRotation[i]  = entity->stateRotation[i - 1];
-        entity->stateScale[i]     = entity->stateScale[i - 1];
-        entity->stateDirection[i] = entity->stateDirection[i - 1];
-        entity->stateVisible[i]   = entity->stateVisible[i - 1];
-        memcpy(&entity->stateAnim[i], &entity->stateAnim[i - 1], sizeof(Animator));
+        self->statePos[i].x     = self->statePos[i - 1].x;
+        self->statePos[i].y     = self->statePos[i - 1].y;
+        self->stateRotation[i]  = self->stateRotation[i - 1];
+        self->stateScale[i]     = self->stateScale[i - 1];
+        self->stateDirection[i] = self->stateDirection[i - 1];
+        self->stateVisible[i]   = self->stateVisible[i - 1];
+        memcpy(&self->stateAnim[i], &self->stateAnim[i - 1], sizeof(Animator));
     }
 
-    entity->statePos[0].x     = entity->currentPos.x;
-    entity->statePos[0].y     = entity->currentPos.y;
-    entity->stateRotation[0]  = entity->currentRotation;
-    entity->stateDirection[0] = entity->currentDirection;
-    entity->stateScale[0]     = entity->currentScale;
-    entity->stateVisible[0]   = entity->currentVisible;
-    memcpy(&entity->stateAnim[0], &entity->currentAnimData, sizeof(Animator));
+    self->statePos[0].x     = self->currentPos.x;
+    self->statePos[0].y     = self->currentPos.y;
+    self->stateRotation[0]  = self->currentRotation;
+    self->stateDirection[0] = self->currentDirection;
+    self->stateScale[0]     = self->currentScale;
+    self->stateVisible[0]   = self->currentVisible;
+    memcpy(&self->stateAnim[0], &self->currentAnimData, sizeof(Animator));
 
     // Record Player
-    entity->drawOrder        = player->drawOrder - 1;
-    entity->currentPos.x     = player->position.x;
-    entity->currentPos.y     = player->position.y;
-    entity->currentRotation  = player->rotation;
-    entity->currentDirection = player->direction;
-    memcpy(&entity->currentAnimData, &player->playerAnimator, sizeof(Animator));
+    self->drawOrder        = player->drawOrder - 1;
+    self->currentPos.x     = player->position.x;
+    self->currentPos.y     = player->position.y;
+    self->currentRotation  = player->rotation;
+    self->currentDirection = player->direction;
+    memcpy(&self->currentAnimData, &player->animator, sizeof(Animator));
     if (player->isChibi || !(player->drawFX & FX_SCALE))
-        entity->currentScale = 0x200;
+        self->currentScale = 0x200;
     else
-        entity->currentScale = player->scale.x;
+        self->currentScale = player->scale.x;
 
     // Check if we have enough speed to be visible
     if (abs(player->velocity.x) >= 0x10000 || abs(player->velocity.y) >= 0x10000) {
-        entity->currentVisible = player->visible;
+        self->currentVisible = player->visible;
     }
     else {
-        entity->currentVisible = false;
+        self->currentVisible = false;
     }
 }
 
@@ -85,24 +85,24 @@ void ImageTrail_StaticUpdate(void) {}
 void ImageTrail_Draw(void)
 {
     RSDK_THIS(ImageTrail);
-    //int32 alpha[3] = { 0xA0 * entity->baseAlpha >> 8, entity->baseAlpha >> 1, 0x60 * entity->baseAlpha >> 8 };
-    int32 alpha = 0x60 * entity->baseAlpha >> 8;
+    //int32 alpha[3] = { 0xA0 * self->baseAlpha >> 8, self->baseAlpha >> 1, 0x60 * self->baseAlpha >> 8 };
+    int32 alpha = 0x60 * self->baseAlpha >> 8;
     int32 inc      = 0x40 / (ImageTrail_TrackCount / 3);
 
     for (int32 i = (ImageTrail_TrackCount / 3); i >= 0; --i) {
         int32 id = (i * 3) - (i - 1);
-        if (entity->stateVisible[id]) {
-            if (entity->stateScale[id] != 0x200) {
-                entity->drawFX |= FX_SCALE;
-                entity->scale.x = entity->stateScale[id];
-                entity->scale.y = entity->stateScale[id];
+        if (self->stateVisible[id]) {
+            if (self->stateScale[id] != 0x200) {
+                self->drawFX |= FX_SCALE;
+                self->scale.x = self->stateScale[id];
+                self->scale.y = self->stateScale[id];
             }
-            entity->alpha     = alpha;
+            self->alpha     = alpha;
             alpha += inc;
-            entity->rotation  = entity->stateRotation[id];
-            entity->direction = entity->stateDirection[id];
-            RSDK.DrawSprite(&entity->stateAnim[id], &entity->statePos[id], 0);
-            entity->drawFX &= ~FX_SCALE;
+            self->rotation  = self->stateRotation[id];
+            self->direction = self->stateDirection[id];
+            RSDK.DrawSprite(&self->stateAnim[id], &self->statePos[id], 0);
+            self->drawFX &= ~FX_SCALE;
         }
     }
 }
@@ -110,22 +110,22 @@ void ImageTrail_Draw(void)
 void ImageTrail_Create(void *data)
 {
     RSDK_THIS(ImageTrail);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         EntityPlayer *player = (EntityPlayer *)data;
-        entity->active       = ACTIVE_ALWAYS;
-        entity->visible      = true;
-        entity->player       = (Entity *)player;
-        entity->playerObjID  = player->objectID;
-        entity->baseAlpha    = 0x100;
-        entity->drawFX       = FX_FLIP | FX_SCALE | FX_ROTATE;
-        entity->inkEffect    = INK_ALPHA;
+        self->active       = ACTIVE_ALWAYS;
+        self->visible      = true;
+        self->player       = (Entity *)player;
+        self->playerObjID  = player->objectID;
+        self->baseAlpha    = 0x100;
+        self->drawFX       = FX_FLIP | FX_SCALE | FX_ROTATE;
+        self->inkEffect    = INK_ALPHA;
 
         for (int32 i = ImageTrail_TrackCount - 1; i >= 0; --i) {
-            entity->statePos[i].x     = player->position.x;
-            entity->statePos[i].y     = player->position.y;
-            entity->stateRotation[i]  = player->rotation;
-            entity->stateDirection[i] = player->direction;
-            entity->stateVisible[i]   = false;
+            self->statePos[i].x     = player->position.x;
+            self->statePos[i].y     = player->position.y;
+            self->stateRotation[i]  = player->rotation;
+            self->stateDirection[i] = player->direction;
+            self->stateVisible[i]   = false;
         }
     }
 }

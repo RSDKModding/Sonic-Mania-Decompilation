@@ -17,17 +17,18 @@ typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
-    int32 field_60;
-    int32 field_64;
-    int32 field_68;
-    Hitbox hitbox1;
-    Hitbox hitbox2;
-    Hitbox hitbox3;
-    Animator animator1;
-    Animator animator2;
-    Animator animator3;
-    Animator animator4;
-    Animator animator5;
+    int32 buttonPos;
+    // both of these 2 below go unused, but based on the similarities to Global/EggPrison, its likely to be these
+    int32 notSolid;
+    int32 checkTileCollisions;
+    Hitbox hitboxSolid;
+    Hitbox hitboxButton;
+    Hitbox hitboxButtonTrigger;
+    Animator mainAnimator;
+    Animator glassAnimator;
+    Animator buttonAnimator;
+    Animator mightyAnimator;
+    Animator rayAnimator;
 } EntitySchrodingersCapsule;
 
 // Object Struct

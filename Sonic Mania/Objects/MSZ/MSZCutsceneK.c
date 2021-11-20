@@ -5,9 +5,9 @@ ObjectMSZCutsceneK *MSZCutsceneK;
 void MSZCutsceneK_Update(void)
 {
     RSDK_THIS(MSZCutsceneK);
-    if (!entity->activated) {
+    if (!self->activated) {
         MSZCutsceneK_StartCutscene();
-        entity->activated = true;
+        self->activated = true;
     }
 }
 
@@ -21,9 +21,9 @@ void MSZCutsceneK_Create(void *data)
 {
     RSDK_THIS(MSZCutsceneK);
 
-    INIT_ENTITY(entity);
-    CutsceneRules_SetupEntity(entity, &entity->size, &entity->hitbox);
-    entity->active = ACTIVE_BOUNDS;
+    INIT_ENTITY(self);
+    CutsceneRules_SetupEntity(self, &self->size, &self->hitbox);
+    self->active = ACTIVE_BOUNDS;
 }
 
 void MSZCutsceneK_StageLoad(void)
@@ -51,7 +51,7 @@ void MSZCutsceneK_StageLoad(void)
 void MSZCutsceneK_SkipCB(void)
 {
     RSDK.SetScene("Mania Mode", "");
-    RSDK_sceneInfo->listPos += TimeAttackData_GetManiaListPos(7, 3, 0);
+    SceneInfo->listPos += TimeAttackData_GetManiaListPos(7, 3, 0);
 }
 
 void MSZCutsceneK_StartCutscene(void)
@@ -60,7 +60,7 @@ void MSZCutsceneK_StartCutscene(void)
 
     void *states[] = { MSZCutsceneK_CutsceneState_Unknown1, MSZCutsceneK_CutsceneState_Unknown2, NULL };
 
-    CutsceneSeq_StartSequence((Entity *)entity, states);
+    CutsceneSeq_StartSequence((Entity *)self, states);
 
     EntityCutsceneSeq *sequence = RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq);
     if (sequence->objectID) {
@@ -80,14 +80,14 @@ void MSZCutsceneK_SetupP2(int posX, int posY)
     player2->characterID     = ID_SONIC;
     player2->position.x      = posX;
     player2->position.y      = posY;
-    player2->spriteIndex     = Player->sonicSpriteIndex;
+    player2->aniFrames     = Player->sonicSpriteIndex;
     player2->tailSpriteIndex = -1;
     player2->cameraOffset    = 0x50000;
     player2->movesetState    = Player_SonicJumpAbility;
     player2->sensorY         = 0x140000;
     player2->stateInput      = 0;
     player2->state           = Player_State_None;
-    RSDK.SetSpriteAnimation(Player->sonicSpriteIndex, ANI_RIDE, &player2->playerAnimator, true, 0);
+    RSDK.SetSpriteAnimation(Player->sonicSpriteIndex, ANI_RIDE, &player2->animator, true, 0);
 }
 
 bool32 MSZCutsceneK_CutsceneState_Unknown1(EntityCutsceneSeq *host)
@@ -99,14 +99,14 @@ bool32 MSZCutsceneK_CutsceneState_Unknown1(EntityCutsceneSeq *host)
     EntityHeavyMystic *mystic = (EntityHeavyMystic *)MSZCutsceneK->mystic;
     EntityTornado *tornado    = (EntityTornado *)MSZCutsceneK->tornado;
     if (!host->timer) {
-        RSDK_sceneInfo->timeEnabled  = false;
-        RSDK_sceneInfo->milliseconds = 0;
+        SceneInfo->timeEnabled  = false;
+        SceneInfo->milliseconds = 0;
         player1->state               = Player_State_None;
         player1->stateInput          = 0;
         CutsceneSeq_LockAllPlayerControl();
         player1->velocity.x = 0;
         player1->velocity.y = 0;
-        RSDK.SetSpriteAnimation(MSZCutsceneK->playerFrames, 6, &player1->playerAnimator, true, 0);
+        RSDK.SetSpriteAnimation(MSZCutsceneK->playerFrames, 6, &player1->animator, true, 0);
         MSZCutsceneK_SetupP2(0xCC0000, 0x29E0000);
     }
     if (mystic->position.x > tornado->position.x - 0x100000) {
@@ -130,26 +130,26 @@ bool32 MSZCutsceneK_CutsceneState_Unknown2(EntityCutsceneSeq *host)
         RSDK.StopChannel(Music->channelID);
         RSDK.PlaySfx(MSZCutsceneK->sfxImpact, false, 255);
         tornado->velocity.y = -0x10000;
-        if (!host->field_6C[0]) {
-            host->field_6C[0] = true;
+        if (!host->values[0]) {
+            host->values[0] = true;
             RSDK.PlaySfx(MSZCutsceneK->sfxDrop, false, 255);
-            RSDK.SetSpriteAnimation(MSZCutsceneK->playerFrames, 4, &player1->playerAnimator, true, 0);
+            RSDK.SetSpriteAnimation(MSZCutsceneK->playerFrames, 4, &player1->animator, true, 0);
             player1->velocity.x = -0x10000;
             player1->velocity.y = -0x30000;
         }
     }
     tornado->position.x += tornado->velocity.x;
     tornado->position.y += tornado->velocity.y;
-    if (tornado->velocity.y >= tornado->field_84.y) {
+    if (tornado->velocity.y >= tornado->movePos.y) {
         tornado->velocity.y = 0;
-        tornado->position.y = tornado->field_84.y;
+        tornado->position.y = tornado->movePos.y;
     }
     else {
         tornado->velocity.y += 0x3800;
     }
 
-    if (host->field_6C[0]) {
-        if (!host->field_6C[2])
+    if (host->values[0]) {
+        if (!host->values[2])
             player1->velocity.y += 0x3800;
     }
     else {
@@ -157,24 +157,24 @@ bool32 MSZCutsceneK_CutsceneState_Unknown2(EntityCutsceneSeq *host)
         player1->position.y = tornado->position.y + MSZCutsceneK->pos1.y;
     }
 
-    if (host->field_6C[1]) {
-        if (host->timer - host->field_68 == 15) {
+    if (host->values[1]) {
+        if (host->timer - host->storedValue2 == 15) {
             globals->suppressTitlecard = true;
             globals->suppressAutoMusic = true;
             globals->enableIntro       = 1;
             RSDK.SetScene("Mania Mode", "");
-            RSDK_sceneInfo->listPos += TimeAttackData_GetManiaListPos(7, 3, 0);
+            SceneInfo->listPos += TimeAttackData_GetManiaListPos(7, 3, 0);
             Zone_StartFadeOut(10, 0x000000);
         }
-        else if (host->timer - host->field_68 == 60) {
+        else if (host->timer - host->storedValue2 == 60) {
             player1->velocity.y = 0;
-            host->field_6C[2]   = true;
+            host->values[2]   = true;
         }
     }
     else if (player1->position.y > tornado->position.y) {
         TornadoPath->cameraPtr = NULL;
-        host->field_6C[1]      = 1;
-        host->field_68         = host->timer;
+        host->values[1]      = 1;
+        host->storedValue2         = host->timer;
         MSZCutsceneK->pos3     = camera->position;
         MSZCutsceneK->pos3.y += 0x1E00000;
         Camera_SetupLerp(0, 0, MSZCutsceneK->pos3.x, MSZCutsceneK->pos3.y, 3);
@@ -188,7 +188,7 @@ bool32 MSZCutsceneK_CutsceneState_Unknown2(EntityCutsceneSeq *host)
 void MSZCutsceneK_EditorDraw(void)
 {
     RSDK_THIS(MSZCutsceneK);
-    CutsceneRules_DrawCutsceneBounds(entity, &entity->size);
+    CutsceneRules_DrawCutsceneBounds(self, &self->size);
 }
 
 void MSZCutsceneK_EditorLoad(void) {}

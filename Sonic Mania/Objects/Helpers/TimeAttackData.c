@@ -148,7 +148,7 @@ int32 TimeAttackData_LoadCB(int32 statusCode)
 {
     if (statusCode == STATUS_OK) {
         globals->taTableLoaded = STATUS_OK;
-        API.SetupSortedUserDBRowIDs(globals->taTableID);
+        API.SetupUserDBRowSorting(globals->taTableID);
         LogHelpers_Print("Load Succeeded! Replay count: %d", API.GetSortedUserDBRowCount(globals->taTableID));
     }
     else {
@@ -158,11 +158,11 @@ int32 TimeAttackData_LoadCB(int32 statusCode)
     LogHelpers_Print("Replay DB Slot => %d, Load Status => %d", globals->taTableID, globals->taTableLoaded);
 
     if (TimeAttackData->loadCallback) {
-        Entity *entStore = RSDK_sceneInfo->entity;
+        Entity *entStore = SceneInfo->entity;
         if (TimeAttackData->loadEntityPtr)
-            RSDK_sceneInfo->entity = TimeAttackData->loadEntityPtr;
+            SceneInfo->entity = TimeAttackData->loadEntityPtr;
         TimeAttackData->loadCallback(statusCode == STATUS_OK);
-        RSDK_sceneInfo->entity        = entStore;
+        SceneInfo->entity        = entStore;
         TimeAttackData->loadCallback  = NULL;
         TimeAttackData->loadEntityPtr = NULL;
     }
@@ -213,7 +213,6 @@ void TimeAttackData_MigrateLegacyTADB(void)
                     off += 12;
                 }
             }
-            //}
 
             TimeAttackData->dword1C = 0;
         }
@@ -291,7 +290,7 @@ int32 TimeAttackData_SaveTimeAttackDB(void (*callback)(int32))
     }
     else {
         LogHelpers_Print("Saving Time Attack DB");
-        TimeAttackData->saveEntityPtr = RSDK_sceneInfo->entity;
+        TimeAttackData->saveEntityPtr = SceneInfo->entity;
         TimeAttackData->saveCallback  = callback;
         API.SaveUserDB(globals->taTableID, TimeAttackData_SaveTimeAttackDB_CB);
     }
@@ -301,11 +300,11 @@ int32 TimeAttackData_SaveTimeAttackDB(void (*callback)(int32))
 void TimeAttackData_SaveTimeAttackDB_CB(int32 statusCode)
 {
     if (TimeAttackData->saveCallback) {
-        Entity *entStore = RSDK_sceneInfo->entity;
+        Entity *entStore = SceneInfo->entity;
         if (TimeAttackData->saveEntityPtr)
-            RSDK_sceneInfo->entity = TimeAttackData->saveEntityPtr;
+            SceneInfo->entity = TimeAttackData->saveEntityPtr;
         TimeAttackData->saveCallback(statusCode == STATUS_OK);
-        RSDK_sceneInfo->entity        = entStore;
+        SceneInfo->entity        = entStore;
         TimeAttackData->saveCallback  = NULL;
         TimeAttackData->saveEntityPtr = NULL;
     }
@@ -313,7 +312,7 @@ void TimeAttackData_SaveTimeAttackDB_CB(int32 statusCode)
 
 int32 TimeAttackData_GetScore(uint8 zone, uint8 charID, uint8 act, int32 encore, int32 rank)
 {
-    if (rank >= 3 && rank)
+    if (rank > 3 && rank)
         return 0;
 
     uint8 rankID = rank - 1;
@@ -354,11 +353,14 @@ int32 TimeAttackData_GetReplayID(uint8 zone, uint8 charID, uint8 act, int32 enco
 void TimeAttackData_ConfigureTableView(uint8 zoneID, uint8 characterID, uint8 act, int32 encore)
 {
     LogHelpers_Print("ConfigureTableView(%d, %d, %d, %d)", characterID, zoneID, act, encore);
-    API.SetupSortedUserDBRowIDs(globals->taTableID);
-    API.Unknown33(globals->taTableID, 2, "zoneID", &zoneID);
-    API.Unknown33(globals->taTableID, 2, "act", &act);
-    API.Unknown33(globals->taTableID, 2, "characterID", &characterID);
-    API.Unknown33(globals->taTableID, 2, "encore", &encore);
+    // setup every sort row ID for every entry
+    API.SetupUserDBRowSorting(globals->taTableID);
+    //remove any sort row IDs that dont match the following values
+    API.AddRowSortFilter(globals->taTableID, 2, "zoneID", &zoneID);
+    API.AddRowSortFilter(globals->taTableID, 2, "act", &act);
+    API.AddRowSortFilter(globals->taTableID, 2, "characterID", &characterID);
+    API.AddRowSortFilter(globals->taTableID, 2, "encore", &encore);
+    //sort the remaining rows
     API.SortDBRows(globals->taTableID, 4, "score", false);
     TimeAttackData->status      = 1;
     TimeAttackData->zoneID      = zoneID;
@@ -383,7 +385,7 @@ void TimeAttackData_AddLeaderboardEntry(uint8 zone, char playerID, uint8 act, in
 
     const char *leaderboardName = "";
     if (zone < 12 && act < 2 && playerID <= 5) {
-        int32 id = 10 * (zone - 1) + (5 * act) + playerID;
+        int32 id = 10 * zone + 5 * act + (playerID - 1);
         if (mode)
             id += 120;
         leaderboardName = LeaderboardNames[id];

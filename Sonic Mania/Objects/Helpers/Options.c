@@ -11,7 +11,7 @@ void Options_StageLoad(void)
 {
 #if !RETRO_USE_PLUS
     Options->state = 0;
-    if (RSDK_info->platform == PLATFORM_DEV || RSDK_info->platform == PLATFORM_PC) {
+    if (GameInfo->platform == PLATFORM_DEV || GameInfo->platform == PLATFORM_PC) {
         Options_Reload();
     }
     else {
@@ -97,7 +97,7 @@ void Options_LoadOptionsBin(void)
             }
             else {
                 globals->optionsLoaded = STATUS_CONTINUE;
-                Options->loadEntityPtr = RSDK_sceneInfo->entity;
+                Options->loadEntityPtr = SceneInfo->entity;
                 Options->loadCallback  = Options_LoadCallback;
                 API_LoadUserFile("Options.bin", globals->optionsRAM, 0x200, Options_LoadOptionsCallback);
             }
@@ -117,7 +117,7 @@ void Options_SaveOptionsBin(void (*callback)(int32))
     if (Options->state) {
         if (sku_platform && sku_platform != PLATFORM_DEV) {
             if (globals->optionsLoaded == STATUS_OK) {
-                Options->saveEntityPtr = RSDK_sceneInfo->entity;
+                Options->saveEntityPtr = SceneInfo->entity;
                 Options->saveCallback  = callback;
 #if RETRO_USE_PLUS
                 API_SaveUserFile("Options.bin", globals->optionsRAM, 0x200, Options_SaveOptionsCallback, false);
@@ -162,7 +162,7 @@ void Options_SetLanguage(int32 language)
     Options->state = 1;
 }
 
-void Options_Unknown1(EntityOptions *options)
+void Options_LoadValuesFromSettings(EntityOptions *options)
 {
     if (options->overrideLanguage) {
         Localization->language = options->language;
@@ -171,13 +171,13 @@ void Options_Unknown1(EntityOptions *options)
         options->language = sku_language;
     }
 
-    if (!options->field_60) {
+    if (!options->overrideShader) {
         options->screenShader = RSDK.GetSettingsValue(SETTINGS_SHADERID) % 4;
     }
-    if (!options->field_68) {
+    if (!options->overrideMusicVol) {
         options->volMusic = RSDK.GetSettingsValue(SETTINGS_STREAM_VOL);
     }
-    if (!options->field_70) {
+    if (!options->overrideSfxVol) {
         options->volSfx = RSDK.GetSettingsValue(SETTINGS_SFX_VOL);
     }
 }
@@ -191,7 +191,7 @@ void Options_LoadOptionsCallback(int32 statusCode)
         globals->optionsLoaded = STATUS_OK;
         LogHelpers_Print("dataPtr.language = %d", options->language);
         LogHelpers_Print("dataPtr.overrideLanguage = %d", options->overrideLanguage);
-        Options_Unknown1((EntityOptions *)globals->optionsRAM);
+        Options_LoadValuesFromSettings((EntityOptions *)globals->optionsRAM);
         RSDK.SetSettingsValue(SETTINGS_SHADERID, options->screenShader);
         RSDK.SetSettingsValue(SETTINGS_STREAM_VOL, options->volMusic);
         RSDK.SetSettingsValue(SETTINGS_SFX_VOL, options->volSfx);
@@ -202,11 +202,11 @@ void Options_LoadOptionsCallback(int32 statusCode)
     }
 
     if (Options->loadCallback) {
-        Entity *entStore = RSDK_sceneInfo->entity;
+        Entity *entStore = SceneInfo->entity;
         if (Options->loadEntityPtr)
-            RSDK_sceneInfo->entity = Options->loadEntityPtr;
+            SceneInfo->entity = Options->loadEntityPtr;
         Options->loadCallback(status);
-        RSDK_sceneInfo->entity = entStore;
+        SceneInfo->entity = entStore;
 
         Options->loadCallback  = false;
         Options->loadEntityPtr = false;
@@ -217,11 +217,11 @@ void Options_SaveOptionsCallback(int32 statusCode)
 {
     Options->state = 0;
     if (Options->saveCallback) {
-        Entity *entStore = RSDK_sceneInfo->entity;
+        Entity *entStore = SceneInfo->entity;
         if (Options->saveEntityPtr)
-            RSDK_sceneInfo->entity = Options->saveEntityPtr;
+            SceneInfo->entity = Options->saveEntityPtr;
         Options->saveCallback(statusCode);
-        RSDK_sceneInfo->entity = entStore;
+        SceneInfo->entity = entStore;
 
         Options->saveCallback  = NULL;
         Options->saveEntityPtr = NULL;

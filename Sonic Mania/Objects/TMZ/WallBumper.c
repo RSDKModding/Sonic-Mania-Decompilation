@@ -12,54 +12,54 @@ void WallBumper_Draw(void)
 {
     RSDK_THIS(WallBumper);
     Vector2 drawPos;
-    drawPos.x = entity->position.x;
-    drawPos.y = entity->position.y;
+    drawPos.x = self->position.x;
+    drawPos.y = self->position.y;
 
-    if (entity->type) {
-        entity->direction ^= entity->reverse;
-        drawPos.x -= entity->size << 20;
-        for (int32 i = 0; i < entity->size; ++i) {
-            RSDK.DrawSprite(&entity->animator, &drawPos, false);
+    if (self->type) {
+        self->direction ^= self->reverse;
+        drawPos.x -= self->size << 20;
+        for (int32 i = 0; i < self->size; ++i) {
+            RSDK.DrawSprite(&self->animator, &drawPos, false);
             drawPos.x += 0x200000;
         }
-        entity->direction ^= entity->reverse;
+        self->direction ^= self->reverse;
     }
     else {
-        entity->direction ^= FLIP_Y * entity->reverse;
-        drawPos.y -= entity->size << 20;
-        for (int32 i = 0; i < entity->size; ++i) {
-            RSDK.DrawSprite(&entity->animator, &drawPos, false);
+        self->direction ^= FLIP_Y * self->reverse;
+        drawPos.y -= self->size << 20;
+        for (int32 i = 0; i < self->size; ++i) {
+            RSDK.DrawSprite(&self->animator, &drawPos, false);
             drawPos.y += 0x200000;
         }
-        entity->direction ^= FLIP_Y * entity->reverse;
+        self->direction ^= FLIP_Y * self->reverse;
     }
 }
 
 void WallBumper_Create(void *data)
 {
     RSDK_THIS(WallBumper);
-    entity->drawFX        = FX_FLIP;
-    entity->visible       = true;
-    entity->drawOrder     = Zone->drawOrderLow;
-    entity->active        = ACTIVE_BOUNDS;
-    entity->updateRange.x = 0x400000;
-    entity->updateRange.y = 0x400000;
-    if (!entity->type) {
-        entity->updateRange.y = (entity->size + 4) << 20;
-        entity->hitbox.left   = 0;
-        entity->hitbox.top    = -16 - (16 * entity->size);
-        entity->hitbox.right  = 8;
-        entity->hitbox.bottom = (16 * entity->size) - 16;
+    self->drawFX        = FX_FLIP;
+    self->visible       = true;
+    self->drawOrder     = Zone->drawOrderLow;
+    self->active        = ACTIVE_BOUNDS;
+    self->updateRange.x = 0x400000;
+    self->updateRange.y = 0x400000;
+    if (!self->type) {
+        self->updateRange.y = (self->size + 4) << 20;
+        self->hitbox.left   = 0;
+        self->hitbox.top    = -16 - (16 * self->size);
+        self->hitbox.right  = 8;
+        self->hitbox.bottom = (16 * self->size) - 16;
     }
     else {
-        entity->direction *= FLIP_Y;
-        entity->updateRange.x = (entity->size + 4) << 20;
-        entity->hitbox.left   = -16 - (16 * entity->size);
-        entity->hitbox.top    = 0;
-        entity->hitbox.right  = (16 * entity->size) - 16;
-        entity->hitbox.bottom = 8;
+        self->direction *= FLIP_Y;
+        self->updateRange.x = (self->size + 4) << 20;
+        self->hitbox.left   = -16 - (16 * self->size);
+        self->hitbox.top    = 0;
+        self->hitbox.right  = (16 * self->size) - 16;
+        self->hitbox.bottom = 8;
     }
-    RSDK.SetSpriteAnimation(WallBumper->aniFrames, entity->type, &entity->animator, true, 0);
+    RSDK.SetSpriteAnimation(WallBumper->aniFrames, self->type, &self->animator, true, 0);
 }
 
 void WallBumper_StageLoad(void)
@@ -74,7 +74,7 @@ void WallBumper_StageLoad(void)
 void WallBumper_DebugSpawn(void)
 {
     RSDK_THIS(DebugMode);
-    CREATE_ENTITY(WallBumper, NULL, entity->position.x, entity->position.y);
+    CREATE_ENTITY(WallBumper, NULL, self->position.x, self->position.y);
 }
 
 void WallBumper_DebugDraw(void)
@@ -89,9 +89,9 @@ void WallBumper_HandleInteractions(void)
 
     foreach_active(Player, player)
     {
-        if (player->playerAnimator.animationID != ANI_HURT && Player_CheckBadnikTouch(player, entity, &entity->hitbox)) {
-            if (entity->type) {
-                if (entity->direction) {
+        if (player->animator.animationID != ANI_HURT && Player_CheckBadnikTouch(player, self, &self->hitbox)) {
+            if (self->type) {
+                if (self->direction) {
                     if (player->velocity.y < 0)
                         continue;
                     player->velocity.y = -0x80000;
@@ -101,7 +101,7 @@ void WallBumper_HandleInteractions(void)
                         continue;
                     player->velocity.y = 0x80000;
                 }
-                if (entity->reverse) {
+                if (self->reverse) {
                     player->velocity.x = -0x80000;
                     player->groundVel  = -0x80000;
                 }
@@ -111,7 +111,7 @@ void WallBumper_HandleInteractions(void)
                 }
             }
             else {
-                if (entity->direction) {
+                if (self->direction) {
                     if (player->velocity.x < 0)
                         continue;
                     player->velocity.x = -0x80000;
@@ -124,13 +124,13 @@ void WallBumper_HandleInteractions(void)
                     player->groundVel  = 0x80000;
                 }
 
-                if (!entity->reverse)
+                if (!self->reverse)
                     player->velocity.y = -0x80000;
                 else
                     player->velocity.y = 0x80000;
             }
             RSDK.PlaySfx(WallBumper->sfxBouncer, false, 255);
-            RSDK.SetSpriteAnimation(player->spriteIndex, ANI_SPRINGCS, &player->playerAnimator, false, 0);
+            RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGCS, &player->animator, false, 0);
 
             if (player->state == Player_State_FlyCarried) {
                 RSDK_GET_ENTITY(SLOT_PLAYER2, Player)->flyCarryTimer = 30;
@@ -140,8 +140,8 @@ void WallBumper_HandleInteractions(void)
             player->tileCollisions = true;
             player->onGround       = false;
             player->state          = Player_State_Air;
-            if (entity->destructible) {
-                destroyEntity(entity);
+            if (self->destructible) {
+                destroyEntity(self);
                 foreach_break;
             }
         }
@@ -153,20 +153,20 @@ void WallBumper_EditorDraw(void)
 {
     RSDK_THIS(WallBumper);
 
-    int dir = entity->direction;
+    int dir = self->direction;
 
-    if (!entity->type) {
-        entity->updateRange.y = (entity->size + 4) << 20;
+    if (!self->type) {
+        self->updateRange.y = (self->size + 4) << 20;
     }
     else {
-        entity->direction *= FLIP_Y;
-        entity->updateRange.x = (entity->size + 4) << 20;
+        self->direction *= FLIP_Y;
+        self->updateRange.x = (self->size + 4) << 20;
     }
-    RSDK.SetSpriteAnimation(WallBumper->aniFrames, entity->type, &entity->animator, true, 0);
+    RSDK.SetSpriteAnimation(WallBumper->aniFrames, self->type, &self->animator, true, 0);
 
     WallBumper_Draw();
 
-    entity->direction = dir;
+    self->direction = dir;
 }
 
 void WallBumper_EditorLoad(void) { WallBumper->aniFrames = RSDK.LoadSpriteAnimation("TMZ1/WallBumper.bin", SCOPE_STAGE); }

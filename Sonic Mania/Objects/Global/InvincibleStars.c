@@ -5,46 +5,47 @@ ObjectInvincibleStars *InvincibleStars;
 void InvincibleStars_Update(void)
 {
     RSDK_THIS(InvincibleStars);
-    EntityPlayer *player = (EntityPlayer *)entity->parent;
+
+    EntityPlayer *player = (EntityPlayer *)self->parent;
     if (player) {
-        entity->starAngle[2] = (entity->starAngle[2] + 1) % 12;
-        entity->starAngle[3] = (entity->starAngle[3] + 1) % 10;
+        self->starAngle[2] = (self->starAngle[2] + 1) % 12;
+        self->starAngle[3] = (self->starAngle[3] + 1) % 10;
 
         for (int32 i = 8 - 1; i > 0; --i) {
-            entity->starPos[i].x = entity->starPos[i - 1].x;
-            entity->starPos[i].y = entity->starPos[i - 1].y;
+            self->starPos[i].x = self->starPos[i - 1].x;
+            self->starPos[i].y = self->starPos[i - 1].y;
         }
-        entity->starPos[0].x = player->position.x;
-        entity->starPos[0].y = player->position.y;
+        self->starPos[0].x = player->position.x;
+        self->starPos[0].y = player->position.y;
 
         Hitbox *playerHitbox = Player_GetHitbox(player);
         if (player->direction & FLIP_X)
-            entity->starPos[0].x += (playerHitbox->left << 15) - (playerHitbox->right << 15) - (playerHitbox->left << 16);
+            self->starPos[0].x += (playerHitbox->left << 15) - (playerHitbox->right << 15) - (playerHitbox->left << 16);
         else
-            entity->starPos[0].x += ((playerHitbox->right + 2 * playerHitbox->left) << 15) - (playerHitbox->left << 15);
+            self->starPos[0].x += ((playerHitbox->right + 2 * playerHitbox->left) << 15) - (playerHitbox->left << 15);
         if (player->direction & 2 && player->invertGravity != 1)
-            entity->starPos[0].y += (playerHitbox->top << 15) - (playerHitbox->bottom << 15) - (playerHitbox->top << 16);
+            self->starPos[0].y += (playerHitbox->top << 15) - (playerHitbox->bottom << 15) - (playerHitbox->top << 16);
         else
-            entity->starPos[0].y += ((playerHitbox->bottom + 2 * playerHitbox->top) << 15) - (playerHitbox->top << 15);
+            self->starPos[0].y += ((playerHitbox->bottom + 2 * playerHitbox->top) << 15) - (playerHitbox->top << 15);
         if (player->direction) {
-            entity->starAngle[0] -= 144;
-            entity->starAngle[1] -= 16;
+            self->starAngle[0] -= 144;
+            self->starAngle[1] -= 16;
         }
         else {
-            entity->starAngle[0] += 144;
-            entity->starAngle[1] += 16;
+            self->starAngle[0] += 144;
+            self->starAngle[1] += 16;
         }
-        entity->starAngle[0] &= 0x1FF;
-        entity->starAngle[1] &= 0x1FF;
+        self->starAngle[0] &= 0x1FF;
+        self->starAngle[1] &= 0x1FF;
 
         if (player->invincibleTimer < 32)
-            entity->alpha = 8 * player->invincibleTimer;
-        entity->drawOrder  = player->drawOrder;
-        entity->visible    = player->visible || (player->state == Ice_State_FrozenPlayer);
-        entity->starOffset = 11;
+            self->alpha = 8 * player->invincibleTimer;
+        self->drawOrder  = player->drawOrder;
+        self->visible    = player->visible || (player->state == Ice_State_FrozenPlayer);
+        self->starOffset = 11;
     }
     else {
-        destroyEntity(entity);
+        destroyEntity(self);
     }
 }
 
@@ -55,89 +56,89 @@ void InvincibleStars_StaticUpdate(void) {}
 void InvincibleStars_Draw(void)
 {
     RSDK_THIS(InvincibleStars);
-    EntityPlayer *player = (EntityPlayer *)entity->parent;
+    EntityPlayer *player = (EntityPlayer *)self->parent;
     if (player) {
         if (player->isChibi) {
-            entity->drawFX |= FX_SCALE;
-            entity->scale.x = 0x100;
-            entity->scale.y = 0x100;
+            self->drawFX |= FX_SCALE;
+            self->scale.x = 0x100;
+            self->scale.y = 0x100;
         }
         else {
             if (player->drawFX & FX_SCALE)
-                entity->drawFX |= FX_SCALE;
+                self->drawFX |= FX_SCALE;
             else
-                entity->drawFX &= ~FX_SCALE;
-            entity->scale.x = player->scale.x;
-            entity->scale.y = player->scale.y;
+                self->drawFX &= ~FX_SCALE;
+            self->scale.x = player->scale.x;
+            self->scale.y = player->scale.y;
         }
     }
 
     Vector2 drawPos;
-    drawPos.x                    = (RSDK.Cos512(entity->starAngle[1] + 0x74) << entity->starOffset) + entity->starPos[7].x;
-    drawPos.y                    = (RSDK.Sin512(entity->starAngle[1] + 0x74) << entity->starOffset) + entity->starPos[7].y;
-    entity->starsData[3].frameID = entity->starAngle[2];
-    RSDK.DrawSprite(&entity->starsData[3], &drawPos, 0);
+    drawPos.x                    = (RSDK.Cos512(self->starAngle[1] + 0x74) << self->starOffset) + self->starPos[7].x;
+    drawPos.y                    = (RSDK.Sin512(self->starAngle[1] + 0x74) << self->starOffset) + self->starPos[7].y;
+    self->starsData[3].frameID = self->starAngle[2];
+    RSDK.DrawSprite(&self->starsData[3], &drawPos, 0);
 
-    drawPos.x = (RSDK.Cos512(entity->starAngle[1] + 0x74) << entity->starOffset) + entity->starPos[7].x;
-    drawPos.y = (RSDK.Sin512(entity->starAngle[1] + 0x74) << entity->starOffset) + entity->starPos[7].y;
-    entity->starsData[3].frameID += 6;
-    RSDK.DrawSprite(&entity->starsData[3], &drawPos, 0);
+    drawPos.x = (RSDK.Cos512(self->starAngle[1] + 0x74) << self->starOffset) + self->starPos[7].x;
+    drawPos.y = (RSDK.Sin512(self->starAngle[1] + 0x74) << self->starOffset) + self->starPos[7].y;
+    self->starsData[3].frameID += 6;
+    RSDK.DrawSprite(&self->starsData[3], &drawPos, 0);
 
-    drawPos.x                    = (RSDK.Cos512(entity->starAngle[1]) << entity->starOffset) + entity->starPos[5].x;
-    drawPos.y                    = (RSDK.Sin512(entity->starAngle[1]) << entity->starOffset) + entity->starPos[5].y;
-    entity->starsData[2].frameID = entity->starAngle[2];
-    RSDK.DrawSprite(&entity->starsData[2], &drawPos, 0);
+    drawPos.x                    = (RSDK.Cos512(self->starAngle[1]) << self->starOffset) + self->starPos[5].x;
+    drawPos.y                    = (RSDK.Sin512(self->starAngle[1]) << self->starOffset) + self->starPos[5].y;
+    self->starsData[2].frameID = self->starAngle[2];
+    RSDK.DrawSprite(&self->starsData[2], &drawPos, 0);
 
-    drawPos.x = (RSDK.Cos512(entity->starAngle[1] + 0x100) << entity->starOffset) + entity->starPos[5].x;
-    drawPos.y = (RSDK.Sin512(entity->starAngle[1] + 0x100) << entity->starOffset) + entity->starPos[5].y;
-    entity->starsData[2].frameID += 6;
-    RSDK.DrawSprite(&entity->starsData[2], &drawPos, 0);
+    drawPos.x = (RSDK.Cos512(self->starAngle[1] + 0x100) << self->starOffset) + self->starPos[5].x;
+    drawPos.y = (RSDK.Sin512(self->starAngle[1] + 0x100) << self->starOffset) + self->starPos[5].y;
+    self->starsData[2].frameID += 6;
+    RSDK.DrawSprite(&self->starsData[2], &drawPos, 0);
 
-    drawPos.x                    = (RSDK.Cos512(entity->starAngle[1] + 0xA8) << entity->starOffset) + entity->starPos[3].x;
-    drawPos.y                    = (RSDK.Sin512(entity->starAngle[1] + 0xA8) << entity->starOffset) + entity->starPos[3].y;
-    entity->starsData[1].frameID = entity->starAngle[3];
-    RSDK.DrawSprite(&entity->starsData[1], &drawPos, 0);
+    drawPos.x                    = (RSDK.Cos512(self->starAngle[1] + 0xA8) << self->starOffset) + self->starPos[3].x;
+    drawPos.y                    = (RSDK.Sin512(self->starAngle[1] + 0xA8) << self->starOffset) + self->starPos[3].y;
+    self->starsData[1].frameID = self->starAngle[3];
+    RSDK.DrawSprite(&self->starsData[1], &drawPos, 0);
 
-    drawPos.x = (RSDK.Cos512(entity->starAngle[1] + 0x1A8) << entity->starOffset) + entity->starPos[3].x;
-    drawPos.y = (RSDK.Sin512(entity->starAngle[1] + 0x1A8) << entity->starOffset) + entity->starPos[3].y;
-    entity->starsData[1].frameID += 5;
-    RSDK.DrawSprite(&entity->starsData[1], &drawPos, 0);
+    drawPos.x = (RSDK.Cos512(self->starAngle[1] + 0x1A8) << self->starOffset) + self->starPos[3].x;
+    drawPos.y = (RSDK.Sin512(self->starAngle[1] + 0x1A8) << self->starOffset) + self->starPos[3].y;
+    self->starsData[1].frameID += 5;
+    RSDK.DrawSprite(&self->starsData[1], &drawPos, 0);
 
-    drawPos.x                    = (RSDK.Cos512(entity->starAngle[0]) << entity->starOffset) + entity->starPos[0].x;
-    drawPos.y                    = (RSDK.Sin512(entity->starAngle[0]) << entity->starOffset) + entity->starPos[0].y;
-    entity->starsData[0].frameID = entity->starAngle[2];
-    RSDK.DrawSprite(entity->starsData, &drawPos, 0);
+    drawPos.x                    = (RSDK.Cos512(self->starAngle[0]) << self->starOffset) + self->starPos[0].x;
+    drawPos.y                    = (RSDK.Sin512(self->starAngle[0]) << self->starOffset) + self->starPos[0].y;
+    self->starsData[0].frameID = self->starAngle[2];
+    RSDK.DrawSprite(self->starsData, &drawPos, 0);
 
-    drawPos.x = (RSDK.Cos512(entity->starAngle[0] + 0x100) << entity->starOffset) + entity->starPos[0].x;
-    drawPos.y = (RSDK.Sin512(entity->starAngle[0] + 0x100) << entity->starOffset) + entity->starPos[0].y;
-    RSDK.DrawSprite(entity->starsData, &drawPos, 0);
+    drawPos.x = (RSDK.Cos512(self->starAngle[0] + 0x100) << self->starOffset) + self->starPos[0].x;
+    drawPos.y = (RSDK.Sin512(self->starAngle[0] + 0x100) << self->starOffset) + self->starPos[0].y;
+    RSDK.DrawSprite(self->starsData, &drawPos, 0);
 }
 
 void InvincibleStars_Create(void *data)
 {
     RSDK_THIS(InvincibleStars);
-    if (!RSDK_sceneInfo->inEditor) {
+    if (!SceneInfo->inEditor) {
         Entity *player  = (Entity *)data;
-        entity->active  = ACTIVE_NORMAL;
-        entity->visible = true;
-        entity->parent  = player;
+        self->active  = ACTIVE_NORMAL;
+        self->visible = true;
+        self->parent  = player;
         for (int32 i = 0; i < 8; ++i) {
-            entity->starPos[i].x = player->position.x;
-            entity->starPos[i].y = player->position.y;
+            self->starPos[i].x = player->position.x;
+            self->starPos[i].y = player->position.y;
         }
-        entity->drawFX       = FX_FLIP;
-        entity->inkEffect    = INK_ADD;
-        entity->starAngle[0] = 180;
-        entity->starAngle[1] = 0;
-        entity->alpha        = 255;
-        RSDK.SetSpriteAnimation(InvincibleStars->spriteIndex, 0, entity->starsData, true, 0);
-        RSDK.SetSpriteAnimation(InvincibleStars->spriteIndex, 1, &entity->starsData[1], true, 0);
-        RSDK.SetSpriteAnimation(InvincibleStars->spriteIndex, 2, &entity->starsData[2], true, 0);
-        RSDK.SetSpriteAnimation(InvincibleStars->spriteIndex, 3, &entity->starsData[3], true, 0);
+        self->drawFX       = FX_FLIP;
+        self->inkEffect    = INK_ADD;
+        self->starAngle[0] = 180;
+        self->starAngle[1] = 0;
+        self->alpha        = 255;
+        RSDK.SetSpriteAnimation(InvincibleStars->aniFrames, 0, &self->starsData[0], true, 0);
+        RSDK.SetSpriteAnimation(InvincibleStars->aniFrames, 1, &self->starsData[1], true, 0);
+        RSDK.SetSpriteAnimation(InvincibleStars->aniFrames, 2, &self->starsData[2], true, 0);
+        RSDK.SetSpriteAnimation(InvincibleStars->aniFrames, 3, &self->starsData[3], true, 0);
     }
 }
 
-void InvincibleStars_StageLoad(void) { InvincibleStars->spriteIndex = RSDK.LoadSpriteAnimation("Global/Invincible.bin", SCOPE_STAGE); }
+void InvincibleStars_StageLoad(void) { InvincibleStars->aniFrames = RSDK.LoadSpriteAnimation("Global/Invincible.bin", SCOPE_STAGE); }
 
 #if RETRO_INCLUDE_EDITOR
 void InvincibleStars_EditorDraw(void) {}

@@ -6,8 +6,8 @@ ObjectFBZ2Outro *FBZ2Outro;
 void FBZ2Outro_Update(void)
 {
     RSDK_THIS(FBZ2Outro);
-    FBZ2Outro_StartCutscene(entity);
-    entity->active = ACTIVE_NEVER;
+    FBZ2Outro_StartCutscene(self);
+    self->active = ACTIVE_NEVER;
 }
 
 void FBZ2Outro_LateUpdate(void) {}
@@ -19,8 +19,8 @@ void FBZ2Outro_Draw(void) {}
 void FBZ2Outro_Create(void *data)
 {
     RSDK_THIS(FBZ2Outro);
-    entity->active      = ACTIVE_NORMAL;
-    entity->isPermanent = true;
+    self->active      = ACTIVE_NORMAL;
+    self->isPermanent = true;
 }
 
 void FBZ2Outro_StageLoad(void) {}
@@ -65,7 +65,7 @@ bool32 FBZ2Outro_CutsceneState_Unknown2(EntityCutsceneSeq *host)
     foreach_active(Player, player)
     {
         player->jumpPress = false;
-        if (player->playerAnimator.animationID == ANI_PUSH) {
+        if (player->animator.animationID == ANI_PUSH) {
             player->jumpPress = true;
             player->jumpHold  = true;
         }
@@ -100,7 +100,7 @@ bool32 FBZ2Outro_CutsceneState_Unknown2(EntityCutsceneSeq *host)
     }
     else {
         for (int32 p = 0; p < Player->playerCount; ++p) {
-            Zone->screenBoundsT1[p] = Zone->screenBoundsB1[p] - RSDK_screens->height;
+            Zone->screenBoundsT1[p] = Zone->screenBoundsB1[p] - ScreenInfo->height;
         }
         return true;
     }

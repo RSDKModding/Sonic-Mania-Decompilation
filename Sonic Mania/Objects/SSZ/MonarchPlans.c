@@ -7,14 +7,14 @@ void MonarchPlans_Update(void)
 {
     RSDK_THIS(MonarchPlans);
 
-    entity->rotationY = (entity->rotationY + 4) & 0x3FF;
-    RSDK.MatrixScaleXYZ(&entity->matrix2, entity->scale.x, -entity->scale.x, entity->scale.x);
-    RSDK.MatrixTranslateXYZ(&entity->matrix2, entity->position.x, entity->position.y, 0, 0);
-    RSDK.MatrixRotateXYZ(&entity->matrix3, 0, entity->rotationY, entity->rotationZ);
-    RSDK.MatrixMultiply(&entity->matrix3, &entity->matrix3, &entity->matrix2);
-    RSDK.MatrixRotateX(&entity->matrix1, 0x1E0);
-    RSDK.MatrixRotateXYZ(&entity->matrix4, 0, entity->rotationY, entity->rotationZ);
-    RSDK.MatrixMultiply(&entity->matrix4, &entity->matrix4, &entity->matrix1);
+    self->rotationY = (self->rotationY + 4) & 0x3FF;
+    RSDK.MatrixScaleXYZ(&self->matrix2, self->scale.x, -self->scale.x, self->scale.x);
+    RSDK.MatrixTranslateXYZ(&self->matrix2, self->position.x, self->position.y, 0, 0);
+    RSDK.MatrixRotateXYZ(&self->matrix3, 0, self->rotationY, self->rotationZ);
+    RSDK.MatrixMultiply(&self->matrix3, &self->matrix3, &self->matrix2);
+    RSDK.MatrixRotateX(&self->matrix1, 0x1E0);
+    RSDK.MatrixRotateXYZ(&self->matrix4, 0, self->rotationY, self->rotationZ);
+    RSDK.MatrixMultiply(&self->matrix4, &self->matrix4, &self->matrix1);
 }
 
 void MonarchPlans_LateUpdate(void) {}
@@ -26,7 +26,7 @@ void MonarchPlans_Draw(void)
     RSDK_THIS(MonarchPlans);
 
     RSDK.Prepare3DScene(MonarchPlans->sceneIndex);
-    RSDK.AddModelTo3DScene(MonarchPlans->meshIndex, MonarchPlans->sceneIndex, S3D_FLATCLR_WIREFRAME, &entity->matrix3, &entity->matrix4, 0x609090);
+    RSDK.AddModelTo3DScene(MonarchPlans->meshIndex, MonarchPlans->sceneIndex, S3D_FLATCLR_WIREFRAME, &self->matrix3, &self->matrix4, 0x609090);
     RSDK.Draw3DScene(MonarchPlans->sceneIndex);
 }
 
@@ -34,15 +34,15 @@ void MonarchPlans_Create(void *data)
 {
     RSDK_THIS(MonarchPlans);
 
-    if (!RSDK_sceneInfo->inEditor) {
-        entity->active        = ACTIVE_BOUNDS;
-        entity->inkEffect     = INK_BLEND;
-        entity->visible       = true;
-        entity->updateRange.x = 0x900000;
-        entity->updateRange.y = 0x900000;
-        entity->scale.x       = 0xA0;
-        entity->scale.y       = 0xA0;
-        entity->drawOrder     = Zone->drawOrderLow;
+    if (!SceneInfo->inEditor) {
+        self->active        = ACTIVE_BOUNDS;
+        self->inkEffect     = INK_BLEND;
+        self->visible       = true;
+        self->updateRange.x = 0x900000;
+        self->updateRange.y = 0x900000;
+        self->scale.x       = 0xA0;
+        self->scale.y       = 0xA0;
+        self->drawOrder     = Zone->drawOrderLow;
     }
 }
 

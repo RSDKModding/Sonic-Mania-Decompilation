@@ -185,33 +185,32 @@ typedef struct {
     uint16 knuxSpriteIndex;
     uint16 mightySpriteIndex;
     uint16 raySpriteIndex;
-    uint16 sfx_Jump;
-    uint16 sfx_Roll;
-    uint16 sfx_Charge;
-    uint16 sfx_Release;
-    uint16 sfx_PeelCharge;
-    uint16 sfx_PeelRelease;
-    uint16 sfx_Dropdash;
-    uint16 sfx_LoseRings;
-    uint16 sfx_Hurt;
-    uint16 sfx_PimPom;
-    uint16 sfx_Skidding;
-    uint16 sfx_Grab;
-    uint16 sfx_Flying;
+    uint16 sfxJump;
+    uint16 sfxRoll;
+    uint16 sfxCharge;
+    uint16 sfxRelease;
+    uint16 sfxPeelCharge;
+    uint16 sfxPeelRelease;
+    uint16 sfxDropdash;
+    uint16 sfxLoseRings;
+    uint16 sfxHurt;
+    uint16 sfxPimPom;
+    uint16 sfxSkidding;
+    uint16 sfxGrab;
+    uint16 sfxFlying;
     bool32 playingFlySFX;
-    uint16 sfx_Tired;
-    uint16 field_A36;
+    uint16 sfxTired;
     bool32 playingTiredSFX;
-    uint16 sfx_Land;
-    uint16 sfx_Slide;
-    uint16 sfx_Outtahere;
-    uint16 sfx_Transform2;
-    uint16 sfx_Swap;
-    uint16 sfx_SwapFail;
-    uint16 sfx_MightyDeflect;
-    uint16 sfx_MightyDrill;
-    uint16 sfx_MightyLand;
-    uint16 sfx_MightyUnspin;
+    uint16 sfxLand;
+    uint16 sfxSlide;
+    uint16 sfxOuttahere;
+    uint16 sfxTransform2;
+    uint16 sfxSwap;
+    uint16 sfxSwapFail;
+    uint16 sfxMightyDeflect;
+    uint16 sfxMightyDrill;
+    uint16 sfxMightyLand;
+    uint16 sfxMightyUnspin;
     int32 raySwoopTimer;
     int32 rayDiveTimer;
     bool32 gotHit[4];
@@ -281,28 +280,26 @@ typedef struct {
                                                0xF098F0, 0xF0A0F0, 0xF078F0, 0xF078F0, 0xF080F0, 0xF088F0, 0xF098F0, 0xF0A0F0 });
     TABLE(colour superPalette_Knux_CPZ[18], { 0xA00180, 0xB00178, 0xC00190, 0xD001B0, 0xE001E0, 0xE820E8, 0xF078D8, 0xF078E8, 0xF088F0, 0xF098F0,
                                               0xF0A8F0, 0xF0B0F0, 0xF078D8, 0xF078E8, 0xF088F0, 0xF098F0, 0xF0A8F0, 0xF0B0F0 });
-    uint16 sfx_Jump;
-    uint16 sfx_Roll;
-    uint16 sfx_Charge;
-    uint16 sfx_Release;
-    uint16 sfx_PeelCharge;
-    uint16 sfx_PeelRelease;
-    uint16 sfx_Dropdash;
-    uint16 sfx_LoseRings;
-    uint16 sfx_Hurt;
-    uint16 field_66E;
-    uint16 sfx_Skidding;
-    uint16 sfx_Grab;
-    uint16 sfx_Flying;
-    uint16 field_676;
+    uint16 sfxJump;
+    uint16 sfxRoll;
+    uint16 sfxCharge;
+    uint16 sfxRelease;
+    uint16 sfxPeelCharge;
+    uint16 sfxPeelRelease;
+    uint16 sfxDropdash;
+    uint16 sfxLoseRings;
+    uint16 sfxHurt;
+    uint16 unused1; //this matches up perfectly with the position of "sfxPimPom" in plus, and it cant be padding so :eye:
+    uint16 sfxSkidding;
+    uint16 sfxGrab;
+    uint16 sfxFlying;
     bool32 playingFlySFX;
-    uint16 sfx_Tired;
-    uint16 field_67E;
+    uint16 sfxTired;
     bool32 playingTiredSFX;
-    uint16 sfx_Land;
-    uint16 sfx_Slide;
-    uint16 sfx_Outtahere;
-    uint16 sfx_Transform2;
+    uint16 sfxLand;
+    uint16 sfxSlide;
+    uint16 sfxOuttahere;
+    uint16 sfxTransform2;
     bool32 gotHit[4];
 } ObjectPlayer;
 #endif
@@ -314,15 +311,15 @@ typedef struct {
     StateMachine(nextAirState);
     StateMachine(nextGroundState);
     EntityCamera *camera;
-    Animator playerAnimator;
+    Animator animator;
     Animator tailAnimator;
     int32 maxWalkSpeed;
     int32 maxJogSpeed;
     int32 maxRunSpeed;
-    int32 field_A4;
+    int32 unused; //the only used variable in the player struct, I cant find a ref to it anywhere so
     int32 tailRotation;
     int32 tailDirection;
-    uint16 spriteIndex;
+    uint16 aniFrames;
     uint16 tailSpriteIndex;
     uint16 storedAnim;
     uint16 playerID;
@@ -335,7 +332,7 @@ typedef struct {
     int32 lives;
     int32 score;
     int32 score1UP;
-    int32 hyperRing;
+    bool32 hyperRing;
     int32 timer;
     int32 outtaHereTimer;
     int32 abilityTimer;
@@ -349,10 +346,10 @@ typedef struct {
     int32 skidding;
     int32 pushing;
     int32 underwater;      // 0 = not in water, 1 = in palette water, else water entityID
-    bool32 groundedStore;  // stored grounded state
-    bool32 invertGravity;  // FBZ magnet flip
-    bool32 isChibi;        // MMZ Chibi form flag
-    bool32 forceTransform; // force transform flag
+    bool32 groundedStore;  // prev onGround flag
+    bool32 invertGravity; 
+    bool32 isChibi;       
+    bool32 forceTransform;
     int32 superState;
     int32 superSecondTimer;
     int32 superBlendAmount;
@@ -445,8 +442,6 @@ void Player_BlendSuperRayColours(int32 bankID);
 #endif
 void Player_HandleSuperForm(void);
 bool32 Player_CheckKeyPress(void);
-void Player_LoseRings(EntityPlayer *player, int32 rings, uint8 cPlane);
-void Player_LoseHyperRings(EntityPlayer *player, int32 rings, uint8 cPlane);
 //returns the pointer to the nearest player to the current entity on the x axis only
 EntityPlayer *Player_GetNearestPlayerX(void);
 // returns the pointer to the nearest player to the current entity on both the x & y axis'
@@ -488,7 +483,7 @@ bool32 Player_CheckProjectileHit(EntityPlayer *player, void *projectile);
 #if RETRO_USE_PLUS
 // similar to checkHit, but for objects that should bounce off mighty's shell, returns true if deflected, otherwise the player is hit and returns
 // false
-bool32 Player_CheckMightyShellHit(EntityPlayer *player, void *e);
+bool32 Player_CheckMightyShellHit(EntityPlayer *player, void *e, int velX, int velY);
 #endif
 // idk yet, needs more research
 bool32 Player_CheckHit2(EntityPlayer *player, void *entity, bool32 flag);
@@ -569,8 +564,8 @@ void Player_UpdateRaySwoopSFX(int32 sfxID);
 void Player_ProcessP1Input(void);
 void Player_ProcessP2InputLag(void);
 void Player_ProcessP2Input_AI(void);
-void Player_ProcessP2Input_None(void);
-void Player_ProcessP2Input_Unknown(void);
+void Player_ProcessP2Input_JumpIn(void);
+void Player_ProcessP2Input_JumpDelay(void);
 void Player_ProcessP2Input_Player(void);
 
 #endif //! OBJ_PLAYER_H

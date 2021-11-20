@@ -6,8 +6,8 @@ ObjectSummary *Summary;
 void Summary_Update(void)
 {
     RSDK_THIS(Summary);
-    StateMachine_Run(entity->state);
-    RSDK_screens->position.x = 0x100 - RSDK_screens->centerX;
+    StateMachine_Run(self->state);
+    ScreenInfo->position.x = 0x100 - ScreenInfo->centerX;
 }
 
 void Summary_LateUpdate(void) {}
@@ -26,19 +26,19 @@ void Summary_StaticUpdate(void)
 void Summary_Draw(void)
 {
     RSDK_THIS(Summary);
-    StateMachine_Run(entity->stateDraw);
+    StateMachine_Run(self->stateDraw);
 }
 
 void Summary_Create(void *data)
 {
     RSDK_THIS(Summary);
-    if (!RSDK_sceneInfo->inEditor) {
-        entity->active    = ACTIVE_ALWAYS;
-        entity->visible   = true;
-        entity->drawOrder = 12;
-        entity->state     = Summary_State_SetupText;
-        entity->stateDraw = Summary_State_Draw;
-        entity->timer     = 640;
+    if (!SceneInfo->inEditor) {
+        self->active    = ACTIVE_ALWAYS;
+        self->visible   = true;
+        self->drawOrder = 12;
+        self->state     = Summary_State_SetupText;
+        self->stateDraw = Summary_State_Draw;
+        self->timer     = 640;
     }
 }
 
@@ -46,131 +46,126 @@ void Summary_StageLoad(void)
 {
     RSDK.ResetEntitySlot(0, Summary->objectID, 0);
 
-    UIPicture->spriteIndex = RSDK.LoadSpriteAnimation("LSelect/Icons.bin", SCOPE_STAGE);
-    UIText->spriteIndex    = RSDK.LoadSpriteAnimation("LSelect/Text.bin", SCOPE_STAGE);
+    UIPicture->aniFrames = RSDK.LoadSpriteAnimation("LSelect/Icons.bin", SCOPE_STAGE);
+    UIText->aniFrames    = RSDK.LoadSpriteAnimation("LSelect/Text.bin", SCOPE_STAGE);
 }
 
 void Summary_State_Draw(void)
 {
     RSDK_THIS(Summary);
-    RSDK.FillScreen(0x000000, entity->timer, entity->timer - 128, entity->timer - 256);
+    RSDK.FillScreen(0x000000, self->timer, self->timer - 128, self->timer - 256);
 }
 
 void Summary_State_SetupText(void)
 {
     RSDK_THIS(Summary);
-    entity->unknownPtr   = NULL;
-    entity->gameModeText = NULL;
-    entity->saveText     = NULL;
+    self->unknownPtr   = NULL;
+    self->gameModeText = NULL;
+    self->saveText     = NULL;
 
     foreach_all(UIText, text)
     {
         int32 align = text->align;
         if (align == ALIGN_RIGHT) {
-            if (entity->gameModeText)
-                entity->saveText = text;
+            if (self->gameModeText)
+                self->saveText = text;
             else
-                entity->gameModeText = text;
+                self->gameModeText = text;
         }
         else if (align == ALIGN_CENTER) {
             if (text->data1 == 0xFF) {
-                entity->totalTime = text;
+                self->totalTime = text;
             }
             else {
                 if (text->data0 > -1 && text->data0 < 32)
-                    entity->textEntities[text->data0] = text;
+                    self->textEntities[text->data0] = text;
             }
         }
     }
 
     int32 id = 0;
     for (int32 i = globals->playerID & 0xFF; i > 0; ++id) i >>= 1;
-    entity->player1ID = id;
+    self->player1ID = id;
 
     id = 0;
     for (int32 i = globals->playerID >> 8; i > 0; ++id) i >>= 1;
-    entity->player2ID = id;
+    self->player2ID = id;
 
     foreach_all(UIPicture, picture)
     {
         if (picture->listID == 3) {
             if (picture->frameID == 1)
-                entity->pictureA = picture;
+                self->pictureA = picture;
             else
-                entity->pictureB = picture;
+                self->pictureB = picture;
         }
     }
 
-    picture               = entity->pictureA;
-    picture->animator.frameID = entity->player1ID;
-    picture               = entity->pictureB;
-    picture->animator.frameID = entity->player2ID;
+    picture               = self->pictureA;
+    picture->animator.frameID = self->player1ID;
+    picture               = self->pictureB;
+    picture->animator.frameID = self->player2ID;
 
     Summary_LoadTimes();
-    entity->state = Summary_State_Unknown;
+    self->state = Summary_State_FadeIn;
 }
 
-void Summary_State_Unknown(void)
+void Summary_State_FadeIn(void)
 {
     RSDK_THIS(Summary);
 
-    if (entity->timer <= 0) {
-        entity->timer     = 0;
-        entity->state     = Summary_State_Unknown2;
-        entity->stateDraw = StateMachine_None;
+    if (self->timer <= 0) {
+        self->timer     = 0;
+        self->state     = Summary_State_Wait;
+        self->stateDraw = StateMachine_None;
     }
     else {
-        entity->timer -= 16;
+        self->timer -= 16;
     }
 }
 
-void Summary_State_Unknown2(void)
+void Summary_State_Wait(void)
 {
     RSDK_THIS(Summary);
-    if (RSDK_controller->keyStart.press || (API_GetConfirmButtonFlip() ? RSDK_controller->keyB.press : RSDK_controller->keyA.press)) {
-        RSDK.SetScene("Presentation", "Menu");
-        entity->timer     = 0;
-        entity->state     = Summary_State_Unknown3;
-        entity->stateDraw = Summary_State_Draw;
-        Music_FadeOut(0.01);
-    }
+    if (ControllerInfo->keyStart.press || (API_GetConfirmButtonFlip() ? ControllerInfo->keyB.press : ControllerInfo->keyA.press)
 #if RETRO_USE_TOUCH_CONTROLS
-    else if (RSDK_touchMouse->count) {
+        || TouchInfo->count
+#endif
+    ) {
         RSDK.SetScene("Presentation", "Menu");
-        entity->timer     = 0;
-        entity->state     = Summary_State_Unknown3;
-        entity->stateDraw = Summary_State_Draw;
+        self->timer     = 0;
+        self->state     = Summary_State_FadeOut;
+        self->stateDraw = Summary_State_Draw;
         Music_FadeOut(0.01);
     }
-#endif
     else {
-        entity->timer = 0;
+        self->timer = 0;
     }
 }
 
-void Summary_State_Unknown3(void)
+void Summary_State_FadeOut(void)
 {
     RSDK_THIS(Summary);
-    if (entity->timer >= 1024) {
+    if (self->timer >= 0x400) {
         RSDK.LoadScene();
     }
     else {
-        entity->timer += 0x10;
+        self->timer += 0x10;
     }
 }
 
 void Summary_SetTextString(uint8 anim, void *text, const char *str)
 {
     EntityUIText *uiText = (EntityUIText *)text;
-    if (!UIWidgets || UIText->spriteIndex)
-        RSDK.SetSpriteAnimation(UIText->spriteIndex, anim, &uiText->animator, true, 0);
+    if (!UIWidgets || UIText->aniFrames)
+        RSDK.SetSpriteAnimation(UIText->aniFrames, anim, &uiText->animator, true, 0);
     else
         RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, anim, &uiText->animator, true, 0);
 
     RSDK.PrependText(&uiText->text, str);
     uiText->listID = anim;
-    if (!UIWidgets || UIText->spriteIndex)
-        RSDK.SetSpriteString(UIText->spriteIndex, uiText->listID, &uiText->text);
+    if (!UIWidgets || UIText->aniFrames)
+        RSDK.SetSpriteString(UIText->aniFrames, uiText->listID, &uiText->text);
     else
         RSDK.SetSpriteString(UIWidgets->uiSpriteIndex, uiText->listID, &uiText->text);
 }
@@ -212,24 +207,24 @@ void Summary_LoadTimes(void)
     RSDK_THIS(Summary);
     if (globals->gameMode == MODE_ENCORE) {
         if (Localization->language == LANGUAGE_JP || sku_region == REGION_JP)
-            Summary_SetTextString(1, entity->gameModeText, "STORY MODE PLUS");
+            Summary_SetTextString(1, self->gameModeText, "STORY MODE PLUS");
         else
-            Summary_SetTextString(1, entity->gameModeText, "ENCORE MODE");
+            Summary_SetTextString(1, self->gameModeText, "ENCORE MODE");
     }
     else if (Localization->language == LANGUAGE_JP || sku_region == REGION_JP) {
-        Summary_SetTextString(1, entity->gameModeText, "STORY MODE");
+        Summary_SetTextString(1, self->gameModeText, "STORY MODE");
     }
     else {
-        Summary_SetTextString(1, entity->gameModeText, "MANIA MODE");
+        Summary_SetTextString(1, self->gameModeText, "MANIA MODE");
     }
     if (globals->saveSlotID == 255) {
-        Summary_SetTextString(0, entity->saveText, "NO SAVE");
+        Summary_SetTextString(0, self->saveText, "NO SAVE");
     }
     else {
         char buf[0x20];
         sprintf(buf, "%s %d", "SAVE SLOT", globals->saveSlotID);
 
-        Summary_SetTextString(0, entity->saveText, "SAVE SLOT ");
+        Summary_SetTextString(0, self->saveText, "SAVE SLOT ");
     }
 
     EntitySaveGame *saveRAM = SaveGame->saveRAM;
@@ -238,8 +233,8 @@ void Summary_LoadTimes(void)
     int32 totalTime = 0;
 
     for (int32 i = 0; i < 0x20; ++i) {
-        if (entity->textEntities[i]) {
-            EntityUIText *text = (EntityUIText *)entity->textEntities[i];
+        if (self->textEntities[i]) {
+            EntityUIText *text = (EntityUIText *)self->textEntities[i];
 
             Summary_SetStageTime(textBuf, saveRAM->zoneTimes[text->data0]);
             int32 time = saveRAM->zoneTimes[text->data0] + totalTime;
@@ -251,7 +246,7 @@ void Summary_LoadTimes(void)
     }
 
     Summary_SetStageTime(textBuf, totalTime);
-    Summary_SetTextString(0, entity->totalTime, textBuf);
+    Summary_SetTextString(0, self->totalTime, textBuf);
 }
 
 #if RETRO_INCLUDE_EDITOR

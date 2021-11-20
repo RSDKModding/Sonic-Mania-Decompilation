@@ -6,47 +6,47 @@ ObjectSchrodingersCapsule *SchrodingersCapsule;
 void SchrodingersCapsule_Update(void)
 {
     RSDK_THIS(SchrodingersCapsule);
-    StateMachine_Run(entity->state);
+    StateMachine_Run(self->state);
 
-    if (entity->animator1.frameID != 1) {
-        bool32 flag = false;
+    if (self->mainAnimator.frameID != 1) {
+        bool32 stoodSolid = false;
         foreach_active(Player, player)
         {
-            if (Player_CheckCollisionBox(player, entity, &entity->hitbox1) == 1)
-                flag = true;
+            if (Player_CheckCollisionBox(player, self, &self->hitboxSolid) == C_TOP)
+                stoodSolid = true;
 
-            if (entity->state == SchrodingersCapsule_Unknown2) {
-                if (Player_CheckCollisionBox(player, entity, &entity->hitbox2) == 1) {
-                    entity->field_60   = 0x80000;
+            if (self->state == SchrodingersCapsule_Unknown2) {
+                if (Player_CheckCollisionBox(player, self, &self->hitboxButton) == C_TOP) {
+                    self->buttonPos   = 0x80000;
                     player->velocity.x = 0;
                     player->groundVel  = 0;
                     CutsceneSeq_LockPlayerControl(player);
-                    flag               = false;
+                    stoodSolid               = false;
                     player->state      = Player_State_Ground;
                     player->stateInput = StateMachine_None;
-                    entity->active     = ACTIVE_NORMAL;
-                    entity->state      = SchrodingersCapsule_Unknown3;
+                    self->active     = ACTIVE_NORMAL;
+                    self->state      = SchrodingersCapsule_Unknown3;
                 }
                 else {
-                    if (Player_CheckCollisionTouch(player, entity, &entity->hitbox3)) {
+                    if (Player_CheckCollisionTouch(player, self, &self->hitboxButtonTrigger)) {
                         Hitbox *playerHitbox = Player_GetHitbox(player);
-                        entity->field_60     = ((playerHitbox->bottom + 48) << 16) - entity->position.y + player->position.y;
-                        if (entity->field_60 <= 0x80000) {
-                            if (entity->field_60 < 0)
-                                entity->field_60 = 0;
-                            entity->field_60 &= 0xFFFF0000;
+                        self->buttonPos     = ((playerHitbox->bottom + 48) << 16) - self->position.y + player->position.y;
+                        if (self->buttonPos <= 0x80000) {
+                            if (self->buttonPos < 0)
+                                self->buttonPos = 0;
+                            self->buttonPos &= 0xFFFF0000;
                         }
                         else {
-                            entity->field_60 = 0x80000;
-                            entity->field_60 &= 0xFFFF0000;
+                            self->buttonPos = 0x80000;
+                            self->buttonPos &= 0xFFFF0000;
                         }
                     }
                     else {
-                        if (entity->field_60 > 0)
-                            entity->field_60 -= 0x10000;
+                        if (self->buttonPos > 0)
+                            self->buttonPos -= 0x10000;
                     }
 
-                    if (flag) {
+                    if (stoodSolid) {
                         EntityPhantomRuby *ruby = (EntityPhantomRuby *)EncoreIntro->phantomRuby;
                         if (ruby->velocity.y > 0)
                             ruby->velocity.y = -ruby->velocity.y;
@@ -55,8 +55,8 @@ void SchrodingersCapsule_Update(void)
                 }
             }
             else {
-                flag = false;
-                Player_CheckCollisionBox(player, entity, &entity->hitbox2);
+                stoodSolid = false;
+                Player_CheckCollisionBox(player, self, &self->hitboxButton);
             }
         }
     }
@@ -71,67 +71,69 @@ void SchrodingersCapsule_Draw(void)
     RSDK_THIS(SchrodingersCapsule);
     Vector2 drawPos;
 
-    if (!entity->animator1.frameID) {
-        drawPos = entity->position;
-        drawPos.y += entity->field_60;
-        RSDK.DrawSprite(&entity->animator3, &drawPos, false);
+    if (!self->mainAnimator.frameID) {
+        drawPos = self->position;
+        drawPos.y += self->buttonPos;
+        RSDK.DrawSprite(&self->buttonAnimator, &drawPos, false);
 
-        entity->animator1.frameID = 2;
-        RSDK.DrawSprite(&entity->animator1, NULL, false);
+        self->mainAnimator.frameID = 2;
+        RSDK.DrawSprite(&self->mainAnimator, NULL, false);
 
         if ((Zone->timer & 8)) {
-            entity->animator1.frameID = 3;
-            RSDK.DrawSprite(&entity->animator1, NULL, false);
+            self->mainAnimator.frameID = 3;
+            RSDK.DrawSprite(&self->mainAnimator, NULL, false);
         }
 
-        drawPos = entity->position;
+        drawPos = self->position;
         drawPos.x += 0xE0000;
-        RSDK.DrawSprite(&entity->animator4, &drawPos, false);
+        RSDK.DrawSprite(&self->mightyAnimator, &drawPos, false);
 
         drawPos.x -= 0x1C0000;
-        RSDK.DrawSprite(&entity->animator5, &drawPos, false);
+        RSDK.DrawSprite(&self->rayAnimator, &drawPos, false);
 
-        entity->animator1.frameID = 0;
+        self->mainAnimator.frameID = 0;
     }
-    RSDK.DrawSprite(&entity->animator1, NULL, false);
+    RSDK.DrawSprite(&self->mainAnimator, NULL, false);
 
-    if (!entity->animator1.frameID) {
-        entity->inkEffect = INK_ADD;
-        entity->alpha     = 128;
-        RSDK.DrawSprite(&entity->animator2, NULL, false);
+    if (!self->mainAnimator.frameID) {
+        self->inkEffect = INK_ADD;
+        self->alpha     = 0x80;
+        RSDK.DrawSprite(&self->glassAnimator, NULL, false);
 
-        entity->inkEffect = INK_NONE;
+        self->inkEffect = INK_NONE;
     }
 }
 
 void SchrodingersCapsule_Create(void *data)
 {
     RSDK_THIS(SchrodingersCapsule);
-    entity->drawFX = FX_FLIP;
-    if (!RSDK_sceneInfo->inEditor) {
-        RSDK.SetSpriteAnimation(SchrodingersCapsule->aniFrames, 0, &entity->animator1, true, 0);
-        RSDK.SetSpriteAnimation(SchrodingersCapsule->aniFrames, 1, &entity->animator3, true, 0);
-        RSDK.SetSpriteAnimation(SchrodingersCapsule->aniFrames, 2, &entity->animator2, true, 0);
-        RSDK.SetSpriteAnimation(SchrodingersCapsule->aniFrames, 3, &entity->animator4, true, 0);
-        RSDK.SetSpriteAnimation(SchrodingersCapsule->aniFrames, 4, &entity->animator5, true, 0);
-        entity->hitbox1.left   = -40;
-        entity->hitbox1.top    = -40;
-        entity->hitbox1.right  = 40;
-        entity->hitbox1.bottom = 40;
-        entity->hitbox2.left   = -16;
-        entity->hitbox2.top    = -44;
-        entity->hitbox2.right  = 16;
-        entity->hitbox2.bottom = -30;
-        entity->hitbox3.left   = -15;
-        entity->hitbox3.top    = -60;
-        entity->hitbox3.right  = 15;
-        entity->hitbox3.bottom = -30;
-        entity->state          = SchrodingersCapsule_Unknown1;
-        entity->active         = ACTIVE_BOUNDS;
-        entity->updateRange.x  = 0x800000;
-        entity->updateRange.y  = 0x800000;
-        entity->visible        = true;
-        entity->drawOrder      = Zone->drawOrderLow;
+    self->drawFX = FX_FLIP;
+    if (!SceneInfo->inEditor) {
+        RSDK.SetSpriteAnimation(SchrodingersCapsule->aniFrames, 0, &self->mainAnimator, true, 0);
+        RSDK.SetSpriteAnimation(SchrodingersCapsule->aniFrames, 1, &self->buttonAnimator, true, 0);
+        RSDK.SetSpriteAnimation(SchrodingersCapsule->aniFrames, 2, &self->glassAnimator, true, 0);
+        RSDK.SetSpriteAnimation(SchrodingersCapsule->aniFrames, 3, &self->mightyAnimator, true, 0);
+        RSDK.SetSpriteAnimation(SchrodingersCapsule->aniFrames, 4, &self->rayAnimator, true, 0);
+        self->hitboxSolid.left           = -40;
+        self->hitboxSolid.top            = -40;
+        self->hitboxSolid.right          = 40;
+        self->hitboxSolid.bottom         = 40;
+
+        self->hitboxButton.left          = -16;
+        self->hitboxButton.top           = -44;
+        self->hitboxButton.right         = 16;
+        self->hitboxButton.bottom        = -30;
+
+        self->hitboxButtonTrigger.left   = -15;
+        self->hitboxButtonTrigger.top    = -60;
+        self->hitboxButtonTrigger.right  = 15;
+        self->hitboxButtonTrigger.bottom = -30;
+        self->state          = SchrodingersCapsule_Unknown1;
+        self->active         = ACTIVE_BOUNDS;
+        self->updateRange.x  = 0x800000;
+        self->updateRange.y  = 0x800000;
+        self->visible        = true;
+        self->drawOrder      = Zone->drawOrderLow;
     }
 }
 
@@ -145,25 +147,25 @@ void SchrodingersCapsule_StageLoad(void)
 void SchrodingersCapsule_Unknown1(void)
 {
     RSDK_THIS(SchrodingersCapsule);
-    entity->state = SchrodingersCapsule_Unknown2;
+    self->state = SchrodingersCapsule_Unknown2;
 }
 
 void SchrodingersCapsule_Unknown2(void)
 {
     RSDK_THIS(SchrodingersCapsule);
-    RSDK.ProcessAnimation(&entity->animator2);
-    RSDK.ProcessAnimation(&entity->animator4);
-    RSDK.ProcessAnimation(&entity->animator5);
+    RSDK.ProcessAnimation(&self->glassAnimator);
+    RSDK.ProcessAnimation(&self->mightyAnimator);
+    RSDK.ProcessAnimation(&self->rayAnimator);
 
     for (int32 p = 0; p < Player->playerCount; ++p) {
         EntityPlayer *player = RSDK_GET_ENTITY(p, Player);
         if (!player->sidekick) {
-            if (abs(entity->position.x - player->position.x) < 0x1000000) {
-                if (abs(entity->position.y - player->position.y) < 0x1000000 && entity->position.x - (Zone->screenBoundsR1[p] << 16) < 0x1000000) {
+            if (abs(self->position.x - player->position.x) < 0x1000000) {
+                if (abs(self->position.y - player->position.y) < 0x1000000 && self->position.x - (Zone->screenBoundsR1[p] << 16) < 0x1000000) {
                     Zone->playerBoundActiveL[p] = true;
                     Zone->playerBoundActiveR[p] = true;
-                    Zone->screenBoundsL1[p]     = (entity->position.x >> 16) - RSDK_screens[p].centerX;
-                    Zone->screenBoundsR1[p]     = (entity->position.x >> 16) + RSDK_screens[p].centerX;
+                    Zone->screenBoundsL1[p]     = (self->position.x >> 16) - ScreenInfo[p].centerX;
+                    Zone->screenBoundsR1[p]     = (self->position.x >> 16) + ScreenInfo[p].centerX;
                 }
             }
         }
@@ -173,40 +175,40 @@ void SchrodingersCapsule_Unknown2(void)
 void SchrodingersCapsule_Unknown3(void)
 {
     RSDK_THIS(SchrodingersCapsule);
-    RSDK.ProcessAnimation(&entity->animator2);
-    RSDK.ProcessAnimation(&entity->animator4);
-    RSDK.ProcessAnimation(&entity->animator5);
-    RSDK.SetSpriteAnimation(0xFFFF, 0, &entity->animator2, true, 0);
-    entity->state               = SchrodingersCapsule_Unknown4;
-    RSDK_sceneInfo->timeEnabled = false;
+    RSDK.ProcessAnimation(&self->glassAnimator);
+    RSDK.ProcessAnimation(&self->mightyAnimator);
+    RSDK.ProcessAnimation(&self->rayAnimator);
+    RSDK.SetSpriteAnimation(0xFFFF, 0, &self->glassAnimator, true, 0);
+    self->state               = SchrodingersCapsule_Unknown4;
+    SceneInfo->timeEnabled = false;
 }
 
 void SchrodingersCapsule_Unknown4(void)
 {
     RSDK_THIS(SchrodingersCapsule);
-    RSDK.ProcessAnimation(&entity->animator2);
-    RSDK.ProcessAnimation(&entity->animator4);
-    RSDK.ProcessAnimation(&entity->animator5);
-    if (!(entity->timer % 3)) {
+    RSDK.ProcessAnimation(&self->glassAnimator);
+    RSDK.ProcessAnimation(&self->mightyAnimator);
+    RSDK.ProcessAnimation(&self->rayAnimator);
+    if (!(self->timer % 3)) {
         EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid((2 * (RSDK.Rand(0, 256) > 192) + EXPLOSION_ENEMY)),
-                                                   (RSDK.Rand(-24, 24) << 16) + entity->position.x, (RSDK.Rand(-24, 24) << 16) + entity->position.y);
+                                                   (RSDK.Rand(-24, 24) << 16) + self->position.x, (RSDK.Rand(-24, 24) << 16) + self->position.y);
         explosion->drawOrder = Zone->drawOrderHigh;
 
         RSDK.PlaySfx(SchrodingersCapsule->sfxExplosion2, 0, 255);
     }
 
-    if (++entity->timer == 60) {
-        entity->timer             = 0;
-        entity->state             = StateMachine_None;
-        entity->animator1.frameID = 1;
-        RSDK.SetSpriteAnimation(0xFFFF, 0xFFFF, &entity->animator4, true, 0);
-        RSDK.SetSpriteAnimation(0xFFFF, 0xFFFF, &entity->animator5, true, 0);
+    if (++self->timer == 60) {
+        self->timer             = 0;
+        self->state             = StateMachine_None;
+        self->mainAnimator.frameID = 1;
+        RSDK.SetSpriteAnimation(0xFFFF, 0xFFFF, &self->mightyAnimator, true, 0);
+        RSDK.SetSpriteAnimation(0xFFFF, 0xFFFF, &self->rayAnimator, true, 0);
 
         EntityPlayer *buddy1 = RSDK_GET_ENTITY(SLOT_PLAYER3, Player);
         buddy1->objectID     = Player->objectID;
         Player_ChangeCharacter(buddy1, ID_MIGHTY);
-        buddy1->position.x      = entity->position.x + 0xE0000;
-        buddy1->position.y      = entity->position.y;
+        buddy1->position.x      = self->position.x + 0xE0000;
+        buddy1->position.y      = self->position.y;
         buddy1->playerID        = RSDK.GetEntityID(buddy1);
         buddy1->active          = ACTIVE_NORMAL;
         buddy1->tileCollisions  = true;
@@ -222,13 +224,13 @@ void SchrodingersCapsule_Unknown4(void)
         buddy1->velocity.x      = 0x1C000;
         buddy1->velocity.y      = -0x40000;
         buddy1->direction       = FLIP_X;
-        RSDK.SetSpriteAnimation(buddy1->spriteIndex, ANI_HURT, &buddy1->playerAnimator, true, 0);
+        RSDK.SetSpriteAnimation(buddy1->aniFrames, ANI_HURT, &buddy1->animator, true, 0);
 
         EntityPlayer *buddy2 = RSDK_GET_ENTITY(SLOT_PLAYER4, Player);
         buddy2->objectID     = Player->objectID;
         Player_ChangeCharacter(buddy2, ID_RAY);
-        buddy2->position.x      = entity->position.x - 0xE0000;
-        buddy2->position.y      = entity->position.y;
+        buddy2->position.x      = self->position.x - 0xE0000;
+        buddy2->position.y      = self->position.y;
         buddy2->playerID        = RSDK.GetEntityID(buddy2);
         buddy2->active          = ACTIVE_NORMAL;
         buddy2->tileCollisions  = true;
@@ -243,15 +245,15 @@ void SchrodingersCapsule_Unknown4(void)
         buddy2->drawFX          = FX_ROTATE | FX_FLIP;
         buddy2->velocity.x      = -0x24000;
         buddy2->velocity.y      = -0x40000;
-        RSDK.SetSpriteAnimation(buddy2->spriteIndex, ANI_HURT, &buddy2->playerAnimator, true, 0);
+        RSDK.SetSpriteAnimation(buddy2->aniFrames, ANI_HURT, &buddy2->animator, true, 0);
 
         Music_FadeOut(0.025);
         RSDK.PlaySfx(SchrodingersCapsule->sfxExplosion3, 0, 255);
 
         EntityPlayer *player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
-        player->position.x   = entity->position.x;
+        player->position.x   = self->position.x;
         Player_ChangeCharacter(player, player->characterID);
-        RSDK.SetSpriteAnimation(player->spriteIndex, ANI_HURT, &player->playerAnimator, true, 0);
+        RSDK.SetSpriteAnimation(player->aniFrames, ANI_HURT, &player->animator, true, 0);
         player->velocity.x = 0;
         player->velocity.y = 0;
         player->groundVel  = 0;
@@ -264,10 +266,10 @@ void SchrodingersCapsule_Unknown4(void)
         EntityCamera *camera = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
         camera->position.x += 0x100000;
 
-        entity->timer = 0;
-        entity->state = SchrodingersCapsule_Unknown5;
+        self->timer = 0;
+        self->state = SchrodingersCapsule_Unknown5;
 
-        EntityFXFade *fade = (EntityFXFade *)RSDK.CreateEntity(FXFade->objectID, intToVoid(0xF0F0F0), entity->position.x, entity->position.y);
+        EntityFXFade *fade = CREATE_ENTITY(FXFade, intToVoid(0xF0F0F0), self->position.x, self->position.y);
         fade->speedIn      = 256;
         fade->speedOut     = 32;
     }
@@ -276,17 +278,17 @@ void SchrodingersCapsule_Unknown4(void)
 void SchrodingersCapsule_Unknown5(void)
 {
     RSDK_THIS(SchrodingersCapsule);
-    if (++entity->timer == 90) {
-        entity->timer = 0;
-        entity->state = StateMachine_None;
+    if (++self->timer == 90) {
+        self->timer = 0;
+        self->state = StateMachine_None;
 
         EntityPlayer *buddy1 = RSDK_GET_ENTITY(SLOT_PLAYER3, Player);
         buddy1->state        = Player_State_Victory;
-        RSDK.SetSpriteAnimation(buddy1->spriteIndex, ANI_VICTORY, &buddy1->playerAnimator, true, 0);
+        RSDK.SetSpriteAnimation(buddy1->aniFrames, ANI_VICTORY, &buddy1->animator, true, 0);
 
         EntityPlayer *buddy2 = RSDK_GET_ENTITY(SLOT_PLAYER4, Player);
         buddy2->state        = Player_State_Victory;
-        RSDK.SetSpriteAnimation(buddy2->spriteIndex, ANI_VICTORY, &buddy2->playerAnimator, true, 0);
+        RSDK.SetSpriteAnimation(buddy2->aniFrames, ANI_VICTORY, &buddy2->animator, true, 0);
 
         ActClear->actID       = 1;
         ActClear->forceNoSave = true;
@@ -300,11 +302,12 @@ void SchrodingersCapsule_EditorDraw(void)
 {
     RSDK_THIS(SchrodingersCapsule);
 
-    RSDK.SetSpriteAnimation(SchrodingersCapsule->aniFrames, 0, &entity->animator1, true, 0);
-    RSDK.SetSpriteAnimation(SchrodingersCapsule->aniFrames, 1, &entity->animator3, true, 0);
-    RSDK.SetSpriteAnimation(SchrodingersCapsule->aniFrames, 2, &entity->animator2, true, 0);
-    RSDK.SetSpriteAnimation(SchrodingersCapsule->aniFrames, 3, &entity->animator4, true, 0);
-    RSDK.SetSpriteAnimation(SchrodingersCapsule->aniFrames, 4, &entity->animator5, true, 0);
+    RSDK.SetSpriteAnimation(SchrodingersCapsule->aniFrames, 0, &self->mainAnimator, true, 0);
+    RSDK.SetSpriteAnimation(SchrodingersCapsule->aniFrames, 1, &self->buttonAnimator, true, 0);
+    RSDK.SetSpriteAnimation(SchrodingersCapsule->aniFrames, 2, &self->glassAnimator, true, 0);
+    RSDK.SetSpriteAnimation(SchrodingersCapsule->aniFrames, 3, &self->mightyAnimator, true, 0);
+    RSDK.SetSpriteAnimation(SchrodingersCapsule->aniFrames, 4, &self->rayAnimator, true, 0);
+
     SchrodingersCapsule_Draw();
 }
 

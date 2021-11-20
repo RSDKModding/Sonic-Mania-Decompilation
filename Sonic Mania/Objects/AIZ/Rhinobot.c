@@ -6,7 +6,7 @@ ObjectRhinobot *Rhinobot;
 void Rhinobot_Update(void)
 {
     RSDK_THIS(Rhinobot);
-    StateMachine_Run(entity->state);
+    StateMachine_Run(self->state);
 }
 
 void Rhinobot_LateUpdate(void) {}
@@ -16,35 +16,35 @@ void Rhinobot_StaticUpdate(void) {}
 void Rhinobot_Draw(void)
 {
     RSDK_THIS(Rhinobot);
-    if (entity->flag) {
+    if (self->playedHuff) {
         Vector2 drawPos;
-        drawPos.x = entity->position.x;
-        drawPos.y = entity->position.y;
-        if (entity->state == Rhinobot_State2) {
-            if (!entity->field_6C)
+        drawPos.x = self->position.x;
+        drawPos.y = self->position.y;
+        if (self->state == Rhinobot_State_HandleGroundMovement) {
+            if (!self->moveDir)
                 drawPos.x -= 0xD0000;
             else
                 drawPos.x += 0xD0000;
         }
-        RSDK.DrawSprite(&entity->animatorDust, &drawPos, false);
+        RSDK.DrawSprite(&self->animatorDust, &drawPos, false);
     }
-    RSDK.DrawSprite(&entity->animatorBot, NULL, false);
+    RSDK.DrawSprite(&self->animatorBot, NULL, false);
 }
 
 void Rhinobot_Create(void *data)
 {
     RSDK_THIS(Rhinobot);
-    entity->visible = true;
-    entity->drawFX |= FX_FLIP;
-    entity->drawOrder     = Zone->drawOrderLow;
-    entity->startPos      = entity->position;
-    entity->startDir      = entity->direction;
-    entity->active        = ACTIVE_BOUNDS;
-    entity->updateRange.x = 0x800000;
-    entity->updateRange.y = 0x800000;
-    RSDK.SetSpriteAnimation(Rhinobot->aniFrames, 0, &entity->animatorBot, true, 0);
-    RSDK.SetSpriteAnimation(Rhinobot->aniFrames, 2, &entity->animatorDust, true, 0);
-    entity->state = Rhinobot_State1;
+    self->visible = true;
+    self->drawFX |= FX_FLIP;
+    self->drawOrder     = Zone->drawOrderLow;
+    self->startPos      = self->position;
+    self->startDir      = self->direction;
+    self->active        = ACTIVE_BOUNDS;
+    self->updateRange.x = 0x800000;
+    self->updateRange.y = 0x800000;
+    RSDK.SetSpriteAnimation(Rhinobot->aniFrames, 0, &self->animatorBot, true, 0);
+    RSDK.SetSpriteAnimation(Rhinobot->aniFrames, 2, &self->animatorDust, true, 0);
+    self->state = Rhinobot_State_Setup;
 }
 
 void Rhinobot_StageLoad(void)
@@ -62,21 +62,21 @@ void Rhinobot_StageLoad(void)
 bool32 Rhinobot_CheckTileCollisions(void)
 {
     RSDK_THIS(Rhinobot);
-    if (entity->field_6C) {
-        if (!RSDK.ObjectTileGrip(entity, Zone->fgLayers, CMODE_FLOOR, 0, 0x40000, 0xF0000, 8)) {
-            if (RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_LWALL, 0, 0x100000, 0, false))
+    if (self->moveDir) {
+        if (!RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, 0x40000, 0xF0000, 8)) {
+            if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_LWALL, 0, 0x100000, 0, false))
                 return false;
-            if (RSDK.ObjectTileGrip(entity, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0xF0000, 8))
+            if (RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0xF0000, 8))
                 return false;
-            entity->state = Rhinobot_HandleUpdate4;
+            self->state = Rhinobot_State_Fall;
         }
     }
-    else if (!RSDK.ObjectTileGrip(entity, Zone->fgLayers, CMODE_FLOOR, 0, -0x40000, 0xF0000, 8)) {
-        if (RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_RWALL, 0, -0x100000, 0, false))
+    else if (!RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, -0x40000, 0xF0000, 8)) {
+        if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_RWALL, 0, -0x100000, 0, false))
             return false;
-        if (RSDK.ObjectTileGrip(entity, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0xF0000, 8))
+        if (RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0xF0000, 8))
             return false;
-        entity->state = Rhinobot_HandleUpdate4;
+        self->state = Rhinobot_State_Fall;
     }
     return true;
 }
@@ -86,17 +86,17 @@ void Rhinobot_CheckHit(void)
     RSDK_THIS(Rhinobot);
     foreach_active(Player, player)
     {
-        if (Player_CheckBadnikTouch(player, entity, &Rhinobot->hitbox))
-            Player_CheckBadnikBreak(entity, player, true);
+        if (Player_CheckBadnikTouch(player, self, &Rhinobot->hitbox))
+            Player_CheckBadnikBreak(self, player, true);
     }
 }
 
 void Rhinobot_CheckOnScreen(void)
 {
     RSDK_THIS(Rhinobot);
-    if (!RSDK.CheckOnScreen(RSDK_sceneInfo->entity, 0) && !RSDK.CheckPosOnScreen(&entity->startPos, &entity->updateRange)) {
-        entity->position  = entity->startPos;
-        entity->direction = entity->startDir;
+    if (!RSDK.CheckOnScreen(self, NULL) && !RSDK.CheckPosOnScreen(&self->startPos, &self->updateRange)) {
+        self->position  = self->startPos;
+        self->direction = self->startDir;
         Rhinobot_Create(NULL);
     }
 }
@@ -104,168 +104,171 @@ void Rhinobot_CheckOnScreen(void)
 void Rhinobot_DebugDraw(void)
 {
     RSDK.SetSpriteAnimation(Rhinobot->aniFrames, 0, &DebugMode->animator, true, 0);
-    RSDK.DrawSprite(&DebugMode->animator, 0, false);
+    RSDK.DrawSprite(&DebugMode->animator, NULL, false);
 }
 
 void Rhinobot_DebugSpawn(void)
 {
-    RSDK.CreateEntity(Rhinobot->objectID, NULL, RSDK_sceneInfo->entity->position.x, RSDK_sceneInfo->entity->position.y);
+    RSDK_THIS(DebugMode);
+
+    CREATE_ENTITY(Rhinobot, NULL, self->position.x, self->position.y);
 }
 
-void Rhinobot_State4(void)
+void Rhinobot_StateDelay_StartMove(void)
 {
     RSDK_THIS(Rhinobot);
-    entity->flag = false;
-    if (!entity->field_6C)
-        entity->velocity.x = -0x40000;
+    self->playedHuff = false;
+    if (!self->moveDir)
+        self->velocity.x = -0x40000;
     else
-        entity->velocity.x = 0x40000;
-    entity->state      = Rhinobot_HandleUpdate2;
-    entity->timedState = Rhinobot_StateSkidding;
+        self->velocity.x = 0x40000;
+    self->state      = Rhinobot_State_Skidding;
+    self->stateDelay = Rhinobot_StateDelay_Skidding;
 }
 
-void Rhinobot_StateSkidding(void)
+void Rhinobot_StateDelay_Skidding(void)
 {
     RSDK_THIS(Rhinobot);
-    RSDK.SetSpriteAnimation(Rhinobot->aniFrames, 1, &entity->animatorBot, true, 0);
-    entity->field_68 ^= 1;
-    entity->field_74   = -entity->field_74;
-    entity->timedState = Rhinobot_StateFinishSkid;
-    entity->field_78   = -entity->field_78;
+    RSDK.SetSpriteAnimation(Rhinobot->aniFrames, 1, &self->animatorBot, true, 0);
+    self->skidDir ^= FLIP_X;
+    self->acceleration = -self->acceleration;
+    self->stateDelay   = Rhinobot_StateDelay_SkidFinish;
+    self->topSpeed     = -self->topSpeed;
 }
 
-void Rhinobot_StateFinishSkid(void)
+void Rhinobot_StateDelay_SkidFinish(void)
 {
     RSDK_THIS(Rhinobot);
-    entity->field_6C ^= 1;
-    entity->direction ^= 1;
-    entity->flag = false;
-    RSDK.SetSpriteAnimation(Rhinobot->aniFrames, 0, &entity->animatorBot, true, 0);
-    entity->timedState = Rhinobot_StateSkidding;
+    self->moveDir ^= FLIP_X;
+    self->direction ^= FLIP_X;
+    self->playedHuff = false;
+    RSDK.SetSpriteAnimation(Rhinobot->aniFrames, 0, &self->animatorBot, true, 0);
+    self->stateDelay = Rhinobot_StateDelay_Skidding;
 }
 
-void Rhinobot_State1(void)
+void Rhinobot_State_Setup(void)
 {
     RSDK_THIS(Rhinobot);
 
-    entity->active     = ACTIVE_NORMAL;
-    entity->timedState = Rhinobot_StateSkidding;
-    entity->field_6C   = entity->startDir;
-    entity->field_68   = entity->startDir;
-    if (entity->direction == FLIP_NONE) {
-        entity->field_74 = -0x1000;
-        entity->field_78 = -0x30000;
+    self->active     = ACTIVE_NORMAL;
+    self->stateDelay = Rhinobot_StateDelay_Skidding;
+    self->moveDir    = self->startDir;
+    self->skidDir    = self->startDir;
+    if (self->direction == FLIP_NONE) {
+        self->acceleration = -0x1000;
+        self->topSpeed     = -0x30000;
     }
     else {
-        entity->field_74 = 0x1000;
-        entity->field_78 = 0x30000;
+        self->acceleration = 0x1000;
+        self->topSpeed     = 0x30000;
     }
-    entity->state = Rhinobot_State2;
-    Rhinobot_State2();
+    self->state = Rhinobot_State_HandleGroundMovement;
+    Rhinobot_State_HandleGroundMovement();
 }
 
-void Rhinobot_State2(void)
+void Rhinobot_State_HandleGroundMovement(void)
 {
     RSDK_THIS(Rhinobot);
     EntityPlayer *player = (EntityPlayer *)Player_GetNearestPlayer();
 
     bool32 flag = false;
-    if (abs(player->position.y - entity->position.y) <= 0x200000) {
-        if (abs(player->position.x - entity->position.x) <= 0x600000) {
-            if (entity->field_68 == entity->field_6C && (player->position.x > entity->position.x) == entity->field_68) {
-                entity->state      = Rhinobot_HandleUpdate3;
-                entity->velocity.x = 0;
-                entity->timer      = 32;
-                entity->timedState = Rhinobot_State4;
-                entity->flag       = true;
-                if (entity->activeScreens)
-                    RSDK.PlaySfx(Rhinobot->sfxHuff, 0, 255);
+    if (abs(player->position.y - self->position.y) <= 0x200000) {
+        if (abs(player->position.x - self->position.x) <= 0x600000) {
+            if (self->skidDir == self->moveDir && (player->position.x > self->position.x) == self->skidDir) {
+                self->state      = Rhinobot_State_Idle;
+                self->velocity.x = 0;
+                self->timer      = 32;
+                self->stateDelay = Rhinobot_StateDelay_StartMove;
+                self->playedHuff = true;
+                if (self->activeScreens)
+                    RSDK.PlaySfx(Rhinobot->sfxHuff, false, 255);
                 flag = true;
             }
         }
     }
-    
+
     if (!flag) {
         if (Rhinobot_CheckTileCollisions()) {
-            if (entity->state == Rhinobot_State2) {
-                entity->velocity.x = entity->velocity.x + entity->field_74;
-                entity->position.x += entity->velocity.x;
+            if (self->state == Rhinobot_State_HandleGroundMovement) {
+                self->velocity.x += self->acceleration;
+                self->position.x += self->velocity.x;
 
-                if (!entity->velocity.x || (entity->field_68 && entity->velocity.x >= entity->field_78)
-                    || (!entity->field_68 && entity->velocity.x <= entity->field_78)) {
-                    entity->timedState();
+                if (!self->velocity.x || (self->skidDir && self->velocity.x >= self->topSpeed)
+                    || (!self->skidDir && self->velocity.x <= self->topSpeed)) {
+                    self->stateDelay();
                 }
             }
         }
         else {
-            entity->velocity.x = 0;
-            entity->field_68   = entity->field_6C ^ 1;
-            entity->field_6C ^= 1;
-            entity->direction ^= 1;
-            entity->flag = false;
-            RSDK.SetSpriteAnimation(Rhinobot->aniFrames, 0, &entity->animatorBot, true, 0);
-            entity->timedState = Rhinobot_StateSkidding;
+            self->velocity.x = 0;
+            self->skidDir    = self->moveDir ^ 1;
+            self->moveDir ^= FLIP_X;
+            self->direction ^= FLIP_X;
+            self->playedHuff = false;
+            RSDK.SetSpriteAnimation(Rhinobot->aniFrames, 0, &self->animatorBot, true, 0);
+            self->stateDelay = Rhinobot_StateDelay_Skidding;
         }
 
-        if (((entity->field_6C && !entity->field_68 && entity->velocity.x < 0x28000)
-            || (!entity->field_6C && entity->field_68 && entity->velocity.x > -0x28000)) && !entity->flag) {
-            entity->flag = true;
-            if (entity->activeScreens)
-                RSDK.PlaySfx(Rhinobot->sfxHuff, 0, 255);
+        if (((self->moveDir && !self->skidDir && self->velocity.x < 0x28000)
+             || (!self->moveDir && self->skidDir && self->velocity.x > -0x28000))
+            && !self->playedHuff) {
+            self->playedHuff = true;
+            if (self->activeScreens)
+                RSDK.PlaySfx(Rhinobot->sfxHuff, false, 255);
         }
     }
 
-    RSDK.ProcessAnimation(&entity->animatorBot);
-    RSDK.ProcessAnimation(&entity->animatorDust);
+    RSDK.ProcessAnimation(&self->animatorBot);
+    RSDK.ProcessAnimation(&self->animatorDust);
     Rhinobot_CheckHit();
     Rhinobot_CheckOnScreen();
 }
 
-void Rhinobot_HandleUpdate2(void)
+void Rhinobot_State_Skidding(void)
 {
     RSDK_THIS(Rhinobot);
-    entity->position.x += entity->velocity.x;
+    self->position.x += self->velocity.x;
     if (!Rhinobot_CheckTileCollisions()) {
-        entity->velocity.x = 0;
-        entity->field_68   = entity->field_6C ^ 1;
-        entity->field_6C ^= 1;
-        entity->direction ^= 1;
-        entity->flag = false;
-        RSDK.SetSpriteAnimation(Rhinobot->aniFrames, 0, &entity->animatorBot, true, 0);
-        entity->timedState = Rhinobot_StateSkidding;
-        entity->state      = Rhinobot_State2;
+        self->velocity.x = 0;
+        self->skidDir    = self->moveDir ^ FLIP_X;
+        self->moveDir ^= FLIP_X;
+        self->direction ^= FLIP_X;
+        self->playedHuff = false;
+        RSDK.SetSpriteAnimation(Rhinobot->aniFrames, 0, &self->animatorBot, true, 0);
+        self->stateDelay = Rhinobot_StateDelay_Skidding;
+        self->state      = Rhinobot_State_HandleGroundMovement;
     }
-    RSDK.ProcessAnimation(&entity->animatorBot);
-    RSDK.ProcessAnimation(&entity->animatorDust);
+    RSDK.ProcessAnimation(&self->animatorBot);
+    RSDK.ProcessAnimation(&self->animatorDust);
     Rhinobot_CheckHit();
     Rhinobot_CheckOnScreen();
 }
 
-void Rhinobot_HandleUpdate3(void)
+void Rhinobot_State_Idle(void)
 {
     RSDK_THIS(Rhinobot);
-    RSDK.ProcessAnimation(&entity->animatorDust);
-    if (--entity->timer <= 0)
-        entity->timedState();
+    RSDK.ProcessAnimation(&self->animatorDust);
+    if (--self->timer <= 0)
+        self->stateDelay();
     Rhinobot_CheckHit();
     Rhinobot_CheckOnScreen();
 }
 
-void Rhinobot_HandleUpdate4(void)
+void Rhinobot_State_Fall(void)
 {
     RSDK_THIS(Rhinobot);
-    RSDK.ProcessAnimation(&entity->animatorDust);
-    entity->position.x += entity->velocity.x;
-    entity->position.y += entity->velocity.y;
-    entity->velocity.y += 0x3800;
-    if (RSDK.ObjectTileGrip(entity, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x100000, 8)) {
-        entity->velocity.y = 0;
-        RSDK.SetSpriteAnimation(Rhinobot->aniFrames, 0, &entity->animatorBot, true, 0);
-        entity->flag = true;
-        if (entity->activeScreens)
-            RSDK.PlaySfx(Rhinobot->sfxHuff, 0, 255);
-        entity->state = Rhinobot_State2;
-        Rhinobot_State2();
+    RSDK.ProcessAnimation(&self->animatorDust);
+    self->position.x += self->velocity.x;
+    self->position.y += self->velocity.y;
+    self->velocity.y += 0x3800;
+    if (RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x100000, 8)) {
+        self->velocity.y = 0;
+        RSDK.SetSpriteAnimation(Rhinobot->aniFrames, 0, &self->animatorBot, true, 0);
+        self->playedHuff = true;
+        if (self->activeScreens)
+            RSDK.PlaySfx(Rhinobot->sfxHuff, false, 255);
+        self->state = Rhinobot_State_HandleGroundMovement;
+        Rhinobot_State_HandleGroundMovement();
     }
     else {
         Rhinobot_CheckHit();

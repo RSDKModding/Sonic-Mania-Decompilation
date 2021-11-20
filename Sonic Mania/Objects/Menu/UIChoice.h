@@ -33,7 +33,7 @@ typedef struct {
     Animator animator2;
     Animator animator3;
     Animator animator4;
-    uint16 spriteIndex;
+    uint16 aniFrames;
 } EntityUIChoice;
 
 // Object Struct

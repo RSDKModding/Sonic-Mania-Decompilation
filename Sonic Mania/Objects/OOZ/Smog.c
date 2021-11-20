@@ -7,26 +7,26 @@ void Smog_Update(void)
     RSDK_THIS(Smog);
     if (Smog->field_4 == 1) {
         OOZSetup->fadeTimer = 0;
-        entity->alpha     = 128;
+        self->alpha     = 128;
         RSDK.SetLimitedFade(0, 1, 2, 224, 0, 255);
     }
     else {
         if (OOZSetup->fadeTimer <= 600) {
-            if (entity->alpha > 0) {
+            if (self->alpha > 0) {
                 RSDK.SetLimitedFade(0, 1, 2, 0, 0, 255);
-                entity->alpha -= 8;
+                self->alpha -= 8;
             }
-            entity->timer = 0;
+            self->timer = 0;
         }
         else {
             RSDK.SetLimitedFade(0, 1, 2, (OOZSetup->fadeTimer - 600) >> 2, 0, 255);
-            if (entity->alpha < 0x80)
-                entity->alpha++;
+            if (self->alpha < 0x80)
+                self->alpha++;
         }
     }
 
     if (OOZSetup->fadeTimer > 1800) {
-        ++entity->timer;
+        ++self->timer;
         foreach_active(Player, player)
         {
             if (player->superState != SUPERSTATE_SUPER) {
@@ -36,12 +36,12 @@ void Smog_Update(void)
                         hud->enableRingFlash = true;
                     foreach_break;
                 }
-                if (entity->timer == 60 && !player->sidekick && player->rings > 0)
+                if (self->timer == 60 && !player->sidekick && player->rings > 0)
                     Player_GiveRings(-1, player, true);
             }
         }
-        if (entity->timer == 60)
-            entity->timer = 0;
+        if (self->timer == 60)
+            self->timer = 0;
     }
 }
 
@@ -61,13 +61,13 @@ void Smog_Draw(void)
     RSDK_THIS(Smog);
     ScanlineInfo *scanlinePtr = Smog->scanlines;
 
-    int32 y       = (Zone->timer + 2 * RSDK_screens->position.y) << 14;
-    uint8 defPos = ((RSDK_screens->position.y >> 1) + 2 * Zone->timer);
+    int32 y       = (Zone->timer + 2 * ScreenInfo->position.y) << 14;
+    uint8 defPos = ((ScreenInfo->position.y >> 1) + 2 * Zone->timer);
 
     ScanlineInfo *scanline = NULL;
-    for (int32 i = 0; i < RSDK_screens->height; ++i) {
+    for (int32 i = 0; i < ScreenInfo->height; ++i) {
         scanline  = (ScanlineInfo *)&Smog->scanlineData[defPos++ * sizeof(ScanlineInfo)];
-        scanlinePtr->position.x = scanline->position.x + (RSDK_screens->position.x << 16);
+        scanlinePtr->position.x = scanline->position.x + (ScreenInfo->position.x << 16);
         scanlinePtr->position.y = y;
         scanlinePtr->deform.x   = scanline->deform.x;
         scanlinePtr->deform.y   = 0;
@@ -77,22 +77,22 @@ void Smog_Draw(void)
         scanlinePtr++;
     }
 
-    if (entity->alpha >= 0x80)
+    if (self->alpha >= 0x80)
         RSDK.DrawDeformedSprite(Smog->aniFrames, INK_BLEND, 0xE0);
     else
-        RSDK.DrawDeformedSprite(Smog->aniFrames, INK_ALPHA, entity->alpha);
+        RSDK.DrawDeformedSprite(Smog->aniFrames, INK_ALPHA, self->alpha);
 }
 
 void Smog_Create(void *data)
 {
     RSDK_THIS(Smog);
-    if (!RSDK_sceneInfo->inEditor) {
-        entity->active    = ACTIVE_NORMAL;
-        entity->visible   = true;
-        entity->inkEffect = INK_ALPHA;
-        entity->drawOrder = Zone->hudDrawOrder - 1;
+    if (!SceneInfo->inEditor) {
+        self->active    = ACTIVE_NORMAL;
+        self->visible   = true;
+        self->inkEffect = INK_ALPHA;
+        self->drawOrder = Zone->hudDrawOrder - 1;
         OOZSetup->fadeTimer = 0;
-        if (!(RSDK_sceneInfo->milliseconds || RSDK_sceneInfo->seconds || RSDK_sceneInfo->minutes)) {
+        if (!(SceneInfo->milliseconds || SceneInfo->seconds || SceneInfo->minutes)) {
             Smog->starPostID      = 0;
             globals->restartFlags = 1;
             globals->tempFlags    = 1;
@@ -109,14 +109,14 @@ void Smog_Create(void *data)
                 }
             }
 
-            if (RSDK_sceneInfo->minutes != globals->tempMinutes || RSDK_sceneInfo->seconds != globals->tempSeconds
-                || RSDK_sceneInfo->milliseconds != globals->tempMilliseconds) {
+            if (SceneInfo->minutes != globals->tempMinutes || SceneInfo->seconds != globals->tempSeconds
+                || SceneInfo->milliseconds != globals->tempMilliseconds) {
                 OOZSetup->flags = globals->restartFlags;
-                Zone_Unknown2();
+                Zone_StartFadeOut_MusicFade();
             }
             else {
                 OOZSetup->flags = globals->tempFlags;
-                Zone_Unknown2();
+                Zone_StartFadeOut_MusicFade();
             }
         }
 
@@ -133,7 +133,7 @@ void Smog_StageLoad(void)
     for (int32 i = 0; i < 0x100; ++i) {
         scanline[i].deform.x   = (RSDK.Sin256(angle >> 1) << 6) + 0x10000;
         scanline[i].deform.y   = (RSDK.Sin256(angle >> 1) << 5) + 0x10000;
-        scanline[i].position.x = (RSDK.Sin256(angle) << 10) - scanline->deform.x * RSDK_screens->centerX;
+        scanline[i].position.x = (RSDK.Sin256(angle) << 10) - scanline->deform.x * ScreenInfo->centerX;
         scanline[i].position.y = 0;
         angle += 2;
     }

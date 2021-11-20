@@ -6,11 +6,31 @@
 // Object Class
 typedef struct {
 	RSDK_OBJECT
+	Hitbox hitbox;
+	Hitbox checkbox;
+	uint32 pictureCount;
+	uint16 aniFrames;
+	uint16 snapSfx;
 } ObjectShutterbug;
 
 // Entity Class
 typedef struct {
 	RSDK_ENTITY
+	StateMachine(state);
+	uint8 snaps;
+	bool32 passThrough;
+	int32 snapTimer;
+	uint32 numSnaps;
+	EntityPlayer *focus;
+	Vector2 spawnPos;
+	Vector2 range;
+	Vector2 offset;
+	uint8 turnTimer;
+	uint8 moveDir;
+	uint8 flickerTimer;
+	Hitbox focusBox;
+	Animator animator;
+	Animator overlayAnim;
 } EntityShutterbug;
 
 // Object Struct
@@ -28,6 +48,25 @@ void Shutterbug_EditorDraw(void);
 void Shutterbug_EditorLoad(void);
 #endif
 void Shutterbug_Serialize(void);
+
+void Shutterbug_DebugSpawn(void);
+void Shutterbug_DebugDraw(void);
+
+void Shutterbug_CheckOnScreen(void);
+
+void Shutterbug_State_Create(void);
+
+void Shutterbug_State_FlyAround(void);
+void Shutterbug_State_ShakeFly(void);
+void Shutterbug_State_BasicMove(void);
+
+int Shutterbug_BounceX(void);
+int Shutterbug_BounceY(void);
+
+void Shutterbug_CheckFocus(void);
+
+void Shutterbug_IncrementPicCount(void);
+void Shutterbug_HandleBodyAnim(void);
 
 // Extra Entity Functions
 

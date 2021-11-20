@@ -5,7 +5,7 @@ ObjectStalactite *Stalactite;
 void Stalactite_Update(void)
 {
     RSDK_THIS(Stalactite);
-    StateMachine_Run(entity->state);
+    StateMachine_Run(self->state);
 }
 
 void Stalactite_LateUpdate(void) {}
@@ -15,24 +15,24 @@ void Stalactite_StaticUpdate(void) {}
 void Stalactite_Draw(void)
 {
     RSDK_THIS(Stalactite);
-    RSDK.DrawSprite(&entity->animator, NULL, false);
+    RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
 void Stalactite_Create(void *data)
 {
     RSDK_THIS(Stalactite);
 
-    entity->active        = ACTIVE_NORMAL;
-    entity->visible       = true;
-    entity->drawOrder     = Zone->drawOrderLow;
-    entity->updateRange.x = 0x400000;
-    entity->updateRange.y = 0x400000;
-    RSDK.SetSpriteAnimation(Stalactite->aniFrames, 0, &entity->animator, true, 0);
+    self->active        = ACTIVE_NORMAL;
+    self->visible       = true;
+    self->drawOrder     = Zone->drawOrderLow;
+    self->updateRange.x = 0x400000;
+    self->updateRange.y = 0x400000;
+    RSDK.SetSpriteAnimation(Stalactite->aniFrames, 0, &self->animator, true, 0);
 
     if (!data)
-        entity->state = Stalactite_State_Unknown1;
+        self->state = Stalactite_State_Unknown1;
     else
-        entity->state = data;
+        self->state = data;
 }
 
 void Stalactite_StageLoad(void)
@@ -59,8 +59,8 @@ void Stalactite_State_Unknown1(void)
 
     foreach_active(Player, player)
     {
-        if (!player->sidekick && Player_CheckCollisionTouch(player, entity, &Stalactite->hitbox2)) {
-            entity->state = Stalactite_State_Unknown5;
+        if (!player->sidekick && Player_CheckCollisionTouch(player, self, &Stalactite->hitbox2)) {
+            self->state = Stalactite_State_Unknown5;
         }
     }
 }
@@ -69,74 +69,74 @@ void Stalactite_State_Unknown2(void)
 {
     RSDK_THIS(Stalactite);
 
-    entity->position.x += entity->velocity.x;
-    entity->position.y += entity->velocity.y;
-    entity->velocity.y += 0x1800;
+    self->position.x += self->velocity.x;
+    self->position.y += self->velocity.y;
+    self->velocity.y += 0x1800;
 
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionTouch(player, entity, &Stalactite->hitbox1)) {
+        if (Player_CheckCollisionTouch(player, self, &Stalactite->hitbox1)) {
 #if RETRO_USE_PLUS
-            if (Player_CheckMightyShellHit(player, entity))
-                entity->state = Stalactite_State_Unknown5;
-#endif
+            if (Player_CheckMightyShellHit(player, self, -0x300, -0x400))
+                self->state = Stalactite_State_Unknown5;
             else
-                Player_CheckHit(player, entity);
+#endif
+                Player_CheckHit(player, self);
         }
     }
 
-    if (RSDK.ObjectTileCollision(entity, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x80000, true)) {
-        entity->state = Stalactite_State_Unknown3;
+    if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x80000, true)) {
+        self->state = Stalactite_State_Unknown3;
         RSDK.PlaySfx(Stalactite->sfxShoot, false, 255);
     }
 
-    if (!RSDK.CheckOnScreen(entity, NULL))
-        destroyEntity(entity);
+    if (!RSDK.CheckOnScreen(self, NULL))
+        destroyEntity(self);
 }
 
 void Stalactite_State_Unknown3(void)
 {
     RSDK_THIS(Stalactite);
 
-    foreach_active(Player, player) { Player_CheckCollisionBox(player, entity, &Stalactite->hitbox1); }
+    foreach_active(Player, player) { Player_CheckCollisionBox(player, self, &Stalactite->hitbox1); }
 }
 
 void Stalactite_State_Unknown4(void)
 {
     RSDK_THIS(Stalactite);
 
-    entity->position.x += entity->velocity.x;
-    entity->position.y += entity->velocity.y;
-    entity->velocity.y += 0x1800;
+    self->position.x += self->velocity.x;
+    self->position.y += self->velocity.y;
+    self->velocity.y += 0x1800;
 
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionTouch(player, entity, &Stalactite->hitbox1)) {
+        if (Player_CheckCollisionTouch(player, self, &Stalactite->hitbox1)) {
 #if RETRO_USE_PLUS
-            if (Player_CheckMightyShellHit(player, entity))
-                entity->state = Stalactite_State_Unknown5;
-#endif
+            if (Player_CheckMightyShellHit(player, self, -0x300, -0x400))
+                self->state = Stalactite_State_Unknown5;
             else
-                Player_CheckHit(player, entity);
+#endif
+                Player_CheckHit(player, self);
         }
     }
 
-    if (!RSDK.CheckOnScreen(entity, NULL))
-        destroyEntity(entity);
+    if (!RSDK.CheckOnScreen(self, NULL))
+        destroyEntity(self);
 }
 
 void Stalactite_State_Unknown5(void)
 {
     RSDK_THIS(Stalactite);
 
-    entity->visible ^= true;
-    RSDK.ProcessAnimation(&entity->animator);
-    entity->position.x += entity->velocity.x;
-    entity->position.y += entity->velocity.y;
-    entity->velocity.y += 0x3800;
+    self->visible ^= true;
+    RSDK.ProcessAnimation(&self->animator);
+    self->position.x += self->velocity.x;
+    self->position.y += self->velocity.y;
+    self->velocity.y += 0x3800;
 
-    if (!RSDK.CheckOnScreen(entity, &entity->updateRange))
-        destroyEntity(entity);
+    if (!RSDK.CheckOnScreen(self, &self->updateRange))
+        destroyEntity(self);
 }
 
 #if RETRO_INCLUDE_EDITOR

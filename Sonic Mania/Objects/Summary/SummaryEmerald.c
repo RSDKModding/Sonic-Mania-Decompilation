@@ -12,26 +12,26 @@ void SummaryEmerald_StaticUpdate(void) {}
 void SummaryEmerald_Draw(void)
 {
     RSDK_THIS(SummaryEmerald);
-    RSDK.DrawSprite(&entity->animator, NULL, false);
+    RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
 void SummaryEmerald_Create(void *data)
 {
     RSDK_THIS(SummaryEmerald);
-    entity->active        = ACTIVE_NORMAL;
-    entity->drawOrder     = 3;
-    entity->visible       = true;
-    entity->updateRange.x = 0x800000;
-    entity->updateRange.y = 0x800000;
-    if (!RSDK_sceneInfo->inEditor) {
-        if ((1 << entity->emeraldID) & SaveGame->saveRAM->chaosEmeralds)
-            RSDK.SetSpriteAnimation(SummaryEmerald->spriteIndex, 0, &entity->animator, true, entity->emeraldID % 7);
+    self->active        = ACTIVE_NORMAL;
+    self->drawOrder     = 3;
+    self->visible       = true;
+    self->updateRange.x = 0x800000;
+    self->updateRange.y = 0x800000;
+    if (!SceneInfo->inEditor) {
+        if ((1 << self->emeraldID) & SaveGame->saveRAM->chaosEmeralds)
+            RSDK.SetSpriteAnimation(SummaryEmerald->aniFrames, 0, &self->animator, true, self->emeraldID % 7);
         else
-            RSDK.SetSpriteAnimation(SummaryEmerald->spriteIndex, 0, &entity->animator, true, 7);
+            RSDK.SetSpriteAnimation(SummaryEmerald->aniFrames, 0, &self->animator, true, 7);
     }
 }
 
-void SummaryEmerald_StageLoad(void) { SummaryEmerald->spriteIndex = RSDK.LoadSpriteAnimation("Summary/SummaryEmerald.bin", SCOPE_STAGE); }
+void SummaryEmerald_StageLoad(void) { SummaryEmerald->aniFrames = RSDK.LoadSpriteAnimation("Summary/SummaryEmerald.bin", SCOPE_STAGE); }
 
 #if RETRO_INCLUDE_EDITOR
 void SummaryEmerald_EditorDraw(void) {}

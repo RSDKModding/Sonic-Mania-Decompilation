@@ -50,42 +50,46 @@ void DrawHelpers_DrawArrow(uint32 colour, int32 x1, int32 y1, int32 x2, int32 y2
     RSDK.DrawLine(x2, y2, x2 + (RSDK.Cos256(angle - 12) << 12), y2 + (RSDK.Sin256(angle - 12) << 12), colour, 0x7F, INK_ADD, false);
 }
 
-void DrawHelpers_DrawDebug4(uint32 colour, int32 a2, int32 alpha, int32 x1, int32 y1, int32 x2, int32 y2)
+void DrawHelpers_DrawIsocelesTriangle(int32 x1, int32 y1, int32 x2, int32 y2, int32 a3, uint32 colour, uint32 inkEffect, uint32 alpha)
 {
     Vector2 verts[3];
 
-    int32 angle  = RSDK.ATan2(x2 - x1, y2 - y1);
-    verts[0].x = x2;
-    verts[0].y = x2;
-    verts[1].x = (RSDK.Cos256(angle + 64) << 9) + x1;
-    verts[1].y = (RSDK.Sin256(angle + 64) << 9) + y1;
-    verts[2].x = (RSDK.Cos256(angle - 64) << 9) + x1;
-    verts[2].y = (RSDK.Sin256(angle - 64) << 9) + y1;
+    int angle         = RSDK.ATan2(x2 - x1, y2 - y1);
 
-    if (RSDK_sceneInfo->inEditor) {
-        RSDK.DrawLine(verts[0].x, verts[0].y, verts[1].x, verts[1].y, colour, 0xFF, INK_NONE, false);
-        RSDK.DrawLine(verts[1].x, verts[1].y, verts[2].x, verts[2].y, colour, 0xFF, INK_NONE, false);
-        RSDK.DrawLine(verts[2].x, verts[2].y, verts[0].x, verts[0].y, colour, 0xFF, INK_NONE, false);
+    verts[0].x    = x2;
+    verts[0].y    = y2;
+    verts[1].x    = x1 + (a3 << 7) * RSDK.Cos256(angle + 64);
+    verts[1].y    = y1 + (a3 << 7) * RSDK.Sin256(angle + 64);
+    verts[2].x    = x1 + (a3 << 7) * RSDK.Cos256(angle - 64);
+    verts[2].y    = y1 + (a3 << 7) * RSDK.Sin256(angle - 64);
+
+    if (SceneInfo->inEditor) {
+        RSDK.DrawLine(x2, y2, verts[1].x, verts[1].y, colour, 255, INK_NONE, false);
+        RSDK.DrawLine(verts[1].x, verts[1].y, verts[2].x, verts[2].y, colour, 255, INK_NONE, false);
+        RSDK.DrawLine(verts[2].x, verts[2].y, x2, y2, colour, 255, INK_NONE, false);
     }
     else {
-        verts[0].x -= RSDK_screens->position.x << 16;
-        verts[0].y -= RSDK_screens->position.y << 16;
-        verts[1].x -= RSDK_screens->position.x << 16;
-        verts[1].y -= RSDK_screens->position.y << 16;
-        verts[2].x -= RSDK_screens->position.x << 16;
-        verts[2].y -= RSDK_screens->position.y << 16;
-        RSDK.DrawQuad(verts, 3, (colour >> 16) & 0xFF, (colour >> 8) & 0xFF, (colour >> 0) & 0xFF, alpha, INK_ALPHA);
+        int screenX = ScreenInfo->position.x << 16;
+        int screenY = ScreenInfo->position.y << 16;
+        verts[0].x -= screenX;
+        verts[0].y -= screenY;
+        verts[1].x -= screenX;
+        verts[1].y -= screenY;
+        verts[2].x -= screenX;
+        verts[2].y -= screenY;
+        RSDK.DrawQuad(verts, 3, (colour >> 16) & 0xFF, (colour >> 8) & 0xFF, (colour >> 0) & 0xFF, alpha, inkEffect);
     }
 }
 
-void DrawHelpers_DrawDebug5(uint32 colour, int32 x, int32 y)
+void DrawHelpers_DrawCross(int32 x, int32 y, int32 sizeX, int32 sizeY, uint32 colour)
 {
     if (x || y) {
-        RSDK.DrawLine(x - 0x100000, y - 0x100000, x + 0x100000, y + 0x100000, colour, 0x7F, INK_NONE, false);
-        RSDK.DrawLine(x + 0x100000, y - 0x100000, x - 0x100000, y + 0x100000, colour, 0x7F, INK_NONE, false);
+        RSDK.DrawLine(x - (sizeX >> 1), y - (sizeY >> 1), x + (sizeX >> 1), y + (sizeY >> 1), colour, 0x7F, INK_NONE, false);
+        RSDK.DrawLine(x + (sizeX >> 1), y - (sizeY >> 1), x - (sizeX >> 1), y + (sizeY >> 1), colour, 0x7F, INK_NONE, false);
     }
 }
 
+//Custom ones!!
 void DrawHelpers_DrawRectOutline(uint32 colour, int32 x, int32 y, int32 sizeX, int32 sizeY)
 {
     Vector2 drawPos;
@@ -111,25 +115,25 @@ void DrawHelpers_DrawArenaBounds(uint32 colour, uint8 flags, int32 left, int32 t
 
     // left
     if (flags & 1) {
-        RSDK.DrawLine(entity->position.x + left, entity->position.y + top, entity->position.x + left, entity->position.y + bottom, colour, 0,
+        RSDK.DrawLine(self->position.x + left, self->position.y + top, self->position.x + left, self->position.y + bottom, colour, 0,
                       INK_NONE, false);
     }
 
     // top
     if (flags & 2) {
-        RSDK.DrawLine(entity->position.x + left, entity->position.y + top, entity->position.x + right, entity->position.y + top, colour, 0, INK_NONE,
+        RSDK.DrawLine(self->position.x + left, self->position.y + top, self->position.x + right, self->position.y + top, colour, 0, INK_NONE,
                       false);
     }
 
     // right
     if (flags & 4) {
-        RSDK.DrawLine(entity->position.x + right, entity->position.y + top, entity->position.x + right, entity->position.y + bottom, colour, 0,
+        RSDK.DrawLine(self->position.x + right, self->position.y + top, self->position.x + right, self->position.y + bottom, colour, 0,
                       INK_NONE, false);
     }
 
     // bottom
     if (flags & 8) {
-        RSDK.DrawLine(entity->position.x + left, entity->position.y + bottom, entity->position.x + right, entity->position.y + bottom, colour, 0,
+        RSDK.DrawLine(self->position.x + left, self->position.y + bottom, self->position.x + right, self->position.y + bottom, colour, 0,
                       INK_NONE, false);
     }
 }

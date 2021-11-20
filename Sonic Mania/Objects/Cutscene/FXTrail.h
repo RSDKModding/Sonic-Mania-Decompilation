@@ -25,7 +25,7 @@ typedef struct {
     uint8 stateVisible[FXTrail_trackCount];
     Animator currentAnim;
     Animator stateAnim[FXTrail_trackCount];
-    Animator *dataPtr;
+    Animator *animatorPtr;
     int32 baseAlpha;
 } EntityFXTrail;
 

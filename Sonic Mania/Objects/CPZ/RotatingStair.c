@@ -11,32 +11,32 @@ void RotatingStair_StaticUpdate(void) {}
 void RotatingStair_Draw(void)
 {
     RSDK_THIS(RotatingStair);
-    RSDK.DrawSprite(&entity->animator, &entity->drawPos, false);
+    RSDK.DrawSprite(&self->animator, &self->drawPos, false);
 }
 
 void RotatingStair_Create(void *data)
 {
     RSDK_THIS(RotatingStair);
-    entity->frameID   = 2;
-    entity->collision = PLATFORM_C_1;
-    entity->speed     = 3;
-    if (entity->direction)
-        entity->amplitude.x = -entity->amplitude.x;
-    if (entity->mode & 1)
-        entity->amplitude.x = -entity->amplitude.x;
+    self->frameID   = 2;
+    self->collision = PLATFORM_C_SOLID_ALL;
+    self->speed     = 3;
+    if (self->direction)
+        self->amplitude.x = -self->amplitude.x;
+    if (self->mode & 1)
+        self->amplitude.x = -self->amplitude.x;
 
-    int32 typeStore = entity->mode;
-    entity->mode    = PLATFORM_2;
+    int32 typeStore = self->mode;
+    self->mode    = PLATFORM_MOVING;
     Platform_Create(NULL);
-    entity->mode = typeStore;
+    self->mode = typeStore;
 
-    if (entity->mode >= 4) {
-        entity->duration = 120 * entity->speed;
-        entity->state    = RotatingStair_Unknown2;
-        entity->interval = entity->duration + 512;
+    if (self->mode >= 4) {
+        self->duration = 120 * self->speed;
+        self->state    = RotatingStair_Unknown2;
+        self->interval = self->duration + 512;
     }
     else {
-        entity->state = RotatingStair_Unknown1;
+        self->state = RotatingStair_Unknown1;
     }
 }
 
@@ -45,91 +45,91 @@ void RotatingStair_StageLoad(void) { RotatingStair->flag = 0; }
 void RotatingStair_Unknown1(void)
 {
     RSDK_THIS(RotatingStair);
-    int32 timer = Zone->timer + entity->oscOff;
-    int32 drawX = -entity->drawPos.x;
-    int32 drawY = -entity->drawPos.y;
+    int32 timer = Zone->timer + self->oscOff;
+    int32 drawX = -self->drawPos.x;
+    int32 drawY = -self->drawPos.y;
 
     int32 dir = 0;
-    if (entity->mode & 1)
-        dir = entity->mode - (((3 * timer) >> 9) & 3) - 2;
+    if (self->mode & 1)
+        dir = self->mode - (((3 * timer) >> 9) & 3) - 2;
     else
-        dir = ((3 * timer) >> 9) + entity->mode;
+        dir = ((3 * timer) >> 9) + self->mode;
     switch (dir & 3) {
         case 0:
-            entity->drawPos.x = entity->amplitude.x * RSDK.Cos1024(timer * entity->speed) + entity->centerPos.x;
-            entity->drawPos.y = entity->centerPos.y + (entity->amplitude.y << 10);
+            self->drawPos.x = self->amplitude.x * RSDK.Cos1024(timer * self->speed) + self->centerPos.x;
+            self->drawPos.y = self->centerPos.y + (self->amplitude.y << 10);
             break;
         case 1:
-            entity->drawPos.x = entity->centerPos.x - (entity->amplitude.x << 10);
-            entity->drawPos.y = entity->centerPos.y - entity->amplitude.y * RSDK.Cos1024(timer * entity->speed);
+            self->drawPos.x = self->centerPos.x - (self->amplitude.x << 10);
+            self->drawPos.y = self->centerPos.y - self->amplitude.y * RSDK.Cos1024(timer * self->speed);
             break;
         case 2:
-            entity->drawPos.x = entity->centerPos.x - entity->amplitude.x * RSDK.Cos1024(timer * entity->speed);
-            entity->drawPos.y = entity->centerPos.y - (entity->amplitude.y << 10);
+            self->drawPos.x = self->centerPos.x - self->amplitude.x * RSDK.Cos1024(timer * self->speed);
+            self->drawPos.y = self->centerPos.y - (self->amplitude.y << 10);
             break;
         case 3:
-            entity->drawPos.x = entity->centerPos.x + (entity->amplitude.x << 10);
-            entity->drawPos.y = entity->amplitude.y * RSDK.Cos1024(timer * entity->speed) + entity->centerPos.y;
+            self->drawPos.x = self->centerPos.x + (self->amplitude.x << 10);
+            self->drawPos.y = self->amplitude.y * RSDK.Cos1024(timer * self->speed) + self->centerPos.y;
             break;
     }
-    entity->velocity.x = drawX + entity->drawPos.x;
-    entity->velocity.y = drawY + entity->drawPos.y;
+    self->velocity.x = drawX + self->drawPos.x;
+    self->velocity.y = drawY + self->drawPos.y;
 }
 
 void RotatingStair_Unknown2(void)
 {
     RSDK_THIS(RotatingStair);
-    int32 drawX = -entity->drawPos.x;
-    int32 drawY = -entity->drawPos.y;
+    int32 drawX = -self->drawPos.x;
+    int32 drawY = -self->drawPos.y;
 
     int32 timer = 0;
-    if (entity->speed * (Zone->timer + entity->oscOff) % entity->interval >= entity->duration)
-        timer = entity->speed * (Zone->timer + entity->oscOff) % entity->interval - entity->duration;
+    if (self->speed * (Zone->timer + self->oscOff) % self->interval >= self->duration)
+        timer = self->speed * (Zone->timer + self->oscOff) % self->interval - self->duration;
 
     int32 dir = 0;
-    if (entity->mode & 1)
-        dir = entity->mode - ((entity->speed * (Zone->timer + entity->oscOff) / entity->interval) & 3) - 2;
+    if (self->mode & 1)
+        dir = self->mode - ((self->speed * (Zone->timer + self->oscOff) / self->interval) & 3) - 2;
     else
-        dir = entity->speed * (Zone->timer + entity->oscOff) / entity->interval + entity->mode;
+        dir = self->speed * (Zone->timer + self->oscOff) / self->interval + self->mode;
     switch (dir) {
         case 0:
-            entity->drawPos.x = entity->amplitude.x * RSDK.Cos1024(timer) + entity->centerPos.x;
-            entity->drawPos.y = entity->centerPos.y + (entity->amplitude.y << 10);
+            self->drawPos.x = self->amplitude.x * RSDK.Cos1024(timer) + self->centerPos.x;
+            self->drawPos.y = self->centerPos.y + (self->amplitude.y << 10);
             break;
         case 1:
-            entity->drawPos.x = entity->centerPos.x - (entity->amplitude.x << 10);
-            entity->drawPos.y = entity->centerPos.y - entity->amplitude.y * RSDK.Cos1024(timer + 512);
+            self->drawPos.x = self->centerPos.x - (self->amplitude.x << 10);
+            self->drawPos.y = self->centerPos.y - self->amplitude.y * RSDK.Cos1024(timer + 512);
             break;
         case 2:
-            entity->drawPos.x = entity->centerPos.x - entity->amplitude.x * RSDK.Cos1024(timer);
-            entity->drawPos.y = entity->centerPos.y - (entity->amplitude.y << 10);
+            self->drawPos.x = self->centerPos.x - self->amplitude.x * RSDK.Cos1024(timer);
+            self->drawPos.y = self->centerPos.y - (self->amplitude.y << 10);
             break;
         case 3:
-            entity->drawPos.x = entity->centerPos.x + (entity->amplitude.x << 10);
-            entity->drawPos.y = entity->amplitude.y * RSDK.Cos1024(timer + 512) + entity->centerPos.y;
+            self->drawPos.x = self->centerPos.x + (self->amplitude.x << 10);
+            self->drawPos.y = self->amplitude.y * RSDK.Cos1024(timer + 512) + self->centerPos.y;
             break;
     }
-    entity->velocity.x = drawX + entity->drawPos.x;
-    entity->velocity.y = drawY + entity->drawPos.y;
+    self->velocity.x = drawX + self->drawPos.x;
+    self->velocity.y = drawY + self->drawPos.y;
 }
 
 void RotatingStair_EditorDraw(void)
 {
     RSDK_THIS(RotatingStair);
 
-    if (entity->direction)
-        entity->amplitude.x = -entity->amplitude.x;
-    if (entity->mode & 1)
-        entity->amplitude.x = -entity->amplitude.x;
+    if (self->direction)
+        self->amplitude.x = -self->amplitude.x;
+    if (self->mode & 1)
+        self->amplitude.x = -self->amplitude.x;
 
-    int32 typeStore = entity->mode;
-    entity->mode    = PLATFORM_2;
+    int32 typeStore = self->mode;
+    self->mode    = PLATFORM_MOVING;
     Platform_Create(NULL);
-    entity->mode = typeStore;
+    self->mode = typeStore;
 
-    if (entity->mode >= 4) {
-        entity->duration = 120 * entity->speed;
-        entity->interval = entity->duration + 512;
+    if (self->mode >= 4) {
+        self->duration = 120 * self->speed;
+        self->interval = self->duration + 512;
         RotatingStair_Unknown2();
     }
     else {

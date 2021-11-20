@@ -7,9 +7,9 @@
 typedef struct {
     RSDK_OBJECT
     int32 startColourID;
-    int32 alpha1;
-    int32 alpha2;
-    int32 field_10;
+    int32 skyAlpha;
+    int32 globeAlpha;
+    int32 unused1;
 } ObjectBSS_Palette;
 
 // Entity Class

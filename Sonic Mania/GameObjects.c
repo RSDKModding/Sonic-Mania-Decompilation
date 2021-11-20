@@ -1,22 +1,22 @@
 #include "SonicMania.h"
 
-SceneInfo *RSDK_sceneInfo = NULL;
-EngineInfo *RSDK_info;
+RSDKSceneInfo *SceneInfo = NULL;
+RSDKGameInfo *GameInfo   = NULL;
 #if RETRO_USE_PLUS
-SKUInfo *RSDK_sku = NULL;
+RSDKSKUInfo *SKU = NULL;
 #endif
-ControllerState *RSDK_controller = NULL;
-AnalogState *RSDK_stickL         = NULL;
+RSDKControllerState *ControllerInfo = NULL;
+RSDKAnalogState *AnalogStickInfoL   = NULL;
 #if RETRO_USE_PLUS
-AnalogState *RSDK_stickR    = NULL;
-TriggerState *RSDK_triggerL = NULL;
-TriggerState *RSDK_triggerR = NULL;
+RSDKAnalogState *AnalogStickInfoR = NULL;
+RSDKTriggerState *TriggerInfoL    = NULL;
+RSDKTriggerState *TriggerInfoR    = NULL;
 #endif
-TouchMouseData *RSDK_touchMouse = NULL;
+RSDKTouchInfo *TouchInfo = NULL;
 #if RETRO_USE_PLUS
-UnknownInfo *RSDK_unknown = NULL;
+RSDKUnknownInfo *UnknownInfo = NULL;
 #endif
-ScreenInfo *RSDK_screens = NULL;
+RSDKScreenInfo *ScreenInfo = NULL;
 
 RSDKFunctionTable RSDK;
 #if RETRO_USE_PLUS
@@ -25,10 +25,10 @@ APIFunctionTable API;
 #if RETRO_USE_MOD_LOADER
 ModFunctionTable Mod;
 
-#define ADD_PUBLIC_FUNC(func) Mod.AddPublicFunction(#func, (void*)(func))
+#define ADD_PUBLIC_FUNC(func) Mod.AddPublicFunction(#func, (void *)(func))
 #endif
 
-void LinkGameLogicDLL(GameInfo *info)
+void LinkGameLogicDLL(EngineInfo *info)
 {
 #if RETRO_USE_PLUS
     memset(&API, 0, sizeof(APIFunctionTable));
@@ -46,23 +46,23 @@ void LinkGameLogicDLL(GameInfo *info)
         memcpy(&Mod, info->modPtrs, sizeof(ModFunctionTable));
 #endif
 
-    RSDK_info = info->engineInfo; //GameInfo
+    GameInfo = info->gameInfo;
 #if RETRO_USE_PLUS
-    RSDK_sku  = info->currentSKU;
+    SKU = info->skuInfo;
 #endif
-    RSDK_sceneInfo  = info->sceneInfo; //StageInfo
-    RSDK_controller = info->controller;
-    RSDK_stickL     = info->stickL;
+    SceneInfo        = info->sceneInfo;
+    ControllerInfo   = info->controllerInfo;
+    AnalogStickInfoL = info->stickInfoL;
 #if RETRO_USE_PLUS
-    RSDK_stickR   = info->stickR;
-    RSDK_triggerL = info->triggerL;
-    RSDK_triggerR = info->triggerR;
+    AnalogStickInfoR = info->stickInfoR;
+    TriggerInfoL     = info->triggerInfoL;
+    TriggerInfoR     = info->triggerInfoR;
 #endif
-    RSDK_touchMouse = info->touchMouse;
+    TouchInfo = info->touchInfo;
 #if RETRO_USE_PLUS
-    RSDK_unknown = info->unknown;
+    UnknownInfo = info->unknownInfo;
 #endif
-    RSDK_screens = info->screenInfo;
+    ScreenInfo = info->screenInfo;
     RSDK.InitGlobalVariables((void **)&globals, sizeof(GlobalVariables));
 
     defaultHitbox.left   = -10;
@@ -150,8 +150,8 @@ void LinkGameLogicDLL(GameInfo *info)
     RSDK_ADD_OBJECT(CollapsingPlatform);
     RSDK_ADD_OBJECT(CollapsingSand);
     RSDK_ADD_OBJECT(ColorHelpers);
-#if RETRO_USE_PLUS
     RSDK_ADD_OBJECT(Competition);
+#if RETRO_USE_PLUS
     RSDK_ADD_OBJECT(CompetitionMenu);
 #endif
     RSDK_ADD_OBJECT(CompetitionSession);
@@ -852,8 +852,8 @@ void LinkGameLogicDLL(GameInfo *info)
         ADD_PUBLIC_FUNC(Player_ApplyShieldEffect);
         ADD_PUBLIC_FUNC(Player_ChangeCharacter);
         ADD_PUBLIC_FUNC(Player_CheckGoSuper);
-        ADD_PUBLIC_FUNC(Player_LoseRings);
-        ADD_PUBLIC_FUNC(Player_LoseHyperRings);
+        ADD_PUBLIC_FUNC(Ring_LoseRings);
+        ADD_PUBLIC_FUNC(Ring_LoseHyperRings);
         ADD_PUBLIC_FUNC(Player_HandleDeath);
         ADD_PUBLIC_FUNC(Player_ResetState);
 
@@ -907,7 +907,7 @@ void LinkGameLogicDLL(GameInfo *info)
         ADD_PUBLIC_FUNC(MathHelpers_Unknown7);
         ADD_PUBLIC_FUNC(MathHelpers_PointInHitbox);
         ADD_PUBLIC_FUNC(MathHelpers_Unknown9);
-        ADD_PUBLIC_FUNC(MathHelpers_Unknown10);
+        ADD_PUBLIC_FUNC(MathHelpers_GetValueSign);
         ADD_PUBLIC_FUNC(MathHelpers_Unknown11);
         ADD_PUBLIC_FUNC(MathHelpers_Unknown12);
         ADD_PUBLIC_FUNC(MathHelpers_Unknown13);
@@ -919,7 +919,7 @@ void LinkGameLogicDLL(GameInfo *info)
         ADD_PUBLIC_FUNC(Options_LoadOptionsBin);
         ADD_PUBLIC_FUNC(Options_SaveOptionsBin);
         ADD_PUBLIC_FUNC(Options_SetLanguage);
-        ADD_PUBLIC_FUNC(Options_Unknown1);
+        ADD_PUBLIC_FUNC(Options_LoadValuesFromSettings);
         ADD_PUBLIC_FUNC(Options_LoadOptionsCallback);
         ADD_PUBLIC_FUNC(Options_SaveOptionsCallback);
 
@@ -936,15 +936,15 @@ void LinkGameLogicDLL(GameInfo *info)
         ADD_PUBLIC_FUNC(Camera_State_VLock);
         ADD_PUBLIC_FUNC(Camera_State_HandleLerp);
 
-        ADD_PUBLIC_FUNC(Dust_State_DropDash);
-        ADD_PUBLIC_FUNC(Dust_State_HammerDrop);
+        ADD_PUBLIC_FUNC(Dust_State_Move);
+        ADD_PUBLIC_FUNC(Dust_State_MoveCollide);
         ADD_PUBLIC_FUNC(Dust_State_GlideSlide);
         ADD_PUBLIC_FUNC(Dust_State_Skid);
         ADD_PUBLIC_FUNC(Dust_State_Spindash);
-        ADD_PUBLIC_FUNC(Dust_State_EggLoco);
+        ADD_PUBLIC_FUNC(Dust_State_MoveGravity);
 
         ADD_PUBLIC_FUNC(Debris_State_Fall);
-        ADD_PUBLIC_FUNC(Debris_State_LightningSpark);
+        ADD_PUBLIC_FUNC(Debris_State_Move);
         ADD_PUBLIC_FUNC(Debris_State_FallAndFlicker);
         ADD_PUBLIC_FUNC(Debris_FallFlickerAnimSetup);
         ADD_PUBLIC_FUNC(Debris_FallFlickerSetup);
@@ -972,14 +972,15 @@ void LinkGameLogicDLL(GameInfo *info)
 }
 
 #if RETRO_USE_MOD_LOADER
-bool32 LinkModLogic(GameInfo* info, const char* id) {
+bool32 LinkModLogic(EngineInfo *info, const char *id)
+{
     LinkGameLogicDLL(info);
     return true;
 }
 #endif
 
-#if !RETRO_STANDALONE 
-int32 RSDK_main(int32 argc, char **argv, void (*linkLogicPtr)(void* info));
+#if !RETRO_STANDALONE
+int32 RSDK_main(int32 argc, char **argv, void (*linkLogicPtr)(void *info));
 
 int32 SDL_main(int32 argc, char *argv[]) { return RSDK_main(argc, argv, LinkGameLogicDLL); }
 #endif

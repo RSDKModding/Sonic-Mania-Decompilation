@@ -118,7 +118,7 @@ void LRZ2Setup_StageLoad(void)
     }
 
 #if RETRO_USE_PLUS
-    if (RSDK_sceneInfo->filter & FILTER_ENCORE) {
+    if (SceneInfo->filter & FILTER_ENCORE) {
         RSDK.LoadPalette(0, "EncoreLRZ2.act", 255);
         RSDK.CopyPalette(0, 128, 1, 128, 128);
     }
@@ -127,9 +127,9 @@ void LRZ2Setup_StageLoad(void)
     LRZ2Setup->dstPal = 1;
     LRZ2Setup->srcPal = 2;
     if (globals->gameMode == MODE_TIMEATTACK || globals->gameMode == MODE_COMPETITION)
-        GenericTrigger->callbacks[GENERICTRIGGER_OUTRO] = NULL;
+        GenericTrigger->callbacks[GENERICTRIGGER_LRZ2_OUTRO] = NULL;
     else
-        GenericTrigger->callbacks[GENERICTRIGGER_OUTRO] = LRZ2Setup_GenericTrigger_CB;
+        GenericTrigger->callbacks[GENERICTRIGGER_LRZ2_OUTRO] = LRZ2Setup_GenericTrigger_CB;
 }
 
 void LRZ2Setup_HandleStageReload(void)
@@ -179,7 +179,7 @@ void LRZ2Setup_GenericTrigger_CB(void)
             globals->enableIntro       = true;
             globals->suppressAutoMusic = true;
             globals->suppressTitlecard = true;
-            ++RSDK_sceneInfo->listPos;
+            ++SceneInfo->listPos;
             if (!RSDK.CheckValidScene())
                 RSDK.SetScene("Presentation", "Title Screen");
             Zone_StartFadeOut(10, 0x000000);
@@ -194,7 +194,7 @@ void LRZ2Setup_GenericTrigger_CB(void)
 
 EntityButton *LRZ2Setup_HandleTagSetup(int32 tag, Entity *entityPtr)
 {
-    if (RSDK_sceneInfo->inEditor)
+    if (SceneInfo->inEditor)
         return NULL;
 
     EntityButton *taggedEntity = NULL;
@@ -290,7 +290,7 @@ void LRZ2Setup_EditorDraw(void) {}
 void LRZ2Setup_EditorLoad(void)
 {
     RSDK_ACTIVE_VAR(GenericTrigger, triggerID);
-    RSDK_ENUM_VAR("LRZ2 Outro", GENERICTRIGGER_OUTRO);
+    RSDK_ENUM_VAR("LRZ2 Outro", GENERICTRIGGER_LRZ2_OUTRO);
 }
 #endif
 

@@ -8,9 +8,9 @@ void ConveyorBelt_Update(void)
 
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionTouch(player, entity, &entity->hitbox)) {
+        if (Player_CheckCollisionTouch(player, self, &self->hitbox)) {
             if (player->onGround)
-                player->position.x += entity->speed << 14;
+                player->position.x += self->speed << 14;
         }
     }
 }
@@ -24,25 +24,25 @@ void ConveyorBelt_Draw(void) {}
 void ConveyorBelt_Create(void *data)
 {
     RSDK_THIS(ConveyorBelt);
-    entity->active        = ACTIVE_BOUNDS;
-    entity->visible       = false;
-    entity->updateRange.x = 0x400000;
-    entity->updateRange.y = 0x400000;
-    entity->drawOrder     = Zone->drawOrderHigh;
-    if (RSDK_sceneInfo->inEditor) {
-        if (!entity->speed)
-            entity->speed = -8;
-        if (!entity->size.x)
-            entity->size.x = 0xC00000;
-        if (!entity->size.y)
-            entity->size.y = 0x200000;
+    self->active        = ACTIVE_BOUNDS;
+    self->visible       = false;
+    self->updateRange.x = 0x400000;
+    self->updateRange.y = 0x400000;
+    self->drawOrder     = Zone->drawOrderHigh;
+    if (SceneInfo->inEditor) {
+        if (!self->speed)
+            self->speed = -8;
+        if (!self->size.x)
+            self->size.x = 0xC00000;
+        if (!self->size.y)
+            self->size.y = 0x200000;
     }
 
-    entity->hitbox.left   = (-entity->size.x >> 17) - 16;
-    entity->hitbox.right  = (entity->size.x >> 17) + 16;
-    entity->hitbox.bottom = (entity->size.y >> 17) + 16;
-    entity->hitbox.top    = -(entity->size.y >> 17) - 16;
-    RSDK.SetSpriteAnimation(ConveyorBelt->aniFrames, 0, &entity->animator, true, 0);
+    self->hitbox.left   = (-self->size.x >> 17) - 16;
+    self->hitbox.right  = (self->size.x >> 17) + 16;
+    self->hitbox.bottom = (self->size.y >> 17) + 16;
+    self->hitbox.top    = -(self->size.y >> 17) - 16;
+    RSDK.SetSpriteAnimation(ConveyorBelt->aniFrames, 0, &self->animator, true, 0);
 }
 
 void ConveyorBelt_StageLoad(void)

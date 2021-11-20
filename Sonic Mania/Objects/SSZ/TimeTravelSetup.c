@@ -15,7 +15,7 @@ void TimeTravelSetup_StaticUpdate(void)
             pos.x = 0;
             pos.y = 0;
             if (RSDK.CheckOnScreen(player, &pos)) {
-                ParticleHelpers_Unknown2(Debris_State_Fall, TimeTravelSetup_Particle_CB, 0x1800, player->position.x, player->position.y, 0x200000,
+                ParticleHelpers_SetupParticleFX(Debris_State_Fall, TimeTravelSetup_Particle_CB, 0x1800, player->position.x, player->position.y, 0x200000,
                                          0x200000);
             }
         }

@@ -5,8 +5,8 @@ ObjectLRZConvItem *LRZConvItem;
 void LRZConvItem_Update(void)
 {
     RSDK_THIS(LRZConvItem);
-    StateMachine_Run(entity->state);
-    RSDK.ProcessAnimation(&entity->animator);
+    StateMachine_Run(self->state);
+    RSDK.ProcessAnimation(&self->animator);
 }
 
 void LRZConvItem_LateUpdate(void) {}
@@ -16,7 +16,7 @@ void LRZConvItem_StaticUpdate(void) {}
 void LRZConvItem_Draw(void)
 {
     RSDK_THIS(LRZConvItem);
-    RSDK.DrawSprite(&entity->animator, NULL, false);
+    RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
 void LRZConvItem_Create(void *data)
@@ -24,20 +24,20 @@ void LRZConvItem_Create(void *data)
     RSDK_THIS(LRZConvItem);
 
     if (data)
-        entity->type = voidToInt(data);
-    entity->active        = ACTIVE_BOUNDS;
-    entity->drawOrder     = Zone->drawOrderLow;
-    entity->startPos      = entity->position;
-    entity->visible       = true;
-    entity->drawFX        = FX_FLIP;
-    entity->updateRange.x = 0x800000;
-    entity->updateRange.y = 0x800000;
-    RSDK.SetSpriteAnimation(LRZConvItem->aniFrames, entity->type, &entity->animator, true, 0);
+        self->type = voidToInt(data);
+    self->active        = ACTIVE_BOUNDS;
+    self->drawOrder     = Zone->drawOrderLow;
+    self->startPos      = self->position;
+    self->visible       = true;
+    self->drawFX        = FX_FLIP;
+    self->updateRange.x = 0x800000;
+    self->updateRange.y = 0x800000;
+    RSDK.SetSpriteAnimation(LRZConvItem->aniFrames, self->type, &self->animator, true, 0);
 
-    if (!RSDK_sceneInfo->inEditor) {
-        switch (entity->type) {
-            case 0: entity->state = LRZConvItem_State_Unknown1; break;
-            case 1: entity->state = LRZConvItem_State_Unknown2; break;
+    if (!SceneInfo->inEditor) {
+        switch (self->type) {
+            case 0: self->state = LRZConvItem_State_Unknown1; break;
+            case 1: self->state = LRZConvItem_State_Unknown2; break;
         }
     }
 }
@@ -94,7 +94,7 @@ Vector2 LRZConvItem_Unknown2(void *e)
             foreach_active(LRZConveyor, conveyor)
             {
                 int moveX = (conveyor->speed << 14) * (2 * (conveyor->direction == FLIP_X) - 1);
-                if (LRZConveyor_HandlePlayerCollisions(conveyor, entity, &hitbox) == 1) {
+                if (LRZConveyor_HandlePlayerCollisions(conveyor, entity, &hitbox) == C_TOP) {
                     flag1 = true;
                     if (conveyor->off) {
                         entity->velocity.x = 0;
@@ -109,19 +109,19 @@ Vector2 LRZConvItem_Unknown2(void *e)
         }
 
         int prevY           = entity->position.y;
-        bool32 BehaviourPtr = RSDK.ObjectTileGrip(entity, Zone->fgLayers, CMODE_FLOOR, 0, 0, hitbox.bottom << 16, 4);
-        if (!BehaviourPtr) {
+        bool32 tileCollided = RSDK.ObjectTileGrip(entity, Zone->fgLayers, CMODE_FLOOR, 0, 0, hitbox.bottom << 16, 4);
+        if (!tileCollided) {
             if (!RSDK.ObjectTileGrip(entity, Zone->fgLayers, CMODE_FLOOR, 0, (hitbox.right << 16) - 0x10000, hitbox.bottom << 16, 4)
                 || !RSDK.ObjectTileGrip(entity, Zone->fgLayers, CMODE_FLOOR, 0, (hitbox.right << 16) - 0x10000, hitbox.bottom << 16, 4)) {
                 if (RSDK.ObjectTileGrip(entity, Zone->fgLayers, CMODE_FLOOR, 0, (hitbox.left + 1) << 16, hitbox.bottom << 16, 4)) {
-                    BehaviourPtr = RSDK.ObjectTileGrip(entity, Zone->fgLayers, CMODE_FLOOR, 0, (hitbox.left + 1) << 16, hitbox.bottom << 16, 4);
+                    tileCollided = RSDK.ObjectTileGrip(entity, Zone->fgLayers, CMODE_FLOOR, 0, (hitbox.left + 1) << 16, hitbox.bottom << 16, 4);
                 }
             }
         }
 
         bool32 prevOnGround = entity->onGround;
         entity->onGround    = false;
-        if (BehaviourPtr || flag1)
+        if (tileCollided || flag1)
             entity->onGround = true;
 
         int32 tileInfo = 0;
@@ -173,7 +173,7 @@ Vector2 LRZConvItem_Unknown2(void *e)
                 break;
         }
 
-        if (BehaviourPtr) {
+        if (tileCollided) {
             if ((flag2 ^ 1) && (abs(entity->velocity.x) > 0) && (flag3 ^ 1))
                 entity->velocity.x = 0;
         }
@@ -226,18 +226,18 @@ void LRZConvItem_State_Unknown1(void)
 {
     RSDK_THIS(LRZConvItem);
 
-    int x              = entity->position.x;
-    int y              = entity->position.y;
-    Vector2 moveOffset = LRZConvItem_Unknown2(entity);
+    int x              = self->position.x;
+    int y              = self->position.y;
+    Vector2 moveOffset = LRZConvItem_Unknown2(self);
 
-    int storeX         = entity->position.x;
-    int storeY         = entity->position.y;
-    entity->position.x = x;
-    entity->position.y = y;
+    int storeX         = self->position.x;
+    int storeY         = self->position.y;
+    self->position.x = x;
+    self->position.y = y;
 
     foreach_active(Player, player)
     {
-        switch (Player_CheckCollisionBox(player, entity, &LRZConvItem->hitbox1)) {
+        switch (Player_CheckCollisionBox(player, self, &LRZConvItem->hitbox1)) {
             case C_TOP:
                 player->position.x += moveOffset.x;
                 player->position.y += moveOffset.y;
@@ -254,23 +254,23 @@ void LRZConvItem_State_Unknown1(void)
         }
     }
 
-    entity->position.x = storeX;
-    entity->position.y = storeY;
+    self->position.x = storeX;
+    self->position.y = storeY;
 }
 
 void LRZConvItem_State_Unknown2(void)
 {
     RSDK_THIS(LRZConvItem);
 
-    LRZConvItem_Unknown2(entity);
+    LRZConvItem_Unknown2(self);
 
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionTouch(player, entity, &LRZConvItem->hitbox2)) {
+        if (Player_CheckCollisionTouch(player, self, &LRZConvItem->hitbox2)) {
 #if RETRO_USE_PLUS
             if (!Player_CheckMightyUnspin(0x400, player, true, &player->uncurlTimer))
 #endif
-                Player_CheckHit(player, entity);
+                Player_CheckHit(player, self);
         }
     }
 }
@@ -279,7 +279,7 @@ void LRZConvItem_State_Unknown2(void)
 void LRZConvItem_EditorDraw(void)
 {
     RSDK_THIS(LRZConvItem);
-    RSDK.SetSpriteAnimation(LRZConvItem->aniFrames, entity->type, &entity->animator, true, 0);
+    RSDK.SetSpriteAnimation(LRZConvItem->aniFrames, self->type, &self->animator, true, 0);
 
     LRZConvItem_Draw();
 }

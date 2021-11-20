@@ -6,26 +6,26 @@ void TurboTurtle_Update(void)
 {
     RSDK_THIS(TurboTurtle);
 
-    RSDK.ProcessAnimation(&entity->animator);
-    if (entity->animator.animationID == 1) {
-        if (!entity->animator.frameID && entity->animator.animationTimer == 1)
+    RSDK.ProcessAnimation(&self->animator);
+    if (self->animator.animationID == 1) {
+        if (!self->animator.frameID && self->animator.animationTimer == 1)
             RSDK.PlaySfx(TurboTurtle->sfxWalk, false, 255);
-        if (entity->animator.frameID == 5 && entity->animator.animationTimer == 1)
+        if (self->animator.frameID == 5 && self->animator.animationTimer == 1)
             RSDK.PlaySfx(TurboTurtle->sfxWalk2, false, 255);
     }
 
-    entity->fanActiveTop   = false;
-    entity->leftFanActive  = false;
-    entity->rightFanActive = false;
+    self->fanActiveTop   = false;
+    self->leftFanActive  = false;
+    self->rightFanActive = false;
 
-    StateMachine_Run(entity->state);
+    StateMachine_Run(self->state);
 
     TurboTurtle_CheckPlayerCollisions();
-    if (entity->state != TurboTurtle_State_Setup) {
-        if (!RSDK.CheckOnScreen(entity, NULL) && !RSDK.CheckPosOnScreen(&entity->startPos, &entity->updateRange)) {
-            entity->direction  = entity->startDir;
-            entity->position.x = entity->startPos.x;
-            entity->position.y = entity->startPos.y;
+    if (self->state != TurboTurtle_State_Setup) {
+        if (!RSDK.CheckOnScreen(self, NULL) && !RSDK.CheckPosOnScreen(&self->startPos, &self->updateRange)) {
+            self->direction  = self->startDir;
+            self->position.x = self->startPos.x;
+            self->position.y = self->startPos.y;
             TurboTurtle_Create(NULL);
         }
     }
@@ -38,52 +38,52 @@ void TurboTurtle_StaticUpdate(void) {}
 void TurboTurtle_Draw(void)
 {
     RSDK_THIS(TurboTurtle);
-    RSDK.DrawSprite(&entity->animator, NULL, false);
+    RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
 void TurboTurtle_Create(void *data)
 {
     RSDK_THIS(TurboTurtle);
 
-    entity->visible       = true;
-    entity->drawOrder     = Zone->drawOrderLow;
-    entity->startPos      = entity->position;
-    entity->startDir      = entity->direction;
-    entity->drawFX        = FX_FLIP;
-    entity->active        = ACTIVE_BOUNDS;
-    entity->updateRange.x = 0x800000;
-    entity->updateRange.y = 0x800000;
+    self->visible       = true;
+    self->drawOrder     = Zone->drawOrderLow;
+    self->startPos      = self->position;
+    self->startDir      = self->direction;
+    self->drawFX        = FX_FLIP;
+    self->active        = ACTIVE_BOUNDS;
+    self->updateRange.x = 0x800000;
+    self->updateRange.y = 0x800000;
 
-    entity->updateRange.x =
-        abs(0x70000 * (entity->stepCount * (2 * (entity->initialSide == 0) - 1) + entity->startPos.x - entity->startPos.x)) + 0x800000;
-    if (!entity->leftFanDuration)
-        entity->leftFanDuration = 60;
-    if (!entity->rightFanDuration)
-        entity->rightFanDuration = 60;
-    if (!entity->leftFanLength)
-        entity->leftFanLength = 128;
-    if (!entity->rightFanLength)
-        entity->rightFanLength = 128;
-    if (!entity->leftFanStrength)
-        entity->leftFanStrength = 18;
-    if (!entity->rightFanStrength)
-        entity->rightFanStrength = 18;
+    self->updateRange.x =
+        abs(0x70000 * (self->stepCount * (2 * (self->initialSide == 0) - 1) + self->startPos.x - self->startPos.x)) + 0x800000;
+    if (!self->leftFanDuration)
+        self->leftFanDuration = 60;
+    if (!self->rightFanDuration)
+        self->rightFanDuration = 60;
+    if (!self->leftFanLength)
+        self->leftFanLength = 128;
+    if (!self->rightFanLength)
+        self->rightFanLength = 128;
+    if (!self->leftFanStrength)
+        self->leftFanStrength = 18;
+    if (!self->rightFanStrength)
+        self->rightFanStrength = 18;
 
-    entity->hitbox1.left   = -24;
-    entity->hitbox1.top    = -19;
-    entity->hitbox1.right  = 24;
-    entity->hitbox1.bottom = -19;
+    self->hitbox1.left   = -24;
+    self->hitbox1.top    = -19;
+    self->hitbox1.right  = 24;
+    self->hitbox1.bottom = -19;
 
-    entity->hitbox2.left   = -19;
-    entity->hitbox2.top    = -24;
-    entity->hitbox2.right  = 19;
-    entity->hitbox2.bottom = 24;
+    self->hitbox2.left   = -19;
+    self->hitbox2.top    = -24;
+    self->hitbox2.right  = 19;
+    self->hitbox2.bottom = 24;
 
-    entity->hitbox3.left   = -20;
-    entity->hitbox3.top    = -24;
-    entity->hitbox3.right  = -20;
-    entity->hitbox3.bottom = 24;
-    entity->state          = TurboTurtle_State_Setup;
+    self->hitbox3.left   = -20;
+    self->hitbox3.top    = -24;
+    self->hitbox3.right  = -20;
+    self->hitbox3.bottom = 24;
+    self->state          = TurboTurtle_State_Setup;
 }
 
 void TurboTurtle_StageLoad(void)
@@ -105,9 +105,9 @@ void TurboTurtle_StageLoad(void)
 void TurboTurtle_DebugSpawn(void)
 {
     RSDK_THIS(DebugMode);
-    EntityTurboTurtle *turboTurtle = CREATE_ENTITY(TurboTurtle, NULL, entity->position.x, entity->position.y);
-    turboTurtle->direction         = entity->direction;
-    turboTurtle->startDir          = entity->direction;
+    EntityTurboTurtle *turboTurtle = CREATE_ENTITY(TurboTurtle, NULL, self->position.x, self->position.y);
+    turboTurtle->direction         = self->direction;
+    turboTurtle->startDir          = self->direction;
 }
 
 void TurboTurtle_DebugDraw(void)
@@ -122,8 +122,8 @@ void TurboTurtle_CheckPlayerCollisions(void)
 
     foreach_active(Player, player)
     {
-        if (Player_CheckBadnikTouch(player, entity, &TurboTurtle->hitbox))
-            Player_CheckBadnikBreak(entity, player, true);
+        if (Player_CheckBadnikTouch(player, self, &TurboTurtle->hitbox))
+            Player_CheckBadnikBreak(self, player, true);
     }
 }
 
@@ -132,26 +132,26 @@ void TurboTurtle_SetupState(void)
     RSDK_THIS(TurboTurtle);
 
     int dir = 0;
-    if (entity->currentSide)
-        dir = entity->rightFanDir;
+    if (self->currentSide)
+        dir = self->rightFanDir;
     else
-        dir = entity->leftFanDir;
-    entity->timer = 0;
+        dir = self->leftFanDir;
+    self->timer = 0;
 
     switch (dir) {
         case 0:
-            RSDK.SetSpriteAnimation(TurboTurtle->aniFrames, 2, &entity->animator, true, 0);
-            entity->state = TurboTurtle_State1_Unknown1;
+            RSDK.SetSpriteAnimation(TurboTurtle->aniFrames, 2, &self->animator, true, 0);
+            self->state = TurboTurtle_State1_Unknown1;
             break;
         case 1:
-            RSDK.SetSpriteAnimation(TurboTurtle->aniFrames, 4, &entity->animator, true, 0);
-            entity->direction = FLIP_NONE;
-            entity->state     = TurboTurtle_State2_Unknown1;
+            RSDK.SetSpriteAnimation(TurboTurtle->aniFrames, 4, &self->animator, true, 0);
+            self->direction = FLIP_NONE;
+            self->state     = TurboTurtle_State2_Unknown1;
             break;
         case 2:
-            RSDK.SetSpriteAnimation(TurboTurtle->aniFrames, 4, &entity->animator, true, 0);
-            entity->direction = FLIP_X;
-            entity->state     = TurboTurtle_State3_Unknown1;
+            RSDK.SetSpriteAnimation(TurboTurtle->aniFrames, 4, &self->animator, true, 0);
+            self->direction = FLIP_X;
+            self->state     = TurboTurtle_State3_Unknown1;
             break;
     }
 }
@@ -160,37 +160,37 @@ void TurboTurtle_HandleFans(void)
 {
     RSDK_THIS(TurboTurtle);
 
-    int storeDir      = entity->direction;
-    entity->direction = FLIP_NONE;
+    int storeDir      = self->direction;
+    self->direction = FLIP_NONE;
 
     int strength = 0;
-    if (entity->currentSide)
-        strength = entity->rightFanStrength;
+    if (self->currentSide)
+        strength = self->rightFanStrength;
     else
-        strength = entity->leftFanStrength;
+        strength = self->leftFanStrength;
 
     int length = 0;
-    if (entity->currentSide)
-        length = entity->rightFanLength;
+    if (self->currentSide)
+        length = self->rightFanLength;
     else
-        length = entity->leftFanLength;
-    if (entity->fanActiveTop) {
+        length = self->leftFanLength;
+    if (self->fanActiveTop) {
         length += RSDK.Sin256(2 * Zone->timer) >> 5;
-        entity->hitbox1.top = entity->hitbox1.bottom - length;
+        self->hitbox1.top = self->hitbox1.bottom - length;
 
         foreach_active(Player, player)
         {
-            if (Player_CheckCollisionTouch(player, entity, &entity->hitbox1)) {
-                int anim = player->playerAnimator.animationID;
+            if (Player_CheckCollisionTouch(player, self, &self->hitbox1)) {
+                int anim = player->animator.animationID;
                 if (anim != ANI_CLING && anim != ANI_SHAFTSWING) {
                     if (!player->onGround) {
                         player->velocity.y -= player->gravityStrength;
                         if (player->velocity.y > 0)
                             player->velocity.y -= (player->velocity.y >> 3);
                     }
-                    int thisY  = entity->position.y;
-                    int bottom = thisY + (entity->hitbox1.bottom << 16);
-                    int top    = (entity->hitbox1.top << 16) + thisY;
+                    int thisY  = self->position.y;
+                    int bottom = thisY + (self->hitbox1.bottom << 16);
+                    int top    = (self->hitbox1.top << 16) + thisY;
                     if (player->position.y > top)
                         top = player->position.y;
                     player->position.y -= ((strength * (((length << 16) - bottom + top != 0 ? (length << 16) - bottom + top : 0) / length)) >> 1);
@@ -200,18 +200,18 @@ void TurboTurtle_HandleFans(void)
         TurboTurtle_HandleFanDebris(0, strength, length << 16);
     }
 
-    if (entity->leftFanActive) {
-        entity->hitbox3.left = entity->hitbox3.right - length;
+    if (self->leftFanActive) {
+        self->hitbox3.left = self->hitbox3.right - length;
 
         foreach_active(Player, player)
         {
-            if (Player_CheckCollisionTouch(player, entity, &entity->hitbox3)) {
-                int anim = player->playerAnimator.animationID;
+            if (Player_CheckCollisionTouch(player, self, &self->hitbox3)) {
+                int anim = player->animator.animationID;
                 if (anim != ANI_CLING && anim != ANI_SHAFTSWING) {
-                    int left = (entity->hitbox3.left << 16) + entity->position.x;
+                    int left = (self->hitbox3.left << 16) + self->position.x;
                     if (player->position.x > left)
                         left = player->position.x;
-                    int pos = (length << 16) - (entity->position.x + (entity->hitbox3.right << 16)) + left;
+                    int pos = (length << 16) - (self->position.x + (self->hitbox3.right << 16)) + left;
                     player->position.x -= (strength * ((pos & -(pos != 0)) / length)) >> 1;
                 }
             }
@@ -219,18 +219,18 @@ void TurboTurtle_HandleFans(void)
         TurboTurtle_HandleFanDebris(2, strength, length << 16);
     }
 
-    if (entity->rightFanActive) {
-        entity->hitbox2.right = length + entity->hitbox2.left;
+    if (self->rightFanActive) {
+        self->hitbox2.right = length + self->hitbox2.left;
 
         foreach_active(Player, player)
         {
-            if (Player_CheckCollisionTouch(player, entity, &entity->hitbox3)) {
-                int anim = player->playerAnimator.animationID;
+            if (Player_CheckCollisionTouch(player, self, &self->hitbox3)) {
+                int anim = player->animator.animationID;
                 if (anim != ANI_CLING && anim != ANI_SHAFTSWING) {
-                    int right = (entity->hitbox2.right << 16) + entity->position.x;
+                    int right = (self->hitbox2.right << 16) + self->position.x;
                     if (player->position.x < right)
                         right = player->position.x;
-                    int pos = entity->position.x + (entity->hitbox2.left << 16);
+                    int pos = self->position.x + (self->hitbox2.left << 16);
                     player->position.x += (strength * (((length << 16) - right + (pos != 0) ? (length << 16) - right + pos : 0) / length)) >> 1;
                 }
             }
@@ -238,7 +238,7 @@ void TurboTurtle_HandleFans(void)
         TurboTurtle_HandleFanDebris(1, strength, length << 16);
     }
 
-    entity->direction = storeDir;
+    self->direction = storeDir;
 }
 
 void TurboTurtle_HandleFanDebris(uint8 type, int strength, int length)
@@ -255,34 +255,34 @@ void TurboTurtle_HandleFanDebris(uint8 type, int strength, int length)
             int velX = 0, velY = 0;
             switch (type) {
                 case 0:
-                    spawnY = entity->position.y + (entity->hitbox1.bottom << 16);
-                    spawnX = (RSDK.Rand(-13, 13) << 16) + entity->position.x;
-                    velX   = (spawnX - entity->position.x) >> 7;
+                    spawnY = self->position.y + (self->hitbox1.bottom << 16);
+                    spawnX = (RSDK.Rand(-13, 13) << 16) + self->position.x;
+                    velX   = (spawnX - self->position.x) >> 7;
                     RSDK.Rand(0, 4);
                     velY  = -0x8000 * strength;
                     timer = length / abs(-0x8000 * strength);
                     break;
                 case 1:
-                    spawnX = entity->position.x + (entity->hitbox2.left << 16);
-                    spawnY = (RSDK.Rand(-13, 13) << 16) + entity->position.y;
+                    spawnX = self->position.x + (self->hitbox2.left << 16);
+                    spawnY = (RSDK.Rand(-13, 13) << 16) + self->position.y;
                     RSDK.Rand(0, 4);
                     velX  = strength << 15;
-                    velY  = (spawnY - entity->position.y) >> 7;
+                    velY  = (spawnY - self->position.y) >> 7;
                     timer = length / abs(strength << 15);
                     break;
                 case 2:
-                    spawnX = entity->position.x - (entity->hitbox2.left << 16);
-                    spawnY = (RSDK.Rand(-13, 13) << 16) + entity->position.y;
+                    spawnX = self->position.x - (self->hitbox2.left << 16);
+                    spawnY = (RSDK.Rand(-13, 13) << 16) + self->position.y;
                     RSDK.Rand(0, 4);
                     velX  = -0x8000 * strength;
-                    velY  = (spawnY - entity->position.y) >> 7;
+                    velY  = (spawnY - self->position.y) >> 7;
                     timer = length / abs(-0x8000 * strength);
                     break;
                 default: break;
             }
 
             timer += RSDK.Rand(-5, 5);
-            EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_LightningSpark, spawnX, spawnY);
+            EntityDebris *debris = CREATE_ENTITY(Debris, Debris_State_Move, spawnX, spawnY);
             RSDK.SetSpriteAnimation(TurboTurtle->aniFrames, anim, &debris->animator, true, frame);
             debris->velocity.x = velX;
             debris->velocity.y = velY;
@@ -309,11 +309,11 @@ void TurboTurtle_State_Setup(void)
 {
     RSDK_THIS(TurboTurtle);
 
-    entity->active = ACTIVE_NORMAL;
-    RSDK.SetSpriteAnimation(TurboTurtle->aniFrames, 0, &entity->animator, true, 0);
-    entity->direction   = entity->startDir;
-    entity->position    = entity->startPos;
-    entity->currentSide = entity->initialSide;
+    self->active = ACTIVE_NORMAL;
+    RSDK.SetSpriteAnimation(TurboTurtle->aniFrames, 0, &self->animator, true, 0);
+    self->direction   = self->startDir;
+    self->position    = self->startPos;
+    self->currentSide = self->initialSide;
     TurboTurtle_SetupState();
 }
 
@@ -322,18 +322,18 @@ void TurboTurtle_State_Unknown1(void)
     RSDK_THIS(TurboTurtle);
     int offsets[] = { 0, 0, 0, 0, 1, 1, 0, 0 };
 
-    entity->position.x += (2 * (entity->currentSide == 1) - 1) * (offsets[entity->animator.frameID] << 16);
-    if (!RSDK.ObjectTileGrip(entity, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x100000, 2)) {
-        entity->stepTimer = 0;
+    self->position.x += (2 * (self->currentSide == 1) - 1) * (offsets[self->animator.frameID] << 16);
+    if (!RSDK.ObjectTileGrip(self, Zone->fgLayers, CMODE_FLOOR, 0, 0, 0x100000, 2)) {
+        self->stepTimer = 0;
         TurboTurtle_SetupState();
     }
-    else if (entity->animator.frameID == entity->animator.frameCount - 1) {
-        if (entity->animator.animationTimer == entity->animator.frameDelay) {
-            if (entity->stepTimer < entity->stepCount) {
-                entity->stepTimer++;
+    else if (self->animator.frameID == self->animator.frameCount - 1) {
+        if (self->animator.animationTimer == self->animator.frameDelay) {
+            if (self->stepTimer < self->stepCount) {
+                self->stepTimer++;
             }
             else {
-                entity->stepTimer = 0;
+                self->stepTimer = 0;
                 TurboTurtle_SetupState();
             }
         }
@@ -344,14 +344,14 @@ void TurboTurtle_State_Unknown2(void)
 {
     RSDK_THIS(TurboTurtle);
 
-    if (entity->animator.animationID == 5) {
-        if (entity->animator.frameID == entity->animator.frameCount - 1) {
-            uint8 dir           = entity->currentSide != 0;
-            entity->currentSide = !entity->currentSide;
-            entity->direction   = dir;
-            entity->stepTimer   = 0;
-            RSDK.SetSpriteAnimation(TurboTurtle->aniFrames, 1, &entity->animator, true, 0);
-            entity->state = TurboTurtle_State_Unknown1;
+    if (self->animator.animationID == 5) {
+        if (self->animator.frameID == self->animator.frameCount - 1) {
+            uint8 dir           = self->currentSide != 0;
+            self->currentSide = !self->currentSide;
+            self->direction   = dir;
+            self->stepTimer   = 0;
+            RSDK.SetSpriteAnimation(TurboTurtle->aniFrames, 1, &self->animator, true, 0);
+            self->state = TurboTurtle_State_Unknown1;
         }
     }
 }
@@ -361,23 +361,23 @@ void TurboTurtle_State1_Unknown1(void)
     RSDK_THIS(TurboTurtle);
 
     int duration = 0;
-    if (entity->currentSide)
-        duration = entity->rightFanDuration;
+    if (self->currentSide)
+        duration = self->rightFanDuration;
     else
-        duration = entity->leftFanDuration;
-    if (entity->stationary || entity->timer < duration) {
-        entity->fanActiveTop = true;
+        duration = self->leftFanDuration;
+    if (self->stationary || self->timer < duration) {
+        self->fanActiveTop = true;
         TurboTurtle_HandleFans();
-        if (!entity->stationary)
-            ++entity->timer;
+        if (!self->stationary)
+            ++self->timer;
     }
     else {
-        uint8 dir           = entity->currentSide != 0;
-        entity->currentSide = !entity->currentSide;
-        entity->direction   = dir;
-        entity->stepTimer   = 0;
-        RSDK.SetSpriteAnimation(TurboTurtle->aniFrames, 1, &entity->animator, true, 0);
-        entity->state = TurboTurtle_State_Unknown1;
+        uint8 dir           = self->currentSide != 0;
+        self->currentSide = !self->currentSide;
+        self->direction   = dir;
+        self->stepTimer   = 0;
+        RSDK.SetSpriteAnimation(TurboTurtle->aniFrames, 1, &self->animator, true, 0);
+        self->state = TurboTurtle_State_Unknown1;
     }
 }
 
@@ -385,10 +385,10 @@ void TurboTurtle_State2_Unknown1(void)
 {
     RSDK_THIS(TurboTurtle);
 
-    if (entity->animator.animationID == 4) {
-        if (entity->animator.frameID == entity->animator.frameCount - 1) {
-            RSDK.SetSpriteAnimation(TurboTurtle->aniFrames, 3, &entity->animator, true, 0);
-            entity->state = TurboTurtle_State2_Unknown2;
+    if (self->animator.animationID == 4) {
+        if (self->animator.frameID == self->animator.frameCount - 1) {
+            RSDK.SetSpriteAnimation(TurboTurtle->aniFrames, 3, &self->animator, true, 0);
+            self->state = TurboTurtle_State2_Unknown2;
         }
     }
 }
@@ -398,19 +398,19 @@ void TurboTurtle_State2_Unknown2(void)
     RSDK_THIS(TurboTurtle);
 
     int duration = 0;
-    if (entity->currentSide)
-        duration = entity->rightFanDuration;
+    if (self->currentSide)
+        duration = self->rightFanDuration;
     else
-        duration = entity->leftFanDuration;
-    if (entity->stationary || entity->timer < duration) {
-        entity->rightFanActive = true;
+        duration = self->leftFanDuration;
+    if (self->stationary || self->timer < duration) {
+        self->rightFanActive = true;
         TurboTurtle_HandleFans();
-        if (!entity->stationary)
-            ++entity->timer;
+        if (!self->stationary)
+            ++self->timer;
     }
     else {
-        RSDK.SetSpriteAnimation(TurboTurtle->aniFrames, 5, &entity->animator, true, 0);
-        entity->state = TurboTurtle_State_Unknown2;
+        RSDK.SetSpriteAnimation(TurboTurtle->aniFrames, 5, &self->animator, true, 0);
+        self->state = TurboTurtle_State_Unknown2;
     }
 }
 
@@ -418,10 +418,10 @@ void TurboTurtle_State3_Unknown1(void)
 {
     RSDK_THIS(TurboTurtle);
 
-    if (entity->animator.animationID == 4) {
-        if (entity->animator.frameID == entity->animator.frameCount - 1) {
-            RSDK.SetSpriteAnimation(TurboTurtle->aniFrames, 3, &entity->animator, true, 0);
-            entity->state = TurboTurtle_State3_Unknown2;
+    if (self->animator.animationID == 4) {
+        if (self->animator.frameID == self->animator.frameCount - 1) {
+            RSDK.SetSpriteAnimation(TurboTurtle->aniFrames, 3, &self->animator, true, 0);
+            self->state = TurboTurtle_State3_Unknown2;
         }
     }
 }
@@ -431,19 +431,19 @@ void TurboTurtle_State3_Unknown2(void)
     RSDK_THIS(TurboTurtle);
 
     int duration = 0;
-    if (entity->currentSide)
-        duration = entity->rightFanDuration;
+    if (self->currentSide)
+        duration = self->rightFanDuration;
     else
-        duration = entity->leftFanDuration;
-    if (entity->stationary || entity->timer < duration) {
-        entity->leftFanActive = true;
+        duration = self->leftFanDuration;
+    if (self->stationary || self->timer < duration) {
+        self->leftFanActive = true;
         TurboTurtle_HandleFans();
-        if (!entity->stationary)
-            ++entity->timer;
+        if (!self->stationary)
+            ++self->timer;
     }
     else {
-        RSDK.SetSpriteAnimation(TurboTurtle->aniFrames, 5, &entity->animator, true, 0);
-        entity->state = TurboTurtle_State_Unknown2;
+        RSDK.SetSpriteAnimation(TurboTurtle->aniFrames, 5, &self->animator, true, 0);
+        self->state = TurboTurtle_State_Unknown2;
     }
 }
 
@@ -452,16 +452,16 @@ void TurboTurtle_EditorDraw(void)
 {
     RSDK_THIS(TurboTurtle);
 
-    entity->visible       = true;
-    entity->drawOrder     = Zone->drawOrderLow;
-    entity->startPos      = entity->position;
-    entity->startDir      = entity->direction;
+    self->visible       = true;
+    self->drawOrder     = Zone->drawOrderLow;
+    self->startPos      = self->position;
+    self->startDir      = self->direction;
 
-    entity->updateRange.x =
-        abs(0x70000 * (entity->stepCount * (2 * (entity->initialSide == 0) - 1) + entity->startPos.x - entity->startPos.x)) + 0x800000;
+    self->updateRange.x =
+        abs(0x70000 * (self->stepCount * (2 * (self->initialSide == 0) - 1) + self->startPos.x - self->startPos.x)) + 0x800000;
 
-    RSDK.SetSpriteAnimation(TurboTurtle->aniFrames, 0, &entity->animator, true, 0);
-    entity->direction   = entity->startDir;
+    RSDK.SetSpriteAnimation(TurboTurtle->aniFrames, 0, &self->animator, true, 0);
+    self->direction   = self->startDir;
 
     TurboTurtle_Draw();
 }

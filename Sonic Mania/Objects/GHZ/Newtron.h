@@ -3,13 +3,19 @@
 
 #include "SonicMania.h"
 
+typedef enum {
+    NEWTRON_SHOOT,
+    NEWTRON_FLY,
+    NEWTRON_PROJECTILE,
+}NewtronTypes;
+
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    Hitbox hitbox1;
-    Hitbox hitbox2;
-    Hitbox hitbox3;
-    Hitbox hitbox4;
+    Hitbox hitboxShoot;
+    Hitbox hitboxFly; //why isn't this used in this object...? checkerball uses it, soooo
+    Hitbox hitboxProjectile;
+    Hitbox hitboxRange;
     uint16 aniFrames;
 } ObjectNewtron;
 
@@ -20,8 +26,8 @@ typedef struct {
     uint8 type;
     int32 timer;
     Vector2 startPos;
-    Animator animator1;
-    Animator animator2;
+    Animator animator;
+    Animator flameAnimator;
 } EntityNewtron;
 
 // Object Struct
@@ -49,14 +55,14 @@ void Newtron_CheckHit(void);
 void Newtron_CheckOnScreen(void);
 
 //States
-void Newtron_Unknown3(void);
-void Newtron_Unknown4(void);
-void Newtron_Unknown5(void);
-void Newtron_Unknown6(void);
-void Newtron_Unknown7(void);
-void Newtron_Unknown8(void);
-void Newtron_Unknown9(void);
-void Newtron_Unknown10(void);
+void Newtron_GetTargetDir(void);
+void Newtron_State_Setup(void);
+void Newtron_State_CheckPlayerInRange(void);
+void Newtron_State_Appear(void);
+void Newtron_State_StartFly(void);
+void Newtron_State_Fly(void);
+void Newtron_State_Shoot(void);
+void Newtron_State_FadeAway(void);
 void Newtron_State_Projectile(void);
 
 #endif //!OBJ_NEWTRON_H

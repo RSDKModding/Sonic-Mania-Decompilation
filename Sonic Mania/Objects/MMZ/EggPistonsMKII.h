@@ -19,7 +19,7 @@ typedef struct {
     int32 health;
     int32 alarmAngle;
     int32 alarmTimer;
-    Entity *controller;
+    Entity *ControllerInfo;
     Entity *pistons[5];
     uint8 pistonCount;
     uint8 field_2D;

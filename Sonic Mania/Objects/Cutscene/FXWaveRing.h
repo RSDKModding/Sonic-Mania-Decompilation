@@ -14,19 +14,19 @@ typedef struct {
     RSDK_ENTITY
     StateMachine(state);
     int32 timer;
-    int32 angleOffset;
-    int32 angle2Offset;
+    int32 angleVel;
+    int32 angleVel2;
     int32 angle2;
-    int32 field_6C;
-    int32 field_70;
-    char r;
-    char g;
-    char b;
-    int32 field_78;
+    int32 angleInc;
+    int32 shrinkSpeed;
+    uint8 r;
+    uint8 g;
+    uint8 b;
+    int32 radiusOffset;
     Entity *parent;
-    Vector2 field_80;
-    int32 field_88;
-    int32 field_8C;
+    Vector2 offsetPos;
+    int32 pointCount;
+    int32 radius;
 } EntityFXWaveRing;
 
 // Object Struct

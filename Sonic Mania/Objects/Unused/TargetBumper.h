@@ -3,6 +3,10 @@
 
 #include "SonicMania.h"
 
+typedef enum { TARGETBUMP_HORIZONTAL, TARGETBUMP_VERTICAL, TARGETBUMP_CIRCLE } TargetBumperTypes;
+
+typedef enum { TARGETBUMP_THREE_HIT, TARGETBUMP_TWO_HIT, TARGETBUMP_ONE_HIT } TargetBumperHitCount;
+
 // Object Class
 typedef struct {
     RSDK_OBJECT
@@ -17,7 +21,7 @@ typedef struct {
     int32 hitCount;
     Vector2 startPos;
     Vector2 curPos;
-    int32 field_74;
+    int32 hitTimer;
     Animator animator;
 } EntityTargetBumper;
 
@@ -29,7 +33,7 @@ void TargetBumper_Update(void);
 void TargetBumper_LateUpdate(void);
 void TargetBumper_StaticUpdate(void);
 void TargetBumper_Draw(void);
-void TargetBumper_Create(void* data);
+void TargetBumper_Create(void *data);
 void TargetBumper_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void TargetBumper_EditorDraw(void);
@@ -41,8 +45,8 @@ void TargetBumper_Serialize(void);
 void TargetBumper_DebugSpawn(void);
 void TargetBumper_DebugDraw(void);
 
-void TargetBumper_Unknown3(void);
-void TargetBumper_Unknown4(void);
-void TargetBumper_Unknown5(void);
+void TargetBumper_Collide(void);
+void TargetBumper_State_Collide(void);
+void TargetBumper_Hit(void);
 
-#endif //!OBJ_TARGETBUMPER_H
+#endif //! OBJ_TARGETBUMPER_H

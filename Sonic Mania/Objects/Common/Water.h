@@ -13,7 +13,7 @@ typedef enum {
     WATER_SPLASH,
     WATER_BUBBLE,
     WATER_COUNTDOWNBUBBLE,
-}WaterTypes;
+} WaterTypes;
 
 // Object Class
 typedef struct {
@@ -22,37 +22,37 @@ typedef struct {
     int32 newWaterLevel;
     int32 targetWaterLevel;
     int32 waterMoveSpeed;
-    int32 array3[4];
-    int32 array4[4];
-    int32 array5[4];
+    int32 constBubbleTimer[4];
+    int32 randBubbleTimer[4];
+    int32 unused1[4]; // unused but set to 0 on bubble timer sets. maybe an old bubble timer?
     TABLE(int32 bubbleSizes[18], { 2, 4, 2, 2, 2, 2, 4, 2, 4, 2, 2, 4, 2, 4, 2, 2, 4, 2 });
-    uint16 spriteIndex;
+    uint16 aniFrames;
     uint16 bigBubbleSprite;
     uint16 wakeSprite;
     Hitbox hitbox2;
     Hitbox hitbox;
-    uint16 sfx_Splash;
-    uint16 sfx_Breathe;
-    uint16 sfx_Warning;
-    uint16 sfx_DrownAlert;
-    uint16 sfx_Drown;
-    uint16 sfx_Skim;
-    uint16 sfx_DNAGrab;
-    uint16 sfx_DNABurst;
-    uint16 sfx_WaterLevelL;
-    uint16 sfx_WaterLevelR;
-    int32 waterLevelChannel_L;
-    int32 waterLevelChannel_R;
-    int32 field_C0;
+    uint16 sfxSplash;
+    uint16 sfxBreathe;
+    uint16 sfxWarning;
+    uint16 sfxDrownAlert;
+    uint16 sfxDrown;
+    uint16 sfxSkim;
+    uint16 sfxDNAGrab;
+    uint16 sfxDNABurst;
+    uint16 sfxWaterLevelL;
+    uint16 sfxWaterLevelR;
+    int32 waterLevelChannelL;
+    int32 waterLevelChannelR;
+    int32 unused2;
     bool32 playingWaterLevelSFX;
-    int32 field_C8;
+    bool32 moveWaterLevel;
     int32 waterLevelVolume;
     int32 waterPalette;
-    int32 field_D4;
+    bool32 ignoreChild; // this is never set except for once and it's used in if ! statements to link the player or not. i'm so sorry for the name
     int32 wakePosX[4];
     uint8 wakeDir[4];
     Animator wakeData;
-    int32 field_104;
+    int32 unused3;
     bool32 playingSkimSFX;
 } ObjectWater;
 
@@ -63,14 +63,14 @@ typedef struct {
     StateMachine(stateDraw);
     int32 type;
     void *childPtr;
-    int32 field_68;
+    int32 bubbleX;
     int8 bubbleType1;
-    uint8 field_6D;
-    uint8 field_6E;
+    uint8 lastDuds;
+    uint8 bubbleFlags;
     int8 bubbleType2;
     int32 numDuds;
     int32 countdownID;
-    int32 field_78;
+    bool32 playerInBubble;
     Vector2 size;
     Vector2 height;
     int32 speed;
@@ -81,16 +81,14 @@ typedef struct {
     uint8 priority;
     bool32 destroyOnTrigger;
     Hitbox hitbox;
-    int32 gapA4;
-    int32 field_A8;
+    bool32 isHCZBubble;
+    int32 hczBubbleTimer;
     int32 timer;
     uint8 activePlayers;
     uint8 activePlayers2;
-    int32 field_B4;
-    int32 field_B8;
-    int32 field_BC;
-    int32 field_C0;
-    EntityButton* taggedObject;
+    Vector2 bubbleOffset;
+    Vector2 bubbleVelocity; // never set, but can tell what they're for in the code
+    EntityButton *taggedObject;
     Animator animator;
 } EntityWater;
 
@@ -102,7 +100,7 @@ void Water_Update(void);
 void Water_LateUpdate(void);
 void Water_StaticUpdate(void);
 void Water_Draw(void);
-void Water_Create(void* data);
+void Water_Create(void *data);
 void Water_StageLoad(void);
 #if RETRO_INCLUDE_EDITOR
 void Water_EditorDraw(void);
@@ -112,36 +110,36 @@ void Water_Serialize(void);
 
 // Extra Entity Functions
 
-//Palette stuff
+// Palette stuff
 void Water_SetWaterLevel(void);
 void Water_RemoveWaterEffect(void);
 
-//Utils
+// Utils
 void Water_CheckButtonTag(void);
 void Water_SpawnBubble(EntityPlayer *player, int32 id);
 void Water_SpawnCountDownBubble(EntityPlayer *player, int32 id, uint8 bubbleID);
 EntityWater *Water_GetPlayerBubble(EntityPlayer *entityPtr);
+void Water_HandleBubbleMovement(void);
+void Water_HCZBubbleSpawner(void);
+void Water_HCZBubbleBurst(EntityWater *self, bool32 jumpedOut);
 
 void Water_State_Palette(void);
 void Water_State_Tint(void);
 void Water_State_Splash(void);
-void Water_Unknown4(void);
-void Water_HCZBubbleBurst(EntityWater *entity, bool32 jumpedOut);
 void Water_State_Bubble(void);
-void Water_Unknown6(void);
+void Water_State_ShrinkPlayerBubble(void);
 void Water_State_HCZBubble(void);
-void Water_HCZBubbleSpawner(void);
 void Water_State_Bubbler(void);
 void Water_State_CountDownBubble(void);
 void Water_State_BubbleMove(void);
 void Water_State_Adjustable(void);
 
-//Draw States
-void Water_State_Draw_Palette(void);
-void Water_State_Draw_Tint(void);
-void Water_State_Draw_Splash(void);
-void Water_State_Draw_CountDownBubble(void);
-void Water_State_Draw_Bubbler(void);
-void Water_State_Draw_Bubble(void);
+// Draw States
+void Water_Draw_Palette(void);
+void Water_Draw_Tint(void);
+void Water_Draw_Splash(void);
+void Water_Draw_CountDownBubble(void);
+void Water_Draw_Bubbler(void);
+void Water_Draw_Bubble(void);
 
-#endif //!OBJ_WATER_H
+#endif //! OBJ_WATER_H

@@ -14,49 +14,49 @@ void SpeedGate_Update(void)
             vel = player->velocity.x;
         int32 spd = vel >> 15;
         if (spd) {
-            if (Player_CheckCollisionTouch(player, entity, &SpeedGate->hitbox)) {
+            if (Player_CheckCollisionTouch(player, self, &SpeedGate->hitbox)) {
                 int32 s = spd - 2;
                 if (spd >= 0)
                     s = spd + 2;
-                if (abs(s) > abs(entity->field_70))
-                    entity->field_70 = s;
-                entity->field_74 = 0;
+                if (abs(s) > abs(self->angleVel))
+                    self->angleVel = s;
+                self->activeTimer = 0;
             }
         }
     }
 
-    entity->angle += entity->field_70;
-    if (entity->field_70 <= 0) {
-        if (entity->angle <= -0x200) {
-            ++entity->field_74;
-            entity->angle += 512;
+    self->angle += self->angleVel;
+    if (self->angleVel <= 0) {
+        if (self->angle <= -0x200) {
+            ++self->activeTimer;
+            self->angle += 512;
 
-            entity->field_70 += 4;
-            if (entity->field_70 > -2)
-                entity->field_70 = -2;
+            self->angleVel += 4;
+            if (self->angleVel > -2)
+                self->angleVel = -2;
 
-            if (entity->field_70 == -2) {
-                entity->field_70 = 0;
-                entity->angle    = 0;
+            if (self->angleVel == -2) {
+                self->angleVel = 0;
+                self->angle    = 0;
             }
         }
     }
     else {
-        if (entity->angle >= 0x200) {
-            ++entity->field_74;
-            entity->angle -= 0x200;
-            entity->field_70 -= 4;
-            if (entity->field_70 < 2)
-                entity->field_70 = 2;
+        if (self->angle >= 0x200) {
+            ++self->activeTimer;
+            self->angle -= 0x200;
+            self->angleVel -= 4;
+            if (self->angleVel < 2)
+                self->angleVel = 2;
 
-            if (entity->field_70 == 2) {
-                entity->field_70 = 0;
-                entity->angle    = 0;
+            if (self->angleVel == 2) {
+                self->angleVel = 0;
+                self->angle    = 0;
             }
         }
     }
 
-    StateMachine_Run(entity->state);
+    StateMachine_Run(self->state);
 }
 
 void SpeedGate_LateUpdate(void) {}
@@ -68,84 +68,84 @@ void SpeedGate_Draw(void)
     RSDK_THIS(SpeedGate);
     Vector2 drawPos;
 
-    entity->rotation = entity->timer2;
-    entity->drawFX   = FX_ROTATE;
-    RSDK.DrawSprite(&entity->topData, NULL, false);
-    RSDK.DrawSprite(&entity->baseData, NULL, false);
+    self->rotation = self->baseRotation;
+    self->drawFX   = FX_ROTATE;
+    RSDK.DrawSprite(&self->topAnimator, NULL, false);
+    RSDK.DrawSprite(&self->baseAnimator, NULL, false);
 
-    drawPos.y                 = entity->position.y;
-    entity->drawFX = FX_SCALE;
+    drawPos.y    = self->position.y;
+    self->drawFX = FX_SCALE;
 
-    entity->scale.x          = abs(RSDK.Sin512(entity->angle & 0x7F));
-    drawPos.x                 = entity->position.x + 0x30000;
-    entity->finsData.frameID = 1;
-    RSDK.DrawSprite(&entity->finsData, &drawPos, false);
+    self->scale.x              = abs(RSDK.Sin512(self->angle & 0x7F));
+    drawPos.x                  = self->position.x + 0x30000;
+    self->finsAnimator.frameID = 1;
+    RSDK.DrawSprite(&self->finsAnimator, &drawPos, false);
 
-    entity->scale.x          = abs(RSDK.Cos512(entity->angle & 0x7F));
-    drawPos.x                = entity->position.x - 0x30000;
-    entity->finsData.frameID = 0;
-    RSDK.DrawSprite(&entity->finsData, &drawPos, false);
-    drawPos.x                = 0x180 * RSDK.Cos512(2 * (entity->angle & 0x7F)) + entity->position.x;
-    entity->finsData.frameID = 1;
-    RSDK.DrawSprite(&entity->finsData, &drawPos, false);
+    self->scale.x              = abs(RSDK.Cos512(self->angle & 0x7F));
+    drawPos.x                  = self->position.x - 0x30000;
+    self->finsAnimator.frameID = 0;
+    RSDK.DrawSprite(&self->finsAnimator, &drawPos, false);
+    drawPos.x                  = 0x180 * RSDK.Cos512(2 * (self->angle & 0x7F)) + self->position.x;
+    self->finsAnimator.frameID = 1;
+    RSDK.DrawSprite(&self->finsAnimator, &drawPos, false);
 
-    entity->scale.x          = abs(RSDK.Sin512(entity->angle & 0x7F));
-    drawPos.x                = 0xB40 * RSDK.Cos512(entity->angle & 0x7F) + entity->position.x;
-    entity->finsData.frameID = 2;
-    RSDK.DrawSprite(&entity->finsData, &drawPos, false);
+    self->scale.x              = abs(RSDK.Sin512(self->angle & 0x7F));
+    drawPos.x                  = 0xB40 * RSDK.Cos512(self->angle & 0x7F) + self->position.x;
+    self->finsAnimator.frameID = 2;
+    RSDK.DrawSprite(&self->finsAnimator, &drawPos, false);
 
-    entity->scale.x          = abs(RSDK.Sin512(entity->angle & 0x7F));
-    drawPos.x                = 0x180 * RSDK.Cos512(2 * (entity->angle & 0x7F)) + entity->position.x;
-    entity->finsData.frameID = 0;
-    RSDK.DrawSprite(&entity->finsData, &drawPos, false);
+    self->scale.x              = abs(RSDK.Sin512(self->angle & 0x7F));
+    drawPos.x                  = 0x180 * RSDK.Cos512(2 * (self->angle & 0x7F)) + self->position.x;
+    self->finsAnimator.frameID = 0;
+    RSDK.DrawSprite(&self->finsAnimator, &drawPos, false);
 
-    entity->scale.x          = abs(RSDK.Cos512(entity->angle & 0x7F));
-    drawPos.x                = entity->position.x - 0xB40 * RSDK.Sin512(entity->angle & 0x7F);
-    entity->finsData.frameID = 2;
-    RSDK.DrawSprite(&entity->finsData, &drawPos, false);
+    self->scale.x              = abs(RSDK.Cos512(self->angle & 0x7F));
+    drawPos.x                  = self->position.x - 0xB40 * RSDK.Sin512(self->angle & 0x7F);
+    self->finsAnimator.frameID = 2;
+    RSDK.DrawSprite(&self->finsAnimator, &drawPos, false);
 
-    entity->rotation = entity->timer3;
-    entity->drawFX   = FX_ROTATE;
-    RSDK.DrawSprite(&entity->timerData, &entity->posUnknown, false);
+    self->rotation = self->timerRotation;
+    self->drawFX   = FX_ROTATE;
+    RSDK.DrawSprite(&self->timerAnimator, &self->timerPos, false);
 
-    entity->drawFX = FX_NONE;
-    if (entity->state == SpeedGate_State_Unknown1)
-        RSDK.DrawSprite(&entity->bubbleData, NULL, false);
+    self->drawFX = FX_NONE;
+    if (self->state == SpeedGate_State_Unknown1)
+        RSDK.DrawSprite(&self->bubbleAnimator, NULL, false);
 }
 
 void SpeedGate_Create(void *data)
 {
     RSDK_THIS(SpeedGate);
-    RSDK.SetSpriteAnimation(SpeedGate->spriteIndex, 0, &entity->baseData, true, 0);
-    RSDK.SetSpriteAnimation(SpeedGate->spriteIndex, 1, &entity->topData, true, 0);
-    RSDK.SetSpriteAnimation(SpeedGate->spriteIndex, 2, &entity->timerData, true, 0);
-    RSDK.SetSpriteAnimation(SpeedGate->spriteIndex, 5, &entity->bubbleData, true, 0);
-    if (!RSDK_sceneInfo->inEditor) {
-        entity->visible       = true;
-        entity->drawOrder     = Zone->playerDrawHigh;
-        entity->active        = ACTIVE_BOUNDS;
-        entity->updateRange.x = 0x400000;
-        entity->updateRange.y = 0x400000;
-        entity->scale.y       = 0x200;
-        if (entity->timer < 1) {
-            RSDK.SetSpriteAnimation(0xFFFF, 0, &entity->timerData, true, 0);
-            RSDK.SetSpriteAnimation(SpeedGate->spriteIndex, 4, &entity->finsData, true, 0);
-            entity->posUnknown.x = entity->position.x;
-            entity->posUnknown.y = entity->position.y - 0x200000;
+    RSDK.SetSpriteAnimation(SpeedGate->aniFrames, 0, &self->baseAnimator, true, 0);
+    RSDK.SetSpriteAnimation(SpeedGate->aniFrames, 1, &self->topAnimator, true, 0);
+    RSDK.SetSpriteAnimation(SpeedGate->aniFrames, 2, &self->timerAnimator, true, 0);
+    RSDK.SetSpriteAnimation(SpeedGate->aniFrames, 5, &self->bubbleAnimator, true, 0);
+    if (!SceneInfo->inEditor) {
+        self->visible       = true;
+        self->drawOrder     = Zone->playerDrawHigh;
+        self->active        = ACTIVE_BOUNDS;
+        self->updateRange.x = 0x400000;
+        self->updateRange.y = 0x400000;
+        self->scale.y       = 0x200;
+        if (self->timer < 1) {
+            RSDK.SetSpriteAnimation(0xFFFF, 0, &self->timerAnimator, true, 0);
+            RSDK.SetSpriteAnimation(SpeedGate->aniFrames, 4, &self->finsAnimator, true, 0);
+            self->timerPos.x = self->position.x;
+            self->timerPos.y = self->position.y - 0x200000;
         }
         else {
-            RSDK.SetSpriteAnimation(SpeedGate->spriteIndex, 3, &entity->finsData, true, 0);
-            entity->posUnknown.x = entity->position.x;
-            entity->state        = SpeedGate_State_Unknown1;
-            entity->posUnknown.y = entity->position.y - 0x200000;
+            RSDK.SetSpriteAnimation(SpeedGate->aniFrames, 3, &self->finsAnimator, true, 0);
+            self->timerPos.x = self->position.x;
+            self->timerPos.y = self->position.y - 0x200000;
+            self->state      = SpeedGate_State_Unknown1;
         }
     }
 }
 
 void SpeedGate_StageLoad(void)
 {
-    SpeedGate->spriteIndex   = RSDK.LoadSpriteAnimation("Global/SpeedGate.bin", SCOPE_STAGE);
-    SpeedGate->sfx_StarPost  = RSDK.GetSFX("Global/StarPost.wav");
+    SpeedGate->aniFrames     = RSDK.LoadSpriteAnimation("Global/SpeedGate.bin", SCOPE_STAGE);
+    SpeedGate->sfxStarPost   = RSDK.GetSFX("Global/StarPost.wav");
     SpeedGate->hitbox.left   = -8;
     SpeedGate->hitbox.top    = -44;
     SpeedGate->hitbox.right  = 8;
@@ -159,18 +159,18 @@ void SpeedGate_State_Unknown1(void)
     int32 playerBit = 1;
     foreach_active(Player, player)
     {
-        if (!(playerBit & entity->activePlayers)) {
-            if (Player_CheckCollisionTouch(player, entity, &SpeedGate->hitbox)) {
-                entity->state     = SpeedGate_State_Unknown2;
-                entity->active    = ACTIVE_BOUNDS;
-                entity->playerPtr = player;
-                entity->field_80  = entity->position.x - player->position.x;
-                entity->field_84  = entity->position.y - player->position.y;
+        if (!(playerBit & self->activePlayers)) {
+            if (Player_CheckCollisionTouch(player, self, &SpeedGate->hitbox)) {
+                self->state            = SpeedGate_State_Unknown2;
+                self->active           = ACTIVE_BOUNDS;
+                self->playerPtr        = player;
+                self->playerDistance.x = self->position.x - player->position.x;
+                self->playerDistance.y = self->position.y - player->position.y;
 
-                entity->timer2 = 0;
-                if (entity->field_70 < 0)
-                    entity->timer2 = 0x200;
-                RSDK.PlaySfx(SpeedGate->sfx_StarPost, 0, 255);
+                self->baseRotation = 0;
+                if (self->angleVel < 0)
+                    self->baseRotation = 0x200;
+                RSDK.PlaySfx(SpeedGate->sfxStarPost, false, 255);
                 foreach_return;
             }
         }
@@ -182,56 +182,56 @@ void SpeedGate_State_Unknown2(void)
 {
     RSDK_THIS(SpeedGate);
 
-    if (entity->timer2 > 0x100) {
-        entity->timer2 -= 8;
+    if (self->baseRotation > 0x100) {
+        self->baseRotation -= 8;
     }
-    else if (entity->timer2 < 0x100) {
-        entity->timer2 += 8;
+    else if (self->baseRotation < 0x100) {
+        self->baseRotation += 8;
     }
 
-    if (entity->timer3 < 256)
-        entity->timer3 += 0x10;
+    if (self->timerRotation < 256)
+        self->timerRotation += 0x10;
 
-    if (entity->timer <= 0) {
-        RSDK.SetSpriteAnimation(0xFFFF, 0, &entity->timerData, true, 0);
-        entity->active = 4;
-        entity->state  = 0;
+    if (self->timer <= 0) {
+        RSDK.SetSpriteAnimation(0xFFFF, 0, &self->timerAnimator, true, 0);
+        self->active = 4;
+        self->state  = 0;
     }
     else {
-        entity->timer--;
-        EntityPlayer *player = entity->playerPtr;
-        if (entity->playerPtr) {
+        self->timer--;
+        EntityPlayer *player = self->playerPtr;
+        if (self->playerPtr) {
             int32 vel = 0x100000;
-            if (entity->playerPtr->direction == FLIP_X)
+            if (self->playerPtr->direction == FLIP_X)
                 vel = -0x100000;
 
-            entity->velocity.x += +((int32)(vel - entity->field_80) >> 6) - (entity->velocity.x >> 4);
-            entity->velocity.y += ((int32)(-0x200000 - entity->field_84) >> 6) - (entity->velocity.y >> 4);
+            self->velocity.x += +((int32)(vel - self->playerDistance.x) >> 6) - (self->velocity.x >> 4);
+            self->velocity.y += ((int32)(-0x200000 - self->playerDistance.y) >> 6) - (self->velocity.y >> 4);
 
-            entity->field_80 += entity->velocity.x;
-            entity->field_84 += entity->velocity.y;
-            entity->posUnknown.x = entity->field_80;
-            entity->posUnknown.y = entity->field_84;
-            entity->posUnknown.x += player->position.x;
-            entity->posUnknown.y += player->position.y;
-            EntitySpeedGate *thisEntity = RSDK_GET_ENTITY(RSDK_sceneInfo->entitySlot + 1, SpeedGate);
+            self->playerDistance.x += self->velocity.x;
+            self->playerDistance.y += self->velocity.y;
+            self->timerPos.x = self->playerDistance.x;
+            self->timerPos.y = self->playerDistance.y;
+            self->timerPos.x += player->position.x;
+            self->timerPos.y += player->position.y;
+            EntitySpeedGate *thisEntity = RSDK_GET_ENTITY(SceneInfo->entitySlot + 1, SpeedGate);
             if (Player_CheckCollisionTouch(player, &thisEntity, &SpeedGate->hitbox)) {
-                RSDK.SetSpriteAnimation(0xFFFF, 0, &entity->timerData, true, 0);
-                entity->state            = 0;
-                entity->angle            = 0;
-                entity->active           = ACTIVE_BOUNDS;
-                thisEntity->velocity.x   = player->velocity.x;
-                thisEntity->velocity.y   = -0x40000;
-                thisEntity->posUnknown.x = entity->posUnknown.x;
-                thisEntity->posUnknown.y = entity->posUnknown.y;
-                thisEntity->timer3       = entity->timer3;
-                thisEntity->active       = ACTIVE_NORMAL;
-                thisEntity->state        = SpeedGate_State_Unknown3;
-                RSDK.SetSpriteAnimation(SpeedGate->spriteIndex, 2, &thisEntity->timerData, true, 0);
-                thisEntity->timer2 = 0;
-                if (thisEntity->field_70 < 0)
-                    thisEntity->timer2 = 0x200;
-                RSDK.PlaySfx(SpeedGate->sfx_StarPost, 0, 255);
+                RSDK.SetSpriteAnimation(0xFFFF, 0, &self->timerAnimator, true, 0);
+                self->state               = 0;
+                self->angle               = 0;
+                self->active              = ACTIVE_BOUNDS;
+                thisEntity->velocity.x    = player->velocity.x;
+                thisEntity->velocity.y    = -0x40000;
+                thisEntity->timerPos.x    = self->timerPos.x;
+                thisEntity->timerPos.y    = self->timerPos.y;
+                thisEntity->timerRotation = self->timerRotation;
+                thisEntity->active        = ACTIVE_NORMAL;
+                thisEntity->state         = SpeedGate_State_Unknown3;
+                RSDK.SetSpriteAnimation(SpeedGate->aniFrames, 2, &thisEntity->timerAnimator, true, 0);
+                thisEntity->baseRotation = 0;
+                if (thisEntity->angleVel < 0)
+                    thisEntity->baseRotation = 0x200;
+                RSDK.PlaySfx(SpeedGate->sfxStarPost, false, 255);
             }
         }
     }
@@ -240,29 +240,30 @@ void SpeedGate_State_Unknown2(void)
 void SpeedGate_State_Unknown3(void)
 {
     RSDK_THIS(SpeedGate);
-    int32 y = entity->position.y - 0x200000;
+    int32 y = self->position.y - 0x200000;
 
-    entity->velocity.x += ((RSDK_sceneInfo->entity->position.x - entity->posUnknown.x) >> 5) - (entity->velocity.x >> 3);
-    entity->velocity.y += ((y - entity->posUnknown.y) >> 5) - (entity->velocity.y >> 3);
-    entity->posUnknown.x += entity->velocity.x;
-    entity->posUnknown.y += entity->velocity.y;
+    self->velocity.x += ((self->position.x - self->timerPos.x) >> 5) - (self->velocity.x >> 3);
+    self->velocity.y += ((y - self->timerPos.y) >> 5) - (self->velocity.y >> 3);
+    self->timerPos.x += self->velocity.x;
+    self->timerPos.y += self->velocity.y;
 
-    if (entity->timer2 > 0x100) {
-        entity->timer2 -= 8;
+    if (self->baseRotation > 0x100) {
+        self->baseRotation -= 8;
     }
-    else if (entity->timer2 < 0x100) {
-        entity->timer2 += 8;
+    else if (self->baseRotation < 0x100) {
+        self->baseRotation += 8;
     }
 
-    if (entity->timer3 < 512) {
-        entity->timer3 += 16;
+    if (self->timerRotation < 512) {
+        self->timerRotation += 16;
     }
-    if (++entity->timer == 48) {
-        entity->posUnknown.x = entity->position.x;
-        entity->timer        = 0;
-        entity->posUnknown.y = y;
-        entity->active       = ACTIVE_BOUNDS;
-        entity->state        = StateMachine_None;
+
+    if (++self->timer == 48) {
+        self->timerPos.x = self->position.x;
+        self->timer      = 0;
+        self->timerPos.y = y;
+        self->active     = ACTIVE_BOUNDS;
+        self->state      = StateMachine_None;
     }
 }
 
@@ -272,57 +273,57 @@ void SpeedGate_EditorDraw(void)
     RSDK_THIS(SpeedGate);
     Vector2 drawPos;
 
-    RSDK.SetSpriteAnimation(SpeedGate->spriteIndex, 0, &entity->baseData, true, 0);
-    RSDK.SetSpriteAnimation(SpeedGate->spriteIndex, 1, &entity->topData, true, 0);
-    RSDK.SetSpriteAnimation(SpeedGate->spriteIndex, 2, &entity->timerData, true, 0);
-    RSDK.SetSpriteAnimation(SpeedGate->spriteIndex, 5, &entity->bubbleData, true, 0);
-    RSDK.SetSpriteAnimation(SpeedGate->spriteIndex, 3, &entity->finsData, true, 0);
+    RSDK.SetSpriteAnimation(SpeedGate->aniFrames, 0, &self->baseAnimator, true, 0);
+    RSDK.SetSpriteAnimation(SpeedGate->aniFrames, 1, &self->topAnimator, true, 0);
+    RSDK.SetSpriteAnimation(SpeedGate->aniFrames, 2, &self->timerAnimator, true, 0);
+    RSDK.SetSpriteAnimation(SpeedGate->aniFrames, 5, &self->bubbleAnimator, true, 0);
+    RSDK.SetSpriteAnimation(SpeedGate->aniFrames, 3, &self->finsAnimator, true, 0);
 
-    entity->rotation = entity->timer2;
-    entity->drawFX   = FX_ROTATE;
-    RSDK.DrawSprite(&entity->topData, NULL, false);
-    RSDK.DrawSprite(&entity->baseData, NULL, false);
+    self->rotation = self->baseRotation;
+    self->drawFX   = FX_ROTATE;
+    RSDK.DrawSprite(&self->topAnimator, NULL, false);
+    RSDK.DrawSprite(&self->baseAnimator, NULL, false);
 
-    drawPos.y      = entity->position.y;
-    entity->drawFX = FX_SCALE;
+    drawPos.y    = self->position.y;
+    self->drawFX = FX_SCALE;
 
-    entity->scale.x          = abs(RSDK.Sin512(entity->angle & 0x7F));
-    drawPos.x                = entity->position.x + 0x30000;
-    entity->finsData.frameID = 1;
-    RSDK.DrawSprite(&entity->finsData, &drawPos, false);
+    self->scale.x              = abs(RSDK.Sin512(self->angle & 0x7F));
+    drawPos.x                  = self->position.x + 0x30000;
+    self->finsAnimator.frameID = 1;
+    RSDK.DrawSprite(&self->finsAnimator, &drawPos, false);
 
-    entity->scale.x          = abs(RSDK.Cos512(entity->angle & 0x7F));
-    drawPos.x                = entity->position.x - 0x30000;
-    entity->finsData.frameID = 0;
-    RSDK.DrawSprite(&entity->finsData, &drawPos, false);
-    drawPos.x                = 0x180 * RSDK.Cos512(2 * (entity->angle & 0x7F)) + entity->position.x;
-    entity->finsData.frameID = 1;
-    RSDK.DrawSprite(&entity->finsData, &drawPos, false);
+    self->scale.x              = abs(RSDK.Cos512(self->angle & 0x7F));
+    drawPos.x                  = self->position.x - 0x30000;
+    self->finsAnimator.frameID = 0;
+    RSDK.DrawSprite(&self->finsAnimator, &drawPos, false);
+    drawPos.x                  = 0x180 * RSDK.Cos512(2 * (self->angle & 0x7F)) + self->position.x;
+    self->finsAnimator.frameID = 1;
+    RSDK.DrawSprite(&self->finsAnimator, &drawPos, false);
 
-    entity->scale.x          = abs(RSDK.Sin512(entity->angle & 0x7F));
-    drawPos.x                = 0xB40 * RSDK.Cos512(entity->angle & 0x7F) + entity->position.x;
-    entity->finsData.frameID = 2;
-    RSDK.DrawSprite(&entity->finsData, &drawPos, false);
+    self->scale.x              = abs(RSDK.Sin512(self->angle & 0x7F));
+    drawPos.x                  = 0xB40 * RSDK.Cos512(self->angle & 0x7F) + self->position.x;
+    self->finsAnimator.frameID = 2;
+    RSDK.DrawSprite(&self->finsAnimator, &drawPos, false);
 
-    entity->scale.x          = abs(RSDK.Sin512(entity->angle & 0x7F));
-    drawPos.x                = 0x180 * RSDK.Cos512(2 * (entity->angle & 0x7F)) + entity->position.x;
-    entity->finsData.frameID = 0;
-    RSDK.DrawSprite(&entity->finsData, &drawPos, false);
+    self->scale.x              = abs(RSDK.Sin512(self->angle & 0x7F));
+    drawPos.x                  = 0x180 * RSDK.Cos512(2 * (self->angle & 0x7F)) + self->position.x;
+    self->finsAnimator.frameID = 0;
+    RSDK.DrawSprite(&self->finsAnimator, &drawPos, false);
 
-    entity->scale.x          = abs(RSDK.Cos512(entity->angle & 0x7F));
-    drawPos.x                = entity->position.x - 0xB40 * RSDK.Sin512(entity->angle & 0x7F);
-    entity->finsData.frameID = 2;
-    RSDK.DrawSprite(&entity->finsData, &drawPos, false);
+    self->scale.x              = abs(RSDK.Cos512(self->angle & 0x7F));
+    drawPos.x                  = self->position.x - 0xB40 * RSDK.Sin512(self->angle & 0x7F);
+    self->finsAnimator.frameID = 2;
+    RSDK.DrawSprite(&self->finsAnimator, &drawPos, false);
 
-    entity->rotation = entity->timer3;
-    entity->drawFX   = FX_ROTATE;
-    RSDK.DrawSprite(&entity->timerData, &entity->posUnknown, false);
+    self->rotation = self->timerRotation;
+    self->drawFX   = FX_ROTATE;
+    RSDK.DrawSprite(&self->timerAnimator, &self->timerPos, false);
 
-    entity->drawFX = FX_NONE;
-    RSDK.DrawSprite(&entity->bubbleData, NULL, false);
+    self->drawFX = FX_NONE;
+    RSDK.DrawSprite(&self->bubbleAnimator, NULL, false);
 }
 
-void SpeedGate_EditorLoad(void) { SpeedGate->spriteIndex = RSDK.LoadSpriteAnimation("Global/SpeedGate.bin", SCOPE_STAGE); }
+void SpeedGate_EditorLoad(void) { SpeedGate->aniFrames = RSDK.LoadSpriteAnimation("Global/SpeedGate.bin", SCOPE_STAGE); }
 #endif
 
 void SpeedGate_Serialize(void)

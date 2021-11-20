@@ -6,7 +6,7 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    uint16 spriteIndex;
+    uint16 aniFrames;
 } ObjectBoundsMarker;
 
 // Entity Class
@@ -35,7 +35,7 @@ void BoundsMarker_EditorLoad(void);
 void BoundsMarker_Serialize(void);
 
 // Extra Entity Functions
-void BoundsMarker_CheckBounds(void *player, EntityBoundsMarker *entity, bool32 setPos);
+void BoundsMarker_CheckBounds(void *player, EntityBoundsMarker *self, bool32 setPos);
 void BoundsMarker_CheckAllBounds(void *player, bool32 setPos);
 
 #endif //!OBJ_BOUNDSMARKER_H

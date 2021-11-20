@@ -5,7 +5,7 @@ ObjectTMZ1Setup *TMZ1Setup;
 void TMZ1Setup_Update(void)
 {
     RSDK_THIS(TMZ1Setup);
-    StateMachine_Run(entity->state);
+    StateMachine_Run(self->state);
 }
 
 void TMZ1Setup_LateUpdate(void) {}
@@ -45,23 +45,19 @@ void TMZ1Setup_StaticUpdate(void)
     }
 
     if (TMZ1Setup->stageState < 2) {
-        int32 posY = RSDK_screens->centerY + RSDK_screens->position.y;
+        int32 posY = ScreenInfo->centerY + ScreenInfo->position.y;
         if (posY >= 4192) {
             if (posY > 4528 && TMZ1Setup->stageState != 1 && !RSDK.GetEntityCount(TMZ1Setup->objectID, true))
-                RSDK.CreateEntity(TMZ1Setup->objectID, intToVoid(1), 0, 0);
+                CREATE_ENTITY(TMZ1Setup, intToVoid(1), 0, 0);
         }
         else if (TMZ1Setup->stageState && !RSDK.GetEntityCount(TMZ1Setup->objectID, true)) {
-            RSDK.CreateEntity(TMZ1Setup->objectID, intToVoid(0), 0, 0);
+            CREATE_ENTITY(TMZ1Setup, intToVoid(0), 0, 0);
         }
     }
     EntityActClear *actClear = RSDK_GET_ENTITY(SLOT_ACTCLEAR, ActClear);
-    if (!TMZ1Setup->reloadFlag && actClear->objectID == ActClear->objectID && actClear->state == ActClear_Unknown6 && !Player->gotHit[0]) {
-#if RETRO_USE_PLUS 
-        API.UnlockAchievement("ACH_TMZ");
-#else
-        APICallback_UnlockAchievement("ACH_TMZ");
-#endif
-        TMZ1Setup->reloadFlag = true;
+    if (!TMZ1Setup->hasAchievement && actClear->objectID == ActClear->objectID && actClear->state == ActClear_Unknown6 && !Player->gotHit[0]) {
+        API_UnlockAchievement("ACH_TMZ");
+        TMZ1Setup->hasAchievement = true;
     }
 }
 
@@ -70,12 +66,12 @@ void TMZ1Setup_Draw(void) {}
 void TMZ1Setup_Create(void *data)
 {
     RSDK_THIS(TMZ1Setup);
-    RSDK_sceneInfo->entity->active = ACTIVE_NORMAL;
+    self->active = ACTIVE_NORMAL;
 
     switch (TMZ1Setup->stageState) {
-        default: entity->state = TMZ1Setup_StateUnknown4; break;
-        case -1: entity->state = TMZ1Setup_StateUnknown3; break;
-        case 2: entity->state = TMZ1Setup_StateUnknown2; break;
+        default: self->state = TMZ1Setup_StateUnknown4; break;
+        case -1: self->state = TMZ1Setup_StateUnknown3; break;
+        case 2: self->state = TMZ1Setup_StateUnknown2; break;
     }
 }
 
@@ -98,7 +94,7 @@ void TMZ1Setup_StageLoad(void)
     RSDK.GetSceneLayer(3)->scrollPos = -0x1000000;
     if (!TMZ1Setup->paletteInit) {
 #if RETRO_USE_PLUS
-        if (RSDK_sceneInfo->filter & FILTER_ENCORE) {
+        if (SceneInfo->filter & FILTER_ENCORE) {
             RSDK.LoadPalette(0, "EncoreTMZ1.act", 0xFF);
             RSDK.LoadPalette(1, "EncoreTMZ1d.act", 0xFF);
             RSDK.LoadPalette(2, "EncoreTMZ1l.act", 0xFF);
@@ -119,7 +115,7 @@ void TMZ1Setup_StageLoad(void)
     if (isMainGameMode() && PlayerHelpers_CheckAct1())
         Zone->stageFinishCallback = TMZ1Setup_StageFinishCB;
     if (PlayerHelpers_CheckStageReload())
-        TMZ1Setup->reloadFlag = true;
+        TMZ1Setup->hasAchievement = true;
 }
 
 void TMZ1Setup_BGCallback_A(void)
@@ -158,30 +154,30 @@ void TMZ1Setup_StageFinishCB(void)
 void TMZ1Setup_StateUnknown2(void)
 {
     RSDK_THIS(TMZ1Setup);
-    if (entity->timer < 256) {
-        entity->timer += 8;
-        RSDK.SetLimitedFade(0, 4, 3, entity->timer, 128, 207);
+    if (self->timer < 256) {
+        self->timer += 8;
+        RSDK.SetLimitedFade(0, 4, 3, self->timer, 128, 207);
     }
     else {
-        destroyEntity(entity);
+        destroyEntity(self);
     }
 }
 
 void TMZ1Setup_StateUnknown3(void)
 {
     RSDK_THIS(TMZ1Setup);
-    if (++entity->timer >= 2) {
-        if (RSDK_screens->position.y + RSDK_screens->centerY > 4192)
-            entity->state = TMZ1Setup_StateUnknown5;
+    if (++self->timer >= 2) {
+        if (ScreenInfo->position.y + ScreenInfo->centerY > 4192)
+            self->state = TMZ1Setup_StateUnknown5;
         else
-            entity->state = TMZ1Setup_StateUnknown6;
+            self->state = TMZ1Setup_StateUnknown6;
     }
 }
 
 void TMZ1Setup_StateUnknown4(void)
 {
     RSDK_THIS(TMZ1Setup);
-    if (entity->timer >= 256) {
+    if (self->timer >= 256) {
         if (TMZ1Setup->stageState) {
             TMZ1Setup->stageState               = 0;
             RSDK.GetSceneLayer(0)->drawLayer[0] = 0;
@@ -196,15 +192,15 @@ void TMZ1Setup_StateUnknown4(void)
             RSDK.GetSceneLayer(2)->drawLayer[0] = 0;
             RSDK.GetSceneLayer(3)->drawLayer[0] = 0;
         }
-        entity->state = TMZ1Setup_StateUnknown7;
+        self->state = TMZ1Setup_StateUnknown7;
     }
     else {
-        entity->timer += 8;
+        self->timer += 8;
         if (TMZ1Setup->stageState)
-            RSDK.SetLimitedFade(0, 3, 4, entity->timer >> 1, 128, 207);
+            RSDK.SetLimitedFade(0, 3, 4, self->timer >> 1, 128, 207);
         else
-            RSDK.SetLimitedFade(0, 4, 3, entity->timer >> 1, 128, 207);
-        RSDK.SetLimitedFade(0, 4, 5, entity->timer, 208, 256);
+            RSDK.SetLimitedFade(0, 4, 3, self->timer >> 1, 128, 207);
+        RSDK.SetLimitedFade(0, 4, 5, self->timer, 208, 256);
     }
 }
 
@@ -217,7 +213,7 @@ void TMZ1Setup_StateUnknown5(void)
     RSDK.GetSceneLayer(2)->drawLayer[0] = 0;
     RSDK.GetSceneLayer(3)->drawLayer[0] = 0;
     RSDK.CopyPalette(3, 128, 0, 128, 80);
-    destroyEntity(entity);
+    destroyEntity(self);
 }
 
 void TMZ1Setup_StateUnknown6(void)
@@ -229,26 +225,26 @@ void TMZ1Setup_StateUnknown6(void)
     RSDK.GetSceneLayer(2)->drawLayer[0] = DRAWLAYER_COUNT;
     RSDK.GetSceneLayer(3)->drawLayer[0] = DRAWLAYER_COUNT;
     RSDK.CopyPalette(4, 128, 0, 128, 80);
-    destroyEntity(entity);
+    destroyEntity(self);
 }
 
 void TMZ1Setup_StateUnknown7(void)
 {
     RSDK_THIS(TMZ1Setup);
-    if (entity->timer <= 0) {
+    if (self->timer <= 0) {
         if (TMZ1Setup->stageState)
             RSDK.CopyPalette(4, 208, 0, 208, 48);
         else
             RSDK.CopyPalette(4, 128, 0, 128, 128);
-        destroyEntity(entity);
+        destroyEntity(self);
     }
     else {
-        entity->timer -= 8;
+        self->timer -= 8;
         if (TMZ1Setup->stageState)
-            RSDK.SetLimitedFade(0, 3, 4, entity->timer >> 1, 128, 207);
+            RSDK.SetLimitedFade(0, 3, 4, self->timer >> 1, 128, 207);
         else
-            RSDK.SetLimitedFade(0, 4, 3, entity->timer >> 1, 128, 207);
-        RSDK.SetLimitedFade(0, 4, 5, entity->timer, 208, 256);
+            RSDK.SetLimitedFade(0, 4, 3, self->timer >> 1, 128, 207);
+        RSDK.SetLimitedFade(0, 4, 5, self->timer, 208, 256);
     }
 }
 

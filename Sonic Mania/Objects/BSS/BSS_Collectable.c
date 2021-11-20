@@ -19,59 +19,59 @@ void BSS_Collectable_Draw(void)
     RSDK_THIS(BSS_Collectable);
     Vector2 drawPos;
 
-    switch (entity->type) {
+    switch (self->type) {
         case BSS_RING:
-            entity->drawFX    = FX_FLIP | FX_SCALE;
-            entity->scale.x   = BSS_Collectable->ringScaleTableX[entity->frameID];
-            entity->scale.y   = BSS_Collectable->ringScaleTableY[entity->frameID];
-            entity->direction = BSS_Collectable->sphereData[entity->type].frameID > 8;
-            drawPos.x         = entity->position.x;
-            drawPos.y         = entity->position.y;
-            drawPos.y -= BSS_Collectable->screenYValues[entity->frameID];
-            RSDK.DrawSprite(&BSS_Collectable->sphereData[entity->type], &drawPos, true);
-            entity->drawFX = FX_NONE;
+            self->drawFX    = FX_FLIP | FX_SCALE;
+            self->scale.x   = BSS_Collectable->ringScaleTableX[self->frameID];
+            self->scale.y   = BSS_Collectable->ringScaleTableY[self->frameID];
+            self->direction = BSS_Collectable->sphereData[self->type].frameID > 8;
+            drawPos.x         = self->position.x;
+            drawPos.y         = self->position.y;
+            drawPos.y -= BSS_Collectable->screenYValues[self->frameID];
+            RSDK.DrawSprite(&BSS_Collectable->sphereData[self->type], &drawPos, true);
+            self->drawFX = FX_NONE;
             return;
-        case BSS_RING_SPARKLE: RSDK.DrawSprite(&BSS_Collectable->sphereData[entity->type], NULL, true); break;
+        case BSS_RING_SPARKLE: RSDK.DrawSprite(&BSS_Collectable->sphereData[self->type], NULL, true); break;
         case BSS_EMERALD_CHAOS:
         case BSS_EMERALD_SUPER:
-            BSS_Collectable->sphereData[entity->type].frameID = entity->frameID >> 1;
-            RSDK.DrawSprite(&BSS_Collectable->sphereData[entity->type], NULL, true);
+            BSS_Collectable->sphereData[self->type].frameID = self->frameID >> 1;
+            RSDK.DrawSprite(&BSS_Collectable->sphereData[self->type], NULL, true);
             break;
         case BSS_MEDAL_SILVER:
         case BSS_MEDAL_GOLD:
-            entity->drawFX  = FX_SCALE;
-            entity->scale.x = BSS_Collectable->medalScaleTable[entity->frameID];
-            entity->scale.y = BSS_Collectable->medalScaleTable[entity->frameID];
-            drawPos.x       = entity->position.x;
-            drawPos.y       = entity->position.y;
-            drawPos.y -= BSS_Collectable->screenYValues[entity->frameID];
-            RSDK.DrawSprite(&BSS_Collectable->sphereData[entity->type], &drawPos, true);
-            entity->drawFX = FX_NONE;
+            self->drawFX  = FX_SCALE;
+            self->scale.x = BSS_Collectable->medalScaleTable[self->frameID];
+            self->scale.y = BSS_Collectable->medalScaleTable[self->frameID];
+            drawPos.x       = self->position.x;
+            drawPos.y       = self->position.y;
+            drawPos.y -= BSS_Collectable->screenYValues[self->frameID];
+            RSDK.DrawSprite(&BSS_Collectable->sphereData[self->type], &drawPos, true);
+            self->drawFX = FX_NONE;
             break;
         case BSS_SPHERE_GREEN_STOOD:
-            BSS_Collectable->sphereData[BSS_SPHERE_GREEN].frameID = entity->frameID;
-            entity->alpha                                         = 0x80;
-            entity->inkEffect                                     = INK_ALPHA;
+            BSS_Collectable->sphereData[BSS_SPHERE_GREEN].frameID = self->frameID;
+            self->alpha                                         = 0x80;
+            self->inkEffect                                     = INK_ALPHA;
             RSDK.DrawSprite(&BSS_Collectable->sphereData[BSS_SPHERE_GREEN], NULL, true);
-            entity->inkEffect = INK_NONE;
+            self->inkEffect = INK_NONE;
             break;
         case BSS_BLUE_STOOD:
-            BSS_Collectable->sphereData[BSS_SPHERE_BLUE].frameID = entity->frameID;
-            entity->alpha                                        = 0x80;
-            entity->inkEffect                                    = INK_ALPHA;
+            BSS_Collectable->sphereData[BSS_SPHERE_BLUE].frameID = self->frameID;
+            self->alpha                                        = 0x80;
+            self->inkEffect                                    = INK_ALPHA;
             RSDK.DrawSprite(&BSS_Collectable->sphereData[BSS_SPHERE_BLUE], NULL, true);
-            entity->inkEffect = INK_NONE;
+            self->inkEffect = INK_NONE;
             break;
         case BSS_SPHERE_PINK_STOOD:
-            BSS_Collectable->sphereData[BSS_SPHERE_PINK].frameID = entity->frameID;
-            entity->alpha                                        = 0x80;
-            entity->inkEffect                                    = INK_ALPHA;
+            BSS_Collectable->sphereData[BSS_SPHERE_PINK].frameID = self->frameID;
+            self->alpha                                        = 0x80;
+            self->inkEffect                                    = INK_ALPHA;
             RSDK.DrawSprite(&BSS_Collectable->sphereData[BSS_SPHERE_PINK], NULL, true);
-            entity->inkEffect = INK_NONE;
+            self->inkEffect = INK_NONE;
             break;
         default:
-            BSS_Collectable->sphereData[entity->type].frameID = entity->frameID;
-            RSDK.DrawSprite(&BSS_Collectable->sphereData[entity->type], NULL, true);
+            BSS_Collectable->sphereData[self->type].frameID = self->frameID;
+            RSDK.DrawSprite(&BSS_Collectable->sphereData[self->type], NULL, true);
             break;
     }
 }
@@ -79,28 +79,28 @@ void BSS_Collectable_Draw(void)
 void BSS_Collectable_Create(void *data)
 {
     RSDK_THIS(BSS_Collectable);
-    if (!RSDK_sceneInfo->inEditor) {
-        entity->active        = ACTIVE_NORMAL;
-        entity->visible       = true;
-        entity->drawOrder     = 3;
-        entity->updateRange.x = 0x800000;
-        entity->updateRange.y = 0x800000;
+    if (!SceneInfo->inEditor) {
+        self->active        = ACTIVE_NORMAL;
+        self->visible       = true;
+        self->drawOrder     = 3;
+        self->updateRange.x = 0x800000;
+        self->updateRange.y = 0x800000;
 
         for (int32 i = 0; i < 8; ++i)
-            RSDK.SetSpriteAnimation(BSS_Collectable->spriteIndex, i, &BSS_Collectable->sphereData[i + 1], true, 0);
+            RSDK.SetSpriteAnimation(BSS_Collectable->aniFrames, i, &BSS_Collectable->sphereData[i + 1], true, 0);
         // RSDK.SetSpriteAnimation(BSS_Collectable->textSpriteIndex, 0, (Animator *)&BSS_Collectable[2].ringScaleTableX[21], true, 0);
         RSDK.SetSpriteAnimation(BSS_Collectable->ringSpriteIndex, 0, &BSS_Collectable->sphereData[7], true, 0);
         RSDK.SetSpriteAnimation(BSS_Collectable->ringSpriteIndex, 1, &BSS_Collectable->sphereData[15], true, 0);
-        RSDK.SetSpriteAnimation(BSS_Collectable->spriteIndex, 6, &BSS_Collectable->sphereData[16], true, 0);
-        RSDK.SetSpriteAnimation(BSS_Collectable->spriteIndex, 7, &BSS_Collectable->sphereData[17], true, 0);
-        RSDK.SetSpriteAnimation(BSS_Collectable->spriteIndex, 8, &BSS_Collectable->sphereData[18], true, 0);
-        RSDK.SetSpriteAnimation(BSS_Collectable->spriteIndex, 9, &BSS_Collectable->sphereData[19], true, 0);
+        RSDK.SetSpriteAnimation(BSS_Collectable->aniFrames, 6, &BSS_Collectable->sphereData[16], true, 0);
+        RSDK.SetSpriteAnimation(BSS_Collectable->aniFrames, 7, &BSS_Collectable->sphereData[17], true, 0);
+        RSDK.SetSpriteAnimation(BSS_Collectable->aniFrames, 8, &BSS_Collectable->sphereData[18], true, 0);
+        RSDK.SetSpriteAnimation(BSS_Collectable->aniFrames, 9, &BSS_Collectable->sphereData[19], true, 0);
     }
 }
 
 void BSS_Collectable_StageLoad(void)
 {
-    BSS_Collectable->spriteIndex     = RSDK.LoadSpriteAnimation("SpecialBS/StageObjects.bin", SCOPE_STAGE);
+    BSS_Collectable->aniFrames     = RSDK.LoadSpriteAnimation("SpecialBS/StageObjects.bin", SCOPE_STAGE);
     BSS_Collectable->ringSpriteIndex = RSDK.LoadSpriteAnimation("SpecialBS/Ring.bin", SCOPE_STAGE);
 
     if (!BSS_Collectable->loadedTables) {

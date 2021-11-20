@@ -3,21 +3,26 @@
 
 #include "SonicMania.h"
 
+typedef enum { UFO_CIRCUIT_MODE_UNUSED } UFO_CircuitModes;
+
+typedef enum {
+    UFO_CIRCUIT_THRTLE_NONE0,
+    UFO_CIRCUIT_THRTLE_NONE,
+    UFO_CIRCUIT_THRTLE_SLOW,
+    UFO_CIRCUIT_THRTLE_MED,
+    UFO_CIRCUIT_THRTLE_FAST,
+} UFO_CircuitThrottles;
+
 // Object Class
 typedef struct {
     RSDK_OBJECT
     int32 nodeCount;
-    int32 field_8;
-    int32 field_C;
-    int32 field_10;
-    int32 field_14;
-    int32 field_18;
-    int32 field_1C;
-    int32 field_20;
-    int32 field_24;
-    uint16 field_28;
+    int32 decelerationNoMach;
+    int32 decelerationMach;
+    Animator unusedAnimator1;
+    uint16 aniFrames; //unused
     uint16 ufoModel;
-    int32 field_2C;
+    int32 unused1;
     uint16 emeraldModel;
     uint16 sceneIndex;
 } ObjectUFO_Circuit;
@@ -35,28 +40,13 @@ typedef struct {
     void *prevNode;
     int32 angleY;
     int32 height;
-    int32 field_7C;
+    int32 topSpeed;
     Vector2 startPos;
-    int32 field_88;
-    int32 field_8C;
-    int32 field_90;
-    int32 field_94;
-    int32 field_98;
-    int32 field_9C;
-    int32 field_A0;
-    int32 field_A4;
-    int32 field_A8;
-    int32 field_AC;
-    int32 field_B0;
-    int32 field_B4;
-    int32 field_B8;
-    int32 field_BC;
-    int32 field_C0;
-    int32 field_C4;
-    Matrix matrix1;
-    Matrix matrix2;
-    Matrix matrix3;
-    Animator animatorUFO;
+    Matrix unusedMatrix1;
+    Matrix matTransform;
+    Matrix matWorld;
+    Matrix matNormal;
+    Animator ufoAnimator;
 } EntityUFO_Circuit;
 
 // Object Struct
@@ -76,10 +66,10 @@ void UFO_Circuit_EditorLoad(void);
 void UFO_Circuit_Serialize(void);
 
 // Extra Entity Functions
-void UFO_Circuit_Unknown1(void);
-void UFO_Circuit_Unknown2(void);
-bool32 UFO_Circuit_Unknown3(void);
-void UFO_Circuit_Unknown4(void);
-void UFO_Circuit_Unknown5(void);
+void UFO_Circuit_HandleSpeedSetup(void);
+void UFO_Circuit_HandleNodeSpeeds(void);
+bool32 UFO_Circuit_CheckNodeChange(void);
+void UFO_Circuit_State_UFO(void);
+void UFO_Circuit_State_Caught(void);
 
 #endif //!OBJ_UFO_CIRCUIT_H

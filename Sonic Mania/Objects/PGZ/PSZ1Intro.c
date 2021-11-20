@@ -8,8 +8,8 @@ void PSZ1Intro_Update(void)
     RSDK_THIS(PSZ1Intro);
     void *states[] = { PSZ1Intro_CutsceneState_Unknown1, PSZ1Intro_CutsceneState_Unknown2, PSZ1Intro_CutsceneState_Unknown3, NULL };
 
-    CutsceneSeq_StartSequence((Entity *)entity, states);
-    entity->active = ACTIVE_NEVER;
+    CutsceneSeq_StartSequence((Entity *)self, states);
+    self->active = ACTIVE_NEVER;
 }
 
 void PSZ1Intro_LateUpdate(void) {}
@@ -21,11 +21,11 @@ void PSZ1Intro_Draw(void) {}
 void PSZ1Intro_Create(void *data)
 {
     RSDK_THIS(PSZ1Intro);
-    if (!RSDK_sceneInfo->inEditor) {
-        entity->active      = ACTIVE_NORMAL;
-        entity->isPermanent = true;
+    if (!SceneInfo->inEditor) {
+        self->active      = ACTIVE_NORMAL;
+        self->isPermanent = true;
         if (!isMainGameMode() || !globals->enableIntro || PlayerHelpers_CheckStageReload()) {
-            destroyEntity(entity);
+            destroyEntity(self);
             foreach_all(HangGlider, glider) { destroyEntity(glider); }
         }
     }
@@ -43,7 +43,7 @@ void PSZ1Intro_HandleGliderJump(EntityHangGlider *glider)
         player->velocity.y = -0x20000;
         player->active     = ACTIVE_NORMAL;
         player->stateInput = StateMachine_None;
-        RSDK.SetSpriteAnimation(player->spriteIndex, ANI_JUMP, &player->playerAnimator, true, 0);
+        RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, true, 0);
         glider->playerPtr = NULL;
     }
 }
@@ -68,7 +68,7 @@ bool32 PSZ1Intro_CutsceneState_Unknown1(EntityCutsceneSeq *host)
             glider->playerPtr    = (Entity *)player;
             glider->velocity.x   = 0x40000;
             glider->velocity.y   = -0x20000;
-            RSDK.SetSpriteAnimation(player->spriteIndex, ANI_SPRINGDIAGONAL, &glider->animator3, true, 0);
+            RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGDIAGONAL, &glider->animator3, true, 0);
             glider->animator3.rotationFlag = 1;
             glider->rotation               = 128;
             glider->drawFX                 = FX_ROTATE;
@@ -85,7 +85,7 @@ bool32 PSZ1Intro_CutsceneState_Unknown1(EntityCutsceneSeq *host)
                 glider->velocity.x = 0x38000;
                 glider->field_60   = 0xE00;
             }
-            entity->gliders[id] = glider;
+            self->gliders[id] = glider;
         }
         ++id;
     }
@@ -100,14 +100,14 @@ bool32 PSZ1Intro_CutsceneState_Unknown1(EntityCutsceneSeq *host)
 bool32 PSZ1Intro_CutsceneState_Unknown2(EntityCutsceneSeq *host)
 {
     RSDK_THIS(PSZ1Intro);
-    if (++entity->timer == 90) {
-        if (entity->gliders[0])
-            PSZ1Intro_HandleGliderJump(entity->gliders[0]);
+    if (++self->timer == 90) {
+        if (self->gliders[0])
+            PSZ1Intro_HandleGliderJump(self->gliders[0]);
     }
-    if (entity->timer == 120) {
-        entity->timer = 0;
-        if (entity->gliders[1])
-            PSZ1Intro_HandleGliderJump(entity->gliders[1]);
+    if (self->timer == 120) {
+        self->timer = 0;
+        if (self->gliders[1])
+            PSZ1Intro_HandleGliderJump(self->gliders[1]);
         return true;
     }
     return false;

@@ -6,7 +6,7 @@ ObjectLRZ3Outro *LRZ3Outro;
 void LRZ3Outro_Update(void)
 {
     RSDK_THIS(LRZ3Outro);
-    StateMachine_Run(entity->state);
+    StateMachine_Run(self->state);
 }
 
 void LRZ3Outro_LateUpdate(void) {}
@@ -19,13 +19,13 @@ void LRZ3Outro_Create(void *data)
 {
     RSDK_THIS(LRZ3Outro);
 
-    if (!RSDK_sceneInfo->inEditor) {
-        entity->active      = ACTIVE_NORMAL;
-        entity->isPermanent = true;
-        entity->bg1         = RSDK.GetSceneLayer(1);
-        entity->bg2         = RSDK.GetSceneLayer(2);
-        foreach_active(ParallaxSprite, sprite) { entity->littlePlanet = (Entity *)sprite; }
-        entity->state = LRZ3Outro_State_Unknown1;
+    if (!SceneInfo->inEditor) {
+        self->active      = ACTIVE_NORMAL;
+        self->isPermanent = true;
+        self->bg1         = RSDK.GetSceneLayer(1);
+        self->bg2         = RSDK.GetSceneLayer(2);
+        foreach_active(ParallaxSprite, sprite) { self->littlePlanet = (Entity *)sprite; }
+        self->state = LRZ3Outro_State_Unknown1;
     }
 }
 
@@ -39,12 +39,12 @@ void LRZ3Outro_HandleExplosions(void)
 {
     RSDK_THIS(LRZ3Outro);
 
-    int x                      = (RSDK.Rand(-RSDK_screens->centerX, RSDK_screens->centerX) + RSDK_screens->centerX + RSDK_screens->position.x);
-    int y                      = (RSDK_screens->position.y + 32 + RSDK_screens->height);
+    int x                      = (RSDK.Rand(-ScreenInfo->centerX, ScreenInfo->centerX) + ScreenInfo->centerX + ScreenInfo->position.x);
+    int y                      = (ScreenInfo->position.y + 32 + ScreenInfo->height);
     EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), x << 16, y << 16);
 
     explosion->velocity.x = RSDK.Rand(-0x20000, 0x20000);
-    explosion->velocity.y = entity->velocity.y - 0x40000;
+    explosion->velocity.y = self->velocity.y - 0x40000;
     explosion->drawOrder  = Zone->drawOrderHigh;
     explosion->drawFX     = FX_SCALE;
     explosion->inkEffect  = INK_BLEND;
@@ -56,18 +56,18 @@ void LRZ3Outro_State_Unknown1(void)
 {
     RSDK_THIS(LRZ3Outro);
 
-    ++entity->timer;
-    if (!(entity->timer & 7))
-        Camera_ShakeScreen(3, 0, 2);
+    ++self->timer;
+    if (!(self->timer & 7))
+        Camera_ShakeScreen(0, 3, 2);
 
-    if (entity->timer == 1) {
-        entity->blastoffChannel = RSDK.PlaySfx(LRZ3Outro->sfxBlastoff, 56628, 0xFF);
-        entity->blastoffVolume = 1.0;
+    if (self->timer == 1) {
+        self->blastoffChannel = RSDK.PlaySfx(LRZ3Outro->sfxBlastoff, 56628, 0xFF);
+        self->blastoffVolume = 1.0;
     }
 
-    if (entity->timer == 60) {
-        entity->timer                       = 0;
-        entity->state                       = LRZ3Outro_State_Unknown2;
+    if (self->timer == 60) {
+        self->timer                       = 0;
+        self->state                       = LRZ3Outro_State_Unknown2;
         RSDK.GetSceneLayer(0)->drawLayer[0] = DRAWLAYER_COUNT;
         RSDK.GetSceneLayer(1)->drawLayer[0] = 0;
     }
@@ -77,37 +77,37 @@ void LRZ3Outro_State_Unknown2(void)
 {
     RSDK_THIS(LRZ3Outro);
 
-    ++entity->timer;
-    if (!(entity->timer & 1))
+    ++self->timer;
+    if (!(self->timer & 1))
         LRZ3Outro_HandleExplosions();
-    if (entity->timer == 30) {
+    if (self->timer == 30) {
         Zone->playerBoundActiveB[0] = true;
-        Zone->screenBoundsB1[0]     = (entity->position.y >> 16) + 64;
+        Zone->screenBoundsB1[0]     = (self->position.y >> 16) + 64;
     }
 
-    if (entity->timer <= 120) {
-        if (!(entity->timer & 7)) {
-            Camera_ShakeScreen(RSDK.Rand(-6, 6), 0, 4);
+    if (self->timer <= 120) {
+        if (!(self->timer & 7)) {
+            Camera_ShakeScreen(0, RSDK.Rand(-6, 6), 4);
         }
     }
     else {
-        if (entity->velocity.y < 0x60000)
-            entity->velocity.y += 0x800;
-        if (!(entity->timer & 7))
+        if (self->velocity.y < 0x60000)
+            self->velocity.y += 0x800;
+        if (!(self->timer & 7))
             Camera_ShakeScreen(0, 0, 4);
     }
 
-    if (entity->timer > 390) {
-        entity->blastoffVolume -= 0.0125;
-        RSDK.SetChannelAttributes(entity->blastoffChannel, entity->blastoffVolume, 0.0, 1.0);
+    if (self->timer > 390) {
+        self->blastoffVolume -= 0.0125;
+        RSDK.SetChannelAttributes(self->blastoffChannel, self->blastoffVolume, 0.0, 1.0);
     }
-    if (entity->timer > 480) {
-        entity->timer = 0;
-        entity->state = LRZ3Outro_State_Unknown3;
-        RSDK.StopChannel(entity->blastoffChannel);
+    if (self->timer > 480) {
+        self->timer = 0;
+        self->state = LRZ3Outro_State_Unknown3;
+        RSDK.StopChannel(self->blastoffChannel);
     }
 
-    TileLayer *bg1 = entity->bg1;
+    TileLayer *bg1 = self->bg1;
     if (bg1->scrollPos <= -0xE00000) {
         bg1->scrollSpeed >>= 1;
     }
@@ -116,7 +116,7 @@ void LRZ3Outro_State_Unknown2(void)
             bg1->scrollSpeed -= 0x80;
     }
 
-    TileLayer *bg2 = entity->bg2;
+    TileLayer *bg2 = self->bg2;
     if (bg2->scrollPos <= -0xE00000) {
         bg2->scrollSpeed >>= 1;
     }
@@ -125,7 +125,7 @@ void LRZ3Outro_State_Unknown2(void)
             bg2->scrollSpeed -= 0x80;
     }
 
-    EntityParallaxSprite *littlePlanet = (EntityParallaxSprite *)entity->littlePlanet;
+    EntityParallaxSprite *littlePlanet = (EntityParallaxSprite *)self->littlePlanet;
     if (littlePlanet->scrollSpeed.y > -0x1000)
         littlePlanet->scrollSpeed.y -= 0x80;
 }
@@ -134,17 +134,17 @@ void LRZ3Outro_State_Unknown3(void)
 {
     RSDK_THIS(LRZ3Outro);
 
-    if (entity->bg2->scrollSpeed < 0)
-        entity->bg2->scrollSpeed += 0x80;
+    if (self->bg2->scrollSpeed < 0)
+        self->bg2->scrollSpeed += 0x80;
 
-    EntityParallaxSprite *littlePlanet = (EntityParallaxSprite *)entity->littlePlanet;
+    EntityParallaxSprite *littlePlanet = (EntityParallaxSprite *)self->littlePlanet;
     if (littlePlanet->scrollSpeed.y > -0x1000) {
         littlePlanet->scrollSpeed.y -= 0x80;
     }
 
     if (littlePlanet->scrollPos.y < -0x1000000) {
         littlePlanet->scrollSpeed.y = 0;
-        entity->state               = StateMachine_None;
+        self->state               = StateMachine_None;
     }
 }
 
@@ -179,7 +179,7 @@ bool32 LRZ3Outro_CutsceneState_Unknown2(EntityCutsceneSeq *host)
 {
     if (host->timer > 60) {
         int frame = 23 - minVal((host->timer - 60) >> 2, 6);
-        foreach_active(Player, player) { RSDK.SetSpriteAnimation(player->spriteIndex, ANI_TWISTER, &player->playerAnimator, true, frame); }
+        foreach_active(Player, player) { RSDK.SetSpriteAnimation(player->aniFrames, ANI_TWISTER, &player->animator, true, frame); }
     }
 
     if (host->timer > 120)

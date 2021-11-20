@@ -5,17 +5,17 @@ ObjectPiston *Piston;
 void Piston_Update(void)
 {
     RSDK_THIS(Piston);
-    if (entity->state == Piston_WaitForInterval && !((Zone->timer + entity->intervalOffset) % entity->interval)) {
-        entity->moveTimer = entity->distance >> 3;
-        entity->active    = ACTIVE_NORMAL;
-        switch (entity->spawnType - 1) {
-            case 0: entity->state = Piston_Launch; break;
-            case 1: entity->state = Piston_Down; break;
-            case 2: entity->state = Piston_Up; break;
-            case 3: entity->state = Piston_Right; break;
-            case 4: entity->state = Piston_Left; break;
-            case 5: entity->state = Piston_RightOrLeft; break;
-            default: entity->state = Piston_DownOrUp; break;
+    if (self->state == Piston_WaitForInterval && !((Zone->timer + self->intervalOffset) % self->interval)) {
+        self->moveTimer = self->distance >> 3;
+        self->active    = ACTIVE_NORMAL;
+        switch (self->spawnType - 1) {
+            case 0: self->state = Piston_Launch; break;
+            case 1: self->state = Piston_Down; break;
+            case 2: self->state = Piston_Up; break;
+            case 3: self->state = Piston_Right; break;
+            case 4: self->state = Piston_Left; break;
+            case 5: self->state = Piston_RightOrLeft; break;
+            default: self->state = Piston_DownOrUp; break;
         }
     }
     Platform_Update();
@@ -28,34 +28,34 @@ void Piston_StaticUpdate(void) {}
 void Piston_Draw(void)
 {
     RSDK_THIS(Piston);
-    RSDK.DrawSprite(&entity->animator, &entity->drawPos, false);
+    RSDK.DrawSprite(&self->animator, &self->drawPos, false);
 }
 
 void Piston_Create(void *data)
 {
     RSDK_THIS(Piston);
-    int32 type              = entity->type;
-    entity->spawnType     = type;
-    entity->type            = PLATFORM_0;
-    entity->collisionType   = PLATFORM_C_1;
+    int32 type              = self->type;
+    self->spawnType     = type;
+    self->type            = PLATFORM_FIXED;
+    self->collisionType   = PLATFORM_C_SOLID_ALL;
     if (type > 3)
-        entity->size += 3;
+        self->size += 3;
     Platform_Create(NULL);
     if (type <= 3) {
-        entity->updateRange.x = 0x800000;
-        entity->updateRange.y = (entity->distance + 128) << 16;
+        self->updateRange.x = 0x800000;
+        self->updateRange.y = (self->distance + 128) << 16;
     }
     else {
-        entity->updateRange.x = (entity->distance + 128) << 16;
-        entity->updateRange.y = 0x800000;
+        self->updateRange.x = (self->distance + 128) << 16;
+        self->updateRange.y = 0x800000;
     }
-    entity->type = type;
-    if (entity->type == 3) {
-        entity->state        = Piston_WaitForPlayers;
-        entity->stateCollide = Piston_StateCollide_Solid;
+    self->type = type;
+    if (self->type == 3) {
+        self->state        = Piston_WaitForPlayers;
+        self->stateCollide = Piston_StateCollide_Solid;
     }
     else
-        entity->state = Piston_WaitForInterval;
+        self->state = Piston_WaitForInterval;
 }
 
 void Piston_StageLoad(void)
@@ -94,7 +94,7 @@ void Piston_StateCollide_Solid(void)
     Platform_CollisionState_AllSolid();
 #if RETRO_USE_PLUS
     for (int32 i = 0; i < Player->playerCount; ++i) {
-        if (((1 << i) & entity->stoodPlayers) != 0) {
+        if (((1 << i) & self->stoodPlayers) != 0) {
             EntityPlayer *player = RSDK_GET_ENTITY(i, Player);
             if (player->state == Player_State_MightyHammerDrop)
                 player->state = Player_State_Air;
@@ -106,109 +106,109 @@ void Piston_StateCollide_Solid(void)
 void Piston_Down(void)
 {
     RSDK_THIS(Piston);
-    entity->drawPos.y += 0x80000;
-    entity->velocity.y = 0x80000;
-    if (--entity->moveTimer <= 0) {
-        entity->spawnType = 3;
-        entity->active    = ACTIVE_BOUNDS;
-        entity->state     = Piston_WaitForInterval;
+    self->drawPos.y += 0x80000;
+    self->velocity.y = 0x80000;
+    if (--self->moveTimer <= 0) {
+        self->spawnType = 3;
+        self->active    = ACTIVE_BOUNDS;
+        self->state     = Piston_WaitForInterval;
     }
 }
 
 void Piston_Up(void)
 {
     RSDK_THIS(Piston);
-    entity->drawPos.y -= 0x80000;
-    entity->velocity.y = 0x80000;
-    if (--entity->moveTimer <= 0) {
-        entity->spawnType = 2;
-        entity->active    = ACTIVE_BOUNDS;
-        entity->state     = Piston_WaitForInterval;
+    self->drawPos.y -= 0x80000;
+    self->velocity.y = 0x80000;
+    if (--self->moveTimer <= 0) {
+        self->spawnType = 2;
+        self->active    = ACTIVE_BOUNDS;
+        self->state     = Piston_WaitForInterval;
     }
 }
 
 void Piston_DownOrUp(void)
 {
     RSDK_THIS(Piston);
-    entity->velocity.y = 0x80000;
-    if (!entity->reverse)
-        entity->drawPos.y += 0x80000;
+    self->velocity.y = 0x80000;
+    if (!self->reverse)
+        self->drawPos.y += 0x80000;
     else
-        entity->drawPos.y -= 0x80000;
-    if (--entity->moveTimer <= 0) {
-        entity->moveTimer = entity->distance;
-        entity->state     = Piston_UpOrDown;
+        self->drawPos.y -= 0x80000;
+    if (--self->moveTimer <= 0) {
+        self->moveTimer = self->distance;
+        self->state     = Piston_UpOrDown;
     }
 }
 
 void Piston_UpOrDown(void)
 {
     RSDK_THIS(Piston);
-    entity->velocity.y = 0x10000;
-    if (!entity->reverse)
-        entity->drawPos.y += 0x10000;
+    self->velocity.y = 0x10000;
+    if (!self->reverse)
+        self->drawPos.y += 0x10000;
     else
-        entity->drawPos.y -= 0x10000;
-    if (--entity->moveTimer <= 0) {
-        entity->moveTimer = ACTIVE_BOUNDS;
-        entity->state     = Piston_WaitForInterval;
+        self->drawPos.y -= 0x10000;
+    if (--self->moveTimer <= 0) {
+        self->moveTimer = ACTIVE_BOUNDS;
+        self->state     = Piston_WaitForInterval;
     }
 }
 
 void Piston_Launch(void)
 {
     RSDK_THIS(Piston);
-    entity->drawPos.y -= 0x80000;
-    entity->velocity.y = 0x80000;
-    if (--entity->moveTimer <= 0) {
+    self->drawPos.y -= 0x80000;
+    self->velocity.y = 0x80000;
+    if (--self->moveTimer <= 0) {
         for (int32 i = 0; i < Player->playerCount; ++i) {
             EntityPlayer* player = RSDK_GET_ENTITY(i, Player);
-            if (((1 << i) & entity->stoodPlayers) != 0) {
+            if (((1 << i) & self->stoodPlayers) != 0) {
                 player->velocity.y = -0x100000;
                 player->state      = Player_State_Air;
                 player->onGround   = false;
-                RSDK.SetSpriteAnimation(player->spriteIndex, ANI_SPRINGTWIRL, &player->playerAnimator, true, 0);
+                RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGTWIRL, &player->animator, true, 0);
             }
         }
-        entity->moveTimer = entity->distance;
-        entity->state     = Piston_Pullback;
+        self->moveTimer = self->distance;
+        self->state     = Piston_Pullback;
     }
 }
 
 void Piston_Pullback(void)
 {
     RSDK_THIS(Piston);
-    entity->drawPos.y += 0x10000;
-    entity->velocity.y = 0x10000;
-    if (--entity->moveTimer <= 0) {
-        entity->active = ACTIVE_BOUNDS;
-        entity->state  = Piston_WaitForInterval;
+    self->drawPos.y += 0x10000;
+    self->velocity.y = 0x10000;
+    if (--self->moveTimer <= 0) {
+        self->active = ACTIVE_BOUNDS;
+        self->state  = Piston_WaitForInterval;
     }
 }
 
 void Piston_WaitForPlayers(void)
 {
     RSDK_THIS(Piston);
-    if (entity->stoodPlayers)
-        entity->state = Piston_PrepareLaunch;
+    if (self->stoodPlayers)
+        self->state = Piston_PrepareLaunch;
 }
 
 void Piston_PrepareLaunch(void)
 {
     RSDK_THIS(Piston);
-    if (entity->stoodPlayers) {
-        if (!entity->moveTimer)
+    if (self->stoodPlayers) {
+        if (!self->moveTimer)
             RSDK.PlaySfx(Piston->landSFX, false, 255);
-        entity->drawPos.y += 0x10000;
-        entity->velocity.y = 0x10000;
-        if (++entity->moveTimer >= 16) {
+        self->drawPos.y += 0x10000;
+        self->velocity.y = 0x10000;
+        if (++self->moveTimer >= 16) {
             RSDK.StopSFX(Piston->landSFX);
             RSDK.PlaySfx(Piston->launchSFX, false, 255);
-            entity->state = Piston_LaunchAndWait;
+            self->state = Piston_LaunchAndWait;
         }
     }
     else {
-        entity->state = Piston_PullbackOrLaunch;
+        self->state = Piston_PullbackOrLaunch;
         RSDK.StopSFX(Piston->landSFX);
     }
 }
@@ -216,86 +216,86 @@ void Piston_PrepareLaunch(void)
 void Piston_PullbackOrLaunch()
 {
     RSDK_THIS(Piston);
-    if (entity->stoodPlayers) {
-        entity->state = Piston_PrepareLaunch;
+    if (self->stoodPlayers) {
+        self->state = Piston_PrepareLaunch;
     }
     else {
-        entity->drawPos.y -= 0x10000;
-        entity->velocity.y = 0x10000;
-        if (--entity->moveTimer <= 0)
-            entity->state = Piston_WaitForPlayers;
+        self->drawPos.y -= 0x10000;
+        self->velocity.y = 0x10000;
+        if (--self->moveTimer <= 0)
+            self->state = Piston_WaitForPlayers;
     }
 }
 
 void Piston_LaunchAndWait(void)
 {
     RSDK_THIS(Piston);
-    entity->drawPos.y -= 0x40000;
-    entity->velocity.y = 0x40000;
-    entity->moveTimer -= 4;
-    if (entity->moveTimer == 4) {
+    self->drawPos.y -= 0x40000;
+    self->velocity.y = 0x40000;
+    self->moveTimer -= 4;
+    if (self->moveTimer == 4) {
         for (int32 i = 0; i < Player->playerCount; ++i) {
             EntityPlayer *player = RSDK_GET_ENTITY(i, Player);
-            if (((1 << i) & entity->stoodPlayers) != 0) {
+            if (((1 << i) & self->stoodPlayers) != 0) {
                 RSDK.PlaySfx(Piston->launchSFX, false, 255);
                 player->velocity.y = -0x100000;
                 player->state      = Player_State_Air;
                 player->onGround   = false;
-                RSDK.SetSpriteAnimation(player->spriteIndex, ANI_SPRINGTWIRL, &player->playerAnimator, true, 0);
+                RSDK.SetSpriteAnimation(player->aniFrames, ANI_SPRINGTWIRL, &player->animator, true, 0);
             }
         }
-        entity->state = Piston_WaitForPlayers;
+        self->state = Piston_WaitForPlayers;
     }
 }
 
 void Piston_Right(void)
 {
     RSDK_THIS(Piston);
-    entity->drawPos.x += 0x80000;
-    entity->velocity.x = 0x80000;
-    if (--entity->moveTimer <= 0) {
-        entity->spawnType = 5;
-        entity->active    = ACTIVE_BOUNDS;
-        entity->state     = Piston_WaitForInterval;
+    self->drawPos.x += 0x80000;
+    self->velocity.x = 0x80000;
+    if (--self->moveTimer <= 0) {
+        self->spawnType = 5;
+        self->active    = ACTIVE_BOUNDS;
+        self->state     = Piston_WaitForInterval;
     }
 }
 
 void Piston_Left(void)
 {
     RSDK_THIS(Piston);
-    entity->drawPos.x -= 0x80000;
-    entity->velocity.x = 0x80000;
-    if (--entity->moveTimer <= 0) {
-        entity->spawnType = 4;
-        entity->active    = ACTIVE_BOUNDS;
-        entity->state     = Piston_WaitForInterval;
+    self->drawPos.x -= 0x80000;
+    self->velocity.x = 0x80000;
+    if (--self->moveTimer <= 0) {
+        self->spawnType = 4;
+        self->active    = ACTIVE_BOUNDS;
+        self->state     = Piston_WaitForInterval;
     }
 }
 
 void Piston_RightOrLeft(void)
 {
     RSDK_THIS(Piston);
-    entity->velocity.x = 0x80000;
-    if (!entity->reverse)
-        entity->drawPos.x += 0x80000;
+    self->velocity.x = 0x80000;
+    if (!self->reverse)
+        self->drawPos.x += 0x80000;
     else
-        entity->drawPos.x -= 0x80000;
-    if (--entity->moveTimer <= 0) {
-        entity->moveTimer = entity->distance;
-        entity->state     = Piston_LeftOrRight;
+        self->drawPos.x -= 0x80000;
+    if (--self->moveTimer <= 0) {
+        self->moveTimer = self->distance;
+        self->state     = Piston_LeftOrRight;
     }
 }
 
 void Piston_LeftOrRight(void)
 {
     RSDK_THIS(Piston);
-    entity->velocity.x = 0x10000;
-    if (!entity->reverse)
-        entity->drawPos.x += 0x10000;
+    self->velocity.x = 0x10000;
+    if (!self->reverse)
+        self->drawPos.x += 0x10000;
     else
-        entity->drawPos.x -= 0x10000;
-    if (--entity->moveTimer <= 0) {
-        entity->moveTimer = ACTIVE_BOUNDS;
-        entity->state     = Piston_WaitForInterval;
+        self->drawPos.x -= 0x10000;
+    if (--self->moveTimer <= 0) {
+        self->moveTimer = ACTIVE_BOUNDS;
+        self->state     = Piston_WaitForInterval;
     }
 }

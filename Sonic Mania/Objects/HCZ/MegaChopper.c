@@ -5,7 +5,7 @@ ObjectMegaChopper *MegaChopper;
 void MegaChopper_Update(void)
 {
     RSDK_THIS(MegaChopper);
-    StateMachine_Run(entity->state);
+    StateMachine_Run(self->state);
 }
 
 void MegaChopper_LateUpdate(void) {}
@@ -15,21 +15,21 @@ void MegaChopper_StaticUpdate(void) {}
 void MegaChopper_Draw(void)
 {
     RSDK_THIS(MegaChopper);
-    RSDK.DrawSprite(&entity->animator, NULL, false);
+    RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
 void MegaChopper_Create(void *data)
 {
     RSDK_THIS(MegaChopper);
-    entity->visible = true;
-    entity->drawFX |= FX_FLIP;
-    entity->drawOrder     = Zone->playerDrawLow + 1;
-    entity->startPos      = entity->position;
-    entity->active        = ACTIVE_BOUNDS;
-    entity->updateRange.x = 0x800000;
-    entity->updateRange.y = 0x800000;
-    RSDK.SetSpriteAnimation(MegaChopper->aniFrames, 0, &entity->animator, true, 0);
-    entity->state = MegaChopper_State_Setup;
+    self->visible = true;
+    self->drawFX |= FX_FLIP;
+    self->drawOrder     = Zone->playerDrawLow + 1;
+    self->startPos      = self->position;
+    self->active        = ACTIVE_BOUNDS;
+    self->updateRange.x = 0x800000;
+    self->updateRange.y = 0x800000;
+    RSDK.SetSpriteAnimation(MegaChopper->aniFrames, 0, &self->animator, true, 0);
+    self->state = MegaChopper_State_Setup;
 }
 
 void MegaChopper_StageLoad(void)
@@ -50,7 +50,7 @@ void MegaChopper_StageLoad(void)
 void MegaChopper_DebugSpawn(void)
 {
     RSDK_THIS(DebugMode);
-    CREATE_ENTITY(MegaChopper, NULL, entity->position.x, entity->position.y);
+    CREATE_ENTITY(MegaChopper, NULL, self->position.x, self->position.y);
 }
 
 void MegaChopper_DebugDraw(void)
@@ -65,14 +65,14 @@ void MegaChopper_CheckPlayerCollisions(void)
 
     foreach_active(Player, player)
     {
-        if (Player_CheckBadnikTouch(player, entity, &MegaChopper->hitbox1)) {
+        if (Player_CheckBadnikTouch(player, self, &MegaChopper->hitbox1)) {
             int blink          = player->blinkTimer;
             player->blinkTimer = 1;
-            if (!Player_CheckBadnikBreak(entity, player, true) && Player_CheckCollisionTouch(player, entity, &MegaChopper->hitbox2)) {
-                entity->playerPtr   = (Entity *)player;
-                entity->playerPos.x = (entity->position.x - player->position.x) & 0xFFFF0000;
-                entity->playerPos.y = (entity->position.y - player->position.y) & 0xFFFF0000;
-                entity->playerDir   = player->direction;
+            if (!Player_CheckBadnikBreak(self, player, true) && Player_CheckCollisionTouch(player, self, &MegaChopper->hitbox2)) {
+                self->playerPtr   = (Entity *)player;
+                self->playerPos.x = (self->position.x - player->position.x) & 0xFFFF0000;
+                self->playerPos.y = (self->position.y - player->position.y) & 0xFFFF0000;
+                self->playerDir   = player->direction;
 
                 if (player->stateInput == Player_ProcessP1Input) {
                     player->stateInput = MegaChopper_PlayerInput_StateP1;
@@ -83,9 +83,9 @@ void MegaChopper_CheckPlayerCollisions(void)
                 else if (player->stateInput == Player_ProcessP2Input_AI) {
                     player->stateInput = MegaChopper_PlayerInput_StateP2_AI;
                 }
-                entity->drawOrder   = player->drawOrder + 1;
-                entity->isPermanent = true;
-                entity->state       = MegaChopper_State_Unknown3;
+                self->drawOrder   = player->drawOrder + 1;
+                self->isPermanent = true;
+                self->state       = MegaChopper_State_Unknown3;
             }
             player->blinkTimer = blink;
             foreach_break;
@@ -96,10 +96,10 @@ void MegaChopper_CheckPlayerCollisions(void)
 void MegaChopper_CheckOnScreen(void)
 {
     RSDK_THIS(MegaChopper);
-    if (!RSDK.CheckOnScreen(entity, NULL) && RSDK.CheckPosOnScreen(&entity->startPos, &entity->updateRange) == false) {
-        entity->position.x   = entity->startPos.x;
-        entity->position.y   = entity->startPos.y;
-        EntityPlayer *player = (EntityPlayer *)entity->playerPtr;
+    if (!RSDK.CheckOnScreen(self, NULL) && RSDK.CheckPosOnScreen(&self->startPos, &self->updateRange) == false) {
+        self->position.x   = self->startPos.x;
+        self->position.y   = self->startPos.y;
+        EntityPlayer *player = (EntityPlayer *)self->playerPtr;
         if (player) {
             if (player->stateInput == MegaChopper_PlayerInput_StateP1) {
                 player->stateInput = Player_ProcessP1Input;
@@ -111,8 +111,8 @@ void MegaChopper_CheckOnScreen(void)
                 player->stateInput = Player_ProcessP2Input_AI;
             }
         }
-        entity->nibbleTimer = 0;
-        entity->isPermanent = false;
+        self->nibbleTimer = 0;
+        self->isPermanent = false;
         MegaChopper_Create(NULL);
     }
 }
@@ -121,11 +121,11 @@ void MegaChopper_PlayerInput_StateP1(void)
 {
     RSDK_THIS(Player);
     Player_ProcessP1Input();
-    if (entity->state != Player_State_None) {
-        entity->up        = false;
-        entity->down      = false;
-        entity->jumpPress = false;
-        entity->jumpHold  = false;
+    if (self->state != Player_State_None) {
+        self->up        = false;
+        self->down      = false;
+        self->jumpPress = false;
+        self->jumpHold  = false;
     }
 }
 
@@ -133,91 +133,91 @@ void MegaChopper_PlayerInput_StateP2(void)
 {
     RSDK_THIS(Player);
     Player_ProcessP2Input_Player();
-    entity->up        = false;
-    entity->down      = false;
-    entity->jumpPress = false;
-    entity->jumpHold  = false;
-    if (entity->stateInput == Player_ProcessP2Input_AI)
-        entity->stateInput = MegaChopper_PlayerInput_StateP2_AI;
+    self->up        = false;
+    self->down      = false;
+    self->jumpPress = false;
+    self->jumpHold  = false;
+    if (self->stateInput == Player_ProcessP2Input_AI)
+        self->stateInput = MegaChopper_PlayerInput_StateP2_AI;
 }
 
 void MegaChopper_PlayerInput_StateP2_AI(void)
 {
     RSDK_THIS(Player);
     Player_ProcessP2Input_AI();
-    entity->up        = false;
-    entity->down      = false;
-    entity->jumpPress = false;
-    entity->jumpHold  = false;
-    if (entity->stateInput == Player_ProcessP2Input_Player)
-        entity->stateInput = MegaChopper_PlayerInput_StateP2;
+    self->up        = false;
+    self->down      = false;
+    self->jumpPress = false;
+    self->jumpHold  = false;
+    if (self->stateInput == Player_ProcessP2Input_Player)
+        self->stateInput = MegaChopper_PlayerInput_StateP2;
 }
 
 void MegaChopper_State_Setup(void)
 {
     RSDK_THIS(MegaChopper);
-    if (entity->position.y >= Water->waterLevel) {
-        entity->active     = ACTIVE_NORMAL;
-        entity->velocity.x = -0x10000;
-        entity->state      = MegaChopper_State_Unknown1;
+    if (self->position.y >= Water->waterLevel) {
+        self->active     = ACTIVE_NORMAL;
+        self->velocity.x = -0x10000;
+        self->state      = MegaChopper_State_Unknown1;
         MegaChopper_State_Unknown1();
     }
     else {
-        destroyEntity(entity);
+        destroyEntity(self);
     }
 }
 
 void MegaChopper_State_Unknown1(void)
 {
     RSDK_THIS(MegaChopper);
-    if (++entity->animator.frameID == 6)
-        entity->animator.frameID = 0;
-    if (entity->animator.frameID == 12)
-        entity->animator.frameID = 6;
+    if (++self->animator.frameID == 6)
+        self->animator.frameID = 0;
+    if (self->animator.frameID == 12)
+        self->animator.frameID = 6;
     EntityPlayer *player = Player_GetNearestPlayer();
 
-    if (entity->position.x >= player->position.x) {
-        entity->velocity.x -= 0x800;
-        if (entity->velocity.x < -0x20000)
-            entity->velocity.x = -0x20000;
+    if (self->position.x >= player->position.x) {
+        self->velocity.x -= 0x800;
+        if (self->velocity.x < -0x20000)
+            self->velocity.x = -0x20000;
     }
     else {
-        entity->velocity.x += 0x800;
-        if (entity->velocity.x > 0x20000)
-            entity->velocity.x = 0x20000;
+        self->velocity.x += 0x800;
+        if (self->velocity.x > 0x20000)
+            self->velocity.x = 0x20000;
     }
 
-    if (entity->position.y >= player->position.y)
-        entity->position.y -= 0x2000;
+    if (self->position.y >= player->position.y)
+        self->position.y -= 0x2000;
     else
-        entity->position.y += 0x2000;
+        self->position.y += 0x2000;
 
-    entity->direction = entity->velocity.x > 0;
-    if (entity->velocity.y > 0) {
-        entity->velocity.y -= 0x3800;
-        if (entity->velocity.y < 0)
-            entity->velocity.y = 0;
+    self->direction = self->velocity.x > 0;
+    if (self->velocity.y > 0) {
+        self->velocity.y -= 0x3800;
+        if (self->velocity.y < 0)
+            self->velocity.y = 0;
     }
-    entity->position.x += entity->velocity.x;
-    entity->position.y += entity->velocity.y;
-    if (entity->position.y < Water->waterLevel) {
+    self->position.x += self->velocity.x;
+    self->position.y += self->velocity.y;
+    if (self->position.y < Water->waterLevel) {
 
         bool32 flag = false;
         foreach_active(Water, water)
         {
-            if (water->type == WATER_RECT && RSDK.CheckObjectCollisionTouchBox(water, &water->hitbox, entity, &Water->hitbox)) {
+            if (water->type == WATER_RECT && RSDK.CheckObjectCollisionTouchBox(water, &water->hitbox, self, &Water->hitbox)) {
                 flag = true;
             }
         }
 
         if (!flag) {
-            entity->velocity.y = -0x40000;
-            if (entity->direction == FLIP_NONE)
-                entity->velocity.x = -0x20000;
+            self->velocity.y = -0x40000;
+            if (self->direction == FLIP_NONE)
+                self->velocity.x = -0x20000;
             else
-                entity->velocity.x = 0x20000;
-            entity->velocity.x = 0x20000;
-            entity->state      = MegaChopper_State_Unknown2;
+                self->velocity.x = 0x20000;
+            self->velocity.x = 0x20000;
+            self->state      = MegaChopper_State_Unknown2;
         }
     }
     MegaChopper_CheckPlayerCollisions();
@@ -227,23 +227,23 @@ void MegaChopper_State_Unknown1(void)
 void MegaChopper_State_Unknown2(void)
 {
     RSDK_THIS(MegaChopper);
-    if (++entity->animator.frameID == 6)
-        entity->animator.frameID = 0;
-    if (entity->animator.frameID == 12)
-        entity->animator.frameID = 6;
+    if (++self->animator.frameID == 6)
+        self->animator.frameID = 0;
+    if (self->animator.frameID == 12)
+        self->animator.frameID = 6;
 
-    entity->position.x += entity->velocity.x;
-    entity->position.y += entity->velocity.y;
-    entity->velocity.y += 0x1800;
+    self->position.x += self->velocity.x;
+    self->position.y += self->velocity.y;
+    self->velocity.y += 0x1800;
 
-    if (entity->position.y >= Water->waterLevel) {
-        entity->state = MegaChopper_State_Unknown1;
+    if (self->position.y >= Water->waterLevel) {
+        self->state = MegaChopper_State_Unknown1;
     }
     else {
         foreach_active(Water, water)
         {
-            if (water->type == WATER_RECT && RSDK.CheckObjectCollisionTouchBox(water, &water->hitbox, entity, &Water->hitbox)) {
-                entity->state = MegaChopper_State_Unknown1;
+            if (water->type == WATER_RECT && RSDK.CheckObjectCollisionTouchBox(water, &water->hitbox, self, &Water->hitbox)) {
+                self->state = MegaChopper_State_Unknown1;
             }
         }
     }
@@ -254,23 +254,23 @@ void MegaChopper_State_Unknown2(void)
 void MegaChopper_State_Unknown3(void)
 {
     RSDK_THIS(MegaChopper);
-    if (++entity->animator.animationTimer == 3) {
-        entity->animator.animationTimer = 0;
-        entity->animator.frameID        = (entity->animator.frameID + 6) % 12;
+    if (++self->animator.animationTimer == 3) {
+        self->animator.animationTimer = 0;
+        self->animator.frameID        = (self->animator.frameID + 6) % 12;
     }
-    EntityPlayer *player = (EntityPlayer *)entity->playerPtr;
+    EntityPlayer *player = (EntityPlayer *)self->playerPtr;
 
     if (!player) {
-        entity->velocity.y = -0x40000;
-        if (entity->direction == FLIP_NONE)
-            entity->velocity.x = 0x20000;
+        self->velocity.y = -0x40000;
+        if (self->direction == FLIP_NONE)
+            self->velocity.x = 0x20000;
         else
-            entity->velocity.x = -0x20000;
-        entity->state = MegaChopper_State_Unknown4;
+            self->velocity.x = -0x20000;
+        self->state = MegaChopper_State_Unknown4;
     }
     else {
-        if (player->playerAnimator.animationID == ANI_JUMP) {
-            entity->playerPtr = NULL;
+        if (player->animator.animationID == ANI_JUMP) {
+            self->playerPtr = NULL;
             if (player->stateInput == MegaChopper_PlayerInput_StateP1) {
                 player->stateInput = Player_ProcessP1Input;
             }
@@ -281,65 +281,65 @@ void MegaChopper_State_Unknown3(void)
                 player->stateInput = Player_ProcessP2Input_AI;
             }
 
-            entity->velocity.y = -0x40000;
-            if (entity->direction == FLIP_NONE)
-                entity->velocity.x = 0x20000;
+            self->velocity.y = -0x40000;
+            if (self->direction == FLIP_NONE)
+                self->velocity.x = 0x20000;
             else
-                entity->velocity.x = -0x20000;
-            entity->state = MegaChopper_State_Unknown4;
+                self->velocity.x = -0x20000;
+            self->state = MegaChopper_State_Unknown4;
         }
         else {
-            if (++entity->nibbleTimer >= 60) {
-                entity->nibbleTimer = 0;
+            if (++self->nibbleTimer >= 60) {
+                self->nibbleTimer = 0;
                 if (!player->rings || player->sidekick) {
                     Player_Hit(player);
-                    if (player->position.x > entity->position.x)
+                    if (player->position.x > self->position.x)
                         player->velocity.x = 0x20000;
                     else
                         player->velocity.x = -0x20000;
-                    entity->playerPtr = NULL;
+                    self->playerPtr = NULL;
                 }
                 else {
                     player->rings--;
                     if (Ring->pan) {
-                        int channel = RSDK.PlaySfx(Ring->sfx_Ring, false, 255);
+                        int channel = RSDK.PlaySfx(Ring->sfxRing, false, 255);
                         RSDK.SetChannelAttributes(channel, 1.0, -1.0, 1.0);
                         Ring->pan = 0;
                     }
                     else {
-                        int channel = RSDK.PlaySfx(Ring->sfx_Ring, false, 255);
+                        int channel = RSDK.PlaySfx(Ring->sfxRing, false, 255);
                         RSDK.SetChannelAttributes(channel, 1.0, 1.0, 1.0);
                         Ring->pan = 1;
                     }
                 }
             }
 
-            if (entity->playerPtr) {
-                entity->position.x = player->position.x + entity->playerPos.x;
-                entity->position.y = player->position.y + entity->playerPos.y;
-                if (player->direction != entity->playerDir) {
-                    entity->direction ^= FLIP_X;
-                    entity->playerDir = player->direction;
+            if (self->playerPtr) {
+                self->position.x = player->position.x + self->playerPos.x;
+                self->position.y = player->position.y + self->playerPos.y;
+                if (player->direction != self->playerDir) {
+                    self->direction ^= FLIP_X;
+                    self->playerDir = player->direction;
                 }
 
-                entity->playerDir = player->direction;
-                if (entity->lastShakeFlags) {
-                    if (!entity->field_72) {
-                        entity->shakeCount     = 0;
-                        entity->lastShakeFlags = 0;
+                self->playerDir = player->direction;
+                if (self->lastShakeFlags) {
+                    if (!self->field_72) {
+                        self->shakeCount     = 0;
+                        self->lastShakeFlags = 0;
                     }
                     else {
                         uint8 flags = 0;
-                        entity->field_72--;
+                        self->field_72--;
                         if (player->left)
                             flags = 1;
                         if (player->right)
                             flags |= 2;
                         if (flags) {
-                            if (flags != 3 && flags != entity->lastShakeFlags) {
-                                entity->lastShakeFlags = flags;
-                                if (++entity->shakeCount >= 6) {
-                                    entity->playerPtr = NULL;
+                            if (flags != 3 && flags != self->lastShakeFlags) {
+                                self->lastShakeFlags = flags;
+                                if (++self->shakeCount >= 6) {
+                                    self->playerPtr = NULL;
                                     if (player->stateInput == MegaChopper_PlayerInput_StateP1) {
                                         player->stateInput = Player_ProcessP1Input;
                                     }
@@ -350,24 +350,24 @@ void MegaChopper_State_Unknown3(void)
                                         player->stateInput = Player_ProcessP2Input_AI;
                                     }
 
-                                    entity->velocity.y = -0x40000;
-                                    if (entity->direction == FLIP_NONE)
-                                        entity->velocity.x = 0x20000;
+                                    self->velocity.y = -0x40000;
+                                    if (self->direction == FLIP_NONE)
+                                        self->velocity.x = 0x20000;
                                     else
-                                        entity->velocity.x = -0x20000;
-                                    entity->state = MegaChopper_State_Unknown4;
+                                        self->velocity.x = -0x20000;
+                                    self->state = MegaChopper_State_Unknown4;
                                 }
                             }
                         }
                     }
                 }
                 else if (player->left) {
-                    entity->lastShakeFlags = 1;
-                    entity->field_72       = 64;
+                    self->lastShakeFlags = 1;
+                    self->field_72       = 64;
                 }
                 else if (player->right) {
-                    entity->lastShakeFlags = 2;
-                    entity->field_72       = 64;
+                    self->lastShakeFlags = 2;
+                    self->field_72       = 64;
                 }
             }
             else {
@@ -381,12 +381,12 @@ void MegaChopper_State_Unknown3(void)
                     player->stateInput = Player_ProcessP2Input_AI;
                 }
 
-                entity->velocity.y = -0x40000;
-                if (entity->direction == FLIP_NONE)
-                    entity->velocity.x = 0x20000;
+                self->velocity.y = -0x40000;
+                if (self->direction == FLIP_NONE)
+                    self->velocity.x = 0x20000;
                 else
-                    entity->velocity.x = -0x20000;
-                entity->state = MegaChopper_State_Unknown4;
+                    self->velocity.x = -0x20000;
+                self->state = MegaChopper_State_Unknown4;
             }
         }
     }
@@ -397,9 +397,9 @@ void MegaChopper_State_Unknown3(void)
 void MegaChopper_State_Unknown4(void)
 {
     RSDK_THIS(MegaChopper);
-    entity->position.x += entity->velocity.x;
-    entity->position.y += entity->velocity.y;
-    entity->velocity.y += 0x3800;
+    self->position.x += self->velocity.x;
+    self->position.y += self->velocity.y;
+    self->velocity.y += 0x3800;
     MegaChopper_CheckOnScreen();
 }
 

@@ -6,7 +6,7 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    TABLE(int32 array[5], { -0x20000, -0x10000, 0x00000, 0x10000, 0x20000 });
+    TABLE(int32 flameOffsets[5], { -0x20000, -0x10000, 0x00000, 0x10000, 0x20000 });
     uint16 aniFrames;
 } ObjectAIZTornado;
 
@@ -14,24 +14,22 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    int32 dword5C;
-    int32 dword60;
-    int32 dword64;
-    int32 dword68;
-    int32 field_6C;
-    int32 field_70;
+    int32 collideTimer; // unused here (used in MSZ/Tornado)
+    int32 turnAngle;
+    bool32 isStood;
+    bool32 showFlame;
+    int32 storeY;       // unused here (used in MSZ/Tornado)
+    int32 gravityForce; // unused here (used in MSZ/Tornado)
     Vector2 prevPos;
-    int32 dword7C;
-    int32 dword80;
-    int32 field_84;
-    int32 field_88;
+    Vector2 movePos;
+    Vector2 newPos;
     Vector2 moveVelocity;
-    int32 field_94;
-    int32 dword98;
-    Animator animator1;
-    Animator animator2;
-    Animator animator3;
-    Animator animator4;
+    bool32 disableInteractions;
+    int32 offsetX; //unused here (used in MSZ/Tornado)
+    Animator animatorTornado;
+    Animator animatorPropeller;
+    Animator animatorFlame;
+    Animator animatorPilot;
 } EntityAIZTornado;
 
 // Object Struct
@@ -51,9 +49,9 @@ void AIZTornado_EditorLoad(void);
 void AIZTornado_Serialize(void);
 
 // Extra Entity Functions
-void AIZTornado_Unknown1(void);
-void AIZTornado_Unknown2(void);
-void AIZTornado_Unknown3(void);
+void AIZTornado_HandleMovement(void);
+void AIZTornado_HandlePlayerCollisions(void);
+void AIZTornado_State_Move(void);
 
 
 #endif //!OBJ_AIZTORNADO_H

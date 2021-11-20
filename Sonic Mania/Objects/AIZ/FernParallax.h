@@ -14,7 +14,7 @@ typedef struct {
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    int32 field_58;
+    StateMachine(state); // unused
     Animator animator;
     uint8 aniID;
     Vector2 parallaxFactor;

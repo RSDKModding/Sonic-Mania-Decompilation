@@ -37,16 +37,16 @@ void GHZ2Outro_EditorLoad(void);
 void GHZ2Outro_Serialize(void);
 
 // Extra Entity Functions
-bool32 GHZ2Outro_CutsceneState1_Unknown1(EntityCutsceneSeq *host);
-bool32 GHZ2Outro_CutsceneState1_Unknown2(EntityCutsceneSeq *host);
+bool32 GHZ2Outro_Cutscene_FinishActClear(EntityCutsceneSeq *host);
+bool32 GHZ2Outro_Cutscene_JumpIntoHole(EntityCutsceneSeq *host);
 
-bool32 GHZ2Outro_CutsceneState2_Unknown1(EntityCutsceneSeq *host);
-bool32 GHZ2Outro_CutsceneState2_Unknown2(EntityCutsceneSeq *host);
-bool32 GHZ2Outro_CutsceneState2_Unknown3(EntityCutsceneSeq *host);
-bool32 GHZ2Outro_CutsceneState2_Unknown4(EntityCutsceneSeq *host);
-bool32 GHZ2Outro_CutsceneState2_Unknown5(EntityCutsceneSeq *host);
-bool32 GHZ2Outro_CutsceneState2_Unknown6(EntityCutsceneSeq *host);
-bool32 GHZ2Outro_LoadNextStage(EntityCutsceneSeq *host);
+bool32 GHZ2Outro_Cutscene_HoleSceneFadeIn(EntityCutsceneSeq *host);
+bool32 GHZ2Outro_Cutscene_SpyOnEggman(EntityCutsceneSeq *host);
+bool32 GHZ2Outro_Cutscene_BreakupGroup(EntityCutsceneSeq *host);
+bool32 GHZ2Outro_Cutscene_RubyHover(EntityCutsceneSeq *host);
+bool32 GHZ2Outro_Cutscene_StartRubyWarp(EntityCutsceneSeq *host);
+bool32 GHZ2Outro_Cutscene_HandleRubyWarp(EntityCutsceneSeq *host);
+bool32 GHZ2Outro_Cutscene_LoadCPZ1(EntityCutsceneSeq *host);
 
 void GHZ2Outro_Cutscene_SkipCB(void);
 

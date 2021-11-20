@@ -5,12 +5,28 @@
 
 // Object Class
 typedef struct {
-	RSDK_OBJECT
+    RSDK_OBJECT
+    uint16 aniFrames;
+    uint16 sfxWhack;
 } ObjectClapperboard;
 
 // Entity Class
 typedef struct {
-	RSDK_ENTITY
+    RSDK_ENTITY
+    StateMachine(state);
+    StateMachine(stateCollide);
+    uint8 takeID;
+    int32 field_64;
+    int32 field_68;
+    Hitbox hitbox;
+    int32 dword74;
+    int32 dword78;
+    int32 dword7C;
+    int32 dword80;
+    Animator animator1;
+    Animator animator2;
+    Animator animator3;
+    Animator animator4;
 } EntityClapperboard;
 
 // Object Struct
@@ -30,6 +46,13 @@ void Clapperboard_EditorLoad(void);
 void Clapperboard_Serialize(void);
 
 // Extra Entity Functions
+void Clapperboard_StateCollide_NoFlip(void);
+void Clapperboard_StateCollide_FlipX(void);
 
+void Clapperboard_State_Unknown1(void);
+void Clapperboard_State_Unknown2(void);
+void Clapperboard_State_Unknown3(void);
+void Clapperboard_State_Unknown4(void);
+void Clapperboard_State_Unknown5(void);
 
 #endif //!OBJ_CLAPPERBOARD_H

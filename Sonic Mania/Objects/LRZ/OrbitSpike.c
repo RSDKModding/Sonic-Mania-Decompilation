@@ -5,44 +5,43 @@ ObjectOrbitSpike *OrbitSpike;
 void OrbitSpike_Update(void)
 {
     RSDK_THIS(OrbitSpike);
-    uint8 angle = 2 * ((entity->offset & 0xFF) + (Zone->timer & 0xFF));
-    if (entity->amplitude.x) {
+    uint8 angle = 2 * ((self->offset & 0xFF) + (Zone->timer & 0xFF));
+    if (self->amplitude.x) {
         if (angle >= 0x80) {
-            entity->drawOrder = Zone->drawOrderLow;
-            entity->scale.x   = 386 + (abs(angle - 0xC0) << 1);
-            entity->scale.y   = 386 + (abs(angle - 0xC0) << 1);
+            self->drawOrder = Zone->drawOrderLow;
+            self->scale.x   = 386 + (abs(angle - 0xC0) << 1);
+            self->scale.y   = 386 + (abs(angle - 0xC0) << 1);
         }
         else {
-            entity->drawOrder = Zone->drawOrderHigh;
-            entity->scale.x   = (319 - abs(angle - 0x40)) << 1;
-            entity->scale.y   = (319 - abs(angle - 0x40)) << 1;
+            self->drawOrder = Zone->drawOrderHigh;
+            self->scale.x   = (319 - abs(angle - 0x40)) << 1;
+            self->scale.y   = (319 - abs(angle - 0x40)) << 1;
         }
     }
     else {
         int32 ang = (angle + 0x40) & 0xFF;
         if (ang >= 0x80) {
-            entity->drawOrder = Zone->drawOrderLow;
-            entity->scale.x   = 386 + (abs(ang - 0xC0) << 1);
-            entity->scale.y   = 386 + (abs(ang - 0xC0) << 1);
+            self->drawOrder = Zone->drawOrderLow;
+            self->scale.x   = 386 + (abs(ang - 0xC0) << 1);
+            self->scale.y   = 386 + (abs(ang - 0xC0) << 1);
         }
         else {
-            entity->drawOrder = Zone->drawOrderHigh;
-            entity->scale.x   = (319 - abs(ang - 0x40)) << 1;
-            entity->scale.y   = (319 - abs(ang - 0x40)) << 1;
+            self->drawOrder = Zone->drawOrderHigh;
+            self->scale.x   = (319 - abs(ang - 0x40)) << 1;
+            self->scale.y   = (319 - abs(ang - 0x40)) << 1;
         }
     }
 
-    entity->position.x = (entity->amplitude.x >> 8) * RSDK.Cos256(angle) + entity->center.x;
-    entity->position.y = (entity->amplitude.y >> 8) * RSDK.Sin256(angle) + entity->center.y;
-    if (entity->drawOrder == Zone->drawOrderHigh) {
+    self->position.x = (self->amplitude.x >> 8) * RSDK.Cos256(angle) + self->center.x;
+    self->position.y = (self->amplitude.y >> 8) * RSDK.Sin256(angle) + self->center.y;
+    if (self->drawOrder == Zone->drawOrderHigh) {
         foreach_active(Player, player)
         {
-            if (Player_CheckCollisionTouch(player, entity, &OrbitSpike->hitbox)
+            if (Player_CheckCollisionTouch(player, self, &OrbitSpike->hitbox)) {
 #if RETRO_USE_PLUS
-                && !Player_CheckMightyUnspin(1024, player, 2, &player->uncurlTimer)
+                if (!Player_CheckMightyUnspin(0x400, player, 2, &player->uncurlTimer))
 #endif
-                ) {
-                Player_CheckHit(player, entity);
+                Player_CheckHit(player, self);
             }
         }
     }
@@ -55,22 +54,22 @@ void OrbitSpike_StaticUpdate(void) {}
 void OrbitSpike_Draw(void)
 {
     RSDK_THIS(OrbitSpike);
-    RSDK.DrawSprite(&entity->animator, NULL, false);
+    RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
 void OrbitSpike_Create(void *data)
 {
     RSDK_THIS(OrbitSpike);
-    if (!RSDK_sceneInfo->inEditor) {
-        entity->center.x      = entity->position.x;
-        entity->center.y      = entity->position.y;
-        entity->active        = ACTIVE_BOUNDS;
-        entity->visible       = true;
-        entity->updateRange.x = 0x800000;
-        entity->updateRange.y = 0x800000;
-        entity->drawFX        = FX_SCALE;
-        RSDK.SetSpriteAnimation(OrbitSpike->aniFrames, 0, &entity->animator, true, 0);
-        entity->drawOrder = Zone->drawOrderHigh;
+    if (!SceneInfo->inEditor) {
+        self->center.x      = self->position.x;
+        self->center.y      = self->position.y;
+        self->active        = ACTIVE_BOUNDS;
+        self->visible       = true;
+        self->updateRange.x = 0x800000;
+        self->updateRange.y = 0x800000;
+        self->drawFX        = FX_SCALE;
+        RSDK.SetSpriteAnimation(OrbitSpike->aniFrames, 0, &self->animator, true, 0);
+        self->drawOrder = Zone->drawOrderHigh;
     }
 }
 
@@ -91,51 +90,51 @@ void OrbitSpike_StageLoad(void)
 void OrbitSpike_EditorDraw(void)
 {
     RSDK_THIS(OrbitSpike);
-    entity->center.x      = entity->position.x;
-    entity->center.y      = entity->position.y;
-    entity->updateRange.x = 0x800000;
-    entity->updateRange.y = 0x800000;
-    entity->drawFX        = FX_SCALE;
-    RSDK.SetSpriteAnimation(OrbitSpike->aniFrames, 0, &entity->animator, true, 0);
+    self->center.x      = self->position.x;
+    self->center.y      = self->position.y;
+    self->updateRange.x = 0x800000;
+    self->updateRange.y = 0x800000;
+    self->drawFX        = FX_SCALE;
+    RSDK.SetSpriteAnimation(OrbitSpike->aniFrames, 0, &self->animator, true, 0);
 
-    entity->inkEffect = INK_NONE;
-    entity->scale.x   = 0x200;
-    entity->scale.y   = 0x200;
+    self->inkEffect = INK_NONE;
+    self->scale.x   = 0x200;
+    self->scale.y   = 0x200;
 
     OrbitSpike_Draw();
 
     //Offset render
-    uint8 angle = 2 * (entity->offset & 0xFF);
-    if (entity->amplitude.x) {
+    uint8 angle = 2 * (self->offset & 0xFF);
+    if (self->amplitude.x) {
         if (angle >= 0x80) {
-            entity->scale.x = 386 + (abs(angle - 0xC0) << 1);
-            entity->scale.y = 386 + (abs(angle - 0xC0) << 1);
+            self->scale.x = 386 + (abs(angle - 0xC0) << 1);
+            self->scale.y = 386 + (abs(angle - 0xC0) << 1);
         }
         else {
-            entity->scale.x = (319 - abs(angle - 0x40)) << 1;
-            entity->scale.y = (319 - abs(angle - 0x40)) << 1;
+            self->scale.x = (319 - abs(angle - 0x40)) << 1;
+            self->scale.y = (319 - abs(angle - 0x40)) << 1;
         }
     }
     else {
         int32 ang = (angle + 0x40) & 0xFF;
         if (ang >= 0x80) {
-            entity->scale.x = 386 + (abs(ang - 0xC0) << 1);
-            entity->scale.y = 386 + (abs(ang - 0xC0) << 1);
+            self->scale.x = 386 + (abs(ang - 0xC0) << 1);
+            self->scale.y = 386 + (abs(ang - 0xC0) << 1);
         }
         else {
-            entity->scale.x = (319 - abs(ang - 0x40)) << 1;
-            entity->scale.y = (319 - abs(ang - 0x40)) << 1;
+            self->scale.x = (319 - abs(ang - 0x40)) << 1;
+            self->scale.y = (319 - abs(ang - 0x40)) << 1;
         }
     }
 
-    entity->position.x = (entity->amplitude.x >> 8) * RSDK.Cos256(angle) + entity->center.x;
-    entity->position.y = (entity->amplitude.y >> 8) * RSDK.Sin256(angle) + entity->center.y;
+    self->position.x = (self->amplitude.x >> 8) * RSDK.Cos256(angle) + self->center.x;
+    self->position.y = (self->amplitude.y >> 8) * RSDK.Sin256(angle) + self->center.y;
     
-    entity->inkEffect = INK_ALPHA;
-    entity->alpha = 0x40;
+    self->inkEffect = INK_ALPHA;
+    self->alpha = 0x40;
     OrbitSpike_Draw();
 
-    entity->position = entity->center;
+    self->position = self->center;
 }
 
 void OrbitSpike_EditorLoad(void)

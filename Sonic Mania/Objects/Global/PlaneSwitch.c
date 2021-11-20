@@ -7,95 +7,85 @@ void PlaneSwitch_Update(void)
     RSDK_THIS(PlaneSwitch);
     foreach_active(Player, player)
     {
-        PlaneSwitch_CheckCollisions(entity, player, entity->flags, entity->size, true, Zone->playerDrawLow, Zone->playerDrawHigh);
+        PlaneSwitch_CheckCollisions(self, player, self->flags, self->size, true, Zone->playerDrawLow, Zone->playerDrawHigh);
     }
-    entity->visible = DebugMode->debugActive;
+    self->visible = DebugMode->debugActive;
 }
 
 void PlaneSwitch_LateUpdate(void) {}
 
 void PlaneSwitch_StaticUpdate(void) {}
 
-void PlaneSwitch_Draw(void)
-{
-    RSDK_THIS(PlaneSwitch);
-    Vector2 drawPos;
-
-    drawPos.x = entity->position.x;
-    drawPos.y = entity->position.y;
-    drawPos.x -= 0x80000;
-    drawPos.y -= entity->size << 19;
-    Zone_Unknown3(&entity->position, &drawPos, entity->angle);
-
-    entity->animator.frameID = entity->flags & 3;
-    for (int32 i = 0; i < entity->size; ++i) {
-        RSDK.DrawSprite(&entity->animator, &drawPos, 0);
-        drawPos.x += RSDK.Sin256(entity->angle) << 12;
-        drawPos.y += RSDK.Cos256(entity->angle) << 12;
-    }
-
-    drawPos.x = entity->position.x + 0x80000;
-    drawPos.y = entity->position.y - (entity->size << 19);
-
-    int32 dx    = (drawPos.x + 0x80000 - entity->position.x) >> 8;
-    int32 dy    = (drawPos.y - entity->position.y) >> 8;
-    drawPos.x = (dy * RSDK.Sin256(entity->angle)) + dx * RSDK.Cos256(entity->angle) + entity->position.x;
-    drawPos.y = (dy * RSDK.Cos256(entity->angle)) - dx * RSDK.Sin256(entity->angle) + entity->position.y;
-
-    entity->animator.frameID = (entity->flags >> 2) & 3;
-    for (int32 i = 0; i < entity->size; ++i) {
-        RSDK.DrawSprite(&entity->animator, &drawPos, 0);
-        drawPos.x += RSDK.Sin256(entity->angle) << 12;
-        drawPos.y += RSDK.Cos256(entity->angle) << 12;
-    }
-}
+void PlaneSwitch_Draw(void) { PlaneSwitch_DrawSprites(); }
 
 void PlaneSwitch_Create(void *data)
 {
     RSDK_THIS(PlaneSwitch);
-    RSDK.SetSpriteAnimation(PlaneSwitch->spriteIndex, 0, &entity->animator, true, 0);
-    if (!RSDK_sceneInfo->inEditor) {
-        entity->active = ACTIVE_BOUNDS;
+    RSDK.SetSpriteAnimation(PlaneSwitch->aniFrames, 0, &self->animator, true, 0);
+    if (!SceneInfo->inEditor) {
+        self->active = ACTIVE_BOUNDS;
 
-        int32 x = 0;
-        if (entity->size * RSDK.Sin256(entity->angle) << 11 >= 0)
-            x = entity->size * RSDK.Sin256(entity->angle) << 11;
-        else
-            x = -(entity->size * RSDK.Sin256(entity->angle) << 11);
-        entity->updateRange.x = x + 0x200000;
-
-        int32 y = 0;
-        if (entity->size * RSDK.Cos256(entity->angle) << 11 >= 0)
-            y = entity->size * RSDK.Cos256(entity->angle) << 11;
-        else
-            y = -(entity->size * RSDK.Cos256(entity->angle) << 11);
-
-        entity->visible       = false;
-        entity->updateRange.y = y + 0x200000;
-        entity->drawOrder     = Zone->drawOrderLow;
-        entity->negAngle      = (uint8) - (uint8)entity->angle;
+        self->updateRange.x = abs(self->size * RSDK.Sin256(self->angle) << 11) + 0x200000;
+        self->updateRange.y = abs(self->size * RSDK.Cos256(self->angle) << 11) + 0x200000;
+        self->visible       = false;
+        self->drawOrder     = Zone->drawOrderLow;
+        self->negAngle      = (uint8) - (self->angle & 0xFF);
     }
 }
 
-void PlaneSwitch_StageLoad(void) { PlaneSwitch->spriteIndex = RSDK.LoadSpriteAnimation("Global/PlaneSwitch.bin", SCOPE_STAGE); }
+void PlaneSwitch_StageLoad(void) { PlaneSwitch->aniFrames = RSDK.LoadSpriteAnimation("Global/PlaneSwitch.bin", SCOPE_STAGE); }
 
-void PlaneSwitch_CheckCollisions(EntityPlaneSwitch *entity, void *o, int32 flags, int32 size, bool32 switchDrawOrder, uint8 low, uint8 high)
+void PlaneSwitch_DrawSprites(void)
+{
+    RSDK_THIS(PlaneSwitch);
+    Vector2 drawPos;
+
+    drawPos.x = self->position.x;
+    drawPos.y = self->position.y;
+    drawPos.x -= 0x80000;
+    drawPos.y -= self->size << 19;
+    Zone_RotateOnPivot(&drawPos, &self->position, self->angle);
+
+    self->animator.frameID = self->flags & 3;
+    for (int32 i = 0; i < self->size; ++i) {
+        RSDK.DrawSprite(&self->animator, &drawPos, false);
+        drawPos.x += RSDK.Sin256(self->angle) << 12;
+        drawPos.y += RSDK.Cos256(self->angle) << 12;
+    }
+
+    drawPos.x = self->position.x + 0x80000;
+    drawPos.y = self->position.y - (self->size << 19);
+
+    int32 dx  = (drawPos.x + 0x80000 - self->position.x) >> 8;
+    int32 dy  = (drawPos.y - self->position.y) >> 8;
+    drawPos.x = (dy * RSDK.Sin256(self->angle)) + dx * RSDK.Cos256(self->angle) + self->position.x;
+    drawPos.y = (dy * RSDK.Cos256(self->angle)) - dx * RSDK.Sin256(self->angle) + self->position.y;
+
+    self->animator.frameID = (self->flags >> 2) & 3;
+    for (int32 i = 0; i < self->size; ++i) {
+        RSDK.DrawSprite(&self->animator, &drawPos, false);
+        drawPos.x += RSDK.Sin256(self->angle) << 12;
+        drawPos.y += RSDK.Cos256(self->angle) << 12;
+    }
+}
+
+void PlaneSwitch_CheckCollisions(EntityPlaneSwitch *self, void *o, int32 flags, int32 size, bool32 switchDrawOrder, uint8 low, uint8 high)
 {
     Entity *other = (Entity *)o;
 
-    int32 x     = (other->position.x - entity->position.x) >> 8;
-    int32 y     = (other->position.y - entity->position.y) >> 8;
-    int32 scanX = (y * RSDK.Sin256(entity->negAngle)) + (x * RSDK.Cos256(entity->negAngle)) + entity->position.x;
-    int32 scanY = (y * RSDK.Cos256(entity->negAngle)) - (x * RSDK.Sin256(entity->negAngle)) + entity->position.y;
-    int32 pos   = ((other->velocity.y >> 8) * RSDK.Sin256(entity->negAngle)) + (other->velocity.x >> 8) * RSDK.Cos256(entity->negAngle);
-    RSDK.Cos256(entity->negAngle);
-    RSDK.Sin256(entity->negAngle);
-    if (!(entity->onPath && !other->onGround)) {
-        int32 xDif = abs(scanX - entity->position.x);
-        int32 yDif = abs(scanY - entity->position.y);
+    int32 x     = (other->position.x - self->position.x) >> 8;
+    int32 y     = (other->position.y - self->position.y) >> 8;
+    int32 scanX = (y * RSDK.Sin256(self->negAngle)) + (x * RSDK.Cos256(self->negAngle)) + self->position.x;
+    int32 scanY = (y * RSDK.Cos256(self->negAngle)) - (x * RSDK.Sin256(self->negAngle)) + self->position.y;
+    int32 pos   = ((other->velocity.y >> 8) * RSDK.Sin256(self->negAngle)) + (other->velocity.x >> 8) * RSDK.Cos256(self->negAngle);
+    RSDK.Cos256(self->negAngle);
+    RSDK.Sin256(self->negAngle);
+    if (!(self->onPath && !other->onGround)) {
+        int32 xDif = abs(scanX - self->position.x);
+        int32 yDif = abs(scanY - self->position.y);
 
         if (xDif < 0x180000 && yDif < size << 19) {
-            if (scanX + pos >= entity->position.x) {
+            if (scanX + pos >= self->position.x) {
                 other->collisionPlane = (flags >> 3) & 1;
                 if (switchDrawOrder) {
                     if (!(flags & 4))
@@ -118,7 +108,17 @@ void PlaneSwitch_CheckCollisions(EntityPlaneSwitch *entity, void *o, int32 flags
 }
 
 #if RETRO_INCLUDE_EDITOR
-void PlaneSwitch_EditorDraw(void) { PlaneSwitch_Draw(); }
+void PlaneSwitch_EditorDraw(void)
+{
+    RSDK_THIS(PlaneSwitch);
+    self->updateRange.x = abs(self->size * RSDK.Sin256(self->angle) << 11) + 0x200000;
+    self->updateRange.y = abs(self->size * RSDK.Cos256(self->angle) << 11) + 0x200000;
+    self->visible       = false;
+    self->drawOrder     = Zone->drawOrderLow;
+    self->negAngle      = (uint8) - (uint8)self->angle;
+
+    PlaneSwitch_DrawSprites();
+}
 
 void PlaneSwitch_EditorLoad(void)
 {

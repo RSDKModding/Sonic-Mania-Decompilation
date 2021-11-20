@@ -53,7 +53,7 @@ void UIVsScoreboard_Serialize(void);
 
 // Extra Entity Functions
 void UIVsScoreboard_SetupSprites(void);
-void UIVsScoreboard_SetText(EntityUIVsScoreboard *entity, const char *text);
+void UIVsScoreboard_SetText(EntityUIVsScoreboard *self, const char *text);
 void UIVsScoreboard_DrawSprites(void);
 
 #endif //!OBJ_UIVSSCOREBOARD_H

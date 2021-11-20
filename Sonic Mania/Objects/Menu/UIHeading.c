@@ -5,11 +5,11 @@ ObjectUIHeading *UIHeading;
 void UIHeading_Update(void)
 {
     RSDK_THIS(UIHeading);
-    if (entity->textSpriteIndex != UIHeading->textSpriteIndex) {
-        RSDK.SetSpriteAnimation(UIHeading->textSpriteIndex, entity->headingID, &entity->animator, true, 0);
-        entity->textSpriteIndex = UIHeading->textSpriteIndex;
+    if (self->textSpriteIndex != UIHeading->textSpriteIndex) {
+        RSDK.SetSpriteAnimation(UIHeading->textSpriteIndex, self->headingID, &self->animator, true, 0);
+        self->textSpriteIndex = UIHeading->textSpriteIndex;
     }
-    StateMachine_Run(entity->state);
+    StateMachine_Run(self->state);
 }
 
 void UIHeading_LateUpdate(void) {}
@@ -19,23 +19,23 @@ void UIHeading_StaticUpdate(void) {}
 void UIHeading_Draw(void)
 {
     RSDK_THIS(UIHeading);
-    RSDK.DrawSprite(&entity->animator2, NULL, false);
-    RSDK.DrawSprite(&entity->animator, NULL, false);
+    RSDK.DrawSprite(&self->animator2, NULL, false);
+    RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
 void UIHeading_Create(void *data)
 {
     RSDK_THIS(UIHeading);
-    if (!RSDK_sceneInfo->inEditor) {
-        entity->startPos      = entity->position;
-        entity->visible       = true;
-        entity->drawOrder     = 2;
-        entity->active        = ACTIVE_BOUNDS;
-        entity->updateRange.x = 0x800000;
-        entity->updateRange.y = 0x300000;
-        RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 0, &entity->animator2, true, 0);
-        RSDK.SetSpriteAnimation(UIHeading->textSpriteIndex, entity->headingID, &entity->animator, true, 0);
-        entity->textSpriteIndex = UIHeading->textSpriteIndex;
+    if (!SceneInfo->inEditor) {
+        self->startPos      = self->position;
+        self->visible       = true;
+        self->drawOrder     = 2;
+        self->active        = ACTIVE_BOUNDS;
+        self->updateRange.x = 0x800000;
+        self->updateRange.y = 0x300000;
+        RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 0, &self->animator2, true, 0);
+        RSDK.SetSpriteAnimation(UIHeading->textSpriteIndex, self->headingID, &self->animator, true, 0);
+        self->textSpriteIndex = UIHeading->textSpriteIndex;
     }
 }
 
@@ -63,13 +63,13 @@ void UIHeading_LoadSprites(void)
 void UIHeading_EditorDraw(void)
 {
     RSDK_THIS(UIHeading);
-    entity->startPos      = entity->position;
-    entity->drawOrder     = 2;
-    entity->updateRange.x = 0x800000;
-    entity->updateRange.y = 0x300000;
-    RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 0, &entity->animator2, true, 0);
-    RSDK.SetSpriteAnimation(UIHeading->textSpriteIndex, entity->headingID, &entity->animator, true, 0);
-    entity->textSpriteIndex = UIHeading->textSpriteIndex;
+    self->startPos      = self->position;
+    self->drawOrder     = 2;
+    self->updateRange.x = 0x800000;
+    self->updateRange.y = 0x300000;
+    RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, 0, &self->animator2, true, 0);
+    RSDK.SetSpriteAnimation(UIHeading->textSpriteIndex, self->headingID, &self->animator, true, 0);
+    self->textSpriteIndex = UIHeading->textSpriteIndex;
 
     UIHeading_Draw();
 }

@@ -5,7 +5,7 @@ ObjectBuzzSaw *BuzzSaw;
 void BuzzSaw_Update(void)
 {
     RSDK_THIS(BuzzSaw);
-    StateMachine_Run(entity->state);
+    StateMachine_Run(self->state);
 }
 
 void BuzzSaw_LateUpdate(void) {}
@@ -15,34 +15,34 @@ void BuzzSaw_StaticUpdate(void) {}
 void BuzzSaw_Draw(void)
 {
     RSDK_THIS(BuzzSaw);
-    RSDK.DrawSprite(&entity->animator, &entity->drawPos, false);
+    RSDK.DrawSprite(&self->animator, &self->drawPos, false);
 }
 
 void BuzzSaw_Create(void *data)
 {
     RSDK_THIS(BuzzSaw);
 
-    entity->drawFX = FX_ROTATE;
-    if (!entity->type)
-        entity->rotation = entity->angle;
+    self->drawFX = FX_ROTATE;
+    if (!self->type)
+        self->rotation = self->angle;
     else
-        entity->inkEffect = INK_ADD;
+        self->inkEffect = INK_ADD;
 
-    if (!RSDK_sceneInfo->inEditor) {
-        RSDK.SetSpriteAnimation(BuzzSaw->aniFrames, entity->type, &entity->animator, true, 0);
-        entity->active        = ACTIVE_BOUNDS;
-        entity->updateRange.x = (abs(entity->speed * entity->amplitude.x) + 64) << 17;
-        entity->updateRange.y = (abs(entity->speed * entity->amplitude.y) + 64) << 17;
-        entity->amplitude.x >>= 10;
-        entity->amplitude.y >>= 10;
-        entity->visible   = true;
-        entity->drawOrder = Zone->drawOrderLow;
-        entity->startPos  = entity->position;
+    if (!SceneInfo->inEditor) {
+        RSDK.SetSpriteAnimation(BuzzSaw->aniFrames, self->type, &self->animator, true, 0);
+        self->active        = ACTIVE_BOUNDS;
+        self->updateRange.x = (abs(self->speed * self->amplitude.x) + 64) << 17;
+        self->updateRange.y = (abs(self->speed * self->amplitude.y) + 64) << 17;
+        self->amplitude.x >>= 10;
+        self->amplitude.y >>= 10;
+        self->visible   = true;
+        self->drawOrder = Zone->drawOrderLow;
+        self->startPos  = self->position;
 
-        if (entity->type == 0)
-            entity->state = BuzzSaw_State_OnArm;
+        if (self->type == 0)
+            self->state = BuzzSaw_State_OnArm;
         else
-            entity->state = BuzzSaw_State_FreeMove_Waiting;
+            self->state = BuzzSaw_State_FreeMove_Waiting;
     }
 }
 
@@ -61,8 +61,8 @@ void BuzzSaw_StageLoad(void)
 
 bool32 BuzzSaw_CheckCB(void)
 {
-    int32 worldX = (RSDK_screens->position.x + RSDK_screens->centerX) << 16;
-    int32 worldY = (RSDK_screens->position.y + RSDK_screens->centerY) << 16;
+    int32 worldX = (ScreenInfo->position.x + ScreenInfo->centerX) << 16;
+    int32 worldY = (ScreenInfo->position.y + ScreenInfo->centerY) << 16;
 
     int32 count = 0;
 
@@ -81,8 +81,8 @@ bool32 BuzzSaw_CheckCB(void)
 void BuzzSaw_UpdateCB(int32 sfx)
 {
     int32 dist   = 0x7FFF0000;
-    int32 worldX = (RSDK_screens->position.x + RSDK_screens->centerX) << 16;
-    int32 worldY = (RSDK_screens->position.y + RSDK_screens->centerY) << 16;
+    int32 worldX = (ScreenInfo->position.x + ScreenInfo->centerX) << 16;
+    int32 worldY = (ScreenInfo->position.y + ScreenInfo->centerY) << 16;
 
     foreach_all(BuzzSaw, saw)
     {
@@ -97,29 +97,28 @@ void BuzzSaw_UpdateCB(int32 sfx)
 void BuzzSaw_CheckPlayerCollisions(void)
 {
     RSDK_THIS(BuzzSaw);
-    entity->position.x = entity->drawPos.x;
-    entity->position.y = entity->drawPos.y;
+    self->position.x = self->drawPos.x;
+    self->position.y = self->drawPos.y;
 
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionTouch(player, entity, &BuzzSaw->hitbox)
+        if (Player_CheckCollisionTouch(player, self, &BuzzSaw->hitbox)) {
 #if RETRO_USE_PLUS
-            && !Player_CheckMightyUnspin(0x600, player, false, &player->uncurlTimer)
+            if (!Player_CheckMightyUnspin(0x600, player, false, &player->uncurlTimer))
 #endif
-        ) {
-            Player_CheckHit(player, entity);
+            Player_CheckHit(player, self);
         }
     }
-    entity->position.x = entity->startPos.x;
-    entity->position.y = entity->startPos.y;
+    self->position.x = self->startPos.x;
+    self->position.y = self->startPos.y;
 }
 
 void BuzzSaw_State_OnArm(void)
 {
     RSDK_THIS(BuzzSaw);
-    entity->drawPos.x = entity->amplitude.x * RSDK.Sin1024(entity->speed * Zone->timer) + entity->startPos.x;
-    entity->drawPos.y = entity->amplitude.y * RSDK.Sin1024(entity->speed * Zone->timer) + entity->startPos.y;
-    RSDK.ProcessAnimation(&entity->animator);
+    self->drawPos.x = self->amplitude.x * RSDK.Sin1024(self->speed * Zone->timer) + self->startPos.x;
+    self->drawPos.y = self->amplitude.y * RSDK.Sin1024(self->speed * Zone->timer) + self->startPos.y;
+    RSDK.ProcessAnimation(&self->animator);
     BuzzSaw_CheckPlayerCollisions();
 }
 
@@ -127,20 +126,20 @@ void BuzzSaw_State_FreeMove_Waiting(void)
 {
     RSDK_THIS(BuzzSaw);
 
-    entity->drawPos.x = entity->position.x;
-    entity->drawPos.y = entity->position.y;
+    self->drawPos.x = self->position.x;
+    self->drawPos.y = self->position.y;
 
     foreach_active(Player, player)
     {
-        int32 angle = RSDK.ATan2((player->position.x - entity->position.x) >> 16, (player->position.y - entity->position.y) >> 16);
+        int32 angle = RSDK.ATan2((player->position.x - self->position.x) >> 16, (player->position.y - self->position.y) >> 16);
 
-        int32 rx = (abs(player->position.x - entity->position.x) >> 16) * (abs(player->position.x - entity->position.x) >> 16);
-        int32 ry = (abs(player->position.y - entity->position.y) >> 16) * (abs(player->position.y - entity->position.y) >> 16);
-        if (angle + 32 - (entity->angle & 0xFF) < 0x40 && (rx + ry) - 0x4000 < 0x5000) {
-            entity->active     = ACTIVE_NORMAL;
-            entity->velocity.x = 0x600 * RSDK.Cos256(entity->angle);
-            entity->velocity.y = 0x600 * RSDK.Sin256(entity->angle);
-            entity->state      = BuzzSaw_State_FreeMove_Released;
+        int32 rx = (abs(player->position.x - self->position.x) >> 16) * (abs(player->position.x - self->position.x) >> 16);
+        int32 ry = (abs(player->position.y - self->position.y) >> 16) * (abs(player->position.y - self->position.y) >> 16);
+        if (angle + 32 - (self->angle & 0xFF) < 0x40 && (rx + ry) - 0x4000 < 0x5000) {
+            self->active     = ACTIVE_NORMAL;
+            self->velocity.x = 0x600 * RSDK.Cos256(self->angle);
+            self->velocity.y = 0x600 * RSDK.Sin256(self->angle);
+            self->state      = BuzzSaw_State_FreeMove_Released;
         }
     }
 }
@@ -149,31 +148,31 @@ void BuzzSaw_State_FreeMove_Released(void)
 {
     RSDK_THIS(BuzzSaw);
 
-    if (entity->alpha < 256)
-        entity->alpha += 16;
-    entity->drawPos.x += entity->velocity.x;
-    entity->drawPos.y += entity->velocity.y;
-    RSDK.ProcessAnimation(&entity->animator);
+    if (self->alpha < 256)
+        self->alpha += 16;
+    self->drawPos.x += self->velocity.x;
+    self->drawPos.y += self->velocity.y;
+    RSDK.ProcessAnimation(&self->animator);
     BuzzSaw_CheckPlayerCollisions();
-    entity->position.x = entity->drawPos.x;
-    entity->position.y = entity->drawPos.y;
-    if (!RSDK.CheckOnScreen(entity, &entity->updateRange)) {
-        entity->position.x = entity->startPos.x;
-        entity->position.y = entity->startPos.y;
-        entity->drawPos.x  = entity->startPos.x;
-        entity->drawPos.y  = entity->startPos.y;
-        entity->alpha      = 0;
-        entity->state      = BuzzSaw_State_FreeMove_Reset;
+    self->position.x = self->drawPos.x;
+    self->position.y = self->drawPos.y;
+    if (!RSDK.CheckOnScreen(self, &self->updateRange)) {
+        self->position.x = self->startPos.x;
+        self->position.y = self->startPos.y;
+        self->drawPos.x  = self->startPos.x;
+        self->drawPos.y  = self->startPos.y;
+        self->alpha      = 0;
+        self->state      = BuzzSaw_State_FreeMove_Reset;
     }
-    entity->position.x = entity->startPos.x;
-    entity->position.y = entity->startPos.y;
+    self->position.x = self->startPos.x;
+    self->position.y = self->startPos.y;
 }
 
 void BuzzSaw_State_FreeMove_Reset(void)
 {
     RSDK_THIS(BuzzSaw);
-    if (!RSDK.CheckOnScreen(entity, &entity->updateRange)) {
-        entity->state = BuzzSaw_State_FreeMove_Waiting;
+    if (!RSDK.CheckOnScreen(self, &self->updateRange)) {
+        self->state = BuzzSaw_State_FreeMove_Waiting;
         BuzzSaw_Create(NULL);
     }
 }
@@ -183,19 +182,19 @@ void BuzzSaw_EditorDraw(void)
 {
     RSDK_THIS(BuzzSaw);
 
-    entity->drawFX    = FX_ROTATE;
-    entity->inkEffect = INK_NONE;
-    entity->rotation  = 0;
-    if (!entity->type)
-        entity->rotation = entity->angle;
+    self->drawFX    = FX_ROTATE;
+    self->inkEffect = INK_NONE;
+    self->rotation  = 0;
+    if (!self->type)
+        self->rotation = self->angle;
     else
-        entity->inkEffect = INK_ADD;
+        self->inkEffect = INK_ADD;
 
-    RSDK.SetSpriteAnimation(BuzzSaw->aniFrames, entity->type, &entity->animator, true, 0);
-    entity->active        = ACTIVE_BOUNDS;
-    entity->updateRange.x = (abs(entity->speed * entity->amplitude.x) + 64) << 17;
-    entity->updateRange.y = (abs(entity->speed * entity->amplitude.y) + 64) << 17;
-    entity->drawPos       = entity->position;
+    RSDK.SetSpriteAnimation(BuzzSaw->aniFrames, self->type, &self->animator, true, 0);
+    self->active        = ACTIVE_BOUNDS;
+    self->updateRange.x = (abs(self->speed * self->amplitude.x) + 64) << 17;
+    self->updateRange.y = (abs(self->speed * self->amplitude.y) + 64) << 17;
+    self->drawPos       = self->position;
 
     BuzzSaw_Draw();
 }

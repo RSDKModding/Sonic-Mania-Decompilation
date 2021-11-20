@@ -5,13 +5,13 @@ ObjectSparkRail *SparkRail;
 void SparkRail_Update(void)
 {
     RSDK_THIS(SparkRail);
-    int32 posY = entity->position.y + (entity->size.y >> 1);
+    int32 posY = self->position.y + (self->size.y >> 1);
     foreach_active(Player, player)
     {
-        if (Player_CheckCollisionTouch(player, entity, &entity->hitbox) && player->onGround) {
+        if (Player_CheckCollisionTouch(player, self, &self->hitbox) && player->onGround) {
             if (abs(player->groundVel) > 0x80000) {
                 RSDK.PlaySfx(SparkRail->sfxPon, false, 255);
-                EntityDebris *spark = CREATE_ENTITY(Debris, Debris_State_LightningSpark, entity->position.x, entity->position.y);
+                EntityDebris *spark = CREATE_ENTITY(Debris, Debris_State_Move, self->position.x, self->position.y);
                 RSDK.SetSpriteAnimation(SparkRail->aniFrames, 0, &spark->animator, true, 0);
                 spark->drawFX     = FX_FLIP;
                 spark->direction  = player->direction != FLIP_NONE;
@@ -33,18 +33,18 @@ void SparkRail_Draw(void) {}
 void SparkRail_Create(void *data)
 {
     RSDK_THIS(SparkRail);
-    entity->active        = ACTIVE_BOUNDS;
-    entity->updateRange.x = 0x800000;
-    entity->updateRange.y = 0x800000;
-    entity->visible       = false;
-    entity->hitbox.left   = -(entity->size.x >> 17);
-    entity->hitbox.top    = -(entity->size.y >> 17);
-    entity->hitbox.right  = entity->size.x >> 17;
-    entity->hitbox.bottom = entity->size.y >> 17;
-    if (!entity->size.x)
-        entity->size.x = 0x800000;
-    if (!entity->size.y)
-        entity->size.y = 0x200000;
+    self->active        = ACTIVE_BOUNDS;
+    self->updateRange.x = 0x800000;
+    self->updateRange.y = 0x800000;
+    self->visible       = false;
+    self->hitbox.left   = -(self->size.x >> 17);
+    self->hitbox.top    = -(self->size.y >> 17);
+    self->hitbox.right  = self->size.x >> 17;
+    self->hitbox.bottom = self->size.y >> 17;
+    if (!self->size.x)
+        self->size.x = 0x800000;
+    if (!self->size.y)
+        self->size.y = 0x200000;
 }
 
 void SparkRail_StageLoad(void)

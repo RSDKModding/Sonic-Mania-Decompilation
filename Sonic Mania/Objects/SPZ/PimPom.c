@@ -6,11 +6,11 @@ void PimPom_Update(void)
 {
     RSDK_THIS(PimPom);
 
-    StateMachine_Run(entity->state);
-    StateMachine_Run(entity->stateMove);
+    StateMachine_Run(self->state);
+    StateMachine_Run(self->stateMove);
 
-    if (entity->timer > 0)
-        entity->timer--;
+    if (self->timer > 0)
+        self->timer--;
 }
 
 void PimPom_LateUpdate(void) {}
@@ -21,13 +21,13 @@ void PimPom_Draw(void)
 {
     RSDK_THIS(PimPom);
 
-    Vector2 drawPos = entity->drawPos;
-    drawPos.x += entity->offset.x;
-    drawPos.y -= entity->offset.y;
-    for (int i = entity->length; i >= 0; --i) {
-        RSDK.DrawSprite(&entity->animator, &drawPos, false);
-        drawPos.x -= entity->moveAmount.x;
-        drawPos.y += entity->moveAmount.y;
+    Vector2 drawPos = self->drawPos;
+    drawPos.x += self->offset.x;
+    drawPos.y -= self->offset.y;
+    for (int i = self->length; i >= 0; --i) {
+        RSDK.DrawSprite(&self->animator, &drawPos, false);
+        drawPos.x -= self->moveAmount.x;
+        drawPos.y += self->moveAmount.y;
     }
 }
 
@@ -35,138 +35,138 @@ void PimPom_Create(void *data)
 {
     RSDK_THIS(PimPom);
 
-    if (!RSDK_sceneInfo->inEditor) {
-        entity->active  = ACTIVE_BOUNDS;
-        entity->visible = true;
+    if (!SceneInfo->inEditor) {
+        self->active  = ACTIVE_BOUNDS;
+        self->visible = true;
 
-        entity->updateRange.x = (40 - (entity->length * (entity->gap + 24))) << 16;
-        entity->updateRange.y = (40 - (entity->length * (entity->gap + 24))) << 16;
-        entity->drawOrder     = Zone->drawOrderLow + 1;
-        entity->angle2        = 0x20 * entity->angle;
-        entity->angle         = 0x20 * entity->angle;
-        entity->negAngle      = 0x100 - entity->angle;
-        entity->rotation      = 2 * entity->negAngle;
+        self->updateRange.x = (40 - (self->length * (self->gap + 24))) << 16;
+        self->updateRange.y = (40 - (self->length * (self->gap + 24))) << 16;
+        self->drawOrder     = Zone->drawOrderLow + 1;
+        self->angle2        = 0x20 * self->angle;
+        self->angle         = 0x20 * self->angle;
+        self->negAngle      = 0x100 - self->angle;
+        self->rotation      = 2 * self->negAngle;
 
         int offset = 8;
-        if (entity->type)
+        if (self->type)
             offset = 24;
 
-        entity->offset.x = ((entity->length * (offset + entity->gap)) << 8) * RSDK.Cos256(entity->angle);
-        entity->offset.y = ((entity->length * (offset + entity->gap)) << 8) * RSDK.Sin256(entity->angle);
+        self->offset.x = ((self->length * (offset + self->gap)) << 8) * RSDK.Cos256(self->angle);
+        self->offset.y = ((self->length * (offset + self->gap)) << 8) * RSDK.Sin256(self->angle);
 
-        entity->moveAmount.x = ((offset + entity->gap) * RSDK.Cos256(entity->angle)) << 9;
-        entity->moveAmount.y = ((offset + entity->gap) * RSDK.Sin256(entity->angle)) << 9;
-        entity->drawPos      = entity->position;
+        self->moveAmount.x = ((offset + self->gap) * RSDK.Cos256(self->angle)) << 9;
+        self->moveAmount.y = ((offset + self->gap) * RSDK.Sin256(self->angle)) << 9;
+        self->drawPos      = self->position;
 
-        switch (entity->type) {
+        switch (self->type) {
             case PIMPOM_SINGLE:
-                RSDK.SetSpriteAnimation(PimPom->aniFrames, 0, &entity->animator, true, entity->color);
-                entity->hitbox.left   = -8;
-                entity->hitbox.top    = -8;
-                entity->hitbox.right  = 8;
-                entity->hitbox.bottom = 8;
-                entity->state         = PimPom_State0_Unknown;
+                RSDK.SetSpriteAnimation(PimPom->aniFrames, 0, &self->animator, true, self->color);
+                self->hitbox.left   = -8;
+                self->hitbox.top    = -8;
+                self->hitbox.right  = 8;
+                self->hitbox.bottom = 8;
+                self->state         = PimPom_State0_Unknown;
                 break;
             case PIMPOM_HORIZONTAL:
-                switch (entity->angle) {
-                    case 0x00: RSDK.SetSpriteAnimation(PimPom->aniFrames, 1, &entity->animator, true, 0); break;
+                switch (self->angle) {
+                    case 0x00: RSDK.SetSpriteAnimation(PimPom->aniFrames, 1, &self->animator, true, 0); break;
                     case 0x20:
-                        entity->drawFX    = FX_FLIP;
-                        entity->direction = FLIP_X;
-                        RSDK.SetSpriteAnimation(PimPom->aniFrames, 2, &entity->animator, true, 0);
+                        self->drawFX    = FX_FLIP;
+                        self->direction = FLIP_X;
+                        RSDK.SetSpriteAnimation(PimPom->aniFrames, 2, &self->animator, true, 0);
                         break;
-                    case 0x40: RSDK.SetSpriteAnimation(PimPom->aniFrames, 3, &entity->animator, true, 0); break;
-                    case 0x60: RSDK.SetSpriteAnimation(PimPom->aniFrames, 2, &entity->animator, true, 0); break;
+                    case 0x40: RSDK.SetSpriteAnimation(PimPom->aniFrames, 3, &self->animator, true, 0); break;
+                    case 0x60: RSDK.SetSpriteAnimation(PimPom->aniFrames, 2, &self->animator, true, 0); break;
                     default: break;
                 }
 
-                if (entity->gap >= 16) {
-                    entity->hitbox.left   = -24;
-                    entity->hitbox.top    = -8;
-                    entity->hitbox.right  = 24;
-                    entity->hitbox.bottom = 8;
-                    entity->state         = PimPom_State1_Unknown;
+                if (self->gap >= 16) {
+                    self->hitbox.left   = -24;
+                    self->hitbox.top    = -8;
+                    self->hitbox.right  = 24;
+                    self->hitbox.bottom = 8;
+                    self->state         = PimPom_State1_Unknown;
                 }
                 else {
-                    int len               = entity->length * (entity->gap + 24);
-                    entity->hitbox.bottom = 8;
-                    entity->state         = PimPom_State1_Unknown;
-                    entity->hitbox.left   = -24 - len;
-                    entity->hitbox.top    = -8;
-                    entity->hitbox.right  = len + 24;
+                    int len               = self->length * (self->gap + 24);
+                    self->hitbox.bottom = 8;
+                    self->state         = PimPom_State1_Unknown;
+                    self->hitbox.left   = -24 - len;
+                    self->hitbox.top    = -8;
+                    self->hitbox.right  = len + 24;
                 }
                 break;
             case PIMPOM_DIAGONAL:
-                RSDK.SetSpriteAnimation(PimPom->aniFrames, 2, &entity->animator, true, 0);
-                entity->drawFX = FX_ROTATE | FX_FLIP;
+                RSDK.SetSpriteAnimation(PimPom->aniFrames, 2, &self->animator, true, 0);
+                self->drawFX = FX_ROTATE | FX_FLIP;
 
-                entity->hitbox.left   = -24;
-                entity->hitbox.top    = -6;
-                entity->hitbox.right  = 24;
-                entity->hitbox.bottom = 6;
-                if (entity->direction == FLIP_X)
-                    entity->angle = 0x20;
+                self->hitbox.left   = -24;
+                self->hitbox.top    = -6;
+                self->hitbox.right  = 24;
+                self->hitbox.bottom = 6;
+                if (self->direction == FLIP_X)
+                    self->angle = 0x20;
                 else
-                    entity->angle = 0xE0;
-                entity->negAngle = 0x100 - entity->angle;
-                entity->state    = PimPom_State1_Unknown;
+                    self->angle = 0xE0;
+                self->negAngle = 0x100 - self->angle;
+                self->state    = PimPom_State1_Unknown;
                 break;
             case PIMPOM_VERTICAL:
-                RSDK.SetSpriteAnimation(PimPom->aniFrames, 1, &entity->animator, true, 0);
-                entity->drawFX = FX_ROTATE;
-                if (entity->gap >= 16) {
-                    entity->hitbox.left   = -24;
-                    entity->hitbox.top    = -8;
-                    entity->hitbox.right  = 24;
-                    entity->hitbox.bottom = 8;
+                RSDK.SetSpriteAnimation(PimPom->aniFrames, 1, &self->animator, true, 0);
+                self->drawFX = FX_ROTATE;
+                if (self->gap >= 16) {
+                    self->hitbox.left   = -24;
+                    self->hitbox.top    = -8;
+                    self->hitbox.right  = 24;
+                    self->hitbox.bottom = 8;
                 }
                 else {
-                    int len               = entity->length * (entity->gap + 24);
-                    entity->hitbox.bottom = 8;
-                    entity->hitbox.left   = -24 - len;
-                    entity->hitbox.top    = -8;
-                    entity->hitbox.right  = len + 24;
+                    int len               = self->length * (self->gap + 24);
+                    self->hitbox.bottom = 8;
+                    self->hitbox.left   = -24 - len;
+                    self->hitbox.top    = -8;
+                    self->hitbox.right  = len + 24;
                 }
-                entity->state = PimPom_State3_Unknown;
+                self->state = PimPom_State3_Unknown;
                 break;
             default: break;
         }
 
-        entity->amplitude.x >>= 10;
-        entity->amplitude.y >>= 10;
+        self->amplitude.x >>= 10;
+        self->amplitude.y >>= 10;
 
         int len = 0;
 
-        switch (entity->moveType) {
+        switch (self->moveType) {
             case PIMPOM_MOVE_NONE:
             default:
-                entity->stateMove     = PimPom_StateMove_None;
-                entity->updateRange.x = (entity->length * (entity->gap + 24) + 88) << 16;
-                entity->updateRange.y = (entity->length * (entity->gap + 24) + 88) << 16;
+                self->stateMove     = PimPom_StateMove_None;
+                self->updateRange.x = (self->length * (self->gap + 24) + 88) << 16;
+                self->updateRange.y = (self->length * (self->gap + 24) + 88) << 16;
                 break;
             case PIMPOM_MOVE_NORMAL:
-                len                   = (entity->length * (entity->gap + 24) + 88) << 6;
-                entity->updateRange.x = (abs(entity->amplitude.x) + len) << 10;
-                entity->updateRange.y = (abs(entity->amplitude.y) + len) << 10;
-                entity->stateMove     = PimPom_StateMove_Normal;
+                len                   = (self->length * (self->gap + 24) + 88) << 6;
+                self->updateRange.x = (abs(self->amplitude.x) + len) << 10;
+                self->updateRange.y = (abs(self->amplitude.y) + len) << 10;
+                self->stateMove     = PimPom_StateMove_Normal;
                 break;
             case PIMPOM_MOVE_CIRCLE:
-                len                   = (entity->length * (entity->gap + 24)) << 6;
-                entity->updateRange.x = (abs(entity->amplitude.x) + len + 0x1600) << 10;
-                entity->updateRange.y = (abs(entity->amplitude.y) + len + 0x1600) << 10;
-                entity->stateMove     = PimPom_StateMove_Circle;
+                len                   = (self->length * (self->gap + 24)) << 6;
+                self->updateRange.x = (abs(self->amplitude.x) + len + 0x1600) << 10;
+                self->updateRange.y = (abs(self->amplitude.y) + len + 0x1600) << 10;
+                self->stateMove     = PimPom_StateMove_Circle;
                 break;
             case PIMPOM_MOVE_3:
-                len                   = (entity->length * (entity->gap + 24)) << 7;
-                entity->updateRange.x = (abs(entity->amplitude.x) + len + 0x2C00) << 9;
-                entity->updateRange.y = (abs(entity->amplitude.y) + len + 0x2C00) << 9;
-                entity->stateMove     = PimPom_StateMove3_Unknown;
+                len                   = (self->length * (self->gap + 24)) << 7;
+                self->updateRange.x = (abs(self->amplitude.x) + len + 0x2C00) << 9;
+                self->updateRange.y = (abs(self->amplitude.y) + len + 0x2C00) << 9;
+                self->stateMove     = PimPom_StateMove3_Unknown;
                 break;
             case PIMPOM_MOVE_4:
-                entity->active        = ACTIVE_NEVER;
-                entity->stateMove     = PimPom_StateMove_ToTarget;
-                entity->updateRange.x = (entity->length * (entity->gap + 24) + 88) << 16;
-                entity->updateRange.y = (entity->length * (entity->gap + 24) + 88) << 16;
+                self->active        = ACTIVE_NEVER;
+                self->stateMove     = PimPom_StateMove_ToTarget;
+                self->updateRange.x = (self->length * (self->gap + 24) + 88) << 16;
+                self->updateRange.y = (self->length * (self->gap + 24) + 88) << 16;
                 break;
         }
     }
@@ -183,18 +183,18 @@ void PimPom_State0_Unknown(void)
 {
     RSDK_THIS(PimPom);
 
-    int storeX       = entity->position.x;
-    int storeY       = entity->position.y;
-    entity->position = entity->drawPos;
-    entity->position.x += entity->offset.x;
-    entity->position.y -= entity->offset.y;
+    int storeX       = self->position.x;
+    int storeY       = self->position.y;
+    self->position = self->drawPos;
+    self->position.x += self->offset.x;
+    self->position.y -= self->offset.y;
 
-    for (int l = 0; l <= entity->length; ++l) {
+    for (int l = 0; l <= self->length; ++l) {
 
         foreach_active(Player, player)
         {
-            if (Player_CheckBadnikTouch(player, entity, &entity->hitbox)) {
-                int angle = RSDK.ATan2(player->position.x - entity->position.x, player->position.y - entity->position.y);
+            if (Player_CheckBadnikTouch(player, self, &self->hitbox)) {
+                int angle = RSDK.ATan2(player->position.x - self->position.x, player->position.y - self->position.y);
 
                 int vel = abs(player->velocity.y + player->velocity.x) >> 8;
                 if (vel < 0x600)
@@ -203,7 +203,7 @@ void PimPom_State0_Unknown(void)
                 int power = RSDK.Rand(0x400, vel);
                 angle += RSDK.Rand(-6, 6);
 
-                if (player->playerAnimator.animationID != ANI_FLY) {
+                if (player->animator.animationID != ANI_FLY) {
                     player->velocity.x = power * RSDK.Cos256(angle);
                     player->groundVel  = power * RSDK.Cos256(angle);
                 }
@@ -212,38 +212,38 @@ void PimPom_State0_Unknown(void)
                 player->jumpAbility = 0;
 #if RETRO_USE_PLUS
                 if (player->characterID == ID_MIGHTY && player->state == Player_State_MightyHammerDrop) {
-                    RSDK.SetSpriteAnimation(player->spriteIndex, ANI_JUMP, &player->playerAnimator, false, 0);
+                    RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
                     player->state = Player_State_Air;
                 }
 #endif
-                if (entity->timer < 1) {
+                if (self->timer < 1) {
                     RSDK.PlaySfx(PimPom->sfxPimPom, false, 255);
-                    entity->timer = 8;
+                    self->timer = 8;
                 }
             }
         }
 
-        entity->position.x -= entity->moveAmount.x;
-        entity->position.y += entity->moveAmount.y;
+        self->position.x -= self->moveAmount.x;
+        self->position.y += self->moveAmount.y;
     }
 
-    entity->position.x = storeX;
-    entity->position.y = storeY;
+    self->position.x = storeX;
+    self->position.y = storeY;
 }
 
 void PimPom_State1_Unknown(void)
 {
     RSDK_THIS(PimPom);
 
-    int startX       = entity->position.x;
-    int startY       = entity->position.y;
-    entity->position = entity->drawPos;
+    int startX       = self->position.x;
+    int startY       = self->position.y;
+    self->position = self->drawPos;
 
     int len = 0;
-    if (entity->gap >= 16) {
-        entity->position.x += entity->offset.x;
-        entity->position.y -= entity->offset.y;
-        len = entity->length;
+    if (self->gap >= 16) {
+        self->position.x += self->offset.x;
+        self->position.y -= self->offset.y;
+        len = self->length;
     }
 
     for (int l = 0; l <= len; ++l) {
@@ -255,24 +255,24 @@ void PimPom_State1_Unknown(void)
             int playerVelX = player->velocity.x;
             int playerVelY = player->velocity.y;
 
-            int distX = (player->position.x - entity->position.x) >> 8;
-            int distY = (player->position.y - entity->position.y) >> 8;
+            int distX = (player->position.x - self->position.x) >> 8;
+            int distY = (player->position.y - self->position.y) >> 8;
 
-            player->position.x = entity->position.x + distY * RSDK.Sin256(entity->negAngle) + distX * RSDK.Cos256(entity->negAngle);
-            player->position.y = entity->position.y - distX * RSDK.Sin256(entity->negAngle) + distY * RSDK.Cos256(entity->negAngle);
+            player->position.x = self->position.x + distY * RSDK.Sin256(self->negAngle) + distX * RSDK.Cos256(self->negAngle);
+            player->position.y = self->position.y - distX * RSDK.Sin256(self->negAngle) + distY * RSDK.Cos256(self->negAngle);
 
             int velX = player->velocity.x >> 8;
             int velY = player->velocity.y >> 8;
 
-            player->velocity.x = velY * RSDK.Sin256(entity->negAngle) + velX * RSDK.Cos256(entity->negAngle);
-            player->velocity.y = velY * RSDK.Cos256(entity->negAngle) - velX * RSDK.Sin256(entity->negAngle);
+            player->velocity.x = velY * RSDK.Sin256(self->negAngle) + velX * RSDK.Cos256(self->negAngle);
+            player->velocity.y = velY * RSDK.Cos256(self->negAngle) - velX * RSDK.Sin256(self->negAngle);
 
             int storedVelX = player->velocity.x;
             int storedVelY = player->velocity.y;
 
             Hitbox hitbox;
             Hitbox *playerHitbox = Player_GetHitbox(player);
-            if ((((entity->angle & 0xFF) - 32) & 0x7F) < 0x40) {
+            if ((((self->angle & 0xFF) - 32) & 0x7F) < 0x40) {
                 hitbox.top    = playerHitbox->left;
                 hitbox.bottom = playerHitbox->right;
                 hitbox.left   = playerHitbox->top;
@@ -282,7 +282,7 @@ void PimPom_State1_Unknown(void)
                 hitbox = *playerHitbox;
             }
 
-            int side = RSDK.CheckObjectCollisionBox(entity, &entity->hitbox, player, &hitbox, true);
+            int side = RSDK.CheckObjectCollisionBox(self, &self->hitbox, player, &hitbox, true);
             switch (side) {
                 case C_NONE:
                     player->position.x = playerX;
@@ -293,7 +293,7 @@ void PimPom_State1_Unknown(void)
                 case C_TOP: player->velocity.y = clampVal(-(storedVelY + (storedVelY >> 4)), -0xE0000, -0x40000);
 #if RETRO_USE_PLUS
                     if (player->characterID == ID_MIGHTY && player->state == Player_State_MightyHammerDrop) {
-                        RSDK.SetSpriteAnimation(player->spriteIndex, ANI_JUMP, &player->playerAnimator, false, 0);
+                        RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
                         player->state = Player_State_Air;
                     }
 #endif
@@ -301,7 +301,7 @@ void PimPom_State1_Unknown(void)
                 case C_LEFT: player->velocity.x = clampVal(-storedVelX, -0x80000, -0x20000);
 #if RETRO_USE_PLUS
                     if (player->characterID == ID_MIGHTY && player->state == Player_State_MightyHammerDrop) {
-                        RSDK.SetSpriteAnimation(player->spriteIndex, ANI_JUMP, &player->playerAnimator, false, 0);
+                        RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
                         player->state = Player_State_Air;
                     }
 #endif
@@ -309,7 +309,7 @@ void PimPom_State1_Unknown(void)
                 case C_RIGHT: player->velocity.x = clampVal(-storedVelX, 0x20000, 0x80000);
 #if RETRO_USE_PLUS
                     if (player->characterID == ID_MIGHTY && player->state == Player_State_MightyHammerDrop) {
-                        RSDK.SetSpriteAnimation(player->spriteIndex, ANI_JUMP, &player->playerAnimator, false, 0);
+                        RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
                         player->state = Player_State_Air;
                     }
 #endif
@@ -317,7 +317,7 @@ void PimPom_State1_Unknown(void)
                 case C_BOTTOM: player->velocity.y = clampVal(-(storedVelY + (storedVelY >> 4)), 0x40000, 0xE0000);
 #if RETRO_USE_PLUS
                     if (player->characterID == ID_MIGHTY && player->state == Player_State_MightyHammerDrop) {
-                        RSDK.SetSpriteAnimation(player->spriteIndex, ANI_JUMP, &player->playerAnimator, false, 0);
+                        RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
                         player->state = Player_State_Air;
                     }
 #endif
@@ -329,50 +329,50 @@ void PimPom_State1_Unknown(void)
                 player->onGround    = false;
                 player->jumpAbility = 0;
 
-                distX = (player->position.x - entity->position.x) >> 8;
-                distY = (player->position.y - entity->position.y) >> 8;
+                distX = (player->position.x - self->position.x) >> 8;
+                distY = (player->position.y - self->position.y) >> 8;
 
-                player->position.x = distY * RSDK.Sin256(entity->angle) + distX * RSDK.Cos256(entity->angle) + entity->position.x;
-                player->position.y = entity->position.y - distX * RSDK.Sin256(entity->angle) + distY * RSDK.Cos256(entity->angle);
+                player->position.x = distY * RSDK.Sin256(self->angle) + distX * RSDK.Cos256(self->angle) + self->position.x;
+                player->position.y = self->position.y - distX * RSDK.Sin256(self->angle) + distY * RSDK.Cos256(self->angle);
 
                 velX = player->velocity.x >> 8;
                 velY = player->velocity.y >> 8;
 
-                player->velocity.x = velY * RSDK.Sin256(entity->angle) + velX * RSDK.Cos256(entity->angle);
-                player->velocity.y = velY * RSDK.Cos256(entity->angle) - velX * RSDK.Sin256(entity->angle);
+                player->velocity.x = velY * RSDK.Sin256(self->angle) + velX * RSDK.Cos256(self->angle);
+                player->velocity.y = velY * RSDK.Cos256(self->angle) - velX * RSDK.Sin256(self->angle);
 
-                if (entity->timer < 1) {
+                if (self->timer < 1) {
                     RSDK.PlaySfx(PimPom->sfxBumper2, false, 255);
-                    entity->timer = 8;
+                    self->timer = 8;
                 }
             }
         }
 
-        entity->position.x -= entity->moveAmount.x;
-        entity->position.y += entity->moveAmount.y;
+        self->position.x -= self->moveAmount.x;
+        self->position.y += self->moveAmount.y;
     }
 
-    entity->position.x = startX;
-    entity->position.y = startY;
+    self->position.x = startX;
+    self->position.y = startY;
 }
 
 void PimPom_State3_Unknown(void)
 {
     RSDK_THIS(PimPom);
 
-    int spinAngle = Zone->timer * entity->spinSpeed;
-    if (entity->direction)
+    int spinAngle = Zone->timer * self->spinSpeed;
+    if (self->direction)
         spinAngle = -spinAngle;
 
-    entity->angle    = (entity->angle2 & 0xFF) + (spinAngle >> 1);
-    entity->negAngle = 0x100 - entity->angle;
-    entity->rotation = 2 * entity->negAngle;
+    self->angle    = (self->angle2 & 0xFF) + (spinAngle >> 1);
+    self->negAngle = 0x100 - self->angle;
+    self->rotation = 2 * self->negAngle;
 
-    entity->offset.x = ((entity->length * (entity->gap + 24)) << 8) * RSDK.Cos256(entity->angle);
-    entity->offset.y = ((entity->length * (entity->gap + 24)) << 8) * RSDK.Sin256(entity->angle);
+    self->offset.x = ((self->length * (self->gap + 24)) << 8) * RSDK.Cos256(self->angle);
+    self->offset.y = ((self->length * (self->gap + 24)) << 8) * RSDK.Sin256(self->angle);
 
-    entity->moveAmount.x = ((entity->gap + 24) * RSDK.Cos256(entity->angle)) << 9;
-    entity->moveAmount.y = ((entity->gap + 24) * RSDK.Sin256(entity->angle)) << 9;
+    self->moveAmount.x = ((self->gap + 24) * RSDK.Cos256(self->angle)) << 9;
+    self->moveAmount.y = ((self->gap + 24) * RSDK.Sin256(self->angle)) << 9;
 
     PimPom_State1_Unknown();
 }
@@ -381,23 +381,23 @@ void PimPom_StateMove_None(void)
 {
     RSDK_THIS(PimPom);
 
-    entity->drawPos.x = entity->position.x;
-    entity->drawPos.y = entity->position.y;
+    self->drawPos.x = self->position.x;
+    self->drawPos.y = self->position.y;
 }
 
 void PimPom_StateMove_Normal(void)
 {
     RSDK_THIS(PimPom);
 
-    int drawX         = entity->drawPos.x;
-    int drawY         = entity->drawPos.y;
-    entity->drawPos.x = entity->position.x + entity->amplitude.x * RSDK.Sin1024(entity->speed * Zone->timer);
-    entity->drawPos.y = entity->position.y + entity->amplitude.y * RSDK.Sin1024(entity->speed * Zone->timer);
-    int moveX         = entity->drawPos.x - drawX;
-    int moveY         = entity->drawPos.y - drawY;
+    int drawX         = self->drawPos.x;
+    int drawY         = self->drawPos.y;
+    self->drawPos.x = self->position.x + self->amplitude.x * RSDK.Sin1024(self->speed * Zone->timer);
+    self->drawPos.y = self->position.y + self->amplitude.y * RSDK.Sin1024(self->speed * Zone->timer);
+    int moveX         = self->drawPos.x - drawX;
+    int moveY         = self->drawPos.y - drawY;
 
-    int slot = RSDK_sceneInfo->entitySlot + 1;
-    for (int i = 0; i < entity->numChildren; ++i) {
+    int slot = SceneInfo->entitySlot + 1;
+    for (int i = 0; i < self->numChildren; ++i) {
         Entity *child = RSDK_GET_ENTITY(slot + i, );
         child->position.x += moveX;
         child->position.y += moveY;
@@ -408,15 +408,15 @@ void PimPom_StateMove_Circle(void)
 {
     RSDK_THIS(PimPom);
 
-    int drawX         = entity->drawPos.x;
-    int drawY         = entity->drawPos.y;
-    entity->drawPos.x = entity->position.x + entity->amplitude.x * RSDK.Cos1024(entity->speed * Zone->timer + 4 * entity->angleM);
-    entity->drawPos.y = entity->position.y + entity->amplitude.y * RSDK.Sin1024(entity->speed * Zone->timer + 4 * entity->angleM);
-    int moveX         = entity->drawPos.x - drawX;
-    int moveY         = entity->drawPos.y - drawY;
+    int drawX         = self->drawPos.x;
+    int drawY         = self->drawPos.y;
+    self->drawPos.x = self->position.x + self->amplitude.x * RSDK.Cos1024(self->speed * Zone->timer + 4 * self->angleM);
+    self->drawPos.y = self->position.y + self->amplitude.y * RSDK.Sin1024(self->speed * Zone->timer + 4 * self->angleM);
+    int moveX         = self->drawPos.x - drawX;
+    int moveY         = self->drawPos.y - drawY;
 
-    int slot = RSDK_sceneInfo->entitySlot + 1;
-    for (int i = 0; i < entity->numChildren; ++i) {
+    int slot = SceneInfo->entitySlot + 1;
+    for (int i = 0; i < self->numChildren; ++i) {
         Entity *child = RSDK_GET_ENTITY(slot + i, );
         child->position.x += moveX;
         child->position.y += moveY;
@@ -427,32 +427,32 @@ void PimPom_StateMove_ToTarget(void)
 {
     RSDK_THIS(PimPom);
 
-    int drawX = entity->drawPos.x;
-    int drawY = entity->drawPos.y;
-    entity->drawPos.x += entity->velocity.x;
-    entity->drawPos.y += entity->velocity.y;
+    int drawX = self->drawPos.x;
+    int drawY = self->drawPos.y;
+    self->drawPos.x += self->velocity.x;
+    self->drawPos.y += self->velocity.y;
 
-    Entity *target = RSDK_GET_ENTITY(entity->speed, );
+    Entity *target = RSDK_GET_ENTITY(self->speed, );
 
-    if (entity->velocity.x <= 0) {
-        if (entity->drawPos.x < target->position.x)
-            entity->drawPos.x = target->position.x;
+    if (self->velocity.x <= 0) {
+        if (self->drawPos.x < target->position.x)
+            self->drawPos.x = target->position.x;
     }
-    else if (entity->drawPos.x > target->position.x)
-        entity->drawPos.x = target->position.x;
+    else if (self->drawPos.x > target->position.x)
+        self->drawPos.x = target->position.x;
 
-    if (entity->velocity.y <= 0) {
-        if (entity->drawPos.y < target->position.y)
-            entity->drawPos.y = target->position.y;
+    if (self->velocity.y <= 0) {
+        if (self->drawPos.y < target->position.y)
+            self->drawPos.y = target->position.y;
     }
-    else if (entity->drawPos.y > target->position.y)
-        entity->drawPos.y = target->position.y;
+    else if (self->drawPos.y > target->position.y)
+        self->drawPos.y = target->position.y;
 
-    int moveX = entity->drawPos.x - drawX;
-    int moveY = entity->drawPos.y - drawY;
+    int moveX = self->drawPos.x - drawX;
+    int moveY = self->drawPos.y - drawY;
 
-    int slot = RSDK_sceneInfo->entitySlot + 1;
-    for (int i = 0; i < entity->numChildren; ++i) {
+    int slot = SceneInfo->entitySlot + 1;
+    for (int i = 0; i < self->numChildren; ++i) {
         Entity *child = RSDK_GET_ENTITY(slot + i, );
         child->position.x += moveX;
         child->position.y += moveY;
@@ -463,23 +463,23 @@ void PimPom_StateMove3_Unknown(void)
 {
     RSDK_THIS(PimPom);
 
-    int drawX = entity->drawPos.x;
-    int drawY = entity->drawPos.y;
+    int drawX = self->drawPos.x;
+    int drawY = self->drawPos.y;
 
-    if (((Zone->timer >> 9) & 1) == entity->direction) {
-        entity->drawPos.x = entity->position.x + ((((Zone->timer & 0xFFFF) << 7) * entity->amplitude.x) >> 6) - (entity->amplitude.x << 15);
-        entity->drawPos.y = entity->position.y + ((((Zone->timer & 0xFFFF) << 7) * entity->amplitude.y) >> 6) - (entity->amplitude.y << 15);
+    if (((Zone->timer >> 9) & 1) == self->direction) {
+        self->drawPos.x = self->position.x + ((((Zone->timer & 0xFFFF) << 7) * self->amplitude.x) >> 6) - (self->amplitude.x << 15);
+        self->drawPos.y = self->position.y + ((((Zone->timer & 0xFFFF) << 7) * self->amplitude.y) >> 6) - (self->amplitude.y << 15);
     }
     else {
-        entity->drawPos.x = entity->position.x + (entity->amplitude.x << 15) - ((((Zone->timer & 0xFFFF) << 7) * entity->amplitude.x) >> 6);
-        entity->drawPos.y = entity->position.y + (entity->amplitude.y << 15) - ((((Zone->timer & 0xFFFF) << 7) * entity->amplitude.y) >> 6);
+        self->drawPos.x = self->position.x + (self->amplitude.x << 15) - ((((Zone->timer & 0xFFFF) << 7) * self->amplitude.x) >> 6);
+        self->drawPos.y = self->position.y + (self->amplitude.y << 15) - ((((Zone->timer & 0xFFFF) << 7) * self->amplitude.y) >> 6);
     }
 
-    int moveX = entity->drawPos.x - drawX;
-    int moveY = entity->drawPos.y - drawY;
+    int moveX = self->drawPos.x - drawX;
+    int moveY = self->drawPos.y - drawY;
 
-    int slot = RSDK_sceneInfo->entitySlot + 1;
-    for (int i = 0; i < entity->numChildren; ++i) {
+    int slot = SceneInfo->entitySlot + 1;
+    for (int i = 0; i < self->numChildren; ++i) {
         Entity *child = RSDK_GET_ENTITY(slot + i, );
         child->position.x += moveX;
         child->position.y += moveY;
@@ -491,97 +491,97 @@ void PimPom_EditorDraw(void)
 {
     RSDK_THIS(PimPom);
 
-    entity->drawFX    = FX_NONE;
-    entity->direction = FLIP_NONE;
-    entity->active    = ACTIVE_BOUNDS;
-    entity->visible   = true;
+    self->drawFX    = FX_NONE;
+    self->direction = FLIP_NONE;
+    self->active    = ACTIVE_BOUNDS;
+    self->visible   = true;
 
-    entity->updateRange.x = (40 - (entity->length * (entity->gap + 24))) << 16;
-    entity->updateRange.y = (40 - (entity->length * (entity->gap + 24))) << 16;
-    entity->drawOrder     = Zone->drawOrderLow + 1;
-    entity->angle2        = 0x20 * entity->angle;
-    entity->angle         = 0x20 * entity->angle;
-    entity->negAngle      = 0x100 - entity->angle;
-    entity->rotation      = 2 * entity->negAngle;
+    self->updateRange.x = (40 - (self->length * (self->gap + 24))) << 16;
+    self->updateRange.y = (40 - (self->length * (self->gap + 24))) << 16;
+    self->drawOrder     = Zone->drawOrderLow + 1;
+    self->angle2        = 0x20 * self->angle;
+    self->angle         = 0x20 * self->angle;
+    self->negAngle      = 0x100 - self->angle;
+    self->rotation      = 2 * self->negAngle;
 
     int offset = 8;
-    if (entity->type)
+    if (self->type)
         offset = 24;
 
-    entity->offset.x = ((entity->length * (offset + entity->gap)) << 8) * RSDK.Cos256(entity->angle);
-    entity->offset.y = ((entity->length * (offset + entity->gap)) << 8) * RSDK.Sin256(entity->angle);
+    self->offset.x = ((self->length * (offset + self->gap)) << 8) * RSDK.Cos256(self->angle);
+    self->offset.y = ((self->length * (offset + self->gap)) << 8) * RSDK.Sin256(self->angle);
 
-    entity->moveAmount.x = ((offset + entity->gap) * RSDK.Cos256(entity->angle)) << 9;
-    entity->moveAmount.y = ((offset + entity->gap) * RSDK.Sin256(entity->angle)) << 9;
-    entity->drawPos      = entity->position;
+    self->moveAmount.x = ((offset + self->gap) * RSDK.Cos256(self->angle)) << 9;
+    self->moveAmount.y = ((offset + self->gap) * RSDK.Sin256(self->angle)) << 9;
+    self->drawPos      = self->position;
 
-    switch (entity->type) {
+    switch (self->type) {
         case PIMPOM_SINGLE:
-            RSDK.SetSpriteAnimation(PimPom->aniFrames, 0, &entity->animator, true, entity->color);
-            entity->hitbox.left   = -8;
-            entity->hitbox.top    = -8;
-            entity->hitbox.right  = 8;
-            entity->hitbox.bottom = 8;
-            entity->state         = PimPom_State0_Unknown;
+            RSDK.SetSpriteAnimation(PimPom->aniFrames, 0, &self->animator, true, self->color);
+            self->hitbox.left   = -8;
+            self->hitbox.top    = -8;
+            self->hitbox.right  = 8;
+            self->hitbox.bottom = 8;
+            self->state         = PimPom_State0_Unknown;
             break;
         case PIMPOM_HORIZONTAL:
-            switch (entity->angle) {
-                case 0x00: RSDK.SetSpriteAnimation(PimPom->aniFrames, 1, &entity->animator, true, 0); break;
+            switch (self->angle) {
+                case 0x00: RSDK.SetSpriteAnimation(PimPom->aniFrames, 1, &self->animator, true, 0); break;
                 case 0x20:
-                    entity->drawFX    = FX_FLIP;
-                    entity->direction = FLIP_X;
-                    RSDK.SetSpriteAnimation(PimPom->aniFrames, 2, &entity->animator, true, 0);
+                    self->drawFX    = FX_FLIP;
+                    self->direction = FLIP_X;
+                    RSDK.SetSpriteAnimation(PimPom->aniFrames, 2, &self->animator, true, 0);
                     break;
-                case 0x40: RSDK.SetSpriteAnimation(PimPom->aniFrames, 3, &entity->animator, true, 0); break;
-                case 0x60: RSDK.SetSpriteAnimation(PimPom->aniFrames, 2, &entity->animator, true, 0); break;
+                case 0x40: RSDK.SetSpriteAnimation(PimPom->aniFrames, 3, &self->animator, true, 0); break;
+                case 0x60: RSDK.SetSpriteAnimation(PimPom->aniFrames, 2, &self->animator, true, 0); break;
                 default: break;
             }
             break;
         case PIMPOM_DIAGONAL:
-            RSDK.SetSpriteAnimation(PimPom->aniFrames, 2, &entity->animator, true, 0);
-            entity->drawFX = FX_ROTATE | FX_FLIP;
-            if (entity->direction == FLIP_X)
-                entity->angle = 0x20;
+            RSDK.SetSpriteAnimation(PimPom->aniFrames, 2, &self->animator, true, 0);
+            self->drawFX = FX_ROTATE | FX_FLIP;
+            if (self->direction == FLIP_X)
+                self->angle = 0x20;
             else
-                entity->angle = 0xE0;
-            entity->negAngle = 0x100 - entity->angle;
+                self->angle = 0xE0;
+            self->negAngle = 0x100 - self->angle;
             break;
         case PIMPOM_VERTICAL:
-            RSDK.SetSpriteAnimation(PimPom->aniFrames, 1, &entity->animator, true, 0);
-            entity->drawFX = FX_ROTATE;
+            RSDK.SetSpriteAnimation(PimPom->aniFrames, 1, &self->animator, true, 0);
+            self->drawFX = FX_ROTATE;
             break;
         default: break;
     }
 
-    int ax = entity->amplitude.x >> 10;
-    int ay = entity->amplitude.y >> 10;
+    int ax = self->amplitude.x >> 10;
+    int ay = self->amplitude.y >> 10;
 
     int len = 0;
 
-    switch (entity->moveType) {
+    switch (self->moveType) {
         case PIMPOM_MOVE_NONE:
         default:
-            entity->updateRange.x = (entity->length * (entity->gap + 24) + 88) << 16;
-            entity->updateRange.y = (entity->length * (entity->gap + 24) + 88) << 16;
+            self->updateRange.x = (self->length * (self->gap + 24) + 88) << 16;
+            self->updateRange.y = (self->length * (self->gap + 24) + 88) << 16;
             break;
         case PIMPOM_MOVE_NORMAL:
-            len                   = (entity->length * (entity->gap + 24) + 88) << 6;
-            entity->updateRange.x = (abs(ax) + len) << 10;
-            entity->updateRange.y = (abs(ay) + len) << 10;
+            len                   = (self->length * (self->gap + 24) + 88) << 6;
+            self->updateRange.x = (abs(ax) + len) << 10;
+            self->updateRange.y = (abs(ay) + len) << 10;
             break;
         case PIMPOM_MOVE_CIRCLE:
-            len                   = (entity->length * (entity->gap + 24)) << 6;
-            entity->updateRange.x = (abs(ax) + len + 0x1600) << 10;
-            entity->updateRange.y = (abs(ay) + len + 0x1600) << 10;
+            len                   = (self->length * (self->gap + 24)) << 6;
+            self->updateRange.x = (abs(ax) + len + 0x1600) << 10;
+            self->updateRange.y = (abs(ay) + len + 0x1600) << 10;
             break;
         case PIMPOM_MOVE_3:
-            len                   = (entity->length * (entity->gap + 24)) << 7;
-            entity->updateRange.x = (abs(ax) + len + 0x2C00) << 9;
-            entity->updateRange.y = (abs(ay) + len + 0x2C00) << 9;
+            len                   = (self->length * (self->gap + 24)) << 7;
+            self->updateRange.x = (abs(ax) + len + 0x2C00) << 9;
+            self->updateRange.y = (abs(ay) + len + 0x2C00) << 9;
             break;
         case PIMPOM_MOVE_4:
-            entity->updateRange.x = (entity->length * (entity->gap + 24) + 88) << 16;
-            entity->updateRange.y = (entity->length * (entity->gap + 24) + 88) << 16;
+            self->updateRange.x = (self->length * (self->gap + 24) + 88) << 16;
+            self->updateRange.y = (self->length * (self->gap + 24) + 88) << 16;
             break;
     }
 

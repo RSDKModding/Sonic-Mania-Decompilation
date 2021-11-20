@@ -5,32 +5,32 @@ ObjectUIKeyBinder *UIKeyBinder;
 void UIKeyBinder_Update(void)
 {
     RSDK_THIS(UIKeyBinder);
-    entity->touchPosStart.x = entity->field_110;
-    entity->touchPosEnd.x   = 0;
-    entity->touchPosEnd.y   = 0;
-    entity->touchPosStart.x += 3 * entity->field_114;
-    entity->touchPosStart.y = entity->field_114 + 0x60000;
+    self->touchPosStart.x = self->field_110;
+    self->touchPosEnd.x   = 0;
+    self->touchPosEnd.y   = 0;
+    self->touchPosStart.x += 3 * self->field_114;
+    self->touchPosStart.y = self->field_114 + 0x60000;
 
-    if (entity->textSpriteIndex != UIWidgets->textSpriteIndex) {
-        RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, entity->listID, &entity->animator1, true, entity->frameID);
-        entity->textSpriteIndex = UIWidgets->textSpriteIndex;
+    if (self->textSpriteIndex != UIWidgets->textSpriteIndex) {
+        RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, self->listID, &self->animator1, true, self->frameID);
+        self->textSpriteIndex = UIWidgets->textSpriteIndex;
     }
 
-    EntityUIControl *parent = (EntityUIControl *)entity->parent;
-    int32 input               = entity->inputID + 1;
-    int32 mappings            = UIKeyBinder_GetMappings(input, entity->type);
+    EntityUIControl *parent = (EntityUIControl *)self->parent;
+    int32 input               = self->inputID + 1;
+    int32 mappings            = UIKeyBinder_GetMappings(input, self->type);
 
     TextInfo info;
     INIT_TEXTINFO(info);
     bool32 flag = true;
 
     int32 frameID = -1;
-    if (entity->field_16C == mappings) {
+    if (self->field_16C == mappings) {
         flag = false;
     }
     else if (mappings == -1) {
-        RSDK.SetSpriteAnimation(UIKeyBinder->aniFrames, UIKeyBinder_GetButtonListID(), &entity->animator2, true, 0);
-        entity->field_16C = -1;
+        RSDK.SetSpriteAnimation(UIKeyBinder->aniFrames, UIKeyBinder_GetButtonListID(), &self->animator2, true, 0);
+        self->field_16C = -1;
         flag              = false;
     }
     else {
@@ -39,10 +39,10 @@ void UIKeyBinder_Update(void)
 
     for (int32 b = 0; b <= 8 && flag; ++b) {
         for (int32 i = 1; i <= 2 && flag; ++i) {
-            if ((b != entity->type || i != input) && mappings) {
+            if ((b != self->type || i != input) && mappings) {
                 if (UIKeyBinder_GetMappings(i, b) != mappings)
                     continue;
-                if (entity->state != UIKeyBinder_Unknown14)
+                if (self->state != UIKeyBinder_Unknown14)
                     break;
 
                 UIKeyBinder->curInputID  = i;
@@ -61,8 +61,8 @@ void UIKeyBinder_Update(void)
                 if (str != -1)
                     Localization_GetString(&info, str);
 
-                UIKeyBinder_SetMappings(entity->type, input, 0);
-                entity->field_16C      = 0;
+                UIKeyBinder_SetMappings(self->type, input, 0);
+                self->field_16C      = 0;
                 EntityUIDialog *dialog = UIDialog_CreateActiveDialog(&info);
                 if (dialog) {
                     UIDialog_AddButton(DIALOG_NO, dialog, UIKeyBinder_Unknown15, true);
@@ -75,43 +75,43 @@ void UIKeyBinder_Update(void)
     }
 
     if (flag) {
-        if (frameID || entity->state != UIKeyBinder_Unknown14) {
-            RSDK.SetSpriteAnimation(UIKeyBinder->aniFrames, UIKeyBinder_GetButtonListID(), &entity->animator2, true, frameID);
-            entity->field_16C = mappings;
-            if (entity->state == UIKeyBinder_Unknown14) {
+        if (frameID || self->state != UIKeyBinder_Unknown14) {
+            RSDK.SetSpriteAnimation(UIKeyBinder->aniFrames, UIKeyBinder_GetButtonListID(), &self->animator2, true, frameID);
+            self->field_16C = mappings;
+            if (self->state == UIKeyBinder_Unknown14) {
                 LogHelpers_Print("bind = %d 0x%02x", mappings, mappings);
                 UIKeyBinder->flag         = false;
                 parent->selectionDisabled = false;
-                entity->processButtonCB   = UIButton_Unknown6;
-                entity->state             = UIKeyBinder_Unknown13;
+                self->processButtonCB   = UIButton_Unknown6;
+                self->state             = UIKeyBinder_Unknown13;
                 UIKeyBinder->activeBinder = 0;
                 parent->childHasFocus     = false;
                 RSDK.SetSettingsValue(SETTINGS_CHANGED, 1);
-                RSDK.PlaySfx(UIWidgets->sfx_Accept, false, 255);
+                RSDK.PlaySfx(UIWidgets->sfxAccept, false, 255);
             }
         }
         else {
             LogHelpers_Print("bind = %d 0x%02x", mappings, mappings);
-            int32 frame = UIButtonPrompt_MappingsToFrame(entity->field_16C);
-            RSDK.SetSpriteAnimation(UIKeyBinder->aniFrames, UIKeyBinder_GetButtonListID(), &entity->animator2, true, frame);
-            UIKeyBinder_SetMappings(input, entity->type, -1);
+            int32 frame = UIButtonPrompt_MappingsToFrame(self->field_16C);
+            RSDK.SetSpriteAnimation(UIKeyBinder->aniFrames, UIKeyBinder_GetButtonListID(), &self->animator2, true, frame);
+            UIKeyBinder_SetMappings(input, self->type, -1);
             RSDK.PlaySfx(UIKeyBinder->sfxFail, false, 255);
         }
     }
 
-    StateMachine_Run(entity->state);
+    StateMachine_Run(self->state);
 
     int32 id = -1;
     for (int32 i = 0; i < parent->buttonCount; ++i) {
-        if (entity == (EntityUIKeyBinder *)parent->buttons[i]) {
+        if (self == (EntityUIKeyBinder *)parent->buttons[i]) {
             id = i;
             break;
         }
     }
 
-    if (entity->state == UIKeyBinder_Unknown13 && (parent->state != UIControl_ProcessInputs || parent->activeEntityID != id)) {
-        entity->flag  = false;
-        entity->state = UIKeyBinder_Unknown12;
+    if (self->state == UIKeyBinder_Unknown13 && (parent->state != UIControl_ProcessInputs || parent->activeEntityID != id)) {
+        self->flag  = false;
+        self->state = UIKeyBinder_Unknown12;
     }
 }
 
@@ -124,33 +124,33 @@ void UIKeyBinder_Draw(void) { UIKeyBinder_DrawSprites(); }
 void UIKeyBinder_Create(void *data)
 {
     RSDK_THIS(UIKeyBinder);
-    entity->visible         = true;
-    entity->drawOrder       = 2;
-    entity->active          = ACTIVE_BOUNDS;
-    entity->updateRange.x   = 0x800000;
-    entity->updateRange.y   = 0x400000;
-    entity->field_110       = 0x400000;
-    entity->field_118       = 12;
-    entity->field_114       = 0xC0000;
-    entity->processButtonCB = UIButton_Unknown6;
-    entity->touchCB         = UIButton_ProcessTouch;
-    entity->options2        = UIKeyBinder_Options2CB;
-    entity->options3        = UIKeyBinder_Options3CB;
-    entity->failCB          = 0;
-    entity->options5        = UIKeyBinder_Options5CB;
-    entity->options6        = UIKeyBinder_Options6CB;
-    entity->options7        = UIKeyBinder_Options7CB;
-    entity->options8        = UIKeyBinder_Options8CB;
-    entity->textFlag        = true;
-    entity->field_12C       = 512;
-    entity->listID          = 0;
-    entity->frameID         = UIKeyBinder_Unknown4(entity->type);
-    RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, entity->listID, &entity->animator1, true, entity->frameID);
-    entity->textSpriteIndex = UIWidgets->textSpriteIndex;
-    if (!RSDK_sceneInfo->inEditor) {
-        int32 mappings = UIKeyBinder_GetMappings(entity->inputID + 1, entity->type);
+    self->visible         = true;
+    self->drawOrder       = 2;
+    self->active          = ACTIVE_BOUNDS;
+    self->updateRange.x   = 0x800000;
+    self->updateRange.y   = 0x400000;
+    self->field_110       = 0x400000;
+    self->field_118       = 12;
+    self->field_114       = 0xC0000;
+    self->processButtonCB = UIButton_Unknown6;
+    self->touchCB         = UIButton_ProcessTouch;
+    self->options2        = UIKeyBinder_Options2CB;
+    self->options3        = UIKeyBinder_Options3CB;
+    self->failCB          = 0;
+    self->options5        = UIKeyBinder_Options5CB;
+    self->options6        = UIKeyBinder_Options6CB;
+    self->options7        = UIKeyBinder_Options7CB;
+    self->options8        = UIKeyBinder_Options8CB;
+    self->textFlag        = true;
+    self->field_12C       = 512;
+    self->listID          = 0;
+    self->frameID         = UIKeyBinder_Unknown4(self->type);
+    RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, self->listID, &self->animator1, true, self->frameID);
+    self->textSpriteIndex = UIWidgets->textSpriteIndex;
+    if (!SceneInfo->inEditor) {
+        int32 mappings = UIKeyBinder_GetMappings(self->inputID + 1, self->type);
         int32 frame    = UIButtonPrompt_MappingsToFrame(mappings);
-        RSDK.SetSpriteAnimation(UIKeyBinder->aniFrames, UIKeyBinder_GetButtonListID(), &entity->animator2, true, frame);
+        RSDK.SetSpriteAnimation(UIKeyBinder->aniFrames, UIKeyBinder_GetButtonListID(), &self->animator2, true, frame);
     }
 }
 
@@ -175,15 +175,15 @@ int32 UIKeyBinder_GetButtonListID(void)
 int32 UIKeyBinder_GetMappings(int32 input, int32 button)
 {
     switch (button) {
-        case 0: return RSDK_controller[input].keyUp.keyMap; break;
-        case 1: return RSDK_controller[input].keyDown.keyMap; break;
-        case 2: return RSDK_controller[input].keyLeft.keyMap; break;
-        case 3: return RSDK_controller[input].keyRight.keyMap; break;
-        case 4: return RSDK_controller[input].keyA.keyMap; break;
-        case 5: return RSDK_controller[input].keyB.keyMap; break;
-        case 6: return RSDK_controller[input].keyX.keyMap; break;
-        case 7: return RSDK_controller[input].keyY.keyMap; break;
-        case 8: return RSDK_controller[input].keyStart.keyMap; break;
+        case 0: return ControllerInfo[input].keyUp.keyMap; break;
+        case 1: return ControllerInfo[input].keyDown.keyMap; break;
+        case 2: return ControllerInfo[input].keyLeft.keyMap; break;
+        case 3: return ControllerInfo[input].keyRight.keyMap; break;
+        case 4: return ControllerInfo[input].keyA.keyMap; break;
+        case 5: return ControllerInfo[input].keyB.keyMap; break;
+        case 6: return ControllerInfo[input].keyX.keyMap; break;
+        case 7: return ControllerInfo[input].keyY.keyMap; break;
+        case 8: return ControllerInfo[input].keyStart.keyMap; break;
         default: break;
     }
     return 0;
@@ -192,15 +192,15 @@ int32 UIKeyBinder_GetMappings(int32 input, int32 button)
 void UIKeyBinder_SetMappings(int32 input, int32 button, int32 mappings)
 {
     switch (button) {
-        case 0: RSDK_controller[input].keyUp.keyMap = mappings; break;
-        case 1: RSDK_controller[input].keyDown.keyMap = mappings; break;
-        case 2: RSDK_controller[input].keyLeft.keyMap = mappings; break;
-        case 3: RSDK_controller[input].keyRight.keyMap = mappings; break;
-        case 4: RSDK_controller[input].keyA.keyMap = mappings; break;
-        case 5: RSDK_controller[input].keyB.keyMap = mappings; break;
-        case 6: RSDK_controller[input].keyX.keyMap = mappings; break;
-        case 7: RSDK_controller[input].keyY.keyMap = mappings; break;
-        case 8: RSDK_controller[input].keyStart.keyMap = mappings; break;
+        case 0: ControllerInfo[input].keyUp.keyMap = mappings; break;
+        case 1: ControllerInfo[input].keyDown.keyMap = mappings; break;
+        case 2: ControllerInfo[input].keyLeft.keyMap = mappings; break;
+        case 3: ControllerInfo[input].keyRight.keyMap = mappings; break;
+        case 4: ControllerInfo[input].keyA.keyMap = mappings; break;
+        case 5: ControllerInfo[input].keyB.keyMap = mappings; break;
+        case 6: ControllerInfo[input].keyX.keyMap = mappings; break;
+        case 7: ControllerInfo[input].keyY.keyMap = mappings; break;
+        case 8: ControllerInfo[input].keyStart.keyMap = mappings; break;
         default: break;
     }
 }
@@ -226,29 +226,29 @@ void UIKeyBinder_DrawSprites(void)
 {
     RSDK_THIS(UIKeyBinder);
     Vector2 drawPos;
-    drawPos.x = entity->position.x;
-    drawPos.y = entity->position.y;
-    drawPos.x -= entity->field_120;
-    drawPos.y -= entity->field_120;
-    UIWidgets_Unknown7(entity->field_114 >> 16, entity->field_110 >> 16, entity->field_118, 0xF0, 0xF0, 0xF0, drawPos.x, drawPos.y);
+    drawPos.x = self->position.x;
+    drawPos.y = self->position.y;
+    drawPos.x -= self->field_120;
+    drawPos.y -= self->field_120;
+    UIWidgets_DrawRhombus(self->field_114 >> 16, self->field_110 >> 16, self->field_118, 0xF0, 0xF0, 0xF0, drawPos.x, drawPos.y);
 
-    drawPos.x += entity->field_120;
-    drawPos.y += entity->field_120;
-    drawPos.x += entity->field_120;
-    drawPos.y += entity->field_120;
-    UIWidgets_Unknown7(entity->field_114 >> 16, entity->field_110 >> 16, entity->field_118, 0, 0, 0, drawPos.x, drawPos.y);
+    drawPos.x += self->field_120;
+    drawPos.y += self->field_120;
+    drawPos.x += self->field_120;
+    drawPos.y += self->field_120;
+    UIWidgets_DrawRhombus(self->field_114 >> 16, self->field_110 >> 16, self->field_118, 0, 0, 0, drawPos.x, drawPos.y);
 
-    drawPos.x = entity->position.x;
-    drawPos.y = entity->position.y;
-    drawPos.x += entity->field_120;
-    drawPos.y += entity->field_120;
-    drawPos.y += entity->field_11C;
-    drawPos.x += 0xB0000 - (entity->field_110 >> 1);
-    RSDK.DrawSprite(&entity->animator2, &drawPos, false);
+    drawPos.x = self->position.x;
+    drawPos.y = self->position.y;
+    drawPos.x += self->field_120;
+    drawPos.y += self->field_120;
+    drawPos.y += self->field_11C;
+    drawPos.x += 0xB0000 - (self->field_110 >> 1);
+    RSDK.DrawSprite(&self->animator2, &drawPos, false);
 
-    if (entity->textFlag) {
+    if (self->textFlag) {
         drawPos.x += 0x60000;
-        RSDK.DrawSprite(&entity->animator1, &drawPos, false);
+        RSDK.DrawSprite(&self->animator1, &drawPos, false);
     }
 }
 
@@ -257,31 +257,31 @@ void UIKeyBinder_Options2CB(void) {}
 bool32 UIKeyBinder_Options7CB(void)
 {
     RSDK_THIS(UIKeyBinder);
-    return entity->state == UIKeyBinder_Unknown13;
+    return self->state == UIKeyBinder_Unknown13;
 }
 
 bool32 UIKeyBinder_Options8CB(void)
 {
     RSDK_THIS(UIKeyBinder);
-    return entity->state == UIKeyBinder_Unknown14;
+    return self->state == UIKeyBinder_Unknown14;
 }
 
 void UIKeyBinder_Options5CB(void)
 {
     RSDK_THIS(UIKeyBinder);
-    if (entity->state != UIKeyBinder_Unknown13) {
-        entity->field_11C = 0;
-        entity->field_120 = 0;
-        entity->field_124 = -0x20000;
-        entity->field_128 = -0x20000;
-        entity->state     = UIKeyBinder_Unknown13;
+    if (self->state != UIKeyBinder_Unknown13) {
+        self->field_11C = 0;
+        self->field_120 = 0;
+        self->field_124 = -0x20000;
+        self->field_128 = -0x20000;
+        self->state     = UIKeyBinder_Unknown13;
     }
 }
 
 void UIKeyBinder_Options6CB(void)
 {
     RSDK_THIS(UIKeyBinder);
-    entity->state = UIKeyBinder_Unknown12;
+    self->state = UIKeyBinder_Unknown12;
 }
 
 void UIKeyBinder_Options3CB(void)
@@ -289,13 +289,13 @@ void UIKeyBinder_Options3CB(void)
     RSDK_THIS(UIKeyBinder);
     if (!UIKeyBinder->flag) {
         UIKeyBinder->flag         = true;
-        EntityUIControl *parent   = (EntityUIControl *)entity->parent;
+        EntityUIControl *parent   = (EntityUIControl *)self->parent;
         parent->childHasFocus     = true;
         parent->selectionDisabled = true;
-        UIKeyBinder->activeBinder = (Entity *)entity;
-        entity->state             = UIKeyBinder_Unknown14;
-        RSDK.PlaySfx(UIWidgets->sfx_Accept, false, 255);
-        UIKeyBinder_SetMappings(entity->inputID + 1, entity->type, -1);
+        UIKeyBinder->activeBinder = (Entity *)self;
+        self->state             = UIKeyBinder_Unknown14;
+        RSDK.PlaySfx(UIWidgets->sfxAccept, false, 255);
+        UIKeyBinder_SetMappings(self->inputID + 1, self->type, -1);
     }
 }
 
@@ -303,33 +303,33 @@ void UIKeyBinder_Unknown12(void)
 {
     RSDK_THIS(UIKeyBinder);
 
-    entity->textFlag = true;
-    if (entity->field_11C) {
-        int32 dist = -(entity->field_11C / abs(entity->field_11C));
-        entity->field_11C += dist << 15;
+    self->textFlag = true;
+    if (self->field_11C) {
+        int32 dist = -(self->field_11C / abs(self->field_11C));
+        self->field_11C += dist << 15;
         if (dist < 0) {
-            if (entity->field_11C < 0) {
-                entity->field_11C = 0;
+            if (self->field_11C < 0) {
+                self->field_11C = 0;
             }
-            else if (dist > 0 && entity->field_11C > 0)
-                entity->field_11C = 0;
+            else if (dist > 0 && self->field_11C > 0)
+                self->field_11C = 0;
         }
-        else if (dist > 0 && entity->field_11C > 0)
-            entity->field_11C = 0;
+        else if (dist > 0 && self->field_11C > 0)
+            self->field_11C = 0;
     }
 
-    if (entity->field_120) {
-        int32 dist = -(entity->field_120 / abs(entity->field_120));
-        entity->field_120 += dist << 16;
+    if (self->field_120) {
+        int32 dist = -(self->field_120 / abs(self->field_120));
+        self->field_120 += dist << 16;
         if (dist < 0) {
-            if (entity->field_120 < 0) {
-                entity->field_120 = 0;
+            if (self->field_120 < 0) {
+                self->field_120 = 0;
             }
-            else if (dist > 0 && entity->field_120 > 0)
-                entity->field_120 = 0;
+            else if (dist > 0 && self->field_120 > 0)
+                self->field_120 = 0;
         }
-        else if (dist > 0 && entity->field_120 > 0)
-            entity->field_120 = 0;
+        else if (dist > 0 && self->field_120 > 0)
+            self->field_120 = 0;
     }
 }
 
@@ -337,19 +337,19 @@ void UIKeyBinder_Unknown13(void)
 {
     RSDK_THIS(UIKeyBinder);
 
-    entity->field_124 += 0x4000;
-    entity->field_11C += entity->field_124;
-    entity->textFlag = true;
-    if (entity->field_11C >= 0 && entity->field_124 > 0) {
-        entity->field_11C = 0;
-        entity->field_124 = 0;
+    self->field_124 += 0x4000;
+    self->field_11C += self->field_124;
+    self->textFlag = true;
+    if (self->field_11C >= 0 && self->field_124 > 0) {
+        self->field_11C = 0;
+        self->field_124 = 0;
     }
 
-    entity->field_128 += 0x4800;
-    entity->field_120 += entity->field_128;
-    if (entity->field_120 >= -0x20000 && entity->field_128 > 0) {
-        entity->field_120 = -0x20000;
-        entity->field_128 = 0;
+    self->field_128 += 0x4800;
+    self->field_120 += self->field_128;
+    if (self->field_120 >= -0x20000 && self->field_128 > 0) {
+        self->field_120 = -0x20000;
+        self->field_128 = 0;
     }
 }
 
@@ -358,9 +358,9 @@ void UIKeyBinder_Unknown14(void)
     RSDK_THIS(UIKeyBinder);
     UIKeyBinder_Unknown13();
 
-    entity->processButtonCB = UIKeyBinder_Options2CB;
-    entity->textFlag        = !((entity->timer >> 1) & 1);
-    entity->timer++;
+    self->processButtonCB = UIKeyBinder_Options2CB;
+    self->textFlag        = !((self->timer >> 1) & 1);
+    self->timer++;
 }
 
 void UIKeyBinder_Unknown15(void)
@@ -399,7 +399,7 @@ void UIKeyBinder_Unknown16(void)
 void UIKeyBinder_EditorDraw(void)
 {
     RSDK_THIS(UIKeyBinder);
-    entity->inkEffect = entity->disabled ? INK_BLEND : INK_NONE;
+    self->inkEffect = self->disabled ? INK_BLEND : INK_NONE;
     UIKeyBinder_DrawSprites();
 }
 

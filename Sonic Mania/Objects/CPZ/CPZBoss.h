@@ -24,7 +24,7 @@ typedef struct {
     int32 field_6C;
     int32 field_70;
     Animator animator1;
-    Animator playerAnimator;
+    Animator animator;
     Animator animator2;
 } EntityCPZBoss;
 

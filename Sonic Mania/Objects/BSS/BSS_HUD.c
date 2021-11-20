@@ -14,16 +14,16 @@ void BSS_HUD_Draw(void)
     RSDK_THIS(BSS_HUD);
 
     drawPos.y             = 0xD0000;
-    drawPos.x             = (RSDK_screens->centerX - 141) << 16;
-    RSDK.DrawSprite(&entity->animator1, &drawPos, true);
+    drawPos.x             = (ScreenInfo->centerX - 141) << 16;
+    RSDK.DrawSprite(&self->sphereAnimator, &drawPos, true);
 
     drawPos.x += 0x250000;
     drawPos.y = 0x110000;
     BSS_HUD_DrawNumbers(BSS_Setup->sphereCount, &drawPos);
 
-    drawPos.x = (RSDK_screens->centerX + 64) << 16;
+    drawPos.x = (ScreenInfo->centerX + 64) << 16;
     drawPos.y = 0xD0000;
-    RSDK.DrawSprite(&entity->animator2, &drawPos, true);
+    RSDK.DrawSprite(&self->ringAnimator, &drawPos, true);
 
     drawPos.x += 0x380000;
     drawPos.y = 0x110000;
@@ -42,7 +42,7 @@ void BSS_HUD_Draw(void)
                     int32 playFieldPos = (x * BSS_PLAYFIELD_H) + y;
                     uint16 type      = playFields[p][playFieldPos] & 0x7F;
 
-                    RSDK.DrawRect((RSDK_screens->width - 64) + (x << 1), (RSDK_screens->height - (3 * 64)) + (p * 64) + (y << 1), 2, 2, colours[type],
+                    RSDK.DrawRect((ScreenInfo->width - 64) + (x << 1), (ScreenInfo->height - (3 * 64)) + (p * 64) + (y << 1), 2, 2, colours[type],
                                   0xFF, INK_NONE, true);
                 }
             }
@@ -53,21 +53,21 @@ void BSS_HUD_Draw(void)
 void BSS_HUD_Create(void *data)
 {
     RSDK_THIS(BSS_HUD);
-    if (!RSDK_sceneInfo->inEditor) {
-        entity->active        = ACTIVE_NORMAL;
-        entity->visible       = true;
-        entity->drawOrder     = DRAWLAYER_COUNT - 1;
-        entity->updateRange.x = 0x800000;
-        entity->updateRange.y = 0x800000;
-        RSDK.SetSpriteAnimation(BSS_HUD->spriteIndex, 0, &entity->animator1, true, 0);
-        RSDK.SetSpriteAnimation(BSS_HUD->spriteIndex, 0, &entity->animator2, true, 1);
-        RSDK.SetSpriteAnimation(BSS_HUD->spriteIndex, 1, &entity->numbersAnimator, true, 0);
+    if (!SceneInfo->inEditor) {
+        self->active        = ACTIVE_NORMAL;
+        self->visible       = true;
+        self->drawOrder     = DRAWLAYER_COUNT - 1;
+        self->updateRange.x = 0x800000;
+        self->updateRange.y = 0x800000;
+        RSDK.SetSpriteAnimation(BSS_HUD->aniFrames, 0, &self->sphereAnimator, true, 0);
+        RSDK.SetSpriteAnimation(BSS_HUD->aniFrames, 0, &self->ringAnimator, true, 1);
+        RSDK.SetSpriteAnimation(BSS_HUD->aniFrames, 1, &self->numbersAnimator, true, 0);
     }
 }
 
 void BSS_HUD_StageLoad(void)
 {
-    BSS_HUD->spriteIndex = RSDK.LoadSpriteAnimation("SpecialBS/HUD.bin", SCOPE_STAGE);
+    BSS_HUD->aniFrames = RSDK.LoadSpriteAnimation("SpecialBS/HUD.bin", SCOPE_STAGE);
     RSDK.ResetEntitySlot(SLOT_BSS_HUD, BSS_HUD->objectID, 0);
 }
 
@@ -76,8 +76,8 @@ void BSS_HUD_DrawNumbers(int32 value, Vector2 *drawPos)
     RSDK_THIS(BSS_HUD);
     int32 mult              = 1;
     for (int32 i = 0; i < 3; ++i) {
-        entity->numbersAnimator.frameID = value / mult % 10;
-        RSDK.DrawSprite(&entity->numbersAnimator, drawPos, true);
+        self->numbersAnimator.frameID = value / mult % 10;
+        RSDK.DrawSprite(&self->numbersAnimator, drawPos, true);
         drawPos->x -= 0x100000;
         mult *= 10;
     }

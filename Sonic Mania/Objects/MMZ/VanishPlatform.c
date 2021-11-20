@@ -5,18 +5,18 @@ ObjectVanishPlatform *VanishPlatform;
 void VanishPlatform_Update(void)
 {
     RSDK_THIS(VanishPlatform);
-    if (!((Zone->timer + entity->intervalOffset) % entity->interval) && entity->state == Platform_State_Normal) {
-        entity->active        = ACTIVE_NORMAL;
-        entity->collapseDelay = entity->duration;
-        entity->state         = VanishPlatform_Unknown1;
+    if (!((Zone->timer + self->intervalOffset) % self->interval) && self->state == Platform_State_Fixed) {
+        self->active        = ACTIVE_NORMAL;
+        self->timer = self->duration;
+        self->state         = VanishPlatform_Unknown1;
     }
-    if (entity->scale.x <= 336) {
-        entity->stateCollide = Platform_CollisionState_None;
-        entity->collision    = PLATFORM_C_4;
+    if (self->scale.x <= 336) {
+        self->stateCollide = Platform_CollisionState_None;
+        self->collision    = PLATFORM_C_SOLID_NONE;
     }
     else {
-        entity->stateCollide = Platform_CollisionState_TopSolid;
-        entity->collision    = PLATFORM_C_0;
+        self->stateCollide = Platform_CollisionState_TopSolid;
+        self->collision    = PLATFORM_C_SOLID_TOP;
     }
     Platform_Update();
 }
@@ -28,19 +28,19 @@ void VanishPlatform_StaticUpdate(void) {}
 void VanishPlatform_Draw(void)
 {
     RSDK_THIS(VanishPlatform);
-    RSDK.DrawSprite(&entity->animator, &entity->drawPos, false);
+    RSDK.DrawSprite(&self->animator, &self->drawPos, false);
 }
 
 void VanishPlatform_Create(void *data)
 {
     RSDK_THIS(VanishPlatform);
-    entity->collision = PLATFORM_C_0;
+    self->collision = PLATFORM_C_SOLID_TOP;
     Platform_Create(NULL);
-    RSDK.SetSpriteAnimation(Platform->spriteIndex, 3, &entity->animator, true, 0);
-    entity->drawFX  = FX_SCALE;
-    entity->scale.x = 0;
-    entity->scale.y = 0x200;
-    entity->state   = Platform_State_Normal;
+    RSDK.SetSpriteAnimation(Platform->aniFrames, 3, &self->animator, true, 0);
+    self->drawFX  = FX_SCALE;
+    self->scale.x = 0;
+    self->scale.y = 0x200;
+    self->state   = Platform_State_Fixed;
 }
 
 void VanishPlatform_StageLoad(void) {}
@@ -49,23 +49,23 @@ void VanishPlatform_Unknown1(void)
 {
     RSDK_THIS(VanishPlatform);
 
-    if (entity->scale.x < 0x200)
-        entity->scale.x += 22;
+    if (self->scale.x < 0x200)
+        self->scale.x += 22;
 
-    if (--entity->collapseDelay <= 0)
-        entity->state = VanishPlatform_Unknown2;
+    if (--self->timer <= 0)
+        self->state = VanishPlatform_Unknown2;
 }
 
 void VanishPlatform_Unknown2(void)
 {
     RSDK_THIS(VanishPlatform);
 
-    if (entity->scale.x <= 0) {
-        entity->active = ACTIVE_BOUNDS;
-        entity->state  = Platform_State_Normal;
+    if (self->scale.x <= 0) {
+        self->active = ACTIVE_BOUNDS;
+        self->state  = Platform_State_Fixed;
     }
     else {
-        entity->scale.x -= 22;
+        self->scale.x -= 22;
     }
 }
 
@@ -73,8 +73,8 @@ void VanishPlatform_Unknown2(void)
 void VanishPlatform_EditorDraw(void)
 {
     RSDK_THIS(VanishPlatform);
-    entity->drawPos = entity->position;
-    entity->drawFX  = FX_NONE;
+    self->drawPos = self->position;
+    self->drawFX  = FX_NONE;
 
     VanishPlatform_Draw();
 }

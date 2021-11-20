@@ -6,14 +6,14 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    uint16 spriteIndex;
+    uint16 aniFrames;
 } ObjectBSS_HUD;
 
 // Entity Class
 typedef struct {
     RSDK_ENTITY
-    Animator animator1;
-    Animator animator2;
+    Animator sphereAnimator;
+    Animator ringAnimator;
     Animator numbersAnimator;
 } EntityBSS_HUD;
 

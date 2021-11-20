@@ -10,7 +10,7 @@ void Soundboard_StaticUpdate(void)
 {
     for (int32 s = 0; s < maxVal(Soundboard->sfxCount, Soundboard_SFXLimit); ++s) {
         bool32 checkFlag = true;
-        if (Soundboard->sfxCheckCallback[s] && RSDK_sceneInfo->state == ENGINESTATE_REGULAR) {
+        if (Soundboard->sfxCheckCallback[s] && SceneInfo->state == ENGINESTATE_REGULAR) {
             if (Soundboard->sfxCheckCallback[s]()) {
                 checkFlag                  = false;
                 Soundboard->sfxUnknown7[s] = 0;

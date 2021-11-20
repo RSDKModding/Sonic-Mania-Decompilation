@@ -6,7 +6,7 @@ void TimeAttackGate_Update(void)
 {
     RSDK_THIS(TimeAttackGate);
     if (RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu)->objectID != PauseMenu->objectID) {
-        StateMachine_Run(entity->state);
+        StateMachine_Run(self->state);
     }
 }
 
@@ -16,13 +16,13 @@ void TimeAttackGate_StaticUpdate(void)
 {
     if (globals->gameMode == MODE_TIMEATTACK) {
         EntityPlayer *player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
-        if (TimeAttackGate->field_1C || !TimeAttackGate->started) {
+        if (TimeAttackGate->isFinished || !TimeAttackGate->started) {
             player->airTimer = 0;
         }
 
         if (TimeAttackGate->suppressedTitlecard) {
             EntityTimeAttackGate *entity        = CREATE_ENTITY(TimeAttackGate, intToVoid(1), 0, 0);
-            entity->state                       = TimeAttackGate_Unknown4;
+            entity->state                       = TimeAttackGate_State_Fadeout;
             entity->fadeTimer                   = 532;
             TimeAttackGate->suppressedTitlecard = false;
         }
@@ -34,77 +34,77 @@ void TimeAttackGate_StaticUpdate(void)
 void TimeAttackGate_Draw(void)
 {
     RSDK_THIS(TimeAttackGate);
-    StateMachine_Run(entity->stateDraw);
+    StateMachine_Run(self->stateDraw);
 }
 
 void TimeAttackGate_Create(void *data)
 {
     RSDK_THIS(TimeAttackGate);
-    if (RSDK_sceneInfo->inEditor || globals->gameMode == MODE_TIMEATTACK) {
-        RSDK.SetSpriteAnimation(TimeAttackGate->aniFrames, 0, &entity->baseAnimator, true, 0);
-        RSDK.SetSpriteAnimation(TimeAttackGate->aniFrames, 1, &entity->topAnimator, true, 0);
-        entity->visible = true;
-        if (entity->finishLine)
-            RSDK.SetSpriteAnimation(TimeAttackGate->aniFrames, 4, &entity->finAnimator, true, 0);
+    if (SceneInfo->inEditor || globals->gameMode == MODE_TIMEATTACK) {
+        RSDK.SetSpriteAnimation(TimeAttackGate->aniFrames, 0, &self->baseAnimator, true, 0);
+        RSDK.SetSpriteAnimation(TimeAttackGate->aniFrames, 1, &self->topAnimator, true, 0);
+        self->visible = true;
+        if (self->finishLine)
+            RSDK.SetSpriteAnimation(TimeAttackGate->aniFrames, 4, &self->finAnimator, true, 0);
         else
-            RSDK.SetSpriteAnimation(TimeAttackGate->aniFrames, 3, &entity->finAnimator, true, 0);
+            RSDK.SetSpriteAnimation(TimeAttackGate->aniFrames, 3, &self->finAnimator, true, 0);
 
-        if (!RSDK_sceneInfo->inEditor) {
+        if (!SceneInfo->inEditor) {
             if (data == intToVoid(1)) {
-                entity->drawOrder = 14;
-                entity->active    = ACTIVE_ALWAYS;
-                entity->state     = TimeAttackGate_State_Restarter;
-                entity->stateDraw = TimeAttackGate_StateDraw_Restarter;
+                self->drawOrder = 14;
+                self->active    = ACTIVE_ALWAYS;
+                self->state     = TimeAttackGate_State_Restarter;
+                self->stateDraw = TimeAttackGate_Draw_Restarter;
             }
             else {
-                entity->active        = ACTIVE_NORMAL;
-                entity->updateRange.x = 0x400000;
-                entity->updateRange.y = 0x400000;
-                entity->drawOrder     = Zone->playerDrawLow + 1;
+                self->active        = ACTIVE_NORMAL;
+                self->updateRange.x = 0x400000;
+                self->updateRange.y = 0x400000;
+                self->drawOrder     = Zone->playerDrawLow + 1;
 
-                int32 checkA = entity->boundsOffset.y + (entity->boundsSize.y >> 1);
-                int32 checkB = entity->boundsOffset.y - (entity->boundsSize.y >> 1);
+                int32 checkA = self->boundsOffset.y + (self->boundsSize.y >> 1);
+                int32 checkB = self->boundsOffset.y - (self->boundsSize.y >> 1);
 
-                if ((-0x10000 * entity->extendTop) < entity->boundsOffset.y - (entity->boundsSize.y >> 1))
-                    checkB = (-0x10000 * entity->extendTop);
+                if ((-0x10000 * self->extendTop) < self->boundsOffset.y - (self->boundsSize.y >> 1))
+                    checkB = (-0x10000 * self->extendTop);
 
-                if (entity->extendBottom << 16 < checkA)
-                    checkA = entity->extendBottom << 16;
+                if (self->extendBottom << 16 < checkA)
+                    checkA = self->extendBottom << 16;
 
-                if (abs(entity->boundsOffset.x - (entity->boundsSize.x >> 1)) > checkB)
-                    entity->updateRange.x = abs(entity->boundsOffset.x - (entity->boundsSize.x >> 1));
+                if (abs(self->boundsOffset.x - (self->boundsSize.x >> 1)) > checkB)
+                    self->updateRange.x = abs(self->boundsOffset.x - (self->boundsSize.x >> 1));
                 else
-                    entity->updateRange.x = ((entity->boundsSize.x >> 1) + entity->boundsOffset.x) + 0x400000;
+                    self->updateRange.x = ((self->boundsSize.x >> 1) + self->boundsOffset.x) + 0x400000;
 
                 if (abs(checkB) > checkA)
-                    entity->updateRange.y = abs(checkB) + 0x400000;
+                    self->updateRange.y = abs(checkB) + 0x400000;
                 else
-                    entity->updateRange.y = checkA + 0x400000;
+                    self->updateRange.y = checkA + 0x400000;
 
-                entity->scale.y   = 0x200;
-                entity->state     = TimeAttackGate_State_Main;
-                entity->stateDraw = TimeAttackGate_StateDraw_Main;
+                self->scale.y   = 0x200;
+                self->state     = TimeAttackGate_State_Main;
+                self->stateDraw = TimeAttackGate_Draw_Main;
             }
         }
     }
     else {
-        destroyEntity(entity);
+        destroyEntity(self);
     }
 }
 
 void TimeAttackGate_StageLoad(void)
 {
-    TimeAttackGate->dword30       = 0xFFFF;
-    TimeAttackGate->aniFrames     = RSDK.LoadSpriteAnimation("Global/SpeedGate.bin", SCOPE_STAGE);
-    TimeAttackGate->hitbox.left   = -8;
-    TimeAttackGate->hitbox.top    = -44;
-    TimeAttackGate->hitbox.right  = 8;
-    TimeAttackGate->hitbox.bottom = 20;
-    TimeAttackGate->sfxSignpost   = RSDK.GetSFX("Global/SignPost.wav");
-    TimeAttackGate->sfxTeleport   = RSDK.GetSFX("Global/Teleport.wav");
-    TimeAttackGate->started       = false;
-    TimeAttackGate->debugEnabled  = false;
-    RSDK_sceneInfo->timeEnabled   = false;
+    TimeAttackGate->teleportChannel = 0xFFFF;
+    TimeAttackGate->aniFrames       = RSDK.LoadSpriteAnimation("Global/SpeedGate.bin", SCOPE_STAGE);
+    TimeAttackGate->hitbox.left     = -8;
+    TimeAttackGate->hitbox.top      = -44;
+    TimeAttackGate->hitbox.right    = 8;
+    TimeAttackGate->hitbox.bottom   = 20;
+    TimeAttackGate->sfxSignpost     = RSDK.GetSFX("Global/SignPost.wav");
+    TimeAttackGate->sfxTeleport     = RSDK.GetSFX("Global/Teleport.wav");
+    TimeAttackGate->started         = false;
+    TimeAttackGate->debugEnabled    = false;
+    SceneInfo->timeEnabled          = false;
     if (globals->suppressTitlecard)
         TimeAttackGate->suppressedTitlecard = true;
 }
@@ -113,8 +113,8 @@ void TimeAttackGate_HandleSpin(void)
 {
     RSDK_THIS(TimeAttackGate);
 
-    int32 top    = (TimeAttackGate->hitbox.top << 16) - (entity->extendTop << 16) + entity->position.y;
-    int32 bottom = ((entity->extendBottom + TimeAttackGate->hitbox.bottom) << 16) + entity->position.y;
+    int32 top    = (TimeAttackGate->hitbox.top << 16) - (self->extendTop << 16) + self->position.y;
+    int32 bottom = ((self->extendBottom + TimeAttackGate->hitbox.bottom) << 16) + self->position.y;
 
     foreach_active(Player, player)
     {
@@ -123,7 +123,7 @@ void TimeAttackGate_HandleSpin(void)
 #else
         if (!player->sidekick) {
 #endif
-            if (!entity->playerPos.x || !entity->playerPos.y) {
+            if (!self->playerPos.x || !self->playerPos.y) {
                 foreach_break;
             }
 
@@ -133,64 +133,64 @@ void TimeAttackGate_HandleSpin(void)
             else
                 vel = player->velocity.x;
             if (vel >> 15
-                && MathHelpers_Unknown12(player->position.x, player->position.y, entity->playerPos.x, entity->playerPos.y, entity->position.x, bottom,
-                                         entity->position.x, top)) {
+                && MathHelpers_Unknown12(player->position.x, player->position.y, self->playerPos.x, self->playerPos.y, self->position.x, bottom,
+                                         self->position.x, top)) {
                 int32 val = (vel >> 15) - 2;
                 if ((vel >> 15) >= 0)
                     val = (vel >> 15) + 2;
-                if (abs(val) > abs(entity->spinSpeed))
-                    entity->spinSpeed = val;
-                entity->spinTimer = 0;
+                if (abs(val) > abs(self->spinSpeed))
+                    self->spinSpeed = val;
+                self->spinTimer = 0;
             }
         }
     }
 
-    entity->angle += entity->spinSpeed;
+    self->angle += self->spinSpeed;
     bool32 flag = false;
-    if (entity->spinSpeed <= 0) {
-        if (entity->angle <= -512) {
-            ++entity->spinTimer;
-            entity->angle += 512;
-            entity->spinSpeed += 4;
-            if (entity->spinSpeed > -2)
-                entity->spinSpeed = -2;
-            flag = entity->spinSpeed == -2;
+    if (self->spinSpeed <= 0) {
+        if (self->angle <= -512) {
+            ++self->spinTimer;
+            self->angle += 512;
+            self->spinSpeed += 4;
+            if (self->spinSpeed > -2)
+                self->spinSpeed = -2;
+            flag = self->spinSpeed == -2;
         }
     }
     else {
-        if (entity->angle >= 512) {
-            ++entity->spinTimer;
-            entity->angle -= 512;
-            entity->spinSpeed -= 4;
-            if (entity->spinSpeed < 2)
-                entity->spinSpeed = 2;
-            flag = entity->spinSpeed == 2;
+        if (self->angle >= 512) {
+            ++self->spinTimer;
+            self->angle -= 512;
+            self->spinSpeed -= 4;
+            if (self->spinSpeed < 2)
+                self->spinSpeed = 2;
+            flag = self->spinSpeed == 2;
         }
     }
 
     if (flag) {
-        entity->spinSpeed = 0;
-        entity->angle     = 0;
+        self->spinSpeed = 0;
+        self->angle     = 0;
     }
 }
 
 void TimeAttackGate_HandleStart(void)
 {
     RSDK_THIS(TimeAttackGate);
-    int32 top               = (TimeAttackGate->hitbox.top << 16) - (entity->extendTop << 16) + entity->position.y;
-    int32 bottom            = ((entity->extendBottom + TimeAttackGate->hitbox.bottom) << 16) + entity->position.y;
+    int32 top             = (TimeAttackGate->hitbox.top << 16) - (self->extendTop << 16) + self->position.y;
+    int32 bottom          = ((self->extendBottom + TimeAttackGate->hitbox.bottom) << 16) + self->position.y;
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
 
-    if (MathHelpers_Unknown12(player1->position.x, player1->position.y, entity->playerPos.x, entity->playerPos.y, entity->position.x, bottom,
-                              entity->position.x, top)) {
-        entity->field_84 = true;
-        if (!entity->finishLine) {
+    if (MathHelpers_Unknown12(player1->position.x, player1->position.y, self->playerPos.x, self->playerPos.y, self->position.x, bottom,
+                              self->position.x, top)) {
+        self->hasFinished = true;
+        if (!self->finishLine) {
             if (!TimeAttackGate->started) {
                 RSDK.PlaySfx(TimeAttackGate->sfxSignpost, false, 255);
                 TimeAttackGate->playerPtr       = player1;
                 TimeAttackGate->started         = true;
-                RSDK_sceneInfo->timeEnabled     = true;
-                EntityTimeAttackGate *restarter = CREATE_ENTITY(TimeAttackGate, intToVoid(1), entity->position.x, entity->position.y);
+                SceneInfo->timeEnabled          = true;
+                EntityTimeAttackGate *restarter = CREATE_ENTITY(TimeAttackGate, intToVoid(1), self->position.x, self->position.y);
                 TimeAttackGate->activeEntity    = (Entity *)restarter;
                 restarter->isPermanent          = true;
 #if RETRO_USE_PLUS
@@ -202,9 +202,9 @@ void TimeAttackGate_HandleStart(void)
             Music_FadeOut(0.025);
             Announcer_AnnounceGoal(0);
             RSDK.PlaySfx(TimeAttackGate->sfxSignpost, false, 255);
-            TimeAttackGate->playerPtr   = NULL;
-            TimeAttackGate->started     = false;
-            RSDK_sceneInfo->timeEnabled = false;
+            TimeAttackGate->playerPtr = NULL;
+            TimeAttackGate->started   = false;
+            SceneInfo->timeEnabled    = false;
 #if RETRO_USE_PLUS
             StateMachine_Run(TimeAttackGate->endCB);
 #endif
@@ -216,8 +216,8 @@ void TimeAttackGate_HandleStart(void)
         }
     }
 
-    entity->playerPos.x = player1->position.x;
-    entity->playerPos.y = player1->position.y;
+    self->playerPos.x = player1->position.x;
+    self->playerPos.y = player1->position.y;
 }
 
 #if RETRO_USE_PLUS
@@ -230,11 +230,11 @@ void TimeAttackGate_Unknown1(void)
             UIWaitSpinner_Wait();
 
         EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
-        int32 playerID = param->characterID;
-        int32 zone     = param->zoneID;
-        int32 time     = (RSDK_sceneInfo->milliseconds + 100 * (RSDK_sceneInfo->seconds + 60 * RSDK_sceneInfo->minutes));
-        int32 act      = param->actID;
-        int32 mode     = RSDK_sceneInfo->filter == SCN_FILTER_ENCORE;
+        int32 playerID         = param->characterID;
+        int32 zone             = param->zoneID;
+        int32 time             = (SceneInfo->milliseconds + 100 * (SceneInfo->seconds + 60 * SceneInfo->minutes));
+        int32 act              = param->actID;
+        int32 mode             = SceneInfo->filter == SCN_FILTER_ENCORE;
 
         param->dbRowID = TimeAttackData_AddTADBEntry(zone, playerID, act, mode, time, TimeAttackGate_LeaderboardCB);
         TimeAttackData_AddLeaderboardEntry(zone, playerID, act, mode, time);
@@ -253,37 +253,37 @@ void TimeAttackGate_LeaderboardCB(int32 status)
 void TimeAttackGate_CheckTouch(void)
 {
     RSDK_THIS(TimeAttackGate);
-    int32 x = entity->boundsOffset.x + entity->position.x;
-    int32 y = entity->boundsOffset.y + entity->position.y;
+    int32 x = self->boundsOffset.x + self->position.x;
+    int32 y = self->boundsOffset.y + self->position.y;
 
     Hitbox hitbox;
-    hitbox.left   = (-entity->boundsSize.x) >> 17;
-    hitbox.right  = entity->boundsSize.x >> 17;
-    hitbox.top    = (-entity->boundsSize.y) >> 17;
-    hitbox.bottom = entity->boundsSize.y >> 17;
+    hitbox.left   = (-self->boundsSize.x) >> 17;
+    hitbox.right  = self->boundsSize.x >> 17;
+    hitbox.top    = (-self->boundsSize.y) >> 17;
+    hitbox.bottom = self->boundsSize.y >> 17;
 
     for (int32 i = 0; i < Player->playerCount; ++i) {
         EntityPlayer *player = RSDK_GET_ENTITY(i, Player);
 
         bool32 flag = false;
-        if (entity->boundsSize.x <= 0 || entity->boundsSize.y <= 0) {
-            flag = entity->position.x - player->position.x < 0x1000000;
+        if (self->boundsSize.x <= 0 || self->boundsSize.y <= 0) {
+            flag = self->position.x - player->position.x < 0x1000000;
         }
         else {
-            int32 storeX         = entity->position.x;
-            int32 storeY         = entity->position.y;
-            entity->position.x = x;
-            entity->position.y = y;
-            flag               = Player_CheckCollisionTouch(player, entity, &hitbox);
-            entity->position.x = storeX;
-            entity->position.y = storeY;
+            int32 storeX     = self->position.x;
+            int32 storeY     = self->position.y;
+            self->position.x = x;
+            self->position.y = y;
+            flag             = Player_CheckCollisionTouch(player, self, &hitbox);
+            self->position.x = storeX;
+            self->position.y = storeY;
         }
 
         if (flag) {
-            Zone->screenBoundsL1[i] = (entity->position.x >> 16) - RSDK_screens[i].centerX;
-            Zone->screenBoundsR1[i] = (entity->position.x >> 16) + RSDK_screens[i].centerX;
-            if (entity->topBoundary)
-                Zone->screenBoundsT1[i] = (entity->position.y) - RSDK_screens[i].centerY;
+            Zone->screenBoundsL1[i] = (self->position.x >> 16) - ScreenInfo[i].centerX;
+            Zone->screenBoundsR1[i] = (self->position.x >> 16) + ScreenInfo[i].centerX;
+            if (self->topBoundary)
+                Zone->screenBoundsT1[i] = (self->position.y) - ScreenInfo[i].centerY;
         }
     }
 }
@@ -297,7 +297,7 @@ void TimeAttackGate_State_Main(void)
     {
         player->lives = 1;
         if (!player->sidekick) {
-            if (!entity->finishLine) {
+            if (!self->finishLine) {
                 if (!TimeAttackGate->started) {
                     foreach_active(HUD, hud)
                     {
@@ -308,7 +308,7 @@ void TimeAttackGate_State_Main(void)
                 }
             }
             else {
-                if (entity->field_84 && player->stateInput) {
+                if (self->hasFinished && player->stateInput) {
                     player->stateInput = StateMachine_None;
                     player->up         = false;
                     player->left       = false;
@@ -317,7 +317,7 @@ void TimeAttackGate_State_Main(void)
                     player->jumpPress  = false;
                     player->jumpHold   = false;
                 }
-                if (!entity->finishLine) {
+                if (!self->finishLine) {
                     if (!TimeAttackGate->started) {
                         foreach_active(HUD, hud)
                         {
@@ -328,24 +328,24 @@ void TimeAttackGate_State_Main(void)
                     }
                 }
             }
-            entity->playerPos.x = player->position.x;
-            entity->playerPos.y = player->position.y;
+            self->playerPos.x = player->position.x;
+            self->playerPos.y = player->position.y;
         }
     }
 
-    if (entity->finishLine) {
+    if (self->finishLine) {
         TimeAttackGate_CheckTouch();
-        if (entity->field_84) {
-            TimeAttackGate->field_1C = true;
-            if (entity->timer >= 180) {
-                if (entity->timer == 180) {
+        if (self->hasFinished) {
+            TimeAttackGate->isFinished = true;
+            if (self->timer >= 180) {
+                if (self->timer == 180) {
                     Music_PlayTrack(TRACK_ACTCLEAR);
                     RSDK.ResetEntitySlot(SLOT_ACTCLEAR, ActClear->objectID, NULL);
-                    ++entity->timer;
+                    ++self->timer;
                 }
             }
             else {
-                entity->timer++;
+                self->timer++;
             }
         }
     }
@@ -354,48 +354,47 @@ void TimeAttackGate_State_Main(void)
 void TimeAttackGate_State_Restarter(void)
 {
     RSDK_THIS(TimeAttackGate);
-    if (TimeAttackGate->field_1C) {
-        destroyEntity(entity);
+    if (TimeAttackGate->isFinished) {
+        destroyEntity(self);
     }
     else {
         EntityPlayer *player = TimeAttackGate->playerPtr;
         if (player) {
             if (player->state == Player_State_Die || player->state == Player_State_Drown) {
-            LABEL_18:
-                entity->restartTimer = 0;
-                entity->radius       = (720 * entity->restartTimer / 35);
+                self->restartTimer = 0;
+                self->radius       = (720 * self->restartTimer / 35);
             }
             else {
-                if (RSDK_controller[player->controllerID].keyY.press) {
-                    entity->restartTimer = 0;
+                if (ControllerInfo[player->controllerID].keyY.press) {
+                    self->restartTimer = 0;
                 }
-                if (!RSDK_controller[player->controllerID].keyY.down) {
-                    if (entity->restartTimer > 0) {
-                        TimeAttackGate->dword30 = 0xFFFF;
+                if (!ControllerInfo[player->controllerID].keyY.down) {
+                    if (self->restartTimer > 0) {
+                        TimeAttackGate->teleportChannel = 0xFFFF;
                         RSDK.StopSFX(TimeAttackGate->sfxTeleport);
-                        entity->restartTimer -= 4;
+                        self->restartTimer -= 4;
                     }
-                    if (entity->restartTimer < 0)
-                        entity->restartTimer = 0;
-                    entity->radius = (720 * entity->restartTimer / 35);
+                    if (self->restartTimer < 0)
+                        self->restartTimer = 0;
+                    self->radius = (720 * self->restartTimer / 35);
                 }
                 else {
-                    if (!entity->restartTimer)
-                        TimeAttackGate->dword30 = RSDK.PlaySfx(TimeAttackGate->sfxTeleport, false, 255);
+                    if (!self->restartTimer)
+                        TimeAttackGate->teleportChannel = RSDK.PlaySfx(TimeAttackGate->sfxTeleport, false, 255);
 
-                    if (entity->restartTimer < 35) {
-                        entity->restartTimer++;
-                        entity->radius = (720 * entity->restartTimer / 35);
+                    if (self->restartTimer < 35) {
+                        self->restartTimer++;
+                        self->radius = (720 * self->restartTimer / 35);
                     }
                     else {
-                        if (entity->restartTimer != 35) {
-                            entity->radius = (720 * entity->restartTimer / 35);
+                        if (self->restartTimer != 35) {
+                            self->radius = (720 * self->restartTimer / 35);
                         }
                         else {
-                            entity->state              = NULL;
+                            self->state                = NULL;
                             globals->suppressTitlecard = true;
                             for (int32 i = 0; i < CHANNEL_COUNT; ++i) {
-                                if (i != Music->channelID && i != TimeAttackGate->dword30) {
+                                if (i != Music->channelID && i != TimeAttackGate->teleportChannel) {
                                     RSDK.StopChannel(i);
                                 }
                             }
@@ -410,70 +409,70 @@ void TimeAttackGate_State_Restarter(void)
     }
 }
 
-void TimeAttackGate_Unknown4(void)
+void TimeAttackGate_State_Fadeout(void)
 {
     RSDK_THIS(TimeAttackGate);
-    if (entity->fadeTimer <= 0) {
+    if (self->fadeTimer <= 0) {
         globals->suppressTitlecard = false;
-        destroyEntity(entity);
+        destroyEntity(self);
     }
     else {
-        entity->fadeTimer -= 32;
+        self->fadeTimer -= 32;
     }
 }
 
-void TimeAttackGate_StateDraw_Main(void)
+void TimeAttackGate_Draw_Main(void)
 {
     RSDK_THIS(TimeAttackGate);
     Vector2 drawPos;
 
-    entity->rotation = entity->field_88;
-    entity->drawFX   = FX_ROTATE;
-    RSDK.DrawSprite(&entity->topAnimator, NULL, false);
-    RSDK.DrawSprite(&entity->baseAnimator, NULL, false);
+    self->rotation = self->baseRotation;
+    self->drawFX   = FX_ROTATE;
+    RSDK.DrawSprite(&self->topAnimator, NULL, false);
+    RSDK.DrawSprite(&self->baseAnimator, NULL, false);
 
-    entity->drawFX = FX_SCALE;
-    drawPos.y      = entity->position.y;
+    self->drawFX = FX_SCALE;
+    drawPos.y    = self->position.y;
 
-    entity->scale.x             = abs(RSDK.Sin512(entity->angle & 0x7F));
-    drawPos.x                   = entity->position.x + 0x30000;
-    entity->finAnimator.frameID = 1;
-    RSDK.DrawSprite(&entity->finAnimator, &drawPos, false);
+    self->scale.x             = abs(RSDK.Sin512(self->angle & 0x7F));
+    drawPos.x                 = self->position.x + 0x30000;
+    self->finAnimator.frameID = 1;
+    RSDK.DrawSprite(&self->finAnimator, &drawPos, false);
 
-    entity->scale.x             = abs(RSDK.Cos512(entity->angle & 0x7F));
-    drawPos.x                   = entity->position.x - 0x30000;
-    entity->finAnimator.frameID = 0;
-    RSDK.DrawSprite(&entity->finAnimator, &drawPos, false);
+    self->scale.x             = abs(RSDK.Cos512(self->angle & 0x7F));
+    drawPos.x                 = self->position.x - 0x30000;
+    self->finAnimator.frameID = 0;
+    RSDK.DrawSprite(&self->finAnimator, &drawPos, false);
 
-    drawPos.x                   = 0x180 * RSDK.Cos512(2 * (entity->angle & 0x7F)) + entity->position.x;
-    entity->finAnimator.frameID = 1;
-    RSDK.DrawSprite(&entity->finAnimator, &drawPos, false);
+    drawPos.x                 = 0x180 * RSDK.Cos512(2 * (self->angle & 0x7F)) + self->position.x;
+    self->finAnimator.frameID = 1;
+    RSDK.DrawSprite(&self->finAnimator, &drawPos, false);
 
-    entity->scale.x             = abs(RSDK.Sin512(entity->angle & 0x7F));
-    drawPos.x                   = 0xB40 * RSDK.Cos512(entity->angle & 0x7F) + entity->position.x;
-    entity->finAnimator.frameID = 2;
-    RSDK.DrawSprite(&entity->finAnimator, &drawPos, false);
+    self->scale.x             = abs(RSDK.Sin512(self->angle & 0x7F));
+    drawPos.x                 = 0xB40 * RSDK.Cos512(self->angle & 0x7F) + self->position.x;
+    self->finAnimator.frameID = 2;
+    RSDK.DrawSprite(&self->finAnimator, &drawPos, false);
 
-    entity->scale.x             = abs(RSDK.Sin512(entity->angle & 0x7F));
-    drawPos.x                   = 0x180 * RSDK.Cos512(2 * (entity->angle & 0x7F)) + entity->position.x;
-    entity->finAnimator.frameID = 0;
-    RSDK.DrawSprite(&entity->finAnimator, &drawPos, false);
+    self->scale.x             = abs(RSDK.Sin512(self->angle & 0x7F));
+    drawPos.x                 = 0x180 * RSDK.Cos512(2 * (self->angle & 0x7F)) + self->position.x;
+    self->finAnimator.frameID = 0;
+    RSDK.DrawSprite(&self->finAnimator, &drawPos, false);
 
-    entity->scale.x             = abs(RSDK.Cos512(entity->angle & 0x7F));
-    drawPos.x                   = entity->position.x - 0xB40 * RSDK.Sin512(entity->angle & 0x7F);
-    entity->finAnimator.frameID = 2;
-    RSDK.DrawSprite(&entity->finAnimator, &drawPos, false);
+    self->scale.x             = abs(RSDK.Cos512(self->angle & 0x7F));
+    drawPos.x                 = self->position.x - 0xB40 * RSDK.Sin512(self->angle & 0x7F);
+    self->finAnimator.frameID = 2;
+    RSDK.DrawSprite(&self->finAnimator, &drawPos, false);
 }
 
-void TimeAttackGate_StateDraw_Restarter(void)
+void TimeAttackGate_Draw_Restarter(void)
 {
     RSDK_THIS(TimeAttackGate);
     EntityPlayer *player = TimeAttackGate->playerPtr;
     if (player) {
-        if (entity->radius > 0)
-            RSDK.DrawCircle(player->position.x, player->position.y, entity->radius, 0xF0F0F0, (entity->restartTimer << 8) / 35, INK_ADD, false);
-        if (entity->fadeTimer > 0)
-            RSDK.FillScreen(0xFFFFFF, entity->fadeTimer, entity->fadeTimer - 128, entity->fadeTimer - 256);
+        if (self->radius > 0)
+            RSDK.DrawCircle(player->position.x, player->position.y, self->radius, 0xF0F0F0, (self->restartTimer << 8) / 35, INK_ADD, false);
+        if (self->fadeTimer > 0)
+            RSDK.FillScreen(0xFFFFFF, self->fadeTimer, self->fadeTimer - 128, self->fadeTimer - 256);
     }
 }
 
@@ -483,49 +482,48 @@ void TimeAttackGate_EditorDraw(void)
     RSDK_THIS(TimeAttackGate);
     Vector2 drawPos;
 
-    if (entity->finishLine)
-        RSDK.SetSpriteAnimation(TimeAttackGate->aniFrames, 4, &entity->finAnimator, true, 0);
+    if (self->finishLine)
+        RSDK.SetSpriteAnimation(TimeAttackGate->aniFrames, 4, &self->finAnimator, true, 0);
     else
-        RSDK.SetSpriteAnimation(TimeAttackGate->aniFrames, 3, &entity->finAnimator, true, 0);
+        RSDK.SetSpriteAnimation(TimeAttackGate->aniFrames, 3, &self->finAnimator, true, 0);
 
+    self->rotation = self->baseRotation;
+    self->drawFX   = FX_ROTATE;
+    RSDK.DrawSprite(&self->topAnimator, NULL, false);
+    RSDK.DrawSprite(&self->baseAnimator, NULL, false);
 
-    entity->rotation = entity->field_88;
-    entity->drawFX   = FX_ROTATE;
-    RSDK.DrawSprite(&entity->topAnimator, NULL, false);
-    RSDK.DrawSprite(&entity->baseAnimator, NULL, false);
+    self->drawFX  = FX_SCALE;
+    drawPos.y     = self->position.y;
+    self->scale.y = 0x200;
 
-    entity->drawFX = FX_SCALE;
-    drawPos.y       = entity->position.y;
-    entity->scale.y = 0x200;
+    self->scale.x             = abs(RSDK.Sin512(self->angle & 0x7F));
+    drawPos.x                 = self->position.x + 0x30000;
+    self->finAnimator.frameID = 1;
+    RSDK.DrawSprite(&self->finAnimator, &drawPos, false);
 
-    entity->scale.x             = abs(RSDK.Sin512(entity->angle & 0x7F));
-    drawPos.x                   = entity->position.x + 0x30000;
-    entity->finAnimator.frameID = 1;
-    RSDK.DrawSprite(&entity->finAnimator, &drawPos, false);
+    self->scale.x             = abs(RSDK.Cos512(self->angle & 0x7F));
+    drawPos.x                 = self->position.x - 0x30000;
+    self->finAnimator.frameID = 0;
+    RSDK.DrawSprite(&self->finAnimator, &drawPos, false);
 
-    entity->scale.x             = abs(RSDK.Cos512(entity->angle & 0x7F));
-    drawPos.x                   = entity->position.x - 0x30000;
-    entity->finAnimator.frameID = 0;
-    RSDK.DrawSprite(&entity->finAnimator, &drawPos, false);
+    drawPos.x                 = 0x180 * RSDK.Cos512(2 * (self->angle & 0x7F)) + self->position.x;
+    self->finAnimator.frameID = 1;
+    RSDK.DrawSprite(&self->finAnimator, &drawPos, false);
 
-    drawPos.x                   = 0x180 * RSDK.Cos512(2 * (entity->angle & 0x7F)) + entity->position.x;
-    entity->finAnimator.frameID = 1;
-    RSDK.DrawSprite(&entity->finAnimator, &drawPos, false);
+    self->scale.x             = abs(RSDK.Sin512(self->angle & 0x7F));
+    drawPos.x                 = 0xB40 * RSDK.Cos512(self->angle & 0x7F) + self->position.x;
+    self->finAnimator.frameID = 2;
+    RSDK.DrawSprite(&self->finAnimator, &drawPos, false);
 
-    entity->scale.x             = abs(RSDK.Sin512(entity->angle & 0x7F));
-    drawPos.x                   = 0xB40 * RSDK.Cos512(entity->angle & 0x7F) + entity->position.x;
-    entity->finAnimator.frameID = 2;
-    RSDK.DrawSprite(&entity->finAnimator, &drawPos, false);
+    self->scale.x             = abs(RSDK.Sin512(self->angle & 0x7F));
+    drawPos.x                 = 0x180 * RSDK.Cos512(2 * (self->angle & 0x7F)) + self->position.x;
+    self->finAnimator.frameID = 0;
+    RSDK.DrawSprite(&self->finAnimator, &drawPos, false);
 
-    entity->scale.x             = abs(RSDK.Sin512(entity->angle & 0x7F));
-    drawPos.x                   = 0x180 * RSDK.Cos512(2 * (entity->angle & 0x7F)) + entity->position.x;
-    entity->finAnimator.frameID = 0;
-    RSDK.DrawSprite(&entity->finAnimator, &drawPos, false);
-
-    entity->scale.x             = abs(RSDK.Cos512(entity->angle & 0x7F));
-    drawPos.x                   = entity->position.x - 0xB40 * RSDK.Sin512(entity->angle & 0x7F);
-    entity->finAnimator.frameID = 2;
-    RSDK.DrawSprite(&entity->finAnimator, &drawPos, false);
+    self->scale.x             = abs(RSDK.Cos512(self->angle & 0x7F));
+    drawPos.x                 = self->position.x - 0xB40 * RSDK.Sin512(self->angle & 0x7F);
+    self->finAnimator.frameID = 2;
+    RSDK.DrawSprite(&self->finAnimator, &drawPos, false);
 }
 
 void TimeAttackGate_EditorLoad(void) { TimeAttackGate->aniFrames = RSDK.LoadSpriteAnimation("Global/SpeedGate.bin", SCOPE_STAGE); }

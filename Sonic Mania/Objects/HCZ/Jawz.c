@@ -5,7 +5,7 @@ ObjectJawz *Jawz;
 void Jawz_Update(void)
 {
     RSDK_THIS(Jawz);
-    StateMachine_Run(entity->state);
+    StateMachine_Run(self->state);
 }
 
 void Jawz_LateUpdate(void) {}
@@ -15,22 +15,22 @@ void Jawz_StaticUpdate(void) {}
 void Jawz_Draw(void)
 {
     RSDK_THIS(Jawz);
-    RSDK.DrawSprite(&entity->animator, NULL, false);
+    RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
 void Jawz_Create(void *data)
 {
     RSDK_THIS(Jawz);
-    entity->visible   = true;
-    entity->drawOrder = Zone->drawOrderLow;
-    entity->drawFX |= FX_FLIP;
-    entity->startPos      = entity->position;
-    entity->active        = ACTIVE_BOUNDS;
-    entity->updateRange.x = 0x800000;
-    entity->updateRange.y = 0x800000;
-    entity->velocity.x    = 0;
-    RSDK.SetSpriteAnimation(Jawz->aniFrames, 0, &entity->animator, true, 0);
-    entity->state = Jawz_CheckPlayerTrigger;
+    self->visible   = true;
+    self->drawOrder = Zone->drawOrderLow;
+    self->drawFX |= FX_FLIP;
+    self->startPos      = self->position;
+    self->active        = ACTIVE_BOUNDS;
+    self->updateRange.x = 0x800000;
+    self->updateRange.y = 0x800000;
+    self->velocity.x    = 0;
+    RSDK.SetSpriteAnimation(Jawz->aniFrames, 0, &self->animator, true, 0);
+    self->state = Jawz_CheckPlayerTrigger;
 }
 
 void Jawz_StageLoad(void)
@@ -47,7 +47,7 @@ void Jawz_StageLoad(void)
 void Jawz_DebugSpawn(void)
 {
     RSDK_THIS(Jawz);
-    CREATE_ENTITY(Jawz, NULL, entity->position.x, entity->position.y);
+    CREATE_ENTITY(Jawz, NULL, self->position.x, self->position.y);
 }
 
 void Jawz_DebugDraw(void)
@@ -61,10 +61,10 @@ void Jawz_CheckPlayerInteractions(void)
     RSDK_THIS(Jawz);
     foreach_active(Player, player)
     {
-        if (Player_CheckBadnikTouch(player, entity, &Jawz->hitbox) && !Player_CheckBadnikBreak(entity, player, true)) {
-            CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), entity->position.x, entity->position.y)->drawOrder = Zone->drawOrderHigh;
+        if (Player_CheckBadnikTouch(player, self, &Jawz->hitbox) && !Player_CheckBadnikBreak(self, player, true)) {
+            CREATE_ENTITY(Explosion, intToVoid(EXPLOSION_ENEMY), self->position.x, self->position.y)->drawOrder = Zone->drawOrderHigh;
             RSDK.PlaySfx(Explosion->sfxDestroy, false, 255);
-            destroyEntity(entity);
+            destroyEntity(self);
         }
     }
 }
@@ -80,62 +80,62 @@ void Jawz_CheckPlayerTrigger(void)
         player = Player_GetNearestPlayer();
 
     if (player) {
-        if (abs(player->position.x - entity->position.x) < 0x1800000) {
+        if (abs(player->position.x - self->position.x) < 0x1800000) {
 
             int32 playerID = RSDK.GetEntityID(player);
-            switch (entity->triggerDir) {
+            switch (self->triggerDir) {
                 case 0:
-                    if (player->position.x > entity->position.x) {
-                        entity->direction  = FLIP_X;
-                        entity->velocity.x = 0x20000;
-                        entity->position.x = (RSDK_screens[playerID].position.x - 64) << 16;
+                    if (player->position.x > self->position.x) {
+                        self->direction  = FLIP_X;
+                        self->velocity.x = 0x20000;
+                        self->position.x = (ScreenInfo[playerID].position.x - 64) << 16;
                     }
-                    else if (player->position.x <= entity->position.x) {
-                        entity->direction  = FLIP_NONE;
-                        entity->velocity.x = -0x20000;
-                        entity->position.x = (RSDK_screens[playerID].position.x + RSDK_screens[playerID].width + 64) << 16;
+                    else if (player->position.x <= self->position.x) {
+                        self->direction  = FLIP_NONE;
+                        self->velocity.x = -0x20000;
+                        self->position.x = (ScreenInfo[playerID].position.x + ScreenInfo[playerID].width + 64) << 16;
                     }
                     break;
                 case 1:
-                    if (player->position.x < entity->position.x) {
-                        entity->direction  = FLIP_NONE;
-                        entity->velocity.x = -0x20000;
-                        entity->position.x = (RSDK_screens[playerID].position.x + RSDK_screens[playerID].width + 64) << 16;
+                    if (player->position.x < self->position.x) {
+                        self->direction  = FLIP_NONE;
+                        self->velocity.x = -0x20000;
+                        self->position.x = (ScreenInfo[playerID].position.x + ScreenInfo[playerID].width + 64) << 16;
                     }
                     break;
                 case 2:
-                    if (player->position.x > entity->position.x) {
-                        entity->direction  = FLIP_X;
-                        entity->velocity.x = 0x20000;
-                        entity->position.x = (RSDK_screens[playerID].position.x - 64) << 16;
+                    if (player->position.x > self->position.x) {
+                        self->direction  = FLIP_X;
+                        self->velocity.x = 0x20000;
+                        self->position.x = (ScreenInfo[playerID].position.x - 64) << 16;
                     }
                     break;
             }
         }
     }
 
-    if (entity->velocity.x) {
-        entity->active  = ACTIVE_NORMAL;
-        entity->visible = 1;
-        entity->state   = Jawz_State_Main;
+    if (self->velocity.x) {
+        self->active  = ACTIVE_NORMAL;
+        self->visible = 1;
+        self->state   = Jawz_State_Main;
         Jawz_State_Main();
     }
     else {
-        entity->active  = ACTIVE_BOUNDS;
-        entity->visible = 0;
+        self->active  = ACTIVE_BOUNDS;
+        self->visible = 0;
     }
 }
 
 void Jawz_State_Main(void)
 {
     RSDK_THIS(Jawz);
-    entity->position.x += entity->velocity.x;
-    RSDK.ProcessAnimation(&entity->animator);
+    self->position.x += self->velocity.x;
+    RSDK.ProcessAnimation(&self->animator);
     Jawz_CheckPlayerInteractions();
 
-    if (!RSDK.CheckOnScreen(entity, NULL) && !RSDK.CheckPosOnScreen(&entity->startPos, &entity->updateRange)) {
-        entity->position.x = entity->startPos.x;
-        entity->position.y = entity->startPos.y;
+    if (!RSDK.CheckOnScreen(self, NULL) && !RSDK.CheckPosOnScreen(&self->startPos, &self->updateRange)) {
+        self->position.x = self->startPos.x;
+        self->position.y = self->startPos.y;
         Jawz_Create(NULL);
     }
 }

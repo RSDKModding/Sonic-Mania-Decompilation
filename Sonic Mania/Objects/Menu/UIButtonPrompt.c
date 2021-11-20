@@ -7,47 +7,47 @@ void UIButtonPrompt_Update(void)
     RSDK_THIS(UIButtonPrompt);
 
     bool32 textChanged = false;
-    if (entity->textSprite != UIWidgets->textSpriteIndex) {
-        RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, 0, &entity->animator3, true, entity->promptID);
+    if (self->textSprite != UIWidgets->textSpriteIndex) {
+        RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, 0, &self->animator3, true, self->promptID);
         textChanged        = true;
-        entity->textSprite = UIWidgets->textSpriteIndex;
+        self->textSprite = UIWidgets->textSpriteIndex;
     }
-    if (entity->scale.x == 0x200 && entity->scaleMax == 0x200 && entity->scaleSpeed)
-        entity->scaleSpeed = 0;
+    if (self->scale.x == 0x200 && self->scaleMax == 0x200 && self->scaleSpeed)
+        self->scaleSpeed = 0;
 
-    StateMachine_Run(entity->state);
+    StateMachine_Run(self->state);
 
-    if (entity->scale.x >= entity->scaleMax) {
-        if (entity->scale.x > entity->scaleMax) {
-            entity->scale.x -= entity->scaleSpeed;
-            if (entity->scale.x < entity->scaleMax)
-                entity->scale.x = entity->scaleMax;
+    if (self->scale.x >= self->scaleMax) {
+        if (self->scale.x > self->scaleMax) {
+            self->scale.x -= self->scaleSpeed;
+            if (self->scale.x < self->scaleMax)
+                self->scale.x = self->scaleMax;
         }
     }
     else {
-        entity->scale.x += entity->scaleSpeed;
-        if (entity->scale.x > entity->scaleMax)
-            entity->scale.x = entity->scaleMax;
+        self->scale.x += self->scaleSpeed;
+        if (self->scale.x > self->scaleMax)
+            self->scale.x = self->scaleMax;
     }
-    entity->scale.y = entity->scale.x;
+    self->scale.y = self->scale.x;
 
-    if (entity->prevPrompt != entity->promptID) {
-        RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, 0, &entity->animator3, true, entity->promptID);
-        entity->prevPrompt = entity->promptID;
+    if (self->prevPrompt != self->promptID) {
+        RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, 0, &self->animator3, true, self->promptID);
+        self->prevPrompt = self->promptID;
     }
 
-    int32 button = entity->buttonID;
-    if (entity->prevButton != button) {
+    int32 button = self->buttonID;
+    if (self->prevButton != button) {
         UIButtonPrompt_Unknown4();
-        button             = entity->buttonID;
-        entity->prevButton = button;
+        button             = self->buttonID;
+        self->prevButton = button;
     }
 
     if (sku_platform == PLATFORM_PC || sku_platform == PLATFORM_DEV) {
         int32 mappings = UIButtonPrompt_GetButtonMappings(UIButtonPrompt->inputID, button);
-        if (textChanged || entity->mappings != mappings) {
+        if (textChanged || self->mappings != mappings) {
             UIButtonPrompt_Unknown4();
-            entity->mappings = mappings;
+            self->mappings = mappings;
         }
     }
 }
@@ -55,27 +55,27 @@ void UIButtonPrompt_Update(void)
 void UIButtonPrompt_LateUpdate(void)
 {
     RSDK_THIS(UIButtonPrompt);
-    EntityUIControl *control = (EntityUIControl *)entity->parent;
-    if (control && entity->headingAnchor) {
+    EntityUIControl *control = (EntityUIControl *)self->parent;
+    if (control && self->headingAnchor) {
         EntityUIHeading *heading = (EntityUIHeading *)control->heading;
         if (heading) {
-            switch (entity->headingAnchor) {
+            switch (self->headingAnchor) {
                 default: break;
                 case 1:
-                    entity->position.x = heading->position.x - 0xBC0000;
-                    entity->position.y = heading->position.y - 0x80000;
+                    self->position.x = heading->position.x - 0xBC0000;
+                    self->position.y = heading->position.y - 0x80000;
                     break;
                 case 2:
-                    entity->position.x = 0x7C0000 + heading->position.x;
-                    entity->position.y = heading->position.y - 0x80000;
+                    self->position.x = 0x7C0000 + heading->position.x;
+                    self->position.y = heading->position.y - 0x80000;
                     break;
                 case 3:
-                    entity->position.x = 0x7C0000 + heading->position.x;
-                    entity->position.y = heading->position.y + 0x100000;
+                    self->position.x = 0x7C0000 + heading->position.x;
+                    self->position.y = heading->position.y + 0x100000;
                     break;
                 case 4:
-                    entity->position.x = (heading->position.x - 0xBC0000);
-                    entity->position.y = heading->position.y + 0x100000;
+                    self->position.x = (heading->position.x - 0xBC0000);
+                    self->position.y = heading->position.y + 0x100000;
                     break;
             }
         }
@@ -101,39 +101,39 @@ void UIButtonPrompt_Draw(void)
 {
     RSDK_THIS(UIButtonPrompt);
     UIButtonPrompt_Unknown4();
-    RSDK.DrawSprite(&entity->animator1, NULL, false);
-    entity->drawFX = FX_SCALE;
-    RSDK.DrawSprite(&entity->animator2, NULL, false);
-    entity->drawFX = FX_NONE;
-    if (entity->flag)
-        RSDK.DrawSprite(&entity->animator3, NULL, false);
+    RSDK.DrawSprite(&self->animator1, NULL, false);
+    self->drawFX = FX_SCALE;
+    RSDK.DrawSprite(&self->animator2, NULL, false);
+    self->drawFX = FX_NONE;
+    if (self->flag)
+        RSDK.DrawSprite(&self->animator3, NULL, false);
 }
 
 void UIButtonPrompt_Create(void *data)
 {
     RSDK_THIS(UIButtonPrompt);
-    if (!RSDK_sceneInfo->inEditor) {
-        entity->startPos      = entity->position;
-        entity->visible       = true;
-        entity->drawOrder     = 2;
-        entity->scaleMax      = 0x200;
-        entity->scaleSpeed    = 0x10;
-        entity->scale.x       = 0x200;
-        entity->scale.y       = 0x200;
-        entity->field_94      = 0;
-        entity->active        = ACTIVE_BOUNDS;
-        entity->updateRange.x = 0x2000000;
-        entity->updateRange.y = 0x800000;
-        entity->flag          = true;
-        RSDK.SetSpriteAnimation(UIButtonPrompt->aniFrames, 0, &entity->animator1, true, 0);
-        RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, 0, &entity->animator3, true, entity->promptID);
+    if (!SceneInfo->inEditor) {
+        self->startPos      = self->position;
+        self->visible       = true;
+        self->drawOrder     = 2;
+        self->scaleMax      = 0x200;
+        self->scaleSpeed    = 0x10;
+        self->scale.x       = 0x200;
+        self->scale.y       = 0x200;
+        self->field_94      = 0;
+        self->active        = ACTIVE_BOUNDS;
+        self->updateRange.x = 0x2000000;
+        self->updateRange.y = 0x800000;
+        self->flag          = true;
+        RSDK.SetSpriteAnimation(UIButtonPrompt->aniFrames, 0, &self->animator1, true, 0);
+        RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, 0, &self->animator3, true, self->promptID);
         UIButtonPrompt_Unknown4();
-        entity->textSprite  = UIWidgets->textSpriteIndex;
-        entity->state       = UIButtonPrompt_Unknown6;
-        entity->parent      = 0;
-        entity->touchSize.x = 0x580000;
-        entity->touchSize.y = 0x100000;
-        entity->touchPos.x  = 0x200000;
+        self->textSprite  = UIWidgets->textSpriteIndex;
+        self->state       = UIButtonPrompt_Unknown6;
+        self->parent      = 0;
+        self->touchSize.x = 0x580000;
+        self->touchSize.y = 0x100000;
+        self->touchPos.x  = 0x200000;
     }
 }
 
@@ -147,12 +147,12 @@ void UIButtonPrompt_StageLoad(void)
 int32 UIButtonPrompt_GetButtonMappings(int32 input, int32 button)
 {
     switch (button) {
-        case 0: return RSDK_controller[input].keyA.keyMap;
-        case 1: return RSDK_controller[input].keyB.keyMap;
-        case 2: return RSDK_controller[input].keyX.keyMap;
-        case 3: return RSDK_controller[input].keyY.keyMap;
-        case 4: return RSDK_controller[input].keyStart.keyMap;
-        case 5: return RSDK_controller[input].keySelect.keyMap;
+        case 0: return ControllerInfo[input].keyA.keyMap;
+        case 1: return ControllerInfo[input].keyB.keyMap;
+        case 2: return ControllerInfo[input].keyX.keyMap;
+        case 3: return ControllerInfo[input].keyY.keyMap;
+        case 4: return ControllerInfo[input].keyStart.keyMap;
+        case 5: return ControllerInfo[input].keySelect.keyMap;
         default: break;
     }
     return 0;
@@ -291,21 +291,21 @@ uint8 UIButtonPrompt_MappingsToFrame(int32 mappings)
 void UIButtonPrompt_Unknown4(void)
 {
     RSDK_THIS(UIButtonPrompt);
-    if (RSDK_sceneInfo->inEditor) {
-        RSDK.SetSpriteAnimation(UIButtonPrompt->aniFrames, 2, &entity->animator2, true, entity->buttonID);
+    if (SceneInfo->inEditor) {
+        RSDK.SetSpriteAnimation(UIButtonPrompt->aniFrames, 2, &self->animator2, true, self->buttonID);
     }
     else {
-        int32 buttonID = entity->buttonID;
+        int32 buttonID = self->buttonID;
         if (API_GetConfirmButtonFlip() && buttonID <= 1)
             buttonID ^= 1;
 
         if (UIButtonPrompt->type != 1 && (UIButtonPrompt->type <= 8 || UIButtonPrompt->type > 12)) {
-            RSDK.SetSpriteAnimation(UIButtonPrompt->aniFrames, UIButtonPrompt->type, &entity->animator2, true, buttonID);
+            RSDK.SetSpriteAnimation(UIButtonPrompt->aniFrames, UIButtonPrompt->type, &self->animator2, true, buttonID);
         }
         else {
             int32 mappings = UIButtonPrompt_GetButtonMappings(UIButtonPrompt->inputID, buttonID);
             int32 frame    = UIButtonPrompt_MappingsToFrame(mappings);
-            RSDK.SetSpriteAnimation(UIButtonPrompt->aniFrames, 1, &entity->animator2, true, frame);
+            RSDK.SetSpriteAnimation(UIButtonPrompt->aniFrames, 1, &self->animator2, true, frame);
         }
     }
 }
@@ -313,35 +313,35 @@ void UIButtonPrompt_Unknown4(void)
 bool32 UIButtonPrompt_CheckTouch(void)
 {
     RSDK_THIS(UIButtonPrompt);
-    EntityUIControl *control = (EntityUIControl *)entity->parent;
+    EntityUIControl *control = (EntityUIControl *)self->parent;
     if (control && !control->dialogHasFocus && !control->selectionDisabled) {
-        if (RSDK_touchMouse->count) {
-            int32 screenX = (RSDK_screens->position.x << 16);
-            int32 screenY = (RSDK_screens->position.y << 16);
-            int32 sizeX   = entity->touchSize.x >> 1;
-            int32 sizeY   = entity->touchSize.y >> 1;
+        if (TouchInfo->count) {
+            int32 screenX = (ScreenInfo->position.x << 16);
+            int32 screenY = (ScreenInfo->position.y << 16);
+            int32 sizeX   = self->touchSize.x >> 1;
+            int32 sizeY   = self->touchSize.y >> 1;
 
             bool32 flag = false;
-            for (int32 i = 0; i < RSDK_touchMouse->count; ++i) {
-                int32 x = screenX - ((RSDK_touchMouse->x[i] * RSDK_screens->width) * -65536.0f);
-                int32 y = screenY - ((RSDK_touchMouse->y[i] * RSDK_screens->height) * -65536.0f);
+            for (int32 i = 0; i < TouchInfo->count; ++i) {
+                int32 x = screenX - ((TouchInfo->x[i] * ScreenInfo->width) * -65536.0f);
+                int32 y = screenY - ((TouchInfo->y[i] * ScreenInfo->height) * -65536.0f);
 
-                int32 touchX = abs(entity->touchPos.x + entity->position.x - x);
-                int32 touchY = abs(entity->touchPos.y + entity->position.y - y);
+                int32 touchX = abs(self->touchPos.x + self->position.x - x);
+                int32 touchY = abs(self->touchPos.y + self->position.y - y);
                 if (touchX < sizeX && touchY < sizeY) {
                     flag = true;
                 }
             }
 
-            entity->touched = flag;
+            self->touched = flag;
             return true;
         }
         else {
-            if (entity->touched) {
-                entity->timer = 0;
-                entity->state = UIButtonPrompt_Unknown7;
+            if (self->touched) {
+                self->timer = 0;
+                self->state = UIButtonPrompt_Unknown7;
             }
-            entity->touched = false;
+            self->touched = false;
         }
     }
     return false;
@@ -350,14 +350,14 @@ bool32 UIButtonPrompt_CheckTouch(void)
 void UIButtonPrompt_Unknown6(void)
 {
     RSDK_THIS(UIButtonPrompt);
-    if (entity->visible) {
+    if (self->visible) {
         if (UIButtonPrompt_CheckTouch()) {
-            entity->scaleMax = 640;
-            if (entity->scaleSpeed < 16)
-                entity->scaleSpeed = 16;
+            self->scaleMax = 640;
+            if (self->scaleSpeed < 16)
+                self->scaleSpeed = 16;
         }
-        else if (!entity->field_94) {
-            entity->scaleMax = 512;
+        else if (!self->field_94) {
+            self->scaleMax = 512;
         }
     }
 }
@@ -366,17 +366,17 @@ void UIButtonPrompt_Unknown7(void)
 {
     RSDK_THIS(UIButtonPrompt);
 
-    entity->scaleMax = 640;
-    if (entity->timer == 16) {
-        entity->timer = 0;
-        entity->flag  = true;
-        entity->state = UIButtonPrompt_Unknown6;
-        int32 buttonID  = entity->buttonID;
+    self->scaleMax = 640;
+    if (self->timer == 16) {
+        self->timer = 0;
+        self->flag  = true;
+        self->state = UIButtonPrompt_Unknown6;
+        int32 buttonID  = self->buttonID;
         if (API_GetConfirmButtonFlip() && buttonID <= 1)
             buttonID ^= 1;
         UIControl_ClearInputs(buttonID);
     }
-    entity->flag = !((++entity->timer >> 1) & 1);
+    self->flag = !((++self->timer >> 1) & 1);
 }
 
 #if RETRO_INCLUDE_EDITOR
@@ -384,16 +384,16 @@ void UIButtonPrompt_EditorDraw(void)
 {
     RSDK_THIS(UIButtonPrompt);
 
-    entity->startPos      = entity->position;
-    entity->drawOrder     = 2;
-    entity->field_94      = 0;
-    entity->updateRange.x = 0x2000000;
-    entity->updateRange.y = 0x800000;
-    entity->flag          = true;
-    RSDK.SetSpriteAnimation(UIButtonPrompt->aniFrames, 0, &entity->animator1, true, 0);
-    RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, 0, &entity->animator3, true, entity->promptID);
+    self->startPos      = self->position;
+    self->drawOrder     = 2;
+    self->field_94      = 0;
+    self->updateRange.x = 0x2000000;
+    self->updateRange.y = 0x800000;
+    self->flag          = true;
+    RSDK.SetSpriteAnimation(UIButtonPrompt->aniFrames, 0, &self->animator1, true, 0);
+    RSDK.SetSpriteAnimation(UIWidgets->textSpriteIndex, 0, &self->animator3, true, self->promptID);
     UIButtonPrompt_Unknown4();
-    entity->textSprite = UIWidgets->textSpriteIndex;
+    self->textSprite = UIWidgets->textSpriteIndex;
 
     UIButtonPrompt_Draw();
 }

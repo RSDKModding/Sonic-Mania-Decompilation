@@ -9,14 +9,15 @@ void CreditsSetup_LateUpdate(void) {}
 void CreditsSetup_StaticUpdate(void)
 {
     if (CreditsSetup->started) {
-        CreditsSetup->unknown += 0x1000;
+        CreditsSetup->scrollPos += 0x1000;
         EntityFXFade *fade = (EntityFXFade *)CreditsSetup->fxFade;
-        if (!CreditsSetup->skipFlag) {
+
+        if (!CreditsSetup->skipped) {
             if (!RSDK.ChannelActive(0))
                 Music_PlayTrack(++CreditsSetup->creditsTrack);
 
-            if (RSDK_controller->keyStart.press || (CreditsSetup->creditsSize && CreditsSetup->creditsPos >= CreditsSetup->creditsSize)) {
-                CreditsSetup->skipFlag = true;
+            if (ControllerInfo->keyStart.press || (CreditsSetup->creditsSize && CreditsSetup->creditsPos >= CreditsSetup->creditsSize)) {
+                CreditsSetup->skipped = true;
 
                 fade->state    = FXFade_State_FadeIn;
                 fade->speedIn  = 8;
@@ -27,8 +28,8 @@ void CreditsSetup_StaticUpdate(void)
                 Music_FadeOut(0.0125);
             }
 #if RETRO_USE_TOUCH_CONTROLS
-            else if (RSDK_touchMouse->count) {
-                CreditsSetup->skipFlag = true;
+            else if (TouchInfo->count) {
+                CreditsSetup->skipped = true;
 
                 fade->state    = FXFade_State_FadeIn;
                 fade->speedIn  = 8;
@@ -72,7 +73,7 @@ void CreditsSetup_StaticUpdate(void)
         }
 
         int32 move = 0x10000;
-        if (RSDK_controller->keyA.down || RSDK_controller->keyB.down || RSDK_controller->keyC.down)
+        if (ControllerInfo->keyA.down || ControllerInfo->keyB.down || ControllerInfo->keyC.down)
             move = 0x80000;
         foreach_all(UICreditsText, text)
         {
@@ -111,13 +112,13 @@ void CreditsSetup_LoadCreditsStrings(void)
     RSDK.LoadStrings(&buffer, "Credits.txt", 8);
     RSDK.SetText(&info, "", 0x80);
 
-    int32 offset = (RSDK_screens->height + 128) << 16;
+    int32 offset = (ScreenInfo->height + 128) << 16;
     for (int32 i = 0; RSDK.SplitStringList(&info, &buffer, i, 1); ++i) {
         if (info.textLength <= 4) {
             offset += 0x200000;
         }
         else {
-            int32 type = info.text[1] - '0';
+            int32 type      = info.text[1] - '0';
             bool32 hasShape = info.text[2] == 'U';
 
             info.textLength -= 3;
@@ -139,7 +140,7 @@ void CreditsSetup_LoadCreditsStrings(void)
         }
     }
 
-    CreditsSetup->creditsSize = offset + (RSDK_screens->height << 15);
+    CreditsSetup->creditsSize = offset + (ScreenInfo->height << 15);
 }
 
 #if RETRO_INCLUDE_EDITOR

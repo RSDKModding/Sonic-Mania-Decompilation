@@ -17,12 +17,12 @@ typedef struct {
     int32 type;
     bool32 walkOnto;
     uint8 tag;
-    int32 field_64;
-    int32 field_68;
-    bool32 activated;
-    int32 field_70;
-    int32 field_74;
-    int32 field_78;
+    bool32 down;            // 64
+    bool32 toggled;         // 68
+    bool32 currentlyActive; // 6B
+    bool32 activated;       // 70
+    bool32 wasActivated;    // 74
+    int32 pressPos;         // 78
     Animator animator;
     StateMachine(state);
     int32 timer;
@@ -49,7 +49,7 @@ void TurretSwitch_Serialize(void);
 
 // Extra Entity Functions
 void TurretSwitch_CheckPlayerCollisions(void);
-void TurretSwitch_Break(EntityTurretSwitch *entity, EntityPlayer *player);
+void TurretSwitch_Break(EntityTurretSwitch *self, EntityPlayer *player);
 
 void TurretSwitch_State_Setup(void);
 void TurretSwitch_State_Turret(void);

@@ -99,7 +99,7 @@ void UITAZoneModule_Unknown17(void);
 void UITAZoneModule_Unknown18(void);
 
 #if !RETRO_USE_PLUS
-void UITAZoneModule_DrawTime(Vector2 *drawPos, int32 minutes, int32 seconds, int32 milliseconds);
+Vector2 UITAZoneModule_DrawTime(int32 x, int32 y, int32 minutes, int32 seconds, int32 milliseconds);
 void UITAZoneModule_Unknown8(void);
 void UITAZoneModule_Unknown7(void);
 void UITAZoneModule_Unknown19(void);
