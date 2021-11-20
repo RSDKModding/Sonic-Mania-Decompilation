@@ -133,8 +133,8 @@ struct RenderState {
     byte fsArgs[0x20];
 
     ScreenInfo* screen;
-    Vector2 clipRectX;
-    Vector2 clipRectY;
+    Vector2 clipRectTL;
+    Vector2 clipRectBR;
 
     // these 2 are used in multiple and are MASSIVE so we keep them
     ushort *lookupTable;

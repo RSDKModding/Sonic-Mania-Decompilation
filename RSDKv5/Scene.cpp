@@ -1727,7 +1727,11 @@ void DrawLayerBasic(TileLayer *layer)
             for (byte *i = &tilesetGFXData[TILE_DATASIZE * (*layout & 0xFFF) + cntX + cntY]; cnt; ++frameBuffer) {
                 --cnt;
                 if (*i)
+#if RETRO_SOFTWARE_RENDER
                     *frameBuffer = palette[*i];
+#else
+                    *frameBuffer = *i;
+#endif
                 ++i;
             }
         }
@@ -1744,6 +1748,8 @@ void DrawLayerBasic(TileLayer *layer)
             if (*layout < 0xFFFF) {
                 byte *tilesetData = &tilesetGFXData[TILE_DATASIZE * (*layout & 0xFFF) + cntY];
                 byte index        = *tilesetData;
+
+#if RETRO_SOFTWARE_RENDER
                 if (index)
                     *frameBuffer = palette[index];
 
@@ -1806,6 +1812,70 @@ void DrawLayerBasic(TileLayer *layer)
                 index = tilesetData[15];
                 if (index)
                     frameBuffer[15] = palette[index];
+#else
+                if (index)
+                    *frameBuffer = index;
+
+                index = tilesetData[1];
+                if (index)
+                    frameBuffer[1] = index;
+
+                index = tilesetData[2];
+                if (index)
+                    frameBuffer[2] = index;
+
+                index = tilesetData[3];
+                if (index)
+                    frameBuffer[3] = index;
+
+                index = tilesetData[4];
+                if (index)
+                    frameBuffer[4] = index;
+
+                index = tilesetData[5];
+                if (index)
+                    frameBuffer[5] = index;
+
+                index = tilesetData[6];
+                if (index)
+                    frameBuffer[6] = index;
+
+                index = tilesetData[7];
+                if (index)
+                    frameBuffer[7] = index;
+
+                index = tilesetData[8];
+                if (index)
+                    frameBuffer[8] = index;
+
+                index = tilesetData[9];
+                if (index)
+                    frameBuffer[9] = index;
+
+                index = tilesetData[10];
+                if (index)
+                    frameBuffer[10] = index;
+
+                index = tilesetData[11];
+                if (index)
+                    frameBuffer[11] = index;
+
+                index = tilesetData[12];
+                if (index)
+                    frameBuffer[12] = index;
+
+                index = tilesetData[13];
+                if (index)
+                    frameBuffer[13] = index;
+
+                index = tilesetData[14];
+                if (index)
+                    frameBuffer[14] = index;
+
+                index = tilesetData[15];
+                if (index)
+                    frameBuffer[15] = index;
+#endif
             }
         }
 
@@ -1827,7 +1897,11 @@ void DrawLayerBasic(TileLayer *layer)
                 for (byte *i = &tilesetGFXData[TILE_DATASIZE * (*layout & 0xFFF) + cntY]; r; ++frameBuffer) {
                     --r;
                     if (*i)
+#if RETRO_SOFTWARE_RENDER
                         *frameBuffer = palette[*i];
+#else
+                        *frameBuffer = *i;
+#endif
                     ++i;
                 }
             }

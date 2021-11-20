@@ -1685,11 +1685,10 @@ void DrawRectangle(int x, int y, int width, int height, uint colour, int alpha, 
     }
 
     Colour c = colour;
-    c.a      = alpha;
 
     PlaceArgs args;
     args.texID        = 0;
-    AddRenderState(inkEffect, 4, 6, &args);
+    AddRenderState(inkEffect, 4, 6, &args, alpha);
 
     AddPoly(xpos, ypos, 0, 0, c);
     AddPoly(xpos + w, ypos, 0, 0, c);
@@ -5273,7 +5272,7 @@ bool32 StatesCompatible(RenderState *one, RenderState *two)
         return false; // the rest can't really be merged
     if (memcmp(one->argBuffer, two->argBuffer, 0x20) || one->blendMode != two->blendMode || one->shader != two->shader || one->alpha != two->alpha
         || memcmp(one->lineBuffer, two->lineBuffer, SCREEN_YSIZE * sizeof(byte)) || one->lookupTable != two->lookupTable
-        || one->fbShader != two->fbShader || one->fbShader2 || two->fbShader2 || memcmp(&one->clipRectX, &two->clipRectX, sizeof(int32) * 4))
+        || one->fbShader != two->fbShader || one->fbShader2 || two->fbShader2 || memcmp(&one->clipRectTL, &two->clipRectTL, sizeof(int32) * 4))
         // if we render inplace (one->fbShader2 || two->fbShader2), we have to buffer it through first
         return false;
     if (one->maskColor != two->maskColor && (two->blendMode == INK_MASKED || two->blendMode == INK_UNMASKED))
@@ -5319,12 +5318,12 @@ void AddRenderState(int blendMode, ushort vertCount, ushort indexCount, void *ar
     else
         memset(newState.argBuffer, 0, 0x20);
     if (!clipRect)
-        memcpy(&newState.clipRectX, &currentScreen->clipBound_X1, sizeof(int32) * 4);
+        memcpy(&newState.clipRectTL, &currentScreen->clipBound_X1, sizeof(int32) * 4);
     else {
-        newState.clipRectX.x = maxVal(currentScreen->clipBound_X1, clipRect[0].x);
-        newState.clipRectX.y = minVal(currentScreen->clipBound_X2, clipRect[0].y);
-        newState.clipRectY.x = maxVal(currentScreen->clipBound_Y1, clipRect[1].x);
-        newState.clipRectY.y = minVal(currentScreen->clipBound_Y2, clipRect[1].y);
+        newState.clipRectTL.x = maxVal(currentScreen->clipBound_X1, clipRect[0].x);
+        newState.clipRectTL.y = minVal(currentScreen->clipBound_Y1, clipRect[0].y);
+        newState.clipRectBR.x = maxVal(currentScreen->clipBound_X2, clipRect[1].x);
+        newState.clipRectBR.y = minVal(currentScreen->clipBound_Y2, clipRect[1].y);
     }
     memcpy(newState.palette, fullPalette, sizeof(fullPalette));
     memcpy(newState.lineBuffer, gfxLineBuffer, sizeof(gfxLineBuffer));
@@ -5390,9 +5389,9 @@ void RenderRenderStates()
         float xScale = engine.windowWidth / (float)pixWidth;
         float yScale = engine.windowHeight / (float)SCREEN_YSIZE;
         glEnable(GL_SCISSOR_TEST);
-        glScissor(renderState->clipRectX.x * xScale, (SCREEN_YSIZE - renderState->clipRectY.y) * yScale,
-                  (renderState->clipRectX.y - renderState->clipRectX.x) * xScale,
-                  (renderState->clipRectY.y - renderState->clipRectY.x) * yScale);
+        glScissor(renderState->clipRectTL.x * xScale, (SCREEN_YSIZE - renderState->clipRectBR.y) * yScale,
+                  (renderState->clipRectBR.x - renderState->clipRectTL.x) * xScale,
+                  (renderState->clipRectBR.y - renderState->clipRectTL.y) * yScale);
 
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, renderState->indexCount * sizeof(ushort), renderState->indecies, GL_DYNAMIC_DRAW);
         glDrawElements(GL_TRIANGLES, renderState->indexCount, GL_UNSIGNED_SHORT, 0);
@@ -5467,8 +5466,8 @@ void FlipScreenHW()
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, 0);
 
         // TODO: TEMP. REMOVE ME WHEN IT MAKES SENSE TO DO SO
-        glBindFramebuffer(GL_FRAMEBUFFER, outFB);
-        glClear(GL_COLOR_BUFFER_BIT);
+        //glBindFramebuffer(GL_FRAMEBUFFER, outFB);
+        //glClear(GL_COLOR_BUFFER_BIT);
     }
     SDL_GL_SwapWindow(engine.window);
 }
