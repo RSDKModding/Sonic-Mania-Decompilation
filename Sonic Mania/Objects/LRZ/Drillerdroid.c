@@ -20,7 +20,7 @@ void Drillerdroid_StaticUpdate(void)
         Drillerdroid->shouldPlayDrillSfx = 0;
     }
     else if (Drillerdroid->playingDrillSfx) {
-        RSDK.StopSFX(Drillerdroid->sfxDrill);
+        RSDK.StopSfx(Drillerdroid->sfxDrill);
         Drillerdroid->playingDrillSfx = false;
     }
 }
@@ -124,16 +124,16 @@ void Drillerdroid_StageLoad(void)
     Drillerdroid->playingDrillSfx    = false;
     Drillerdroid->armorHealth           = 3;
     Drillerdroid->field_6D           = 0;
-    Drillerdroid->sfxHit             = RSDK.GetSFX("Stage/BossHit.wav");
-    Drillerdroid->sfxExplosion       = RSDK.GetSFX("Stage/Explosion2.wav");
-    Drillerdroid->sfxDrill           = RSDK.GetSFX("LRZ/Drill.wav");
-    Drillerdroid->sfxImpact          = RSDK.GetSFX("Stage/Impact4.wav");
-    Drillerdroid->sfxJump            = RSDK.GetSFX("LRZ/DrillJump.wav");
-    Drillerdroid->sfxTargeting       = RSDK.GetSFX("Stage/Targeting1.wav");
-    Drillerdroid->sfxSizzle          = RSDK.GetSFX("LRZ/Sizzle.wav");
-    Drillerdroid->sfxDrop            = RSDK.GetSFX("Stage/Drop.wav");
-    Drillerdroid->sfxFail            = RSDK.GetSFX("Stage/Fail.wav");
-    Drillerdroid->sfxClang           = RSDK.GetSFX("Stage/Clang2.wav");
+    Drillerdroid->sfxHit             = RSDK.GetSfx("Stage/BossHit.wav");
+    Drillerdroid->sfxExplosion       = RSDK.GetSfx("Stage/Explosion2.wav");
+    Drillerdroid->sfxDrill           = RSDK.GetSfx("LRZ/Drill.wav");
+    Drillerdroid->sfxImpact          = RSDK.GetSfx("Stage/Impact4.wav");
+    Drillerdroid->sfxJump            = RSDK.GetSfx("LRZ/DrillJump.wav");
+    Drillerdroid->sfxTargeting       = RSDK.GetSfx("Stage/Targeting1.wav");
+    Drillerdroid->sfxSizzle          = RSDK.GetSfx("LRZ/Sizzle.wav");
+    Drillerdroid->sfxDrop            = RSDK.GetSfx("Stage/Drop.wav");
+    Drillerdroid->sfxFail            = RSDK.GetSfx("Stage/Fail.wav");
+    Drillerdroid->sfxClang           = RSDK.GetSfx("Stage/Clang2.wav");
 }
 
 void Drillerdroid_Hit(void)
@@ -787,7 +787,7 @@ void Drillerdroid_State_Unknown17(void)
         if (flag) {
             self->position.x = 0;
             RSDK.PlaySfx(Drillerdroid->sfxFail, false, 255);
-            RSDK.StopSFX(Drillerdroid->sfxTargeting);
+            RSDK.StopSfx(Drillerdroid->sfxTargeting);
             self->timer = 60;
             self->state = Drillerdroid_State_Unknown18;
         }

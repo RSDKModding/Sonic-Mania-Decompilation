@@ -41,7 +41,7 @@ void Batbrain_StageLoad(void)
     Batbrain->hitbox.top    = -18;
     Batbrain->hitbox.right  = 12;
     Batbrain->hitbox.bottom = 18;
-    Batbrain->sfxFlap       = RSDK.GetSFX("Stage/Flap.wav");
+    Batbrain->sfxFlap       = RSDK.GetSfx("Stage/Flap.wav");
 
     DEBUGMODE_ADD_OBJ(Batbrain);
 }

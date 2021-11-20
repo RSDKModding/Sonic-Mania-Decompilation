@@ -153,9 +153,9 @@ void PopcornMachine_StageLoad(void)
     PopcornMachine->hitbox2.right    = 176;
     PopcornMachine->hitbox2.top      = -16;
     PopcornMachine->hitbox2.bottom   = 24;
-    PopcornMachine->sfxFanStart      = RSDK.GetSFX("Stage/FanStart.wav");
-    PopcornMachine->sfxShoot         = RSDK.GetSFX("Stage/Shoot1.wav");
-    PopcornMachine->sfxPopcornLaunch = RSDK.GetSFX("Stage/PopcornLaunch.wav");
+    PopcornMachine->sfxFanStart      = RSDK.GetSfx("Stage/FanStart.wav");
+    PopcornMachine->sfxShoot         = RSDK.GetSfx("Stage/Shoot1.wav");
+    PopcornMachine->sfxPopcornLaunch = RSDK.GetSfx("Stage/PopcornLaunch.wav");
 }
 
 void PopcornMachine_LinkPlayer(EntityPlayer *player)

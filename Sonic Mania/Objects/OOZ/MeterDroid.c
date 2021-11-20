@@ -86,13 +86,13 @@ void MeterDroid_StageLoad(void)
     MeterDroid->hitbox3.top    = -14;
     MeterDroid->hitbox3.right  = 14;
     MeterDroid->hitbox3.bottom = 14;
-    MeterDroid->sfxHit         = RSDK.GetSFX("Stage/BossHit.wav");
-    MeterDroid->sfxExplosion   = RSDK.GetSFX("Stage/Explosion2.wav");
-    MeterDroid->sfxDestroy     = RSDK.GetSFX("Global/Destroy.wav");
-    MeterDroid->sfxToss        = RSDK.GetSFX("OOZ/Toss.wav");
-    MeterDroid->sfxGrab        = RSDK.GetSFX("Global/Grab.wav");
-    MeterDroid->sfxValve       = RSDK.GetSFX("OOZ/Valve.wav");
-    MeterDroid->sfxWrench      = RSDK.GetSFX("OOZ/Wrench.wav");
+    MeterDroid->sfxHit         = RSDK.GetSfx("Stage/BossHit.wav");
+    MeterDroid->sfxExplosion   = RSDK.GetSfx("Stage/Explosion2.wav");
+    MeterDroid->sfxDestroy     = RSDK.GetSfx("Global/Destroy.wav");
+    MeterDroid->sfxToss        = RSDK.GetSfx("OOZ/Toss.wav");
+    MeterDroid->sfxGrab        = RSDK.GetSfx("Global/Grab.wav");
+    MeterDroid->sfxValve       = RSDK.GetSfx("OOZ/Valve.wav");
+    MeterDroid->sfxWrench      = RSDK.GetSfx("OOZ/Wrench.wav");
 }
 
 void MeterDroid_CheckPlayerCollisions(void)

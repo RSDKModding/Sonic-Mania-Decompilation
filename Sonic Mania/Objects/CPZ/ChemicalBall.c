@@ -56,7 +56,7 @@ void ChemicalBall_StageLoad(void)
     ChemicalBall->hitbox.top    = -8;
     ChemicalBall->hitbox.right  = 8;
     ChemicalBall->hitbox.bottom = 8;
-    ChemicalBall->sfxBloop      = RSDK.GetSFX("Stage/Bloop.wav");
+    ChemicalBall->sfxBloop      = RSDK.GetSfx("Stage/Bloop.wav");
 }
 
 void ChemicalBall_CheckHit(void)

@@ -64,7 +64,7 @@ void Newspaper_StageLoad(void)
 {
 #if RETRO_USE_PLUS
     Newspaper->aniFrames     = RSDK.LoadSpriteAnimation("PSZ1/Newspaper.bin", SCOPE_STAGE);
-    Newspaper->sfxPaperStack = RSDK.GetSFX("PSZ/PaperStack.wav");
+    Newspaper->sfxPaperStack = RSDK.GetSfx("PSZ/PaperStack.wav");
 #else
     if (RSDK.CheckStageFolder("PSZ1"))
         Newspaper->aniFrames = RSDK.LoadSpriteAnimation("PSZ1/Newspaper.bin", SCOPE_STAGE);

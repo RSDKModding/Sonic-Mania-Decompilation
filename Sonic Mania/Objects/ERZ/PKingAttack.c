@@ -70,7 +70,7 @@ void PKingAttack_Create(void *data)
 void PKingAttack_StageLoad(void)
 {
     PKingAttack->aniFrames = RSDK.LoadSpriteAnimation("Phantom/PhantomKing.bin", SCOPE_STAGE);
-    PKingAttack->sfxPulse  = RSDK.GetSFX("Stage/ElecPulse.wav");
+    PKingAttack->sfxPulse  = RSDK.GetSfx("Stage/ElecPulse.wav");
 }
 
 void PKingAttack_CheckPlayerCollisions(void)

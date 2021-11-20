@@ -56,9 +56,9 @@ void CableWarp_Create(void *data)
 void CableWarp_StageLoad(void)
 {
     CableWarp->aniFrames      = RSDK.LoadSpriteAnimation("SPZ2/CableWarp.bin", SCOPE_STAGE);
-    CableWarp->sfxCharge      = RSDK.GetSFX("Stage/ElecCharge.wav");
-    CableWarp->sfxPulse       = RSDK.GetSFX("Stage/ElecPulse.wav");
-    CableWarp->sfxLedgeBreak  = RSDK.GetSFX("Stage/LedgeBreak.wav");
+    CableWarp->sfxCharge      = RSDK.GetSfx("Stage/ElecCharge.wav");
+    CableWarp->sfxPulse       = RSDK.GetSfx("Stage/ElecPulse.wav");
+    CableWarp->sfxLedgeBreak  = RSDK.GetSfx("Stage/LedgeBreak.wav");
     CableWarp->hitbox1.left   = -16;
     CableWarp->hitbox1.top    = -16;
     CableWarp->hitbox1.right  = 16;

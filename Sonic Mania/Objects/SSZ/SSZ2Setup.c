@@ -42,7 +42,7 @@ void SSZ2Setup_Create(void *data) {}
 
 void SSZ2Setup_StageLoad(void)
 {
-    SSZ2Setup->sfxSpark     = RSDK.GetSFX("SSZ2/Spark.wav");
+    SSZ2Setup->sfxSpark     = RSDK.GetSfx("SSZ2/Spark.wav");
     Animals->animalTypes[0] = ANIMAL_FLICKY;
     Animals->animalTypes[1] = ANIMAL_PICKY;
     SSZ2Setup->towerID      = RSDK.GetSceneLayerID("Tower");

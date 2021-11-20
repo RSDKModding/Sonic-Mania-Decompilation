@@ -88,7 +88,7 @@ void PhantomRider_Create(void *data)
 void PhantomRider_StageLoad(void)
 {
     PhantomRider->aniFrames      = RSDK.LoadSpriteAnimation("Phantom/PhantomRider.bin", SCOPE_STAGE);
-    PhantomRider->sfxRiderLaunch = RSDK.GetSFX("LRZ/RiderLaunch.wav");
+    PhantomRider->sfxRiderLaunch = RSDK.GetSfx("LRZ/RiderLaunch.wav");
 }
 
 void PhantomRider_ProcessAutoScroll(void)

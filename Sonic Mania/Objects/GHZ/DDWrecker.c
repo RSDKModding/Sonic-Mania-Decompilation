@@ -84,13 +84,13 @@ void DDWrecker_Create(void *data)
 void DDWrecker_StageLoad(void)
 {
     DDWrecker->aniFrames   = RSDK.LoadSpriteAnimation("GHZ/DDWrecker.bin", SCOPE_STAGE);
-    DDWrecker->sfxBossHit   = RSDK.GetSFX("Stage/BossHit.wav");
-    DDWrecker->sfxExplosion = RSDK.GetSFX("Stage/Explosion2.wav");
-    DDWrecker->sfxDrop      = RSDK.GetSFX("Stage/Drop.wav");
-    DDWrecker->sfxImpact    = RSDK.GetSFX("Stage/Impact2.wav");
-    DDWrecker->sfxAssemble  = RSDK.GetSFX("Stage/Assemble.wav");
-    DDWrecker->sfxRotate    = RSDK.GetSFX("Stage/Rotate.wav");
-    DDWrecker->sfxSharp     = RSDK.GetSFX("Stage/Sharp.wav");
+    DDWrecker->sfxBossHit   = RSDK.GetSfx("Stage/BossHit.wav");
+    DDWrecker->sfxExplosion = RSDK.GetSfx("Stage/Explosion2.wav");
+    DDWrecker->sfxDrop      = RSDK.GetSfx("Stage/Drop.wav");
+    DDWrecker->sfxImpact    = RSDK.GetSfx("Stage/Impact2.wav");
+    DDWrecker->sfxAssemble  = RSDK.GetSfx("Stage/Assemble.wav");
+    DDWrecker->sfxRotate    = RSDK.GetSfx("Stage/Rotate.wav");
+    DDWrecker->sfxSharp     = RSDK.GetSfx("Stage/Sharp.wav");
 }
 
 void DDWrecker_State_Init(void)

@@ -20,7 +20,7 @@ void RockDrill_StaticUpdate(void)
         RockDrill->shouldPlayDrillSfx = 0;
     }
     else if (RockDrill->playingDrillSfx) {
-        RSDK.StopSFX(RockDrill->sfxDrill);
+        RSDK.StopSfx(RockDrill->sfxDrill);
         RockDrill->playingDrillSfx = false;
     }
 }
@@ -124,9 +124,9 @@ void RockDrill_StageLoad(void)
     RockDrill->active             = ACTIVE_ALWAYS;
     RockDrill->shouldPlayDrillSfx = 0;
     RockDrill->playingDrillSfx    = false;
-    RockDrill->sfxHit             = RSDK.GetSFX("Stage/BossHit.wav");
-    RockDrill->sfxExplosion       = RSDK.GetSFX("Stage/Explosion2.wav");
-    RockDrill->sfxDrill           = RSDK.GetSFX("LRZ/Drill.wav");
+    RockDrill->sfxHit             = RSDK.GetSfx("Stage/BossHit.wav");
+    RockDrill->sfxExplosion       = RSDK.GetSfx("Stage/Explosion2.wav");
+    RockDrill->sfxDrill           = RSDK.GetSfx("LRZ/Drill.wav");
 }
 
 void RockDrill_CheckPlayerCollisions(void)

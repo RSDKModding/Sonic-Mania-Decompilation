@@ -84,8 +84,8 @@ void AIZKingClaw_StageLoad(void)
     }
 
     AIZKingClaw->active        = ACTIVE_NORMAL;
-    AIZKingClaw->sfxClack      = RSDK.GetSFX("Stage/Clack.wav");
-    AIZKingClaw->sfxWalkerLegs = RSDK.GetSFX("LRZ/WalkerLegs.wav");
+    AIZKingClaw->sfxClack      = RSDK.GetSfx("Stage/Clack.wav");
+    AIZKingClaw->sfxWalkerLegs = RSDK.GetSfx("LRZ/WalkerLegs.wav");
 }
 
 void AIZKingClaw_HandleClawPositions(void)

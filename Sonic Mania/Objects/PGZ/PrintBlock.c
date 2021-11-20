@@ -86,7 +86,7 @@ void PrintBlock_StageLoad(void)
     if (RSDK.CheckStageFolder("PSZ1"))
         PrintBlock->aniFrames = RSDK.LoadSpriteAnimation("PSZ1/PrintBlock.bin", SCOPE_STAGE);
     RSDK.SetSpriteAnimation(PrintBlock->aniFrames, 12, &PrintBlock->animator, true, 0);
-    PrintBlock->sfxLetter = RSDK.GetSFX("PSZ/Letter.wav");
+    PrintBlock->sfxLetter = RSDK.GetSfx("PSZ/Letter.wav");
 }
 
 void PrintBlock_Unknown1(void)

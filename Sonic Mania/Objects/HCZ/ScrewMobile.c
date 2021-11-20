@@ -27,7 +27,7 @@ void ScrewMobile_StaticUpdate(void)
         }
     }
     else if (ScrewMobile->playingFanSfx) {
-        RSDK.StopSFX(ScrewMobile->sfxBigFan);
+        RSDK.StopSfx(ScrewMobile->sfxBigFan);
         ScrewMobile->playingFanSfx = false;
     }
     ScrewMobile->shouldPlayFanSfx = 0;
@@ -101,10 +101,10 @@ void ScrewMobile_StageLoad(void)
     ScrewMobile->playingFanSfx    = false;
     ScrewMobile->shouldPlayFanSfx = 0;
     ScrewMobile->active           = ACTIVE_ALWAYS;
-    ScrewMobile->sfxButton        = RSDK.GetSFX("Stage/Button2.wav");
-    ScrewMobile->sfxEggMobile     = RSDK.GetSFX("HCZ/EggMobile.wav");
-    ScrewMobile->sfxBigFan        = RSDK.GetSFX("HCZ/BigFan.wav");
-    ScrewMobile->sfxImpact        = RSDK.GetSFX("Stage/Impact5.wav");
+    ScrewMobile->sfxButton        = RSDK.GetSfx("Stage/Button2.wav");
+    ScrewMobile->sfxEggMobile     = RSDK.GetSfx("HCZ/EggMobile.wav");
+    ScrewMobile->sfxBigFan        = RSDK.GetSfx("HCZ/BigFan.wav");
+    ScrewMobile->sfxImpact        = RSDK.GetSfx("Stage/Impact5.wav");
 }
 
 void ScrewMobile_State_Unknown1(void)

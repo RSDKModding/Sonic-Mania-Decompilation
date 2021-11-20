@@ -111,7 +111,7 @@ void FilmReel_Update(void)
     if (self->field_90) {
         if (!self->field_90) {
             RSDK.PlaySfx(FilmReel->sfxLanding, false, 255);
-            RSDK.StopSFX(FilmReel->sfxUnravel);
+            RSDK.StopSfx(FilmReel->sfxUnravel);
             if (self->field_90 == 1)
                 self->active = ACTIVE_BOUNDS;
         }
@@ -236,8 +236,8 @@ void FilmReel_StageLoad(void)
     FilmReel->hitbox.bottom = 64;
     FilmReel->offsetPos.x   = 0x800000;
     FilmReel->offsetPos.y   = 0x800000;
-    FilmReel->sfxUnravel    = RSDK.GetSFX("Stage/Unravel.wav");
-    FilmReel->sfxLanding    = RSDK.GetSFX("Stage/Landing.wav");
+    FilmReel->sfxUnravel    = RSDK.GetSfx("Stage/Unravel.wav");
+    FilmReel->sfxLanding    = RSDK.GetSfx("Stage/Landing.wav");
 }
 
 void FilmReel_SpinLeft(void)

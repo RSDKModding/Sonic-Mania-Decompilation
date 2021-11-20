@@ -153,16 +153,16 @@ void CrimsonEye_StageLoad(void)
     CrimsonEye->destroyedBallCount            = 0;
     CrimsonEye->value17            = 0;
     CrimsonEye->liftBG             = RSDK.GetSceneLayer(RSDK.GetSceneLayerID("Lift Background"));
-    CrimsonEye->sfxHit             = RSDK.GetSFX("Stage/BossHit.wav");
-    CrimsonEye->sfxExplosion       = RSDK.GetSFX("Stage/Explosion2.wav");
-    CrimsonEye->sfxHover           = RSDK.GetSFX("TMZ1/Hover.wav");
-    CrimsonEye->sfxHover2          = RSDK.GetSFX("TMZ1/Hover2.wav");
-    CrimsonEye->sfxElevator        = RSDK.GetSFX("TMZ1/Elevator.wav");
-    CrimsonEye->sfxShot            = RSDK.GetSFX("Stage/Shot.wav");
-    CrimsonEye->sfxBeep            = RSDK.GetSFX("Stage/Beep4.wav");
-    CrimsonEye->sfxHullClose       = RSDK.GetSFX("Stage/HullClose.wav");
-    CrimsonEye->sfxButton          = RSDK.GetSFX("Stage/Button.wav");
-    CrimsonEye->sfxImpact          = RSDK.GetSFX("Stage/Impact5.wav");
+    CrimsonEye->sfxHit             = RSDK.GetSfx("Stage/BossHit.wav");
+    CrimsonEye->sfxExplosion       = RSDK.GetSfx("Stage/Explosion2.wav");
+    CrimsonEye->sfxHover           = RSDK.GetSfx("TMZ1/Hover.wav");
+    CrimsonEye->sfxHover2          = RSDK.GetSfx("TMZ1/Hover2.wav");
+    CrimsonEye->sfxElevator        = RSDK.GetSfx("TMZ1/Elevator.wav");
+    CrimsonEye->sfxShot            = RSDK.GetSfx("Stage/Shot.wav");
+    CrimsonEye->sfxBeep            = RSDK.GetSfx("Stage/Beep4.wav");
+    CrimsonEye->sfxHullClose       = RSDK.GetSfx("Stage/HullClose.wav");
+    CrimsonEye->sfxButton          = RSDK.GetSfx("Stage/Button.wav");
+    CrimsonEye->sfxImpact          = RSDK.GetSfx("Stage/Impact5.wav");
 }
 
 void CrimsonEye_Explode(void)

@@ -25,9 +25,9 @@ void MMZ2Outro_Create(void *data)
 
 void MMZ2Outro_StageLoad(void)
 {
-    MMZ2Outro->sfxThunda    = RSDK.GetSFX("MMZ/ThundaVerb.wav");
-    MMZ2Outro->sfxLightsOut = RSDK.GetSFX("MMZ/LightsOut.wav");
-    MMZ2Outro->sfxTMZEyes   = RSDK.GetSFX("MMZ/TMZEyes.wav");
+    MMZ2Outro->sfxThunda    = RSDK.GetSfx("MMZ/ThundaVerb.wav");
+    MMZ2Outro->sfxLightsOut = RSDK.GetSfx("MMZ/LightsOut.wav");
+    MMZ2Outro->sfxTMZEyes   = RSDK.GetSfx("MMZ/TMZEyes.wav");
 }
 
 void MMZ2Outro_StartCutscene(void)

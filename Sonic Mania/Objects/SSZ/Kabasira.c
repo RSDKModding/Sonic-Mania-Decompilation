@@ -90,8 +90,8 @@ void Kabasira_StageLoad(void)
     Kabasira->hitbox.bottom = 6;
     Kabasira->checkRange.x  = 0x60000;
     Kabasira->checkRange.y  = 0x60000;
-    Kabasira->sfxPon        = RSDK.GetSFX("Stage/Pon.wav");
-    Kabasira->sfxExplosion2 = RSDK.GetSFX("Stage/Explosion2.wav");
+    Kabasira->sfxPon        = RSDK.GetSfx("Stage/Pon.wav");
+    Kabasira->sfxExplosion2 = RSDK.GetSfx("Stage/Explosion2.wav");
     DEBUGMODE_ADD_OBJ(Kabasira);
 }
 

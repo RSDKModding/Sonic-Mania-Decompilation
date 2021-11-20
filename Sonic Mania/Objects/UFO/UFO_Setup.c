@@ -58,10 +58,10 @@ void UFO_Setup_StageLoad(void)
     RSDK.SetDrawLayerProperties(1, false, UFO_Setup_DrawLayerCallback);
     RSDK.SetDrawLayerProperties(3, false, UFO_Setup_DrawLayerCallback);
     RSDK.SetDrawLayerProperties(4, true, NULL);
-    UFO_Setup->sfxBlueSphere = RSDK.GetSFX("Special/BlueSphere2.wav");
-    UFO_Setup->sfxSSExit     = RSDK.GetSFX("Special/SSExit.wav");
-    UFO_Setup->sfxEmerald    = RSDK.GetSFX("Special/Emerald.wav");
-    UFO_Setup->sfxEvent      = RSDK.GetSFX("Special/Event.wav");
+    UFO_Setup->sfxBlueSphere = RSDK.GetSfx("Special/BlueSphere2.wav");
+    UFO_Setup->sfxSSExit     = RSDK.GetSfx("Special/SSExit.wav");
+    UFO_Setup->sfxEmerald    = RSDK.GetSfx("Special/Emerald.wav");
+    UFO_Setup->sfxEvent      = RSDK.GetSfx("Special/Event.wav");
     RSDK.CopyPalette(0, 0, 7, 0, 128);
     RSDK.CopyPalette(1, 96, 0, 96, 32);
     RSDK.SetLimitedFade(1, 0, 7, 36, 160, 255);

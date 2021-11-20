@@ -113,7 +113,7 @@ void Clucker_StageLoad(void)
     Clucker->hitbox4.top         = -4;
     Clucker->hitbox4.right       = 4;
     Clucker->hitbox4.bottom      = 4;
-    Clucker->sfxShot             = RSDK.GetSFX("Stage/Shot.wav");
+    Clucker->sfxShot             = RSDK.GetSfx("Stage/Shot.wav");
 
     DEBUGMODE_ADD_OBJ(Clucker);
 }

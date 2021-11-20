@@ -80,9 +80,9 @@ void FBZMissile_StageLoad(void)
     FBZMissile->hitbox3.top    = -8;
     FBZMissile->hitbox3.right  = 32;
     FBZMissile->hitbox3.bottom = 8;
-    FBZMissile->sfxPush        = RSDK.GetSFX("Stage/Push.wav");
-    FBZMissile->sfxPush2       = RSDK.GetSFX("Stage/Push.wav");
-    FBZMissile->sfxExplosion   = RSDK.GetSFX("Stage/Explosion2.wav");
+    FBZMissile->sfxPush        = RSDK.GetSfx("Stage/Push.wav");
+    FBZMissile->sfxPush2       = RSDK.GetSfx("Stage/Push.wav");
+    FBZMissile->sfxExplosion   = RSDK.GetSfx("Stage/Explosion2.wav");
 }
 
 void FBZMissile_StateLauncher_Delay(void)

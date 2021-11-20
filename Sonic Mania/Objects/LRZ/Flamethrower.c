@@ -30,7 +30,7 @@ void Flamethrower_StaticUpdate(void)
     }
 
     if (!count && Flamethrower->playingFlameSfx) {
-        RSDK.StopSFX(Flamethrower->sfxFlame);
+        RSDK.StopSfx(Flamethrower->sfxFlame);
         Flamethrower->playingFlameSfx = false;
     }
 }
@@ -103,7 +103,7 @@ void Flamethrower_StageLoad(void)
     Flamethrower->hitbox5.right  = 9;
     Flamethrower->hitbox5.bottom = 9;
 
-    Flamethrower->sfxFlame = RSDK.GetSFX("Stage/Flame2.wav");
+    Flamethrower->sfxFlame = RSDK.GetSfx("Stage/Flame2.wav");
     if (RSDK.CheckStageFolder("LRZ2")) {
         Flamethrower->aniFrames = RSDK.LoadSpriteAnimation("LRZ2/Flamethrower.bin", SCOPE_STAGE);
     }

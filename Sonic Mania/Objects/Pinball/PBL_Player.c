@@ -128,7 +128,7 @@ void PBL_Player_StageLoad(void)
     RSDK.SetDiffuseIntensity(PBL_Player->sceneIndex, 8, 8, 8);
     RSDK.SetSpecularIntensity(PBL_Player->sceneIndex, 15, 15, 15);
 
-    PBL_Player->sfxPlunger = RSDK.GetSFX("Pinball/Plunger.wav");
+    PBL_Player->sfxPlunger = RSDK.GetSfx("Pinball/Plunger.wav");
 }
 
 void PBL_Player_ProcessPlayerControl(void)

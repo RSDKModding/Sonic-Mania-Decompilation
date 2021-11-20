@@ -163,7 +163,7 @@ void WaterGush_Create(void *data)
 void WaterGush_StageLoad(void)
 {
     WaterGush->aniFrames = RSDK.LoadSpriteAnimation("HCZ/WaterGush.bin", SCOPE_STAGE);
-    WaterGush->sfxGush   = RSDK.GetSFX("HCZ/WaterGush.wav");
+    WaterGush->sfxGush   = RSDK.GetSfx("HCZ/WaterGush.wav");
 }
 
 void WaterGush_SetupHitboxes(void)

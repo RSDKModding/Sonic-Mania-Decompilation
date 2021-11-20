@@ -73,8 +73,8 @@ void Grabber_StageLoad(void)
     Grabber->hitbox2.right      = 8;
     Grabber->hitbox2.bottom     = 16;
     DEBUGMODE_ADD_OBJ(Grabber);
-    Grabber->sfxGrab    = RSDK.GetSFX("Global/Grab.wav");
-    Grabber->sfxDestroy = RSDK.GetSFX("Global/Destroy.wav");
+    Grabber->sfxGrab    = RSDK.GetSfx("Global/Grab.wav");
+    Grabber->sfxDestroy = RSDK.GetSfx("Global/Destroy.wav");
 }
 
 void Grabber_DebugDraw(void)

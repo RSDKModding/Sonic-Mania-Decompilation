@@ -31,7 +31,7 @@ void Turbine_StaticUpdate(void)
 
     if (!flag) {
         if (Turbine->playingTurbineSfx) {
-            RSDK.StopSFX(Turbine->sfxTurbine);
+            RSDK.StopSfx(Turbine->sfxTurbine);
             Turbine->playingTurbineSfx = false;
         }
     }
@@ -78,7 +78,7 @@ void Turbine_StageLoad(void)
     Turbine->hitboxHurt.right  = 6;
     Turbine->hitboxHurt.top    = -44;
     Turbine->hitboxHurt.bottom = 44;
-    Turbine->sfxTurbine        = RSDK.GetSFX("LRZ/Turbine.wav");
+    Turbine->sfxTurbine        = RSDK.GetSfx("LRZ/Turbine.wav");
 }
 
 void Turbine_CheckPlayerCollisions(void)

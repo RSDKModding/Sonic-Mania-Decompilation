@@ -38,7 +38,7 @@ void OOZSetup_StaticUpdate(void)
         RSDK.DrawAniTiles(OOZSetup->aniTiles, 756, 16 * OOZSetup->aniTilesFrame, 160, 16, 16);
     }
 
-    OOZSetup->value9 = 0;
+    OOZSetup->swimmingPlayerCount = 0;
     foreach_active(Player, player)
     {
         int32 playerID = RSDK.GetEntityID(player);
@@ -86,7 +86,7 @@ void OOZSetup_StaticUpdate(void)
                     default: OOZSetup->activePlayers &= ~(1 << playerID); break;
                     case 1:
                         if (!player->sidekick)
-                            OOZSetup->value9++;
+                            OOZSetup->swimmingPlayerCount++;
                         OOZSetup->activePlayers &= ~(1 << playerID);
                         if (player->velocity.y < 0) {
                             player->velocity.y += 0x3800;
@@ -102,7 +102,7 @@ void OOZSetup_StaticUpdate(void)
 #if RETRO_USE_PLUS
                             && player->state != Player_State_MightyHammerDrop
 #endif
-                            ) {
+                        ) {
                             OOZSetup->activePlayers &= ~(1 << playerID);
                             if (player->onGround == true) {
                                 player->interaction    = true;
@@ -116,7 +116,7 @@ void OOZSetup_StaticUpdate(void)
 #if RETRO_USE_PLUS
                             && player->state != Player_State_MightyHammerDrop
 #endif
-                            ) {
+                        ) {
                             OOZSetup->activePlayers &= ~(1 << playerID);
                             if (player->onGround) {
                                 player->interaction    = true;
@@ -130,7 +130,7 @@ void OOZSetup_StaticUpdate(void)
                         break;
                     case 4:
                         if (!player->sidekick)
-                            OOZSetup->value9++;
+                            OOZSetup->swimmingPlayerCount++;
                         OOZSetup->activePlayers |= 1 << playerID;
                         player->interaction    = true;
                         player->tileCollisions = true;
@@ -196,7 +196,7 @@ void OOZSetup_Draw(void)
     if (self->type)
         RSDK.FillScreen(0xC0C0E8, OOZSetup->fadeTimer >> 5, OOZSetup->fadeTimer >> 5, OOZSetup->fadeTimer >> 4);
     else
-        OOZSetup_Unknown4();
+        OOZSetup_Draw_Flames();
 }
 
 void OOZSetup_Create(void *data)
@@ -220,11 +220,11 @@ void OOZSetup_StageLoad(void)
     for (int32 i = 0; i < 0x400; ++i) {
         OOZSetup->bgPtr->deformationData[i] = OOZSetup->deformData[i & 0x3F];
     }
-    OOZSetup->fadeTimer     = 0;
-    OOZSetup->flags         = 1;
-    OOZSetup->value9        = 0;
-    Animals->animalTypes[0] = ANIMAL_ROCKY;
-    Animals->animalTypes[1] = ANIMAL_PECKY;
+    OOZSetup->fadeTimer           = 0;
+    OOZSetup->flags               = 1;
+    OOZSetup->swimmingPlayerCount = 0;
+    Animals->animalTypes[0]       = ANIMAL_ROCKY;
+    Animals->animalTypes[1]       = ANIMAL_PECKY;
     memset(OOZSetup->flameTimers, 0, sizeof(OOZSetup->flameTimers));
     memset(OOZSetup->flameTimerPtrs, 0, sizeof(OOZSetup->flameTimerPtrs));
     OOZSetup->flameCount = 0;
@@ -280,15 +280,15 @@ void OOZSetup_StageLoad(void)
 
     int32 id = Soundboard_LoadSFX("OOZ/Slide.wav", 12382, OOZSetup_CheckCB_Slide, NULL);
     if (id >= 0)
-        Soundboard->sfxUnknown8[id] = 30;
+        Soundboard->sfxFadeOutDuration[id] = 30;
 
     id = Soundboard_LoadSFX("OOZ/OilSwim.wav", true, OOZSetup_CheckCB_Swim, NULL);
     if (id >= 0)
-        Soundboard->sfxUnknown8[id] = 30;
+        Soundboard->sfxFadeOutDuration[id] = 30;
 
     id = Soundboard_LoadSFX("Stage/Flame2.wav", true, OOZSetup_CheckCB_Flame, NULL);
     if (id >= 0)
-        Soundboard->sfxUnknown8[id] = 30;
+        Soundboard->sfxFadeOutDuration[id] = 30;
 }
 
 bool32 OOZSetup_CheckCB_Flame(void)
@@ -320,14 +320,14 @@ bool32 OOZSetup_CheckCB_Slide(void)
     return count > 0;
 }
 
-bool32 OOZSetup_CheckCB_Swim(void) { return OOZSetup->value9 > 0; }
+bool32 OOZSetup_CheckCB_Swim(void) { return OOZSetup->swimmingPlayerCount > 0; }
 
-void OOZSetup_Unknown4(void)
+void OOZSetup_Draw_Flames(void)
 {
     RSDK_THIS(OOZSetup);
     for (int32 i = 0; i < OOZSetup->flameCount; ++i) {
         if (OOZSetup->flameTimerPtrs[i]) {
-            self->rotation                = 2 * (OOZSetup->flamePositions[i].x & 0xFF);
+            self->rotation                  = 2 * (OOZSetup->flamePositions[i].x & 0xFF);
             OOZSetup->flameAnimator.frameID = OOZSetup->flamePositions[i].y & 0xFF;
             RSDK.DrawSprite(&OOZSetup->flameAnimator, &OOZSetup->flamePositions[i], false);
         }
@@ -395,7 +395,7 @@ bool32 OOZSetup_Unknown6(int32 posY, int32 posX, int32 angle)
             if (i + 1 > OOZSetup->flameCount) {
                 OOZSetup->flameCount = i + 1;
             }
-            OOZSetup->flameTimers[pos]                                                                          = 0xF0;
+            OOZSetup->flameTimers[pos]                                                                      = 0xF0;
             CREATE_ENTITY(Explosion, intToVoid(2), self->position.x, self->position.y - 0x60000)->drawOrder = self->drawOrder;
             return true;
         }
@@ -406,11 +406,7 @@ bool32 OOZSetup_Unknown6(int32 posY, int32 posX, int32 angle)
 void OOZSetup_GenericTriggerCB(void)
 {
     if (!OOZSetup->hasAchievement) {
-#if RETRO_USE_PLUS
-        API.UnlockAchievement("ACH_OOZ");
-#else
-        APICallback_UnlockAchievement("ACH_OOZ");
-#endif
+        API_UnlockAchievement("ACH_OOZ");
         OOZSetup->hasAchievement = true;
     }
 }
@@ -418,8 +414,8 @@ void OOZSetup_GenericTriggerCB(void)
 void OOZSetup_PlayerState_OilPool(void)
 {
     RSDK_THIS(Player);
-    int32 top              = self->topSpeed;
-    int32 acc              = self->acceleration;
+    int32 top          = self->topSpeed;
+    int32 acc          = self->acceleration;
     self->topSpeed     = (self->topSpeed >> 1) + (self->topSpeed >> 3);
     self->acceleration = (self->acceleration >> 1) + (self->acceleration >> 3);
 
@@ -530,8 +526,8 @@ void OOZSetup_PlayerState_OilSlide(void)
 void OOZSetup_PlayerState_OilFall(void)
 {
     RSDK_THIS(Player);
-    int32 top              = self->topSpeed;
-    int32 acc              = self->acceleration;
+    int32 top          = self->topSpeed;
+    int32 acc          = self->acceleration;
     self->topSpeed     = (self->topSpeed >> 2) + (self->topSpeed >> 3);
     self->acceleration = (self->acceleration >> 2) + (self->acceleration >> 3);
 

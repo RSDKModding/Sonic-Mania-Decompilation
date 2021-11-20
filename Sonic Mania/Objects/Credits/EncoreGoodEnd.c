@@ -63,7 +63,7 @@ void EncoreGoodEnd_Create(void *data)
     }
 }
 
-void EncoreGoodEnd_StageLoad(void) { EncoreGoodEnd->sfxSnap = RSDK.GetSFX("SPZ/ShBugSnap.wav"); }
+void EncoreGoodEnd_StageLoad(void) { EncoreGoodEnd->sfxSnap = RSDK.GetSfx("SPZ/ShBugSnap.wav"); }
 
 void EncoreGoodEnd_SetupDecorations(void)
 {

@@ -92,7 +92,7 @@ void LRZConvSwitch_Create(void *data)
 void LRZConvSwitch_StageLoad(void)
 {
     LRZConvSwitch->aniFrames = RSDK.LoadSpriteAnimation("LRZ2/LRZConvSwitch.bin", SCOPE_STAGE);
-    LRZConvSwitch->sfxClack  = RSDK.GetSFX("Stage/Clack.wav");
+    LRZConvSwitch->sfxClack  = RSDK.GetSfx("Stage/Clack.wav");
 }
 
 void LRZConvSwitch_Calibrate(void)

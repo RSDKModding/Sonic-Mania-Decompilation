@@ -86,8 +86,8 @@ void Tornado_StageLoad(void)
         if ((globals->playerID & 0xFF) != ID_KNUCKLES)
             Tornado->knuxFrames = RSDK.LoadSpriteAnimation("Players/KnuxCutsceneAIZ.bin", SCOPE_STAGE);
     }
-    Tornado->sfxExplosion = RSDK.GetSFX("Stage/Explosion2.wav");
-    Tornado->sfxImpact    = RSDK.GetSFX("Stage/Impact5.wav");
+    Tornado->sfxExplosion = RSDK.GetSfx("Stage/Explosion2.wav");
+    Tornado->sfxImpact    = RSDK.GetSfx("Stage/Impact5.wav");
 }
 
 void Tornado_State_Setup(void)

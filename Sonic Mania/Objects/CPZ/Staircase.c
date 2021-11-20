@@ -49,7 +49,7 @@ void Staircase_StageLoad(void)
 {
     if (RSDK.CheckStageFolder("CPZ")) {
         Staircase->animID = RSDK.LoadSpriteAnimation("CPZ/Staircase.bin", SCOPE_STAGE);
-        Staircase->sfxID  = RSDK.GetSFX("CPZ/CPZ2HitBlocksStop.wav");
+        Staircase->sfxID  = RSDK.GetSfx("CPZ/CPZ2HitBlocksStop.wav");
         Soundboard_LoadSFX("CPZ/CPZ2HitBlocks.wav", true, Staircase_CheckCB, NULL);
     }
 }
@@ -107,7 +107,7 @@ void Staircase_Wait(void)
 
     if (--self->timer < 0) {
         self->timer = 128;
-        if (!RSDK.IsSFXPlaying(Staircase->sfxID))
+        if (!RSDK.IsSfxPlaying(Staircase->sfxID))
             RSDK.PlaySfx(Staircase->sfxID, false, 255);
         self->state     = Staircase_MoveBlocks;
         self->drawState = Staircase_DrawBlocks;

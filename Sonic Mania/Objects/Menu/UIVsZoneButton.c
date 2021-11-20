@@ -110,7 +110,7 @@ void UIVsZoneButton_StageLoad(void)
 {
     UIVsZoneButton->aniFrames  = RSDK.LoadSpriteAnimation("UI/SaveSelect.bin", SCOPE_STAGE);
     UIVsZoneButton->textFrames = RSDK.LoadSpriteAnimation("UI/TextEN.bin", SCOPE_STAGE);
-    UIVsZoneButton->sfxFail    = RSDK.GetSFX("Stage/Fail.wav");
+    UIVsZoneButton->sfxFail    = RSDK.GetSfx("Stage/Fail.wav");
 }
 
 void UIVsZoneButton_SetupAnimators(void)

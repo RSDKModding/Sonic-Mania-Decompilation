@@ -82,7 +82,7 @@ void PBL_Setup_StageLoad(void)
     RSDK.SetLimitedFade(5, 0, 7, 180, 0, 255);
     RSDK.SetLimitedFade(6, 0, 7, 216, 0, 255);
     RSDK.ResetEntitySlot(SLOT_PBL_SETUP, PBL_Setup->objectID, NULL);
-    PBL_Setup->sfxContinue = RSDK.GetSFX("Special/Continue.wav");
+    PBL_Setup->sfxContinue = RSDK.GetSfx("Special/Continue.wav");
 }
 
 void PBL_Setup_TableLow_ScanlineCallback(ScanlineInfo *scanlines)

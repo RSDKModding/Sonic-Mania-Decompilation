@@ -98,12 +98,12 @@ void KleptoMobile_Create(void *data)
 void KleptoMobile_StageLoad(void)
 {
     KleptoMobile->aniFrames    = RSDK.LoadSpriteAnimation("Phantom/KleptoMobile.bin", SCOPE_STAGE);
-    KleptoMobile->sfxHit       = RSDK.GetSFX("Stage/BossHit.wav");
-    KleptoMobile->sfxExplosion = RSDK.GetSFX("Stage/Explosion2.wav");
-    KleptoMobile->sfxFlail     = RSDK.GetSFX("SSZ1/Flail.wav");
-    KleptoMobile->sfxWhack     = RSDK.GetSFX("Stage/Whack.wav");
-    KleptoMobile->sfxPowerUp   = RSDK.GetSFX("Stage/PowerUp.wav");
-    KleptoMobile->sfxRocketJet = RSDK.GetSFX("Stage/RocketJet.wav");
+    KleptoMobile->sfxHit       = RSDK.GetSfx("Stage/BossHit.wav");
+    KleptoMobile->sfxExplosion = RSDK.GetSfx("Stage/Explosion2.wav");
+    KleptoMobile->sfxFlail     = RSDK.GetSfx("SSZ1/Flail.wav");
+    KleptoMobile->sfxWhack     = RSDK.GetSfx("Stage/Whack.wav");
+    KleptoMobile->sfxPowerUp   = RSDK.GetSfx("Stage/PowerUp.wav");
+    KleptoMobile->sfxRocketJet = RSDK.GetSfx("Stage/RocketJet.wav");
 }
 
 void KleptoMobile_HandleAnimations(void)
@@ -464,7 +464,7 @@ void KleptoMobile_State_Unknown3(void)
     if (++self->timer < 180) {
         EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
         if (abs(player1->position.x - self->position.x) < 0xC00000 && abs(player1->position.y - self->position.y) < 0xC00000) {
-            RSDK.StopSFX(KleptoMobile->sfxPowerUp);
+            RSDK.StopSfx(KleptoMobile->sfxPowerUp);
             self->timer     = 14;
             self->field_10C = 0;
             self->field_114 = true;

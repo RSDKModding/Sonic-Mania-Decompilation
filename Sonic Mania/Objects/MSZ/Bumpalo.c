@@ -66,10 +66,10 @@ void Bumpalo_StageLoad(void)
     Bumpalo->hitbox5.right  = -8;
     Bumpalo->hitbox5.bottom = 0;
 
-    Bumpalo->sfxBumper = RSDK.GetSFX("Stage/Bumper.wav");
-    Bumpalo->sfxHuff   = RSDK.GetSFX("Stage/Huff.wav");
-    Bumpalo->sfxClack  = RSDK.GetSFX("Stage/Clack.wav");
-    Bumpalo->sfxImpact = RSDK.GetSFX("Stage/Impact5.wav");
+    Bumpalo->sfxBumper = RSDK.GetSfx("Stage/Bumper.wav");
+    Bumpalo->sfxHuff   = RSDK.GetSfx("Stage/Huff.wav");
+    Bumpalo->sfxClack  = RSDK.GetSfx("Stage/Clack.wav");
+    Bumpalo->sfxImpact = RSDK.GetSfx("Stage/Impact5.wav");
     DEBUGMODE_ADD_OBJ(Bumpalo);
 }
 

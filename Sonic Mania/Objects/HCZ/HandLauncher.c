@@ -60,7 +60,7 @@ void HandLauncher_StageLoad(void)
 {
     HandLauncher->active         = ACTIVE_ALWAYS;
     HandLauncher->aniFrames    = RSDK.LoadSpriteAnimation("HCZ/HandLauncher.bin", SCOPE_STAGE);
-    HandLauncher->sfxDunkey      = RSDK.GetSFX("HCZ/Dunkey.wav");
+    HandLauncher->sfxDunkey      = RSDK.GetSfx("HCZ/Dunkey.wav");
     HandLauncher->hitbox1.left   = -24;
     HandLauncher->hitbox1.top    = -240;
     HandLauncher->hitbox1.right  = 24;

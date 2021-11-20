@@ -86,18 +86,18 @@ void ActClear_CheckPlayerVictory(void);
 void ActClear_SaveGameCallback(int32 success);
 void ActClear_Unknown5(void);
 
-void ActClear_Unknown6(void);
-void ActClear_Unknown7(void);
-void ActClear_State_TAFinish(void);
-void ActClear_Unknown8(void);
-void ActClear_TallyScore(void);
-void ActClear_LoadNextScene(void);
+void ActClear_State_EnterText(void);
+void ActClear_State_AdjustText(void);
+void ActClear_State_EnterBonuses(void);
+void ActClear_State_ScoreShownDelay(void);
+void ActClear_State_TallyScore(void);
+void ActClear_State_SaveGameProgress(void);
 #if RETRO_USE_PLUS
-void ActClear_State_TAResults(void);
+void ActClear_State_ShowResultsTA(void);
 #endif
-void ActClear_Unknown10(void);
-void ActClear_State_ActFinish(void);
+void ActClear_State_StartExitSequence(void);
+void ActClear_State_ExitActClear(void);
 
-void ActClear_ForcePlayerOnScreen(void);
+void ActClear_State_ForcePlayerOnScreen(void);
 
 #endif //!OBJ_ACTCLEAR_H

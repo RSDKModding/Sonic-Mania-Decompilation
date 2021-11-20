@@ -46,7 +46,7 @@ void LRZ3OutroK_StageLoad(void)
         foreach_break;
     }
 
-    LRZ3OutroK->sfxWarp = RSDK.GetSFX("LRZ/Warp.wav");
+    LRZ3OutroK->sfxWarp = RSDK.GetSfx("LRZ/Warp.wav");
 }
 
 void LRZ3OutroK_StartCutscene(void)

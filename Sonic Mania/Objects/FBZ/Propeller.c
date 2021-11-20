@@ -77,7 +77,7 @@ void Propeller_Create(void *data)
 void Propeller_StageLoad(void)
 {
     Propeller->aniFrames = RSDK.LoadSpriteAnimation("FBZ/Propeller.bin", SCOPE_STAGE);
-    Propeller->sfxFan    = RSDK.GetSFX("FBZ/FBZFan.wav");
+    Propeller->sfxFan    = RSDK.GetSfx("FBZ/FBZFan.wav");
 }
 
 #if RETRO_INCLUDE_EDITOR

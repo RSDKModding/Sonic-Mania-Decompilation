@@ -102,7 +102,7 @@ void TwistedTubes_StageLoad(void)
     TwistedTubes->hitbox3.right  = 56;
     TwistedTubes->hitbox3.bottom = 64;
 
-    TwistedTubes->sfxTravel = RSDK.GetSFX("Tube/Travel.wav");
+    TwistedTubes->sfxTravel = RSDK.GetSfx("Tube/Travel.wav");
 }
 
 void TwistedTubes_HandleInteractions(void)

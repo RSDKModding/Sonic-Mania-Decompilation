@@ -87,8 +87,8 @@ void BallCannon_StageLoad(void)
     BallCannon->hitbox3.left   = -8;
     BallCannon->hitbox3.right  = 8;
     BallCannon->hitbox3.bottom = 4;
-    BallCannon->sfxLedgeBreak  = RSDK.GetSFX("Stage/LedgeBreak.wav");
-    BallCannon->sfxFire        = RSDK.GetSFX("Stage/CannonFire.wav");
+    BallCannon->sfxLedgeBreak  = RSDK.GetSfx("Stage/LedgeBreak.wav");
+    BallCannon->sfxFire        = RSDK.GetSfx("Stage/CannonFire.wav");
 }
 
 void BallCannon_Unknown1(void)

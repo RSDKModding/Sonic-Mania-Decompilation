@@ -202,13 +202,13 @@ void MegaOctus_StageLoad(void)
     MegaOctus->orbHealth[0]   = 4;
     MegaOctus->orbHealth[1]   = 4;
     MegaOctus->field_D4       = false;
-    MegaOctus->sfxBossHit     = RSDK.GetSFX("Stage/BossHit.wav");
-    MegaOctus->sfxExplosion   = RSDK.GetSFX("Stage/Explosion2.wav");
-    MegaOctus->sfxLaser       = RSDK.GetSFX("OOZ/OOZLaser.wav");
-    MegaOctus->sfxBullet      = RSDK.GetSFX("OOZ/OOZBullet.wav");
-    MegaOctus->sfxHarpoon     = RSDK.GetSFX("OOZ/Harpoon.wav");
-    MegaOctus->sfxSurface     = RSDK.GetSFX("OOZ/OOZSurface.wav");
-    MegaOctus->sfxLaserSplash = RSDK.GetSFX("OOZ/LaserSplash.wav");
+    MegaOctus->sfxBossHit     = RSDK.GetSfx("Stage/BossHit.wav");
+    MegaOctus->sfxExplosion   = RSDK.GetSfx("Stage/Explosion2.wav");
+    MegaOctus->sfxLaser       = RSDK.GetSfx("OOZ/OOZLaser.wav");
+    MegaOctus->sfxBullet      = RSDK.GetSfx("OOZ/OOZBullet.wav");
+    MegaOctus->sfxHarpoon     = RSDK.GetSfx("OOZ/Harpoon.wav");
+    MegaOctus->sfxSurface     = RSDK.GetSfx("OOZ/OOZSurface.wav");
+    MegaOctus->sfxLaserSplash = RSDK.GetSfx("OOZ/LaserSplash.wav");
 }
 
 void MegaOctus_CheckPlayerCollisions_Body(void)

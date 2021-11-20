@@ -78,10 +78,10 @@ void DiveEggman_StageLoad(void)
     DiveEggman->hitbox3.right  = 7;
     DiveEggman->hitbox3.bottom = 11;
 
-    DiveEggman->sfxBigFan       = RSDK.GetSFX("HCZ/BigFan.wav");
-    DiveEggman->sfxHit          = RSDK.GetSFX("Stage/BossHit.wav");
-    DiveEggman->sfxExplosion    = RSDK.GetSFX("Stage/Explosion2.wav");
-    DiveEggman->sfxRockemSockem = RSDK.GetSFX("Stage/RockemSockem.wav");
+    DiveEggman->sfxBigFan       = RSDK.GetSfx("HCZ/BigFan.wav");
+    DiveEggman->sfxHit          = RSDK.GetSfx("Stage/BossHit.wav");
+    DiveEggman->sfxExplosion    = RSDK.GetSfx("Stage/Explosion2.wav");
+    DiveEggman->sfxRockemSockem = RSDK.GetSfx("Stage/RockemSockem.wav");
 }
 
 void DiveEggman_Explode(void)

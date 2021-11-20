@@ -65,11 +65,11 @@ void RollerMKII_StageLoad(void)
     RollerMKII->hitbox2.top        = -14;
     RollerMKII->hitbox2.right      = 14;
     RollerMKII->hitbox2.bottom     = 14;
-    RollerMKII->sfxBumper          = RSDK.GetSFX("Stage/Bumper3.wav");
-    RollerMKII->sfxJump            = RSDK.GetSFX("Stage/Jump2.wav");
-    RollerMKII->sfxDropDash        = RSDK.GetSFX("Global/DropDash.wav");
-    RollerMKII->sfxRelease         = RSDK.GetSFX("Global/Release.wav");
-    RollerMKII->sfxSkidding        = RSDK.GetSFX("Global/Skidding.wav");
+    RollerMKII->sfxBumper          = RSDK.GetSfx("Stage/Bumper3.wav");
+    RollerMKII->sfxJump            = RSDK.GetSfx("Stage/Jump2.wav");
+    RollerMKII->sfxDropDash        = RSDK.GetSfx("Global/DropDash.wav");
+    RollerMKII->sfxRelease         = RSDK.GetSfx("Global/Release.wav");
+    RollerMKII->sfxSkidding        = RSDK.GetSfx("Global/Skidding.wav");
     DEBUGMODE_ADD_OBJ(RollerMKII);
 }
 
@@ -429,7 +429,7 @@ void RollerMKII_State_Unknown4(void)
                 }
                 self->velocity.y = -0x20000;
                 self->onGround   = false;
-                RSDK.StopSFX(RollerMKII->sfxDropDash);
+                RSDK.StopSfx(RollerMKII->sfxDropDash);
                 RSDK.PlaySfx(RollerMKII->sfxRelease, false, 255);
                 Hitbox *hitbox = RSDK.GetHitbox(&self->animator, 0);
 

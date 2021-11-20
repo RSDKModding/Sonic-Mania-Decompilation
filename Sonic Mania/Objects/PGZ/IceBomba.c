@@ -90,8 +90,8 @@ void IceBomba_StageLoad(void)
     IceBomba->checkbox.top      = 64;
     IceBomba->checkbox.right    = 12;
     IceBomba->checkbox.bottom   = 128;
-    IceBomba->explosionSFX = RSDK.GetSFX("Stage/Explosion.wav");
-    IceBomba->freezeSFX    = RSDK.GetSFX("PSZ/Freeze.wav");
+    IceBomba->explosionSFX = RSDK.GetSfx("Stage/Explosion.wav");
+    IceBomba->freezeSFX    = RSDK.GetSfx("PSZ/Freeze.wav");
     DEBUGMODE_ADD_OBJ(IceBomba);
 }
 

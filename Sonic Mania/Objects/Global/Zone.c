@@ -447,7 +447,7 @@ void Zone_StageLoad(void)
             break;
         default: break;
     }
-    Zone->sfxfail = RSDK.GetSFX("Stage/Fail.wav");
+    Zone->sfxfail = RSDK.GetSfx("Stage/Fail.wav");
 }
 
 int32 Zone_GetZoneID(void)

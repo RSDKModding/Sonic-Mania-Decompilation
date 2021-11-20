@@ -421,8 +421,8 @@ void HUD_StageLoad(void)
 #endif
 
 #if RETRO_USE_PLUS
-    HUD->sfxClick    = RSDK.GetSFX("Stage/Click.wav");
-    HUD->sfxStarpost = RSDK.GetSFX("Global/StarPost.wav");
+    HUD->sfxClick    = RSDK.GetSfx("Stage/Click.wav");
+    HUD->sfxStarpost = RSDK.GetSfx("Global/StarPost.wav");
     HUD->showTAPrompt      = false;
 
     EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;

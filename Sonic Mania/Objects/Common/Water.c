@@ -66,8 +66,8 @@ void Water_StaticUpdate(void)
         }
     }
     else if (!Water->waterLevelVolume && Water->playingWaterLevelSFX) {
-        RSDK.StopSFX(Water->sfxWaterLevelL);
-        RSDK.StopSFX(Water->sfxWaterLevelR);
+        RSDK.StopSfx(Water->sfxWaterLevelL);
+        RSDK.StopSfx(Water->sfxWaterLevelR);
         Water->playingWaterLevelSFX = false;
     }
 
@@ -86,7 +86,7 @@ void Water_StaticUpdate(void)
         }
     }
     else if (Water->playingSkimSFX) {
-        RSDK.StopSFX(Water->sfxSkim);
+        RSDK.StopSfx(Water->sfxSkim);
         Water->playingSkimSFX = 0;
     }
 }
@@ -232,19 +232,19 @@ void Water_StageLoad(void)
     Water->hitbox.top       = -1;
     Water->hitbox.right     = 1;
     Water->hitbox.bottom    = 1;
-    Water->sfxSplash        = RSDK.GetSFX("Stage/Splash.wav");
-    Water->sfxBreathe       = RSDK.GetSFX("Stage/Breathe.wav");
-    Water->sfxWarning       = RSDK.GetSFX("Stage/Warning.wav");
-    Water->sfxDrown         = RSDK.GetSFX("Stage/Drown.wav");
-    Water->sfxDrownAlert    = RSDK.GetSFX("Stage/DrownAlert.wav");
-    Water->sfxSkim          = RSDK.GetSFX("HCZ/Skim.wav");
+    Water->sfxSplash        = RSDK.GetSfx("Stage/Splash.wav");
+    Water->sfxBreathe       = RSDK.GetSfx("Stage/Breathe.wav");
+    Water->sfxWarning       = RSDK.GetSfx("Stage/Warning.wav");
+    Water->sfxDrown         = RSDK.GetSfx("Stage/Drown.wav");
+    Water->sfxDrownAlert    = RSDK.GetSfx("Stage/DrownAlert.wav");
+    Water->sfxSkim          = RSDK.GetSfx("HCZ/Skim.wav");
     if (RSDK.CheckStageFolder("HCZ")) {
         Water->wakeSprite      = RSDK.LoadSpriteAnimation("HCZ/Wake.bin", SCOPE_STAGE);
         Water->bigBubbleSprite = RSDK.LoadSpriteAnimation("HCZ/BigBubble.bin", SCOPE_STAGE);
-        Water->sfxWaterLevelL  = RSDK.GetSFX("HCZ/WaterLevel_L.wav");
-        Water->sfxWaterLevelR  = RSDK.GetSFX("HCZ/WaterLevel_R.wav");
-        Water->sfxDNAGrab      = RSDK.GetSFX("CPZ/DNAGrab.wav");
-        Water->sfxDNABurst     = RSDK.GetSFX("CPZ/DNABurst.wav");
+        Water->sfxWaterLevelL  = RSDK.GetSfx("HCZ/WaterLevel_L.wav");
+        Water->sfxWaterLevelR  = RSDK.GetSfx("HCZ/WaterLevel_R.wav");
+        Water->sfxDNAGrab      = RSDK.GetSfx("CPZ/DNAGrab.wav");
+        Water->sfxDNABurst     = RSDK.GetSfx("CPZ/DNABurst.wav");
         RSDK.SetSpriteAnimation(Water->wakeSprite, 0, &Water->wakeData, true, 0);
     }
 }

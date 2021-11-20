@@ -144,9 +144,9 @@ void Hatterkiller_StageLoad(void)
     Hatterkiller->hitbox.top    = -8;
     Hatterkiller->hitbox.right  = 8;
     Hatterkiller->hitbox.bottom = 8;
-    Hatterkiller->sfxRocketJet  = RSDK.GetSFX("Stage/RocketJet.wav");
-    Hatterkiller->sfxTransform2 = RSDK.GetSFX("Stage/Transform2.wav");
-    Hatterkiller->sfxPowerup    = RSDK.GetSFX("Stage/PowerUp.wav");
+    Hatterkiller->sfxRocketJet  = RSDK.GetSfx("Stage/RocketJet.wav");
+    Hatterkiller->sfxTransform2 = RSDK.GetSfx("Stage/Transform2.wav");
+    Hatterkiller->sfxPowerup    = RSDK.GetSfx("Stage/PowerUp.wav");
     DEBUGMODE_ADD_OBJ(Hatterkiller);
 }
 

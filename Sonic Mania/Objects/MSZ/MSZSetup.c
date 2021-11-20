@@ -249,7 +249,7 @@ void MSZSetup_StageLoad(void)
     }
 
 #if RETRO_USE_PLUS
-    MSZSetup->sfxLocoChugga = RSDK.GetSFX("MSZ/LocoChugga.wav");
+    MSZSetup->sfxLocoChugga = RSDK.GetSfx("MSZ/LocoChugga.wav");
 #endif
     Animals->animalTypes[0] = ANIMAL_LOCKY;
     Animals->animalTypes[1] = ANIMAL_POCKY;

@@ -41,7 +41,7 @@ void OOZ1Outro_Create(void *data)
     }
 }
 
-void OOZ1Outro_StageLoad(void) { OOZ1Outro->sfxDrop = RSDK.GetSFX("Stage/Drop.wav"); }
+void OOZ1Outro_StageLoad(void) { OOZ1Outro->sfxDrop = RSDK.GetSfx("Stage/Drop.wav"); }
 
 bool32 OOZ1Outro_Unknown1(EntityCutsceneSeq *host)
 {

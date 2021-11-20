@@ -137,17 +137,17 @@ void HeavyShinobi_StageLoad(void)
     HeavyShinobi->activeShurikens    = 0;
     HeavyShinobi->health             = 8;
     HeavyShinobi->invincibilityTimer = 0;
-    HeavyShinobi->sfxHit             = RSDK.GetSFX("Stage/BossHit.wav");
-    HeavyShinobi->sfxExplosion       = RSDK.GetSFX("Stage/Explosion2.wav");
-    HeavyShinobi->sfxDefeat          = RSDK.GetSFX("PSZ/ShinobiDefeat.wav");
-    HeavyShinobi->sfxDropIn          = RSDK.GetSFX("PSZ/ShinobiDropIn.wav");
-    HeavyShinobi->sfxExplode         = RSDK.GetSFX("PSZ/ShinobiExplode.wav");
-    HeavyShinobi->sfxGlitch          = RSDK.GetSFX("PSZ/ShinobiGlitch.wav");
-    HeavyShinobi->sfxJump            = RSDK.GetSFX("PSZ/ShinobiJump.wav");
-    HeavyShinobi->sfxParry           = RSDK.GetSFX("PSZ/ShinobiParry.wav");
-    HeavyShinobi->sfxSlash           = RSDK.GetSFX("PSZ/ShinobiSlash.wav");
-    HeavyShinobi->sfxStick           = RSDK.GetSFX("PSZ/ShinobiStick.wav");
-    HeavyShinobi->sfxThrow           = RSDK.GetSFX("PSZ/ShinobiThrow.wav");
+    HeavyShinobi->sfxHit             = RSDK.GetSfx("Stage/BossHit.wav");
+    HeavyShinobi->sfxExplosion       = RSDK.GetSfx("Stage/Explosion2.wav");
+    HeavyShinobi->sfxDefeat          = RSDK.GetSfx("PSZ/ShinobiDefeat.wav");
+    HeavyShinobi->sfxDropIn          = RSDK.GetSfx("PSZ/ShinobiDropIn.wav");
+    HeavyShinobi->sfxExplode         = RSDK.GetSfx("PSZ/ShinobiExplode.wav");
+    HeavyShinobi->sfxGlitch          = RSDK.GetSfx("PSZ/ShinobiGlitch.wav");
+    HeavyShinobi->sfxJump            = RSDK.GetSfx("PSZ/ShinobiJump.wav");
+    HeavyShinobi->sfxParry           = RSDK.GetSfx("PSZ/ShinobiParry.wav");
+    HeavyShinobi->sfxSlash           = RSDK.GetSfx("PSZ/ShinobiSlash.wav");
+    HeavyShinobi->sfxStick           = RSDK.GetSfx("PSZ/ShinobiStick.wav");
+    HeavyShinobi->sfxThrow           = RSDK.GetSfx("PSZ/ShinobiThrow.wav");
 }
 
 void HeavyShinobi_HandleAfterFX(void)
@@ -523,7 +523,7 @@ void HeavyShinobi_State_Glitched(void)
             RSDK.SetSpriteAnimation(HeavyShinobi->aniFrames, 5, &self->animator2, false, 0);
             self->timer = RSDK.Rand(30, 91);
             self->state = HeavyShinobi_State_Unknown1;
-            RSDK.StopSFX(HeavyShinobi->sfxGlitch);
+            RSDK.StopSfx(HeavyShinobi->sfxGlitch);
         }
     }
 

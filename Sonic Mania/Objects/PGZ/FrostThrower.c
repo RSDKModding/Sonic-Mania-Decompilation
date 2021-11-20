@@ -49,8 +49,8 @@ void FrostThrower_StageLoad(void)
     else if (RSDK.CheckStageFolder("PSZ2"))
         FrostThrower->aniFrames = RSDK.LoadSpriteAnimation("PSZ2/FrostThrower.bin", SCOPE_STAGE);
 
-    FrostThrower->sfxFrostThrower = RSDK.GetSFX("PSZ/FrostThrower.wav");
-    FrostThrower->sfxFreeze       = RSDK.GetSFX("PSZ/Freeze.wav");
+    FrostThrower->sfxFrostThrower = RSDK.GetSfx("PSZ/FrostThrower.wav");
+    FrostThrower->sfxFreeze       = RSDK.GetSfx("PSZ/Freeze.wav");
 }
 
 void FrostThrower_Unknown1(void)

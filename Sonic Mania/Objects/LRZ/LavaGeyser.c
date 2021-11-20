@@ -61,10 +61,10 @@ void LavaGeyser_StageLoad(void)
     else if (RSDK.CheckStageFolder("LRZ2"))
         LavaGeyser->aniFrames = RSDK.LoadSpriteAnimation("LRZ2/LavaGeyser.bin", SCOPE_STAGE);
 
-    LavaGeyser->sfxHit        = RSDK.GetSFX("Stage/BossHit.wav");
-    LavaGeyser->sfxExplosion  = RSDK.GetSFX("Stage/Explosion2.wav");
-    LavaGeyser->sfxDrill      = RSDK.GetSFX("LRZ/Drill.wav");
-    LavaGeyser->sfxLavaGeyser = RSDK.GetSFX("LRZ/LavaGeyser.wav");
+    LavaGeyser->sfxHit        = RSDK.GetSfx("Stage/BossHit.wav");
+    LavaGeyser->sfxExplosion  = RSDK.GetSfx("Stage/Explosion2.wav");
+    LavaGeyser->sfxDrill      = RSDK.GetSfx("LRZ/Drill.wav");
+    LavaGeyser->sfxLavaGeyser = RSDK.GetSfx("LRZ/LavaGeyser.wav");
 }
 
 void LavaGeyser_CheckPlayerCollisions(void)

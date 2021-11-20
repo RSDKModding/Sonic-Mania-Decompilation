@@ -66,8 +66,8 @@ void SpecialRing_StageLoad(void)
     // sets specular (highlight) intensity (16-0, 16 = none, 0 = all)
     RSDK.SetSpecularIntensity(SpecialRing->sceneIndex, 14, 14, 14);
 
-    SpecialRing->sfxSpecialRing = RSDK.GetSFX("Global/SpecialRing.wav");
-    SpecialRing->sfxSpecialWarp = RSDK.GetSFX("Global/SpecialWarp.wav");
+    SpecialRing->sfxSpecialRing = RSDK.GetSfx("Global/SpecialRing.wav");
+    SpecialRing->sfxSpecialWarp = RSDK.GetSfx("Global/SpecialWarp.wav");
 
     DEBUGMODE_ADD_OBJ(SpecialRing);
 

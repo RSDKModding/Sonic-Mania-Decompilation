@@ -85,7 +85,7 @@ void Syringe_StageLoad(void)
     Syringe->handleHitbox.top    = -0x31;
     Syringe->handleHitbox.right  = 0x18;
     Syringe->handleHitbox.bottom = -0x27;
-    Syringe->sfxBloop            = RSDK.GetSFX("Stage/Bloop.wav");
+    Syringe->sfxBloop            = RSDK.GetSfx("Stage/Bloop.wav");
 }
 
 #if RETRO_INCLUDE_EDITOR

@@ -620,7 +620,7 @@ void setupFunctions()
     addToRSDKFunctionTable(FunctionTable_SetTileAngle, SetTileAngle);
     addToRSDKFunctionTable(FunctionTable_GetTileBehaviour, GetTileBehaviour);
     addToRSDKFunctionTable(FunctionTable_SetTileBehaviour, SetTileBehaviour);
-    addToRSDKFunctionTable(FunctionTable_GetSFX, GetSFX);
+    addToRSDKFunctionTable(FunctionTable_GetSFX, GetSfx);
     addToRSDKFunctionTable(FunctionTable_PlaySFX, PlaySfx);
     addToRSDKFunctionTable(FunctionTable_StopSFX, StopSfx);
     addToRSDKFunctionTable(FunctionTable_PlayMusic, PlayStream);

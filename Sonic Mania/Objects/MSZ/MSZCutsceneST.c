@@ -20,7 +20,7 @@ void MSZCutsceneST_StaticUpdate(void)
 {
     if (RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu)->objectID == PauseMenu->objectID || !MSZCutsceneST->isMayday) {
         if (MSZCutsceneST->playingMaydaySfx) {
-            RSDK.StopSFX(MSZCutsceneST->sfxMayday);
+            RSDK.StopSfx(MSZCutsceneST->sfxMayday);
             MSZCutsceneST->playingMaydaySfx = false;
         }
     }
@@ -75,9 +75,9 @@ void MSZCutsceneST_StageLoad(void)
         foreach_break;
     }
 
-    MSZCutsceneST->sfxExplosion3 = RSDK.GetSFX("Stage/Explosion3.wav");
-    MSZCutsceneST->sfxMayday     = RSDK.GetSFX("MSZ/Mayday.wav");
-    MSZCutsceneST->sfxLedgeBreak = RSDK.GetSFX("Stage/LedgeBreak.wav");
+    MSZCutsceneST->sfxExplosion3 = RSDK.GetSfx("Stage/Explosion3.wav");
+    MSZCutsceneST->sfxMayday     = RSDK.GetSfx("MSZ/Mayday.wav");
+    MSZCutsceneST->sfxLedgeBreak = RSDK.GetSfx("Stage/LedgeBreak.wav");
     MSZCutsceneST->active        = ACTIVE_ALWAYS;
 }
 

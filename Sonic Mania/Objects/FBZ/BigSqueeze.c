@@ -86,10 +86,10 @@ void BigSqueeze_StageLoad(void)
 {
     BigSqueeze->active        = ACTIVE_ALWAYS;
     BigSqueeze->aniFrames     = RSDK.LoadSpriteAnimation("FBZ/BigSqueeze.bin", SCOPE_STAGE);
-    BigSqueeze->sfxBossHit    = RSDK.GetSFX("Stage/BossHit.wav");
-    BigSqueeze->sfxExplosion2 = RSDK.GetSFX("Stage/Explosion2.wav");
-    BigSqueeze->sfxMagnet     = RSDK.GetSFX("FBZ/Magnet.wav");
-    BigSqueeze->sfxOrbinaut   = RSDK.GetSFX("FBZ/Orbinaut.wav");
+    BigSqueeze->sfxBossHit    = RSDK.GetSfx("Stage/BossHit.wav");
+    BigSqueeze->sfxExplosion2 = RSDK.GetSfx("Stage/Explosion2.wav");
+    BigSqueeze->sfxMagnet     = RSDK.GetSfx("FBZ/Magnet.wav");
+    BigSqueeze->sfxOrbinaut   = RSDK.GetSfx("FBZ/Orbinaut.wav");
     BigSqueeze->value6        = 0;
     BigSqueeze->isRumbling    = false;
     Soundboard_LoadSFX("Stage/Rumble.wav", true, BigSqueeze_RumbleCheckCB, NULL);

@@ -81,7 +81,7 @@ void MSHologram_StageLoad(void)
     MSHologram->hitbox.top    = -10;
     MSHologram->hitbox.right  = 12;
     MSHologram->hitbox.bottom = 10;
-    MSHologram->sfxExplosion  = RSDK.GetSFX("Stage/Explosion2.wav");
+    MSHologram->sfxExplosion  = RSDK.GetSfx("Stage/Explosion2.wav");
 }
 
 void MSHologram_State_CheckPlayerCollisions(void)

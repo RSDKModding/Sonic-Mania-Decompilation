@@ -41,7 +41,7 @@ void RPlaneShifter_StageLoad(void)
 {
     RPlaneShifter->active     = ACTIVE_ALWAYS;
     RPlaneShifter->aniFrames  = RSDK.LoadSpriteAnimation("MMZ/RPlaneShifter.bin", SCOPE_STAGE);
-    RPlaneShifter->sfxTicTock = RSDK.GetSFX("MMZ/TicTock.wav");
+    RPlaneShifter->sfxTicTock = RSDK.GetSfx("MMZ/TicTock.wav");
 }
 
 void RPlaneShifter_DrawSprites(void)

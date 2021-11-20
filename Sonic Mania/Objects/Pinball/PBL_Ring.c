@@ -63,7 +63,7 @@ void PBL_Ring_Create(void *data)
 void PBL_Ring_StageLoad(void)
 {
     PBL_Ring->aniFrames = RSDK.LoadSpriteAnimation("Global/Ring.bin", SCOPE_STAGE);
-    PBL_Ring->sfxRing   = RSDK.GetSFX("Global/Ring.wav");
+    PBL_Ring->sfxRing   = RSDK.GetSfx("Global/Ring.wav");
 }
 
 void PBL_Ring_GiveRing(void)

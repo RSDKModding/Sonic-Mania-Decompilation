@@ -46,7 +46,7 @@ void LRZConvItem_StageLoad(void)
 {
     LRZConvItem->aniFrames = RSDK.LoadSpriteAnimation("LRZ2/LRZConvItem.bin", SCOPE_STAGE);
     LRZConvItem_SetupHitboxes();
-    LRZConvItem->sfxSizzle = RSDK.GetSFX("LRZ/Sizzle.wav");
+    LRZConvItem->sfxSizzle = RSDK.GetSfx("LRZ/Sizzle.wav");
 }
 
 void LRZConvItem_SetupHitboxes(void)

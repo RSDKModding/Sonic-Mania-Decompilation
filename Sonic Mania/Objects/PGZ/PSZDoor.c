@@ -208,7 +208,7 @@ void PSZDoor_StageLoad(void)
     PSZDoor->hitboxes[1].left   = -56;
     PSZDoor->hitboxes[1].bottom = 12;
     PSZDoor->hitboxes[1].right  = 56;
-    PSZDoor->sfxOpen            = RSDK.GetSFX("Stage/Open.wav");
+    PSZDoor->sfxOpen            = RSDK.GetSfx("Stage/Open.wav");
 }
 
 int32 PSZDoor_Unknown1(void)

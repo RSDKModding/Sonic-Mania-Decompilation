@@ -42,7 +42,7 @@ void ThanksSetup_Create(void *data)
 
 void ThanksSetup_StageLoad(void)
 {
-    ThanksSetup->sfxSega = RSDK.GetSFX("Stage/Sega.wav");
+    ThanksSetup->sfxSega = RSDK.GetSfx("Stage/Sega.wav");
     RSDK.ResetEntitySlot(0, ThanksSetup->objectID, 0);
     UIPicture->aniFrames = RSDK.LoadSpriteAnimation("Thanks/Decorations.bin", SCOPE_STAGE);
     for (int32 i = 0; i < 16; ++i) {

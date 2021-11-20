@@ -91,9 +91,9 @@ void UFO_ItemBox_StageLoad(void)
     RSDK.SetDiffuseColour(UFO_ItemBox->sceneIndex, 160, 160, 0);
     RSDK.SetDiffuseIntensity(UFO_ItemBox->sceneIndex, 8, 8, 0);
     RSDK.SetSpecularIntensity(UFO_ItemBox->sceneIndex, 14, 14, 0);
-    UFO_ItemBox->sfxDestroy      = RSDK.GetSFX("Global/Destroy.wav");
-    UFO_ItemBox->sfxRockemSockem = RSDK.GetSFX("Stage/RockemSockem.wav");
-    UFO_ItemBox->sfxBumper       = RSDK.GetSFX("Stage/Bumper.wav");
+    UFO_ItemBox->sfxDestroy      = RSDK.GetSfx("Global/Destroy.wav");
+    UFO_ItemBox->sfxRockemSockem = RSDK.GetSfx("Stage/RockemSockem.wav");
+    UFO_ItemBox->sfxBumper       = RSDK.GetSfx("Stage/Bumper.wav");
 }
 
 void UFO_ItemBox_State_HasContents(void)

@@ -75,13 +75,13 @@ void PBL_Crane_Create(void *data)
 void PBL_Crane_StageLoad(void)
 {
     PBL_Crane->aniFrames    = RSDK.LoadSpriteAnimation("Pinball/Backglass.bin", SCOPE_STAGE);
-    PBL_Crane->sfxBackGlass = RSDK.GetSFX("Pinball/Backglass.wav");
-    PBL_Crane->sfxCraneMove = RSDK.GetSFX("Pinball/CraneMove.wav");
-    PBL_Crane->sfxCraneDrop = RSDK.GetSFX("Pinball/CraneDrop.wav");
-    PBL_Crane->sfxCraneGrab = RSDK.GetSFX("Pinball/CraneGrab.wav");
-    PBL_Crane->sfxCraneRise = RSDK.GetSFX("Pinball/CraneRise.wav");
-    PBL_Crane->sfxPrizeGood = RSDK.GetSFX("Pinball/PrizeGood.wav");
-    PBL_Crane->sfxPrizeBad  = RSDK.GetSFX("Pinball/PrizeBad.wav");
+    PBL_Crane->sfxBackGlass = RSDK.GetSfx("Pinball/Backglass.wav");
+    PBL_Crane->sfxCraneMove = RSDK.GetSfx("Pinball/CraneMove.wav");
+    PBL_Crane->sfxCraneDrop = RSDK.GetSfx("Pinball/CraneDrop.wav");
+    PBL_Crane->sfxCraneGrab = RSDK.GetSfx("Pinball/CraneGrab.wav");
+    PBL_Crane->sfxCraneRise = RSDK.GetSfx("Pinball/CraneRise.wav");
+    PBL_Crane->sfxPrizeGood = RSDK.GetSfx("Pinball/PrizeGood.wav");
+    PBL_Crane->sfxPrizeBad  = RSDK.GetSfx("Pinball/PrizeBad.wav");
 }
 
 void PBL_Crane_HandlePrizes(void)

@@ -67,7 +67,7 @@ void CollapsingSand_StageLoad(void)
     CollapsingSand->aniFrames = RSDK.LoadSpriteAnimation("MSZ/SandCollapse.bin", SCOPE_STAGE);
     RSDK.SetSpriteAnimation(CollapsingSand->aniFrames, 0, &CollapsingSand->animator, true, 0);
 
-    CollapsingSand->sfxSandFall = RSDK.GetSFX("MSZ/SandFall.wav");
+    CollapsingSand->sfxSandFall = RSDK.GetSfx("MSZ/SandFall.wav");
 }
 
 void CollapsingSand_State_CheckPlayerCollisions(void)

@@ -78,11 +78,11 @@ void CrashTest_StageLoad(void)
     CrashTest->active = ACTIVE_ALWAYS;
 
     CrashTest->aniFrames       = RSDK.LoadSpriteAnimation("TMZ1/CrashTest.bin", SCOPE_STAGE);
-    CrashTest->sfxExplosion    = RSDK.GetSFX("Stage/Explosion2.wav");
-    CrashTest->sfxCrash        = RSDK.GetSFX("TMZ1/Crash.wav");
-    CrashTest->sfxTrafficLight = RSDK.GetSFX("TMZ1/TrafficLight.wav");
-    CrashTest->sfxCarRev       = RSDK.GetSFX("TMZ1/CarRev.wav");
-    CrashTest->sfxSpeedBooster = RSDK.GetSFX("Stage/SpeedBooster.wav");
+    CrashTest->sfxExplosion    = RSDK.GetSfx("Stage/Explosion2.wav");
+    CrashTest->sfxCrash        = RSDK.GetSfx("TMZ1/Crash.wav");
+    CrashTest->sfxTrafficLight = RSDK.GetSfx("TMZ1/TrafficLight.wav");
+    CrashTest->sfxCarRev       = RSDK.GetSfx("TMZ1/CarRev.wav");
+    CrashTest->sfxSpeedBooster = RSDK.GetSfx("Stage/SpeedBooster.wav");
 }
 
 void CrashTest_SetupHitboxes(void)

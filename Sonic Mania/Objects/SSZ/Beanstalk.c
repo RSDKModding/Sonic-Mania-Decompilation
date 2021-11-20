@@ -67,9 +67,9 @@ void Beanstalk_Create(void *data)
 void Beanstalk_StageLoad(void)
 {
     Beanstalk->aniFrames             = RSDK.LoadSpriteAnimation("SSZ1/Beanstalk.bin", SCOPE_STAGE);
-    Beanstalk->sfxImpact             = RSDK.GetSFX("Stage/Impact6.wav");
-    Beanstalk->sfxBeanNode           = RSDK.GetSFX("SSZ1/BeanNode.wav");
-    Beanstalk->sfxBeanChomp          = RSDK.GetSFX("SSZ1/BeanChomp.wav");
+    Beanstalk->sfxImpact             = RSDK.GetSfx("Stage/Impact6.wav");
+    Beanstalk->sfxBeanNode           = RSDK.GetSfx("SSZ1/BeanNode.wav");
+    Beanstalk->sfxBeanChomp          = RSDK.GetSfx("SSZ1/BeanChomp.wav");
     Beanstalk->hitboxSeed.left       = -1;
     Beanstalk->hitboxSeed.top        = -64;
     Beanstalk->hitboxSeed.right      = 1;

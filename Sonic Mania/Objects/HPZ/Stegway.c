@@ -56,8 +56,8 @@ void Stegway_StageLoad(void)
     Stegway->hitbox2.top         = -32;
     Stegway->hitbox2.right       = 0;
     Stegway->hitbox2.bottom      = 14;
-    Stegway->sfxRev              = RSDK.GetSFX("Stage/Rev.wav");
-    Stegway->sfxRelease          = RSDK.GetSFX("Global/Release.wav");
+    Stegway->sfxRev              = RSDK.GetSfx("Stage/Rev.wav");
+    Stegway->sfxRelease          = RSDK.GetSfx("Global/Release.wav");
     DEBUGMODE_ADD_OBJ(Stegway);
 }
 

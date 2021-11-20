@@ -69,7 +69,7 @@ void PuyoAttack_Create(void *data)
 void PuyoAttack_StageLoad(void)
 {
     PuyoAttack->aniFrames = RSDK.LoadSpriteAnimation("Puyo/Combos.bin", SCOPE_STAGE);
-    PuyoAttack->sfxAttack = RSDK.GetSFX("Puyo/Attack.wav");
+    PuyoAttack->sfxAttack = RSDK.GetSfx("Puyo/Attack.wav");
 }
 
 #if RETRO_INCLUDE_EDITOR

@@ -123,12 +123,12 @@ void EggPistonsMKII_StageLoad(void)
     EggPistonsMKII->pistonCount        = 0;
     EggPistonsMKII->invincibilityTimer = 0;
     EggPistonsMKII->field_2D           = 0;
-    EggPistonsMKII->sfxHit             = RSDK.GetSFX("Stage/BossHit.wav");
-    EggPistonsMKII->sfxWall            = RSDK.GetSFX("Stage/Wall.wav");
-    EggPistonsMKII->sfxElectrify       = RSDK.GetSFX("Stage/Electrify.wav");
-    EggPistonsMKII->sfxExplosion       = RSDK.GetSFX("Stage/Explosion2.wav");
-    EggPistonsMKII->sfxAlarm           = RSDK.GetSFX("MMZ/Alarm.wav");
-    RSDK.StopSFX(EggPistonsMKII->sfxAlarm);
+    EggPistonsMKII->sfxHit             = RSDK.GetSfx("Stage/BossHit.wav");
+    EggPistonsMKII->sfxWall            = RSDK.GetSfx("Stage/Wall.wav");
+    EggPistonsMKII->sfxElectrify       = RSDK.GetSfx("Stage/Electrify.wav");
+    EggPistonsMKII->sfxExplosion       = RSDK.GetSfx("Stage/Explosion2.wav");
+    EggPistonsMKII->sfxAlarm           = RSDK.GetSfx("MMZ/Alarm.wav");
+    RSDK.StopSfx(EggPistonsMKII->sfxAlarm);
 }
 
 void EggPistonsMKII_CheckPlayerCollisions_Piston(void)
@@ -480,7 +480,7 @@ void EggPistonsMKII_State_Destroyed(void)
     if (++id >= 5) {
         EggPistonsMKII->field_2D = 0;
         Music_TransitionTrack(TRACK_STAGE, 0.0125);
-        RSDK.StopSFX(EggPistonsMKII->sfxAlarm);
+        RSDK.StopSfx(EggPistonsMKII->sfxAlarm);
         self->state = EggPistonsMKII_State_Finish;
     }
 }

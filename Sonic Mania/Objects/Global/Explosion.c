@@ -37,7 +37,7 @@ void Explosion_Create(void *data)
 void Explosion_StageLoad(void)
 {
     Explosion->aniFrames  = RSDK.LoadSpriteAnimation("Global/Explosions.bin", SCOPE_STAGE);
-    Explosion->sfxDestroy = RSDK.GetSFX("Global/Destroy.wav");
+    Explosion->sfxDestroy = RSDK.GetSfx("Global/Destroy.wav");
 }
 
 #if RETRO_INCLUDE_EDITOR

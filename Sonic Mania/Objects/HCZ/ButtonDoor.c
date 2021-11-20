@@ -62,15 +62,15 @@ void ButtonDoor_StageLoad(void)
 {
     if (RSDK.CheckStageFolder("LRZ1")) {
         ButtonDoor->aniFrames = RSDK.LoadSpriteAnimation("LRZ1/ButtonDoor.bin", SCOPE_STAGE);
-        ButtonDoor->sfxOpen   = RSDK.GetSFX("Stage/Open.wav");
+        ButtonDoor->sfxOpen   = RSDK.GetSfx("Stage/Open.wav");
     }
     else if (RSDK.CheckStageFolder("LRZ2")) {
         ButtonDoor->aniFrames = RSDK.LoadSpriteAnimation("LRZ2/ButtonDoor.bin", SCOPE_STAGE);
-        ButtonDoor->sfxOpen   = RSDK.GetSFX("Stage/Open.wav");
+        ButtonDoor->sfxOpen   = RSDK.GetSfx("Stage/Open.wav");
     }
     else if (RSDK.CheckStageFolder("HCZ")) {
         ButtonDoor->aniFrames = RSDK.LoadSpriteAnimation("HCZ/ButtonDoor.bin", SCOPE_STAGE);
-        ButtonDoor->sfxOpen   = RSDK.GetSFX("Stage/Clack.wav");
+        ButtonDoor->sfxOpen   = RSDK.GetSfx("Stage/Clack.wav");
     }
 }
 

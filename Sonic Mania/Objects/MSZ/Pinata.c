@@ -41,7 +41,7 @@ void Pinata_StageLoad(void)
     Pinata->hitbox.top    = -16;
     Pinata->hitbox.right  = 12;
     Pinata->hitbox.bottom = 16;
-    Pinata->sfxPinata     = RSDK.GetSFX("MSZ/Pinata.wav");
+    Pinata->sfxPinata     = RSDK.GetSfx("MSZ/Pinata.wav");
     DEBUGMODE_ADD_OBJ(Pinata);
 }
 

@@ -72,7 +72,7 @@ void Bomb_StageLoad(void)
     Bomb->hitboxShrapnel.top    = -6;
     Bomb->hitboxShrapnel.right  = 6;
     Bomb->hitboxShrapnel.bottom = 6;
-    Bomb->sfxExplosion          = RSDK.GetSFX("Stage/Explosion.wav");
+    Bomb->sfxExplosion          = RSDK.GetSfx("Stage/Explosion.wav");
     DEBUGMODE_ADD_OBJ(Bomb);
 }
 

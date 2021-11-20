@@ -42,8 +42,8 @@ void SpikeCrusher_Create(void *data)
 
 void SpikeCrusher_StageLoad(void)
 {
-    SpikeCrusher->sfxHuff   = RSDK.GetSFX("Stage/Huff.wav");
-    SpikeCrusher->sfxImpact = RSDK.GetSFX("Stage/Impact4.wav");
+    SpikeCrusher->sfxHuff   = RSDK.GetSfx("Stage/Huff.wav");
+    SpikeCrusher->sfxImpact = RSDK.GetSfx("Stage/Impact4.wav");
 }
 
 void SpikeCrusher_CheckOnScreen(void)

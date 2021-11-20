@@ -121,7 +121,7 @@ void Whirlpool_StaticUpdate(void)
     }
     else if (stopFlag) {
         if (Whirlpool->playingSFX) {
-            RSDK.StopSFX(Whirlpool->sfxWhirlpool);
+            RSDK.StopSfx(Whirlpool->sfxWhirlpool);
             Whirlpool->playingSFX = false;
         }
     }
@@ -168,7 +168,7 @@ void Whirlpool_StageLoad(void)
 {
     Whirlpool->active       = ACTIVE_ALWAYS;
     Whirlpool->aniFrames    = RSDK.LoadSpriteAnimation("Global/Water.bin", SCOPE_STAGE);
-    Whirlpool->sfxWhirlpool = RSDK.GetSFX("HCZ/Whirlpool.wav");
+    Whirlpool->sfxWhirlpool = RSDK.GetSfx("HCZ/Whirlpool.wav");
 }
 
 void WhirlPool_DrawSprites(void)

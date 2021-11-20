@@ -97,14 +97,14 @@ void DBTower_StageLoad(void)
     DBTower->hitbox.bottom   = 27;
     DBTower->defeated        = false;
     DBTower->active          = ACTIVE_ALWAYS;
-    DBTower->sfxRocketJet    = RSDK.GetSFX("Stage/RocketJet.wav");
-    DBTower->sfxHit          = RSDK.GetSFX("Stage/BossHit.wav");
-    DBTower->sfxExplosion2   = RSDK.GetSFX("Stage/Explosion2.wav");
-    DBTower->sfxExplosion3   = RSDK.GetSFX("Stage/Explosion3.wav");
-    DBTower->sfxBumper3      = RSDK.GetSFX("Stage/Bumper3.wav");
-    DBTower->sfxAssemble     = RSDK.GetSFX("Stage/Assemble.wav");
-    DBTower->sfxRocketJet2   = RSDK.GetSFX("Stage/RocketJet.wav");
-    DBTower->sfxRockemSockem = RSDK.GetSFX("Stage/RockemSockem.wav");
+    DBTower->sfxRocketJet    = RSDK.GetSfx("Stage/RocketJet.wav");
+    DBTower->sfxHit          = RSDK.GetSfx("Stage/BossHit.wav");
+    DBTower->sfxExplosion2   = RSDK.GetSfx("Stage/Explosion2.wav");
+    DBTower->sfxExplosion3   = RSDK.GetSfx("Stage/Explosion3.wav");
+    DBTower->sfxBumper3      = RSDK.GetSfx("Stage/Bumper3.wav");
+    DBTower->sfxAssemble     = RSDK.GetSfx("Stage/Assemble.wav");
+    DBTower->sfxRocketJet2   = RSDK.GetSfx("Stage/RocketJet.wav");
+    DBTower->sfxRockemSockem = RSDK.GetSfx("Stage/RockemSockem.wav");
 }
 
 void DBTower_CheckPlayerCollisions(void)

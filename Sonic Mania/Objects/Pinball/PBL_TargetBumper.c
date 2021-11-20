@@ -74,8 +74,8 @@ void PBL_TargetBumper_StageLoad(void)
     PBL_TargetBumper->hitbox.top      = -6;
     PBL_TargetBumper->hitbox.right    = 12;
     PBL_TargetBumper->hitbox.bottom   = 6;
-    PBL_TargetBumper->sfxTargetBumper = RSDK.GetSFX("Pinball/TargetBumper.wav");
-    PBL_TargetBumper->sfxFlipper      = RSDK.GetSFX("Pinball/Flipper.wav");
+    PBL_TargetBumper->sfxTargetBumper = RSDK.GetSfx("Pinball/TargetBumper.wav");
+    PBL_TargetBumper->sfxFlipper      = RSDK.GetSfx("Pinball/Flipper.wav");
 }
 
 void PBL_TargetBumper_HandlePlayerInteractions(void)

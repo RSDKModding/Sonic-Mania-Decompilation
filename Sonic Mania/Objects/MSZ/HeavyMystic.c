@@ -152,23 +152,23 @@ void HeavyMystic_StageLoad(void)
     HeavyMystic->rouguesFrames  = RSDK.LoadSpriteAnimation("MSZ/Rogues.bin", SCOPE_STAGE);
     HeavyMystic->active         = ACTIVE_ALWAYS;
     HeavyMystic->curtainLinePos = 0;
-    HeavyMystic->sfxHit         = RSDK.GetSFX("Stage/BossHit.wav");
-    HeavyMystic->sfxExplosion   = RSDK.GetSFX("Stage/Explosion2.wav");
-    HeavyMystic->sfxMagicBox    = RSDK.GetSFX("MSZ/MagicBox.wav");
-    HeavyMystic->sfxClack       = RSDK.GetSFX("Stage/Clack.wav");
-    HeavyMystic->sfxImpact      = RSDK.GetSFX("Stage/Impact3.wav");
-    HeavyMystic->sfxPowerDown   = RSDK.GetSFX("Stage/PowerDown.wav");
-    HeavyMystic->sfxPon         = RSDK.GetSFX("Stage/Pon.wav");
-    HeavyMystic->sfxDrop        = RSDK.GetSFX("Stage/Drop.wav");
-    HeavyMystic->sfxImpact2     = RSDK.GetSFX("Stage/Impact3.wav");
-    HeavyMystic->sfxAssemble    = RSDK.GetSFX("Stage/Assemble.wav");
-    HeavyMystic->sfxPoof        = RSDK.GetSFX("MSZ/MysticPoof.wav");
-    HeavyMystic->sfxTwinkle     = RSDK.GetSFX("MSZ/MysticTwinkle.wav");
-    HeavyMystic->sfxHat         = RSDK.GetSFX("MSZ/MysticHat.wav");
-    HeavyMystic->sfxHatNode     = RSDK.GetSFX("MSZ/MysticHatNode.wav");
-    HeavyMystic->sfxBleeps      = RSDK.GetSFX("MSZ/MysticBleeps.wav");
-    HeavyMystic->sfxAppear1     = RSDK.GetSFX("MSZ/MysticAppearAct1.wav");
-    HeavyMystic->sfxTransform   = RSDK.GetSFX("MSZ/MysticTransform.wav");
+    HeavyMystic->sfxHit         = RSDK.GetSfx("Stage/BossHit.wav");
+    HeavyMystic->sfxExplosion   = RSDK.GetSfx("Stage/Explosion2.wav");
+    HeavyMystic->sfxMagicBox    = RSDK.GetSfx("MSZ/MagicBox.wav");
+    HeavyMystic->sfxClack       = RSDK.GetSfx("Stage/Clack.wav");
+    HeavyMystic->sfxImpact      = RSDK.GetSfx("Stage/Impact3.wav");
+    HeavyMystic->sfxPowerDown   = RSDK.GetSfx("Stage/PowerDown.wav");
+    HeavyMystic->sfxPon         = RSDK.GetSfx("Stage/Pon.wav");
+    HeavyMystic->sfxDrop        = RSDK.GetSfx("Stage/Drop.wav");
+    HeavyMystic->sfxImpact2     = RSDK.GetSfx("Stage/Impact3.wav");
+    HeavyMystic->sfxAssemble    = RSDK.GetSfx("Stage/Assemble.wav");
+    HeavyMystic->sfxPoof        = RSDK.GetSfx("MSZ/MysticPoof.wav");
+    HeavyMystic->sfxTwinkle     = RSDK.GetSfx("MSZ/MysticTwinkle.wav");
+    HeavyMystic->sfxHat         = RSDK.GetSfx("MSZ/MysticHat.wav");
+    HeavyMystic->sfxHatNode     = RSDK.GetSfx("MSZ/MysticHatNode.wav");
+    HeavyMystic->sfxBleeps      = RSDK.GetSfx("MSZ/MysticBleeps.wav");
+    HeavyMystic->sfxAppear1     = RSDK.GetSfx("MSZ/MysticAppearAct1.wav");
+    HeavyMystic->sfxTransform   = RSDK.GetSfx("MSZ/MysticTransform.wav");
 }
 
 void HeavyMystic_Unknown1(int32 x, int32 y)
@@ -1413,7 +1413,7 @@ void HeavyMystic_State2_Unknown5(void)
     self->scale.x = RSDK.Cos256(self->angle + 64) + 0x200;
     self->scale.y = RSDK.Sin256(self->angle) + 0x200;
     if (self->angle == 768) {
-        RSDK.StopSFX(HeavyMystic->sfxMagicBox);
+        RSDK.StopSfx(HeavyMystic->sfxMagicBox);
         RSDK.PlaySfx(HeavyMystic->sfxPowerDown, false, 255);
         self->angle     = 0;
         self->timer     = 0;

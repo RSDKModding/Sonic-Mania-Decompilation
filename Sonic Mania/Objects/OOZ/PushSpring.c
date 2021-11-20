@@ -77,8 +77,8 @@ void PushSpring_StageLoad(void)
 {
     if (RSDK.CheckStageFolder("OOZ1") || RSDK.CheckStageFolder("OOZ2"))
         PushSpring->aniFrames = RSDK.LoadSpriteAnimation("OOZ/PushSpring.bin", SCOPE_STAGE);
-    PushSpring->sfxPush   = RSDK.GetSFX("Stage/Push.wav");
-    PushSpring->sfxSpring = RSDK.GetSFX("Global/Spring.wav");
+    PushSpring->sfxPush   = RSDK.GetSfx("Stage/Push.wav");
+    PushSpring->sfxSpring = RSDK.GetSfx("Global/Spring.wav");
 }
 
 void PushSpring_HandlePlayerCollisions_Top(void)

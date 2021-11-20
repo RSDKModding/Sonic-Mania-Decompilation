@@ -163,11 +163,11 @@ void Shiversaw_StageLoad(void)
 
     Shiversaw->health             = 6;
     Shiversaw->invincibilityTimer = 0;
-    Shiversaw->sfxHit             = RSDK.GetSFX("Stage/BossHit.wav");
-    Shiversaw->sfxExplosion2      = RSDK.GetSFX("Stage/Explosion2.wav");
-    Shiversaw->sfxExplosion3      = RSDK.GetSFX("Stage/Explosion3.wav");
-    Shiversaw->sfxTargeting       = RSDK.GetSFX("Stage/Targeting1.wav");
-    Shiversaw->sfxRocketJet       = RSDK.GetSFX("Stage/RocketJet.wav");
+    Shiversaw->sfxHit             = RSDK.GetSfx("Stage/BossHit.wav");
+    Shiversaw->sfxExplosion2      = RSDK.GetSfx("Stage/Explosion2.wav");
+    Shiversaw->sfxExplosion3      = RSDK.GetSfx("Stage/Explosion3.wav");
+    Shiversaw->sfxTargeting       = RSDK.GetSfx("Stage/Targeting1.wav");
+    Shiversaw->sfxRocketJet       = RSDK.GetSfx("Stage/RocketJet.wav");
 }
 
 bool32 Shiversaw_CheckSawHit(EntityPlayer *player, int32 sawID)
@@ -188,7 +188,7 @@ bool32 Shiversaw_CheckSawHit(EntityPlayer *player, int32 sawID)
         player->velocity.y = -0x28000;
         player->blinkTimer = 60;
         player->state      = Player_State_Hit;
-        RSDK.StopSFX(Player->sfxMightyDrill);
+        RSDK.StopSfx(Player->sfxMightyDrill);
         player->onGround         = false;
         player->jumpAbility      = 0;
         player->jumpAbilityTimer = 0;
@@ -875,7 +875,7 @@ void Shiversaw_CheckCrateCollisions(void)
         foreach_all(Crate, crate)
         {
             if (RSDK.CheckObjectCollisionTouchBox(self, &crate->hitbox, crate, &crate->hitbox)) {
-                RSDK.StopSFX(Shiversaw->sfxTargeting);
+                RSDK.StopSfx(Shiversaw->sfxTargeting);
                 if (!crate->animator.frameID) {
                     Crate_Break(crate);
                     if (self->stateSaw[sawID] == Shiversaw_StateSaw_Unknown4)
@@ -1002,7 +1002,7 @@ void Shiversaw_StateSaw_Unknown3(void)
 
     ++self->sawTimers[sawID];
     if (self->sawTimers[sawID] >= 45) {
-        RSDK.StopSFX(Shiversaw->sfxTargeting);
+        RSDK.StopSfx(Shiversaw->sfxTargeting);
         RSDK.PlaySfx(Shiversaw->sfxRocketJet, false, 255);
         self->stateSaw[sawID] = Shiversaw_StateSaw_Unknown4;
     }

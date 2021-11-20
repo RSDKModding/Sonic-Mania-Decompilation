@@ -13,11 +13,11 @@ typedef struct {
     int32 sfxLoopPoint[Soundboard_SFXLimit];
     bool32 (*sfxCheckCallback[Soundboard_SFXLimit])(void);
     void (*sfxUpdateCallback[Soundboard_SFXLimit])(int32);
-    bool32 sfxUnknown4[Soundboard_SFXLimit];
+    bool32 sfxIsPlaying[Soundboard_SFXLimit];
     int32 sfxChannel[Soundboard_SFXLimit];
-    int32 sfxUnknown6[Soundboard_SFXLimit];
-    int32 sfxUnknown7[Soundboard_SFXLimit];
-    int32 sfxUnknown8[Soundboard_SFXLimit];
+    int32 sfxPlayingTimer[Soundboard_SFXLimit];
+    int32 sfxFadeOutTimer[Soundboard_SFXLimit];
+    int32 sfxFadeOutDuration[Soundboard_SFXLimit];
 } ObjectSoundboard;
 
 // Entity Class

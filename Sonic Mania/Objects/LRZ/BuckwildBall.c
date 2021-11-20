@@ -59,8 +59,8 @@ void BuckwildBall_StageLoad(void)
 {
     BuckwildBall->aniFrames      = RSDK.LoadSpriteAnimation("LRZ1/BuckwildBall.bin", SCOPE_STAGE);
     BuckwildBall->particleFrames = RSDK.LoadSpriteAnimation("LRZ1/Particles.bin", SCOPE_STAGE);
-    BuckwildBall->sfxImpact      = RSDK.GetSFX("Stage/Impact2.wav");
-    BuckwildBall->sfxSharp       = RSDK.GetSFX("Stage/Sharp.wav");
+    BuckwildBall->sfxImpact      = RSDK.GetSfx("Stage/Impact2.wav");
+    BuckwildBall->sfxSharp       = RSDK.GetSfx("Stage/Sharp.wav");
     BuckwildBall->hitbox.left    = -28;
     BuckwildBall->hitbox.top     = -28;
     BuckwildBall->hitbox.right   = 28;

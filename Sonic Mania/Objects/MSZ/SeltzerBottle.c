@@ -102,7 +102,7 @@ void SeltzerBottle_StageLoad(void)
     SeltzerBottle->layerID        = RSDK.GetSceneLayerID("Seltzer Path");
     if (SeltzerBottle->layerID)
         SeltzerBottle->layerBitFlags = 1 << SeltzerBottle->layerID;
-    SeltzerBottle->sfxSpray = RSDK.GetSFX("MSZ/Spray.wav");
+    SeltzerBottle->sfxSpray = RSDK.GetSfx("MSZ/Spray.wav");
 }
 
 void SeltzerBottle_Unknown1(void)

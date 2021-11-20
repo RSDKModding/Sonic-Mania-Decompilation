@@ -113,8 +113,8 @@ void Rexon_StageLoad(void)
     Rexon->hitbox4.right  = 4;
     Rexon->hitbox4.bottom = 4;
 
-    Rexon->sfxShot      = RSDK.GetSFX("Stage/Shot.wav");
-    Rexon->sfxExplosion = RSDK.GetSFX("Stage/Explosion2.wav");
+    Rexon->sfxShot      = RSDK.GetSfx("Stage/Shot.wav");
+    Rexon->sfxExplosion = RSDK.GetSfx("Stage/Explosion2.wav");
 
     DEBUGMODE_ADD_OBJ(Rexon);
 }

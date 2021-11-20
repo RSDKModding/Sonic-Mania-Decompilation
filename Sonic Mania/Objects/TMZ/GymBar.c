@@ -74,7 +74,7 @@ void GymBar_StageLoad(void)
 {
     if (RSDK.CheckStageFolder("TMZ1") || RSDK.CheckStageFolder("TMZ2"))
         GymBar->aniFrames = RSDK.LoadSpriteAnimation("TMZ1/GymBar.bin", SCOPE_STAGE);
-    GymBar->sfxBumper = RSDK.GetSFX("Stage/Bumper3.wav");
+    GymBar->sfxBumper = RSDK.GetSfx("Stage/Bumper3.wav");
 
     DEBUGMODE_ADD_OBJ(GymBar);
 }

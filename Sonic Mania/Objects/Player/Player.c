@@ -393,12 +393,12 @@ void Player_StaticUpdate(void)
     }
 
     if (!flying && Player->playingFlySFX) {
-        RSDK.StopSFX(Player->sfxFlying);
+        RSDK.StopSfx(Player->sfxFlying);
         Player->playingFlySFX = false;
     }
 
     if (!tired && Player->playingTiredSFX) {
-        RSDK.StopSFX(Player->sfxTired);
+        RSDK.StopSfx(Player->sfxTired);
         Player->playingTiredSFX = false;
     }
 
@@ -688,31 +688,31 @@ void Player_StageLoad(void)
     Player->jumpHoldState  = false;
 
     // Sfx Loading
-    Player->sfxJump        = RSDK.GetSFX("Global/Jump.wav");
-    Player->sfxLoseRings   = RSDK.GetSFX("Global/LoseRings.wav");
-    Player->sfxHurt        = RSDK.GetSFX("Global/Hurt.wav");
-    Player->sfxRoll        = RSDK.GetSFX("Global/Roll.wav");
-    Player->sfxCharge      = RSDK.GetSFX("Global/Charge.wav");
-    Player->sfxRelease     = RSDK.GetSFX("Global/Release.wav");
-    Player->sfxPeelCharge  = RSDK.GetSFX("Global/PeelCharge.wav");
-    Player->sfxPeelRelease = RSDK.GetSFX("Global/PeelRelease.wav");
-    Player->sfxDropdash    = RSDK.GetSFX("Global/DropDash.wav");
-    Player->sfxSkidding    = RSDK.GetSFX("Global/Skidding.wav");
-    Player->sfxGrab        = RSDK.GetSFX("Global/Grab.wav");
-    Player->sfxFlying      = RSDK.GetSFX("Global/Flying.wav");
-    Player->sfxTired       = RSDK.GetSFX("Global/Tired.wav");
-    Player->sfxLand        = RSDK.GetSFX("Global/Land.wav");
-    Player->sfxSlide       = RSDK.GetSFX("Global/Slide.wav");
-    Player->sfxOuttahere   = RSDK.GetSFX("Global/OuttaHere.wav");
-    Player->sfxTransform2  = RSDK.GetSFX("Stage/Transform2.wav");
+    Player->sfxJump        = RSDK.GetSfx("Global/Jump.wav");
+    Player->sfxLoseRings   = RSDK.GetSfx("Global/LoseRings.wav");
+    Player->sfxHurt        = RSDK.GetSfx("Global/Hurt.wav");
+    Player->sfxRoll        = RSDK.GetSfx("Global/Roll.wav");
+    Player->sfxCharge      = RSDK.GetSfx("Global/Charge.wav");
+    Player->sfxRelease     = RSDK.GetSfx("Global/Release.wav");
+    Player->sfxPeelCharge  = RSDK.GetSfx("Global/PeelCharge.wav");
+    Player->sfxPeelRelease = RSDK.GetSfx("Global/PeelRelease.wav");
+    Player->sfxDropdash    = RSDK.GetSfx("Global/DropDash.wav");
+    Player->sfxSkidding    = RSDK.GetSfx("Global/Skidding.wav");
+    Player->sfxGrab        = RSDK.GetSfx("Global/Grab.wav");
+    Player->sfxFlying      = RSDK.GetSfx("Global/Flying.wav");
+    Player->sfxTired       = RSDK.GetSfx("Global/Tired.wav");
+    Player->sfxLand        = RSDK.GetSfx("Global/Land.wav");
+    Player->sfxSlide       = RSDK.GetSfx("Global/Slide.wav");
+    Player->sfxOuttahere   = RSDK.GetSfx("Global/OuttaHere.wav");
+    Player->sfxTransform2  = RSDK.GetSfx("Stage/Transform2.wav");
 #if RETRO_USE_PLUS
-    Player->sfxPimPom        = RSDK.GetSFX("Stage/PimPom.wav");
-    Player->sfxSwap          = RSDK.GetSFX("Global/Swap.wav");
-    Player->sfxSwapFail      = RSDK.GetSFX("Global/SwapFail.wav");
-    Player->sfxMightyDeflect = RSDK.GetSFX("Global/MightyDeflect.wav");
-    Player->sfxMightyDrill   = RSDK.GetSFX("Global/MightyDrill.wav");
-    Player->sfxMightyLand    = RSDK.GetSFX("Global/MightyLand.wav");
-    Player->sfxMightyUnspin  = RSDK.GetSFX("Global/MightyUnspin.wav");
+    Player->sfxPimPom        = RSDK.GetSfx("Stage/PimPom.wav");
+    Player->sfxSwap          = RSDK.GetSfx("Global/Swap.wav");
+    Player->sfxSwapFail      = RSDK.GetSfx("Global/SwapFail.wav");
+    Player->sfxMightyDeflect = RSDK.GetSfx("Global/MightyDeflect.wav");
+    Player->sfxMightyDrill   = RSDK.GetSfx("Global/MightyDrill.wav");
+    Player->sfxMightyLand    = RSDK.GetSfx("Global/MightyLand.wav");
+    Player->sfxMightyUnspin  = RSDK.GetSfx("Global/MightyUnspin.wav");
 #endif
 
 #if RETRO_USE_PLUS
@@ -1129,7 +1129,7 @@ bool32 Player_CheckGoSuper(EntityPlayer *player, uint8 emeraldflags)
         return false;
 
 #if RETRO_USE_PLUS
-    RSDK.StopSFX(Player->sfxSwapFail);
+    RSDK.StopSfx(Player->sfxSwapFail);
     if (globals->medalMods & getMod(SECRET_SUPERDASH))
         player->movesetState = ERZStart_Player_StartSuperFly;
 #endif
@@ -3919,7 +3919,7 @@ void Player_State_Spindash(void)
         else
             self->groundVel = vel;
 
-        RSDK.StopSFX(Player->sfxCharge);
+        RSDK.StopSfx(Player->sfxCharge);
         RSDK.PlaySfx(Player->sfxRelease, false, 0xFF);
         RSDK.SetSpriteAnimation(self->aniFrames, ANI_JUMP, &self->animator, false, 0);
         if (!self->collisionMode) {
@@ -3994,7 +3994,7 @@ void Player_State_Peelout(void)
     }
 
     if (!self->up) {
-        RSDK.StopSFX(Player->sfxPeelCharge);
+        RSDK.StopSfx(Player->sfxPeelCharge);
         if (self->abilityTimer >= 0x60000) {
             if (self->camera && !Zone->autoScrollSpeed) {
                 self->scrollDelay   = 15;
@@ -4237,7 +4237,7 @@ void Player_State_DropDash(void)
         dust->position.y += RSDK.GetHitbox(&self->animator, 0)->bottom << 16;
         dust->direction = self->direction;
         dust->drawOrder = self->drawOrder;
-        RSDK.StopSFX(Player->sfxDropdash);
+        RSDK.StopSfx(Player->sfxDropdash);
         if (self->superState == SUPERSTATE_SUPER)
             RSDK.PlaySfx(Player->sfxPeelRelease, false, 255);
         else
@@ -4982,7 +4982,7 @@ void Player_State_MightyHammerDrop(void)
         self->animator.animationSpeed = (abs(self->groundVel) >> 12) + 48;
         if (self->animator.animationSpeed > 0xF0)
             self->animator.animationSpeed = 0xF0;
-        RSDK.StopSFX(Player->sfxMightyDrill);
+        RSDK.StopSfx(Player->sfxMightyDrill);
         RSDK.PlaySfx(Player->sfxMightyLand, false, 0xFF);
         Camera_ShakeScreen(RSDK.GetEntityID(self), 0, 4);
 

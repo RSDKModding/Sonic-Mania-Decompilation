@@ -54,7 +54,7 @@ void Ball_StageLoad(void)
     Ball->hitbox2.top    = -128;
     Ball->hitbox2.right  = 128;
     Ball->hitbox2.bottom = 128;
-    Ball->sfxSplash      = RSDK.GetSFX("Stage/Splash2.wav");
+    Ball->sfxSplash      = RSDK.GetSfx("Stage/Splash2.wav");
     DEBUGMODE_ADD_OBJ(Ball);
 }
 

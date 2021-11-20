@@ -37,7 +37,7 @@ void LogoSetup_Create(void *data)
 
 void LogoSetup_StageLoad(void)
 {
-    LogoSetup->sfxSega = RSDK.GetSFX("Stage/Sega.wav");
+    LogoSetup->sfxSega = RSDK.GetSfx("Stage/Sega.wav");
     RSDK.ResetEntitySlot(0, LogoSetup->objectID, NULL);
     UIPicture->aniFrames = RSDK.LoadSpriteAnimation("Logos/Logos.bin", SCOPE_STAGE);
 

@@ -90,7 +90,7 @@ void PhantomGunner_StageLoad(void)
     PhantomGunner->hitbox3.right  = 8;
     PhantomGunner->hitbox3.bottom = 8;
 
-    PhantomGunner->sfxCannonFire = RSDK.GetSFX("Stage/CannonFire.wav");
+    PhantomGunner->sfxCannonFire = RSDK.GetSfx("Stage/CannonFire.wav");
 }
 
 void PhantomGunner_Explode(void)

@@ -64,8 +64,8 @@ void KingClaw_StageLoad(void)
 {
     KingClaw->aniFrames     = RSDK.LoadSpriteAnimation("LRZ3/Claw.bin", SCOPE_STAGE);
     KingClaw->active        = ACTIVE_NORMAL;
-    KingClaw->sfxClack      = RSDK.GetSFX("Stage/Clack.wav");
-    KingClaw->sfxWalkerLegs = RSDK.GetSFX("LRZ/WalkerLegs.wav");
+    KingClaw->sfxClack      = RSDK.GetSfx("Stage/Clack.wav");
+    KingClaw->sfxWalkerLegs = RSDK.GetSfx("LRZ/WalkerLegs.wav");
 }
 
 void KingClaw_HandleJointPositions(void)

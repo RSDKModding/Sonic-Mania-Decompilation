@@ -390,7 +390,7 @@ void Platform_StageLoad(void)
     }
     else if (RSDK.CheckStageFolder("FBZ")) {
         Platform->aniFrames = RSDK.LoadSpriteAnimation("FBZ/Platform.bin", SCOPE_STAGE);
-        Platform->sfxClack   = RSDK.GetSFX("Stage/Clack2.wav");
+        Platform->sfxClack   = RSDK.GetSfx("Stage/Clack2.wav");
         Platform->useClack    = true;
     }
     else if (RSDK.CheckStageFolder("PSZ1")) {
@@ -407,7 +407,7 @@ void Platform_StageLoad(void)
     }
     else if (RSDK.CheckStageFolder("HCZ")) {
         Platform->aniFrames = RSDK.LoadSpriteAnimation("HCZ/Platform.bin", SCOPE_STAGE);
-        Platform->sfxClack   = RSDK.GetSFX("Stage/Clack2.wav");
+        Platform->sfxClack   = RSDK.GetSfx("Stage/Clack2.wav");
         Platform->useClack    = true;
     }
     else if (RSDK.CheckStageFolder("MSZ")) {
@@ -435,11 +435,11 @@ void Platform_StageLoad(void)
         Platform->aniFrames = RSDK.LoadSpriteAnimation("Blueprint/Platform.bin", SCOPE_STAGE);
     }
 
-    Platform->sfxClacker = RSDK.GetSFX("Stage/Clacker.wav");
-    Platform->sfxClang   = RSDK.GetSFX("Stage/Clang.wav");
-    Platform->sfxPush    = RSDK.GetSFX("Global/Push.wav");
+    Platform->sfxClacker = RSDK.GetSfx("Stage/Clacker.wav");
+    Platform->sfxClang   = RSDK.GetSfx("Stage/Clang.wav");
+    Platform->sfxPush    = RSDK.GetSfx("Global/Push.wav");
     if (Platform->playingPushSFX) {
-        RSDK.StopSFX(Platform->sfxPush);
+        RSDK.StopSfx(Platform->sfxPush);
         Platform->playingPushSFX = 0;
     }
 }
@@ -670,7 +670,7 @@ void Platform_State_Pushable(void)
     }
     else {
         if (Platform->playingPushSFX) {
-            RSDK.StopSFX(Platform->sfxPush);
+            RSDK.StopSfx(Platform->sfxPush);
             Platform->playingPushSFX = false;
         }
         if (self->timer < 4) {
@@ -731,7 +731,7 @@ void Platform_State_Pushable(void)
         self->velocity.y = 0;
         self->visible    = false;
         if (Platform->playingPushSFX) {
-            RSDK.StopSFX(Platform->sfxPush);
+            RSDK.StopSfx(Platform->sfxPush);
             Platform->playingPushSFX = false;
         }
         self->state = Platform_State_Collapse_CheckReset;

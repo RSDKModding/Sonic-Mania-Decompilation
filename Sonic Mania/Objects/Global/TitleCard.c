@@ -51,22 +51,22 @@ void TitleCard_Create(void *data)
 
         self->decorationPos.y = -0x340000;
         self->decorationPos.x = (ScreenInfo->width - 160) << 16;
-        RSDK.SetSpriteAnimation(TitleCard->aniFrames, 0, &self->decorationData, true, 0);
-        RSDK.SetSpriteAnimation(TitleCard->aniFrames, 1, &self->nameLetterData, true, 0);
-        RSDK.SetSpriteAnimation(TitleCard->aniFrames, 2, &self->zoneLetterData, true, 0);
-        RSDK.SetSpriteAnimation(TitleCard->aniFrames, 3, &self->actNumbersData, true, 0);
+        RSDK.SetSpriteAnimation(TitleCard->aniFrames, 0, &self->decorationAnimator, true, 0);
+        RSDK.SetSpriteAnimation(TitleCard->aniFrames, 1, &self->nameLetterAnimator, true, 0);
+        RSDK.SetSpriteAnimation(TitleCard->aniFrames, 2, &self->zoneLetterAnimator, true, 0);
+        RSDK.SetSpriteAnimation(TitleCard->aniFrames, 3, &self->actNumbersAnimator, true, 0);
         if (self->actID > 3)
             self->actID = 3;
 
-        self->actNumbersData.frameID = self->actID;
-        self->drawPos2.y             = 0xA80000;
-        self->drawPos2.x             = (ScreenInfo->centerX + 106) << 16;
+        self->actNumbersAnimator.frameID = self->actID;
+        self->actNumPos.y             = 0xA80000;
+        self->actNumPos.x             = (ScreenInfo->centerX + 106) << 16;
         self->actNumScale               = -0x400;
         if (self->wordStopPos - self->bottomWordOffset < 0x100000) {
             int32 dif = (self->wordStopPos - self->bottomWordOffset) - 0x100000;
             self->currentWordPos -= dif;
             self->zoneStopPos -= dif;
-            self->drawPos2.x -= dif;
+            self->actNumPos.x -= dif;
             self->wordStopPos = self->wordStopPos - dif;
         }
 
@@ -79,7 +79,7 @@ void TitleCard_Create(void *data)
             SceneInfo->seconds         = globals->restartSeconds;
             SceneInfo->minutes         = globals->restartMinutes;
             SceneInfo->timeEnabled     = true;
-            EntityPlayer *player       = (EntityPlayer *)RSDK.GetEntityByID(SLOT_PLAYER1);
+            EntityPlayer *player       = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
             RSDK.CopyEntity(player, (Entity *)Zone->entityData, false);
             RSDK.SetSpriteAnimation(player->aniFrames, player->animator.animationID, &player->animator, false, player->animator.frameID);
 
@@ -554,8 +554,8 @@ void TitleCard_State_SlideAway(void)
         self->zoneStopPos -= speed;
         self->currentWordPos -= speed;
         self->wordStopPos += speed;
-        self->drawPos2.x += speed;
-        self->drawPos2.y += speed;
+        self->actNumPos.x += speed;
+        self->actNumPos.y += speed;
         self->points1[0].x -= speed;
         self->points1[1].x -= speed;
         self->points1[2].x -= speed;
@@ -653,11 +653,11 @@ void TitleCard_Draw_Default(void)
     RSDK.DrawQuad(self->points2, 4, 0x00, 0x00, 0x00, 0xFF, INK_NONE);
     RSDK.DrawQuad(self->points3, 4, 0xF0, 0xF0, 0xF0, 0xFF, INK_NONE);
 #if RETRO_USE_PLUS
-    self->decorationData.frameID = 2 * (SceneInfo->filter == SCN_FILTER_ENCORE) + 1;
+    self->decorationAnimator.frameID = 2 * (SceneInfo->filter == SCN_FILTER_ENCORE) + 1;
 #else
-    self->decorationData.frameID = 2 * 0 + 1;
+    self->decorationAnimator.frameID = 2 * 0 + 1;
 #endif
-    RSDK.DrawSprite(&self->decorationData, &self->decorationPos, true);
+    RSDK.DrawSprite(&self->decorationAnimator, &self->decorationPos, true);
 }
 
 void TitleCard_Draw_SolidBG(void)
@@ -679,11 +679,11 @@ void TitleCard_Draw_SolidBG(void)
                       INK_NONE);
     if (!globals->atlEnabled && globals->suppressTitlecard == false) {
 #if RETRO_USE_PLUS
-        self->decorationData.frameID = 2 * (SceneInfo->filter == SCN_FILTER_ENCORE) + 1;
+        self->decorationAnimator.frameID = 2 * (SceneInfo->filter == SCN_FILTER_ENCORE) + 1;
 #else
-        self->decorationData.frameID = 2 * 0 + 1;
+        self->decorationAnimator.frameID = 2 * 0 + 1;
 #endif
-        RSDK.DrawSprite(&self->decorationData, &self->decorationPos, true);
+        RSDK.DrawSprite(&self->decorationAnimator, &self->decorationPos, true);
     }
 
     if (self->word2Offset > 0)
@@ -696,22 +696,22 @@ void TitleCard_Draw_SolidBG(void)
     RSDK.SetClipBounds(SceneInfo->currentScreenID, 0, 170, ScreenInfo[SceneInfo->currentScreenID].width, 240);
 
     for (int32 i = 0; i < 4; ++i) {
-        self->zoneLetterData.frameID = i;
+        self->zoneLetterAnimator.frameID = i;
         drawPos.y                    = 0xBA0000 + self->zoneCharPos[i];
-        RSDK.DrawSprite(&self->zoneLetterData, &drawPos, true);
+        RSDK.DrawSprite(&self->zoneLetterAnimator, &drawPos, true);
     }
 
     if (self->word2Offset > 0) {
         RSDK.SetClipBounds(SceneInfo->currentScreenID, 0, 0, ScreenInfo[SceneInfo->currentScreenID].width, 130);
         drawPos.y = 0x720000;
         drawPos.x = self->currentWordPos - 0x140000;
-        RSDK.DrawText(&self->nameLetterData, &drawPos, &self->zoneName, 0, self->word2Offset, ALIGN_RIGHT, 1, 0, self->charPos, true);
+        RSDK.DrawText(&self->nameLetterAnimator, &drawPos, &self->zoneName, 0, self->word2Offset, ALIGN_RIGHT, 1, 0, self->charPos, true);
     }
 
     RSDK.SetClipBounds(SceneInfo->currentScreenID, 0, 0, ScreenInfo[SceneInfo->currentScreenID].width, 170);
     drawPos.y = 0x9A0000;
     drawPos.x = self->wordStopPos - 0x140000;
-    RSDK.DrawText(&self->nameLetterData, &drawPos, &self->zoneName, self->word2Offset, 0, ALIGN_RIGHT, 1, 0, self->charPos, true);
+    RSDK.DrawText(&self->nameLetterAnimator, &drawPos, &self->zoneName, self->word2Offset, 0, ALIGN_RIGHT, 1, 0, self->charPos, true);
 
     RSDK.SetClipBounds(SceneInfo->currentScreenID, 0, 0, ScreenInfo[SceneInfo->currentScreenID].width, ScreenInfo[SceneInfo->currentScreenID].height);
     if (self->actID != 3) {
@@ -724,21 +724,19 @@ void TitleCard_Draw_SolidBG(void)
                 self->scale.x = self->actNumScale;
 
 #if RETRO_USE_PLUS
-            self->decorationData.frameID = (SceneInfo->filter == SCN_FILTER_ENCORE) ? 2 : 0;
+            self->decorationAnimator.frameID = (SceneInfo->filter == SCN_FILTER_ENCORE) ? 2 : 0;
 #else
-            self->decorationData.frameID = 0;
+            self->decorationAnimator.frameID = 0;
 #endif
-            RSDK.DrawSprite(&self->decorationData, &self->drawPos2, true);
+            RSDK.DrawSprite(&self->decorationAnimator, &self->actNumPos, true);
 
             self->scale.x = self->actNumScale - 0x100;
-            if (self->scale.x < 0) {
+            if (self->scale.x < 0) 
                 self->scale.x = 0;
-            }
-            else if (self->scale.x > 0x200) {
+            else if (self->scale.x > 0x200) 
                 self->scale.x = 0x200;
-            }
 
-            RSDK.DrawSprite(&self->actNumbersData, &self->drawPos2, true);
+            RSDK.DrawSprite(&self->actNumbersAnimator, &self->actNumPos, true);
             self->drawFX = FX_NONE;
         }
     }
@@ -768,21 +766,21 @@ void TitleCard_Draw_SlideAway(void)
 
     if (!globals->atlEnabled && !globals->suppressTitlecard) {
 #if RETRO_USE_PLUS
-        self->decorationData.frameID = 2 * (SceneInfo->filter == SCN_FILTER_ENCORE) + 1;
+        self->decorationAnimator.frameID = 2 * (SceneInfo->filter == SCN_FILTER_ENCORE) + 1;
 #else
-        self->decorationData.frameID = 2 * 0 + 1;
+        self->decorationAnimator.frameID = 2 * 0 + 1;
 #endif
-        RSDK.DrawSprite(&self->decorationData, &self->decorationPos, true);
+        RSDK.DrawSprite(&self->decorationAnimator, &self->decorationPos, true);
     }
 
     if (self->actID != 3 && self->actNumScale > 0) {
 #if RETRO_USE_PLUS
-        self->decorationData.frameID = (SceneInfo->filter == SCN_FILTER_ENCORE) ? 2 : 0;
+        self->decorationAnimator.frameID = (SceneInfo->filter == SCN_FILTER_ENCORE) ? 2 : 0;
 #else
-        self->decorationData.frameID = 0;
+        self->decorationAnimator.frameID = 0;
 #endif
-        RSDK.DrawSprite(&self->decorationData, &self->drawPos2, true);
-        RSDK.DrawSprite(&self->actNumbersData, &self->drawPos2, true);
+        RSDK.DrawSprite(&self->decorationAnimator, &self->actNumPos, true);
+        RSDK.DrawSprite(&self->actNumbersAnimator, &self->actNumPos, true);
     }
     if (self->word2Offset > 0)
         RSDK.DrawQuad(self->points1, 4, 0x00, 0x00, 0x00, 0xFF, INK_NONE);
@@ -792,35 +790,35 @@ void TitleCard_Draw_SlideAway(void)
     Vector2 drawPos;
     drawPos.x                    = self->zoneStopPos;
     drawPos.y                    = 0xBA0000;
-    self->zoneLetterData.frameID = 0;
-    RSDK.DrawSprite(&self->zoneLetterData, &drawPos, true);
+    self->zoneLetterAnimator.frameID = 0;
+    RSDK.DrawSprite(&self->zoneLetterAnimator, &drawPos, true);
 
-    self->zoneLetterData.frameID = 1;
-    RSDK.DrawSprite(&self->zoneLetterData, &drawPos, true);
+    self->zoneLetterAnimator.frameID = 1;
+    RSDK.DrawSprite(&self->zoneLetterAnimator, &drawPos, true);
 
-    self->zoneLetterData.frameID = 2;
-    RSDK.DrawSprite(&self->zoneLetterData, &drawPos, true);
+    self->zoneLetterAnimator.frameID = 2;
+    RSDK.DrawSprite(&self->zoneLetterAnimator, &drawPos, true);
 
-    self->zoneLetterData.frameID = 3;
-    RSDK.DrawSprite(&self->zoneLetterData, &drawPos, true);
+    self->zoneLetterAnimator.frameID = 3;
+    RSDK.DrawSprite(&self->zoneLetterAnimator, &drawPos, true);
 
     if (self->word2Offset > 0) {
         drawPos.y = 0x720000;
         drawPos.x = self->currentWordPos - 0x140000;
-        RSDK.DrawText(&self->nameLetterData, &drawPos, &self->zoneName, 0, self->word2Offset, ALIGN_RIGHT, 1, 0, 0, true);
+        RSDK.DrawText(&self->nameLetterAnimator, &drawPos, &self->zoneName, 0, self->word2Offset, ALIGN_RIGHT, 1, 0, 0, true);
     }
 
     drawPos.y = 0x9A0000;
     drawPos.x = self->wordStopPos - 0x140000;
-    RSDK.DrawText(&self->nameLetterData, &drawPos, &self->zoneName, self->word2Offset, 0, ALIGN_RIGHT, 1, 0, 0, true);
+    RSDK.DrawText(&self->nameLetterAnimator, &drawPos, &self->zoneName, self->word2Offset, 0, ALIGN_RIGHT, 1, 0, 0, true);
 }
 
 #if RETRO_INCLUDE_EDITOR
 void TitleCard_EditorDraw(void)
 {
     RSDK_THIS(TitleCard);
-    RSDK.SetSpriteAnimation(TitleCard->aniFrames, 0, &self->decorationData, true, 3);
-    RSDK.DrawSprite(&self->decorationData, NULL, false);
+    RSDK.SetSpriteAnimation(TitleCard->aniFrames, 0, &self->decorationAnimator, true, 3);
+    RSDK.DrawSprite(&self->decorationAnimator, NULL, false);
 }
 
 void TitleCard_EditorLoad(void) { TitleCard->aniFrames = RSDK.LoadSpriteAnimation("Editor/EditorIcons.bin", SCOPE_STAGE); }

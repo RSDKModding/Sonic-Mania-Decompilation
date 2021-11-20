@@ -23,8 +23,8 @@ void LaundroMobile_StaticUpdate(void)
     }
     else {
         if (LaundroMobile->playingFanSfx) {
-            RSDK.StopSFX(LaundroMobile->sfxFan);
-            RSDK.StopSFX(LaundroMobile->sfxWash);
+            RSDK.StopSfx(LaundroMobile->sfxFan);
+            RSDK.StopSfx(LaundroMobile->sfxWash);
             LaundroMobile->playingFanSfx = false;
         }
     }
@@ -75,8 +75,8 @@ void LaundroMobile_Create(void *data)
                     LaundroMobile->useStageWrap       = false;
                     LaundroMobile->shouldPlayFanSfx   = 0;
                     LaundroMobile->playingFanSfx      = false;
-                    RSDK.StopSFX(LaundroMobile->sfxFan);
-                    RSDK.StopSFX(LaundroMobile->sfxWash);
+                    RSDK.StopSfx(LaundroMobile->sfxFan);
+                    RSDK.StopSfx(LaundroMobile->sfxWash);
                     LaundroMobile->rocketAngles[0] = 0;
                     LaundroMobile->rocketAngles[1] = 0x8000;
                     LaundroMobile->rocketAngles[2] = 0;
@@ -190,21 +190,21 @@ void LaundroMobile_StageLoad(void)
     LaundroMobile->active           = ACTIVE_ALWAYS;
     LaundroMobile->playingFanSfx    = false;
     LaundroMobile->shouldPlayFanSfx = 0;
-    LaundroMobile->sfxHit           = RSDK.GetSFX("Stage/BossHit.wav");
-    LaundroMobile->sfxExplosion     = RSDK.GetSFX("Stage/Explosion2.wav");
-    LaundroMobile->sfxButton2       = RSDK.GetSFX("Stage/Button2.wav");
-    LaundroMobile->sfxFan           = RSDK.GetSFX("HCZ/BigFan.wav");
-    LaundroMobile->sfxRoll          = RSDK.GetSFX("Global/Roll.wav");
-    LaundroMobile->sfxWash          = RSDK.GetSFX("HCZ/Wash.wav");
-    LaundroMobile->sfxHullClose     = RSDK.GetSFX("Stage/HullClose.wav");
-    LaundroMobile->sfxPush          = RSDK.GetSFX("Stage/Push.wav");
-    LaundroMobile->sfxFireball      = RSDK.GetSFX("Stage/Fireball.wav");
-    LaundroMobile->sfxButton        = RSDK.GetSFX("Stage/Button.wav");
-    LaundroMobile->sfxLedgeBreak    = RSDK.GetSFX("Stage/LedgeBreak3.wav");
-    LaundroMobile->sfxPimPom        = RSDK.GetSFX("Stage/PimPom.wav");
+    LaundroMobile->sfxHit           = RSDK.GetSfx("Stage/BossHit.wav");
+    LaundroMobile->sfxExplosion     = RSDK.GetSfx("Stage/Explosion2.wav");
+    LaundroMobile->sfxButton2       = RSDK.GetSfx("Stage/Button2.wav");
+    LaundroMobile->sfxFan           = RSDK.GetSfx("HCZ/BigFan.wav");
+    LaundroMobile->sfxRoll          = RSDK.GetSfx("Global/Roll.wav");
+    LaundroMobile->sfxWash          = RSDK.GetSfx("HCZ/Wash.wav");
+    LaundroMobile->sfxHullClose     = RSDK.GetSfx("Stage/HullClose.wav");
+    LaundroMobile->sfxPush          = RSDK.GetSfx("Stage/Push.wav");
+    LaundroMobile->sfxFireball      = RSDK.GetSfx("Stage/Fireball.wav");
+    LaundroMobile->sfxButton        = RSDK.GetSfx("Stage/Button.wav");
+    LaundroMobile->sfxLedgeBreak    = RSDK.GetSfx("Stage/LedgeBreak3.wav");
+    LaundroMobile->sfxPimPom        = RSDK.GetSfx("Stage/PimPom.wav");
 #if RETRO_USE_PLUS
-    LaundroMobile->sfxRumble = RSDK.GetSFX("Stage/Rumble.wav");
-    LaundroMobile->sfxImpact = RSDK.GetSFX("Stage/Impact6.wav");
+    LaundroMobile->sfxRumble = RSDK.GetSfx("Stage/Rumble.wav");
+    LaundroMobile->sfxImpact = RSDK.GetSfx("Stage/Impact6.wav");
 #endif
 }
 
@@ -243,7 +243,7 @@ void LaundroMobile_CheckPlayerCollisions(void)
 
                 if (LaundroMobile->health) {
                     if (LaundroMobile->health == 8) {
-                        RSDK.StopSFX(LaundroMobile->sfxFan);
+                        RSDK.StopSfx(LaundroMobile->sfxFan);
                         RSDK.SetSpriteAnimation(LaundroMobile->aniFrames, 4, &self->animator2, true, 0);
                         self->timer = 60;
                         self->state = LaundroMobile_State_Destroyed_Phase1;
@@ -1563,7 +1563,7 @@ void LaundroMobile_State1_Unknown3(void)
                 RSDK.PlaySfx(LaundroMobile->sfxHit, false, 255);
                 LaundroMobile->invincibilityTimer = 30;
                 if (LaundroMobile->health <= 8) {
-                    RSDK.StopSFX(LaundroMobile->sfxFan);
+                    RSDK.StopSfx(LaundroMobile->sfxFan);
                     RSDK.SetSpriteAnimation(LaundroMobile->aniFrames, 4, &boss->animator2, true, 0);
                     boss->timer = 60;
                     boss->state = LaundroMobile_State_Destroyed_Phase1;

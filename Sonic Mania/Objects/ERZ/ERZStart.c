@@ -64,10 +64,10 @@ void ERZStart_Create(void *data)
 
 void ERZStart_StageLoad(void)
 {
-    ERZStart->sfxClack     = RSDK.GetSFX("Stage/Clack.wav");
-    ERZStart->sfxFlyIn     = RSDK.GetSFX("ERZ/FlyIn.wav");
-    ERZStart->sfxHullClose = RSDK.GetSFX("Stage/HullClose.wav");
-    ERZStart->sfxRumble    = RSDK.GetSFX("Stage/Rumble.wav");
+    ERZStart->sfxClack     = RSDK.GetSfx("Stage/Clack.wav");
+    ERZStart->sfxFlyIn     = RSDK.GetSfx("ERZ/FlyIn.wav");
+    ERZStart->sfxHullClose = RSDK.GetSfx("Stage/HullClose.wav");
+    ERZStart->sfxRumble    = RSDK.GetSfx("Stage/Rumble.wav");
 }
 
 void ERZStart_SetupObjects(void)
@@ -444,7 +444,7 @@ bool32 ERZStart_CutsceneState_Unknown8(EntityCutsceneSeq *host)
         fxRuby->position.x = king->position.x;
         fxRuby->position.y = king->position.y;
         fxRuby->fadeWhite  = 0x300;
-        RSDK.StopSFX(ERZStart->sfxRumble);
+        RSDK.StopSfx(ERZStart->sfxRumble);
         return true;
     }
     else {

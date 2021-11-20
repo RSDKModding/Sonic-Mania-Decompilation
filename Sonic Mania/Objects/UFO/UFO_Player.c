@@ -147,15 +147,15 @@ void UFO_Player_StageLoad(void)
         RSDK.CopyEntity(player1, player, true);
     }
 
-    UFO_Player->sfxJump         = RSDK.GetSFX("Global/Jump.wav");
-    UFO_Player->sfxCharge       = RSDK.GetSFX("Global/Charge.wav");
-    UFO_Player->sfxRelease      = RSDK.GetSFX("Global/Release.wav");
-    UFO_Player->sfxLoseRings    = RSDK.GetSFX("Global/LoseRings.wav");
-    UFO_Player->sfxDrop         = RSDK.GetSFX("Stage/Drop.wav");
-    UFO_Player->sfxBumper       = RSDK.GetSFX("Stage/Bumper.wav");
-    UFO_Player->sfxSpring       = RSDK.GetSFX("Global/Spring.wav");
-    UFO_Player->sfxSkid         = RSDK.GetSFX("Special/Skid.wav");
-    UFO_Player->sfxGrittyGround = RSDK.GetSFX("Special/GrittyGround.wav");
+    UFO_Player->sfxJump         = RSDK.GetSfx("Global/Jump.wav");
+    UFO_Player->sfxCharge       = RSDK.GetSfx("Global/Charge.wav");
+    UFO_Player->sfxRelease      = RSDK.GetSfx("Global/Release.wav");
+    UFO_Player->sfxLoseRings    = RSDK.GetSfx("Global/LoseRings.wav");
+    UFO_Player->sfxDrop         = RSDK.GetSfx("Stage/Drop.wav");
+    UFO_Player->sfxBumper       = RSDK.GetSfx("Stage/Bumper.wav");
+    UFO_Player->sfxSpring       = RSDK.GetSfx("Global/Spring.wav");
+    UFO_Player->sfxSkid         = RSDK.GetSfx("Special/Skid.wav");
+    UFO_Player->sfxGrittyGround = RSDK.GetSfx("Special/GrittyGround.wav");
 
     EntityUFO_Player *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, UFO_Player);
     RSDK.ClearCameras();

@@ -116,8 +116,8 @@ void PBL_Flipper_StageLoad(void)
     PBL_Flipper->hitbox2.top     = -24;
     PBL_Flipper->hitbox2.right   = 12;
     PBL_Flipper->hitbox2.bottom  = 8;
-    PBL_Flipper->sfxFlipperStage = RSDK.GetSFX("Stage/Flipper.wav");
-    PBL_Flipper->sfxFlipper      = RSDK.GetSFX("Pinball/Flipper.wav");
+    PBL_Flipper->sfxFlipperStage = RSDK.GetSfx("Stage/Flipper.wav");
+    PBL_Flipper->sfxFlipper      = RSDK.GetSfx("Pinball/Flipper.wav");
 }
 
 void PBL_Flipper_HandlePlayerInteractions(void)

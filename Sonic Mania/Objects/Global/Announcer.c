@@ -35,50 +35,50 @@ void Announcer_StageLoad(void)
     Announcer->finishedCountdown = false;
     if (RSDK.CheckStageFolder("Menu")) {
 #if !RETRO_USE_PLUS
-        Announcer->sfxNewRecordTop = RSDK.GetSFX("VO/NewRecordTop.wav");
-        Announcer->sfxNewRecordMid = RSDK.GetSFX("VO/NewRecordMid.wav");
+        Announcer->sfxNewRecordTop = RSDK.GetSfx("VO/NewRecordTop.wav");
+        Announcer->sfxNewRecordMid = RSDK.GetSfx("VO/NewRecordMid.wav");
 #endif
-        Announcer->sfxSonic    = RSDK.GetSFX("VO/Sonic.wav");
-        Announcer->sfxTails    = RSDK.GetSFX("VO/Tails.wav");
-        Announcer->sfxKnuckles = RSDK.GetSFX("VO/Knuckles.wav");
+        Announcer->sfxSonic    = RSDK.GetSfx("VO/Sonic.wav");
+        Announcer->sfxTails    = RSDK.GetSfx("VO/Tails.wav");
+        Announcer->sfxKnuckles = RSDK.GetSfx("VO/Knuckles.wav");
 #if RETRO_USE_PLUS
-        Announcer->sfxMighty = RSDK.GetSFX("VO/Mighty.wav");
-        Announcer->sfxRay    = RSDK.GetSFX("VO/Ray.wav");
+        Announcer->sfxMighty = RSDK.GetSfx("VO/Mighty.wav");
+        Announcer->sfxRay    = RSDK.GetSfx("VO/Ray.wav");
 #endif
-        Announcer->sfxTheWinnerIs = RSDK.GetSFX("VO/TheWinnerIs.wav");
-        Announcer->sfxPlayer1     = RSDK.GetSFX("VO/Player1.wav");
-        Announcer->sfxPlayer2     = RSDK.GetSFX("VO/Player2.wav");
+        Announcer->sfxTheWinnerIs = RSDK.GetSfx("VO/TheWinnerIs.wav");
+        Announcer->sfxPlayer1     = RSDK.GetSfx("VO/Player1.wav");
+        Announcer->sfxPlayer2     = RSDK.GetSfx("VO/Player2.wav");
 #if RETRO_USE_PLUS
-        Announcer->sfxPlayer3 = RSDK.GetSFX("VO/Player3.wav");
-        Announcer->sfxPlayer4 = RSDK.GetSFX("VO/Player4.wav");
+        Announcer->sfxPlayer3 = RSDK.GetSfx("VO/Player3.wav");
+        Announcer->sfxPlayer4 = RSDK.GetSfx("VO/Player4.wav");
 #endif
-        Announcer->sfxSonicWins = RSDK.GetSFX("VO/SonicWins.wav");
-        Announcer->sfxTailsWins = RSDK.GetSFX("VO/TailsWins.wav");
-        Announcer->sfxKnuxWins  = RSDK.GetSFX("VO/KnuxWins.wav");
+        Announcer->sfxSonicWins = RSDK.GetSfx("VO/SonicWins.wav");
+        Announcer->sfxTailsWins = RSDK.GetSfx("VO/TailsWins.wav");
+        Announcer->sfxKnuxWins  = RSDK.GetSfx("VO/KnuxWins.wav");
 #if RETRO_USE_PLUS
-        Announcer->sfxMightyWins   = RSDK.GetSFX("VO/MightyWins.wav");
-        Announcer->sfxRayWins      = RSDK.GetSFX("VO/RayWins.wav");
-        Announcer->sfxItsADraw     = RSDK.GetSFX("VO/ItsADraw.wav");
-        Announcer->sfxItsADraw_Set = RSDK.GetSFX("VO/ItsADraw_Set.wav");
+        Announcer->sfxMightyWins   = RSDK.GetSfx("VO/MightyWins.wav");
+        Announcer->sfxRayWins      = RSDK.GetSfx("VO/RayWins.wav");
+        Announcer->sfxItsADraw     = RSDK.GetSfx("VO/ItsADraw.wav");
+        Announcer->sfxItsADraw_Set = RSDK.GetSfx("VO/ItsADraw_Set.wav");
         LogHelpers_Print("sfxDrawRound = %d", Announcer->sfxItsADraw);
         LogHelpers_Print("sfxDrawSet = %d", Announcer->sfxItsADraw_Set);
 #endif
     }
     else if (globals->gameMode == MODE_COMPETITION) {
         Announcer->aniFrames = RSDK.LoadSpriteAnimation("Global/Announcer.bin", SCOPE_STAGE);
-        Announcer->sfxThree  = RSDK.GetSFX("VO/Three.wav");
-        Announcer->sfxTwo    = RSDK.GetSFX("VO/Two.wav");
-        Announcer->sfxOne    = RSDK.GetSFX("VO/One.wav");
-        Announcer->sfxGo     = RSDK.GetSFX("VO/Go.wav");
-        Announcer->sfxGoal   = RSDK.GetSFX("VO/Goal.wav");
+        Announcer->sfxThree  = RSDK.GetSfx("VO/Three.wav");
+        Announcer->sfxTwo    = RSDK.GetSfx("VO/Two.wav");
+        Announcer->sfxOne    = RSDK.GetSfx("VO/One.wav");
+        Announcer->sfxGo     = RSDK.GetSfx("VO/Go.wav");
+        Announcer->sfxGoal   = RSDK.GetSfx("VO/Goal.wav");
     }
     else if (globals->gameMode == MODE_TIMEATTACK) {
         Announcer->aniFrames = RSDK.LoadSpriteAnimation("Global/Announcer.bin", SCOPE_STAGE);
 #if RETRO_USE_PLUS
-        Announcer->sfxNewRecordTop = RSDK.GetSFX("VO/NewRecordTop.wav");
-        Announcer->sfxNewRecordMid = RSDK.GetSFX("VO/NewRecordMid.wav");
+        Announcer->sfxNewRecordTop = RSDK.GetSfx("VO/NewRecordTop.wav");
+        Announcer->sfxNewRecordMid = RSDK.GetSfx("VO/NewRecordMid.wav");
 #endif
-        Announcer->sfxGoal = RSDK.GetSFX("VO/Goal.wav");
+        Announcer->sfxGoal = RSDK.GetSfx("VO/Goal.wav");
     }
 }
 

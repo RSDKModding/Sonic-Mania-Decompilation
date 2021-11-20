@@ -189,11 +189,11 @@ void GigaMetal_StageLoad(void)
     GigaMetal->hitbox4.right  = 16;
     GigaMetal->hitbox4.bottom = -64;
 
-    GigaMetal->sfxRoar   = RSDK.GetSFX("SSZ2/MSRoar.wav");
-    GigaMetal->sfxImpact = RSDK.GetSFX("Stage/Impact6.wav");
-    GigaMetal->sfxTarget = RSDK.GetSFX("SSZ2/MSTarget.wav");
-    GigaMetal->sfxPimpom = RSDK.GetSFX("Stage/PimPom.wav");
-    GigaMetal->sfxCannon = RSDK.GetSFX("SSZ2/MSCannon.wav");
+    GigaMetal->sfxRoar   = RSDK.GetSfx("SSZ2/MSRoar.wav");
+    GigaMetal->sfxImpact = RSDK.GetSfx("Stage/Impact6.wav");
+    GigaMetal->sfxTarget = RSDK.GetSfx("SSZ2/MSTarget.wav");
+    GigaMetal->sfxPimpom = RSDK.GetSfx("Stage/PimPom.wav");
+    GigaMetal->sfxCannon = RSDK.GetSfx("SSZ2/MSCannon.wav");
     RSDK.CopyPalette(0, 1, 4, 1, 255);
     for (int i = 0; i < 256; ++i) RSDK.SetPaletteEntry(5, i, 0xF00080);
     GigaMetal->invincibleTimer = 0;

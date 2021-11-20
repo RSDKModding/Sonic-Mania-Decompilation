@@ -56,8 +56,8 @@ void MagnetSphere_StageLoad(void)
     MagnetSphere->hitbox.top    = -56;
     MagnetSphere->hitbox.right  = 56;
     MagnetSphere->hitbox.bottom = 56;
-    MagnetSphere->sfxBumper     = RSDK.GetSFX("Stage/Bumper3.wav");
-    MagnetSphere->sfxPlasmaBall = RSDK.GetSFX("TMZ1/PlasmaBall.wav");
+    MagnetSphere->sfxBumper     = RSDK.GetSfx("Stage/Bumper3.wav");
+    MagnetSphere->sfxPlasmaBall = RSDK.GetSfx("TMZ1/PlasmaBall.wav");
     DEBUGMODE_ADD_OBJ(MagnetSphere);
 }
 

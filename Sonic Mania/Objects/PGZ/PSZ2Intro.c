@@ -29,7 +29,7 @@ void PSZ2Intro_Create(void *data)
 
 void PSZ2Intro_StageLoad(void)
 {
-    PSZ2Intro->sfxExplosion3 = RSDK.GetSFX("Stage/Explosion3.wav");
+    PSZ2Intro->sfxExplosion3 = RSDK.GetSfx("Stage/Explosion3.wav");
     foreach_all(FXFade, fxFade)
     {
         PSZ2Intro->fxFade = fxFade;

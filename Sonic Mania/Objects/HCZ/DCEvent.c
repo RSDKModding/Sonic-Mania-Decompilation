@@ -90,10 +90,10 @@ void DCEvent_StageLoad(void)
     DCEvent->hitbox2.right  = 8;
     DCEvent->hitbox2.bottom = 8;
 
-    DCEvent->sfxExplosion = RSDK.GetSFX("Stage/Explosion2.wav");
-    DCEvent->sfxRumble    = RSDK.GetSFX("Stage/Rumble.wav");
-    DCEvent->sfxImpact6   = RSDK.GetSFX("Stage/Impact6.wav");
-    DCEvent->sfxImpact4   = RSDK.GetSFX("Stage/Impact4.wav");
+    DCEvent->sfxExplosion = RSDK.GetSfx("Stage/Explosion2.wav");
+    DCEvent->sfxRumble    = RSDK.GetSfx("Stage/Rumble.wav");
+    DCEvent->sfxImpact6   = RSDK.GetSfx("Stage/Impact6.wav");
+    DCEvent->sfxImpact4   = RSDK.GetSfx("Stage/Impact4.wav");
 }
 
 void DCEvent_State_Collapse(void)

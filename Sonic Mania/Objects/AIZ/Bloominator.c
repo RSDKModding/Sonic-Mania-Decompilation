@@ -52,7 +52,7 @@ void Bloominator_StageLoad(void)
     Bloominator->projectileHitbox.top    = -4;
     Bloominator->projectileHitbox.right  = 4;
     Bloominator->projectileHitbox.bottom = 4;
-    Bloominator->sfxShot                 = RSDK.GetSFX("Stage/Shot.wav");
+    Bloominator->sfxShot                 = RSDK.GetSfx("Stage/Shot.wav");
 
     DEBUGMODE_ADD_OBJ(Bloominator);
 }

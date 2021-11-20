@@ -141,8 +141,8 @@ void StarPost_StageLoad(void)
         }
     }
 
-    StarPost->sfxStarPost = RSDK.GetSFX("Global/StarPost.wav");
-    StarPost->sfxWarp     = RSDK.GetSFX("Global/SpecialWarp.wav");
+    StarPost->sfxStarPost = RSDK.GetSfx("Global/StarPost.wav");
+    StarPost->sfxWarp     = RSDK.GetSfx("Global/SpecialWarp.wav");
 }
 
 void StarPost_DebugDraw(void)

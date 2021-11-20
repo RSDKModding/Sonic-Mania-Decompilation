@@ -186,7 +186,7 @@ void BouncePlant_StageLoad(void)
     BouncePlant->hitbox.left    = -12;
     BouncePlant->hitbox.right   = 50;
     BouncePlant->hitbox.right   = 8;
-    BouncePlant->sfxBouncePlant = RSDK.GetSFX("SSZ1/BouncePlant.wav");
+    BouncePlant->sfxBouncePlant = RSDK.GetSfx("SSZ1/BouncePlant.wav");
 }
 
 void BoucePlant_Unknown1(void)

@@ -181,7 +181,7 @@ void Springboard_Create(void *data)
 void Springboard_StageLoad(void)
 {
     Springboard->aniFrames = RSDK.LoadSpriteAnimation("CPZ/Springboard.bin", SCOPE_STAGE);
-    Springboard->sfxSpring = RSDK.GetSFX("Global/Spring.wav");
+    Springboard->sfxSpring = RSDK.GetSfx("Global/Spring.wav");
     DEBUGMODE_ADD_OBJ(Springboard);
 }
 

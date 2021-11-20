@@ -12,8 +12,8 @@ void Shield_Update(void)
         if ((self->frameID & -4) <= 0)
             --drawOrder;
         self->drawOrder = drawOrder;
-        self->visible   = self->flag & player->visible;
-        self->flag      = true;
+        self->visible   = self->forceVisible & player->visible;
+        self->forceVisible = true;
     }
 }
 
@@ -97,14 +97,14 @@ void Shield_Create(void *data)
 void Shield_StageLoad(void)
 {
     Shield->aniFrames         = RSDK.LoadSpriteAnimation("Global/Shields.bin", SCOPE_STAGE);
-    Shield->sfxBlueShield      = RSDK.GetSFX("Global/BlueShield.wav");
-    Shield->sfxBubbleShield    = RSDK.GetSFX("Global/BubbleShield.wav");
-    Shield->sfxFireShield      = RSDK.GetSFX("Global/FireShield.wav");
-    Shield->sfxLightningShield = RSDK.GetSFX("Global/LightningShield.wav");
-    Shield->sfxInstaShield     = RSDK.GetSFX("Global/InstaShield.wav");
-    Shield->sfxBubbleBounce    = RSDK.GetSFX("Global/BubbleBounce.wav");
-    Shield->sfxFireDash        = RSDK.GetSFX("Global/FireDash.wav");
-    Shield->sfxLightningJump   = RSDK.GetSFX("Global/LightningJump.wav");
+    Shield->sfxBlueShield      = RSDK.GetSfx("Global/BlueShield.wav");
+    Shield->sfxBubbleShield    = RSDK.GetSfx("Global/BubbleShield.wav");
+    Shield->sfxFireShield      = RSDK.GetSfx("Global/FireShield.wav");
+    Shield->sfxLightningShield = RSDK.GetSfx("Global/LightningShield.wav");
+    Shield->sfxInstaShield     = RSDK.GetSfx("Global/InstaShield.wav");
+    Shield->sfxBubbleBounce    = RSDK.GetSfx("Global/BubbleBounce.wav");
+    Shield->sfxFireDash        = RSDK.GetSfx("Global/FireDash.wav");
+    Shield->sfxLightningJump   = RSDK.GetSfx("Global/LightningJump.wav");
 }
 
 void Shield_State_Generic(void)

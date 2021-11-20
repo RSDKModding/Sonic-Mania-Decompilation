@@ -35,8 +35,8 @@ void SPZ1Intro_Create(void *data)
 
 void SPZ1Intro_StageLoad(void)
 {
-    SPZ1Intro->sfxGasPop = RSDK.GetSFX("OOZ/GasPop.wav");
-    SPZ1Intro->sfxPon    = RSDK.GetSFX("Stage/Pon.wav");
+    SPZ1Intro->sfxGasPop = RSDK.GetSfx("OOZ/GasPop.wav");
+    SPZ1Intro->sfxPon    = RSDK.GetSfx("Stage/Pon.wav");
     SPZ1Intro->aniFrames = RSDK.LoadSpriteAnimation("SPZ1/ManholeCover.bin", SCOPE_STAGE);
 }
 
@@ -123,7 +123,7 @@ bool32 SPZ1Intro_CutsceneState_Unknown2(EntityCutsceneSeq *host)
         player1->nextGroundState = 0;
         RSDK.PlaySfx(SPZ1Intro->sfxGasPop, false, 255);
         RSDK.PlaySfx(SPZ1Intro->sfxPon, false, 255);
-        RSDK.StopSFX(Player->sfxRoll);
+        RSDK.StopSfx(Player->sfxRoll);
         Camera_ShakeScreen(0, 0, 2);
         EntityDebris *debris = SPZ1Intro->debris;
         debris->state        = Debris_State_Fall;

@@ -55,7 +55,7 @@ void Rhinobot_StageLoad(void)
     Rhinobot->hitbox.top    = -9;
     Rhinobot->hitbox.right  = 23;
     Rhinobot->hitbox.bottom = 15;
-    Rhinobot->sfxHuff       = RSDK.GetSFX("Stage/Huff.wav");
+    Rhinobot->sfxHuff       = RSDK.GetSfx("Stage/Huff.wav");
     DEBUGMODE_ADD_OBJ(Rhinobot);
 }
 

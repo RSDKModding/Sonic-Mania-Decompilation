@@ -120,8 +120,8 @@ void PauseMenu_Create(void *data)
 void PauseMenu_StageLoad(void)
 {
     PauseMenu->active               = ACTIVE_ALWAYS;
-    PauseMenu->sfxBleep             = RSDK.GetSFX("Global/MenuBleep.wav");
-    PauseMenu->sfxAccept            = RSDK.GetSFX("Global/MenuAccept.wav");
+    PauseMenu->sfxBleep             = RSDK.GetSfx("Global/MenuBleep.wav");
+    PauseMenu->sfxAccept            = RSDK.GetSfx("Global/MenuAccept.wav");
     PauseMenu->disableEvents        = false;
     PauseMenu->controllerDisconnect = false;
     PauseMenu->forcedDisconnect     = false;

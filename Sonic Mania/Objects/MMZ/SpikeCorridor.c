@@ -41,9 +41,9 @@ void SpikeCorridor_Create(void *data)
 void SpikeCorridor_StageLoad(void)
 {
     SpikeCorridor->aniFrames    = RSDK.LoadSpriteAnimation("MMZ/SpikeCorridor.bin", SCOPE_STAGE);
-    SpikeCorridor->sfxDrop      = RSDK.GetSFX("Stage/Drop.wav");
-    SpikeCorridor->sfxImpact    = RSDK.GetSFX("Stage/Impact2.wav");
-    SpikeCorridor->sfxIndicator = RSDK.GetSFX("MMZ/Indicator.wav");
+    SpikeCorridor->sfxDrop      = RSDK.GetSfx("Stage/Drop.wav");
+    SpikeCorridor->sfxImpact    = RSDK.GetSfx("Stage/Impact2.wav");
+    SpikeCorridor->sfxIndicator = RSDK.GetSfx("MMZ/Indicator.wav");
 }
 
 void SpikeCorridor_SetupHitboxes(void)
@@ -290,7 +290,7 @@ void SpikeCorridor_StateSpikes_Fall(void)
     RSDK_THIS(SpikeCorridor);
 
     if (self->yOffset >= self->fallOffset) {
-        RSDK.StopSFX(SpikeCorridor->sfxDrop);
+        RSDK.StopSfx(SpikeCorridor->sfxDrop);
         RSDK.PlaySfx(SpikeCorridor->sfxImpact, false, 255);
         Camera_ShakeScreen(0, 0, 5);
         self->active = ACTIVE_ALWAYS;

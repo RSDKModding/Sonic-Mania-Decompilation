@@ -161,8 +161,8 @@ void BarStool_StageLoad(void)
     BarStool->hitbox.top    = -24;
     BarStool->hitbox.right  = 16;
     BarStool->hitbox.bottom = -16;
-    BarStool->sfxSpin       = RSDK.GetSFX("MSZ/StoolSpin.wav");
-    BarStool->sfxHop        = RSDK.GetSFX("MSZ/StoolHop.wav");
+    BarStool->sfxSpin       = RSDK.GetSfx("MSZ/StoolSpin.wav");
+    BarStool->sfxHop        = RSDK.GetSfx("MSZ/StoolHop.wav");
 }
 
 void BarStool_EditorDraw(void)

@@ -157,7 +157,7 @@ void UIKeyBinder_Create(void *data)
 void UIKeyBinder_StageLoad(void)
 {
     UIKeyBinder->aniFrames = RSDK.LoadSpriteAnimation("UI/Buttons.bin", SCOPE_STAGE);
-    UIKeyBinder->sfxFail   = RSDK.GetSFX("Stage/Fail.wav");
+    UIKeyBinder->sfxFail   = RSDK.GetSfx("Stage/Fail.wav");
 }
 
 int32 UIKeyBinder_GetButtonListID(void)

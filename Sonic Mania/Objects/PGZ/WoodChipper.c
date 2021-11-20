@@ -32,7 +32,7 @@ void WoodChipper_StaticUpdate(void)
         }
     }
     else if (WoodChipper->playingChipSFX) {
-        RSDK.StopSFX(WoodChipper->sfxChipperWood);
+        RSDK.StopSfx(WoodChipper->sfxChipperWood);
         WoodChipper->playingWoodSFX = false;
     }
 
@@ -43,7 +43,7 @@ void WoodChipper_StaticUpdate(void)
         }
     }
     else if (WoodChipper->playingChipSFX) {
-        RSDK.StopSFX(WoodChipper->sfxChipperChips);
+        RSDK.StopSfx(WoodChipper->sfxChipperChips);
         WoodChipper->playingChipSFX = false;
     }
 }
@@ -155,8 +155,8 @@ void WoodChipper_StageLoad(void)
     WoodChipper->hitboxRazor.top    = -58;
     WoodChipper->hitboxRazor.right  = 40;
     WoodChipper->hitboxRazor.bottom = 0;
-    WoodChipper->sfxChipperWood     = RSDK.GetSFX("PSZ/ChipperWood.wav");
-    WoodChipper->sfxChipperChips    = RSDK.GetSFX("PSZ/ChipperChips.wav");
+    WoodChipper->sfxChipperWood     = RSDK.GetSfx("PSZ/ChipperWood.wav");
+    WoodChipper->sfxChipperChips    = RSDK.GetSfx("PSZ/ChipperChips.wav");
 }
 
 void WoodChipper_HandlePlayerCollisions(void)

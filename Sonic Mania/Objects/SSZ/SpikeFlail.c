@@ -118,7 +118,7 @@ void SpikeFlail_StageLoad(void)
 {
     SpikeFlail->aniFrames = RSDK.LoadSpriteAnimation("SSZ1/SpikeFlail.bin", SCOPE_STAGE);
     SpikeFlail->active    = ACTIVE_ALWAYS;
-    SpikeFlail->sfxFlail  = RSDK.GetSFX("SSZ1/Flail.wav");
+    SpikeFlail->sfxFlail  = RSDK.GetSfx("SSZ1/Flail.wav");
 }
 
 void SpikeFlail_SetupHitbox(void)

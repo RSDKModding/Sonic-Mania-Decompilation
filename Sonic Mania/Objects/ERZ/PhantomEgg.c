@@ -74,17 +74,17 @@ void PhantomEgg_StageLoad(void)
     RSDK.CopyPalette(1, 128, 0, 128, 128);
     RSDK.CopyPalette(0, 0, 4, 0, 128);
     PhantomEgg->superFlag     = false;
-    PhantomEgg->sfxHit        = RSDK.GetSFX("Stage/BossHit.wav");
-    PhantomEgg->sfxExplosion2 = RSDK.GetSFX("Stage/Explosion2.wav");
-    PhantomEgg->sfxRocketJet  = RSDK.GetSFX("Stage/RocketJet.wav");
-    PhantomEgg->sfxExplosion3 = RSDK.GetSFX("Stage/Explosion3.wav");
-    PhantomEgg->sfxJump       = RSDK.GetSFX("TMZ3/Jump.wav");
-    PhantomEgg->sfxLand       = RSDK.GetSFX("TMZ3/Land.wav");
-    PhantomEgg->sfxRepel      = RSDK.GetSFX("TMZ3/Repel.wav");
-    PhantomEgg->sfxShield     = RSDK.GetSFX("TMZ3/Shield.wav");
-    PhantomEgg->sfxShock      = RSDK.GetSFX("TMZ3/Shock.wav");
-    PhantomEgg->sfxSummon     = RSDK.GetSFX("TMZ3/Summon.wav");
-    PhantomEgg->sfxMissile    = RSDK.GetSFX("TMZ3/Missile.wav");
+    PhantomEgg->sfxHit        = RSDK.GetSfx("Stage/BossHit.wav");
+    PhantomEgg->sfxExplosion2 = RSDK.GetSfx("Stage/Explosion2.wav");
+    PhantomEgg->sfxRocketJet  = RSDK.GetSfx("Stage/RocketJet.wav");
+    PhantomEgg->sfxExplosion3 = RSDK.GetSfx("Stage/Explosion3.wav");
+    PhantomEgg->sfxJump       = RSDK.GetSfx("TMZ3/Jump.wav");
+    PhantomEgg->sfxLand       = RSDK.GetSfx("TMZ3/Land.wav");
+    PhantomEgg->sfxRepel      = RSDK.GetSfx("TMZ3/Repel.wav");
+    PhantomEgg->sfxShield     = RSDK.GetSfx("TMZ3/Shield.wav");
+    PhantomEgg->sfxShock      = RSDK.GetSfx("TMZ3/Shock.wav");
+    PhantomEgg->sfxSummon     = RSDK.GetSfx("TMZ3/Summon.wav");
+    PhantomEgg->sfxMissile    = RSDK.GetSfx("TMZ3/Missile.wav");
 }
 
 void PhantomEgg_HandleAnimations(void)

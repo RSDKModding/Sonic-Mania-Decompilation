@@ -91,8 +91,8 @@ void LottoBall_Create(void *data)
 void LottoBall_StageLoad(void)
 {
     LottoBall->aniFrames      = RSDK.LoadSpriteAnimation("SPZ2/LottoBall.bin", SCOPE_STAGE);
-    LottoBall->sfxLottoBounce = RSDK.GetSFX("Stage/LottoBounce.wav");
-    LottoBall->sfxSpew        = RSDK.GetSFX("Stage/SpewBall.wav");
+    LottoBall->sfxLottoBounce = RSDK.GetSfx("Stage/LottoBounce.wav");
+    LottoBall->sfxSpew        = RSDK.GetSfx("Stage/SpewBall.wav");
 }
 
 void LottoBall_Unknown1(void)

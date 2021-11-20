@@ -100,8 +100,8 @@ void TimeAttackGate_StageLoad(void)
     TimeAttackGate->hitbox.top      = -44;
     TimeAttackGate->hitbox.right    = 8;
     TimeAttackGate->hitbox.bottom   = 20;
-    TimeAttackGate->sfxSignpost     = RSDK.GetSFX("Global/SignPost.wav");
-    TimeAttackGate->sfxTeleport     = RSDK.GetSFX("Global/Teleport.wav");
+    TimeAttackGate->sfxSignpost     = RSDK.GetSfx("Global/SignPost.wav");
+    TimeAttackGate->sfxTeleport     = RSDK.GetSfx("Global/Teleport.wav");
     TimeAttackGate->started         = false;
     TimeAttackGate->debugEnabled    = false;
     SceneInfo->timeEnabled          = false;
@@ -371,7 +371,7 @@ void TimeAttackGate_State_Restarter(void)
                 if (!ControllerInfo[player->controllerID].keyY.down) {
                     if (self->restartTimer > 0) {
                         TimeAttackGate->teleportChannel = 0xFFFF;
-                        RSDK.StopSFX(TimeAttackGate->sfxTeleport);
+                        RSDK.StopSfx(TimeAttackGate->sfxTeleport);
                         self->restartTimer -= 4;
                     }
                     if (self->restartTimer < 0)

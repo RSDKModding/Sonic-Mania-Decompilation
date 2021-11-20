@@ -35,7 +35,7 @@ void MagPlatform_Create(void *data)
     }
 }
 
-void MagPlatform_StageLoad(void) { MagPlatform->sfxChain = RSDK.GetSFX("Stage/Chain.wav"); }
+void MagPlatform_StageLoad(void) { MagPlatform->sfxChain = RSDK.GetSfx("Stage/Chain.wav"); }
 
 void MagPlatform_Unknown1(void)
 {

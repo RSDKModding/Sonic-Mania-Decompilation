@@ -88,7 +88,7 @@ bool32 InitAudioDevice()
 #endif
 #endif
 
-    if (!LoadGlobalSFX())
+    if (!LoadGlobalSfx())
         return true;
 
     for (int i = 0; i < CHANNEL_COUNT; ++i) {
@@ -225,7 +225,7 @@ void ProcessAudioPlayback(void *data, Uint8 *stream, int len)
                                 if (channel->bufferPos >= channel->sampleLength) {
                                     if (channel->loop == 1) {
                                         channel->bufferPos = 0;
-                                        soundBuf    = &channel->samplePtr[channel->bufferPos];
+                                        soundBuf           = &channel->samplePtr[channel->bufferPos];
                                     }
                                     else if (channel->loop) {
                                         channel->bufferPos = channel->loop;
@@ -348,7 +348,8 @@ void ProcessAudioPlayback(void *data, Uint8 *stream, int len)
     }
 }
 
-bool32 LoadGlobalSFX() {
+bool32 LoadGlobalSfx()
+{
     for (int i = 0; i < SFX_COUNT; ++i) MEM_ZERO(sfxList[i]);
 
     FileInfo info;
@@ -529,13 +530,13 @@ int PlayStream(const char *filename, uint32 slot, int startPos, uint32 loopPoint
     if (slot >= CHANNEL_COUNT) {
     }
 
-    ChannelInfo *channel  = &channels[slot];
+    ChannelInfo *channel = &channels[slot];
     if (channel->state == CHANNEL_STREAM_LOAD)
         printf("");
 
     channel->soundID      = 0xFF;
     channel->loop         = loopPoint;
-    channel->unknown3     = 0xFF;
+    channel->priority     = 0xFF;
     channel->state        = CHANNEL_STREAM_LOAD;
     channel->pan          = 0.0;
     channel->volume       = 1.0;
@@ -624,7 +625,7 @@ void LoadSfx(char *filename, byte plays, byte scope)
                             Seek_Set(&info, 34);
 
                             ushort sampleBits = ReadInt16(&info);
-                            int loop               = 0;
+                            int loop          = 0;
                             while (true) {
                                 signature = ReadInt32(&info, false);
                                 if (signature == 'atad')
@@ -650,9 +651,9 @@ void LoadSfx(char *filename, byte plays, byte scope)
                             }
                             AllocateStorage(sizeof(float) * length, (void **)&sfxList[id].buffer, DATASET_SFX, false);
                             sfxList[id].length = length;
-                            
+
                             if (sampleBits == 8) {
-                                sbyte *buffer = (sbyte*)sfxList[id].buffer;
+                                sbyte *buffer = (sbyte *)sfxList[id].buffer;
                                 for (int remaining = length; remaining; --remaining) {
                                     int sample = ReadInt8(&info);
                                     *buffer    = (sample - 128);
@@ -670,10 +671,9 @@ void LoadSfx(char *filename, byte plays, byte scope)
                                 }
                             }
 
-                            
                             SDL_AudioCVT convert;
-                            if (SDL_BuildAudioCVT(&convert, format, channels, freq, audioDeviceFormat.format,
-                                                  audioDeviceFormat.channels, audioDeviceFormat.freq)
+                            if (SDL_BuildAudioCVT(&convert, format, channels, freq, audioDeviceFormat.format, audioDeviceFormat.channels,
+                                                  audioDeviceFormat.freq)
                                 > 0) {
                                 convert.buf = (byte *)malloc(size * convert.len_mult);
                                 convert.len = size;
@@ -694,14 +694,13 @@ void LoadSfx(char *filename, byte plays, byte scope)
                             else {
                                 LockAudioDevice();
                                 GEN_HASH(filename, sfxList[id].hash);
-                                //AllocateStorage(wav_length, (void **)&sfxList[id].buffer, DATASET_SFX, false);
-                                //memcpy(sfxList[id].buffer, wav_buffer, wav_length);
-                                //sfxList[id].length             = wav_length / sizeof(float);
+                                // AllocateStorage(wav_length, (void **)&sfxList[id].buffer, DATASET_SFX, false);
+                                // memcpy(sfxList[id].buffer, wav_buffer, wav_length);
+                                // sfxList[id].length             = wav_length / sizeof(float);
                                 sfxList[id].scope              = scope;
                                 sfxList[id].maxConcurrentPlays = plays;
                                 UnlockAudioDevice();
                             }
-
                         }
                         CloseFile(&info);
                     }
@@ -751,11 +750,9 @@ void LoadSfx(char *filename, byte plays, byte scope)
 #endif
     }
 }
-int PlaySfx(ushort sfx, uint loopPoint, int unknown)
+int PlaySfx(uint16 sfx, uint32 loopPoint, uint32 priority)
 {
-    if (sfx >= SFX_COUNT)
-        return -1;
-    if (!sfxList[sfx].scope)
+    if (sfx >= SFX_COUNT || !sfxList[sfx].scope)
         return -1;
 
     byte count = 0;
@@ -765,29 +762,33 @@ int PlaySfx(ushort sfx, uint loopPoint, int unknown)
     }
 
     sbyte slot = -1;
-    // if we've hit the max, replace one
+    // if we've hit the max, replace the oldest one
     if (count >= sfxList[sfx].maxConcurrentPlays) {
+        int32 highestStackID = 0;
         for (int c = 0; c < CHANNEL_COUNT; ++c) {
-            if (channels[c].soundID == sfx) {
-                slot = c;
-                break;
+            int stackID = sfxList[sfx].playCount - channels[c].playIndex;
+            if (stackID > highestStackID && channels[c].soundID == sfx) {
+                slot           = c;
+                highestStackID = stackID;
             }
         }
     }
-    else {
-        for (int c = 0; c < CHANNEL_COUNT && slot < 0; ++c) {
-            if (channels[c].soundID == -1 && channels[c].state != CHANNEL_STREAM_LOAD) {
-                slot = c;
-            }
-        }
 
+    // if we don't have a slot yet, try to pick any channel that's not currently playing
+    for (int c = 0; c < CHANNEL_COUNT && slot < 0; ++c) {
+        if (channels[c].soundID == -1 && channels[c].state != CHANNEL_STREAM_LOAD) {
+            slot = c;
+        }
+    }
+
+    // as a last resort, run through all channels
+    // pick the channel closest to being finished AND with lower priority
+    if (slot < 0) {
         uint len = 0xFFFFFFFF;
-        for (int c = 0; c < CHANNEL_COUNT && slot < 0; ++c) {
-            if (channels[c].sampleLength < len && channels[c].unknown3 <= unknown) {
-                if (channels[c].state != CHANNEL_STREAM_LOAD)
-                    slot = c;
-                if (channels[c].state != CHANNEL_STREAM_LOAD)
-                    len = (uint)channels[c].sampleLength;
+        for (int c = 0; c < CHANNEL_COUNT; ++c) {
+            if (channels[c].sampleLength < len && priority > channels[c].priority && channels[c].state != CHANNEL_STREAM_LOAD) {
+                slot = c;
+                len  = (uint)channels[c].sampleLength;
             }
         }
     }
@@ -807,38 +808,38 @@ int PlaySfx(ushort sfx, uint loopPoint, int unknown)
         channels[slot].loop = loopPoint;
     else
         channels[slot].loop = loopPoint != 0 ? 1 : 0;
-    channels[slot].unknown3 = unknown;
-    channels[slot].unknown2 = sfxList[sfx].unknown;
+    channels[slot].priority  = priority;
+    channels[slot].playIndex = sfxList[sfx].playCount++;
     return slot;
 }
 
-void SetChannelAttributes(byte slot, float volume, float panning, float speed)
+void SetChannelAttributes(uint8 channel, float volume, float panning, float speed)
 {
-    if (slot < CHANNEL_COUNT) {
-        volume                = fminf(4.0, volume);
-        volume                = fmaxf(0.0, volume);
-        channels[slot].volume = volume;
+    if (channel < CHANNEL_COUNT) {
+        volume                   = fminf(4.0, volume);
+        volume                   = fmaxf(0.0, volume);
+        channels[channel].volume = volume;
 
-        panning            = fminf(1.0, panning);
-        panning            = fmaxf(-1.0f, panning);
-        channels[slot].pan = panning;
+        panning               = fminf(1.0, panning);
+        panning               = fmaxf(-1.0f, panning);
+        channels[channel].pan = panning;
 
         if (speed > 0.0) {
-            channels[slot].speed = (int)(speed * 65536.0f);
+            channels[channel].speed = (int)(speed * 65536.0f);
         }
         else if (speed == 1.0) {
-            channels[slot].speed = 0x10000;
+            channels[channel].speed = 0x10000;
         }
     }
 }
 
-uint GetChannelPos(byte slot)
+uint GetChannelPos(uint8 channel)
 {
-    if (slot >= CHANNEL_COUNT)
+    if (channel >= CHANNEL_COUNT)
         return 0;
-    if (channels[slot].state == CHANNEL_SFX)
-        return channels[slot].bufferPos;
-    if (channels[slot].state == CHANNEL_STREAMING) {
+    if (channels[channel].state == CHANNEL_SFX)
+        return channels[channel].bufferPos;
+    if (channels[channel].state == CHANNEL_STREAMING) {
         return (uint)ov_pcm_tell(&streamInfo.vorbisFile);
     }
     return 0;

@@ -69,7 +69,7 @@ void PBL_Bumper_StageLoad(void)
     PBL_Bumper->hitbox.top    = -14;
     PBL_Bumper->hitbox.right  = 14;
     PBL_Bumper->hitbox.bottom = 14;
-    PBL_Bumper->sfxBumper     = RSDK.GetSFX("Stage/Bumper.wav");
+    PBL_Bumper->sfxBumper     = RSDK.GetSfx("Stage/Bumper.wav");
 }
 
 void PBL_Bumper_HandlePlayerInteractions(void)

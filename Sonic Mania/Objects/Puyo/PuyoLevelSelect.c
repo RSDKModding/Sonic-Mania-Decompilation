@@ -119,8 +119,8 @@ void PuyoLevelSelect_Create(void *data)
 void PuyoLevelSelect_StageLoad(void)
 {
     PuyoLevelSelect->aniFrames     = RSDK.LoadSpriteAnimation("Puyo/PuyoUI.bin", SCOPE_STAGE);
-    PuyoLevelSelect->sfxMenuBleep  = RSDK.GetSFX("Global/MenuBleep.wav");
-    PuyoLevelSelect->sfxMenuAccept = RSDK.GetSFX("Global/MenuAccept.wav");
+    PuyoLevelSelect->sfxMenuBleep  = RSDK.GetSfx("Global/MenuBleep.wav");
+    PuyoLevelSelect->sfxMenuAccept = RSDK.GetSfx("Global/MenuAccept.wav");
 }
 
 void PuyoLevelSelect_DrawSprites(void)

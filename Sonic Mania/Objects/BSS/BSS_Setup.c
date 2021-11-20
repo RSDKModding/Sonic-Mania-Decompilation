@@ -195,18 +195,18 @@ void BSS_Setup_StageLoad(void)
     RSDK.ResetEntitySlot(SLOT_BSS_SETUP, BSS_Setup->objectID, NULL);
     BSS_Setup_SetupPalette();
     globals->specialCleared   = false;
-    BSS_Setup->sfxBlueSphere  = RSDK.GetSFX("Special/BlueSphere.wav");
-    BSS_Setup->sfxSSExit      = RSDK.GetSFX("Special/SSExit.wav");
-    BSS_Setup->sfxSSJettison  = RSDK.GetSFX("Special/SSJettison.wav");
-    BSS_Setup->sfxEmerald     = RSDK.GetSFX("Special/Emerald.wav");
-    BSS_Setup->sfxEvent       = RSDK.GetSFX("Special/Event.wav");
-    BSS_Setup->sfxBumper      = RSDK.GetSFX("Stage/Bumper.wav");
-    BSS_Setup->sfxSpring      = RSDK.GetSFX("Global/Spring.wav");
-    BSS_Setup->sfxRing        = RSDK.GetSFX("Global/Ring.wav");
-    BSS_Setup->sfxLoseRings   = RSDK.GetSFX("Global/LoseRings.wav");
-    BSS_Setup->sfxMedal       = RSDK.GetSFX("Special/Medal.wav");
-    BSS_Setup->sfxMedalCaught = RSDK.GetSFX("Special/MedalCaught.wav");
-    BSS_Setup->sfxTeleport    = RSDK.GetSFX("Global/Teleport.wav");
+    BSS_Setup->sfxBlueSphere  = RSDK.GetSfx("Special/BlueSphere.wav");
+    BSS_Setup->sfxSSExit      = RSDK.GetSfx("Special/SSExit.wav");
+    BSS_Setup->sfxSSJettison  = RSDK.GetSfx("Special/SSJettison.wav");
+    BSS_Setup->sfxEmerald     = RSDK.GetSfx("Special/Emerald.wav");
+    BSS_Setup->sfxEvent       = RSDK.GetSfx("Special/Event.wav");
+    BSS_Setup->sfxBumper      = RSDK.GetSfx("Stage/Bumper.wav");
+    BSS_Setup->sfxSpring      = RSDK.GetSfx("Global/Spring.wav");
+    BSS_Setup->sfxRing        = RSDK.GetSfx("Global/Ring.wav");
+    BSS_Setup->sfxLoseRings   = RSDK.GetSfx("Global/LoseRings.wav");
+    BSS_Setup->sfxMedal       = RSDK.GetSfx("Special/Medal.wav");
+    BSS_Setup->sfxMedalCaught = RSDK.GetSfx("Special/MedalCaught.wav");
+    BSS_Setup->sfxTeleport    = RSDK.GetSfx("Global/Teleport.wav");
 
     EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
     if (param->field_59 == 1) {

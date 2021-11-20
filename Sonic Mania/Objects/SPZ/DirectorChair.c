@@ -97,9 +97,9 @@ void DirectorChair_StageLoad(void)
     DirectorChair->hitbox3.bottom = -3;
     DirectorChair->field_3        = 0;
     DirectorChair->field_4        = 0;
-    DirectorChair->sfxUnravel     = RSDK.GetSFX("Stage/Unravel.wav");
-    DirectorChair->sfxExtend      = RSDK.GetSFX("Stage/Extend.wav");
-    DirectorChair->sfxRetract     = RSDK.GetSFX("Stage/Retract.wav");
+    DirectorChair->sfxUnravel     = RSDK.GetSfx("Stage/Unravel.wav");
+    DirectorChair->sfxExtend      = RSDK.GetSfx("Stage/Extend.wav");
+    DirectorChair->sfxRetract     = RSDK.GetSfx("Stage/Retract.wav");
 }
 
 void DirectorChair_StateCollide_Chair(void)
@@ -220,7 +220,7 @@ void DirectorChair_Unknown4(void)
     if (self->rotation <= -96) {
         self->rotation = -96;
         if (!--DirectorChair->field_3)
-            RSDK.StopSFX(DirectorChair->sfxExtend);
+            RSDK.StopSfx(DirectorChair->sfxExtend);
         if (self->type) {
             self->active = ACTIVE_BOUNDS;
             self->state  = DirectorChair_Unknown2;
@@ -281,7 +281,7 @@ void DirectorChair_Unknown6(void)
     self->rotation = self->angle >> 8;
     if (self->rotation >= self->field_E8) {
         if (!--DirectorChair->field_4)
-            RSDK.StopSFX(DirectorChair->sfxRetract);
+            RSDK.StopSfx(DirectorChair->sfxRetract);
         self->rotation = self->field_E8;
         if (!self->type) {
             self->active = ACTIVE_BOUNDS;

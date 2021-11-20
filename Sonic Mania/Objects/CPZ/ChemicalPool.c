@@ -125,9 +125,9 @@ void ChemicalPool_Create(void *data)
 void ChemicalPool_StageLoad(void)
 {
     ChemicalPool->aniFrames     = RSDK.LoadSpriteAnimation("CPZ/ChemPool.bin", SCOPE_STAGE);
-    ChemicalPool->sfxChemYellow = RSDK.GetSFX("CPZ/ChemYellow.wav");
-    ChemicalPool->sfxChemRed    = RSDK.GetSFX("CPZ/ChemRed.wav");
-    ChemicalPool->sfxChemChange = RSDK.GetSFX("CPZ/ChemChange.wav");
+    ChemicalPool->sfxChemYellow = RSDK.GetSfx("CPZ/ChemYellow.wav");
+    ChemicalPool->sfxChemRed    = RSDK.GetSfx("CPZ/ChemRed.wav");
+    ChemicalPool->sfxChemChange = RSDK.GetSfx("CPZ/ChemChange.wav");
 }
 
 void ChemicalPool_ChangeState(EntityChemicalPool *chemPool, int32 newType, int32 newR, int32 newG, int32 newB)

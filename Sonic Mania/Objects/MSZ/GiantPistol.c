@@ -74,8 +74,8 @@ void GiantPistol_StageLoad(void)
     GiantPistol->hitbox3.top    = -58;
     GiantPistol->hitbox3.right  = 64;
     GiantPistol->hitbox3.bottom = -16;
-    GiantPistol->sfxClack       = RSDK.GetSFX("Stage/Clack.wav");
-    GiantPistol->sfxCannonFire  = RSDK.GetSFX("Stage/CannonFire.wav");
+    GiantPistol->sfxClack       = RSDK.GetSfx("Stage/Clack.wav");
+    GiantPistol->sfxCannonFire  = RSDK.GetSfx("Stage/CannonFire.wav");
 }
 
 void GiantPistol_State_WaitForPlayer(void)

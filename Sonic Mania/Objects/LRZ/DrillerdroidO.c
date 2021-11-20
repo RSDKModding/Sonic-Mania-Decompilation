@@ -20,7 +20,7 @@ void DrillerdroidO_StaticUpdate(void)
         DrillerdroidO->shouldPlayDrillSfx = 0;
     }
     else if (DrillerdroidO->playingDrillSfx) {
-        RSDK.StopSFX(DrillerdroidO->sfxDrill);
+        RSDK.StopSfx(DrillerdroidO->sfxDrill);
         DrillerdroidO->playingDrillSfx = false;
     }
 }
@@ -153,13 +153,13 @@ void DrillerdroidO_StageLoad(void)
     DrillerdroidO->shouldPlayDrillSfx = 0;
     DrillerdroidO->playingDrillSfx    = false;
     DrillerdroidO->emitFireballs      = false;
-    DrillerdroidO->sfxHit             = RSDK.GetSFX("Stage/BossHit.wav");
-    DrillerdroidO->sfxExplosion       = RSDK.GetSFX("Stage/Explosion2.wav");
-    DrillerdroidO->sfxDrill           = RSDK.GetSFX("LRZ/Drill.wav");
-    DrillerdroidO->sfxImpact          = RSDK.GetSFX("Stage/Impact4.wav");
-    DrillerdroidO->sfxJump            = RSDK.GetSFX("LRZ/DrillJump.wav");
-    DrillerdroidO->sfxTargeting       = RSDK.GetSFX("Stage/Targeting1.wav");
-    DrillerdroidO->sfxSizzle          = RSDK.GetSFX("LRZ/Sizzle.wav");
+    DrillerdroidO->sfxHit             = RSDK.GetSfx("Stage/BossHit.wav");
+    DrillerdroidO->sfxExplosion       = RSDK.GetSfx("Stage/Explosion2.wav");
+    DrillerdroidO->sfxDrill           = RSDK.GetSfx("LRZ/Drill.wav");
+    DrillerdroidO->sfxImpact          = RSDK.GetSfx("Stage/Impact4.wav");
+    DrillerdroidO->sfxJump            = RSDK.GetSfx("LRZ/DrillJump.wav");
+    DrillerdroidO->sfxTargeting       = RSDK.GetSfx("Stage/Targeting1.wav");
+    DrillerdroidO->sfxSizzle          = RSDK.GetSfx("LRZ/Sizzle.wav");
 }
 
 void DrillerdroidO_CheckPlayerCollisions(void)

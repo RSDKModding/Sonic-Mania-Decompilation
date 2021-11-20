@@ -48,12 +48,12 @@ void LevelSelect_Create(void *data)
 
 void LevelSelect_StageLoad(void)
 {
-    LevelSelect->sfxFail = RSDK.GetSFX("Stage/Fail.wav");
+    LevelSelect->sfxFail = RSDK.GetSfx("Stage/Fail.wav");
 #if RETRO_USE_PLUS
-    LevelSelect->sfxRing     = RSDK.GetSFX("Global/Ring.wav");
-    LevelSelect->sfxEmerald  = RSDK.GetSFX("Special/Emerald.wav");
-    LevelSelect->sfxContinue = RSDK.GetSFX("Special/Continue.wav");
-    LevelSelect->sfxMedalGot = RSDK.GetSFX("Special/MedalCaught.wav");
+    LevelSelect->sfxRing     = RSDK.GetSfx("Global/Ring.wav");
+    LevelSelect->sfxEmerald  = RSDK.GetSfx("Special/Emerald.wav");
+    LevelSelect->sfxContinue = RSDK.GetSfx("Special/Continue.wav");
+    LevelSelect->sfxMedalGot = RSDK.GetSfx("Special/MedalCaught.wav");
 #endif
     RSDK.ResetEntitySlot(0, LevelSelect->objectID, NULL);
     UIPicture->aniFrames    = RSDK.LoadSpriteAnimation("LSelect/Icons.bin", SCOPE_STAGE);

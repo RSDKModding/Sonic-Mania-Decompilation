@@ -162,7 +162,7 @@ void Button_StageLoad(void)
         Button->hasEggman = true;
     if (RSDK.GetObjectIDByName("PhantomRider"))
         Button->hasPhantomRider = true;
-    Button->sfxButton = RSDK.GetSFX("Stage/Button.wav");
+    Button->sfxButton = RSDK.GetSfx("Stage/Button.wav");
 }
 
 void Button_CheckEggmanCollisions(void)

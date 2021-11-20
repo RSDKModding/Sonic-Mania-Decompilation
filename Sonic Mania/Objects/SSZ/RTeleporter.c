@@ -48,8 +48,8 @@ void RTeleporter_StageLoad(void)
     RTeleporter->hitbox.left   = -34;
     RTeleporter->hitbox.right  = 34;
     RTeleporter->hitbox.bottom = 32;
-    RTeleporter->sfxExplosion  = RSDK.GetSFX("Stage/Explosion2.wav");
-    RTeleporter->sfxGoodFuture = RSDK.GetSFX("Stage/GoodFuture.wav");
+    RTeleporter->sfxExplosion  = RSDK.GetSfx("Stage/Explosion2.wav");
+    RTeleporter->sfxGoodFuture = RSDK.GetSfx("Stage/GoodFuture.wav");
 }
 
 void RTeleporter_State_CheckPlayerCollisions(void)

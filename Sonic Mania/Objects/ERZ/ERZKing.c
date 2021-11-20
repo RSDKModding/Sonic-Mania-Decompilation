@@ -80,8 +80,8 @@ void ERZKing_Create(void *data)
 void ERZKing_StageLoad(void)
 {
     ERZKing->aniFrames     = RSDK.LoadSpriteAnimation("Phantom/PhantomKing.bin", SCOPE_STAGE);
-    ERZKing->sfxHit        = RSDK.GetSFX("Stage/BossHit.wav");
-    ERZKing->sfxExplosion2 = RSDK.GetSFX("Stage/Explosion2.wav");
+    ERZKing->sfxHit        = RSDK.GetSfx("Stage/BossHit.wav");
+    ERZKing->sfxExplosion2 = RSDK.GetSfx("Stage/Explosion2.wav");
 }
 
 void ERZKing_CheckPlayerCollisions(void)

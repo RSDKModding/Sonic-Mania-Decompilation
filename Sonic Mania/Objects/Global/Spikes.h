@@ -14,11 +14,11 @@ typedef enum {
 typedef struct {
     RSDK_OBJECT
     StateMachine(stateDraw);
-    Animator vData;
-    Animator hData;
+    Animator verticalAnimator;
+    Animator horizontalAnimator;
     uint16 aniFrames;
-    int32 dword3C;
-    int32 dword40;
+    int32 unused1; // both set on StageLoad but then never used
+    int32 unused2; // both set on StageLoad but then never used
     uint16 sfxMove;
     uint16 sfxSpike;
 } ObjectSpikes;
@@ -59,8 +59,8 @@ void Spikes_EditorLoad(void);
 void Spikes_Serialize(void);
 
 // Extra Entity Functions
-void Spikes_StateDraw_Global(void);
-void Spikes_StateDraw_Stage(void);
+void Spikes_Draw_Global(void);
+void Spikes_Draw_Stage(void);
 
 void Spikes_Shatter(int32 velX, int32 velY);
 void Spikes_CheckHit(EntityPlayer *player, int32 playerVelX, int32 playerVelY);

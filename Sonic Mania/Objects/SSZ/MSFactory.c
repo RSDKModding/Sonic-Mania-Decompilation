@@ -42,8 +42,8 @@ void MSFactory_Create(void *data)
 void MSFactory_StageLoad(void)
 {
     MSFactory->aniFrames          = RSDK.LoadSpriteAnimation("SSZ2/MSFactory.bin", SCOPE_STAGE);
-    MSFactory->sfxMachineActivate = RSDK.GetSFX("Stage/MachineActivate.wav");
-    MSFactory->sfxHullClose       = RSDK.GetSFX("Stage/HullClose.wav");
+    MSFactory->sfxMachineActivate = RSDK.GetSfx("Stage/MachineActivate.wav");
+    MSFactory->sfxHullClose       = RSDK.GetSfx("Stage/HullClose.wav");
 }
 
 void MSFactory_Unknown1(void)

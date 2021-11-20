@@ -41,7 +41,7 @@ void WeatherMobile_StaticUpdate(void)
         }
     }
     else if (WeatherMobile->playingRainSfx) {
-        RSDK.StopSFX(WeatherMobile->sfxRain);
+        RSDK.StopSfx(WeatherMobile->sfxRain);
         WeatherMobile->playingRainSfx = false;
     }
 
@@ -58,7 +58,7 @@ void WeatherMobile_StaticUpdate(void)
     }
     else if (!windCount1 && !windCount2) {
         if (WeatherMobile->playingWindSfx) {
-            RSDK.StopSFX(WeatherMobile->sfxWind);
+            RSDK.StopSfx(WeatherMobile->sfxWind);
             WeatherMobile->playingWindSfx = false;
         }
     }
@@ -179,13 +179,13 @@ void WeatherMobile_StageLoad(void)
     WeatherMobile->active       = ACTIVE_ALWAYS;
     WeatherMobile->aniFrames    = RSDK.LoadSpriteAnimation("SPZ2/WeatherMobile.bin", SCOPE_STAGE);
     WeatherMobile->eggmanFrames = RSDK.LoadSpriteAnimation("Eggman/EggMobile.bin", SCOPE_STAGE);
-    WeatherMobile->sfxHit       = RSDK.GetSFX("Stage/BossHit.wav");
-    WeatherMobile->sfxExplosion = RSDK.GetSFX("Stage/Explosion2.wav");
-    WeatherMobile->sfxCloud     = RSDK.GetSFX("SPZ2/Cloud.wav");
-    WeatherMobile->sfxLightning = RSDK.GetSFX("SPZ2/Lightning.wav");
-    WeatherMobile->sfxSun       = RSDK.GetSFX("SPZ2/Sun.wav");
-    WeatherMobile->sfxWind      = RSDK.GetSFX("SPZ2/Wind.wav");
-    WeatherMobile->sfxRain      = RSDK.GetSFX("FBZ/Rain.wav");
+    WeatherMobile->sfxHit       = RSDK.GetSfx("Stage/BossHit.wav");
+    WeatherMobile->sfxExplosion = RSDK.GetSfx("Stage/Explosion2.wav");
+    WeatherMobile->sfxCloud     = RSDK.GetSfx("SPZ2/Cloud.wav");
+    WeatherMobile->sfxLightning = RSDK.GetSfx("SPZ2/Lightning.wav");
+    WeatherMobile->sfxSun       = RSDK.GetSfx("SPZ2/Sun.wav");
+    WeatherMobile->sfxWind      = RSDK.GetSfx("SPZ2/Wind.wav");
+    WeatherMobile->sfxRain      = RSDK.GetSfx("FBZ/Rain.wav");
 }
 
 void WeatherMobile_HandleAnimations(void)

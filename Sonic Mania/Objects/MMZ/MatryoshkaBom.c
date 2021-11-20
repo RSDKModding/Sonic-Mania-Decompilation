@@ -109,9 +109,9 @@ void MatryoshkaBom_StageLoad(void)
 
     DEBUGMODE_ADD_OBJ(MatryoshkaBom);
 
-    MatryoshkaBom->sfxExplosion = RSDK.GetSFX("Stage/Explosion.wav");
-    MatryoshkaBom->sfxButton    = RSDK.GetSFX("Stage/Button2.wav");
-    MatryoshkaBom->sfxPon       = RSDK.GetSFX("Stage/Pon.wav");
+    MatryoshkaBom->sfxExplosion = RSDK.GetSfx("Stage/Explosion.wav");
+    MatryoshkaBom->sfxButton    = RSDK.GetSfx("Stage/Button2.wav");
+    MatryoshkaBom->sfxPon       = RSDK.GetSfx("Stage/Pon.wav");
 }
 
 void MatryoshkaBom_DebugSpawn(void)

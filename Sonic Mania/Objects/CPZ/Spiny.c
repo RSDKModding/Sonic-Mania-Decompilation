@@ -70,7 +70,7 @@ void Spiny_StageLoad(void)
     Spiny->hitboxShot.right   = 4;
     Spiny->hitboxShot.bottom  = 4;
     DEBUGMODE_ADD_OBJ(Spiny);
-    Spiny->sfxShot = RSDK.GetSFX("Stage/Shot.wav");
+    Spiny->sfxShot = RSDK.GetSfx("Stage/Shot.wav");
 }
 
 void Spiny_DebugSpawn(void)

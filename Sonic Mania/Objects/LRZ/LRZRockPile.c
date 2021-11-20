@@ -74,7 +74,7 @@ void LRZRockPile_StageLoad(void)
         LRZRockPile->hitbox1.bottom = 32;
     }
 
-    LRZRockPile->sfxLedgeBreak = RSDK.GetSFX("Stage/LedgeBreak.wav");
+    LRZRockPile->sfxLedgeBreak = RSDK.GetSfx("Stage/LedgeBreak.wav");
 
     LRZRockPile->hitbox2.left   = -64;
     LRZRockPile->hitbox2.top    = -32;

@@ -93,12 +93,12 @@ void EncoreIntro_Create(void *data)
 void EncoreIntro_StageLoad(void)
 {
     EncoreIntro->aniFrames          = RSDK.LoadSpriteAnimation("AIZ/Cutscene.bin", SCOPE_STAGE);
-    EncoreIntro->sfxHighFive        = RSDK.GetSFX("Stage/HighFive.wav");
-    EncoreIntro->sfxMysticPoof      = RSDK.GetSFX("MSZ/MysticPoof.wav");
-    EncoreIntro->sfxKingCharge      = RSDK.GetSFX("LRZ/KingCharge.wav");
-    EncoreIntro->sfxMysticHat       = RSDK.GetSFX("MSZ/MysticHat.wav");
-    EncoreIntro->sfxMysticTransform = RSDK.GetSFX("MSZ/MysticTransform.wav");
-    EncoreIntro->sfxPon             = RSDK.GetSFX("Stage/Pon.wav");
+    EncoreIntro->sfxHighFive        = RSDK.GetSfx("Stage/HighFive.wav");
+    EncoreIntro->sfxMysticPoof      = RSDK.GetSfx("MSZ/MysticPoof.wav");
+    EncoreIntro->sfxKingCharge      = RSDK.GetSfx("LRZ/KingCharge.wav");
+    EncoreIntro->sfxMysticHat       = RSDK.GetSfx("MSZ/MysticHat.wav");
+    EncoreIntro->sfxMysticTransform = RSDK.GetSfx("MSZ/MysticTransform.wav");
+    EncoreIntro->sfxPon             = RSDK.GetSfx("Stage/Pon.wav");
     Music_SetMusicTrack("BuddyBeat.ogg", TRACK_BUDDYBEAT, 85232);
 }
 

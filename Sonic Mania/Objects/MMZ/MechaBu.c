@@ -64,8 +64,8 @@ void MechaBu_StageLoad(void)
 
     DEBUGMODE_ADD_OBJ(MechaBu);
 
-    MechaBu->sfxSawUp   = RSDK.GetSFX("MMZ/SawUp.wav");
-    MechaBu->sfxSawDown = RSDK.GetSFX("MMZ/SawDown.wav");
+    MechaBu->sfxSawUp   = RSDK.GetSfx("MMZ/SawUp.wav");
+    MechaBu->sfxSawDown = RSDK.GetSfx("MMZ/SawDown.wav");
 }
 
 void MechaBu_DebugSpawn(void)

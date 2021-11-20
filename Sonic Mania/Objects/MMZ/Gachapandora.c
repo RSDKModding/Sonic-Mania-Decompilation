@@ -199,12 +199,12 @@ void Gachapandora_StageLoad(void)
     Gachapandora->value20[1] = 0;
     Gachapandora->value20[2] = 0;
 
-    Gachapandora->sfxHit       = RSDK.GetSFX("Stage/BossHit.wav");
-    Gachapandora->sfxExplosion = RSDK.GetSFX("Stage/Explosion2.wav");
-    Gachapandora->sfxUnravel   = RSDK.GetSFX("Stage/Unravel.wav");
-    Gachapandora->sfxPon       = RSDK.GetSFX("Stage/Pon.wav");
-    Gachapandora->sfxFireball  = RSDK.GetSFX("Stage/Fireball.wav");
-    Gachapandora->sfxGiggle    = RSDK.GetSFX("MMZ/Giggle.wav");
+    Gachapandora->sfxHit       = RSDK.GetSfx("Stage/BossHit.wav");
+    Gachapandora->sfxExplosion = RSDK.GetSfx("Stage/Explosion2.wav");
+    Gachapandora->sfxUnravel   = RSDK.GetSfx("Stage/Unravel.wav");
+    Gachapandora->sfxPon       = RSDK.GetSfx("Stage/Pon.wav");
+    Gachapandora->sfxFireball  = RSDK.GetSfx("Stage/Fireball.wav");
+    Gachapandora->sfxGiggle    = RSDK.GetSfx("MMZ/Giggle.wav");
 }
 
 void Gachapandora_CheckPlayerCollisions(void)

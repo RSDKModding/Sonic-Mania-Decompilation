@@ -81,8 +81,8 @@ void PhantomKing_Create(void *data)
 void PhantomKing_StageLoad(void)
 {
     PhantomKing->aniFrames    = RSDK.LoadSpriteAnimation("Phantom/PhantomKing.bin", SCOPE_STAGE);
-    PhantomKing->sfxHit       = RSDK.GetSFX("Stage/BossHit.wav");
-    PhantomKing->sfxExplosion = RSDK.GetSFX("Stage/Explosion2.wav");
+    PhantomKing->sfxHit       = RSDK.GetSfx("Stage/BossHit.wav");
+    PhantomKing->sfxExplosion = RSDK.GetSfx("Stage/Explosion2.wav");
 }
 
 void PhantomKing_CheckPlayerCollisions(void)

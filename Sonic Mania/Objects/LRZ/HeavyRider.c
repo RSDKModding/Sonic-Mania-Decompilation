@@ -159,14 +159,14 @@ void HeavyRider_StageLoad(void)
 
     HeavyRider->health             = 8;
     HeavyRider->invincibilityTimer = 0;
-    HeavyRider->sfxHit             = RSDK.GetSFX("Stage/BossHit.wav");
-    HeavyRider->sfxExplosion       = RSDK.GetSFX("Stage/Explosion2.wav");
-    HeavyRider->sfxCharge          = RSDK.GetSFX("LRZ/RiderCharge.wav");
-    HeavyRider->sfxLaunch          = RSDK.GetSFX("LRZ/RiderLaunch.wav");
-    HeavyRider->sfxSkid            = RSDK.GetSFX("LRZ/RiderSkid.wav");
-    HeavyRider->sfxJump            = RSDK.GetSFX("LRZ/RiderJump.wav");
-    HeavyRider->sfxCheer           = RSDK.GetSFX("LRZ/RiderCheer.wav");
-    HeavyRider->sfxBumper          = RSDK.GetSFX("Stage/Bumper3.wav");
+    HeavyRider->sfxHit             = RSDK.GetSfx("Stage/BossHit.wav");
+    HeavyRider->sfxExplosion       = RSDK.GetSfx("Stage/Explosion2.wav");
+    HeavyRider->sfxCharge          = RSDK.GetSfx("LRZ/RiderCharge.wav");
+    HeavyRider->sfxLaunch          = RSDK.GetSfx("LRZ/RiderLaunch.wav");
+    HeavyRider->sfxSkid            = RSDK.GetSfx("LRZ/RiderSkid.wav");
+    HeavyRider->sfxJump            = RSDK.GetSfx("LRZ/RiderJump.wav");
+    HeavyRider->sfxCheer           = RSDK.GetSfx("LRZ/RiderCheer.wav");
+    HeavyRider->sfxBumper          = RSDK.GetSfx("Stage/Bumper3.wav");
 }
 
 void HeavyRider_SpawnDebris(int frame, uint8 drawOrder, int x, int y)

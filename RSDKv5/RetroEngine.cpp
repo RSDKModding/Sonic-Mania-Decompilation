@@ -299,7 +299,7 @@ void runRetroEngine()
 #if RETRO_USING_SDL2
             SDL_SetWindowTitle(engine.window, gameVerInfo.gameName);
 #endif
-            LoadGlobalSFX();
+            LoadGlobalSfx();
 
             sceneInfo.state = ENGINESTATE_LOAD;
         }

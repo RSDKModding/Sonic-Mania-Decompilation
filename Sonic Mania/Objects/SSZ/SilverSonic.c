@@ -66,11 +66,11 @@ void SilverSonic_Create(void *data)
 void SilverSonic_StageLoad(void)
 {
     SilverSonic->aniFrames  = RSDK.LoadSpriteAnimation("SSZ2/SilverSonic.bin", SCOPE_STAGE);
-    SilverSonic->sfxJump    = RSDK.GetSFX("SSZ2/SSJump.wav");
-    SilverSonic->sfxDash    = RSDK.GetSFX("SSZ2/SSDash.wav");
-    SilverSonic->sfxBoost   = RSDK.GetSFX("SSZ2/SSBoost.wav");
-    SilverSonic->sfxRebound = RSDK.GetSFX("SSZ2/SSRebound.wav");
-    SilverSonic->sfxArm     = RSDK.GetSFX("SSZ2/SSArm.wav");
+    SilverSonic->sfxJump    = RSDK.GetSfx("SSZ2/SSJump.wav");
+    SilverSonic->sfxDash    = RSDK.GetSfx("SSZ2/SSDash.wav");
+    SilverSonic->sfxBoost   = RSDK.GetSfx("SSZ2/SSBoost.wav");
+    SilverSonic->sfxRebound = RSDK.GetSfx("SSZ2/SSRebound.wav");
+    SilverSonic->sfxArm     = RSDK.GetSfx("SSZ2/SSArm.wav");
 }
 
 void SilverSonic_HandleNextAttack(void)

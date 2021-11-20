@@ -87,15 +87,15 @@ void LaunchSpring_Create(void *data)
             default: break;
         }
 
-        LaunchSpring->sfxGrab = RSDK.GetSFX("Global/Grab.wav");
+        LaunchSpring->sfxGrab = RSDK.GetSfx("Global/Grab.wav");
         if (RSDK.CheckStageFolder("SSZ1") || RSDK.CheckStageFolder("SSZ2")) {
             LaunchSpring->flag            = false;
-            LaunchSpring->sfxClack        = RSDK.GetSFX("Stage/Clack.wav");
-            LaunchSpring->sfxSpeedBooster = RSDK.GetSFX("Stage/SpeedBooster.wav");
+            LaunchSpring->sfxClack        = RSDK.GetSfx("Stage/Clack.wav");
+            LaunchSpring->sfxSpeedBooster = RSDK.GetSfx("Stage/SpeedBooster.wav");
         }
         else if (RSDK.CheckStageFolder("TMZ1") || RSDK.CheckStageFolder("TMZ2")) {
             LaunchSpring->flag            = true;
-            LaunchSpring->sfxSpeedBooster = RSDK.GetSFX("Stage/CannonFire.wav");
+            LaunchSpring->sfxSpeedBooster = RSDK.GetSfx("Stage/CannonFire.wav");
         }
     }
 }

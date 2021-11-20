@@ -57,8 +57,8 @@ void Letterboard_StageLoad(void)
     Letterboard->hitbox.top    = -12;
     Letterboard->hitbox.right  = 12;
     Letterboard->hitbox.bottom = 12;
-    Letterboard->sfxLetterTurn = RSDK.GetSFX("Stage/LetterTurn.wav");
-    Letterboard->sfxWin        = RSDK.GetSFX("Stage/Win.wav");
+    Letterboard->sfxLetterTurn = RSDK.GetSfx("Stage/LetterTurn.wav");
+    Letterboard->sfxWin        = RSDK.GetSfx("Stage/Win.wav");
 }
 
 void Letterboard_State_Controller(void)

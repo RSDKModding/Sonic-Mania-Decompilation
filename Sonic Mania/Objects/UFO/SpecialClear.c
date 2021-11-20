@@ -314,12 +314,12 @@ void SpecialClear_StageLoad(void)
 #if !RETRO_USE_PLUS
     SpecialClear->continueFrames = RSDK.LoadSpriteAnimation("Players/Continue.bin", SCOPE_STAGE);
 #endif
-    SpecialClear->sfxScoreAdd    = RSDK.GetSFX("Global/ScoreAdd.wav");
-    SpecialClear->sfxScoreTotal  = RSDK.GetSFX("Global/ScoreTotal.wav");
-    SpecialClear->sfxEvent       = RSDK.GetSFX("Special/Event.wav");
-    SpecialClear->sfxSpecialWarp = RSDK.GetSFX("Global/SpecialWarp.wav");
-    SpecialClear->sfxContinue    = RSDK.GetSFX("Special/Continue.wav");
-    SpecialClear->sfxEmerald     = RSDK.GetSFX("Special/Emerald.wav");
+    SpecialClear->sfxScoreAdd    = RSDK.GetSfx("Global/ScoreAdd.wav");
+    SpecialClear->sfxScoreTotal  = RSDK.GetSfx("Global/ScoreTotal.wav");
+    SpecialClear->sfxEvent       = RSDK.GetSfx("Special/Event.wav");
+    SpecialClear->sfxSpecialWarp = RSDK.GetSfx("Global/SpecialWarp.wav");
+    SpecialClear->sfxContinue    = RSDK.GetSfx("Special/Continue.wav");
+    SpecialClear->sfxEmerald     = RSDK.GetSfx("Special/Emerald.wav");
 }
 
 void SpecialClear_DrawNumbers(Vector2 *pos, int32 value)

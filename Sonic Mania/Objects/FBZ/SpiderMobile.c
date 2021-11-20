@@ -124,17 +124,17 @@ void SpiderMobile_StageLoad(void)
     SpiderMobile->hitboxPlatform.right  = 512;
     SpiderMobile->hitboxPlatform.bottom = 288;
 
-    SpiderMobile->sfxHit       = RSDK.GetSFX("Stage/BossHit.wav");
-    SpiderMobile->sfxExplosion = RSDK.GetSFX("Stage/Explosion2.wav");
-    SpiderMobile->sfxBumper    = RSDK.GetSFX("Stage/Bumper.wav");
-    SpiderMobile->sfxCharge    = RSDK.GetSFX("FBZ/SpiderCharge.wav");
-    SpiderMobile->sfxElecBall  = RSDK.GetSFX("FBZ/SpiderElecBall.wav");
-    SpiderMobile->sfxFall      = RSDK.GetSFX("FBZ/SpiderFall.wav");
-    SpiderMobile->sfxFlailing  = RSDK.GetSFX("FBZ/SpiderFlailing.wav");
-    SpiderMobile->sfxHitGround = RSDK.GetSFX("FBZ/SpiderHitGround.wav");
-    SpiderMobile->sfxRecovery  = RSDK.GetSFX("FBZ/SpiderRecovery.wav");
-    SpiderMobile->sfxElevator  = RSDK.GetSFX("FBZ/Elevator.wav");
-    SpiderMobile->sfxHullClose = RSDK.GetSFX("Stage/HullClose.wav");
+    SpiderMobile->sfxHit       = RSDK.GetSfx("Stage/BossHit.wav");
+    SpiderMobile->sfxExplosion = RSDK.GetSfx("Stage/Explosion2.wav");
+    SpiderMobile->sfxBumper    = RSDK.GetSfx("Stage/Bumper.wav");
+    SpiderMobile->sfxCharge    = RSDK.GetSfx("FBZ/SpiderCharge.wav");
+    SpiderMobile->sfxElecBall  = RSDK.GetSfx("FBZ/SpiderElecBall.wav");
+    SpiderMobile->sfxFall      = RSDK.GetSfx("FBZ/SpiderFall.wav");
+    SpiderMobile->sfxFlailing  = RSDK.GetSfx("FBZ/SpiderFlailing.wav");
+    SpiderMobile->sfxHitGround = RSDK.GetSfx("FBZ/SpiderHitGround.wav");
+    SpiderMobile->sfxRecovery  = RSDK.GetSfx("FBZ/SpiderRecovery.wav");
+    SpiderMobile->sfxElevator  = RSDK.GetSfx("FBZ/Elevator.wav");
+    SpiderMobile->sfxHullClose = RSDK.GetSfx("Stage/HullClose.wav");
     Soundboard_LoadSFX("FBZ/Elevator.wav", true, SpiderMobile_CheckCB, NULL);
 }
 

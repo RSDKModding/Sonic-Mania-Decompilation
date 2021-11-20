@@ -43,7 +43,7 @@ void Firework_StaticUpdate(void)
 
     if (!flag) {
         if (Firework->playingFlameSfx) {
-            RSDK.StopSFX(Firework->sfxFlame);
+            RSDK.StopSfx(Firework->sfxFlame);
             Firework->playingFlameSfx = false;
         }
     }
@@ -99,10 +99,10 @@ void Firework_StageLoad(void)
     Firework->hitbox2.top    = -10;
     Firework->hitbox2.right  = 10;
     Firework->hitbox2.bottom = 10;
-    Firework->sfxRocketJet   = RSDK.GetSFX("Stage/RocketJet.wav");
-    Firework->sfxFlame       = RSDK.GetSFX("Stage/Flame2.wav");
-    Firework->sfxExplosion2  = RSDK.GetSFX("Stage/Explosion2.wav");
-    Firework->sfxExplosion   = RSDK.GetSFX("Stage/Explosion.wav");
+    Firework->sfxRocketJet   = RSDK.GetSfx("Stage/RocketJet.wav");
+    Firework->sfxFlame       = RSDK.GetSfx("Stage/Flame2.wav");
+    Firework->sfxExplosion2  = RSDK.GetSfx("Stage/Explosion2.wav");
+    Firework->sfxExplosion   = RSDK.GetSfx("Stage/Explosion.wav");
     Firework->active         = ACTIVE_ALWAYS;
 }
 

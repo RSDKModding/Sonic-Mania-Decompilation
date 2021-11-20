@@ -147,11 +147,11 @@ void Hatch_StageLoad(void)
     Hatch->hitbox5.right  = 12;
     Hatch->hitbox5.bottom = 24;
     Hatch->active         = ACTIVE_ALWAYS;
-    Hatch->sfxHatchOpen   = RSDK.GetSFX("OOZ/SubHatchOpen.wav");
-    Hatch->sfxHatchClose  = RSDK.GetSFX("OOZ/SubHatchClose.wav");
-    Hatch->sfxDescend     = RSDK.GetSFX("OOZ/SubDescend.wav");
-    Hatch->sfxSurface     = RSDK.GetSFX("OOZ/SubSurface.wav");
-    Hatch->sfxGasPop      = RSDK.GetSFX("OOZ/GasPop.wav");
+    Hatch->sfxHatchOpen   = RSDK.GetSfx("OOZ/SubHatchOpen.wav");
+    Hatch->sfxHatchClose  = RSDK.GetSfx("OOZ/SubHatchClose.wav");
+    Hatch->sfxDescend     = RSDK.GetSfx("OOZ/SubDescend.wav");
+    Hatch->sfxSurface     = RSDK.GetSfx("OOZ/SubSurface.wav");
+    Hatch->sfxGasPop      = RSDK.GetSfx("OOZ/GasPop.wav");
 }
 
 void Hatch_Unknown1(void)

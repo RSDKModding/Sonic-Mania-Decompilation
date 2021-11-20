@@ -54,7 +54,7 @@ void LightBulb_StageLoad(void)
     LightBulb->hitbox.top    = -12;
     LightBulb->hitbox.right  = 12;
     LightBulb->hitbox.bottom = 12;
-    LightBulb->sfxBulbPop    = RSDK.GetSFX("Stage/BulbPop.wav");
+    LightBulb->sfxBulbPop    = RSDK.GetSfx("Stage/BulbPop.wav");
     DEBUGMODE_ADD_OBJ(LightBulb);
 }
 

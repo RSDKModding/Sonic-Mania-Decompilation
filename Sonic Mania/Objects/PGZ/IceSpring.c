@@ -189,8 +189,8 @@ void IceSpring_Create(void *data)
 void IceSpring_StageLoad(void)
 {
     IceSpring->animID     = RSDK.LoadSpriteAnimation("PSZ2/IceSpring.bin", SCOPE_STAGE);
-    IceSpring->bounceSFX  = RSDK.GetSFX("Global/Spring.wav");
-    IceSpring->shatterSFX = RSDK.GetSFX("Stage/WindowShatter.wav");
+    IceSpring->bounceSFX  = RSDK.GetSfx("Global/Spring.wav");
+    IceSpring->shatterSFX = RSDK.GetSfx("Stage/WindowShatter.wav");
 }
 
 void IceSpring_Shatter(int32 velX, int32 velY)

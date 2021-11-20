@@ -77,7 +77,7 @@ void MicDrop_StageLoad(void)
     MicDrop->hitbox2.right  = 128;
     MicDrop->hitbox2.bottom = 256;
     DEBUGMODE_ADD_OBJ(MicDrop);
-    MicDrop->sfxElectrify = RSDK.GetSFX("Stage/Electrify.wav");
+    MicDrop->sfxElectrify = RSDK.GetSfx("Stage/Electrify.wav");
 }
 
 void MicDrop_DebugSpawn(void)

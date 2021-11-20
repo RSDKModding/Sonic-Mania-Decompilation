@@ -38,9 +38,9 @@ void LRZ1Intro_Create(void *data)
 void LRZ1Intro_StageLoad(void)
 {
     LRZ1Intro->aniFrames      = RSDK.LoadSpriteAnimation("LRZ1/IntroSub.bin", SCOPE_STAGE);
-    LRZ1Intro->sfxSubLand     = RSDK.GetSFX("LRZ/SubLand.wav");
-    LRZ1Intro->sfxWalkerLegs2 = RSDK.GetSFX("LRZ/WalkerLegs2.wav");
-    LRZ1Intro->sfxLava        = RSDK.GetSFX("Stage/Lava.wav");
+    LRZ1Intro->sfxSubLand     = RSDK.GetSfx("LRZ/SubLand.wav");
+    LRZ1Intro->sfxWalkerLegs2 = RSDK.GetSfx("LRZ/WalkerLegs2.wav");
+    LRZ1Intro->sfxLava        = RSDK.GetSfx("Stage/Lava.wav");
 }
 
 void LRZ1Intro_HandlePlayerCollisions(void)

@@ -211,20 +211,20 @@ void WarpDoor_StageLoad(void)
         WarpDoor->tags[i] = NULL;
     }
     if (RSDK.CheckStageFolder("FBZ"))
-        WarpDoor->sfxWarpDoor = RSDK.GetSFX("FBZ/WarpDoor.wav");
+        WarpDoor->sfxWarpDoor = RSDK.GetSfx("FBZ/WarpDoor.wav");
     if (RSDK.CheckStageFolder("TMZ2")) {
-        WarpDoor->sfxRubyAttackL[0] = RSDK.GetSFX("Ruby/Attack1_L.wav");
-        WarpDoor->sfxRubyAttackR[0] = RSDK.GetSFX("Ruby/Attack1_R.wav");
-        WarpDoor->sfxRubyAttackL[1] = RSDK.GetSFX("Ruby/Attack2_L.wav");
-        WarpDoor->sfxRubyAttackR[1] = RSDK.GetSFX("Ruby/Attack2_R.wav");
-        WarpDoor->sfxRubyAttackL[2] = RSDK.GetSFX("Ruby/Attack3_L.wav");
-        WarpDoor->sfxRubyAttackR[2] = RSDK.GetSFX("Ruby/Attack3_R.wav");
-        WarpDoor->sfxRubyAttackL[3] = RSDK.GetSFX("Ruby/Attack4_L.wav");
-        WarpDoor->sfxRubyAttackR[3] = RSDK.GetSFX("Ruby/Attack4_R.wav");
-        WarpDoor->sfxRubyAttackL[4] = RSDK.GetSFX("Ruby/Attack5_L.wav");
-        WarpDoor->sfxRubyAttackR[4] = RSDK.GetSFX("Ruby/Attack5_R.wav");
-        WarpDoor->sfxRubyAttackL[5] = RSDK.GetSFX("Ruby/Attack6_L.wav");
-        WarpDoor->sfxRubyAttackR[5] = RSDK.GetSFX("Ruby/Attack6_R.wav");
+        WarpDoor->sfxRubyAttackL[0] = RSDK.GetSfx("Ruby/Attack1_L.wav");
+        WarpDoor->sfxRubyAttackR[0] = RSDK.GetSfx("Ruby/Attack1_R.wav");
+        WarpDoor->sfxRubyAttackL[1] = RSDK.GetSfx("Ruby/Attack2_L.wav");
+        WarpDoor->sfxRubyAttackR[1] = RSDK.GetSfx("Ruby/Attack2_R.wav");
+        WarpDoor->sfxRubyAttackL[2] = RSDK.GetSfx("Ruby/Attack3_L.wav");
+        WarpDoor->sfxRubyAttackR[2] = RSDK.GetSfx("Ruby/Attack3_R.wav");
+        WarpDoor->sfxRubyAttackL[3] = RSDK.GetSfx("Ruby/Attack4_L.wav");
+        WarpDoor->sfxRubyAttackR[3] = RSDK.GetSfx("Ruby/Attack4_R.wav");
+        WarpDoor->sfxRubyAttackL[4] = RSDK.GetSfx("Ruby/Attack5_L.wav");
+        WarpDoor->sfxRubyAttackR[4] = RSDK.GetSfx("Ruby/Attack5_R.wav");
+        WarpDoor->sfxRubyAttackL[5] = RSDK.GetSfx("Ruby/Attack6_L.wav");
+        WarpDoor->sfxRubyAttackR[5] = RSDK.GetSfx("Ruby/Attack6_R.wav");
     }
 }
 

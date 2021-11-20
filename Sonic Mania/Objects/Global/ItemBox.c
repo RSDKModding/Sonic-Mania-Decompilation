@@ -184,12 +184,12 @@ void ItemBox_StageLoad(void)
         }
     }
 
-    ItemBox->sfxDestroy   = RSDK.GetSFX("Global/Destroy.wav");
-    ItemBox->sfxTeleport  = RSDK.GetSFX("Global/Teleport.wav");
-    ItemBox->sfxHyperRing = RSDK.GetSFX("Global/HyperRing.wav");
+    ItemBox->sfxDestroy   = RSDK.GetSfx("Global/Destroy.wav");
+    ItemBox->sfxTeleport  = RSDK.GetSfx("Global/Teleport.wav");
+    ItemBox->sfxHyperRing = RSDK.GetSfx("Global/HyperRing.wav");
 #if RETRO_USE_PLUS
-    ItemBox->sfxPowerDown = RSDK.GetSFX("Stage/PowerDown.wav");
-    ItemBox->sfxRevovery  = RSDK.GetSFX("Global/Recovery.wav");
+    ItemBox->sfxPowerDown = RSDK.GetSfx("Stage/PowerDown.wav");
+    ItemBox->sfxRevovery  = RSDK.GetSfx("Global/Recovery.wav");
 #endif
 }
 

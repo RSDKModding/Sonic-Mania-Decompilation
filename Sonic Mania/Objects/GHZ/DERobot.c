@@ -139,15 +139,15 @@ void DERobot_StageLoad(void)
     DERobot->hitbox2.top    = -9;
     DERobot->hitbox2.right  = 9;
     DERobot->hitbox2.bottom = 9;
-    DERobot->sfxHit         = RSDK.GetSFX("Stage/BossHit.wav");
-    DERobot->sfxExplosion   = RSDK.GetSFX("Stage/Explosion2.wav");
-    DERobot->sfxImpact      = RSDK.GetSFX("Stage/Impact2.wav");
-    DERobot->sfxTargeting   = RSDK.GetSFX("Stage/Targeting1.wav");
-    DERobot->sfxLedgeBreak  = RSDK.GetSFX("Stage/LedgeBreak.wav");
-    DERobot->sfxBuzzsaw     = RSDK.GetSFX("Stage/Buzzsaw.wav");
-    DERobot->sfxDrop        = RSDK.GetSFX("Stage/Drop.wav");
-    DERobot->sfxButton2     = RSDK.GetSFX("Stage/Button2.wav");
-    DERobot->sfxHullClose   = RSDK.GetSFX("Stage/HullClose.wav");
+    DERobot->sfxHit         = RSDK.GetSfx("Stage/BossHit.wav");
+    DERobot->sfxExplosion   = RSDK.GetSfx("Stage/Explosion2.wav");
+    DERobot->sfxImpact      = RSDK.GetSfx("Stage/Impact2.wav");
+    DERobot->sfxTargeting   = RSDK.GetSfx("Stage/Targeting1.wav");
+    DERobot->sfxLedgeBreak  = RSDK.GetSfx("Stage/LedgeBreak.wav");
+    DERobot->sfxBuzzsaw     = RSDK.GetSfx("Stage/Buzzsaw.wav");
+    DERobot->sfxDrop        = RSDK.GetSfx("Stage/Drop.wav");
+    DERobot->sfxButton2     = RSDK.GetSfx("Stage/Button2.wav");
+    DERobot->sfxHullClose   = RSDK.GetSfx("Stage/HullClose.wav");
     RSDK.SetPaletteEntry(0, 236, 0x282028);
     RSDK.SetPaletteEntry(0, 237, 0x383040);
     RSDK.SetPaletteEntry(0, 238, 0x484868);
@@ -660,7 +660,7 @@ void DERobot_Unknown25(void)
     RSDK.ProcessAnimation(&self->animator3);
 
     if (self->field_CC <= 0) {
-        RSDK.StopSFX(DERobot->sfxBuzzsaw);
+        RSDK.StopSfx(DERobot->sfxBuzzsaw);
         self->state = DERobot_Unknown26;
     }
     else {

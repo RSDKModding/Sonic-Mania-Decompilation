@@ -85,7 +85,7 @@ void TimePost_StageLoad(void)
     TimePost->hitbox2.top    = -24;
     TimePost->hitbox2.right  = 8;
     TimePost->hitbox2.bottom = 24;
-    TimePost->sfxFuture      = RSDK.GetSFX("SSZ1/Future.wav");
+    TimePost->sfxFuture      = RSDK.GetSfx("SSZ1/Future.wav");
 }
 
 void TimePost_Spin(void)

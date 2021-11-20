@@ -31,8 +31,8 @@ void LRZ3Outro_Create(void *data)
 
 void LRZ3Outro_StageLoad(void)
 {
-    LRZ3Outro->sfxBlastoff     = RSDK.GetSFX("LRZ/Blastoff.wav");
-    LRZ3Outro->sfxLittlePlanet = RSDK.GetSFX("LRZ/LittlePlanet.wav");
+    LRZ3Outro->sfxBlastoff     = RSDK.GetSfx("LRZ/Blastoff.wav");
+    LRZ3Outro->sfxLittlePlanet = RSDK.GetSfx("LRZ/LittlePlanet.wav");
 }
 
 void LRZ3Outro_HandleExplosions(void)

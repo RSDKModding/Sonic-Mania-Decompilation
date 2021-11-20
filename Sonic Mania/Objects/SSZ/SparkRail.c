@@ -53,7 +53,7 @@ void SparkRail_StageLoad(void)
         SparkRail->aniFrames = RSDK.LoadSpriteAnimation("SSZ1/Spark.bin", SCOPE_STAGE);
     else
         SparkRail->aniFrames = RSDK.LoadSpriteAnimation("SSZ2/Spark.bin", SCOPE_STAGE);
-    SparkRail->sfxPon = RSDK.GetSFX("Stage/Pon.wav");
+    SparkRail->sfxPon = RSDK.GetSfx("Stage/Pon.wav");
 }
 
 #if RETRO_INCLUDE_EDITOR

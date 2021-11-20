@@ -108,19 +108,19 @@ void HeavyGunner_Create(void *data)
 void HeavyGunner_StageLoad(void)
 {
     HeavyGunner->aniFrames     = RSDK.LoadSpriteAnimation("SPZ1/Boss.bin", SCOPE_STAGE);
-    HeavyGunner->sfxFire       = RSDK.GetSFX("Stage/CannonFire.wav");
-    HeavyGunner->sfxJet        = RSDK.GetSFX("Stage/RocketJet.wav");
-    HeavyGunner->sfxHit        = RSDK.GetSFX("Stage/BossHit.wav");
-    HeavyGunner->sfxDestroy    = RSDK.GetSFX("Global/Destroy.wav");
-    HeavyGunner->sfxExplosion2 = RSDK.GetSFX("Stage/Explosion2.wav");
-    HeavyGunner->sfxExplosion3 = RSDK.GetSFX("Stage/Explosion3.wav");
-    HeavyGunner->sfxCharge     = RSDK.GetSFX("SPZ1/BazookaCharge.wav");
-    HeavyGunner->sfxThrow      = RSDK.GetSFX("SPZ1/BazookaThrow.wav");
-    HeavyGunner->sfxFlyIn      = RSDK.GetSFX("SPZ1/EggRoboFlyIn.wav");
-    HeavyGunner->sfxWooshIn    = RSDK.GetSFX("SPZ1/HeliWooshIn.wav");
-    HeavyGunner->sfxWooshOut   = RSDK.GetSFX("SPZ1/HeliWooshOut.wav");
-    HeavyGunner->sfxFlip       = RSDK.GetSFX("SPZ1/RocketFlip.wav");
-    HeavyGunner->sfxRumble     = RSDK.GetSFX("SPZ1/Rumble.wav");
+    HeavyGunner->sfxFire       = RSDK.GetSfx("Stage/CannonFire.wav");
+    HeavyGunner->sfxJet        = RSDK.GetSfx("Stage/RocketJet.wav");
+    HeavyGunner->sfxHit        = RSDK.GetSfx("Stage/BossHit.wav");
+    HeavyGunner->sfxDestroy    = RSDK.GetSfx("Global/Destroy.wav");
+    HeavyGunner->sfxExplosion2 = RSDK.GetSfx("Stage/Explosion2.wav");
+    HeavyGunner->sfxExplosion3 = RSDK.GetSfx("Stage/Explosion3.wav");
+    HeavyGunner->sfxCharge     = RSDK.GetSfx("SPZ1/BazookaCharge.wav");
+    HeavyGunner->sfxThrow      = RSDK.GetSfx("SPZ1/BazookaThrow.wav");
+    HeavyGunner->sfxFlyIn      = RSDK.GetSfx("SPZ1/EggRoboFlyIn.wav");
+    HeavyGunner->sfxWooshIn    = RSDK.GetSfx("SPZ1/HeliWooshIn.wav");
+    HeavyGunner->sfxWooshOut   = RSDK.GetSfx("SPZ1/HeliWooshOut.wav");
+    HeavyGunner->sfxFlip       = RSDK.GetSfx("SPZ1/RocketFlip.wav");
+    HeavyGunner->sfxRumble     = RSDK.GetSfx("SPZ1/Rumble.wav");
 
     Soundboard_LoadSFX("SPZ1/HBHSurprise.wav", true, HeavyGunner_SurpriseCheckCB, NULL);
     Soundboard_LoadSFX("SPZ1/HeliProp.wav", true, HeavyGunner_HelicopterCheckCB, NULL);

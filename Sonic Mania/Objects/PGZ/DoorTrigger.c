@@ -187,7 +187,7 @@ void DoorTrigger_StageLoad(void)
     DoorTrigger->hitboxes[1].left   = -10;
     DoorTrigger->hitboxes[1].bottom = 0;
     DoorTrigger->hitboxes[1].right  = 10;
-    DoorTrigger->sfxShatter         = RSDK.GetSFX("Stage/WindowShatter.wav");
+    DoorTrigger->sfxShatter         = RSDK.GetSfx("Stage/WindowShatter.wav");
 }
 
 #if RETRO_INCLUDE_EDITOR

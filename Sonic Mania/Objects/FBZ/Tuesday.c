@@ -238,11 +238,11 @@ void Tuesday_StageLoad(void)
     Tuesday->hitbox2.right  = 40;
     Tuesday->hitbox2.bottom = 80;
 
-    Tuesday->sfxElecCharge = RSDK.GetSFX("Stage/ElecCharge.wav");
-    Tuesday->sfxZap        = RSDK.GetSFX("Stage/Zap.wav");
-    Tuesday->sfxBossHit    = RSDK.GetSFX("Stage/BossHit.wav");
-    Tuesday->sfxExplosion  = RSDK.GetSFX("Stage/Explosion2.wav");
-    Tuesday->sfxDrop       = RSDK.GetSFX("Stage/Drop.wav");
+    Tuesday->sfxElecCharge = RSDK.GetSfx("Stage/ElecCharge.wav");
+    Tuesday->sfxZap        = RSDK.GetSfx("Stage/Zap.wav");
+    Tuesday->sfxBossHit    = RSDK.GetSfx("Stage/BossHit.wav");
+    Tuesday->sfxExplosion  = RSDK.GetSfx("Stage/Explosion2.wav");
+    Tuesday->sfxDrop       = RSDK.GetSfx("Stage/Drop.wav");
 }
 
 void Tuesday_DrawElectricity(void)

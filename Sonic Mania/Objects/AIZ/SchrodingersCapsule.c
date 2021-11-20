@@ -140,8 +140,8 @@ void SchrodingersCapsule_Create(void *data)
 void SchrodingersCapsule_StageLoad(void)
 {
     SchrodingersCapsule->aniFrames     = RSDK.LoadSpriteAnimation("AIZ/SchrodingersCapsule.bin", SCOPE_STAGE);
-    SchrodingersCapsule->sfxExplosion2 = RSDK.GetSFX("Stage/Explosion2.wav");
-    SchrodingersCapsule->sfxExplosion3 = RSDK.GetSFX("Stage/Explosion3.wav");
+    SchrodingersCapsule->sfxExplosion2 = RSDK.GetSfx("Stage/Explosion2.wav");
+    SchrodingersCapsule->sfxExplosion3 = RSDK.GetSfx("Stage/Explosion3.wav");
 }
 
 void SchrodingersCapsule_Unknown1(void)

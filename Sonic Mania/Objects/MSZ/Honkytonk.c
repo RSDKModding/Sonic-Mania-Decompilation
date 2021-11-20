@@ -137,7 +137,7 @@ void Honkytonk_StageLoad(void)
     Honkytonk->hitbox2.top    = 6;
     Honkytonk->hitbox2.right  = 24;
     Honkytonk->hitbox2.bottom = 12;
-    Honkytonk->sfxPiano       = RSDK.GetSFX("MSZ/Piano00C2.wav");
+    Honkytonk->sfxPiano       = RSDK.GetSfx("MSZ/Piano00C2.wav");
 }
 
 void Honkytonk_EditorDraw(void)

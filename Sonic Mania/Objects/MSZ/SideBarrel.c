@@ -91,7 +91,7 @@ void SideBarrel_Create(void *data)
 void SideBarrel_StageLoad(void)
 {
     SideBarrel->aniFrames = RSDK.LoadSpriteAnimation("MSZ/SideBarrel.bin", SCOPE_STAGE);
-    SideBarrel->sfxDrop   = RSDK.GetSFX("Stage/Drop.wav");
+    SideBarrel->sfxDrop   = RSDK.GetSfx("Stage/Drop.wav");
 }
 
 #if RETRO_INCLUDE_EDITOR

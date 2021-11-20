@@ -52,7 +52,7 @@ void FBZ1Outro_StageLoad(void)
             FBZ1Outro->craneP2 = crane;
     }
 
-    FBZ1Outro->sfxDrop = RSDK.GetSFX("Stage/Drop.wav");
+    FBZ1Outro->sfxDrop = RSDK.GetSfx("Stage/Drop.wav");
 }
 
 void FBZ1Outro_StartCutscene(void)

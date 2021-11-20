@@ -181,7 +181,7 @@ void RockemSockem_StageLoad(void)
     RockemSockem->hitbox.top      = -14;
     RockemSockem->hitbox.right    = 16;
     RockemSockem->hitbox.bottom   = 14;
-    RockemSockem->sfxRockemSockem = RSDK.GetSFX("Stage/RockemSockem.wav");
+    RockemSockem->sfxRockemSockem = RSDK.GetSfx("Stage/RockemSockem.wav");
 }
 
 void RockemSockem_Unknown1(void)

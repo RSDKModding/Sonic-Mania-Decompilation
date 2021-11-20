@@ -96,8 +96,8 @@ void Splats_StageLoad(void)
     Splats->hitbox3.bottom = -18;
 
     DEBUGMODE_ADD_OBJ(Splats);
-    Splats->sfxSplatsSpawn = RSDK.GetSFX("PSZ/SplatsSpawn.wav");
-    Splats->sfxSplatsLand  = RSDK.GetSFX("PSZ/SplatsLand.wav");
+    Splats->sfxSplatsSpawn = RSDK.GetSfx("PSZ/SplatsSpawn.wav");
+    Splats->sfxSplatsLand  = RSDK.GetSfx("PSZ/SplatsLand.wav");
 }
 
 void Splats_DebugDraw(void)

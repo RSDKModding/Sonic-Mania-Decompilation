@@ -65,16 +65,16 @@ void PuyoBean_StageLoad(void)
     PuyoBean->hitbox.top     = -8;
     PuyoBean->hitbox.right   = 8;
     PuyoBean->hitbox.bottom  = 8;
-    PuyoBean->sfxLand        = RSDK.GetSFX("Puyo/Land.wav");
-    PuyoBean->sfxRotate      = RSDK.GetSFX("Puyo/Rotate.wav");
-    PuyoBean->sfxJunk        = RSDK.GetSFX("Puyo/Junk.wav");
-    PuyoBean->sfxFall        = RSDK.GetSFX("Puyo/Fall.wav");
-    PuyoBean->chainFrames[0] = RSDK.GetSFX("Puyo/Chain0.wav");
-    PuyoBean->chainFrames[1] = RSDK.GetSFX("Puyo/Chain1.wav");
-    PuyoBean->chainFrames[2] = RSDK.GetSFX("Puyo/Chain2.wav");
-    PuyoBean->chainFrames[3] = RSDK.GetSFX("Puyo/Chain3.wav");
-    PuyoBean->chainFrames[4] = RSDK.GetSFX("Puyo/Chain4.wav");
-    PuyoBean->chainFrames[5] = RSDK.GetSFX("Puyo/Chain5.wav");
+    PuyoBean->sfxLand        = RSDK.GetSfx("Puyo/Land.wav");
+    PuyoBean->sfxRotate      = RSDK.GetSfx("Puyo/Rotate.wav");
+    PuyoBean->sfxJunk        = RSDK.GetSfx("Puyo/Junk.wav");
+    PuyoBean->sfxFall        = RSDK.GetSfx("Puyo/Fall.wav");
+    PuyoBean->chainFrames[0] = RSDK.GetSfx("Puyo/Chain0.wav");
+    PuyoBean->chainFrames[1] = RSDK.GetSfx("Puyo/Chain1.wav");
+    PuyoBean->chainFrames[2] = RSDK.GetSfx("Puyo/Chain2.wav");
+    PuyoBean->chainFrames[3] = RSDK.GetSfx("Puyo/Chain3.wav");
+    PuyoBean->chainFrames[4] = RSDK.GetSfx("Puyo/Chain4.wav");
+    PuyoBean->chainFrames[5] = RSDK.GetSfx("Puyo/Chain5.wav");
     for (int i = 0; i < 0x100; ++i) PuyoBean->gameState[i] = NULL;
 }
 

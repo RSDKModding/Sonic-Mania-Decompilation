@@ -76,7 +76,7 @@ void Shutterbug_StageLoad(void)
     Shutterbug->checkbox.bottom = 160;
     Shutterbug->pictureCount    = 0;
     DEBUGMODE_ADD_OBJ(Shutterbug);
-    Shutterbug->snapSfx = RSDK.GetSFX("SPZ/ShBugSnap.wav");
+    Shutterbug->snapSfx = RSDK.GetSfx("SPZ/ShBugSnap.wav");
 }
 
 void Shutterbug_DebugSpawn(void)

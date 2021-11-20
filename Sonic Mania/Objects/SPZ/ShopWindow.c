@@ -13,7 +13,7 @@ void ShopWindow_Update(void)
             EntityShield *shield = RSDK_GET_ENTITY((Player->playerCount + RSDK.GetEntityID(player)), Shield);
             if (shield->objectID == Shield->objectID && shield->type == SHIELD_BLUE) {
                 if (Player_CheckCollisionTouch(player, self, &self->hitbox2))
-                    shield->flag = Zone->timer & 1;
+                    shield->forceVisible = Zone->timer & 1;
             }
         }
     }
@@ -88,7 +88,7 @@ void ShopWindow_StageLoad(void)
 {
     ShopWindow->aniFrames = RSDK.LoadSpriteAnimation("SPZ1/ShopWindow.bin", SCOPE_STAGE);
     RSDK.SetPaletteMask(RSDK.GetPaletteEntry(0, 253));
-    ShopWindow->sfxShatter = RSDK.GetSFX("Stage/WindowShatter.wav");
+    ShopWindow->sfxShatter = RSDK.GetSfx("Stage/WindowShatter.wav");
 }
 
 void ShopWindow_State_Shard(void)

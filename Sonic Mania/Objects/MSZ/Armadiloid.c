@@ -60,7 +60,7 @@ void Armadiloid_StageLoad(void)
 
     DEBUGMODE_ADD_OBJ(Armadiloid);
 
-    Armadiloid->sfxShot = RSDK.GetSFX("Stage/Shot.wav");
+    Armadiloid->sfxShot = RSDK.GetSfx("Stage/Shot.wav");
 }
 void Armadiloid_DebugSpawn(void)
 {

@@ -83,23 +83,23 @@ void MetalSonic_StageLoad(void)
     MetalSonic->hitbox2.top     = -8;
     MetalSonic->hitbox2.right   = 16;
     MetalSonic->hitbox2.bottom  = 8;
-    MetalSonic->sfxHit          = RSDK.GetSFX("Stage/BossHit.wav");
-    MetalSonic->sfxExplosion2   = RSDK.GetSFX("Stage/Explosion2.wav");
-    MetalSonic->sfxExplosion3   = RSDK.GetSFX("Stage/Explosion3.wav");
-    MetalSonic->sfxRumble       = RSDK.GetSFX("Stage/Rumble.wav");
-    MetalSonic->sfxJump2        = RSDK.GetSFX("Stage/Jump2.wav");
-    MetalSonic->sfxSpecialRing  = RSDK.GetSFX("Global/SpecialRing.wav");
-    MetalSonic->sfxMSElecPulse  = RSDK.GetSFX("SSZ2/MSElecPulse.wav");
-    MetalSonic->sfxMSBall       = RSDK.GetSFX("SSZ2/MSBall.wav");
-    MetalSonic->sfxMSFireball   = RSDK.GetSFX("SSZ2/MSFireball.wav");
-    MetalSonic->sfxBeep3        = RSDK.GetSFX("Stage/Beep3.wav");
-    MetalSonic->sfxBeep4        = RSDK.GetSFX("Stage/Beep4.wav");
-    MetalSonic->sfxRockemSockem = RSDK.GetSFX("Stage/RockemSockem.wav");
-    MetalSonic->sfxMSShoot      = RSDK.GetSFX("SSZ2/MSShoot.wav");
-    MetalSonic->sfxMSChargeFire = RSDK.GetSFX("SSZ2/MSChargeFire.wav");
+    MetalSonic->sfxHit          = RSDK.GetSfx("Stage/BossHit.wav");
+    MetalSonic->sfxExplosion2   = RSDK.GetSfx("Stage/Explosion2.wav");
+    MetalSonic->sfxExplosion3   = RSDK.GetSfx("Stage/Explosion3.wav");
+    MetalSonic->sfxRumble       = RSDK.GetSfx("Stage/Rumble.wav");
+    MetalSonic->sfxJump2        = RSDK.GetSfx("Stage/Jump2.wav");
+    MetalSonic->sfxSpecialRing  = RSDK.GetSfx("Global/SpecialRing.wav");
+    MetalSonic->sfxMSElecPulse  = RSDK.GetSfx("SSZ2/MSElecPulse.wav");
+    MetalSonic->sfxMSBall       = RSDK.GetSfx("SSZ2/MSBall.wav");
+    MetalSonic->sfxMSFireball   = RSDK.GetSfx("SSZ2/MSFireball.wav");
+    MetalSonic->sfxBeep3        = RSDK.GetSfx("Stage/Beep3.wav");
+    MetalSonic->sfxBeep4        = RSDK.GetSfx("Stage/Beep4.wav");
+    MetalSonic->sfxRockemSockem = RSDK.GetSfx("Stage/RockemSockem.wav");
+    MetalSonic->sfxMSShoot      = RSDK.GetSfx("SSZ2/MSShoot.wav");
+    MetalSonic->sfxMSChargeFire = RSDK.GetSfx("SSZ2/MSChargeFire.wav");
 #if RETRO_USE_PLUS
-    MetalSonic->sfxMSTransform = RSDK.GetSFX("SSZ2/MSTransform.wav");
-    MetalSonic->sfxTransform2  = RSDK.GetSFX("Stage/Transform2.wav");
+    MetalSonic->sfxMSTransform = RSDK.GetSfx("SSZ2/MSTransform.wav");
+    MetalSonic->sfxTransform2  = RSDK.GetSfx("Stage/Transform2.wav");
 #endif
 }
 

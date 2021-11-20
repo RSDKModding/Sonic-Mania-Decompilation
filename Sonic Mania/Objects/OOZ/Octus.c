@@ -65,7 +65,7 @@ void Octus_StageLoad(void)
     Octus->hitbox2.top    = -4;
     Octus->hitbox2.right  = 4;
     Octus->hitbox2.bottom = 4;
-    Octus->sfxShot        = RSDK.GetSFX("Stage/Shot.wav");
+    Octus->sfxShot        = RSDK.GetSfx("Stage/Shot.wav");
     DEBUGMODE_ADD_OBJ(Octus);
 }
 

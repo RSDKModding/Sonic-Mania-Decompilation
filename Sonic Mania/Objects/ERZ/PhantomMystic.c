@@ -71,9 +71,9 @@ void PhantomMystic_Create(void* data)
 void PhantomMystic_StageLoad(void)
 {
     PhantomMystic->aniFrames   = RSDK.LoadSpriteAnimation("Phantom/PhantomMystic.bin", SCOPE_STAGE);
-    PhantomMystic->sfxCupSwap  = RSDK.GetSFX("TMZ3/CupSwap.wav");
-    PhantomMystic->sfxBigLaser = RSDK.GetSFX("TMZ3/BigLaser.wav");
-    PhantomMystic->sfxImpact   = RSDK.GetSFX("Stage/Impact2.wav");
+    PhantomMystic->sfxCupSwap  = RSDK.GetSfx("TMZ3/CupSwap.wav");
+    PhantomMystic->sfxBigLaser = RSDK.GetSfx("TMZ3/BigLaser.wav");
+    PhantomMystic->sfxImpact   = RSDK.GetSfx("Stage/Impact2.wav");
 }
 
 void PhantomMystic_CheckPlayerCollisions(void)
