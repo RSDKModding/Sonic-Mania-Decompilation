@@ -13,7 +13,7 @@ void DemoMenu_Update(void)
         if (++frameA->sprX > 193)
             frameA->sprX -= 192;
         SpriteFrame *frameB = self->spzFrame;
-        if (--frameB->sprX < 1)
+        if (--frameB->sprX <= 0)
             frameB->sprX += 192;
     }
 }

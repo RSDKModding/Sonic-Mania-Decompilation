@@ -36,10 +36,10 @@ void LogoSetup_Serialize(void);
 
 // Extra Entity Functions
 bool32 LogoSetup_ImageCallback(void);
-void LogoSetup_CESAScreen(void);
-void LogoSetup_SegaScreen(void);
-void LogoSetup_Unknown2(void);
-void LogoSetup_Unknown3(void);
-void LogoSetup_Unknown4(void);
+void LogoSetup_State_CESAScreen(void);
+void LogoSetup_State_ShowLogos(void);
+void LogoSetup_State_FadeToNextLogos(void);
+void LogoSetup_State_NextLogos(void);
+void LogoSetup_Draw_Fade(void);
 
 #endif //!OBJ_LOGOSETUP_H

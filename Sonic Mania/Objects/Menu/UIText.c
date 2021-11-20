@@ -48,8 +48,8 @@ void UIText_Create(void *data)
         RSDK.SetSpriteAnimation(UIWidgets->uiSpriteIndex, self->listID, &self->animator, true, 0);
 
     if (!SceneInfo->inEditor) {
-        self->active    = 2;
-        self->visible   = 1;
+        self->active    = ACTIVE_NORMAL;
+        self->visible   = true;
         self->drawOrder = 2;
         if (!self->text.text)
             RSDK.SetText(&self->text, "UNTITLED", false);

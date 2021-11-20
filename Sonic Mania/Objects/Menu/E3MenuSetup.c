@@ -7,8 +7,8 @@ void E3MenuSetup_Update(void)
 {
     RSDK_THIS(E3MenuSetup);
     StateMachine_Run(self->state);
-    if (self->timer >= self->timeOut) {
-        StateMachine_Run(self->timedState);
+    if (self->timer >= self->delay) {
+        StateMachine_Run(self->stateDelay);
         destroyEntity(self);
     }
     else {
@@ -20,9 +20,9 @@ void E3MenuSetup_LateUpdate(void) {}
 
 void E3MenuSetup_StaticUpdate(void)
 {
-    if (!E3MenuSetup->flag) {
-        E3MenuSetup_Unknown1();
-        E3MenuSetup->flag = true;
+    if (!E3MenuSetup->initialized) {
+        E3MenuSetup_SetupUI();
+        E3MenuSetup->initialized = true;
     }
 }
 
@@ -36,13 +36,13 @@ void E3MenuSetup_Create(void *data)
 {
     RSDK_THIS(E3MenuSetup);
     self->active    = ACTIVE_NORMAL;
-    self->inkEffect = INK_BLEND;
-    self->direction = 14;
+    self->visible   = true;
+    self->drawOrder = 14;
 }
 
 void E3MenuSetup_StageLoad(void) { RSDK.SetSettingsValue(SETTINGS_SHADERID, 1); }
 
-void E3MenuSetup_Unknown1(void)
+void E3MenuSetup_SetupUI(void)
 {
     TextInfo info;
     INIT_TEXTINFO(info);
@@ -56,18 +56,18 @@ void E3MenuSetup_Unknown1(void)
         if (RSDK.StringCompare(&info, &control->tag, false))
             E3MenuSetup->zoneControl = (Entity *)control;
     }
-    E3MenuSetup_Unknown2();
+    E3MenuSetup_SetupButtons();
 }
 
-void E3MenuSetup_Unknown2(void)
+void E3MenuSetup_SetupButtons(void)
 {
     foreach_all(UICharButton, button)
     {
         if (button->parent == E3MenuSetup->charSelControl) {
             switch (button->characterID) {
-                case 0: button->options2 = E3MenuSetup_Unknown5; break;
-                case 1: button->options2 = E3MenuSetup_Unknown6; break;
-                case 2: button->options2 = E3MenuSetup_Unknown7; break;
+                case 0: button->options2 = E3MenuSetup_SelectCB_Sonic; break;
+                case 1: button->options2 = E3MenuSetup_SelectCB_Tails; break;
+                case 2: button->options2 = E3MenuSetup_SelectCB_Knux; break;
             }
         }
     }
@@ -75,7 +75,7 @@ void E3MenuSetup_Unknown2(void)
     int32 id = 0;
     foreach_all(UITAZoneModule, module)
     {
-        module->options2 = E3MenuSetup_Unknown4;
+        module->options2 = E3MenuSetup_ZoneSelectCB;
         if (!id) { // GHZ
             module->zoneID = 0;
             module->actID = 1;
@@ -87,7 +87,7 @@ void E3MenuSetup_Unknown2(void)
     }
 }
 
-void E3MenuSetup_Unknown3(void)
+void E3MenuSetup_Delay_LoadScene(void)
 {
     EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
     EntityUIControl *control = (EntityUIControl *)E3MenuSetup->zoneControl;
@@ -107,18 +107,18 @@ void E3MenuSetup_Unknown3(void)
     RSDK.LoadScene();
 }
 
-void E3MenuSetup_Unknown4(void)
+void E3MenuSetup_ZoneSelectCB(void)
 {
     EntityE3MenuSetup *entity = CREATE_ENTITY(E3MenuSetup, NULL, 0xFFF00000, 0xFFF00000);
     entity->fadeColour        = 0x000000;
-    entity->timeOut           = 32;
-    entity->field_70          = 5;
-    entity->state             = E3MenuSetup_Unknown8;
-    entity->timedState        = E3MenuSetup_Unknown3;
+    entity->delay             = 32;
+    entity->fadeSpeed         = 5;
+    entity->state             = E3MenuSetup_State_FadeOut;
+    entity->stateDelay        = E3MenuSetup_Delay_LoadScene;
 }
 
 // Sonic Sel
-void E3MenuSetup_Unknown5(void)
+void E3MenuSetup_SelectCB_Sonic(void)
 {
     EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
     TimeAttackData_ClearOptions();
@@ -131,7 +131,7 @@ void E3MenuSetup_Unknown5(void)
 }
 
 // Tails Sel
-void E3MenuSetup_Unknown6(void)
+void E3MenuSetup_SelectCB_Tails(void)
 {
     EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
     TimeAttackData_ClearOptions();
@@ -144,7 +144,7 @@ void E3MenuSetup_Unknown6(void)
 }
 
 // Knux Sel
-void E3MenuSetup_Unknown7(void)
+void E3MenuSetup_SelectCB_Knux(void)
 {
     EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
     TimeAttackData_ClearOptions();
@@ -156,10 +156,10 @@ void E3MenuSetup_Unknown7(void)
     UIControl_MatchMenuTag("Zones");
 }
 
-void E3MenuSetup_Unknown8(void)
+void E3MenuSetup_State_FadeOut(void)
 {
     RSDK_THIS(E3MenuSetup);
-    self->fadeTimer = clampVal(self->timer << (self->field_70 - 1), 0, 0x200);
+    self->fadeTimer = clampVal(self->timer << (self->fadeSpeed - 1), 0, 0x200);
 }
 
 void E3MenuSetup_EditorDraw(void) {}
