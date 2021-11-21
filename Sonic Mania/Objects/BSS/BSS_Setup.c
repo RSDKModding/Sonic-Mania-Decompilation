@@ -21,7 +21,7 @@ void BSS_Setup_Update(void)
 
 #if RETRO_USE_PLUS
     EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
-    if (!param->field_59 && !self->stopMovement && globals->gameMode < MODE_TIMEATTACK)
+    if (!param->selectionType && !self->stopMovement && globals->gameMode < MODE_TIMEATTACK)
         ++SaveGame->saveRAM->zoneTimes[28];
 #endif
 }
@@ -209,7 +209,7 @@ void BSS_Setup_StageLoad(void)
     BSS_Setup->sfxTeleport    = RSDK.GetSfx("Global/Teleport.wav");
 
     EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
-    if (param->field_59 == 1) {
+    if (param->selectionType == 1) {
         TextInfo info;
         Localization_GetString(&info, STR_RPC_PLAYING);
         API_SetRichPresence(PRESENCE_GENERIC, &info);
@@ -621,7 +621,7 @@ void BSS_Setup_HandleSteppedObjects(void)
         case BSS_MEDAL_GOLD:
             if (self->globeTimer > 240) {
                 EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
-                if (!param->field_59 && globals->gameMode < MODE_TIMEATTACK) {
+                if (!param->selectionType && globals->gameMode < MODE_TIMEATTACK) {
                     int32 pos = BSS_Setup_GetStageID();
                     if (pos >= 0) {
                         EntityGameProgress *progress = GameProgress_GetGameProgress();

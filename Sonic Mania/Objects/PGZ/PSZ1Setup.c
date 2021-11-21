@@ -75,7 +75,7 @@ void PSZ1Setup_StaticUpdate(void)
         }
     }
 
-    if (Zone->screenBoundsB1[0] == 2944) {
+    if (Zone->cameraBoundsB[0] == 2944) {
         EntityPlayer *player = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
         if (player->position.y < 0xAA00000) {
             if (player->position.y <= 0x900000) {

@@ -330,7 +330,7 @@ void DiveEggman_State_Finish(void)
     }
 
     if (!RSDK.CheckOnScreen(self, NULL)) {
-        Zone->screenBoundsT1[0] = 0;
+        Zone->cameraBoundsT[0] = 0;
         screwMobile->state      = ScrewMobile_State_BossFinished;
         destroyEntity(self);
     }

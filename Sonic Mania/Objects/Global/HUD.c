@@ -324,7 +324,7 @@ void HUD_Draw(void)
 
     if (globals->gameMode == MODE_COMPETITION) {
 #if RETRO_USE_PLUS
-        switch (HUD->compSession[SceneInfo->currentScreenID]) {
+        switch (HUD->screenBorderType[SceneInfo->currentScreenID]) {
             case 1:
                 RSDK.DrawRect(ScreenInfo->width - 1, 0, 1, ScreenInfo->height, 0, 255, INK_NONE, true);
                 RSDK.DrawRect(0, ScreenInfo->height - 1, ScreenInfo->width, 1, 0, 255, INK_NONE, true);
@@ -427,10 +427,10 @@ void HUD_StageLoad(void)
 
     EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
     if (globals->gameMode == MODE_COMPETITION) {
-        HUD->compSession[0] = session->unknown84;
-        HUD->compSession[1] = session->unknown85;
-        HUD->compSession[2] = session->splitScreenMode;
-        HUD->compSession[3] = session->unknown87;
+        HUD->screenBorderType[0] = session->splitScreenMode[0];
+        HUD->screenBorderType[1] = session->splitScreenMode[1];
+        HUD->screenBorderType[2] = session->splitScreenMode[2];
+        HUD->screenBorderType[3] = session->splitScreenMode[3];
     }
 #endif
 }

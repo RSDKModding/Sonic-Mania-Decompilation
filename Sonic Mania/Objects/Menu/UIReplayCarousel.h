@@ -22,7 +22,7 @@ typedef struct {
     uint8 field_158;
     int32 field_15C;
     StateMachine(stateDraw);
-    int16 field_164;
+    int16 replayID;
     uint16 dbUnknownCount;
     int32 field_168;
     int32 field_16C;

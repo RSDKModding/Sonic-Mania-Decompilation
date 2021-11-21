@@ -378,11 +378,11 @@ void HeavyMystic_State1_Unknown1(void)
     RSDK_THIS(HeavyMystic);
     if (++self->timer >= 8) {
         self->timer        = 0;
-        HeavyMystic->boundsL = (Zone->screenBoundsL1[0] + 64) << 16;
-        HeavyMystic->boundsR = (Zone->screenBoundsR1[0] - 64) << 16;
+        HeavyMystic->boundsL = (Zone->cameraBoundsL[0] + 64) << 16;
+        HeavyMystic->boundsR = (Zone->cameraBoundsR[0] - 64) << 16;
         HeavyMystic->boundsM = self->position.x;
-        HeavyMystic->boundsT = (Zone->screenBoundsT1[0] + 48) << 16;
-        HeavyMystic->boundsB = (Zone->screenBoundsB1[0] - 8) << 16;
+        HeavyMystic->boundsT = (Zone->cameraBoundsT[0] + 48) << 16;
+        HeavyMystic->boundsB = (Zone->cameraBoundsB[0] - 8) << 16;
         self->state        = HeavyMystic_State1_Unknown2;
     }
 }
@@ -394,7 +394,7 @@ void HeavyMystic_State1_Unknown2(void)
     if (self->timer) {
         self->timer++;
         if (self->timer == 120) {
-            Zone->screenBoundsT1[0] = Zone->screenBoundsB1[0] - ScreenInfo->height;
+            Zone->cameraBoundsT[0] = Zone->cameraBoundsB[0] - ScreenInfo->height;
             MSZSetup_Unknown1(self->position.x + 0x4000000, 0);
             self->position.y += 0x500000;
             self->targetPos.x                                 = self->position.x;
@@ -413,9 +413,9 @@ void HeavyMystic_State1_Unknown2(void)
             Music_TransitionTrack(TRACK_HBHBOSS, 0.0125);
             Zone->playerBoundActiveL[0] = true;
             Zone->playerBoundActiveR[0] = true;
-            Zone->screenBoundsL1[0]     = (self->position.x >> 16) - ScreenInfo->centerX;
-            Zone->screenBoundsR1[0]     = (self->position.x >> 16) + ScreenInfo->centerX;
-            Zone->screenBoundsB1[0]     = (self->position.y >> 16) + 256;
+            Zone->cameraBoundsL[0]     = (self->position.x >> 16) - ScreenInfo->centerX;
+            Zone->cameraBoundsR[0]     = (self->position.x >> 16) + ScreenInfo->centerX;
+            Zone->cameraBoundsB[0]     = (self->position.y >> 16) + 256;
             ++self->timer;
             self->active = ACTIVE_NORMAL;
         }
@@ -668,7 +668,7 @@ void HeavyMystic_State_CloseCurtains(void)
     if (HeavyMystic->curtainLinePos >= 0xD00000) {
         HeavyMystic->curtainLinePos                        = 0xD00000;
         RSDK.GetSceneLayer(Zone->fgHigh)->scanlineCallback = 0;
-        Zone->screenBoundsR1[0] += 0x350;
+        Zone->cameraBoundsR[0] += 0x350;
         destroyEntity(self);
     }
     else {

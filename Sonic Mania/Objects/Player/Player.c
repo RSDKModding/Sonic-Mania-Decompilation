@@ -1708,23 +1708,23 @@ void Player_ResetBoundaries(EntityPlayer *player)
 
     int32 screen = RSDK.GetEntityID(player);
     RSDK.GetLayerSize(Zone->fgLow, &size, true);
-    Zone->screenBoundsL1[screen]     = 0;
-    Zone->screenBoundsR1[screen]     = size.x;
-    Zone->screenBoundsT1[screen]     = 0;
-    Zone->screenBoundsB1[screen]     = size.y;
-    Zone->screenBoundsL2[screen]     = Zone->screenBoundsL1[screen] << 16;
-    Zone->screenBoundsR2[screen]     = Zone->screenBoundsR1[screen] << 16;
-    Zone->screenBoundsT2[screen]     = Zone->screenBoundsT1[screen] << 16;
-    Zone->screenBoundsB2[screen]     = Zone->screenBoundsB1[screen] << 16;
-    Zone->deathBoundary[screen]      = Zone->screenBoundsB1[screen] << 16;
+    Zone->cameraBoundsL[screen]     = 0;
+    Zone->cameraBoundsR[screen]     = size.x;
+    Zone->cameraBoundsT[screen]     = 0;
+    Zone->cameraBoundsB[screen]     = size.y;
+    Zone->playerBoundsL[screen]     = Zone->cameraBoundsL[screen] << 16;
+    Zone->playerBoundsR[screen]     = Zone->cameraBoundsR[screen] << 16;
+    Zone->playerBoundsT[screen]     = Zone->cameraBoundsT[screen] << 16;
+    Zone->playerBoundsB[screen]     = Zone->cameraBoundsB[screen] << 16;
+    Zone->deathBoundary[screen]      = Zone->cameraBoundsB[screen] << 16;
     Zone->playerBoundActiveT[screen] = true;
     Zone->playerBoundActiveT[screen] = false;
 
     if (player->camera) {
-        player->camera->boundsL = Zone->screenBoundsL1[screen];
-        player->camera->boundsR = Zone->screenBoundsR1[screen];
-        player->camera->boundsT = Zone->screenBoundsT1[screen];
-        player->camera->boundsB = Zone->screenBoundsB1[screen];
+        player->camera->boundsL = Zone->cameraBoundsL[screen];
+        player->camera->boundsR = Zone->cameraBoundsR[screen];
+        player->camera->boundsT = Zone->cameraBoundsT[screen];
+        player->camera->boundsB = Zone->cameraBoundsB[screen];
     }
 }
 void Player_State_TransportTube(void)
@@ -4333,7 +4333,7 @@ void Player_State_TailsFlight(void)
         self->velocity.y += self->abilitySpeed;
         if (!self->sidekick)
             slot = SceneInfo->entitySlot;
-        if (self->position.y < Zone->screenBoundsT2[slot] + 0x100000 && self->velocity.y < 0)
+        if (self->position.y < Zone->playerBoundsT[slot] + 0x100000 && self->velocity.y < 0)
             self->velocity.y = 0;
 
         EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
@@ -4539,7 +4539,7 @@ void Player_State_KnuxGlideLeft(void)
         }
     }
 
-    if (self->position.y < Zone->screenBoundsT2[SceneInfo->entitySlot] + 0x100000) {
+    if (self->position.y < Zone->playerBoundsT[SceneInfo->entitySlot] + 0x100000) {
         self->velocity.x   = 0;
         self->abilitySpeed = 0;
     }
@@ -4660,7 +4660,7 @@ void Player_State_KnuxGlideRight(void)
         }
     }
 
-    if (self->position.y < Zone->screenBoundsT2[SceneInfo->entitySlot] + 0x100000) {
+    if (self->position.y < Zone->playerBoundsT[SceneInfo->entitySlot] + 0x100000) {
         self->velocity.x   = 0;
         self->abilitySpeed = 0;
     }
@@ -4782,7 +4782,7 @@ void Player_State_KnuxWallClimb(void)
             else
                 self->velocity.y = -0x10000;
 
-            int32 bounds = Zone->screenBoundsT2[SceneInfo->entitySlot] + 0x140000;
+            int32 bounds = Zone->playerBoundsT[SceneInfo->entitySlot] + 0x140000;
             if (self->position.y < bounds)
                 self->position.y = bounds;
         }
@@ -5255,7 +5255,7 @@ void Player_State_RayGlide(void)
         self->abilityValue     = 0;
     }
     else {
-        if (!self->jumpHold || self->position.y < Zone->screenBoundsT2[self->playerID] + 0x100000) {
+        if (!self->jumpHold || self->position.y < Zone->playerBoundsT[self->playerID] + 0x100000) {
             RSDK.SetSpriteAnimation(self->aniFrames, ANI_JUMP, &self->animator, false, 0);
             self->state = Player_State_Air;
         }

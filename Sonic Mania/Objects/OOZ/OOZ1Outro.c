@@ -63,18 +63,18 @@ bool32 OOZ1Outro_Unknown1(EntityCutsceneSeq *host)
             player->position.y += (self->size.y >> 1) - 0x400000;
         }
 
-        self->boundsR         = Zone->screenBoundsR1[0];
-        self->boundsT         = Zone->screenBoundsT1[0];
-        self->boundsB         = Zone->screenBoundsB1[0];
-        Zone->screenBoundsL1[0] = (self->position.x >> 16) - ScreenInfo->centerX;
-        Zone->screenBoundsR1[0] = (self->position.x >> 16) + ScreenInfo->centerX;
-        Zone->screenBoundsT1[0] = (self->position.y >> 16) - ScreenInfo->centerY;
-        Zone->screenBoundsB1[0] = (self->position.y >> 16) + ScreenInfo->centerY;
+        self->boundsR         = Zone->cameraBoundsR[0];
+        self->boundsT         = Zone->cameraBoundsT[0];
+        self->boundsB         = Zone->cameraBoundsB[0];
+        Zone->cameraBoundsL[0] = (self->position.x >> 16) - ScreenInfo->centerX;
+        Zone->cameraBoundsR[0] = (self->position.x >> 16) + ScreenInfo->centerX;
+        Zone->cameraBoundsT[0] = (self->position.y >> 16) - ScreenInfo->centerY;
+        Zone->cameraBoundsB[0] = (self->position.y >> 16) + ScreenInfo->centerY;
         EntityCamera *camera    = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
-        camera->boundsL         = Zone->screenBoundsL1[0];
-        camera->boundsR         = Zone->screenBoundsR1[0];
-        camera->boundsT         = Zone->screenBoundsT1[0];
-        camera->boundsB         = Zone->screenBoundsB1[0];
+        camera->boundsL         = Zone->cameraBoundsL[0];
+        camera->boundsR         = Zone->cameraBoundsR[0];
+        camera->boundsT         = Zone->cameraBoundsT[0];
+        camera->boundsB         = Zone->cameraBoundsB[0];
         Smog->field_4           = true;
     }
     if (host->timer == 30) {
@@ -110,10 +110,10 @@ bool32 OOZ1Outro_Unknown2(EntityCutsceneSeq *host)
             player->stateInput     = StateMachine_None;
             RSDK.SetSpriteAnimation(player->aniFrames, ANI_HURT, &player->animator, false, 0);
         }
-        Zone->screenBoundsL1[0] = self->boundsL;
-        Zone->screenBoundsR1[0] = self->boundsR;
-        Zone->screenBoundsT1[0] = self->boundsT;
-        Zone->screenBoundsB1[0] = self->boundsB;
+        Zone->cameraBoundsL[0] = self->boundsL;
+        Zone->cameraBoundsR[0] = self->boundsR;
+        Zone->cameraBoundsT[0] = self->boundsT;
+        Zone->cameraBoundsB[0] = self->boundsB;
         if (RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->objectID)
             RSDK_GET_ENTITY(SLOT_CUTSCENESEQ, CutsceneSeq)->skipType = SKIPTYPE_RELOADSCN;
         return true;

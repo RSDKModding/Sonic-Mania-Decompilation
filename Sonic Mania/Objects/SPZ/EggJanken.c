@@ -243,8 +243,8 @@ void EggJanken_State1_SetupArena(void)
         self->timer               = 0;
         Zone->playerBoundActiveR[0] = true;
         Zone->playerBoundActiveB[0] = true;
-        Zone->screenBoundsR1[0]     = (self->position.x >> 16) + ScreenInfo->centerX;
-        Zone->screenBoundsB1[0]     = (self->position.y >> 16) + 208;
+        Zone->cameraBoundsR[0]     = (self->position.x >> 16) + ScreenInfo->centerX;
+        Zone->cameraBoundsB[0]     = (self->position.y >> 16) + 208;
         self->startPos.y -= 0x1000000;
         self->active = ACTIVE_NORMAL;
         self->state1 = EggJanken_State1_StartFight;
@@ -256,12 +256,12 @@ void EggJanken_State1_StartFight(void)
     RSDK_THIS(EggJanken);
 
     Zone->playerBoundActiveL[0] = true;
-    Zone->screenBoundsL1[0]     = ScreenInfo->position.x;
+    Zone->cameraBoundsL[0]     = ScreenInfo->position.x;
 
     if (RSDK_GET_ENTITY(SLOT_PLAYER1, Player)->position.x > self->position.x) {
         self->visible             = true;
         Zone->playerBoundActiveL[0] = true;
-        Zone->screenBoundsR1[0]     = (self->position.x >> 16) - ScreenInfo->centerX;
+        Zone->cameraBoundsR[0]     = (self->position.x >> 16) - ScreenInfo->centerX;
         self->state1              = EggJanken_State1_Unknown1;
         self->stateDraw           = EggJanken_StateDraw_Unknown1;
         self->timer               = 272;

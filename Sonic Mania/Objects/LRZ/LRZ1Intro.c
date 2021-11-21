@@ -154,10 +154,10 @@ void LRZ1Intro_State_Unknown2(void)
         self->velocity.x = 0x100000;
         self->state      = LRZ1Intro_State_Unknown3;
         RSDK.PlaySfx(LRZ1Intro->sfxSubLand, false, 255);
-        Zone->screenBoundsL1[0] = 2732;
-        Zone->screenBoundsL1[1] = 2732;
-        Zone->screenBoundsL1[2] = 2732;
-        Zone->screenBoundsL1[3] = 2732;
+        Zone->cameraBoundsL[0] = 2732;
+        Zone->cameraBoundsL[1] = 2732;
+        Zone->cameraBoundsL[2] = 2732;
+        Zone->cameraBoundsL[3] = 2732;
     }
     LRZ1Intro_HandlePlayerMovement();
 }

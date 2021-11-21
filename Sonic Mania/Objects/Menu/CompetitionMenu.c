@@ -188,7 +188,7 @@ void CompetitionMenu_Unknown3(void)
                 EntityUIVsRoundPicker *picker = (EntityUIVsRoundPicker *)UIButton_GetChoicePtr(control->buttons[1], control->buttons[1]->selection);
                 if (picker)
                     picker->val = session->matchCount;
-                UIButton_SetChoiceSelectionWithCB(control->buttons[2], session->splitScreenMode);
+                UIButton_SetChoiceSelectionWithCB(control->buttons[2], session->splitScreenMode[2]);
                 CompetitionMenu_Unknown9(session->playerCount);
             }
 
@@ -348,24 +348,24 @@ void CompetitionMenu_SetupSplitScreen(int32 mode)
     switch (mode) {
         case 0:
         case 1:
-            session->unknown84 = 2;
-            session->unknown85 = 5;
+            session->splitScreenMode[0] = 2;
+            session->splitScreenMode[1] = 5;
             break;
         case 2:
-            session->splitScreenMode = 5;
-            session->unknown85       = 3;
-            session->unknown84       = 1;
+            session->splitScreenMode[2] = 5;
+            session->splitScreenMode[1] = 3;
+            session->splitScreenMode[0] = 1;
             break;
         case 3:
-            session->unknown84       = 2;
-            session->unknown85       = 4;
-            session->splitScreenMode = 6;
+            session->splitScreenMode[0] = 2;
+            session->splitScreenMode[1] = 4;
+            session->splitScreenMode[2] = 6;
             break;
         case 4:
-            session->splitScreenMode = 4;
-            session->unknown87       = 6;
-            session->unknown85       = 3;
-            session->unknown84       = 1;
+            session->splitScreenMode[0] = 1;
+            session->splitScreenMode[1] = 3;
+            session->splitScreenMode[2] = 4;
+            session->splitScreenMode[3] = 6;
             break;
         default: break;
     }
@@ -530,7 +530,7 @@ void CompetitionMenu_RulesButtonCB(void)
     session->inMatch     = true;
     session->monitorMode = monitorMode;
     CompetitionMenu_SetupSplitScreen(rulesControl->buttons[2]->selection);
-    session->readOnlyDisplayMode = rulesControl->buttons[2]->selection;
+    session->displayMode = rulesControl->buttons[2]->selection;
 
     EntityUIControl *control       = (EntityUIControl *)CompetitionMenu->competitionControl;
     EntityUIControl *legacyControl = (EntityUIControl *)CompetitionMenu->competitionControl_Legacy;

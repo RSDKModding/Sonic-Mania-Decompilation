@@ -1349,7 +1349,7 @@ void LaundroMobile_State_ExitHCZ(void)
         EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
         if (player1->objectID == Player->objectID)
             player1->right = true;
-        if (player1->position.x > (Zone->screenBoundsR1[0] + 64) << 16) {
+        if (player1->position.x > (Zone->cameraBoundsR[0] + 64) << 16) {
             HCZSetup_StageFinishCB_Act2();
             destroyEntity(self);
         }
@@ -1717,10 +1717,10 @@ void LaundroMobile_State2_Unknown1(void)
     RSDK.ProcessAnimation(&self->animator3);
     Zone->playerBoundActiveL[0] = true;
     Zone->playerBoundActiveR[0] = true;
-    Zone->screenBoundsL1[0]     = ScreenInfo->position.x;
-    Zone->screenBoundsR1[0]     = ScreenInfo->centerX + (self->position.x >> 16);
+    Zone->cameraBoundsL[0]     = ScreenInfo->position.x;
+    Zone->cameraBoundsR[0]     = ScreenInfo->centerX + (self->position.x >> 16);
     if (RSDK_GET_ENTITY(SLOT_PLAYER1, Player)->position.x > self->position.x - 0xC00000)
-        Zone->screenBoundsT1[0] = ScreenInfo->position.y;
+        Zone->cameraBoundsT[0] = ScreenInfo->position.y;
 
     if (!LaundroMobile->health && !LaundroMobile->invincibilityTimer) {
         Debris_FallFlickerSetup(LaundroMobile->aniFrames, LaundroMobile->debrisInfo);

@@ -262,9 +262,9 @@ void SaveGame_SaveGameState(void)
 void SaveGame_SaveProgress(void)
 {
     EntitySaveGame *saveRAM = SaveGame->saveRAM;
-    saveRAM->lives  = Player->savedLives;
-    saveRAM->score  = Player->savedScore;
-    saveRAM->score1UP  = Player->savedScore1UP;
+    saveRAM->lives          = Player->savedLives;
+    saveRAM->score          = Player->savedScore;
+    saveRAM->score1UP       = Player->savedScore1UP;
 #if RETRO_USE_PLUS
     saveRAM->continues      = globals->continues;
     saveRAM->characterFlags = globals->characterFlags;
@@ -331,15 +331,15 @@ void SaveGame_SavePlayerState(void)
 }
 void SaveGame_LoadPlayerState(void)
 {
-    SceneInfo->milliseconds = globals->restartMilliseconds;
-    SceneInfo->seconds      = globals->restartSeconds;
-    SceneInfo->minutes      = globals->restartMinutes;
-    Player->rings                = globals->restartRings;
-    Player->ringExtraLife        = globals->restart1UP;
-    Player->powerups             = globals->restartPowerups;
-    globals->restartRings        = 0;
-    globals->restart1UP          = 100;
-    globals->restartPowerups     = 0;
+    SceneInfo->milliseconds  = globals->restartMilliseconds;
+    SceneInfo->seconds       = globals->restartSeconds;
+    SceneInfo->minutes       = globals->restartMinutes;
+    Player->rings            = globals->restartRings;
+    Player->ringExtraLife    = globals->restart1UP;
+    Player->powerups         = globals->restartPowerups;
+    globals->restartRings    = 0;
+    globals->restart1UP      = 100;
+    globals->restartPowerups = 0;
 }
 void SaveGame_ResetPlayerState(void)
 {

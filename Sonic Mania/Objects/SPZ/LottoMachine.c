@@ -195,9 +195,9 @@ void LottoMachine_CheckPlayerCollisions(void)
                                 self->field_78 = player->direction;
                             self->playerPtrs[self->playerCount++] = (Entity *)player;
 
-                            if (Zone->screenBoundsB1[playerID] != (self->position.y >> 16) + 160) {
-                                self->playerTimers[playerID] = Zone->screenBoundsB1[playerID];
-                                Zone->screenBoundsB1[playerID] = ((self->position.y >> 16) + 160);
+                            if (Zone->cameraBoundsB[playerID] != (self->position.y >> 16) + 160) {
+                                self->playerTimers[playerID] = Zone->cameraBoundsB[playerID];
+                                Zone->cameraBoundsB[playerID] = ((self->position.y >> 16) + 160);
                             }
 
                             LottoMachine->activePlayers |= (1 << playerID);
@@ -464,9 +464,9 @@ void LottoMachine_State_Unknown1(void)
                             self->playerAngles[playerID] = 32;
                         }
 
-                        if (Zone->screenBoundsB1[playerID] != (self->position.y >> 16) + 160) {
-                            self->playerTimers[playerID] = Zone->screenBoundsB1[playerID];
-                            Zone->screenBoundsB1[playerID] = ((self->position.y >> 16) + 160);
+                        if (Zone->cameraBoundsB[playerID] != (self->position.y >> 16) + 160) {
+                            self->playerTimers[playerID] = Zone->cameraBoundsB[playerID];
+                            Zone->cameraBoundsB[playerID] = ((self->position.y >> 16) + 160);
                         }
                     }
                 }
@@ -644,7 +644,7 @@ void LottoMachine_State_Unknown5(void)
                         player->jumpAbility  = 0;
                         RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, true, 0);
                         int playerID                   = RSDK.GetEntityID(player);
-                        Zone->screenBoundsB1[playerID] = self->playerTimers[playerID];
+                        Zone->cameraBoundsB[playerID] = self->playerTimers[playerID];
                     }
                 }
             }

@@ -52,7 +52,7 @@ bool32 FBZ2Outro_CutsceneState_Unknown1(EntityCutsceneSeq *host)
     RSDK.GetLayerSize(Zone->fgLow, &size, true);
     size.x -= 128;
     for (int32 p = 0; p < Player->playerCount; ++p) {
-        Zone->screenBoundsR1[p]     = size.x;
+        Zone->cameraBoundsR[p]     = size.x;
         Zone->playerBoundActiveR[p] = false;
     }
 
@@ -100,7 +100,7 @@ bool32 FBZ2Outro_CutsceneState_Unknown2(EntityCutsceneSeq *host)
     }
     else {
         for (int32 p = 0; p < Player->playerCount; ++p) {
-            Zone->screenBoundsT1[p] = Zone->screenBoundsB1[p] - ScreenInfo->height;
+            Zone->cameraBoundsT[p] = Zone->cameraBoundsB[p] - ScreenInfo->height;
         }
         return true;
     }

@@ -25,7 +25,7 @@ typedef struct {
     int32 collectedSpecialRings;
     int32 medalMods;
 #if RETRO_USE_PLUS
-    //(AIZ if encore) + GHZ-TMZ + ERZ
+    //(AIZ if encore) + GHZ-TMZ + (ERZ if not encore)
     // Bonus stage is [28]
     // Special stage is [29]
     // the rest are unused
@@ -46,7 +46,7 @@ typedef struct {
     Entity *saveEntityPtr;
     void (*saveCallback)(int32);
     EntitySaveGame *saveRAM;
-    int32 field_14;
+    int32 unused1;
 } ObjectSaveGame;
 
 extern ObjectSaveGame *SaveGame;

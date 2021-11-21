@@ -192,9 +192,9 @@ void DBTower_State_SetupArena(void)
 
     if (RSDK_GET_ENTITY(SLOT_PLAYER1, Player)->position.x > self->position.x) {
         Zone->playerBoundActiveL[0] = true;
-        Zone->screenBoundsL1[0]     = (self->position.x >> 16) - ScreenInfo->centerX;
+        Zone->cameraBoundsL[0]     = (self->position.x >> 16) - ScreenInfo->centerX;
         Zone->playerBoundActiveR[0] = true;
-        Zone->screenBoundsR1[0]     = (self->position.x >> 16) + ScreenInfo->centerX;
+        Zone->cameraBoundsR[0]     = (self->position.x >> 16) + ScreenInfo->centerX;
         self->active              = ACTIVE_NORMAL;
         self->timer               = 0;
         self->field_68.y += 0xA20000;
@@ -369,9 +369,9 @@ void DBTower_State_Finish(void)
         }
         else {
 #endif
-            Zone->screenBoundsR1[0] += 848;
+            Zone->cameraBoundsR[0] += 848;
             Zone->playerBoundActiveR[0] = false;
-            Zone->screenBoundsB1[0]     = 304;
+            Zone->cameraBoundsB[0]     = 304;
             destroyEntity(self);
 #if RETRO_USE_PLUS
         }

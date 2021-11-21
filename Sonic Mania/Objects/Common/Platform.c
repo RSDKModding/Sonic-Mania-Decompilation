@@ -6,7 +6,7 @@ void Platform_Update(void)
 {
     RSDK_THIS(Platform);
 #if RETRO_USE_PLUS
-    if (Zone->flag) {
+    if (Zone->teleportActionActive) {
         self->pushPlayersL = false;
         self->pushPlayersR = false;
     }

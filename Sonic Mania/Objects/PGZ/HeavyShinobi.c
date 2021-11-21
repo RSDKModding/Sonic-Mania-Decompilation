@@ -222,8 +222,8 @@ void HeavyShinobi_Unknown3(void)
     RSDK.PlaySfx(HeavyShinobi->sfxJump, false, 255);
     self->timer = 28;
 
-    if (self->position.x >= (Zone->screenBoundsL1[0] + 144) << 16) {
-        if (self->position.x <= (Zone->screenBoundsR1[0] - 144) << 16)
+    if (self->position.x >= (Zone->cameraBoundsL[0] + 144) << 16) {
+        if (self->position.x <= (Zone->cameraBoundsR[0] - 144) << 16)
             self->velocity.x = (RSDK.Rand(0, 2) << 18) - 0x20000;
         else
             self->velocity.x = -0x20000;
@@ -265,9 +265,9 @@ void HeavyShinobi_State_Setup(void)
     if (++self->timer >= 2) {
         self->timer               = 0;
         Zone->playerBoundActiveR[0] = true;
-        Zone->screenBoundsR1[0]     = ScreenInfo->centerX + 80 + (self->position.x >> 16);
+        Zone->cameraBoundsR[0]     = ScreenInfo->centerX + 80 + (self->position.x >> 16);
         Zone->playerBoundActiveB[0] = true;
-        Zone->screenBoundsB1[0]     = (self->position.y >> 16) + 68;
+        Zone->cameraBoundsB[0]     = (self->position.y >> 16) + 68;
         self->position.y          = (ScreenInfo->position.y - 192) << 16;
         for (int32 i = 0; i < 16; ++i) HeavyShinobi->storePos[i] = self->position;
 
@@ -281,15 +281,15 @@ void HeavyShinobi_State_SetupArena(void)
     RSDK_THIS(HeavyShinobi);
 
     Zone->playerBoundActiveL[0] = true;
-    Zone->screenBoundsL1[0]     = ScreenInfo->position.x;
+    Zone->cameraBoundsL[0]     = ScreenInfo->position.x;
     if (RSDK_GET_ENTITY(SLOT_PLAYER1, Player)->position.x > self->position.x - 0x500000) {
         Zone->playerBoundActiveL[0] = true;
-        Zone->screenBoundsL1[0]     = (self->position.x >> 16) - ScreenInfo->centerX - 80;
-        CREATE_ENTITY(HeavyShinobi, intToVoid(SHINOBI_BOUNDS), (Zone->screenBoundsL1[0] + 40) << 16, (Zone->screenBoundsB1[0] - 376) << 16);
+        Zone->cameraBoundsL[0]     = (self->position.x >> 16) - ScreenInfo->centerX - 80;
+        CREATE_ENTITY(HeavyShinobi, intToVoid(SHINOBI_BOUNDS), (Zone->cameraBoundsL[0] + 40) << 16, (Zone->cameraBoundsB[0] - 376) << 16);
         EntityHeavyShinobi *child =
-            CREATE_ENTITY(HeavyShinobi, intToVoid(SHINOBI_BOUNDS), (Zone->screenBoundsR1[0] - 40) << 16, (Zone->screenBoundsB1[0] - 376) << 16);
+            CREATE_ENTITY(HeavyShinobi, intToVoid(SHINOBI_BOUNDS), (Zone->cameraBoundsR[0] - 40) << 16, (Zone->cameraBoundsB[0] - 376) << 16);
         child->timer      = 1;
-        child->position.y = (Zone->screenBoundsB1[0] - 99) << 16;
+        child->position.y = (Zone->cameraBoundsB[0] - 99) << 16;
         child->state      = HeavyShinobi_State4_Unknown2;
         self->state     = HeavyShinobi_State_StartFight;
     }
@@ -300,10 +300,10 @@ void HeavyShinobi_State_StartFight(void)
     RSDK_THIS(HeavyShinobi);
 
     Zone->playerBoundActiveL[0] = true;
-    Zone->screenBoundsL1[0]     = ScreenInfo->position.x;
+    Zone->cameraBoundsL[0]     = ScreenInfo->position.x;
     if (RSDK_GET_ENTITY(SLOT_PLAYER1, Player)->position.x > self->position.x) {
         Zone->playerBoundActiveL[0] = true;
-        Zone->screenBoundsL1[0]     = (self->position.x >> 16) - ScreenInfo->centerX - 80;
+        Zone->cameraBoundsL[0]     = (self->position.x >> 16) - ScreenInfo->centerX - 80;
         Music_TransitionTrack(TRACK_HBHBOSS, 0.0125);
         self->visible = true;
         HeavyShinobi_Unknown3();
@@ -383,15 +383,15 @@ void HeavyShinobi_State_Unknown3(void)
     self->velocity.y += 0x2800;
 
     if (self->velocity.x >= 0) {
-        if (self->position.x > (Zone->screenBoundsR1[0] - 104) << 16) {
+        if (self->position.x > (Zone->cameraBoundsR[0] - 104) << 16) {
             self->velocity.x = 0;
-            self->position.x = (Zone->screenBoundsR1[0] - 104) << 16;
+            self->position.x = (Zone->cameraBoundsR[0] - 104) << 16;
         }
     }
     else {
-        if (self->position.x < (Zone->screenBoundsL1[0] + 104) << 16) {
+        if (self->position.x < (Zone->cameraBoundsL[0] + 104) << 16) {
             self->velocity.x = 0;
-            self->position.x = (Zone->screenBoundsL1[0] + 104) << 16;
+            self->position.x = (Zone->cameraBoundsL[0] + 104) << 16;
         }
     }
 
@@ -500,15 +500,15 @@ void HeavyShinobi_State_Glitched(void)
     self->velocity.y += 0x3800;
 
     if (self->velocity.x >= 0) {
-        if (self->position.x > (Zone->screenBoundsR1[0] - 104) << 16) {
+        if (self->position.x > (Zone->cameraBoundsR[0] - 104) << 16) {
             self->velocity.x = 0;
-            self->position.x = (Zone->screenBoundsR1[0] - 104) << 16;
+            self->position.x = (Zone->cameraBoundsR[0] - 104) << 16;
         }
     }
     else {
-        if (self->position.x < (Zone->screenBoundsL1[0] + 104) << 16) {
+        if (self->position.x < (Zone->cameraBoundsL[0] + 104) << 16) {
             self->velocity.x = 0;
-            self->position.x = (Zone->screenBoundsL1[0] + 104) << 16;
+            self->position.x = (Zone->cameraBoundsL[0] + 104) << 16;
         }
     }
 
@@ -564,15 +564,15 @@ void HeavyShinobi_State_Destroyed(void)
     self->velocity.y += 0x3800;
 
     if (self->velocity.x >= 0) {
-        if (self->position.x > (Zone->screenBoundsR1[0] - 104) << 16) {
+        if (self->position.x > (Zone->cameraBoundsR[0] - 104) << 16) {
             self->velocity.x = 0;
-            self->position.x = (Zone->screenBoundsR1[0] - 104) << 16;
+            self->position.x = (Zone->cameraBoundsR[0] - 104) << 16;
         }
     }
     else {
-        if (self->position.x < (Zone->screenBoundsL1[0] + 104) << 16) {
+        if (self->position.x < (Zone->cameraBoundsL[0] + 104) << 16) {
             self->velocity.x = 0;
-            self->position.x = (Zone->screenBoundsL1[0] + 104) << 16;
+            self->position.x = (Zone->cameraBoundsL[0] + 104) << 16;
         }
     }
 
@@ -610,7 +610,7 @@ void HeavyShinobi_State_Finished(void)
 
     if (!RSDK.CheckOnScreen(self, &self->updateRange)) {
         Music_TransitionTrack(TRACK_STAGE, 0.0125);
-        Zone->screenBoundsR1[0] += 424;
+        Zone->cameraBoundsR[0] += 424;
         HeavyShinobi->health = -1;
         destroyEntity(self);
     }
@@ -902,8 +902,8 @@ void HeavyShinobi_State4_Unknown1(void)
     self->position.y += self->velocity.y;
     self->velocity.y += 0x4800;
 
-    if (self->position.y >= (Zone->screenBoundsB1[0] - 99) << 16) {
-        self->position.y = (Zone->screenBoundsB1[0] - 99) << 16;
+    if (self->position.y >= (Zone->cameraBoundsB[0] - 99) << 16) {
+        self->position.y = (Zone->cameraBoundsB[0] - 99) << 16;
         self->state      = HeavyShinobi_State4_Unknown2;
     }
 

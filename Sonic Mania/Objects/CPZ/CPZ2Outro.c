@@ -64,10 +64,10 @@ bool32 CPZ2Outro_CutsceneSeq(void *h)
 
     if (!host->timer) {
         ((EntityEggPrison *)CPZ2Outro->prisonPtr)->notSolid = true;
-        Zone->screenBoundsT1[0]                              = 0;
-        Zone->screenBoundsT1[1]                              = 0;
-        Zone->screenBoundsR1[0]                              = size.x;
-        Zone->screenBoundsR1[1]                              = size.x;
+        Zone->cameraBoundsT[0]                              = 0;
+        Zone->cameraBoundsT[1]                              = 0;
+        Zone->cameraBoundsR[0]                              = size.x;
+        Zone->cameraBoundsR[1]                              = size.x;
         Zone->playerBoundActiveR[0]                          = 0;
         Zone->playerBoundActiveR[1]                          = 0;
         CutsceneSeq_LockAllPlayerControl();

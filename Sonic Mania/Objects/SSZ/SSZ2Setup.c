@@ -183,11 +183,11 @@ void SSZ2Setup_GenericTriggerCallback3(void)
             player->stateInput      = 0;
             player->left            = false;
             player->right           = true;
-            Zone->screenBoundsR1[0] = ScreenInfo->centerX + (self->position.x >> 16);
-            Zone->screenBoundsR1[1] = ScreenInfo->centerX + (self->position.x >> 16);
+            Zone->cameraBoundsR[0] = ScreenInfo->centerX + (self->position.x >> 16);
+            Zone->cameraBoundsR[1] = ScreenInfo->centerX + (self->position.x >> 16);
 #if RETRO_USE_PLUS
-            Zone->screenBoundsR1[2] = ScreenInfo->centerX + (self->position.x >> 16);
-            Zone->screenBoundsR1[3] = ScreenInfo->centerX + (self->position.x >> 16);
+            Zone->cameraBoundsR[2] = ScreenInfo->centerX + (self->position.x >> 16);
+            Zone->cameraBoundsR[3] = ScreenInfo->centerX + (self->position.x >> 16);
 #endif
 
             for (int32 i = 0; i < Player->playerCount; ++i) {

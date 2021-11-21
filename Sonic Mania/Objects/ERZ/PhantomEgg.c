@@ -240,10 +240,10 @@ void PhantomEgg_HandlePhantomWarp(uint8 phantomID)
     RSDK_THIS(PhantomEgg);
 
     int id                    = phantomID & 3;
-    PhantomEgg->boundsStoreL1 = Zone->screenBoundsL1[0];
-    PhantomEgg->boundsStoreR1 = Zone->screenBoundsR1[0];
-    PhantomEgg->boundsStoreT1 = Zone->screenBoundsT1[0];
-    PhantomEgg->boundsStoreB1 = Zone->screenBoundsB1[0];
+    PhantomEgg->boundsStoreL1 = Zone->cameraBoundsL[0];
+    PhantomEgg->boundsStoreR1 = Zone->cameraBoundsR[0];
+    PhantomEgg->boundsStoreT1 = Zone->cameraBoundsT[0];
+    PhantomEgg->boundsStoreB1 = Zone->cameraBoundsB[0];
 
     Entity *phantomHeavy = NULL;
 
@@ -293,25 +293,25 @@ void PhantomEgg_HandlePhantomWarp(uint8 phantomID)
         int offsetY = nodeBottom->position.y - (PhantomEgg->boundsStoreB1 << 16);
 
         for (int p = 0; p < Player->playerCount; ++p) {
-            Zone->screenBoundsL1[p] = nodeLeft->position.x >> 16;
-            Zone->screenBoundsR1[p] = nodeRight->position.x >> 16;
-            Zone->screenBoundsT1[p] = nodeTop->position.y >> 16;
-            Zone->screenBoundsB1[p] = nodeBottom->position.y >> 16;
+            Zone->cameraBoundsL[p] = nodeLeft->position.x >> 16;
+            Zone->cameraBoundsR[p] = nodeRight->position.x >> 16;
+            Zone->cameraBoundsT[p] = nodeTop->position.y >> 16;
+            Zone->cameraBoundsB[p] = nodeBottom->position.y >> 16;
 
-            Zone->screenBoundsL2[p] = nodeLeft->position.x;
-            Zone->screenBoundsR2[p] = nodeRight->position.x;
-            Zone->screenBoundsT2[p] = nodeTop->position.y;
-            Zone->screenBoundsB2[p] = nodeBottom->position.y;
+            Zone->playerBoundsL[p] = nodeLeft->position.x;
+            Zone->playerBoundsR[p] = nodeRight->position.x;
+            Zone->playerBoundsT[p] = nodeTop->position.y;
+            Zone->playerBoundsB[p] = nodeBottom->position.y;
             Zone->deathBoundary[p]  = nodeBottom->position.y + 0x800000;
         }
 
         phantomHeavy->active = ACTIVE_NORMAL;
 
         EntityCamera *camera = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
-        camera->boundsL      = Zone->screenBoundsL1[0];
-        camera->boundsR      = Zone->screenBoundsR1[0];
-        camera->boundsT      = Zone->screenBoundsT1[0];
-        camera->boundsB      = Zone->screenBoundsB1[0];
+        camera->boundsL      = Zone->cameraBoundsL[0];
+        camera->boundsR      = Zone->cameraBoundsR[0];
+        camera->boundsT      = Zone->cameraBoundsT[0];
+        camera->boundsB      = Zone->cameraBoundsB[0];
 
         if (id == 3) {
             EntityPlatformNode *nodeStart = RSDK_GET_ENTITY(phantomSlot + 5, PlatformNode);
@@ -356,23 +356,23 @@ void PhantomEgg_HandleReturnWarp(void)
     RSDK_THIS(PhantomEgg);
 
     for (int p = 0; p < Player->playerCount; ++p) {
-        Zone->screenBoundsL1[p] = PhantomEgg->boundsStoreL1;
-        Zone->screenBoundsR1[p] = PhantomEgg->boundsStoreR1;
-        Zone->screenBoundsT1[p] = PhantomEgg->boundsStoreT1;
-        Zone->screenBoundsB1[p] = PhantomEgg->boundsStoreB1;
+        Zone->cameraBoundsL[p] = PhantomEgg->boundsStoreL1;
+        Zone->cameraBoundsR[p] = PhantomEgg->boundsStoreR1;
+        Zone->cameraBoundsT[p] = PhantomEgg->boundsStoreT1;
+        Zone->cameraBoundsB[p] = PhantomEgg->boundsStoreB1;
 
-        Zone->screenBoundsL2[p] = PhantomEgg->boundsStoreL1 << 16;
-        Zone->screenBoundsR2[p] = PhantomEgg->boundsStoreR1 << 16;
-        Zone->screenBoundsT2[p] = PhantomEgg->boundsStoreT1 << 16;
-        Zone->screenBoundsB2[p] = PhantomEgg->boundsStoreB1 << 16;
-        Zone->deathBoundary[p]  = Zone->screenBoundsB2[p];
+        Zone->playerBoundsL[p] = PhantomEgg->boundsStoreL1 << 16;
+        Zone->playerBoundsR[p] = PhantomEgg->boundsStoreR1 << 16;
+        Zone->playerBoundsT[p] = PhantomEgg->boundsStoreT1 << 16;
+        Zone->playerBoundsB[p] = PhantomEgg->boundsStoreB1 << 16;
+        Zone->deathBoundary[p]  = Zone->playerBoundsB[p];
     }
 
     EntityCamera *camera = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
-    camera->boundsL      = Zone->screenBoundsL1[0];
-    camera->boundsR      = Zone->screenBoundsR1[0];
-    camera->boundsT      = Zone->screenBoundsT1[0];
-    camera->boundsB      = Zone->screenBoundsB1[0];
+    camera->boundsL      = Zone->cameraBoundsL[0];
+    camera->boundsR      = Zone->cameraBoundsR[0];
+    camera->boundsT      = Zone->cameraBoundsT[0];
+    camera->boundsB      = Zone->cameraBoundsB[0];
     camera->position.x   = PhantomEgg->boundsM;
     camera->position.y   = PhantomEgg->boundsStoreB1 - (ScreenInfo->centerY << 16);
 
@@ -480,14 +480,14 @@ void PhantomEgg_State_SetupArena(void)
         self->timer               = 0;
         Zone->playerBoundActiveL[0] = true;
         Zone->playerBoundActiveR[0] = true;
-        Zone->screenBoundsL1[0]     = (self->position.x >> 16) - ScreenInfo->centerX;
-        Zone->screenBoundsR1[0]     = (self->position.x >> 16) + ScreenInfo->centerX;
-        Zone->screenBoundsT1[0]     = Zone->screenBoundsB1[0] - ScreenInfo->height;
-        PhantomEgg->boundsL         = (Zone->screenBoundsL1[0] + 64) << 16;
-        PhantomEgg->boundsR         = (Zone->screenBoundsR1[0] - 64) << 16;
+        Zone->cameraBoundsL[0]     = (self->position.x >> 16) - ScreenInfo->centerX;
+        Zone->cameraBoundsR[0]     = (self->position.x >> 16) + ScreenInfo->centerX;
+        Zone->cameraBoundsT[0]     = Zone->cameraBoundsB[0] - ScreenInfo->height;
+        PhantomEgg->boundsL         = (Zone->cameraBoundsL[0] + 64) << 16;
+        PhantomEgg->boundsR         = (Zone->cameraBoundsR[0] - 64) << 16;
         PhantomEgg->boundsM         = self->position.x;
-        PhantomEgg->boundsT         = (Zone->screenBoundsT1[0] + 48) << 16;
-        PhantomEgg->boundsB         = (Zone->screenBoundsB1[0] - 96) << 16;
+        PhantomEgg->boundsT         = (Zone->cameraBoundsT[0] + 48) << 16;
+        PhantomEgg->boundsB         = (Zone->cameraBoundsB[0] - 96) << 16;
         self->position.y -= 0x1000000;
         self->active = ACTIVE_NORMAL;
         self->state  = PhantomEgg_State_Unknown1;

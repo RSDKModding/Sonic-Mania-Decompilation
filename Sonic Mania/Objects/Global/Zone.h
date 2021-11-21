@@ -33,14 +33,14 @@ typedef struct {
     int32 ringFrame;
     int32 timer;
     int32 timer2;
-    int32 screenBoundsL1[PLAYER_MAX];
-    int32 screenBoundsR1[PLAYER_MAX];
-    int32 screenBoundsT1[PLAYER_MAX];
-    int32 screenBoundsB1[PLAYER_MAX];
-    int32 screenBoundsL2[PLAYER_MAX];
-    int32 screenBoundsR2[PLAYER_MAX];
-    int32 screenBoundsT2[PLAYER_MAX];
-    int32 screenBoundsB2[PLAYER_MAX];
+    int32 cameraBoundsL[PLAYER_MAX];
+    int32 cameraBoundsR[PLAYER_MAX];
+    int32 cameraBoundsT[PLAYER_MAX];
+    int32 cameraBoundsB[PLAYER_MAX];
+    int32 playerBoundsL[PLAYER_MAX];
+    int32 playerBoundsR[PLAYER_MAX];
+    int32 playerBoundsT[PLAYER_MAX];
+    int32 playerBoundsB[PLAYER_MAX];
     int32 deathBoundary[PLAYER_MAX];
     int32 playerBoundActiveL[PLAYER_MAX];
     int32 playerBoundActiveR[PLAYER_MAX];
@@ -54,7 +54,9 @@ typedef struct {
     uint16 fgLow;
     uint16 fgHigh;
     uint16 moveLayer;
+#if RETRO_USE_PLUS
     uint16 scratchLayer;
+#endif
     uint16 fgLowID;
     uint16 fgHighID;
     uint16 moveID;
@@ -71,7 +73,7 @@ typedef struct {
     int32 screenPosX[PLAYER_MAX];
     int32 screenPosY[PLAYER_MAX];
     bool32 swapGameMode;
-    int32 flag;
+    bool32 teleportActionActive;
     int32 randSeed;
 #endif
 } ObjectZone;
@@ -106,7 +108,7 @@ void Zone_Serialize(void);
 // Extra Entity Functions
 int32 Zone_GetZoneID(void);
 void Zone_StoreEntities(int32 xOffset, int32 yOffset);
-void Zone_ReloadStoredEntities(int32 xOffset, int32 yOffset, bool32 flag);
+void Zone_ReloadStoredEntities(int32 xOffset, int32 yOffset, bool32 setCamera);
 void Zone_StartFadeOut(int32 fadeSpeed, int32 fadeColour);
 void Zone_StartFadeIn(int32 fadeSpeed, int32 fadeColour);
 void Zone_StartFadeOut_MusicFade(void);
@@ -117,7 +119,7 @@ void Zone_ApplyWorldBounds(void);
 bool32 Zone_IsAct2(void);
 int32 Zone_GetEncoreStageID(void);
 int32 Zone_GetManiaStageID(void);
-void Zone_StateDraw_Fadeout(void);
+void Zone_Draw_Fade(void);
 void Zone_State_Fadeout(void);
 void Zone_State_FadeIn(void);
 void Zone_State_Fadeout_Unknown(void);

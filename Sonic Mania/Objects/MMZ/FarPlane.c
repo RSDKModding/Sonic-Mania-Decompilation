@@ -82,13 +82,13 @@ void FarPlane_StageLoad(void)
 #endif
             RSDK.SetLimitedFade(4, 0, 3, 96, 128, 143);
         RSDK.CopyTileLayer(FarPlane->layerID, 0, 192, Zone->fgLow, 0, 192, 1024, 208);
-        Zone->screenBoundsB1[0] -= 0x800;
+        Zone->cameraBoundsB[0] -= 0x800;
         Zone->deathBoundary[0] -= 0x8000000;
-        Zone->screenBoundsB1[1] -= 0x800;
+        Zone->cameraBoundsB[1] -= 0x800;
         Zone->deathBoundary[1] -= 0x8000000;
-        Zone->screenBoundsB1[2] -= 0x800;
+        Zone->cameraBoundsB[2] -= 0x800;
         Zone->deathBoundary[2] -= 0x8000000;
-        Zone->screenBoundsB1[3] -= 0x800;
+        Zone->cameraBoundsB[3] -= 0x800;
         Zone->deathBoundary[3] -= 0x8000000;
 
         ++Zone->drawOrderLow;

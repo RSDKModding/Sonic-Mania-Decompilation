@@ -195,10 +195,10 @@ void HCZSetup_StageLoad(void)
     if (Zone->actID) {
         if (!PlayerHelpers_CheckStageReload())
             PlayerHelpers_CheckPlayerPos(0x5900000, 0xB00000, 0x2600000, 0x6800000);
-        Zone->screenBoundsL1[0] = 168;
-        Zone->screenBoundsL1[1] = 168;
-        Zone->screenBoundsL1[2] = 168;
-        Zone->screenBoundsL1[3] = 168;
+        Zone->cameraBoundsL[0] = 168;
+        Zone->cameraBoundsL[1] = 168;
+        Zone->cameraBoundsL[2] = 168;
+        Zone->cameraBoundsL[3] = 168;
         if (isMainGameMode() && globals->atlEnabled && !PlayerHelpers_CheckStageReload()) {
             Zone_ReloadStoredEntities(0x6A00000, 0x1840000, true);
         }
@@ -263,7 +263,7 @@ void HCZSetup_ScanlineCallback(ScanlineInfo *scanlines)
 
 void HCZSetup_HandleActTransition(void)
 {
-    Zone_StoreEntities((Zone->screenBoundsL1[0] + ScreenInfo->centerX) << 16, Zone->screenBoundsB1[0] << 16);
+    Zone_StoreEntities((Zone->cameraBoundsL[0] + ScreenInfo->centerX) << 16, Zone->cameraBoundsB[0] << 16);
     RSDK.LoadScene();
 }
 

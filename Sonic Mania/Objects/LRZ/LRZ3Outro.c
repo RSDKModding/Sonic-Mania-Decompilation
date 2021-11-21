@@ -82,7 +82,7 @@ void LRZ3Outro_State_Unknown2(void)
         LRZ3Outro_HandleExplosions();
     if (self->timer == 30) {
         Zone->playerBoundActiveB[0] = true;
-        Zone->screenBoundsB1[0]     = (self->position.y >> 16) + 64;
+        Zone->cameraBoundsB[0]     = (self->position.y >> 16) + 64;
     }
 
     if (self->timer <= 120) {

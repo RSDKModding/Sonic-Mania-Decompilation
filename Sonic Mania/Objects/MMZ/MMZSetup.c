@@ -78,10 +78,10 @@ void MMZSetup_StageLoad(void)
 
         MMZSetup->aniTileDelay2 = 16;
         if (!PlayerHelpers_CheckStageReload() && PlayerHelpers_CheckPlayerPos(0x73C0000, 0x2C0000, 0x1040000, 0x82C0000)) {
-            Zone->screenBoundsB1[0] = 2092;
-            Zone->screenBoundsB1[1] = 2092;
-            Zone->screenBoundsB1[2] = 2092;
-            Zone->screenBoundsB1[3] = 2092;
+            Zone->cameraBoundsB[0] = 2092;
+            Zone->cameraBoundsB[1] = 2092;
+            Zone->cameraBoundsB[2] = 2092;
+            Zone->cameraBoundsB[3] = 2092;
         }
 
         if (isMainGameMode() && globals->atlEnabled) {
@@ -99,10 +99,10 @@ void MMZSetup_StageLoad(void)
             Zone->forcePlayerOnScreenFlag = true;
             Zone->stageFinishCallback     = MMZSetup_StageFinishCB_Act1;
         }
-        Zone->screenBoundsB1[0] = 5120;
-        Zone->screenBoundsB1[1] = 5120;
-        Zone->screenBoundsB1[2] = 5120;
-        Zone->screenBoundsB1[3] = 5120;
+        Zone->cameraBoundsB[0] = 5120;
+        Zone->cameraBoundsB[1] = 5120;
+        Zone->cameraBoundsB[2] = 5120;
+        Zone->cameraBoundsB[3] = 5120;
     }
 
 #if RETRO_USE_PLUS
@@ -116,7 +116,7 @@ void MMZSetup_StageLoad(void)
 
 void MMZSetup_StageFinishCB_Act1(void)
 {
-    Zone_StoreEntities((Zone->screenBoundsL1[0] + ScreenInfo->centerX) << 16, Zone->screenBoundsB1[0] << 16);
+    Zone_StoreEntities((Zone->cameraBoundsL[0] + ScreenInfo->centerX) << 16, Zone->cameraBoundsB[0] << 16);
     RSDK.LoadScene();
 }
 #if RETRO_USE_PLUS

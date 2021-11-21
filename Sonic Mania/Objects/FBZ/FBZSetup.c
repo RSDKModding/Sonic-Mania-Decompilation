@@ -112,14 +112,14 @@ void FBZSetup_StageLoad(void)
 void FBZSetup_ActTransitionLoad(void)
 {
     Zone_ReloadStoredEntities(0x10E40000, 0xD40000, false);
-    Zone->screenBoundsL1[0] = 0;
-    Zone->screenBoundsB1[0] = 4324;
-    Zone->screenBoundsL1[1] = 0;
-    Zone->screenBoundsB1[1] = 4324;
-    Zone->screenBoundsL1[2] = 0;
-    Zone->screenBoundsB1[2] = 4324;
-    Zone->screenBoundsL1[3] = 0;
-    Zone->screenBoundsB1[3] = 4324;
+    Zone->cameraBoundsL[0] = 0;
+    Zone->cameraBoundsB[0] = 4324;
+    Zone->cameraBoundsL[1] = 0;
+    Zone->cameraBoundsB[1] = 4324;
+    Zone->cameraBoundsL[2] = 0;
+    Zone->cameraBoundsB[2] = 4324;
+    Zone->cameraBoundsL[3] = 0;
+    Zone->cameraBoundsB[3] = 4324;
 
     int32 id         = 0;
     TileLayer *layer = RSDK.GetSceneLayer(2);

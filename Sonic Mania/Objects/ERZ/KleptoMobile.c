@@ -340,8 +340,8 @@ void KleptoMobile_State_SetupArena(void)
     KleptoMobile->boundsM = self->position.x;
     KleptoMobile->boundsL = KleptoMobile->boundsM - 0x800000;
     KleptoMobile->boundsR = KleptoMobile->boundsM + 0x800000;
-    KleptoMobile->boundsT = (Zone->screenBoundsT1[0] + 48) << 16;
-    KleptoMobile->boundsB = (Zone->screenBoundsB1[0] - 96) << 16;
+    KleptoMobile->boundsT = (Zone->cameraBoundsT[0] + 48) << 16;
+    KleptoMobile->boundsB = (Zone->cameraBoundsB[0] - 96) << 16;
     self->state         = StateMachine_None;
 }
 
@@ -384,11 +384,11 @@ void KleptoMobile_State_Unknown2(void)
         self->velocity.x += 0x800;
     }
 
-    int bottom   = Zone->screenBoundsB1[0] << 16;
+    int bottom   = Zone->cameraBoundsB[0] << 16;
     int boundary = bottom - 0x800000;
     if (y <= bottom - 0x800000) {
         boundary = bottom + 0x800000;
-        if (y >= (Zone->screenBoundsT1[0] + 128) << 16)
+        if (y >= (Zone->cameraBoundsT[0] + 128) << 16)
             boundary = y;
     }
 
@@ -515,8 +515,8 @@ void KleptoMobile_State_Unknown4(void)
       do {
         do {
             self->field_70.y = (RSDK.Rand(-2, 3) << 21) + player1->position.y;
-        } while (self->field_70.y > (Zone->screenBoundsB1[0] - 64) << 16);
-      } while (self->field_70.y < (Zone->screenBoundsT1[0] + 64) << 16);
+        } while (self->field_70.y > (Zone->cameraBoundsB[0] - 64) << 16);
+      } while (self->field_70.y < (Zone->cameraBoundsT[0] + 64) << 16);
 
     self->circleRadius = 128;
     if (++self->field_108 == 4) {

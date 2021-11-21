@@ -52,13 +52,13 @@ bool32 SSZ1Outro_CutsceneState_Unknown1(EntityCutsceneSeq *host)
             }
         }
 
-        Zone->screenBoundsR1[0]     = self->hitbox.right + (self->position.x >> 16);
+        Zone->cameraBoundsR[0]     = self->hitbox.right + (self->position.x >> 16);
         Zone->playerBoundActiveR[0] = false;
-        Zone->screenBoundsR1[1]     = self->hitbox.right + (self->position.x >> 16);
+        Zone->cameraBoundsR[1]     = self->hitbox.right + (self->position.x >> 16);
         Zone->playerBoundActiveR[1] = false;
-        Zone->screenBoundsR1[2]     = self->hitbox.right + (self->position.x >> 16);
+        Zone->cameraBoundsR[2]     = self->hitbox.right + (self->position.x >> 16);
         Zone->playerBoundActiveR[2] = false;
-        Zone->screenBoundsR1[3]     = self->hitbox.right + (self->position.x >> 16);
+        Zone->cameraBoundsR[3]     = self->hitbox.right + (self->position.x >> 16);
         Zone->playerBoundActiveR[3] = false;
 
         CutsceneSeq_LockAllPlayerControl();

@@ -120,7 +120,7 @@ void PhantomRuby_State_FallOffScreen(void)
     self->position.x += self->velocity.x;
     self->position.y += self->velocity.y;
     self->velocity.y += 0x3800;
-    if (self->position.y > (Zone->screenBoundsB1[0] + 64) << 16)
+    if (self->position.y > (Zone->cameraBoundsB[0] + 64) << 16)
         self->state = StateMachine_None;
 }
 

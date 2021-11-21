@@ -387,7 +387,7 @@ void SpecialClear_LoadScene(void)
     }
     else if (!self->field_120) {
         EntityMenuParam *param = (EntityMenuParam *)globals->menuParam;
-        if (param->field_59 == 1) {
+        if (param->selectionType == 1) {
             RSDK.SetScene("Presentation", "Menu");
             RSDK.LoadScene();
         }

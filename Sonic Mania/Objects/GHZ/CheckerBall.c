@@ -607,7 +607,7 @@ void CheckerBall_HandleObjectCollisions(void)
             itemBox->contentsSpeed = -0x38000;
             itemBox->active        = 1;
             itemBox->velocity.y    = -0x20000;
-            itemBox->state         = ItemBox_State_Contents;
+            itemBox->state         = ItemBox_State_ContentsShown;
             RSDK.SetSpriteAnimation(ItemBox->aniFrames, 1, &itemBox->animatorBox, true, 0);
             itemBox->animatorBox.frameID = ItemBox->brokenFrame++;
             ItemBox->brokenFrame %= 3;

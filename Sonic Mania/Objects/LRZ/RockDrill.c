@@ -191,13 +191,13 @@ void RockDrill_State_Unknown1(void)
     self->active = ACTIVE_NORMAL;
     self->state  = RockDrill_State_Unknown2;
     if (self->lockCamera) {
-        self->boundsL         = Zone->screenBoundsL1[0];
-        self->boundsR         = Zone->screenBoundsR1[0];
-        self->boundsT         = Zone->screenBoundsT1[0];
-        self->boundsB         = Zone->screenBoundsB1[0];
-        Zone->screenBoundsL1[0] = (self->position.x >> 16) - ScreenInfo->centerX - 96;
-        Zone->screenBoundsR1[0] = (self->position.x >> 16) + ScreenInfo->centerX - 96;
-        Zone->screenBoundsB1[0] = (self->position.y >> 16) + 96;
+        self->boundsL         = Zone->cameraBoundsL[0];
+        self->boundsR         = Zone->cameraBoundsR[0];
+        self->boundsT         = Zone->cameraBoundsT[0];
+        self->boundsB         = Zone->cameraBoundsB[0];
+        Zone->cameraBoundsL[0] = (self->position.x >> 16) - ScreenInfo->centerX - 96;
+        Zone->cameraBoundsR[0] = (self->position.x >> 16) + ScreenInfo->centerX - 96;
+        Zone->cameraBoundsB[0] = (self->position.y >> 16) + 96;
     }
     self->timer = 120;
 }
@@ -276,10 +276,10 @@ void RockDrill_State_Unknown2(void)
         }
 
         if (self->lockCamera) {
-            Zone->screenBoundsL1[0] = self->boundsL;
-            Zone->screenBoundsR1[0] = self->boundsR;
-            Zone->screenBoundsT1[0] = self->boundsT;
-            Zone->screenBoundsB1[0] = self->boundsB;
+            Zone->cameraBoundsL[0] = self->boundsL;
+            Zone->cameraBoundsR[0] = self->boundsR;
+            Zone->cameraBoundsT[0] = self->boundsT;
+            Zone->cameraBoundsB[0] = self->boundsB;
         }
         self->timer  = 30;
         self->state  = RockDrill_State_Unknown3;

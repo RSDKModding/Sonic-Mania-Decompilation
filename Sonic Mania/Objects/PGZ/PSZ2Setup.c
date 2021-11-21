@@ -79,17 +79,17 @@ void PSZ2Setup_StageLoad(void)
     PSZ2Setup->aniTiles2         = RSDK.LoadSpriteSheet("PSZ2/AniTiles2.gif", SCOPE_STAGE);
 
     if (!isMainGameMode() || !globals->atlEnabled || PlayerHelpers_CheckStageReload()) {
-        Zone->screenBoundsL1[0] = 1024;
-        Zone->screenBoundsL1[1] = 1024;
-        Zone->screenBoundsL1[2] = 1024;
-        Zone->screenBoundsL1[3] = 1024;
+        Zone->cameraBoundsL[0] = 1024;
+        Zone->cameraBoundsL[1] = 1024;
+        Zone->cameraBoundsL[2] = 1024;
+        Zone->cameraBoundsL[3] = 1024;
         FXFade_StopAll();
     }
     else {
-        Zone->screenBoundsB1[0] = 1556;
-        Zone->screenBoundsB1[1] = 1556;
-        Zone->screenBoundsB1[2] = 1556;
-        Zone->screenBoundsB1[3] = 1556;
+        Zone->cameraBoundsB[0] = 1556;
+        Zone->cameraBoundsB[1] = 1556;
+        Zone->cameraBoundsB[2] = 1556;
+        Zone->cameraBoundsB[3] = 1556;
         PSZ2Setup_ActTransitionLoad();
     }
 
@@ -118,22 +118,22 @@ void PSZ2Setup_ActTransitionLoad(void)
     globals->restartMinutes      = 0;
     memset(globals->atlEntityData, 0, TEMPENTITY_START * sizeof(int32));
 
-    Zone->screenBoundsL1[0] = 0;
-    Zone->screenBoundsR1[0] = 944;
-    Zone->screenBoundsT1[0] = 0;
-    Zone->screenBoundsB1[0] = 1556;
-    Zone->screenBoundsL1[1] = 0;
-    Zone->screenBoundsR1[1] = 944;
-    Zone->screenBoundsT1[1] = 0;
-    Zone->screenBoundsB1[1] = 1556;
-    Zone->screenBoundsL1[2] = 0;
-    Zone->screenBoundsR1[2] = 944;
-    Zone->screenBoundsT1[2] = 0;
-    Zone->screenBoundsB1[2] = 1556;
-    Zone->screenBoundsL1[3] = 0;
-    Zone->screenBoundsR1[3] = 944;
-    Zone->screenBoundsT1[3] = 0;
-    Zone->screenBoundsB1[3] = 1556;
+    Zone->cameraBoundsL[0] = 0;
+    Zone->cameraBoundsR[0] = 944;
+    Zone->cameraBoundsT[0] = 0;
+    Zone->cameraBoundsB[0] = 1556;
+    Zone->cameraBoundsL[1] = 0;
+    Zone->cameraBoundsR[1] = 944;
+    Zone->cameraBoundsT[1] = 0;
+    Zone->cameraBoundsB[1] = 1556;
+    Zone->cameraBoundsL[2] = 0;
+    Zone->cameraBoundsR[2] = 944;
+    Zone->cameraBoundsT[2] = 0;
+    Zone->cameraBoundsB[2] = 1556;
+    Zone->cameraBoundsL[3] = 0;
+    Zone->cameraBoundsR[3] = 944;
+    Zone->cameraBoundsT[3] = 0;
+    Zone->cameraBoundsB[3] = 1556;
 }
 
 void PSZ2Setup_StageFinishCB(void) { CREATE_ENTITY(PSZ2Outro, NULL, 0, 0); }

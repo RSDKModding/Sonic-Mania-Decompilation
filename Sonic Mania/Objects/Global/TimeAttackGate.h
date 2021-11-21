@@ -14,7 +14,7 @@ typedef struct {
     int32 isFinished;
     int32 unused1;
     bool32 suppressedTitlecard;
-    bool32 debugEnabled;
+    bool32 disableRecords;
     uint16 sfxSignpost;
     uint16 sfxTeleport;
     int32 teleportChannel;

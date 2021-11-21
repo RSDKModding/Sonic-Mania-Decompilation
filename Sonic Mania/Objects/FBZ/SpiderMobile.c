@@ -285,13 +285,13 @@ void SpiderMobile_HandlePlatformMovement(void)
     RSDK_THIS(SpiderMobile);
 
     int32 offsetY = 0x7000000;
-    if (Zone->screenBoundsB1[0] > 5508 || self->state == SpiderMobile_StateEggman_Unknown2)
+    if (Zone->cameraBoundsB[0] > 5508 || self->state == SpiderMobile_StateEggman_Unknown2)
         offsetY = self->field_88;
 
-    Zone->screenBoundsT1[0] += offsetY >> 16;
-    Zone->screenBoundsB1[0] += offsetY >> 16;
+    Zone->cameraBoundsT[0] += offsetY >> 16;
+    Zone->cameraBoundsB[0] += offsetY >> 16;
     Zone->deathBoundary[0] += offsetY;
-    Zone->screenBoundsB2[0] += offsetY;
+    Zone->playerBoundsB[0] += offsetY;
     RSDK.GetSceneLayer(Zone->fgHigh)->scrollPos -= offsetY;
     self->position.y += offsetY;
     self->origin.y += offsetY;
@@ -660,15 +660,15 @@ void SpiderMobile_StateBody_SetupBounds(void)
             self->timer               = 0;
             Zone->playerBoundActiveL[0] = true;
             Zone->playerBoundActiveR[0] = true;
-            Zone->screenBoundsL1[0]     = (self->position.x >> 16) - 212;
-            Zone->screenBoundsR1[0]     = (self->position.x >> 16) + 212;
-            Zone->screenBoundsT1[0]     = (self->position.y >> 16) - ScreenInfo->height;
-            Zone->screenBoundsB1[0]     = (self->position.y >> 16);
-            SpiderMobile->boundL        = (Zone->screenBoundsL1[0] + 64) << 16;
-            SpiderMobile->boundR        = (Zone->screenBoundsR1[0] - 64) << 16;
+            Zone->cameraBoundsL[0]     = (self->position.x >> 16) - 212;
+            Zone->cameraBoundsR[0]     = (self->position.x >> 16) + 212;
+            Zone->cameraBoundsT[0]     = (self->position.y >> 16) - ScreenInfo->height;
+            Zone->cameraBoundsB[0]     = (self->position.y >> 16);
+            SpiderMobile->boundL        = (Zone->cameraBoundsL[0] + 64) << 16;
+            SpiderMobile->boundR        = (Zone->cameraBoundsR[0] - 64) << 16;
             SpiderMobile->startX        = self->position.x;
-            SpiderMobile->boundT        = (Zone->screenBoundsT1[0] + 48) << 16;
-            SpiderMobile->boundB        = (Zone->screenBoundsB1[0] - 8) << 16;
+            SpiderMobile->boundT        = (Zone->cameraBoundsT[0] + 48) << 16;
+            SpiderMobile->boundB        = (Zone->cameraBoundsB[0] - 8) << 16;
             self->state               = SpiderMobile_StateBody_SetupArena;
             FBZSetup_GenericTriggerCB_ShowInterior();
         }
@@ -716,14 +716,14 @@ void SpiderMobile_StateBody_SetupArena(void)
                 barrier->position.y += offsetY;
             }
 
-            Zone->screenBoundsL1[0] += offsetX >> 16;
-            Zone->screenBoundsR1[0] += offsetX >> 16;
-            Zone->screenBoundsT1[0] += offsetY >> 16;
-            Zone->screenBoundsB1[0] += offsetY >> 16;
-            Zone->screenBoundsL2[0] += offsetX;
-            Zone->screenBoundsR2[0] += offsetX;
-            Zone->screenBoundsT2[0] += offsetY;
-            Zone->screenBoundsB2[0] += offsetY;
+            Zone->cameraBoundsL[0] += offsetX >> 16;
+            Zone->cameraBoundsR[0] += offsetX >> 16;
+            Zone->cameraBoundsT[0] += offsetY >> 16;
+            Zone->cameraBoundsB[0] += offsetY >> 16;
+            Zone->playerBoundsL[0] += offsetX;
+            Zone->playerBoundsR[0] += offsetX;
+            Zone->playerBoundsT[0] += offsetY;
+            Zone->playerBoundsB[0] += offsetY;
             Zone->deathBoundary[0] = 0x7FFFFFFF;
 
             self->origin.y -= 0x1200000;
@@ -1064,10 +1064,10 @@ void SpiderMobile_StateEggman_Unknown2(void)
     }
     SpiderMobile_HandlePlatformMovement();
 
-    if (Zone->screenBoundsB1[0] <= 5248) {
+    if (Zone->cameraBoundsB[0] <= 5248) {
         self->timer           = 0;
-        Zone->screenBoundsB1[0] = 5248;
-        Zone->screenBoundsR1[0] += 1024;
+        Zone->cameraBoundsB[0] = 5248;
+        Zone->cameraBoundsR[0] += 1024;
         Camera_ShakeScreen(0, 0, 6);
         self->visible = false;
         RSDK.PlaySfx(SpiderMobile->sfxHullClose, false, 255);

@@ -131,11 +131,11 @@ bool32 SSZ3Cutscene_OutroState_Unknown1(EntityCutsceneSeq *host)
     int32 pos2 = 0;
     if (pos < 220) {
         pos2                    = ((ScreenInfo->width + ScreenInfo->position.x) >> 4) + 2;
-        Zone->screenBoundsR1[0] = 16 * (((ScreenInfo->width + ScreenInfo->position.x) >> 4) + 38);
+        Zone->cameraBoundsR[0] = 16 * (((ScreenInfo->width + ScreenInfo->position.x) >> 4) + 38);
     }
     else {
         pos                     = 0;
-        Zone->screenBoundsR1[0] = 4672;
+        Zone->cameraBoundsR[0] = 4672;
         pos2                    = 256;
     }
     Zone->playerBoundActiveR[0] = false;

@@ -295,7 +295,7 @@ void UISubHeading_StartNewSave(void)
     TimeAttackData_ClearOptions();
     RSDK.GetCString(param->menuTag, &control->tag);
     param->selectionID = control->field_D8;
-    param->field_168 = 0;
+    param->replayID    = 0;
     globals->gameMode = self->encoreMode != false;
 
     bool32 loadingSave = false;

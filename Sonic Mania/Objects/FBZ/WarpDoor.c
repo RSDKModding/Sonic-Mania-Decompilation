@@ -61,15 +61,15 @@ void WarpDoor_Update(void)
                             player->scrollDelay                       = 0;
                             WarpDoor_SetupBoundaries(boundID, &posPtr);
                             int32 pID                   = RSDK.GetEntityID(player);
-                            camera->boundsL           = Zone->screenBoundsL1[pID];
-                            camera->boundsR           = Zone->screenBoundsR1[pID];
-                            camera->boundsT           = Zone->screenBoundsT1[pID];
-                            camera->boundsB           = Zone->screenBoundsB1[pID];
-                            Zone->screenBoundsL2[pID] = Zone->screenBoundsL1[pID] << 16;
-                            Zone->screenBoundsR2[pID] = Zone->screenBoundsR1[pID] << 16;
-                            Zone->screenBoundsT2[pID] = Zone->screenBoundsT1[pID] << 16;
-                            Zone->screenBoundsB2[pID] = Zone->screenBoundsB1[pID] << 16;
-                            Zone->deathBoundary[pID]  = Zone->screenBoundsB1[pID] << 16;
+                            camera->boundsL           = Zone->cameraBoundsL[pID];
+                            camera->boundsR           = Zone->cameraBoundsR[pID];
+                            camera->boundsT           = Zone->cameraBoundsT[pID];
+                            camera->boundsB           = Zone->cameraBoundsB[pID];
+                            Zone->playerBoundsL[pID] = Zone->cameraBoundsL[pID] << 16;
+                            Zone->playerBoundsR[pID] = Zone->cameraBoundsR[pID] << 16;
+                            Zone->playerBoundsT[pID] = Zone->cameraBoundsT[pID] << 16;
+                            Zone->playerBoundsB[pID] = Zone->cameraBoundsB[pID] << 16;
+                            Zone->deathBoundary[pID]  = Zone->cameraBoundsB[pID] << 16;
                         }
 
                         if (tag->definesBounds)
@@ -247,15 +247,15 @@ void WarpDoor_SetStageBounds(void)
     Vector2 size;
 
     RSDK.GetLayerSize(Zone->fgLow, &size, true);
-    Zone->screenBoundsL1[0]     = 0;
-    Zone->screenBoundsR1[0]     = size.x;
-    Zone->screenBoundsT1[0]     = 0;
-    Zone->screenBoundsB1[0]     = size.y;
-    Zone->screenBoundsL2[0]     = Zone->screenBoundsL1[0] << 16;
-    Zone->screenBoundsR2[0]     = Zone->screenBoundsR1[0] << 16;
-    Zone->screenBoundsT2[0]     = Zone->screenBoundsT1[0] << 16;
-    Zone->screenBoundsB2[0]     = Zone->screenBoundsB1[0] << 16;
-    Zone->deathBoundary[0]      = Zone->screenBoundsB1[0] << 16;
+    Zone->cameraBoundsL[0]     = 0;
+    Zone->cameraBoundsR[0]     = size.x;
+    Zone->cameraBoundsT[0]     = 0;
+    Zone->cameraBoundsB[0]     = size.y;
+    Zone->playerBoundsL[0]     = Zone->cameraBoundsL[0] << 16;
+    Zone->playerBoundsR[0]     = Zone->cameraBoundsR[0] << 16;
+    Zone->playerBoundsT[0]     = Zone->cameraBoundsT[0] << 16;
+    Zone->playerBoundsB[0]     = Zone->cameraBoundsB[0] << 16;
+    Zone->deathBoundary[0]      = Zone->cameraBoundsB[0] << 16;
     Zone->playerBoundActiveL[0] = true;
     Zone->playerBoundActiveT[0] = false;
     Zone->playerBoundActiveR[0] = false;
@@ -268,14 +268,14 @@ void WarpDoor_SetWarpBounds(uint8 id)
     Zone->playerBoundActiveR[0] = false;
     Zone->playerBoundActiveB[0] = false;
     Zone->playerBoundActiveL[0] = true;
-    Zone->screenBoundsT1[0]     = WarpDoor->boundaries[id].top;
-    Zone->screenBoundsR1[0]     = WarpDoor->boundaries[id].right;
-    Zone->screenBoundsB1[0]     = WarpDoor->boundaries[id].bottom;
-    Zone->screenBoundsL1[0]     = WarpDoor->boundaries[id].left;
-    Zone->screenBoundsT2[0]     = WarpDoor->boundaries[id].top << 16;
-    Zone->screenBoundsR2[0]     = WarpDoor->boundaries[id].right << 16;
-    Zone->screenBoundsB2[0]     = WarpDoor->boundaries[id].bottom << 16;
-    Zone->screenBoundsL2[0]     = WarpDoor->boundaries[id].left << 16;
+    Zone->cameraBoundsT[0]     = WarpDoor->boundaries[id].top;
+    Zone->cameraBoundsR[0]     = WarpDoor->boundaries[id].right;
+    Zone->cameraBoundsB[0]     = WarpDoor->boundaries[id].bottom;
+    Zone->cameraBoundsL[0]     = WarpDoor->boundaries[id].left;
+    Zone->playerBoundsT[0]     = WarpDoor->boundaries[id].top << 16;
+    Zone->playerBoundsR[0]     = WarpDoor->boundaries[id].right << 16;
+    Zone->playerBoundsB[0]     = WarpDoor->boundaries[id].bottom << 16;
+    Zone->playerBoundsL[0]     = WarpDoor->boundaries[id].left << 16;
     Zone->deathBoundary[0]      = WarpDoor->boundaries[id].bottom << 16;
     WarpDoor->field_1406        = 16;
     WarpDoor->field_1405        = id;

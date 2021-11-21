@@ -162,11 +162,11 @@ void EncoreIntro_SetupCutscenePart2(void)
 
     Vector2 size;
     RSDK.GetLayerSize(Zone->fgLow, &size, true);
-    Zone->screenBoundsR1[0]     = size.x;
-    Zone->screenBoundsR2[0]     = size.x << 16;
+    Zone->cameraBoundsR[0]     = size.x;
+    Zone->playerBoundsR[0]     = size.x << 16;
     Zone->playerBoundActiveR[0] = true;
-    Zone->screenBoundsL1[0]     = (self->position.x >> 16) - ScreenInfo->centerX;
-    Zone->screenBoundsL2[0]     = Zone->screenBoundsL1[0] << 16;
+    Zone->cameraBoundsL[0]     = (self->position.x >> 16) - ScreenInfo->centerX;
+    Zone->playerBoundsL[0]     = Zone->cameraBoundsL[0] << 16;
     Zone->playerBoundActiveL[0] = true;
 
     EntityPhantomRuby *ruby = (EntityPhantomRuby *)EncoreIntro->phantomRuby;
@@ -207,8 +207,8 @@ bool32 EncoreIntro_CutsceneState_Unknown1(EntityCutsceneSeq *host)
             player1->velocity.x = 0;
             player1->direction  = FLIP_NONE;
             foreach_all(CutsceneHBH, cutsceneHBH) { cutsceneHBH->drawOrder = Zone->drawOrderLow; }
-            Zone->screenBoundsT1[0] = Zone->screenBoundsB1[0] - SCREEN_YSIZE;
-            Zone->screenBoundsT2[0] = Zone->screenBoundsB1[0] - SCREEN_YSIZE;
+            Zone->cameraBoundsT[0] = Zone->cameraBoundsB[0] - SCREEN_YSIZE;
+            Zone->playerBoundsT[0] = Zone->cameraBoundsB[0] - SCREEN_YSIZE;
         }
         else if (host->timer == 240) {
             fxRuby->delay = 32;
@@ -333,18 +333,18 @@ bool32 EncoreIntro_CutsceneState_Unknown7(EntityCutsceneSeq *host)
     EntityPhantomRuby *ruby = (EntityPhantomRuby *)EncoreIntro->phantomRuby;
 
     if (player->position.x <= self->position.x + 0x2000000) {
-        Zone->screenBoundsL1[0]     = ScreenInfo->position.x;
-        Zone->screenBoundsL2[0]     = Zone->screenBoundsL1[0] << 16;
+        Zone->cameraBoundsL[0]     = ScreenInfo->position.x;
+        Zone->playerBoundsL[0]     = Zone->cameraBoundsL[0] << 16;
         Zone->playerBoundActiveL[0] = true;
     }
     else {
-        Zone->screenBoundsT1[0] = 0;
-        Zone->screenBoundsT2[0] = 0;
+        Zone->cameraBoundsT[0] = 0;
+        Zone->playerBoundsT[0] = 0;
     }
 
     if (ruby->activeScreens) {
-        Zone->screenBoundsT1[0] = Zone->screenBoundsB1[0] - SCREEN_YSIZE;
-        Zone->screenBoundsT2[0] = Zone->screenBoundsB1[0] - SCREEN_YSIZE;
+        Zone->cameraBoundsT[0] = Zone->cameraBoundsB[0] - SCREEN_YSIZE;
+        Zone->playerBoundsT[0] = Zone->cameraBoundsB[0] - SCREEN_YSIZE;
         Music_TransitionTrack(TRACK_EGGMAN1, 0.05);
         return true;
     }
@@ -632,10 +632,10 @@ bool32 EncoreIntro_CutsceneState_Unknown12(EntityCutsceneSeq *host)
         }
         else if (host->timer == 75) {
             RSDK.SetSpriteAnimation(mystic->aniFrames, 0, &mystic->animator, true, 0);
-            Zone->screenBoundsR1[0] = 16 * RSDK.GetSceneLayer(Zone->fgLow)->width;
-            Zone->screenBoundsR2[0] = 16 * RSDK.GetSceneLayer(Zone->fgLow)->width;
-            Zone->screenBoundsT1[0] = 784;
-            Zone->screenBoundsT2[0] = 784;
+            Zone->cameraBoundsR[0] = 16 * RSDK.GetSceneLayer(Zone->fgLow)->width;
+            Zone->playerBoundsR[0] = 16 * RSDK.GetSceneLayer(Zone->fgLow)->width;
+            Zone->cameraBoundsT[0] = 784;
+            Zone->playerBoundsT[0] = 784;
             mystic->direction       = FLIP_NONE;
             return true;
         }
@@ -1055,8 +1055,8 @@ bool32 EncoreIntro_CutsceneState_Unknown22(EntityCutsceneSeq *host)
 
         Vector2 size;
         RSDK.GetLayerSize(Zone->fgLow, &size, true);
-        Zone->screenBoundsR2[0]     = size.x;
-        Zone->screenBoundsR1[0]     = size.x;
+        Zone->playerBoundsR[0]     = size.x;
+        Zone->cameraBoundsR[0]     = size.x;
         Zone->playerBoundActiveR[0] = true;
 
         foreach_all(HUD, hud)

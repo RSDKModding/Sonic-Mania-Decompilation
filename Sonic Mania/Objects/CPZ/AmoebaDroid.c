@@ -244,15 +244,15 @@ void AmoebaDroid_StateMain_SetupArena(void)
         self->timer               = 0;
         Zone->playerBoundActiveL[0] = true;
         Zone->playerBoundActiveR[0] = true;
-        Zone->screenBoundsL1[0]     = (self->position.x >> 16) - ScreenInfo->centerX;
-        Zone->screenBoundsR1[0]     = ScreenInfo->centerX + (self->position.x >> 16);
-        Zone->screenBoundsT1[0]     = (self->position.y >> 16) - ScreenInfo->height;
-        Zone->screenBoundsB1[0]     = (self->position.y >> 16);
-        AmoebaDroid->arenaLeft      = (Zone->screenBoundsL1[0] + 64) << 16;
-        AmoebaDroid->arenaRight     = (Zone->screenBoundsR1[0] - 64) << 16;
+        Zone->cameraBoundsL[0]     = (self->position.x >> 16) - ScreenInfo->centerX;
+        Zone->cameraBoundsR[0]     = ScreenInfo->centerX + (self->position.x >> 16);
+        Zone->cameraBoundsT[0]     = (self->position.y >> 16) - ScreenInfo->height;
+        Zone->cameraBoundsB[0]     = (self->position.y >> 16);
+        AmoebaDroid->arenaLeft      = (Zone->cameraBoundsL[0] + 64) << 16;
+        AmoebaDroid->arenaRight     = (Zone->cameraBoundsR[0] - 64) << 16;
         AmoebaDroid->startX         = self->position.x;
-        AmoebaDroid->arenaTop       = (Zone->screenBoundsT1[0] + 48) << 16;
-        AmoebaDroid->arenaBottom    = (Zone->screenBoundsB1[0] - 8) << 16;
+        AmoebaDroid->arenaTop       = (Zone->cameraBoundsT[0] + 48) << 16;
+        AmoebaDroid->arenaBottom    = (Zone->cameraBoundsB[0] - 8) << 16;
         self->state               = AmoebaDroid_StateMain_SetupWaterLevel;
     }
 }

@@ -527,8 +527,8 @@ void SignPost_HandleCompetition(void)
                 if (Player_CheckCollisionTouch(player, self, &hitbox)) {
                     self->position.x      = ex;
                     self->position.y      = ey;
-                    Zone->screenBoundsL1[p] = (self->position.x >> 0x10) - ScreenInfo[p].centerX;
-                    Zone->screenBoundsR1[p] = ScreenInfo[p].centerX + (self->position.x >> 0x10);
+                    Zone->cameraBoundsL[p] = (self->position.x >> 0x10) - ScreenInfo[p].centerX;
+                    Zone->cameraBoundsR[p] = ScreenInfo[p].centerX + (self->position.x >> 0x10);
                     if (globals->gameMode == MODE_COMPETITION)
                         Zone->playerBoundActiveR[p] = true;
                 }
@@ -538,9 +538,9 @@ void SignPost_HandleCompetition(void)
                 }
             }
             else {
-                if (self->position.x - player->position.x < 0x1000000 || self->position.x - (Zone->screenBoundsR1[p] << 16) < 0x1000000) {
-                    Zone->screenBoundsL1[p] = (self->position.x >> 0x10) - ScreenInfo[p].centerX;
-                    Zone->screenBoundsR1[p] = ScreenInfo[p].centerX + (self->position.x >> 0x10);
+                if (self->position.x - player->position.x < 0x1000000 || self->position.x - (Zone->cameraBoundsR[p] << 16) < 0x1000000) {
+                    Zone->cameraBoundsL[p] = (self->position.x >> 0x10) - ScreenInfo[p].centerX;
+                    Zone->cameraBoundsR[p] = ScreenInfo[p].centerX + (self->position.x >> 0x10);
                     if (globals->gameMode == MODE_COMPETITION)
                         Zone->playerBoundActiveR[p] = true;
                 }

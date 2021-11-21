@@ -101,9 +101,9 @@ void DDWrecker_State_SetupArena(void)
         Zone->playerBoundActiveL[0]    = true;
         Zone->playerBoundActiveR[0]    = true;
         Zone->playerBoundActiveB[0]    = true;
-        Zone->screenBoundsL1[0]        = (self->position.x >> 0x10) - ScreenInfo->centerX;
-        Zone->screenBoundsR1[0]        = (self->position.x >> 0x10) + ScreenInfo->centerX;
-        Zone->screenBoundsB1[0]        = (self->position.y >> 0x10);
+        Zone->cameraBoundsL[0]        = (self->position.x >> 0x10) - ScreenInfo->centerX;
+        Zone->cameraBoundsR[0]        = (self->position.x >> 0x10) + ScreenInfo->centerX;
+        Zone->cameraBoundsB[0]        = (self->position.y >> 0x10);
         DDWrecker->camBoundL           = self->position.x + ((160 - ScreenInfo->centerX) << 16);
         DDWrecker->camBoundR           = self->position.x + ((ScreenInfo->centerX - 160) << 16);
         DDWrecker->bossBoundL          = self->position.x + ((32 - ScreenInfo->centerX) << 16);

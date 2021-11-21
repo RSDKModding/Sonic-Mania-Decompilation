@@ -22,8 +22,8 @@ void Zone_LateUpdate(void)
             Hitbox *playerHitbox = Player_GetHitbox(player);
             if (Zone->playerBoundActiveL[playerID]) {
                 int32 offset = -0x10000 * playerHitbox->left;
-                if (player->position.x - offset <= Zone->screenBoundsL2[playerID]) {
-                    player->position.x = offset + Zone->screenBoundsL2[playerID];
+                if (player->position.x - offset <= Zone->playerBoundsL[playerID]) {
+                    player->position.x = offset + Zone->playerBoundsL[playerID];
                     if (player->onGround) {
                         if (player->groundVel < Zone->autoScrollSpeed) {
                             player->velocity.x = Zone->autoScrollSpeed;
@@ -40,8 +40,8 @@ void Zone_LateUpdate(void)
 
             if (Zone->playerBoundActiveR[playerID]) {
                 int32 offset = playerHitbox->right << 16;
-                if (offset + player->position.x >= Zone->screenBoundsR2[playerID]) {
-                    player->position.x = Zone->screenBoundsR2[playerID] - offset;
+                if (offset + player->position.x >= Zone->playerBoundsR[playerID]) {
+                    player->position.x = Zone->playerBoundsR[playerID] - offset;
                     if (player->onGround) {
                         if (player->groundVel > Zone->autoScrollSpeed) {
                             player->velocity.x = Zone->autoScrollSpeed;
@@ -59,21 +59,21 @@ void Zone_LateUpdate(void)
             }
 
             if (Zone->playerBoundActiveT[playerID]) {
-                if (player->position.y - 0x140000 < Zone->screenBoundsT2[playerID]) {
-                    player->position.y = Zone->screenBoundsT2[playerID] + 0x140000;
+                if (player->position.y - 0x140000 < Zone->playerBoundsT[playerID]) {
+                    player->position.y = Zone->playerBoundsT[playerID] + 0x140000;
                     player->velocity.y = 0;
                 }
             }
 
             if (player->state != Player_State_Die && !player->hurtFlag) {
-                if (Zone->screenBoundsB2[playerID] <= Zone->deathBoundary[playerID]) {
+                if (Zone->playerBoundsB[playerID] <= Zone->deathBoundary[playerID]) {
                     if (player->position.y > Zone->deathBoundary[playerID]) {
                         player->hurtFlag                   = 2;
                         Zone->playerBoundActiveB[playerID] = false;
                     }
                 }
                 else {
-                    if (player->position.y > Zone->screenBoundsB2[playerID]) {
+                    if (player->position.y > Zone->playerBoundsB[playerID]) {
                         player->hurtFlag                   = 2;
                         Zone->playerBoundActiveB[playerID] = false;
                     }
@@ -81,8 +81,8 @@ void Zone_LateUpdate(void)
             }
 
             if (Zone->playerBoundActiveB[playerID]) {
-                if (player->position.y + 0x140000 > Zone->screenBoundsB2[playerID]) {
-                    player->position.y = Zone->screenBoundsB2[playerID] - 0x140000;
+                if (player->position.y + 0x140000 > Zone->playerBoundsB[playerID]) {
+                    player->position.y = Zone->playerBoundsB[playerID] - 0x140000;
                     player->velocity.y = 0;
                     player->onGround   = true;
                 }
@@ -363,20 +363,19 @@ void Zone_StageLoad(void)
     if (!Zone->swapGameMode) {
 #endif
         for (int32 s = 0; s < PLAYER_MAX; ++s) {
-            Zone->screenBoundsL1[s] = 0;
-            Zone->screenBoundsR1[s] = layerSize.x;
-            Zone->screenBoundsT1[s] = 0;
-            Zone->screenBoundsB1[s] = layerSize.y;
+            Zone->cameraBoundsL[s] = 0;
+            Zone->cameraBoundsR[s] = layerSize.x;
+            Zone->cameraBoundsT[s] = 0;
+            Zone->cameraBoundsB[s] = layerSize.y;
 
-            Zone->screenBoundsL2[s] = Zone->screenBoundsL1[s] << 0x10;
-            Zone->screenBoundsR2[s] = Zone->screenBoundsR1[s] << 0x10;
-            Zone->screenBoundsT2[s] = Zone->screenBoundsT1[s] << 0x10;
-            Zone->screenBoundsB2[s] = Zone->screenBoundsB1[s] << 0x10;
+            Zone->playerBoundsL[s] = Zone->cameraBoundsL[s] << 0x10;
+            Zone->playerBoundsR[s] = Zone->cameraBoundsR[s] << 0x10;
+            Zone->playerBoundsT[s] = Zone->cameraBoundsT[s] << 0x10;
+            Zone->playerBoundsB[s] = Zone->cameraBoundsB[s] << 0x10;
 
-            Zone->deathBoundary[s]      = Zone->screenBoundsB1[s] << 0x10;
+            Zone->deathBoundary[s]      = Zone->cameraBoundsB[s] << 0x10;
             Zone->playerBoundActiveL[s] = true;
-            Zone->playerBoundActiveR[s] = true;
-            Zone->playerBoundActiveT[s] = false;
+            Zone->playerBoundActiveB[s] = false;
         }
 #if RETRO_USE_PLUS
     }
@@ -529,11 +528,11 @@ void Zone_StoreEntities(int32 xOffset, int32 yOffset)
     globals->atlEnabled      = true;
 }
 
-void Zone_ReloadStoredEntities(int32 yOffset, int32 xOffset, bool32 flag)
+void Zone_ReloadStoredEntities(int32 yOffset, int32 xOffset, bool32 setCamera)
 {
     for (int32 e = 0; e < globals->atlEntityCount; ++e) {
         Entity *entityData = (Entity *)&globals->atlEntityData[e << 9];
-        Entity *entity;
+        Entity *entity = NULL;
         if (globals->atlEntitySlot[e] >= 12)
             entity = RSDK.CreateEntity(TYPE_BLANK, NULL, 0, 0);
         else
@@ -555,8 +554,8 @@ void Zone_ReloadStoredEntities(int32 yOffset, int32 xOffset, bool32 flag)
     }
 
     memset(globals->atlEntityData, 0, globals->atlEntityCount << 9);
-    Zone->atlReloadFlag = flag;
-    if (flag) {
+    Zone->atlReloadFlag = setCamera;
+    if (setCamera) {
         EntityPlayer *player   = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
         player->camera         = NULL;
         EntityCamera *camera   = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
@@ -585,7 +584,7 @@ void Zone_StartFadeOut(int32 fadeSpeed, int32 fadeColour)
     zone->screenID   = PLAYER_MAX;
     zone->timer      = 0;
     zone->state      = Zone_State_Fadeout;
-    zone->stateDraw  = Zone_StateDraw_Fadeout;
+    zone->stateDraw  = Zone_Draw_Fade;
     zone->visible    = true;
     zone->drawOrder  = DRAWLAYER_COUNT - 1;
 }
@@ -598,7 +597,7 @@ void Zone_StartFadeIn(int32 fadeSpeed, int32 fadeColour)
     zone->screenID   = PLAYER_MAX;
     zone->timer      = 640;
     zone->state      = Zone_State_FadeIn;
-    zone->stateDraw  = Zone_StateDraw_Fadeout;
+    zone->stateDraw  = Zone_Draw_Fade;
     zone->visible    = true;
     zone->drawOrder  = DRAWLAYER_COUNT - 1;
 }
@@ -611,7 +610,7 @@ void Zone_StartFadeOut_MusicFade(void)
     zone->screenID   = PLAYER_MAX;
     zone->timer      = 0;
     zone->state      = Zone_State_Fadeout;
-    zone->stateDraw  = Zone_StateDraw_Fadeout;
+    zone->stateDraw  = Zone_Draw_Fade;
     zone->visible    = true;
     zone->drawOrder  = DRAWLAYER_COUNT - 1;
     Music_FadeOut(0.025);
@@ -635,14 +634,14 @@ void Zone_ReloadScene(int32 screen)
 #if RETRO_USE_PLUS
     if (globals->gameMode != MODE_ENCORE || EncoreIntro) {
         entity->state     = Zone_State_Fadeout_Destroy;
-        entity->stateDraw = Zone_StateDraw_Fadeout;
+        entity->stateDraw = Zone_Draw_Fade;
         entity->visible   = true;
         entity->drawOrder = DRAWLAYER_COUNT - 1;
     }
     else {
 #endif
         entity->state     = Zone_State_ReloadScene;
-        entity->stateDraw = Zone_StateDraw_Fadeout;
+        entity->stateDraw = Zone_Draw_Fade;
         entity->visible   = true;
         entity->drawOrder = DRAWLAYER_COUNT - 1;
 #if RETRO_USE_PLUS
@@ -658,11 +657,11 @@ void Zone_StartTeleportAction(void)
     entity->screenID   = PLAYER_MAX;
     entity->fadeSpeed  = 16;
     entity->state      = Zone_State_SwapPlayers;
-    entity->stateDraw  = Zone_StateDraw_Fadeout;
+    entity->stateDraw  = Zone_Draw_Fade;
     entity->visible    = true;
     entity->drawOrder  = DRAWLAYER_COUNT - 1;
 #if RETRO_USE_PLUS
-    Zone->flag = true;
+    Zone->teleportActionActive = true;
 #endif
 }
 
@@ -780,7 +779,7 @@ int32 Zone_GetManiaStageID(void)
     return pos2;
 }
 
-void Zone_StateDraw_Fadeout(void)
+void Zone_Draw_Fade(void)
 {
     RSDK_THIS(Zone);
     RSDK.FillScreen(self->fadeColour, self->timer, self->timer - 0x80, self->timer - 0x100);
@@ -865,7 +864,7 @@ void Zone_TitleCard_SupressCB(void)
     zone->fadeSpeed            = 16;
     zone->fadeColour           = 0xF0F0F0;
     zone->state                = Zone_State_Fadeout_Destroy;
-    zone->stateDraw            = Zone_StateDraw_Fadeout;
+    zone->stateDraw            = Zone_Draw_Fade;
     zone->visible              = true;
     zone->drawOrder            = 15;
     globals->suppressTitlecard = false;
@@ -904,14 +903,14 @@ void Zone_HandlePlayerSwap(void)
     int32 playerBoundActiveR[4];
     int32 playerBoundActiveL[4];
     int32 deathBounds[4];
-    int32 screenBoundsB2[4];
-    int32 screenBoundsT2[4];
-    int32 screenBoundsR2[4];
-    int32 screenBoundsL2[4];
-    int32 screenBoundsB1[4];
-    int32 screenBoundsT1[4];
-    int32 screenBoundsR1[4];
-    int32 screenBoundsL1[4];
+    int32 playerBoundsB[4];
+    int32 playerBoundsT[4];
+    int32 playerBoundsR[4];
+    int32 playerBoundsL[4];
+    int32 cameraBoundsB[4];
+    int32 cameraBoundsT[4];
+    int32 cameraBoundsR[4];
+    int32 cameraBoundsL[4];
     int32 layerIDs[LAYER_COUNT];
 
 #if RETRO_USE_PLUS
@@ -919,14 +918,14 @@ void Zone_HandlePlayerSwap(void)
         EntityPlayer *player = RSDK_GET_ENTITY(Zone->playerIDs[p], Player);
         RSDK.CopyEntity(&Zone->entityData[p], player, false);
 
-        screenBoundsL1[p]     = Zone->screenBoundsL1[p];
-        screenBoundsR1[p]     = Zone->screenBoundsR1[p];
-        screenBoundsT1[p]     = Zone->screenBoundsT1[p];
-        screenBoundsB1[p]     = Zone->screenBoundsB1[p];
-        screenBoundsL2[p]     = Zone->screenBoundsL2[p];
-        screenBoundsR2[p]     = Zone->screenBoundsR2[p];
-        screenBoundsT2[p]     = Zone->screenBoundsT2[p];
-        screenBoundsB2[p]     = Zone->screenBoundsB2[p];
+        cameraBoundsL[p]     = Zone->cameraBoundsL[p];
+        cameraBoundsR[p]     = Zone->cameraBoundsR[p];
+        cameraBoundsT[p]     = Zone->cameraBoundsT[p];
+        cameraBoundsB[p]     = Zone->cameraBoundsB[p];
+        playerBoundsL[p]     = Zone->playerBoundsL[p];
+        playerBoundsR[p]     = Zone->playerBoundsR[p];
+        playerBoundsT[p]     = Zone->playerBoundsT[p];
+        playerBoundsB[p]     = Zone->playerBoundsB[p];
         deathBounds[p]        = Zone->deathBoundary[p];
         playerBoundActiveL[p] = Zone->playerBoundActiveL[p];
         playerBoundActiveR[p] = Zone->playerBoundActiveR[p];
@@ -995,14 +994,14 @@ void Zone_HandlePlayerSwap(void)
         playerPtr->blinkTimer      = player->blinkTimer;
         playerPtr->visible         = player->visible;
         Player_ChangePhysicsState(playerPtr);
-        Zone->screenBoundsL1[Zone->playerIDs2[p]]     = screenBoundsL1[p];
-        Zone->screenBoundsR1[Zone->playerIDs2[p]]     = screenBoundsR1[p];
-        Zone->screenBoundsT1[Zone->playerIDs2[p]]     = screenBoundsT1[p];
-        Zone->screenBoundsB1[Zone->playerIDs2[p]]     = screenBoundsB1[p];
-        Zone->screenBoundsL2[Zone->playerIDs2[p]]     = screenBoundsL2[p];
-        Zone->screenBoundsR2[Zone->playerIDs2[p]]     = screenBoundsR2[p];
-        Zone->screenBoundsT2[Zone->playerIDs2[p]]     = screenBoundsT2[p];
-        Zone->screenBoundsB2[Zone->playerIDs2[p]]     = screenBoundsB2[p];
+        Zone->cameraBoundsL[Zone->playerIDs2[p]]     = cameraBoundsL[p];
+        Zone->cameraBoundsR[Zone->playerIDs2[p]]     = cameraBoundsR[p];
+        Zone->cameraBoundsT[Zone->playerIDs2[p]]     = cameraBoundsT[p];
+        Zone->cameraBoundsB[Zone->playerIDs2[p]]     = cameraBoundsB[p];
+        Zone->playerBoundsL[Zone->playerIDs2[p]]     = playerBoundsL[p];
+        Zone->playerBoundsR[Zone->playerIDs2[p]]     = playerBoundsR[p];
+        Zone->playerBoundsT[Zone->playerIDs2[p]]     = playerBoundsT[p];
+        Zone->playerBoundsB[Zone->playerIDs2[p]]     = playerBoundsB[p];
         Zone->deathBoundary[Zone->playerIDs2[p]]      = deathBounds[p];
         Zone->playerBoundActiveL[Zone->playerIDs2[p]] = playerBoundActiveL[p];
         Zone->playerBoundActiveR[Zone->playerIDs2[p]] = playerBoundActiveR[p];
@@ -1061,14 +1060,14 @@ void Zone_HandlePlayerSwap(void)
         playerPtrs[p] = (EntityPlayer*)RSDK.CreateEntity(TYPE_BLANK, NULL, 0, 0);
         RSDK.CopyEntity(playerPtrs[p], player, false);
 
-        screenBoundsL1[p] = Zone->screenBoundsL1[p];
-        screenBoundsR1[p] = Zone->screenBoundsR1[p];
-        screenBoundsT1[p] = Zone->screenBoundsT1[p];
-        screenBoundsB1[p] = Zone->screenBoundsB1[p];
-        screenBoundsL2[p] = Zone->screenBoundsL2[p];
-        screenBoundsR2[p] = Zone->screenBoundsR2[p];
-        screenBoundsT2[p] = Zone->screenBoundsT2[p];
-        screenBoundsB2[p] = Zone->screenBoundsB2[p];
+        cameraBoundsL[p] = Zone->cameraBoundsL[p];
+        cameraBoundsR[p] = Zone->cameraBoundsR[p];
+        cameraBoundsT[p] = Zone->cameraBoundsT[p];
+        cameraBoundsB[p] = Zone->cameraBoundsB[p];
+        playerBoundsL[p] = Zone->playerBoundsL[p];
+        playerBoundsR[p] = Zone->playerBoundsR[p];
+        playerBoundsT[p] = Zone->playerBoundsT[p];
+        playerBoundsB[p] = Zone->playerBoundsB[p];
         deathBounds[p] = Zone->deathBoundary[p];
         playerBoundActiveL[p] = Zone->playerBoundActiveL[p];
         playerBoundActiveR[p] = Zone->playerBoundActiveR[p];
@@ -1140,14 +1139,14 @@ void Zone_HandlePlayerSwap(void)
         playerPtr->blinkTimer = player->blinkTimer;
         playerPtr->visible = player->visible;
         Player_ChangePhysicsState(playerPtr);
-        Zone->screenBoundsL1[playerIDs2[p]] = screenBoundsL1[p];
-        Zone->screenBoundsR1[playerIDs2[p]] = screenBoundsR1[p];
-        Zone->screenBoundsT1[playerIDs2[p]] = screenBoundsT1[p];
-        Zone->screenBoundsB1[playerIDs2[p]] = screenBoundsB1[p];
-        Zone->screenBoundsL2[playerIDs2[p]] = screenBoundsL2[p];
-        Zone->screenBoundsR2[playerIDs2[p]] = screenBoundsR2[p];
-        Zone->screenBoundsT2[playerIDs2[p]] = screenBoundsT2[p];
-        Zone->screenBoundsB2[playerIDs2[p]] = screenBoundsB2[p];
+        Zone->cameraBoundsL[playerIDs2[p]] = cameraBoundsL[p];
+        Zone->cameraBoundsR[playerIDs2[p]] = cameraBoundsR[p];
+        Zone->cameraBoundsT[playerIDs2[p]] = cameraBoundsT[p];
+        Zone->cameraBoundsB[playerIDs2[p]] = cameraBoundsB[p];
+        Zone->playerBoundsL[playerIDs2[p]] = playerBoundsL[p];
+        Zone->playerBoundsR[playerIDs2[p]] = playerBoundsR[p];
+        Zone->playerBoundsT[playerIDs2[p]] = playerBoundsT[p];
+        Zone->playerBoundsB[playerIDs2[p]] = playerBoundsB[p];
         Zone->deathBoundary[playerIDs2[p]] = deathBounds[p];
         Zone->playerBoundActiveL[playerIDs2[p]] = playerBoundActiveL[p];
         Zone->playerBoundActiveR[playerIDs2[p]] = playerBoundActiveR[p];
@@ -1200,7 +1199,7 @@ void Zone_State_SwapPlayers(void)
     if (self->timer > 512) {
         self->timer = self->timer - self->fadeSpeed;
 #if RETRO_USE_PLUS
-        Zone->flag    = true;
+        Zone->teleportActionActive = true;
 #endif
     }
     else {
@@ -1240,8 +1239,8 @@ void Zone_State_SwapPlayers(void)
             EntityCompetitionSession *session = (EntityCompetitionSession *)globals->competitionSession;
 
             uint8 flags = 0;
-            if (session->unknown29) {
-                if (session->unknown29 == 1) {
+            if (session->swapFlag) {
+                if (session->swapFlag == 1) {
                     for (Zone->playerID = 0; Zone->playerID < Zone->playerCount; ++Zone->playerID) {
                         Zone->playerIDs2[Zone->playerID] = Zone->playerIDs[Zone->playerID];
                     }
@@ -1296,7 +1295,7 @@ void Zone_State_SwapPlayers(void)
         }
         self->state = Zone_State_HandleSwapFadeIn;
 #if RETRO_USE_PLUS
-        Zone->flag    = true;
+        Zone->teleportActionActive = true;
 #endif
     }
 }
@@ -1306,14 +1305,14 @@ void Zone_State_HandleSwapFadeIn(void)
     RSDK_THIS(Zone);
     if (self->timer <= 0) {
 #if RETRO_USE_PLUS
-        Zone->flag = false;
+        Zone->teleportActionActive = false;
 #endif
         destroyEntity(self);
     }
     else {
         self->timer -= self->fadeSpeed;
 #if RETRO_USE_PLUS
-        Zone->flag = true;
+        Zone->teleportActionActive = true;
 #endif
     }
 }

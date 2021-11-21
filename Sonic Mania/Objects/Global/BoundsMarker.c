@@ -52,26 +52,26 @@ void BoundsMarker_CheckBounds(void *p, EntityBoundsMarker *entity, bool32 setPos
         if (abs(entity->position.x - player->position.x) < entity->width) {
             switch (entity->type) {
                 case BOUNDSMARKER_BOTTOM: // bottom
-                    Zone->screenBoundsB2[playerID] = entity->position.y;
-                    Zone->screenBoundsB1[playerID] = Zone->screenBoundsB2[playerID] >> 0x10;
+                    Zone->playerBoundsB[playerID] = entity->position.y;
+                    Zone->cameraBoundsB[playerID] = Zone->playerBoundsB[playerID] >> 0x10;
                     Zone->deathBoundary[playerID]  = entity->position.y;
                     break;
                 case BOUNDSMARKER_BOTTOM_OFFSET: // bottom (offset)
                     if (player->position.y < entity->position.y - (entity->offset << 16)) {
-                        Zone->screenBoundsB2[playerID] = entity->position.y;
-                        Zone->screenBoundsB1[playerID] = Zone->screenBoundsB2[playerID] >> 0x10;
+                        Zone->playerBoundsB[playerID] = entity->position.y;
+                        Zone->cameraBoundsB[playerID] = Zone->playerBoundsB[playerID] >> 0x10;
                         Zone->deathBoundary[playerID]  = entity->position.y;
                     }
                     break;
                 case BOUNDSMARKER_TOP_OFFSET: // top (offset)
                     if (player->position.y > entity->position.y + (entity->offset << 16)) {
-                        Zone->screenBoundsT2[playerID] = entity->position.y;
-                        Zone->screenBoundsT1[playerID] = Zone->screenBoundsT2[playerID] >> 0x10;
+                        Zone->playerBoundsT[playerID] = entity->position.y;
+                        Zone->cameraBoundsT[playerID] = Zone->playerBoundsT[playerID] >> 0x10;
                     }
                     break;
                 case BOUNDSMARKER_TOP: // top
-                    Zone->screenBoundsT2[playerID] = entity->position.y;
-                    Zone->screenBoundsT1[playerID] = Zone->screenBoundsT2[playerID] >> 0x10;
+                    Zone->playerBoundsT[playerID] = entity->position.y;
+                    Zone->cameraBoundsT[playerID] = Zone->playerBoundsT[playerID] >> 0x10;
                     break;
                 default: break;
             }
@@ -80,10 +80,10 @@ void BoundsMarker_CheckBounds(void *p, EntityBoundsMarker *entity, bool32 setPos
         if (setPos) {
             EntityCamera *camera = player->camera;
             if (camera) {
-                camera->boundsL = Zone->screenBoundsL1[playerID];
-                camera->boundsR = Zone->screenBoundsR1[playerID];
-                camera->boundsT = Zone->screenBoundsT1[playerID];
-                camera->boundsB = Zone->screenBoundsB1[playerID];
+                camera->boundsL = Zone->cameraBoundsL[playerID];
+                camera->boundsR = Zone->cameraBoundsR[playerID];
+                camera->boundsT = Zone->cameraBoundsT[playerID];
+                camera->boundsB = Zone->cameraBoundsB[playerID];
             }
         }
     }

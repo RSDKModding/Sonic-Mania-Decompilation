@@ -446,9 +446,9 @@ void Shiversaw_State_Entry(void)
                 if (player1->position.y > self->position.y + 0x400000 && player1->onGround) {
                     self->timer               = 0;
                     Zone->playerBoundActiveR[0] = true;
-                    Zone->screenBoundsR1[0]     = (self->position.x >> 16) + 416;
+                    Zone->cameraBoundsR[0]     = (self->position.x >> 16) + 416;
                     Zone->playerBoundActiveB[0] = true;
-                    Zone->screenBoundsB1[0]     = (self->position.y >> 16) + 128;
+                    Zone->cameraBoundsB[0]     = (self->position.y >> 16) + 128;
                     self->position.y -= 0x1000000;
                     self->position.x -= 0x1000000;
                     Shiversaw_Unknown3();
@@ -518,9 +518,9 @@ void Shiversaw_State_Entry(void)
 #else
         self->timer               = 0;
         Zone->playerBoundActiveR[0] = true;
-        Zone->screenBoundsR1[0]     = (self->position.x >> 16) + 416;
+        Zone->cameraBoundsR[0]     = (self->position.x >> 16) + 416;
         Zone->playerBoundActiveB[0] = true;
-        Zone->screenBoundsB1[0]     = (self->position.y >> 16) + 128;
+        Zone->cameraBoundsB[0]     = (self->position.y >> 16) + 128;
         self->position.y -= 0x1000000;
         self->position.x -= 0x1000000;
         Shiversaw_Unknown3();
@@ -539,12 +539,12 @@ void Shiversaw_State_SetupBounds(void)
         self->timer               = 0;
 #endif
         Zone->playerBoundActiveL[0] = true;
-        Zone->screenBoundsL1[0]     = ScreenInfo->position.x;
+        Zone->cameraBoundsL[0]     = ScreenInfo->position.x;
         EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
         if (player1->position.x > self->position.x + 0x500000) {
             if (player1->position.y > self->field_84) {
                 Zone->playerBoundActiveL[0] = true;
-                Zone->screenBoundsL1[0]     = (self->position.x >> 16) - 416;
+                Zone->cameraBoundsL[0]     = (self->position.x >> 16) - 416;
                 self->state               = Shiversaw_State_Unknown1;
 #if !RETRO_USE_PLUS
                 Music_TransitionTrack(TRACK_MINIBOSS, 0.014);

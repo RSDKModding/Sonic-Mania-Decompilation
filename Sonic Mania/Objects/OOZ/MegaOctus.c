@@ -366,12 +366,12 @@ void MegaOctus_State_SetupBounds(void)
     if (++self->timer >= 2) {
         self->timer               = 0;
         Zone->playerBoundActiveR[0] = true;
-        Zone->screenBoundsR1[0]     = (self->position.x >> 16) + 448;
+        Zone->cameraBoundsR[0]     = (self->position.x >> 16) + 448;
         Zone->playerBoundActiveB[0] = false;
-        Zone->screenBoundsB1[0]     = (self->position.y >> 16) + 96;
-        Zone->deathBoundary[0]      = Zone->screenBoundsB1[0] << 16;
+        Zone->cameraBoundsB[0]     = (self->position.y >> 16) + 96;
+        Zone->deathBoundary[0]      = Zone->cameraBoundsB[0] << 16;
 #if RETRO_USE_PLUS
-        Zone->screenBoundsT1[0] = Zone->screenBoundsB1[0] - 384;
+        Zone->cameraBoundsT[0] = Zone->cameraBoundsB[0] - 384;
 #endif
         self->position.y += 0xC00000;
         self->active  = ACTIVE_NORMAL;
@@ -384,12 +384,12 @@ void MegaOctus_State_SetupArena(void)
 {
     RSDK_THIS(MegaOctus);
     Zone->playerBoundActiveL[0] = true;
-    Zone->screenBoundsL1[0]     = ScreenInfo->position.x;
+    Zone->cameraBoundsL[0]     = ScreenInfo->position.x;
 
     if (RSDK_GET_ENTITY(SLOT_PLAYER1, Player)->position.x > self->origin.x) {
         RSDK.GetSceneLayer(Zone->fgLow)->drawLayer[0] = 2;
         Zone->playerBoundActiveL[0]                   = true;
-        Zone->screenBoundsL1[0]                       = (self->position.x >> 16) - 192;
+        Zone->cameraBoundsL[0]                       = (self->position.x >> 16) - 192;
         Music_TransitionTrack(TRACK_EGGMAN1, 0.0075);
         OOZSetup->flags      = false;
         self->velocity.y   = -0x40000;
@@ -605,7 +605,7 @@ void MegaOctus_State_Finish(void)
         }
 
         if (flag) {
-            Zone->screenBoundsR1[0] += 424;
+            Zone->cameraBoundsR[0] += 424;
             destroyEntity(self);
         }
     }

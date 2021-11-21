@@ -205,7 +205,7 @@ bool32 TMZ2Outro_CutsceneState_TimeToEscape(EntityCutsceneSeq *host)
     if (host->timer == 128) {
         EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
         player1->right        = true;
-        Zone->screenBoundsR1[0] += 832;
+        Zone->cameraBoundsR[0] += 832;
         Zone->playerBoundActiveR[0] = false;
         return true;
     }
@@ -233,7 +233,7 @@ bool32 TMZ2Outro_CutsceneState_HurryToCar(EntityCutsceneSeq *host)
     if (host->timer == 248)
         RSDK.PlaySfx(TMZ2Outro->sfxGrab, false, 255);
     if (host->timer == 384) {
-        Zone->screenBoundsR1[0] = 0x2000;
+        Zone->cameraBoundsR[0] = 0x2000;
         EntityCamera *camera    = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
         camera->position.x      = (camera->boundsR - ScreenInfo->centerX) << 16;
         camera->boundsR         = 0x2000;
@@ -469,7 +469,7 @@ bool32 TMZ2Outro_CutsceneState_OuttaHere(EntityCutsceneSeq *host)
                 RSDK.SetSpriteAnimation(player->aniFrames, ANI_HURT, &player->animator, false, 0);
             }
 
-            Zone->screenBoundsR1[0]     = 0x2000;
+            Zone->cameraBoundsR[0]     = 0x2000;
             Zone->playerBoundActiveR[0] = false;
         }
         else if (host->timer == 290) {

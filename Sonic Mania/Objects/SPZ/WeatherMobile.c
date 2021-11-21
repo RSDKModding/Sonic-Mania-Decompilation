@@ -247,7 +247,7 @@ void WeatherMobile_HandleDefeat(void)
             case WEATHERMOBILE_WIND_MANAGER:
             case WEATHERMOBILE_RAIN_MANAGER:
                 destroyEntity(weatherMobile);
-                Zone->screenBoundsT1[0] = Zone->screenBoundsB1[0] - ScreenInfo->height;
+                Zone->cameraBoundsT[0] = Zone->cameraBoundsB[0] - ScreenInfo->height;
                 break;
             case WEATHERMOBILE_CLOUD:
                 if (weatherMobile->state != WeatherMobile_State6_Unknown4) {
@@ -344,15 +344,15 @@ void WeatherMobile_State_SetupArena(void)
         self->timer               = 0;
         Zone->playerBoundActiveL[0] = true;
         Zone->playerBoundActiveR[0] = true;
-        Zone->screenBoundsL1[0]     = (self->position.x >> 16) - ScreenInfo->centerX;
-        Zone->screenBoundsR1[0]     = ScreenInfo->centerX + (self->position.x >> 16);
-        Zone->screenBoundsT1[0]     = (self->position.y >> 16) - ScreenInfo->height;
-        Zone->screenBoundsB1[0]     = (self->position.y >> 16);
-        WeatherMobile->boundsL      = (Zone->screenBoundsL1[0] + 64) << 16;
-        WeatherMobile->boundsR      = (Zone->screenBoundsR1[0] - 64) << 16;
+        Zone->cameraBoundsL[0]     = (self->position.x >> 16) - ScreenInfo->centerX;
+        Zone->cameraBoundsR[0]     = ScreenInfo->centerX + (self->position.x >> 16);
+        Zone->cameraBoundsT[0]     = (self->position.y >> 16) - ScreenInfo->height;
+        Zone->cameraBoundsB[0]     = (self->position.y >> 16);
+        WeatherMobile->boundsL      = (Zone->cameraBoundsL[0] + 64) << 16;
+        WeatherMobile->boundsR      = (Zone->cameraBoundsR[0] - 64) << 16;
         WeatherMobile->boundsM      = self->position.x;
-        WeatherMobile->boundsT      = (Zone->screenBoundsT1[0] + 48) << 16;
-        WeatherMobile->boundsB      = (Zone->screenBoundsB1[0] - 96) << 16;
+        WeatherMobile->boundsT      = (Zone->cameraBoundsT[0] + 48) << 16;
+        WeatherMobile->boundsB      = (Zone->cameraBoundsB[0] - 96) << 16;
         self->state               = WeatherMobile_State_StartBoss;
     }
 }
@@ -602,7 +602,7 @@ void WeatherMobile_State2_Unknown1(void)
 
     if (self->velocity.y <= -0x180000) {
         self->timer = 0;
-        Zone->screenBoundsT1[0] -= 128;
+        Zone->cameraBoundsT[0] -= 128;
         self->state = WeatherMobile_State2_Unknown2;
         foreach_active(TVPole, pole) { pole->state = TVPole_State_CheckGrab; }
     }
@@ -663,7 +663,7 @@ void WeatherMobile_State2_Unknown3(void)
 
     if (self->velocity.y >= -0x80000) {
         foreach_active(TVPole, pole) { pole->state = TVPole_State_ForceRelease; }
-        Zone->screenBoundsT1[0] += 128;
+        Zone->cameraBoundsT[0] += 128;
         destroyEntity(self);
     }
     else {

@@ -574,8 +574,8 @@ bool32 MSZCutsceneST_CutsceneState_Unknown8(EntityCutsceneSeq *host)
 
         foreach_active(ParallaxSprite, sprite) { sprite->scrollPos.x &= 0xFFFF0000; }
 
-        Zone->screenBoundsL1[0] = (player1->position.x >> 16) - 160;
-        Zone->screenBoundsB1[0] = (player1->position.y >> 16) - 112;
+        Zone->cameraBoundsL[0] = (player1->position.x >> 16) - 160;
+        Zone->cameraBoundsB[0] = (player1->position.y >> 16) - 112;
         if (player2->objectID != Player->objectID || player2->onGround)
             return true;
     }

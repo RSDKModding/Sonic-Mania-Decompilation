@@ -409,10 +409,10 @@ void HeavyKing_State_SetupArena(void)
             HeavyKing->boundsM          = kingClaw->position.x;
             HeavyKing->boundsR          = kingClaw->position.x + 0x600000;
             Zone->playerBoundActiveL[0] = true;
-            Zone->screenBoundsL1[0]     = (kingClaw->position.x >> 16) - 320;
+            Zone->cameraBoundsL[0]     = (kingClaw->position.x >> 16) - 320;
             Zone->playerBoundActiveR[0] = true;
-            Zone->screenBoundsR1[0]     = (kingClaw->position.x >> 16) + 320;
-            Zone->screenBoundsT1[0]     = (kingClaw->position.y >> 16);
+            Zone->cameraBoundsR[0]     = (kingClaw->position.x >> 16) + 320;
+            Zone->cameraBoundsT[0]     = (kingClaw->position.y >> 16);
             HeavyKing->value9           = kingClaw->position.y + 0x2400000;
             self->active              = ACTIVE_NORMAL;
             HeavyKing_HandleClawMovement();
@@ -1117,7 +1117,7 @@ void HeavyKing_State_Finish(void)
 
     if (!RSDK.CheckOnScreen(self, &self->updateRange)) {
         Music_TransitionTrack(TRACK_STAGE, 0.0125);
-        Zone->screenBoundsR1[0] += 1024;
+        Zone->cameraBoundsR[0] += 1024;
         destroyEntity(self->claw);
         destroyEntity(self);
     }

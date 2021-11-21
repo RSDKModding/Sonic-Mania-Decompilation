@@ -418,8 +418,8 @@ void Gachapandora_State_SetupArena(void)
         self->timer               = 0;
         Zone->playerBoundActiveR[0] = true;
         Zone->playerBoundActiveB[0] = true;
-        Zone->screenBoundsR1[0]     = (self->position.x >> 16) + ScreenInfo->centerX;
-        Zone->screenBoundsB1[0]     = (self->position.y >> 16) + 128;
+        Zone->cameraBoundsR[0]     = (self->position.x >> 16) + ScreenInfo->centerX;
+        Zone->cameraBoundsB[0]     = (self->position.y >> 16) + 128;
 
         self->position.y = (ScreenInfo->position.y - 192) << 16;
         self->active     = ACTIVE_NORMAL;
@@ -433,11 +433,11 @@ void Gachapandora_State_Unknown1(void)
     RSDK_THIS(Gachapandora);
 
     Zone->playerBoundActiveL[0] = true;
-    Zone->screenBoundsL1[0]     = ScreenInfo->position.x;
+    Zone->cameraBoundsL[0]     = ScreenInfo->position.x;
 
     if (RSDK_GET_ENTITY(SLOT_PLAYER1, Player)->position.x > self->position.x) {
         Zone->playerBoundActiveL[0] = true;
-        Zone->screenBoundsL1[0]     = (self->position.x >> 16) - ScreenInfo->centerX;
+        Zone->cameraBoundsL[0]     = (self->position.x >> 16) - ScreenInfo->centerX;
         Music_TransitionTrack(TRACK_EGGMAN2, 0.0125);
         self->health = 9;
         self->state  = Gachapandora_State_Unknown2;
@@ -836,7 +836,7 @@ void Gachapandora_State_Finish(void)
         self->velocity.y += 0x1800;
 
         if (self->position.y > (ScreenInfo->position.y + ScreenInfo->height + 128) << 16) {
-            Zone->screenBoundsR1[0] += 424;
+            Zone->cameraBoundsR[0] += 424;
             self->state = StateMachine_None;
             Music_TransitionTrack(TRACK_STAGE, 0.0125);
         }

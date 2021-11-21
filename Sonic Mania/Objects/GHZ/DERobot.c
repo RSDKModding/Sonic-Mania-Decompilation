@@ -159,13 +159,13 @@ void DERobot_HandleScreenBounds(void)
 {
     RSDK_THIS(DERobot);
     int32 x = (self->position.x >> 16) - ScreenInfo->centerX + 128;
-    if (x > Zone->screenBoundsL1[0]) {
-        Zone->screenBoundsL1[0]                        = x;
-        Zone->screenBoundsR1[0]                        = ScreenInfo->width + 96 + x;
-        Zone->screenBoundsL2[0]                        = Zone->screenBoundsL1[0] << 16;
-        Zone->screenBoundsR2[0]                        = Zone->screenBoundsR1[0] << 16;
+    if (x > Zone->cameraBoundsL[0]) {
+        Zone->cameraBoundsL[0]                        = x;
+        Zone->cameraBoundsR[0]                        = ScreenInfo->width + 96 + x;
+        Zone->playerBoundsL[0]                        = Zone->cameraBoundsL[0] << 16;
+        Zone->playerBoundsR[0]                        = Zone->cameraBoundsR[0] << 16;
         Zone->playerBoundActiveB[0]                    = 0;
-        RSDK_GET_ENTITY(SLOT_CAMERA1, Camera)->boundsL = Zone->screenBoundsL1[0];
+        RSDK_GET_ENTITY(SLOT_CAMERA1, Camera)->boundsL = Zone->cameraBoundsL[0];
     }
 }
 
@@ -760,10 +760,10 @@ void DERobot_State_SetupArena(void)
         EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
         if (player1->position.y <= self->position.y + 0x200000 && player1->state != Player_State_ForceRoll_Ground) {
             for (int32 i = 0; i < Player->playerCount; ++i) {
-                Zone->screenBoundsL1[i]     = (self->position.x >> 16) - ScreenInfo->centerX + 128;
-                Zone->screenBoundsR1[i]     = ScreenInfo->centerX + 128 + (self->position.x >> 16);
-                Zone->screenBoundsB1[i]     = self->position.y >> 16;
-                Zone->screenBoundsB2[i]     = Zone->screenBoundsB1[i] << 16;
+                Zone->cameraBoundsL[i]     = (self->position.x >> 16) - ScreenInfo->centerX + 128;
+                Zone->cameraBoundsR[i]     = ScreenInfo->centerX + 128 + (self->position.x >> 16);
+                Zone->cameraBoundsB[i]     = self->position.y >> 16;
+                Zone->playerBoundsB[i]     = Zone->cameraBoundsB[i] << 16;
                 Zone->playerBoundActiveL[i] = true;
                 Zone->playerBoundActiveR[i] = true;
                 Zone->playerBoundActiveB[i] = false;

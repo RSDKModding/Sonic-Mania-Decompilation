@@ -288,8 +288,8 @@ void BigSqueeze_State1_SetupIntro(void)
 
         Zone->playerBoundActiveL[0] = true;
         Zone->playerBoundActiveR[0] = true;
-        Zone->screenBoundsL1[0]     = (self->position.x >> 16) - 212;
-        Zone->screenBoundsR1[0]     = (self->position.x >> 16) + 308;
+        Zone->cameraBoundsL[0]     = (self->position.x >> 16) - 212;
+        Zone->cameraBoundsR[0]     = (self->position.x >> 16) + 308;
         self->state               = BigSqueeze_State1_SetupEggman;
     }
 }
@@ -336,11 +336,11 @@ void BigSqueeze_State1_SetupBossArena(void)
     if (eggman->state == Eggman_State_ProcessAnimation) {
         foreach_all(CollapsingPlatform, platform) { platform->active = ACTIVE_BOUNDS; }
 
-        Zone->screenBoundsR1[0] = (self->position.x >> 16) + 212;
-        Zone->screenBoundsB1[0] = 1792;
-        Zone->screenBoundsT1[0] = Zone->screenBoundsB1[0] - ScreenInfo->height;
+        Zone->cameraBoundsR[0] = (self->position.x >> 16) + 212;
+        Zone->cameraBoundsB[0] = 1792;
+        Zone->cameraBoundsT[0] = Zone->cameraBoundsB[0] - ScreenInfo->height;
 
-        BigSqueeze->value7 = (Zone->screenBoundsB1[0] - 16) << 16;
+        BigSqueeze->value7 = (Zone->cameraBoundsB[0] - 16) << 16;
         eggman->state      = Eggman_State_ProcessThenSet;
         eggman->animID     = 0;
         self->state      = BigSqueeze_State1_SetupBoss;

@@ -237,7 +237,7 @@ void Hatch_Unknown2(void)
         zone->timer      = 0;
         zone->drawOrder  = 15;
         zone->visible    = true;
-        zone->stateDraw  = Zone_StateDraw_Fadeout;
+        zone->stateDraw  = Zone_Draw_Fade;
     }
 }
 
@@ -263,7 +263,7 @@ void Hatch_Unknown3(void)
             player->state            = Player_State_Air;
             EntityWarpDoor *warpDoor = RSDK_GET_ENTITY(SceneInfo->entitySlot - 1, WarpDoor);
             if (warpDoor->objectID == WarpDoor->objectID) {
-                Zone->screenBoundsB1[RSDK.GetEntityID(player)] = 0x7FFF;
+                Zone->cameraBoundsB[RSDK.GetEntityID(player)] = 0x7FFF;
                 warpDoor->hitbox                               = self->warpHitbox;
                 warpDoor->position.y                           = self->position.y;
                 player->tileCollisions                         = true;
@@ -406,7 +406,7 @@ void Hatch_Unknown10(void)
         EntityWarpDoor *warpDoor = RSDK_GET_ENTITY(SceneInfo->entitySlot - 1, WarpDoor);
 
         if (warpDoor->objectID == WarpDoor->objectID) {
-            Zone->screenBoundsB1[RSDK.GetEntityID(player)] = 0x7FFF;
+            Zone->cameraBoundsB[RSDK.GetEntityID(player)] = 0x7FFF;
             warpDoor->hitbox                               = self->warpHitbox;
             warpDoor->position.y                           = player->position.y;
             player->state                                  = self->stateStore;

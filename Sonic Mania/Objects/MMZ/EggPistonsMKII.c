@@ -288,9 +288,9 @@ void EggPistonsMKII_State_SetupArena(void)
         self->timer               = 0;
         Zone->playerBoundActiveR[0] = true;
         Zone->playerBoundActiveB[0] = true;
-        Zone->screenBoundsR1[0]     = (self->position.x >> 16) + ScreenInfo->centerX;
-        Zone->screenBoundsB1[0]     = (self->position.y >> 16) + 71;
-        Zone->screenBoundsT1[0]     = (Zone->screenBoundsB1[0] - ScreenInfo->height);
+        Zone->cameraBoundsR[0]     = (self->position.x >> 16) + ScreenInfo->centerX;
+        Zone->cameraBoundsB[0]     = (self->position.y >> 16) + 71;
+        Zone->cameraBoundsT[0]     = (Zone->cameraBoundsB[0] - ScreenInfo->height);
         self->active              = ACTIVE_NORMAL;
         self->state               = EggPistonsMKII_State_EnterBoss;
     }
@@ -302,7 +302,7 @@ void EggPistonsMKII_State_EnterBoss(void)
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
 
     Zone->playerBoundActiveL[0] = true;
-    Zone->screenBoundsL1[0]     = ScreenInfo->position.x;
+    Zone->cameraBoundsL[0]     = ScreenInfo->position.x;
 
     int pos = RETRO_USE_PLUS ? (self->position.x - 0xC00000) : self->position.x;
     if (player1->position.x > pos) {
@@ -322,7 +322,7 @@ void EggPistonsMKII_State_EnterBoss(void)
         if (player1->position.x > (self->position.x - 0x80000)) {
 #endif
             Zone->playerBoundActiveL[0] = true;
-            Zone->screenBoundsL1[0]     = (self->position.x >> 16) - ScreenInfo->centerX;
+            Zone->cameraBoundsL[0]     = (self->position.x >> 16) - ScreenInfo->centerX;
             Music_TransitionTrack(TRACK_MINIBOSS, 0.0125);
 
             EggPistonsMKII->health = 8;
@@ -744,7 +744,7 @@ void EggPistonsMKII_StateAlarm_Destroyed(void)
             destroyEntity(barrier);
         }
 
-        Zone->screenBoundsR1[0] += 424;
+        Zone->cameraBoundsR[0] += 424;
         Zone->playerBoundActiveR[0] = false;
         destroyEntity(self);
     }

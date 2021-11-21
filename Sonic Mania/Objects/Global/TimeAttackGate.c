@@ -21,13 +21,13 @@ void TimeAttackGate_StaticUpdate(void)
         }
 
         if (TimeAttackGate->suppressedTitlecard) {
-            EntityTimeAttackGate *entity        = CREATE_ENTITY(TimeAttackGate, intToVoid(1), 0, 0);
+            EntityTimeAttackGate *entity        = CREATE_ENTITY(TimeAttackGate, intToVoid(true), 0, 0);
             entity->state                       = TimeAttackGate_State_Fadeout;
             entity->fadeTimer                   = 532;
             TimeAttackGate->suppressedTitlecard = false;
         }
         if (DebugMode->debugActive)
-            TimeAttackGate->debugEnabled = true;
+            TimeAttackGate->disableRecords = true;
     }
 }
 
@@ -50,7 +50,7 @@ void TimeAttackGate_Create(void *data)
             RSDK.SetSpriteAnimation(TimeAttackGate->aniFrames, 3, &self->finAnimator, true, 0);
 
         if (!SceneInfo->inEditor) {
-            if (data == intToVoid(1)) {
+            if (data == intToVoid(true)) {
                 self->drawOrder = 14;
                 self->active    = ACTIVE_ALWAYS;
                 self->state     = TimeAttackGate_State_Restarter;
@@ -62,24 +62,24 @@ void TimeAttackGate_Create(void *data)
                 self->updateRange.y = 0x400000;
                 self->drawOrder     = Zone->playerDrawLow + 1;
 
-                int32 checkA = self->boundsOffset.y + (self->boundsSize.y >> 1);
-                int32 checkB = self->boundsOffset.y - (self->boundsSize.y >> 1);
+                int32 boundsBottom = self->boundsOffset.y + (self->boundsSize.y >> 1);
+                int32 boundsTop    = self->boundsOffset.y - (self->boundsSize.y >> 1);
 
                 if ((-0x10000 * self->extendTop) < self->boundsOffset.y - (self->boundsSize.y >> 1))
-                    checkB = (-0x10000 * self->extendTop);
+                    boundsTop = (-0x10000 * self->extendTop);
 
-                if (self->extendBottom << 16 < checkA)
-                    checkA = self->extendBottom << 16;
+                if (self->extendBottom << 16 < boundsBottom)
+                    boundsBottom = self->extendBottom << 16;
 
-                if (abs(self->boundsOffset.x - (self->boundsSize.x >> 1)) > checkB)
+                if (abs(self->boundsOffset.x - (self->boundsSize.x >> 1)) > boundsTop)
                     self->updateRange.x = abs(self->boundsOffset.x - (self->boundsSize.x >> 1));
                 else
                     self->updateRange.x = ((self->boundsSize.x >> 1) + self->boundsOffset.x) + 0x400000;
 
-                if (abs(checkB) > checkA)
-                    self->updateRange.y = abs(checkB) + 0x400000;
+                if (abs(boundsTop) > boundsBottom)
+                    self->updateRange.y = abs(boundsTop) + 0x400000;
                 else
-                    self->updateRange.y = checkA + 0x400000;
+                    self->updateRange.y = boundsBottom + 0x400000;
 
                 self->scale.y   = 0x200;
                 self->state     = TimeAttackGate_State_Main;
@@ -103,7 +103,7 @@ void TimeAttackGate_StageLoad(void)
     TimeAttackGate->sfxSignpost     = RSDK.GetSfx("Global/SignPost.wav");
     TimeAttackGate->sfxTeleport     = RSDK.GetSfx("Global/Teleport.wav");
     TimeAttackGate->started         = false;
-    TimeAttackGate->debugEnabled    = false;
+    TimeAttackGate->disableRecords  = false;
     SceneInfo->timeEnabled          = false;
     if (globals->suppressTitlecard)
         TimeAttackGate->suppressedTitlecard = true;
@@ -208,7 +208,7 @@ void TimeAttackGate_HandleStart(void)
 #if RETRO_USE_PLUS
             StateMachine_Run(TimeAttackGate->endCB);
 #endif
-            if (!TimeAttackGate->debugEnabled)
+            if (!TimeAttackGate->disableRecords)
                 ActClear->isTimeAttack = true;
 #if RETRO_USE_PLUS
             TimeAttackGate_Unknown1();
@@ -223,7 +223,7 @@ void TimeAttackGate_HandleStart(void)
 #if RETRO_USE_PLUS
 void TimeAttackGate_Unknown1(void)
 {
-    if (!TimeAttackGate->debugEnabled) {
+    if (!TimeAttackGate->disableRecords) {
         if (ActClear)
             ActClear->finishedSavingGame = true;
         if (UIWaitSpinner)
@@ -236,7 +236,7 @@ void TimeAttackGate_Unknown1(void)
         int32 act              = param->actID;
         int32 mode             = SceneInfo->filter == SCN_FILTER_ENCORE;
 
-        param->dbRowID = TimeAttackData_AddTADBEntry(zone, playerID, act, mode, time, TimeAttackGate_LeaderboardCB);
+        param->timeAttackRank = TimeAttackData_AddTADBEntry(zone, playerID, act, mode, time, TimeAttackGate_LeaderboardCB);
         TimeAttackData_AddLeaderboardEntry(zone, playerID, act, mode, time);
     }
 }
@@ -280,10 +280,10 @@ void TimeAttackGate_CheckTouch(void)
         }
 
         if (flag) {
-            Zone->screenBoundsL1[i] = (self->position.x >> 16) - ScreenInfo[i].centerX;
-            Zone->screenBoundsR1[i] = (self->position.x >> 16) + ScreenInfo[i].centerX;
+            Zone->cameraBoundsL[i] = (self->position.x >> 16) - ScreenInfo[i].centerX;
+            Zone->cameraBoundsR[i] = (self->position.x >> 16) + ScreenInfo[i].centerX;
             if (self->topBoundary)
-                Zone->screenBoundsT1[i] = (self->position.y) - ScreenInfo[i].centerY;
+                Zone->cameraBoundsT[i] = (self->position.y) - ScreenInfo[i].centerY;
         }
     }
 }

@@ -277,9 +277,9 @@ void DrillerdroidO_State_SetupArena(void)
         self->timer               = 0;
         Zone->playerBoundActiveR[0] = true;
         Zone->playerBoundActiveB[0] = true;
-        Zone->screenBoundsR1[0]     = (self->position.x >> 16) + ScreenInfo->centerX;
-        Zone->screenBoundsB1[0]     = (self->position.y >> 16) + 96;
-        Zone->screenBoundsT1[0]     = Zone->screenBoundsB1[0] - 240;
+        Zone->cameraBoundsR[0]     = (self->position.x >> 16) + ScreenInfo->centerX;
+        Zone->cameraBoundsB[0]     = (self->position.y >> 16) + 96;
+        Zone->cameraBoundsT[0]     = Zone->cameraBoundsB[0] - 240;
         self->startY              = self->position.y;
         self->active              = ACTIVE_NORMAL;
         self->position.y          = (ScreenInfo->position.y - 192) << 16;
@@ -293,11 +293,11 @@ void DrillerdroidO_State_StartBoss(void)
     RSDK_THIS(DrillerdroidO);
 
     Zone->playerBoundActiveL[0] = true;
-    Zone->screenBoundsL1[0]     = ScreenInfo->position.x;
+    Zone->cameraBoundsL[0]     = ScreenInfo->position.x;
 
     if (RSDK_GET_ENTITY(SLOT_PLAYER1, Player)->position.x > self->position.x) {
         Zone->playerBoundActiveL[0] = true;
-        Zone->screenBoundsL1[0]     = (self->position.x >> 16) - ScreenInfo->centerX;
+        Zone->cameraBoundsL[0]     = (self->position.x >> 16) - ScreenInfo->centerX;
         Music_TransitionTrack(TRACK_MINIBOSS, 0.0125);
         self->health = 6;
         CREATE_ENTITY(DrillerdroidO, intToVoid(DRILLERDROIDO_TARGET), self->position.x, self->startY);
@@ -317,8 +317,8 @@ void DrillerdroidO_State_Unknown2(void)
     self->velocity.y += 0x3800;
     DrillerdroidO_CheckPlayerCollisions();
 
-    if (self->position.y >= (Zone->screenBoundsB1[0] - 112) << 16) {
-        self->position.y = (Zone->screenBoundsB1[0] - 112) << 16;
+    if (self->position.y >= (Zone->cameraBoundsB[0] - 112) << 16) {
+        self->position.y = (Zone->cameraBoundsB[0] - 112) << 16;
         RSDK.PlaySfx(DrillerdroidO->sfxImpact, false, 255);
 
         EntityCamera *camera = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
@@ -619,7 +619,7 @@ void DrillerdroidO_State_Unknown14(void)
 
     if (--self->timer <= 0) {
         self->position.y += 0x1000000;
-        Zone->screenBoundsB1[0] += 256;
+        Zone->cameraBoundsB[0] += 256;
         self->state = DrillerdroidO_State_Unknown15;
     }
 }
@@ -628,8 +628,8 @@ void DrillerdroidO_State_Unknown15(void)
 {
     RSDK_THIS(DrillerdroidO);
 
-    Zone->screenBoundsT1[0] = ScreenInfo->position.y;
-    if (Zone->screenBoundsT1[0] == Zone->screenBoundsB1[0] - 240) {
+    Zone->cameraBoundsT[0] = ScreenInfo->position.y;
+    if (Zone->cameraBoundsT[0] == Zone->cameraBoundsB[0] - 240) {
         EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
         CREATE_ENTITY(DrillerdroidO, intToVoid(DRILLERDROIDO_TARGET), player1->position.x, player1->position.y)->target = (Entity *)player1;
         RSDK.PlaySfx(DrillerdroidO->sfxTargeting, false, 255);
@@ -832,7 +832,7 @@ void DrillerdroidO_State_Finish(void)
     DrillerdroidO_Explode();
 
     if (!RSDK.CheckOnScreen(self, NULL)) {
-        Zone->screenBoundsR1[0] += 424;
+        Zone->cameraBoundsR[0] += 424;
         destroyEntity(self);
     }
 }
@@ -938,10 +938,10 @@ void DrillerdroidO_State_Target(void)
         self->target                  = NULL;
         DrillerdroidO->boss->position.x = self->position.x;
 
-        if (self->position.x < (Zone->screenBoundsL1[0] + 64) << 16 || self->position.x > (Zone->screenBoundsR1[0] - 64) << 16)
-            DrillerdroidO->boss->position.x = (Zone->screenBoundsL1[0] + 64) << 16;
-        else if (self->position.x > (Zone->screenBoundsR1[0] - 64) << 16)
-            DrillerdroidO->boss->position.x = (Zone->screenBoundsR1[0] - 64) << 16;
+        if (self->position.x < (Zone->cameraBoundsL[0] + 64) << 16 || self->position.x > (Zone->cameraBoundsR[0] - 64) << 16)
+            DrillerdroidO->boss->position.x = (Zone->cameraBoundsL[0] + 64) << 16;
+        else if (self->position.x > (Zone->cameraBoundsR[0] - 64) << 16)
+            DrillerdroidO->boss->position.x = (Zone->cameraBoundsR[0] - 64) << 16;
     }
     if (self->timer == 128)
         destroyEntity(self);

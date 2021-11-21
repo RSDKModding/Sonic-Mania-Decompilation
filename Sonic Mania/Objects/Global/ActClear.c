@@ -854,7 +854,7 @@ void ActClear_State_StartExitSequence(void)
             zone->fadeSpeed  = 10;
             zone->fadeColour = 0;
             zone->state      = Zone_State_Fadeout;
-            zone->stateDraw  = Zone_StateDraw_Fadeout;
+            zone->stateDraw  = Zone_Draw_Fade;
             zone->visible    = true;
             zone->drawOrder  = 15;
         }

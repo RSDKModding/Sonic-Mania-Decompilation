@@ -286,18 +286,18 @@ void PauseMenu_FocusCamera(void)
         return;
 
     LogHelpers_Print("FocusCamera(): triggerPlayer = %d", self->triggerPlayer);
-    foreach_all(Camera, camera)
+    foreach_all(Camera, cameraPtr)
     {
-        int32 id         = RSDK.GetEntityID(camera);
-        int32 prevScreen = camera->screenID;
+        int32 id         = RSDK.GetEntityID(cameraPtr);
+        int32 prevScreen = cameraPtr->screenID;
         if (id - SLOT_CAMERA1 == self->triggerPlayer) {
-            camera->screenID = 0;
-            Camera_SetCameraBounds(camera);
+            cameraPtr->screenID = 0;
+            Camera_SetCameraBounds(cameraPtr);
         }
         else {
-            camera->screenID = 1;
+            cameraPtr->screenID = 1;
         }
-        LogHelpers_Print("cameraPtr->screenID %d => %d", prevScreen, camera->screenID);
+        LogHelpers_Print("cameraPtr->screenID %d => %d", prevScreen, cameraPtr->screenID);
     }
 }
 

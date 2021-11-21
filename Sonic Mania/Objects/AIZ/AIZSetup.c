@@ -113,7 +113,7 @@ void AIZSetup_StageLoad(void)
 #if RETRO_USE_PLUS
     if (Zone->actID != 3)
 #endif
-        Zone->screenBoundsB1[0] = SCREEN_YSIZE;
+        Zone->cameraBoundsB[0] = SCREEN_YSIZE;
 
     AIZSetup->cutsceneInit    = false;
     AIZSetup->aniTiles        = RSDK.LoadSpriteSheet("AIZ/AniTiles.gif", SCOPE_STAGE);

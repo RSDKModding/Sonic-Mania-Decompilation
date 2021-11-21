@@ -456,15 +456,15 @@ void HotaruHiWatt_State_SetupBounds(void)
         self->timer               = 0;
         Zone->playerBoundActiveL[0] = true;
         Zone->playerBoundActiveR[0] = true;
-        Zone->screenBoundsL1[0]     = (self->position.x >> 16) - ScreenInfo->centerX;
-        Zone->screenBoundsR1[0]     = (self->position.x >> 16) + ScreenInfo->centerX;
-        Zone->screenBoundsT1[0]     = (self->position.y >> 16) - ScreenInfo->height;
-        Zone->screenBoundsB1[0]     = (self->position.y >> 16);
-        HotaruHiWatt->boundsL       = (Zone->screenBoundsL1[0] + 64) << 16;
-        HotaruHiWatt->boundsR       = (Zone->screenBoundsR1[0] - 64) << 16;
+        Zone->cameraBoundsL[0]     = (self->position.x >> 16) - ScreenInfo->centerX;
+        Zone->cameraBoundsR[0]     = (self->position.x >> 16) + ScreenInfo->centerX;
+        Zone->cameraBoundsT[0]     = (self->position.y >> 16) - ScreenInfo->height;
+        Zone->cameraBoundsB[0]     = (self->position.y >> 16);
+        HotaruHiWatt->boundsL       = (Zone->cameraBoundsL[0] + 64) << 16;
+        HotaruHiWatt->boundsR       = (Zone->cameraBoundsR[0] - 64) << 16;
         HotaruHiWatt->boundsM       = self->position.x;
-        HotaruHiWatt->boundsT       = (Zone->screenBoundsT1[0] + 48) << 16;
-        HotaruHiWatt->boundsB       = (Zone->screenBoundsB1[0] - 8) << 16;
+        HotaruHiWatt->boundsT       = (Zone->cameraBoundsT[0] + 48) << 16;
+        HotaruHiWatt->boundsB       = (Zone->cameraBoundsB[0] - 8) << 16;
 
         foreach_active(Fireflies, fireflies)
         {

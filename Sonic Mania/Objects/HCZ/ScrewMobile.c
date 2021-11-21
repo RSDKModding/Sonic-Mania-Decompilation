@@ -111,8 +111,8 @@ void ScrewMobile_State_Unknown1(void)
 {
     RSDK_THIS(ScrewMobile);
 
-    Zone->screenBoundsR1[0]     = (self->position.x >> 16) + 32;
-    Zone->screenBoundsR2[0]     = Zone->screenBoundsR1[0] << 16;
+    Zone->cameraBoundsR[0]     = (self->position.x >> 16) + 32;
+    Zone->playerBoundsR[0]     = Zone->cameraBoundsR[0] << 16;
     Zone->playerBoundActiveR[0] = true;
 
     if (Player->playerCount > 1) {
@@ -132,9 +132,9 @@ void ScrewMobile_State_Unknown1(void)
 
     EntityPlayer *player1 = RSDK_GET_ENTITY(SLOT_PLAYER1, Player);
     if (Player_CheckCollisionTouch(player1, self, &ScrewMobile->hitbox1)) {
-        Zone->screenBoundsT1[0]     = (self->position.y >> 16) - 40;
-        Zone->screenBoundsR2[0]     = 0x7FFF;
-        Zone->screenBoundsR1[0]     = 0x7FFF;
+        Zone->cameraBoundsT[0]     = (self->position.y >> 16) - 40;
+        Zone->playerBoundsR[0]     = 0x7FFF;
+        Zone->cameraBoundsR[0]     = 0x7FFF;
         Zone->playerBoundActiveR[0] = false;
         player1->state              = Player_State_None;
         player1->velocity.x         = 0;
@@ -259,7 +259,7 @@ void ScrewMobile_State_Unknown2(void)
 
     if (Player_CheckValidState(player1)) {
         if (player1->jumpPress) {
-            if (!Zone->screenBoundsT1[0]) {
+            if (!Zone->cameraBoundsT[0]) {
                 Player_StartJump(player1);
                 self->state = ScrewMobile_State_Idle;
                 return;
@@ -365,16 +365,16 @@ void ScrewMobile_State_BossFinished(void)
     player1->jumpPress    = false;
     player1->jumpHold     = false;
     ScrewMobile_State_Unknown2();
-    Zone->screenBoundsL1[0] = ScreenInfo->position.x;
-    Zone->screenBoundsL2[0] = Zone->screenBoundsL1[0] << 16;
+    Zone->cameraBoundsL[0] = ScreenInfo->position.x;
+    Zone->playerBoundsL[0] = Zone->cameraBoundsL[0] << 16;
 
     if (RSDK.ObjectTileCollision(self, Zone->fgLayers, CMODE_LWALL, 0, 0x200000, 0, true)) {
         EntityCamera *camera = RSDK_GET_ENTITY(SLOT_CAMERA1, Camera);
-        Zone->screenBoundsL1[0] += 2;
-        ScreenInfo->position.x = Zone->screenBoundsL1[0];
-        Zone->screenBoundsL2[0]  = Zone->screenBoundsL1[0] << 16;
-        camera->position.x       = Zone->screenBoundsL1[0] << 16;
-        if (Zone->screenBoundsL1[0] >= (self->position.x >> 16) - 32)
+        Zone->cameraBoundsL[0] += 2;
+        ScreenInfo->position.x = Zone->cameraBoundsL[0];
+        Zone->playerBoundsL[0]  = Zone->cameraBoundsL[0] << 16;
+        camera->position.x       = Zone->cameraBoundsL[0] << 16;
+        if (Zone->cameraBoundsL[0] >= (self->position.x >> 16) - 32)
             self->state = ScrewMobile_State_Idle;
     }
 }

@@ -243,7 +243,7 @@ void OOZSetup_StageLoad(void)
 
         GenericTrigger->callbacks[0] = OOZSetup_GenericTriggerCB;
         if (!StarPost->postIDs[0])
-            Zone->screenBoundsB1[0] = 1600;
+            Zone->cameraBoundsB[0] = 1600;
 
         if (isMainGameMode() && globals->enableIntro) {
             if (!PlayerHelpers_CheckStageReload()) {

@@ -83,6 +83,7 @@ void TitleCard_State_ShowTitle(void);
 void TitleCard_State_Idle(void);
 void TitleCard_State_SlideAway(void);
 void TitleCard_State_Supressed(void);
+
 // Draw States
 void TitleCard_Draw_Default(void);
 void TitleCard_Draw_SolidBG(void);

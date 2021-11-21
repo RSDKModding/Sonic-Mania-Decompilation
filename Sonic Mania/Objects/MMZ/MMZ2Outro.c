@@ -76,7 +76,7 @@ bool32 MMZ2Outro_CutsceneState_Unknown1(EntityCutsceneSeq *host)
             }
         }
         RSDK.PlaySfx(MMZ2Outro->sfxLightsOut, false, 255);
-        Zone->screenBoundsT1[0] = 0;
+        Zone->cameraBoundsT[0] = 0;
         return true;
     }
     return false;
@@ -128,12 +128,12 @@ bool32 MMZ2Outro_CutsceneState_Unknown3(EntityCutsceneSeq *host)
     }
 
     for (int32 p = 0; p < Player->playerCount; ++p) {
-        Zone->screenBoundsR1[p] += 0x240;
-        Zone->screenBoundsR2[p] += 0x2400000;
+        Zone->cameraBoundsR[p] += 0x240;
+        Zone->playerBoundsR[p] += 0x2400000;
     }
 
-    self->position.x                                = (Zone->screenBoundsR1[0] - ScreenInfo->centerX) << 16;
-    self->position.y                                = (Zone->screenBoundsB1[0] - ScreenInfo->centerY) << 16;
+    self->position.x                                = (Zone->cameraBoundsR[0] - ScreenInfo->centerX) << 16;
+    self->position.y                                = (Zone->cameraBoundsB[0] - ScreenInfo->centerY) << 16;
     RSDK_GET_ENTITY(SLOT_CAMERA1, Camera)->position.x = (ScreenInfo->position.x + ScreenInfo->centerX) << 16;
     Camera_SetupLerp(3, 0, self->position.x, self->position.y, 2);
     return true;
