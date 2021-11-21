@@ -67,10 +67,10 @@ void AmoebaDroid_HandleDropletRelease(bool32 interact);
 void AmoebaDroid_CheckHit(void);
 void AmoebaDroid_CheckPlayerHit(void);
 
-void AmoebaDroid_StateDrawMain_Unknown1(void);
-void AmoebaDroid_StateDraw1_Unknown1(void);
+void AmoebaDroid_Draw_AmoebaDroid(void);
+void AmoebaDroid_Draw_BigBlob(void);
 
-void AmoebaDroid_StateMain_Setup(void);
+void AmoebaDroid_StateMain_SetupArena(void);
 void AmoebaDroid_StateMain_SetupWaterLevel(void);
 void AmoebaDroid_StateMain_Unknown1(void);
 void AmoebaDroid_StateMain_Unknown2(void);
@@ -83,7 +83,7 @@ void AmoebaDroid_StateMain_Unknown8(void);
 void AmoebaDroid_StateMain_Unknown9(void);
 void AmoebaDroid_StateMain_Unknown10(void);
 void AmoebaDroid_State1_Unknown1(void);
-void AmoebaDroid_State2_Unknown1(void);
+void AmoebaDroid_State_SmallBlob(void);
 void AmoebaDroid_State2_Unknown2(void);
 void AmoebaDroid_State4_Unknown1(void);
 void AmoebaDroid_State3_Unknown1(void);

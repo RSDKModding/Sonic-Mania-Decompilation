@@ -46,8 +46,8 @@ void AmoebaDroid_Create(void *data)
                     RSDK.SetSpriteAnimation(AmoebaDroid->aniFrames, 0, &self->animator1, true, 0);
                     RSDK.SetSpriteAnimation(AmoebaDroid->aniFrames, 1, &self->animator2, true, 0);
                     RSDK.SetSpriteAnimation(AmoebaDroid->aniFrames, 2, &self->animator3, true, 0);
-                    self->stateDraw = AmoebaDroid_StateDrawMain_Unknown1;
-                    self->state     = AmoebaDroid_StateMain_Setup;
+                    self->stateDraw = AmoebaDroid_Draw_AmoebaDroid;
+                    self->state     = AmoebaDroid_StateMain_SetupArena;
                     break;
                 case 1:
                     self->visible       = true;
@@ -60,7 +60,7 @@ void AmoebaDroid_Create(void *data)
                     self->inkEffect     = INK_ALPHA;
                     self->scale.y       = 0x200;
                     RSDK.SetSpriteAnimation(AmoebaDroid->aniFrames, 3, &self->animator1, true, 0);
-                    self->stateDraw = AmoebaDroid_StateDraw1_Unknown1;
+                    self->stateDraw = AmoebaDroid_Draw_BigBlob;
                     self->state     = AmoebaDroid_State1_Unknown1;
                     break;
                 case 2:
@@ -74,7 +74,7 @@ void AmoebaDroid_Create(void *data)
                     self->updateRange.x = 0x200000;
                     self->updateRange.y = 0x200000;
                     self->inkEffect     = INK_ALPHA;
-                    self->state         = AmoebaDroid_State2_Unknown1;
+                    self->state         = AmoebaDroid_State_SmallBlob;
                     RSDK.SetSpriteAnimation(AmoebaDroid->aniFrames, 4, &self->animator1, true, 0);
                     break;
                 case 3:
@@ -184,7 +184,7 @@ void AmoebaDroid_CheckPlayerHit(void)
     }
 }
 
-void AmoebaDroid_StateDrawMain_Unknown1(void)
+void AmoebaDroid_Draw_AmoebaDroid(void)
 {
     RSDK_THIS(AmoebaDroid);
     if (self->invincibleTimer & 1) {
@@ -211,23 +211,22 @@ void AmoebaDroid_StateDrawMain_Unknown1(void)
     }
 }
 
-void AmoebaDroid_StateDraw1_Unknown1(void)
+void AmoebaDroid_Draw_BigBlob(void)
 {
     RSDK_THIS(AmoebaDroid);
-    Vector2 drawPos;
+    Vector2 drawPos = self->position;
 
-    drawPos            = self->position;
     SpriteFrame *frame = RSDK.GetFrame(AmoebaDroid->aniFrames, 3, 0);
-    int32 angle          = self->angle;
-    int32 sprY           = frame->sprY;
+    int32 angle        = self->angle;
+    int32 sprY         = frame->sprY;
 
-    int32 maxY      = (frame->sprY + 96) << 8;
+    int32 maxY    = (frame->sprY + 96) << 8;
     frame->height = 1;
     drawPos.y -= RSDK.Sin256(self->angle) << 10;
 
     for (int32 y = sprY << 8; y < maxY; angle += 2) {
         self->scale.x = (RSDK.Sin256(frame->sprY + 2 * angle) >> 2) + 512;
-        frame->sprY     = y >> 8;
+        frame->sprY   = y >> 8;
 
         if ((y >> 8) >= sprY)
             RSDK.DrawSprite(&self->animator1, &drawPos, false);
@@ -238,14 +237,14 @@ void AmoebaDroid_StateDraw1_Unknown1(void)
     frame->sprY = sprY;
 }
 
-void AmoebaDroid_StateMain_Setup(void)
+void AmoebaDroid_StateMain_SetupArena(void)
 {
     RSDK_THIS(AmoebaDroid);
     if (++self->timer >= 8) {
         self->timer               = 0;
         Zone->playerBoundActiveL[0] = true;
-        Zone->screenBoundsL1[0]     = (self->position.x >> 16) - ScreenInfo->centerX;
         Zone->playerBoundActiveR[0] = true;
+        Zone->screenBoundsL1[0]     = (self->position.x >> 16) - ScreenInfo->centerX;
         Zone->screenBoundsR1[0]     = ScreenInfo->centerX + (self->position.x >> 16);
         Zone->screenBoundsT1[0]     = (self->position.y >> 16) - ScreenInfo->height;
         Zone->screenBoundsB1[0]     = (self->position.y >> 16);
@@ -572,7 +571,7 @@ void AmoebaDroid_State1_Unknown1(void)
     self->position.y = parent->position.y;
 }
 
-void AmoebaDroid_State2_Unknown1(void)
+void AmoebaDroid_State_SmallBlob(void)
 {
     RSDK_THIS(AmoebaDroid);
     if (self->alpha < 192)
@@ -707,14 +706,14 @@ void AmoebaDroid_EditorDraw(void)
             RSDK.SetSpriteAnimation(AmoebaDroid->aniFrames, 0, &self->animator1, true, 0);
             RSDK.SetSpriteAnimation(AmoebaDroid->aniFrames, 1, &self->animator2, true, 0);
             RSDK.SetSpriteAnimation(AmoebaDroid->aniFrames, 2, &self->animator3, true, 0);
-            self->stateDraw = AmoebaDroid_StateDrawMain_Unknown1;
+            self->stateDraw = AmoebaDroid_Draw_AmoebaDroid;
             break;
         case 1:
             self->drawFX    = FX_SCALE;
             self->inkEffect = INK_ALPHA;
             self->scale.y   = 0x200;
             RSDK.SetSpriteAnimation(AmoebaDroid->aniFrames, 3, &self->animator1, true, 0);
-            self->stateDraw = AmoebaDroid_StateDraw1_Unknown1;
+            self->stateDraw = AmoebaDroid_Draw_BigBlob;
             break;
         case 2:
             self->updateRange.x = 0x200000;

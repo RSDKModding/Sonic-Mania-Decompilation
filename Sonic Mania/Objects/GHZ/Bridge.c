@@ -176,7 +176,8 @@ void Bridge_Create(void *data)
 {
     RSDK_THIS(Bridge);
     self->visible = true;
-    ++self->length;
+    if (!SceneInfo->inEditor)
+        ++self->length;
     self->drawOrder     = Zone->drawOrderLow;
     self->active        = ACTIVE_BOUNDS;
     int32 len               = self->length << 19;
@@ -236,7 +237,21 @@ void Bridge_Burn(int32 offset)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void Bridge_EditorDraw(void) { Bridge_Draw(); }
+void Bridge_EditorDraw(void)
+{
+    RSDK_THIS(Bridge);
+    int32 length        = self->length++;
+
+    int32 len           = self->length << 19;
+    self->startPos      = self->position.x - len;
+    self->endPos        = len + self->position.x;
+    self->updateRange.x = len;
+    self->updateRange.y = 0x800000;
+
+    Bridge_Draw();
+
+    self->length = length;
+}
 
 void Bridge_EditorLoad(void)
 {

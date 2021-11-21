@@ -1268,66 +1268,59 @@ void Water_EditorDraw(void)
     self->updateRange.x = 0x800000;
     self->updateRange.y = 0x800000;
 
+    self->inkEffect = INK_NONE;
     switch (self->type) {
         case WATER_PALETTE:
             self->inkEffect = INK_ADD;
             self->alpha     = RSDK.CheckStageFolder("AIZ") ? 0x60 : 0xE0;
             RSDK.SetSpriteAnimation(Water->aniFrames, 0, &self->animator, true, 0);
-            self->stateDraw   = Water_Draw_Palette;
-            Water->waterLevel = self->position.y;
+
+            Water_Draw_Palette();
             break;
         case WATER_RECT:
             self->drawFX        = FX_FLIP;
-            self->stateDraw     = Water_Draw_Tint;
             self->updateRange.x = self->size.x >> 1;
             self->updateRange.y = self->size.y >> 1;
+
+            self->inkEffect = INK_BLEND;
+            RSDK.DrawRect(self->position.x - (self->size.x >> 1), self->position.y - (self->size.y >> 1), self->size.x, self->size.y,
+                          self->b + ((self->g + (self->r << 8)) << 8), 0x100, INK_SUB, false);
+            if (showGizmos()) {
+                self->inkEffect = INK_NONE;
+                DrawHelpers_DrawRectOutline(0xFFFF00, self->position.x, self->position.y, self->size.x, self->size.y);
+            }
             break;
         case WATER_BUBBLER:
         case WATER_BUBBLER_2:
             self->inkEffect = INK_ADD;
             self->alpha     = 0x100;
             RSDK.SetSpriteAnimation(Water->aniFrames, 2, &self->animator, true, 0);
-            self->stateDraw = Water_Draw_Bubbler;
+
+            Water_Draw_Bubbler();
             break;
         case WATER_ADJUST:
             self->active  = ACTIVE_BOUNDS;
             self->visible = false;
+
+            //TODO: actual sprite???/ lollll
+
+            if (showGizmos()) {
+                RSDK.DrawLine(self->position.x - 0x100000, self->position.y - 0x100000, self->position.x + 0x100000, self->position.x + 0x100000,
+                              0xFFFF00, 0xFF, INK_NONE, false);
+            }
             break;
         case WATER_BUBBLE_SPAWNER:
-            self->stateDraw = Water_Draw_Bubble;
             self->drawFX    = FX_SCALE;
             self->inkEffect = INK_ADD;
             self->alpha     = 0x100;
             self->scale.x   = 0x200;
             self->scale.y   = 0x200;
             RSDK.SetSpriteAnimation(Water->bigBubbleSprite, 7, &self->animator, true, 0);
-            break;
-        case WATER_SPLASH:
-            RSDK.SetSpriteAnimation(Water->aniFrames, 1, &self->animator, true, 0);
-            self->stateDraw = Water_Draw_Splash;
-            break;
-        case WATER_BUBBLE:
-            self->drawFX    = FX_SCALE;
-            self->inkEffect = INK_ADD;
-            self->alpha     = 0x100;
-            self->scale.x   = 0x200;
-            self->scale.y   = 0x200;
-            RSDK.SetSpriteAnimation(Water->aniFrames, 5, &self->animator, true, 0);
-            self->stateDraw = Water_Draw_Bubble;
-            break;
-        case WATER_COUNTDOWNBUBBLE:
-            self->drawFX    = FX_SCALE;
-            self->inkEffect = INK_ADD;
-            self->alpha     = 0x100;
-            self->scale.x   = 0x200;
-            self->scale.y   = 0x200;
-            RSDK.SetSpriteAnimation(Water->aniFrames, 7, &self->animator, true, 0);
-            self->stateDraw = Water_Draw_CountDownBubble;
+
+            Water_Draw_Bubble();
             break;
         default: break;
     }
-
-    StateMachine_Run(self->stateDraw);
 }
 
 void Water_EditorLoad(void)

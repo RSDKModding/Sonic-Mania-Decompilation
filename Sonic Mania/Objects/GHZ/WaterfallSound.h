@@ -8,9 +8,9 @@
 typedef struct {
     RSDK_OBJECT
     int32 activeCount;
-    int32 field_8;
-    int32 field_C;
-    int32 field_10;
+    int32 unused1;
+    int32 unused2;
+    int32 unused3;
     uint16 aniFrames;
 } ObjectWaterfallSound;
 
@@ -18,8 +18,8 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     Vector2 size;
-    Vector2 posUnk;
-    bool32 flag;
+    Vector2 sfxPos;
+    bool32 sfxActive;
     Animator animator;
 } EntityWaterfallSound;
 

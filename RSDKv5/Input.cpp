@@ -426,7 +426,7 @@ void UpdateDeviceInput(InputDevice *device)
 void ProcessKeyboardInput(InputDevice *device, int32 controllerID)
 {
 #if RETRO_USING_SDL2
-    int keyCount         = 0;
+    int keyCount = 0;
     const byte *keyState = SDL_GetKeyboardState(&keyCount);
 
     for (int i = 0; i < 12; ++i) InputManager.keyPress[controllerID - 1][i] = false;
@@ -444,12 +444,11 @@ void ProcessKeyboardInput(InputDevice *device, int32 controllerID)
         }
     }
 
-    int inputID    = device->controllerID + 1;
     int *mappings[] = {
-        &controller[inputID].keyUp.keyMap,    &controller[inputID].keyDown.keyMap,  &controller[inputID].keyLeft.keyMap,
-        &controller[inputID].keyRight.keyMap, &controller[inputID].keyA.keyMap,     &controller[inputID].keyB.keyMap,
-        &controller[inputID].keyC.keyMap,     &controller[inputID].keyX.keyMap,     &controller[inputID].keyY.keyMap,
-        &controller[inputID].keyZ.keyMap,     &controller[inputID].keyStart.keyMap, &controller[inputID].keySelect.keyMap,
+        &controller[controllerID].keyUp.keyMap,    &controller[controllerID].keyDown.keyMap,  &controller[controllerID].keyLeft.keyMap,
+        &controller[controllerID].keyRight.keyMap, &controller[controllerID].keyA.keyMap,     &controller[controllerID].keyB.keyMap,
+        &controller[controllerID].keyC.keyMap,     &controller[controllerID].keyX.keyMap,     &controller[controllerID].keyY.keyMap,
+        &controller[controllerID].keyZ.keyMap,     &controller[controllerID].keyStart.keyMap, &controller[controllerID].keySelect.keyMap,
     };
 
     for (int i = 0; i < KEY_MAX; i++) {
@@ -685,8 +684,45 @@ void InitInputDevice()
     }
 }
 
+void ClearInput()
+{
+    for (int i = 0; i <= PLAYER_COUNT; ++i) {
+        if (i != 0 && activeControllers[i - 1] == CONT_UNASSIGNED)
+            continue;
+
+        controller[i].keyUp.press     = false;
+        controller[i].keyDown.press   = false;
+        controller[i].keyLeft.press   = false;
+        controller[i].keyRight.press  = false;
+        controller[i].keyA.press      = false;
+        controller[i].keyB.press      = false;
+        controller[i].keyC.press      = false;
+        controller[i].keyX.press      = false;
+        controller[i].keyY.press      = false;
+        controller[i].keyZ.press      = false;
+        controller[i].keyStart.press  = false;
+        controller[i].keySelect.press = false;
+        stickL[i].keyUp.press         = false;
+        stickL[i].keyDown.press       = false;
+        stickL[i].keyLeft.press       = false;
+        stickL[i].keyRight.press      = false;
+        stickL[i].keyStick.press      = false;
+        stickR[i].keyUp.press         = false;
+        stickR[i].keyDown.press       = false;
+        stickR[i].keyLeft.press       = false;
+        stickR[i].keyRight.press      = false;
+        stickR[i].keyStick.press      = false;
+        triggerL[i].keyL.press        = false;
+        triggerL[i].keyR.press        = false;
+        triggerR[i].keyL.press        = false;
+        triggerR[i].keyR.press        = false;
+    }
+}
+
 void ProcessInput()
 {
+    ClearInput();
+
     InputManager.anyPress = false;
 
     for (int i = 0; i < InputDeviceCount; ++i) {
@@ -699,7 +735,7 @@ void ProcessInput()
         int assign = activeControllers[i];
         if (assign && assign != CONT_UNASSIGNED) {
             if (assign == CONT_AUTOASSIGN) {
-                int id              = GetControllerInputID();
+                int id               = GetControllerInputID();
                 activeControllers[i] = id;
                 if (id != -1)
                     AssignControllerID(i + 1, id);

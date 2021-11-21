@@ -215,7 +215,7 @@ void Announcer_State_Finished(void)
             }
             else {
                 self->visible = true;
-                MathHelpers_Lerp1(&self->drawOffset, ((self->timer - 76) << 8) / 16, 0, 0, ScreenInfo->width << 16, 0);
+                MathHelpers_Lerp(&self->drawOffset, ((self->timer - 76) << 8) / 16, 0, 0, ScreenInfo->width << 16, 0);
                 ++self->timer;
             }
         }

@@ -18,7 +18,7 @@ void ZipLine_Update(void)
             self->grabDelay[pid]--;
 
         if ((1 << pid) & self->activePlayers) {
-            if (player->objectID == Player->objectID && Player_CheckValidState(player)) {
+            if (Player_CheckValidState(player)) {
                 Hitbox *playerHitbox = Player_GetHitbox(player);
                 if (player->state != Player_State_Hit) {
                     if (player->velocity.x) {
@@ -49,7 +49,7 @@ void ZipLine_Update(void)
                         if (!self->grabDelay[pid] && player->jumpPress) {
                             player->velocity.y       = -0x40000;
                             player->jumpAbilityTimer = 1;
-                            RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, 0, 0);
+                            RSDK.SetSpriteAnimation(player->aniFrames, ANI_JUMP, &player->animator, false, 0);
                             player->animator.animationSpeed = 48;
                             player->state                         = Player_State_Air;
                             self->grabDelay[pid]                = 60;
@@ -72,7 +72,7 @@ void ZipLine_Update(void)
                     self->grabDelay[pid] = 60;
                     self->activePlayers &= ~(1 << pid);
                     player->onGround       = false;
-                    player->groundedStore  = 0;
+                    player->groundedStore  = false;
                     player->tileCollisions = true;
                 }
             }
@@ -92,10 +92,10 @@ void ZipLine_Update(void)
                 otherHitbox.right  = playerHitbox->right;
                 otherHitbox.bottom = otherHitbox.top + 8;
                 if (RSDK.CheckObjectCollisionTouchBox(self, &ZipLine->hitbox, player, &otherHitbox)) {
-                    if (player->sidekick || self->state == ZipLine_Unknown4) {
+                    if (player->sidekick || self->state == ZipLine_State_Moving) {
                         self->activePlayers |= 1 << pid;
                         player->onGround      = false;
-                        player->groundedStore = 0;
+                        player->groundedStore = false;
                         player->velocity.x    = 0;
                         player->velocity.y    = 0;
                         player->groundVel     = 0;
@@ -110,13 +110,13 @@ void ZipLine_Update(void)
                         player->state           = Player_State_None;
                         player->nextAirState    = StateMachine_None;
                         player->nextGroundState = StateMachine_None;
-                        RSDK.PlaySfx(Player->sfxGrab, 0, 0xFF);
+                        RSDK.PlaySfx(Player->sfxGrab, false, 0xFF);
                         self->grabDelay[pid] = 15;
                         self->active         = ACTIVE_NORMAL;
                     }
                     else if (!self->state) {
                         self->groundVel = player->groundVel;
-                        if ((uint8)(self->angle - 64) < 0x80)
+                        if ((uint8)(self->angle - 0x40) < 0x80)
                             self->groundVel = -player->groundVel;
 
                         if (self->groundVel > 0xA0000)
@@ -134,14 +134,14 @@ void ZipLine_Update(void)
                                         self->velocity.y = 0;
                                         self->groundVel  = 0;
                                     }
-                                    self->state = ZipLine_Unknown4;
+                                    self->state = ZipLine_State_Moving;
                                 }
 
                                 if (self->handlePos.x == self->endPos.x && self->velocity.y < 0) {
-                                    self->state = ZipLine_Unknown4;
+                                    self->state = ZipLine_State_Moving;
                                     self->activePlayers |= 1 << pid;
                                     player->onGround      = false;
-                                    player->groundedStore = 0;
+                                    player->groundedStore = false;
                                     player->velocity.x    = 0;
                                     player->velocity.y    = 0;
                                     player->groundVel     = 0;
@@ -156,7 +156,7 @@ void ZipLine_Update(void)
                                     player->state           = Player_State_None;
                                     player->nextAirState    = StateMachine_None;
                                     player->nextGroundState = StateMachine_None;
-                                    RSDK.PlaySfx(Player->sfxGrab, 0, 0xFF);
+                                    RSDK.PlaySfx(Player->sfxGrab, false, 0xFF);
                                     self->grabDelay[pid] = 15;
                                     self->active         = ACTIVE_NORMAL;
                                 }
@@ -168,14 +168,14 @@ void ZipLine_Update(void)
                                         self->velocity.y = 0;
                                         self->groundVel  = 0;
                                     }
-                                    self->state = ZipLine_Unknown4;
+                                    self->state = ZipLine_State_Moving;
                                 }
 
                                 if (self->handlePos.x == self->startPos.x && self->velocity.y < 0) {
-                                    self->state = ZipLine_Unknown4;
+                                    self->state = ZipLine_State_Moving;
                                     self->activePlayers |= 1 << pid;
                                     player->onGround      = false;
-                                    player->groundedStore = 0;
+                                    player->groundedStore = false;
                                     player->velocity.x    = 0;
                                     player->velocity.y    = 0;
                                     player->groundVel     = 0;
@@ -190,7 +190,7 @@ void ZipLine_Update(void)
                                     player->state           = Player_State_None;
                                     player->nextAirState    = StateMachine_None;
                                     player->nextGroundState = StateMachine_None;
-                                    RSDK.PlaySfx(Player->sfxGrab, 0, 0xFF);
+                                    RSDK.PlaySfx(Player->sfxGrab, false, 0xFF);
                                     self->grabDelay[pid] = 15;
                                     self->active         = ACTIVE_NORMAL;
                                 }
@@ -200,10 +200,10 @@ void ZipLine_Update(void)
                             if (self->groundVel) {
                                 if (self->groundVel < 0) {
                                     if (self->handlePos.x != self->startPos.x) {
-                                        self->state = ZipLine_Unknown4;
+                                        self->state = ZipLine_State_Moving;
                                         self->activePlayers |= 1 << pid;
                                         player->onGround      = false;
-                                        player->groundedStore = 0;
+                                        player->groundedStore = false;
                                         player->velocity.x    = 0;
                                         player->velocity.y    = 0;
                                         player->groundVel     = 0;
@@ -218,16 +218,16 @@ void ZipLine_Update(void)
                                         player->state           = Player_State_None;
                                         player->nextAirState    = StateMachine_None;
                                         player->nextGroundState = StateMachine_None;
-                                        RSDK.PlaySfx(Player->sfxGrab, 0, 0xFF);
+                                        RSDK.PlaySfx(Player->sfxGrab, false, 0xFF);
                                         self->grabDelay[pid] = 15;
                                         self->active         = ACTIVE_NORMAL;
                                     }
                                 }
                                 else if (self->handlePos.x != self->endPos.x) {
-                                    self->state = ZipLine_Unknown4;
+                                    self->state = ZipLine_State_Moving;
                                     self->activePlayers |= 1 << pid;
                                     player->onGround      = false;
-                                    player->groundedStore = 0;
+                                    player->groundedStore = false;
                                     player->velocity.x    = 0;
                                     player->velocity.y    = 0;
                                     player->groundVel     = 0;
@@ -242,7 +242,7 @@ void ZipLine_Update(void)
                                     player->state           = Player_State_None;
                                     player->nextAirState    = StateMachine_None;
                                     player->nextGroundState = StateMachine_None;
-                                    RSDK.PlaySfx(Player->sfxGrab, 0, 0xFF);
+                                    RSDK.PlaySfx(Player->sfxGrab, false, 0xFF);
                                     self->grabDelay[pid] = 15;
                                     self->active         = ACTIVE_NORMAL;
                                 }
@@ -295,9 +295,7 @@ void ZipLine_Create(void *data)
         self->position.y += (self->endPos.y - self->startPos.y) >> 1;
         self->updateRange.x = (abs(self->endPos.x - self->startPos.x) >> 1) + 0x400000;
         self->updateRange.y = (abs(self->endPos.y - self->startPos.y) >> 1) + 0x400000;
-        Vector2 pos           = ZipLine_Unknown3();
-        self->field_98.x    = pos.x;
-        self->field_98.y    = pos.y;
+        self->joinPos      = ZipLine_GetJoinPos();
     }
 }
 
@@ -310,10 +308,10 @@ void ZipLine_StageLoad(void)
     ZipLine->hitbox.bottom = 24;
     ZipLine->hitbox.right  = 8;
 
-    Zone_AddCallback(ZipLine_Unknown1);
+    Zone_AddCallback(ZipLine_ZoneCB);
 }
 
-void ZipLine_Unknown1(void)
+void ZipLine_ZoneCB(void)
 {
     foreach_active(ZipLine, zipline)
     {
@@ -327,7 +325,7 @@ void ZipLine_Unknown1(void)
     }
 }
 
-void ZipLine_Unknown2(void)
+void ZipLine_ForceReleasePlayers(void)
 {
     RSDK_THIS(ZipLine);
 
@@ -348,7 +346,8 @@ void ZipLine_Unknown2(void)
     }
 }
 
-Vector2 ZipLine_Unknown3(void)
+//this func actually rules, you can join any number of ZipLines together using this
+Vector2 ZipLine_GetJoinPos(void)
 {
     RSDK_THIS(ZipLine);
     EntityZipLine *endMarker = RSDK_GET_ENTITY(SceneInfo->entitySlot - 1, ZipLine);
@@ -409,8 +408,8 @@ Vector2 ZipLine_Unknown3(void)
             int32 distX2 = (endMarker->startPos.x >> 17) - (endMarker->endPos.x >> 17);
             int32 distY2 = (endMarker->endPos.y >> 17) - (endMarker->startPos.y >> 17);
 
-            int32 val1      = distX1 * (self->startPos.y >> 17) + distY1 * (self->startPos.x >> 17);
-            int32 val2      = distX2 * (endMarker->startPos.y >> 17) + distY2 * (endMarker->startPos.x >> 17);
+            int32 val1    = distX1 * (self->startPos.y >> 17) + distY1 * (self->startPos.x >> 17);
+            int32 val2    = distX2 * (endMarker->startPos.y >> 17) + distY2 * (endMarker->startPos.x >> 17);
             float divisor = (float)(distY1 * distX2 - distX1 * distY2);
             if (divisor != 0.0f) {
                 endMarker->handlePos.x = -0x100000;
@@ -421,7 +420,7 @@ Vector2 ZipLine_Unknown3(void)
     }
     return result;
 }
-void ZipLine_Unknown4(void)
+void ZipLine_State_Moving(void)
 {
     RSDK_THIS(ZipLine);
     self->groundVel += (RSDK.Sin256(self->angle) << 14 >> 8);
@@ -431,35 +430,35 @@ void ZipLine_Unknown4(void)
     self->velocity.x = self->groundVel * RSDK.Cos256(self->angle) >> 8;
     self->velocity.y = self->groundVel * RSDK.Sin256(self->angle) >> 8;
 
-    if (self->field_98.x) {
-        int32 entX           = self->position.x;
-        int32 entY           = self->position.y;
+    if (self->joinPos.x) {
+        int32 storeX           = self->position.x;
+        int32 storeY           = self->position.y;
         self->position.x = self->handlePos.x;
         self->position.y = self->handlePos.y;
 
         Hitbox otherHitbox;
-        otherHitbox.top    = ((self->field_98.y - self->position.y - (self->velocity.y >> 1)) >> 16) + 8;
-        otherHitbox.bottom = (((self->velocity.y >> 1) + (self->field_98.y - self->position.y)) >> 16) + 16;
+        otherHitbox.top    = ((self->joinPos.y - self->position.y - (self->velocity.y >> 1)) >> 16) + 8;
+        otherHitbox.bottom = (((self->velocity.y >> 1) + (self->joinPos.y - self->position.y)) >> 16) + 16;
 
         if (self->velocity.x >= 0) {
-            otherHitbox.left  = (self->field_98.x - self->position.x) >> 16;
-            otherHitbox.right = ((self->field_98.x + self->velocity.x - self->position.x) >> 16) + 5;
+            otherHitbox.left  = (self->joinPos.x - self->position.x) >> 16;
+            otherHitbox.right = ((self->joinPos.x + self->velocity.x - self->position.x) >> 16) + 5;
         }
         else {
-            otherHitbox.left  = (((self->field_98.x - self->position.x) - self->velocity.x) >> 16) - 5;
-            otherHitbox.right = (self->field_98.x - self->position.x) >> 16;
+            otherHitbox.left  = (((self->joinPos.x - self->position.x) - self->velocity.x) >> 16) - 5;
+            otherHitbox.right = (self->joinPos.x - self->position.x) >> 16;
         }
 
         if (RSDK.CheckObjectCollisionTouchBox(self, &ZipLine->hitbox, self, &otherHitbox)) {
             EntityZipLine *endMarker = RSDK_GET_ENTITY(SceneInfo->entitySlot - 1, ZipLine);
-            endMarker->handlePos.x   = self->field_98.x;
-            endMarker->handlePos.y   = self->field_98.y;
+            endMarker->handlePos.x   = self->joinPos.x;
+            endMarker->handlePos.y   = self->joinPos.y;
             endMarker->onGround      = true;
             endMarker->activePlayers = self->activePlayers;
             endMarker->groundVel     = self->groundVel;
-            endMarker->state         = ZipLine_Unknown4;
-            self->position.x       = entX;
-            self->position.y       = entY;
+            endMarker->state         = ZipLine_State_Moving;
+            self->position.x       = storeX;
+            self->position.y       = storeY;
             self->activePlayers    = 0;
             self->groundVel        = 0;
             self->handlePos.x      = -0x100000;
@@ -481,8 +480,8 @@ void ZipLine_Unknown4(void)
             }
             return;
         }
-        self->position.x = entX;
-        self->position.y = entY;
+        self->position.x = storeX;
+        self->position.y = storeY;
     }
 
     self->handlePos.x += self->velocity.x;
@@ -503,11 +502,11 @@ void ZipLine_Unknown4(void)
 
             if (self->handlePos.x == self->startPos.x && self->handlePos.y == self->startPos.y) {
                 self->groundVel = 0;
-                if (self->startPos.y <= self->endPos.y || self->onGround) {
-                    self->onGround = true;
+                if (self->startPos.y >= self->endPos.y || !self->onGround) {
+                    self->onGround = false;
                     self->active   = ACTIVE_BOUNDS;
                     self->state    = StateMachine_None;
-                    ZipLine_Unknown2();
+                    ZipLine_ForceReleasePlayers();
                 }
             }
         }
@@ -526,11 +525,11 @@ void ZipLine_Unknown4(void)
 
             if (self->handlePos.x == self->startPos.x && self->handlePos.y == self->startPos.y) {
                 self->groundVel = 0;
-                if (self->startPos.y <= self->endPos.y || self->onGround) {
-                    self->onGround = true;
+                if (self->startPos.y >= self->endPos.y || !self->onGround) {
+                    self->onGround = false;
                     self->active   = ACTIVE_BOUNDS;
                     self->state    = StateMachine_None;
-                    ZipLine_Unknown2();
+                    ZipLine_ForceReleasePlayers();
                 }
             }
         }
@@ -559,11 +558,11 @@ void ZipLine_Unknown4(void)
 
         if (self->handlePos.x == self->endPos.x && self->handlePos.y == self->endPos.y) {
             self->groundVel = 0;
-            if (self->endPos.y >= self->startPos.y || self->onGround) {
-                self->onGround = true;
+            if (self->endPos.y >= self->startPos.y || !self->onGround) {
+                self->onGround = false;
                 self->active   = ACTIVE_BOUNDS;
                 self->state    = StateMachine_None;
-                ZipLine_Unknown2();
+                ZipLine_ForceReleasePlayers();
             }
         }
     }

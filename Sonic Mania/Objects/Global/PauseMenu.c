@@ -545,11 +545,11 @@ void PauseMenu_State_StartPause(void)
         Vector2 pos;
 
         int32 val = 32 * self->timer;
-        MathHelpers_Lerp3(&pos, maxVal(0, val), -0xF00000, 0, 0, 0);
+        MathHelpers_Lerp2Sin1024(&pos, maxVal(0, val), -0xF00000, 0, 0, 0);
 
         self->headerPos.x = pos.x;
         self->headerPos.y = pos.y;
-        MathHelpers_Lerp3(&pos, maxVal(0, val), 0xE80000, 0, 0, 0);
+        MathHelpers_Lerp2Sin1024(&pos, maxVal(0, val), 0xE80000, 0, 0, 0);
 
         ++self->timer;
         self->yellowTrianglePos.x = pos.x;
@@ -750,11 +750,11 @@ void PauseMenu_State_Resume(void)
         Vector2 pos;
 
         int32 val = 32 * self->timer;
-        MathHelpers_Lerp3(&pos, maxVal(0, val), 0, 0, -0xF00000, 0);
+        MathHelpers_Lerp2Sin1024(&pos, maxVal(0, val), 0, 0, -0xF00000, 0);
 
         self->headerPos.x = pos.x;
         self->headerPos.y = pos.y;
-        MathHelpers_Lerp3(&pos, maxVal(0, val), 0, 0, 0xE80000, 0);
+        MathHelpers_Lerp2Sin1024(&pos, maxVal(0, val), 0, 0, 0xE80000, 0);
 
         self->yellowTrianglePos.x = pos.x;
         self->yellowTrianglePos.y = pos.y;

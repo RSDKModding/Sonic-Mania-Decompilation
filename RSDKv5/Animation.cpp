@@ -159,16 +159,16 @@ void ProcessAnimation(Animator *animator)
     }
 }
 
-int GetStringWidth(uint16 sprIndex, uint16 animID, TextInfo *info, int32 startIndex, int32 length, int32 spacing)
+int GetStringWidth(uint16 aniFrames, uint16 animID, TextInfo *info, int32 startIndex, int32 length, int32 spacing)
 {
-    if (sprIndex >= SPRFILE_COUNT)
+    if (aniFrames >= SPRFILE_COUNT)
         return 0;
     if (!info)
         return 0;
     if (!info->text)
         return 0;
 
-    SpriteAnimation *spr = &spriteAnimationList[sprIndex];
+    SpriteAnimation *spr = &spriteAnimationList[aniFrames];
     if (animID < spr->animCount) {
         SpriteAnimationEntry *anim = &spr->animations[animID];
 
@@ -203,14 +203,14 @@ int GetStringWidth(uint16 sprIndex, uint16 animID, TextInfo *info, int32 startIn
     return 0;
 }
 
-void SetSpriteString(uint16 spriteIndex, uint16 animID, TextInfo *info)
+void SetSpriteString(uint16 aniFrames, uint16 animID, TextInfo *info)
 {
-    if (spriteIndex >= SPRFILE_COUNT)
+    if (aniFrames >= SPRFILE_COUNT)
         return;
     if (!info)
         return;
 
-    SpriteAnimation *spr = &spriteAnimationList[spriteIndex];
+    SpriteAnimation *spr = &spriteAnimationList[aniFrames];
     if (animID < spr->animCount) {
         SpriteAnimationEntry *anim = &spr->animations[animID];
 

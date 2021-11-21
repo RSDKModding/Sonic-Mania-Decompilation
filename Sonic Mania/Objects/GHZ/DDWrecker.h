@@ -5,8 +5,8 @@
 
 typedef enum {
     DDWRECKER_SETUP,
-    DDWRECKER_MAIN_1,
-    DDWRECKER_MAIN_2,
+    DDWRECKER_BALL1,
+    DDWRECKER_BALL2,
     DDWRECKER_CHAIN,
     DDWRECKER_CORE,
 }DDWreckerTypes;
@@ -19,9 +19,9 @@ typedef struct {
     int32 bossBoundL;
     int32 bossBoundR;
     int32 bossBoundT;
-    int32 xVelocityUnknown[3];
-    TABLE(int32 angleOffsets1[6], { -64, -32, -16, 16, 32, 64 });
-    TABLE(int32 angleOffsets2[6], { 32, 48, 64, 80, 96, 128 });
+    int32 attackVelocities[3];
+    TABLE(int32 spinOffset[6], { -64, -32, -16, 16, 32, 64 });
+    TABLE(int32 swingOffset[6], { 32, 48, 64, 80, 96, 128 });
     uint16 aniFrames;
     uint16 sfxBossHit;
     uint16 sfxExplosion;
@@ -36,24 +36,24 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    StateMachine(lateState);
+    StateMachine(stateBall);
     Vector2 startPos;
     int32 type;
     int32 timer;
-    bool32 invincible;
+    int32 invincibilityTimer;
     int32 health;
-    int32 flag;
-    int32 timer4;
-    int32 timer2;
-    int32 angle3;
-    int32 arcOffset;
+    bool32 swapBalls;
+    int32 angleVel;
+    int32 spinTimer;
+    int32 spinAngle;
+    int32 radius;
     uint16 slots[6];
     void *bodyA;
     void *bodyB;
-    int32 field_A0;
-    int32 angle2;
-    int32 field_A8;
-    int32 field_AC;
+    int32 unused1;
+    int32 unknownAngle;
+    int32 unused2;
+    int32 unused3;
     int32 blendAmount;
     Animator animator;
     Hitbox hitbox;
@@ -76,26 +76,29 @@ void DDWrecker_EditorLoad(void);
 void DDWrecker_Serialize(void);
 
 // Extra Entity Functions
-void DDWrecker_State_Init(void);
+void DDWrecker_State_SetupArena(void);
 void DDWrecker_State_InitChildren(void);
 void DDWrecker_State_Assemble(void);
-void DDWrecker_State_Unknown2(void);
-void DDWrecker_State_Unknown3(void);
-void DDWrecker_State_Unknown4(void);
-void DDWrecker_State_Unknown5(void);
-void DDWrecker_State_Unknown6(void);
-void DDWrecker_State_Unknown7(void);
-void DDWrecker_State_Unknown8(void);
-void DDWrecker_State_Unknown9(void);
-void DDWrecker_State_Unknown10(void);
-void DDWrecker_State_Unknown11(void);
-void DDWrecker_State_Unknown12(void);
-void DDWrecker_LateState_Unknown1(void);
-void DDWrecker_LateState_Unknown2(void);
-void DDWrecker_LateState_Unknown3(void);
+void DDWrecker_State_EnterWreckers(void);
+void DDWrecker_State_AttackDelay(void);
+void DDWrecker_State_SwingRight(void);
+void DDWrecker_State_SwingLeft(void);
+void DDWrecker_State_SwingMoveToCenter(void);
+void DDWrecker_State_HandleSpinning(void);
+void DDWrecker_State_SwingSlowDown(void);
+void DDWrecker_State_PrepareBounceAttack(void);
+void DDWrecker_State_SignalBounceAttackStart(void);
+void DDWrecker_State_HandleBounceAttack(void);
+void DDWrecker_State_EndBounceAttack(void);
+
+void DDWrecker_StateBall_Vulnerable(void);
+void DDWrecker_StateBall_Spiked(void);
+void DDWrecker_StateBall_Partnerless(void);
+
 void DDWrecker_Hit(void);
 void DDWrecker_Spin(void);
-void DDWrecker_Spin2(void);
+void DDWrecker_Swing(void);
+
 void DDWrecker_State_Debris(void);
 void DDWrecker_State_Die(void);
 void DDWrecker_State_SpawnSignpost(void);

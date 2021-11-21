@@ -10,9 +10,9 @@ void DDWrecker_Update(void)
     RSDK.ProcessAnimation(&self->animator);
 
     if (self->type != DDWRECKER_CORE) {
-        if (self->invincible > 0)
-            self->invincible--;
-        StateMachine_Run(self->lateState);
+        if (self->invincibilityTimer > 0)
+            self->invincibilityTimer--;
+        StateMachine_Run(self->stateBall);
     }
 }
 
@@ -23,10 +23,10 @@ void DDWrecker_StaticUpdate(void) {}
 void DDWrecker_Draw(void)
 {
     RSDK_THIS(DDWrecker);
-    if (self->type == DDWRECKER_MAIN_1 || self->type == DDWRECKER_MAIN_2) {
+    if (self->type == DDWRECKER_BALL1 || self->type == DDWRECKER_BALL2) {
         RSDK.SetActivePalette(1, 0, ScreenInfo->height);
         self->direction = self->animator.frameID >= 16;
-        if ((self->invincible & 2) == 0) {
+        if (!(self->invincibilityTimer & 2)) {
             RSDK.SetLimitedFade(1, 2, 3, self->blendAmount, 1, 28);
         }
         else {
@@ -50,8 +50,8 @@ void DDWrecker_Create(void *data)
             self->type   = voidToInt(data);
             self->active = ACTIVE_NORMAL;
             switch (self->type) {
-                case DDWRECKER_MAIN_1: // main body
-                case DDWRECKER_MAIN_2:
+                case DDWRECKER_BALL1: // main body
+                case DDWRECKER_BALL2:
                     RSDK.SetSpriteAnimation(DDWrecker->aniFrames, 0, &self->animator, true, 0);
                     self->drawFX        = FX_FLIP | FX_ROTATE;
                     self->hitbox.left   = -20;
@@ -76,14 +76,14 @@ void DDWrecker_Create(void *data)
             self->updateRange.x = 0x800000;
             self->updateRange.y = 0x800000;
             self->visible       = false;
-            self->state         = DDWrecker_State_Init;
+            self->state         = DDWrecker_State_SetupArena;
         }
     }
 }
 
 void DDWrecker_StageLoad(void)
 {
-    DDWrecker->aniFrames   = RSDK.LoadSpriteAnimation("GHZ/DDWrecker.bin", SCOPE_STAGE);
+    DDWrecker->aniFrames    = RSDK.LoadSpriteAnimation("GHZ/DDWrecker.bin", SCOPE_STAGE);
     DDWrecker->sfxBossHit   = RSDK.GetSfx("Stage/BossHit.wav");
     DDWrecker->sfxExplosion = RSDK.GetSfx("Stage/Explosion2.wav");
     DDWrecker->sfxDrop      = RSDK.GetSfx("Stage/Drop.wav");
@@ -93,34 +93,33 @@ void DDWrecker_StageLoad(void)
     DDWrecker->sfxSharp     = RSDK.GetSfx("Stage/Sharp.wav");
 }
 
-void DDWrecker_State_Init(void)
+void DDWrecker_State_SetupArena(void)
 {
     RSDK_THIS(DDWrecker);
     if (++self->timer >= 8) {
-        RSDKScreenInfo *screen             = ScreenInfo;
-        self->timer                  = 0;
+        self->timer                    = 0;
         Zone->playerBoundActiveL[0]    = true;
-        Zone->screenBoundsL1[0]        = (self->position.x >> 0x10) - screen->centerX;
         Zone->playerBoundActiveR[0]    = true;
-        Zone->screenBoundsR1[0]        = screen->centerX + (self->position.x >> 0x10);
         Zone->playerBoundActiveB[0]    = true;
+        Zone->screenBoundsL1[0]        = (self->position.x >> 0x10) - ScreenInfo->centerX;
+        Zone->screenBoundsR1[0]        = (self->position.x >> 0x10) + ScreenInfo->centerX;
         Zone->screenBoundsB1[0]        = (self->position.y >> 0x10);
-        DDWrecker->camBoundL           = self->position.x + ((160 - screen->centerX) << 16);
-        DDWrecker->camBoundR           = self->position.x + ((screen->centerX - 160) << 16);
-        DDWrecker->bossBoundL          = self->position.x + ((32 - screen->centerX) << 16);
-        DDWrecker->bossBoundR          = self->position.x + ((screen->centerX - 32) << 16);
+        DDWrecker->camBoundL           = self->position.x + ((160 - ScreenInfo->centerX) << 16);
+        DDWrecker->camBoundR           = self->position.x + ((ScreenInfo->centerX - 160) << 16);
+        DDWrecker->bossBoundL          = self->position.x + ((32 - ScreenInfo->centerX) << 16);
+        DDWrecker->bossBoundR          = self->position.x + ((ScreenInfo->centerX - 32) << 16);
         DDWrecker->bossBoundT          = self->position.y - 0xC00000;
-        DDWrecker->xVelocityUnknown[0] = screen->centerX - 168;
-        if (DDWrecker->xVelocityUnknown[0] < 0) {
-            DDWrecker->xVelocityUnknown[0] = 0;
+        DDWrecker->attackVelocities[0] = ScreenInfo->centerX - 168;
+        if (DDWrecker->attackVelocities[0] < 0) {
+            DDWrecker->attackVelocities[0] = 0;
         }
-        if (DDWrecker->xVelocityUnknown[0] > 24) {
-            DDWrecker->xVelocityUnknown[0] = 24;
+        if (DDWrecker->attackVelocities[0] > 24) {
+            DDWrecker->attackVelocities[0] = 24;
         }
-        DDWrecker->xVelocityUnknown[0] = (DDWrecker->xVelocityUnknown[0] + 32) << 11;
-        DDWrecker->xVelocityUnknown[1] = DDWrecker->xVelocityUnknown[0] >> 2;
-        DDWrecker->xVelocityUnknown[2] = 288 * DDWrecker->xVelocityUnknown[0] >> 8;
-        self->state                  = DDWrecker_State_InitChildren;
+        DDWrecker->attackVelocities[0] = (DDWrecker->attackVelocities[0] + 32) << 11;
+        DDWrecker->attackVelocities[1] = DDWrecker->attackVelocities[0] >> 2;
+        DDWrecker->attackVelocities[2] = 288 * DDWrecker->attackVelocities[0] >> 8;
+        self->state                    = DDWrecker_State_InitChildren;
     }
 }
 
@@ -174,34 +173,34 @@ void DDWrecker_State_InitChildren(void)
             child->state      = DDWrecker_State_Assemble;
 
             child = RSDK_GET_ENTITY(SceneInfo->entitySlot + 6, DDWrecker); // bodyA
-            RSDK.ResetEntityPtr(child, DDWrecker->objectID, intToVoid(DDWRECKER_MAIN_1));
+            RSDK.ResetEntityPtr(child, DDWrecker->objectID, intToVoid(DDWRECKER_BALL1));
             child->position.x = self->position.x;
             child->position.y = self->position.y;
             child->position.y += 0x400000;
-            child->slots[0]  = SceneInfo->entitySlot + 1;
-            child->slots[1]  = SceneInfo->entitySlot + 2;
-            child->slots[2]  = SceneInfo->entitySlot + 3;
-            child->slots[3]  = SceneInfo->entitySlot + 4;
-            child->slots[4]  = SceneInfo->entitySlot + 5;
-            child->slots[5]  = SceneInfo->entitySlot + 7;
-            child->bodyA     = RSDK.GetEntityByID(SceneInfo->entitySlot + 6);
-            child->bodyB     = RSDK.GetEntityByID(SceneInfo->entitySlot + 7);
-            child->arcOffset = 64;
+            child->slots[0] = SceneInfo->entitySlot + 1;
+            child->slots[1] = SceneInfo->entitySlot + 2;
+            child->slots[2] = SceneInfo->entitySlot + 3;
+            child->slots[3] = SceneInfo->entitySlot + 4;
+            child->slots[4] = SceneInfo->entitySlot + 5;
+            child->slots[5] = SceneInfo->entitySlot + 7;
+            child->bodyA    = RSDK.GetEntityByID(SceneInfo->entitySlot + 6);
+            child->bodyB    = RSDK.GetEntityByID(SceneInfo->entitySlot + 7);
+            child->radius   = 64;
 
             child = RSDK_GET_ENTITY(SceneInfo->entitySlot + 7, DDWrecker); // bodyB
-            RSDK.ResetEntityPtr(child, DDWrecker->objectID, intToVoid(DDWRECKER_MAIN_2));
+            RSDK.ResetEntityPtr(child, DDWrecker->objectID, intToVoid(DDWRECKER_BALL2));
             child->position.x = self->position.x;
             child->position.y = self->position.y;
             child->position.y += 0x400000;
-            child->slots[0]  = SceneInfo->entitySlot + 1;
-            child->slots[1]  = SceneInfo->entitySlot + 2;
-            child->slots[2]  = SceneInfo->entitySlot + 3;
-            child->slots[3]  = SceneInfo->entitySlot + 4;
-            child->slots[4]  = SceneInfo->entitySlot + 5;
-            child->slots[5]  = SceneInfo->entitySlot + 6;
-            child->bodyB     = RSDK_GET_ENTITY(SceneInfo->entitySlot + 7, DDWrecker);
-            child->bodyA     = RSDK_GET_ENTITY(SceneInfo->entitySlot + 6, DDWrecker);
-            child->arcOffset = 64;
+            child->slots[0] = SceneInfo->entitySlot + 1;
+            child->slots[1] = SceneInfo->entitySlot + 2;
+            child->slots[2] = SceneInfo->entitySlot + 3;
+            child->slots[3] = SceneInfo->entitySlot + 4;
+            child->slots[4] = SceneInfo->entitySlot + 5;
+            child->slots[5] = SceneInfo->entitySlot + 6;
+            child->bodyB    = RSDK_GET_ENTITY(SceneInfo->entitySlot + 7, DDWrecker);
+            child->bodyA    = RSDK_GET_ENTITY(SceneInfo->entitySlot + 6, DDWrecker);
+            child->radius   = 64;
 
             destroyEntity(self);
         }
@@ -223,39 +222,39 @@ void DDWrecker_State_Assemble(void)
     if (self->position.y > self->startPos.y && self->velocity.y > 0) {
         self->position.y = self->startPos.y;
         self->velocity.y = 0;
-        self->arcOffset  = 2048;
-        self->timer2     = 128;
-        self->state      = DDWrecker_State_Unknown2;
-        RSDK.PlaySfx(DDWrecker->sfxAssemble, 0, 255);
+        self->radius     = 2048;
+        self->spinTimer  = 128;
+        self->state      = DDWrecker_State_EnterWreckers;
+        RSDK.PlaySfx(DDWrecker->sfxAssemble, false, 255);
     }
 }
-void DDWrecker_State_Unknown2(void)
+
+void DDWrecker_State_EnterWreckers(void)
 {
     RSDK_THIS(DDWrecker);
-    self->angle3 = (self->angle3 + (self->timer2 >> 1)) & 0x3FF;
-    self->arcOffset += (64 - self->arcOffset) >> 4;
-    self->angle      = (uint8)(self->angle + 2);
-    self->position.y = ((RSDK.Sin256(self->angle) << 10) + self->startPos.y) & 0xFFFF0000;
+    self->spinAngle = (self->spinAngle + (self->spinTimer >> 1)) & 0x3FF;
+    self->radius += (64 - self->radius) >> 4;
+    self->position.y = BadnikHelpers_Oscillate(self->startPos.y, 2, 10);
     DDWrecker_Spin();
 
-    if (self->timer2 <= 0) {
+    if (self->spinTimer <= 0) {
         self->timer = 30;
-        self->state = DDWrecker_State_Unknown3;
+        self->state = DDWrecker_State_AttackDelay;
         foreach_active(DDWrecker, child)
         {
-            if (child->type == DDWRECKER_MAIN_1 || child->type == DDWRECKER_MAIN_2)
-                child->lateState = DDWrecker_LateState_Unknown1;
+            if (child->type == DDWRECKER_BALL1 || child->type == DDWRECKER_BALL2)
+                child->stateBall = DDWrecker_StateBall_Vulnerable;
         }
     }
     else {
-        self->timer2--;
+        self->spinTimer--;
     }
 }
-void DDWrecker_State_Unknown3(void)
+
+void DDWrecker_State_AttackDelay(void)
 {
     RSDK_THIS(DDWrecker);
-    self->angle      = (uint8)(self->angle + 2);
-    self->position.y = ((RSDK.Sin256(self->angle) << 10) + self->startPos.y) & 0xFFFF0000;
+    self->position.y = BadnikHelpers_Oscillate(self->startPos.y, 2, 10);
 
     DDWrecker_Spin();
     if (--self->timer < 1) {
@@ -267,9 +266,9 @@ void DDWrecker_State_Unknown3(void)
             entityA->startPos.y -= 0x400000;
             entityA->velocity.x = 0;
             entityA->angle      = self->angle;
-            entityA->angle3     = 0;
+            entityA->spinAngle  = 0;
             entityA->timer      = 4;
-            entityA->state      = DDWrecker_State_Unknown5;
+            entityA->state      = DDWrecker_State_SwingLeft;
         }
         else {
             entityB->startPos.x = self->startPos.x;
@@ -277,141 +276,142 @@ void DDWrecker_State_Unknown3(void)
             entityB->startPos.y -= 0x400000;
             entityA->velocity.x = 0;
             entityB->angle      = self->angle;
-            entityB->angle3     = 512;
+            entityB->spinAngle  = 512;
             entityB->timer      = 4;
-            entityB->state      = DDWrecker_State_Unknown4;
+            entityB->state      = DDWrecker_State_SwingRight;
         }
-        if (self->flag == 1) {
-            entityA->lateState = DDWrecker_LateState_Unknown1;
-            entityB->lateState = DDWrecker_LateState_Unknown2;
+        if (self->swapBalls) {
+            entityA->stateBall = DDWrecker_StateBall_Vulnerable;
+            entityB->stateBall = DDWrecker_StateBall_Spiked;
         }
         else {
-            entityA->lateState = DDWrecker_LateState_Unknown2;
-            entityB->lateState = DDWrecker_LateState_Unknown1;
+            entityA->stateBall = DDWrecker_StateBall_Spiked;
+            entityB->stateBall = DDWrecker_StateBall_Vulnerable;
         }
-        RSDK.PlaySfx(DDWrecker->sfxSharp, 0, 255);
+        RSDK.PlaySfx(DDWrecker->sfxSharp, false, 255);
         self->state = StateMachine_None;
     }
 }
-void DDWrecker_State_Unknown4(void)
+
+void DDWrecker_State_SwingRight(void)
 {
     RSDK_THIS(DDWrecker);
-    if (self->angle3 < 0x200) {
+    if (self->spinAngle < 0x200) {
         self->position.x += self->velocity.x;
         if (self->position.x < DDWrecker->camBoundL)
             self->position.x = DDWrecker->camBoundL;
     }
-    self->angle3 += 4;
-    self->angle3 &= 0x3FF;
-    self->angle      = (uint8)(self->angle + 2);
-    self->position.y = ((RSDK.Sin256(self->angle) << 10) + self->startPos.y) & 0xFFFF0000;
+    self->spinAngle += 4;
+    self->spinAngle &= 0x3FF;
+    self->position.y = BadnikHelpers_Oscillate(self->startPos.y, 2, 10);
 
-    DDWrecker_Spin2();
-    if (self->angle3 >= 768) {
+    DDWrecker_Swing();
+    if (self->spinAngle >= 768) {
         if (--self->timer <= 0) {
             EntityDDWrecker *child = RSDK_GET_ENTITY(self->slots[2], DDWrecker);
             child->velocity.x      = (child->startPos.x - child->position.x) >> 6;
             child->velocity.y      = (child->startPos.y - child->position.y) >> 6;
-            child->timer2          = -2;
-            child->angle3          = self->angle3;
+            child->spinTimer       = -2;
+            child->spinAngle       = self->spinAngle;
             child->angle           = 0;
             child->timer           = 64;
-            child->state           = DDWrecker_State_Unknown6;
+            child->state           = DDWrecker_State_SwingMoveToCenter;
             if (self == self->bodyB)
-                child->angle3 += 0x200;
+                child->spinAngle += 0x200;
             self->state = StateMachine_None;
 
             EntityDDWrecker *bodyA = self->bodyA;
             EntityDDWrecker *bodyB = self->bodyB;
-            bodyA->lateState       = DDWrecker_LateState_Unknown2;
-            bodyB->lateState       = DDWrecker_LateState_Unknown2;
-            RSDK.PlaySfx(DDWrecker->sfxSharp, 0, 255);
+            bodyA->stateBall       = DDWrecker_StateBall_Spiked;
+            bodyB->stateBall       = DDWrecker_StateBall_Spiked;
+            RSDK.PlaySfx(DDWrecker->sfxSharp, false, 255);
         }
         else {
             if (self->velocity.x)
-                self->velocity.x = DDWrecker->xVelocityUnknown[0];
+                self->velocity.x = DDWrecker->attackVelocities[0];
             else
-                self->velocity.x = DDWrecker->xVelocityUnknown[1];
+                self->velocity.x = DDWrecker->attackVelocities[1];
 
-            self->state = DDWrecker_State_Unknown5;
+            self->state = DDWrecker_State_SwingLeft;
             if (self->timer == 2) {
                 EntityDDWrecker *bodyA = self->bodyA;
                 EntityDDWrecker *bodyB = self->bodyB;
 
-                if (bodyA->lateState == DDWrecker_LateState_Unknown1)
-                    bodyA->lateState = DDWrecker_LateState_Unknown2;
+                if (bodyA->stateBall == DDWrecker_StateBall_Vulnerable)
+                    bodyA->stateBall = DDWrecker_StateBall_Spiked;
                 else
-                    bodyA->lateState = DDWrecker_LateState_Unknown1;
+                    bodyA->stateBall = DDWrecker_StateBall_Vulnerable;
 
-                if (bodyB->lateState == DDWrecker_LateState_Unknown1)
-                    bodyB->lateState = DDWrecker_LateState_Unknown2;
+                if (bodyB->stateBall == DDWrecker_StateBall_Vulnerable)
+                    bodyB->stateBall = DDWrecker_StateBall_Spiked;
                 else
-                    bodyB->lateState = DDWrecker_LateState_Unknown1;
+                    bodyB->stateBall = DDWrecker_StateBall_Vulnerable;
                 RSDK.PlaySfx(DDWrecker->sfxSharp, 0, 255);
             }
         }
     }
 }
-void DDWrecker_State_Unknown5(void)
+
+void DDWrecker_State_SwingLeft(void)
 {
     RSDK_THIS(DDWrecker);
-    if (self->angle3 > 511) {
+    if (self->spinAngle >= 0x200) {
         self->position.x += self->velocity.x;
         if (self->position.x > DDWrecker->camBoundR)
             self->position.x = DDWrecker->camBoundR;
     }
-    self->angle3 += 4;
-    self->angle3 &= 0x3FF;
-    self->angle      = (uint8)(self->angle + 2);
-    self->position.y = ((RSDK.Sin256(self->angle) << 10) + self->startPos.y) & 0xFFFF0000;
+    self->spinAngle += 4;
+    self->spinAngle &= 0x3FF;
+    self->position.y = BadnikHelpers_Oscillate(self->startPos.y, 2, 10);
 
-    DDWrecker_Spin2();
-    if (self->angle3 >= 256 && self->angle3 < 512) {
+    DDWrecker_Swing();
+    if (self->spinAngle >= 256 && self->spinAngle < 512) {
         if (--self->timer <= 0) {
             EntityDDWrecker *child = RSDK_GET_ENTITY(self->slots[2], DDWrecker);
             child->velocity.x      = (child->startPos.x - child->position.x) >> 6;
             child->velocity.y      = (child->startPos.y - child->position.y) >> 6;
-            child->timer2          = 2;
-            child->angle3          = self->angle3;
+            child->spinTimer       = 2;
+            child->spinAngle       = self->spinAngle;
             child->angle           = 0;
             child->timer           = 64;
-            child->state           = DDWrecker_State_Unknown6;
+            child->state           = DDWrecker_State_SwingMoveToCenter;
             if (self == self->bodyB)
-                child->angle3 += 512;
+                child->spinAngle += 512;
             self->state = StateMachine_None;
 
             EntityDDWrecker *bodyA = self->bodyA;
             EntityDDWrecker *bodyB = self->bodyB;
-            bodyA->lateState       = DDWrecker_LateState_Unknown2;
-            bodyB->lateState       = DDWrecker_LateState_Unknown2;
+            bodyA->stateBall       = DDWrecker_StateBall_Spiked;
+            bodyB->stateBall       = DDWrecker_StateBall_Spiked;
             RSDK.PlaySfx(DDWrecker->sfxSharp, 0, 255);
         }
         else {
             if (self->velocity.x)
-                self->velocity.x = -DDWrecker->xVelocityUnknown[0];
+                self->velocity.x = -DDWrecker->attackVelocities[0];
             else
-                self->velocity.x = -DDWrecker->xVelocityUnknown[1];
+                self->velocity.x = -DDWrecker->attackVelocities[1];
 
-            self->state = DDWrecker_State_Unknown4;
+            self->state = DDWrecker_State_SwingRight;
             if (self->timer == 2) {
                 EntityDDWrecker *bodyA = self->bodyA;
                 EntityDDWrecker *bodyB = self->bodyB;
 
-                if (bodyA->lateState == DDWrecker_LateState_Unknown1)
-                    bodyA->lateState = DDWrecker_LateState_Unknown2;
+                if (bodyA->stateBall == DDWrecker_StateBall_Vulnerable)
+                    bodyA->stateBall = DDWrecker_StateBall_Spiked;
                 else
-                    bodyA->lateState = DDWrecker_LateState_Unknown1;
+                    bodyA->stateBall = DDWrecker_StateBall_Vulnerable;
 
-                if (bodyB->lateState == DDWrecker_LateState_Unknown1)
-                    bodyB->lateState = DDWrecker_LateState_Unknown2;
+                if (bodyB->stateBall == DDWrecker_StateBall_Vulnerable)
+                    bodyB->stateBall = DDWrecker_StateBall_Spiked;
                 else
-                    bodyB->lateState = DDWrecker_LateState_Unknown1;
+                    bodyB->stateBall = DDWrecker_StateBall_Vulnerable;
                 RSDK.PlaySfx(DDWrecker->sfxSharp, 0, 255);
             }
         }
     }
 }
-void DDWrecker_State_Unknown6(void)
+
+void DDWrecker_State_SwingMoveToCenter(void)
 {
     RSDK_THIS(DDWrecker);
     self->position.x += self->velocity.x;
@@ -444,78 +444,73 @@ void DDWrecker_State_Unknown6(void)
     }
 
     if (!self->velocity.x && !self->velocity.y) {
-        self->angle += 2;
-        self->angle &= 0xFF;
-        self->position.y = ((RSDK.Sin256(self->angle) << 10) + self->startPos.y) & 0xFFFF0000;
+        self->position.y = BadnikHelpers_Oscillate(self->startPos.y, 2, 10);
     }
 
-    if (self->timer2 <= 0) {
-        if (self->timer2 > -141) {
-            self->timer2--;
+    if (self->spinTimer <= 0) {
+        if (self->spinTimer > -141) {
+            self->spinTimer--;
         }
         else {
-            self->state = DDWrecker_State_Unknown7;
-            RSDK.PlaySfx(DDWrecker->sfxAssemble, 0, 255);
+            self->state = DDWrecker_State_HandleSpinning;
+            RSDK.PlaySfx(DDWrecker->sfxAssemble, false, 255);
         }
     }
-    else if (self->timer2 >= 144) {
-        self->state = DDWrecker_State_Unknown7;
-        RSDK.PlaySfx(DDWrecker->sfxAssemble, 0, 255);
+    else if (self->spinTimer >= 144) {
+        self->state = DDWrecker_State_HandleSpinning;
+        RSDK.PlaySfx(DDWrecker->sfxAssemble, false, 255);
     }
     else {
-        self->timer2++;
+        self->spinTimer++;
     }
 
-    self->angle3 = (self->angle3 + (self->timer2 >> 2)) & 0x3FF;
+    self->spinAngle = (self->spinAngle + (self->spinTimer >> 2)) & 0x3FF;
     DDWrecker_Spin();
 }
-void DDWrecker_State_Unknown7(void)
+
+void DDWrecker_State_HandleSpinning(void)
 {
     RSDK_THIS(DDWrecker);
-    self->angle3 = (self->angle3 + (self->timer2 >> 2)) & 0x3FF;
-
-    self->angle += 2;
-    self->angle &= 0xFF;
-    self->position.y = ((RSDK.Sin256(self->angle) << 10) + self->startPos.y) & 0xFFFF0000;
+    self->spinAngle  = (self->spinAngle + (self->spinTimer >> 2)) & 0x3FF;
+    self->position.y = BadnikHelpers_Oscillate(self->startPos.y, 2, 10);
 
     DDWrecker_Spin();
     if (!--self->timer) {
-        self->state = DDWrecker_State_Unknown8;
+        self->state = DDWrecker_State_SwingSlowDown;
 
         EntityDDWrecker *bodyA = self->bodyA;
         EntityDDWrecker *bodyB = self->bodyB;
-        bodyA->lateState       = DDWrecker_LateState_Unknown1;
-        bodyB->lateState       = DDWrecker_LateState_Unknown1;
+        bodyA->stateBall       = DDWrecker_StateBall_Vulnerable;
+        bodyB->stateBall       = DDWrecker_StateBall_Vulnerable;
     }
 }
-void DDWrecker_State_Unknown8(void)
+
+void DDWrecker_State_SwingSlowDown(void)
 {
     RSDK_THIS(DDWrecker);
-    if (self->timer2 <= 0) {
-        if (self->timer2 < -8)
-            self->timer2++;
+    if (self->spinTimer <= 0) {
+        if (self->spinTimer < -8)
+            self->spinTimer++;
     }
     else {
-        if (self->timer2 > 8)
-            self->timer2--;
+        if (self->spinTimer > 8)
+            self->spinTimer--;
     }
-    self->angle3 = (self->angle3 + (self->timer2 >> 2)) & 0x3FF;
-
-    self->angle += 2;
-    self->angle &= 0xFF;
-    self->position.y = ((RSDK.Sin256(self->angle) << 10) + self->startPos.y) & 0xFFFF0000;
+    self->spinAngle  = (self->spinAngle + (self->spinTimer >> 2)) & 0x3FF;
+    self->position.y = BadnikHelpers_Oscillate(self->startPos.y, 2, 10);
 
     DDWrecker_Spin();
-    if (!(self->angle3 & 0x1FC)) {
-        if (abs(self->timer2) <= 8) {
-            self->timer2 = 0;
-            self->timer  = 30;
-            self->angle3 = (self->angle3 + 0x80) & 0x300;
-            self->state  = DDWrecker_State_Unknown3;
+    if (!(self->spinAngle & 0x1FC)) {
+        if (abs(self->spinTimer) <= 8) {
+            self->spinTimer = 0;
+            self->timer     = 30;
+            self->spinAngle = (self->spinAngle + 0x80) & 0x300;
+            self->state     = DDWrecker_State_AttackDelay;
         }
     }
 }
-void DDWrecker_State_Unknown9(void)
+
+void DDWrecker_State_PrepareBounceAttack(void)
 {
     RSDK_THIS(DDWrecker);
     self->velocity.y -= 0x800;
@@ -527,22 +522,20 @@ void DDWrecker_State_Unknown9(void)
         self->velocity.y = 0;
     }
 
-    self->angle += 2;
-    self->angle &= 0xFF;
-    self->position.y = ((RSDK.Sin256(self->angle) << 10) + self->startPos.y) & 0xFFFF0000;
+    self->position.y = BadnikHelpers_Oscillate(self->startPos.y, 2, 10);
 
-    self->timer4 = 8;
+    self->angleVel = 8;
     if (self->position.x <= DDWrecker->bossBoundL) {
         self->position.x = DDWrecker->bossBoundL;
         self->velocity.x = 0;
         if (self->startPos.y <= DDWrecker->bossBoundT)
-            self->state = DDWrecker_State_Unknown10;
+            self->state = DDWrecker_State_SignalBounceAttackStart;
     }
     else if (self->position.x >= DDWrecker->bossBoundR) {
         self->position.x = DDWrecker->bossBoundR;
         self->velocity.x = 0;
         if (self->startPos.y <= DDWrecker->bossBoundT)
-            self->state = DDWrecker_State_Unknown10;
+            self->state = DDWrecker_State_SignalBounceAttackStart;
     }
 
     if (self->rotation < 0) {
@@ -566,12 +559,11 @@ void DDWrecker_State_Unknown9(void)
             RSDK.SetSpriteAnimation(DDWrecker->aniFrames, 2, &self->animator, true, 0);
     }
 }
-void DDWrecker_State_Unknown10(void)
+
+void DDWrecker_State_SignalBounceAttackStart(void)
 {
     RSDK_THIS(DDWrecker);
-    self->angle += 2;
-    self->angle &= 0xFF;
-    self->position.y = ((RSDK.Sin256(self->angle) << 10) + self->startPos.y) & 0xFFFF0000;
+    self->position.y = BadnikHelpers_Oscillate(self->startPos.y, 2, 10);
 
     if (self->animator.animationID) {
         if (self->animator.animationID == 1) {
@@ -588,17 +580,18 @@ void DDWrecker_State_Unknown10(void)
     }
     else {
         RSDK.SetSpriteAnimation(DDWrecker->aniFrames, 1, &self->animator, true, 0);
-        RSDK.PlaySfx(DDWrecker->sfxSharp, 0, 255);
+        RSDK.PlaySfx(DDWrecker->sfxSharp, false, 255);
     }
 
     if (++self->timer == 30) {
         self->timer      = 0;
         self->velocity.y = -0x20000;
-        self->state      = DDWrecker_State_Unknown11;
-        RSDK.PlaySfx(DDWrecker->sfxDrop, 0, 255);
+        self->state      = DDWrecker_State_HandleBounceAttack;
+        RSDK.PlaySfx(DDWrecker->sfxDrop, false, 255);
     }
 }
-void DDWrecker_State_Unknown11(void)
+
+void DDWrecker_State_HandleBounceAttack(void)
 {
     RSDK_THIS(DDWrecker);
     self->position.x += self->velocity.x;
@@ -609,27 +602,28 @@ void DDWrecker_State_Unknown11(void)
         if (RSDK.ObjectTileCollision(self, Zone->fgLayers, 0, 0, 0, 0x180000, true)) {
             ++self->timer;
             Camera_ShakeScreen(0, 0, 3);
-            RSDK.PlaySfx(DDWrecker->sfxImpact, 0, 255);
+            RSDK.PlaySfx(DDWrecker->sfxImpact, false, 255);
             self->velocity.y = (self->velocity.y >> 3) - self->velocity.y;
-            if (self->timer - 1) {
-                if (!(self->timer - 3)) {
+            if (self->timer >= 2) {
+                if (self->timer == 3) {
                     self->velocity.y = 0;
                     self->timer      = 0;
                     self->startPos.y = self->position.y;
-                    self->timer4     = 8;
-                    self->state      = DDWrecker_State_Unknown12;
+                    self->angleVel   = 8;
+                    self->state      = DDWrecker_State_EndBounceAttack;
                 }
             }
             else {
                 if (self->position.x - (DDWrecker->bossBoundL + 0x100000) > 0)
-                    self->velocity.x = -DDWrecker->xVelocityUnknown[2];
+                    self->velocity.x = -DDWrecker->attackVelocities[2];
                 else
-                    self->velocity.x = DDWrecker->xVelocityUnknown[2];
+                    self->velocity.x = DDWrecker->attackVelocities[2];
             }
         }
     }
 }
-void DDWrecker_State_Unknown12(void)
+
+void DDWrecker_State_EndBounceAttack(void)
 {
     RSDK_THIS(DDWrecker);
     if (self->animator.animationID == 2) {
@@ -643,28 +637,29 @@ void DDWrecker_State_Unknown12(void)
 
     if (++self->timer == 30) {
         self->timer = 0;
-        self->state = DDWrecker_State_Unknown9;
+        self->state = DDWrecker_State_PrepareBounceAttack;
     }
 }
-void DDWrecker_LateState_Unknown1(void)
+
+void DDWrecker_StateBall_Vulnerable(void)
 {
     RSDK_THIS(DDWrecker);
     foreach_active(Player, player)
     {
-        if (!self->invincible && Player_CheckBadnikTouch(player, self, &self->hitbox) && Player_CheckBossHit(player, self)) {
+        if (!self->invincibilityTimer && Player_CheckBadnikTouch(player, self, &self->hitbox) && Player_CheckBossHit(player, self)) {
             DDWrecker_Hit();
-            RSDK.PlaySfx(DDWrecker->sfxBossHit, 0, 255);
+            RSDK.PlaySfx(DDWrecker->sfxBossHit, false, 255);
         }
     }
 
-    if (self->timer4 > 0) {
-        if (self->timer4 > 8)
-            self->timer4--;
+    if (self->angleVel > 0) {
+        if (self->angleVel > 8)
+            self->angleVel--;
 
-        self->angle2 += self->timer4;
-        if (self->angle2 > 1023) {
-            self->angle2 = 0;
-            self->timer4 = 0;
+        self->unknownAngle += self->angleVel;
+        if (self->unknownAngle >= 0x400) {
+            self->unknownAngle = 0;
+            self->angleVel     = 0;
         }
     }
 
@@ -680,12 +675,13 @@ void DDWrecker_LateState_Unknown1(void)
         self->blendAmount -= 16;
     }
 }
-void DDWrecker_LateState_Unknown2(void)
+
+void DDWrecker_StateBall_Spiked(void)
 {
     RSDK_THIS(DDWrecker);
     foreach_active(Player, player)
     {
-        if (!self->invincible && Player_CheckBadnikTouch(player, self, &self->hitbox)) {
+        if (!self->invincibilityTimer && Player_CheckBadnikTouch(player, self, &self->hitbox)) {
             if (player->invincibleTimer || player->blinkTimer > 0 || self->animator.animationID < 3) {
                 if (Player_CheckBossHit(player, self)) {
                     DDWrecker_Hit();
@@ -712,20 +708,21 @@ void DDWrecker_LateState_Unknown2(void)
         RSDK.SetSpriteAnimation(DDWrecker->aniFrames, 1, &self->animator, true, 0);
     }
 
-    if (self->timer4 < 48)
-        self->timer4 += 2;
+    if (self->angleVel < 48)
+        self->angleVel += 2;
 
-    self->angle2 = (self->angle2 + self->timer4) & 0x3FF;
+    self->unknownAngle = (self->unknownAngle + self->angleVel) & 0x3FF;
     if (self->blendAmount < 256) {
         self->blendAmount += 16;
     }
 }
-void DDWrecker_LateState_Unknown3(void)
+
+void DDWrecker_StateBall_Partnerless(void)
 {
     RSDK_THIS(DDWrecker);
     foreach_active(Player, player)
     {
-        if (!self->invincible && Player_CheckBadnikTouch(player, self, &self->hitbox)) {
+        if (!self->invincibilityTimer && Player_CheckBadnikTouch(player, self, &self->hitbox)) {
             if (player->invincibleTimer || player->blinkTimer > 0 || self->animator.animationID < 3) {
                 if (Player_CheckBossHit(player, self)) {
                     DDWrecker_Hit();
@@ -738,7 +735,7 @@ void DDWrecker_LateState_Unknown3(void)
         }
     }
 
-    self->angle2 = (self->angle2 + self->timer4) & 0x3FF;
+    self->unknownAngle = (self->unknownAngle + self->angleVel) & 0x3FF;
     if (self->animator.animationID == 0) {
         if (self->blendAmount > 0) {
             self->blendAmount -= 16;
@@ -753,19 +750,19 @@ void DDWrecker_Hit(void)
     RSDK_THIS(DDWrecker);
     if (--self->health <= 0) {
         self->state     = DDWrecker_State_Die;
-        self->lateState = StateMachine_None;
+        self->stateBall = StateMachine_None;
         self->timer     = 0;
         foreach_active(DDWrecker, child)
         {
             if (self != child) {
                 switch (child->type) {
-                    case DDWRECKER_MAIN_1:
-                    case DDWRECKER_MAIN_2:
-                        if (child->lateState) {
-                            child->state      = DDWrecker_State_Unknown12;
+                    case DDWRECKER_BALL1:
+                    case DDWRECKER_BALL2:
+                        if (child->stateBall) {
+                            child->state      = DDWrecker_State_EndBounceAttack;
                             child->startPos.y = child->position.y;
-                            child->velocity.x = -DDWrecker->xVelocityUnknown[2];
-                            child->lateState  = DDWrecker_LateState_Unknown3;
+                            child->velocity.x = -DDWrecker->attackVelocities[2];
+                            child->stateBall  = DDWrecker_StateBall_Partnerless;
                         }
                         break;
                     case DDWRECKER_CHAIN:
@@ -782,8 +779,8 @@ void DDWrecker_Hit(void)
         }
     }
     else {
-        self->invincible = 48;
-        RSDK.PlaySfx(DDWrecker->sfxBossHit, 0, 255);
+        self->invincibilityTimer = 48;
+        RSDK.PlaySfx(DDWrecker->sfxBossHit, false, 255);
     }
 }
 void DDWrecker_Spin(void)
@@ -791,8 +788,8 @@ void DDWrecker_Spin(void)
     RSDK_THIS(DDWrecker);
     for (int32 i = 0; i < 6; ++i) {
         EntityDDWrecker *child = RSDK_GET_ENTITY(self->slots[i], DDWrecker);
-        child->position.x      = DDWrecker->angleOffsets1[i] * RSDK.Sin1024(self->angle3) * self->arcOffset;
-        child->position.y      = DDWrecker->angleOffsets1[i] * RSDK.Cos1024(self->angle3) * self->arcOffset;
+        child->position.x      = DDWrecker->spinOffset[i] * RSDK.Sin1024(self->spinAngle) * self->radius;
+        child->position.y      = DDWrecker->spinOffset[i] * RSDK.Cos1024(self->spinAngle) * self->radius;
         child->position.x += self->position.x;
         child->position.y += self->position.y;
 
@@ -815,23 +812,23 @@ void DDWrecker_Spin(void)
         }
     }
 }
-void DDWrecker_Spin2(void)
+void DDWrecker_Swing(void)
 {
     RSDK_THIS(DDWrecker);
-    int32 angle        = RSDK.Sin1024(self->angle3) >> 2;
-    self->rotation = RSDK.Sin1024(-self->angle3) >> 6;
-    if (self->timer4 == 0)
-        self->angle2 = RSDK.Sin1024(-self->angle3) >> 5;
+    int32 angle    = RSDK.Sin1024(self->spinAngle) >> 2;
+    self->rotation = RSDK.Sin1024(-self->spinAngle) >> 6;
+    if (!self->angleVel)
+        self->unknownAngle = RSDK.Sin1024(-self->spinAngle) >> 5;
 
     EntityDDWrecker *child = NULL;
     for (int32 i = 0; i < 6; ++i) {
         child             = RSDK_GET_ENTITY(self->slots[i], DDWrecker);
-        child->position.x = DDWrecker->angleOffsets2[i] * RSDK.Sin1024(angle) * self->arcOffset;
-        child->position.y = DDWrecker->angleOffsets2[i] * RSDK.Cos1024(angle) * self->arcOffset;
+        child->position.x = DDWrecker->swingOffset[i] * RSDK.Sin1024(angle) * self->radius;
+        child->position.y = DDWrecker->swingOffset[i] * RSDK.Cos1024(angle) * self->radius;
         child->position.x += self->position.x;
         child->position.y += self->position.y;
     }
-    child->rotation = RSDK.Sin1024(-self->angle3) >> 5;
+    child->rotation = RSDK.Sin1024(-self->spinAngle) >> 5;
 }
 void DDWrecker_State_Debris(void)
 {
@@ -848,8 +845,8 @@ void DDWrecker_State_Die(void)
     if (!(Zone->timer % 3)) {
         RSDK.PlaySfx(DDWrecker->sfxExplosion, 0, 255);
         if (Zone->timer & 4) {
-            int x = self->position.x + (RSDK.Rand(-20, 20) << 16);
-            int y = self->position.y + (RSDK.Rand(-20, 20) << 16);
+            int x                      = self->position.x + (RSDK.Rand(-20, 20) << 16);
+            int y                      = self->position.y + (RSDK.Rand(-20, 20) << 16);
             EntityExplosion *explosion = CREATE_ENTITY(Explosion, intToVoid((RSDK.Rand(0, 256) > 192) + EXPLOSION_BOSS), x, y);
 
             explosion->drawOrder = Zone->drawOrderHigh;
@@ -864,9 +861,9 @@ void DDWrecker_State_Die(void)
         }
         else {
             Music_TransitionTrack(TRACK_STAGE, 0.0125);
-            self->timer               = 0;
-            self->visible             = false;
-            self->state               = DDWrecker_State_SpawnSignpost;
+            self->timer            = 0;
+            self->visible          = false;
+            self->state            = DDWrecker_State_SpawnSignpost;
             SceneInfo->timeEnabled = false;
             Player_GiveScore(RSDK_GET_ENTITY(SLOT_PLAYER1, Player), 1000);
         }
@@ -880,7 +877,7 @@ void DDWrecker_State_SpawnSignpost(void)
         {
             signPost->position.x = self->position.x;
             signPost->state      = SignPost_State_Fall;
-            RSDK.PlaySfx(SignPost->sfxTwinkle, 0, 255);
+            RSDK.PlaySfx(SignPost->sfxTwinkle, false, 255);
         }
         destroyEntity(self);
     }
@@ -900,10 +897,7 @@ void DDWrecker_EditorDraw(void)
     }
 }
 
-void DDWrecker_EditorLoad(void)
-{
-    DDWrecker->aniFrames = RSDK.LoadSpriteAnimation("GHZ/DDWrecker.bin", SCOPE_STAGE);
-}
+void DDWrecker_EditorLoad(void) { DDWrecker->aniFrames = RSDK.LoadSpriteAnimation("GHZ/DDWrecker.bin", SCOPE_STAGE); }
 #endif
 
 void DDWrecker_Serialize(void) {}

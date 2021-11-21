@@ -528,7 +528,27 @@ int PlayStream(const char *filename, uint32 slot, int startPos, uint32 loopPoint
         return -1;
 
     if (slot >= CHANNEL_COUNT) {
+        for (int c = 0; c < CHANNEL_COUNT && slot >= CHANNEL_COUNT; ++c) {
+            if (channels[c].soundID == -1 && channels[c].state != CHANNEL_STREAM_LOAD) {
+                slot = c;
+            }
+        }
+
+        // as a last resort, run through all channels
+        // pick the channel closest to being finished
+        if (slot >= CHANNEL_COUNT) {
+            uint len = 0xFFFFFFFF;
+            for (int c = 0; c < CHANNEL_COUNT; ++c) {
+                if (channels[c].sampleLength < len && channels[c].state != CHANNEL_STREAM_LOAD) {
+                    slot = c;
+                    len  = (uint)channels[c].sampleLength;
+                }
+            }
+        }
     }
+
+    if (slot >= CHANNEL_COUNT)
+        return -1;
 
     ChannelInfo *channel = &channels[slot];
     if (channel->state == CHANNEL_STREAM_LOAD)
@@ -597,8 +617,8 @@ void LoadSfx(char *filename, byte plays, byte scope)
             }
             else {
                 SDL_AudioSpec wav_spec;
-                uint wav_length;
-                byte *wav_buffer;
+                uint wav_length = 0;
+                byte *wav_buffer = NULL;
                 SDL_AudioSpec *wav = SDL_LoadWAV_RW(src, 0, &wav_spec, &wav_buffer, &wav_length);
 
                 SDL_RWclose(src);

@@ -63,11 +63,11 @@ extern SpriteAnimation spriteAnimationList[SPRFILE_COUNT];
 uint16 LoadSpriteAnimation(const char *filename, Scopes scope);
 uint16 CreateSpriteAnimation(const char *filename, uint32 frameCount, uint32 animCount, Scopes scope);
 
-inline uint16 GetSpriteAnimation(uint16 sprIndex, const char *name)
+inline uint16 GetSpriteAnimation(uint16 aniFrames, const char *name)
 {
-    if (sprIndex >= SPRFILE_COUNT)
+    if (aniFrames >= SPRFILE_COUNT)
         return 0;
-    SpriteAnimation *spr = &spriteAnimationList[sprIndex];
+    SpriteAnimation *spr = &spriteAnimationList[aniFrames];
 
     RETRO_HASH(hash);
     GEN_HASH(name, hash);
@@ -80,11 +80,11 @@ inline uint16 GetSpriteAnimation(uint16 sprIndex, const char *name)
     return -1;
 }
 
-inline SpriteFrame *GetFrame(ushort sprIndex, uint16 anim, int32 frame)
+inline SpriteFrame *GetFrame(ushort aniFrames, uint16 anim, int32 frame)
 {
-    if (sprIndex >= SPRFILE_COUNT)
+    if (aniFrames >= SPRFILE_COUNT)
         return NULL;
-    SpriteAnimation *spr = &spriteAnimationList[sprIndex];
+    SpriteAnimation *spr = &spriteAnimationList[aniFrames];
     if (anim >= spr->animCount)
         return NULL;
     return &spr->frames[frame + spr->animations[anim].frameListOffset];
@@ -108,16 +108,16 @@ inline int16 GetFrameID(Animator *animator)
 
 void ProcessAnimation(Animator *animator);
 
-inline void SetSpriteAnimation(uint16 spriteIndex, uint16 animationID, Animator *animator, bool32 forceApply, int16 frameID)
+inline void SetSpriteAnimation(uint16 aniFrames, uint16 animationID, Animator *animator, bool32 forceApply, int16 frameID)
 {
-    if (spriteIndex >= SPRFILE_COUNT) {
+    if (aniFrames >= SPRFILE_COUNT) {
         if (animator)
             animator->framePtrs = NULL;
         return;
     }
     if (!animator)
         return;
-    SpriteAnimation *spr = &spriteAnimationList[spriteIndex];
+    SpriteAnimation *spr = &spriteAnimationList[aniFrames];
     if (animationID >= spr->animCount)
         return;
 
@@ -138,11 +138,11 @@ inline void SetSpriteAnimation(uint16 spriteIndex, uint16 animationID, Animator 
     animator->animationID     = animationID;
 }
 
-inline void EditSpriteAnimation(uint16 spriteIndex, uint16 animID, const char *name, int32 frameOffset, uint16 frameCount, int16 animSpeed,
+inline void EditSpriteAnimation(uint16 aniFrames, uint16 animID, const char *name, int32 frameOffset, uint16 frameCount, int16 animSpeed,
                                 uint8 loopIndex, uint8 rotationFlag)
 {
-    if (spriteIndex < SPRFILE_COUNT) {
-        SpriteAnimation *spr = &spriteAnimationList[spriteIndex];
+    if (aniFrames < SPRFILE_COUNT) {
+        SpriteAnimation *spr = &spriteAnimationList[aniFrames];
         if (animID < spr->animCount) {
             SpriteAnimationEntry *anim = &spr->animations[animID];
             GEN_HASH(name, anim->hash);
@@ -155,7 +155,7 @@ inline void EditSpriteAnimation(uint16 spriteIndex, uint16 animID, const char *n
     }
 }
 
-int32 GetStringWidth(uint16 sprIndex, uint16 animID, TextInfo *info, int32 startIndex, int32 length, int32 spacing);
-void SetSpriteString(uint16 spriteIndex, uint16 animID, TextInfo *info);
+int32 GetStringWidth(uint16 aniFrames, uint16 animID, TextInfo *info, int32 startIndex, int32 length, int32 spacing);
+void SetSpriteString(uint16 aniFrames, uint16 animID, TextInfo *info);
 
 #endif

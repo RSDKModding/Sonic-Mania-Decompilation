@@ -91,7 +91,7 @@ void UIUsernamePopup_Unknown4(void)
         }
         else {
             self->drawFlag = true;
-            MathHelpers_Lerp1(&self->posUnknown, 32 * clampVal(self->timer - self->timeOut, 0, 8), -self->dword6C, self->dword6C, 0, 0);
+            MathHelpers_Lerp(&self->posUnknown, 32 * clampVal(self->timer - self->timeOut, 0, 8), -self->dword6C, self->dword6C, 0, 0);
             ++self->timer;
         }
     }
