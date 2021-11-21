@@ -32,7 +32,7 @@ void WaterfallSound_Create(void *data)
         self->updateRange.x = TILE_SIZE * self->size.x;
         self->updateRange.y = TILE_SIZE * self->size.y;
         self->visible       = true;
-        self->active        = ACTIVE_BOUNDS;
+        self->active        = ACTIVE_NEVER;
         self->sfxPos.x      = 0;
         self->sfxPos.y      = 0;
         self->drawOrder     = Zone->drawOrderHigh;
