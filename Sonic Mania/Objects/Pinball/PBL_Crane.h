@@ -29,7 +29,7 @@ typedef struct {
     int32 field_6C;
     int32 field_70;
     Entity *parent;
-    Entity *field_78;
+    Entity *cameraTarget;
     Animator animator1;
     Animator animator2;
     Animator animator3;

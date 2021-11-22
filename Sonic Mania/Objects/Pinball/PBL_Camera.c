@@ -28,10 +28,10 @@ void PBL_Camera_Create(void *data)
     self->worldY     = 0x100 << 16;
     self->rotationY  = -0x60;
     self->position.y = self->dword68 + (0x700 << 16);
-    self->dword6C    = 0x100 << 16;
-    self->dword70    = 0x700 << 16;
-    self->dword74    = 0x100 << 16;
-    self->dword78    = 0x700 << 16;
+    self->curCamBoundaryT = 0x100 << 16;
+    self->curCamBoundaryB = 0x700 << 16;
+    self->newCamBoundaryT = 0x100 << 16;
+    self->newCamBoundaryB = 0x700 << 16;
 }
 
 void PBL_Camera_StageLoad(void)
@@ -40,7 +40,7 @@ void PBL_Camera_StageLoad(void)
     RSDK.ClearCameras();
     EntityPBL_Camera *entity = RSDK_GET_ENTITY(SLOT_PBL_CAMERA, PBL_Camera);
     RSDK.AddCamera(&entity->targetPos, 0x100 << 16, 0x100 << 16, true);
-    PBL_Camera->flag = false;
+    PBL_Camera->useAltMatNormal = false;
 }
 
 void PBL_Camera_Unknown1(void)
@@ -50,7 +50,7 @@ void PBL_Camera_Unknown1(void)
     if (angle < 0x3C0000)
         angle = 0x3C0000;
 
-    int32 ang  = self->angle - self->field_7C;
+    int32 ang  = self->angle - self->prevAngle;
     int32 ang2 = ang - 0x400;
     if (self->angle <= 512)
         ang2 = ang + 0x400;
@@ -62,8 +62,8 @@ void PBL_Camera_Unknown1(void)
 
     int32 height               = ((RSDK.Sin1024(-self->rotationY) << 12) << 8) / angle;
     ScreenInfo->position.y = height - ScreenInfo->centerY + 512;
-    self->field_7C         = self->angle;
-    self->field_80         = clampVal(ScreenInfo->centerY - height + 8, -64, ScreenInfo->height);
+    self->prevAngle         = self->angle;
+    self->centerY         = clampVal(ScreenInfo->centerY - height + 8, -64, ScreenInfo->height);
 }
 
 void PBL_Camera_Unknown2(void)
@@ -78,27 +78,29 @@ void PBL_Camera_Unknown2(void)
             self->position.y += minVal(target->position.y - self->position.y + 0xF00000, 0x100000);
         }
 
-        if (self->position.y < self->dword6C + 0x2000000)
-            self->position.y = self->dword6C + 0x2000000;
-        if (self->dword6C != self->dword74) {
-            self->dword6C += clampVal(self->dword74 - self->dword6C, -0x100000, 0x100000);
+        if (self->position.y < self->curCamBoundaryT + 0x2000000)
+            self->position.y = self->curCamBoundaryT + 0x2000000;
+        if (self->curCamBoundaryT != self->newCamBoundaryT) {
+            self->curCamBoundaryT += clampVal(self->newCamBoundaryT - self->curCamBoundaryT, -0x100000, 0x100000);
         }
 
-        if (self->position.y > self->dword70 + 0x900000)
-            self->position.y = self->dword70 + 0x900000;
+        if (self->position.y > self->curCamBoundaryB + 0x900000)
+            self->position.y = self->curCamBoundaryB + 0x900000;
 
-        if (self->dword70 != self->dword78) {
-            self->dword70 += clampVal(self->dword78 - self->dword70, -0x100000, 0x100000);
+        if (self->curCamBoundaryB != self->newCamBoundaryB) {
+            self->curCamBoundaryB += clampVal(self->newCamBoundaryB - self->curCamBoundaryB, -0x100000, 0x100000);
         }
     }
-    RSDK.MatrixTranslateXYZ(&self->matrix, -self->position.x, -self->worldY, -self->position.y, true);
-    RSDK.MatrixRotateXYZ(&PBL_Camera->matrix2, self->rotationY, self->angle, 0);
-    RSDK.MatrixMultiply(&PBL_Camera->matrix1, &self->matrix, &PBL_Camera->matrix2);
-    RSDK.MatrixScaleXYZ(&self->matrix, -0x100, 0x100, 0x100);
-    RSDK.MatrixMultiply(&PBL_Camera->matrix2, &PBL_Camera->matrix2, &self->matrix);
-    RSDK.MatrixRotateXYZ(&PBL_Camera->matrix3, self->rotationY + 8 * PBL_Setup->timer, self->angle, 0);
-    RSDK.MatrixMultiply(&PBL_Camera->matrix3, &PBL_Camera->matrix3, &self->matrix);
-    RSDK.MatrixMultiply(&PBL_Camera->matrix1, &PBL_Camera->matrix1, &self->matrix);
+    RSDK.MatrixTranslateXYZ(&self->matTransform, -self->position.x, -self->worldY, -self->position.y, true);
+    RSDK.MatrixRotateXYZ(&PBL_Camera->matNormalItem, self->rotationY, self->angle, 0);
+    RSDK.MatrixMultiply(&PBL_Camera->matWorld, &self->matTransform, &PBL_Camera->matNormalItem);
+
+    RSDK.MatrixScaleXYZ(&self->matTransform, -0x100, 0x100, 0x100);
+    RSDK.MatrixMultiply(&PBL_Camera->matNormalItem, &PBL_Camera->matNormalItem, &self->matTransform);
+
+    RSDK.MatrixRotateXYZ(&PBL_Camera->matNormal, self->rotationY + 8 * PBL_Setup->timer, self->angle, 0);
+    RSDK.MatrixMultiply(&PBL_Camera->matNormal, &PBL_Camera->matNormal, &self->matTransform);
+    RSDK.MatrixMultiply(&PBL_Camera->matWorld, &PBL_Camera->matWorld, &self->matTransform);
 }
 
 #if RETRO_INCLUDE_EDITOR

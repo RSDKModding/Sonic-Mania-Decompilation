@@ -7,8 +7,8 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    int32 field_4;
-    int32 field_8;
+    int32 unused1;
+    int32 unused2;
     uint16 aniFrames;
     uint16 sfxRing;
 } ObjectPBL_Ring;
@@ -17,9 +17,9 @@ typedef struct {
 typedef struct {
     RSDK_ENTITY
     StateMachine(state);
-    int32 field_5C;
+    int32 unused1;
     int32 height;
-    int32 field_64;
+    int32 unused2;
     int32 worldX;
     int32 worldY;
     Animator animator;

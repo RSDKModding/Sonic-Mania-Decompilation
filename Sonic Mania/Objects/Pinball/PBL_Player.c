@@ -12,16 +12,16 @@ void PBL_Player_Update(void)
     self->angleX   = ((uint16)self->angleX - (uint16)((abs(self->velocity.y) + abs(self->velocity.x)) >> 12)) & 0x3FF;
     self->rotation = 4 * RSDK.ATan2(-self->velocity.y, self->velocity.x);
     if (!(self->angleX & 0x100))
-        self->animator.animationID = PBL_Player->jumpModel;
+        self->animator.animationID = PBL_Player->jumpFrames;
     else
-        self->animator.animationID = PBL_Player->ballModel;
+        self->animator.animationID = PBL_Player->ballFrames;
     RSDK.ProcessAnimation(&self->animator);
 }
 
 void PBL_Player_LateUpdate(void)
 {
     RSDK_THIS(PBL_Player);
-    Matrix *mat = &PBL_Camera->matrix1;
+    Matrix *mat = &PBL_Camera->matWorld;
 
     
     self->depth3D = mat->values[2][3] + mat->values[2][0] * (self->position.x >> 0x10) + mat->values[2][2] * (self->position.y >> 0x10)
@@ -40,8 +40,8 @@ void PBL_Player_Draw(void)
         RSDK.MatrixRotateY(&self->matrix3, self->rotation);
         RSDK.MatrixMultiply(&self->matrix4, &self->matrix1, &self->matrix3);
         RSDK.MatrixMultiply(&self->matrix3, &self->matrix4, &self->matrix2);
-        RSDK.MatrixMultiply(&self->matrix3, &self->matrix3, &PBL_Camera->matrix1);
-        RSDK.MatrixMultiply(&self->matrix4, &self->matrix4, &PBL_Camera->matrix2);
+        RSDK.MatrixMultiply(&self->matrix3, &self->matrix3, &PBL_Camera->matWorld);
+        RSDK.MatrixMultiply(&self->matrix4, &self->matrix4, &PBL_Camera->matNormalItem);
         RSDK.AddModelTo3DScene(self->animator.animationID, PBL_Player->sceneIndex, S3D_FLATCLR_SHADED_BLENDED_SCREEN, &self->matrix3,
                                &self->matrix4, 0xFFFFFF);
         RSDK.Draw3DScene(PBL_Player->sceneIndex);
@@ -63,7 +63,7 @@ void PBL_Player_Create(void *data)
         self->onGround        = false;
         self->tileCollisions  = true;
         self->collisionLayers = 1 << PBL_Setup->tableHigh;
-        RSDK.SetModelAnimation(PBL_Player->jumpModel, &self->animator, 128, 0, true, 0);
+        RSDK.SetModelAnimation(PBL_Player->jumpFrames, &self->animator, 128, 0, true, 0);
 
         foreach_all(PBL_Camera, camera) { camera->targetPtr = (Entity *)self; }
     }
@@ -78,40 +78,40 @@ void PBL_Player_StageLoad(void)
 
     switch (globals->playerID & 0xFF) {
         case ID_TAILS:
-            PBL_Player->jumpModel       = RSDK.LoadMesh("Special/TailsJump.bin", SCOPE_STAGE);
-            PBL_Player->ballModel       = RSDK.LoadMesh("Special/TailsBall.bin", SCOPE_STAGE);
+            PBL_Player->jumpFrames       = RSDK.LoadMesh("Special/TailsJump.bin", SCOPE_STAGE);
+            PBL_Player->ballFrames       = RSDK.LoadMesh("Special/TailsBall.bin", SCOPE_STAGE);
             PBL_Player->outerBox.top    = -10;
             PBL_Player->outerBox.bottom = 10;
             PBL_Player->innerBox.top    = -10;
             PBL_Player->innerBox.bottom = 10;
             break;
         case ID_KNUCKLES:
-            PBL_Player->jumpModel       = RSDK.LoadMesh("Special/KnuxJump.bin", SCOPE_STAGE);
-            PBL_Player->ballModel       = RSDK.LoadMesh("Special/KnuxBall.bin", SCOPE_STAGE);
+            PBL_Player->jumpFrames       = RSDK.LoadMesh("Special/KnuxJump.bin", SCOPE_STAGE);
+            PBL_Player->ballFrames       = RSDK.LoadMesh("Special/KnuxBall.bin", SCOPE_STAGE);
             PBL_Player->outerBox.top    = -12;
             PBL_Player->outerBox.bottom = 12;
             PBL_Player->innerBox.top    = -12;
             PBL_Player->innerBox.bottom = 12;
             break;
         case ID_MIGHTY:
-            PBL_Player->jumpModel       = RSDK.LoadMesh("Special/MightyJump.bin", SCOPE_STAGE);
-            PBL_Player->ballModel       = RSDK.LoadMesh("Special/MightyBall.bin", SCOPE_STAGE);
+            PBL_Player->jumpFrames       = RSDK.LoadMesh("Special/MightyJump.bin", SCOPE_STAGE);
+            PBL_Player->ballFrames       = RSDK.LoadMesh("Special/MightyBall.bin", SCOPE_STAGE);
             PBL_Player->outerBox.top    = -12;
             PBL_Player->outerBox.bottom = 12;
             PBL_Player->innerBox.top    = -12;
             PBL_Player->innerBox.bottom = 12;
             break;
         case ID_RAY:
-            PBL_Player->jumpModel       = RSDK.LoadMesh("Special/RayJump.bin", SCOPE_STAGE);
-            PBL_Player->ballModel       = RSDK.LoadMesh("Special/RayBall.bin", SCOPE_STAGE);
+            PBL_Player->jumpFrames       = RSDK.LoadMesh("Special/RayJump.bin", SCOPE_STAGE);
+            PBL_Player->ballFrames       = RSDK.LoadMesh("Special/RayBall.bin", SCOPE_STAGE);
             PBL_Player->outerBox.top    = -10;
             PBL_Player->outerBox.bottom = 10;
             PBL_Player->innerBox.top    = -10;
             PBL_Player->innerBox.bottom = 10;
             break;
         default:
-            PBL_Player->jumpModel       = RSDK.LoadMesh("Special/SonicJump.bin", SCOPE_STAGE);
-            PBL_Player->ballModel       = RSDK.LoadMesh("Special/SonicBall.bin", SCOPE_STAGE);
+            PBL_Player->jumpFrames       = RSDK.LoadMesh("Special/SonicJump.bin", SCOPE_STAGE);
+            PBL_Player->ballFrames       = RSDK.LoadMesh("Special/SonicBall.bin", SCOPE_STAGE);
             PBL_Player->outerBox.top    = -12;
             PBL_Player->outerBox.bottom = 12;
             PBL_Player->innerBox.top    = -12;
@@ -232,7 +232,7 @@ void PBL_Player_State_Launcher(void)
         self->collisionPlane = 1;
         self->onGround       = false;
         self->state          = PBL_Player_State_Air;
-        RSDK.PlaySfx(PBL_Player->sfxPlunger, 0, 255);
+        RSDK.PlaySfx(PBL_Player->sfxPlunger, false, 255);
     }
 }
 
@@ -287,9 +287,14 @@ void PBL_Player_State_Air(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void PBL_Player_EditorDraw(void) {}
+void PBL_Player_EditorDraw(void)
+{
+    RSDK_THIS(PBL_Player);
+    RSDK.SetSpriteAnimation(PBL_Player->aniFrames, 0, &self->animator, true, 7);
+    RSDK.DrawSprite(&self->animator, NULL, false);
+}
 
-void PBL_Player_EditorLoad(void) {}
+void PBL_Player_EditorLoad(void) { PBL_Player->aniFrames = RSDK.LoadSpriteAnimation("Editor/PlayerIcons.bin", SCOPE_STAGE); }
 #endif
 
 void PBL_Player_Serialize(void) {}

@@ -16,7 +16,7 @@ void PBL_Ring_LateUpdate(void)
     int32 y = self->height >> 8;
     int32 z = self->position.y >> 8;
 
-    Matrix *mat = &PBL_Camera->matrix1;
+    Matrix *mat = &PBL_Camera->matWorld;
 
     self->worldX = mat->values[0][3] + (y * mat->values[0][1] >> 8) + (z * mat->values[0][2] >> 8) + (x * mat->values[0][0] >> 8);
     self->worldY = mat->values[1][3] + (y * mat->values[1][1] >> 8) + (z * mat->values[1][2] >> 8) + (x * mat->values[1][0] >> 8);
@@ -37,7 +37,7 @@ void PBL_Ring_Draw(void)
         self->scale.x   = 0x1000000 / self->depth3D;
         self->scale.y   = 0x1000000 / self->depth3D;
         if (self->state == PBL_Ring_State_Ring)
-            self->animator.frameID = PBL_Setup->timer2;
+            self->animator.frameID = PBL_Setup->ringFrame;
         RSDK.DrawSprite(&self->animator, &drawPos, true);
     }
 }
@@ -115,8 +115,8 @@ void PBL_Ring_State_RingSparkle(void)
 void PBL_Ring_EditorDraw(void)
 {
     RSDK_THIS(PBL_Ring);
-    RSDK.SetSpriteAnimation(PBL_Ring->aniFrames, 1, &self->animator, true, 0);
-    RSDK.DrawSprite(&self->animator, NULL, true);
+    RSDK.SetSpriteAnimation(PBL_Ring->aniFrames, 0, &self->animator, true, 0);
+    RSDK.DrawSprite(&self->animator, NULL, false);
 }
 
 void PBL_Ring_EditorLoad(void) { PBL_Ring->aniFrames = RSDK.LoadSpriteAnimation("Global/Ring.bin", SCOPE_STAGE); }

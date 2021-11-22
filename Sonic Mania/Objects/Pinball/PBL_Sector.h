@@ -7,7 +7,7 @@
 // Object Class
 typedef struct {
     RSDK_OBJECT
-    uint16 field_4;
+    uint16 aniFrames;
 } ObjectPBL_Sector;
 
 // Entity Class
@@ -16,7 +16,7 @@ typedef struct {
     Vector2 size;
     uint8 craneID;
     int32 timer;
-    bool32 flag;
+    bool32 playerEntered;
     Animator animator;
 } EntityPBL_Sector;
 

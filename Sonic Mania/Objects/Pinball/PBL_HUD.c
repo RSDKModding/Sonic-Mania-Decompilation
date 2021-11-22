@@ -21,8 +21,8 @@ void PBL_HUD_Draw(void)
         StateMachine_Run(self->stateDraw);
     }
     else {
-        RSDK.DrawSprite(&self->animator1, NULL, true);
-        RSDK.DrawSprite(&self->animator2, NULL, true);
+        RSDK.DrawSprite(&self->displayAnimator, NULL, true);
+        RSDK.DrawSprite(&self->baseAnimator, NULL, true);
     }
 }
 
@@ -36,83 +36,83 @@ void PBL_HUD_Create(void *data)
         self->position.y = 0;
         self->scale.x    = 0x200;
         self->scale.y    = 0x200;
-        RSDK.SetSpriteAnimation(PBL_HUD->aniFrames, 0, &self->animator1, true, 0);
-        RSDK.SetSpriteAnimation(PBL_HUD->aniFrames, 0, &self->animator2, true, 1);
-        RSDK.SetSpriteAnimation(PBL_HUD->aniFrames, 1, &self->animator3, true, 0);
+        RSDK.SetSpriteAnimation(PBL_HUD->aniFrames, 0, &self->displayAnimator, true, 0);
+        RSDK.SetSpriteAnimation(PBL_HUD->aniFrames, 0, &self->baseAnimator, true, 1);
+        RSDK.SetSpriteAnimation(PBL_HUD->aniFrames, 1, &self->textAnimator, true, 0);
         RSDK.SetText(&self->text, "", 64);
 
         if (globals->gameMode == MODE_ENCORE)
-            PBL_HUD_DisplayMessage(self, "BONUS STAGE! RESCUE YOUR BUDDIES!", 1);
+            PBL_HUD_DisplayMessage(self, "BONUS STAGE! RESCUE YOUR BUDDIES!", PBL_HUD_MSG_SCROLL_LEFT);
         else
-            PBL_HUD_DisplayMessage(self, "BONUS STAGE!", 1);
+            PBL_HUD_DisplayMessage(self, "BONUS STAGE!", PBL_HUD_MSG_SCROLL_LEFT);
     }
 }
 
 void PBL_HUD_StageLoad(void) { PBL_HUD->aniFrames = RSDK.LoadSpriteAnimation("Pinball/Backglass.bin", SCOPE_STAGE); }
 
-void PBL_HUD_DisplayMessage(EntityPBL_HUD *self, const char *message, int32 type)
+void PBL_HUD_DisplayMessage(EntityPBL_HUD *entity, const char *message, int32 type)
 {
-    if (self->state != PBL_HUD_State_Message7 && self->state != PBL_HUD_Unknown12 && self->state != PBL_HUD_Unknown13) {
-        RSDK.PrependText(&self->text, message);
-        RSDK.SetSpriteString(PBL_HUD->aniFrames, 1, &self->text);
-        self->stateDraw = PBL_HUD_StateDraw_Unknown2;
+    if (entity->state != PBL_HUD_StateMessage_FlashThenCrane && entity->state != PBL_HUD_State_RevealCrane && entity->state != PBL_HUD_State_HideCrane) {
+        RSDK.PrependText(&entity->text, message);
+        RSDK.SetSpriteString(PBL_HUD->aniFrames, 1, &entity->text);
+        entity->stateDraw = PBL_HUD_Draw_Message;
         switch (type) {
-            case 0:
-                self->offset.x = 0x410000;
-                self->state    = PBL_HUD_State_Message0;
-                self->timer    = 12 * self->text.textLength + 128;
+            case PBL_HUD_MSG_SCROLL_LEFT_SLOW:
+                entity->offset.x = 0x410000;
+                entity->state    = PBL_HUD_StateMessage_ScrollLeftSlow;
+                entity->timer    = 12 * entity->text.textLength + 128;
                 break;
-            case 1:
-                self->offset.x = 0x410000;
-                self->state    = PBL_HUD_State_Message1;
-                self->timer    = 6 * self->text.textLength + 64;
+            case PBL_HUD_MSG_SCROLL_LEFT:
+                entity->offset.x = 0x410000;
+                entity->state    = PBL_HUD_StateMessage_ScrollLeftFast;
+                entity->timer    = 6 * entity->text.textLength + 64;
                 break;
-            case 2:
-                self->state    = PBL_HUD_State_Message2;
-                self->timer    = 12 * self->text.textLength + 128;
-                self->offset.x = -0x410000 - 0xC0000 * self->text.textLength;
+            case PBL_HUD_MSG_SCROLL_RIGHT_SLOW:
+                entity->state    = PBL_HUD_StateMessage_ScrollRightSlow;
+                entity->timer    = 12 * entity->text.textLength + 128;
+                entity->offset.x = -0x410000 - 0xC0000 * entity->text.textLength;
                 break;
-            case 3:
-                self->state    = PBL_HUD_State_Message3;
-                self->timer    = 6 * self->text.textLength + 64;
-                self->offset.x = -0x410000 - 0xC0000 * self->text.textLength;
+            case PBL_HUD_MSG_SCROLL_RIGHT:
+                entity->state    = PBL_HUD_StateMessage_ScrollRightFast;
+                entity->timer    = 6 * entity->text.textLength + 64;
+                entity->offset.x = -0x410000 - 0xC0000 * entity->text.textLength;
                 break;
-            case 4:
-                self->offset.y   = 0x120000;
-                self->timer      = -9;
-                self->velocity.y = -0x20000;
-                self->state      = PBL_HUD_State_Message4;
-                self->offset.x   = -0x60000 * self->text.textLength;
+            case PBL_HUD_MSG_SHOW_RISE:
+                entity->offset.y   = 0x120000;
+                entity->timer      = -9;
+                entity->velocity.y = -0x20000;
+                entity->state      = PBL_HUD_StateMessage_ShowMove;
+                entity->offset.x   = -0x60000 * entity->text.textLength;
                 break;
-            case 5:
-                self->offset.y   = -0x120000;
-                self->timer      = -9;
-                self->velocity.y = 0x20000;
-                self->state      = PBL_HUD_State_Message4;
-                self->offset.x   = -0x60000 * self->text.textLength;
+            case PBL_HUD_MSG_SHOW_FALL:
+                entity->offset.y   = -0x120000;
+                entity->timer      = -9;
+                entity->velocity.y = 0x20000;
+                entity->state      = PBL_HUD_StateMessage_ShowMove;
+                entity->offset.x   = -0x60000 * entity->text.textLength;
                 break;
-            case 6:
-                self->state    = PBL_HUD_State_Message6;
-                self->timer    = 60;
-                self->offset.x = -0x60000 * self->text.textLength;
+            case PBL_HUD_MSG_FLASH:
+                entity->state    = PBL_HUD_StateMessage_Flash;
+                entity->timer    = 60;
+                entity->offset.x = -0x60000 * entity->text.textLength;
                 break;
-            case 7:
-                self->state    = PBL_HUD_State_Message7;
-                self->timer    = 60;
-                self->offset.x = -0x60000 * self->text.textLength;
+            case PBL_HUD_MSG_FLASH_CRANE:
+                entity->state    = PBL_HUD_StateMessage_FlashThenCrane;
+                entity->timer    = 60;
+                entity->offset.x = -0x60000 * entity->text.textLength;
                 break;
             default: break;
         }
     }
 }
 
-void PBL_HUD_State_Message0(void)
+void PBL_HUD_StateMessage_ScrollLeftSlow(void)
 {
     RSDK_THIS(PBL_HUD);
 
     if (self->timer <= 0) {
         self->state     = StateMachine_None;
-        self->stateDraw = PBL_HUD_StateDraw_Unknown3;
+        self->stateDraw = PBL_HUD_Draw_Score;
     }
     else {
         self->timer--;
@@ -121,26 +121,26 @@ void PBL_HUD_State_Message0(void)
     }
 }
 
-void PBL_HUD_State_Message1(void)
+void PBL_HUD_StateMessage_ScrollLeftFast(void)
 {
     RSDK_THIS(PBL_HUD);
 
     if (self->timer <= 0) {
         self->state     = StateMachine_None;
-        self->stateDraw = PBL_HUD_StateDraw_Unknown3;
+        self->stateDraw = PBL_HUD_Draw_Score;
     }
     else {
         self->offset.x -= 0x20000;
         self->timer--;
     }
 }
-void PBL_HUD_State_Message2(void)
+void PBL_HUD_StateMessage_ScrollRightSlow(void)
 {
     RSDK_THIS(PBL_HUD);
 
     if (self->timer <= 0) {
         self->state     = StateMachine_None;
-        self->stateDraw = PBL_HUD_StateDraw_Unknown3;
+        self->stateDraw = PBL_HUD_Draw_Score;
     }
     else {
         self->timer--;
@@ -149,13 +149,13 @@ void PBL_HUD_State_Message2(void)
     }
 }
 
-void PBL_HUD_State_Message3(void)
+void PBL_HUD_StateMessage_ScrollRightFast(void)
 {
     RSDK_THIS(PBL_HUD);
 
     if (self->timer <= 0) {
         self->state     = 0;
-        self->stateDraw = PBL_HUD_StateDraw_Unknown3;
+        self->stateDraw = PBL_HUD_Draw_Score;
     }
     else {
         self->offset.x += 0x20000;
@@ -163,46 +163,45 @@ void PBL_HUD_State_Message3(void)
     }
 }
 
-void PBL_HUD_State_Message4(void)
+void PBL_HUD_StateMessage_ShowMove(void)
 {
     RSDK_THIS(PBL_HUD);
 
     if (self->timer < 0 || self->timer > 60)
         self->offset.y += self->velocity.y;
 
-    self->timer++;
-    if (self->timer > 90) {
+    if (++self->timer > 90) {
         self->timer     = 0;
         self->offset.y  = 0;
         self->state     = StateMachine_None;
-        self->stateDraw = PBL_HUD_StateDraw_Unknown3;
+        self->stateDraw = PBL_HUD_Draw_Score;
     }
 }
 
-void PBL_HUD_State_Message6(void)
+void PBL_HUD_StateMessage_Flash(void)
 {
     RSDK_THIS(PBL_HUD);
 
     if (self->timer <= 0) {
         self->state     = StateMachine_None;
-        self->stateDraw = PBL_HUD_StateDraw_Unknown3;
+        self->stateDraw = PBL_HUD_Draw_Score;
     }
     else {
         self->timer--;
         if ((self->timer & 7) < 4)
             self->stateDraw = StateMachine_None;
         else
-            self->stateDraw = PBL_HUD_StateDraw_Unknown2;
+            self->stateDraw = PBL_HUD_Draw_Message;
     }
 }
 
-void PBL_HUD_State_Message7(void)
+void PBL_HUD_StateMessage_FlashThenCrane(void)
 {
     RSDK_THIS(PBL_HUD);
 
     if (self->timer <= 0) {
-        self->state     = PBL_HUD_Unknown12;
-        self->stateDraw = PBL_HUD_StateDraw_Unknown1;
+        self->state     = PBL_HUD_State_RevealCrane;
+        self->stateDraw = PBL_HUD_Draw_Basic;
         self->drawFX    = FX_SCALE;
 
         foreach_active(PBL_Crane, crane) { crane->state = PBL_Crane_State_CreatePrizes; }
@@ -212,21 +211,21 @@ void PBL_HUD_State_Message7(void)
         if ((self->timer & 7) < 4)
             self->stateDraw = StateMachine_None;
         else
-            self->stateDraw = PBL_HUD_StateDraw_Unknown2;
+            self->stateDraw = PBL_HUD_Draw_Message;
     }
 }
 
-void PBL_HUD_StateDraw_Unknown1(void)
+void PBL_HUD_Draw_Basic(void)
 {
     RSDK_THIS(PBL_HUD);
-    RSDK.DrawSprite(&self->animator1, NULL, true);
+    RSDK.DrawSprite(&self->displayAnimator, NULL, true);
 }
 
-void PBL_HUD_StateDraw_Unknown2(void)
+void PBL_HUD_Draw_Message(void)
 {
     RSDK_THIS(PBL_HUD);
-    RSDK.DrawSprite(&self->animator1, 0, true);
-    RSDK.DrawSprite(&self->animator2, 0, true);
+    RSDK.DrawSprite(&self->displayAnimator, NULL, true);
+    RSDK.DrawSprite(&self->baseAnimator, NULL, true);
 
     Vector2 position;
     position.x = self->position.x;
@@ -234,11 +233,11 @@ void PBL_HUD_StateDraw_Unknown2(void)
     position.x += self->offset.x;
     position.y += self->offset.y;
     RSDK.SetClipBounds(SceneInfo->currentScreenID, ScreenInfo->centerX - 55, 40, ScreenInfo->centerX + 56, 58);
-    RSDK.DrawText(&self->animator3, &position, &self->text, 0, 0, 0, 1, 0, 0, true);
+    RSDK.DrawText(&self->textAnimator, &position, &self->text, 0, 0, 0, 1, 0, 0, true);
     RSDK.SetClipBounds(SceneInfo->currentScreenID, 0, 0, ScreenInfo->width, ScreenInfo->height);
 }
 
-void PBL_HUD_StateDraw_Unknown3(void)
+void PBL_HUD_Draw_Score(void)
 {
     RSDK_THIS(PBL_HUD);
     int32 score = PBL_Setup->score;
@@ -254,21 +253,21 @@ void PBL_HUD_StateDraw_Unknown3(void)
     drawPos.x = self->position.x;
     drawPos.y = self->position.y;
     drawPos.x += 0x320000;
-    RSDK.DrawSprite(&self->animator1, NULL, true);
-    RSDK.DrawSprite(&self->animator2, NULL, true);
+    RSDK.DrawSprite(&self->displayAnimator, NULL, true);
+    RSDK.DrawSprite(&self->baseAnimator, NULL, true);
 
     int32 div = 10;
     while (count > 0) {
-        self->animator3.frameID = PBL_Setup->score / mult % div;
-        RSDK.DrawSprite(&self->animator3, &drawPos, true);
+        self->textAnimator.frameID = PBL_Setup->score / mult % div;
+        RSDK.DrawSprite(&self->textAnimator, &drawPos, true);
         drawPos.x -= 0xC0000;
         mult *= 10;
         --count;
     }
-    self->animator3.frameID = 0;
+    self->textAnimator.frameID = 0;
 }
 
-void PBL_HUD_Unknown12(void)
+void PBL_HUD_State_RevealCrane(void)
 {
     RSDK_THIS(PBL_HUD);
     self->scale.x += 4;
@@ -279,7 +278,7 @@ void PBL_HUD_Unknown12(void)
     }
 }
 
-void PBL_HUD_Unknown13(void)
+void PBL_HUD_State_HideCrane(void)
 {
     RSDK_THIS(PBL_HUD);
     self->scale.x -= 4;
@@ -290,7 +289,7 @@ void PBL_HUD_Unknown13(void)
         self->scale.y    = 0x200;
         self->drawFX     = FX_NONE;
         self->state      = StateMachine_None;
-        self->stateDraw  = PBL_HUD_StateDraw_Unknown3;
+        self->stateDraw  = PBL_HUD_Draw_Score;
 
         foreach_all(PBL_Player, player)
         {
@@ -301,9 +300,16 @@ void PBL_HUD_Unknown13(void)
 }
 
 #if RETRO_INCLUDE_EDITOR
-void PBL_HUD_EditorDraw(void) {}
+void PBL_HUD_EditorDraw(void)
+{
+    RSDK_THIS(PBL_HUD);
+    RSDK.SetSpriteAnimation(PBL_HUD->aniFrames, 0, &self->displayAnimator, true, 0);
+    RSDK.SetSpriteAnimation(PBL_HUD->aniFrames, 0, &self->baseAnimator, true, 1);
 
-void PBL_HUD_EditorLoad(void) {}
+    RSDK.DrawSprite(&self->displayAnimator, NULL, false);
+}
+
+void PBL_HUD_EditorLoad(void) { PBL_HUD->aniFrames = RSDK.LoadSpriteAnimation("Pinball/Backglass.bin", SCOPE_STAGE); }
 #endif
 
 void PBL_HUD_Serialize(void) {}

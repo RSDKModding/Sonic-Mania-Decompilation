@@ -16,7 +16,7 @@ void PBL_Bumper_LateUpdate(void)
     int32 y = self->height;
     int32 z = self->position.y;
 
-    Matrix *mat   = &PBL_Camera->matrix1;
+    Matrix *mat   = &PBL_Camera->matWorld;
     self->depth3D = mat->values[2][1] * (y >> 16) + mat->values[2][2] * (z >> 16) + mat->values[2][0] * (x >> 16) + mat->values[2][3];
     if (self->depth3D >= 0x4000) {
         int32 depth = ((mat->values[0][3] << 8) + ((mat->values[0][2] * (z >> 8)) & 0xFFFFFF00) + ((mat->values[0][0] * (x >> 8)) & 0xFFFFFF00)
@@ -32,13 +32,13 @@ void PBL_Bumper_Draw(void)
     RSDK_THIS(PBL_Bumper);
     if (self->depth3D >= 0x4000) {
         RSDK.Prepare3DScene(PBL_Bumper->sceneIndex);
-        RSDK.MatrixScaleXYZ(&self->matrix2, self->scale.x, self->scale.y, self->scale.x);
-        RSDK.MatrixTranslateXYZ(&self->matrix2, self->position.x, self->height, self->position.y, false);
-        RSDK.MatrixRotateY(&self->matrix3, self->angle);
-        RSDK.MatrixMultiply(&self->matrix1, &self->matrix3, &self->matrix2);
-        RSDK.MatrixMultiply(&self->matrix1, &self->matrix1, &PBL_Camera->matrix1);
-        RSDK.MatrixMultiply(&self->matrix3, &self->matrix3, &PBL_Camera->matrix2);
-        RSDK.AddModelTo3DScene(PBL_Bumper->modelFrames, PBL_Bumper->sceneIndex, S3D_FLATCLR_SHADED_BLENDED_SCREEN, &self->matrix1, &self->matrix3,
+        RSDK.MatrixScaleXYZ(&self->matTransform, self->scale.x, self->scale.y, self->scale.x);
+        RSDK.MatrixTranslateXYZ(&self->matTransform, self->position.x, self->height, self->position.y, false);
+        RSDK.MatrixRotateY(&self->matNormal, self->angle);
+        RSDK.MatrixMultiply(&self->matWorld, &self->matNormal, &self->matTransform);
+        RSDK.MatrixMultiply(&self->matWorld, &self->matWorld, &PBL_Camera->matWorld);
+        RSDK.MatrixMultiply(&self->matNormal, &self->matNormal, &PBL_Camera->matNormalItem);
+        RSDK.AddModelTo3DScene(PBL_Bumper->modelFrames, PBL_Bumper->sceneIndex, S3D_FLATCLR_SHADED_BLENDED_SCREEN, &self->matWorld, &self->matNormal,
                                0xFFFFFF);
         RSDK.Draw3DScene(PBL_Bumper->sceneIndex);
     }
@@ -53,10 +53,10 @@ void PBL_Bumper_Create(void *data)
         self->active        = ACTIVE_BOUNDS;
         self->updateRange.x = 0x400000;
         self->updateRange.y = 0x400000;
-        self->angle         = 512;
+        self->angle         = 0x200;
         self->scale.x       = 0x100;
         self->scale.y       = 0x100;
-        self->state         = PBL_Bumper_Unknown2;
+        self->state         = PBL_Bumper_State_CheckBumps;
         RSDK.SetModelAnimation(PBL_Bumper->modelFrames, &self->animator, 96, 0, true, 0);
     }
 }
@@ -79,11 +79,11 @@ void PBL_Bumper_HandlePlayerInteractions(void)
     foreach_active(PBL_Player, player)
     {
         if (RSDK.CheckObjectCollisionTouchBox(self, &PBL_Bumper->hitbox, player, &PBL_Player->outerBox)) {
-            if (self->state == PBL_Bumper_Unknown2) {
-                self->field_60 = 0;
-                self->field_64 = 0x8000;
+            if (self->state == PBL_Bumper_State_CheckBumps) {
+                self->scaleFactor = 0;
+                self->scaleVel = 0x8000;
                 self->active   = ACTIVE_NORMAL;
-                self->state    = PBL_Bumper_Unknown3;
+                self->state    = PBL_Bumper_State_Bumped;
                 RSDK.PlaySfx(PBL_Bumper->sfxBumper, false, 255);
             }
             int32 angle = RSDK.ATan2(player->position.x - self->position.x, player->position.y - self->position.y);
@@ -97,36 +97,36 @@ void PBL_Bumper_HandlePlayerInteractions(void)
     }
 }
 
-void PBL_Bumper_Unknown2(void) { PBL_Bumper_HandlePlayerInteractions(); }
+void PBL_Bumper_State_CheckBumps(void) { PBL_Bumper_HandlePlayerInteractions(); }
 
-void PBL_Bumper_Unknown3(void)
+void PBL_Bumper_State_Bumped(void)
 {
     RSDK_THIS(PBL_Bumper);
-    self->field_64 += 0x1000;
-    self->field_60 += self->field_64;
-    if (self->field_60 > 0x8000) {
-        self->field_64 = -(self->field_64 >> 1);
-        if (++self->field_68 > 6) {
-            self->field_68 = 0;
-            self->state    = PBL_Bumper_Unknown4;
+    self->scaleVel += 0x1000;
+    self->scaleFactor += self->scaleVel;
+    if (self->scaleFactor > 0x8000) {
+        self->scaleVel = -(self->scaleVel >> 1);
+        if (++self->timer > 6) {
+            self->timer = 0;
+            self->state    = PBL_Bumper_State_FinishedBump;
         }
     }
-    self->scale.x = (self->field_60 >> 8) + 256;
-    self->scale.y = (self->field_60 >> 8) + 256;
+    self->scale.x = (self->scaleFactor >> 8) + 0x100;
+    self->scale.y = (self->scaleFactor >> 8) + 0x100;
     PBL_Bumper_HandlePlayerInteractions();
 }
 
-void PBL_Bumper_Unknown4(void)
+void PBL_Bumper_State_FinishedBump(void)
 {
     RSDK_THIS(PBL_Bumper);
-    self->field_60 -= (self->field_60 >> 2);
-    if (self->field_60 < 256) {
-        self->field_60 = 0;
+    self->scaleFactor -= (self->scaleFactor >> 2);
+    if (self->scaleFactor < 256) {
+        self->scaleFactor = 0;
         self->active   = ACTIVE_BOUNDS;
-        self->state    = PBL_Bumper_Unknown2;
+        self->state    = PBL_Bumper_State_CheckBumps;
     }
-    self->scale.x = (self->field_60 >> 8) + 256;
-    self->scale.y = (self->field_60 >> 8) + 256;
+    self->scale.x = (self->scaleFactor >> 8) + 0x100;
+    self->scale.y = (self->scaleFactor >> 8) + 0x100;
     PBL_Bumper_HandlePlayerInteractions();
 }
 

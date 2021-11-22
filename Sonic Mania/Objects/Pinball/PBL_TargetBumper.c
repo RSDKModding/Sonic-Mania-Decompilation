@@ -16,7 +16,7 @@ void PBL_TargetBumper_LateUpdate(void)
     int32 y = self->height;
     int32 z = self->position.y;
 
-    Matrix *mat = &PBL_Camera->matrix1;
+    Matrix *mat   = &PBL_Camera->matWorld;
     self->depth3D = mat->values[2][1] * (y >> 16) + mat->values[2][2] * (z >> 16) + mat->values[2][0] * (x >> 16) + mat->values[2][3];
     if (self->depth3D >= 0x4000) {
         int32 depth = ((mat->values[0][3] << 8) + ((mat->values[0][2] * (z >> 8)) & 0xFFFFFF00) + ((mat->values[0][0] * (x >> 8)) & 0xFFFFFF00)
@@ -31,17 +31,17 @@ void PBL_TargetBumper_Draw(void)
 {
     RSDK_THIS(PBL_TargetBumper);
     if (self->depth3D >= 0x4000) {
-        uint32 colour = RSDK.GetPaletteEntry(0, (self->field_60 & 0xFF) - 80);
+        uint32 colour = RSDK.GetPaletteEntry(0, (self->colour & 0xFF) - 80);
         RSDK.SetDiffuseColour(PBL_TargetBumper->sceneIndex, (colour >> 16) & 0xFF, (colour >> 8) & 0xFF, colour & 0xFF);
         RSDK.Prepare3DScene(PBL_TargetBumper->sceneIndex);
-        RSDK.MatrixScaleXYZ(&self->matrix2, self->scale.x, self->scale.y, 256);
-        RSDK.MatrixTranslateXYZ(&self->matrix2, self->position.x, self->height, self->position.y, false);
-        RSDK.MatrixRotateY(&self->matrix3, self->angle);
-        RSDK.MatrixMultiply(&self->matrix1, &self->matrix3, &self->matrix2);
-        RSDK.MatrixMultiply(&self->matrix1, &self->matrix1, &PBL_Camera->matrix1);
-        RSDK.MatrixMultiply(&self->matrix3, &self->matrix3, &PBL_Camera->matrix3);
-        RSDK.AddModelTo3DScene(PBL_TargetBumper->modelFrames, PBL_TargetBumper->sceneIndex, PBL_TargetBumper->drawType, &self->matrix1,
-                               &self->matrix3, 0xFFFFFF);
+        RSDK.MatrixScaleXYZ(&self->matTransform, self->scale.x, self->scale.y, 256);
+        RSDK.MatrixTranslateXYZ(&self->matTransform, self->position.x, self->height, self->position.y, false);
+        RSDK.MatrixRotateY(&self->matNormal, self->angle);
+        RSDK.MatrixMultiply(&self->matWorld, &self->matNormal, &self->matTransform);
+        RSDK.MatrixMultiply(&self->matWorld, &self->matWorld, &PBL_Camera->matWorld);
+        RSDK.MatrixMultiply(&self->matNormal, &self->matNormal, &PBL_Camera->matNormal);
+        RSDK.AddModelTo3DScene(PBL_TargetBumper->modelFrames, PBL_TargetBumper->sceneIndex, PBL_TargetBumper->drawType, &self->matWorld,
+                               &self->matNormal, 0xFFFFFF);
         RSDK.Draw3DScene(PBL_TargetBumper->sceneIndex);
     }
 }
@@ -57,8 +57,8 @@ void PBL_TargetBumper_Create(void *data)
         self->updateRange.y = 0x400000;
         self->scale.x       = 0x100;
         self->scale.y       = 0x100;
-        self->state         = PBL_TargetBumper_Unknown2;
-        self->field_60      = 2 * (RSDK.GetEntityID(self) % 3);
+        self->state         = PBL_TargetBumper_State_Active;
+        self->colour      = 2 * (RSDK.GetEntityID(self) % 3);
         RSDK.SetModelAnimation(PBL_TargetBumper->modelFrames, &self->animator, 96, 0, true, 0);
     }
 }
@@ -105,26 +105,26 @@ void PBL_TargetBumper_HandlePlayerInteractions(void)
             int32 velX = player->velocity.x;
             int32 velY = player->velocity.y;
             switch (RSDK.CheckObjectCollisionBox(self, &PBL_TargetBumper->hitbox, player, &PBL_Player->outerBox, true)) {
-                case 0:
+                case C_NONE:
                     player->position.x = posX;
                     player->position.y = posY;
                     player->velocity.x = velStoreX;
                     player->velocity.y = velStoreY;
                     break;
-                case 1:
-                case 4:
+                case C_TOP:
+                case C_BOTTOM:
                     player->onGround = false;
                     if (abs(velY) < 0x40000)
                         velY <<= 1;
                     player->velocity.y = -velY;
                     Zone_RotateOnPivot(&player->position, &self->position, negAngle);
                     Zone_RotateOnPivot(&player->velocity, &pivotPos, negAngle);
-                    self->state      = PBL_TargetBumper_Unknown3;
+                    self->state      = PBL_TargetBumper_State_Reced;
                     self->velocity.y = -8;
                     PBL_Setup_GiveScore(1000);
                     RSDK.PlaySfx(PBL_TargetBumper->sfxTargetBumper, false, 255);
                     break;
-                case 2:
+                case C_LEFT:
                     if (velX < 0) {
                         player->velocity.x = velX;
                     }
@@ -145,7 +145,7 @@ void PBL_TargetBumper_HandlePlayerInteractions(void)
                         player->onGround = false;
                     }
                     break;
-                case 3:
+                case C_RIGHT:
                     if (velX > 0) {
                         player->velocity.x = velX;
                     }
@@ -172,9 +172,9 @@ void PBL_TargetBumper_HandlePlayerInteractions(void)
     }
 }
 
-void PBL_TargetBumper_Unknown2(void) { PBL_TargetBumper_HandlePlayerInteractions(); }
+void PBL_TargetBumper_State_Active(void) { PBL_TargetBumper_HandlePlayerInteractions(); }
 
-void PBL_TargetBumper_Unknown3(void)
+void PBL_TargetBumper_State_Reced(void)
 {
     RSDK_THIS(PBL_TargetBumper);
     self->velocity.y += 2;
@@ -186,7 +186,7 @@ void PBL_TargetBumper_Unknown3(void)
     }
 }
 
-void PBL_TargetBumper_Unknown4(void)
+void PBL_TargetBumper_State_Rise(void)
 {
     RSDK_THIS(PBL_TargetBumper);
     self->velocity.y -= 2;
@@ -195,7 +195,7 @@ void PBL_TargetBumper_Unknown4(void)
         self->active     = ACTIVE_BOUNDS;
         self->velocity.y = 0;
         self->scale.y    = 256;
-        self->state      = PBL_TargetBumper_Unknown2;
+        self->state      = PBL_TargetBumper_State_Active;
     }
 }
 

@@ -21,8 +21,8 @@ void PBL_Setup_StaticUpdate(void)
     PBL_Setup->timer &= 0x7FFF;
 
     if (!(PBL_Setup->timer & 1)) {
-        ++PBL_Setup->timer2;
-        PBL_Setup->timer2 &= 0xF;
+        ++PBL_Setup->ringFrame;
+        PBL_Setup->ringFrame &= 0xF;
     }
 
     if (!(PBL_Setup->timer & 0xF)) {
@@ -32,8 +32,8 @@ void PBL_Setup_StaticUpdate(void)
         }
     }
 
-    PBL_Setup->timer3 += 0x8000;
-    PBL_Setup->timer3 &= 0x7FFFFFFF;
+    PBL_Setup->scanlineTimer += 0x8000;
+    PBL_Setup->scanlineTimer &= 0x7FFFFFFF;
     if ((ControllerInfo->keyStart.press || UnknownInfo->field_10 == 1) && SceneInfo->state == ENGINESTATE_REGULAR
         && !RSDK_GET_ENTITY(SLOT_PAUSEMENU, PauseMenu)->objectID) {
         RSDK.ResetEntitySlot(SLOT_PAUSEMENU, PauseMenu->objectID, NULL);
@@ -57,7 +57,7 @@ void PBL_Setup_Create(void *data)
     self->drawOrder = DRAWLAYER_COUNT - 1;
     self->colour    = 0xF0F0F0;
     self->timer     = 512;
-    self->state     = PBL_Setup_Unknown9;
+    self->state     = PBL_Setup_State_FadeIn;
 }
 
 void PBL_Setup_StageLoad(void)
@@ -88,7 +88,7 @@ void PBL_Setup_StageLoad(void)
 void PBL_Setup_TableLow_ScanlineCallback(ScanlineInfo *scanlines)
 {
     EntityPBL_Camera *camera = RSDK_GET_ENTITY(SLOT_PBL_CAMERA, PBL_Camera);
-    RSDK.SetClipBounds(0, 0, camera->field_80, ScreenInfo->width, ScreenInfo->height);
+    RSDK.SetClipBounds(0, 0, camera->centerY, ScreenInfo->width, ScreenInfo->height);
 
     int32 sin    = RSDK.Sin1024(camera->angle) >> 2;
     int32 cos    = RSDK.Cos1024(camera->angle) >> 2;
@@ -117,7 +117,7 @@ void PBL_Setup_TableLow_ScanlineCallback(ScanlineInfo *scanlines)
 void PBL_Setup_TableHigh_ScanlineCallback(ScanlineInfo *scanlines)
 {
     EntityPBL_Camera *camera = RSDK_GET_ENTITY(SLOT_PBL_CAMERA, PBL_Camera);
-    RSDK.SetClipBounds(0, 0, camera->field_80, ScreenInfo->width, ScreenInfo->height);
+    RSDK.SetClipBounds(0, 0, camera->centerY, ScreenInfo->width, ScreenInfo->height);
 
     int32 sin    = RSDK.Sin1024(camera->angle) >> 2;
     int32 cos    = RSDK.Cos1024(camera->angle) >> 2;
@@ -150,7 +150,7 @@ void PBL_Setup_BG_ScanlineCallback(ScanlineInfo *scanlines)
     int32 centerX = ScreenInfo->centerX;
     int32 sin     = RSDK.Sin256(32);
     int32 cos     = RSDK.Cos256(32);
-    int32 timer   = PBL_Setup->timer3 >> 1;
+    int32 timer   = PBL_Setup->scanlineTimer >> 1;
 
     int32 clr = 0;
     for (int32 i = 160; i > 40; --i) {
@@ -172,7 +172,7 @@ void PBL_Setup_DrawLayer_Callback(void)
     RSDK.SetActivePalette(0, 0, ScreenInfo->height);
 }
 
-void PBL_Setup_Unknown5(void)
+void PBL_Setup_ExitPinball(void)
 {
     EntityPBL_Setup *setup = RSDK_GET_ENTITY(SLOT_BSS_SETUP, PBL_Setup);
     setup->visible         = true;
@@ -199,7 +199,7 @@ void PBL_Setup_GiveScore(int32 score)
     }
 
     if (PBL_Setup->score > PBL_Setup->score1UP) {
-        RSDK.PlaySfx(PBL_Setup->sfxContinue, 0, 255);
+        RSDK.PlaySfx(PBL_Setup->sfxContinue, false, 255);
 
         EntitySaveGame *saveRAM = SaveGame->saveRAM;
         if (saveRAM->continues < 20)
@@ -208,7 +208,7 @@ void PBL_Setup_GiveScore(int32 score)
             PBL_Setup->score1UP += 10000;
         }
 
-        foreach_active(PBL_HUD, hud) { PBL_HUD_DisplayMessage(hud, "!CONTINUE!", 1); }
+        foreach_active(PBL_HUD, hud) { PBL_HUD_DisplayMessage(hud, "!CONTINUE!", PBL_HUD_MSG_SCROLL_LEFT); }
     }
 }
 
@@ -222,13 +222,13 @@ void PBL_Setup_GiveLife(void)
     }
 }
 
-void PBL_Setup_Unknown9(void)
+void PBL_Setup_State_FadeIn(void)
 {
     RSDK_THIS(PBL_Setup);
     if (self->timer <= 0) {
         self->timer               = 0;
         self->visible             = false;
-        self->state               = PBL_Setup_Unknown10;
+        self->state               = PBL_Setup_State_ManageStageExit;
         SceneInfo->timeEnabled = true;
     }
     else {
@@ -236,13 +236,13 @@ void PBL_Setup_Unknown9(void)
     }
 }
 
-void PBL_Setup_Unknown10(void)
+void PBL_Setup_State_ManageStageExit(void)
 {
     EntityPBL_Camera *camera = RSDK_GET_ENTITY(SLOT_PBL_CAMERA, PBL_Camera);
     foreach_active(PBL_Player, player)
     {
-        if (player->position.y > camera->dword70 + 0x400000) {
-            PBL_Setup_Unknown5();
+        if (player->position.y > camera->curCamBoundaryB + 0x400000) {
+            PBL_Setup_ExitPinball();
             player->state = StateMachine_None;
         }
     }
